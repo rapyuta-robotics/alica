@@ -34,7 +34,7 @@ SystemConfigPtr SystemConfig::getInstance()
 
     instance = boost::shared_ptr<SystemConfig>(new SystemConfig());
 
-    char *x = ::getenv("ES_ROOT");
+    char *x = ::getenv(DOMAIN_FOLDER.c_str());
 
     if (x == NULL)
     {
@@ -69,7 +69,10 @@ SystemConfigPtr SystemConfig::getInstance()
     char* envname = ::getenv("ROBOT");
     if ((envname == NULL) || ((*envname) == 0x0))
     {
-      hostname = std::getenv("HOSTNAME");
+      char hn[1024];
+      hn[1023] = '\0';
+      gethostname(hn, 1023);
+      SystemConfig::hostname = hn;
     }
     else
     {
@@ -196,7 +199,10 @@ void SystemConfig::resetHostname()
   char* envname = ::getenv("ROBOT");
   if ((envname == NULL) || ((*envname) == 0x0))
   {
-    hostname = std::getenv("HOSTNAME");
+    char hn[1024];
+          hn[1023] = '\0';
+          gethostname(hn, 1023);
+          SystemConfig::hostname = hn;
   }
   else
   {
@@ -208,4 +214,19 @@ void SystemConfig::resetHostname()
 std::string SystemConfig::robotNodeName(const std::string& nodeName)
 {
   return SystemConfig::getHostname() + NODE_NAME_SEPERATOR + nodeName;
+}
+
+std::string SystemConfig::GetEnv(const std::string & var)
+{
+  const char * val = ::getenv(var.c_str());
+  if (val == 0)
+  {
+    std::cerr << "Environment Variable " << var << " is null" << std::endl;
+    return "";
+  }
+  else
+  {
+    std::cout << "Environment Variable " << var << " is " << val << std::endl;
+    return val;
+  }
 }

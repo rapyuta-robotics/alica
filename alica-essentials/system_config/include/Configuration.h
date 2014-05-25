@@ -189,7 +189,7 @@ protected:
       return boost::lexical_cast<Target>(true);
     }
 
-    printf("Value %s\n", value.c_str());
+    std::cout << "Value " << value << std::endl;
 
     return boost::lexical_cast<Target>(value);
   }

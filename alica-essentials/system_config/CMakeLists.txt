@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(system_config)
 
+## Use c++ 11x std
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -93,7 +96,9 @@ include_directories(include  ${catkin_LIBRARIES} ${Boost_INCLUDE_DIR})
 ## Declare a cpp library
 add_library(system_config
   src/SystemConfig.cpp
-  include/Configuration.h
+  src/Configuration.cpp
+  src/ConfigException.cpp
+  src/Exception.cpp
 )
 
 ## Declare a cpp executable
@@ -151,6 +156,7 @@ target_link_libraries(system_config
 catkin_add_gtest(${PROJECT_NAME}-test test/test_system_config.cpp)
 if(TARGET ${PROJECT_NAME}-test)
   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${Boost_LIBRARIES})
+  #add_dependencies(system_config-test system_config)
 endif()
 
 ## Add folders to be run by python nosetests

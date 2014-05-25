@@ -7,8 +7,8 @@
 TEST(SystemConfigBasics, ownRobotID)
 {
   SystemConfigPtr sc = SystemConfig::getInstance();
-  std::cout << "Own Robot ID: " << sc->GetOwnRobotID() << std::endl;
-  EXPECT_TRUE(1==1);
+  int ownID = sc->GetOwnRobotID();
+  EXPECT_TRUE(ownID>0);
 }
 
 // Run all the tests that were declared with TEST()

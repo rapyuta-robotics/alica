@@ -9,6 +9,8 @@
 
 #include "Configuration.h"
 
+const std::string DOMAIN_FOLDER="DOMAIN_FOLDER";
+
 class SystemConfig;
 
 typedef boost::shared_ptr<SystemConfig> SystemConfigPtr;
@@ -58,6 +60,7 @@ public:
   std::string getLibPath();
   std::string getLogPath();
   std::string getConfigPath();
+  static std::string GetEnv(const std::string& var);
 };
 
 #endif /* SYSTEMCONFIG_H_ */
