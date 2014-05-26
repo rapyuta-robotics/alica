@@ -33,10 +33,10 @@ protected:
 
   static SystemConfigPtr instance;
 
-  static boost::filesystem::path rootPath;
-  static boost::filesystem::path libPath;
-  static boost::filesystem::path logPath;
-  static boost::filesystem::path configPath;
+  static std::string rootPath;
+  static std::string libPath;
+  static std::string logPath;
+  static std::string configPath;
 
   static std::string hostname;
 

@@ -16,10 +16,10 @@ std::mutex SystemConfig::mutex;
 
 SystemConfigPtr SystemConfig::instance;
 
-boost::filesystem::path SystemConfig::rootPath;
-boost::filesystem::path SystemConfig::libPath;
-boost::filesystem::path SystemConfig::logPath;
-boost::filesystem::path SystemConfig::configPath;
+std::string SystemConfig::rootPath;
+std::string SystemConfig::libPath;
+std::string SystemConfig::logPath;
+std::string SystemConfig::configPath;
 int SystemConfig::ownRobotID;
 
 std::string SystemConfig::hostname;
@@ -47,27 +47,28 @@ SystemConfigPtr SystemConfig::getInstance()
 				std::cout << "SystemConfig: Error while calling getcwd!" << std::endl;
 			}
 
-			rootPath = boost::filesystem::path(cwd).normalize();
+			rootPath = cwd;
 
 		}
 		else
 		{
-			rootPath = boost::filesystem::path(x).normalize();
+			rootPath = x;
 		}
 
-		x = ::getenv("ES_CONFIG_ROOT");
+		x = ::getenv("DOMAIN_CONFIG_FOLDER");
 
 		if (x == NULL)
 		{
-			configPath = (rootPath / "etc").normalize();
+			configPath = (rootPath + "/etc/");
 		}
 		else
 		{
-			configPath = boost::filesystem::path(x).normalize();
+			std::string temp = x;
+			configPath = temp + "/";
 		}
 
-		libPath = (rootPath / "lib").normalize();
-		logPath = (rootPath / "log").normalize();
+		libPath = (rootPath + "/lib/");
+		logPath = (rootPath + "/log/");
 		char* envname = ::getenv("ROBOT");
 		if ((envname == NULL) || ((*envname) == 0x0))
 		{
@@ -106,25 +107,26 @@ Configuration *SystemConfig::operator[](const std::string s)
 		}
 	}
 
-	std::vector<boost::filesystem::path> files;
+	std::vector<std::string> files;
 
 	std::string file = s + ".conf";
 
 	// Check the local config
-	files.push_back(boost::filesystem::path(file));
+	files.push_back(file);
+	std::string tempConfigPath = configPath;
 
-	boost::filesystem::path path(configPath);
-	path /= hostname;
-	path /= file;
+	tempConfigPath = tempConfigPath + hostname;
 
+
+	tempConfigPath = tempConfigPath + file;
 	// Check the host-specific config
-	files.push_back(path);
+	files.push_back(tempConfigPath);
 
-	path = boost::filesystem::path(configPath);
-	path /= file;
+	tempConfigPath = configPath;
+	tempConfigPath =  tempConfigPath + file;
 
 	// Check the global config
-	files.push_back(path);
+	files.push_back(tempConfigPath);
 
 	for (size_t i = 0; i < files.size(); i++)
 	{
@@ -135,7 +137,7 @@ Configuration *SystemConfig::operator[](const std::string s)
 			std::lock_guard<std::mutex>  lock(mutex);
 
 			std::shared_ptr<Configuration> result = std::shared_ptr<Configuration>(
-					new Configuration(files[i].string()));
+					new Configuration(files[i]));
 			configs[s] = result;
 
 			return result.get();
@@ -148,7 +150,7 @@ Configuration *SystemConfig::operator[](const std::string s)
 
 	for (size_t i = 0; i < files.size(); i++)
 	{
-		ss << "- " << files[i].string() << std::endl;
+		ss << "- " << files[i] << std::endl;
 	}
 
 	throw ConfigException(ss.str());
@@ -168,22 +170,22 @@ int SystemConfig::GetOwnRobotID()
 }
 std::string SystemConfig::getRootPath()
 {
-	return rootPath.string();
+	return rootPath;
 }
 
 std::string SystemConfig::getLibPath()
 {
-	return libPath.string();
+	return libPath;
 }
 
 std::string SystemConfig::getLogPath()
 {
-	return logPath.string();
+	return logPath;
 }
 
 std::string SystemConfig::getConfigPath()
 {
-	return configPath.string();
+	return configPath;
 }
 
 std::string SystemConfig::getHostname()
