@@ -14,10 +14,10 @@ Configuration::Configuration(std::string filename) :
 Configuration::Configuration(std::string filename, const std::string content) :
 		filename(filename), configRoot(new ConfigNode("root"))
 {
-	load(filename, boost::shared_ptr<std::istream>(new std::istringstream(content)), false, false);
+	load(filename, std::shared_ptr<std::istream>(new std::istringstream(content)), false, false);
 }
 
-void Configuration::load(std::string filename, boost::shared_ptr<std::istream> content, bool, bool)
+void Configuration::load(std::string filename, std::shared_ptr<std::istream> content, bool, bool)
 {
 
 	this->filename = filename;
@@ -382,7 +382,7 @@ std::string Configuration::pathNotFound(std::vector<std::string> *params)
 	return os.str();
 }
 
-boost::shared_ptr<std::vector<std::string> > Configuration::getSections(const char *path, ...)
+std::shared_ptr<std::vector<std::string> > Configuration::getSections(const char *path, ...)
 {
 
 	CONSUME_PARAMS(path);
@@ -396,7 +396,7 @@ boost::shared_ptr<std::vector<std::string> > Configuration::getSections(const ch
 
 	collectSections(this->configRoot.get(), params.get(), 0, &nodes);
 
-	boost::shared_ptr<std::vector<std::string> > result(new std::vector<std::string>());
+	std::shared_ptr<std::vector<std::string> > result(new std::vector<std::string>());
 
 	if (nodes.size() == 0)
 	{
@@ -416,7 +416,7 @@ boost::shared_ptr<std::vector<std::string> > Configuration::getSections(const ch
 	return result;
 }
 
-boost::shared_ptr<std::vector<std::string> > Configuration::getNames(const char *path, ...)
+std::shared_ptr<std::vector<std::string> > Configuration::getNames(const char *path, ...)
 {
 
 	CONSUME_PARAMS(path);
@@ -425,7 +425,7 @@ boost::shared_ptr<std::vector<std::string> > Configuration::getNames(const char 
 
 	collect(this->configRoot.get(), params.get(), 0, &nodes);
 
-	boost::shared_ptr<std::vector<std::string> > result(new std::vector<std::string>());
+	std::shared_ptr<std::vector<std::string> > result(new std::vector<std::string>());
 
 	if (nodes.size() == 0)
 	{
@@ -443,7 +443,7 @@ boost::shared_ptr<std::vector<std::string> > Configuration::getNames(const char 
 	return result;
 }
 
-boost::shared_ptr<std::vector<std::string> > Configuration::tryGetSections(std::string d, const char *path, ...)
+std::shared_ptr<std::vector<std::string> > Configuration::tryGetSections(std::string d, const char *path, ...)
 {
 
 	CONSUME_PARAMS(path);
@@ -452,7 +452,7 @@ boost::shared_ptr<std::vector<std::string> > Configuration::tryGetSections(std::
 
 	collect(this->configRoot.get(), params.get(), 0, &nodes);
 
-	boost::shared_ptr<std::vector<std::string> > result(new std::vector<std::string>());
+	std::shared_ptr<std::vector<std::string> > result(new std::vector<std::string>());
 
 	if (nodes.size() == 0)
 	{
@@ -473,7 +473,7 @@ boost::shared_ptr<std::vector<std::string> > Configuration::tryGetSections(std::
 	return result;
 }
 
-boost::shared_ptr<std::vector<std::string> > Configuration::tryGetNames(std::string d, const char *path, ...)
+std::shared_ptr<std::vector<std::string> > Configuration::tryGetNames(std::string d, const char *path, ...)
 {
 
 	CONSUME_PARAMS(path);
@@ -482,7 +482,7 @@ boost::shared_ptr<std::vector<std::string> > Configuration::tryGetNames(std::str
 
 	collect(this->configRoot.get(), params.get(), 0, &nodes);
 
-	boost::shared_ptr<std::vector<std::string> > result(new std::vector<std::string>());
+	std::shared_ptr<std::vector<std::string> > result(new std::vector<std::string>());
 
 	if (nodes.size() == 0)
 	{

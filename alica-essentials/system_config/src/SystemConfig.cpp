@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <iostream>
 #include <fstream>
+#include <mutex>
+#include <thread>
 
 #include <boost/thread.hpp>
 
@@ -10,7 +12,7 @@
 // Initialize static variables
 bool SystemConfig::initialized = false;
 
-boost::mutex SystemConfig::mutex;
+std::mutex SystemConfig::mutex;
 
 SystemConfigPtr SystemConfig::instance;
 
@@ -22,17 +24,17 @@ int SystemConfig::ownRobotID;
 
 std::string SystemConfig::hostname;
 
-std::map<std::string, boost::shared_ptr<Configuration> > SystemConfig::configs;
+std::map<std::string, std::shared_ptr<Configuration> > SystemConfig::configs;
 
 SystemConfigPtr SystemConfig::getInstance()
 {
 
-	boost::mutex::scoped_lock lock(mutex);
+	std::lock_guard<std::mutex>  lock(mutex);
 
 	if (!initialized)
 	{
 
-		instance = boost::shared_ptr<SystemConfig>(new SystemConfig());
+		instance = std::shared_ptr<SystemConfig>(new SystemConfig());
 
 		char *x = ::getenv(DOMAIN_FOLDER.c_str());
 
@@ -94,9 +96,9 @@ Configuration *SystemConfig::operator[](const std::string s)
 {
 
 	{
-		boost::mutex::scoped_lock lock(mutex);
+		std::lock_guard<std::mutex>  lock(mutex);
 
-		std::map<std::string, boost::shared_ptr<Configuration> >::iterator itr = configs.find(s);
+		std::map<std::string, std::shared_ptr<Configuration> >::iterator itr = configs.find(s);
 
 		if (itr != configs.end())
 		{
@@ -130,9 +132,9 @@ Configuration *SystemConfig::operator[](const std::string s)
 		if (boost::filesystem::exists(files[i]))
 		{
 
-			boost::mutex::scoped_lock lock(mutex);
+			std::lock_guard<std::mutex>  lock(mutex);
 
-			boost::shared_ptr<Configuration> result = boost::shared_ptr<Configuration>(
+			std::shared_ptr<Configuration> result = std::shared_ptr<Configuration>(
 					new Configuration(files[i].string()));
 			configs[s] = result;
 

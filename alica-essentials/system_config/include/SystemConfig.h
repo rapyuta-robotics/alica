@@ -3,6 +3,8 @@
 
 #include <map>
 #include <string>
+#include <mutex>
+#include <memory>
 
 #include <boost/thread/mutex.hpp>
 #include <boost/filesystem.hpp>
@@ -13,7 +15,7 @@ const std::string DOMAIN_FOLDER="DOMAIN_FOLDER";
 
 class SystemConfig;
 
-typedef boost::shared_ptr<SystemConfig> SystemConfigPtr;
+typedef std::shared_ptr<SystemConfig> SystemConfigPtr;
 
 class SystemConfig
 {
@@ -27,7 +29,7 @@ protected:
 
   static bool initialized;
 
-  static boost::mutex mutex;
+  static std::mutex mutex;
 
   static SystemConfigPtr instance;
 
@@ -38,7 +40,7 @@ protected:
 
   static std::string hostname;
 
-  static std::map<std::string, boost::shared_ptr<Configuration> > configs;
+  static std::map<std::string, std::shared_ptr<Configuration> > configs;
 
   static const char NODE_NAME_SEPERATOR = '_';
   static int ownRobotID;

@@ -19,7 +19,7 @@
 #include "ConfigException.h"
 
 #define CONSUME_PARAMS(path) \
-boost::shared_ptr<std::vector<std::string> > params(new std::vector<std::string>());\
+std::shared_ptr<std::vector<std::string> > params(new std::vector<std::string>());\
 if (path != NULL) {\
 	va_list ap;\
 	va_start(ap, path);\
@@ -36,7 +36,7 @@ if (path != NULL) {\
 
 class ConfigNode;
 
-typedef boost::shared_ptr<ConfigNode> ConfigNodePtr;
+typedef std::shared_ptr<ConfigNode> ConfigNodePtr;
 
 class ConfigNode
 {
@@ -206,11 +206,11 @@ public:
 
   inline void load(std::string filename)
   {
-    load(filename, boost::shared_ptr<std::ifstream>(new std::ifstream(filename.c_str(), std::ifstream::in)), false,
+    load(filename, std::shared_ptr<std::ifstream>(new std::ifstream(filename.c_str(), std::ifstream::in)), false,
          false);
   }
 
-  void load(std::string filename, boost::shared_ptr<std::istream> content, bool create, bool replace);
+  void load(std::string filename, std::shared_ptr<std::istream> content, bool create, bool replace);
 
   void store();
   void store(std::string filename);
@@ -236,7 +236,7 @@ public:
   }
 
   template<typename T>
-  boost::shared_ptr<std::vector<T> > getAll(const char *path, ...)
+  std::shared_ptr<std::vector<T> > getAll(const char *path, ...)
   {
 
     CONSUME_PARAMS(path);
@@ -250,7 +250,7 @@ public:
       throw ConfigException(pathNotFound(params.get()));
     }
 
-    boost::shared_ptr<std::vector<T> > result(new std::vector<T>());
+    std::shared_ptr<std::vector<T> > result(new std::vector<T>());
 
     for (int i = 0; i < nodes.size(); i++)
     {
@@ -280,7 +280,7 @@ public:
   }
 
   template<typename T>
-  boost::shared_ptr<std::vector<T> > tryGetAll(T d, const char *path, ...)
+  std::shared_ptr<std::vector<T> > tryGetAll(T d, const char *path, ...)
   {
 
     CONSUME_PARAMS(path);
@@ -289,7 +289,7 @@ public:
 
     collect(this->configRoot.get(), params.get(), 0, &nodes);
 
-    boost::shared_ptr<std::vector<T> > result(new std::vector<T>());
+    std::shared_ptr<std::vector<T> > result(new std::vector<T>());
 
     if (nodes.size() == 0)
     {
@@ -326,11 +326,11 @@ public:
     }
   }
 
-  boost::shared_ptr<std::vector<std::string> > getSections(const char *path, ...);
-  boost::shared_ptr<std::vector<std::string> > getNames(const char *path, ...);
+  std::shared_ptr<std::vector<std::string> > getSections(const char *path, ...);
+  std::shared_ptr<std::vector<std::string> > getNames(const char *path, ...);
 
-  boost::shared_ptr<std::vector<std::string> > tryGetSections(std::string d, const char *path, ...);
-  boost::shared_ptr<std::vector<std::string> > tryGetNames(std::string d, const char *path, ...);
+  std::shared_ptr<std::vector<std::string> > tryGetSections(std::string d, const char *path, ...);
+  std::shared_ptr<std::vector<std::string> > tryGetNames(std::string d, const char *path, ...);
 };
 
 #endif /* CONFIGURATION_H_ */
