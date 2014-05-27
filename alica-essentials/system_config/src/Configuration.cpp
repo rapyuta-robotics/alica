@@ -1,18 +1,18 @@
 #include "Configuration.h"
 
 Configuration::Configuration() :
-filename(), configRoot(new ConfigNode("root"))
+		filename(), configRoot(new ConfigNode("root"))
 {
 }
 
 Configuration::Configuration(std::string filename) :
-														filename(filename), configRoot(new ConfigNode("root"))
+		filename(filename), configRoot(new ConfigNode("root"))
 {
 	load(filename);
 }
 
 Configuration::Configuration(std::string filename, const std::string content) :
-														filename(filename), configRoot(new ConfigNode("root"))
+		filename(filename), configRoot(new ConfigNode("root"))
 {
 	load(filename, std::shared_ptr<std::istream>(new std::istringstream(content)), false, false);
 }
@@ -59,7 +59,7 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 
 					chrPos += line.size() - 1;
 				}
-				continue;
+					continue;
 
 				case '<':
 				case '[':
@@ -129,7 +129,7 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 
 					chrPos += (end + 1);
 				}
-				break;
+					break;
 
 				default:
 					chrPos++;
@@ -204,7 +204,7 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 	{
 		std::ostringstream ss;
 		ss << "Parse error in " << filename << ", line " << linePos << " character " << line.size()
-																<< ": no closing tag found!";
+				<< ": no closing tag found!";
 		throw ConfigException(ss.str());
 	}
 }
@@ -232,8 +232,7 @@ void Configuration::serialize_internal(std::ostringstream *ss, ConfigNode *node)
 	else if (node->getType() == ConfigNode::Leaf)
 	{
 
-		*ss << std::string(4 * node->getDepth(), ' ') << node->getName() << " = "
-				<< node->getValue() << std::endl;
+		*ss << std::string(4 * node->getDepth(), ' ') << node->getName() << " = " << node->getValue() << std::endl;
 
 	}
 	else
@@ -274,7 +273,7 @@ std::string Configuration::serialize()
 }
 
 void Configuration::collect(ConfigNode *node, std::vector<std::string> *params, size_t offset,
-                            std::vector<ConfigNode *> *result)
+							std::vector<ConfigNode *> *result)
 {
 
 	std::vector<ConfigNodePtr> *children = node->getChildren();
@@ -306,7 +305,7 @@ void Configuration::collect(ConfigNode *node, std::vector<std::string> *params, 
 }
 
 void Configuration::collectSections(ConfigNode *node, std::vector<std::string> *params, size_t offset,
-                                    std::vector<ConfigNode *> *result)
+									std::vector<ConfigNode *> *result)
 {
 
 	std::vector<ConfigNodePtr> *children = node->getChildren();
@@ -510,22 +509,22 @@ std::shared_ptr<std::vector<std::string> > Configuration::tryGetNames(std::strin
 	return result;
 }
 
-std::string Configuration::trimLeft(const std::string& str,
-                                    const std::string& whitespace)
+std::string Configuration::trimLeft(const std::string& str, const std::string& whitespace)
 {
 	const auto strBegin = str.find_first_not_of(whitespace);
-	if (strBegin == std::string::npos) {
+	if (strBegin == std::string::npos)
+	{
 		return ""; // no content
 	}
 
 	return str.substr(strBegin, str.length());
 }
 
-std::string Configuration::trim(const std::string& str,
-                                const std::string& whitespace)
+std::string Configuration::trim(const std::string& str, const std::string& whitespace)
 {
 	const auto strBegin = str.find_first_not_of(whitespace);
-	if (strBegin == std::string::npos) {
+	if (strBegin == std::string::npos)
+	{
 		return ""; // no content
 	}
 	const auto strEnd = str.find_last_not_of(whitespace);
@@ -533,15 +532,19 @@ std::string Configuration::trim(const std::string& str,
 
 	return str.substr(strBegin, strRange);
 }
-std::shared_ptr<std::vector<std::string> > Configuration::split(char seperator, const char *path , va_list ap){
+std::shared_ptr<std::vector<std::string> > Configuration::split(char seperator, const char *path, va_list ap)
+{
 	std::shared_ptr<std::vector<std::string> > params(new std::vector<std::string>());
-	if (path != NULL) {
+	if (path != NULL)
+	{
 		const char *temp = path;
-		do {
+		do
+		{
 			std::string::size_type p = 0;
 			std::string::size_type q;
 			std::string charString = temp;
-			while ((q = charString.find(seperator, p)) != std::string::npos) {
+			while ((q = charString.find(seperator, p)) != std::string::npos)
+			{
 				params->emplace_back(temp, p, q - p);
 				p = q + 1;
 			}

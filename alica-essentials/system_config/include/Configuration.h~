@@ -158,21 +158,20 @@ protected:
 	template<typename Target>
 	Target convert(std::string value)
 	{
-		std::stringstream ss;
-		Target v;
-		if (typeid(Target) == typeid(bool)){
+
+		if (typeid(Target) == typeid(bool))
+		{
+			std::transform(value.begin(), value.end(), value.begin(), ::tolower);
+
 			if (("false" == value) || ("no" == value) || ("0" == value))
 			{
-				ss << "0";
-				ss >> v;
+				return false;
 			}
-			ss << "1";
-			ss >> v;
-		}else{
-			ss << value;
-			ss >> v;
+			return true;
 		}
-		return v;
+
+		std::cout << "Value " << value << std::endl;
+		return atoi(value.c_str());
 	}
 
 	void collect(ConfigNode *node, std::vector<std::string> *params, size_t offset, std::vector<ConfigNode *> *result);

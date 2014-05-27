@@ -8,8 +8,6 @@ std::mutex SystemConfig::mutex;
 SystemConfigPtr SystemConfig::instance;
 
 std::string SystemConfig::rootPath;
-std::string SystemConfig::libPath;
-std::string SystemConfig::logPath;
 std::string SystemConfig::configPath;
 int SystemConfig::ownRobotID;
 
@@ -46,7 +44,7 @@ SystemConfigPtr SystemConfig::getInstance()
 			rootPath = x;
 		}
 
-		x = ::getenv("DOMAIN_CONFIG_FOLDER");
+		x = ::getenv(DOMAIN_CONFIG_FOLDER.c_str());
 
 		if (x == NULL)
 		{
@@ -58,8 +56,6 @@ SystemConfigPtr SystemConfig::getInstance()
 			configPath = temp + "/";
 		}
 
-		libPath = (rootPath + "/lib/");
-		logPath = (rootPath + "/log/");
 		char* envname = ::getenv("ROBOT");
 		if ((envname == NULL) || ((*envname) == 0x0))
 		{
@@ -74,8 +70,6 @@ SystemConfigPtr SystemConfig::getInstance()
 		}
 		std::cout << "Root:       " << rootPath << std::endl;
 		std::cout << "ConfigRoot: " << configPath << std::endl;
-		std::cout << "LibRoot:    " << libPath << std::endl;
-		std::cout << "LogRoot:    " << logPath << std::endl;
 		std::cout << "Hostname:   " << hostname << std::endl;
 
 		initialized = true;
@@ -106,15 +100,15 @@ Configuration *SystemConfig::operator[](const std::string s)
 	files.push_back(file);
 	std::string tempConfigPath = configPath;
 
-	tempConfigPath = tempConfigPath + hostname;
+	tempConfigPath = tempConfigPath  + "/" + hostname;
 
 
-	tempConfigPath = tempConfigPath + file;
+	tempConfigPath = tempConfigPath + "/" + file;
 	// Check the host-specific config
 	files.push_back(tempConfigPath);
 
 	tempConfigPath = configPath;
-	tempConfigPath =  tempConfigPath + file;
+	tempConfigPath =  tempConfigPath  + "/" + file;
 
 	// Check the global config
 	files.push_back(tempConfigPath);
@@ -163,16 +157,6 @@ std::string SystemConfig::getRootPath()
 	return rootPath;
 }
 
-std::string SystemConfig::getLibPath()
-{
-	return libPath;
-}
-
-std::string SystemConfig::getLogPath()
-{
-	return logPath;
-}
-
 std::string SystemConfig::getConfigPath()
 {
 	return configPath;
@@ -187,6 +171,16 @@ void SystemConfig::setHostname(std::string newHostname)
 {
 	hostname = newHostname;
 	configs.clear();
+}
+
+void SystemConfig::setRootPath(std::string rootPath)
+{
+	this->rootPath = rootPath;
+}
+
+void SystemConfig::setConfigPath(std::string configPath)
+{
+	this->configPath = configPath;
 }
 
 void SystemConfig::resetHostname()

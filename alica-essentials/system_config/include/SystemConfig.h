@@ -15,6 +15,7 @@
 #include "Configuration.h"
 
 const std::string DOMAIN_FOLDER="DOMAIN_FOLDER";
+const std::string DOMAIN_CONFIG_FOLDER="DOMAIN_CONFIG_FOLDER";
 
 class SystemConfig;
 
@@ -37,8 +38,6 @@ protected:
   static SystemConfigPtr instance;
 
   static std::string rootPath;
-  static std::string libPath;
-  static std::string logPath;
   static std::string configPath;
 
   static std::string hostname;
@@ -62,10 +61,10 @@ public:
   Configuration *operator[](const std::string s);
 
   std::string getRootPath();
-  std::string getLibPath();
-  std::string getLogPath();
   std::string getConfigPath();
   bool fileExists(const std::string& filename);
+  void setRootPath(std::string rootPath);
+  void setConfigPath(std::string configPath);
   static std::string GetEnv(const std::string& var);
 };
 
