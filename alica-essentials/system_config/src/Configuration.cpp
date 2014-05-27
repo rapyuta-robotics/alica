@@ -33,7 +33,7 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 	{
 
 		std::getline(*content, line);
-		boost::algorithm::trim_left(line);
+		line = Configuration::trimLeft(line);
 
 		int lineLen = line.size();
 
@@ -54,7 +54,7 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 				{
 					std::string comment = line.substr(1, line.size() - 1);
 
-					boost::trim(comment);
+					comment = Configuration::trim(comment);
 					currentNode->create(ConfigNode::Comment, comment);
 
 					chrPos += line.size() - 1;
@@ -181,8 +181,8 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 							key = element.substr(0, eq - 1);
 							value = element.substr(eq + 1, element.size() - eq - 1);
 
-							boost::algorithm::trim(key);
-							boost::algorithm::trim(value);
+							key = Configuration::trim(key);
+							value = Configuration::trim(value);
 						}
 
 						boost::any a(value);
@@ -503,3 +503,28 @@ std::shared_ptr<std::vector<std::string> > Configuration::tryGetNames(std::strin
 	return result;
 }
 
+std::string Configuration::trimLeft(const std::string& str,
+                 const std::string& whitespace)
+{
+    const auto strBegin = str.find_first_not_of(whitespace);
+    if (strBegin == std::string::npos) {
+        return ""; // no content
+    }
+    //const auto strEnd = str.find_last_not_of(whitespace);
+    //const auto strRange = strEnd - strBegin + 1;
+
+    return str.substr(strBegin, str.length());
+}
+
+std::string Configuration::trim(const std::string& str,
+                 const std::string& whitespace)
+{
+    const auto strBegin = str.find_first_not_of(whitespace);
+    if (strBegin == std::string::npos) {
+        return ""; // no content
+    }
+    const auto strEnd = str.find_last_not_of(whitespace);
+    const auto strRange = strEnd - strBegin + 1;
+
+    return str.substr(strBegin, strRange);
+}

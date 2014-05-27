@@ -6,8 +6,6 @@
 #include <thread>
 #include <sys/stat.h>
 
-#include <boost/thread.hpp>
-
 #include "SystemConfig.h"
 
 // Initialize static variables

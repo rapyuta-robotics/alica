@@ -217,6 +217,9 @@ public:
 
   std::string serialize();
 
+  std::string trimLeft(const std::string& str, const std::string& whitespace  = " \t");
+  std::string trim(const std::string& str, const std::string& whitespace  = " \t");
+
   template<typename T>
   T get(const char *path, ...)
   {
