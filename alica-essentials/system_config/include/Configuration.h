@@ -7,29 +7,15 @@
 #include <fstream>
 #include <cstdarg>
 #include <sstream>
+#include <memory>
 #include <string>
 #include <cstdarg>
 #include <stdint.h>
 #include <stdlib.h>
+#include <algorithm>
 
 #include "ConfigException.h"
 
-
-/*#define CONSUME_PARAMS(path) \
-std::shared_ptr<std::vector<std::string> > params(new std::vector<std::string>());\
-if (path != NULL) {\
-	va_list ap;\
-	va_start(ap, path);\
-	const char *temp = path;\
-	do { \
-		std::vector<std::string> result; \
-		split(result, temp, std::any_of("."));\
-		for (size_t i = 0; i < result.size(); i++) { \
-			params->push_back(result[i]); \
-		} \
-	} while ((temp = va_arg(ap, const char *)) != NULL); \
-	va_end(ap); \
-}*/
 
 class ConfigNode;
 
@@ -40,122 +26,122 @@ class ConfigNode
 
 public:
 
-  typedef enum
-  {
-    Node = 0, Leaf = 1, Comment = 2,
-  } Type;
+	typedef enum
+	{
+		Node = 0, Leaf = 1, Comment = 2,
+	} Type;
 
 protected:
 
-  std::string name;
-  std::string value;
-  ConfigNode *parent;
-  std::vector<ConfigNodePtr> children;
-  int depth;
-  Type type;
+	std::string name;
+	std::string value;
+	ConfigNode *parent;
+	std::vector<ConfigNodePtr> children;
+	int depth;
+	Type type;
 
 public:
 
-  ConfigNode(std::string name) :
-      name(name), value(), parent(NULL), children(), depth(0), type(Node)
-  {
-  }
+	ConfigNode(std::string name) :
+		name(name), value(), parent(NULL), children(), depth(0), type(Node)
+{
+}
 
-  ConfigNode(Type type, std::string name) :
-      name(name), value(), parent(NULL), children(), depth(0), type(type)
-  {
-  }
+	ConfigNode(Type type, std::string name) :
+		name(name), value(), parent(NULL), children(), depth(0), type(type)
+	{
+	}
 
-  ConfigNode(std::string name, std::string &value) :
-      name(name), value(value), parent(NULL), children(), depth(0), type(Leaf)
-  {
-  }
+	ConfigNode(std::string name, std::string &value) :
+		name(name), value(value), parent(NULL), children(), depth(0), type(Leaf)
+	{
+	}
 
-  ConfigNode(const ConfigNode &other) :
-      name(other.name), value(other.value), parent(other.parent), children(other.children), depth(other.depth), type(
-          other.type)
-  {
-  }
+	ConfigNode(const ConfigNode &other) :
+		name(other.name), value(other.value), parent(other.parent), children(other.children), depth(other.depth), type(
+				other.type)
+	{
+	}
 
-  ~ConfigNode()
-  {
-//				std::cout << "deleting " << this->name << std::endl;
-  }
+	~ConfigNode()
+	{
+		//				std::cout << "deleting " << this->name << std::endl;
+	}
 
-  ConfigNode *create(std::string name)
-  {
-    this->children.push_back(ConfigNodePtr(new ConfigNode(name)));
-    this->children.back()->setParent(this);
-    return this->children.back().get();
-  }
+	ConfigNode *create(std::string name)
+	{
+		this->children.push_back(ConfigNodePtr(new ConfigNode(name)));
+		this->children.back()->setParent(this);
+		return this->children.back().get();
+	}
 
-  ConfigNode *create(Type type, std::string name)
-  {
-    this->children.push_back(ConfigNodePtr(new ConfigNode(type, name)));
-    this->children.back()->setParent(this);
-    return this->children.back().get();
-  }
+	ConfigNode *create(Type type, std::string name)
+	{
+		this->children.push_back(ConfigNodePtr(new ConfigNode(type, name)));
+		this->children.back()->setParent(this);
+		return this->children.back().get();
+	}
 
-  ConfigNode *create(std::string name, std::string &value)
-  {
-    this->children.push_back(ConfigNodePtr(new ConfigNode(name, value)));
-    this->children.back()->setParent(this);
-    return this->children.back().get();
-  }
+	ConfigNode *create(std::string name, std::string &value)
+	{
+		this->children.push_back(ConfigNodePtr(new ConfigNode(name, value)));
+		this->children.back()->setParent(this);
+		return this->children.back().get();
+	}
 
-  std::vector<ConfigNodePtr> *getChildren()
-  {
-    return &this->children;
-  }
+	std::vector<ConfigNodePtr> *getChildren()
+								  {
+		return &this->children;
+								  }
 
-  ConfigNode *getParent()
-  {
-    return this->parent;
-  }
+	ConfigNode *getParent()
+	{
+		return this->parent;
+	}
 
-  void setParent(ConfigNode *parent)
-  {
-    this->parent = parent;
-    this->depth = parent->depth + 1;
-  }
+	void setParent(ConfigNode *parent)
+	{
+		this->parent = parent;
+		this->depth = parent->depth + 1;
+	}
 
-  const std::string &getValue() const
-  {
-    return this->value;
-  }
+	const std::string &getValue() const
+	{
+		return this->value;
+	}
 
-  void setValue(std::string &value)
-  {
-    this->value = value;
-  }
+	void setValue(std::string &value)
+	{
+		this->value = value;
+	}
 
-  const std::string &getName() const
-  {
-    return this->name;
-  }
+	const std::string &getName() const
+	{
+		return this->name;
+	}
 
-  int getDepth() const
-  {
-    return this->depth;
-  }
+	int getDepth() const
+	{
+		return this->depth;
+	}
 
-  Type getType() const
-  {
-    return this->type;
-  }
+	Type getType() const
+	{
+		return this->type;
+	}
 
-  ConfigNode &operator=(const ConfigNode &other)
-  {
+	ConfigNode &operator=(const ConfigNode &other)
+	{
 
-    this->name = other.name;
-    this->value = other.value;
-    this->parent = other.parent;
-    this->children = other.children;
-    this->depth = other.depth;
-    this->type = other.type;
+		this->name = other.name;
+		this->value = other.value;
+		this->parent = other.parent;
+		this->children = other.children;
+		this->depth = other.depth;
+		this->type = other.type;
 
-    return *this;
-  }
+		return *this;
+	}
 };
 
 class Configuration
@@ -163,182 +149,193 @@ class Configuration
 
 protected:
 
-  std::string filename;
+	std::string filename;
 
-  ConfigNodePtr configRoot;
+	ConfigNodePtr configRoot;
 
-  void serialize_internal(std::ostringstream *ss, ConfigNode *node);
+	void serialize_internal(std::ostringstream *ss, ConfigNode *node);
 
-  template<typename Target>
-  Target convert(std::string value)
-  {
+	template<typename Target>
+	Target convert(std::string value)
+	{
 
-    if (typeid(Target) == typeid(bool))
-    {
+		if (typeid(Target) == typeid(bool))
+		{
 
-     // boost::algorithm::to_lower(value);
-      //std::transform(value.begin(), value.end(), value.begin(), ::tolower);
+			std::transform(value.begin(), value.end(), value.begin(), ::tolower);
 
-      if (("false" == value) || ("no" == value) || ("0" == value))
-      {
-        return false;
-      }
+			if (("false" == value) || ("no" == value) || ("0" == value))
+			{
+				return false;
+			}
 
-     // return boost::lexical_cast<Target>(true);
-      return true;
-    }
+			// return boost::lexical_cast<Target>(true);
+			return true;
+		}
 
-    std::cout << "Value " << value << std::endl;
-    return atoi(value.c_str());
-  }
+		std::cout << "Value " << value << std::endl;
+		return atoi(value.c_str());
+	}
 
-  void collect(ConfigNode *node, std::vector<std::string> *params, size_t offset, std::vector<ConfigNode *> *result);
-  void collectSections(ConfigNode *node, std::vector<std::string> *params, size_t offset,
-                       std::vector<ConfigNode *> *result);
-  std::string pathNotFound(std::vector<std::string> *params);
+	void collect(ConfigNode *node, std::vector<std::string> *params, size_t offset, std::vector<ConfigNode *> *result);
+	void collectSections(ConfigNode *node, std::vector<std::string> *params, size_t offset,
+	                     std::vector<ConfigNode *> *result);
+	std::string pathNotFound(std::vector<std::string> *params);
 
 public:
-  Configuration();
-  Configuration(std::string filename);
-  Configuration(std::string filename, const std::string content);
+	Configuration();
+	Configuration(std::string filename);
+	Configuration(std::string filename, const std::string content);
 
 
-  inline void load(std::string filename)
-  {
-    load(filename, std::shared_ptr<std::ifstream>(new std::ifstream(filename.c_str(), std::ifstream::in)), false,
-         false);
-  }
+	inline void load(std::string filename)
+	{
+		load(filename, std::shared_ptr<std::ifstream>(new std::ifstream(filename.c_str(), std::ifstream::in)), false,
+		     false);
+	}
 
-  void load(std::string filename, std::shared_ptr<std::istream> content, bool create, bool replace);
+	void load(std::string filename, std::shared_ptr<std::istream> content, bool create, bool replace);
 
-  void store();
-  void store(std::string filename);
+	void store();
+	void store(std::string filename);
 
-  std::string serialize();
+	std::string serialize();
 
-  std::string trimLeft(const std::string& str, const std::string& whitespace  = " \t");
-  std::string trim(const std::string& str, const std::string& whitespace  = " \t");
-  std::shared_ptr<std::vector<std::string> > split(const char *path , char seperator);
+	std::string trimLeft(const std::string& str, const std::string& whitespace  = " \t");
+	std::string trim(const std::string& str, const std::string& whitespace  = " \t");
+	std::shared_ptr<std::vector<std::string> > split(char seperator, const char *path , va_list ap);
 
-  template<typename T>
-  T get(const char *path, ...)
-  {
-
-		std::shared_ptr<std::vector<std::string> > params;
-		params = split(path, '.');
-
-    std::vector<ConfigNode *> nodes;
-
-    collect(this->configRoot.get(), params.get(), 0, &nodes);
-
-    if (nodes.size() == 0)
-    {
-      throw ConfigException(pathNotFound(params.get()));
-    }
-
-    return convert<T>(nodes[0]->getValue());
-  }
-
-  template<typename T>
-  std::shared_ptr<std::vector<T> > getAll(const char *path, ...)
-  {
+	template<typename T>
+	T get(const char *path, ...)
+	{
 
 		std::shared_ptr<std::vector<std::string> > params;
-		params = split(path, '.');
+		va_list ap;
+		va_start(ap, path);
+		params = split('.', path, ap);
+		va_end(ap);
+		std::vector<ConfigNode *> nodes;
 
-    std::vector<ConfigNode *> nodes;
+		collect(this->configRoot.get(), params.get(), 0, &nodes);
 
-    collect(this->configRoot.get(), params.get(), 0, &nodes);
+		if (nodes.size() == 0)
+		{
+			throw ConfigException(pathNotFound(params.get()));
+		}
 
-    if (nodes.size() == 0)
-    {
-      throw ConfigException(pathNotFound(params.get()));
-    }
+		return convert<T>(nodes[0]->getValue());
+	}
 
-    std::shared_ptr<std::vector<T> > result(new std::vector<T>());
-
-    for (int i = 0; i < nodes.size(); i++)
-    {
-      result->push_back(convert<T>(nodes[i]->getValue()));
-    }
-
-    return result;
-
-  }
-
-  template<typename T>
-  T tryGet(T d, const char *path, ...)
-  {
+	template<typename T>
+	std::shared_ptr<std::vector<T> > getAll(const char *path, ...)
+	{
 
 		std::shared_ptr<std::vector<std::string> > params;
-		params = split(path, '.');
+		va_list ap;
+		va_start(ap, path);
+		params = split('.', path, ap);
+		va_end(ap);
+		std::vector<ConfigNode *> nodes;
 
-    std::vector<ConfigNode *> nodes;
+		collect(this->configRoot.get(), params.get(), 0, &nodes);
 
-    collect(this->configRoot.get(), params.get(), 0, &nodes);
+		if (nodes.size() == 0)
+		{
+			throw ConfigException(pathNotFound(params.get()));
+		}
 
-    if (nodes.size() == 0)
-    {
-      return d;
-    }
+		std::shared_ptr<std::vector<T> > result(new std::vector<T>());
 
-    return convert<T>(nodes[0]->getValue());
-  }
+		for (int i = 0; i < nodes.size(); i++)
+		{
+			result->push_back(convert<T>(nodes[i]->getValue()));
+		}
 
-  template<typename T>
-  std::shared_ptr<std::vector<T> > tryGetAll(T d, const char *path, ...)
-  {
+		return result;
 
-		std::shared_ptr<std::vector<std::string> > params;
-		params = split(path, '.');
+	}
 
-    std::vector<ConfigNode *> nodes;
-
-    collect(this->configRoot.get(), params.get(), 0, &nodes);
-
-    std::shared_ptr<std::vector<T> > result(new std::vector<T>());
-
-    if (nodes.size() == 0)
-    {
-
-      result->push_back(d);
-
-      return result;
-    }
-
-    for (int i = 0; i < nodes.size(); i++)
-    {
-      result->push_back(convert<T>(nodes[i]->getValue()));
-    }
-
-    return result;
-  }
-
-  template<typename T>
-  void set(T value, const char *path, ...)
-  {
+	template<typename T>
+	T tryGet(T d, const char *path, ...)
+	{
 
 		std::shared_ptr<std::vector<std::string> > params;
-		params = split(path, '.');
+		va_list ap;
+		va_start(ap, path);
+		params = split('.', path, ap);
+		va_end(ap);
 
-    std::vector<ConfigNode *> nodes;
+		std::vector<ConfigNode *> nodes;
 
-    collect(this->configRoot.get(), params.get(), 0, &nodes);
+		collect(this->configRoot.get(), params.get(), 0, &nodes);
 
-    for (int i = 0; i < nodes.size(); i++)
-    {
-      if (nodes[i]->getType() == ConfigNode::Leaf)
-      {
-        nodes[i]->setValue(value);
-      }
-    }
-  }
+		if (nodes.size() == 0)
+		{
+			return d;
+		}
 
-  std::shared_ptr<std::vector<std::string> > getSections(const char *path, ...);
-  std::shared_ptr<std::vector<std::string> > getNames(const char *path, ...);
+		return convert<T>(nodes[0]->getValue());
+	}
 
-  std::shared_ptr<std::vector<std::string> > tryGetSections(std::string d, const char *path, ...);
-  std::shared_ptr<std::vector<std::string> > tryGetNames(std::string d, const char *path, ...);
+	template<typename T>
+	std::shared_ptr<std::vector<T> > tryGetAll(T d, const char *path, ...)
+	{
+		std::shared_ptr<std::vector<std::string> > params;
+		va_list ap;
+		va_start(ap, path);
+		params = split('.', path, ap);
+		va_end(ap);
+
+		std::vector<ConfigNode *> nodes;
+
+		collect(this->configRoot.get(), params.get(), 0, &nodes);
+
+		std::shared_ptr<std::vector<T> > result(new std::vector<T>());
+
+		if (nodes.size() == 0)
+		{
+
+			result->push_back(d);
+
+			return result;
+		}
+
+		for (int i = 0; i < nodes.size(); i++)
+		{
+			result->push_back(convert<T>(nodes[i]->getValue()));
+		}
+
+		return result;
+	}
+
+	template<typename T>
+	void set(T value, const char *path, ...)
+	{
+
+		std::shared_ptr<std::vector<std::string> > params;
+		va_list ap;
+		va_start(ap, path);
+		params = split('.', path, ap);
+		va_end(ap);
+
+		std::vector<ConfigNode *> nodes;
+
+		collect(this->configRoot.get(), params.get(), 0, &nodes);
+
+		for (int i = 0; i < nodes.size(); i++)
+		{
+			if (nodes[i]->getType() == ConfigNode::Leaf)
+			{
+				nodes[i]->setValue(value);
+			}
+		}
+	}
+
+	std::shared_ptr<std::vector<std::string> > getSections(const char *path, ...);
+	std::shared_ptr<std::vector<std::string> > getNames(const char *path, ...);
+
+	std::shared_ptr<std::vector<std::string> > tryGetSections(std::string d, const char *path, ...);
+	std::shared_ptr<std::vector<std::string> > tryGetNames(std::string d, const char *path, ...);
 };
 
 #endif /* CONFIGURATION_H_ */

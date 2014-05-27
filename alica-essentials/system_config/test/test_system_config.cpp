@@ -11,6 +11,14 @@ TEST(SystemConfigBasics, ownRobotID)
   EXPECT_TRUE(ownID>0);
 }
 
+TEST(SystemConfigBasics, ownRobotID2)
+{
+  SystemConfigPtr sc = SystemConfig::getInstance();
+
+  int ownID = (*sc)["Globals"]->get<int>("Globals.Team", SystemConfig::getHostname().c_str(), "ID", NULL);
+  EXPECT_TRUE(ownID>0);
+}
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv){
 testing::InitGoogleTest(&argc, argv);

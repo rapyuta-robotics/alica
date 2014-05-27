@@ -6,13 +6,13 @@ filename(), configRoot(new ConfigNode("root"))
 }
 
 Configuration::Configuration(std::string filename) :
-				filename(filename), configRoot(new ConfigNode("root"))
+														filename(filename), configRoot(new ConfigNode("root"))
 {
 	load(filename);
 }
 
 Configuration::Configuration(std::string filename, const std::string content) :
-				filename(filename), configRoot(new ConfigNode("root"))
+														filename(filename), configRoot(new ConfigNode("root"))
 {
 	load(filename, std::shared_ptr<std::istream>(new std::istringstream(content)), false, false);
 }
@@ -204,7 +204,7 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 	{
 		std::ostringstream ss;
 		ss << "Parse error in " << filename << ", line " << linePos << " character " << line.size()
-						<< ": no closing tag found!";
+																<< ": no closing tag found!";
 		throw ConfigException(ss.str());
 	}
 }
@@ -233,7 +233,7 @@ void Configuration::serialize_internal(std::ostringstream *ss, ConfigNode *node)
 	{
 
 		*ss << std::string(4 * node->getDepth(), ' ') << node->getName() << " = "
-				<< boost::any_cast<std::string>(node->getValue()) << std::endl;
+				<< node->getValue() << std::endl;
 
 	}
 	else
@@ -344,7 +344,6 @@ void Configuration::collectSections(ConfigNode *node, std::vector<std::string> *
 
 			if ((*children)[j]->getName().compare((*params)[i]) == 0)
 			{
-				//					printf("found true mit %s\n", (*children)[j]->getName().c_str());
 				collectSections((*children)[j].get(), params, offset + 1, result);
 				found = true;
 			}
@@ -386,14 +385,12 @@ std::shared_ptr<std::vector<std::string> > Configuration::getSections(const char
 {
 
 	std::shared_ptr<std::vector<std::string> > params;
-	params = split(path, '.');
+	va_list ap;
+	va_start(ap, path);
+	params = split('.', path, ap);
+	va_end(ap);
 
 	std::vector<ConfigNode *> nodes;
-
-	//        for(unsigned int i = 0; i < params->size(); i++){
-	//			printf("Params %d %s\n", i, (*params)[i].c_str());
-
-	//        }
 
 	collectSections(this->configRoot.get(), params.get(), 0, &nodes);
 
@@ -406,7 +403,6 @@ std::shared_ptr<std::vector<std::string> > Configuration::getSections(const char
 
 	for (unsigned int i = 0; i < nodes.size(); i++)
 	{
-		//printf("Nodes as result: %u %s\n", i, nodes[i]->getName().c_str());
 
 		if (nodes[i]->getType() == ConfigNode::Node)
 		{
@@ -421,7 +417,10 @@ std::shared_ptr<std::vector<std::string> > Configuration::getNames(const char *p
 {
 
 	std::shared_ptr<std::vector<std::string> > params;
-	params = split(path, '.');
+	va_list ap;
+	va_start(ap, path);
+	params = split('.', path, ap);
+	va_end(ap);
 
 	std::vector<ConfigNode *> nodes;
 
@@ -449,7 +448,10 @@ std::shared_ptr<std::vector<std::string> > Configuration::tryGetSections(std::st
 {
 
 	std::shared_ptr<std::vector<std::string> > params;
-	params = split(path, '.');
+	va_list ap;
+	va_start(ap, path);
+	params = split('.', path, ap);
+	va_end(ap);
 
 	std::vector<ConfigNode *> nodes;
 
@@ -478,10 +480,11 @@ std::shared_ptr<std::vector<std::string> > Configuration::tryGetSections(std::st
 
 std::shared_ptr<std::vector<std::string> > Configuration::tryGetNames(std::string d, const char *path, ...)
 {
-
 	std::shared_ptr<std::vector<std::string> > params;
-	params = split(path, '.');
-
+	va_list ap;
+	va_start(ap, path);
+	params = split('.', path, ap);
+	va_end(ap);
 	std::vector<ConfigNode *> nodes;
 
 	collect(this->configRoot.get(), params.get(), 0, &nodes);
@@ -514,8 +517,6 @@ std::string Configuration::trimLeft(const std::string& str,
 	if (strBegin == std::string::npos) {
 		return ""; // no content
 	}
-	//const auto strEnd = str.find_last_not_of(whitespace);
-	//const auto strRange = strEnd - strBegin + 1;
 
 	return str.substr(strBegin, str.length());
 }
@@ -532,27 +533,20 @@ std::string Configuration::trim(const std::string& str,
 
 	return str.substr(strBegin, strRange);
 }
-std::shared_ptr<std::vector<std::string> > Configuration::split(const char *path , char seperator){
+std::shared_ptr<std::vector<std::string> > Configuration::split(char seperator, const char *path , va_list ap){
 	std::shared_ptr<std::vector<std::string> > params(new std::vector<std::string>());
 	if (path != NULL) {
-		va_list ap;
-		va_start(ap, path);
 		const char *temp = path;
 		do {
-			std::vector<std::string> result;
 			std::string::size_type p = 0;
 			std::string::size_type q;
-			std::string charString = path;
+			std::string charString = temp;
 			while ((q = charString.find(seperator, p)) != std::string::npos) {
-				result.emplace_back(path, p, q - p);
+				params->emplace_back(temp, p, q - p);
 				p = q + 1;
 			}
-			result.emplace_back(path, p);
-			for (size_t i = 0; i < result.size(); i++) {
-				params->push_back(result[i]);
-			}
+			params->emplace_back(temp, p, charString.length());
 		} while ((temp = va_arg(ap, const char *)) != NULL);
-		va_end(ap);
 	}
 	return params;
 }

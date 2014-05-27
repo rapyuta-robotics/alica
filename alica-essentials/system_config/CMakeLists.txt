@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 find_package(catkin REQUIRED)
 
 ## System dependencies are found with CMake's conventions
-find_package(Boost REQUIRED COMPONENTS system filesystem)
+#find_package(Boost REQUIRED COMPONENTS system filesystem)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -82,7 +82,7 @@ catkin_package(
  INCLUDE_DIRS include
  LIBRARIES system_config
 # CATKIN_DEPENDS other_catkin_pkg
- DEPENDS system filesystem
+# DEPENDS system filesystem
 )
 
 ###########
@@ -91,7 +91,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include  ${catkin_LIBRARIES} ${Boost_INCLUDE_DIR})
+include_directories(include  ${catkin_LIBRARIES})
 
 ## Declare a cpp library
 add_library(system_config
@@ -109,9 +109,7 @@ add_library(system_config
 # add_dependencies(system_config_node system_config_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(system_config
-  ${catkin_LIBRARIES} ${Boost_LIBRARIES}
-)
+target_link_libraries(system_config ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -155,7 +153,7 @@ target_link_libraries(system_config
 ## Add gtest based cpp test target and link libraries
 catkin_add_gtest(${PROJECT_NAME}-test test/test_system_config.cpp)
 if(TARGET ${PROJECT_NAME}-test)
-  target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${Boost_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
   #add_dependencies(system_config-test system_config)
 endif()
 
