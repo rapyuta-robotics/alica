@@ -10,10 +10,12 @@
 #include <string>
 #include <cstdarg>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "ConfigException.h"
 
-#define CONSUME_PARAMS(path) \
+
+/*#define CONSUME_PARAMS(path) \
 std::shared_ptr<std::vector<std::string> > params(new std::vector<std::string>());\
 if (path != NULL) {\
 	va_list ap;\
@@ -21,13 +23,13 @@ if (path != NULL) {\
 	const char *temp = path;\
 	do { \
 		std::vector<std::string> result; \
-		boost::split(result, temp, boost::is_any_of(".")); \
+		split(result, temp, std::any_of("."));\
 		for (size_t i = 0; i < result.size(); i++) { \
 			params->push_back(result[i]); \
 		} \
 	} while ((temp = va_arg(ap, const char *)) != NULL); \
 	va_end(ap); \
-}
+}*/
 
 class ConfigNode;
 
@@ -175,7 +177,7 @@ protected:
     {
 
      // boost::algorithm::to_lower(value);
-      std::transform(value.begin(), value.end(), value.begin(), ::tolower);
+      //std::transform(value.begin(), value.end(), value.begin(), ::tolower);
 
       if (("false" == value) || ("no" == value) || ("0" == value))
       {
@@ -200,6 +202,7 @@ public:
   Configuration(std::string filename);
   Configuration(std::string filename, const std::string content);
 
+
   inline void load(std::string filename)
   {
     load(filename, std::shared_ptr<std::ifstream>(new std::ifstream(filename.c_str(), std::ifstream::in)), false,
@@ -215,12 +218,14 @@ public:
 
   std::string trimLeft(const std::string& str, const std::string& whitespace  = " \t");
   std::string trim(const std::string& str, const std::string& whitespace  = " \t");
+  std::shared_ptr<std::vector<std::string> > split(const char *path , char seperator);
 
   template<typename T>
   T get(const char *path, ...)
   {
 
-    CONSUME_PARAMS(path);
+		std::shared_ptr<std::vector<std::string> > params;
+		params = split(path, '.');
 
     std::vector<ConfigNode *> nodes;
 
@@ -238,7 +243,8 @@ public:
   std::shared_ptr<std::vector<T> > getAll(const char *path, ...)
   {
 
-    CONSUME_PARAMS(path);
+		std::shared_ptr<std::vector<std::string> > params;
+		params = split(path, '.');
 
     std::vector<ConfigNode *> nodes;
 
@@ -264,7 +270,8 @@ public:
   T tryGet(T d, const char *path, ...)
   {
 
-    CONSUME_PARAMS(path);
+		std::shared_ptr<std::vector<std::string> > params;
+		params = split(path, '.');
 
     std::vector<ConfigNode *> nodes;
 
@@ -282,7 +289,8 @@ public:
   std::shared_ptr<std::vector<T> > tryGetAll(T d, const char *path, ...)
   {
 
-    CONSUME_PARAMS(path);
+		std::shared_ptr<std::vector<std::string> > params;
+		params = split(path, '.');
 
     std::vector<ConfigNode *> nodes;
 
@@ -310,7 +318,8 @@ public:
   void set(T value, const char *path, ...)
   {
 
-    CONSUME_PARAMS(path);
+		std::shared_ptr<std::vector<std::string> > params;
+		params = split(path, '.');
 
     std::vector<ConfigNode *> nodes;
 

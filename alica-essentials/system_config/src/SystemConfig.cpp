@@ -1,11 +1,3 @@
-#include <stdlib.h>
-#include <unistd.h>
-#include <iostream>
-#include <fstream>
-#include <mutex>
-#include <thread>
-#include <sys/stat.h>
-
 #include "SystemConfig.h"
 
 // Initialize static variables
@@ -40,8 +32,8 @@ SystemConfigPtr SystemConfig::getInstance()
 		if (x == NULL)
 		{
 
-			char cwd[PATH_MAX];
-			if (::getcwd(cwd, PATH_MAX) == NULL)
+			char cwd[4096];
+			if (::getcwd(cwd, 4096) == NULL)
 			{
 				std::cout << "SystemConfig: Error while calling getcwd!" << std::endl;
 			}

@@ -4,10 +4,13 @@
 #include <map>
 #include <string>
 #include <mutex>
+#include <thread>
 #include <memory>
-
-#include <boost/thread/mutex.hpp>
-#include <boost/filesystem.hpp>
+#include <fstream>
+#include <iostream>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 #include "Configuration.h"
 

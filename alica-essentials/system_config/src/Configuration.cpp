@@ -1,18 +1,18 @@
 #include "Configuration.h"
 
 Configuration::Configuration() :
-		filename(), configRoot(new ConfigNode("root"))
+filename(), configRoot(new ConfigNode("root"))
 {
 }
 
 Configuration::Configuration(std::string filename) :
-		filename(filename), configRoot(new ConfigNode("root"))
+				filename(filename), configRoot(new ConfigNode("root"))
 {
 	load(filename);
 }
 
 Configuration::Configuration(std::string filename, const std::string content) :
-		filename(filename), configRoot(new ConfigNode("root"))
+				filename(filename), configRoot(new ConfigNode("root"))
 {
 	load(filename, std::shared_ptr<std::istream>(new std::istringstream(content)), false, false);
 }
@@ -59,7 +59,7 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 
 					chrPos += line.size() - 1;
 				}
-					continue;
+				continue;
 
 				case '<':
 				case '[':
@@ -88,7 +88,7 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 					}
 
 					std::string name = line.substr(1, end - 1);
-//							std::cout << "'" << line << "' '" << name << "' " << end << std::endl;
+					//							std::cout << "'" << line << "' '" << name << "' " << end << std::endl;
 
 					if ((name[0] == '/') || (name[0] == '!'))
 					{
@@ -111,7 +111,7 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 
 						currentNode = currentNode->getParent();
 
-//								std::cout << "<- " << name << std::endl;
+						//								std::cout << "<- " << name << std::endl;
 
 					}
 					else
@@ -129,7 +129,7 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 
 					chrPos += (end + 1);
 				}
-					break;
+				break;
 
 				default:
 					chrPos++;
@@ -204,7 +204,7 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 	{
 		std::ostringstream ss;
 		ss << "Parse error in " << filename << ", line " << linePos << " character " << line.size()
-				<< ": no closing tag found!";
+						<< ": no closing tag found!";
 		throw ConfigException(ss.str());
 	}
 }
@@ -274,7 +274,7 @@ std::string Configuration::serialize()
 }
 
 void Configuration::collect(ConfigNode *node, std::vector<std::string> *params, size_t offset,
-							std::vector<ConfigNode *> *result)
+                            std::vector<ConfigNode *> *result)
 {
 
 	std::vector<ConfigNodePtr> *children = node->getChildren();
@@ -306,23 +306,23 @@ void Configuration::collect(ConfigNode *node, std::vector<std::string> *params, 
 }
 
 void Configuration::collectSections(ConfigNode *node, std::vector<std::string> *params, size_t offset,
-									std::vector<ConfigNode *> *result)
+                                    std::vector<ConfigNode *> *result)
 {
 
 	std::vector<ConfigNodePtr> *children = node->getChildren();
 
-//		for(unsigned int i = 0; i < children->size(); i++){
+	//		for(unsigned int i = 0; i < children->size(); i++){
 
-//			printf("Children %d %s\n", i, (*children)[i]->getName().c_str());
+	//			printf("Children %d %s\n", i, (*children)[i]->getName().c_str());
 
-//		}
+	//		}
 
-//		printf("offset %u\n", (unsigned int)offset);
-//		printf("params->size %u\n", (unsigned int)params->size());
+	//		printf("offset %u\n", (unsigned int)offset);
+	//		printf("params->size %u\n", (unsigned int)params->size());
 
 	if (offset == params->size())
 	{
-//			printf("pushed %s\n", node->getName().c_str());
+		//			printf("pushed %s\n", node->getName().c_str());
 		//result->push_back(node);
 		for (unsigned int i = 0; i < children->size(); i++)
 		{
@@ -344,7 +344,7 @@ void Configuration::collectSections(ConfigNode *node, std::vector<std::string> *
 
 			if ((*children)[j]->getName().compare((*params)[i]) == 0)
 			{
-//					printf("found true mit %s\n", (*children)[j]->getName().c_str());
+				//					printf("found true mit %s\n", (*children)[j]->getName().c_str());
 				collectSections((*children)[j].get(), params, offset + 1, result);
 				found = true;
 			}
@@ -385,14 +385,15 @@ std::string Configuration::pathNotFound(std::vector<std::string> *params)
 std::shared_ptr<std::vector<std::string> > Configuration::getSections(const char *path, ...)
 {
 
-	CONSUME_PARAMS(path);
+	std::shared_ptr<std::vector<std::string> > params;
+	params = split(path, '.');
 
 	std::vector<ConfigNode *> nodes;
 
-//        for(unsigned int i = 0; i < params->size(); i++){
-//			printf("Params %d %s\n", i, (*params)[i].c_str());
+	//        for(unsigned int i = 0; i < params->size(); i++){
+	//			printf("Params %d %s\n", i, (*params)[i].c_str());
 
-//        }
+	//        }
 
 	collectSections(this->configRoot.get(), params.get(), 0, &nodes);
 
@@ -419,7 +420,8 @@ std::shared_ptr<std::vector<std::string> > Configuration::getSections(const char
 std::shared_ptr<std::vector<std::string> > Configuration::getNames(const char *path, ...)
 {
 
-	CONSUME_PARAMS(path);
+	std::shared_ptr<std::vector<std::string> > params;
+	params = split(path, '.');
 
 	std::vector<ConfigNode *> nodes;
 
@@ -446,7 +448,8 @@ std::shared_ptr<std::vector<std::string> > Configuration::getNames(const char *p
 std::shared_ptr<std::vector<std::string> > Configuration::tryGetSections(std::string d, const char *path, ...)
 {
 
-	CONSUME_PARAMS(path);
+	std::shared_ptr<std::vector<std::string> > params;
+	params = split(path, '.');
 
 	std::vector<ConfigNode *> nodes;
 
@@ -476,7 +479,8 @@ std::shared_ptr<std::vector<std::string> > Configuration::tryGetSections(std::st
 std::shared_ptr<std::vector<std::string> > Configuration::tryGetNames(std::string d, const char *path, ...)
 {
 
-	CONSUME_PARAMS(path);
+	std::shared_ptr<std::vector<std::string> > params;
+	params = split(path, '.');
 
 	std::vector<ConfigNode *> nodes;
 
@@ -504,28 +508,52 @@ std::shared_ptr<std::vector<std::string> > Configuration::tryGetNames(std::strin
 }
 
 std::string Configuration::trimLeft(const std::string& str,
-                 const std::string& whitespace)
+                                    const std::string& whitespace)
 {
-    const auto strBegin = str.find_first_not_of(whitespace);
-    if (strBegin == std::string::npos) {
-        return ""; // no content
-    }
-    //const auto strEnd = str.find_last_not_of(whitespace);
-    //const auto strRange = strEnd - strBegin + 1;
+	const auto strBegin = str.find_first_not_of(whitespace);
+	if (strBegin == std::string::npos) {
+		return ""; // no content
+	}
+	//const auto strEnd = str.find_last_not_of(whitespace);
+	//const auto strRange = strEnd - strBegin + 1;
 
-    return str.substr(strBegin, str.length());
+	return str.substr(strBegin, str.length());
 }
 
 std::string Configuration::trim(const std::string& str,
-                 const std::string& whitespace)
+                                const std::string& whitespace)
 {
-    const auto strBegin = str.find_first_not_of(whitespace);
-    if (strBegin == std::string::npos) {
-        return ""; // no content
-    }
-    const auto strEnd = str.find_last_not_of(whitespace);
-    const auto strRange = strEnd - strBegin + 1;
+	const auto strBegin = str.find_first_not_of(whitespace);
+	if (strBegin == std::string::npos) {
+		return ""; // no content
+	}
+	const auto strEnd = str.find_last_not_of(whitespace);
+	const auto strRange = strEnd - strBegin + 1;
 
-    return str.substr(strBegin, strRange);
+	return str.substr(strBegin, strRange);
+}
+std::shared_ptr<std::vector<std::string> > Configuration::split(const char *path , char seperator){
+	std::shared_ptr<std::vector<std::string> > params(new std::vector<std::string>());
+	if (path != NULL) {
+		va_list ap;
+		va_start(ap, path);
+		const char *temp = path;
+		do {
+			std::vector<std::string> result;
+			std::string::size_type p = 0;
+			std::string::size_type q;
+			std::string charString = path;
+			while ((q = charString.find(seperator, p)) != std::string::npos) {
+				result.emplace_back(path, p, q - p);
+				p = q + 1;
+			}
+			result.emplace_back(path, p);
+			for (size_t i = 0; i < result.size(); i++) {
+				params->push_back(result[i]);
+			}
+		} while ((temp = va_arg(ap, const char *)) != NULL);
+		va_end(ap);
+	}
+	return params;
 }
 
