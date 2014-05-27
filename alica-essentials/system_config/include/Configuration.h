@@ -150,6 +150,7 @@ class Configuration
 protected:
 
 	std::string filename;
+	std::stringstream ss;
 
 	ConfigNodePtr configRoot;
 
@@ -158,7 +159,7 @@ protected:
 	template<typename Target>
 	Target convert(std::string value)
 	{
-		std::stringstream ss;
+		ss.clear();
 		Target v;
 		if (typeid(Target) == typeid(bool)){
 			if (("false" == value) || ("no" == value) || ("0" == value))

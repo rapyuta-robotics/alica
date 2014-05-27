@@ -4,6 +4,17 @@
 #include <gtest/gtest.h>
 #include <stdio.h>
 
+
+std::string get_selfpath() {
+	char buff[1024];
+	ssize_t len = ::readlink("/proc/self/exe", buff, sizeof(buff)-1);
+	if (len != -1) {
+		buff[len] = '\0';
+		return std::string(buff);
+	} else {
+		/* handle error condition */
+	}
+}
 // Declare a test
 TEST(SystemConfigBasics, ownRobotID)
 {
@@ -22,9 +33,14 @@ TEST(SystemConfigBasics, ownRobotID2)
 
 TEST(SystemConfigBasics, testOwnEtc)
 {
+	std::string path = get_selfpath();
+	int place = path.rfind("devel");
+	path = path.substr(0, place);
+	path = path + "src/supplementary/system_config/test";
+
 	SystemConfigPtr sc = SystemConfig::getInstance();
-	sc->setRootPath("../../../src/supplementary/system_config/test");
-	sc->setConfigPath("../../../src/supplementary/system_config//test/etc");
+	sc->setRootPath(path);
+	sc->setConfigPath(path + "/etc");
 	Configuration *conf = (*sc)["Test"];
 
 	std::string testValue1 = conf->get<std::string>("TestValue1", NULL);
@@ -56,3 +72,4 @@ int main(int argc, char **argv){
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }
+
