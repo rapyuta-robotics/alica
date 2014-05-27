@@ -11,11 +11,6 @@
 #include <cstdarg>
 #include <stdint.h>
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/any.hpp>
-
 #include "ConfigException.h"
 
 #define CONSUME_PARAMS(path) \
@@ -51,7 +46,7 @@ public:
 protected:
 
   std::string name;
-  boost::any value;
+  std::string value;
   ConfigNode *parent;
   std::vector<ConfigNodePtr> children;
   int depth;
@@ -69,7 +64,7 @@ public:
   {
   }
 
-  ConfigNode(std::string name, boost::any &value) :
+  ConfigNode(std::string name, std::string &value) :
       name(name), value(value), parent(NULL), children(), depth(0), type(Leaf)
   {
   }
@@ -99,7 +94,7 @@ public:
     return this->children.back().get();
   }
 
-  ConfigNode *create(std::string name, boost::any &value)
+  ConfigNode *create(std::string name, std::string &value)
   {
     this->children.push_back(ConfigNodePtr(new ConfigNode(name, value)));
     this->children.back()->setParent(this);
@@ -122,12 +117,12 @@ public:
     this->depth = parent->depth + 1;
   }
 
-  const boost::any &getValue() const
+  const std::string &getValue() const
   {
     return this->value;
   }
 
-  void setValue(boost::any &value)
+  void setValue(std::string &value)
   {
     this->value = value;
   }
@@ -179,19 +174,20 @@ protected:
     if (typeid(Target) == typeid(bool))
     {
 
-      boost::algorithm::to_lower(value);
+     // boost::algorithm::to_lower(value);
+      std::transform(value.begin(), value.end(), value.begin(), ::tolower);
 
       if (("false" == value) || ("no" == value) || ("0" == value))
       {
-        return boost::lexical_cast<Target>(false);
+        return false;
       }
 
-      return boost::lexical_cast<Target>(true);
+     // return boost::lexical_cast<Target>(true);
+      return true;
     }
 
     std::cout << "Value " << value << std::endl;
-
-    return boost::lexical_cast<Target>(value);
+    return atoi(value.c_str());
   }
 
   void collect(ConfigNode *node, std::vector<std::string> *params, size_t offset, std::vector<ConfigNode *> *result);
@@ -235,7 +231,7 @@ public:
       throw ConfigException(pathNotFound(params.get()));
     }
 
-    return convert<T>(boost::any_cast<std::string>(nodes[0]->getValue()));
+    return convert<T>(nodes[0]->getValue());
   }
 
   template<typename T>
@@ -257,7 +253,7 @@ public:
 
     for (int i = 0; i < nodes.size(); i++)
     {
-      result->push_back(convert<T>(boost::any_cast<std::string>(nodes[i]->getValue())));
+      result->push_back(convert<T>(nodes[i]->getValue()));
     }
 
     return result;
@@ -279,7 +275,7 @@ public:
       return d;
     }
 
-    return convert<T>(boost::any_cast<std::string>(nodes[0]->getValue()));
+    return convert<T>(nodes[0]->getValue());
   }
 
   template<typename T>
@@ -304,7 +300,7 @@ public:
 
     for (int i = 0; i < nodes.size(); i++)
     {
-      result->push_back(convert<T>(boost::any_cast<std::string>(nodes[i]->getValue())));
+      result->push_back(convert<T>(nodes[i]->getValue()));
     }
 
     return result;

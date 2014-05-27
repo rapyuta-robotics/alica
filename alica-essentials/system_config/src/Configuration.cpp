@@ -185,9 +185,9 @@ void Configuration::load(std::string filename, std::shared_ptr<std::istream> con
 							value = Configuration::trim(value);
 						}
 
-						boost::any a(value);
+						//boost::any a(value);
 
-						currentNode->create(key, a);
+						currentNode->create(key, value);
 
 					}
 					else
@@ -528,3 +528,4 @@ std::string Configuration::trim(const std::string& str,
 
     return str.substr(strBegin, strRange);
 }
+
