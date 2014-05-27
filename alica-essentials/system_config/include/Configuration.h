@@ -161,15 +161,12 @@ protected:
 
 		if (typeid(Target) == typeid(bool))
 		{
-
 			std::transform(value.begin(), value.end(), value.begin(), ::tolower);
 
 			if (("false" == value) || ("no" == value) || ("0" == value))
 			{
 				return false;
 			}
-
-			// return boost::lexical_cast<Target>(true);
 			return true;
 		}
 
