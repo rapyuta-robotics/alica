@@ -11,6 +11,8 @@
 #include <cstdarg>
 #include <stdint.h>
 #include <stdlib.h>
+#include <memory>
+#include <algorithm>
 
 #include "ConfigException.h"
 
@@ -177,8 +179,7 @@ protected:
     {
 
      // boost::algorithm::to_lower(value);
-      //std::transform(value.begin(), value.end(), value.begin(), ::tolower);
-
+      std::transform(value.begin(), value.end(), value.begin(), ::tolower);
       if (("false" == value) || ("no" == value) || ("0" == value))
       {
         return false;
