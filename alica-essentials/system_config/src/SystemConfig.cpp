@@ -4,6 +4,7 @@
 #include <fstream>
 #include <mutex>
 #include <thread>
+#include <sys/stat.h>
 
 #include <boost/thread.hpp>
 
@@ -130,8 +131,7 @@ Configuration *SystemConfig::operator[](const std::string s)
 
 	for (size_t i = 0; i < files.size(); i++)
 	{
-
-		if (boost::filesystem::exists(files[i]))
+		if (fileExists(files[i]))
 		{
 
 			std::lock_guard<std::mutex>  lock(mutex);
@@ -234,4 +234,13 @@ std::string SystemConfig::GetEnv(const std::string & var)
 		std::cout << "Environment Variable " << var << " is " << val << std::endl;
 		return val;
 	}
+}
+bool SystemConfig::fileExists(const std::string& filename)
+{
+	struct stat buf;
+    if (stat(filename.c_str(), &buf) != -1)
+    {
+        return true;
+    }
+    return false;
 }

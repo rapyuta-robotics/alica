@@ -62,6 +62,7 @@ public:
   std::string getLibPath();
   std::string getLogPath();
   std::string getConfigPath();
+  bool fileExists(const std::string& filename);
   static std::string GetEnv(const std::string& var);
 };
 
