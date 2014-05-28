@@ -21,17 +21,17 @@ PlanParser::~PlanParser()
 	// TODO Auto-generated destructor stub
 }
 
-virtual Alica::Plan PlanParser::ParsePlanTree(std::string masterplan)
+virtual alica::Plan PlanParser::ParsePlanTree(std::string masterplan)
 {
 
 	return 0;
 }
-virtual Alica::RoleSet PlanParser::ParseRoleSet(std::string roleSetName, std::string roleSetDir)
+virtual alica::RoleSet PlanParser::ParseRoleSet(std::string roleSetName, std::string roleSetDir)
 {
 
 	return 0;
 }
-virtual std::map<long, Alica::AlicaElement> PlanParser::GetParsedElements()
+virtual std::map<long, alica::AlicaElement> PlanParser::GetParsedElements()
 {
 
 	return 0;

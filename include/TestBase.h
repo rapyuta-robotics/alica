@@ -22,25 +22,27 @@
 #include "engine/AlicaEngine.h"
 #include "engine/parser/tinyxml2.h"
 
-namespace Alica {
+namespace alica
+{
 
-class TestBase {
+class TestBase
+{
 public:
 	TestBase(int argc, char** argv);
 	virtual ~TestBase();
 	void ConsumeCmdLineArguments(int argc, char** argv);
-    void Run();
-    void PrintUsage();
+	void Run();
+	void PrintUsage();
 
 protected:
-    // cmd-line params
-    string masterPlan;
-    string teamColour;
-    string rolesetdir;
-    string roleset;
-    string delayStart;
-    bool simulator;
-    bool stepEngine;
+	// cmd-line params
+	string masterPlan;
+	string teamColour;
+	string rolesetdir;
+	string roleset;
+	string delayStart;
+	bool simulator;
+	bool stepEngine;
 
 	AlicaEngine *ae;
 };

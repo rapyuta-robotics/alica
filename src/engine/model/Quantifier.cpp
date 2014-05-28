@@ -7,14 +7,17 @@
 
 #include "Quantifier.h"
 
-namespace Alica {
+namespace alica
+{
 
-Quantifier::Quantifier() {
+Quantifier::Quantifier()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-Quantifier::~Quantifier() {
+Quantifier::~Quantifier()
+{
 	// TODO Auto-generated destructor stub
 }
 

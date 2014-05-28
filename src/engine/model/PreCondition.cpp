@@ -7,14 +7,17 @@
 
 #include "PreCondition.h"
 
-namespace Alica {
+namespace alica
+{
 
-PreCondition::PreCondition() {
+PreCondition::PreCondition()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-PreCondition::~PreCondition() {
+PreCondition::~PreCondition()
+{
 	// TODO Auto-generated destructor stub
 }
 

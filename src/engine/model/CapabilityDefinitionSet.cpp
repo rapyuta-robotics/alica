@@ -7,14 +7,17 @@
 
 #include "CapabilityDefinitionSet.h"
 
-namespace Alica {
+namespace alica
+{
 
-CapabilityDefinitionSet::CapabilityDefinitionSet() {
+CapabilityDefinitionSet::CapabilityDefinitionSet()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-CapabilityDefinitionSet::~CapabilityDefinitionSet() {
+CapabilityDefinitionSet::~CapabilityDefinitionSet()
+{
 	// TODO Auto-generated destructor stub
 }
 

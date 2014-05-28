@@ -7,14 +7,17 @@
 
 #include "RoleDefinitionSet.h"
 
-namespace Alica {
+namespace alica
+{
 
-RoleDefinitionSet::RoleDefinitionSet() {
+RoleDefinitionSet::RoleDefinitionSet()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-RoleDefinitionSet::~RoleDefinitionSet() {
+RoleDefinitionSet::~RoleDefinitionSet()
+{
 	// TODO Auto-generated destructor stub
 }
 

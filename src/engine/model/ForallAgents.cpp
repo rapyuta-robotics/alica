@@ -7,14 +7,17 @@
 
 #include "ForallAgents.h"
 
-namespace Alica {
+namespace alica
+{
 
-ForallAgents::ForallAgents() {
+ForallAgents::ForallAgents()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-ForallAgents::~ForallAgents() {
+ForallAgents::~ForallAgents()
+{
 	// TODO Auto-generated destructor stub
 }
 

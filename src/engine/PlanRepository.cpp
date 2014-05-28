@@ -7,7 +7,7 @@
 
 #include "PlanRepository.h"
 
-namespace Alica
+namespace alica
 {
 PlanRepository::PlanRepository()
 {

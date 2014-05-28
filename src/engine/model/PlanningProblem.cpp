@@ -7,14 +7,17 @@
 
 #include "PlanningProblem.h"
 
-namespace Alica {
+namespace alica
+{
 
-PlanningProblem::PlanningProblem() {
+PlanningProblem::PlanningProblem()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-PlanningProblem::~PlanningProblem() {
+PlanningProblem::~PlanningProblem()
+{
 	// TODO Auto-generated destructor stub
 }
 

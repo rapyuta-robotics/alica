@@ -10,9 +10,11 @@
 
 #include "AbstractPlan.h"
 
-namespace Alica {
+namespace alica
+{
 
-class BehaviourConfiguration: public AbstractPlan {
+class BehaviourConfiguration : public AbstractPlan
+{
 public:
 	BehaviourConfiguration();
 	virtual ~BehaviourConfiguration();

@@ -8,9 +8,11 @@
 #ifndef ALICAELEMENT_H_
 #define ALICAELEMENT_H_
 
-namespace Alica {
+namespace alica
+{
 
-class AlicaElement {
+class AlicaElement
+{
 public:
 	AlicaElement();
 	virtual ~AlicaElement();

@@ -10,12 +10,14 @@
 
 #include <AlicaElement.h>
 
-namespace Alica {
+namespace alica
+{
 
 /*
  *
  */
-class RoleTaskMapping: public AlicaElement {
+class RoleTaskMapping : public AlicaElement
+{
 public:
 	RoleTaskMapping();
 	virtual ~RoleTaskMapping();
