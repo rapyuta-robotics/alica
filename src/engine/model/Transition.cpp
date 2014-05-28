@@ -7,14 +7,17 @@
 
 #include "Transition.h"
 
-namespace Alica {
+namespace alica
+{
 
-Transition::Transition() {
+Transition::Transition()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-Transition::~Transition() {
+Transition::~Transition()
+{
 	// TODO Auto-generated destructor stub
 }
 

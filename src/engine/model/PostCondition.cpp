@@ -7,14 +7,17 @@
 
 #include "PostCondition.h"
 
-namespace Alica {
+namespace alica
+{
 
-PostCondition::PostCondition() {
+PostCondition::PostCondition()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-PostCondition::~PostCondition() {
+PostCondition::~PostCondition()
+{
 	// TODO Auto-generated destructor stub
 }
 

@@ -10,12 +10,14 @@
 
 #include <Condition.h>
 
-namespace Alica {
+namespace alica
+{
 
 /*
  *
  */
-class RuntimeCondition: public Condition {
+class RuntimeCondition : public Condition
+{
 public:
 	RuntimeCondition();
 	virtual ~RuntimeCondition();

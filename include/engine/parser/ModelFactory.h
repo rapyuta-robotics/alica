@@ -8,9 +8,11 @@
 #ifndef MODELFACTORY_H_
 #define MODELFACTORY_H_
 
-namespace Alica {
+namespace alica
+{
 
-class ModelFactory {
+class ModelFactory
+{
 public:
 	ModelFactory();
 	virtual ~ModelFactory();

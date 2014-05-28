@@ -12,7 +12,7 @@
 #include "ModelFactory.h";
 #include ""
 
-namespace Alica
+namespace alica
 {
 
 class PlanParser : public IPlanParser
@@ -21,10 +21,10 @@ public:
 	PlanParser();
 	virtual ~PlanParser();
 
-	virtual Alica::Plan ParsePlanTree(std::string masterplan);
-	virtual Alica::RoleSet ParseRoleSet(std::string roleSetName, std::string roleSetDir);
+	virtual alica::Plan ParsePlanTree(std::string masterplan);
+	virtual alica::RoleSet ParseRoleSet(std::string roleSetName, std::string roleSetDir);
 	virtual void IgnoreMasterPlanId(bool val);
-	virtual std::map<long, Alica::AlicaElement> GetParsedElements();
+	virtual std::map<long, alica::AlicaElement> GetParsedElements();
 
 private:
 	SystemConfig sc;

@@ -7,14 +7,17 @@
 
 #include "Characteristic.h"
 
-namespace Alica {
+namespace alica
+{
 
-Characteristic::Characteristic() {
+Characteristic::Characteristic()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-Characteristic::~Characteristic() {
+Characteristic::~Characteristic()
+{
 	// TODO Auto-generated destructor stub
 }
 

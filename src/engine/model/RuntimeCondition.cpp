@@ -7,14 +7,17 @@
 
 #include "RuntimeCondition.h"
 
-namespace Alica {
+namespace alica
+{
 
-RuntimeCondition::RuntimeCondition() {
+RuntimeCondition::RuntimeCondition()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-RuntimeCondition::~RuntimeCondition() {
+RuntimeCondition::~RuntimeCondition()
+{
 	// TODO Auto-generated destructor stub
 }
 

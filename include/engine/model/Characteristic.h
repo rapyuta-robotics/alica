@@ -10,9 +10,11 @@
 
 #include "AlicaElement.h"
 
-namespace Alica {
+namespace alica
+{
 
-class Characteristic: public AlicaElement {
+class Characteristic : public AlicaElement
+{
 public:
 	Characteristic();
 	virtual ~Characteristic();

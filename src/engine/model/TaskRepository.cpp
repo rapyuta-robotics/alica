@@ -7,14 +7,17 @@
 
 #include "TaskRepository.h"
 
-namespace Alica {
+namespace alica
+{
 
-TaskRepository::TaskRepository() {
+TaskRepository::TaskRepository()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-TaskRepository::~TaskRepository() {
+TaskRepository::~TaskRepository()
+{
 	// TODO Auto-generated destructor stub
 }
 

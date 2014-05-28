@@ -7,14 +7,17 @@
 
 #include "AlicaElement.h"
 
-namespace Alica {
+namespace alica
+{
 
-AlicaElement::AlicaElement() {
+AlicaElement::AlicaElement()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-AlicaElement::~AlicaElement() {
+AlicaElement::~AlicaElement()
+{
 	// TODO Auto-generated destructor stub
 }
 

@@ -10,9 +10,11 @@
 
 #include "AlicaElement.h"
 
-namespace Alica {
+namespace alica
+{
 
-class EntryPoint: public AlicaElement {
+class EntryPoint : public AlicaElement
+{
 public:
 	EntryPoint();
 	virtual ~EntryPoint();

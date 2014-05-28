@@ -7,14 +7,17 @@
 
 #include "SuccessState.h"
 
-namespace Alica {
+namespace alica
+{
 
-SuccessState::SuccessState() {
+SuccessState::SuccessState()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-SuccessState::~SuccessState() {
+SuccessState::~SuccessState()
+{
 	// TODO Auto-generated destructor stub
 }
 

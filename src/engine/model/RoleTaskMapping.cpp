@@ -7,14 +7,17 @@
 
 #include "RoleTaskMapping.h"
 
-namespace Alica {
+namespace alica
+{
 
-RoleTaskMapping::RoleTaskMapping() {
+RoleTaskMapping::RoleTaskMapping()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-RoleTaskMapping::~RoleTaskMapping() {
+RoleTaskMapping::~RoleTaskMapping()
+{
 	// TODO Auto-generated destructor stub
 }
 

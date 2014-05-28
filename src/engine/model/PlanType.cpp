@@ -7,14 +7,17 @@
 
 #include "PlanType.h"
 
-namespace Alica {
+namespace alica
+{
 
-PlanType::PlanType() {
+PlanType::PlanType()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-PlanType::~PlanType() {
+PlanType::~PlanType()
+{
 	// TODO Auto-generated destructor stub
 }
 

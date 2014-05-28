@@ -10,9 +10,11 @@
 
 #include "State.h"
 
-namespace Alica {
+namespace alica
+{
 
-class TerminalState: public State {
+class TerminalState : public State
+{
 public:
 	TerminalState();
 	virtual ~TerminalState();

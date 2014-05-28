@@ -7,14 +7,17 @@
 
 #include "Parametrisation.h"
 
-namespace Alica {
+namespace alica
+{
 
-Parametrisation::Parametrisation() {
+Parametrisation::Parametrisation()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-Parametrisation::~Parametrisation() {
+Parametrisation::~Parametrisation()
+{
 	// TODO Auto-generated destructor stub
 }
 
