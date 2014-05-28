@@ -10,7 +10,7 @@
 
 #include "SystemConfig.h";
 #include "ModelFactory.h";
-#include ""
+#include "PlanRepository.h"
 
 namespace alica
 {
@@ -27,9 +27,18 @@ public:
 	virtual std::map<long, alica::AlicaElement> GetParsedElements();
 
 private:
-	SystemConfig sc;
+	supplementary::SystemConfig sc;
 	ModelFactory mf;
 	PlanRepository rep;
+
+	std::list<std::string> filesToParse;
+	std::list<std::string> filesParsed;
+
+	std::string basePlanPath;
+	std::string baseRolePath;
+	std::string currentDirectory;
+	std::string esConfigRoot;
+	std::string currentFile;
 
 
 };
