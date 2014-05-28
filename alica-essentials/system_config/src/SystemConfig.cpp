@@ -1,5 +1,7 @@
 #include "SystemConfig.h"
 
+namespace supplementary
+{
 // Initialize static variables
 bool SystemConfig::initialized = false;
 
@@ -227,4 +229,5 @@ bool SystemConfig::fileExists(const std::string& filename)
         return true;
     }
     return false;
+}
 }

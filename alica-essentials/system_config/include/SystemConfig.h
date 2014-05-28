@@ -17,6 +17,8 @@
 const std::string DOMAIN_FOLDER="DOMAIN_FOLDER";
 const std::string DOMAIN_CONFIG_FOLDER="DOMAIN_CONFIG_FOLDER";
 
+namespace supplementary
+{
 class SystemConfig;
 
 typedef std::shared_ptr<SystemConfig> SystemConfigPtr;
@@ -67,5 +69,5 @@ public:
   void setConfigPath(std::string configPath);
   static std::string GetEnv(const std::string& var);
 };
-
+}
 #endif /* SYSTEMCONFIG_H_ */

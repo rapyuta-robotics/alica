@@ -15,7 +15,8 @@
 #include <algorithm>
 
 #include "ConfigException.h"
-
+namespace supplementary
+{
 
 class ConfigNode;
 
@@ -336,6 +337,6 @@ public:
 	std::shared_ptr<std::vector<std::string> > tryGetSections(std::string d, const char *path, ...);
 	std::shared_ptr<std::vector<std::string> > tryGetNames(std::string d, const char *path, ...);
 };
-
+}
 #endif /* CONFIGURATION_H_ */
 

@@ -12,6 +12,8 @@
 #include <iostream>
 #include <cstdarg>
 
+namespace supplementary
+{
 class Exception : public std::exception
 {
 
@@ -58,6 +60,6 @@ protected:
 };
 
 std::ostream &operator <<(std::ostream &os, const Exception &x);
-
+}
 #endif /* CASTOR_EXCEPTION_H */
 

@@ -1,5 +1,7 @@
 #include "Configuration.h"
 
+namespace supplementary
+{
 Configuration::Configuration() :
 		filename(), configRoot(new ConfigNode("root"))
 {
@@ -553,4 +555,4 @@ std::shared_ptr<std::vector<std::string> > Configuration::split(char seperator, 
 	}
 	return params;
 }
-
+}

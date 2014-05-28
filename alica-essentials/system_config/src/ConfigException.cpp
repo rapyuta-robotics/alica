@@ -1,5 +1,7 @@
 #include "ConfigException.h"
 
+namespace supplementary
+{
 ConfigException::ConfigException(const std::string what, ...) throw ()
 {
 	va_list params;
@@ -11,4 +13,5 @@ ConfigException::ConfigException(const std::string what, ...) throw ()
 std::ostream &operator <<(std::ostream &os, const ConfigException &x)
 {
 	return os << x.what();
+}
 }
