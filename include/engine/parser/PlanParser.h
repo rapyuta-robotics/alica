@@ -8,12 +8,30 @@
 #ifndef PLANPARSER_H_
 #define PLANPARSER_H_
 
-namespace Alica {
+#include "SystemConfig.h";
+#include "ModelFactory.h";
+#include ""
 
-class PlanParser {
+namespace Alica
+{
+
+class PlanParser : public IPlanParser
+{
 public:
 	PlanParser();
 	virtual ~PlanParser();
+
+	virtual Alica::Plan ParsePlanTree(std::string masterplan);
+	virtual Alica::RoleSet ParseRoleSet(std::string roleSetName, std::string roleSetDir);
+	virtual void IgnoreMasterPlanId(bool val);
+	virtual std::map<long, Alica::AlicaElement> GetParsedElements();
+
+private:
+	SystemConfig sc;
+	ModelFactory mf;
+	PlanRepository rep;
+
+
 };
 
 } /* namespace Alica */
