@@ -8,7 +8,7 @@
 #ifndef ROLESET_H_
 #define ROLESET_H_
 
-#include <AlicaElement.h>
+#include "AlicaElement.h"
 
 namespace alica
 {

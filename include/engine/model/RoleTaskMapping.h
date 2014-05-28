@@ -8,7 +8,7 @@
 #ifndef ROLETASKMAPPING_H_
 #define ROLETASKMAPPING_H_
 
-#include <AlicaElement.h>
+#include "engine/model/AlicaElement.h"
 
 namespace alica
 {

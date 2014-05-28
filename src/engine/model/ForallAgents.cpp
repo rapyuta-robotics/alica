@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "ForallAgents.h"
+#include "engine/model/ForallAgents.h"
 
 namespace alica
 {

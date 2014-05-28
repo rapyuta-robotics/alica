@@ -5,7 +5,7 @@
  *      Author: snook
  */
 
-#include "IPlanParser.h"
+#include "engine/IPlanParser.h"
 
 namespace alica
 {
@@ -15,8 +15,4 @@ IPlanParser::IPlanParser()
 
 }
 
-IPlanParser::~IPlanParser()
-{
-	// TODO Auto-generated destructor stub
-}
 }

@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "PostCondition.h"
+#include "engine/model/PostCondition.h"
 
 namespace alica
 {

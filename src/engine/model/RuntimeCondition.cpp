@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "RuntimeCondition.h"
+#include "engine/model/RuntimeCondition.h"
 
 namespace alica
 {

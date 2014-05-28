@@ -7,24 +7,25 @@
 
 #ifndef PLANREPOSITORY_H_
 #define PLANREPOSITORY_H_
+
 #include <stdio.h>
 #include <map>
-#include <Plan.h>
-#include <Task.h>
-#include <Behaviour.h>
-#include <BehaviourConfiguration.h>
-#include <PlanType.h>
-#include <Role.h>
-#include <Characteristic.h>
-#include <Capability.h>
-#include <State.h>
-#include <EntryPoint.h>
-#include <Transition.h>
-#include <SyncTransition.h>
-#include <Quantifier.h>
-#include <Variable.h>
-#include <RoleDefinitionSet.h>
-#include <TaskRepository.h>
+#include "model/Plan.h"
+#include "model/Task.h"
+#include "model/Behaviour.h"
+#include "model/BehaviourConfiguration.h"
+#include "model/PlanType.h"
+#include "model/Role.h"
+#include "model/Characteristic.h"
+#include "model/Capability.h"
+#include "model/State.h"
+#include "model/EntryPoint.h"
+#include "model/Transition.h"
+#include "model/SyncTransition.h"
+#include "model/Quantifier.h"
+#include "model/Variable.h"
+#include "model/RoleDefinitionSet.h"
+#include "model/TaskRepository.h"
 
 namespace alica
 {
@@ -34,22 +35,22 @@ public:
 	PlanRepository();
 	virtual ~PlanRepository();
 
-	std::map<long, alica::Plan> Plans();
-	std::map<long, alica::Task> Tasks();
-	std::map<long, alica::Behaviour> Behaviours();
-	std::map<long, alica::BehaviourConfiguration> BehaviourConfigurations();
-	std::map<long, alica::PlanType> PlanTypes();
-	std::map<long, alica::Role> Roles();
-	std::map<long, alica::Characteristic> Characteristics();
-	std::map<long, alica::Capability> Capabilities();
-	std::map<long, alica::State> States();
-	std::map<long, alica::EntryPoint> EntryPoints();
-	std::map<long, alica::Transition> Transitions();
-	std::map<long, alica::SyncTransition> SyncTransitions();
-	std::map<long, alica::Quantifier> Quantifiers();
-	std::map<long, alica::Variable> Variables();
-	std::map<long, alica::RoleDefinitionSet> RoleDefinitionSets();
-	std::map<long, alica::TaskRepository> TaskRepositorys();
+	std::map<long, alica::Plan> plans();
+	std::map<long, alica::Task> tasks();
+	std::map<long, alica::Behaviour> behaviours();
+	std::map<long, alica::BehaviourConfiguration> behaviourConfigurations();
+	std::map<long, alica::PlanType> planTypes();
+	std::map<long, alica::Role> roles();
+	std::map<long, alica::Characteristic> characteristics();
+	std::map<long, alica::Capability> capabilities();
+	std::map<long, alica::State> states();
+	std::map<long, alica::EntryPoint> entryPoints();
+	std::map<long, alica::Transition> transitions();
+	std::map<long, alica::SyncTransition> syncTransitions();
+	std::map<long, alica::Quantifier> quantifiers();
+	std::map<long, alica::Variable> variables();
+	std::map<long, alica::RoleDefinitionSet> roleDefinitionSets();
+	std::map<long, alica::TaskRepository> taskRepositorys();
 
 };
 }

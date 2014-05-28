@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "BehaviourConfiguration.h"
+#include "engine/model/BehaviourConfiguration.h"
 
 namespace alica
 {

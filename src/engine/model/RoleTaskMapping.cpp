@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "RoleTaskMapping.h"
+#include "engine/model/RoleTaskMapping.h"
 
 namespace alica
 {

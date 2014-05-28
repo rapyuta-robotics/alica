@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "CapabilityDefinitionSet.h"
+#include "engine/model/CapabilityDefinitionSet.h"
 
 namespace alica
 {

@@ -8,7 +8,7 @@
 #ifndef TRANSITION_H_
 #define TRANSITION_H_
 
-#include <AlicaElement.h>
+#include "AlicaElement.h"
 
 namespace alica
 {

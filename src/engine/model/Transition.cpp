@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "Transition.h"
+#include "engine/model/Transition.h"
 
 namespace alica
 {

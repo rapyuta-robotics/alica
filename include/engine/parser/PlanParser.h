@@ -8,31 +8,39 @@
 #ifndef PLANPARSER_H_
 #define PLANPARSER_H_
 
-#include "SystemConfig.h";
-#include "ModelFactory.h";
-#include "PlanRepository.h"
+class ModelFactory;
+
+#include <SystemConfig.h>
+#include "../PlanRepository.h"
+#include "../IPlanParser.h"
+#include <list>
+#include "ModelFactory.h"
 
 namespace alica
 {
-
 class PlanParser : public IPlanParser
 {
 public:
-	PlanParser();
+	PlanParser(std::shared_ptr<PlanRepository> rep);
 	virtual ~PlanParser();
 
-	virtual alica::Plan ParsePlanTree(std::string masterplan);
-	virtual alica::RoleSet ParseRoleSet(std::string roleSetName, std::string roleSetDir);
+	virtual std::shared_ptr<Plan> ParsePlanTree(std::string masterplan);
+	virtual std::shared_ptr<RoleSet> ParseRoleSet(std::string roleSetName, std::string roleSetDir);
 	virtual void IgnoreMasterPlanId(bool val);
-	virtual std::map<long, alica::AlicaElement> GetParsedElements();
+	virtual std::shared_ptr<std::map<long, alica::AlicaElement> > GetParsedElements();
+
+	std::string getCurrentFile();
+	void setCurrentFile(std::string currentFile);
 
 private:
-	supplementary::SystemConfig sc;
-	ModelFactory mf;
-	PlanRepository rep;
+	std::shared_ptr<supplementary::SystemConfig> sc;
+	std::shared_ptr<ModelFactory> mf;
+	std::shared_ptr<PlanRepository> rep;
+	Plan masterPlan;
 
-	std::list<std::string> filesToParse;
-	std::list<std::string> filesParsed;
+
+	std::list<std::string> filesToParse();
+	std::list<std::string> filesParsed();
 
 	std::string basePlanPath;
 	std::string baseRolePath;

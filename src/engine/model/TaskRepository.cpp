@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "TaskRepository.h"
+#include "engine/model/TaskRepository.h"
 
 namespace alica
 {

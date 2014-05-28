@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "EntryPoint.h"
+#include "engine/model/EntryPoint.h"
 
 namespace alica
 {

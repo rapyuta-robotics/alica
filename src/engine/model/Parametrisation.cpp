@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "Parametrisation.h"
+#include "engine/model/Parametrisation.h"
 
 namespace alica
 {

@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "Quantifier.h"
+#include "engine/model/Quantifier.h"
 
 namespace alica
 {

@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "Characteristic.h"
+#include "engine/model/Characteristic.h"
 
 namespace alica
 {

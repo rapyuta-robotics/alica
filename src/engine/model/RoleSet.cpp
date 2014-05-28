@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "RoleSet.h"
+#include "engine/model/RoleSet.h"
 
 namespace alica
 {
