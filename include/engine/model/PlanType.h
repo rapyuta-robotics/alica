@@ -10,9 +10,11 @@
 
 #include "AbstractPlan.h"
 
-namespace Alica {
+namespace alica
+{
 
-class PlanType: public AbstractPlan {
+class PlanType : public AbstractPlan
+{
 public:
 	PlanType();
 	virtual ~PlanType();

@@ -7,14 +7,17 @@
 
 #include "Task.h"
 
-namespace Alica {
+namespace alica
+{
 
-Task::Task() {
+Task::Task()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-Task::~Task() {
+Task::~Task()
+{
 	// TODO Auto-generated destructor stub
 }
 

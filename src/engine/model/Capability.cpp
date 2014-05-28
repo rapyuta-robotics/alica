@@ -7,7 +7,8 @@
 
 #include "Capability.h"
 
-namespace Alica{
+namespace alica
+{
 Capability::Capability()
 {
 	// TODO Auto-generated constructor stub

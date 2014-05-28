@@ -10,9 +10,11 @@
 
 #include "AlicaElement.h"
 
-namespace Alica {
+namespace alica
+{
 
-class CapabilityDefinitionSet: public AlicaElement {
+class CapabilityDefinitionSet : public AlicaElement
+{
 public:
 	CapabilityDefinitionSet();
 	virtual ~CapabilityDefinitionSet();

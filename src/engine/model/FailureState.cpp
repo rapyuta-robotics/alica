@@ -7,14 +7,17 @@
 
 #include "FailureState.h"
 
-namespace Alica {
+namespace alica
+{
 
-FailureState::FailureState() {
+FailureState::FailureState()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-FailureState::~FailureState() {
+FailureState::~FailureState()
+{
 	// TODO Auto-generated destructor stub
 }
 

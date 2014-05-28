@@ -7,14 +7,17 @@
 
 #include "Condition.h"
 
-namespace Alica {
+namespace alica
+{
 
-Condition::Condition() {
+Condition::Condition()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-Condition::~Condition() {
+Condition::~Condition()
+{
 	// TODO Auto-generated destructor stub
 }
 

@@ -7,14 +7,17 @@
 
 #include "ModelFactory.h"
 
-namespace Alica {
+namespace alica
+{
 
-ModelFactory::ModelFactory() {
+ModelFactory::ModelFactory()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-ModelFactory::~ModelFactory() {
+ModelFactory::~ModelFactory()
+{
 	// TODO Auto-generated destructor stub
 }
 

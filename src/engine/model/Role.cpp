@@ -7,14 +7,17 @@
 
 #include "Role.h"
 
-namespace Alica {
+namespace alica
+{
 
-Role::Role() {
+Role::Role()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-Role::~Role() {
+Role::~Role()
+{
 	// TODO Auto-generated destructor stub
 }
 

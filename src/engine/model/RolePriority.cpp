@@ -7,14 +7,17 @@
 
 #include "RolePriority.h"
 
-namespace Alica {
+namespace alica
+{
 
-RolePriority::RolePriority() {
+RolePriority::RolePriority()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-RolePriority::~RolePriority() {
+RolePriority::~RolePriority()
+{
 	// TODO Auto-generated destructor stub
 }
 

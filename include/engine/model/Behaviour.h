@@ -10,9 +10,11 @@
 
 #include "AlicaElement.h"
 
-namespace Alica {
+namespace alica
+{
 
-class Behaviour: public AlicaElement {
+class Behaviour : public AlicaElement
+{
 public:
 	Behaviour();
 	virtual ~Behaviour();

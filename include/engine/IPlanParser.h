@@ -15,7 +15,7 @@
 #include "RoleSet.h"
 #include "AlicaElement.h"
 
-namespace Alica
+namespace alica
 {
 class IPlanParser
 {
@@ -24,11 +24,11 @@ public:
 	virtual ~IPlanParser()
 	{
 	}
-	virtual Alica::Plan ParsePlanTree(std::string masterplan) = 0;
-	virtual Alica::RoleSet ParseRoleSet(std::string roleSetName, std::string roleSetDir) = 0;
+	virtual alica::Plan ParsePlanTree(std::string masterplan) = 0;
+	virtual alica::RoleSet ParseRoleSet(std::string roleSetName, std::string roleSetDir) = 0;
 	virtual void IgnoreMasterPlanId(bool val) = 0;
 
-	virtual std::map<long, Alica::AlicaElement> GetParsedElements() = 0;
+	virtual std::map<long, alica::AlicaElement> GetParsedElements() = 0;
 };
 }
 #endif /* IPLANPARSER_H_ */

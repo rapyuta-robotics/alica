@@ -10,12 +10,14 @@
 
 #include <AlicaElement.h>
 
-namespace Alica {
+namespace alica
+{
 
 /*
  *
  */
-class Transition: public AlicaElement {
+class Transition : public AlicaElement
+{
 public:
 	Transition();
 	virtual ~Transition();

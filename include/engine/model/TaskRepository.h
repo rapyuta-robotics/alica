@@ -10,12 +10,14 @@
 
 #include <AlicaElement.h>
 
-namespace Alica {
+namespace alica
+{
 
 /*
  *
  */
-class TaskRepository: public AlicaElement {
+class TaskRepository : public AlicaElement
+{
 public:
 	TaskRepository();
 	virtual ~TaskRepository();

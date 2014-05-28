@@ -10,9 +10,11 @@
 
 #include "AlicaElement.h"
 
-namespace Alica {
+namespace alica
+{
 
-class Parametrisation: public AlicaElement {
+class Parametrisation : public AlicaElement
+{
 public:
 	Parametrisation();
 	virtual ~Parametrisation();

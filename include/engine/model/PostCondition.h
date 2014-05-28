@@ -10,9 +10,11 @@
 
 #include "Condition.h"
 
-namespace Alica {
+namespace alica
+{
 
-class PostCondition: public Condition {
+class PostCondition : public Condition
+{
 public:
 	PostCondition();
 	virtual ~PostCondition();

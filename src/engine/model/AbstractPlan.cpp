@@ -7,14 +7,17 @@
 
 #include "AbstractPlan.h"
 
-namespace Alica {
+namespace alica
+{
 
-AbstractPlan::AbstractPlan() {
+AbstractPlan::AbstractPlan()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-AbstractPlan::~AbstractPlan() {
+AbstractPlan::~AbstractPlan()
+{
 	// TODO Auto-generated destructor stub
 }
 

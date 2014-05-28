@@ -10,9 +10,11 @@
 
 #include <AlicaElement.h>
 
-namespace Alica {
+namespace alica
+{
 
-class RolePriority: public AlicaElement {
+class RolePriority : public AlicaElement
+{
 public:
 	RolePriority();
 	virtual ~RolePriority();

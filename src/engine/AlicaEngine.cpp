@@ -7,24 +7,29 @@
 
 #include "engine/AlicaEngine.h"
 
-namespace Alica {
+namespace alica
+{
 
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine() {
+AlicaEngine::AlicaEngine()
+{
 	// TODO Auto-generated constructor stub
 }
 
-AlicaEngine::~AlicaEngine() {
+AlicaEngine::~AlicaEngine()
+{
 	// TODO Auto-generated destructor stub
 }
 
-void AlicaEngine::Init(string roleSetName, string masterPlanName, string roleSetDir,bool stepEngine) {
+void AlicaEngine::Init(string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine)
+{
 	// TODO
 }
 
-void AlicaEngine::Start() {
+void AlicaEngine::Start()
+{
 }
 
 } /* namespace Alica */

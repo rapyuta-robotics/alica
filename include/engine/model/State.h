@@ -10,9 +10,11 @@
 
 #include "AlicaElement.h"
 
-namespace Alica {
+namespace alica
+{
 
-class State: public AlicaElement {
+class State : public AlicaElement
+{
 public:
 	State();
 	virtual ~State();

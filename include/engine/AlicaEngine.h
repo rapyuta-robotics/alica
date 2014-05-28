@@ -12,13 +12,15 @@
 
 using namespace std;
 
-namespace Alica {
+namespace alica
+{
 
-class AlicaEngine {
+class AlicaEngine
+{
 public:
 	AlicaEngine();
 	virtual ~AlicaEngine();
-	void Init(string roleSetName, string masterPlanName, string roleSetDir,bool stepEngine);
+	void Init(string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine);
 	void Start();
 
 };
