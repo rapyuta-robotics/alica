@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "AlicaElement.h"
+#include "engine/model/AlicaElement.h"
 
 namespace alica
 {

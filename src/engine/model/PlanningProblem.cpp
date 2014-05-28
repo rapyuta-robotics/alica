@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "PlanningProblem.h"
+#include "engine/model/PlanningProblem.h"
 
 namespace alica
 {

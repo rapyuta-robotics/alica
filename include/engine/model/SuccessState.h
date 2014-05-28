@@ -8,7 +8,7 @@
 #ifndef SUCCESSSTATE_H_
 #define SUCCESSSTATE_H_
 
-#include <TerminalState.h>
+#include "engine/model/TerminalState.h"
 
 namespace alica
 {

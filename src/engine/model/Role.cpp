@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "Role.h"
+#include "engine/model/Role.h"
 
 namespace alica
 {

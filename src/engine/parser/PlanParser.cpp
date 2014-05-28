@@ -5,14 +5,25 @@
  *      Author: Stephan Opfer
  */
 
-#include "PlanParser.h"
+#include "engine/parser/PlanParser.h"
+#include "SystemConfig.h"
 
 namespace alica
 {
 
-PlanParser::PlanParser()
+PlanParser::PlanParser(std::shared_ptr<PlanRepository> rep)
 {
-	// TODO Auto-generated constructor stub
+
+//	this->mf = new ModelFactory(this, rep);
+	this->rep = rep;
+
+	this->sc = supplementary::SystemConfig::getInstance();
+	this->esConfigRoot = this->sc->getConfigPath();
+
+	std::string planDir = (*this->sc)["Alica"]->get<std::string>("Alica.PlanDir");
+	std::string roleDir = (*this->sc)["Alica"]->get<std::string>("Alica.RoleDir");
+
+
 
 }
 
@@ -21,24 +32,48 @@ PlanParser::~PlanParser()
 	// TODO Auto-generated destructor stub
 }
 
-virtual alica::Plan PlanParser::ParsePlanTree(std::string masterplan)
+std::shared_ptr<Plan> PlanParser::ParsePlanTree(std::string masterplan)
 {
 
-	return 0;
+	std::shared_ptr<Plan> p;
+	return p;
 }
-virtual alica::RoleSet PlanParser::ParseRoleSet(std::string roleSetName, std::string roleSetDir)
+std::shared_ptr<RoleSet> PlanParser::ParseRoleSet(std::string roleSetName, std::string roleSetDir)
 {
 
-	return 0;
+	std::shared_ptr<RoleSet> r;
+	return r;
 }
-virtual std::map<long, alica::AlicaElement> PlanParser::GetParsedElements()
+std::shared_ptr<std::map<long, alica::AlicaElement> > PlanParser::GetParsedElements()
 {
 
-	return 0;
+	std::shared_ptr<std::map<long, alica::AlicaElement> > map;
+	return map;
 }
-virtual void PlanParser::IgnoreMasterPlanId(bool val)
+void PlanParser::IgnoreMasterPlanId(bool val)
 {
+	this->mf->setIgnoreMasterPlanId(val);
+}
+std::string PlanParser::getCurrentFile()
+{
+	return this->currentFile;
+}
 
+
+void PlanParser::setCurrentFile(std::string currentFile)
+{
+	if (currentFile.compare(0, basePlanPath.size(), basePlanPath))
+	{
+		this->currentFile = currentFile.substr(basePlanPath.size());
+	}
+	else if (currentFile.compare(0, baseRolePath.size(), baseRolePath))
+	{
+		this->currentFile = currentFile.substr(baseRolePath.size());
+	}
+	else
+	{
+		this->currentFile = currentFile;
+	}
 }
 
 } /* namespace Alica */

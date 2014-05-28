@@ -8,7 +8,7 @@
 #ifndef ROLEPRIORITY_H_
 #define ROLEPRIORITY_H_
 
-#include <AlicaElement.h>
+#include "engine/model/AlicaElement.h"
 
 namespace alica
 {

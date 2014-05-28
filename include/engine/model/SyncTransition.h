@@ -8,7 +8,7 @@
 #ifndef SYNCTRANSITION_H_
 #define SYNCTRANSITION_H_
 
-#include <AlicaElement.h>
+#include "AlicaElement.h"
 
 namespace alica
 {

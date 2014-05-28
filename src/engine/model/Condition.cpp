@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "Condition.h"
+#include "engine/model/Condition.h"
 
 namespace alica
 {

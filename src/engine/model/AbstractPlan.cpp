@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "AbstractPlan.h"
+#include "engine/model/AbstractPlan.h"
 
 namespace alica
 {

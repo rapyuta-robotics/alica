@@ -8,7 +8,7 @@
 #ifndef RUNTIMECONDITION_H_
 #define RUNTIMECONDITION_H_
 
-#include <Condition.h>
+#include "engine/model/Condition.h"
 
 namespace alica
 {

@@ -8,7 +8,7 @@
 #ifndef VARIABLE_H_
 #define VARIABLE_H_
 
-#include <AlicaElement.h>
+#include "AlicaElement.h"
 
 namespace alica
 {

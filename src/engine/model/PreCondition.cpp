@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "PreCondition.h"
+#include "engine/model/PreCondition.h"
 
 namespace alica
 {

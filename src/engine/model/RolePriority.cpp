@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "RolePriority.h"
+#include "engine/model/RolePriority.h"
 
 namespace alica
 {

@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "SyncTransition.h"
+#include "engine/model/SyncTransition.h"
 
 namespace alica
 {

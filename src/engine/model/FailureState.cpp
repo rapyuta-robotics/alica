@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "FailureState.h"
+#include "engine/model/FailureState.h"
 
 namespace alica
 {

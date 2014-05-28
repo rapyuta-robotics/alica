@@ -5,7 +5,7 @@
  *      Author: snook
  */
 
-#include "PlanRepository.h"
+#include "engine/PlanRepository.h"
 
 namespace alica
 {

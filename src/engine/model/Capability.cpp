@@ -5,7 +5,7 @@
  *      Author: snook
  */
 
-#include "Capability.h"
+#include "engine/model/Capability.h"
 
 namespace alica
 {

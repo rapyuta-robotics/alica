@@ -1,14 +1,17 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(alica_engine)
 
+## Use c++ 11x std
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp)
+find_package(catkin REQUIRED COMPONENTS roscpp system_config)
 
 
 ## System dependencies are found with CMake's conventions
-find_package(Boost REQUIRED COMPONENTS program_options)
+#find_package(Boost REQUIRED COMPONENTS program_options)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -79,8 +82,9 @@ find_package(Boost REQUIRED COMPONENTS program_options)
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES alica_engine
-  CATKIN_DEPENDS roscpp
+  CATKIN_DEPENDS roscpp system_config
   DEPENDS program_options
+  
 )
 
 ###########
@@ -89,17 +93,15 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
- include_directories(include ${Boost_INCLUDE_DIR})
+ include_directories(include ${catkin_INCLUDE_DIRS})
 
 ## Declare a cpp library
 # add_library(alica_engine
 #   src/${PROJECT_NAME}/alica_engine.cpp
 # )
-
+file (GLOB _my_sources RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/engine/*.cpp src/engine/parser/*.cpp src/engine/model/*.cpp src/*.cpp)
 ## Declare a cpp executable
- add_executable(test_base src/TestBase.cpp
-                          src/engine/parser/tinyxml2.cpp
-                          src/engine/AlicaEngine.cpp)
+ add_executable(test_base ${_my_sources})
 
 
 ## Add cmake target dependencies of the executable/library
@@ -108,7 +110,7 @@ catkin_package(
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries(test_base
-   ${catkin_LIBRARIES} ${Boost_LIBRARIES}
+   ${catkin_LIBRARIES} system_config
  )
 
 #############

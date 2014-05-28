@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "SuccessState.h"
+#include "engine/model/SuccessState.h"
 
 namespace alica
 {

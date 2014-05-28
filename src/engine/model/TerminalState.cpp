@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "TerminalState.h"
+#include "engine/model/TerminalState.h"
 
 namespace alica
 {

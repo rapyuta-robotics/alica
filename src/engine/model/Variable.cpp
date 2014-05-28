@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "Variable.h"
+#include "engine/model/Variable.h"
 
 namespace alica
 {
