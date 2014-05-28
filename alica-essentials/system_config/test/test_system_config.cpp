@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include <stdio.h>
 
-
+using namespace supplementary;
 std::string get_selfpath() {
 	char buff[1024];
 	ssize_t len = ::readlink("/proc/self/exe", buff, sizeof(buff)-1);
