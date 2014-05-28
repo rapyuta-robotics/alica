@@ -7,14 +7,17 @@
 
 #include "SyncTransition.h"
 
-namespace Alica {
+namespace alica
+{
 
-SyncTransition::SyncTransition() {
+SyncTransition::SyncTransition()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-SyncTransition::~SyncTransition() {
+SyncTransition::~SyncTransition()
+{
 	// TODO Auto-generated destructor stub
 }
 

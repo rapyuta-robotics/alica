@@ -10,9 +10,11 @@
 
 #include "AlicaElement.h"
 
-namespace Alica {
+namespace alica
+{
 
-class Condition: public AlicaElement {
+class Condition : public AlicaElement
+{
 public:
 	Condition();
 	virtual ~Condition();

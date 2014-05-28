@@ -7,14 +7,17 @@
 
 #include "Variable.h"
 
-namespace Alica {
+namespace alica
+{
 
-Variable::Variable() {
+Variable::Variable()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-Variable::~Variable() {
+Variable::~Variable()
+{
 	// TODO Auto-generated destructor stub
 }
 

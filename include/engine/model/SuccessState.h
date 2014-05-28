@@ -10,12 +10,14 @@
 
 #include <TerminalState.h>
 
-namespace Alica {
+namespace alica
+{
 
 /*
  *
  */
-class SuccessState: public TerminalState {
+class SuccessState : public TerminalState
+{
 public:
 	SuccessState();
 	virtual ~SuccessState();

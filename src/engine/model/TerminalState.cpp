@@ -7,14 +7,17 @@
 
 #include "TerminalState.h"
 
-namespace Alica {
+namespace alica
+{
 
-TerminalState::TerminalState() {
+TerminalState::TerminalState()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-TerminalState::~TerminalState() {
+TerminalState::~TerminalState()
+{
 	// TODO Auto-generated destructor stub
 }
 

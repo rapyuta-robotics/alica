@@ -10,9 +10,11 @@
 
 #include "AlicaElement.h"
 
-namespace Alica {
+namespace alica
+{
 
-class AbstractPlan: public AlicaElement {
+class AbstractPlan : public AlicaElement
+{
 public:
 	AbstractPlan();
 	virtual ~AbstractPlan();

@@ -7,14 +7,17 @@
 
 #include "State.h"
 
-namespace Alica {
+namespace alica
+{
 
-State::State() {
+State::State()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-State::~State() {
+State::~State()
+{
 	// TODO Auto-generated destructor stub
 }
 

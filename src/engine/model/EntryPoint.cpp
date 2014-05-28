@@ -7,14 +7,17 @@
 
 #include "EntryPoint.h"
 
-namespace Alica {
+namespace alica
+{
 
-EntryPoint::EntryPoint() {
+EntryPoint::EntryPoint()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-EntryPoint::~EntryPoint() {
+EntryPoint::~EntryPoint()
+{
 	// TODO Auto-generated destructor stub
 }
 

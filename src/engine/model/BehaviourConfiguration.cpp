@@ -7,14 +7,17 @@
 
 #include "BehaviourConfiguration.h"
 
-namespace Alica {
+namespace alica
+{
 
-BehaviourConfiguration::BehaviourConfiguration() {
+BehaviourConfiguration::BehaviourConfiguration()
+{
 	// TODO Auto-generated constructor stub
 
 }
 
-BehaviourConfiguration::~BehaviourConfiguration() {
+BehaviourConfiguration::~BehaviourConfiguration()
+{
 	// TODO Auto-generated destructor stub
 }
 

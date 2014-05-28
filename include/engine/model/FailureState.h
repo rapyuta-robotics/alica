@@ -10,9 +10,11 @@
 
 #include "TerminalState.h"
 
-namespace Alica {
+namespace alica
+{
 
-class FailureState: public TerminalState {
+class FailureState : public TerminalState
+{
 public:
 	FailureState();
 	virtual ~FailureState();

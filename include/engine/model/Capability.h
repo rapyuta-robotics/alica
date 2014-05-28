@@ -8,7 +8,7 @@
 #ifndef CAPABILITY_H_
 #define CAPABILITY_H_
 
-namespace Alica
+namespace alica
 {
 class Capability
 {

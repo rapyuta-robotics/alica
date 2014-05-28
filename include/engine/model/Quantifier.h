@@ -10,9 +10,11 @@
 
 #include "AlicaElement.h"
 
-namespace Alica {
+namespace alica
+{
 
-class Quantifier: public AlicaElement {
+class Quantifier : public AlicaElement
+{
 public:
 	Quantifier();
 	virtual ~Quantifier();

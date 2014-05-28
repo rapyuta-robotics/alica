@@ -10,12 +10,14 @@
 
 #include <AlicaElement.h>
 
-namespace Alica {
+namespace alica
+{
 
 /*
  *
  */
-class RoleSet: public AlicaElement {
+class RoleSet : public AlicaElement
+{
 public:
 	RoleSet();
 	virtual ~RoleSet();

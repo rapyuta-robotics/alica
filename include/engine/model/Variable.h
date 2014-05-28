@@ -10,12 +10,14 @@
 
 #include <AlicaElement.h>
 
-namespace Alica {
+namespace alica
+{
 
 /*
  *
  */
-class Variable: public AlicaElement {
+class Variable : public AlicaElement
+{
 public:
 	Variable();
 	virtual ~Variable();
