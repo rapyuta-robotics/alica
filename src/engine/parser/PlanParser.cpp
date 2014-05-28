@@ -7,7 +7,7 @@
 
 #include "PlanParser.h"
 
-namespace Alica
+namespace alica
 {
 
 PlanParser::PlanParser()
