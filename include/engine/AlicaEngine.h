@@ -10,6 +10,9 @@
 
 #include <string>
 
+#include <SystemConfig.h>
+#include "engine/PlanRepository.h"
+
 using namespace std;
 
 namespace alica
@@ -22,6 +25,16 @@ public:
 	virtual ~AlicaEngine();
 	void Init(string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine);
 	void Start();
+	bool GetStepEngine();
+
+protected:
+	supplementary::SystemConfigPtr sc;
+
+private:
+	bool stepEngine;
+	shared_ptr<PlanRepository> planRepository;
+
+	void SetStepEngine(bool stepEngine);
 
 };
 
