@@ -1,11 +1,14 @@
 #ifndef SYSTEMCONFIG_H_
 #define SYSTEMCONFIG_H_
 
+using namespace std;
+
 #include <map>
 #include <string>
 #include <mutex>
 #include <thread>
 #include <memory>
+#include <atomic>
 #include <fstream>
 #include <iostream>
 #include <stdlib.h>
@@ -14,60 +17,47 @@
 
 #include "Configuration.h"
 
-const std::string DOMAIN_FOLDER="DOMAIN_FOLDER";
-const std::string DOMAIN_CONFIG_FOLDER="DOMAIN_CONFIG_FOLDER";
+const std::string DOMAIN_FOLDER = "DOMAIN_FOLDER";
+const std::string DOMAIN_CONFIG_FOLDER = "DOMAIN_CONFIG_FOLDER";
 
 namespace supplementary
 {
-class SystemConfig;
+	class SystemConfig;
+	typedef std::shared_ptr<const SystemConfig> SystemConfigPtr;
 
-typedef std::shared_ptr<SystemConfig> SystemConfigPtr;
+	class SystemConfig
+	{
 
-class SystemConfig
-{
+	protected:
+		// stuff for singlton pattern
+		static bool initialized;
+		static mutex scMutex;
+		static atomic < SystemConfigPtr > instance;
 
-protected:
+		static std::string rootPath;
+		static std::string configPath;
+		static std::string hostname;
+		static std::map<std::string, std::shared_ptr<Configuration> > configs;
+		static const char NODE_NAME_SEPERATOR = '_';
+		static int ownRobotID;
 
-  SystemConfig()
-  {
-    ownRobotID = 0;
-  }
+	public:
+		static SystemConfigPtr getInstance();
 
-  static bool initialized;
+		static std::string robotNodeName(const std::string& nodeName);
+		static int GetOwnRobotID();
+		static std::string getHostname();
+		static void setHostname(std::string newHostname);
+		static void resetHostname();
+		Configuration *operator[](const std::string s);
+		std::string getRootPath();
+		std::string getConfigPath();bool fileExists(const std::string& filename);
+		void setRootPath(std::string rootPath);
+		void setConfigPath(std::string configPath);
+		static std::string GetEnv(const std::string& var);
 
-  static std::mutex mutex;
-
-  static SystemConfigPtr instance;
-
-  static std::string rootPath;
-  static std::string configPath;
-
-  static std::string hostname;
-
-  static std::map<std::string, std::shared_ptr<Configuration> > configs;
-
-  static const char NODE_NAME_SEPERATOR = '_';
-  static int ownRobotID;
-
-public:
-
-  static SystemConfigPtr getInstance();
-
-  static std::string robotNodeName(const std::string& nodeName);
-
-  static int GetOwnRobotID();
-  static std::string getHostname();
-  static void setHostname(std::string newHostname);
-  static void resetHostname();
-
-  Configuration *operator[](const std::string s);
-
-  std::string getRootPath();
-  std::string getConfigPath();
-  bool fileExists(const std::string& filename);
-  void setRootPath(std::string rootPath);
-  void setConfigPath(std::string configPath);
-  static std::string GetEnv(const std::string& var);
-};
+	private:
+		SystemConfig();
+	};
 }
 #endif /* SYSTEMCONFIG_H_ */
