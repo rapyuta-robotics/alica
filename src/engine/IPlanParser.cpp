@@ -9,10 +9,10 @@
 
 namespace alica
 {
-IPlanParser::IPlanParser()
-{
-	// TODO Auto-generated constructor stub
+	IPlanParser::IPlanParser()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
 }
