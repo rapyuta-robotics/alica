@@ -44,7 +44,7 @@ protected:
 	bool simulator;
 	bool stepEngine;
 
-	AlicaEngine *ae;
+	AlicaEngine* ae;
 };
 
 } /* namespace Alica */

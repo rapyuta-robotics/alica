@@ -18,25 +18,27 @@ using namespace std;
 namespace alica
 {
 
-class AlicaEngine
-{
-public:
-	AlicaEngine();
-	virtual ~AlicaEngine();
-	void Init(string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine);
-	void Start();
-	bool GetStepEngine();
+	class AlicaEngine
+	{
+	public:
+		static AlicaEngine* getInstance();
+		void init(string roleSetName, string masterPlanName, string roleSetDir,
+		bool stepEngine);
+		void start();bool getStepEngine();
 
-protected:
-	supplementary::SystemConfigPtr sc;
+	protected:
+		supplementary::SystemConfig* sc;
 
-private:
-	bool stepEngine;
-	shared_ptr<PlanRepository> planRepository;
+	private:
+		// private constructur/ destructor because of singleton
+		AlicaEngine();
+		~AlicaEngine();
 
-	void SetStepEngine(bool stepEngine);
+		bool stepEngine;
+		void setStepEngine(bool stepEngine);
 
-};
+		shared_ptr<PlanRepository> planRepository;
+	};
 
 } /* namespace Alica */
 

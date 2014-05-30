@@ -33,7 +33,8 @@ public:
 	void setCurrentFile(std::string currentFile);
 
 private:
-	std::shared_ptr<supplementary::SystemConfig> sc;
+	//std::shared_ptr<supplementary::SystemConfig> sc;
+	supplementary::SystemConfig* sc;
 	std::shared_ptr<ModelFactory> mf;
 	std::shared_ptr<PlanRepository> rep;
 	Plan masterPlan;
