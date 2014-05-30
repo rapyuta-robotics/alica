@@ -2,557 +2,528 @@
 
 namespace supplementary
 {
-Configuration::Configuration() :
-		filename(), configRoot(new ConfigNode("root"))
-{
-}
+	Configuration::Configuration() :
+			filename(), configRoot(new ConfigNode("root"))
+	{
+	}
 
-Configuration::Configuration(std::string filename) :
-		filename(filename), configRoot(new ConfigNode("root"))
-{
-	load(filename);
-}
+	Configuration::Configuration(string filename) :
+			filename(filename), configRoot(new ConfigNode("root"))
+	{
+		load(filename);
+	}
 
-Configuration::Configuration(std::string filename, const std::string content) :
-		filename(filename), configRoot(new ConfigNode("root"))
-{
-	load(filename, std::shared_ptr<std::istream>(new std::istringstream(content)), false, false);
-}
+	Configuration::Configuration(string filename, const string content) :
+			filename(filename), configRoot(new ConfigNode("root"))
+	{
+		load(filename, shared_ptr<istream>(new istringstream(content)), false, false);
+	}
 
-void Configuration::load(std::string filename, std::shared_ptr<std::istream> content, bool, bool)
-{
-
-	this->filename = filename;
-
-	int linePos = 0;
-	int chrPos = 0;
-
-	std::string line;
-
-	ConfigNode *currentNode = this->configRoot.get();
-
-	while (content->good())
+	void Configuration::load(string filename, shared_ptr<istream> content, bool, bool)
 	{
 
-		std::getline(*content, line);
-		line = Configuration::trimLeft(line);
+		this->filename = filename;
 
-		int lineLen = line.size();
+		int linePos = 0;
+		int chrPos = 0;
 
-		chrPos = 1;
+		string line;
 
-		linePos++;
+		ConfigNode *currentNode = this->configRoot.get();
 
-		while (chrPos < lineLen - 1)
+		while (content->good())
 		{
 
-			if (line.size() == 0)
-				break;
+			getline(*content, line);
+			line = Configuration::trimLeft(line);
 
-			switch (line[0])
+			int lineLen = line.size();
+
+			chrPos = 1;
+
+			linePos++;
+
+			while (chrPos < lineLen - 1)
 			{
 
-				case '#':
-				{
-					std::string comment = line.substr(1, line.size() - 1);
-
-					comment = Configuration::trim(comment);
-					currentNode->create(ConfigNode::Comment, comment);
-
-					chrPos += line.size() - 1;
-				}
-					continue;
-
-				case '<':
-				case '[':
-				{
-					size_t end = line.find(']');
-
-					if (end == std::string::npos)
-					{
-						end = line.find('>');
-					}
-
-					if ((line.size() < 2) || (end == std::string::npos))
-					{
-						std::ostringstream ss;
-						ss << "Parse error in " << filename << ", line " << linePos << " character " << chrPos
-								<< ": malformed tag!";
-						throw ConfigException(ss.str());
-					}
-
-					if (end - 1 == 0)
-					{
-						std::ostringstream ss;
-						ss << "Parse error in " << filename << ", line " << linePos << " character " << chrPos
-								<< ": malformed tag, tag name empty!";
-						throw ConfigException(ss.str());
-					}
-
-					std::string name = line.substr(1, end - 1);
-					//							std::cout << "'" << line << "' '" << name << "' " << end << std::endl;
-
-					if ((name[0] == '/') || (name[0] == '!'))
-					{
-
-						if (currentNode == NULL)
-						{
-							std::ostringstream ss;
-							ss << "Parse error in " << filename << ", line " << linePos << " character " << chrPos
-									<< ": no opening tag found!";
-							throw ConfigException(ss.str());
-						}
-
-						if (name.compare(1, name.size() - 1, currentNode->getName()) != 0)
-						{
-							std::ostringstream ss;
-							ss << "Parse error in " << filename << ", line " << linePos << " character " << chrPos
-									<< ": closing tag does not match opening tag!";
-							throw ConfigException(ss.str());
-						}
-
-						currentNode = currentNode->getParent();
-
-						//								std::cout << "<- " << name << std::endl;
-
-					}
-					else
-					{
-
-						ConfigNode *x = currentNode->create(name);
-
-						currentNode = x;
-					}
-
-					if (end < line.size() - 1)
-					{
-						line = line.substr(end + 1, line.size() - end - 1);
-					}
-
-					chrPos += (end + 1);
-				}
+				if (line.size() == 0)
 					break;
 
-				default:
-					chrPos++;
+				switch (line[0])
+				{
 
-					if ((line[0] != ' ') && (line[0] != '\t'))
+					case '#':
 					{
+						string comment = line.substr(1, line.size() - 1);
 
-						size_t curPos = 0;
-						bool inString = false;
+						comment = Configuration::trim(comment);
+						currentNode->create(ConfigNode::Comment, comment);
 
-						std::ostringstream ss;
+						chrPos += line.size() - 1;
+					}
+						continue;
 
-						while (curPos < line.size())
+					case '<':
+					case '[':
+					{
+						size_t end = line.find(']');
+
+						if (end == string::npos)
 						{
-
-							/*								if ((!inString) &&
-							 ((line[curPos] == '[') || (line[curPos] == '<')))
-							 {
-							 curPos--;
-							 break;
-							 }
-							 */
-							if (line[curPos] == '"')
-							{
-								inString = !inString;
-								curPos++;
-							}
-
-							if (curPos < line.size())
-							{
-
-								ss << line[curPos];
-								curPos++;
-							}
+							end = line.find('>');
 						}
 
-						line = (curPos >= line.size() - 1 ? "" : line.substr(curPos + 1, line.size() - curPos - 1));
-
-						chrPos += (curPos - 1);
-
-						std::string element = ss.str();
-						std::string key;
-						std::string value;
-
-						size_t eq = element.find('=');
-
-						if (eq != std::string::npos)
+						if ((line.size() < 2) || (end == string::npos))
 						{
-							key = element.substr(0, eq - 1);
-							value = element.substr(eq + 1, element.size() - eq - 1);
 
-							key = Configuration::trim(key);
-							value = Configuration::trim(value);
+							cerr << "Parse error in " << filename << ", line " << linePos << " character " << chrPos
+									<< ": malformed tag!" << endl;
+							throw new exception();
 						}
 
-						//boost::any a(value);
+						if (end - 1 == 0)
+						{
+							cerr << "Parse error in " << filename << ", line " << linePos << " character " << chrPos
+									<< ": malformed tag, tag name empty!" << endl;
+							throw new exception();
+						}
 
-						currentNode->create(key, value);
+						string name = line.substr(1, end - 1);
 
+						if ((name[0] == '/') || (name[0] == '!'))
+						{
+
+							if (currentNode == NULL)
+							{
+								cerr << "Parse error in " << filename << ", line " << linePos << " character " << chrPos
+										<< ": no opening tag found!" << endl;
+								throw new exception();
+							}
+
+							if (name.compare(1, name.size() - 1, currentNode->getName()) != 0)
+							{
+								cerr << "Parse error in " << filename << ", line " << linePos << " character " << chrPos
+										<< ": closing tag does not match opening tag!" << endl;
+								throw new exception();
+							}
+
+							currentNode = currentNode->getParent();
+						}
+						else
+						{
+							ConfigNode *x = currentNode->create(name);
+							currentNode = x;
+						}
+
+						if (end < line.size() - 1)
+						{
+							line = line.substr(end + 1, line.size() - end - 1);
+						}
+
+						chrPos += (end + 1);
 					}
-					else
-					{
-						line = line.substr(1, line.size() - 1);
-					}
+						break;
 
-					break;
-			}
-		}
-	}
+					default:
+						chrPos++;
 
-	if (this->configRoot.get() != currentNode)
-	{
-		std::ostringstream ss;
-		ss << "Parse error in " << filename << ", line " << linePos << " character " << line.size()
-				<< ": no closing tag found!";
-		throw ConfigException(ss.str());
-	}
-}
+						if ((line[0] != ' ') && (line[0] != '\t'))
+						{
 
-void Configuration::serialize_internal(std::ostringstream *ss, ConfigNode *node)
-{
+							size_t curPos = 0;
+							bool inString = false;
 
-	if (node == NULL)
-		return;
+							ostringstream ss;
 
-	if (node->getType() == ConfigNode::Node)
-	{
+							while (curPos < line.size())
+							{
+								if (line[curPos] == '"')
+								{
+									inString = !inString;
+									curPos++;
+								}
 
-		*ss << std::string(4 * node->getDepth(), ' ') << "[" << node->getName() << "]" << std::endl;
+								if (curPos < line.size())
+								{
 
-		for (std::vector<ConfigNodePtr>::iterator itr = node->getChildren()->begin(); itr != node->getChildren()->end();
-				itr++)
-		{
-			serialize_internal(ss, (*itr).get());
-		}
+									ss << line[curPos];
+									curPos++;
+								}
+							}
 
-		*ss << std::string(4 * node->getDepth(), ' ') << "[!" << node->getName() << "]" << std::endl;
+							line = (curPos >= line.size() - 1 ? "" : line.substr(curPos + 1, line.size() - curPos - 1));
 
-	}
-	else if (node->getType() == ConfigNode::Leaf)
-	{
+							chrPos += (curPos - 1);
 
-		*ss << std::string(4 * node->getDepth(), ' ') << node->getName() << " = " << node->getValue() << std::endl;
+							string element = ss.str();
+							string key;
+							string value;
 
-	}
-	else
-	{ // Comment
+							size_t eq = element.find('=');
 
-		*ss << std::string(4 * node->getDepth(), ' ') << "# " << node->getName() << std::endl;
+							if (eq != string::npos)
+							{
+								key = element.substr(0, eq - 1);
+								value = element.substr(eq + 1, element.size() - eq - 1);
 
-	}
-}
+								key = Configuration::trim(key);
+								value = Configuration::trim(value);
+							}
 
-void Configuration::store()
-{
+							currentNode->create(key, value);
+						}
+						else
+						{
+							line = line.substr(1, line.size() - 1);
+						}
 
-	if (this->filename.size() > 0)
-	{
-		store(this->filename);
-	}
-}
-
-void Configuration::store(std::string filename)
-{
-
-	std::ostringstream ss;
-	std::ofstream os(filename.c_str(), std::ios_base::out);
-
-	serialize_internal(&ss, this->configRoot.get());
-
-	os << ss.str();
-}
-
-std::string Configuration::serialize()
-{
-
-	std::ostringstream ss;
-	serialize_internal(&ss, this->configRoot.get());
-
-	return ss.str();
-}
-
-void Configuration::collect(ConfigNode *node, std::vector<std::string> *params, size_t offset,
-							std::vector<ConfigNode *> *result)
-{
-
-	std::vector<ConfigNodePtr> *children = node->getChildren();
-
-	if (offset == params->size())
-	{
-		result->push_back(node);
-		return;
-	}
-
-	for (size_t i = offset; i < params->size(); i++)
-	{
-
-		bool found = false;
-
-		for (size_t j = 0; j < children->size(); j++)
-		{
-
-			if ((*children)[j]->getName().compare((*params)[i]) == 0)
-			{
-				collect((*children)[j].get(), params, offset + 1, result);
-				found = true;
+						break;
+				}
 			}
 		}
 
-		if (!found)
+		if (this->configRoot.get() != currentNode)
+		{
+			cout << "Parse error in " << filename << ", line " << linePos << " character " << line.size()
+					<< ": no closing tag found!" << endl;
+			throw new exception();
+		}
+	}
+
+	void Configuration::serialize_internal(ostringstream *ss, ConfigNode *node)
+	{
+
+		if (node == NULL)
 			return;
-	}
-}
 
-void Configuration::collectSections(ConfigNode *node, std::vector<std::string> *params, size_t offset,
-									std::vector<ConfigNode *> *result)
-{
-
-	std::vector<ConfigNodePtr> *children = node->getChildren();
-
-	//		for(unsigned int i = 0; i < children->size(); i++){
-
-	//			printf("Children %d %s\n", i, (*children)[i]->getName().c_str());
-
-	//		}
-
-	//		printf("offset %u\n", (unsigned int)offset);
-	//		printf("params->size %u\n", (unsigned int)params->size());
-
-	if (offset == params->size())
-	{
-		//			printf("pushed %s\n", node->getName().c_str());
-		//result->push_back(node);
-		for (unsigned int i = 0; i < children->size(); i++)
+		if (node->getType() == ConfigNode::Node)
 		{
 
-			result->push_back((*children)[i].get());
+			*ss << string(node->getDepth(), '\t') << "[" << node->getName() << "]" << endl;
+
+			for (vector<ConfigNodePtr>::iterator itr = node->getChildren()->begin(); itr != node->getChildren()->end();
+					itr++)
+			{
+				serialize_internal(ss, (*itr).get());
+			}
+
+			*ss << string(node->getDepth(), '\t') << "[!" << node->getName() << "]" << endl;
 
 		}
-
-		return;
-	}
-
-	for (size_t i = offset; i < params->size(); i++)
-	{
-
-		bool found = false;
-
-		for (size_t j = 0; j < children->size(); j++)
+		else if (node->getType() == ConfigNode::Leaf)
 		{
 
-			if ((*children)[j]->getName().compare((*params)[i]) == 0)
+			*ss << string(node->getDepth(), '\t') << node->getName() << " = " << node->getValue() << endl;
+
+		}
+		else
+		{ // Comment
+
+			*ss << string(node->getDepth(), '\t') << "# " << node->getName() << endl;
+
+		}
+	}
+
+	void Configuration::store()
+	{
+		if (this->filename.size() > 0)
+		{
+			store(this->filename);
+		}
+	}
+
+	void Configuration::store(string filename)
+	{
+		ostringstream ss;
+		ofstream os(filename.c_str(), ios_base::out);
+
+		serialize_internal(&ss, this->configRoot.get());
+
+		os << ss.str();
+	}
+
+	string Configuration::serialize()
+	{
+		ostringstream ss;
+		serialize_internal(&ss, this->configRoot.get());
+		return ss.str();
+	}
+
+	void Configuration::collect(ConfigNode *node, vector<string> *params, size_t offset, vector<ConfigNode *> *result)
+	{
+
+		vector<ConfigNodePtr> *children = node->getChildren();
+
+		if (offset == params->size())
+		{
+			result->push_back(node);
+			return;
+		}
+
+		for (size_t i = offset; i < params->size(); i++)
+		{
+
+			bool found = false;
+
+			for (size_t j = 0; j < children->size(); j++)
 			{
-				collectSections((*children)[j].get(), params, offset + 1, result);
-				found = true;
+
+				if ((*children)[j]->getName().compare((*params)[i]) == 0)
+				{
+					collect((*children)[j].get(), params, offset + 1, result);
+					found = true;
+				}
+			}
+
+			if (!found)
+				return;
+		}
+	}
+
+	void Configuration::collectSections(ConfigNode *node, vector<string> *params, size_t offset,
+										vector<ConfigNode *> *result)
+	{
+
+		vector<ConfigNodePtr> *children = node->getChildren();
+
+		if (offset == params->size())
+		{
+			for (unsigned int i = 0; i < children->size(); i++)
+			{
+				result->push_back((*children)[i].get());
+			}
+			return;
+		}
+
+		for (size_t i = offset; i < params->size(); i++)
+		{
+			bool found = false;
+			for (size_t j = 0; j < children->size(); j++)
+			{
+				if ((*children)[j]->getName().compare((*params)[i]) == 0)
+				{
+					collectSections((*children)[j].get(), params, offset + 1, result);
+					found = true;
+				}
+			}
+			if (!found)
+				return;
+		}
+	}
+
+	/**
+	 * Creates a suitable error message, if the given path was not found.
+	 * @param params The path which does not exist.
+	 * @return The corresponding error message.
+	 */
+	string Configuration::pathNotFound(vector<string> *params)
+	{
+		ostringstream os;
+		if ((params == NULL) || (params->size() == 0))
+		{
+			os << "Empty path not found in " << this->filename << "!" << endl;
+		}
+		else
+		{
+			os << "Path '" << (*params)[0];
+			for (size_t i = 1; i < params->size(); i++)
+			{
+				os << "." << (*params)[i];
+			}
+			os << "' not found in " << this->filename << "!" << endl;
+		}
+		return os.str();
+	}
+
+	shared_ptr<vector<string> > Configuration::getSections(const char *path, ...)
+	{
+		va_list ap;
+		va_start(ap, path);
+		shared_ptr<vector<string> > params = getParams('.', path, ap);
+		va_end(ap);
+
+		vector<ConfigNode *> nodes;
+
+		collectSections(this->configRoot.get(), params.get(), 0, &nodes);
+
+		shared_ptr<vector<string> > result(new vector<string>());
+
+		if (nodes.size() == 0)
+		{
+			cerr << pathNotFound(params.get()) << endl;
+			throw exception();
+		}
+
+		for (unsigned int i = 0; i < nodes.size(); i++)
+		{
+
+			if (nodes[i]->getType() == ConfigNode::Node)
+			{
+				result->push_back(nodes[i]->getName());
 			}
 		}
-
-		if (!found)
-			return;
-	}
-}
-
-std::string Configuration::pathNotFound(std::vector<std::string> *params)
-{
-
-	std::ostringstream os;
-
-	if ((params == NULL) || (params->size() == 0))
-	{
-
-		os << "Empty path not found in " << this->filename << "!" << std::endl;
-
-	}
-	else
-	{
-
-		os << "Path '" << (*params)[0];
-
-		for (size_t i = 1; i < params->size(); i++)
-		{
-			os << "." << (*params)[i];
-		}
-
-		os << "' not found in " << this->filename << "!" << std::endl;
-	}
-
-	return os.str();
-}
-
-std::shared_ptr<std::vector<std::string> > Configuration::getSections(const char *path, ...)
-{
-
-	std::shared_ptr<std::vector<std::string> > params;
-	va_list ap;
-	va_start(ap, path);
-	params = split('.', path, ap);
-	va_end(ap);
-
-	std::vector<ConfigNode *> nodes;
-
-	collectSections(this->configRoot.get(), params.get(), 0, &nodes);
-
-	std::shared_ptr<std::vector<std::string> > result(new std::vector<std::string>());
-
-	if (nodes.size() == 0)
-	{
-		throw ConfigException(pathNotFound(params.get()));
-	}
-
-	for (unsigned int i = 0; i < nodes.size(); i++)
-	{
-
-		if (nodes[i]->getType() == ConfigNode::Node)
-		{
-			result->push_back(nodes[i]->getName());
-		}
-	}
-
-	return result;
-}
-
-std::shared_ptr<std::vector<std::string> > Configuration::getNames(const char *path, ...)
-{
-
-	std::shared_ptr<std::vector<std::string> > params;
-	va_list ap;
-	va_start(ap, path);
-	params = split('.', path, ap);
-	va_end(ap);
-
-	std::vector<ConfigNode *> nodes;
-
-	collect(this->configRoot.get(), params.get(), 0, &nodes);
-
-	std::shared_ptr<std::vector<std::string> > result(new std::vector<std::string>());
-
-	if (nodes.size() == 0)
-	{
-		throw ConfigException(pathNotFound(params.get()));
-	}
-
-	for (size_t i = 0; i < nodes.size(); i++)
-	{
-		if (nodes[i]->getType() == ConfigNode::Leaf)
-		{
-			result->push_back(nodes[i]->getName());
-		}
-	}
-
-	return result;
-}
-
-std::shared_ptr<std::vector<std::string> > Configuration::tryGetSections(std::string d, const char *path, ...)
-{
-
-	std::shared_ptr<std::vector<std::string> > params;
-	va_list ap;
-	va_start(ap, path);
-	params = split('.', path, ap);
-	va_end(ap);
-
-	std::vector<ConfigNode *> nodes;
-
-	collect(this->configRoot.get(), params.get(), 0, &nodes);
-
-	std::shared_ptr<std::vector<std::string> > result(new std::vector<std::string>());
-
-	if (nodes.size() == 0)
-	{
-
-		result->push_back(d);
 
 		return result;
 	}
 
-	for (size_t i = 0; i < nodes.size(); i++)
+	shared_ptr<vector<string> > Configuration::getNames(const char *path, ...)
 	{
-		if (nodes[i]->getType() == ConfigNode::Node)
+		va_list ap;
+		va_start(ap, path);
+		shared_ptr<vector<string> > params = getParams('.', path, ap);
+		va_end(ap);
+
+		vector<ConfigNode *> nodes;
+
+		collect(this->configRoot.get(), params.get(), 0, &nodes);
+
+		shared_ptr<vector<string> > result(new vector<string>());
+
+		if (nodes.size() == 0)
 		{
-			result->push_back(nodes[i]->getName());
+			cerr << pathNotFound(params.get()) << endl;
+			throw exception();
 		}
-	}
 
-	return result;
-}
-
-std::shared_ptr<std::vector<std::string> > Configuration::tryGetNames(std::string d, const char *path, ...)
-{
-	std::shared_ptr<std::vector<std::string> > params;
-	va_list ap;
-	va_start(ap, path);
-	params = split('.', path, ap);
-	va_end(ap);
-	std::vector<ConfigNode *> nodes;
-
-	collect(this->configRoot.get(), params.get(), 0, &nodes);
-
-	std::shared_ptr<std::vector<std::string> > result(new std::vector<std::string>());
-
-	if (nodes.size() == 0)
-	{
-
-		result->push_back(d);
+		for (size_t i = 0; i < nodes.size(); i++)
+		{
+			if (nodes[i]->getType() == ConfigNode::Leaf)
+			{
+				result->push_back(nodes[i]->getName());
+			}
+		}
 
 		return result;
 	}
 
-	for (size_t i = 0; i < nodes.size(); i++)
+	shared_ptr<vector<string> > Configuration::tryGetSections(string d, const char *path, ...)
 	{
-		if (nodes[i]->getType() == ConfigNode::Leaf)
+		va_list ap;
+		va_start(ap, path);
+		shared_ptr<vector<string> > params = getParams('.', path, ap);
+		va_end(ap);
+
+		vector<ConfigNode *> nodes;
+
+		collect(this->configRoot.get(), params.get(), 0, &nodes);
+
+		shared_ptr<vector<string> > result(new vector<string>());
+
+		if (nodes.size() == 0)
 		{
-			result->push_back(nodes[i]->getName());
+			result->push_back(d);
+			return result;
 		}
-	}
 
-	return result;
-}
-
-std::string Configuration::trimLeft(const std::string& str, const std::string& whitespace)
-{
-	const auto strBegin = str.find_first_not_of(whitespace);
-	if (strBegin == std::string::npos)
-	{
-		return ""; // no content
-	}
-
-	return str.substr(strBegin, str.length());
-}
-
-std::string Configuration::trim(const std::string& str, const std::string& whitespace)
-{
-	const auto strBegin = str.find_first_not_of(whitespace);
-	if (strBegin == std::string::npos)
-	{
-		return ""; // no content
-	}
-	const auto strEnd = str.find_last_not_of(whitespace);
-	const auto strRange = strEnd - strBegin + 1;
-
-	return str.substr(strBegin, strRange);
-}
-std::shared_ptr<std::vector<std::string> > Configuration::split(char seperator, const char *path, va_list ap)
-{
-	std::shared_ptr<std::vector<std::string> > params(new std::vector<std::string>());
-	if (path != NULL)
-	{
-		const char *temp = path;
-		do
+		for (size_t i = 0; i < nodes.size(); i++)
 		{
-			std::string::size_type p = 0;
-			std::string::size_type q;
-			std::string charString = temp;
-			while ((q = charString.find(seperator, p)) != std::string::npos)
+			if (nodes[i]->getType() == ConfigNode::Node)
 			{
-				params->emplace_back(temp, p, q - p);
-				p = q + 1;
+				result->push_back(nodes[i]->getName());
 			}
-			params->emplace_back(temp, p, charString.length());
-		} while ((temp = va_arg(ap, const char *)) != NULL);
+		}
+
+		return result;
 	}
-	return params;
-}
+
+	/**
+	 * Collects the names of all child sections at the given level.
+	 * @param d the default value which should be returned if the given path does not exist.
+	 * @param path Specifies the level inside the configuration, at which the names of the child sections should be collected.
+	 * @return The names of the sections at the given path
+	 */
+	shared_ptr<vector<string> > Configuration::tryGetNames(string d, const char *path, ...)
+	{
+		va_list ap;
+		va_start(ap, path);
+		shared_ptr<vector<string> > params = getParams('.', path, ap);
+		va_end(ap);
+
+		vector<ConfigNode *> nodes;
+
+		collect(this->configRoot.get(), params.get(), 0, &nodes);
+
+		shared_ptr<vector<string> > result(new vector<string>());
+
+		if (nodes.size() == 0)
+		{
+			result->push_back(d);
+			return result;
+		}
+
+		for (size_t i = 0; i < nodes.size(); i++)
+		{
+			if (nodes[i]->getType() == ConfigNode::Leaf)
+			{
+				result->push_back(nodes[i]->getName());
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Removes the given whitespaces at the beginning of the string.
+	 * @param str The string which should be trimmed.
+	 * @param whitespace The whitespaces which should be removed.
+	 * @return The trimmed string.
+	 */
+	string Configuration::trimLeft(const string& str, const string& whitespace)
+	{
+		const auto strBegin = str.find_first_not_of(whitespace);
+		if (strBegin == string::npos)
+		{
+			return ""; // no content
+		}
+
+		return str.substr(strBegin, str.length());
+	}
+
+	/**
+	 * Removes the given whitespaces at the beginning and the end of the string.
+	 * @param str The string which should be trimmed.
+	 * @param whitespace The whitespaces which should be removed.
+	 * @return The trimmed string.
+	 */
+	string Configuration::trim(const string& str, const string& whitespace)
+	{
+		const auto strBegin = str.find_first_not_of(whitespace);
+		if (strBegin == string::npos)
+		{
+			return ""; // no content
+		}
+		const auto strEnd = str.find_last_not_of(whitespace);
+		const auto strRange = strEnd - strBegin + 1;
+
+		return str.substr(strBegin, strRange);
+	}
+
+	/**
+	 * Splits the given strings if it finds the given seperator.
+	 * @param seperator
+	 * @param path
+	 * @param ap
+	 * @return The list of strings after everything was splitted.
+	 */
+	shared_ptr<vector<string> > Configuration::getParams(char seperator, const char *path, va_list ap)
+	{
+		shared_ptr<vector<string> > params(new vector<string>());
+		if (path != NULL)
+		{
+			const char *temp = path;
+			do
+			{
+				string::size_type p = 0;
+				string::size_type q;
+				string charString = temp;
+				while ((q = charString.find(seperator, p)) != string::npos)
+				{
+					params->emplace_back(temp, p, q - p);
+					p = q + 1;
+				}
+				params->emplace_back(temp, p, charString.length());
+			} while ((temp = va_arg(ap, const char *)) != NULL);
+		}
+		return params;
+	}
 }

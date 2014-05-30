@@ -97,8 +97,6 @@ include_directories(include  ${catkin_LIBRARIES})
 add_library(system_config
   src/SystemConfig.cpp
   src/Configuration.cpp
-  src/ConfigException.cpp
-  src/Exception.cpp
 )
 
 ## Declare a cpp executable

@@ -17,47 +17,39 @@ using namespace std;
 
 #include "Configuration.h"
 
-const std::string DOMAIN_FOLDER = "DOMAIN_FOLDER";
-const std::string DOMAIN_CONFIG_FOLDER = "DOMAIN_CONFIG_FOLDER";
+const string DOMAIN_FOLDER = "DOMAIN_FOLDER";
+const string DOMAIN_CONFIG_FOLDER = "DOMAIN_CONFIG_FOLDER";
 
 namespace supplementary
 {
-	class SystemConfig;
-	typedef std::shared_ptr<const SystemConfig> SystemConfigPtr;
-
 	class SystemConfig
 	{
 
 	protected:
-		// stuff for singlton pattern
-		static bool initialized;
-		static mutex scMutex;
-		static atomic < SystemConfigPtr > instance;
-
-		static std::string rootPath;
-		static std::string configPath;
-		static std::string hostname;
-		static std::map<std::string, std::shared_ptr<Configuration> > configs;
-		static const char NODE_NAME_SEPERATOR = '_';
-		static int ownRobotID;
+		static string rootPath;
+		static string configPath;
+		static string hostname;
+		static mutex configsMapMutex;
+		static map<string, shared_ptr<Configuration> > configs;
+//		static const char NODE_NAME_SEPERATOR = '_';
 
 	public:
-		static SystemConfigPtr getInstance();
-
-		static std::string robotNodeName(const std::string& nodeName);
+		static SystemConfig* getInstance();
+		static string robotNodeName(const string& nodeName);
 		static int GetOwnRobotID();
-		static std::string getHostname();
-		static void setHostname(std::string newHostname);
-		static void resetHostname();
-		Configuration *operator[](const std::string s);
-		std::string getRootPath();
-		std::string getConfigPath();bool fileExists(const std::string& filename);
-		void setRootPath(std::string rootPath);
-		void setConfigPath(std::string configPath);
-		static std::string GetEnv(const std::string& var);
+		static string getHostname();
+		static void setHostname(string newHostname);
+		//static void resetHostname();
+		Configuration *operator[](const string s);
+		string getRootPath();
+		string getConfigPath();bool fileExists(const string& filename);
+		void setRootPath(string rootPath);
+		void setConfigPath(string configPath);
+		static string getEnv(const string& var);
 
 	private:
 		SystemConfig();
+		~SystemConfig(){};
 	};
 }
 #endif /* SYSTEMCONFIG_H_ */

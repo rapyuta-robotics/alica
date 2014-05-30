@@ -5,7 +5,11 @@
 #include <stdio.h>
 
 using namespace supplementary;
-std::string get_selfpath() {
+/**
+ * Helpfull method to get the location of the currently executed executable.
+ * @return The path to the running executable.
+ */
+std::string getSelfpath() {
 	char buff[1024];
 	ssize_t len = ::readlink("/proc/self/exe", buff, sizeof(buff)-1);
 	if (len != -1) {
@@ -16,55 +20,30 @@ std::string get_selfpath() {
 	}
 }
 // Declare a test
-TEST(SystemConfigBasics, ownRobotID)
+TEST(SystemConfigBasics, readValues)
 {
-	SystemConfigPtr sc = SystemConfig::getInstance();
-	int ownID = sc->GetOwnRobotID();
-	EXPECT_TRUE(ownID>0);
-}
-
-TEST(SystemConfigBasics, ownRobotID2)
-{
-	SystemConfigPtr sc = SystemConfig::getInstance();
-
-	int ownID = (*sc)["Globals"]->get<int>("Globals.Team", SystemConfig::getHostname().c_str(), "ID", NULL);
-	EXPECT_TRUE(ownID>0);
-}
-
-TEST(SystemConfigBasics, testOwnEtc)
-{
-	std::string path = get_selfpath();
+	// determine the path to the test config
+	std::string path = getSelfpath();
 	int place = path.rfind("devel");
 	path = path.substr(0, place);
 	path = path + "src/supplementary/system_config/test";
 
-	SystemConfigPtr sc = SystemConfig::getInstance();
+	// bring up the SystemConfig with the corresponding path
+	SystemConfig* sc = SystemConfig::getInstance();
 	sc->setRootPath(path);
 	sc->setConfigPath(path + "/etc");
-	Configuration *conf = (*sc)["Test"];
 
-	std::string testValue1 = conf->get<std::string>("TestValue1", NULL);
-	EXPECT_STREQ(testValue1.c_str(),"TestValue1");
+	// read int
+	int intTestValue = (*sc)["Test"]->get<int>("intTestValue", NULL);
+	EXPECT_EQ(221, intTestValue);
 
-	int testValue2 = conf->get<int>("TestValue2", NULL);
-	EXPECT_EQ(testValue2,2);
+	// read double
+	double doubleTestValue = (*sc)["Test"]->get<double>("doubleTestValue", NULL);
+	EXPECT_DOUBLE_EQ(0.66234023823, doubleTestValue);
 
-	float testValue3 = conf->get<float>("TestValue3", NULL);
-	EXPECT_FLOAT_EQ(testValue3,0.66412);
-
-	bool testValue4 = conf->get<bool>("TestValue4", NULL);
-	EXPECT_EQ(testValue4, false);
-
-	bool testValue5 = conf->get<bool>("TestValue5", NULL);
-	EXPECT_EQ(testValue5, false);
-
-	bool testValue6 = conf->get<bool>("TestValue6", NULL);
-	EXPECT_EQ(testValue6, true);
-
-	bool testValue7 = conf->get<bool>("TestValue7", NULL);
-	EXPECT_EQ(testValue7, true);
-
-
+	// read float
+	float floatTestValue = (*sc)["Test"]->get<float>("floatTestValue", NULL);
+	EXPECT_FLOAT_EQ(1.14f, floatTestValue);
 }
 
 // Run all the tests that were declared with TEST()
