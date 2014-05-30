@@ -16,13 +16,11 @@ namespace alica
 	 */
 	AlicaEngine::AlicaEngine()
 	{
-		//Sanity check
-		supplementary::SystemConfig::GetOwnRobotID();
 
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->stepEngine = false;
 
-		cout << "AE: Constructor called!" << endl;
+		cout << "AE: Constructor finished!" << endl;
 	}
 
 	AlicaEngine::~AlicaEngine()
@@ -30,23 +28,33 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
-	void AlicaEngine::Init(string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine)
+	/**
+	 * The method for getting the singleton instance.
+	 * @return A pointer to the AlicaEngine object, you must not delete.
+	 */
+	AlicaEngine* AlicaEngine::getInstance()
 	{
-		this->SetStepEngine(stepEngine);
-
-		this->planRepository = shared_ptr<PlanRepository> (new PlanRepository());
+		static AlicaEngine instance;
+		return &instance;
 	}
 
-	void AlicaEngine::Start()
+	void AlicaEngine::init(string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine)
+	{
+		this->setStepEngine(stepEngine);
+
+		this->planRepository = shared_ptr<PlanRepository>(new PlanRepository());
+	}
+
+	void AlicaEngine::start()
 	{
 	}
 
-	bool AlicaEngine::GetStepEngine()
+	bool AlicaEngine::getStepEngine()
 	{
 		return this->stepEngine;
 	}
 
-	void AlicaEngine::SetStepEngine(bool stepEngine)
+	void AlicaEngine::setStepEngine(bool stepEngine)
 	{
 		this->stepEngine = stepEngine;
 	}

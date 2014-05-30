@@ -12,8 +12,6 @@ namespace alica
 
 	PlanParser::PlanParser(std::shared_ptr<PlanRepository> rep)
 	{
-
-//	this->mf = new ModelFactory(this, rep);
 		this->rep = rep;
 
 		this->sc = supplementary::SystemConfig::getInstance();

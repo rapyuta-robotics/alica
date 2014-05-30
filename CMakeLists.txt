@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(alica_engine)
+project(alica)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -81,10 +81,9 @@ find_package(catkin REQUIRED COMPONENTS roscpp system_config)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-#  LIBRARIES alica_engine
-  CATKIN_DEPENDS roscpp system_config
-  DEPENDS program_options
-  
+  LIBRARIES alica
+  CATKIN_DEPENDS roscpp
+  DEPENDS tinyxml
 )
 
 ###########
@@ -96,22 +95,26 @@ catkin_package(
  include_directories(include ${catkin_INCLUDE_DIRS})
 
 ## Declare a cpp library
-# add_library(alica_engine
-#   src/${PROJECT_NAME}/alica_engine.cpp
-# )
-file (GLOB _my_sources RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/engine/*.cpp src/engine/parser/*.cpp src/engine/model/*.cpp src/*.cpp)
+ add_library(alica
+   src/engine/AlicaEngine.cpp
+   src/engine/IPlanParser.cpp
+   src/engine/PlanRepository.cpp 
+ )
+ 
+ target_link_libraries(alica 
+   ${catkin_LIBRARIES} system_config
+ )
+ 
 ## Declare a cpp executable
- add_executable(test_base ${_my_sources})
-
+ add_executable(test_base src/TestBase.cpp)
+ 
+ target_link_libraries(test_base
+   ${catkin_LIBRARIES} alica
+ )
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(alica_engine_node alica_engine_generate_messages_cpp)
-
-## Specify libraries to link a library or executable target against
- target_link_libraries(test_base
-   ${catkin_LIBRARIES} system_config
- )
+# add_dependencies(alica alica_engine_generate_messages_cpp)
 
 #############
 ## Install ##
@@ -154,9 +157,9 @@ file (GLOB _my_sources RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/engine/*.cpp src
 
 ## Add gtest based cpp test target and link libraries
  catkin_add_gtest(${PROJECT_NAME}-test test/test_alica_engine.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
+ if(TARGET ${PROJECT_NAME}-test)
+   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
+ endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
