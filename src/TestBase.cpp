@@ -19,6 +19,8 @@ TestBase::TestBase(int argc, char** argv) {
 	cout << endl;
 
 	this->ae = AlicaEngine::getInstance();
+	this->ae->init(this->roleset, this->masterPlan, this->rolesetdir, this->stepEngine);
+	this->ae->start();
 }
 
 void TestBase::ConsumeCmdLineArguments(int argc, char** argv) {

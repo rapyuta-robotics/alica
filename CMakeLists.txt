@@ -97,8 +97,12 @@ catkin_package(
 ## Declare a cpp library
  add_library(alica
    src/engine/AlicaEngine.cpp
-   src/engine/IPlanParser.cpp
-   src/engine/PlanRepository.cpp 
+   src/engine/parser/PlanParser.cpp
+   src/engine/parser/ModelFactory.cpp
+   src/engine/PlanRepository.cpp
+   src/engine/model/Plan.cpp
+   src/engine/model/AbstractPlan.cpp
+   src/engine/model/AlicaElement.cpp
  )
  
  target_link_libraries(alica 
