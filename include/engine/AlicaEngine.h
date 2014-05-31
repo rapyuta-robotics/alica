@@ -12,6 +12,8 @@
 
 #include <SystemConfig.h>
 #include "engine/PlanRepository.h"
+#include "engine/IPlanParser.h"
+#include "engine/parser/PlanParser.h"
 
 using namespace std;
 
@@ -38,6 +40,7 @@ namespace alica
 		void setStepEngine(bool stepEngine);
 
 		shared_ptr<PlanRepository> planRepository;
+		shared_ptr<IPlanParser> planParser;
 	};
 
 } /* namespace Alica */
