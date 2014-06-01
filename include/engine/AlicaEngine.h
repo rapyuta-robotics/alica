@@ -14,6 +14,7 @@
 #include "engine/PlanRepository.h"
 #include "engine/IPlanParser.h"
 #include "engine/parser/PlanParser.h"
+#include "engine/model/Plan.h"
 
 using namespace std;
 
@@ -30,6 +31,7 @@ namespace alica
 
 	protected:
 		supplementary::SystemConfig* sc;
+		shared_ptr<Plan> masterPlan;
 
 	private:
 		// private constructur/ destructor because of singleton

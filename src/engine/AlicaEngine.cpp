@@ -43,8 +43,8 @@ namespace alica
 		this->setStepEngine(stepEngine);
 
 		this->planRepository = shared_ptr<PlanRepository>(new PlanRepository());
-		// todo try to make the creation inside the PlanParser file
 		this->planParser = shared_ptr<IPlanParser>(new PlanParser(this->planRepository));
+		this->masterPlan = this->planParser->ParsePlanTree(masterPlanName);
 	}
 
 	void AlicaEngine::start()
