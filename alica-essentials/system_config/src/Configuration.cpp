@@ -518,10 +518,12 @@ namespace supplementary
 				string charString = temp;
 				while ((q = charString.find(seperator, p)) != string::npos)
 				{
+//					cout << "SC-Conf: Adding-InLoop: '" << string(temp, p, q-p) << "'" << endl;
 					params->emplace_back(temp, p, q - p);
 					p = q + 1;
 				}
-				params->emplace_back(temp, p, charString.length());
+//				cout << "SC-Conf: Adding-AfterLoop: '" << string(temp, p, charString.length()-p) << "'" << endl;
+				params->emplace_back(temp, p, charString.length()-p);
 			} while ((temp = va_arg(ap, const char *)) != NULL);
 		}
 		return params;

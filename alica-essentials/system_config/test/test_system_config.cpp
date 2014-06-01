@@ -1,10 +1,10 @@
-// Bring in my package's API, which is what I'm testing
 #include "SystemConfig.h"
-// Bring in gtest
 #include <gtest/gtest.h>
 #include <stdio.h>
 
+using namespace std;
 using namespace supplementary;
+
 /**
  * Helpfull method to get the location of the currently executed executable.
  * @return The path to the running executable.
@@ -17,6 +17,8 @@ std::string getSelfpath() {
 		return std::string(buff);
 	} else {
 		/* handle error condition */
+		cerr << "Could not determine my own path!" << endl;
+		throw new exception();
 	}
 }
 // Declare a test
