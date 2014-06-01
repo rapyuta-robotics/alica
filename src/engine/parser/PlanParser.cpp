@@ -4,21 +4,21 @@
  *  Created on: Mar 27, 2014
  *      Author: Stephan Opfer
  */
-
+using namespace std;
 #include "engine/parser/PlanParser.h"
 
 namespace alica
 {
 
-	PlanParser::PlanParser(std::shared_ptr<PlanRepository> rep)
+	PlanParser::PlanParser(shared_ptr<PlanRepository> rep)
 	{
 		this->rep = rep;
 
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->esConfigRoot = this->sc->getConfigPath();
 
-		std::string planDir = (*this->sc)["Alica"]->get < std::string > ("Alica.PlanDir");
-		std::string roleDir = (*this->sc)["Alica"]->get < std::string > ("Alica.RoleDir");
+		string planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
+		string roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
 
 	}
 
@@ -27,34 +27,44 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
-	std::shared_ptr<Plan> PlanParser::ParsePlanTree(std::string masterplan)
+	shared_ptr<Plan> PlanParser::ParsePlanTree(string masterplan)
 	{
+		string topFile = PlanParser::findPmlFile("basePlanPath", masterplan);
 
-		std::shared_ptr<Plan> p;
-		return p;
+		//if (topFile.Equals("")) {
+//			AlicaEngine.Get().Abort(String.Format("PP: Cannot find Masterplan {0} in {1}",masterplan,this.basePlanPath));
+		//}
+		//this.currentDirectory =  Directory.GetParent(topFile).FullName+Path.DirectorySeparatorChar;
+		cout << "PP: Using Masterplan " << topFile << endl;
+		//this.CurrentFile = topFile;
+		//this.masterPlan = ParsePlanFile(topFile);
+		//ParseFileLoop();
+		//this.mf.ComputeReachabilities();
+		//return this.masterPlan;
+
 	}
-	std::shared_ptr<RoleSet> PlanParser::ParseRoleSet(std::string roleSetName, std::string roleSetDir)
+	shared_ptr<RoleSet> PlanParser::ParseRoleSet(string roleSetName, string roleSetDir)
 	{
 
-		std::shared_ptr<RoleSet> r;
+		shared_ptr<RoleSet> r;
 		return r;
 	}
-	std::shared_ptr<std::map<long, alica::AlicaElement> > PlanParser::GetParsedElements()
+	shared_ptr<map<long, alica::AlicaElement> > PlanParser::GetParsedElements()
 	{
 
-		std::shared_ptr < std::map<long, alica::AlicaElement> > map;
+		shared_ptr<map<long, alica::AlicaElement> > map;
 		return map;
 	}
 	void PlanParser::IgnoreMasterPlanId(bool val)
 	{
 		this->mf->setIgnoreMasterPlanId(val);
 	}
-	std::string PlanParser::getCurrentFile()
+	string PlanParser::getCurrentFile()
 	{
 		return this->currentFile;
 	}
 
-	void PlanParser::setCurrentFile(std::string currentFile)
+	void PlanParser::setCurrentFile(string currentFile)
 	{
 		if (currentFile.compare(0, basePlanPath.size(), basePlanPath))
 		{
@@ -70,4 +80,23 @@ namespace alica
 		}
 	}
 
-} /* namespace Alica */
+	string PlanParser::findPmlFile(string path, string plan)
+	{
+		string fname = plan + ".pml";
+//		foreach(string file in Directory.GetFiles(path,"*.pml"))
+//		{
+//			if (file.EndsWith(Path.DirectorySeparatorChar+fname))
+//			{
+//				return file;
+//			}
+//		}
+//		foreach(string subfolder in Directory.GetDirectories(path))
+//		{
+//			string file = FindPmlFile(subfolder,plan);
+//			if (!file.Equals("")) return file;
+//		}
+		return "";
+	}
+
+}
+/* namespace Alica */

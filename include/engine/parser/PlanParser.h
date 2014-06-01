@@ -49,6 +49,7 @@ private:
 	std::string esConfigRoot;
 	std::string currentFile;
 
+	string findPmlFile (string path, string plan);
 
 };
 
