@@ -62,6 +62,7 @@ static const unsigned char TIXML_UTF_LEAD_2 = 0xbfU;
 namespace tinyxml2
 {
 
+
 	struct Entity
 	{
 		const char* pattern;
