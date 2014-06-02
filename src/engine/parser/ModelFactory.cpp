@@ -10,25 +10,27 @@
 namespace alica
 {
 
-ModelFactory::ModelFactory(PlanParser* p, std::shared_ptr<PlanRepository> rep)
-{
-	// TODO Auto-generated constructor stub
-	this->p = p;
-	this->ignoreMasterPlanId = false;
+	ModelFactory::ModelFactory(PlanParser* p, std::shared_ptr<PlanRepository> rep)
+	{
+		// TODO Auto-generated constructor stub
+		this->p = p;
+		this->ignoreMasterPlanId = false;
 
-}
+	}
 
-ModelFactory::~ModelFactory()
-{
-	// TODO Auto-generated destructor stub
-}
+	ModelFactory::~ModelFactory()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
-void ModelFactory::setIgnoreMasterPlanId(bool value){
-	this->ignoreMasterPlanId = value;
-}
+	void ModelFactory::setIgnoreMasterPlanId(bool value)
+	{
+		this->ignoreMasterPlanId = value;
+	}
 
-bool ModelFactory::getIgnoreMasterPlanId(){
-	return this->ignoreMasterPlanId;
-}
+	bool ModelFactory::getIgnoreMasterPlanId()
+	{
+		return this->ignoreMasterPlanId;
+	}
 
 } /* namespace Alica */
