@@ -13,6 +13,9 @@ namespace alica
 	PlanParser::PlanParser(shared_ptr<PlanRepository> rep)
 	{
 		this->rep = rep;
+		std::shared_ptr<PlanParser> ppp = shared_from_this();
+		cout << "HAÖÖÖP " << ppp << endl;
+		this->mf = std::shared_ptr<ModelFactory>(new ModelFactory(ppp, this->rep));
 
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->esConfigRoot = this->sc->getConfigPath();
