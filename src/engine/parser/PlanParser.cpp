@@ -14,23 +14,14 @@ namespace alica
 		this->rep = rep;
 		this->mf = shared_ptr<ModelFactory>(new ModelFactory(this, rep));
 		this->sc = supplementary::SystemConfig::getInstance();
-		this->esConfigRoot = this->sc->getConfigPath();
+		this->domainConfigFolder = this->sc->getConfigPath();
 
 		this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
 		this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
 
-		if (supplementary::FileSystem::isPathRooted(this->planDir))
+		if (domainConfigFolder.find_last_of("/") != domainConfigFolder.length() - 1)
 		{
-			// have fun
-		}
-		else
-		{
-			// have fun
-		}
-
-		if (esConfigRoot.find_last_of("/") != esConfigRoot.length() - 1)
-		{
-			esConfigRoot = esConfigRoot + "/";
+			domainConfigFolder = domainConfigFolder + "/";
 		}
 		if (planDir.find_last_of("/") != planDir.length() - 1)
 		{
@@ -40,7 +31,32 @@ namespace alica
 		{
 			roleDir = roleDir + "/";
 		}
-		//Hier gehts bei mir weiter...
+		if (!(supplementary::FileSystem::isPathRooted(this->planDir)))
+		{
+			basePlanPath = domainConfigFolder + "/" + planDir;
+		}
+		else
+		{
+			basePlanPath = planDir;
+		}
+		if (!(supplementary::FileSystem::isPathRooted(this->roleDir)))
+		{
+			baseRolePath = domainConfigFolder + "/" + roleDir;
+		}
+		else
+		{
+			baseRolePath = roleDir;
+		}
+		if (!(supplementary::FileSystem::fileExists(basePlanPath)))
+		{
+			//TODO: Abort method (c#) for the AlicaEngine
+			throw new exception();
+		}
+		if (!(supplementary::FileSystem::fileExists(baseRolePath)))
+		{
+			//TODO: Abort method (c#) for the AlicaEngine
+			throw new exception();
+		}
 	}
 
 	PlanParser::~PlanParser()
