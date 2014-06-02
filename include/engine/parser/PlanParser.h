@@ -8,7 +8,7 @@
 #ifndef PLANPARSER_H_
 #define PLANPARSER_H_
 
-//class ModelFactory;
+using namespace std;
 
 #include <iostream>
 #include <list>
@@ -17,7 +17,6 @@
 #include <SystemConfig.h>
 #include "../PlanRepository.h"
 #include "../IPlanParser.h"
-#include "ModelFactory.h"
 
 namespace alica
 {
@@ -57,7 +56,6 @@ private:
 	string findPmlFile(string path, string plan);
 
 };
-
 } /* namespace Alica */
 
 #endif /* PLANPARSER_H_ */

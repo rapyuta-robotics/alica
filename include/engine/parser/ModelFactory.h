@@ -7,6 +7,7 @@
 
 #ifndef MODELFACTORY_H_
 #define MODELFACTORY_H_
+
 using namespace std;
 
 #include <memory>
@@ -19,8 +20,6 @@ class PlanParser;
 class ModelFactory
 {
 public:
-//	ModelFactory(PlanParser p, PlanRepository rep);
-//	ModelFactory();
 	ModelFactory(PlanParser *p,shared_ptr<PlanRepository> rep);
 	virtual ~ModelFactory();
 
@@ -32,7 +31,6 @@ protected:
 	PlanParser* p;
 	shared_ptr<PlanRepository> rep;
 };
-
 } /* namespace Alica */
 
 #endif /* MODELFACTORY_H_ */

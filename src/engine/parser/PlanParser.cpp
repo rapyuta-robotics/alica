@@ -4,9 +4,8 @@
  *  Created on: Mar 27, 2014
  *      Author: Stephan Opfer
  */
-using namespace std;
 #include "engine/parser/PlanParser.h"
-
+#include "engine/parser/ModelFactory.h"
 namespace alica
 {
 
@@ -14,13 +13,11 @@ namespace alica
 	{
 		this->rep = rep;
 		this->mf = shared_ptr<ModelFactory>(new ModelFactory(this, rep));
-
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->esConfigRoot = this->sc->getConfigPath();
 
 		this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
 		this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
-
 	}
 
 	PlanParser::~PlanParser()
