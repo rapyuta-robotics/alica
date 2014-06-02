@@ -18,6 +18,15 @@ namespace alica
 
 		this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
 		this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
+
+		if (supplementary::FileSystem::isPathRooted(this->planDir))
+		{
+			// have fun
+		}
+		else
+		{
+			// have fun
+		}
 	}
 
 	PlanParser::~PlanParser()
@@ -27,11 +36,11 @@ namespace alica
 
 	shared_ptr<Plan> PlanParser::ParsePlanTree(string masterplan)
 	{
-
-		string topFile = supplementary::FileSystem::findFile(this->planDir, masterplan, ".pml");
+		string topFile = supplementary::FileSystem::findFile(this->basePlanPath, masterplan, ".pml");
 		cout << "PP: topFile: " << topFile << endl;
 
-		if (topFile.compare("") == 0) {
+		if (topFile.compare("") == 0)
+		{
 //			AlicaEngine.Get().Abort(String.Format("PP: Cannot find Masterplan {0} in {1}",masterplan,this.basePlanPath));
 		}
 //		this.currentDirectory =  Directory.GetParent(topFile).FullName+Path.DirectorySeparatorChar;
@@ -44,22 +53,26 @@ namespace alica
 		//return this.masterPlan;
 
 	}
+
 	shared_ptr<RoleSet> PlanParser::ParseRoleSet(string roleSetName, string roleSetDir)
 	{
 
 		shared_ptr<RoleSet> r;
 		return r;
 	}
+
 	shared_ptr<map<long, alica::AlicaElement> > PlanParser::GetParsedElements()
 	{
 
 		shared_ptr<map<long, alica::AlicaElement> > map;
 		return map;
 	}
+
 	void PlanParser::IgnoreMasterPlanId(bool val)
 	{
 		this->mf->setIgnoreMasterPlanId(val);
 	}
+
 	string PlanParser::getCurrentFile()
 	{
 		return this->currentFile;
