@@ -8,7 +8,7 @@
 #ifndef PLANPARSER_H_
 #define PLANPARSER_H_
 
-//class ModelFactory;
+using namespace std;
 
 #include <iostream>
 #include <list>
@@ -17,46 +17,45 @@
 #include <SystemConfig.h>
 #include "../PlanRepository.h"
 #include "../IPlanParser.h"
-#include "ModelFactory.h"
 
 namespace alica
 {
-class PlanParser : public enable_shared_from_this<PlanParser>, public IPlanParser
-{
-public:
-	PlanParser(shared_ptr<PlanRepository> rep);
-	virtual ~PlanParser();
+	class ModelFactory;
 
-	virtual shared_ptr<Plan> ParsePlanTree(string masterplan);
-	virtual shared_ptr<RoleSet> ParseRoleSet(string roleSetName, string roleSetDir);
-	virtual void IgnoreMasterPlanId(bool val);
-	virtual shared_ptr<map<long, alica::AlicaElement> > GetParsedElements();
+	class PlanParser : public enable_shared_from_this<PlanParser>, public IPlanParser
+	{
+	public:
+		PlanParser(shared_ptr<PlanRepository> rep);
+		virtual ~PlanParser();
 
-	string getCurrentFile();
-	void setCurrentFile(string currentFile);
+		virtual shared_ptr<Plan> ParsePlanTree(string masterplan);
+		virtual shared_ptr<RoleSet> ParseRoleSet(string roleSetName, string roleSetDir);
+		virtual void IgnoreMasterPlanId(bool val);
+		virtual shared_ptr<map<long, alica::AlicaElement> > GetParsedElements();
 
-private:
-	//shared_ptr<supplementary::SystemConfig> sc;
-	supplementary::SystemConfig* sc;
-	shared_ptr<ModelFactory> mf;
-	shared_ptr<PlanRepository> rep;
-	Plan masterPlan;
-	string planDir;
-	string roleDir;
+		string getCurrentFile();
+		void setCurrentFile(string currentFile);
 
+	private:
+		supplementary::SystemConfig* sc;
+		shared_ptr<ModelFactory> mf;
+		shared_ptr<PlanRepository> rep;
+		Plan masterPlan;
+		string planDir;
+		string roleDir;
 
-	list<string> filesToParse();
-	list<string> filesParsed();
+		list<string> filesToParse();
+		list<string> filesParsed();
 
-	string basePlanPath;
-	string baseRolePath;
-	string currentDirectory;
-	string esConfigRoot;
-	string currentFile;
+		string basePlanPath;
+		string baseRolePath;
+		string currentDirectory;
+		string esConfigRoot;
+		string currentFile;
 
-	string findPmlFile (string path, string plan);
+		string findPmlFile(string path, string plan);
 
-};
+	};
 
 } /* namespace Alica */
 

@@ -4,15 +4,15 @@
  *  Created on: Mar 27, 2014
  *      Author: Stephan Opfer
  */
-using namespace std;
 #include "engine/parser/PlanParser.h"
-
+#include "engine/parser/ModelFactory.h"
 namespace alica
 {
 
 	PlanParser::PlanParser(shared_ptr<PlanRepository> rep)
 	{
 		this->rep = rep;
+		cout << "hmpfeee" << endl;
 		std::shared_ptr<PlanParser> ppp = shared_from_this();
 		cout << "HAÖÖÖP " << ppp << endl;
 		this->mf = std::shared_ptr<ModelFactory>(new ModelFactory(ppp, this->rep));
@@ -22,7 +22,6 @@ namespace alica
 
 		this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
 		this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
-
 	}
 
 	PlanParser::~PlanParser()
