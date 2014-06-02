@@ -13,9 +13,7 @@ namespace alica
 	PlanParser::PlanParser(shared_ptr<PlanRepository> rep)
 	{
 		this->rep = rep;
-		std::shared_ptr<PlanParser> ppp = shared_from_this();
-		cout << "HAÖÖÖP " << ppp << endl;
-		this->mf = std::shared_ptr<ModelFactory>(new ModelFactory(ppp, this->rep));
+		this->mf = shared_ptr<ModelFactory>(new ModelFactory(this, rep));
 
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->esConfigRoot = this->sc->getConfigPath();
@@ -36,11 +34,12 @@ namespace alica
 		string topFile = supplementary::FileSystem::findFile(this->planDir, masterplan, ".pml");
 		cout << "PP: topFile: " << topFile << endl;
 
-		//if (topFile.Equals("")) {
+		if (topFile.compare("") == 0) {
 //			AlicaEngine.Get().Abort(String.Format("PP: Cannot find Masterplan {0} in {1}",masterplan,this.basePlanPath));
-		//}
-		//this.currentDirectory =  Directory.GetParent(topFile).FullName+Path.DirectorySeparatorChar;
-		cout << "PP: Using Masterplan " << topFile << endl;
+		}
+//		this.currentDirectory =  Directory.GetParent(topFile).FullName+Path.DirectorySeparatorChar;
+//		this->currentDirectory =
+//		cout << "PP: Using Masterplan " << topFile << endl;
 		//this.CurrentFile = topFile;
 		//this.masterPlan = ParsePlanFile(topFile);
 		//ParseFileLoop();
