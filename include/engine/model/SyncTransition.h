@@ -13,15 +13,15 @@
 namespace alica
 {
 
-/*
- *
- */
-class SyncTransition : public alica::AlicaElement
-{
-public:
-	SyncTransition();
-	virtual ~SyncTransition();
-};
+	/*
+	 *
+	 */
+	class SyncTransition : public alica::AlicaElement
+	{
+	public:
+		SyncTransition();
+		virtual ~SyncTransition();
+	};
 
 } /* namespace Alica */
 

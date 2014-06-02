@@ -10,15 +10,15 @@
 namespace alica
 {
 
-RolePriority::RolePriority()
-{
-	// TODO Auto-generated constructor stub
+	RolePriority::RolePriority()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-RolePriority::~RolePriority()
-{
-	// TODO Auto-generated destructor stub
-}
+	RolePriority::~RolePriority()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

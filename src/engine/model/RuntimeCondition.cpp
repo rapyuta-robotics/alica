@@ -10,15 +10,15 @@
 namespace alica
 {
 
-RuntimeCondition::RuntimeCondition()
-{
-	// TODO Auto-generated constructor stub
+	RuntimeCondition::RuntimeCondition()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-RuntimeCondition::~RuntimeCondition()
-{
-	// TODO Auto-generated destructor stub
-}
+	RuntimeCondition::~RuntimeCondition()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

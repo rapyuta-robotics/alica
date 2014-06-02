@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class Characteristic : public AlicaElement
-{
-public:
-	Characteristic();
-	virtual ~Characteristic();
-};
+	class Characteristic : public AlicaElement
+	{
+	public:
+		Characteristic();
+		virtual ~Characteristic();
+	};
 
 } /* namespace Alica */
 

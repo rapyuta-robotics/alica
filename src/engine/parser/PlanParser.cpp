@@ -27,6 +27,20 @@ namespace alica
 		{
 			// have fun
 		}
+
+		if (esConfigRoot.find_last_of("/") != esConfigRoot.length() - 1)
+		{
+			esConfigRoot = esConfigRoot + "/";
+		}
+		if (planDir.find_last_of("/") != planDir.length() - 1)
+		{
+			planDir = planDir + "/";
+		}
+		if (roleDir.find_last_of("/") != roleDir.length() - 1)
+		{
+			roleDir = roleDir + "/";
+		}
+		//Hier gehts bei mir weiter...
 	}
 
 	PlanParser::~PlanParser()

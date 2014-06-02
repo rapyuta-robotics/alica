@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class BehaviourConfiguration : public AbstractPlan
-{
-public:
-	BehaviourConfiguration();
-	virtual ~BehaviourConfiguration();
-};
+	class BehaviourConfiguration : public AbstractPlan
+	{
+	public:
+		BehaviourConfiguration();
+		virtual ~BehaviourConfiguration();
+	};
 
 } /* namespace Alica */
 

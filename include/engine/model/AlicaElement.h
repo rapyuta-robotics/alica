@@ -11,12 +11,12 @@
 namespace alica
 {
 
-class AlicaElement
-{
-public:
-	AlicaElement();
-	virtual ~AlicaElement();
-};
+	class AlicaElement
+	{
+	public:
+		AlicaElement();
+		virtual ~AlicaElement();
+	};
 
 } /* namespace Alica */
 

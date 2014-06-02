@@ -10,15 +10,15 @@
 namespace alica
 {
 
-SyncTransition::SyncTransition()
-{
-	// TODO Auto-generated constructor stub
+	SyncTransition::SyncTransition()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-SyncTransition::~SyncTransition()
-{
-	// TODO Auto-generated destructor stub
-}
+	SyncTransition::~SyncTransition()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

@@ -13,15 +13,15 @@
 namespace alica
 {
 
-/*
- *
- */
-class Variable : public AlicaElement
-{
-public:
-	Variable();
-	virtual ~Variable();
-};
+	/*
+	 *
+	 */
+	class Variable : public AlicaElement
+	{
+	public:
+		Variable();
+		virtual ~Variable();
+	};
 
 } /* namespace Alica */
 

@@ -10,15 +10,15 @@
 namespace alica
 {
 
-Characteristic::Characteristic()
-{
-	// TODO Auto-generated constructor stub
+	Characteristic::Characteristic()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-Characteristic::~Characteristic()
-{
-	// TODO Auto-generated destructor stub
-}
+	Characteristic::~Characteristic()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class TerminalState : public State
-{
-public:
-	TerminalState();
-	virtual ~TerminalState();
-};
+	class TerminalState : public State
+	{
+	public:
+		TerminalState();
+		virtual ~TerminalState();
+	};
 
 } /* namespace Alica */
 

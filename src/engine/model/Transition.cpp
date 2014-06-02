@@ -10,15 +10,15 @@
 namespace alica
 {
 
-Transition::Transition()
-{
-	// TODO Auto-generated constructor stub
+	Transition::Transition()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-Transition::~Transition()
-{
-	// TODO Auto-generated destructor stub
-}
+	Transition::~Transition()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

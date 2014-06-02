@@ -10,15 +10,15 @@
 namespace alica
 {
 
-ForallAgents::ForallAgents()
-{
-	// TODO Auto-generated constructor stub
+	ForallAgents::ForallAgents()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-ForallAgents::~ForallAgents()
-{
-	// TODO Auto-generated destructor stub
-}
+	ForallAgents::~ForallAgents()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

@@ -10,11 +10,11 @@
 
 namespace alica
 {
-class Capability
-{
-public:
-	Capability();
-	virtual ~Capability();
-};
+	class Capability
+	{
+	public:
+		Capability();
+		virtual ~Capability();
+	};
 }
 #endif /* CAPABILITY_H_ */

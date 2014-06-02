@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class PostCondition : public Condition
-{
-public:
-	PostCondition();
-	virtual ~PostCondition();
-};
+	class PostCondition : public Condition
+	{
+	public:
+		PostCondition();
+		virtual ~PostCondition();
+	};
 
 } /* namespace Alica */
 

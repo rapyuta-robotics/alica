@@ -10,15 +10,15 @@
 namespace alica
 {
 
-Parametrisation::Parametrisation()
-{
-	// TODO Auto-generated constructor stub
+	Parametrisation::Parametrisation()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-Parametrisation::~Parametrisation()
-{
-	// TODO Auto-generated destructor stub
-}
+	Parametrisation::~Parametrisation()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */
