@@ -18,6 +18,20 @@ namespace alica
 
 		this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
 		this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
+
+		if (esConfigRoot.find_last_of("/") != esConfigRoot.length() - 1)
+		{
+			esConfigRoot = esConfigRoot + "/";
+		}
+		if (planDir.find_last_of("/") != planDir.length() - 1)
+		{
+			planDir = planDir + "/";
+		}
+		if (roleDir.find_last_of("/") != roleDir.length() - 1)
+		{
+			roleDir = roleDir + "/";
+		}
+		//Hier gehts bei mir weiter...
 	}
 
 	PlanParser::~PlanParser()
@@ -31,7 +45,8 @@ namespace alica
 		string topFile = supplementary::FileSystem::findFile(this->planDir, masterplan, ".pml");
 		cout << "PP: topFile: " << topFile << endl;
 
-		if (topFile.compare("") == 0) {
+		if (topFile.compare("") == 0)
+		{
 //			AlicaEngine.Get().Abort(String.Format("PP: Cannot find Masterplan {0} in {1}",masterplan,this.basePlanPath));
 		}
 //		this.currentDirectory =  Directory.GetParent(topFile).FullName+Path.DirectorySeparatorChar;
