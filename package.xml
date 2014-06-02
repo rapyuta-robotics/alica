@@ -34,6 +34,7 @@
   <!-- Use build_depend for packages you need at compile time: -->
   <build_depend>roscpp</build_depend>
   <build_depend>system_config</build_depend>
+  <build_depend>fsystem</build_depend>
   
   <!-- Use buildtool_depend for build tool packages: -->
   <buildtool_depend>catkin</buildtool_depend>
@@ -41,6 +42,7 @@
   <!-- Use run_depend for packages you need at runtime: -->
   <run_depend>roscpp</run_depend>
   <run_depend>system_config</run_depend>
+  <run_depend>fsystem</run_depend>
   
   <!-- Use test_depend for packages you need only for testing: -->
   <test_depend>gtest</test_depend>
