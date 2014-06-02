@@ -7,6 +7,8 @@
 
 #include "FileSystem.h"
 
+
+
 namespace supplementary
 {
 
@@ -28,6 +30,8 @@ namespace supplementary
 	{
 		int size = 100;
 		char* buff = NULL;
+		buff = (char *)malloc(size);
+
 		while (1)
 		{
 			buff = (char *)realloc(buff, size);
@@ -39,7 +43,7 @@ namespace supplementary
 				return NULL;
 			}
 
-			if (len < size)
+			if (len == size)
 			{
 				size *= 2;
 			}
