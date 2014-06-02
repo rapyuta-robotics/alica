@@ -58,6 +58,7 @@ namespace supplementary
 
 	string FileSystem::findFile(string path, string file, string ending)
 	{
+		cout << "ff: Path: " << path << " file: " << " ending: " << ending << endl;
 		struct dirent **namelist;
 		int i, n;
 
