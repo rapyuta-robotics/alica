@@ -28,12 +28,17 @@ namespace supplementary
 	public:
 		virtual ~FileSystem();
 		static string getSelfPath ();
-		static string findFile(string path, string file, string ending);
+		static bool findFile(const string& path,const string& file, string& path_found);
 		static vector<string> findAllFiles(string path, string ending);
 		static bool fileExists(const string& filename);
 		static bool isPathRooted(const string& path);
 		static bool endsWith(const string& file, const string& ending);
+		static bool isDirectory(const string& path);
+		static bool isFile(const string& path);
+		static string getParent(const string& path);
 
+		static const string CURDIR;
+		static const string PARENTDIR;
 	private:
 		FileSystem();
 	};

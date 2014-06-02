@@ -9,6 +9,8 @@
 
 namespace supplementary
 {
+	string const FileSystem::CURDIR = ".";
+	string const FileSystem::PARENTDIR = "..";
 
 	FileSystem::FileSystem()
 	{
@@ -54,28 +56,65 @@ namespace supplementary
 		return NULL;
 	}
 
-	string FileSystem::findFile(string path, string file, string ending)
+	bool FileSystem::findFile(const string& path, const string& file, string& path_found)
 	{
-		cout << "ff: Path: " << path << " file: " << file << " ending: " << ending << endl;
+		//cout << "ff: Path: " << path << " file: " << file << endl;
 
-		string fullFile;
+		if (!fileExists(path))
+			return false;
+
 		struct dirent **namelist;
 		int i, n;
-
 		n = scandir(path.c_str(), &namelist, 0, alphasort);
+
 		if (n < 0)
 		{
-			perror("scandir");
+			perror("FileSystem::findFile");
+			free(namelist);
+			return false;
 		}
-		else
+
+		for (i = 0; i < n; i++)
 		{
-			for (i = 0; i < n; i++)
+			//cout << "ff: Namelist " << i << ": " << namelist[i]->d_name << endl;
+			string curFile = namelist[i]->d_name;
+			string curFullFile = path + curFile;
+			if (isDirectory(curFullFile))
 			{
-				cout << "Namelist " << i << ": " << namelist[i]->d_name << endl;
-				free(namelist[i]);
+				// ignore current or parent directory
+				if (CURDIR.compare(curFile) == 0 || PARENTDIR.compare(curFile) == 0)
+				{
+					free(namelist[i]);
+					continue;
+				}
+
+				// recursively call this method for regular directories
+				if (findFile(curFullFile+"/",file,path_found)) {
+					free(namelist);
+					return true;
+				}
 			}
+			else if (isFile(curFullFile))
+			{
+				if (file.compare(namelist[i]->d_name) == 0)
+				{
+					// file found, so return the full path
+					free(namelist);
+					path_found = curFullFile;
+					return true;
+				}
+			}
+			else
+			{
+				cout << "ff: Found a symlink, or something else, which is not a regular file or directory: " << curFullFile << endl;
+			}
+
+			free(namelist[i]);
 		}
+
 		free(namelist);
+		return false;
+
 	}
 
 	vector<string> FileSystem::findAllFiles(string path, string ending)
@@ -94,6 +133,42 @@ namespace supplementary
 		if (stat(filename.c_str(), &buf) != -1)
 		{
 			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks whether the path is a directory.
+	 * @param path The path to check, should be rooted.
+	 * @return true if the given path is a directory, false otherwise.
+	 */
+	bool FileSystem::isDirectory(const string& path)
+	{
+		struct stat buf;
+		if (stat(path.c_str(), &buf) != -1)
+		{
+			if (S_ISDIR(buf.st_mode))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks whether the path is a file.
+	 * @param path The path to check, should be rooted.
+	 * @return true if the given path is a regular file, false otherwise.
+	 */
+	bool FileSystem::isFile(const string& path)
+	{
+		struct stat buf;
+		if (stat(path.c_str(), &buf) != -1)
+		{
+			if (S_ISREG(buf.st_mode))
+			{
+				return true;
+			}
 		}
 		return false;
 	}
@@ -131,6 +206,20 @@ namespace supplementary
 		{
 			return false;
 		}
+	}
+
+	/**
+	 * Determines the parent folder of the given path.
+	 * @param path
+	 * @return "" if the path does not exist, or has no parent folder. Otherwise the parent folder.
+	 */
+	string FileSystem::getParent(const string& path)
+	{
+		if (!fileExists(path))
+		{
+			return "";
+		}
+		return path.substr(0,path.rfind('/'));
 	}
 
 } /* namespace fsystem */
