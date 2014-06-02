@@ -9,7 +9,6 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS roscpp system_config fsystem)
 
-
 ## System dependencies are found with CMake's conventions
 #find_package(Boost REQUIRED COMPONENTS program_options)
 
@@ -83,7 +82,7 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES alica
   CATKIN_DEPENDS roscpp fsystem
-  DEPENDS tinyxml
+#  DEPENDS tinyxml
 )
 
 ###########
@@ -97,17 +96,17 @@ catkin_package(
 ## Declare a cpp library
  add_library(alica
    src/engine/AlicaEngine.cpp
+   src/engine/PlanRepository.cpp
    src/engine/parser/PlanParser.cpp
    src/engine/parser/ModelFactory.cpp
-   src/engine/PlanRepository.cpp
+   src/engine/parser/tinyxml2.cpp
+   src/engine/model/AlicaElement.cpp
    src/engine/model/Plan.cpp
    src/engine/model/AbstractPlan.cpp
-   src/engine/model/AlicaElement.cpp
    src/engine/model/RuntimeCondition.cpp
    src/engine/model/Condition.cpp
  )
  
- message("ALICA: ${catkin_LIBRARIES}")
  target_link_libraries(alica ${catkin_LIBRARIES})
  add_dependencies(alica ${catkin_LIBRARIES})
  
