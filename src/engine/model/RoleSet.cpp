@@ -10,15 +10,15 @@
 namespace alica
 {
 
-RoleSet::RoleSet()
-{
-	// TODO Auto-generated constructor stub
+	RoleSet::RoleSet()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-RoleSet::~RoleSet()
-{
-	// TODO Auto-generated destructor stub
-}
+	RoleSet::~RoleSet()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

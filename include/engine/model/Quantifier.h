@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class Quantifier : public AlicaElement
-{
-public:
-	Quantifier();
-	virtual ~Quantifier();
-};
+	class Quantifier : public AlicaElement
+	{
+	public:
+		Quantifier();
+		virtual ~Quantifier();
+	};
 
 } /* namespace Alica */
 

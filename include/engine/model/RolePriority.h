@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class RolePriority : public AlicaElement
-{
-public:
-	RolePriority();
-	virtual ~RolePriority();
-};
+	class RolePriority : public AlicaElement
+	{
+	public:
+		RolePriority();
+		virtual ~RolePriority();
+	};
 
 } /* namespace Alica */
 

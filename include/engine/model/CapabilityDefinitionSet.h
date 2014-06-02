@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class CapabilityDefinitionSet : public AlicaElement
-{
-public:
-	CapabilityDefinitionSet();
-	virtual ~CapabilityDefinitionSet();
-};
+	class CapabilityDefinitionSet : public AlicaElement
+	{
+	public:
+		CapabilityDefinitionSet();
+		virtual ~CapabilityDefinitionSet();
+	};
 
 } /* namespace Alica */
 

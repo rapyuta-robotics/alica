@@ -10,15 +10,15 @@
 namespace alica
 {
 
-PreCondition::PreCondition()
-{
-	// TODO Auto-generated constructor stub
+	PreCondition::PreCondition()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-PreCondition::~PreCondition()
-{
-	// TODO Auto-generated destructor stub
-}
+	PreCondition::~PreCondition()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

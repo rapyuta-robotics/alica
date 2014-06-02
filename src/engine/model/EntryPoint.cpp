@@ -10,15 +10,15 @@
 namespace alica
 {
 
-EntryPoint::EntryPoint()
-{
-	// TODO Auto-generated constructor stub
+	EntryPoint::EntryPoint()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-EntryPoint::~EntryPoint()
-{
-	// TODO Auto-generated destructor stub
-}
+	EntryPoint::~EntryPoint()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

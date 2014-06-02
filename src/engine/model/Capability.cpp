@@ -9,14 +9,14 @@
 
 namespace alica
 {
-Capability::Capability()
-{
-	// TODO Auto-generated constructor stub
+	Capability::Capability()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-Capability::~Capability()
-{
-	// TODO Auto-generated destructor stub
-}
+	Capability::~Capability()
+	{
+		// TODO Auto-generated destructor stub
+	}
 }

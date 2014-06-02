@@ -13,15 +13,15 @@
 namespace alica
 {
 
-/*
- *
- */
-class TaskRepository : public AlicaElement
-{
-public:
-	TaskRepository();
-	virtual ~TaskRepository();
-};
+	/*
+	 *
+	 */
+	class TaskRepository : public AlicaElement
+	{
+	public:
+		TaskRepository();
+		virtual ~TaskRepository();
+	};
 
 } /* namespace Alica */
 

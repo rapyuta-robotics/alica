@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class PreCondition : public Condition
-{
-public:
-	PreCondition();
-	virtual ~PreCondition();
-};
+	class PreCondition : public Condition
+	{
+	public:
+		PreCondition();
+		virtual ~PreCondition();
+	};
 
 } /* namespace Alica */
 

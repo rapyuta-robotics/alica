@@ -10,15 +10,15 @@
 namespace alica
 {
 
-PlanningProblem::PlanningProblem()
-{
-	// TODO Auto-generated constructor stub
+	PlanningProblem::PlanningProblem()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-PlanningProblem::~PlanningProblem()
-{
-	// TODO Auto-generated destructor stub
-}
+	PlanningProblem::~PlanningProblem()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */
