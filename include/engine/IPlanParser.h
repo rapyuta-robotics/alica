@@ -10,6 +10,7 @@
 
 using namespace std;
 
+
 #include <stdio.h>
 #include <map>
 #include <memory>
@@ -24,9 +25,7 @@ namespace alica
 	class IPlanParser
 	{
 	public:
-		virtual ~IPlanParser()
-		{
-		}
+		virtual ~IPlanParser() {}
 		virtual std::shared_ptr<Plan> ParsePlanTree(std::string masterplan) = 0;
 		virtual std::shared_ptr<RoleSet> ParseRoleSet(std::string roleSetName, std::string roleSetDir) = 0;
 		virtual void IgnoreMasterPlanId(bool val) = 0;

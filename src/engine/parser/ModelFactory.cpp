@@ -6,10 +6,11 @@
  */
 
 #include "engine/parser/ModelFactory.h"
+
 namespace alica
 {
 
-ModelFactory::ModelFactory(shared_ptr<PlanParser> p, shared_ptr<PlanRepository> rep)
+ModelFactory::ModelFactory(PlanParser* p, std::shared_ptr<PlanRepository> rep)
 {
 	// TODO Auto-generated constructor stub
 	this->p = p;

@@ -21,7 +21,8 @@
 
 namespace alica
 {
-class PlanParser : public enable_shared_from_this<PlanParser>, public IPlanParser
+class ModelFactory;
+class PlanParser :  public IPlanParser
 {
 public:
 	PlanParser(shared_ptr<PlanRepository> rep);
@@ -44,7 +45,6 @@ private:
 	string planDir;
 	string roleDir;
 
-
 	list<string> filesToParse();
 	list<string> filesParsed();
 
@@ -54,7 +54,7 @@ private:
 	string esConfigRoot;
 	string currentFile;
 
-	string findPmlFile (string path, string plan);
+	string findPmlFile(string path, string plan);
 
 };
 
