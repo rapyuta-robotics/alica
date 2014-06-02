@@ -14,8 +14,10 @@ using namespace std;
 #include <vector>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <dirent.h>
 
 namespace supplementary
 {

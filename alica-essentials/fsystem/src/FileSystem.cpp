@@ -54,12 +54,28 @@ namespace supplementary
 
 	string FileSystem::findFile(string path, string file, string ending)
 	{
-		return "Test";
+		struct dirent **namelist;
+		int i, n;
+
+		n = scandir(path.c_str(), &namelist, 0, alphasort);
+		if (n < 0)
+		{
+			perror("scandir");
+		}
+		else
+		{
+			for (i = 0; i < n; i++)
+			{
+				cout << namelist[i]->d_name << endl;
+				free(namelist[i]);
+			}
+		}
+		free(namelist);
 	}
 
 	vector<string> FileSystem::findAllFiles(string path, string ending)
 	{
-		return vector<string> ();
+		return vector<string>();
 	}
 
 	/**
