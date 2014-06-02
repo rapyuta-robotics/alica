@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class State : public AlicaElement
-{
-public:
-	State();
-	virtual ~State();
-};
+	class State : public AlicaElement
+	{
+	public:
+		State();
+		virtual ~State();
+	};
 
 } /* namespace Alica */
 

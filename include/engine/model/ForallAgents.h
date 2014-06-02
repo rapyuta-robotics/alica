@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class ForallAgents : public Quantifier
-{
-public:
-	ForallAgents();
-	virtual ~ForallAgents();
-};
+	class ForallAgents : public Quantifier
+	{
+	public:
+		ForallAgents();
+		virtual ~ForallAgents();
+	};
 
 } /* namespace Alica */
 

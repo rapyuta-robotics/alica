@@ -10,15 +10,15 @@
 namespace alica
 {
 
-RoleTaskMapping::RoleTaskMapping()
-{
-	// TODO Auto-generated constructor stub
+	RoleTaskMapping::RoleTaskMapping()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-RoleTaskMapping::~RoleTaskMapping()
-{
-	// TODO Auto-generated destructor stub
-}
+	RoleTaskMapping::~RoleTaskMapping()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

@@ -13,15 +13,15 @@
 namespace alica
 {
 
-/*
- *
- */
-class SuccessState : public TerminalState
-{
-public:
-	SuccessState();
-	virtual ~SuccessState();
-};
+	/*
+	 *
+	 */
+	class SuccessState : public TerminalState
+	{
+	public:
+		SuccessState();
+		virtual ~SuccessState();
+	};
 
 } /* namespace Alica */
 

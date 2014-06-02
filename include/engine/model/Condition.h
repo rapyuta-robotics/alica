@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class Condition : public AlicaElement
-{
-public:
-	Condition();
-	virtual ~Condition();
-};
+	class Condition : public AlicaElement
+	{
+	public:
+		Condition();
+		virtual ~Condition();
+	};
 
 } /* namespace Alica */
 

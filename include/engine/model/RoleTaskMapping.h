@@ -13,15 +13,15 @@
 namespace alica
 {
 
-/*
- *
- */
-class RoleTaskMapping : public AlicaElement
-{
-public:
-	RoleTaskMapping();
-	virtual ~RoleTaskMapping();
-};
+	/*
+	 *
+	 */
+	class RoleTaskMapping : public AlicaElement
+	{
+	public:
+		RoleTaskMapping();
+		virtual ~RoleTaskMapping();
+	};
 
 } /* namespace Alica */
 

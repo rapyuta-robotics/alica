@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class Plan : public AbstractPlan
-{
-public:
-	Plan();
-	virtual ~Plan();
-};
+	class Plan : public AbstractPlan
+	{
+	public:
+		Plan();
+		virtual ~Plan();
+	};
 
 } /* namespace Alica */
 

@@ -10,15 +10,15 @@
 namespace alica
 {
 
-CapabilityDefinitionSet::CapabilityDefinitionSet()
-{
-	// TODO Auto-generated constructor stub
+	CapabilityDefinitionSet::CapabilityDefinitionSet()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-CapabilityDefinitionSet::~CapabilityDefinitionSet()
-{
-	// TODO Auto-generated destructor stub
-}
+	CapabilityDefinitionSet::~CapabilityDefinitionSet()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

@@ -13,15 +13,15 @@
 namespace alica
 {
 
-/*
- *
- */
-class Transition : public AlicaElement
-{
-public:
-	Transition();
-	virtual ~Transition();
-};
+	/*
+	 *
+	 */
+	class Transition : public AlicaElement
+	{
+	public:
+		Transition();
+		virtual ~Transition();
+	};
 
 } /* namespace Alica */
 

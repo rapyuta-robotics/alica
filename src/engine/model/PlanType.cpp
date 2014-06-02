@@ -10,15 +10,15 @@
 namespace alica
 {
 
-PlanType::PlanType()
-{
-	// TODO Auto-generated constructor stub
+	PlanType::PlanType()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-PlanType::~PlanType()
-{
-	// TODO Auto-generated destructor stub
-}
+	PlanType::~PlanType()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

@@ -10,15 +10,15 @@
 namespace alica
 {
 
-Role::Role()
-{
-	// TODO Auto-generated constructor stub
+	Role::Role()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-Role::~Role()
-{
-	// TODO Auto-generated destructor stub
-}
+	Role::~Role()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */
