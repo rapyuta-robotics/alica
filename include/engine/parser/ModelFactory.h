@@ -7,12 +7,13 @@
 
 #ifndef MODELFACTORY_H_
 #define MODELFACTORY_H_
-
-class PlanParser;
+using namespace std;
+//class PlanParser;
 
 #include <memory>
 
 #include "../PlanRepository.h"
+#include "PlanParser.h"
 namespace alica
 {
 
@@ -22,7 +23,7 @@ class ModelFactory
 public:
 //	ModelFactory(PlanParser p, PlanRepository rep);
 //	ModelFactory();
-	ModelFactory(PlanParser* p, std::shared_ptr<PlanRepository> rep);
+	ModelFactory(shared_ptr<PlanParser> p, shared_ptr<PlanRepository> rep);
 	virtual ~ModelFactory();
 
 	bool ignoreMasterPlanId;
@@ -30,8 +31,8 @@ public:
 	void setIgnoreMasterPlanId(bool value);
 
 protected:
-	PlanParser *p;
-	std::shared_ptr<PlanRepository> rep;
+	shared_ptr<PlanParser> p;
+	shared_ptr<PlanRepository> rep;
 };
 
 } /* namespace Alica */

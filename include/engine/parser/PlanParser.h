@@ -8,17 +8,20 @@
 #ifndef PLANPARSER_H_
 #define PLANPARSER_H_
 
-class ModelFactory;
+//class ModelFactory;
+
+#include <iostream>
+#include <list>
+#include <stdio.h>
 
 #include <SystemConfig.h>
 #include "../PlanRepository.h"
 #include "../IPlanParser.h"
-#include <list>
 #include "ModelFactory.h"
 
 namespace alica
 {
-class PlanParser : public IPlanParser
+class PlanParser : public enable_shared_from_this<PlanParser>, public IPlanParser
 {
 public:
 	PlanParser(std::shared_ptr<PlanRepository> rep);
