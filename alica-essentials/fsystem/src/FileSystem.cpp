@@ -7,8 +7,6 @@
 
 #include "FileSystem.h"
 
-
-
 namespace supplementary
 {
 
@@ -58,7 +56,9 @@ namespace supplementary
 
 	string FileSystem::findFile(string path, string file, string ending)
 	{
-		cout << "ff: Path: " << path << " file: " << " ending: " << ending << endl;
+		cout << "ff: Path: " << path << " file: " << file << " ending: " << ending << endl;
+
+		string fullFile;
 		struct dirent **namelist;
 		int i, n;
 
@@ -71,7 +71,7 @@ namespace supplementary
 		{
 			for (i = 0; i < n; i++)
 			{
-				cout << namelist[i]->d_name << endl;
+				cout << "Namelist " << i << ": " << namelist[i]->d_name << endl;
 				free(namelist[i]);
 			}
 		}
@@ -96,6 +96,41 @@ namespace supplementary
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Checks weather the given path starts with '/'.
+	 * @param path The path, which should be checked.
+	 * @return true if the path is rooted, false otherwise.
+	 */
+	bool FileSystem::isPathRooted(const string& path)
+	{
+		if (!path.empty() && path.find_first_of('/') == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/**
+	 * Checks weather the given file ends with the given ending.
+	 * @param file The file to check.
+	 * @param ending The ending for checking file.
+	 * @return true if the file is not empty and ends with ending, false, otherwise.
+	 */
+	bool FileSystem::endsWith(const string& file, const string& ending)
+	{
+		if (!file.empty() && (file.length() - ending.length()) == file.rfind(ending))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 } /* namespace fsystem */

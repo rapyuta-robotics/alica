@@ -31,6 +31,8 @@ namespace supplementary
 		static string findFile(string path, string file, string ending);
 		static vector<string> findAllFiles(string path, string ending);
 		static bool fileExists(const string& filename);
+		static bool isPathRooted(const string& path);
+		static bool endsWith(const string& file, const string& ending);
 
 	private:
 		FileSystem();
