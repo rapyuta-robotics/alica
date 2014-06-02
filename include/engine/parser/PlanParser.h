@@ -52,7 +52,7 @@ namespace alica
 		string basePlanPath;
 		string baseRolePath;
 		string currentDirectory;
-		string esConfigRoot;
+		string domainConfigFolder;
 		string currentFile;
 
 		string findPmlFile(string path, string plan);
