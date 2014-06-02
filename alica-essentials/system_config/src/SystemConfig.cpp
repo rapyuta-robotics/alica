@@ -12,7 +12,7 @@ namespace supplementary
 	map<string, shared_ptr<Configuration> > SystemConfig::configs;
 
 	/**
-	 * The method for getting the singlton instance.
+	 * The method for getting the singleton instance.
 	 * @return A pointer to the SystemConfig object, you must not delete.
 	 */
 	SystemConfig* SystemConfig::getInstance()
@@ -113,7 +113,7 @@ namespace supplementary
 
 		for (size_t i = 0; i < files.size(); i++)
 		{
-			if (fileExists(files[i]))
+			if (FileSystem::fileExists(files[i]))
 			{
 				lock_guard<mutex> lock(configsMapMutex);
 
@@ -217,18 +217,5 @@ namespace supplementary
 		}
 	}
 
-	/**
-	 * Checks whether a given file exists.
-	 * @param filename Absolute path to file.
-	 * @return true if the file exists, false otherwise.
-	 */
-	bool SystemConfig::fileExists(const string& filename)
-	{
-		struct stat buf;
-		if (stat(filename.c_str(), &buf) != -1)
-		{
-			return true;
-		}
-		return false;
-	}
+
 }

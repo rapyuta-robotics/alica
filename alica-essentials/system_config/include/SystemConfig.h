@@ -11,9 +11,8 @@ using namespace std;
 #include <atomic>
 #include <fstream>
 #include <iostream>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/stat.h>
+
+#include <FileSystem.h>
 
 #include "Configuration.h"
 
@@ -42,7 +41,7 @@ namespace supplementary
 		//static void resetHostname();
 		Configuration *operator[](const string s);
 		string getRootPath();
-		string getConfigPath();bool fileExists(const string& filename);
+		string getConfigPath();
 		void setRootPath(string rootPath);
 		void setConfigPath(string configPath);
 		static string getEnv(const string& var);

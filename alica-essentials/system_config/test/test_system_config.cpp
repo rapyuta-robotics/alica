@@ -1,31 +1,13 @@
 #include "SystemConfig.h"
 #include <gtest/gtest.h>
-#include <stdio.h>
 
-using namespace std;
 using namespace supplementary;
 
-/**
- * Helpfull method to get the location of the currently executed executable.
- * @return The path to the running executable.
- */
-std::string getSelfpath() {
-	char buff[1024];
-	ssize_t len = ::readlink("/proc/self/exe", buff, sizeof(buff)-1);
-	if (len != -1) {
-		buff[len] = '\0';
-		return std::string(buff);
-	} else {
-		/* handle error condition */
-		cerr << "Could not determine my own path!" << endl;
-		throw new exception();
-	}
-}
 // Declare a test
 TEST(SystemConfigBasics, readValues)
 {
 	// determine the path to the test config
-	std::string path = getSelfpath();
+	string path = FileSystem::getSelfPath();
 	int place = path.rfind("devel");
 	path = path.substr(0, place);
 	path = path + "src/supplementary/system_config/test";

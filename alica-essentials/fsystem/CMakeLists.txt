@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(system_config)
+project(fsystem)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -7,10 +7,10 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED fsystem)
+#find_package(catkin REQUIRED)
 
 ## System dependencies are found with CMake's conventions
-#find_package(Boost REQUIRED COMPONENTS system filesystem)
+# find_package(Boost REQUIRED COMPONENTS system)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -79,10 +79,10 @@ find_package(catkin REQUIRED fsystem)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
- INCLUDE_DIRS include
- LIBRARIES system_config
- CATKIN_DEPENDS fsystem
-# DEPENDS system filesystem
+  INCLUDE_DIRS include
+  LIBRARIES fsystem
+#  CATKIN_DEPENDS other_catkin_pkg
+#  DEPENDS system_lib
 )
 
 ###########
@@ -91,23 +91,24 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include ${catkin_INCLUDE_DIRS})
+ include_directories(include)
 
 ## Declare a cpp library
-add_library(system_config
-  src/SystemConfig.cpp
-  src/Configuration.cpp
-)
+ add_library(fsystem
+   src/FileSystem.cpp
+ )
 
 ## Declare a cpp executable
-# add_executable(system_config_node src/system_config_node.cpp)
+# add_executable(fsystem_node src/fsystem_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(system_config ${catkin_LIBRARIES})
+# add_dependencies(fsystem_node fsystem_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(system_config ${catkin_LIBRARIES})
+# target_link_libraries(fsystem_node
+#   ${catkin_LIBRARIES}
+# )
 
 #############
 ## Install ##
@@ -124,7 +125,7 @@ target_link_libraries(system_config ${catkin_LIBRARIES})
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS system_config system_config_node
+# install(TARGETS fsystem fsystem_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -149,10 +150,10 @@ target_link_libraries(system_config ${catkin_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-catkin_add_gtest(${PROJECT_NAME}-test test/test_system_config.cpp)
-if(TARGET ${PROJECT_NAME}-test)
-  target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
-endif()
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_fsystem.cpp)
+# if(TARGET ${PROJECT_NAME}-test)
+#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
+# endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
