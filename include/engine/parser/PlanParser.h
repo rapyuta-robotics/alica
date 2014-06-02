@@ -21,33 +21,35 @@ namespace alica
 class PlanParser : public IPlanParser
 {
 public:
-	PlanParser(std::shared_ptr<PlanRepository> rep);
+	PlanParser(shared_ptr<PlanRepository> rep);
 	virtual ~PlanParser();
 
-	virtual std::shared_ptr<Plan> ParsePlanTree(std::string masterplan);
-	virtual std::shared_ptr<RoleSet> ParseRoleSet(std::string roleSetName, std::string roleSetDir);
+	virtual shared_ptr<Plan> ParsePlanTree(string masterplan);
+	virtual shared_ptr<RoleSet> ParseRoleSet(string roleSetName, string roleSetDir);
 	virtual void IgnoreMasterPlanId(bool val);
-	virtual std::shared_ptr<std::map<long, alica::AlicaElement> > GetParsedElements();
+	virtual shared_ptr<map<long, alica::AlicaElement> > GetParsedElements();
 
-	std::string getCurrentFile();
-	void setCurrentFile(std::string currentFile);
+	string getCurrentFile();
+	void setCurrentFile(string currentFile);
 
 private:
-	//std::shared_ptr<supplementary::SystemConfig> sc;
+	//shared_ptr<supplementary::SystemConfig> sc;
 	supplementary::SystemConfig* sc;
-	std::shared_ptr<ModelFactory> mf;
-	std::shared_ptr<PlanRepository> rep;
+	shared_ptr<ModelFactory> mf;
+	shared_ptr<PlanRepository> rep;
 	Plan masterPlan;
+	string planDir;
+	string roleDir;
 
 
-	std::list<std::string> filesToParse();
-	std::list<std::string> filesParsed();
+	list<string> filesToParse();
+	list<string> filesParsed();
 
-	std::string basePlanPath;
-	std::string baseRolePath;
-	std::string currentDirectory;
-	std::string esConfigRoot;
-	std::string currentFile;
+	string basePlanPath;
+	string baseRolePath;
+	string currentDirectory;
+	string esConfigRoot;
+	string currentFile;
 
 	string findPmlFile (string path, string plan);
 

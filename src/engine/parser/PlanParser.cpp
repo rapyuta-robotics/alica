@@ -17,8 +17,8 @@ namespace alica
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->esConfigRoot = this->sc->getConfigPath();
 
-		string planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
-		string roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
+		this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
+		this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
 
 	}
 
@@ -29,7 +29,9 @@ namespace alica
 
 	shared_ptr<Plan> PlanParser::ParsePlanTree(string masterplan)
 	{
-		string topFile = PlanParser::findPmlFile("basePlanPath", masterplan);
+
+		string topFile = supplementary::FileSystem::findFile(this->planDir, masterplan, ".pml");
+		cout << "PP: topFile: " << topFile << endl;
 
 		//if (topFile.Equals("")) {
 //			AlicaEngine.Get().Abort(String.Format("PP: Cannot find Masterplan {0} in {1}",masterplan,this.basePlanPath));
