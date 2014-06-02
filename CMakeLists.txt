@@ -103,6 +103,8 @@ catkin_package(
    src/engine/model/Plan.cpp
    src/engine/model/AbstractPlan.cpp
    src/engine/model/AlicaElement.cpp
+   src/engine/model/RuntimeCondition.cpp
+   src/engine/model/Condition.cpp
  )
  
  target_link_libraries(alica 
