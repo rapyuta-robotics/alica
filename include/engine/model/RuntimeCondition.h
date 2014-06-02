@@ -13,15 +13,15 @@
 namespace alica
 {
 
-/*
- *
- */
-class RuntimeCondition : public Condition
-{
-public:
-	RuntimeCondition();
-	virtual ~RuntimeCondition();
-};
+	/*
+	 *
+	 */
+	class RuntimeCondition : public Condition
+	{
+	public:
+		RuntimeCondition();
+		virtual ~RuntimeCondition();
+	};
 
 } /* namespace Alica */
 

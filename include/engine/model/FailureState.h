@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class FailureState : public TerminalState
-{
-public:
-	FailureState();
-	virtual ~FailureState();
-};
+	class FailureState : public TerminalState
+	{
+	public:
+		FailureState();
+		virtual ~FailureState();
+	};
 
 } /* namespace Alica */
 

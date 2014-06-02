@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class Role : public AlicaElement
-{
-public:
-	Role();
-	virtual ~Role();
-};
+	class Role : public AlicaElement
+	{
+	public:
+		Role();
+		virtual ~Role();
+	};
 
 } /* namespace Alica */
 

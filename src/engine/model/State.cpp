@@ -10,15 +10,15 @@
 namespace alica
 {
 
-State::State()
-{
-	// TODO Auto-generated constructor stub
+	State::State()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-State::~State()
-{
-	// TODO Auto-generated destructor stub
-}
+	State::~State()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

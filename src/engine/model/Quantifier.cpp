@@ -10,15 +10,15 @@
 namespace alica
 {
 
-Quantifier::Quantifier()
-{
-	// TODO Auto-generated constructor stub
+	Quantifier::Quantifier()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-Quantifier::~Quantifier()
-{
-	// TODO Auto-generated destructor stub
-}
+	Quantifier::~Quantifier()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

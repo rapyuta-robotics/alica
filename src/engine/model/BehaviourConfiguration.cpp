@@ -10,15 +10,15 @@
 namespace alica
 {
 
-BehaviourConfiguration::BehaviourConfiguration()
-{
-	// TODO Auto-generated constructor stub
+	BehaviourConfiguration::BehaviourConfiguration()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-BehaviourConfiguration::~BehaviourConfiguration()
-{
-	// TODO Auto-generated destructor stub
-}
+	BehaviourConfiguration::~BehaviourConfiguration()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

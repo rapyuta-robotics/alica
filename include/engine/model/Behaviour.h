@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class Behaviour : public AlicaElement
-{
-public:
-	Behaviour();
-	virtual ~Behaviour();
-};
+	class Behaviour : public AlicaElement
+	{
+	public:
+		Behaviour();
+		virtual ~Behaviour();
+	};
 
 } /* namespace Alica */
 

@@ -10,15 +10,15 @@
 namespace alica
 {
 
-SuccessState::SuccessState()
-{
-	// TODO Auto-generated constructor stub
+	SuccessState::SuccessState()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-SuccessState::~SuccessState()
-{
-	// TODO Auto-generated destructor stub
-}
+	SuccessState::~SuccessState()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

@@ -10,15 +10,15 @@
 namespace alica
 {
 
-Variable::Variable()
-{
-	// TODO Auto-generated constructor stub
+	Variable::Variable()
+	{
+		// TODO Auto-generated constructor stub
 
-}
+	}
 
-Variable::~Variable()
-{
-	// TODO Auto-generated destructor stub
-}
+	Variable::~Variable()
+	{
+		// TODO Auto-generated destructor stub
+	}
 
 } /* namespace Alica */

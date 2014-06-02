@@ -15,22 +15,22 @@ using namespace std;
 #include "../PlanRepository.h"
 namespace alica
 {
-class PlanParser;
+	class PlanParser;
 
-class ModelFactory
-{
-public:
-	ModelFactory(PlanParser *p,shared_ptr<PlanRepository> rep);
-	virtual ~ModelFactory();
+	class ModelFactory
+	{
+	public:
+		ModelFactory(PlanParser *p, shared_ptr<PlanRepository> rep);
+		virtual ~ModelFactory();
 
-	bool ignoreMasterPlanId;
-	bool getIgnoreMasterPlanId();
-	void setIgnoreMasterPlanId(bool value);
+		bool ignoreMasterPlanId;
+		bool getIgnoreMasterPlanId();
+		void setIgnoreMasterPlanId(bool value);
 
-protected:
-	PlanParser* p;
-	shared_ptr<PlanRepository> rep;
-};
+	protected:
+		PlanParser* p;
+		shared_ptr<PlanRepository> rep;
+	};
 } /* namespace Alica */
 
 #endif /* MODELFACTORY_H_ */

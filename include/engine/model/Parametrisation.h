@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class Parametrisation : public AlicaElement
-{
-public:
-	Parametrisation();
-	virtual ~Parametrisation();
-};
+	class Parametrisation : public AlicaElement
+	{
+	public:
+		Parametrisation();
+		virtual ~Parametrisation();
+	};
 
 } /* namespace Alica */
 

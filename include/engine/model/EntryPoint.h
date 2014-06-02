@@ -13,12 +13,12 @@
 namespace alica
 {
 
-class EntryPoint : public AlicaElement
-{
-public:
-	EntryPoint();
-	virtual ~EntryPoint();
-};
+	class EntryPoint : public AlicaElement
+	{
+	public:
+		EntryPoint();
+		virtual ~EntryPoint();
+	};
 
 } /* namespace Alica */
 
