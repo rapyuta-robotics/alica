@@ -66,21 +66,21 @@ namespace alica
 
 	shared_ptr<Plan> PlanParser::ParsePlanTree(string masterplan)
 	{
-		string topFile = supplementary::FileSystem::findFile(this->basePlanPath, masterplan, ".pml");
-		cout << "PP: topFile: " << topFile << endl;
-
-		if (topFile.compare("") == 0)
-		{
+//		string topFile = supplementary::FileSystem::findFile(this->basePlanPath, masterplan, ".pml");
+//		cout << "PP: topFile: " << topFile << endl;
+//
+//		if (topFile.compare("") == 0)
+//		{
 //			AlicaEngine.Get().Abort(String.Format("PP: Cannot find Masterplan {0} in {1}",masterplan,this.basePlanPath));
-		}
+//		}
 //		this.currentDirectory =  Directory.GetParent(topFile).FullName+Path.DirectorySeparatorChar;
-//		this->currentDirectory =
+//		this->currentDirectory = supplementary::FileSystem::(topFile);
 //		cout << "PP: Using Masterplan " << topFile << endl;
-		//this.CurrentFile = topFile;
-		//this.masterPlan = ParsePlanFile(topFile);
-		//ParseFileLoop();
-		//this.mf.ComputeReachabilities();
-		//return this.masterPlan;
+//		this.CurrentFile = topFile;
+//		this.masterPlan = ParsePlanFile(topFile);
+//		ParseFileLoop();
+//		this.mf.ComputeReachabilities();
+//		return this.masterPlan;
 
 	}
 
