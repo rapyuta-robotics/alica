@@ -8,6 +8,8 @@
 #ifndef ABSTRACTPLAN_H_
 #define ABSTRACTPLAN_H_
 
+using namespace std;
+
 #include "AlicaElement.h"
 
 namespace alica
@@ -18,6 +20,13 @@ namespace alica
 	public:
 		AbstractPlan();
 		virtual ~AbstractPlan();
+		bool isMasterPlan() const;
+		void setMasterPlan(bool isMasterPlan);
+
+		virtual string toString() const;
+
+	protected:
+		bool masterPlan;
 	};
 
 } /* namespace Alica */

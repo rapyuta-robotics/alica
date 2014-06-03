@@ -12,13 +12,30 @@ namespace alica
 
 	AbstractPlan::AbstractPlan()
 	{
-		// TODO Auto-generated constructor stub
-
+		this->masterPlan = false;
 	}
 
 	AbstractPlan::~AbstractPlan()
 	{
-		// TODO Auto-generated destructor stub
+	}
+
+	bool AbstractPlan::isMasterPlan() const
+	{
+		return masterPlan;
+	}
+
+	void AbstractPlan::setMasterPlan(bool masterPlan)
+	{
+		this->masterPlan = masterPlan;
+	}
+
+	string AbstractPlan::toString() const
+	{
+		stringstream ss;
+		ss << AlicaElement::toString();
+		ss << "IsMasterPlan: " << isMasterPlan() << endl;
+		return ss.str();
 	}
 
 } /* namespace Alica */
+

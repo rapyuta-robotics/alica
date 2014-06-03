@@ -17,7 +17,6 @@ namespace alica
 
 	Plan::~Plan()
 	{
-		// TODO Auto-generated destructor stub
 	}
 	void Plan::setFilename(string filename)
 	{
@@ -27,5 +26,14 @@ namespace alica
 	{
 		return filename;
 	}
+	string Plan::toString() const
+	{
+		stringstream ss;
+		ss << AbstractPlan::toString();
+		ss << "Filename: " << this->filename << endl;
+		return ss.str();
+	}
 
 } /* namespace Alica */
+
+

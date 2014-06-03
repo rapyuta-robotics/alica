@@ -23,7 +23,15 @@ TEST(Alica, planParser)
 	// setup the engine
 	alica::AlicaEngine* ae = alica::AlicaEngine::getInstance();
 	ae->init("WM09", "WM09", "WM09", false);
-	ae->start();
+	const std::map<long int, alica::Plan, std::less<long int>, std::allocator<std::pair<const long int, alica::Plan> > > plans =
+			ae->getPlanRepository()->getPlans();
+
+	for(map<long, alica::Plan>::const_iterator iter = plans.begin(); iter != plans.end(); iter++ )
+	{
+		cout << "ID: " << iter->first << endl;
+		cout << "Plan: " << iter->second.toString() << endl;
+	}
+	//ae->start();
 }
 
 // Run all the tests that were declared with TEST()
