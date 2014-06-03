@@ -28,6 +28,7 @@ namespace alica
 		void init(string roleSetName, string masterPlanName, string roleSetDir,
 		bool stepEngine);
 		void start();bool getStepEngine();
+		void abort (string msg);
 
 	protected:
 		supplementary::SystemConfig* sc;

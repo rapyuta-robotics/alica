@@ -13,6 +13,9 @@ using namespace std;
 #include <iostream>
 #include <list>
 #include <stdio.h>
+#include <exception>
+#include <algorithm>
+#include <string>
 
 #include <SystemConfig.h>
 #include <FileSystem.h>
@@ -20,6 +23,9 @@ using namespace std;
 #include "../IPlanParser.h"
 #include "../model/Plan.h"
 #include "tinyxml2.h"
+#include "ModelFactory.h"
+#include "../AlicaEngine.h"
+
 
 namespace alica
 {
@@ -38,12 +44,13 @@ namespace alica
 
 		string getCurrentFile();
 		void setCurrentFile(string currentFile);
+		long parserId(tinyxml2::XMLElement* node);
 
 	private:
 		supplementary::SystemConfig* sc;
 		shared_ptr<ModelFactory> mf;
 		shared_ptr<PlanRepository> rep;
-		Plan masterPlan;
+		std::shared_ptr<Plan> masterPlan;
 		string planDir;
 		string roleDir;
 		string basePlanPath;
@@ -52,9 +59,11 @@ namespace alica
 		string domainConfigFolder;
 		string currentFile;
 
-		Plan parsePlanFile(string& planFile);
-		list<string> filesToParse();
-		list<string> filesParsed();
+		std::shared_ptr<Plan> parsePlanFile(string& planFile);
+		long fetchId(const string& idString, long id);
+
+		list<string> filesToParse;
+		list<string> filesParsed;
 
 	};
 } /* namespace Alica */

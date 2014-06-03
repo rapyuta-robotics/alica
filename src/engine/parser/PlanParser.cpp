@@ -5,7 +5,6 @@
  *      Author: Stephan Opfer
  */
 #include "engine/parser/PlanParser.h"
-#include "engine/parser/ModelFactory.h"
 #define PP_DEBUG
 namespace alica
 {
@@ -52,13 +51,11 @@ namespace alica
 		cout << "PP: baseRolePath: " << baseRolePath << endl;
 		if (!(supplementary::FileSystem::fileExists(basePlanPath)))
 		{
-			//TODO: Abort method (c#) for the AlicaEngine
-			throw new exception();
+			AlicaEngine::getInstance()->abort("PP: BasePlanPath does not exists " + basePlanPath);
 		}
 		if (!(supplementary::FileSystem::fileExists(baseRolePath)))
 		{
-			//TODO: Abort method (c#) for the AlicaEngine
-			throw new exception();
+			AlicaEngine::getInstance()->abort("PP: BaseRolePath does not exists " + baseRolePath);
 		}
 	}
 
@@ -72,13 +69,10 @@ namespace alica
 		string masterPlanPath;
 		bool found = supplementary::FileSystem::findFile(this->basePlanPath, masterplan + ".pml", masterPlanPath);
 		cout << "PP: masterPlanPath: " << masterPlanPath << endl;
-
 		if (!found)
 		{
-			cerr << "PP: Cannot find MasterPlan '" << masterplan << "' in '" << this->basePlanPath << "'" << endl;
-			throw new exception();
+			AlicaEngine::getInstance()->abort("PP: Cannot find MasterPlan '" + masterplan);
 		}
-
 		this->currentFile = masterPlanPath;
 		this->currentDirectory = supplementary::FileSystem::getParent(masterPlanPath);
 
@@ -90,7 +84,7 @@ namespace alica
 		//return this.masterPlan;
 	}
 
-	Plan PlanParser::parsePlanFile(string& planFile)
+	std::shared_ptr<Plan> PlanParser::parsePlanFile(string& planFile)
 	{
 #ifdef PP_DEBUG
 		cout << "PP: parsing Plan file: " << planFile << endl;
@@ -98,9 +92,10 @@ namespace alica
 
 		tinyxml2::XMLDocument doc;
 		doc.LoadFile(planFile.c_str());
-		if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
+		if (doc.ErrorID() != tinyxml2::XML_NO_ERROR)
+		{
 			cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
-			throw new exception ();
+			throw new exception();
 		}
 
 		// Structure of the XML file:
@@ -122,7 +117,9 @@ namespace alica
 		title = textNode->Value();
 		cout << "Text (2): " << title << endl;
 
-		return Plan();
+		std::shared_ptr<Plan> p = this->mf->createPlan(&doc);
+//		Plan* p = this->mf->createPlan(node);
+		return p;
 	}
 
 	shared_ptr<RoleSet> PlanParser::ParseRoleSet(string roleSetName, string roleSetDir)
@@ -163,6 +160,96 @@ namespace alica
 		{
 			this->currentFile = currentFile;
 		}
+	}
+
+	/**
+	 * parse id of the plan
+	 * @param node the given xml node
+	 * @return id: returns the id from the plan
+	 */
+	long PlanParser::parserId(tinyxml2::XMLElement* node)
+	{
+		long id = -1;
+		string idString = node->Attribute("id");
+		if (idString.compare("") != 0)
+		{
+			try
+			{
+				id = stol(idString);
+			}
+			catch (exception e)
+			{
+				AlicaEngine::getInstance()->abort("PP: Cannot convert ID to long: " + idString + " WHAT?? " + e.what());
+			}
+			return id;
+		}
+		else
+		{
+			idString = node->Attribute("href");
+			if (idString.compare("") != 0)
+			{
+				id = fetchId(idString, id);
+				return id;
+
+			}
+			else
+			{
+				const tinyxml2::XMLNode* currNode = node->FirstChild();
+				while (currNode)
+				{
+					const tinyxml2::XMLText* textNode = currNode->ToText();
+					if(textNode){
+						id = fetchId(textNode->Value(), id);
+						return id;
+					}
+
+					currNode = currNode->NextSibling();
+				}
+			}
+		}
+
+		cerr << "Cannot resolve remote reference!\nAttributes of node in question are:" << endl;
+		const tinyxml2::XMLAttribute* curAttribute = node->FirstAttribute();
+		while (curAttribute)
+		{
+			cout << curAttribute->Name() << " : " << curAttribute->Value() << endl;
+			curAttribute = curAttribute->Next();
+		}
+		AlicaEngine::getInstance()->abort("PP: Couldn't resolve remote reference: " + string(node->Name()));
+		return -1;
+	}
+
+	/**
+	 * Helper
+	 * @param idString is a String that have to be converted in a long
+	 * @param id the really really really (stopfer) long id
+	 */
+	long PlanParser::fetchId(const string& idString, long id)
+	{
+		int hashPos = idString.find_first_of("#");
+		string locator = idString.substr(0, hashPos);
+		if (!locator.empty())
+		{
+			//TODO: Maybe doesnt work... somewhere / put pls
+			string path = this->currentDirectory + locator;
+			list<string>::iterator findIterParsed = find(filesParsed.begin(), filesParsed.end(), path);
+			list<string>::iterator findIterToParse = find(filesToParse.begin(), filesToParse.end(), path);
+			if (findIterParsed != filesParsed.end() && findIterToParse != filesToParse.end())
+			{
+				cout << "PP: Adding " + path + " to parse queue " << endl;
+				filesToParse.push_back(path);
+			}
+		}
+		string tokenId = idString.substr(hashPos, idString.length() - hashPos);
+		try
+		{
+			id = stol(tokenId);
+		}
+		catch (exception e)
+		{
+			AlicaEngine::getInstance()->abort("PP: Cannot convert ID to long: " + tokenId + " WHAT?? " + e.what());
+		}
+		return id;
 	}
 }
 /* namespace Alica */

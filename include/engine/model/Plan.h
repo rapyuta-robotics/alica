@@ -8,6 +8,8 @@
 #ifndef PLAN_H_
 #define PLAN_H_
 
+using namespace std;
+#include <string>
 #include "AbstractPlan.h"
 
 namespace alica
@@ -16,8 +18,15 @@ namespace alica
 	class Plan : public AbstractPlan
 	{
 	public:
-		Plan();
+		Plan(long id);
 		virtual ~Plan();
+		void setFilename (string filename);
+		string getFilename();
+
+	private:
+		string filename;
+		long id;
+
 	};
 
 } /* namespace Alica */

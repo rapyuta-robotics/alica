@@ -10,15 +10,22 @@
 namespace alica
 {
 
-	Plan::Plan()
+	Plan::Plan(long id)
 	{
-		// TODO Auto-generated constructor stub
-
+		this->id = id;
 	}
 
 	Plan::~Plan()
 	{
 		// TODO Auto-generated destructor stub
+	}
+	void Plan::setFilename(string filename)
+	{
+		this->filename = filename;
+	}
+	string Plan::getFilename()
+	{
+		return filename;
 	}
 
 } /* namespace Alica */
