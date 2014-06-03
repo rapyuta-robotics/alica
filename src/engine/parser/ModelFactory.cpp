@@ -13,7 +13,8 @@ namespace alica
 	ModelFactory::ModelFactory(PlanParser* p, std::shared_ptr<PlanRepository> rep)
 	{
 		// TODO Auto-generated constructor stub
-		this->p = p;
+		this->parser = p;
+		this->rep = rep;
 		this->ignoreMasterPlanId = false;
 
 	}
@@ -31,6 +32,13 @@ namespace alica
 	bool ModelFactory::getIgnoreMasterPlanId()
 	{
 		return this->ignoreMasterPlanId;
+	}
+
+	Plan createPlan(tinyxml2::XMLDocument node){
+//		long id =
+//
+//		Plan plan = new Plan(id);
+
 	}
 
 } /* namespace Alica */

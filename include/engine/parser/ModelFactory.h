@@ -11,8 +11,10 @@
 using namespace std;
 
 #include <memory>
+#include "tinyxml2.h"
 
 #include "../PlanRepository.h"
+#include "../model/Plan.h"
 namespace alica
 {
 	class PlanParser;
@@ -26,9 +28,10 @@ namespace alica
 		bool ignoreMasterPlanId;
 		bool getIgnoreMasterPlanId();
 		void setIgnoreMasterPlanId(bool value);
+		Plan createPlan(tinyxml2::XMLDocument node);
 
 	protected:
-		PlanParser* p;
+		PlanParser* parser;
 		shared_ptr<PlanRepository> rep;
 	};
 } /* namespace Alica */
