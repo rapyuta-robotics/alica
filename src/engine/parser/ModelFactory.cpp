@@ -42,9 +42,14 @@ namespace alica
 //		Plan* plan = new Plan(id);
 		std::shared_ptr<Plan> plan  = shared_ptr<Plan>(new Plan(id));
 		plan->setFilename(this->parser->getCurrentFile());
-
 		setAlicaElementAttributes(*plan, *element);
 
+		string masterPlan = element->Attribute("masterPlan");
+
+		if(!masterPlan.empty()){
+			//TODO: PAUL c#  Zeile 468
+			//Hier geht es morgen weiter
+		}
 		return plan;
 
 	}
