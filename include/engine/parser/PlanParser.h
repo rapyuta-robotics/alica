@@ -19,9 +19,11 @@ using namespace std;
 #include "../PlanRepository.h"
 #include "../IPlanParser.h"
 #include "../model/Plan.h"
+#include "tinyxml2.h"
 
 namespace alica
 {
+
 	class ModelFactory;
 	class PlanParser : public IPlanParser
 	{
@@ -38,24 +40,21 @@ namespace alica
 		void setCurrentFile(string currentFile);
 
 	private:
-		//shared_ptr<supplementary::SystemConfig> sc;
 		supplementary::SystemConfig* sc;
 		shared_ptr<ModelFactory> mf;
 		shared_ptr<PlanRepository> rep;
 		Plan masterPlan;
 		string planDir;
 		string roleDir;
-
-		list<string> filesToParse();
-		list<string> filesParsed();
-
 		string basePlanPath;
 		string baseRolePath;
 		string currentDirectory;
 		string domainConfigFolder;
 		string currentFile;
 
-		string findPmlFile(string path, string plan);
+		Plan parsePlanFile(string& planFile);
+		list<string> filesToParse();
+		list<string> filesParsed();
 
 	};
 } /* namespace Alica */

@@ -6,6 +6,7 @@
  */
 #include "engine/parser/PlanParser.h"
 #include "engine/parser/ModelFactory.h"
+#define PP_DEBUG
 namespace alica
 {
 
@@ -33,7 +34,7 @@ namespace alica
 		}
 		if (!(supplementary::FileSystem::isPathRooted(this->planDir)))
 		{
-			basePlanPath = domainConfigFolder + "/" + planDir;
+			basePlanPath = domainConfigFolder + planDir;
 		}
 		else
 		{
@@ -41,12 +42,14 @@ namespace alica
 		}
 		if (!(supplementary::FileSystem::isPathRooted(this->roleDir)))
 		{
-			baseRolePath = domainConfigFolder + "/" + roleDir;
+			baseRolePath = domainConfigFolder + roleDir;
 		}
 		else
 		{
 			baseRolePath = roleDir;
 		}
+		cout << "PP: basePlanPath: " << basePlanPath << endl;
+		cout << "PP: baseRolePath: " << baseRolePath << endl;
 		if (!(supplementary::FileSystem::fileExists(basePlanPath)))
 		{
 			//TODO: Abort method (c#) for the AlicaEngine
@@ -66,22 +69,60 @@ namespace alica
 
 	shared_ptr<Plan> PlanParser::ParsePlanTree(string masterplan)
 	{
-//		string topFile = supplementary::FileSystem::findFile(this->basePlanPath, masterplan, ".pml");
-//		cout << "PP: topFile: " << topFile << endl;
-//
-//		if (topFile.compare("") == 0)
-//		{
-//			AlicaEngine.Get().Abort(String.Format("PP: Cannot find Masterplan {0} in {1}",masterplan,this.basePlanPath));
-//		}
-//		this.currentDirectory =  Directory.GetParent(topFile).FullName+Path.DirectorySeparatorChar;
-//		this->currentDirectory = supplementary::FileSystem::(topFile);
-//		cout << "PP: Using Masterplan " << topFile << endl;
-//		this.CurrentFile = topFile;
-//		this.masterPlan = ParsePlanFile(topFile);
-//		ParseFileLoop();
-//		this.mf.ComputeReachabilities();
-//		return this.masterPlan;
+		string masterPlanPath;
+		bool found = supplementary::FileSystem::findFile(this->basePlanPath, masterplan + ".pml", masterPlanPath);
+		cout << "PP: masterPlanPath: " << masterPlanPath << endl;
 
+		if (!found)
+		{
+			cerr << "PP: Cannot find MasterPlan '" << masterplan << "' in '" << this->basePlanPath << "'" << endl;
+			throw new exception();
+		}
+
+		this->currentFile = masterPlanPath;
+		this->currentDirectory = supplementary::FileSystem::getParent(masterPlanPath);
+
+		cout << "PP: CurFile: " << this->currentFile << " CurDir: " << this->currentDirectory << endl;
+
+		this->masterPlan = parsePlanFile(masterPlanPath);
+		//ParseFileLoop();
+		//this.mf.ComputeReachabilities();
+		//return this.masterPlan;
+	}
+
+	Plan PlanParser::parsePlanFile(string& planFile)
+	{
+#ifdef PP_DEBUG
+		cout << "PP: parsing Plan file: " << planFile << endl;
+#endif
+
+		tinyxml2::XMLDocument doc;
+		doc.LoadFile(planFile.c_str());
+		if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
+			cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
+			throw new exception ();
+		}
+
+		// Structure of the XML file:
+		// - Element "PLAY"      the root Element, which is the
+		//                       FirstChildElement of the Document
+		// - - Element "TITLE"   child of the root PLAY Element
+		// - - - Text            child of the TITLE Element
+
+		// Navigate to the title, using the convenience function,
+		// with a dangerous lack of error checking.
+		const char* title =
+				doc.FirstChildElement("alica:Plan")->FirstChildElement("states")->FirstChildElement("plans")->GetText();
+		cout << "Text (1): " << title << endl;
+
+		// Text is just another Node to TinyXML-2. The more
+		// general way to get to the XMLText:
+		tinyxml2::XMLText* textNode =
+				doc.FirstChildElement("alica:Plan")->FirstChildElement("states")->FirstChildElement("plans")->FirstChild()->ToText();
+		title = textNode->Value();
+		cout << "Text (2): " << title << endl;
+
+		return Plan();
 	}
 
 	shared_ptr<RoleSet> PlanParser::ParseRoleSet(string roleSetName, string roleSetDir)
@@ -123,24 +164,5 @@ namespace alica
 			this->currentFile = currentFile;
 		}
 	}
-
-	string PlanParser::findPmlFile(string path, string plan)
-	{
-		string fname = plan + ".pml";
-//		foreach(string file in Directory.GetFiles(path,"*.pml"))
-//		{
-//			if (file.EndsWith(Path.DirectorySeparatorChar+fname))
-//			{
-//				return file;
-//			}
-//		}
-//		foreach(string subfolder in Directory.GetDirectories(path))
-//		{
-//			string file = FindPmlFile(subfolder,plan);
-//			if (!file.Equals("")) return file;
-//		}
-		return "";
-	}
-
 }
 /* namespace Alica */
