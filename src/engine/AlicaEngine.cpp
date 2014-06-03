@@ -56,6 +56,11 @@ namespace alica
 		return this->stepEngine;
 	}
 
+	shared_ptr<PlanRepository> AlicaEngine::getPlanRepository()
+	{
+		return this->planRepository;
+	}
+
 	void AlicaEngine::setStepEngine(bool stepEngine)
 	{
 		this->stepEngine = stepEngine;

@@ -8,8 +8,11 @@
 #ifndef PLANREPOSITORY_H_
 #define PLANREPOSITORY_H_
 
+using namespace std;
+
 #include <stdio.h>
 #include <map>
+
 #include "model/Plan.h"
 #include "model/Task.h"
 #include "model/Behaviour.h"
@@ -29,29 +32,63 @@
 
 namespace alica
 {
-class PlanRepository
-{
-public:
-	PlanRepository();
-	virtual ~PlanRepository();
+	class PlanRepository
+	{
+	public:
+		PlanRepository();
+		virtual ~PlanRepository();
 
-	std::map<long, alica::Plan> plans();
-	std::map<long, alica::Task> tasks();
-	std::map<long, alica::Behaviour> behaviours();
-	std::map<long, alica::BehaviourConfiguration> behaviourConfigurations();
-	std::map<long, alica::PlanType> planTypes();
-	std::map<long, alica::Role> roles();
-	std::map<long, alica::Characteristic> characteristics();
-	std::map<long, alica::Capability> capabilities();
-	std::map<long, alica::State> states();
-	std::map<long, alica::EntryPoint> entryPoints();
-	std::map<long, alica::Transition> transitions();
-	std::map<long, alica::SyncTransition> syncTransitions();
-	std::map<long, alica::Quantifier> quantifiers();
-	std::map<long, alica::Variable> variables();
-	std::map<long, alica::RoleDefinitionSet> roleDefinitionSets();
-	std::map<long, alica::TaskRepository> taskRepositorys();
+		const map<long, BehaviourConfiguration>& getBehaviourConfigurations() const;
+		const map<long, Behaviour>& getBehaviours() const;
+		const map<long, Capability>& getCapabilities() const;
+		const map<long, Characteristic>& getCharacteristics() const;
+		const map<long, EntryPoint>& getEntryPoints() const;
+		map<long, Plan> getPlans() const;
+		const map<long, PlanType>& getPlanTypes() const;
+		const map<long, Quantifier>& getQuantifiers() const;
+		const map<long, RoleDefinitionSet>& getRoleDefinitionSets() const;
+		const map<long, Role>& getRoles() const;
+		const map<long, State>& getStates() const;
+		const map<long, SyncTransition>& getSyncTransitions() const;
+		const map<long, TaskRepository>& getTaskRepositorys() const;
+		const map<long, Task>& getTasks() const;
+		const map<long, Transition>& getTransitions() const;
+		const map<long, Variable>& getVariables() const;
 
-};
+	private:
+		map<long,Plan> plans;
+		map<long,Task> tasks;
+		map<long,Behaviour> behaviours;
+		map<long,BehaviourConfiguration> behaviourConfigurations;
+		map<long,PlanType> planTypes;
+		map<long,Role> roles;
+		map<long,Characteristic> characteristics;
+		map<long,Capability> capabilities;
+		map<long,State> states;
+		map<long,EntryPoint> entryPoints;
+		map<long,Transition> transitions;
+		map<long,SyncTransition> syncTransitions;
+		map<long,Quantifier> quantifiers;
+		map<long,Variable> variables;
+		map<long,RoleDefinitionSet> roleDefinitionSets;
+		map<long,TaskRepository> taskRepositorys;
+
+		void setBehaviourConfigurations(const map<long, BehaviourConfiguration>& behaviourConfigurations);
+		void setBehaviours(const map<long, Behaviour>& behaviours);
+		void setCapabilities(const map<long, Capability>& capabilities);
+		void setCharacteristics(const map<long, Characteristic>& characteristics);
+		void setEntryPoints(const map<long, EntryPoint>& entryPoints);
+		void setPlans(const map<long, Plan>& plans);
+		void setPlanTypes(const map<long, PlanType>& planTypes);
+		void setQuantifiers(const map<long, Quantifier>& quantifiers);
+		void setRoleDefinitionSets(const map<long, RoleDefinitionSet>& roleDefinitionSets);
+		void setRoles(const map<long, Role>& roles);
+		void setStates(const map<long, State>& states);
+		void setSyncTransitions(const map<long, SyncTransition>& syncTransitions);
+		void setTaskRepositorys(const map<long, TaskRepository>& taskRepositorys);
+		void setTasks(const map<long, Task>& tasks);
+		void setTransitions(const map<long, Transition>& transitions);
+		void setVariables(const map<long, Variable>& variables);
+	};
 }
 #endif /* PLANREPOSITORY_H_ */

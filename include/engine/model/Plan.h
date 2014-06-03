@@ -23,9 +23,10 @@ namespace alica
 		void setFilename (string filename);
 		string getFilename();
 
-	private:
+		virtual string toString() const;
+
+	protected:
 		string filename;
-		long id;
 
 	};
 

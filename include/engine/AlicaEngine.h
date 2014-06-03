@@ -29,6 +29,7 @@ namespace alica
 		bool stepEngine);
 		void start();bool getStepEngine();
 		void abort (string msg);
+		shared_ptr<PlanRepository> getPlanRepository();
 
 	protected:
 		supplementary::SystemConfig* sc;

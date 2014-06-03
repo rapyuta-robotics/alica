@@ -12,8 +12,7 @@ namespace alica
 
 	AlicaElement::AlicaElement()
 	{
-		// TODO Auto-generated constructor stub
-
+		this->id = 0;
 	}
 
 	AlicaElement::~AlicaElement()
@@ -33,5 +32,22 @@ namespace alica
 	string AlicaElement::getComment(){
 		return this->comment;
 	}
+	long AlicaElement::getId() const
+	{
+		return id;
+	}
+	void AlicaElement::setId(long id)
+	{
+		this->id = id;
+	}
+	string AlicaElement::toString() const
+	{
+		stringstream ss;
+		ss << "ID: " << this->getId()  << " Name: " << this->name << endl;
+		ss << "Comment: " << this->comment << endl;
+		return ss.str();
+	}
 
 } /* namespace Alica */
+
+

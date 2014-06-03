@@ -81,10 +81,10 @@ namespace alica
 		this->masterPlan = parsePlanFile(masterPlanPath);
 		//ParseFileLoop();
 		//this.mf.ComputeReachabilities();
-		//return this.masterPlan;
+		return this->masterPlan;
 	}
 
-	std::shared_ptr<Plan> PlanParser::parsePlanFile(string& planFile)
+	shared_ptr<Plan> PlanParser::parsePlanFile(string& planFile)
 	{
 #ifdef PP_DEBUG
 		cout << "PP: parsing Plan file: " << planFile << endl;
@@ -98,27 +98,7 @@ namespace alica
 			throw new exception();
 		}
 
-		// Structure of the XML file:
-		// - Element "PLAY"      the root Element, which is the
-		//                       FirstChildElement of the Document
-		// - - Element "TITLE"   child of the root PLAY Element
-		// - - - Text            child of the TITLE Element
-
-		// Navigate to the title, using the convenience function,
-		// with a dangerous lack of error checking.
-		const char* title =
-				doc.FirstChildElement("alica:Plan")->FirstChildElement("states")->FirstChildElement("plans")->GetText();
-		cout << "Text (1): " << title << endl;
-
-		// Text is just another Node to TinyXML-2. The more
-		// general way to get to the XMLText:
-		tinyxml2::XMLText* textNode =
-				doc.FirstChildElement("alica:Plan")->FirstChildElement("states")->FirstChildElement("plans")->FirstChild()->ToText();
-		title = textNode->Value();
-		cout << "Text (2): " << title << endl;
-
-		std::shared_ptr<Plan> p = this->mf->createPlan(&doc);
-//		Plan* p = this->mf->createPlan(node);
+		std::shared_ptr<Plan> p = make_shared<Plan>(this->mf->createPlan(&doc));
 		return p;
 	}
 

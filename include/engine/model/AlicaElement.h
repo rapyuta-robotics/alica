@@ -11,6 +11,7 @@ using namespace std;
 
 #include <stdio.h>
 #include <string>
+#include <sstream>
 namespace alica
 {
 
@@ -24,8 +25,13 @@ namespace alica
 		string getName();
 		void setComment(string comment);
 		string getComment();
+		long getId() const;
+		void setId(long id);
 
-	private:
+		virtual string toString() const;
+
+	protected:
+		long id;
 		string name;
 		string comment;
 	};
