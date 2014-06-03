@@ -21,4 +21,17 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
+	void AlicaElement::setName(string name){
+		this->name = name;
+	}
+	string AlicaElement::getName(){
+		return this->name;
+	}
+	void AlicaElement::setComment(string comment){
+		this->comment = comment;
+	}
+	string AlicaElement::getComment(){
+		return this->comment;
+	}
+
 } /* namespace Alica */

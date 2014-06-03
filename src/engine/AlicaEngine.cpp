@@ -60,5 +60,9 @@ namespace alica
 	{
 		this->stepEngine = stepEngine;
 	}
+	void AlicaEngine::abort (string msg){
+		cout << "ABORT: " << msg << endl;
+		exit(EXIT_FAILURE);
+	}
 
 } /* namespace Alica */

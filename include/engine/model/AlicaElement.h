@@ -7,7 +7,10 @@
 
 #ifndef ALICAELEMENT_H_
 #define ALICAELEMENT_H_
+using namespace std;
 
+#include <stdio.h>
+#include <string>
 namespace alica
 {
 
@@ -16,6 +19,15 @@ namespace alica
 	public:
 		AlicaElement();
 		virtual ~AlicaElement();
+
+		void setName(string name);
+		string getName();
+		void setComment(string comment);
+		string getComment();
+
+	private:
+		string name;
+		string comment;
 	};
 
 } /* namespace Alica */

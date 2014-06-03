@@ -6,7 +6,6 @@
  */
 
 #include "engine/parser/ModelFactory.h"
-
 namespace alica
 {
 
@@ -16,6 +15,7 @@ namespace alica
 		this->parser = p;
 		this->rep = rep;
 		this->ignoreMasterPlanId = false;
+
 
 	}
 
@@ -34,11 +34,31 @@ namespace alica
 		return this->ignoreMasterPlanId;
 	}
 
-	Plan createPlan(tinyxml2::XMLDocument node){
-//		long id =
-//
-//		Plan plan = new Plan(id);
+	std::shared_ptr<Plan> ModelFactory::createPlan(tinyxml2::XMLDocument* node){
+		tinyxml2::XMLElement* element = node->FirstChildElement("alica:Plan");
+		long id = this->parser->parserId(element);
+		cout << "ID " << id << endl;
 
+//		Plan* plan = new Plan(id);
+		std::shared_ptr<Plan> plan  = shared_ptr<Plan>(new Plan(id));
+		plan->setFilename(this->parser->getCurrentFile());
+
+		setAlicaElementAttributes(*plan, *element);
+
+		return plan;
+
+	}
+
+	void ModelFactory::setAlicaElementAttributes(AlicaElement& ae, tinyxml2::XMLElement& ele){
+		string name = ele.Attribute("name");
+		string comment = ele.Attribute("comment");
+
+		if(!name.empty()){
+			ae.setName(name);
+		}else ae.setName("MISSING_NAME");
+		if(!comment.empty()){
+			ae.setComment(comment);
+		}else ae.setComment("");
 	}
 
 } /* namespace Alica */

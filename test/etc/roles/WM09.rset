@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="ASCII"?>
+<alica:RoleSet xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1244796609887" name="WM09.rset" comment="" usableWithPlanID="1244794606469" default="true">
+  <mappings id="1244796609889" name="" comment="">
+    <taskPriorities id="1244796609891" name="" comment="" key="1225115406909" value="0.5"/>
+    <taskPriorities id="1244796609892" name="" comment="" key="1221754402444" value="-1.0"/>
+    <taskPriorities id="1244796609893" name="" comment="" key="1238695696093" value="0.7"/>
+    <taskPriorities id="1244796609894" name="" comment="" key="1238695738047" value="0.55"/>
+    <taskPriorities id="1244796609895" name="" comment="" key="1225112227903" value="0.5"/>
+    <taskPriorities id="1244796609896" name="" comment="" key="1225116131298" value="0.5"/>
+    <taskPriorities id="1244796609897" name="" comment="" key="1238601692867" value="0.5"/>
+    <taskPriorities id="1244796609898" name="" comment="" key="1238601842183" value="0.7"/>
+    <taskPriorities id="1244796609899" name="" comment="" key="1229108731442" value="0.5"/>
+    <taskPriorities id="1244796609900" name="" comment="" key="1222613952469" value="0.7"/>
+    <taskPriorities id="1244796610201" name="" comment="" key="1225115536468" value="0.5"/>
+    <taskPriorities id="1245599516134" name="" comment="" key="1239368962867" value="0.5"/>
+    <taskPriorities id="1245599516141" name="" comment="" key="1245543202619" value="0.5"/>
+    <taskPriorities id="1271548430936" name="" comment="" key="1271540837074" value="0.5"/>
+    <taskPriorities id="1301247380949" name="" comment="" key="1301247111152" value="-1.0"/>
+    <taskPriorities id="1301247380958" name="" comment="" key="1301247041956" value="0.5"/>
+    <taskPriorities id="1303133878825" name="" comment="" key="1238096850824" value="-1.0"/>
+    <taskPriorities id="1307185896356" name="" comment="" key="1307185798142" value="-1.0"/>
+    <taskPriorities id="1334600032505" name="" comment="" key="1271529595073" value="0.5"/>
+    <role>../rolesDefinition.rdefset#1222973297047</role>
+  </mappings>
+  <mappings id="1244796609901" name="" comment="">
+    <taskPriorities id="1244796609902" name="" comment="" key="1225115406909" value="0.7"/>
+    <taskPriorities id="1244796609903" name="" comment="" key="1221754402444" value="-1.0"/>
+    <taskPriorities id="1244796609904" name="" comment="" key="1238695696093" value="0.5"/>
+    <taskPriorities id="1244796609905" name="" comment="" key="1238695738047" value="0.5"/>
+    <taskPriorities id="1244796609906" name="" comment="" key="1225112227903" value="0.5"/>
+    <taskPriorities id="1244796609907" name="" comment="" key="1225116131298" value="0.65"/>
+    <taskPriorities id="1244796609908" name="" comment="" key="1238601692867" value="0.55"/>
+    <taskPriorities id="1244796609909" name="" comment="" key="1238601842183" value="0.5"/>
+    <taskPriorities id="1244796609910" name="" comment="" key="1229108731442" value="0.5"/>
+    <taskPriorities id="1244796609911" name="" comment="" key="1222613952469" value="0.5"/>
+    <taskPriorities id="1244796610202" name="" comment="" key="1225115536468" value="0.5"/>
+    <taskPriorities id="1245599516136" name="" comment="" key="1239368962867" value="0.7"/>
+    <taskPriorities id="1245599516142" name="" comment="" key="1245543202619" value="0.5"/>
+    <taskPriorities id="1271548430937" name="" comment="" key="1271540837074" value="0.5"/>
+    <taskPriorities id="1301247380950" name="" comment="" key="1301247111152" value="-1.0"/>
+    <taskPriorities id="1301247380959" name="" comment="" key="1301247041956" value="0.5"/>
+    <taskPriorities id="1303133878826" name="" comment="" key="1238096850824" value="-1.0"/>
+    <taskPriorities id="1307185896357" name="" comment="" key="1307185798142" value="-1.0"/>
+    <taskPriorities id="1334600032506" name="" comment="" key="1271529595073" value="0.5"/>
+    <role>../rolesDefinition.rdefset#1222973297049</role>
+  </mappings>
+  <mappings id="1244796609912" name="" comment="">
+    <taskPriorities id="1244796609913" name="" comment="" key="1225115406909" value="0.65"/>
+    <taskPriorities id="1244796609914" name="" comment="" key="1221754402444" value="-1.0"/>
+    <taskPriorities id="1244796609915" name="" comment="" key="1238695696093" value="0.5"/>
+    <taskPriorities id="1244796609916" name="" comment="" key="1238695738047" value="0.5"/>
+    <taskPriorities id="1244796609917" name="" comment="" key="1225112227903" value="0.5"/>
+    <taskPriorities id="1244796609918" name="" comment="" key="1225116131298" value="0.7"/>
+    <taskPriorities id="1244796609919" name="" comment="" key="1238601692867" value="0.6"/>
+    <taskPriorities id="1244796609920" name="" comment="" key="1238601842183" value="0.55"/>
+    <taskPriorities id="1244796609921" name="" comment="" key="1229108731442" value="0.5"/>
+    <taskPriorities id="1244796609922" name="" comment="" key="1222613952469" value="0.55"/>
+    <taskPriorities id="1244796610203" name="" comment="" key="1225115536468" value="0.5"/>
+    <taskPriorities id="1245599516137" name="" comment="" key="1239368962867" value="0.65"/>
+    <taskPriorities id="1245599516143" name="" comment="" key="1245543202619" value="0.5"/>
+    <taskPriorities id="1271548430938" name="" comment="" key="1271540837074" value="0.5"/>
+    <taskPriorities id="1301247380951" name="" comment="" key="1301247111152" value="-1.0"/>
+    <taskPriorities id="1301247380960" name="" comment="" key="1301247041956" value="0.5"/>
+    <taskPriorities id="1303133878828" name="" comment="" key="1238096850824" value="-1.0"/>
+    <taskPriorities id="1307185896358" name="" comment="" key="1307185798142" value="-1.0"/>
+    <taskPriorities id="1334600032507" name="" comment="" key="1271529595073" value="0.5"/>
+    <role>../rolesDefinition.rdefset#1222973297051</role>
+  </mappings>
+  <mappings id="1244796609923" name="" comment="">
+    <taskPriorities id="1244796609924" name="" comment="" key="1225115406909" value="-1.0"/>
+    <taskPriorities id="1244796609925" name="" comment="" key="1221754402444" value="0.9"/>
+    <taskPriorities id="1244796609926" name="" comment="" key="1238695696093" value="-1.0"/>
+    <taskPriorities id="1244796609927" name="" comment="" key="1238695738047" value="-1.0"/>
+    <taskPriorities id="1244796609928" name="" comment="" key="1225112227903" value="0.5"/>
+    <taskPriorities id="1244796609929" name="" comment="" key="1225116131298" value="-1.0"/>
+    <taskPriorities id="1244796609930" name="" comment="" key="1238601692867" value="-1.0"/>
+    <taskPriorities id="1244796609931" name="" comment="" key="1238601842183" value="-1.0"/>
+    <taskPriorities id="1244796609932" name="" comment="" key="1229108731442" value="-1.0"/>
+    <taskPriorities id="1244796609933" name="" comment="" key="1222613952469" value="-1.0"/>
+    <taskPriorities id="1244796610204" name="" comment="" key="1225115536468" value="-1.0"/>
+    <taskPriorities id="1245599516138" name="" comment="" key="1239368962867" value="-1.0"/>
+    <taskPriorities id="1245599516144" name="" comment="" key="1245543202619" value="-1.0"/>
+    <taskPriorities id="1271548430939" name="" comment="" key="1271540837074" value="-1.0"/>
+    <taskPriorities id="1301247380952" name="" comment="" key="1301247111152" value="-1.0"/>
+    <taskPriorities id="1301247380962" name="" comment="" key="1301247041956" value="-1.0"/>
+    <taskPriorities id="1303133878829" name="" comment="" key="1238096850824" value="-1.0"/>
+    <taskPriorities id="1307185896360" name="" comment="" key="1307185798142" value="-1.0"/>
+    <taskPriorities id="1334600032508" name="" comment="" key="1271529595073" value="-1.0"/>
+    <role>../rolesDefinition.rdefset#1222973297052</role>
+  </mappings>
+  <mappings id="1244796609934" name="" comment="">
+    <taskPriorities id="1244796609935" name="" comment="" key="1225115406909" value="0.55"/>
+    <taskPriorities id="1244796609936" name="" comment="" key="1221754402444" value="-1.0"/>
+    <taskPriorities id="1244796609937" name="" comment="" key="1238695696093" value="0.6"/>
+    <taskPriorities id="1244796609938" name="" comment="" key="1238695738047" value="0.7"/>
+    <taskPriorities id="1244796609939" name="" comment="" key="1225112227903" value="0.5"/>
+    <taskPriorities id="1244796609940" name="" comment="" key="1225116131298" value="0.55"/>
+    <taskPriorities id="1244796609941" name="" comment="" key="1238601692867" value="0.7"/>
+    <taskPriorities id="1244796609942" name="" comment="" key="1238601842183" value="0.65"/>
+    <taskPriorities id="1244796609943" name="" comment="" key="1229108731442" value="0.5"/>
+    <taskPriorities id="1244796609944" name="" comment="" key="1222613952469" value="0.65"/>
+    <taskPriorities id="1244796610205" name="" comment="" key="1225115536468" value="0.5"/>
+    <taskPriorities id="1245599516139" name="" comment="" key="1239368962867" value="0.55"/>
+    <taskPriorities id="1245599516145" name="" comment="" key="1245543202619" value="0.7"/>
+    <taskPriorities id="1271548430941" name="" comment="" key="1271540837074" value="0.5"/>
+    <taskPriorities id="1301247380953" name="" comment="" key="1301247111152" value="-1.0"/>
+    <taskPriorities id="1301247380963" name="" comment="" key="1301247041956" value="0.5"/>
+    <taskPriorities id="1303133878830" name="" comment="" key="1238096850824" value="-1.0"/>
+    <taskPriorities id="1307185896361" name="" comment="" key="1307185798142" value="-1.0"/>
+    <taskPriorities id="1334600032510" name="" comment="" key="1271529595073" value="0.5"/>
+    <role>../rolesDefinition.rdefset#1222973297054</role>
+  </mappings>
+  <mappings id="1244796609945" name="" comment="">
+    <taskPriorities id="1244796609946" name="" comment="" key="1225115406909" value="0.6"/>
+    <taskPriorities id="1244796609947" name="" comment="" key="1221754402444" value="-1.0"/>
+    <taskPriorities id="1244796609948" name="" comment="" key="1238695696093" value="0.55"/>
+    <taskPriorities id="1244796609949" name="" comment="" key="1238695738047" value="0.6"/>
+    <taskPriorities id="1244796609950" name="" comment="" key="1225112227903" value="0.5"/>
+    <taskPriorities id="1244796609951" name="" comment="" key="1225116131298" value="0.6"/>
+    <taskPriorities id="1244796609952" name="" comment="" key="1238601692867" value="0.65"/>
+    <taskPriorities id="1244796609953" name="" comment="" key="1238601842183" value="0.6"/>
+    <taskPriorities id="1244796609954" name="" comment="" key="1229108731442" value="0.5"/>
+    <taskPriorities id="1244796609955" name="" comment="" key="1222613952469" value="0.6"/>
+    <taskPriorities id="1244796610206" name="" comment="" key="1225115536468" value="0.5"/>
+    <taskPriorities id="1245599516140" name="" comment="" key="1239368962867" value="0.6"/>
+    <taskPriorities id="1245599516146" name="" comment="" key="1245543202619" value="0.65"/>
+    <taskPriorities id="1271548430942" name="" comment="" key="1271540837074" value="0.5"/>
+    <taskPriorities id="1301247380955" name="" comment="" key="1301247111152" value="-1.0"/>
+    <taskPriorities id="1301247380964" name="" comment="" key="1301247041956" value="0.5"/>
+    <taskPriorities id="1303133878831" name="" comment="" key="1238096850824" value="-1.0"/>
+    <taskPriorities id="1307185896362" name="" comment="" key="1307185798142" value="-1.0"/>
+    <taskPriorities id="1334600032511" name="" comment="" key="1271529595073" value="0.5"/>
+    <role>../rolesDefinition.rdefset#1222973297056</role>
+  </mappings>
+  <mappings id="1301085044112" name="" comment="">
+    <taskPriorities id="1301085044113" name="" comment="" key="1225112227903" value="0.5"/>
+    <taskPriorities id="1301085044114" name="" comment="" key="1229108731442" value="0.5"/>
+    <taskPriorities id="1301085044115" name="" comment="" key="1239368962867" value="0.5"/>
+    <taskPriorities id="1301085044116" name="" comment="" key="1238601842183" value="0.7"/>
+    <taskPriorities id="1301085044117" name="" comment="" key="1245543202619" value="0.5"/>
+    <taskPriorities id="1301085044118" name="" comment="" key="1225115406909" value="0.5"/>
+    <taskPriorities id="1301085044119" name="" comment="" key="1238601692867" value="0.5"/>
+    <taskPriorities id="1301085044120" name="" comment="" key="1271540837074" value="0.5"/>
+    <taskPriorities id="1301085044122" name="" comment="" key="1221754402444" value="-1.0"/>
+    <taskPriorities id="1301085044123" name="" comment="" key="1222613952469" value="0.7"/>
+    <taskPriorities id="1301085044124" name="" comment="" key="1225115536468" value="0.5"/>
+    <taskPriorities id="1301085044128" name="" comment="" key="1225116131298" value="0.5"/>
+    <taskPriorities id="1301085044129" name="" comment="" key="1238695696093" value="0.7"/>
+    <taskPriorities id="1301085044130" name="" comment="" key="1238695738047" value="0.55"/>
+    <taskPriorities id="1301247380956" name="" comment="" key="1301247111152" value="0.5"/>
+    <taskPriorities id="1301247380965" name="" comment="" key="1301247041956" value="0.0"/>
+    <taskPriorities id="1303133878832" name="" comment="" key="1238096850824" value="0.5"/>
+    <taskPriorities id="1307185896363" name="" comment="" key="1307185798142" value="0.5"/>
+    <taskPriorities id="1334600032512" name="" comment="" key="1271529595073" value="0.5"/>
+    <role>../rolesDefinition.rdefset#1301084991775</role>
+  </mappings>
+  <mappings id="1301085044131" name="" comment="">
+    <taskPriorities id="1301085044132" name="" comment="" key="1225112227903" value="0.5"/>
+    <taskPriorities id="1301085044133" name="" comment="" key="1229108731442" value="0.5"/>
+    <taskPriorities id="1301085044134" name="" comment="" key="1239368962867" value="0.55"/>
+    <taskPriorities id="1301085044135" name="" comment="" key="1238601842183" value="0.65"/>
+    <taskPriorities id="1301085044136" name="" comment="" key="1245543202619" value="0.7"/>
+    <taskPriorities id="1301085044137" name="" comment="" key="1225115406909" value="0.55"/>
+    <taskPriorities id="1301085044138" name="" comment="" key="1238601692867" value="0.7"/>
+    <taskPriorities id="1301085044139" name="" comment="" key="1271540837074" value="0.5"/>
+    <taskPriorities id="1301085044140" name="" comment="" key="1221754402444" value="-1.0"/>
+    <taskPriorities id="1301085044141" name="" comment="" key="1222613952469" value="0.65"/>
+    <taskPriorities id="1301085044142" name="" comment="" key="1225115536468" value="0.5"/>
+    <taskPriorities id="1301085044146" name="" comment="" key="1225116131298" value="0.55"/>
+    <taskPriorities id="1301085044147" name="" comment="" key="1238695696093" value="0.6"/>
+    <taskPriorities id="1301085044148" name="" comment="" key="1238695738047" value="0.7"/>
+    <taskPriorities id="1301247380957" name="" comment="" key="1301247111152" value="0.5"/>
+    <taskPriorities id="1301247380966" name="" comment="" key="1301247041956" value="0.0"/>
+    <taskPriorities id="1303133878833" name="" comment="" key="1238096850824" value="0.5"/>
+    <taskPriorities id="1307185896364" name="" comment="" key="1307185798142" value="0.5"/>
+    <taskPriorities id="1334600032513" name="" comment="" key="1271529595073" value="0.5"/>
+    <role>../rolesDefinition.rdefset#1301085012645</role>
+  </mappings>
+  <mappings id="1309349146220" name="" comment="">
+    <taskPriorities id="1309349146221" name="" comment="" key="1225112227903" value="0.5"/>
+    <taskPriorities id="1309349146222" name="" comment="" key="1229108731442" value="0.5"/>
+    <taskPriorities id="1309349146223" name="" comment="" key="1238601692867" value="0.65"/>
+    <taskPriorities id="1309349146224" name="" comment="" key="1238601842183" value="0.6"/>
+    <taskPriorities id="1309349146225" name="" comment="" key="1225115406909" value="0.6"/>
+    <taskPriorities id="1309349146226" name="" comment="" key="1271540837074" value="0.5"/>
+    <taskPriorities id="1309349146227" name="" comment="" key="1239368962867" value="0.6"/>
+    <taskPriorities id="1309349146228" name="" comment="" key="1245543202619" value="0.65"/>
+    <taskPriorities id="1309349146229" name="" comment="" key="1222613952469" value="0.6"/>
+    <taskPriorities id="1309349146230" name="" comment="" key="1225115536468" value="0.5"/>
+    <taskPriorities id="1309349146231" name="" comment="" key="1221754402444" value="-1.0"/>
+    <taskPriorities id="1309349146234" name="" comment="" key="1238096850824" value="0.5"/>
+    <taskPriorities id="1309349146235" name="" comment="" key="1301247111152" value="0.5"/>
+    <taskPriorities id="1309349146236" name="" comment="" key="1301247041956" value="0.0"/>
+    <taskPriorities id="1309349146237" name="" comment="" key="1307185798142" value="0.5"/>
+    <taskPriorities id="1309349146238" name="" comment="" key="1225116131298" value="0.6"/>
+    <taskPriorities id="1309349146239" name="" comment="" key="1238695696093" value="0.55"/>
+    <taskPriorities id="1309349146241" name="" comment="" key="1238695738047" value="0.6"/>
+    <taskPriorities id="1334600032515" name="" comment="" key="1271529595073" value="0.5"/>
+    <role>../rolesDefinition.rdefset#1309349068496</role>
+  </mappings>
+  <mappings id="1309349146242" name="" comment="">
+    <taskPriorities id="1309349146243" name="" comment="" key="1225112227903" value="0.5"/>
+    <taskPriorities id="1309349146244" name="" comment="" key="1229108731442" value="0.5"/>
+    <taskPriorities id="1309349146245" name="" comment="" key="1238601692867" value="0.55"/>
+    <taskPriorities id="1309349146246" name="" comment="" key="1238601842183" value="0.5"/>
+    <taskPriorities id="1309349146247" name="" comment="" key="1225115406909" value="0.7"/>
+    <taskPriorities id="1309349146248" name="" comment="" key="1271540837074" value="0.5"/>
+    <taskPriorities id="1309349146249" name="" comment="" key="1239368962867" value="0.7"/>
+    <taskPriorities id="1309349146250" name="" comment="" key="1245543202619" value="0.5"/>
+    <taskPriorities id="1309349146251" name="" comment="" key="1222613952469" value="0.5"/>
+    <taskPriorities id="1309349146252" name="" comment="" key="1225115536468" value="0.5"/>
+    <taskPriorities id="1309349146253" name="" comment="" key="1221754402444" value="-1.0"/>
+    <taskPriorities id="1309349146256" name="" comment="" key="1238096850824" value="0.5"/>
+    <taskPriorities id="1309349146257" name="" comment="" key="1301247111152" value="0.5"/>
+    <taskPriorities id="1309349146258" name="" comment="" key="1301247041956" value="0.0"/>
+    <taskPriorities id="1309349146259" name="" comment="" key="1307185798142" value="0.5"/>
+    <taskPriorities id="1309349146260" name="" comment="" key="1225116131298" value="0.65"/>
+    <taskPriorities id="1309349146261" name="" comment="" key="1238695696093" value="0.5"/>
+    <taskPriorities id="1309349146262" name="" comment="" key="1238695738047" value="0.5"/>
+    <taskPriorities id="1334600032516" name="" comment="" key="1271529595073" value="0.5"/>
+    <role>../rolesDefinition.rdefset#1309349121234</role>
+  </mappings>
+</alica:RoleSet>
