@@ -37,7 +37,7 @@ namespace alica
 		PlanParser(shared_ptr<PlanRepository> rep);
 		virtual ~PlanParser();
 
-		virtual shared_ptr<Plan> ParsePlanTree(string masterplan);
+		virtual Plan* ParsePlanTree(string masterplan);
 		virtual shared_ptr<RoleSet> ParseRoleSet(string roleSetName, string roleSetDir);
 		virtual void IgnoreMasterPlanId(bool val);
 		virtual shared_ptr<map<long, alica::AlicaElement> > GetParsedElements();
@@ -50,7 +50,7 @@ namespace alica
 		supplementary::SystemConfig* sc;
 		shared_ptr<ModelFactory> mf;
 		shared_ptr<PlanRepository> rep;
-		std::shared_ptr<Plan> masterPlan;
+		Plan* masterPlan;
 		string planDir;
 		string roleDir;
 		string basePlanPath;
@@ -59,7 +59,7 @@ namespace alica
 		string domainConfigFolder;
 		string currentFile;
 
-		std::shared_ptr<Plan> parsePlanFile(string& planFile);
+		Plan* parsePlanFile(string& planFile);
 		long fetchId(const string& idString, long id);
 
 		list<string> filesToParse;

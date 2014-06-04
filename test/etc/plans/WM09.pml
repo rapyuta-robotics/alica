@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1244794606469" name="WM09" comment="" masterPlan="true" utilityFunction="" utilityThreshold="1.0" priority="0.0" minCardinality="1" maxCardinality="2147483647">
+<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1244794606469" name="WM09" comment="Paul ist der Boss!" masterPlan="true" utilityFunction="" utilityThreshold="1.0" priority="0.0" minCardinality="1" maxCardinality="2147483647">
   <states id="1244794607095" name="OwnPenalty" comment="">
     <plans xsi:type="alica:Plan">../../StandardSituations/Penalty/GO09Penalty.pml#1239552465962</plans>
     <inTransitions>#1244794606516</inTransitions>

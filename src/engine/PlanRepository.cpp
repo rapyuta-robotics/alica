@@ -17,7 +17,7 @@ namespace alica
 	{
 
 	}
-	const map<long, BehaviourConfiguration>& PlanRepository::getBehaviourConfigurations() const
+	map<long, BehaviourConfiguration>& PlanRepository::getBehaviourConfigurations()
 	{
 		return behaviourConfigurations;
 	}
@@ -27,7 +27,7 @@ namespace alica
 		this->behaviourConfigurations = behaviourConfigurations;
 	}
 
-	const map<long, Behaviour>& PlanRepository::getBehaviours() const
+	map<long, Behaviour>& PlanRepository::getBehaviours()
 	{
 		return behaviours;
 	}
@@ -37,7 +37,7 @@ namespace alica
 		this->behaviours = behaviours;
 	}
 
-	const map<long, Capability>& PlanRepository::getCapabilities() const
+	map<long, Capability>& PlanRepository::getCapabilities()
 	{
 		return capabilities;
 	}
@@ -47,7 +47,7 @@ namespace alica
 		this->capabilities = capabilities;
 	}
 
-	const map<long, Characteristic>& PlanRepository::getCharacteristics() const
+	map<long, Characteristic>& PlanRepository::getCharacteristics()
 	{
 		return characteristics;
 	}
@@ -57,7 +57,7 @@ namespace alica
 		this->characteristics = characteristics;
 	}
 
-	const map<long, EntryPoint>& PlanRepository::getEntryPoints() const
+	map<long, EntryPoint>& PlanRepository::getEntryPoints()
 	{
 		return entryPoints;
 	}
@@ -67,17 +67,17 @@ namespace alica
 		this->entryPoints = entryPoints;
 	}
 
-	map<long, Plan> PlanRepository::getPlans() const
+	map<long, Plan*>& PlanRepository::getPlans()
 	{
 		return plans;
 	}
 
-	void PlanRepository::setPlans(const map<long, Plan>& plans)
+	void PlanRepository::setPlans(const map<long, Plan*>& plans)
 	{
 		this->plans = plans;
 	}
 
-	const map<long, PlanType>& PlanRepository::getPlanTypes() const
+	map<long, PlanType>& PlanRepository::getPlanTypes()
 	{
 		return planTypes;
 	}
@@ -87,7 +87,7 @@ namespace alica
 		this->planTypes = planTypes;
 	}
 
-	const map<long, Quantifier>& PlanRepository::getQuantifiers() const
+	map<long, Quantifier>& PlanRepository::getQuantifiers()
 	{
 		return quantifiers;
 	}
@@ -97,7 +97,7 @@ namespace alica
 		this->quantifiers = quantifiers;
 	}
 
-	const map<long, RoleDefinitionSet>& PlanRepository::getRoleDefinitionSets() const
+	map<long, RoleDefinitionSet>& PlanRepository::getRoleDefinitionSets()
 	{
 		return roleDefinitionSets;
 	}
@@ -107,7 +107,7 @@ namespace alica
 		this->roleDefinitionSets = roleDefinitionSets;
 	}
 
-	const map<long, Role>& PlanRepository::getRoles() const
+	map<long, Role>& PlanRepository::getRoles()
 	{
 		return roles;
 	}
@@ -117,7 +117,7 @@ namespace alica
 		this->roles = roles;
 	}
 
-	const map<long, State>& PlanRepository::getStates() const
+	map<long, State>& PlanRepository::getStates()
 	{
 		return states;
 	}
@@ -127,7 +127,7 @@ namespace alica
 		this->states = states;
 	}
 
-	const map<long, SyncTransition>& PlanRepository::getSyncTransitions() const
+	map<long, SyncTransition>& PlanRepository::getSyncTransitions()
 	{
 		return syncTransitions;
 	}
@@ -137,7 +137,7 @@ namespace alica
 		this->syncTransitions = syncTransitions;
 	}
 
-	const map<long, TaskRepository>& PlanRepository::getTaskRepositorys() const
+	map<long, TaskRepository>& PlanRepository::getTaskRepositorys()
 	{
 		return taskRepositorys;
 	}
@@ -147,7 +147,7 @@ namespace alica
 		this->taskRepositorys = taskRepositorys;
 	}
 
-	const map<long, Task>& PlanRepository::getTasks() const
+	map<long, Task>& PlanRepository::getTasks()
 	{
 		return tasks;
 	}
@@ -157,7 +157,7 @@ namespace alica
 		this->tasks = tasks;
 	}
 
-	const map<long, Transition>& PlanRepository::getTransitions() const
+	map<long, Transition>& PlanRepository::getTransitions()
 	{
 		return transitions;
 	}
@@ -167,7 +167,7 @@ namespace alica
 		this->transitions = transitions;
 	}
 
-	const map<long, Variable>& PlanRepository::getVariables() const
+	map<long, Variable>& PlanRepository::getVariables()
 	{
 		return variables;
 	}

@@ -64,7 +64,7 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
-	shared_ptr<Plan> PlanParser::ParsePlanTree(string masterplan)
+	Plan* PlanParser::ParsePlanTree(string masterplan)
 	{
 		string masterPlanPath;
 		bool found = supplementary::FileSystem::findFile(this->basePlanPath, masterplan + ".pml", masterPlanPath);
@@ -84,7 +84,7 @@ namespace alica
 		return this->masterPlan;
 	}
 
-	shared_ptr<Plan> PlanParser::parsePlanFile(string& planFile)
+	Plan* PlanParser::parsePlanFile(string& planFile)
 	{
 #ifdef PP_DEBUG
 		cout << "PP: parsing Plan file: " << planFile << endl;
@@ -97,8 +97,7 @@ namespace alica
 			cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
 			throw new exception();
 		}
-
-		std::shared_ptr<Plan> p = make_shared<Plan>(this->mf->createPlan(&doc));
+		Plan* p = this->mf->createPlan(&doc);
 		return p;
 	}
 

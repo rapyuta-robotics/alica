@@ -20,5 +20,15 @@ namespace alica
 	{
 		// TODO Auto-generated destructor stub
 	}
+	const Task* alica::EntryPoint::getTask() const
+	{
+		return task;
+	}
+
+	void alica::EntryPoint::setTask(const Task* task)
+	{
+		this->task = task;
+	}
 
 } /* namespace Alica */
+

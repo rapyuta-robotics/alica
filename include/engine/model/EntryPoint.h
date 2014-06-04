@@ -9,6 +9,7 @@
 #define ENTRYPOINT_H_
 
 #include "AlicaElement.h"
+#include "Task.h"
 
 namespace alica
 {
@@ -18,6 +19,12 @@ namespace alica
 	public:
 		EntryPoint();
 		virtual ~EntryPoint();
+		const Task* getTask() const;
+		void setTask(const Task* task);
+
+	protected:
+		const Task* task;
+
 	};
 
 } /* namespace Alica */

@@ -93,39 +93,46 @@ catkin_package(
 ## Your package locations should be listed before other locations
  include_directories(include ${catkin_INCLUDE_DIRS})
 
+
+file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
+
+
 ## Declare a cpp library
  add_library(alica
-   src/engine/AlicaEngine.cpp
-   src/engine/PlanRepository.cpp
-   src/engine/parser/PlanParser.cpp
-   src/engine/parser/ModelFactory.cpp
-   src/engine/parser/tinyxml2.cpp
-   src/engine/model/AlicaElement.cpp
-   src/engine/model/Plan.cpp
-   src/engine/model/AbstractPlan.cpp
-   src/engine/model/RuntimeCondition.cpp
-   src/engine/model/Condition.cpp
-   src/engine/model/EntryPoint.cpp
-   src/engine/model/TaskRepository.cpp
-   src/engine/model/Task.cpp
-   src/engine/model/Role.cpp
-   src/engine/model/Characteristic.cpp
-   src/engine/model/SyncTransition.cpp
-   src/engine/model/Transition.cpp
-   src/engine/model/Quantifier.cpp
-   src/engine/model/Variable.cpp
-   src/engine/model/Behaviour.cpp
-   src/engine/model/State.cpp
-   src/engine/model/PlanType.cpp
-   src/engine/model/BehaviourConfiguration.cpp
-   src/engine/model/RoleDefinitionSet.cpp
-   src/engine/model/Capability.cpp
-   src/engine/UtilityFunction.cpp
-   src/engine/model/PreCondition.cpp
-   src/engine/BasicBehaviour.cpp
-   src/engine/model/CapValue.cpp;
+	${alica_SOURCES};
  )
- 
+## Declare a cpp library
+ ##add_library(alica
+   ##src/engine/AlicaEngine.cpp
+   ##src/engine/PlanRepository.cpp
+   ##src/engine/parser/PlanParser.cpp
+   ##src/engine/parser/ModelFactory.cpp
+   ##src/engine/parser/tinyxml2.cpp
+   ##src/engine/model/AlicaElement.cpp
+   ##src/engine/model/Plan.cpp
+   ##src/engine/model/AbstractPlan.cpp
+   ##src/engine/model/RuntimeCondition.cpp
+   ##src/engine/model/Condition.cpp
+   ##src/engine/model/EntryPoint.cpp
+   ##src/engine/model/TaskRepository.cpp
+   ##src/engine/model/Task.cpp
+   ##src/engine/model/Role.cpp
+   ##src/engine/model/Characteristic.cpp
+   ##src/engine/model/SyncTransition.cpp
+   ##src/engine/model/Transition.cpp
+   ##src/engine/model/Quantifier.cpp
+   ##src/engine/model/Variable.cpp
+   ##src/engine/model/Behaviour.cpp
+   ##src/engine/model/State.cpp
+   ##src/engine/model/PlanType.cpp
+   ##src/engine/model/BehaviourConfiguration.cpp
+   ##src/engine/model/RoleDefinitionSet.cpp
+   ##src/engine/model/Capability.cpp
+   ##src/engine/UtilityFunction.cpp
+   ##src/engine/model/PreCondition.cpp
+   ##src/engine/BasicBehaviour.cpp
+   ##src/engine/model/CapValue.cpp;
+ ## )
  target_link_libraries(alica ${catkin_LIBRARIES})
  add_dependencies(alica ${catkin_LIBRARIES})
  
