@@ -28,16 +28,16 @@ namespace alica
 
 		bool ignoreMasterPlanId;bool getIgnoreMasterPlanId();
 		void setIgnoreMasterPlanId(bool value);
-		Plan createPlan(tinyxml2::XMLDocument* node);
-		const map<long, AlicaElement>& getElements() const;
-		void setElements(const map<long, AlicaElement>& elements);
+		Plan* createPlan(tinyxml2::XMLDocument* node);
+		const map<long, AlicaElement*>& getElements() const;
+		void setElements(const map<long, AlicaElement*>& elements);
 
 	private:
 		PlanParser* parser;
 		shared_ptr<PlanRepository> rep;
-		map<long,AlicaElement> elements;
-		void setAlicaElementAttributes(AlicaElement& ae, tinyxml2::XMLElement& ele);
-		void addElement(const AlicaElement ae);
+		map<long,AlicaElement*> elements;
+		void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement& ele);
+		void addElement(AlicaElement* ae);
 	};
 } /* namespace Alica */
 

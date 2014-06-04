@@ -33,7 +33,7 @@ namespace alica
 
 	protected:
 		supplementary::SystemConfig* sc;
-		shared_ptr<Plan> masterPlan;
+		Plan* masterPlan;
 
 	private:
 		// private constructur/ destructor because of singleton

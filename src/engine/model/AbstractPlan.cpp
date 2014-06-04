@@ -17,7 +17,7 @@ namespace alica
 		this->masterPlan = false;
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		this->authorithyTimeInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
-																			"MinimalAuthorityTimeIntervall") * 1000000;
+																			"MinimalAuthorityTimeInterval") * 1000000;
 	}
 
 	AbstractPlan::~AbstractPlan()
@@ -28,7 +28,7 @@ namespace alica
 	{
 		stringstream ss;
 		ss << AlicaElement::toString();
-		ss << "IsMasterPlan: " << isMasterPlan() << endl;
+		ss << "IsMasterPlan: " << (isMasterPlan() ? "true":"false") << endl;
 		return ss.str();
 	}
 
