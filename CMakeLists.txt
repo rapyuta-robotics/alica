@@ -120,6 +120,10 @@ catkin_package(
    src/engine/model/BehaviourConfiguration.cpp
    src/engine/model/RoleDefinitionSet.cpp
    src/engine/model/Capability.cpp
+   src/engine/UtilityFunction.cpp
+   src/engine/model/PreCondition.cpp
+   src/engine/BasicBehaviour.cpp
+   src/engine/model/CapValue.cpp;
  )
  
  target_link_libraries(alica ${catkin_LIBRARIES})
