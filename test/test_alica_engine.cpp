@@ -26,8 +26,10 @@ TEST(Alica, planParser)
 	const std::map<long int, alica::Plan*, std::less<long int>, std::allocator<std::pair<const long int, alica::Plan*> > > plans =
 			ae->getPlanRepository()->getPlans();
 
+	cout << "Printing plans from Repository: " << endl;
 	for(map<long, alica::Plan*>::const_iterator iter = plans.begin(); iter != plans.end(); iter++ )
 	{
+		cout << "--------- Next Plan: -------------" << endl;
 		cout << "ID: " << iter->first << endl;
 		cout << "Plan: " << iter->second->toString() << endl;
 	}

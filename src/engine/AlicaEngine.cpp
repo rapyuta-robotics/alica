@@ -25,7 +25,6 @@ namespace alica
 
 	AlicaEngine::~AlicaEngine()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	/**
@@ -66,8 +65,9 @@ namespace alica
 		this->stepEngine = stepEngine;
 	}
 	void AlicaEngine::abort (string msg){
-		cout << "ABORT: " << msg << endl;
+		cerr << "ABORT: " << msg << endl;
 		exit(EXIT_FAILURE);
 	}
+
 
 } /* namespace Alica */

@@ -149,14 +149,16 @@ namespace alica
 	long PlanParser::parserId(tinyxml2::XMLElement* node)
 	{
 		long id = -1;
-		string idString = node->Attribute("id");
+		string idString = "";
+		if (node->Attribute("id"))
+			idString = node->Attribute("id");
 		if (idString.compare("") != 0)
 		{
 			try
 			{
 				id = stol(idString);
 			}
-			catch (exception e)
+			catch (exception &e)
 			{
 				AlicaEngine::getInstance()->abort("PP: Cannot convert ID to long: " + idString + " WHAT?? " + e.what());
 			}
@@ -164,12 +166,12 @@ namespace alica
 		}
 		else
 		{
-			idString = node->Attribute("href");
+			if (node->Attribute("href"))
+				idString = node->Attribute("href");
 			if (idString.compare("") != 0)
 			{
 				id = fetchId(idString, id);
 				return id;
-
 			}
 			else
 			{
@@ -219,7 +221,7 @@ namespace alica
 				filesToParse.push_back(path);
 			}
 		}
-		string tokenId = idString.substr(hashPos, idString.length() - hashPos);
+		string tokenId = idString.substr(hashPos+1, idString.length() - hashPos);
 		try
 		{
 			id = stol(tokenId);
