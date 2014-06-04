@@ -16,8 +16,9 @@ namespace alica
 		this->variables = (*new list<Variable*>);
 		this->masterPlan = false;
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-		this->authorithyTimeInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
-																			"MinimalAuthorityTimeIntervall") * 1000000;
+		//TODO
+		//this->authorithyTimeInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
+		//																	"MinimalAuthorityTimeIntervall") * 1000000;
 	}
 
 	AbstractPlan::~AbstractPlan()
