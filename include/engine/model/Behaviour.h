@@ -14,12 +14,13 @@ using namespace std;
 #include <string>
 
 #include "AlicaElement.h"
-#include "BehaviourConfiguration.h"
 #include "../BasicBehaviour.h"
+#include "BehaviourConfiguration.h"
 
 namespace alica
 {
 
+	class BehaviourConfiguration;
 	class Behaviour : public AlicaElement
 	{
 	public:
