@@ -197,63 +197,54 @@ namespace supplementary
 	template<>
 	inline int Configuration::convert<int>(string value)
 	{
-		cout << "SC-Conf: called convert<int> with value: " << value << endl;
 		return stoi(value);
 	}
 
 	template<>
 	inline unsigned int Configuration::convert<unsigned int>(string value)
 	{
-		cout << "SC-Conf: called convert<unsigned int> with value: " << value << endl;
 		return stoul(value);
 	}
 
 	template<>
 	inline long Configuration::convert<long>(string value)
 	{
-		cout << "SC-Conf: called convert<long> with value: " << value << endl;
 		return stol(value);
 	}
 
 	template<>
 	inline long double Configuration::convert<long double>(string value)
 	{
-		cout << "SC-Conf: called convert<long double> with value: " << value << endl;
 		return stold(value);
 	}
 
 	template<>
 	inline long long Configuration::convert<long long>(string value)
 	{
-		cout << "SC-Conf: called convert<long long> with value: " << value << endl;
 		return stoll(value);
 	}
 
 	template<>
 	inline unsigned long Configuration::convert<unsigned long>(string value)
 	{
-		cout << "SC-Conf: called convert<unsigned long> with value: " << value << endl;
 		return stoul(value);
 	}
 
 	template<>
 	inline unsigned long long Configuration::convert<unsigned long long>(string value)
 	{
-		cout << "SC-Conf: called convert<unsigned long long> with value: " << value << endl;
 		return stoull(value);
 	}
 
 	template<>
 	inline float Configuration::convert<float>(string value)
 	{
-		cout << "SC-Conf: called convert<float> with value: " << value << endl;
 		return stof(value);
 	}
 
 	template<>
 	inline double Configuration::convert<double>(string value)
 	{
-		cout << "SC-Conf: called convert<double> with value: " << value << endl;
 		return stod(value);
 	}
 
