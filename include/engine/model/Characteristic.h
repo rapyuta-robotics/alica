@@ -18,6 +18,9 @@ namespace alica
 	public:
 		Characteristic();
 		virtual ~Characteristic();
+
+	private:
+
 	};
 
 } /* namespace Alica */

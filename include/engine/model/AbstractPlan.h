@@ -10,8 +10,16 @@
 
 using namespace std;
 
-#include "AlicaElement.h"
+#include <list>
+#include <SystemConfig.h>
+#include <string>
+#include <algorithm>
 
+#include "AlicaElement.h"
+#include "Variable.h"
+#include "RuntimeCondition.h"
+#include "PreCondition.h"
+#include "../UtilityFunction.h"
 namespace alica
 {
 
@@ -20,13 +28,39 @@ namespace alica
 	public:
 		AbstractPlan();
 		virtual ~AbstractPlan();
+
+		bool containsVar(const Variable* v);
+		bool containsVar(string name);
+
 		bool isMasterPlan() const;
 		void setMasterPlan(bool isMasterPlan);
-
 		virtual string toString() const;
+		unsigned long getAuthorithyTimeInterval() const;
+		void setAuthorithyTimeInterval(unsigned long authorithyTimeInterval);
+		const virtual string& getFileName() const;
+		virtual void setFileName(const string& fileName);
+		const list<Variable*>& getVariables() const;
+		void setVariables(const list<Variable*>& variables);
+		const RuntimeCondition& getRuntimeCondition() const;
+		void setRuntimeCondition(const RuntimeCondition& runtimeCondition);
+		const PreCondition& getPreCondition() const;
+		void setPreCondition(const PreCondition& preCondition);
+		const UtilityFunction& getUtilityFunction() const;
+		void setUtilityFunction(const UtilityFunction& utilityFunction);
+		double getUtilityThreshold() const;
+		void setUtilityThreshold(double utilityThreshold = 1.0);
+
+	private:
+		unsigned long authorithyTimeInterval;
+		string fileName;
+		RuntimeCondition runtimeCondition;
+		PreCondition preCondition;
+		UtilityFunction utilityFunction;
 
 	protected:
 		bool masterPlan;
+		list<Variable*> variables;
+		double utilityThreshold = 1.0;
 	};
 
 } /* namespace Alica */

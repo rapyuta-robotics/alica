@@ -8,7 +8,14 @@
 #ifndef BEHAVIOUR_H_
 #define BEHAVIOUR_H_
 
+using namespace std;
+
+#include <list>
+#include <string>
+
 #include "AlicaElement.h"
+#include "BehaviourConfiguration.h"
+#include "../BasicBehaviour.h"
 
 namespace alica
 {
@@ -17,7 +24,22 @@ namespace alica
 	{
 	public:
 		Behaviour();
+		Behaviour(string name);
 		virtual ~Behaviour();
+
+		string toString();
+
+		const list<BehaviourConfiguration>& getConfigurations() const;
+		void setConfigurations(const list<BehaviourConfiguration>& configurations);
+		const string& getFileName() const;
+		void setFileName(const string& fileName);
+		const BasicBehaviour& getImplementation() const;
+		void setImplementation(const BasicBehaviour& implementation);
+
+	private:
+		list<BehaviourConfiguration> configurations;
+		string fileName;
+		BasicBehaviour implementation;
 	};
 
 } /* namespace Alica */
