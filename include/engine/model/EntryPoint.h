@@ -13,6 +13,7 @@
 
 namespace alica
 {
+	class Plan;
 
 	class EntryPoint : public AlicaElement
 	{
@@ -21,9 +22,21 @@ namespace alica
 		virtual ~EntryPoint();
 		const Task* getTask() const;
 		void setTask(const Task* task);
+		const Plan* getPlan() const;
+		void setPlan(Plan* plan);
+		const int getMaxCardinality() const;
+		void setMaxCardinality(int maxCardinality = 0);
+		const int getMinCardinality() const;
+		void setMinCardinality(int minCardinality = 0);
+		void setSuccessRequired(bool successRequired);
+		const bool getSuccessRequired() const;
 
 	protected:
 		const Task* task;
+		const Plan* plan;
+		int minCardinality = 0;
+		int maxCardinality = 0;
+		bool successRequired;
 
 	};
 

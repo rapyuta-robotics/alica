@@ -33,10 +33,23 @@ namespace alica
 		void setElements(const map<long, AlicaElement*>& elements);
 
 	private:
+		static const string entryPoints;
+		static const string states;
+		static const string transitions;
+		static const string conditions;
+		static const string vars;
+		static const string synchronisations;
+		static const string rating;
+		static const string state;
+		static const string task;
+
 		PlanParser* parser;
 		shared_ptr<PlanRepository> rep;
 		map<long,AlicaElement*> elements;
-		void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement& ele);
+
+		void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele);
+		EntryPoint* createEntryPoint(tinyxml2::XMLElement* node);
+		bool isReferenceNode (tinyxml2::XMLElement* node);
 		void addElement(AlicaElement* ae);
 	};
 } /* namespace Alica */

@@ -28,7 +28,8 @@ namespace alica
 		void init(string roleSetName, string masterPlanName, string roleSetDir,
 		bool stepEngine);
 		void start();bool getStepEngine();
-		void abort (string msg);
+		void abort(string msg);
+		template<typename T> void abort(string msg, const T tail);
 		shared_ptr<PlanRepository> getPlanRepository();
 
 	protected:
@@ -46,6 +47,14 @@ namespace alica
 		shared_ptr<PlanRepository> planRepository;
 		shared_ptr<IPlanParser> planParser;
 	};
+
+	template<typename T>
+	void AlicaEngine::abort(string msg, const T tail)
+	{
+		stringstream ss;
+		ss << msg << tail;
+		AlicaEngine::abort(ss.str());
+	}
 
 } /* namespace Alica */
 
