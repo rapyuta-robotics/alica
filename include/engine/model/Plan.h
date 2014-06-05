@@ -15,16 +15,19 @@ using namespace std;
 #include <map>
 #include "AbstractPlan.h"
 #include "EntryPoint.h"
-#include "State.h"
-#include "FailureState.h"
-#include "SuccessState.h"
+//#include "State.h"
+//#include "FailureState.h"
+//#include "SuccessState.h"
 #include "Transition.h"
 #include "PostCondition.h"
 #include "SyncTransition.h"
 
 namespace alica
 {
-
+	class State;
+	class TerminalState;
+	class FailureState;
+	class SuccessState;
 	class Plan : public AbstractPlan
 	{
 	public:
@@ -44,8 +47,8 @@ namespace alica
 		void setMinCardinality(int minCardinality = 0);
 		PostCondition& getPostCondition() ;
 		void setPostCondition(const PostCondition& postCondition);
-		list<State>& getStates() ;
-		void setStates(const list<State>& states);
+		list<State*>& getStates();
+		void setStates(const list<State*>& states);
 		list<SuccessState>& getSuccessStates() ;
 		void setSuccessStates(const list<SuccessState>& succesPoints);
 		list<SyncTransition>& getSyncTransitions() ;
@@ -59,7 +62,7 @@ namespace alica
 		int minCardinality = 0;
 		int maxCardinality = 0;
 		map<long, EntryPoint*> entryPoints;
-		list<State> states;
+		list<State*> states;
 		list<FailureState> failureStates;
 		list<SuccessState> successStates;
 		list<SyncTransition> syncTransitions;

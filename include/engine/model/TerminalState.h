@@ -5,14 +5,13 @@
  *      Author: Stephan Opfer
  */
 
-#ifndef EXITPOINT_H_
-#define EXITPOINT_H_
+#ifndef TERMINALSTATE_H_
+#define TERMINALSTATE_H_
 
 #include "State.h"
 
 namespace alica
 {
-
 	class TerminalState : public State
 	{
 	public:
@@ -22,4 +21,4 @@ namespace alica
 
 } /* namespace Alica */
 
-#endif /* EXITPOINT_H_ */
+#endif /* TERMINALSTATE_H_ */

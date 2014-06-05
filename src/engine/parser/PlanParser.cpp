@@ -150,8 +150,9 @@ namespace alica
 	{
 		long id = -1;
 		string idString = "";
-		if (node->Attribute("id"))
-			idString = node->Attribute("id");
+		const char* idChar = node->Attribute("id");
+		if (idChar)
+			idString = idChar;
 		if (idString.compare("") != 0)
 		{
 			try
@@ -166,8 +167,10 @@ namespace alica
 		}
 		else
 		{
-			if (node->Attribute("href"))
-				idString = node->Attribute("href");
+			string idString = "";
+			const char* idChar = node->Attribute("href");
+			if (idChar)
+				idString = idChar;
 			if (idString.compare("") != 0)
 			{
 				id = fetchId(idString, id);
