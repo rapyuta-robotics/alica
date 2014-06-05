@@ -14,11 +14,12 @@ using namespace std;
 
 #include "AlicaElement.h"
 #include "Task.h"
-#include "State.h"
 
 namespace alica
 {
+
 	class Plan;
+	class State;
 
 	class EntryPoint : public AlicaElement
 	{
