@@ -12,7 +12,7 @@ namespace alica
 
 	Behaviour::Behaviour()
 	{
-		this->configurations = (*new list<BehaviourConfiguration> );
+
 	}
 	Behaviour::Behaviour(string name) :
 			Behaviour()

@@ -15,11 +15,12 @@ namespace alica
 		this->eventDriven = false;
 		this->frequency = 30;
 		this->deferring = 0;
-		this->parameters = (*new map<string,string>);
+		this->behaviour = NULL;
 
 	}
 
-	BehaviourConfiguration::BehaviourConfiguration(long id) : BehaviourConfiguration()
+	BehaviourConfiguration::BehaviourConfiguration(long id) :
+			BehaviourConfiguration()
 	{
 		this->id = id;
 	}
@@ -32,14 +33,30 @@ namespace alica
 	string BehaviourConfiguration::toString()
 	{
 		stringstream ss;
-		ss << "#BehaviourConfiguration: " << this->getName()  << " " << this->getId() << endl;
-		ss << "\tBehaviour: ";
-		if(this->getBehaviour() != NULL) {
+		ss << "#BehaviourConfiguration: " << this->getName() << " " << this->getId() << endl;
+		ss << "\t Behaviour: ";
+		if (this->getBehaviour() != NULL)
+		{
 			ss << name << " " << this->getBehaviour()->getId();
 		}
-		ss << endl;"\tDeferring: " + this->getDeferring();
+		ss << endl;
+		ss << "\t Deferring: " + this->getDeferring() << endl;
+		ss << "\t Frequency: " + this->getFrequency() << endl;
+		ss << "\t MasterPlan?: " + this->isMasterPlan() << endl;
+		ss << "\t Parameters: " + this->getParameters().size() << endl;
 
-		//TODO finish to string
+		if (this->getParameters().size() != 0)
+		{
+			for(map<string,string>::const_iterator iter = this->getParameters().begin(); iter != this->getParameters().end(); iter++)
+			{
+				const string s = iter->first;
+				const string val = iter->second;
+				ss << "\t" + s << " : " << val << endl;
+			}
+		}
+		ss << endl;
+		ss << "#EndBehaviourConfiguration" << endl;
+
 		return ss.str();
 	}
 
