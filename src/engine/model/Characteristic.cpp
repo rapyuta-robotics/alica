@@ -12,13 +12,55 @@ namespace alica
 
 	Characteristic::Characteristic()
 	{
-		// TODO Auto-generated constructor stub
 
 	}
 
 	Characteristic::~Characteristic()
 	{
-		// TODO Auto-generated destructor stub
+	}
+
+	string Characteristic::toString()
+	{
+		stringstream ss;
+		ss << "#Characteristic " << endl;
+		ss << "\t Capability: " << capability.getName() << endl;
+		ss << "\t CapValue: " << capValue.getName() << endl;
+		ss << "\t Weight: " << weight << endl;
+		return ss.str();
+	}
+
+//================= Getter and Setter =============================
+
+	const Capability& Characteristic::getCapability() const
+	{
+		return capability;
+	}
+
+	void Characteristic::setCapability(const Capability& capability)
+	{
+		this->capability = capability;
+	}
+
+	const CapValue& Characteristic::getCapValue() const
+	{
+		return capValue;
+	}
+
+	void Characteristic::setCapValue(const CapValue& capValue)
+	{
+		this->capValue = capValue;
+	}
+
+	double Characteristic::getWeight() const
+	{
+		return weight;
+	}
+
+	void Characteristic::setWeight(double weight)
+	{
+		this->weight = weight;
 	}
 
 } /* namespace Alica */
+
+

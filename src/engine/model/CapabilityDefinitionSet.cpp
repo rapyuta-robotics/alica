@@ -12,13 +12,23 @@ namespace alica
 
 	CapabilityDefinitionSet::CapabilityDefinitionSet()
 	{
-		// TODO Auto-generated constructor stub
-
+		this->capabilities = (*new list<Capability>);
 	}
 
 	CapabilityDefinitionSet::~CapabilityDefinitionSet()
 	{
-		// TODO Auto-generated destructor stub
+	}
+
+//================== Getter and Setter ===================================
+
+	const list<Capability>& CapabilityDefinitionSet::getCapabilities() const
+	{
+		return capabilities;
+	}
+
+	void CapabilityDefinitionSet::setCapabilities(const list<Capability>& capabilities)
+	{
+		this->capabilities = capabilities;
 	}
 
 } /* namespace Alica */

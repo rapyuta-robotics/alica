@@ -12,13 +12,11 @@ namespace alica
 
 	CapValue::CapValue()
 	{
-		// TODO Auto-generated constructor stub
 
 	}
 
 	CapValue::~CapValue()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 } /* namespace alica */

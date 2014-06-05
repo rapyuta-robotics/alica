@@ -8,16 +8,42 @@
 #ifndef CONDITION_H_
 #define CONDITION_H_
 
+using namespace std;
+
+#include <string>
+#include <list>
+
 #include "AlicaElement.h"
+#include "Variable.h"
+#include "Quantifier.h"
 
 namespace alica
 {
 
+	class AbstractPlan;
 	class Condition : public AlicaElement
 	{
 	public:
 		Condition();
+		Condition(long id);
 		virtual ~Condition();
+
+		const string& getConditionString() const;
+		void setConditionString(const string& conditionString);
+		const list<Quantifier>& getQuantifiers() const;
+		const list<Variable>& getVariables() const;
+		void setVariables(const list<Variable>& variables);
+		AbstractPlan* getAbstractPlan() const;
+		void setAbstractPlan(AbstractPlan*& abstractPlan);
+
+	private:
+		void setQuantifiers(const list<Quantifier>& quantifiers);
+	protected:
+		string conditionString;
+		list<Variable> variables;
+		list<Quantifier> quantifiers;
+		AbstractPlan* abstractPlan;
+
 	};
 
 } /* namespace Alica */

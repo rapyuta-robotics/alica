@@ -8,13 +8,30 @@
 #ifndef CAPABILITY_H_
 #define CAPABILITY_H_
 
+using namespace std;
+
+#include <list>
+#include <iostream>
+#include <exception>
+
+#include "AlicaElement.h"
+#include "CapValue.h"
+
 namespace alica
 {
-	class Capability
+	class Capability : public AlicaElement
 	{
 	public:
 		Capability();
 		virtual ~Capability();
+
+		double similarityValue(CapValue* roleVal, CapValue* robotVal);
+
+		const list<CapValue*>& getCapValues() const;
+
+
+	protected:
+		list<CapValue*> capValues;
 	};
 }
 #endif /* CAPABILITY_H_ */

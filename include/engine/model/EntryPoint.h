@@ -8,8 +8,13 @@
 #ifndef ENTRYPOINT_H_
 #define ENTRYPOINT_H_
 
+using namespace std;
+
+#include <unordered_set>
+
 #include "AlicaElement.h"
 #include "Task.h"
+#include "State.h"
 
 namespace alica
 {
@@ -20,6 +25,9 @@ namespace alica
 	public:
 		EntryPoint();
 		virtual ~EntryPoint();
+
+		const long IDLEID = -1;
+
 		const Task* getTask() const;
 		void setTask(const Task* task);
 		const Plan* getPlan() const;
@@ -30,6 +38,12 @@ namespace alica
 		void setMinCardinality(int minCardinality = 0);
 		void setSuccessRequired(bool successRequired);
 		const bool getSuccessRequired() const;
+		bool isSuccessRequired() const;
+		const unordered_set<State*>& getReachableStates() const;
+		void setReachableStates(const unordered_set<State*>& reachableStates);
+
+	private:
+
 
 	protected:
 		const Task* task;
@@ -37,6 +51,7 @@ namespace alica
 		int minCardinality = 0;
 		int maxCardinality = 0;
 		bool successRequired;
+		unordered_set<State*> reachableStates;
 
 	};
 

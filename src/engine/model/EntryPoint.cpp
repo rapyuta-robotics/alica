@@ -18,7 +18,7 @@ namespace alica
 	{
 	}
 
-	const Task* alica::EntryPoint::getTask() const
+	const Task* EntryPoint::getTask() const
 	{
 		return task;
 	}
@@ -66,6 +66,20 @@ namespace alica
 	const bool EntryPoint::getSuccessRequired() const
 	{
 		return this->successRequired;
+	}
+	const unordered_set<State*>& EntryPoint::getReachableStates() const
+	{
+		return reachableStates;
+	}
+
+	void EntryPoint::setReachableStates(const unordered_set<State*>& reachableStates)
+	{
+		this->reachableStates = reachableStates;
+	}
+
+	bool EntryPoint::isSuccessRequired() const
+	{
+		return successRequired;
 	}
 
 } /* namespace Alica */

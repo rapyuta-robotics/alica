@@ -8,7 +8,14 @@
 #ifndef CHARACTERISTIC_H_
 #define CHARACTERISTIC_H_
 
+using namespace std;
+
+#include <string.h>
+#include <iostream>
+
 #include "AlicaElement.h"
+#include "Capability.h"
+#include "CapValue.h"
 
 namespace alica
 {
@@ -19,7 +26,19 @@ namespace alica
 		Characteristic();
 		virtual ~Characteristic();
 
-	private:
+		string toString();
+
+		const Capability& getCapability() const;
+		void setCapability(const Capability& capability);
+		const CapValue& getCapValue() const;
+		void setCapValue(const CapValue& capValue);
+		double getWeight() const;
+		void setWeight(double weight);
+
+	protected:
+		Capability capability;
+		CapValue capValue;
+		double weight = 0;
 
 	};
 
