@@ -12,7 +12,6 @@ namespace alica
 
 	CapabilityDefinitionSet::CapabilityDefinitionSet()
 	{
-		this->capabilities = (*new list<Capability>);
 	}
 
 	CapabilityDefinitionSet::~CapabilityDefinitionSet()
