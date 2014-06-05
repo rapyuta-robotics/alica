@@ -22,6 +22,7 @@ using namespace std;
 #include "PostCondition.h"
 #include "SyncTransition.h"
 
+
 namespace alica
 {
 	class State;
@@ -39,8 +40,8 @@ namespace alica
 		virtual string toString() const;
 		map<long, EntryPoint*>& getEntryPoints() ;
 		void setEntryPoints(const map<long, EntryPoint*>& entryPoints);
-		list<FailureState>& getFailureStates() ;
-		void setFailureStates(const list<FailureState>& failurePoints);
+		list<FailureState*>& getFailureStates() ;
+		void setFailureStates(const list<FailureState*>& failurePoints);
 		int getMaxCardinality();
 		void setMaxCardinality(int maxCardinality = 0);
 		int getMinCardinality() ;
@@ -49,8 +50,8 @@ namespace alica
 		void setPostCondition(const PostCondition& postCondition);
 		list<State*>& getStates();
 		void setStates(const list<State*>& states);
-		list<SuccessState>& getSuccessStates() ;
-		void setSuccessStates(const list<SuccessState>& succesPoints);
+		list<SuccessState*>& getSuccessStates() ;
+		void setSuccessStates(const list<SuccessState*>& succesPoints);
 		list<SyncTransition>& getSyncTransitions() ;
 		void setSyncTransitions(const list<SyncTransition>& syncTransitions);
 		list<Transition>& getTransitions() ;
@@ -63,8 +64,8 @@ namespace alica
 		int maxCardinality = 0;
 		map<long, EntryPoint*> entryPoints;
 		list<State*> states;
-		list<FailureState> failureStates;
-		list<SuccessState> successStates;
+		list<FailureState*> failureStates;
+		list<SuccessState*> successStates;
 		list<SyncTransition> syncTransitions;
 		list<Transition> transitions;
 		PostCondition postCondition;

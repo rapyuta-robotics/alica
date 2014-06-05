@@ -17,6 +17,11 @@ namespace alica
 	public:
 		TerminalState();
 		virtual ~TerminalState();
+		const PostCondition* getPosCondition() const;
+		void setPosCondition(const PostCondition* posCondition);
+
+	protected:
+		const PostCondition* posCondition;
 	};
 
 } /* namespace Alica */

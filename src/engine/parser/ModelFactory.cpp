@@ -24,6 +24,7 @@ namespace alica
 	const string ModelFactory::subplan = "subplan";
 	const string ModelFactory::subvar = "subvar";
 	const string ModelFactory::var = "var";
+	const string ModelFactory::result = "result";
 
 	ModelFactory::ModelFactory(PlanParser* p, shared_ptr<PlanRepository> rep)
 	{
@@ -94,7 +95,7 @@ namespace alica
 
 			if (isReferenceNode(curChild))
 			{
-				AlicaEngine::getInstance()->abort("PP: Plan child is reference", curChild);
+				AlicaEngine::getInstance()->abort("MF: Plan child is reference", curChild);
 			}
 
 			const char* val = curChild->Value();
@@ -124,9 +125,15 @@ namespace alica
 				}
 				else if (typeString.compare("alica:SuccessState") == 0)
 				{
+					SuccessState* suc = createSuccessState(curChild);
+					suc->setInPlan(plan);
+					plan->getSuccessStates().push_front(suc);
+					plan->getStates().push_front(suc);
+
 				}
 				else if (typeString.compare("alica:FailureState") == 0)
 				{
+					//TODO: FailureState
 				}
 				else
 				{
@@ -155,12 +162,73 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("PP: Unhandled Plan Child: ", val);
+				AlicaEngine::getInstance()->abort("MF: Unhandled Plan Child: ", val);
 			}
 			curChild = curChild->NextSiblingElement();
 		}
 
 		return plan;
+	}
+
+	SuccessState* ModelFactory::createSuccessState(tinyxml2::XMLElement* element)
+	{
+		SuccessState* suc = new SuccessState();
+		suc->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(suc, element);
+
+		addElement(suc);
+		this->rep.get()->getStates().insert(pair<long, State*>(suc->getId(), suc));
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			long cid = this->parser->parserId(curChild);
+			if (inTransitions.compare(val) == 0)
+			{
+				this->stateInTransitionReferences.push_back(pair<long, long>(suc->getId(), cid));
+			}
+			else if (result.compare(val) == 0)
+			{
+				PostCondition* postCon = createPostCondition(curChild);
+				suc->setPosCondition(postCon);
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled State Child:", curChild);
+			}
+
+			curChild = curChild->NextSiblingElement();
+		}
+		return suc;
+	}
+	PostCondition* ModelFactory::createPostCondition(tinyxml2::XMLElement* element)
+	{
+		PostCondition* pos = new PostCondition();
+		pos->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(pos, element);
+		addElement(pos);
+
+		string conditionString = "";
+		const char* conditionPtr = element->Attribute("conditionString");
+		if(conditionPtr){
+			conditionString = conditionPtr;
+			pos->setConditionString(conditionString);
+		}
+		if(!conditionString.empty()){
+			//TODO: ANTLRBUILDER
+		}
+		else
+		{
+			//TODO: aus c#
+			//pos->ConditionFOL = null;
+		}
+
+		if(element->FirstChild()){
+			AlicaEngine::getInstance()->abort("MF: Unhandled Result child", element->FirstChild());
+		}
+
+		return pos;
 	}
 
 	EntryPoint* ModelFactory::createEntryPoint(tinyxml2::XMLElement* element)
@@ -208,14 +276,14 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("PP: Unhandled EntryPoint Child: ", val);
+				AlicaEngine::getInstance()->abort("MF: Unhandled EntryPoint Child: ", val);
 			}
 			curChild = curChild->NextSiblingElement();
 		}
 
 		if (!haveState)
 		{
-			AlicaEngine::getInstance()->abort("PP: No initial state identified for EntryPoint: ", ep->getId());
+			AlicaEngine::getInstance()->abort("MF: No initial state identified for EntryPoint: ", ep->getId());
 		}
 
 		return ep;
@@ -258,7 +326,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("PP: Unhandled State Child:", curChild);
+				AlicaEngine::getInstance()->abort("MF: Unhandled State Child:", curChild);
 			}
 
 			curChild = curChild->NextSiblingElement();
@@ -272,7 +340,7 @@ namespace alica
 		para->setId(this->parser->parserId(element));
 		setAlicaElementAttributes(para, element);
 
-		addElement (para);
+		addElement(para);
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
 		{
@@ -375,7 +443,7 @@ namespace alica
 		if (this->elements.find(ae->getId()) != this->elements.end())
 		{
 			stringstream ss;
-			ss << "PP: ERROR Double IDs: " << ae->getId();
+			ss << "MF: ERROR Double IDs: " << ae->getId();
 			AlicaEngine::getInstance()->abort(ss.str());
 		}
 		elements.insert(pair<long, AlicaElement*>(ae->getId(), ae));

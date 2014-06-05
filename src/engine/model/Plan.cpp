@@ -67,12 +67,12 @@ namespace alica
 		this->entryPoints = entryPoints;
 	}
 
-	list<FailureState>& Plan::getFailureStates()
+	list<FailureState*>& Plan::getFailureStates()
 	{
 		return failureStates;
 	}
 
-	void Plan::setFailureStates(const list<FailureState>& failureStates)
+	void Plan::setFailureStates(const list<FailureState*>& failureStates)
 	{
 		this->failureStates = failureStates;
 	}
@@ -117,12 +117,12 @@ namespace alica
 		this->states = states;
 	}
 
-	list<SuccessState>& Plan::getSuccessStates()
+	list<SuccessState*>& Plan::getSuccessStates()
 	{
 		return successStates;
 	}
 
-	void Plan::setSuccessStates(const list<SuccessState>& successStates)
+	void Plan::setSuccessStates(const list<SuccessState*>& successStates)
 	{
 		this->successStates = successStates;
 	}
