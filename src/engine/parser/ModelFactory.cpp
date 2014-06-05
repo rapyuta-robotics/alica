@@ -87,7 +87,7 @@ namespace alica
 
 			if (isReferenceNode(curChild))
 			{
-
+				AlicaEngine::getInstance()->abort("PP: Plan child is reference", curChild);
 			}
 
 			const char* val = curChild->Value();
@@ -182,7 +182,6 @@ namespace alica
 			curChild = curChild->NextSiblingElement();
 		}
 
-
 		if (!haveState)
 		{
 			AlicaEngine::getInstance()->abort("PP: No initial state identified for EntryPoint: ", ep->getId());
@@ -191,10 +190,26 @@ namespace alica
 		return ep;
 	}
 
+	/**
+	 *
+	 * @param node xmlElement that represent the current xml tag
+	 * @return true if the child node is a text element otherwise false
+	 */
 	bool ModelFactory::isReferenceNode(tinyxml2::XMLElement* node)
 	{
-		// TODO: ausimplementieren, danke ;-)
-		return true;
+
+		tinyxml2::XMLNode* curChild = node->FirstChild();
+		while (curChild != nullptr)
+		{
+			const tinyxml2::XMLText* textNode = curChild->ToText();
+			if (textNode)
+			{
+				return true;
+			}
+			curChild = curChild->NextSibling();
+
+		}
+		return false;
 	}
 
 	void ModelFactory::setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele)
