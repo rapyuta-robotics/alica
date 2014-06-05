@@ -18,6 +18,8 @@ using namespace std;
 #include "PlanParser.h"
 #include "../model/AlicaElement.h"
 #include "../model/Parametrisation.h"
+#include "../model/SuccessState.h"
+
 namespace alica
 {
 	class PlanParser;
@@ -51,6 +53,7 @@ namespace alica
 		static const string subplan;
 		static const string subvar;
 		static const string var;
+		static const string result;
 
 		PlanParser* parser;
 		shared_ptr<PlanRepository> rep;
@@ -65,7 +68,9 @@ namespace alica
 		void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele);
 		EntryPoint* createEntryPoint(tinyxml2::XMLElement* element);
 		State* createState(tinyxml2::XMLElement* element);
+		SuccessState* createSuccessState(tinyxml2::XMLElement* element);
 		Parametrisation* createParametrisation(tinyxml2::XMLElement* element);
+		PostCondition* createPostCondition(tinyxml2::XMLElement* element);
 		bool isReferenceNode(tinyxml2::XMLElement* node);
 		void addElement(AlicaElement* ae);
 
