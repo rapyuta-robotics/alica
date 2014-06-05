@@ -17,6 +17,7 @@ using namespace std;
 #include "../model/Plan.h"
 #include "PlanParser.h"
 #include "../model/AlicaElement.h"
+#include "../model/Parametrisation.h"
 namespace alica
 {
 	class PlanParser;
@@ -31,6 +32,7 @@ namespace alica
 		Plan* createPlan(tinyxml2::XMLDocument* node);
 		const map<long, AlicaElement*>& getElements() const;
 		void setElements(const map<long, AlicaElement*>& elements);
+		string getNameOfNode(tinyxml2::XMLElement* node);
 
 	private:
 		static const string entryPoints;
@@ -42,15 +44,33 @@ namespace alica
 		static const string rating;
 		static const string state;
 		static const string task;
+		static const string inTransitions;
+		static const string outTransitions;
+		static const string plans;
+		static const string parametrisation;
+		static const string subplan;
+		static const string subvar;
+		static const string var;
 
 		PlanParser* parser;
 		shared_ptr<PlanRepository> rep;
-		map<long,AlicaElement*> elements;
+		map<long, AlicaElement*> elements;
+		list<pair<long, long>> stateInTransitionReferences;
+		list<pair<long, long>> stateOutTransitionReferences;
+		list<pair<long, long>> statePlanReferences;
+		list<pair<long, long>> paramSubPlanReferences;
+		list<pair<long, long>> paramSubVarReferences;
+		list<pair<long, long>> paramVarReferences;
 
 		void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele);
-		EntryPoint* createEntryPoint(tinyxml2::XMLElement* node);
-		bool isReferenceNode (tinyxml2::XMLElement* node);
+		EntryPoint* createEntryPoint(tinyxml2::XMLElement* element);
+		State* createState(tinyxml2::XMLElement* element);
+		Parametrisation* createParametrisation(tinyxml2::XMLElement* element);
+		bool isReferenceNode(tinyxml2::XMLElement* node);
 		void addElement(AlicaElement* ae);
+
+	protected:
+
 	};
 } /* namespace Alica */
 

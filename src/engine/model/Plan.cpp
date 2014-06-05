@@ -6,7 +6,9 @@
  */
 
 #include "engine/model/Plan.h"
-
+#include "engine/model/State.h"
+#include "engine/model/FailureState.h"
+#include "engine/model/SuccessState.h"
 namespace alica
 {
 	Plan::Plan() :
@@ -105,12 +107,12 @@ namespace alica
 		this->postCondition = postCondition;
 	}
 
-	list<State>& Plan::getStates()
+	list<State*>& Plan::getStates()
 	{
 		return states;
 	}
 
-	void Plan::setStates(const list<State>& states)
+	void Plan::setStates(const list<State*>& states)
 	{
 		this->states = states;
 	}

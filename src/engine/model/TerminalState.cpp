@@ -10,7 +10,8 @@
 namespace alica
 {
 
-	TerminalState::TerminalState()
+	TerminalState::TerminalState() :
+			State()
 	{
 		// TODO Auto-generated constructor stub
 

@@ -5,8 +5,8 @@
  *      Author: Stephan Opfer
  */
 
-#ifndef FAILUREPOINT_H_
-#define FAILUREPOINT_H_
+#ifndef FAILURESTATE_H_
+#define FAILURESTATE_H_
 
 #include "TerminalState.h"
 
@@ -22,4 +22,4 @@ namespace alica
 
 } /* namespace Alica */
 
-#endif /* FAILUREPOINT_H_ */
+#endif /* FAILURESTATE_H_ */
