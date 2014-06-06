@@ -73,7 +73,7 @@ namespace alica
 	void PlanType::setPlans(const list<Plan*>& plans)
 	{
 		this->plans = plans;
-	}f
+	}
 
 } /* namespace Alica */
 
