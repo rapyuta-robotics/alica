@@ -34,12 +34,14 @@ namespace alica
 	class Plan : public AbstractPlan
 	{
 	public:
-		Plan();
-		Plan(long id);
+
+		Plan(long id = 0);
 		virtual ~Plan();
-		void setFilename (string filename);
-		string getFilename();
+
 		virtual string toString() const;
+		EntryPoint* getEntryPointTaskID(long taskID);
+
+		const virtual string& getFileName() const;
 		map<long, EntryPoint*>& getEntryPoints() ;
 		void setEntryPoints(const map<long, EntryPoint*>& entryPoints);
 		list<FailureState*>& getFailureStates() ;
@@ -58,10 +60,8 @@ namespace alica
 		void setSyncTransitions(const list<SyncTransition*>& syncTransitions);
 		list<Transition*>& getTransitions() ;
 		void setTransitions(const list<Transition*>& transitions);
-		EntryPoint* getEntryPointTaskID(long taskID);
 
 	protected:
-		string filename;
 		int minCardinality = 0;
 		int maxCardinality = 0;
 		map<long, EntryPoint*> entryPoints;

@@ -8,6 +8,11 @@
 #ifndef RUNTIMECONDITION_H_
 #define RUNTIMECONDITION_H_
 
+using namespace std;
+
+#include <string>
+#include <sstream>
+
 #include "engine/model/Condition.h"
 
 namespace alica
@@ -19,8 +24,11 @@ namespace alica
 	class RuntimeCondition : public Condition
 	{
 	public:
-		RuntimeCondition();
+		RuntimeCondition(long id = 0);
 		virtual ~RuntimeCondition();
+
+		string toString();
+
 	};
 
 } /* namespace Alica */

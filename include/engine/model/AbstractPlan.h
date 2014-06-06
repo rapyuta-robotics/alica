@@ -58,6 +58,7 @@ namespace alica
 		UtilityFunction utilityFunction;
 
 	protected:
+		string fileName;
 		bool masterPlan;
 		list<Variable*> variables;
 		double utilityThreshold = 1.0;
