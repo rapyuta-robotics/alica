@@ -9,6 +9,7 @@
 #define TRANSITION_H_
 
 #include "AlicaElement.h"
+#include "PreCondition.h"
 #include "State.h"
 
 namespace alica
@@ -23,12 +24,15 @@ namespace alica
 	public:
 		Transition();
 		virtual ~Transition();
-		State* getInState() const;
+		const PreCondition* getPreCondition() ;
+		void setPreCondition(const PreCondition* preCondition);
+		State* getOutState();
+		State* getInState() ;
 		void setInState(State* inState);
-		State* getOutState() const;
 		void setOutState(State* outState);
 
 	private:
+		const PreCondition* preCondition;
 		State* inState;
 		State* outState;
 	};

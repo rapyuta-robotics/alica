@@ -21,7 +21,16 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
-	State* Transition::getInState() const
+	const PreCondition* Transition::getPreCondition()
+	{
+		return preCondition;
+	}
+
+	void Transition::setPreCondition(const PreCondition* preCondition)
+	{
+		this->preCondition = preCondition;
+	}
+	State* Transition::getInState()
 	{
 		return inState;
 	}
@@ -31,7 +40,7 @@ namespace alica
 		this->inState = inState;
 	}
 
-	State* Transition::getOutState() const
+	State* Transition::getOutState()
 	{
 		return outState;
 	}

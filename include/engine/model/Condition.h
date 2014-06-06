@@ -30,11 +30,11 @@ namespace alica
 
 		const string& getConditionString() const;
 		void setConditionString(const string& conditionString);
-		const list<Quantifier*>& getQuantifiers() const;
+		list<Quantifier*>& getQuantifiers() ;
 		const list<Variable*>& getVariables() const;
 		void setVariables(const list<Variable*>& variables);
 		AbstractPlan* getAbstractPlan() const;
-		void setAbstractPlan(AbstractPlan*& abstractPlan);
+		void setAbstractPlan(AbstractPlan* abstractPlan);
 
 	private:
 		void setQuantifiers(const list<Quantifier*>& quantifiers);

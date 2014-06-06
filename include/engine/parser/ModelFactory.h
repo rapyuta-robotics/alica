@@ -19,6 +19,8 @@ using namespace std;
 #include "../model/AlicaElement.h"
 #include "../model/Parametrisation.h"
 #include "../model/SuccessState.h"
+#include "../model/FailureState.h"
+#include "../model/ForallAgents.h"
 
 namespace alica
 {
@@ -54,6 +56,12 @@ namespace alica
 		static const string subvar;
 		static const string var;
 		static const string result;
+		static const string inState;
+		static const string outState;
+		static const string preCondition;
+		static const string synchronisation;
+		static const string quantifiers;
+		static const string sorts;
 
 		PlanParser* parser;
 		shared_ptr<PlanRepository> rep;
@@ -61,16 +69,26 @@ namespace alica
 		list<pair<long, long>> stateInTransitionReferences;
 		list<pair<long, long>> stateOutTransitionReferences;
 		list<pair<long, long>> statePlanReferences;
+		list<pair<long, long>> transitionSynchReferences;
+		list<pair<long, long>> transitionAimReferences;
 		list<pair<long, long>> paramSubPlanReferences;
 		list<pair<long, long>> paramSubVarReferences;
 		list<pair<long, long>> paramVarReferences;
+		list<pair<long, long>> conditionVarReferences;
+		list<pair<long, long>> quantifierScopeReferences;
+		list<pair<long, long>> epStateReferences;
+		list<pair<long, long>> epTaskReferences;
 
 		void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele);
 		EntryPoint* createEntryPoint(tinyxml2::XMLElement* element);
 		State* createState(tinyxml2::XMLElement* element);
 		SuccessState* createSuccessState(tinyxml2::XMLElement* element);
+		FailureState* createFailureState(tinyxml2::XMLElement* element);
+		Transition* createTransition(tinyxml2::XMLElement* element, Plan* plan);
 		Parametrisation* createParametrisation(tinyxml2::XMLElement* element);
+		PreCondition* createPreCondition(tinyxml2::XMLElement* element);
 		PostCondition* createPostCondition(tinyxml2::XMLElement* element);
+		Quantifier* createQuantifier(tinyxml2::XMLElement* element);
 		bool isReferenceNode(tinyxml2::XMLElement* node);
 		void addElement(AlicaElement* ae);
 
