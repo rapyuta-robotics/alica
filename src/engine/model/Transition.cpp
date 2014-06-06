@@ -21,4 +21,13 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
+	const PreCondition* Transition::getPreCondition()
+	{
+		return preCondition;
+	}
+
+	void Transition::setPreCondition(const PreCondition* preCondition)
+	{
+		this->preCondition = preCondition;
+	}
 } /* namespace Alica */

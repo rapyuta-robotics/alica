@@ -35,12 +35,12 @@ namespace alica
 		this->conditionString = conditionString;
 	}
 
-	const list<Quantifier>& Condition::getQuantifiers() const
+	list<Quantifier*>& Condition::getQuantifiers()
 	{
 		return quantifiers;
 	}
 
-	void Condition::setQuantifiers(const list<Quantifier>& quantifiers)
+	void Condition::setQuantifiers(const list<Quantifier*>& quantifiers)
 	{
 		this->quantifiers = quantifiers;
 	}
@@ -60,7 +60,7 @@ namespace alica
 		return abstractPlan;
 	}
 
-	void Condition::setAbstractPlan(AbstractPlan*& abstractPlan)
+	void Condition::setAbstractPlan(AbstractPlan* abstractPlan)
 	{
 		this->abstractPlan = abstractPlan;
 	}

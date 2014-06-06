@@ -52,10 +52,10 @@ namespace alica
 		void setStates(const list<State*>& states);
 		list<SuccessState*>& getSuccessStates() ;
 		void setSuccessStates(const list<SuccessState*>& succesPoints);
-		list<SyncTransition>& getSyncTransitions() ;
-		void setSyncTransitions(const list<SyncTransition>& syncTransitions);
-		list<Transition>& getTransitions() ;
-		void setTransitions(const list<Transition>& transitions);
+		list<SyncTransition*>& getSyncTransitions() ;
+		void setSyncTransitions(const list<SyncTransition*>& syncTransitions);
+		list<Transition*>& getTransitions() ;
+		void setTransitions(const list<Transition*>& transitions);
 		EntryPoint* getEntryPointTaskID(long taskID);
 
 	protected:
@@ -66,8 +66,8 @@ namespace alica
 		list<State*> states;
 		list<FailureState*> failureStates;
 		list<SuccessState*> successStates;
-		list<SyncTransition> syncTransitions;
-		list<Transition> transitions;
+		list<SyncTransition*> syncTransitions;
+		list<Transition*> transitions;
 		PostCondition postCondition;
 
 	};

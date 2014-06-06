@@ -22,3 +22,13 @@ namespace alica
 	}
 
 } /* namespace Alica */
+
+bool alica::PreCondition::isEnabled() const
+{
+	return enabled;
+}
+
+void alica::PreCondition::setEnabled(bool enabled)
+{
+	this->enabled = enabled;
+}

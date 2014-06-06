@@ -18,6 +18,11 @@ namespace alica
 	public:
 		PreCondition();
 		virtual ~PreCondition();
+		bool isEnabled() const;
+		void setEnabled(bool enabled);
+
+	private:
+		bool enabled;
 	};
 
 } /* namespace Alica */
