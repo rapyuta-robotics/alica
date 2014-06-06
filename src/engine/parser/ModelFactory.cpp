@@ -156,7 +156,37 @@ namespace alica
 			}
 			else if (conditions.compare(val) == 0)
 			{
-				//TODO:
+				const char* typePtr = curChild->Attribute("xsi:type");
+				string typeString = "";
+				if (typePtr)
+				{
+					typeString = typePtr;
+				}
+				if (typeString.empty())
+				{
+					AlicaEngine::getInstance()->abort("MF: Condition without xsi:type in plan", plan->getName());
+				}
+				else if (typeString.compare("alica:RuntimeCondition") == 0)
+				{
+					RuntimeCondition* rc = createRuntimeCondition(curChild);
+					rc->setAbstractPlan(plan);
+					plan->setRuntimeCondition(rc);
+				}
+				else if (typeString.compare("alica:PreCondition") == 0)
+				{
+					PreCondition* p = createPreCondition(curChild);
+					p->setAbstractPlan(plan);
+					plan->setPreCondition(p);
+				}
+				else if (typeString.compare("alica:PostCondition") == 0)
+				{
+					PostCondition* p = createPostCondition(curChild);
+					plan->setPostCondition(p);
+				}
+				else
+				{
+					AlicaEngine::getInstance()->abort("MF: Unknown Condition type", curChild);
+				}
 			}
 			else if (vars.compare(val) == 0)
 			{
@@ -178,6 +208,54 @@ namespace alica
 		}
 
 		return plan;
+	}
+	RuntimeCondition* ModelFactory::createRuntimeCondition(tinyxml2::XMLElement* element)
+	{
+		RuntimeCondition* r = new RuntimeCondition();
+		r->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(r, element);
+		addElement(r);
+
+		string conditionString = "";
+		const char* conditionPtr = element->Attribute("conditionString");
+		if (conditionPtr)
+		{
+			conditionString = conditionPtr;
+			r->setConditionString(conditionString);
+		}
+
+		if (!conditionString.empty())
+		{
+			//TODO: ANTLRBUILDER
+		}
+		else
+		{
+			//TODO: aus c#
+			//pos->ConditionFOL = null;
+		}
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			long cid = this->parser->parserId(curChild);
+			if (vars.compare(val) == 0)
+			{
+				this->conditionVarReferences.push_back(pair<long, long>(r->getId(), cid));
+			}
+			else if (quantifiers.compare(val) == 0)
+			{
+				Quantifier* q = createQuantifier(curChild);
+				r->getQuantifiers().push_back(q);
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled RuntimeCondition Child", curChild);
+			}
+			curChild = curChild->NextSiblingElement();
+		}
+		return r;
+
 	}
 
 	Transition* ModelFactory::createTransition(tinyxml2::XMLElement* element, Plan* plan)
@@ -325,7 +403,7 @@ namespace alica
 			long cid = this->parser->parserId(curChild);
 			if (sorts.compare(val) == 0)
 			{
-				//TODO: q.addDomainIdentefies;
+				q->getDomainIdentifiers().push_back(val);
 			}
 			else
 			{

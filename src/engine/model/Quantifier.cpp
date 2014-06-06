@@ -22,3 +22,13 @@ namespace alica
 	}
 
 } /* namespace Alica */
+
+ list<string>& alica::Quantifier::getDomainIdentifiers()
+{
+	return domainIdentifiers;
+}
+
+void alica::Quantifier::setDomainIdentifiers(const list<string>& domainIdentifiers)
+{
+	this->domainIdentifiers = domainIdentifiers;
+}

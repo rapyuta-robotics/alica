@@ -48,8 +48,8 @@ namespace alica
 		void setMaxCardinality(int maxCardinality = 0);
 		int getMinCardinality() ;
 		void setMinCardinality(int minCardinality = 0);
-		PostCondition& getPostCondition() ;
-		void setPostCondition(const PostCondition& postCondition);
+		const PostCondition* getPostCondition() const ;
+		void setPostCondition(const PostCondition* postCondition);
 		list<State*>& getStates();
 		void setStates(const list<State*>& states);
 		list<SuccessState*>& getSuccessStates() ;
@@ -70,7 +70,7 @@ namespace alica
 		list<SuccessState*> successStates;
 		list<SyncTransition*> syncTransitions;
 		list<Transition*> transitions;
-		PostCondition postCondition;
+		const PostCondition* postCondition;
 
 	};
 

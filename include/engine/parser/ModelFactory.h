@@ -88,6 +88,7 @@ namespace alica
 		Parametrisation* createParametrisation(tinyxml2::XMLElement* element);
 		PreCondition* createPreCondition(tinyxml2::XMLElement* element);
 		PostCondition* createPostCondition(tinyxml2::XMLElement* element);
+		RuntimeCondition* createRuntimeCondition(tinyxml2::XMLElement* element);
 		Quantifier* createQuantifier(tinyxml2::XMLElement* element);
 		bool isReferenceNode(tinyxml2::XMLElement* node);
 		void addElement(AlicaElement* ae);
