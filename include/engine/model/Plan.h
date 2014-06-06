@@ -34,12 +34,14 @@ namespace alica
 	class Plan : public AbstractPlan
 	{
 	public:
-		Plan();
-		Plan(long id);
+
+		Plan(long id = 0);
 		virtual ~Plan();
-		void setFilename (string filename);
-		string getFilename();
+
 		virtual string toString() const;
+		EntryPoint* getEntryPointTaskID(long taskID);
+
+		const virtual string& getFileName() const;
 		map<long, EntryPoint*>& getEntryPoints() ;
 		void setEntryPoints(const map<long, EntryPoint*>& entryPoints);
 		list<FailureState*>& getFailureStates() ;
@@ -54,22 +56,21 @@ namespace alica
 		void setStates(const list<State*>& states);
 		list<SuccessState*>& getSuccessStates() ;
 		void setSuccessStates(const list<SuccessState*>& succesPoints);
-		list<SyncTransition>& getSyncTransitions() ;
-		void setSyncTransitions(const list<SyncTransition>& syncTransitions);
-		list<Transition>& getTransitions() ;
-		void setTransitions(const list<Transition>& transitions);
-		EntryPoint* getEntryPointTaskID(long taskID);
+		list<SyncTransition*>& getSyncTransitions() ;
+		void setSyncTransitions(const list<SyncTransition*>& syncTransitions);
+		list<Transition*>& getTransitions() ;
+		void setTransitions(const list<Transition*>& transitions);
+
 
 	protected:
-		string filename;
 		int minCardinality = 0;
 		int maxCardinality = 0;
 		map<long, EntryPoint*> entryPoints;
 		list<State*> states;
 		list<FailureState*> failureStates;
 		list<SuccessState*> successStates;
-		list<SyncTransition> syncTransitions;
-		list<Transition> transitions;
+		list<SyncTransition*> syncTransitions;
+		list<Transition*> transitions;
 		PostCondition postCondition;
 
 	};

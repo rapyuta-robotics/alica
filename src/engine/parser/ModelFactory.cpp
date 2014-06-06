@@ -53,7 +53,7 @@ namespace alica
 
 		long id = this->parser->parserId(element);
 		Plan* plan = new Plan(id);
-		plan->setFilename(this->parser->getCurrentFile());
+		plan->setFileName(this->parser->getCurrentFile());
 		setAlicaElementAttributes(plan, element);
 
 		string isMasterPlanAttr = element->Attribute("masterPlan");

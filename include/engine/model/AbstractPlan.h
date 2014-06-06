@@ -52,12 +52,12 @@ namespace alica
 
 	private:
 		unsigned long authorithyTimeInterval;
-		string fileName;
 		RuntimeCondition runtimeCondition;
 		PreCondition preCondition;
 		UtilityFunction utilityFunction;
 
 	protected:
+		string fileName;
 		bool masterPlan;
 		list<Variable*> variables;
 		double utilityThreshold = 1.0;
