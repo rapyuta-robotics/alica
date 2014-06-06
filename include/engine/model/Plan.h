@@ -61,7 +61,6 @@ namespace alica
 		list<Transition*>& getTransitions() ;
 		void setTransitions(const list<Transition*>& transitions);
 
-
 	protected:
 		int minCardinality = 0;
 		int maxCardinality = 0;
