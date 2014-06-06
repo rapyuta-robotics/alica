@@ -25,6 +25,11 @@ namespace alica
 	const string ModelFactory::subvar = "subvar";
 	const string ModelFactory::var = "var";
 	const string ModelFactory::result = "result";
+	const string ModelFactory::inState = "inState";
+	const string ModelFactory::outState = "outState";
+	const string ModelFactory::preCondition = "preCondition";
+	const string ModelFactory::synchronisation = "synchronisation";
+	const string ModelFactory::quantifiers = "quantifiers";
 
 	ModelFactory::ModelFactory(PlanParser* p, shared_ptr<PlanRepository> rep)
 	{
@@ -133,7 +138,10 @@ namespace alica
 				}
 				else if (typeString.compare("alica:FailureState") == 0)
 				{
-					//TODO: FailureState
+					FailureState* fail = createFailureState(curChild);
+					fail->setInPlan(plan);
+					plan->getFailureStates().push_front(fail);
+					plan->getStates().push_front(fail);
 				}
 				else
 				{
@@ -142,7 +150,8 @@ namespace alica
 			}
 			else if (transitions.compare(val) == 0)
 			{
-
+				Transition* tran = createTransition(curChild, plan);
+				plan->getTransitions().push_front(tran);
 			}
 			else if (conditions.compare(val) == 0)
 			{
@@ -170,7 +179,181 @@ namespace alica
 		return plan;
 	}
 
-	SuccessState* ModelFactory::createSuccessState(tinyxml2::XMLElement* element)
+	Transition* ModelFactory::createTransition(tinyxml2::XMLElement* element, Plan* plan)
+	{
+		Transition* tran = new Transition();
+		tran->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(tran, element);
+		addElement(tran);
+		this->rep.get()->getTransitions().insert(pair<long, Transition*>(tran->getId(), tran));
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			long cid = this->parser->parserId(curChild);
+			if (inState.compare(val) == 0)
+			{
+				//silently ignore
+			}
+			else if (outState.compare(val) == 0)
+			{
+				this->transitionAimReferences.push_back(pair<long, long>(tran->getId(), cid));
+			}
+			else if (preCondition.compare(val) == 0)
+			{
+				PreCondition* pre = createPreCondition(curChild);
+				tran->setPreCondition(pre);
+				pre->setAbstractPlan(plan);
+			}
+			else if (synchronisation.compare(val) == 0)
+			{
+				this->transitionSynchReferences.push_back(pair<long, long>(tran->getId(), cid));
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled Transition Child:", curChild);
+			}
+			curChild = curChild->NextSiblingElement();
+		}
+		return tran;
+	}
+
+	PreCondition* ModelFactory::createPreCondition(tinyxml2::XMLElement* element)
+	{
+		PreCondition* pre = new PreCondition();
+		pre->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(pre, element);
+		addElement(pre);
+		string conditionString = "";
+		const char* conditionPtr = element->Attribute("conditionString");
+		if (conditionPtr)
+		{
+			conditionString = conditionPtr;
+			pre->setConditionString(conditionString);
+		}
+
+		if (!conditionString.empty())
+		{
+			//TODO: ANTLRBUILDER
+		}
+		else
+		{
+			//TODO: aus c#
+			//pos->ConditionFOL = null;
+		}
+		string enabled = "";
+		const char* enabledPtr = element->Attribute("enabled");
+		if (enabledPtr)
+		{
+			enabled = enabledPtr;
+			if (enabled.compare("true") == 0)
+			{
+				pre->setEnabled(true);
+			}
+			else
+			{
+				pre->setEnabled(false);
+			}
+		}
+		else
+		{
+			pre->setEnabled(true);
+		}
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			long cid = this->parser->parserId(curChild);
+			if (vars.compare(val) == 0)
+			{
+				this->conditionVarReferences.push_back(pair<long, long>(pre->getId(), cid));
+			}
+			else if (quantifiers.compare(val) == 0)
+			{
+				Quantifier* q = createQuantifier(curChild);
+				pre->getQuantifiers().push_back(q);
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled PreCondition Child:", curChild);
+			}
+			curChild = curChild->NextSiblingElement();
+		}
+		return pre;
+	}
+	Quantifier* ModelFactory::createQuantifier(tinyxml2::XMLElement* element)
+	{
+		Quantifier* q;
+		long id = this->parser->parserId(element);
+
+		string typeString = "";
+		const char* typePtr = element->Attribute("xsi:type");
+		if (typePtr)
+		{
+			typeString = typePtr;
+			if (typeString.compare("alica:ForallAgents") == 0)
+			{
+				q = new ForallAgents();
+				q->setId(id);
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unsupported quantifier type! !", typeString);
+			}
+		}
+		else
+		{
+			AlicaEngine::getInstance()->abort("MF: Quantifier without type!", id);
+		}
+
+		addElement(q);
+		this->rep.get()->getQuantifiers().insert(pair<long, Quantifier*>(q->getId(), q));
+		setAlicaElementAttributes(q, element);
+
+		string scopeString = "";
+		const char* scopePtr = element->Attribute("scope");
+
+		if (scopePtr)
+		{
+
+		}
+
+		return q;
+
+	}
+	FailureState* ModelFactory::createFailureState(tinyxml2::XMLElement * element)
+	{
+		FailureState* fail = new FailureState();
+		fail->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(fail, element);
+
+		addElement(fail);
+		this->rep.get()->getStates().insert(pair<long, State*>(fail->getId(), fail));
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			long cid = this->parser->parserId(curChild);
+			if (inTransitions.compare(val) == 0)
+			{
+				this->stateInTransitionReferences.push_back(pair<long, long>(fail->getId(), cid));
+			}
+			else if (result.compare(val) == 0)
+			{
+				PostCondition* postCon = createPostCondition(curChild);
+				fail->setPosCondition(postCon);
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled State Child:", curChild);
+			}
+
+			curChild = curChild->NextSiblingElement();
+		}
+		return fail;
+	}
+	SuccessState * ModelFactory::createSuccessState(tinyxml2::XMLElement * element)
 	{
 		SuccessState* suc = new SuccessState();
 		suc->setId(this->parser->parserId(element));
@@ -202,7 +385,7 @@ namespace alica
 		}
 		return suc;
 	}
-	PostCondition* ModelFactory::createPostCondition(tinyxml2::XMLElement* element)
+	PostCondition * ModelFactory::createPostCondition(tinyxml2::XMLElement * element)
 	{
 		PostCondition* pos = new PostCondition();
 		pos->setId(this->parser->parserId(element));
@@ -211,11 +394,13 @@ namespace alica
 
 		string conditionString = "";
 		const char* conditionPtr = element->Attribute("conditionString");
-		if(conditionPtr){
+		if (conditionPtr)
+		{
 			conditionString = conditionPtr;
 			pos->setConditionString(conditionString);
 		}
-		if(!conditionString.empty()){
+		if (!conditionString.empty())
+		{
 			//TODO: ANTLRBUILDER
 		}
 		else
@@ -224,14 +409,15 @@ namespace alica
 			//pos->ConditionFOL = null;
 		}
 
-		if(element->FirstChild()){
+		if (element->FirstChild())
+		{
 			AlicaEngine::getInstance()->abort("MF: Unhandled Result child", element->FirstChild());
 		}
 
 		return pos;
 	}
 
-	EntryPoint* ModelFactory::createEntryPoint(tinyxml2::XMLElement* element)
+	EntryPoint * ModelFactory::createEntryPoint(tinyxml2::XMLElement * element)
 	{
 
 		EntryPoint* ep = new EntryPoint();
@@ -293,7 +479,7 @@ namespace alica
 	 * @param element the xml state tag
 	 * @return state pointer
 	 */
-	State* ModelFactory::createState(tinyxml2::XMLElement* element)
+	State * ModelFactory::createState(tinyxml2::XMLElement * element)
 	{
 		State* s = new State();
 		s->setId(this->parser->parserId(element));
@@ -334,7 +520,7 @@ namespace alica
 		return s;
 	}
 
-	Parametrisation* ModelFactory::createParametrisation(tinyxml2::XMLElement* element)
+	Parametrisation * ModelFactory::createParametrisation(tinyxml2::XMLElement * element)
 	{
 		Parametrisation* para = new Parametrisation();
 		para->setId(this->parser->parserId(element));
@@ -372,7 +558,7 @@ namespace alica
 	 * @param node actual xml element
 	 * @return the name of the xml element or missing name
 	 */
-	string ModelFactory::getNameOfNode(tinyxml2::XMLElement* node)
+	string ModelFactory::getNameOfNode(tinyxml2::XMLElement * node)
 	{
 		string name = "";
 		const char* namePtr = node->Attribute("name");
@@ -442,6 +628,7 @@ namespace alica
 	{
 		if (this->elements.find(ae->getId()) != this->elements.end())
 		{
+			cout << "ELEMENT " << ae->getName() << endl;
 			stringstream ss;
 			ss << "MF: ERROR Double IDs: " << ae->getId();
 			AlicaEngine::getInstance()->abort(ss.str());

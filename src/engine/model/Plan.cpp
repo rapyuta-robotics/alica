@@ -127,22 +127,22 @@ namespace alica
 		this->successStates = successStates;
 	}
 
-	list<SyncTransition>& Plan::getSyncTransitions()
+	list<SyncTransition*>& Plan::getSyncTransitions()
 	{
 		return syncTransitions;
 	}
 
-	void Plan::setSyncTransitions(const list<SyncTransition>& syncTransitions)
+	void Plan::setSyncTransitions(const list<SyncTransition*>& syncTransitions)
 	{
 		this->syncTransitions = syncTransitions;
 	}
 
-	list<Transition>& Plan::getTransitions()
+	list<Transition*>& Plan::getTransitions()
 	{
 		return transitions;
 	}
 
-	void Plan::setTransitions(const list<Transition>& transitions)
+	void Plan::setTransitions(const list<Transition*>& transitions)
 	{
 		this->transitions = transitions;
 	}
