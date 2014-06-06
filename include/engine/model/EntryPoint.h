@@ -11,9 +11,13 @@
 using namespace std;
 
 #include <unordered_set>
+#include <string>
+#include <sstream>
 
 #include "AlicaElement.h"
 #include "Task.h"
+#include "State.h"
+#include "Transition.h"
 
 namespace alica
 {
@@ -28,6 +32,9 @@ namespace alica
 		virtual ~EntryPoint();
 
 		const long IDLEID = -1;
+		void ComputeReachabilitySet();
+		string ToString ();
+		int CompareTo(EntryPoint otherEp);
 
 		const Task* getTask() const;
 		void setTask(const Task* task);
@@ -42,11 +49,11 @@ namespace alica
 		bool isSuccessRequired() const;
 		const unordered_set<State*>& getReachableStates() const;
 		void setReachableStates(const unordered_set<State*>& reachableStates);
-
-	private:
-
+		const State* getState() const;
+		void setState(State* state);
 
 	protected:
+		State* state;
 		const Task* task;
 		const Plan* plan;
 		int minCardinality = 0;

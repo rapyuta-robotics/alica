@@ -20,16 +20,20 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
-	void AlicaElement::setName(string name){
+	void AlicaElement::setName(string name)
+	{
 		this->name = name;
 	}
-	string AlicaElement::getName(){
+	string AlicaElement::getName() const
+	{
 		return this->name;
 	}
-	void AlicaElement::setComment(string comment){
+	void AlicaElement::setComment(string comment)
+	{
 		this->comment = comment;
 	}
-	string AlicaElement::getComment(){
+	string AlicaElement::getComment()
+	{
 		return this->comment;
 	}
 	long AlicaElement::getId() const
@@ -43,11 +47,10 @@ namespace alica
 	string AlicaElement::toString() const
 	{
 		stringstream ss;
-		ss << "ID: " << this->getId()  << " Name: " << this->name << endl;
+		ss << "ID: " << this->getId() << " Name: " << this->name << endl;
 		ss << "Comment: " << this->comment << endl;
 		return ss.str();
 	}
 
 } /* namespace Alica */
-
 

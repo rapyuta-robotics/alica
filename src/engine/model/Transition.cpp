@@ -30,4 +30,26 @@ namespace alica
 	{
 		this->preCondition = preCondition;
 	}
+	State* Transition::getInState()
+	{
+		return inState;
+	}
+
+	void Transition::setInState(State* inState)
+	{
+		this->inState = inState;
+	}
+
+	State* Transition::getOutState()
+	{
+		return outState;
+	}
+
+	void Transition::setOutState( State* outState)
+	{
+		this->outState = outState;
+	}
+
 } /* namespace Alica */
+
+
