@@ -8,6 +8,11 @@
 #ifndef PRECONDITION_H_
 #define PRECONDITION_H_
 
+using namespace std;
+
+#include <string>
+#include <sstream>
+
 #include "Condition.h"
 
 namespace alica
@@ -16,8 +21,11 @@ namespace alica
 	class PreCondition : public Condition
 	{
 	public:
-		PreCondition();
+		PreCondition(long id = 0);
 		virtual ~PreCondition();
+
+		string toString();
+
 		bool isEnabled() const;
 		void setEnabled(bool enabled);
 

@@ -10,15 +10,23 @@
 namespace alica
 {
 
-	PostCondition::PostCondition()
+	PostCondition::PostCondition(long id)
 	{
-		// TODO Auto-generated constructor stub
-
+		this->id = id;
 	}
 
 	PostCondition::~PostCondition()
 	{
-		// TODO Auto-generated destructor stub
+	}
+
+	string PostCondition::toString()
+	{
+		stringstream ss;
+		ss << "#PostCondition: " + this->name << " " << this->id << endl;
+		ss << "\t ConditionString: " << this->conditionString << endl;
+		ss << "#PostCondition" << endl;
+		return ss.str();
+
 	}
 
 } /* namespace Alica */

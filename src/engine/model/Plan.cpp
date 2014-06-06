@@ -11,12 +11,7 @@
 #include "engine/model/SuccessState.h"
 namespace alica
 {
-	Plan::Plan() :
-			AbstractPlan()
-	{
-
-	}
-	Plan::Plan(long id)
+	Plan::Plan(long id) : AbstractPlan()
 	{
 		this->id = id;
 	}
@@ -24,21 +19,17 @@ namespace alica
 	Plan::~Plan()
 	{
 	}
-	void Plan::setFilename(string filename)
-	{
-		this->filename = filename;
-	}
-	string Plan::getFilename()
-	{
-		return filename;
-	}
+
 	string Plan::toString() const
 	{
 		stringstream ss;
 		ss << AbstractPlan::toString();
-		ss << "Filename: " << this->filename << endl;
+		ss << "Filename: " << this->fileName << endl;
 		return ss.str();
 	}
+
+
+
 	EntryPoint* Plan::getEntryPointTaskID(long taskID)
 	{
 		for (map<long, alica::EntryPoint*>::const_iterator iter = entryPoints.begin(); iter != entryPoints.end(); iter++)
@@ -55,6 +46,21 @@ namespace alica
 			}
 		}
 		return nullptr;
+	}
+
+//===================== Getter and Setter ==================
+
+	const string& Plan::getFileName() const
+	{
+		if(this->fileName.empty())
+		{
+			static string result = this->name+".pml";
+			return result;
+		}
+		else
+		{
+			return this->fileName;
+		}
 	}
 
 	map<long, EntryPoint*>& Plan::getEntryPoints()

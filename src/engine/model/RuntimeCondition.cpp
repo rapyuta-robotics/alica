@@ -10,15 +10,22 @@
 namespace alica
 {
 
-	RuntimeCondition::RuntimeCondition()
+	RuntimeCondition::RuntimeCondition(long id)
 	{
-		// TODO Auto-generated constructor stub
-
+		this->id = id;
 	}
 
 	RuntimeCondition::~RuntimeCondition()
 	{
-		// TODO Auto-generated destructor stub
+	}
+
+	string RuntimeCondition::toString()
+	{
+		stringstream ss;
+		ss << "#RuntimeCondition: " << this->name << " " << this->id << endl;
+		ss <<  "\t ConditionString: " << this->conditionString << endl;
+		ss << "#EndRuntimeCondition" << endl;
+		return ss.str();
 	}
 
 } /* namespace Alica */

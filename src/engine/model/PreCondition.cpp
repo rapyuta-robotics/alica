@@ -10,25 +10,35 @@
 namespace alica
 {
 
-	PreCondition::PreCondition()
+	PreCondition::PreCondition(long id)
 	{
-		// TODO Auto-generated constructor stub
-
+		this->id = id;
+		this->enabled = true;
 	}
 
 	PreCondition::~PreCondition()
 	{
-		// TODO Auto-generated destructor stub
+	}
+
+	string PreCondition::toString()
+	{
+		stringstream ss;
+		ss << "#PreCondition: " << this->name << " " << this->id << endl;
+		ss << "\t ConditionString: " << this->conditionString << endl;
+		ss << "#EndPreCondition" << endl;
+		return ss.str();
+	}
+
+	bool PreCondition::isEnabled() const
+	{
+		return enabled;
+	}
+
+	void PreCondition::setEnabled(bool enabled)
+	{
+		this->enabled = enabled;
 	}
 
 } /* namespace Alica */
 
-bool alica::PreCondition::isEnabled() const
-{
-	return enabled;
-}
 
-void alica::PreCondition::setEnabled(bool enabled)
-{
-	this->enabled = enabled;
-}
