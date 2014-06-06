@@ -30,6 +30,7 @@ namespace alica
 	const string ModelFactory::preCondition = "preCondition";
 	const string ModelFactory::synchronisation = "synchronisation";
 	const string ModelFactory::quantifiers = "quantifiers";
+	const string ModelFactory::sorts = "sorts";
 
 	ModelFactory::ModelFactory(PlanParser* p, shared_ptr<PlanRepository> rep)
 	{
@@ -155,7 +156,7 @@ namespace alica
 			}
 			else if (conditions.compare(val) == 0)
 			{
-
+				//TODO:
 			}
 			else if (vars.compare(val) == 0)
 			{
@@ -310,12 +311,28 @@ namespace alica
 		this->rep.get()->getQuantifiers().insert(pair<long, Quantifier*>(q->getId(), q));
 		setAlicaElementAttributes(q, element);
 
-		string scopeString = "";
 		const char* scopePtr = element->Attribute("scope");
-
+		long cid;
 		if (scopePtr)
 		{
+			cid = stol(scopePtr);
+			this->quantifierScopeReferences.push_back(pair<long, long>(q->getId(), cid));
+		}
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			long cid = this->parser->parserId(curChild);
+			if (sorts.compare(val) == 0)
+			{
+				//TODO: q.addDomainIdentefies;
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled Quantifier Child:", curChild);
+			}
 
+			curChild = curChild->NextSiblingElement();
 		}
 
 		return q;
@@ -450,15 +467,16 @@ namespace alica
 		{
 			const char* val = curChild->Value();
 			curChildId = this->parser->parserId(curChild);
+			long tid;
 
 			if (state.compare(val) == 0)
 			{
-				// TODO siehe c#
+				this->epStateReferences.push_back(pair<long, long>(ep->getId(), tid));
 				haveState = true;
 			}
 			else if (task.compare(val) == 0)
 			{
-				// TODO siehe c#
+				this->epTaskReferences.push_back(pair<long, long>(ep->getId(), tid));
 			}
 			else
 			{
