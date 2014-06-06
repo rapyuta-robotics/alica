@@ -61,6 +61,7 @@ namespace alica
 		static const string preCondition;
 		static const string synchronisation;
 		static const string quantifiers;
+		static const string sorts;
 
 		PlanParser* parser;
 		shared_ptr<PlanRepository> rep;
@@ -74,6 +75,9 @@ namespace alica
 		list<pair<long, long>> paramSubVarReferences;
 		list<pair<long, long>> paramVarReferences;
 		list<pair<long, long>> conditionVarReferences;
+		list<pair<long, long>> quantifierScopeReferences;
+		list<pair<long, long>> epStateReferences;
+		list<pair<long, long>> epTaskReferences;
 
 		void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele);
 		EntryPoint* createEntryPoint(tinyxml2::XMLElement* element);
