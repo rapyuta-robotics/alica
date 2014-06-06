@@ -97,12 +97,12 @@ namespace alica
 		this->minCardinality = minCardinality;
 	}
 
-	PostCondition& Plan::getPostCondition()
+	const PostCondition* Plan::getPostCondition() const
 	{
 		return postCondition;
 	}
 
-	void Plan::setPostCondition(const PostCondition& postCondition)
+	void Plan::setPostCondition(const PostCondition* postCondition)
 	{
 		this->postCondition = postCondition;
 	}
