@@ -23,21 +23,17 @@ namespace alica
 	{
 		stringstream ss;
 		ss << "#PlanType: " << this->name << " " << this->id << endl;
+		ss << "\t Plans: " << this->plans.size() << endl;
+		if(this->plans.size() != 0)
+		{
+			for(Plan* p : this->plans)
+			{
+				ss << "\t" << p->getId()  << " " << p->getName() << endl;
+			}
+
+		}
+		ss << "#EndPlanType" << endl;
 		return ss.str();
-//		ret += "#PlanType: " + this.Name + " " + this.Id + "\n";
-//
-//		ret += "\tPlans: " +this.Plans.Count+ "\n";
-//		if(this.Plans.Count != 0)
-//		{
-//			foreach (Plan p in this.Plans)
-//			{
-//				//ret += "\t" + p;
-//				ret += "\t" + p.Id + " " + p.Name + "\n";
-//			}
-//		}
-//		ret += "#EndPlanType\n";
-//
-//		return ret;
 	}
 
 //====================== Getter and Setter =========================
