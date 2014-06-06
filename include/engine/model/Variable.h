@@ -8,6 +8,11 @@
 #ifndef VARIABLE_H_
 #define VARIABLE_H_
 
+using namespace std;
+
+#include <string>
+#include <sstream>
+
 #include "AlicaElement.h"
 
 namespace alica
@@ -20,7 +25,17 @@ namespace alica
 	{
 	public:
 		Variable();
+		Variable(long id, string name, string type);
 		virtual ~Variable();
+
+		string toString();
+
+		const string& getType() const;
+		void setType(const string& type);
+
+
+	private:
+		string type;
 	};
 
 } /* namespace Alica */

@@ -18,70 +18,163 @@ namespace alica
 	{
 	}
 
-	const Task* EntryPoint::getTask() const
+	void EntryPoint::ComputeReachabilitySet()
 	{
-		return task;
+		list<State*> queue;
+		queue.push_front(this->state);
+		State* cs;
+		while (queue.size() > 0)
+		{
+			cs = *queue.begin();
+			queue.pop_front();
+			if(this->reachableStates.insert(cs).second)
+			{
+				for(Transition* t : cs->getOutTransitions())
+				{
+					queue.push_back(t->getOutState());
+				}
+			}
+
+
+		}
+//		while (queue.Count > 0)
+//		{
+//			State cs = queue.First.Value;
+//			queue.RemoveFirst();
+//			if (ReachableStates.Add(cs))
+//			{ //not yet visited
+//			foreach(Transition t in cs.OutTransitions)
+//			{
+//				queue.AddLast(t.OutState);
+//			}
+//		}
+
 	}
 
-	void EntryPoint::setTask(const Task* task)
+
+string EntryPoint::ToString()
+{
+	stringstream ss;
+	ss << "#EntryPoint: " << this->name << " " << this->id << endl;
+	ss << "\t MinCardinality: " << this->minCardinality << endl;
+	ss << "\t MaxCardinality: " << this->maxCardinality << endl;
+	ss << "\t Task:" << endl;
+	if (this->task != NULL)
 	{
-		this->task = task;
+		ss << "\t" << this->task->getId() << " " << this->task->getName();
+	}
+	else
+	{
+		ss << "null";
+	}
+	ss << endl;
+	ss << "\t Initial State:" << endl;
+	if (this->state != NULL)
+	{
+		ss << "\t" << this->state->getId() << " " << this->state->getName();
+	}
+	else
+	{
+		ss << "null";
+	}
+	ss << endl;
+	ss << "#EndEntryPoint" << endl;
+	return ss.str();
+
+}
+
+int EntryPoint::CompareTo(EntryPoint otherEp)
+{
+	if (task->getId() < otherEp.getTask()->getId())
+	{
+		return 1;
+	}
+	else if (task->getId() == otherEp.getTask()->getId())
+	{
+		return 0;
+	}
+	else
+	{
+		return -1;
 	}
 
-	void EntryPoint::setPlan(Plan* plan)
-	{
-		this->plan = plan;
-	}
+}
 
-	const Plan* EntryPoint::getPlan() const
-	{
-		return plan;
-	}
+//================== Getter and Setter =============
 
-	const int EntryPoint::getMaxCardinality() const
-	{
-		return this->maxCardinality;
-	}
+const Task* EntryPoint::getTask() const
+{
+	return task;
+}
 
-	void EntryPoint::setMaxCardinality(int maxCardinality)
-	{
-		this->maxCardinality = maxCardinality;
-	}
+void EntryPoint::setTask(const Task* task)
+{
+	this->task = task;
+}
 
-	const int EntryPoint::getMinCardinality() const
-	{
-		return this->minCardinality;
-	}
+void EntryPoint::setPlan(Plan* plan)
+{
+	this->plan = plan;
+}
 
-	void EntryPoint::setMinCardinality(int minCardinality)
-	{
-		this->minCardinality = minCardinality;
-	}
+const Plan* EntryPoint::getPlan() const
+{
+	return plan;
+}
 
-	void EntryPoint::setSuccessRequired(bool successRequired)
-	{
-		this->successRequired = successRequired;
-	}
+const int EntryPoint::getMaxCardinality() const
+{
+	return this->maxCardinality;
+}
 
-	const bool EntryPoint::getSuccessRequired() const
-	{
-		return this->successRequired;
-	}
-	const unordered_set<State*>& EntryPoint::getReachableStates() const
-	{
-		return reachableStates;
-	}
+void EntryPoint::setMaxCardinality(int maxCardinality)
+{
+	this->maxCardinality = maxCardinality;
+}
 
-	void EntryPoint::setReachableStates(const unordered_set<State*>& reachableStates)
-	{
-		this->reachableStates = reachableStates;
-	}
+const int EntryPoint::getMinCardinality() const
+{
+	return this->minCardinality;
+}
 
-	bool EntryPoint::isSuccessRequired() const
-	{
-		return successRequired;
-	}
+void EntryPoint::setMinCardinality(int minCardinality)
+{
+	this->minCardinality = minCardinality;
+}
+
+void EntryPoint::setSuccessRequired(bool successRequired)
+{
+	this->successRequired = successRequired;
+}
+
+const bool EntryPoint::getSuccessRequired() const
+{
+	return this->successRequired;
+}
+const unordered_set<State*>& EntryPoint::getReachableStates() const
+{
+	return reachableStates;
+}
+
+const State* EntryPoint::getState() const
+{
+	return state;
+}
+
+void EntryPoint::setState(State* state)
+{
+	this->state = state;
+}
+
+void EntryPoint::setReachableStates(const unordered_set<State*>& reachableStates)
+{
+	this->reachableStates = reachableStates;
+}
+
+bool EntryPoint::isSuccessRequired() const
+{
+	return successRequired;
+}
 
 } /* namespace Alica */
-
 

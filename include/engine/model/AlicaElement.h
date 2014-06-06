@@ -22,7 +22,7 @@ namespace alica
 		virtual ~AlicaElement();
 
 		void setName(string name);
-		string getName();
+		string getName() const;
 		void setComment(string comment);
 		string getComment();
 		long getId() const;
