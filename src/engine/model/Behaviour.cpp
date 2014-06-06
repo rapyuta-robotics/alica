@@ -30,8 +30,8 @@ namespace alica
 		stringstream ss;
 		ss << "#Behaviour: " << this->getName() << endl;
 		ss << "\t Configurations: " << this->getConfigurations().size() << endl;
-		for(BehaviourConfiguration bc : this->getConfigurations()) {
-			ss << "\t" << bc.getName() << " " << bc.getId() << endl;
+		for(BehaviourConfiguration* bc : this->getConfigurations()) {
+			ss << "\t" << bc->getName() << " " << bc->getId() << endl;
 		}
 		ss << "#EndBehaviour" << endl;
 		return ss.str();
@@ -39,12 +39,12 @@ namespace alica
 
 //==================== Getter and Setter ===================
 
-	const list<BehaviourConfiguration>& Behaviour::getConfigurations() const
+	const list<BehaviourConfiguration*>& Behaviour::getConfigurations() const
 	{
 		return configurations;
 	}
 
-	void Behaviour::setConfigurations(const list<BehaviourConfiguration>& configurations)
+	void Behaviour::setConfigurations(const list<BehaviourConfiguration*>& configurations)
 	{
 		this->configurations = configurations;
 	}

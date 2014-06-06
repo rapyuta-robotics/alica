@@ -29,6 +29,8 @@ namespace alica
 	class TerminalState;
 	class FailureState;
 	class SuccessState;
+	class EntryPoint;
+	class Transition;
 	class Plan : public AbstractPlan
 	{
 	public:
