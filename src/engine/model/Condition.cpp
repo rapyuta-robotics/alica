@@ -35,22 +35,22 @@ namespace alica
 		this->conditionString = conditionString;
 	}
 
-	const list<Quantifier>& Condition::getQuantifiers() const
+	const list<Quantifier*>& Condition::getQuantifiers() const
 	{
 		return quantifiers;
 	}
 
-	void Condition::setQuantifiers(const list<Quantifier>& quantifiers)
+	void Condition::setQuantifiers(const list<Quantifier*>& quantifiers)
 	{
 		this->quantifiers = quantifiers;
 	}
 
-	const list<Variable>& Condition::getVariables() const
+	const list<Variable*>& Condition::getVariables() const
 	{
 		return variables;
 	}
 
-	void Condition::setVariables(const list<Variable>& variables)
+	void Condition::setVariables(const list<Variable*>& variables)
 	{
 		this->variables = variables;
 	}

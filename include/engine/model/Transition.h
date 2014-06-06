@@ -9,6 +9,7 @@
 #define TRANSITION_H_
 
 #include "AlicaElement.h"
+#include "State.h"
 
 namespace alica
 {
@@ -16,11 +17,20 @@ namespace alica
 	/*
 	 *
 	 */
+	class State;
 	class Transition : public AlicaElement
 	{
 	public:
 		Transition();
 		virtual ~Transition();
+		State* getInState() const;
+		void setInState(State* inState);
+		State* getOutState() const;
+		void setOutState(State* outState);
+
+	private:
+		State* inState;
+		State* outState;
 	};
 
 } /* namespace Alica */

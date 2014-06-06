@@ -8,6 +8,11 @@
 #ifndef FAILURESTATE_H_
 #define FAILURESTATE_H_
 
+using namespace std;
+
+#include <string>
+#include <sstream>
+
 #include "TerminalState.h"
 
 namespace alica
@@ -18,6 +23,7 @@ namespace alica
 	public:
 		FailureState();
 		virtual ~FailureState();
+		string toString();
 	};
 
 } /* namespace Alica */

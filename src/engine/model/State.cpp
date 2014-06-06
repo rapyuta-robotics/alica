@@ -49,24 +49,24 @@ namespace alica
 		this->inPlan = inPlan;
 	}
 
-	const list<Transition>& State::getInTransitions() const
+	const list<Transition*>& State::getInTransitions() const
 	{
 		return inTransitions;
 	}
 
-	void State::setInTransitions(const list<Transition>& inTransitions)
+	void State::setInTransitions(const list<Transition*>& inTransitions)
 	{
 		this->inTransitions = inTransitions;
 	}
 
-	const list<Transition>& State::getOutTransition() const
+	const list<Transition*>& State::getOutTransitions() const
 	{
-		return outTransition;
+		return outTransitions;
 	}
 
-	void State::setOutTransition(const list<Transition>& outTransition)
+	void State::setOutTransitions(const list<Transition*>& outTransition)
 	{
-		this->outTransition = outTransition;
+		this->outTransitions = outTransition;
 	}
 
 	 list<Parametrisation*>& State::getParametrisation()
@@ -79,12 +79,12 @@ namespace alica
 		this->parametrisation = parametrisation;
 	}
 
-	const list<AbstractPlan>& State::getPlans() const
+	const list<AbstractPlan*>& State::getPlans() const
 	{
 		return plans;
 	}
 
-	void State::setPlans(const list<AbstractPlan>& plans)
+	void State::setPlans(const list<AbstractPlan*>& plans)
 	{
 		this->plans = plans;
 	}

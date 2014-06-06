@@ -21,4 +21,26 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
+	State* Transition::getInState() const
+	{
+		return inState;
+	}
+
+	void Transition::setInState(State* inState)
+	{
+		this->inState = inState;
+	}
+
+	State* Transition::getOutState() const
+	{
+		return outState;
+	}
+
+	void Transition::setOutState( State* outState)
+	{
+		this->outState = outState;
+	}
+
 } /* namespace Alica */
+
+

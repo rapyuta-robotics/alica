@@ -30,15 +30,15 @@ namespace alica
 
 		string toString();
 
-		const list<BehaviourConfiguration>& getConfigurations() const;
-		void setConfigurations(const list<BehaviourConfiguration>& configurations);
+		const list<BehaviourConfiguration*>& getConfigurations() const;
+		void setConfigurations(const list<BehaviourConfiguration*>& configurations);
 		const string& getFileName() const;
 		void setFileName(const string& fileName);
 		const BasicBehaviour& getImplementation() const;
 		void setImplementation(const BasicBehaviour& implementation);
 
 	private:
-		list<BehaviourConfiguration> configurations;
+		list<BehaviourConfiguration*> configurations;
 		string fileName;
 		BasicBehaviour implementation;
 	};
