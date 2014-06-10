@@ -10,25 +10,111 @@
 namespace alica
 {
 
-	Quantifier::Quantifier()
+	Quantifier::Quantifier(long id)
 	{
-		// TODO Auto-generated constructor stub
+		this->id = id;
 
 	}
 
 	Quantifier::~Quantifier()
 	{
-		// TODO Auto-generated destructor stub
+	}
+
+	bool Quantifier::isScopeIsEntryPoint() const
+	{
+		return scopeIsEntryPoint;
+	}
+
+	void Quantifier::setScopeIsEntryPoint(bool scopeIsEntryPoint)
+	{
+		this->scopeIsEntryPoint = scopeIsEntryPoint;
+	}
+
+	bool Quantifier::isScopeIsPlan() const
+	{
+		return scopeIsPlan;
+	}
+
+	void Quantifier::setScopeIsPlan(bool scopeIsPlan)
+	{
+		this->scopeIsPlan = scopeIsPlan;
+	}
+
+	bool Quantifier::isScopeIsState() const
+	{
+		return scopeIsState;
+	}
+
+	list<string>& Quantifier::getDomainIdentifiers()
+	{
+		return domainIdentifiers;
+	}
+
+	void Quantifier::setDomainIdentifiers(const list<string>& domainIdentifiers)
+	{
+		this->domainIdentifiers = domainIdentifiers;
+	}
+//	State* Quantifier::getScopedState()
+//	{
+//		return this->state;
+//	}
+//
+//	EntryPoint* Quantifier::getScopedEntryPoint()
+//	{
+//		return this->entryPoint;
+//	}
+//
+//	Plan* Quantifier::getScopedPlan()
+//	{
+//		return this->plan;
+//	}
+//
+//	void Quantifier::setScope(AlicaElement ae)
+//	{
+//		scopeIsEntryPoint = (typeid(ae) == typeid(EntryPoint));
+//		scopeIsPlan = (typeid(ae) == typeid(Plan));
+//		scopeIsState = (typeid(ae) == typeid(State));
+//
+//		if (scopeIsPlan)
+//		{
+//			this->plan = (Plan*)ae;
+//		}
+//		else if (scopeIsEntryPoint)
+//		{
+//			this->entryPoint = (EntryPoint*)ae;
+//		}
+//		else if (scopeIsState)
+//		{
+//			this->state = (State*)ae;
+//		}
+//		else
+//		{
+//			AlicaEngine::getInstance()->abort("Scope of Quantifier is not an entrypoint, plan, or state: ", ae);
+//		}
+//	}
+
+//	AlicaElement* Quantifier::getScope()
+//	{
+//		if (scopeIsPlan)
+//		{
+//			return this->plan;
+//		}
+//		if (scopeIsState)
+//		{
+//			return this->state;
+//		}
+//		if (scopeIsEntryPoint)
+//		{
+//			return this->entryPoint;
+//		}
+//		return NULL;
+//	}
+
+	void Quantifier::setScopeIsState(bool scopeIsState)
+	{
+		this->scopeIsState = scopeIsState;
 	}
 
 } /* namespace Alica */
 
- list<string>& alica::Quantifier::getDomainIdentifiers()
-{
-	return domainIdentifiers;
-}
 
-void alica::Quantifier::setDomainIdentifiers(const list<string>& domainIdentifiers)
-{
-	this->domainIdentifiers = domainIdentifiers;
-}
