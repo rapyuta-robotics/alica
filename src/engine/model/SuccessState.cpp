@@ -12,13 +12,31 @@ namespace alica
 
 	SuccessState::SuccessState()
 	{
-		// TODO Auto-generated constructor stub
+		this->terminal = true;
+		this->successState = true;
+		this->failureState = false;
 
 	}
 
 	SuccessState::~SuccessState()
 	{
-		// TODO Auto-generated destructor stub
+	}
+
+	string SuccessState::toString()
+	{
+		stringstream ss;
+		ss << "#SuccessState: " << this->name << " " << this->id << endl;
+		ss << "\t Result:" << endl;
+		ss << "\t InTransitions: " << this->inTransitions.size() << endl;
+		if(this->inTransitions.size() != 0)
+		{
+			for(Transition* t : this->getInTransitions())
+			{
+				ss << "\t" << t->getId() << " " << t->getName() << endl;
+			}
+		}
+		ss << "#SuccessState" << endl;
+		return ss.str();
 	}
 
 } /* namespace Alica */
