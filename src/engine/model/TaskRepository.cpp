@@ -21,4 +21,41 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
+	long TaskRepository::getDefaultTask() const
+	{
+		return defaultTask;
+	}
+
+	void TaskRepository::setDefaultTask(long defaultTask)
+	{
+		this->defaultTask = defaultTask;
+	}
+
+	const string& TaskRepository::getFileName() const
+	{
+		if (this->getFileName().empty())
+		{
+			static string result = name + ".rdefset";
+			return result;
+		}
+		return fileName;
+	}
+
+	void TaskRepository::setFileName(const string& fileName)
+	{
+		this->fileName = fileName;
+	}
+
+	const list<Task*>& TaskRepository::getTasks() const
+	{
+		return tasks;
+	}
+
+	void TaskRepository::setTasks(const list<Task*>& tasks)
+	{
+		this->tasks = tasks;
+	}
+
 } /* namespace Alica */
+
+
