@@ -190,14 +190,14 @@ namespace alica
 			}
 			else if (vars.compare(val) == 0)
 			{
-
+				Variable* var = createVariable(curChild);
+				plan->getVariables().push_back(var);
 			}
 			else if (synchronisations.compare(val) == 0)
 			{
-
-			}
-			else if (rating.compare(val) == 0)
-			{
+				SyncTransition* st = createSyncTransition(curChild);
+				st->setPlan(plan);
+				plan->getSyncTransitions().push_back(st);
 
 			}
 			else
@@ -208,6 +208,48 @@ namespace alica
 		}
 
 		return plan;
+	}
+
+	SyncTransition* ModelFactory::createSyncTransition(tinyxml2::XMLElement* element)
+	{
+		SyncTransition* s = new SyncTransition();
+		s->setId(this->parser->parserId(element));
+		const char* talkTimeoutPtr = element->Attribute("talkTimeout");
+		if (talkTimeoutPtr)
+		{
+			s->setTalkTimeOut(stol(talkTimeoutPtr));
+		}
+		const char* syncTimeoutPtr = element->Attribute("syncTimeout");
+		if (syncTimeoutPtr)
+		{
+			s->setSyncTimeOut(stol(syncTimeoutPtr));
+		}
+
+		addElement(s);
+		this->rep.get()->getSyncTransitions().insert(pair<long, SyncTransition*>(s->getId(), s));
+		if (element->FirstChild())
+		{
+			AlicaEngine::getInstance()->abort("MF: Unhandled Synchtransition Child:", element->FirstChild());
+		}
+		return s;
+	}
+	Variable* ModelFactory::createVariable(tinyxml2::XMLElement* element)
+	{
+		string type = "";
+		const char* conditionPtr = element->Attribute("Type");
+		if (conditionPtr)
+		{
+			type = conditionPtr;
+		}
+		//TODO; Variable.GetVariables... FOL ANTRLBUILDER....s
+//		Variable* v =
+//		string acName = v->getName();
+//		setAlicaElementAttributes(v, element);
+//		v->setName(acName);
+//		addElement(v);
+//		this->rep.get()->getVariables().insert(pair<long, Variable*>(v->getId(), v));
+		return nullptr;
+
 	}
 	RuntimeCondition* ModelFactory::createRuntimeCondition(tinyxml2::XMLElement* element)
 	{

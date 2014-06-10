@@ -20,7 +20,7 @@ using namespace std;
 //#include "SuccessState.h"
 #include "Transition.h"
 #include "PostCondition.h"
-#include "SyncTransition.h"
+//#include "SyncTransition.h"
 
 
 namespace alica
@@ -31,6 +31,7 @@ namespace alica
 	class SuccessState;
 	class EntryPoint;
 	class Transition;
+	class SyncTransition;
 	class Plan : public AbstractPlan
 	{
 	public:
