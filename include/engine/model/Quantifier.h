@@ -10,12 +10,14 @@
 
 using namespace std;
 
-#include "AlicaElement.h"
 #include <list>
 #include <string>
 
+#include "AlicaElement.h"
+//#include "EntryPoint.h"
+//#include "../AlicaEngine.h"
 
-
+// TODO remove circle
 
 namespace alica
 {
@@ -23,13 +25,33 @@ namespace alica
 	class Quantifier : public AlicaElement
 	{
 	public:
-		Quantifier();
+		Quantifier(long id = 0);
 		virtual ~Quantifier();
 		list<string>& getDomainIdentifiers() ;
 		void setDomainIdentifiers(const list<string>& domainIdentifiers);
+		bool isScopeIsEntryPoint() const;
+		bool isScopeIsPlan() const;
+		bool isScopeIsState() const;
+//		State* getScopedState();
+//		EntryPoint* getScopedEntryPoint();
+//		Plan* getScopedPlan();
+		void setScope(AlicaElement ae);
+		AlicaElement* getScope();
+
 
 	private:
 		list<string> domainIdentifiers;
+		void setScopeIsEntryPoint(bool scopeIsEntryPoint);
+		void setScopeIsPlan(bool scopeIsPlan);
+		void setScopeIsState(bool scopeIsState);
+
+	protected:
+		bool scopeIsEntryPoint;
+		bool scopeIsPlan;
+		bool scopeIsState;
+//		EntryPoint* entryPoint;
+//		State* state;
+//		Plan* plan;
 	};
 
 } /* namespace Alica */

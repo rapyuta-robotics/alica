@@ -32,17 +32,22 @@ namespace alica
 		this->defaultTask = defaultTask;
 	}
 
-	const string& alica::TaskRepository::getFilename() const
+	const string& TaskRepository::getFileName() const
 	{
-		return filename;
+		if (this->getFileName().empty())
+		{
+			static string result = name + ".rdefset";
+			return result;
+		}
+		return fileName;
 	}
 
-	void alica::TaskRepository::setFilename(const string& filename)
+	void TaskRepository::setFileName(const string& fileName)
 	{
-		this->filename = filename;
+		this->fileName = fileName;
 	}
 
-	list<Task*>& TaskRepository::getTasks()
+	 list<Task*>& TaskRepository::getTasks()
 	{
 		return tasks;
 	}
@@ -53,4 +58,3 @@ namespace alica
 	}
 
 } /* namespace Alica */
-

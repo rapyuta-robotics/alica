@@ -8,7 +8,14 @@
 #ifndef ROLESET_H_
 #define ROLESET_H_
 
+using namespace std;
+
+#include <list>
+#include <string>
+#include <sstream>
+
 #include "AlicaElement.h"
+#include "RoleTaskMapping.h"
 
 namespace alica
 {
@@ -21,6 +28,18 @@ namespace alica
 	public:
 		RoleSet();
 		virtual ~RoleSet();
+		string toString();
+		bool isIsDefault() const;
+		void setIsDefault(bool isDefault);
+		const list<RoleTaskMapping*>& getRoleTaskMappings() const;
+		void setRoleTaskMappings(const list<RoleTaskMapping*>& roleTaskMappings);
+		long getUsableWithPlanId() const;
+		void setUsableWithPlanId(long usableWithPlanId);
+
+	protected:
+		list<RoleTaskMapping*> roleTaskMappings;
+		bool isDefault;
+		long usableWithPlanID;
 	};
 
 } /* namespace Alica */

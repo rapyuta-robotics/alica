@@ -21,6 +21,7 @@ using namespace std;
 namespace alica
 {
 	class Plan;
+	class Transition;
 	class State : public AlicaElement
 	{
 	public:
