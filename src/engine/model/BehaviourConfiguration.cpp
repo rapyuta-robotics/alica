@@ -47,7 +47,8 @@ namespace alica
 
 		if (this->getParameters().size() != 0)
 		{
-			for(map<string,string>::const_iterator iter = this->getParameters().begin(); iter != this->getParameters().end(); iter++)
+			for (map<string, string>::const_iterator iter = this->getParameters().begin();
+					iter != this->getParameters().end(); iter++)
 			{
 				const string s = iter->first;
 				const string val = iter->second;
@@ -92,7 +93,7 @@ namespace alica
 		this->frequency = frequency;
 	}
 
-	const map<string, string>& BehaviourConfiguration::getParameters() const
+	map<string, string>& BehaviourConfiguration::getParameters()
 	{
 		return parameters;
 	}

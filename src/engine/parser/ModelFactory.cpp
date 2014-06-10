@@ -31,6 +31,8 @@ namespace alica
 	const string ModelFactory::synchronisation = "synchronisation";
 	const string ModelFactory::quantifiers = "quantifiers";
 	const string ModelFactory::sorts = "sorts";
+	const string ModelFactory::configurations = "configurations";
+	const string ModelFactory::parameters = "parameters";
 
 	ModelFactory::ModelFactory(PlanParser* p, shared_ptr<PlanRepository> rep)
 	{
@@ -212,7 +214,120 @@ namespace alica
 	void ModelFactory::createBehaviour(tinyxml2::XMLDocument* node)
 	{
 		tinyxml2::XMLElement* element = node->FirstChildElement();
+		long id = this->parser->parserId(element);
+		Behaviour* beh = new Behaviour();
+		beh->setId(id);
 
+		setAlicaElementAttributes(beh, element);
+		addElement(beh);
+		this->rep.get()->getBehaviours().insert(pair<long, Behaviour*>(beh->getId(), beh));
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			long cid = this->parser->parserId(curChild);
+			if (configurations.compare(val) == 0)
+			{
+				BehaviourConfiguration* bc = createBehaviourConfiguration(curChild);
+				this->rep.get()->getBehaviourConfigurations().insert(
+						pair<long, BehaviourConfiguration*>(bc->getId(), bc));
+				bc->setBehaviour(beh);
+				beh->getConfigurations().push_back(bc);
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled Behaviour Child:", element->FirstChild());
+			}
+		}
+
+	}
+	BehaviourConfiguration* ModelFactory::createBehaviourConfiguration(tinyxml2::XMLElement* element)
+	{
+		BehaviourConfiguration* b = new BehaviourConfiguration();
+		b->setId(this->parser->parserId(element));
+		b->setFileName(this->parser->getCurrentFile());
+
+		const char* attr = element->Attribute("masterPlan");
+		string attrString = "";
+		if (attr)
+		{
+			attrString = attr;
+			transform(attrString.begin(), attrString.end(), attrString.begin(), ::tolower);
+			if (attrString.compare("true") == 0)
+			{
+				b->setMasterPlan(true);
+			}
+		}
+
+		attr = element->Attribute("receiveRemoteCommand");
+		if (attr)
+		{
+			attrString = attr;
+			transform(attrString.begin(), attrString.end(), attrString.begin(), ::tolower);
+			if (attrString.compare("true") == 0)
+			{
+				b->setEventDriven(true);
+			}
+		}
+		attr = element->Attribute("visionTriggered");
+		if (attr)
+		{
+			attrString = attr;
+			transform(attrString.begin(), attrString.end(), attrString.begin(), ::tolower);
+			if (attrString.compare("true") == 0)
+			{
+				b->setEventDriven(true);
+			}
+		}
+		attr = element->Attribute("eventDriven");
+		if (attr)
+		{
+			attrString = attr;
+			transform(attrString.begin(), attrString.end(), attrString.begin(), ::tolower);
+			if (attrString.compare("true") == 0)
+			{
+				b->setEventDriven(true);
+			}
+		}
+
+		attr = element->Attribute("deferring");
+		if (attr)
+		{
+			b->setDeferring(stoi(attr));
+		}
+		attr = element->Attribute("frequency");
+		if (attr)
+		{
+			b->setFrequency(stoi(attr));
+		}
+		setAlicaElementAttributes(b, element);
+		this->elements.insert(pair<long, AlicaElement*>(b->getId(), b));
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			long cid = this->parser->parserId(curChild);
+			if (vars.compare(val) == 0)
+			{
+				Variable* v = createVariable(curChild);
+				b->getVariables().push_back(v);
+			}
+			else if(parameters.compare(val) == 0)
+			{
+				const char* key = curChild->Attribute("key");
+				const char* value = curChild->Attribute("value");
+				if(attr && value)
+				{
+					b->getParameters().insert(pair<string, string>(attr, value));
+				}
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled BehaviourConfiguration Child:", curChild);
+			}
+		}
+
+		return b;
 	}
 	void ModelFactory::createTasks(tinyxml2::XMLDocument* node)
 	{

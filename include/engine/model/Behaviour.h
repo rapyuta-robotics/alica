@@ -30,7 +30,7 @@ namespace alica
 
 		string toString();
 
-		const list<BehaviourConfiguration*>& getConfigurations() const;
+		list<BehaviourConfiguration*>& getConfigurations();
 		void setConfigurations(const list<BehaviourConfiguration*>& configurations);
 		const string& getFileName() const;
 		void setFileName(const string& fileName);

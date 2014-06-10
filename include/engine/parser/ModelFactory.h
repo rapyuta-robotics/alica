@@ -64,6 +64,8 @@ namespace alica
 		static const string synchronisation;
 		static const string quantifiers;
 		static const string sorts;
+		static const string configurations;
+		static const string parameters;
 
 		PlanParser* parser;
 		shared_ptr<PlanRepository> rep;
@@ -93,6 +95,7 @@ namespace alica
 		PostCondition* createPostCondition(tinyxml2::XMLElement* element);
 		RuntimeCondition* createRuntimeCondition(tinyxml2::XMLElement* element);
 		Quantifier* createQuantifier(tinyxml2::XMLElement* element);
+		BehaviourConfiguration* createBehaviourConfiguration(tinyxml2::XMLElement* element);
 		Variable* createVariable(tinyxml2::XMLElement* element);
 		bool isReferenceNode(tinyxml2::XMLElement* node);
 		void addElement(AlicaElement* ae);
