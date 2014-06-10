@@ -13,7 +13,7 @@ namespace alica
 	TerminalState::TerminalState() :
 			State()
 	{
-		// TODO Auto-generated constructor stub
+		this->terminal = true;
 
 	}
 

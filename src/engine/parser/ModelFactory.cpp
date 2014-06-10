@@ -334,7 +334,7 @@ namespace alica
 		tinyxml2::XMLElement* element = node->FirstChildElement();
 		TaskRepository* tr = new TaskRepository();
 		tr->setId(this->parser->parserId(element));
-		tr->setFilename(this->parser->getCurrentFile());
+		tr->setFileName(this->parser->getCurrentFile());
 		setAlicaElementAttributes(tr, element);
 		this->rep.get()->getTaskRepositorys().insert(pair<long, TaskRepository*>(tr->getId(), tr));
 

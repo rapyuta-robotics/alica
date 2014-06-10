@@ -21,24 +21,41 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
+
+	Task::Task(bool defaultTask)
+	{
+		this->defaultTask = defaultTask;
+	}
+
+	string Task::toString()
+	{
+		stringstream ss;
+		ss << "#Task: " << this->name << " " << this->id << endl;
+		ss << "\t Description: " << this->description << endl;
+		ss << "#EndTask" << endl;
+		return ss.str();
+	}
+
+	const string& Task::getDescription() const
+	{
+		return description;
+	}
+
+	void Task::setDescription(const string& description)
+	{
+		this->description = description;
+	}
+
 	const TaskRepository* Task::getTaskRepository() const
 	{
 		return taskRepository;
 	}
 
-	void Task::setTaskRepository( TaskRepository* taskRepository)
+	void Task::setTaskRepository(const TaskRepository* taskRepository)
 	{
 		this->taskRepository = taskRepository;
 	}
-	const string& alica::Task::getDescription() const
-	{
-		return description;
-	}
-
-	void alica::Task::setDescription(const string& description)
-	{
-		this->description = description;
-	}
 
 } /* namespace Alica */
+
 
