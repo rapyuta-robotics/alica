@@ -61,7 +61,6 @@ namespace alica
 
 	PlanParser::~PlanParser()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	Plan* PlanParser::ParsePlanTree(string masterplan)
@@ -111,7 +110,7 @@ namespace alica
 			}
 			else if (supplementary::FileSystem::endsWith(fileToParse, ".pty"))
 			{
-
+				//TODO PAUL
 			}
 			else
 			{

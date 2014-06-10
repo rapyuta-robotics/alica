@@ -33,7 +33,7 @@ namespace alica
 		void setEventDriven(bool eventDriven);
 		int getFrequency() const;
 		void setFrequency(int frequency);
-		const map<string, string>& getParameters() const;
+		map<string, string>& getParameters();
 		void setParameters(const map<string, string>& parameters);
 		const Behaviour* getBehaviour() const;
 		void setBehaviour(const Behaviour* behaviour);

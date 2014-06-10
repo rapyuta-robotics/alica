@@ -39,7 +39,7 @@ namespace alica
 
 //==================== Getter and Setter ===================
 
-	const list<BehaviourConfiguration*>& Behaviour::getConfigurations() const
+	list<BehaviourConfiguration*>& Behaviour::getConfigurations()
 	{
 		return configurations;
 	}
