@@ -82,7 +82,7 @@ namespace alica
 		this->fileName = fileName;
 	}
 
-	const list<Variable*>& AbstractPlan::getVariables() const
+	list<Variable*>& AbstractPlan::getVariables()
 	{
 		return variables;
 	}

@@ -39,7 +39,7 @@ namespace alica
 		void setAuthorithyTimeInterval(unsigned long authorithyTimeInterval);
 		const virtual string& getFileName() const;
 		virtual void setFileName(const string& fileName);
-		const list<Variable*>& getVariables() const;
+		list<Variable*>& getVariables();
 		void setVariables(const list<Variable*>& variables);
 		const RuntimeCondition* getRuntimeCondition() const;
 		void setRuntimeCondition(const RuntimeCondition* runtimeCondition);
