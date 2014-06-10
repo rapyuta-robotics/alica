@@ -52,7 +52,6 @@ namespace alica
 
 	private:
 		unsigned long authorithyTimeInterval;
-		string fileName;
 		const RuntimeCondition* runtimeCondition;
 		const PreCondition* preCondition;
 		UtilityFunction utilityFunction;
