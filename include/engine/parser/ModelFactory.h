@@ -39,6 +39,7 @@ namespace alica
 		string getNameOfNode(tinyxml2::XMLElement* node);
 		void createTasks(tinyxml2::XMLDocument* node);
 		void createBehaviour(tinyxml2::XMLDocument* node);
+		void createPlanType(tinyxml2::XMLDocument* node);
 
 	private:
 		static const string entryPoints;

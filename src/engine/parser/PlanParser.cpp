@@ -110,7 +110,7 @@ namespace alica
 			}
 			else if (supplementary::FileSystem::endsWith(fileToParse, ".pty"))
 			{
-				//TODO PAUL
+				parsePlanTypeFile(fileToParse);
 			}
 			else
 			{
@@ -121,6 +121,20 @@ namespace alica
 		//TODO:
 //		this.mf.AttachPlanReferences();
 
+	}
+	void PlanParser::parsePlanTypeFile(string currentFile)
+	{
+#ifdef PP_DEBUG
+		cout << "PP: parsing Plan file: " << currentFile << endl;
+#endif
+		tinyxml2::XMLDocument doc;
+		doc.LoadFile(currentFile.c_str());
+		if (doc.ErrorID() != tinyxml2::XML_NO_ERROR)
+		{
+			cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
+			throw new exception();
+		}
+		this->mf->createPlanType(&doc);
 	}
 	void PlanParser::parseBehaviourFile(string currentFile)
 	{
