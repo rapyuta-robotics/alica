@@ -8,7 +8,13 @@
 #ifndef TASKREPOSITORY_H_
 #define TASKREPOSITORY_H_
 
+using namespace std;
+
+#include <string>
+#include <list>
+
 #include "AlicaElement.h"
+#include "Task.h"
 
 namespace alica
 {
@@ -16,11 +22,25 @@ namespace alica
 	/*
 	 *
 	 */
+	class Task;
 	class TaskRepository : public AlicaElement
 	{
 	public:
 		TaskRepository();
 		virtual ~TaskRepository();
+		long getDefaultTask() const;
+		void setDefaultTask(long defaultTask);
+		const string& getFileName() const;
+		void setFileName(const string& fileName);
+		const list<Task*>& getTasks() const;
+
+	private:
+		void setTasks(const list<Task*>& tasks);
+
+	protected:
+		string fileName;
+		list<Task*> tasks;
+		long defaultTask;
 	};
 
 } /* namespace Alica */
