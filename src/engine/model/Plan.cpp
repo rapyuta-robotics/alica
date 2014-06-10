@@ -9,6 +9,7 @@
 #include "engine/model/State.h"
 #include "engine/model/FailureState.h"
 #include "engine/model/SuccessState.h"
+#include "engine/model/SyncTransition.h"
 namespace alica
 {
 	Plan::Plan(long id) : AbstractPlan()
