@@ -238,6 +238,7 @@ namespace alica
 			{
 				AlicaEngine::getInstance()->abort("MF: Unhandled Behaviour Child:", element->FirstChild());
 			}
+			curChild = curChild->NextSiblingElement();
 		}
 
 	}
@@ -325,6 +326,7 @@ namespace alica
 			{
 				AlicaEngine::getInstance()->abort("MF: Unhandled BehaviourConfiguration Child:", curChild);
 			}
+			curChild = curChild->NextSiblingElement();
 		}
 
 		return b;
@@ -356,7 +358,7 @@ namespace alica
 			Task* task = new Task();
 			task->setId(cid);
 			setAlicaElementAttributes(task, curChild);
-			const char* descriptionkPtr = element->Attribute("description");
+			const char* descriptionkPtr = curChild->Attribute("description");
 
 			if (descriptionkPtr)
 			{
@@ -366,6 +368,7 @@ namespace alica
 			this->rep.get()->getTasks().insert(pair<long, Task*>(task->getId(), task));
 			task->setTaskRepository(tr);
 			tr->getTasks().push_back(task);
+			curChild = curChild->NextSiblingElement();
 		}
 	}
 
