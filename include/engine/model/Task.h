@@ -9,6 +9,7 @@
 #define TASK_H_
 
 #include "AlicaElement.h"
+#include "TaskRepository.h"
 
 namespace alica
 {
@@ -21,6 +22,14 @@ namespace alica
 	public:
 		Task();
 		virtual ~Task();
+		const string& getDescription() const;
+		void setDescription(const string& description);
+		const TaskRepository* getTaskRepository() const;
+		void setTaskRepository( TaskRepository* taskRepository);
+
+	private:
+		string description;
+		TaskRepository* taskRepository;
 	};
 
 } /* namespace Alica */

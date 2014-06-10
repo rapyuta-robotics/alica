@@ -209,8 +209,48 @@ namespace alica
 
 		return plan;
 	}
+	void ModelFactory::createBehaviour(tinyxml2::XMLDocument* node)
+	{
+		tinyxml2::XMLElement* element = node->FirstChildElement();
 
-	SyncTransition* ModelFactory::createSyncTransition(tinyxml2::XMLElement* element)
+	}
+	void ModelFactory::createTasks(tinyxml2::XMLDocument* node)
+	{
+		tinyxml2::XMLElement* element = node->FirstChildElement();
+		TaskRepository* tr = new TaskRepository();
+		tr->setId(this->parser->parserId(element));
+		tr->setFilename(this->parser->getCurrentFile());
+		setAlicaElementAttributes(tr, element);
+		this->rep.get()->getTaskRepositorys().insert(pair<long, TaskRepository*>(tr->getId(), tr));
+
+		const char* defaultTaskPtr = element->Attribute("defaultTask");
+		if (defaultTaskPtr)
+		{
+			long id = stol(defaultTaskPtr);
+			tr->setDefaultTask(id);
+		}
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			long cid = stol(defaultTaskPtr);
+			Task* task = new Task();
+			task->setId(cid);
+			setAlicaElementAttributes(task, curChild);
+			const char* descriptionkPtr = element->Attribute("description");
+
+			if (descriptionkPtr)
+			{
+				task->setDescription(descriptionkPtr);
+			}
+			addElement(task);
+			this->rep.get()->getTasks().insert(pair<long, Task*>(task->getId(), task));
+			task->setTaskRepository(tr);
+			tr->getTasks().push_back(task);
+		}
+	}
+
+	SyncTransition * ModelFactory::createSyncTransition(tinyxml2::XMLElement * element)
 	{
 		SyncTransition* s = new SyncTransition();
 		s->setId(this->parser->parserId(element));
@@ -233,7 +273,7 @@ namespace alica
 		}
 		return s;
 	}
-	Variable* ModelFactory::createVariable(tinyxml2::XMLElement* element)
+	Variable * ModelFactory::createVariable(tinyxml2::XMLElement * element)
 	{
 		string type = "";
 		const char* conditionPtr = element->Attribute("Type");
@@ -251,7 +291,7 @@ namespace alica
 		return nullptr;
 
 	}
-	RuntimeCondition* ModelFactory::createRuntimeCondition(tinyxml2::XMLElement* element)
+	RuntimeCondition * ModelFactory::createRuntimeCondition(tinyxml2::XMLElement * element)
 	{
 		RuntimeCondition* r = new RuntimeCondition();
 		r->setId(this->parser->parserId(element));
@@ -300,7 +340,7 @@ namespace alica
 
 	}
 
-	Transition* ModelFactory::createTransition(tinyxml2::XMLElement* element, Plan* plan)
+	Transition * ModelFactory::createTransition(tinyxml2::XMLElement * element, Plan * plan)
 	{
 		Transition* tran = new Transition();
 		tran->setId(this->parser->parserId(element));
@@ -339,7 +379,7 @@ namespace alica
 		return tran;
 	}
 
-	PreCondition* ModelFactory::createPreCondition(tinyxml2::XMLElement* element)
+	PreCondition * ModelFactory::createPreCondition(tinyxml2::XMLElement * element)
 	{
 		PreCondition* pre = new PreCondition();
 		pre->setId(this->parser->parserId(element));
@@ -402,7 +442,7 @@ namespace alica
 		}
 		return pre;
 	}
-	Quantifier* ModelFactory::createQuantifier(tinyxml2::XMLElement* element)
+	Quantifier * ModelFactory::createQuantifier(tinyxml2::XMLElement * element)
 	{
 		Quantifier* q;
 		long id = this->parser->parserId(element);
@@ -458,7 +498,7 @@ namespace alica
 		return q;
 
 	}
-	FailureState* ModelFactory::createFailureState(tinyxml2::XMLElement * element)
+	FailureState * ModelFactory::createFailureState(tinyxml2::XMLElement * element)
 	{
 		FailureState* fail = new FailureState();
 		fail->setId(this->parser->parserId(element));

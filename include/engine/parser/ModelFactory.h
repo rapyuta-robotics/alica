@@ -37,6 +37,8 @@ namespace alica
 		const map<long, AlicaElement*>& getElements() const;
 		void setElements(const map<long, AlicaElement*>& elements);
 		string getNameOfNode(tinyxml2::XMLElement* node);
+		void createTasks(tinyxml2::XMLDocument* node);
+		void createBehaviour(tinyxml2::XMLDocument* node);
 
 	private:
 		static const string entryPoints;
