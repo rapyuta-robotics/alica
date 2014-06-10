@@ -23,6 +23,7 @@ using namespace std;
 namespace alica
 {
 	class RoleTaskMapping;
+	class RoleDefinitionSet;
 	class Role : public AlicaElement
 	{
 	public:

@@ -21,6 +21,7 @@ namespace alica
 {
 
 	class AbstractPlan;
+	class Quantifier;
 	class Condition : public AlicaElement
 	{
 	public:
