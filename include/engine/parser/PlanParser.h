@@ -44,6 +44,7 @@ namespace alica
 
 		string getCurrentFile();
 		void setCurrentFile(string currentFile);
+		void parseFileLoop();
 		long parserId(tinyxml2::XMLElement* node);
 
 	private:
@@ -58,7 +59,8 @@ namespace alica
 		string currentDirectory;
 		string domainConfigFolder;
 		string currentFile;
-
+		void parseTaskFile(string currentFile);
+		void parseBehaviourFile(string currentFile);
 		Plan* parsePlanFile(string& planFile);
 		long fetchId(const string& idString, long id);
 

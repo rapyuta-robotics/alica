@@ -79,9 +79,80 @@ namespace alica
 		cout << "PP: CurFile: " << this->currentFile << " CurDir: " << this->currentDirectory << endl;
 
 		this->masterPlan = parsePlanFile(masterPlanPath);
-		//ParseFileLoop();
+		parseFileLoop();
+
+		//TODO::
 		//this.mf.ComputeReachabilities();
 		return this->masterPlan;
+	}
+	void PlanParser::parseFileLoop()
+	{
+		while (this->filesToParse.size() > 0)
+		{
+			string fileToParse = this->filesToParse.front();
+			this->filesToParse.pop_front();
+			this->currentDirectory = supplementary::FileSystem::getParent(fileToParse);
+
+			if (supplementary::FileSystem::fileExists(fileToParse))
+			{
+				AlicaEngine::getInstance()->abort("PP: Cannot Find referenced file", fileToParse);
+			}
+			if (supplementary::FileSystem::endsWith(fileToParse, ".pml"))
+			{
+				parsePlanFile(fileToParse);
+			}
+			else if (supplementary::FileSystem::endsWith(fileToParse, ".tsk"))
+			{
+				parseTaskFile(fileToParse);
+			}
+			else if (supplementary::FileSystem::endsWith(fileToParse, ".beh"))
+			{
+				parseBehaviourFile(fileToParse);
+			}
+			else if (supplementary::FileSystem::endsWith(fileToParse, ".pty"))
+			{
+
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("PP: Cannot Parse file", fileToParse);
+			}
+			filesParsed.push_back(fileToParse);
+		}
+		//TODO:
+//		this.mf.AttachPlanReferences();
+
+	}
+	void PlanParser::parseBehaviourFile(string currentFile)
+	{
+#ifdef PP_DEBUG
+		cout << "PP: parsing Plan file: " << currentFile << endl;
+#endif
+		tinyxml2::XMLDocument doc;
+		doc.LoadFile(currentFile.c_str());
+		if (doc.ErrorID() != tinyxml2::XML_NO_ERROR)
+		{
+			cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
+			throw new exception();
+		}
+		this->mf->createBehaviour(&doc);
+
+	}
+
+	void PlanParser::parseTaskFile(string currentFile)
+	{
+#ifdef PP_DEBUG
+		cout << "PP: parsing Plan file: " << currentFile << endl;
+#endif
+		tinyxml2::XMLDocument doc;
+		doc.LoadFile(currentFile.c_str());
+		if (doc.ErrorID() != tinyxml2::XML_NO_ERROR)
+		{
+			cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
+			throw new exception();
+		}
+		this->mf->createTasks(&doc);
+
 	}
 
 	Plan* PlanParser::parsePlanFile(string& planFile)
@@ -182,7 +253,8 @@ namespace alica
 				while (currNode)
 				{
 					const tinyxml2::XMLText* textNode = currNode->ToText();
-					if(textNode){
+					if (textNode)
+					{
 						id = fetchId(textNode->Value(), id);
 						return id;
 					}
@@ -224,7 +296,7 @@ namespace alica
 				filesToParse.push_back(path);
 			}
 		}
-		string tokenId = idString.substr(hashPos+1, idString.length() - hashPos);
+		string tokenId = idString.substr(hashPos + 1, idString.length() - hashPos);
 		try
 		{
 			id = stol(tokenId);
