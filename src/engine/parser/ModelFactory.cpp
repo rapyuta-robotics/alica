@@ -312,11 +312,11 @@ namespace alica
 				Variable* v = createVariable(curChild);
 				b->getVariables().push_back(v);
 			}
-			else if(parameters.compare(val) == 0)
+			else if (parameters.compare(val) == 0)
 			{
 				const char* key = curChild->Attribute("key");
 				const char* value = curChild->Attribute("value");
-				if(attr && value)
+				if (attr && value)
 				{
 					b->getParameters().insert(pair<string, string>(attr, value));
 				}
@@ -328,6 +328,10 @@ namespace alica
 		}
 
 		return b;
+	}
+	void ModelFactory::createPlanType(tinyxml2::XMLDocument* node)
+	{
+		//TODO Paul
 	}
 	void ModelFactory::createTasks(tinyxml2::XMLDocument* node)
 	{

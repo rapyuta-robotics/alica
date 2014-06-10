@@ -60,6 +60,7 @@ namespace alica
 		string domainConfigFolder;
 		string currentFile;
 		void parseTaskFile(string currentFile);
+		void parsePlanTypeFile(string currentFile);
 		void parseBehaviourFile(string currentFile);
 		Plan* parsePlanFile(string& planFile);
 		long fetchId(const string& idString, long id);
