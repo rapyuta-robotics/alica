@@ -8,6 +8,11 @@
 #ifndef SUCCESSSTATE_H_
 #define SUCCESSSTATE_H_
 
+using namespace std;
+
+#include <string>
+#include <sstream>
+
 #include "engine/model/TerminalState.h"
 
 namespace alica
@@ -21,6 +26,10 @@ namespace alica
 	public:
 		SuccessState();
 		virtual ~SuccessState();
+		string toString();
+
+
+
 	};
 
 } /* namespace Alica */
