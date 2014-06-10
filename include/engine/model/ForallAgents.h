@@ -16,7 +16,7 @@ namespace alica
 	class ForallAgents : public Quantifier
 	{
 	public:
-		ForallAgents();
+		ForallAgents(long id = 0);
 		virtual ~ForallAgents();
 	};
 

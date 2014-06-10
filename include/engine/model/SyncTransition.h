@@ -24,6 +24,8 @@ namespace alica
 	/*
 	 *
 	 */
+	class Plan;
+	class Transition;
 	class SyncTransition : public alica::AlicaElement
 	{
 	public:

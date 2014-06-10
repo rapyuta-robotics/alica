@@ -11,6 +11,7 @@
 #include "AlicaElement.h"
 #include "PreCondition.h"
 #include "State.h"
+#include "SyncTransition.h"
 
 namespace alica
 {
@@ -19,6 +20,7 @@ namespace alica
 	 *
 	 */
 	class State;
+	class SyncTransition;
 	class Transition : public AlicaElement
 	{
 	public:
@@ -30,11 +32,14 @@ namespace alica
 		State* getInState() ;
 		void setInState(State* inState);
 		void setOutState(State* outState);
+		const SyncTransition* getSyncTransition() const;
+		void setSyncTransition(const SyncTransition* syncTransition);
 
 	private:
 		const PreCondition* preCondition;
 		State* inState;
 		State* outState;
+		const SyncTransition* syncTransition;
 	};
 
 } /* namespace Alica */
