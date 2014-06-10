@@ -10,7 +10,7 @@
 namespace alica
 {
 
-	ForallAgents::ForallAgents()
+	ForallAgents::ForallAgents(long id) : Quantifier(id)
 	{
 		// TODO Auto-generated constructor stub
 

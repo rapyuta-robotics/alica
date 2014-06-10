@@ -50,6 +50,16 @@ namespace alica
 		this->outState = outState;
 	}
 
+	const SyncTransition* Transition::getSyncTransition() const
+	{
+		return syncTransition;
+	}
+
+	void Transition::setSyncTransition(const SyncTransition* syncTransition)
+	{
+		this->syncTransition = syncTransition;
+	}
+
 } /* namespace Alica */
 
 
