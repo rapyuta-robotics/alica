@@ -61,7 +61,7 @@ namespace alica
 		this->parametrisation = parametrisation;
 	}
 
-	const list<Plan*>& PlanType::getPlans() const
+	list<Plan*>& PlanType::getPlans()
 	{
 		return plans;
 	}

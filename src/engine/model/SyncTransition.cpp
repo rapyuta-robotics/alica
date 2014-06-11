@@ -87,7 +87,7 @@ namespace alica
 		this->plan = plan;
 	}
 
-	const list<Transition*>& SyncTransition::getInSync() const
+	list<Transition*>& SyncTransition::getInSync()
 	{
 		return inSync;
 	}

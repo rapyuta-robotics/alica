@@ -22,7 +22,7 @@ TEST(Alica, planParser)
 
 	// setup the engine
 	alica::AlicaEngine* ae = alica::AlicaEngine::getInstance();
-	ae->init("WM09", "WM09", "WM09", false);
+	ae->init("MasterPlan", "MasterPlan", "MasterPlan", false);
 	const std::map<long int, alica::Plan*, std::less<long int>, std::allocator<std::pair<const long int, alica::Plan*> > > plans =
 			ae->getPlanRepository()->getPlans();
 

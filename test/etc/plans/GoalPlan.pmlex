@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="GoalPlan.pml#1402488881799"/>
+    <value xPos="98" yPos="94" width="81" height="67"/>
+  </extensions>
+  <extensions>
+    <key href="GoalPlan.pml#1402488870347"/>
+    <value width="661" height="409"/>
+  </extensions>
+  <extensions>
+    <key href="GoalPlan.pml#1402488881800"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="GoalPlan.pml#1402489131988"/>
+    <value xPos="354" yPos="333"/>
+  </extensions>
+  <extensions>
+    <key href="GoalPlan.pml#1402489152217"/>
+    <value xPos="356" yPos="129"/>
+  </extensions>
+  <extensions>
+    <key href="GoalPlan.pml#1402489173167"/>
+    <value>
+      <bendpoints xPos="381" yPos="210"/>
+    </value>
+  </extensions>
+  <extensions>
+    <key href="GoalPlan.pml#1402489192198"/>
+    <value xPos="499" yPos="186" width="62" height="49" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="GoalPlan.pml#1402489205153"/>
+    <value>
+      <bendpoints xPos="387" yPos="164"/>
+    </value>
+  </extensions>
+  <extensions>
+    <key href="GoalPlan.pml#1402489216617"/>
+    <value>
+      <bendpoints xPos="596" yPos="243"/>
+    </value>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>

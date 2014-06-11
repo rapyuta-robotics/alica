@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402488787818"/>
+    <value xPos="110" yPos="133" width="81" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402488770050"/>
+    <value width="748" height="447"/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402488787819"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402489237914"/>
+    <value xPos="304" yPos="85" width="65" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402489257607"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402489260911"/>
+    <value xPos="479" yPos="298"/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402489273401"/>
+    <value xPos="291" yPos="265" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402489276995"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Tackle.pml#1402489318663"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/Attack.beh#1402488866727"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/MidFieldStandard.beh#1402488712657"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/Tackle.beh#1402488956661"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Defend.pml#1402488893641"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>

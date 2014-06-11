@@ -32,9 +32,9 @@ namespace alica
 		virtual ~EntryPoint();
 
 		const long IDLEID = -1;
-		void ComputeReachabilitySet();
-		string ToString ();
-		int CompareTo(EntryPoint otherEp);
+		void computeReachabilitySet();
+		string toString ();
+		int compareTo(EntryPoint otherEp);
 
 		const Task* getTask() const;
 		void setTask(const Task* task);

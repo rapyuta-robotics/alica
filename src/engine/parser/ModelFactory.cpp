@@ -24,7 +24,7 @@ namespace alica
 	const string ModelFactory::subplan = "subplan";
 	const string ModelFactory::subvar = "subvar";
 	const string ModelFactory::var = "var";
-	const string ModelFactory::result = "result";
+	const string ModelFactory::postCondition = "postCondition";
 	const string ModelFactory::inState = "inState";
 	const string ModelFactory::outState = "outState";
 	const string ModelFactory::preCondition = "preCondition";
@@ -333,7 +333,47 @@ namespace alica
 	}
 	void ModelFactory::createPlanType(tinyxml2::XMLDocument* node)
 	{
-		//TODO Paul
+		tinyxml2::XMLElement* element = node->FirstChildElement();
+		PlanType* pt = new PlanType();
+		pt->setId(this->parser->parserId(element));
+		pt->setFileName(this->parser->getCurrentFile());
+		setAlicaElementAttributes(pt, element);
+		addElement(pt);
+		this->rep.get()->getPlanTypes().insert(pair<long, PlanType*>(pt->getId(), pt));
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			if (plans.compare(val) == 0)
+			{
+				string activated = "";
+				const char* activatedPtr = curChild->Attribute("activated");
+				if (activatedPtr)
+				{
+					activated = activatedPtr;
+					transform(activated.begin(), activated.end(), activated.begin(), ::tolower);
+					if (activated.compare("true") == 0)
+					{
+						long cid = this->parser->parserId(curChild->FirstChildElement());
+						this->planTypePlanReferences.push_back(pair<long, long>(pt->getId(), cid));
+					}
+				}
+				else
+				{
+#ifdef PP_DEBUG
+					cout << "MF: Skipping deactivated plan" << endl;
+#endif
+				}
+
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled PlanType Child:", curChild);
+			}
+			curChild = curChild->NextSiblingElement();
+		}
+
 	}
 	void ModelFactory::createTasks(tinyxml2::XMLDocument* node)
 	{
@@ -343,19 +383,20 @@ namespace alica
 		tr->setFileName(this->parser->getCurrentFile());
 		setAlicaElementAttributes(tr, element);
 		this->rep.get()->getTaskRepositorys().insert(pair<long, TaskRepository*>(tr->getId(), tr));
-
+		long id = 0;
 		const char* defaultTaskPtr = element->Attribute("defaultTask");
 		if (defaultTaskPtr)
 		{
-			long id = stol(defaultTaskPtr);
+			id = stol(defaultTaskPtr);
 			tr->setDefaultTask(id);
 		}
 
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
 		{
-			long cid = stol(defaultTaskPtr);
-			Task* task = new Task();
+			long cid = this->parser->parserId(curChild);
+
+			Task* task = new Task(cid == id);
 			task->setId(cid);
 			setAlicaElementAttributes(task, curChild);
 			const char* descriptionkPtr = curChild->Attribute("description");
@@ -403,14 +444,17 @@ namespace alica
 		{
 			type = conditionPtr;
 		}
-		//TODO; Variable.GetVariables... FOL ANTRLBUILDER....s
-//		Variable* v =
-//		string acName = v->getName();
-//		setAlicaElementAttributes(v, element);
-//		v->setName(acName);
-//		addElement(v);
-//		this->rep.get()->getVariables().insert(pair<long, Variable*>(v->getId(), v));
-		return nullptr;
+		string name = "";
+		const char* namePtr = element->Attribute("name");
+		if (namePtr)
+		{
+			name = namePtr;
+		}
+		Variable* v = new Variable(this->parser->parserId(element), name, type);
+		setAlicaElementAttributes(v, element);
+		addElement(v);
+		this->rep.get()->getVariables().insert(pair<long, Variable*>(v->getId(), v));
+		return v;
 
 	}
 	RuntimeCondition * ModelFactory::createRuntimeCondition(tinyxml2::XMLElement * element)
@@ -638,14 +682,14 @@ namespace alica
 			{
 				this->stateInTransitionReferences.push_back(pair<long, long>(fail->getId(), cid));
 			}
-			else if (result.compare(val) == 0)
+			else if (postCondition.compare(val) == 0)
 			{
 				PostCondition* postCon = createPostCondition(curChild);
 				fail->setPosCondition(postCon);
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled State Child:", curChild);
+				AlicaEngine::getInstance()->abort("MF: Unhandled FaulireState Child: ", curChild->Value());
 			}
 
 			curChild = curChild->NextSiblingElement();
@@ -670,14 +714,14 @@ namespace alica
 			{
 				this->stateInTransitionReferences.push_back(pair<long, long>(suc->getId(), cid));
 			}
-			else if (result.compare(val) == 0)
+			else if (postCondition.compare(val) == 0)
 			{
 				PostCondition* postCon = createPostCondition(curChild);
 				suc->setPosCondition(postCon);
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled State Child:", curChild);
+				AlicaEngine::getInstance()->abort("MF: Unhandled SuccesState Child:", curChild->Value());
 			}
 
 			curChild = curChild->NextSiblingElement();
@@ -749,16 +793,15 @@ namespace alica
 		{
 			const char* val = curChild->Value();
 			curChildId = this->parser->parserId(curChild);
-			long tid;
 
 			if (state.compare(val) == 0)
 			{
-				this->epStateReferences.push_back(pair<long, long>(ep->getId(), tid));
+				this->epStateReferences.push_back(pair<long, long>(ep->getId(), curChildId));
 				haveState = true;
 			}
 			else if (task.compare(val) == 0)
 			{
-				this->epTaskReferences.push_back(pair<long, long>(ep->getId(), tid));
+				this->epTaskReferences.push_back(pair<long, long>(ep->getId(), curChildId));
 			}
 			else
 			{
@@ -812,7 +855,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled State Child:", curChild);
+				AlicaEngine::getInstance()->abort("MF: Unhandled State Child: ", curChild->Value());
 			}
 
 			curChild = curChild->NextSiblingElement();
@@ -912,6 +955,181 @@ namespace alica
 		}
 		else
 			ae->setComment("");
+	}
+	void ModelFactory::computeReachabilities()
+	{
+		cout << "MF: Computing Reachability sets..." << endl;
+
+		for (map<long, alica::Plan*>::const_iterator iter = this->rep->getPlans().begin();
+				iter != this->rep->getPlans().end(); iter++)
+		{
+			Plan* plan = iter->second;
+			for (map<long, alica::EntryPoint*>::const_iterator iter = plan->getEntryPoints().begin();
+					iter != plan->getEntryPoints().end(); iter++)
+			{
+				iter->second->computeReachabilitySet();
+			}
+		}
+		cout << "...done!" << endl;
+
+	}
+	void ModelFactory::attachPlanReferences()
+	{
+		cout << "MF: Attaching Plan references.." << endl;
+
+		//epTaskReferences
+		for (pair<long, long> pairs : this->epTaskReferences)
+		{
+			Task* t = (Task*)this->elements.find(pairs.second)->second;
+			EntryPoint* ep = (EntryPoint*)this->elements.find(pairs.first)->second;
+			ep->setTask(t);
+		}
+		this->epTaskReferences.clear();
+
+		//transitionAimReferences
+		for (pair<long, long> pairs : this->transitionAimReferences)
+		{
+			Transition* t = (Transition*)this->elements.find(pairs.first)->second;
+			State* st = (State*)this->elements.find(pairs.second)->second;
+			if (!st)
+			{
+				AlicaEngine::getInstance()->abort("MF: Cannot resolve transitionAimReferences target: ", pairs.first);
+			}
+			t->setOutState(st);
+			st->getInTransitions().push_back(t);
+		}
+		this->transitionAimReferences.clear();
+
+		//epStateReferences
+		for (pair<long, long> pairs : this->epStateReferences)
+		{
+			State* st = (State*)this->elements.find(pairs.second)->second;
+			EntryPoint* ep = (EntryPoint*)this->elements.find(pairs.first)->second;
+			ep->setState(st);
+		}
+		this->epStateReferences.clear();
+
+		//stateInTransitionReferences
+		for (pair<long, long> pairs : this->stateInTransitionReferences)
+		{
+			Transition* t = (Transition*)this->elements.find(pairs.second)->second;
+			State* st = (State*)this->elements.find(pairs.first)->second;
+			if (st != t->getOutState())
+			{
+				AlicaEngine::getInstance()->abort("MF: Unexpected reference in a transition! ", pairs.first);
+			}
+		}
+		this->stateInTransitionReferences.clear();
+
+		//stateOutTransitionReferences
+		for (pair<long, long> pairs : this->stateOutTransitionReferences)
+		{
+			State* st = (State*)this->elements.find(pairs.first)->second;
+			Transition* t = (Transition*)this->elements.find(pairs.second)->second;
+			st->getOutTransitions().push_back(t);
+			t->setInState(st);
+		}
+		this->stateOutTransitionReferences.clear();
+
+		//statePlanReferences
+		for (pair<long, long> pairs : this->statePlanReferences)
+		{
+			State* st = (State*)this->elements.find(pairs.first)->second;
+			AbstractPlan* p = (AbstractPlan*)this->elements.find(pairs.second)->second;
+			st->getPlans().push_front(p);
+		}
+		this->statePlanReferences.clear();
+
+		//planTypePlanReferences
+		for (pair<long, long> pairs : this->planTypePlanReferences)
+		{
+			PlanType* pt = (PlanType*)this->elements.find(pairs.first)->second;
+			Plan* p = (Plan*)this->elements.find(pairs.second)->second;
+			pt->getPlans().push_front(p);
+		}
+		this->planTypePlanReferences.clear();
+
+		//conditionVarReferences
+		for (pair<long, long> pairs : this->conditionVarReferences)
+		{
+			Condition* c = (Condition*)this->elements.find(pairs.first)->second;
+			Variable* v = (Variable*)this->elements.find(pairs.second)->second;
+			c->getVariables().push_back(v);
+		}
+		this->conditionVarReferences.clear();
+
+		//paramSubPlanReferences
+		for (pair<long, long> pairs : this->paramSubPlanReferences)
+		{
+			Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
+			AbstractPlan* ap = (AbstractPlan*)this->elements.find(pairs.second)->second;
+			p->setSubPlan(ap);
+		}
+		this->paramSubPlanReferences.clear();
+
+		//paramSubVarReferences
+		for (pair<long, long> pairs : this->paramSubVarReferences)
+		{
+			Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
+			Variable* ap = (Variable*)this->elements.find(pairs.second)->second;
+			p->setVar(ap);
+		}
+		this->paramSubVarReferences.clear();
+
+		//paramVarReferences
+		for (pair<long, long> pairs : this->paramVarReferences)
+		{
+			Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
+			Variable* v = (Variable*)this->elements.find(pairs.second)->second;
+			p->setVar(v);
+		}
+		this->paramVarReferences.clear();
+
+		//transitionSynchReferences
+		for (pair<long, long> pairs : this->transitionSynchReferences)
+		{
+			Transition* t = (Transition*)this->elements.find(pairs.first)->second;
+			SyncTransition* sync = (SyncTransition*)this->elements.find(pairs.second)->second;
+			t->setSyncTransition(sync);
+			sync->getInSync().push_front(t);
+		}
+		this->transitionSynchReferences.clear();
+
+		//quantifierScopeReferences
+		for (pair<long, long> pairs : this->quantifierScopeReferences)
+		{
+			//TODO
+//			AlicaElement* ae = (AlicaElement*)this->elements.find(pairs.second)->second;
+//			Quantifier* q = (Quantifier*)this->elements.find(pairs.first)->second;
+//			q->setScope(ae);
+		}
+		this->quantifierScopeReferences.clear();
+
+		removeRedundancy();
+		cout << "DONE!" << endl;
+
+	}
+	void ModelFactory::removeRedundancy()
+	{
+		for (map<long, alica::Plan*>::const_iterator iter = this->rep->getPlans().begin();
+				iter != this->rep->getPlans().end(); iter++)
+		{
+			Plan* plan = iter->second;
+			list<Transition*> transToRemove;
+			for (Transition* tran : plan->getTransitions())
+			{
+				if (!tran->getInState())
+				{
+					transToRemove.push_back(tran);
+				}
+			}
+
+			for (Transition* tran : transToRemove)
+			{
+				plan->getTransitions().remove(tran);
+			}
+		}
+
 	}
 
 	const map<long, AlicaElement*>& ModelFactory::getElements() const

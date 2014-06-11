@@ -42,7 +42,7 @@ namespace alica
 		void setTalkTimeOut(unsigned long talkTimeOut);
 		const Plan* getPlan() const;
 		void setPlan(Plan* plan);
-		const list<Transition*>& getInSync() const;
+		list<Transition*>& getInSync();
 		void setInSync(const list<Transition*>& inSync);
 
 	private:

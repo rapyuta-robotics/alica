@@ -32,7 +32,7 @@ namespace alica
 		const string& getConditionString() const;
 		void setConditionString(const string& conditionString);
 		list<Quantifier*>& getQuantifiers() ;
-		const list<Variable*>& getVariables() const;
+		 list<Variable*>& getVariables() ;
 		void setVariables(const list<Variable*>& variables);
 		AbstractPlan* getAbstractPlan() const;
 		void setAbstractPlan(AbstractPlan* abstractPlan);
