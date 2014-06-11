@@ -80,8 +80,7 @@ namespace alica
 		this->masterPlan = parsePlanFile(masterPlanPath);
 		parseFileLoop();
 
-		//TODO::
-		//this.mf.ComputeReachabilities();
+		this->mf->computeReachabilities();
 		return this->masterPlan;
 	}
 	void PlanParser::parseFileLoop()
@@ -92,9 +91,9 @@ namespace alica
 			this->filesToParse.pop_front();
 			this->currentDirectory = supplementary::FileSystem::getParent(fileToParse);
 
-			if (supplementary::FileSystem::fileExists(fileToParse))
+			if (!supplementary::FileSystem::fileExists(fileToParse))
 			{
-				AlicaEngine::getInstance()->abort("PP: Cannot Find referenced file", fileToParse);
+				AlicaEngine::getInstance()->abort("PP: Cannot Find referenced file ", fileToParse);
 			}
 			if (supplementary::FileSystem::endsWith(fileToParse, ".pml"))
 			{
@@ -118,8 +117,7 @@ namespace alica
 			}
 			filesParsed.push_back(fileToParse);
 		}
-		//TODO:
-//		this.mf.AttachPlanReferences();
+		this->mf->attachPlanReferences();
 
 	}
 	void PlanParser::parsePlanTypeFile(string currentFile)
@@ -159,6 +157,7 @@ namespace alica
 #endif
 		tinyxml2::XMLDocument doc;
 		doc.LoadFile(currentFile.c_str());
+		cout << "TASKREPO " << currentFile << endl;
 		if (doc.ErrorID() != tinyxml2::XML_NO_ERROR)
 		{
 			cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
@@ -299,11 +298,13 @@ namespace alica
 		string locator = idString.substr(0, hashPos);
 		if (!locator.empty())
 		{
-			//TODO: Maybe doesnt work... somewhere / put pls
-			string path = this->currentDirectory + locator;
+			if(!supplementary::FileSystem::endsWith(this->currentDirectory, "/")){
+				this->currentDirectory = this->currentDirectory + "/";
+			}
+			string path = this->currentDirectory + locator ;
 			list<string>::iterator findIterParsed = find(filesParsed.begin(), filesParsed.end(), path);
 			list<string>::iterator findIterToParse = find(filesToParse.begin(), filesToParse.end(), path);
-			if (findIterParsed != filesParsed.end() && findIterToParse != filesToParse.end())
+			if (findIterParsed == filesParsed.end() && findIterToParse == filesToParse.end())
 			{
 				cout << "PP: Adding " + path + " to parse queue " << endl;
 				filesToParse.push_back(path);

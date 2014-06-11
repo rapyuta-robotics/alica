@@ -33,13 +33,13 @@ namespace alica
 		void setFailureState(bool failureState);
 		const Plan* getInPlan() const;
 		void setInPlan( Plan* inPlan);
-		const list<Transition*>& getInTransitions() const;
+		 list<Transition*>& getInTransitions() ;
 		void setInTransitions(const list<Transition*>& inTransitions);
-		const list<Transition*>& getOutTransitions() const;
+		 list<Transition*>& getOutTransitions() ;
 		void setOutTransitions(const list<Transition*>& outTransition);
 		 list<Parametrisation*>& getParametrisation();
 		void setParametrisation(const list<Parametrisation*>& parametrisation);
-		const list<AbstractPlan*>& getPlans() const;
+		 list<AbstractPlan*>& getPlans() ;
 		void setPlans(const list<AbstractPlan*>& plans);bool isSuccessState() const;
 		void setSuccessState(bool successState);bool isTerminal() const;
 		void setTerminal(bool terminal);

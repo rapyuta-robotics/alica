@@ -40,6 +40,8 @@ namespace alica
 		void createTasks(tinyxml2::XMLDocument* node);
 		void createBehaviour(tinyxml2::XMLDocument* node);
 		void createPlanType(tinyxml2::XMLDocument* node);
+		void computeReachabilities();
+		void attachPlanReferences();
 
 	private:
 		static const string entryPoints;
@@ -58,7 +60,7 @@ namespace alica
 		static const string subplan;
 		static const string subvar;
 		static const string var;
-		static const string result;
+		static const string postCondition;
 		static const string inState;
 		static const string outState;
 		static const string preCondition;
@@ -83,6 +85,7 @@ namespace alica
 		list<pair<long, long>> quantifierScopeReferences;
 		list<pair<long, long>> epStateReferences;
 		list<pair<long, long>> epTaskReferences;
+		list<pair<long, long>> planTypePlanReferences;
 
 		void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele);
 		EntryPoint* createEntryPoint(tinyxml2::XMLElement* element);
@@ -102,6 +105,7 @@ namespace alica
 		void addElement(AlicaElement* ae);
 
 	protected:
+		void removeRedundancy();
 
 	};
 } /* namespace Alica */

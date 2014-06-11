@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="MasterPlan.pml#1402488437261"/>
+    <value xPos="71" yPos="86" width="134" height="86" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlan.pml#1402488437260"/>
+    <value width="804" height="600"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlan.pml#1402488437263"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlan.pml#1402488463437"/>
+    <value xPos="77" yPos="330" width="65" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlan.pml#1402488470615"/>
+    <value xPos="417" yPos="1" width="120" height="103" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlan.pml#1402488477650"/>
+    <value xPos="244" yPos="65" width="74" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlan.pml#1402488484084"/>
+    <value xPos="11" yPos="297"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlan.pml#1402488517667"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlan.pml#1402488519757"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlan.pml#1402488536570"/>
+    <value xPos="647" yPos="339"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlan.pml#1402488557864"/>
+    <value>
+      <bendpoints xPos="674" yPos="73"/>
+    </value>
+  </extensions>
+  <extensions>
+    <key href="AttackPlan.pml#1402488634525"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/MidFieldStandard.beh#1402488712657"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/DefendMid.beh#1402488763903"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402488770050"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/Attack.beh#1402488866727"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="GoalPlan.pml#1402488870347"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Defend.pml#1402488893641"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>

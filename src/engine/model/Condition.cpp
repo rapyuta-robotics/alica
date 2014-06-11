@@ -45,7 +45,7 @@ namespace alica
 		this->quantifiers = quantifiers;
 	}
 
-	const list<Variable*>& Condition::getVariables() const
+	list<Variable*>& Condition::getVariables()
 	{
 		return variables;
 	}

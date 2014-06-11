@@ -33,7 +33,7 @@ namespace alica
 
 		const list<Parametrisation*>& getParametrisation() const;
 		void setParametrisation(const list<Parametrisation*>& parametrisation);
-		const list<Plan*>& getPlans() const;
+		list<Plan*>& getPlans() ;
 		void setPlans(const list<Plan*>& plans);
 
 	protected:
