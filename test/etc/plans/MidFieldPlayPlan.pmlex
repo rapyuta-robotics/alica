@@ -14,7 +14,7 @@
   </extensions>
   <extensions>
     <key href="MidFieldPlayPlan.pml#1402489237914"/>
-    <value xPos="304" yPos="85" width="65" height="67" collapsed="false"/>
+    <value xPos="338" yPos="13" width="155" height="134" collapsed="false"/>
   </extensions>
   <extensions>
     <key href="MidFieldPlayPlan.pml#1402489257607"/>
@@ -26,7 +26,7 @@
   </extensions>
   <extensions>
     <key href="MidFieldPlayPlan.pml#1402489273401"/>
-    <value xPos="291" yPos="265" collapsed="false"/>
+    <value xPos="355" yPos="167" width="152" height="86" collapsed="false"/>
   </extensions>
   <extensions>
     <key href="MidFieldPlayPlan.pml#1402489276995"/>
@@ -51,5 +51,25 @@
   <extensions>
     <key href="Defend.pml#1402488893641"/>
     <value/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402500828244"/>
+    <value xPos="133" yPos="299"/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402500830885"/>
+    <value xPos="161" yPos="295"/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402500833246"/>
+    <value xPos="363" yPos="328"/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402500843072"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402500865502"/>
+    <value xPos="323" yPos="266"/>
   </extensions>
 </uiextensionmodel:PmlUiExtensionMap>
