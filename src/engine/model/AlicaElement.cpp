@@ -7,6 +7,7 @@
 
 #include "engine/model/AlicaElement.h"
 
+
 namespace alica
 {
 
@@ -17,7 +18,6 @@ namespace alica
 
 	AlicaElement::~AlicaElement()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	void AlicaElement::setName(string name)

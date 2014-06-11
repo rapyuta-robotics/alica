@@ -14,14 +14,17 @@ using namespace std;
 #include <string>
 
 #include "AlicaElement.h"
-//#include "EntryPoint.h"
-//#include "../AlicaEngine.h"
 
-// TODO remove circle
+
+#include "../AlicaEngine.h"
 
 namespace alica
 {
 
+	class EntryPoint;
+	class State;
+	class Plan;
+	class Condition;
 	class Quantifier : public AlicaElement
 	{
 	public:
@@ -32,10 +35,10 @@ namespace alica
 		bool isScopeIsEntryPoint() const;
 		bool isScopeIsPlan() const;
 		bool isScopeIsState() const;
-//		State* getScopedState();
-//		EntryPoint* getScopedEntryPoint();
-//		Plan* getScopedPlan();
-		void setScope(AlicaElement ae);
+		State* getScopedState();
+		EntryPoint* getScopedEntryPoint();
+		Plan* getScopedPlan();
+		void setScope(AlicaElement* ae);
 		AlicaElement* getScope();
 
 
@@ -49,9 +52,9 @@ namespace alica
 		bool scopeIsEntryPoint;
 		bool scopeIsPlan;
 		bool scopeIsState;
-//		EntryPoint* entryPoint;
-//		State* state;
-//		Plan* plan;
+		EntryPoint* entryPoint;
+		State* state;
+		Plan* plan;
 	};
 
 } /* namespace Alica */

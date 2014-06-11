@@ -6,6 +6,7 @@
  */
 
 #include "engine/PlanRepository.h"
+#include "engine/model/Quantifier.h"
 
 namespace alica
 {

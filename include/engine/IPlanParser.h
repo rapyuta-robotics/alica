@@ -22,6 +22,7 @@ using namespace std;
 
 namespace alica
 {
+	class Plan;
 	class IPlanParser
 	{
 	public:

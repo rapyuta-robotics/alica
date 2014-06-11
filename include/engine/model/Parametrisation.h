@@ -15,11 +15,11 @@ using namespace std;
 
 #include "AlicaElement.h"
 #include "Variable.h"
-#include "AbstractPlan.h"
+
 
 namespace alica
 {
-
+	class AbstractPlan;
 	class Parametrisation : public AlicaElement
 	{
 	public:
@@ -28,8 +28,8 @@ namespace alica
 
 		string ToString ();
 
-		const AbstractPlan& getSubPlan() const;
-		void setSubPlan(const AbstractPlan& subPlan);
+		const AbstractPlan* getSubPlan() const;
+		void setSubPlan(const AbstractPlan* subPlan);
 		const Variable& getSubVar() const;
 		void setSubVar(const Variable& subVar);
 		const Variable& getVar() const;
@@ -38,7 +38,7 @@ namespace alica
 	protected:
 		Variable var;
 		Variable subVar;
-		AbstractPlan subPlan;
+		AbstractPlan* subPlan;
 
 	};
 

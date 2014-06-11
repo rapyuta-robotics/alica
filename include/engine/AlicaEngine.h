@@ -20,7 +20,7 @@ using namespace std;
 
 namespace alica
 {
-
+	class PlanRepository;
 	class AlicaEngine
 	{
 	public:

@@ -6,6 +6,7 @@
  */
 
 #include "engine/model/Parametrisation.h"
+#include "engine/model/AbstractPlan.h"
 
 namespace alica
 {
@@ -25,18 +26,18 @@ namespace alica
 		stringstream ss;
 		ss << "[Parametrisation: Var=" << this->var.getId();
 		ss << " SubVar=" << this->subVar.getName() << " (" << this->subVar.getName() << "), ";
-		ss << "SubPlan=" << this->subPlan.getName() << "]" << endl;
+		ss << "SubPlan=" << this->subPlan->getName() << "]" << endl;
 		return ss.str();
 	}
 
 //================= Getter and Setter ========================
 
-	const AbstractPlan& Parametrisation::getSubPlan() const
+	const AbstractPlan* Parametrisation::getSubPlan() const
 	{
 		return subPlan;
 	}
 
-	void Parametrisation::setSubPlan(const AbstractPlan& subPlan)
+	void Parametrisation::setSubPlan(const AbstractPlan* subPlan)
 	{
 		this->subPlan = subPlan;
 	}

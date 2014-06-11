@@ -6,6 +6,9 @@
  */
 
 #include "engine/model/Transition.h"
+#include "engine/model/PreCondition.h"
+#include "engine/model/PostCondition.h"
+#include "engine/model/Plan.h"
 
 namespace alica
 {
