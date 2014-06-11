@@ -6,6 +6,7 @@
  */
 
 #include "engine/model/SuccessState.h"
+#include "engine/model/Transition.h"
 
 namespace alica
 {

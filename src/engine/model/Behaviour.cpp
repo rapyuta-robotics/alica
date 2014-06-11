@@ -6,6 +6,7 @@
  */
 
 #include "engine/model/Behaviour.h"
+#include "engine/model/BehaviourConfiguration.h"
 
 namespace alica
 {
@@ -64,12 +65,12 @@ namespace alica
 		this->fileName = fileName;
 	}
 
-	const BasicBehaviour& Behaviour::getImplementation() const
+	const BasicBehaviour* Behaviour::getImplementation() const
 	{
 		return implementation;
 	}
 
-	void Behaviour::setImplementation(const BasicBehaviour& implementation)
+	void Behaviour::setImplementation(BasicBehaviour* implementation)
 	{
 		this->implementation = implementation;
 	}

@@ -6,6 +6,7 @@
  */
 
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/Variable.h"
 
 namespace alica
 {
@@ -113,12 +114,12 @@ namespace alica
 		this->preCondition = preCondition;
 	}
 
-	const UtilityFunction& AbstractPlan::getUtilityFunction() const
+	const UtilityFunction* AbstractPlan::getUtilityFunction() const
 	{
 		return utilityFunction;
 	}
 
-	void AbstractPlan::setUtilityFunction(const UtilityFunction& utilityFunction)
+	void AbstractPlan::setUtilityFunction(UtilityFunction* utilityFunction)
 	{
 		this->utilityFunction = utilityFunction;
 	}

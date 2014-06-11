@@ -6,6 +6,8 @@
  */
 
 #include "engine/model/RolePriority.h"
+#include "engine/AlicaEngine.h"
+#include "engine/PlanRepository.h"
 
 namespace alica
 {

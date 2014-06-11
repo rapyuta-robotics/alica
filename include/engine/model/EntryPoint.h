@@ -13,17 +13,16 @@ using namespace std;
 #include <unordered_set>
 #include <string>
 #include <sstream>
+#include <list>
 
 #include "AlicaElement.h"
-#include "Task.h"
-#include "State.h"
-#include "Transition.h"
 
 namespace alica
 {
 
 	class Plan;
 	class State;
+	class Task;
 
 	class EntryPoint : public AlicaElement
 	{

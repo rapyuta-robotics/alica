@@ -18,9 +18,6 @@ using namespace std;
 namespace alica
 {
 
-	/*
-	 *
-	 */
 	class Variable : public AlicaElement
 	{
 	public:

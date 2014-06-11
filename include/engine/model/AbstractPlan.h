@@ -16,12 +16,14 @@ using namespace std;
 #include <algorithm>
 
 #include "AlicaElement.h"
-#include "Variable.h"
-#include "RuntimeCondition.h"
-#include "PreCondition.h"
-#include "../UtilityFunction.h"
+
 namespace alica
 {
+
+	class Variable;
+	class PreCondition;
+	class RuntimeCondition;
+	class UtilityFunction;
 
 	class AbstractPlan : public AlicaElement
 	{
@@ -45,8 +47,8 @@ namespace alica
 		void setRuntimeCondition(const RuntimeCondition* runtimeCondition);
 		const PreCondition* getPreCondition() const;
 		void setPreCondition(const PreCondition* preCondition);
-		const UtilityFunction& getUtilityFunction() const;
-		void setUtilityFunction(const UtilityFunction& utilityFunction);
+		const UtilityFunction* getUtilityFunction() const;
+		void setUtilityFunction(UtilityFunction* utilityFunction);
 		double getUtilityThreshold() const;
 		void setUtilityThreshold(double utilityThreshold = 1.0);
 
@@ -54,7 +56,7 @@ namespace alica
 		unsigned long authorithyTimeInterval;
 		const RuntimeCondition* runtimeCondition;
 		const PreCondition* preCondition;
-		UtilityFunction utilityFunction;
+		UtilityFunction* utilityFunction;
 
 	protected:
 		string fileName;

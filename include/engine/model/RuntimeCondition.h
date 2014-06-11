@@ -13,14 +13,11 @@ using namespace std;
 #include <string>
 #include <sstream>
 
-#include "engine/model/Condition.h"
+#include "Condition.h"
 
 namespace alica
 {
 
-	/*
-	 *
-	 */
 	class RuntimeCondition : public Condition
 	{
 	public:

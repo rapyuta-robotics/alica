@@ -6,11 +6,9 @@
  */
 
 #include "engine/model/Plan.h"
-#include "engine/model/State.h"
-#include "engine/model/FailureState.h"
-#include "engine/model/SuccessState.h"
-#include "engine/model/SyncTransition.h"
+#include "engine/model/Task.h"
 #include "engine/model/EntryPoint.h"
+
 namespace alica
 {
 	Plan::Plan(long id) : AbstractPlan()
@@ -29,8 +27,6 @@ namespace alica
 		ss << "Filename: " << this->fileName << endl;
 		return ss.str();
 	}
-
-
 
 	EntryPoint* Plan::getEntryPointTaskID(long taskID)
 	{
