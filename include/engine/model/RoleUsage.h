@@ -10,10 +10,9 @@
 
 using namespace std;
 
-#include "Role.h"
-
 namespace alica
 {
+	class Role;
 
 	class RoleUsage
 	{
@@ -24,8 +23,8 @@ namespace alica
 		void setUsed(bool used);
 		int getPriorityOrder() const;
 		void setPriorityOrder(int priorityOrder);
-		const Role*& getRole() const;
-		void setRole(const Role*& role);
+		Role* getRole() const;
+		void setRole(Role* role);
 
 	protected:
 		int priorityOrder;

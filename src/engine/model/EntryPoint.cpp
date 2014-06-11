@@ -6,6 +6,9 @@
  */
 
 #include "engine/model/EntryPoint.h"
+#include "engine/model/Transition.h"
+#include "engine/model/State.h"
+#include "engine/model/Task.h"
 
 namespace alica
 {

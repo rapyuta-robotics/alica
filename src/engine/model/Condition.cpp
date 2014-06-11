@@ -6,7 +6,6 @@
  */
 
 #include "engine/model/Condition.h"
-#include "engine/model/AbstractPlan.h"
 
 namespace alica
 {

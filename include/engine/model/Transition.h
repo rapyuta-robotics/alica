@@ -9,18 +9,14 @@
 #define TRANSITION_H_
 
 #include "AlicaElement.h"
-#include "PreCondition.h"
-#include "State.h"
-#include "SyncTransition.h"
 
 namespace alica
 {
 
-	/*
-	 *
-	 */
 	class State;
 	class SyncTransition;
+	class PreCondition;
+
 	class Transition : public AlicaElement
 	{
 	public:

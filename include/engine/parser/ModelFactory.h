@@ -11,20 +11,32 @@
 using namespace std;
 
 #include <memory>
+#include <list>
+#include <map>
 
 #include "tinyxml2.h"
-#include "../PlanRepository.h"
-#include "../model/Plan.h"
-#include "PlanParser.h"
-#include "../model/AlicaElement.h"
-#include "../model/Parametrisation.h"
-#include "../model/SuccessState.h"
-#include "../model/FailureState.h"
-#include "../model/ForallAgents.h"
 
 namespace alica
 {
 	class PlanParser;
+	class PlanRepository;
+
+	class Plan;
+	class EntryPoint;
+	class AlicaElement;
+	class State;
+	class SuccessState;
+	class FailureState;
+	class Transition;
+	class SyncTransition;
+	class Parametrisation;
+	class PreCondition;
+	class PostCondition;
+	class RuntimeCondition;
+	class Quantifier;
+	class BehaviourConfiguration;
+	class Variable;
+
 	class ModelFactory
 	{
 	public:

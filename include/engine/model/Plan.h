@@ -9,29 +9,25 @@
 #define PLAN_H_
 
 using namespace std;
+
 #include <stddef.h>
 #include <string>
 #include <list>
 #include <map>
-#include "AbstractPlan.h"
-//#include "EntryPoint.h"
-//#include "State.h"
-//#include "FailureState.h"
-//#include "SuccessState.h"
-#include "Transition.h"
-#include "PostCondition.h"
-//#include "SyncTransition.h"
 
+#include "AbstractPlan.h"
 
 namespace alica
 {
-	class State;
-	class TerminalState;
+
+	class EntryPoint;
 	class FailureState;
 	class SuccessState;
-	class EntryPoint;
-	class Transition;
+	class PostCondition;
+	class State;
 	class SyncTransition;
+	class Transition;
+
 	class Plan : public AbstractPlan
 	{
 	public:

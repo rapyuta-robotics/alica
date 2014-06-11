@@ -15,10 +15,11 @@ using namespace std;
 #include <exception>
 
 #include "AlicaElement.h"
-#include "CapValue.h"
 
 namespace alica
 {
+	class CapValue;
+
 	class Capability : public AlicaElement
 	{
 	public:

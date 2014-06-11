@@ -12,6 +12,8 @@
 
 namespace alica
 {
+	class PostCondition;
+
 	class TerminalState : public State
 	{
 	public:

@@ -14,11 +14,11 @@ using namespace std;
 #include <string>
 
 #include "AbstractPlan.h"
-#include "Behaviour.h"
 
 namespace alica
 {
 	class Behaviour;
+
 	class BehaviourConfiguration : public AbstractPlan
 	{
 	public:

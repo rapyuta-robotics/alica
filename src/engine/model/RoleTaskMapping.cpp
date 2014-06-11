@@ -6,6 +6,7 @@
  */
 
 #include "engine/model/RoleTaskMapping.h"
+#include "engine/model/Role.h"
 
 namespace alica
 {
