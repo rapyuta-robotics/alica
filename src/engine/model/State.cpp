@@ -6,7 +6,6 @@
  */
 
 #include "engine/model/State.h"
-
 namespace alica
 {
 

@@ -6,6 +6,8 @@
  */
 
 #include "engine/model/SyncTransition.h"
+#include "engine/model/Plan.h"
+#include "engine/model/Transition.h"
 
 namespace alica
 {

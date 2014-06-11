@@ -6,6 +6,7 @@
  */
 
 #include "engine/model/BehaviourConfiguration.h"
+#include "engine/model/Behaviour.h"
 
 namespace alica
 {

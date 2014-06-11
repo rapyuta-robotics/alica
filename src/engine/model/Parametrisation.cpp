@@ -6,6 +6,8 @@
  */
 
 #include "engine/model/Parametrisation.h"
+#include "engine/model/Variable.h"
+#include "engine/model/AbstractPlan.h"
 
 namespace alica
 {

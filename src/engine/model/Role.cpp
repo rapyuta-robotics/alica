@@ -6,6 +6,8 @@
  */
 
 #include "engine/model/Role.h"
+#include "engine/model/RoleTaskMapping.h"
+#include "engine/model/Characteristic.h"
 
 namespace alica
 {
@@ -42,7 +44,7 @@ namespace alica
 		for (map<string, Characteristic*>::const_iterator iter = this->characteristics.begin();
 				iter != this->characteristics.end(); iter++)
 		{
-			ss << "t" << iter->second->getName() << " : " << iter->second->getCapValue().getName() << endl;
+			ss << "t" << iter->second->getName() << " : " << iter->second->getCapValue()->getName() << endl;
 		}
 		ss << endl;
 		ss << "\tRTM TaskPriorities (" << this->roleTaskMapping->getId() << "): "

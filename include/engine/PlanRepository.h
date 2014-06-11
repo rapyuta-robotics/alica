@@ -13,25 +13,25 @@ using namespace std;
 #include <stdio.h>
 #include <map>
 
-#include "model/Plan.h"
-#include "model/Task.h"
-#include "model/Behaviour.h"
-#include "model/BehaviourConfiguration.h"
-#include "model/PlanType.h"
-#include "model/Role.h"
-#include "model/Characteristic.h"
-#include "model/Capability.h"
-#include "model/State.h"
-#include "model/EntryPoint.h"
-#include "model/Transition.h"
-#include "model/SyncTransition.h"
-#include "model/Quantifier.h"
-#include "model/Variable.h"
-#include "model/RoleDefinitionSet.h"
-#include "model/TaskRepository.h"
-
 namespace alica
 {
+	class BehaviourConfiguration;
+	class Behaviour;
+	class Capability;
+	class Characteristic;
+	class EntryPoint;
+	class Plan;
+	class PlanType;
+	class Quantifier;
+	class RoleDefinitionSet;
+	class Role;
+	class State;
+	class SyncTransition;
+	class TaskRepository;
+	class Task;
+	class Transition;
+	class Variable;
+
 	class PlanRepository
 	{
 	public:

@@ -15,18 +15,14 @@ using namespace std;
 #include <sstream>
 
 #include "AlicaElement.h"
-#include "Plan.h"
-#include "Transition.h"
 
 namespace alica
 {
 
-	/*
-	 *
-	 */
 	class Plan;
 	class Transition;
-	class SyncTransition : public alica::AlicaElement
+
+	class SyncTransition : public AlicaElement
 	{
 	public:
 		SyncTransition();

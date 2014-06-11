@@ -8,18 +8,17 @@
 #ifndef ALICAENGINE_H_
 #define ALICAENGINE_H_
 
+using namespace std;
+
 #include <string>
 
 #include <SystemConfig.h>
-#include "engine/PlanRepository.h"
-#include "engine/IPlanParser.h"
-#include "engine/parser/PlanParser.h"
-#include "engine/model/Plan.h"
-
-using namespace std;
 
 namespace alica
 {
+	class PlanRepository;
+	class Plan;
+	class IPlanParser;
 
 	class AlicaEngine
 	{

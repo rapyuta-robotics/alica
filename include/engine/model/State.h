@@ -11,17 +11,17 @@
 using namespace std;
 
 #include <stdio.h>
+#include <list>
 
-#include "Plan.h"
 #include "AlicaElement.h"
-#include "AbstractPlan.h"
-#include "Transition.h"
-#include "Parametrisation.h"
 
 namespace alica
 {
 	class Plan;
 	class Transition;
+	class AbstractPlan;
+	class Parametrisation;
+
 	class State : public AlicaElement
 	{
 	public:

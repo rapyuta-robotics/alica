@@ -23,30 +23,30 @@ namespace alica
 	{
 		stringstream ss;
 		ss << "#Characteristic " << endl;
-		ss << "\t Capability: " << capability.getName() << endl;
-		ss << "\t CapValue: " << capValue.getName() << endl;
+		ss << "\t Capability: " << capability->getName() << endl;
+		ss << "\t CapValue: " << capValue->getName() << endl;
 		ss << "\t Weight: " << weight << endl;
 		return ss.str();
 	}
 
 //================= Getter and Setter =============================
 
-	const Capability& Characteristic::getCapability() const
+	const Capability* Characteristic::getCapability() const
 	{
 		return capability;
 	}
 
-	void Characteristic::setCapability(const Capability& capability)
+	void Characteristic::setCapability(Capability* capability)
 	{
 		this->capability = capability;
 	}
 
-	const CapValue& Characteristic::getCapValue() const
+	const CapValue* Characteristic::getCapValue() const
 	{
 		return capValue;
 	}
 
-	void Characteristic::setCapValue(const CapValue& capValue)
+	void Characteristic::setCapValue(CapValue* capValue)
 	{
 		this->capValue = capValue;
 	}

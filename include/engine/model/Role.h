@@ -14,16 +14,16 @@ using namespace std;
 #include <string>
 #include <sstream>
 #include <exception>
+#include <iostream>
 
 #include "AlicaElement.h"
-#include "RoleTaskMapping.h"
-#include "Characteristic.h"
-#include "RoleDefinitionSet.h"
 
 namespace alica
 {
 	class RoleTaskMapping;
 	class RoleDefinitionSet;
+	class Characteristic;
+
 	class Role : public AlicaElement
 	{
 	public:

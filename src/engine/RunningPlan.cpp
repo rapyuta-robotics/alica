@@ -5,7 +5,7 @@
  *      Author: stefan
  */
 
-#include "RunningPlan.h"
+#include "engine/RunningPlan.h"
 
 namespace alica
 {

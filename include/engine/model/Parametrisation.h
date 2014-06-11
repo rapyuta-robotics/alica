@@ -14,11 +14,11 @@ using namespace std;
 #include <sstream>
 
 #include "AlicaElement.h"
-#include "Variable.h"
-#include "AbstractPlan.h"
 
 namespace alica
 {
+	class Variable;
+	class AbstractPlan;
 
 	class Parametrisation : public AlicaElement
 	{

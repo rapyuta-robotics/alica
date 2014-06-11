@@ -5,7 +5,7 @@
  *      Author: stefan
  */
 
-#include "RoleUsage.h"
+#include "engine/model/RoleUsage.h"
 
 namespace alica
 {
@@ -42,12 +42,12 @@ namespace alica
 		this->priorityOrder = priorityOrder;
 	}
 
-	const Role*& RoleUsage::getRole() const
+	Role* RoleUsage::getRole() const
 	{
 		return role;
 	}
 
-	void RoleUsage::setRole(const Role*& role)
+	void RoleUsage::setRole(Role* role)
 	{
 		this->role = role;
 	}

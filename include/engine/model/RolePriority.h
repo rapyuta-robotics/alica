@@ -15,13 +15,12 @@ using namespace std;
 #include <string>
 #include <SystemConfig.h>
 
-#include "engine/model/AlicaElement.h"
-#include "Role.h"
-#include "RoleUsage.h"
-#include "../AlicaEngine.h"
+#include "AlicaElement.h"
 
 namespace alica
 {
+	class Role;
+	class RoleUsage;
 
 	class RolePriority : public AlicaElement
 	{

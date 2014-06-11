@@ -6,6 +6,7 @@
  */
 
 #include "engine/model/TerminalState.h"
+#include "engine/model/PostCondition.h"
 
 namespace alica
 {

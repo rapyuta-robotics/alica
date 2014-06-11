@@ -19,18 +19,21 @@ using namespace std;
 
 #include <SystemConfig.h>
 #include <FileSystem.h>
-#include "../PlanRepository.h"
 #include "../IPlanParser.h"
-#include "../model/Plan.h"
-#include "tinyxml2.h"
-#include "ModelFactory.h"
-#include "../AlicaEngine.h"
 
+namespace tinyxml2 {
+	class XMLElement;
+}
 
 namespace alica
 {
 
 	class ModelFactory;
+	class PlanRepository;
+	class Plan;
+	class RoleSet;
+	class AlicaElement;
+
 	class PlanParser : public IPlanParser
 	{
 	public:
@@ -40,7 +43,7 @@ namespace alica
 		virtual Plan* ParsePlanTree(string masterplan);
 		virtual shared_ptr<RoleSet> ParseRoleSet(string roleSetName, string roleSetDir);
 		virtual void IgnoreMasterPlanId(bool val);
-		virtual shared_ptr<map<long, alica::AlicaElement> > GetParsedElements();
+		virtual shared_ptr<map<long, AlicaElement> > GetParsedElements();
 
 		string getCurrentFile();
 		void setCurrentFile(string currentFile);

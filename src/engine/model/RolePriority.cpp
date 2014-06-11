@@ -6,6 +6,10 @@
  */
 
 #include "engine/model/RolePriority.h"
+#include "engine/AlicaEngine.h"
+#include "engine/PlanRepository.h"
+#include "engine/model/Role.h"
+#include "engine/model/RoleUsage.h"
 
 namespace alica
 {
@@ -14,22 +18,21 @@ namespace alica
 	{
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		this->roles = AlicaEngine::getInstance()->getPlanRepository()->getRoles();
-		// TODO
-//		string[] priorities = (*sc)["Globals"].get<string[]>("Globals","RoleRipository");
+		shared_ptr<vector<string> > priorities = (*sc)["Globals"]->getNames("Globals","RolePriority", NULL);
 		int order = 0;
-//		for (int i = 0; i < priorities.size(); i++)
-//		{
-//			order = (*sc)["Globals"].get<int>("Globals", "RolePriority", priorities[i]);
-//			for (Role* r : this->roles)
-//			{
-//				if (r->name.compare(priorities[i]))
-//				{
-//					this->role = r;
-//					break;
-//				}
-//			}
-//			this->priorityList.push_back(new RoleUsage(order, this->role)):
-//		}
+		for (auto iter : *priorities)
+		{
+			order = (*sc)["Globals"]->get<int>("Globals", "RolePriority", iter.c_str(), NULL);
+			for (auto rolePair : this->roles)
+			{
+				if (rolePair.second->getName().compare(iter.c_str()))
+				{
+					this->role = rolePair.second;
+					break;
+				}
+			}
+			this->priorityList.push_back(new RoleUsage(order, this->role));
+		}
 	}
 
 	RolePriority::~RolePriority()
