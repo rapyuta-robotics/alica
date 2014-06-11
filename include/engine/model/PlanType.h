@@ -15,13 +15,13 @@ using namespace std;
 #include <list>
 
 #include "AbstractPlan.h"
-#include "Plan.h"
-#include "Parametrisation.h"
+
 
 
 namespace alica
 {
-
+	class Parametrisation;
+	class Plan;
 	class PlanType : public AbstractPlan
 	{
 	public:

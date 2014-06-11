@@ -6,6 +6,8 @@
  */
 
 #include "engine/model/PlanType.h"
+#include "engine/model/Parametrisation.h"
+#include "engine/model/Plan.h"
 
 namespace alica
 {

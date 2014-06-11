@@ -31,6 +31,7 @@ namespace alica
 {
 
 	class ModelFactory;
+	class PlanRepository;
 	class PlanParser : public IPlanParser
 	{
 	public:

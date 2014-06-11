@@ -20,11 +20,16 @@ using namespace std;
 #include "../model/Parametrisation.h"
 #include "../model/SuccessState.h"
 #include "../model/FailureState.h"
-#include "../model/ForallAgents.h"
+
 
 namespace alica
 {
 	class PlanParser;
+	class PlanRepository;
+	class EntryPoint;
+	class RuntimeCondition;
+	class Quantifier;
+	class BehaviourConfiguration;
 	class ModelFactory
 	{
 	public:

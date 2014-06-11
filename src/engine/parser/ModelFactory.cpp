@@ -6,6 +6,11 @@
  */
 
 #include "engine/parser/ModelFactory.h"
+#include "engine/model/EntryPoint.h"
+#include "engine/model/ForallAgents.h"
+#include "engine/model/Quantifier.h"
+#include "engine/model/RuntimeCondition.h"
+#include "engine/model/BehaviourConfiguration.h"
 namespace alica
 {
 	const string ModelFactory::conditions = "conditions";

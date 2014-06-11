@@ -22,7 +22,6 @@ using namespace std;
 #include "../UtilityFunction.h"
 namespace alica
 {
-
 	class AbstractPlan : public AlicaElement
 	{
 	public:

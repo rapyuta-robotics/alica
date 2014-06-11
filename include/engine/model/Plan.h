@@ -23,6 +23,7 @@ using namespace std;
 //#include "SyncTransition.h"
 
 
+
 namespace alica
 {
 	class State;
@@ -32,6 +33,7 @@ namespace alica
 	class EntryPoint;
 	class Transition;
 	class SyncTransition;
+	class Condition;
 	class Plan : public AbstractPlan
 	{
 	public:

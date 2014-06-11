@@ -7,6 +7,7 @@
 
 #include "engine/model/Condition.h"
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/Quantifier.h"
 
 namespace alica
 {

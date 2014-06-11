@@ -25,13 +25,13 @@ using namespace std;
 #include "model/EntryPoint.h"
 #include "model/Transition.h"
 #include "model/SyncTransition.h"
-#include "model/Quantifier.h"
 #include "model/Variable.h"
 #include "model/RoleDefinitionSet.h"
 #include "model/TaskRepository.h"
 
 namespace alica
 {
+	class Quantifier;
 	class PlanRepository
 	{
 	public:
