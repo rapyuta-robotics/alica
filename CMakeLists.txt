@@ -96,7 +96,6 @@ catkin_package(
 
 file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 
-
 ## Declare a cpp library
  add_library(alica
 	${alica_SOURCES};
