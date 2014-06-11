@@ -24,6 +24,8 @@
 #include "engine/model/Parametrisation.h"
 #include "engine/model/Quantifier.h"
 #include "engine/model/ForallAgents.h"
+#include "engine/model/PlanType.h"
+#include "engine/model/Variable.h"
 
 #include "engine/AlicaEngine.h"
 
