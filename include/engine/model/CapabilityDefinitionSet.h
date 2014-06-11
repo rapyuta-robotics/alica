@@ -13,10 +13,11 @@ using namespace std;
 #include <list>
 
 #include "AlicaElement.h"
-#include "Capability.h"
 
 namespace alica
 {
+
+	class Capability;
 
 	class CapabilityDefinitionSet : public AlicaElement
 	{

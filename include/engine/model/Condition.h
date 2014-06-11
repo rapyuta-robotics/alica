@@ -14,14 +14,13 @@ using namespace std;
 #include <list>
 
 #include "AlicaElement.h"
-#include "Variable.h"
-#include "Quantifier.h"
 
 namespace alica
 {
-
-	class AbstractPlan;
+	class Variable;
 	class Quantifier;
+	class AbstractPlan;
+
 	class Condition : public AlicaElement
 	{
 	public:

@@ -13,23 +13,17 @@ using namespace std;
 #include <string>
 #include <sstream>
 
-#include "engine/model/TerminalState.h"
+#include "TerminalState.h"
 
 namespace alica
 {
 
-	/*
-	 *
-	 */
 	class SuccessState : public TerminalState
 	{
 	public:
 		SuccessState();
 		virtual ~SuccessState();
 		string toString();
-
-
-
 	};
 
 } /* namespace Alica */

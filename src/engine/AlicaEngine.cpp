@@ -7,6 +7,8 @@
 using namespace std;
 
 #include "engine/AlicaEngine.h"
+#include "engine/PlanRepository.h"
+#include "engine/parser/PlanParser.h"
 
 namespace alica
 {

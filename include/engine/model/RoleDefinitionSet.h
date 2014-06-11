@@ -14,11 +14,11 @@ using namespace std;
 #include <string>
 
 #include "AlicaElement.h"
-#include "Role.h"
 
 namespace alica
 {
 	class Role;
+
 	class RoleDefinitionSet : public AlicaElement
 	{
 	public:

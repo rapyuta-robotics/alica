@@ -6,7 +6,6 @@
  */
 
 #include "engine/model/TaskRepository.h"
-#include "engine/model/Task.h"
 
 namespace alica
 {

@@ -6,6 +6,27 @@
  */
 
 #include "engine/parser/ModelFactory.h"
+#include "engine/PlanRepository.h"
+#include "engine/parser/PlanParser.h"
+#include "engine/model/SuccessState.h"
+#include "engine/model/Transition.h"
+#include "engine/model/PreCondition.h"
+#include "engine/model/SyncTransition.h"
+#include "engine/model/Task.h"
+#include "engine/model/TaskRepository.h"
+#include "engine/model/BehaviourConfiguration.h"
+#include "engine/model/Plan.h"
+#include "engine/model/RuntimeCondition.h"
+#include "engine/model/EntryPoint.h"
+#include "engine/model/FailureState.h"
+#include "engine/model/Behaviour.h"
+#include "engine/model/PostCondition.h"
+#include "engine/model/Parametrisation.h"
+#include "engine/model/Quantifier.h"
+#include "engine/model/ForallAgents.h"
+
+#include "engine/AlicaEngine.h"
+
 namespace alica
 {
 	const string ModelFactory::conditions = "conditions";
@@ -608,6 +629,7 @@ namespace alica
 		}
 		return pre;
 	}
+
 	Quantifier * ModelFactory::createQuantifier(tinyxml2::XMLElement * element)
 	{
 		Quantifier* q;
@@ -664,6 +686,7 @@ namespace alica
 		return q;
 
 	}
+
 	FailureState * ModelFactory::createFailureState(tinyxml2::XMLElement * element)
 	{
 		FailureState* fail = new FailureState();

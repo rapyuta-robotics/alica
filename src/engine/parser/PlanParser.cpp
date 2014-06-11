@@ -4,8 +4,12 @@
  *  Created on: Mar 27, 2014
  *      Author: Stephan Opfer
  */
-#include "engine/parser/PlanParser.h"
 #define PP_DEBUG
+
+#include "engine/parser/PlanParser.h"
+#include "engine/parser/ModelFactory.h"
+#include "engine/AlicaEngine.h"
+
 namespace alica
 {
 

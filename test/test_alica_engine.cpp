@@ -1,8 +1,11 @@
 using namespace std;
 
-#include "engine/AlicaEngine.h"
 #include "SystemConfig.h"
 #include <gtest/gtest.h>
+
+#include "engine/AlicaEngine.h"
+#include "engine/PlanRepository.h"
+#include "engine/model/Plan.h"
 
 /**
  * Tests the plan parser with some nice plans

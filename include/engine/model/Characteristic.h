@@ -20,6 +20,9 @@ using namespace std;
 namespace alica
 {
 
+	class Capability;
+	class CapValue;
+
 	class Characteristic : public AlicaElement
 	{
 	public:
@@ -28,16 +31,16 @@ namespace alica
 
 		string toString();
 
-		const Capability& getCapability() const;
-		void setCapability(const Capability& capability);
-		const CapValue& getCapValue() const;
-		void setCapValue(const CapValue& capValue);
+		const Capability* getCapability() const;
+		void setCapability(Capability* capability);
+		const CapValue* getCapValue() const;
+		void setCapValue(CapValue* capValue);
 		double getWeight() const;
 		void setWeight(double weight);
 
 	protected:
-		Capability capability;
-		CapValue capValue;
+		Capability* capability;
+		CapValue* capValue;
 		double weight = 0;
 
 	};
