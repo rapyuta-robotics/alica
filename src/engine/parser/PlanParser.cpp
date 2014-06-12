@@ -67,6 +67,60 @@ namespace alica
 	{
 	}
 
+	RoleSet* PlanParser::parseRoleSet(string roleSetName, string roleSetDir)
+	{
+		if (roleSetName.empty())
+		{
+			roleSetName = findDefaultRoleSet(roleSetDir);
+		}
+		else
+		{
+			//TODO:
+		}
+	}
+	string PlanParser::findDefaultRoleSet(string dir)
+	{
+
+		if (!supplementary::FileSystem::isPathRooted(dir))
+		{
+			dir = this->baseRolePath + "/" + dir;
+		}
+		if (!supplementary::FileSystem::isDirectory(dir))
+		{
+			AlicaEngine::getInstance()->abort("PP: RoleSet directory does not exist: " + dir);
+		}
+
+		vector<string> files = supplementary::FileSystem::findAllFiles(dir, ".rset");
+
+		for (string s : files)
+		{
+			tinyxml2::XMLDocument doc;
+			doc.LoadFile(s.c_str());
+			if (doc.ErrorID() != tinyxml2::XML_NO_ERROR)
+			{
+				cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
+				throw new exception();
+			}
+
+			tinyxml2::XMLElement* element = doc.FirstChildElement();
+			const char* attr = element->Attribute("default");
+			if (attr)
+			{
+				string attrString = attr;
+				if(attrString.compare("true") == 0)
+				{
+					return s;
+				}
+			}
+		}
+		if(files.size() == 1)
+		{
+			return files[0];
+		}
+		AlicaEngine::getInstance()->abort("PP: Cannot find a default roleset in directory: " + dir);
+		return "";
+	}
+
 	Plan* PlanParser::ParsePlanTree(string masterplan)
 	{
 		string masterPlanPath;
@@ -302,10 +356,11 @@ namespace alica
 		string locator = idString.substr(0, hashPos);
 		if (!locator.empty())
 		{
-			if(!supplementary::FileSystem::endsWith(this->currentDirectory, "/")){
+			if (!supplementary::FileSystem::endsWith(this->currentDirectory, "/"))
+			{
 				this->currentDirectory = this->currentDirectory + "/";
 			}
-			string path = this->currentDirectory + locator ;
+			string path = this->currentDirectory + locator;
 			list<string>::iterator findIterParsed = find(filesParsed.begin(), filesParsed.end(), path);
 			list<string>::iterator findIterToParse = find(filesToParse.begin(), filesToParse.end(), path);
 			if (findIterParsed == filesParsed.end() && findIterToParse == filesToParse.end())
