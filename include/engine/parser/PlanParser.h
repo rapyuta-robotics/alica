@@ -20,6 +20,7 @@ using namespace std;
 #include <SystemConfig.h>
 #include <FileSystem.h>
 #include "../IPlanParser.h"
+#include "../model/RoleSet.h"
 
 namespace tinyxml2 {
 	class XMLElement;
@@ -48,6 +49,7 @@ namespace alica
 		string getCurrentFile();
 		void setCurrentFile(string currentFile);
 		void parseFileLoop();
+		RoleSet* parseRoleSet(string roleSetName, string roleSetDir);
 		long parserId(tinyxml2::XMLElement* node);
 
 	private:
@@ -67,6 +69,7 @@ namespace alica
 		void parseBehaviourFile(string currentFile);
 		Plan* parsePlanFile(string& planFile);
 		long fetchId(const string& idString, long id);
+		string findDefaultRoleSet(string dir);
 
 		list<string> filesToParse;
 		list<string> filesParsed;
