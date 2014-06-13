@@ -75,7 +75,7 @@ namespace alica
 		}
 		else
 		{
-			if (roleSetDir.find_last_of("/") != domainConfigFolder.length() - 1)
+			if (roleSetDir.find_last_of("/") != roleSetDir.length() - 1)
 			{
 				roleSetDir = roleSetDir + "/";
 			}
@@ -217,7 +217,7 @@ namespace alica
 		return "";
 	}
 
-	Plan* PlanParser::ParsePlanTree(string masterplan)
+	Plan* PlanParser::parsePlanTree(string masterplan)
 	{
 		string masterPlanPath;
 		bool found = supplementary::FileSystem::findFile(this->basePlanPath, masterplan + ".pml", masterPlanPath);
@@ -339,21 +339,14 @@ namespace alica
 		return p;
 	}
 
-	shared_ptr<RoleSet> PlanParser::ParseRoleSet(string roleSetName, string roleSetDir)
-	{
-
-		shared_ptr<RoleSet> r;
-		return r;
-	}
-
-	shared_ptr<map<long, alica::AlicaElement> > PlanParser::GetParsedElements()
+	shared_ptr<map<long, alica::AlicaElement> > PlanParser::getParsedElements()
 	{
 
 		shared_ptr<map<long, alica::AlicaElement> > map;
 		return map;
 	}
 
-	void PlanParser::IgnoreMasterPlanId(bool val)
+	void PlanParser::ignoreMasterPlanId(bool val)
 	{
 		this->mf->setIgnoreMasterPlanId(val);
 	}

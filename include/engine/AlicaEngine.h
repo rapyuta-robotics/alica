@@ -19,6 +19,7 @@ namespace alica
 	class PlanRepository;
 	class Plan;
 	class IPlanParser;
+	class RoleSet;
 
 	class AlicaEngine
 	{
@@ -34,6 +35,7 @@ namespace alica
 	protected:
 		supplementary::SystemConfig* sc;
 		Plan* masterPlan;
+		RoleSet* roleSet;
 
 	private:
 		// private constructur/ destructor because of singleton
