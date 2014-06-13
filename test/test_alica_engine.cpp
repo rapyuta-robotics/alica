@@ -25,7 +25,7 @@ TEST(Alica, planParser)
 
 	// setup the engine
 	alica::AlicaEngine* ae = alica::AlicaEngine::getInstance();
-	ae->init("MasterPlan", "MasterPlan", "MasterPlan", false);
+	ae->init("Roleset", "MasterPlan", ".", false);
 	const std::map<long int, alica::Plan*, std::less<long int>, std::allocator<std::pair<const long int, alica::Plan*> > > plans =
 			ae->getPlanRepository()->getPlans();
 

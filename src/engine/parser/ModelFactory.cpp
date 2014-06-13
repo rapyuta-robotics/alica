@@ -300,7 +300,7 @@ namespace alica
 		while (curChild != nullptr)
 		{
 			const char* val = curChild->Value();
-			if (mappings.compare(var) == 0)
+			if (mappings.compare(val) == 0)
 			{
 				RoleTaskMapping* rtm = createRoleTaskMapping(curChild);
 				rs->getRoleTaskMappings().push_front(rtm);
