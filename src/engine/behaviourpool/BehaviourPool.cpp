@@ -14,6 +14,8 @@ namespace alica
 
 	BehaviourPool::BehaviourPool()
 	{
+		this->loadedBehaviours = new map<Behaviour*, type_index>();
+		this->usedBehaviours = new map<Behaviour*, BasicBehaviour*> ();
 	}
 
 	BehaviourPool::~BehaviourPool()

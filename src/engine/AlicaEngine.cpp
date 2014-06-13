@@ -14,7 +14,6 @@ using namespace std;
 #include "engine/behaviourpool/BehaviourPool.h"
 #include "engine/model/RoleSet.h"
 
-
 namespace alica
 {
 
@@ -23,6 +22,12 @@ namespace alica
 	 */
 	AlicaEngine::AlicaEngine()
 	{
+		this->roleSet = nullptr;
+		this->masterPlan = nullptr;
+		this->planParser = nullptr;
+		this->teamObserver = nullptr;
+		this->log = nullptr;
+		this->planRepository = nullptr;
 		this->behaviourPool = new BehaviourPool();
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->stepEngine = false;
@@ -75,6 +80,16 @@ namespace alica
 		return unique_ptr<IBehaviourPool> (this->behaviourPool);
 	}
 
+	ITeamObserver* AlicaEngine::getTeamObserver()
+	{
+		return this->teamObserver;
+	}
+
+	void AlicaEngine::setTeamObserver(ITeamObserver* teamObserver)
+	{
+		this->teamObserver = teamObserver;
+	}
+
 	void AlicaEngine::setStepEngine(bool stepEngine)
 	{
 		this->stepEngine = stepEngine;
@@ -95,7 +110,7 @@ namespace alica
 		this->robotName = robotName;
 	}
 
-	Logger* AlicaEngine::getLog() const
+	Logger* AlicaEngine::getLog()
 	{
 		return log;
 	}

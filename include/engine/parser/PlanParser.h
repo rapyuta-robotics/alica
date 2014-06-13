@@ -20,7 +20,6 @@ using namespace std;
 #include <SystemConfig.h>
 #include <FileSystem.h>
 #include "../IPlanParser.h"
-#include "../model/RoleSet.h"
 
 namespace tinyxml2 {
 	class XMLElement;
