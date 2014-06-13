@@ -19,6 +19,11 @@ namespace alica
 
 	TeamObserver::TeamObserver()
 	{
+		this->teamTimeOut = 0;
+		this->myId = 0;
+		this->me = nullptr;
+		this->log = nullptr;
+		this->ae = nullptr;
 	}
 
 	TeamObserver::~TeamObserver()

@@ -35,7 +35,7 @@ namespace alica
 		virtual ~TeamObserver();
 		//event OnTeamChange OnTeamChangeEvent;
 		void messageRecievedFrom(int rid);
-		int getOwnId();
+		virtual int getOwnId();
 		RobotEngineData* getRobotById(int id);
 		unique_ptr<list<RobotEngineData*> > GetAvailableRobots();
 		unique_ptr<list<RobotProperties*> > GetAvailableRobotProperties();

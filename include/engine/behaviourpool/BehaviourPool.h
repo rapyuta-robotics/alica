@@ -33,12 +33,12 @@ namespace alica
 		void addBehaviour(RunningPlan rp);
 
 	private:
-		map<Behaviour, type_index>* loadedBehaviours;
+		map<Behaviour*, type_index>* loadedBehaviours;
 
-		map<Behaviour, BasicBehaviour>* usedBehaviours;
+		map<Behaviour*, BasicBehaviour*>* usedBehaviours;
 
 		template<typename T>
-		BasicBehaviour generateBasicBehaviourFromType (T type);
+		BasicBehaviour* generateBasicBehaviourFromType (T type);
 
 		void loadTypesFromFile ();
 		void preLoadBehaviourThreads ();
@@ -49,7 +49,7 @@ namespace alica
 #include "engine/BasicBehaviour.h"
 
 template<typename T>
-inline alica::BasicBehaviour alica::BehaviourPool::generateBasicBehaviourFromType(T type)
+inline alica::BasicBehaviour* alica::BehaviourPool::generateBasicBehaviourFromType(T type)
 {
 }
 

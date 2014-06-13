@@ -15,25 +15,28 @@ namespace alica
 
 	PlanParser::PlanParser(PlanRepository* rep)
 	{
+		using namespace supplementary;
+
+		this->masterPlan = nullptr;
 		this->rep = rep;
 		this->mf = shared_ptr<ModelFactory>(new ModelFactory(this, rep));
-		this->sc = supplementary::SystemConfig::getInstance();
+		this->sc = SystemConfig::getInstance();
 		this->domainConfigFolder = this->sc->getConfigPath();
 
 		this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
 		this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
 
-		if (domainConfigFolder.find_last_of("/") != domainConfigFolder.length() - 1)
+		if (domainConfigFolder.find_last_of(FileSystem::PATH_SEPARATOR) != domainConfigFolder.length() - 1)
 		{
-			domainConfigFolder = domainConfigFolder + "/";
+			domainConfigFolder = domainConfigFolder + FileSystem::PATH_SEPARATOR;
 		}
-		if (planDir.find_last_of("/") != planDir.length() - 1)
+		if (planDir.find_last_of(FileSystem::PATH_SEPARATOR) != planDir.length() - 1)
 		{
-			planDir = planDir + "/";
+			planDir = planDir + FileSystem::PATH_SEPARATOR;
 		}
-		if (roleDir.find_last_of("/") != roleDir.length() - 1)
+		if (roleDir.find_last_of(FileSystem::PATH_SEPARATOR) != roleDir.length() - 1)
 		{
-			roleDir = roleDir + "/";
+			roleDir = roleDir + FileSystem::PATH_SEPARATOR;
 		}
 		if (!(supplementary::FileSystem::isPathRooted(this->planDir)))
 		{
@@ -71,23 +74,25 @@ namespace alica
 
 	RoleSet* PlanParser::parseRoleSet(string roleSetName, string roleSetDir)
 	{
+		using namespace supplementary;
+
 		if (roleSetName.empty())
 		{
 			roleSetName = findDefaultRoleSet(roleSetDir);
 		}
 		else
 		{
-			if (roleSetDir.find_last_of("/") != roleSetDir.length() - 1)
+			if (roleSetDir.find_last_of(FileSystem::PATH_SEPARATOR) != roleSetDir.length() - 1 && roleSetDir.length() > 0)
 			{
-				roleSetDir = roleSetDir + "/";
+				roleSetDir = roleSetDir + FileSystem::PATH_SEPARATOR;
 			}
-			if (!supplementary::FileSystem::isPathRooted(roleSetDir))
+			if (!FileSystem::isPathRooted(roleSetDir))
 			{
-				roleSetName = baseRolePath + "/" + roleSetDir + "/" + roleSetName;
+				roleSetName = FileSystem::combinePaths(FileSystem::combinePaths(baseRolePath, roleSetDir), roleSetName);
 			}
 			else
 			{
-				roleSetName = roleSetDir + "/" + roleSetName;
+				roleSetName = FileSystem::combinePaths(roleSetDir, roleSetName);
 			}
 		}
 
@@ -100,7 +105,9 @@ namespace alica
 			AlicaEngine::getInstance()->abort("PP: Cannot find roleset: " + roleSetName);
 		}
 
+#ifdef PP_DEBUG
 		cout << "PP: Parsing RoleSet " << roleSetName << endl;
+#endif
 
 		this->currentDirectory = supplementary::FileSystem::getParent(roleSetName);
 
@@ -182,7 +189,7 @@ namespace alica
 
 		if (!supplementary::FileSystem::isPathRooted(dir))
 		{
-			dir = this->baseRolePath + "/" + dir;
+			dir = supplementary::FileSystem::combinePaths(this->baseRolePath, dir);
 		}
 		if (!supplementary::FileSystem::isDirectory(dir))
 		{
@@ -446,7 +453,7 @@ namespace alica
 	/**
 	 * Helper
 	 * @param idString is a String that have to be converted in a long
-	 * @param id the really really really (stopfer) long id
+	 * @param id the id
 	 */
 	long PlanParser::fetchId(const string& idString, long id)
 	{
@@ -474,7 +481,7 @@ namespace alica
 		{
 			id = stol(tokenId);
 		}
-		catch (exception e)
+		catch (exception& e)
 		{
 			AlicaEngine::getInstance()->abort("PP: Cannot convert ID to long: " + tokenId + " WHAT?? " + e.what());
 		}

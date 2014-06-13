@@ -5,20 +5,31 @@
  *      Author: stefan
  */
 
-#include <engine/BasicBehaviour.h>
+#include "engine/BasicBehaviour.h"
+#include "engine/AlicaEngine.h"
+#include "engine/ITeamObserver.h"
 
 namespace alica
 {
 
-	BasicBehaviour::BasicBehaviour()
+	BasicBehaviour::BasicBehaviour(string name)
 	{
-		// TODO Auto-generated constructor stub
-
+		this->name = name;
+		this->parameters = new map<string, string>();
 	}
 
 	BasicBehaviour::~BasicBehaviour()
 	{
-		// TODO Auto-generated destructor stub
+	}
+
+	const string BasicBehaviour::getName() const
+	{
+		return this->name;
+	}
+
+	void BasicBehaviour::setName(string name)
+	{
+		this->name = name;
 	}
 
 	/**
@@ -27,7 +38,7 @@ namespace alica
 	 */
 	int BasicBehaviour::getOwnId()
 	{
-		//return AlicaEngine::getInstance()->getTeamObserver.getOwnId();
+		return AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
 	}
 
 } /* namespace alica */

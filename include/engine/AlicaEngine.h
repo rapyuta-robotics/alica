@@ -22,6 +22,7 @@ namespace alica
 	class IBehaviourPool;
 	class Logger;
 	class RoleSet;
+	class ITeamObserver;
 
 	class AlicaEngine
 	{
@@ -36,8 +37,10 @@ namespace alica
 		unique_ptr<IBehaviourPool> getBehaviourPool();
 		const string& getRobotName() const;
 		void setRobotName(const string& robotName);
-		Logger* getLog() const;
+		Logger* getLog();
 		void setLog(Logger* log);
+		ITeamObserver* getTeamObserver();
+		void setTeamObserver(ITeamObserver* teamObserver);
 
 	protected:
 		supplementary::SystemConfig* sc;
@@ -57,6 +60,7 @@ namespace alica
 		PlanRepository* planRepository;
 		IPlanParser* planParser;
 		IBehaviourPool* behaviourPool;
+		ITeamObserver* teamObserver;
 
 	};
 
