@@ -27,6 +27,13 @@
 #include "engine/model/ForallAgents.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/Variable.h"
+#include "engine/model/Role.h"
+#include "engine/model/RoleSet.h"
+#include "engine/model/RoleTaskMapping.h"
+#include "engine/model/Capability.h"
+#include "engine/model/Characteristic.h"
+#include "engine/model/CapabilityDefinitionSet.h"
+#include "engine/model/RoleDefinitionSet.h"
 
 #include "engine/AlicaEngine.h"
 
@@ -57,6 +64,15 @@ namespace alica
 	const string ModelFactory::sorts = "sorts";
 	const string ModelFactory::configurations = "configurations";
 	const string ModelFactory::parameters = "parameters";
+	const string ModelFactory::mappings = "mappings";
+	const string ModelFactory::taskPriorities = "taskPriorities";
+	const string ModelFactory::role = "role";
+	const string ModelFactory::capabilities = "capabilities";
+	const string ModelFactory::capValues = "capValues";
+	const string ModelFactory::roles = "roles";
+	const string ModelFactory::characteristics = "characteristics";
+	const string ModelFactory::capability = "capability";
+	const string ModelFactory::value = "value";
 
 	ModelFactory::ModelFactory(PlanParser* p, PlanRepository* rep)
 	{
@@ -235,6 +251,248 @@ namespace alica
 
 		return plan;
 	}
+	RoleSet* ModelFactory::createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPlan)
+	{
+		tinyxml2::XMLElement* element = node->FirstChildElement();
+
+		const char* def = element->Attribute("default");
+		bool isDefault = false;
+		if (def)
+		{
+			string d = def;
+			if (d.compare("true") == 0)
+			{
+				isDefault = true;
+			}
+		}
+
+		const char* pidPtr = element->Attribute("usableWithPlanID");
+		long pid = 0;
+
+		if (pidPtr)
+		{
+			pid = stol(pidPtr);
+		}
+
+		bool isUseable = false;
+		if (ignoreMasterPlanId)
+		{
+			isUseable = true;
+		}
+		else
+		{
+			isUseable = pidPtr && (pid == masterPlan->getId());
+		}
+
+		if (!isDefault && !isUseable)
+		{
+			AlicaEngine::getInstance()->abort(
+					"MF:Selected RoleSet is not default, nor useable with current masterplan");
+		}
+
+		RoleSet* rs = new RoleSet();
+		rs->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(rs, element);
+		rs->setIsDefault(isDefault);
+		rs->setUsableWithPlanId(pid);
+		addElement(rs);
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			if (mappings.compare(val) == 0)
+			{
+				RoleTaskMapping* rtm = createRoleTaskMapping(curChild);
+				rs->getRoleTaskMappings().push_front(rtm);
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled RoleSet Child:", curChild->Value());
+			}
+			curChild = curChild->NextSiblingElement();
+		}
+
+		return rs;
+	}
+	RoleTaskMapping* ModelFactory::createRoleTaskMapping(tinyxml2::XMLElement* element)
+	{
+		RoleTaskMapping* rtm = new RoleTaskMapping();
+		rtm->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(rtm, element);
+		addElement(rtm);
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+
+			if (taskPriorities.compare(val) == 0)
+			{
+				const char* keyPtr = element->Attribute("key");
+				const char* valuePtr = element->Attribute("value");
+				if (keyPtr && valuePtr)
+				{
+					rtm->getTaskPriorities().insert(pair<long, double>(stol(keyPtr), stod(valuePtr)));
+				}
+			}
+			else if (role.compare(val) == 0)
+			{
+				long cid = this->parser->parserId(curChild);
+				this->rtmRoleReferences.push_back(pair<long, long>(rtm->getId(), cid));
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled RoleTaskMapping Child ", curChild->Value());
+			}
+			curChild = curChild->NextSiblingElement();
+		}
+
+		return rtm;
+	}
+	void ModelFactory::createCapabilityDefinitionSet(tinyxml2::XMLDocument* node)
+	{
+		tinyxml2::XMLElement* element = node->FirstChildElement();
+		CapabilityDefinitionSet* capSet = new CapabilityDefinitionSet();
+		capSet->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(capSet, element);
+		addElement(capSet);
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			if (capabilities.compare(val) == 0)
+			{
+				Capability* cap = createCapability(curChild);
+				capSet->getCapabilities().push_back(cap);
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled Behaviour Child:", curChild->Value());
+			}
+			curChild = curChild->NextSiblingElement();
+		}
+
+	}
+	Capability* ModelFactory::createCapability(tinyxml2::XMLElement* element)
+	{
+		Capability* cap = new Capability();
+		cap->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(cap, element);
+		addElement(cap);
+		this->rep.get()->getCapabilities().insert(pair<long, Capability*>(cap->getId(), cap));
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			if (capValues.compare(val) == 0)
+			{
+				CapValue* cval = new CapValue();
+				cval->setId(this->parser->parserId(curChild));
+				setAlicaElementAttributes(cval, curChild);
+				addElement(cval);
+				cap->getCapValues().push_back(cval);
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled Capability Child:", curChild->Value());
+			}
+			curChild = curChild->NextSiblingElement();
+		}
+		return cap;
+	}
+	void ModelFactory::createRoleDefinitionSet(tinyxml2::XMLDocument* node)
+	{
+		tinyxml2::XMLElement* element = node->FirstChildElement();
+		RoleDefinitionSet* r = new RoleDefinitionSet();
+		r->setId(this->parser->parserId(element));
+		r->setFileName(this->parser->getCurrentFile());
+		setAlicaElementAttributes(r, element);
+		addElement(r);
+		this->rep.get()->getRoleDefinitionSets().insert(pair<long, RoleDefinitionSet*>(r->getId(), r));
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			if (roles.compare(val) == 0)
+			{
+				Role* role = createRole(curChild);
+				r->getRoles().push_back(role);
+				role->setRoleDefinitionSet(r);
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled RoleDefinitionSet Child:", curChild->Value());
+			}
+			curChild = curChild->NextSiblingElement();
+		}
+	}
+
+	Role* ModelFactory::createRole(tinyxml2::XMLElement* element)
+	{
+		Role* r = new Role();
+		r->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(r, element);
+		addElement(r);
+		this->rep.get()->getRoles().insert(pair<long, Role*>(r->getId(), r));
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			if (characteristics.compare(val) == 0)
+			{
+				Characteristic* cha = createCharacteristic(curChild);
+				r->getCharacteristics().insert(pair<string, Characteristic*>(cha->getName(), cha));
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled Role Child:", curChild->Value());
+			}
+			curChild = curChild->NextSiblingElement();
+		}
+		return r;
+	}
+	Characteristic* ModelFactory::createCharacteristic(tinyxml2::XMLElement* element)
+	{
+		Characteristic* cha = new Characteristic();
+		cha->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(cha, element);
+
+		const char* attr = element->Attribute("weight");
+		if (attr)
+		{
+			cha->setWeight(stod(attr));
+		}
+
+		addElement(cha);
+		this->rep.get()->getCharacteristics().insert(pair<long, Characteristic*>(cha->getId(), cha));
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			if (capability.compare(val) == 0)
+			{
+				long capid = this->parser->parserId(curChild);
+				this->charCapReferences.push_back(pair<long, long>(cha->getId(), capid));
+			}
+			else if (value.compare(val) == 0)
+			{
+				long capValid = this->parser->parserId(curChild);
+				this->charCapValReferences.push_back(pair<long, long>(cha->getId(), capValid));
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("MF: Unhandled Characteristic Child:", curChild->Value());
+			}
+			curChild = curChild->NextSiblingElement();
+		}
+		return cha;
+	}
 	void ModelFactory::createBehaviour(tinyxml2::XMLDocument* node)
 	{
 		tinyxml2::XMLElement* element = node->FirstChildElement();
@@ -260,7 +518,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled Behaviour Child:", element->FirstChild());
+				AlicaEngine::getInstance()->abort("MF: Unhandled Behaviour Child:", curChild->Value());
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -1141,6 +1399,40 @@ namespace alica
 		cout << "DONE!" << endl;
 #endif
 
+	}
+	void ModelFactory::attachRoleReferences()
+	{
+		cout << "MF: Attaching Role references..." << endl;
+		for (pair<long, long> pairs : this->rtmRoleReferences)
+		{
+			Role* r = (Role*)this->elements.find(pairs.second)->second;
+			RoleTaskMapping* rtm = (RoleTaskMapping*)this->elements.find(pairs.first)->second;
+			r->setRoleTaskMapping(rtm);
+			rtm->setRole(r);
+		}
+		this->rtmRoleReferences.clear();
+		cout << "MF: Attaching Role references... DONE" << endl;
+	}
+	void ModelFactory::attachCharacteristicReferences()
+	{
+		cout << "MF: Attaching Characteristics references..." << endl;
+		for (pair<long, long> pairs : this->charCapReferences)
+		{
+			Characteristic* cha = (Characteristic*)this->rep->getCharacteristics().find(pairs.first)->second;
+			Capability* cap = (Capability*)this->elements.find(pairs.second)->second;
+			cha->setCapability(cap);
+		}
+		this->charCapReferences.clear();
+
+		for (pair<long, long> pairs : this->charCapValReferences)
+		{
+			Characteristic* cha = (Characteristic*)this->rep->getCharacteristics().find(pairs.first)->second;
+			CapValue* capVal = (CapValue*)this->elements.find(pairs.first)->second;
+			cha->setCapValue(capVal);
+		}
+		this->charCapValReferences.clear();
+
+		cout << "MF: Attaching Characteristics references... DONE" << endl;
 	}
 	void ModelFactory::removeRedundancy()
 	{

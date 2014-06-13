@@ -21,4 +21,34 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
+	bool RunningPlan::isBehaviour() const
+	{
+		return behaviour;
+	}
+
+	void RunningPlan::setBehaviour(bool behaviour)
+	{
+		this->behaviour = behaviour;
+	}
+
+	const list<RunningPlan*>& RunningPlan::getChildren() const
+	{
+		return children;
+	}
+
+	void RunningPlan::setChildren(const list<RunningPlan*>& children)
+	{
+		this->children = children;
+	}
+
+	AbstractPlan* RunningPlan::getPlan() const
+	{
+		return plan;
+	}
+
+	void RunningPlan::setPlan(AbstractPlan* plan)
+	{
+		this->plan = plan;
+	}
+
 } /* namespace alica */

@@ -20,6 +20,8 @@ namespace alica
 	class Plan;
 	class IPlanParser;
 	class IBehaviourPool;
+	class Logger;
+	class RoleSet;
 
 	class AlicaEngine
 	{
@@ -32,10 +34,17 @@ namespace alica
 		template<typename T> void abort(string msg, const T tail);
 		unique_ptr<PlanRepository> getPlanRepository();
 		unique_ptr<IBehaviourPool> getBehaviourPool();
+		const string& getRobotName() const;
+		void setRobotName(const string& robotName);
+		Logger* getLog() const;
+		void setLog(Logger* log);
 
 	protected:
 		supplementary::SystemConfig* sc;
 		Plan* masterPlan;
+		Logger* log;
+		string robotName;
+		RoleSet* roleSet;
 
 	private:
 		// private constructur/ destructor because of singleton

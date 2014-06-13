@@ -34,7 +34,7 @@ namespace alica
 		this->fileName = fileName;
 	}
 
-	const list<Role*>& RoleDefinitionSet::getRoles() const
+	list<Role*>& RoleDefinitionSet::getRoles()
 	{
 		return roles;
 	}
