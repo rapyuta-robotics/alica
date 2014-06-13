@@ -381,7 +381,7 @@ namespace alica
 		cap->setId(this->parser->parserId(element));
 		setAlicaElementAttributes(cap, element);
 		addElement(cap);
-		this->rep.get()->getCapabilities().insert(pair<long, Capability*>(cap->getId(), cap));
+		this->rep->getCapabilities().insert(pair<long, Capability*>(cap->getId(), cap));
 
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
@@ -411,7 +411,7 @@ namespace alica
 		r->setFileName(this->parser->getCurrentFile());
 		setAlicaElementAttributes(r, element);
 		addElement(r);
-		this->rep.get()->getRoleDefinitionSets().insert(pair<long, RoleDefinitionSet*>(r->getId(), r));
+		this->rep->getRoleDefinitionSets().insert(pair<long, RoleDefinitionSet*>(r->getId(), r));
 
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
@@ -437,7 +437,7 @@ namespace alica
 		r->setId(this->parser->parserId(element));
 		setAlicaElementAttributes(r, element);
 		addElement(r);
-		this->rep.get()->getRoles().insert(pair<long, Role*>(r->getId(), r));
+		this->rep->getRoles().insert(pair<long, Role*>(r->getId(), r));
 
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
@@ -469,7 +469,7 @@ namespace alica
 		}
 
 		addElement(cha);
-		this->rep.get()->getCharacteristics().insert(pair<long, Characteristic*>(cha->getId(), cha));
+		this->rep->getCharacteristics().insert(pair<long, Characteristic*>(cha->getId(), cha));
 
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
@@ -1402,7 +1402,9 @@ namespace alica
 	}
 	void ModelFactory::attachRoleReferences()
 	{
+#ifdef MF_DEBUG
 		cout << "MF: Attaching Role references..." << endl;
+#endif
 		for (pair<long, long> pairs : this->rtmRoleReferences)
 		{
 			Role* r = (Role*)this->elements.find(pairs.second)->second;
@@ -1411,11 +1413,15 @@ namespace alica
 			rtm->setRole(r);
 		}
 		this->rtmRoleReferences.clear();
-		cout << "MF: Attaching Role references... DONE" << endl;
+#ifdef MF_DEBUG
+		cout << "MF: Attaching Role references... done!" << endl;
+#endif
 	}
 	void ModelFactory::attachCharacteristicReferences()
 	{
+#ifdef MF_DEBUG
 		cout << "MF: Attaching Characteristics references..." << endl;
+#endif
 		for (pair<long, long> pairs : this->charCapReferences)
 		{
 			Characteristic* cha = (Characteristic*)this->rep->getCharacteristics().find(pairs.first)->second;
@@ -1431,8 +1437,9 @@ namespace alica
 			cha->setCapValue(capVal);
 		}
 		this->charCapValReferences.clear();
-
-		cout << "MF: Attaching Characteristics references... DONE" << endl;
+#ifdef MF_DEBUG
+		cout << "MF: Attaching Characteristics references... done!" << endl;
+#endif
 	}
 	void ModelFactory::removeRedundancy()
 	{
