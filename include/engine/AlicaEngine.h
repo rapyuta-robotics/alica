@@ -20,6 +20,7 @@ namespace alica
 	class Plan;
 	class IPlanParser;
 	class Logger;
+	class RoleSet;
 
 	class AlicaEngine
 	{
@@ -41,6 +42,7 @@ namespace alica
 		Plan* masterPlan;
 		Logger* log;
 		string robotName;
+		RoleSet* roleSet;
 
 	private:
 		// private constructur/ destructor because of singleton

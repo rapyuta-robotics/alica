@@ -33,14 +33,14 @@ namespace alica
 		double getPriority(long taskId);
 		string toString();
 
-		const map<string, Characteristic*>& getCharacteristics() const;
+		map<string, Characteristic*>& getCharacteristics();
 		const RoleDefinitionSet* getRoleDefinitionSet() const;
 		void setRoleDefinitionSet(const RoleDefinitionSet* roleDefinitionSet);
 		const RoleTaskMapping* getRoleTaskMapping() const;
-		void setRoleTaskMapping(const RoleTaskMapping* roleTaskMapping);
+		void setRoleTaskMapping(RoleTaskMapping* roleTaskMapping);
 
 	protected:
-		const RoleTaskMapping* roleTaskMapping;
+		RoleTaskMapping* roleTaskMapping;
 		map<string, Characteristic*> characteristics;
 		const RoleDefinitionSet* roleDefinitionSet;
 	};

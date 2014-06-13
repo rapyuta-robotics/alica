@@ -41,10 +41,9 @@ namespace alica
 		PlanParser(shared_ptr<PlanRepository> rep);
 		virtual ~PlanParser();
 
-		virtual Plan* ParsePlanTree(string masterplan);
-		virtual shared_ptr<RoleSet> ParseRoleSet(string roleSetName, string roleSetDir);
-		virtual void IgnoreMasterPlanId(bool val);
-		virtual shared_ptr<map<long, AlicaElement> > GetParsedElements();
+		virtual Plan* parsePlanTree(string masterplan);
+		virtual void ignoreMasterPlanId(bool val);
+		virtual shared_ptr<map<long, AlicaElement> > getParsedElements();
 
 		string getCurrentFile();
 		void setCurrentFile(string currentFile);
@@ -65,6 +64,8 @@ namespace alica
 		string domainConfigFolder;
 		string currentFile;
 		void parseTaskFile(string currentFile);
+		void parseRoleDefFile(string currentFile);
+		void parseCapabilityDefFile(string currentFile);
 		void parsePlanTypeFile(string currentFile);
 		void parseBehaviourFile(string currentFile);
 		Plan* parsePlanFile(string& planFile);

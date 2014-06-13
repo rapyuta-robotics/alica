@@ -16,11 +16,11 @@ using namespace std;
 
 #include "tinyxml2.h"
 
+
 namespace alica
 {
 	class PlanParser;
 	class PlanRepository;
-
 	class Plan;
 	class EntryPoint;
 	class AlicaElement;
@@ -36,6 +36,13 @@ namespace alica
 	class Quantifier;
 	class BehaviourConfiguration;
 	class Variable;
+	class Role;
+	class RoleDefinitionSet;
+	class CapabilityDefinitionSet;
+	class Characteristic;
+	class Capability;
+	class RoleTaskMapping;
+	class RoleSet;
 
 	class ModelFactory
 	{
@@ -51,9 +58,15 @@ namespace alica
 		string getNameOfNode(tinyxml2::XMLElement* node);
 		void createTasks(tinyxml2::XMLDocument* node);
 		void createBehaviour(tinyxml2::XMLDocument* node);
+		void createCapabilityDefinitionSet(tinyxml2::XMLDocument* node);
+		void createRoleDefinitionSet(tinyxml2::XMLDocument* node);
 		void createPlanType(tinyxml2::XMLDocument* node);
 		void computeReachabilities();
 		void attachPlanReferences();
+		void attachRoleReferences();
+		void attachCharacteristicReferences();
+		RoleSet* createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPlan);
+
 
 	private:
 		static const string entryPoints;
@@ -81,6 +94,15 @@ namespace alica
 		static const string sorts;
 		static const string configurations;
 		static const string parameters;
+		static const string mappings;
+		static const string taskPriorities;
+		static const string role;
+		static const string capabilities;
+		static const string capValues;
+		static const string roles;
+		static const string characteristics;
+		static const string capability;
+		static const string value;
 
 		PlanParser* parser;
 		shared_ptr<PlanRepository> rep;
@@ -98,6 +120,9 @@ namespace alica
 		list<pair<long, long>> epStateReferences;
 		list<pair<long, long>> epTaskReferences;
 		list<pair<long, long>> planTypePlanReferences;
+		list<pair<long, long>> rtmRoleReferences;
+		list<pair<long, long>> charCapReferences;
+		list<pair<long, long>> charCapValReferences;
 
 		void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele);
 		EntryPoint* createEntryPoint(tinyxml2::XMLElement* element);
@@ -112,6 +137,10 @@ namespace alica
 		RuntimeCondition* createRuntimeCondition(tinyxml2::XMLElement* element);
 		Quantifier* createQuantifier(tinyxml2::XMLElement* element);
 		BehaviourConfiguration* createBehaviourConfiguration(tinyxml2::XMLElement* element);
+		RoleTaskMapping* createRoleTaskMapping(tinyxml2::XMLElement* element);
+		Capability* createCapability(tinyxml2::XMLElement* element);
+		Role* createRole(tinyxml2::XMLElement* element);
+		Characteristic* createCharacteristic(tinyxml2::XMLElement* element);
 		Variable* createVariable(tinyxml2::XMLElement* element);
 		bool isReferenceNode(tinyxml2::XMLElement* node);
 		void addElement(AlicaElement* ae);

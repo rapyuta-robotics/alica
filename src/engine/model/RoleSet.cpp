@@ -44,7 +44,7 @@ namespace alica
 		this->isDefault = isDefault;
 	}
 
-	const list<RoleTaskMapping*>& RoleSet::getRoleTaskMappings() const
+	list<RoleTaskMapping*>& RoleSet::getRoleTaskMappings()
 	{
 		return roleTaskMappings;
 	}

@@ -20,7 +20,7 @@ namespace alica
 
 //================== Getter and Setter ===================================
 
-	const list<Capability*>& CapabilityDefinitionSet::getCapabilities() const
+	list<Capability*>& CapabilityDefinitionSet::getCapabilities()
 	{
 		return capabilities;
 	}

@@ -9,6 +9,7 @@ using namespace std;
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
 #include "engine/parser/PlanParser.h"
+#include "engine/model/RoleSet.h"
 
 namespace alica
 {
@@ -45,7 +46,8 @@ namespace alica
 
 		this->planRepository = shared_ptr<PlanRepository>(new PlanRepository());
 		this->planParser = shared_ptr<IPlanParser>(new PlanParser(this->planRepository));
-		this->masterPlan = this->planParser->ParsePlanTree(masterPlanName);
+		this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
+		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
 	}
 
 	void AlicaEngine::start()
