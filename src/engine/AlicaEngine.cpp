@@ -72,4 +72,26 @@ namespace alica
 	}
 
 
+	const string& AlicaEngine::getRobotName() const
+	{
+		return robotName;
+	}
+
+	void AlicaEngine::setRobotName(const string& robotName)
+	{
+		this->robotName = robotName;
+	}
+
+	Logger* AlicaEngine::getLog() const
+	{
+		return log;
+	}
+
+	void AlicaEngine::setLog(Logger* log)
+	{
+		this->log = log;
+	}
+
 } /* namespace Alica */
+
+
