@@ -31,7 +31,7 @@ namespace alica
 
 		const Role* getRole() const;
 		void setRole(const Role* role);
-		const map<long, double>& getTaskPriorities() const;
+		 map<long, double>& getTaskPriorities();
 		void setTaskPriorities(const map<long, double>& taskPriorities);
 
 	protected:
