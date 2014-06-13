@@ -11,15 +11,14 @@ namespace supplementary
 {
 	string const FileSystem::CURDIR = ".";
 	string const FileSystem::PARENTDIR = "..";
+	char const FileSystem::PATH_SEPARATOR = '/';
 
 	FileSystem::FileSystem()
 	{
-		// TODO Auto-generated constructor stub
 	}
 
 	FileSystem::~FileSystem()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	/**
@@ -174,13 +173,13 @@ namespace supplementary
 	}
 
 	/**
-	 * Checks weather the given path starts with '/'.
+	 * Checks weather the given path starts with PATH_SEPARATOR.
 	 * @param path The path, which should be checked.
 	 * @return true if the path is rooted, false otherwise.
 	 */
 	bool FileSystem::isPathRooted(const string& path)
 	{
-		if (!path.empty() && path.find_first_of('/') == 0)
+		if (!path.empty() && path.find_first_of(PATH_SEPARATOR) == 0)
 		{
 			return true;
 		}
@@ -188,6 +187,23 @@ namespace supplementary
 		{
 			return false;
 		}
+	}
+
+	string FileSystem::combinePaths(const string& path1, const string& path2)
+	{
+		if (path1.length() == 0)
+		{
+			return path2;
+		}
+		if (path2.length() == 0)
+		{
+			return path1;
+		}
+		if (path1.find_last_of(PATH_SEPARATOR) == string::npos)
+		{
+			return path1 + PATH_SEPARATOR + path2;
+		}
+		return path1 + path2;
 	}
 
 	/**
@@ -219,7 +235,7 @@ namespace supplementary
 		{
 			return "";
 		}
-		return path.substr(0,path.rfind('/'));
+		return path.substr(0,path.rfind(PATH_SEPARATOR));
 	}
 
 } /* namespace fsystem */

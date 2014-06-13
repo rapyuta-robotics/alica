@@ -32,6 +32,7 @@ namespace supplementary
 		static vector<string> findAllFiles(string path, string ending);
 		static bool fileExists(const string& filename);
 		static bool isPathRooted(const string& path);
+		static string combinePaths(const string& path1, const string& path2);
 		static bool endsWith(const string& file, const string& ending);
 		static bool isDirectory(const string& path);
 		static bool isFile(const string& path);
@@ -39,6 +40,7 @@ namespace supplementary
 
 		static const string CURDIR;
 		static const string PARENTDIR;
+		static const char PATH_SEPARATOR;
 	private:
 		FileSystem();
 	};
