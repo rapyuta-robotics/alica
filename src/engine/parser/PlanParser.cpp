@@ -77,10 +77,105 @@ namespace alica
 		}
 		else
 		{
-			//TODO:
+			if (roleSetDir.find_last_of("/") != roleSetDir.length() - 1)
+			{
+				roleSetDir = roleSetDir + "/";
+			}
+			if (!supplementary::FileSystem::isPathRooted(roleSetDir))
+			{
+				roleSetName = baseRolePath + "/" + roleSetDir + "/" + roleSetName;
+			}
+			else
+			{
+				roleSetName = roleSetDir + "/" + roleSetName;
+			}
 		}
 
-		// TODO return something...
+		if (!supplementary::FileSystem::endsWith(roleSetName, ".rset"))
+		{
+			roleSetName = roleSetName + ".rset";
+		}
+		if (!supplementary::FileSystem::fileExists(roleSetName))
+		{
+			AlicaEngine::getInstance()->abort("PP: Cannot find roleset: " + roleSetName);
+		}
+
+		cout << "PP: Parsing RoleSet " << roleSetName << endl;
+
+		this->currentDirectory = supplementary::FileSystem::getParent(roleSetName);
+
+		tinyxml2::XMLDocument doc;
+		doc.LoadFile(roleSetName.c_str());
+		if (doc.ErrorID() != tinyxml2::XML_NO_ERROR)
+		{
+			cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
+			throw new exception();
+		}
+
+		RoleSet* r = this->mf->createRoleSet(&doc, this->masterPlan);
+
+		filesParsed.push_back(roleSetName);
+
+		while (this->filesToParse.size() > 0)
+		{
+			string fileToParse = this->filesToParse.front();
+			this->filesToParse.pop_front();
+			this->currentDirectory = supplementary::FileSystem::getParent(fileToParse);
+			this->currentFile = fileToParse;
+
+			if (!supplementary::FileSystem::fileExists(fileToParse))
+			{
+				AlicaEngine::getInstance()->abort("PP: Cannot Find referenced file ", fileToParse);
+			}
+			if (supplementary::FileSystem::endsWith(fileToParse, ".rdefset"))
+			{
+				parseRoleDefFile(fileToParse);
+			}
+			else if (supplementary::FileSystem::endsWith(fileToParse, ".cdefset"))
+			{
+				parseCapabilityDefFile(fileToParse);
+			}
+			else
+			{
+				AlicaEngine::getInstance()->abort("PP: Cannot Parse file " + fileToParse);
+			}
+			filesParsed.push_back(fileToParse);
+
+		}
+
+		this->mf->attachRoleReferences();
+		this->mf->attachCharacteristicReferences();
+		return r;
+
+	}
+	void PlanParser::parseRoleDefFile(string currentFile)
+	{
+#ifdef PP_DEBUG
+		cout << "PP: parsing RoleDef file: " << currentFile << endl;
+#endif
+		tinyxml2::XMLDocument doc;
+		doc.LoadFile(currentFile.c_str());
+		if (doc.ErrorID() != tinyxml2::XML_NO_ERROR)
+		{
+			cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
+			throw new exception();
+		}
+		this->mf->createRoleDefinitionSet(&doc);
+	}
+	void PlanParser::parseCapabilityDefFile(string currentFile)
+	{
+#ifdef PP_DEBUG
+		cout << "PP: parsing RoleDef file: " << currentFile << endl;
+#endif
+		tinyxml2::XMLDocument doc;
+		doc.LoadFile(currentFile.c_str());
+		if (doc.ErrorID() != tinyxml2::XML_NO_ERROR)
+		{
+			cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
+			throw new exception();
+		}
+		this->mf->createCapabilityDefinitionSet(&doc);
+
 	}
 	string PlanParser::findDefaultRoleSet(string dir)
 	{
@@ -111,13 +206,13 @@ namespace alica
 			if (attr)
 			{
 				string attrString = attr;
-				if(attrString.compare("true") == 0)
+				if (attrString.compare("true") == 0)
 				{
 					return s;
 				}
 			}
 		}
-		if(files.size() == 1)
+		if (files.size() == 1)
 		{
 			return files[0];
 		}
@@ -125,7 +220,7 @@ namespace alica
 		return "";
 	}
 
-	Plan* PlanParser::ParsePlanTree(string masterplan)
+	Plan* PlanParser::parsePlanTree(string masterplan)
 	{
 		string masterPlanPath;
 		bool found = supplementary::FileSystem::findFile(this->basePlanPath, masterplan + ".pml", masterPlanPath);
@@ -155,6 +250,7 @@ namespace alica
 			string fileToParse = this->filesToParse.front();
 			this->filesToParse.pop_front();
 			this->currentDirectory = supplementary::FileSystem::getParent(fileToParse);
+			this->currentFile = fileToParse;
 
 			if (!supplementary::FileSystem::fileExists(fileToParse))
 			{
@@ -251,21 +347,14 @@ namespace alica
 		return p;
 	}
 
-	shared_ptr<RoleSet> PlanParser::ParseRoleSet(string roleSetName, string roleSetDir)
-	{
-
-		shared_ptr<RoleSet> r;
-		return r;
-	}
-
-	shared_ptr<map<long, alica::AlicaElement> > PlanParser::GetParsedElements()
+	shared_ptr<map<long, alica::AlicaElement> > PlanParser::getParsedElements()
 	{
 
 		shared_ptr<map<long, alica::AlicaElement> > map;
 		return map;
 	}
 
-	void PlanParser::IgnoreMasterPlanId(bool val)
+	void PlanParser::ignoreMasterPlanId(bool val)
 	{
 		this->mf->setIgnoreMasterPlanId(val);
 	}

@@ -28,7 +28,7 @@ namespace alica
 
 		double similarityValue(CapValue* roleVal, CapValue* robotVal);
 
-		const list<CapValue*>& getCapValues() const;
+		list<CapValue*>& getCapValues() ;
 
 
 	protected:

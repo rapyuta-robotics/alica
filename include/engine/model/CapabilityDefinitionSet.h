@@ -24,8 +24,7 @@ namespace alica
 	public:
 		CapabilityDefinitionSet();
 		virtual ~CapabilityDefinitionSet();
-		const list<Capability*>& getCapabilities() const;
-
+		list<Capability*>& getCapabilities();
 
 	private:
 		list<Capability*> capabilities;

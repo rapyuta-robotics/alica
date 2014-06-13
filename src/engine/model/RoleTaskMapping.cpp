@@ -49,7 +49,7 @@ namespace alica
 		this->role = role;
 	}
 
-	const map<long, double>& RoleTaskMapping::getTaskPriorities() const
+	map<long, double>& RoleTaskMapping::getTaskPriorities()
 	{
 		return taskPriorities;
 	}

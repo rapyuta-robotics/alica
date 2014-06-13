@@ -12,6 +12,8 @@ using namespace std;
 #include "engine/PlanRepository.h"
 #include "engine/parser/PlanParser.h"
 #include "engine/behaviourpool/BehaviourPool.h"
+#include "engine/model/RoleSet.h"
+
 
 namespace alica
 {
@@ -51,6 +53,7 @@ namespace alica
 		this->planParser = new PlanParser(this->planRepository);
 		this->masterPlan = this->planParser->ParsePlanTree(masterPlanName);
 		this->behaviourPool->init();
+		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
 	}
 
 	void AlicaEngine::start()
@@ -82,4 +85,26 @@ namespace alica
 		exit(EXIT_FAILURE);
 	}
 
+	const string& AlicaEngine::getRobotName() const
+	{
+		return robotName;
+	}
+
+	void AlicaEngine::setRobotName(const string& robotName)
+	{
+		this->robotName = robotName;
+	}
+
+	Logger* AlicaEngine::getLog() const
+	{
+		return log;
+	}
+
+	void AlicaEngine::setLog(Logger* log)
+	{
+		this->log = log;
+	}
+
 } /* namespace Alica */
+
+
