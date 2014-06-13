@@ -25,10 +25,10 @@ namespace alica
 	{
 	public:
 		virtual ~IPlanParser() {}
-		virtual Plan* ParsePlanTree(string masterplan) = 0;
-		virtual shared_ptr<RoleSet> ParseRoleSet(string roleSetName, string roleSetDir) = 0;
-		virtual void IgnoreMasterPlanId(bool val) = 0;
-		virtual shared_ptr<map<long, AlicaElement> > GetParsedElements() = 0;
+		virtual Plan* parsePlanTree(string masterplan) = 0;
+		virtual RoleSet* parseRoleSet(string roleSetName, string roleSetDir) = 0;
+		virtual void ignoreMasterPlanId(bool val) = 0;
+		virtual shared_ptr<map<long, AlicaElement> > getParsedElements() = 0;
 	};
 }
 #endif /* IPLANPARSER_H_ */

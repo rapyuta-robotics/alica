@@ -53,7 +53,7 @@ namespace alica
 
 //====================== Getter and Setter ==============================
 
-	const list<CapValue*>& Capability::getCapValues() const
+	list<CapValue*>& Capability::getCapValues()
 	{
 		return capValues;
 	}
