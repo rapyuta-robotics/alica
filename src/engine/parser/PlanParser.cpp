@@ -4,7 +4,7 @@
  *  Created on: Mar 27, 2014
  *      Author: Stephan Opfer
  */
-#define PP_DEBUG
+//#define PP_DEBUG
 
 #include "engine/parser/PlanParser.h"
 #include "engine/parser/ModelFactory.h"
@@ -13,7 +13,7 @@
 namespace alica
 {
 
-	PlanParser::PlanParser(shared_ptr<PlanRepository> rep)
+	PlanParser::PlanParser(PlanRepository* rep)
 	{
 		this->rep = rep;
 		this->mf = shared_ptr<ModelFactory>(new ModelFactory(this, rep));
@@ -51,8 +51,10 @@ namespace alica
 		{
 			baseRolePath = roleDir;
 		}
+#ifdef PP_DEBUG
 		cout << "PP: basePlanPath: " << basePlanPath << endl;
 		cout << "PP: baseRolePath: " << baseRolePath << endl;
+#endif
 		if (!(supplementary::FileSystem::fileExists(basePlanPath)))
 		{
 			AlicaEngine::getInstance()->abort("PP: BasePlanPath does not exists " + basePlanPath);
@@ -77,6 +79,8 @@ namespace alica
 		{
 			//TODO:
 		}
+
+		// TODO return something...
 	}
 	string PlanParser::findDefaultRoleSet(string dir)
 	{
@@ -125,15 +129,18 @@ namespace alica
 	{
 		string masterPlanPath;
 		bool found = supplementary::FileSystem::findFile(this->basePlanPath, masterplan + ".pml", masterPlanPath);
+#ifdef PP_DEBUG
 		cout << "PP: masterPlanPath: " << masterPlanPath << endl;
+#endif
 		if (!found)
 		{
 			AlicaEngine::getInstance()->abort("PP: Cannot find MasterPlan '" + masterplan);
 		}
 		this->currentFile = masterPlanPath;
 		this->currentDirectory = supplementary::FileSystem::getParent(masterPlanPath);
-
+#ifdef PP_DEBUG
 		cout << "PP: CurFile: " << this->currentFile << " CurDir: " << this->currentDirectory << endl;
+#endif
 
 		this->masterPlan = parsePlanFile(masterPlanPath);
 		parseFileLoop();
@@ -215,7 +222,9 @@ namespace alica
 #endif
 		tinyxml2::XMLDocument doc;
 		doc.LoadFile(currentFile.c_str());
+#ifdef PP_DEBUG
 		cout << "TASKREPO " << currentFile << endl;
+#endif
 		if (doc.ErrorID() != tinyxml2::XML_NO_ERROR)
 		{
 			cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
@@ -365,7 +374,9 @@ namespace alica
 			list<string>::iterator findIterToParse = find(filesToParse.begin(), filesToParse.end(), path);
 			if (findIterParsed == filesParsed.end() && findIterToParse == filesToParse.end())
 			{
+#ifdef PP_DEBUG
 				cout << "PP: Adding " + path + " to parse queue " << endl;
+#endif
 				filesToParse.push_back(path);
 			}
 		}

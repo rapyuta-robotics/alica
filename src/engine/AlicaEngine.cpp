@@ -4,11 +4,14 @@
  *  Created on: Mar 3, 2014
  *      Author: Stephan Opfer
  */
+//#define AE_DEBUG
+
 using namespace std;
 
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
 #include "engine/parser/PlanParser.h"
+#include "engine/behaviourpool/BehaviourPool.h"
 
 namespace alica
 {
@@ -18,11 +21,12 @@ namespace alica
 	 */
 	AlicaEngine::AlicaEngine()
 	{
-
+		this->behaviourPool = new BehaviourPool();
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->stepEngine = false;
-
+#ifdef AE_DEBUG
 		cout << "AE: Constructor finished!" << endl;
+#endif
 	}
 
 	AlicaEngine::~AlicaEngine()
@@ -43,9 +47,10 @@ namespace alica
 	{
 		this->setStepEngine(stepEngine);
 
-		this->planRepository = shared_ptr<PlanRepository>(new PlanRepository());
-		this->planParser = shared_ptr<IPlanParser>(new PlanParser(this->planRepository));
+		this->planRepository = new PlanRepository();
+		this->planParser = new PlanParser(this->planRepository);
 		this->masterPlan = this->planParser->ParsePlanTree(masterPlanName);
+		this->behaviourPool->init();
 	}
 
 	void AlicaEngine::start()
@@ -57,19 +62,24 @@ namespace alica
 		return this->stepEngine;
 	}
 
-	shared_ptr<PlanRepository> AlicaEngine::getPlanRepository()
+	unique_ptr<PlanRepository> AlicaEngine::getPlanRepository()
 	{
-		return this->planRepository;
+		return unique_ptr<PlanRepository> (this->planRepository);
+	}
+
+	unique_ptr<IBehaviourPool> AlicaEngine::getBehaviourPool()
+	{
+		return unique_ptr<IBehaviourPool> (this->behaviourPool);
 	}
 
 	void AlicaEngine::setStepEngine(bool stepEngine)
 	{
 		this->stepEngine = stepEngine;
 	}
+
 	void AlicaEngine::abort (string msg){
 		cerr << "ABORT: " << msg << endl;
 		exit(EXIT_FAILURE);
 	}
-
 
 } /* namespace Alica */

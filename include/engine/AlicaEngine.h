@@ -19,17 +19,19 @@ namespace alica
 	class PlanRepository;
 	class Plan;
 	class IPlanParser;
+	class IBehaviourPool;
 
 	class AlicaEngine
 	{
 	public:
 		static AlicaEngine* getInstance();
-		void init(string roleSetName, string masterPlanName, string roleSetDir,
-		bool stepEngine);
-		void start();bool getStepEngine();
+		void init(string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine);
+		void start();
+		bool getStepEngine();
 		void abort(string msg);
 		template<typename T> void abort(string msg, const T tail);
-		shared_ptr<PlanRepository> getPlanRepository();
+		unique_ptr<PlanRepository> getPlanRepository();
+		unique_ptr<IBehaviourPool> getBehaviourPool();
 
 	protected:
 		supplementary::SystemConfig* sc;
@@ -43,8 +45,10 @@ namespace alica
 		bool stepEngine;
 		void setStepEngine(bool stepEngine);
 
-		shared_ptr<PlanRepository> planRepository;
-		shared_ptr<IPlanParser> planParser;
+		PlanRepository* planRepository;
+		IPlanParser* planParser;
+		IBehaviourPool* behaviourPool;
+
 	};
 
 	template<typename T>

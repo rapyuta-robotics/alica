@@ -16,6 +16,8 @@ namespace alica
 	public:
 		BasicBehaviour();
 		virtual ~BasicBehaviour();
+	protected:
+		int getOwnId();
 	};
 
 } /* namespace alica */

@@ -21,4 +21,13 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
+	/**
+	 * Convenience method to obtain the robot's own id.
+	 * @return the own robot id
+	 */
+	int BasicBehaviour::getOwnId()
+	{
+		//return AlicaEngine::getInstance()->getTeamObserver.getOwnId();
+	}
+
 } /* namespace alica */
