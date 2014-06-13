@@ -63,7 +63,7 @@ namespace alica
 
 //====================== Getter and Setter ==================
 
-	const map<string, Characteristic*>& Role::getCharacteristics() const
+	map<string, Characteristic*>& Role::getCharacteristics()
 	{
 		return characteristics;
 	}
@@ -83,7 +83,7 @@ namespace alica
 		return roleTaskMapping;
 	}
 
-	void Role::setRoleTaskMapping(const RoleTaskMapping* roleTaskMapping)
+	void Role::setRoleTaskMapping(RoleTaskMapping* roleTaskMapping)
 	{
 		this->roleTaskMapping = roleTaskMapping;
 	}

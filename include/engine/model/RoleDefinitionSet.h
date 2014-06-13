@@ -26,7 +26,7 @@ namespace alica
 		virtual ~RoleDefinitionSet();
 		const string& getFileName() const;
 		void setFileName(const string& fileName);
-		const list<Role*>& getRoles() const;
+		list<Role*>& getRoles();
 
 	private:
 		void setRoles(const list<Role*>& roles);

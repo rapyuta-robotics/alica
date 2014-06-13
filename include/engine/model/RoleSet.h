@@ -28,7 +28,7 @@ namespace alica
 		string toString();
 		bool isIsDefault() const;
 		void setIsDefault(bool isDefault);
-		const list<RoleTaskMapping*>& getRoleTaskMappings() const;
+		list<RoleTaskMapping*>& getRoleTaskMappings();
 		void setRoleTaskMappings(const list<RoleTaskMapping*>& roleTaskMappings);
 		long getUsableWithPlanId() const;
 		void setUsableWithPlanId(long usableWithPlanId);
