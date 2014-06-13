@@ -38,7 +38,7 @@ namespace alica
 	class PlanParser : public IPlanParser
 	{
 	public:
-		PlanParser(shared_ptr<PlanRepository> rep);
+		PlanParser(PlanRepository* rep);
 		virtual ~PlanParser();
 
 		virtual Plan* ParsePlanTree(string masterplan);
@@ -55,7 +55,7 @@ namespace alica
 	private:
 		supplementary::SystemConfig* sc;
 		shared_ptr<ModelFactory> mf;
-		shared_ptr<PlanRepository> rep;
+		PlanRepository* rep;
 		Plan* masterPlan;
 		string planDir;
 		string roleDir;

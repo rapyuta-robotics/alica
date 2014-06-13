@@ -4,6 +4,7 @@
  *  Created on: Mar 27, 2014
  *      Author: Stephan Opfer
  */
+//#define MF_DEBUG
 
 #include "engine/parser/ModelFactory.h"
 #include "engine/PlanRepository.h"
@@ -57,7 +58,7 @@ namespace alica
 	const string ModelFactory::configurations = "configurations";
 	const string ModelFactory::parameters = "parameters";
 
-	ModelFactory::ModelFactory(PlanParser* p, shared_ptr<PlanRepository> rep)
+	ModelFactory::ModelFactory(PlanParser* p, PlanRepository* rep)
 	{
 		this->parser = p;
 		this->rep = rep;
@@ -118,7 +119,7 @@ namespace alica
 		// insert into elements map
 		addElement(plan);
 		// insert into plan repository map
-		this->rep.get()->getPlans().insert(pair<long, Plan*>(plan->getId(), plan));
+		this->rep->getPlans().insert(pair<long, Plan*>(plan->getId(), plan));
 
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
@@ -243,7 +244,7 @@ namespace alica
 
 		setAlicaElementAttributes(beh, element);
 		addElement(beh);
-		this->rep.get()->getBehaviours().insert(pair<long, Behaviour*>(beh->getId(), beh));
+		this->rep->getBehaviours().insert(pair<long, Behaviour*>(beh->getId(), beh));
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
 		{
@@ -252,7 +253,7 @@ namespace alica
 			if (configurations.compare(val) == 0)
 			{
 				BehaviourConfiguration* bc = createBehaviourConfiguration(curChild);
-				this->rep.get()->getBehaviourConfigurations().insert(
+				this->rep->getBehaviourConfigurations().insert(
 						pair<long, BehaviourConfiguration*>(bc->getId(), bc));
 				bc->setBehaviour(beh);
 				beh->getConfigurations().push_back(bc);
@@ -362,7 +363,7 @@ namespace alica
 		pt->setFileName(this->parser->getCurrentFile());
 		setAlicaElementAttributes(pt, element);
 		addElement(pt);
-		this->rep.get()->getPlanTypes().insert(pair<long, PlanType*>(pt->getId(), pt));
+		this->rep->getPlanTypes().insert(pair<long, PlanType*>(pt->getId(), pt));
 
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
@@ -405,7 +406,7 @@ namespace alica
 		tr->setId(this->parser->parserId(element));
 		tr->setFileName(this->parser->getCurrentFile());
 		setAlicaElementAttributes(tr, element);
-		this->rep.get()->getTaskRepositorys().insert(pair<long, TaskRepository*>(tr->getId(), tr));
+		this->rep->getTaskRepositorys().insert(pair<long, TaskRepository*>(tr->getId(), tr));
 		long id = 0;
 		const char* defaultTaskPtr = element->Attribute("defaultTask");
 		if (defaultTaskPtr)
@@ -429,7 +430,7 @@ namespace alica
 				task->setDescription(descriptionkPtr);
 			}
 			addElement(task);
-			this->rep.get()->getTasks().insert(pair<long, Task*>(task->getId(), task));
+			this->rep->getTasks().insert(pair<long, Task*>(task->getId(), task));
 			task->setTaskRepository(tr);
 			tr->getTasks().push_back(task);
 			curChild = curChild->NextSiblingElement();
@@ -452,7 +453,7 @@ namespace alica
 		}
 
 		addElement(s);
-		this->rep.get()->getSyncTransitions().insert(pair<long, SyncTransition*>(s->getId(), s));
+		this->rep->getSyncTransitions().insert(pair<long, SyncTransition*>(s->getId(), s));
 		if (element->FirstChild())
 		{
 			AlicaEngine::getInstance()->abort("MF: Unhandled Synchtransition Child:", element->FirstChild());
@@ -476,7 +477,7 @@ namespace alica
 		Variable* v = new Variable(this->parser->parserId(element), name, type);
 		setAlicaElementAttributes(v, element);
 		addElement(v);
-		this->rep.get()->getVariables().insert(pair<long, Variable*>(v->getId(), v));
+		this->rep->getVariables().insert(pair<long, Variable*>(v->getId(), v));
 		return v;
 
 	}
@@ -535,7 +536,7 @@ namespace alica
 		tran->setId(this->parser->parserId(element));
 		setAlicaElementAttributes(tran, element);
 		addElement(tran);
-		this->rep.get()->getTransitions().insert(pair<long, Transition*>(tran->getId(), tran));
+		this->rep->getTransitions().insert(pair<long, Transition*>(tran->getId(), tran));
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
 		{
@@ -658,7 +659,7 @@ namespace alica
 		}
 
 		addElement(q);
-		this->rep.get()->getQuantifiers().insert(pair<long, Quantifier*>(q->getId(), q));
+		this->rep->getQuantifiers().insert(pair<long, Quantifier*>(q->getId(), q));
 		setAlicaElementAttributes(q, element);
 
 		const char* scopePtr = element->Attribute("scope");
@@ -696,7 +697,7 @@ namespace alica
 		setAlicaElementAttributes(fail, element);
 
 		addElement(fail);
-		this->rep.get()->getStates().insert(pair<long, State*>(fail->getId(), fail));
+		this->rep->getStates().insert(pair<long, State*>(fail->getId(), fail));
 
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
@@ -728,7 +729,7 @@ namespace alica
 		setAlicaElementAttributes(suc, element);
 
 		addElement(suc);
-		this->rep.get()->getStates().insert(pair<long, State*>(suc->getId(), suc));
+		this->rep->getStates().insert(pair<long, State*>(suc->getId(), suc));
 
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
@@ -854,7 +855,7 @@ namespace alica
 		setAlicaElementAttributes(s, element);
 
 		addElement(s);
-		this->rep.get()->getStates().insert(pair<long, State*>(s->getId(), s));
+		this->rep->getStates().insert(pair<long, State*>(s->getId(), s));
 
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
@@ -983,7 +984,9 @@ namespace alica
 	}
 	void ModelFactory::computeReachabilities()
 	{
+#ifdef MF_DEBUG
 		cout << "MF: Computing Reachability sets..." << endl;
+#endif
 
 		for (map<long, alica::Plan*>::const_iterator iter = this->rep->getPlans().begin();
 				iter != this->rep->getPlans().end(); iter++)
@@ -995,13 +998,16 @@ namespace alica
 				iter->second->computeReachabilitySet();
 			}
 		}
-		cout << "...done!" << endl;
+#ifdef MF_DEBUG
+		cout << "MF: Computing Reachability sets...done!" << endl;
+#endif
 
 	}
 	void ModelFactory::attachPlanReferences()
 	{
+#ifdef MF_DEBUG
 		cout << "MF: Attaching Plan references.." << endl;
-
+#endif
 		//epTaskReferences
 		for (pair<long, long> pairs : this->epTaskReferences)
 		{
@@ -1131,7 +1137,9 @@ namespace alica
 		this->quantifierScopeReferences.clear();
 
 		removeRedundancy();
+#ifdef MF_DEBUG
 		cout << "DONE!" << endl;
+#endif
 
 	}
 	void ModelFactory::removeRedundancy()

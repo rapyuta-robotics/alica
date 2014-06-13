@@ -40,7 +40,7 @@ namespace alica
 	class ModelFactory
 	{
 	public:
-		ModelFactory(PlanParser *p, shared_ptr<PlanRepository> rep);
+		ModelFactory(PlanParser *p, PlanRepository* rep);
 		virtual ~ModelFactory();
 
 		bool ignoreMasterPlanId;bool getIgnoreMasterPlanId();
@@ -83,7 +83,7 @@ namespace alica
 		static const string parameters;
 
 		PlanParser* parser;
-		shared_ptr<PlanRepository> rep;
+		PlanRepository* rep;
 		map<long, AlicaElement*> elements;
 		list<pair<long, long>> stateInTransitionReferences;
 		list<pair<long, long>> stateOutTransitionReferences;
