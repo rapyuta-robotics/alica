@@ -51,7 +51,7 @@ namespace alica
 
 		this->planRepository = new PlanRepository();
 		this->planParser = new PlanParser(this->planRepository);
-		this->masterPlan = this->planParser->ParsePlanTree(masterPlanName);
+		this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
 		this->behaviourPool->init();
 		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
 	}

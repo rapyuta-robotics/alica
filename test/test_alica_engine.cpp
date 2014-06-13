@@ -60,7 +60,7 @@ TEST(Alica, behaviourPool)
 	sc->setConfigPath(path + "/etc");
 
 	alica::AlicaEngine* ae = alica::AlicaEngine::getInstance();
-	ae->init("MasterPlan", "MasterPlan", ".", false);
+	ae->init("Roleset", "MasterPlan", ".", false);
 
 	std::map<long int, alica::Behaviour*> behaviours = ae->getPlanRepository()->getBehaviours();
 
