@@ -12,6 +12,7 @@ using namespace std;
 
 #include <map>
 #include <typeindex>
+#include <iostream>
 
 #include <engine/IBehaviourPool.h>
 
