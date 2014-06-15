@@ -2,7 +2,7 @@
  * BehaviourPool.h
  *
  *  Created on: Jun 13, 2014
- *      Author: emmeda
+ *      Author: Stephan Opfer
  */
 
 #ifndef BEHAVIOURPOOL_H_
@@ -23,6 +23,7 @@ namespace alica
 
 	class BehaviourPool : public IBehaviourPool
 	{
+
 	public:
 		BehaviourPool();
 		virtual ~BehaviourPool();
@@ -34,23 +35,15 @@ namespace alica
 
 	private:
 		map<Behaviour*, type_index>* loadedBehaviours;
-
 		map<Behaviour*, BasicBehaviour*>* usedBehaviours;
 
-		template<typename T>
-		BasicBehaviour* generateBasicBehaviourFromType (T type);
-
-		void loadTypesFromFile ();
-		void preLoadBehaviourThreads ();
+		void loadTypesFromFile();
+		void preLoadBehaviourThreads();
 	};
 
 } /* namespace alica */
 
-#include "engine/BasicBehaviour.h"
 
-template<typename T>
-inline alica::BasicBehaviour* alica::BehaviourPool::generateBasicBehaviourFromType(T type)
-{
-}
+
 
 #endif /* BEHAVIOURPOOL_H_ */

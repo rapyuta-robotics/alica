@@ -18,6 +18,12 @@ namespace alica
 		this->parameters = new map<string, string>();
 	}
 
+	BasicBehaviour::BasicBehaviour()
+	{
+		this->name = "Test1234";
+		this->parameters = new map<string, string>();
+	}
+
 	BasicBehaviour::~BasicBehaviour()
 	{
 	}
@@ -40,5 +46,20 @@ namespace alica
 	{
 		return AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
 	}
+
+	map<string, BasicBehaviour*(*)()>* BasicBehaviour::creators = BasicBehaviour::getCreatorMap();
+
+	map<string, BasicBehaviour*(*)()> * BasicBehaviour::getCreatorMap()
+	{
+		// never delete'ed. (exist until program termination)
+		// because we can't guarantee correct destruction order
+		if (!BasicBehaviour::creators)
+		{
+			BasicBehaviour::creators = new map<string, BasicBehaviour*(*)()>();
+		}
+		return BasicBehaviour::creators;
+	}
+
+
 
 } /* namespace alica */
