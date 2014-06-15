@@ -8,6 +8,7 @@ using namespace std;
 #include "engine/model/Plan.h"
 #include "engine/IBehaviourPool.h"
 #include "engine/model/Behaviour.h"
+#include "engine/BasicBehaviour.h"
 
 /**
  * Tests the plan parser with some nice plans
@@ -37,37 +38,6 @@ TEST(Alica, planParser)
 		cout << "--------- Next Plan: -------------" << endl;
 		cout << "ID: " << iter->first << endl;
 		cout << "Plan: " << iter->second->toString() << endl;
-	}
-}
-
-
-/**
- * \brief Tests the behaviour pool
- *
- * Tests the behaviour pool by initialising an AlicaEngine and retrieve the parsed behaviours.
- */
-TEST(Alica, behaviourPool)
-{
-	// determine the path to the test config
-	string path = supplementary::FileSystem::getSelfPath();
-	int place = path.rfind("devel");
-	path = path.substr(0, place);
-	path = path + "src/alica/test";
-
-	// bring up the SystemConfig with the corresponding path
-	supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-	sc->setRootPath(path);
-	sc->setConfigPath(path + "/etc");
-
-	alica::AlicaEngine* ae = alica::AlicaEngine::getInstance();
-	ae->init("Roleset", "MasterPlan", ".", false);
-
-	std::map<long int, alica::Behaviour*> behaviours = ae->getPlanRepository()->getBehaviours();
-
-	unique_ptr<alica::IBehaviourPool> bp = ae->getBehaviourPool();
-	for(auto behaviourPair : behaviours) {
-		cout << "Behaviour: " << behaviourPair.second->getName() << endl;
-		EXPECT_TRUE(bp->isBehaviourAvailable(behaviourPair.second)) << "Did not find the Behaviour " << behaviourPair.second->getName();
 	}
 }
 
