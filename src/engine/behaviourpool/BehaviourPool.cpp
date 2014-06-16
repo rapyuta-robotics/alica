@@ -14,8 +14,8 @@ namespace alica
 
 	BehaviourPool::BehaviourPool()
 	{
-		this->loadedBehaviours = new map<Behaviour*, type_index>();
-		this->usedBehaviours = new map<Behaviour*, BasicBehaviour*> ();
+		this->behaviourCreators = new map<Behaviour*, createFunc> ();
+		this->availableBehaviours = new map<Behaviour*, BasicBehaviour*>();
 	}
 
 	BehaviourPool::~BehaviourPool()
@@ -53,11 +53,15 @@ namespace alica
 #ifdef BP_DEBUG
 		cout << "BP: loadTypesFromFile() was called!" << endl;
 #endif
-
 	}
 
 	void BehaviourPool::preLoadBehaviourThreads()
 	{
+	}
+
+	void BehaviourPool::registerBehaviour(Behaviour* behaviour, createFunc creatorFunction)
+	{
+		this->behaviourCreators->insert(make_pair(behaviour, creatorFunction));
 	}
 
 } /* namespace alica */
