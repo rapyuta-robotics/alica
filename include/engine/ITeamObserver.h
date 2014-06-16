@@ -30,15 +30,15 @@ namespace alica
 		virtual void init() = 0;
 		virtual void close() = 0;
 		virtual void tick(RunningPlan* root) = 0;
-		virtual list<RobotEngineData*> getAvailableRobots() = 0;
-		virtual list<RobotProperties*> getAvailableRobotProperties() = 0;
-		virtual list<int> getAvailableRobotIds() = 0;
+		virtual unique_ptr<list<RobotEngineData*> > getAvailableRobots() = 0;
+		virtual unique_ptr<list<RobotProperties*> > getAvailableRobotProperties() = 0;
+		virtual unique_ptr<list<int> > getAvailableRobotIds() = 0;
 		virtual int getOwnId() = 0;
 		virtual int teamSize() = 0;
 		virtual RobotEngineData* getOwnEngineData() = 0;
 		virtual RobotEngineData* getRobotById(int id) = 0;
 		virtual RobotProperties* getOwnRobotProperties() = 0;
-		virtual map<int, SimplePlanTree*> getTeamPlanTrees() = 0;
+		virtual unique_ptr<map<int, SimplePlanTree*> > getTeamPlanTrees() = 0;
 
 		virtual int successesInPlan(Plan* p) = 0;
 		virtual SuccesCollection getSuccessCollection(Plan* p) = 0;

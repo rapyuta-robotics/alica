@@ -11,6 +11,7 @@
 namespace alica
 {
 	class RobotProperties;
+	class SuccessMarks;
 
 	class RobotEngineData
 	{
@@ -22,10 +23,16 @@ namespace alica
 		void setActive(bool active);
 		RobotProperties* getProperties() const;
 		void setProperties(RobotProperties* properties);
+		SuccessMarks* getSuccessMarks() const;
+		void setSuccessMarks(SuccessMarks* successMarks);
+		unsigned long getLastMessageTime() const;
+		void setLastMessageTime(unsigned long lastMessageTime);
 
 	protected:
 		RobotProperties* properties;
 		bool active;
+		SuccessMarks* successMarks;
+		unsigned long lastMessageTime;
 	};
 
 } /* namespace alica */
