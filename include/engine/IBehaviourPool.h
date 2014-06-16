@@ -12,6 +12,7 @@ namespace alica
 {
 	class RunningPlan;
 	class Behaviour;
+	class BasicBehaviour;
 
 	class IBehaviourPool
 	{
@@ -32,6 +33,9 @@ namespace alica
 		virtual void init() = 0;
 
 		virtual void stop() = 0;
+
+		typedef BasicBehaviour * (*createFunc)(void);
+		virtual void registerBehaviour(Behaviour* behaviour, createFunc createFunction) = 0;
 	};
 
 } /* namespace alica */

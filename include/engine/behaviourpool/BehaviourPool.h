@@ -32,18 +32,24 @@ namespace alica
 		bool isBehaviourAvailable(const Behaviour* b) const;
 		void removeBehaviour(RunningPlan rp);
 		void addBehaviour(RunningPlan rp);
+		void registerBehaviour(Behaviour* behaviour, createFunc createFunction);
 
 	private:
-		map<Behaviour*, type_index>* loadedBehaviours;
-		map<Behaviour*, BasicBehaviour*>* usedBehaviours;
+		/**
+		 * This map matches behaviours to their create methods.
+		 */
+		map<Behaviour*, BasicBehaviour*(*)()>* behaviourCreators;
+
+		/**
+		 * This map manages behaviours used by the currently running ALICA program.
+		 */
+		map<Behaviour*, BasicBehaviour*>* availableBehaviours;
+
 
 		void loadTypesFromFile();
 		void preLoadBehaviourThreads();
 	};
 
 } /* namespace alica */
-
-
-
 
 #endif /* BEHAVIOURPOOL_H_ */
