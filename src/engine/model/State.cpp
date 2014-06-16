@@ -38,7 +38,7 @@ namespace alica
 		this->failureState = failureState;
 	}
 
-	const Plan* State::getInPlan() const
+	Plan* State::getInPlan() const
 	{
 		return inPlan;
 	}

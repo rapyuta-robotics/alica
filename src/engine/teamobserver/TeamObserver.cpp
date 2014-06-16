@@ -11,6 +11,11 @@
 #include "engine/collections/RobotProperties.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/RunningPlan.h"
+#include "engine/model/State.h"
+#include "engine/SimplePlanTree.h"
+#include "engine/model/AbstractPlan.h"
+#include "engine/model/Plan.h"
+#include "engine/collections/SuccessMarks.h"
 
 namespace alica
 {
@@ -126,7 +131,7 @@ namespace alica
 		return nullptr;
 	}
 
-	unique_ptr<list<RobotEngineData*> > TeamObserver::GetAvailableRobots()
+	unique_ptr<list<RobotEngineData*> > TeamObserver::getAvailableRobots()
 	{
 		unique_ptr<list<RobotEngineData*> > ret = unique_ptr<list<RobotEngineData*> >(new list<RobotEngineData*>);
 		ret.get()->push_back(this->me);
@@ -141,7 +146,7 @@ namespace alica
 		return ret;
 	}
 
-	unique_ptr<list<RobotProperties*> > TeamObserver::GetAvailableRobotProperties()
+	unique_ptr<list<RobotProperties*> > TeamObserver::getAvailableRobotProperties()
 	{
 		unique_ptr<list<RobotProperties*> > ret = unique_ptr<list<RobotProperties*> >(new list<RobotProperties*>);
 		ret.get()->push_back(me->getProperties());
@@ -153,7 +158,7 @@ namespace alica
 		return ret;
 	}
 
-	unique_ptr<list<int> > TeamObserver::GetAvailableRobotIds()
+	unique_ptr<list<int> > TeamObserver::getAvailableRobotIds()
 	{
 		unique_ptr<list<int> > ret = unique_ptr<list<int> >(new list<int>);
 		ret.get()->push_back(myId);
@@ -167,12 +172,12 @@ namespace alica
 		return ret;
 	}
 
-	RobotProperties* TeamObserver::GetOwnRobotProperties()
+	RobotProperties* TeamObserver::getOwnRobotProperties()
 	{
 		return this->me->getProperties();
 	}
 
-	RobotEngineData* TeamObserver::GetOwnEngineData()
+	RobotEngineData* TeamObserver::getOwnEngineData()
 	{
 		return this->me;
 	}
@@ -190,7 +195,7 @@ namespace alica
 		return i;
 	}
 
-	unique_ptr<map<int, SimplePlanTree*> > TeamObserver::GetTeamPlanTrees()
+	unique_ptr<map<int, SimplePlanTree*> > TeamObserver::getTeamPlanTrees()
 	{
 		unique_ptr<map<int, SimplePlanTree*> > ret = unique_ptr<map<int, SimplePlanTree*> >(new map<int, SimplePlanTree*>);
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
@@ -210,6 +215,42 @@ namespace alica
 		//ret
 
 		return ret;
+	}
+
+	void TeamObserver::tick(RunningPlan* root)
+	{
+		//TODO ICommunication interface
+		//unsigned long time = RosSharp.Now();
+		unsigned long time = std::time(nullptr);
+		bool changed = false;
+		list<int> robotsAvail;
+		robotsAvail.push_back(this->myId);
+		for(RobotEngineData* r : this->allOtherRobots)
+		{
+			if((r->getLastMessageTime() + teamTimeOut) < time)
+			{
+				changed |= r->isActive();
+				r->setActive(false);
+				r->getSuccessMarks()->clear();
+				lock_guard<mutex> lock(this->simplePlanTreeMutex);
+				this->simplePlanTrees.erase(r->getProperties()->getId());
+			}
+			else if(!r->isActive())
+			{
+				r->setActive(true);
+				changed = true;
+			}
+			if(r->isActive())
+			{
+				robotsAvail.push_back(r->getProperties()->getId());
+			}
+		}
+		//TODO events missing
+//		if(changed && OnTeamChangeEvent!=null) {
+//			OnTeamChangeEvent();
+//			this.log.EventOccurred("TeamChanged");
+//		}
+		//TODO C# line 248
 	}
 
 	void TeamObserver::cleanOwnSuccessMarks(RunningPlan* root)
@@ -243,8 +284,13 @@ namespace alica
 		{
 			SimplePlanTree* spt = queue.front();
 			queue.pop_front();
-			//TODO TEamObserver.cs 336
+			presentPlans->insert(spt->getState()->getInPlan());
+			for(SimplePlanTree* c : spt->getChildren())
+			{
+				queue.push_back(c);
+			}
 		}
+		this->getOwnEngineData()->getSuccessMarks()->limitToPlans(move(presentPlans));
 	}
 
 } /* namespace alica */

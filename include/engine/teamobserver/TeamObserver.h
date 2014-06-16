@@ -17,6 +17,7 @@ using namespace std;
 #include <mutex>
 #include <thread>
 #include <memory>
+#include <ctime>
 
 #include "engine/ITeamObserver.h"
 
@@ -37,14 +38,15 @@ namespace alica
 		void messageRecievedFrom(int rid);
 		virtual int getOwnId();
 		RobotEngineData* getRobotById(int id);
-		unique_ptr<list<RobotEngineData*> > GetAvailableRobots();
-		unique_ptr<list<RobotProperties*> > GetAvailableRobotProperties();
-		unique_ptr<list<int> > GetAvailableRobotIds();
-		RobotProperties* GetOwnRobotProperties();
-		RobotEngineData* GetOwnEngineData();
+		unique_ptr<list<RobotEngineData*> > getAvailableRobots();
+		unique_ptr<list<RobotProperties*> > getAvailableRobotProperties();
+		unique_ptr<list<int> > getAvailableRobotIds();
+		RobotProperties* getOwnRobotProperties();
+		RobotEngineData* getOwnEngineData();
 		int teamSize();
-		unique_ptr<map<int, SimplePlanTree*> > GetTeamPlanTrees();
+		unique_ptr<map<int, SimplePlanTree*> > getTeamPlanTrees();
 		void init();
+		void tick(RunningPlan* root);
 
 	protected:
 		static mutex simplePlanTreeMutex;

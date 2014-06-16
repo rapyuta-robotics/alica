@@ -31,7 +31,7 @@ namespace alica
 		virtual string toString() const;
 		bool isFailureState() const;
 		void setFailureState(bool failureState);
-		const Plan* getInPlan() const;
+		Plan* getInPlan() const;
 		void setInPlan( Plan* inPlan);
 		 list<Transition*>& getInTransitions() ;
 		void setInTransitions(const list<Transition*>& inTransitions);

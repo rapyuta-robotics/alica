@@ -45,6 +45,25 @@ namespace alica
 	{
 		this->properties = properties;
 	}
+	SuccessMarks* RobotEngineData::getSuccessMarks() const
+	{
+		return successMarks;
+	}
+
+	void RobotEngineData::setSuccessMarks(SuccessMarks* successMarks)
+	{
+		this->successMarks = successMarks;
+	}
+
+	unsigned long RobotEngineData::getLastMessageTime() const
+	{
+		return lastMessageTime;
+	}
+
+	void RobotEngineData::setLastMessageTime(unsigned long lastMessageTime)
+	{
+		this->lastMessageTime = lastMessageTime;
+	}
 
 } /* namespace alica */
 
