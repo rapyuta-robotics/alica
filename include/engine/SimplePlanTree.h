@@ -11,6 +11,7 @@
 using namespace std;
 
 #include <unordered_set>
+#include <list>
 
 namespace alica
 {
@@ -27,14 +28,26 @@ namespace alica
 		void setEntryPoint(EntryPoint* entryPoint);
 		State* getState() const;
 		void setState(State* state);
-		const unordered_set<SimplePlanTree*>& getChildren() const;
-		void setChildren(const unordered_set<SimplePlanTree*>& children);
+		unordered_set<SimplePlanTree*>& getChildren();
+		void setChildren(unordered_set<SimplePlanTree*>& children);
+		int getRobotId() const;
+		void setRobotId(int robotId);
+		bool isNewSimplePlanTree() const;
+		void setNewSimplePlanTree(bool newSimplePlanTree);
+		long getReceiveTime() const;
+		void setReceiveTime(long receiveTime);
+		const list<long>& getStateIds() const;
+		void setStateIds(const list<long>& stateIds);
 
 	protected:
 		SimplePlanTree* parent;
 		unordered_set<SimplePlanTree*> children;
 		State* state;
 		EntryPoint* entryPoint;
+		int robotId = -1;
+		bool newSimplePlanTree;
+		long receiveTime;
+		list<long> stateIds;
 
 
 	};

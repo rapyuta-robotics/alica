@@ -33,7 +33,7 @@ namespace alica
 		const long IDLEID = -1;
 		void computeReachabilitySet();
 		string toString ();
-		int compareTo(EntryPoint otherEp);
+		static bool compareTo(const EntryPoint* ep1 , const EntryPoint* ep2);
 
 		const Task* getTask() const;
 		void setTask(const Task* task);

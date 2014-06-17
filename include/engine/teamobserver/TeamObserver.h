@@ -18,6 +18,7 @@ using namespace std;
 #include <thread>
 #include <memory>
 #include <ctime>
+#include <map>
 
 #include "engine/ITeamObserver.h"
 
@@ -27,6 +28,9 @@ namespace alica
 	class Logger;
 	class AlicaEngine;
 	class SystemConfig;
+	class EntryPoint;
+	class State;
+	class SuccessCollection;
 
 	class TeamObserver : public virtual ITeamObserver
 	{
@@ -47,6 +51,13 @@ namespace alica
 		unique_ptr<map<int, SimplePlanTree*> > getTeamPlanTrees();
 		void init();
 		void tick(RunningPlan* root);
+		void doBroadcast(list<long> msg);
+		int successInPlan(Plan* plan);
+		SuccessCollection* getSuccessCollection(Plan* plan);
+		void updateSuccessCollection(Plan* p, SuccessCollection* sc);
+
+	private:
+		EntryPoint* entryPointOfState(State* state);
 
 	protected:
 		static mutex simplePlanTreeMutex;
@@ -63,6 +74,7 @@ namespace alica
 		unordered_set<int> ignoredRobots;
 		AlicaEngine* ae;
 		void cleanOwnSuccessMarks(RunningPlan* root);
+		SimplePlanTree* sptFromMessage(int robotId, list<long> ids);
 
 	};
 
