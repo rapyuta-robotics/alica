@@ -13,6 +13,9 @@ using namespace std;
 #include "engine/parser/PlanParser.h"
 #include "engine/behaviourpool/BehaviourPool.h"
 #include "engine/model/RoleSet.h"
+#include "engine/ISyncModul.h"
+#include "engine/IRoleAssignment.h"
+#include "engine/AllocationAuthority/AuthorityManager.h"
 
 namespace alica
 {
@@ -88,6 +91,36 @@ namespace alica
 	void AlicaEngine::setTeamObserver(ITeamObserver* teamObserver)
 	{
 		this->teamObserver = teamObserver;
+	}
+
+	ISyncModul* AlicaEngine::getSyncModul()
+	{
+		return syncModul;
+	}
+
+	void AlicaEngine::setSyncModul(ISyncModul* syncModul)
+	{
+		this->syncModul = syncModul;
+	}
+
+	AuthorityManager* AlicaEngine::getAuth()
+	{
+		return auth;
+	}
+
+	void AlicaEngine::setAuth(AuthorityManager* auth)
+	{
+		this->auth = auth;
+	}
+
+	IRoleAssignment* AlicaEngine::getRoleAssignment()
+	{
+		return roleAssignment;
+	}
+
+	void AlicaEngine::setRoleAssignment( IRoleAssignment* roleAssignment)
+	{
+		this->roleAssignment = roleAssignment;
 	}
 
 	void AlicaEngine::setStepEngine(bool stepEngine)
