@@ -19,7 +19,7 @@ namespace alica
 	class RobotEngineData;
 	class RobotProperties;
 	class SimplePlanTree;
-	class SuccesCollection;
+	class SuccessCollection;
 	class Plan;
 	class AbstractPlan;
 
@@ -41,8 +41,8 @@ namespace alica
 		virtual unique_ptr<map<int, SimplePlanTree*> > getTeamPlanTrees() = 0;
 
 		virtual int successesInPlan(Plan* p) = 0;
-		virtual SuccesCollection getSuccessCollection(Plan* p) = 0;
-		virtual void updateSuccessCollection(Plan* p, SuccesCollection* sc) = 0;
+		virtual SuccessCollection* getSuccessCollection(Plan* p) = 0;
+		virtual void updateSuccessCollection(Plan* p, SuccessCollection* sc) = 0;
 
 		virtual void doBroadCast(list<long> planmsg) = 0;
 

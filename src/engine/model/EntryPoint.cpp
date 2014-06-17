@@ -72,21 +72,9 @@ namespace alica
 
 	}
 
-	int EntryPoint::compareTo(EntryPoint otherEp)
+	bool EntryPoint::compareTo(const EntryPoint* ep1, const EntryPoint* ep2)
 	{
-		if (task->getId() < otherEp.getTask()->getId())
-		{
-			return 1;
-		}
-		else if (task->getId() == otherEp.getTask()->getId())
-		{
-			return 0;
-		}
-		else
-		{
-			return -1;
-		}
-
+		return (ep1->getTask()->getId() < ep2->getTask()->getId());
 	}
 
 //================== Getter and Setter =============
@@ -166,4 +154,5 @@ namespace alica
 	}
 
 } /* namespace Alica */
+
 

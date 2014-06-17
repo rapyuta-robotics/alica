@@ -41,14 +41,55 @@ namespace alica
 		this->state = state;
 	}
 
-	const unordered_set<SimplePlanTree*>& SimplePlanTree::getChildren() const
+	unordered_set<SimplePlanTree*>& SimplePlanTree::getChildren()
 	{
 		return children;
 	}
 
-	void SimplePlanTree::setChildren(const unordered_set<SimplePlanTree*>& children)
+	void SimplePlanTree::setChildren(unordered_set<SimplePlanTree*>& children)
 	{
 		this->children = children;
 	}
 
+	int SimplePlanTree::getRobotId() const
+	{
+		return robotId;
+	}
+
+	void SimplePlanTree::setRobotId(int robotId)
+	{
+		this->robotId = robotId;
+	}
+
+	bool SimplePlanTree::isNewSimplePlanTree() const
+	{
+		return newSimplePlanTree;
+	}
+
+	void SimplePlanTree::setNewSimplePlanTree(bool newSimplePlanTree)
+	{
+		this->newSimplePlanTree = newSimplePlanTree;
+	}
+	long SimplePlanTree::getReceiveTime() const
+	{
+		return receiveTime;
+	}
+
+	void SimplePlanTree::setReceiveTime(long receiveTime)
+	{
+		this->receiveTime = receiveTime;
+	}
+
+	const list<long>& SimplePlanTree::getStateIds() const
+	{
+		return stateIds;
+	}
+
+	void SimplePlanTree::setStateIds(const list<long>& stateIds)
+	{
+		this->stateIds = stateIds;
+	}
+
 } /* namespace alica */
+
+
