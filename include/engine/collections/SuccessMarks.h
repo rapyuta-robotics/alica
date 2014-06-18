@@ -2,17 +2,20 @@
  * SuccessMarks.h
  *
  *  Created on: Jun 16, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #ifndef SUCCESSMARKS_H_
 #define SUCCESSMARKS_H_
 
 using namespace std;
+
 #include <map>
 #include <memory>
 #include <unordered_set>
 #include <list>
+#include <algorithm>
+#include <memory>
 
 namespace alica
 {
@@ -29,12 +32,14 @@ namespace alica
 
 		//TODO uses ICollection in C# so far only unordered_set needed
 		void limitToPlans(unique_ptr<unordered_set<AbstractPlan*> > active);
-		map<AbstractPlan*, list<EntryPoint*> > getSuccesMarks() const;
-		void setSuccesMarks(map<AbstractPlan*, list<EntryPoint*> > succesMarks);
+		map<AbstractPlan*,shared_ptr<list<EntryPoint*> > > getSuccessMarks() const;
+		void setSuccesMarks(map<AbstractPlan*,shared_ptr<list<EntryPoint*> > > succesMarks);
 		void clear();
+		shared_ptr<list<EntryPoint*> >succeededEntryPoints(AbstractPlan* p);
+		void removePlan(AbstractPlan* plan);
 
 	protected:
-		map<AbstractPlan*,list<EntryPoint*> > succesMarks;
+		map<AbstractPlan*,shared_ptr<list<EntryPoint*> > > succesMarks;
 	};
 
 } /* namespace alica */

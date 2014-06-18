@@ -11,7 +11,6 @@
 using namespace std;
 
 #include <string>
-
 #include <SystemConfig.h>
 
 namespace alica
@@ -24,6 +23,9 @@ namespace alica
 	class RoleSet;
 	class ITeamObserver;
 	class IBehaviourCreator;
+	class ISyncModul;
+	class AuthorityManager;
+	class IRoleAssignment;
 
 	class AlicaEngine
 	{
@@ -43,12 +45,22 @@ namespace alica
 		ITeamObserver* getTeamObserver();
 		void setTeamObserver(ITeamObserver* teamObserver);
 
+		void setSyncModul(ISyncModul* syncModul);
+		ISyncModul* getSyncModul();
+		AuthorityManager* getAuth();
+		void setAuth(AuthorityManager* auth);
+		IRoleAssignment* getRoleAssignment();
+		void setRoleAssignment(IRoleAssignment* roleAssignment);
+
 	protected:
 		supplementary::SystemConfig* sc;
 		Plan* masterPlan;
 		Logger* log;
 		string robotName;
 		RoleSet* roleSet;
+		ISyncModul* syncModul;
+		AuthorityManager* auth;
+		IRoleAssignment* roleAssignment;
 
 	private:
 		// private constructur/ destructor because of singleton

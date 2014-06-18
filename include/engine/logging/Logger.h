@@ -2,7 +2,7 @@
  * Logger.h
  *
  *  Created on: Jun 13, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #ifndef LOGGER_H_
