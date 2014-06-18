@@ -2,7 +2,7 @@
  * PlanBase.h
  *
  *  Created on: Jun 17, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #ifndef PLANBASE_H_

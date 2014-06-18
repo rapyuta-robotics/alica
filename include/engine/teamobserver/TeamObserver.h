@@ -2,7 +2,7 @@
  * TeamObserver.h
  *
  *  Created on: Jun 13, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #ifndef TEAMOBSERVER_H_
@@ -48,13 +48,18 @@ namespace alica
 		RobotProperties* getOwnRobotProperties();
 		RobotEngineData* getOwnEngineData();
 		int teamSize();
-		unique_ptr<map<int, SimplePlanTree*> > getTeamPlanTrees();
+		unique_ptr<map<int, shared_ptr<SimplePlanTree> > > getTeamPlanTrees();
 		void init();
 		void tick(RunningPlan* root);
 		void doBroadcast(list<long> msg);
 		int successInPlan(Plan* plan);
 		SuccessCollection* getSuccessCollection(Plan* plan);
 		void updateSuccessCollection(Plan* p, SuccessCollection* sc);
+		void ignoreRobot(int rid);
+		void unIgnoreRobot(int rid);
+		bool isRobotIgnored(int rid);
+		void notifyRobotLeftPlan(AbstractPlan* plan);
+		void handlePlanTreeInfo(shared_ptr<SimplePlanTree> incoming);
 
 	private:
 		EntryPoint* entryPointOfState(State* state);
@@ -68,13 +73,13 @@ namespace alica
 		//C#
 //		protected IntPtr planTreePublisher;
 //		protected Node rosNode;
-		map<int, SimplePlanTree*> simplePlanTrees;
+		shared_ptr<map<int, shared_ptr<SimplePlanTree> > > simplePlanTrees;
 		unsigned long teamTimeOut;
 		Logger* log;
 		unordered_set<int> ignoredRobots;
 		AlicaEngine* ae;
 		void cleanOwnSuccessMarks(RunningPlan* root);
-		SimplePlanTree* sptFromMessage(int robotId, list<long> ids);
+		shared_ptr<SimplePlanTree> sptFromMessage(int robotId, list<long> ids);
 
 	};
 

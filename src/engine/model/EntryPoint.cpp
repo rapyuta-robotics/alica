@@ -94,7 +94,7 @@ namespace alica
 		this->plan = plan;
 	}
 
-	const Plan* EntryPoint::getPlan() const
+	Plan* EntryPoint::getPlan() const
 	{
 		return plan;
 	}

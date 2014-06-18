@@ -2,7 +2,7 @@
  * ISyncModul.h
  *
  *  Created on: Jun 17, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #ifndef ISYNCMODUL_H_

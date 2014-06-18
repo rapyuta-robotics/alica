@@ -2,7 +2,7 @@
  * UtilityFunction.cpp
  *
  *  Created on: Jun 4, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #include "engine/UtilityFunction.h"

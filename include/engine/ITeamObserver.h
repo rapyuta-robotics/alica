@@ -2,7 +2,7 @@
  * ITeamObserver.h
  *
  *  Created on: Jun 13, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #ifndef ITEAMOBSERVER_H_
@@ -12,6 +12,7 @@ using namespace std;
 
 #include <list>
 #include <map>
+#include <memory>
 
 namespace alica
 {
@@ -38,7 +39,7 @@ namespace alica
 		virtual RobotEngineData* getOwnEngineData() = 0;
 		virtual RobotEngineData* getRobotById(int id) = 0;
 		virtual RobotProperties* getOwnRobotProperties() = 0;
-		virtual unique_ptr<map<int, SimplePlanTree*> > getTeamPlanTrees() = 0;
+		virtual unique_ptr<map<int, shared_ptr<SimplePlanTree> > > getTeamPlanTrees() = 0;
 
 		virtual int successesInPlan(Plan* p) = 0;
 		virtual SuccessCollection* getSuccessCollection(Plan* p) = 0;
@@ -50,8 +51,10 @@ namespace alica
 		virtual void unIgnoreRobot(int rid) = 0;
 		virtual bool isRobotIgnored(int rid) = 0;
 
-		virtual void notifyTeamLeftPlan(AbstractPlan* p) = 0;
-		virtual void notifyILeftPlan(AbstractPlan* p) = 0;
+		//virtual void notifyTeamLeftPlan(AbstractPlan* p) = 0;
+		//virtual void notifyILeftPlan(AbstractPlan* p) = 0;
+		//both methods replaced by:
+		virtual void notifyRobotLeftPlan(AbstractPlan* p) = 0;
 		virtual void messageRecievedFrom(int rid) = 0;
 
 		//event OnTeamChange OnTeamChangeEvent;

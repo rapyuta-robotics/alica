@@ -2,7 +2,7 @@
  * SuccessCollection.cpp
  *
  *  Created on: Jun 17, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #include <engine/collections/SuccessCollection.h>
