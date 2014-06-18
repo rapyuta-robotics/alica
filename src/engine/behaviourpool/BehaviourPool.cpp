@@ -8,14 +8,19 @@
 
 #include "engine/behaviourpool/BehaviourPool.h"
 #include "engine/RunningPlan.h"
+#include "engine/IBehaviourCreator.h"
+#include "engine/AlicaEngine.h"
+#include "engine/PlanRepository.h"
+#include "engine/model/Behaviour.h"
+#include "engine/BasicBehaviour.h"
 
 namespace alica
 {
 
 	BehaviourPool::BehaviourPool()
 	{
-		this->behaviourCreators = new map<Behaviour*, createFunc> ();
-		this->availableBehaviours = new map<Behaviour*, BasicBehaviour*>();
+		this->behaviourCreator = nullptr;
+		this->availableBehaviours = new map<Behaviour*, unique_ptr<BasicBehaviour> >();
 	}
 
 	BehaviourPool::~BehaviourPool()
@@ -26,18 +31,43 @@ namespace alica
 	{
 	}
 
-	void BehaviourPool::init()
+	bool BehaviourPool::init(IBehaviourCreator* bc)
 	{
-#ifdef BP_DEBUG
-		cout << "BP: init() was called!" << endl;
-#endif
-		this->loadTypesFromFile();
+		if (this->behaviourCreator != nullptr)
+		{
+			delete this->behaviourCreator;
+		}
 
+		this->behaviourCreator = bc;
+
+		std::map<long int, alica::Behaviour*> behaviours =
+				AlicaEngine::getInstance()->getPlanRepository()->getBehaviours();
+		for (auto iter : behaviours)
+		{
+			unique_ptr<BasicBehaviour> basicBeh = this->behaviourCreator->createBehaviour(iter.second->getName());
+			if (basicBeh != nullptr)
+			{
+				this->availableBehaviours->insert(make_pair(iter.second, move(basicBeh)));
+			} else
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
-	bool BehaviourPool::isBehaviourAvailable(const Behaviour* b) const
+	bool BehaviourPool::isBehaviourAvailable(Behaviour* b) const
 	{
-		return true;
+		try
+		{
+			this->availableBehaviours->at(b);
+			return true;
+		}
+		catch (const std::out_of_range& oor)
+		{
+			cerr << "Out of Range error: " << oor.what() << '\n';
+			return false;
+		}
 	}
 
 	void BehaviourPool::removeBehaviour(RunningPlan rp)
@@ -46,22 +76,6 @@ namespace alica
 
 	void BehaviourPool::addBehaviour(RunningPlan rp)
 	{
-	}
-
-	void BehaviourPool::loadTypesFromFile()
-	{
-#ifdef BP_DEBUG
-		cout << "BP: loadTypesFromFile() was called!" << endl;
-#endif
-	}
-
-	void BehaviourPool::preLoadBehaviourThreads()
-	{
-	}
-
-	void BehaviourPool::registerBehaviour(Behaviour* behaviour, createFunc creatorFunction)
-	{
-		this->behaviourCreators->insert(make_pair(behaviour, creatorFunction));
 	}
 
 } /* namespace alica */

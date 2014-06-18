@@ -27,9 +27,6 @@ namespace alica
 		const string getName() const;
 		void setName(string name);
 
-		virtual BasicBehaviour * create() = 0;
-
-
 	protected:
 		string name;
 		map<string, string>* parameters;

@@ -9,6 +9,7 @@ using namespace std;
 #include "engine/IBehaviourPool.h"
 #include "engine/model/Behaviour.h"
 #include "engine/BasicBehaviour.h"
+#include "DummyBehaviourCreator.h"
 
 /**
  * Tests the plan parser with some nice plans
@@ -28,7 +29,8 @@ TEST(Alica, planParser)
 
 	// setup the engine
 	alica::AlicaEngine* ae = alica::AlicaEngine::getInstance();
-	ae->init("Roleset", "MasterPlan", ".", false);
+
+	ae->init(new alica::DummyBehaviourCreator(), "Roleset", "MasterPlan", ".", false);
 	const std::map<long int, alica::Plan*, std::less<long int>, std::allocator<std::pair<const long int, alica::Plan*> > > plans =
 			ae->getPlanRepository()->getPlans();
 
