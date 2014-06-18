@@ -2,7 +2,7 @@
  * SuccessMarks.h
  *
  *  Created on: Jun 16, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #ifndef SUCCESSMARKS_H_
@@ -36,6 +36,7 @@ namespace alica
 		void setSuccesMarks(map<AbstractPlan*,shared_ptr<list<EntryPoint*> > > succesMarks);
 		void clear();
 		shared_ptr<list<EntryPoint*> >succeededEntryPoints(AbstractPlan* p);
+		void removePlan(AbstractPlan* plan);
 
 	protected:
 		map<AbstractPlan*,shared_ptr<list<EntryPoint*> > > succesMarks;

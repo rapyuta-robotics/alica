@@ -2,7 +2,7 @@
  * RoleUsage.cpp
  *
  *  Created on: Jun 10, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #include "engine/model/RoleUsage.h"

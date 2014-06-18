@@ -2,7 +2,7 @@
  * RobotEngineData.cpp
  *
  *  Created on: Jun 13, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #include <engine/collections/RobotEngineData.h>

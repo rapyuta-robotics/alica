@@ -2,23 +2,40 @@
  * SimplePlanTree.cpp
  *
  *  Created on: Jun 16, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #include <engine/SimplePlanTree.h>
+#include "engine/model/EntryPoint.h"
+#include "engine/model/Plan.h"
 
 namespace alica
 {
 
 	SimplePlanTree::SimplePlanTree()
 	{
-		// TODO Auto-generated constructor stub
 
 	}
 
 	SimplePlanTree::~SimplePlanTree()
 	{
-		// TODO Auto-generated destructor stub
+
+	}
+
+	bool SimplePlanTree::containsPlan(AbstractPlan* plan)
+	{
+		if(this->getEntryPoint()->getPlan() == plan)
+		{
+			return true;
+		}
+		for(shared_ptr<SimplePlanTree> spt : this->getChildren())
+		{
+			if(spt->containsPlan(plan))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	EntryPoint* SimplePlanTree::getEntryPoint() const
@@ -41,12 +58,12 @@ namespace alica
 		this->state = state;
 	}
 
-	unordered_set<SimplePlanTree*>& SimplePlanTree::getChildren()
+	unordered_set<shared_ptr<SimplePlanTree> > SimplePlanTree::getChildren()
 	{
 		return children;
 	}
 
-	void SimplePlanTree::setChildren(unordered_set<SimplePlanTree*>& children)
+	void SimplePlanTree::setChildren(unordered_set<shared_ptr<SimplePlanTree> > children)
 	{
 		this->children = children;
 	}

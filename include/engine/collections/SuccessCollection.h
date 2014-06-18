@@ -2,7 +2,7 @@
  * SuccessCollection.h
  *
  *  Created on: Jun 17, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #ifndef SUCCESSCOLLECTION_H_

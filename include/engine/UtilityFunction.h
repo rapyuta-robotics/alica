@@ -2,7 +2,7 @@
  * UtilityFunction.h
  *
  *  Created on: Jun 4, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #ifndef UTILITYFUNCTION_H_

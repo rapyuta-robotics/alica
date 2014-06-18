@@ -2,7 +2,7 @@
  * Capability.cpp
  *
  *  Created on: May 28, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #include "engine/model/Capability.h"

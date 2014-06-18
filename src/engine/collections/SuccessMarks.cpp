@@ -2,7 +2,7 @@
  * SuccessMarks.cpp
  *
  *  Created on: Jun 16, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #include <engine/collections/SuccessMarks.h>
@@ -64,6 +64,11 @@ namespace alica
 			}
 		}
 		return nullptr;
+	}
+
+	void SuccessMarks::removePlan(AbstractPlan* plan)
+	{
+		this->getSuccessMarks().erase(plan);
 	}
 
 } /* namespace alica */

@@ -2,7 +2,7 @@
  * RunningPlan.h
  *
  *  Created on: Jun 10, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #ifndef RUNNINGPLAN_H_
