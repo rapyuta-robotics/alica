@@ -2,7 +2,7 @@
  * CapValue.h
  *
  *  Created on: Jun 4, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #ifndef CAPVALUE_H_

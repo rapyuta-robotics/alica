@@ -33,11 +33,11 @@ namespace alica
 		const long IDLEID = -1;
 		void computeReachabilitySet();
 		string toString ();
-		int compareTo(EntryPoint otherEp);
+		static bool compareTo(const EntryPoint* ep1 , const EntryPoint* ep2);
 
 		const Task* getTask() const;
 		void setTask(const Task* task);
-		const Plan* getPlan() const;
+		Plan* getPlan() const;
 		void setPlan(Plan* plan);
 		const int getMaxCardinality() const;
 		void setMaxCardinality(int maxCardinality = 0);
@@ -54,7 +54,7 @@ namespace alica
 	protected:
 		State* state;
 		const Task* task;
-		const Plan* plan;
+		Plan* plan;
 		int minCardinality = 0;
 		int maxCardinality = 0;
 		bool successRequired;

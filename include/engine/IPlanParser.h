@@ -2,7 +2,7 @@
  * IPlanParser.h
  *
  *  Created on: May 28, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #ifndef IPLANPARSER_H_

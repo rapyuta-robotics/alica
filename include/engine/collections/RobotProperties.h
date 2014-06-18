@@ -2,7 +2,7 @@
  * RobotProperties.h
  *
  *  Created on: Jun 13, 2014
- *      Author: stefan
+ *      Author: Stefan Jakob
  */
 
 #ifndef ROBOTPROPERTIES_H_

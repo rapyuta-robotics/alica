@@ -35,12 +35,13 @@ TEST(Alica, planParser)
 			ae->getPlanRepository()->getPlans();
 
 	cout << "Printing plans from Repository: " << endl;
-	for(map<long, alica::Plan*>::const_iterator iter = plans.begin(); iter != plans.end(); iter++ )
+	for (map<long, alica::Plan*>::const_iterator iter = plans.begin(); iter != plans.end(); iter++)
 	{
 		cout << "--------- Next Plan: -------------" << endl;
 		cout << "ID: " << iter->first << endl;
 		cout << "Plan: " << iter->second->toString() << endl;
 	}
+
 }
 
 // Run all the tests that were declared with TEST()
