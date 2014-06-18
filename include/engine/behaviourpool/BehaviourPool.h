@@ -13,6 +13,7 @@ using namespace std;
 #include <map>
 #include <typeindex>
 #include <iostream>
+#include <memory>
 
 #include <engine/IBehaviourPool.h>
 
@@ -28,26 +29,18 @@ namespace alica
 		BehaviourPool();
 		virtual ~BehaviourPool();
 		void stop();
-		void init();
-		bool isBehaviourAvailable(const Behaviour* b) const;
+		bool init(IBehaviourCreator* bc);
+		bool isBehaviourAvailable(Behaviour* b) const;
 		void removeBehaviour(RunningPlan rp);
 		void addBehaviour(RunningPlan rp);
-		void registerBehaviour(Behaviour* behaviour, createFunc createFunction);
-
 	private:
-		/**
-		 * This map matches behaviours to their create methods.
-		 */
-		map<Behaviour*, BasicBehaviour*(*)()>* behaviourCreators;
-
 		/**
 		 * This map manages behaviours used by the currently running ALICA program.
 		 */
-		map<Behaviour*, BasicBehaviour*>* availableBehaviours;
+		map<Behaviour*, unique_ptr<BasicBehaviour> >* availableBehaviours;
 
+		IBehaviourCreator* behaviourCreator;
 
-		void loadTypesFromFile();
-		void preLoadBehaviourThreads();
 	};
 
 } /* namespace alica */

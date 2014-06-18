@@ -23,12 +23,13 @@ namespace alica
 	class Logger;
 	class RoleSet;
 	class ITeamObserver;
+	class IBehaviourCreator;
 
 	class AlicaEngine
 	{
 	public:
 		static AlicaEngine* getInstance();
-		void init(string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine);
+		bool init(IBehaviourCreator* bc, string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine);
 		void start();
 		bool getStepEngine();
 		void abort(string msg);

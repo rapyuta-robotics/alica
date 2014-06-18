@@ -22,7 +22,6 @@ find_package(catkin REQUIRED COMPONENTS roscpp system_config fsystem)
 ## Declare ROS messages, services and actions ##
 ################################################
 
-
 ## To declare and build messages, services or actions from within this
 ## package, follow these steps:
 ## * Let MSG_DEP_SET be the set of packages whose message types you use in
@@ -188,7 +187,7 @@ file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 #############
 
 ## Add gtest based cpp test target and link libraries
- catkin_add_gtest(${PROJECT_NAME}-test test/test_alica_engine.cpp)
+ catkin_add_gtest(${PROJECT_NAME}-test test/test_alica_engine.cpp test/DummyBehaviourCreator.cpp)
  if(TARGET ${PROJECT_NAME}-test)
    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
  endif()

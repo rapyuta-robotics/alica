@@ -50,15 +50,18 @@ namespace alica
 		return &instance;
 	}
 
-	void AlicaEngine::init(string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine)
+	bool AlicaEngine::init(IBehaviourCreator* bc, string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine)
 	{
+		bool everythingWorked = true;
 		this->setStepEngine(stepEngine);
 
 		this->planRepository = new PlanRepository();
 		this->planParser = new PlanParser(this->planRepository);
 		this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
-		this->behaviourPool->init();
 		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
+		everythingWorked &= this->behaviourPool->init(bc);
+
+		return everythingWorked;
 	}
 
 	void AlicaEngine::start()
