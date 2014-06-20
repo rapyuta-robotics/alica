@@ -11,6 +11,7 @@
 using namespace std;
 
 #include <stdio.h>
+#include <iostream>
 #include <map>
 
 namespace alica
