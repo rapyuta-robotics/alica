@@ -291,7 +291,7 @@ namespace alica
 	void PlanParser::parsePlanTypeFile(string currentFile)
 	{
 #ifdef PP_DEBUG
-		cout << "PP: parsing Plan file: " << currentFile << endl;
+		cout << "PP: parsing PlanType file: " << currentFile << endl;
 #endif
 		tinyxml2::XMLDocument doc;
 		doc.LoadFile(currentFile.c_str());
@@ -305,7 +305,7 @@ namespace alica
 	void PlanParser::parseBehaviourFile(string currentFile)
 	{
 #ifdef PP_DEBUG
-		cout << "PP: parsing Plan file: " << currentFile << endl;
+		cout << "PP: parsing Behaviour file: " << currentFile << endl;
 #endif
 		tinyxml2::XMLDocument doc;
 		doc.LoadFile(currentFile.c_str());
@@ -321,7 +321,7 @@ namespace alica
 	void PlanParser::parseTaskFile(string currentFile)
 	{
 #ifdef PP_DEBUG
-		cout << "PP: parsing Plan file: " << currentFile << endl;
+		cout << "PP: parsing Task file: " << currentFile << endl;
 #endif
 		tinyxml2::XMLDocument doc;
 		doc.LoadFile(currentFile.c_str());

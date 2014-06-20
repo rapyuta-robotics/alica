@@ -5,18 +5,19 @@
  *      Author: Paul Panin
  */
 
+using namespace std;
+
 #include "engine/PlanRepository.h"
 #include "engine/model/Quantifier.h"
+#include "engine/model/Plan.h"
 
 namespace alica
 {
 	PlanRepository::PlanRepository()
 	{
-
 	}
 	PlanRepository::~PlanRepository()
 	{
-
 	}
 	map<long, BehaviourConfiguration*>& PlanRepository::getBehaviourConfigurations()
 	{

@@ -32,12 +32,13 @@ namespace alica
 	public:
 		static AlicaEngine* getInstance();
 		bool init(IBehaviourCreator* bc, string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine);
+		bool shutdown();
 		void start();
 		bool getStepEngine();
 		void abort(string msg);
 		template<typename T> void abort(string msg, const T tail);
-		unique_ptr<PlanRepository> getPlanRepository();
-		unique_ptr<IBehaviourPool> getBehaviourPool();
+		PlanRepository* getPlanRepository();
+		IBehaviourPool* getBehaviourPool();
 		const string& getRobotName() const;
 		void setRobotName(const string& robotName);
 		Logger* getLog();

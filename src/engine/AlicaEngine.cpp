@@ -4,7 +4,7 @@
  *  Created on: Mar 3, 2014
  *      Author: Stephan Opfer
  */
-//#define AE_DEBUG
+#define AE_DEBUG
 
 using namespace std;
 
@@ -31,6 +31,9 @@ namespace alica
 		this->teamObserver = nullptr;
 		this->log = nullptr;
 		this->planRepository = nullptr;
+		this->syncModul = nullptr;
+		this->roleAssignment = nullptr;
+		this->auth = nullptr;
 		this->behaviourPool = new BehaviourPool();
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->stepEngine = false;
@@ -53,7 +56,8 @@ namespace alica
 		return &instance;
 	}
 
-	bool AlicaEngine::init(IBehaviourCreator* bc, string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine)
+	bool AlicaEngine::init(IBehaviourCreator* bc, string roleSetName, string masterPlanName, string roleSetDir,
+	bool stepEngine)
 	{
 		bool everythingWorked = true;
 		this->setStepEngine(stepEngine);
@@ -63,7 +67,21 @@ namespace alica
 		this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
 		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
 		everythingWorked &= this->behaviourPool->init(bc);
+		return everythingWorked;
+	}
 
+	bool AlicaEngine::shutdown()
+	{
+		bool everythingWorked = true;
+		delete this->planRepository;
+		this->planRepository = nullptr;
+		delete this->planParser;
+		this->planParser = nullptr;
+		// roleSet is an Element in the elements set of the model factory and is cleaned there already
+		//delete this->roleSet;
+		this->roleSet= nullptr;
+		delete this->behaviourPool;
+		this->behaviourPool = nullptr;
 		return everythingWorked;
 	}
 
@@ -76,14 +94,14 @@ namespace alica
 		return this->stepEngine;
 	}
 
-	unique_ptr<PlanRepository> AlicaEngine::getPlanRepository()
+	PlanRepository* AlicaEngine::getPlanRepository()
 	{
-		return unique_ptr<PlanRepository> (this->planRepository);
+		return this->planRepository;
 	}
 
-	unique_ptr<IBehaviourPool> AlicaEngine::getBehaviourPool()
+	IBehaviourPool* AlicaEngine::getBehaviourPool()
 	{
-		return unique_ptr<IBehaviourPool> (this->behaviourPool);
+		return this->behaviourPool;
 	}
 
 	ITeamObserver* AlicaEngine::getTeamObserver()
@@ -121,7 +139,7 @@ namespace alica
 		return roleAssignment;
 	}
 
-	void AlicaEngine::setRoleAssignment( IRoleAssignment* roleAssignment)
+	void AlicaEngine::setRoleAssignment(IRoleAssignment* roleAssignment)
 	{
 		this->roleAssignment = roleAssignment;
 	}
@@ -131,7 +149,8 @@ namespace alica
 		this->stepEngine = stepEngine;
 	}
 
-	void AlicaEngine::abort (string msg){
+	void AlicaEngine::abort(string msg)
+	{
 		cerr << "ABORT: " << msg << endl;
 		exit(EXIT_FAILURE);
 	}
@@ -157,5 +176,4 @@ namespace alica
 	}
 
 } /* namespace Alica */
-
 

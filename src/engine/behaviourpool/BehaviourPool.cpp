@@ -25,6 +25,7 @@ namespace alica
 
 	BehaviourPool::~BehaviourPool()
 	{
+		delete this->availableBehaviours;
 	}
 
 	void BehaviourPool::stop()

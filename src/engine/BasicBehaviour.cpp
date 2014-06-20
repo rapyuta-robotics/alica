@@ -26,6 +26,7 @@ namespace alica
 
 	BasicBehaviour::~BasicBehaviour()
 	{
+		delete this->parameters;
 	}
 
 	const string BasicBehaviour::getName() const

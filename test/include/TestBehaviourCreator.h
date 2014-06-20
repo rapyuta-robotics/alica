@@ -1,12 +1,12 @@
 /*
- * DummyBehaviourCreator.h
+ * TestBehaviourCreator.h
  *
  *  Created on: Jun 18, 2014
  *      Author: Stephan Opfer
  */
 
-#ifndef DUMMYBEHAVIOURCREATOR_H_
-#define DUMMYBEHAVIOURCREATOR_H_
+#ifndef TESTBEHAVIOURCREATOR_H_
+#define TESTBEHAVIOURCREATOR_H_
 
 #include <engine/IBehaviourCreator.h>
 
@@ -18,14 +18,14 @@ namespace alica
 
 	class BasicBehaviour;
 
-	class DummyBehaviourCreator : public IBehaviourCreator
+	class TestBehaviourCreator : public IBehaviourCreator
 	{
 	public:
-		DummyBehaviourCreator();
-		virtual ~DummyBehaviourCreator();
+		TestBehaviourCreator();
+		virtual ~TestBehaviourCreator();
 		virtual unique_ptr<BasicBehaviour> createBehaviour(string behaviourName);
 	};
 
 } /* namespace alica */
 
-#endif /* DUMMYBEHAVIOURCREATOR_H_ */
+#endif /* TESTBEHAVIOURCREATOR_H_ */

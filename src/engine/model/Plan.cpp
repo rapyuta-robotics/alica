@@ -11,8 +11,10 @@
 
 namespace alica
 {
-	Plan::Plan(long id) : AbstractPlan()
+	Plan::Plan(long id) :
+			AbstractPlan()
 	{
+		this->postCondition = nullptr;
 		this->id = id;
 	}
 
@@ -30,16 +32,21 @@ namespace alica
 
 	EntryPoint* Plan::getEntryPointTaskID(long taskID)
 	{
-		for (map<long, alica::EntryPoint*>::const_iterator iter = entryPoints.begin(); iter != entryPoints.end(); iter++)
+		for (map<long, alica::EntryPoint*>::const_iterator iter = entryPoints.begin(); iter != entryPoints.end();
+				iter++)
 		{
 			const Task* task = iter->second->getTask();
-			if(task != nullptr){
-				if(task->getId() == taskID){
+			if (task != nullptr)
+			{
+				if (task->getId() == taskID)
+				{
 					return iter->second;
 				}
 			}
-			else{
-				cout << "Model: Class Plan: Entrypoint with ID " << iter->second->getId() << " does not have a Task" << endl;
+			else
+			{
+				cout << "Model: Class Plan: Entrypoint with ID " << iter->second->getId() << " does not have a Task"
+						<< endl;
 				throw new exception();
 			}
 		}
@@ -50,9 +57,9 @@ namespace alica
 
 	const string& Plan::getFileName() const
 	{
-		if(this->fileName.empty())
+		if (this->fileName.empty())
 		{
-			static string result = this->name+".pml";
+			static string result = this->name + ".pml";
 			return result;
 		}
 		else

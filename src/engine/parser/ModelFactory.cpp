@@ -5,7 +5,6 @@
  *      Author: Stephan Opfer
  */
 //#define MF_DEBUG
-
 #include "engine/parser/ModelFactory.h"
 #include "engine/PlanRepository.h"
 #include "engine/parser/PlanParser.h"
@@ -83,6 +82,10 @@ namespace alica
 
 	ModelFactory::~ModelFactory()
 	{
+		for (auto iter : this->elements)
+		{
+			delete iter.second;
+		}
 	}
 
 	void ModelFactory::setIgnoreMasterPlanId(bool value)
@@ -511,8 +514,7 @@ namespace alica
 			if (configurations.compare(val) == 0)
 			{
 				BehaviourConfiguration* bc = createBehaviourConfiguration(curChild);
-				this->rep->getBehaviourConfigurations().insert(
-						pair<long, BehaviourConfiguration*>(bc->getId(), bc));
+				this->rep->getBehaviourConfigurations().insert(pair<long, BehaviourConfiguration*>(bc->getId(), bc));
 				bc->setBehaviour(beh);
 				beh->getConfigurations().push_back(bc);
 			}
@@ -663,6 +665,7 @@ namespace alica
 		TaskRepository* tr = new TaskRepository();
 		tr->setId(this->parser->parserId(element));
 		tr->setFileName(this->parser->getCurrentFile());
+		addElement(tr);
 		setAlicaElementAttributes(tr, element);
 		this->rep->getTaskRepositorys().insert(pair<long, TaskRepository*>(tr->getId(), tr));
 		long id = 0;

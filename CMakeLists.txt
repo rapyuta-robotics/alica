@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS roscpp system_config fsystem)
 ## System dependencies are found with CMake's conventions
 #find_package(Boost REQUIRED COMPONENTS program_options)
 
-
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
@@ -91,7 +90,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
- include_directories(include ${catkin_INCLUDE_DIRS})
+ include_directories(include test/include ${catkin_INCLUDE_DIRS})
 
 
 file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
@@ -135,13 +134,14 @@ file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
  target_link_libraries(alica ${catkin_LIBRARIES})
  add_dependencies(alica ${catkin_LIBRARIES})
  
+
 ## Declare a cpp executable
- add_executable(test_base src/TestBase.cpp)
- 
- target_link_libraries(test_base
-   ${catkin_LIBRARIES} alica
- )
- add_dependencies(test_base ${catkin_LIBRARIES})
+# add_executable(test_base src/TestBase.cpp)
+# 
+# target_link_libraries(test_base
+#   ${catkin_LIBRARIES} alica
+# )
+# add_dependencies(test_base ${catkin_LIBRARIES})
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -187,7 +187,8 @@ file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 #############
 
 ## Add gtest based cpp test target and link libraries
- catkin_add_gtest(${PROJECT_NAME}-test test/test_alica_engine.cpp test/DummyBehaviourCreator.cpp)
+file(GLOB_RECURSE test_alica_SOURCES "test/src/*.cpp")
+ catkin_add_gtest(${PROJECT_NAME}-test ${test_alica_SOURCES})
  if(TARGET ${PROJECT_NAME}-test)
    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
  endif()
