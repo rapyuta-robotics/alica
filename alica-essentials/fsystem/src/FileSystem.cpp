@@ -49,7 +49,9 @@ namespace supplementary
 			else
 			{
 				buff[len] = '\0';
-				return std::string(buff);
+				std::string retString = std::string(buff);
+				free(buff);
+				return retString;
 			}
 		}
 		return NULL;
@@ -73,6 +75,7 @@ namespace supplementary
 			return false;
 		}
 
+		bool fileFound = false;
 		for (i = 0; i < n; i++)
 		{
 			//cout << "ff: Namelist " << i << ": " << namelist[i]->d_name << endl;
@@ -89,8 +92,8 @@ namespace supplementary
 
 				// recursively call this method for regular directories
 				if (findFile(curFullFile+"/",file,path_found)) {
-					free(namelist);
-					return true;
+					fileFound = true;
+					break;
 				}
 			}
 			else if (isFile(curFullFile))
@@ -98,9 +101,9 @@ namespace supplementary
 				if (file.compare(namelist[i]->d_name) == 0)
 				{
 					// file found, so return the full path
-					free(namelist);
+					fileFound = true;
 					path_found = curFullFile;
-					return true;
+					break;
 				}
 			}
 			else
@@ -111,8 +114,13 @@ namespace supplementary
 			free(namelist[i]);
 		}
 
+		for (; i < n; i++)
+		{
+			free(namelist[i]);
+		}
+
 		free(namelist);
-		return false;
+		return fileFound;
 
 	}
 

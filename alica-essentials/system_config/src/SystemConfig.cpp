@@ -74,6 +74,11 @@ namespace supplementary
 		cout << "Hostname:   " << hostname << endl;*/
 	}
 
+	void SystemConfig::shutdown()
+	{
+
+	}
+
 	/**
 	 * The access operator for choosing the configuration according to the given string
 	 *
