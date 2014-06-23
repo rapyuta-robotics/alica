@@ -107,6 +107,15 @@ namespace alica
 	{
 		this->terminal = terminal;
 	}
+	 EntryPoint* alica::State::getEntryPoint()
+	{
+		return entryPoint;
+	}
+
+	void alica::State::setEntryPoint( EntryPoint* entryPoint)
+	{
+		this->entryPoint = entryPoint;
+	}
 	string State::toString() const
 	{
 		stringstream ss;
@@ -116,3 +125,5 @@ namespace alica
 	}
 
 } /* namespace Alica */
+
+

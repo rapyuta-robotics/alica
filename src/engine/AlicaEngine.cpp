@@ -34,7 +34,7 @@ namespace alica
 		this->syncModul = nullptr;
 		this->roleAssignment = nullptr;
 		this->auth = nullptr;
-		this->behaviourPool = new BehaviourPool();
+		this->behaviourPool = nullptr;
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->stepEngine = false;
 #ifdef AE_DEBUG
@@ -61,11 +61,11 @@ namespace alica
 	{
 		bool everythingWorked = true;
 		this->setStepEngine(stepEngine);
-
 		this->planRepository = new PlanRepository();
 		this->planParser = new PlanParser(this->planRepository);
 		this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
 		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
+		this->behaviourPool = new BehaviourPool();
 		everythingWorked &= this->behaviourPool->init(bc);
 		return everythingWorked;
 	}

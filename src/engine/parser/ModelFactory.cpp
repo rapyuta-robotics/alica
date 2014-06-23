@@ -132,9 +132,8 @@ namespace alica
 		attr = element->Attribute("utilityThreshold");
 		if (!attr.empty())
 		{
-			plan->setMaxCardinality(stod(attr));
+			plan->setUtilityThreshold(stod(attr));
 		}
-
 		// insert into elements map
 		addElement(plan);
 		// insert into plan repository map
@@ -1298,6 +1297,7 @@ namespace alica
 			State* st = (State*)this->elements.find(pairs.second)->second;
 			EntryPoint* ep = (EntryPoint*)this->elements.find(pairs.first)->second;
 			ep->setState(st);
+			st->setEntryPoint(ep);
 		}
 		this->epStateReferences.clear();
 
