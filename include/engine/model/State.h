@@ -21,6 +21,7 @@ namespace alica
 	class Transition;
 	class AbstractPlan;
 	class Parametrisation;
+	class EntryPoint;
 
 	class State : public AlicaElement
 	{
@@ -43,6 +44,8 @@ namespace alica
 		void setPlans(const list<AbstractPlan*>& plans);bool isSuccessState() const;
 		void setSuccessState(bool successState);bool isTerminal() const;
 		void setTerminal(bool terminal);
+		EntryPoint* getEntryPoint();
+		void setEntryPoint(EntryPoint* entryPoint);
 
 	protected:
 		list<AbstractPlan*> plans;
@@ -53,6 +56,7 @@ namespace alica
 		bool terminal;
 		bool failureState;
 		bool successState;
+		EntryPoint* entryPoint;
 
 	};
 
