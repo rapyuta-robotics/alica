@@ -26,6 +26,8 @@ namespace alica
 		virtual void run(void* msg) = 0;
 		const string getName() const;
 		void setName(string name);
+		void start();
+		void stop();
 
 	protected:
 		string name;

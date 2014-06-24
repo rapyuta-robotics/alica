@@ -28,16 +28,15 @@ namespace alica
 	public:
 		BehaviourPool();
 		virtual ~BehaviourPool();
-		void stop();
+		void stopAll();
 		bool init(IBehaviourCreator* bc);
-		bool isBehaviourAvailable(Behaviour* b) const;
-		void removeBehaviour(RunningPlan rp);
-		void addBehaviour(RunningPlan rp);
+		void stopBehaviour(RunningPlan rp);
+		void startBehaviour(RunningPlan rp);
 	private:
 		/**
 		 * This map manages behaviours used by the currently running ALICA program.
 		 */
-		map<Behaviour*, unique_ptr<BasicBehaviour> >* availableBehaviours;
+		map<Behaviour*, shared_ptr<BasicBehaviour> >* availableBehaviours;
 
 		IBehaviourCreator* behaviourCreator;
 
