@@ -39,7 +39,7 @@ protected:
 		string path = supplementary::FileSystem::getSelfPath();
 		int place = path.rfind("devel");
 		path = path.substr(0, place);
-		path = path + "src/alica/test";
+		path = path + "src/alica/alica_engine/test";
 
 		// bring up the SystemConfig with the corresponding path
 		sc = supplementary::SystemConfig::getInstance();
