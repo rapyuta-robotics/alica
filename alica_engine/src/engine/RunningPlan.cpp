@@ -51,4 +51,16 @@ namespace alica
 		this->plan = plan;
 	}
 
+	shared_ptr<BasicBehaviour> RunningPlan::getBasicBehaviour()
+	{
+		return this->basicBehaviour;
+	}
+
+	void RunningPlan::setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour)
+	{
+		this->basicBehaviour = basicBehaviour;
+	}
+
+
 } /* namespace alica */
+

@@ -12,7 +12,7 @@ using namespace std;
 namespace alica
 {
 
-	Attack::Attack()
+	Attack::Attack() : BasicBehaviour("Attack")
 	{
 		this->callCounter = 0;
 	}

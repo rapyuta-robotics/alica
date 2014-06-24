@@ -41,8 +41,8 @@ namespace alica
 		void setAuthorithyTimeInterval(unsigned long authorithyTimeInterval);
 		const virtual string& getFileName() const;
 		virtual void setFileName(const string& fileName);
-		list<Variable*>& getVariables();
-		void setVariables(const list<Variable*>& variables);
+		shared_ptr<list<Variable*>> getVariables();
+		void setVariables(shared_ptr<list<Variable*>> variables);
 		RuntimeCondition* getRuntimeCondition();
 		void setRuntimeCondition(RuntimeCondition* runtimeCondition);
 		PreCondition* getPreCondition();
@@ -61,7 +61,7 @@ namespace alica
 	protected:
 		string fileName;
 		bool masterPlan;
-		list<Variable*> variables;
+		shared_ptr<list<Variable*>> variables;
 		double utilityThreshold = 1.0;
 	};
 

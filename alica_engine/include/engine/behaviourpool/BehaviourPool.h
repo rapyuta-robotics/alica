@@ -30,8 +30,8 @@ namespace alica
 		virtual ~BehaviourPool();
 		void stopAll();
 		bool init(IBehaviourCreator* bc);
-		void stopBehaviour(RunningPlan rp);
-		void startBehaviour(RunningPlan rp);
+		void stopBehaviour(shared_ptr<RunningPlan> rp);
+		void startBehaviour(shared_ptr<RunningPlan> rp);
 	private:
 		/**
 		 * This map manages behaviours used by the currently running ALICA program.

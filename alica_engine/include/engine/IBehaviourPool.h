@@ -28,9 +28,9 @@ namespace alica
 		// C#: public delegate void EngineTrigger(object arg);
 
 
-		virtual void startBehaviour(RunningPlan rp) = 0;
+		virtual void startBehaviour(shared_ptr<RunningPlan> rp) = 0;
 
-		virtual void stopBehaviour(RunningPlan rp) = 0;
+		virtual void stopBehaviour(shared_ptr<RunningPlan> rp) = 0;
 
 		virtual bool init(IBehaviourCreator* bc) = 0;
 

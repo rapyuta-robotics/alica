@@ -10,7 +10,7 @@
 namespace alica
 {
 
-	MidFieldStandard::MidFieldStandard()
+	MidFieldStandard::MidFieldStandard() : BasicBehaviour ("MidFieldStandard")
 	{
 		this->callCounter = 0;
 	}

@@ -12,7 +12,7 @@ using namespace std;
 namespace alica
 {
 
-	DefendMid::DefendMid()
+	DefendMid::DefendMid() : BasicBehaviour ("DefendMid")
 	{
 		this->callCounter = 0;
 	}
