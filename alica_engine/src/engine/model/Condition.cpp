@@ -64,4 +64,14 @@ namespace alica
 		this->abstractPlan = abstractPlan;
 	}
 
+	const string& Condition::getPlugInName() const
+	{
+		return plugInName;
+	}
+
+	void Condition::setPlugInName(const string& plugInName)
+	{
+		this->plugInName = plugInName;
+	}
+
 } /* namespace Alica */
