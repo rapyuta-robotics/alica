@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(alica)
+project(alica_engine)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -79,7 +79,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp system_config fsystem)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES alica
+  LIBRARIES alica_engine
   CATKIN_DEPENDS roscpp fsystem
 #  DEPENDS tinyxml
 )
@@ -96,7 +96,7 @@ catkin_package(
 file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 
 ## Declare a cpp library
- add_library(alica
+ add_library(alica_engine
 	${alica_SOURCES};
  )
 ## Declare a cpp library
@@ -131,8 +131,8 @@ file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
    ##src/engine/BasicBehaviour.cpp
    ##src/engine/model/CapValue.cpp;
  ## )
- target_link_libraries(alica ${catkin_LIBRARIES})
- add_dependencies(alica ${catkin_LIBRARIES})
+ target_link_libraries(alica_engine ${catkin_LIBRARIES})
+ add_dependencies(alica_engine ${catkin_LIBRARIES})
  
 
 ## Declare a cpp executable
