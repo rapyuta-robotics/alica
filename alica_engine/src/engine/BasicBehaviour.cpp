@@ -47,6 +47,23 @@ namespace alica
 	{
 		return AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
 	}
+	/**
+	 * Starts the execution of this Behaviour (either Timer, or Event triggered)
+	 */
+	void BasicBehaviour::start()
+	{
+		// TODO implement this
+	}
+
+	/**
+	 * Stops the execution of this Behaviour
+	 */
+	void BasicBehaviour::stop()
+	{
+		// TODO implement this
+	}
 
 
 } /* namespace alica */
+
+

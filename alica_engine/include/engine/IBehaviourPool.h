@@ -27,15 +27,14 @@ namespace alica
 		// TODO find a nice way to trigger
 		// C#: public delegate void EngineTrigger(object arg);
 
-		virtual bool isBehaviourAvailable(Behaviour* b) const = 0;
 
-		virtual void addBehaviour(RunningPlan rp) = 0;
+		virtual void startBehaviour(RunningPlan rp) = 0;
 
-		virtual void removeBehaviour(RunningPlan rp) = 0;
+		virtual void stopBehaviour(RunningPlan rp) = 0;
 
 		virtual bool init(IBehaviourCreator* bc) = 0;
 
-		virtual void stop() = 0;
+		virtual void stopAll() = 0;
 	};
 
 } /* namespace alica */

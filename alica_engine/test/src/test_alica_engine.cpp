@@ -31,7 +31,7 @@ protected:
 		string path = supplementary::FileSystem::getSelfPath();
 		int place = path.rfind("devel");
 		path = path.substr(0, place);
-		path = path + "src/alica/test";
+		path = path + "src/alica/alica_engine/test";
 
 		// bring up the SystemConfig with the corresponding path
 		sc = supplementary::SystemConfig::getInstance();
@@ -181,13 +181,11 @@ TEST_F(AlicaEngineTest, behaviourPoolInit)
 	EXPECT_TRUE(ae->init(new alica::TestBehaviourCreator(), "Roleset", "MasterPlan", ".", false))
 			<< "Unable to initialise the Alica Engine!";
 
-	map<long int, alica::Behaviour*> behaviours = ae->getPlanRepository()->getBehaviours();
+	auto behaviours = ae->getPlanRepository()->getBehaviours();
 	alica::IBehaviourPool* bp = ae->getBehaviourPool();
 	for (auto behaviourPair : behaviours)
 	{
 		cout << "Behaviour: " << behaviourPair.second->getName() << endl;
-		EXPECT_TRUE(bp->isBehaviourAvailable(behaviourPair.second)) << "Did not find the Behaviour "
-				<< behaviourPair.second->getName();
 	}
 }
 

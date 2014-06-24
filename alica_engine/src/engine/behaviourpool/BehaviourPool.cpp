@@ -20,16 +20,12 @@ namespace alica
 	BehaviourPool::BehaviourPool()
 	{
 		this->behaviourCreator = nullptr;
-		this->availableBehaviours = new map<Behaviour*, unique_ptr<BasicBehaviour> >();
+		this->availableBehaviours = new map<Behaviour*, shared_ptr<BasicBehaviour> >();
 	}
 
 	BehaviourPool::~BehaviourPool()
 	{
 		delete this->availableBehaviours;
-	}
-
-	void BehaviourPool::stop()
-	{
 	}
 
 	bool BehaviourPool::init(IBehaviourCreator* bc)
@@ -41,15 +37,16 @@ namespace alica
 
 		this->behaviourCreator = bc;
 
-		std::map<long int, alica::Behaviour*> behaviours =
-				AlicaEngine::getInstance()->getPlanRepository()->getBehaviours();
+		auto behaviours = AlicaEngine::getInstance()->getPlanRepository()->getBehaviours();
 		for (auto iter : behaviours)
 		{
-			unique_ptr<BasicBehaviour> basicBeh = this->behaviourCreator->createBehaviour(iter.second->getName());
+			shared_ptr<BasicBehaviour> basicBeh = this->behaviourCreator->createBehaviour(iter.second->getName());
 			if (basicBeh != nullptr)
 			{
+				iter.second->setImplementation(basicBeh);
 				this->availableBehaviours->insert(make_pair(iter.second, move(basicBeh)));
-			} else
+			}
+			else
 			{
 				return false;
 			}
@@ -57,26 +54,53 @@ namespace alica
 		return true;
 	}
 
-	bool BehaviourPool::isBehaviourAvailable(Behaviour* b) const
+	void BehaviourPool::stopAll()
 	{
-		try
+		auto behaviours = AlicaEngine::getInstance()->getPlanRepository()->getBehaviours();
+		for (auto iter : behaviours)
 		{
-			this->availableBehaviours->at(b);
-			return true;
-		}
-		catch (const std::out_of_range& oor)
-		{
-			cerr << "Out of Range error: " << oor.what() << '\n';
-			return false;
+			shared_ptr<BasicBehaviour> bbPtr = iter.second->getImplementation();
+			if (bbPtr == nullptr)
+			{
+				cerr << "BP::stop(): Found Behaviour without an BasicBehaviour attached!" << endl;
+				continue;
+			}
+
+			bbPtr->stop();
+
 		}
 	}
 
-	void BehaviourPool::removeBehaviour(RunningPlan rp)
+	void BehaviourPool::stopBehaviour(RunningPlan rp)
 	{
+
 	}
 
-	void BehaviourPool::addBehaviour(RunningPlan rp)
+	void BehaviourPool::startBehaviour(RunningPlan rp)
 	{
+		if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp.plan))
+		{
+			shared_ptr<BasicBehaviour> bb = bc->getBehaviour()->getImplementation();
+			if (bb != nullptr)
+			{
+				// set basic behaviours params and vars
+				bb->setParameters(bc->getParameters());
+				bb->setVariables(bc->getVariables());
+
+				// set both directions rp <-> bb
+				rp->setBasicBehaviour(bb);
+				bb->setRunningPlan(rp);
+
+				// start basic behaviour
+				bb->setDueTime(bc->getDeferring());
+				bb->setPeriod(1000 / bc->getFrequency());
+				bb->start();
+			}
+		}
+		else
+		{
+			cerr << "BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp.plan->getName() << " Plan Id: " << rp.plan->getId() << endl;
+		}
 	}
 
 } /* namespace alica */
