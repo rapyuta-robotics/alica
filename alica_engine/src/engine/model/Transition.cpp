@@ -24,12 +24,12 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
-	const PreCondition* Transition::getPreCondition()
+	PreCondition* Transition::getPreCondition()
 	{
 		return preCondition;
 	}
 
-	void Transition::setPreCondition(const PreCondition* preCondition)
+	void Transition::setPreCondition(PreCondition* preCondition)
 	{
 		this->preCondition = preCondition;
 	}
@@ -53,12 +53,12 @@ namespace alica
 		this->outState = outState;
 	}
 
-	const SyncTransition* Transition::getSyncTransition() const
+	SyncTransition* Transition::getSyncTransition()
 	{
 		return syncTransition;
 	}
 
-	void Transition::setSyncTransition(const SyncTransition* syncTransition)
+	void Transition::setSyncTransition(SyncTransition* syncTransition)
 	{
 		this->syncTransition = syncTransition;
 	}
