@@ -94,22 +94,22 @@ namespace alica
 		this->variables = variables;
 	}
 
-	const RuntimeCondition* AbstractPlan::getRuntimeCondition() const
+	RuntimeCondition* AbstractPlan::getRuntimeCondition()
 	{
 		return runtimeCondition;
 	}
 
-	void AbstractPlan::setRuntimeCondition(const RuntimeCondition* runtimeCondition)
+	void AbstractPlan::setRuntimeCondition(RuntimeCondition* runtimeCondition)
 	{
 		this->runtimeCondition = runtimeCondition;
 	}
 
-	const PreCondition* AbstractPlan::getPreCondition() const
+	PreCondition* AbstractPlan::getPreCondition()
 	{
 		return preCondition;
 	}
 
-	void AbstractPlan::setPreCondition(const PreCondition* preCondition)
+	void AbstractPlan::setPreCondition(PreCondition* preCondition)
 	{
 		this->preCondition = preCondition;
 	}
