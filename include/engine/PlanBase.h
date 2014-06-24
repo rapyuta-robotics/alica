@@ -2,7 +2,7 @@
  * PlanBase.h
  *
  *  Created on: Jun 17, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #ifndef PLANBASE_H_
@@ -10,8 +10,9 @@
 
 using namespace std;
 
-#include <thread>
 #include <queue>
+#include <stdio.h>
+#include <thread>
 
 namespace alica
 {
@@ -31,8 +32,15 @@ namespace alica
 		PlanBase(Plan* masterplan);
 		virtual ~PlanBase();
 
+
+//		PlanBase::AutoResetEvent& getSignal();
+		const RunningPlan* getRootNode() const;
+		void setRootNode(const RunningPlan* rootNode);
+
 	private:
 		queue<RunningPlan> fpEvents;
+//		AutoResetEvent signal;
+//		AutoResetEvent loopGuard;
 
 	protected:
 		Plan* masterPlan;
@@ -53,7 +61,7 @@ namespace alica
 		ulong loopInterval;
 
 		bool ruuning;
-		bool sendStatusMessage;
+		bool sendStatusMessages;
 		bool sendStatusInterval;
 
 		thread mainThread;
