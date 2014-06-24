@@ -235,7 +235,7 @@ namespace alica
 			else if (vars.compare(val) == 0)
 			{
 				Variable* var = createVariable(curChild);
-				plan->getVariables().push_back(var);
+				plan->getVariables()->push_back(var);
 			}
 			else if (synchronisations.compare(val) == 0)
 			{
@@ -594,7 +594,7 @@ namespace alica
 			if (vars.compare(val) == 0)
 			{
 				Variable* v = createVariable(curChild);
-				b->getVariables().push_back(v);
+				b->getVariables()->push_back(v);
 			}
 			else if (parameters.compare(val) == 0)
 			{
@@ -602,7 +602,7 @@ namespace alica
 				const char* value = curChild->Attribute("value");
 				if (attr && value)
 				{
-					b->getParameters().insert(pair<string, string>(attr, value));
+					b->getParameters()->insert(pair<string, string>(attr, value));
 				}
 			}
 			else

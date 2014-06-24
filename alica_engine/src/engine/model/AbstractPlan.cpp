@@ -33,15 +33,14 @@ namespace alica
 
 	bool AbstractPlan::containsVar(const Variable* v)
 	{
-		const list<Variable*> vars = this->getVariables();
-		return find(vars.begin(), vars.end(), v) != vars.end();
-
+		auto vars = this->getVariables();
+		return find(vars->begin(), vars->end(), v) != vars->end();
 	}
 
 	bool AbstractPlan::containsVar(string name)
 	{
-		const list<Variable*> vars = this->getVariables();
-		for (Variable* v : vars)
+		auto vars = this->getVariables();
+		for (Variable* v : *vars)
 		{
 			if (v->getName() == name)
 			{
@@ -83,13 +82,13 @@ namespace alica
 		this->fileName = fileName;
 	}
 
-	list<Variable*>& AbstractPlan::getVariables()
+	shared_ptr<list<Variable*>> AbstractPlan::getVariables()
 	{
 		return variables;
 	}
 
 
-	void AbstractPlan::setVariables(const list<Variable*>& variables)
+	void AbstractPlan::setVariables(shared_ptr<list<Variable*>> variables)
 	{
 		this->variables = variables;
 	}

@@ -12,6 +12,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
 #include "engine/model/Behaviour.h"
+#include "engine/model/BehaviourConfiguration.h"
 #include "engine/BasicBehaviour.h"
 
 namespace alica
@@ -71,14 +72,14 @@ namespace alica
 		}
 	}
 
-	void BehaviourPool::stopBehaviour(RunningPlan rp)
+	void BehaviourPool::stopBehaviour(shared_ptr<RunningPlan> rp)
 	{
-
+		// TODO implement this
 	}
 
-	void BehaviourPool::startBehaviour(RunningPlan rp)
+	void BehaviourPool::startBehaviour(shared_ptr<RunningPlan> rp)
 	{
-		if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp.plan))
+		if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp->getPlan()))
 		{
 			shared_ptr<BasicBehaviour> bb = bc->getBehaviour()->getImplementation();
 			if (bb != nullptr)
@@ -99,7 +100,7 @@ namespace alica
 		}
 		else
 		{
-			cerr << "BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp.plan->getName() << " Plan Id: " << rp.plan->getId() << endl;
+			cerr << "BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp->getPlan()->getName() << " Plan Id: " << rp->getPlan()->getId() << endl;
 		}
 	}
 
