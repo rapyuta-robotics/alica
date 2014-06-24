@@ -22,20 +22,20 @@ namespace alica
 	public:
 		Transition();
 		virtual ~Transition();
-		const PreCondition* getPreCondition() ;
-		void setPreCondition(const PreCondition* preCondition);
+		PreCondition* getPreCondition() ;
+		void setPreCondition(PreCondition* preCondition);
 		State* getOutState();
 		State* getInState() ;
 		void setInState(State* inState);
 		void setOutState(State* outState);
-		const SyncTransition* getSyncTransition() const;
-		void setSyncTransition(const SyncTransition* syncTransition);
+		SyncTransition* getSyncTransition();
+		void setSyncTransition(SyncTransition* syncTransition);
 
 	private:
-		const PreCondition* preCondition;
+		PreCondition* preCondition;
 		State* inState;
 		State* outState;
-		const SyncTransition* syncTransition;
+		SyncTransition* syncTransition;
 	};
 
 } /* namespace Alica */

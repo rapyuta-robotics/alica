@@ -701,6 +701,7 @@ namespace alica
 	{
 		SyncTransition* s = new SyncTransition();
 		s->setId(this->parser->parserId(element));
+		setAlicaElementAttributes(s, element);
 		const char* talkTimeoutPtr = element->Attribute("talkTimeout");
 		if (talkTimeoutPtr)
 		{
@@ -971,7 +972,7 @@ namespace alica
 			else if (postCondition.compare(val) == 0)
 			{
 				PostCondition* postCon = createPostCondition(curChild);
-				fail->setPosCondition(postCon);
+				fail->setPostCondition(postCon);
 			}
 			else
 			{
@@ -1003,7 +1004,7 @@ namespace alica
 			else if (postCondition.compare(val) == 0)
 			{
 				PostCondition* postCon = createPostCondition(curChild);
-				suc->setPosCondition(postCon);
+				suc->setPostCondition(postCon);
 			}
 			else
 			{

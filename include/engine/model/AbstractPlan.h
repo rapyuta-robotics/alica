@@ -43,10 +43,10 @@ namespace alica
 		virtual void setFileName(const string& fileName);
 		list<Variable*>& getVariables();
 		void setVariables(const list<Variable*>& variables);
-		const RuntimeCondition* getRuntimeCondition() const;
-		void setRuntimeCondition(const RuntimeCondition* runtimeCondition);
-		const PreCondition* getPreCondition() const;
-		void setPreCondition(const PreCondition* preCondition);
+		RuntimeCondition* getRuntimeCondition();
+		void setRuntimeCondition(RuntimeCondition* runtimeCondition);
+		PreCondition* getPreCondition();
+		void setPreCondition(PreCondition* preCondition);
 		const UtilityFunction* getUtilityFunction() const;
 		void setUtilityFunction(UtilityFunction* utilityFunction);
 		double getUtilityThreshold() const;
@@ -54,8 +54,8 @@ namespace alica
 
 	private:
 		unsigned long authorithyTimeInterval;
-		const RuntimeCondition* runtimeCondition;
-		const PreCondition* preCondition;
+		RuntimeCondition* runtimeCondition;
+		PreCondition* preCondition;
 		UtilityFunction* utilityFunction;
 
 	protected:
