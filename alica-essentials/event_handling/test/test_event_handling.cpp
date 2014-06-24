@@ -58,7 +58,7 @@ TEST(EventHandling, autoResetEvent)
 	first.join();
 	second.join();
 
-	std::chrono::milliseconds dura(10000);
+	std::chrono::milliseconds dura(5000);
 	std::chrono::milliseconds duraThread(1000);
 	std::chrono::milliseconds delayinM(2000);
 	Timer* t = new Timer(&callback, duraThread, true,  delayinM);
