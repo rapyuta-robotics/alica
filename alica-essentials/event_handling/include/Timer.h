@@ -2,7 +2,7 @@
  * Timer.h
  *
  *  Created on: Jun 23, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #ifndef TIMER_H_
@@ -21,24 +21,24 @@ namespace supplementary
 	{
 	public:
 		Timer();
-		Timer(Timer_Callback callback, std::chrono::milliseconds  msInterval);
-		Timer(Timer_Callback callback, std::chrono::milliseconds msInterval, bool delay,  std::chrono::milliseconds delayInMili);
+		Timer(Timer_Callback callback, chrono::milliseconds msInterval, bool delay, chrono::milliseconds delayInMili);
 		virtual ~Timer();
+		void sleepThenTimeout();
 		void setCallBack(Timer_Callback callback);
-		void setInterval(std::chrono::milliseconds  msInterval);
-		void start();
-		void stop();
+		void setInterval(std::chrono::milliseconds msInterval);
+		virtual void start();
+		virtual void stop();
 
+
+		bool delay;
+		chrono::milliseconds msInterval;
+		chrono::milliseconds delayInMili;
+		bool running;
+		thread cThread ;
 
 	private:
 		Timer_Callback callback;
-		std::chrono::milliseconds msInterval;
-		std::chrono::milliseconds delayInMili;
-		thread cThread;
-		bool started;
-		bool delay;
-		void temporize();
-		void sleepThenTimeout();
+		virtual void runningThread();
 	};
 
 } /* namespace supplementary */

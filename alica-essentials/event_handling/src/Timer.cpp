@@ -2,7 +2,7 @@
  * Timer.cpp
  *
  *  Created on: Jun 23, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #include "Timer.h"
@@ -14,7 +14,7 @@ namespace supplementary
 	{
 		this->callback = 0;
 		this->msInterval = std::chrono::milliseconds(1000); /* Set default interval to 1 second */
-		this->started = false;
+		this->running = false;
 		this->delay = false;
 
 	}
@@ -22,19 +22,12 @@ namespace supplementary
 	{
 		stop();
 	}
-	Timer::Timer(Timer_Callback callback, std::chrono::milliseconds msInterval)
-	{
-		this->callback = callback;
-		this->msInterval = msInterval;
-		this->started = false;
-		this->delay = false;
-	}
 	Timer::Timer(Timer_Callback callback, std::chrono::milliseconds msInterval, bool delay,
 					std::chrono::milliseconds delayInMili)
 	{
 		this->callback = callback;
 		this->msInterval = msInterval;
-		this->started = false;
+		this->running = false;
 		this->delay = delay;
 		this->delayInMili = delayInMili;
 	}
@@ -48,22 +41,21 @@ namespace supplementary
 	}
 	void Timer::start()
 	{
-		this->started = true;
-		cThread = thread(&Timer::temporize, this);
+		this->running = true;
+		cThread = thread(&Timer::runningThread, this);
 	}
 	void Timer::stop()
 	{
-		this->started = false;
+		this->running = false;
 	}
-	void Timer::temporize()
+	void Timer::runningThread()
 	{
 		if (this->delay)
 		{
 			std::this_thread::sleep_for(delayInMili);
 		}
-		while (this->started)
+		while (this->running)
 		{
-			cout << "SCHALFE" << endl;
 			callback();
 			this->sleepThenTimeout();
 		}

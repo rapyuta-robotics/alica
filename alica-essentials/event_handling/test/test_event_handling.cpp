@@ -8,27 +8,37 @@
 #include <gtest/gtest.h>
 #include <thread>
 #include "../include/AutoResetEvent.h"
+#include "../include/TimerCallback.h"
 #include "../include/Timer.h"
 #include <string>
 using namespace supplementary;
 
 AutoResetEvent event;
-Timer timer;
 int callbackInt = 0;
 
-static void otherThread(std::string which)
+class EventTest : public ::testing::Test
 {
-	event.waitOne();
-	std::cout << which << std::endl;
-}
-static void callback()
+public:
+	static void otherThread(std::string which)
+	{
+		event.waitOne();
+		std::cout << which << std::endl;
+	}
+	void callback()
+	{
+		callbackInt++;
+		std::cout << "ZÄHLE HOCH " << callbackInt << std::endl;
+	}
+
+	static void callbackTwo()
+	{
+		callbackInt++;
+		std::cout << "ZÄHLE HOCH " << callbackInt << std::endl;
+	}
+};
+
+TEST_F(EventTest, autoResetEvent)
 {
-	callbackInt++;
-	std::cout << "ZÄHLE HOCH " << callbackInt << std::endl;
-}
-TEST(EventHandling, autoResetEvent)
-{
-	std::cout << "###########################################################################" << std::endl;
 	std::thread first(std::bind(otherThread, "first!"));
 	std::cout << "nach FIRST" << std::endl;
 
@@ -57,20 +67,26 @@ TEST(EventHandling, autoResetEvent)
 
 	first.join();
 	second.join();
-
-	std::chrono::milliseconds dura(5000);
+//
+	std::chrono::milliseconds dura(4000);
 	std::chrono::milliseconds duraThread(1000);
-	std::chrono::milliseconds delayinM(2000);
-	Timer* t = new Timer(&callback, duraThread, true,  delayinM);
+	std::chrono::milliseconds delayinM(1000);
 
-
-	t->start();
+	TimerCallback<EventTest> h(this, &EventTest::callback, duraThread, true, delayinM);
+	h.start();
 	std::this_thread::sleep_for(dura);
-	t->stop();
+	h.stop();
 
-	EXPECT_EQ(8, callbackInt) << "WRONG value of times!" << endl;
+	EXPECT_EQ(3, callbackInt) << "WRONG value of times!" << endl;
+
+//	Timer* t = new Timer(&EventTest::callbackTwo, duraThread, true, delayinM);
+//	callbackInt = 0;
+//	t->start();
+//	std::this_thread::sleep_for(dura);
+//	t->stop();
+//
+//	EXPECT_EQ(3, callbackInt) << "WRONG value of times!" << endl;
 }
-
 int main(int argc, char **argv)
 {
 	testing::InitGoogleTest(&argc, argv);
