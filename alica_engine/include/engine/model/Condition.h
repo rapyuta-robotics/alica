@@ -35,6 +35,8 @@ namespace alica
 		void setVariables(const list<Variable*>& variables);
 		AbstractPlan* getAbstractPlan() const;
 		void setAbstractPlan(AbstractPlan* abstractPlan);
+		const string& getPlugInName() const;
+		void setPlugInName(const string& plugInName);
 
 	private:
 		void setQuantifiers(const list<Quantifier*>& quantifiers);
@@ -43,6 +45,7 @@ namespace alica
 		list<Variable*> variables;
 		list<Quantifier*> quantifiers;
 		AbstractPlan* abstractPlan;
+		string plugInName;
 
 	};
 

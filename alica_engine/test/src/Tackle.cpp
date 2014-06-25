@@ -10,7 +10,7 @@
 namespace alica
 {
 
-	Tackle::Tackle()
+	Tackle::Tackle() : BasicBehaviour("Tackle")
 	{
 		this->callCounter = 0;
 	}

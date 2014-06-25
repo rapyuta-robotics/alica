@@ -11,10 +11,12 @@
 using namespace std;
 
 #include <list>
+#include <memory>
 
 namespace alica
 {
 
+	class BasicBehaviour;
 	class AbstractPlan;
 
 	class RunningPlan
@@ -28,10 +30,13 @@ namespace alica
 		void setChildren(const list<RunningPlan*>& children);
 		AbstractPlan* getPlan() const;
 		void setPlan(AbstractPlan* plan);
+		shared_ptr<BasicBehaviour> getBasicBehaviour();
+		void setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour);
 
 	protected:
 		bool behaviour;
 		AbstractPlan* plan;
+		shared_ptr<BasicBehaviour> basicBehaviour;
 		list<RunningPlan*> children;
 	};
 

@@ -33,8 +33,8 @@ namespace alica
 		void setEventDriven(bool eventDriven);
 		int getFrequency() const;
 		void setFrequency(int frequency);
-		map<string, string>& getParameters();
-		void setParameters(const map<string, string>& parameters);
+		shared_ptr<map<string,string>> getParameters();
+		void setParameters(const shared_ptr<map<string,string>> parameters);
 		const Behaviour* getBehaviour() const;
 		void setBehaviour(const Behaviour* behaviour);
 
@@ -42,7 +42,7 @@ namespace alica
 		bool eventDriven;
 		int frequency;
 		int deferring;
-		map<string,string> parameters;
+		shared_ptr<map<string,string>> parameters;
 		const Behaviour* behaviour;
 	};
 

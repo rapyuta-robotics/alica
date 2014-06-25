@@ -23,14 +23,14 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
-	const PostCondition* TerminalState::getPosCondition() const
+	PostCondition* TerminalState::getPostCondition()
 	{
-		return posCondition;
+		return postCondition;
 	}
 
-	void TerminalState::setPosCondition(const PostCondition* posCondition)
+	void TerminalState::setPostCondition(PostCondition* posCondition)
 	{
-		this->posCondition = posCondition;
+		this->postCondition = posCondition;
 	}
 
 } /* namespace Alica */

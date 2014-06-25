@@ -5,6 +5,8 @@
  *      Author: Stephan Opfer
  */
 
+#include <memory>
+
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
 
@@ -13,10 +15,10 @@ namespace alica
 
 	Behaviour::Behaviour()
 	{
-
+		this->implementation = nullptr;
 	}
-	Behaviour::Behaviour(string name) :
-			Behaviour()
+
+	Behaviour::Behaviour(string name) :	Behaviour()
 	{
 		this->name = name;
 	}
@@ -37,8 +39,6 @@ namespace alica
 		ss << "#EndBehaviour" << endl;
 		return ss.str();
 	}
-
-//==================== Getter and Setter ===================
 
 	list<BehaviourConfiguration*>& Behaviour::getConfigurations()
 	{
@@ -65,12 +65,12 @@ namespace alica
 		this->fileName = fileName;
 	}
 
-	const BasicBehaviour* Behaviour::getImplementation() const
+	const shared_ptr<BasicBehaviour> Behaviour::getImplementation() const
 	{
 		return implementation;
 	}
 
-	void Behaviour::setImplementation(BasicBehaviour* implementation)
+	void Behaviour::setImplementation(shared_ptr<BasicBehaviour> implementation)
 	{
 		this->implementation = implementation;
 	}

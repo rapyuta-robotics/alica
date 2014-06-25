@@ -44,12 +44,12 @@ namespace alica
 		ss << "\t Deferring: " + this->getDeferring() << endl;
 		ss << "\t Frequency: " + this->getFrequency() << endl;
 		ss << "\t MasterPlan?: " + this->isMasterPlan() << endl;
-		ss << "\t Parameters: " + this->getParameters().size() << endl;
+		ss << "\t Parameters: " + this->getParameters()->size() << endl;
 
-		if (this->getParameters().size() != 0)
+		if (this->getParameters()->size() != 0)
 		{
-			for (map<string, string>::const_iterator iter = this->getParameters().begin();
-					iter != this->getParameters().end(); iter++)
+			for (map<string, string>::const_iterator iter = this->getParameters()->begin();
+					iter != this->getParameters()->end(); iter++)
 			{
 				const string s = iter->first;
 				const string val = iter->second;
@@ -61,8 +61,6 @@ namespace alica
 
 		return ss.str();
 	}
-
-//================== Getter and Setter =========================
 
 	int BehaviourConfiguration::getDeferring() const
 	{
@@ -94,12 +92,12 @@ namespace alica
 		this->frequency = frequency;
 	}
 
-	map<string, string>& BehaviourConfiguration::getParameters()
+	shared_ptr<map<string,string>> BehaviourConfiguration::getParameters()
 	{
 		return parameters;
 	}
 
-	void BehaviourConfiguration::setParameters(const map<string, string>& parameters)
+	void BehaviourConfiguration::setParameters(shared_ptr<map<string,string>> parameters)
 	{
 		this->parameters = parameters;
 	}
