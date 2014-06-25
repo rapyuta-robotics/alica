@@ -144,6 +144,11 @@ namespace alica
 		this->roleAssignment = roleAssignment;
 	}
 
+	IPlanParser* AlicaEngine::getPlanParser()
+	{
+		return planParser;
+	}
+
 	void AlicaEngine::setStepEngine(bool stepEngine)
 	{
 		this->stepEngine = stepEngine;
