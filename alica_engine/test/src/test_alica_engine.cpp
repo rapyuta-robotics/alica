@@ -5,6 +5,7 @@ using namespace std;
 #include <map>
 #include <list>
 #include <typeinfo>
+#include <iostream>
 
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
@@ -552,7 +553,7 @@ TEST_F(AlicaEngineTest, planParser)
 										{}, {1402500843072}, 1402500828244);
 							break;
 						case 1402500833246:
-							checkState(s, 1402500833246, "Shoot", "", {}, {}, {1402500843072});
+							checkState(s, 1402500833246, "Shoot", "", {}, {1402500843072}, {});
 							break;
 						default:
 							EXPECT_TRUE(false);
