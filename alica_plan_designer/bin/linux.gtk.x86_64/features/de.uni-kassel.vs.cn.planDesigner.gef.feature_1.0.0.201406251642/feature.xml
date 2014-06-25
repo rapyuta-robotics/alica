@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="de.uni-kassel.vs.cn.planDesigner.gef.feature"
+      label="GEF Feature"
+      version="1.0.0.201406251642"
+      plugin="de.uni-kassel.vs.cn.planDesigner.ui">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="com.ibm.icu"/>
+      <import plugin="org.eclipse.draw2d" version="3.7.0" match="compatible"/>
+      <import plugin="org.eclipse.core.runtime" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.ui.workbench" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jface" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.swt" version="3.2.0" match="compatible"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.gef"
+         download-size="0"
+         install-size="0"
+         version="3.9.0.201308190730"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.draw2d"
+         download-size="0"
+         install-size="0"
+         version="3.9.0.201308190730"
+         unpack="false"/>
+
+   <plugin
+         id="de.uni-kassel.vs.cn.planDesigner.codegeneration"
+         download-size="0"
+         install-size="0"
+         version="1.0.1.201406251642"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swt"
+         download-size="0"
+         install-size="0"
+         version="3.102.1.v20140206-1334"
+         unpack="false"/>
+
+</feature>
