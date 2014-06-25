@@ -11,6 +11,10 @@
 using namespace std;
 
 #include <list>
+#include <vector>
+#include <memory>
+#include <string>
+#include <sstream>
 
 namespace alica
 {
@@ -24,19 +28,20 @@ namespace alica
 		virtual ~SuccessCollection();
 		int getCount() const;
 		void setCount(int count);
-		EntryPoint** getKeys();
-		list<int>** getValues();
+		EntryPoint** getEntryPoints();
 		void setSuccess(int robot, EntryPoint* ep);
 		void clear();
-		list<int>** getRobots();
-		void setRobots(list<int>** robots);
+		shared_ptr<list<int> >* getRobots();
+		void setRobots(shared_ptr<list<int> >* robots);
+		shared_ptr<list<int> > getRobots(EntryPoint* ep);
+		shared_ptr<list<int> > getRobotsById(long id);
+		string toString();
 
 	private:
 
 	protected:
-		EntryPoint** keys;
-		list<int>** values;
-		list<int>** robots;
+		EntryPoint** entryPoints;
+		shared_ptr<list<int> >* robots;
 		int count = 0;
 	};
 

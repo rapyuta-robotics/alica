@@ -52,6 +52,7 @@ namespace alica
 		void setAuth(AuthorityManager* auth);
 		IRoleAssignment* getRoleAssignment();
 		void setRoleAssignment(IRoleAssignment* roleAssignment);
+		IPlanParser* getPlanParser();
 
 	protected:
 		supplementary::SystemConfig* sc;
