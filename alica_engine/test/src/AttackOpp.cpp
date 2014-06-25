@@ -10,7 +10,7 @@
 namespace alica
 {
 
-	AttackOpp::AttackOpp()
+	AttackOpp::AttackOpp() : BasicBehaviour("AttackOpp")
 	{
 		this->callCounter = 0;
 	}
