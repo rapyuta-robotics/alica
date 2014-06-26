@@ -8,7 +8,6 @@
 #include <gtest/gtest.h>
 #include <thread>
 #include "../include/AutoResetEvent.h"
-#include "../include/TimerCallback.h"
 #include "../include/Timer.h"
 #include <string>
 using namespace supplementary;
@@ -72,7 +71,7 @@ TEST_F(EventTest, autoResetEvent)
 	std::chrono::milliseconds duraThread(1000);
 	std::chrono::milliseconds delayinM(1000);
 
-	TimerCallback<EventTest> h(this, &EventTest::callback, duraThread, true, delayinM);
+	Timer<EventTest> h(this, &EventTest::callback, duraThread, true, delayinM);
 	h.start();
 	std::this_thread::sleep_for(dura);
 	h.stop();
