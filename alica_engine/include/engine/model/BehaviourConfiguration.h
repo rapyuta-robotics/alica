@@ -19,6 +19,12 @@ namespace alica
 {
 	class Behaviour;
 
+	/**
+	 * A Behaviour Configuration encapsulates a set of static parameters and a set of variables for a (Basic)Behaviour.
+	 *
+	 * The BehaviourConfiguration is indirectly derived from AlicaElement, therefore it
+	 * is owned by the PlanRepository and should never be deleted or changed by anybody else.
+	 */
 	class BehaviourConfiguration : public AbstractPlan
 	{
 	public:

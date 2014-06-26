@@ -30,7 +30,7 @@ namespace alica
 	{
 	public:
 		PlanBase(Plan* masterplan);
-		virtual ~PlanBase();
+		~PlanBase();
 
 
 //		PlanBase::AutoResetEvent& getSignal();
