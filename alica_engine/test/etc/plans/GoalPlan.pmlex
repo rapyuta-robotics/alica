@@ -28,7 +28,7 @@
   </extensions>
   <extensions>
     <key href="GoalPlan.pml#1402489192198"/>
-    <value xPos="499" yPos="186" width="62" height="49" collapsed="false"/>
+    <value xPos="480" yPos="104" width="62" height="49" collapsed="false"/>
   </extensions>
   <extensions>
     <key href="GoalPlan.pml#1402489205153"/>
@@ -39,7 +39,11 @@
   <extensions>
     <key href="GoalPlan.pml#1402489216617"/>
     <value>
-      <bendpoints xPos="596" yPos="243"/>
+      <bendpoints xPos="580" yPos="184"/>
     </value>
+  </extensions>
+  <extensions>
+    <key href="GoalPlan.pml#1403773741874"/>
+    <value xPos="296" yPos="256"/>
   </extensions>
 </uiextensionmodel:PmlUiExtensionMap>

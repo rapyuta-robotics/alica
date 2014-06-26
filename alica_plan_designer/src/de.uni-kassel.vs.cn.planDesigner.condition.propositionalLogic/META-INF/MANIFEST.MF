@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PropositionalLogic
+Bundle-SymbolicName: de.uni-kassel.vs.cn.planDesigner.condition.propositionalLogic;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: de.uni_kassel.vs.cn.plandesigner.condition.pl.Activator
+Bundle-Vendor: Uni-Kassel
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ de.uni-kassel.vs.cn.planDesigner.ui;bundle-version="1.0.0",
+ de.uni-kassel.vs.cn.planDesigner.alica;bundle-version="1.0.0",
+ org.eclipse.ui.views.properties.tabbed;bundle-version="3.6.0",
+ org.eclipse.emf.common,
+ de.uni-kassel.vs.cn.planDesigner.condition.core,
+ org.eclipse.emf.transaction;bundle-version="1.4.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

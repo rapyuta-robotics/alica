@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: TestA
+Bundle-SymbolicName: de.uni-kassel.vs.cn.planDesigner.condition.defaultPlugin;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: de.uni_kassel.vs.cn.plandesigner.condition.defaultPlugin.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ de.uni-kassel.vs.cn.planDesigner.ui;bundle-version="1.0.0",
+ de.uni-kassel.vs.cn.planDesigner.alica;bundle-version="1.0.0",
+ org.eclipse.ui.views.properties.tabbed,
+ org.eclipse.emf.common,
+ de.uni-kassel.vs.cn.planDesigner.condition.core,
+ org.eclipse.emf.transaction;bundle-version="1.4.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

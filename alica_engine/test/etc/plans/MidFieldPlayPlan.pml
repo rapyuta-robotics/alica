@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488770050" name="MidFieldPlayPlan" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="0" maxCardinality="2147483647">
+<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488770050" name="MidFieldPlayPlan" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="3" maxCardinality="2147483647">
   <conditions xsi:type="alica:RuntimeCondition" id="1402489260911" name="NewRuntimeCondition" comment="Test RC" conditionString="" pluginName=""/>
   <states id="1402488787818" name="Wander" comment="" entryPoint="1402488787819">
     <plans xsi:type="alica:BehaviourConfiguration">Behaviour/MidFieldStandard.beh#1402488712657</plans>
@@ -17,6 +17,7 @@
     <inTransitions>#1402489276995</inTransitions>
   </states>
   <states id="1402500830885" name="Kill" comment="" entryPoint="1402500828244">
+    <plans xsi:type="alica:PlanningProblem">TestPlanningProblem.pp#1403773823508</plans>
     <outTransitions>#1402500843072</outTransitions>
   </states>
   <states id="1402500833246" name="Shoot" comment="">
@@ -40,11 +41,11 @@
     <synchronisation>#1402500865502</synchronisation>
   </transitions>
   <synchronisations id="1402500865502" name="SynChro" comment="" synchedTransitions="1402500843072 1402489276995" talkTimeout="30" syncTimeout="10000" failOnSyncTimeOut="false"/>
-  <entryPoints id="1402488787819" name="" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
+  <entryPoints id="1402488787819" name="" comment="" successRequired="true" minCardinality="0" maxCardinality="2147483647">
     <task>../Misc/taskrepository.tsk#1225112227903</task>
     <state>#1402488787818</state>
   </entryPoints>
-  <entryPoints id="1402500828244" name="NewEntryPoint" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
+  <entryPoints id="1402500828244" name="NewEntryPoint" comment="TestComment" successRequired="false" minCardinality="3" maxCardinality="5">
     <task>../Misc/taskrepository.tsk#1225112227903</task>
     <state>#1402500830885</state>
   </entryPoints>

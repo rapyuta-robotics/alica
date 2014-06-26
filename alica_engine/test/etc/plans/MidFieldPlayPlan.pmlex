@@ -58,7 +58,7 @@
   </extensions>
   <extensions>
     <key href="MidFieldPlayPlan.pml#1402500830885"/>
-    <value xPos="161" yPos="295"/>
+    <value xPos="161" yPos="295" collapsed="false"/>
   </extensions>
   <extensions>
     <key href="MidFieldPlayPlan.pml#1402500833246"/>
@@ -71,5 +71,9 @@
   <extensions>
     <key href="MidFieldPlayPlan.pml#1402500865502"/>
     <value xPos="323" yPos="266"/>
+  </extensions>
+  <extensions>
+    <key href="TestPlanningProblem.pp#1403773823508"/>
+    <value/>
   </extensions>
 </uiextensionmodel:PmlUiExtensionMap>
