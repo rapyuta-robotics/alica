@@ -11,9 +11,16 @@
 using namespace std;
 
 #include <string>
+#include <map>
+#include <sstream>
+#include <SystemConfig.h>
+#include <algorithm>
 
 namespace alica
 {
+
+	class Characteristic;
+	class Capability;
 
 	class RobotProperties
 	{
@@ -25,10 +32,18 @@ namespace alica
 		void setId(int id);
 		const string& getName() const;
 		void setName(const string& name);
+		map<string, Characteristic*> getCharacteristics();
+		const string& getDefaultRole() const;
+		void setDefaultRole(const string& defaultRole);
+		string toString();
 
 	protected:
 		int id = -1;
 		string name;
+		string defaultRole;
+		map<string, Characteristic*> characteristics;
+		map<long, Capability*> capabilities;
+
 	};
 
 } /* namespace alica */
