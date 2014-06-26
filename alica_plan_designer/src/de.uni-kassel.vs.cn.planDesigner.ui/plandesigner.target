@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="plandesigner" sequenceNumber="64">
+<locations>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.cdt.feature.group" version="8.3.0.201402142303"/>
+<unit id="org.eclipse.cdt.sdk.feature.group" version="8.3.0.201402142303"/>
+<repository location="http://download.eclipse.org/tools/cdt/releases/kepler"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.cdt.feature.group" version="8.3.0.201402142303"/>
+<unit id="org.eclipse.cdt.sdk.feature.group" version="8.3.0.201402142303"/>
+<unit id="org.eclipse.gmf.tooling.runtime.feature.group" version="3.1.0.201402192033"/>
+<unit id="org.eclipse.gmf.tooling.feature.group" version="3.1.0.201402192033"/>
+<unit id="org.eclipse.gmf.examples.runtime.feature.group" version="1.7.0.201306111432"/>
+<unit id="org.eclipse.emf.mwe2.runtime.sdk.feature.group" version="2.4.1.v201309030422"/>
+<unit id="org.eclipse.xtext.sdk.feature.group" version="2.4.3.v201309030823"/>
+<unit id="org.eclipse.emf.mwe2.language.sdk.feature.group" version="2.4.1.v201309030840"/>
+<unit id="org.eclipse.gmf.sdk.feature.group" version="3.1.0.201402192033"/>
+<unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.7.0.201306111432"/>
+<unit id="org.eclipse.emf.validation.sdk.feature.group" version="1.7.0.201306111341"/>
+<unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.7.0.201306101425"/>
+<unit id="org.eclipse.gef.sdk.feature.group" version="3.9.1.201308190730"/>
+<unit id="org.eclipse.gmf.feature.group" version="1.7.0.201306111432"/>
+<unit id="org.eclipse.emf.transaction.sdk.feature.group" version="1.7.0.201306111400"/>
+<unit id="org.eclipse.zest.sdk.feature.group" version="1.5.1.201308190730"/>
+<unit id="org.eclipse.jdt.feature.group" version="3.9.2.v20140221-1700"/>
+<unit id="org.eclipse.emf.mwe.sdk.feature.group" version="1.3.1.v201309030422"/>
+<unit id="org.eclipse.xpand.sdk.feature.group" version="1.4.0.v201306110406"/>
+<unit id="org.eclipse.emf.ecoretools.sdk.feature.group" version="1.2.0.201306071421"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.9.2.v20140203-1126"/>
+<repository location="http://download.eclipse.org/releases/kepler/"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.platform.sdk" version="4.3.2.M20140221-1700"/>
+<unit id="org.eclipse.rcp.feature.group" version="4.3.2.v20140221-1700"/>
+<unit id="org.eclipse.pde.feature.group" version="3.9.1.v20140221-1700"/>
+<unit id="org.eclipse.platform.ide" version="4.3.2.M20140221-1700"/>
+<unit id="org.eclipse.rcp.source.feature.group" version="4.3.2.v20140221-1700"/>
+<unit id="org.eclipse.equinox.sdk.feature.group" version="3.9.0.v20140221-1852"/>
+<unit id="org.eclipse.sdk.ide" version="4.3.2.M20140221-1700"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.3/"/>
+</location>
+</locations>
+<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-7-openjdk-amd64"/>
+</target>

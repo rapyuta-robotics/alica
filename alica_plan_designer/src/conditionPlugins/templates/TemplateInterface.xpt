@@ -1,0 +1,20 @@
+«IMPORT alica»  
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ExpressionsCSharp::stateCheckingMethods(State s) FOR Plan»
+
+«ENDAROUND»
+
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ExpressionsCSharp::planCheckingMethods FOR AbstractPlan»
+
+«ENDAROUND»
+
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ConstraintsCSharp::stateCheckingMethods(State s) FOR Plan»
+
+«ENDAROUND»
+
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ConstraintsCSharp::planCheckingMethods FOR AbstractPlan»
+
+«ENDAROUND»
+
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::GoalExpressionCSharp::planCheckingMethods FOR AbstractPlan»
+
+«ENDAROUND»

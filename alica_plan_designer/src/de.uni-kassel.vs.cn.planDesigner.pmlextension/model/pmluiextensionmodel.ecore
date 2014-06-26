@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="uiextensionmodel" nsURI="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel"
+    nsPrefix="uiextensionmodel">
+  <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+    <details key="representation" value="schema"/>
+    <details key="targetNamespace" value="http:///de.uni_kassel.vs.cn/alica/ui/extensionmodel"/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="PmlUiExtension">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="xPos" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="yPos" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="width" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="height" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="collapsed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bendpoints" upperBound="-1"
+        eType="#//Bendpoint" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="visible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PmlUiExtensionMap">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extension" upperBound="-1"
+        eType="#//EObjectToPmlUiExtensionMapEntry" containment="true">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="name" value="extensions"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EObjectToPmlUiExtensionMapEntry" instanceClassName="java.util.Map$Entry">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="key" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//PmlUiExtension"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Bendpoint">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="xPos" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="yPos" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+</ecore:EPackage>
