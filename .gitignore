@@ -1,0 +1,61 @@
+# message and service generated files
+msg_gen/
+msg_cs_gen/
+srv_gen/
+srv_cs_gen/
+proxy_gen/
+idl_gen/
+
+# documentation
+doc/
+
+# log files
+log/temp/
+
+# binaries and libraries
+bin/
+lib/
+build/
+devel/
+.libs/
+.deps/
+*.exe
+*.dll
+*.mdb
+*.o
+
+# system backup files from several editors
+*.swp
+*.*~
+_*.py
+_*.pyc
+
+# vision distance look up table
+DistanceLookup.dat
+RayLookup.dat
+
+# unknown? please comment
+autom4te.cache
+config.log
+config.status
+*.la
+*.lo
+
+# K-Develop Proejct files
+*.kdev4
+*.kdev4/
+
+# QT-Creator Project files
+*.txt.user
+qtcreator-build/
+
+#ignore eagle backup something
+*.*#*
+*.epf
+
+# negated patterns (have to below rules, they overright)
+!alica_plan_designer/bin
+alica_plan_designer/bin/linux.gtk.x86_64/workspace
+alica_plan_designer/bin/linux.gtk.x86_64/configuration
+alica_plan_designer/bin/linux.gtk.x86/workspace
+alica_plan_designer/bin/linux.gtk.x86/configuration
