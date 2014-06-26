@@ -8,10 +8,16 @@
 #ifndef ROBOTENGINEDATA_H_
 #define ROBOTENGINEDATA_H_
 
+using namespace std;
+
+#include <map>
+#include <typeinfo>
+
 namespace alica
 {
 	class RobotProperties;
 	class SuccessMarks;
+	class Variable;
 
 	class RobotEngineData
 	{
@@ -27,12 +33,16 @@ namespace alica
 		void setSuccessMarks(SuccessMarks* successMarks);
 		unsigned long getLastMessageTime() const;
 		void setLastMessageTime(unsigned long lastMessageTime);
+		virtual void initSortedTerms();
+		virtual Variable* getSortedVariable(string sort);
 
 	protected:
 		RobotProperties* properties;
 		bool active;
 		SuccessMarks* successMarks;
 		unsigned long lastMessageTime;
+		map<string, Variable*> sortedVariables;
+		long makeUniqueId(string s);
 	};
 
 } /* namespace alica */

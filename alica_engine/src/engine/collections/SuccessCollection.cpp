@@ -9,6 +9,7 @@
 
 #include "engine/model/Plan.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/model/Task.h"
 
 namespace alica
 {
@@ -16,8 +17,7 @@ namespace alica
 	SuccessCollection::SuccessCollection(Plan* plan)
 	{
 		this->count = plan->getEntryPoints().size();
-		this->keys = new EntryPoint*[this->count];
-		this->values = new list<int>* [this->count];
+		this->entryPoints = new EntryPoint*[this->count];
 		int i = 0;
 		list<EntryPoint*> eps;
 		for (map<long, EntryPoint*>::const_iterator iter = plan->getEntryPoints().begin();
@@ -26,10 +26,9 @@ namespace alica
 			eps.push_back(iter->second);
 		}
 		eps.sort(EntryPoint::compareTo);
-		for(EntryPoint* ep : eps)
+		for (EntryPoint* ep : eps)
 		{
-			this->keys[i] = ep;
-			this->values[i] = new list<int>();
+			this->entryPoints[i] = ep;
 			i++;
 		}
 	}
@@ -48,44 +47,86 @@ namespace alica
 		this->count = count;
 	}
 
-	EntryPoint** SuccessCollection::getKeys()
+	EntryPoint** SuccessCollection::getEntryPoints()
 	{
-		return keys;
-	}
-
-	list<int>** SuccessCollection::getValues()
-	{
-		return values;
+		return entryPoints;
 	}
 
 	void SuccessCollection::setSuccess(int robot, EntryPoint* ep)
 	{
-		for(int i = 0; i < this->count; i++)
+		for (int i = 0; i < this->count; i++)
 		{
-			if(this->keys[i] == ep)
+			if (this->entryPoints[i] == ep)
 			{
-				this->values[i]->push_back(robot);
+				this->robots[i]->push_back(robot);
 				return;
 			}
 		}
 	}
 	void SuccessCollection::clear()
 	{
-		for(int i=0; i<this->count; i++) {
+		for (int i = 0; i < this->count; i++)
+		{
 			this->robots[i]->clear();
 		}
 	}
 
-	 list<int>** SuccessCollection::getRobots()
+	shared_ptr<list<int> >* SuccessCollection::getRobots()
 	{
 		return robots;
 	}
 
-	void SuccessCollection::setRobots( list<int>** robots)
+	void SuccessCollection::setRobots(shared_ptr<list<int> >* robots)
 	{
 		this->robots = robots;
 	}
 
-} /* namespace alica */
+	shared_ptr<list<int> > SuccessCollection::getRobots(EntryPoint* ep)
+	{
+		for (int i = 0; i < this->count; i++)
+		{
+			if (this->getEntryPoints()[i] == ep)
+			{
+				return this->robots[i];
+			}
+		}
+		return nullptr;
+	}
 
+	shared_ptr<list<int> > SuccessCollection::getRobotsById(long id)
+	{
+		for (int i = 0; i < this->count; i++)
+		{
+			if (this->getEntryPoints()[i]->getId() == id)
+			{
+				return this->robots[i];
+			}
+		}
+		return nullptr;
+	}
+
+	string SuccessCollection::toString()
+	{
+		stringstream ss;
+		ss << "";
+		for (int i = 0; i < this->count; i++)
+		{
+			if (this->robots[i]->size() > 0)
+			{
+				ss << this->entryPoints[i]->getTask()->getId() << ": ";
+				for (int r : *(this->robots[i]))
+				{
+					ss << r << " ";
+				}
+				ss << endl;
+			}
+		}
+		if (ss.str().compare("") != 0)
+		{
+			return "Successes: \n" + ss.str();
+		}
+		return "No EntryPoint successful!";
+	}
+
+} /* namespace alica */
 
