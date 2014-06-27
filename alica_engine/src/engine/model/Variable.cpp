@@ -6,19 +6,23 @@
  */
 
 #include "engine/model/Variable.h"
+#include "Variable.h"
 
 namespace alica
 {
 
 	Variable::Variable()
 	{
-		// TODO Auto-generated constructor stub
 
+	}
+
+	Variable::Variable(AutoDiff::Variable* v)
+	{
+		this->solverVar = v;
 	}
 
 	Variable::~Variable()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	Variable::Variable(long id, string name, string type) :
@@ -27,6 +31,7 @@ namespace alica
 		this->id = id;
 		this->name = name;
 		this->type = type;
+		this->solverVar = new AutoDiff::Variable();
 	}
 
 	string Variable::toString()
@@ -47,5 +52,16 @@ namespace alica
 	{
 		this->type = type;
 	}
+
+	AutoDiff::Variable* Variable::getSolverVar()
+	{
+		return solverVar;
+	}
+
+	void alica::Variable::setSolverVar(AutoDiff::Variable* solverVar)
+	{
+		this->solverVar = solverVar;
+	}
 } /* namespace Alica */
+
 
