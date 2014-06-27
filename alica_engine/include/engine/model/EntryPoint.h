@@ -48,7 +48,7 @@ namespace alica
 		bool isSuccessRequired() const;
 		const unordered_set<State*>& getReachableStates() const;
 		void setReachableStates(const unordered_set<State*>& reachableStates);
-		const State* getState() const;
+		State* getState();
 		void setState(State* state);
 
 	protected:

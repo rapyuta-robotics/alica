@@ -15,6 +15,11 @@ using namespace std;
 
 #include "AlicaElement.h"
 
+namespace AutoDiff
+{
+	class Variable;
+}
+
 namespace alica
 {
 
@@ -22,6 +27,7 @@ namespace alica
 	{
 	public:
 		Variable();
+		Variable(AutoDiff::Variable* v);
 		Variable(long id, string name, string type);
 		virtual ~Variable();
 
@@ -29,10 +35,15 @@ namespace alica
 
 		const string& getType() const;
 		void setType(const string& type);
+		AutoDiff::Variable* getSolverVar();
 
 
 	private:
 		string type;
+		void setSolverVar(AutoDiff::Variable* solverVar);
+
+	protected:
+		AutoDiff::Variable* solverVar;
 	};
 
 } /* namespace Alica */
