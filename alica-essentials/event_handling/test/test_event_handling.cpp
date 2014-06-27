@@ -1,5 +1,5 @@
 /*
- * testeventhandling.cpp
+ * test_event_handling.cpp
  *
  *  Created on: Jun 18, 2014
  *      Author: Paul Panin
@@ -7,17 +7,23 @@
 
 #include <gtest/gtest.h>
 #include <thread>
-#include "../include/AutoResetEvent.h"
-#include "../include/Timer.h"
 #include <string>
+
+#include "AutoResetEvent.h"
+#include "TimerEvent.h"
+
 using namespace supplementary;
 
+// TODO cleanup this global variable mess :)
 AutoResetEvent event;
-int callbackInt = 0;
-
+int callbackInt2;
 class EventTest : public ::testing::Test
 {
 public:
+	int callbackInt = 0;
+	condition_variable* cv;
+	mutex cv_mtx;
+
 	static void otherThread(std::string which)
 	{
 		event.waitOne();
@@ -26,16 +32,39 @@ public:
 	void callback()
 	{
 		callbackInt++;
+		this->cv->notify_one();
 		std::cout << "ZÄHLE HOCH " << callbackInt << std::endl;
 	}
 
 	static void callbackTwo()
 	{
-		callbackInt++;
-		std::cout << "ZÄHLE HOCH " << callbackInt << std::endl;
+		callbackInt2++;
+		std::cout << "ZÄHLE HOCH " << callbackInt2 << std::endl;
 	}
 };
 
+TEST_F(EventTest, timerEvent)
+{
+	this->cv = new condition_variable();
+	unique_lock<mutex> lck(cv_mtx);
+
+	TimerEvent timerEvent(1000, 1000, true);
+	timerEvent.registerCV(this->cv);
+	timerEvent.start();
+
+	cv->wait_for(lck, chrono::seconds(5), [&]
+	{
+		this->callback();
+		cout << "callbackInt is " << callbackInt << endl;
+		return callbackInt == 3;
+	});
+
+	timerEvent.stop();
+
+	EXPECT_EQ(3, callbackInt) << "WRONG value of times!" << endl;
+}
+
+// TODO cleanup this test...
 TEST_F(EventTest, autoResetEvent)
 {
 	std::thread first(std::bind(otherThread, "first!"));
@@ -66,25 +95,6 @@ TEST_F(EventTest, autoResetEvent)
 
 	first.join();
 	second.join();
-//
-	std::chrono::milliseconds dura(4000);
-	std::chrono::milliseconds duraThread(1000);
-	std::chrono::milliseconds delayinM(1000);
-
-	Timer<EventTest> h(this, &EventTest::callback, duraThread, true, delayinM);
-	h.start();
-	std::this_thread::sleep_for(dura);
-	h.stop();
-
-	EXPECT_EQ(3, callbackInt) << "WRONG value of times!" << endl;
-
-//	Timer* t = new Timer(&EventTest::callbackTwo, duraThread, true, delayinM);
-//	callbackInt = 0;
-//	t->start();
-//	std::this_thread::sleep_for(dura);
-//	t->stop();
-//
-//	EXPECT_EQ(3, callbackInt) << "WRONG value of times!" << endl;
 }
 int main(int argc, char **argv)
 {
