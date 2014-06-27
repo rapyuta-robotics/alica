@@ -7,3 +7,6 @@
 
 #include "Variable.h"
 
+AutoDiff::Variable::Variable()
+{
+}

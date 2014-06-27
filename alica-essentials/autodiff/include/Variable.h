@@ -5,8 +5,8 @@
  *      Author: psp
  */
 
-#ifndef VARIABLE_H_
-#define VARIABLE_H_
+#ifndef AUTODIFFVARIABLE_H_
+#define AUTODIFFVARIABLE_H_
 
 #include "Term.h"
 
@@ -14,7 +14,8 @@ namespace AutoDiff
 {
 	class Variable : public Term
 	{
-
+	public:
+		Variable();
 	};
 } /* namespace AutoDiff */
 
