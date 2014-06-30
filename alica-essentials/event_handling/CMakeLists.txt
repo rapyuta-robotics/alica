@@ -96,7 +96,7 @@ catkin_package(
 ## Declare a cpp library
 add_library(event_handling
    src/AutoResetEvent.cpp
-   src/TimerEvent.cpp
+   src/Timer.cpp
 )
 
 ## Declare a cpp executable

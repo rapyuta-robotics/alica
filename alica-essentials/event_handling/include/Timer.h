@@ -1,12 +1,12 @@
 /*
- * TimerEvent.h
+ * Timer.h
  *
  *  Created on: Jun 27, 2014
  *      Author: Stephan Opfer
  */
 
-#ifndef TIMEREVENT_H_
-#define TIMEREVENT_H_
+#ifndef TIMER_H_
+#define TIMER_H_
 
 using namespace std;
 
@@ -22,11 +22,11 @@ namespace supplementary
 	 * The TimerEvent allows to register several condition variables.
 	 * The condition variables are notified according to the timers configuration.
 	 */
-	class TimerEvent
+	class Timer
 	{
 	public:
-		TimerEvent(long msInterval, long msDelayedStart, bool notifyAll);
-		virtual ~TimerEvent(){};
+		Timer(long msInterval, long msDelayedStart, bool notifyAll);
+		~Timer();
 		void registerCV(condition_variable* condVar);
 		void start();
 		void stop();
@@ -34,8 +34,10 @@ namespace supplementary
 		bool pause();
 		bool isRunning();
 		bool isStarted();
-		void setMsDelayedStart(long msDelayedStart);
-		void setMsInterval(long msInterval);
+		void setDelayedStart(long msDelayedStart);
+		void setInterval(long msInterval);
+		const long getDelayedStart() const;
+		const long getInterval() const;
 
 	private:
 		thread* runThread;
@@ -51,4 +53,4 @@ namespace supplementary
 	};
 } /* namespace supplementary */
 
-#endif /* TIMEREVENT_H_ */
+#endif /* TIMER_H_ */

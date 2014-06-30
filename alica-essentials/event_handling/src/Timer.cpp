@@ -1,32 +1,38 @@
 /*
- * TimerEvent.cpp
+ * Timer.cpp
  *
  *  Created on: Jun 27, 2014
  *      Author: Stephan Opfer
  */
 
-#include "TimerEvent.h"
+#include "Timer.h"
 
 namespace supplementary
 {
 
-	TimerEvent::TimerEvent(long msInterval, long msDelayedStart, bool notifyAll) : notifyAll(notifyAll)
+	Timer::Timer(long msInterval, long msDelayedStart, bool notifyAll) : notifyAll(notifyAll)
 	{
 		this->started = false;
 		this->running = false;
 		this->msInterval = chrono::milliseconds(msInterval);
 		this->msDelayedStart = chrono::milliseconds(msDelayedStart);
 		this->registeredCVs = vector<condition_variable*>();
-		this->runThread = new thread(&TimerEvent::run, this);
+		this->runThread = new thread(&Timer::run, this);
 	}
 
-	void TimerEvent::registerCV(condition_variable* condVar)
+	Timer::~Timer()
+	{
+		this->stop();
+		this->runThread->join();
+		delete this->runThread;
+	}
+
+	void Timer::registerCV(condition_variable* condVar)
 	{
 		this->registeredCVs.push_back(condVar);
-
 	}
 
-	void TimerEvent::run()
+	void Timer::run()
 	{
 		if (msDelayedStart.count() > 0)
 		{
@@ -58,14 +64,14 @@ namespace supplementary
 		}
 	}
 
-	void TimerEvent::start()
+	void Timer::start()
 	{
 		this->started = true;
 		this->running = true;
-		runThread = new thread(&TimerEvent::run, this);
+		runThread = new thread(&Timer::run, this);
 	}
 
-	bool TimerEvent::restart()
+	bool Timer::restart()
 	{
 		if (this->started && !this->running)
 		{
@@ -79,7 +85,7 @@ namespace supplementary
 		}
 	}
 
-	bool TimerEvent::pause()
+	bool Timer::pause()
 	{
 		if (this->started && this->running)
 		{
@@ -92,31 +98,43 @@ namespace supplementary
 		}
 	}
 
-	void TimerEvent::stop()
+	void Timer::stop()
 	{
 		this->running = true;
 		this->started = false;
 		cv.notify_one();
 	}
 
-	bool TimerEvent::isRunning()
+	bool Timer::isRunning()
 	{
 		return this->running;
 	}
 
-	bool TimerEvent::isStarted()
+	bool Timer::isStarted()
 	{
 		return this->started;
 	}
 
-	void TimerEvent::setMsDelayedStart(long msDelayedStart)
+	void Timer::setDelayedStart(long msDelayedStart)
 	{
 		this->msDelayedStart = chrono::milliseconds(msDelayedStart);
 	}
 
-	void TimerEvent::setMsInterval(long msInterval)
+	const long Timer::getDelayedStart() const
+	{
+		return msDelayedStart.count();
+	}
+
+	void Timer::setInterval(long msInterval)
 	{
 		this->msInterval = chrono::milliseconds(msInterval);
 	}
 
+	const long Timer::getInterval() const
+	{
+		return msInterval.count();
+	}
+
 } /* namespace supplementary */
+
+

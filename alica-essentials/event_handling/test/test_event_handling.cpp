@@ -10,7 +10,7 @@
 #include <string>
 
 #include "AutoResetEvent.h"
-#include "TimerEvent.h"
+#include "Timer.h"
 
 using namespace supplementary;
 
@@ -48,7 +48,7 @@ TEST_F(EventTest, timerEvent)
 	this->cv = new condition_variable();
 	unique_lock<mutex> lck(cv_mtx);
 
-	TimerEvent timerEvent(1000, 1000, true);
+	Timer timerEvent(1000, 1000, true);
 	timerEvent.registerCV(this->cv);
 	timerEvent.start();
 
