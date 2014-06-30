@@ -5,7 +5,7 @@
  *      Author: snook
  */
 
-#include "engine/AllocationAuthority/AuthorityManager.h"
+#include "engine/allocationauthority/AuthorityManager.h"
 
 namespace alica
 {

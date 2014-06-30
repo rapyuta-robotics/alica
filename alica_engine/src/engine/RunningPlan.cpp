@@ -6,6 +6,7 @@
  */
 
 #include "engine/RunningPlan.h"
+#include "engine/model/AbstractPlan.h"
 
 namespace alica
 {
@@ -59,6 +60,19 @@ namespace alica
 	void RunningPlan::setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour)
 	{
 		this->basicBehaviour = basicBehaviour;
+	}
+
+	void RunningPlan::printRecursive()
+	{
+		cout << this << endl;
+		for(RunningPlan* c : this->children)
+		{
+			c->printRecursive();
+		}
+		if(this->children.size() > 0)
+		{
+			cout << "END CHILDREN of " << (this->plan==nullptr?"NULL":this->plan->getName()) << endl;
+		}
 	}
 
 

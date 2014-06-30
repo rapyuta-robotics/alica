@@ -13,6 +13,11 @@ using namespace std;
 #include <queue>
 #include <stdio.h>
 #include <thread>
+#include <AutoResetEvent.h>
+#include <TimerEvent.h>
+#include <algorithm>
+#include <math.h>
+#include "containers/BehaviourEngineInfo.h"
 
 namespace alica
 {
@@ -25,22 +30,24 @@ namespace alica
 	class Logger;
 	class AuthorityManager;
 	class ISyncModul;
+	class IAlicaCommunication;
 
 	class PlanBase
 	{
 	public:
 		PlanBase(Plan* masterplan);
 		~PlanBase();
-
-
-//		PlanBase::AutoResetEvent& getSignal();
+		supplementary::AutoResetEvent* getSignal();
 		const RunningPlan* getRootNode() const;
-		void setRootNode(const RunningPlan* rootNode);
+		void setRootNode(RunningPlan* rootNode);
+
+		void start();
 
 	private:
 		queue<RunningPlan> fpEvents;
-//		AutoResetEvent signal;
-//		AutoResetEvent loopGuard;
+		supplementary::AutoResetEvent* signal;
+		supplementary::AutoResetEvent* loopGuard;
+		supplementary::TimerEvent* loopTimer;
 
 	protected:
 		Plan* masterPlan;
@@ -53,6 +60,7 @@ namespace alica
 		IRoleAssignment* ra;
 		ISyncModul* syncModel;
 		AuthorityManager* authModul;
+		IAlicaCommunication* statusPublisher;
 
 		ulong loopTime;
 		ulong lastSendTime;
@@ -64,8 +72,12 @@ namespace alica
 		bool sendStatusMessages;
 		bool sendStatusInterval;
 
-		thread mainThread;
+		thread* mainThread;
 		Logger* log;
+
+		BehaviourEngineInfo statusMessage;
+
+		void run();
 
 	};
 

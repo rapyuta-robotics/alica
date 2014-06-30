@@ -15,7 +15,7 @@ using namespace std;
 #include "engine/model/RoleSet.h"
 #include "engine/ISyncModul.h"
 #include "engine/IRoleAssignment.h"
-#include "engine/AllocationAuthority/AuthorityManager.h"
+#include "engine/allocationauthority/AuthorityManager.h"
 
 namespace alica
 {
