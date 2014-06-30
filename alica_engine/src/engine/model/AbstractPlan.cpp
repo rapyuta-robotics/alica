@@ -15,6 +15,7 @@ namespace alica
 			AlicaElement()
 	{
 		this->masterPlan = false;
+		this->variables = make_shared<list<Variable*> >();
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		this->authorithyTimeInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection","MinimalAuthorityTimeInterval") * 1000000;
 	}

@@ -98,17 +98,17 @@ namespace alica
 		return ret;
 	}
 
-	vector<int> StateCollection::getRobotsInStateSorted(State* s)
+	shared_ptr<vector<int> > StateCollection::getRobotsInStateSorted(State* s)
 	{
-		vector<int> ret;
+		shared_ptr<vector<int> > ret= shared_ptr<vector<int> >();
 		for (int i = 0; i < this->robots.size(); i++)
 		{
 			if (this->states[i] == s)
 			{
-				ret.push_back(this->robots[i]);
+				ret->push_back(this->robots[i]);
 			}
 		}
-		sort(ret.begin(), ret.end());
+		sort(ret->begin(), ret->end());
 		return ret;
 	}
 
@@ -211,10 +211,10 @@ namespace alica
 		vector<EntryPoint*> eps = oldOne->getEntyPoints();
 		for(int i = 0; i < eps.size(); i++)
 		{
-			for(int rid : oldOne->getRobotsWorking(eps[i]))
+			for(int rid : *(oldOne->getRobotsWorking(eps[i])))
 			{
-				auto iter = find(newOne->getRobotsWorking(eps[i]).begin(), newOne->getRobotsWorking(eps[i]).end(), rid);
-				if(iter != newOne->getRobotsWorking(eps[i]).end())
+				auto iter = find(newOne->getRobotsWorking(eps[i])->begin(), newOne->getRobotsWorking(eps[i])->end(), rid);
+				if(iter != newOne->getRobotsWorking(eps[i])->end())
 				{
 					this->setState(rid, oldOne->getRobotStateMapping()->getState(rid));
 				}

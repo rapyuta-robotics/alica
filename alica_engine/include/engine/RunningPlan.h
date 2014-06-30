@@ -19,6 +19,7 @@ namespace alica
 
 	class BasicBehaviour;
 	class AbstractPlan;
+	class Assignment;
 
 	class RunningPlan
 	{
@@ -26,6 +27,7 @@ namespace alica
 		RunningPlan();
 		virtual ~RunningPlan();
 		bool isBehaviour() const;
+		enum planChange{NoCHange, InternalChange, SuccessChange, FailChange};
 		void setBehaviour(bool behaviour);
 		const list<RunningPlan*>& getChildren() const;
 		void setChildren(const list<RunningPlan*>& children);
@@ -33,6 +35,8 @@ namespace alica
 		void setPlan(AbstractPlan* plan);
 		shared_ptr<BasicBehaviour> getBasicBehaviour();
 		void setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour);
+		Assignment* getAssignment();
+		void setAssignment(Assignment* assignment);
 
 		void printRecursive();
 
@@ -41,6 +45,7 @@ namespace alica
 		AbstractPlan* plan;
 		shared_ptr<BasicBehaviour> basicBehaviour;
 		list<RunningPlan*> children;
+		Assignment* assignment;
 	};
 
 } /* namespace alica */

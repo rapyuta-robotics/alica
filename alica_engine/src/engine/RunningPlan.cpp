@@ -74,7 +74,17 @@ namespace alica
 			cout << "END CHILDREN of " << (this->plan==nullptr?"NULL":this->plan->getName()) << endl;
 		}
 	}
+	Assignment* RunningPlan::getAssignment()
+	{
+		return assignment;
+	}
+
+	void RunningPlan::setAssignment(Assignment* assignment)
+	{
+		this->assignment = assignment;
+	}
 
 
 } /* namespace alica */
+
 
