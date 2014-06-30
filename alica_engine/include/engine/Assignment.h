@@ -10,13 +10,10 @@
 
 using namespace std;
 
-<<<<<<< HEAD
-=======
+
 #include <vector>
 #include <algorithm>
 #include <memory>
-
->>>>>>> 03e8bebaddbb9d1c407e0b143699cf28cada4dc9
 #include "IAssignment.h"
 
 namespace alica
