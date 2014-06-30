@@ -22,7 +22,7 @@ namespace alica
 	{
 	public:
 		virtual ~IBehaviourCreator() {}
-		virtual unique_ptr<BasicBehaviour> createBehaviour(string behaviourName) = 0;
+		virtual unique_ptr<BasicBehaviour> createBehaviour(long behaviourConfId) = 0;
 	};
 
 } /* namespace alica */

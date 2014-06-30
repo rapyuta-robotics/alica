@@ -24,4 +24,8 @@ namespace alica
 		cout << "MidFieldStandard was called " << callCounter++ << " times!" << endl;
 	}
 
+	void MidFieldStandard::initialiseParameters()
+	{
+	}
+
 } /* namespace alica */

@@ -24,4 +24,8 @@ namespace alica
 		cout << "AttackOpp was called " << callCounter++ << " times!" << endl;
 	}
 
+	void AttackOpp::initialiseParameters()
+	{
+	}
+
 } /* namespace alica */

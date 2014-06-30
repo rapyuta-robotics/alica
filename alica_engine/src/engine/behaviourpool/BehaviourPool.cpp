@@ -24,7 +24,7 @@ namespace alica
 	BehaviourPool::BehaviourPool()
 	{
 		this->behaviourCreator = nullptr;
-		this->availableBehaviours = new map<Behaviour*, shared_ptr<BasicBehaviour> >();
+		this->availableBehaviours = new map<BehaviourConfiguration*, shared_ptr<BasicBehaviour> >();
 	}
 
 	/**
@@ -50,13 +50,12 @@ namespace alica
 
 		this->behaviourCreator = bc;
 
-		auto behaviours = AlicaEngine::getInstance()->getPlanRepository()->getBehaviours();
-		for (auto iter : behaviours)
+		auto behaviourConfs = AlicaEngine::getInstance()->getPlanRepository()->getBehaviourConfigurations();
+		for (auto iter : behaviourConfs)
 		{
-			shared_ptr<BasicBehaviour> basicBeh = this->behaviourCreator->createBehaviour(iter.second->getName());
+			shared_ptr<BasicBehaviour> basicBeh = this->behaviourCreator->createBehaviour(iter.first);
 			if (basicBeh != nullptr)
 			{
-				iter.second->setImplementation(basicBeh);
 				this->availableBehaviours->insert(make_pair(iter.second, move(basicBeh)));
 			}
 			else
@@ -72,10 +71,10 @@ namespace alica
 	 */
 	void BehaviourPool::stopAll()
 	{
-		auto behaviours = AlicaEngine::getInstance()->getPlanRepository()->getBehaviours();
-		for (auto iter : behaviours)
+		auto behaviourConfs = AlicaEngine::getInstance()->getPlanRepository()->getBehaviourConfigurations();
+		for (auto iter : behaviourConfs)
 		{
-			shared_ptr<BasicBehaviour> bbPtr = iter.second->getImplementation();
+			shared_ptr<BasicBehaviour> bbPtr = this->availableBehaviours->at(iter.second);
 			if (bbPtr == nullptr)
 			{
 				cerr << "BP::stop(): Found Behaviour without an BasicBehaviour attached!" << endl;
@@ -95,7 +94,7 @@ namespace alica
 	{
 		if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp->getPlan()))
 		{
-			shared_ptr<BasicBehaviour> bb = bc->getBehaviour()->getImplementation();
+			shared_ptr<BasicBehaviour> bb = this->availableBehaviours->at(bc);
 			if (bb != nullptr)
 			{
 				bb->stop();
@@ -115,9 +114,10 @@ namespace alica
 	{
 		if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp->getPlan()))
 		{
-			shared_ptr<BasicBehaviour> bb = bc->getBehaviour()->getImplementation();
+			shared_ptr<BasicBehaviour> bb = this->availableBehaviours->at(bc);
 			if (bb != nullptr)
 			{
+				// TODO: Some of these things can be set during initialisation, have a review which one
 				// set basic behaviours params and vars
 				bb->setParameters(bc->getParameters());
 				bb->setVariables(bc->getVariables());
@@ -127,8 +127,8 @@ namespace alica
 				bb->setRunningPlan(rp);
 
 				// start basic behaviour
-				bb->setDueTime(bc->getDeferring());
-				bb->setPeriod(1000 / bc->getFrequency());
+				bb->setDelayedStart(bc->getDeferring());
+				bb->setInterval(1000 / bc->getFrequency());
 				bb->start();
 			}
 		}

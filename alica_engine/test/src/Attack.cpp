@@ -26,4 +26,8 @@ namespace alica
 		cout << "Attack was called " << callCounter++ << " times!" << endl;
 	}
 
+	void Attack::initialiseParameters()
+	{
+	}
+
 } /* namespace alica */

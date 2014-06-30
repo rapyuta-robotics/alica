@@ -25,36 +25,32 @@ namespace alica
 	{
 	}
 
-	unique_ptr<BasicBehaviour> TestBehaviourCreator::createBehaviour(string behaviourName)
+	unique_ptr<BasicBehaviour> TestBehaviourCreator::createBehaviour(long behaviourConfId)
 	{
 		unique_ptr<alica::BasicBehaviour> beh;
 
-		if ("MidFieldStandard" == behaviourName)
+		switch (behaviourConfId)
 		{
-			beh.reset(new MidFieldStandard());
-		}
-		else if ("DefendMid" == behaviourName)
-		{
-			beh.reset(new DefendMid());
-		}
-		else if ("Attack" == behaviourName)
-		{
-			beh.reset(new Attack());
-		}
-		else if ("Tackle" == behaviourName)
-		{
-			beh.reset(new Tackle());
-		}
-		else if ("AttackOpp" == behaviourName)
-		{
-			beh.reset(new AttackOpp());
-		}
-		else
-		{
-			cerr << "Unknown behaviour requested: " << behaviourName << endl;
+			case 1402488712657:
+				beh.reset(new MidFieldStandard());
+				break;
+			case 1402488763903:
+				beh.reset(new DefendMid());
+				break;
+			case 1402488956661:
+				beh.reset(new Tackle());
+				break;
+			case 1402488866727:
+				beh.reset(new Attack());
+				break;
+			case 1402489366699:
+				beh.reset(new AttackOpp());
+				break;
+			default:
+			cerr << "TestBehaviourCreator: Unknown behaviour configuration id requested: " << behaviourConfId << endl;
 			throw new exception();
+			break;
 		}
-
 		return beh;
 	}
 

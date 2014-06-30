@@ -4,10 +4,15 @@
  *  Created on: Jun 4, 2014
  *      Author: Stefan Jakob
  */
+#define BEH_DEBUG
 
 #include "engine/BasicBehaviour.h"
+#include "engine/model/Behaviour.h"
 #include "engine/AlicaEngine.h"
 #include "engine/ITeamObserver.h"
+#include "engine/RunningPlan.h"
+#include "engine/model/BehaviourConfiguration.h"
+#include <Timer.h>
 
 namespace alica
 {
@@ -16,6 +21,13 @@ namespace alica
 	{
 		this->name = name;
 		this->parameters = nullptr;
+		this->runThread = new thread(&BasicBehaviour::runInternal, this);
+		this->timer = new supplementary::Timer(0, 0, false);
+		this->failure = false;
+		this->success = false;
+		this->callInit = true;
+		this->running = false;
+		this->started = false;
 	}
 
 	BasicBehaviour::~BasicBehaviour()
@@ -32,12 +44,12 @@ namespace alica
 		this->name = name;
 	}
 
-	shared_ptr<map<string,string>> BasicBehaviour::getParameters()
+	shared_ptr<map<string, string>> BasicBehaviour::getParameters()
 	{
 		return this->parameters;
 	}
 
-	void BasicBehaviour::setParameters(shared_ptr<map<string,string>> parameters)
+	void BasicBehaviour::setParameters(shared_ptr<map<string, string>> parameters)
 	{
 		this->parameters = parameters;
 	}
@@ -52,24 +64,24 @@ namespace alica
 		this->variables = variables;
 	}
 
-	int BasicBehaviour::getDueTime() const
+	int BasicBehaviour::getDelayedStart() const
 	{
-		return dueTime;
+		return this->timer->getDelayedStart();
 	}
 
-	void BasicBehaviour::setDueTime(int dueTime)
+	void BasicBehaviour::setDelayedStart(long msDelayedStart)
 	{
-		this->dueTime = dueTime;
+		this->timer->setDelayedStart(msDelayedStart);
 	}
 
-	int BasicBehaviour::getPeriod() const
+	int BasicBehaviour::getInterval() const
 	{
-		return period;
+		return this->timer->getInterval();
 	}
 
-	void BasicBehaviour::setPeriod(int period)
+	void BasicBehaviour::setInterval(long msInterval)
 	{
-		this->period = period;
+		this->timer->setInterval(msInterval);
 	}
 
 	/**
@@ -86,6 +98,7 @@ namespace alica
 	void BasicBehaviour::start()
 	{
 		// TODO implement this
+		this->started = true;
 	}
 
 	/**
@@ -94,6 +107,17 @@ namespace alica
 	void BasicBehaviour::stop()
 	{
 		// TODO implement this
+		this->started = false;
+	}
+
+	bool BasicBehaviour::pause()
+	{
+		return this->timer->pause();
+	}
+
+	bool BasicBehaviour::restart()
+	{
+		return this->timer->restart();
 	}
 
 	const shared_ptr<RunningPlan>& BasicBehaviour::getRunningPlan() const
@@ -106,7 +130,51 @@ namespace alica
 		this->runningPlan = runningPlan;
 	}
 
+	void BasicBehaviour::initInternal()
+	{
+		this->success = false;
+		this->failure = false;
+		this->callInit = false;
+		try
+		{
+			this->initialiseParameters();
+		}
+		catch (exception& e)
+		{
+			cerr << "BB: Exception in Behaviour-INIT of: " << this->getName() << endl << e.what() << endl;
+		}
+	}
+
+	void BasicBehaviour::runInternal()
+	{
+		unique_lock<mutex> lck(runCV_mtx);
+		while (!AlicaEngine::getInstance()->isTerminating() && this->started)
+		{
+			this->runCV.wait(lck, [&]
+			{	return this->timer->isRunning();}); // protection against spurious wake-ups
+
+			if (!this->started)
+				return;
+			if (this->callInit)
+				this->initialiseParameters();
+#ifdef BEH_DEBUG
+			chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
+#endif
+			// TODO: pass something like an eventarg (to be implemented) class-member, which could be set for an event triggered (to be implemented) behaviour.
+			this->run(nullptr);
+#ifdef BEH_DEBUG
+			BehaviourConfiguration* conf = dynamic_cast<BehaviourConfiguration*>(this->getRunningPlan()->getPlan());
+			if (conf->isEventDriven())
+			{
+				double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / conf->getFrequency() * 1000.0;
+				if (dura > 0.1)
+				{ //Behaviour "+conf.Behaviour.Name+" exceeded runtime by {0,1:0.##}ms!",delta
+					cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura << "ms!" << endl;
+				}
+			}
+#endif
+		}
+	}
 
 } /* namespace alica */
-
 

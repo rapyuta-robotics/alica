@@ -34,13 +34,10 @@ namespace alica
 		void setConfigurations(const list<BehaviourConfiguration*>& configurations);
 		const string& getFileName() const;
 		void setFileName(const string& fileName);
-		const shared_ptr<BasicBehaviour> getImplementation() const;
-		void setImplementation(shared_ptr<BasicBehaviour> implementation);
 
 	private:
 		list<BehaviourConfiguration*> configurations;
 		string fileName;
-		shared_ptr<BasicBehaviour> implementation;
 	};
 
 } /* namespace Alica */
