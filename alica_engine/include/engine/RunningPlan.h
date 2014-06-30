@@ -12,6 +12,7 @@ using namespace std;
 
 #include <list>
 #include <memory>
+#include <iostream>
 
 namespace alica
 {
@@ -32,6 +33,8 @@ namespace alica
 		void setPlan(AbstractPlan* plan);
 		shared_ptr<BasicBehaviour> getBasicBehaviour();
 		void setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour);
+
+		void printRecursive();
 
 	protected:
 		bool behaviour;

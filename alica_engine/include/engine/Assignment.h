@@ -10,7 +10,7 @@
 
 using namespace std;
 
-#include "engine/IAssignment.h"
+#include "IAssignment.h"
 
 namespace alica
 {
@@ -18,7 +18,7 @@ namespace alica
 	class Plan;
 	class StateCollection;
 
-	class Assignment : public virtual IAssignment
+	class Assignment : public IAssignment
 	{
 	public:
 		Assignment();

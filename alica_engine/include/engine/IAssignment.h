@@ -23,7 +23,7 @@ namespace alica
 	class IAssignment
 	{
 	public:
-		virtual ~IAssignment();
+		virtual ~IAssignment() {};
 		virtual vector<int> getRobotsWorking(EntryPoint* ep) = 0;
 		virtual vector<int> getRobotsWorking(long epid) = 0;
 		virtual int totalRobotCount() = 0;
