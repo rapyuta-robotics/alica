@@ -27,6 +27,8 @@ using namespace std;
 #include "engine/model/TerminalState.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/SyncTransition.h"
+#include "engine/model/Quantifier.h"
+#include "engine/model/ForallAgents.h"
 
 class AlicaEngineTest : public ::testing::Test
 {
@@ -177,6 +179,10 @@ protected:
 		EXPECT_EQ(syncTimeout, transition->getSyncTimeOut()) << "Wrong syncTimeout!" << endl;
 	}
 
+	static void checkQuantifier(alica::Quantifier* quantifier, long id, string name ,string comment)
+	{
+
+	}
 };
 
 /**
@@ -245,6 +251,26 @@ TEST_F(AlicaEngineTest, planParser)
 						case 1402489459382:
 							checkTransition(t, 1402489459382, "MISSING_NAME", "", 1402489460549, 1402488646220,
 											1402489396914, "MISSING_NAME", "", "", "", true);
+							for(alica::Quantifier* q : t->getPreCondition()->getQuantifiers())
+							{
+								switch(q->getId())
+								{
+									case 1403773214317:
+										break;
+									case 1403773224776:
+										break;
+									case 1403773234841:
+										break;
+									case 1403773248357:
+										break;
+									default:
+										EXPECT_TRUE(false);
+										cerr << "TEST_F(AlicaEngineTest, planParser) found a Quantifier not part of AttackPlan.pml!"
+										<< endl;
+										break;
+
+								}
+							}
 							break;
 						case 1402489460694:
 							checkTransition(t, 1402489460694, "MISSING_NAME", "", 1402489462088, 1402489396914,

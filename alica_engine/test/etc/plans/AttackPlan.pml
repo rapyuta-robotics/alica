@@ -18,12 +18,12 @@
   <transitions id="1402489459382" name="" comment="" msg="">
     <preCondition id="1402489460549" name="" comment="" conditionString="" pluginName="PropositionalLogicPlugin" enabled="true">
       <quantifiers xsi:type="alica:ForallAgents" id="1403773214317" name="" comment="" scope="1402488634525">
-        <sorts>(X</sorts>
-        <sorts>Y)</sorts>
+        <sorts>X</sorts>
+        <sorts>Y</sorts>
       </quantifiers>
       <quantifiers xsi:type="alica:ForallAgents" id="1403773224776" name="" comment="" scope="1402488646220">
-        <sorts>(A</sorts>
-        <sorts>B)</sorts>
+        <sorts>A</sorts>
+        <sorts>B</sorts>
       </quantifiers>
       <quantifiers xsi:type="alica:ForallAgents" id="1403773234841" name="" comment="" scope="1402489396914">
         <sorts>another one</sorts>

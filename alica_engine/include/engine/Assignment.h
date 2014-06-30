@@ -14,7 +14,7 @@ using namespace std;
 #include <algorithm>
 #include <memory>
 
-#include "engine/IAssignment.h"
+#include "IAssignment.h"
 
 namespace alica
 {
