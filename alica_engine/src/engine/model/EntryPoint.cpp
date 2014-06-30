@@ -133,7 +133,7 @@ namespace alica
 		return reachableStates;
 	}
 
-	const State* EntryPoint::getState() const
+	State* EntryPoint::getState()
 	{
 		return state;
 	}

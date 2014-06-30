@@ -18,17 +18,29 @@
 namespace alica
 {
 
+	/**
+	 * Basic Constructor.
+	 */
 	BehaviourPool::BehaviourPool()
 	{
 		this->behaviourCreator = nullptr;
 		this->availableBehaviours = new map<Behaviour*, shared_ptr<BasicBehaviour> >();
 	}
 
+	/**
+	 * Basic Destructor.
+	 */
 	BehaviourPool::~BehaviourPool()
 	{
 		delete this->availableBehaviours;
 	}
 
+	/**
+	 * Creates instances of BasicBehaviours, needed according to the PlanRepository, with the help of the given BehaviourCreator.
+	 * If a BasicBehaviour cannot be instantiated, the Initialisation of the Pool is cancelled.
+	 * @param bc A BehaviourCreator.
+	 * @return True, if all necessary BasicBehaviours could be constructed. False, if the Initialisation was cancelled.
+	 */
 	bool BehaviourPool::init(IBehaviourCreator* bc)
 	{
 		if (this->behaviourCreator != nullptr)
@@ -55,6 +67,9 @@ namespace alica
 		return true;
 	}
 
+	/**
+	 * Calls stop on all BasicBehaviours.
+	 */
 	void BehaviourPool::stopAll()
 	{
 		auto behaviours = AlicaEngine::getInstance()->getPlanRepository()->getBehaviours();
@@ -72,11 +87,30 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Disables the thread of the BasicBehaviour in the given RunningPlan.
+	 * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
+	 */
 	void BehaviourPool::stopBehaviour(shared_ptr<RunningPlan> rp)
 	{
-		// TODO implement this
+		if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp->getPlan()))
+		{
+			shared_ptr<BasicBehaviour> bb = bc->getBehaviour()->getImplementation();
+			if (bb != nullptr)
+			{
+				bb->stop();
+			}
+		}
+		else
+		{
+			cerr << "BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp->getPlan()->getName() << " Plan Id: " << rp->getPlan()->getId() << endl;
+		}
 	}
 
+	/**
+	 * Enables the thread of the BasicBehaviour in the given RunningPlan.
+	 * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
+	 */
 	void BehaviourPool::startBehaviour(shared_ptr<RunningPlan> rp)
 	{
 		if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp->getPlan()))
@@ -100,7 +134,7 @@ namespace alica
 		}
 		else
 		{
-			cerr << "BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp->getPlan()->getName() << " Plan Id: " << rp->getPlan()->getId() << endl;
+			cerr << "BP::startBehaviour(): Cannot start Behaviour of given RunningPlan! Plan Name: " << rp->getPlan()->getName() << " Plan Id: " << rp->getPlan()->getId() << endl;
 		}
 	}
 

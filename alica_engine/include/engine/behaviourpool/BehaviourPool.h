@@ -22,6 +22,10 @@ namespace alica
 
 	class BasicBehaviour;
 
+	/**
+	 * Manages the connection between the domain specific implementation (BasicBehaviours) of Behaviours.
+	 * It creates used BasicBehaviours with its given BehaviourCreator and starts and stops the Behaviours.
+	 */
 	class BehaviourPool : public IBehaviourPool
 	{
 
@@ -34,7 +38,7 @@ namespace alica
 		void startBehaviour(shared_ptr<RunningPlan> rp);
 	private:
 		/**
-		 * This map manages behaviours used by the currently running ALICA program.
+		 * Manages behaviours used by the running ALICA program.
 		 */
 		map<Behaviour*, shared_ptr<BasicBehaviour> >* availableBehaviours;
 
