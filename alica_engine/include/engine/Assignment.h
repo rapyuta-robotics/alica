@@ -10,6 +10,10 @@
 
 using namespace std;
 
+#include <vector>
+#include <algorithm>
+#include <memory>
+
 #include "engine/IAssignment.h"
 
 namespace alica
@@ -17,6 +21,8 @@ namespace alica
 
 	class Plan;
 	class StateCollection;
+	class AssignmentCollection;
+	class EntryPoint;
 
 	class Assignment : public virtual IAssignment
 	{
@@ -26,10 +32,16 @@ namespace alica
 		Plan* getPlan();
 		void setPlan(Plan* plan);
 		StateCollection* getRobotStateMapping();
+		shared_ptr<vector<int> > getAllRobotsSorted();
+		AssignmentCollection* getEpRobotsMapping();
+		shared_ptr<vector<int> > getRobotsWorking(long epid);
+		shared_ptr<vector<int> > getRobotsWorkingSorted(EntryPoint* ep);
+		shared_ptr<vector<int> > getRobotsWorking(EntryPoint* ep);
 
 	protected:
 		Plan* plan;
 		StateCollection* robotStateMapping;
+		AssignmentCollection* epRobotsMapping;
 	};
 
 } /* namespace alica */

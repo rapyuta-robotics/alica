@@ -61,6 +61,16 @@ namespace alica
 		this->basicBehaviour = basicBehaviour;
 	}
 
+	Assignment* RunningPlan::getAssignment()
+	{
+		return assignment;
+	}
+
+	void RunningPlan::setAssignment(Assignment* assignment)
+	{
+		this->assignment = assignment;
+	}
 
 } /* namespace alica */
+
 

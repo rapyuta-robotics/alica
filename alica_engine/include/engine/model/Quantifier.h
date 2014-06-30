@@ -13,14 +13,23 @@ using namespace std;
 #include <list>
 #include <string>
 #include <typeinfo>
+#include <vector>
+#include <memory>
 
 #include "AlicaElement.h"
+
+namespace AutoDiff
+{
+	class Term;
+}
 
 namespace alica
 {
 	class State;
 	class EntryPoint;
 	class Plan;
+	class Variable;
+	class RunningPlan;
 
 	class Quantifier : public AlicaElement
 	{
@@ -37,6 +46,8 @@ namespace alica
 		Plan* getScopedPlan();
 		void setScope(AlicaElement* ae);
 		AlicaElement* getScope();
+		virtual shared_ptr<list<vector<Variable* > > >getSortedVariables(RunningPlan* p, shared_ptr<vector<int> > agentsInScope) = 0;
+		virtual shared_ptr<list<vector<AutoDiff::Term*> > > getSortedTerms(RunningPlan* p, shared_ptr<vector<int> > agentsInScope) = 0;
 
 	private:
 		list<string> domainIdentifiers;
