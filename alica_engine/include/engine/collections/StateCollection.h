@@ -14,6 +14,7 @@ using namespace std;
 #include <unordered_set>
 #include <algorithm>
 #include <sstream>
+#include <memory>
 
 namespace alica
 {
@@ -38,7 +39,7 @@ namespace alica
 		int getCount();
 		State* getState(int r);
 		unordered_set<int> getRobotsInState(State* s);
-		vector<int> getRobotsInStateSorted(State* s);
+		shared_ptr<vector<int> > getRobotsInStateSorted(State* s);
 		unordered_set<int> getRobotsInState(long sid);
 		void removeRobot(int r);
 		void clear();

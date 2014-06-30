@@ -13,6 +13,7 @@ using namespace std;
 #include <vector>
 #include <list>
 #include <string>
+#include <memory>
 
 namespace alica
 {
@@ -23,9 +24,9 @@ namespace alica
 	class IAssignment
 	{
 	public:
-		virtual ~IAssignment() {};
-		virtual vector<int> getRobotsWorking(EntryPoint* ep) = 0;
-		virtual vector<int> getRobotsWorking(long epid) = 0;
+		virtual ~IAssignment() {}
+		virtual shared_ptr<vector<int> > getRobotsWorking(EntryPoint* ep) = 0;
+		virtual shared_ptr<vector<int> > getRobotsWorking(long epid) = 0;
 		virtual int totalRobotCount() = 0;
 		virtual vector<EntryPoint*> getEntyPoints() = 0;
 		virtual int getEntryPointCount() = 0;
