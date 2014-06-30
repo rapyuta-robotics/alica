@@ -6,6 +6,7 @@
  */
 
 #include "engine/Assignment.h"
+#include "engine/collections/AssignmentCollection.h"
 
 namespace alica
 {
@@ -35,6 +36,42 @@ namespace alica
 		return robotStateMapping;
 	}
 
+	shared_ptr<vector<int> > Assignment::getAllRobotsSorted()
+	{
+		shared_ptr<vector<int> > ret = shared_ptr<vector<int> >();
+		for (int i = 0; i < this->getEpRobotsMapping()->getCount(); i++)
+		{
+			for (int j = 0; j < this->getEpRobotsMapping()->getRobots()[i]->size(); j++)
+			{
+				ret->push_back(this->getEpRobotsMapping()->getRobots()[i]->at(j));
+			}
+		}
+		sort(ret->begin(), ret->end());
+		return ret;
+	}
+
+	AssignmentCollection* Assignment::getEpRobotsMapping()
+	{
+		return epRobotsMapping;
+	}
+
+	shared_ptr<vector<int> > Assignment::getRobotsWorking(long epid)
+	{
+		return this->getEpRobotsMapping()->getRobotsById(epid);
+	}
+
+	shared_ptr<vector<int> > Assignment::getRobotsWorkingSorted(EntryPoint* ep)
+	{
+		shared_ptr<vector<int> > ret = getRobotsWorking(ep);
+		sort(ret->begin(), ret->end());
+		return ret;
+	}
+
+	shared_ptr<vector<int> > Assignment::getRobotsWorking(EntryPoint* ep)
+	{
+		return this->getEpRobotsMapping()->getRobots(ep);
+	}
 
 } /* namespace alica */
+
 

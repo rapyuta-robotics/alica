@@ -8,16 +8,33 @@
 #ifndef FORALLAGENTS_H_
 #define FORALLAGENTS_H_
 
+#include <list>
+#include <vector>
+#include <memory>
+
+
 #include "Quantifier.h"
+
+namespace AutoDiff
+{
+	class Term;
+}
 
 namespace alica
 {
+
+	class RunningPlan;
+	class Variable;
 
 	class ForallAgents : public Quantifier
 	{
 	public:
 		ForallAgents(long id = 0);
 		virtual ~ForallAgents();
+		shared_ptr<list<vector<Variable* > > > getSortedVariables(RunningPlan* p, shared_ptr<vector<int> > agentsInScope);
+		shared_ptr<list<vector<AutoDiff::Term*> > > getSortedTerms(RunningPlan* p, shared_ptr<vector<int> > agentsInScope);
+
+
 	};
 
 } /* namespace Alica */
