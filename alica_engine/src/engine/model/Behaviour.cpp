@@ -15,7 +15,6 @@ namespace alica
 
 	Behaviour::Behaviour()
 	{
-		this->implementation = nullptr;
 	}
 
 	Behaviour::Behaviour(string name) :	Behaviour()
@@ -63,16 +62,6 @@ namespace alica
 	void Behaviour::setFileName(const string& fileName)
 	{
 		this->fileName = fileName;
-	}
-
-	const shared_ptr<BasicBehaviour> Behaviour::getImplementation() const
-	{
-		return implementation;
-	}
-
-	void Behaviour::setImplementation(shared_ptr<BasicBehaviour> implementation)
-	{
-		this->implementation = implementation;
 	}
 
 } /* namespace Alica */

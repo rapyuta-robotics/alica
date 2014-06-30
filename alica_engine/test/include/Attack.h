@@ -20,8 +20,10 @@ namespace alica
 		Attack();
 		virtual ~Attack();
 		virtual void run(void* msg);
+
 	protected:
 		int callCounter;
+		virtual void initialiseParameters();
 	};
 
 } /* namespace alica */

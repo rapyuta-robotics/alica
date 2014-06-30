@@ -180,5 +180,16 @@ namespace alica
 		this->log = log;
 	}
 
+	bool AlicaEngine::isTerminating() const
+	{
+		return terminating;
+	}
+
+	void AlicaEngine::setTerminating(bool terminating)
+	{
+		this->terminating = terminating;
+	}
+
 } /* namespace Alica */
+
 

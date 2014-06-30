@@ -20,6 +20,7 @@ using namespace std;
 namespace alica
 {
 
+	class BehaviourConfiguration;
 	class BasicBehaviour;
 
 	/**
@@ -39,8 +40,10 @@ namespace alica
 	private:
 		/**
 		 * Manages behaviours used by the running ALICA program.
+		 * The key of the map is the behaviour configuration, which is created through the plan designer.
+		 * The value is the basic behaviour, which is the implementation of that behaviour.
 		 */
-		map<Behaviour*, shared_ptr<BasicBehaviour> >* availableBehaviours;
+		map<BehaviourConfiguration*, shared_ptr<BasicBehaviour> >* availableBehaviours;
 
 		IBehaviourCreator* behaviourCreator;
 

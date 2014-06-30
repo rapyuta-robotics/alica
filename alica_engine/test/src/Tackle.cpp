@@ -24,4 +24,8 @@ namespace alica
 		cout << "Tackle was called " << callCounter++ << " times!" << endl;
 	}
 
+	void Tackle::initialiseParameters()
+	{
+	}
+
 } /* namespace alica */

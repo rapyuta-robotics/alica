@@ -23,7 +23,7 @@ namespace alica
 	public:
 		TestBehaviourCreator();
 		virtual ~TestBehaviourCreator();
-		virtual unique_ptr<BasicBehaviour> createBehaviour(string behaviourName);
+		virtual unique_ptr<BasicBehaviour> createBehaviour(long behaviourConfId);
 	};
 
 } /* namespace alica */

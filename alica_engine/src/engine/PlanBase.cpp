@@ -63,7 +63,7 @@ namespace alica
 		this->signal = new supplementary::AutoResetEvent(false);
 		this->loopGuard = new supplementary::AutoResetEvent(false);
 		//TODO:
-		this->loopTimer = new supplementary::TimerEvent(this->loopTime / 1000000, this->loopTime / 1000000, true);
+		this->loopTimer = new supplementary::Timer(this->loopTime / 1000000, this->loopTime / 1000000, true);
 
 #if PB_DEBUG
 		cout << "PB: Engine loop time is " << loopTime/1000000 << "ms, broadcast interval is " << this.minSendInterval/1000000 << "ms - "<< this.maxSendInterval/1000000) << "ms" << endl;

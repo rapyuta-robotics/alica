@@ -53,6 +53,8 @@ namespace alica
 		IRoleAssignment* getRoleAssignment();
 		void setRoleAssignment(IRoleAssignment* roleAssignment);
 		IPlanParser* getPlanParser();
+		bool isTerminating() const;
+		void setTerminating(bool terminating);
 
 	protected:
 		supplementary::SystemConfig* sc;
@@ -70,6 +72,7 @@ namespace alica
 		~AlicaEngine();
 
 		bool stepEngine;
+		bool terminating;
 		void setStepEngine(bool stepEngine);
 
 		PlanRepository* planRepository;

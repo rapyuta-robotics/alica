@@ -25,4 +25,9 @@ namespace alica
 	{
 		cout << "DefendMid was called " << callCounter++ << " times!" << endl;
 	}
+
+	void DefendMid::initialiseParameters()
+	{
+	}
+
 } /* namespace alica */

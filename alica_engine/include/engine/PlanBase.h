@@ -14,7 +14,7 @@ using namespace std;
 #include <stdio.h>
 #include <thread>
 #include <AutoResetEvent.h>
-#include <TimerEvent.h>
+#include <Timer.h>
 #include <algorithm>
 #include <math.h>
 #include "containers/BehaviourEngineInfo.h"
@@ -47,7 +47,7 @@ namespace alica
 		queue<RunningPlan> fpEvents;
 		supplementary::AutoResetEvent* signal;
 		supplementary::AutoResetEvent* loopGuard;
-		supplementary::TimerEvent* loopTimer;
+		supplementary::Timer* loopTimer;
 
 	protected:
 		Plan* masterPlan;

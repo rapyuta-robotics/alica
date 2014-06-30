@@ -22,6 +22,7 @@ namespace alica
 		virtual void run(void* msg);
 	protected:
 		int callCounter;
+		virtual void initialiseParameters();
 	};
 
 } /* namespace alica */

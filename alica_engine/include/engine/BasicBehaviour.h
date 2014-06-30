@@ -15,11 +15,19 @@ using namespace std;
 #include <map>
 #include <memory>
 #include <list>
+#include <thread>
+#include <chrono>
+#include <condition_variable>
+
+namespace supplementary {
+	class Timer;
+}
 
 namespace alica
 {
 	class Variable;
 	class RunningPlan;
+	class BehaviourConfiguration;
 
 	class BasicBehaviour
 	{
@@ -35,10 +43,12 @@ namespace alica
 		void setVariables(shared_ptr<list<Variable*>> variables);
 		void start();
 		void stop();
-		int getDueTime() const;
-		void setDueTime(int dueTime);
-		int getPeriod() const;
-		void setPeriod(int period);
+		bool pause();
+		bool restart();
+		int getDelayedStart() const;
+		void setDelayedStart(long msDelayedStart);
+		int getInterval() const;
+		void setInterval(long msInterval);
 		const shared_ptr<RunningPlan>& getRunningPlan() const;
 		void setRunningPlan(const shared_ptr<RunningPlan>& runningPlan);
 
@@ -47,11 +57,24 @@ namespace alica
 		shared_ptr<map<string,string>> parameters;
 		shared_ptr<list<Variable*>> variables;
 		shared_ptr<RunningPlan> runningPlan;
-		int period;
-		int dueTime;
+		chrono::milliseconds msInterval;
+		chrono::milliseconds msDelayedStart;
+		bool running, started, callInit, success, failure;
+		thread* runThread; /** < executes the runInternal and thereby the abstract run method */
+		supplementary::Timer* timer; /** < triggers the condition_variable of the runThread, if this behaviour is timer triggered */
 		int getOwnId();
 
+		/**
+		 * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
+		 * Override for behaviour specific initialisation.
+		 */
+		virtual void initialiseParameters () {};
+
 	private:
+		mutex runCV_mtx;
+		condition_variable runCV;
+		void runInternal();
+		void initInternal();
 
 
 	};
