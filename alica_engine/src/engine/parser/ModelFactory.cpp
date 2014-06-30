@@ -885,9 +885,14 @@ namespace alica
 				Quantifier* q = createQuantifier(curChild);
 				pre->getQuantifiers().push_back(q);
 			}
+			else if(parameters.compare(val) == 0)
+			{
+				//ignore
+				//created by propositinal logic plugin
+			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled PreCondition Child:", curChild);
+				AlicaEngine::getInstance()->abort("MF: Unhandled PreCondition Child:", curChild->Value());
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -934,7 +939,6 @@ namespace alica
 		while (curChild != nullptr)
 		{
 			const char* val = curChild->Value();
-			long cid = this->parser->parserId(curChild);
 			if (sorts.compare(val) == 0)
 			{
 				q->getDomainIdentifiers().push_back(val);

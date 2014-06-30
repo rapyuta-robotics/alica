@@ -24,7 +24,7 @@ namespace alica
 	class IAssignment
 	{
 	public:
-		virtual ~IAssignment();
+		virtual ~IAssignment() {}
 		virtual shared_ptr<vector<int> > getRobotsWorking(EntryPoint* ep) = 0;
 		virtual shared_ptr<vector<int> > getRobotsWorking(long epid) = 0;
 		virtual int totalRobotCount() = 0;
