@@ -179,9 +179,15 @@ protected:
 		EXPECT_EQ(syncTimeout, transition->getSyncTimeOut()) << "Wrong syncTimeout!" << endl;
 	}
 
-	static void checkQuantifier(alica::Quantifier* quantifier, long id, string name ,string comment)
+	static void checkQuantifier(alica::Quantifier* quantifier, long id, string name ,string comment, long scope, initializer_list<string> sorts)
 	{
-
+		checkAlicaElement(quantifier, id, name, comment);
+		EXPECT_EQ(scope, quantifier->getScope()->getId()) << "Wrong Scope" << endl;
+		for(string sorts : quantifier->getDomainIdentifiers())
+		{
+			EXPECT_TRUE(find(quantifier->getDomainIdentifiers().begin(), quantifier->getDomainIdentifiers().end(), sorts.c_str())
+			            != quantifier->getDomainIdentifiers().end()) << "Sort not found!" << endl;
+		}
 	}
 };
 
@@ -256,12 +262,20 @@ TEST_F(AlicaEngineTest, planParser)
 								switch(q->getId())
 								{
 									case 1403773214317:
+										checkQuantifier(q, 1403773214317, "", "", 1402488634525, {"X","Y"});
+										EXPECT_TRUE(typeid(alica::ForallAgents) == typeid(q))<< "Wrong Type!" << endl;
 										break;
 									case 1403773224776:
+										checkQuantifier(q, 1403773224776, "", "", 1402488646220, {"A","B"});
+										EXPECT_TRUE(typeid(alica::ForallAgents) == typeid(q))<< "Wrong Type!" << endl;
 										break;
 									case 1403773234841:
+										checkQuantifier(q, 1403773234841, "", "", 1402489396914, {"another one"});
+										EXPECT_TRUE(typeid(alica::ForallAgents) == typeid(q))<< "Wrong Type!" << endl;
 										break;
 									case 1403773248357:
+										checkQuantifier(q, 1403773248357, "", "", 1402488646221, {"TaskQuantifier"});
+										EXPECT_TRUE(typeid(alica::ForallAgents) == typeid(q))<< "Wrong Type!" << endl;
 										break;
 									default:
 										EXPECT_TRUE(false);

@@ -10,9 +10,13 @@
 
 using namespace std;
 
+#include <map>
 #include <list>
 #include <memory>
 #include <iostream>
+#include <SystemConfig.h>
+
+#include "engine/PlanStatus.h"
 
 namespace alica
 {
@@ -20,6 +24,11 @@ namespace alica
 	class BasicBehaviour;
 	class AbstractPlan;
 	class Assignment;
+	class State;
+	class EntryPoint;
+	class PlanType;
+	class IBehaviourPool;
+	class ITeamObserver;
 
 	class RunningPlan
 	{
@@ -37,8 +46,11 @@ namespace alica
 		void setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour);
 		Assignment* getAssignment();
 		void setAssignment(Assignment* assignment);
-
 		void printRecursive();
+		unsigned long getPlanStartTime();
+		unsigned long getStateStartTime();
+		bool isActive();
+		void setActive(bool active);
 
 	protected:
 		bool behaviour;
@@ -46,7 +58,25 @@ namespace alica
 		shared_ptr<BasicBehaviour> basicBehaviour;
 		list<RunningPlan*> children;
 		Assignment* assignment;
-	};
+		RunningPlan* parent;
+		State* activeState;
+		EntryPoint* activeEntryPoint;
+		PlanStatus status;
+		unsigned long stateStartTime;
+		unsigned long planStartTime;
+		int ownId;
+		list<int> robotsAvail;
+		map<AbstractPlan*, int> failedSubPlans;
+		PlanType* planType;
+		int failCount;
+		bool failHandlingNeeded;
+		bool active;
+		IBehaviourPool* bp;
+		ITeamObserver* to;
+		bool allocationNeeded;
+		unsigned long assignmentProtectionTime = (((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime")) * 1000000);
+
+};
 
 } /* namespace alica */
 
