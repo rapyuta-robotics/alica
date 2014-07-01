@@ -7,19 +7,31 @@
 
 #include "engine/RunningPlan.h"
 #include "engine/model/AbstractPlan.h"
+#include "engine/AlicaEngine.h"
+#include "engine/ITeamObserver.h"
+
 
 namespace alica
 {
 
 	RunningPlan::RunningPlan()
 	{
-		// TODO Auto-generated constructor stub
+		this->to = AlicaEngine::getInstance()->getTeamObserver();
+		this->ownId = to->getOwnId();
+		this->children = list<RunningPlan*>();
+		this->robotsAvail = list<int>();
+		this->status = PlanStatus::Running;
+		this->failCount = 0;
+		this->basicBehaviour = nullptr;
+		this->failedSubPlans = map<AbstractPlan*, int>();
+		this->active = false;
+		this->allocationNeeded = false;
+		this->failHandlingNeeded = false;
 
 	}
 
 	RunningPlan::~RunningPlan()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	bool RunningPlan::isBehaviour() const
@@ -84,6 +96,25 @@ namespace alica
 		this->assignment = assignment;
 	}
 
+	unsigned long RunningPlan::getPlanStartTime()
+	{
+		return planStartTime;
+	}
+
+	unsigned long RunningPlan::getStateStartTime()
+	{
+		return stateStartTime;
+	}
+
+	bool RunningPlan::isActive()
+	{
+		return active;
+	}
+
+	void RunningPlan::setActive(bool active)
+	{
+		this->active = active;
+	}
 
 } /* namespace alica */
 
