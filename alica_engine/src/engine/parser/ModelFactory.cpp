@@ -33,6 +33,7 @@
 #include "engine/model/Characteristic.h"
 #include "engine/model/CapabilityDefinitionSet.h"
 #include "engine/model/RoleDefinitionSet.h"
+#include "engine/model/PlanningProblem.h"
 
 #include "engine/AlicaEngine.h"
 
@@ -72,6 +73,8 @@ namespace alica
 	const string ModelFactory::characteristics = "characteristics";
 	const string ModelFactory::capability = "capability";
 	const string ModelFactory::value = "value";
+	const string ModelFactory::waitPlan = "waitPlan";
+	const string ModelFactory::alternativePlan = "alternativePlan";
 
 	ModelFactory::ModelFactory(PlanParser* p, PlanRepository* rep)
 	{
@@ -134,7 +137,7 @@ namespace alica
 		{
 			plan->setUtilityThreshold(stod(attr));
 		}
-		// insert into elements map
+		// insert into elements ma
 		addElement(plan);
 		// insert into plan repository map
 		this->rep->getPlans().insert(pair<long, Plan*>(plan->getId(), plan));
@@ -791,6 +794,128 @@ namespace alica
 
 	}
 
+	void ModelFactory::createPlanningProblem(tinyxml2::XMLDocument* node)
+	{
+		tinyxml2::XMLElement* element = node->FirstChildElement();
+		PlanningProblem* p = new PlanningProblem();
+		p->setId(this->parser->parserId(element));
+		p->setFileName(this->parser->getCurrentFile());
+		setAlicaElementAttributes(p, element);
+		addElement(p);
+
+		const char* conditionPtr = element->Attribute("updateRate");
+		if (conditionPtr)
+		{
+			p->setUpdateRate(stoi(conditionPtr));
+		}
+		else
+		{
+			p->setUpdateRate(-1);
+		}
+
+		string attr;
+		const char* attrPtr = element->Attribute("distributeProblem");
+		if (attrPtr)
+		{
+			attr = attrPtr;
+			if (attr.compare("true") == 0)
+			{
+				p->setDistributeProblem(true);
+			}
+			else
+			{
+				p->setDistributeProblem(false);
+			}
+		}
+		else
+		{
+			p->setDistributeProblem(false);
+		}
+
+		attrPtr = element->Attribute("planningType");
+
+		if (attrPtr)
+		{
+			attr = attrPtr;
+			if (attr.compare("Interactive") == 0)
+			{
+				p->setPlanningType(Interactive);
+			}
+			else if (attr.compare("Online") == 0)
+			{
+				p->setPlanningType(Online);
+			}
+			else
+			{
+				p->setPlanningType(Offline);
+			}
+		}
+		else
+		{
+			p->setPlanningType(Online);
+		}
+
+		attrPtr = element->Attribute("requirements");
+		if (attrPtr)
+		{
+			p->setRequirements(attrPtr);
+		}
+		else
+		{
+			p->setRequirements("");
+		}
+		this->rep->getPlanningProblems().insert(pair<long, PlanningProblem*>(p->getId(), p));
+
+		tinyxml2::XMLElement* curChild = element->FirstChildElement();
+		while (curChild != nullptr)
+		{
+			const char* val = curChild->Value();
+			long cid = this->parser->parserId(curChild);
+			if (plans.compare(val) == 0)
+			{
+				this->planningProblemPlanReferences.push_back(pair<long, long>(p->getId(), cid));
+			}
+			else if (conditions.compare(val) == 0)
+			{
+				const char* type = curChild->Attribute("xsi:type");
+				string typeStr;
+				if (type)
+				{
+					typeStr = type;
+					if (typeStr.compare("alica:PostCondition") == 0)
+					{
+						PostCondition* pa = createPostCondition(curChild);
+						p->setPostCondition(pa);
+					}
+					else if (typeStr.compare("alica:PreCondition") == 0)
+					{
+						PreCondition* pa = createPreCondition(curChild);
+						p->setPreCondition(pa);
+					}
+					else if (typeStr.compare("alica:RuntimeCondition") == 0)
+					{
+						RuntimeCondition* pa = createRuntimeCondition(curChild);
+						p->setRuntimeCondition(pa);
+					}
+				}
+				else
+				{
+					AlicaEngine::getInstance()->abort("MF: Unknown Condition type:", curChild->Value());
+				}
+			}
+			else if (waitPlan.compare(val) == 0)
+			{
+				this->planningProblemPlanWaitReferences.push_back(pair<long, long>(p->getId(), cid));
+			}
+			else if (alternativePlan.compare(val) == 0)
+			{
+				this->planningProblemPlanAlternativeReferences.push_back(pair<long, long>(p->getId(), cid));
+			}
+
+			curChild = curChild->NextSiblingElement();
+		}
+//		return p;
+	}
 	Transition * ModelFactory::createTransition(tinyxml2::XMLElement * element, Plan * plan)
 	{
 		Transition* tran = new Transition();
@@ -853,6 +978,13 @@ namespace alica
 			//TODO: aus c#
 			//pos->ConditionFOL = null;
 		}
+
+		const char* pluginNamePtr = element->Attribute("pluginName");
+		if (pluginNamePtr)
+		{
+			pre->setPlugInName(pluginNamePtr);
+		}
+
 		string enabled = "";
 		const char* enabledPtr = element->Attribute("enabled");
 		if (enabledPtr)
@@ -885,7 +1017,7 @@ namespace alica
 				Quantifier* q = createQuantifier(curChild);
 				pre->getQuantifiers().push_back(q);
 			}
-			else if(parameters.compare(val) == 0)
+			else if (parameters.compare(val) == 0)
 			{
 				//ignore
 				//created by propositinal logic plugin
@@ -1391,6 +1523,33 @@ namespace alica
 			sync->getInSync().push_front(t);
 		}
 		this->transitionSynchReferences.clear();
+
+		//planningProblemPlanReferences
+		for (pair<long, long> pairs : this->planningProblemPlanReferences)
+		{
+			PlanningProblem* s = (PlanningProblem*)this->elements.find(pairs.first)->second;
+			AbstractPlan* p = (AbstractPlan*)this->elements.find(pairs.second)->second;
+			s->getPlans().push_back(p);
+		}
+		this->planningProblemPlanReferences.clear();
+
+		//planningProblemPlanWaitReferences
+		for (pair<long, long> pairs : this->planningProblemPlanWaitReferences)
+		{
+			PlanningProblem* s = (PlanningProblem*)this->elements.find(pairs.first)->second;
+			Plan* p = (Plan*)this->elements.find(pairs.second)->second;
+			s->setWaitPlan(p);
+		}
+		this->planningProblemPlanWaitReferences.clear();
+
+		//planningProblemPlanAlternativeReferences
+		for (pair<long, long> pairs : this->planningProblemPlanAlternativeReferences)
+		{
+			PlanningProblem* s = (PlanningProblem*)this->elements.find(pairs.first)->second;
+			Plan* p = (Plan*)this->elements.find(pairs.second)->second;
+			s->setAlternativePlan(p);
+		}
+		this->planningProblemPlanAlternativeReferences.clear();
 
 		//quantifierScopeReferences
 		for (pair<long, long> pairs : this->quantifierScopeReferences)

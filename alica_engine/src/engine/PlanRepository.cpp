@@ -33,6 +33,10 @@ namespace alica
 	{
 		return behaviours;
 	}
+	map<long, PlanningProblem*>& PlanRepository::getPlanningProblems()
+	{
+		return planningProblems;
+	}
 
 	void PlanRepository::setBehaviours(const map<long, Behaviour*>& behaviours)
 	{

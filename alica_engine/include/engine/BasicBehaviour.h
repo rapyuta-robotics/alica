@@ -18,7 +18,6 @@ using namespace std;
 #include <thread>
 #include <chrono>
 #include <condition_variable>
-
 namespace supplementary {
 	class Timer;
 }
