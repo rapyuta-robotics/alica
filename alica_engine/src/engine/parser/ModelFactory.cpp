@@ -1555,9 +1555,11 @@ namespace alica
 		for (pair<long, long> pairs : this->quantifierScopeReferences)
 		{
 			//TODO
-//			AlicaElement* ae = (AlicaElement*)this->elements.find(pairs.second)->second;
-//			Quantifier* q = (Quantifier*)this->elements.find(pairs.first)->second;
-//			q->setScope(ae);
+			AlicaElement* ae = (AlicaElement*)this->elements.find(pairs.second)->second;
+			Quantifier* q = (Quantifier*)this->elements.find(pairs.first)->second;
+			cout << "TYPPPPE " << ae->getName() << endl;
+			cout << "TYPPPE ID " << ae->getId() << endl;
+			q->setScope(ae);
 		}
 		this->quantifierScopeReferences.clear();
 
