@@ -67,6 +67,7 @@ namespace alica
 		void parseCapabilityDefFile(string currentFile);
 		void parsePlanTypeFile(string currentFile);
 		void parseBehaviourFile(string currentFile);
+		void parsePlanningProblem(string currentFile);
 		Plan* parsePlanFile(string& planFile);
 		long fetchId(const string& idString, long id);
 		string findDefaultRoleSet(string dir);
