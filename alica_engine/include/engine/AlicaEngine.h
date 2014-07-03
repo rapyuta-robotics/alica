@@ -26,6 +26,7 @@ namespace alica
 	class ISyncModul;
 	class AuthorityManager;
 	class IRoleAssignment;
+	class IAlicaCommunication;
 
 	class AlicaEngine
 	{
@@ -56,6 +57,7 @@ namespace alica
 		bool isTerminating() const;
 		void setTerminating(bool terminating);
 		RoleSet* getRoleSet();
+		IAlicaCommunication* getCommunicatior();
 
 	protected:
 		supplementary::SystemConfig* sc;
@@ -66,6 +68,7 @@ namespace alica
 		ISyncModul* syncModul;
 		AuthorityManager* auth;
 		IRoleAssignment* roleAssignment;
+		IAlicaCommunication* communicatior;
 
 	private:
 		// private constructur/ destructor because of singleton

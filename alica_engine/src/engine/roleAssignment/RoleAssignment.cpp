@@ -28,7 +28,7 @@ namespace alica
 		this->robotRoleMapping = map<int, Role*>();
 		this->availableRobots;
 		this->sortedRobots = vector<RobotRoleUtility*>();
-//		this->communication = AlicaEngine::getInstance()->getCommuncation;
+		this->communication = AlicaEngine::getInstance()->getCommunicatior();
 	}
 
 	RoleAssignment::~RoleAssignment()
