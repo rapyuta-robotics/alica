@@ -196,6 +196,11 @@ namespace alica
 		this->terminating = terminating;
 	}
 
+	IAlicaCommunication* AlicaEngine::getCommunicatior()
+	{
+		return communicatior;
+	}
+
 } /* namespace Alica */
 
 
