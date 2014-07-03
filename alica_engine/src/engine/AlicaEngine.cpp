@@ -35,6 +35,7 @@ namespace alica
 		this->roleAssignment = nullptr;
 		this->auth = nullptr;
 		this->behaviourPool = nullptr;
+		this->roleSet = nullptr;
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->stepEngine = false;
 #ifdef AE_DEBUG
@@ -147,6 +148,11 @@ namespace alica
 	IPlanParser* AlicaEngine::getPlanParser()
 	{
 		return planParser;
+	}
+
+	RoleSet* AlicaEngine::getRoleSet()
+	{
+		return roleSet;
 	}
 
 	void AlicaEngine::setStepEngine(bool stepEngine)

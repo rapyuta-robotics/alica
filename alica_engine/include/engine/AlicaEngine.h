@@ -55,6 +55,7 @@ namespace alica
 		IPlanParser* getPlanParser();
 		bool isTerminating() const;
 		void setTerminating(bool terminating);
+		RoleSet* getRoleSet();
 
 	protected:
 		supplementary::SystemConfig* sc;
