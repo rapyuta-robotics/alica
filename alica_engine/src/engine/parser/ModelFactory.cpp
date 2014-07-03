@@ -1557,8 +1557,6 @@ namespace alica
 			//TODO
 			AlicaElement* ae = (AlicaElement*)this->elements.find(pairs.second)->second;
 			Quantifier* q = (Quantifier*)this->elements.find(pairs.first)->second;
-			cout << "TYPPPPE " << ae->getName() << endl;
-			cout << "TYPPPE ID " << ae->getId() << endl;
 			q->setScope(ae);
 		}
 		this->quantifierScopeReferences.clear();
