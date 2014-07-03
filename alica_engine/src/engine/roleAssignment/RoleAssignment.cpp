@@ -9,6 +9,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/model/Role.h"
 #include "engine/ITeamObserver.h"
+#include "engine/collections/RobotEngineData.h"
 
 namespace alica
 {
@@ -18,7 +19,7 @@ namespace alica
 		this->robotRoleMapping = map<int, Role*>();
 		this->availableRobots = list<RobotProperties*>();
 		this->sortedRobots = vector<RobotRoleUtility*>();
-		//TODO
+		//TODO RosNode
 	}
 
 	RoleAssignment::~RoleAssignment()
@@ -52,7 +53,10 @@ namespace alica
 		if(iter != this->robotRoleMapping.end())
 		{
 			return iter->second;
-
+		}
+		else
+		{
+			r = to->getRobotById(robotId)->getLastRole();
 		}
 	}
 
