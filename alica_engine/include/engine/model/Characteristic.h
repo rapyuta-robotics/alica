@@ -31,9 +31,9 @@ namespace alica
 
 		string toString();
 
-		const Capability* getCapability() const;
+		Capability* getCapability();
 		void setCapability(Capability* capability);
-		const CapValue* getCapValue() const;
+		CapValue* getCapValue();
 		void setCapValue(CapValue* capValue);
 		double getWeight() const;
 		void setWeight(double weight);
