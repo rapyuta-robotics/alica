@@ -11,11 +11,14 @@
 namespace alica
 {
 
+	class EntryPoint;
+
 	class EpByTaskComparer
 	{
 	public:
 		EpByTaskComparer();
 		virtual ~EpByTaskComparer();
+		static bool compareTo(EntryPoint* x, EntryPoint* y);
 	};
 
 } /* namespace alica */

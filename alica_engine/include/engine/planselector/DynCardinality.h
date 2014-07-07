@@ -11,9 +11,10 @@
 namespace alica
 {
 
-	class DynCardinality
+	struct DynCardinality
 	{
 	public:
+		DynCardinality();
 		DynCardinality(int min, int max);
 		virtual ~DynCardinality();
 		int getMax();
