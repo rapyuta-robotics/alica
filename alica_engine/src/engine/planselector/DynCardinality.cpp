@@ -35,6 +35,10 @@ namespace alica
 		return min;
 	}
 
+	DynCardinality::DynCardinality()
+	{
+	}
+
 	void DynCardinality::setMin(int min)
 	{
 		this->min = min;
