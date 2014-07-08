@@ -8,6 +8,7 @@
 #ifndef TASKASSIGNMENT_H_
 #define TASKASSIGNMENT_H_
 #define EXPANSIONEVAL
+#define PSDEBUG
 
 #include "engine/ITaskAssignment.h"
 
@@ -16,6 +17,8 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <algorithm>
+#include <memory>
 
 namespace alica
 {
@@ -30,13 +33,12 @@ namespace alica
 	class TaskAssignment : virtual public ITaskAssignment
 	{
 	public:
-		TaskAssignment();
 		TaskAssignment(list<Plan*> planList, vector<int> paraRobots, bool preasingOtherRobots);
 		virtual ~TaskAssignment();
 		Assignment* getNextBestAssignment(IAssignment* oldAss);
 		string toString();
 #ifdef EXPANSIONEVAL
-		int getExpansionCount() const;
+		int getExpansionCount();
 		void setExpansionCount(int expansionCount);
 #endif
 	private:
@@ -46,8 +48,9 @@ namespace alica
 		list<Plan*> planList;
 		vector<int> robots;
 		vector<EntryPoint*> entryPointVector;
+		//TODO has to be sorted every time used
 		vector<PartialAssignment*> fringe;
-		bool addAlreadyAssignedRobots(PartialAssignment* pa, map<int, SimplePlanTree*> simplePlanTreeMap);
+		bool addAlreadyAssignedRobots(PartialAssignment* pa, map<int, shared_ptr<SimplePlanTree> >* simplePlanTreeMap);
 
 #ifdef EXPANSIONEVAL
 		int expansionCount;
