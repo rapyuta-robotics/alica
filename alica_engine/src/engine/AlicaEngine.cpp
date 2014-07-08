@@ -35,6 +35,7 @@ namespace alica
 		this->roleAssignment = nullptr;
 		this->auth = nullptr;
 		this->behaviourPool = nullptr;
+		this->roleSet = nullptr;
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->stepEngine = false;
 #ifdef AE_DEBUG
@@ -149,6 +150,11 @@ namespace alica
 		return planParser;
 	}
 
+	RoleSet* AlicaEngine::getRoleSet()
+	{
+		return roleSet;
+	}
+
 	void AlicaEngine::setStepEngine(bool stepEngine)
 	{
 		this->stepEngine = stepEngine;
@@ -188,6 +194,11 @@ namespace alica
 	void AlicaEngine::setTerminating(bool terminating)
 	{
 		this->terminating = terminating;
+	}
+
+	IAlicaCommunication* AlicaEngine::getCommunicatior()
+	{
+		return communicatior;
 	}
 
 } /* namespace Alica */

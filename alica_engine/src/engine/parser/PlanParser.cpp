@@ -5,7 +5,6 @@
  *      Author: Stephan Opfer
  */
 //#define PP_DEBUG
-
 #include "engine/parser/PlanParser.h"
 #include "engine/parser/ModelFactory.h"
 #include "engine/AlicaEngine.h"
@@ -82,7 +81,8 @@ namespace alica
 		}
 		else
 		{
-			if (roleSetDir.find_last_of(FileSystem::PATH_SEPARATOR) != roleSetDir.length() - 1 && roleSetDir.length() > 0)
+			if (roleSetDir.find_last_of(FileSystem::PATH_SEPARATOR) != roleSetDir.length() - 1
+					&& roleSetDir.length() > 0)
 			{
 				roleSetDir = roleSetDir + FileSystem::PATH_SEPARATOR;
 			}
@@ -245,6 +245,7 @@ namespace alica
 #endif
 
 		this->masterPlan = parsePlanFile(masterPlanPath);
+		this->filesParsed.push_back(masterPlanPath);
 		parseFileLoop();
 
 		this->mf->computeReachabilities();
@@ -252,6 +253,7 @@ namespace alica
 	}
 	void PlanParser::parseFileLoop()
 	{
+
 		while (this->filesToParse.size() > 0)
 		{
 			string fileToParse = this->filesToParse.front();
@@ -279,6 +281,10 @@ namespace alica
 			{
 				parsePlanTypeFile(fileToParse);
 			}
+			else if (supplementary::FileSystem::endsWith(fileToParse, ".pp"))
+			{
+				parsePlanningProblem(fileToParse);
+			}
 			else
 			{
 				AlicaEngine::getInstance()->abort("PP: Cannot Parse file", fileToParse);
@@ -288,6 +294,22 @@ namespace alica
 		this->mf->attachPlanReferences();
 
 	}
+
+	void PlanParser::parsePlanningProblem(string currentFile)
+	{
+#ifdef PP_DEBUG
+		cout << "PP: parsing Planning Problem file: " << currentFile << endl;
+#endif
+		tinyxml2::XMLDocument doc;
+		doc.LoadFile(currentFile.c_str());
+		if (doc.ErrorID() != tinyxml2::XML_NO_ERROR)
+		{
+			cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
+			throw new exception();
+		}
+		this->mf->createPlanningProblem(&doc);
+	}
+
 	void PlanParser::parsePlanTypeFile(string currentFile)
 	{
 #ifdef PP_DEBUG

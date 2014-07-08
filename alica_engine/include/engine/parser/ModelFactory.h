@@ -43,6 +43,7 @@ namespace alica
 	class Capability;
 	class RoleTaskMapping;
 	class RoleSet;
+	class PlanningProblem;
 
 	class ModelFactory
 	{
@@ -61,6 +62,7 @@ namespace alica
 		void createCapabilityDefinitionSet(tinyxml2::XMLDocument* node);
 		void createRoleDefinitionSet(tinyxml2::XMLDocument* node);
 		void createPlanType(tinyxml2::XMLDocument* node);
+		void createPlanningProblem(tinyxml2::XMLDocument* node);
 		void computeReachabilities();
 		void attachPlanReferences();
 		void attachRoleReferences();
@@ -103,6 +105,8 @@ namespace alica
 		static const string characteristics;
 		static const string capability;
 		static const string value;
+		static const string waitPlan;
+		static const string alternativePlan;
 
 		PlanParser* parser;
 		PlanRepository* rep;
@@ -123,6 +127,9 @@ namespace alica
 		list<pair<long, long>> rtmRoleReferences;
 		list<pair<long, long>> charCapReferences;
 		list<pair<long, long>> charCapValReferences;
+		list<pair<long, long>> planningProblemPlanReferences;
+		list<pair<long, long>> planningProblemPlanWaitReferences;
+		list<pair<long, long>> planningProblemPlanAlternativeReferences;
 
 		void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele);
 		EntryPoint* createEntryPoint(tinyxml2::XMLElement* element);
@@ -131,6 +138,7 @@ namespace alica
 		FailureState* createFailureState(tinyxml2::XMLElement* element);
 		Transition* createTransition(tinyxml2::XMLElement* element, Plan* plan);
 		SyncTransition* createSyncTransition(tinyxml2::XMLElement* element);
+
 		Parametrisation* createParametrisation(tinyxml2::XMLElement* element);
 		PreCondition* createPreCondition(tinyxml2::XMLElement* element);
 		PostCondition* createPostCondition(tinyxml2::XMLElement* element);

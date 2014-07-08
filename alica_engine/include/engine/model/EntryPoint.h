@@ -30,13 +30,13 @@ namespace alica
 		EntryPoint();
 		virtual ~EntryPoint();
 
-		const long IDLEID = -1;
+		const static long IDLEID = -1;
 		void computeReachabilitySet();
 		string toString ();
-		static bool compareTo(const EntryPoint* ep1 , const EntryPoint* ep2);
+		static bool compareTo(EntryPoint* ep1 , EntryPoint* ep2);
 
-		const Task* getTask() const;
-		void setTask(const Task* task);
+		Task* getTask();
+		void setTask(Task* task);
 		Plan* getPlan() const;
 		void setPlan(Plan* plan);
 		const int getMaxCardinality() const;
@@ -53,7 +53,7 @@ namespace alica
 
 	protected:
 		State* state;
-		const Task* task;
+		Task* task;
 		Plan* plan;
 		int minCardinality = 0;
 		int maxCardinality = 0;

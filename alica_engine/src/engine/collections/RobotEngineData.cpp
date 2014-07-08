@@ -106,6 +106,16 @@ namespace alica
 		}
 	}
 
+	Role* RobotEngineData::getLastRole()
+	{
+		return lastRole;
+	}
+
+	void RobotEngineData::setLastRole(Role* lastRole)
+	{
+		this->lastRole = lastRole;
+	}
+
 	long RobotEngineData::makeUniqueId(string s)
 	{
 		long ret = (long)this->getProperties()->getId() << 32;

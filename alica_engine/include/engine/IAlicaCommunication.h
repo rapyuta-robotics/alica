@@ -10,6 +10,7 @@
 
 namespace alica
 {
+	class RoleSwitch;
 
 	class IAlicaCommunication
 	{
@@ -20,7 +21,7 @@ namespace alica
 		virtual void SendAllocationAuthority() = 0;
 		virtual void SendBehaviourEngineInfo() = 0;
 		virtual void SendPlanTreeInfo() = 0;
-		virtual void SendRoleSwitch() = 0;
+		virtual void SendRoleSwitch(RoleSwitch rs) = 0;
 		virtual void SendSolverResult() = 0;
 		virtual void SendSyncReady() = 0;
 		virtual void SendSyncTalk() = 0;

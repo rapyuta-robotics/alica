@@ -21,13 +21,13 @@ namespace alica
 	{
 		this->name = name;
 		this->parameters = nullptr;
-		this->runThread = new thread(&BasicBehaviour::runInternal, this);
 		this->timer = new supplementary::Timer(0, 0, false);
 		this->failure = false;
 		this->success = false;
 		this->callInit = true;
 		this->running = false;
 		this->started = false;
+		this->runThread = new thread(&BasicBehaviour::runInternal, this);
 	}
 
 	BasicBehaviour::~BasicBehaviour()
@@ -148,12 +148,12 @@ namespace alica
 
 	void BasicBehaviour::runInternal()
 	{
+		sleep(3);
 		unique_lock<mutex> lck(runCV_mtx);
 		while (!AlicaEngine::getInstance()->isTerminating() && this->started)
 		{
 			this->runCV.wait(lck, [&]
-			{	return this->timer->isRunning();}); // protection against spurious wake-ups
-
+			{return this->timer->isRunning();}); // protection against spurious wake-ups
 			if (!this->started)
 				return;
 			if (this->callInit)
@@ -167,10 +167,12 @@ namespace alica
 			BehaviourConfiguration* conf = dynamic_cast<BehaviourConfiguration*>(this->getRunningPlan()->getPlan());
 			if (conf->isEventDriven())
 			{
-				double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / conf->getFrequency() * 1000.0;
+				double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0
+						- 1.0 / conf->getFrequency() * 1000.0;
 				if (dura > 0.1)
 				{ //Behaviour "+conf.Behaviour.Name+" exceeded runtime by {0,1:0.##}ms!",delta
-					cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura << "ms!" << endl;
+					cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura
+							<< "ms!" << endl;
 				}
 			}
 #endif
