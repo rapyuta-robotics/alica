@@ -99,6 +99,7 @@ namespace alica
 	{
 		// TODO implement this
 		this->started = true;
+		this->callInit = true;
 	}
 
 	/**
