@@ -14,6 +14,7 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/collections/SuccessCollection.h"
 #include "engine/model/Task.h"
+#include "engine/SimplePlanTree.h"
 
 namespace alica
 {
@@ -103,7 +104,7 @@ namespace alica
 		idleEP->getTask()->setName("IDLE-TASK");
 		idleEP->getTask()->setId(Task::IDLEID);
 
-		for(int i = 0; i < maxCount; i++)
+		for (int i = 0; i < maxCount; i++)
 		{
 			daPAs[i] = new PartialAssignment();
 		}
@@ -116,7 +117,7 @@ namespace alica
 		this->max = 1.0;
 		this->compareVal = PRECISION;
 		this->unAssignedRobots.clear();
-		for(int i = 0; i < this->epRobotsMapping->getCount(); i++)
+		for (int i = 0; i < this->epRobotsMapping->getCount(); i++)
 		{
 			this->epRobotsMapping->getRobots()[i]->clear();
 		}
@@ -349,36 +350,246 @@ namespace alica
 
 	}
 
-	bool PartialAssignment::addIfAlreadyAssigned(SimplePlanTree* spt, int robot)
+	bool PartialAssignment::addIfAlreadyAssigned(SimplePlanTree spt, int robot)
 	{
+		if (spt.getEntryPoint()->getPlan() == this->plan)
+		{
+			vector<EntryPoint*> eps = this->epRobotsMapping->getEntryPoints();
+			EntryPoint* curEp;
+			int max = this->epRobotsMapping->getCount();
+			if (allowIdling)
+			{
+				max--;
+			}
+			for (int i = 0; i < max; ++i)
+			{
+				curEp = eps[i];
+				if (spt.getEntryPoint()->getId() == curEp->getId())
+				{
+					if (!this->assignRobot(robot, i))
+					{
+						break;
+					}
+					auto iter = find(this->unAssignedRobots.begin(), this->unAssignedRobots.end(), robot);
+					if (this->unAssignedRobots.erase(iter) == this->unAssignedRobots.end())
+					{
+						cerr << "PA: Tried to assign robot " << robot << ", but it was not UNassigned!" << endl;
+						throw new exception;
+					}
+					return true;
+				}
+			}
+			return false;
+		}
+		else if (spt.getChildren().size() > 0)
+		{
+			for (auto sptChild : spt.getChildren())
+			{
+				if (this->addIfAlreadyAssigned((*sptChild), robot))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	bool PartialAssignment::assignRobot(int robot, int index)
 	{
+		if (this->dynCardinalities[index]->getMax() > 0)
+		{
+			this->epRobotsMapping->getRobots()[index]->push_back(robot);
+			if (this->dynCardinalities[index]->getMin() > 0)
+			{
+				this->dynCardinalities[index]->setMin(this->dynCardinalities[index]->getMin() - 1);
+			}
+			if (this->dynCardinalities[index]->getMax() != INFINITY)
+			{
+				this->dynCardinalities[index]->setMax(this->dynCardinalities[index]->getMax() - 1);
+			}
+			return true;
+		}
+		return false;
 	}
 
-	list<PartialAssignment*> PartialAssignment::expand()
+	shared_ptr<list<PartialAssignment*> > PartialAssignment::expand()
 	{
+		shared_ptr<list<PartialAssignment*> > newPas = make_shared<list<PartialAssignment*> >(
+				list<PartialAssignment*>(this->epRobotsMapping->getCount()));
+		if (this->unAssignedRobots.size() == 0)
+		{
+			return newPas;
+		}
+		int robot = this->unAssignedRobots[0];
+		this->unAssignedRobots.erase(this->unAssignedRobots.begin());
+		PartialAssignment* newPa;
+		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
+		{
+			if (this->dynCardinalities[i]->getMax() > 0)
+			{
+				newPa = PartialAssignment::getNew(this);
+				newPa->assignRobot(robot, i);
+				newPas->push_back(newPa);
+			}
+		}
+		return newPas;
 	}
 
 	bool PartialAssignment::isValid()
 	{
+		int min = 0;
+		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
+		{
+			min += dynCardinalities[i]->getMin();
+		}
+		return min <= this->numUnAssignedRobots();
 	}
 
 	bool PartialAssignment::isGoal()
 	{
+		if (this->unAssignedRobots.size() > 0)
+		{
+			return false;
+		}
+		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
+		{
+			if (this->dynCardinalities[i]->getMin() != 0)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
-	bool PartialAssignment::compareTo(PartialAssignment* thisPa, PartialAssignment* oldPa)
+	bool PartialAssignment::compareTo(PartialAssignment* thisPa, PartialAssignment* newPa)
 	{
+		//TODO has perhaps to be changed
+		// 0 , -1 = false
+		// 1 true
+		if (thisPa == newPa)
+		{
+			return false;
+		}
+		if (newPa->compareVal > thisPa->compareVal)
+		{
+			return true;
+		}
+		else if (newPa->compareVal < thisPa->compareVal)
+		{
+			return false;
+		}
+		else if (newPa->plan->getId() < thisPa->plan->getId())
+		{
+			return false;
+		}
+		else if (newPa->plan->getId() > thisPa->plan->getId())
+		{
+			return true;
+		}
+		if (thisPa->unAssignedRobots.size() > newPa->unAssignedRobots.size())
+		{
+			return true;
+		}
+		else if (thisPa->unAssignedRobots.size() < newPa->unAssignedRobots.size())
+		{
+			return false;
+		}
+		if (newPa->min > thisPa->min)
+		{
+			return true;
+		}
+		else if (newPa->min < thisPa->min)
+		{
+			return false;
+		}
+		auto me = thisPa->epRobotsMapping->getRobots();
+		auto you = newPa->epRobotsMapping->getRobots();
+		for (int i = 0; i < thisPa->epRobotsMapping->getCount(); ++i)
+		{
+			if (me[i]->size() < you[i]->size())
+			{
+				return true;
+			}
+			else if (me[i]->size() > you[i]->size())
+			{
+				return false;
+			}
+		}
+		for(int i= 0; thisPa->epRobotsMapping->getCount(); ++i)
+		{
+			for(int j = 0; j < me[i]->size(); ++j)
+			{
+				if(me[i]->at(j) < you[i]->at(j))
+				{
+					return true;
+				}
+				else if(me[i]->at(j) > you[i]->at(j))
+				{
+					return false;
+				}
+			}
+		}
+		return false;
+
 	}
 
+
+	//TODO c# variant has to be adapted to c++
 	int PartialAssignment::getHashCode()
 	{
+		if(this->hashCalculated)
+		{
+			return this->hash;
+		}
+		int basei = this->epRobotsMapping->getCount() + 1;
+		vector<int> robots;
+		for(int i = 0; i < this->epRobotsMapping->getCount(); ++i)
+		{
+			robots = (*this->epRobotsMapping->getRobots()[i]);
+			for(int robot : robots)
+			{
+
+				//TODO find replacement for c# array.binarysearch
+				this->hash += (i + 1) * pow(basei, robots[i]);
+			}
+		}
+		this->hashCalculated = true;
+		return this->hash;
 	}
 
 	string PartialAssignment::toString()
 	{
+		stringstream ss;
+		ss << "Plan: " << this->plan->getName() << endl;
+		ss << "Utility: " << this->min << ".." << this->max << endl;
+		ss << "UnAssignedRobots: ";
+		for(int robot : this->unAssignedRobots)
+		{
+			ss << robot << " ";
+		}
+		ss << endl;
+		vector<EntryPoint*> ownEps = this->epRobotsMapping->getEntryPoints();
+		vector<int> robots;
+		for(int i = 0; i < this->epRobotsMapping->getCount(); ++i)
+		{
+			robots = (*this->epRobotsMapping->getRobots()[i]);
+			ss << "EPid: " << ownEps[i]->getId() << "Task: "
+					<< ownEps[i]->getTask()->getName() << " minCar: "
+					<< this->dynCardinalities[i]->getMin() << " maxCar: "
+					<< (this->dynCardinalities[i]->getMax() == INFINIT ? "*":this->dynCardinalities[i]->getMax()+"")
+					<< " Assigned Robots: ";
+			for(int robot : robots)
+			{
+				ss << robot << " ";
+			}
+			ss << endl;
+		}
+
+		ss << this->epRobotsMapping->toString();
+		ss << "HashCode: " << this->getHashCode() << endl;
+
+		return ss.str();
+
 	}
 
 	int PartialAssignment::numUnAssignedRobots()
@@ -388,10 +599,17 @@ namespace alica
 
 	string PartialAssignment::assignmentCollectionToString()
 	{
+		return "PA: \n" + toString();
 	}
 
 	int PartialAssignment::pow(int x, int y)
 	{
+		int ret = 1;
+		for(int i = 0; i < y ; i++)
+		{
+			ret *= x;
+		}
+		return ret;
 	}
 
 } /* namespace alica */
