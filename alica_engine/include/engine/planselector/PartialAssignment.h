@@ -52,12 +52,12 @@ namespace alica
 		shared_ptr<list<int> > getRobotsWorkingAndFinished(EntryPoint* ep);
 		shared_ptr<list<int> > getRobotsWorkingAndFinished(long epid);
 		shared_ptr<list<int> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
-		bool addIfAlreadyAssigned(SimplePlanTree* spt, int robot);
+		bool addIfAlreadyAssigned(SimplePlanTree spt, int robot);
 		bool assignRobot(int robot, int index);
-		list<PartialAssignment*> expand();
+		shared_ptr<list<PartialAssignment*> > expand();
 		bool isValid();
 		bool isGoal();
-		bool compareTo(PartialAssignment* thisPa, PartialAssignment* oldPa);
+		bool compareTo(PartialAssignment* thisPa, PartialAssignment* newPa);
 		int getHashCode();
 		string toString();
 		AssignmentCollection* getEpRobotsMapping();
