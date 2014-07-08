@@ -13,6 +13,7 @@ using namespace std;
 #include <map>
 #include <vector>
 #include <list>
+#include <memory>
 
 #include "engine/IRoleAssignment.h"
 
@@ -26,6 +27,7 @@ namespace alica
 	class Publisher;
 	class RobotRoleUtility;
 	class RolePriority;
+	class IAlicaCommunication;
 
 	class RoleAssignment : virtual public IRoleAssignment
 	{
@@ -45,7 +47,7 @@ namespace alica
 		//TODO this vector has to be sorted each time an element is inserted
 		vector<RobotRoleUtility*> sortedRobots;
 		map<long, Role*> roles;
-		list<RobotProperties*> availableRobots;
+		unique_ptr<list<RobotProperties*> > availableRobots;
 		Role* ownRole;
 		RobotProperties* ownRobotProperties;
 		ITeamObserver* to;
@@ -56,6 +58,7 @@ namespace alica
 		bool updateRoles = false;
 		void roleUtilities();
 		void update();
+		IAlicaCommunication* communication;
 
 	};
 

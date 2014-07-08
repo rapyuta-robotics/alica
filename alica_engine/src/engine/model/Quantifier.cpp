@@ -75,9 +75,9 @@ namespace alica
 
 	void Quantifier::setScope(AlicaElement* ae)
 	{
-		scopeIsEntryPoint = (typeid(ae) == typeid(EntryPoint*));
-		scopeIsPlan = (typeid(ae) == typeid(Plan*));
-		scopeIsState = (typeid(ae) == typeid(State*));
+		scopeIsEntryPoint = (dynamic_cast<EntryPoint*>(ae) !=0);
+		scopeIsPlan = (dynamic_cast<Plan*>(ae) !=0 );
+		scopeIsState = (dynamic_cast<State*>(ae) !=0);
 
 		if (scopeIsPlan)
 		{

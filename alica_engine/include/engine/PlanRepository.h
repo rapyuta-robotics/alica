@@ -32,6 +32,7 @@ namespace alica
 	class Task;
 	class Transition;
 	class Variable;
+	class PlanningProblem;
 
 	class PlanRepository
 	{
@@ -55,6 +56,7 @@ namespace alica
 		map<long, Task*>& getTasks();
 		map<long, Transition*>& getTransitions();
 		map<long, Variable*>& getVariables();
+		map<long, PlanningProblem*>& getPlanningProblems();
 
 	private:
 		map<long, Plan*> plans;
@@ -73,6 +75,7 @@ namespace alica
 		map<long, Variable*> variables;
 		map<long, RoleDefinitionSet*> roleDefinitionSets;
 		map<long, TaskRepository*> taskRepositorys;
+		map<long, PlanningProblem*> planningProblems;
 
 		void setBehaviourConfigurations(const map<long, BehaviourConfiguration*>& behaviourConfigurations);
 		void setBehaviours(const map<long, Behaviour*>& behaviours);

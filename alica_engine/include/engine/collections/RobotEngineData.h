@@ -18,6 +18,7 @@ namespace alica
 	class RobotProperties;
 	class SuccessMarks;
 	class Variable;
+	class Role;
 
 	class RobotEngineData
 	{
@@ -35,6 +36,8 @@ namespace alica
 		void setLastMessageTime(unsigned long lastMessageTime);
 		virtual void initSortedTerms();
 		virtual Variable* getSortedVariable(string sort);
+		Role* getLastRole();
+		void setLastRole(Role* lastRole);
 
 	protected:
 		RobotProperties* properties;
@@ -43,6 +46,7 @@ namespace alica
 		unsigned long lastMessageTime;
 		map<string, Variable*> sortedVariables;
 		long makeUniqueId(string s);
+		Role* lastRole;
 	};
 
 } /* namespace alica */

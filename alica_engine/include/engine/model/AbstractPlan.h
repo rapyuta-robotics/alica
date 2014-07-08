@@ -47,7 +47,7 @@ namespace alica
 		void setRuntimeCondition(RuntimeCondition* runtimeCondition);
 		PreCondition* getPreCondition();
 		void setPreCondition(PreCondition* preCondition);
-		const UtilityFunction* getUtilityFunction() const;
+		UtilityFunction* getUtilityFunction();
 		void setUtilityFunction(UtilityFunction* utilityFunction);
 		double getUtilityThreshold() const;
 		void setUtilityThreshold(double utilityThreshold = 1.0);
