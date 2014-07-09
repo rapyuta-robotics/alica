@@ -16,6 +16,7 @@ using namespace std;
 #include "engine/ISyncModul.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/allocationauthority/AuthorityManager.h"
+#include "engine/IEngineModule.h"
 
 namespace alica
 {
@@ -39,12 +40,12 @@ namespace alica
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->stepEngine = false;
 
-		string modName[] = (*this->sc)["Alica"]->get<string>("Alica", "Extensions", "LoadModule", NULL);
+//		TODO: MODULELOADER CASTOR
+//		string modName[] = (*this->sc)["Alica"]->get<string>("Alica", "Extensions", "LoadModule", NULL);
 //		if (modName->size() > 0)
-		{
+//		{
 //			for (string name : modName)
 //			{
-//				TODO:
 //				ModuleLoader<IEngineModule> l = ModuleLoader<IEngineModule> .Load(name, null, true, true);
 //				mods.Add(l.GetInstance(null, null));
 //				Console.WriteLine("AE: Loaded Module " + name);
@@ -64,7 +65,7 @@ namespace alica
 	 * The method for getting the singleton instance.
 	 * @return A pointer to the AlicaEngine object, you must not delete.
 	 */
-	AlicaEngine* AlicaEngine::getInstance()
+	AlicaEngine * AlicaEngine::getInstance()
 	{
 		static AlicaEngine instance;
 		return &instance;
@@ -108,17 +109,17 @@ namespace alica
 		return this->stepEngine;
 	}
 
-	PlanRepository* AlicaEngine::getPlanRepository()
+	PlanRepository * AlicaEngine::getPlanRepository()
 	{
 		return this->planRepository;
 	}
 
-	IBehaviourPool* AlicaEngine::getBehaviourPool()
+	IBehaviourPool * AlicaEngine::getBehaviourPool()
 	{
 		return this->behaviourPool;
 	}
 
-	ITeamObserver* AlicaEngine::getTeamObserver()
+	ITeamObserver * AlicaEngine::getTeamObserver()
 	{
 		return this->teamObserver;
 	}
@@ -128,7 +129,7 @@ namespace alica
 		this->teamObserver = teamObserver;
 	}
 
-	ISyncModul* AlicaEngine::getSyncModul()
+	ISyncModul * AlicaEngine::getSyncModul()
 	{
 		return syncModul;
 	}
@@ -138,7 +139,7 @@ namespace alica
 		this->syncModul = syncModul;
 	}
 
-	AuthorityManager* AlicaEngine::getAuth()
+	AuthorityManager * AlicaEngine::getAuth()
 	{
 		return auth;
 	}
@@ -148,7 +149,7 @@ namespace alica
 		this->auth = auth;
 	}
 
-	IRoleAssignment* AlicaEngine::getRoleAssignment()
+	IRoleAssignment * AlicaEngine::getRoleAssignment()
 	{
 		return roleAssignment;
 	}
@@ -158,12 +159,12 @@ namespace alica
 		this->roleAssignment = roleAssignment;
 	}
 
-	IPlanParser* AlicaEngine::getPlanParser()
+	IPlanParser * AlicaEngine::getPlanParser()
 	{
 		return planParser;
 	}
 
-	RoleSet* AlicaEngine::getRoleSet()
+	RoleSet * AlicaEngine::getRoleSet()
 	{
 		return roleSet;
 	}
@@ -189,7 +190,7 @@ namespace alica
 		this->robotName = robotName;
 	}
 
-	Logger* AlicaEngine::getLog()
+	Logger * AlicaEngine::getLog()
 	{
 		return log;
 	}
@@ -209,7 +210,7 @@ namespace alica
 		this->terminating = terminating;
 	}
 
-	IAlicaCommunication* AlicaEngine::getCommunicatior()
+	IAlicaCommunication * AlicaEngine::getCommunicatior()
 	{
 		return communicatior;
 	}

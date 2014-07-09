@@ -10,6 +10,11 @@
 
 namespace alica
 {
+	class ITeamObserver;
+	class ISyncModul;
+	class IPlanSelector;
+	class Logger;
+
 	class RuleBook
 	{
 	public:
@@ -24,7 +29,7 @@ namespace alica
 		ISyncModul* sm;
 		int maxConsecutiveChanges;
 		IPlanSelector* ps;
-		Logger log;
+		Logger* log;
 
 
 	};

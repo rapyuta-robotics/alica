@@ -119,7 +119,7 @@ namespace alica
 
 			if(this->rootNode == nullptr)
 			{
-				this->rootNode = ruleBook->
+//				this->rootNode = ruleBook->
 			}
 //			for(int i = 0; i < this->ae->getA)
 //

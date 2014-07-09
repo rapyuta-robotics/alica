@@ -12,6 +12,7 @@ using namespace std;
 
 #include <string>
 #include <SystemConfig.h>
+#include <list>
 
 namespace alica
 {
@@ -26,11 +27,10 @@ namespace alica
 	class ISyncModul;
 	class AuthorityManager;
 	class IRoleAssignment;
-<<<<<<< HEAD
 	class IPlanSelector;
-=======
 	class IAlicaCommunication;
->>>>>>> 685b95169ae1f73fb83d162906f3caef7fb8422b
+	class IEngineModule;
+
 
 	class AlicaEngine
 	{
@@ -72,9 +72,8 @@ namespace alica
 		ISyncModul* syncModul;
 		AuthorityManager* auth;
 		IRoleAssignment* roleAssignment;
-		list<IEngineModule> mods;
-		IPlanSelector planSelector;
-
+		list<IEngineModule*> mods;
+		IPlanSelector* planSelector;
 		IAlicaCommunication* communicatior;
 
 
