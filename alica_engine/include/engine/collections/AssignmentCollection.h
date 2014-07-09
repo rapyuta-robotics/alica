@@ -29,7 +29,7 @@ namespace alica
 		virtual ~AssignmentCollection();
 		int getCount() const;
 		void setCount(int count);
-		vector<EntryPoint*> getEntryPoints();
+		vector<EntryPoint*>& getEntryPoints();
 		void setEntryPoints(vector<EntryPoint*> entryPoints);
 		vector<shared_ptr<vector<int> > > getRobots();
 		void setRobots(vector<shared_ptr<vector<int> > > robots);

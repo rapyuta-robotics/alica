@@ -9,6 +9,7 @@
 #include "engine/model/AbstractPlan.h"
 #include "engine/AlicaEngine.h"
 #include "engine/ITeamObserver.h"
+#include "engine/model/Plan.h"
 
 
 namespace alica
@@ -19,7 +20,7 @@ namespace alica
 		this->to = AlicaEngine::getInstance()->getTeamObserver();
 		this->ownId = to->getOwnId();
 		this->children = list<RunningPlan*>();
-		this->robotsAvail = list<int>();
+		this->robotsAvail = unique_ptr<list<int> >();
 		this->status = PlanStatus::Running;
 		this->failCount = 0;
 		this->basicBehaviour = nullptr;
@@ -28,6 +29,18 @@ namespace alica
 		this->allocationNeeded = false;
 		this->failHandlingNeeded = false;
 
+	}
+	RunningPlan::RunningPlan(Plan* plan)
+	{
+		this->plan = plan;
+		vector<EntryPoint*> epCol;
+		transform(plan->getEntryPoints().begin(), plan->getEntryPoints().end(), back_inserter(epCol), [](map<long, EntryPoint*>::value_type& val){return val.second;} );
+
+	}
+
+	void RunningPlan::setAllocationNeeded(bool allocationNeeded)
+	{
+		this->allocationNeeded = allocationNeeded;
 	}
 
 	RunningPlan::~RunningPlan()
@@ -114,6 +127,12 @@ namespace alica
 	void RunningPlan::setActive(bool active)
 	{
 		this->active = active;
+	}
+
+	void RunningPlan::setRobotsAvail(unique_ptr<list<int> >  robots)
+	{
+		this->robotsAvail->clear();
+		this->robotsAvail = move(robots);
 	}
 
 } /* namespace alica */

@@ -18,6 +18,8 @@ using namespace std;
 
 #include "engine/PlanStatus.h"
 
+using namespace std;
+
 namespace alica
 {
 
@@ -29,11 +31,13 @@ namespace alica
 	class PlanType;
 	class IBehaviourPool;
 	class ITeamObserver;
+	class Plan;
 
 	class RunningPlan
 	{
 	public:
 		RunningPlan();
+		RunningPlan(Plan* plan);
 		virtual ~RunningPlan();
 		bool isBehaviour() const;
 		enum planChange{NoCHange, InternalChange, SuccessChange, FailChange};
@@ -51,6 +55,8 @@ namespace alica
 		unsigned long getStateStartTime();
 		bool isActive();
 		void setActive(bool active);
+		void setRobotsAvail(unique_ptr<list<int> >  robots);
+		void setAllocationNeeded(bool allocationNeeded);
 
 	protected:
 		bool behaviour;
@@ -65,7 +71,7 @@ namespace alica
 		unsigned long stateStartTime;
 		unsigned long planStartTime;
 		int ownId;
-		list<int> robotsAvail;
+		unique_ptr<list<int> > robotsAvail;
 		map<AbstractPlan*, int> failedSubPlans;
 		PlanType* planType;
 		int failCount;
