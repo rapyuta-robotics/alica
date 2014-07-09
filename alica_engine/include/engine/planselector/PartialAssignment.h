@@ -22,6 +22,7 @@ using namespace std;
 #include <memory>
 
 #include <SystemConfig.h>
+#include "engine/IAssignment.h"
 
 
 namespace alica
@@ -36,7 +37,7 @@ namespace alica
 	class DynCardinality;
 	class SimplePlanTree;
 
-	class PartialAssignment
+	class PartialAssignment : virtual public IAssignment
 	{
 	public:
 		virtual ~PartialAssignment();
@@ -52,7 +53,7 @@ namespace alica
 		shared_ptr<list<int> > getRobotsWorkingAndFinished(EntryPoint* ep);
 		shared_ptr<list<int> > getRobotsWorkingAndFinished(long epid);
 		shared_ptr<list<int> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
-		bool addIfAlreadyAssigned(SimplePlanTree spt, int robot);
+		bool addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, int robot);
 		bool assignRobot(int robot, int index);
 		shared_ptr<list<PartialAssignment*> > expand();
 		bool isValid();
@@ -66,10 +67,6 @@ namespace alica
 		SuccessCollection* getEpSuccessMapping();
 		int numUnAssignedRobots();
 		vector<int> getUnAssignedRobots();
-		double getMax();
-		void setMax(double max);
-		double getMin();
-		void setMin(double min);
 		string assignmentCollectionToString();
 		vector<EntryPoint*> getEntryPoints();
 
@@ -87,8 +84,6 @@ namespace alica
 		static bool allowIdling;
 		static EntryPoint* idleEP;
 		UtilityFunction* utilFunc;
-		double min;
-		double max;
 		AssignmentCollection* epRobotsMapping;
 		vector<int> robots;
 		vector<DynCardinality*> dynCardinalities;

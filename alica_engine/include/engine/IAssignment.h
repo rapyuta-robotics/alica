@@ -28,12 +28,12 @@ namespace alica
 		virtual shared_ptr<vector<int> > getRobotsWorking(EntryPoint* ep) = 0;
 		virtual shared_ptr<vector<int> > getRobotsWorking(long epid) = 0;
 		virtual int totalRobotCount() = 0;
-		virtual vector<EntryPoint*> getEntyPoints() = 0;
+		virtual vector<EntryPoint*> getEntryPoints() = 0;
 		virtual int getEntryPointCount() = 0;
-		virtual list<int> getRobotsWorkingAndFinished(EntryPoint* ep) = 0;
-		virtual list<int> getUniqueRobotsWorkingAndFinished(EntryPoint* ep) = 0;
-		virtual list<int> getRobotsWorkingAndFinished(long epid) = 0;
-		virtual SuccessCollection* getSuccessMapping() = 0;
+		virtual shared_ptr<list<int> > getRobotsWorkingAndFinished(EntryPoint* ep) = 0;
+		virtual shared_ptr<list<int> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep) = 0;
+		virtual shared_ptr<list<int> > getRobotsWorkingAndFinished(long epid) = 0;
+		virtual SuccessCollection* getEpSuccessMapping() = 0;
 		virtual bool isValid() = 0;
 		virtual string assignmentCollectionToString() = 0;
 

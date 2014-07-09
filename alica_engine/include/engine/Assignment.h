@@ -23,11 +23,13 @@ namespace alica
 	class StateCollection;
 	class AssignmentCollection;
 	class EntryPoint;
+	class PartialAssignment;
 
 	class Assignment : public IAssignment
 	{
 	public:
 		Assignment();
+		Assignment(PartialAssignment* pa);
 		virtual ~Assignment();
 		Plan* getPlan();
 		void setPlan(Plan* plan);
@@ -37,6 +39,16 @@ namespace alica
 		shared_ptr<vector<int> > getRobotsWorking(long epid);
 		shared_ptr<vector<int> > getRobotsWorkingSorted(EntryPoint* ep);
 		shared_ptr<vector<int> > getRobotsWorking(EntryPoint* ep);
+		int totalRobotCount();
+		vector<EntryPoint*> getEntryPoints();
+		int getEntryPointCount();
+		shared_ptr<list<int> > getRobotsWorkingAndFinished(EntryPoint* ep);
+		shared_ptr<list<int> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
+		shared_ptr<list<int> > getRobotsWorkingAndFinished(long epid);
+		SuccessCollection* getEpSuccessMapping();
+		bool isValid();
+		string assignmentCollectionToString();
+		string toString();
 
 	protected:
 		Plan* plan;

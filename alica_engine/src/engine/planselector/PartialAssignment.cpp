@@ -68,26 +68,6 @@ namespace alica
 		return unAssignedRobots;
 	}
 
-	double PartialAssignment::getMax()
-	{
-		return max;
-	}
-
-	void PartialAssignment::setMax(double max)
-	{
-		this->max = max;
-	}
-
-	double PartialAssignment::getMin()
-	{
-		return min;
-	}
-
-	void PartialAssignment::setMin(double min)
-	{
-		this->min = min;
-	}
-
 	vector<EntryPoint*> PartialAssignment::getEntryPoints()
 	{
 		return this->epRobotsMapping->getEntryPoints();
@@ -350,9 +330,9 @@ namespace alica
 
 	}
 
-	bool PartialAssignment::addIfAlreadyAssigned(SimplePlanTree spt, int robot)
+	bool PartialAssignment::addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, int robot)
 	{
-		if (spt.getEntryPoint()->getPlan() == this->plan)
+		if (spt->getEntryPoint()->getPlan() == this->plan)
 		{
 			vector<EntryPoint*> eps = this->epRobotsMapping->getEntryPoints();
 			EntryPoint* curEp;
@@ -364,7 +344,7 @@ namespace alica
 			for (int i = 0; i < max; ++i)
 			{
 				curEp = eps[i];
-				if (spt.getEntryPoint()->getId() == curEp->getId())
+				if (spt->getEntryPoint()->getId() == curEp->getId())
 				{
 					if (!this->assignRobot(robot, i))
 					{
@@ -381,11 +361,11 @@ namespace alica
 			}
 			return false;
 		}
-		else if (spt.getChildren().size() > 0)
+		else if (spt->getChildren().size() > 0)
 		{
-			for (auto sptChild : spt.getChildren())
+			for (auto sptChild : spt->getChildren())
 			{
-				if (this->addIfAlreadyAssigned((*sptChild), robot))
+				if (this->addIfAlreadyAssigned(sptChild, robot))
 				{
 					return true;
 				}
