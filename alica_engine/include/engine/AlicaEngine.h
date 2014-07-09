@@ -62,6 +62,7 @@ namespace alica
 		void setTerminating(bool terminating);
 		RoleSet* getRoleSet();
 		IAlicaCommunication* getCommunicatior();
+		IPlanSelector* getPlanSelector();
 
 	protected:
 		supplementary::SystemConfig* sc;
