@@ -6,13 +6,14 @@
  */
 
 #include "engine/rules/RuleBook.h"
+#include "engine/AlicaEngine.h"
 
 namespace alica
 {
 	RuleBook::RuleBook()
 	{
 		this->to = AlicaEngine::getInstance()->getTeamObserver();
-		this->ps = AlicaEngine::getInstance()
+//		this->ps = AlicaEngine::getInstance().
 	}
 
 	RuleBook::~RuleBook()
