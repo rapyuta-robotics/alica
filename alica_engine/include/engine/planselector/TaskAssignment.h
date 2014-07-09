@@ -10,6 +10,8 @@
 #define EXPANSIONEVAL
 #define PSDEBUG
 
+using namespace std;
+
 #include "engine/ITaskAssignment.h"
 
 #include <list>
