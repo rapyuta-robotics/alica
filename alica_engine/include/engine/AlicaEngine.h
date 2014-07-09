@@ -26,7 +26,11 @@ namespace alica
 	class ISyncModul;
 	class AuthorityManager;
 	class IRoleAssignment;
+<<<<<<< HEAD
 	class IPlanSelector;
+=======
+	class IAlicaCommunication;
+>>>>>>> 685b95169ae1f73fb83d162906f3caef7fb8422b
 
 	class AlicaEngine
 	{
@@ -56,6 +60,8 @@ namespace alica
 		IPlanParser* getPlanParser();
 		bool isTerminating() const;
 		void setTerminating(bool terminating);
+		RoleSet* getRoleSet();
+		IAlicaCommunication* getCommunicatior();
 
 	protected:
 		supplementary::SystemConfig* sc;
@@ -68,6 +74,9 @@ namespace alica
 		IRoleAssignment* roleAssignment;
 		list<IEngineModule> mods;
 		IPlanSelector planSelector;
+
+		IAlicaCommunication* communicatior;
+
 
 	private:
 		// private constructur/ destructor because of singleton

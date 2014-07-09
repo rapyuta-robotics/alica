@@ -15,6 +15,18 @@ namespace alica
 	public:
 		RuleBook();
 		virtual ~RuleBook();
+		bool isChangeOccured() const;
+		void setChangeOccured(bool changeOccured);
+
+		bool changeOccured;
+	protected:
+		ITeamObserver* to;
+		ISyncModul* sm;
+		int maxConsecutiveChanges;
+		IPlanSelector* ps;
+		Logger log;
+
+
 	};
 
 #endif /* RULEBOOK_H_ */

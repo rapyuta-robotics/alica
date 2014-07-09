@@ -30,10 +30,10 @@ namespace alica
 		void setDescription(const string& description);
 		const TaskRepository* getTaskRepository() const;
 		void setTaskRepository(const TaskRepository* taskRepository);
+		const static long IDLEID = -1;
 
 	private:
 		string description;
-		const long IDLEID = -1;
 		string toString();
 		const TaskRepository* taskRepository;
 

@@ -11,8 +11,8 @@ namespace alica
 {
 	RuleBook::RuleBook()
 	{
-		// TODO Auto-generated constructor stub
-
+		this->to = AlicaEngine::getInstance()->getTeamObserver();
+		this->ps = AlicaEngine::getInstance()
 	}
 
 	RuleBook::~RuleBook()
@@ -20,4 +20,18 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
+
+
+
+
+	/** Getter and Setter **/
+	bool RuleBook::isChangeOccured() const
+	{
+		return changeOccured;
+	}
+
+	void RuleBook::setChangeOccured(bool changeOccured)
+	{
+		this->changeOccured = changeOccured;
+	}
 }

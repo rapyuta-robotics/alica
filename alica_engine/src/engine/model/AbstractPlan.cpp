@@ -114,7 +114,7 @@ namespace alica
 		this->preCondition = preCondition;
 	}
 
-	const UtilityFunction* AbstractPlan::getUtilityFunction() const
+	UtilityFunction* AbstractPlan::getUtilityFunction()
 	{
 		return utilityFunction;
 	}

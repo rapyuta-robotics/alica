@@ -35,20 +35,21 @@ namespace alica
 		this->roleAssignment = nullptr;
 		this->auth = nullptr;
 		this->behaviourPool = nullptr;
+		this->roleSet = nullptr;
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->stepEngine = false;
 
 		string modName[] = (*this->sc)["Alica"]->get<string>("Alica", "Extensions", "LoadModule", NULL);
-		if (modName->size() > 0)
+//		if (modName->size() > 0)
 		{
-			for (string name : modName)
-			{
-				//TODO:
+//			for (string name : modName)
+//			{
+//				TODO:
 //				ModuleLoader<IEngineModule> l = ModuleLoader<IEngineModule> .Load(name, null, true, true);
 //				mods.Add(l.GetInstance(null, null));
 //				Console.WriteLine("AE: Loaded Module " + name);
-			}
-		}
+//			}
+//		}
 
 #ifdef AE_DEBUG
 		cout << "AE: Constructor finished!" << endl;
@@ -162,6 +163,11 @@ namespace alica
 		return planParser;
 	}
 
+	RoleSet* AlicaEngine::getRoleSet()
+	{
+		return roleSet;
+	}
+
 	void AlicaEngine::setStepEngine(bool stepEngine)
 	{
 		this->stepEngine = stepEngine;
@@ -201,6 +207,11 @@ namespace alica
 	void AlicaEngine::setTerminating(bool terminating)
 	{
 		this->terminating = terminating;
+	}
+
+	IAlicaCommunication* AlicaEngine::getCommunicatior()
+	{
+		return communicatior;
 	}
 
 } /* namespace Alica */
