@@ -17,10 +17,10 @@ using namespace std;
 #include "engine/IRoleAssignment.h"
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/IEngineModule.h"
+#include "engine/planselector/PlanSelector.h"
 
 namespace alica
 {
-
 	/**
 	 * The main class.
 	 */
@@ -81,6 +81,7 @@ namespace alica
 		this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
 		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
 		this->behaviourPool = new BehaviourPool();
+		this->planSelector = new PlanSelector();
 		everythingWorked &= this->behaviourPool->init(bc);
 		return everythingWorked;
 	}
@@ -112,6 +113,11 @@ namespace alica
 	PlanRepository * AlicaEngine::getPlanRepository()
 	{
 		return this->planRepository;
+	}
+
+	IPlanSelector* AlicaEngine::getPlanSelector()
+	{
+		return this->planSelector;
 	}
 
 	IBehaviourPool * AlicaEngine::getBehaviourPool()
