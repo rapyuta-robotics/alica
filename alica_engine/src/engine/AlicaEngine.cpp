@@ -37,6 +37,19 @@ namespace alica
 		this->behaviourPool = nullptr;
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->stepEngine = false;
+
+		string modName[] = (*this->sc)["Alica"]->get<string>("Alica", "Extensions", "LoadModule", NULL);
+		if (modName->size() > 0)
+		{
+			for (string name : modName)
+			{
+				//TODO:
+//				ModuleLoader<IEngineModule> l = ModuleLoader<IEngineModule> .Load(name, null, true, true);
+//				mods.Add(l.GetInstance(null, null));
+//				Console.WriteLine("AE: Loaded Module " + name);
+			}
+		}
+
 #ifdef AE_DEBUG
 		cout << "AE: Constructor finished!" << endl;
 #endif
@@ -79,7 +92,7 @@ namespace alica
 		this->planParser = nullptr;
 		// roleSet is an Element in the elements set of the model factory and is cleaned there already
 		//delete this->roleSet;
-		this->roleSet= nullptr;
+		this->roleSet = nullptr;
 		delete this->behaviourPool;
 		this->behaviourPool = nullptr;
 		return everythingWorked;
@@ -191,5 +204,4 @@ namespace alica
 	}
 
 } /* namespace Alica */
-
 
