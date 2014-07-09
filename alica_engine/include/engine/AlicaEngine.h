@@ -26,6 +26,7 @@ namespace alica
 	class ISyncModul;
 	class AuthorityManager;
 	class IRoleAssignment;
+	class IPlanSelector;
 
 	class AlicaEngine
 	{
@@ -65,6 +66,8 @@ namespace alica
 		ISyncModul* syncModul;
 		AuthorityManager* auth;
 		IRoleAssignment* roleAssignment;
+		list<IEngineModule> mods;
+		IPlanSelector planSelector;
 
 	private:
 		// private constructur/ destructor because of singleton
