@@ -12,29 +12,52 @@ using namespace std;
 
 #include <string>
 #include <map>
+#include <list>
 
 namespace alica
 {
 	class Plan;
-	struct TaskRoleStruct;
 	class AlicaEngine;
 	class IRoleAssignment;
+	class USummand;
+	class RunningPlan;
+	class IAssignment;
+	struct UtilityInterval;
+	struct TaskRoleStruct;
 
 	class UtilityFunction
 	{
 	public:
-		UtilityFunction();
+		UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight, double similarityWeight, Plan* plan);
 		virtual ~UtilityFunction();
+		list<USummand*> getUtilSummands();
+		void setUtilSummands(list<USummand*> utilSummands);
+		double eval(RunningPlan* newRp, RunningPlan* oldRp);
+		UtilityInterval* eval(IAssignment* newAss, IAssignment* oldAss);
+		void updateAssignment(IAssignment* newAss, IAssignment* oldAss);
+		void cacheEvalData();
+		void init();
+		static void initDataStructures();
+		string toString();
+		Plan* getPlan();
+		map<TaskRoleStruct*, double> getPriorityMartix();
+
 		const double DIFFERENCETHRESHOLD = 0.0001;
 	protected:
 		Plan* plan;
 		string name = "DefaultUtilityFunction";
-		map<TaskRoleStruct*, double > taskRolePriorityMap;
+		map<TaskRoleStruct*, double > priorityMartix;
 		map<long, double> roleHighestPriorityMap;
 		double priorityWeight;
 		double similarityWeight;
 		AlicaEngine* bpe;
 		IRoleAssignment* ra;
+		list<USummand*> utilSummands;
+		TaskRoleStruct* lookupStruct;
+		UtilityInterval* priResult;
+		UtilityInterval* getPriorityResult(IAssignment* ass);
+		UtilityInterval* simUI;
+		UtilityInterval* getSimilarity(IAssignment* newAss, IAssignment* oldAss);
 
 	};
 
