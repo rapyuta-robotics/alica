@@ -6,19 +6,42 @@
  */
 
 #include "engine/UtilityFunction.h"
+#include "engine/TaskRoleStruct.h"
+#include "engine/UtilityInterval.h"
 
 namespace alica
 {
 
-	UtilityFunction::UtilityFunction()
+	UtilityFunction::UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight, double similarityWeight, Plan* plan)
 	{
-		// TODO Auto-generated constructor stub
+		this->lookupStruct = new TaskRoleStruct(0,0);
+		this->priResult = new UtilityInterval(0.0,0.0);
+		this->simUI = new UtilityInterval(0.0,0.0);
 
 	}
 
 	UtilityFunction::~UtilityFunction()
 	{
-		// TODO Auto-generated destructor stub
+	}
+
+	list<USummand*> UtilityFunction::getUtilSummands()
+	{
+		return utilSummands;
+	}
+
+	void UtilityFunction::setUtilSummands(list<USummand*> utilSummands)
+	{
+		this->utilSummands = utilSummands;
+	}
+
+	Plan* UtilityFunction::getPlan()
+	{
+		return plan;
+	}
+
+	map<TaskRoleStruct*, double> UtilityFunction::getPriorityMartix()
+	{
+		return priorityMartix;
 	}
 
 } /* namespace alica */

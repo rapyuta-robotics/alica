@@ -10,6 +10,8 @@
 #include "engine/AlicaEngine.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/Assignment.h"
+#include "engine/model/Plan.h"
+#include "engine/UtilityFunction.h"
 
 namespace alica
 {
@@ -37,8 +39,7 @@ namespace alica
 		PartialAssignment* curPa;
 		for (Plan* curPlan : this->planList)
 		{
-			//TODO finish UtilityFunction
-//			curPlan->getUtilityFunction()->cacheEvalData();
+			curPlan->getUtilityFunction()->cacheEvalData();
 
 			curPa = PartialAssignment::getNew(this->robots, curPlan, to->getSuccessCollection(curPlan));
 
@@ -47,8 +48,7 @@ namespace alica
 
 				if (this->addAlreadyAssignedRobots(curPa, &(*simplePlanTreeMap)))
 				{
-					//TODO finish UtilityFunction
-//					curPlan->getUtilityFunction()->updateAssignment(curPa, nullptr);
+					curPlan->getUtilityFunction()->updateAssignment(curPa, nullptr);
 				}
 			}
 			this->fringe.push_back(curPa);
@@ -147,8 +147,7 @@ namespace alica
 			{
 				auto iter = newPas->begin();
 				advance(iter, i);
-				//TODO finish utilityfunction
-				//(*iter)->getUtilFunc()->updateAssignment((*iter), oldAss);
+				(*iter)->getUtilFunc()->updateAssignment((*iter), oldAss);
 				if((*iter)->getMax() != -1)
 				{
 					this->fringe.push_back((*iter));
