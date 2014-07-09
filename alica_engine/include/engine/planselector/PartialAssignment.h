@@ -23,7 +23,7 @@ using namespace std;
 
 #include <SystemConfig.h>
 #include "engine/IAssignment.h"
-
+#include "engine/collections/AssignmentCollection.h"
 
 namespace alica
 {
@@ -33,7 +33,6 @@ namespace alica
 	class Plan;
 	class SuccessCollection;
 	class UtilityFunction;
-	class AssignmentCollection;
 	class DynCardinality;
 	class SimplePlanTree;
 
@@ -69,6 +68,10 @@ namespace alica
 		vector<int> getUnAssignedRobots();
 		string assignmentCollectionToString();
 		vector<EntryPoint*> getEntryPoints();
+		int getHash();
+		void setHash(int hash);
+		bool isHashCalculated();
+		void setHashCalculated(bool hashCalculated);
 
 	private:
 		const int INFINIT = numeric_limits<int>::max();
@@ -99,5 +102,40 @@ namespace alica
 	};
 
 } /* namespace alica */
+
+namespace std
+{
+    template<>
+    struct hash<alica::PartialAssignment>
+    {
+        typedef alica::PartialAssignment argument_type;
+        typedef std::size_t value_type;
+
+        value_type operator()(argument_type & pa) const
+        {
+        	if(pa.isHashCalculated())
+        	{
+        		return pa.getHash();
+        	}
+        	int basei = pa.getEpRobotsMapping()->getCount() + 1;
+        	vector<int> robots;
+        	for(int i = 0; i < pa.getEpRobotsMapping()->getCount(); ++i)
+        	{
+        		robots = (*pa.getEpRobotsMapping()->getRobots()[i]);
+        		for(int robot : robots)
+        		{
+
+        			//TODO find replacement for c# array.binarysearch
+        			pa.setHash(pa.getHash() + (i + 1) * pow(basei, robots[i]));
+        		}
+        	}
+//            value_type const h1 ( std::hash<std::string>()(s.first_name) );
+//            value_type const h2 ( std::hash<std::string>()(s.last_name) );
+//            return h1 ^ (h2 << 1);
+            pa.setHashCalculated(true);
+            return pa.getHash();
+        }
+    };
+}
 
 #endif /* PARTIALASSIGNMENT_H_ */

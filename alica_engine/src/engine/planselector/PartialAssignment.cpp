@@ -19,6 +19,26 @@
 namespace alica
 {
 
+	int PartialAssignment::getHash()
+	{
+		return hash;
+	}
+
+	void PartialAssignment::setHash(int hash = 0)
+	{
+		this->hash = hash;
+	}
+
+	bool PartialAssignment::isHashCalculated()
+	{
+		return hashCalculated;
+	}
+
+	void PartialAssignment::setHashCalculated(bool hashCalculated)
+	{
+		this->hashCalculated = hashCalculated;
+	}
+
 	PartialAssignment::PartialAssignment()
 	{
 		this->maxCount = 10100;

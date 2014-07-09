@@ -10,7 +10,7 @@
 
 using namespace std;
 
-#include <algorithm>
+#include <functional>
 
 namespace alica
 {
@@ -23,9 +23,25 @@ namespace alica
 		long taskId;
 		long roleId;
 		bool equals(TaskRoleStruct* trs);
-		int getHashCode();
 	};
 
 } /* namespace alica */
+
+namespace std
+{
+    template<>
+    struct hash<alica::TaskRoleStruct>
+    {
+        typedef alica::TaskRoleStruct argument_type;
+        typedef std::size_t value_type;
+
+        value_type operator()(argument_type const& trs) const
+        {
+            value_type const h1 ( std::hash<long>()(trs.taskId) );
+            value_type const h2 ( std::hash<long>()(trs.roleId) );
+            return h1 ^ h2;
+        }
+    };
+}
 
 #endif /* TASKROLESTRUCT_H_ */

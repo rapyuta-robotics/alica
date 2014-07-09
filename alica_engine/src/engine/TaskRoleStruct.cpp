@@ -26,9 +26,4 @@ namespace alica
 		return taskId==trs->taskId && roleId==trs->roleId;
 	}
 
-	int TaskRoleStruct::getHashCode()
-	{
-		return hash<long>(taskId) ^ hash<long>(roleId);
-	}
-
 } /* namespace alica */
