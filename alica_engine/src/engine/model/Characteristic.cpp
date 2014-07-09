@@ -31,7 +31,7 @@ namespace alica
 
 //================= Getter and Setter =============================
 
-	const Capability* Characteristic::getCapability() const
+	Capability* Characteristic::getCapability()
 	{
 		return capability;
 	}
@@ -41,7 +41,7 @@ namespace alica
 		this->capability = capability;
 	}
 
-	const CapValue* Characteristic::getCapValue() const
+	CapValue* Characteristic::getCapValue()
 	{
 		return capValue;
 	}

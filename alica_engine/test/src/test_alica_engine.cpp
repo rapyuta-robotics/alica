@@ -129,32 +129,29 @@ protected:
 	}
 
 	static void checkPreCondition(alica::PreCondition* condition, long id, string name, string comment,
-									string ConString, string pluginName, bool enabled)
+									string conString, string pluginName, bool enabled)
 	{
 		checkAlicaElement(condition, id, name, comment);
-		EXPECT_STREQ(ConString.c_str(), condition->getConditionString().c_str()) << "Wrong ConditionString!" << endl;
-		//TODO wait for planParser update
-		//EXPECT_STREQ(preCondition->getPlugInName().c_str(), preConString.c_str()) << "Wrong PlugInName!" << endl;
+		EXPECT_STREQ(conString.c_str(), condition->getConditionString().c_str()) << "Wrong ConditionString!" << endl;
+		EXPECT_STREQ(condition->getPlugInName().c_str(), pluginName.c_str()) << "Wrong PlugInName!" << endl;
 		EXPECT_EQ(enabled, condition->isEnabled()) << "Wrong enabled value!" << endl;
 
 	}
 
 	static void checkPostCondition(alica::PostCondition* condition, long id, string name, string comment,
-									string ConString, string pluginName)
+									string conString, string pluginName)
 	{
 		checkAlicaElement(condition, id, name, comment);
-		EXPECT_STREQ(ConString.c_str(), condition->getConditionString().c_str()) << "Wrong ConditionString!" << endl;
-		//TODO wait for planParser update
-		//EXPECT_STREQ(preCondition->getPlugInName().c_str(), preConString.c_str()) << "Wrong PlugInName!" << endl;
+		EXPECT_STREQ(conString.c_str(), condition->getConditionString().c_str()) << "Wrong ConditionString!" << endl;
+		EXPECT_STREQ(condition->getPlugInName().c_str(), pluginName.c_str()) << "Wrong PlugInName!" << endl;
 	}
 
 	static void checkRuntimeCondition(alica::RuntimeCondition* condition, long id, string name, string comment,
-										string ConString, string pluginName)
+										string conString, string pluginName)
 		{
 			checkAlicaElement(condition, id, name, comment);
-			EXPECT_STREQ(ConString.c_str(), condition->getConditionString().c_str()) << "Wrong ConditionString!" << endl;
-			//TODO wait for planParser update
-			//EXPECT_STREQ(preCondition->getPlugInName().c_str(), preConString.c_str()) << "Wrong PlugInName!" << endl;
+			EXPECT_STREQ(conString.c_str(), condition->getConditionString().c_str()) << "Wrong ConditionString!" << endl;
+			EXPECT_STREQ(condition->getPlugInName().c_str(), pluginName.c_str()) << "Wrong PlugInName!" << endl;
 		}
 
 	static void checkTransition(alica::Transition* transition, long id, string name, string comment,
@@ -256,26 +253,31 @@ TEST_F(AlicaEngineTest, planParser)
 					{
 						case 1402489459382:
 							checkTransition(t, 1402489459382, "MISSING_NAME", "", 1402489460549, 1402488646220,
-											1402489396914, "MISSING_NAME", "", "", "", true);
+											1402489396914, "MISSING_NAME", "", "", "PropositionalLogicPlugin", true);
+							cout << "Quantifiers: " << endl;
 							for(alica::Quantifier* q : t->getPreCondition()->getQuantifiers())
 							{
 								switch(q->getId())
 								{
 									case 1403773214317:
-										checkQuantifier(q, 1403773214317, "", "", 1402488634525, {"X","Y"});
-										EXPECT_TRUE(typeid(alica::ForallAgents) == typeid(q))<< "Wrong Type!" << endl;
+										cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
+										checkQuantifier(q, 1403773214317, "MISSING_NAME", "", 1402488634525, {"X","Y"});
+										EXPECT_TRUE(dynamic_cast<alica::ForallAgents*>(q) != 0)<< "Wrong Type!" << endl;
 										break;
 									case 1403773224776:
-										checkQuantifier(q, 1403773224776, "", "", 1402488646220, {"A","B"});
-										EXPECT_TRUE(typeid(alica::ForallAgents) == typeid(q))<< "Wrong Type!" << endl;
+										cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
+										checkQuantifier(q, 1403773224776, "MISSING_NAME", "", 1402488646220, {"A","B"});
+										EXPECT_TRUE(dynamic_cast<alica::ForallAgents*>(q) != 0)<< "Wrong Type!" << endl;
 										break;
 									case 1403773234841:
-										checkQuantifier(q, 1403773234841, "", "", 1402489396914, {"another one"});
-										EXPECT_TRUE(typeid(alica::ForallAgents) == typeid(q))<< "Wrong Type!" << endl;
+										cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
+										checkQuantifier(q, 1403773234841, "MISSING_NAME", "", 1402489396914, {"another one"});
+										EXPECT_TRUE(dynamic_cast<alica::ForallAgents*>(q) != 0)<< "Wrong Type!" << endl;
 										break;
 									case 1403773248357:
-										checkQuantifier(q, 1403773248357, "", "", 1402488646221, {"TaskQuantifier"});
-										EXPECT_TRUE(typeid(alica::ForallAgents) == typeid(q))<< "Wrong Type!" << endl;
+										cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
+										checkQuantifier(q, 1403773248357, "MISSING_NAME", "", 1402488646221, {"TaskQuantifier"});
+										EXPECT_TRUE(dynamic_cast<alica::ForallAgents*>(q) != 0)<< "Wrong Type!" << endl;
 										break;
 									default:
 										EXPECT_TRUE(false);
@@ -288,7 +290,7 @@ TEST_F(AlicaEngineTest, planParser)
 							break;
 						case 1402489460694:
 							checkTransition(t, 1402489460694, "MISSING_NAME", "", 1402489462088, 1402489396914,
-											1402488646220, "MISSING_NAME", "", "", "", true);
+											1402488646220, "Condition-Name-Shoot-Attack", "", "Some nice comment!", "DefaultPlugin", true);
 							break;
 						default:
 							EXPECT_TRUE(false);
@@ -568,7 +570,7 @@ TEST_F(AlicaEngineTest, planParser)
 				cout << endl;
 				break;
 			case 1402488770050:
-				checkPlan(iter.second, 1402488770050, "MidFieldPlayPlan", "", false, 0.1, 0, 2147483647);
+				checkPlan(iter.second, 1402488770050, "MidFieldPlayPlan", "", false, 0.1, 3, 2147483647);
 				checkRuntimeCondition(iter.second->getRuntimeCondition(), 1402489260911, "NewRuntimeCondition", "Test RC", "", "");
 				cout << "States: " << endl;
 				EXPECT_EQ(5, iter.second->getStates().size()) << "Number of states didnt fit MidFieldPlayPlan.pml state size."
@@ -589,7 +591,7 @@ TEST_F(AlicaEngineTest, planParser)
 							checkState(s, 1402489273401, "Sync", "", {1402488956661}, {1402489276995}, {});
 							break;
 						case 1402500830885:
-							checkState(s, 1402500830885, "Kill", "", {},
+							checkState(s, 1402500830885, "Kill", "", {1403773823508},
 										{}, {1402500843072}, 1402500828244);
 							break;
 						case 1402500833246:
@@ -604,7 +606,7 @@ TEST_F(AlicaEngineTest, planParser)
 				}
 				cout << "Transitions: " << endl;
 				EXPECT_EQ(3, iter.second->getTransitions().size())
-						<< "Number of Transitions didnt fit AttackPlan.pml EntryPoints size." << endl;
+						<< "Number of Transitions didnt fit MidFieldPlayPlan.pml EntryPoints size." << endl;
 				for (alica::Transition* t : iter.second->getTransitions())
 				{
 					cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
@@ -634,7 +636,7 @@ TEST_F(AlicaEngineTest, planParser)
 				}
 				cout << "EntryPoints: " << endl;
 				EXPECT_EQ(2,iter.second->getEntryPoints().size())
-						<< "Number of EntryPoints didnt fit Tackle.pml EntryPoints size." << endl;
+						<< "Number of EntryPoints didnt fit MidFieldPlayPlan.pml EntryPoints size." << endl;
 				for (map<long, alica::EntryPoint*>::const_iterator epIterator = iter.second->getEntryPoints().begin();
 						epIterator != iter.second->getEntryPoints().end(); epIterator++)
 				{
@@ -642,11 +644,11 @@ TEST_F(AlicaEngineTest, planParser)
 					switch (epIterator->second->getId())
 					{
 						case 1402488787819:
-							checkEntryPoint(epIterator->second, 1402488787819, "MISSING_NAME", "", false, 0, 2147483647,
+							checkEntryPoint(epIterator->second, 1402488787819, "MISSING_NAME", "", true, 0, 2147483647,
 							                1402488787818, 1225112227903, "DefaultTask");
 							break;
 						case 1402500828244:
-							checkEntryPoint(epIterator->second, 1402500828244, "NewEntryPoint", "", false, 0, 2147483647,
+							checkEntryPoint(epIterator->second, 1402500828244, "NewEntryPoint", "TestComment", false, 3, 5,
 							                1402500830885, 1225112227903, "DefaultTask");
 							break;
 						default:

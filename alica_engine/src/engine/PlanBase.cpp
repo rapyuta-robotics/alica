@@ -86,7 +86,7 @@ namespace alica
 	{
 		while (this->ruuning)
 		{
-//			ulong beginTime =
+			chrono::system_clock::time_point beginTime = std::chrono::high_resolution_clock::now();
 
 			if (ae->getStepEngine())
 			{
@@ -101,7 +101,33 @@ namespace alica
 					rootNode->printRecursive();
 				}
 				cout << "===END CUR TREE===" << endl;
+
+				this->signal->waitOne();
+				beginTime = std::chrono::high_resolution_clock::now();
+
 			}
+			//TODO
+//			this->log->itertionStart();
+
+			//Send tick to other modules
+			this->teamObserver->tick(this->rootNode);
+			this->ra->tick();
+			this->syncModel->tick();
+			this->authModul->tick(this->rootNode);
+
+			//// StepEngine wait was here before we moved it up (Endy & stopfer)
+
+			if(this->rootNode == nullptr)
+			{
+				this->rootNode = ruleBook->
+			}
+//			for(int i = 0; i < this->ae->getA)
+//
+//			if(this->rootNode == nullptr)
+//			{
+//				this->rootNode = ruleBook->
+//			}
+
 		}
 	}
 

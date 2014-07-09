@@ -72,19 +72,19 @@ namespace alica
 
 	}
 
-	bool EntryPoint::compareTo(const EntryPoint* ep1, const EntryPoint* ep2)
+	bool EntryPoint::compareTo(EntryPoint* ep1, EntryPoint* ep2)
 	{
 		return (ep1->getTask()->getId() < ep2->getTask()->getId());
 	}
 
 //================== Getter and Setter =============
 
-	const Task* EntryPoint::getTask() const
+	Task* EntryPoint::getTask()
 	{
 		return task;
 	}
 
-	void EntryPoint::setTask(const Task* task)
+	void EntryPoint::setTask(Task* task)
 	{
 		this->task = task;
 	}
