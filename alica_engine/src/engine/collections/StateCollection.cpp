@@ -208,7 +208,7 @@ namespace alica
 		{
 			return;
 		}
-		vector<EntryPoint*> eps = oldOne->getEntyPoints();
+		vector<EntryPoint*> eps = oldOne->getEntryPoints();
 		for(int i = 0; i < eps.size(); i++)
 		{
 			for(int rid : *(oldOne->getRobotsWorking(eps[i])))
