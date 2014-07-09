@@ -21,6 +21,7 @@ namespace alica
 
 	class Plan;
 	class StateCollection;
+	class SuccessCollection;
 	class AssignmentCollection;
 	class EntryPoint;
 	class PartialAssignment;
@@ -30,6 +31,7 @@ namespace alica
 	public:
 		Assignment();
 		Assignment(PartialAssignment* pa);
+		Assignment(Plan* pa);
 		virtual ~Assignment();
 		Plan* getPlan();
 		void setPlan(Plan* plan);
@@ -53,6 +55,7 @@ namespace alica
 	protected:
 		Plan* plan;
 		StateCollection* robotStateMapping;
+		SuccessCollection* epSucMapping;
 		AssignmentCollection* epRobotsMapping;
 	};
 

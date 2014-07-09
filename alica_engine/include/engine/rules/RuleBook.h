@@ -10,10 +10,12 @@
 
 namespace alica
 {
-	class ITeamObserver;
 	class ISyncModul;
 	class IPlanSelector;
 	class Logger;
+	class ITeamObserver;
+	class RunningPlan;
+	class Plan;
 
 	class RuleBook
 	{
@@ -24,6 +26,8 @@ namespace alica
 		void setChangeOccured(bool changeOccured);
 
 		bool changeOccured;
+
+		RunningPlan* initialisationRule(Plan* masterPlan);
 	protected:
 		ITeamObserver* to;
 		ISyncModul* sm;

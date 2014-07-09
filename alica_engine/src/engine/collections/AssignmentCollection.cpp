@@ -95,7 +95,7 @@ namespace alica
 		this->count = count;
 	}
 
-	vector<EntryPoint*> AssignmentCollection::getEntryPoints()
+	vector<EntryPoint*>& AssignmentCollection::getEntryPoints()
 	{
 		return entryPoints;
 	}

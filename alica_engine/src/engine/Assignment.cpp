@@ -7,6 +7,10 @@
 
 #include "engine/Assignment.h"
 #include "engine/collections/AssignmentCollection.h"
+#include "engine/model/Plan.h"
+#include "engine/collections/StateCollection.h"
+#include "engine/collections/SuccessCollection.h"
+
 
 namespace alica
 {
@@ -20,6 +24,21 @@ namespace alica
 	Assignment::~Assignment()
 	{
 		// TODO Auto-generated destructor stub
+	}
+	Assignment::Assignment(Plan* pa)
+	{
+		this->plan = pa;
+		this->max = 0;
+		this->min = 0;
+
+		this->epRobotsMapping = new AssignmentCollection(this->plan->getEntryPoints().size());
+
+		list<EntryPoint*> l;
+		transform(plan->getEntryPoints().begin(), plan->getEntryPoints().end(), back_inserter(l), [](map<long, EntryPoint*>::value_type& val){return val.second;} );
+		l.sort();
+		copy(l.begin(), l.end(), back_inserter(epRobotsMapping->getEntryPoints()));
+		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
+		this->epSucMapping = new SuccessCollection(pa);
 	}
 
 	Plan* Assignment::getPlan()
