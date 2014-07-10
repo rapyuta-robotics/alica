@@ -25,6 +25,7 @@ namespace alica
 	class AssignmentCollection;
 	class EntryPoint;
 	class PartialAssignment;
+	class State;
 
 	class Assignment : public IAssignment
 	{
@@ -48,6 +49,9 @@ namespace alica
 		shared_ptr<list<int> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
 		shared_ptr<list<int> > getRobotsWorkingAndFinished(long epid);
 		SuccessCollection* getEpSuccessMapping();
+		void setAllToInitialState(unique_ptr<list<int> > robots, EntryPoint* defep);
+		void removeRobot(int robotId);
+		void addRobot(int id, EntryPoint* e, State* s);
 		bool isValid();
 		string assignmentCollectionToString();
 		string toString();

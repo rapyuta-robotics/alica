@@ -32,15 +32,24 @@ namespace alica
 	class IBehaviourPool;
 	class ITeamObserver;
 	class Plan;
+	class RuleBook;
 
 	class RunningPlan
 	{
 	public:
+		/**
+		 * Captures the result of a rule application.
+		 */
+		enum PlanChange {
+			NoChange,      //!< NoChange occurred, rule was not applicable
+			InternalChange,//!< InternalChange, change occurred but is of no interest to upper level plans
+			SuccesChange,  //!< SuccesChange, change occurred and led to a success, upper level can react
+			FailChange     //!< FailChange, change occurred and led to a failure, upper level should react
+		};
 		RunningPlan();
 		RunningPlan(Plan* plan);
 		virtual ~RunningPlan();
 		bool isBehaviour() const;
-		enum planChange{NoCHange, InternalChange, SuccessChange, FailChange};
 		void setBehaviour(bool behaviour);
 		const list<RunningPlan*>& getChildren() const;
 		void setChildren(const list<RunningPlan*>& children);
@@ -57,6 +66,8 @@ namespace alica
 		void setActive(bool active);
 		void setRobotsAvail(unique_ptr<list<int> >  robots);
 		void setAllocationNeeded(bool allocationNeeded);
+		void setOwnEntryPoint(EntryPoint* value);
+		PlanChange tick(RuleBook* rules);
 
 	protected:
 		bool behaviour;

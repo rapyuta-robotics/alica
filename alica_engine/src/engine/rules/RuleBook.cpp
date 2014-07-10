@@ -11,6 +11,8 @@
 #include "engine/model/Plan.h"
 #include "engine/RunningPlan.h"
 #include "engine/ITeamObserver.h"
+#include "engine/model/EntryPoint.h"
+#include "engine/logging/Logger.h"
 
 #include <SystemConfig.h>
 
@@ -47,7 +49,19 @@ namespace alica
 		main->setAllocationNeeded(true);
 		unique_ptr<list<int> > robots = to->getAvailableRobotIds();
 		main->setRobotsAvail(move(robots));
-		//TODO::
+
+		EntryPoint* defep;
+		list<EntryPoint*> l;
+		transform(masterPlan->getEntryPoints().begin(), masterPlan->getEntryPoints().end(), back_inserter(l), [](map<long, EntryPoint*>::value_type& val){return val.second;} );
+		for(EntryPoint* e : l)
+		{
+			defep = e;
+			break;
+		}
+		main->getAssignment()->setAllToInitialState(move(robots), defep);
+		main->setActive(true);
+		main->setOwnEntryPoint(defep);
+		log->evenOccured("Init");
 		return main;
 
 	}
