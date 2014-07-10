@@ -68,9 +68,9 @@ namespace alica
 		{
 			return weight;
 		}
-		virtual UtilityInterval* eval(IAssignment* ass) = 0;
-		virtual void cacheEvalData() = 0;
-		virtual pair<vector<double>, double> differentiate(IAssignment* newAss) = 0
+		virtual UtilityInterval* eval(IAssignment* ass);
+		virtual void cacheEvalData();
+		virtual pair<vector<double>, double>* differentiate(IAssignment* newAss)
 		{
 			return nullptr;
 		}
