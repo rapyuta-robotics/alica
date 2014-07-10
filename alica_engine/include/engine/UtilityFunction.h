@@ -7,12 +7,15 @@
 
 #ifndef UTILITYFUNCTION_H_
 #define UTILITYFUNCTION_H_
+#define UFDEBUG
 
 using namespace std;
 
 #include <string>
 #include <map>
 #include <list>
+#include <algorithm>
+#include <vector>
 
 namespace alica
 {
@@ -37,6 +40,7 @@ namespace alica
 		void updateAssignment(IAssignment* newAss, IAssignment* oldAss);
 		void cacheEvalData();
 		void init();
+		virtual pair<vector<double>, double>* differentiate(IAssignment* newAss);
 		static void initDataStructures();
 		string toString();
 		Plan* getPlan();
