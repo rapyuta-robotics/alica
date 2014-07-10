@@ -16,6 +16,7 @@ namespace alica
 	class ITeamObserver;
 	class RunningPlan;
 	class Plan;
+	class EntryPoint;
 
 	class RuleBook
 	{

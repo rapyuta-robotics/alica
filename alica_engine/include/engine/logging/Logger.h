@@ -7,7 +7,9 @@
 
 #ifndef LOGGER_H_
 #define LOGGER_H_
+#include <string>
 
+using namespace std;
 namespace alica
 {
 
@@ -16,6 +18,10 @@ namespace alica
 	public:
 		Logger();
 		virtual ~Logger();
+
+		void evenOccured(string event);
+		void itertionStart();
+
 	};
 
 } /* namespace alica */

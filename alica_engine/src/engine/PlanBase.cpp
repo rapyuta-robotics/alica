@@ -107,7 +107,7 @@ namespace alica
 
 			}
 			//TODO
-//			this->log->itertionStart();
+			this->log->itertionStart();
 
 			//Send tick to other modules
 			this->teamObserver->tick(this->rootNode);
@@ -116,11 +116,11 @@ namespace alica
 			this->authModul->tick(this->rootNode);
 
 			//// StepEngine wait was here before we moved it up (Endy & stopfer)
-
 			if(this->rootNode == nullptr)
 			{
-//				this->rootNode = ruleBook->
+				this->rootNode = ruleBook->initialisationRule(this->masterPlan);
 			}
+//			id(this->rootNode->t)
 //			for(int i = 0; i < this->ae->getA)
 //
 //			if(this->rootNode == nullptr)
