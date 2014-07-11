@@ -15,6 +15,7 @@ using namespace std;
 #include <algorithm>
 #include <memory>
 #include "IAssignment.h"
+#include <SystemConfig.h>
 
 namespace alica
 {
@@ -26,13 +27,14 @@ namespace alica
 	class EntryPoint;
 	class PartialAssignment;
 	class State;
+	struct AllocationAuthorityInfo;
 
 	class Assignment : public IAssignment
 	{
 	public:
-		Assignment();
 		Assignment(PartialAssignment* pa);
-		Assignment(Plan* pa);
+		Assignment(Plan* p,AllocationAuthorityInfo* aai);
+		Assignment(Plan* p);
 		virtual ~Assignment();
 		Plan* getPlan();
 		void setPlan(Plan* plan);
@@ -53,16 +55,29 @@ namespace alica
 		void removeRobot(int robotId);
 		void addRobot(int id, EntryPoint* e, State* s);
 		bool isValid();
+		bool isSuccessfull();
+		bool isEqual(Assignment* otherAssignment);
+		bool isEntryPointNonEmpty(EntryPoint* ep);
+		bool updateRobot(int robot, EntryPoint* ep, State* s);
+		bool updateRobot(int robot, EntryPoint* ep);
+		bool removeRobot(int robot, EntryPoint* ep);
 		string assignmentCollectionToString();
+		void addRobot(int id, EntryPoint* e);
+		void moveRobots(State* from, State* to);
+		EntryPoint* entryPointOfRobot(int robot);
+		shared_ptr<vector<int> >  getAllRobots();
+		void clear();
+		void setAllToInitialState(list<int> robots, EntryPoint* ep);
 		string toString();
+		string toHackString();
 
 	protected:
+		static bool allowIdling;
 		Plan* plan;
 		StateCollection* robotStateMapping;
 		SuccessCollection* epSucMapping;
 		AssignmentCollection* epRobotsMapping;
 	};
-
 } /* namespace alica */
 
 #endif /* ASSIGNMENT_H_ */
