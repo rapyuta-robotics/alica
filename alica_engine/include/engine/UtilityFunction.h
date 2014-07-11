@@ -16,6 +16,7 @@ using namespace std;
 #include <list>
 #include <algorithm>
 #include <vector>
+#include <sstream>
 
 namespace alica
 {
