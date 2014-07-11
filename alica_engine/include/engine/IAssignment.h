@@ -58,9 +58,9 @@ namespace alica
 			this->min = min;
 		}
 
-		int getNumAssignedRobots() const
+		int getNumUnAssignedRobots() const
 		{
-			return numAssignedRobots;
+			return numUnAssignedRobots;
 		}
 
 		const list<int>& getUnassignedRobots() const
@@ -70,7 +70,7 @@ namespace alica
 
 	protected:
 		list<int> unassignedRobots;
-		int numAssignedRobots;
+		int numUnAssignedRobots;
 		double min;
 		double max;
 

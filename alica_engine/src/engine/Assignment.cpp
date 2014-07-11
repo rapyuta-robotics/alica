@@ -15,21 +15,15 @@
 namespace alica
 {
 
-	Assignment::Assignment()
-	{
-		// TODO Auto-generated constructor stub
-
-	}
-
 	Assignment::~Assignment()
 	{
-		// TODO Auto-generated destructor stub
 	}
-	Assignment::Assignment(Plan* pa)
+	Assignment::Assignment(Plan* p)
 	{
-		this->plan = pa;
-		this->max = 0;
-		this->min = 0;
+		this->plan = p;
+		this->max = 0.0;
+		this->min = 0.0;
+		this->allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling",NULL);
 
 		this->epRobotsMapping = new AssignmentCollection(this->plan->getEntryPoints().size());
 
@@ -38,7 +32,7 @@ namespace alica
 		l.sort();
 		copy(l.begin(), l.end(), back_inserter(epRobotsMapping->getEntryPoints()));
 		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
-		this->epSucMapping = new SuccessCollection(pa);
+		this->epSucMapping = new SuccessCollection(p);
 	}
 
 	Plan* Assignment::getPlan()
@@ -86,9 +80,121 @@ namespace alica
 		return ret;
 	}
 
+	Assignment::Assignment(PartialAssignment* pa)
+	{
+	}
+
+	Assignment::Assignment(Plan* p, AllocationAuthorityInfo* aai)
+	{
+	}
+
 	shared_ptr<vector<int> > Assignment::getRobotsWorking(EntryPoint* ep)
 	{
 		return this->getEpRobotsMapping()->getRobots(ep);
+	}
+
+	int Assignment::totalRobotCount()
+	{
+	}
+
+	vector<EntryPoint*> Assignment::getEntryPoints()
+	{
+	}
+
+	int Assignment::getEntryPointCount()
+	{
+	}
+
+	shared_ptr<list<int> > Assignment::getRobotsWorkingAndFinished(EntryPoint* ep)
+	{
+	}
+
+	shared_ptr<list<int> > Assignment::getUniqueRobotsWorkingAndFinished(EntryPoint* ep)
+	{
+	}
+
+	shared_ptr<list<int> > Assignment::getRobotsWorkingAndFinished(long epid)
+	{
+	}
+
+	SuccessCollection* Assignment::getEpSuccessMapping()
+	{
+	}
+
+	void Assignment::setAllToInitialState(unique_ptr<list<int> > robots, EntryPoint* defep)
+	{
+	}
+
+	void Assignment::removeRobot(int robotId)
+	{
+	}
+
+	void Assignment::addRobot(int id, EntryPoint* e, State* s)
+	{
+	}
+
+	bool Assignment::isValid()
+	{
+	}
+
+	bool Assignment::isSuccessfull()
+	{
+	}
+
+	bool Assignment::isEqual(Assignment* otherAssignment)
+	{
+	}
+
+	bool Assignment::isEntryPointNonEmpty(EntryPoint* ep)
+	{
+	}
+
+	bool Assignment::updateRobot(int robot, EntryPoint* ep, State* s)
+	{
+	}
+
+	bool Assignment::updateRobot(int robot, EntryPoint* ep)
+	{
+	}
+
+	bool Assignment::removeRobot(int robot, EntryPoint* ep)
+	{
+	}
+
+	string Assignment::assignmentCollectionToString()
+	{
+	}
+
+	void Assignment::addRobot(int id, EntryPoint* e)
+	{
+	}
+
+	void Assignment::moveRobots(State* from, State* to)
+	{
+	}
+
+	EntryPoint* Assignment::entryPointOfRobot(int robot)
+	{
+	}
+
+	shared_ptr<vector<int> > Assignment::getAllRobots()
+	{
+	}
+
+	void Assignment::clear()
+	{
+	}
+
+	void Assignment::setAllToInitialState(list<int> robots, EntryPoint* ep)
+	{
+	}
+
+	string Assignment::toString()
+	{
+	}
+
+	string Assignment::toHackString()
+	{
 	}
 
 } /* namespace alica */
