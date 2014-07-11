@@ -16,6 +16,9 @@
 #include "engine/teamobserver/TeamObserver.h"
 #include "engine/model/Task.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/model/RoleSet.h"
+#include "engine/model/RoleTaskMapping.h"
+#include "engine/model/Role.h"
 
 namespace alica
 {
@@ -177,14 +180,79 @@ namespace alica
 
 	void UtilityFunction::init()
 	{
+		this->roleHighestPriorityMap = map<long, double>();
+		this->priorityMartix = map<TaskRoleStruct*, double>();
+		RoleSet* roleSet = AlicaEngine::getInstance()->getRoleSet();
+		long taskId;
+		long roleId;
+		double curPrio;
+
+		for(RoleTaskMapping* rtm : roleSet->getRoleTaskMappings())
+		{
+			roleId = rtm->getRole()->getId();
+			this->roleHighestPriorityMap.insert(pair<long, double>(roleId, 0.0));
+			for(auto epIter = this->plan->getEntryPoints().begin(); epIter != this->plan->getEntryPoints().end(); epIter++)
+			{
+				taskId = epIter->second->getId();
+				auto iter = rtm->getTaskPriorities().find(taskId);
+				if(iter == rtm->getTaskPriorities().end())
+				{
+					stringstream ss;
+					ss << "UF: There is no priority for the task "
+		                    << taskId << " in the roleTaskMapping of the role "
+		                    << rtm->getRole()->getName() << " with id " << roleId
+		                    << "!\n We are in the UF for the plan "
+		                    << this->plan->getName() << "!" << endl;
+					AlicaEngine::getInstance()->abort(ss.str());
+				}
+				else
+				{
+					curPrio = iter->second;
+				}
+				TaskRoleStruct* trs = new TaskRoleStruct(taskId, roleId);
+				if(this->priorityMartix.find(trs) == this->priorityMartix.end())
+				{
+					this->priorityMartix.insert(pair<TaskRoleStruct*, double>(trs, curPrio));
+				}
+				if(this->roleHighestPriorityMap.at(roleId) < curPrio)
+				{
+					this->roleHighestPriorityMap.at(roleId) = curPrio;
+				}
+			}
+			this->priorityMartix.insert(pair<TaskRoleStruct*, double>(new TaskRoleStruct(Task::IDLEID, roleId), curPrio));
+		}
+		//c# != null
+		if (this->utilSummands.size() != 0)
+		{
+			for(USummand* utilSum : this->utilSummands) {
+				utilSum->init();
+			}
+		}
+		this->bpe = AlicaEngine::getInstance();
+		this->ra  = this->bpe->getRoleAssignment();
 	}
 
 	void UtilityFunction::initDataStructures()
 	{
+
+		map<long,Plan*> plans = AlicaEngine::getInstance()->getPlanRepository()->getPlans();
+
+		for(auto iter = plans.begin(); iter != plans.end(); iter++) {
+			(*iter).second->getUtilityFunction()->init();
+		}
 	}
 
 	string UtilityFunction::toString()
 	{
+
+		stringstream ss;
+		ss <<  this->name << endl;
+		ss <<  "prioW: " << this->priorityWeight << " simW: " << this->similarityWeight << endl;
+		for(USummand* utilSummand : this->utilSummands)
+		{
+			ss << utilSummand->toString();
+		}
+		return ss.str();
 	}
 
 	map<TaskRoleStruct*, double> UtilityFunction::getPriorityMartix()
@@ -275,25 +343,25 @@ namespace alica
 
 		for(int i = 0; i < oldAss->getEntryPointCount(); ++i)
 		{
-//			list<int> oldRobots = oldAss->getRobotsWorkingAndFinished(oldAssEps[i]);
-//			numOldAssignedRobots += oldRobots.size();
-//			list<int> newRobots = newAss->getRobotsWorkingAndFinished(oldAssEps[i]);
-//
-//			//C# newRobots != null
-//			if(newRobots.size() != 0)
-//			{
-//				for(int oldRobot : oldRobots)
-//				{
-//					if(find(newRobots.begin(),newRobots.end(), oldRobot) != newRobots.end())
-//					{
-//						simUI->setMin(simUI->getMin() + 1);
-//					}
-//					else if(oldAssEps[i]->getMaxCardinality() > newRobots.size() && find(newAss->getUnassignedRobots().begin(),newAss->getUnassignedRobots().end(), oldRobot) != newAss->getUnassignedRobots().end())
-//					{
-//						simUI->setMax(simUI->getMax() + 1);
-//					}
-//				}
-//			}
+			auto oldRobots = oldAss->getRobotsWorkingAndFinished(oldAssEps[i]);
+			numOldAssignedRobots += oldRobots->size();
+			auto newRobots = newAss->getRobotsWorkingAndFinished(oldAssEps[i]);
+
+			//C# newRobots != null
+			if(newRobots->size() != 0)
+			{
+				for(int oldRobot : (*oldRobots))
+				{
+					if(find(newRobots->begin(),newRobots->end(), oldRobot) != newRobots->end())
+					{
+						simUI->setMin(simUI->getMin() + 1);
+					}
+					else if(oldAssEps[i]->getMaxCardinality() > newRobots->size() && find(newAss->getUnassignedRobots().begin(),newAss->getUnassignedRobots().end(), oldRobot) != newAss->getUnassignedRobots().end())
+					{
+						simUI->setMax(simUI->getMax() + 1);
+					}
+				}
+			}
 		}
 
 		simUI->setMax(simUI->getMax() + simUI->getMin());
