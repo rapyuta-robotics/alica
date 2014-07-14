@@ -45,7 +45,7 @@ namespace alica
 		if (aai.senderID != this->ownID)
 		{
 			ae->getTeamObserver()->messageRecievedFrom(aai.senderID);
-			for (EntryPointRobots epr : aai.entrypoints)
+			for (EntryPointRobots epr : aai.entryPointRobots)
 			{
 				for (int rid : epr.robots)
 				{

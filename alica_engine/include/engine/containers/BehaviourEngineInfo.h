@@ -8,6 +8,8 @@
 #ifndef BEHAVIOURENGINEINFO_H_
 #define BEHAVIOURENGINEINFO_H_
 
+#include <vector>
+
 using namespace std;
 
 namespace alica
@@ -20,7 +22,7 @@ namespace alica
 		string currentState;
 		string currentRole;
 		string currentTask;
-		int robotIDsWithMe[];
+		vector<int> robotIDsWithMe;
 	};
 }
 
