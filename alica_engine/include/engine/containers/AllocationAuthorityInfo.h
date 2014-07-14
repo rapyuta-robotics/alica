@@ -8,6 +8,7 @@
 #ifndef ALLOCATIONAUTHORITYINFO_H_
 #define ALLOCATIONAUTHORITYINFO_H_
 
+#include <vector>
 #include "EntryPointRobots.h"
 
 using namespace std;
@@ -21,7 +22,7 @@ namespace alica
 		int	parentState;
 		int	planType;
 		int authority;
-		EntryPointRobots entrypoints[];
+		vector<EntryPointRobots> entryPointRobots;
 	};
 }
 

@@ -14,6 +14,7 @@ using namespace std;
 #include <vector>
 #include <algorithm>
 #include <memory>
+#include <sstream>
 #include "IAssignment.h"
 #include <SystemConfig.h>
 
@@ -52,7 +53,7 @@ namespace alica
 		shared_ptr<list<int> > getRobotsWorkingAndFinished(long epid);
 		SuccessCollection* getEpSuccessMapping();
 		void setAllToInitialState(unique_ptr<list<int> > robots, EntryPoint* defep);
-		void removeRobot(int robotId);
+		bool removeRobot(int robotId);
 		void addRobot(int id, EntryPoint* e, State* s);
 		bool isValid();
 		bool isSuccessfull();
@@ -67,7 +68,6 @@ namespace alica
 		EntryPoint* entryPointOfRobot(int robot);
 		shared_ptr<vector<int> >  getAllRobots();
 		void clear();
-		void setAllToInitialState(list<int> robots, EntryPoint* ep);
 		string toString();
 		string toHackString();
 

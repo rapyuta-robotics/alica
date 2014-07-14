@@ -8,6 +8,8 @@
 #ifndef ENTRYPOINTROBOTS_H_
 #define ENTRYPOINTROBOTS_H_
 
+#include <vector>
+
 using namespace std;
 
 namespace alica
@@ -15,7 +17,7 @@ namespace alica
 	struct EntryPointRobots
 	{
 		int	entrypoint;
-		int robots[];
+		vector<int> robots;
 	};
 }
 
