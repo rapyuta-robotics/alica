@@ -220,6 +220,11 @@ namespace alica
 	{
 		return communicatior;
 	}
+	IPlanner* AlicaEngine::getPlanner()
+	{
+		return planner;
+	}
 
 } /* namespace Alica */
+
 

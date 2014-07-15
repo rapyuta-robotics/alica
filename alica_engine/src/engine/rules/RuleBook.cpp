@@ -138,10 +138,12 @@ namespace alica
 		if (!r->getCycleManager()->mayDoUtilityCheck())
 			return PlanChange::NoChange;
 
-		unordered_set<int> robots = r->getParent()->getAssignment()->getRobotStateMapping()->getRobotsInState(
-				r->getParent()->getActiveState());
+		vector<int> robots;
+		copy(r->getParent()->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
+					r->getParent()->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
+					back_inserter(robots));
 
-		RunningPlan* newr = ps->getBestSimilarAssignment(r, robots);
+		RunningPlan* newr = ps->getBestSimilarAssignment(r, make_shared<vector<int> >(robots));
 		if (newr == nullptr)
 			return PlanChange::NoChange;
 		double curUtil;
@@ -312,12 +314,15 @@ namespace alica
 			return PlanChange::NoChange;
 		}
 		r->setAllocationNeeded(false);
-
-		list<RunningPlan*> children = this->ps->getPlansForState(
+		vector<int> robots;
+		copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
+						r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
+						back_inserter(robots));
+		shared_ptr<list<RunningPlan*> > children = this->ps->getPlansForState(
 				r, r->getActiveState()->getPlans(),
-				r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()));
+				make_shared<vector<int> >(robots));
 
-		if (children.size() == 0 || children.size() < r->getActiveState()->getPlans().size())
+		if (children->size() == 0 || children->size() < r->getActiveState()->getPlans().size())
 		{
 			r->addFailure();
 #if RULE_debug
@@ -331,7 +336,7 @@ namespace alica
 		cout << "RB: PlanAlloc" << r.Plan.Name << endl;
 #endif
 
-		if (children.size() > 0)
+		if (children->size() > 0)
 		{
 			log->evenOccured("PAlloc(" + r->getPlan()->getName() + " in State " + r->getActiveState()->getName() + ")");
 			return PlanChange::InternalChange;

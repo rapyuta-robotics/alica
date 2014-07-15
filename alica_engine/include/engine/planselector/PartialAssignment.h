@@ -43,7 +43,7 @@ namespace alica
 		static void init();
 		void clear();
 		static void reset();
-		static PartialAssignment* getNew(vector<int> robots, Plan* plan, SuccessCollection* sucCol);
+		static PartialAssignment* getNew(shared_ptr<vector<int> > robots, Plan* plan, SuccessCollection* sucCol);
 		static PartialAssignment* getNew(PartialAssignment* oldPA);
 		int getEntryPointCount();
 		int totalRobotCount();
@@ -88,7 +88,7 @@ namespace alica
 		static EntryPoint* idleEP;
 		UtilityFunction* utilFunc;
 		AssignmentCollection* epRobotsMapping;
-		vector<int> robots;
+		shared_ptr<vector<int> > robots;
 		vector<DynCardinality*> dynCardinalities;
 		vector<int> unAssignedRobots;
 		Plan* plan;

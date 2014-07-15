@@ -223,9 +223,15 @@ namespace alica
 			}
 		}
 	}
+
 	PlanStatus RunningPlan::getStatus() const
 	{
 		return status;
+	}
+	PlanType* RunningPlan::getPlanType()
+	{
+		return planType;
+
 	}
 
 } /* namespace alica */
