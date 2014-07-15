@@ -10,13 +10,16 @@
 
 #include <vector>
 #include <list>
+#include <unordered_set>
 #include "engine/IPlanSelector.h"
-#include "engine/RunningPlan.h"
-#include "engine/model/AbstractPlan.h"
+
 
 using namespace std;
 namespace alica
 {
+	class RunningPlan;
+	class AbstractPlan;
+
 	class PlanSelector : public virtual IPlanSelector
 	{
 	public:
@@ -24,8 +27,8 @@ namespace alica
 		virtual ~PlanSelector();
 
 		virtual RunningPlan* getBestSimilarAssignment(RunningPlan* rp);
-		virtual RunningPlan* getBestSimilarAssignment(RunningPlan* rp, vector<int> robots);
-		virtual list<RunningPlan*> getPlansForState(RunningPlan* planningParent, list<AbstractPlan*> plans, vector<int> robotIDs);
+		virtual RunningPlan* getBestSimilarAssignment(RunningPlan* rp, unordered_set<int> robots);
+		virtual list<RunningPlan*> getPlansForState(RunningPlan* planningParent, list<AbstractPlan*> plans, unordered_set<int> robotIDs);
 	};
 
 } /* namespace alica */

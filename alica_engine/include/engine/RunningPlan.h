@@ -17,6 +17,7 @@ using namespace std;
 #include <SystemConfig.h>
 
 #include "engine/PlanStatus.h"
+#include "engine/PlanChange.h"
 
 using namespace std;
 
@@ -33,24 +34,18 @@ namespace alica
 	class ITeamObserver;
 	class Plan;
 	class RuleBook;
+	class ConstraintStore;
+	class CycleManager;
 
 	class RunningPlan
 	{
 	public:
-		/**
-		 * Captures the result of a rule application.
-		 */
-		enum PlanChange {
-			NoChange,      //!< NoChange occurred, rule was not applicable
-			InternalChange,//!< InternalChange, change occurred but is of no interest to upper level plans
-			SuccesChange,  //!< SuccesChange, change occurred and led to a success, upper level can react
-			FailChange     //!< FailChange, change occurred and led to a failure, upper level should react
-		};
 		RunningPlan();
 		RunningPlan(Plan* plan);
 		virtual ~RunningPlan();
 		bool isBehaviour() const;
 		void setBehaviour(bool behaviour);
+		bool isAllocationNeeded() const;
 		const list<RunningPlan*>& getChildren() const;
 		void setChildren(const list<RunningPlan*>& children);
 		AbstractPlan* getPlan() const;
@@ -61,21 +56,42 @@ namespace alica
 		void setAssignment(Assignment* assignment);
 		void printRecursive();
 		unsigned long getPlanStartTime();
-		unsigned long getStateStartTime();
-		bool isActive();
+		unsigned long getStateStartTime();bool isActive();
 		void setActive(bool active);
-		void setRobotsAvail(unique_ptr<list<int> >  robots);
+		void setRobotsAvail(unique_ptr<list<int> > robots);
 		void setAllocationNeeded(bool allocationNeeded);
+		void setFailHandlingNeeded(bool failHandlingNeeded);
 		void setOwnEntryPoint(EntryPoint* value);
 		PlanChange tick(RuleBook* rules);
+		State* getActiveState() const;
+		CycleManager* getCycleManager() const;
+		ConstraintStore* getConstraintStore() const;
+		EntryPoint* getOwnEntryPoint() const;
+		void setActiveState(State* s);
+		void setParent(RunningPlan* s);
+		RunningPlan* getParent() const;bool getFailHandlingNeeded() const;
+		PlanStatus getStatus() const;
+
+		//TODO: Nicht implementiert
+		void moveState(State* nextState);
+		void clearFailures();
+		void clearFailedChildren();
+		void addFailure();
+		void addChildren(list<RunningPlan*> children);
+		bool evalRuntimeCondition();
+		int getFailure();
+		void deactivateChildren(bool allAreLeaving);
+		void clearChildren();
+		void setFailedChildren(AbstractPlan* p);
+		void adaptAssignment(RunningPlan* r);
 
 	protected:
+		RunningPlan* parent;
 		bool behaviour;
 		AbstractPlan* plan;
 		shared_ptr<BasicBehaviour> basicBehaviour;
 		list<RunningPlan*> children;
 		Assignment* assignment;
-		RunningPlan* parent;
 		State* activeState;
 		EntryPoint* activeEntryPoint;
 		PlanStatus status;
@@ -92,8 +108,9 @@ namespace alica
 		ITeamObserver* to;
 		bool allocationNeeded;
 		unsigned long assignmentProtectionTime = (((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime")) * 1000000);
-
-};
+		CycleManager* cycleManagement;
+		ConstraintStore* constraintStore;
+	};
 
 } /* namespace alica */
 

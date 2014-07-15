@@ -7,10 +7,10 @@
 
 #include "engine/allocationauthority/CycleManager.h"
 
-namespace supplementary
+namespace alica
 {
 
-	CycleManager::CycleManager()
+	CycleManager::CycleManager(RunningPlan* p)
 	{
 		// TODO Auto-generated constructor stub
 
