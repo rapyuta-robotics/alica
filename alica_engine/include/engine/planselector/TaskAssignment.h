@@ -16,6 +16,7 @@ using namespace std;
 
 #include <list>
 #include <vector>
+#include <memory>
 #include <map>
 #include <string>
 #include <sstream>
@@ -35,7 +36,7 @@ namespace alica
 	class TaskAssignment : virtual public ITaskAssignment
 	{
 	public:
-		TaskAssignment(list<Plan*> planList, vector<int> paraRobots, bool preasingOtherRobots);
+		TaskAssignment(list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots);
 		virtual ~TaskAssignment();
 		Assignment* getNextBestAssignment(IAssignment* oldAss);
 		string toString();
@@ -48,7 +49,7 @@ namespace alica
 
 	protected:
 		list<Plan*> planList;
-		vector<int> robots;
+		shared_ptr<vector<int> > robots;
 		vector<EntryPoint*> entryPointVector;
 		//TODO has to be sorted every time used
 		vector<PartialAssignment*> fringe;
