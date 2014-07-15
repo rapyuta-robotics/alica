@@ -33,6 +33,8 @@ namespace alica
 	class ITeamObserver;
 	class Plan;
 	class RuleBook;
+	class BehaviourConfiguration;
+
 
 	class RunningPlan
 	{
@@ -48,6 +50,8 @@ namespace alica
 		};
 		RunningPlan();
 		RunningPlan(Plan* plan);
+		RunningPlan(PlanType* pt);
+		RunningPlan(BehaviourConfiguration* bc);
 		virtual ~RunningPlan();
 		bool isBehaviour() const;
 		void setBehaviour(bool behaviour);
@@ -68,6 +72,15 @@ namespace alica
 		void setAllocationNeeded(bool allocationNeeded);
 		void setOwnEntryPoint(EntryPoint* value);
 		PlanChange tick(RuleBook* rules);
+		PlanType* getPlanType();
+		RunningPlan* getParent();
+		void setParent(RunningPlan* parent);
+		bool evalPreCondition();
+		bool evalRuntimeCondition();
+		State* getActiveState();
+		void setActiveState(State* activeState);
+		void addChildren(shared_ptr<list<RunningPlan*> > runningPlans);
+
 
 	protected:
 		bool behaviour;

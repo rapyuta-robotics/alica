@@ -129,7 +129,7 @@ namespace alica
 		curIndex = 0;
 	}
 
-	PartialAssignment* PartialAssignment::getNew(vector<int> robots, Plan* plan, SuccessCollection* sucCol)
+	PartialAssignment* PartialAssignment::getNew(shared_ptr<vector<int> > robots, Plan* plan, SuccessCollection* sucCol)
 	{
 		if (curIndex >= maxCount)
 		{
@@ -206,7 +206,7 @@ namespace alica
 			}
 		}
 
-		for (int i : robots)
+		for (int i : (*robots))
 		{
 			ret->unAssignedRobots.push_back(i);
 		}

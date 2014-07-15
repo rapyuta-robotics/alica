@@ -7,16 +7,24 @@
 
 #ifndef PLANSELECTOR_H_
 #define PLANSELECTOR_H_
+#define PSDEBUG
 
 #include <vector>
 #include <list>
+#include <memory>
+#include <sstream>
 #include "engine/IPlanSelector.h"
-#include "engine/RunningPlan.h"
-#include "engine/model/AbstractPlan.h"
 
 using namespace std;
+
 namespace alica
 {
+	class ITeamObserver;
+	class RunningPlan;
+	class AbstractPlan;
+	class PlanType;
+	class Plan;
+
 	class PlanSelector : public virtual IPlanSelector
 	{
 	public:
@@ -24,8 +32,13 @@ namespace alica
 		virtual ~PlanSelector();
 
 		virtual RunningPlan* getBestSimilarAssignment(RunningPlan* rp);
-		virtual RunningPlan* getBestSimilarAssignment(RunningPlan* rp, vector<int> robots);
-		virtual list<RunningPlan*> getPlansForState(RunningPlan* planningParent, list<AbstractPlan*> plans, vector<int> robotIDs);
+		virtual RunningPlan* getBestSimilarAssignment(RunningPlan* rp, shared_ptr<vector<int> > robots);
+		virtual shared_ptr<list<RunningPlan*> > getPlansForState(RunningPlan* planningParent, list<AbstractPlan*> plans, shared_ptr<vector<int> > robotIDs);
+		RunningPlan* createRunningPlan(RunningPlan* planningParent, list<Plan*> plans, shared_ptr<vector<int> >  robotIDs, RunningPlan* oldRp, PlanType* relevantPlanType);
+
+	private:
+		ITeamObserver* to;
+		shared_ptr<list<RunningPlan*> > getPlansForStateInternal(RunningPlan* planningParent, list<AbstractPlan*> plans, shared_ptr<vector<int> > robotIDs);
 	};
 
 } /* namespace alica */

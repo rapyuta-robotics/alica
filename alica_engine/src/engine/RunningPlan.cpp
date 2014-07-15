@@ -165,7 +165,30 @@ namespace alica
 			}
 		}
 	}
+	PlanType* RunningPlan::getPlanType()
+	{
+		return planType;
+	}
 
+	RunningPlan* RunningPlan::getParent()
+	{
+		return parent;
+	}
+
+	void RunningPlan::setParent(RunningPlan* parent)
+	{
+		this->parent = parent;
+	}
+
+	State* RunningPlan::getActiveState()
+	{
+		return activeState;
+	}
+
+	void RunningPlan::setActiveState(State* activeState)
+	{
+		this->activeState = activeState;
+	}
 } /* namespace alica */
 
 
