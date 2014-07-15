@@ -16,6 +16,7 @@ namespace alica
 	class State;
 	class SyncTransition;
 	class PreCondition;
+	class RunningPlan;
 
 	class Transition : public AlicaElement
 	{
@@ -30,6 +31,7 @@ namespace alica
 		void setOutState(State* outState);
 		SyncTransition* getSyncTransition();
 		void setSyncTransition(SyncTransition* syncTransition);
+		bool evalCondition(RunningPlan* r);
 
 	private:
 		PreCondition* preCondition;

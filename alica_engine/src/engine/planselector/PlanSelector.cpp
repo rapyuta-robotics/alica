@@ -7,6 +7,9 @@
 
 #include <engine/planselector/PlanSelector.h>
 
+#include "engine/RunningPlan.h"
+#include "engine/model/AbstractPlan.h"
+
 namespace alica
 {
 
