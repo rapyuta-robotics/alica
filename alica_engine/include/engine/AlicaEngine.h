@@ -30,6 +30,7 @@ namespace alica
 	class IPlanSelector;
 	class IAlicaCommunication;
 	class IEngineModule;
+	class IPlanner;
 
 
 	class AlicaEngine
@@ -63,6 +64,7 @@ namespace alica
 		RoleSet* getRoleSet();
 		IAlicaCommunication* getCommunicatior();
 		IPlanSelector* getPlanSelector();
+		IPlanner* getPlanner();
 
 	protected:
 		supplementary::SystemConfig* sc;
@@ -76,6 +78,7 @@ namespace alica
 		list<IEngineModule*> mods;
 		IPlanSelector* planSelector;
 		IAlicaCommunication* communicatior;
+		IPlanner* planner;
 
 
 	private:

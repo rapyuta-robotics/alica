@@ -20,20 +20,20 @@ namespace alica
 	{
 	}
 
-	TaskAssignment::TaskAssignment(list<Plan*> planList, vector<int> paraRobots, bool preasingOtherRobots)
+	TaskAssignment::TaskAssignment(list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots)
 	{
 #ifdef EXPANSIONEVAL
 		this->expansionCount = 0;
 #endif
 		this->planList = planList;
 		ITeamObserver* to = AlicaEngine::getInstance()->getTeamObserver();
-		this->robots = vector<int>(paraRobots.size());
+		this->robots = make_shared<vector<int> >(vector<int>(paraRobots->size()));
 		int k = 0;
-		for (int i : paraRobots)
+		for (int i : (*paraRobots))
 		{
-			this->robots[k++] = i;
+			this->robots->at(k++) = i;
 		}
-		sort(robots.begin(), robots.end());
+		sort(robots->begin(), robots->end());
 		this->fringe = vector<PartialAssignment*>();
 		auto simplePlanTreeMap = to->getTeamPlanTrees();
 		PartialAssignment* curPa;
@@ -83,11 +83,11 @@ namespace alica
 		stringstream ss;
 		ss << endl;
 		ss << "--------------------TA:--------------------" << endl;
-		ss << "NumRobots: " << this->robots.size() << endl;
+		ss << "NumRobots: " << this->robots->size() << endl;
 		ss << "RobotIDs: ";
-		for(int i = 0; i < this->robots.size(); ++i)// RobotIds
+		for(int i = 0; i < this->robots->size(); ++i)// RobotIds
 		{
-			ss << this->robots[i] <<  " ";
+			ss << (*this->robots)[i] <<  " ";
 		}
 		ss << endl;
 		ss << "Initial Fringe (Count " << this->fringe.size() << "):" << endl;
@@ -177,7 +177,7 @@ namespace alica
 		int ownRobotId = AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
 		bool haveToRevalute = false;
 		shared_ptr<SimplePlanTree> spt = nullptr;
-		for (int robot : this->robots)
+		for (int robot : (*this->robots))
 		{
 			if (ownRobotId == robot)
 			{
