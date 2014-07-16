@@ -31,8 +31,8 @@ namespace alica
 		EntryPoint** getEntryPoints();
 		void setSuccess(int robot, EntryPoint* ep);
 		void clear();
-		shared_ptr<list<int> >* getRobots();
-		void setRobots(shared_ptr<list<int> >* robots);
+		vector<shared_ptr<list<int> > > getRobots();
+		void setRobots(vector<shared_ptr<list<int> > > robots);
 		shared_ptr<list<int> > getRobots(EntryPoint* ep);
 		shared_ptr<list<int> > getRobotsById(long id);
 		string toString();
@@ -41,7 +41,7 @@ namespace alica
 
 	protected:
 		EntryPoint** entryPoints;
-		shared_ptr<list<int> >* robots;
+		vector<shared_ptr<list<int> > > robots;
 		int count = 0;
 	};
 
