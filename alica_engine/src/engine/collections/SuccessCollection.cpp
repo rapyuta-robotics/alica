@@ -71,12 +71,12 @@ namespace alica
 		}
 	}
 
-	shared_ptr<list<int> >* SuccessCollection::getRobots()
+	vector<shared_ptr<list<int> > > SuccessCollection::getRobots()
 	{
 		return robots;
 	}
 
-	void SuccessCollection::setRobots(shared_ptr<list<int> >* robots)
+	void SuccessCollection::setRobots(vector<shared_ptr<list<int> > > robots)
 	{
 		this->robots = robots;
 	}
