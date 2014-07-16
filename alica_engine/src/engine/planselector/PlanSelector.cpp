@@ -23,6 +23,9 @@
 #include "engine/collections/RobotProperties.h"
 #include "engine/model/State.h"
 
+#include "engine/RunningPlan.h"
+#include "engine/model/AbstractPlan.h"
+
 namespace alica
 {
 

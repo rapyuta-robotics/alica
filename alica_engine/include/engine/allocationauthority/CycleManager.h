@@ -8,14 +8,20 @@
 #ifndef CYCLEMANAGER_H_
 #define CYCLEMANAGER_H_
 
-namespace supplementary
+namespace alica
 {
+	class RunningPlan;
 
 	class CycleManager
 	{
 	public:
-		CycleManager();
+		CycleManager(RunningPlan* p);
 		virtual ~CycleManager();
+		//TODO nicht implementiert
+		void update();
+		bool isOverridden();
+		bool setAssignment(RunningPlan* r);
+		bool mayDoUtilityCheck();
 	};
 
 } /* namespace supplementary */

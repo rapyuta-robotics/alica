@@ -57,6 +57,11 @@ namespace alica
 	{
 		return syncTransition;
 	}
+	bool Transition::evalCondition(RunningPlan* r)
+	{
+		//TODO
+		return false;
+	}
 
 	void Transition::setSyncTransition(SyncTransition* syncTransition)
 	{

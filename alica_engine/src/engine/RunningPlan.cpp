@@ -12,6 +12,8 @@
 #include "engine/model/Plan.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/Assignment.h"
+#include "engine/constraintmodul/ConstraintStore.h"
+#include "engine/allocationauthority/CycleManager.h"
 
 namespace alica
 {
@@ -29,36 +31,78 @@ namespace alica
 		this->active = false;
 		this->allocationNeeded = false;
 		this->failHandlingNeeded = false;
+		this->constraintStore = new ConstraintStore(this);
+		this->cycleManagement = new CycleManager(this);
 
 	}
-	RunningPlan::RunningPlan(Plan* plan) : RunningPlan()
+	RunningPlan::RunningPlan(Plan* plan) :
+			RunningPlan()
 	{
 		this->plan = plan;
 		vector<EntryPoint*> epCol;
-		transform(plan->getEntryPoints().begin(), plan->getEntryPoints().end(), back_inserter(epCol), [](map<long, EntryPoint*>::value_type& val){return val.second;} );
+		transform(plan->getEntryPoints().begin(), plan->getEntryPoints().end(), back_inserter(epCol),
+					[](map<long, EntryPoint*>::value_type& val)
+					{	return val.second;});
 
 		sort(epCol.begin(), epCol.end(), EntryPoint::compareTo);
 		unordered_set<int> robots[epCol.size()];
 
-		for(int i = 0; i < epCol.size(); i++ )
+		for (int i = 0; i < epCol.size(); i++)
 		{
 			robots[i] = unordered_set<int>();
 		}
-
 
 		this->setBehaviour(false);
 
 	}
 
+	bool RunningPlan::getFailHandlingNeeded() const
+	{
+		return this->failHandlingNeeded;
+	}
+	void RunningPlan::setParent(RunningPlan* s)
+	{
+		this->parent = s;
+	}
+	RunningPlan* RunningPlan::getParent() const
+	{
+		return this->parent;
+	}
+
 	//TODO::
-//	RunningPlan::PlanChange RunningPlan::tick(RuleBook* rules){
+//	PlanChange RunningPlan::tick(RuleBook* rules){
 //
-//		this->c
+//		this->cycleManagement->update();
+//		PlanChange myChange = rules->v
+//
+//		return;
 //	}
 
-	void RunningPlan::setAllocationNeeded(bool allocationNeeded)
+	bool RunningPlan::isAllocationNeeded() const
 	{
-		this->allocationNeeded = allocationNeeded;
+		return this->allocationNeeded;
+	}
+	void RunningPlan::setAllocationNeeded(bool need)
+	{
+		this->allocationNeeded = need;
+	}
+	void RunningPlan::moveState(State* nextState)
+	{
+		//TODO
+	}
+
+	CycleManager* RunningPlan::getCycleManager() const
+	{
+		return this->cycleManagement;
+	}
+	ConstraintStore* RunningPlan::getConstraintStore() const
+	{
+		return this->constraintStore;
+	}
+
+	State* RunningPlan::getActiveState() const
+	{
+		return this->activeState;
 	}
 
 	RunningPlan::~RunningPlan()
@@ -68,6 +112,10 @@ namespace alica
 	bool RunningPlan::isBehaviour() const
 	{
 		return behaviour;
+	}
+	void RunningPlan::setFailHandlingNeeded(bool failHandlingNeeded)
+	{
+		this->failHandlingNeeded = failHandlingNeeded;
 	}
 
 	void RunningPlan::setBehaviour(bool behaviour)
@@ -108,13 +156,13 @@ namespace alica
 	void RunningPlan::printRecursive()
 	{
 		cout << this << endl;
-		for(RunningPlan* c : this->children)
+		for (RunningPlan* c : this->children)
 		{
 			c->printRecursive();
 		}
-		if(this->children.size() > 0)
+		if (this->children.size() > 0)
 		{
-			cout << "END CHILDREN of " << (this->plan==nullptr?"NULL":this->plan->getName()) << endl;
+			cout << "END CHILDREN of " << (this->plan == nullptr ? "NULL" : this->plan->getName()) << endl;
 		}
 	}
 	Assignment* RunningPlan::getAssignment()
@@ -147,48 +195,44 @@ namespace alica
 		this->active = active;
 	}
 
-	void RunningPlan::setRobotsAvail(unique_ptr<list<int> >  robots)
+	void RunningPlan::setRobotsAvail(unique_ptr<list<int> > robots)
 	{
 		this->robotsAvail->clear();
 		this->robotsAvail = move(robots);
 	}
+
+	EntryPoint* RunningPlan::getOwnEntryPoint() const
+	{
+		return this->activeEntryPoint;
+	}
+	void RunningPlan::setActiveState(State* s)
+	{
+		this->activeState = s;
+	}
+
 	void RunningPlan::setOwnEntryPoint(EntryPoint* value)
 	{
-		if(this->activeEntryPoint != value)
+		if (this->activeEntryPoint != value)
 		{
 			this->assignment->removeRobot(ownId);
 			this->activeEntryPoint = value;
-			if(this->activeEntryPoint != nullptr)
+			if (this->activeEntryPoint != nullptr)
 			{
 				this->activeState = this->activeEntryPoint->getState();
 				this->assignment->addRobot(ownId, this->activeEntryPoint, this->activeState);
 			}
 		}
 	}
+
+	PlanStatus RunningPlan::getStatus() const
+	{
+		return status;
+	}
 	PlanType* RunningPlan::getPlanType()
 	{
 		return planType;
+
 	}
 
-	RunningPlan* RunningPlan::getParent()
-	{
-		return parent;
-	}
-
-	void RunningPlan::setParent(RunningPlan* parent)
-	{
-		this->parent = parent;
-	}
-
-	State* RunningPlan::getActiveState()
-	{
-		return activeState;
-	}
-
-	void RunningPlan::setActiveState(State* activeState)
-	{
-		this->activeState = activeState;
-	}
 } /* namespace alica */
-
 
