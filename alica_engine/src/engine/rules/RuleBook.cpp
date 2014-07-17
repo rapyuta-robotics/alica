@@ -37,7 +37,6 @@ namespace alica
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		this->maxConsecutiveChanges = (*sc)["Alica"]->get<int>("Alica.MaxRuleApplications", NULL);
 		this->changeOccured = true;
-
 	}
 
 	RuleBook::~RuleBook()

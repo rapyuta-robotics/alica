@@ -14,6 +14,8 @@
 #include "engine/Assignment.h"
 #include "engine/constraintmodul/ConstraintStore.h"
 #include "engine/allocationauthority/CycleManager.h"
+#include "engine/model/State.h"
+#include "engine/rules/RuleBook.h"
 #include "engine/model/BehaviourConfiguration.h"
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/IBehaviourPool.h"
@@ -27,6 +29,7 @@
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/Task.h"
+
 
 namespace alica
 {
@@ -98,14 +101,28 @@ namespace alica
 		return this->parent;
 	}
 
-	//TODO::
-//	PlanChange RunningPlan::tick(RuleBook* rules){
-//
-//		this->cycleManagement->update();
-//		PlanChange myChange = rules->v
-//
-//		return;
-//	}
+	/**
+	 * Called once per Engine iteration, performs all neccessary checks and executes rules from the rulebook.
+	 * @param rules
+	 * @return PlanChange
+	 */
+	PlanChange RunningPlan::tick(RuleBook* rules){
+
+		this->cycleManagement->update();
+		PlanChange myChange = rules->visit(this);
+
+		PlanChange childChange = PlanChange::NoChange;
+		for(RunningPlan* rp : this->children)
+		{
+			childChange = rules->updateChange(childChange, rp->tick(rules));
+		}
+		if(childChange != PlanChange::NoChange && childChange != PlanChange::InternalChange)
+		{
+			myChange = rules->updateChange(myChange, rules->visit(this));
+		}
+
+		return myChange;
+	}
 
 	bool RunningPlan::isAllocationNeeded()
 	{
@@ -115,11 +132,6 @@ namespace alica
 	{
 		this->allocationNeeded = need;
 	}
-
-	PlanChange RunningPlan::tick(RuleBook* rules)
-	{
-	}
-
 	bool RunningPlan::evalPreCondition()
 	{
 		if (this->plan == nullptr)
