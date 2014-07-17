@@ -33,6 +33,8 @@ namespace supplementary
 		bool restart();
 		bool pause();
 		bool isRunning();
+		bool isNotifyCalled();
+		void setNotifyCalled(bool called);
 		bool isStarted();
 		void setDelayedStart(long msDelayedStart);
 		void setInterval(long msInterval);
@@ -45,6 +47,7 @@ namespace supplementary
 		chrono::milliseconds msDelayedStart; /** < The time between starting the TimerEvent and the first fired event */
 		bool running, started;
 		bool notifyAll;
+		bool notifyCalled;
 		mutex cv_mtx;
 		condition_variable cv;
 		vector<condition_variable*> registeredCVs; /** < These condition variables are notified each iteration of the Timer */

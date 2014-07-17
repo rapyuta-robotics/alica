@@ -10,13 +10,15 @@
 namespace supplementary
 {
 
-	Timer::Timer(long msInterval, long msDelayedStart, bool notifyAll) : notifyAll(notifyAll)
+	Timer::Timer(long msInterval, long msDelayedStart, bool notifyAll) :
+			notifyAll(notifyAll)
 	{
 		this->started = false;
 		this->running = false;
 		this->msInterval = chrono::milliseconds(msInterval);
 		this->msDelayedStart = chrono::milliseconds(msDelayedStart);
 		this->registeredCVs = vector<condition_variable*>();
+		this->notifyCalled = false;
 		this->runThread = new thread(&Timer::run, this);
 	}
 
@@ -47,6 +49,7 @@ namespace supplementary
 			{	return this->running && this->registeredCVs.size() > 0;});
 
 			chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
+			this->notifyCalled = true;
 			for (int i = 0; i < this->registeredCVs.size(); i++)
 			{
 				if (this->notifyAll)
@@ -59,7 +62,8 @@ namespace supplementary
 				}
 			}
 			auto dura = std::chrono::high_resolution_clock::now() - start;
-			cout << "TimerEvent: Duration is " << chrono::duration_cast<chrono::nanoseconds>(dura).count() << " nanoseconds" << endl;
+			cout << "TimerEvent: Duration is " << chrono::duration_cast<chrono::nanoseconds>(dura).count()
+					<< " nanoseconds" << endl;
 			this_thread::sleep_for(msInterval - dura);
 		}
 	}
@@ -135,6 +139,14 @@ namespace supplementary
 		return msInterval.count();
 	}
 
-} /* namespace supplementary */
+	bool Timer::isNotifyCalled()
+	{
+		return this->notifyCalled;
+	}
+	void Timer::setNotifyCalled(bool called)
+	{
+		this->notifyCalled = called;
+	}
 
+} /* namespace supplementary */
 
