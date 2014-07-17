@@ -17,7 +17,10 @@ using namespace std;
 #include <Timer.h>
 #include <algorithm>
 #include <math.h>
+#include <mutex>
+#include <typeinfo>
 #include "containers/BehaviourEngineInfo.h"
+#include "engine/IAlicaClock.h"
 
 namespace alica
 {
@@ -31,23 +34,36 @@ namespace alica
 	class AuthorityManager;
 	class ISyncModul;
 	class IAlicaCommunication;
+	class Task;
+	class State;
+	class EntryPoint;
+	class IAlicaClock;
+	class Assignment;
+	class StateCollection;
 
 	class PlanBase
 	{
 	public:
 		PlanBase(Plan* masterplan);
 		~PlanBase();
-		supplementary::AutoResetEvent* getSignal();
+		condition_variable* getStepModeCV();
 		const RunningPlan* getRootNode() const;
 		void setRootNode(RunningPlan* rootNode);
-
+		void setRuleBook(RuleBook* ruleBook);
+		const ulong getloopInterval() const;
+		void setLoopInterval(ulong loopInterval);
+		void stop();
 		void start();
+		void addFastPathEvent(RunningPlan* p);
 
 	private:
-		queue<RunningPlan> fpEvents;
-		supplementary::AutoResetEvent* signal;
-		supplementary::AutoResetEvent* loopGuard;
+		queue<RunningPlan*> fpEvents;
+//		supplementary::AutoResetEvent* signal;
+//		supplementary::AutoResetEvent* loopGuard;
+		condition_variable* timerModeCV;
+		condition_variable* stepModeCV;
 		supplementary::Timer* loopTimer;
+		void checkPlanBase(RunningPlan* r);
 
 	protected:
 		Plan* masterPlan;
@@ -61,23 +77,29 @@ namespace alica
 		ISyncModul* syncModel;
 		AuthorityManager* authModul;
 		IAlicaCommunication* statusPublisher;
+		IAlicaClock* alicaClock;
 
-		ulong loopTime;
-		ulong lastSendTime;
-		ulong minSendInterval;
-		ulong maxSendInterval;
-		ulong loopInterval;
+		alicaTime loopTime;
+		alicaTime lastSendTime;
+		alicaTime minSendInterval;
+		alicaTime maxSendInterval;
+		alicaTime loopInterval;
+		alicaTime lastSentStatusTime;
+		alicaTime sendStatusInterval;
 
-		bool ruuning;
+		bool running;
 		bool sendStatusMessages;
-		bool sendStatusInterval;
 
 		thread* mainThread;
 		Logger* log;
 
-		BehaviourEngineInfo statusMessage;
-
+		BehaviourEngineInfo* statusMessage;
+		mutex lomutex;
+		mutex stepMutex;
+		mutex timerMutex;
+		unique_lock<mutex> lckTimer;
 		void run();
+
 
 	};
 
