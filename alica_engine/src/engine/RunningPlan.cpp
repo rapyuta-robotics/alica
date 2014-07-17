@@ -14,6 +14,8 @@
 #include "engine/Assignment.h"
 #include "engine/constraintmodul/ConstraintStore.h"
 #include "engine/allocationauthority/CycleManager.h"
+#include "engine/model/State.h"
+#include "engine/rules/RuleBook.h"
 
 namespace alica
 {
@@ -69,14 +71,28 @@ namespace alica
 		return this->parent;
 	}
 
-	//TODO::
-//	PlanChange RunningPlan::tick(RuleBook* rules){
-//
-//		this->cycleManagement->update();
-//		PlanChange myChange = rules->v
-//
-//		return;
-//	}
+	/**
+	 * Called once per Engine iteration, performs all neccessary checks and executes rules from the rulebook.
+	 * @param rules
+	 * @return PlanChange
+	 */
+	PlanChange RunningPlan::tick(RuleBook* rules){
+
+		this->cycleManagement->update();
+		PlanChange myChange = rules->visit(this);
+
+		PlanChange childChange = PlanChange::NoChange;
+		for(RunningPlan* rp : this->children)
+		{
+			childChange = rules->updateChange(childChange, rp->tick(rules));
+		}
+		if(childChange != PlanChange::NoChange && childChange != PlanChange::InternalChange)
+		{
+			myChange = rules->updateChange(myChange, rules->visit(this));
+		}
+
+		return myChange;
+	}
 
 	bool RunningPlan::isAllocationNeeded() const
 	{
