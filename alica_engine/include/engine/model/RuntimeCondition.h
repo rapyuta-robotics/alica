@@ -17,12 +17,16 @@ using namespace std;
 
 namespace alica
 {
+	class RunningPlan;
 
 	class RuntimeCondition : public Condition
 	{
 	public:
 		RuntimeCondition(long id = 0);
 		virtual ~RuntimeCondition();
+
+		//finish delegates
+		bool eval(RunningPlan* r);
 
 		string toString();
 
