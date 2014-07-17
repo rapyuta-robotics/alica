@@ -71,7 +71,6 @@ namespace alica
 		IPlanner* getPlanner();
 		IAlicaClock* getIAlicaClock();
 		void doStep();
-		//TODO:
 		void iterationComplete();
 
 	protected:

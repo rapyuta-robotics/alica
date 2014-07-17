@@ -19,6 +19,9 @@
 namespace alica
 {
 
+	bool Assignment::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>(
+			"Alica.AllowIdling",
+			NULL);
 	Assignment::~Assignment()
 	{
 	}
@@ -27,8 +30,6 @@ namespace alica
 		this->plan = p;
 		this->max = 0.0;
 		this->min = 0.0;
-		this->allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling",
-		NULL);
 
 		this->epRobotsMapping = new AssignmentCollection(this->plan->getEntryPoints().size());
 
@@ -322,36 +323,36 @@ namespace alica
 
 	bool Assignment::isEqual(Assignment* otherAssignment)
 	{
-		if(otherAssignment == nullptr)
+		if (otherAssignment == nullptr)
 		{
 			return false;
 		}
-		if(this->epRobotsMapping->getCount() != otherAssignment->epRobotsMapping->getCount())
+		if (this->epRobotsMapping->getCount() != otherAssignment->epRobotsMapping->getCount())
 		{
 			return false;
 		}
 		auto ownEps = this->epRobotsMapping->getEntryPoints();
 		auto otherEps = otherAssignment->epRobotsMapping->getEntryPoints();
-		for(int i = 0; i < ownEps.size(); ++i)
+		for (int i = 0; i < ownEps.size(); ++i)
 		{
-			if(ownEps[i]->getId() != otherEps[i]->getId())
+			if (ownEps[i]->getId() != otherEps[i]->getId())
 			{
 				return false;
 			}
 		}
 		auto ownRobots = this->epRobotsMapping->getRobots();
 		auto otherRobots = otherAssignment->epRobotsMapping->getRobots();
-		for(int i = 0; i < ownRobots.size(); ++i)
+		for (int i = 0; i < ownRobots.size(); ++i)
 		{
-			if(ownRobots[i]->size() != otherRobots[i]->size())
+			if (ownRobots[i]->size() != otherRobots[i]->size())
 			{
 				return false;
 			}
 
-			for(int robot : (*ownRobots[i]))
+			for (int robot : (*ownRobots[i]))
 			{
 				auto iter = find(otherRobots[i]->begin(), otherRobots[i]->end(), robot);
-				if(iter == otherRobots[i]->end())
+				if (iter == otherRobots[i]->end())
 				{
 					return false;
 				}
@@ -529,14 +530,15 @@ namespace alica
 		ss << "Rating: " << this->max << endl;
 		auto ownEps = this->epRobotsMapping->getEntryPoints();
 		auto ownRobots = this->epRobotsMapping->getRobots();
-		for(int i = 0; i < this->epRobotsMapping->getCount(); ++i)
+		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
 		{
 			ss << "EP: " << ownEps[i]->getId() << " Task: " << ownEps[i]->getTask()->getName() << " RobotIDs: ";
-			for(int robot : (*ownRobots[i])){
+			for (int robot : (*ownRobots[i]))
+			{
 				ss << robot << " ";
 			}
 			ss << endl;
- 		}
+		}
 		ss << this->robotStateMapping->toString();
 		ss << this->epSucMapping->toString();
 		return ss.str();

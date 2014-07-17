@@ -21,4 +21,21 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
+	void CycleManager::update()
+	{
+
+	}
+	bool CycleManager::isOverridden()
+	{
+		//TODO:
+	}
+	bool CycleManager::setAssignment(RunningPlan* r)
+	{
+		//TODO:
+	}
+	bool CycleManager::mayDoUtilityCheck()
+	{
+		//TODO:
+	}
+
 } /* namespace supplementary */

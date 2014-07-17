@@ -21,7 +21,7 @@ namespace alica
 		virtual void close() = 0;
 		virtual void tick() = 0;
 		virtual void setSynchronisation(Transition trans, bool holds) = 0;
-		bool followSyncTransition(Transition trans);
+		virtual bool followSyncTransition(Transition trans) = 0;
 	};
 }
 #endif /* ISYNCMODUL_H_ */

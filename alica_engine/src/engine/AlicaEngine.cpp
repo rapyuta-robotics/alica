@@ -104,6 +104,11 @@ namespace alica
 		return everythingWorked;
 	}
 
+	void AlicaEngine::iterationComplete()
+	{
+		//TODO:
+	}
+
 	void AlicaEngine::start()
 	{
 		this->planBase->start();
