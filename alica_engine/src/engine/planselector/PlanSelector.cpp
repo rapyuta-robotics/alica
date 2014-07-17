@@ -266,6 +266,7 @@ namespace alica
 									<< ap->getId() << endl;
 							throw new exception();
 						}
+						//TODO implement method in planner
 						Plan* myP = AlicaEngine::getInstance()->getPlanner()->requestPlan(pp);
 						planList = list<Plan*>();
 						planList.push_back(myP);
