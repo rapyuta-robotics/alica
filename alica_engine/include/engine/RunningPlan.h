@@ -16,6 +16,7 @@ using namespace std;
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <unordered_set>
 #include <algorithm>
 #include <SystemConfig.h>
 
@@ -110,13 +111,13 @@ namespace alica
 		void activate();
 		EntryPoint* getActiveEntryPoint();
 		void setActiveEntryPoint(EntryPoint* activeEntryPoint);
-		void limitToRobots(vector<int> robots);
+		void limitToRobots(unordered_set<int> robots);
 		CycleManager* getCycleManagement();
 		void setCycleManagement(CycleManager* cycleManagement);
 		void revokeAllConstraints();
 		void attachPlanConstraints();
 		bool recursiveUpdateAssignment(list<SimplePlanTree*> spts, list<int> availableAgents,list<int> noUpdates, unsigned long now);
-		void ToMessage(list<long> message, RunningPlan& deepestNode, int& depth, int curDepth);
+		void ToMessage(list<long> message, RunningPlan* deepestNode, int depth, int curDepth);
 		string toString();
 
 	private:
