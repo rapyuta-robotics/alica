@@ -15,13 +15,11 @@ namespace alica
 
 	EpByTaskComparer::EpByTaskComparer()
 	{
-		// TODO Auto-generated constructor stub
 
 	}
 
 	EpByTaskComparer::~EpByTaskComparer()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	bool EpByTaskComparer::compareTo(EntryPoint* x, EntryPoint* y)

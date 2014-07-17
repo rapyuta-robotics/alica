@@ -16,6 +16,12 @@
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/model/State.h"
 #include "engine/rules/RuleBook.h"
+#include "engine/model/BehaviourConfiguration.h"
+#include "engine/IPlanTreeVisitor.h"
+#include "engine/IBehaviourPool.h"
+#include "engine/model/State.h"
+#include "engine/collections/SuccessCollection.h"
+
 
 namespace alica
 {
@@ -58,6 +64,22 @@ namespace alica
 
 	}
 
+	RunningPlan::RunningPlan(PlanType* pt) :
+			RunningPlan()
+	{
+		this->plan = nullptr;
+		this->planType = pt;
+		this->setBehaviour(false);
+	}
+
+	RunningPlan::RunningPlan(BehaviourConfiguration* bc) :
+			RunningPlan()
+	{
+		this->plan = bc;
+		this->setBehaviour(true);
+		this->bp = AlicaEngine::getInstance()->getBehaviourPool();
+	}
+
 	bool RunningPlan::getFailHandlingNeeded() const
 	{
 		return this->failHandlingNeeded;
@@ -94,7 +116,7 @@ namespace alica
 		return myChange;
 	}
 
-	bool RunningPlan::isAllocationNeeded() const
+	bool RunningPlan::isAllocationNeeded()
 	{
 		return this->allocationNeeded;
 	}
@@ -102,6 +124,22 @@ namespace alica
 	{
 		this->allocationNeeded = need;
 	}
+	bool RunningPlan::evalPreCondition()
+	{
+	}
+
+	bool RunningPlan::evalRuntimeCondition()
+	{
+	}
+
+	State* RunningPlan::getActiveState()
+	{
+	}
+
+	void RunningPlan::addChildren(shared_ptr<list<RunningPlan*> > runningPlans)
+	{
+	}
+
 	void RunningPlan::moveState(State* nextState)
 	{
 		//TODO
@@ -125,12 +163,13 @@ namespace alica
 	{
 	}
 
-	bool RunningPlan::isBehaviour() const
+	bool RunningPlan::isBehaviour()
 	{
 		return behaviour;
 	}
 	void RunningPlan::setFailHandlingNeeded(bool failHandlingNeeded)
 	{
+		//TODO finish
 		this->failHandlingNeeded = failHandlingNeeded;
 	}
 
@@ -139,23 +178,24 @@ namespace alica
 		this->behaviour = behaviour;
 	}
 
-	const list<RunningPlan*>& RunningPlan::getChildren() const
+	list<RunningPlan*> RunningPlan::getChildren()
 	{
 		return children;
 	}
 
-	void RunningPlan::setChildren(const list<RunningPlan*>& children)
+	void RunningPlan::setChildren(list<RunningPlan*> children)
 	{
 		this->children = children;
 	}
 
-	AbstractPlan* RunningPlan::getPlan() const
+	AbstractPlan* RunningPlan::getPlan()
 	{
 		return plan;
 	}
 
 	void RunningPlan::setPlan(AbstractPlan* plan)
 	{
+		//TODO finish
 		this->plan = plan;
 	}
 
@@ -223,6 +263,7 @@ namespace alica
 	}
 	void RunningPlan::setActiveState(State* s)
 	{
+		//TODO finish
 		this->activeState = s;
 	}
 
@@ -242,12 +283,266 @@ namespace alica
 
 	PlanStatus RunningPlan::getStatus() const
 	{
+		//TODO finish
 		return status;
 	}
 	PlanType* RunningPlan::getPlanType()
 	{
 		return planType;
 
+	}
+
+	void RunningPlan::clearFailures()
+	{
+	}
+
+	void RunningPlan::clearFailedChildren()
+	{
+		this->failedSubPlans.clear();
+	}
+
+	void RunningPlan::addFailure()
+	{
+	}
+
+	void RunningPlan::addChildren(list<RunningPlan*> children)
+	{
+	}
+
+	int RunningPlan::getFailure()
+	{
+	}
+
+	void RunningPlan::deactivateChildren()
+	{
+		for (RunningPlan* r : this->children)
+		{
+			r->deactivate();
+		}
+	}
+
+	void RunningPlan::clearChildren()
+	{
+		this->children.clear();
+	}
+
+	void RunningPlan::setFailedChildren(AbstractPlan* p)
+	{
+	}
+
+	void RunningPlan::adaptAssignment(RunningPlan* r)
+	{
+	}
+
+	unique_ptr<list<int> > RunningPlan::getRobotsAvail()
+	{
+		return move(robotsAvail);
+	}
+
+	EntryPoint* RunningPlan::getActiveEntryPoint()
+	{
+		return activeEntryPoint;
+	}
+
+	void RunningPlan::setActiveEntryPoint(EntryPoint* activeEntryPoint)
+	{
+		//TODO finish
+		this->activeEntryPoint = activeEntryPoint;
+	}
+
+	CycleManager* RunningPlan::getCycleManagement()
+	{
+		return cycleManagement;
+	}
+
+	void RunningPlan::setCycleManagement(CycleManager* cycleManagement)
+	{
+		this->cycleManagement = cycleManagement;
+	}
+
+	void RunningPlan::setFailedChild(AbstractPlan* child)
+	{
+		if (this->failedSubPlans.find(child) != this->failedSubPlans.end())
+		{
+			this->failedSubPlans.at(child)++;}
+		else
+		{
+			this->failedSubPlans.insert(pair<AbstractPlan*, int>(child, 1));
+		}
+
+	}
+
+	void RunningPlan::setRobotAvail(int robot)
+	{
+		auto iter = find(this->robotsAvail->begin(), this->robotsAvail->end(), robot);
+		if (iter != this->robotsAvail->end())
+		{
+			return;
+		}
+		this->robotsAvail->push_back(robot);
+	}
+
+	void RunningPlan::setRobotUnAvail(int robot)
+	{
+		auto iter = find(this->robotsAvail->begin(), this->robotsAvail->end(), robot);
+		if (iter != this->robotsAvail->end())
+		{
+			this->robotsAvail->erase(iter);
+		}
+
+	}
+
+	void RunningPlan::accept(IPlanTreeVisitor* vis)
+	{
+		vis->visit(this);
+		for (int i = 0; i < this->children.size(); i++)
+		{
+			auto iter = this->children.begin();
+			advance(iter, i);
+			(*iter)->accept(vis);
+		}
+	}
+
+	void RunningPlan::deactivate()
+	{
+		this->active = false;
+		if (this->isBehaviour())
+		{
+			bp->stopBehaviour(shared_from_this());
+		}
+		else
+		{
+			this->to->notifyRobotLeftPlan(this->plan);
+		}
+	}
+
+	bool RunningPlan::allChildrenStatus(PlanStatus ps)
+	{
+		for (int i = 0; i < this->children.size(); i++)
+		{
+			auto iter = this->children.begin();
+			advance(iter, i);
+			if (ps != (*iter)->getStatus())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	bool RunningPlan::anyChildrenTaskSuccess()
+	{
+		for(int i = 0; i < this->children.size(); i++)
+		{
+			auto iter = this->children.begin();
+			advance(iter, i);
+			if((*iter)->isBehaviour())
+			{
+				if((*iter)->getStatus() == PlanStatus::Success)
+				{
+					return true;
+				}
+			}
+			else if((*iter)->getActiveState() != nullptr && (*iter)->getActiveState()->isSuccessState())
+			{
+				return true;
+			}
+			for(shared_ptr<list<int> > successes : (*iter)->getAssignment()->getEpSuccessMapping()->getRobots())
+			{
+				if(find(successes->begin(), successes->end(), this->ownId) != successes->end())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	bool RunningPlan::anyChildrenTaskFailure()
+	{
+		for(int i = 0; i < this->children.size(); i++)
+		{
+			auto iter = this->children.begin();
+			advance(iter, i);
+			if((*iter)->getStatus() == PlanStatus::Failed)
+			{
+				return true;
+			}
+			if((*iter)->getActiveState() != nullptr && (*iter)->getActiveState()->isFailureState())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool RunningPlan::anyChildrenTaskTerminated()
+	{
+		for(int i = 0; i < this->children.size(); i++)
+		{
+			auto iter = this->children.begin();
+			advance(iter, i);
+			if((*iter)->isBehaviour())
+			{
+				if((*iter)->getStatus() == PlanStatus::Failed || (*iter)->getStatus() == PlanStatus::Success)
+				{
+					return true;
+				}
+			}
+			else if((*iter)->getActiveState() != nullptr && (*iter)->getActiveState()->isTerminal())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void RunningPlan::activate()
+	{
+	}
+
+	void RunningPlan::limitToRobots(vector<int> robots)
+	{
+	}
+
+	void RunningPlan::revokeAllConstraints()
+	{
+	}
+
+	void RunningPlan::attachPlanConstraints()
+	{
+	}
+
+	bool RunningPlan::recursiveUpdateAssignment(list<SimplePlanTree*> spts, list<int> availableAgents,
+												list<int> noUpdates, unsigned long now)
+	{
+	}
+
+	void RunningPlan::ToMessage(list<long> message, RunningPlan& deepestNode, int& depth, int curDepth)
+	{
+	}
+
+	string RunningPlan::toString()
+	{
+	}
+
+	bool RunningPlan::anyChildrenStatus(PlanStatus ps)
+	{
+		for (int i = 0; i < this->children.size(); i++)
+		{
+			auto iter = this->children.begin();
+			advance(iter, i);
+			if (ps == (*iter)->getStatus())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void RunningPlan::setConstraintStore(ConstraintStore* constraintStore)
+	{
+		this->constraintStore = constraintStore;
 	}
 
 } /* namespace alica */

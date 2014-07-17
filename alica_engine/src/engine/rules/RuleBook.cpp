@@ -241,7 +241,7 @@ namespace alica
 			return PlanChange::FailChange;
 		}
 		r->setFailHandlingNeeded(false);
-		r->deactivateChildren(true);
+		r->deactivateChildren();
 		r->clearChildren();
 		vector<int> robots;
 		copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
@@ -269,7 +269,7 @@ namespace alica
 			return PlanChange::NoChange;
 		if (r->getFailure() != 2)
 			return PlanChange::NoChange;
-		r->getParent()->deactivateChildren(false);
+		r->getParent()->deactivateChildren();
 		r->getParent()->setFailedChildren(r->getPlan());
 		r->getParent()->setAllocationNeeded(true);
 		r->getParent()->clearChildren();
