@@ -31,6 +31,8 @@ namespace alica
 	class IAlicaCommunication;
 	class IEngineModule;
 	class IPlanner;
+	class IAlicaClock;
+	class PlanBase;
 
 
 	class AlicaEngine
@@ -61,10 +63,16 @@ namespace alica
 		IPlanParser* getPlanParser();
 		bool isTerminating() const;
 		void setTerminating(bool terminating);
+		void setStepCalled(bool stepCalled);
+		bool getStepCalled() const;
 		RoleSet* getRoleSet();
 		IAlicaCommunication* getCommunicatior();
 		IPlanSelector* getPlanSelector();
 		IPlanner* getPlanner();
+		IAlicaClock* getIAlicaClock();
+		void doStep();
+		//TODO:
+		void iterationComplete();
 
 	protected:
 		supplementary::SystemConfig* sc;
@@ -79,6 +87,9 @@ namespace alica
 		IPlanSelector* planSelector;
 		IAlicaCommunication* communicatior;
 		IPlanner* planner;
+		IAlicaClock* alicaClock;
+		PlanBase* planBase;
+		bool stepCalled;
 
 
 	private:

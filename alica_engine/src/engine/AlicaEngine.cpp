@@ -18,6 +18,7 @@ using namespace std;
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/IEngineModule.h"
 #include "engine/planselector/PlanSelector.h"
+#include "engine/PlanBase.h"
 
 namespace alica
 {
@@ -82,6 +83,8 @@ namespace alica
 		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
 		this->behaviourPool = new BehaviourPool();
 		this->planSelector = new PlanSelector();
+		this->planBase = new PlanBase(this->masterPlan);
+		this->stepCalled = false;
 		everythingWorked &= this->behaviourPool->init(bc);
 		return everythingWorked;
 	}
@@ -103,13 +106,27 @@ namespace alica
 
 	void AlicaEngine::start()
 	{
+		this->planBase->start();
+		cout << "AE: Engine started" << endl;
+	}
+	void AlicaEngine::setStepCalled(bool stepCalled)
+	{
+		this->stepCalled = stepCalled;
+	}
+	bool AlicaEngine::getStepCalled() const
+	{
+		return this->stepCalled;
 	}
 
 	bool AlicaEngine::getStepEngine()
 	{
 		return this->stepEngine;
 	}
-
+	void AlicaEngine::doStep()
+	{
+		this->stepCalled = true;
+		this->planBase->getStepModeCV()->notify_one();
+	}
 	PlanRepository * AlicaEngine::getPlanRepository()
 	{
 		return this->planRepository;
@@ -118,6 +135,10 @@ namespace alica
 	IPlanSelector* AlicaEngine::getPlanSelector()
 	{
 		return this->planSelector;
+	}
+	IAlicaClock* AlicaEngine::getIAlicaClock()
+	{
+		return this->alicaClock;
 	}
 
 	IBehaviourPool * AlicaEngine::getBehaviourPool()
@@ -226,5 +247,4 @@ namespace alica
 	}
 
 } /* namespace Alica */
-
 

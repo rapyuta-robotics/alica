@@ -36,7 +36,6 @@ namespace alica
 		void setChangeOccured(bool changeOccured);
 		PlanChange visit(RunningPlan* r);
 		PlanChange updateChange(PlanChange cur, PlanChange update);
-		bool changeOccured;
 		RunningPlan* initialisationRule(Plan* masterPlan);
 
 	protected:
@@ -45,6 +44,7 @@ namespace alica
 		int maxConsecutiveChanges;
 		IPlanSelector* ps;
 		Logger* log;
+		bool changeOccured;
 		PlanChange synchTransitionRule(RunningPlan* r);
 		PlanChange transitionRule(RunningPlan* r);
 		PlanChange topFailRule(RunningPlan* r);

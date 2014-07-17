@@ -12,6 +12,7 @@
 using namespace std;
 namespace alica
 {
+	class RunningPlan;
 
 	class Logger
 	{
@@ -21,6 +22,7 @@ namespace alica
 
 		void evenOccured(string event);
 		void itertionStart();
+		void iterationEnds(RunningPlan* p);
 
 	};
 
