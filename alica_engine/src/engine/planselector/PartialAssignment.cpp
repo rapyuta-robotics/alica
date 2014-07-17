@@ -18,6 +18,13 @@
 
 namespace alica
 {
+	int PartialAssignment::maxCount = 10100;
+	int PartialAssignment::maxEpsCount = 20;
+	int PartialAssignment::curIndex = 0;
+	vector<PartialAssignment*>  PartialAssignment::daPAs = vector<PartialAssignment*>(maxCount);
+	EpByTaskComparer PartialAssignment::epByTaskComparer = EpByTaskComparer();
+	bool PartialAssignment::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling");
+	EntryPoint* PartialAssignment::idleEP;
 
 	int PartialAssignment::getHash()
 	{
@@ -41,12 +48,6 @@ namespace alica
 
 	PartialAssignment::PartialAssignment()
 	{
-		this->maxCount = 10100;
-		this->maxEpsCount = 20;
-		this->curIndex = 0;
-		this->daPAs = vector<PartialAssignment*>(maxCount);
-		this->epByTaskComparer = EpByTaskComparer();
-		this->allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling");
 		this->epRobotsMapping = new AssignmentCollection(maxEpsCount);
 		this->unAssignedRobots = vector<int>();
 		this->dynCardinalities = vector<DynCardinality*>(maxEpsCount);

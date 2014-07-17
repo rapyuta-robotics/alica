@@ -9,15 +9,20 @@
 
 namespace alica
 {
-	//TODO
 
 	ConstraintStore::ConstraintStore(RunningPlan* rp)
 	{
-
+		//TODO:
 	}
 
 	ConstraintStore::~ConstraintStore()
 	{
+		//TODO:
+	}
+
+	void ConstraintStore::addCondition(Condition* con)
+	{
+		//TODO:
 	}
 
 } /* namespace supplementary */

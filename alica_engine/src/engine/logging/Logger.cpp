@@ -21,4 +21,17 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
+	void Logger::evenOccured(string event)
+	{
+		//TODO:
+	}
+	void Logger::itertionStart()
+	{
+		//TODO:
+	}
+	void Logger::iterationEnds(RunningPlan* p)
+	{
+		//TODO:
+	}
+
 } /* namespace alica */
