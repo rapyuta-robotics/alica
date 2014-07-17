@@ -18,6 +18,8 @@ using namespace std;
 namespace alica
 {
 
+	class RunningPlan;
+
 	class PreCondition : public Condition
 	{
 	public:
@@ -25,6 +27,9 @@ namespace alica
 		virtual ~PreCondition();
 
 		string toString();
+
+		//finish delegate
+		bool eval(RunningPlan*);
 
 		bool isEnabled() const;
 		void setEnabled(bool enabled);

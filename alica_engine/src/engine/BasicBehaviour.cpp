@@ -131,6 +131,16 @@ namespace alica
 		this->runningPlan = runningPlan;
 	}
 
+	bool BasicBehaviour::isSuccess() const
+	{
+		return success;
+	}
+
+	bool BasicBehaviour::isFailure() const
+	{
+		return failure;
+	}
+
 	void BasicBehaviour::initInternal()
 	{
 		this->success = false;
