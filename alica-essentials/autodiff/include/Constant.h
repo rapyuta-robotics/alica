@@ -1,35 +1,33 @@
 /*
- * Product.h
+ * Constant.h
  *
  *  Created on: Jun 12, 2014
  *      Author: psp
  */
 
-#ifndef PRODUCT_H_
-#define PRODUCT_H_
+#ifndef CONSTANT_H_
+#define CONSTANT_H_
 
 #include "Term.h"
 
 namespace AutoDiff
 {
 
-	class Product : public Term
+	class Constant : public Term
 	{
 	public:
-		Product(shared_ptr<Term> left, shared_ptr<Term> right);
+		Constant(double value);
 
 		int accept(shared_ptr<ITermVisitor> visitor);
 
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
 
-		shared_ptr<Term> getLeft();
-		shared_ptr<Term> getRight();
+		double getValue();
 	private:
-		shared_ptr<Term> _left;
-		shared_ptr<Term> _right;
+		double _value;
 	};
 
 } /* namespace AutoDiff */
 
-#endif /* PRODUCT_H_ */
+#endif /* CONSTANT_H_ */

@@ -1,33 +1,33 @@
 /*
- * Exp.h
+ * Abs.h
  *
- *  Created on: Jun 12, 2014
+ *  Created on: Jul 17, 2014
  *      Author: psp
  */
 
-#ifndef EXP_H_
-#define EXP_H_
+#ifndef ABS_H_
+#define ABS_H_
 
 #include "Term.h"
 
 namespace AutoDiff
 {
 
-	class Exp : public Term
+	class Abs : public Term
 	{
 	public:
-		Exp(shared_ptr<Term> arg);
+		Abs(shared_ptr<Term> arg);
 
 		int accept(shared_ptr<ITermVisitor> visitor);
 
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
 
-		shared_ptr<Term> getArg();
+		const shared_ptr<Term> getArg();
 	private:
 		shared_ptr<Term> _arg;
 	};
 
 } /* namespace AutoDiff */
 
-#endif /* EXP_H_ */
+#endif /* ABS_H_ */
