@@ -1,0 +1,10 @@
+Three examples that encode the n-queens problem. The third example calculates
+solutions for different board sizes, which can be given as a list of intervals
+on the command line.
+
+Example calls:
+    clingo queens1.lp
+    clingo queens2.lp
+    clingo incqueens.lp incqueens-py.lp -c calls="list((1,1),(3,5),(8,9))"
+    clingo incqueens.lp incqueens-lua.lp -c calls="list((1,1),(3,5),(8,9))"
+

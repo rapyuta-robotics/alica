@@ -1,0 +1,10 @@
+The new clingo-4 does not have an inbuilt incremental solving mode anymore.
+This example shows how this mode can be simulated via scripting.  For
+convenience, the lua main function in iclingo-lua.lp has been embedded into
+clingo and can be loaded with the #include statements (see example
+iclingo-lua.lp).
+
+Example calls:
+    clingo iclingo-int.lp example.lp
+    clingo iclingo-lua.lp example.lp
+    clingo iclingo-py.lp example.lp

@@ -207,7 +207,7 @@ namespace supplementary
 		{
 			return path1;
 		}
-		if (path1.find_last_of(PATH_SEPARATOR) == string::npos)
+		if (path1.find_last_of(PATH_SEPARATOR) != path1.size() - 1)
 		{
 			return path1 + PATH_SEPARATOR + path2;
 		}

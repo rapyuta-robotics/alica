@@ -5,8 +5,8 @@
  *      Author: psp
  */
 
-#ifndef VARIABLE_H_
-#define VARIABLE_H_
+#ifndef AutoDiffVARIABLE_H_
+#define AutoDiffVARIABLE_H_
 
 #include "Term.h"
 
@@ -22,4 +22,4 @@ namespace AutoDiff
 	};
 } /* namespace AutoDiff */
 
-#endif /* VARIABLE_H_ */
+#endif /* AutoDiffVARIABLE_H_ */
