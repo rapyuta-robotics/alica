@@ -1,8 +1,9 @@
 #include "SystemConfig.h"
+#include <iostream>
+#include <typeinfo>
 #include <gtest/gtest.h>
 
 using namespace supplementary;
-
 // Declare a test
 TEST(SystemConfigBasics, readValues)
 {
@@ -29,7 +30,6 @@ TEST(SystemConfigBasics, readValues)
 //	float floatTestValue = (*sc)["Test"]->get<float>("floatTestValue", NULL);
 //	EXPECT_FLOAT_EQ(1.14f, floatTestValue);
 }
-
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv){
 	testing::InitGoogleTest(&argc, argv);

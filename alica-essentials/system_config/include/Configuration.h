@@ -253,6 +253,21 @@ namespace supplementary
 	{
 		return value;
 	}
+
+	template<>
+	inline bool Configuration::convert<bool>(string value)
+	{
+		if ("false" == value)
+		{
+			return false;
+		}
+		else if ("true" == value)
+		{
+			return true;
+		}
+		cerr << "Configuration: unable to parse boolean. Value is: " << value << endl;
+		throw new exception();
+	}
 }
 #endif /* CONFIGURATION_H_ */
 

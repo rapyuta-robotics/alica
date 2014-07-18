@@ -2,7 +2,7 @@
  * ConfigNode.h
  *
  *  Created on: May 30, 2014
- *      Author: emmeda
+ *      Author: Stephan Opfer
  */
 
 #ifndef CONFIGNODE_H_
