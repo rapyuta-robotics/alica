@@ -44,7 +44,6 @@ namespace alica
 		virtual int successesInPlan(Plan* p) = 0;
 		virtual SuccessCollection* getSuccessCollection(Plan* p) = 0;
 		virtual void updateSuccessCollection(Plan* p, SuccessCollection* sc) = 0;
-
 		virtual void doBroadCast(list<long> planmsg) = 0;
 
 		virtual void ignoreRobot(int rid) = 0;

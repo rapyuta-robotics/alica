@@ -27,5 +27,9 @@ namespace alica
 		ss << "#EndRuntimeCondition" << endl;
 		return ss.str();
 	}
+	bool RuntimeCondition::eval(RunningPlan* r)
+	{
+		//TODO:
+	}
 
 } /* namespace Alica */

@@ -19,6 +19,7 @@ using namespace std;
 #include "engine/IEngineModule.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/PlanBase.h"
+#include "engine/teamobserver/TeamObserver.h"
 
 namespace alica
 {
@@ -83,6 +84,7 @@ namespace alica
 		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
 		this->behaviourPool = new BehaviourPool();
 		this->planSelector = new PlanSelector();
+		this->teamObserver = new TeamObserver();
 		this->planBase = new PlanBase(this->masterPlan);
 		this->stepCalled = false;
 		everythingWorked &= this->behaviourPool->init(bc);
@@ -101,6 +103,10 @@ namespace alica
 		this->roleSet = nullptr;
 		delete this->behaviourPool;
 		this->behaviourPool = nullptr;
+		delete this->teamObserver;
+		this->teamObserver = nullptr;
+		delete this->planBase;
+		this->planBase = nullptr;
 		return everythingWorked;
 	}
 
