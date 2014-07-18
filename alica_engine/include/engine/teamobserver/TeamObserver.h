@@ -51,8 +51,8 @@ namespace alica
 		unique_ptr<map<int, shared_ptr<SimplePlanTree> > > getTeamPlanTrees();
 		void init();
 		void tick(RunningPlan* root);
-		void doBroadcast(list<long> msg);
-		int successInPlan(Plan* plan);
+		void doBroadCast(list<long> msg);
+		int successesInPlan(Plan* plan);
 		SuccessCollection* getSuccessCollection(Plan* plan);
 		void updateSuccessCollection(Plan* p, SuccessCollection* sc);
 		void ignoreRobot(int rid);
@@ -60,6 +60,7 @@ namespace alica
 		bool isRobotIgnored(int rid);
 		void notifyRobotLeftPlan(AbstractPlan* plan);
 		void handlePlanTreeInfo(shared_ptr<SimplePlanTree> incoming);
+		void close();
 
 	private:
 		EntryPoint* entryPointOfState(State* state);

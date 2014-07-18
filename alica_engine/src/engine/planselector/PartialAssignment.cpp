@@ -23,7 +23,7 @@ namespace alica
 	int PartialAssignment::curIndex = 0;
 	vector<PartialAssignment*>  PartialAssignment::daPAs = vector<PartialAssignment*>(maxCount);
 	EpByTaskComparer PartialAssignment::epByTaskComparer = EpByTaskComparer();
-	bool PartialAssignment::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling");
+	bool PartialAssignment::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling", NULL);
 	EntryPoint* PartialAssignment::idleEP;
 
 	int PartialAssignment::getHash()

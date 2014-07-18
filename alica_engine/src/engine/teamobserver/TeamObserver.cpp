@@ -285,7 +285,12 @@ namespace alica
 		}
 	}
 
-	void TeamObserver::doBroadcast(list<long> msg)
+	void TeamObserver::close()
+	{
+		//TODO: implement
+	}
+
+	void TeamObserver::doBroadCast(list<long> msg)
 	{
 		//TODO ICommunication needed
 //		if(!ae.MaySendMessages) return;
@@ -360,7 +365,7 @@ namespace alica
 		return nullptr;
 	}
 
-	int TeamObserver::successInPlan(Plan* plan)
+	int TeamObserver::successesInPlan(Plan* plan)
 	{
 		int ret = 0;
 		shared_ptr<list<EntryPoint*> > suc;

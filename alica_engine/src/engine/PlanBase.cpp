@@ -72,7 +72,8 @@ namespace alica
 
 		if(!this->ae->getStepEngine())
 		{
-			this->loopTimer = new supplementary::Timer(this->loopTime / 1000000, this->loopTime / 1000000, true);
+			this->loopTimer = new supplementary::Timer(this->loopTime / 1000000, this->loopTime / 1000000, false);
+			this->timerModeCV = new condition_variable();
 			this->loopTimer->registerCV(timerModeCV);
 			loopTimer->start();
 		}

@@ -29,7 +29,7 @@ namespace alica
 		string toString();
 
 		//finish delegate
-		bool eval(RunningPlan*);
+		bool eval(RunningPlan* r);
 
 		bool isEnabled() const;
 		void setEnabled(bool enabled);
