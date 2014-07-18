@@ -123,10 +123,28 @@ add_library(autodiff
   src/TermUtils.cpp
   src/Variable.cpp
   src/Zero.cpp
+  src/compiled/CompiledAbs.cpp
+  src/compiled/CompiledAnd.cpp
+  src/compiled/CompiledAtan2.cpp
   src/compiled/CompiledConstant.cpp
+  src/compiled/CompiledConstPower.cpp
+  src/compiled/CompiledConstraintUtility.cpp
+  src/compiled/CompiledCos.cpp
   src/compiled/CompiledExp.cpp
+  src/compiled/CompiledGp.cpp
+  src/compiled/CompiledLinSigmoid.cpp
+  src/compiled/CompiledLog.cpp
+  src/compiled/CompiledLTConstraint.cpp
+  src/compiled/CompiledLTEConstraint.cpp
+  src/compiled/CompiledMax.cpp
+  src/compiled/CompiledMin.cpp
+  src/compiled/CompiledOr.cpp
   src/compiled/CompiledProduct.cpp
+  src/compiled/CompiledReification.cpp
+  src/compiled/CompiledSigmoid.cpp
+  src/compiled/CompiledSin.cpp
   src/compiled/CompiledSum.cpp
+  src/compiled/CompiledTermPower.cpp
   src/compiled/CompiledVariable.cpp
 )
 

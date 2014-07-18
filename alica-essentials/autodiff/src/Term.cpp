@@ -293,6 +293,6 @@ namespace AutoDiff
 
 //	bool operator==(const shared_ptr<Term>& left, const shared_ptr<Term>& right)
 //	{
-//		return true;
+//		return false;
 //	}
 } /* namespace AutoDiff */

@@ -21,38 +21,9 @@ using namespace std;
 namespace AutoDiff
 {
 	class Term;
-	class Abs;
-	class And;
-	class Atan2;
-	class Constant;
-	class ConstPower;
-	class ConstraintUtility;
-	class Cos;
-	class Exp;
-	class Gp;
-	class LinSigmoid;
-	class Log;
-	class LTConstraint;
-	class LTEConstraint;
-	class Max;
-	class Min;
-	class Or;
-	class Product;
-	class Reification;
-	class Sigmoid;
-	class Sin;
-	class Sum;
-	class TermPower;
-	class Variable;
-	class Zero;
 
 	namespace Compiled
 	{
-		class CompiledConstant;
-		class CompiledExp;
-		class CompiledProduct;
-		class CompiledSum;
-		class CompiledVariable;
 		class TapeElement;
 	}
 
@@ -107,7 +78,6 @@ namespace AutoDiff
 			int visit(shared_ptr<Zero> zero);
 		private:
 			vector<shared_ptr<Compiled::TapeElement>> *_tape;
-//			map<shared_ptr<Term>, int> _indexOf;
 			map<int, int> _indexOf;
 
 			int compile(shared_ptr<Term> term, function<shared_ptr<Compiled::TapeElement> ()> compiler);
@@ -118,10 +88,28 @@ namespace AutoDiff
 		public:
 			EvalVisitor(vector<shared_ptr<Compiled::TapeElement>> *tape);
 
+			void visit(shared_ptr<Compiled::CompiledAbs> elem);
+			void visit(shared_ptr<Compiled::CompiledAnd> elem);
+			void visit(shared_ptr<Compiled::CompiledAtan2> elem);
 			void visit(shared_ptr<Compiled::CompiledConstant> elem);
+			void visit(shared_ptr<Compiled::CompiledConstPower> elem);
+			void visit(shared_ptr<Compiled::CompiledConstraintUtility> elem);
+			void visit(shared_ptr<Compiled::CompiledCos> elem);
 			void visit(shared_ptr<Compiled::CompiledExp> elem);
+			void visit(shared_ptr<Compiled::CompiledGp> elem);
+			void visit(shared_ptr<Compiled::CompiledLinSigmoid> elem);
+			void visit(shared_ptr<Compiled::CompiledLog> elem);
+			void visit(shared_ptr<Compiled::CompiledLTConstraint> elem);
+			void visit(shared_ptr<Compiled::CompiledLTEConstraint> elem);
+			void visit(shared_ptr<Compiled::CompiledMax> elem);
+			void visit(shared_ptr<Compiled::CompiledMin> elem);
+			void visit(shared_ptr<Compiled::CompiledOr> elem);
 			void visit(shared_ptr<Compiled::CompiledProduct> elem);
+			void visit(shared_ptr<Compiled::CompiledReification> elem);
+			void visit(shared_ptr<Compiled::CompiledSigmoid> elem);
+			void visit(shared_ptr<Compiled::CompiledSin> elem);
 			void visit(shared_ptr<Compiled::CompiledSum> elem);
+			void visit(shared_ptr<Compiled::CompiledTermPower> elem);
 			void visit(shared_ptr<Compiled::CompiledVariable> var);
 		private:
 			vector<shared_ptr<Compiled::TapeElement>> *_tape;
@@ -134,10 +122,28 @@ namespace AutoDiff
 		public:
 			ForwardSweepVisitor(vector<shared_ptr<Compiled::TapeElement>> *tape);
 
+			void visit(shared_ptr<Compiled::CompiledAbs> elem);
+			void visit(shared_ptr<Compiled::CompiledAnd> elem);
+			void visit(shared_ptr<Compiled::CompiledAtan2> elem);
 			void visit(shared_ptr<Compiled::CompiledConstant> elem);
+			void visit(shared_ptr<Compiled::CompiledConstPower> elem);
+			void visit(shared_ptr<Compiled::CompiledConstraintUtility> elem);
+			void visit(shared_ptr<Compiled::CompiledCos> elem);
 			void visit(shared_ptr<Compiled::CompiledExp> elem);
+			void visit(shared_ptr<Compiled::CompiledGp> elem);
+			void visit(shared_ptr<Compiled::CompiledLinSigmoid> elem);
+			void visit(shared_ptr<Compiled::CompiledLog> elem);
+			void visit(shared_ptr<Compiled::CompiledLTConstraint> elem);
+			void visit(shared_ptr<Compiled::CompiledLTEConstraint> elem);
+			void visit(shared_ptr<Compiled::CompiledMax> elem);
+			void visit(shared_ptr<Compiled::CompiledMin> elem);
+			void visit(shared_ptr<Compiled::CompiledOr> elem);
 			void visit(shared_ptr<Compiled::CompiledProduct> elem);
+			void visit(shared_ptr<Compiled::CompiledReification> elem);
+			void visit(shared_ptr<Compiled::CompiledSigmoid> elem);
+			void visit(shared_ptr<Compiled::CompiledSin> elem);
 			void visit(shared_ptr<Compiled::CompiledSum> elem);
+			void visit(shared_ptr<Compiled::CompiledTermPower> elem);
 			void visit(shared_ptr<Compiled::CompiledVariable> var);
 		private:
 			vector<shared_ptr<Compiled::TapeElement>> *_tape;
