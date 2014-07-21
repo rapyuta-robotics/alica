@@ -35,7 +35,6 @@ namespace alica
 
 	RobotEngineData::~RobotEngineData()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	bool RobotEngineData::isActive() const

@@ -21,7 +21,6 @@ namespace alica
 
 	RobotRoleUtility::~RobotRoleUtility()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	RobotProperties* RobotRoleUtility::getRobot()

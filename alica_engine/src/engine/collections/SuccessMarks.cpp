@@ -19,13 +19,11 @@ namespace alica
 
 	SuccessMarks::SuccessMarks()
 	{
-		// TODO Auto-generated constructor stub
 
 	}
 
 	SuccessMarks::~SuccessMarks()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	void SuccessMarks::limitToPlans(unique_ptr<unordered_set<AbstractPlan*> > active)
