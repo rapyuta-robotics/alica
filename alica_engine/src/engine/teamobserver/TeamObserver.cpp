@@ -21,6 +21,7 @@
 #include "engine/PlanRepository.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/collections/SuccessCollection.h"
+#include "engine/IAlicaClock.h"
 
 namespace alica
 {
@@ -42,16 +43,15 @@ namespace alica
 
 	void TeamObserver::messageRecievedFrom(int rid)
 	{
-		//TODO finish after mockup is done
-		//for(RobotEngineData re : this->allOtherRobots)
-		//{
-		//if(re.getProperties.getId() == rid)
-		//{
-		//TODO ITime interface
-		//re.setLastMessageTime = RosSharp.Now();
-		//break;
-		//}
-		//}
+		for (RobotEngineData* re : this->allOtherRobots)
+		{
+			if (re->getProperties()->getId() == rid)
+			{
+
+				re->setLastMessageTime(AlicaEngine::getInstance()->getIAlicaClock()->now());
+				break;
+			}
+		}
 	}
 
 	void TeamObserver::init()
@@ -226,8 +226,7 @@ namespace alica
 	void TeamObserver::tick(RunningPlan* root)
 	{
 		//TODO ICommunication interface
-		//unsigned long time = RosSharp.Now();
-		unsigned long time = std::time(nullptr);
+		unsigned long time = AlicaEngine::getInstance()->getIAlicaClock()->now();
 		bool changed = false;
 		list<int> robotsAvail;
 		robotsAvail.push_back(this->myId);
@@ -523,8 +522,7 @@ namespace alica
 		}
 		map<long, State*> states = AlicaEngine::getInstance()->getPlanRepository()->getStates();
 		//TODO ICommunication
-		//unsigned long time = RosSharp.Now();
-		unsigned long time = std::time(nullptr);
+		unsigned long time = AlicaEngine::getInstance()->getIAlicaClock()->now();
 		shared_ptr<SimplePlanTree> root = make_shared<SimplePlanTree>();
 		root->setRobotId(robotId);
 		root->setReceiveTime(time);
