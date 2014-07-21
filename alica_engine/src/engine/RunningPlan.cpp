@@ -29,6 +29,7 @@
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/Task.h"
+#include "engine/IAlicaClock.h"
 
 
 namespace alica
@@ -272,8 +273,7 @@ namespace alica
 	{
 		if (this->plan != plan)
 		{
-			//TODO wait for IAlicaClock
-			//this->planStartTime = AlicaEngine::getInstance()->getIAlicaClock().now();
+			this->planStartTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
 			this->constraintStore->clear();
 		}
 		this->plan = plan;
@@ -346,8 +346,7 @@ namespace alica
 		if (this->activeState != s)
 		{
 			this->activeState = s;
-			//TODO wait for IAlicaClock
-			//this->stateStartTime = AlicaEngine::getInstance()->getIAlicaClock().now();
+			this->stateStartTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
 			if (this->activeState != nullptr)
 			{
 				if (this->activeState->isFailureState())
