@@ -134,7 +134,7 @@ namespace alica
 				beginTime = alicaClock->now();
 
 			}
-			this->log->itertionStart();
+			this->log->itertionStarts();
 
 			//Send tick to other modules
 			this->teamObserver->tick(this->rootNode);
