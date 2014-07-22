@@ -18,10 +18,16 @@ namespace AutoDiff
 	class Sum : public Term
 	{
 	public:
-		Sum(std::vector<Term> terms);
+		Sum(vector<shared_ptr<Term>> terms);
 
+		int accept(shared_ptr<ITermVisitor> visitor);
+
+		shared_ptr<Term> aggregateConstants();
+		shared_ptr<Term> derivative(shared_ptr<Variable> v);
+
+		const vector<shared_ptr<Term>> getTerms();
 	private:
-		std::vector<Term> _terms;
+		vector<shared_ptr<Term>> _terms;
 	};
 
 } /* namespace AutoDiff */

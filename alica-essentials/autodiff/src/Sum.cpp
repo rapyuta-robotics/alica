@@ -7,14 +7,75 @@
 
 #include "Sum.h"
 
+#include "TermBuilder.h"
+#include "Constant.h"
+#include "Zero.h"
+
+#include <cmath>
+
 namespace AutoDiff
 {
 	/**
 	 *
 	 */
-	Sum::Sum(std::vector<Term> terms)
+	Sum::Sum(vector<shared_ptr<Term>> terms) :
+			Term()
 	{
 		_terms = terms;
 	}
 
+	int Sum::accept(shared_ptr<ITermVisitor> visitor)
+	{
+		shared_ptr<Sum> thisCasted = dynamic_pointer_cast<Sum>(shared_from_this());
+		return visitor->visit(thisCasted);
+	}
+
+	shared_ptr<Term> Sum::aggregateConstants()
+	{
+		shared_ptr<Term> curSummand;
+		bool foundConst = false;
+		double sum = 0;
+		vector<shared_ptr<Term>> nonConstTerms;
+		for (int i = 0; i < _terms.size(); ++i)
+		{
+			curSummand = _terms[i]->aggregateConstants();
+			if (dynamic_pointer_cast<Constant>(curSummand) != 0)
+			{
+				sum += dynamic_pointer_cast<Constant>(curSummand)->getValue();
+				foundConst = true;
+			}
+			else
+			{
+				if (!(dynamic_pointer_cast<Zero>(curSummand) != 0))
+				{
+					nonConstTerms.push_back(curSummand);
+				}
+			}
+		}
+		if (nonConstTerms.size() == 0) {
+			return TermBuilder::constant(sum);
+		} else if (!foundConst && nonConstTerms.size() == 1) {
+			return nonConstTerms[0];
+		}
+		if (foundConst) {
+			nonConstTerms.push_back(TermBuilder::constant(sum));
+		}
+		_terms = nonConstTerms;
+		return shared_from_this();
+	}
+
+	shared_ptr<Term> Sum::derivative(shared_ptr<Variable> v)
+	{
+		vector<shared_ptr<Term>> t;
+		for (int i = 0; i < _terms.size(); ++i)
+		{
+			t.push_back(_terms[i]->derivative(v));
+		}
+		return make_shared<Sum>(t);
+	}
+
+	const vector<shared_ptr<Term>> Sum::getTerms()
+	{
+		return _terms;
+	}
 } /* namespace AutoDiff */

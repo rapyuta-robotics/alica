@@ -5,8 +5,8 @@
  *      Author: psp
  */
 
-#ifndef AUTODIFFVARIABLE_H_
-#define AUTODIFFVARIABLE_H_
+#ifndef VARIABLE_H_
+#define VARIABLE_H_
 
 #include "Term.h"
 
@@ -15,7 +15,10 @@ namespace AutoDiff
 	class Variable : public Term
 	{
 	public:
-		Variable();
+		int accept(shared_ptr<ITermVisitor> visitor);
+
+		shared_ptr<Term> aggregateConstants();
+		shared_ptr<Term> derivative(shared_ptr<Variable> v);
 	};
 } /* namespace AutoDiff */
 

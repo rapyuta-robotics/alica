@@ -93,15 +93,41 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-file(GLOB_RECURSE autodiff_SOURCES "src/*.cpp")
-
 ## Declare a cpp library
 add_library(autodiff
-#  src/Term.cpp#
-#  src/TermBuilder.cpp
-#  src/Variable.cpp
-#  src/Zero.cpp
-  ${autodiff_SOURCES};
+  src/CompiledDifferentiator.cpp
+  src/Abs.cpp
+  src/And.cpp
+  src/Atan2.cpp
+  src/Constant.cpp
+  src/ConstPower.cpp
+  src/ConstraintUtility.cpp
+  src/Cos.cpp
+  src/Exp.cpp
+  src/Gp.cpp
+  src/LinSigmoid.cpp
+  src/Log.cpp
+  src/LTConstraint.cpp
+  src/LTEConstraint.cpp
+  src/Max.cpp
+  src/Min.cpp
+  src/Or.cpp
+  src/Product.cpp
+  src/Reification.cpp
+  src/Sigmoid.cpp
+  src/Sin.cpp
+  src/Sum.cpp
+  src/Term.cpp
+  src/TermBuilder.cpp
+  src/TermPower.cpp
+  src/TermUtils.cpp
+  src/Variable.cpp
+  src/Zero.cpp
+  src/compiled/CompiledConstant.cpp
+  src/compiled/CompiledExp.cpp
+  src/compiled/CompiledProduct.cpp
+  src/compiled/CompiledSum.cpp
+  src/compiled/CompiledVariable.cpp
 )
 
 ## Declare a cpp executable
