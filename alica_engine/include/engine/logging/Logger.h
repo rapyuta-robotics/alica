@@ -48,7 +48,7 @@ namespace alica
 		bool active = false;
 		ofstream* fileWriter;
 		bool recievedEvent;
-		stringstream sBuild;
+		stringstream* sBuild;
 		list<string> eventStrings;
 		unsigned long startTime;
 		int itCount;
@@ -57,7 +57,7 @@ namespace alica
 		bool inIteration;
 		list<string> createHumanReadablePlanTree(list<long> list);
 		EntryPoint* entryPointOfState(State* s);
-		void evaluationAssignmentToString(stringstream ss, RunningPlan* rp);
+		void evaluationAssignmentsToString(stringstream* ss, RunningPlan* rp);
 		list<string> createTreeLog(RunningPlan* r);
 
 
