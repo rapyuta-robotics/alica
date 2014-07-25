@@ -94,8 +94,9 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
- include_directories(libgringo libgringo/src)
+ include_directories(libgringo libgringo/src libprogram_opts libclasp app/clingo)
 
+### BUILDING GRINGO ###
   FIND_PACKAGE(RE2C REQUIRED 0.13.5)
   ADD_CUSTOM_COMMAND(OUTPUT libgringo/src/input/nongroundlexer.hh
 	COMMAND re2c -o libgringo/src/input/nongroundlexer.hh libgringo/src/input/nongroundlexer.xh
@@ -116,10 +117,31 @@ catkin_package(
 ## Declare a cpp library
  file(GLOB_RECURSE libgringo_SOURCES "libgringo/src/*.cc")
  file(GLOB_RECURSE libgringo_SOURCES ${libgringo_SOURCES} "libgringo/src/*.cpp")
- add_library(
+add_library(
   libgringo STATIC ${libgringo_SOURCES} libgringo/src/input/nongroundlexer.hh ${BISON_GringoParser_OUTPUTS}
  )
  add_dependencies(libgringo CreateNongroundgrammarFolder)
+
+### BUIDLING LIBOPTIONS ###
+  file(GLOB_RECURSE libprogram_opts_SOURCES "libprogram_opts/src/*.cpp")
+  add_library(
+    libprogram_opts STATIC ${libprogram_opts_SOURCES}
+  )
+
+### BUIDLING LIBCLASP ###
+  add_definitions(-DWITH_THREADS=0)
+  file(GLOB_RECURSE libclasp_SOURCES "libclasp/src/*.cpp")
+  add_library(
+    libclasp STATIC ${libclasp_SOURCES}
+  )
+
+### BUIDLING CLINGO ###
+  file(GLOB_RECURSE clingo_SOURCES "app/clingo/src/*.cc")
+  add_executable(
+    clingo ${clingo_SOURCES}
+  )
+  target_link_libraries(clingo libgringo libprogram_opts libclasp)
+
 
 
 # TODO
