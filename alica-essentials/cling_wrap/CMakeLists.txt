@@ -94,7 +94,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
- include_directories(libgringo libgringo/src libprogram_opts libclasp app/clingo)
+ include_directories(libgringo libgringo/src libprogram_opts libclasp)
 
 ### BUILDING GRINGO ###
   FIND_PACKAGE(RE2C REQUIRED 0.13.5)
@@ -142,6 +142,11 @@ add_library(
   )
   target_link_libraries(clingo libgringo libprogram_opts libclasp)
 
+### BUIDLING LIBCLING_WRAP ###
+#  add_definitions(-DWITH_THREADS=0)
+#  file(GLOB_RECURSE libcling_wrap_SOURCES "/src/*.cpp")
+#  add_library(
+#    libclasp STATIC ${libclasp_SOURCES}
 
 
 # TODO
