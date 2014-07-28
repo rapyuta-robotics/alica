@@ -130,4 +130,24 @@ namespace alica
 		return ss.str();
 	}
 
+	vector<EntryPointRobotPair*> AllocationDifference::getAdditions()
+	{
+		return additions;
+	}
+
+	void AllocationDifference::setAdditions(vector<EntryPointRobotPair*> additions)
+	{
+		this->additions = additions;
+	}
+
+	vector<EntryPointRobotPair*> AllocationDifference::getSubtractions()
+	{
+		return subtractions;
+	}
+
+	void AllocationDifference::setSubtractions(vector<EntryPointRobotPair*> subtractions)
+	{
+		this->subtractions = subtractions;
+	}
+
 } /* namespace alica */

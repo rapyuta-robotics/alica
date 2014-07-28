@@ -12,6 +12,9 @@
 using namespace std;
 
 #include <vector>
+#include <thread>
+#include <mutex>
+
 
 #include "engine/allocationauthority/AllocationDifference.h"
 namespace supplementary
@@ -43,6 +46,7 @@ namespace alica
 
 
 	protected:
+		mutex allocationHistoryMutex;
 		static supplementary::SystemConfig* sc;
 		static int maxAllocationCycles;
 		static bool enabled;
@@ -54,10 +58,10 @@ namespace alica
 		{
 			observing, overridden, overriding
 		};
-		unsigned long ovverideTimestamp;
+		unsigned long overrideTimestamp;
 		double intervalIncFactor;
 		double intervalDecFactor;
-		static unsigned long minimalOverrideTImeInterval;
+		static unsigned long minimalOverrideTimeInterval;
 		static unsigned long maximalOverrideTimeInterval;
 		static unsigned long overrideShoutInterval;
 		static unsigned long overrideWaitInterval;
