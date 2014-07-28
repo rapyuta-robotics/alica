@@ -17,7 +17,7 @@ namespace alica
 		this->masterPlan = false;
 		this->variables = make_shared<list<Variable*> >();
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-		this->authorithyTimeInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection","MinimalAuthorityTimeInterval") * 1000000;
+		this->authorityTimeInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection","MinimalAuthorityTimeInterval") * 1000000;
 	}
 
 	AbstractPlan::~AbstractPlan()
@@ -63,14 +63,14 @@ namespace alica
 		this->masterPlan = masterPlan;
 	}
 
-	unsigned long AbstractPlan::getAuthorithyTimeInterval() const
+	unsigned long AbstractPlan::getAuthorityTimeInterval() const
 	{
-		return authorithyTimeInterval;
+		return authorityTimeInterval;
 	}
 
-	void AbstractPlan::setAuthorithyTimeInterval(unsigned long authorithyTimeInterval)
+	void AbstractPlan::setAuthorityTimeInterval(unsigned long authorithyTimeInterval)
 	{
-		this->authorithyTimeInterval = authorithyTimeInterval;
+		this->authorityTimeInterval = authorithyTimeInterval;
 	}
 
 	const string& AbstractPlan::getFileName() const

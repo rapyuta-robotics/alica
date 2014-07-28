@@ -33,13 +33,15 @@ namespace alica
 		bool equals(AllocationDifference* other);
 		void applyDifference(AllocationDifference* other);
 		string toString();
-
-	private:
-		vector<EntryPointRobotPair*> additions;
-		vector<EntryPointRobotPair*> subtractions;
+		vector<EntryPointRobotPair*> getAdditions();
+		void setAdditions(vector<EntryPointRobotPair*> additions);
+		vector<EntryPointRobotPair*> getSubtractions();
+		void setSubtractions(vector<EntryPointRobotPair*> subtractions);
 
 	protected:
 		AllocationDifference::Reason reason;
+		vector<EntryPointRobotPair*> additions;
+		vector<EntryPointRobotPair*> subtractions;
 
 	};
 
