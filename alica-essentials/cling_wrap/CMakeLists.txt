@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -O3 -Wall ${CMAKE_CXX_FLAGS}")
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+#find_package(catkin REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -82,8 +82,8 @@ find_package(catkin REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES cling_wrap
+  INCLUDE_DIRS include
+  LIBRARIES libcling_wrap
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
@@ -94,33 +94,32 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
- include_directories(libgringo libgringo/src libprogram_opts libclasp)
+ include_directories(include libgringo libgringo/src libprogram_opts libclasp)
 
 ### BUILDING GRINGO ###
   FIND_PACKAGE(RE2C REQUIRED 0.13.5)
-  ADD_CUSTOM_COMMAND(OUTPUT libgringo/src/input/nongroundlexer.hh
+  ADD_CUSTOM_COMMAND(TARGET libgringo
+    PRE_BUILD
 	COMMAND re2c -o libgringo/src/input/nongroundlexer.hh libgringo/src/input/nongroundlexer.xh
-		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+	DEPENDS libgringo/src/input/nongroundlexer.xh
+	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   )
 
-  FIND_PACKAGE(BISON REQUIRED 3.0)
-  ADD_CUSTOM_TARGET(CreateNongroundgrammarFolder
-	COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/libgringo/src/input/nongroundgrammar
-	COMMENT Creating \"nongroundgrammar\"-folder.
-  )
+ 
+  FIND_PACKAGE(BISON REQUIRED 3.0) 
   BISON_TARGET(GringoParser 
 	libgringo/src/input/nongroundgrammar.yy
 	${CMAKE_CURRENT_SOURCE_DIR}/libgringo/src/input/nongroundgrammar/grammar.cc
 	COMPILE_FLAGS "-r all --report-file=libgringo/src/input/nongroundgrammar/grammar.out"
   )
 
-## Declare a cpp library
  file(GLOB_RECURSE libgringo_SOURCES "libgringo/src/*.cc")
  file(GLOB_RECURSE libgringo_SOURCES ${libgringo_SOURCES} "libgringo/src/*.cpp")
-add_library(
-  libgringo STATIC ${libgringo_SOURCES} libgringo/src/input/nongroundlexer.hh ${BISON_GringoParser_OUTPUTS}
+ add_library(
+  libgringo STATIC ${libgringo_SOURCES} ${BISON_GringoParser_OUTPUTS}
  )
- add_dependencies(libgringo CreateNongroundgrammarFolder)
+
+# add_dependencies(libgringo test123)
 
 ### BUIDLING LIBOPTIONS ###
   file(GLOB_RECURSE libprogram_opts_SOURCES "libprogram_opts/src/*.cpp")
@@ -136,23 +135,20 @@ add_library(
   )
 
 ### BUIDLING CLINGO ###
-  file(GLOB_RECURSE clingo_SOURCES "app/clingo/src/*.cc")
-  add_executable(
-    clingo ${clingo_SOURCES}
-  )
-  target_link_libraries(clingo libgringo libprogram_opts libclasp)
+#  file(GLOB_RECURSE clingo_SOURCES "app/clingo/src/*.cc")
+#  add_executable(
+#    clingo ${clingo_SOURCES}
+#  )
+#  target_link_libraries(clingo libgringo libprogram_opts libclasp)
 
 ### BUIDLING LIBCLING_WRAP ###
-#  add_definitions(-DWITH_THREADS=0)
-#  file(GLOB_RECURSE libcling_wrap_SOURCES "/src/*.cpp")
-#  add_library(
-#    libclasp STATIC ${libclasp_SOURCES}
-
-
-# TODO
-# - create bison target (it is generated in a new folder libgringo/src/input/nongroundgrammar)
-# - create re2c target
-
+  file(GLOB_RECURSE libcling_wrap_SOURCES "libcling_wrap/*.cc")
+  file(GLOB_RECURSE libcling_wrap_SOURCES ${libcling_wrap_SOURCES} "libcling_wrap/*.cpp")
+  file(GLOB_RECURSE libcling_wrap_SOURCES ${libcling_wrap_SOURCES} "app/clingo/src/*.cc")
+  add_library(
+    libcling_wrap STATIC ${libcling_wrap_SOURCES}
+  )
+  target_link_libraries(libcling_wrap libgringo libprogram_opts libclasp)
 ## Declare a cpp executable
 # add_executable(cling_wrap_node src/cling_wrap_node.cpp)
 
@@ -205,10 +201,13 @@ add_library(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_cling_wrap.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
+ catkin_add_gtest(${PROJECT_NAME}-test 
+   test/src/test_cling_wrap.cpp
+   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/test
+ )
+ if(TARGET ${PROJECT_NAME}-test)
+   target_link_libraries(${PROJECT_NAME}-test libcling_wrap)
+ endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

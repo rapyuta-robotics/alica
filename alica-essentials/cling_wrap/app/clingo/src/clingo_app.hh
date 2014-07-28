@@ -45,6 +45,7 @@ public:
     const char* getUsage()      const { return "[number] [options] [files]"; }
 protected:
     enum Mode { mode_clingo = 0, mode_clasp = 1, mode_gringo = 2 };
+    Mode mode_;
     virtual void        initOptions(ProgramOptions::OptionContext& root);
     virtual void        validateOptions(const ProgramOptions::OptionContext& root, const ProgramOptions::ParsedOptions& parsed, const ProgramOptions::ParsedValues& vals);
 
@@ -72,14 +73,14 @@ protected:
     virtual void setConf(std::string const &part, bool replace);
     virtual void enableEnumAssumption(bool enable);
     Gringo::SolveFuture *asolve(ModelHandler mh, FinishHandler fh);
+    GringoOptions grOpts_;
+    std::unique_ptr<Grounder>  grd;
 private:
     ClingoApp(const ClingoApp&);
     ClingoApp& operator=(const ClingoApp&);
-    GringoOptions grOpts_;
-    Mode mode_;
     // Gringo stuff
     friend struct ClingoSolveFuture;
-    std::unique_ptr<Grounder>  grd;
+
     Gringo::Ground::Parameters params;
     Gringo::Input::ProgramVec  parts;
     bool                       enableEnumAssupmption_ = true;
