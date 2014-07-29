@@ -17,6 +17,10 @@ namespace supplementary
 	ClingWrapper::ClingWrapper()
 	{
 		setMode(Mode::mode_clingo);
+		this->setVerbose(0);
+		claspAppOpts_.quiet[0] = 2;
+		claspAppOpts_.quiet[1] = 2;
+		claspAppOpts_.quiet[2] = 2;
 	}
 
 	ClingWrapper::~ClingWrapper()
@@ -45,11 +49,17 @@ namespace supplementary
 		this->mode_ = mode;
 	}
 
-	void ClingWrapper::solve()
+	Gringo::SolveResult ClingWrapper::solve()
 	{
 		lastModel = nullptr;
 		lastSolver = nullptr;
-		Gringo::SolveResult clingoApp = ClingoApp::solve(nullptr);
+		Gringo::SolveResult result = ClingoApp::solve(nullptr);
+		return result;
+	}
+
+	void ClingWrapper::ground(std::string const &name, Gringo::FWValVec args)
+	{
+		ClingoApp::ground(name, args);
 	}
 
 	void ClingWrapper::addKnowledgeFile(std::string path)
@@ -63,6 +73,31 @@ namespace supplementary
 		lastSolver = &s;
 		return true;
 	}
+
+	void ClingWrapper::assignExternal(shared_ptr<Gringo::Value> ext, bool val)
+	{
+		ClingoApp::assignExternal(*ext, val);
+	}
+
+	shared_ptr<Gringo::Value>ClingWrapper::ClingWrapper::assignExternal(const std::string& name, Gringo::FWValVec args, bool val)
+	{
+		shared_ptr<Gringo::Value> gv = (args.size() == 0 ? make_shared<Gringo::Value>(name) : make_shared<Gringo::Value>(name, args));
+		assignExternal(gv, val);
+		return gv;
+	}
+
+	void ClingWrapper::releaseExternal(shared_ptr<Gringo::Value> ext)
+	{
+		ClingoApp::releaseExternal(*ext);
+	}
+
+	shared_ptr<Gringo::Value> ClingWrapper::releaseExternal(std::string const &name, Gringo::FWValVec args)
+	{
+		shared_ptr<Gringo::Value> gv = (args.size() == 0 ? make_shared<Gringo::Value>(name) : make_shared<Gringo::Value>(name, args));
+		releaseExternal (gv);
+		return gv;
+	}
+
 
 	void ClingWrapper::printLastModel()
 	{

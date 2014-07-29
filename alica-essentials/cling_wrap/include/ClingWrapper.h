@@ -8,9 +8,12 @@
 #ifndef CLINGWRAPPER_H_
 #define CLINGWRAPPER_H_
 
+using namespace std;
+
 #include <climits>
 #include <string>
 #include <iostream>
+#include <memory>
 
 #include "../app/clingo/src/clingo_app.hh"
 
@@ -23,14 +26,19 @@ namespace supplementary
 {
 
 
-	class ClingWrapper : public ClingoApp
+	class ClingWrapper : protected ClingoApp
 	{
 	public:
 		ClingWrapper();
 		virtual ~ClingWrapper();
 		void init();
 		void setMode(Mode mode);
-		void solve();
+		Gringo::SolveResult solve();
+		void ground(std::string const &name, Gringo::FWValVec args);
+		void assignExternal(shared_ptr<Gringo::Value> ext, bool val);
+		shared_ptr<Gringo::Value> assignExternal(std::string const &name, Gringo::FWValVec args, bool val);
+		void releaseExternal(shared_ptr<Gringo::Value> ext);
+		shared_ptr<Gringo::Value> releaseExternal(std::string const &name, Gringo::FWValVec args);
 		void addKnowledgeFile(std::string path);
 		virtual	bool onModel(const Clasp::Solver& s, const Clasp::Model& m);
 		void printLastModel();
