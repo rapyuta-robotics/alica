@@ -38,7 +38,7 @@ TEST(ClingWrap, incqueens)
 	std::chrono::_V2::system_clock::time_point end = chrono::high_resolution_clock::now();
 	cout << "Init-Time:" << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
 
-	for (int i = 1; i < 3; i++)
+	for (int i = 1; i < 10; i++)
 	{
 		chrono::_V2::system_clock::time_point incstart = chrono::high_resolution_clock::now();
 		cw.ground("board", {i});
@@ -51,6 +51,7 @@ TEST(ClingWrap, incqueens)
 //		}
 
 // TODO komische ausgaben vom Solver wegbekommen?!
+		//sleep(1);
 		cout << "Inc-Time:" << chrono::duration_cast<chrono::nanoseconds>(incend - incstart).count() << " ns" << endl;
 	}
 }
