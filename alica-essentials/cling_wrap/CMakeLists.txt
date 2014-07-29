@@ -98,13 +98,14 @@ catkin_package(
 
 ### BUILDING GRINGO ###
   FIND_PACKAGE(RE2C REQUIRED 0.13.5)
-  ADD_CUSTOM_COMMAND(TARGET libgringo
-    PRE_BUILD
-	COMMAND re2c -o libgringo/src/input/nongroundlexer.hh libgringo/src/input/nongroundlexer.xh
-	DEPENDS libgringo/src/input/nongroundlexer.xh
-	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  set(FileToCheck "libgringo/src/input/nongroundlexer.hh")
+  ADD_CUSTOM_TARGET(CheckNonGroundLexer ALL
+   COMMAND ${CMAKE_COMMAND}
+     -DFileToCheck=${FileToCheck}
+     -DWORKING_DIRECTORY=${CMAKE_CURRENT_SOURCE_DIR}
+     -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/GenRE2C.cmake
+   COMMENT "Checking if ${FileToCheck} exists..."
   )
-
  
   FIND_PACKAGE(BISON REQUIRED 3.0) 
   BISON_TARGET(GringoParser 
@@ -118,8 +119,7 @@ catkin_package(
  add_library(
   libgringo STATIC ${libgringo_SOURCES} ${BISON_GringoParser_OUTPUTS}
  )
-
-# add_dependencies(libgringo test123)
+ add_dependencies(libgringo CheckNonGroundLexer)
 
 ### BUIDLING LIBOPTIONS ###
   file(GLOB_RECURSE libprogram_opts_SOURCES "libprogram_opts/src/*.cpp")
