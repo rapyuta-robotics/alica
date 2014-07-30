@@ -36,14 +36,14 @@ namespace alica
 		virtual ~UtilityFunction();
 		list<USummand*> getUtilSummands();
 		void setUtilSummands(list<USummand*> utilSummands);
-		double eval(RunningPlan* newRp, RunningPlan* oldRp);
-		UtilityInterval* eval(IAssignment* newAss, IAssignment* oldAss);
+		virtual double eval(RunningPlan* newRp, RunningPlan* oldRp);
+		virtual UtilityInterval* eval(IAssignment* newAss, IAssignment* oldAss);
 		void updateAssignment(IAssignment* newAss, IAssignment* oldAss);
 		void cacheEvalData();
 		void init();
 		virtual pair<vector<double>, double>* differentiate(IAssignment* newAss);
 		static void initDataStructures();
-		string toString();
+		virtual string toString();
 		Plan* getPlan();
 		map<TaskRoleStruct*, double> getPriorityMartix();
 
