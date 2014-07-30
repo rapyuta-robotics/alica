@@ -107,13 +107,13 @@ namespace supplementary
 
 		// Check the host-specific config
 		string tempConfigPath = configPath;
-		tempConfigPath = tempConfigPath + "/" + hostname;
-		tempConfigPath = tempConfigPath + "/" + file;
+		tempConfigPath = FileSystem::combinePaths(tempConfigPath, hostname);
+		tempConfigPath = FileSystem::combinePaths(tempConfigPath, file);
 		files.push_back(tempConfigPath);
 
 		// Check the global config
 		tempConfigPath = configPath;
-		tempConfigPath = tempConfigPath + "/" + file;
+		tempConfigPath = FileSystem::combinePaths(tempConfigPath, file);
 		files.push_back(tempConfigPath);
 
 		for (size_t i = 0; i < files.size(); i++)
