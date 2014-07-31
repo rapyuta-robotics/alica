@@ -39,6 +39,7 @@ namespace supplementary
 		shared_ptr<Gringo::Value> assignExternal(std::string const &name, Gringo::FWValVec args, bool val);
 		void releaseExternal(shared_ptr<Gringo::Value> ext);
 		shared_ptr<Gringo::Value> releaseExternal(std::string const &name, Gringo::FWValVec args);
+		void add(std::string const &name, Gringo::FWStringVec const &params, std::string const &part);
 		void addKnowledgeFile(std::string path);
 		virtual	bool onModel(const Clasp::Solver& s, const Clasp::Model& m);
 		void printLastModel();

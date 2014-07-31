@@ -5,7 +5,7 @@ cap(grasp;speak).
 hasCapability(r1,grasp,3).
 hasCapability(r2,speak,2).
 
--hasCapability(r1,speak).
+%-hasCapability(r1,speak).
 
 requiresCapability(ro1,grasp,2).
 requiresCapability(ro2,speak,3).
@@ -18,7 +18,7 @@ requiresCapability(ro2,speak,3).
 	
 :- hasRole(ROBOT,ROLE), requiresCapability(ROLE,CAP,_), -hasCapability(ROBOT,CAP).
 :- hasCapability(ROBOT,CAP,_), -hasCapability(ROBOT,CAP).
-:- {hasRole(X,ro2) : robot(X)} 0.
+:- {hasRole(X,ro2) : robot(X)} 2.
 
 % optimization
 
@@ -33,3 +33,5 @@ matching(ROBOT, ROLE, CAPABILITY, -REQ_SKILL) :- hasRole(ROBOT,ROLE),
 
 #show hasRole/2.
 %#show matching/4.
+#external -hasCapability(robot,cap).
+-hasCapability(robot,cap).

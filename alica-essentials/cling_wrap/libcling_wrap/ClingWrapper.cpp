@@ -98,6 +98,10 @@ namespace supplementary
 		return gv;
 	}
 
+	void ClingWrapper::add(const std::string& name, const Gringo::FWStringVec& params, const std::string& part)
+	{
+		ClingoApp::add(name, params, part);
+	}
 
 	void ClingWrapper::printLastModel()
 	{

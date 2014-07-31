@@ -102,6 +102,30 @@ TEST(ClingWrap, iclingo)
 	}
 }
 
+TEST(ClingWrap, simpleRoleAssignment)
+{
+	chrono::_V2::system_clock::time_point start = chrono::high_resolution_clock::now();
+
+	supplementary::ClingWrapper cw;
+	cw.addKnowledgeFile("data/roleassignment/roleassignment.lp");
+	cw.init();
+	cw.solve();
+	cw.printLastModel();
+	std::chrono::_V2::system_clock::time_point end = chrono::high_resolution_clock::now();
+	cout << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
+
+	//cw.add("base", {"r1","speak"}, "-hasCapability.");
+
+	cw.assignExternal("-hasCapability", {"r1", "speak"}, true);
+	//cw.ground("base", {});
+	Gringo::SolveResult solve = cw.solve();
+	if (Gringo::SolveResult::SAT == solve)
+	{
+		cout << "Model Found" << endl;
+	}
+	cw.printLastModel();
+}
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {
