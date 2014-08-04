@@ -20,7 +20,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp system_config fsystem autodiff ev
 ################################################
 ## Declare ROS messages, services and actions ##
 ################################################
-
+ 
 ## To declare and build messages, services or actions from within this
 ## package, follow these steps:
 ## * Let MSG_DEP_SET be the set of packages whose message types you use in
@@ -98,6 +98,14 @@ file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 ## Declare a cpp library
  add_library(alica_engine
 	${alica_SOURCES};
+ )
+  add_library(test_behaviour_creator
+	test/src/Attack.cpp;
+	test/src/AttackOpp.cpp;
+	test/src/DefendMid.cpp;
+	test/src/MidFieldStandard.cpp;
+	test/src/Tackle.cpp;
+	test/src/TestBehaviourCreator.cpp;
  )
 ## Declare a cpp library
  ##add_library(alica

@@ -48,7 +48,6 @@ namespace alica
 		PlanRepository* getPlanRepository();
 		IBehaviourPool* getBehaviourPool();
 		const string& getRobotName() const;
-		void setRobotName(const string& robotName);
 		Logger* getLog();
 		void setLog(Logger* log);
 		ITeamObserver* getTeamObserver();
@@ -70,6 +69,7 @@ namespace alica
 		IPlanSelector* getPlanSelector();
 		IPlanner* getPlanner();
 		IAlicaClock* getIAlicaClock();
+		void setIAlicaClock(IAlicaClock* clock);
 		void doStep();
 		void iterationComplete();
 
@@ -77,7 +77,6 @@ namespace alica
 		supplementary::SystemConfig* sc;
 		Plan* masterPlan;
 		Logger* log;
-		string robotName;
 		RoleSet* roleSet;
 		ISyncModul* syncModul;
 		AuthorityManager* auth;

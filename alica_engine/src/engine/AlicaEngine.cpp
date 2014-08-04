@@ -20,6 +20,7 @@ using namespace std;
 #include "engine/planselector/PlanSelector.h"
 #include "engine/PlanBase.h"
 #include "engine/teamobserver/TeamObserver.h"
+#include "engine/logging/Logger.h"
 
 namespace alica
 {
@@ -84,13 +85,20 @@ namespace alica
 		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
 		this->behaviourPool = new BehaviourPool();
 		this->teamObserver = new TeamObserver();
+<<<<<<< HEAD
 		this->teamObserver->init();
 		this->planSelector = new PlanSelector();
+=======
+		this->log = new Logger();
+		this->teamObserver->init();
+>>>>>>> 9a57ed5275962f51d3f2e9d547d1ab0293d7ebca
 		this->planBase = new PlanBase(this->masterPlan);
 		this->stepCalled = false;
+		planBase->start();
 		everythingWorked &= this->behaviourPool->init(bc);
 		return everythingWorked;
 	}
+
 
 	bool AlicaEngine::shutdown()
 	{
@@ -163,6 +171,11 @@ namespace alica
 		return this->teamObserver;
 	}
 
+	void AlicaEngine::setIAlicaClock(IAlicaClock* clock)
+	{
+		this->alicaClock = clock;
+	}
+
 	void AlicaEngine::setTeamObserver(ITeamObserver* teamObserver)
 	{
 		this->teamObserver = teamObserver;
@@ -221,12 +234,7 @@ namespace alica
 
 	const string& AlicaEngine::getRobotName() const
 	{
-		return robotName;
-	}
-
-	void AlicaEngine::setRobotName(const string& robotName)
-	{
-		this->robotName = robotName;
+		return sc->getHostname();
 	}
 
 	Logger * AlicaEngine::getLog()
