@@ -59,8 +59,8 @@ namespace alica
 		void setTransitions(const list<Transition*>& transitions);
 
 	protected:
-		int minCardinality = 0;
-		int maxCardinality = 0;
+		int minCardinality;
+		int maxCardinality;
 		map<long, EntryPoint*> entryPoints;
 		list<State*> states;
 		list<FailureState*> failureStates;

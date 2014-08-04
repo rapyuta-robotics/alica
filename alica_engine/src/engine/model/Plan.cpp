@@ -16,6 +16,8 @@ namespace alica
 	{
 		this->postCondition = nullptr;
 		this->id = id;
+		this->minCardinality = 0;
+		this->maxCardinality = 0;
 	}
 
 	Plan::~Plan()
@@ -90,7 +92,7 @@ namespace alica
 
 	int Plan::getMaxCardinality()
 	{
-		return maxCardinality;
+		return this->maxCardinality;
 	}
 
 	void Plan::setMaxCardinality(int maxCardinality)
@@ -100,7 +102,7 @@ namespace alica
 
 	int Plan::getMinCardinality()
 	{
-		return minCardinality;
+		return this->minCardinality;
 	}
 
 	void Plan::setMinCardinality(int minCardinality)

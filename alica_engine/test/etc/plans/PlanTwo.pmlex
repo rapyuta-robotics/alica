@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="PlanTwo.pml#1407153656781"/>
+    <value xPos="213" yPos="18" width="127" height="86" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="PlanTwo.pml#1407153645238"/>
+    <value width="630" height="424"/>
+  </extensions>
+  <extensions>
+    <key href="PlanTwo.pml#1407153656782"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="PlanThree.pml#1407153663917"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="PlanTwo.pml#1407153821287"/>
+    <value xPos="167" yPos="276"/>
+  </extensions>
+  <extensions>
+    <key href="PlanTwo.pml#1407153842648"/>
+    <value xPos="311" yPos="253"/>
+  </extensions>
+  <extensions>
+    <key href="PlanTwo.pml#1407153860891"/>
+    <value xPos="271" yPos="159" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="PlanTwo.pml#1407153869754"/>
+    <value xPos="245" yPos="315" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="GoalPlan.pml#1402488870347"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Defend.pml#1402488893641"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="AttackPlan.pml#1402488634525"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Attack.pty#1407153314946"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>

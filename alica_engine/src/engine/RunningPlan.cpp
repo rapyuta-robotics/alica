@@ -50,8 +50,8 @@ namespace alica
 		this->failHandlingNeeded = false;
 		this->constraintStore = new ConstraintStore(this);
 		this->cycleManagement = new CycleManager(this);
-
 	}
+
 	RunningPlan::RunningPlan(Plan* plan) :
 			RunningPlan()
 	{
