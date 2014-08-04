@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(alica_ros_proxy)
-
+## Use c++ 11x std
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   alica_engine
+  system_config
+  cnc_turtlebots_behaviours
   roscpp
 )
 
@@ -93,13 +96,14 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
-  ${catkin_INCLUDE_DIRS}
+	include
+	${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
-# add_library(alica_ros_proxy
-#   src/${PROJECT_NAME}/alica_ros_proxy.cpp
-# )
+add_library(alica_ros_proxy
+	src/clock/AlicaROSClock.cpp
+)
 
 ## Declare a cpp executable
 # add_executable(alica_ros_proxy_node src/alica_ros_proxy_node.cpp)
@@ -109,9 +113,10 @@ include_directories(
 # add_dependencies(alica_ros_proxy_node alica_ros_proxy_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(alica_ros_proxy_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(alica_ros_proxy
+   ${catkin_LIBRARIES}
+   alica_engine
+ )
 
 #############
 ## Install ##
@@ -153,10 +158,10 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_alica_ros_proxy.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
+ catkin_add_gtest(${PROJECT_NAME}-test test/test_alica_ros_proxy.cpp)
+ if(TARGET ${PROJECT_NAME}-test)
+   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} system_config alica_engine cnc_turtlebots_behaviours test_behaviour_creator)
+ endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

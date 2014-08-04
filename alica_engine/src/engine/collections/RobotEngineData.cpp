@@ -5,24 +5,20 @@
  *      Author: Stefan Jakob
  */
 
-#include <engine/collections/RobotEngineData.h>
+#include "engine/collections/RobotEngineData.h"
 
-#include <engine/model/Quantifier.h>
-#include <engine/AlicaEngine.h>
-#include <engine/PlanRepository.h>
-#include <engine/model/ForallAgents.h>
-#include <engine/model/Variable.h>
-#include <engine/collections/RobotProperties.h>
-#include <engine/IPlanParser.h>
-#include <engine/model/AlicaElement.h>
+#include "engine/model/Quantifier.h"
+#include "engine/AlicaEngine.h"
+#include "engine/PlanRepository.h"
+#include "engine/model/ForallAgents.h"
+#include "engine/model/Variable.h"
+#include "engine/collections/RobotProperties.h"
+#include "engine/IPlanParser.h"
+#include "engine/model/AlicaElement.h"
+#include "engine/collections/SuccessMarks.h"
 
 namespace alica
 {
-
-	RobotEngineData::RobotEngineData()
-	{
-
-	}
 
 	RobotEngineData::RobotEngineData(RobotProperties* properties)
 	{
@@ -30,6 +26,7 @@ namespace alica
 		this->lastMessageTime = 0;
 		this->properties = properties;
 		this->initSortedTerms();
+		this->successMarks = new SuccessMarks();
 
 	}
 
