@@ -85,13 +85,9 @@ namespace alica
 		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
 		this->behaviourPool = new BehaviourPool();
 		this->teamObserver = new TeamObserver();
-<<<<<<< HEAD
 		this->teamObserver->init();
 		this->planSelector = new PlanSelector();
-=======
 		this->log = new Logger();
-		this->teamObserver->init();
->>>>>>> 9a57ed5275962f51d3f2e9d547d1ab0293d7ebca
 		this->planBase = new PlanBase(this->masterPlan);
 		this->stepCalled = false;
 		planBase->start();

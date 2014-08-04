@@ -103,11 +103,9 @@ namespace alica
 		{
 			AlicaEngine::getInstance()->abort("TO: Could not find own robot name in Globals Id = " + ownPlayerName);
 		}
-<<<<<<< HEAD
+
 		if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull"),NULL)
-=======
-		if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull", NULL))
->>>>>>> 9a57ed5275962f51d3f2e9d547d1ab0293d7ebca
+
 		{
 			for (RobotEngineData* r : this->allOtherRobots)
 			{
