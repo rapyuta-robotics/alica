@@ -7,7 +7,7 @@
 
 #define TO_DEBUG
 
-#include <engine/teamobserver/TeamObserver.h>
+#include "engine/teamobserver/TeamObserver.h"
 #include <SystemConfig.h>
 #include "engine/AlicaEngine.h"
 #include "engine/collections/RobotProperties.h"
@@ -32,6 +32,7 @@ namespace alica
 	{
 		this->teamTimeOut = 0;
 		this->myId = 0;
+		this->simplePlanTrees = make_shared<map<int, shared_ptr<SimplePlanTree> > >(map<int,  shared_ptr<SimplePlanTree> >());
 		this->me = nullptr;
 		this->log = nullptr;
 		this->ae = nullptr;
@@ -63,7 +64,6 @@ namespace alica
 
 		string ownPlayerName = ae->getRobotName();
 		cout << "TO: Initing Robot " << ownPlayerName << endl;
-
 		this->teamTimeOut = (*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut",NULL) * 1000000;
 		shared_ptr<vector<string> > playerNames = (*sc)["Globals"]->getSections("Globals.Team", NULL);
 		bool foundSelf = false;
@@ -103,7 +103,11 @@ namespace alica
 		{
 			AlicaEngine::getInstance()->abort("TO: Could not find own robot name in Globals Id = " + ownPlayerName);
 		}
+<<<<<<< HEAD
 		if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull"),NULL)
+=======
+		if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull", NULL))
+>>>>>>> 9a57ed5275962f51d3f2e9d547d1ab0293d7ebca
 		{
 			for (RobotEngineData* r : this->allOtherRobots)
 			{
@@ -335,6 +339,7 @@ namespace alica
 		}
 		list<shared_ptr<SimplePlanTree> > queue;
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
+
 		for (auto pair : *this->simplePlanTrees)
 		{
 			queue.push_back(pair.second);

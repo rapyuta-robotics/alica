@@ -22,7 +22,7 @@ namespace alica
 	Logger::Logger()
 	{
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-		this->active = (*sc)["Alica"]->get<bool>("Alica.EventLogging.Enabled");
+		this->active = (*sc)["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
 		if (this->active)
 		{
 			char buffer[50];
@@ -33,7 +33,7 @@ namespace alica
 			strftime(buffer, 50, "%FT%T", timeinfo);
 			string timeString = buffer;
 			replace(timeString.begin(), timeString.end(), ':', '-');
-			string logPath = (*sc)["Alica"]->get<string>("Alica.EventLogging.LogFolder");
+			string logPath = (*sc)["Alica"]->get<string>("Alica.EventLogging.LogFolder", NULL);
 			if (!supplementary::FileSystem::isPathRooted(logPath))
 			{
 				//TODO maybe it think about it
@@ -46,9 +46,14 @@ namespace alica
 			}
 			if (!supplementary::FileSystem::isDirectory(logPath))
 			{
-				if (mkdir(logPath.c_str(), 755) != 0)
+				logPath = "home/snook/alica";
+				umask(0);
+				if (int res = mkdir(logPath.c_str(), 0777) != 0)
 				{
-					AlicaEngine::getInstance()->abort("Cannot create log folder: ", logPath);
+					ostringstream convert;
+					convert << res;
+					string a = convert.str();
+					AlicaEngine::getInstance()->abort("Cannot create log folder: ", logPath + " Result of mkdir: " + a);
 				}
 			}
 			string logFile = logPath + "alica-run--" + robotName + "--" + timeString + ".txt";

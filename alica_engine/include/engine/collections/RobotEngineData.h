@@ -23,7 +23,6 @@ namespace alica
 	class RobotEngineData
 	{
 	public:
-		RobotEngineData();
 		RobotEngineData(RobotProperties* properties);
 		virtual ~RobotEngineData();
 		bool isActive() const;
