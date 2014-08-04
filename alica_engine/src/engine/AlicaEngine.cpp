@@ -20,6 +20,7 @@ using namespace std;
 #include "engine/planselector/PlanSelector.h"
 #include "engine/PlanBase.h"
 #include "engine/teamobserver/TeamObserver.h"
+#include "engine/logging/Logger.h"
 
 namespace alica
 {
@@ -85,11 +86,15 @@ namespace alica
 		this->behaviourPool = new BehaviourPool();
 		this->planSelector = new PlanSelector();
 		this->teamObserver = new TeamObserver();
+		this->log = new Logger();
+		this->teamObserver->init();
 		this->planBase = new PlanBase(this->masterPlan);
 		this->stepCalled = false;
+		planBase->start();
 		everythingWorked &= this->behaviourPool->init(bc);
 		return everythingWorked;
 	}
+
 
 	bool AlicaEngine::shutdown()
 	{
@@ -162,6 +167,11 @@ namespace alica
 		return this->teamObserver;
 	}
 
+	void AlicaEngine::setIAlicaClock(IAlicaClock* clock)
+	{
+		this->alicaClock = clock;
+	}
+
 	void AlicaEngine::setTeamObserver(ITeamObserver* teamObserver)
 	{
 		this->teamObserver = teamObserver;
@@ -220,12 +230,7 @@ namespace alica
 
 	const string& AlicaEngine::getRobotName() const
 	{
-		return robotName;
-	}
-
-	void AlicaEngine::setRobotName(const string& robotName)
-	{
-		this->robotName = robotName;
+		return sc->getHostname();
 	}
 
 	Logger * AlicaEngine::getLog()

@@ -99,6 +99,14 @@ file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
  add_library(alica_engine
 	${alica_SOURCES};
  )
+  add_library(test_behaviour_creator
+	test/src/Attack.cpp;
+	test/src/AttackOpp.cpp;
+	test/src/DefendMid.cpp;
+	test/src/MidFieldStandard.cpp;
+	test/src/Tackle.cpp;
+	test/src/TestBehaviourCreator.cpp;
+ )
 ## Declare a cpp library
  ##add_library(alica
    ##src/engine/AlicaEngine.cpp

@@ -105,7 +105,6 @@ namespace alica
 		while (this->running)
 		{
 			alicaTime beginTime = alicaClock->now();
-
 			if (ae->getStepEngine())
 			{
 				cout << "===CUR TREE===" << endl;

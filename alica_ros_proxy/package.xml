@@ -41,9 +41,12 @@
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>alica_engine</build_depend>
+  <build_depend>system_config</build_depend>
   <build_depend>roscpp</build_depend>
   <run_depend>alica_engine</run_depend>
+  <run_depend>system_config</run_depend>
   <run_depend>roscpp</run_depend>
+  <test_depend>gtest</test_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
