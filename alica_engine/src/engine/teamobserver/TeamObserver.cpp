@@ -35,6 +35,7 @@ namespace alica
 		this->me = nullptr;
 		this->log = nullptr;
 		this->ae = nullptr;
+		this->allOtherRobots = list<RobotEngineData*>();
 	}
 
 	TeamObserver::~TeamObserver()
@@ -63,8 +64,8 @@ namespace alica
 		string ownPlayerName = ae->getRobotName();
 		cout << "TO: Initing Robot " << ownPlayerName << endl;
 
-		this->teamTimeOut = (*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut") * 1000000;
-		shared_ptr<vector<string> > playerNames = (*sc)["Alica"]->getSections("Globals.Team");
+		this->teamTimeOut = (*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut",NULL) * 1000000;
+		shared_ptr<vector<string> > playerNames = (*sc)["Globals"]->getSections("Globals.Team", NULL);
 		bool foundSelf = false;
 
 		for (int i = 0; i < playerNames->size(); i++)
@@ -102,7 +103,7 @@ namespace alica
 		{
 			AlicaEngine::getInstance()->abort("TO: Could not find own robot name in Globals Id = " + ownPlayerName);
 		}
-		if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull"))
+		if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull"),NULL)
 		{
 			for (RobotEngineData* r : this->allOtherRobots)
 			{
@@ -367,7 +368,7 @@ namespace alica
 	int TeamObserver::successesInPlan(Plan* plan)
 	{
 		int ret = 0;
-		shared_ptr<list<EntryPoint*> > suc;
+		shared_ptr<list<EntryPoint*> > suc = make_shared<list<EntryPoint*> >(list<EntryPoint*>());
 		for (RobotEngineData* r : this->allOtherRobots)
 		{
 			if (r->isActive())

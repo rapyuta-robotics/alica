@@ -89,7 +89,8 @@ namespace alica
 		list<Plan*> newPlanList = list<Plan*>();
 		for (Plan* plan : plans)
 		{
-			if (plan->getMinCardinality() < robotIDs->size() + to->successesInPlan(plan))
+			if (plan->getMinCardinality() < robotIDs->size()
+					+ to->successesInPlan(plan))
 			{
 #ifdef PSDEBUG
 				stringstream ss;

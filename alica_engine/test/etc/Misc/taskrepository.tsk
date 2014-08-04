@@ -2,4 +2,6 @@
 <alica:TaskRepository xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1226672409680" name="" comment="" defaultTask="1225112227903">
   <tasks id="1225112227903" name="DefaultTask" comment="" description="DefaultTask"/>
   <tasks id="1402488486725" name="DefendTask" comment="" description=""/>
+  <tasks id="1407153522080" name="AttackTask" comment="" description=""/>
+  <tasks id="1407153536219" name="MidFieldTask" comment="" description=""/>
 </alica:TaskRepository>

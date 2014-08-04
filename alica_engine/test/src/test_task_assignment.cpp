@@ -19,6 +19,8 @@ using namespace std;
 #include "../test/include/TestBehaviourCreator.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/RunningPlan.h"
+#include "engine/PlanRepository.h"
+#include "engine/model/Plan.h"
 
 class TaskAssignmentTest : public ::testing::Test
 {
@@ -30,7 +32,7 @@ protected:
 		ae = alica::AlicaEngine::getInstance();
 		//TODO extend TestBehaviourCreator
 		alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
-		ae->init(bc,"Roleset", "MasterPlan", ".", true);
+		ae->init(bc,"Roleset", "MasterPlanTaskAssignment", ".", true);
 	}
 
 	virtual void TearDown()
@@ -47,10 +49,10 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 	{
 		robots->push_back(i);
 	}
+	auto planMap = ae->getPlanRepository()->getPlans();
+	auto rp = new alica::RunningPlan((*planMap.find(1407152758497)).second);
 	list<alica::AbstractPlan*> planList = list<alica::AbstractPlan*>();
-	cout << "###" << endl;
-	auto rp = new alica::RunningPlan();
-	cout << "aaaa" << endl;
- 	auto plans = ps->getPlansForState(rp, planList, robots);
+	planList.push_back((*planMap.find(1407152758497)).second);
+	auto plans = ps->getPlansForState(rp, planList, robots);
 }
 

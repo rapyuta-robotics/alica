@@ -15,6 +15,7 @@
 #include <engine/collections/RobotProperties.h>
 #include <engine/IPlanParser.h>
 #include <engine/model/AlicaElement.h>
+#include "engine/collections/SuccessMarks.h"
 
 namespace alica
 {
@@ -30,6 +31,8 @@ namespace alica
 		this->lastMessageTime = 0;
 		this->properties = properties;
 		this->initSortedTerms();
+		this->successMarks = new SuccessMarks();
+		this->lastRole = nullptr;
 
 	}
 
