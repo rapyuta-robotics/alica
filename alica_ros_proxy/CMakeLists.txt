@@ -158,7 +158,7 @@ target_link_libraries(alica_ros_proxy
 #############
 
 ## Add gtest based cpp test target and link libraries
- catkin_add_gtest(${PROJECT_NAME}-test test/test_alica_ros_proxy.cpp)
+ catkin_add_gtest(${PROJECT_NAME}-test test/test_alica_ros_proxy.cpp test/test_task_assignment.cpp)
  if(TARGET ${PROJECT_NAME}-test)
    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} system_config alica_engine cnc_turtlebots_behaviours test_behaviour_creator)
  endif()
