@@ -37,7 +37,7 @@ namespace alica
 			string logPath = (*sc)["Alica"]->get<string>("Alica.EventLogging.LogFolder", NULL);
 			if (!supplementary::FileSystem::isPathRooted(logPath))
 			{
-				//TODO maybe it think about it
+				//TODO maybe think about it
 				logPath = ".alica/" + logPath;
 				logPath = supplementary::FileSystem::combinePaths(::getenv("HOME"), logPath);
 			}
@@ -45,6 +45,7 @@ namespace alica
 			{
 				logPath += supplementary::FileSystem::PATH_SEPARATOR;
 			}
+			// TODO: create nice supplementary::FileSystem::createDirectory(string path, int rights) method from next if clause
 			if (!supplementary::FileSystem::isDirectory(logPath))
 			{
 				string path = "";
