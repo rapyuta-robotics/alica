@@ -29,19 +29,16 @@ namespace alica
 			struct tm * timeinfo;
 			string robotName = AlicaEngine::getInstance()->getRobotName();
 			time_t time = AlicaEngine::getInstance()->getIAlicaClock()->now();
-//			time_t time = std::time(0);
 			cout << time << endl;
 			timeinfo = localtime(&time);
-			cout << "timeonfo " << timeinfo << endl;
 			strftime(buffer, 1024, "%FT%T", timeinfo);
-			cout << "klappt" << endl;
 			string timeString = buffer;
 			replace(timeString.begin(), timeString.end(), ':', '-');
 			string logPath = (*sc)["Alica"]->get<string>("Alica.EventLogging.LogFolder", NULL);
 			if (!supplementary::FileSystem::isPathRooted(logPath))
 			{
 				//TODO maybe it think about it
-				logPath = "alica/" + logPath;
+				logPath = ".alica/" + logPath;
 				logPath = supplementary::FileSystem::combinePaths(::getenv("HOME"), logPath);
 			}
 			if (logPath.find_last_of(supplementary::FileSystem::PATH_SEPARATOR) != logPath.size() - 1)
