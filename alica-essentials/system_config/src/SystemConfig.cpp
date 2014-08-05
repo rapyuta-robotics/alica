@@ -69,9 +69,9 @@ namespace supplementary
 			hostname = envname;
 		}
 
-		/*cout << "Root:       " << rootPath << endl;
+		cout << "Root:       " << rootPath << endl;
 		cout << "ConfigRoot: " << configPath << endl;
-		cout << "Hostname:   " << hostname << endl;*/
+		cout << "Hostname:   " << hostname << endl;
 	}
 
 	void SystemConfig::shutdown()
