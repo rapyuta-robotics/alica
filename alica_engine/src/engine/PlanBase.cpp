@@ -48,7 +48,7 @@ namespace alica
 		if (minbcfreq > maxbcfreq)
 		{
 			AlicaEngine::getInstance()->abort(
-					"PB: Alica.conf: Minimal brodcast frequency must be lower or equal to maximal broadcast frequency!");
+					"PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
 		}
 
 		this->minSendInterval = (alicaTime)fmax(1000000, lround(1.0 / maxbcfreq * 1000000000));
