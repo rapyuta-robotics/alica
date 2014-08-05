@@ -2,7 +2,7 @@
  * AlicaROSClock.cpp
  *
  *  Created on: Jul 18, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #include "clock/AlicaROSClock.h"
@@ -26,8 +26,8 @@ namespace alicaRosProxy
 	{
 		ros::Time::init();
 		ros::Time t = ros::Time::now();
-		alica::alicaTime ret = t.nsec;
-		ret += t.sec * 1000000000;
+		alica::alicaTime ret = ((alica::alicaTime)t.sec * 1000000000L) + t.nsec;
+		std::cout << "Return: " << ret << std::endl;
 		return ret;
 	}
 	void AlicaROSClock::sleep(int ms)
