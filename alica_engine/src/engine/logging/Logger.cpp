@@ -28,16 +28,20 @@ namespace alica
 			char buffer[50];
 			struct tm * timeinfo;
 			string robotName = AlicaEngine::getInstance()->getRobotName();
-			long time = AlicaEngine::getInstance()->getIAlicaClock()->now();
+			time_t time = AlicaEngine::getInstance()->getIAlicaClock()->now();
+//			time_t time = std::time(0);
+			cout << time << endl;
 			timeinfo = localtime(&time);
-			strftime(buffer, 50, "%FT%T", timeinfo);
+			cout << "timeonfo " << timeinfo << endl;
+			strftime(buffer, 1024, "%FT%T", timeinfo);
+			cout << "klappt" << endl;
 			string timeString = buffer;
 			replace(timeString.begin(), timeString.end(), ':', '-');
 			string logPath = (*sc)["Alica"]->get<string>("Alica.EventLogging.LogFolder", NULL);
 			if (!supplementary::FileSystem::isPathRooted(logPath))
 			{
 				//TODO maybe it think about it
-				logPath = ".alica/" + logPath;
+				logPath = "alica/" + logPath;
 				logPath = supplementary::FileSystem::combinePaths(::getenv("HOME"), logPath);
 			}
 			if (logPath.find_last_of(supplementary::FileSystem::PATH_SEPARATOR) != logPath.size() - 1)
@@ -46,14 +50,20 @@ namespace alica
 			}
 			if (!supplementary::FileSystem::isDirectory(logPath))
 			{
-				logPath = "home/snook/alica";
-				umask(0);
-				if (int res = mkdir(logPath.c_str(), 0777) != 0)
-				{
-					ostringstream convert;
-					convert << res;
-					string a = convert.str();
-					AlicaEngine::getInstance()->abort("Cannot create log folder: ", logPath + " Result of mkdir: " + a);
+				string path = "";
+				int pos;
+				while((pos = logPath.find('/')) != string::npos){
+				  path = path + logPath.substr(0, pos) + "/";
+				  if(logPath.substr(0, pos).size() != 1){
+				    if(!supplementary::FileSystem::isDirectory(path))
+				    {
+				    	if (int res = mkdir(path.c_str(), 0777) != 0)
+				    	{
+				    		AlicaEngine::getInstance()->abort("Cannot create log folder: ", path);
+				    	}
+				    }
+				  }
+				  logPath.erase(0, pos + 1);
 				}
 			}
 			string logFile = logPath + "alica-run--" + robotName + "--" + timeString + ".txt";
