@@ -21,6 +21,7 @@ using namespace std;
 #include "engine/RunningPlan.h"
 #include "engine/PlanRepository.h"
 #include "engine/model/Plan.h"
+#include "clock/AlicaROSClock.h"
 
 class TaskAssignmentTest : public ::testing::Test
 {
@@ -32,6 +33,7 @@ protected:
 		ae = alica::AlicaEngine::getInstance();
 		//TODO extend TestBehaviourCreator
 		alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
+		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->init(bc,"Roleset", "MasterPlanTaskAssignment", ".", true);
 	}
 

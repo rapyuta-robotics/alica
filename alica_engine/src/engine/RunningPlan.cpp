@@ -48,6 +48,7 @@ namespace alica
 		this->active = false;
 		this->allocationNeeded = false;
 		this->failHandlingNeeded = false;
+		this->children = list<RunningPlan*>();
 		this->constraintStore = new ConstraintStore(this);
 		this->cycleManagement = new CycleManager(this);
 	}
@@ -256,7 +257,7 @@ namespace alica
 
 	list<RunningPlan*> RunningPlan::getChildren()
 	{
-		return children;
+		return this->children;
 	}
 
 	void RunningPlan::setChildren(list<RunningPlan*> children)

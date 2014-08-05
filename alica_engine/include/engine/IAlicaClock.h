@@ -9,7 +9,7 @@
 #define IALICATIME_H_
 namespace alica
 {
-	typedef long long alicaTime;
+	typedef signed long long alicaTime;
 
 	class IAlicaClock
 	{
