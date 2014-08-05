@@ -2,7 +2,7 @@
  * AuthorityManager.cpp
  *
  *  Created on: Jun 17, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #include "engine/allocationauthority/AuthorityManager.h"
