@@ -2,7 +2,7 @@
  * AlicaROSClock.h
  *
  *  Created on: Jul 18, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #ifndef ALICAROSCLOCK_H_
