@@ -102,9 +102,11 @@ namespace alica
 	 */
 	void PlanBase::run()
 	{
+		cout << "PLANBASE STARTET " << endl;
 		while (this->running)
 		{
 			alicaTime beginTime = alicaClock->now();
+			cout << "BEGIN TIME is: " << beginTime << endl;
 			if (ae->getStepEngine())
 			{
 				cout << "===CUR TREE===" << endl;
@@ -161,7 +163,6 @@ namespace alica
 			}
 
 			alicaTime now = alicaClock->now();
-
 			if ((this->ruleBook->isChangeOccured() && this->lastSendTime + this->minSendInterval < now)
 					|| this->lastSendTime + this->maxSendInterval < now)
 			{

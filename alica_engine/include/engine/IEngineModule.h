@@ -2,7 +2,7 @@
  * IEngineModule.h
  *
  *  Created on: Jul 7, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #ifndef IENGINEMODULE_H_
