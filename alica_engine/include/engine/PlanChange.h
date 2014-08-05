@@ -2,7 +2,7 @@
  * PlanChange.h
  *
  *  Created on: Jul 15, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #ifndef PLANCHANGE_H_

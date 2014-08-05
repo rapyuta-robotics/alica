@@ -20,6 +20,7 @@ using namespace std;
 #include "engine/IAlicaClock.h"
 #include <time.h>
 #include <sys/stat.h>
+#include <iomanip>
 
 #include "engine/IPlanTreeVisitor.h"
 
