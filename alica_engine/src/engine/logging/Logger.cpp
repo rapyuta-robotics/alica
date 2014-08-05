@@ -26,12 +26,13 @@ namespace alica
 		if (this->active)
 		{
 			char buffer[50];
-			struct tm * timeinfo;
 			string robotName = AlicaEngine::getInstance()->getRobotName();
-			long time = AlicaEngine::getInstance()->getIAlicaClock()->now();
-			timeinfo = localtime(&time);
+		//	time_t time = AlicaEngine::getInstance()->getIAlicaClock()->now();
+			time_t t = std::time(0);
+			struct tm * timeinfo = std::localtime(&t);
 			strftime(buffer, 50, "%FT%T", timeinfo);
 			string timeString = buffer;
+//			string timeString = std::put_time(timeinfo,"%FT%T");
 			replace(timeString.begin(), timeString.end(), ':', '-');
 			string logPath = (*sc)["Alica"]->get<string>("Alica.EventLogging.LogFolder", NULL);
 			if (!supplementary::FileSystem::isPathRooted(logPath))
@@ -46,7 +47,7 @@ namespace alica
 			}
 			if (!supplementary::FileSystem::isDirectory(logPath))
 			{
-				logPath = "home/snook/alica";
+//				logPath = "home/snook/alica";
 				umask(0);
 				if (int res = mkdir(logPath.c_str(), 0777) != 0)
 				{
