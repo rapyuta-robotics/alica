@@ -31,9 +31,7 @@ namespace alica
 			const long int time = AlicaEngine::getInstance()->getIAlicaClock()->now()/1000000000L;
 			cout << "Alica Time: " << time << endl;
 			timeinfo = localtime(&time);
-			cout << "timeonfo " << timeinfo << endl;
 			strftime(buffer, 1024, "%FT%T", timeinfo);
-			cout << "klappt" << endl;
 			string timeString = buffer;
 			replace(timeString.begin(), timeString.end(), ':', '-');
 			string logPath = (*sc)["Alica"]->get<string>("Alica.EventLogging.LogFolder", NULL);
