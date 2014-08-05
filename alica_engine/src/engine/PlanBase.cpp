@@ -28,6 +28,7 @@ namespace alica
 {
 	PlanBase::PlanBase(Plan* masterPlan)
 	{
+		this->rootNode = nullptr;
 		this->masterPlan = masterPlan;
 		this->ae = AlicaEngine::getInstance();
 		this->teamObserver = ae->getTeamObserver();
@@ -299,7 +300,7 @@ namespace alica
 		if (r->isBehaviour())
 			return;
 		shared_ptr<vector<int> > robots = r->getAssignment()->getAllRobots();
-		for (RunningPlan* rp : r->getChildren())
+		for (RunningPlan* rp : *r->getChildren())
 		{
 			if (rp->isBehaviour())
 				continue;
