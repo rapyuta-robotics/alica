@@ -103,8 +103,10 @@ namespace supplementary
 		ClingoApp::add(name, params, part);
 	}
 
-	void ClingWrapper::printLastModel()
+	void ClingWrapper::printLastModel(bool verbose)
 	{
+	        std::cout << "Last Model ";
+
 		if (!lastModel)
 		{
 			std::cout << "No model found" << std::endl;
@@ -118,7 +120,29 @@ namespace supplementary
 		}
 
 		std::cout << std::endl;
+
+		if (verbose)
+		{
+		        std::cout << "Symbol table: ";
+		        for (auto value : this->lastSolver->symbolTable())
+                        {
+                                std::cout << "(" << value.second.name.c_str() << ", " <<
+                                    (this->lastModel->isTrue(value.second.lit) ? "true" : "false") << ") ";
+                        }
+
+	                std::cout << std::endl;
+		}
 	}
+
+        const Clasp::Model* ClingWrapper::getLastModel()
+        {
+          return this->lastModel;
+        }
+
+        const Clasp::Solver* ClingWrapper::getLastSolver()
+        {
+          return this->lastSolver;
+        }
 
 } /* namespace supplementary */
 

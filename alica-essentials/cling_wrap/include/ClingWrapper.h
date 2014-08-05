@@ -42,7 +42,10 @@ namespace supplementary
 		void add(std::string const &name, Gringo::FWStringVec const &params, std::string const &part);
 		void addKnowledgeFile(std::string path);
 		virtual	bool onModel(const Clasp::Solver& s, const Clasp::Model& m);
-		void printLastModel();
+		void printLastModel(bool verbose = false);
+
+		const Clasp::Model* getLastModel();
+		const Clasp::Solver* getLastSolver();
 
 	private:
 		const Clasp::Model* lastModel;

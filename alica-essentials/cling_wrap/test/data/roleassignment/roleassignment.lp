@@ -29,9 +29,13 @@ matching(ROBOT, ROLE, CAPABILITY, SKILL - REQ_SKILL) :- hasRole(ROBOT,ROLE),
 matching(ROBOT, ROLE, CAPABILITY, -REQ_SKILL) :- hasRole(ROBOT,ROLE), 
 	not hasCapability(ROBOT,CAPABILITY,_), requiresCapability(ROLE,CAPABILITY,REQ_SKILL). 
 
-#maximize { U, ROBOT, ROLE, CAP : matching(ROBOT,ROLE,CAP,U) }.
+sum(S) :- S = #sum { V : matching(_,_,_,V)}.
 
-#show hasRole/2.
+#maximize { S : sum(S) }.
+%#maximize { U, ROBOT, ROLE, CAP : matching(ROBOT,ROLE,CAP,U) }.
+
+%#show sum/1.
+%#show hasRole/2.
 %#show matching/4.
-#external -hasCapability(robot,cap).
--hasCapability(robot,cap).
+%#external -hasCapability(robot,cap).
+%-hasCapability(robot,cap).
