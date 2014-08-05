@@ -28,8 +28,8 @@ namespace alica
 			char buffer[50];
 			struct tm * timeinfo;
 			string robotName = AlicaEngine::getInstance()->getRobotName();
-			time_t time = AlicaEngine::getInstance()->getIAlicaClock()->now();
-			cout << time << endl;
+			const long int time = AlicaEngine::getInstance()->getIAlicaClock()->now()/1000000000L;
+			cout << "Alica Time: " << time << endl;
 			timeinfo = localtime(&time);
 			strftime(buffer, 1024, "%FT%T", timeinfo);
 			string timeString = buffer;
