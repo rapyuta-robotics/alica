@@ -2,7 +2,7 @@
  * PlanningType.h
  *
  *  Created on: Jul 1, 2014
- *      Author: snook
+ *      Author: Paul Panin
  */
 
 #ifndef PLANNINGTYPE_H_
