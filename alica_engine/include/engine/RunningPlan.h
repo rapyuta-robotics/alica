@@ -145,7 +145,7 @@ namespace alica
 		IBehaviourPool* bp;
 		ITeamObserver* to;bool allocationNeeded;
 		unsigned long assignmentProtectionTime = (((*supplementary::SystemConfig::getInstance())["Alica"]->get<
-				unsigned long>("Alica.AssignmentProtectionTime")) * 1000000);
+				unsigned long>("Alica.AssignmentProtectionTime", NULL)) * 1000000);
 		CycleManager* cycleManagement;
 		ConstraintStore* constraintStore;
 	};
