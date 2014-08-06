@@ -28,6 +28,7 @@ namespace alica
 {
 	PlanBase::PlanBase(Plan* masterPlan)
 	{
+		this->rootNode = nullptr;
 		this->masterPlan = masterPlan;
 		this->ae = AlicaEngine::getInstance();
 		this->teamObserver = ae->getTeamObserver();
@@ -47,7 +48,7 @@ namespace alica
 		if (minbcfreq > maxbcfreq)
 		{
 			AlicaEngine::getInstance()->abort(
-					"PB: Alica.conf: Minimal brodcast frequency must be lower or equal to maximal broadcast frequency!");
+					"PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
 		}
 
 		this->minSendInterval = (alicaTime)fmax(1000000, lround(1.0 / maxbcfreq * 1000000000));
@@ -299,7 +300,7 @@ namespace alica
 		if (r->isBehaviour())
 			return;
 		shared_ptr<vector<int> > robots = r->getAssignment()->getAllRobots();
-		for (RunningPlan* rp : r->getChildren())
+		for (RunningPlan* rp : *r->getChildren())
 		{
 			if (rp->isBehaviour())
 				continue;

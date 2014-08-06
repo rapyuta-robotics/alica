@@ -37,7 +37,7 @@ namespace alica
 			string logPath = (*sc)["Alica"]->get<string>("Alica.EventLogging.LogFolder", NULL);
 			if (!supplementary::FileSystem::isPathRooted(logPath))
 			{
-				//TODO maybe it think about it
+				//TODO maybe think about it
 				logPath = ".alica/" + logPath;
 				logPath = supplementary::FileSystem::combinePaths(::getenv("HOME"), logPath);
 			}
@@ -45,6 +45,7 @@ namespace alica
 			{
 				logPath += supplementary::FileSystem::PATH_SEPARATOR;
 			}
+			// TODO: create nice supplementary::FileSystem::createDirectory(string path, int rights) method from next if clause
 			if (!supplementary::FileSystem::isDirectory(logPath))
 			{
 				string path = "";
@@ -217,7 +218,7 @@ namespace alica
 		}
 
 		(*ss) << rp->getAssignment()->toHackString();
-		for (RunningPlan* child : rp->getChildren())
+		for (RunningPlan* child : *rp->getChildren())
 		{
 			evaluationAssignmentsToString(ss, child);
 		}
@@ -254,11 +255,11 @@ namespace alica
 			}
 		}
 
-		if (r->getChildren().size() != 0)
+		if (r->getChildren()->size() != 0)
 		{
 			result.push_back("-1"); //start children marker
 
-			for (RunningPlan* r : r->getChildren())
+			for (RunningPlan* r : *r->getChildren())
 			{
 				list<string> tmp = createTreeLog(r);
 				for (string s : tmp)
