@@ -39,7 +39,6 @@ namespace alica
 	{
 		this->to = AlicaEngine::getInstance()->getTeamObserver();
 		this->ownId = to->getOwnId();
-		this->children = list<RunningPlan*>();
 		this->robotsAvail = unique_ptr<list<int> >();
 		this->status = PlanStatus::Running;
 		this->failCount = 0;
@@ -48,7 +47,6 @@ namespace alica
 		this->active = false;
 		this->allocationNeeded = false;
 		this->failHandlingNeeded = false;
-		this->children = list<RunningPlan*>();
 		this->constraintStore = new ConstraintStore(this);
 		this->cycleManagement = new CycleManager(this);
 	}
