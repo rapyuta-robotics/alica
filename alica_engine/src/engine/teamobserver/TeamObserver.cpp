@@ -319,7 +319,7 @@ namespace alica
 				new unordered_set<AbstractPlan*>);
 		if (root != nullptr)
 		{
-			list<RunningPlan*>* q = new list<RunningPlan*>;
+			list<RunningPlan*>* q = new list<RunningPlan*>();
 			q->push_front(root);
 			while (q->size() > 0)
 			{
@@ -328,7 +328,7 @@ namespace alica
 				if (!p->isBehaviour())
 				{
 					presentPlans->insert(p->getPlan());
-					for (RunningPlan* c : p->getChildren())
+					for (RunningPlan* c : *p->getChildren())
 					{
 						q->push_back(c);
 					}
