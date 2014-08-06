@@ -37,5 +37,7 @@ sum(S) :- S = #sum { V : matching(_,_,_,V)}.
 %#show sum/1.
 %#show hasRole/2.
 %#show matching/4.
-%#external -hasCapability(robot,cap).
-%-hasCapability(robot,cap).
+
+#program hasCapability(robot,cap).
+
+#external hasCapability(robot,cap).

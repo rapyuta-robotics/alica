@@ -7,6 +7,7 @@
 
 #include <gtest/gtest.h>
 #include "ClingWrapper.h"
+#include "External.h"
 #include "clasp/solver.h"
 #include <chrono>
 #include <map>
@@ -63,12 +64,9 @@ TEST(ClingWrap, iclingo)
 {
 	chrono::_V2::system_clock::time_point start = chrono::high_resolution_clock::now();
 
-	supplementary::ClingWrapper cw;
-	cw.addKnowledgeFile("data/iclingo/example.lp");
-	cw.init();
-//	cw.ground("board", {10});
-//	cw.solve();
-//	cw.printLastModel();
+	std::shared_ptr<supplementary::ClingWrapper> cw = std::make_shared<supplementary::ClingWrapper>();
+	cw->addKnowledgeFile("data/iclingo/example.lp");
+	cw->init();
 
 	std::chrono::_V2::system_clock::time_point end = chrono::high_resolution_clock::now();
 	cout << "Init-Time:" << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
@@ -77,6 +75,8 @@ TEST(ClingWrap, iclingo)
 	int imin = 1;
 	int imax = 11;
 	string istop = "UNSAT";
+	std::shared_ptr<supplementary::External> external;
+
 
 	while (true)
 	{
@@ -84,19 +84,16 @@ TEST(ClingWrap, iclingo)
 		{
 			break;
 		}
-		cw.ground("cumulative", {step});
-		if (step >= iquery)
+		cw->ground("cumulative", {step});
+		if (step > iquery && external)
 		{
-			if (step > iquery)
-			{
-				cw.releaseExternal("query", {step - 1});
-			}
+			external->release();
 		}
-		cw.assignExternal("query", {step}, true);
-		cw.ground("volatile", {step});
+		external = cw->getExternal("query", {step}, "volatile");
+		external->assign(true);
 
-		Gringo::SolveResult ret = cw.solve();
-		cw.printLastModel();
+		Gringo::SolveResult ret = cw->solve();
+		cw->printLastModel();
 		if (step >= imin && ((istop == "SAT" && ret == Gringo::SolveResult::SAT) || (istop == "UNSAT" && ret != Gringo::SolveResult::SAT)))
 		{
 			break;
@@ -117,10 +114,10 @@ TEST(ClingWrap, simpleRoleAssignment)
 	std::chrono::_V2::system_clock::time_point end = chrono::high_resolution_clock::now();
 	cout << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
 
-	//cw.add("base", {"r1","speak"}, "-hasCapability.");
+	auto ext = cw.getExternal("hasCapability",{"r1", "dance"}, "hasCapability");
+	ext->assign(true);
 
-	cw.assignExternal("-hasCapability", {"r1", "speak"}, true);
-	//cw.ground("base", {});
+
 	Gringo::SolveResult solve = cw.solve();
 	if (Gringo::SolveResult::SAT == solve)
 	{
@@ -152,7 +149,8 @@ void testModel(supplementary::ClingWrapper* cw, std::map<uint32, const char*>* s
 TEST(ClingWrap, modelStable)
 {
         std::map<uint32, const char*>* symbols = new std::map<uint32, const char*>();
-        std::vector<std::shared_ptr<Gringo::Value>> players;
+        std::vector<std::shared_ptr<supplementary::External>> players;
+        std::vector<std::shared_ptr<supplementary::External>> playersDeleted;
         supplementary::ClingWrapper* cw = new supplementary::ClingWrapper();
         cw->addKnowledgeFile("data/model/testModelLiterals.lp");
         cw->init();
@@ -160,30 +158,41 @@ TEST(ClingWrap, modelStable)
         cw->ground("inc", {1});
         cw->ground("player", {1, 1});
 
-        players.push_back(cw->assignExternal("player", {1, 1}, true));
+        auto ext = cw->getExternal("player", {1, 1}, "player");
+        ext->assign(true);
 
-        for (int i=2; i < 10000; ++i)
+        players.push_back(ext);
+
+        for (int i=2; i < 1000; ++i)
         {
           cw->ground("inc", {i});
 
           int row = (rand() % i) + 1;
           int column = (rand() % i) + 1;
 
-          cw->ground("player", {row, i});
-          cw->ground("player", {i, column});
+          auto rowPlayer =  cw->getExternal("player", {row, i}, "player");
+          auto columnPlayer = cw->getExternal("player", {i, column}, "player");
 
-          auto rowPlayer = cw->assignExternal("player", {row, i}, true);
-          auto columnPlayer = cw->assignExternal("player", {i, column}, true);
+          rowPlayer->assign(true);
+          columnPlayer->assign(true);
 
           players.push_back(rowPlayer);
           players.push_back(columnPlayer);
+
+          if (playersDeleted.size() > 0)
+          {
+            int toAdd = (rand() % playersDeleted.size());
+            playersDeleted[toAdd]->assign(true);
+            players.push_back(playersDeleted[toAdd]);
+            playersDeleted.erase(playersDeleted.begin() + toAdd);
+          }
 
           int r = (rand() % 10);
 
           if (r < 6)
           {
             int toDelete = (rand() % players.size());
-            cw->releaseExternal(players[toDelete]);
+            players[toDelete]->release();
             players.erase(players.begin() + toDelete);
           }
           else if (r < 8)
@@ -194,7 +203,8 @@ TEST(ClingWrap, modelStable)
                 break;
 
               int toDelete = (rand() % players.size());
-              cw->releaseExternal(players[toDelete]);
+              players[toDelete]->release();
+              playersDeleted.push_back(players[toDelete]);
               players.erase(players.begin() + toDelete);
             }
           }

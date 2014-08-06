@@ -6,6 +6,8 @@
  */
 
 #include "ClingWrapper.h"
+#include "External.h"
+
 #include "clasp/solver.h"
 
 using namespace Clasp;
@@ -132,6 +134,42 @@ namespace supplementary
 
 	                std::cout << std::endl;
 		}
+	}
+
+        std::shared_ptr<External> const ClingWrapper::getExternal(const std::string& name, Gringo::FWValVec args,
+                                                                  const std::string &ground)
+        {
+          return this->getExternal(name, args, ground, args);
+        }
+
+	std::shared_ptr<External> const ClingWrapper::getExternal(const std::string& name, Gringo::FWValVec args,
+	                                                          const std::string &ground, Gringo::FWValVec groundArgs)
+	{
+	  auto value = std::make_shared<Gringo::Value>(name, args);
+
+	  try
+	  {
+	    return this->externals.at(value->hash());
+	  }
+	  catch (std::out_of_range &e)
+	  {
+	    std::lock_guard<std::mutex> guard (this->mtx_);
+
+            try
+            {
+              return this->externals.at(value->hash());
+            }
+            catch (std::out_of_range &e)
+            {
+              External* ptr = new External(this, value);
+              auto external = std::shared_ptr<External>(ptr);
+              this->externals.insert(std::pair<size_t, std::shared_ptr<External>>(value->hash(), external));
+
+              this->ground(ground, groundArgs);
+
+              return external;
+            }
+	  }
 	}
 
         const Clasp::Model* ClingWrapper::getLastModel()
