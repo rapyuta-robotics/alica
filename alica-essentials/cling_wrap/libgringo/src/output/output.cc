@@ -297,7 +297,7 @@ struct DefaultLparseTranslator : LparseTranslator {
         out.finishRules();
         for (auto &y : symtab) {
             std::ostringstream oss;
-            oss 
+            oss
                 << std::get<1>(y)
                 << "="
                 << std::get<2>(y);
@@ -615,7 +615,7 @@ struct LparseHandler : StmHandler {
         out.disposeMinimize() = trans.minimizeChanged();
         trans.translate(); 
         trans.outputSymbols(out, domains, outPreds);
-        if (!outPreds.empty()) { 
+        if (!outPreds.empty()) {
             for (auto &x : outPreds) {
                 if (!std::get<2>(x)) {
                     auto it(domains.find(std::get<1>(x)));

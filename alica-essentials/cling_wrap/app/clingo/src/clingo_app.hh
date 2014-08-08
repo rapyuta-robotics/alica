@@ -19,6 +19,10 @@
 
 // }}}
 
+
+#ifndef CLINGO_APP_H_
+#define CLINGO_APP_H_
+
 #include "clasp/clasp_app.h"
 #include "gringo/version.hh"
 #include "grounder.hh"
@@ -92,3 +96,5 @@ private:
     ClingoSolveFuture          solveFuture_;
 #endif
 };
+
+#endif

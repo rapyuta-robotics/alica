@@ -8,6 +8,8 @@
 #include <gtest/gtest.h>
 #include "ClingWrapper.h"
 #include "External.h"
+#include "BaseLiteral.h"
+#include "BoolLiteral.h"
 #include "clasp/solver.h"
 #include <chrono>
 #include <map>
@@ -35,9 +37,6 @@ TEST(ClingWrap, incqueens)
 	supplementary::ClingWrapper cw;
 	cw.addKnowledgeFile("data/queens/incqueens.lp");
 	cw.init();
-//	cw.ground("board", {10});
-//	cw.solve();
-//	cw.printLastModel();
 
 	std::chrono::_V2::system_clock::time_point end = chrono::high_resolution_clock::now();
 	cout << "Init-Time:" << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
@@ -50,12 +49,6 @@ TEST(ClingWrap, incqueens)
 		cw.printLastModel();
 		std::chrono::_V2::system_clock::time_point incend = chrono::high_resolution_clock::now();
 
-//		for(long j=1; j < 10; j++) {
-//			cout <<"hmmm";
-//		}
-
-// TODO komische ausgaben vom Solver wegbekommen?!
-		//sleep(1);
 		cout << "Inc-Time:" << chrono::duration_cast<chrono::nanoseconds>(incend - incstart).count() << " ns" << endl;
 	}
 }
@@ -74,7 +67,7 @@ TEST(ClingWrap, iclingo)
 	int iquery = 1;
 	int imin = 1;
 	int imax = 11;
-	string istop = "UNSAT";
+	string istop = "SAT";
 	std::shared_ptr<supplementary::External> external;
 
 
@@ -163,8 +156,14 @@ TEST(ClingWrap, modelStable)
 
         players.push_back(ext);
 
-        for (int i=2; i < 1000; ++i)
+        for (int i=2; i < 10; ++i)
         {
+//          if ( i == 6 )
+//          {
+//            cw->add("showArea", {}, "#show column/1.");
+//            cw->ground("showArea", {});
+//          }
+
           cw->ground("inc", {i});
 
           int row = (rand() % i) + 1;
@@ -212,42 +211,42 @@ TEST(ClingWrap, modelStable)
           cw->solve();
           testModel(cw, symbols);
         }
+
+//        cw->printLastModel(true);
 }
 
+TEST(ClingWrap, boolLiterals)
+{
+        supplementary::ClingWrapper* cw = new supplementary::ClingWrapper();
+        cw->addKnowledgeFile("data/model/testModelLiterals.lp");
+        cw->init();
 
-//TEST(ClingWrap, snapshot)
-//{
-//  chrono::_V2::system_clock::time_point start = chrono::high_resolution_clock::now();
+        cw->ground("inc", {1});
+        cw->ground("player", {1, 1});
+        auto ext = cw->getExternal("player", {1, 1}, "player");
+        ext->assign(true);
+
+        auto sum = cw->getBoolLiteral("sumPlayer", {1});
+
+//        cw->solve();
 //
-//          supplementary::ClingWrapper cw;
-//          cw.addKnowledgeFile("data/queens/incqueens.lp");
-//          cw.init();
-//
-//          for (int i=1; i < 6; ++i)
-//          {
-//            cw.ground("board", {i});
-//          }
-//          cout << "First model, board size 5" << endl;
-//          cw.solve();
-//          cw.printLastModel();
-//
-//          auto prg = cw.getProgram();
-//
-//          cout << "Second model, board size 6" << endl;
-//          cw.ground("board", {6});
-//          cw.solve();
-//          cw.printLastModel();
-//
-//          cout << "Third model, board size 5?" << endl;
-//          cw.setProgram(prg);
-//          cw.solve();
-//          cw.printLastModel();
-//
-//          std::chrono::_V2::system_clock::time_point end = chrono::high_resolution_clock::now();
-//          cout << "Init-Time:" << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
-//
-//
-//}
+//        EXPECT_EQ(true, sum->getValue());
+
+        cw->ground("inc", {2});
+        cw->ground("player", {1, 2});
+        auto ext2 = cw->getExternal("player", {1, 2}, "player");
+        ext2->assign(true);
+
+        auto sum2 = cw->getBoolLiteral("sumPlayer", {2});
+
+        cw->solve();
+
+        EXPECT_EQ(false, sum->getValue());
+        EXPECT_EQ(true, sum2->getValue());
+
+        cw->printLastModel(true);
+}
+
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)

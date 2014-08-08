@@ -34,6 +34,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <climits>
+#include <iostream>
 namespace Clasp { namespace Asp {
 /////////////////////////////////////////////////////////////////////////////////////////
 // class LpStats
@@ -410,6 +411,7 @@ LogicProgram& LogicProgram::setAtomName(Var atomId, const char* name) {
 	check_not_frozen();
 	check_modular(atomId >= startAtom(), atomId);
 	resize(atomId);
+	//std::cout << "New Atom " << atomId << ", " << name << std::endl;
 	ctx()->symbolTable().addUnique(atomId, name);
 	return *this;
 }

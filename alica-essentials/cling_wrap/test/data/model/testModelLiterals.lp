@@ -13,3 +13,5 @@ column(i).
 #program player(j,k).
 
 #external player(j,k).
+
+%#show row/1.

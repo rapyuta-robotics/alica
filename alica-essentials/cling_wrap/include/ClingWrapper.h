@@ -16,6 +16,8 @@ using namespace std;
 #include <memory>
 #include <mutex>
 #include <string>
+#include <tuple>
+#include <vector>
 
 #include "../app/clingo/src/clingo_app.hh"
 
@@ -27,11 +29,12 @@ namespace Clasp {
 namespace supplementary
 {
   class External;
+  class BaseLiteral;
+  class BoolLiteral;
 }
 
 namespace supplementary
 {
-
 
 	class ClingWrapper : protected ClingoApp, public enable_shared_from_this<ClingWrapper>
 	{
@@ -54,10 +57,15 @@ namespace supplementary
                 std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args,
                                                             std::string const &ground, Gringo::FWValVec groundArgs);
 
+                void registerLiteral(unsigned int literal, Gringo::Value value);
+                std::shared_ptr<BoolLiteral> const getBoolLiteral(std::string const &name, Gringo::FWValVec args);
+
+
 		const Clasp::Model* getLastModel();
 		const Clasp::Solver* getLastSolver();
 
 	private:
+		int getNumWildcards(Gringo::Value &value);
                 void assignExternal(shared_ptr<Gringo::Value> ext, bool val);
                 shared_ptr<Gringo::Value> assignExternal(std::string const &name, Gringo::FWValVec args, bool val);
                 void releaseExternal(shared_ptr<Gringo::Value> ext);
@@ -65,9 +73,12 @@ namespace supplementary
 
 	private:
 		std::map<size_t, std::shared_ptr<External>> externals;
-                std::mutex mtx_;
+                std::mutex mutexExternals;
+                std::mutex mutexLiterals;
 		const Clasp::Model* lastModel;
 		const Clasp::Solver* lastSolver;
+		std::vector<std::tuple<unsigned int, Gringo::Value>> existingLiterals;
+		std::vector<std::shared_ptr<BaseLiteral>> baseLiterals;
 	};
 
 } /* namespace supplementary */

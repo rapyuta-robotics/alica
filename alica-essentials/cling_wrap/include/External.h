@@ -47,6 +47,6 @@ private:
   Gringo::Output::ExternalType value;
 };
 
-} /* namespace ice */
+} /* namespace supplementary */
 
 #endif /* EXTERNAL_H_ */
