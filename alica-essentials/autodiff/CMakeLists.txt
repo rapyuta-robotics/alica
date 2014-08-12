@@ -121,6 +121,7 @@ add_library(autodiff
   src/TermBuilder.cpp
   src/TermPower.cpp
   src/TermUtils.cpp
+  src/TVec.cpp
   src/Variable.cpp
   src/Zero.cpp
   src/compiled/CompiledAbs.cpp

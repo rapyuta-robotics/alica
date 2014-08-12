@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include <iostream>
+#include <limits>
 
 using namespace AutoDiff;
 using namespace std;
@@ -72,7 +72,7 @@ TEST(AutoDiffTest, CONSTPOWER)
 {
 	shared_ptr<Variable> x = make_shared<Variable>();
 
-	shared_ptr<Term> func = make_shared<ConstPower>(x, 2);
+	shared_ptr<Term> func = TermBuilder::power(x, 2);
 
 	vector<shared_ptr<Variable>> vars {x};
 	vector<double> point {13};
@@ -348,7 +348,7 @@ TEST(AutoDiffTest, TERMPOWER)
 	shared_ptr<Variable> x = make_shared<Variable>();
 	shared_ptr<Variable> y = make_shared<Variable>();
 
-	shared_ptr<Term> func = make_shared<TermPower>(x, y);
+	shared_ptr<Term> func = TermBuilder::power(x, y);
 
 	vector<shared_ptr<Variable>> vars {x, y};
 	vector<double> point {13, 2};
@@ -362,6 +362,17 @@ TEST(AutoDiffTest, TERMPOWER)
 	ASSERT_DOUBLE_EQ(169, eval);
 	ASSERT_DOUBLE_EQ(26, gradient[0]);
 	ASSERT_NEAR(433.476441, gradient[1], 10E-6);
+}
+
+TEST(AutoDiffTest, EQUALITY)
+{
+	shared_ptr<Term> TRUE = TermBuilder::constant(1);
+	shared_ptr<Term> FALSE = TermBuilder::constant(numeric_limits<double>::min());
+
+	ASSERT_TRUE(TRUE == Term::TRUE);
+	ASSERT_TRUE(FALSE == Term::FALSE);
+	ASSERT_FALSE(TRUE == Term::FALSE);
+	ASSERT_FALSE(FALSE == Term::TRUE);
 }
 
 TEST(AutoDiffTest, COMPILED)

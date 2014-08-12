@@ -10,14 +10,22 @@
 
 #include "TapeElement.h"
 
+#include <memory>
+#include <vector>
+
 namespace AutoDiff
 {
+	class GaussianProcess; // XXX: class is missing, TODO: import
+
 	namespace Compiled
 	{
 
 		class CompiledGp : public TapeElement
 		{
-			// TODO:
+		public:
+			vector<int> _terms;
+			int _dc;
+			shared_ptr<GaussianProcess> _gpr;
 
 			void accept(shared_ptr<ITapeVisitor> visitor);
 		};

@@ -19,6 +19,7 @@ namespace AutoDiff
 	{
 	public:
 		Sum(vector<shared_ptr<Term>> terms);
+		Sum(shared_ptr<Term> first, shared_ptr<Term> second, vector<shared_ptr<Term>> rest);
 
 		int accept(shared_ptr<ITermVisitor> visitor);
 

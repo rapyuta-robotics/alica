@@ -14,7 +14,7 @@
 
 namespace AutoDiff
 {
-	class GaussianProcess;
+	class GaussianProcess; // XXX: class is missing, TODO: import
 
 	class Gp : public Term
 	{

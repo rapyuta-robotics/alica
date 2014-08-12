@@ -8,15 +8,29 @@
 #include "Term.h"
 
 #include "TermBuilder.h"
+#include "Abs.h"
 #include "And.h"
+#include "Atan2.h"
+#include "Constant.h"
 #include "ConstPower.h"
+#include "ConstraintUtility.h"
+#include "Cos.h"
+#include "Exp.h"
+#include "Gp.h"
+#include "LinSigmoid.h"
+#include "Log.h"
 #include "LTConstraint.h"
 #include "LTEConstraint.h"
 #include "Max.h"
 #include "Min.h"
 #include "Or.h"
 #include "Product.h"
+#include "Reification.h"
+#include "Sigmoid.h"
+#include "Sin.h"
 #include "Sum.h"
+#include "TermPower.h"
+#include "Variable.h"
 #include "Zero.h"
 
 #include <typeinfo>
@@ -291,8 +305,26 @@ namespace AutoDiff
 		return make_shared<LTEConstraint>(right, left, Term::getConstraintSteepness());
 	}
 
-//	bool operator==(const shared_ptr<Term>& left, const shared_ptr<Term>& right)
+//	bool Term::operator==(const shared_ptr<Term>& term)
 //	{
+//		cout << "operator== 1" << endl;
 //		return false;
 //	}
+
+	bool operator==(const shared_ptr<Term>& left, const shared_ptr<Term>& right)
+	{
+		cout << "operator== 2" << endl;
+
+		if (dynamic_pointer_cast<Zero>(left) != 0 && dynamic_pointer_cast<Zero>(right) != 0)
+		{
+			return true;
+		}
+		else if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0)
+		{
+			shared_ptr<Constant> constantLeft = dynamic_pointer_cast<Constant>(left);
+			shared_ptr<Constant> constantRight = dynamic_pointer_cast<Constant>(right);
+			return constantLeft->getValue() == constantRight->getValue();
+		}
+		return false;
+	}
 } /* namespace AutoDiff */

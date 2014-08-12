@@ -30,7 +30,7 @@ namespace AutoDiff
 	shared_ptr<Term> ConstraintUtility::aggregateConstants()
 	{
 		_constraint = _constraint->aggregateConstants();
-		_utility = _utility>aggregateConstants();
+		_utility = _utility->aggregateConstants();
 		return shared_from_this();
 	}
 
