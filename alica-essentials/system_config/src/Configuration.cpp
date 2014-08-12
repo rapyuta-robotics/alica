@@ -253,16 +253,13 @@ namespace supplementary
 	{
 
 		vector<ConfigNodePtr> *children = node->getChildren();
-
 		if (offset == params->size())
 		{
 			result->push_back(node);
 			return;
 		}
-
 		for (size_t i = offset; i < params->size(); i++)
 		{
-
 			bool found = false;
 
 			for (size_t j = 0; j < children->size(); j++)
@@ -276,7 +273,9 @@ namespace supplementary
 			}
 
 			if (!found)
+			{
 				return;
+			}
 		}
 	}
 
@@ -325,7 +324,7 @@ namespace supplementary
 		}
 		else
 		{
-			os << "Path '" << (*params)[0];
+			os << "Configuration: Path '" << (*params)[0];
 			for (size_t i = 1; i < params->size(); i++)
 			{
 				os << "." << (*params)[i];
@@ -375,7 +374,7 @@ namespace supplementary
 
 		vector<ConfigNode *> nodes;
 
-		collect(this->configRoot.get(), params.get(), 0, &nodes);
+		collectSections(this->configRoot.get(), params.get(), 0, &nodes);
 
 		shared_ptr<vector<string> > result(new vector<string>());
 
@@ -392,7 +391,6 @@ namespace supplementary
 				result->push_back(nodes[i]->getName());
 			}
 		}
-
 		return result;
 	}
 
@@ -458,7 +456,6 @@ namespace supplementary
 				result->push_back(nodes[i]->getName());
 			}
 		}
-
 		return result;
 	}
 
@@ -475,7 +472,6 @@ namespace supplementary
 		{
 			return ""; // no content
 		}
-
 		return str.substr(strBegin, str.length());
 	}
 
