@@ -167,10 +167,30 @@ namespace supplementary
 		}
 	}
 
-        std::shared_ptr<External> const ClingWrapper::getExternal(const std::string& name, Gringo::FWValVec args,
-                                                                  const std::string &ground)
+        std::shared_ptr<External> const ClingWrapper::getExternal(const std::string& name, Gringo::FWValVec args)
         {
-          return this->getExternal(name, args, ground, args);
+          return this->getExternal(name, args, name, args);
+        }
+
+        std::shared_ptr<External> const ClingWrapper::getExternal(const std::string& name, Gringo::FWValVec args,
+                                                                  bool const assign)
+        {
+          auto ext = this->getExternal(name, args, name, args);
+
+          ext->assign(assign);
+
+          return ext;
+        }
+
+        std::shared_ptr<External> const ClingWrapper::getExternal(const std::string& name, Gringo::FWValVec args,
+                                                                  const std::string &ground, Gringo::FWValVec groundArgs,
+                                                                  bool const assign)
+        {
+          auto ext = this->getExternal(name, args, ground, groundArgs);
+
+          ext->assign(assign);
+
+          return ext;
         }
 
 	std::shared_ptr<External> const ClingWrapper::getExternal(const std::string& name, Gringo::FWValVec args,
@@ -202,6 +222,31 @@ namespace supplementary
             }
 	  }
 	}
+
+        bool ClingWrapper::query(std::string const &name, Gringo::FWValVec args)
+        {
+          if (this->lastModel == nullptr || this->lastSolver == nullptr)
+            return false;
+
+          int literalId = -1;
+          Gringo::Value query(name, args);
+
+          for (auto lit : this->existingLiterals)
+          {
+            const Gringo::Value& value = std::get<1>(lit);
+
+            if (this->checkMatchValues(&query, &value))
+            {
+              literalId = std::get<0>(lit);
+              break;
+            }
+          }
+
+          if (literalId == -1)
+            return false;
+
+          return this->lastModel->isTrue(this->lastSolver->symbolTable()[literalId].lit);
+        }
 
         void ClingWrapper::registerLiteral(unsigned int literal, Gringo::Value value)
         {
@@ -249,6 +294,31 @@ namespace supplementary
           }
 
           return boolLiteral;
+        }
+
+        bool ClingWrapper::checkMatchValues(const Gringo::Value* value1, const Gringo::Value* value2)
+        {
+          if (value2->type() != Gringo::Value::Type::FUNC)
+            return false;
+
+          if (value1->name() != value2->name())
+            return false;
+
+          if (value1->args().size() != value2->args().size())
+            return false;
+
+          for (uint i = 0; i < value1->args().size(); ++i)
+          {
+            Gringo::Value arg = value1->args()[i];
+
+            if (arg.type() == Gringo::Value::Type::STRING && arg.name() == "?")
+              continue;
+
+            if (arg != value2->args()[i])
+              return false;
+          }
+
+          return true;
         }
 
         const Clasp::Model* ClingWrapper::getLastModel()

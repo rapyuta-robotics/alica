@@ -52,19 +52,23 @@ namespace supplementary
 		virtual	bool onModel(const Clasp::Solver& s, const Clasp::Model& m);
 		void printLastModel(bool verbose = false);
 
-		std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args,
-		                                            std::string const &ground);
+                std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args);
+		std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args, bool const assign);
                 std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args,
                                                             std::string const &ground, Gringo::FWValVec groundArgs);
+                std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args,
+                                                            std::string const &ground, Gringo::FWValVec groundArgs, bool const assign);
+
+                bool query(std::string const &name, Gringo::FWValVec args);
 
                 void registerLiteral(unsigned int literal, Gringo::Value value);
                 std::shared_ptr<BoolLiteral> const getBoolLiteral(std::string const &name, Gringo::FWValVec args);
-
 
 		const Clasp::Model* getLastModel();
 		const Clasp::Solver* getLastSolver();
 
 	private:
+                bool checkMatchValues(const Gringo::Value* value1, const Gringo::Value* value2);
 		int getNumWildcards(Gringo::Value &value);
                 void assignExternal(shared_ptr<Gringo::Value> ext, bool val);
                 shared_ptr<Gringo::Value> assignExternal(std::string const &name, Gringo::FWValVec args, bool val);

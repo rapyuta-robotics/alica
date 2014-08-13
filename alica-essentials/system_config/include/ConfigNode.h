@@ -82,7 +82,6 @@ namespace supplementary
 		ConfigNode *create(string name, string &value)
 		{
 			this->children.push_back(ConfigNodePtr(new ConfigNode(name, value)));
-			cout << "CREATE " << name << " " << value  << endl;
 			this->children.back()->setParent(this);
 			return this->children.back().get();
 		}

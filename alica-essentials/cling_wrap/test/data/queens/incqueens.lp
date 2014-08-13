@@ -12,7 +12,8 @@ target(X,  n,  X-1,n,  h,n) :- X = 2..n.                % horizontal
 target(n,  Y,  n-1,Y,  h,n) :- Y = 1..n-1.              % horizontal
 target(Y,  X,  Y,  X-1,v,n) :- target(X,Y,X-1,Y,h,n).   % vertical
 
-{ queen(1..n,n); queen(n,1..n-1) }.
+{ queen(1..n,n) }.
+{ queen(n,1..n-1) }.
 
 attack(X',Y',D) :- target(X,Y,X',Y',D,n), queen(X,Y).
 attack(X',Y',D) :- target(X,Y,X',Y',D,n), attack(X,Y,D).
