@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(autodiff)
+project(constraintsolver)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -8,7 +8,9 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
- fsystem
+  fsystem
+  autodiff
+  system_config
 )
 
 ## System dependencies are found with CMake's conventions
@@ -82,7 +84,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES autodiff
+ LIBRARIES constaintsolver autodiff system_config
  CATKIN_DEPENDS fsystem
 # DEPENDS system filesystem
 )
@@ -93,73 +95,25 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+)
 
 ## Declare a cpp library
-add_library(autodiff
-  src/CompiledDifferentiator.cpp
-  src/Abs.cpp
-  src/And.cpp
-  src/Atan2.cpp
-  src/Constant.cpp
-  src/ConstPower.cpp
-  src/ConstraintUtility.cpp
-  src/Cos.cpp
-  src/Exp.cpp
-  src/Gp.cpp
-  src/LinSigmoid.cpp
-  src/Log.cpp
-  src/LTConstraint.cpp
-  src/LTEConstraint.cpp
-  src/Max.cpp
-  src/Min.cpp
-  src/Or.cpp
-  src/Product.cpp
-  src/Reification.cpp
-  src/Sigmoid.cpp
-  src/Sin.cpp
-  src/Sum.cpp
-  src/Term.cpp
-  src/TermBuilder.cpp
-  src/TermPower.cpp
-  src/TermUtils.cpp
-  src/TVec.cpp
-  src/Variable.cpp
-  src/Zero.cpp
-  src/compiled/CompiledAbs.cpp
-  src/compiled/CompiledAnd.cpp
-  src/compiled/CompiledAtan2.cpp
-  src/compiled/CompiledConstant.cpp
-  src/compiled/CompiledConstPower.cpp
-  src/compiled/CompiledConstraintUtility.cpp
-  src/compiled/CompiledCos.cpp
-  src/compiled/CompiledExp.cpp
-  src/compiled/CompiledGp.cpp
-  src/compiled/CompiledLinSigmoid.cpp
-  src/compiled/CompiledLog.cpp
-  src/compiled/CompiledLTConstraint.cpp
-  src/compiled/CompiledLTEConstraint.cpp
-  src/compiled/CompiledMax.cpp
-  src/compiled/CompiledMin.cpp
-  src/compiled/CompiledOr.cpp
-  src/compiled/CompiledProduct.cpp
-  src/compiled/CompiledReification.cpp
-  src/compiled/CompiledSigmoid.cpp
-  src/compiled/CompiledSin.cpp
-  src/compiled/CompiledSum.cpp
-  src/compiled/CompiledTermPower.cpp
-  src/compiled/CompiledVariable.cpp
+add_library(constraintsolver
+  src/GSolver.cpp
 )
 
 ## Declare a cpp executable
-# add_executable(autodiff_node src/autodiff_node.cpp)
+# add_executable(constraintsolver_node src/constraintsolver_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(autodiff ${catkin_LIBRARIES})
+add_dependencies(constraintsolver ${catkin_LIBRARIES})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(autodiff ${catkin_LIBRARIES})
+target_link_libraries(constraintsolver ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -176,7 +130,7 @@ target_link_libraries(autodiff ${catkin_LIBRARIES})
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS autodiff autodiff_node
+# install(TARGETS constraintsolver constraintsolver_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -201,7 +155,7 @@ target_link_libraries(autodiff ${catkin_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-catkin_add_gtest(${PROJECT_NAME}-test test/test_autodiff.cpp)
+catkin_add_gtest(${PROJECT_NAME}-test test/test_constraintsolver.cpp)
 if(TARGET ${PROJECT_NAME}-test)
   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
 endif()

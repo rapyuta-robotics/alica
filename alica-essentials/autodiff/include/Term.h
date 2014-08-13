@@ -66,8 +66,7 @@ namespace AutoDiff
 		static double getConstraintSteepness();
 		static void setConstraintSteepness(double constraintSteepness);
 
-//		bool operator==(const shared_ptr<Term>& term);
-		friend bool operator==(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
+//		friend bool operator==(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
 //		friend bool operator!=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
 	private:
 		const int m_id;

@@ -46,6 +46,41 @@ namespace AutoDiff
 		}
 	}
 
+	TVec::TVec(shared_ptr<Term> x)
+	{
+		_terms = vector<shared_ptr<Term>>();
+		_terms.push_back(x);
+	}
+
+	TVec::TVec(shared_ptr<Term> x, shared_ptr<Term> y) :
+			TVec(x)
+	{
+		_terms.push_back(y);
+	}
+
+	TVec::TVec(shared_ptr<Term> x, shared_ptr<Term> y, shared_ptr<Term> z) :
+			TVec(x, y)
+	{
+		_terms.push_back(z);
+	}
+
+	TVec::TVec(double x) :
+			TVec(TermBuilder::constant(x))
+	{
+
+	}
+
+	TVec::TVec(double x, double y) :
+			TVec(TermBuilder::constant(x), TermBuilder::constant(y))
+	{
+
+	}
+	TVec::TVec(double x, double y, double z) :
+			TVec(TermBuilder::constant(x), TermBuilder::constant(y), TermBuilder::constant(z))
+	{
+
+	}
+
 	shared_ptr<Term> TVec::normSquared()
 	{
 		vector<shared_ptr<Term>> powers;

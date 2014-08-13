@@ -305,26 +305,13 @@ namespace AutoDiff
 		return make_shared<LTEConstraint>(right, left, Term::getConstraintSteepness());
 	}
 
-//	bool Term::operator==(const shared_ptr<Term>& term)
+//	bool operator==(const shared_ptr<Term>& left, const shared_ptr<Term>& right)
 //	{
-//		cout << "operator== 1" << endl;
-//		return false;
+//		return &(*left) == &(*right);
 //	}
-
-	bool operator==(const shared_ptr<Term>& left, const shared_ptr<Term>& right)
-	{
-		cout << "operator== 2" << endl;
-
-		if (dynamic_pointer_cast<Zero>(left) != 0 && dynamic_pointer_cast<Zero>(right) != 0)
-		{
-			return true;
-		}
-		else if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0)
-		{
-			shared_ptr<Constant> constantLeft = dynamic_pointer_cast<Constant>(left);
-			shared_ptr<Constant> constantRight = dynamic_pointer_cast<Constant>(right);
-			return constantLeft->getValue() == constantRight->getValue();
-		}
-		return false;
-	}
+//
+//	bool operator!=(const shared_ptr<Term>& left, const shared_ptr<Term>& right)
+//	{
+//		return !(left == right);
+//	}
 } /* namespace AutoDiff */
