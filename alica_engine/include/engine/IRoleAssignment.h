@@ -15,7 +15,7 @@ using namespace std;
 
 namespace alica
 {
-
+	class IAlicaCommunication;
 	class IRoleAssignment
 	{
 	public:
@@ -23,6 +23,7 @@ namespace alica
 		virtual void init() = 0;
 		virtual void tick() = 0;
 		virtual Role* getRole(int robotID) = 0;
+		virtual void setCommunication(IAlicaCommunication* communication) = 0;
 		const Role* getOwnRole()
 		{
 			return ownRole;

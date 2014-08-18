@@ -34,7 +34,8 @@ protected:
 		//TODO extend TestBehaviourCreator
 		alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-		ae->init(bc,"Roleset", "MasterPlanTaskAssignment", ".", true);
+		//Sicher das du die StepEngine starten willste? Wenn ja -> setze es wieder auf true
+		ae->init(bc,"Roleset", "MasterPlanTaskAssignment", ".", false);
 	}
 
 	virtual void TearDown()

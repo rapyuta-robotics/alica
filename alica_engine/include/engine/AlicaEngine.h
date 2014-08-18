@@ -47,7 +47,7 @@ namespace alica
 		template<typename T> void abort(string msg, const T tail);
 		PlanRepository* getPlanRepository();
 		IBehaviourPool* getBehaviourPool();
-		const string& getRobotName() const;
+		string getRobotName() const;
 		Logger* getLog();
 		void setLog(Logger* log);
 		ITeamObserver* getTeamObserver();
@@ -65,7 +65,8 @@ namespace alica
 		void setStepCalled(bool stepCalled);
 		bool getStepCalled() const;
 		RoleSet* getRoleSet();
-		IAlicaCommunication* getCommunicatior();
+		IAlicaCommunication* getCommunicator();
+		void setCommunicator(IAlicaCommunication * communicator);
 		IPlanSelector* getPlanSelector();
 		IPlanner* getPlanner();
 		IAlicaClock* getIAlicaClock();
@@ -83,7 +84,7 @@ namespace alica
 		IRoleAssignment* roleAssignment;
 		list<IEngineModule*> mods;
 		IPlanSelector* planSelector;
-		IAlicaCommunication* communicatior;
+		IAlicaCommunication* communicator;
 		IPlanner* planner;
 		IAlicaClock* alicaClock;
 		PlanBase* planBase;

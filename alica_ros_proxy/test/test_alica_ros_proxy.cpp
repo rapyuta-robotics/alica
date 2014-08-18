@@ -16,7 +16,8 @@ TEST(PlanBase, planBaseTest)
 	alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ae->init(bc, "Roleset", "MasterPlan", ".", false);
-	delete bc;
+	ae->start();
+	sleep(3);
 }
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv){

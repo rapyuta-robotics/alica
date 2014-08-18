@@ -71,10 +71,11 @@ namespace alica
 		for (int i = 0; i < playerNames->size(); i++)
 		{
 			RobotProperties* rp = new RobotProperties(playerNames->at(i));
-			if (!foundSelf && playerNames->at(i).compare(ownPlayerName))
+			if (!foundSelf && playerNames->at(i).compare(ownPlayerName) == 0)
 			{
 				foundSelf = true;
 				this->me = new RobotEngineData(rp);
+				cout << "ME " << rp->getName() << rp->getId() << rp->getDefaultRole() << endl;
 				this->me->setActive(true);
 				this->myId = rp->getId();
 
@@ -147,11 +148,12 @@ namespace alica
 		{
 			if (r->isActive())
 			{
+				cout << "PASST HIER " << endl;
 				ret->push_back(r);
 			}
 
 		}
-		return ret;
+		return move(ret);
 	}
 
 	unique_ptr<list<RobotProperties*> > TeamObserver::getAvailableRobotProperties()
@@ -337,7 +339,7 @@ namespace alica
 		}
 		list<shared_ptr<SimplePlanTree> > queue;
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
-
+		cout << "lock guard " << endl;
 		for (auto pair : *this->simplePlanTrees)
 		{
 			queue.push_back(pair.second);
@@ -352,6 +354,7 @@ namespace alica
 				queue.push_back(c);
 			}
 		}
+		cout << this->getOwnEngineData()->getSuccessMarks() << endl;
 		this->getOwnEngineData()->getSuccessMarks()->limitToPlans(move(presentPlans));
 	}
 

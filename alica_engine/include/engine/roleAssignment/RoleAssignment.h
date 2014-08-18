@@ -40,6 +40,7 @@ namespace alica
 		Role* getOwnRole();
 		void setOwnRole(Role* ownRole);
 		map<int, Role*> getRobotRoleMapping();
+		void setCommunication(IAlicaCommunication* communication);
 
 	private:
 		RoleSet* roleSet;

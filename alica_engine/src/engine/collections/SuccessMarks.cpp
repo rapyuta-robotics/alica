@@ -29,12 +29,11 @@ namespace alica
 	void SuccessMarks::limitToPlans(unique_ptr<unordered_set<AbstractPlan*> > active)
 	{
 		list<AbstractPlan*> tr;
-		for (map<AbstractPlan*, shared_ptr<list<EntryPoint*> > >::const_iterator iterator =
-				this->getSuccessMarks().begin(); iterator != this->getSuccessMarks().end(); iterator++)
+		for (auto iterator : this->getSuccessMarks())
 		{
-			if (active->find(iterator->first) != active->end())
+			if (active->find(iterator.first) != active->end())
 			{
-				tr.push_back(iterator->first);
+				tr.push_back(iterator.first);
 			}
 		}
 		for (AbstractPlan* p : tr)
@@ -94,7 +93,8 @@ namespace alica
 					{
 						shared_ptr<list<EntryPoint*> > s;
 						s->push_back(ep);
-						this->getSuccessMarks().insert(pair<AbstractPlan*, shared_ptr<list<EntryPoint*> > >(ep->getPlan(),s));
+						this->getSuccessMarks().insert(
+								pair<AbstractPlan*, shared_ptr<list<EntryPoint*> > >(ep->getPlan(), s));
 					}
 				}
 			}

@@ -24,33 +24,34 @@ namespace alica
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		this->id = (*sc)["Globals"]->tryGet<int>(-1,"Globals", "Team", name.c_str(), "ID", NULL);
 		this->name = name;
+		this->characteristics = map<string, Characteristic*>();
 		this->capabilities = AlicaEngine::getInstance()->getPlanRepository()->getCapabilities();
 		string key = "";
 		string kvalue = "";
-		auto caps = (*sc)["Globals"]->getNames("Globals", "Team", this->name.c_str(), NULL);
+		shared_ptr<vector<string> > caps = (*sc)["Globals"]->getNames("Globals", "Team", this->name.c_str(), NULL);
+		cout << "SIZE CAPS  " << caps->size()  << " " << name << endl;
 		for(string s : *caps)
 		{
-			if(s.compare("ID") == 0 || s.compare("DefaultRole"))
+			if(s.compare("ID") == 0 || s.compare("DefaultRole") == 0)
 			{
 				continue;
 			}
 			key = s;
-			kvalue = (*sc)["Globals"]->get<string>("Globals","Team",this->name.c_str(),s.c_str(), NULL);
+			kvalue = (*sc)["Globals"]->get<string>("Globals","Team", this->name.c_str(), s.c_str(), NULL);
+			cout << "kValue " << kvalue  << " key " << key << endl;
 			for(auto p : this->capabilities)
 			{
 				if(p.second->getName().compare(key) == 0)
 				{
 					for(CapValue* val : p.second->getCapValues())
 					{
-
-						string k = "";
-						transform(kvalue.begin(), kvalue.end(), k.begin(), ::tolower);
-						if(val->getName().compare(k) == 0)
+//						transform(kvalue.begin(), kvalue.end(), kvalue.begin(), ::tolower);
+						if(val->getName().compare(kvalue) == 0)
 						{
 							Characteristic* cha = new Characteristic();
 							cha->setCapability(p.second);
 							cha->setCapValue(val);
-							this->getCharacteristics().insert(pair<string, Characteristic*>(key, cha));
+							this->characteristics.insert(pair<string, Characteristic*>(key, cha));
 						}
 					}
 				}
@@ -86,7 +87,7 @@ namespace alica
 
 	map<string, Characteristic*> RobotProperties::getCharacteristics()
 	{
-		return characteristics;
+		return this->characteristics;
 	}
 
 	const string& RobotProperties::getDefaultRole() const
