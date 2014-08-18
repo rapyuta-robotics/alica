@@ -21,6 +21,8 @@ using namespace std;
 #include "engine/PlanBase.h"
 #include "engine/teamobserver/TeamObserver.h"
 #include "engine/logging/Logger.h"
+#include "engine/roleAssignment/RoleAssignment.h"
+#include "engine/UtilityFunction.h"
 
 namespace alica
 {
@@ -29,18 +31,21 @@ namespace alica
 	 */
 	AlicaEngine::AlicaEngine()
 	{
+		this->sc = supplementary::SystemConfig::getInstance();
+		this->setTerminating(false);
+		this->teamObserver = new TeamObserver();
+		this->roleAssignment = new RoleAssignment();
+		this->behaviourPool = new BehaviourPool();
+		//TODO: erstellen von syncmodul
+//		this->syncModul = new SyncModul();
+
 		this->roleSet = nullptr;
 		this->masterPlan = nullptr;
 		this->planParser = nullptr;
-		this->teamObserver = nullptr;
 		this->log = nullptr;
 		this->planRepository = nullptr;
-		this->syncModul = nullptr;
-		this->roleAssignment = nullptr;
 		this->auth = nullptr;
-		this->behaviourPool = nullptr;
 		this->roleSet = nullptr;
-		this->sc = supplementary::SystemConfig::getInstance();
 		this->stepEngine = false;
 
 //		TODO: MODULELOADER CASTOR
@@ -77,24 +82,41 @@ namespace alica
 	bool AlicaEngine::init(IBehaviourCreator* bc, string roleSetName, string masterPlanName, string roleSetDir,
 	bool stepEngine)
 	{
-		bool everythingWorked = true;
-		this->setStepEngine(stepEngine);
-		this->planRepository = new PlanRepository();
-		this->planParser = new PlanParser(this->planRepository);
-		this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
-		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
-		this->behaviourPool = new BehaviourPool();
-		this->teamObserver = new TeamObserver();
-		this->teamObserver->init();
-		this->planSelector = new PlanSelector();
-		this->log = new Logger();
-		this->planBase = new PlanBase(this->masterPlan);
+		this->stepEngine = stepEngine;
+		if (this->planRepository == nullptr)
+		{
+			this->planRepository = new PlanRepository();
+		}
+		if (this->planParser == nullptr)
+		{
+			this->planParser = new PlanParser(this->planRepository);
+		}
+		if (this->masterPlan == nullptr)
+		{
+			this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
+		}
+		if (this->roleSet == nullptr)
+		{
+			this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
+		}
+
 		this->stepCalled = false;
-		planBase->start();
+		bool everythingWorked = true;
 		everythingWorked &= this->behaviourPool->init(bc);
+		this->log = new Logger();
+		this->auth = new AuthorityManager();
+		this->teamObserver->init();
+		this->roleAssignment->init();
+		this->planSelector = new PlanSelector();
+		//TODO
+//		ConstraintHelper.Init(this.cSolver);
+		this->auth->init();
+		this->planBase = new PlanBase(this->masterPlan);
+		UtilityFunction::initDataStructures();
+		//TODO
+//		this.syncModul.Init();
 		return everythingWorked;
 	}
-
 
 	bool AlicaEngine::shutdown()
 	{
@@ -228,7 +250,7 @@ namespace alica
 		exit(EXIT_FAILURE);
 	}
 
-	const string& AlicaEngine::getRobotName() const
+	string AlicaEngine::getRobotName() const
 	{
 		return sc->getHostname();
 	}
@@ -253,9 +275,15 @@ namespace alica
 		this->terminating = terminating;
 	}
 
-	IAlicaCommunication * AlicaEngine::getCommunicatior()
+	IAlicaCommunication * AlicaEngine::getCommunicator()
 	{
-		return communicatior;
+		return communicator;
+	}
+
+	void AlicaEngine::setCommunicator(IAlicaCommunication * communicator)
+	{
+		this->communicator = communicator;
+		this->roleAssignment->setCommunication(communicator);
 	}
 	IPlanner* AlicaEngine::getPlanner()
 	{
