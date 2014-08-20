@@ -25,6 +25,12 @@ namespace alica
 
 	RoleAssignment::RoleAssignment()
 	{
+		this->communication = nullptr;
+		this->to = nullptr;
+		this->ownRobotProperties = nullptr;
+		this->roleSet = nullptr;
+		this->rolePub = nullptr;
+		this->ownRole = nullptr;
 		this->robotRoleMapping = map<int, Role*>();
 		this->availableRobots;
 		this->sortedRobots = vector<RobotRoleUtility*>();

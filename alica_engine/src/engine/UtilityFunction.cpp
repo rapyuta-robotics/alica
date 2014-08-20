@@ -26,6 +26,8 @@ namespace alica
 	UtilityFunction::UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight,
 										double similarityWeight, Plan* plan)
 	{
+		this->ra = nullptr;
+		this->bpe = nullptr;
 		this->lookupStruct = new TaskRoleStruct(0, 0);
 		this->priResult = new UtilityInterval(0.0, 0.0);
 		this->simUI = new UtilityInterval(0.0, 0.0);

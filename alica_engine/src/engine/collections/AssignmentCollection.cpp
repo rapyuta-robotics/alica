@@ -13,7 +13,7 @@ namespace alica
 
 	AssignmentCollection::AssignmentCollection()
 	{
-
+		this->count = 0;
 	}
 
 	AssignmentCollection::AssignmentCollection(vector<EntryPoint*> eps, vector<shared_ptr<vector<int> > > robots)

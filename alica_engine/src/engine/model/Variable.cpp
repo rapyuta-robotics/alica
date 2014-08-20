@@ -13,7 +13,7 @@ namespace alica
 
 	Variable::Variable()
 	{
-
+		this->solverVar = nullptr;
 	}
 
 	Variable::Variable(AutoDiff::Variable* v)

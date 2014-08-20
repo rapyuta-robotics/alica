@@ -95,7 +95,6 @@ namespace alica
 		int getFailure();
 		void deactivateChildren();
 		void clearChildren();
-		void setFailedChildren(AbstractPlan* p);
 		void adaptAssignment(RunningPlan* r);
 		void setFailedChild(AbstractPlan* child);
 		unique_ptr<list<int> > getRobotsAvail();
@@ -116,7 +115,7 @@ namespace alica
 		void setCycleManagement(CycleManager* cycleManagement);
 		void revokeAllConstraints();
 		void attachPlanConstraints();
-		bool recursiveUpdateAssignment(list<SimplePlanTree*> spts, list<int> availableAgents,list<int> noUpdates, unsigned long now);
+		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents,list<int> noUpdates, unsigned long now);
 		void ToMessage(list<long> message, RunningPlan* deepestNode, int depth, int curDepth);
 		string toString();
 

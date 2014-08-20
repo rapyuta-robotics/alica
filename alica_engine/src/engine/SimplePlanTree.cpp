@@ -14,7 +14,11 @@ namespace alica
 
 	SimplePlanTree::SimplePlanTree()
 	{
-
+		this->state = nullptr;
+		this->newSimplePlanTree = false;
+		this->receiveTime = 0;
+		this->entryPoint = nullptr;
+		this->parent =nullptr;
 	}
 
 	SimplePlanTree::~SimplePlanTree()

@@ -21,6 +21,10 @@ namespace alica
 
 	Logger::Logger()
 	{
+		this->endTime = 0;
+		this->itCount = 0;
+		this->sBuild = 0;
+		this->startTime = 0;
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		this->active = (*sc)["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
 		if (this->active)

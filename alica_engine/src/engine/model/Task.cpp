@@ -12,19 +12,20 @@ namespace alica
 
 	Task::Task()
 	{
-		// TODO Auto-generated constructor stub
-
+		this->defaultTask = nullptr;
+		this->taskRepository = nullptr;
 	}
 
 	Task::~Task()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 
 	Task::Task(bool defaultTask)
 	{
 		this->defaultTask = defaultTask;
+		this->taskRepository = nullptr;
+
 	}
 
 	string Task::toString()

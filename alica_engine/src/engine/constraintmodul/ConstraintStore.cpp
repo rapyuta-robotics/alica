@@ -12,6 +12,7 @@ namespace alica
 
 	ConstraintStore::ConstraintStore(RunningPlan* rp)
 	{
+		this->rp = rp;
 		//TODO:
 	}
 

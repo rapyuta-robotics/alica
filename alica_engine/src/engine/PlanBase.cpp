@@ -28,6 +28,15 @@ namespace alica
 {
 	PlanBase::PlanBase(Plan* masterPlan)
 	{
+		this->mainThread = nullptr;
+		this->treeDepth = 0;
+		this->lastSendTime = 0;
+		this->statusPublisher = nullptr;
+		this->lastSentStatusTime =0;
+		this->loopInterval = 0;
+		this->stepModeCV = nullptr;
+		this->deepestNode = nullptr;
+		this->log = nullptr;
 		this->rootNode = nullptr;
 		this->masterPlan = masterPlan;
 		this->ae = AlicaEngine::getInstance();

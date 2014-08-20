@@ -15,6 +15,10 @@ namespace alica
 
 	EntryPoint::EntryPoint()
 	{
+		this->task = nullptr;
+		this->state = nullptr;
+		this->successRequired = false;
+		this->plan = nullptr;
 	}
 
 	EntryPoint::~EntryPoint()

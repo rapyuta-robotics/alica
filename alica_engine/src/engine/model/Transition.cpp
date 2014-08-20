@@ -15,13 +15,14 @@ namespace alica
 
 	Transition::Transition()
 	{
-		// TODO Auto-generated constructor stub
-
+		this->preCondition = nullptr;
+		this->inState = nullptr;
+		this->outState = nullptr;
+		this->syncTransition = nullptr;
 	}
 
 	Transition::~Transition()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	PreCondition* Transition::getPreCondition()

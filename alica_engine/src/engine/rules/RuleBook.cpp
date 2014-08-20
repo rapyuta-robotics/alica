@@ -30,6 +30,7 @@ namespace alica
 {
 	RuleBook::RuleBook()
 	{
+		this->log = nullptr;
 		AlicaEngine* ae = AlicaEngine::getInstance();
 		this->to = ae->getTeamObserver();
 		this->ps = ae->getPlanSelector();
@@ -270,7 +271,7 @@ namespace alica
 		if (r->getFailure() != 2)
 			return PlanChange::NoChange;
 		r->getParent()->deactivateChildren();
-		r->getParent()->setFailedChildren(r->getPlan());
+		r->getParent()->setFailedChild(r->getPlan());
 		r->getParent()->setAllocationNeeded(true);
 		r->getParent()->clearChildren();
 		r->setFailHandlingNeeded(false);
