@@ -55,6 +55,9 @@ namespace alica
 		this->rp = p;
 		this->myID = AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
 		this->pr = AlicaEngine::getInstance()->getPlanRepository();
+		this->overrideTimestamp = 0;
+		this->overrideShoutTime = 0;
+		this->fixedAllocation = nullptr;
 	}
 
 	CycleManager::~CycleManager()

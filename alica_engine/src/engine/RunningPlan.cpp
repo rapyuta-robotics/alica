@@ -30,13 +30,24 @@
 #include "engine/model/PlanType.h"
 #include "engine/model/Task.h"
 #include "engine/IAlicaClock.h"
-
+#include "engine/SimplePlanTree.h"
+#include "engine/allocationauthority/EntryPointRobotPair.h"
 
 namespace alica
 {
 
 	RunningPlan::RunningPlan()
 	{
+		this->planType = nullptr;
+		this->plan = nullptr;
+		this->parent = nullptr;
+		this->bp = nullptr;
+		this->activeState = nullptr;
+		this->activeEntryPoint = nullptr;
+		this->behaviour = nullptr;
+		this->planStartTime = 0;
+		this->stateStartTime = 0;
+		this->assignment = nullptr;
 		this->to = AlicaEngine::getInstance()->getTeamObserver();
 		this->ownId = to->getOwnId();
 		this->robotsAvail = unique_ptr<list<int> >();
@@ -107,17 +118,18 @@ namespace alica
 	 * @param rules
 	 * @return PlanChange
 	 */
-	PlanChange RunningPlan::tick(RuleBook* rules){
+	PlanChange RunningPlan::tick(RuleBook* rules)
+	{
 
 		this->cycleManagement->update();
 		PlanChange myChange = rules->visit(this);
 
 		PlanChange childChange = PlanChange::NoChange;
-		for(RunningPlan* rp : *this->children)
+		for (RunningPlan* rp : *this->children)
 		{
 			childChange = rules->updateChange(childChange, rp->tick(rules));
 		}
-		if(childChange != PlanChange::NoChange && childChange != PlanChange::InternalChange)
+		if (childChange != PlanChange::NoChange && childChange != PlanChange::InternalChange)
 		{
 			myChange = rules->updateChange(myChange, rules->visit(this));
 		}
@@ -256,7 +268,7 @@ namespace alica
 
 	list<RunningPlan*>* RunningPlan::getChildren()
 	{
-		cout << "Size of children list: "  <<  this->children->size() << endl;
+		cout << "Size of children list: " << this->children->size() << endl;
 		return this->children;
 	}
 
@@ -416,7 +428,21 @@ namespace alica
 
 	void RunningPlan::addChildren(list<RunningPlan*>* children)
 	{
-		//TODO implement this....
+		for (RunningPlan* r : (*children))
+		{
+			r->setParent(this);
+			this->children->push_back(r);
+			int f = 0;
+			auto iter = this->failedSubPlans.find(r->getPlan());
+			if (iter != this->failedSubPlans.end())
+			{
+				r->failCount = iter->second;
+			}
+			if (this->active)
+			{
+				r->activate();
+			}
+		}
 	}
 
 	int RunningPlan::getFailure()
@@ -435,11 +461,6 @@ namespace alica
 	void RunningPlan::clearChildren()
 	{
 		this->children->clear();
-	}
-
-	void RunningPlan::setFailedChildren(AbstractPlan* p)
-	{
-		//TODO implement this....
 	}
 
 	void RunningPlan::adaptAssignment(RunningPlan* r)
@@ -706,13 +727,191 @@ namespace alica
 		this->constraintStore->addCondition(this->plan->getRuntimeCondition());
 	}
 
-	bool RunningPlan::recursiveUpdateAssignment(list<SimplePlanTree*> spts, list<int> availableAgents,
+	bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents,
 												list<int> noUpdates, unsigned long now)
 	{
-		if(this->isBehaviour())
+		if (this->isBehaviour())
 		{
 			return false;
 		}
+		bool keepTask = (this->planStartTime + assignmentProtectionTime > now);
+		bool auth = this->cycleManagement->haveAuthority();
+
+		//if keepTask, the task Assignment should not be changed!
+		bool ret = false;
+		AllocationDifference* aldif = new AllocationDifference();
+		for (shared_ptr<SimplePlanTree> spt : spts)
+		{
+			if (spt->getState()->getInPlan() != this->plan)
+			{ //the robot is no longer participating in this plan
+				if (!keepTask & !auth)
+				{
+					EntryPoint* ep = this->getAssignment()->entryPointOfRobot(spt->getRobotId());
+					if (ep != nullptr)
+					{
+						this->getAssignment()->removeRobot(spt->getRobotId());
+						ret = true;
+						aldif->getSubtractions().push_back(new EntryPointRobotPair(ep, spt->getRobotId()));
+					}
+				}
+			}
+			else
+			{
+				if (keepTask || auth)
+				{ //Update only state, and that only if it is in the reachablity graph of its current entrypoint, else ignore
+					EntryPoint* cep = this->getAssignment()->entryPointOfRobot(spt->getRobotId());
+					if (cep != nullptr)
+					{
+						if (cep->getReachableStates().find(spt->getState()) != cep->getReachableStates().end())
+						{
+							this->getAssignment()->getRobotStateMapping()->setState(spt->getRobotId(), spt->getState());
+						}
+					}
+					else
+					{ //robot was not expected to be here during protected assignment time, add it.
+						this->getAssignment()->addRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
+						aldif->getAdditions().push_back(new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId()));
+
+					}
+				}
+				else
+				{ //Normal Update
+					EntryPoint* ep = this->getAssignment()->entryPointOfRobot(spt->getRobotId());
+					ret |= this->getAssignment()->updateRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
+					if (spt->getEntryPoint() != ep)
+					{
+						aldif->getAdditions().push_back(new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId()));
+						if (ep != nullptr)
+							aldif->getSubtractions().push_back(new EntryPointRobotPair(ep, spt->getRobotId()));
+					}
+
+				}
+			}
+		}
+		auto eps = this->getAssignment()->getEntryPoints();
+		list<int> rem = list<int>();
+		if (!keepTask)
+		{ //remove any robot no longer available in the spts (auth flag obey here, as robot might be unavailable)
+		  //EntryPoint[] eps = this.Assignment.GetEntryPoints();
+
+			for (int i = 0; i < eps.size(); i++)
+			{
+				rem.clear();
+				auto robs = this->getAssignment()->getRobotsWorking(eps[i]);
+				for (int rob : (*robs))
+				{
+					if (rob == ownId)
+						continue;
+					bool found = false;
+					if (find(noUpdates.begin(), noUpdates.end(), rob) != noUpdates.end())
+					{
+						//found = true;
+						continue;
+					}
+					for (shared_ptr<SimplePlanTree> spt : spts)
+					{
+						if (spt->getRobotId() == rob)
+						{
+							found = true;
+							break;
+						}
+					}
+					if (!found)
+					{
+						rem.push_back(rob);
+						//this.Assignment.RemoveRobot(rob);
+						aldif->getSubtractions().push_back(new EntryPointRobotPair(eps[i], rob));
+						ret = true;
+					}
+				}
+				for (int rob : rem)
+				{
+					this->getAssignment()->removeRobot(rob); //TODO: use entrypoint to speed things up
+				}
+			}
+		}
+
+		//enforce consistency between RA and PlanTree by removing robots deemed inactive:
+		if (!auth)
+		{ //under authority do not remove robots from assignment
+			for (int i = 0; i < eps.size(); i++)
+			{
+				rem.clear();
+				auto robs = this->getAssignment()->getRobotsWorking(eps[i]);
+				for (int rob : (*robs))
+				{
+					//if (rob==ownId) continue;
+					if (find(availableAgents.begin(), availableAgents.end(), rob) == availableAgents.end())
+					{
+						rem.push_back(rob);
+						//this.Assignment.RemoveRobot(rob);
+						aldif->getSubtractions().push_back(new EntryPointRobotPair(eps[i], rob));
+						ret = true;
+					}
+				}
+
+				for (int rob : rem)
+				{
+					this->getAssignment()->removeRobot(rob);
+				}
+			}
+		}
+
+		aldif->setReason(AllocationDifference::Reason::message);
+		this->cycleManagement->setNewAllocDiff(this, aldif);
+//Update Success Collection:
+		this->to->updateSuccessCollection((Plan*)this->getPlan(), this->getAssignment()->getEpSuccessMapping());
+
+//If Assignment Protection Time for newly started plans is over, limit available robots to those in this active state.
+		if (this->stateStartTime + assignmentProtectionTime > now)
+		{
+			auto robotsJoined = this->getAssignment()->getRobotStateMapping()->getRobotsInState(this->getActiveState());
+			for (int i = 0; i < availableAgents.size(); i++)
+			{
+				if (find(robotsJoined.begin(), robotsJoined.end(), availableAgents[i]) == robotsJoined.end())
+				{
+					availableAgents.erase(availableAgents.begin() + i);
+					i--;
+				}
+			}
+		}
+		else if (auth)
+		{ // in case of authority, remove all that are not assigned to same task
+			auto robotsJoined = this->getAssignment()->getRobotsWorking(this->getOwnEntryPoint());
+			for (int i = 0; i < availableAgents.size(); i++)
+			{
+				if (find(robotsJoined->begin(), robotsJoined->end(), availableAgents[i]) == robotsJoined->end())
+				{
+					availableAgents.erase(availableAgents.begin() + i);
+					i--;
+				}
+			}
+		}
+//Give Plans to children
+		for (RunningPlan* r : (*this->children))
+		{
+			if (r->isBehaviour())
+			{
+				continue;
+			}
+			list<shared_ptr<SimplePlanTree> > newcspts = list<shared_ptr<SimplePlanTree> >();
+			for(shared_ptr<SimplePlanTree> spt : spts)
+			{
+				if(spt->getState() == this->activeState)
+				{
+					for(shared_ptr<SimplePlanTree> cspt : spt->getChildren())
+					{
+						if(cspt->getState()->getInPlan() == r->getPlan())
+						{
+							newcspts.push_back(cspt);
+							break;
+						}
+					}
+				}
+			}
+			ret |= r->recursiveUpdateAssignment(newcspts, availableAgents, noUpdates, now);
+		}
+		return ret;
 
 	}
 
@@ -753,7 +952,8 @@ namespace alica
 		ss << "Plan: " + (plan != nullptr ? plan->getName() : "NULL") << endl;
 		ss << "PlanType: " << (planType != nullptr ? planType->getName() : "NULL") << endl;
 		ss << "ActState: " << (activeState != nullptr ? activeState->getName() : "NULL") << endl;
-		ss << "Task: " << (this->getOwnEntryPoint() != nullptr ? this->getOwnEntryPoint()->getTask()->getName() : "NULL")
+		ss << "Task: "
+				<< (this->getOwnEntryPoint() != nullptr ? this->getOwnEntryPoint()->getTask()->getName() : "NULL")
 				<< endl;
 		ss << "IsBehaviour: " << this->isBehaviour() << "\t";
 		if (this->isBehaviour())

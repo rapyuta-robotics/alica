@@ -37,6 +37,8 @@ namespace alica
 
 	DynCardinality::DynCardinality()
 	{
+		this->max = 0;
+		this->min = 0;
 	}
 
 	void DynCardinality::setMin(int min)

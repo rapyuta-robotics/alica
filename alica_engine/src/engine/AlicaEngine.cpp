@@ -31,8 +31,15 @@ namespace alica
 	 */
 	AlicaEngine::AlicaEngine()
 	{
+		this->stepCalled = false;
+		this->planBase = nullptr;
+		this->planner = nullptr;
+		this->planSelector = nullptr;
+		this->communicator = nullptr;
+		this->alicaClock = nullptr;
+		this->syncModul = nullptr;
 		this->sc = supplementary::SystemConfig::getInstance();
-		this->setTerminating(false);
+		this->terminating = false;
 		this->teamObserver = new TeamObserver();
 		this->roleAssignment = new RoleAssignment();
 		this->behaviourPool = new BehaviourPool();

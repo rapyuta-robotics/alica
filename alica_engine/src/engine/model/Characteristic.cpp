@@ -12,7 +12,8 @@ namespace alica
 
 	Characteristic::Characteristic()
 	{
-
+		this->capability = nullptr;
+		this->capValue = nullptr;
 	}
 
 	Characteristic::~Characteristic()

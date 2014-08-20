@@ -12,7 +12,8 @@ namespace alica
 
 	RoleSet::RoleSet()
 	{
-
+		this->usableWithPlanID = 0;
+		this->isDefault = false;
 	}
 
 	RoleSet::~RoleSet()

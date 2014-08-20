@@ -14,18 +14,23 @@ namespace alica
 		this->terminal = false;
 		this->successState = false;
 		this->failureState = false;
-		// TODO Auto-generated constructor stub
+		this->inPlan = false;
+		this->entryPoint = nullptr;
 
 	}
 	State::State(long id)
 	{
 		this->id = id;
+		this->terminal = false;
+		this->successState = false;
+		this->failureState = false;
+		this->inPlan = false;
+		this->entryPoint = nullptr;
 
 	}
 
 	State::~State()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	bool State::isFailureState() const

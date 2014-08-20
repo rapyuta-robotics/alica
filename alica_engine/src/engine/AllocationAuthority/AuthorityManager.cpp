@@ -12,6 +12,8 @@ namespace alica
 	AuthorityManager::AuthorityManager()
 	{
 		this->ae = AlicaEngine::getInstance();
+		this->ownID = 0;
+		this->authorityPub = nullptr;
 	}
 
 	AuthorityManager::~AuthorityManager()
@@ -89,10 +91,11 @@ namespace alica
 	 */
 	void AuthorityManager::sendAllocation(RunningPlan* p)
 	{
+		//TODO
 	}
 	bool AuthorityManager::authorityMatchesPlan(AllocationAuthorityInfo aai, RunningPlan* p)
 	{
-
+		//TODO
 	}
 
 }

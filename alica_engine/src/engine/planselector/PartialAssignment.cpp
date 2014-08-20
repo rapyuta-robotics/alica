@@ -48,6 +48,10 @@ namespace alica
 
 	PartialAssignment::PartialAssignment()
 	{
+		this->utilFunc = nullptr;
+		this->epSuccessMapping = nullptr;
+		this->hashCalculated = false;
+		this->plan = nullptr;
 		this->epRobotsMapping = new AssignmentCollection(maxEpsCount);
 		this->unAssignedRobots = vector<int>();
 		this->dynCardinalities = vector<DynCardinality*>(maxEpsCount);

@@ -13,7 +13,7 @@ namespace alica
 
 	RoleTaskMapping::RoleTaskMapping()
 	{
-
+		this->role = nullptr;
 	}
 
 	RoleTaskMapping::~RoleTaskMapping()

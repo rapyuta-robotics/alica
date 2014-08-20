@@ -16,6 +16,8 @@ namespace alica
 	{
 		this->additions = vector<EntryPointRobotPair*>();
 		this->subtractions = vector<EntryPointRobotPair*>();
+		//TODO perhaps default valueis needed
+		this->reason = empty;
 	}
 
 	AllocationDifference::~AllocationDifference()
