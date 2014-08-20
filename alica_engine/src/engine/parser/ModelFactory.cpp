@@ -1574,7 +1574,7 @@ namespace alica
 #endif
 		for (pair<long, long> pairs : this->rtmRoleReferences)
 		{
-			Role* r = (Role*)this->elements.find(pairs.second)->second;
+			Role* r = (Role*)this->rep->getRoles().find(pairs.second)->second;
 			RoleTaskMapping* rtm = (RoleTaskMapping*)this->elements.find(pairs.first)->second;
 			r->setRoleTaskMapping(rtm);
 			rtm->setRole(r);
@@ -1600,7 +1600,7 @@ namespace alica
 		for (pair<long, long> pairs : this->charCapValReferences)
 		{
 			Characteristic* cha = (Characteristic*)this->rep->getCharacteristics().find(pairs.first)->second;
-			CapValue* capVal = (CapValue*)this->elements.find(pairs.first)->second;
+			CapValue* capVal = (CapValue*)this->elements.find(pairs.second)->second;
 			cha->setCapValue(capVal);
 		}
 		this->charCapValReferences.clear();
