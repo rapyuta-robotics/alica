@@ -18,18 +18,17 @@ namespace AutoDiff
 	LTConstraint::LTConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness) :
 			Term()
 	{
-		_x = x;
-		_y = y;
+		_left = x;
+		_right = y;
 		_steppness = steppness;
-//		_negatedform = 0;
-		_negatedform = make_shared<LTEConstraint>(_x, _y, _steppness, shared_from_this());
+		_negatedform = NULL;
 	}
 
 	LTConstraint::LTConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness, shared_ptr<Term> negatedForm) :
 			Term()
 	{
-		_x = x;
-		_y = y;
+		_left = x;
+		_right = y;
 		_steppness = steppness;
 		_negatedform = negatedForm;
 	}
@@ -42,12 +41,12 @@ namespace AutoDiff
 
 	shared_ptr<Term> LTConstraint::aggregateConstants()
 	{
-		_x = _x->aggregateConstants();
-		_y = _y->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(_x) != 0 && dynamic_pointer_cast<Constant>(_y) != 0)
+		_left = _left->aggregateConstants();
+		_right = _right->aggregateConstants();
+		if (dynamic_pointer_cast<Constant>(_left) != 0 && dynamic_pointer_cast<Constant>(_right) != 0)
 		{
-			shared_ptr<Constant> x = dynamic_pointer_cast<Constant>(_x);
-			shared_ptr<Constant> y = dynamic_pointer_cast<Constant>(_y);
+			shared_ptr<Constant> x = dynamic_pointer_cast<Constant>(_left);
+			shared_ptr<Constant> y = dynamic_pointer_cast<Constant>(_right);
 			if (x->getValue() < y->getValue())
 			{
 				return Term::TRUE;
@@ -70,21 +69,21 @@ namespace AutoDiff
 
 	shared_ptr<Term> LTConstraint::negate()
 	{
-//		if (_negatedform == 0)
-//		{
-//			_negatedform = make_shared<LTEConstraint>(_x, _y, _steppness, shared_from_this());
-//		}
+		if (!_negatedform)
+		{
+			_negatedform = make_shared<LTEConstraint>(_left, _right, _steppness, shared_from_this());
+		}
 		return _negatedform;
 	}
 
-	const shared_ptr<Term> LTConstraint::getX()
+	const shared_ptr<Term> LTConstraint::getLeft()
 	{
-		return _x;
+		return _left;
 	}
 
-	const shared_ptr<Term> LTConstraint::getY()
+	const shared_ptr<Term> LTConstraint::getRight()
 	{
-		return _y;
+		return _right;
 	}
 
 	const double LTConstraint::getSteppness()

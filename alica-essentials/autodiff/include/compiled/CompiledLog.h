@@ -1,0 +1,29 @@
+/*
+ * CompiledLog.h
+ *
+ *  Created on: Jul 18, 2014
+ *      Author: psp
+ */
+
+#ifndef COMPILEDLOG_H_
+#define COMPILEDLOG_H_
+
+#include "TapeElement.h"
+
+namespace AutoDiff
+{
+	namespace Compiled
+	{
+
+		class CompiledLog : public TapeElement
+		{
+		public:
+			int _arg;
+
+			void accept(shared_ptr<ITapeVisitor> visitor);
+		};
+
+	} /* namespace Compiled */
+} /* namespace AutoDiff */
+
+#endif /* COMPILEDLOG_H_ */

@@ -20,6 +20,7 @@
 // }}}
 
 #include "grounder.hh"
+#include "ClingWrapper.h"
 
 // {{{ definition of ClaspLpOutput
 
@@ -72,14 +73,17 @@ void ClaspLpOutput::printDisjunctiveRule(AtomVec const &atoms, LitVec const &bod
 }
 
 void ClaspLpOutput::printSymbol(unsigned atomUid, Gringo::Value v) {
-	if (v.type() == Gringo::Value::ID || v.type() == Gringo::Value::STRING) {
-		prg_.setAtomName(atomUid, (*v.string()).c_str());
-	}
-	else {
-		str_.str("");
-		v.print(str_);
-		prg_.setAtomName(atomUid, str_.str().c_str());
-	}
+    if (this->clingWrapper)
+      this->clingWrapper->registerLiteral(atomUid, v);
+
+    if (v.type() == Gringo::Value::ID || v.type() == Gringo::Value::STRING) {
+            prg_.setAtomName(atomUid, (*v.string()).c_str());
+    }
+    else {
+            str_.str("");
+            v.print(str_);
+            prg_.setAtomName(atomUid, str_.str().c_str());
+    }
 }
 
 void ClaspLpOutput::printExternal(unsigned atomUid, Gringo::Output::ExternalType type) {
@@ -100,7 +104,8 @@ bool &ClaspLpOutput::disposeMinimize() {
 #define LOG if (verbose_) std::cerr
 Grounder::Grounder() {}
 
-void Grounder::parse(const StringSeq& files, const GringoOptions& opts, Clasp::Asp::LogicProgram* claspOut) {
+void Grounder::parse(const StringSeq& files, const GringoOptions& opts, Clasp::Asp::LogicProgram* claspOut,
+                     supplementary::ClingWrapper* clingWrapper) {
     using namespace Gringo;
 	if (opts.wNoRedef)        { message_printer()->disable(W_DEFINE_REDEFINTION); }
 	if (opts.wNoCycle)        { message_printer()->disable(W_DEFINE_CYCLIC);  }
@@ -114,7 +119,7 @@ void Grounder::parse(const StringSeq& files, const GringoOptions& opts, Clasp::A
 		out.reset(new Output::OutputBase(std::move(outPreds), std::cout, opts.lpRewrite));
 	}
 	else {	
-		if (claspOut) { lpOut.reset(new ClaspLpOutput(*claspOut)); }
+		if (claspOut) { lpOut.reset(new ClaspLpOutput(*claspOut, clingWrapper)); }
 		else          { lpOut.reset(new Output::PlainLparseOutputter(std::cout)); }
 		out.reset(new Output::OutputBase(std::move(outPreds), *lpOut, opts.lparseDebug));
 	}

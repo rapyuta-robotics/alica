@@ -26,13 +26,13 @@ namespace AutoDiff
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
 		shared_ptr<Term> negate();
 
-		const shared_ptr<Term> getX();
-		const shared_ptr<Term> getY();
+		const shared_ptr<Term> getLeft();
+		const shared_ptr<Term> getRight();
 		const double getSteppness();
 		const shared_ptr<Term> getNegatedForm();
 	private:
-		shared_ptr<Term> _x;
-		shared_ptr<Term> _y;
+		shared_ptr<Term> _left;
+		shared_ptr<Term> _right;
 		double _steppness;
 		shared_ptr<Term> _negatedform;
 	};

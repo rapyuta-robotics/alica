@@ -8,6 +8,7 @@
 #include "CompiledDifferentiator.h"
 
 #include "Term.h"
+#include "TermBuilder.h"
 #include "Abs.h"
 #include "And.h"
 #include "Atan2.h"
@@ -32,13 +33,33 @@
 #include "TermPower.h"
 #include "Variable.h"
 #include "Zero.h"
+#include "compiled/CompiledAbs.h"
+#include "compiled/CompiledAnd.h"
+#include "compiled/CompiledAtan2.h"
 #include "compiled/CompiledConstant.h"
+#include "compiled/CompiledConstPower.h"
+#include "compiled/CompiledConstraintUtility.h"
+#include "compiled/CompiledCos.h"
 #include "compiled/CompiledExp.h"
+#include "compiled/CompiledGp.h"
+#include "compiled/CompiledLinSigmoid.h"
+#include "compiled/CompiledLog.h"
+#include "compiled/CompiledLTConstraint.h"
+#include "compiled/CompiledLTEConstraint.h"
+#include "compiled/CompiledMax.h"
+#include "compiled/CompiledMin.h"
+#include "compiled/CompiledOr.h"
 #include "compiled/CompiledProduct.h"
+#include "compiled/CompiledReification.h"
+#include "compiled/CompiledSigmoid.h"
+#include "compiled/CompiledSin.h"
 #include "compiled/CompiledSum.h"
+#include "compiled/CompiledTermPower.h"
 #include "compiled/CompiledVariable.h"
 
-#include <math.h>
+#include <cmath>
+#include <limits>
+#include <algorithm>
 
 #include <iostream>
 
@@ -156,20 +177,56 @@ namespace AutoDiff
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Abs> abs)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptr<Abs> abs)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(abs, [&abs, &storedThis]()
+		{
+			int argIndex = abs->getArg()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledAbs> element = make_shared<Compiled::CompiledAbs>();
+			element->_arg = argIndex;
+			element->inputs = vector<Compiled::InputEdge>(1);
+			element->inputs[0].index = argIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<And> and_)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptr<And> and_)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(and_, [&and_, &storedThis]()
+		{
+			int leftIndex = and_->getLeft()->accept(storedThis);
+			int rightIndex = and_->getRight()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledAnd> element = make_shared<Compiled::CompiledAnd>();
+			element->_left = leftIndex;
+			element->_right = rightIndex;
+			element->inputs = vector<Compiled::InputEdge>(2);
+			element->inputs[0].index = leftIndex;
+			element->inputs[1].index = rightIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Atan2> atan2)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptr<Atan2> atan2)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(atan2, [&atan2, &storedThis]()
+		{
+			int leftIndex = atan2->getLeft()->accept(storedThis);
+			int rightIndex = atan2->getRight()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledAtan2> element = make_shared<Compiled::CompiledAtan2>();
+			element->_left = leftIndex;
+			element->_right = rightIndex;
+			element->inputs = vector<Compiled::InputEdge>(2);
+			element->inputs[0].index = leftIndex;
+			element->inputs[1].index = rightIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Constant> constant)
@@ -186,20 +243,56 @@ namespace AutoDiff
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<ConstPower> intPower)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptr<ConstPower> intPower)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(intPower, [&intPower, &storedThis]()
+		{
+			int baseIndex = intPower->getBase()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledConstPower> element = make_shared<Compiled::CompiledConstPower>();
+			element->_base = baseIndex;
+			element->_exponent = intPower->getExponent();
+			element->inputs = vector<Compiled::InputEdge>(1);
+			element->inputs[0].index = baseIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<ConstraintUtility> cu)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptrr<ConstraintUtility> cu)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(
+				cu,
+				[&cu, &storedThis]()
+				{
+					int constraintIndex = cu->getConstraint()->accept(storedThis);
+					int utilityIndex = cu->getUtility()->accept(storedThis);
+
+					shared_ptr<Compiled::CompiledConstraintUtility> element = make_shared<Compiled::CompiledConstraintUtility>();
+					element->_constraint = constraintIndex;
+					element->_utility = utilityIndex;
+					element->inputs = vector<Compiled::InputEdge>(2);
+					element->inputs[0].index = constraintIndex;
+					element->inputs[1].index = utilityIndex;
+
+					return element;
+				});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Cos> cos)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptrr<Cos> cos)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(cos, [&cos, &storedThis]()
+		{
+			int argIndex = cos->getArg()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledCos> element = make_shared<Compiled::CompiledCos>();
+			element->_arg = argIndex;
+			element->inputs = vector<Compiled::InputEdge>(1);
+			element->inputs[0].index = argIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Exp> exp)
@@ -220,52 +313,138 @@ namespace AutoDiff
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Gp> gp)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptrr<Gp> gp)" << endl;
+		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptr<Gp> gp)" << endl;
 		throw "NOT IMPLEMENTED YET";
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<LinSigmoid> sigmoid)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptrr<LinSigmoid> sigmoid)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(sigmoid, [&sigmoid, &storedThis]()
+		{
+			int argIndex = sigmoid->getArg()->accept(storedThis);
+
+			//XXX: warum nich CompiledLinSigmoid?
+						shared_ptr<Compiled::CompiledSigmoid> element = make_shared<Compiled::CompiledSigmoid>();
+						element->_arg = argIndex;
+						element->inputs = vector<Compiled::InputEdge>(2);
+						element->inputs[0].index = argIndex;
+
+						return element;
+					});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Log> log)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptrr<Log> log)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(log, [&log, &storedThis]()
+		{
+			int argIndex = log->getArg()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledLog> element = make_shared<Compiled::CompiledLog>();
+			element->_arg = argIndex;
+			element->inputs = vector<Compiled::InputEdge>(1);
+			element->inputs[0].index = argIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<LTConstraint> constraint)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptrr<LTConstraint> constraint)"
-				<< endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(constraint, [&constraint, &storedThis]()
+		{
+			int leftIndex = constraint->getLeft()->accept(storedThis);
+			int rightIndex = constraint->getRight()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledLTConstraint> element = make_shared<Compiled::CompiledLTConstraint>();
+			element->_left = leftIndex;
+			element->_right = rightIndex;
+			element->_steepness = constraint->getSteppness();
+			element->inputs = vector<Compiled::InputEdge>(2);
+			element->inputs[0].index = leftIndex;
+			element->inputs[1].index = rightIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<LTEConstraint> constraint)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptrr<LTEConstraint> constraint)"
-				<< endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(constraint, [&constraint, &storedThis]()
+		{
+			int leftIndex = constraint->getLeft()->accept(storedThis);
+			int rightIndex = constraint->getRight()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledLTEConstraint> element = make_shared<Compiled::CompiledLTEConstraint>();
+			element->_left = leftIndex;
+			element->_right = rightIndex;
+			element->_steepness = constraint->getSteppness();
+			element->inputs = vector<Compiled::InputEdge>(2);
+			element->inputs[0].index = leftIndex;
+			element->inputs[1].index = rightIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Max> max)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptr<Max> max)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(max, [&max, &storedThis]()
+		{
+			int leftIndex = max->getLeft()->accept(storedThis);
+			int rightIndex = max->getRight()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledMax> element = make_shared<Compiled::CompiledMax>();
+			element->_left = leftIndex;
+			element->_right = rightIndex;
+			element->inputs = vector<Compiled::InputEdge>(2);
+			element->inputs[0].index = leftIndex;
+			element->inputs[1].index = rightIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Min> min)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptr<Min> min)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(min, [&min, &storedThis]()
+		{
+			int leftIndex = min->getLeft()->accept(storedThis);
+			int rightIndex = min->getRight()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledMin> element = make_shared<Compiled::CompiledMin>();
+			element->_left = leftIndex;
+			element->_right = rightIndex;
+			element->inputs = vector<Compiled::InputEdge>(2);
+			element->inputs[0].index = leftIndex;
+			element->inputs[1].index = rightIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Or> or_)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptr<Or> or_)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(or_, [&or_, &storedThis]()
+		{
+			int leftIndex = or_->getLeft()->accept(storedThis);
+			int rightIndex = or_->getRight()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledOr> element = make_shared<Compiled::CompiledOr>();
+			element->_left = leftIndex;
+			element->_right = rightIndex;
+			element->inputs = vector<Compiled::InputEdge>(2);
+			element->inputs[0].index = leftIndex;
+			element->inputs[1].index = rightIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Product> product)
@@ -289,20 +468,57 @@ namespace AutoDiff
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Reification> dis)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptr<Reification> dis)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(dis, [&dis, &storedThis]()
+		{
+			int conIndex = dis->getCondition()->accept(storedThis);
+			int negConIndex = dis->getNegatedCondition()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledReification> element = make_shared<Compiled::CompiledReification>();
+			element->_min = dis->getMin();
+			element->_max = dis->getMax();
+			element->_condition = conIndex;
+			element->_negatedCondition = negConIndex;
+			element->inputs = vector<Compiled::InputEdge>(2);
+			element->inputs[0].index = conIndex;
+			element->inputs[1].index = negConIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Sigmoid> sigmoid)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptrr<Sigmoid> sigmoid)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(sigmoid, [&sigmoid, &storedThis]()
+		{
+			int argIndex = sigmoid->getArg()->accept(storedThis);
+			int midIndex = sigmoid->getMid()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledSigmoid> element = make_shared<Compiled::CompiledSigmoid>();
+			element->_arg = argIndex;
+			element->_mid= midIndex;
+			element->inputs = vector<Compiled::InputEdge>(2);
+			element->inputs[0].index = argIndex;
+			element->inputs[1].index = midIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Sin> sin)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptrr<Sin> sin)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(sin, [&sin, &storedThis]()
+		{
+			int argIndex = sin->getArg()->accept(storedThis);
+			shared_ptr<Compiled::CompiledSin> element = make_shared<Compiled::CompiledSin>();
+			element->_arg = argIndex;
+			element->inputs = vector<Compiled::InputEdge>(1);
+			element->inputs[0].index = argIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Sum> sum)
@@ -329,8 +545,21 @@ namespace AutoDiff
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<TermPower> power)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptr<TermPower> power)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(power, [&power, &storedThis]()
+		{
+			int baseIndex = power->getBase()->accept(storedThis);
+			int expIndex = power->getExponent()->accept(storedThis);
+
+			shared_ptr<Compiled::CompiledTermPower> element = make_shared<Compiled::CompiledTermPower>();
+			element->_base = baseIndex;
+			element->_exponent = expIndex;
+			element->inputs = vector<Compiled::InputEdge>(2);
+			element->inputs[0].index = baseIndex;
+			element->inputs[1].index = expIndex;
+
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Variable> var)
@@ -340,8 +569,12 @@ namespace AutoDiff
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Zero> zero)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::Compiler::visit(shared_ptr<Zero> zero)" << endl;
-		throw "NOT IMPLEMENTED YET";
+		shared_ptr<ITermVisitor> storedThis = shared_from_this();
+		return compile(zero, [&zero, &storedThis]()
+		{
+			shared_ptr<Compiled::CompiledConstant> element = make_shared<Compiled::CompiledConstant>(0);
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::compile(shared_ptr<Term> term,
@@ -371,9 +604,57 @@ namespace AutoDiff
 		_tape = tape;
 	}
 
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledAbs> elem)
+	{
+		elem->value = fabs(valueOf(elem->_arg));
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledAnd> elem)
+	{
+		if (valueOf(elem->_left) > 0.75)
+		{
+			elem->value = valueOf(elem->_right);
+		}
+		else if (valueOf(elem->_right) > 0.75)
+		{
+			elem->value = valueOf(elem->_left);
+		}
+		else
+		{
+			elem->value = valueOf(elem->_left) + valueOf(elem->_right);
+		}
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledAtan2> elem)
+	{
+		elem->value = atan2(valueOf(elem->_left), valueOf(elem->_right));
+	}
+
 	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledConstant> elem)
 	{
 
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledConstPower> elem)
+	{
+		elem->value = pow(valueOf(elem->_base), elem->_exponent);
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledConstraintUtility> elem)
+	{
+		if (valueOf(elem->_constraint) < 0.999)
+		{
+			elem->value = valueOf(elem->_constraint);
+		}
+		else
+		{
+			elem->value = valueOf(elem->_constraint) * valueOf(elem->_utility);
+		}
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledCos> elem)
+	{
+		elem->value = cos(valueOf(elem->_arg));
 	}
 
 	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledExp> elem)
@@ -381,9 +662,122 @@ namespace AutoDiff
 		elem->value = exp(valueOf(elem->_arg));
 	}
 
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledGp> elem)
+	{
+		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledGp> elem)"
+				<< endl;
+		throw "NOT IMPLEMENTED YET";
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledLinSigmoid> elem)
+	{
+		double e = exp(-valueOf(elem->_arg));
+		if (e == numeric_limits<double>::infinity())
+		{
+			elem->value = Term::EPSILON;
+		}
+		else
+		{
+			elem->value = 1.0 / (1.0 + e);
+		}
+		if (elem->value < Term::EPSILON)
+		{
+			elem->value = Term::EPSILON;
+		}
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledLog> elem)
+	{
+		elem->value = log(valueOf(elem->_arg));
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledLTConstraint> elem)
+	{
+		if (valueOf(elem->_left) < valueOf(elem->_right))
+		{
+			elem->value = 1;
+		}
+		else
+		{
+			elem->value = elem->_steepness * (valueOf(elem->_right) - valueOf(elem->_left));
+		}
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledLTEConstraint> elem)
+	{
+		if (valueOf(elem->_left) < valueOf(elem->_right))
+		{
+			elem->value = 1;
+		}
+		else
+		{
+			elem->value = elem->_steepness * (valueOf(elem->_right) - valueOf(elem->_left));
+		}
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledMax> elem)
+	{
+		elem->value = max(valueOf(elem->_left), valueOf(elem->_right));
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledMin> elem)
+	{
+		elem->value = min(valueOf(elem->_left), valueOf(elem->_right));
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledOr> elem)
+	{
+		if (valueOf(elem->_left) > 0.75)
+		{
+			elem->value = valueOf(elem->_left);
+		}
+		else if (valueOf(elem->_right) > 0.75)
+		{
+			elem->value = valueOf(elem->_right);
+		}
+		else
+		{
+			elem->value = valueOf(elem->_left) + valueOf(elem->_right);
+		}
+	}
+
 	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledProduct> elem)
 	{
 		elem->value = valueOf(elem->_left) * valueOf(elem->_right);
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledReification> elem)
+	{
+		if (valueOf(elem->_condition) > 0)
+		{
+			elem->value = elem->_max;
+		}
+		else
+		{
+			elem->value = elem->_min;
+		}
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledSigmoid> elem)
+	{
+		double e = exp(elem->_steepness * (-valueOf(elem->_arg) + valueOf(elem->_mid)));
+		if (e == numeric_limits<double>::infinity())
+		{
+			elem->value = Term::EPSILON;
+		}
+		else
+		{
+			elem->value = 1.0 / (1.0 + e);
+		}
+		if (elem->value < Term::EPSILON)
+		{
+			elem->value = Term::EPSILON;
+		}
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledSin> elem)
+	{
+		elem->value = sin(valueOf(elem->_arg));
 	}
 
 	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledSum> elem)
@@ -393,6 +787,11 @@ namespace AutoDiff
 		{
 			elem->value += valueOf(elem->_terms[i]);
 		}
+	}
+
+	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledTermPower> elem)
+	{
+		elem->value = pow(valueOf(elem->_base), valueOf(elem->_exponent));
 	}
 
 	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<Compiled::CompiledVariable> var)
@@ -410,15 +809,241 @@ namespace AutoDiff
 		_tape = tape;
 	}
 
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledAbs> elem)
+	{
+		double arg = valueOf(elem->_arg);
+		elem->value = fabs(arg);
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledAnd> elem)
+	{
+		double left = valueOf(elem->_left);
+		double right = valueOf(elem->_right);
+		if (left > 0.75 && right > 0.75)
+		{
+			elem->value = 1;
+			elem->inputs[0].weight = 0;
+			elem->inputs[1].weight = 0;
+			return;
+		}
+		elem->value = 0;
+		if (left <= 0)
+		{
+			elem->value += left;
+			elem->inputs[0].weight = 1;
+		}
+		if (right <= 0)
+		{
+			elem->value += right;
+			elem->inputs[1].weight = 1;
+		}
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledAtan2> elem)
+	{
+		double left = valueOf(elem->_left);
+		double right = valueOf(elem->_right);
+
+		elem->value = atan2(left, right);
+		double denom = left * left + right * right;
+		elem->inputs[0].weight = -right / denom;
+		elem->inputs[1].weight = left / denom;
+	}
+
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledConstant> elem)
 	{
 
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledConstPower> elem)
+	{
+		double baseVal = valueOf(elem->_base);
+		//modified to remove one Math.Pow -- HS
+		double r = pow(baseVal, elem->_exponent - 1);
+		elem->value = r * baseVal;
+		elem->inputs[0].weight = elem->_exponent * r;
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledConstraintUtility> elem)
+	{
+		double constraint = valueOf(elem->_constraint);
+		if (constraint > 0)
+		{
+			elem->value = valueOf(elem->_utility);
+			elem->inputs[0].weight = 0;
+			elem->inputs[1].weight = 1;
+		}
+		else
+		{
+			elem->value = constraint;
+			elem->inputs[0].weight = 1;
+			elem->inputs[1].weight = 0;
+		}
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledCos> elem)
+	{
+		double arg = valueOf(elem->_arg);
+
+		elem->value = cos(arg);
+		elem->inputs[0].weight = -sin(arg);
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledExp> elem)
 	{
 		elem->value = exp(valueOf(elem->_arg));
 		elem->inputs[0].weight = elem->value;
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledGp> elem)
+	{
+		cerr
+				<< "NOT IMPLEMENTED: CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledGp> elem)"
+				<< endl;
+		throw "NOT IMPLEMENTED YET";
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledLinSigmoid> elem)
+	{
+		double arg = valueOf(elem->_arg);
+		double e = exp(-arg);
+
+		if (e == numeric_limits<double>::infinity())
+		{
+			elem->value = Term::EPSILON;
+		}
+		else
+		{
+			elem->value = 1.0 / (1.0 + e);
+		}
+		if (elem->value < Term::EPSILON)
+		{
+			elem->value = Term::EPSILON;
+		}
+		if (e == 0.0 || e == numeric_limits<double>::infinity())
+		{
+			elem->inputs[0].weight = Term::EPSILON;
+			elem->inputs[1].weight = -Term::EPSILON;
+			return;
+		}
+		double e2 = e / ((e + 1) * (e + 1));
+		elem->inputs[0].weight = e2;
+		elem->inputs[1].weight = -e2;
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledLog> elem)
+	{
+		double arg = valueOf(elem->_arg);
+
+		elem->value = log(arg);
+		elem->inputs[0].weight = 1 / arg;
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledLTConstraint> elem)
+	{
+		double left = valueOf(elem->_left);
+		double right = valueOf(elem->_right);
+
+		if (left < right)
+		{
+			elem->value = 1;
+			elem->inputs[0].weight = 0;
+			elem->inputs[1].weight = 0;
+		}
+		else
+		{
+			elem->value = elem->_steepness * (right - left);
+			elem->inputs[0].weight = -elem->_steepness;
+			elem->inputs[1].weight = elem->_steepness;
+		}
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledLTEConstraint> elem)
+	{
+		double left = valueOf(elem->_left);
+		double right = valueOf(elem->_right);
+
+		if (left <= right)
+		{
+			elem->value = 1;
+			elem->inputs[0].weight = 0;
+			elem->inputs[1].weight = 0;
+		}
+		else
+		{
+			elem->value = elem->_steepness * (right - left);
+			elem->inputs[0].weight = -elem->_steepness;
+			elem->inputs[1].weight = elem->_steepness;
+		}
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledMax> elem)
+	{
+		double left = valueOf(elem->_left);
+		double right = valueOf(elem->_right);
+
+		elem->value = max(left, right);
+		if (left > right)
+		{
+			elem->inputs[0].weight = 1;
+			elem->inputs[1].weight = 0;
+		}
+		else
+		{
+			elem->inputs[0].weight = 0;
+			elem->inputs[1].weight = 1;
+		}
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledMin> elem)
+	{
+		double left = valueOf(elem->_left);
+		double right = valueOf(elem->_right);
+
+		elem->value = min(left, right);
+		if (left < right)
+		{
+			elem->inputs[0].weight = 1;
+			elem->inputs[1].weight = 0;
+		}
+		else
+		{
+			elem->inputs[0].weight = 0;
+			elem->inputs[1].weight = 1;
+		}
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledOr> elem)
+	{
+		double left = valueOf(elem->_left);
+		double right = valueOf(elem->_right);
+
+		if (left > 0.75 || right > 0.75)
+		{
+			elem->value = 1;
+			elem->inputs[0].weight = 0;
+			elem->inputs[1].weight = 0;
+			return;
+		}
+		elem->value = 0;
+		if (left <= 0)
+		{
+			elem->value += left;
+			elem->inputs[0].weight = 1;
+		}
+		else
+		{
+			elem->inputs[0].weight = 0;
+		}
+		if (right <= 0)
+		{
+			elem->value += right;
+			elem->inputs[1].weight = 1;
+		}
+		else
+		{
+			elem->inputs[1].weight = 0;
+		}
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledProduct> elem)
@@ -430,6 +1055,63 @@ namespace AutoDiff
 		elem->inputs[0].weight = right;
 		elem->inputs[1].weight = left;
 	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledReification> elem)
+	{
+		double condition = valueOf(elem->_condition);
+		double d = elem->_max - elem->_min;
+
+		if (condition > 0)
+		{
+			elem->value = elem->_max;
+			elem->inputs[0].weight = 0;
+			elem->inputs[1].weight = -d;
+		}
+		else
+		{
+			elem->value = elem->_min;
+			elem->inputs[0].weight = d;
+			elem->inputs[1].weight = 0;
+		}
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledSigmoid> elem)
+	{
+		double arg = valueOf(elem->_arg);
+		double mid = valueOf(elem->_mid);
+		double e = exp(elem->_steepness * (-arg + mid));
+
+		if (e == numeric_limits<double>::infinity())
+		{
+			elem->value = Term::EPSILON;
+		}
+		else
+		{
+			elem->value = 1.0 / (1.0 + e);
+		}
+		if (elem->value < Term::EPSILON)
+		{
+			elem->value = Term::EPSILON;
+		}
+		if (e == 0.0 || e == numeric_limits<double>::infinity())
+		{
+			elem->inputs[0].weight = elem->_steepness * Term::EPSILON;
+			elem->inputs[1].weight = -elem->_steepness * Term::EPSILON;
+			return;
+		}
+		double e2 = elem->_steepness * e / ((e + 1) * (e + 1));
+		elem->inputs[0].weight = e2;
+		elem->inputs[1].weight = -e2;
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledSin> elem)
+	{
+		double arg = valueOf(elem->_arg);
+
+		elem->value = sin(arg);
+		elem->inputs[0].weight = cos(arg);
+	}
+
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledSum> elem)
 	{
 		elem->value = 0;
@@ -442,6 +1124,16 @@ namespace AutoDiff
 		{
 			elem->inputs[i].weight = 1;
 		}
+	}
+
+	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledTermPower> elem)
+	{
+		double baseVal = valueOf(elem->_base);
+		double exponent = valueOf(elem->_exponent);
+
+		elem->value = pow(baseVal, exponent);
+		elem->inputs[0].weight = exponent * pow(baseVal, exponent - 1);
+		elem->inputs[1].weight = elem->value * log(baseVal);
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<Compiled::CompiledVariable> var)

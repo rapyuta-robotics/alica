@@ -33,13 +33,19 @@
 #include <clasp/clasp_facade.h>
 #include <program_opts/application.h>
 
+namespace supplementary
+{
+  class ClingWrapper;
+}
+
 // #define DEBUG_OUTPUT
 
 // {{{ declaration of ClaspLpOutput
 
 class ClaspLpOutput : public Gringo::Output::LparseOutputter {
     public:
-        ClaspLpOutput(Clasp::Asp::LogicProgram& out) : prg_(out) {
+        ClaspLpOutput(Clasp::Asp::LogicProgram& out, supplementary::ClingWrapper* clingWrapper) : prg_(out),
+        clingWrapper(clingWrapper) {
             false_ = prg_.newAtom();
             prg_.setCompute(false_, false);
 #ifdef DEBUG_OUTPUT
@@ -69,6 +75,7 @@ class ClaspLpOutput : public Gringo::Output::LparseOutputter {
         unsigned false_;
         std::stringstream str_;
         bool disposeMinimize_ = true;
+        supplementary::ClingWrapper* clingWrapper;
 };
 
 // }}}
@@ -97,7 +104,8 @@ public:
 
 	typedef ProgramOptions::StringSeq StringSeq;
 	Grounder();
-	void parse(const StringSeq& files, const GringoOptions& opts, Clasp::Asp::LogicProgram* out);
+	void parse(const StringSeq& files, const GringoOptions& opts, Clasp::Asp::LogicProgram* out,
+	           supplementary::ClingWrapper* clingWrapper = nullptr);
 	void ground(Gringo::Ground::Parameters& params, Gringo::Input::ProgramVec& parts);
 	void main(Gringo::Control &ctl);
 
