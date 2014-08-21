@@ -45,7 +45,7 @@ namespace alica
 				{
 					for(CapValue* val : p.second->getCapValues())
 					{
-						transform(kvalue.begin(), kvalue.end(), kvalue.begin(), ::tolower);
+						//transform(kvalue.begin(), kvalue.end(), kvalue.begin(), ::tolower);
 						if(val->getName().compare(kvalue) == 0)
 						{
 							Characteristic* cha = new Characteristic();
