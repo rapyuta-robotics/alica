@@ -7,7 +7,7 @@ using namespace std;
 #include <typeinfo>
 #include <iostream>
 
-#include "engine/AlicaEngine.h"
+#include <engine/AlicaEngine.h>
 #include "engine/PlanRepository.h"
 #include "engine/model/Plan.h"
 #include "engine/IBehaviourPool.h"
@@ -29,6 +29,7 @@ using namespace std;
 #include "engine/model/SyncTransition.h"
 #include "engine/model/Quantifier.h"
 #include "engine/model/ForallAgents.h"
+#include "../../alica_ros_proxy/include/clock/AlicaROSClock.h"
 
 class AlicaEngineTest : public ::testing::Test
 {
@@ -42,7 +43,7 @@ protected:
 		string path = supplementary::FileSystem::getSelfPath();
 		int place = path.rfind("devel");
 		path = path.substr(0, place);
-		path = path + "src/alica/alica_engine/test";
+		path = path + "src/alica/alica_test/";
 
 		// bring up the SystemConfig with the corresponding path
 		sc = supplementary::SystemConfig::getInstance();
@@ -194,6 +195,7 @@ protected:
 TEST_F(AlicaEngineTest, initAndShutdown)
 {
 	alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
+	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	EXPECT_TRUE(ae->init(bc, "Roleset", "MasterPlan", ".", false)) << "Unable to initialise the Alica Engine!";
 	EXPECT_TRUE(ae->shutdown()) << "Unable to shutdown the Alica Engine!";
 	delete bc;
@@ -204,6 +206,7 @@ TEST_F(AlicaEngineTest, initAndShutdown)
  */
 TEST_F(AlicaEngineTest, planParser)
 {
+	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ae->init(new alica::TestBehaviourCreator(), "Roleset", "MasterPlan", ".", false);
 	auto plans = ae->getPlanRepository()->getPlans();
 
@@ -698,6 +701,7 @@ TEST_F(AlicaEngineTest, planParser)
  */
 TEST_F(AlicaEngineTest, behaviourPoolInit)
 {
+	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	EXPECT_TRUE(ae->init(new alica::TestBehaviourCreator(), "Roleset", "MasterPlan", ".", false))
 			<< "Unable to initialise the Alica Engine!";
 

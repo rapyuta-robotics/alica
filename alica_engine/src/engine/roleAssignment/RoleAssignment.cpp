@@ -173,12 +173,12 @@ namespace alica
 					string s = charIter->second->getName();
 					cout << "Ausgabe " << s << endl;
 					auto iter = rps->getCharacteristics().find(charIter->second->getName());
-					cout << "ITER AUSGABE " << iter->second->getName() << endl;
+				//	cout << "ITER AUSGABE " << iter->second->getCapValue()->getName() << endl;
 					if(iter != rps->getCharacteristics().end())
 					{
 						cout << "WAR ICH NIE DRINNE " << endl;
 						rbChar = iter->second;
-						cout << "NAME " << rbChar->getName() << endl;
+				//		cout << "NAME " << rbChar->getCapValue()->getName() << endl;
 						double individualUtility = charIter->second->getCapability()->similarityValue(charIter->second->getCapValue(), rbChar->getCapValue());
 						if(individualUtility == 0)
 						{

@@ -16,12 +16,12 @@ using namespace std;
 #include "engine/planselector/TaskAssignment.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/IPlanSelector.h"
-#include "../test/include/TestBehaviourCreator.h"
+#include "TestBehaviourCreator.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/RunningPlan.h"
 #include "engine/PlanRepository.h"
 #include "engine/model/Plan.h"
-#include "clock/AlicaROSClock.h"
+#include <clock/AlicaROSClock.h>
 
 class TaskAssignmentTest : public ::testing::Test
 {

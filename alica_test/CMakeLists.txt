@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(alica_engine)
+project(alica_test)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp system_config fsystem autodiff event_handling)
+find_package(catkin REQUIRED COMPONENTS roscpp system_config fsystem autodiff event_handling alica_engine alica_ros_proxy)
 
 ## System dependencies are found with CMake's conventions
 #find_package(Boost REQUIRED COMPONENTS program_options)
@@ -79,8 +79,8 @@ find_package(catkin REQUIRED COMPONENTS roscpp system_config fsystem autodiff ev
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES alica_engine
-  CATKIN_DEPENDS roscpp fsystem
+  LIBRARIES alica_engine 
+  CATKIN_DEPENDS alica_engine alica_ros_proxy
 #  DEPENDS tinyxml
 )
 
@@ -96,8 +96,16 @@ catkin_package(
 file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 
 ## Declare a cpp library
- add_library(alica_engine
+ add_library(alica_test
 	${alica_SOURCES};
+ )
+  add_library(test_behaviour_creator
+	src/Attack.cpp;
+	src/AttackOpp.cpp;
+	src/DefendMid.cpp;
+	src/MidFieldStandard.cpp;
+	src/Tackle.cpp;
+	src/TestBehaviourCreator.cpp;
  )
 ## Declare a cpp library
  ##add_library(alica
@@ -131,8 +139,8 @@ file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
    ##src/engine/BasicBehaviour.cpp
    ##src/engine/model/CapValue.cpp;
  ## )
- target_link_libraries(alica_engine ${catkin_LIBRARIES})
- add_dependencies(alica_engine ${catkin_LIBRARIES})
+ target_link_libraries(alica_test ${catkin_LIBRARIES})
+ add_dependencies(alica_test ${catkin_LIBRARIES})
  
 
 ## Declare a cpp executable
@@ -187,7 +195,11 @@ file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 #############
 
 ## Add gtest based cpp test target and link libraries
-
+file(GLOB_RECURSE test_alica_SOURCES "src/test/*.cpp")
+ catkin_add_gtest(${PROJECT_NAME}-test ${test_alica_SOURCES})
+ if(TARGET ${PROJECT_NAME}-test)
+   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES} system_config alica_engine test_behaviour_creator cnc_turtlebots_behaviours alica_ros_proxy)
+ endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

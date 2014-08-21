@@ -8,7 +8,7 @@
 #ifndef ATTACK_H_
 #define ATTACK_H_
 
-#include "engine/BasicBehaviour.h"
+#include <engine/BasicBehaviour.h>
 
 namespace alica
 {

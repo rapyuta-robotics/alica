@@ -82,10 +82,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES alica_ros_proxy
-#  CATKIN_DEPENDS alica_engine roscpp
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES alica_ros_proxy
+  CATKIN_DEPENDS alica_engine roscpp
+  DEPENDS system_lib
 )
 
 ###########
@@ -158,10 +158,7 @@ target_link_libraries(alica_ros_proxy
 #############
 
 ## Add gtest based cpp test target and link libraries
- catkin_add_gtest(${PROJECT_NAME}-test test/test_alica_ros_proxy.cpp )
- if(TARGET ${PROJECT_NAME}-test)
-   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} system_config alica_engine cnc_turtlebots_behaviours test_behaviour_creator)
- endif()
+
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
