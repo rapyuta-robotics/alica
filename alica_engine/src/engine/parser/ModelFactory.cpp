@@ -466,7 +466,6 @@ namespace alica
 		Characteristic* cha = new Characteristic();
 		cha->setId(this->parser->parserId(element));
 		setAlicaElementAttributes(cha, element);
-
 		const char* attr = element->Attribute("weight");
 		if (attr)
 		{

@@ -110,9 +110,9 @@ namespace alica
 		this->stepCalled = false;
 		bool everythingWorked = true;
 		everythingWorked &= this->behaviourPool->init(bc);
-		this->log = new Logger();
 		this->auth = new AuthorityManager();
 		this->teamObserver->init();
+		this->log = new Logger();
 		this->roleAssignment->init();
 		this->planSelector = new PlanSelector();
 		//TODO
