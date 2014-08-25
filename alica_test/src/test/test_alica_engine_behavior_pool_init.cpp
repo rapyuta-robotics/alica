@@ -1,12 +1,12 @@
-#include <iostream>
-#include <typeinfo>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
 #include "TestBehaviourCreator.h"
+#include "engine/model/Behaviour.h"
+#include "engine/PlanRepository.h"
 #include <clock/AlicaROSClock.h>
 
-class PlanBase : public ::testing::Test
+class AlicaEngineTestBehPool : public ::testing::Test
 {
 protected:
 	supplementary::SystemConfig* sc;
@@ -34,17 +34,22 @@ protected:
 		sc->shutdown();
 	}
 };
-// Declare a test
-TEST_F(PlanBase, planBaseTest)
+/**
+ * Tests the initialisation of the behaviourPool
+ */
+TEST_F(AlicaEngineTestBehPool, behaviourPoolInit)
 {
-	supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-	sc->setHostname("nase");
-	alica::AlicaEngine* ae = alica::AlicaEngine::getInstance();
 	alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-	ae->init(bc, "Roleset", "MasterPlan", ".", false);
-	ae->start();
-	sleep(3);
-}
+	EXPECT_TRUE(ae->init(bc, "Roleset", "MasterPlan", ".", false))
+			<< "Unable to initialise the Alica Engine!";
 
+	auto behaviours = ae->getPlanRepository()->getBehaviours();
+	alica::IBehaviourPool* bp = ae->getBehaviourPool();
+	for (auto behaviourPair : behaviours)
+	{
+		cout << "Behaviour: " << behaviourPair.second->getName() << endl;
+	}
+	delete bc;
+}
 

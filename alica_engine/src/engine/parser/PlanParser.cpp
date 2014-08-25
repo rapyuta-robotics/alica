@@ -8,6 +8,7 @@
 #include "engine/parser/PlanParser.h"
 #include "engine/parser/ModelFactory.h"
 #include "engine/AlicaEngine.h"
+#include "engine/model/Plan.h"
 
 namespace alica
 {

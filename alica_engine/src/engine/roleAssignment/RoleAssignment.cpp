@@ -102,15 +102,14 @@ namespace alica
 
 	void RoleAssignment::mapRoleToRobot(RolePriority* rp)
 	{
-		cout << "MAP ROLe" << endl;
 		for (RoleUsage* rolUse : rp->getPriorityList())
 		{
 			for (RobotRoleUtility* rc : this->sortedRobots)
 			{
 				if (rolUse->getRole() == rc->getRole())
 				{
-					if (this->robotRoleMapping.find(rc->getRobot()->getId()) != this->robotRoleMapping.end()
-							|| rc->getUtilityValue() == 0)
+					if (this->robotRoleMapping.size() != 0 && (this->robotRoleMapping.find(rc->getRobot()->getId()) != this->robotRoleMapping.end()
+							|| rc->getUtilityValue() == 0))
 					{
 						continue;
 					}
@@ -130,7 +129,6 @@ namespace alica
 	{
 		this->roleSet = AlicaEngine::getInstance()->getRoleSet();
 		this->roles = AlicaEngine::getInstance()->getPlanRepository()->getRoles();
-		cout << "ROLE UTILITIES" << endl;
 		if (this->roleSet == nullptr)
 		{
 			cerr << "RA: The current Roleset is null!" << endl;
@@ -147,37 +145,31 @@ namespace alica
 		double dutility = 0;
 		RobotRoleUtility* rc;
 		this->sortedRobots.clear();
-
-		for(auto roleIter = this->roles.begin(); roleIter != this->roles.end(); roleIter++)
+		for (auto roleIter = this->roles.begin(); roleIter != this->roles.end(); roleIter++)
 		{
-			for(RobotProperties* rps : (*this->availableRobots))
+			for (RobotProperties* rps : (*this->availableRobots))
 			{
 				int y = 0;
 				dutility = 0;
-				for(auto charIter = roleIter->second->getCharacteristics().begin(); charIter != roleIter->second->getCharacteristics().end(); charIter++)
+				for (auto charIter = roleIter->second->getCharacteristics().begin();
+						charIter != roleIter->second->getCharacteristics().end(); charIter++)
 				{
-					cout << "CHARA" << endl;
 					Characteristic* rbChar = nullptr;
-					for(auto iter : rps->getCharacteristics())
-					{
-						cout << "CNAME " << iter.second->getCapability()->getName() << endl;
-					}
-					for(auto iter : roleIter->second->getCharacteristics())
-					{
-						cout << "DNAME " << iter.second->getName() << endl;
-					}
-					for(auto iter : rps->getCharacteristics())
-					{
-						cout << "STRING " << iter.first << endl;
-					}
 					string s = charIter->second->getName();
-					auto iter = rps->getCharacteristics().find(charIter->second->getName());
-					if(iter != rps->getCharacteristics().end())
+//					auto iter = rps->getCharacteristics().find(charIter->second->getName());
+					for (auto iter : rps->getCharacteristics())
 					{
-						cout << "WAR ICH NIE DRINNE " << endl;
-						rbChar = iter->second;
-						double individualUtility = charIter->second->getCapability()->similarityValue(charIter->second->getCapValue(), rbChar->getCapValue());
-						if(individualUtility == 0)
+						if (iter.first.compare(s) == 0)
+						{
+							rbChar = iter.second;
+							break;
+						}
+					}
+					if (rbChar != nullptr)
+					{
+						double individualUtility = charIter->second->getCapability()->similarityValue(
+								charIter->second->getCapValue(), rbChar->getCapValue());
+						if (individualUtility == 0)
 						{
 							dutility = 0;
 							break;
@@ -186,27 +178,22 @@ namespace alica
 						y++;
 					}
 				}
-				if(y != 0)
+				if (y != 0)
 				{
 					dutility /= y;
 					rc = new RobotRoleUtility(dutility, rps, roleIter->second);
-					cout << "PUSHE" << rc->getRobot()->getName() << endl;
 					this->sortedRobots.push_back(rc);
 					sort(this->sortedRobots.begin(), this->sortedRobots.end(), RobotRoleUtility::compareTo);
 				}
 			}
 		}
-		cout << this->sortedRobots.size() << endl;
 		if (this->sortedRobots.size() == 0)
 		{
 			AlicaEngine::getInstance()->abort(
 					"RA: Could not establish a mapping between robots and roles. Please check capability definitions!");
 		}
-		cout << "KOMME ICH RAUS" << endl;
 		RolePriority* rp = new RolePriority();
-		cout << "KOMME ICH RAUS" << endl;
 		this->robotRoleMapping.clear();
-		cout << "KOMME ICH RAUS" << endl;
 		while (this->robotRoleMapping.size() < this->availableRobots->size())
 		{
 			mapRoleToRobot(rp);

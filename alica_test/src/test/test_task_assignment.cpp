@@ -30,17 +30,16 @@ protected:
 
 	virtual void SetUp()
 	{
-//		ae = alica::AlicaEngine::getInstance();
+		ae = alica::AlicaEngine::getInstance();
 //		//TODO extend TestBehaviourCreator
 //		alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
 //		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-//		//Sicher das du die StepEngine starten willste? Wenn ja -> setze es wieder auf true
 //		ae->init(bc,"Roleset", "MasterPlanTaskAssignment", ".", false);
 	}
 
 	virtual void TearDown()
 	{
-		//ae->shutdown();
+		ae->shutdown();
 	}
 };
 
