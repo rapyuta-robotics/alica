@@ -23,6 +23,7 @@ using namespace std;
 #include "engine/logging/Logger.h"
 #include "engine/roleAssignment/RoleAssignment.h"
 #include "engine/UtilityFunction.h"
+#include "engine/model/Plan.h"
 
 namespace alica
 {
@@ -40,9 +41,9 @@ namespace alica
 		this->syncModul = nullptr;
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->terminating = false;
-		this->teamObserver = new TeamObserver();
-		this->roleAssignment = new RoleAssignment();
-		this->behaviourPool = new BehaviourPool();
+		this->teamObserver = nullptr;
+		this->roleAssignment = nullptr;
+		this->behaviourPool = nullptr;
 		//TODO: erstellen von syncmodul
 //		this->syncModul = new SyncModul();
 
@@ -106,7 +107,18 @@ namespace alica
 		{
 			this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
 		}
-
+		if(this->behaviourPool == nullptr)
+		{
+			this->behaviourPool = new BehaviourPool();
+		}
+		if(this->teamObserver == nullptr)
+		{
+			this->teamObserver = new TeamObserver();
+		}
+		if(this->roleAssignment == nullptr)
+		{
+			this->roleAssignment = new RoleAssignment();
+		}
 		this->stepCalled = false;
 		bool everythingWorked = true;
 		everythingWorked &= this->behaviourPool->init(bc);
@@ -141,6 +153,7 @@ namespace alica
 		this->teamObserver = nullptr;
 		delete this->planBase;
 		this->planBase = nullptr;
+		this->masterPlan = nullptr;
 		return everythingWorked;
 	}
 

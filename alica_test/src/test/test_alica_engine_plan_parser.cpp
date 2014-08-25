@@ -190,24 +190,13 @@ protected:
 };
 
 /**
- * Initialises an instance of the AlicaEngine and shuts it down again. This test is nice for basic memory leak testing.
- */
-TEST_F(AlicaEngineTest, initAndShutdown)
-{
-	alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
-	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-	EXPECT_TRUE(ae->init(bc, "Roleset", "MasterPlan", ".", false)) << "Unable to initialise the Alica Engine!";
-	EXPECT_TRUE(ae->shutdown()) << "Unable to shutdown the Alica Engine!";
-	delete bc;
-}
-
-/**
  * Tests the plan parser with some nice plans
  */
 TEST_F(AlicaEngineTest, planParser)
 {
+	alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-	ae->init(new alica::TestBehaviourCreator(), "Roleset", "MasterPlan", ".", false);
+	ae->init(bc, "Roleset", "MasterPlan", ".", false);
 	auto plans = ae->getPlanRepository()->getPlans();
 
 	cout << "Printing plans from Repository: " << endl;
@@ -693,23 +682,6 @@ TEST_F(AlicaEngineTest, planParser)
 				break;
 
 		}
-	}
-}
-
-/**
- * Tests the initialisation of the behaviourPool
- */
-TEST_F(AlicaEngineTest, behaviourPoolInit)
-{
-	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-	EXPECT_TRUE(ae->init(new alica::TestBehaviourCreator(), "Roleset", "MasterPlan", ".", false))
-			<< "Unable to initialise the Alica Engine!";
-
-	auto behaviours = ae->getPlanRepository()->getBehaviours();
-	alica::IBehaviourPool* bp = ae->getBehaviourPool();
-	for (auto behaviourPair : behaviours)
-	{
-		cout << "Behaviour: " << behaviourPair.second->getName() << endl;
 	}
 }
 

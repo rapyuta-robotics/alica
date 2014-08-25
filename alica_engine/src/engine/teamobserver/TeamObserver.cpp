@@ -22,6 +22,7 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/collections/SuccessCollection.h"
 #include "engine/IAlicaClock.h"
+#include "engine/model/Characteristic.h"
 
 namespace alica
 {
@@ -63,7 +64,6 @@ namespace alica
 		this->log = ae->getLog();
 
 		string ownPlayerName = ae->getRobotName();
-		cout << "TO: Initing Robot " << ownPlayerName << endl;
 		this->teamTimeOut = (*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut",NULL) * 1000000;
 		shared_ptr<vector<string> > playerNames = (*sc)["Globals"]->getSections("Globals.Team", NULL);
 		bool foundSelf = false;
@@ -75,7 +75,6 @@ namespace alica
 			{
 				foundSelf = true;
 				this->me = new RobotEngineData(rp);
-				cout << "ME " << rp->getName() << rp->getId() << rp->getDefaultRole() << endl;
 				this->me->setActive(true);
 				this->myId = rp->getId();
 
@@ -163,9 +162,12 @@ namespace alica
 		for (RobotEngineData* r : this->allOtherRobots)
 		{
 			if (r->isActive())
+			{
 				ret->push_back(r->getProperties());
+			}
 		}
-		return ret;
+
+		return move(ret);
 	}
 
 	unique_ptr<list<int> > TeamObserver::getAvailableRobotIds()
@@ -179,7 +181,7 @@ namespace alica
 				ret->push_back(r->getProperties()->getId());
 			}
 		}
-		return ret;
+		return move(ret);
 	}
 
 	RobotProperties* TeamObserver::getOwnRobotProperties()
@@ -225,7 +227,7 @@ namespace alica
 		}
 		//ret
 
-		return ret;
+		return move(ret);
 	}
 
 	void TeamObserver::tick(RunningPlan* root)

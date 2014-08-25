@@ -240,8 +240,9 @@ namespace alica
 		map<long,Plan*> plans = AlicaEngine::getInstance()->getPlanRepository()->getPlans();
 
 		for(auto iter = plans.begin(); iter != plans.end(); iter++) {
-			(*iter).second->getUtilityFunction()->init();
+			iter->second->getUtilityFunction()->init();
 		}
+		cout << "KOMME RAUS" << endl;
 	}
 
 	string UtilityFunction::toString()

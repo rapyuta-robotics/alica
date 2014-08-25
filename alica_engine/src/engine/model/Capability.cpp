@@ -22,21 +22,14 @@ namespace alica
 	{
 		const int nCount = capValues.size();
 
-		for(CapValue* c : capValues)
-		{
-			cout << "NAME " << c << endl;
-		}
 
 		int rlIndex = -1;
 		int rbIndex = -1;
 		int index = 0;
-		cout << "ROLEVAL " << roleVal->getName() << " RobotVal " << robotVal->getName() << endl;
 
 		for (list<CapValue*>::const_iterator itRoleVal = capValues.begin(); itRoleVal != capValues.end(); itRoleVal++)
 		{
-			cout << "ITER " << *itRoleVal << roleVal << robotVal << endl;
 			CapValue* cap = *itRoleVal;
-			cout << cap->getId() << " " << roleVal->getId() << " " <<robotVal->getId() << endl;
 			if (*itRoleVal == roleVal)
 			{
 				rlIndex = index;

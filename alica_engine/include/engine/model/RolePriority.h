@@ -27,7 +27,7 @@ namespace alica
 	public:
 		RolePriority();
 		virtual ~RolePriority();
-		const list<RoleUsage*>& getPriorityList() const;
+		list<RoleUsage*> getPriorityList();
 
 	private:
 		map<long, Role*> roles;

@@ -1,12 +1,10 @@
-#include <iostream>
-#include <typeinfo>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
 #include "TestBehaviourCreator.h"
 #include <clock/AlicaROSClock.h>
 
-class PlanBase : public ::testing::Test
+class AlicaEngineTestInit : public ::testing::Test
 {
 protected:
 	supplementary::SystemConfig* sc;
@@ -34,17 +32,15 @@ protected:
 		sc->shutdown();
 	}
 };
-// Declare a test
-TEST_F(PlanBase, planBaseTest)
+
+/**
+ * Initialises an instance of the AlicaEngine and shuts it down again. This test is nice for basic memory leak testing.
+ */
+TEST_F(AlicaEngineTestInit, initAndShutdown)
 {
-	supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-	sc->setHostname("nase");
 	alica::AlicaEngine* ae = alica::AlicaEngine::getInstance();
 	alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-	ae->init(bc, "Roleset", "MasterPlan", ".", false);
-	ae->start();
-	sleep(3);
+	EXPECT_TRUE(ae->init(bc, "Roleset", "MasterPlan", ".", false)) << "Unable to initialise the Alica Engine!";
 }
-
 
