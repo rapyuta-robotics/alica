@@ -30,6 +30,8 @@ using namespace std;
 #include "engine/model/Quantifier.h"
 #include "engine/model/ForallAgents.h"
 #include "../../alica_ros_proxy/include/clock/AlicaROSClock.h"
+#include "engine/PlanRepository.h"
+#include "engine/DefaultUtilityFunction.h"
 
 class AlicaEngineTest : public ::testing::Test
 {

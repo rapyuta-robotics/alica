@@ -19,6 +19,7 @@
 #include "engine/model/RoleSet.h"
 #include "engine/model/RoleTaskMapping.h"
 #include "engine/model/Role.h"
+#include "engine/DefaultUtilityFunction.h"
 
 namespace alica
 {
@@ -191,12 +192,14 @@ namespace alica
 
 		for(RoleTaskMapping* rtm : roleSet->getRoleTaskMappings())
 		{
+			//TODO RoleTaskMappings empty
 			roleId = rtm->getRole()->getId();
 			this->roleHighestPriorityMap.insert(pair<long, double>(roleId, 0.0));
 			for(auto epIter = this->plan->getEntryPoints().begin(); epIter != this->plan->getEntryPoints().end(); epIter++)
 			{
 				taskId = epIter->second->getId();
 				auto iter = rtm->getTaskPriorities().find(taskId);
+				cout << "Taskpriorities " << rtm->getTaskPriorities().size() << endl;
 				if(iter == rtm->getTaskPriorities().end())
 				{
 					stringstream ss;
@@ -240,6 +243,8 @@ namespace alica
 		map<long,Plan*> plans = AlicaEngine::getInstance()->getPlanRepository()->getPlans();
 
 		for(auto iter = plans.begin(); iter != plans.end(); iter++) {
+			//TODO hack to get tests running
+			iter->second->setUtilityFunction(new DefaultUtilityFunction(iter->second));
 			iter->second->getUtilityFunction()->init();
 		}
 		cout << "KOMME RAUS" << endl;

@@ -5,6 +5,8 @@
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
 #include <clock/AlicaROSClock.h>
+#include  "engine/DefaultUtilityFunction.h"
+#include "engine/model/Plan.h"
 
 class AlicaEngineTestBehPool : public ::testing::Test
 {
@@ -43,7 +45,6 @@ TEST_F(AlicaEngineTestBehPool, behaviourPoolInit)
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	EXPECT_TRUE(ae->init(bc, "Roleset", "MasterPlan", ".", false))
 			<< "Unable to initialise the Alica Engine!";
-
 	auto behaviours = ae->getPlanRepository()->getBehaviours();
 	alica::IBehaviourPool* bp = ae->getBehaviourPool();
 	for (auto behaviourPair : behaviours)

@@ -198,7 +198,7 @@ file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 file(GLOB_RECURSE test_alica_SOURCES "src/test/*.cpp")
  catkin_add_gtest(${PROJECT_NAME}-test ${test_alica_SOURCES})
  if(TARGET ${PROJECT_NAME}-test)
-   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES} system_config alica_engine test_behaviour_creator cnc_turtlebots_behaviours alica_ros_proxy)
+   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES} system_config alica_engine test_behaviour_creator alica_ros_proxy)
  endif()
 
 ## Add folders to be run by python nosetests
