@@ -3,6 +3,9 @@
 #include <engine/IAlicaClock.h>
 #include "TestBehaviourCreator.h"
 #include <clock/AlicaROSClock.h>
+#include "engine/PlanRepository.h"
+#include "engine/DefaultUtilityFunction.h"
+#include "engine/model/Plan.h"
 
 class AlicaEngineTestInit : public ::testing::Test
 {

@@ -45,12 +45,12 @@ namespace alica
 		this->isDefault = isDefault;
 	}
 
-	list<RoleTaskMapping*>& RoleSet::getRoleTaskMappings()
+	list<RoleTaskMapping*> RoleSet::getRoleTaskMappings()
 	{
 		return roleTaskMappings;
 	}
 
-	void RoleSet::setRoleTaskMappings(const list<RoleTaskMapping*>& roleTaskMappings)
+	void RoleSet::setRoleTaskMappings(const list<RoleTaskMapping*> roleTaskMappings)
 	{
 		this->roleTaskMappings = roleTaskMappings;
 	}

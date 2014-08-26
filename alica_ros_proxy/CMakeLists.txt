@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 find_package(catkin REQUIRED COMPONENTS
   alica_engine
   system_config
-  cnc_turtlebots_behaviours
+#  cnc_turtlebots_behaviours
   roscpp
 )
 
