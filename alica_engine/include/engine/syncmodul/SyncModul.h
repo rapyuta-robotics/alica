@@ -44,7 +44,7 @@ namespace alica
 		void sendAcks(vector<SyncData*> syncDataList);
 		void synchronisationDone(SyncTransition* st);
 		void onSyncTalk(SyncTalk st);
-		void onSyncReady(SyncReady st);
+		void onSyncReady(SyncReady sr);
 	protected:
 		bool running;
 		AlicaEngine* ae;
