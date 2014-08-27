@@ -6,33 +6,34 @@
  */
 
 #include <engine/syncmodul/SyncRow.h>
+#include <algorithm>
 
 namespace alica
 {
 
 	SyncRow::SyncRow()
 	{
-		// TODO Auto-generated constructor stub
-
+		this->syncData = nullptr;
 	}
 
 	SyncRow::SyncRow(SyncData* sd)
 	{
+		this->syncData = sd;
 	}
 
 	SyncRow::~SyncRow()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
-	vector<int> SyncRow::getRecievedBy()
+	vector<int> SyncRow::getReceivedBy()
 	{
-		return recievedBy;
+		sort(this->receivedBy.begin(), this->receivedBy.end());
+		return receivedBy;
 	}
 
-	void SyncRow::setRecievedBy(vector<int> recievedBy)
+	void SyncRow::setReceivedBy(vector<int> receivedBy)
 	{
-		this->recievedBy = recievedBy;
+		this->receivedBy = receivedBy;
 	}
 
 	SyncData* SyncRow::getSyncData()

@@ -7,11 +7,15 @@
 
 #ifndef SYNCHRONISATION_H_
 #define SYNCHRONISATION_H_
-#define SM_MISC
+//#define SM_MISC
+#define SM_SUCCESS
+//#define SM_FAILURE
+#define SM_MESSAGES
 
 using namespace std;
 
 #include <list>
+#include <mutex>
 
 namespace alica
 {
@@ -44,6 +48,7 @@ namespace alica
 		void printMatrix();
 
 	protected:
+		mutex syncMutex;
 		SyncModul* syncModul;
 		SyncTransition* syncTransition;
 		int myID;
