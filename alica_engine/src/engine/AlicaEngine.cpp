@@ -24,6 +24,8 @@ using namespace std;
 #include "engine/roleassignment/RoleAssignment.h"
 #include "engine/UtilityFunction.h"
 #include "engine/model/Plan.h"
+#include "engine/syncmodul/SyncModul.h"
+
 
 namespace alica
 {
@@ -44,6 +46,7 @@ namespace alica
 		this->teamObserver = nullptr;
 		this->roleAssignment = nullptr;
 		this->behaviourPool = nullptr;
+		this->syncModul = nullptr;
 		//TODO: erstellen von syncmodul
 //		this->syncModul = new SyncModul();
 
@@ -55,6 +58,7 @@ namespace alica
 		this->auth = nullptr;
 		this->roleSet = nullptr;
 		this->stepEngine = false;
+		this->maySendMessages = false;
 
 //		TODO: MODULELOADER CASTOR
 //		string modName[] = (*this->sc)["Alica"]->get<string>("Alica", "Extensions", "LoadModule", NULL);
@@ -67,6 +71,7 @@ namespace alica
 //				Console.WriteLine("AE: Loaded Module " + name);
 //			}
 //		}
+		this->maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
 
 #ifdef AE_DEBUG
 		cout << "AE: Constructor finished!" << endl;
@@ -107,21 +112,21 @@ namespace alica
 		{
 			this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
 		}
-		if(this->behaviourPool == nullptr)
+		if (this->behaviourPool == nullptr)
 		{
 			this->behaviourPool = new BehaviourPool();
 		}
-		if(this->teamObserver == nullptr)
+		if (this->teamObserver == nullptr)
 		{
 			this->teamObserver = new TeamObserver();
 		}
-		if(this->roleAssignment == nullptr)
+		if (this->roleAssignment == nullptr)
 		{
 			this->roleAssignment = new RoleAssignment();
 		}
-		if(this->syncModul == nullptr)
+		if (this->syncModul == nullptr)
 		{
-//			this->syncModul = new Sy
+			this->syncModul = new SyncModul();
 		}
 		this->stepCalled = false;
 		bool everythingWorked = true;
@@ -136,14 +141,14 @@ namespace alica
 		this->auth->init();
 		this->planBase = new PlanBase(this->masterPlan);
 		UtilityFunction::initDataStructures();
-		//TODO
-//		this.syncModul.Init();
+		this->syncModul->init();
 		return everythingWorked;
 	}
 
 	bool AlicaEngine::shutdown()
 	{
 		bool everythingWorked = true;
+		this->maySendMessages = false;
 		delete this->planRepository;
 		this->planRepository = nullptr;
 		delete this->planParser;
@@ -158,6 +163,7 @@ namespace alica
 		delete this->planBase;
 		this->planBase = nullptr;
 		this->masterPlan = nullptr;
+		this->syncModul = nullptr;
 		return everythingWorked;
 	}
 
@@ -292,6 +298,14 @@ namespace alica
 	bool AlicaEngine::isTerminating() const
 	{
 		return terminating;
+	}
+	bool AlicaEngine::isMaySendMessages() const
+	{
+		return maySendMessages;
+	}
+	void AlicaEngine::setMaySendMessages(bool maySendMessages)
+	{
+		this->maySendMessages = maySendMessages;
 	}
 
 	void AlicaEngine::setTerminating(bool terminating)

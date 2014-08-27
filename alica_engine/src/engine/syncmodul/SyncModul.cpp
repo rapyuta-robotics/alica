@@ -14,6 +14,7 @@
 #include "engine/containers/SyncData.h"
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
+#include "engine/IAlicaCommunication.h"
 
 namespace alica
 {
@@ -24,9 +25,8 @@ namespace alica
 		this->myId = 0;
 		this->pr = nullptr;
 		this->running = false;
-		this->syncReadyPublisher = nullptr;
-		this->syncTalkPublisher = nullptr;
 		this->ticks = 0;
+		this->communicator = nullptr;
 
 	}
 
@@ -42,6 +42,7 @@ namespace alica
 		this->ae = AlicaEngine::getInstance();
 		this->myId = ae->getTeamObserver()->getOwnId();
 		this->pr = this->ae->getPlanRepository();
+		this->communicator = this->ae->getCommunicator();
 		//TODO
 //		syncTalkPublisher = this.rosNode.Advertise("SyncTalk", SyncTalk.TypeId, 5);
 //		syncReadyPublisher = this.rosNode.Advertise("SyncReady", SyncReady.TypeId, 5);
@@ -95,21 +96,58 @@ namespace alica
 	}
 	void SyncModul::sendSyncTalk(SyncTalk st)
 	{
-//		if(this->ae->)
-//			return;
-//		st.senderID = this->myId;
+		if (this->ae->isMaySendMessages())
+			return;
+		st.senderID = this->myId;
+		this->communicator->sendSyncTalk(st);
 
 	}
 	void SyncModul::sendSyncReady(SyncReady sr)
 	{
-
+		if (this->ae->isMaySendMessages())
+			return;
+		sr.senderID = this->myId;
+		communicator->sendSyncReady(sr);
 	}
-	void SyncModul::sendAcks(list<SyncData> syncDataList)
+	void SyncModul::sendAcks(vector<SyncData> syncDataList)
 	{
+		if (this->ae->isMaySendMessages())
+			return;
+		SyncTalk st;
+		st.senderID = this->myId;
+		st.syncData = syncDataList;
+		this->communicator->sendAcks(st);
+	}
+	void SyncModul::synchronisationDone(SyncTransition* st)
+	{
+#if SM_SUCCES
+		cout << "SyncDONE in SYNCMODUL for synctransID: "  << st->getId() << endl;
+#endif
 
+		{
+			lock_guard<mutex> lock(lomutex);
+#if SM_SUCCES
+			cout << "Remove synchronisation object for syntransID: " << st->getId() << endl;
+#endif
+			this->synchSet.erase(st);
+		}
+		this->synchedTransitions.push_back(st);
+#if SM_SUCCES
+				cout << "SM: SYNC TRIGGER TIME:" << this->ae->getIAlicaClock()->now()/1000000UL << endl;
+#endif
 	}
 
 	bool SyncModul::followSyncTransition(Transition* trans)
+	{
+		list<SyncTransition*>::iterator it = find(this->synchedTransitions.begin(),this->synchedTransitions.end(),trans->getSyncTransition());
+		if(it != this->synchedTransitions.end())
+		{
+			this->synchedTransitions.remove(trans->getSyncTransition());
+			return true;
+		}
+		return false;
+	}
+	void SyncModul::onSyncTalk(SyncTalk st)
 	{
 
 	}

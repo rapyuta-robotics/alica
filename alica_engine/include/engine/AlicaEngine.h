@@ -34,15 +34,12 @@ namespace alica
 	class IAlicaClock;
 	class PlanBase;
 
-
 	class AlicaEngine
 	{
 	public:
-		static AlicaEngine* getInstance();
-		bool init(IBehaviourCreator* bc, string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine);
-		bool shutdown();
-		void start();
-		bool getStepEngine();
+		static AlicaEngine* getInstance();bool init(IBehaviourCreator* bc, string roleSetName, string masterPlanName,
+													string roleSetDir, bool stepEngine);bool shutdown();
+		void start();bool getStepEngine();
 		void abort(string msg);
 		template<typename T> void abort(string msg, const T tail);
 		PlanRepository* getPlanRepository();
@@ -59,11 +56,12 @@ namespace alica
 		void setAuth(AuthorityManager* auth);
 		IRoleAssignment* getRoleAssignment();
 		void setRoleAssignment(IRoleAssignment* roleAssignment);
-		IPlanParser* getPlanParser();
-		bool isTerminating() const;
+		IPlanParser* getPlanParser();bool isTerminating() const;
 		void setTerminating(bool terminating);
 		void setStepCalled(bool stepCalled);
 		bool getStepCalled() const;
+		bool isMaySendMessages() const;
+		void setMaySendMessages(bool maySendMessages);
 		RoleSet* getRoleSet();
 		IAlicaCommunication* getCommunicator();
 		void setCommunicator(IAlicaCommunication * communicator);
@@ -72,7 +70,7 @@ namespace alica
 		IAlicaClock* getIAlicaClock();
 		void setIAlicaClock(IAlicaClock* clock);
 		void doStep();
-		void iterationComplete();
+		void iterationComplete();bool maySendMessages;
 
 	protected:
 		supplementary::SystemConfig* sc;
@@ -87,17 +85,14 @@ namespace alica
 		IAlicaCommunication* communicator;
 		IPlanner* planner;
 		IAlicaClock* alicaClock;
-		PlanBase* planBase;
-		bool stepCalled;
-
+		PlanBase* planBase;bool stepCalled;
 
 	private:
 		// private constructur/ destructor because of singleton
 		AlicaEngine();
 		~AlicaEngine();
 
-		bool stepEngine;
-		bool terminating;
+		bool stepEngine;bool terminating;
 		void setStepEngine(bool stepEngine);
 
 		PlanRepository* planRepository;
@@ -110,6 +105,7 @@ namespace alica
 	template<typename T>
 	void AlicaEngine::abort(string msg, const T tail)
 	{
+		this->maySendMessages = false;
 		stringstream ss;
 		ss << msg << tail;
 		AlicaEngine::abort(ss.str());

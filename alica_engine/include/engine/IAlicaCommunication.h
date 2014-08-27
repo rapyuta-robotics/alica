@@ -11,6 +11,7 @@
 namespace alica
 {
 	class RoleSwitch;
+	struct SyncTalk;
 
 	class IAlicaCommunication
 	{
@@ -23,8 +24,9 @@ namespace alica
 		virtual void sendPlanTreeInfo() = 0;
 		virtual void sendRoleSwitch(RoleSwitch rs) = 0;
 		virtual void sendSolverResult() = 0;
-		virtual void sendSyncReady() = 0;
-		virtual void sendSyncTalk() = 0;
+		virtual void sendSyncReady(SyncReady sr) = 0;
+		virtual void sendSyncTalk(SyncTalk st) = 0;
+		virtual void sendAcks(SyncTalk st) = 0;
 
 
 	};
