@@ -440,7 +440,7 @@ namespace alica
 			if (t->getSyncTransition() == nullptr)
 				continue;
 
-			if (this->sm->followSyncTransition((*t)))
+			if (this->sm->followSyncTransition((t)))
 			{
 				if (t->evalCondition(r))
 				{
@@ -450,12 +450,12 @@ namespace alica
 				}
 				else
 				{
-					this->sm->setSynchronisation(*t, false);
+					this->sm->setSynchronisation(t, false);
 				}
 			}
 			else
 			{
-				this->sm->setSynchronisation(*t, t->evalCondition(r));
+				this->sm->setSynchronisation(t, t->evalCondition(r));
 			}
 		}
 		if (nextState == nullptr)
