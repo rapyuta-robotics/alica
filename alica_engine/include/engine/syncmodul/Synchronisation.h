@@ -33,7 +33,7 @@ namespace alica
 		virtual ~Synchronisation();
 		void setTick(unsigned long now);
 		void changeOwnData (long transitionID, bool conditionHolds);
-		bool IsValid(unsigned long curTick);
+		bool isValid(unsigned long curTick);
 		bool integrateSyncTalk(SyncTalk* talk, unsigned long curTick);
 		void integrateSyncReady(SyncReady* ready);
 		SyncTransition* getSyncTransition();

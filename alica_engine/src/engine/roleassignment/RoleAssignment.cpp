@@ -51,7 +51,7 @@ namespace alica
 		{
 			RoleSwitch rs = RoleSwitch();
 			rs.roleID = ownRole->getId();
-			this->communication->SendRoleSwitch(rs);
+			this->communication->sendRoleSwitch(rs);
 		}
 		this->ownRole = ownRole;
 	}

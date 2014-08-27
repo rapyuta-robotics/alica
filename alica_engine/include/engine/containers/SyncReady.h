@@ -14,8 +14,8 @@ namespace alica
 {
 	struct SyncReady
 	{
-		int32 senderID;
-		int64 syncTransitionID;
+		int senderID;
+		int syncTransitionID;
 	};
 
 } /* namespace alica */
