@@ -151,5 +151,9 @@ namespace alica
 	{
 
 	}
+	void SyncModul::onSyncReady(SyncReady st)
+	{
+
+	}
 
 } /* namespace supplementary */
