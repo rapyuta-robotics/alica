@@ -7,7 +7,7 @@
 
 #include "engine/syncmodul/SyncModul.h"
 
-namespace supplementary
+namespace alica
 {
 
 	SyncModul::SyncModul()
