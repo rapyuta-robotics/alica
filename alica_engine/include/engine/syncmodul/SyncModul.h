@@ -13,6 +13,7 @@
 #include <mutex>
 #include <iostream>
 #include <map>
+#include <vector>
 
 using namespace std;
 
@@ -40,7 +41,7 @@ namespace alica
 		virtual bool followSyncTransition(Transition* trans);
 		void sendSyncTalk (SyncTalk st);
 		void sendSyncReady(SyncReady sr);
-		void sendAcks(vector<SyncData> syncDataList);
+		void sendAcks(vector<SyncData*> syncDataList);
 		void synchronisationDone(SyncTransition* st);
 		void onSyncTalk(SyncTalk st);
 		void onSyncReady(SyncReady st);
