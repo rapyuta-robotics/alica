@@ -12,6 +12,7 @@ namespace alica
 {
 	class RoleSwitch;
 	struct SyncTalk;
+	struct SyncReady;
 
 	class IAlicaCommunication
 	{
