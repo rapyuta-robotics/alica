@@ -26,6 +26,7 @@ namespace alica
 	struct SyncData;
 	struct SyncReady;
 	struct SyncTalk;
+	class IAlicaCommunication;
 
 	class SyncModul : public ISyncModul
 	{
@@ -39,19 +40,20 @@ namespace alica
 		virtual bool followSyncTransition(Transition* trans);
 		void sendSyncTalk (SyncTalk st);
 		void sendSyncReady(SyncReady sr);
-		void sendAcks(list<SyncData> syncDataList);
+		void sendAcks(vector<SyncData> syncDataList);
+		void synchronisationDone(SyncTransition* st);
+		void onSyncTalk(SyncTalk st);
 
 	protected:
 		bool running;
 		AlicaEngine* ae;
-		int* syncTalkPublisher;
-		int* syncReadyPublisher;
 		int myId;
 		unsigned long ticks;
 		PlanRepository* pr;
 		map<SyncTransition*, Synchronisation*> synchSet;
 		list<SyncTransition*> synchedTransitions;
 		mutex lomutex;
+		IAlicaCommunication* communicator;
 
 	};
 
