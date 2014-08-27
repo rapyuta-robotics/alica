@@ -18,7 +18,7 @@ namespace alica
 
 	struct SyncTalk
 	{
-		int32 senderID;
+		int senderID;
 		vector<SyncData*> syncData;
 	};
 

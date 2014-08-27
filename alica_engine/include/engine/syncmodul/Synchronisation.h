@@ -7,11 +7,15 @@
 
 #ifndef SYNCHRONISATION_H_
 #define SYNCHRONISATION_H_
-#define SM_MISC
+//#define SM_MISC
+#define SM_SUCCESS
+//#define SM_FAILURE
+#define SM_MESSAGES
 
 using namespace std;
 
 #include <list>
+#include <mutex>
 
 namespace alica
 {
@@ -33,7 +37,7 @@ namespace alica
 		virtual ~Synchronisation();
 		void setTick(unsigned long now);
 		void changeOwnData (long transitionID, bool conditionHolds);
-		bool IsValid(unsigned long curTick);
+		bool isValid(unsigned long curTick);
 		bool integrateSyncTalk(SyncTalk* talk, unsigned long curTick);
 		void integrateSyncReady(SyncReady* ready);
 		SyncTransition* getSyncTransition();
@@ -44,6 +48,7 @@ namespace alica
 		void printMatrix();
 
 	protected:
+		mutex syncMutex;
 		SyncModul* syncModul;
 		SyncTransition* syncTransition;
 		int myID;

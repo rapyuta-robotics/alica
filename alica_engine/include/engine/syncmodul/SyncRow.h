@@ -23,15 +23,15 @@ namespace alica
 		SyncRow();
 		SyncRow(SyncData* sd);
 		virtual ~SyncRow();
-		vector<int> getRecievedBy();
-		void setRecievedBy(vector<int> recievedBy);
+		vector<int> getReceivedBy();
+		void setReceivedBy(vector<int> recievedBy);
 		SyncData* getSyncData();
 		void setSyncData(SyncData* syncData);
 
 	protected:
 		SyncData* syncData;
 		//this vector always has to be sorted
-		vector<int> recievedBy;
+		vector<int> receivedBy;
 	};
 
 } /* namespace alica */
