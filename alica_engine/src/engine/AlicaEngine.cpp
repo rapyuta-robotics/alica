@@ -21,7 +21,7 @@ using namespace std;
 #include "engine/PlanBase.h"
 #include "engine/teamobserver/TeamObserver.h"
 #include "engine/logging/Logger.h"
-#include "engine/roleAssignment/RoleAssignment.h"
+#include "engine/roleassignment/RoleAssignment.h"
 #include "engine/UtilityFunction.h"
 #include "engine/model/Plan.h"
 
@@ -118,6 +118,10 @@ namespace alica
 		if(this->roleAssignment == nullptr)
 		{
 			this->roleAssignment = new RoleAssignment();
+		}
+		if(this->syncModul == nullptr)
+		{
+//			this->syncModul = new Sy
 		}
 		this->stepCalled = false;
 		bool everythingWorked = true;

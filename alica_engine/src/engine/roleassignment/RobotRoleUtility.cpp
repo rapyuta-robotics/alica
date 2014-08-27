@@ -5,7 +5,7 @@
  *      Author: Stefan Jakob
  */
 
-#include <engine/roleAssignment/RobotRoleUtility.h>
+#include "engine/roleassignment/RobotRoleUtility.h"
 #include "engine/model/Role.h"
 #include "engine/collections/RobotProperties.h"
 

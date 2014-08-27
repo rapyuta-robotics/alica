@@ -5,7 +5,7 @@
  *      Author: Stefan Jakob
  */
 
-#include "engine/expressionHandler/ExpressionHandler.h"
+#include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/RunningPlan.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Transition.h"

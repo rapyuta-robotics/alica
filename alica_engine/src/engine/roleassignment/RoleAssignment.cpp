@@ -5,14 +5,14 @@
  *      Author: Stefan Jakob
  */
 
-#include <engine/roleAssignment/RoleAssignment.h>
+#include <engine/roleassignment/RoleAssignment.h>
 #include "engine/AlicaEngine.h"
 #include "engine/model/Role.h"
 #include "engine/ITeamObserver.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/model/RoleUsage.h"
 #include "engine/PlanRepository.h"
-#include "engine/roleAssignment/RobotRoleUtility.h"
+#include "engine/roleassignment/RobotRoleUtility.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/model/RolePriority.h"
 #include "engine/model/Characteristic.h"
