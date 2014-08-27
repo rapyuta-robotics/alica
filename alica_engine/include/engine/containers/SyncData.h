@@ -14,8 +14,8 @@ namespace alica
 {
 	struct SyncData
 	{
-		int32 robotID;
-		int64 transitionID;
+		int robotID;
+		int transitionID;
 		bool conditionHolds;
 		bool ack;
 	};
