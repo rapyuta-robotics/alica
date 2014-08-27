@@ -18,13 +18,13 @@ namespace alica
 		IAlicaCommunication();
 		virtual ~IAlicaCommunication();
 
-		virtual void SendAllocationAuthority() = 0;
-		virtual void SendBehaviourEngineInfo() = 0;
-		virtual void SendPlanTreeInfo() = 0;
-		virtual void SendRoleSwitch(RoleSwitch rs) = 0;
-		virtual void SendSolverResult() = 0;
-		virtual void SendSyncReady() = 0;
-		virtual void SendSyncTalk() = 0;
+		virtual void sendAllocationAuthority() = 0;
+		virtual void sendBehaviourEngineInfo() = 0;
+		virtual void sendPlanTreeInfo() = 0;
+		virtual void sendRoleSwitch(RoleSwitch rs) = 0;
+		virtual void sendSolverResult() = 0;
+		virtual void sendSyncReady() = 0;
+		virtual void sendSyncTalk() = 0;
 
 
 	};
