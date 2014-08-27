@@ -14,7 +14,7 @@ namespace alica
 		this->terminal = false;
 		this->successState = false;
 		this->failureState = false;
-		this->inPlan = false;
+		this->inPlan = nullptr;
 		this->entryPoint = nullptr;
 
 	}
@@ -24,7 +24,7 @@ namespace alica
 		this->terminal = false;
 		this->successState = false;
 		this->failureState = false;
-		this->inPlan = false;
+		this->inPlan = nullptr;
 		this->entryPoint = nullptr;
 
 	}
