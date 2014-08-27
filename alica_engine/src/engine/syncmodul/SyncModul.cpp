@@ -109,7 +109,7 @@ namespace alica
 		sr.senderID = this->myId;
 		communicator->sendSyncReady(sr);
 	}
-	void SyncModul::sendAcks(vector<SyncData> syncDataList)
+	void SyncModul::sendAcks(vector<SyncData*> syncDataList)
 	{
 		if (this->ae->isMaySendMessages())
 			return;
