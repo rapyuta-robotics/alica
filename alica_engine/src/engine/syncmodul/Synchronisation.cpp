@@ -14,6 +14,7 @@
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
 #include "engine/syncmodul/SyncRow.h"
+#include "engine/syncmodul/SyncModul.h"
 
 namespace alica
 {
@@ -23,14 +24,13 @@ namespace alica
 		this->syncModul = nullptr;
 		this->syncTransition = nullptr;
 		this->myID = -1;
-		this->lastTalkData = 0;
-		this->lastTalkData = nullptr;
 		this->syncStartTime = 0;
 		this->readyForSync = false;
 		this->lastTick = 0;
 		this->runningPlan = nullptr;
 		this->myRow = nullptr;
 		this->lastTalkTime = 0;
+		this->lastTalkData = nullptr;
 	}
 
 	Synchronisation::Synchronisation(int myID, SyncTransition* st, SyncModul* sm)
@@ -69,7 +69,7 @@ namespace alica
 	{
 #ifdef SM_MISC
 		cout << "CHOD: ElapsedTime: "
-		<< (AlicaEngine::getInstance()->getIAlicaClock()->now() / 1000000UL - this->syncStartTime) << endl;
+				<< (AlicaEngine::getInstance()->getIAlicaClock()->now() / 1000000UL - this->syncStartTime) << endl;
 #endif
 
 		if (!conditionHolds)
@@ -230,12 +230,14 @@ namespace alica
 #ifdef SM_MESSAGES
 					cout << "ROW SD: " << row->getSyncData()->robotID << " " << row->getSyncData()->transitionID << " "
 							<< row->getSyncData()->conditionHolds << " " << row->getSyncData()->ack << endl;
-					cout << "CUR SD: " << sd->robotID << " " << sd->transitionID << " " << sd->conditionHolds << " " << sd->ack << endl;
+					cout << "CUR SD: " << sd->robotID << " " << sd->transitionID << " " << sd->conditionHolds << " "
+							<< sd->ack << endl;
 #endif
 
-					if (sd->ack == row->getSyncData()->ack && sd->conditionHolds == row->getSyncData()->conditionHolds
-							&& sd->robotID == row->getSyncData()->robotID
-							&& sd->transitionID == row->getSyncData()->transitionID)
+					if (sd->ack == myRow->getSyncData()->ack
+							&& sd->conditionHolds == myRow->getSyncData()->conditionHolds
+							&& sd->robotID == myRow->getSyncData()->robotID
+							&& sd->transitionID == myRow->getSyncData()->transitionID)
 					{
 						rowInMatrix = row;
 						break;
@@ -288,8 +290,7 @@ namespace alica
 						Console.WriteLine("SyncDONE in Synchronisation (IntTalk): elapsed time: " + ((RosCS.RosSharp.Now()/1000000UL) - this.syncStartTime));
 #endif
 						//notify syncmodul
-						//TODO
-			//			this->syncModul->synchronisationDone(this->syncTransition);
+						this->syncModul->synchronisationDone(this->syncTransition);
 
 					}
 				}
@@ -301,6 +302,40 @@ namespace alica
 
 	void Synchronisation::integrateSyncReady(SyncReady* ready)
 	{
+		//every robot that has acknowleged my row needs to send me a SyncReady
+		bool found = false;
+		for (SyncReady* sr : this->receivedSyncReadys)
+		{
+			if (sr->senderID == ready->senderID)
+			{
+				found = true;
+				break;
+			}
+		}
+
+		if (!found)
+		{
+			this->receivedSyncReadys.push_back(ready);
+		}
+#ifdef SM_MESSAGES
+		cout << "Matrix: IntSyncReady" << endl;
+		printMatrix();
+#endif
+
+		//check if all robots are ready
+		if (this->readyForSync)
+		{
+			if (allSyncReady())
+			{
+				//notify syncModul
+#ifdef SM_SUCCESS
+				cout << "SyncDONE in Synchronisation (IntReady): elapsed time: "
+						<< (AlicaEngine::getInstance()->getIAlicaClock()->now() / 1000000UL) - this->syncStartTime
+						<< endl;
+#endif
+				this->syncModul->synchronisationDone(this->syncTransition);
+			}
+		}
 	}
 
 	void Synchronisation::setSyncTransition(SyncTransition* syncTransition)
@@ -310,10 +345,55 @@ namespace alica
 
 	bool Synchronisation::allSyncReady()
 	{
+		//test if all robots who acknowledged myRow have sent a SyncReady
+		for (int robotID : this->myRow->getReceivedBy())
+		{
+			if (robotID != myID) //we do not necessarily need an ack from ourselves
+			{
+				bool foundRobot = false;
+				for (SyncReady* sr : this->receivedSyncReadys)
+				{
+					if (sr->senderID == robotID)
+					{
+						foundRobot = true;
+						break;
+					}
+				}
+
+				if (!foundRobot) //at least one robot is missing
+				{
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	void Synchronisation::printMatrix()
 	{
+		cout << endl;
+		cout << "Matrix:" << endl;
+
+		lock_guard<mutex> lock(syncMutex);
+		{
+
+			for (SyncRow* row : this->syncMatrix)
+			{
+				string robots = "";
+				for (int robotID : row->getReceivedBy())
+				{
+					robots += robotID + ", ";
+				}
+				cout << "Row: " << row->getSyncData()->robotID << " " << row->getSyncData()->transitionID + " "
+								+ row->getSyncData()->conditionHolds << " " << row->getSyncData()->ack << " RecvBy: " << robots << endl;
+			}
+			cout << "ReceivedSyncreadys: ";
+			for (SyncReady* sr : this->receivedSyncReadys)
+			{
+				cout << sr->senderID << ", " << endl;;
+			}
+		}
+		cout << endl;
 	}
 
 	void Synchronisation::sendTalk(SyncData* sd)
@@ -326,16 +406,69 @@ namespace alica
 #ifdef SM_MESSAGES
 		cout << "Sending Talk TID: " << sd->transitionID << endl;
 #endif
-		//TODO
-		//this->syncModul->sendSyncTalk(talk);
+
+		this->syncModul->sendSyncTalk(*talk);
 	}
 
 	void Synchronisation::sendSyncReady()
 	{
+		//send own row again to be sure
+		sendTalk(myRow->getSyncData());
+
+		SyncReady* sr = new SyncReady();
+		sr->syncTransitionID = this->syncTransition->getId();
+		this->syncModul->sendSyncReady(*sr);
 	}
 
 	bool Synchronisation::isSyncComplete()
 	{
+		//myRow needs to be acknowledged by all participants
+		//every participant needs to believe in its condition
+		//there must be at least one participant for every condition
+
+		this->rowsOK.clear();
+
+		//collect participants
+		for (long transID : this->connectedTransitions)
+		{
+			SyncRow* foundRow = nullptr;
+
+			lock_guard<mutex> lock(syncMutex);
+
+			for (SyncRow* row : this->syncMatrix)
+			{
+				if (row->getSyncData()->transitionID == transID && row->getSyncData()->conditionHolds)
+				{
+					foundRow = row;
+					break;
+				}
+			}
+
+			if (foundRow == nullptr) //no robot for transition
+			{
+				return false;
+			}
+
+			if (find(this->rowsOK.begin(), this->rowsOK.end(), foundRow) == this->rowsOK.end())
+			{
+				this->rowsOK.push_back(foundRow);
+			}
+		}
+
+		//check for acks in own row
+		for (SyncRow* row : this->rowsOK)
+		{
+			//there must be an ack on the ownRow from every participant
+			if (find(this->myRow->getReceivedBy().begin(), this->myRow->getReceivedBy().end(),
+						row->getSyncData()->robotID) == this->myRow->getReceivedBy().end())
+			{
+				return false;
+			}
+		}
+
+		return true;
+
 	}
 
-} /* namespace alica */
+}
+/* namespace alica */

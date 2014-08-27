@@ -8,9 +8,9 @@
 #ifndef SYNCHRONISATION_H_
 #define SYNCHRONISATION_H_
 //#define SM_MISC
-#define SM_SUCCESS
+//#define SM_SUCCESS
 //#define SM_FAILURE
-#define SM_MESSAGES
+//#define SM_MESSAGES
 
 using namespace std;
 
