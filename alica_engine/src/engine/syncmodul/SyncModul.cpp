@@ -43,13 +43,6 @@ namespace alica
 		this->myId = ae->getTeamObserver()->getOwnId();
 		this->pr = this->ae->getPlanRepository();
 		this->communicator = this->ae->getCommunicator();
-		//TODO
-//		syncTalkPublisher = this.rosNode.Advertise("SyncTalk", SyncTalk.TypeId, 5);
-//		syncReadyPublisher = this.rosNode.Advertise("SyncReady", SyncReady.TypeId, 5);
-//
-//		this.rosNode.Subscribe("SyncTalk", OnSyncTalk, 10);
-//		this.rosNode.Subscribe("SyncReady", OnSyncReady, 10);
-
 	}
 	void SyncModul::close()
 	{
@@ -121,7 +114,7 @@ namespace alica
 	void SyncModul::synchronisationDone(SyncTransition* st)
 	{
 #if SM_SUCCES
-		cout << "SyncDONE in SYNCMODUL for synctransID: "  << st->getId() << endl;
+		cout << "SyncDONE in SYNCMODUL for synctransID: " << st->getId() << endl;
 #endif
 
 		{
@@ -133,14 +126,15 @@ namespace alica
 		}
 		this->synchedTransitions.push_back(st);
 #if SM_SUCCES
-				cout << "SM: SYNC TRIGGER TIME:" << this->ae->getIAlicaClock()->now()/1000000UL << endl;
+		cout << "SM: SYNC TRIGGER TIME:" << this->ae->getIAlicaClock()->now()/1000000UL << endl;
 #endif
 	}
 
 	bool SyncModul::followSyncTransition(Transition* trans)
 	{
-		list<SyncTransition*>::iterator it = find(this->synchedTransitions.begin(),this->synchedTransitions.end(),trans->getSyncTransition());
-		if(it != this->synchedTransitions.end())
+		list<SyncTransition*>::iterator it = find(this->synchedTransitions.begin(), this->synchedTransitions.end(),
+													trans->getSyncTransition());
+		if (it != this->synchedTransitions.end())
 		{
 			this->synchedTransitions.remove(trans->getSyncTransition());
 			return true;
@@ -149,10 +143,110 @@ namespace alica
 	}
 	void SyncModul::onSyncTalk(SyncTalk st)
 	{
+		if (!this->running || st.senderID == this->myId)
+			return;
+		if (this->ae->getTeamObserver()->isRobotIgnored(st.senderID))
+			return;
+
+#if SM_SUCCES
+		cout << "SyncModul:Handle Synctalk" << endl;
+#endif
+
+		vector<SyncData*> toAck;
+		for (SyncData* sd : st.syncData)
+		{
+#if SM_SUCCES
+			cout << "SyncModul: TransID" << sd->transitioID << endl;
+			cout << "SyncModul: RobotID" << sd->robotID << endl;
+			cout << "SyncModul: Condition" << sd->conditionHolds << endl;
+			cout << "SyncModul: ACK" << sd->ack << endl;
+#endif
+			Transition* trans = nullptr;
+			SyncTransition* syncTrans = nullptr;
+
+			map<long, Transition*>::iterator iter = this->pr->getTransitions().find(sd->transitionID);
+			if (iter != this->pr->getTransitions().end())
+			{
+				trans = iter->second;
+				if (trans->getSyncTransition() != nullptr)
+				{
+					syncTrans = trans->getSyncTransition()
+				}
+				else
+				{
+					cout << "SyncModul: Transition " << trans->getId() << " is not connected to a SyncTransition"
+							<< endl;
+					return;
+				}
+			}
+			else
+			{
+				cout << "SyncModul: Could not find Element for Transition with ID: " << sd->transitionID << endl;
+				return;
+			}
+
+			Synchronisation* sync = nullptr;
+			bool doAck = true;
+			{
+				lock_guard<mutex> lock(lomutex);
+				map<SyncTransition*, Synchronisation*>::iterator i = this->synchSet.find(syncTrans);
+
+				if (i != this->synchSet.end())
+				{
+					cout << "SyncModul: Synchronisation " << syncTrans->getId() << " found" << endl;
+					sync->integrateSyncTalk(&st, this->ticks);
+				}
+				else
+				{
+					cout << "SyncModul: HandleSyncTalk: create new synchronisation" << endl;
+					sync = new Synchronisation(this->myId, syncTrans, this);
+					synchSet.insert(pair<SyncTransition*, Synchronisation*>(syncTrans, sync));
+					doAck = sync->integrateSyncTalk(&st, this->ticks);
+				}
+
+			}
+			if (!sd->ack && st.senderID == sd->robotID && doAck)
+			{
+				toAck.push_back(sd);
+			}
+
+		}
+		for (SyncData* sd : toAck)
+		{
+			sd->ack = true;
+		}
+		if (toAck.size() > 0)
+		{
+			sendAcks(toAck);
+		}
 
 	}
-	void SyncModul::onSyncReady(SyncReady st)
+	void SyncModul::onSyncReady(SyncReady sr)
 	{
+		if (!this->running || sr.senderID == this->myId)
+			return;
+		if (this->ae->getTeamObserver()->isRobotIgnored(sr.senderID))
+			return;
+		SyncTransition* syncTrans = nullptr;
+		map<long, SyncTransition*>::iterator iter = this->pr->getSyncTransitions().find(sr.syncTransitionID);
+		if(iter == this->pr->getSyncTransitions().end())
+		{
+			cout << "SyncModul: Unable to find synchronisation " << sr.syncTransitionID << " send by " << sr.senderID << endl;
+			return;
+ 		}
+		else
+		{
+			syncTrans = iter->second;
+		}
+
+		{
+			lock_guard<mutex> lock(lomutex);
+			map<SyncTransition*, Synchronisation*>::iterator i = this->synchSet.find(syncTrans);
+			if(i != this->synchSet.end())
+			{
+				i->second->integrateSyncReady(&sr);
+			}
+		}
 
 	}
 
