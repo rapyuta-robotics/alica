@@ -40,7 +40,7 @@ namespace alica
 	{
 	}
 
-	list<RoleUsage*> RolePriority::getPriorityList()
+	list<RoleUsage*>& RolePriority::getPriorityList()
 	{
 		return priorityList;
 	}

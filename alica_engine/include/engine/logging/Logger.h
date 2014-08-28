@@ -56,10 +56,10 @@ namespace alica
 		unsigned long endTime;
 		double time;
 		bool inIteration;
-		list<string> createHumanReadablePlanTree(list<long> list);
+		shared_ptr<list<string> > createHumanReadablePlanTree(list<long> list);
 		EntryPoint* entryPointOfState(State* s);
 		void evaluationAssignmentsToString(stringstream* ss, RunningPlan* rp);
-		list<string> createTreeLog(RunningPlan* r);
+		shared_ptr<list<string> > createTreeLog(RunningPlan* r);
 
 
 	};
