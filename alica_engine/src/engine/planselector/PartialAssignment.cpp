@@ -56,7 +56,6 @@ namespace alica
 		this->unAssignedRobots = vector<int>();
 		this->dynCardinalities = vector<DynCardinality*>(maxEpsCount);
 		this->compareVal = PRECISION;
-
 		for (int i = 0; i < maxEpsCount; i++)
 		{
 			this->dynCardinalities[i] = new DynCardinality();

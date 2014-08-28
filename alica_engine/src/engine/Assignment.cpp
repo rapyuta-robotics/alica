@@ -38,7 +38,11 @@ namespace alica
 					[](map<long, EntryPoint*>::value_type& val)
 					{	return val.second;});
 		l.sort();
-		copy(l.begin(), l.end(), back_inserter(epRobotsMapping->getEntryPoints()));
+		for(EntryPoint* ep : l)
+		{
+			this->epRobotsMapping->getEntryPoints().push_back(ep);
+		}
+
 		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 		this->epSucMapping = new SuccessCollection(p);
 	}

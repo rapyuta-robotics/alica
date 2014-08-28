@@ -38,7 +38,7 @@ namespace alica
 	}
 	long AlicaElement::getId() const
 	{
-		return id;
+		return this->id;
 	}
 	void AlicaElement::setId(long id)
 	{
