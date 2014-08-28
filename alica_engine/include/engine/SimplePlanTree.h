@@ -38,8 +38,8 @@ namespace alica
 		void setNewSimplePlanTree(bool newSimplePlanTree);
 		long getReceiveTime() const;
 		void setReceiveTime(long receiveTime);
-		const list<long>& getStateIds() const;
-		void setStateIds(const list<long>& stateIds);
+		list<long>& getStateIds();
+		void setStateIds(list<long>& stateIds);
 		bool containsPlan(AbstractPlan* plan);
 
 	protected:

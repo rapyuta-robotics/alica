@@ -25,7 +25,7 @@ namespace alica
 	{
 	}
 
-	vector<int> SyncRow::getReceivedBy()
+	vector<int>& SyncRow::getReceivedBy()
 	{
 		sort(this->receivedBy.begin(), this->receivedBy.end());
 		return receivedBy;

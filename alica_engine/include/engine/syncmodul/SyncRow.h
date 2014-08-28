@@ -23,7 +23,7 @@ namespace alica
 		SyncRow();
 		SyncRow(SyncData* sd);
 		virtual ~SyncRow();
-		vector<int> getReceivedBy();
+		vector<int>& getReceivedBy();
 		void setReceivedBy(vector<int> recievedBy);
 		SyncData* getSyncData();
 		void setSyncData(SyncData* syncData);

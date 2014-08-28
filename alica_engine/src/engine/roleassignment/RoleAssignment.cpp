@@ -95,7 +95,7 @@ namespace alica
 		}
 	}
 
-	map<int, Role*> RoleAssignment::getRobotRoleMapping()
+	map<int, Role*>& RoleAssignment::getRobotRoleMapping()
 	{
 		return robotRoleMapping;
 	}
