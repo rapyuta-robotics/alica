@@ -42,7 +42,7 @@ namespace alica
 		bool succeeded(AbstractPlan* p, EntryPoint* e);
 		bool succeeded(long planId, long entryPointId);
 		bool anyTaskSucceeded(AbstractPlan* p);
-		list<long>& toList();
+		list<long> toList();
 
 	protected:
 		map<AbstractPlan*,shared_ptr<list<EntryPoint*> > > succesMarks;
