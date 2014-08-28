@@ -15,6 +15,7 @@
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
 #include "engine/IAlicaCommunication.h"
+#include "engine/model/SyncTransition.h"
 
 namespace alica
 {
@@ -170,7 +171,7 @@ namespace alica
 				trans = iter->second;
 				if (trans->getSyncTransition() != nullptr)
 				{
-					syncTrans = trans->getSyncTransition()
+					syncTrans = trans->getSyncTransition();
 				}
 				else
 				{

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="ASCII"?>
 <alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488437260" name="MasterPlan" comment="comment" masterPlan="true" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="0" maxCardinality="2147483647">
   <states id="1402488437261" name="Attack" comment="" entryPoint="1402488437263">
-    <plans xsi:type="alica:Plan">AttackPlan.pml#1402488634525</plans>
     <plans xsi:type="alica:BehaviourConfiguration">Behaviour/Attack.beh#1402488866727</plans>
     <outTransitions>#1402488517667</outTransitions>
+    <outTransitions>#1409218318661</outTransitions>
   </states>
-  <states id="1402488463437" name="Defend" comment="" entryPoint="1402488484084">
+  <states id="1402488463437" name="Defend" comment="">
     <plans xsi:type="alica:Plan">Defend.pml#1402488893641</plans>
+    <inTransitions>#1409218318661</inTransitions>
   </states>
   <states id="1402488470615" name="Goal" comment="">
     <plans xsi:type="alica:Plan">GoalPlan.pml#1402488870347</plans>
@@ -38,12 +39,13 @@
     <inState>#1402488470615</inState>
     <outState>#1402488536570</outState>
   </transitions>
+  <transitions id="1409218318661" name="AttackToDefend" comment="AttackToDefend" msg="">
+    <preCondition id="1409218319990" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+    <inState>#1402488437261</inState>
+    <outState>#1402488463437</outState>
+  </transitions>
   <entryPoints id="1402488437263" name="" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
     <task>../Misc/taskrepository.tsk#1225112227903</task>
     <state>#1402488437261</state>
-  </entryPoints>
-  <entryPoints id="1402488484084" name="" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
-    <task>../Misc/taskrepository.tsk#1402488486725</task>
-    <state>#1402488463437</state>
   </entryPoints>
 </alica:Plan>

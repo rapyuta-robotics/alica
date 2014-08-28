@@ -15,6 +15,7 @@ using namespace std;
 #include <algorithm>
 #include <sstream>
 #include <memory>
+#include <iostream>
 
 namespace alica
 {

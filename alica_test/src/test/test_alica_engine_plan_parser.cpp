@@ -65,7 +65,7 @@ protected:
 	static void checkAlicaElement(alica::AlicaElement* ae, long id, string name, string comment)
 	{
 		EXPECT_EQ(id, ae->getId()) << "Wrong ID!" << endl;
-		EXPECT_STREQ(name.c_str(), ae->getName().c_str()) << "Wrong Name for Element of type " 	<< endl;
+		EXPECT_STREQ(name.c_str(), ae->getName().c_str()) << "Wrong Name for Element of type " << endl;
 		EXPECT_STREQ(comment.c_str(), ae->getComment().c_str()) << "Wrong Comment!" << endl;
 	}
 
@@ -151,12 +151,11 @@ protected:
 
 	static void checkRuntimeCondition(alica::RuntimeCondition* condition, long id, string name, string comment,
 										string conString, string pluginName)
-		{
-			checkAlicaElement(condition, id, name, comment);
-			EXPECT_STREQ(conString.c_str(), condition->getConditionString().c_str()) << "Wrong ConditionString!" << endl;
-			EXPECT_STREQ(condition->getPlugInName().c_str(), pluginName.c_str()) << "Wrong PlugInName!" << endl;
-		}
-
+	{
+		checkAlicaElement(condition, id, name, comment);
+		EXPECT_STREQ(conString.c_str(), condition->getConditionString().c_str()) << "Wrong ConditionString!" << endl;
+		EXPECT_STREQ(condition->getPlugInName().c_str(), pluginName.c_str()) << "Wrong PlugInName!" << endl;
+	}
 	static void checkTransition(alica::Transition* transition, long id, string name, string comment,
 								long preConditionId, long inState, long outState, string preConName,
 								string preConComment, string preConString, string pluginName, bool enabled)
@@ -172,21 +171,22 @@ protected:
 	}
 
 	static void checkSyncTransition(alica::SyncTransition* transition, long id, string name, string comment,
-	                                int talkTimeout, int syncTimeout)
+									int talkTimeout, int syncTimeout)
 	{
 		checkAlicaElement(transition, id, name, comment);
 		EXPECT_EQ(talkTimeout, transition->getTalkTimeOut()) << "Wrong talkTimeout!" << endl;
 		EXPECT_EQ(syncTimeout, transition->getSyncTimeOut()) << "Wrong syncTimeout!" << endl;
 	}
 
-	static void checkQuantifier(alica::Quantifier* quantifier, long id, string name ,string comment, long scope, initializer_list<string> sorts)
+	static void checkQuantifier(alica::Quantifier* quantifier, long id, string name, string comment, long scope,
+								initializer_list<string> sorts)
 	{
 		checkAlicaElement(quantifier, id, name, comment);
 		EXPECT_EQ(scope, quantifier->getScope()->getId()) << "Wrong Scope" << endl;
-		for(string sorts : quantifier->getDomainIdentifiers())
+		for (string sorts : quantifier->getDomainIdentifiers())
 		{
 			EXPECT_TRUE(find(quantifier->getDomainIdentifiers().begin(), quantifier->getDomainIdentifiers().end(), sorts.c_str())
-			            != quantifier->getDomainIdentifiers().end()) << "Sort not found!" << endl;
+					!= quantifier->getDomainIdentifiers().end()) << "Sort not found!" << endl;
 		}
 	}
 };
@@ -249,34 +249,43 @@ TEST_F(AlicaEngineTest, planParser)
 							checkTransition(t, 1402489459382, "MISSING_NAME", "", 1402489460549, 1402488646220,
 											1402489396914, "MISSING_NAME", "", "", "PropositionalLogicPlugin", true);
 							cout << "Quantifiers: " << endl;
-							for(alica::Quantifier* q : t->getPreCondition()->getQuantifiers())
+							for (alica::Quantifier* q : t->getPreCondition()->getQuantifiers())
 							{
-								switch(q->getId())
+								switch (q->getId())
 								{
 									case 1403773214317:
 										cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
-										checkQuantifier(q, 1403773214317, "MISSING_NAME", "", 1402488634525, {"X","Y"});
-										EXPECT_TRUE(dynamic_cast<alica::ForallAgents*>(q) != 0)<< "Wrong Type!" << endl;
+										checkQuantifier(q, 1403773214317, "MISSING_NAME", "", 1402488634525,
+														{"X", "Y"});
+										EXPECT_TRUE(dynamic_cast<alica::ForallAgents*>(q) != 0) << "Wrong Type!"
+												<< endl;
 										break;
 									case 1403773224776:
 										cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
-										checkQuantifier(q, 1403773224776, "MISSING_NAME", "", 1402488646220, {"A","B"});
-										EXPECT_TRUE(dynamic_cast<alica::ForallAgents*>(q) != 0)<< "Wrong Type!" << endl;
+										checkQuantifier(q, 1403773224776, "MISSING_NAME", "", 1402488646220,
+														{"A", "B"});
+										EXPECT_TRUE(dynamic_cast<alica::ForallAgents*>(q) != 0) << "Wrong Type!"
+												<< endl;
 										break;
 									case 1403773234841:
 										cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
-										checkQuantifier(q, 1403773234841, "MISSING_NAME", "", 1402489396914, {"another one"});
-										EXPECT_TRUE(dynamic_cast<alica::ForallAgents*>(q) != 0)<< "Wrong Type!" << endl;
+										checkQuantifier(q, 1403773234841, "MISSING_NAME", "", 1402489396914, {
+												"another one"});
+										EXPECT_TRUE(dynamic_cast<alica::ForallAgents*>(q) != 0) << "Wrong Type!"
+												<< endl;
 										break;
 									case 1403773248357:
 										cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
-										checkQuantifier(q, 1403773248357, "MISSING_NAME", "", 1402488646221, {"TaskQuantifier"});
-										EXPECT_TRUE(dynamic_cast<alica::ForallAgents*>(q) != 0)<< "Wrong Type!" << endl;
+										checkQuantifier(q, 1403773248357, "MISSING_NAME", "", 1402488646221, {
+												"TaskQuantifier"});
+										EXPECT_TRUE(dynamic_cast<alica::ForallAgents*>(q) != 0) << "Wrong Type!"
+												<< endl;
 										break;
 									default:
 										EXPECT_TRUE(false);
-										cerr << "TEST_F(AlicaEngineTest, planParser) found a Quantifier not part of AttackPlan.pml!"
-										<< endl;
+										cerr
+												<< "TEST_F(AlicaEngineTest, planParser) found a Quantifier not part of AttackPlan.pml!"
+												<< endl;
 										break;
 
 								}
@@ -284,7 +293,8 @@ TEST_F(AlicaEngineTest, planParser)
 							break;
 						case 1402489460694:
 							checkTransition(t, 1402489460694, "MISSING_NAME", "", 1402489462088, 1402489396914,
-											1402488646220, "Condition-Name-Shoot-Attack", "", "Some nice comment!", "DefaultPlugin", true);
+											1402488646220, "Condition-Name-Shoot-Attack", "", "Some nice comment!",
+											"DefaultPlugin", true);
 							break;
 						default:
 							EXPECT_TRUE(false);
@@ -324,7 +334,8 @@ TEST_F(AlicaEngineTest, planParser)
 							checkState(s, 1402488910751, "GetGoal", "GetGoal", {}, {1402489071510}, {});
 							break;
 						case 1402488959965:
-							checkState(s, 1402488959965, "GetBall", "", {}, {1402488991762}, {1402488990761, 1402489064693},
+							checkState(s, 1402488959965, "GetBall", "", {}, {1402488991762}, {1402488990761,
+																								1402489064693},
 										1402488903550);
 							break;
 						case 1402489037735:
@@ -404,18 +415,20 @@ TEST_F(AlicaEngineTest, planParser)
 					switch (s->getId())
 					{
 						case 1402488881799:
-							checkState(s, 1402488881799, "Shoot", "", {}, {1402489205153},
-										{1402489173167}, 1402488881800);
+							checkState(s, 1402488881799, "Shoot", "", {}, {1402489205153}, {1402489173167},
+										1402488881800);
 							break;
 						case 1402489152217:
-							checkState(s, 1402489152217, "Miss", "", {}, {1402489173167}, {1402489205153, 1402489216617});
+							checkState(s, 1402489152217, "Miss", "", {}, {1402489173167},
+										{1402489205153, 1402489216617});
 							break;
 						case 1402489192198:
 						{
 							EXPECT_TRUE(s->isSuccessState()) << "Should be a SuccessState" << endl;
 							checkState(s, 1402489192198, "Scored", "", {}, {1402489216617}, {});
 							alica::TerminalState* terminalState = (alica::TerminalState*)s;
-							checkPostCondition(terminalState->getPostCondition(), 1402489620773, "MISSING_NAME", "Test POSTC", "", "");
+							checkPostCondition(terminalState->getPostCondition(), 1402489620773, "MISSING_NAME",
+												"Test POSTC", "", "");
 							break;
 						}
 						default:
@@ -434,16 +447,16 @@ TEST_F(AlicaEngineTest, planParser)
 					switch (t->getId())
 					{
 						case 1402489173167:
-							checkTransition(t, 1402489173167, "MISSING_NAME", "", 1402489174338,
-							                1402488881799, 1402489152217, "MISSING_NAME", "", "", "", true);
+							checkTransition(t, 1402489173167, "MISSING_NAME", "", 1402489174338, 1402488881799,
+											1402489152217, "MISSING_NAME", "", "", "", true);
 							break;
 						case 1402489205153:
-							checkTransition(t, 1402489205153, "MISSING_NAME", "", 1402489206278,
-							                1402489152217, 1402488881799, "MISSING_NAME", "", "", "", true);
+							checkTransition(t, 1402489205153, "MISSING_NAME", "", 1402489206278, 1402489152217,
+											1402488881799, "MISSING_NAME", "", "", "", true);
 							break;
 						case 1402489216617:
-							checkTransition(t, 1402489216617, "MISSING_NAME", "", 1402489218027,
-							                1402489152217, 1402489192198, "MISSING_NAME", "", "", "", true);
+							checkTransition(t, 1402489216617, "MISSING_NAME", "", 1402489218027, 1402489152217,
+											1402489192198, "MISSING_NAME", "", "", "", true);
 							break;
 						default:
 							EXPECT_TRUE(false);
@@ -463,7 +476,7 @@ TEST_F(AlicaEngineTest, planParser)
 					{
 						case 1402488881800:
 							checkEntryPoint(epIterator->second, 1402488881800, "MISSING_NAME", "", false, 0, 2147483647,
-							                1402488881799, 1225112227903, "DefaultTask");
+											1402488881799, 1225112227903, "DefaultTask");
 							break;
 						default:
 							EXPECT_TRUE(false);
@@ -485,12 +498,12 @@ TEST_F(AlicaEngineTest, planParser)
 					switch (s->getId())
 					{
 						case 1402488437261:
-							checkState(s, 1402488437261, "Attack", "", {1402488634525, 1402488866727}, {}, {
-									1402488517667},
+							checkState(s, 1402488437261, "Attack", "", {1402488866727}, {}, {1402488517667,
+																								1409218318661},
 										1402488437263);
 							break;
 						case 1402488463437:
-							checkState(s, 1402488463437, "Defend", "", {1402488893641}, {}, {}, 1402488484084);
+							checkState(s, 1402488463437, "Defend", "", {1402488893641}, {1409218318661}, {});
 							break;
 						case 1402488470615:
 							checkState(s, 1402488470615, "Goal", "", {1402488870347}, {1402488519757}, {1402488557864});
@@ -511,7 +524,7 @@ TEST_F(AlicaEngineTest, planParser)
 					}
 				}
 				cout << "Transitions: " << endl;
-				EXPECT_EQ(3, iter.second->getTransitions().size())
+				EXPECT_EQ(4, iter.second->getTransitions().size())
 						<< "Number of Transitions didnt fit AttackPlan.pml EntryPoints size." << endl;
 				for (alica::Transition* t : iter.second->getTransitions())
 				{
@@ -530,7 +543,12 @@ TEST_F(AlicaEngineTest, planParser)
 							checkTransition(t, 1402488519757, "MidFieldToGoal", "MidFieldToGoal", 1402488520968,
 											1402488477650, 1402488470615, "MISSING_NAME", "", "", "", true);
 							break;
+						case 1409218318661:
+							checkTransition(t, 1409218318661, "AttackToDefend", "AttackToDefend", 1409218319990,
+											1402488437261, 1402488463437, "MISSING_NAME", "", "", "", true);
+							break;
 						default:
+							cout << t->getId() << "########" << endl;
 							EXPECT_TRUE(false);
 							cerr << "TEST_F(AlicaEngineTest, planParser) found a transition not part of MasterPlan.pml!"
 									<< endl;
@@ -538,7 +556,7 @@ TEST_F(AlicaEngineTest, planParser)
 					}
 				}
 				cout << "EntryPoints: " << endl;
-				EXPECT_EQ(2,iter.second->getEntryPoints().size())
+				EXPECT_EQ(1,iter.second->getEntryPoints().size())
 						<< "Number of EntryPoints didnt fit Tackle.pml EntryPoints size." << endl;
 				for (map<long, alica::EntryPoint*>::const_iterator epIterator = iter.second->getEntryPoints().begin();
 						epIterator != iter.second->getEntryPoints().end(); epIterator++)
@@ -565,35 +583,40 @@ TEST_F(AlicaEngineTest, planParser)
 				break;
 			case 1402488770050:
 				checkPlan(iter.second, 1402488770050, "MidFieldPlayPlan", "", false, 0.1, 3, 2147483647);
-				checkRuntimeCondition(iter.second->getRuntimeCondition(), 1402489260911, "NewRuntimeCondition", "Test RC", "", "");
+				checkRuntimeCondition(iter.second->getRuntimeCondition(), 1402489260911, "NewRuntimeCondition",
+										"Test RC", "", "");
 				cout << "States: " << endl;
-				EXPECT_EQ(5, iter.second->getStates().size()) << "Number of states didnt fit MidFieldPlayPlan.pml state size."
-						<< endl;
+				EXPECT_EQ(5, iter.second->getStates().size())
+						<< "Number of states didnt fit MidFieldPlayPlan.pml state size." << endl;
 				for (alica::State* s : iter.second->getStates())
 				{
 					cout << "\t" << s->getName() << " ID: " << s->getId() << endl;
 					switch (s->getId())
 					{
 						case 1402488787818:
-							checkState(s, 1402488787818, "Wander", "", {1402488712657}, {}, {1402489257607, 1402489276995},
-							           1402488787819);
+							checkState(s, 1402488787818, "Wander", "", {1402488712657}, {}, {1402489257607,
+																								1402489276995},
+										1402488787819);
 							break;
 						case 1402489237914:
-							checkState(s, 1402489237914, "Tackle", "", {1402489318663, 1402488866727, 1402488893641}, {1402489257607}, {});
+							checkState(s, 1402489237914, "Tackle", "", {1402489318663, 1402488866727, 1402488893641}, {
+									1402489257607},
+										{});
 							break;
 						case 1402489273401:
 							checkState(s, 1402489273401, "Sync", "", {1402488956661}, {1402489276995}, {});
 							break;
 						case 1402500830885:
-							checkState(s, 1402500830885, "Kill", "", {1403773823508},
-										{}, {1402500843072}, 1402500828244);
+							checkState(s, 1402500830885, "Kill", "", {1403773823508}, {}, {1402500843072},
+										1402500828244);
 							break;
 						case 1402500833246:
 							checkState(s, 1402500833246, "Shoot", "", {}, {1402500843072}, {});
 							break;
 						default:
 							EXPECT_TRUE(false);
-							cerr << "TEST_F(AlicaEngineTest, planParser) found a state not part of MidFieldPlayPlan.pml!"
+							cerr
+									<< "TEST_F(AlicaEngineTest, planParser) found a state not part of MidFieldPlayPlan.pml!"
 									<< endl;
 							break;
 					}
@@ -607,23 +630,25 @@ TEST_F(AlicaEngineTest, planParser)
 					switch (t->getId())
 					{
 						case 1402489257607:
-							checkTransition(t, 1402489257607, "MISSING_NAME", "", 1402489258509,
-							                1402488787818, 1402489237914, "MISSING_NAME", "", "", "", true);
+							checkTransition(t, 1402489257607, "MISSING_NAME", "", 1402489258509, 1402488787818,
+											1402489237914, "MISSING_NAME", "", "", "", true);
 							break;
 						case 1402489276995:
-							checkTransition(t, 1402489276995, "MISSING_NAME", "", 1402489278408,
-							                1402488787818, 1402489273401, "MISSING_NAME", "", "", "", true);
-							EXPECT_EQ(1402500865502, t->getSyncTransition()->getId()) << "Wrong synctransition ID!" << endl;
+							checkTransition(t, 1402489276995, "MISSING_NAME", "", 1402489278408, 1402488787818,
+											1402489273401, "MISSING_NAME", "", "", "", true);
+							EXPECT_EQ(1402500865502, t->getSyncTransition()->getId()) << "Wrong synctransition ID!"
+									<< endl;
 							break;
 						case 1402500843072:
-							checkTransition(t, 1402500843072, "MISSING_NAME", "", 1402500844446,
-							                1402500830885, 1402500833246, "MISSING_NAME", "", "", "", true);
-							checkSyncTransition(t->getSyncTransition(), 1402500865502, "SynChro" , "",30 ,10000);
+							checkTransition(t, 1402500843072, "MISSING_NAME", "", 1402500844446, 1402500830885,
+											1402500833246, "MISSING_NAME", "", "", "", true);
+							checkSyncTransition(t->getSyncTransition(), 1402500865502, "SynChro", "", 30, 10000);
 
 							break;
 						default:
 							EXPECT_TRUE(false);
-							cerr << "TEST_F(AlicaEngineTest, planParser) found a transition not part of MidFieldPlayPlan.pml!"
+							cerr
+									<< "TEST_F(AlicaEngineTest, planParser) found a transition not part of MidFieldPlayPlan.pml!"
 									<< endl;
 							break;
 					}
@@ -639,15 +664,16 @@ TEST_F(AlicaEngineTest, planParser)
 					{
 						case 1402488787819:
 							checkEntryPoint(epIterator->second, 1402488787819, "MISSING_NAME", "", true, 0, 2147483647,
-							                1402488787818, 1225112227903, "DefaultTask");
+											1402488787818, 1225112227903, "DefaultTask");
 							break;
 						case 1402500828244:
-							checkEntryPoint(epIterator->second, 1402500828244, "NewEntryPoint", "TestComment", false, 3, 5,
-							                1402500830885, 1225112227903, "DefaultTask");
+							checkEntryPoint(epIterator->second, 1402500828244, "NewEntryPoint", "TestComment", false, 3,
+											5, 1402500830885, 1225112227903, "DefaultTask");
 							break;
 						default:
 							EXPECT_TRUE(false);
-							cerr << "TEST_F(AlicaEngineTest, planParser) found a EntryPoint not part of MidFieldPlayPlan.pml!"
+							cerr
+									<< "TEST_F(AlicaEngineTest, planParser) found a EntryPoint not part of MidFieldPlayPlan.pml!"
 									<< endl;
 							break;
 					}

@@ -27,10 +27,10 @@ namespace alica
 	{
 		this->count = maxSize;
 		this->robots = vector<shared_ptr<vector<int> > >(maxSize);
-		this->entryPoints = vector<EntryPoint*>(maxSize);
+//		this->entryPoints = vector<EntryPoint*>(maxSize);
 		for(int i = 0; i < maxSize; i++)
 		{
-			this->robots[i] = shared_ptr<vector<int> >();
+			this->robots[i] = make_shared<vector<int> >(vector<int> ());
 		}
 	}
 
@@ -97,7 +97,7 @@ namespace alica
 
 	vector<EntryPoint*>& AssignmentCollection::getEntryPoints()
 	{
-		return entryPoints;
+		return this->entryPoints;
 	}
 
 	void AssignmentCollection::setEntryPoints(vector<EntryPoint*> entryPoints)
