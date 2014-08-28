@@ -28,7 +28,7 @@ namespace alica
 		{
 			return ownRole;
 		}
-		map<int, Role*> getRobotRoleMapping()
+		map<int, Role*>& getRobotRoleMapping()
 		{
 			return robotRoleMapping;
 		}

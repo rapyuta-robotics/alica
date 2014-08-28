@@ -65,9 +65,9 @@ namespace alica
 		UtilityFunction* getUtilFunc();
 		SuccessCollection* getEpSuccessMapping();
 		int numUnAssignedRobots();
-		vector<int> getUnAssignedRobots();
+		vector<int>& getUnAssignedRobots();
 		string assignmentCollectionToString();
-		vector<EntryPoint*> getEntryPoints();
+		vector<EntryPoint*>& getEntryPoints();
 		int getHash();
 		void setHash(int hash);
 		bool isHashCalculated();

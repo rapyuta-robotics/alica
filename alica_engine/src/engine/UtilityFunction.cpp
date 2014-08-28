@@ -44,7 +44,7 @@ namespace alica
 	{
 	}
 
-	list<USummand*> UtilityFunction::getUtilSummands()
+	list<USummand*>& UtilityFunction::getUtilSummands()
 	{
 		return utilSummands;
 	}
@@ -263,7 +263,7 @@ namespace alica
 		return ss.str();
 	}
 
-	map<TaskRoleStruct*, double> UtilityFunction::getPriorityMartix()
+	map<TaskRoleStruct*, double>& UtilityFunction::getPriorityMartix()
 	{
 		return priorityMartix;
 	}

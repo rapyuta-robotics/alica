@@ -166,7 +166,7 @@ namespace alica
 		return this->numUnAssignedRobots + c;
 	}
 
-	vector<EntryPoint*> Assignment::getEntryPoints()
+	vector<EntryPoint*>& Assignment::getEntryPoints()
 	{
 		return this->epRobotsMapping->getEntryPoints();
 	}

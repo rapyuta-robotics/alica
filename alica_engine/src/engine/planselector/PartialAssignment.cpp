@@ -87,12 +87,12 @@ namespace alica
 		return epSuccessMapping;
 	}
 
-	vector<int> PartialAssignment::getUnAssignedRobots()
+	vector<int>& PartialAssignment::getUnAssignedRobots()
 	{
 		return unAssignedRobots;
 	}
 
-	vector<EntryPoint*> PartialAssignment::getEntryPoints()
+	vector<EntryPoint*>& PartialAssignment::getEntryPoints()
 	{
 		return this->epRobotsMapping->getEntryPoints();
 	}

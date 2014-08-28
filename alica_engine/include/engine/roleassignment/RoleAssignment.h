@@ -39,7 +39,7 @@ namespace alica
 		void tick();
 		Role* getOwnRole();
 		void setOwnRole(Role* ownRole);
-		map<int, Role*> getRobotRoleMapping();
+		map<int, Role*>& getRobotRoleMapping();
 		void setCommunication(IAlicaCommunication* communication);
 
 	private:

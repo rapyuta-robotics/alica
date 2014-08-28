@@ -34,7 +34,7 @@ namespace alica
 	public:
 		UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight, double similarityWeight, Plan* plan);
 		virtual ~UtilityFunction();
-		list<USummand*> getUtilSummands();
+		list<USummand*>& getUtilSummands();
 		void setUtilSummands(list<USummand*> utilSummands);
 		virtual double eval(RunningPlan* newRp, RunningPlan* oldRp);
 		virtual UtilityInterval* eval(IAssignment* newAss, IAssignment* oldAss);
@@ -45,7 +45,7 @@ namespace alica
 		static void initDataStructures();
 		virtual string toString();
 		Plan* getPlan();
-		map<TaskRoleStruct*, double> getPriorityMartix();
+		map<TaskRoleStruct*, double>& getPriorityMartix();
 
 		const double DIFFERENCETHRESHOLD = 0.0001;
 	protected:
