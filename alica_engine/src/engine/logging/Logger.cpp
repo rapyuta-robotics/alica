@@ -119,7 +119,7 @@ namespace alica
 			return;
 		}
 		this->recievedEvent = false;
-		list<string> ownTree = createTreeLog(p);
+		shared_ptr<list<string> > ownTree = createTreeLog(p);
 
 		(*this->sBuild) << "START:\t";
 		(*this->sBuild) << to_string((this->startTime / 1000000UL)) << endl;
@@ -150,7 +150,7 @@ namespace alica
 
 		(*this->sBuild) << "LocalTree:";
 
-		for (string id : ownTree)
+		for (string id : *ownTree)
 		{
 			(*this->sBuild) << "\t";
 			(*this->sBuild) << id;
@@ -173,9 +173,9 @@ namespace alica
 	{
 	}
 
-	list<string> Logger::createHumanReadablePlanTree(list<long> l)
+	shared_ptr<list<string> > Logger::createHumanReadablePlanTree(list<long> l)
 	{
-		list<string> result = list<string>();
+		shared_ptr<list<string> > result = make_shared<list<string> >(list<string>());
 
 		auto states = AlicaEngine::getInstance()->getPlanRepository()->getStates();
 
@@ -189,13 +189,13 @@ namespace alica
 				if (iter != states.end())
 				{
 					e = entryPointOfState(s);
-					result.push_back(e->getTask()->getName());
-					result.push_back(s->getName());
+					result->push_back(e->getTask()->getName());
+					result->push_back(s->getName());
 				}
 			}
 			else
 			{
-				result.push_back(to_string(id));
+				result->push_back(to_string(id));
 			}
 		}
 
@@ -228,51 +228,51 @@ namespace alica
 		}
 	}
 
-	list<string> Logger::createTreeLog(RunningPlan* r)
+	shared_ptr<list<string> > Logger::createTreeLog(RunningPlan* r)
 	{
-		list<string> result = list<string>();
+		shared_ptr<list<string> > result = make_shared<list<string> >(list<string>());
 
 		if (r->getActiveState() != nullptr)
 		{
 			if (r->getOwnEntryPoint() != nullptr)
 			{
-				result.push_back(r->getOwnEntryPoint()->getTask()->getName());
+				result->push_back(r->getOwnEntryPoint()->getTask()->getName());
 			}
 			else
 			{
-				result.push_back("-3"); //indicates no task
+				result->push_back("-3"); //indicates no task
 			}
 
-			result.push_back(r->getActiveState()->getName());
+			result->push_back(r->getActiveState()->getName());
 		}
 		else
 		{
 			if (r->getBasicBehaviour() != nullptr)
 			{
-				result.push_back("BasicBehaviour");
-				result.push_back(r->getBasicBehaviour()->getName());
+				result->push_back("BasicBehaviour");
+				result->push_back(r->getBasicBehaviour()->getName());
 			}
 			else //will idle
 			{
-				result.push_back("IDLE");
-				result.push_back("NOSTATE");
+				result->push_back("IDLE");
+				result->push_back("NOSTATE");
 			}
 		}
 
 		if (r->getChildren()->size() != 0)
 		{
-			result.push_back("-1"); //start children marker
+			result->push_back("-1"); //start children marker
 
 			for (RunningPlan* r : *r->getChildren())
 			{
-				list<string> tmp = createTreeLog(r);
-				for (string s : tmp)
+				shared_ptr<list<string> > tmp = createTreeLog(r);
+				for (string s : *tmp)
 				{
-					result.push_back(s);
+					result->push_back(s);
 				}
 			}
 
-			result.push_back("-2"); //end children marker
+			result->push_back("-2"); //end children marker
 		}
 
 		return result;

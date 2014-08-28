@@ -32,7 +32,7 @@ namespace alica
 		void setId(int id);
 		const string& getName() const;
 		void setName(const string& name);
-		map<string, Characteristic*> getCharacteristics();
+		map<string, Characteristic*>& getCharacteristics();
 		const string& getDefaultRole() const;
 		void setDefaultRole(const string& defaultRole);
 		string toString();

@@ -23,7 +23,7 @@ namespace alica
 	{
 	}
 
-	vector<int> StateCollection::getRobots()
+	vector<int>& StateCollection::getRobots()
 	{
 		return robots;
 	}
@@ -33,7 +33,7 @@ namespace alica
 		this->robots = robots;
 	}
 
-	vector<State*> StateCollection::getStates()
+	vector<State*>& StateCollection::getStates()
 	{
 		return states;
 	}
@@ -84,7 +84,7 @@ namespace alica
 		return nullptr;
 	}
 
-	unordered_set<int> StateCollection::getRobotsInState(State* s)
+	unordered_set<int>& StateCollection::getRobotsInState(State* s)
 	{
 		unordered_set<int> ret;
 		for (int i = 0; i < this->robots.size(); i++)
@@ -112,7 +112,7 @@ namespace alica
 		return ret;
 	}
 
-	unordered_set<int> StateCollection::getRobotsInState(long sid)
+	unordered_set<int>& StateCollection::getRobotsInState(long sid)
 	{
 		unordered_set<int> ret;
 		for (int i = 0; i < this->robots.size(); i++)

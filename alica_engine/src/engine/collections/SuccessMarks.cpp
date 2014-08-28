@@ -42,7 +42,7 @@ namespace alica
 		}
 	}
 
-	map<AbstractPlan*, shared_ptr<list<EntryPoint*> > > SuccessMarks::getSuccessMarks() const
+	map<AbstractPlan*, shared_ptr<list<EntryPoint*> > >& SuccessMarks::getSuccessMarks()
 	{
 		return succesMarks;
 	}
@@ -171,7 +171,7 @@ namespace alica
 		return false;
 	}
 
-	list<long> SuccessMarks::toList()
+	list<long>& SuccessMarks::toList()
 	{
 		list<long> ret;
 		for (auto pair : this->getSuccessMarks())
