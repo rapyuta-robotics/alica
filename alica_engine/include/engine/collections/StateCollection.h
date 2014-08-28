@@ -39,9 +39,9 @@ namespace alica
 		void setStates(vector<State*> states);
 		int getCount();
 		State* getState(int r);
-		unordered_set<int>& getRobotsInState(State* s);
+		unordered_set<int> getRobotsInState(State* s);
 		shared_ptr<vector<int> > getRobotsInStateSorted(State* s);
-		unordered_set<int>& getRobotsInState(long sid);
+		unordered_set<int> getRobotsInState(long sid);
 		void removeRobot(int r);
 		void clear();
 		State* stateOfRobot(int robot);

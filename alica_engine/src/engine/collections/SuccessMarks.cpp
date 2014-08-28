@@ -171,7 +171,7 @@ namespace alica
 		return false;
 	}
 
-	list<long>& SuccessMarks::toList()
+	list<long> SuccessMarks::toList()
 	{
 		list<long> ret;
 		for (auto pair : this->getSuccessMarks())

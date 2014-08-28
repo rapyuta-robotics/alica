@@ -197,9 +197,8 @@ namespace alica
 			this->roleHighestPriorityMap.insert(pair<long, double>(roleId, 0.0));
 			for(auto epIter = this->plan->getEntryPoints().begin(); epIter != this->plan->getEntryPoints().end(); epIter++)
 			{
-				taskId = epIter->second->getId();
+				taskId = epIter->second->getTask()->getId();
 				auto iter = rtm->getTaskPriorities().find(taskId);
-				cout << "Taskpriorities " << rtm->getTaskPriorities().size() << endl;
 				if(iter == rtm->getTaskPriorities().end())
 				{
 					stringstream ss;

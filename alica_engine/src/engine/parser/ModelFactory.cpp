@@ -334,8 +334,8 @@ namespace alica
 
 			if (taskPriorities.compare(val) == 0)
 			{
-				const char* keyPtr = element->Attribute("key");
-				const char* valuePtr = element->Attribute("value");
+				const char* keyPtr = curChild->Attribute("key");
+				const char* valuePtr = curChild->Attribute("value");
 				if (keyPtr && valuePtr)
 				{
 					rtm->getTaskPriorities().insert(pair<long, double>(stol(keyPtr), stod(valuePtr)));
