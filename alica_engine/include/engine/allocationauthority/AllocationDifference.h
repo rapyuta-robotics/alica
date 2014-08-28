@@ -33,9 +33,9 @@ namespace alica
 		bool equals(AllocationDifference* other);
 		void applyDifference(AllocationDifference* other);
 		string toString();
-		vector<EntryPointRobotPair*> getAdditions();
+		vector<EntryPointRobotPair*>& getAdditions();
 		void setAdditions(vector<EntryPointRobotPair*> additions);
-		vector<EntryPointRobotPair*> getSubtractions();
+		vector<EntryPointRobotPair*>& getSubtractions();
 		void setSubtractions(vector<EntryPointRobotPair*> subtractions);
 
 	protected:

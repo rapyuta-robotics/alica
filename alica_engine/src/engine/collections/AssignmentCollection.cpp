@@ -105,7 +105,7 @@ namespace alica
 		this->entryPoints = entryPoints;
 	}
 
-	vector<shared_ptr<vector<int> > > AssignmentCollection::getRobots()
+	vector<shared_ptr<vector<int> > >& AssignmentCollection::getRobots()
 	{
 		return robots;
 	}

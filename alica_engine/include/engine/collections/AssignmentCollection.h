@@ -32,7 +32,7 @@ namespace alica
 		void setCount(int count);
 		vector<EntryPoint*>& getEntryPoints();
 		void setEntryPoints(vector<EntryPoint*> entryPoints);
-		vector<shared_ptr<vector<int> > > getRobots();
+		vector<shared_ptr<vector<int> > >& getRobots();
 		void setRobots(vector<shared_ptr<vector<int> > > robots);
 		shared_ptr<vector<int> > getRobots(EntryPoint* ep);
 		shared_ptr<vector<int> > getRobotsById(long id);
