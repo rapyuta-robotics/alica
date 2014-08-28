@@ -33,8 +33,8 @@ namespace alica
 
 		string toString();
 
-		const string& getType() const;
-		void setType(const string& type);
+		string getType();
+		void setType(string type);
 		AutoDiff::Variable* getSolverVar();
 
 

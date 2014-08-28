@@ -71,7 +71,7 @@ namespace alica
 		}
 	}
 
-	vector<shared_ptr<list<int> > > SuccessCollection::getRobots()
+	vector<shared_ptr<list<int> > >& SuccessCollection::getRobots()
 	{
 		return robots;
 	}

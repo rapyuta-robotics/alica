@@ -83,7 +83,7 @@ namespace alica
 		this->name = name;
 	}
 
-	map<string, Characteristic*> RobotProperties::getCharacteristics()
+	map<string, Characteristic*>& RobotProperties::getCharacteristics()
 	{
 		return this->characteristics;
 	}

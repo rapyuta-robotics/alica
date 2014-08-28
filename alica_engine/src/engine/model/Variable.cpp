@@ -43,12 +43,12 @@ namespace alica
 
 //============= Getter and Setter ======================
 
-	const string& Variable::getType() const
+	string Variable::getType()
 	{
 		return type;
 	}
 
-	void Variable::setType(const string& type)
+	void Variable::setType(string type)
 	{
 		this->type = type;
 	}
