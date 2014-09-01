@@ -37,7 +37,7 @@ namespace alica
 		 list<Transition*>& getInTransitions() ;
 		void setInTransitions(const list<Transition*>& inTransitions);
 		 list<Transition*>& getOutTransitions() ;
-		void setOutTransitions(const list<Transition*>& outTransition);
+		void setOutTransitions(list<Transition*> outTransition);
 		 list<Parametrisation*>& getParametrisation();
 		void setParametrisation(const list<Parametrisation*>& parametrisation);
 		 list<AbstractPlan*>& getPlans() ;

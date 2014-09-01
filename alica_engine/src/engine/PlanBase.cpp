@@ -149,31 +149,22 @@ namespace alica
 			this->log->itertionStarts();
 
 			//Send tick to other modules
-			cout << "vor den TICKs " << endl;
 			this->teamObserver->tick(this->rootNode);
-			cout << "NACH TO " << endl;
 			this->ra->tick();
-			cout << "NACH RA " << endl;
 			this->syncModel->tick();
-			cout << "NACH SM " << endl;
 			this->authModul->tick(this->rootNode);
-			cout << "NACH AM " << endl;
 
-			cout << "NACH DEN TICKS " << endl;
 			if (this->rootNode == nullptr)
 			{
-				cout << "ROOTNODE == NULLPTR " << endl;
 				this->rootNode = ruleBook->initialisationRule(this->masterPlan);
-				cout << "NACH INITIALROLE " << endl;
 			}
 
-			if (this->rootNode->tick(ruleBook) == PlanChange::NoChange)
+			if (this->rootNode->tick(this->ruleBook) == PlanChange::FailChange)
 			{
 #if PB_DEBUG
 				cout << "PB: MasterPlan Failed" << endl;
 #endif
 			}
-
 			//lock for fpEvents
 			{
 				lock_guard<mutex> lock(lomutex);

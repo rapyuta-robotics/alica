@@ -192,7 +192,6 @@ namespace alica
 
 		for(RoleTaskMapping* rtm : roleSet->getRoleTaskMappings())
 		{
-			//TODO RoleTaskMappings empty
 			roleId = rtm->getRole()->getId();
 			this->roleHighestPriorityMap.insert(pair<long, double>(roleId, 0.0));
 			for(auto epIter = this->plan->getEntryPoints().begin(); epIter != this->plan->getEntryPoints().end(); epIter++)
@@ -246,7 +245,6 @@ namespace alica
 			iter->second->setUtilityFunction(new DefaultUtilityFunction(iter->second));
 			iter->second->getUtilityFunction()->init();
 		}
-		cout << "KOMME RAUS" << endl;
 	}
 
 	string UtilityFunction::toString()

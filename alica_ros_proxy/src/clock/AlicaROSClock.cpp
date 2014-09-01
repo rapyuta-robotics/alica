@@ -27,7 +27,6 @@ namespace alicaRosProxy
 		ros::Time::init();
 		ros::Time t = ros::Time::now();
 		alica::alicaTime ret = ((alica::alicaTime)t.sec * 1000000000L) + t.nsec;
-		std::cout << "Return: " << ret << std::endl;
 		return ret;
 	}
 	void AlicaROSClock::sleep(int ms)

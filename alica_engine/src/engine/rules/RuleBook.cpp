@@ -30,11 +30,11 @@ namespace alica
 {
 	RuleBook::RuleBook()
 	{
-		this->log = nullptr;
 		AlicaEngine* ae = AlicaEngine::getInstance();
 		this->to = ae->getTeamObserver();
 		this->ps = ae->getPlanSelector();
 		this->sm = ae->getSyncModul();
+		this->log = ae->getLog();
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		this->maxConsecutiveChanges = (*sc)["Alica"]->get<int>("Alica.MaxRuleApplications", NULL);
 		this->changeOccured = true;
@@ -69,10 +69,11 @@ namespace alica
 			defep = e;
 			break;
 		}
-		main->getAssignment()->setAllToInitialState(move(robots), defep);
+		unique_ptr<list<int> > r = to->getAvailableRobotIds();
+		main->getAssignment()->setAllToInitialState(move(r), defep);
 		main->setActive(true);
 		main->setOwnEntryPoint(defep);
-		log->evenOccured("Init");
+		this->log->evenOccured("Init");
 		return main;
 
 	}
@@ -432,14 +433,17 @@ namespace alica
 	PlanChange RuleBook::synchTransitionRule(RunningPlan* r)
 	{
 		if (r->getActiveState() == nullptr)
+		{
 			return PlanChange::NoChange;
+		}
 		State* nextState;
 
 		for (Transition* t : r->getActiveState()->getOutTransitions())
 		{
 			if (t->getSyncTransition() == nullptr)
+			{
 				continue;
-
+			}
 			if (this->sm->followSyncTransition((t)))
 			{
 				if (t->evalCondition(r))
