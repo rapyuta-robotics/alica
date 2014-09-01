@@ -167,10 +167,9 @@ namespace supplementary
 		}
 	}
 
-        std::shared_ptr<External> const ClingWrapper::getExternal(const std::string& name, Gringo::FWValVec args,
-                                                                  const std::string &ground)
+        std::shared_ptr<External> const ClingWrapper::getExternal(const std::string& name, Gringo::FWValVec args)
         {
-          return this->getExternal(name, args, ground, args);
+          return this->getExternal(name, args, name, args);
         }
 
 	std::shared_ptr<External> const ClingWrapper::getExternal(const std::string& name, Gringo::FWValVec args,

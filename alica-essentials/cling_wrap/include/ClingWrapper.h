@@ -52,8 +52,7 @@ namespace supplementary
 		virtual	bool onModel(const Clasp::Solver& s, const Clasp::Model& m);
 		void printLastModel(bool verbose = false);
 
-		std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args,
-		                                            std::string const &ground);
+		std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args);
                 std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args,
                                                             std::string const &ground, Gringo::FWValVec groundArgs);
 
