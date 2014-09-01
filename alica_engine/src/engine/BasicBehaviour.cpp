@@ -158,7 +158,7 @@ namespace alica
 
 	void BasicBehaviour::runInternal()
 	{
-		sleep(3);
+//		sleep(3);
 		unique_lock<mutex> lck(runCV_mtx);
 		while (!AlicaEngine::getInstance()->isTerminating() && this->started)
 		{

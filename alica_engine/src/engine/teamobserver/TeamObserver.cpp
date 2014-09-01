@@ -341,7 +341,6 @@ namespace alica
 		}
 		list<shared_ptr<SimplePlanTree> > queue;
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
-		cout << "lock guard " << endl;
 		for (auto pair : *this->simplePlanTrees)
 		{
 			queue.push_back(pair.second);
@@ -356,7 +355,6 @@ namespace alica
 				queue.push_back(c);
 			}
 		}
-		cout << this->getOwnEngineData()->getSuccessMarks() << endl;
 		this->getOwnEngineData()->getSuccessMarks()->limitToPlans(move(presentPlans));
 	}
 

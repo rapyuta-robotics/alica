@@ -61,6 +61,7 @@ namespace alica
 		this->children = new list<RunningPlan*>();
 		this->constraintStore = new ConstraintStore(this);
 		this->cycleManagement = new CycleManager(this);
+		this->robotsAvail = unique_ptr<list<int> >(new list<int>);
 	}
 
 	RunningPlan::RunningPlan(Plan* plan) :
@@ -304,7 +305,6 @@ namespace alica
 
 	void RunningPlan::printRecursive()
 	{
-		cout << this << endl;
 		for (RunningPlan* c : *this->children)
 		{
 			c->printRecursive();

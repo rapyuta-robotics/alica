@@ -31,10 +31,10 @@ protected:
 	virtual void SetUp()
 	{
 		ae = alica::AlicaEngine::getInstance();
-//		//TODO extend TestBehaviourCreator
-//		alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
-//		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-//		ae->init(bc,"Roleset", "MasterPlanTaskAssignment", ".", false);
+		//TODO extend TestBehaviourCreator
+		alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
+		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+		ae->init(bc,"Roleset", "MasterPlan", ".", false);
 	}
 
 	virtual void TearDown()
@@ -45,16 +45,16 @@ protected:
 
 TEST_F(TaskAssignmentTest, constructTaskAssignment)
 {
-//	alica::IPlanSelector* ps = ae->getPlanSelector();
-//	auto robots = make_shared<vector<int> >(vector<int>());
-//	for(int i = 1 ; i <= 5; i++)
-//	{
-//		robots->push_back(i);
-//	}
-//	auto planMap = ae->getPlanRepository()->getPlans();
-//	auto rp = new alica::RunningPlan((*planMap.find(1407152758497)).second);
-//	list<alica::AbstractPlan*> planList = list<alica::AbstractPlan*>();
-//	planList.push_back((*planMap.find(1407152758497)).second);
-//	auto plans = ps->getPlansForState(rp, planList, robots);
+	alica::IPlanSelector* ps = ae->getPlanSelector();
+	auto robots = make_shared<vector<int> >(vector<int>());
+	for(int i = 1 ; i <= 5; i++)
+	{
+		robots->push_back(i);
+	}
+	auto planMap = ae->getPlanRepository()->getPlans();
+	auto rp = new alica::RunningPlan((*planMap.find(1402488437260)).second);
+	list<alica::AbstractPlan*> planList;
+	planList.push_back((*planMap.find(1402488437260)).second);
+	auto plans = ps->getPlansForState(rp, planList, robots);
 }
 

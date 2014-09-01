@@ -68,7 +68,7 @@ namespace alica
 		return outTransitions;
 	}
 
-	void State::setOutTransitions(const list<Transition*>& outTransition)
+	void State::setOutTransitions(list<Transition*> outTransition)
 	{
 		this->outTransitions = outTransition;
 	}

@@ -8,7 +8,7 @@
 #ifndef TASKASSIGNMENT_H_
 #define TASKASSIGNMENT_H_
 #define EXPANSIONEVAL
-#define PSDEBUG
+//#define PSDEBUG
 
 using namespace std;
 

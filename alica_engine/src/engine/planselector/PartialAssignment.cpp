@@ -148,6 +148,9 @@ namespace alica
 		if (allowIdling)
 		{
 			ret->epRobotsMapping->setCount(plan->getEntryPoints().size() + 1);
+			//TODO segmentation fault => entrypoints empty
+			cout << "PA: epRobotsMapping " << ret->epRobotsMapping->getCount() << endl;
+			cout << "PA: entrypoints " << ret->epRobotsMapping->getEntryPoints().size() << endl;
 			ret->epRobotsMapping->getEntryPoints()[ret->epRobotsMapping->getCount() - 1] = idleEP;
 		}
 		else
@@ -155,6 +158,7 @@ namespace alica
 			ret->epRobotsMapping->setCount(plan->getEntryPoints().size());
 		}
 		//TODO check if copies are needed
+		cout << "PA: left if" << endl;
 		vector<EntryPoint*> copy;
 		for (auto iter : plan->getEntryPoints())
 		{
