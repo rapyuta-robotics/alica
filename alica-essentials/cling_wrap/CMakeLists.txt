@@ -82,7 +82,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -O3 -Wall ${CMAKE_CXX_FLAGS}")
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
+  INCLUDE_DIRS include libgringo libgringo/src libprogram_opts libclasp
   LIBRARIES libcling_wrap
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
