@@ -25,13 +25,13 @@ namespace alica
 	{
 	public:
 		AssignmentCollection();
-		AssignmentCollection(vector<EntryPoint*> eps, vector<shared_ptr<vector<int> > > robots);
+		AssignmentCollection(vector<EntryPoint*>& eps, vector<shared_ptr<vector<int> > > robots);
 		AssignmentCollection(int maxSize);
 		virtual ~AssignmentCollection();
 		int getCount() const;
 		void setCount(int count);
 		vector<EntryPoint*>& getEntryPoints();
-		void setEntryPoints(vector<EntryPoint*> entryPoints);
+		void setEntryPoints(vector<EntryPoint*>& entryPoints);
 		vector<shared_ptr<vector<int> > >& getRobots();
 		void setRobots(vector<shared_ptr<vector<int> > > robots);
 		shared_ptr<vector<int> > getRobots(EntryPoint* ep);

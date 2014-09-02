@@ -10,12 +10,6 @@
 namespace alica
 {
 
-	Task::Task()
-	{
-		this->defaultTask = nullptr;
-		this->taskRepository = nullptr;
-	}
-
 	Task::~Task()
 	{
 	}

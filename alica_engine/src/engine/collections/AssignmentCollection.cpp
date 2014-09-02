@@ -16,7 +16,7 @@ namespace alica
 		this->count = 0;
 	}
 
-	AssignmentCollection::AssignmentCollection(vector<EntryPoint*> eps, vector<shared_ptr<vector<int> > > robots)
+	AssignmentCollection::AssignmentCollection(vector<EntryPoint*>& eps, vector<shared_ptr<vector<int> > > robots)
 	{
 		this->count = eps.size();
 		this->entryPoints = eps;
@@ -27,7 +27,7 @@ namespace alica
 	{
 		this->count = maxSize;
 		this->robots = vector<shared_ptr<vector<int> > >(maxSize);
-//		this->entryPoints = vector<EntryPoint*>(maxSize);
+		this->entryPoints = vector<EntryPoint*>(maxSize);
 		for(int i = 0; i < maxSize; i++)
 		{
 			this->robots[i] = make_shared<vector<int> >(vector<int> ());
@@ -100,7 +100,7 @@ namespace alica
 		return this->entryPoints;
 	}
 
-	void AssignmentCollection::setEntryPoints(vector<EntryPoint*> entryPoints)
+	void AssignmentCollection::setEntryPoints(vector<EntryPoint*>& entryPoints)
 	{
 		this->entryPoints = entryPoints;
 	}

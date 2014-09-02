@@ -13,6 +13,10 @@
 #include "engine/model/Plan.h"
 #include "engine/UtilityFunction.h"
 
+
+#include "engine/model/EntryPoint.h"
+#include "engine/model/Task.h"
+
 namespace alica
 {
 
@@ -140,6 +144,7 @@ namespace alica
 			cout << "--->" << endl;
 #endif
 			auto newPas = curPa->expand();
+			cout << "TA: newPas size " << newPas->size() << endl;
 #ifdef EXPANSIONEVAL
 			expansionCount++;
 #endif
