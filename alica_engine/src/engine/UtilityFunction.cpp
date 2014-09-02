@@ -116,6 +116,7 @@ namespace alica
 
 	UtilityInterval* UtilityFunction::eval(IAssignment* newAss, IAssignment* oldAss)
 	{
+		//TODO failure
 		UtilityInterval* sumOfUI = new UtilityInterval(0.0, 0.0);
 		double sumOfWeights = 0.0;
 		UtilityInterval* prioUI = this->getPriorityResult(newAss);

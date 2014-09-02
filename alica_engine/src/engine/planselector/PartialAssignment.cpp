@@ -148,23 +148,17 @@ namespace alica
 		if (allowIdling)
 		{
 			ret->epRobotsMapping->setCount(plan->getEntryPoints().size() + 1);
-			//TODO segmentation fault => entrypoints empty
-			cout << "PA: epRobotsMapping " << ret->epRobotsMapping->getCount() << endl;
-			cout << "PA: entrypoints " << ret->epRobotsMapping->getEntryPoints().size() << endl;
 			ret->epRobotsMapping->getEntryPoints()[ret->epRobotsMapping->getCount() - 1] = idleEP;
 		}
 		else
 		{
 			ret->epRobotsMapping->setCount(plan->getEntryPoints().size());
 		}
-		//TODO check if copies are needed
-		cout << "PA: left if" << endl;
-		vector<EntryPoint*> copy;
+		int i=0;
 		for (auto iter : plan->getEntryPoints())
 		{
-			copy.push_back(iter.second);
+			ret->epRobotsMapping->getEntryPoints()[i++] = iter.second;
 		}
-		ret->epRobotsMapping->setEntryPoints(copy);
 
 		if (allowIdling)
 		{
@@ -422,8 +416,7 @@ namespace alica
 
 	shared_ptr<list<PartialAssignment*> > PartialAssignment::expand()
 	{
-		shared_ptr<list<PartialAssignment*> > newPas = make_shared<list<PartialAssignment*> >(
-				list<PartialAssignment*>(this->epRobotsMapping->getCount()));
+		shared_ptr<list<PartialAssignment*> > newPas = make_shared<list<PartialAssignment*> >();
 		if (this->unAssignedRobots.size() == 0)
 		{
 			return newPas;
@@ -582,7 +575,9 @@ namespace alica
 		{
 			robots = (*this->epRobotsMapping->getRobots()[i]);
 			ss << "EPid: " << ownEps[i]->getId() << "Task: "
-					<< ownEps[i]->getTask()->getName() << " minCar: "
+					<< ownEps[i]
+					          ->getTask()
+					          ->getName() << " minCar: "
 					<< this->dynCardinalities[i]->getMin() << " maxCar: "
 					<< (this->dynCardinalities[i]->getMax() == INFINIT ? "*":this->dynCardinalities[i]->getMax()+"")
 					<< " Assigned Robots: ";

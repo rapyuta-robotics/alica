@@ -12,6 +12,7 @@ using namespace std;
 
 #include <string>
 #include <sstream>
+#include <iostream>
 
 #include "AlicaElement.h"
 
@@ -23,7 +24,6 @@ namespace alica
 	class Task : public AlicaElement
 	{
 	public:
-		Task();
 		Task(bool defaultTask);
 		virtual ~Task();
 		const string& getDescription() const;

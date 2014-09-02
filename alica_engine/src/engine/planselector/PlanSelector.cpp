@@ -25,6 +25,8 @@
 
 #include "engine/RunningPlan.h"
 #include "engine/model/AbstractPlan.h"
+
+#include "engine/model/Task.h"
 #define PSDEBUG
 
 namespace alica
@@ -129,6 +131,7 @@ namespace alica
 			ta = new TaskAssignment(newPlanList, robotIDs, false);
 			oldAss = oldRp->getAssignment();
 		}
+
 #ifdef PSDEBUG
 		cout << ta->toString();
 #endif
