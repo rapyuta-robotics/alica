@@ -21,11 +21,11 @@
 #include "engine/model/Role.h"
 #include "engine/DefaultUtilityFunction.h"
 
+
 namespace alica
 {
 
-	UtilityFunction::UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight,
-										double similarityWeight, Plan* plan)
+	UtilityFunction::UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight, double similarityWeight, Plan* plan)
 	{
 		this->ra = nullptr;
 		this->bpe = nullptr;
@@ -116,7 +116,6 @@ namespace alica
 
 	UtilityInterval* UtilityFunction::eval(IAssignment* newAss, IAssignment* oldAss)
 	{
-		//TODO failure
 		UtilityInterval* sumOfUI = new UtilityInterval(0.0, 0.0);
 		double sumOfWeights = 0.0;
 		UtilityInterval* prioUI = this->getPriorityResult(newAss);
@@ -275,7 +274,7 @@ namespace alica
 			return this->priResult;
 		}
 		//c# != null
-		if(ass->getUnassignedRobots().size() == 0)
+		if(ass->getUnassignedRobots().size() != 0)
 		{
 			for(int i = 0; i < ass->getUnassignedRobots().size(); i++)
 			{
@@ -288,13 +287,13 @@ namespace alica
 		int denum = min(this->plan->getMaxCardinality(), this->bpe->getTeamObserver()->teamSize());
 		long taskId;
 		long roleId;
-		vector<EntryPoint*> eps = ass->getEntryPoints();
+		shared_ptr<vector<EntryPoint*> > eps = ass->getEntryPoints();
 		double curPrio;
 
 		for(int i = 0; i < ass->getEntryPointCount(); ++i)
 		{
-			taskId = eps[i]->getTask()->getId();
-			auto robotList = ass->getUniqueRobotsWorkingAndFinished(eps[i]);
+			taskId = eps->at(i)->getTask()->getId();
+			auto robotList = ass->getUniqueRobotsWorkingAndFinished(eps->at(i));
 			for(int j = 0; j < robotList->size(); ++j)
 			{
 				auto iter = robotList->begin();
@@ -302,7 +301,14 @@ namespace alica
 				roleId = this->ra->getRole((*iter))->getId();
 				this->lookupStruct->taskId = taskId;
 				this->lookupStruct->roleId = roleId;
-				curPrio = this->priorityMartix.at(this->lookupStruct);
+				for(auto pair : this->priorityMartix)
+				{
+					if(pair.first->roleId == this->lookupStruct->roleId && pair.first->taskId == this->lookupStruct->taskId)
+					{
+						curPrio = pair.second;
+						break;
+					}
+				}
 				if(curPrio < 0.0)
 				{
 					this->priResult->setMin(-1.0);
@@ -311,7 +317,16 @@ namespace alica
 				}
 				this->priResult->setMin(this->priResult->getMin() + curPrio);
 #ifdef UFDEBUG
-				cout << "UF: taskId:" << taskId << " roleId:" << roleId << " prio: " << this->priorityMartix[this->lookupStruct] << endl;
+				double prio = 0;
+				for(auto pair : this->priorityMartix)
+				{
+					if(pair.first->roleId == this->lookupStruct->roleId && pair.first->taskId == this->lookupStruct->taskId)
+					{
+						prio = pair.second;
+						break;
+					}
+				}
+				cout << "UF: taskId:" << taskId << " roleId:" << roleId << " prio: " << prio << endl;
 #endif
 			}
 		}
@@ -345,13 +360,13 @@ namespace alica
 		simUI->setMax(0.0);
 		simUI->setMin(0.0);
 		int numOldAssignedRobots = 0;
-		vector<EntryPoint*> oldAssEps = oldAss->getEntryPoints();
+		shared_ptr<vector<EntryPoint*> > oldAssEps = oldAss->getEntryPoints();
 
 		for(int i = 0; i < oldAss->getEntryPointCount(); ++i)
 		{
-			auto oldRobots = oldAss->getRobotsWorkingAndFinished(oldAssEps[i]);
+			auto oldRobots = oldAss->getRobotsWorkingAndFinished(oldAssEps->at(i));
 			numOldAssignedRobots += oldRobots->size();
-			auto newRobots = newAss->getRobotsWorkingAndFinished(oldAssEps[i]);
+			auto newRobots = newAss->getRobotsWorkingAndFinished(oldAssEps->at(i));
 
 			//C# newRobots != null
 			if(newRobots->size() != 0)
@@ -362,7 +377,7 @@ namespace alica
 					{
 						simUI->setMin(simUI->getMin() + 1);
 					}
-					else if(oldAssEps[i]->getMaxCardinality() > newRobots->size() && find(newAss->getUnassignedRobots().begin(),newAss->getUnassignedRobots().end(), oldRobot) != newAss->getUnassignedRobots().end())
+					else if(oldAssEps->at(i)->getMaxCardinality() > newRobots->size() && find(newAss->getUnassignedRobots().begin(),newAss->getUnassignedRobots().end(), oldRobot) != newAss->getUnassignedRobots().end())
 					{
 						simUI->setMax(simUI->getMax() + 1);
 					}

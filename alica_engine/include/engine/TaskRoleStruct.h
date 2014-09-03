@@ -22,7 +22,7 @@ namespace alica
 		virtual ~TaskRoleStruct();
 		long taskId;
 		long roleId;
-		bool equals(TaskRoleStruct* trs);
+		bool equals(TaskRoleStruct trs);
 	};
 
 } /* namespace alica */

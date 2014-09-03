@@ -16,9 +16,9 @@ namespace alica
 		this->count = 0;
 	}
 
-	AssignmentCollection::AssignmentCollection(vector<EntryPoint*>& eps, vector<shared_ptr<vector<int> > > robots)
+	AssignmentCollection::AssignmentCollection(shared_ptr<vector<EntryPoint*> > eps, shared_ptr<vector<shared_ptr<vector<int> > > > robots)
 	{
-		this->count = eps.size();
+		this->count = eps->size();
 		this->entryPoints = eps;
 		this->robots = robots;
 	}
@@ -26,11 +26,11 @@ namespace alica
 	AssignmentCollection::AssignmentCollection(int maxSize)
 	{
 		this->count = maxSize;
-		this->robots = vector<shared_ptr<vector<int> > >(maxSize);
-		this->entryPoints = vector<EntryPoint*>(maxSize);
+		this->robots = make_shared<vector<shared_ptr<vector<int> > > >(maxSize);
+		this->entryPoints = make_shared<vector<EntryPoint*> >(maxSize);
 		for(int i = 0; i < maxSize; i++)
 		{
-			this->robots[i] = make_shared<vector<int> >(vector<int> ());
+			this->robots->at(i) = make_shared<vector<int> >(vector<int> ());
 		}
 	}
 
@@ -41,9 +41,9 @@ namespace alica
 	shared_ptr<vector<int> > AssignmentCollection::getRobots(EntryPoint* ep)
 	{
 		for (int i=0; i<this->count;i++) {
-			if (this->entryPoints[i] == ep)
+			if (this->entryPoints->at(i) == ep)
 			{
-				return this->robots[i];
+				return this->robots->at(i);
 			}
 		}
 		return nullptr;
@@ -52,9 +52,9 @@ namespace alica
 	shared_ptr<vector<int> > AssignmentCollection::getRobotsById(long id)
 	{
 		for (int i=0; i<this->count;i++) {
-			if (this->entryPoints[i]->getId() == id)
+			if (this->entryPoints->at(i)->getId() == id)
 			{
-				return this->robots[i];
+				return this->robots->at(i);
 			}
 		}
 		return nullptr;
@@ -63,19 +63,19 @@ namespace alica
 	void AssignmentCollection::clear()
 	{
 		for(int i=0; i<this->count; i++) {
-			this->robots[i]->clear();
+			this->robots->at(i)->clear();
 		}
 	}
 
 	string AssignmentCollection::toString()
 	{
 		stringstream ss;
-		for(int i=0; i<this->robots.size(); i++)
+		for(int i=0; i<this->robots->size(); i++)
 		{
-			if( this->entryPoints[i] != nullptr )
+			if( this->entryPoints->at(i) != nullptr )
 			{
-				ss << this->entryPoints[i]->getId() << " : ";
-				for(int robot : *(this->robots[i]))
+				ss << this->entryPoints->at(i)->getId() << " : ";
+				for(int robot : *(this->robots->at(i)))
 				{
 					ss << robot << ", ";
 				}
@@ -95,22 +95,22 @@ namespace alica
 		this->count = count;
 	}
 
-	vector<EntryPoint*>& AssignmentCollection::getEntryPoints()
+	shared_ptr<vector<EntryPoint*> > AssignmentCollection::getEntryPoints()
 	{
 		return this->entryPoints;
 	}
 
-	void AssignmentCollection::setEntryPoints(vector<EntryPoint*>& entryPoints)
+	void AssignmentCollection::setEntryPoints(shared_ptr<vector<EntryPoint*> > entryPoints)
 	{
 		this->entryPoints = entryPoints;
 	}
 
-	vector<shared_ptr<vector<int> > >& AssignmentCollection::getRobots()
+	shared_ptr<vector<shared_ptr<vector<int> > > > AssignmentCollection::getRobots()
 	{
 		return robots;
 	}
 
-	void AssignmentCollection::setRobots(vector<shared_ptr<vector<int> > > robots)
+	void AssignmentCollection::setRobots(shared_ptr<vector<shared_ptr<vector<int> > > > robots)
 	{
 		this->robots = robots;
 	}
