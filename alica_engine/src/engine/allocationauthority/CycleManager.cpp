@@ -163,7 +163,7 @@ namespace alica
 			this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
 			this->allocationHistory[this->newestAllocationDifference]->reset();
 
-			for (EntryPoint* ep : oldAss->getEntryPoints())
+			for (EntryPoint* ep : (*oldAss->getEntryPoints()))
 			{
 
 				auto newRobots = newAss->getRobotsWorking(ep);

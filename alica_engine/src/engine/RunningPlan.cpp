@@ -794,10 +794,10 @@ namespace alica
 		{ //remove any robot no longer available in the spts (auth flag obey here, as robot might be unavailable)
 		  //EntryPoint[] eps = this.Assignment.GetEntryPoints();
 
-			for (int i = 0; i < eps.size(); i++)
+			for (int i = 0; i < eps->size(); i++)
 			{
 				rem.clear();
-				auto robs = this->getAssignment()->getRobotsWorking(eps[i]);
+				auto robs = this->getAssignment()->getRobotsWorking(eps->at(i));
 				for (int rob : (*robs))
 				{
 					if (rob == ownId)
@@ -820,7 +820,7 @@ namespace alica
 					{
 						rem.push_back(rob);
 						//this.Assignment.RemoveRobot(rob);
-						aldif->getSubtractions().push_back(new EntryPointRobotPair(eps[i], rob));
+						aldif->getSubtractions().push_back(new EntryPointRobotPair(eps->at(i), rob));
 						ret = true;
 					}
 				}
@@ -834,10 +834,10 @@ namespace alica
 		//enforce consistency between RA and PlanTree by removing robots deemed inactive:
 		if (!auth)
 		{ //under authority do not remove robots from assignment
-			for (int i = 0; i < eps.size(); i++)
+			for (int i = 0; i < eps->size(); i++)
 			{
 				rem.clear();
-				auto robs = this->getAssignment()->getRobotsWorking(eps[i]);
+				auto robs = this->getAssignment()->getRobotsWorking(eps->at(i));
 				for (int rob : (*robs))
 				{
 					//if (rob==ownId) continue;
@@ -845,7 +845,7 @@ namespace alica
 					{
 						rem.push_back(rob);
 						//this.Assignment.RemoveRobot(rob);
-						aldif->getSubtractions().push_back(new EntryPointRobotPair(eps[i], rob));
+						aldif->getSubtractions().push_back(new EntryPointRobotPair(eps->at(i), rob));
 						ret = true;
 					}
 				}

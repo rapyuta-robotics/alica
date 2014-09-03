@@ -67,7 +67,7 @@ namespace alica
 		int numUnAssignedRobots();
 		vector<int>& getUnAssignedRobots();
 		string assignmentCollectionToString();
-		vector<EntryPoint*>& getEntryPoints();
+		shared_ptr<vector<EntryPoint*> > getEntryPoints();
 		int getHash();
 		void setHash(int hash);
 		bool isHashCalculated();
@@ -121,7 +121,7 @@ namespace std
         	vector<int> robots;
         	for(int i = 0; i < pa.getEpRobotsMapping()->getCount(); ++i)
         	{
-        		robots = (*pa.getEpRobotsMapping()->getRobots()[i]);
+        		robots = (*pa.getEpRobotsMapping()->getRobots()->at(i));
         		for(int robot : robots)
         		{
 
