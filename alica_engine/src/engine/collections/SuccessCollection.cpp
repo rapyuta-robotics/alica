@@ -30,6 +30,7 @@ namespace alica
 		for (EntryPoint* ep : eps)
 		{
 			this->entryPoints[i] = ep;
+			this->robots[i] = make_shared<list<int> >();
 			i++;
 		}
 	}
@@ -113,6 +114,7 @@ namespace alica
 		ss << "";
 		for (int i = 0; i < this->count; i++)
 		{
+			//TODO robots shared ptr null
 			if (this->robots[i]->size() > 0)
 			{
 				ss << this->entryPoints[i]->getTask()->getId() << ": ";

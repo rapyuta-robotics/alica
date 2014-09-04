@@ -47,9 +47,6 @@ namespace alica
 		this->roleAssignment = nullptr;
 		this->behaviourPool = nullptr;
 		this->syncModul = nullptr;
-		//TODO: erstellen von syncmodul
-//		this->syncModul = new SyncModul();
-
 		this->roleSet = nullptr;
 		this->masterPlan = nullptr;
 		this->planParser = nullptr;

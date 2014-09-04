@@ -24,8 +24,10 @@ protected:
 
 		// bring up the SystemConfig with the corresponding path
 		sc = supplementary::SystemConfig::getInstance();
+		sc->setHostname("nase");
 		sc->setRootPath(path);
 		sc->setConfigPath(path + "/etc");
+
 
 		// setup the engine
 		ae = alica::AlicaEngine::getInstance();
@@ -40,8 +42,6 @@ protected:
 // Declare a test
 TEST_F(PlanBase, planBaseTest)
 {
-	supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-	sc->setHostname("nase");
 	alica::AlicaEngine* ae = alica::AlicaEngine::getInstance();
 	alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());

@@ -34,15 +34,15 @@ namespace alica
 		this->epRobotsMapping = new AssignmentCollection(this->plan->getEntryPoints().size());
 
 		list<EntryPoint*> l;
-		transform(plan->getEntryPoints().begin(), plan->getEntryPoints().end(), back_inserter(l),
-					[](map<long, EntryPoint*>::value_type& val)
-					{	return val.second;});
-		l.sort();
-		for(EntryPoint* ep : l)
+		for(auto pair : plan->getEntryPoints())
 		{
-			this->epRobotsMapping->getEntryPoints()->push_back(ep);
+			l.push_back(pair.second);
 		}
-
+		l.sort(EntryPoint::compareTo);
+		cout << "Ass: ep size " << l.size() << endl;
+		auto iter = l.begin();
+		advance(iter, l.size());
+		copy(l.begin(), iter, this->epRobotsMapping->getEntryPoints()->begin());
 		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 		this->epSucMapping = new SuccessCollection(p);
 	}

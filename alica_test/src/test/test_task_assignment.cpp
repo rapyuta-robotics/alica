@@ -27,9 +27,12 @@ class TaskAssignmentTest : public ::testing::Test
 {
 protected:
 	alica::AlicaEngine* ae;
+	supplementary::SystemConfig* sc;
 
 	virtual void SetUp()
 	{
+		sc = supplementary::SystemConfig::getInstance();
+		sc->setHostname("zwerg");
 		ae = alica::AlicaEngine::getInstance();
 		//TODO extend TestBehaviourCreator
 		alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
@@ -40,13 +43,14 @@ protected:
 	virtual void TearDown()
 	{
 		ae->shutdown();
+		sc->shutdown();
 	}
 };
 
 TEST_F(TaskAssignmentTest, constructTaskAssignment)
 {
 	alica::IPlanSelector* ps = ae->getPlanSelector();
-	auto robots = make_shared<vector<int> >(vector<int>());
+	auto robots = make_shared<vector<int> >();
 	for(int i = 1 ; i <= 5; i++)
 	{
 		robots->push_back(i);

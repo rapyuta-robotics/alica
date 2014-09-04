@@ -50,11 +50,10 @@ namespace alica
 
 	StateCollection::StateCollection(AssignmentCollection* ac)
 	{
-
+		cout << "SC: ep size " << ac->getEntryPoints()->size() << endl;
 		for(int i = 0;i < ac->getCount(); i ++)
 		{
 			State* initialState = ac->getEntryPoints()->at(i)->getState();
-			cout << "SC: robots size " << ac->getRobots()->at(i)->size() << endl;
 			for(auto r : (*ac->getRobots()->at(i)))
 			{
 				this->setState(r,initialState);

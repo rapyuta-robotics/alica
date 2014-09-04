@@ -20,6 +20,7 @@ using namespace std;
 #include <string>
 #include <algorithm>
 #include <memory>
+#include <math.h>
 
 #include <SystemConfig.h>
 #include "engine/IAssignment.h"
@@ -57,7 +58,7 @@ namespace alica
 		shared_ptr<list<PartialAssignment*> > expand();
 		bool isValid();
 		bool isGoal();
-		bool compareTo(PartialAssignment* thisPa, PartialAssignment* newPa);
+		static bool compareTo(PartialAssignment* thisPa, PartialAssignment* newPa);
 		int getHashCode();
 		string toString();
 		AssignmentCollection* getEpRobotsMapping();
@@ -72,6 +73,7 @@ namespace alica
 		void setHash(int hash);
 		bool isHashCalculated();
 		void setHashCalculated(bool hashCalculated);
+		void setMax(double max);
 
 	private:
 		const int INFINIT = numeric_limits<int>::max();

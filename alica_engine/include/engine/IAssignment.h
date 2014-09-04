@@ -43,7 +43,7 @@ namespace alica
 			return max;
 		}
 
-		void setMax(double max)
+		virtual void setMax(double max)
 		{
 			this->max = max;
 		}

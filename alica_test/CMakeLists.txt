@@ -93,7 +93,7 @@ catkin_package(
  include_directories(include test/include ${catkin_INCLUDE_DIRS})
 
 
-file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
+file(GLOB_RECURSE alica_SOURCES "src/test/*.cpp")
 
 ## Declare a cpp library
  add_library(alica_test

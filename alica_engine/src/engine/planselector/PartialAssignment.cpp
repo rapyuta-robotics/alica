@@ -467,39 +467,39 @@ namespace alica
 		//TODO has perhaps to be changed
 		// 0 , -1 = false
 		// 1 true
-		if (thisPa == newPa)
+		if (&thisPa == &newPa)
 		{
 			return false;
 		}
-		if (newPa->compareVal > thisPa->compareVal)
+		if (newPa->compareVal < thisPa->compareVal)
 		{
 			return true;
 		}
-		else if (newPa->compareVal < thisPa->compareVal)
-		{
-			return false;
-		}
-		else if (newPa->plan->getId() < thisPa->plan->getId())
+		else if (newPa->compareVal > thisPa->compareVal)
 		{
 			return false;
 		}
 		else if (newPa->plan->getId() > thisPa->plan->getId())
 		{
-			return true;
+			return false;
 		}
-		if (thisPa->unAssignedRobots.size() > newPa->unAssignedRobots.size())
+		else if (newPa->plan->getId() < thisPa->plan->getId())
 		{
 			return true;
 		}
-		else if (thisPa->unAssignedRobots.size() < newPa->unAssignedRobots.size())
+		if (thisPa->unAssignedRobots.size() < newPa->unAssignedRobots.size())
+		{
+			return true;
+		}
+		else if (thisPa->unAssignedRobots.size() > newPa->unAssignedRobots.size())
 		{
 			return false;
 		}
-		if (newPa->min > thisPa->min)
+		if (newPa->min < thisPa->min)
 		{
 			return true;
 		}
-		else if (newPa->min < thisPa->min)
+		else if (newPa->min > thisPa->min)
 		{
 			return false;
 		}
@@ -511,7 +511,7 @@ namespace alica
 			{
 				return true;
 			}
-			else if (me->at(i)->size() > you->at(i)->size())
+			else if (me->at(i)->size() < you->at(i)->size())
 			{
 				return false;
 			}
@@ -520,7 +520,7 @@ namespace alica
 		{
 			for(int j = 0; j < me->at(i)->size(); ++j)
 			{
-				if(me->at(i)->at(j) < you->at(i)->at(j))
+				if(me->at(i)->at(j) > you->at(i)->at(j))
 				{
 					return true;
 				}
@@ -613,4 +613,12 @@ namespace alica
 		return ret;
 	}
 
+	void PartialAssignment::setMax(double max)
+	{
+		this->max = max;
+		this->compareVal = (long)round(max * PRECISION);
+	}
+
 } /* namespace alica */
+
+
