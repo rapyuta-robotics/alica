@@ -7,6 +7,7 @@
 
 #ifndef PLANBASE_H_
 #define PLANBASE_H_
+#define PB_DEBUG
 
 using namespace std;
 

@@ -159,6 +159,8 @@ namespace alica
 				continue;
 			}
 
+			ep = rp->getAssignment()->entryPointOfRobot(ownRobProb->getId());
+
 			if (ep == nullptr)
 			{
 #ifdef PSDEBUG

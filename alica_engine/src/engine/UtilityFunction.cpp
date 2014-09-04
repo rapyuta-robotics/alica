@@ -222,7 +222,7 @@ namespace alica
 					this->roleHighestPriorityMap.at(roleId) = curPrio;
 				}
 			}
-			this->priorityMartix.insert(pair<TaskRoleStruct*, double>(new TaskRoleStruct(Task::IDLEID, roleId), curPrio));
+			this->priorityMartix.insert(pair<TaskRoleStruct*, double>(new TaskRoleStruct(Task::IDLEID, roleId), 0.0));
 		}
 		//c# != null
 		if (this->utilSummands.size() != 0)
@@ -288,7 +288,7 @@ namespace alica
 		long taskId;
 		long roleId;
 		shared_ptr<vector<EntryPoint*> > eps = ass->getEntryPoints();
-		double curPrio;
+		double curPrio = 0;
 
 		for(int i = 0; i < ass->getEntryPointCount(); ++i)
 		{

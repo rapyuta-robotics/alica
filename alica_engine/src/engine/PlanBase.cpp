@@ -88,8 +88,10 @@ namespace alica
 			loopTimer->start();
 		}
 
-#if PB_DEBUG
-		cout << "PB: Engine loop time is " << loopTime/1000000 << "ms, broadcast interval is " << this.minSendInterval/1000000 << "ms - "<< this.maxSendInterval/1000000) << "ms" << endl;
+#ifdef PB_DEBUG
+		cout << "PB: Engine loop time is " << loopTime/1000000
+				<< "ms, broadcast interval is " << this->minSendInterval/1000000
+				<< "ms - " <<  this->maxSendInterval/1000000 << "ms" << endl;
 #endif
 		if (halfLoopTime < this->minSendInterval)
 		{
@@ -161,7 +163,7 @@ namespace alica
 
 			if (this->rootNode->tick(this->ruleBook) == PlanChange::FailChange)
 			{
-#if PB_DEBUG
+#ifdef PB_DEBUG
 				cout << "PB: MasterPlan Failed" << endl;
 #endif
 			}

@@ -161,6 +161,7 @@ namespace alica
 					this->fringe.push_back((*iter));
 				}
 			}
+			sort(fringe.begin(), fringe.end(), PartialAssignment::compareTo);
 #ifdef PSDEBUG
 				cout << "<---" << endl;
 				cout << "TA: AFTER fringe exp:" << endl;
