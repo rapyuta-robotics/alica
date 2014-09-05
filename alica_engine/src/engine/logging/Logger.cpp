@@ -32,7 +32,7 @@ namespace alica
 			char buffer[50];
 			struct tm * timeinfo;
 			string robotName = AlicaEngine::getInstance()->getRobotName();
-			const long int time = AlicaEngine::getInstance()->getIAlicaClock()->now()/1000000000L;
+			const long int time = AlicaEngine::getInstance()->getIAlicaClock()->now() / 1000000000L;
 			cout << "Alica Time: " << time << endl;
 			timeinfo = localtime(&time);
 			strftime(buffer, 1024, "%FT%T", timeinfo);
@@ -52,21 +52,12 @@ namespace alica
 			// TODO: create nice supplementary::FileSystem::createDirectory(string path, int rights) method from next if clause
 			if (!supplementary::FileSystem::isDirectory(logPath))
 			{
-				string path = "";
-				int pos;
-				while((pos = logPath.find('/')) != string::npos){
-				  path = path + logPath.substr(0, pos) + "/";
-				  if(logPath.substr(0, pos).size() != 1){
-				    if(!supplementary::FileSystem::isDirectory(path))
-				    {
-				    	if (int res = mkdir(path.c_str(), 0777) != 0)
-				    	{
-				    		AlicaEngine::getInstance()->abort("Cannot create log folder: ", path);
-				    	}
-				    }
-				  }
-				  logPath.erase(0, pos + 1);
+
+				if (!supplementary::FileSystem::createDirectory(logPath, 777))
+				{
+					AlicaEngine::getInstance()->abort("Cannot create log folder: ", logPath);
 				}
+
 			}
 			string logFile = logPath + "alica-run--" + robotName + "--" + timeString + ".txt";
 			this->fileWriter = new ofstream(logFile.c_str());
@@ -83,7 +74,7 @@ namespace alica
 	{
 	}
 
-	void Logger::evenOccured(string event)
+	void Logger::eventOccured(string event)
 	{
 		if (!this->active)
 		{
