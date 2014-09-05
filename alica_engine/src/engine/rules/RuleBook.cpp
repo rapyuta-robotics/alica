@@ -73,7 +73,7 @@ namespace alica
 		main->getAssignment()->setAllToInitialState(move(r), defep);
 		main->setActive(true);
 		main->setOwnEntryPoint(defep);
-		this->log->evenOccured("Init");
+		this->log->eventOccured("Init");
 		return main;
 
 	}
@@ -172,7 +172,7 @@ namespace alica
 			cout << "RB: DynAlloc" <<r->getPlan()->getName() << endl;
 #endif
 
-			log->evenOccured("DynAlloc(" + r->getPlan()->getName() + ")");
+			log->eventOccured("DynAlloc(" + r->getPlan()->getName() + ")");
 			return PlanChange::InternalChange;
 		}
 		return PlanChange::NoChange;
@@ -190,7 +190,7 @@ namespace alica
 		{
 			if (r->getCycleManager()->setAssignment(r))
 			{
-				log->evenOccured("AuthorityOverride(" + r->getPlan()->getName() + ")");
+				log->eventOccured("AuthorityOverride(" + r->getPlan()->getName() + ")");
 				return PlanChange::InternalChange;
 			}
 		}
@@ -218,7 +218,7 @@ namespace alica
 #if RULE_debug
 			cout << "RB: PlanAbort" << r.Plan.Name << endl;
 #endif
-			log->evenOccured("PAbort(" + r->getPlan()->getName() + ")");
+			log->eventOccured("PAbort(" + r->getPlan()->getName() + ")");
 			return PlanChange::FailChange;
 		}
 		return PlanChange::NoChange;
@@ -256,7 +256,7 @@ namespace alica
 #if RULE_debug
 		cout << "RB: PlanRedo" << r.Plan.Name << endl;
 #endif
-		log->evenOccured("PRede(" + r->getPlan()->getName() + ")");
+		log->eventOccured("PRede(" + r->getPlan()->getName() + ")");
 		return PlanChange::InternalChange;
 	}
 
@@ -280,7 +280,7 @@ namespace alica
 #if RULE_debug
 		cout << "RB: PlanReplace" << r.Plan.Name << endl;
 #endif
-		log->evenOccured("PReplace(" + r->getPlan()->getName() + ")");
+		log->eventOccured("PReplace(" + r->getPlan()->getName() + ")");
 		return PlanChange::FailChange;
 	}
 	/**
@@ -299,7 +299,7 @@ namespace alica
 #if RULE_debug
 		cout << "RB: PlanPropagation" << r.Plan.Name << endl;
 #endif
-		log->evenOccured("PProp(" + r->getPlan()->getName() + ")");
+		log->eventOccured("PProp(" + r->getPlan()->getName() + ")");
 		return PlanChange::FailChange;
 	}
 
@@ -339,7 +339,7 @@ namespace alica
 
 		if (children->size() > 0)
 		{
-			log->evenOccured("PAlloc(" + r->getPlan()->getName() + " in State " + r->getActiveState()->getName() + ")");
+			log->eventOccured("PAlloc(" + r->getPlan()->getName() + " in State " + r->getActiveState()->getName() + ")");
 			return PlanChange::InternalChange;
 		}
 		return PlanChange::NoChange;
@@ -378,7 +378,7 @@ namespace alica
 #if RULE_debug
 			cout << "RB: PlanTopFail" << r.Plan.Name << endl;
 #endif
-			log->evenOccured("TopFail");
+			log->eventOccured("TopFail");
 			return PlanChange::InternalChange;
 		}
 		return PlanChange::NoChange;
@@ -416,7 +416,7 @@ namespace alica
 		r->moveState(nextState);
 
 		r->setAllocationNeeded(true);
-		log->evenOccured("SynchTrans(" + r->getPlan()->getName() + ")");
+		log->eventOccured("SynchTrans(" + r->getPlan()->getName() + ")");
 		if (r->getActiveState()->isSuccessState())
 			return PlanChange::SuccesChange;
 		else if (r->getActiveState()->isFailureState())
@@ -471,7 +471,7 @@ namespace alica
 		r->moveState(nextState);
 
 		r->setAllocationNeeded(true);
-		log->evenOccured("SynchTrans(" + r->getPlan()->getName() + ")");
+		log->eventOccured("SynchTrans(" + r->getPlan()->getName() + ")");
 		if (r->getActiveState()->isSuccessState())
 			return PlanChange::SuccesChange;
 		else if (r->getActiveState()->isFailureState())

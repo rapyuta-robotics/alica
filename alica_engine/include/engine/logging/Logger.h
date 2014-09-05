@@ -37,7 +37,7 @@ namespace alica
 		Logger();
 		virtual ~Logger();
 
-		void evenOccured(string event);
+		void eventOccured(string event);
 		void itertionStarts();
 		void iterationEnds(RunningPlan* p);
 		void close();

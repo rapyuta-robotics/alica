@@ -23,6 +23,7 @@
 #include "engine/collections/SuccessCollection.h"
 #include "engine/IAlicaClock.h"
 #include "engine/model/Characteristic.h"
+#include "engine/logging/Logger.h"
 
 namespace alica
 {
@@ -33,7 +34,8 @@ namespace alica
 	{
 		this->teamTimeOut = 0;
 		this->myId = 0;
-		this->simplePlanTrees = make_shared<map<int, shared_ptr<SimplePlanTree> > >(map<int,  shared_ptr<SimplePlanTree> >());
+		this->simplePlanTrees = make_shared<map<int, shared_ptr<SimplePlanTree> > >(
+				map<int, shared_ptr<SimplePlanTree> >());
 		this->me = nullptr;
 		this->log = nullptr;
 		this->ae = nullptr;
@@ -64,7 +66,7 @@ namespace alica
 		this->log = ae->getLog();
 
 		string ownPlayerName = ae->getRobotName();
-		this->teamTimeOut = (*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut",NULL) * 1000000;
+		this->teamTimeOut = (*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL) * 1000000;
 		shared_ptr<vector<string> > playerNames = (*sc)["Globals"]->getSections("Globals.Team", NULL);
 		bool foundSelf = false;
 
@@ -209,7 +211,7 @@ namespace alica
 
 	unique_ptr<map<int, shared_ptr<SimplePlanTree> > > TeamObserver::getTeamPlanTrees()
 	{
-		unique_ptr<map<int, shared_ptr<SimplePlanTree> > > ret = unique_ptr<map<int,shared_ptr<SimplePlanTree> > >(
+		unique_ptr<map<int, shared_ptr<SimplePlanTree> > > ret = unique_ptr<map<int, shared_ptr<SimplePlanTree> > >(
 				new map<int, shared_ptr<SimplePlanTree> >);
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
 		for (RobotEngineData* r : this->allOtherRobots)
@@ -217,7 +219,8 @@ namespace alica
 			if (r->isActive())
 			{
 				shared_ptr<SimplePlanTree> t = nullptr;
-				map<int, shared_ptr<SimplePlanTree> >::iterator iter = this->simplePlanTrees->find(r->getProperties()->getId());
+				map<int, shared_ptr<SimplePlanTree> >::iterator iter = this->simplePlanTrees->find(
+						r->getProperties()->getId());
 				t = iter->second;
 				if (t != nullptr)
 				{
@@ -225,8 +228,6 @@ namespace alica
 				}
 			}
 		}
-		//ret
-
 		return move(ret);
 	}
 
@@ -260,7 +261,7 @@ namespace alica
 		//TODO events missing
 //		if(changed && OnTeamChangeEvent!=null) {
 //			OnTeamChangeEvent();
-//			this.log.EventOccurred("TeamChanged");
+//		this->log->eventOccured("TeamChanged");
 //		}
 		cleanOwnSuccessMarks(root);
 		if (root != nullptr)
@@ -271,7 +272,8 @@ namespace alica
 			for (map<int, shared_ptr<SimplePlanTree> >::const_iterator iterator = this->simplePlanTrees->begin();
 					iterator != this->simplePlanTrees->end(); iterator++)
 			{
-				if (find(robotsAvail.begin(), robotsAvail.end(), iterator->second.get()->getRobotId()) != robotsAvail.end())
+				if (find(robotsAvail.begin(), robotsAvail.end(), iterator->second.get()->getRobotId())
+						!= robotsAvail.end())
 				{
 					if (iterator->second->isNewSimplePlanTree())
 					{
@@ -293,7 +295,13 @@ namespace alica
 
 	void TeamObserver::close()
 	{
-		//TODO: implement
+		//	this->onTeamChangeEvent = nullptr;
+//		if (this->rosNode != nullptr)
+//		{
+//			this.rosNode.Close();
+//		}
+//		this->rosNode = nullptr;
+		cout << "Closed TO" << endl;;
 	}
 
 	void TeamObserver::doBroadCast(list<long> msg)
@@ -476,9 +484,9 @@ namespace alica
 	void TeamObserver::notifyRobotLeftPlan(AbstractPlan* plan)
 	{
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
-		for(auto iterator : *this->simplePlanTrees)
+		for (auto iterator : *this->simplePlanTrees)
 		{
-			if(iterator.second->containsPlan(plan))
+			if (iterator.second->containsPlan(plan))
 			{
 				return;
 			}
@@ -490,10 +498,11 @@ namespace alica
 	void TeamObserver::handlePlanTreeInfo(shared_ptr<SimplePlanTree> incoming)
 	{
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
-		if(this->simplePlanTrees->find(incoming->getRobotId()) != this->simplePlanTrees->end())
+		if (this->simplePlanTrees->find(incoming->getRobotId()) != this->simplePlanTrees->end())
 		{
 			shared_ptr<SimplePlanTree> toDelete = this->simplePlanTrees->at(incoming->getRobotId());
-			map<int, shared_ptr<SimplePlanTree> > ::iterator iterator = this->simplePlanTrees->find(incoming->getRobotId());
+			map<int, shared_ptr<SimplePlanTree> >::iterator iterator = this->simplePlanTrees->find(
+					incoming->getRobotId());
 			if (iterator != this->simplePlanTrees->end())
 			{
 				iterator->second = incoming;
