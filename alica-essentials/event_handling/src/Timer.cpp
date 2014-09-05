@@ -62,8 +62,8 @@ namespace supplementary
 				}
 			}
 			auto dura = std::chrono::high_resolution_clock::now() - start;
-			cout << "TimerEvent: Duration is " << chrono::duration_cast<chrono::nanoseconds>(dura).count()
-					<< " nanoseconds" << endl;
+//			cout << "TimerEvent: Duration is " << chrono::duration_cast<chrono::nanoseconds>(dura).count()
+//					<< " nanoseconds" << endl;
 			this_thread::sleep_for(msInterval - dura);
 		}
 	}

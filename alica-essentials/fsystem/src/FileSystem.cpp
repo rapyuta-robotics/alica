@@ -91,7 +91,8 @@ namespace supplementary
 				}
 
 				// recursively call this method for regular directories
-				if (findFile(curFullFile+"/",file,path_found)) {
+				if (findFile(curFullFile + "/", file, path_found))
+				{
 					fileFound = true;
 					break;
 				}
@@ -108,7 +109,8 @@ namespace supplementary
 			}
 			else
 			{
-				cout << "ff: Found a symlink, or something else, which is not a regular file or directory: " << curFullFile << endl;
+				cout << "ff: Found a symlink, or something else, which is not a regular file or directory: "
+						<< curFullFile << endl;
 			}
 
 			free(namelist[i]);
@@ -162,7 +164,7 @@ namespace supplementary
 		return false;
 	}
 
-	/**
+	/**createDirectory(string path, int rights)
 	 * Checks whether the path is a file.
 	 * @param path The path to check, should be rooted.
 	 * @return true if the given path is a regular file, false otherwise.
@@ -243,7 +245,30 @@ namespace supplementary
 		{
 			return "";
 		}
-		return path.substr(0,path.rfind(PATH_SEPARATOR));
+		return path.substr(0, path.rfind(PATH_SEPARATOR));
+	}
+
+	bool FileSystem::createDirectory(string path, int rights)
+	{
+		string result = "";
+		int pos;
+		while ((pos = path.find('/')) != string::npos)
+		{
+			result = result + path.substr(0, pos) + "/";
+			if (path.substr(0, pos).size() != 1)
+			{
+				if (!supplementary::FileSystem::isDirectory(result))
+				{
+					if (int res = mkdir(result.c_str(), 0777) != 0)
+					{
+						return false;
+					}
+				}
+			}
+			path.erase(0, pos + 1);
+		}
+		return true;
 	}
 
 } /* namespace fsystem */
+
