@@ -38,16 +38,16 @@ namespace alica
 	 * Message Handler
 	 * param name = aai
 	 */
-	void AuthorityManager::handleIncomingAuthorityMessage(AllocationAuthorityInfo aai)
+	void AuthorityManager::handleIncomingAuthorityMessage(shared_ptr<AllocationAuthorityInfo> aai)
 	{
-		if (ae->getTeamObserver()->isRobotIgnored(aai.senderID))
+		if (ae->getTeamObserver()->isRobotIgnored(aai->senderID))
 		{
 			return;
 		}
-		if (aai.senderID != this->ownID)
+		if (aai->senderID != this->ownID)
 		{
-			ae->getTeamObserver()->messageRecievedFrom(aai.senderID);
-			for (EntryPointRobots epr : aai.entryPointRobots)
+			ae->getTeamObserver()->messageRecievedFrom(aai->senderID);
+			for (EntryPointRobots epr : aai->entryPointRobots)
 			{
 				for (int rid : epr.robots)
 				{

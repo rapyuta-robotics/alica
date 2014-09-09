@@ -59,7 +59,7 @@ namespace alica
 		void unIgnoreRobot(int rid);
 		bool isRobotIgnored(int rid);
 		void notifyRobotLeftPlan(AbstractPlan* plan);
-		void handlePlanTreeInfo(shared_ptr<SimplePlanTree> incoming);
+		virtual void handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming);
 		void close();
 
 	private:

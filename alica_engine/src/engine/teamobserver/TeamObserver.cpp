@@ -24,6 +24,7 @@
 #include "engine/IAlicaClock.h"
 #include "engine/model/Characteristic.h"
 #include "engine/logging/Logger.h"
+#include "engine/containers/PlanTreeInfo.h"
 
 namespace alica
 {
@@ -495,23 +496,24 @@ namespace alica
 		this->me->getSuccessMarks()->removePlan(plan);
 	}
 
-	void TeamObserver::handlePlanTreeInfo(shared_ptr<SimplePlanTree> incoming)
+	void TeamObserver::handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming)
 	{
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
-		if (this->simplePlanTrees->find(incoming->getRobotId()) != this->simplePlanTrees->end())
+		//TODO did we receive the message from ourselfes? if yes: return!
+		if (this->simplePlanTrees->find(incoming->senderID) != this->simplePlanTrees->end())
 		{
-			shared_ptr<SimplePlanTree> toDelete = this->simplePlanTrees->at(incoming->getRobotId());
+			shared_ptr<SimplePlanTree> toDelete = this->simplePlanTrees->at(incoming->senderID);
 			map<int, shared_ptr<SimplePlanTree> >::iterator iterator = this->simplePlanTrees->find(
-					incoming->getRobotId());
+					incoming->senderID);
 			if (iterator != this->simplePlanTrees->end())
 			{
-				iterator->second = incoming;
+				iterator->second = sptFromMessage(incoming->senderID, incoming->stateIDs);
 			}
 
 		}
 		else
 		{
-			this->simplePlanTrees->insert(pair<int, shared_ptr<SimplePlanTree> >(incoming->getRobotId(), incoming));
+			this->simplePlanTrees->insert(pair<int, shared_ptr<SimplePlanTree> >(incoming->senderID, sptFromMessage(incoming->senderID, incoming->stateIDs)));
 		}
 
 	}
