@@ -110,7 +110,7 @@ namespace alica
 		SyncTalk st;
 		st.senderID = this->myId;
 		st.syncData = syncDataList;
-		this->communicator->sendAcks(st);
+		this->communicator->sendSyncTalk(st);
 	}
 	void SyncModul::synchronisationDone(SyncTransition* st)
 	{
@@ -142,11 +142,11 @@ namespace alica
 		}
 		return false;
 	}
-	void SyncModul::onSyncTalk(SyncTalk st)
+	void SyncModul::onSyncTalk(shared_ptr<SyncTalk> st)
 	{
-		if (!this->running || st.senderID == this->myId)
+		if (!this->running || st->senderID == this->myId)
 			return;
-		if (this->ae->getTeamObserver()->isRobotIgnored(st.senderID))
+		if (this->ae->getTeamObserver()->isRobotIgnored(st->senderID))
 			return;
 
 #if SM_SUCCES
@@ -154,7 +154,7 @@ namespace alica
 #endif
 
 		vector<SyncData*> toAck;
-		for (SyncData* sd : st.syncData)
+		for (SyncData* sd : st->syncData)
 		{
 #if SM_SUCCES
 			cout << "SyncModul: TransID" << sd->transitioID << endl;
@@ -195,18 +195,18 @@ namespace alica
 				if (i != this->synchSet.end())
 				{
 					cout << "SyncModul: Synchronisation " << syncTrans->getId() << " found" << endl;
-					sync->integrateSyncTalk(&st, this->ticks);
+					sync->integrateSyncTalk(st, this->ticks);
 				}
 				else
 				{
 					cout << "SyncModul: HandleSyncTalk: create new synchronisation" << endl;
 					sync = new Synchronisation(this->myId, syncTrans, this);
 					synchSet.insert(pair<SyncTransition*, Synchronisation*>(syncTrans, sync));
-					doAck = sync->integrateSyncTalk(&st, this->ticks);
+					doAck = sync->integrateSyncTalk(st, this->ticks);
 				}
 
 			}
-			if (!sd->ack && st.senderID == sd->robotID && doAck)
+			if (!sd->ack && st->senderID == sd->robotID && doAck)
 			{
 				toAck.push_back(sd);
 			}
@@ -222,17 +222,17 @@ namespace alica
 		}
 
 	}
-	void SyncModul::onSyncReady(SyncReady sr)
+	void SyncModul::onSyncReady(shared_ptr<SyncReady> sr)
 	{
-		if (!this->running || sr.senderID == this->myId)
+		if (!this->running || sr->senderID == this->myId)
 			return;
-		if (this->ae->getTeamObserver()->isRobotIgnored(sr.senderID))
+		if (this->ae->getTeamObserver()->isRobotIgnored(sr->senderID))
 			return;
 		SyncTransition* syncTrans = nullptr;
-		map<long, SyncTransition*>::iterator iter = this->pr->getSyncTransitions().find(sr.syncTransitionID);
+		map<long, SyncTransition*>::iterator iter = this->pr->getSyncTransitions().find(sr->syncTransitionID);
 		if(iter == this->pr->getSyncTransitions().end())
 		{
-			cout << "SyncModul: Unable to find synchronisation " << sr.syncTransitionID << " send by " << sr.senderID << endl;
+			cout << "SyncModul: Unable to find synchronisation " << sr->syncTransitionID << " send by " << sr->senderID << endl;
 			return;
  		}
 		else
@@ -245,7 +245,7 @@ namespace alica
 			map<SyncTransition*, Synchronisation*>::iterator i = this->synchSet.find(syncTrans);
 			if(i != this->synchSet.end())
 			{
-				i->second->integrateSyncReady(&sr);
+				i->second->integrateSyncReady(sr);
 			}
 		}
 

@@ -195,7 +195,7 @@ namespace alica
 		return true;
 	}
 
-	bool Synchronisation::integrateSyncTalk(SyncTalk* talk, unsigned long curTick)
+	bool Synchronisation::integrateSyncTalk(shared_ptr<SyncTalk> talk, unsigned long curTick)
 	{
 		if (this->readyForSync)
 		{
@@ -300,11 +300,11 @@ namespace alica
 		return true;
 	}
 
-	void Synchronisation::integrateSyncReady(SyncReady* ready)
+	void Synchronisation::integrateSyncReady(shared_ptr<SyncReady> ready)
 	{
 		//every robot that has acknowleged my row needs to send me a SyncReady
 		bool found = false;
-		for (SyncReady* sr : this->receivedSyncReadys)
+		for (shared_ptr<SyncReady> sr : this->receivedSyncReadys)
 		{
 			if (sr->senderID == ready->senderID)
 			{
@@ -351,7 +351,7 @@ namespace alica
 			if (robotID != myID) //we do not necessarily need an ack from ourselves
 			{
 				bool foundRobot = false;
-				for (SyncReady* sr : this->receivedSyncReadys)
+				for (shared_ptr<SyncReady> sr : this->receivedSyncReadys)
 				{
 					if (sr->senderID == robotID)
 					{
@@ -388,7 +388,7 @@ namespace alica
 								+ row->getSyncData()->conditionHolds << " " << row->getSyncData()->ack << " RecvBy: " << robots << endl;
 			}
 			cout << "ReceivedSyncreadys: ";
-			for (SyncReady* sr : this->receivedSyncReadys)
+			for (shared_ptr<SyncReady> sr : this->receivedSyncReadys)
 			{
 				cout << sr->senderID << ", " << endl;;
 			}

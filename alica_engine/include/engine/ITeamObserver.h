@@ -23,6 +23,7 @@ namespace alica
 	class SuccessCollection;
 	class Plan;
 	class AbstractPlan;
+	struct PlanTreeInfo;
 
 	class ITeamObserver
 	{
@@ -40,6 +41,7 @@ namespace alica
 		virtual RobotEngineData* getRobotById(int id) = 0;
 		virtual RobotProperties* getOwnRobotProperties() = 0;
 		virtual unique_ptr<map<int, shared_ptr<SimplePlanTree> > > getTeamPlanTrees() = 0;
+		virtual void handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming) = 0;
 
 		virtual int successesInPlan(Plan* p) = 0;
 		virtual SuccessCollection* getSuccessCollection(Plan* p) = 0;

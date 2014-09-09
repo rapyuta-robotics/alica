@@ -39,12 +39,13 @@ namespace alica
 		virtual void tick();
 		virtual void setSynchronisation(Transition* trans, bool holds);
 		virtual bool followSyncTransition(Transition* trans);
-		void sendSyncTalk (SyncTalk st);
+		virtual void onSyncTalk(shared_ptr<SyncTalk> st);
+		virtual void onSyncReady(shared_ptr<SyncReady> sr);
+
+		void sendSyncTalk(SyncTalk st);
 		void sendSyncReady(SyncReady sr);
 		void sendAcks(vector<SyncData*> syncDataList);
 		void synchronisationDone(SyncTransition* st);
-		void onSyncTalk(SyncTalk st);
-		void onSyncReady(SyncReady sr);
 	protected:
 		bool running;
 		AlicaEngine* ae;
