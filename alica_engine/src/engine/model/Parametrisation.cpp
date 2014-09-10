@@ -14,13 +14,14 @@ namespace alica
 
 	Parametrisation::Parametrisation()
 	{
-
+		this->subPlan =nullptr;
+		this->subVar = nullptr;
+		this->var = nullptr;
 	}
 
 	Parametrisation::~Parametrisation()
 	{
 	}
-
 
 	string Parametrisation::ToString()
 	{
@@ -33,7 +34,7 @@ namespace alica
 
 //================= Getter and Setter ========================
 
-	const AbstractPlan* Parametrisation::getSubPlan() const
+	AbstractPlan* Parametrisation::getSubPlan()
 	{
 		return subPlan;
 	}
@@ -43,7 +44,7 @@ namespace alica
 		this->subPlan = subPlan;
 	}
 
-	const Variable* Parametrisation::getSubVar() const
+	Variable* Parametrisation::getSubVar()
 	{
 		return subVar;
 	}
@@ -53,7 +54,7 @@ namespace alica
 		this->subVar = subVar;
 	}
 
-	const Variable* Parametrisation::getVar() const
+	Variable* Parametrisation::getVar()
 	{
 		return var;
 	}
