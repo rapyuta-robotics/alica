@@ -74,11 +74,12 @@ namespace alica
 		tinyxml2::XMLElement* createTransitionXMLNode(Transition* t, tinyxml2::XMLDocument* doc);
 		tinyxml2::XMLElement* createEntryPointXMLNode(EntryPoint* e, tinyxml2::XMLDocument* doc);
 		void addPlanElementAttributes(AlicaElement* p, tinyxml2::XMLElement* x);
-		tinyxml2::XMLAttribute* getXsiTypeAttribute(string type, tinyxml2::XMLDocument* doc);
+//		tinyxml2::XMLAttribute* getXsiTypeAttribute(string type, tinyxml2::XMLDocument* doc);
 		string getRelativeFileName(string file);
 		string getRelativeFileName(AbstractPlan* p);
 		void createRoleSet(RoleSet* r, tinyxml2::XMLDocument* doc);
 		void createTaskRepository(TaskRepository* tr, tinyxml2::XMLDocument* doc);
+		static int objectCounter;
 
 
 	protected:
