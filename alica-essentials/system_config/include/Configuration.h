@@ -59,7 +59,7 @@ namespace supplementary
 		string serialize();
 
 		string trimLeft(const string& str, const string& whitespace = " \t");
-		string trim(const string& str, const string& whitespace = " \t");
+		static string trim(const string& str, const string& whitespace = " \t");
 		shared_ptr<vector<string> > getParams(char seperator, const char *path, va_list ap);
 
 		shared_ptr<vector<string> > getSections(const char *path, ...);
