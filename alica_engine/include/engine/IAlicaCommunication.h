@@ -33,7 +33,7 @@ namespace alica
 		virtual void sendSyncTalk(SyncTalk st) = 0;
 
 		//TODO call
-		virtual void tick();
+		virtual void tick() {};
 
 		void onSyncTalkReceived(shared_ptr<SyncTalk> st);
 		void onSyncReadyReceived(shared_ptr<SyncReady> sr);
