@@ -76,7 +76,7 @@ namespace alica
 	}
 
 	shared_ptr<list<RunningPlan*> > PlanSelector::getPlansForState(RunningPlan* planningParent,
-																	list<AbstractPlan*> plans,
+	                                                               list<alica::AbstractPlan*>* plans,
 																	shared_ptr<vector<int> > robotIDs)
 	{
 		PartialAssignment::reset();
@@ -179,7 +179,7 @@ namespace alica
 			}
 			if(oldRp == nullptr)
 			{
-				rpChildren = this->getPlansForStateInternal(rp, rp->getActiveState()->getPlans(), rp->getAssignment()->getRobotsWorking(ep));
+				rpChildren = this->getPlansForStateInternal(rp, &rp->getActiveState()->getPlans(), rp->getAssignment()->getRobotsWorking(ep));
 			}
 			else
 			{
@@ -200,14 +200,15 @@ namespace alica
 	}
 
 	shared_ptr<list<RunningPlan*> > PlanSelector::getPlansForStateInternal(RunningPlan* planningParent,
-																			list<AbstractPlan*> plans,
+	                                                                      list<alica::AbstractPlan*>* plans,
 																			shared_ptr<vector<int> > robotIDs)
 	{
-		shared_ptr<list<RunningPlan*> > rps = make_shared<list<RunningPlan*> >(list<RunningPlan*>());
+		shared_ptr<list<RunningPlan*> > rps = make_shared<list<RunningPlan*> >();
 #ifdef PSDEBUG
 		cout << "<######PS: GetPlansForState: Parent:"
-				<< (planningParent != nullptr ? planningParent->getPlan()->getName() : "null") << " plan count: "
-				<< plans.size() << " robot count: " << robotIDs->size() << endl;
+						<< (planningParent != nullptr ? planningParent->getPlan()->getName() : "null") << " plan count: "
+						<< plans->size() << " robot count: "
+						<< robotIDs->size() << endl;
 #endif
 		RunningPlan* rp;
 		list<Plan*> planList;
@@ -215,7 +216,7 @@ namespace alica
 		Plan* p;
 		PlanType* pt;
 		PlanningProblem* pp;
-		for (AbstractPlan* ap : plans)
+		for (AbstractPlan* ap : *plans)
 		{
 			bc = dynamic_cast<BehaviourConfiguration*>(ap);
 			if (bc != nullptr)

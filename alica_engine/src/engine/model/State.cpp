@@ -26,7 +26,6 @@ namespace alica
 		this->failureState = false;
 		this->inPlan = nullptr;
 		this->entryPoint = nullptr;
-
 	}
 
 	State::~State()
@@ -125,7 +124,6 @@ namespace alica
 	{
 		stringstream ss;
 		ss << AlicaElement::toString();
-		ss << "Filename: " << this << endl;
 		return ss.str();
 	}
 

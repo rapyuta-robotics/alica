@@ -25,7 +25,7 @@ namespace alica
 		virtual ~IPlanSelector() {}
 		//normal plan selection
 //		virtual list<RunningPlan*> getPlansForState(RunningPlan* planningParent,list<AbstractPlan*> plans, unordered_set<int> robotIDs) = 0;
-		virtual shared_ptr<list<RunningPlan*> > getPlansForState(RunningPlan* planningParent,list<AbstractPlan*> plans, shared_ptr<vector<int> > robotIDs) = 0;
+		virtual shared_ptr<list<RunningPlan*> > getPlansForState(RunningPlan* planningParent,list<alica::AbstractPlan*>* plans, shared_ptr<vector<int> > robotIDs) = 0;
 
 		/**
 		 * Get the best Assignment for this RP with its plan and old Assignment, which is also similar to the old Assignment

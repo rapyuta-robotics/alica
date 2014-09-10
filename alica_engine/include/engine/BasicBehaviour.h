@@ -49,8 +49,8 @@ namespace alica
 		void setDelayedStart(long msDelayedStart);
 		int getInterval() const;
 		void setInterval(long msInterval);
-		const shared_ptr<RunningPlan>& getRunningPlan() const;
-		void setRunningPlan(const shared_ptr<RunningPlan>& runningPlan);
+		shared_ptr<RunningPlan> getRunningPlan();
+		void setRunningPlan(shared_ptr<RunningPlan> runningPlan);
 		bool isSuccess() const;
 		bool isFailure() const;
 

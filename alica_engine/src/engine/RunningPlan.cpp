@@ -210,6 +210,7 @@ namespace alica
 			}
 			if (this->active)
 			{
+				cout << "RP: active " << endl;
 				r->activate();
 			}
 		}
@@ -580,6 +581,7 @@ namespace alica
 		this->active = false;
 		if (this->isBehaviour())
 		{
+			//TODO
 			bp->stopBehaviour(shared_from_this());
 		}
 		else
@@ -674,7 +676,12 @@ namespace alica
 		this->active = true;
 		if (this->isBehaviour())
 		{
-			bp->startBehaviour(shared_from_this());
+			//TODO
+			cout << "RP: start beh" << endl;
+			auto x = shared_from_this();
+			cout << "RP: this" << endl;
+			bp->startBehaviour(x);
+			cout << "RP: after start" << endl;
 		}
 		this->attachPlanConstraints();
 		for (RunningPlan* r : this->children)

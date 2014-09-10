@@ -38,12 +38,12 @@ namespace alica
 //		virtual RunningPlan* getBestSimilarAssignment(RunningPlan* rp, unordered_set<int> robots);
 //		virtual list<RunningPlan*> getPlansForState(RunningPlan* planningParent, list<AbstractPlan*> plans, unordered_set<int> robotIDs);
 		virtual RunningPlan* getBestSimilarAssignment(RunningPlan* rp, shared_ptr<vector<int> > robots);
-		virtual shared_ptr<list<RunningPlan*> > getPlansForState(RunningPlan* planningParent, list<AbstractPlan*> plans, shared_ptr<vector<int> > robotIDs);
+		virtual shared_ptr<list<RunningPlan*> > getPlansForState(RunningPlan* planningParent, list<alica::AbstractPlan*>* plans, shared_ptr<vector<int> > robotIDs);
 		RunningPlan* createRunningPlan(RunningPlan* planningParent, list<Plan*> plans, shared_ptr<vector<int> >  robotIDs, RunningPlan* oldRp, PlanType* relevantPlanType);
 
 	private:
 		ITeamObserver* to;
-		shared_ptr<list<RunningPlan*> > getPlansForStateInternal(RunningPlan* planningParent, list<AbstractPlan*> plans, shared_ptr<vector<int> > robotIDs);
+		shared_ptr<list<RunningPlan*> > getPlansForStateInternal(RunningPlan* planningParent, list<alica::AbstractPlan*>* plans, shared_ptr<vector<int> > robotIDs);
 	};
 
 } /* namespace alica */
