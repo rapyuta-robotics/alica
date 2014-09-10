@@ -32,6 +32,8 @@ namespace alica
 		virtual void sendSyncReady(SyncReady sr) = 0;
 		virtual void sendSyncTalk(SyncTalk st) = 0;
 
+		virtual void tick();
+
 		void onSyncTalkReceived(shared_ptr<SyncTalk> st);
 		void onSyncReadyReceived(shared_ptr<SyncReady> sr);
 		void onAuthorityInfoReceived(shared_ptr<AllocationAuthorityInfo> aai);

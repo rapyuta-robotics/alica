@@ -72,6 +72,7 @@ namespace alica
 		void doStep();
 		void iterationComplete();bool maySendMessages;
 
+
 	protected:
 		supplementary::SystemConfig* sc;
 		Plan* masterPlan;
