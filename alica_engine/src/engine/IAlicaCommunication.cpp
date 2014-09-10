@@ -17,7 +17,6 @@ IAlicaCommunication::IAlicaCommunication(AlicaEngine* ae)
 	this->ae = ae;
 }
 
-
 void alica::IAlicaCommunication::onSyncTalkReceived(shared_ptr<SyncTalk> st)
 {
 	ae->getSyncModul()->onSyncTalk(st);

@@ -15,6 +15,7 @@
 #include "../RunningPlan.h"
 
 #include <memory>
+#include <vector>
 
 using namespace std;
 
@@ -35,12 +36,12 @@ namespace alica
 
 	protected:
 		IAlicaCommunication* authorityPub;
-		list<shared_ptr<AllocationAuthorityInfo>> queue;
+		vector<shared_ptr<AllocationAuthorityInfo>> queue;
 		AlicaEngine* ae;
 		int ownID;
 		mutex mu;
 		void processPlan(RunningPlan* p);
-		bool authorityMatchesPlan(AllocationAuthorityInfo aai, RunningPlan* p);
+		bool authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, RunningPlan* p);
 
 
 	};

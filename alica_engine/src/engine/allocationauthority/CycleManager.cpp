@@ -200,7 +200,7 @@ namespace alica
 		}
 	}
 
-	void alica::CycleManager::handleAuthorityInfo(AllocationAuthorityInfo* aai)
+	void alica::CycleManager::handleAuthorityInfo(shared_ptr<AllocationAuthorityInfo> aai)
 	{
 		if (!enabled)
 		{
@@ -326,7 +326,7 @@ namespace alica
 			if (rp->getActiveState() != nullptr)
 			{
 				auto robotsJoined = rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState());
-				for (RunningPlan* c : *rp->getChildren())
+				for (RunningPlan* c : rp->getChildren())
 				{
 					c->limitToRobots(robotsJoined);
 				}

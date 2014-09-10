@@ -34,7 +34,7 @@ namespace alica
 	{
 	public:
 		Assignment(PartialAssignment* pa);
-		Assignment(Plan* p,AllocationAuthorityInfo* aai);
+		Assignment(Plan* p,shared_ptr<AllocationAuthorityInfo> aai);
 		Assignment(Plan* p);
 		virtual ~Assignment();
 		Plan* getPlan();

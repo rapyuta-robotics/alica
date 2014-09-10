@@ -121,7 +121,7 @@ namespace alica
 		this->epSucMapping = pa->getEpSuccessMapping();
 	}
 
-	Assignment::Assignment(Plan* p, AllocationAuthorityInfo* aai)
+	Assignment::Assignment(Plan* p, shared_ptr<AllocationAuthorityInfo> aai)
 	{
 		this->plan = p;
 		this->max = 1;

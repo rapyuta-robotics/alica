@@ -6,6 +6,12 @@
  */
 
 #include "engine/allocationauthority/AuthorityManager.h"
+#include "engine/allocationauthority/CycleManager.h"
+#include "engine/model/State.h"
+#include "engine/model/AbstractPlan.h"
+#include "engine/model/PlanType.h"
+#include "engine/Assignment.h"
+#include "engine/model/EntryPoint.h"
 
 namespace alica
 {
@@ -79,11 +85,28 @@ namespace alica
 		{
 			return;
 		}
-//			TODO:
-//		if (p->)
-//		{
-//			sendAllocation(p);
-//		}
+		if (p->isBehaviour())
+		{
+			return;
+		}
+		if (p->getCycleManagement()->needsSending())
+		{
+			sendAllocation(p);
+			p->getCycleManagement()->sent();
+		}
+		for (int i = 0; i < this->queue.size(); i++)
+		{
+			if (authorityMatchesPlan(this->queue[i], p))
+			{
+				p->getCycleManagement()->handleAuthorityInfo(this->queue[i]);
+				this->queue.erase(this->queue.begin() + i);
+				i--;
+			}
+		}
+		for (RunningPlan* c : p->getChildren())
+		{
+			processPlan(c);
+		}
 
 	}
 	/**
@@ -91,11 +114,53 @@ namespace alica
 	 */
 	void AuthorityManager::sendAllocation(RunningPlan* p)
 	{
-		//TODO
+		if (!this->ae->isMaySendMessages())
+		{
+			return;
+		}
+		AllocationAuthorityInfo aai = AllocationAuthorityInfo();
+
+		EntryPointRobots it;
+		Assignment* ass = p->getAssignment();
+		//Console.WriteLine("Sending Assignment: {0}",ass);
+		auto eps = ass->getEntryPoints();
+		for (int i = 0; i < eps->size(); i++)
+		{
+			it = EntryPointRobots();
+			it.entrypoint = eps->at(i)->getId();
+			auto robots = ass->getRobotsWorking(eps->at(i));
+			for(int j = 0; j < robots->size(); j++)
+			{
+				it.robots.push_back(robots->at(j));
+			}
+			aai.entryPointRobots.push_back(it);
+		}
+
+		aai.parentState = (p->getParent() == nullptr || p->getParent()->getActiveState() == nullptr ? -1 : p->getParent()->getActiveState()->getId());
+		aai.planId = p->getPlan()->getId();
+		aai.authority = this->ownID;
+		aai.senderID = this->ownID;
+		aai.planType = (p->getPlanType() == nullptr ? -1 : p->getPlanType()->getId());
+
+		this->authorityPub->sendAllocationAuthority(aai);
 	}
-	bool AuthorityManager::authorityMatchesPlan(AllocationAuthorityInfo aai, RunningPlan* p)
+
+	bool AuthorityManager::authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, RunningPlan* p)
 	{
-		//TODO
+		if ((p->getParent() == nullptr && aai->parentState == -1)
+				|| (p->getParent() != nullptr && p->getParent()->getActiveState() != nullptr
+						&& aai->parentState == p->getParent()->getActiveState()->getId()))
+		{
+			if (p->getPlan()->getId() == aai->planId)
+			{
+				return true;
+			}
+			else if (aai->planType != -1 && p->getPlanType() != nullptr && p->getPlanType()->getId() == aai->planType)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

@@ -213,7 +213,7 @@ namespace alica
 		}
 
 		(*ss) << rp->getAssignment()->toHackString();
-		for (RunningPlan* child : *rp->getChildren())
+		for (RunningPlan* child : rp->getChildren())
 		{
 			evaluationAssignmentsToString(ss, child);
 		}
@@ -250,11 +250,11 @@ namespace alica
 			}
 		}
 
-		if (r->getChildren()->size() != 0)
+		if (r->getChildren().size() != 0)
 		{
 			result->push_back("-1"); //start children marker
 
-			for (RunningPlan* r : *r->getChildren())
+			for (RunningPlan* r : r->getChildren())
 			{
 				shared_ptr<list<string> > tmp = createTreeLog(r);
 				for (string s : *tmp)
