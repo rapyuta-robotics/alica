@@ -312,7 +312,7 @@ namespace alica
 		if (r->isBehaviour())
 			return;
 		shared_ptr<vector<int> > robots = r->getAssignment()->getAllRobots();
-		for (RunningPlan* rp : *r->getChildren())
+		for (RunningPlan* rp : r->getChildren())
 		{
 			if (rp->isBehaviour())
 				continue;

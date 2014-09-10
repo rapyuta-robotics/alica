@@ -23,7 +23,7 @@ namespace alica
 	{
 	public:
 		IAlicaCommunication(AlicaEngine* ae);
-		virtual ~IAlicaCommunication();
+		virtual ~IAlicaCommunication(){}
 
 		virtual void sendAllocationAuthority(AllocationAuthorityInfo aai) = 0;
 		virtual void sendBehaviourEngineInfo(BehaviourEngineInfo bi) = 0;

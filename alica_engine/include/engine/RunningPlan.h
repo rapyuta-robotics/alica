@@ -55,8 +55,8 @@ namespace alica
 		bool isBehaviour();
 		void setBehaviour(bool behaviour);
 		bool isAllocationNeeded();
-		list<RunningPlan*>* getChildren();
-		void setChildren(list<RunningPlan*>* children);
+		list<RunningPlan*>& getChildren();
+		void setChildren(list<RunningPlan*> children);
 		AbstractPlan* getPlan();
 		void setPlan(AbstractPlan* plan);
 		shared_ptr<BasicBehaviour> getBasicBehaviour();
@@ -91,7 +91,7 @@ namespace alica
 		void clearFailures();
 		void clearFailedChildren();
 		void addFailure();
-		void addChildren(list<RunningPlan*>* children);
+		void addChildren(list<RunningPlan*>& children);
 		int getFailure();
 		void deactivateChildren();
 		void clearChildren();
@@ -127,7 +127,7 @@ namespace alica
 		bool behaviour;
 		AbstractPlan* plan;
 		shared_ptr<BasicBehaviour> basicBehaviour;
-		list<RunningPlan*>* children;
+		list<RunningPlan*> children;
 		Assignment* assignment;
 		State* activeState;
 		EntryPoint* activeEntryPoint;
