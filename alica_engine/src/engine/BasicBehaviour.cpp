@@ -121,12 +121,12 @@ namespace alica
 		return this->timer->restart();
 	}
 
-	const shared_ptr<RunningPlan>& BasicBehaviour::getRunningPlan() const
+	shared_ptr<RunningPlan> BasicBehaviour::getRunningPlan()
 	{
 		return runningPlan;
 	}
 
-	void BasicBehaviour::setRunningPlan(const shared_ptr<RunningPlan>& runningPlan)
+	void BasicBehaviour::setRunningPlan(shared_ptr<RunningPlan> runningPlan)
 	{
 		this->runningPlan = runningPlan;
 	}

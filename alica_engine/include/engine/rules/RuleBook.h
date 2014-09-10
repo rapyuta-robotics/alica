@@ -7,6 +7,7 @@
 
 #ifndef RULEBOOK_H_
 #define RULEBOOK_H_
+#define RULE_debug
 
 #include "engine/PlanChange.h"
 

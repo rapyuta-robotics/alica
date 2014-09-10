@@ -88,18 +88,15 @@ namespace alica
 
 		do
 		{
-
 			msChange = updateChange(msChange, changeRecord);
 			changeRecord = PlanChange::NoChange;
 			changeRecord = updateChange(changeRecord, synchTransitionRule(r));
 			PlanChange transChange = transitionRule(r);
-
 			while (transChange != PlanChange::NoChange && ++changes < this->maxConsecutiveChanges)
 			{
 				changeRecord = updateChange(changeRecord, transChange);
 				transChange = transitionRule(r);
 			}
-
 			changeRecord = updateChange(changeRecord, transitionRule(r));
 			changeRecord = updateChange(changeRecord, topFailRule(r));
 			changeRecord = updateChange(changeRecord, allocationRule(r));
@@ -153,7 +150,7 @@ namespace alica
 		else
 			curUtil = r->getPlan()->getUtilityFunction()->eval(r, r);
 		double possibleUtil = newr->getAssignment()->getMax();
-#if RULE_debug
+#ifdef RULE_debug
 		cout << "RB: Old U " << curUtil << " | " << " New U:" << possibleUtil << endl;
 		cout << "RB: New Assignment" << newr->getAssignment() << endl;
 		cout << "RB: Old Assignment" << r->getAssignment() << endl;
@@ -167,7 +164,7 @@ namespace alica
 			r->adaptAssignment(newr);
 			if (r->getActiveState() != nullptr && r->getActiveState() != before)
 				r->setAllocationNeeded(true);
-#if RULE_debug
+#ifdef RULE_debug
 			cout << "RB: B4 dynChange: Util is " << curUtil << " | " << " suggested is " << possibleUtil << " | " << " threshold " << r->getPlan()->getUtilityThreshold() << endl;
 			cout << "RB: DynAlloc" <<r->getPlan()->getName() << endl;
 #endif
@@ -215,8 +212,8 @@ namespace alica
 		if ((r->getActiveState() != nullptr && r->getActiveState()->isFailureState()) || !r->getAssignment()->isValid()
 				|| !r->evalRuntimeCondition())
 		{
-#if RULE_debug
-			cout << "RB: PlanAbort" << r.Plan.Name << endl;
+#ifdef RULE_debug
+			cout << "RB: PlanAbort" << r->getPlan()->getName() << endl;
 #endif
 			log->eventOccured("PAbort(" + r->getPlan()->getName() + ")");
 			return PlanChange::FailChange;
@@ -253,8 +250,8 @@ namespace alica
 
 		r->setActiveState(r->getOwnEntryPoint()->getState());
 		r->setAllocationNeeded(true);
-#if RULE_debug
-		cout << "RB: PlanRedo" << r.Plan.Name << endl;
+#ifdef RULE_debug
+		cout << "RB: PlanRedo" << r->getPlan()->getName() << endl;
 #endif
 		log->eventOccured("PRede(" + r->getPlan()->getName() + ")");
 		return PlanChange::InternalChange;
@@ -277,8 +274,8 @@ namespace alica
 		r->getParent()->clearChildren();
 		r->setFailHandlingNeeded(false);
 
-#if RULE_debug
-		cout << "RB: PlanReplace" << r.Plan.Name << endl;
+#ifdef RULE_debug
+		cout << "RB: PlanReplace" << r->getPlan()->getName() << endl;
 #endif
 		log->eventOccured("PReplace(" + r->getPlan()->getName() + ")");
 		return PlanChange::FailChange;
@@ -296,8 +293,8 @@ namespace alica
 			return PlanChange::NoChange;
 		r->getParent()->addFailure();
 
-#if RULE_debug
-		cout << "RB: PlanPropagation" << r.Plan.Name << endl;
+#ifdef RULE_debug
+		cout << "RB: PlanPropagation" << r->getPlan()->getName() << endl;
 #endif
 		log->eventOccured("PProp(" + r->getPlan()->getName() + ")");
 		return PlanChange::FailChange;
@@ -315,26 +312,33 @@ namespace alica
 			return PlanChange::NoChange;
 		}
 		r->setAllocationNeeded(false);
-		vector<int> robots;
+		shared_ptr<vector<int> > robots = make_shared<vector<int> >(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
 		copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
 						r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
-						back_inserter(robots));
-		shared_ptr<list<RunningPlan*> > children = this->ps->getPlansForState(
-				r, r->getActiveState()->getPlans(),
-				make_shared<vector<int> >(robots));
+						back_inserter(*robots));
+//		auto iter = r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin();
+//		for (int i = 0; i < robots->size();i++)
+//		{
+//			robots->at(i) = *iter;
+//			iter++;
+//		}
 
+
+		shared_ptr<list<RunningPlan*> > children = this->ps->getPlansForState(
+				r, &r->getActiveState()->getPlans(),
+				robots);
 		if (children->size() == 0 || children->size() < r->getActiveState()->getPlans().size())
 		{
 			r->addFailure();
-#if RULE_debug
-			cout << "RB: PlanAllocFailed" << r.Plan.Name << endl;
+#ifdef RULE_debug
+			cout << "RB: PlanAllocFailed" << r->getPlan()->getName() << endl;
 #endif
 			return PlanChange::FailChange;
 		}
-
 		r->addChildren(children);
-#if RULE_debug
-		cout << "RB: PlanAlloc" << r.Plan.Name << endl;
+		cout << "RB: after add children" << endl;
+#ifdef RULE_debug
+		cout << "RB: PlanAlloc" <<  r->getPlan()->getName() << endl;
 #endif
 
 		if (children->size() > 0)
@@ -375,8 +379,8 @@ namespace alica
 			r->getAssignment()->setAllToInitialState(move(robots), r->getOwnEntryPoint());
 			r->setActiveState(r->getOwnEntryPoint()->getState());
 			r->clearFailedChildren();
-#if RULE_debug
-			cout << "RB: PlanTopFail" << r.Plan.Name << endl;
+#ifdef RULE_debug
+			cout << "RB: PlanTopFail" << r->getPlan()->getName() << endl;
 #endif
 			log->eventOccured("TopFail");
 			return PlanChange::InternalChange;
@@ -395,7 +399,7 @@ namespace alica
 	{
 		if (r->getActiveState() == nullptr)
 			return PlanChange::NoChange;
-		State* nextState;
+		State* nextState = nullptr;
 
 		for (Transition* t : r->getActiveState()->getOutTransitions())
 		{
@@ -410,8 +414,8 @@ namespace alica
 		}
 		if (nextState == nullptr)
 			return PlanChange::NoChange;
-#if RULE_debug
-		cout << "RB: SynchTransition" << r.Plan.Name << endl;
+#ifdef RULE_debug
+		cout << "RB: SynchTransition" << r->getPlan()->getName() << endl;
 #endif
 		r->moveState(nextState);
 
@@ -436,7 +440,8 @@ namespace alica
 		{
 			return PlanChange::NoChange;
 		}
-		State* nextState;
+
+		State* nextState = nullptr;
 
 		for (Transition* t : r->getActiveState()->getOutTransitions())
 		{
@@ -464,8 +469,8 @@ namespace alica
 		}
 		if (nextState == nullptr)
 			return PlanChange::NoChange;
-#if RULE_debug
-		cout << "RB: SynchTransition" << r.Plan.Name << endl;
+#ifdef RULE_debug
+		cout << "RB: SynchTransition" << r->getPlan()->getName()<< endl;
 #endif
 
 		r->moveState(nextState);
