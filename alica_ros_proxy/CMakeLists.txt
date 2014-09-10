@@ -102,7 +102,7 @@ include_directories(
 
 ## Declare a cpp library
 add_library(alica_ros_proxy
-	src/clock/AlicaROSClock.cpp
+	src/clock/AlicaROSClock.cpp src/communication/AlicaRosCommunication.cpp
 )
 
 ## Declare a cpp executable

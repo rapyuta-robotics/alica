@@ -5,7 +5,10 @@
  *      Author: endy
  */
 
-#include "IAlicaCommunication.h"
+#include "engine/IAlicaCommunication.h"
+#include "engine/syncmodul/SyncModul.h"
+#include "engine/allocationauthority/AuthorityManager.h"
+#include "engine/teamobserver/TeamObserver.h"
 
 using namespace alica;
 
@@ -17,20 +20,20 @@ IAlicaCommunication::IAlicaCommunication(AlicaEngine* ae)
 
 void alica::IAlicaCommunication::onSyncTalkReceived(shared_ptr<SyncTalk> st)
 {
-	ae->syncModul->onSyncTalk(st);
+	ae->getSyncModul()->onSyncTalk(st);
 }
 
 void alica::IAlicaCommunication::onSyncReadyReceived(shared_ptr<SyncReady> sr)
 {
-	ae->syncModul->onSyncReady(sr);
+	ae->getSyncModul()->onSyncReady(sr);
 }
 
 void alica::IAlicaCommunication::onAuthorityInfoReceived(shared_ptr<AllocationAuthorityInfo> aai)
 {
-	ae->auth->handleIncomingAuthorityMessage(aai);
+	ae->getAuth()->handleIncomingAuthorityMessage(aai);
 }
 
 void alica::IAlicaCommunication::onPlanTreeInfoReceived(shared_ptr<PlanTreeInfo> pti)
 {
-	ae->teamObserver->handlePlanTreeInfo(pti);
+	ae->getTeamObserver()->handlePlanTreeInfo(pti);
 }
