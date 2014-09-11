@@ -37,7 +37,7 @@ protected:
 		//TODO extend TestBehaviourCreator
 		alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-		ae->init(bc,"Roleset", "MasterPlan", ".", false);
+		ae->init(bc,"RolesetTA", "MasterPlanTaskAssignment", ".", false);
 	}
 
 	virtual void TearDown()
@@ -56,9 +56,9 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 		robots->push_back(i);
 	}
 	auto planMap = ae->getPlanRepository()->getPlans();
-	auto rp = make_shared<alica::RunningPlan>((*planMap.find(1402488437260)).second);
+	auto rp = make_shared<alica::RunningPlan>((*planMap.find(1407152758497)).second);
 	list<alica::AbstractPlan*>* planList = new list<alica::AbstractPlan*>();
-	planList->push_back((*planMap.find(1402488437260)).second);
+	planList->push_back((*planMap.find(1407152758497)).second);
 	auto plans = ps->getPlansForState(rp, planList, robots);
 }
 
