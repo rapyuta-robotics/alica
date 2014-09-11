@@ -42,7 +42,7 @@ namespace alica
 	{
 	}
 
-	RunningPlan* PlanSelector::getBestSimilarAssignment(RunningPlan* rp)
+	shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp)
 	{
 		PartialAssignment::reset();
 		list<Plan*> newPlanList;
@@ -59,7 +59,7 @@ namespace alica
 		return this->createRunningPlan(rp->getParent(), newPlanList, robots, rp, rp->getPlanType());
 	}
 
-	RunningPlan* PlanSelector::getBestSimilarAssignment(RunningPlan* rp, shared_ptr<vector<int> > robots)
+	shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp, shared_ptr<vector<int> > robots)
 	{
 		PartialAssignment::reset();
 		list<Plan*> newPlanList;
@@ -75,18 +75,19 @@ namespace alica
 		return this->createRunningPlan(rp->getParent(), newPlanList, robots, rp, rp->getPlanType());
 	}
 
-	shared_ptr<list<RunningPlan*> > PlanSelector::getPlansForState(RunningPlan* planningParent,
+	shared_ptr<list<shared_ptr<RunningPlan>> > PlanSelector::getPlansForState(shared_ptr<RunningPlan> planningParent,
 	                                                               list<alica::AbstractPlan*>* plans,
 																	shared_ptr<vector<int> > robotIDs)
 	{
+//		cout << "PS: " << planningParent->toString() << endl;
 		PartialAssignment::reset();
-		shared_ptr<list<RunningPlan*> > ll = this->getPlansForStateInternal(planningParent, plans, robotIDs);
+		shared_ptr<list<shared_ptr<RunningPlan>> > ll = this->getPlansForStateInternal(planningParent, plans, robotIDs);
 		return ll;
 
 	}
 
-	RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, list<Plan*> plans,
-													shared_ptr<vector<int> > robotIDs, RunningPlan* oldRp,
+	shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> planningParent, list<Plan*> plans,
+													shared_ptr<vector<int> > robotIDs, shared_ptr<RunningPlan> oldRp,
 													PlanType* relevantPlanType)
 	{
 		list<Plan*> newPlanList = list<Plan*>();
@@ -119,15 +120,15 @@ namespace alica
 		}
 		TaskAssignment* ta;
 		Assignment* oldAss = nullptr;
-		RunningPlan* rp;
+		shared_ptr<RunningPlan> rp;
 		if (oldRp == nullptr)
 		{
-			rp = new RunningPlan(relevantPlanType);
+			rp = make_shared<RunningPlan>(relevantPlanType);
 			ta = new TaskAssignment(newPlanList, robotIDs, true);
 		}
 		else
 		{
-			rp = new RunningPlan(oldRp->getPlanType());
+			rp = make_shared<RunningPlan>(oldRp->getPlanType());
 			ta = new TaskAssignment(newPlanList, robotIDs, false);
 			oldAss = oldRp->getAssignment();
 		}
@@ -138,7 +139,7 @@ namespace alica
 		EntryPoint* ep = nullptr;
 		RobotProperties* ownRobProb = to->getOwnRobotProperties();
 		rp->setParent(planningParent);
-		shared_ptr<list<RunningPlan*> > rpChildren;
+		shared_ptr<list<shared_ptr<RunningPlan>>> rpChildren;
 		do
 		{
 			rp->setAssignment(ta->getNextBestAssignment(oldAss));
@@ -199,18 +200,19 @@ namespace alica
 		return rp;
 	}
 
-	shared_ptr<list<RunningPlan*> > PlanSelector::getPlansForStateInternal(RunningPlan* planningParent,
+	shared_ptr<list<shared_ptr<RunningPlan>> > PlanSelector::getPlansForStateInternal(shared_ptr<RunningPlan> planningParent,
 	                                                                      list<alica::AbstractPlan*>* plans,
 																			shared_ptr<vector<int> > robotIDs)
 	{
-		shared_ptr<list<RunningPlan*> > rps = make_shared<list<RunningPlan*> >();
+		shared_ptr<list<shared_ptr<RunningPlan>> > rps = make_shared<list<shared_ptr<RunningPlan>> >();
 #ifdef PSDEBUG
+		//cout << "PS: " << planningParent->toString() << endl;
 		cout << "<######PS: GetPlansForState: Parent:"
 						<< (planningParent != nullptr ? planningParent->getPlan()->getName() : "null") << " plan count: "
 						<< plans->size() << " robot count: "
 						<< robotIDs->size() << endl;
 #endif
-		RunningPlan* rp;
+		shared_ptr<RunningPlan> rp;
 		list<Plan*> planList;
 		BehaviourConfiguration* bc;
 		Plan* p;
@@ -221,7 +223,7 @@ namespace alica
 			bc = dynamic_cast<BehaviourConfiguration*>(ap);
 			if (bc != nullptr)
 			{
-				rp = new RunningPlan(bc);
+				rp = make_shared<RunningPlan>(bc);
 				rp->setPlan(bc);
 				rps->push_back(rp);
 				rp->setParent(planningParent);

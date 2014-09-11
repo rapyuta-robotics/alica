@@ -55,8 +55,8 @@ namespace alica
 		bool isBehaviour();
 		void setBehaviour(bool behaviour);
 		bool isAllocationNeeded();
-		list<RunningPlan*>& getChildren();
-		void setChildren(list<RunningPlan*> children);
+		list<shared_ptr<RunningPlan>>& getChildren();
+		void setChildren(list<shared_ptr<RunningPlan>> children);
 		AbstractPlan* getPlan();
 		void setPlan(AbstractPlan* plan);
 		shared_ptr<BasicBehaviour> getBasicBehaviour();
@@ -77,8 +77,8 @@ namespace alica
 		CycleManager* getCycleManager() const;
 		ConstraintStore* getConstraintStore() const;
 		EntryPoint* getOwnEntryPoint() const;
-		void setParent(RunningPlan* s);
-		RunningPlan* getParent() const;
+		void setParent(weak_ptr<RunningPlan> s);
+		weak_ptr<RunningPlan> getParent() const;
 		bool getFailHandlingNeeded() const;
 		PlanStatus getStatus() const;
 		PlanType* getPlanType();
@@ -86,16 +86,16 @@ namespace alica
 		bool evalRuntimeCondition();
 		State* getActiveState();
 		void setActiveState(State* activeState);
-		void addChildren(shared_ptr<list<RunningPlan*> > runningPlans);
+		void addChildren(shared_ptr<list<shared_ptr<RunningPlan>>> runningPlans);
 		void moveState(State* nextState);
 		void clearFailures();
 		void clearFailedChildren();
 		void addFailure();
-		void addChildren(list<RunningPlan*>& children);
+		void addChildren(list<shared_ptr<RunningPlan>>& children);
 		int getFailure();
 		void deactivateChildren();
 		void clearChildren();
-		void adaptAssignment(RunningPlan* r);
+		void adaptAssignment(shared_ptr<RunningPlan> r);
 		void setFailedChild(AbstractPlan* child);
 		unique_ptr<list<int> > getRobotsAvail();
 		void setRobotAvail(int robot);
@@ -123,11 +123,11 @@ namespace alica
 		void setConstraintStore(ConstraintStore* constraintStore);
 
 	protected:
-		RunningPlan* parent;
+		weak_ptr<RunningPlan> parent;
 		bool behaviour;
 		AbstractPlan* plan;
 		shared_ptr<BasicBehaviour> basicBehaviour;
-		list<RunningPlan*> children;
+		list<shared_ptr<RunningPlan> > children;
 		Assignment* assignment;
 		State* activeState;
 		EntryPoint* activeEntryPoint;

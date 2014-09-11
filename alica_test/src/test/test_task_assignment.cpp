@@ -56,7 +56,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 		robots->push_back(i);
 	}
 	auto planMap = ae->getPlanRepository()->getPlans();
-	auto rp = new alica::RunningPlan((*planMap.find(1402488437260)).second);
+	auto rp = make_shared<alica::RunningPlan>((*planMap.find(1402488437260)).second);
 	list<alica::AbstractPlan*>* planList = new list<alica::AbstractPlan*>();
 	planList->push_back((*planMap.find(1402488437260)).second);
 	auto plans = ps->getPlansForState(rp, planList, robots);

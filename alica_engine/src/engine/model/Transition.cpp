@@ -9,6 +9,7 @@
 #include "engine/model/PreCondition.h"
 #include "engine/model/PostCondition.h"
 #include "engine/model/Plan.h"
+#include "engine/RunningPlan.h"
 
 namespace alica
 {
@@ -58,7 +59,7 @@ namespace alica
 	{
 		return syncTransition;
 	}
-	bool Transition::evalCondition(RunningPlan* r)
+	bool Transition::evalCondition(shared_ptr<RunningPlan> r)
 	{
 		//TODO
 		return false;

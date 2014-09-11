@@ -39,9 +39,9 @@ namespace alica
 
 		void eventOccured(string event);
 		void itertionStarts();
-		void iterationEnds(RunningPlan* p);
+		void iterationEnds(shared_ptr<RunningPlan> p);
 		void close();
-		void visit(RunningPlan* r);
+		void visit(shared_ptr<RunningPlan> r);
 
 
 	protected:
@@ -58,8 +58,8 @@ namespace alica
 		bool inIteration;
 		shared_ptr<list<string> > createHumanReadablePlanTree(list<long> list);
 		EntryPoint* entryPointOfState(State* s);
-		void evaluationAssignmentsToString(stringstream* ss, RunningPlan* rp);
-		shared_ptr<list<string> > createTreeLog(RunningPlan* r);
+		void evaluationAssignmentsToString(stringstream* ss, shared_ptr<RunningPlan> rp);
+		shared_ptr<list<string> > createTreeLog(shared_ptr<RunningPlan> r);
 
 
 	};

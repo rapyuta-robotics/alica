@@ -50,7 +50,7 @@ namespace alica
 		int teamSize();
 		unique_ptr<map<int, shared_ptr<SimplePlanTree> > > getTeamPlanTrees();
 		void init();
-		void tick(RunningPlan* root);
+		void tick(shared_ptr<RunningPlan> root);
 		void doBroadCast(list<long> msg);
 		int successesInPlan(Plan* plan);
 		SuccessCollection* getSuccessCollection(Plan* plan);
@@ -79,7 +79,7 @@ namespace alica
 		Logger* log;
 		unordered_set<int> ignoredRobots;
 		AlicaEngine* ae;
-		void cleanOwnSuccessMarks(RunningPlan* root);
+		void cleanOwnSuccessMarks(shared_ptr<RunningPlan> root);
 		shared_ptr<SimplePlanTree> sptFromMessage(int robotId, list<long> ids);
 
 	};

@@ -170,7 +170,7 @@ namespace alica
 			//lock for fpEvents
 			{
 				lock_guard<mutex> lock(lomutex);
-				queue<RunningPlan*> empty;
+				queue<shared_ptr<RunningPlan>> empty;
 				swap(this->fpEvents, empty);
 			}
 
@@ -250,7 +250,7 @@ namespace alica
 					lock_guard<mutex> lock(lomutex);
 					while (this->running && availTime > 1 && fpEvents.size() > 0)
 					{
-						RunningPlan* rp = fpEvents.front();
+						shared_ptr<RunningPlan> rp = fpEvents.front();
 						fpEvents.pop();
 
 						if (rp->isActive())
@@ -263,7 +263,7 @@ namespace alica
 								{
 									break;
 								}
-								rp = rp->getParent();
+								rp = rp->getParent().lock();
 								first = false;
 							}
 						}
@@ -305,14 +305,14 @@ namespace alica
 	PlanBase::~PlanBase()
 	{
 	}
-	void PlanBase::checkPlanBase(RunningPlan* r)
+	void PlanBase::checkPlanBase(shared_ptr<RunningPlan> r)
 	{
 		if (r == nullptr)
 			return;
 		if (r->isBehaviour())
 			return;
 		shared_ptr<vector<int> > robots = r->getAssignment()->getAllRobots();
-		for (RunningPlan* rp : r->getChildren())
+		for (shared_ptr<RunningPlan> rp : r->getChildren())
 		{
 			if (rp->isBehaviour())
 				continue;
@@ -330,7 +330,7 @@ namespace alica
 		}
 
 	}
-	void PlanBase::addFastPathEvent(RunningPlan* p)
+	void PlanBase::addFastPathEvent(shared_ptr<RunningPlan> p)
 	{
 		{
 			lock_guard<mutex> lock(lomutex);
@@ -360,12 +360,12 @@ namespace alica
 		}
 		return this->stepModeCV;
 	}
-	const RunningPlan* PlanBase::getRootNode() const
+	const shared_ptr<RunningPlan> PlanBase::getRootNode() const
 	{
 		return rootNode;
 	}
 
-	void PlanBase::setRootNode(RunningPlan* rootNode)
+	void PlanBase::setRootNode(shared_ptr<RunningPlan> rootNode)
 	{
 		this->rootNode = rootNode;
 	}
