@@ -72,14 +72,14 @@ namespace alica
 	/**
 	 * Cyclic tick function, called by the plan base every iteration
 	 */
-	void AuthorityManager::tick(RunningPlan* p)
+	void AuthorityManager::tick(shared_ptr<RunningPlan> p)
 	{
 		lock_guard<mutex> lock(mu);
 		processPlan(p);
 		this->queue.clear();
 	}
 
-	void AuthorityManager::processPlan(RunningPlan* p)
+	void AuthorityManager::processPlan(shared_ptr<RunningPlan> p)
 	{
 		if (p == nullptr || p->isBehaviour())
 		{
@@ -103,7 +103,7 @@ namespace alica
 				i--;
 			}
 		}
-		for (RunningPlan* c : p->getChildren())
+		for (shared_ptr<RunningPlan> c : p->getChildren())
 		{
 			processPlan(c);
 		}
@@ -112,7 +112,7 @@ namespace alica
 	/**
 	 * Sends an AllocationAuthorityInfo message containing the assignment of p
 	 */
-	void AuthorityManager::sendAllocation(RunningPlan* p)
+	void AuthorityManager::sendAllocation(shared_ptr<RunningPlan> p)
 	{
 		if (!this->ae->isMaySendMessages())
 		{
@@ -136,7 +136,8 @@ namespace alica
 			aai.entryPointRobots.push_back(it);
 		}
 
-		aai.parentState = (p->getParent() == nullptr || p->getParent()->getActiveState() == nullptr ? -1 : p->getParent()->getActiveState()->getId());
+		auto temp = p->getParent().lock()->getActiveState();
+		aai.parentState = (p->getParent().expired() || temp == nullptr ? -1 : temp->getId());
 		aai.planId = p->getPlan()->getId();
 		aai.authority = this->ownID;
 		aai.senderID = this->ownID;
@@ -145,11 +146,12 @@ namespace alica
 		this->authorityPub->sendAllocationAuthority(aai);
 	}
 
-	bool AuthorityManager::authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, RunningPlan* p)
+	bool AuthorityManager::authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p)
 	{
-		if ((p->getParent() == nullptr && aai->parentState == -1)
-				|| (p->getParent() != nullptr && p->getParent()->getActiveState() != nullptr
-						&& aai->parentState == p->getParent()->getActiveState()->getId()))
+		auto temp = p->getParent().lock()->getActiveState();
+		if ((p->getParent().expired() && aai->parentState == -1)
+				|| (!p->getParent().expired() && temp != nullptr
+						&& aai->parentState == temp->getId()))
 		{
 			if (p->getPlan()->getId() == aai->planId)
 			{

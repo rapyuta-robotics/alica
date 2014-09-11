@@ -18,7 +18,7 @@ namespace alica
 	{
 	public:
 		virtual ~IPlanTreeVisitor() {}
-		virtual void visit(RunningPlan* r) = 0;
+		virtual void visit(shared_ptr<RunningPlan> r) = 0;
 	};
 
 } /* namespace alica */

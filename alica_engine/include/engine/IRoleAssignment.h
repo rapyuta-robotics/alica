@@ -19,12 +19,14 @@ namespace alica
 	class IRoleAssignment
 	{
 	public:
-		virtual ~IRoleAssignment() {}
+		virtual ~IRoleAssignment()
+		{
+		}
 		virtual void init() = 0;
 		virtual void tick() = 0;
 		virtual Role* getRole(int robotID) = 0;
 		virtual void setCommunication(IAlicaCommunication* communication) = 0;
-		const Role* getOwnRole()
+		Role* getOwnRole()
 		{
 			return ownRole;
 		}
@@ -33,8 +35,8 @@ namespace alica
 			return robotRoleMapping;
 		}
 
-	private:
-		const Role* ownRole;
+	protected:
+		Role* ownRole;
 		map<int, Role*> robotRoleMapping;
 
 	};

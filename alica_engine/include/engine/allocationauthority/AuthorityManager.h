@@ -31,8 +31,8 @@ namespace alica
 		void init();
 		void close();
 		void handleIncomingAuthorityMessage(shared_ptr<AllocationAuthorityInfo> aai);
-		void tick(RunningPlan* p);
-		void sendAllocation(RunningPlan* p);
+		void tick(shared_ptr<RunningPlan> p);
+		void sendAllocation(shared_ptr<RunningPlan> p);
 
 	protected:
 		IAlicaCommunication* authorityPub;
@@ -40,8 +40,8 @@ namespace alica
 		AlicaEngine* ae;
 		int ownID;
 		mutex mu;
-		void processPlan(RunningPlan* p);
-		bool authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, RunningPlan* p);
+		void processPlan(shared_ptr<RunningPlan> p);
+		bool authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p);
 
 
 	};

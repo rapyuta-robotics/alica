@@ -23,7 +23,7 @@ namespace alica
 	{
 		this->endTime = 0;
 		this->itCount = 0;
-		this->sBuild = 0;
+		this->sBuild = new stringstream;
 		this->startTime = 0;
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		this->active = (*sc)["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
@@ -94,7 +94,7 @@ namespace alica
 		this->startTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
 	}
 
-	void Logger::iterationEnds(RunningPlan* p)
+	void Logger::iterationEnds(shared_ptr<RunningPlan> p)
 	{
 		if (!this->active)
 		{
@@ -112,6 +112,7 @@ namespace alica
 		this->recievedEvent = false;
 		shared_ptr<list<string> > ownTree = createTreeLog(p);
 
+		//TODO sbuild = nullptr
 		(*this->sBuild) << "START:\t";
 		(*this->sBuild) << to_string((this->startTime / 1000000UL)) << endl;
 		(*this->sBuild) << "AVG-RT:\t";
@@ -160,7 +161,7 @@ namespace alica
 		}
 	}
 
-	void Logger::visit(RunningPlan* r)
+	void Logger::visit(shared_ptr<RunningPlan> r)
 	{
 	}
 
@@ -205,7 +206,7 @@ namespace alica
 		return nullptr;
 	}
 
-	void Logger::evaluationAssignmentsToString(stringstream* ss, RunningPlan* rp)
+	void Logger::evaluationAssignmentsToString(stringstream* ss, shared_ptr<RunningPlan> rp)
 	{
 		if (rp->isBehaviour())
 		{
@@ -213,13 +214,13 @@ namespace alica
 		}
 
 		(*ss) << rp->getAssignment()->toHackString();
-		for (RunningPlan* child : rp->getChildren())
+		for (shared_ptr<RunningPlan> child : rp->getChildren())
 		{
 			evaluationAssignmentsToString(ss, child);
 		}
 	}
 
-	shared_ptr<list<string> > Logger::createTreeLog(RunningPlan* r)
+	shared_ptr<list<string> > Logger::createTreeLog(shared_ptr<RunningPlan> r)
 	{
 		shared_ptr<list<string> > result = make_shared<list<string> >(list<string>());
 
@@ -254,9 +255,9 @@ namespace alica
 		{
 			result->push_back("-1"); //start children marker
 
-			for (RunningPlan* r : r->getChildren())
+			for (shared_ptr<RunningPlan> rp : r->getChildren())
 			{
-				shared_ptr<list<string> > tmp = createTreeLog(r);
+				shared_ptr<list<string> > tmp = createTreeLog(rp);
 				for (string s : *tmp)
 				{
 					result->push_back(s);

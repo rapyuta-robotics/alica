@@ -232,7 +232,7 @@ namespace alica
 		return move(ret);
 	}
 
-	void TeamObserver::tick(RunningPlan* root)
+	void TeamObserver::tick(shared_ptr<RunningPlan> root)
 	{
 		//TODO ICommunication interface
 		unsigned long time = AlicaEngine::getInstance()->getIAlicaClock()->now();
@@ -326,22 +326,22 @@ namespace alica
 #endif
 	}
 
-	void TeamObserver::cleanOwnSuccessMarks(RunningPlan* root)
+	void TeamObserver::cleanOwnSuccessMarks(shared_ptr<RunningPlan> root)
 	{
 		unique_ptr<unordered_set<AbstractPlan*> > presentPlans = unique_ptr<unordered_set<AbstractPlan*> >(
 				new unordered_set<AbstractPlan*>);
 		if (root != nullptr)
 		{
-			list<RunningPlan*>* q = new list<RunningPlan*>();
+			list<shared_ptr<RunningPlan>>* q = new list<shared_ptr<RunningPlan>>();
 			q->push_front(root);
 			while (q->size() > 0)
 			{
-				RunningPlan* p = q->front();
+				shared_ptr<RunningPlan> p = q->front();
 				q->pop_front();
 				if (!p->isBehaviour())
 				{
 					presentPlans->insert(p->getPlan());
-					for (RunningPlan* c : p->getChildren())
+					for (shared_ptr<RunningPlan> c : p->getChildren())
 					{
 						q->push_back(c);
 					}

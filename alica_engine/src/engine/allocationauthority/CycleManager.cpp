@@ -249,7 +249,7 @@ namespace alica
 		return this->state == CycleState::overriding;
 	}
 
-	bool CycleManager::setAssignment(RunningPlan* r)
+	bool CycleManager::setAssignment(shared_ptr<RunningPlan> r)
 	{
 #ifdef CM_DEBUG
 		cout << "Setting new Assignment " << rp->getPlan()->getName() << "!" << endl;
@@ -326,7 +326,7 @@ namespace alica
 			if (rp->getActiveState() != nullptr)
 			{
 				auto robotsJoined = rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState());
-				for (RunningPlan* c : rp->getChildren())
+				for (shared_ptr<RunningPlan> c : rp->getChildren())
 				{
 					c->limitToRobots(robotsJoined);
 				}

@@ -59,7 +59,7 @@ namespace alica
 		return plan;
 	}
 
-	double UtilityFunction::eval(RunningPlan* newRp, RunningPlan* oldRp)
+	double UtilityFunction::eval(shared_ptr<RunningPlan> newRp, shared_ptr<RunningPlan> oldRp)
 	{
 		if (!newRp->getAssignment()->isValid())
 		{

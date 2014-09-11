@@ -40,7 +40,6 @@ namespace alica
 	{
 		this->planType = nullptr;
 		this->plan = nullptr;
-		this->parent = nullptr;
 		this->bp = nullptr;
 		this->activeState = nullptr;
 		this->activeEntryPoint = nullptr;
@@ -58,7 +57,6 @@ namespace alica
 		this->active = false;
 		this->allocationNeeded = false;
 		this->failHandlingNeeded = false;
-		this->children = list<RunningPlan*>();
 		this->constraintStore = new ConstraintStore(this);
 		this->cycleManagement = new CycleManager(this);
 		this->robotsAvail = unique_ptr<list<int> >(new list<int>);
@@ -105,11 +103,11 @@ namespace alica
 	{
 		return this->failHandlingNeeded;
 	}
-	void RunningPlan::setParent(RunningPlan* s)
+	void RunningPlan::setParent(weak_ptr<RunningPlan> s)
 	{
 		this->parent = s;
 	}
-	RunningPlan* RunningPlan::getParent() const
+	weak_ptr<RunningPlan> RunningPlan::getParent() const
 	{
 		return this->parent;
 	}
@@ -123,16 +121,18 @@ namespace alica
 	{
 
 		this->cycleManagement->update();
-		PlanChange myChange = rules->visit(this);
+		//TODO
+		PlanChange myChange = rules->visit(shared_from_this());
 
 		PlanChange childChange = PlanChange::NoChange;
-		for (RunningPlan* rp : this->children)
+		for (shared_ptr<RunningPlan> rp : this->children)
 		{
 			childChange = rules->updateChange(childChange, rp->tick(rules));
 		}
 		if (childChange != PlanChange::NoChange && childChange != PlanChange::InternalChange)
 		{
-			myChange = rules->updateChange(myChange, rules->visit(this));
+			//TODO
+			myChange = rules->updateChange(myChange, rules->visit(shared_from_this()));
 		}
 
 		return myChange;
@@ -195,11 +195,11 @@ namespace alica
 		return this->activeState;
 	}
 
-	void RunningPlan::addChildren(shared_ptr<list<RunningPlan*> > runningPlans)
+	void RunningPlan::addChildren(shared_ptr<list<shared_ptr<RunningPlan>>> runningPlans)
 	{
-		for (RunningPlan* r : (*runningPlans))
+		for (shared_ptr<RunningPlan> r : (*runningPlans))
 		{
-			r->setParent(this);
+			r->setParent(shared_from_this());
 			this->children.push_back(r);
 			int f = 0;
 			auto iter = this->failedSubPlans.find(r->plan);
@@ -268,13 +268,12 @@ namespace alica
 		this->behaviour = behaviour;
 	}
 
-	list<RunningPlan*>& RunningPlan::getChildren()
+	list<shared_ptr<RunningPlan>>& RunningPlan::getChildren()
 	{
-		cout << "Size of children list: " << this->children.size() << endl;
 		return this->children;
 	}
 
-	void RunningPlan::setChildren(list<RunningPlan*> children)
+	void RunningPlan::setChildren(list<shared_ptr<RunningPlan>> children)
 	{
 		this->children = children;
 	}
@@ -306,7 +305,7 @@ namespace alica
 
 	void RunningPlan::printRecursive()
 	{
-		for (RunningPlan* c : this->children)
+		for (shared_ptr<RunningPlan> c : this->children)
 		{
 			c->printRecursive();
 		}
@@ -427,11 +426,11 @@ namespace alica
 		this->failHandlingNeeded = true;
 	}
 
-	void RunningPlan::addChildren(list<RunningPlan*>& children)
+	void RunningPlan::addChildren(list<shared_ptr<RunningPlan>>& children)
 	{
-		for (RunningPlan* r : children)
+		for (shared_ptr<RunningPlan> r : children)
 		{
-			r->setParent(this);
+			r->setParent(shared_from_this());
 			this->children.push_back(r);
 			int f = 0;
 			auto iter = this->failedSubPlans.find(r->getPlan());
@@ -453,7 +452,7 @@ namespace alica
 
 	void RunningPlan::deactivateChildren()
 	{
-		for (RunningPlan* r : this->children)
+		for (shared_ptr<RunningPlan> r : this->children)
 		{
 			r->deactivate();
 		}
@@ -464,7 +463,7 @@ namespace alica
 		this->children.clear();
 	}
 
-	void RunningPlan::adaptAssignment(RunningPlan* r)
+	void RunningPlan::adaptAssignment(shared_ptr<RunningPlan> r)
 	{
 		State* newState = r->getAssignment()->getRobotStateMapping()->getState(this->ownId);
 		r->getAssignment()->getRobotStateMapping()->reconsiderOldAssignment(this->assignment, r->getAssignment());
@@ -482,7 +481,7 @@ namespace alica
 		else
 		{
 			auto robotsJoined = r->getAssignment()->getRobotStateMapping()->getRobotsInState(newState);
-			for (RunningPlan* r : this->children)
+			for (shared_ptr<RunningPlan> r : this->children)
 			{
 				r->limitToRobots(robotsJoined);
 			}
@@ -567,7 +566,8 @@ namespace alica
 
 	void RunningPlan::accept(IPlanTreeVisitor* vis)
 	{
-		vis->visit(this);
+		//TODO
+		vis->visit(shared_from_this());
 		for (int i = 0; i < this->children.size(); i++)
 		{
 			auto iter = this->children.begin();
@@ -684,7 +684,7 @@ namespace alica
 			cout << "RP: after start" << endl;
 		}
 		this->attachPlanConstraints();
-		for (RunningPlan* r : this->children)
+		for (shared_ptr<RunningPlan> r : this->children)
 		{
 			r->activate();
 		}
@@ -716,7 +716,7 @@ namespace alica
 		}
 		if (recurse)
 		{
-			for (RunningPlan* c : this->children)
+			for (shared_ptr<RunningPlan> c : this->children)
 			{
 				c->limitToRobots(robots);
 			}
@@ -895,7 +895,7 @@ namespace alica
 			}
 		}
 //Give Plans to children
-		for (RunningPlan* r : this->children)
+		for (shared_ptr<RunningPlan> r : this->children)
 		{
 			if (r->isBehaviour())
 			{
@@ -944,7 +944,7 @@ namespace alica
 		if (this->children.size() > 0)
 		{
 			message.push_back(-1);
-			for (RunningPlan* r : this->children)
+			for (shared_ptr<RunningPlan> r : this->children)
 			{
 				r->ToMessage(message, deepestNode, depth, curDepth + 1);
 			}
@@ -990,7 +990,7 @@ namespace alica
 		if (this->children.size() > 0)
 		{
 			ss << " ( ";
-			for (RunningPlan* r : this->children)
+			for (shared_ptr<RunningPlan> r : this->children)
 			{
 				if (r->plan == nullptr)
 				{

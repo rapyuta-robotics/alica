@@ -31,7 +31,7 @@ namespace alica
 		virtual ~ITeamObserver() {}
 		virtual void init() = 0;
 		virtual void close() = 0;
-		virtual void tick(RunningPlan* root) = 0;
+		virtual void tick(shared_ptr<RunningPlan> root) = 0;
 		virtual unique_ptr<list<RobotEngineData*> > getAvailableRobots() = 0;
 		virtual unique_ptr<list<RobotProperties*> > getAvailableRobotProperties() = 0;
 		virtual unique_ptr<list<int> > getAvailableRobotIds() = 0;

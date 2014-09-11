@@ -40,11 +40,6 @@ namespace alica
 	{
 	}
 
-	Role* RoleAssignment::getOwnRole()
-	{
-		return ownRole;
-	}
-
 	void RoleAssignment::setOwnRole(Role* ownRole)
 	{
 		if (this->ownRole != ownRole)

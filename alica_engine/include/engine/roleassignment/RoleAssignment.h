@@ -37,7 +37,6 @@ namespace alica
 		void init();
 		Role* getRole(int robotId);
 		void tick();
-		Role* getOwnRole();
 		void setOwnRole(Role* ownRole);
 		map<int, Role*>& getRobotRoleMapping();
 		void setCommunication(IAlicaCommunication* communication);
@@ -49,7 +48,6 @@ namespace alica
 		vector<RobotRoleUtility*> sortedRobots;
 		map<long, Role*> roles;
 		unique_ptr<list<RobotProperties*> > availableRobots;
-		Role* ownRole;
 		RobotProperties* ownRobotProperties;
 		ITeamObserver* to;
 		Publisher* rolePub;
