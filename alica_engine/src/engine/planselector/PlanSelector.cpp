@@ -139,7 +139,7 @@ namespace alica
 		EntryPoint* ep = nullptr;
 		RobotProperties* ownRobProb = to->getOwnRobotProperties();
 		rp->setParent(planningParent);
-		shared_ptr<list<shared_ptr<RunningPlan>>> rpChildren;
+		shared_ptr<list<shared_ptr<RunningPlan>>> rpChildren = nullptr;
 		do
 		{
 			rp->setAssignment(ta->getNextBestAssignment(oldAss));
@@ -189,14 +189,17 @@ namespace alica
 #endif
 					break;
 			}
-		} while (rpChildren->size() == 0); // c# rpChildren == null
-		if(rpChildren->size() == 0) // c# rpChildren == null
+		} while (rpChildren == nullptr);
+		if(rpChildren == nullptr && rpChildren->size() != 0) // c# rpChildren != null
 		{
 #ifdef PSDEBUG
 				cout << "PS: Set child -> father reference" << endl;
 #endif
 				rp->addChildren(rpChildren);
 		}
+#ifdef PSDEBUG
+		cout << "PS: Created RunningPlan: \n" << rp->toString() << endl;
+#endif
 		return rp;
 	}
 
@@ -210,7 +213,7 @@ namespace alica
 		cout << "<######PS: GetPlansForState: Parent:"
 						<< (planningParent != nullptr ? planningParent->getPlan()->getName() : "null") << " plan count: "
 						<< plans->size() << " robot count: "
-						<< robotIDs->size() << endl;
+						<< robotIDs->size() << " ######>" << endl;
 #endif
 		shared_ptr<RunningPlan> rp;
 		list<Plan*> planList;

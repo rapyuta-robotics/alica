@@ -17,7 +17,7 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Task.h"
 
-#define PSDEBUG
+//#define PSDEBUG
 
 namespace alica
 {
@@ -125,7 +125,6 @@ namespace alica
 		PartialAssignment* goal = nullptr;
 		while (this->fringe.size() > 0 && goal == nullptr)
 		{
-			cout << "TA: fringe size " << this->fringe.size() << endl;
 			curPa = this->fringe.at(0);
 			this->fringe.erase(this->fringe.begin());
 #ifdef PSDEBUG
@@ -147,7 +146,6 @@ namespace alica
 			cout << "--->" << endl;
 #endif
 			auto newPas = curPa->expand();
-			cout << "TA: newPas size " << newPas->size() << endl;
 #ifdef EXPANSIONEVAL
 			expansionCount++;
 #endif

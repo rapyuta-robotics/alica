@@ -132,9 +132,10 @@ namespace alica
 		this->availableRobots = AlicaEngine::getInstance()->getTeamObserver()->getAvailableRobotProperties();
 
 		cout << "RA: Available robots: " << this->availableRobots->size() << endl;
+		cout << "RA: Robot Ids: ";
 		for (RobotProperties* aRobot : (*this->availableRobots))
 		{
-			cout << aRobot->getId() << " " << endl;
+			cout << aRobot->getId() << " ";
 		}
 		cout << endl;
 		double dutility = 0;

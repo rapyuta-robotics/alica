@@ -7,7 +7,7 @@
 
 #ifndef UTILITYFUNCTION_H_
 #define UTILITYFUNCTION_H_
-#define UFDEBUG
+//#define UFDEBUG
 
 using namespace std;
 
