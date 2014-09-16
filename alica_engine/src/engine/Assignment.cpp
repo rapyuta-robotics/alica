@@ -39,7 +39,6 @@ namespace alica
 			l.push_back(pair.second);
 		}
 		l.sort(EntryPoint::compareTo);
-		cout << "Ass: ep size " << l.size() << endl;
 		auto iter = l.begin();
 		advance(iter, l.size());
 		copy(l.begin(), iter, this->epRobotsMapping->getEntryPoints()->begin());
@@ -113,7 +112,6 @@ namespace alica
 		{
 			robots->at(i) = assCol->getRobots()->at(i);
 		}
-		cout << "Ass: robots " << robots->size() << endl;
 		shared_ptr<vector<EntryPoint*> > newEps = make_shared<vector<EntryPoint*> >(robots->size());
 		copy(assCol->getEntryPoints()->begin(), assCol->getEntryPoints()->begin() + robots->size(), newEps->begin());
 		this->epRobotsMapping = new AssignmentCollection(newEps, robots);

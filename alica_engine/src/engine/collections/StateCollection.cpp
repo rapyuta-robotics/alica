@@ -50,7 +50,6 @@ namespace alica
 
 	StateCollection::StateCollection(AssignmentCollection* ac)
 	{
-		cout << "SC: ep size " << ac->getEntryPoints()->size() << endl;
 		for(int i = 0;i < ac->getCount(); i ++)
 		{
 			State* initialState = ac->getEntryPoints()->at(i)->getState();
