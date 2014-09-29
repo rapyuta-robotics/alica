@@ -49,16 +49,19 @@ namespace alica
 		Plan* getPlan();
 		map<TaskRoleStruct*, double>& getPriorityMartix();
 
-		const double DIFFERENCETHRESHOLD = 0.0001;
+		const double DIFFERENCETHRESHOLD = 0.0001; // Max difference for the same result
 	protected:
 		Plan* plan;
 		string name = "DefaultUtilityFunction";
+		// For default priority based utility summand (which is integrated in every UF)
 		map<TaskRoleStruct*, double > priorityMartix;
 		map<long, double> roleHighestPriorityMap;
+		// For default similarity based utility summand (which is integrated in every UF)
 		double priorityWeight;
 		double similarityWeight;
 		AlicaEngine* bpe;
 		IRoleAssignment* ra;
+		// List of normal utility summands
 		list<USummand*> utilSummands;
 		TaskRoleStruct* lookupStruct;
 		UtilityInterval* priResult;

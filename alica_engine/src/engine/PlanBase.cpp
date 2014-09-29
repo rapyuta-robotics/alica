@@ -26,6 +26,10 @@
 
 namespace alica
 {
+	/**
+	 * Constructs the PlanBase given a top-level plan to execute
+	 * @param masterplan A Plan
+	 */
 	PlanBase::PlanBase(Plan* masterPlan)
 	{
 		this->mainThread = nullptr;
@@ -117,9 +121,9 @@ namespace alica
 		cout << "PLANBASE STARTET " << endl;
 		while (this->running)
 		{
-			cout << "RUNNING" << endl;
+			cout << "PB: RUNNING" << endl;
 			alicaTime beginTime = alicaClock->now();
-			cout << "BEGIN TIME is: " << beginTime << endl;
+			cout << "PB: BEGIN TIME is: " << beginTime << endl;
 			if (ae->getStepEngine())
 			{
 				cout << "===CUR TREE===" << endl;
@@ -281,6 +285,9 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Stops the plan base thread.
+	 */
 	void PlanBase::stop()
 	{
 		this->running = false;
@@ -337,9 +344,11 @@ namespace alica
 			fpEvents.push(p);
 		}
 		timerModeCV->notify_one();
-
 	}
-	//####################Getter and Setter####################
+
+	/**
+	 * Set a custom RuleBook to use.
+	 */
 	void PlanBase::setRuleBook(RuleBook* ruleBook)
 	{
 		this->ruleBook = ruleBook;
@@ -360,11 +369,13 @@ namespace alica
 		}
 		return this->stepModeCV;
 	}
+	/**
+	 * Returns the root node of the ALICA plan tree in execution.
+	 */
 	const shared_ptr<RunningPlan> PlanBase::getRootNode() const
 	{
 		return rootNode;
 	}
-
 	void PlanBase::setRootNode(shared_ptr<RunningPlan> rootNode)
 	{
 		this->rootNode = rootNode;

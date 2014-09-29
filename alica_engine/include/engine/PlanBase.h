@@ -43,6 +43,10 @@ namespace alica
 	class Assignment;
 	class StateCollection;
 
+	/**
+	 * A PlanBase holds the internal representation of the plan graph and issues all operations on it.
+	 * It is the most central object within the ALICA Engine.
+	 */
 	class PlanBase
 	{
 	public:
@@ -59,6 +63,9 @@ namespace alica
 		void addFastPathEvent(shared_ptr<RunningPlan> p);
 
 	private:
+		/**
+		 * List of RunningPlans scheduled for out-of-loop evaluation.
+		 */
 		queue<shared_ptr<RunningPlan>> fpEvents;
 //		supplementary::AutoResetEvent* signal;
 //		supplementary::AutoResetEvent* loopGuard;

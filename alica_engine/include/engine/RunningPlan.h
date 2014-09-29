@@ -44,6 +44,9 @@ namespace alica
 	class IPlanTreeVisitor;
 	class SimplePlanTree;
 
+	/**
+	 * A RunningPlan represents a plan or a behaviour in execution, holding all information relevant at runtime.
+	 */
 	class RunningPlan : public enable_shared_from_this<RunningPlan>
 	{
 	public:
@@ -73,8 +76,6 @@ namespace alica
 		void setFailHandlingNeeded(bool failHandlingNeeded);
 		void setOwnEntryPoint(EntryPoint* value);
 		PlanChange tick(RuleBook* rules);
-		State* getActiveState() const;
-		CycleManager* getCycleManager() const;
 		ConstraintStore* getConstraintStore() const;
 		EntryPoint* getOwnEntryPoint() const;
 		void setParent(weak_ptr<RunningPlan> s);
@@ -132,7 +133,13 @@ namespace alica
 		State* activeState;
 		EntryPoint* activeEntryPoint;
 		PlanStatus status;
+		/**
+		 * The (ROS-)timestamp referring to when the local robot entered the ActiveState.
+		 */
 		unsigned long stateStartTime;
+		/**
+		 * The timestamp referring to when this plan was started by the local robot
+		 */
 		unsigned long planStartTime;
 		int ownId;
 		unique_ptr<list<int> > robotsAvail;
@@ -140,6 +147,9 @@ namespace alica
 		PlanType* planType;
 		int failCount;
 		bool failHandlingNeeded;
+		/**
+		 * Whether or not this running plan is active or has been removed from the plan tree
+		 */
 		bool active;
 		IBehaviourPool* bp;
 		ITeamObserver* to;bool allocationNeeded;

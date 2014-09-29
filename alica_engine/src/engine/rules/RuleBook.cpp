@@ -133,7 +133,7 @@ namespace alica
 			return PlanChange::NoChange;
 		if (r->getParent().expired())
 			return PlanChange::NoChange; //masterplan excluded
-		if (!r->getCycleManager()->mayDoUtilityCheck())
+		if (!r->getCycleManagement()->mayDoUtilityCheck())
 			return PlanChange::NoChange;
 
 		vector<int> robots;
@@ -184,9 +184,9 @@ namespace alica
 	{
 		if (r->isBehaviour())
 			return PlanChange::NoChange;
-		if (r->getCycleManager()->isOverridden())
+		if (r->getCycleManagement()->isOverridden())
 		{
-			if (r->getCycleManager()->setAssignment(r))
+			if (r->getCycleManagement()->setAssignment(r))
 			{
 				log->eventOccured("AuthorityOverride(" + r->getPlan()->getName() + ")");
 				return PlanChange::InternalChange;
@@ -207,7 +207,7 @@ namespace alica
 			return PlanChange::NoChange;
 		if (r->getStatus() == PlanStatus::Success)
 			return PlanChange::NoChange;
-		if (!r->getCycleManager()->mayDoUtilityCheck())
+		if (!r->getCycleManagement()->mayDoUtilityCheck())
 			return PlanChange::NoChange;
 
 		if ((r->getActiveState() != nullptr && r->getActiveState()->isFailureState()) || !r->getAssignment()->isValid()
