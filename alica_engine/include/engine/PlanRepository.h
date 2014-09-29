@@ -34,6 +34,10 @@ namespace alica
 	class Variable;
 	class PlanningProblem;
 
+	/**
+	 * The PlanRepository holds the ALICA program, neatly separated into different Dictionaries.
+	 * It is especially useful to map element Ids back to their object, e.g., when receiving messages referring to plan elements.
+	 */
 	class PlanRepository
 	{
 	public:

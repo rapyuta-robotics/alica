@@ -59,28 +59,40 @@ namespace alica
 		return plan;
 	}
 
+	/**
+	 * Evaluates the utility function according to the priorities of the assigned
+	 * roles and according to the similarity, if an oldRP is given and according to all
+	 * other utility summands of this utility function.
+	 */
 	double UtilityFunction::eval(shared_ptr<RunningPlan> newRp, shared_ptr<RunningPlan> oldRp)
 	{
+		// Invalid Assignments have an Utility of -1 changed from 0 according to specs
 		if (!newRp->getAssignment()->isValid())
 		{
 			return -1.0;
 		}
 		UtilityInterval* sumOfUI = new UtilityInterval(0.0, 0.0);
 		double sumOfWeights = 0.0;
+
+		// Sum up priority summand
 		UtilityInterval* prioUI = this->getPriorityResult(newRp->getAssignment());
 		if (prioUI->getMax() < 0.0)
 		{
+			// one robot has a negative priority for his task -> -1.0 for the complete assignment
 			return -1;
 		}
 		sumOfUI->setMax(sumOfUI->getMax() + this->priorityWeight * prioUI->getMax());
 		sumOfUI->setMin(sumOfUI->getMin() + this->priorityWeight * prioUI->getMin());
 		sumOfWeights += this->priorityWeight;
+
+		// Sum up all normal utility summands
 		UtilityInterval* curUI;
 		for (int i = 0; i < this->utilSummands.size(); ++i)
 		{
 			auto iter = utilSummands.begin();
 			advance(iter, i);
 			curUI = (*iter)->eval(newRp->getAssignment());
+			//if a summand deny assignment, return -1 for forbidden assignments
 			if (curUI->getMax() == -1.0)
 			{
 				return -1.0;
@@ -92,17 +104,19 @@ namespace alica
 
 		if (oldRp != nullptr && this->similarityWeight > 0)
 		{
+			// Sum up similarity summand
 			UtilityInterval* simUI = this->getSimilarity(newRp->getAssignment(), oldRp->getAssignment());
 			sumOfUI->setMax(sumOfUI->getMax() + this->similarityWeight * simUI->getMax());
 			sumOfUI->setMin(sumOfUI->getMin() + this->similarityWeight * simUI->getMin());
 			sumOfWeights += this->similarityWeight;
 		}
 
+		// Normalize to 0..1
 		if (sumOfWeights > 0.0)
 		{
 			sumOfUI->setMax(sumOfUI->getMax() / sumOfWeights);
 			sumOfUI->setMin(sumOfUI->getMin() / sumOfWeights);
-
+			// Min == Max because RP.Assignment must be an complete Assignment!
 			if ((sumOfUI->getMax() - sumOfUI->getMin()) > DIFFERENCETHRESHOLD)
 			{
 				cerr << "UF: The utility min and max value differs more than " << DIFFERENCETHRESHOLD
@@ -114,24 +128,35 @@ namespace alica
 		return 0.0;
 	}
 
+	/**
+	 * Evaluates the utility function according to the priorities of the assigned
+	 * roles and according to the similarity, if an oldAss is given.
+	 * ATTENTION PLZ: Return value is only significant with respect to current Utility of oldAss! (SimilarityMeasure)
+	 * @return The utility interval
+	 */
 	UtilityInterval* UtilityFunction::eval(IAssignment* newAss, IAssignment* oldAss)
 	{
 		UtilityInterval* sumOfUI = new UtilityInterval(0.0, 0.0);
 		double sumOfWeights = 0.0;
+
+		// Sum up priority summand
 		UtilityInterval* prioUI = this->getPriorityResult(newAss);
 		if (prioUI->getMax() == -1.0)
 		{
+			// one robot have a negativ priority for his task -> (-1.0, -1.0) for the complete assignment
 			return prioUI;
 		}
 		sumOfUI->setMax(sumOfUI->getMax() + this->priorityWeight * prioUI->getMax());
 		sumOfUI->setMin(sumOfUI->getMin() + this->priorityWeight * prioUI->getMin());
 		sumOfWeights += this->priorityWeight;
+		// Sum up all normal utility summands
 		UtilityInterval* curUI;
 		for (int i = 0; i < this->utilSummands.size(); ++i)
 		{
 			auto iter = utilSummands.begin();
 			advance(iter, i);
 			curUI = (*iter)->eval(newAss);
+			//if a summand deny assignment, return -1 for forbidden assignments
 			if (curUI->getMax() == -1.0)
 			{
 				sumOfUI->setMax(-1.0);
@@ -143,6 +168,7 @@ namespace alica
 		}
 		if (oldAss != nullptr && this->similarityWeight > 0)
 		{
+			// Sum up similarity summand
 			UtilityInterval* simUI = this->getSimilarity(newAss, oldAss);
 			sumOfUI->setMax(sumOfUI->getMax() + this->similarityWeight * simUI->getMax());
 			sumOfUI->setMin(sumOfUI->getMin() + this->similarityWeight * simUI->getMin());
@@ -161,6 +187,11 @@ namespace alica
 		return sumOfUI;
 	}
 
+	/**
+	 * Updates the utility function according to the priorities of the assigned
+	 * roles and according to the similarity, if an oldAss is given.
+	 * @return void
+	 */
 	void UtilityFunction::updateAssignment(IAssignment* newAss, IAssignment* oldAss)
 	{
 		UtilityInterval* utilityInterval = this->eval(newAss, oldAss);
@@ -170,7 +201,7 @@ namespace alica
 
 	void UtilityFunction::cacheEvalData()
 	{
-		if(this->utilSummands.size() == 0)
+		if(this->utilSummands.size() == 0) // == null for default utility function
 		{
 			for(int i = 0; i < this->utilSummands.size(); ++i)
 			{
@@ -181,8 +212,15 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Initializes the '(Task x Role) -> Priority'-Dictionary and the
+	 * 'Role -> Highest Priority'-Dictionary for each role of the current roleset.
+	 * @return void
+	 */
 	void UtilityFunction::init()
 	{
+		// CREATE MATRIX && HIGHEST PRIORITY ARRAY
+		// init dicts
 		this->roleHighestPriorityMap = map<long, double>();
 		this->priorityMartix = map<TaskRoleStruct*, double>();
 		RoleSet* roleSet = AlicaEngine::getInstance()->getRoleSet();
@@ -222,10 +260,12 @@ namespace alica
 					this->roleHighestPriorityMap.at(roleId) = curPrio;
 				}
 			}
+			// Add Priority for Idle-EntryPoint
 			this->priorityMartix.insert(pair<TaskRoleStruct*, double>(new TaskRoleStruct(Task::IDLEID, roleId), 0.0));
 		}
 		//c# != null
-		if (this->utilSummands.size() != 0)
+		// INIT UTILITYSUMMANDS
+		if (this->utilSummands.size() != 0) // it is null for default utility function
 		{
 			for(USummand* utilSum : this->utilSummands) {
 				utilSum->init();
@@ -235,6 +275,11 @@ namespace alica
 		this->ra  = this->bpe->getRoleAssignment();
 	}
 
+	/**
+	 *  Calls Init() for every utiltiyfunction.
+	 * Is called and the end of AlicaEngine.Init(..), because it
+	 * needs the current roleset (circular dependency otherwise).
+	 */
 	void UtilityFunction::initDataStructures()
 	{
 
@@ -265,6 +310,10 @@ namespace alica
 		return priorityMartix;
 	}
 
+	/**
+	 * Calculates the priority result for the specified Assignment
+	 * @return the priority result
+	 */
 	UtilityInterval* UtilityFunction::getPriorityResult(IAssignment* ass)
 	{
 		this->priResult->setMax(0.0);
@@ -274,7 +323,8 @@ namespace alica
 			return this->priResult;
 		}
 		//c# != null
-		if(ass->getUnassignedRobots().size() != 0)
+		// SUM UP HEURISTIC PART OF PRIORITY UTILITY
+		if(ass->getUnassignedRobots().size() != 0)  // == null, when it is a normal assignment
 		{
 			for(int i = 0; i < ass->getUnassignedRobots().size(); i++)
 			{
@@ -283,7 +333,9 @@ namespace alica
 				this->priResult->setMax(this->priResult->getMax() + this->roleHighestPriorityMap.at(this->ra->getRole((*iter))->getId()));
 			}
 		}
+		// SUM UP DEFINED PART OF PRIORITY UTILITY
 
+		// for better comparability of different utility functions
 		int denum = min(this->plan->getMaxCardinality(), this->bpe->getTeamObserver()->teamSize());
 		long taskId;
 		long roleId;
@@ -309,7 +361,7 @@ namespace alica
 						break;
 					}
 				}
-				if(curPrio < 0.0)
+				if(curPrio < 0.0)// because one Robot has a negative priority for his task
 				{
 					this->priResult->setMin(-1.0);
 					this->priResult->setMax(-1.0);
@@ -355,15 +407,21 @@ namespace alica
 		return nullptr;
 	}
 
+	/**
+	 * Evaluates the similarity of the new Assignment to the old Assignment
+	 * @return The result of the evaluation
+	 */
 	UtilityInterval* UtilityFunction::getSimilarity(IAssignment* newAss, IAssignment* oldAss)
 	{
 		simUI->setMax(0.0);
 		simUI->setMin(0.0);
+		// Calculate the similarity to the old Assignment
 		int numOldAssignedRobots = 0;
 		shared_ptr<vector<EntryPoint*> > oldAssEps = oldAss->getEntryPoints();
 
 		for(int i = 0; i < oldAss->getEntryPointCount(); ++i)
 		{
+			// for normalisation
 			auto oldRobots = oldAss->getRobotsWorkingAndFinished(oldAssEps->at(i));
 			numOldAssignedRobots += oldRobots->size();
 			auto newRobots = newAss->getRobotsWorkingAndFinished(oldAssEps->at(i));
@@ -386,6 +444,7 @@ namespace alica
 		}
 
 		simUI->setMax(simUI->getMax() + simUI->getMin());
+		// Normalise if possible
 		if (numOldAssignedRobots > 0)
 		{
 			simUI->setMin(simUI->getMin() / numOldAssignedRobots);

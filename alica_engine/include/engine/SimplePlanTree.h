@@ -21,6 +21,9 @@ namespace alica
 	class EntryPoint;
 	class AbstractPlan;
 
+	/**
+	 * A SimplePlanTree is a simplified version of the RunningPlan, usually created from an incoming message. It thus represents the plan graph of another robot.
+	 */
 	class SimplePlanTree
 	{
 	public:
@@ -43,12 +46,24 @@ namespace alica
 		bool containsPlan(AbstractPlan* plan);
 
 	protected:
+		/**
+		 * The parent SimplePlanTree
+		 */
 		SimplePlanTree* parent;
 		unordered_set<shared_ptr<SimplePlanTree> > children;
+		/**
+		 * The state occupied by the respective robot.
+		 */
 		State* state;
 		EntryPoint* entryPoint;
+		/**
+		 * The id of the robot to which this tree refers to
+		 */
 		int robotId = -1;
 		bool newSimplePlanTree;
+		/**
+		 * The timestamp denoting when this tree was received.
+		 */
 		long receiveTime;
 		list<long> stateIds;
 

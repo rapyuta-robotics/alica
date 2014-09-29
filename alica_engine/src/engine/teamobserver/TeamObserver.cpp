@@ -315,7 +315,7 @@ namespace alica
 //			pti.SucceededEps = this.GetOwnEngineData().SuccessMarks.ToList();
 //			rosNode.Send(planTreePublisher,pti);
 #ifdef TO_DEBUG
-		cout << "Sending Plan Message: " << endl;
+		cout << "TO: Sending Plan Message: " << endl;
 		for (int i = 0; i < msg.size(); i++)
 		{
 			list<long>::const_iterator iter = msg.begin();

@@ -29,7 +29,7 @@ namespace alica
 
 		/**
 		 * Get the best Assignment for this RP with its plan and old Assignment, which is also similar to the old Assignment
-		 * @param rp
+		 * @param rp The old RunningPlan
 		 * @return The new and similar
 		 */
 		virtual shared_ptr<RunningPlan> getBestSimilarAssignment(shared_ptr<RunningPlan> rp) = 0;
