@@ -48,6 +48,9 @@ namespace alica
 		vector<RobotRoleUtility*> sortedRobots;
 		map<long, Role*> roles;
 		unique_ptr<list<RobotProperties*> > availableRobots;
+		/**
+		 * Current Robot's Properties.
+		 */
 		RobotProperties* ownRobotProperties;
 		ITeamObserver* to;
 		Publisher* rolePub;

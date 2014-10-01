@@ -30,6 +30,9 @@ namespace alica
 	class State;
 	struct AllocationAuthorityInfo;
 
+	/**
+	 * Contains all allocation information for a single plan. This includes the robot-task mapping, robot-state mapping and success information.
+	 */
 	class Assignment : public IAssignment
 	{
 	public:
@@ -73,8 +76,17 @@ namespace alica
 
 	protected:
 		static bool allowIdling;
+		/**
+		 * The Plan this Assignment refers to
+		 */
 		Plan* plan;
+		/**
+		 * The robot-to-state mapping of this assignment.
+		 */
 		StateCollection* robotStateMapping;
+		/**
+		 * Information about succeeded tasks.
+		 */
 		SuccessCollection* epSucMapping;
 		AssignmentCollection* epRobotsMapping;
 	};

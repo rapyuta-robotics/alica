@@ -99,11 +99,13 @@ namespace alica
 
 	void PartialAssignment::init()
 	{
+		// IDLE-EntryPoint
 		idleEP = new EntryPoint();
 		idleEP->setName("IDLE-ep");
 		idleEP->setId(EntryPoint::IDLEID);
 		idleEP->setMinCardinality(0);
 		idleEP->setMaxCardinality(numeric_limits<int>::max());
+		// Add IDLE-Task
 		idleEP->setTask(new Task(true));
 		idleEP->getTask()->setName("IDLE-TASK");
 		idleEP->getTask()->setId(Task::IDLEID);
@@ -141,25 +143,29 @@ namespace alica
 		}
 		PartialAssignment* ret = daPAs[curIndex++];
 		ret->clear();
-		ret->robots = robots;
+		ret->robots = robots; // Should already be sorted! (look at TaskAssignment, or PlanSelector)
 		ret->plan = plan;
 		ret->utilFunc = plan->getUtilityFunction();
 		ret->epSuccessMapping = sucCol;
+		// Create EP-Array
 		if (allowIdling)
 		{
 			ret->epRobotsMapping->setCount(plan->getEntryPoints().size() + 1);
+			// Insert IDLE-EntryPoint
 			ret->epRobotsMapping->getEntryPoints()->at(ret->epRobotsMapping->getCount() - 1) = idleEP;
 		}
 		else
 		{
 			ret->epRobotsMapping->setCount(plan->getEntryPoints().size());
 		}
+		// Insert plan entrypoints
 		int i=0;
 		for (auto iter : plan->getEntryPoints())
 		{
 			ret->epRobotsMapping->getEntryPoints()->at(i++) = iter.second;
 		}
 
+		// Sort the entrypoint array
 		if (allowIdling)
 		{
 			auto iter1 = ret->epRobotsMapping->getEntryPoints()->begin();
@@ -208,6 +214,7 @@ namespace alica
 			}
 		}
 
+		// At the beginning all robots are unassigned
 		for (int i : (*robots))
 		{
 			ret->unAssignedRobots.push_back(i);
@@ -352,6 +359,12 @@ namespace alica
 
 	}
 
+	/**
+	 * If the robot has already assigned itself, this method updates the partial assignment accordingly
+	 * @param A shared_ptr<SimplePlanTree>
+	 * @param An int
+	 * @return A bool
+	 */
 	bool PartialAssignment::addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, int robot)
 	{
 		if (spt->getEntryPoint()->getPlan() == this->plan)
@@ -372,17 +385,20 @@ namespace alica
 					{
 						break;
 					}
+					//remove robot from "To-Add-List"
 					auto iter = find(this->unAssignedRobots.begin(), this->unAssignedRobots.end(), robot);
 					if (this->unAssignedRobots.erase(iter) == this->unAssignedRobots.end())
 					{
 						cerr << "PA: Tried to assign robot " << robot << ", but it was not UNassigned!" << endl;
 						throw new exception;
 					}
+					//return true, because we are ready, when we found the robot here
 					return true;
 				}
 			}
 			return false;
 		}
+		// If there are children and we didnt find the robot until now, then go on recursive
 		else if (spt->getChildren().size() > 0)
 		{
 			for (auto sptChild : spt->getChildren())
@@ -393,9 +409,14 @@ namespace alica
 				}
 			}
 		}
+		// Did not find the robot in any relevant entry point
 		return false;
 	}
 
+	/**
+	 * Assigns the robot into the datastructures according to the given index.
+	 * @return True, when it was possible to assign the robot. False, otherwise.
+	 */
 	bool PartialAssignment::assignRobot(int robot, int index)
 	{
 		if (this->dynCardinalities[index]->getMax() > 0)
@@ -419,8 +440,10 @@ namespace alica
 		shared_ptr<list<PartialAssignment*> > newPas = make_shared<list<PartialAssignment*> >();
 		if (this->unAssignedRobots.size() == 0)
 		{
+			// No robot left to expand
 			return newPas;
 		}
+		// Robot which should be assigned next
 		int robot = this->unAssignedRobots[0];
 		this->unAssignedRobots.erase(this->unAssignedRobots.begin());
 		PartialAssignment* newPa;
@@ -428,6 +451,7 @@ namespace alica
 		{
 			if (this->dynCardinalities[i]->getMax() > 0)
 			{
+				// Update the cardinalities and assign the robot
 				newPa = PartialAssignment::getNew(this);
 				newPa->assignRobot(robot, i);
 				newPas->push_back(newPa);
@@ -436,6 +460,9 @@ namespace alica
 		return newPas;
 	}
 
+	/**
+	 * Checks whether the current assignment is valid
+	 */
 	bool PartialAssignment::isValid()
 	{
 		int min = 0;
@@ -446,12 +473,18 @@ namespace alica
 		return min <= this->numUnAssignedRobots();
 	}
 
+	/**
+	 * Checks if this PartialAssignment is a complete Assignment.
+	 * @return True, if it is, false otherwise.
+	 */
 	bool PartialAssignment::isGoal()
 	{
+		// There should be no unassigned robots anymore
 		if (this->unAssignedRobots.size() > 0)
 		{
 			return false;
 		}
+		// Every EntryPoint should be satisfied according to his minCar
 		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
 		{
 			if (this->dynCardinalities[i]->getMin() != 0)
@@ -462,23 +495,33 @@ namespace alica
 		return true;
 	}
 
+	/**
+	 * Compares this PartialAssignment with another one.
+	 * @return false if it is the same object or they have the same utility, assignment and plan id
+	 	 * false if this PartialAssignment has a higher utility, or plan id
+	 	 * Difference between Hashcodes, if they have the same utility and plan id
+	 	 * true if the other PartialAssignment has a higher utility, or plan id
+	 */
 	bool PartialAssignment::compareTo(PartialAssignment* thisPa, PartialAssignment* newPa)
 	{
 		//TODO has perhaps to be changed
 		// 0 , -1 = false
 		// 1 true
-		if (&thisPa == &newPa)
+		if (&thisPa == &newPa) // Same reference -> same object
 		{
 			return false;
 		}
 		if (newPa->compareVal < thisPa->compareVal)
 		{
+			// other has higher possible utility
 			return true;
 		}
 		else if (newPa->compareVal > thisPa->compareVal)
 		{
+			// this has higher possible utility
 			return false;
 		}
+		// Now we are sure that both partial assignments have the same utility
 		else if (newPa->plan->getId() > thisPa->plan->getId())
 		{
 			return false;
@@ -487,6 +530,7 @@ namespace alica
 		{
 			return true;
 		}
+		// Now we are sure that both partial assignments have the same utility and the same plan id
 		if (thisPa->unAssignedRobots.size() < newPa->unAssignedRobots.size())
 		{
 			return true;
@@ -497,10 +541,12 @@ namespace alica
 		}
 		if (newPa->min < thisPa->min)
 		{
+			// other has higher actual utility
 			return true;
 		}
 		else if (newPa->min > thisPa->min)
 		{
+			// this has higher actual utility
 			return false;
 		}
 		auto me = thisPa->epRobotsMapping->getRobots();
@@ -536,6 +582,10 @@ namespace alica
 
 
 	//TODO c# variant has to be adapted to c++
+	/**
+	 * Calculates a HashCode, which depends on the assignments and the plan.
+	 * @return A HashCode, which should be robot independent.
+	 */
 	int PartialAssignment::getHashCode()
 	{
 		if(this->hashCalculated)
@@ -603,6 +653,9 @@ namespace alica
 		return "PA: \n" + toString();
 	}
 
+	/**
+	 * little helper to calculate the y-th power of x with integers
+	 */
 	int PartialAssignment::pow(int x, int y)
 	{
 		int ret = 1;

@@ -140,6 +140,9 @@ namespace alica
 		}
 	}
 
+	/**
+	 * resend lastTalk, test for failure on synchronisation timeout and stop sync on state change
+	 */
 	bool Synchronisation::isValid(unsigned long curTick)
 	{
 		bool stillActive = (this->lastTick + 2 >= curTick);

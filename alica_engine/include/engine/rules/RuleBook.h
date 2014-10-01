@@ -31,6 +31,9 @@ namespace alica
 	class CycleManager;
 	class UtilityFunction;
 
+	/**
+	 * Defines the operational semantics of the used ALICA dialect.
+	 */
 	class RuleBook
 	{
 	public:

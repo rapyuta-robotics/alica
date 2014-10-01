@@ -26,6 +26,12 @@ namespace alica
 	{
 	}
 
+	/**
+	 * Constructor of a new TaskAssignment
+	 * @param planList Plans to build an assignment for
+	 * @param paraRobots robots to build an assignment for
+	 * @param a bool
+	 */
 	TaskAssignment::TaskAssignment(list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots)
 	{
 #ifdef EXPANSIONEVAL
@@ -39,21 +45,26 @@ namespace alica
 		{
 			this->robots->at(k++) = i;
 		}
+		 // sort robot ids ascending
 		sort(robots->begin(), robots->end());
 		this->fringe = vector<PartialAssignment*>();
 		auto simplePlanTreeMap = to->getTeamPlanTrees();
 		PartialAssignment* curPa;
 		for (Plan* curPlan : this->planList)
 		{
+			// CACHE EVALUATION DATA IN EACH USUMMAND
 			curPlan->getUtilityFunction()->cacheEvalData();
 
+			// CREATE INITIAL PARTIAL ASSIGNMENTS
 			curPa = PartialAssignment::getNew(this->robots, curPlan, to->getSuccessCollection(curPlan));
 
+			// ASSIGN PREASSIGNED OTHER ROBOTS
 			if (preasingOtherRobots)
 			{
 
 				if (this->addAlreadyAssignedRobots(curPa, &(*simplePlanTreeMap)))
 				{
+					// revaluate this pa
 					curPlan->getUtilityFunction()->updateAssignment(curPa, nullptr);
 				}
 			}
@@ -61,6 +72,11 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Gets the Assignment with next best utility
+	 * @param oldAss old Assignment
+	 * @return An Assignment for the plan
+	 */
 	Assignment* TaskAssignment::getNextBestAssignment(IAssignment* oldAss)
 	{
 #ifdef PSDEBUG
@@ -132,8 +148,10 @@ namespace alica
 			cout << "TA: NEXT PA from fringe:" << endl;
 			cout << curPa->toString() << "--->" << endl;
 #endif
+			// Check if it is a goal
 			if (curPa->isGoal())
 			{
+				// Save the goal in result
 				goal = curPa;
 			}
 #ifdef PSDEBUG
@@ -145,17 +163,21 @@ namespace alica
 			}
 			cout << "--->" << endl;
 #endif
+			// Expand for the next search (maybe necessary later)
 			auto newPas = curPa->expand();
 #ifdef EXPANSIONEVAL
 			expansionCount++;
 #endif
+			// Every just expanded partial assignment must get an updated utility
 			for(int i = 0; i < newPas->size(); i++)
 			{
+				// Update the utility values
 				auto iter = newPas->begin();
 				advance(iter, i);
 				(*iter)->getUtilFunc()->updateAssignment((*iter), oldAss);
-				if((*iter)->getMax() != -1)
+				if((*iter)->getMax() != -1) // add this partial assignment only, if all assigned robots does not have a priority of -1 for any task
 				{
+					// Add to search fringe
 					this->fringe.push_back((*iter));
 				}
 			}
@@ -174,10 +196,10 @@ namespace alica
 		return goal;
 	}
 	/**
-	 *
-	 * @param pa
+	 * If any robot has already assigned itself, this method updates the partial assignment accordingly.
+	 * @param pa A PartialAssignment
 	 * @param simplePlanTreeMap never try to delete this
-	 * @return
+	 * @return True if any robot has already assigned itself, false otherwise
 	 */
 	bool TaskAssignment::addAlreadyAssignedRobots(PartialAssignment* pa,
 													map<int, shared_ptr<SimplePlanTree> >* simplePlanTreeMap)

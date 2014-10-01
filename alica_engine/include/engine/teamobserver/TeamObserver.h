@@ -32,6 +32,10 @@ namespace alica
 	class State;
 	class SuccessCollection;
 
+	/**
+	 * The TeamObserver manages communication with the team. Thus it sends and receives PlanTreeInfo messages.
+	 * Specialized Modules may communicate through other means.
+	 */
 	class TeamObserver : public virtual ITeamObserver
 	{
 	public:

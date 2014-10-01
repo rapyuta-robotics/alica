@@ -88,6 +88,7 @@ namespace alica
 		static EpByTaskComparer epByTaskComparer;
 		static bool allowIdling;
 		static EntryPoint* idleEP;
+		// UtilityFunction
 		UtilityFunction* utilFunc;
 		AssignmentCollection* epRobotsMapping;
 		shared_ptr<vector<int> > robots;

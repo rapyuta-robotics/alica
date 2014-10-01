@@ -79,6 +79,11 @@ namespace alica
 		return epRobotsMapping;
 	}
 
+	/**
+	 * The robots that are currently working on a specific task, referred to by an EntryPoint Id.
+	 * @param epid EntryPoint id
+	 * @return A vector of int
+	 */
 	shared_ptr<vector<int> > Assignment::getRobotsWorking(long epid)
 	{
 		return this->getEpRobotsMapping()->getRobotsById(epid);
@@ -102,7 +107,7 @@ namespace alica
 		shared_ptr<vector<shared_ptr<vector<int> > > >robots;
 		if (allowIdling)
 		{
-			robots = make_shared<vector<shared_ptr<vector<int> > > >(assCol->getCount() - 1);
+			robots = make_shared<vector<shared_ptr<vector<int> > > >(assCol->getCount() - 1);// -1 for idling
 		}
 		else
 		{
@@ -150,6 +155,11 @@ namespace alica
 		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 	}
 
+	/**
+	 * The robots that are currently working on a specific task, referred to by an EntryPoint.
+	 * @param ep An EntryPoint
+	 * @return A vector of int
+	 */
 	shared_ptr<vector<int> > Assignment::getRobotsWorking(EntryPoint* ep)
 	{
 		return this->getEpRobotsMapping()->getRobots(ep);
@@ -165,16 +175,27 @@ namespace alica
 		return this->numUnAssignedRobots + c;
 	}
 
+	/**
+	 * The shared_ptr of a vector of EntryPoints this assignment considers relevant.
+	 */
 	shared_ptr<vector<EntryPoint*> > Assignment::getEntryPoints()
 	{
 		return this->epRobotsMapping->getEntryPoints();
 	}
 
+	/**
+	 * Number of Entrypoints in this assignment's plan.
+	 */
 	int Assignment::getEntryPointCount()
 	{
 		return this->epRobotsMapping->getCount();
 	}
 
+	/**
+	 * The robots that are currently working on or already succeeded in a specific task, referred to by an EntryPoint.
+	 * @param ep An EntryPoint
+	 * @return a shared_ptr of a list of int
+	 */
 	shared_ptr<list<int> > Assignment::getRobotsWorkingAndFinished(EntryPoint* ep)
 	{
 		shared_ptr<list<int> > ret = make_shared<list<int> >(list<int>());
@@ -201,6 +222,12 @@ namespace alica
 		return ret;
 	}
 
+	/**
+	 * The robots that are currently working on or already succeeded in a specific task, referred to by an EntryPoint.
+	 * Each robot only occurs once.
+	 * @param ep An entrypoint
+	 * @return a shared_ptr of a list of int
+	 */
 	shared_ptr<list<int> > Assignment::getUniqueRobotsWorkingAndFinished(EntryPoint* ep)
 	{
 		shared_ptr<list<int> > ret = make_shared<list<int> >(list<int>());
@@ -219,6 +246,11 @@ namespace alica
 		return ret;
 	}
 
+	/**
+	 * The robots that are currently working on or already succeeded in a specific task, referred to by an EntryPoint Id.
+	 * @param epid EntryPoint id
+	 * @return a shared_ptr of a list of int
+	 */
 	shared_ptr<list<int> > Assignment::getRobotsWorkingAndFinished(long epid)
 	{
 		shared_ptr<list<int> > ret = make_shared<list<int> >(list<int>());
@@ -290,6 +322,10 @@ namespace alica
 		return;
 	}
 
+	/**
+	 * Tests whether this assignment is valid with respect to the plan's cardinalities.
+	 * @return A bool
+	 */
 	bool Assignment::isValid()
 	{
 		auto robots = this->epRobotsMapping->getRobots();
@@ -306,6 +342,10 @@ namespace alica
 		return true;
 	}
 
+	/**
+	 * Tests weather all required tasks have been successfully completed and thus the plan can be considered as successful.
+	 * @return A bool
+	 */
 	bool Assignment::isSuccessfull()
 	{
 		for (int i = 0; i < this->epSucMapping->getCount(); i++)
@@ -330,10 +370,12 @@ namespace alica
 		{
 			return false;
 		}
+		//check for same length
 		if (this->epRobotsMapping->getCount() != otherAssignment->epRobotsMapping->getCount())
 		{
 			return false;
 		}
+		//check for same entrypoints
 		auto ownEps = this->epRobotsMapping->getEntryPoints();
 		auto otherEps = otherAssignment->epRobotsMapping->getEntryPoints();
 		for (int i = 0; i < ownEps->size(); ++i)
@@ -343,6 +385,7 @@ namespace alica
 				return false;
 			}
 		}
+		//check for same robots in entrypoints
 		auto ownRobots = this->epRobotsMapping->getRobots();
 		auto otherRobots = otherAssignment->epRobotsMapping->getRobots();
 		for (int i = 0; i < ownRobots->size(); ++i)
@@ -364,6 +407,11 @@ namespace alica
 		return true;
 	}
 
+	/**
+	 * Test whether at least one robot is working on a task or succeeded with a task.
+	 * @param ep An EntryPoint identifying the task in question.
+	 * @return bool
+	 */
 	bool Assignment::isEntryPointNonEmpty(EntryPoint* ep)
 	{
 		auto r = this->epRobotsMapping->getRobots(ep);
@@ -492,6 +540,11 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Returns the EntryPoint a robot is currently working on. Returns null, if the robot is currently not working on the respective plan.
+	 * @param robot an int
+	 * @return An entrypoint
+	 */
 	EntryPoint* Assignment::entryPointOfRobot(int robot)
 	{
 		for (int i = 0; i < this->epRobotsMapping->getCount(); i++)
@@ -506,6 +559,10 @@ namespace alica
 		return nullptr;
 	}
 
+	/**
+	 * The list of all robots currently allocated by this assignment to work on any task within the plan.
+	 * @return A shared_ptr of a vector of int
+	 */
 	shared_ptr<vector<int> > Assignment::getAllRobots()
 	{
 		auto ret = make_shared<vector<int> >(vector<int>());

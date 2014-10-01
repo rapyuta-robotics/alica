@@ -17,6 +17,10 @@
 namespace alica
 {
 
+	/**
+	 * Basic constructor. Initializes various timers. Should only be called from the constructor of inheriting classes.
+	 * @param name The name of the behaviour
+	 */
 	BasicBehaviour::BasicBehaviour(string name)
 	{
 		this->name = name;
