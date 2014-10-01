@@ -45,6 +45,9 @@ namespace alica
 	class RoleSet;
 	class PlanningProblem;
 
+	/**
+	 * Constructs Model elements, i.e., objects inheriting from <see cref="PlanElement"/> given their XML representation.
+	 */
 	class ModelFactory
 	{
 	public:

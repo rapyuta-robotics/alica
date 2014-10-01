@@ -34,6 +34,9 @@ namespace alica
 	class RoleSet;
 	class AlicaElement;
 
+	/**
+	 * The default parser, parsing the XML encoding of an ALICA plan-tree
+	 */
 	class PlanParser : public IPlanParser
 	{
 	public:

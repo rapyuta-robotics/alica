@@ -58,11 +58,13 @@ namespace alica
 
 	}
 
+	/**
+	 * Gets or sets the directory to save to.
+	 */
 	string PlanWriter::getTempPlanDir()
 	{
 		return tempPlanDir;
 	}
-
 	void PlanWriter::setTempPlanDir(string directory)
 	{
 		this->tempPlanDir = directory;
@@ -73,11 +75,21 @@ namespace alica
 		return configPath;
 	}
 
+	/**
+	 *  Gets or sets the plans to save.
+	 */
 	vector<AlicaElement*>& PlanWriter::getPlansToSave()
 	{
 		return plansToSave;
 	}
+	void PlanWriter::setPlansToSave(vector<AlicaElement*>& plansToSave)
+	{
+		this->plansToSave = plansToSave;
+	}
 
+	/**
+	 * Save all plans in the repository.
+	 */
 	void PlanWriter::saveAllPlans()
 	{
 		this->plansToSave.clear();
@@ -88,18 +100,20 @@ namespace alica
 		saveFileLoop();
 	}
 
+	/**
+	 * Saves a single plan.
+	 * @param p The plan to save.
+	 */
 	void PlanWriter::saveSinglePlan(Plan* p)
 	{
 		this->currentFile = supplementary::FileSystem::combinePaths(this->tempPlanDir, p->getFileName());
 		tinyxml2::XMLDocument* doc = createPlanXMLDocument(p);
 
-		//Console.WriteLine(p.FileName);
 		string dir = supplementary::FileSystem::getParent(this->currentFile);
 		if (!supplementary::FileSystem::isDirectory(dir))
 		{
 			supplementary::FileSystem::createDirectory(dir, 777);
 		}
-		//Console.WriteLine("Save file to : " + this.currentFile);
 		doc->SaveFile(this->currentFile.c_str(), false);
 	}
 
@@ -108,13 +122,11 @@ namespace alica
 		this->currentFile = supplementary::FileSystem::combinePaths(directory, p->getFileName());
 		tinyxml2::XMLDocument* doc = createPlanXMLDocument(p);
 
-		//Console.WriteLine(p.FileName);
 		string dir = supplementary::FileSystem::getParent(this->currentFile);
 		if (!supplementary::FileSystem::isDirectory(dir))
 		{
 			supplementary::FileSystem::createDirectory(dir, 777);
 		}
-		//Console.WriteLine("Save file to : " + this.currentFile);
 		doc->SaveFile(this->currentFile.c_str(), false);
 	}
 
@@ -246,13 +258,11 @@ namespace alica
 		this->currentFile = supplementary::FileSystem::combinePaths(this->tempPlanDir, name);
 		tinyxml2::XMLDocument* doc = createRoleSetXMLDocument(r);
 
-		//Console.WriteLine(p.FileName);
 		string dir = supplementary::FileSystem::getParent(this->currentFile);
 		if (!supplementary::FileSystem::isDirectory(dir))
 		{
 			supplementary::FileSystem::createDirectory(dir, 777);
 		}
-		//Console.WriteLine("Save file to : " + this.currentFile);
 		doc->SaveFile(this->currentFile.c_str(), false);
 	}
 
@@ -261,13 +271,11 @@ namespace alica
 		this->currentFile = supplementary::FileSystem::combinePaths(directory, name);
 		tinyxml2::XMLDocument* doc = createRoleSetXMLDocument(r);
 
-		//Console.WriteLine(p.FileName);
 		string dir = supplementary::FileSystem::getParent(this->currentFile);
 		if (!supplementary::FileSystem::isDirectory(dir))
 		{
 			supplementary::FileSystem::createDirectory(dir, 777);
 		}
-		//Console.WriteLine("Save file to : " + this.currentFile);
 		doc->SaveFile(this->currentFile.c_str(), false);
 	}
 
@@ -288,13 +296,11 @@ namespace alica
 		this->currentFile = supplementary::FileSystem::combinePaths(this->tempPlanDir, name);
 		tinyxml2::XMLDocument* doc = createTaskRepositoryXMLDocument(tr);
 
-		//Console.WriteLine(p.FileName);
 		string dir = supplementary::FileSystem::getParent(this->currentFile);
 		if (!supplementary::FileSystem::isDirectory(dir))
 		{
 			supplementary::FileSystem::createDirectory(dir, 777);
 		}
-		//Console.WriteLine("Save file to : " + this.currentFile);
 		doc->SaveFile(this->currentFile.c_str(), false);
 	}
 
@@ -303,19 +309,12 @@ namespace alica
 		this->currentFile = supplementary::FileSystem::combinePaths(directory, name);
 		tinyxml2::XMLDocument* doc = createTaskRepositoryXMLDocument(tr);
 
-		//Console.WriteLine(p.FileName);
 		string dir = supplementary::FileSystem::getParent(this->currentFile);
 		if (!supplementary::FileSystem::isDirectory(dir))
 		{
 			supplementary::FileSystem::createDirectory(dir, 777);
 		}
-		//Console.WriteLine("Save file to : " + this.currentFile);
 		doc->SaveFile(this->currentFile.c_str(), false);
-	}
-
-	void PlanWriter::setPlansToSave(vector<AlicaElement*>& plansToSave)
-	{
-		this->plansToSave = plansToSave;
 	}
 
 	void PlanWriter::addConditionChildren(Condition* c, tinyxml2::XMLElement* xn, tinyxml2::XMLDocument* doc)

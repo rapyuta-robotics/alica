@@ -23,6 +23,9 @@ namespace AutoDiff
 namespace alica
 {
 
+	/**
+	 * A variable is constraint by conditions, feasible values can be queried using a ConstraintQuery.
+	 */
 	class Variable : public AlicaElement
 	{
 	public:

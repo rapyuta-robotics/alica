@@ -36,6 +36,9 @@ namespace alica
 	protected:
 		list<RoleTaskMapping*> roleTaskMappings;
 		bool isDefault;
+		/**
+		 * the plan ID this roleset is defined for
+		 */
 		long usableWithPlanID;
 	};
 

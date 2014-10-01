@@ -21,6 +21,9 @@ namespace alica
 
 	class TaskRepository;
 
+	/**
+	 * an abstract description of parts of plans to be taken on by a set of robots
+	 */
 	class Task : public AlicaElement
 	{
 	public:
@@ -30,7 +33,7 @@ namespace alica
 		void setDescription(const string& description);
 		const TaskRepository* getTaskRepository() const;
 		void setTaskRepository(const TaskRepository* taskRepository);
-		const static long IDLEID = -1;
+		const static long IDLEID = -1; // For Task Id of an Idle EntryPoint...
 
 	private:
 		string description;

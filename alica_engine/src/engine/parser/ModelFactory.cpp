@@ -76,6 +76,11 @@ namespace alica
 	const string ModelFactory::waitPlan = "waitPlan";
 	const string ModelFactory::alternativePlan = "alternativePlan";
 
+	/**
+	 * Constructor
+	 * @param p The PlanParser handling the plan and role files.
+	 * @param rep The <see PlanRepository holding all plan elements. Elements will be added to it.
+	 */
 	ModelFactory::ModelFactory(PlanParser* p, PlanRepository* rep)
 	{
 		this->parser = p;
@@ -1378,6 +1383,11 @@ namespace alica
 		else
 			ae->setComment("");
 	}
+
+	/**
+	 * Computes the sets of reachable states for all entrypoints created.
+	 * This speeds up some calculations during run-time.
+	 */
 	void ModelFactory::computeReachabilities()
 	{
 #ifdef MF_DEBUG
