@@ -36,6 +36,9 @@ namespace alica
 		}
 
 	protected:
+		/**
+		 * Current Robot's role.
+		 */
 		Role* ownRole;
 		map<int, Role*> robotRoleMapping;
 

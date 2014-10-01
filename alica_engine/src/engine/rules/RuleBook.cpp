@@ -28,6 +28,9 @@
 
 namespace alica
 {
+	/**
+	 * Basic constructor
+	 */
 	RuleBook::RuleBook()
 	{
 		AlicaEngine* ae = AlicaEngine::getInstance();
@@ -45,6 +48,11 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
+	/**
+	 * Implementation of the Init Rule
+	 * @param masterPlan A Plan
+	 * @return the shared_ptr of a Runningplan constructed from the given plan
+	 */
 	shared_ptr<RunningPlan> RuleBook::initialisationRule(Plan* masterPlan)
 	{
 		if (masterPlan->getEntryPoints().size() != 1)
@@ -78,6 +86,13 @@ namespace alica
 
 	}
 
+	/**
+	 * Called in every iteration by a RunningPlan to apply rules to it.
+	 * Will consecutively apply rules until no further changes can be made or
+	 * maxConsecutiveChangesare made. This method also dictates the sequence in which rules are applied.
+	 * @param r A shared_ptr of a RunningPlan
+	 * @return A PlanChange
+	 */
 	PlanChange RuleBook::visit(shared_ptr<RunningPlan> r)
 	{
 		int changes = 0;
@@ -124,7 +139,7 @@ namespace alica
 
 	/**
 	 * Changes the allocation of r to a better one, if one can be found and the plan is currently allowed to change allocation.
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
 	PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r)
@@ -177,7 +192,7 @@ namespace alica
 	}
 	/**
 	 * Adopts an authorative assignment in case the CycleManager of r is in overridden mode
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
 	PlanChange RuleBook::authorityOverrideRule(shared_ptr<RunningPlan> r)
@@ -196,7 +211,7 @@ namespace alica
 	}
 	/**
 	 * The abort rule, sets a failure if a failure state is reached, the allocation invalid or the runtimecondition does not hold.
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
 	PlanChange RuleBook::planAbortRule(shared_ptr<RunningPlan> r)
@@ -224,7 +239,7 @@ namespace alica
 
 	/**
 	 * Tries to repair a plan by moving all robots in the current state to the corresponding initial state.
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
 	PlanChange RuleBook::planRedoRule(shared_ptr<RunningPlan> r)
@@ -260,7 +275,7 @@ namespace alica
 
 	/**
 	 * Tries to repair a failure by removing this plan and triggering a new task allocation.
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
 	PlanChange RuleBook::planReplaceRule(shared_ptr<RunningPlan> r)
@@ -284,8 +299,8 @@ namespace alica
 	}
 	/**
 	 * Propagates a failure to the parent in case it couldn't be repaired on this level.
-	 * @param r
-	 * @return
+	 * @param r A shared_ptr of a RunningPlan
+	 * @return A PlanChange
 	 */
 	PlanChange RuleBook::planPropagationRule(shared_ptr<RunningPlan> r)
 	{
@@ -304,7 +319,7 @@ namespace alica
 
 	/**
 	 * Allocates agents in the current state within r to sub-plans.
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
 	PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> r)
@@ -353,7 +368,7 @@ namespace alica
 
 	/**
 	 * Handles a failure at the top-level plan by resetting everything.
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChnage
 	 */
 	PlanChange RuleBook::topFailRule(shared_ptr<RunningPlan> r)
@@ -393,8 +408,8 @@ namespace alica
 	/**
 	 * The transition rule, moves an agent along a transition to a next state if the corresponding condition holds,
 	 * flags the RunningPlan for allocation in the next state.
-	 * Note, in case multiple transitions are eligble, one is chosen implementation dependent.
-	 * @param r
+	 * Note, in case multiple transitions are eligible, one is chosen implementation dependent.
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
 	PlanChange RuleBook::transitionRule(shared_ptr<RunningPlan> r)
@@ -431,9 +446,9 @@ namespace alica
 	}
 
 	/**
-	 * Moves the agent along a synchronised transition, if the corresponding transition holds and the
-	 * deems the transition as synchronised.
-	 * @param r
+	 * Moves the agent along a synchronized transition, if the corresponding transition holds and the
+	 * deems the transition as synchronized.
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
 	PlanChange RuleBook::synchTransitionRule(shared_ptr<RunningPlan> r)
@@ -488,8 +503,8 @@ namespace alica
 
 	/**
 	 * Combines to PlanChange flags to one, giving priority to Failures.
-	 * @param cur
-	 * @param update
+	 * @param cur A PlanChange
+	 * @param update A PlanChange
 	 * @return PlanChange
 	 */
 	PlanChange RuleBook::updateChange(PlanChange cur, PlanChange update)

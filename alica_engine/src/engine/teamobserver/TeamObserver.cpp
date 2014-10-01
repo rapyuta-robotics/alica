@@ -121,11 +121,20 @@ namespace alica
 //		rosNode.Subscribe("PlanTreeInfo",this.HandlePlanTreeInfo);
 	}
 
+	/**
+	 *  Returns this robot's own unique id.
+	 *  @return an int
+	 */
 	int TeamObserver::getOwnId()
 	{
 		return this->myId;
 	}
 
+	/**
+	 * Access engine data of a robot by its id. Returns nullptr if none found.
+	 * @param id an int the robot id
+	 * @return a RobotEngineData*
+	 */
 	RobotEngineData* TeamObserver::getRobotById(int id)
 	{
 		if (id == myId)
@@ -142,6 +151,10 @@ namespace alica
 		return nullptr;
 	}
 
+	/**
+	 * Returns the dynamic engine data of robots from which message have been received recently. Includes own engine data.
+	 * @return a unique_ptr of a list of RobotEngineData*
+	 */
 	unique_ptr<list<RobotEngineData*> > TeamObserver::getAvailableRobots()
 	{
 		unique_ptr<list<RobotEngineData*> > ret = unique_ptr<list<RobotEngineData*> >(new list<RobotEngineData*>);
@@ -158,6 +171,10 @@ namespace alica
 		return move(ret);
 	}
 
+	/**
+	 * Returns the static properties of robots from which message have been received recently. Includes own properties.
+	 * @return a unique_ptr of a list of RobotProperties*
+	 */
 	unique_ptr<list<RobotProperties*> > TeamObserver::getAvailableRobotProperties()
 	{
 		unique_ptr<list<RobotProperties*> > ret = unique_ptr<list<RobotProperties*> >(new list<RobotProperties*>);
@@ -173,6 +190,10 @@ namespace alica
 		return move(ret);
 	}
 
+	/**
+	 * Returns the ids of robots from which message have been received recently. Includes own id.
+	 * @return a unique_ptr of a list of int
+	 */
 	unique_ptr<list<int> > TeamObserver::getAvailableRobotIds()
 	{
 		unique_ptr<list<int> > ret = unique_ptr<list<int> >(new list<int>);
@@ -197,6 +218,10 @@ namespace alica
 		return this->me;
 	}
 
+	/**
+	 * The current size of the team.
+	 * @return An int
+	 */
 	int TeamObserver::teamSize()
 	{
 		int i = 1;
@@ -305,6 +330,11 @@ namespace alica
 		cout << "Closed TO" << endl;;
 	}
 
+	/**
+	 * Broadcasts a PlanTreeInfo Message
+	 * @param msg A list of long, a serialized version of the current planning tree
+	 * as constructed by RunningPlan.ToMessage.
+	 */
 	void TeamObserver::doBroadCast(list<long> msg)
 	{
 		//TODO ICommunication needed
@@ -326,6 +356,10 @@ namespace alica
 #endif
 	}
 
+	/**
+	 * Removes any successmarks left by this robot in plans no longer inhabited by any agent.
+	 * @param root a shared_ptr of a RunningPlan
+	 */
 	void TeamObserver::cleanOwnSuccessMarks(shared_ptr<RunningPlan> root)
 	{
 		unique_ptr<unordered_set<AbstractPlan*> > presentPlans = unique_ptr<unordered_set<AbstractPlan*> >(
@@ -380,6 +414,11 @@ namespace alica
 		return nullptr;
 	}
 
+	/**
+	 * Returns the number of successes the team knows about in the given plan.
+	 * @param plan a plan
+	 * @return an int counting successes in plan
+	 */
 	int TeamObserver::successesInPlan(Plan* plan)
 	{
 		int ret = 0;
@@ -460,6 +499,10 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Ignore all messages received by a robot.
+	 * @param rid an int identifying the robot to ignore
+	 */
 	void TeamObserver::ignoreRobot(int rid)
 	{
 		if (find(ignoredRobots.begin(), ignoredRobots.end(), rid) != ignoredRobots.end())
@@ -469,6 +512,10 @@ namespace alica
 		this->ignoredRobots.insert(rid);
 	}
 
+	/**
+	 * Stops ignoring the messages received by a robot
+	 * @param rid an int identifying the robot
+	 */
 	void TeamObserver::unIgnoreRobot(int rid)
 	{
 		if (find(ignoredRobots.begin(), ignoredRobots.end(), rid) != ignoredRobots.end())
@@ -477,11 +524,19 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Checks if a robot is ignored
+	 * @param rid an int identifying the robot
+	 */
 	bool TeamObserver::isRobotIgnored(int rid)
 	{
 		return (find(ignoredRobots.begin(), ignoredRobots.end(), rid) != ignoredRobots.end());
 	}
 
+	/**
+	 * Notify the TeamObserver that this robot has left a plan. This will reset any successmarks left, if no other robot is believed to be left in the plan.
+	 * @param plan The AbstractPlan left by the robot
+	 */
 	void TeamObserver::notifyRobotLeftPlan(AbstractPlan* plan)
 	{
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
@@ -518,6 +573,12 @@ namespace alica
 
 	}
 
+	/**
+	 * Constructs a SimplePlanTree from a received message
+	 * @param robotId The id of the other robot.
+	 * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
+	 * @return shared_ptr of a SimplePlanTree
+	 */
 	shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(int robotId, list<long> ids)
 	{
 #ifdef TO_DEBUG

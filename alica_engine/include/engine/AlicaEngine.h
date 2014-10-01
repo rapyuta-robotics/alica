@@ -70,7 +70,12 @@ namespace alica
 		IAlicaClock* getIAlicaClock();
 		void setIAlicaClock(IAlicaClock* clock);
 		void doStep();
-		void iterationComplete();bool maySendMessages;
+		void iterationComplete();
+		/**
+		 * Switch the engine between normal operation and silent mode, in which no messages other than debugging information are sent out.
+		 * This is useful for a robot on hot standby.
+		 */
+		bool maySendMessages;
 
 
 	protected:
@@ -92,8 +97,14 @@ namespace alica
 		// private constructur/ destructor because of singleton
 		AlicaEngine();
 		~AlicaEngine();
-
-		bool stepEngine;bool terminating;
+		/**
+		 * Set to have the engine's main loop wait on a signal via MayStep
+		 */
+		bool stepEngine;
+		/**
+		 * Indicates whether the engine is shutting down.
+		 */
+		bool terminating;
 		void setStepEngine(bool stepEngine);
 
 		PlanRepository* planRepository;

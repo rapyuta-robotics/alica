@@ -89,6 +89,15 @@ namespace alica
 		return &instance;
 	}
 
+	/**
+	 * Intialise the engine
+	 * @param bc A behaviourcreator
+	 * @param roleSetName A string, the roleset to be used. If empty, a default roleset is looked for
+	 * @param masterPlanName A string, the top-level plan to be used
+	 * @param roleSetDir A string, the directory in which to search for roleSets. If empty, the base role path will be used.
+	 * @param stepEngine A bool, whether or not the engine should start in stepped mode
+	 * @return bool true if everything worked false otherwise
+	 */
 	bool AlicaEngine::init(IBehaviourCreator* bc, string roleSetName, string masterPlanName, string roleSetDir,
 	bool stepEngine)
 	{
@@ -142,6 +151,9 @@ namespace alica
 		return everythingWorked;
 	}
 
+	/**
+	 * Closes the engine for good.
+	 */
 	bool AlicaEngine::shutdown()
 	{
 		bool everythingWorked = true;
@@ -169,6 +181,9 @@ namespace alica
 		//TODO:
 	}
 
+	/**
+	 * Starts the engine.
+	 */
 	void AlicaEngine::start()
 	{
 		this->planBase->start();
@@ -192,40 +207,56 @@ namespace alica
 		this->stepCalled = true;
 		this->planBase->getStepModeCV()->notify_one();
 	}
+	/**
+	 * Returns the plan repository, which holds the static ALICA program.
+	 */
 	PlanRepository * AlicaEngine::getPlanRepository()
 	{
 		return this->planRepository;
 	}
 
+	/**
+	 * Returns the planselector
+	 */
 	IPlanSelector* AlicaEngine::getPlanSelector()
 	{
 		return this->planSelector;
 	}
+	/**
+	 * Returns the Alica Clock interface
+	 */
 	IAlicaClock* AlicaEngine::getIAlicaClock()
 	{
 		return this->alicaClock;
 	}
-
-	IBehaviourPool * AlicaEngine::getBehaviourPool()
-	{
-		return this->behaviourPool;
-	}
-
-	ITeamObserver * AlicaEngine::getTeamObserver()
-	{
-		return this->teamObserver;
-	}
-
 	void AlicaEngine::setIAlicaClock(IAlicaClock* clock)
 	{
 		this->alicaClock = clock;
 	}
 
+	/**
+	 * Returns the behaviourpool
+	 */
+	IBehaviourPool * AlicaEngine::getBehaviourPool()
+	{
+		return this->behaviourPool;
+	}
+
+	/**
+	 * Returns the TeamObserver, which handles most communication tasks.
+	 */
+	ITeamObserver * AlicaEngine::getTeamObserver()
+	{
+		return this->teamObserver;
+	}
 	void AlicaEngine::setTeamObserver(ITeamObserver* teamObserver)
 	{
 		this->teamObserver = teamObserver;
 	}
 
+	/**
+	 * Gets the SyncModul, which enables synchronized transitions.
+	 */
 	ISyncModul * AlicaEngine::getSyncModul()
 	{
 		return syncModul;
@@ -236,16 +267,21 @@ namespace alica
 		this->syncModul = syncModul;
 	}
 
+	/**
+	 * Gets AuthorityManager, which detects and resolvs conflicts in task allocation.
+	 */
 	AuthorityManager * AlicaEngine::getAuth()
 	{
 		return auth;
 	}
-
 	void AlicaEngine::setAuth(AuthorityManager* auth)
 	{
 		this->auth = auth;
 	}
 
+	/**
+	 * Gets the RoleAssignment, responsible for allocating roles to robots.
+	 */
 	IRoleAssignment * AlicaEngine::getRoleAssignment()
 	{
 		return roleAssignment;
@@ -256,11 +292,17 @@ namespace alica
 		this->roleAssignment = roleAssignment;
 	}
 
+	/**
+	 * Returns the parser which reads ALICAs XML representation
+	 */
 	IPlanParser * AlicaEngine::getPlanParser()
 	{
 		return planParser;
 	}
 
+	/**
+	 * Returns the RoleSet in use.
+	 */
 	RoleSet * AlicaEngine::getRoleSet()
 	{
 		return roleSet;
@@ -271,17 +313,28 @@ namespace alica
 		this->stepEngine = stepEngine;
 	}
 
+	/**
+	 * Abort execution with a message, called if initialization fails.
+	 * @param msg A string
+	 */
 	void AlicaEngine::abort(string msg)
 	{
 		cerr << "ABORT: " << msg << endl;
 		exit(EXIT_FAILURE);
 	}
 
+	/**
+	 * Gets the robot name, either by access the environment variable "ROBOT", or if that isn't set, the hostname.
+	 * @return The robot name under which the engine operates, a string
+	 */
 	string AlicaEngine::getRobotName() const
 	{
 		return sc->getHostname();
 	}
 
+	/**
+	 * Gets the Logger
+	 */
 	Logger * AlicaEngine::getLog()
 	{
 		return log;
@@ -320,6 +373,10 @@ namespace alica
 		this->communicator = communicator;
 		this->roleAssignment->setCommunication(communicator);
 	}
+
+	/**
+	 * Returns the problem planner
+	 */
 	IPlanner* AlicaEngine::getPlanner()
 	{
 		return planner;

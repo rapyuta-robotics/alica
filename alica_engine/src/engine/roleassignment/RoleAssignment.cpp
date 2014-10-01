@@ -95,6 +95,10 @@ namespace alica
 		return robotRoleMapping;
 	}
 
+	/**
+	 * Maps the role to robot according to priority list and utility value.
+	 * @param rp A RolePriority*
+	 */
 	void RoleAssignment::mapRoleToRobot(RolePriority* rp)
 	{
 		for (RoleUsage* rolUse : rp->getPriorityList())
@@ -120,6 +124,10 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Assign roles according to capability and role priority list
+	 * @exception Represents errors that occur during application execution.
+	 */
 	void RoleAssignment::roleUtilities()
 	{
 		this->roleSet = AlicaEngine::getInstance()->getRoleSet();
