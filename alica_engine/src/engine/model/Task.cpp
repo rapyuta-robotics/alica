@@ -10,11 +10,17 @@
 namespace alica
 {
 
+	/**
+	 * Basic constructor
+	 */
 	Task::~Task()
 	{
 	}
 
-
+	/**
+	 * constructor
+	 * @param defaultTask A bool
+	 */
 	Task::Task(bool defaultTask)
 	{
 		this->defaultTask = defaultTask;

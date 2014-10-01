@@ -11,6 +11,9 @@
 namespace alica
 {
 
+	/**
+	 * Basic constructor
+	 */
 	SuccessState::SuccessState()
 	{
 		this->terminal = true;

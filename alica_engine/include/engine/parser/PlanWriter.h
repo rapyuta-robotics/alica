@@ -38,6 +38,9 @@ namespace alica
 	class RoleSet;
 	class AbstractPlan;
 
+	/**
+	 * The PlanWriter can be used to store generated plans.
+	 */
 	class PlanWriter
 	{
 	public:

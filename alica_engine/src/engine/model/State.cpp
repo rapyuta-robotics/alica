@@ -9,6 +9,9 @@
 namespace alica
 {
 
+	/**
+	 * Basic constructor
+	 */
 	State::State()
 	{
 		this->terminal = false;
@@ -18,6 +21,11 @@ namespace alica
 		this->entryPoint = nullptr;
 
 	}
+
+	/**
+	 * Constructor which accepts a unique id.
+	 * @param id A int
+	 */
 	State::State(long id)
 	{
 		this->id = id;
