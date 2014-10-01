@@ -25,12 +25,12 @@ namespace alica
 		IAlicaCommunication(AlicaEngine* ae);
 		virtual ~IAlicaCommunication(){}
 
-		virtual void sendAllocationAuthority(AllocationAuthorityInfo aai) = 0;
-		virtual void sendBehaviourEngineInfo(BehaviourEngineInfo bi) = 0;
-		virtual void sendPlanTreeInfo(PlanTreeInfo pti) = 0;
-		virtual void sendRoleSwitch(RoleSwitch rs) = 0;
-		virtual void sendSyncReady(SyncReady sr) = 0;
-		virtual void sendSyncTalk(SyncTalk st) = 0;
+		virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai) = 0;
+		virtual void sendBehaviourEngineInfo(BehaviourEngineInfo& bi) = 0;
+		virtual void sendPlanTreeInfo(PlanTreeInfo& pti) = 0;
+		virtual void sendRoleSwitch(RoleSwitch& rs) = 0;
+		virtual void sendSyncReady(SyncReady& sr) = 0;
+		virtual void sendSyncTalk(SyncTalk& st) = 0;
 
 		//TODO call
 		virtual void tick() {};
