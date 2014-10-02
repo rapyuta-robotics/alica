@@ -32,6 +32,10 @@ namespace alica
 	class State;
 	class SuccessCollection;
 
+	/**
+	 * The TeamObserver manages communication with the team. Thus it sends and receives PlanTreeInfo messages.
+	 * Specialized Modules may communicate through other means.
+	 */
 	class TeamObserver : public virtual ITeamObserver
 	{
 	public:
@@ -50,7 +54,7 @@ namespace alica
 		int teamSize();
 		unique_ptr<map<int, shared_ptr<SimplePlanTree> > > getTeamPlanTrees();
 		void init();
-		void tick(RunningPlan* root);
+		void tick(shared_ptr<RunningPlan> root);
 		void doBroadCast(list<long> msg);
 		int successesInPlan(Plan* plan);
 		SuccessCollection* getSuccessCollection(Plan* plan);
@@ -59,7 +63,7 @@ namespace alica
 		void unIgnoreRobot(int rid);
 		bool isRobotIgnored(int rid);
 		void notifyRobotLeftPlan(AbstractPlan* plan);
-		void handlePlanTreeInfo(shared_ptr<SimplePlanTree> incoming);
+		virtual void handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming);
 		void close();
 
 	private:
@@ -79,7 +83,7 @@ namespace alica
 		Logger* log;
 		unordered_set<int> ignoredRobots;
 		AlicaEngine* ae;
-		void cleanOwnSuccessMarks(RunningPlan* root);
+		void cleanOwnSuccessMarks(shared_ptr<RunningPlan> root);
 		shared_ptr<SimplePlanTree> sptFromMessage(int robotId, list<long> ids);
 
 	};

@@ -8,8 +8,8 @@
 #ifndef PARTIALASSIGNMENT_H_
 #define PARTIALASSIGNMENT_H_
 
-#define PADEBUG
-#define SUCDEBUG
+//#define PADEBUG
+//#define SUCDEBUG
 
 using namespace std;
 
@@ -20,6 +20,7 @@ using namespace std;
 #include <string>
 #include <algorithm>
 #include <memory>
+#include <math.h>
 
 #include <SystemConfig.h>
 #include "engine/IAssignment.h"
@@ -57,7 +58,7 @@ namespace alica
 		shared_ptr<list<PartialAssignment*> > expand();
 		bool isValid();
 		bool isGoal();
-		bool compareTo(PartialAssignment* thisPa, PartialAssignment* newPa);
+		static bool compareTo(PartialAssignment* thisPa, PartialAssignment* newPa);
 		int getHashCode();
 		string toString();
 		AssignmentCollection* getEpRobotsMapping();
@@ -65,13 +66,14 @@ namespace alica
 		UtilityFunction* getUtilFunc();
 		SuccessCollection* getEpSuccessMapping();
 		int numUnAssignedRobots();
-		vector<int> getUnAssignedRobots();
+		vector<int>& getUnAssignedRobots();
 		string assignmentCollectionToString();
-		vector<EntryPoint*> getEntryPoints();
+		shared_ptr<vector<EntryPoint*> > getEntryPoints();
 		int getHash();
 		void setHash(int hash);
 		bool isHashCalculated();
 		void setHashCalculated(bool hashCalculated);
+		void setMax(double max);
 
 	private:
 		const int INFINIT = numeric_limits<int>::max();
@@ -86,6 +88,7 @@ namespace alica
 		static EpByTaskComparer epByTaskComparer;
 		static bool allowIdling;
 		static EntryPoint* idleEP;
+		// UtilityFunction
 		UtilityFunction* utilFunc;
 		AssignmentCollection* epRobotsMapping;
 		shared_ptr<vector<int> > robots;
@@ -121,7 +124,7 @@ namespace std
         	vector<int> robots;
         	for(int i = 0; i < pa.getEpRobotsMapping()->getCount(); ++i)
         	{
-        		robots = (*pa.getEpRobotsMapping()->getRobots()[i]);
+        		robots = (*pa.getEpRobotsMapping()->getRobots()->at(i));
         		for(int robot : robots)
         		{
 

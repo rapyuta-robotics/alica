@@ -17,6 +17,12 @@ namespace alica
 	Quantifier::Quantifier(long id)
 	{
 		this->id = id;
+		this->plan = nullptr;
+		this->entryPoint = nullptr;
+		this->scopeIsEntryPoint = false;
+		this->scopeIsPlan = false;
+		this->scopeIsState = false;
+		this->state = nullptr;
 
 	}
 

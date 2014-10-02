@@ -21,6 +21,11 @@ using namespace std;
 #include "engine/PlanBase.h"
 #include "engine/teamobserver/TeamObserver.h"
 #include "engine/logging/Logger.h"
+#include "engine/roleassignment/RoleAssignment.h"
+#include "engine/UtilityFunction.h"
+#include "engine/model/Plan.h"
+#include "engine/syncmodul/SyncModul.h"
+
 
 namespace alica
 {
@@ -29,19 +34,28 @@ namespace alica
 	 */
 	AlicaEngine::AlicaEngine()
 	{
+		this->stepCalled = false;
+		this->planBase = nullptr;
+		this->planner = nullptr;
+		this->planSelector = nullptr;
+		this->communicator = nullptr;
+		this->alicaClock = nullptr;
+		this->syncModul = nullptr;
+		this->sc = supplementary::SystemConfig::getInstance();
+		this->terminating = false;
+		this->teamObserver = nullptr;
+		this->roleAssignment = nullptr;
+		this->behaviourPool = nullptr;
+		this->syncModul = nullptr;
 		this->roleSet = nullptr;
 		this->masterPlan = nullptr;
 		this->planParser = nullptr;
-		this->teamObserver = nullptr;
 		this->log = nullptr;
 		this->planRepository = nullptr;
-		this->syncModul = nullptr;
-		this->roleAssignment = nullptr;
 		this->auth = nullptr;
-		this->behaviourPool = nullptr;
 		this->roleSet = nullptr;
-		this->sc = supplementary::SystemConfig::getInstance();
 		this->stepEngine = false;
+		this->maySendMessages = false;
 
 //		TODO: MODULELOADER CASTOR
 //		string modName[] = (*this->sc)["Alica"]->get<string>("Alica", "Extensions", "LoadModule", NULL);
@@ -54,6 +68,7 @@ namespace alica
 //				Console.WriteLine("AE: Loaded Module " + name);
 //			}
 //		}
+		this->maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
 
 #ifdef AE_DEBUG
 		cout << "AE: Constructor finished!" << endl;
@@ -74,31 +89,75 @@ namespace alica
 		return &instance;
 	}
 
+	/**
+	 * Intialise the engine
+	 * @param bc A behaviourcreator
+	 * @param roleSetName A string, the roleset to be used. If empty, a default roleset is looked for
+	 * @param masterPlanName A string, the top-level plan to be used
+	 * @param roleSetDir A string, the directory in which to search for roleSets. If empty, the base role path will be used.
+	 * @param stepEngine A bool, whether or not the engine should start in stepped mode
+	 * @return bool true if everything worked false otherwise
+	 */
 	bool AlicaEngine::init(IBehaviourCreator* bc, string roleSetName, string masterPlanName, string roleSetDir,
 	bool stepEngine)
 	{
-		bool everythingWorked = true;
-		this->setStepEngine(stepEngine);
-		this->planRepository = new PlanRepository();
-		this->planParser = new PlanParser(this->planRepository);
-		this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
-		this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
-		this->behaviourPool = new BehaviourPool();
-		this->teamObserver = new TeamObserver();
-		this->teamObserver->init();
-		this->planSelector = new PlanSelector();
-		this->log = new Logger();
-		this->planBase = new PlanBase(this->masterPlan);
+		this->stepEngine = stepEngine;
+		if (this->planRepository == nullptr)
+		{
+			this->planRepository = new PlanRepository();
+		}
+		if (this->planParser == nullptr)
+		{
+			this->planParser = new PlanParser(this->planRepository);
+		}
+		if (this->masterPlan == nullptr)
+		{
+			this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
+		}
+		if (this->roleSet == nullptr)
+		{
+			this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
+		}
+		if (this->behaviourPool == nullptr)
+		{
+			this->behaviourPool = new BehaviourPool();
+		}
+		if (this->teamObserver == nullptr)
+		{
+			this->teamObserver = new TeamObserver();
+		}
+		if (this->roleAssignment == nullptr)
+		{
+			this->roleAssignment = new RoleAssignment();
+		}
+		if (this->syncModul == nullptr)
+		{
+			this->syncModul = new SyncModul();
+		}
 		this->stepCalled = false;
-		planBase->start();
+		bool everythingWorked = true;
 		everythingWorked &= this->behaviourPool->init(bc);
+		this->auth = new AuthorityManager();
+		this->teamObserver->init();
+		this->log = new Logger();
+		this->roleAssignment->init();
+		this->planSelector = new PlanSelector();
+		//TODO
+//		ConstraintHelper.Init(this.cSolver);
+		this->auth->init();
+		this->planBase = new PlanBase(this->masterPlan);
+		UtilityFunction::initDataStructures();
+		this->syncModul->init();
 		return everythingWorked;
 	}
 
-
+	/**
+	 * Closes the engine for good.
+	 */
 	bool AlicaEngine::shutdown()
 	{
 		bool everythingWorked = true;
+		this->maySendMessages = false;
 		delete this->planRepository;
 		this->planRepository = nullptr;
 		delete this->planParser;
@@ -112,6 +171,8 @@ namespace alica
 		this->teamObserver = nullptr;
 		delete this->planBase;
 		this->planBase = nullptr;
+		this->masterPlan = nullptr;
+		this->syncModul = nullptr;
 		return everythingWorked;
 	}
 
@@ -120,6 +181,9 @@ namespace alica
 		//TODO:
 	}
 
+	/**
+	 * Starts the engine.
+	 */
 	void AlicaEngine::start()
 	{
 		this->planBase->start();
@@ -143,40 +207,56 @@ namespace alica
 		this->stepCalled = true;
 		this->planBase->getStepModeCV()->notify_one();
 	}
+	/**
+	 * Returns the plan repository, which holds the static ALICA program.
+	 */
 	PlanRepository * AlicaEngine::getPlanRepository()
 	{
 		return this->planRepository;
 	}
 
+	/**
+	 * Returns the planselector
+	 */
 	IPlanSelector* AlicaEngine::getPlanSelector()
 	{
 		return this->planSelector;
 	}
+	/**
+	 * Returns the Alica Clock interface
+	 */
 	IAlicaClock* AlicaEngine::getIAlicaClock()
 	{
 		return this->alicaClock;
 	}
-
-	IBehaviourPool * AlicaEngine::getBehaviourPool()
-	{
-		return this->behaviourPool;
-	}
-
-	ITeamObserver * AlicaEngine::getTeamObserver()
-	{
-		return this->teamObserver;
-	}
-
 	void AlicaEngine::setIAlicaClock(IAlicaClock* clock)
 	{
 		this->alicaClock = clock;
 	}
 
+	/**
+	 * Returns the behaviourpool
+	 */
+	IBehaviourPool * AlicaEngine::getBehaviourPool()
+	{
+		return this->behaviourPool;
+	}
+
+	/**
+	 * Returns the TeamObserver, which handles most communication tasks.
+	 */
+	ITeamObserver * AlicaEngine::getTeamObserver()
+	{
+		return this->teamObserver;
+	}
 	void AlicaEngine::setTeamObserver(ITeamObserver* teamObserver)
 	{
 		this->teamObserver = teamObserver;
 	}
 
+	/**
+	 * Gets the SyncModul, which enables synchronized transitions.
+	 */
 	ISyncModul * AlicaEngine::getSyncModul()
 	{
 		return syncModul;
@@ -187,16 +267,21 @@ namespace alica
 		this->syncModul = syncModul;
 	}
 
+	/**
+	 * Gets AuthorityManager, which detects and resolvs conflicts in task allocation.
+	 */
 	AuthorityManager * AlicaEngine::getAuth()
 	{
 		return auth;
 	}
-
 	void AlicaEngine::setAuth(AuthorityManager* auth)
 	{
 		this->auth = auth;
 	}
 
+	/**
+	 * Gets the RoleAssignment, responsible for allocating roles to robots.
+	 */
 	IRoleAssignment * AlicaEngine::getRoleAssignment()
 	{
 		return roleAssignment;
@@ -207,11 +292,17 @@ namespace alica
 		this->roleAssignment = roleAssignment;
 	}
 
+	/**
+	 * Returns the parser which reads ALICAs XML representation
+	 */
 	IPlanParser * AlicaEngine::getPlanParser()
 	{
 		return planParser;
 	}
 
+	/**
+	 * Returns the RoleSet in use.
+	 */
 	RoleSet * AlicaEngine::getRoleSet()
 	{
 		return roleSet;
@@ -222,17 +313,28 @@ namespace alica
 		this->stepEngine = stepEngine;
 	}
 
+	/**
+	 * Abort execution with a message, called if initialization fails.
+	 * @param msg A string
+	 */
 	void AlicaEngine::abort(string msg)
 	{
 		cerr << "ABORT: " << msg << endl;
 		exit(EXIT_FAILURE);
 	}
 
-	const string& AlicaEngine::getRobotName() const
+	/**
+	 * Gets the robot name, either by access the environment variable "ROBOT", or if that isn't set, the hostname.
+	 * @return The robot name under which the engine operates, a string
+	 */
+	string AlicaEngine::getRobotName() const
 	{
 		return sc->getHostname();
 	}
 
+	/**
+	 * Gets the Logger
+	 */
 	Logger * AlicaEngine::getLog()
 	{
 		return log;
@@ -247,16 +349,34 @@ namespace alica
 	{
 		return terminating;
 	}
+	bool AlicaEngine::isMaySendMessages() const
+	{
+		return maySendMessages;
+	}
+	void AlicaEngine::setMaySendMessages(bool maySendMessages)
+	{
+		this->maySendMessages = maySendMessages;
+	}
 
 	void AlicaEngine::setTerminating(bool terminating)
 	{
 		this->terminating = terminating;
 	}
 
-	IAlicaCommunication * AlicaEngine::getCommunicatior()
+	IAlicaCommunication * AlicaEngine::getCommunicator()
 	{
-		return communicatior;
+		return communicator;
 	}
+
+	void AlicaEngine::setCommunicator(IAlicaCommunication * communicator)
+	{
+		this->communicator = communicator;
+		this->roleAssignment->setCommunication(communicator);
+	}
+
+	/**
+	 * Returns the problem planner
+	 */
 	IPlanner* AlicaEngine::getPlanner()
 	{
 		return planner;

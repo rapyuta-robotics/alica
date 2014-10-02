@@ -17,7 +17,9 @@ using namespace std;
 
 namespace alica
 {
-
+	/**
+	 *  A terminal state, encoding the succesful termination of a task.
+	 */
 	class SuccessState : public TerminalState
 	{
 	public:

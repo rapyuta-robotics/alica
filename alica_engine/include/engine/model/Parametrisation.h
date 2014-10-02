@@ -26,13 +26,13 @@ namespace alica
 		Parametrisation();
 		virtual ~Parametrisation();
 
-		string ToString ();
+		string ToString();
 
-		const AbstractPlan* getSubPlan() const;
+		AbstractPlan* getSubPlan();
 		void setSubPlan(AbstractPlan* subPlan);
-		const Variable* getSubVar() const;
+		Variable* getSubVar();
 		void setSubVar(Variable* subVar);
-		const Variable* getVar() const;
+		Variable* getVar();
 		void setVar(Variable* var);
 
 	protected:

@@ -7,7 +7,7 @@
 
 #ifndef UTILITYFUNCTION_H_
 #define UTILITYFUNCTION_H_
-#define UFDEBUG
+//#define UFDEBUG
 
 using namespace std;
 
@@ -17,6 +17,9 @@ using namespace std;
 #include <algorithm>
 #include <vector>
 #include <sstream>
+#include <memory>
+
+#include "engine/RunningPlan.h"
 
 namespace alica
 {
@@ -24,7 +27,6 @@ namespace alica
 	class AlicaEngine;
 	class IRoleAssignment;
 	class USummand;
-	class RunningPlan;
 	class IAssignment;
 	struct UtilityInterval;
 	struct TaskRoleStruct;
@@ -34,9 +36,9 @@ namespace alica
 	public:
 		UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight, double similarityWeight, Plan* plan);
 		virtual ~UtilityFunction();
-		list<USummand*> getUtilSummands();
+		list<USummand*>& getUtilSummands();
 		void setUtilSummands(list<USummand*> utilSummands);
-		virtual double eval(RunningPlan* newRp, RunningPlan* oldRp);
+		virtual double eval(shared_ptr<RunningPlan> newRp, shared_ptr<RunningPlan> oldRp);
 		virtual UtilityInterval* eval(IAssignment* newAss, IAssignment* oldAss);
 		void updateAssignment(IAssignment* newAss, IAssignment* oldAss);
 		void cacheEvalData();
@@ -45,18 +47,21 @@ namespace alica
 		static void initDataStructures();
 		virtual string toString();
 		Plan* getPlan();
-		map<TaskRoleStruct*, double> getPriorityMartix();
+		map<TaskRoleStruct*, double>& getPriorityMartix();
 
-		const double DIFFERENCETHRESHOLD = 0.0001;
+		const double DIFFERENCETHRESHOLD = 0.0001; // Max difference for the same result
 	protected:
 		Plan* plan;
 		string name = "DefaultUtilityFunction";
+		// For default priority based utility summand (which is integrated in every UF)
 		map<TaskRoleStruct*, double > priorityMartix;
 		map<long, double> roleHighestPriorityMap;
+		// For default similarity based utility summand (which is integrated in every UF)
 		double priorityWeight;
 		double similarityWeight;
 		AlicaEngine* bpe;
 		IRoleAssignment* ra;
+		// List of normal utility summands
 		list<USummand*> utilSummands;
 		TaskRoleStruct* lookupStruct;
 		UtilityInterval* priResult;

@@ -12,6 +12,7 @@ using namespace std;
 #include <stdio.h>
 #include <string>
 #include <sstream>
+#include <iostream>
 namespace alica
 {
 

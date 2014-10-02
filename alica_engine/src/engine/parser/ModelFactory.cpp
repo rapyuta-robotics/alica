@@ -76,6 +76,11 @@ namespace alica
 	const string ModelFactory::waitPlan = "waitPlan";
 	const string ModelFactory::alternativePlan = "alternativePlan";
 
+	/**
+	 * Constructor
+	 * @param p The PlanParser handling the plan and role files.
+	 * @param rep The <see PlanRepository holding all plan elements. Elements will be added to it.
+	 */
 	ModelFactory::ModelFactory(PlanParser* p, PlanRepository* rep)
 	{
 		this->parser = p;
@@ -334,8 +339,8 @@ namespace alica
 
 			if (taskPriorities.compare(val) == 0)
 			{
-				const char* keyPtr = element->Attribute("key");
-				const char* valuePtr = element->Attribute("value");
+				const char* keyPtr = curChild->Attribute("key");
+				const char* valuePtr = curChild->Attribute("value");
 				if (keyPtr && valuePtr)
 				{
 					rtm->getTaskPriorities().insert(pair<long, double>(stol(keyPtr), stod(valuePtr)));
@@ -466,7 +471,6 @@ namespace alica
 		Characteristic* cha = new Characteristic();
 		cha->setId(this->parser->parserId(element));
 		setAlicaElementAttributes(cha, element);
-
 		const char* attr = element->Attribute("weight");
 		if (attr)
 		{
@@ -1379,6 +1383,11 @@ namespace alica
 		else
 			ae->setComment("");
 	}
+
+	/**
+	 * Computes the sets of reachable states for all entrypoints created.
+	 * This speeds up some calculations during run-time.
+	 */
 	void ModelFactory::computeReachabilities()
 	{
 #ifdef MF_DEBUG
@@ -1574,7 +1583,7 @@ namespace alica
 #endif
 		for (pair<long, long> pairs : this->rtmRoleReferences)
 		{
-			Role* r = (Role*)this->elements.find(pairs.second)->second;
+			Role* r = (Role*)this->rep->getRoles().find(pairs.second)->second;
 			RoleTaskMapping* rtm = (RoleTaskMapping*)this->elements.find(pairs.first)->second;
 			r->setRoleTaskMapping(rtm);
 			rtm->setRole(r);
@@ -1600,7 +1609,7 @@ namespace alica
 		for (pair<long, long> pairs : this->charCapValReferences)
 		{
 			Characteristic* cha = (Characteristic*)this->rep->getCharacteristics().find(pairs.first)->second;
-			CapValue* capVal = (CapValue*)this->elements.find(pairs.first)->second;
+			CapValue* capVal = (CapValue*)this->elements.find(pairs.second)->second;
 			cha->setCapValue(capVal);
 		}
 		this->charCapValReferences.clear();

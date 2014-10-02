@@ -26,8 +26,21 @@
 
 namespace alica
 {
+	/**
+	 * Constructs the PlanBase given a top-level plan to execute
+	 * @param masterplan A Plan
+	 */
 	PlanBase::PlanBase(Plan* masterPlan)
 	{
+		this->mainThread = nullptr;
+		this->treeDepth = 0;
+		this->lastSendTime = 0;
+		this->statusPublisher = nullptr;
+		this->lastSentStatusTime =0;
+		this->loopInterval = 0;
+		this->stepModeCV = nullptr;
+		this->deepestNode = nullptr;
+		this->log = nullptr;
 		this->rootNode = nullptr;
 		this->masterPlan = masterPlan;
 		this->ae = AlicaEngine::getInstance();
@@ -79,8 +92,10 @@ namespace alica
 			loopTimer->start();
 		}
 
-#if PB_DEBUG
-		cout << "PB: Engine loop time is " << loopTime/1000000 << "ms, broadcast interval is " << this.minSendInterval/1000000 << "ms - "<< this.maxSendInterval/1000000) << "ms" << endl;
+#ifdef PB_DEBUG
+		cout << "PB: Engine loop time is " << loopTime/1000000
+				<< "ms, broadcast interval is " << this->minSendInterval/1000000
+				<< "ms - " <<  this->maxSendInterval/1000000 << "ms" << endl;
 #endif
 		if (halfLoopTime < this->minSendInterval)
 		{
@@ -106,8 +121,9 @@ namespace alica
 		cout << "PLANBASE STARTET " << endl;
 		while (this->running)
 		{
+			cout << "PB: RUNNING" << endl;
 			alicaTime beginTime = alicaClock->now();
-			cout << "BEGIN TIME is: " << beginTime << endl;
+			cout << "PB: BEGIN TIME is: " << beginTime << endl;
 			if (ae->getStepEngine())
 			{
 				cout << "===CUR TREE===" << endl;
@@ -149,17 +165,16 @@ namespace alica
 				this->rootNode = ruleBook->initialisationRule(this->masterPlan);
 			}
 
-			if (this->rootNode->tick(ruleBook) == PlanChange::NoChange)
+			if (this->rootNode->tick(this->ruleBook) == PlanChange::FailChange)
 			{
-#if PB_DEBUG
+#ifdef PB_DEBUG
 				cout << "PB: MasterPlan Failed" << endl;
 #endif
 			}
-
 			//lock for fpEvents
 			{
 				lock_guard<mutex> lock(lomutex);
-				queue<RunningPlan*> empty;
+				queue<shared_ptr<RunningPlan>> empty;
 				swap(this->fpEvents, empty);
 			}
 
@@ -239,7 +254,7 @@ namespace alica
 					lock_guard<mutex> lock(lomutex);
 					while (this->running && availTime > 1 && fpEvents.size() > 0)
 					{
-						RunningPlan* rp = fpEvents.front();
+						shared_ptr<RunningPlan> rp = fpEvents.front();
 						fpEvents.pop();
 
 						if (rp->isActive())
@@ -252,7 +267,7 @@ namespace alica
 								{
 									break;
 								}
-								rp = rp->getParent();
+								rp = rp->getParent().lock();
 								first = false;
 							}
 						}
@@ -264,11 +279,15 @@ namespace alica
 
 			if (availTime > 1 && !ae->getStepEngine())
 			{
+				cout << "SCHALFE" << endl;
 				alicaClock->sleep(availTime);
 			}
 		}
 	}
 
+	/**
+	 * Stops the plan base thread.
+	 */
 	void PlanBase::stop()
 	{
 		this->running = false;
@@ -293,14 +312,14 @@ namespace alica
 	PlanBase::~PlanBase()
 	{
 	}
-	void PlanBase::checkPlanBase(RunningPlan* r)
+	void PlanBase::checkPlanBase(shared_ptr<RunningPlan> r)
 	{
 		if (r == nullptr)
 			return;
 		if (r->isBehaviour())
 			return;
 		shared_ptr<vector<int> > robots = r->getAssignment()->getAllRobots();
-		for (RunningPlan* rp : *r->getChildren())
+		for (shared_ptr<RunningPlan> rp : r->getChildren())
 		{
 			if (rp->isBehaviour())
 				continue;
@@ -318,16 +337,18 @@ namespace alica
 		}
 
 	}
-	void PlanBase::addFastPathEvent(RunningPlan* p)
+	void PlanBase::addFastPathEvent(shared_ptr<RunningPlan> p)
 	{
 		{
 			lock_guard<mutex> lock(lomutex);
 			fpEvents.push(p);
 		}
 		timerModeCV->notify_one();
-
 	}
-	//####################Getter and Setter####################
+
+	/**
+	 * Set a custom RuleBook to use.
+	 */
 	void PlanBase::setRuleBook(RuleBook* ruleBook)
 	{
 		this->ruleBook = ruleBook;
@@ -348,12 +369,14 @@ namespace alica
 		}
 		return this->stepModeCV;
 	}
-	const RunningPlan* PlanBase::getRootNode() const
+	/**
+	 * Returns the root node of the ALICA plan tree in execution.
+	 */
+	const shared_ptr<RunningPlan> PlanBase::getRootNode() const
 	{
 		return rootNode;
 	}
-
-	void PlanBase::setRootNode(RunningPlan* rootNode)
+	void PlanBase::setRootNode(shared_ptr<RunningPlan> rootNode)
 	{
 		this->rootNode = rootNode;
 	}

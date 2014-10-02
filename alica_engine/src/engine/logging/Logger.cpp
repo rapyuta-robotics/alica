@@ -21,6 +21,10 @@ namespace alica
 
 	Logger::Logger()
 	{
+		this->endTime = 0;
+		this->itCount = 0;
+		this->sBuild = new stringstream;
+		this->startTime = 0;
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		this->active = (*sc)["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
 		if (this->active)
@@ -28,7 +32,7 @@ namespace alica
 			char buffer[50];
 			struct tm * timeinfo;
 			string robotName = AlicaEngine::getInstance()->getRobotName();
-			const long int time = AlicaEngine::getInstance()->getIAlicaClock()->now()/1000000000L;
+			const long int time = AlicaEngine::getInstance()->getIAlicaClock()->now() / 1000000000L;
 			cout << "Alica Time: " << time << endl;
 			timeinfo = localtime(&time);
 			strftime(buffer, 1024, "%FT%T", timeinfo);
@@ -48,21 +52,12 @@ namespace alica
 			// TODO: create nice supplementary::FileSystem::createDirectory(string path, int rights) method from next if clause
 			if (!supplementary::FileSystem::isDirectory(logPath))
 			{
-				string path = "";
-				int pos;
-				while((pos = logPath.find('/')) != string::npos){
-				  path = path + logPath.substr(0, pos) + "/";
-				  if(logPath.substr(0, pos).size() != 1){
-				    if(!supplementary::FileSystem::isDirectory(path))
-				    {
-				    	if (int res = mkdir(path.c_str(), 0777) != 0)
-				    	{
-				    		AlicaEngine::getInstance()->abort("Cannot create log folder: ", path);
-				    	}
-				    }
-				  }
-				  logPath.erase(0, pos + 1);
+
+				if (!supplementary::FileSystem::createDirectory(logPath, 777))
+				{
+					AlicaEngine::getInstance()->abort("Cannot create log folder: ", logPath);
 				}
+
 			}
 			string logFile = logPath + "alica-run--" + robotName + "--" + timeString + ".txt";
 			this->fileWriter = new ofstream(logFile.c_str());
@@ -79,7 +74,7 @@ namespace alica
 	{
 	}
 
-	void Logger::evenOccured(string event)
+	void Logger::eventOccured(string event)
 	{
 		if (!this->active)
 		{
@@ -99,7 +94,7 @@ namespace alica
 		this->startTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
 	}
 
-	void Logger::iterationEnds(RunningPlan* p)
+	void Logger::iterationEnds(shared_ptr<RunningPlan> p)
 	{
 		if (!this->active)
 		{
@@ -115,8 +110,9 @@ namespace alica
 			return;
 		}
 		this->recievedEvent = false;
-		list<string> ownTree = createTreeLog(p);
+		shared_ptr<list<string> > ownTree = createTreeLog(p);
 
+		//TODO sbuild = nullptr
 		(*this->sBuild) << "START:\t";
 		(*this->sBuild) << to_string((this->startTime / 1000000UL)) << endl;
 		(*this->sBuild) << "AVG-RT:\t";
@@ -146,7 +142,7 @@ namespace alica
 
 		(*this->sBuild) << "LocalTree:";
 
-		for (string id : ownTree)
+		for (string id : *ownTree)
 		{
 			(*this->sBuild) << "\t";
 			(*this->sBuild) << id;
@@ -165,13 +161,13 @@ namespace alica
 		}
 	}
 
-	void Logger::visit(RunningPlan* r)
+	void Logger::visit(shared_ptr<RunningPlan> r)
 	{
 	}
 
-	list<string> Logger::createHumanReadablePlanTree(list<long> l)
+	shared_ptr<list<string> > Logger::createHumanReadablePlanTree(list<long> l)
 	{
-		list<string> result = list<string>();
+		shared_ptr<list<string> > result = make_shared<list<string> >(list<string>());
 
 		auto states = AlicaEngine::getInstance()->getPlanRepository()->getStates();
 
@@ -185,13 +181,13 @@ namespace alica
 				if (iter != states.end())
 				{
 					e = entryPointOfState(s);
-					result.push_back(e->getTask()->getName());
-					result.push_back(s->getName());
+					result->push_back(e->getTask()->getName());
+					result->push_back(s->getName());
 				}
 			}
 			else
 			{
-				result.push_back(to_string(id));
+				result->push_back(to_string(id));
 			}
 		}
 
@@ -210,7 +206,7 @@ namespace alica
 		return nullptr;
 	}
 
-	void Logger::evaluationAssignmentsToString(stringstream* ss, RunningPlan* rp)
+	void Logger::evaluationAssignmentsToString(stringstream* ss, shared_ptr<RunningPlan> rp)
 	{
 		if (rp->isBehaviour())
 		{
@@ -218,57 +214,57 @@ namespace alica
 		}
 
 		(*ss) << rp->getAssignment()->toHackString();
-		for (RunningPlan* child : *rp->getChildren())
+		for (shared_ptr<RunningPlan> child : rp->getChildren())
 		{
 			evaluationAssignmentsToString(ss, child);
 		}
 	}
 
-	list<string> Logger::createTreeLog(RunningPlan* r)
+	shared_ptr<list<string> > Logger::createTreeLog(shared_ptr<RunningPlan> r)
 	{
-		list<string> result = list<string>();
+		shared_ptr<list<string> > result = make_shared<list<string> >(list<string>());
 
 		if (r->getActiveState() != nullptr)
 		{
 			if (r->getOwnEntryPoint() != nullptr)
 			{
-				result.push_back(r->getOwnEntryPoint()->getTask()->getName());
+				result->push_back(r->getOwnEntryPoint()->getTask()->getName());
 			}
 			else
 			{
-				result.push_back("-3"); //indicates no task
+				result->push_back("-3"); //indicates no task
 			}
 
-			result.push_back(r->getActiveState()->getName());
+			result->push_back(r->getActiveState()->getName());
 		}
 		else
 		{
 			if (r->getBasicBehaviour() != nullptr)
 			{
-				result.push_back("BasicBehaviour");
-				result.push_back(r->getBasicBehaviour()->getName());
+				result->push_back("BasicBehaviour");
+				result->push_back(r->getBasicBehaviour()->getName());
 			}
 			else //will idle
 			{
-				result.push_back("IDLE");
-				result.push_back("NOSTATE");
+				result->push_back("IDLE");
+				result->push_back("NOSTATE");
 			}
 		}
 
-		if (r->getChildren()->size() != 0)
+		if (r->getChildren().size() != 0)
 		{
-			result.push_back("-1"); //start children marker
+			result->push_back("-1"); //start children marker
 
-			for (RunningPlan* r : *r->getChildren())
+			for (shared_ptr<RunningPlan> rp : r->getChildren())
 			{
-				list<string> tmp = createTreeLog(r);
-				for (string s : tmp)
+				shared_ptr<list<string> > tmp = createTreeLog(rp);
+				for (string s : *tmp)
 				{
-					result.push_back(s);
+					result->push_back(s);
 				}
 			}
 
-			result.push_back("-2"); //end children marker
+			result->push_back("-2"); //end children marker
 		}
 
 		return result;

@@ -15,25 +15,31 @@ using namespace std;
 
 namespace alica
 {
-
+	class IAlicaCommunication;
 	class IRoleAssignment
 	{
 	public:
-		virtual ~IRoleAssignment() {}
+		virtual ~IRoleAssignment()
+		{
+		}
 		virtual void init() = 0;
 		virtual void tick() = 0;
 		virtual Role* getRole(int robotID) = 0;
-		const Role* getOwnRole()
+		virtual void setCommunication(IAlicaCommunication* communication) = 0;
+		Role* getOwnRole()
 		{
 			return ownRole;
 		}
-		map<int, Role*> getRobotRoleMapping()
+		map<int, Role*>& getRobotRoleMapping()
 		{
 			return robotRoleMapping;
 		}
 
-	private:
-		const Role* ownRole;
+	protected:
+		/**
+		 * Current Robot's role.
+		 */
+		Role* ownRole;
 		map<int, Role*> robotRoleMapping;
 
 	};

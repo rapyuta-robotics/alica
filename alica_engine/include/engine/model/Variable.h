@@ -23,6 +23,9 @@ namespace AutoDiff
 namespace alica
 {
 
+	/**
+	 * A variable is constraint by conditions, feasible values can be queried using a ConstraintQuery.
+	 */
 	class Variable : public AlicaElement
 	{
 	public:
@@ -33,8 +36,8 @@ namespace alica
 
 		string toString();
 
-		const string& getType() const;
-		void setType(const string& type);
+		string getType();
+		void setType(string type);
 		AutoDiff::Variable* getSolverVar();
 
 

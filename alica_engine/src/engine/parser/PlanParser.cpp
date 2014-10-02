@@ -8,10 +8,15 @@
 #include "engine/parser/PlanParser.h"
 #include "engine/parser/ModelFactory.h"
 #include "engine/AlicaEngine.h"
+#include "engine/model/Plan.h"
 
 namespace alica
 {
 
+	/**
+	 * Constructor
+	 * @param A PlanRepository, in which parsed elements are stored.
+	 */
 	PlanParser::PlanParser(PlanRepository* rep)
 	{
 		using namespace supplementary;
@@ -71,6 +76,12 @@ namespace alica
 	{
 	}
 
+	/**
+	 * Parse a roleset
+	 * @param roleSetName The name of the roleset to parse. May be empty, in which case a default roleset is looked for.
+	 * @param roleSetDir The relative directory in which to search for a roleset.
+	 * @return The parsed roleSet
+	 */
 	RoleSet* PlanParser::parseRoleSet(string roleSetName, string roleSetDir)
 	{
 		using namespace supplementary;
@@ -227,6 +238,11 @@ namespace alica
 		return "";
 	}
 
+	/**
+	 * Parses a plan tree
+	 * @param masterplan The name of the top-level plan
+	 * @return The top-level plan
+	 */
 	Plan* PlanParser::parsePlanTree(string masterplan)
 	{
 		string masterPlanPath;
@@ -251,6 +267,7 @@ namespace alica
 		this->mf->computeReachabilities();
 		return this->masterPlan;
 	}
+
 	void PlanParser::parseFileLoop()
 	{
 
@@ -295,6 +312,11 @@ namespace alica
 
 	}
 
+	/**
+	 * Parses a planning problem
+	 * @param planName The name of the planning problem
+	 * @return The top-level PlanningProblem
+	 */
 	void PlanParser::parsePlanningProblem(string currentFile)
 	{
 #ifdef PP_DEBUG
@@ -376,6 +398,10 @@ namespace alica
 		return p;
 	}
 
+	/**
+	 * Provides access to all parsed elements, indexed by their id.
+	 * @return A shared_ptr<map<long, alica::AlicaElement>
+	 */
 	shared_ptr<map<long, alica::AlicaElement> > PlanParser::getParsedElements()
 	{
 

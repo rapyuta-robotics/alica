@@ -23,6 +23,9 @@ namespace alica
 	class Parametrisation;
 	class EntryPoint;
 
+	/**
+	 * A State is a plan element inhabitable by agents, which contains sub-plans, sub-plantypes, and behaviours.
+	 */
 	class State : public AlicaElement
 	{
 	public:
@@ -37,7 +40,7 @@ namespace alica
 		 list<Transition*>& getInTransitions() ;
 		void setInTransitions(const list<Transition*>& inTransitions);
 		 list<Transition*>& getOutTransitions() ;
-		void setOutTransitions(const list<Transition*>& outTransition);
+		void setOutTransitions(list<Transition*> outTransition);
 		 list<Parametrisation*>& getParametrisation();
 		void setParametrisation(const list<Parametrisation*>& parametrisation);
 		 list<AbstractPlan*>& getPlans() ;
@@ -48,14 +51,41 @@ namespace alica
 		void setEntryPoint(EntryPoint* entryPoint);
 
 	protected:
+		/**
+		 * The list of AbstractPlans meant to be executed in the context of this state.
+		 */
 		list<AbstractPlan*> plans;
+		/**
+		 * The list of Transitions leading to this state.
+		 */
 		list<Transition*> inTransitions;
+		/**
+		 * The list ofTransitions going from this state to another one.
+		 */
 		list<Transition*> outTransitions;
+		/**
+		 * The list of Parametrisations, which bind variables of sub-plans to variables in this state's plan.
+		 */
 		list<Parametrisation*> parametrisation;
+		/**
+		 * The plan containing this state.
+		 */
 		Plan* inPlan;
+		/**
+		 * whether or not this is a terminal state.
+		 */
 		bool terminal;
+		/**
+		 * whether or not this is a FailureState, used to avoid casting and type checking during runtime.
+		 */
 		bool failureState;
+		/**
+		 * whether or not this is a SuccessState, used to avoid casting and type checking during runtime.
+		 */
 		bool successState;
+		/**
+		 * EntryPoint of the State
+		 */
 		EntryPoint* entryPoint;
 
 	};

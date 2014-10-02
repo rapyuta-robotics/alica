@@ -22,13 +22,16 @@ namespace alica
 	class RunningPlan;
 	class UtilityInterval;
 
+	/**
+	 * A default implementation for a plan's utility function. The only occuring summand referrs to the task-role preferences.
+	 */
 	class DefaultUtilityFunction : virtual public UtilityFunction
 	{
 	public:
 		DefaultUtilityFunction(Plan* plan);
 		virtual ~DefaultUtilityFunction();
 		double eval(RunningPlan* newRp, RunningPlan* oldRp);
-		UtilityInterval* eva (IAssignment* newAss, IAssignment* oldAss);
+		UtilityInterval* eval (IAssignment* newAss, IAssignment* oldAss);
 		string toString();
 
 	};

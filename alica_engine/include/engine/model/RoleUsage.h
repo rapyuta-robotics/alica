@@ -14,6 +14,9 @@ namespace alica
 {
 	class Role;
 
+	/**
+	 * RoleUsage contains a role with it's priorty.
+	 */
 	class RoleUsage
 	{
 	public:

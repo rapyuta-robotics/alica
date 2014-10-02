@@ -8,7 +8,7 @@
 #ifndef TASKASSIGNMENT_H_
 #define TASKASSIGNMENT_H_
 #define EXPANSIONEVAL
-#define PSDEBUG
+//#define PSDEBUG
 
 using namespace std;
 
@@ -33,6 +33,10 @@ namespace alica
 	class PartialAssignment;
 	class SimplePlanTree;
 
+	/**
+	 * Represents an instance of an assignment problem for one plan or a plantype.
+	 * All parameters, which are static for this problem, are stored here.
+	 */
 	class TaskAssignment : virtual public ITaskAssignment
 	{
 	public:
@@ -48,10 +52,12 @@ namespace alica
 		PartialAssignment* calcNextBestPartialAssignment(IAssignment* oldAss);
 
 	protected:
+		// Plan to build an assignment for
 		list<Plan*> planList;
 		shared_ptr<vector<int> > robots;
 		vector<EntryPoint*> entryPointVector;
 		//TODO has to be sorted every time used
+		// Fringe of the search tree
 		vector<PartialAssignment*> fringe;
 		bool addAlreadyAssignedRobots(PartialAssignment* pa, map<int, shared_ptr<SimplePlanTree> >* simplePlanTreeMap);
 

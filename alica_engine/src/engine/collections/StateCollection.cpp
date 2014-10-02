@@ -23,7 +23,7 @@ namespace alica
 	{
 	}
 
-	vector<int> StateCollection::getRobots()
+	vector<int>& StateCollection::getRobots()
 	{
 		return robots;
 	}
@@ -33,7 +33,7 @@ namespace alica
 		this->robots = robots;
 	}
 
-	vector<State*> StateCollection::getStates()
+	vector<State*>& StateCollection::getStates()
 	{
 		return states;
 	}
@@ -44,18 +44,16 @@ namespace alica
 		this->states = states;
 	}
 
-	StateCollection::StateCollection(int maxSize)
+	StateCollection::StateCollection(int maxSize) : robots(maxSize), states(maxSize)
 	{
-		this->robots = vector<int>(maxSize);
-		this->states = vector<State*>(maxSize);
 	}
 
 	StateCollection::StateCollection(AssignmentCollection* ac)
 	{
 		for(int i = 0;i < ac->getCount(); i ++)
 		{
-			State* initialState = ac->getEntryPoints()[i]->getState();
-			for(int r : *(ac->getRobots()[i]))
+			State* initialState = ac->getEntryPoints()->at(i)->getState();
+			for(auto r : (*ac->getRobots()->at(i)))
 			{
 				this->setState(r,initialState);
 			}
@@ -208,13 +206,13 @@ namespace alica
 		{
 			return;
 		}
-		vector<EntryPoint*> eps = oldOne->getEntryPoints();
-		for(int i = 0; i < eps.size(); i++)
+		shared_ptr<vector<EntryPoint*> >eps = oldOne->getEntryPoints();
+		for(int i = 0; i < eps->size(); i++)
 		{
-			for(int rid : *(oldOne->getRobotsWorking(eps[i])))
+			for(int rid : *(oldOne->getRobotsWorking(eps->at(i))))
 			{
-				auto iter = find(newOne->getRobotsWorking(eps[i])->begin(), newOne->getRobotsWorking(eps[i])->end(), rid);
-				if(iter != newOne->getRobotsWorking(eps[i])->end())
+				auto iter = find(newOne->getRobotsWorking(eps->at(i))->begin(), newOne->getRobotsWorking(eps->at(i))->end(), rid);
+				if(iter != newOne->getRobotsWorking(eps->at(i))->end())
 				{
 					this->setState(rid, oldOne->getRobotStateMapping()->getState(rid));
 				}

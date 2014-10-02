@@ -34,20 +34,17 @@ namespace alica
 	class IAlicaClock;
 	class PlanBase;
 
-
 	class AlicaEngine
 	{
 	public:
-		static AlicaEngine* getInstance();
-		bool init(IBehaviourCreator* bc, string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine);
-		bool shutdown();
-		void start();
-		bool getStepEngine();
+		static AlicaEngine* getInstance();bool init(IBehaviourCreator* bc, string roleSetName, string masterPlanName,
+													string roleSetDir, bool stepEngine);bool shutdown();
+		void start();bool getStepEngine();
 		void abort(string msg);
 		template<typename T> void abort(string msg, const T tail);
 		PlanRepository* getPlanRepository();
 		IBehaviourPool* getBehaviourPool();
-		const string& getRobotName() const;
+		string getRobotName() const;
 		Logger* getLog();
 		void setLog(Logger* log);
 		ITeamObserver* getTeamObserver();
@@ -59,19 +56,27 @@ namespace alica
 		void setAuth(AuthorityManager* auth);
 		IRoleAssignment* getRoleAssignment();
 		void setRoleAssignment(IRoleAssignment* roleAssignment);
-		IPlanParser* getPlanParser();
-		bool isTerminating() const;
+		IPlanParser* getPlanParser();bool isTerminating() const;
 		void setTerminating(bool terminating);
 		void setStepCalled(bool stepCalled);
 		bool getStepCalled() const;
+		bool isMaySendMessages() const;
+		void setMaySendMessages(bool maySendMessages);
 		RoleSet* getRoleSet();
-		IAlicaCommunication* getCommunicatior();
+		IAlicaCommunication* getCommunicator();
+		void setCommunicator(IAlicaCommunication * communicator);
 		IPlanSelector* getPlanSelector();
 		IPlanner* getPlanner();
 		IAlicaClock* getIAlicaClock();
 		void setIAlicaClock(IAlicaClock* clock);
 		void doStep();
 		void iterationComplete();
+		/**
+		 * Switch the engine between normal operation and silent mode, in which no messages other than debugging information are sent out.
+		 * This is useful for a robot on hot standby.
+		 */
+		bool maySendMessages;
+
 
 	protected:
 		supplementary::SystemConfig* sc;
@@ -83,19 +88,22 @@ namespace alica
 		IRoleAssignment* roleAssignment;
 		list<IEngineModule*> mods;
 		IPlanSelector* planSelector;
-		IAlicaCommunication* communicatior;
+		IAlicaCommunication* communicator;
 		IPlanner* planner;
 		IAlicaClock* alicaClock;
-		PlanBase* planBase;
-		bool stepCalled;
-
+		PlanBase* planBase;bool stepCalled;
 
 	private:
 		// private constructur/ destructor because of singleton
 		AlicaEngine();
 		~AlicaEngine();
-
+		/**
+		 * Set to have the engine's main loop wait on a signal via MayStep
+		 */
 		bool stepEngine;
+		/**
+		 * Indicates whether the engine is shutting down.
+		 */
 		bool terminating;
 		void setStepEngine(bool stepEngine);
 
@@ -109,6 +117,7 @@ namespace alica
 	template<typename T>
 	void AlicaEngine::abort(string msg, const T tail)
 	{
+		this->maySendMessages = false;
 		stringstream ss;
 		ss << msg << tail;
 		AlicaEngine::abort(ss.str());

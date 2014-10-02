@@ -10,9 +10,10 @@
 
 namespace alica
 {
+	//Added None for default constructor
 	enum PlanningType
 	{
-		Online=0, Offline=1, Interactive=2
+		Online=0, Offline=1, Interactive=2, None=3
 	};
 
 }

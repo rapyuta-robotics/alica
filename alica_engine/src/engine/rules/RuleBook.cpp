@@ -28,12 +28,16 @@
 
 namespace alica
 {
+	/**
+	 * Basic constructor
+	 */
 	RuleBook::RuleBook()
 	{
 		AlicaEngine* ae = AlicaEngine::getInstance();
 		this->to = ae->getTeamObserver();
 		this->ps = ae->getPlanSelector();
 		this->sm = ae->getSyncModul();
+		this->log = ae->getLog();
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		this->maxConsecutiveChanges = (*sc)["Alica"]->get<int>("Alica.MaxRuleApplications", NULL);
 		this->changeOccured = true;
@@ -44,14 +48,19 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
-	RunningPlan* RuleBook::initialisationRule(Plan* masterPlan)
+	/**
+	 * Implementation of the Init Rule
+	 * @param masterPlan A Plan
+	 * @return the shared_ptr of a Runningplan constructed from the given plan
+	 */
+	shared_ptr<RunningPlan> RuleBook::initialisationRule(Plan* masterPlan)
 	{
 		if (masterPlan->getEntryPoints().size() != 1)
 		{
 			AlicaEngine::getInstance()->abort("RB: Masterplan does not have exactly one task!");
 		}
 
-		RunningPlan* main = new RunningPlan(masterPlan);
+		shared_ptr<RunningPlan> main = make_shared<RunningPlan>(masterPlan);
 		main->setAssignment(new Assignment(masterPlan));
 
 		main->setAllocationNeeded(true);
@@ -68,15 +77,23 @@ namespace alica
 			defep = e;
 			break;
 		}
-		main->getAssignment()->setAllToInitialState(move(robots), defep);
+		unique_ptr<list<int> > r = to->getAvailableRobotIds();
+		main->getAssignment()->setAllToInitialState(move(r), defep);
 		main->setActive(true);
 		main->setOwnEntryPoint(defep);
-		log->evenOccured("Init");
+		this->log->eventOccured("Init");
 		return main;
 
 	}
 
-	PlanChange RuleBook::visit(RunningPlan* r)
+	/**
+	 * Called in every iteration by a RunningPlan to apply rules to it.
+	 * Will consecutively apply rules until no further changes can be made or
+	 * maxConsecutiveChangesare made. This method also dictates the sequence in which rules are applied.
+	 * @param r A shared_ptr of a RunningPlan
+	 * @return A PlanChange
+	 */
+	PlanChange RuleBook::visit(shared_ptr<RunningPlan> r)
 	{
 		int changes = 0;
 		bool doDynAlloc = true;
@@ -86,18 +103,15 @@ namespace alica
 
 		do
 		{
-
 			msChange = updateChange(msChange, changeRecord);
 			changeRecord = PlanChange::NoChange;
 			changeRecord = updateChange(changeRecord, synchTransitionRule(r));
 			PlanChange transChange = transitionRule(r);
-
 			while (transChange != PlanChange::NoChange && ++changes < this->maxConsecutiveChanges)
 			{
 				changeRecord = updateChange(changeRecord, transChange);
 				transChange = transitionRule(r);
 			}
-
 			changeRecord = updateChange(changeRecord, transitionRule(r));
 			changeRecord = updateChange(changeRecord, topFailRule(r));
 			changeRecord = updateChange(changeRecord, allocationRule(r));
@@ -125,24 +139,25 @@ namespace alica
 
 	/**
 	 * Changes the allocation of r to a better one, if one can be found and the plan is currently allowed to change allocation.
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
-	PlanChange RuleBook::dynamicAllocationRule(RunningPlan* r)
+	PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r)
 	{
 		if (r->isAllocationNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
-		if (r->getParent() == nullptr)
+		if (r->getParent().expired())
 			return PlanChange::NoChange; //masterplan excluded
-		if (!r->getCycleManager()->mayDoUtilityCheck())
+		if (!r->getCycleManagement()->mayDoUtilityCheck())
 			return PlanChange::NoChange;
 
 		vector<int> robots;
-		copy(r->getParent()->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
-					r->getParent()->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
+		auto temp = r->getParent().lock();
+		copy(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
+					temp->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
 					back_inserter(robots));
 
-		RunningPlan* newr = ps->getBestSimilarAssignment(r, make_shared<vector<int> >(robots));
+		shared_ptr<RunningPlan> newr = ps->getBestSimilarAssignment(r, make_shared<vector<int> >(robots));
 		if (newr == nullptr)
 			return PlanChange::NoChange;
 		double curUtil;
@@ -151,7 +166,7 @@ namespace alica
 		else
 			curUtil = r->getPlan()->getUtilityFunction()->eval(r, r);
 		double possibleUtil = newr->getAssignment()->getMax();
-#if RULE_debug
+#ifdef RULE_debug
 		cout << "RB: Old U " << curUtil << " | " << " New U:" << possibleUtil << endl;
 		cout << "RB: New Assignment" << newr->getAssignment() << endl;
 		cout << "RB: Old Assignment" << r->getAssignment() << endl;
@@ -165,30 +180,30 @@ namespace alica
 			r->adaptAssignment(newr);
 			if (r->getActiveState() != nullptr && r->getActiveState() != before)
 				r->setAllocationNeeded(true);
-#if RULE_debug
+#ifdef RULE_debug
 			cout << "RB: B4 dynChange: Util is " << curUtil << " | " << " suggested is " << possibleUtil << " | " << " threshold " << r->getPlan()->getUtilityThreshold() << endl;
 			cout << "RB: DynAlloc" <<r->getPlan()->getName() << endl;
 #endif
 
-			log->evenOccured("DynAlloc(" + r->getPlan()->getName() + ")");
+			log->eventOccured("DynAlloc(" + r->getPlan()->getName() + ")");
 			return PlanChange::InternalChange;
 		}
 		return PlanChange::NoChange;
 	}
 	/**
 	 * Adopts an authorative assignment in case the CycleManager of r is in overridden mode
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
-	PlanChange RuleBook::authorityOverrideRule(RunningPlan* r)
+	PlanChange RuleBook::authorityOverrideRule(shared_ptr<RunningPlan> r)
 	{
 		if (r->isBehaviour())
 			return PlanChange::NoChange;
-		if (r->getCycleManager()->isOverridden())
+		if (r->getCycleManagement()->isOverridden())
 		{
-			if (r->getCycleManager()->setAssignment(r))
+			if (r->getCycleManagement()->setAssignment(r))
 			{
-				log->evenOccured("AuthorityOverride(" + r->getPlan()->getName() + ")");
+				log->eventOccured("AuthorityOverride(" + r->getPlan()->getName() + ")");
 				return PlanChange::InternalChange;
 			}
 		}
@@ -196,10 +211,10 @@ namespace alica
 	}
 	/**
 	 * The abort rule, sets a failure if a failure state is reached, the allocation invalid or the runtimecondition does not hold.
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
-	PlanChange RuleBook::planAbortRule(RunningPlan* r)
+	PlanChange RuleBook::planAbortRule(shared_ptr<RunningPlan> r)
 	{
 		if (r->getFailHandlingNeeded())
 			return PlanChange::NoChange;
@@ -207,16 +222,16 @@ namespace alica
 			return PlanChange::NoChange;
 		if (r->getStatus() == PlanStatus::Success)
 			return PlanChange::NoChange;
-		if (!r->getCycleManager()->mayDoUtilityCheck())
+		if (!r->getCycleManagement()->mayDoUtilityCheck())
 			return PlanChange::NoChange;
 
 		if ((r->getActiveState() != nullptr && r->getActiveState()->isFailureState()) || !r->getAssignment()->isValid()
 				|| !r->evalRuntimeCondition())
 		{
-#if RULE_debug
-			cout << "RB: PlanAbort" << r.Plan.Name << endl;
+#ifdef RULE_debug
+			cout << "RB: PlanAbort" << r->getPlan()->getName() << endl;
 #endif
-			log->evenOccured("PAbort(" + r->getPlan()->getName() + ")");
+			log->eventOccured("PAbort(" + r->getPlan()->getName() + ")");
 			return PlanChange::FailChange;
 		}
 		return PlanChange::NoChange;
@@ -224,12 +239,12 @@ namespace alica
 
 	/**
 	 * Tries to repair a plan by moving all robots in the current state to the corresponding initial state.
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
-	PlanChange RuleBook::planRedoRule(RunningPlan* r)
+	PlanChange RuleBook::planRedoRule(shared_ptr<RunningPlan> r)
 	{
-		if (r->getParent() == nullptr || !r->getFailHandlingNeeded() || r->isBehaviour())
+		if (r->getParent().expired() || !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
 		if (r->getFailure() != 1)
 			return PlanChange::NoChange;
@@ -251,93 +266,101 @@ namespace alica
 
 		r->setActiveState(r->getOwnEntryPoint()->getState());
 		r->setAllocationNeeded(true);
-#if RULE_debug
-		cout << "RB: PlanRedo" << r.Plan.Name << endl;
+#ifdef RULE_debug
+		cout << "RB: PlanRedo" << r->getPlan()->getName() << endl;
 #endif
-		log->evenOccured("PRede(" + r->getPlan()->getName() + ")");
+		log->eventOccured("PRede(" + r->getPlan()->getName() + ")");
 		return PlanChange::InternalChange;
 	}
 
 	/**
 	 * Tries to repair a failure by removing this plan and triggering a new task allocation.
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
-	PlanChange RuleBook::planReplaceRule(RunningPlan* r)
+	PlanChange RuleBook::planReplaceRule(shared_ptr<RunningPlan> r)
 	{
-		if (r->getParent() == nullptr || !r->getFailHandlingNeeded() || r->isBehaviour())
+		if (r->getParent().expired()|| !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
 		if (r->getFailure() != 2)
 			return PlanChange::NoChange;
-		r->getParent()->deactivateChildren();
-		r->getParent()->setFailedChildren(r->getPlan());
-		r->getParent()->setAllocationNeeded(true);
-		r->getParent()->clearChildren();
+		auto temp = r->getParent().lock();
+		temp->deactivateChildren();
+		temp->setFailedChild(r->getPlan());
+		temp->setAllocationNeeded(true);
+		temp->clearChildren();
 		r->setFailHandlingNeeded(false);
 
-#if RULE_debug
-		cout << "RB: PlanReplace" << r.Plan.Name << endl;
+#ifdef RULE_debug
+		cout << "RB: PlanReplace" << r->getPlan()->getName() << endl;
 #endif
-		log->evenOccured("PReplace(" + r->getPlan()->getName() + ")");
+		log->eventOccured("PReplace(" + r->getPlan()->getName() + ")");
 		return PlanChange::FailChange;
 	}
 	/**
 	 * Propagates a failure to the parent in case it couldn't be repaired on this level.
-	 * @param r
-	 * @return
+	 * @param r A shared_ptr of a RunningPlan
+	 * @return A PlanChange
 	 */
-	PlanChange RuleBook::planPropagationRule(RunningPlan* r)
+	PlanChange RuleBook::planPropagationRule(shared_ptr<RunningPlan> r)
 	{
-		if (r->getParent() == nullptr || !r->getFailHandlingNeeded() || r->isBehaviour())
+		if (r->getParent().lock()|| !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
 		if (r->getFailure() != 3)
 			return PlanChange::NoChange;
-		r->getParent()->addFailure();
+		r->getParent().lock()->addFailure();
 
-#if RULE_debug
-		cout << "RB: PlanPropagation" << r.Plan.Name << endl;
+#ifdef RULE_debug
+		cout << "RB: PlanPropagation" << r->getPlan()->getName() << endl;
 #endif
-		log->evenOccured("PProp(" + r->getPlan()->getName() + ")");
+		log->eventOccured("PProp(" + r->getPlan()->getName() + ")");
 		return PlanChange::FailChange;
 	}
 
 	/**
 	 * Allocates agents in the current state within r to sub-plans.
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
-	PlanChange RuleBook::allocationRule(RunningPlan* r)
+	PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> r)
 	{
 		if (!r->isAllocationNeeded())
 		{
 			return PlanChange::NoChange;
 		}
 		r->setAllocationNeeded(false);
-		vector<int> robots;
+		shared_ptr<vector<int> > robots = make_shared<vector<int> >(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
 		copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
 						r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
-						back_inserter(robots));
-		shared_ptr<list<RunningPlan*> > children = this->ps->getPlansForState(
-				r, r->getActiveState()->getPlans(),
-				make_shared<vector<int> >(robots));
+						back_inserter(*robots));
+//		auto iter = r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin();
+//		for (int i = 0; i < robots->size();i++)
+//		{
+//			robots->at(i) = *iter;
+//			iter++;
+//		}
 
+
+		shared_ptr<list<shared_ptr<RunningPlan>> > children = this->ps->getPlansForState(
+				r, &r->getActiveState()->getPlans(),
+				robots);
 		if (children->size() == 0 || children->size() < r->getActiveState()->getPlans().size())
 		{
 			r->addFailure();
-#if RULE_debug
-			cout << "RB: PlanAllocFailed" << r.Plan.Name << endl;
+#ifdef RULE_debug
+			cout << "RB: PlanAllocFailed" << r->getPlan()->getName() << endl;
 #endif
 			return PlanChange::FailChange;
 		}
-
 		r->addChildren(children);
-#if RULE_debug
-		cout << "RB: PlanAlloc" << r.Plan.Name << endl;
+		cout << "RB: after add children" << endl;
+#ifdef RULE_debug
+		cout << "RB: PlanAlloc" <<  r->getPlan()->getName() << endl;
 #endif
 
 		if (children->size() > 0)
 		{
-			log->evenOccured("PAlloc(" + r->getPlan()->getName() + " in State " + r->getActiveState()->getName() + ")");
+			log->eventOccured("PAlloc(" + r->getPlan()->getName() + " in State " + r->getActiveState()->getName() + ")");
 			return PlanChange::InternalChange;
 		}
 		return PlanChange::NoChange;
@@ -345,12 +368,12 @@ namespace alica
 
 	/**
 	 * Handles a failure at the top-level plan by resetting everything.
-	 * @param r
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChnage
 	 */
-	PlanChange RuleBook::topFailRule(RunningPlan* r)
+	PlanChange RuleBook::topFailRule(shared_ptr<RunningPlan> r)
 	{
-		if (r->getParent() == nullptr)
+		if (r->getParent().expired())
 			return PlanChange::NoChange;
 
 		if (r->getFailHandlingNeeded())
@@ -373,10 +396,10 @@ namespace alica
 			r->getAssignment()->setAllToInitialState(move(robots), r->getOwnEntryPoint());
 			r->setActiveState(r->getOwnEntryPoint()->getState());
 			r->clearFailedChildren();
-#if RULE_debug
-			cout << "RB: PlanTopFail" << r.Plan.Name << endl;
+#ifdef RULE_debug
+			cout << "RB: PlanTopFail" << r->getPlan()->getName() << endl;
 #endif
-			log->evenOccured("TopFail");
+			log->eventOccured("TopFail");
 			return PlanChange::InternalChange;
 		}
 		return PlanChange::NoChange;
@@ -385,15 +408,15 @@ namespace alica
 	/**
 	 * The transition rule, moves an agent along a transition to a next state if the corresponding condition holds,
 	 * flags the RunningPlan for allocation in the next state.
-	 * Note, in case multiple transitions are eligble, one is chosen implementation dependent.
-	 * @param r
+	 * Note, in case multiple transitions are eligible, one is chosen implementation dependent.
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
-	PlanChange RuleBook::transitionRule(RunningPlan* r)
+	PlanChange RuleBook::transitionRule(shared_ptr<RunningPlan> r)
 	{
 		if (r->getActiveState() == nullptr)
 			return PlanChange::NoChange;
-		State* nextState;
+		State* nextState = nullptr;
 
 		for (Transition* t : r->getActiveState()->getOutTransitions())
 		{
@@ -408,13 +431,13 @@ namespace alica
 		}
 		if (nextState == nullptr)
 			return PlanChange::NoChange;
-#if RULE_debug
-		cout << "RB: SynchTransition" << r.Plan.Name << endl;
+#ifdef RULE_debug
+		cout << "RB: SynchTransition" << r->getPlan()->getName() << endl;
 #endif
 		r->moveState(nextState);
 
 		r->setAllocationNeeded(true);
-		log->evenOccured("SynchTrans(" + r->getPlan()->getName() + ")");
+		log->eventOccured("SynchTrans(" + r->getPlan()->getName() + ")");
 		if (r->getActiveState()->isSuccessState())
 			return PlanChange::SuccesChange;
 		else if (r->getActiveState()->isFailureState())
@@ -423,23 +446,27 @@ namespace alica
 	}
 
 	/**
-	 * Moves the agent along a synchronised transition, if the corresponding transition holds and the
-	 * deems the transition as synchronised.
-	 * @param r
+	 * Moves the agent along a synchronized transition, if the corresponding transition holds and the
+	 * deems the transition as synchronized.
+	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
-	PlanChange RuleBook::synchTransitionRule(RunningPlan* r)
+	PlanChange RuleBook::synchTransitionRule(shared_ptr<RunningPlan> r)
 	{
 		if (r->getActiveState() == nullptr)
+		{
 			return PlanChange::NoChange;
-		State* nextState;
+		}
+
+		State* nextState = nullptr;
 
 		for (Transition* t : r->getActiveState()->getOutTransitions())
 		{
 			if (t->getSyncTransition() == nullptr)
+			{
 				continue;
-
-			if (this->sm->followSyncTransition((*t)))
+			}
+			if (this->sm->followSyncTransition((t)))
 			{
 				if (t->evalCondition(r))
 				{
@@ -449,24 +476,24 @@ namespace alica
 				}
 				else
 				{
-					this->sm->setSynchronisation(*t, false);
+					this->sm->setSynchronisation(t, false);
 				}
 			}
 			else
 			{
-				this->sm->setSynchronisation(*t, t->evalCondition(r));
+				this->sm->setSynchronisation(t, t->evalCondition(r));
 			}
 		}
 		if (nextState == nullptr)
 			return PlanChange::NoChange;
-#if RULE_debug
-		cout << "RB: SynchTransition" << r.Plan.Name << endl;
+#ifdef RULE_debug
+		cout << "RB: SynchTransition" << r->getPlan()->getName()<< endl;
 #endif
 
 		r->moveState(nextState);
 
 		r->setAllocationNeeded(true);
-		log->evenOccured("SynchTrans(" + r->getPlan()->getName() + ")");
+		log->eventOccured("SynchTrans(" + r->getPlan()->getName() + ")");
 		if (r->getActiveState()->isSuccessState())
 			return PlanChange::SuccesChange;
 		else if (r->getActiveState()->isFailureState())
@@ -476,8 +503,8 @@ namespace alica
 
 	/**
 	 * Combines to PlanChange flags to one, giving priority to Failures.
-	 * @param cur
-	 * @param update
+	 * @param cur A PlanChange
+	 * @param update A PlanChange
 	 * @return PlanChange
 	 */
 	PlanChange RuleBook::updateChange(PlanChange cur, PlanChange update)

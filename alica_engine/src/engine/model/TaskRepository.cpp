@@ -12,13 +12,11 @@ namespace alica
 
 	TaskRepository::TaskRepository()
 	{
-		// TODO Auto-generated constructor stub
-
+		this->defaultTask = 0;
 	}
 
 	TaskRepository::~TaskRepository()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	long TaskRepository::getDefaultTask() const
