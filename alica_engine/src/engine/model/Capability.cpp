@@ -18,6 +18,12 @@ namespace alica
 	{
 	}
 
+	/**
+	 * Computes the similarity between two capability values.
+	 * @param roleVal Role value
+	 * @param robotVal Robot value
+	 * @return The value, ranges between 0 and 1.
+	 */
 	double Capability::similarityValue(CapValue* roleVal, CapValue* robotVal)
 	{
 		const int nCount = capValues.size();

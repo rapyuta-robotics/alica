@@ -15,6 +15,9 @@
 
 namespace alica
 {
+	/**
+	 * Constructor
+	 */
 	AuthorityManager::AuthorityManager()
 	{
 		this->ae = AlicaEngine::getInstance();
@@ -26,6 +29,9 @@ namespace alica
 	{
 	}
 
+	/**
+	 * Initialises this engine module
+	 */
 	void AuthorityManager::init()
 	{
 		this->ownID = AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
@@ -34,6 +40,10 @@ namespace alica
 //		this.rosNode.Subscribe("AllocationAuthorityInfo", HandleIncomingAuthorityMessage, 10);
 //		authorityPub = new Publisher(this.rosNode, "AllocationAuthorityInfo", AllocationAuthorityInfo.TypeId, 2);
 	}
+
+	/**
+	 * Closes this engine module
+	 */
 	void AuthorityManager::close()
 	{
 		//TODO::
@@ -42,7 +52,7 @@ namespace alica
 
 	/**
 	 * Message Handler
-	 * param name = aai
+	 * param name = aai A AllocationAthorityInfo
 	 */
 	void AuthorityManager::handleIncomingAuthorityMessage(shared_ptr<AllocationAuthorityInfo> aai)
 	{

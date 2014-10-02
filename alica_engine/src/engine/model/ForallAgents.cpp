@@ -23,15 +23,19 @@ namespace alica
 
 	ForallAgents::ForallAgents(long id) : Quantifier(id)
 	{
-		// TODO Auto-generated constructor stub
 
 	}
 
 	ForallAgents::~ForallAgents()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
+	/**
+	 * Returns the <see cref="Variable"/>s currently associated with the agents occupying the scope of this quantifier.
+	 * @param plan A RunningPlan
+	 * @param agentsInScope A shared_ptr<vector<int> >
+	 * @return shared_ptr<list<vector<Variable*> > >
+	 */
 	shared_ptr<list<vector<Variable*> > > ForallAgents::getSortedVariables(RunningPlan* p, shared_ptr<vector<int> > agentsInScope)
 	{
 		agentsInScope = nullptr;
@@ -72,6 +76,12 @@ namespace alica
 		return ret;
 	}
 
+	/**
+	 * Returns the AutoDiff.Terms currently associated with the agents occupying the scope of this quantifier.
+	 * @param plan A RunningPlan
+	 * @param agentsInScope A shared_ptr<vector<int> >
+	 * @return shared_ptr<list<vector<AutoDiff::Term*> > >
+	 */
 	shared_ptr<list<vector<AutoDiff::Term*> > > ForallAgents::getSortedTerms(RunningPlan* plan, shared_ptr<vector<int> > agentsInScope)
 	{
 		agentsInScope = nullptr;

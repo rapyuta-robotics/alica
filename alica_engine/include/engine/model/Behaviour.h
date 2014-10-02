@@ -21,6 +21,9 @@ namespace alica
 	class BehaviourConfiguration;
 	class BasicBehaviour;
 
+	/**
+	 * Represents a Behaviour within the plan tree
+	 */
 	class Behaviour : public AlicaElement
 	{
 	public:
@@ -34,9 +37,18 @@ namespace alica
 		void setConfigurations(const list<BehaviourConfiguration*>& configurations);
 		const string& getFileName() const;
 		void setFileName(const string& fileName);
+		BasicBehaviour* getImplementation();
+		void setImplementation(BasicBehaviour* implementation);
 
 	private:
+		/**
+		 * The set of static configurations of this Behaviour
+		 */
 		list<BehaviourConfiguration*> configurations;
+		/**
+		 * The actual implementation of this behaviour, a subclass of BasicBehaviour
+		 */
+		BasicBehaviour* implementation;
 		string fileName;
 	};
 

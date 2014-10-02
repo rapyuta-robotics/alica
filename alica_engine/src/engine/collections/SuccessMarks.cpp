@@ -17,6 +17,9 @@
 namespace alica
 {
 
+	/**
+	 * Default Constructor
+	 */
 	SuccessMarks::SuccessMarks()
 	{
 
@@ -26,6 +29,10 @@ namespace alica
 	{
 	}
 
+	/**
+	 * Drop every mark not occurring in plans passed as argument.
+	 * @param active An unique_ptr<unordered_set<AbstractPlan*> >
+	 */
 	void SuccessMarks::limitToPlans(unique_ptr<unordered_set<AbstractPlan*> > active)
 	{
 		list<AbstractPlan*> tr;
@@ -52,11 +59,19 @@ namespace alica
 		this->succesMarks = succesMarks;
 	}
 
+	/**
+	 * Clear all marks
+	 */
 	void SuccessMarks::clear()
 	{
 		this->succesMarks.clear();
 	}
 
+	/**
+	 * Get all EntryPoints succeeded in a plan. May return nullptr.
+	 * @param p An AbstractPlan*
+	 * @return A shared_ptr<list<EntryPoint*> >
+	 */
 	shared_ptr<list<EntryPoint*> > SuccessMarks::succeededEntryPoints(AbstractPlan* p)
 	{
 		for (map<AbstractPlan*, shared_ptr<list<EntryPoint*> > >::const_iterator iterator =
@@ -70,6 +85,10 @@ namespace alica
 		return nullptr;
 	}
 
+	/**
+	 * Construct from a list of EntryPoint id, as received by a message
+	 * @param epIds A list<long>
+	 */
 	SuccessMarks::SuccessMarks(list<long> epIds)
 	{
 		map<long, EntryPoint*> eps = AlicaEngine::getInstance()->getPlanRepository()->getEntryPoints();
@@ -101,11 +120,20 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Remove all marks referring to the specified plan.
+	 * @param plan An AbstractPlan*
+	 */
 	void SuccessMarks::removePlan(AbstractPlan* plan)
 	{
 		this->getSuccessMarks().erase(plan);
 	}
 
+	/**
+	 * Mark an EntryPoint within a plan as successfully completed
+	 * @param p An AbstractPlan*
+	 * @param e An EntryPoint*
+	 */
 	void SuccessMarks::markSuccessfull(AbstractPlan* p, EntryPoint* e)
 	{
 		auto iter = this->getSuccessMarks().find(p);
@@ -127,6 +155,12 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Check whether an EntryPoint in a plan was completed.
+	 * @param p An AbstractPlan*
+	 * @param e An EntryPoint*
+	 * @return A bool
+	 */
 	bool SuccessMarks::succeeded(AbstractPlan* p, EntryPoint* e)
 	{
 		list<EntryPoint*> l;
@@ -140,6 +174,12 @@ namespace alica
 		return false;
 	}
 
+	/**
+	 * Check whether an EntryPoint in a plan was completed.
+	 * @param planId An int
+	 * @param entryPointId An int
+	 * @return A bool
+	 */
 	bool SuccessMarks::succeeded(long planId, long entryPointId)
 	{
 		Plan* p = AlicaEngine::getInstance()->getPlanRepository()->getPlans().at(planId);
@@ -147,6 +187,11 @@ namespace alica
 		return succeeded(p, e);
 	}
 
+	/**
+	 * Test if at least one task has succeeded within abstract plan p
+	 * @param p An AbstractPlan*
+	 * @return A bool
+	 */
 	bool SuccessMarks::anyTaskSucceeded(AbstractPlan* p)
 	{
 		list<EntryPoint*> l;
@@ -171,6 +216,10 @@ namespace alica
 		return false;
 	}
 
+	/**
+	 * Serialize to a list of EntryPoint ids.
+	 * @return A list<long>
+	 */
 	list<long> SuccessMarks::toList()
 	{
 		list<long> ret;

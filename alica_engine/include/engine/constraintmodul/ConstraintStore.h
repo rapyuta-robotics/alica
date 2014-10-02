@@ -20,6 +20,9 @@ namespace alica
 	class Condition;
 	class RunningPlan;
 
+	/**
+	 * Holds information about active constraints in the corresponding RunningPlan
+	 */
 	class ConstraintStore
 	{
 	public:
@@ -27,7 +30,7 @@ namespace alica
 		virtual ~ConstraintStore();
 		void clear();
 		void addCondition(Condition* con);
-		void removeCondition(Condition con);
+		void removeCondition(Condition* con);
 
 		//	TODO
 //		void acceptQuery(ConstraintQuery query);

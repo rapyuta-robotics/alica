@@ -20,6 +20,9 @@ namespace alica
 
 	class EntryPointRobotPair;
 
+	/**
+	 * A representation of the difference between two allocations
+	 */
 	class AllocationDifference
 	{
 	public:
@@ -39,6 +42,9 @@ namespace alica
 		void setSubtractions(vector<EntryPointRobotPair*> subtractions);
 
 	protected:
+		/**
+		 * Denoting the reason for an allocation switch
+		 */
 		AllocationDifference::Reason reason;
 		vector<EntryPointRobotPair*> additions;
 		vector<EntryPointRobotPair*> subtractions;

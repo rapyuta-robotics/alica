@@ -14,6 +14,9 @@ namespace alica
 {
 	class PostCondition;
 
+	/**
+	 * A terminal state within a plan. Indicates termination of the corresponding task
+	 */
 	class TerminalState : public State
 	{
 	public:

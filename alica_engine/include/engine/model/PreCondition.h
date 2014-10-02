@@ -20,6 +20,9 @@ namespace alica
 
 	class RunningPlan;
 
+	/**
+	 * A precondition guards a Plan or a Transition.
+	 */
 	class PreCondition : public Condition
 	{
 	public:

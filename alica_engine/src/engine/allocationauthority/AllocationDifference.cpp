@@ -34,11 +34,18 @@ namespace alica
 		this->reason = reason;
 	}
 
+	/**
+	 * Returns whether the difference is empty, i.e., the corresponding allocations are the same
+	 * @return A bool
+	 */
 	bool AllocationDifference::isEmpty()
 	{
 		return this->additions.size() == 0 && this->subtractions.size() == 0;
 	}
 
+	/**
+	 * Reset this difference to the empty difference
+	 */
 	void AllocationDifference::reset()
 	{
 		this->additions.clear();
@@ -88,6 +95,10 @@ namespace alica
 		return true;
 	}
 
+	/**
+	 * Apply another difference to this one resulting in the composition of both
+	 * @param other A AllocationDifference*
+	 */
 	void AllocationDifference::applyDifference(AllocationDifference* other)
 	{
 		for (int i = 0; i < other->additions.size(); i++)

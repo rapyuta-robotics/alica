@@ -19,6 +19,9 @@ namespace alica
 
 	class Capability;
 
+	/**
+	 * A capability definition set holds all defined capabilities.
+	 */
 	class CapabilityDefinitionSet : public AlicaElement
 	{
 	public:

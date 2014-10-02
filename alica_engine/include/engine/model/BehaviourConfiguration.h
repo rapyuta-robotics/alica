@@ -45,10 +45,26 @@ namespace alica
 		void setBehaviour(const Behaviour* behaviour);
 
 	private:
+		/**
+		 * Specifies whether this Behaviour is run eventDriven. If it is not event driven, a timer will call it according to Frequency and Deferring.
+		 */
 		bool eventDriven;
+		/**
+		 * The frequency with which this Behaviour is called in case it is not EventDriven.
+		 */
 		int frequency;
+		/**
+		 * The time in ms to wait before this Behaviour is executed for the first time after entering the corresponding state.
+		 * Has only effect for Behaviours not running in EventDriven mode.
+		 */
 		int deferring;
+		/**
+		 * The set of static parameters of this Behaviour configuration. Usually parsed by BasicBehaviour.InitializeParameters.
+		 */
 		shared_ptr<map<string,string>> parameters;
+		/**
+		 * This configuration's Behaviour
+		 */
 		const Behaviour* behaviour;
 	};
 

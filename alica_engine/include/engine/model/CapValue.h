@@ -13,6 +13,9 @@
 namespace alica
 {
 
+	/**
+	 * A value for a Capability.
+	 */
 	class CapValue : public AlicaElement
 	{
 	public:

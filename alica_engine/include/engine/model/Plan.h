@@ -28,6 +28,9 @@ namespace alica
 	class SyncTransition;
 	class Transition;
 
+	/**
+	 * An ALICA plan
+	 */
 	class Plan : public AbstractPlan
 	{
 	public:

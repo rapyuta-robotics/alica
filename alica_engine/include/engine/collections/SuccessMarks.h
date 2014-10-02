@@ -23,6 +23,9 @@ namespace alica
 	class AbstractPlan;
 	class EntryPoint;
 
+	/**
+	 * Globally holds information about succeeded entrypoints for a specific robot
+	 */
 	class SuccessMarks
 	{
 	public:

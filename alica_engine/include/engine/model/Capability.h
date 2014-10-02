@@ -20,6 +20,9 @@ namespace alica
 {
 	class CapValue;
 
+	/**
+	 * A capability is used to match agents to roles.
+	 */
 	class Capability : public AlicaElement
 	{
 	public:
@@ -32,6 +35,9 @@ namespace alica
 
 
 	protected:
+		/**
+		 * List of possible values for this capability
+		 */
 		list<CapValue*> capValues;
 	};
 }

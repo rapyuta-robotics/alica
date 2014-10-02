@@ -23,6 +23,9 @@ namespace alica
 {
 	class IAlicaCommunication;
 
+	/**
+	 * Manages communication wrt. conflict resolution.
+	 */
 	class AuthorityManager
 	{
 	public:

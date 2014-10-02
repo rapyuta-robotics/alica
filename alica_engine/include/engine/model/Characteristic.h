@@ -23,6 +23,9 @@ namespace alica
 	class Capability;
 	class CapValue;
 
+	/**
+	 * A characteristic encapsulates a Capability and aCapValue.
+	 */
 	class Characteristic : public AlicaElement
 	{
 	public:
@@ -41,6 +44,9 @@ namespace alica
 	protected:
 		Capability* capability;
 		CapValue* capValue;
+		/**
+		 * The weight, used for role allocation.
+		 */
 		double weight = 0;
 
 	};
