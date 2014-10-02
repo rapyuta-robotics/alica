@@ -7,8 +7,12 @@
 
 #ifndef RULEBOOK_H_
 #define RULEBOOK_H_
+#define RULE_debug
+
+using namespace std;
 
 #include "engine/PlanChange.h"
+#include <memory>
 
 namespace alica
 {
@@ -27,6 +31,9 @@ namespace alica
 	class CycleManager;
 	class UtilityFunction;
 
+	/**
+	 * Defines the operational semantics of the used ALICA dialect.
+	 */
 	class RuleBook
 	{
 	public:
@@ -34,9 +41,9 @@ namespace alica
 		virtual ~RuleBook();
 		bool isChangeOccured() const;
 		void setChangeOccured(bool changeOccured);
-		PlanChange visit(RunningPlan* r);
+		PlanChange visit(shared_ptr<RunningPlan> r);
 		PlanChange updateChange(PlanChange cur, PlanChange update);
-		RunningPlan* initialisationRule(Plan* masterPlan);
+		shared_ptr<RunningPlan> initialisationRule(Plan* masterPlan);
 
 	protected:
 		ITeamObserver* to;
@@ -45,16 +52,16 @@ namespace alica
 		IPlanSelector* ps;
 		Logger* log;
 		bool changeOccured;
-		PlanChange synchTransitionRule(RunningPlan* r);
-		PlanChange transitionRule(RunningPlan* r);
-		PlanChange topFailRule(RunningPlan* r);
-		PlanChange allocationRule(RunningPlan* r);
-		PlanChange authorityOverrideRule(RunningPlan* r);
-		PlanChange planAbortRule(RunningPlan* r);
-		PlanChange planRedoRule(RunningPlan* r);
-		PlanChange planReplaceRule(RunningPlan* r);
-		PlanChange planPropagationRule(RunningPlan* r);
-		PlanChange dynamicAllocationRule(RunningPlan* r);
+		PlanChange synchTransitionRule(shared_ptr<RunningPlan> r);
+		PlanChange transitionRule(shared_ptr<RunningPlan> r);
+		PlanChange topFailRule(shared_ptr<RunningPlan> r);
+		PlanChange allocationRule(shared_ptr<RunningPlan> r);
+		PlanChange authorityOverrideRule(shared_ptr<RunningPlan> r);
+		PlanChange planAbortRule(shared_ptr<RunningPlan> r);
+		PlanChange planRedoRule(shared_ptr<RunningPlan> r);
+		PlanChange planReplaceRule(shared_ptr<RunningPlan> r);
+		PlanChange planPropagationRule(shared_ptr<RunningPlan> r);
+		PlanChange dynamicAllocationRule(shared_ptr<RunningPlan> r);
 	};
 
 #endif /* RULEBOOK_H_ */

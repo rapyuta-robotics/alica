@@ -17,6 +17,10 @@
 namespace alica
 {
 
+	/**
+	 * Basic constructor. Initializes various timers. Should only be called from the constructor of inheriting classes.
+	 * @param name The name of the behaviour
+	 */
 	BasicBehaviour::BasicBehaviour(string name)
 	{
 		this->name = name;
@@ -121,12 +125,12 @@ namespace alica
 		return this->timer->restart();
 	}
 
-	const shared_ptr<RunningPlan>& BasicBehaviour::getRunningPlan() const
+	shared_ptr<RunningPlan> BasicBehaviour::getRunningPlan()
 	{
 		return runningPlan;
 	}
 
-	void BasicBehaviour::setRunningPlan(const shared_ptr<RunningPlan>& runningPlan)
+	void BasicBehaviour::setRunningPlan(shared_ptr<RunningPlan> runningPlan)
 	{
 		this->runningPlan = runningPlan;
 	}
@@ -158,7 +162,7 @@ namespace alica
 
 	void BasicBehaviour::runInternal()
 	{
-		sleep(3);
+//		sleep(3);
 		unique_lock<mutex> lck(runCV_mtx);
 		while (!AlicaEngine::getInstance()->isTerminating() && this->started)
 		{

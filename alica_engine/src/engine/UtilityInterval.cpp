@@ -9,7 +9,9 @@
 
 namespace alica
 {
-
+	/**
+	 * Holds a minimal and a maximal possible utility value. Used internally for searching.
+	 */
 	UtilityInterval::UtilityInterval(double min, double max)
 	{
 		this->min = min;
@@ -20,6 +22,9 @@ namespace alica
 	{
 	}
 
+	/**
+	 * The maximally achievable utility.
+	 */
 	double UtilityInterval::getMax()
 	{
 		return max;
@@ -30,6 +35,9 @@ namespace alica
 		this->max = max;
 	}
 
+	/**
+	 * The minimally achievable utility.
+	 */
 	double UtilityInterval::getMin()
 	{
 		return min;

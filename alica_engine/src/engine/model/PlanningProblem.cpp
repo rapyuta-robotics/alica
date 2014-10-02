@@ -12,13 +12,18 @@ namespace alica
 
 	PlanningProblem::PlanningProblem()
 	{
-		// TODO Auto-generated constructor stub
-
+		this->runtimeCondition = nullptr;
+		this->preCondition = nullptr;
+		this->alternativePlan = nullptr;
+		this->planningType = PlanningType::None;
+		this->updateRate = 0;
+		this->postCondition = nullptr;
+		this->waitPlan = nullptr;
+		this->distributeProblem = false;
 	}
 
 	PlanningProblem::~PlanningProblem()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	const Plan* PlanningProblem::getAlternativePlan() const

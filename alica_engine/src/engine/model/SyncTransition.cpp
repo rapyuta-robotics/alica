@@ -17,6 +17,7 @@ namespace alica
 		this->failOnSyncTimeOut = false;
 		this->syncTimeOut = 3000;
 		this->talkTimeOut = 30;
+		this->plan = nullptr;
 	}
 
 	SyncTransition::~SyncTransition()

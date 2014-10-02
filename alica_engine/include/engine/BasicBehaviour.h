@@ -28,6 +28,9 @@ namespace alica
 	class RunningPlan;
 	class BehaviourConfiguration;
 
+	/**
+	 * The base class for all behaviours. All Behaviours must inherit from this class.
+	 */
 	class BasicBehaviour
 	{
 	public:
@@ -49,19 +52,41 @@ namespace alica
 		void setDelayedStart(long msDelayedStart);
 		int getInterval() const;
 		void setInterval(long msInterval);
-		const shared_ptr<RunningPlan>& getRunningPlan() const;
-		void setRunningPlan(const shared_ptr<RunningPlan>& runningPlan);
+		shared_ptr<RunningPlan> getRunningPlan();
+		void setRunningPlan(shared_ptr<RunningPlan> runningPlan);
 		bool isSuccess() const;
 		bool isFailure() const;
 
 	protected:
+		/**
+		 * The name of this behaviour.
+		 */
 		string name;
+		/**
+		 * Parameters are behaviour configuration specific fixed values. They are set before the behaviour is activated.
+		 */
 		shared_ptr<map<string,string>> parameters;
+		/**
+		 * The set of Variables attached to this behaviours as defined by the BehaviourConfiguration.
+		 */
 		shared_ptr<list<Variable*>> variables;
+		/**
+		 * The running plan representing this behaviour within the PlanBase.
+		 */
 		shared_ptr<RunningPlan> runningPlan;
 		chrono::milliseconds msInterval;
 		chrono::milliseconds msDelayedStart;
-		bool running, started, callInit, success, failure;
+		bool running;
+		bool started;
+		bool callInit;
+		/**
+		 * The Success flag. Raised by a behaviour to indicate it reached whatever it meant to reach.
+		 */
+		bool success;
+		/**
+		 * The Failure flag. Raised by a behaviour to indicate it has failed in some way.
+		 */
+		bool failure;
 		thread* runThread; /** < executes the runInternal and thereby the abstract run method */
 		supplementary::Timer* timer; /** < triggers the condition_variable of the runThread, if this behaviour is timer triggered */
 		int getOwnId();

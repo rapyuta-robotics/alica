@@ -99,14 +99,6 @@ file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
  add_library(alica_engine
 	${alica_SOURCES};
  )
-  add_library(test_behaviour_creator
-	test/src/Attack.cpp;
-	test/src/AttackOpp.cpp;
-	test/src/DefendMid.cpp;
-	test/src/MidFieldStandard.cpp;
-	test/src/Tackle.cpp;
-	test/src/TestBehaviourCreator.cpp;
- )
 ## Declare a cpp library
  ##add_library(alica
    ##src/engine/AlicaEngine.cpp
@@ -195,11 +187,7 @@ file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 #############
 
 ## Add gtest based cpp test target and link libraries
-file(GLOB_RECURSE test_alica_SOURCES "test/src/*.cpp")
- catkin_add_gtest(${PROJECT_NAME}-test ${test_alica_SOURCES})
- if(TARGET ${PROJECT_NAME}-test)
-   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
- endif()
+
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

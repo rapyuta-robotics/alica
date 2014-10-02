@@ -9,23 +9,35 @@
 namespace alica
 {
 
+	/**
+	 * Basic constructor
+	 */
 	State::State()
 	{
 		this->terminal = false;
 		this->successState = false;
 		this->failureState = false;
-		// TODO Auto-generated constructor stub
+		this->inPlan = nullptr;
+		this->entryPoint = nullptr;
 
 	}
+
+	/**
+	 * Constructor which accepts a unique id.
+	 * @param id A int
+	 */
 	State::State(long id)
 	{
 		this->id = id;
-
+		this->terminal = false;
+		this->successState = false;
+		this->failureState = false;
+		this->inPlan = nullptr;
+		this->entryPoint = nullptr;
 	}
 
 	State::~State()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	bool State::isFailureState() const
@@ -63,7 +75,7 @@ namespace alica
 		return outTransitions;
 	}
 
-	void State::setOutTransitions(const list<Transition*>& outTransition)
+	void State::setOutTransitions(list<Transition*> outTransition)
 	{
 		this->outTransitions = outTransition;
 	}
@@ -120,7 +132,6 @@ namespace alica
 	{
 		stringstream ss;
 		ss << AlicaElement::toString();
-		ss << "Filename: " << this << endl;
 		return ss.str();
 	}
 

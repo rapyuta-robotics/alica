@@ -34,11 +34,14 @@ namespace alica
 		this->epRobotsMapping = new AssignmentCollection(this->plan->getEntryPoints().size());
 
 		list<EntryPoint*> l;
-		transform(plan->getEntryPoints().begin(), plan->getEntryPoints().end(), back_inserter(l),
-					[](map<long, EntryPoint*>::value_type& val)
-					{	return val.second;});
-		l.sort();
-		copy(l.begin(), l.end(), back_inserter(epRobotsMapping->getEntryPoints()));
+		for(auto pair : plan->getEntryPoints())
+		{
+			l.push_back(pair.second);
+		}
+		l.sort(EntryPoint::compareTo);
+		auto iter = l.begin();
+		advance(iter, l.size());
+		copy(l.begin(), iter, this->epRobotsMapping->getEntryPoints()->begin());
 		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 		this->epSucMapping = new SuccessCollection(p);
 	}
@@ -62,9 +65,9 @@ namespace alica
 		shared_ptr<vector<int> > ret = shared_ptr<vector<int> >();
 		for (int i = 0; i < this->getEpRobotsMapping()->getCount(); i++)
 		{
-			for (int j = 0; j < this->getEpRobotsMapping()->getRobots()[i]->size(); j++)
+			for (int j = 0; j < this->getEpRobotsMapping()->getRobots()->at(i)->size(); j++)
 			{
-				ret->push_back(this->getEpRobotsMapping()->getRobots()[i]->at(j));
+				ret->push_back(this->getEpRobotsMapping()->getRobots()->at(i)->at(j));
 			}
 		}
 		sort(ret->begin(), ret->end());
@@ -76,6 +79,11 @@ namespace alica
 		return epRobotsMapping;
 	}
 
+	/**
+	 * The robots that are currently working on a specific task, referred to by an EntryPoint Id.
+	 * @param epid EntryPoint id
+	 * @return A vector of int
+	 */
 	shared_ptr<vector<int> > Assignment::getRobotsWorking(long epid)
 	{
 		return this->getEpRobotsMapping()->getRobotsById(epid);
@@ -96,47 +104,47 @@ namespace alica
 		this->allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling",
 		NULL);
 		auto assCol = pa->getEpRobotsMapping();
-		vector<shared_ptr<vector<int> > > robots;
+		shared_ptr<vector<shared_ptr<vector<int> > > >robots;
 		if (allowIdling)
 		{
-			robots = vector<shared_ptr<vector<int> > >(assCol->getCount() - 1);
+			robots = make_shared<vector<shared_ptr<vector<int> > > >(assCol->getCount() - 1);// -1 for idling
 		}
 		else
 		{
-			robots = vector<shared_ptr<vector<int> > >(assCol->getCount());
+			robots = make_shared<vector<shared_ptr<vector<int> > > >(assCol->getCount());
 		}
-		for (int i = 0; i < robots.size(); ++i)
+		for (int i = 0; i < robots->size(); ++i)
 		{
-			robots[i] = assCol->getRobots().at(i);
+			robots->at(i) = assCol->getRobots()->at(i);
 		}
-		vector<EntryPoint*> newEps = vector<EntryPoint*>(robots.size());
-		copy(assCol->getEntryPoints().begin(), assCol->getEntryPoints().end(), newEps.begin());
+		shared_ptr<vector<EntryPoint*> > newEps = make_shared<vector<EntryPoint*> >(robots->size());
+		copy(assCol->getEntryPoints()->begin(), assCol->getEntryPoints()->begin() + robots->size(), newEps->begin());
 		this->epRobotsMapping = new AssignmentCollection(newEps, robots);
 		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 		this->epSucMapping = pa->getEpSuccessMapping();
 	}
 
-	Assignment::Assignment(Plan* p, AllocationAuthorityInfo* aai)
+	Assignment::Assignment(Plan* p, shared_ptr<AllocationAuthorityInfo> aai)
 	{
 		this->plan = p;
 		this->max = 1;
 		this->min = 1;
 		this->allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling",
 		NULL);
-		vector<EntryPoint*> eps = vector<EntryPoint*>(p->getEntryPoints().size());
-		vector<shared_ptr<vector<int> > > robots = vector<shared_ptr<vector<int> > >(p->getEntryPoints().size());
+		shared_ptr<vector<EntryPoint*> > eps = make_shared<vector<EntryPoint*> >(p->getEntryPoints().size());
+		shared_ptr<vector<shared_ptr<vector<int> > > > robots = make_shared<vector<shared_ptr<vector<int> > > >(p->getEntryPoints().size());
 		int k = 0;
 		for (auto iter : p->getEntryPoints())
 		{
-			eps[k] = iter.second;
-			robots[k] = make_shared<vector<int> >(vector<int>());
+			eps->at(k) = iter.second;
+			robots->at(k) = make_shared<vector<int> >();
 			for (int i = 0; i < aai->entryPointRobots.size(); i++)
 			{
 				if (iter.second->getId() == aai->entryPointRobots[i].entrypoint)
 				{
 					for (int rob : aai->entryPointRobots[i].robots)
 					{
-						robots[k]->push_back(rob);
+						robots->at(k)->push_back(rob);
 					}
 				}
 			}
@@ -147,6 +155,11 @@ namespace alica
 		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 	}
 
+	/**
+	 * The robots that are currently working on a specific task, referred to by an EntryPoint.
+	 * @param ep An EntryPoint
+	 * @return A vector of int
+	 */
 	shared_ptr<vector<int> > Assignment::getRobotsWorking(EntryPoint* ep)
 	{
 		return this->getEpRobotsMapping()->getRobots(ep);
@@ -155,23 +168,34 @@ namespace alica
 	int Assignment::totalRobotCount()
 	{
 		int c = 0;
-		for (int i = 0; i < this->epRobotsMapping->getRobots().size(); i++)
+		for (int i = 0; i < this->epRobotsMapping->getRobots()->size(); i++)
 		{
-			c += this->epRobotsMapping->getRobots()[i]->size();
+			c += this->epRobotsMapping->getRobots()->at(i)->size();
 		}
 		return this->numUnAssignedRobots + c;
 	}
 
-	vector<EntryPoint*> Assignment::getEntryPoints()
+	/**
+	 * The shared_ptr of a vector of EntryPoints this assignment considers relevant.
+	 */
+	shared_ptr<vector<EntryPoint*> > Assignment::getEntryPoints()
 	{
 		return this->epRobotsMapping->getEntryPoints();
 	}
 
+	/**
+	 * Number of Entrypoints in this assignment's plan.
+	 */
 	int Assignment::getEntryPointCount()
 	{
 		return this->epRobotsMapping->getCount();
 	}
 
+	/**
+	 * The robots that are currently working on or already succeeded in a specific task, referred to by an EntryPoint.
+	 * @param ep An EntryPoint
+	 * @return a shared_ptr of a list of int
+	 */
 	shared_ptr<list<int> > Assignment::getRobotsWorkingAndFinished(EntryPoint* ep)
 	{
 		shared_ptr<list<int> > ret = make_shared<list<int> >(list<int>());
@@ -198,6 +222,12 @@ namespace alica
 		return ret;
 	}
 
+	/**
+	 * The robots that are currently working on or already succeeded in a specific task, referred to by an EntryPoint.
+	 * Each robot only occurs once.
+	 * @param ep An entrypoint
+	 * @return a shared_ptr of a list of int
+	 */
 	shared_ptr<list<int> > Assignment::getUniqueRobotsWorkingAndFinished(EntryPoint* ep)
 	{
 		shared_ptr<list<int> > ret = make_shared<list<int> >(list<int>());
@@ -216,6 +246,11 @@ namespace alica
 		return ret;
 	}
 
+	/**
+	 * The robots that are currently working on or already succeeded in a specific task, referred to by an EntryPoint Id.
+	 * @param epid EntryPoint id
+	 * @return a shared_ptr of a list of int
+	 */
 	shared_ptr<list<int> > Assignment::getRobotsWorkingAndFinished(long epid)
 	{
 		shared_ptr<list<int> > ret = make_shared<list<int> >(list<int>());
@@ -265,11 +300,11 @@ namespace alica
 		this->robotStateMapping->removeRobot(robotId);
 		for (int i = 0; i < this->epRobotsMapping->getCount(); i++)
 		{
-			auto iter = find(this->epRobotsMapping->getRobots()[i]->begin(),
-								this->epRobotsMapping->getRobots()[i]->end(), robotId);
-			if (iter != this->epRobotsMapping->getRobots()[i]->end())
+			auto iter = find(this->epRobotsMapping->getRobots()->at(i)->begin(),
+								this->epRobotsMapping->getRobots()->at(i)->end(), robotId);
+			if (iter != this->epRobotsMapping->getRobots()->at(i)->end())
 			{
-				this->epRobotsMapping->getRobots()[i]->erase(iter);
+				this->epRobotsMapping->getRobots()->at(i)->erase(iter);
 				return true;
 			}
 		}
@@ -287,15 +322,19 @@ namespace alica
 		return;
 	}
 
+	/**
+	 * Tests whether this assignment is valid with respect to the plan's cardinalities.
+	 * @return A bool
+	 */
 	bool Assignment::isValid()
 	{
 		auto robots = this->epRobotsMapping->getRobots();
 		auto eps = this->epRobotsMapping->getEntryPoints();
 		auto success = this->epSucMapping->getRobots();
-		for (int i = 0; i < robots.size(); ++i)
+		for (int i = 0; i < robots->size(); ++i)
 		{
-			int c = robots[i]->size() + success[i]->size();
-			if (c > eps[i]->getMaxCardinality() || c < eps[i]->getMinCardinality())
+			int c = robots->at(i)->size() + success[i]->size();
+			if (c > eps->at(i)->getMaxCardinality() || c < eps->at(i)->getMinCardinality())
 			{
 				return false;
 			}
@@ -303,6 +342,10 @@ namespace alica
 		return true;
 	}
 
+	/**
+	 * Tests weather all required tasks have been successfully completed and thus the plan can be considered as successful.
+	 * @return A bool
+	 */
 	bool Assignment::isSuccessfull()
 	{
 		for (int i = 0; i < this->epSucMapping->getCount(); i++)
@@ -327,32 +370,35 @@ namespace alica
 		{
 			return false;
 		}
+		//check for same length
 		if (this->epRobotsMapping->getCount() != otherAssignment->epRobotsMapping->getCount())
 		{
 			return false;
 		}
+		//check for same entrypoints
 		auto ownEps = this->epRobotsMapping->getEntryPoints();
 		auto otherEps = otherAssignment->epRobotsMapping->getEntryPoints();
-		for (int i = 0; i < ownEps.size(); ++i)
+		for (int i = 0; i < ownEps->size(); ++i)
 		{
-			if (ownEps[i]->getId() != otherEps[i]->getId())
+			if (ownEps->at(i)->getId() != otherEps->at(i)->getId())
 			{
 				return false;
 			}
 		}
+		//check for same robots in entrypoints
 		auto ownRobots = this->epRobotsMapping->getRobots();
 		auto otherRobots = otherAssignment->epRobotsMapping->getRobots();
-		for (int i = 0; i < ownRobots.size(); ++i)
+		for (int i = 0; i < ownRobots->size(); ++i)
 		{
-			if (ownRobots[i]->size() != otherRobots[i]->size())
+			if (ownRobots->at(i)->size() != otherRobots->at(i)->size())
 			{
 				return false;
 			}
 
-			for (int robot : (*ownRobots[i]))
+			for (int robot : (*ownRobots->at(i)))
 			{
-				auto iter = find(otherRobots[i]->begin(), otherRobots[i]->end(), robot);
-				if (iter == otherRobots[i]->end())
+				auto iter = find(otherRobots->at(i)->begin(), otherRobots->at(i)->end(), robot);
+				if (iter == otherRobots->at(i)->end())
 				{
 					return false;
 				}
@@ -361,6 +407,11 @@ namespace alica
 		return true;
 	}
 
+	/**
+	 * Test whether at least one robot is working on a task or succeeded with a task.
+	 * @param ep An EntryPoint identifying the task in question.
+	 * @return bool
+	 */
 	bool Assignment::isEntryPointNonEmpty(EntryPoint* ep)
 	{
 		auto r = this->epRobotsMapping->getRobots(ep);
@@ -378,26 +429,26 @@ namespace alica
 		bool ret = false;
 		for (int i = 0; i < this->epRobotsMapping->getCount(); i++)
 		{
-			if (this->epRobotsMapping->getEntryPoints()[i] == ep)
+			if (this->epRobotsMapping->getEntryPoints()->at(i) == ep)
 			{
-				if (find(this->epRobotsMapping->getRobots()[i]->begin(), this->epRobotsMapping->getRobots()[i]->end(),
-							robot) != this->epRobotsMapping->getRobots()[i]->end())
+				if (find(this->epRobotsMapping->getRobots()->at(i)->begin(), this->epRobotsMapping->getRobots()->at(i)->end(),
+							robot) != this->epRobotsMapping->getRobots()->at(i)->end())
 				{
 					return false;
 				}
 				else
 				{
-					this->epRobotsMapping->getRobots()[i]->push_back(robot);
+					this->epRobotsMapping->getRobots()->at(i)->push_back(robot);
 					ret = true;
 				}
 			}
 			else
 			{
-				auto iter = find(this->epRobotsMapping->getRobots()[i]->begin(),
-									this->epRobotsMapping->getRobots()[i]->end(), robot);
-				if (iter != this->epRobotsMapping->getRobots()[i]->end())
+				auto iter = find(this->epRobotsMapping->getRobots()->at(i)->begin(),
+									this->epRobotsMapping->getRobots()->at(i)->end(), robot);
+				if (iter != this->epRobotsMapping->getRobots()->at(i)->end())
 				{
-					this->epRobotsMapping->getRobots()[i]->erase(iter);
+					this->epRobotsMapping->getRobots()->at(i)->erase(iter);
 					ret = true;
 				}
 			}
@@ -410,26 +461,26 @@ namespace alica
 		bool ret = false;
 		for (int i = 0; i < this->epRobotsMapping->getCount(); i++)
 		{
-			if (this->epRobotsMapping->getEntryPoints()[i] == ep)
+			if (this->epRobotsMapping->getEntryPoints()->at(i) == ep)
 			{
-				if (find(this->epRobotsMapping->getRobots()[i]->begin(), this->epRobotsMapping->getRobots()[i]->end(),
-							robot) != this->epRobotsMapping->getRobots()[i]->end())
+				if (find(this->epRobotsMapping->getRobots()->at(i)->begin(), this->epRobotsMapping->getRobots()->at(i)->end(),
+							robot) != this->epRobotsMapping->getRobots()->at(i)->end())
 				{
 					return false;
 				}
 				else
 				{
-					this->epRobotsMapping->getRobots()[i]->push_back(robot);
+					this->epRobotsMapping->getRobots()->at(i)->push_back(robot);
 					ret = true;
 				}
 			}
 			else
 			{
-				auto iter = find(this->epRobotsMapping->getRobots()[i]->begin(),
-									this->epRobotsMapping->getRobots()[i]->end(), robot);
-				if (iter != this->epRobotsMapping->getRobots()[i]->end())
+				auto iter = find(this->epRobotsMapping->getRobots()->at(i)->begin(),
+									this->epRobotsMapping->getRobots()->at(i)->end(), robot);
+				if (iter != this->epRobotsMapping->getRobots()->at(i)->end())
 				{
-					this->epRobotsMapping->getRobots()[i]->erase(iter);
+					this->epRobotsMapping->getRobots()->at(i)->erase(iter);
 					ret = true;
 				}
 			}
@@ -489,28 +540,37 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Returns the EntryPoint a robot is currently working on. Returns null, if the robot is currently not working on the respective plan.
+	 * @param robot an int
+	 * @return An entrypoint
+	 */
 	EntryPoint* Assignment::entryPointOfRobot(int robot)
 	{
 		for (int i = 0; i < this->epRobotsMapping->getCount(); i++)
 		{
-			auto iter = find(this->epRobotsMapping->getRobots()[i]->begin(),
-								this->epRobotsMapping->getRobots()[i]->end(), robot);
-			if (iter != this->epRobotsMapping->getRobots()[i]->end())
+			auto iter = find(this->epRobotsMapping->getRobots()->at(i)->begin(),
+								this->epRobotsMapping->getRobots()->at(i)->end(), robot);
+			if (iter != this->epRobotsMapping->getRobots()->at(i)->end())
 			{
-				return this->epRobotsMapping->getEntryPoints()[i];
+				return this->epRobotsMapping->getEntryPoints()->at(i);
 			}
 		}
 		return nullptr;
 	}
 
+	/**
+	 * The list of all robots currently allocated by this assignment to work on any task within the plan.
+	 * @return A shared_ptr of a vector of int
+	 */
 	shared_ptr<vector<int> > Assignment::getAllRobots()
 	{
 		auto ret = make_shared<vector<int> >(vector<int>());
 		for (int i = 0; i < this->epRobotsMapping->getCount(); i++)
 		{
-			for (int j = 0; j < this->epRobotsMapping->getRobots()[i]->size(); j++)
+			for (int j = 0; j < this->epRobotsMapping->getRobots()->at(i)->size(); j++)
 			{
-				ret->push_back(this->epRobotsMapping->getRobots()[i]->at(j));
+				ret->push_back(this->epRobotsMapping->getRobots()->at(i)->at(j));
 			}
 		}
 		return ret;
@@ -532,8 +592,8 @@ namespace alica
 		auto ownRobots = this->epRobotsMapping->getRobots();
 		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
 		{
-			ss << "EP: " << ownEps[i]->getId() << " Task: " << ownEps[i]->getTask()->getName() << " RobotIDs: ";
-			for (int robot : (*ownRobots[i]))
+			ss << "EP: " << ownEps->at(i)->getId() << " Task: " << ownEps->at(i)->getTask()->getName() << " RobotIDs: ";
+			for (int robot : (*ownRobots->at(i)))
 			{
 				ss << robot << " ";
 			}
@@ -551,10 +611,10 @@ namespace alica
 		auto eps = this->epRobotsMapping->getEntryPoints();
 		auto robots = this->epRobotsMapping->getRobots();
 		auto suc = this->epSucMapping->getRobots();
-		for (int i = 0; i < eps.size(); i++)
+		for (int i = 0; i < eps->size(); i++)
 		{
-			ss << eps[i]->getTask()->getName() << " ";
-			for (int robotID : (*robots[i]))
+			ss << eps->at(i)->getTask()->getName() << " ";
+			for (int robotID : (*robots->at(i)))
 			{
 				ss << robotID + " ";
 			}

@@ -18,6 +18,7 @@ namespace alica
 	{
 		this->count = plan->getEntryPoints().size();
 		this->entryPoints = new EntryPoint*[this->count];
+		this->robots = vector<shared_ptr<list<int> > >(this->count);
 		int i = 0;
 		list<EntryPoint*> eps;
 		for (map<long, EntryPoint*>::const_iterator iter = plan->getEntryPoints().begin();
@@ -29,6 +30,7 @@ namespace alica
 		for (EntryPoint* ep : eps)
 		{
 			this->entryPoints[i] = ep;
+			this->robots[i] = make_shared<list<int> >();
 			i++;
 		}
 	}
@@ -71,12 +73,12 @@ namespace alica
 		}
 	}
 
-	vector<shared_ptr<list<int> > > SuccessCollection::getRobots()
+	vector<shared_ptr<list<int> > >& SuccessCollection::getRobots()
 	{
 		return robots;
 	}
 
-	void SuccessCollection::setRobots(vector<shared_ptr<list<int> > > robots)
+	void SuccessCollection::setRobots(vector<shared_ptr<list<int> > >& robots)
 	{
 		this->robots = robots;
 	}
@@ -87,6 +89,7 @@ namespace alica
 		{
 			if (this->getEntryPoints()[i] == ep)
 			{
+				//TODO this->robots[i] null
 				return this->robots[i];
 			}
 		}
@@ -111,6 +114,7 @@ namespace alica
 		ss << "";
 		for (int i = 0; i < this->count; i++)
 		{
+			//TODO robots shared ptr null
 			if (this->robots[i]->size() > 0)
 			{
 				ss << this->entryPoints[i]->getTask()->getId() << ": ";

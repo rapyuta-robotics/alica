@@ -12,7 +12,8 @@ namespace alica
 
 	RoleSet::RoleSet()
 	{
-
+		this->usableWithPlanID = 0;
+		this->isDefault = false;
 	}
 
 	RoleSet::~RoleSet()
@@ -49,7 +50,7 @@ namespace alica
 		return roleTaskMappings;
 	}
 
-	void RoleSet::setRoleTaskMappings(const list<RoleTaskMapping*>& roleTaskMappings)
+	void RoleSet::setRoleTaskMappings(const list<RoleTaskMapping*> roleTaskMappings)
 	{
 		this->roleTaskMappings = roleTaskMappings;
 	}

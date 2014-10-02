@@ -35,11 +35,11 @@ namespace alica
 		virtual ~CycleManager();
 		void update();
 		bool isOverridden();
-		bool setAssignment(RunningPlan* r);
+		bool setAssignment(shared_ptr<RunningPlan> r);
 		bool mayDoUtilityCheck();
 		void setNewAllocDiff(RunningPlan* curP, AllocationDifference* aldif);
 		void setNewAllocDiff(RunningPlan* curP, Assignment* oldAss, Assignment* newAss, AllocationDifference::Reason reas);
-		void handleAuthorityInfo(AllocationAuthorityInfo* aai);
+		void handleAuthorityInfo(shared_ptr<AllocationAuthorityInfo> aai);
 		bool needsSending();
 		void sent();
 		bool haveAuthority();
@@ -69,7 +69,7 @@ namespace alica
 		static int historySize;
 		CycleState state;
 		RunningPlan* rp;
-		AllocationAuthorityInfo* fixedAllocation;
+		shared_ptr<AllocationAuthorityInfo> fixedAllocation;
 		bool detectAllocationCycle();
 	};
 

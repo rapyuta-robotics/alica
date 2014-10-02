@@ -25,14 +25,24 @@ namespace alica
 	class EntryPoint;
 	class IAssignment;
 
+	/**
+	 * Abstract super class for domain dependent utility summands.
+	 */
 	class USummand
 	{
 	public:
 
 		virtual ~USummand()	{}
+		/**
+		 * Searches every needed entrypoint in the hashtable of the xmlparser
+		 * and stores it in the relevant entrypoint vector. This will increase the
+		 * performance of the evaluation of this utility summand.
+		 */
 		virtual void init()
 		{
+			// init relevant entrypoint vector
 			this->relevantEntryPoints = vector<EntryPoint*>(this->relevantEntryPointIds.size());
+			// find the right entrypoint for each id in relevant entrypoint id
 			map<long, EntryPoint*> elements = AlicaEngine::getInstance()->getPlanRepository()->getEntryPoints();
 			EntryPoint* curEp;
 			for(int i = 0; i < this->relevantEntryPoints.size(); ++i)
@@ -68,7 +78,15 @@ namespace alica
 		{
 			return weight;
 		}
+		/**
+		 * Evaluates the utilityfunction summand
+		 * @return The result of the evaluation
+		 */
 		virtual UtilityInterval* eval(IAssignment* ass);
+		/**
+		 * Cache every data for the current evaluation, to
+		 * assure consistency over the complete current evaluation.
+		 */
 		virtual void cacheEvalData();
 		virtual pair<vector<double>, double>* differentiate(IAssignment* newAss)
 		{
@@ -82,6 +100,9 @@ namespace alica
 	protected:
 		UtilityInterval ui;
 		vector<long> relevantEntryPointIds;
+		/**
+		 * Weight of this UtilitySummand
+		 */
 		double weight;
 		string name;
 		long id;

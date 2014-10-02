@@ -14,7 +14,11 @@ namespace alica
 
 	SimplePlanTree::SimplePlanTree()
 	{
-
+		this->state = nullptr;
+		this->newSimplePlanTree = false;
+		this->receiveTime = 0;
+		this->entryPoint = nullptr;
+		this->parent =nullptr;
 	}
 
 	SimplePlanTree::~SimplePlanTree()
@@ -97,12 +101,12 @@ namespace alica
 		this->receiveTime = receiveTime;
 	}
 
-	const list<long>& SimplePlanTree::getStateIds() const
+	list<long>& SimplePlanTree::getStateIds()
 	{
 		return stateIds;
 	}
 
-	void SimplePlanTree::setStateIds(const list<long>& stateIds)
+	void SimplePlanTree::setStateIds(list<long>& stateIds)
 	{
 		this->stateIds = stateIds;
 	}

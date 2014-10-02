@@ -29,13 +29,16 @@ namespace alica
 		bool isIsDefault() const;
 		void setIsDefault(bool isDefault);
 		list<RoleTaskMapping*>& getRoleTaskMappings();
-		void setRoleTaskMappings(const list<RoleTaskMapping*>& roleTaskMappings);
+		void setRoleTaskMappings(const list<RoleTaskMapping*> roleTaskMappings);
 		long getUsableWithPlanId() const;
 		void setUsableWithPlanId(long usableWithPlanId);
 
 	protected:
 		list<RoleTaskMapping*> roleTaskMappings;
 		bool isDefault;
+		/**
+		 * the plan ID this roleset is defined for
+		 */
 		long usableWithPlanID;
 	};
 

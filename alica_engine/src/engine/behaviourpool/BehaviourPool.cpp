@@ -112,8 +112,10 @@ namespace alica
 	 */
 	void BehaviourPool::startBehaviour(shared_ptr<RunningPlan> rp)
 	{
+		cout << "BP: vor start" << endl;
 		if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp->getPlan()))
 		{
+			cout << "BP1: vor start" << endl;
 			shared_ptr<BasicBehaviour> bb = this->availableBehaviours->at(bc);
 			if (bb != nullptr)
 			{
@@ -129,7 +131,9 @@ namespace alica
 				// start basic behaviour
 				bb->setDelayedStart(bc->getDeferring());
 				bb->setInterval(1000 / bc->getFrequency());
+
 				bb->start();
+				cout << "BP: nach start" << endl;
 			}
 		}
 		else

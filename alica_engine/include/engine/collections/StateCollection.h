@@ -15,6 +15,7 @@ using namespace std;
 #include <algorithm>
 #include <sstream>
 #include <memory>
+#include <iostream>
 
 namespace alica
 {
@@ -32,9 +33,9 @@ namespace alica
 		StateCollection(int maxSize);
 		StateCollection(AssignmentCollection* ac);
 		virtual ~StateCollection();
-		vector<int> getRobots();
+		vector<int>& getRobots();
 		void setRobots(vector<int> robots);
-		vector<State*> getStates();
+		vector<State*>& getStates();
 		void setStates(vector<State*> states);
 		int getCount();
 		State* getState(int r);

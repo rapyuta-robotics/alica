@@ -21,9 +21,9 @@ namespace alica
 	{
 	}
 
-	bool TaskRoleStruct::equals(TaskRoleStruct* trs)
+	bool TaskRoleStruct::equals(TaskRoleStruct trs)
 	{
-		return taskId==trs->taskId && roleId==trs->roleId;
+		return taskId==trs.taskId && roleId==trs.roleId;
 	}
 
 } /* namespace alica */

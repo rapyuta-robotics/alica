@@ -14,6 +14,11 @@
 #include "../ITeamObserver.h"
 #include "../RunningPlan.h"
 
+#include <memory>
+#include <vector>
+
+using namespace std;
+
 namespace alica
 {
 	class IAlicaCommunication;
@@ -25,18 +30,18 @@ namespace alica
 		virtual ~AuthorityManager();
 		void init();
 		void close();
-		void handleIncomingAuthorityMessage(AllocationAuthorityInfo aai);
-		void tick(RunningPlan* p);
-		void sendAllocation(RunningPlan* p);
+		void handleIncomingAuthorityMessage(shared_ptr<AllocationAuthorityInfo> aai);
+		void tick(shared_ptr<RunningPlan> p);
+		void sendAllocation(shared_ptr<RunningPlan> p);
 
 	protected:
 		IAlicaCommunication* authorityPub;
-		list<AllocationAuthorityInfo> queue;
+		vector<shared_ptr<AllocationAuthorityInfo>> queue;
 		AlicaEngine* ae;
 		int ownID;
 		mutex mu;
-		void processPlan(RunningPlan* p);
-		bool authorityMatchesPlan(AllocationAuthorityInfo aai, RunningPlan* p);
+		void processPlan(shared_ptr<RunningPlan> p);
+		bool authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p);
 
 
 	};

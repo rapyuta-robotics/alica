@@ -13,6 +13,10 @@
 namespace alica
 {
 
+	/**
+	 * Basic constructor
+	 * @param plan The plan, this utility function belongs to
+	 */
 	DefaultUtilityFunction::DefaultUtilityFunction(Plan* plan) :
 			UtilityFunction("DefaultUtility", list<USummand*>(), 1.0, 0.0, plan)
 	{
@@ -22,6 +26,11 @@ namespace alica
 	{
 	}
 
+	/**
+	 * the utility function according to the priorities of the assigned
+	 * roles and according to the similarity, if an oldRP is given.
+	 * @return The utility
+	 */
 	double DefaultUtilityFunction::eval(RunningPlan* newRP, RunningPlan* oldRP)
 	{
 		if (newRP->getAssignment() == nullptr)
@@ -69,7 +78,12 @@ namespace alica
 		return 0.0;
 	}
 
-	UtilityInterval* DefaultUtilityFunction::eva(IAssignment* newAss, IAssignment* oldAss)
+	/**
+	 * Evaluates the utility function according to the priorities of the assigned
+	 * roles and according to the similarity, if an oldRP is given.
+	 * @return The utility interval
+	 */
+	UtilityInterval* DefaultUtilityFunction::eval(IAssignment* newAss, IAssignment* oldAss)
 	{
 		UtilityInterval* sumOfUI = new UtilityInterval(0.0, 0.0);
 		double sumOfWeights = 0.0;

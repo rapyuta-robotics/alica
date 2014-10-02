@@ -12,6 +12,9 @@ namespace alica
 
 	ConstraintStore::ConstraintStore(RunningPlan* rp)
 	{
+		this->rp = rp;
+		this->activeConitions = unordered_set<Condition*>();
+		this->activeVariables = map<Variable*, list<Condition*> >();
 		//TODO:
 	}
 

@@ -44,6 +44,9 @@ namespace alica
 	class IPlanTreeVisitor;
 	class SimplePlanTree;
 
+	/**
+	 * A RunningPlan represents a plan or a behaviour in execution, holding all information relevant at runtime.
+	 */
 	class RunningPlan : public enable_shared_from_this<RunningPlan>
 	{
 	public:
@@ -55,8 +58,8 @@ namespace alica
 		bool isBehaviour();
 		void setBehaviour(bool behaviour);
 		bool isAllocationNeeded();
-		list<RunningPlan*>* getChildren();
-		void setChildren(list<RunningPlan*>* children);
+		list<shared_ptr<RunningPlan>>& getChildren();
+		void setChildren(list<shared_ptr<RunningPlan>> children);
 		AbstractPlan* getPlan();
 		void setPlan(AbstractPlan* plan);
 		shared_ptr<BasicBehaviour> getBasicBehaviour();
@@ -73,12 +76,10 @@ namespace alica
 		void setFailHandlingNeeded(bool failHandlingNeeded);
 		void setOwnEntryPoint(EntryPoint* value);
 		PlanChange tick(RuleBook* rules);
-		State* getActiveState() const;
-		CycleManager* getCycleManager() const;
 		ConstraintStore* getConstraintStore() const;
 		EntryPoint* getOwnEntryPoint() const;
-		void setParent(RunningPlan* s);
-		RunningPlan* getParent() const;
+		void setParent(weak_ptr<RunningPlan> s);
+		weak_ptr<RunningPlan> getParent() const;
 		bool getFailHandlingNeeded() const;
 		PlanStatus getStatus() const;
 		PlanType* getPlanType();
@@ -86,17 +87,16 @@ namespace alica
 		bool evalRuntimeCondition();
 		State* getActiveState();
 		void setActiveState(State* activeState);
-		void addChildren(shared_ptr<list<RunningPlan*> > runningPlans);
+		void addChildren(shared_ptr<list<shared_ptr<RunningPlan>>> runningPlans);
 		void moveState(State* nextState);
 		void clearFailures();
 		void clearFailedChildren();
 		void addFailure();
-		void addChildren(list<RunningPlan*>* children);
+		void addChildren(list<shared_ptr<RunningPlan>>& children);
 		int getFailure();
 		void deactivateChildren();
 		void clearChildren();
-		void setFailedChildren(AbstractPlan* p);
-		void adaptAssignment(RunningPlan* r);
+		void adaptAssignment(shared_ptr<RunningPlan> r);
 		void setFailedChild(AbstractPlan* child);
 		unique_ptr<list<int> > getRobotsAvail();
 		void setRobotAvail(int robot);
@@ -116,7 +116,7 @@ namespace alica
 		void setCycleManagement(CycleManager* cycleManagement);
 		void revokeAllConstraints();
 		void attachPlanConstraints();
-		bool recursiveUpdateAssignment(list<SimplePlanTree*> spts, list<int> availableAgents,list<int> noUpdates, unsigned long now);
+		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents,list<int> noUpdates, unsigned long now);
 		void ToMessage(list<long> message, RunningPlan* deepestNode, int depth, int curDepth);
 		string toString();
 
@@ -124,16 +124,22 @@ namespace alica
 		void setConstraintStore(ConstraintStore* constraintStore);
 
 	protected:
-		RunningPlan* parent;
+		weak_ptr<RunningPlan> parent;
 		bool behaviour;
 		AbstractPlan* plan;
 		shared_ptr<BasicBehaviour> basicBehaviour;
-		list<RunningPlan*>* children;
+		list<shared_ptr<RunningPlan> > children;
 		Assignment* assignment;
 		State* activeState;
 		EntryPoint* activeEntryPoint;
 		PlanStatus status;
+		/**
+		 * The (ROS-)timestamp referring to when the local robot entered the ActiveState.
+		 */
 		unsigned long stateStartTime;
+		/**
+		 * The timestamp referring to when this plan was started by the local robot
+		 */
 		unsigned long planStartTime;
 		int ownId;
 		unique_ptr<list<int> > robotsAvail;
@@ -141,6 +147,9 @@ namespace alica
 		PlanType* planType;
 		int failCount;
 		bool failHandlingNeeded;
+		/**
+		 * Whether or not this running plan is active or has been removed from the plan tree
+		 */
 		bool active;
 		IBehaviourPool* bp;
 		ITeamObserver* to;bool allocationNeeded;

@@ -10,21 +10,22 @@
 namespace alica
 {
 
-	Task::Task()
-	{
-		// TODO Auto-generated constructor stub
-
-	}
-
+	/**
+	 * Basic constructor
+	 */
 	Task::~Task()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
-
+	/**
+	 * constructor
+	 * @param defaultTask A bool
+	 */
 	Task::Task(bool defaultTask)
 	{
 		this->defaultTask = defaultTask;
+		this->taskRepository = nullptr;
+
 	}
 
 	string Task::toString()

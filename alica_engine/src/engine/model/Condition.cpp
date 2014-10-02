@@ -12,6 +12,7 @@ namespace alica
 
 	Condition::Condition()
 	{
+		this->abstractPlan = nullptr;
 	}
 
 	Condition::Condition(long id)
