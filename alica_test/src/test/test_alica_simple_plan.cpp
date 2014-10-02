@@ -45,12 +45,7 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	EXPECT_TRUE(ae->init(bc, "Roleset", "SimpleTestPlan", ".", false))
 			<< "Unable to initialise the Alica Engine!";
-	auto behaviours = ae->getPlanRepository()->getBehaviours();
-//	alica::IBehaviourPool* bp = ae->getBehaviourPool();
-//	for (auto behaviourPair : behaviours)
-//	{
-//		cout << "Behaviour: " << behaviourPair.second->getName() << endl;
-//	}
+
 	ae->start();
 
 	sleep(5);
