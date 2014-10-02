@@ -41,6 +41,10 @@ namespace alica
 			* 1000000;
 	int CycleManager::historySize = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize");
 
+	/**
+	 * Construct a CycleManager for a RunningPlan
+	 * @param p A RunningPlan
+	 */
 	CycleManager::CycleManager(RunningPlan* p)
 	{
 		this->intervalIncFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalIncreaseFactor");
@@ -64,6 +68,10 @@ namespace alica
 	{
 	}
 
+	/**
+	 * Called once per engine iteration by the corresponding RunningPlan.
+	 * Checks whether a state change is needed.
+	 */
 	void CycleManager::update()
 	{
 		if (!enabled)
@@ -121,11 +129,21 @@ namespace alica
 			}
 		}
 	}
+
+	/**
+	 * Indicates whether an authorative allocation is present
+	 * @return bool
+	 */
 	bool CycleManager::isOverridden()
 	{
 		return this->state == CycleState::overridden && this->fixedAllocation != nullptr;
 	}
 
+	/**
+	 * Notify the CycleManager of a new AllocationDifference
+	 * @param curP The RunningPlan of this CycleManager, in case it has changed.
+	 * @param aldif The new AllocationDifference
+	 */
 	void alica::CycleManager::setNewAllocDiff(RunningPlan* curP, AllocationDifference* aldif)
 	{
 		if (!enabled)
@@ -145,6 +163,13 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Notify the CycleManager of a change in the assignment
+	 * @param curP The RunningPlan of this CycleManager, in case it has changed.
+	 * @param oldAss The former Assignment
+	 * @param newAss The new Assignment
+	 * @param reas The AllocationDifference.Reason for this change.
+	 */
 	void alica::CycleManager::setNewAllocDiff(RunningPlan* curP, Assignment* oldAss, Assignment* newAss,
 												AllocationDifference::Reason reas)
 	{
@@ -200,6 +225,10 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Message Handler
+	 * @param aai A shared_ptr<AllocationAuthorityInfo>
+	 */
 	void alica::CycleManager::handleAuthorityInfo(shared_ptr<AllocationAuthorityInfo> aai)
 	{
 		if (!enabled)
@@ -239,16 +268,28 @@ namespace alica
 						< AlicaEngine::getInstance()->getIAlicaClock()->now());
 	}
 
+	/**
+	 * Indicate to the manager that a corresponding message has been sent.
+	 */
 	void alica::CycleManager::sent()
 	{
 		this->overrideShoutTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
 	}
 
+	/**
+	 * Indicates whether the local agent currently holds authority over the plan.
+	 * @return A bool
+	 */
 	bool alica::CycleManager::haveAuthority()
 	{
 		return this->state == CycleState::overriding;
 	}
 
+	/**
+	 * Apply the authorative assignment to the RunningPlan
+	 * @param r A shared_ptr<RunningPlan>
+	 * @return A bool
+	 */
 	bool CycleManager::setAssignment(shared_ptr<RunningPlan> r)
 	{
 #ifdef CM_DEBUG
@@ -341,6 +382,10 @@ namespace alica
 		return modifiedSelf || modified;
 	}
 
+	/**
+	 * Indicates wether authority allows the assignment of this plan to be changed.
+	 * @return A bool
+	 */
 	bool CycleManager::mayDoUtilityCheck()
 	{
 		return this->state != CycleState::overridden;
@@ -348,6 +393,9 @@ namespace alica
 
 	bool CycleManager::detectAllocationCycle()
 	{
+		//A Cycle occurs n-times,
+		//Consists of 1 UtilityChange, m message update
+		//after uc, allocation is same again (delta = 0)
 		int cyclesFound = 0;
 		int count = 0;
 		AllocationDifference* utChange = nullptr;

@@ -23,6 +23,9 @@ using namespace std;
 namespace alica
 {
 
+	/**
+	 * An ALICA planningProblem
+	 */
 	class PlanningProblem : public AlicaElement
 	{
 	public:

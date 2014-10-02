@@ -21,6 +21,9 @@ namespace alica
 	class Quantifier;
 	class AbstractPlan;
 
+	/**
+	 * A condition encapsulates expressions and constraint specific to a AlicaElement, e.g., a Transition, or a Plan.
+	 */
 	class Condition : public AlicaElement
 	{
 	public:
@@ -28,6 +31,14 @@ namespace alica
 		Condition(long id);
 		virtual ~Condition();
 
+		/**
+		 * The delegate type used to attach constraints to plans.
+		 */
+		//public delegate void GetConstraint(ConstraintDescriptor cd,RunningPlan rp);
+		/**
+		 * The delegate type used to attach conditions to plans.
+		 */
+		//public delegate bool Evaluate(RunningPlan rp);
 		const string& getConditionString() const;
 		void setConditionString(const string& conditionString);
 		list<Quantifier*>& getQuantifiers() ;
@@ -42,8 +53,17 @@ namespace alica
 		void setQuantifiers(const list<Quantifier*>& quantifiers);
 	protected:
 		string conditionString;
+		/**
+		 * The static variables used in the constraint of this condition.
+		 */
 		list<Variable*> variables;
+		/**
+		 * The quantifiers used in the constraint of this condition.
+		 */
 		list<Quantifier*> quantifiers;
+		/**
+		 * The Abstract Plan in which this condition occurs.
+		 */
 		AbstractPlan* abstractPlan;
 		string plugInName;
 

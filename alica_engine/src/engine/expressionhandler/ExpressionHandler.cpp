@@ -14,6 +14,9 @@
 namespace alica
 {
 
+	/**
+	 * Constructor, loads the assembly containing expressions and constraints.
+	 */
 	ExpressionHandler::ExpressionHandler()
 	{
 		// TODO Auto-generated constructor stub
@@ -24,9 +27,15 @@ namespace alica
 	{
 		// TODO Auto-generated destructor stub
 	}
+	/**
+	 * Dummy Constraint builder in case none was found in the assembly.
+	 */
 	//Todo:
 	//		void dummyConstraint(ConstraintDescriptor cd, RunningPlan* rp);
 
+	/**
+	 * Attaches expressions and constraints to the plans. Called by the AlicaEngine during start up.
+	 */
 	void ExpressionHandler::attachAll()
 	{
 

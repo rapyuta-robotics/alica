@@ -25,6 +25,9 @@ namespace alica
 	class RuntimeCondition;
 	class UtilityFunction;
 
+	/**
+	 * Super class of plans, plantypes and behaviourconfigurations.
+	 */
 	class AbstractPlan : public AlicaElement
 	{
 	public:
@@ -54,14 +57,29 @@ namespace alica
 
 	private:
 		unsigned long authorityTimeInterval;
+		/**
+		 * This plan's runtime condition.
+		 */
 		RuntimeCondition* runtimeCondition;
+		/**
+		 * This plan's precondition
+		 */
 		PreCondition* preCondition;
+		/**
+		 * This plan's Utility function
+		 */
 		UtilityFunction* utilityFunction;
 
 	protected:
 		string fileName;
+		/**
+		 *  Whether this plan is marked as a MasterPlan.
+		 */
 		bool masterPlan;
 		shared_ptr<list<Variable*>> variables;
+		/**
+		 * The utility threshold, the higher, the less likely dynamic changes are.
+		 */
 		double utilityThreshold = 1.0;
 	};
 

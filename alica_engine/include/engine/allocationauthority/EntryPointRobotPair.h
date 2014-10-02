@@ -16,6 +16,9 @@ namespace alica
 {
 
 
+	/**
+	 * A simple helper class for conflict detection
+	 */
 	class EntryPointRobotPair
 	{
 	public:

@@ -31,6 +31,9 @@ namespace alica
 	class EntryPoint;
 	class State;
 
+	/**
+	 * The Plan Logger will write a log file according to the settings in the Alica.conf file.
+	 */
 	class Logger : public IPlanTreeVisitor
 	{
 	public:

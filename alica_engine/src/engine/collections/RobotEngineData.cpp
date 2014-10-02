@@ -21,6 +21,10 @@
 namespace alica
 {
 
+	/**
+	 * Basic constructor
+	 * @param properties This robot's RobotProperties
+	 */
 	RobotEngineData::RobotEngineData(RobotProperties* properties)
 	{
 		this->active = false;

@@ -20,6 +20,9 @@ namespace alica
 	class Variable;
 	class Role;
 
+	/**
+	 * Basic Runtime information relating to a robot within the team
+	 */
 	class RobotEngineData
 	{
 	public:
@@ -39,9 +42,21 @@ namespace alica
 		void setLastRole(Role* lastRole);
 
 	protected:
+		/**
+		 * The robot's RobotProperties
+		 */
 		RobotProperties* properties;
+		/**
+		 * Whether or not the robot is considered active
+		 */
 		bool active;
+		/**
+		 * The SuccessMarks of the robot, indicating which EntryPoints it completed.
+		 */
 		SuccessMarks* successMarks;
+		/**
+		 * The timestamp of the last message event from this robot
+		 */
 		unsigned long lastMessageTime;
 		map<string, Variable*> sortedVariables;
 		long makeUniqueId(string s);

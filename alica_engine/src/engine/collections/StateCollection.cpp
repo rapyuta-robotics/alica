@@ -200,6 +200,9 @@ namespace alica
 		}
 	}
 
+	/**
+	 * //we are at new assignment, so everything is set to initial states, set them back:
+	 */
 	void StateCollection::reconsiderOldAssignment(Assignment* oldOne, Assignment* newOne)
 	{
 		if(oldOne->getPlan() != newOne->getPlan())

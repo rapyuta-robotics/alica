@@ -26,6 +26,9 @@ namespace alica
 	class RunningPlan;
 	class Variable;
 
+	/**
+	 * A quantifier associated with agents, i.e., the domain identifiers of this quantifier refer to properties of an agent
+	 */
 	class ForallAgents : public Quantifier
 	{
 	public:

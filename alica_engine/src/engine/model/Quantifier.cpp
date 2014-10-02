@@ -64,21 +64,35 @@ namespace alica
 	{
 		this->domainIdentifiers = domainIdentifiers;
 	}
+
+	/**
+	 * Returns the scope of this quantifier, returns null, if the scope is not a state.
+	 */
 	State* Quantifier::getScopedState()
 	{
 		return this->state;
 	}
 
+	/**
+	 * Returns the scope of this quantifier, returns null, if the scope is not an EntryPoint.
+	 */
 	EntryPoint* Quantifier::getScopedEntryPoint()
 	{
 		return this->entryPoint;
 	}
 
+	/**
+	 * Returns the scope of this quantifier, returns null, if the scope is not a Plan.
+	 */
 	Plan* Quantifier::getScopedPlan()
 	{
 		return this->plan;
 	}
 
+	/**
+	 * Set the scope of this quantifier, called by the ModelFactory
+	 * @param ae An AlicaElement
+	 */
 	void Quantifier::setScope(AlicaElement* ae)
 	{
 		scopeIsEntryPoint = (dynamic_cast<EntryPoint*>(ae) !=0);

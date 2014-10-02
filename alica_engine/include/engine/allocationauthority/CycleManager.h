@@ -28,6 +28,9 @@ namespace alica
 	struct AllocationAuthorityInfo;
 	class Assignment;
 
+	/**
+	 * Responsibile for detecting cycles in assignment updates and reactions to these
+	 */
 	class CycleManager
 	{
 	public:

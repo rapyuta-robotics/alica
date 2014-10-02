@@ -16,6 +16,12 @@ namespace alica
 		this->count = 0;
 	}
 
+	/**
+	 * Construct an AssignmentCollection from an shared_ptr<vector<EntryPoint*> >r and a shared_ptr<vector<shared_ptr<vector<int> > > >, each holding the robot-ids
+	 * within the corresponding EntryPoint.
+	 * @param eps A shared_ptr<vector<EntryPoint*> >
+	 * @param robots A shared_ptr<vector<shared_ptr<vector<int> > > >
+	 */
 	AssignmentCollection::AssignmentCollection(shared_ptr<vector<EntryPoint*> > eps, shared_ptr<vector<shared_ptr<vector<int> > > > robots)
 	{
 		this->count = eps->size();
@@ -23,6 +29,10 @@ namespace alica
 		this->robots = robots;
 	}
 
+	/**
+	 * Construct an empty AssignmentCollection of a specific size
+	 * @param maxSize An int
+	 */
 	AssignmentCollection::AssignmentCollection(int maxSize)
 	{
 		this->count = maxSize;
@@ -38,6 +48,11 @@ namespace alica
 	{
 	}
 
+	/**
+	 * Returns the robots in EntryPoint k
+	 * @param ep An EntryPoint
+	 * @return A shared_ptr<vector<int> >
+	 */
 	shared_ptr<vector<int> > AssignmentCollection::getRobots(EntryPoint* ep)
 	{
 		for (int i=0; i<this->count;i++) {
@@ -49,6 +64,11 @@ namespace alica
 		return nullptr;
 	}
 
+	/**
+	 * Returns the robots in the EntryPoint identifyed by id.
+	 * @param id A long
+	 * @return A shared_ptr<vector<int> >
+	 */
 	shared_ptr<vector<int> > AssignmentCollection::getRobotsById(long id)
 	{
 		for (int i=0; i<this->count;i++) {
@@ -60,6 +80,9 @@ namespace alica
 		return nullptr;
 	}
 
+	/**
+	 * Removes all robots from the AssignmentCollection
+	 */
 	void AssignmentCollection::clear()
 	{
 		for(int i=0; i<this->count; i++) {

@@ -18,6 +18,9 @@ using namespace std;
 namespace alica
 {
 
+	/**
+	 * A terminal failure state in a plan. Indicates unsuccesful termination.
+	 */
 	class FailureState : public TerminalState
 	{
 	public:

@@ -15,6 +15,9 @@ namespace alica
 	class Condition;
 	class Transition;
 
+	/**
+	 * The ExpressionHandler attaches expressions and constraints to plans during start-up of the engine.
+	 */
 	class ExpressionHandler
 	{
 	public:

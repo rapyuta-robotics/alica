@@ -31,6 +31,9 @@ namespace alica
 	class Variable;
 	class RunningPlan;
 
+	/**
+	 * A quantifier encapsulates a set of Variables, belonging to a domain artifact, scoped under a AlicaElement
+	 */
 	class Quantifier : public AlicaElement
 	{
 	public:
@@ -46,7 +49,18 @@ namespace alica
 		Plan* getScopedPlan();
 		void setScope(AlicaElement* ae);
 		AlicaElement* getScope();
+		/**
+		 * Access the list of sorted Variables under the scope of this quantifier given a runningplan.
+		 * @param p A RunningPlan
+		 * @param agentsInScope A shared_ptr<vector<int> >
+		 * @return A shared_ptr<list<vector<Variable* > > >
+		 */
 		virtual shared_ptr<list<vector<Variable* > > >getSortedVariables(RunningPlan* p, shared_ptr<vector<int> > agentsInScope) = 0;
+		/**
+		 * Access the list of sorted AD.Terms under the scope of this quantifier given a RunningPlan.
+		 * @param agentsInScope A shared_ptr<vector<int> >
+		 * @return A shared_ptr<list<vector<AutoDiff::Term* > > >
+		 */
 		virtual shared_ptr<list<vector<AutoDiff::Term*> > > getSortedTerms(RunningPlan* p, shared_ptr<vector<int> > agentsInScope) = 0;
 
 	private:
@@ -56,8 +70,17 @@ namespace alica
 		void setScopeIsState(bool scopeIsState);
 
 	protected:
+		/**
+		 * Indicates that the scope of this quantifier is an EntryPoint
+		 */
 		bool scopeIsEntryPoint;
+		/**
+		 * Indicates that the scope of this quantifier is a Plan
+		 */
 		bool scopeIsPlan;
+		/**
+		 * Indicates that the scope of this quantifier is an State
+		 */
 		bool scopeIsState;
 		EntryPoint* entryPoint;
 		State* state;

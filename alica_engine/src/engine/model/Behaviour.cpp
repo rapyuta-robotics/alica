@@ -64,4 +64,15 @@ namespace alica
 		this->fileName = fileName;
 	}
 
+	BasicBehaviour* alica::Behaviour::getImplementation()
+	{
+		return implementation;
+	}
+
+	void alica::Behaviour::setImplementation(BasicBehaviour* implementation)
+	{
+		this->implementation = implementation;
+	}
 } /* namespace Alica */
+
+

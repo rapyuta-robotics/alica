@@ -16,6 +16,9 @@ using namespace std;
 namespace alica
 {
 
+	/**
+	 * Base class of all model elements
+	 */
 	class AlicaElement
 	{
 	public:
@@ -32,7 +35,13 @@ namespace alica
 		virtual string toString() const;
 
 	protected:
+		/**
+		 * This element's unique id
+		 */
 		long id;
+		/**
+		 * This element's descriptive name.
+		 */
 		string name;
 		string comment;
 	};

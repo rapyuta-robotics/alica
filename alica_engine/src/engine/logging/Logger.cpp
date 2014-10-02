@@ -49,7 +49,6 @@ namespace alica
 			{
 				logPath += supplementary::FileSystem::PATH_SEPARATOR;
 			}
-			// TODO: create nice supplementary::FileSystem::createDirectory(string path, int rights) method from next if clause
 			if (!supplementary::FileSystem::isDirectory(logPath))
 			{
 
@@ -74,6 +73,10 @@ namespace alica
 	{
 	}
 
+	/**
+	 * Notify the logger that an event occurred which changed the plan tree.
+	 * @param event A string denoting the event
+	 */
 	void Logger::eventOccured(string event)
 	{
 		if (!this->active)
@@ -82,18 +85,26 @@ namespace alica
 		}
 		if (!this->inIteration)
 		{
-			event += "(FP)";
+			event += "(FP)";//add flag for fast path out-of-loop events.
 		}
 		this->eventStrings.push_back(event);
 		this->recievedEvent = true;
 	}
 
+	/**
+	 * Notify the logger of a new iteration, called by the PlanBase
+	 */
 	void Logger::itertionStarts()
 	{
 		this->inIteration = true;
 		this->startTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
 	}
 
+	/**
+	 *  Notify that the current iteration is finished, triggering the Logger to write an entry if an event occurred in the current iteration.
+	 * Called by the PlanBase.
+	 * @param p The root RunningPlan of the plan base.
+	 */
 	void Logger::iterationEnds(shared_ptr<RunningPlan> p)
 	{
 		if (!this->active)
@@ -152,6 +163,9 @@ namespace alica
 		evaluationAssignmentsToString(this->sBuild, p);
 	}
 
+	/**
+	 * Closes the logger.
+	 */
 	void Logger::close()
 	{
 		if (this->active)
@@ -165,6 +179,11 @@ namespace alica
 	{
 	}
 
+	/**
+	 * Internal method to create the log string from a serialised plan.
+	 * @param l A list<long>
+	 * @return shared_ptr<list<string> >
+	 */
 	shared_ptr<list<string> > Logger::createHumanReadablePlanTree(list<long> l)
 	{
 		shared_ptr<list<string> > result = make_shared<list<string> >(list<string>());

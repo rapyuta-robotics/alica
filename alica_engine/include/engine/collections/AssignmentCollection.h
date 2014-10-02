@@ -21,6 +21,9 @@ namespace alica
 
 	class EntryPoint;
 
+	/**
+	 * Holds the mapping from EntryPoints to robots.
+	 */
 	class AssignmentCollection
 	{
 	public:
@@ -41,8 +44,17 @@ namespace alica
 
 
 	protected:
+		/**
+		 * The EntryPoints referred to
+		 */
 		shared_ptr<vector<EntryPoint*> > entryPoints;
+		/**
+		 * The number of EntryPoints in this AssignmentCollection.
+		 */
 		int count;
+		/**
+		 * The robots mapped to EntryPoints in this AssignmentCollection.
+		 */
 		shared_ptr<vector<shared_ptr<vector<int> > > > robots;
 	};
 

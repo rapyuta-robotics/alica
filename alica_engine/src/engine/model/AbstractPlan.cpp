@@ -35,6 +35,11 @@ namespace alica
 		return ss.str();
 	}
 
+	/**
+	 * Tests whether a given variable belongs to this plan.
+	 * @param v A Variable*
+	 * @return A bool
+	 */
 	bool AbstractPlan::containsVar(const Variable* v)
 	{
 		auto vars = this->getVariables();
