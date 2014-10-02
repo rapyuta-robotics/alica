@@ -252,7 +252,7 @@ namespace alica
 #endif
 		if (!found)
 		{
-			AlicaEngine::getInstance()->abort("PP: Cannot find MasterPlan '" + masterplan);
+			AlicaEngine::getInstance()->abort("PP: Cannot find MasterPlan '" + masterplan + "'");
 		}
 		this->currentFile = masterPlanPath;
 		this->currentDirectory = supplementary::FileSystem::getParent(masterPlanPath);
