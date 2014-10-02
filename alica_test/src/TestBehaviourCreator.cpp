@@ -51,7 +51,7 @@ namespace alica
 			throw new exception();
 			break;
 		}
-		return beh;
+		return move(beh);
 	}
 
 } /* namespace alica */
