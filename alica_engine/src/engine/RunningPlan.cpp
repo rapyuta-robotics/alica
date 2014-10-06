@@ -942,7 +942,7 @@ namespace alica
 				}
 				for (int rob : rem)
 				{
-					this->getAssignment()->removeRobot(rob); //TODO: use entrypoint to speed things up
+					this->getAssignment()->removeRobot(rob);
 				}
 			}
 		}
@@ -1031,7 +1031,7 @@ namespace alica
 
 	}
 
-	void RunningPlan::ToMessage(list<long> message, RunningPlan* deepestNode, int depth, int curDepth)
+	void RunningPlan::ToMessage(list<long> message, shared_ptr<RunningPlan> deepestNode, int depth, int curDepth)
 	{
 		if (this->isBehaviour())
 		{
@@ -1048,7 +1048,7 @@ namespace alica
 		if (curDepth > depth)
 		{
 			depth = curDepth;
-			deepestNode = this;
+			deepestNode = shared_from_this();
 		}
 		if (this->children.size() > 0)
 		{

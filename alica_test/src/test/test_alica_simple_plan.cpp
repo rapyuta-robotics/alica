@@ -1,10 +1,12 @@
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
+#include "engine/IAlicaCommunication.h"
 #include "TestBehaviourCreator.h"
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
 #include <clock/AlicaROSClock.h>
+#include <communication/AlicaRosCommunication.h>
 #include  "engine/DefaultUtilityFunction.h"
 #include "engine/model/Plan.h"
 
@@ -43,6 +45,7 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 {
 	alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	EXPECT_TRUE(ae->init(bc, "Roleset", "SimpleTestPlan", ".", false))
 			<< "Unable to initialise the Alica Engine!";
 

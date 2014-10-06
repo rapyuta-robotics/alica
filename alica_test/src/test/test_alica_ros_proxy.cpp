@@ -5,11 +5,13 @@
 #include <engine/IAlicaClock.h>
 #include "TestBehaviourCreator.h"
 #include <clock/AlicaROSClock.h>
+#include <communication/AlicaRosCommunication.h>
+#include "engine/IAlicaCommunication.h"
 #include "engine/PlanRepository.h"
 #include "engine/model/Plan.h"
 #include "engine/DefaultUtilityFunction.h"
 
-class PlanBase : public ::testing::Test
+class PlanBaseTest : public ::testing::Test
 {
 protected:
 	supplementary::SystemConfig* sc;
@@ -40,11 +42,12 @@ protected:
 	}
 };
 // Declare a test
-TEST_F(PlanBase, planBaseTest)
+TEST_F(PlanBaseTest, planBaseTest)
 {
 	alica::AlicaEngine* ae = alica::AlicaEngine::getInstance();
 	alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	ae->init(bc, "Roleset", "MasterPlan", ".", false);
 	ae->start();
 	sleep(3);
