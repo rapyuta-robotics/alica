@@ -25,6 +25,7 @@
 #include "engine/model/Characteristic.h"
 #include "engine/logging/Logger.h"
 #include "engine/containers/PlanTreeInfo.h"
+#include "engine/IAlicaCommunication.h"
 
 namespace alica
 {
@@ -115,10 +116,6 @@ namespace alica
 				this->ignoredRobots.insert(r->getProperties()->getId());
 			}
 		}
-		//TODO ICommunication
-//		rosNode = new Node("AlicaEngine");
-//		planTreePublisher = rosNode.Advertise("PlanTreeInfo",RosCS.AlicaEngine.PlanTreeInfo.TypeId,1);
-//		rosNode.Subscribe("PlanTreeInfo",this.HandlePlanTreeInfo);
 	}
 
 	/**
@@ -259,10 +256,9 @@ namespace alica
 
 	void TeamObserver::tick(shared_ptr<RunningPlan> root)
 	{
-		//TODO ICommunication interface
 		unsigned long time = AlicaEngine::getInstance()->getIAlicaClock()->now();
 		bool changed = false;
-		list<int> robotsAvail;
+		vector<int> robotsAvail;
 		robotsAvail.push_back(this->myId);
 		for (RobotEngineData* r : this->allOtherRobots)
 		{
@@ -312,10 +308,10 @@ namespace alica
 					}
 				}
 			}
-			//TODO implement RecursiveUpdateAssignment after finishing mockup
-//			if(root.RecursiveUpdateAssignment(updatedspts,robotsAvail,noUpdates, time)) {
-//				this.log.EventOccurred("MsgUpdate");
-//			}
+			if (root->recursiveUpdateAssignment(updatespts, robotsAvail, noUpdates, time))
+			{
+				this->log->eventOccured("MsgUpdate");
+			}
 		}
 	}
 
@@ -327,7 +323,8 @@ namespace alica
 //			this.rosNode.Close();
 //		}
 //		this->rosNode = nullptr;
-		cout << "Closed TO" << endl;;
+		cout << "Closed TO" << endl;
+		;
 	}
 
 	/**
@@ -337,13 +334,15 @@ namespace alica
 	 */
 	void TeamObserver::doBroadCast(list<long> msg)
 	{
-		//TODO ICommunication needed
-//		if(!ae.MaySendMessages) return;
-//			RosCS.AlicaEngine.PlanTreeInfo pti = new RosCS.AlicaEngine.PlanTreeInfo();
-//			pti.SenderID = this.myId;
-//			pti.StateIDs = msg;
-//			pti.SucceededEps = this.GetOwnEngineData().SuccessMarks.ToList();
-//			rosNode.Send(planTreePublisher,pti);
+		if (!ae->maySendMessages)
+		{
+			return;
+		}
+		PlanTreeInfo pti = PlanTreeInfo();
+		pti.senderID = this->myId;
+		pti.stateIDs = msg;
+		pti.succeededEPs = this->getOwnEngineData()->getSuccessMarks()->toList();
+		ae->getCommunicator()->sendPlanTreeInfo(pti);
 #ifdef TO_DEBUG
 		cout << "TO: Sending Plan Message: " << endl;
 		for (int i = 0; i < msg.size(); i++)
@@ -554,12 +553,10 @@ namespace alica
 	void TeamObserver::handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming)
 	{
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
-		//TODO did we receive the message from ourselfes? if yes: return!
 		if (this->simplePlanTrees->find(incoming->senderID) != this->simplePlanTrees->end())
 		{
 			shared_ptr<SimplePlanTree> toDelete = this->simplePlanTrees->at(incoming->senderID);
-			map<int, shared_ptr<SimplePlanTree> >::iterator iterator = this->simplePlanTrees->find(
-					incoming->senderID);
+			map<int, shared_ptr<SimplePlanTree> >::iterator iterator = this->simplePlanTrees->find(incoming->senderID);
 			if (iterator != this->simplePlanTrees->end())
 			{
 				iterator->second = sptFromMessage(incoming->senderID, incoming->stateIDs);
@@ -568,7 +565,9 @@ namespace alica
 		}
 		else
 		{
-			this->simplePlanTrees->insert(pair<int, shared_ptr<SimplePlanTree> >(incoming->senderID, sptFromMessage(incoming->senderID, incoming->stateIDs)));
+			this->simplePlanTrees->insert(
+					pair<int, shared_ptr<SimplePlanTree> >(incoming->senderID,
+															sptFromMessage(incoming->senderID, incoming->stateIDs)));
 		}
 
 	}
@@ -594,13 +593,11 @@ namespace alica
 #endif
 		if (ids.size() == 0)
 		{
-			//TODO ICommunication needed
-//			this.rosNode.RosWarn(String.Format("TO: Empty state list for robot {0}",robotId));
+			//warning
 			cerr << "TO: Empty state list for robot " << robotId << endl;
 			return nullptr;
 		}
 		map<long, State*> states = AlicaEngine::getInstance()->getPlanRepository()->getStates();
-		//TODO ICommunication
 		unsigned long time = AlicaEngine::getInstance()->getIAlicaClock()->now();
 		shared_ptr<SimplePlanTree> root = make_shared<SimplePlanTree>();
 		root->setRobotId(robotId);
@@ -614,8 +611,7 @@ namespace alica
 			root->setEntryPoint(entryPointOfState(root->getState()));
 			if (root->getEntryPoint() == nullptr)
 			{
-				//TODO ICommunication needed
-//				this.rosNode.RosWarn(String.Format("TO: Cannot find ep for State ({0}) received from {1}",ids[0],robotId));
+				//Warning
 				list<long>::const_iterator iter = ids.begin();
 				cerr << "TO: Cannot find ep for State (" << *iter << ") received from " << robotId << endl;
 				return nullptr;

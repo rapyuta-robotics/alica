@@ -23,6 +23,7 @@
 #include "engine/IAlicaClock.h"
 #include "engine/Assignment.h"
 #include "engine/collections/StateCollection.h"
+#include "engine/IAlicaCommunication.h"
 
 namespace alica
 {
@@ -73,10 +74,6 @@ namespace alica
 		this->sendStatusMessages = (*sc)["Alica"]->get<bool>("Alica.StatusMessages.Enabled", NULL);
 		if (sendStatusMessages)
 		{
-			//TODO: Communication
-			//this->statusPUblisher = ae->getPUblisher();
-//			this.rosNode = new Node("AlicaEngine");
-//			this.statusPublisher = new Publisher(this.rosNode, "BehaviourEngineInfo", BehaviourEngineInfo.TypeId, 1);
 			double stfreq = (*sc)["Alica"]->get<double>("Alica.StatusMessages.Frequency", NULL);
 			this->sendStatusInterval = (alicaTime)max(1000000.0, round(1.0 / stfreq * 1000000000));
 			this->statusMessage = new BehaviourEngineInfo();
@@ -185,8 +182,7 @@ namespace alica
 				list<long> msg;
 				this->deepestNode = this->rootNode;
 				this->treeDepth = 0;
-				//TODO:
-//				this->rootNode->
+				this->rootNode->ToMessage(msg, this->deepestNode, this->treeDepth,0);
 				this->teamObserver->doBroadCast(msg);
 				this->lastSendTime = now;
 				this->ruleBook->setChangeOccured(false);
@@ -221,8 +217,7 @@ namespace alica
 						this->statusMessage->currentState = "NONE";
 					}
 					this->statusMessage->currentRole = this->ra->getOwnRole()->getName();
-					//TODO:
-//					this.statusPublisher.Send(this.statusMessage);
+					ae->getCommunicator()->sendBehaviourEngineInfo(*this->statusMessage);
 					this->lastSentStatusTime = alicaClock->now();
 				}
 			}
