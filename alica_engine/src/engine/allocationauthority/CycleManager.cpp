@@ -66,6 +66,10 @@ namespace alica
 
 	CycleManager::~CycleManager()
 	{
+		for (int i = 0; i < this->allocationHistory.size(); i++)
+		{
+			delete this->allocationHistory[i];
+		}
 	}
 
 	/**

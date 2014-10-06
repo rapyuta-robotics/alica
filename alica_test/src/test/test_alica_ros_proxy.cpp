@@ -16,6 +16,8 @@ class PlanBaseTest : public ::testing::Test
 protected:
 	supplementary::SystemConfig* sc;
 	alica::AlicaEngine* ae;
+	alica::TestBehaviourCreator* bc;
+
 	virtual void SetUp()
 	{
 		// determine the path to the test config
@@ -33,22 +35,25 @@ protected:
 
 		// setup the engine
 		ae = alica::AlicaEngine::getInstance();
+		bc = new alica::TestBehaviourCreator();
+		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+		ae->init(bc, "Roleset", "MasterPlan", ".", false);
 	}
 
 	virtual void TearDown()
 	{
 		ae->shutdown();
 		sc->shutdown();
+		delete ae->getIAlicaClock();
+		delete ae->getCommunicator();
+		delete bc;
 	}
 };
 // Declare a test
 TEST_F(PlanBaseTest, planBaseTest)
 {
-	alica::AlicaEngine* ae = alica::AlicaEngine::getInstance();
-	alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
-	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-	ae->init(bc, "Roleset", "MasterPlan", ".", false);
+	//TODO test something
 	ae->start();
 	sleep(3);
 }

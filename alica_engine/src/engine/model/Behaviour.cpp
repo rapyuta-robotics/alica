@@ -15,6 +15,7 @@ namespace alica
 
 	Behaviour::Behaviour()
 	{
+		this->implementation = nullptr;
 	}
 
 	Behaviour::Behaviour(string name) :	Behaviour()

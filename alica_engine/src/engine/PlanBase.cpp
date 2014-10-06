@@ -306,6 +306,10 @@ namespace alica
 
 	PlanBase::~PlanBase()
 	{
+		delete this->ruleBook;
+		delete this->timerModeCV;
+		delete this->statusMessage;
+		delete this->loopTimer;
 	}
 	void PlanBase::checkPlanBase(shared_ptr<RunningPlan> r)
 	{

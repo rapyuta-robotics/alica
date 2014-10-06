@@ -6,6 +6,8 @@ using namespace std;
 #include <list>
 #include <typeinfo>
 #include <iostream>
+#include <memory>
+#include <ros/ros.h>
 
 #include <engine/AlicaEngine.h>
 #include "engine/PlanRepository.h"
@@ -39,6 +41,7 @@ class AlicaEngineTest : public ::testing::Test
 protected:
 	supplementary::SystemConfig* sc;
 	alica::AlicaEngine* ae;
+	alica::TestBehaviourCreator* bc;
 	virtual void SetUp()
 	{
 		// determine the path to the test config
@@ -54,12 +57,17 @@ protected:
 
 		// setup the engine
 		ae = alica::AlicaEngine::getInstance();
+		bc = new alica::TestBehaviourCreator();
+		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+		ae->init(bc, "Roleset", "MasterPlan", ".", false);
 	}
 
 	virtual void TearDown()
 	{
 		ae->shutdown();
 		sc->shutdown();
+		delete ae->getIAlicaClock();
+		delete bc;
 	}
 
 	static void checkAlicaElement(alica::AlicaElement* ae, long id, string name, string comment)
@@ -196,9 +204,6 @@ protected:
  */
 TEST_F(AlicaEngineTest, planParser)
 {
-	alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
-	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-	ae->init(bc, "Roleset", "MasterPlan", ".", false);
 	auto plans = ae->getPlanRepository()->getPlans();
 
 	cout << "Printing plans from Repository: " << endl;
@@ -716,5 +721,8 @@ TEST_F(AlicaEngineTest, planParser)
 int main(int argc, char **argv)
 {
 	testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+	ros::init(argc,argv,"AlicaEngine");
+	bool ret = RUN_ALL_TESTS();
+	ros::shutdown();
+	return ret;
 }

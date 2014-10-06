@@ -38,6 +38,10 @@ namespace alica
 
 	RolePriority::~RolePriority()
 	{
+		for(auto x : this->priorityList)
+		{
+			delete x;
+		}
 	}
 
 	list<RoleUsage*>& RolePriority::getPriorityList()

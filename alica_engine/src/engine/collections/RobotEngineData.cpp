@@ -38,6 +38,11 @@ namespace alica
 
 	RobotEngineData::~RobotEngineData()
 	{
+		delete this->successMarks;
+		for(auto x : this->sortedVariables)
+		{
+			delete x.second;
+		}
 	}
 
 	bool RobotEngineData::isActive() const

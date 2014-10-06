@@ -37,6 +37,7 @@ namespace alica
 
 	SuccessCollection::~SuccessCollection()
 	{
+		delete this->entryPoints;
 	}
 
 	int SuccessCollection::getCount() const

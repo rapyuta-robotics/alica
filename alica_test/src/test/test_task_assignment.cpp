@@ -28,14 +28,14 @@ class TaskAssignmentTest : public ::testing::Test
 protected:
 	alica::AlicaEngine* ae;
 	supplementary::SystemConfig* sc;
+	alica::TestBehaviourCreator* bc;
 
 	virtual void SetUp()
 	{
 		sc = supplementary::SystemConfig::getInstance();
 		sc->setHostname("zwerg");
 		ae = alica::AlicaEngine::getInstance();
-		//TODO extend TestBehaviourCreator
-		alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
+		bc = new alica::TestBehaviourCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->init(bc,"RolesetTA", "MasterPlanTaskAssignment", ".", false);
 	}
@@ -44,11 +44,14 @@ protected:
 	{
 		ae->shutdown();
 		sc->shutdown();
+		delete bc;
+		delete ae->getIAlicaClock();
 	}
 };
 
 TEST_F(TaskAssignmentTest, constructTaskAssignment)
 {
+
 	alica::IPlanSelector* ps = ae->getPlanSelector();
 	auto robots = make_shared<vector<int> >();
 	for(int i = 1 ; i <= 5; i++)

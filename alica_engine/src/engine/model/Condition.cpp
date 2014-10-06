@@ -18,7 +18,7 @@ namespace alica
 	Condition::Condition(long id)
 	{
 		this->id = id;
-		this->abstractPlan = NULL;
+		this->abstractPlan = nullptr;
 	}
 
 	Condition::~Condition()

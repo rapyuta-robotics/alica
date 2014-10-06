@@ -61,6 +61,10 @@ namespace alica
 
 	RobotProperties::~RobotProperties()
 	{
+		for(auto x : this->characteristics)
+		{
+			delete x.second;
+		}
 	}
 
 	int RobotProperties::getId() const

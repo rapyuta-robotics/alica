@@ -16,7 +16,7 @@ namespace alica
 		this->eventDriven = false;
 		this->frequency = 30;
 		this->deferring = 0;
-		this->behaviour = NULL;
+		this->behaviour = nullptr;
 
 	}
 

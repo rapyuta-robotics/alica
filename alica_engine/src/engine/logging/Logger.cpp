@@ -71,6 +71,8 @@ namespace alica
 
 	Logger::~Logger()
 	{
+		delete this->sBuild;
+		delete this->fileWriter;
 	}
 
 	/**

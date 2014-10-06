@@ -14,13 +14,12 @@ namespace alica
 
 	Role::Role()
 	{
-		// TODO Auto-generated constructor stub
-
+		this->roleDefinitionSet = nullptr;
+		this->roleTaskMapping = nullptr;
 	}
 
 	Role::~Role()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	double Role::getPriority(long taskId)
