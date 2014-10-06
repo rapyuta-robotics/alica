@@ -27,17 +27,17 @@ namespace alicaRosProxy
 {
 
 	AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae) :
-			IAlicaCommunication(ae), rosNode()
+			IAlicaCommunication(ae) //, rosNode()
 	{
 		spinner = new ros::AsyncSpinner(4);
 
-		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+		//supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 
-		ownID = ((*sc)["Globals"]->tryGet<int>(-1, "Globals", "Team", sc->getHostname().c_str(), "ID", NULL));
-		if (ownID == -1)
-		{
-			//cout << "ATTENTION!!! OwnID is set to -1!!! ROBOT ID is not in Globals.conf [Globals][Team]!!!" << endl;
-		}
+		/*ownID = ((*sc)["Globals"]->tryGet<int>(-1, "Globals", "Team", sc->getHostname().c_str(), "ID", NULL));
+		 if (ownID == -1)
+		 {
+		 cout << "ATTENTION!!! OwnID is set to -1!!! ROBOT ID is not in Globals.conf [Globals][Team]!!!" << endl;
+		 }*/
 
 		AllocationAuthorityInfoPublisher = rosNode.advertise<alica_ros_proxy::AllocationAuthorityInfo>(
 				"/AlicaEngine/AllocationAuthorityInfo", 2);
@@ -55,13 +55,13 @@ namespace alicaRosProxy
 													(AlicaRosCommunication*)this);
 
 		SyncReadyPublisher = rosNode.advertise<alica_ros_proxy::SyncTalk>("/AlicaEngine/SyncTalk", 10);
-		SyncReadySubscriber = rosNode.subscribe("/AlicaEngine/AllocationAuthorityInfo", 5,
-												&AlicaRosCommunication::handleSyncTalkRos,
+		SyncReadySubscriber = rosNode.subscribe("/AlicaEngine/SyncTalk", 5, &AlicaRosCommunication::handleSyncTalkRos,
 												(AlicaRosCommunication*)this);
 		SyncTalkPublisher = rosNode.advertise<alica_ros_proxy::SyncReady>("/AlicaEngine/SyncReady", 10);
-		SyncTalkSubscriber = rosNode.subscribe("/AlicaEngine/AllocationAuthorityInfo", 5,
-												&AlicaRosCommunication::handleSyncReadyRos,
+		SyncTalkSubscriber = rosNode.subscribe("/AlicaEngine/SyncReady", 5, &AlicaRosCommunication::handleSyncReadyRos,
 												(AlicaRosCommunication*)this);
+
+		spinner->start();
 
 	}
 
@@ -69,6 +69,16 @@ namespace alicaRosProxy
 	{
 		spinner->stop();
 		delete spinner;
+
+		cout << "1" << endl;
+		AllocationAuthorityInfoSubscriber.shutdown();
+		RoleSwitchPublisher.shutdown();
+		PlanTreeInfoSubscriber.shutdown();
+		SyncReadySubscriber.shutdown();
+		SyncTalkSubscriber.shutdown();
+		rosNode.shutdown();
+
+		cout << "2" << endl;
 	}
 
 	void AlicaRosCommunication::tick()

@@ -23,6 +23,7 @@ namespace alica
 
 	Variable::~Variable()
 	{
+		delete this->solverVar;
 	}
 
 	Variable::Variable(long id, string name, string type) :

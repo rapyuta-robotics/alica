@@ -15,6 +15,7 @@ class AlicaSimplePlan : public ::testing::Test
 protected:
 	supplementary::SystemConfig* sc;
 	alica::AlicaEngine* ae;
+	alica::TestBehaviourCreator* bc;
 	virtual void SetUp()
 	{
 		// determine the path to the test config
@@ -30,12 +31,19 @@ protected:
 
 		// setup the engine
 		ae = alica::AlicaEngine::getInstance();
+		bc = new alica::TestBehaviourCreator();
+		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+			ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	}
 
 	virtual void TearDown()
 	{
+
 		ae->shutdown();
 		sc->shutdown();
+		delete ae->getIAlicaClock();
+		delete ae->getCommunicator();
+		delete bc;
 	}
 };
 /**
@@ -43,15 +51,13 @@ protected:
  */
 TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 {
-	alica::TestBehaviourCreator* bc = new alica::TestBehaviourCreator();
-	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+
 	EXPECT_TRUE(ae->init(bc, "Roleset", "SimpleTestPlan", ".", false))
 			<< "Unable to initialise the Alica Engine!";
 
 	ae->start();
 
 	sleep(5);
-	delete bc;
+
 }
 

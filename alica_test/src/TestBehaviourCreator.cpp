@@ -25,9 +25,9 @@ namespace alica
 	{
 	}
 
-	unique_ptr<BasicBehaviour> TestBehaviourCreator::createBehaviour(long behaviourConfId)
+	shared_ptr<BasicBehaviour> TestBehaviourCreator::createBehaviour(long behaviourConfId)
 	{
-		unique_ptr<alica::BasicBehaviour> beh;
+		shared_ptr<alica::BasicBehaviour> beh;
 
 		switch (behaviourConfId)
 		{
@@ -51,7 +51,7 @@ namespace alica
 			throw new exception();
 			break;
 		}
-		return move(beh);
+		return beh;
 	}
 
 } /* namespace alica */

@@ -62,7 +62,7 @@ namespace alica
 				basicBeh->setDelayedStart(iter.second->getDeferring());
 				basicBeh->setInterval(1000 / iter.second->getFrequency());
 
-				this->availableBehaviours->insert(make_pair(iter.second, move(basicBeh)));
+				this->availableBehaviours->insert(make_pair(iter.second, basicBeh));
 			}
 			else
 			{

@@ -15,6 +15,7 @@ namespace alica
 			State()
 	{
 		this->terminal = true;
+		this->postCondition = nullptr;
 
 	}
 

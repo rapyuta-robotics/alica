@@ -154,28 +154,73 @@ namespace alica
 	/**
 	 * Closes the engine for good.
 	 */
-	bool AlicaEngine::shutdown()
+	void AlicaEngine::shutdown()
 	{
-		bool everythingWorked = true;
+		this->terminating = true;
 		this->maySendMessages = false;
-		delete this->planRepository;
-		this->planRepository = nullptr;
-		delete this->planParser;
-		this->planParser = nullptr;
-		// roleSet is an Element in the elements set of the model factory and is cleaned there already
-		//delete this->roleSet;
+
+		if(this->behaviourPool != nullptr)
+		{
+			this->behaviourPool->stopAll();
+			delete this->behaviourPool;
+			this->behaviourPool = nullptr;
+		}
+
+		if(this->planBase != nullptr)
+		{
+			this->planBase->stop();
+			delete this->planBase;
+			this->planBase = nullptr;
+		}
+
+		if(this->auth != nullptr)
+		{
+			this->auth->close();
+			delete this->auth;
+			this->auth = nullptr;
+		}
+
+		if(this->syncModul != nullptr)
+		{
+			this->syncModul->close();
+			delete this->syncModul;
+			this->syncModul = nullptr;
+		}
+
+		if(this->teamObserver != nullptr)
+		{
+			this->teamObserver->close();
+			delete this->teamObserver;
+			this->teamObserver = nullptr;
+		}
+
+		if(this->log != nullptr)
+		{
+			this->log->close();
+			delete this->log;
+			this->log = nullptr;
+		}
+
+		if(this->planRepository != nullptr)
+		{
+			delete this->planRepository;
+			this->planRepository = nullptr;
+		}
+
+		if(this->planParser != nullptr)
+		{
+			delete this->planParser;
+			this->planParser = nullptr;
+		}
+
 		this->roleSet = nullptr;
-		delete this->behaviourPool;
-		this->behaviourPool = nullptr;
-		delete this->teamObserver;
-		this->teamObserver = nullptr;
-		delete this->planBase;
-		this->planBase = nullptr;
 		this->masterPlan = nullptr;
-		this->syncModul = nullptr;
-		return everythingWorked;
+
 	}
 
+	/**
+	 * Register with this EngineTrigger to be called after an engine iteration is complete.
+	 */
 	void AlicaEngine::iterationComplete()
 	{
 		//TODO:

@@ -38,7 +38,8 @@ namespace alica
 	{
 	public:
 		static AlicaEngine* getInstance();bool init(IBehaviourCreator* bc, string roleSetName, string masterPlanName,
-													string roleSetDir, bool stepEngine);bool shutdown();
+													string roleSetDir, bool stepEngine);
+		void shutdown();
 		void start();bool getStepEngine();
 		void abort(string msg);
 		template<typename T> void abort(string msg, const T tail);
@@ -76,7 +77,6 @@ namespace alica
 		 * This is useful for a robot on hot standby.
 		 */
 		bool maySendMessages;
-
 
 	protected:
 		supplementary::SystemConfig* sc;
