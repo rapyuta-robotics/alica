@@ -123,7 +123,6 @@ namespace alica
 		this->recievedEvent = false;
 		shared_ptr<list<string> > ownTree = createTreeLog(p);
 
-		//TODO sbuild = nullptr
 		(*this->sBuild) << "START:\t";
 		(*this->sBuild) << to_string((this->startTime / 1000000UL)) << endl;
 		(*this->sBuild) << "AVG-RT:\t";

@@ -40,7 +40,6 @@ namespace alica
 	{
 	public:
 		TeamObserver();
-		//TODO ICommunication interface destructor ==> unique_ptr ?
 		virtual ~TeamObserver();
 		//event OnTeamChange OnTeamChangeEvent;
 		void messageRecievedFrom(int rid);
@@ -74,10 +73,6 @@ namespace alica
 		list<RobotEngineData*> allOtherRobots;
 		int myId;
 		RobotEngineData* me;
-		//TODO ICommunication interface
-		//C#
-//		protected IntPtr planTreePublisher;
-//		protected Node rosNode;
 		shared_ptr<map<int, shared_ptr<SimplePlanTree> > > simplePlanTrees;
 		unsigned long teamTimeOut;
 		Logger* log;
