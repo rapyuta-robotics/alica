@@ -56,6 +56,12 @@ namespace alica
 			shared_ptr<BasicBehaviour> basicBeh = this->behaviourCreator->createBehaviour(iter.first);
 			if (basicBeh != nullptr)
 			{
+				// set stuff from behaviour configuration in basic behaviour object
+				basicBeh->setParameters(iter.second->getParameters());
+				basicBeh->setVariables(iter.second->getVariables());
+				basicBeh->setDelayedStart(iter.second->getDeferring());
+				basicBeh->setInterval(1000 / iter.second->getFrequency());
+
 				this->availableBehaviours->insert(make_pair(iter.second, move(basicBeh)));
 			}
 			else
@@ -82,7 +88,30 @@ namespace alica
 			}
 
 			bbPtr->stop();
+		}
+	}
 
+	/**
+	 * Enables the thread of the BasicBehaviour in the given RunningPlan.
+	 * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
+	 */
+	void BehaviourPool::startBehaviour(shared_ptr<RunningPlan> rp)
+	{
+		if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp->getPlan()))
+		{
+			shared_ptr<BasicBehaviour> bb = this->availableBehaviours->at(bc);
+			if (bb != nullptr)
+			{
+				// set both directions rp <-> bb
+				rp->setBasicBehaviour(bb);
+				bb->setRunningPlan(rp);
+
+				bb->start();
+			}
+		}
+		else
+		{
+			cerr << "BP::startBehaviour(): Cannot start Behaviour of given RunningPlan! Plan Name: " << rp->getPlan()->getName() << " Plan Id: " << rp->getPlan()->getId() << endl;
 		}
 	}
 
@@ -103,42 +132,6 @@ namespace alica
 		else
 		{
 			cerr << "BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp->getPlan()->getName() << " Plan Id: " << rp->getPlan()->getId() << endl;
-		}
-	}
-
-	/**
-	 * Enables the thread of the BasicBehaviour in the given RunningPlan.
-	 * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
-	 */
-	void BehaviourPool::startBehaviour(shared_ptr<RunningPlan> rp)
-	{
-		cout << "BP: vor start" << endl;
-		if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp->getPlan()))
-		{
-			cout << "BP1: vor start" << endl;
-			shared_ptr<BasicBehaviour> bb = this->availableBehaviours->at(bc);
-			if (bb != nullptr)
-			{
-				// TODO: Some of these things can be set during initialisation, have a review which one
-				// set basic behaviours params and vars
-				bb->setParameters(bc->getParameters());
-				bb->setVariables(bc->getVariables());
-
-				// set both directions rp <-> bb
-				rp->setBasicBehaviour(bb);
-				bb->setRunningPlan(rp);
-
-				// start basic behaviour
-				bb->setDelayedStart(bc->getDeferring());
-				bb->setInterval(1000 / bc->getFrequency());
-
-				bb->start();
-				cout << "BP: nach start" << endl;
-			}
-		}
-		else
-		{
-			cerr << "BP::startBehaviour(): Cannot start Behaviour of given RunningPlan! Plan Name: " << rp->getPlan()->getName() << " Plan Id: " << rp->getPlan()->getId() << endl;
 		}
 	}
 

@@ -44,8 +44,8 @@ namespace alica
 		void setParameters(shared_ptr<map<string,string>> parameters);
 		shared_ptr<list<Variable*>> getVariables();
 		void setVariables(shared_ptr<list<Variable*>> variables);
-		void start();
-		void stop();
+		bool stop();
+		bool start();
 		bool pause();
 		bool restart();
 		int getDelayedStart() const;
@@ -76,7 +76,6 @@ namespace alica
 		shared_ptr<RunningPlan> runningPlan;
 		chrono::milliseconds msInterval;
 		chrono::milliseconds msDelayedStart;
-		bool running;
 		bool started;
 		bool callInit;
 		/**

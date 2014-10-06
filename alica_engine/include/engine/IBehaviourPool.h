@@ -31,19 +31,19 @@ namespace alica
 		// C#: public delegate void EngineTrigger(object arg);
 
 		/**
-		 * Add a behaviour represented by its RunningPlan to the set of currently active behaviour. Usually called by the RunningPlan.
-		 * @param rp A RunningPlan
-		 */
-		virtual void startBehaviour(shared_ptr<RunningPlan> rp) = 0;
-
-		/**
-		 * Remove a behaviour represented by its RunningPlan from the set of currently active behaviour. Usually called by the RunningPlan.
+		 * Destroys a behaviour represented by its RunningPlan.
 		 * @param rp A RunningPlan
 		 */
 		virtual void stopBehaviour(shared_ptr<RunningPlan> rp) = 0;
 
 		/**
-		 * Initializes this Engine Module
+		 * Starts a behaviour represented by its RunningPlan from the set of currently active behaviour.
+		 * @param rp A RunningPlan
+		 */
+		virtual void startBehaviour(shared_ptr<RunningPlan> rp) = 0;
+
+		/**
+		 * Initialises this Engine Module
 		 */
 		virtual bool init(IBehaviourCreator* bc) = 0;
 

@@ -29,13 +29,18 @@ namespace alica
 		this->failure = false;
 		this->success = false;
 		this->callInit = true;
-		this->running = false;
-		this->started = false;
+		this->started = true;
 		this->runThread = new thread(&BasicBehaviour::runInternal, this);
 	}
 
 	BasicBehaviour::~BasicBehaviour()
 	{
+		this->started = false;
+		this->runCV.notify_all();
+		this->timer->start();
+		this->runThread->join();
+		delete this->runThread;
+		delete this->timer;
 	}
 
 	const string BasicBehaviour::getName() const
@@ -96,33 +101,22 @@ namespace alica
 	{
 		return AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
 	}
+
 	/**
-	 * Starts the execution of this Behaviour (either Timer, or Event triggered)
+	 * Stops the execution of this BasicBehaviour.
 	 */
-	void BasicBehaviour::start()
+	bool BasicBehaviour::stop()
 	{
-		// TODO implement this
-		this->started = true;
+		return this->timer->stop();
+	}
+
+	/**
+	 * Starts the execution of this BasicBehaviour.
+	 */
+	bool BasicBehaviour::start()
+	{
 		this->callInit = true;
-	}
-
-	/**
-	 * Stops the execution of this Behaviour
-	 */
-	void BasicBehaviour::stop()
-	{
-		// TODO implement this
-		this->started = false;
-	}
-
-	bool BasicBehaviour::pause()
-	{
-		return this->timer->pause();
-	}
-
-	bool BasicBehaviour::restart()
-	{
-		return this->timer->restart();
+		return this->timer->start();
 	}
 
 	shared_ptr<RunningPlan> BasicBehaviour::getRunningPlan()
@@ -162,16 +156,17 @@ namespace alica
 
 	void BasicBehaviour::runInternal()
 	{
-//		sleep(3);
 		unique_lock<mutex> lck(runCV_mtx);
 		while (!AlicaEngine::getInstance()->isTerminating() && this->started)
 		{
 			this->runCV.wait(lck, [&]
-			{return this->timer->isRunning();}); // protection against spurious wake-ups
+			{return !this->started || this->timer->isNotifyCalled();}); // protection against spurious wake-ups
+
 			if (!this->started)
 				return;
+
 			if (this->callInit)
-				this->initialiseParameters();
+				this->initInternal();
 #ifdef BEH_DEBUG
 			chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
 #endif
@@ -181,15 +176,14 @@ namespace alica
 			BehaviourConfiguration* conf = dynamic_cast<BehaviourConfiguration*>(this->getRunningPlan()->getPlan());
 			if (conf->isEventDriven())
 			{
-				double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0
-						- 1.0 / conf->getFrequency() * 1000.0;
+				double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / conf->getFrequency() * 1000.0;
 				if (dura > 0.1)
 				{ //Behaviour "+conf.Behaviour.Name+" exceeded runtime by {0,1:0.##}ms!",delta
-					cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura
-							<< "ms!" << endl;
+					cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura << "ms!" << endl;
 				}
 			}
 #endif
+			this->timer->setNotifyCalled(false);
 		}
 	}
 

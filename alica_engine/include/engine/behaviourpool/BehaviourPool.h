@@ -33,10 +33,11 @@ namespace alica
 	public:
 		BehaviourPool();
 		virtual ~BehaviourPool();
-		void stopAll();
 		bool init(IBehaviourCreator* bc);
-		void stopBehaviour(shared_ptr<RunningPlan> rp);
 		void startBehaviour(shared_ptr<RunningPlan> rp);
+		void stopBehaviour(shared_ptr<RunningPlan> rp);
+		void stopAll();
+
 	private:
 		/**
 		 * Manages behaviours used by the running ALICA program.
