@@ -89,7 +89,6 @@ namespace alica
 		{
 			if (this->getEntryPoints()[i] == ep)
 			{
-				//TODO this->robots[i] null
 				return this->robots[i];
 			}
 		}
@@ -114,7 +113,6 @@ namespace alica
 		ss << "";
 		for (int i = 0; i < this->count; i++)
 		{
-			//TODO robots shared ptr null
 			if (this->robots[i]->size() > 0)
 			{
 				ss << this->entryPoints[i]->getTask()->getId() << ": ";
