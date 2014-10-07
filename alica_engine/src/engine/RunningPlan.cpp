@@ -1031,7 +1031,7 @@ namespace alica
 
 	}
 
-	void RunningPlan::ToMessage(list<long> message, shared_ptr<RunningPlan> deepestNode, int depth, int curDepth)
+	void RunningPlan::toMessage(list<long> message, shared_ptr<RunningPlan> deepestNode, int depth, int curDepth)
 	{
 		if (this->isBehaviour())
 		{
@@ -1055,7 +1055,7 @@ namespace alica
 			message.push_back(-1);
 			for (shared_ptr<RunningPlan> r : this->children)
 			{
-				r->ToMessage(message, deepestNode, depth, curDepth + 1);
+				r->toMessage(message, deepestNode, depth, curDepth + 1);
 			}
 			message.push_back(-2);
 		}

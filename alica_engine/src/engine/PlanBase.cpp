@@ -182,7 +182,7 @@ namespace alica
 				list<long> msg;
 				this->deepestNode = this->rootNode;
 				this->treeDepth = 0;
-				this->rootNode->ToMessage(msg, this->deepestNode, this->treeDepth,0);
+				this->rootNode->toMessage(msg, this->deepestNode, this->treeDepth,0);
 				this->teamObserver->doBroadCast(msg);
 				this->lastSendTime = now;
 				this->ruleBook->setChangeOccured(false);
