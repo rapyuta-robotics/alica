@@ -28,11 +28,12 @@ namespace alica
 	class RobotRoleUtility;
 	class RolePriority;
 	class IAlicaCommunication;
+	class AlicaEngine;
 
 	class RoleAssignment : virtual public IRoleAssignment
 	{
 	public:
-		RoleAssignment();
+		RoleAssignment(AlicaEngine* ae);
 		virtual ~RoleAssignment();
 		void init();
 		Role* getRole(int robotId);
@@ -42,6 +43,7 @@ namespace alica
 		void setCommunication(IAlicaCommunication* communication);
 
 	private:
+		AlicaEngine* ae;
 		RoleSet* roleSet;
 		map<int, Role*> robotRoleMapping;
 		//TODO this vector has to be sorted each time an element is inserted
