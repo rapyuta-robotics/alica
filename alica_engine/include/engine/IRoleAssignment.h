@@ -19,6 +19,7 @@ namespace alica
 	class IRoleAssignment
 	{
 	public:
+
 		virtual ~IRoleAssignment()
 		{
 		}
