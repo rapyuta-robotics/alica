@@ -1,10 +1,12 @@
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
+#include "engine/IAlicaCommunication.h"
 #include "TestBehaviourCreator.h"
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
 #include <clock/AlicaROSClock.h>
+#include <communication/AlicaRosCommunication.h>
 #include  "engine/DefaultUtilityFunction.h"
 #include "engine/model/Plan.h"
 
@@ -31,13 +33,13 @@ protected:
 		// setup the engine
 		ae = alica::AlicaEngine::getInstance();
 		bc = new alica::TestBehaviourCreator();
-		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	}
 
 	virtual void TearDown()
 	{
 		ae->shutdown();
 		sc->shutdown();
+		delete ae->getCommunicator();
 		delete ae->getIAlicaClock();
 		delete bc;
 	}
@@ -47,8 +49,10 @@ protected:
  */
 TEST_F(AlicaEngineTestBehPool, behaviourPoolInit)
 {
+	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	EXPECT_TRUE(ae->init(bc, "Roleset", "MasterPlan", ".", false))
 			<< "Unable to initialise the Alica Engine!";
+	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	auto behaviours = ae->getPlanRepository()->getBehaviours();
 	alica::IBehaviourPool* bp = ae->getBehaviourPool();
 	for (auto behaviourPair : behaviours)
