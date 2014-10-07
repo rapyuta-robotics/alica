@@ -272,9 +272,11 @@ namespace alica
 
 			}
 
+			cout << "PB: availTime " << availTime << endl;
+
 			if (availTime > 1 && !ae->getStepEngine())
 			{
-				cout << "SCHALFE" << endl;
+				cout << "PB: SLEEP!" << endl;
 				alicaClock->sleep(availTime);
 			}
 		}
