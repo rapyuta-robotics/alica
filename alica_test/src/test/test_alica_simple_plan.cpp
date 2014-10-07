@@ -33,7 +33,7 @@ protected:
 		ae = alica::AlicaEngine::getInstance();
 		bc = new alica::TestBehaviourCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-			ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	}
 
 	virtual void TearDown()
