@@ -301,6 +301,9 @@ namespace alica
 
 	RunningPlan::~RunningPlan()
 	{
+		cout << "RP: Destruktor" << this->basicBehaviour << endl;
+		this->basicBehaviour.reset();
+		cout << "RP: Destruktor Count" << this->basicBehaviour.use_count() << endl;
 	}
 
 	/**
@@ -782,8 +785,7 @@ namespace alica
 		this->active = true;
 		if (this->isBehaviour())
 		{
-			auto x = shared_from_this();
-			bp->startBehaviour(x);
+			bp->startBehaviour(shared_from_this());
 		}
 		this->attachPlanConstraints();
 		for (shared_ptr<RunningPlan> r : this->children)
@@ -1031,7 +1033,7 @@ namespace alica
 
 	}
 
-	void RunningPlan::toMessage(list<long>& message, shared_ptr<RunningPlan> deepestNode, int depth, int curDepth)
+	void RunningPlan::toMessage(list<long>& message, shared_ptr<RunningPlan>& deepestNode, int& depth, int curDepth)
 	{
 		if (this->isBehaviour())
 		{
@@ -1052,6 +1054,7 @@ namespace alica
 		}
 		if (this->children.size() > 0)
 		{
+			cout << "RP: " << this->children.size() << endl;
 			message.push_back(-1);
 			for (shared_ptr<RunningPlan> r : this->children)
 			{

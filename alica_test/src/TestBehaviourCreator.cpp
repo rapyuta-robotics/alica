@@ -27,31 +27,31 @@ namespace alica
 
 	shared_ptr<BasicBehaviour> TestBehaviourCreator::createBehaviour(long behaviourConfId)
 	{
-		shared_ptr<alica::BasicBehaviour> beh;
+		//shared_ptr<alica::BasicBehaviour> beh;
 
 		switch (behaviourConfId)
 		{
 			case 1402488712657:
-				beh.reset(new MidFieldStandard());
+				return make_shared<MidFieldStandard>();
 				break;
 			case 1402488763903:
-				beh.reset(new DefendMid());
+				return make_shared<DefendMid>();
 				break;
 			case 1402488956661:
-				beh.reset(new Tackle());
+				return make_shared<Tackle>();
 				break;
 			case 1402488866727:
-				beh.reset(new Attack());
+				return make_shared<Attack>();
 				break;
 			case 1402489366699:
-				beh.reset(new AttackOpp());
+				return make_shared<AttackOpp>();
 				break;
 			default:
 			cerr << "TestBehaviourCreator: Unknown behaviour configuration id requested: " << behaviourConfId << endl;
 			throw new exception();
 			break;
 		}
-		return beh;
+		//return beh;
 	}
 
 } /* namespace alica */

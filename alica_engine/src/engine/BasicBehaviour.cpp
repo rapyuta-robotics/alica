@@ -18,18 +18,14 @@ namespace alica
 {
 
 	/**
-	 * Basic constructor. Initializes various timers. Should only be called from the constructor of inheriting classes.
+	 * Basic constructor. Initialises the timer. Should only be called from the constructor of inheriting classes.
 	 * @param name The name of the behaviour
 	 */
-	BasicBehaviour::BasicBehaviour(string name)
+	BasicBehaviour::BasicBehaviour(string name) :
+			name(name), parameters(nullptr), failure(false), success(false), callInit(true), started(true)
 	{
-		this->name = name;
-		this->parameters = nullptr;
 		this->timer = new supplementary::Timer(0, 0, false);
-		this->failure = false;
-		this->success = false;
-		this->callInit = true;
-		this->started = true;
+		this->timer->registerCV(&this->runCV);
 		this->runThread = new thread(&BasicBehaviour::runInternal, this);
 	}
 
@@ -160,7 +156,7 @@ namespace alica
 		while (!AlicaEngine::getInstance()->isTerminating() && this->started)
 		{
 			this->runCV.wait(lck, [&]
-			{return !this->started || this->timer->isNotifyCalled();}); // protection against spurious wake-ups
+			{	return !this->started || this->timer->isNotifyCalled();}); // protection against spurious wake-ups
 
 			if (!this->started)
 				return;

@@ -117,7 +117,7 @@ namespace alica
 		void revokeAllConstraints();
 		void attachPlanConstraints();
 		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents,list<int> noUpdates, unsigned long now);
-		void toMessage(list<long>& message, shared_ptr<RunningPlan> deepestNode, int depth, int curDepth);
+		void toMessage(list<long>& message, shared_ptr<RunningPlan>& deepestNode, int& depth, int curDepth);
 		string toString();
 
 	private:

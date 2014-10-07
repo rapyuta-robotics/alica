@@ -37,7 +37,7 @@ namespace alica
 		this->treeDepth = 0;
 		this->lastSendTime = 0;
 		this->statusPublisher = nullptr;
-		this->lastSentStatusTime =0;
+		this->lastSentStatusTime = 0;
 		this->loopInterval = 0;
 		this->stepModeCV = nullptr;
 		this->deepestNode = nullptr;
@@ -61,8 +61,7 @@ namespace alica
 
 		if (minbcfreq > maxbcfreq)
 		{
-			AlicaEngine::getInstance()->abort(
-					"PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
+			AlicaEngine::getInstance()->abort("PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
 		}
 
 		this->minSendInterval = (alicaTime)fmax(1000000, lround(1.0 / maxbcfreq * 1000000000));
@@ -81,7 +80,9 @@ namespace alica
 			this->statusMessage->masterPlan = masterPlan->getName();
 		}
 
-		if(!this->ae->getStepEngine())
+		this->timerModeCV = nullptr;
+		this->loopTimer = nullptr;
+		if (!this->ae->getStepEngine())
 		{
 			this->loopTimer = new supplementary::Timer(this->loopTime / 1000000, this->loopTime / 1000000, false);
 			this->timerModeCV = new condition_variable();
@@ -90,9 +91,7 @@ namespace alica
 		}
 
 #ifdef PB_DEBUG
-		cout << "PB: Engine loop time is " << loopTime/1000000
-				<< "ms, broadcast interval is " << this->minSendInterval/1000000
-				<< "ms - " <<  this->maxSendInterval/1000000 << "ms" << endl;
+		cout << "PB: Engine loop time is " << loopTime / 1000000 << "ms, broadcast interval is " << this->minSendInterval / 1000000 << "ms - " << this->maxSendInterval / 1000000 << "ms" << endl;
 #endif
 		if (halfLoopTime < this->minSendInterval)
 		{
@@ -106,9 +105,11 @@ namespace alica
 	 */
 	void PlanBase::start()
 	{
-		this->log = ae->getLog();
-		this->running = true;
-		this->mainThread = new thread(&PlanBase::run, this);
+		if (!this->running) {
+			this->log = ae->getLog();
+			this->running = true;
+			this->mainThread = new thread(&PlanBase::run, this);
+		}
 	}
 	/**
 	 * The Engine's main loop
@@ -138,13 +139,11 @@ namespace alica
 					unique_lock<mutex> lckStep(stepMutex);
 					stepModeCV->wait(lckStep, [&]
 					{
-						if(this->ae->getStepCalled())
-						{
-							this->ae->setStepCalled(false);
-							return true;
-						}
-						return false;
+						return this->ae->getStepCalled();
 					});
+					this->ae->setStepCalled(false);
+					if (!running)
+						return;
 				}
 				beginTime = alicaClock->now();
 
@@ -176,13 +175,12 @@ namespace alica
 			}
 
 			alicaTime now = alicaClock->now();
-			if ((this->ruleBook->isChangeOccured() && this->lastSendTime + this->minSendInterval < now)
-					|| this->lastSendTime + this->maxSendInterval < now)
+			if ((this->ruleBook->isChangeOccured() && this->lastSendTime + this->minSendInterval < now) || this->lastSendTime + this->maxSendInterval < now)
 			{
 				list<long> msg;
 				this->deepestNode = this->rootNode;
 				this->treeDepth = 0;
-				this->rootNode->toMessage(msg, this->deepestNode, this->treeDepth,0);
+				this->rootNode->toMessage(msg, this->deepestNode, this->treeDepth, 0);
 				this->teamObserver->doBroadCast(msg);
 				this->lastSendTime = now;
 				this->ruleBook->setChangeOccured(false);
@@ -205,11 +203,7 @@ namespace alica
 					if (this->deepestNode->getActiveState() != nullptr)
 					{
 						this->statusMessage->currentState = this->deepestNode->getActiveState()->getName();
-						copy(this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(
-								this->deepestNode->getActiveState()).begin(),
-								this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(
-										this->deepestNode->getActiveState()).end(),
-								back_inserter(this->statusMessage->robotIDsWithMe));
+						copy(this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(this->deepestNode->getActiveState()).begin(), this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(this->deepestNode->getActiveState()).end(), back_inserter(this->statusMessage->robotIDsWithMe));
 
 					}
 					else
@@ -288,20 +282,40 @@ namespace alica
 	void PlanBase::stop()
 	{
 		this->running = false;
+		this->ae->setStepCalled(true);
+
+		if (this->loopTimer != nullptr)
+		{
+			this->loopTimer->start();
+		}
+		else
+		{
+			this->loopTimer = new supplementary::Timer(5, 0, false);
+			if (this->timerModeCV == nullptr)
+			{
+				this->timerModeCV = new condition_variable();
+			}
+			this->loopTimer->registerCV(timerModeCV);
+			this->loopTimer->start();
+		}
+
 		if (ae->getStepEngine())
 		{
 			stepModeCV->notify_one();
 		}
-		timerModeCV->notify_one();
-		timerModeCV->notify_one();
-		if (this->mainThread->get_id() != this_thread::get_id())
+		else
 		{
-			this->mainThread->join();
+			timerModeCV->notify_one();
 		}
+
+		if (this->mainThread != nullptr) {
+			this->mainThread->join();
+			delete this->mainThread;
+		}
+		this->mainThread = nullptr;
 		if (this->loopTimer != nullptr)
 		{
 			this->loopTimer->stop();
-			delete loopTimer;
 		}
 
 	}
@@ -309,9 +323,16 @@ namespace alica
 	PlanBase::~PlanBase()
 	{
 		delete this->ruleBook;
-		delete this->timerModeCV;
+		if (this->timerModeCV != nullptr)
+		{
+			delete this->timerModeCV;
+		}
 		delete this->statusMessage;
-		delete this->loopTimer;
+
+		if (this->loopTimer != nullptr)
+		{
+			delete this->loopTimer;
+		}
 	}
 	void PlanBase::checkPlanBase(shared_ptr<RunningPlan> r)
 	{

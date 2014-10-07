@@ -6,6 +6,7 @@
 #include "engine/PlanRepository.h"
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/model/Plan.h"
+#include <communication/AlicaRosCommunication.h>
 
 class AlicaEngineTestInit : public ::testing::Test
 {
@@ -30,14 +31,18 @@ protected:
 		ae = alica::AlicaEngine::getInstance();
 		bc = new alica::TestBehaviourCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	}
 
 	virtual void TearDown()
 	{
+		//cout << "Before Shutdown" << endl;
 		ae->shutdown();
 		sc->shutdown();
+		delete ae->getCommunicator();
 		delete ae->getIAlicaClock();
 		delete bc;
+		//cout << "After Shutdown" << endl;
 	}
 };
 
