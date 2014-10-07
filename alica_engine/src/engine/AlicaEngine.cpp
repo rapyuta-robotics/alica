@@ -128,7 +128,7 @@ namespace alica
 		}
 		if (this->roleAssignment == nullptr)
 		{
-			this->roleAssignment = new RoleAssignment();
+			this->roleAssignment = new RoleAssignment(this);
 		}
 		if (this->syncModul == nullptr)
 		{
@@ -416,7 +416,7 @@ namespace alica
 	void AlicaEngine::setCommunicator(IAlicaCommunication * communicator)
 	{
 		this->communicator = communicator;
-		this->roleAssignment->setCommunication(communicator);
+		//this->roleAssignment->setCommunication(communicator);
 	}
 
 	/**
