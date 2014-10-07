@@ -36,8 +36,7 @@ namespace alica
 	{
 		this->teamTimeOut = 0;
 		this->myId = 0;
-		this->simplePlanTrees = make_shared<map<int, shared_ptr<SimplePlanTree> > >(
-				map<int, shared_ptr<SimplePlanTree> >());
+		this->simplePlanTrees = make_shared<map<int, shared_ptr<SimplePlanTree> > >(map<int, shared_ptr<SimplePlanTree> >());
 		this->me = nullptr;
 		this->log = nullptr;
 		this->ae = nullptr;
@@ -234,16 +233,14 @@ namespace alica
 
 	unique_ptr<map<int, shared_ptr<SimplePlanTree> > > TeamObserver::getTeamPlanTrees()
 	{
-		unique_ptr<map<int, shared_ptr<SimplePlanTree> > > ret = unique_ptr<map<int, shared_ptr<SimplePlanTree> > >(
-				new map<int, shared_ptr<SimplePlanTree> >);
+		unique_ptr<map<int, shared_ptr<SimplePlanTree> > > ret = unique_ptr<map<int, shared_ptr<SimplePlanTree> > >(new map<int, shared_ptr<SimplePlanTree> >);
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
 		for (RobotEngineData* r : this->allOtherRobots)
 		{
 			if (r->isActive())
 			{
 				shared_ptr<SimplePlanTree> t = nullptr;
-				map<int, shared_ptr<SimplePlanTree> >::iterator iter = this->simplePlanTrees->find(
-						r->getProperties()->getId());
+				map<int, shared_ptr<SimplePlanTree> >::iterator iter = this->simplePlanTrees->find(r->getProperties()->getId());
 				t = iter->second;
 				if (t != nullptr)
 				{
@@ -291,11 +288,9 @@ namespace alica
 			list<shared_ptr<SimplePlanTree> > updatespts;
 			list<int> noUpdates;
 			lock_guard<mutex> lock(this->simplePlanTreeMutex);
-			for (map<int, shared_ptr<SimplePlanTree> >::const_iterator iterator = this->simplePlanTrees->begin();
-					iterator != this->simplePlanTrees->end(); iterator++)
+			for (map<int, shared_ptr<SimplePlanTree> >::const_iterator iterator = this->simplePlanTrees->begin(); iterator != this->simplePlanTrees->end(); iterator++)
 			{
-				if (find(robotsAvail.begin(), robotsAvail.end(), iterator->second.get()->getRobotId())
-						!= robotsAvail.end())
+				if (find(robotsAvail.begin(), robotsAvail.end(), iterator->second.get()->getRobotId()) != robotsAvail.end())
 				{
 					if (iterator->second->isNewSimplePlanTree())
 					{
@@ -361,8 +356,7 @@ namespace alica
 	 */
 	void TeamObserver::cleanOwnSuccessMarks(shared_ptr<RunningPlan> root)
 	{
-		unique_ptr<unordered_set<AbstractPlan*> > presentPlans = unique_ptr<unordered_set<AbstractPlan*> >(
-				new unordered_set<AbstractPlan*>);
+		unique_ptr<unordered_set<AbstractPlan*> > presentPlans = unique_ptr<unordered_set<AbstractPlan*> >(new unordered_set<AbstractPlan*>);
 		if (root != nullptr)
 		{
 			list<shared_ptr<RunningPlan>>* q = new list<shared_ptr<RunningPlan>>();
@@ -385,7 +379,10 @@ namespace alica
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
 		for (auto pair : *this->simplePlanTrees)
 		{
-			queue.push_back(pair.second);
+			if (pair.second.operator bool())
+			{
+				queue.push_back(pair.second);
+			}
 		}
 		while (queue.size() > 0)
 		{
@@ -402,8 +399,7 @@ namespace alica
 
 	EntryPoint* TeamObserver::entryPointOfState(State* state)
 	{
-		for (map<long, EntryPoint*>::const_iterator iter = state->getInPlan()->getEntryPoints().begin();
-				iter != state->getInPlan()->getEntryPoints().end(); iter++)
+		for (map<long, EntryPoint*>::const_iterator iter = state->getInPlan()->getEntryPoints().begin(); iter != state->getInPlan()->getEntryPoints().end(); iter++)
 		{
 			if (iter->second->getReachableStates().find(state) != iter->second->getReachableStates().end())
 			{
@@ -565,9 +561,7 @@ namespace alica
 		}
 		else
 		{
-			this->simplePlanTrees->insert(
-					pair<int, shared_ptr<SimplePlanTree> >(incoming->senderID,
-															sptFromMessage(incoming->senderID, incoming->stateIDs)));
+			this->simplePlanTrees->insert(pair<int, shared_ptr<SimplePlanTree> >(incoming->senderID, sptFromMessage(incoming->senderID, incoming->stateIDs)));
 		}
 
 	}
