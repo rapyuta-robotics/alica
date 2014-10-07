@@ -23,7 +23,7 @@
 namespace alica
 {
 
-	RoleAssignment::RoleAssignment()
+	RoleAssignment::RoleAssignment(AlicaEngine* ae) : ae(ae)
 	{
 		this->communication = nullptr;
 		this->to = nullptr;
@@ -53,7 +53,7 @@ namespace alica
 
 	void RoleAssignment::init()
 	{
-		this->to = AlicaEngine::getInstance()->getTeamObserver();
+		this->to = ae->getTeamObserver();
 		//TODO delegates missing
 		//to->onTeamCHangedEvent += Update;
 
@@ -130,14 +130,14 @@ namespace alica
 	 */
 	void RoleAssignment::roleUtilities()
 	{
-		this->roleSet = AlicaEngine::getInstance()->getRoleSet();
-		this->roles = AlicaEngine::getInstance()->getPlanRepository()->getRoles();
+		this->roleSet = ae->getRoleSet();
+		this->roles = ae->getPlanRepository()->getRoles();
 		if (this->roleSet == nullptr)
 		{
 			cerr << "RA: The current Roleset is null!" << endl;
 			throw new exception();
 		}
-		this->availableRobots = AlicaEngine::getInstance()->getTeamObserver()->getAvailableRobotProperties();
+		this->availableRobots = ae->getTeamObserver()->getAvailableRobotProperties();
 
 		cout << "RA: Available robots: " << this->availableRobots->size() << endl;
 		cout << "RA: Robot Ids: ";
@@ -193,8 +193,7 @@ namespace alica
 		}
 		if (this->sortedRobots.size() == 0)
 		{
-			AlicaEngine::getInstance()->abort(
-					"RA: Could not establish a mapping between robots and roles. Please check capability definitions!");
+			ae->abort("RA: Could not establish a mapping between robots and roles. Please check capability definitions!");
 		}
 		RolePriority* rp = new RolePriority();
 		this->robotRoleMapping.clear();
