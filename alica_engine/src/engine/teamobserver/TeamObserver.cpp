@@ -327,7 +327,7 @@ namespace alica
 	 * @param msg A list of long, a serialized version of the current planning tree
 	 * as constructed by RunningPlan.ToMessage.
 	 */
-	void TeamObserver::doBroadCast(list<long> msg)
+	void TeamObserver::doBroadCast(list<long>& msg)
 	{
 		if (!ae->maySendMessages)
 		{
@@ -620,44 +620,50 @@ namespace alica
 
 		shared_ptr<SimplePlanTree> curParent;
 		shared_ptr<SimplePlanTree> cur = root;
-
-		for (int i = 0; i < ids.size(); i++)
+		if (ids.size() > 1)
 		{
 			list<long>::const_iterator iter = ids.begin();
-			advance(iter, i);
-			if (*iter == -1)
+			iter++;
+			for (; iter != ids.end(); iter++)
 			{
-				curParent = cur;
-				cur.reset();
-			}
-			else if (*iter == -2)
-			{
-				cerr << "TO: Malformed SptMessage from " << robotId << endl;
-				return nullptr;
-			}
-			else
-			{
-				cur = make_shared<SimplePlanTree>();
-				cur->setRobotId(robotId);
-				cur->setReceiveTime(time);
-
-				curParent->getChildren().insert(cur);
-				if (states.find(*iter) != states.end())
+				if (*iter == -1)
 				{
-					root->setState(states.at(*iter));
-					root->setEntryPoint(entryPointOfState(root->getState()));
-					if (cur->getEntryPoint() == nullptr)
+					curParent = cur;
+					cur.reset();
+				}
+				else if (*iter == -2)
+				{
+					cur = curParent;
+					if (cur == nullptr)
 					{
-						list<long>::const_iterator iter = ids.begin();
-						cerr << "TO: Cannot find ep for State (" << *iter << ") received from " << robotId << endl;
+						cerr << "TO: Malformed SptMessage from " << robotId << endl;
 						return nullptr;
 					}
 				}
 				else
 				{
-					list<long>::const_iterator iter = ids.begin();
-					cerr << "Unknown State (" << *iter << ") received from " << robotId << endl;
-					return nullptr;
+					cur = make_shared<SimplePlanTree>();
+					cur->setRobotId(robotId);
+					cur->setReceiveTime(time);
+
+					curParent->getChildren().insert(cur);
+					if (states.find(*iter) != states.end())
+					{
+						root->setState(states.at(*iter));
+						root->setEntryPoint(entryPointOfState(root->getState()));
+						if (cur->getEntryPoint() == nullptr)
+						{
+							list<long>::const_iterator iter = ids.begin();
+							cerr << "TO: Cannot find ep for State (" << *iter << ") received from " << robotId << endl;
+							return nullptr;
+						}
+					}
+					else
+					{
+						list<long>::const_iterator iter = ids.begin();
+						cerr << "Unknown State (" << *iter << ") received from " << robotId << endl;
+						return nullptr;
+					}
 				}
 			}
 		}

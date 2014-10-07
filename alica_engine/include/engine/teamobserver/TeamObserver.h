@@ -54,7 +54,7 @@ namespace alica
 		unique_ptr<map<int, shared_ptr<SimplePlanTree> > > getTeamPlanTrees();
 		void init();
 		void tick(shared_ptr<RunningPlan> root);
-		void doBroadCast(list<long> msg);
+		void doBroadCast(list<long>& msg);
 		int successesInPlan(Plan* plan);
 		SuccessCollection* getSuccessCollection(Plan* plan);
 		void updateSuccessCollection(Plan* p, SuccessCollection* sc);

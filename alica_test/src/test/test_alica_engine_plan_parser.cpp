@@ -34,6 +34,8 @@ using namespace std;
 #include "../../alica_ros_proxy/include/clock/AlicaROSClock.h"
 #include "engine/PlanRepository.h"
 #include "engine/DefaultUtilityFunction.h"
+//#include "engine/IAlicaCommunication.h"
+#include <communication/AlicaRosCommunication.h>
 
 class AlicaEngineTest : public ::testing::Test
 {
@@ -59,6 +61,7 @@ protected:
 		ae = alica::AlicaEngine::getInstance();
 		bc = new alica::TestBehaviourCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 		ae->init(bc, "Roleset", "MasterPlan", ".", false);
 	}
 
@@ -713,6 +716,7 @@ TEST_F(AlicaEngineTest, planParser)
 						<< "TEST_F(AlicaEngineTest, planParser) found an id not part of testplans but expect_true for all ids failed!"
 						<< endl;
 				break;
+
 
 		}
 	}
