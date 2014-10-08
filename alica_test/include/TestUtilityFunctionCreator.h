@@ -18,6 +18,7 @@ namespace alica
 	public:
 		virtual ~TestUtilityFunctionCreator();
 		TestUtilityFunctionCreator();
+		shared_ptr<BasicUtilityFunction> createConstraint(long utilityfunctionConfId);
 	};
 
 } /* namespace alica */
