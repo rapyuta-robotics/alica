@@ -16,4 +16,20 @@
     <key href="Behaviour/Attack.beh#1402488866727"/>
     <value/>
   </extensions>
+  <extensions>
+    <key href="SimpleTestPlan.pml#1412761855746"/>
+    <value xPos="345" yPos="128" width="87" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="SimpleTestPlan.pml#1412761925032"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="SimpleTestPlan.pml#1412781693884"/>
+    <value xPos="329" yPos="301"/>
+  </extensions>
+  <extensions>
+    <key href="SimpleTestPlan.pml#1412781707952"/>
+    <value xPos="33" yPos="-22"/>
+  </extensions>
 </uiextensionmodel:PmlUiExtensionMap>

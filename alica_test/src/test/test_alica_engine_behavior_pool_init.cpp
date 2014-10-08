@@ -9,6 +9,7 @@
 #include <communication/AlicaRosCommunication.h>
 #include  "engine/DefaultUtilityFunction.h"
 #include "engine/model/Plan.h"
+#include "TestConditionCreator.h"
 
 class AlicaEngineTestBehPool : public ::testing::Test
 {
@@ -16,6 +17,7 @@ protected:
 	supplementary::SystemConfig* sc;
 	alica::AlicaEngine* ae;
 	alica::TestBehaviourCreator* bc;
+	alica::TestConditionCreator* cc;
 
 	virtual void SetUp()
 	{
@@ -33,6 +35,9 @@ protected:
 		// setup the engine
 		ae = alica::AlicaEngine::getInstance();
 		bc = new alica::TestBehaviourCreator();
+		cc = new alica::TestConditionCreator();
+		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	}
 
 	virtual void TearDown()
@@ -41,6 +46,7 @@ protected:
 		sc->shutdown();
 		delete ae->getCommunicator();
 		delete ae->getIAlicaClock();
+		delete cc;
 		delete bc;
 	}
 };
@@ -49,10 +55,8 @@ protected:
  */
 TEST_F(AlicaEngineTestBehPool, behaviourPoolInit)
 {
-	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-	EXPECT_TRUE(ae->init(bc, "Roleset", "MasterPlan", ".", false))
+	EXPECT_TRUE(ae->init(bc, cc, "Roleset", "MasterPlan", ".", false))
 			<< "Unable to initialise the Alica Engine!";
-	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	auto behaviours = ae->getPlanRepository()->getBehaviours();
 	alica::IBehaviourPool* bp = ae->getBehaviourPool();
 	for (auto behaviourPair : behaviours)

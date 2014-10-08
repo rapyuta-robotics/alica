@@ -22,6 +22,7 @@ using namespace std;
 #include "engine/PlanRepository.h"
 #include "engine/model/Plan.h"
 #include <clock/AlicaROSClock.h>
+#include "TestConditionCreator.h"
 
 class TaskAssignmentTest : public ::testing::Test
 {
@@ -29,6 +30,7 @@ protected:
 	alica::AlicaEngine* ae;
 	supplementary::SystemConfig* sc;
 	alica::TestBehaviourCreator* bc;
+	alica::TestConditionCreator* cc;
 
 	virtual void SetUp()
 	{
@@ -36,8 +38,9 @@ protected:
 		sc->setHostname("zwerg");
 		ae = alica::AlicaEngine::getInstance();
 		bc = new alica::TestBehaviourCreator();
+		cc = new alica::TestConditionCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-		ae->init(bc,"RolesetTA", "MasterPlanTaskAssignment", ".", false);
+		ae->init(bc, cc, "RolesetTA", "MasterPlanTaskAssignment", ".", false);
 	}
 
 	virtual void TearDown()
@@ -45,6 +48,7 @@ protected:
 		ae->shutdown();
 		sc->shutdown();
 		delete bc;
+		delete cc;
 		delete ae->getIAlicaClock();
 	}
 };

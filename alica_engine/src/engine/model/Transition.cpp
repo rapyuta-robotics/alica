@@ -61,8 +61,7 @@ namespace alica
 	}
 	bool Transition::evalCondition(shared_ptr<RunningPlan> r)
 	{
-		//TODO
-		return false;
+		return this->preCondition->evaluate(r);
 	}
 
 	void Transition::setSyncTransition(SyncTransition* syncTransition)

@@ -38,10 +38,6 @@ namespace alica
 	{
 		this->enabled = enabled;
 	}
-	bool PreCondition::eval(RunningPlan* r)
-	{
-
-	}
 
 } /* namespace Alica */
 

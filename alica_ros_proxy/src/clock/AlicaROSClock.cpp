@@ -28,7 +28,7 @@ namespace alicaRosProxy
 	}
 	void AlicaROSClock::sleep(int ms)
 	{
-		ros::Duration(ms/1000).sleep();
+		ros::Duration(ms * 1000000).sleep();
 	}
 
 } /* namespace supplementary */
