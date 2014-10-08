@@ -36,6 +36,7 @@ using namespace std;
 #include "engine/DefaultUtilityFunction.h"
 //#include "engine/IAlicaCommunication.h"
 #include <communication/AlicaRosCommunication.h>
+#include "TestConditionCreator.h"
 
 class AlicaEngineTest : public ::testing::Test
 {
@@ -44,6 +45,7 @@ protected:
 	supplementary::SystemConfig* sc;
 	alica::AlicaEngine* ae;
 	alica::TestBehaviourCreator* bc;
+	alica::TestConditionCreator* cc;
 	virtual void SetUp()
 	{
 		// determine the path to the test config
@@ -60,9 +62,10 @@ protected:
 		// setup the engine
 		ae = alica::AlicaEngine::getInstance();
 		bc = new alica::TestBehaviourCreator();
+		cc = new alica::TestConditionCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-		ae->init(bc, "Roleset", "MasterPlan", ".", false);
+		ae->init(bc, cc, "Roleset", "MasterPlan", ".", false);
 	}
 
 	virtual void TearDown()
@@ -70,6 +73,7 @@ protected:
 		ae->shutdown();
 		sc->shutdown();
 		delete ae->getIAlicaClock();
+		delete cc;
 		delete bc;
 	}
 

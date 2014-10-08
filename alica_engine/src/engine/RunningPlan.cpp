@@ -189,7 +189,7 @@ namespace alica
 		}
 		try
 		{
-			return this->plan->getPreCondition()->eval(this);
+			return this->plan->getPreCondition()->evaluate(shared_from_this());
 		}
 		catch (exception & e)
 		{
@@ -215,7 +215,7 @@ namespace alica
 		}
 		try
 		{
-			return this->plan->getRuntimeCondition()->eval(this);
+			return this->plan->getRuntimeCondition()->evaluate(shared_from_this());
 		}
 		catch (exception & e)
 		{
