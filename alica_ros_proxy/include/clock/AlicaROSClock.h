@@ -19,7 +19,7 @@ namespace alicaRosProxy
 		AlicaROSClock();
 		virtual ~AlicaROSClock();
 		virtual alica::alicaTime now();
-		virtual void sleep(int availTime);
+		virtual void sleep(long us);
 	};
 
 } /* namespace supplementary */

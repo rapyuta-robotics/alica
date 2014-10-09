@@ -12,6 +12,7 @@ using namespace std;
 
 #include <map>
 #include <typeinfo>
+#include <memory>
 
 namespace alica
 {
@@ -26,12 +27,12 @@ namespace alica
 	class RobotEngineData
 	{
 	public:
-		RobotEngineData(RobotProperties* properties);
+		RobotEngineData(shared_ptr<RobotProperties> properties);
 		virtual ~RobotEngineData();
 		bool isActive() const;
 		void setActive(bool active);
-		RobotProperties* getProperties() const;
-		void setProperties(RobotProperties* properties);
+		shared_ptr<RobotProperties> getProperties() const;
+		void setProperties(shared_ptr<RobotProperties> properties);
 		SuccessMarks* getSuccessMarks() const;
 		void setSuccessMarks(SuccessMarks* successMarks);
 		unsigned long getLastMessageTime() const;
@@ -45,7 +46,7 @@ namespace alica
 		/**
 		 * The robot's RobotProperties
 		 */
-		RobotProperties* properties;
+		shared_ptr<RobotProperties> properties;
 		/**
 		 * Whether or not the robot is considered active
 		 */

@@ -44,7 +44,7 @@ namespace alica
 		static void init();
 		void clear();
 		static void reset();
-		static PartialAssignment* getNew(shared_ptr<vector<int> > robots, Plan* plan, SuccessCollection* sucCol);
+		static PartialAssignment* getNew(shared_ptr<vector<int> > robots, Plan* plan, shared_ptr<SuccessCollection> sucCol);
 		static PartialAssignment* getNew(PartialAssignment* oldPA);
 		int getEntryPointCount();
 		int totalRobotCount();
@@ -64,7 +64,7 @@ namespace alica
 		AssignmentCollection* getEpRobotsMapping();
 		Plan* getPlan();
 		UtilityFunction* getUtilFunc();
-		SuccessCollection* getEpSuccessMapping();
+		shared_ptr<SuccessCollection> getEpSuccessMapping();
 		int numUnAssignedRobots();
 		vector<int>& getUnAssignedRobots();
 		string assignmentCollectionToString();
@@ -74,6 +74,7 @@ namespace alica
 		bool isHashCalculated();
 		void setHashCalculated(bool hashCalculated);
 		void setMax(double max);
+		static void cleanUp();
 
 	private:
 		const int INFINIT = numeric_limits<int>::max();
@@ -92,14 +93,14 @@ namespace alica
 		UtilityFunction* utilFunc;
 		AssignmentCollection* epRobotsMapping;
 		shared_ptr<vector<int> > robots;
-		vector<DynCardinality*> dynCardinalities;
+		vector<shared_ptr<DynCardinality>> dynCardinalities;
 		vector<int> unAssignedRobots;
 		Plan* plan;
 		const long PRECISION = 1073741824;
 		long compareVal = 0;
 		bool hashCalculated;
 		int hash = 0;
-		SuccessCollection* epSuccessMapping;
+		shared_ptr<SuccessCollection> epSuccessMapping;
 
 
 	};

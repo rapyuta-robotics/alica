@@ -232,6 +232,7 @@ namespace alica
 
 		if(this->expressionHandler != nullptr) {
 			delete this->expressionHandler;
+			this->expressionHandler = nullptr;
 		}
 
 	}

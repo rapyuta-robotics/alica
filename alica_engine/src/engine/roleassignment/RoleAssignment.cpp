@@ -141,7 +141,7 @@ namespace alica
 
 		cout << "RA: Available robots: " << this->availableRobots->size() << endl;
 		cout << "RA: Robot Ids: ";
-		for (RobotProperties* aRobot : (*this->availableRobots))
+		for (auto aRobot : (*this->availableRobots))
 		{
 			cout << aRobot->getId() << " ";
 		}
@@ -151,7 +151,7 @@ namespace alica
 		this->sortedRobots.clear();
 		for (auto roleIter = this->roles.begin(); roleIter != this->roles.end(); roleIter++)
 		{
-			for (RobotProperties* rps : (*this->availableRobots))
+			for (auto rps : (*this->availableRobots))
 			{
 				int y = 0;
 				dutility = 0;

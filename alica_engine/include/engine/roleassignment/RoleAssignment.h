@@ -49,11 +49,11 @@ namespace alica
 		//TODO this vector has to be sorted each time an element is inserted
 		vector<RobotRoleUtility*> sortedRobots;
 		map<long, Role*> roles;
-		unique_ptr<list<RobotProperties*> > availableRobots;
+		unique_ptr<list<shared_ptr<RobotProperties>> > availableRobots;
 		/**
 		 * Current Robot's Properties.
 		 */
-		RobotProperties* ownRobotProperties;
+		shared_ptr<RobotProperties> ownRobotProperties;
 		ITeamObserver* to;
 		Publisher* rolePub;
 		void mapRoleToRobot(RolePriority* rp);

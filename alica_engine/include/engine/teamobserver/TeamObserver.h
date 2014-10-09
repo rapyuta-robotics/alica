@@ -46,9 +46,9 @@ namespace alica
 		virtual int getOwnId();
 		RobotEngineData* getRobotById(int id);
 		unique_ptr<list<RobotEngineData*> > getAvailableRobots();
-		unique_ptr<list<RobotProperties*> > getAvailableRobotProperties();
+		unique_ptr<list<shared_ptr<RobotProperties>> > getAvailableRobotProperties();
 		unique_ptr<list<int> > getAvailableRobotIds();
-		RobotProperties* getOwnRobotProperties();
+		shared_ptr<RobotProperties> getOwnRobotProperties();
 		RobotEngineData* getOwnEngineData();
 		int teamSize();
 		unique_ptr<map<int, shared_ptr<SimplePlanTree> > > getTeamPlanTrees();
@@ -56,8 +56,8 @@ namespace alica
 		void tick(shared_ptr<RunningPlan> root);
 		void doBroadCast(list<long>& msg);
 		int successesInPlan(Plan* plan);
-		SuccessCollection* getSuccessCollection(Plan* plan);
-		void updateSuccessCollection(Plan* p, SuccessCollection* sc);
+		shared_ptr<SuccessCollection> getSuccessCollection(Plan* plan);
+		void updateSuccessCollection(Plan* p, shared_ptr<SuccessCollection> sc);
 		void ignoreRobot(int rid);
 		void unIgnoreRobot(int rid);
 		bool isRobotIgnored(int rid);

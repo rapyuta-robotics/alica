@@ -33,19 +33,19 @@ namespace alica
 		virtual void close() = 0;
 		virtual void tick(shared_ptr<RunningPlan> root) = 0;
 		virtual unique_ptr<list<RobotEngineData*> > getAvailableRobots() = 0;
-		virtual unique_ptr<list<RobotProperties*> > getAvailableRobotProperties() = 0;
+		virtual unique_ptr<list<shared_ptr<RobotProperties>> > getAvailableRobotProperties() = 0;
 		virtual unique_ptr<list<int> > getAvailableRobotIds() = 0;
 		virtual int getOwnId() = 0;
 		virtual int teamSize() = 0;
 		virtual RobotEngineData* getOwnEngineData() = 0;
 		virtual RobotEngineData* getRobotById(int id) = 0;
-		virtual RobotProperties* getOwnRobotProperties() = 0;
+		virtual shared_ptr<RobotProperties> getOwnRobotProperties() = 0;
 		virtual unique_ptr<map<int, shared_ptr<SimplePlanTree> > > getTeamPlanTrees() = 0;
 		virtual void handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming) = 0;
 
 		virtual int successesInPlan(Plan* p) = 0;
-		virtual SuccessCollection* getSuccessCollection(Plan* p) = 0;
-		virtual void updateSuccessCollection(Plan* p, SuccessCollection* sc) = 0;
+		virtual shared_ptr<SuccessCollection> getSuccessCollection(Plan* p) = 0;
+		virtual void updateSuccessCollection(Plan* p, shared_ptr<SuccessCollection> sc) = 0;
 		virtual void doBroadCast(list<long>& planmsg) = 0;
 
 		virtual void ignoreRobot(int rid) = 0;

@@ -8,6 +8,10 @@
 #ifndef ROBOTROLEUTILITY_H_
 #define ROBOTROLEUTILITY_H_
 
+#include <memory>
+
+using namespace std;
+
 namespace alica
 {
 
@@ -18,15 +22,15 @@ namespace alica
 	class RobotRoleUtility
 	{
 		public:
-			RobotRoleUtility(double dUtilityValue, RobotProperties* robot, Role* role);
+			RobotRoleUtility(double dUtilityValue, shared_ptr<RobotProperties> robot, Role* role);
 			virtual ~RobotRoleUtility();
 			static bool compareTo(RobotRoleUtility* thisOne, RobotRoleUtility* otherOne);
-			RobotProperties* getRobot();
+			shared_ptr<RobotProperties> getRobot();
 			Role* getRole();
 			double getUtilityValue();
 
 		protected:
-			RobotProperties* robot;
+			shared_ptr<RobotProperties> robot;
 			Role* role;
 			double utilityValue;
 

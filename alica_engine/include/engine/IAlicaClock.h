@@ -16,7 +16,7 @@ namespace alica
 	public:
 		virtual ~IAlicaClock() {}
 		virtual alicaTime now() = 0;
-		virtual void sleep(int availTime) = 0;
+		virtual void sleep(long us) = 0;
 	};
 
 }

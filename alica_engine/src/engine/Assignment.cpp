@@ -43,7 +43,7 @@ namespace alica
 		advance(iter, l.size());
 		copy(l.begin(), iter, this->epRobotsMapping->getEntryPoints()->begin());
 		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
-		this->epSucMapping = new SuccessCollection(p);
+		this->epSucMapping = make_shared<SuccessCollection>(p);
 	}
 
 	Plan* Assignment::getPlan()
@@ -151,7 +151,7 @@ namespace alica
 			k++;
 		}
 		this->epRobotsMapping = new AssignmentCollection(eps, robots);
-		this->epSucMapping = new SuccessCollection(p);
+		this->epSucMapping = make_shared<SuccessCollection>(p);
 		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 	}
 
@@ -277,7 +277,7 @@ namespace alica
 		return ret;
 	}
 
-	SuccessCollection* Assignment::getEpSuccessMapping()
+	shared_ptr<SuccessCollection> Assignment::getEpSuccessMapping()
 	{
 		return this->epSucMapping;
 	}

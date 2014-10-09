@@ -64,7 +64,7 @@ namespace alica
 		/**
 		 * Information about succeeded tasks.
 		 */
-		virtual SuccessCollection* getEpSuccessMapping() = 0;
+		virtual shared_ptr<SuccessCollection> getEpSuccessMapping() = 0;
 		/**
 		 * Checks whether the current assignment is valid
 		 */
