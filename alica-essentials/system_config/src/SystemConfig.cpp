@@ -122,7 +122,8 @@ namespace supplementary
 			{
 				lock_guard<mutex> lock(configsMapMutex);
 
-				shared_ptr<Configuration> result = shared_ptr<Configuration>(new Configuration(files[i]));
+				//shared_ptr<Configuration> result = shared_ptr<Configuration>(new Configuration(files[i]));
+				shared_ptr<Configuration> result = make_shared<Configuration>(files[i]);
 				configs[s] = result;
 
 				return result.get();
