@@ -141,7 +141,9 @@ namespace alica
 		this->teamObserver->init();
 		this->log = new Logger();
 		this->roleAssignment->init();
-		this->planSelector = new PlanSelector();
+		if(planSelector==nullptr) {
+			this->planSelector = new PlanSelector();
+		}
 		//TODO
 //		ConstraintHelper.Init(this.cSolver);
 		this->auth->init();
@@ -213,6 +215,9 @@ namespace alica
 			delete this->planParser;
 			this->planParser = nullptr;
 		}
+
+		delete planSelector;
+		planSelector = nullptr;
 
 		this->roleSet = nullptr;
 		this->masterPlan = nullptr;
