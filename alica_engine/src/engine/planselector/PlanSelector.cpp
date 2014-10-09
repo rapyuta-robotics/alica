@@ -142,7 +142,7 @@ namespace alica
 		}
 		// TASKASSIGNMENT
 		TaskAssignment* ta;
-		Assignment* oldAss = nullptr;
+		shared_ptr<Assignment> oldAss = nullptr;
 		shared_ptr<RunningPlan> rp;
 		if (oldRp == nullptr)
 		{
@@ -170,7 +170,7 @@ namespace alica
 		do
 		{
 			// ASSIGNMENT
-			rp->setAssignment(ta->getNextBestAssignment(oldAss));
+			rp->setAssignment(ta->getNextBestAssignment(&*oldAss));
 			if (rp->getAssignment() == nullptr)
 			{
 #ifdef PSDEBUG

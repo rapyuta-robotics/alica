@@ -8,6 +8,8 @@
 #ifndef ITASKASSIGNMENT_H_
 #define ITASKASSIGNMENT_H_
 
+#include <memory>
+
 using namespace std;
 
 namespace alica
@@ -25,7 +27,7 @@ namespace alica
 		 * @param oldAss The old IAssignment,  possibly null in case of a completely new assignment problem.
 		 * @return The new Assignment
 		 */
-		virtual Assignment* getNextBestAssignment(IAssignment* oldAss) = 0;
+		virtual shared_ptr<Assignment> getNextBestAssignment(IAssignment* oldAss) = 0;
 
 	};
 

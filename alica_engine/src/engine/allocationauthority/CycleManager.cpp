@@ -158,6 +158,7 @@ namespace alica
 		try
 		{
 			this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
+			delete this->allocationHistory[this->newestAllocationDifference];
 			this->allocationHistory[this->newestAllocationDifference] = aldif;
 		}
 		catch (exception &e)
@@ -322,7 +323,7 @@ namespace alica
 					break;
 				}
 			}
-			rp->setAssignment(new Assignment(newPlan, this->fixedAllocation));
+			rp->setAssignment(make_shared<Assignment>(newPlan, this->fixedAllocation));
 			for (EntryPointRobots epr : this->fixedAllocation->entryPointRobots)
 			{
 				if (find(epr.robots.begin(), epr.robots.end(), myID) != epr.robots.end())

@@ -78,7 +78,7 @@ namespace alica
 		double sumOfWeights = 0.0;
 
 		// Sum up priority summand
-		UtilityInterval* prioUI = this->getPriorityResult(newRp->getAssignment());
+		UtilityInterval* prioUI = this->getPriorityResult(&*newRp->getAssignment());
 		if (prioUI->getMax() < 0.0)
 		{
 			// one robot has a negative priority for his task -> -1.0 for the complete assignment
@@ -94,7 +94,7 @@ namespace alica
 		{
 			auto iter = utilSummands.begin();
 			advance(iter, i);
-			curUI = (*iter)->eval(newRp->getAssignment());
+			curUI = (*iter)->eval(&*newRp->getAssignment());
 			//if a summand deny assignment, return -1 for forbidden assignments
 			if (curUI->getMax() == -1.0)
 			{
@@ -108,7 +108,7 @@ namespace alica
 		if (oldRp != nullptr && this->similarityWeight > 0)
 		{
 			// Sum up similarity summand
-			UtilityInterval* simUI = this->getSimilarity(newRp->getAssignment(), oldRp->getAssignment());
+			UtilityInterval* simUI = this->getSimilarity(&*newRp->getAssignment(), &*oldRp->getAssignment());
 			sumOfUI->setMax(sumOfUI->getMax() + this->similarityWeight * simUI->getMax());
 			sumOfUI->setMin(sumOfUI->getMin() + this->similarityWeight * simUI->getMin());
 			sumOfWeights += this->similarityWeight;

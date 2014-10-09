@@ -378,11 +378,11 @@ namespace alica
 	/**
 	 * The current assignment of robots to EntryPoints.
 	 */
-	Assignment* RunningPlan::getAssignment()
+	shared_ptr<Assignment> RunningPlan::getAssignment()
 	{
 		return assignment;
 	}
-	void RunningPlan::setAssignment(Assignment* assignment)
+	void RunningPlan::setAssignment(shared_ptr<Assignment> assignment)
 	{
 		this->assignment = assignment;
 	}

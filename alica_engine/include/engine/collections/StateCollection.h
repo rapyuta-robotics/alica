@@ -49,7 +49,7 @@ namespace alica
 		void setStates(vector<int> robots, State* state);
 		string toString();
 		void setInitialState(int robot, EntryPoint* ep);
-		void reconsiderOldAssignment(Assignment* oldOne, Assignment* newOne);
+		void reconsiderOldAssignment(shared_ptr<Assignment> oldOne, shared_ptr<Assignment> newOne);
 
 	protected:
 		vector<int> robots;

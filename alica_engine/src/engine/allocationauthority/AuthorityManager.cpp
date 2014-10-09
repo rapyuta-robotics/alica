@@ -131,7 +131,7 @@ namespace alica
 		AllocationAuthorityInfo aai = AllocationAuthorityInfo();
 
 		EntryPointRobots it;
-		Assignment* ass = p->getAssignment();
+		shared_ptr<Assignment> ass = p->getAssignment();
 		//Console.WriteLine("Sending Assignment: {0}",ass);
 		auto eps = ass->getEntryPoints();
 		for (int i = 0; i < eps->size(); i++)
