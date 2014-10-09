@@ -45,6 +45,12 @@ namespace alica
 
 	TeamObserver::~TeamObserver()
 	{
+		for(auto iter : this->allOtherRobots) {
+			delete iter;
+		}
+		if(me!=nullptr) {
+			delete me;
+		}
 	}
 
 	void TeamObserver::messageRecievedFrom(int rid)
@@ -73,7 +79,7 @@ namespace alica
 
 		for (int i = 0; i < playerNames->size(); i++)
 		{
-			RobotProperties* rp = new RobotProperties(playerNames->at(i));
+			shared_ptr<RobotProperties> rp = make_shared<RobotProperties>(playerNames->at(i));
 			if (!foundSelf && playerNames->at(i).compare(ownPlayerName) == 0)
 			{
 				foundSelf = true;
@@ -171,9 +177,9 @@ namespace alica
 	 * Returns the static properties of robots from which message have been received recently. Includes own properties.
 	 * @return a unique_ptr of a list of RobotProperties*
 	 */
-	unique_ptr<list<RobotProperties*> > TeamObserver::getAvailableRobotProperties()
+	unique_ptr<list<shared_ptr<RobotProperties>> > TeamObserver::getAvailableRobotProperties()
 	{
-		unique_ptr<list<RobotProperties*> > ret = unique_ptr<list<RobotProperties*> >(new list<RobotProperties*>);
+		unique_ptr<list<shared_ptr<RobotProperties>> > ret = unique_ptr<list<shared_ptr<RobotProperties>> >(new list<shared_ptr<RobotProperties>>);
 		ret->push_back(me->getProperties());
 		for (RobotEngineData* r : this->allOtherRobots)
 		{
@@ -204,7 +210,7 @@ namespace alica
 		return move(ret);
 	}
 
-	RobotProperties* TeamObserver::getOwnRobotProperties()
+	shared_ptr<RobotProperties> TeamObserver::getOwnRobotProperties()
 	{
 		return this->me->getProperties();
 	}
@@ -437,9 +443,9 @@ namespace alica
 		return ret;
 	}
 
-	SuccessCollection* TeamObserver::getSuccessCollection(Plan* plan)
+	shared_ptr<SuccessCollection> TeamObserver::getSuccessCollection(Plan* plan)
 	{
-		SuccessCollection* ret = new SuccessCollection(plan);
+		shared_ptr<SuccessCollection> ret = make_shared<SuccessCollection>(plan);
 		shared_ptr<list<EntryPoint*> > suc;
 		for (RobotEngineData* r : this->allOtherRobots)
 		{
@@ -466,7 +472,7 @@ namespace alica
 		return ret;
 	}
 
-	void TeamObserver::updateSuccessCollection(Plan* p, SuccessCollection* sc)
+	void TeamObserver::updateSuccessCollection(Plan* p, shared_ptr<SuccessCollection> sc)
 	{
 		sc->clear();
 		shared_ptr<list<EntryPoint*> > suc;

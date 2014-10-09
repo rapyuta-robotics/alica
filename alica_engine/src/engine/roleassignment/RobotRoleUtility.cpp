@@ -12,7 +12,7 @@
 namespace alica
 {
 
-	RobotRoleUtility::RobotRoleUtility(double dUtilityValue, RobotProperties* robot, Role* role)
+	RobotRoleUtility::RobotRoleUtility(double dUtilityValue, shared_ptr<RobotProperties> robot, Role* role)
 	{
 		this->utilityValue = dUtilityValue;
 		this->robot = robot;
@@ -23,7 +23,7 @@ namespace alica
 	{
 	}
 
-	RobotProperties* RobotRoleUtility::getRobot()
+	shared_ptr<RobotProperties> RobotRoleUtility::getRobot()
 	{
 		return robot;
 	}

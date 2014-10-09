@@ -25,7 +25,7 @@ namespace alica
 	 * Basic constructor
 	 * @param properties This robot's RobotProperties
 	 */
-	RobotEngineData::RobotEngineData(RobotProperties* properties)
+	RobotEngineData::RobotEngineData(shared_ptr<RobotProperties> properties)
 	{
 		this->active = false;
 		this->lastMessageTime = 0;
@@ -55,12 +55,12 @@ namespace alica
 		this->active = active;
 	}
 
-	RobotProperties* RobotEngineData::getProperties() const
+	shared_ptr<RobotProperties> RobotEngineData::getProperties() const
 	{
 		return properties;
 	}
 
-	void RobotEngineData::setProperties(RobotProperties* properties)
+	void RobotEngineData::setProperties(shared_ptr<RobotProperties> properties)
 	{
 		this->properties = properties;
 	}

@@ -54,7 +54,7 @@ namespace alica
 		shared_ptr<list<int> > getRobotsWorkingAndFinished(EntryPoint* ep);
 		shared_ptr<list<int> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
 		shared_ptr<list<int> > getRobotsWorkingAndFinished(long epid);
-		SuccessCollection* getEpSuccessMapping();
+		shared_ptr<SuccessCollection> getEpSuccessMapping();
 		void setAllToInitialState(unique_ptr<list<int> > robots, EntryPoint* defep);
 		bool removeRobot(int robotId);
 		void addRobot(int id, EntryPoint* e, State* s);
@@ -87,7 +87,7 @@ namespace alica
 		/**
 		 * Information about succeeded tasks.
 		 */
-		SuccessCollection* epSucMapping;
+		shared_ptr<SuccessCollection> epSucMapping;
 		AssignmentCollection* epRobotsMapping;
 	};
 } /* namespace alica */

@@ -40,6 +40,7 @@ namespace alica
 
 	PlanSelector::~PlanSelector()
 	{
+		PartialAssignment::cleanUp();
 	}
 
 	/**
@@ -162,7 +163,7 @@ namespace alica
 #endif
 		// some variables for the do while loop
 		EntryPoint* ep = nullptr;
-		RobotProperties* ownRobProb = to->getOwnRobotProperties();
+		shared_ptr<RobotProperties> ownRobProb = to->getOwnRobotProperties();
 		// PLANNINGPARENT
 		rp->setParent(planningParent);
 		shared_ptr<list<shared_ptr<RunningPlan>>> rpChildren = nullptr;

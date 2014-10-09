@@ -58,6 +58,10 @@ namespace alica
 		double minbcfreq = (*sc)["Alica"]->get<double>("Alica.MinBroadcastFrequency", NULL);
 		double maxbcfreq = (*sc)["Alica"]->get<double>("Alica.MaxBroadcastFrequency", NULL);
 		this->loopTime = (alicaTime)fmax(1000000, lround(1.0 / freq * 1000000000));
+		if (this->loopTime == 1000000)
+		{
+			cerr << "PB: ALICA should not be used with more than 1000Hz -> 1000Hz assumed" << endl;
+		}
 
 		if (minbcfreq > maxbcfreq)
 		{
@@ -105,7 +109,8 @@ namespace alica
 	 */
 	void PlanBase::start()
 	{
-		if (!this->running) {
+		if (!this->running)
+		{
 			this->log = ae->getLog();
 			this->running = true;
 			this->mainThread = new thread(&PlanBase::run, this);
@@ -234,7 +239,7 @@ namespace alica
 				}
 			}
 
-			int availTime = (int)((this->loopTime - (alicaClock->now() - beginTime)) / 1000000UL);
+			long availTime = (long)((this->loopTime - (alicaClock->now() - beginTime)) / 1000UL);
 
 			if (fpEvents.size() > 0)
 			{
@@ -260,17 +265,17 @@ namespace alica
 								first = false;
 							}
 						}
-						availTime = (int)((this->loopTime - (alicaClock->now() - beginTime)) / 1000000UL);
+						availTime = (long)((this->loopTime - (alicaClock->now() - beginTime)) / 1000UL);
 					}
 				}
 
 			}
 
-			cout << "PB: availTime " << availTime << endl;
+			cout << "PB: availTime " << availTime <<  " LT: "  << loopTime <<endl;
+			cout << "PB: After Iteration " << alicaClock->now() << " Diff; " << (alicaClock->now() - beginTime) <<endl;
 
 			if (availTime > 1 && !ae->getStepEngine())
 			{
-				cout << "PB: SLEEP!" << endl;
 				alicaClock->sleep(availTime);
 			}
 		}
@@ -308,7 +313,8 @@ namespace alica
 			timerModeCV->notify_one();
 		}
 
-		if (this->mainThread != nullptr) {
+		if (this->mainThread != nullptr)
+		{
 			this->mainThread->join();
 			delete this->mainThread;
 		}
