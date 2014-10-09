@@ -34,6 +34,7 @@ namespace alica
 				break;
 			default:
 			cerr << "TestUtilityFunctionCreator: Unknown utility function id requested: " << utilityfunctionConfId << endl;
+			return make_shared<UtilityFunction1412252439925>();
 			throw new exception();
 			break;
 		}

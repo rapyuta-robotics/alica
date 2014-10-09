@@ -42,7 +42,6 @@ protected:
 		crc = new alica::TestConstraintCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-		ae->init(bc, cc, uc, crc, "Roleset", "MasterPlan", ".", false);
 	}
 
 	virtual void TearDown()
@@ -63,7 +62,6 @@ protected:
  */
 TEST_F(AlicaEngineTestInit, initAndShutdown)
 {
-
 	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "Roleset", "MasterPlan", ".", false)) << "Unable to initialise the Alica Engine!";
 
 }

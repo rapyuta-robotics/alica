@@ -156,7 +156,7 @@ namespace alica
 //		ConstraintHelper.Init(this.cSolver);
 		this->auth->init();
 		this->planBase = new PlanBase(this->masterPlan);
-		//this->planBase->start();
+		this->expressionHandler->attachAll();
 		UtilityFunction::initDataStructures();
 		this->syncModul->init();
 		return everythingWorked;

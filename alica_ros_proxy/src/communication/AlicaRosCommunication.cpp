@@ -70,7 +70,6 @@ namespace alicaRosProxy
 		spinner->stop();
 		delete spinner;
 
-		cout << "1" << endl;
 		AllocationAuthorityInfoSubscriber.shutdown();
 		RoleSwitchPublisher.shutdown();
 		PlanTreeInfoSubscriber.shutdown();
@@ -78,7 +77,6 @@ namespace alicaRosProxy
 		SyncTalkSubscriber.shutdown();
 		rosNode.shutdown();
 
-		cout << "2" << endl;
 	}
 
 	void AlicaRosCommunication::tick()
