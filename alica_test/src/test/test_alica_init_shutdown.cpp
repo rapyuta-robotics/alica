@@ -7,6 +7,7 @@
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/model/Plan.h"
 #include <communication/AlicaRosCommunication.h>
+#include "TestConditionCreator.h"
 
 class AlicaEngineTestInit : public ::testing::Test
 {
@@ -14,6 +15,7 @@ protected:
 	supplementary::SystemConfig* sc;
 	alica::AlicaEngine* ae;
 	alica::TestBehaviourCreator* bc;
+	alica::TestConditionCreator* cc;
 	virtual void SetUp()
 	{
 		// determine the path to the test config
@@ -30,6 +32,7 @@ protected:
 		// setup the engine
 		ae = alica::AlicaEngine::getInstance();
 		bc = new alica::TestBehaviourCreator();
+		cc = new alica::TestConditionCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	}
@@ -41,6 +44,7 @@ protected:
 		sc->shutdown();
 		delete ae->getCommunicator();
 		delete ae->getIAlicaClock();
+		delete cc;
 		delete bc;
 		//cout << "After Shutdown" << endl;
 	}
@@ -52,7 +56,7 @@ protected:
 TEST_F(AlicaEngineTestInit, initAndShutdown)
 {
 
-	EXPECT_TRUE(ae->init(bc, "Roleset", "MasterPlan", ".", false)) << "Unable to initialise the Alica Engine!";
+	EXPECT_TRUE(ae->init(bc, cc, "Roleset", "MasterPlan", ".", false)) << "Unable to initialise the Alica Engine!";
 
 }
 
