@@ -301,9 +301,7 @@ namespace alica
 
 	RunningPlan::~RunningPlan()
 	{
-		cout << "RP: Destruktor" << this->basicBehaviour << endl;
 		this->basicBehaviour.reset();
-		cout << "RP: Destruktor Count" << this->basicBehaviour.use_count() << endl;
 	}
 
 	/**
@@ -1054,7 +1052,6 @@ namespace alica
 		}
 		if (this->children.size() > 0)
 		{
-			cout << "RP: " << this->children.size() << endl;
 			message.push_back(-1);
 			for (shared_ptr<RunningPlan> r : this->children)
 			{

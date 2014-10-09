@@ -25,6 +25,8 @@
 #include "engine/collections/StateCollection.h"
 #include "engine/IAlicaCommunication.h"
 
+
+
 namespace alica
 {
 	/**
@@ -124,9 +126,10 @@ namespace alica
 		cout << "PLANBASE STARTET " << endl;
 		while (this->running)
 		{
-			cout << "PB: RUNNING" << endl;
+			//cout << "PB: RUNNING" << endl;
 			alicaTime beginTime = alicaClock->now();
-			cout << "PB: BEGIN TIME is: " << beginTime << endl;
+
+			//cout << "PB: BEGIN TIME is: " << beginTime << endl;
 			if (ae->getStepEngine())
 			{
 				cout << "===CUR TREE===" << endl;
@@ -153,6 +156,7 @@ namespace alica
 				beginTime = alicaClock->now();
 
 			}
+
 			this->log->itertionStarts();
 
 			//Send tick to other modules
@@ -180,6 +184,8 @@ namespace alica
 			}
 
 			alicaTime now = alicaClock->now();
+
+
 			if ((this->ruleBook->isChangeOccured() && this->lastSendTime + this->minSendInterval < now) || this->lastSendTime + this->maxSendInterval < now)
 			{
 				list<long> msg;
@@ -220,24 +226,9 @@ namespace alica
 					this->lastSentStatusTime = alicaClock->now();
 				}
 			}
+
 			this->log->iterationEnds(this->rootNode);
 			this->ae->iterationComplete();
-
-			if (!ae->getStepEngine())
-			{
-				{
-					unique_lock<mutex> lckTimer(timerMutex);
-					timerModeCV->wait(lckTimer, [&]
-					{
-						if(this->loopTimer->isNotifyCalled())
-						{
-							this->loopTimer->setNotifyCalled(false);
-							return true;
-						}
-						return false;
-					});
-				}
-			}
 
 			long availTime = (long)((this->loopTime - (alicaClock->now() - beginTime)) / 1000UL);
 
@@ -246,7 +237,7 @@ namespace alica
 				//lock for fpEvents
 				{
 					lock_guard<mutex> lock(lomutex);
-					while (this->running && availTime > 1 && fpEvents.size() > 0)
+					while (this->running && availTime > 1000 && fpEvents.size() > 0)
 					{
 						shared_ptr<RunningPlan> rp = fpEvents.front();
 						fpEvents.pop();
@@ -271,8 +262,23 @@ namespace alica
 
 			}
 
-			cout << "PB: availTime " << availTime <<  " LT: "  << loopTime <<endl;
-			cout << "PB: After Iteration " << alicaClock->now() << " Diff; " << (alicaClock->now() - beginTime) <<endl;
+			/*if (!ae->getStepEngine())
+			{
+				{
+					unique_lock<mutex> lckTimer(timerMutex);
+					timerModeCV->wait(lckTimer, [&]
+					{
+						if(this->loopTimer->isNotifyCalled())
+						{
+							this->loopTimer->setNotifyCalled(false);
+							return true;
+						}
+						return false;
+					});
+				}
+			}*/
+			cout << "PB: availTime " << availTime << endl;
+
 
 			if (availTime > 1 && !ae->getStepEngine())
 			{
