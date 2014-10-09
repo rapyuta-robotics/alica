@@ -25,7 +25,7 @@ namespace alica
 	{
 	}
 
-	shared_ptr<BasicUtilityFunction> createUtility(long utilityfunctionConfId)
+	shared_ptr<BasicUtilityFunction> TestUtilityFunctionCreator::createUtility(long utilityfunctionConfId)
 	{
 		switch (utilityfunctionConfId)
 		{
