@@ -16,6 +16,7 @@ using namespace std;
 #include <algorithm>
 
 #include "AlicaElement.h"
+#include "engine/IAlicaClock.h"
 
 namespace alica
 {
@@ -41,7 +42,7 @@ namespace alica
 		void setMasterPlan(bool isMasterPlan);
 		virtual string toString() const;
 		unsigned long getAuthorityTimeInterval() const;
-		void setAuthorityTimeInterval(unsigned long authorityTimeInterval);
+		void setAuthorityTimeInterval(alicaTime authorityTimeInterval);
 		const virtual string& getFileName() const;
 		virtual void setFileName(const string& fileName);
 		shared_ptr<list<Variable*>> getVariables();
@@ -56,7 +57,7 @@ namespace alica
 		void setUtilityThreshold(double utilityThreshold = 1.0);
 
 	private:
-		unsigned long authorityTimeInterval;
+		alicaTime authorityTimeInterval;
 		/**
 		 * This plan's runtime condition.
 		 */

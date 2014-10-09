@@ -17,6 +17,8 @@ using namespace std;
 
 
 #include "engine/allocationauthority/AllocationDifference.h"
+#include "engine/IAlicaClock.h"
+
 namespace supplementary
 {
 	class SystemConfig;
@@ -61,14 +63,14 @@ namespace alica
 		{
 			observing, overridden, overriding
 		};
-		unsigned long overrideTimestamp;
+		alicaTime overrideTimestamp;
 		double intervalIncFactor;
 		double intervalDecFactor;
-		static unsigned long minimalOverrideTimeInterval;
-		static unsigned long maximalOverrideTimeInterval;
-		static unsigned long overrideShoutInterval;
-		static unsigned long overrideWaitInterval;
-		unsigned long overrideShoutTime;
+		static alicaTime minimalOverrideTimeInterval;
+		static alicaTime maximalOverrideTimeInterval;
+		static alicaTime overrideShoutInterval;
+		static alicaTime overrideWaitInterval;
+		alicaTime overrideShoutTime;
 		static int historySize;
 		CycleState state;
 		RunningPlan* rp;
