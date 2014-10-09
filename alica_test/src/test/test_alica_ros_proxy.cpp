@@ -10,6 +10,7 @@
 #include "engine/PlanRepository.h"
 #include "engine/model/Plan.h"
 #include "engine/DefaultUtilityFunction.h"
+#include "TestConditionCreator.h"
 
 class PlanBaseTest : public ::testing::Test
 {
@@ -17,6 +18,7 @@ protected:
 	supplementary::SystemConfig* sc;
 	alica::AlicaEngine* ae;
 	alica::TestBehaviourCreator* bc;
+	alica::TestConditionCreator* cc;
 
 	virtual void SetUp()
 	{
@@ -36,9 +38,10 @@ protected:
 		// setup the engine
 		ae = alica::AlicaEngine::getInstance();
 		bc = new alica::TestBehaviourCreator();
+		cc = new alica::TestConditionCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-		ae->init(bc, "Roleset", "MasterPlan", ".", false);
+		ae->init(bc, cc, "Roleset", "MasterPlan", ".", false);
 	}
 
 	virtual void TearDown()
@@ -47,6 +50,7 @@ protected:
 		sc->shutdown();
 		delete ae->getIAlicaClock();
 		delete ae->getCommunicator();
+		delete cc;
 		delete bc;
 	}
 };

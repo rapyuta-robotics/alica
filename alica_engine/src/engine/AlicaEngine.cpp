@@ -25,7 +25,8 @@ using namespace std;
 #include "engine/UtilityFunction.h"
 #include "engine/model/Plan.h"
 #include "engine/syncmodul/SyncModul.h"
-
+#include "engine/IConditionCreator.h"
+#include "engine/expressionhandler/ExpressionHandler.h"
 
 namespace alica
 {
@@ -48,6 +49,7 @@ namespace alica
 		this->behaviourPool = nullptr;
 		this->syncModul = nullptr;
 		this->roleSet = nullptr;
+		this->expressionHandler = nullptr;
 		this->masterPlan = nullptr;
 		this->planParser = nullptr;
 		this->log = nullptr;
@@ -98,8 +100,9 @@ namespace alica
 	 * @param stepEngine A bool, whether or not the engine should start in stepped mode
 	 * @return bool true if everything worked false otherwise
 	 */
-	bool AlicaEngine::init(IBehaviourCreator* bc, string roleSetName, string masterPlanName, string roleSetDir,
-	bool stepEngine)
+	bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, string roleSetName, string masterPlanName,
+							string roleSetDir,
+							bool stepEngine)
 	{
 		this->stepEngine = stepEngine;
 		if (this->planRepository == nullptr)
@@ -134,6 +137,11 @@ namespace alica
 		{
 			this->syncModul = new SyncModul();
 		}
+		if (this->expressionHandler == nullptr)
+		{
+			this->expressionHandler = new ExpressionHandler(this, cc);
+		}
+
 		this->stepCalled = false;
 		bool everythingWorked = true;
 		everythingWorked &= this->behaviourPool->init(bc);
@@ -162,55 +170,55 @@ namespace alica
 		this->terminating = true;
 		this->maySendMessages = false;
 
-		if(this->behaviourPool != nullptr)
+		if (this->behaviourPool != nullptr)
 		{
 			this->behaviourPool->stopAll();
 			delete this->behaviourPool;
 			this->behaviourPool = nullptr;
 		}
 
-		if(this->planBase != nullptr)
+		if (this->planBase != nullptr)
 		{
 			this->planBase->stop();
 			delete this->planBase;
 			this->planBase = nullptr;
 		}
 
-		if(this->auth != nullptr)
+		if (this->auth != nullptr)
 		{
 			this->auth->close();
 			delete this->auth;
 			this->auth = nullptr;
 		}
 
-		if(this->syncModul != nullptr)
+		if (this->syncModul != nullptr)
 		{
 			this->syncModul->close();
 			delete this->syncModul;
 			this->syncModul = nullptr;
 		}
 
-		if(this->teamObserver != nullptr)
+		if (this->teamObserver != nullptr)
 		{
 			this->teamObserver->close();
 			delete this->teamObserver;
 			this->teamObserver = nullptr;
 		}
 
-		if(this->log != nullptr)
+		if (this->log != nullptr)
 		{
 			this->log->close();
 			delete this->log;
 			this->log = nullptr;
 		}
 
-		if(this->planRepository != nullptr)
+		if (this->planRepository != nullptr)
 		{
 			delete this->planRepository;
 			this->planRepository = nullptr;
 		}
 
-		if(this->planParser != nullptr)
+		if (this->planParser != nullptr)
 		{
 			delete this->planParser;
 			this->planParser = nullptr;
@@ -221,6 +229,10 @@ namespace alica
 
 		this->roleSet = nullptr;
 		this->masterPlan = nullptr;
+
+		if(this->expressionHandler != nullptr) {
+			delete this->expressionHandler;
+		}
 
 	}
 

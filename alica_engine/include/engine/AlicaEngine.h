@@ -33,11 +33,13 @@ namespace alica
 	class IPlanner;
 	class IAlicaClock;
 	class PlanBase;
+	class IConditionCreator;
+	class ExpressionHandler;
 
 	class AlicaEngine
 	{
 	public:
-		static AlicaEngine* getInstance();bool init(IBehaviourCreator* bc, string roleSetName, string masterPlanName,
+		static AlicaEngine* getInstance();bool init(IBehaviourCreator* bc, IConditionCreator* cc, string roleSetName, string masterPlanName,
 													string roleSetDir, bool stepEngine);
 		void shutdown();
 		void start();bool getStepEngine();
@@ -86,6 +88,7 @@ namespace alica
 		ISyncModul* syncModul;
 		AuthorityManager* auth;
 		IRoleAssignment* roleAssignment;
+		ExpressionHandler* expressionHandler;
 		list<IEngineModule*> mods;
 		IPlanSelector* planSelector;
 		IAlicaCommunication* communicator;

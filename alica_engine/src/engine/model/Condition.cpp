@@ -6,6 +6,7 @@
  */
 
 #include "engine/model/Condition.h"
+#include "engine/BasicCondition.h"
 
 namespace alica
 {
@@ -13,16 +14,19 @@ namespace alica
 	Condition::Condition()
 	{
 		this->abstractPlan = nullptr;
+		this->basicCondition = nullptr;
 	}
 
 	Condition::Condition(long id)
 	{
 		this->id = id;
 		this->abstractPlan = nullptr;
+		this->basicCondition = nullptr;
 	}
 
 	Condition::~Condition()
 	{
+
 	}
 
 	const string& Condition::getConditionString() const
@@ -38,6 +42,19 @@ namespace alica
 	list<Quantifier*>& Condition::getQuantifiers()
 	{
 		return quantifiers;
+	}
+
+	bool Condition::evaluate(shared_ptr<RunningPlan> rp)
+	{
+		if (basicCondition == nullptr)
+		{
+			cerr << "Condition: Missing implementation of Condition: " << this->getId() << endl;
+			return false;
+		}
+		else
+		{
+			return basicCondition->evaluate(rp);
+		}
 	}
 
 	void Condition::setQuantifiers(const list<Quantifier*>& quantifiers)
@@ -75,4 +92,16 @@ namespace alica
 		this->plugInName = plugInName;
 	}
 
+	shared_ptr<BasicCondition> Condition::getBasicCondition()
+	{
+		return basicCondition;
+	}
+
+	void Condition::setBasicCondition(shared_ptr<BasicCondition> basicCondition)
+	{
+		this->basicCondition = basicCondition;
+	}
+
 } /* namespace Alica */
+
+

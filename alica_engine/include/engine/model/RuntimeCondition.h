@@ -25,9 +25,6 @@ namespace alica
 		RuntimeCondition(long id = 0);
 		virtual ~RuntimeCondition();
 
-		//finish delegates
-		bool eval(RunningPlan* r);
-
 		string toString();
 
 	};
