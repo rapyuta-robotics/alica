@@ -259,7 +259,7 @@ namespace alica
 
 	void TeamObserver::tick(shared_ptr<RunningPlan> root)
 	{
-		unsigned long time = AlicaEngine::getInstance()->getIAlicaClock()->now();
+		alicaTime time = AlicaEngine::getInstance()->getIAlicaClock()->now();
 		bool changed = false;
 		vector<int> robotsAvail;
 		robotsAvail.push_back(this->myId);
@@ -598,7 +598,7 @@ namespace alica
 			return nullptr;
 		}
 		map<long, State*> states = AlicaEngine::getInstance()->getPlanRepository()->getStates();
-		unsigned long time = AlicaEngine::getInstance()->getIAlicaClock()->now();
+		alicaTime time = AlicaEngine::getInstance()->getIAlicaClock()->now();
 		shared_ptr<SimplePlanTree> root = make_shared<SimplePlanTree>();
 		root->setRobotId(robotId);
 		root->setReceiveTime(time);

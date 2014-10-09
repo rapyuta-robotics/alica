@@ -29,14 +29,14 @@ namespace alica
 	supplementary::SystemConfig* CycleManager::sc = supplementary::SystemConfig::getInstance();
 	int CycleManager::maxAllocationCycles = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "CycleCount");
 	bool CycleManager::enabled = (*sc)["Alica"]->get<bool>("Alica", "CycleDetection", "Enabled");
-	unsigned long CycleManager::minimalOverrideTimeInterval = (*sc)["Alica"]->get<unsigned long>(
+	alicaTime CycleManager::minimalOverrideTimeInterval = (*sc)["Alica"]->get<unsigned long>(
 			"Alica", "CycleDetection", "MinimalAuthorityTimeInterval") * 1000000;
-	unsigned long CycleManager::maximalOverrideTimeInterval = (*sc)["Alica"]->get<unsigned long>(
+	alicaTime CycleManager::maximalOverrideTimeInterval = (*sc)["Alica"]->get<unsigned long>(
 			"Alica", "CycleDetection", "MaximalAuthorityTimeInterval") * 1000000;
-	unsigned long CycleManager::overrideShoutInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
+	alicaTime CycleManager::overrideShoutInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
 																							"MessageTimeInterval")
 			* 1000000;
-	unsigned long CycleManager::overrideWaitInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
+	alicaTime CycleManager::overrideWaitInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
 																							"MessageWaitTimeInterval")
 			* 1000000;
 	int CycleManager::historySize = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize");
@@ -95,7 +95,7 @@ namespace alica
 				this->state = CycleState::overriding;
 				this->rp->getPlan()->setAuthorityTimeInterval(
 						min(maximalOverrideTimeInterval,
-							(unsigned long)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
+							(alicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
 				this->overrideShoutTime = 0;
 				cout << "Assuming Authority for " << this->rp->getPlan()->getAuthorityTimeInterval() / 1000000000.0
 						<< "sec!" << endl;
@@ -105,7 +105,7 @@ namespace alica
 			{
 				this->rp->getPlan()->setAuthorityTimeInterval(
 						max(minimalOverrideTimeInterval,
-							(unsigned long)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalDecFactor)));
+							(alicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalDecFactor)));
 			}
 		}
 		else
@@ -258,7 +258,7 @@ namespace alica
 				this->state = CycleState::overriding;
 				this->rp->getPlan()->setAuthorityTimeInterval(
 						min(maximalOverrideTimeInterval,
-							(unsigned long)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
+							(alicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
 				this->overrideTimestamp = AlicaEngine::getInstance()->getIAlicaClock()->now();
 				this->overrideShoutTime = 0;
 			}

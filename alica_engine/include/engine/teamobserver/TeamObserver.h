@@ -21,6 +21,7 @@ using namespace std;
 #include <map>
 
 #include "engine/ITeamObserver.h"
+#include "engine/IAlicaClock.h"
 
 namespace alica
 {
@@ -74,7 +75,7 @@ namespace alica
 		int myId;
 		RobotEngineData* me;
 		shared_ptr<map<int, shared_ptr<SimplePlanTree> > > simplePlanTrees;
-		unsigned long teamTimeOut;
+		alicaTime teamTimeOut;
 		Logger* log;
 		unordered_set<int> ignoredRobots;
 		AlicaEngine* ae;
