@@ -387,12 +387,12 @@ namespace alica
 		this->assignment = assignment;
 	}
 
-	unsigned long RunningPlan::getPlanStartTime()
+	alicaTime RunningPlan::getPlanStartTime()
 	{
 		return planStartTime;
 	}
 
-	unsigned long RunningPlan::getStateStartTime()
+	alicaTime RunningPlan::getStateStartTime()
 	{
 		return stateStartTime;
 	}
@@ -846,7 +846,7 @@ namespace alica
 	}
 
 	bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents,
-												list<int> noUpdates, unsigned long now)
+												list<int> noUpdates, alicaTime now)
 	{
 		if (this->isBehaviour())
 		{
