@@ -28,7 +28,7 @@ namespace alica
 	UtilityFunction::UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight, double similarityWeight, Plan* plan)
 	{
 		this->ra = nullptr;
-		this->bpe = nullptr;
+		this->ae = nullptr;
 		this->lookupStruct = new TaskRoleStruct(0, 0);
 		this->priResult = new UtilityInterval(0.0, 0.0);
 		this->simUI = new UtilityInterval(0.0, 0.0);
@@ -42,6 +42,9 @@ namespace alica
 
 	UtilityFunction::~UtilityFunction()
 	{
+		for(auto pair : this->priorityMartix) {
+			delete pair.first;
+		}
 	}
 
 	list<USummand*>& UtilityFunction::getUtilSummands()
@@ -271,8 +274,8 @@ namespace alica
 				utilSum->init();
 			}
 		}
-		this->bpe = AlicaEngine::getInstance();
-		this->ra  = this->bpe->getRoleAssignment();
+		this->ae = AlicaEngine::getInstance();
+		this->ra  = this->ae->getRoleAssignment();
 	}
 
 	/**
@@ -336,7 +339,7 @@ namespace alica
 		// SUM UP DEFINED PART OF PRIORITY UTILITY
 
 		// for better comparability of different utility functions
-		int denum = min(this->plan->getMaxCardinality(), this->bpe->getTeamObserver()->teamSize());
+		int denum = min(this->plan->getMaxCardinality(), this->ae->getTeamObserver()->teamSize());
 		long taskId;
 		long roleId;
 		shared_ptr<vector<EntryPoint*> > eps = ass->getEntryPoints();

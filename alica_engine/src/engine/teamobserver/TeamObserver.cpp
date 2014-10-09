@@ -380,6 +380,7 @@ namespace alica
 					}
 				}
 			}
+			delete q;
 		}
 		list<shared_ptr<SimplePlanTree> > queue;
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);

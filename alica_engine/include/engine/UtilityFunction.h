@@ -59,7 +59,7 @@ namespace alica
 		// For default similarity based utility summand (which is integrated in every UF)
 		double priorityWeight;
 		double similarityWeight;
-		AlicaEngine* bpe;
+		AlicaEngine* ae;
 		IRoleAssignment* ra;
 		// List of normal utility summands
 		list<USummand*> utilSummands;
