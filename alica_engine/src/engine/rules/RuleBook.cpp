@@ -61,7 +61,7 @@ namespace alica
 		}
 
 		shared_ptr<RunningPlan> main = make_shared<RunningPlan>(masterPlan);
-		main->setAssignment(new Assignment(masterPlan));
+		main->setAssignment(make_shared<Assignment>(masterPlan));
 
 		main->setAllocationNeeded(true);
 		unique_ptr<list<int> > robots = to->getAvailableRobotIds();

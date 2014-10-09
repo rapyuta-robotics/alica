@@ -65,8 +65,8 @@ namespace alica
 		void setPlan(AbstractPlan* plan);
 		shared_ptr<BasicBehaviour> getBasicBehaviour();
 		void setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour);
-		Assignment* getAssignment();
-		void setAssignment(Assignment* assignment);
+		shared_ptr<Assignment> getAssignment();
+		void setAssignment(shared_ptr<Assignment> assignment);
 		void printRecursive();
 		alicaTime getPlanStartTime();
 		alicaTime getStateStartTime();
@@ -130,7 +130,7 @@ namespace alica
 		AbstractPlan* plan;
 		shared_ptr<BasicBehaviour> basicBehaviour;
 		list<shared_ptr<RunningPlan> > children;
-		Assignment* assignment;
+		shared_ptr<Assignment> assignment;
 		State* activeState;
 		EntryPoint* activeEntryPoint;
 		PlanStatus status;

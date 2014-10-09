@@ -201,9 +201,9 @@ namespace alica
 	}
 
 	/**
-	 * //we are at new assignment, so everything is set to initial states, set them back:
+	 * We are at new assignment, so everything is set to initial states, set them back:
 	 */
-	void StateCollection::reconsiderOldAssignment(Assignment* oldOne, Assignment* newOne)
+	void StateCollection::reconsiderOldAssignment(shared_ptr<Assignment> oldOne, shared_ptr<Assignment> newOne)
 	{
 		if(oldOne->getPlan() != newOne->getPlan())
 		{

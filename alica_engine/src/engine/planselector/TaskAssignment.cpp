@@ -77,7 +77,7 @@ namespace alica
 	 * @param oldAss old Assignment
 	 * @return An Assignment for the plan
 	 */
-	Assignment* TaskAssignment::getNextBestAssignment(IAssignment* oldAss)
+	shared_ptr<Assignment> TaskAssignment::getNextBestAssignment(IAssignment* oldAss)
 	{
 #ifdef PSDEBUG
 		cout << "TA: Calculating next best PartialAssignment..." << endl;
@@ -92,7 +92,7 @@ namespace alica
 		cout << "TA: ... calculated this PartialAssignment:\n" << calculatedPa->toString();
 #endif
 
-		Assignment* newAss = new Assignment(calculatedPa);
+		shared_ptr<Assignment> newAss = make_shared<Assignment>(calculatedPa);
 #ifdef PSDEBUG
 		cout << "TA: Return this Assignment to PS:" << newAss->toString() << endl;
 #endif

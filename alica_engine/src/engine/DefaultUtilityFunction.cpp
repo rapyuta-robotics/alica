@@ -47,7 +47,7 @@ namespace alica
 		double sumOfWeights = 0.0;
 
 		// Sum up priority summand
-		UtilityInterval* prioUI = this->getPriorityResult(newRP->getAssignment());
+		UtilityInterval* prioUI = this->getPriorityResult(&*newRP->getAssignment());
 		sumOfUI->setMax(sumOfUI->getMax() + this->priorityWeight * prioUI->getMax());
 		sumOfUI->setMin(sumOfUI->getMin() + this->priorityWeight * prioUI->getMin());
 		sumOfWeights += this->priorityWeight;
@@ -55,7 +55,7 @@ namespace alica
 		if (oldRP != nullptr && this->similarityWeight > 0.0)
 		{
 			// Sum up similarity summand
-			UtilityInterval* simUI = this->getSimilarity(newRP->getAssignment(), oldRP->getAssignment());
+			UtilityInterval* simUI = this->getSimilarity(&*newRP->getAssignment(), &*oldRP->getAssignment());
 			sumOfUI->setMax(sumOfUI->getMax() + this->similarityWeight * simUI->getMax());
 			sumOfUI->setMin(sumOfUI->getMin() + this->similarityWeight * simUI->getMin());
 			sumOfWeights += this->similarityWeight;

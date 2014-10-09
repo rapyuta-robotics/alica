@@ -42,7 +42,7 @@ namespace alica
 	public:
 		TaskAssignment(list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots);
 		virtual ~TaskAssignment();
-		Assignment* getNextBestAssignment(IAssignment* oldAss);
+		shared_ptr<Assignment> getNextBestAssignment(IAssignment* oldAss);
 		string toString();
 #ifdef EXPANSIONEVAL
 		int getExpansionCount();

@@ -24,6 +24,7 @@ namespace alica
 			NULL);
 	Assignment::~Assignment()
 	{
+		delete this->epRobotsMapping;
 	}
 	Assignment::Assignment(Plan* p)
 	{
