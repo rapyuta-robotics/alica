@@ -10,6 +10,8 @@
 #include  "engine/DefaultUtilityFunction.h"
 #include "engine/model/Plan.h"
 #include "TestConditionCreator.h"
+#include "TestConstraintCreator.h"
+#include "TestUtilityFunctionCreator.h"
 
 class AlicaSimplePlan : public ::testing::Test
 {
@@ -18,6 +20,9 @@ protected:
 	alica::AlicaEngine* ae;
 	alica::TestBehaviourCreator* bc;
 	alica::TestConditionCreator* cc;
+	alica::TestUtilityFunctionCreator* uc;
+	alica::TestConstraintCreator* crc;
+
 	virtual void SetUp()
 	{
 		// determine the path to the test config
@@ -35,6 +40,8 @@ protected:
 		ae = alica::AlicaEngine::getInstance();
 		bc = new alica::TestBehaviourCreator();
 		cc = new alica::TestConditionCreator();
+		uc = new alica::TestUtilityFunctionCreator();
+		crc = new alica::TestConstraintCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	}
@@ -48,6 +55,8 @@ protected:
 		delete ae->getCommunicator();
 		delete cc;
 		delete bc;
+		delete uc;
+		delete crc;
 	}
 };
 /**
@@ -56,7 +65,7 @@ protected:
 TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 {
 
-	EXPECT_TRUE(ae->init(bc, cc, "Roleset", "SimpleTestPlan", ".", false))
+	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "Roleset", "SimpleTestPlan", ".", false))
 			<< "Unable to initialise the Alica Engine!";
 
 	ae->start();

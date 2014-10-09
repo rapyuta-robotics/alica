@@ -100,7 +100,7 @@ namespace alica
 	 * @param stepEngine A bool, whether or not the engine should start in stepped mode
 	 * @return bool true if everything worked false otherwise
 	 */
-	bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, string roleSetName, string masterPlanName,
+	bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc, string roleSetName, string masterPlanName,
 							string roleSetDir,
 							bool stepEngine)
 	{
@@ -139,7 +139,7 @@ namespace alica
 		}
 		if (this->expressionHandler == nullptr)
 		{
-			this->expressionHandler = new ExpressionHandler(this, cc);
+			this->expressionHandler = new ExpressionHandler(this, cc, uc, crc);
 		}
 
 		this->stepCalled = false;

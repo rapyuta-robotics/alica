@@ -9,12 +9,13 @@
 #define ALICA_ALICA_ENGINE_INCLUDE_ENGINE_ICONSTRAINTCREATOR_H_
 
 #include <memory>
+#include "engine/BasicConstraint.h"
 
 using namespace std;
 
 namespace alica
 {
-	class BasicConstraint;
+
 
 	class IConstraintCreator
 	{

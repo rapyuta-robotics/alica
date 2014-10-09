@@ -25,8 +25,6 @@
 #include "engine/collections/StateCollection.h"
 #include "engine/IAlicaCommunication.h"
 
-
-
 namespace alica
 {
 	/**
@@ -185,7 +183,6 @@ namespace alica
 
 			alicaTime now = alicaClock->now();
 
-
 			if ((this->ruleBook->isChangeOccured() && this->lastSendTime + this->minSendInterval < now) || this->lastSendTime + this->maxSendInterval < now)
 			{
 				list<long> msg;
@@ -230,7 +227,17 @@ namespace alica
 			this->log->iterationEnds(this->rootNode);
 			this->ae->iterationComplete();
 
-			long availTime = (long)((this->loopTime - (alicaClock->now() - beginTime)) / 1000UL);
+			long availTime;
+
+			now = alicaClock->now();
+			if (this->loopTime > (now - beginTime))
+			{
+				availTime = (long)((this->loopTime - (now - beginTime)) / 1000UL);
+			}
+			else
+			{
+				availTime = 0;
+			}
 
 			if (fpEvents.size() > 0)
 			{
@@ -256,29 +263,36 @@ namespace alica
 								first = false;
 							}
 						}
-						availTime = (long)((this->loopTime - (alicaClock->now() - beginTime)) / 1000UL);
+						now = alicaClock->now();
+						if (this->loopTime > (now - beginTime))
+						{
+							availTime = (long)((this->loopTime - (now - beginTime)) / 1000UL);
+						}
+						else
+						{
+							availTime = 0;
+						}
 					}
 				}
 
 			}
 
 			/*if (!ae->getStepEngine())
-			{
-				{
-					unique_lock<mutex> lckTimer(timerMutex);
-					timerModeCV->wait(lckTimer, [&]
-					{
-						if(this->loopTimer->isNotifyCalled())
-						{
-							this->loopTimer->setNotifyCalled(false);
-							return true;
-						}
-						return false;
-					});
-				}
-			}*/
+			 {
+			 {
+			 unique_lock<mutex> lckTimer(timerMutex);
+			 timerModeCV->wait(lckTimer, [&]
+			 {
+			 if(this->loopTimer->isNotifyCalled())
+			 {
+			 this->loopTimer->setNotifyCalled(false);
+			 return true;
+			 }
+			 return false;
+			 });
+			 }
+			 }*/
 			cout << "PB: availTime " << availTime << endl;
-
 
 			if (availTime > 1 && !ae->getStepEngine())
 			{

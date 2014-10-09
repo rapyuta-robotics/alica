@@ -17,11 +17,10 @@ namespace alica
 	class ConstraintDescriptor;
 	class RunningPlan;
 
-	class BasicContraint
+	class BasicConstraint
 	{
 	public:
-		BasicContraint();
-		virtual ~BasicContraint();
+		virtual ~BasicConstraint(){}
 
 		virtual void getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan>) = 0;
 	};

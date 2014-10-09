@@ -63,7 +63,7 @@ namespace alica
 		string toString();
 		AssignmentCollection* getEpRobotsMapping();
 		Plan* getPlan();
-		UtilityFunction* getUtilFunc();
+		shared_ptr<UtilityFunction> getUtilFunc();
 		shared_ptr<SuccessCollection> getEpSuccessMapping();
 		int numUnAssignedRobots();
 		vector<int>& getUnAssignedRobots();
@@ -90,7 +90,7 @@ namespace alica
 		static bool allowIdling;
 		static EntryPoint* idleEP;
 		// UtilityFunction
-		UtilityFunction* utilFunc;
+		shared_ptr<UtilityFunction> utilFunc;
 		AssignmentCollection* epRobotsMapping;
 		shared_ptr<vector<int> > robots;
 		vector<shared_ptr<DynCardinality>> dynCardinalities;

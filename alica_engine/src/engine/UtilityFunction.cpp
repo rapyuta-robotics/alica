@@ -287,7 +287,7 @@ namespace alica
 
 		for(auto iter = plans.begin(); iter != plans.end(); iter++) {
 			//TODO hack to get tests running
-			iter->second->setUtilityFunction(new DefaultUtilityFunction(iter->second));
+			//iter->second->setUtilityFunction(new DefaultUtilityFunction(iter->second));
 			iter->second->getUtilityFunction()->init();
 		}
 	}

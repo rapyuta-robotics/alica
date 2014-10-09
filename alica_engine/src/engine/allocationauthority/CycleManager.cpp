@@ -403,7 +403,7 @@ namespace alica
 		int cyclesFound = 0;
 		int count = 0;
 		AllocationDifference* utChange = nullptr;
-		AllocationDifference* temp = new AllocationDifference();
+		shared_ptr<AllocationDifference> temp = make_shared<AllocationDifference>();
 		lock_guard<mutex> lock(this->allocationHistoryMutex);
 		{
 			for (int i = this->newestAllocationDifference; count < this->allocationHistory.size(); i--)

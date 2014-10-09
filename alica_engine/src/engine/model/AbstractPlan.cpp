@@ -122,12 +122,12 @@ namespace alica
 		this->preCondition = preCondition;
 	}
 
-	UtilityFunction* AbstractPlan::getUtilityFunction()
+	shared_ptr<UtilityFunction> AbstractPlan::getUtilityFunction()
 	{
 		return utilityFunction;
 	}
 
-	void AbstractPlan::setUtilityFunction(UtilityFunction* utilityFunction)
+	void AbstractPlan::setUtilityFunction(shared_ptr<UtilityFunction> utilityFunction)
 	{
 		this->utilityFunction = utilityFunction;
 	}

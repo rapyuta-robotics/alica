@@ -21,7 +21,7 @@ namespace alica
 	public:
 		virtual ~IUtilityCreator(){}
 
-		virtual shared_ptr<BasicUtilityFunction> createConstraint(long utilityfunctionConfId) = 0;
+		virtual shared_ptr<BasicUtilityFunction> createUtility(long utilityfunctionConfId) = 0;
 	};
 
 } /* namespace alica */
