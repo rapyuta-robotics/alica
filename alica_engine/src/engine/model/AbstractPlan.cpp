@@ -76,7 +76,7 @@ namespace alica
 		return authorityTimeInterval;
 	}
 
-	void AbstractPlan::setAuthorityTimeInterval(unsigned long authorithyTimeInterval)
+	void AbstractPlan::setAuthorityTimeInterval(alicaTime authorithyTimeInterval)
 	{
 		this->authorityTimeInterval = authorithyTimeInterval;
 	}
