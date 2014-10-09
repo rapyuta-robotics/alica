@@ -12,6 +12,9 @@
 #include "engine/model/Condition.h"
 #include <SystemConfig.h>
 #include "engine/IConditionCreator.h"
+#include "engine/IUtilityCreator.h"
+#include "engine/IConstraintCreator.h"
+#include "engine/BasicUtilityFunction.h"
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
 #include "engine/model/PreCondition.h"
@@ -25,10 +28,12 @@ namespace alica
 	/**
 	 * Constructor, loads the assembly containing expressions and constraints.
 	 */
-	ExpressionHandler::ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc)
+	ExpressionHandler::ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc)
 	{
 		this->ae = ae;
 		this->conditionCreator = cc;
+		this->utilityCreator = uc;
+		this->constraintCreator = crc;
 	}
 
 	ExpressionHandler::~ExpressionHandler()
@@ -51,7 +56,10 @@ namespace alica
 		{
 			auto p = it.second;
 
+			auto ufGen = utilityCreator->createUtility(p->getId());
 			//TODO hole utility function (siehe c#)
+			p->setUtilityFunction(ufGen->getUtilityFunction(p));
+
 
 			if (p->getPreCondition() != nullptr)
 			{

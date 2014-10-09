@@ -34,12 +34,14 @@ namespace alica
 	class IAlicaClock;
 	class PlanBase;
 	class IConditionCreator;
+	class IConstraintCreator;
+	class IUtilityCreator;
 	class ExpressionHandler;
 
 	class AlicaEngine
 	{
 	public:
-		static AlicaEngine* getInstance();bool init(IBehaviourCreator* bc, IConditionCreator* cc, string roleSetName, string masterPlanName,
+		static AlicaEngine* getInstance();bool init(IBehaviourCreator* bc, IConditionCreator* cc,  IUtilityCreator* uc, IConstraintCreator* crc, string roleSetName, string masterPlanName,
 													string roleSetDir, bool stepEngine);
 		void shutdown();
 		void start();bool getStepEngine();

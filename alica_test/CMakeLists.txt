@@ -107,9 +107,12 @@ file(GLOB_RECURSE alica_SOURCES "src/test/*.cpp")
 	src/Tackle.cpp;
 	src/TestBehaviourCreator.cpp;
  ) 
-   add_library(test_condition_creator
+   add_library(test_expression_creator
 	src/TestConditionCreator.cpp;
-	src/SimpleTestPlan1412252439925.cpp
+	src/TestConstraintCreator.cpp;
+	src/TestUtilityFunctionCreator.cpp;
+	src/SimpleTestPlan1412252439925.cpp;
+	src/SimpleTestPlan1412252439925Constraint.cpp
  )
 ## Declare a cpp library
  ##add_library(alica
@@ -202,7 +205,7 @@ file(GLOB_RECURSE alica_SOURCES "src/test/*.cpp")
 file(GLOB_RECURSE test_alica_SOURCES "src/test/*.cpp")
  catkin_add_gtest(${PROJECT_NAME}-test ${test_alica_SOURCES})
  if(TARGET ${PROJECT_NAME}-test)
-   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES} system_config alica_engine test_behaviour_creator alica_ros_proxy test_condition_creator)
+   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES} system_config alica_engine test_behaviour_creator alica_ros_proxy test_expression_creator)
  endif()
 
 ## Add folders to be run by python nosetests

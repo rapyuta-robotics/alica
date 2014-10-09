@@ -6,6 +6,9 @@
  */
 
 #include "SimpleTestPlan1412252439925Constraint.h"
+#include "engine/constraintmodul/ConstraintDescriptor.h"
+#include "engine/RunningPlan.h"
+
 using namespace std;
 using namespace alica;
 

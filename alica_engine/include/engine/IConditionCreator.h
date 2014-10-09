@@ -8,7 +8,7 @@
 #ifndef ALICA_ALICA_ENGINE_INCLUDE_ENGINE_ICONDITIONCREATOR_H_
 #define ALICA_ALICA_ENGINE_INCLUDE_ENGINE_ICONDITIONCREATOR_H_
 
-#include "BasicCondition.h"
+#include "engine/BasicCondition.h"
 
 using namespace std;
 

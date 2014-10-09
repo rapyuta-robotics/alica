@@ -51,8 +51,8 @@ namespace alica
 		void setRuntimeCondition(RuntimeCondition* runtimeCondition);
 		PreCondition* getPreCondition();
 		void setPreCondition(PreCondition* preCondition);
-		UtilityFunction* getUtilityFunction();
-		void setUtilityFunction(UtilityFunction* utilityFunction);
+		shared_ptr<UtilityFunction> getUtilityFunction();
+		void setUtilityFunction(shared_ptr<UtilityFunction> utilityFunction);
 		double getUtilityThreshold() const;
 		void setUtilityThreshold(double utilityThreshold = 1.0);
 
@@ -69,7 +69,7 @@ namespace alica
 		/**
 		 * This plan's Utility function
 		 */
-		UtilityFunction* utilityFunction;
+		shared_ptr<UtilityFunction> utilityFunction;
 
 	protected:
 		string fileName;

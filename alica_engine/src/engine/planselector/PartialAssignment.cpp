@@ -78,7 +78,7 @@ namespace alica
 		return plan;
 	}
 
-	UtilityFunction* PartialAssignment::getUtilFunc()
+	shared_ptr<UtilityFunction> PartialAssignment::getUtilFunc()
 	{
 		return utilFunc;
 	}

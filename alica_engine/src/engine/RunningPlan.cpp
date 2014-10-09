@@ -62,6 +62,13 @@ namespace alica
 		this->robotsAvail = unique_ptr<list<int> >(new list<int>);
 	}
 
+	RunningPlan::~RunningPlan()
+	{
+		this->basicBehaviour.reset();
+		delete cycleManagement;
+		delete constraintStore;
+	}
+
 	RunningPlan::RunningPlan(Plan* plan) :
 			RunningPlan()
 	{
@@ -297,11 +304,6 @@ namespace alica
 	void RunningPlan::setConstraintStore(ConstraintStore* constraintStore)
 	{
 		this->constraintStore = constraintStore;
-	}
-
-	RunningPlan::~RunningPlan()
-	{
-		this->basicBehaviour.reset();
 	}
 
 	/**

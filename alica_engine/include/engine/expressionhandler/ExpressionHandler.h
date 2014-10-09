@@ -15,6 +15,8 @@ namespace alica
 	class Condition;
 	class Transition;
 	class IConditionCreator;
+	class IConstraintCreator;
+	class IUtilityCreator;
 	class AlicaEngine;
 
 	/**
@@ -23,7 +25,7 @@ namespace alica
 	class ExpressionHandler
 	{
 	public:
-		ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc);
+		ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc);
 		virtual ~ExpressionHandler();
 		void attachAll();
 //		void dummyConstraint(ConstraintDescriptor cd, RunningPlan* rp);
@@ -32,6 +34,8 @@ namespace alica
 
 	protected:
 		IConditionCreator* conditionCreator;
+		IUtilityCreator* utilityCreator;
+		IConstraintCreator* constraintCreator;
 		AlicaEngine* ae;
 //		void attachPlanConditions(Plan* p, T exprType, T consType);
 //		void attachTransConditions(Transition* t, T exprType, T consType);

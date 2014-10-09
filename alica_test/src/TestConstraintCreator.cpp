@@ -6,6 +6,9 @@
  */
 
 #include "TestConstraintCreator.h"
+#include <iostream>
+
+using namespace std;
 
 namespace alica
 {

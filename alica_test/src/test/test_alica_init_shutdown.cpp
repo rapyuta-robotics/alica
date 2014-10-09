@@ -2,6 +2,8 @@
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
 #include "TestBehaviourCreator.h"
+#include "TestConstraintCreator.h"
+#include "TestUtilityFunctionCreator.h"
 #include <clock/AlicaROSClock.h>
 #include "engine/PlanRepository.h"
 #include "engine/DefaultUtilityFunction.h"
@@ -16,6 +18,9 @@ protected:
 	alica::AlicaEngine* ae;
 	alica::TestBehaviourCreator* bc;
 	alica::TestConditionCreator* cc;
+	alica::TestUtilityFunctionCreator* uc;
+	alica::TestConstraintCreator* crc;
+
 	virtual void SetUp()
 	{
 		// determine the path to the test config
@@ -33,20 +38,23 @@ protected:
 		ae = alica::AlicaEngine::getInstance();
 		bc = new alica::TestBehaviourCreator();
 		cc = new alica::TestConditionCreator();
+		uc = new alica::TestUtilityFunctionCreator();
+		crc = new alica::TestConstraintCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+		ae->init(bc, cc, uc, crc, "Roleset", "MasterPlan", ".", false);
 	}
 
 	virtual void TearDown()
 	{
-		//cout << "Before Shutdown" << endl;
 		ae->shutdown();
 		sc->shutdown();
-		delete ae->getCommunicator();
 		delete ae->getIAlicaClock();
+		delete ae->getCommunicator();
 		delete cc;
+		delete uc;
+		delete crc;
 		delete bc;
-		//cout << "After Shutdown" << endl;
 	}
 };
 
@@ -56,7 +64,7 @@ protected:
 TEST_F(AlicaEngineTestInit, initAndShutdown)
 {
 
-	EXPECT_TRUE(ae->init(bc, cc, "Roleset", "MasterPlan", ".", false)) << "Unable to initialise the Alica Engine!";
+	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "Roleset", "MasterPlan", ".", false)) << "Unable to initialise the Alica Engine!";
 
 }
 
