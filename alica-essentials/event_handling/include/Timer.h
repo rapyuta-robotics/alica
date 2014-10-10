@@ -28,10 +28,8 @@ namespace supplementary
 		Timer(long msInterval, long msDelayedStart, bool notifyAll);
 		~Timer();
 		void registerCV(condition_variable* condVar);
-		void start();
-		void stop();
-		bool restart();
-		bool pause();
+		bool start();
+		bool stop();
 		bool isRunning();
 		bool isNotifyCalled();
 		void setNotifyCalled(bool called);
@@ -45,7 +43,7 @@ namespace supplementary
 		thread* runThread;
 		chrono::milliseconds msInterval; /** < The time between two fired events */
 		chrono::milliseconds msDelayedStart; /** < The time between starting the TimerEvent and the first fired event */
-		bool running, started;
+		bool running, started, triggered;
 		bool notifyAll;
 		bool notifyCalled;
 		mutex cv_mtx;

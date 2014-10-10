@@ -37,6 +37,7 @@ namespace supplementary
 		static bool isDirectory(const string& path);
 		static bool isFile(const string& path);
 		static string getParent(const string& path);
+		static bool createDirectory(string path, int rights);
 
 		static const string CURDIR;
 		static const string PARENTDIR;

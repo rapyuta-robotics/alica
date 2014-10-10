@@ -13,8 +13,9 @@ namespace supplementary
 	Timer::Timer(long msInterval, long msDelayedStart, bool notifyAll) :
 			notifyAll(notifyAll)
 	{
-		this->started = false;
+		this->started = true;
 		this->running = false;
+		this->triggered = false;
 		this->msInterval = chrono::milliseconds(msInterval);
 		this->msDelayedStart = chrono::milliseconds(msDelayedStart);
 		this->registeredCVs = vector<condition_variable*>();
@@ -24,7 +25,9 @@ namespace supplementary
 
 	Timer::~Timer()
 	{
-		this->stop();
+		this->running = true;
+		this->started = false;
+		cv.notify_one();
 		this->runThread->join();
 		delete this->runThread;
 	}
@@ -46,7 +49,10 @@ namespace supplementary
 		while (this->started)
 		{
 			this->cv.wait(lck, [&]
-			{	return this->running && this->registeredCVs.size() > 0;});
+			{return !this->started || (this->running && this->registeredCVs.size() > 0);});
+
+			if (!this->started) // for destroying the timer
+				return;
 
 			chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
 			this->notifyCalled = true;
@@ -62,51 +68,29 @@ namespace supplementary
 				}
 			}
 			auto dura = std::chrono::high_resolution_clock::now() - start;
-			cout << "TimerEvent: Duration is " << chrono::duration_cast<chrono::nanoseconds>(dura).count()
-					<< " nanoseconds" << endl;
+//			cout << "TimerEvent: Duration is " << chrono::duration_cast<chrono::nanoseconds>(dura).count()
+//					<< " nanoseconds" << endl;
 			this_thread::sleep_for(msInterval - dura);
 		}
 	}
 
-	void Timer::start()
-	{
-		this->started = true;
-		this->running = true;
-		runThread = new thread(&Timer::run, this);
-	}
-
-	bool Timer::restart()
+	bool Timer::start()
 	{
 		if (this->started && !this->running)
 		{
 			this->running = true;
 			this->cv.notify_one();
-			return true;
 		}
-		else
-		{
-			return false;
-		}
+		return this->started && this->running;
 	}
 
-	bool Timer::pause()
+	bool Timer::stop()
 	{
 		if (this->started && this->running)
 		{
 			this->running = false;
-			return true;
 		}
-		else
-		{
-			return false;
-		}
-	}
-
-	void Timer::stop()
-	{
-		this->running = true;
-		this->started = false;
-		cv.notify_one();
+		return this->started && this->running;
 	}
 
 	bool Timer::isRunning()
@@ -143,6 +127,7 @@ namespace supplementary
 	{
 		return this->notifyCalled;
 	}
+
 	void Timer::setNotifyCalled(bool called)
 	{
 		this->notifyCalled = called;
