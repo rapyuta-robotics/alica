@@ -12,12 +12,16 @@
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include  "engine/DefaultUtilityFunction.h"
+#include  "engine/ITeamObserver.h"
 #include "engine/model/Plan.h"
 #include "TestConditionCreator.h"
 #include "TestConstraintCreator.h"
 #include "TestUtilityFunctionCreator.h"
 #include "Attack.h"
 #include "MidFieldStandard.h"
+#include "engine/Assignment.h"
+#include "engine/collections/AssignmentCollection.h"
+#include "engine/collections/StateCollection.h"
 
 class AlicaSimplePlan : public ::testing::Test
 {
@@ -80,14 +84,20 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 	sleep(sleepTime);
 
 	EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1412761855746);
-	EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour()->getName(), string("Attack"));
+	EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour()->getName(),
+				string("Attack"));
 	//Assuming 30 Hz were 11 iterations are executed by MidFieldStandard, we expect at least 29*sleeptime-15 calls on Attack
-	EXPECT_GT(((Attack*)&*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour())->callCounter, (sleepTime)*29-15);
-	EXPECT_GT(((Attack*)&*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour())->initCounter, 0);
-	for(auto iter : *ae->getBehaviourPool()->getAvailableBehaviours())
+	EXPECT_GT(
+			((Attack* )&*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour())->callCounter,
+			(sleepTime) * 29 - 15);
+	EXPECT_GT(
+			((Attack* )&*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour())->initCounter,
+			0);
+	for (auto iter : *ae->getBehaviourPool()->getAvailableBehaviours())
 	{
-		if(iter.second->getName() == "MidFieldStandard") {
-			EXPECT_GT(((MidFieldStandard*)&*iter.second)->callCounter, 10);
+		if (iter.second->getName() == "MidFieldStandard")
+		{
+			EXPECT_GT(((MidFieldStandard* )&*iter.second)->callCounter, 10);
 		}
 	}
 }
