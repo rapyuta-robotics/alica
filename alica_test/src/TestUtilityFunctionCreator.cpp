@@ -29,14 +29,27 @@ namespace alica
 	{
 		switch (utilityfunctionConfId)
 		{
+			case 1407153703092:
+			case 1407153683051:
+			case 1407153663917:
+			case 1407153645238:
+			case 1407153611768:
+			case 1407152758497:
+			case 1402488437260:
+			case 1402488991641:
+			case 1402488770050:
+			case 1402488870347:
+			case 1402488893641:
+			case 1402489318663:
+			case 1402488634525:
 			case 1412252439925:
 				return make_shared<UtilityFunction1412252439925>();
 				break;
 			default:
-			cerr << "TestUtilityFunctionCreator: Unknown utility function id requested: " << utilityfunctionConfId << endl;
-			return make_shared<UtilityFunction1412252439925>();
-			throw new exception();
-			break;
+				cerr << "TestUtilityFunctionCreator: Unknown utility function id requested: " << utilityfunctionConfId
+						<< endl;
+				throw new exception();
+				break;
 		}
 		return nullptr;
 	}

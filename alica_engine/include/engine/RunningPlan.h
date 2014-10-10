@@ -120,6 +120,7 @@ namespace alica
 		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents,list<int> noUpdates, alicaTime now);
 		void toMessage(list<long>& message, shared_ptr<RunningPlan>& deepestNode, int& depth, int curDepth);
 		string toString();
+		int getOwnID();
 
 	private:
 		void setConstraintStore(ConstraintStore* constraintStore);

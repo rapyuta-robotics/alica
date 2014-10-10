@@ -1135,5 +1135,9 @@ namespace alica
 		return false;
 	}
 
+	int RunningPlan::getOwnID() {
+		return this->ownId;
+	}
+
 } /* namespace alica */
 

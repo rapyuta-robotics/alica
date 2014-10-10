@@ -5,6 +5,7 @@
 #include "TestBehaviourCreator.h"
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
+#include "engine/PlanBase.h"
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include  "engine/DefaultUtilityFunction.h"
@@ -70,7 +71,10 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 
 	ae->start();
 
-	sleep(5);
+	sleep(3);
+
+	cerr << ae->getPlanBase()->getRootNode()->toString() << endl;
+	cerr << ae->getPlanBase()->getDeepestNode()->toString() << endl;
 
 }
 

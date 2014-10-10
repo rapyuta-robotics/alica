@@ -76,6 +76,9 @@ namespace alica
 		void setIAlicaClock(IAlicaClock* clock);
 		void doStep();
 		void iterationComplete();
+
+		PlanBase* getPlanBase();
+
 		/**
 		 * Switch the engine between normal operation and silent mode, in which no messages other than debugging information are sent out.
 		 * This is useful for a robot on hot standby.
