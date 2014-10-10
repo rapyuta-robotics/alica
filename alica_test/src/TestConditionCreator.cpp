@@ -38,11 +38,31 @@ namespace alica
 			case 1412761926856:
 				return make_shared<TransitionCondition1412761926856>();
 				break;
+			case 1409218319990:
+			case 1402488558741:
+			case 1402488520968:
+			case 1402488519140:
+			case 1402489462088:
+			case 1402489460549:
+			case 1402489260911:
+			case 1402500844446:
+			case 1402489278408:
+			case 1402489258509:
+			case 1402489131988:
+			case 1403773741874:
+			case 1402489218027:
+			case 1402489206278:
+			case 1402489174338:
+			case 1402489073613:
+			case 1402489065962:
+			case 1402488993122:
+			case 1402488991641:
+				return make_shared<BasicFalseCondition>();
+				break;
 			default:
-			cerr << "TestConditionCreator: Unknown condition id requested: " << conditionConfId << endl;
-			return make_shared<BasicFalseCondition>();
-			throw new exception();
-			break;
+				cerr << "TestConditionCreator: Unknown condition id requested: " << conditionConfId << endl;
+				throw new exception();
+				break;
 		}
 	}
 

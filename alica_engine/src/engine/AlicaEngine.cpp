@@ -100,8 +100,8 @@ namespace alica
 	 * @param stepEngine A bool, whether or not the engine should start in stepped mode
 	 * @return bool true if everything worked false otherwise
 	 */
-	bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc, string roleSetName, string masterPlanName,
-							string roleSetDir,
+	bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc,
+							string roleSetName, string masterPlanName, string roleSetDir,
 							bool stepEngine)
 	{
 		this->stepEngine = stepEngine;
@@ -149,7 +149,8 @@ namespace alica
 		this->teamObserver->init();
 		this->log = new Logger();
 		this->roleAssignment->init();
-		if(planSelector==nullptr) {
+		if (planSelector == nullptr)
+		{
 			this->planSelector = new PlanSelector();
 		}
 		//TODO
@@ -230,7 +231,8 @@ namespace alica
 		this->roleSet = nullptr;
 		this->masterPlan = nullptr;
 
-		if(this->expressionHandler != nullptr) {
+		if (this->expressionHandler != nullptr)
+		{
 			delete this->expressionHandler;
 			this->expressionHandler = nullptr;
 		}
@@ -444,6 +446,14 @@ namespace alica
 	IPlanner* AlicaEngine::getPlanner()
 	{
 		return planner;
+	}
+
+	/**
+	 * Returns Alica Main clase that manages the current alica state
+	 */
+	PlanBase* AlicaEngine::getPlanBase()
+	{
+		return planBase;
 	}
 
 } /* namespace Alica */

@@ -65,7 +65,8 @@ namespace alica
 
 		if (minbcfreq > maxbcfreq)
 		{
-			AlicaEngine::getInstance()->abort("PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
+			AlicaEngine::getInstance()->abort(
+					"PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
 		}
 
 		this->minSendInterval = (alicaTime)fmax(1000000, lround(1.0 / maxbcfreq * 1000000000));
@@ -95,7 +96,8 @@ namespace alica
 		}
 
 #ifdef PB_DEBUG
-		cout << "PB: Engine loop time is " << loopTime / 1000000 << "ms, broadcast interval is " << this->minSendInterval / 1000000 << "ms - " << this->maxSendInterval / 1000000 << "ms" << endl;
+		cout << "PB: Engine loop time is " << loopTime / 1000000 << "ms, broadcast interval is "
+				<< this->minSendInterval / 1000000 << "ms - " << this->maxSendInterval / 1000000 << "ms" << endl;
 #endif
 		if (halfLoopTime < this->minSendInterval)
 		{
@@ -183,7 +185,8 @@ namespace alica
 
 			alicaTime now = alicaClock->now();
 
-			if ((this->ruleBook->isChangeOccured() && this->lastSendTime + this->minSendInterval < now) || this->lastSendTime + this->maxSendInterval < now)
+			if ((this->ruleBook->isChangeOccured() && this->lastSendTime + this->minSendInterval < now)
+					|| this->lastSendTime + this->maxSendInterval < now)
 			{
 				list<long> msg;
 				this->deepestNode = this->rootNode;
@@ -211,7 +214,11 @@ namespace alica
 					if (this->deepestNode->getActiveState() != nullptr)
 					{
 						this->statusMessage->currentState = this->deepestNode->getActiveState()->getName();
-						copy(this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(this->deepestNode->getActiveState()).begin(), this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(this->deepestNode->getActiveState()).end(), back_inserter(this->statusMessage->robotIDsWithMe));
+						copy(this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(
+								this->deepestNode->getActiveState()).begin(),
+								this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(
+										this->deepestNode->getActiveState()).end(),
+								back_inserter(this->statusMessage->robotIDsWithMe));
 
 					}
 					else
@@ -427,6 +434,30 @@ namespace alica
 	void PlanBase::setRootNode(shared_ptr<RunningPlan> rootNode)
 	{
 		this->rootNode = rootNode;
+	}
+
+	/**
+	 * Returns the deepest ALICA node
+	 */
+	shared_ptr<RunningPlan> PlanBase::getDeepestNode()
+	{
+		return deepestNode;
+	}
+
+	/**
+	 * Returns the deepest ALICA node
+	 */
+	shared_ptr<RunningPlan> PlanBase::getRootNode()
+	{
+		return rootNode;
+	}
+
+	/**
+	 * Returns the Masterplan
+	 */
+	Plan* PlanBase::getMasterPlan()
+	{
+		return masterPlan;
 	}
 
 }

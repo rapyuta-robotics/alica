@@ -61,6 +61,10 @@ namespace alica
 		void stop();
 		void start();
 		void addFastPathEvent(shared_ptr<RunningPlan> p);
+		shared_ptr<RunningPlan> getDeepestNode();
+		shared_ptr<RunningPlan> getRootNode();
+		Plan* getMasterPlan();
+
 
 	private:
 		/**
