@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace AutoDiff
+namespace autodiff
 {
 	class Abs;
 	class And;
@@ -72,6 +72,6 @@ namespace AutoDiff
 		virtual int visit(shared_ptr<Zero> elem) = 0;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* ITERMVISITOR_H_ */

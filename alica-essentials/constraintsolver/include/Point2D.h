@@ -8,9 +8,9 @@
 #ifndef POINT2D_H_
 #define POINT2D_H_
 
-namespace CarpeNoctem
+namespace carpenoctem
 {
-	namespace Containers
+	namespace containers
 	{
 
 		class Point2D
@@ -28,7 +28,7 @@ namespace CarpeNoctem
 			double _y;
 		};
 
-	} /* namespace Containers */
-} /* namespace CarpeNoctem */
+	} /* namespace containers */
+} /* namespace carpenoctem */
 
 #endif /* POINT2D_H_ */

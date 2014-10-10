@@ -13,7 +13,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 	/**
 	 *
@@ -90,4 +90,4 @@ namespace AutoDiff
 	{
 		return _terms;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

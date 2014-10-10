@@ -12,7 +12,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 	Abs::Abs(shared_ptr<Term> arg) :
 			Term()
@@ -45,4 +45,4 @@ namespace AutoDiff
 	{
 		return _arg->derivative(v) * _arg / shared_from_this();
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

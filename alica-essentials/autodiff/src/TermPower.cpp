@@ -14,7 +14,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 	TermPower::TermPower(shared_ptr<Term> baseTerm, shared_ptr<Term> exponent) :
 			Term()
@@ -69,4 +69,4 @@ namespace AutoDiff
 	{
 		return _exponent;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

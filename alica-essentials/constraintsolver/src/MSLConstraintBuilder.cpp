@@ -7,9 +7,9 @@
 
 #include "MSLConstraintBuilder.h"
 
-namespace CarpeNoctem
+namespace carpenoctem
 {
-	namespace Base
+	namespace base
 	{
 		double MSLConstraintBuilder::AREA_TOL = 100.0;
 		double MSLConstraintBuilder::ON_LINE_TOL = 50.0;
@@ -125,5 +125,5 @@ namespace CarpeNoctem
 					throw "Unknown Area!";
 			}
 		}
-	} /* namespace Base */
-} /* namespace CarpeNoctem */
+	} /* namespace base */
+} /* namespace carpenoctem */

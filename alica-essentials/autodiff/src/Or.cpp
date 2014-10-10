@@ -12,7 +12,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 	Or::Or(shared_ptr<Term> left, shared_ptr<Term> right) :
 			Term()
@@ -69,4 +69,4 @@ namespace AutoDiff
 	{
 		return _right;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

@@ -13,11 +13,11 @@
 #include <memory>
 #include <vector>
 
-namespace AutoDiff
+namespace autodiff
 {
 	class GaussianProcess; // XXX: class is missing, TODO: import
 
-	namespace Compiled
+	namespace compiled
 	{
 
 		class CompiledGp : public TapeElement
@@ -30,7 +30,7 @@ namespace AutoDiff
 			void accept(shared_ptr<ITapeVisitor> visitor);
 		};
 
-	} /* namespace Compiled */
-} /* namespace AutoDiff */
+	} /* namespace compiled */
+} /* namespace autodiff */
 
 #endif /* COMPILEDGP_H_ */

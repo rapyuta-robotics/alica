@@ -13,7 +13,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 	Cos::Cos(shared_ptr<Term> arg) :
 			Term()
@@ -54,4 +54,4 @@ namespace AutoDiff
 	{
 		return _arg;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

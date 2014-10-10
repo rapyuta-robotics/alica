@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   fsystem
   autodiff
   system_config
+  alica_engine
 )
 
 ## System dependencies are found with CMake's conventions
@@ -102,10 +103,11 @@ include_directories(
 
 ## Declare a cpp library
 add_library(constraintsolver
-  src/ConstraintBuilder.cpp
+#  src/CGSolver.cpp
   src/GSolver.cpp
   src/MSLConstraintBuilder.cpp
   src/Point2D.cpp
+  src/ResultStore.cpp
 )
 
 ## Declare a cpp executable

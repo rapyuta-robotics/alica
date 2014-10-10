@@ -12,7 +12,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	Exp::Exp(shared_ptr<Term> arg) :
@@ -55,4 +55,4 @@ namespace AutoDiff
 		return _arg;
 	}
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */

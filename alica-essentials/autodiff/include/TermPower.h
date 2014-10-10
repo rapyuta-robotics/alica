@@ -10,7 +10,7 @@
 
 #include "Term.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class TermPower : public Term
@@ -30,6 +30,6 @@ namespace AutoDiff
 		shared_ptr<Term> _exponent;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* TERMPOWER_H_ */

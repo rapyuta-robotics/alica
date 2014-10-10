@@ -15,13 +15,13 @@
 #include <vector>
 
 using namespace std;
-using namespace AutoDiff;
-using namespace CarpeNoctem::Containers;
+using namespace autodiff;
+using namespace carpenoctem::containers;
 
 
-namespace CarpeNoctem
+namespace carpenoctem
 {
-	namespace Base
+	namespace base
 	{
 		// should be in /home/psp/impera/MSLCN/MSLWorldModel/src/Areas.cs
 		enum Areas
@@ -88,7 +88,7 @@ namespace CarpeNoctem
 									shared_ptr<Point2D> *upperLeftCorner);
 		};
 
-	} /* namespace Base */
-} /* namespace CarpeNoctem */
+	} /* namespace base */
+} /* namespace carpeNoctem */
 
 #endif /* MSLCONSTRAINTBUILDER_H_ */

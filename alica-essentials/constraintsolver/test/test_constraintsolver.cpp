@@ -3,7 +3,7 @@
 #include "AutoDiff.h"
 #include "GSolver.h"
 #include "MSLConstraintBuilder.h"
-#include "ConstraintBuilder.h"
+#include <engine/constraintmodul/ConstraintBuilder.h>
 
 #include <ctime>
 #include <iostream>
@@ -11,10 +11,10 @@
 #include <cmath>
 
 using namespace std;
-using namespace AutoDiff;
-using namespace Alica;
-using namespace Alica::Reasoner;
-using namespace CarpeNoctem::Base;
+using namespace autodiff;
+using namespace alica;
+using namespace alica::reasoner;
+using namespace carpenoctem::base;
 
 TEST(AutoDiffTest, GSOLVER)
 {

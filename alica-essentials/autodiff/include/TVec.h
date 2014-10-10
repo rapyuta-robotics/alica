@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace AutoDiff
+namespace autodiff
 {
 	class Term;
 
@@ -28,12 +28,6 @@ namespace AutoDiff
 		TVec(vector<shared_ptr<Term>> left, vector<shared_ptr<Term>> right,
 				function<shared_ptr<Term>(shared_ptr<Term>, shared_ptr<Term>)> elemOp);
 		TVec(vector<shared_ptr<Term>> input, function<shared_ptr<Term>(shared_ptr<Term>)> elemOp);
-//		TVec(shared_ptr<Term> x);
-//		TVec(shared_ptr<Term> x, shared_ptr<Term> y);
-//		TVec(shared_ptr<Term> x, shared_ptr<Term> y, shared_ptr<Term> z);
-//		TVec(double x);
-//		TVec(double x, double y);
-//		TVec(double x, double y, double z);
 
 		shared_ptr<Term> normSquared();
 		shared_ptr<TVec> normalize();
@@ -59,6 +53,6 @@ namespace AutoDiff
 	shared_ptr<TVec> operator*(const double scalar, const shared_ptr<TVec>& vector);
 	shared_ptr<Term> operator*(const shared_ptr<TVec>& left, const shared_ptr<TVec>& right);
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* TVEC_H_ */

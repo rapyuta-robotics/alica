@@ -13,7 +13,7 @@
 
 using namespace std;
 
-namespace AutoDiff
+namespace autodiff
 {
 	class Constant;
 	class ConstPower;
@@ -57,6 +57,6 @@ namespace AutoDiff
 		static shared_ptr<Term> polynom(vector<shared_ptr<Term>> input, int degree, vector<shared_ptr<Term>> param);
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* TERMBUILDER_H_ */

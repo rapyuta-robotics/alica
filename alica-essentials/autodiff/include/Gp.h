@@ -12,7 +12,7 @@
 
 #include <vector>
 
-namespace AutoDiff
+namespace autodiff
 {
 	class GaussianProcess; // XXX: class is missing, TODO: import
 
@@ -37,6 +37,6 @@ namespace AutoDiff
 		int _divCount;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* GP_H_ */

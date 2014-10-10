@@ -10,7 +10,7 @@
 
 #include "Term.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class Constant : public Term
@@ -28,6 +28,6 @@ namespace AutoDiff
 		double _value;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* CONSTANT_H_ */

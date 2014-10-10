@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-using namespace AutoDiff;
+using namespace autodiff;
 using namespace std;
 
 TEST(AutoDiffTest, ABS)

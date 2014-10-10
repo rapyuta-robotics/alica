@@ -13,7 +13,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 	Atan2::Atan2(shared_ptr<Term> left, shared_ptr<Term> right) :
 					Term()
@@ -56,4 +56,4 @@ namespace AutoDiff
 	{
 		return _right;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

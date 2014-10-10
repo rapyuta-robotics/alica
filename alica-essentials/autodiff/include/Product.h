@@ -10,7 +10,7 @@
 
 #include "Term.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class Product : public Term
@@ -30,6 +30,6 @@ namespace AutoDiff
 		shared_ptr<Term> _right;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* PRODUCT_H_ */

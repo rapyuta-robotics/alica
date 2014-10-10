@@ -9,9 +9,9 @@
 
 #include "compiled/ITapeVisitor.h"
 
-namespace AutoDiff
+namespace autodiff
 {
-	namespace Compiled
+	namespace compiled
 	{
 		CompiledConstant::CompiledConstant(double value) {
 			this->value = value;
@@ -22,5 +22,5 @@ namespace AutoDiff
 			shared_ptr<CompiledConstant> thisCasted = dynamic_pointer_cast<CompiledConstant>(shared_from_this());
 			visitor->visit(thisCasted);
 		}
-	} /* namespace Compiled */
-} /* namespace AutoDiff */
+	} /* namespace compiled */
+} /* namespace autodiff */

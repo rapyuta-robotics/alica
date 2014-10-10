@@ -10,7 +10,7 @@
 #include "TermBuilder.h"
 #include "Constant.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 	And::And(shared_ptr<Term> left, shared_ptr<Term> right) :
 			Term()
@@ -73,4 +73,4 @@ namespace AutoDiff
 	{
 		return _right;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

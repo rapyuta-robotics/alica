@@ -14,7 +14,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 	Sin::Sin(shared_ptr<Term> arg) :
 			Term()
@@ -52,4 +52,4 @@ namespace AutoDiff
 	{
 		return _arg;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

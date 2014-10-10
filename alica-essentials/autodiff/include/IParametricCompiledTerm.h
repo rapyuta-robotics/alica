@@ -13,7 +13,7 @@
 
 using namespace std;
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class IParametricCompiledTerm
@@ -80,6 +80,6 @@ namespace AutoDiff
 //		};
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* IPARAMETRICCOMPILEDTERM_H_ */

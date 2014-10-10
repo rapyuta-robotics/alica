@@ -13,7 +13,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	Product::Product(shared_ptr<Term> left, shared_ptr<Term> right) :
@@ -80,4 +80,4 @@ namespace AutoDiff
 		return _right;
 	}
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */

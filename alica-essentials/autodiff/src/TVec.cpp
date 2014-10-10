@@ -10,7 +10,7 @@
 #include "Term.h"
 #include "TermBuilder.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 	TVec::TVec(vector<shared_ptr<Term>> terms)
 	{
@@ -32,14 +32,11 @@ namespace AutoDiff
 		}
 	}
 
-	TVec::TVec(shared_ptr<TVec> first, vector<shared_ptr<Term>> rest) //:
-//			TVec(vector<shared_ptr<Term>>(first->getTerms(), rest))
+	TVec::TVec(shared_ptr<TVec> first, vector<shared_ptr<Term>> rest)
 	{
 		vector<shared_ptr<Term>> terms = first->getTerms();
 		terms.insert(terms.end(), rest.begin(), rest.end());
 		_terms = terms;
-		// public TVec(TVec first, params Term[] rest)
-		// : this(first.terms.Concat(rest ?? System.Linq.Enumerable.Empty<Term>()))
 	}
 
 	TVec::TVec(vector<shared_ptr<Term>> left, vector<shared_ptr<Term>> right,
@@ -60,41 +57,6 @@ namespace AutoDiff
 			_terms[i] = elemOp(input[i]);
 		}
 	}
-
-//	TVec::TVec(shared_ptr<Term> x)
-//	{
-//		_terms = vector<shared_ptr<Term>>();
-//		_terms.push_back(x);
-//	}
-//
-//	TVec::TVec(shared_ptr<Term> x, shared_ptr<Term> y) :
-//			TVec(x)
-//	{
-//		_terms.push_back(y);
-//	}
-//
-//	TVec::TVec(shared_ptr<Term> x, shared_ptr<Term> y, shared_ptr<Term> z) :
-//			TVec(x, y)
-//	{
-//		_terms.push_back(z);
-//	}
-//
-//	TVec::TVec(double x) :
-//			TVec(TermBuilder::constant(x))
-//	{
-//
-//	}
-//
-//	TVec::TVec(double x, double y) :
-//			TVec(TermBuilder::constant(x), TermBuilder::constant(y))
-//	{
-//
-//	}
-//	TVec::TVec(double x, double y, double z) :
-//			TVec(TermBuilder::constant(x), TermBuilder::constant(y), TermBuilder::constant(z))
-//	{
-//
-//	}
 
 	shared_ptr<Term> TVec::normSquared()
 	{
@@ -158,12 +120,6 @@ namespace AutoDiff
 
 	shared_ptr<TVec> TVec::crossProduct(shared_ptr<TVec> left, shared_ptr<TVec> right)
 	{
-//		vector<shared_ptr<Term>> terms;
-//		terms.push_back(left->getY() * right->getZ() - left->getZ() * right->getY());
-//		terms.push_back(left->getZ() * right->getX() - left->getX() * right->getZ());
-//		terms.push_back(left->getX() * right->getY() - left->getY() * right->getX());
-//		return make_shared<TVec>(begin(terms), end(terms));
-
 		return make_shared<TVec>(initializer_list<shared_ptr<Term>>{
 			left->getY() * right->getZ() - left->getZ() * right->getY(),
 			left->getZ() * right->getX() - left->getX() * right->getZ(),
@@ -228,4 +184,4 @@ namespace AutoDiff
 		return TVec::innerProduct(left, right);
 	}
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */

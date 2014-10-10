@@ -7,7 +7,7 @@
 
 #include "Gp.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 	Gp::Gp(vector<shared_ptr<Term>> args, shared_ptr<GaussianProcess> gp, int dc) :
 			Term()
@@ -51,4 +51,4 @@ namespace AutoDiff
 	{
 		return _divCount;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

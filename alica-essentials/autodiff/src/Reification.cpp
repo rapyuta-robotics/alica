@@ -7,7 +7,7 @@
 
 #include "Reification.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 	Reification::Reification(shared_ptr<Term> condition, double min, double max) :
 			Term()
@@ -53,4 +53,4 @@ namespace AutoDiff
 	{
 		return _max;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

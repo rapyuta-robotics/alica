@@ -10,7 +10,7 @@
 
 #include "Term.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class ConstPower : public Term
@@ -30,6 +30,6 @@ namespace AutoDiff
 		double _exponent;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* CONSTPOWER_H_ */

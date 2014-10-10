@@ -7,7 +7,7 @@
 
 #include "Zero.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	int Zero::accept(shared_ptr<ITermVisitor> visitor)
@@ -25,4 +25,4 @@ namespace AutoDiff
 	{
 		return shared_from_this();
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

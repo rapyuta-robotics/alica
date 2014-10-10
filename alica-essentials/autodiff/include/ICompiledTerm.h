@@ -13,7 +13,7 @@
 
 using namespace std;
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class ICompiledTerm
@@ -54,6 +54,6 @@ namespace AutoDiff
 // TODO:		ReadOnlyCollection<Variable> Variables { get; }
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* ICOMPILEDTERM_H_ */

@@ -13,7 +13,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 	LTConstraint::LTConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness) :
 			Term()
@@ -95,4 +95,4 @@ namespace AutoDiff
 	{
 		return _negatedform;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

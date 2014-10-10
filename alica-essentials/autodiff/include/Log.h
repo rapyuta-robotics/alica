@@ -10,7 +10,7 @@
 
 #include "Term.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class Log : public Term
@@ -29,6 +29,6 @@ namespace AutoDiff
 		shared_ptr<Term> _arg;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* LOG_H_ */

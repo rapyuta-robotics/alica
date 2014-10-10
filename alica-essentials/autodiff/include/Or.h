@@ -10,7 +10,7 @@
 
 #include "Term.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class Or : public Term
@@ -32,6 +32,6 @@ namespace AutoDiff
 		shared_ptr<Term> _right;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* OR_H_ */

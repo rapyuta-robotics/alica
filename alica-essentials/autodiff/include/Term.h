@@ -15,7 +15,7 @@
 
 using namespace std;
 
-namespace AutoDiff
+namespace autodiff
 {
 	enum AndType {
 		MIN,
@@ -102,6 +102,6 @@ namespace AutoDiff
 	shared_ptr<Term> operator<(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
 	shared_ptr<Term> operator<=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
 	shared_ptr<Term> operator>=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* TERM_H_ */

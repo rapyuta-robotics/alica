@@ -13,7 +13,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 	ConstPower::ConstPower(shared_ptr<Term> baseTerm, double exponent) :
 			Term()
@@ -74,4 +74,4 @@ namespace AutoDiff
 	{
 		return _exponent;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

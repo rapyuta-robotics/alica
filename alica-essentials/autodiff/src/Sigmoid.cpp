@@ -15,7 +15,7 @@
 #include <cmath>
 #include <limits>
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	Sigmoid::Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid) :
@@ -93,4 +93,4 @@ namespace AutoDiff
 	{
 		return _steepness;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

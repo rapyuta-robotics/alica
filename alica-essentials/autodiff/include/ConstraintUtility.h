@@ -10,7 +10,7 @@
 
 #include "Term.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class ConstraintUtility : public Term
@@ -32,6 +32,6 @@ namespace AutoDiff
 		shared_ptr<Term> _utility;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* CONSTRAINTUTILITY_H_ */

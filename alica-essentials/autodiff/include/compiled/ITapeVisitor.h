@@ -12,9 +12,9 @@
 
 using namespace std;
 
-namespace AutoDiff
+namespace autodiff
 {
-	namespace Compiled
+	namespace compiled
 	{
 		class CompiledAbs;
 		class CompiledAnd;
@@ -71,8 +71,8 @@ namespace AutoDiff
 			virtual void visit(shared_ptr<CompiledTermPower> elem) = 0;
 			virtual void visit(shared_ptr<CompiledVariable> var) = 0;
 		};
-	} // namespace Compiled
+	} // namespace compiled
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* ITAPEVISITOR_H_ */

@@ -10,9 +10,9 @@
 
 #include "TapeElement.h"
 
-namespace AutoDiff
+namespace autodiff
 {
-	namespace Compiled
+	namespace compiled
 	{
 
 		class CompiledAtan2 : public TapeElement
@@ -24,7 +24,7 @@ namespace AutoDiff
 			void accept(shared_ptr<ITapeVisitor> visitor);
 		};
 
-	} /* namespace Compiled */
-} /* namespace AutoDiff */
+	} /* namespace compiled */
+} /* namespace autodiff */
 
 #endif /* COMPILEDATAN2_H_ */

@@ -10,7 +10,7 @@
 
 #include "Term.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class Reification : public Term
@@ -35,6 +35,6 @@ namespace AutoDiff
 		double _max;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* REIFICATION_H_ */

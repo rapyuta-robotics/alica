@@ -13,7 +13,7 @@
 #include <cmath>
 #include <limits>
 
-namespace AutoDiff
+namespace autodiff
 {
 	LinSigmoid::LinSigmoid(shared_ptr<Term> arg) :
 			Term()
@@ -57,4 +57,4 @@ namespace AutoDiff
 	{
 		return _arg;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

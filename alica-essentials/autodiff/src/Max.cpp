@@ -12,7 +12,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 	Max::Max(shared_ptr<Term> left, shared_ptr<Term> right) :
 			Term()
@@ -78,4 +78,4 @@ namespace AutoDiff
 	{
 		return _right;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

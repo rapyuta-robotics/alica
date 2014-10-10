@@ -12,7 +12,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 	ConstraintUtility::ConstraintUtility(shared_ptr<Term> constraint, shared_ptr<Term> utility) :
 			Term()
@@ -53,4 +53,4 @@ namespace AutoDiff
 	{
 		return _utility;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

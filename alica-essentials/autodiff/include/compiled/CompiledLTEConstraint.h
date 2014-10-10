@@ -10,9 +10,9 @@
 
 #include "TapeElement.h"
 
-namespace AutoDiff
+namespace autodiff
 {
-	namespace Compiled
+	namespace compiled
 	{
 
 		class CompiledLTEConstraint : public TapeElement
@@ -25,7 +25,7 @@ namespace AutoDiff
 			void accept(shared_ptr<ITapeVisitor> visitor);
 		};
 
-	} /* namespace Compiled */
-} /* namespace AutoDiff */
+	} /* namespace compiled */
+} /* namespace autodiff */
 
 #endif /* COMPILEDLTECONSTRAINT_H_ */

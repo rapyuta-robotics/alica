@@ -12,7 +12,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	Constant::Constant(double value) :
@@ -42,4 +42,4 @@ namespace AutoDiff
 		return _value;
 	}
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */

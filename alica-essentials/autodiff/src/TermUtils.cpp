@@ -9,7 +9,7 @@
 
 #include "CompiledDifferentiator.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 	/**
 	 * Creates a compiled representation of a given term that allows efficient evaluation of the value/gradient.
@@ -58,4 +58,4 @@ namespace AutoDiff
 		vector<double> result = compile(term, variables)->differentiate(point).first;
 		return result;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

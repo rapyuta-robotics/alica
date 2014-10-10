@@ -15,9 +15,9 @@
 
 using namespace std;
 
-namespace AutoDiff
+namespace autodiff
 {
-	namespace Compiled
+	namespace compiled
 	{
 		class CompiledSum : public TapeElement
 		{
@@ -26,7 +26,7 @@ namespace AutoDiff
 
 			void accept(shared_ptr<ITapeVisitor> visitor);
 		};
-	} /* namespace Compiled */
-} /* namespace AutoDiff */
+	} /* namespace compiled */
+} /* namespace autodiff */
 
 #endif /* COMPILEDSUM_H_ */

@@ -13,9 +13,9 @@
 
 using namespace std;
 
-namespace AutoDiff
+namespace autodiff
 {
-	namespace Compiled
+	namespace compiled
 	{
 		struct InputEdge
 		{
@@ -38,7 +38,7 @@ namespace AutoDiff
 
 			virtual void accept(shared_ptr<ITapeVisitor> visitor) = 0;
 		};
-	} // namespace Compiled
-} /* namespace AutoDiff */
+	} // namespace compiled
+} /* namespace autodiff */
 
 #endif /* TAPEELEMENT_H_ */

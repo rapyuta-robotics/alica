@@ -7,9 +7,9 @@
 
 #include "Point2D.h"
 
-namespace CarpeNoctem
+namespace carpenoctem
 {
-	namespace Containers
+	namespace containers
 	{
 		Point2D::Point2D(double x, double y)
 		{
@@ -36,5 +36,5 @@ namespace CarpeNoctem
 		{
 			_y = y;
 		}
-	} /* namespace Containers */
-} /* namespace CarpeNoctem */
+	} /* namespace containers */
+} /* namespace carpenoctem */

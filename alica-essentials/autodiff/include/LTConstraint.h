@@ -10,7 +10,7 @@
 
 #include "Term.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 	class LTEConstraint;
 
@@ -37,6 +37,6 @@ namespace AutoDiff
 		shared_ptr<Term> _negatedform;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* LTCONSTRAINT_H_ */

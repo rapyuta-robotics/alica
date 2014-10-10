@@ -36,7 +36,7 @@
 #include <typeinfo>
 #include <limits>
 
-namespace AutoDiff
+namespace autodiff
 {
 	int Term::m_nextId = 0;
 
@@ -303,4 +303,4 @@ namespace AutoDiff
 	{
 		return make_shared<LTEConstraint>(right, left, Term::getConstraintSteepness());
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

@@ -12,7 +12,7 @@
 
 #include <vector>
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class Sum : public Term
@@ -31,6 +31,6 @@ namespace AutoDiff
 		vector<shared_ptr<Term>> _terms;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* SUM_H_ */

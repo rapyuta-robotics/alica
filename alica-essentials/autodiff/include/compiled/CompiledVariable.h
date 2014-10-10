@@ -14,9 +14,9 @@
 
 using namespace std;
 
-namespace AutoDiff
+namespace autodiff
 {
-	namespace Compiled
+	namespace compiled
 	{
 		class CompiledVariable : public TapeElement
 		{
@@ -24,7 +24,7 @@ namespace AutoDiff
 			void accept(shared_ptr<ITapeVisitor> visitor);
 		};
 
-	} /* namespace Compiled */
-} /* namespace AutoDiff */
+	} /* namespace compiled */
+} /* namespace autodiff */
 
 #endif /* COMPILEDVARIABLE_H_ */

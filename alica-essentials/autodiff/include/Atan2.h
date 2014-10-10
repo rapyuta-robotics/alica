@@ -10,7 +10,7 @@
 
 #include "Term.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class Atan2 : public Term
@@ -31,6 +31,6 @@ namespace AutoDiff
 		shared_ptr<Term> _right;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* ATAN2_H_ */

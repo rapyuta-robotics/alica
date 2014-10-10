@@ -13,7 +13,7 @@
 #include <cmath>
 #include <limits>
 
-namespace AutoDiff
+namespace autodiff
 {
 	Log::Log(shared_ptr<Term> arg) :
 			Term()
@@ -47,4 +47,4 @@ namespace AutoDiff
 	{
 		return _arg;
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

@@ -23,16 +23,16 @@
 
 #include <iostream>
 
-namespace Alica
+namespace alica
 {
-	namespace Reasoner
+	namespace reasoner
 	{
 		int GSolver::_fcounter = 0;
 
 		GSolver::GSolver()
 		{
-			AutoDiff::Term::setAnd(AutoDiff::AndType::AND);
-			AutoDiff::Term::setOr(AutoDiff::OrType::MAX);
+			Term::setAnd(AndType::AND);
+			Term::setOr(OrType::MAX);
 
 			_rResults = vector<shared_ptr<RpropResult>>();
 
@@ -74,19 +74,19 @@ namespace Alica
 			sw.close();
 		}
 
-		vector<double> GSolver::solve(shared_ptr<AutoDiff::Term> equation, vector<shared_ptr<AutoDiff::Variable>> args,
+		vector<double> GSolver::solve(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
 										vector<vector<double>> limits, double *util)
 		{
 			return solve(equation, args, limits, vector<vector<double>>(), numeric_limits<double>::max(), util);
 		}
 
-		bool GSolver::solveSimple(shared_ptr<AutoDiff::Term> equation, vector<shared_ptr<AutoDiff::Variable>> args,
+		bool GSolver::solveSimple(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
 									vector<vector<double>> limits)
 		{
 			return solveSimple(equation, args, limits, vector<vector<double>>());
 		}
 
-		vector<double> GSolver::solve(shared_ptr<AutoDiff::Term> equation, vector<shared_ptr<AutoDiff::Variable>> args,
+		vector<double> GSolver::solve(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
 										vector<vector<double>> limits, vector<vector<double>> seeds,
 										double sufficientUtility, double *util)
 		{
@@ -113,17 +113,17 @@ namespace Alica
 #ifdef AGGREGATE_CONSTANTS
 			equation = equation->aggregateConstants();
 #endif
-			_term = AutoDiff::TermUtils::compile(equation, args);
-			shared_ptr<AutoDiff::ConstraintUtility> cu = dynamic_pointer_cast<AutoDiff::ConstraintUtility>(equation);
-			bool utilIsConstant = dynamic_pointer_cast<AutoDiff::Constant>(cu->getUtility()) != 0;
+			_term = TermUtils::compile(equation, args);
+			shared_ptr<ConstraintUtility> cu = dynamic_pointer_cast<ConstraintUtility>(equation);
+			bool utilIsConstant = dynamic_pointer_cast<Constant>(cu->getUtility()) != 0;
 			if (utilIsConstant)
 			{
 				_utilityThreshold = 0.75;
 			}
-			bool constraintIsConstant = dynamic_pointer_cast<AutoDiff::Constant>(cu->getConstraint()) != 0;
+			bool constraintIsConstant = dynamic_pointer_cast<Constant>(cu->getConstraint()) != 0;
 			if (constraintIsConstant)
 			{
-				shared_ptr<AutoDiff::Constant> constraint = dynamic_pointer_cast<AutoDiff::Constant>(
+				shared_ptr<Constant> constraint = dynamic_pointer_cast<Constant>(
 						cu->getConstraint());
 				if (constraint->getValue() < 0.25)
 				{
@@ -175,8 +175,8 @@ namespace Alica
 				//if time allows, do an unconstrained run
 				if (!constraintIsConstant && !utilIsConstant && _seedWithUtilOptimum)
 				{
-					shared_ptr<AutoDiff::ICompiledTerm> curProb = _term;
-					_term = AutoDiff::TermUtils::compile(cu->getUtility(), args);
+					shared_ptr<ICompiledTerm> curProb = _term;
+					_term = TermUtils::compile(cu->getUtility(), args);
 					_runs++;
 					vector<double> utilitySeed = rPropLoop(vector<double>())->_finalValue;
 					_term = curProb;
@@ -234,7 +234,7 @@ namespace Alica
 			return res->_finalValue;
 		}
 
-		bool GSolver::solveSimple(shared_ptr<AutoDiff::Term> equation, vector<shared_ptr<AutoDiff::Variable>> args,
+		bool GSolver::solveSimple(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
 									vector<vector<double>> limits, vector<vector<double>> seeds)
 		{
 			_rResults.clear();
@@ -248,7 +248,7 @@ namespace Alica
 			}
 			equation = equation->aggregateConstants();
 
-			_term = AutoDiff::TermUtils::compile(equation, args);
+			_term = TermUtils::compile(equation, args);
 
 			_rpropStepWidth = vector<double>(_dim);
 			_rpropStepConvergenceThreshold = vector<double>(_dim);
@@ -292,8 +292,8 @@ namespace Alica
 			return false;
 		}
 
-		vector<double> GSolver::solveTest(shared_ptr<AutoDiff::Term> equation,
-											vector<shared_ptr<AutoDiff::Variable>> args, vector<vector<double>> limits)
+		vector<double> GSolver::solveTest(shared_ptr<Term> equation,
+											vector<shared_ptr<Variable>> args, vector<vector<double>> limits)
 		{
 #ifdef GSOLVER_LOG
 			initLog();
@@ -310,7 +310,7 @@ namespace Alica
 				_ranges[i] = _limits[i][1] - _limits[i][0];
 			}
 
-			_term = AutoDiff::TermUtils::compile(equation, args);
+			_term = TermUtils::compile(equation, args);
 
 			_rpropStepWidth = vector<double>(_dim);
 			_rpropStepConvergenceThreshold = vector<double>(_dim);
@@ -336,8 +336,8 @@ namespace Alica
 			return res;
 		}
 
-		vector<double> GSolver::solveTest(shared_ptr<AutoDiff::Term> equation,
-											vector<shared_ptr<AutoDiff::Variable>> args, vector<vector<double>> limits,
+		vector<double> GSolver::solveTest(shared_ptr<Term> equation,
+											vector<shared_ptr<Variable>> args, vector<vector<double>> limits,
 											int maxRuns, bool *found)
 		{
 #ifdef GSOLVER_LOG
@@ -355,7 +355,7 @@ namespace Alica
 				_ranges[i] = _limits[i][1] - _limits[i][0];
 			}
 
-			_term = AutoDiff::TermUtils::compile(equation, args);
+			_term = TermUtils::compile(equation, args);
 
 			_rpropStepWidth = vector<double>(_dim);
 			_rpropStepConvergenceThreshold = vector<double>(_dim);
@@ -833,5 +833,5 @@ namespace Alica
 //		{
 //			return left->_finalUtil > right->_finalUtil;
 //		}
-	} /* namespace Reasoner */
-} /* namespace Alica */
+	} /* namespace reasoner */
+} /* namespace alica */

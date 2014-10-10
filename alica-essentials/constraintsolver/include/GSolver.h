@@ -16,10 +16,11 @@
 #include <fstream>
 
 using namespace std;
+using namespace autodiff;
 
-namespace Alica
+namespace alica
 {
-	namespace Reasoner
+	namespace reasoner
 	{
 		class GSolver : public enable_shared_from_this<GSolver>
 		{
@@ -29,18 +30,18 @@ namespace Alica
 		public:
 			GSolver();
 
-			vector<double> solve(shared_ptr<AutoDiff::Term> equation, vector<shared_ptr<AutoDiff::Variable>> args,
+			vector<double> solve(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
 									vector<vector<double>> limits, double *util);
-			bool solveSimple(shared_ptr<AutoDiff::Term> equation, vector<shared_ptr<AutoDiff::Variable>> args,
+			bool solveSimple(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
 								vector<vector<double>> limits);
-			vector<double> solve(shared_ptr<AutoDiff::Term> equation, vector<shared_ptr<AutoDiff::Variable>> args,
+			vector<double> solve(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
 									vector<vector<double>> limits, vector<vector<double>> seeds,
 									double sufficientUtility, double *util);
-			bool solveSimple(shared_ptr<AutoDiff::Term> equation, vector<shared_ptr<AutoDiff::Variable>> args,
+			bool solveSimple(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
 								vector<vector<double>> limits, vector<vector<double>> seeds);
-			vector<double> solveTest(shared_ptr<AutoDiff::Term> equation, vector<shared_ptr<AutoDiff::Variable>> args,
+			vector<double> solveTest(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
 										vector<vector<double>> limits);
-			vector<double> solveTest(shared_ptr<AutoDiff::Term> equation, vector<shared_ptr<AutoDiff::Variable>> args,
+			vector<double> solveTest(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
 										vector<vector<double>> limits, int maxRuns, bool *found);
 
 			long getRuns();
@@ -95,7 +96,7 @@ namespace Alica
 			double _utilityThreshold;
 			ulong _maxSolveTime;
 			// //vector<double>[] seeds;
-			shared_ptr<AutoDiff::ICompiledTerm> _term;
+			shared_ptr<ICompiledTerm> _term;
 
 			ofstream sw;
 
@@ -108,7 +109,7 @@ namespace Alica
 			double _rPropConvergenceStepSize;
 
 		};
-	} /* namespace Reasoner */
-} /* namespace Alica */
+	} /* namespace reasoner */
+} /* namespace alica */
 
 #endif /* GSOLVER_H_ */

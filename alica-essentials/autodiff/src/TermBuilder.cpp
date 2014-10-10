@@ -25,7 +25,7 @@
 
 #include <cmath>
 
-namespace AutoDiff
+namespace autodiff
 {
 	/**
 	 * Builds a new constant term.
@@ -252,4 +252,4 @@ namespace AutoDiff
 		return ret;
 	}
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */

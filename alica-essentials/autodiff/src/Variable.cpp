@@ -9,7 +9,7 @@
 
 #include "TermBuilder.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 	int Variable::accept(shared_ptr<ITermVisitor> visitor) {
 		shared_ptr<Variable> thisCasted = dynamic_pointer_cast<Variable>(shared_from_this());
@@ -29,4 +29,4 @@ namespace AutoDiff
 			return TermBuilder::constant(0);
 		}
 	}
-} /* namespace AutoDiff */
+} /* namespace autodiff */

@@ -15,7 +15,7 @@
 
 using namespace std;
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class TermUtils
@@ -26,6 +26,6 @@ namespace AutoDiff
 		static vector<double> differentiate(shared_ptr<Term> term, vector<shared_ptr<Variable>> variables, vector<double> point);
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* TERMUTILS_H_ */

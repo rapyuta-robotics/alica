@@ -10,7 +10,7 @@
 
 #include "Term.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 	class Variable : public Term
 	{
@@ -20,6 +20,6 @@ namespace AutoDiff
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
 	};
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* AutoDiffVARIABLE_H_ */

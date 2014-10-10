@@ -10,7 +10,7 @@
 
 #include "Term.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 
 	class Sigmoid : public Term
@@ -33,6 +33,6 @@ namespace AutoDiff
 		double _steepness;
 	};
 
-} /* namespace AutoDiff */
+} /* namespace autodiff */
 
 #endif /* SIGMOID_H_ */
