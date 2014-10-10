@@ -7,6 +7,7 @@
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
 #include "engine/BasicBehaviour.h"
+#include "engine/IBehaviourPool.h"
 #include "engine/PlanBase.h"
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
@@ -16,6 +17,7 @@
 #include "TestConstraintCreator.h"
 #include "TestUtilityFunctionCreator.h"
 #include "Attack.h"
+#include "MidFieldStandard.h"
 
 class AlicaSimplePlan : public ::testing::Test
 {
@@ -79,7 +81,14 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 
 	EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1412761855746);
 	EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour()->getName(), string("Attack"));
-	//Assuming 30 Hz we expect at least 29*sleeptime calls on Attack
-	EXPECT_GT(((Attack*)&*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour())->callCounter, (sleepTime)*29);
+	//Assuming 30 Hz were 11 iterations are executed by MidFieldStandard, we expect at least 29*sleeptime-15 calls on Attack
+	EXPECT_GT(((Attack*)&*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour())->callCounter, (sleepTime)*29-15);
+	EXPECT_GT(((Attack*)&*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour())->initCounter, 0);
+	for(auto iter : *ae->getBehaviourPool()->getAvailableBehaviours())
+	{
+		if(iter.second->getName() == "MidFieldStandard") {
+			EXPECT_GT(((MidFieldStandard*)&*iter.second)->callCounter, 10);
+		}
+	}
 }
 

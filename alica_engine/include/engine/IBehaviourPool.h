@@ -16,6 +16,7 @@ namespace alica
 	class Behaviour;
 	class BasicBehaviour;
 	class IBehaviourCreator;
+	class BehaviourConfiguration;
 
 	class IBehaviourPool
 	{
@@ -51,6 +52,11 @@ namespace alica
 		 * Stops this engine module
 		 */
 		virtual void stopAll() = 0;
+
+		/**
+		 * Returns a map of all available behaviours
+		 */
+		virtual map<BehaviourConfiguration*, shared_ptr<BasicBehaviour> >* getAvailableBehaviours() = 0;
 	};
 
 } /* namespace alica */
