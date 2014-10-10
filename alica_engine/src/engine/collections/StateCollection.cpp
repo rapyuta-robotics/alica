@@ -162,6 +162,7 @@ namespace alica
 			if (this->robots[i] == robot)
 			{
 				this->states[i] = state;
+				return;
 			}
 		}
 		this->robots.push_back(robot);
