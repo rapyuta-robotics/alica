@@ -18,7 +18,7 @@ using namespace std;
 
 #include "AlicaElement.h"
 
-namespace AutoDiff
+namespace autodiff
 {
 	class Term;
 }
@@ -61,7 +61,7 @@ namespace alica
 		 * @param agentsInScope A shared_ptr<vector<int> >
 		 * @return A shared_ptr<list<vector<AutoDiff::Term* > > >
 		 */
-		virtual shared_ptr<list<vector<AutoDiff::Term*> > > getSortedTerms(RunningPlan* p, shared_ptr<vector<int> > agentsInScope) = 0;
+		virtual shared_ptr<list<vector<autodiff::Term*> > > getSortedTerms(RunningPlan* p, shared_ptr<vector<int> > agentsInScope) = 0;
 
 	private:
 		list<string> domainIdentifiers;

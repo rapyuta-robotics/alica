@@ -82,7 +82,7 @@ namespace alica
 	 * @param agentsInScope A shared_ptr<vector<int> >
 	 * @return shared_ptr<list<vector<AutoDiff::Term*> > >
 	 */
-	shared_ptr<list<vector<AutoDiff::Term*> > > ForallAgents::getSortedTerms(RunningPlan* plan, shared_ptr<vector<int> > agentsInScope)
+	shared_ptr<list<vector<autodiff::Term*> > > ForallAgents::getSortedTerms(RunningPlan* plan, shared_ptr<vector<int> > agentsInScope)
 	{
 		agentsInScope = nullptr;
 		if(this->isScopeIsPlan())
@@ -104,11 +104,11 @@ namespace alica
 		{
 			return nullptr;
 		}
-		shared_ptr<list<vector<AutoDiff::Term*> > > ret;
+		shared_ptr<list<vector<autodiff::Term*> > > ret;
 		ITeamObserver* to = AlicaEngine::getInstance()->getTeamObserver();
 		for(int r : *(agentsInScope))
 		{
-			vector<AutoDiff::Term*> terms = vector<AutoDiff::Term*>(this->getDomainIdentifiers().size());
+			vector<autodiff::Term*> terms = vector<autodiff::Term*>(this->getDomainIdentifiers().size());
 			RobotEngineData* re = to->getRobotById(r);
 			for(int i = 0; i < terms.size(); i++)
 			{

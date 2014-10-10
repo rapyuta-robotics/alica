@@ -16,7 +16,7 @@ namespace alica
 		this->solverVar = nullptr;
 	}
 
-	Variable::Variable(AutoDiff::Variable* v)
+	Variable::Variable(autodiff::Variable* v)
 	{
 		this->solverVar = v;
 	}
@@ -32,7 +32,7 @@ namespace alica
 		this->id = id;
 		this->name = name;
 		this->type = type;
-		this->solverVar = new AutoDiff::Variable();
+		this->solverVar = new autodiff::Variable();
 	}
 
 	string Variable::toString()
@@ -54,12 +54,12 @@ namespace alica
 		this->type = type;
 	}
 
-	AutoDiff::Variable* Variable::getSolverVar()
+	autodiff::Variable* Variable::getSolverVar()
 	{
 		return solverVar;
 	}
 
-	void alica::Variable::setSolverVar(AutoDiff::Variable* solverVar)
+	void alica::Variable::setSolverVar(autodiff::Variable* solverVar)
 	{
 		this->solverVar = solverVar;
 	}
