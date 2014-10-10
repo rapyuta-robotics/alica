@@ -87,7 +87,7 @@ TEST(AutoDiffTest, GSOLVER)
 	double actual = TermUtils::evaluate(csu, vars, res);
 	cout << "Result:" << actual << endl;
 }
-
+/*
 TEST(AutoDiffTest, GSOLVER_UTIL)
 {
 	// 12000 * 18000
@@ -167,7 +167,7 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 	double actual = TermUtils::evaluate(csu, vars, res);
 	cout << "Result:" << actual << endl;
 }
-
+*/
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {
