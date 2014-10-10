@@ -21,6 +21,7 @@ namespace alica
 		virtual ~Attack();
 		virtual void run(void* msg);
 		int callCounter;
+		int initCounter;
 
 	protected:
 		virtual void initialiseParameters();

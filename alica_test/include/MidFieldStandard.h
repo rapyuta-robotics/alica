@@ -20,8 +20,8 @@ namespace alica
 		MidFieldStandard();
 		virtual ~MidFieldStandard();
 		virtual void run(void* msg);
-	protected:
 		int callCounter;
+	protected:
 		virtual void initialiseParameters();
 	};
 

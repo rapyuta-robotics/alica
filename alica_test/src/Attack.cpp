@@ -15,6 +15,7 @@ namespace alica
 	Attack::Attack() : BasicBehaviour("Attack")
 	{
 		this->callCounter = 0;
+		this->initCounter = 0;
 	}
 
 	Attack::~Attack()
@@ -23,11 +24,12 @@ namespace alica
 
 	void Attack::run(void* msg)
 	{
-		cout << "Attack was called " << callCounter++ << " times!" << endl;
+		callCounter++;
 	}
 
 	void Attack::initialiseParameters()
 	{
+		initCounter++;
 	}
 
 } /* namespace alica */

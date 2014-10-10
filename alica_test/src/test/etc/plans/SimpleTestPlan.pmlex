@@ -32,4 +32,8 @@
     <key href="SimpleTestPlan.pml#1412781707952"/>
     <value xPos="33" yPos="-22"/>
   </extensions>
+  <extensions>
+    <key href="Behaviour/MidFieldStandard.beh#1402488712657"/>
+    <value/>
+  </extensions>
 </uiextensionmodel:PmlUiExtensionMap>

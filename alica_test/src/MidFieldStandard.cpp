@@ -21,11 +21,15 @@ namespace alica
 
 	void MidFieldStandard::run(void* msg)
 	{
-		cout << "MidFieldStandard was called " << callCounter++ << " times!" << endl;
+		callCounter++;
+		if(callCounter>10) {
+			this->success = true;
+		}
 	}
 
 	void MidFieldStandard::initialiseParameters()
 	{
+		this->callCounter = 0;
 	}
 
 } /* namespace alica */

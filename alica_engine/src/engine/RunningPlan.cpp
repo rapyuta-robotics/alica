@@ -239,26 +239,26 @@ namespace alica
 		return this->activeState;
 	}
 	void RunningPlan::setActiveState(State* s)
+	{
+		if (this->activeState != s)
 		{
-			if (this->activeState != s)
+			this->activeState = s;
+			this->stateStartTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
+			if (this->activeState != nullptr)
 			{
-				this->activeState = s;
-				this->stateStartTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
-				if (this->activeState != nullptr)
+				if (this->activeState->isFailureState())
 				{
-					if (this->activeState->isFailureState())
-					{
-						this->status = PlanStatus::Failed;
-					}
-					else if (this->activeState->isSuccessState())
-					{
-						this->assignment->getEpSuccessMapping()->getRobots(this->activeEntryPoint)->push_back(this->ownId);
-						this->to->getOwnEngineData()->getSuccessMarks()->markSuccessfull(this->plan,
-																							this->activeEntryPoint);
-					}
+					this->status = PlanStatus::Failed;
+				}
+				else if (this->activeState->isSuccessState())
+				{
+					this->assignment->getEpSuccessMapping()->getRobots(this->activeEntryPoint)->push_back(this->ownId);
+					this->to->getOwnEngineData()->getSuccessMarks()->markSuccessfull(this->plan,
+																						this->activeEntryPoint);
 				}
 			}
 		}
+	}
 
 	void RunningPlan::addChildren(shared_ptr<list<shared_ptr<RunningPlan>>> runningPlans)
 	{
@@ -719,11 +719,14 @@ namespace alica
 			{
 				return true;
 			}
-			for (shared_ptr<list<int> > successes : (*iter)->getAssignment()->getEpSuccessMapping()->getRobots())
+			if ((*iter)->getAssignment() != nullptr)
 			{
-				if (find(successes->begin(), successes->end(), this->ownId) != successes->end())
+				for (shared_ptr<list<int> > successes : (*iter)->getAssignment()->getEpSuccessMapping()->getRobots())
 				{
-					return true;
+					if (find(successes->begin(), successes->end(), this->ownId) != successes->end())
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -888,7 +891,8 @@ namespace alica
 					else
 					{ //robot was not expected to be here during protected assignment time, add it.
 						this->getAssignment()->addRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
-						aldif->getAdditions().push_back(new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId()));
+						aldif->getAdditions().push_back(
+								new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId()));
 
 					}
 				}
@@ -898,7 +902,8 @@ namespace alica
 					ret |= this->getAssignment()->updateRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
 					if (spt->getEntryPoint() != ep)
 					{
-						aldif->getAdditions().push_back(new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId()));
+						aldif->getAdditions().push_back(
+								new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId()));
 						if (ep != nullptr)
 							aldif->getSubtractions().push_back(new EntryPointRobotPair(ep, spt->getRobotId()));
 					}
@@ -1013,13 +1018,13 @@ namespace alica
 				continue;
 			}
 			list<shared_ptr<SimplePlanTree> > newcspts = list<shared_ptr<SimplePlanTree> >();
-			for(shared_ptr<SimplePlanTree> spt : spts)
+			for (shared_ptr<SimplePlanTree> spt : spts)
 			{
-				if(spt->getState() == this->activeState)
+				if (spt->getState() == this->activeState)
 				{
-					for(shared_ptr<SimplePlanTree> cspt : spt->getChildren())
+					for (shared_ptr<SimplePlanTree> cspt : spt->getChildren())
 					{
-						if(cspt->getState()->getInPlan() == r->getPlan())
+						if (cspt->getState()->getInPlan() == r->getPlan())
 						{
 							newcspts.push_back(cspt);
 							break;
@@ -1135,7 +1140,8 @@ namespace alica
 		return false;
 	}
 
-	int RunningPlan::getOwnID() {
+	int RunningPlan::getOwnID()
+	{
 		return this->ownId;
 	}
 
