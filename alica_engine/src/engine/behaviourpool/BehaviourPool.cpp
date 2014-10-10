@@ -135,4 +135,9 @@ namespace alica
 		}
 	}
 
+
+	map<BehaviourConfiguration*, shared_ptr<BasicBehaviour> >* BehaviourPool::getAvailableBehaviours() {
+		return availableBehaviours;
+	}
+
 } /* namespace alica */
