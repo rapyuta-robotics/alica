@@ -420,7 +420,7 @@ namespace alica
 
 		for (Transition* t : r->getActiveState()->getOutTransitions())
 		{
-			if (t->getSyncTransition() == nullptr)
+			if (t->getSyncTransition() != nullptr)
 				continue;
 			if (t->evalCondition(r))
 			{

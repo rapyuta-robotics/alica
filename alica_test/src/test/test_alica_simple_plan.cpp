@@ -2,9 +2,11 @@
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
 #include "engine/IAlicaCommunication.h"
+#include "engine/model/State.h"
 #include "TestBehaviourCreator.h"
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
+#include "engine/BasicBehaviour.h"
 #include "engine/PlanBase.h"
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
@@ -13,6 +15,7 @@
 #include "TestConditionCreator.h"
 #include "TestConstraintCreator.h"
 #include "TestUtilityFunctionCreator.h"
+#include "Attack.h"
 
 class AlicaSimplePlan : public ::testing::Test
 {
@@ -71,10 +74,12 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 
 	ae->start();
 
-	sleep(3);
+	unsigned int sleepTime = 1;
+	sleep(sleepTime);
 
-	cerr << ae->getPlanBase()->getRootNode()->toString() << endl;
-	cerr << ae->getPlanBase()->getDeepestNode()->toString() << endl;
-
+	EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1412761855746);
+	EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour()->getName(), string("Attack"));
+	//Assuming 30 Hz we expect at least 29*sleeptime calls on Attack
+	EXPECT_GT(((Attack*)&*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour())->callCounter, (sleepTime)*29);
 }
 
