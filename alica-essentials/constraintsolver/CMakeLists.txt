@@ -102,7 +102,10 @@ include_directories(
 
 ## Declare a cpp library
 add_library(constraintsolver
+  src/ConstraintBuilder.cpp
   src/GSolver.cpp
+  src/MSLConstraintBuilder.cpp
+  src/Point2D.cpp
 )
 
 ## Declare a cpp executable

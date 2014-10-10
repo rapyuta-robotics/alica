@@ -221,8 +221,10 @@ namespace AutoDiff
 	shared_ptr<Term> TermBuilder::boundedRectangle(shared_ptr<TVec> arg, shared_ptr<TVec> leftLower,
 													shared_ptr<TVec> rightUpper, double steepness)
 	{
-		return boundedValue(arg->getX(), leftLower->getX(), rightUpper->getX(), steepness)
-				& boundedValue(arg->getY(), leftLower->getY(), rightUpper->getY(), steepness);
+		shared_ptr<Term> left = boundedValue(arg->getX(), leftLower->getX(), rightUpper->getX(), steepness);
+		shared_ptr<Term> right = boundedValue(arg->getY(), leftLower->getY(), rightUpper->getY(), steepness);
+		shared_ptr<Term> and_ = left & right;
+		return left & right;
 	}
 
 	shared_ptr<Term> TermBuilder::euclidianDistanceSqr(shared_ptr<TVec> one, shared_ptr<TVec> two)

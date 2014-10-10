@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <vector>
+#include <initializer_list>
 
 using namespace std;
 
@@ -21,16 +22,18 @@ namespace AutoDiff
 	{
 	public:
 		TVec(vector<shared_ptr<Term>> terms);
+		TVec(initializer_list<shared_ptr<Term>> terms);
+		TVec(initializer_list<double> values);
 		TVec(shared_ptr<TVec> first, vector<shared_ptr<Term>> rest);
 		TVec(vector<shared_ptr<Term>> left, vector<shared_ptr<Term>> right,
 				function<shared_ptr<Term>(shared_ptr<Term>, shared_ptr<Term>)> elemOp);
 		TVec(vector<shared_ptr<Term>> input, function<shared_ptr<Term>(shared_ptr<Term>)> elemOp);
-		TVec(shared_ptr<Term> x);
-		TVec(shared_ptr<Term> x, shared_ptr<Term> y);
-		TVec(shared_ptr<Term> x, shared_ptr<Term> y, shared_ptr<Term> z);
-		TVec(double x);
-		TVec(double x, double y);
-		TVec(double x, double y, double z);
+//		TVec(shared_ptr<Term> x);
+//		TVec(shared_ptr<Term> x, shared_ptr<Term> y);
+//		TVec(shared_ptr<Term> x, shared_ptr<Term> y, shared_ptr<Term> z);
+//		TVec(double x);
+//		TVec(double x, double y);
+//		TVec(double x, double y, double z);
 
 		shared_ptr<Term> normSquared();
 		shared_ptr<TVec> normalize();

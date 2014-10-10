@@ -65,9 +65,6 @@ namespace AutoDiff
 		static void setOr(OrType o);
 		static double getConstraintSteepness();
 		static void setConstraintSteepness(double constraintSteepness);
-
-//		friend bool operator==(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
-//		friend bool operator!=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
 	private:
 		const int m_id;
 		static int m_nextId;
@@ -100,6 +97,11 @@ namespace AutoDiff
 	shared_ptr<Term> operator|(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
 	shared_ptr<Term> operator%(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
 	shared_ptr<Term> operator^(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
+
+	shared_ptr<Term> operator>(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
+	shared_ptr<Term> operator<(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
+	shared_ptr<Term> operator<=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
+	shared_ptr<Term> operator>=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
 } /* namespace AutoDiff */
 
 #endif /* TERM_H_ */

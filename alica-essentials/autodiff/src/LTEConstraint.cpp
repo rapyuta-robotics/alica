@@ -21,7 +21,7 @@ namespace AutoDiff
 		_left = x;
 		_right = y;
 		_steppness = steppness;
-		_negatedform = NULL;
+		_negatedform = nullptr;
 	}
 
 	LTEConstraint::LTEConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness, shared_ptr<Term> negatedForm) :
@@ -69,7 +69,7 @@ namespace AutoDiff
 
 	shared_ptr<Term> LTEConstraint::negate()
 	{
-		if (!_negatedform)
+		if (!(_negatedform != nullptr))
 		{
 			_negatedform = make_shared<LTConstraint>(_left, _right, _steppness, shared_from_this());
 		}

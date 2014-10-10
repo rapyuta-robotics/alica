@@ -7,7 +7,7 @@
 
 #include "GSolver.h"
 
-//#define GSOLVER_LOG
+#define GSOLVER_LOG
 //#define ALWAYS_CHECK_THRESHOLD
 #define AGGREGATE_CONSTANTS
 
@@ -34,15 +34,12 @@ namespace Alica
 			AutoDiff::Term::setAnd(AutoDiff::AndType::AND);
 			AutoDiff::Term::setOr(AutoDiff::OrType::MAX);
 
-			// this.rand = new Random();
 			_rResults = vector<shared_ptr<RpropResult>>();
 
 			_seedWithUtilOptimum = true;
 			supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 			_maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
 			_maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1000000;
-//			_maxfevals = 100000000;
-//			_maxSolveTime = 25 * 1000000;
 			_rPropConvergenceStepSize = 1E-2;
 		}
 
@@ -108,6 +105,7 @@ namespace Alica
 			_dim = args.size();
 			_limits = limits;
 			_ranges = vector<double>(_dim);
+
 			for (int i = 0; i < _dim; ++i)
 			{
 				_ranges[i] = (_limits[i][1] - _limits[i][0]);
@@ -434,7 +432,7 @@ namespace Alica
 			{
 				if (std::isnan(seed[i]))
 				{
-					res->_initialValue[i] = rand() * _ranges[i] + _limits[i][0];
+					res->_initialValue[i] = ((double)rand() / RAND_MAX) * _ranges[i] + _limits[i][0];
 				}
 				else
 				{
@@ -445,7 +443,7 @@ namespace Alica
 			res->_initialUtil = tup.second;
 			res->_finalUtil = tup.second;
 
-			res->_finalValue.swap(res->_initialValue);
+			res->_finalValue = vector<double>(res->_initialValue);
 
 			return tup.first;
 		}
@@ -460,7 +458,7 @@ namespace Alica
 			{
 				for (int i = 0; i < _dim; ++i)
 				{
-					res->_initialValue[i] = rand() * _ranges[i] + _limits[i][0];
+					res->_initialValue[i] = ((double)rand() / RAND_MAX) * _ranges[i] + _limits[i][0];
 				}
 				_fevals++;
 				tup = _term->differentiate(res->_initialValue);
@@ -480,7 +478,7 @@ namespace Alica
 			res->_initialUtil = tup.second;
 			res->_finalUtil = tup.second;
 
-			res->_finalValue.swap(res->_initialValue);
+			res->_finalValue = vector<double>(res->_initialValue);
 
 			return tup.first;
 		}
@@ -513,7 +511,7 @@ namespace Alica
 
 			pair<vector<double>, double> tup;
 
-			curValue.swap(ret->_initialValue);
+			curValue = vector<double>(ret->_initialValue);
 
 			formerGradient = curGradient;
 
@@ -563,7 +561,7 @@ namespace Alica
 					if (curUtil > ret->_finalUtil)
 					{
 						ret->_finalUtil = curUtil;
-						ret->_finalValue.swap(curValue);
+						ret->_finalValue = vector<double>(curValue);
 					}
 
 					return ret;
@@ -597,7 +595,7 @@ namespace Alica
 					badcounter = 0;
 
 					ret->_finalUtil = curUtil;
-					ret->_finalValue.swap(curValue);
+					ret->_finalValue = vector<double>(curValue);
 
 #ifdef ALWAYS_CHECK_THRESHOLD
 					if (curUtil > _utilityThreshold)
@@ -653,7 +651,7 @@ namespace Alica
 
 			pair<vector<double>, double> tup;
 
-			curValue.swap(ret->_initialValue);
+			curValue = vector<double>(ret->_initialValue);
 
 			formerGradient = curGradient;
 
@@ -702,7 +700,7 @@ namespace Alica
 					badcounter = 0;
 
 					ret->_finalUtil = curUtil;
-					ret->_finalValue.swap(curValue);
+					ret->_finalValue = vector<double>(curValue);
 
 					if (curUtil > 0.75)
 					{

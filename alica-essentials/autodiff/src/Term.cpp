@@ -36,8 +36,6 @@
 #include <typeinfo>
 #include <limits>
 
-#include <iostream>
-
 namespace AutoDiff
 {
 	int Term::m_nextId = 0;
@@ -221,6 +219,7 @@ namespace AutoDiff
 
 	shared_ptr<Term> operator&(const shared_ptr<Term>& left, const shared_ptr<Term>& right)
 	{
+
 		if (Term::getAnd() == AndType::AND)
 		{
 			if (left == Term::TRUE || right == Term::FALSE)
@@ -304,14 +303,4 @@ namespace AutoDiff
 	{
 		return make_shared<LTEConstraint>(right, left, Term::getConstraintSteepness());
 	}
-
-//	bool operator==(const shared_ptr<Term>& left, const shared_ptr<Term>& right)
-//	{
-//		return &(*left) == &(*right);
-//	}
-//
-//	bool operator!=(const shared_ptr<Term>& left, const shared_ptr<Term>& right)
-//	{
-//		return !(left == right);
-//	}
 } /* namespace AutoDiff */

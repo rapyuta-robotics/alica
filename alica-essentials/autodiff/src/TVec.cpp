@@ -17,6 +17,21 @@ namespace AutoDiff
 		_terms = terms;
 	}
 
+	TVec::TVec(initializer_list<shared_ptr<Term>> terms)
+	{
+		_terms = terms;
+	}
+
+	TVec::TVec(initializer_list<double> values)
+	{
+		_terms = vector<shared_ptr<Term>>(values.size());
+		std::initializer_list<double>::iterator it;
+		int i = 0;
+		for (it = values.begin(); it != values.end(); ++it, ++i) {
+			_terms[i] = TermBuilder::constant(*it);
+		}
+	}
+
 	TVec::TVec(shared_ptr<TVec> first, vector<shared_ptr<Term>> rest) //:
 //			TVec(vector<shared_ptr<Term>>(first->getTerms(), rest))
 	{
@@ -46,40 +61,40 @@ namespace AutoDiff
 		}
 	}
 
-	TVec::TVec(shared_ptr<Term> x)
-	{
-		_terms = vector<shared_ptr<Term>>();
-		_terms.push_back(x);
-	}
-
-	TVec::TVec(shared_ptr<Term> x, shared_ptr<Term> y) :
-			TVec(x)
-	{
-		_terms.push_back(y);
-	}
-
-	TVec::TVec(shared_ptr<Term> x, shared_ptr<Term> y, shared_ptr<Term> z) :
-			TVec(x, y)
-	{
-		_terms.push_back(z);
-	}
-
-	TVec::TVec(double x) :
-			TVec(TermBuilder::constant(x))
-	{
-
-	}
-
-	TVec::TVec(double x, double y) :
-			TVec(TermBuilder::constant(x), TermBuilder::constant(y))
-	{
-
-	}
-	TVec::TVec(double x, double y, double z) :
-			TVec(TermBuilder::constant(x), TermBuilder::constant(y), TermBuilder::constant(z))
-	{
-
-	}
+//	TVec::TVec(shared_ptr<Term> x)
+//	{
+//		_terms = vector<shared_ptr<Term>>();
+//		_terms.push_back(x);
+//	}
+//
+//	TVec::TVec(shared_ptr<Term> x, shared_ptr<Term> y) :
+//			TVec(x)
+//	{
+//		_terms.push_back(y);
+//	}
+//
+//	TVec::TVec(shared_ptr<Term> x, shared_ptr<Term> y, shared_ptr<Term> z) :
+//			TVec(x, y)
+//	{
+//		_terms.push_back(z);
+//	}
+//
+//	TVec::TVec(double x) :
+//			TVec(TermBuilder::constant(x))
+//	{
+//
+//	}
+//
+//	TVec::TVec(double x, double y) :
+//			TVec(TermBuilder::constant(x), TermBuilder::constant(y))
+//	{
+//
+//	}
+//	TVec::TVec(double x, double y, double z) :
+//			TVec(TermBuilder::constant(x), TermBuilder::constant(y), TermBuilder::constant(z))
+//	{
+//
+//	}
 
 	shared_ptr<Term> TVec::normSquared()
 	{
@@ -143,14 +158,17 @@ namespace AutoDiff
 
 	shared_ptr<TVec> TVec::crossProduct(shared_ptr<TVec> left, shared_ptr<TVec> right)
 	{
-		vector<shared_ptr<Term>> terms;
-		terms.push_back(left->getY() * right->getZ() - left->getZ() * right->getY());
-		terms.push_back(left->getZ() * right->getX() - left->getX() * right->getZ());
-		terms.push_back(left->getX() * right->getY() - left->getY() * right->getX());
-		return make_shared<TVec>(terms);
-//		return make_shared<TVec>(left->getY() * right->getZ() - left->getZ() * right->getY(),
-//									left->getZ() * right->getX() - left->getX() * right->getZ(),
-//									left->getX() * right->getY() - left->getY() * right->getX());
+//		vector<shared_ptr<Term>> terms;
+//		terms.push_back(left->getY() * right->getZ() - left->getZ() * right->getY());
+//		terms.push_back(left->getZ() * right->getX() - left->getX() * right->getZ());
+//		terms.push_back(left->getX() * right->getY() - left->getY() * right->getX());
+//		return make_shared<TVec>(begin(terms), end(terms));
+
+		return make_shared<TVec>(initializer_list<shared_ptr<Term>>{
+			left->getY() * right->getZ() - left->getZ() * right->getY(),
+			left->getZ() * right->getX() - left->getX() * right->getZ(),
+			left->getX() * right->getY() - left->getY() * right->getX()
+		});
 	}
 
 	shared_ptr<Term> TVec::operator[](int index)
