@@ -37,6 +37,7 @@ namespace alica
 		void startBehaviour(shared_ptr<RunningPlan> rp);
 		void stopBehaviour(shared_ptr<RunningPlan> rp);
 		void stopAll();
+		map<BehaviourConfiguration*, shared_ptr<BasicBehaviour> >* getAvailableBehaviours();
 
 	private:
 		/**

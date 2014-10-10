@@ -332,14 +332,13 @@ namespace alica
 		shared_ptr<vector<int> > robots = make_shared<vector<int> >(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
 		copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
 						r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
-						back_inserter(*robots));
+						robots->begin()); //Was before: back_inserter(*robots)
 //		auto iter = r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin();
 //		for (int i = 0; i < robots->size();i++)
 //		{
 //			robots->at(i) = *iter;
 //			iter++;
 //		}
-
 
 		shared_ptr<list<shared_ptr<RunningPlan>> > children = this->ps->getPlansForState(
 				r, &r->getActiveState()->getPlans(),

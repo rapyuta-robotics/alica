@@ -3,7 +3,7 @@
   <conditions xsi:type="alica:RuntimeCondition" id="1412781693884" name="NewRuntimeCondition" comment="" conditionString="" pluginName="DefaultPlugin"/>
   <conditions xsi:type="alica:PreCondition" id="1412781707952" name="NewPreCondition" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
   <states id="1412252439926" name="TestState1" comment="" entryPoint="1412252439927">
-    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/Attack.beh#1402488866727</plans>
+    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/MidFieldStandard.beh#1402488712657</plans>
     <outTransitions>#1412761925032</outTransitions>
   </states>
   <states id="1412761855746" name="TestState2" comment="">
