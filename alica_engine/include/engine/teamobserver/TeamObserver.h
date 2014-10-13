@@ -71,7 +71,7 @@ namespace alica
 		EntryPoint* entryPointOfState(State* state);
 
 	protected:
-		static mutex simplePlanTreeMutex;
+		mutex simplePlanTreeMutex;
 		list<RobotEngineData*> allOtherRobots;
 		int myId;
 		RobotEngineData* me;
