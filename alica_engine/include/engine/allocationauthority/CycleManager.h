@@ -54,9 +54,9 @@ namespace alica
 	protected:
 		AlicaEngine* ae;
 		mutex allocationHistoryMutex;
-		static supplementary::SystemConfig* sc;
-		static int maxAllocationCycles;
-		static bool enabled;
+		supplementary::SystemConfig* sc;
+		int maxAllocationCycles;
+		bool enabled;
 		vector<AllocationDifference*> allocationHistory;
 		PlanRepository* pr;
 		int newestAllocationDifference;
@@ -68,12 +68,12 @@ namespace alica
 		alicaTime overrideTimestamp;
 		double intervalIncFactor;
 		double intervalDecFactor;
-		static alicaTime minimalOverrideTimeInterval;
-		static alicaTime maximalOverrideTimeInterval;
-		static alicaTime overrideShoutInterval;
-		static alicaTime overrideWaitInterval;
+		alicaTime minimalOverrideTimeInterval;
+		alicaTime maximalOverrideTimeInterval;
+		alicaTime overrideShoutInterval;
+		alicaTime overrideWaitInterval;
 		alicaTime overrideShoutTime;
-		static int historySize;
+		int historySize;
 		CycleState state;
 		RunningPlan* rp;
 		shared_ptr<AllocationAuthorityInfo> fixedAllocation;
