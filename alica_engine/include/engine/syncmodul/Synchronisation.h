@@ -28,13 +28,14 @@ namespace alica
 	struct SyncData;
 	struct SyncReady;
 	struct SyncTalk;
+	class AlicaEngine;
 
 
 	class Synchronisation
 	{
 	public:
-		Synchronisation();
-		Synchronisation(int myID, SyncTransition* st, SyncModul* sm);
+		Synchronisation(AlicaEngine* ae);
+		Synchronisation(AlicaEngine* ae, int myID, SyncTransition* st, SyncModul* sm);
 		virtual ~Synchronisation();
 		void setTick(unsigned long now);
 		void changeOwnData (long transitionID, bool conditionHolds);
@@ -49,6 +50,7 @@ namespace alica
 		void printMatrix();
 
 	protected:
+		AlicaEngine* ae;
 		mutex syncMutex;
 		SyncModul* syncModul;
 		SyncTransition* syncTransition;

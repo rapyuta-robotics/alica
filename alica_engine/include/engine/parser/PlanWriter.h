@@ -37,6 +37,7 @@ namespace alica
 	class EntryPoint;
 	class RoleSet;
 	class AbstractPlan;
+	class AlicaEngine;
 
 	/**
 	 * The PlanWriter can be used to store generated plans.
@@ -44,7 +45,7 @@ namespace alica
 	class PlanWriter
 	{
 	public:
-		PlanWriter(PlanRepository* rep);
+		PlanWriter(AlicaEngine* ae, PlanRepository* rep);
 		virtual ~PlanWriter();
 		void saveAllPlans();
 		void saveSinglePlan(Plan* p);
@@ -86,6 +87,7 @@ namespace alica
 
 
 	protected:
+		AlicaEngine* ae;
 		string tempPlanDir;
 		string configPath;
 		vector<AlicaElement*> plansToSave;

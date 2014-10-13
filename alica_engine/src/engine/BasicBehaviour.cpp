@@ -95,7 +95,7 @@ namespace alica
 	 */
 	int BasicBehaviour::getOwnId()
 	{
-		return AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
+		return this->runningPlan->getOwnID();
 	}
 
 	/**

@@ -14,10 +14,10 @@
 namespace alica
 {
 
-	RolePriority::RolePriority()
+	RolePriority::RolePriority(AlicaEngine* ae)
 	{
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-		this->roles = AlicaEngine::getInstance()->getPlanRepository()->getRoles();
+		this->roles = ae->getPlanRepository()->getRoles();
 
 		shared_ptr<vector<string> > priorities = (*sc)["Globals"]->getNames("Globals", "RolePriority", NULL);
 		int order = 0;

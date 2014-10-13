@@ -31,9 +31,9 @@ namespace alica
 	/**
 	 * Basic constructor
 	 */
-	RuleBook::RuleBook()
+	RuleBook::RuleBook(AlicaEngine* ae)
 	{
-		AlicaEngine* ae = AlicaEngine::getInstance();
+		this->ae = ae;
 		this->to = ae->getTeamObserver();
 		this->ps = ae->getPlanSelector();
 		this->sm = ae->getSyncModul();
@@ -57,10 +57,10 @@ namespace alica
 	{
 		if (masterPlan->getEntryPoints().size() != 1)
 		{
-			AlicaEngine::getInstance()->abort("RB: Masterplan does not have exactly one task!");
+			ae->abort("RB: Masterplan does not have exactly one task!");
 		}
 
-		shared_ptr<RunningPlan> main = make_shared<RunningPlan>(masterPlan);
+		shared_ptr<RunningPlan> main = make_shared<RunningPlan>(ae, masterPlan);
 		main->setAssignment(make_shared<Assignment>(masterPlan));
 
 		main->setAllocationNeeded(true);

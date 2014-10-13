@@ -1,3 +1,10 @@
+/*
+ * test_alica_multi_agent_plan.cpp
+ *
+ *  Created on: Oct 13, 2014
+ *      Author: Stefan Jakob
+ */
+
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
@@ -23,7 +30,7 @@
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/collections/StateCollection.h"
 
-class AlicaSimplePlan : public ::testing::Test
+class AlicaMultiAgent : public ::testing::Test
 {
 protected:
 	supplementary::SystemConfig* sc;
@@ -72,7 +79,7 @@ protected:
 /**
  * Tests whether it is possible to run a behaviour in a primitive plan.
  */
-TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
+TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 {
 
 	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "Roleset", "SimpleTestPlan", ".", false))
@@ -101,4 +108,5 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 		}
 	}
 }
+
 

@@ -29,7 +29,7 @@ namespace alica
 	class AuthorityManager
 	{
 	public:
-		AuthorityManager();
+		AuthorityManager(AlicaEngine* ae);
 		virtual ~AuthorityManager();
 		void init();
 		void close();

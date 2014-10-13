@@ -32,13 +32,14 @@ namespace alica
 	 * @param paraRobots robots to build an assignment for
 	 * @param a bool
 	 */
-	TaskAssignment::TaskAssignment(list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots)
+	TaskAssignment::TaskAssignment(AlicaEngine* ae,list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots)
 	{
 #ifdef EXPANSIONEVAL
 		this->expansionCount = 0;
 #endif
+		this->ae = ae;
 		this->planList = planList;
-		ITeamObserver* to = AlicaEngine::getInstance()->getTeamObserver();
+		ITeamObserver* to = ae->getTeamObserver();
 		this->robots = make_shared<vector<int> >(vector<int>(paraRobots->size()));
 		int k = 0;
 		for (int i : (*paraRobots))
@@ -204,7 +205,7 @@ namespace alica
 	bool TaskAssignment::addAlreadyAssignedRobots(PartialAssignment* pa,
 													map<int, shared_ptr<SimplePlanTree> >* simplePlanTreeMap)
 	{
-		int ownRobotId = AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
+		int ownRobotId = this->ae->getTeamObserver()->getOwnId();
 		bool haveToRevalute = false;
 		shared_ptr<SimplePlanTree> spt = nullptr;
 		for (int robot : (*this->robots))
