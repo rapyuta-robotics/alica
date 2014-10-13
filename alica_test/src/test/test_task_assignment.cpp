@@ -40,7 +40,7 @@ protected:
 	{
 		sc = supplementary::SystemConfig::getInstance();
 		sc->setHostname("zwerg");
-		ae = alica::AlicaEngine::getInstance();
+		ae = new alica::AlicaEngine();
 		bc = new alica::TestBehaviourCreator();
 		cc = new alica::TestConditionCreator();
 		uc = new alica::TestUtilityFunctionCreator();
@@ -71,7 +71,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 		robots->push_back(i);
 	}
 	auto planMap = ae->getPlanRepository()->getPlans();
-	auto rp = make_shared<alica::RunningPlan>((*planMap.find(1407152758497)).second);
+	auto rp = make_shared<alica::RunningPlan>(ae, (*planMap.find(1407152758497)).second);
 	list<alica::AbstractPlan*>* planList = new list<alica::AbstractPlan*>();
 	planList->push_back((*planMap.find(1407152758497)).second);
 	auto plans = ps->getPlansForState(rp, planList, robots);

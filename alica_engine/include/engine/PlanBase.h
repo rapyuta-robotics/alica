@@ -42,6 +42,7 @@ namespace alica
 	class IAlicaClock;
 	class Assignment;
 	class StateCollection;
+	class AlicaEngine;
 
 	/**
 	 * A PlanBase holds the internal representation of the plan graph and issues all operations on it.
@@ -50,7 +51,7 @@ namespace alica
 	class PlanBase
 	{
 	public:
-		PlanBase(Plan* masterplan);
+		PlanBase(AlicaEngine* ae, Plan* masterplan);
 		~PlanBase();
 		condition_variable* getStepModeCV();
 		const shared_ptr<RunningPlan> getRootNode() const;

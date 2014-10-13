@@ -44,6 +44,7 @@ namespace alica
 	class RoleTaskMapping;
 	class RoleSet;
 	class PlanningProblem;
+	class AlicaEngine;
 
 	/**
 	 * Constructs Model elements, i.e., objects inheriting from <see cref="PlanElement"/> given their XML representation.
@@ -51,7 +52,7 @@ namespace alica
 	class ModelFactory
 	{
 	public:
-		ModelFactory(PlanParser *p, PlanRepository* rep);
+		ModelFactory(AlicaEngine* ae, PlanParser *p, PlanRepository* rep);
 		virtual ~ModelFactory();
 
 		bool ignoreMasterPlanId;bool getIgnoreMasterPlanId();
@@ -157,6 +158,7 @@ namespace alica
 		void addElement(AlicaElement* ae);
 
 	protected:
+		AlicaEngine* ae;
 		void removeRedundancy();
 
 	};

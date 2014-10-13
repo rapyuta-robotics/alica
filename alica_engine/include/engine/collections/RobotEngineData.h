@@ -20,6 +20,7 @@ namespace alica
 	class SuccessMarks;
 	class Variable;
 	class Role;
+	class AlicaEngine;
 
 	/**
 	 * Basic Runtime information relating to a robot within the team
@@ -27,7 +28,7 @@ namespace alica
 	class RobotEngineData
 	{
 	public:
-		RobotEngineData(shared_ptr<RobotProperties> properties);
+		RobotEngineData(AlicaEngine* ae, shared_ptr<RobotProperties> properties);
 		virtual ~RobotEngineData();
 		bool isActive() const;
 		void setActive(bool active);
@@ -43,6 +44,7 @@ namespace alica
 		void setLastRole(Role* lastRole);
 
 	protected:
+		AlicaEngine* ae;
 		/**
 		 * The robot's RobotProperties
 		 */

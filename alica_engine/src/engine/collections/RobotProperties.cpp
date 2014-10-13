@@ -18,13 +18,13 @@ namespace alica
 	{
 	}
 
-	RobotProperties::RobotProperties(string name)
+	RobotProperties::RobotProperties(AlicaEngine* ae, string name)
 	{
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		this->id = (*sc)["Globals"]->tryGet<int>(-1, "Globals", "Team", name.c_str(), "ID", NULL);
 		this->name = name;
 		this->characteristics = map<string, Characteristic*>();
-		this->capabilities = AlicaEngine::getInstance()->getPlanRepository()->getCapabilities();
+		this->capabilities = ae->getPlanRepository()->getCapabilities();
 		string key = "";
 		string kvalue = "";
 		shared_ptr<vector<string> > caps = (*sc)["Globals"]->getNames("Globals", "Team", this->name.c_str(), NULL);

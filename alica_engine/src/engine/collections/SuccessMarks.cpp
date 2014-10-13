@@ -20,9 +20,9 @@ namespace alica
 	/**
 	 * Default Constructor
 	 */
-	SuccessMarks::SuccessMarks()
+	SuccessMarks::SuccessMarks(AlicaEngine* ae)
 	{
-
+		this->ae = ae;
 	}
 
 	SuccessMarks::~SuccessMarks()
@@ -89,9 +89,10 @@ namespace alica
 	 * Construct from a list of EntryPoint id, as received by a message
 	 * @param epIds A list<long>
 	 */
-	SuccessMarks::SuccessMarks(list<long> epIds)
+	SuccessMarks::SuccessMarks(AlicaEngine* ae, list<long> epIds)
 	{
-		map<long, EntryPoint*> eps = AlicaEngine::getInstance()->getPlanRepository()->getEntryPoints();
+		this->ae = ae;
+		map<long, EntryPoint*> eps = ae->getPlanRepository()->getEntryPoints();
 		for (long id : epIds)
 		{
 			EntryPoint* ep;
@@ -182,7 +183,7 @@ namespace alica
 	 */
 	bool SuccessMarks::succeeded(long planId, long entryPointId)
 	{
-		Plan* p = AlicaEngine::getInstance()->getPlanRepository()->getPlans().at(planId);
+		Plan* p = ae->getPlanRepository()->getPlans().at(planId);
 		EntryPoint* e = p->getEntryPoints().at(entryPointId);
 		return succeeded(p, e);
 	}

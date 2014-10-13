@@ -32,7 +32,7 @@ namespace alica
 
 	mutex TeamObserver::simplePlanTreeMutex;
 
-	TeamObserver::TeamObserver()
+	TeamObserver::TeamObserver(AlicaEngine* ae)
 	{
 		this->teamTimeOut = 0;
 		this->myId = 0;
@@ -40,7 +40,7 @@ namespace alica
 				map<int, shared_ptr<SimplePlanTree> >());
 		this->me = nullptr;
 		this->log = nullptr;
-		this->ae = nullptr;
+		this->ae = ae;
 		this->allOtherRobots = list<RobotEngineData*>();
 	}
 
@@ -63,7 +63,7 @@ namespace alica
 			if (re->getProperties()->getId() == rid)
 			{
 
-				re->setLastMessageTime(AlicaEngine::getInstance()->getIAlicaClock()->now());
+				re->setLastMessageTime(ae->getIAlicaClock()->now());
 				break;
 			}
 		}
@@ -72,7 +72,6 @@ namespace alica
 	void TeamObserver::init()
 	{
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-		this->ae = AlicaEngine::getInstance();
 		this->log = ae->getLog();
 
 		string ownPlayerName = ae->getRobotName();
@@ -82,11 +81,11 @@ namespace alica
 
 		for (int i = 0; i < playerNames->size(); i++)
 		{
-			shared_ptr<RobotProperties> rp = make_shared<RobotProperties>(playerNames->at(i));
+			shared_ptr<RobotProperties> rp = make_shared<RobotProperties>(ae, playerNames->at(i));
 			if (!foundSelf && playerNames->at(i).compare(ownPlayerName) == 0)
 			{
 				foundSelf = true;
-				this->me = new RobotEngineData(rp);
+				this->me = new RobotEngineData(ae, rp);
 				this->me->setActive(true);
 				this->myId = rp->getId();
 
@@ -99,21 +98,21 @@ namespace alica
 					{
 						stringstream ss;
 						ss << "TO: Found twice Robot ID " << rp->getId() << "in globals team section" << endl;
-						AlicaEngine::getInstance()->abort(ss.str());
+						ae->abort(ss.str());
 					}
 					if (rp->getId() == myId)
 					{
 						stringstream ss2;
 						ss2 << "TO: Found myself twice Robot ID " << rp->getId() << "in globals team section" << endl;
-						AlicaEngine::getInstance()->abort(ss2.str());
+						ae->abort(ss2.str());
 					}
 				}
-				this->allOtherRobots.push_back(new RobotEngineData(rp));
+				this->allOtherRobots.push_back(new RobotEngineData(ae, rp));
 			}
 		}
 		if (!foundSelf)
 		{
-			AlicaEngine::getInstance()->abort("TO: Could not find own robot name in Globals Id = " + ownPlayerName);
+			ae->abort("TO: Could not find own robot name in Globals Id = " + ownPlayerName);
 		}
 
 		if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull", NULL))
@@ -265,7 +264,7 @@ namespace alica
 
 	void TeamObserver::tick(shared_ptr<RunningPlan> root)
 	{
-		alicaTime time = AlicaEngine::getInstance()->getIAlicaClock()->now();
+		alicaTime time = ae->getIAlicaClock()->now();
 		bool changed = false;
 		vector<int> robotsAvail;
 		robotsAvail.push_back(this->myId);
@@ -613,8 +612,8 @@ namespace alica
 			cerr << "TO: Empty state list for robot " << robotId << endl;
 			return nullptr;
 		}
-		map<long, State*> states = AlicaEngine::getInstance()->getPlanRepository()->getStates();
-		alicaTime time = AlicaEngine::getInstance()->getIAlicaClock()->now();
+		map<long, State*> states = ae->getPlanRepository()->getStates();
+		alicaTime time = ae->getIAlicaClock()->now();
 		shared_ptr<SimplePlanTree> root = make_shared<SimplePlanTree>();
 		root->setRobotId(robotId);
 		root->setReceiveTime(time);

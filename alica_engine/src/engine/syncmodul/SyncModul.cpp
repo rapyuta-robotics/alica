@@ -20,9 +20,9 @@
 namespace alica
 {
 
-	SyncModul::SyncModul()
+	SyncModul::SyncModul(AlicaEngine* ae)
 	{
-		this->ae = nullptr;
+		this->ae = ae;
 		this->myId = 0;
 		this->pr = nullptr;
 		this->running = false;
@@ -40,7 +40,6 @@ namespace alica
 	{
 		this->ticks = 0;
 		this->running = true;
-		this->ae = AlicaEngine::getInstance();
 		this->myId = ae->getTeamObserver()->getOwnId();
 		this->pr = this->ae->getPlanRepository();
 		this->communicator = this->ae->getCommunicator();
@@ -79,7 +78,7 @@ namespace alica
 		}
 		else
 		{
-			s = new Synchronisation(myId, trans->getSyncTransition(), this);
+			s = new Synchronisation(ae, myId, trans->getSyncTransition(), this);
 			s->setTick(this->ticks);
 			s->changeOwnData(trans->getId(), holds);
 			{
@@ -200,7 +199,7 @@ namespace alica
 				else
 				{
 					cout << "SyncModul: HandleSyncTalk: create new synchronisation" << endl;
-					sync = new Synchronisation(this->myId, syncTrans, this);
+					sync = new Synchronisation(ae, this->myId, syncTrans, this);
 					synchSet.insert(pair<SyncTransition*, Synchronisation*>(syncTrans, sync));
 					doAck = sync->integrateSyncTalk(st, this->ticks);
 				}
