@@ -32,9 +32,10 @@
 namespace alica
 {
 
-	PlanSelector::PlanSelector()
+	PlanSelector::PlanSelector(AlicaEngine* ae)
 	{
-		this->to = AlicaEngine::getInstance()->getTeamObserver();
+		this->ae = ae;
+		this->to = ae->getTeamObserver();
 		PartialAssignment::init();
 	}
 
@@ -147,14 +148,14 @@ namespace alica
 		if (oldRp == nullptr)
 		{
 			// preassign other robots, because we dont need a similar assignment
-			rp = make_shared<RunningPlan>(relevantPlanType);
-			ta = new TaskAssignment(newPlanList, robotIDs, true);
+			rp = make_shared<RunningPlan>(ae, relevantPlanType);
+			ta = new TaskAssignment(this->ae, newPlanList, robotIDs, true);
 		}
 		else
 		{
 			// dont preassign other robots, because we need a similar assignment (not the same)
-			rp = make_shared<RunningPlan>(oldRp->getPlanType());
-			ta = new TaskAssignment(newPlanList, robotIDs, false);
+			rp = make_shared<RunningPlan>(ae, oldRp->getPlanType());
+			ta = new TaskAssignment(this->ae, newPlanList, robotIDs, false);
 			oldAss = oldRp->getAssignment();
 		}
 
@@ -264,7 +265,7 @@ namespace alica
 			bc = dynamic_cast<BehaviourConfiguration*>(ap);
 			if (bc != nullptr)
 			{
-				rp = make_shared<RunningPlan>(bc);
+				rp = make_shared<RunningPlan>(ae, bc);
 				// A BehaviourConfiguration is a Plan too (in this context)
 				rp->setPlan(bc);
 				rps->push_back(rp);
@@ -321,7 +322,7 @@ namespace alica
 							throw new exception();
 						}
 						//TODO implement method in planner
-						Plan* myP = AlicaEngine::getInstance()->getPlanner()->requestPlan(pp);
+						Plan* myP = ae->getPlanner()->requestPlan(pp);
 						planList = list<Plan*>();
 						planList.push_back(myP);
 						rp = this->createRunningPlan(planningParent, planList, robotIDs, nullptr, nullptr);

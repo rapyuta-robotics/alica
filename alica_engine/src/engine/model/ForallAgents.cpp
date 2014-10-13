@@ -21,9 +21,9 @@
 namespace alica
 {
 
-	ForallAgents::ForallAgents(long id) : Quantifier(id)
+	ForallAgents::ForallAgents(AlicaEngine* ae, long id) : Quantifier(id)
 	{
-
+		this->ae = ae;
 	}
 
 	ForallAgents::~ForallAgents()
@@ -59,7 +59,7 @@ namespace alica
 			return nullptr;
 		}
 		shared_ptr<list<vector<Variable*> > > ret;
-		ITeamObserver* to = AlicaEngine::getInstance()->getTeamObserver();
+		ITeamObserver* to = ae->getTeamObserver();
 		for(int r : *(agentsInScope))
 		{
 			vector<Variable*> terms = vector<Variable*>(this->getDomainIdentifiers().size());
@@ -105,7 +105,7 @@ namespace alica
 			return nullptr;
 		}
 		shared_ptr<list<vector<AutoDiff::Term*> > > ret;
-		ITeamObserver* to = AlicaEngine::getInstance()->getTeamObserver();
+		ITeamObserver* to = ae->getTeamObserver();
 		for(int r : *(agentsInScope))
 		{
 			vector<AutoDiff::Term*> terms = vector<AutoDiff::Term*>(this->getDomainIdentifiers().size());

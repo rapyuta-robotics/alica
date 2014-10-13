@@ -34,7 +34,6 @@ namespace alica
 	class BasicBehaviour
 	{
 	public:
-		BasicBehaviour();
 		BasicBehaviour(string name);
 		virtual ~BasicBehaviour();
 		virtual void run(void* msg) = 0;

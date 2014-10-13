@@ -27,6 +27,7 @@ namespace alica
 	class AbstractPlan;
 	class PlanType;
 	class Plan;
+	class AlicaEngine;
 
 	/**
 	 * Implements the task allocation algorithm
@@ -34,7 +35,7 @@ namespace alica
 	class PlanSelector : public virtual IPlanSelector
 	{
 	public:
-		PlanSelector();
+		PlanSelector(AlicaEngine* ae);
 		virtual ~PlanSelector();
 
 		virtual shared_ptr<RunningPlan> getBestSimilarAssignment(shared_ptr<RunningPlan> rp);
@@ -44,6 +45,7 @@ namespace alica
 
 	private:
 		ITeamObserver* to;
+		AlicaEngine* ae;
 		shared_ptr<list<shared_ptr<RunningPlan>> > getPlansForStateInternal(shared_ptr<RunningPlan> planningParent, list<alica::AbstractPlan*>* plans, shared_ptr<vector<int> > robotIDs);
 	};
 

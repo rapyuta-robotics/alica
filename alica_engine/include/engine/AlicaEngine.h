@@ -41,7 +41,9 @@ namespace alica
 	class AlicaEngine
 	{
 	public:
-		static AlicaEngine* getInstance();bool init(IBehaviourCreator* bc, IConditionCreator* cc,  IUtilityCreator* uc, IConstraintCreator* crc, string roleSetName, string masterPlanName,
+		AlicaEngine();
+//		static AlicaEngine* getInstance();
+		bool init(IBehaviourCreator* bc, IConditionCreator* cc,  IUtilityCreator* uc, IConstraintCreator* crc, string roleSetName, string masterPlanName,
 													string roleSetDir, bool stepEngine);
 		void shutdown();
 		void start();bool getStepEngine();
@@ -102,8 +104,7 @@ namespace alica
 		PlanBase* planBase;bool stepCalled;
 
 	private:
-		// private constructur/ destructor because of singleton
-		AlicaEngine();
+
 		~AlicaEngine();
 		/**
 		 * Set to have the engine's main loop wait on a signal via MayStep

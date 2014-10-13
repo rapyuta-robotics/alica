@@ -40,7 +40,7 @@ protected:
 
 
 		// setup the engine
-		ae = alica::AlicaEngine::getInstance();
+		ae = new alica::AlicaEngine();
 		bc = new alica::TestBehaviourCreator();
 		cc = new alica::TestConditionCreator();
 		uc = new alica::TestUtilityFunctionCreator();
@@ -67,7 +67,7 @@ TEST_F(PlanBaseTest, planBaseTest)
 {
 	//TODO test something
 	ae->start();
-	sleep(3);
+	sleep(1);
 }
 
 

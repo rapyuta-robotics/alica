@@ -44,6 +44,7 @@ namespace alica
 	class BehaviourConfiguration;
 	class IPlanTreeVisitor;
 	class SimplePlanTree;
+	class AlicaEngine;
 
 	/**
 	 * A RunningPlan represents a plan or a behaviour in execution, holding all information relevant at runtime.
@@ -51,10 +52,10 @@ namespace alica
 	class RunningPlan : public enable_shared_from_this<RunningPlan>
 	{
 	public:
-		RunningPlan();
-		RunningPlan(Plan* plan);
-		RunningPlan(PlanType* pt);
-		RunningPlan(BehaviourConfiguration* bc);
+		RunningPlan(AlicaEngine* ae);
+		RunningPlan(AlicaEngine* ae, Plan* plan);
+		RunningPlan(AlicaEngine* ae, PlanType* pt);
+		RunningPlan(AlicaEngine* ae, BehaviourConfiguration* bc);
 		virtual ~RunningPlan();
 		bool isBehaviour();
 		void setBehaviour(bool behaviour);
@@ -126,6 +127,7 @@ namespace alica
 		void setConstraintStore(ConstraintStore* constraintStore);
 
 	protected:
+		AlicaEngine* ae;
 		weak_ptr<RunningPlan> parent;
 		bool behaviour;
 		AbstractPlan* plan;

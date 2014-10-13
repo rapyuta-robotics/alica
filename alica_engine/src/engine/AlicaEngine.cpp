@@ -85,11 +85,11 @@ namespace alica
 	 * The method for getting the singleton instance.
 	 * @return A pointer to the AlicaEngine object, you must not delete.
 	 */
-	AlicaEngine * AlicaEngine::getInstance()
-	{
-		static AlicaEngine instance;
-		return &instance;
-	}
+//	AlicaEngine * AlicaEngine::getInstance()
+//	{
+//		static AlicaEngine instance;
+//		return &instance;
+//	}
 
 	/**
 	 * Intialise the engine
@@ -112,7 +112,7 @@ namespace alica
 		}
 		if (this->planParser == nullptr)
 		{
-			this->planParser = new PlanParser(this->planRepository);
+			this->planParser = new PlanParser(this, this->planRepository);
 		}
 		if (this->masterPlan == nullptr)
 		{
@@ -124,11 +124,11 @@ namespace alica
 		}
 		if (this->behaviourPool == nullptr)
 		{
-			this->behaviourPool = new BehaviourPool();
+			this->behaviourPool = new BehaviourPool(this);
 		}
 		if (this->teamObserver == nullptr)
 		{
-			this->teamObserver = new TeamObserver();
+			this->teamObserver = new TeamObserver(this);
 		}
 		if (this->roleAssignment == nullptr)
 		{
@@ -136,7 +136,7 @@ namespace alica
 		}
 		if (this->syncModul == nullptr)
 		{
-			this->syncModul = new SyncModul();
+			this->syncModul = new SyncModul(this);
 		}
 		if (this->expressionHandler == nullptr)
 		{
@@ -146,20 +146,20 @@ namespace alica
 		this->stepCalled = false;
 		bool everythingWorked = true;
 		everythingWorked &= this->behaviourPool->init(bc);
-		this->auth = new AuthorityManager();
+		this->auth = new AuthorityManager(this);
 		this->teamObserver->init();
-		this->log = new Logger();
+		this->log = new Logger(this);
 		this->roleAssignment->init();
 		if (planSelector == nullptr)
 		{
-			this->planSelector = new PlanSelector();
+			this->planSelector = new PlanSelector(this);
 		}
 		//TODO
 //		ConstraintHelper.Init(this.cSolver);
 		this->auth->init();
-		this->planBase = new PlanBase(this->masterPlan);
+		this->planBase = new PlanBase(this, this->masterPlan);
 		this->expressionHandler->attachAll();
-		UtilityFunction::initDataStructures();
+		UtilityFunction::initDataStructures(this);
 		this->syncModul->init();
 		return everythingWorked;
 	}
