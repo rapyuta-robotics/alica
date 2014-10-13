@@ -109,7 +109,7 @@ namespace alica
 													shared_ptr<vector<int> > robotIDs, shared_ptr<RunningPlan> oldRp,
 													PlanType* relevantPlanType)
 	{
-		list<Plan*> newPlanList = list<Plan*>();
+		list<Plan*> newPlanList;
 		// REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
 		for (Plan* plan : plans)
 		{
@@ -149,13 +149,13 @@ namespace alica
 		{
 			// preassign other robots, because we dont need a similar assignment
 			rp = make_shared<RunningPlan>(ae, relevantPlanType);
-			ta = new TaskAssignment(this->ae, newPlanList, robotIDs, true);
+			ta = new TaskAssignment(this->ae->getTeamObserver(), newPlanList, robotIDs, true);
 		}
 		else
 		{
 			// dont preassign other robots, because we need a similar assignment (not the same)
 			rp = make_shared<RunningPlan>(ae, oldRp->getPlanType());
-			ta = new TaskAssignment(this->ae, newPlanList, robotIDs, false);
+			ta = new TaskAssignment(this->ae->getTeamObserver(), newPlanList, robotIDs, false);
 			oldAss = oldRp->getAssignment();
 		}
 

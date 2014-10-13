@@ -26,27 +26,27 @@
 
 namespace alica
 {
-	supplementary::SystemConfig* CycleManager::sc = supplementary::SystemConfig::getInstance();
-	int CycleManager::maxAllocationCycles = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "CycleCount");
-	bool CycleManager::enabled = (*sc)["Alica"]->get<bool>("Alica", "CycleDetection", "Enabled");
-	alicaTime CycleManager::minimalOverrideTimeInterval = (*sc)["Alica"]->get<unsigned long>(
-			"Alica", "CycleDetection", "MinimalAuthorityTimeInterval") * 1000000;
-	alicaTime CycleManager::maximalOverrideTimeInterval = (*sc)["Alica"]->get<unsigned long>(
-			"Alica", "CycleDetection", "MaximalAuthorityTimeInterval") * 1000000;
-	alicaTime CycleManager::overrideShoutInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
-																							"MessageTimeInterval")
-			* 1000000;
-	alicaTime CycleManager::overrideWaitInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
-																							"MessageWaitTimeInterval")
-			* 1000000;
-	int CycleManager::historySize = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize");
-
 	/**
 	 * Construct a CycleManager for a RunningPlan
 	 * @param p A RunningPlan
 	 */
 	CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
 	{
+		sc = supplementary::SystemConfig::getInstance();
+		maxAllocationCycles = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "CycleCount");
+		enabled = (*sc)["Alica"]->get<bool>("Alica", "CycleDetection", "Enabled");
+		minimalOverrideTimeInterval = (*sc)["Alica"]->get<unsigned long>(
+				"Alica", "CycleDetection", "MinimalAuthorityTimeInterval") * 1000000;
+		maximalOverrideTimeInterval = (*sc)["Alica"]->get<unsigned long>(
+				"Alica", "CycleDetection", "MaximalAuthorityTimeInterval") * 1000000;
+		overrideShoutInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
+																							"MessageTimeInterval")
+				* 1000000;
+		overrideWaitInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
+																							"MessageWaitTimeInterval")
+				* 1000000;
+		historySize = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize");
+
 		this->ae = ae;
 		this->intervalIncFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalIncreaseFactor");
 		this->intervalDecFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalDecreaseFactor");
@@ -249,7 +249,7 @@ namespace alica
 		if (rid > myID)
 		{
 			this->state = CycleState::overridden;
-			this->overrideShoutTime =ae->getIAlicaClock()->now();
+			this->overrideShoutTime = ae->getIAlicaClock()->now();
 			this->fixedAllocation = aai;
 		}
 		else
@@ -270,8 +270,7 @@ namespace alica
 	bool alica::CycleManager::needsSending()
 	{
 		return this->state == CycleState::overriding
-				&& (this->overrideShoutTime + overrideShoutInterval
-						< ae->getIAlicaClock()->now());
+				&& (this->overrideShoutTime + overrideShoutInterval < ae->getIAlicaClock()->now());
 	}
 
 	/**

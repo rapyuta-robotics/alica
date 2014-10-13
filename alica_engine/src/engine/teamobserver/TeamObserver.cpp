@@ -30,8 +30,6 @@
 namespace alica
 {
 
-	mutex TeamObserver::simplePlanTreeMutex;
-
 	TeamObserver::TeamObserver(AlicaEngine* ae)
 	{
 		this->teamTimeOut = 0;
