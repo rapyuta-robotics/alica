@@ -104,6 +104,7 @@ namespace alica
 							string roleSetName, string masterPlanName, string roleSetDir,
 							bool stepEngine)
 	{
+		this->terminating = false;
 		this->stepEngine = stepEngine;
 		if (this->planRepository == nullptr)
 		{
