@@ -201,6 +201,7 @@ namespace alica
 		{
 			mapRoleToRobot(rp);
 		}
+		delete rp;
 	}
 
 	void RoleAssignment::setCommunication(IAlicaCommunication* communication)

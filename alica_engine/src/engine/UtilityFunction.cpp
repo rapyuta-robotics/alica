@@ -45,6 +45,10 @@ namespace alica
 		for(auto pair : this->priorityMartix) {
 			delete pair.first;
 		}
+		delete this->simUI;
+		delete this->priResult;
+		delete this->lookupStruct;
+
 	}
 
 	list<USummand*>& UtilityFunction::getUtilSummands()
