@@ -6,6 +6,7 @@
  */
 
 #include <engine/planselector/PlanSelector.h>
+#include <engine/planselector/PartialAssignmentPool.h>
 #include "engine/AlicaEngine.h"
 #include "engine/teamobserver/TeamObserver.h"
 #include "engine/planselector/PartialAssignment.h"
@@ -32,16 +33,15 @@
 namespace alica
 {
 
-	PlanSelector::PlanSelector(AlicaEngine* ae)
+	PlanSelector::PlanSelector(AlicaEngine* ae, PartialAssignmentPool* pap)
 	{
 		this->ae = ae;
 		this->to = ae->getTeamObserver();
-		PartialAssignment::init();
+		this->pap = pap;
 	}
 
 	PlanSelector::~PlanSelector()
 	{
-		PartialAssignment::cleanUp();
 	}
 
 	/**
@@ -50,7 +50,7 @@ namespace alica
 	shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp)
 	{
 		// Reset set index of the partial assignment multiton
-		PartialAssignment::reset();
+		PartialAssignment::reset(pap);
 		// CREATE NEW PLAN LIST
 		list<Plan*> newPlanList;
 		if (rp->getPlanType() == nullptr)
@@ -73,7 +73,7 @@ namespace alica
 	shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp, shared_ptr<vector<int> > robots)
 	{
 		// Reset set index of the partial assignment object pool
-		PartialAssignment::reset();
+		PartialAssignment::reset(pap);
 		// CREATE NEW PLAN LIST
 		list<Plan*> newPlanList;
 		if (rp->getPlanType() == nullptr)
@@ -99,7 +99,7 @@ namespace alica
 	                                                               list<alica::AbstractPlan*>* plans,
 																	shared_ptr<vector<int> > robotIDs)
 	{
-		PartialAssignment::reset();
+		PartialAssignment::reset(pap);
 		shared_ptr<list<shared_ptr<RunningPlan>> > ll = this->getPlansForStateInternal(planningParent, plans, robotIDs);
 		return ll;
 
@@ -149,13 +149,13 @@ namespace alica
 		{
 			// preassign other robots, because we dont need a similar assignment
 			rp = make_shared<RunningPlan>(ae, relevantPlanType);
-			ta = new TaskAssignment(this->ae->getTeamObserver(), newPlanList, robotIDs, true);
+			ta = new TaskAssignment(this->ae->getPartialAssignmentPool(), this->ae->getTeamObserver(), newPlanList, robotIDs, true);
 		}
 		else
 		{
 			// dont preassign other robots, because we need a similar assignment (not the same)
 			rp = make_shared<RunningPlan>(ae, oldRp->getPlanType());
-			ta = new TaskAssignment(this->ae->getTeamObserver(), newPlanList, robotIDs, false);
+			ta = new TaskAssignment(this->ae->getPartialAssignmentPool(), this->ae->getTeamObserver(), newPlanList, robotIDs, false);
 			oldAss = oldRp->getAssignment();
 		}
 

@@ -37,6 +37,7 @@ namespace alica
 	class IConstraintCreator;
 	class IUtilityCreator;
 	class ExpressionHandler;
+	class PartialAssignmentPool;
 
 	class AlicaEngine
 	{
@@ -78,6 +79,7 @@ namespace alica
 		void setIAlicaClock(IAlicaClock* clock);
 		void doStep();
 		void iterationComplete();
+		PartialAssignmentPool* getPartialAssignmentPool();
 
 		PlanBase* getPlanBase();
 
@@ -101,6 +103,7 @@ namespace alica
 		IAlicaCommunication* communicator;
 		IPlanner* planner;
 		IAlicaClock* alicaClock;
+		PartialAssignmentPool* pap;
 		PlanBase* planBase;bool stepCalled;
 
 	private:
