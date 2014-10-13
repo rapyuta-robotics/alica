@@ -21,6 +21,7 @@ namespace alica
 
 	class AbstractPlan;
 	class EntryPoint;
+	class AlicaEngine;
 
 	/**
 	 * Globally holds information about succeeded entrypoints for a specific robot
@@ -28,8 +29,8 @@ namespace alica
 	class SuccessMarks
 	{
 	public:
-		SuccessMarks();
-		SuccessMarks(list<long> epIds);
+		SuccessMarks(AlicaEngine* ae);
+		SuccessMarks(AlicaEngine* ae, list<long> epIds);
 		virtual ~SuccessMarks();
 
 
@@ -48,6 +49,7 @@ namespace alica
 
 	protected:
 		map<AbstractPlan*,shared_ptr<list<EntryPoint*> > > succesMarks;
+		AlicaEngine* ae;
 	};
 
 } /* namespace alica */

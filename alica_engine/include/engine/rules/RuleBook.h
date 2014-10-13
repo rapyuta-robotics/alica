@@ -30,6 +30,7 @@ namespace alica
 	class StateCollection;
 	class CycleManager;
 	class UtilityFunction;
+	class AlicaEngine;
 
 	/**
 	 * Defines the operational semantics of the used ALICA dialect.
@@ -37,7 +38,7 @@ namespace alica
 	class RuleBook
 	{
 	public:
-		RuleBook();
+		RuleBook(AlicaEngine* ae);
 		virtual ~RuleBook();
 		bool isChangeOccured() const;
 		void setChangeOccured(bool changeOccured);
@@ -46,6 +47,7 @@ namespace alica
 		shared_ptr<RunningPlan> initialisationRule(Plan* masterPlan);
 
 	protected:
+		AlicaEngine* ae;
 		ITeamObserver* to;
 		ISyncModul* sm;
 		int maxConsecutiveChanges;

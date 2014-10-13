@@ -25,13 +25,14 @@ namespace alica
 	 * Basic constructor
 	 * @param properties This robot's RobotProperties
 	 */
-	RobotEngineData::RobotEngineData(shared_ptr<RobotProperties> properties)
+	RobotEngineData::RobotEngineData(AlicaEngine* ae, shared_ptr<RobotProperties> properties)
 	{
+		this->ae = ae;
 		this->active = false;
 		this->lastMessageTime = 0;
 		this->properties = properties;
 		this->initSortedTerms();
-		this->successMarks = new SuccessMarks();
+		this->successMarks = new SuccessMarks(ae);
 		this->lastRole = nullptr;
 
 	}
@@ -86,7 +87,7 @@ namespace alica
 
 	void RobotEngineData::initSortedTerms()
 	{
-		map<long, Quantifier*> qs = AlicaEngine::getInstance()->getPlanRepository()->getQuantifiers();
+		map<long, Quantifier*> qs = ae->getPlanRepository()->getQuantifiers();
 		for (map<long, Quantifier*>::const_iterator iter = qs.begin(); iter != qs.end(); iter++)
 		{
 			if (typeid(iter->second) == typeid(ForallAgents))
@@ -127,10 +128,10 @@ namespace alica
 	{
 		long ret = (long)this->getProperties()->getId() << 32;
 		ret += (unsigned int) hash<string>()(s);
-		auto iterator = AlicaEngine::getInstance()->getPlanParser()->getParsedElements()->find(ret);
-		if(iterator != AlicaEngine::getInstance()->getPlanParser()->getParsedElements()->end())
+		auto iterator = this->ae->getPlanParser()->getParsedElements()->find(ret);
+		if(iterator != ae->getPlanParser()->getParsedElements()->end())
 		{
-			AlicaEngine::getInstance()->abort("TO: Hash Collision in generating unique ID: ", ret);
+			ae->abort("TO: Hash Collision in generating unique ID: ", ret);
 		}
 		return ret;
 	}

@@ -93,7 +93,7 @@ namespace alica
 	 * Set the scope of this quantifier, called by the ModelFactory
 	 * @param ae An AlicaElement
 	 */
-	void Quantifier::setScope(AlicaElement* ae)
+	void Quantifier::setScope(AlicaEngine* a, AlicaElement* ae)
 	{
 		scopeIsEntryPoint = (dynamic_cast<EntryPoint*>(ae) !=0);
 		scopeIsPlan = (dynamic_cast<Plan*>(ae) !=0 );
@@ -113,7 +113,7 @@ namespace alica
 		}
 		else
 		{
-			AlicaEngine::getInstance()->abort("Scope of Quantifier is not an entrypoint, plan, or state: ", ae);
+			a->abort("Scope of Quantifier is not an entrypoint, plan, or state: ", ae);
 		}
 	}
 

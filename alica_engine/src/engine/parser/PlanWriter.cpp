@@ -42,8 +42,9 @@ namespace alica
 
 	int PlanWriter::objectCounter = 0;
 
-	PlanWriter::PlanWriter(PlanRepository* rep)
+	PlanWriter::PlanWriter(AlicaEngine* ae, PlanRepository* rep)
 	{
+		this->ae = ae;
 		string path = supplementary::SystemConfig::getInstance()->getConfigPath();
 		this->tempPlanDir = supplementary::FileSystem::combinePaths(path, "plans/tmp/");
 		this->rep = rep;
@@ -644,7 +645,7 @@ namespace alica
 //		xp->SetAttributeNode(xsiType);
 		xp->SetAttribute("xmlns:xmi", "http://www.omg.org/XMI");
 		xp->SetAttribute("id",
-							to_string(AlicaEngine::getInstance()->getIAlicaClock()->now() + objectCounter++).c_str());
+							to_string(ae->getIAlicaClock()->now() + objectCounter++).c_str());
 		xp->SetAttribute("name", r->getName().c_str());
 		xp->SetAttribute("comment", r->getComment().c_str());
 		xp->SetAttribute("usableWithPlanID", to_string(r->getUsableWithPlanId()).c_str());
@@ -655,7 +656,7 @@ namespace alica
 			tinyxml2::XMLElement* xc = doc->NewElement("mappings");
 			xp->InsertEndChild(xc);
 			xc->SetAttribute(
-					"id", to_string(AlicaEngine::getInstance()->getIAlicaClock()->now() + objectCounter++).c_str());
+					"id", to_string(ae->getIAlicaClock()->now() + objectCounter++).c_str());
 			xc->SetAttribute("name", rtm->getName().c_str());
 			xc->SetAttribute("comment", rtm->getComment().c_str());
 			for (auto mapping : rtm->getTaskPriorities())
@@ -663,7 +664,7 @@ namespace alica
 				tinyxml2::XMLElement* xd = doc->NewElement("taskPriorities");
 				xc->InsertEndChild(xd);
 				xd->SetAttribute(
-						"id", to_string(AlicaEngine::getInstance()->getIAlicaClock()->now() + objectCounter++).c_str());
+						"id", to_string(ae->getIAlicaClock()->now() + objectCounter++).c_str());
 				xd->SetAttribute("name", "");
 				xd->SetAttribute("comment", "");
 				xd->SetAttribute("key", to_string(mapping.first).c_str());
@@ -690,7 +691,7 @@ namespace alica
 		xp->SetAttribute("xmlns:xmi", "http://www.omg.org/XMI");
 		xp->SetAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 		xp->SetAttribute("xmlns:xmi","http://www.omg.org/XMI");
-		xp->SetAttribute("id",to_string(AlicaEngine::getInstance()->getIAlicaClock()->now() + objectCounter++).c_str());
+		xp->SetAttribute("id",to_string(ae->getIAlicaClock()->now() + objectCounter++).c_str());
 		xp->SetAttribute("name",tr->getName().c_str());
 		xp->SetAttribute("comment",tr->getComment().c_str());
 		xp->SetAttribute("defaultTask",to_string(tr->getDefaultTask()).c_str());

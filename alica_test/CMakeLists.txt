@@ -112,6 +112,8 @@ file(GLOB_RECURSE alica_SOURCES "src/test/*.cpp")
 	src/TestConstraintCreator.cpp;
 	src/TestUtilityFunctionCreator.cpp;
 	src/SimpleTestPlan1412252439925.cpp;
+	src/MultiAgentTestMaster1413200842973.cpp
+	src/MultiAgentTestPlan1413200862180.cpp
 	src/SimpleTestPlan1412252439925Constraint.cpp
  )
 ## Declare a cpp library

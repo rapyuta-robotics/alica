@@ -30,6 +30,7 @@ namespace alica
 	class ITeamObserver;
 	class EntryPoint;
 	class State;
+	class AlicaEngine;
 
 	/**
 	 * The Plan Logger will write a log file according to the settings in the Alica.conf file.
@@ -37,7 +38,7 @@ namespace alica
 	class Logger : public IPlanTreeVisitor
 	{
 	public:
-		Logger();
+		Logger(AlicaEngine* ae);
 		virtual ~Logger();
 
 		void eventOccured(string event);
@@ -48,6 +49,7 @@ namespace alica
 
 
 	protected:
+		AlicaEngine* ae;
 		ITeamObserver* to;
 		bool active = false;
 		ofstream* fileWriter;

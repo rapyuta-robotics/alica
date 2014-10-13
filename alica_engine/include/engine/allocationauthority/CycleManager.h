@@ -29,6 +29,7 @@ namespace alica
 	class PlanRepository;
 	struct AllocationAuthorityInfo;
 	class Assignment;
+	class AlicaEngine;
 
 	/**
 	 * Responsibile for detecting cycles in assignment updates and reactions to these
@@ -36,7 +37,7 @@ namespace alica
 	class CycleManager
 	{
 	public:
-		CycleManager(RunningPlan* p);
+		CycleManager(AlicaEngine* ae, RunningPlan* p);
 		virtual ~CycleManager();
 		void update();
 		bool isOverridden();
@@ -51,6 +52,7 @@ namespace alica
 
 
 	protected:
+		AlicaEngine* ae;
 		mutex allocationHistoryMutex;
 		static supplementary::SystemConfig* sc;
 		static int maxAllocationCycles;

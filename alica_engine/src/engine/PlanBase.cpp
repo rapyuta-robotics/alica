@@ -31,7 +31,7 @@ namespace alica
 	 * Constructs the PlanBase given a top-level plan to execute
 	 * @param masterplan A Plan
 	 */
-	PlanBase::PlanBase(Plan* masterPlan)
+	PlanBase::PlanBase(AlicaEngine* ae, Plan* masterPlan)
 	{
 		this->mainThread = nullptr;
 		this->treeDepth = 0;
@@ -44,14 +44,14 @@ namespace alica
 		this->log = nullptr;
 		this->rootNode = nullptr;
 		this->masterPlan = masterPlan;
-		this->ae = AlicaEngine::getInstance();
+		this->ae = ae;
 		this->teamObserver = ae->getTeamObserver();
 		this->syncModel = ae->getSyncModul();
 		this->authModul = ae->getAuth();
 		this->ra = ae->getRoleAssignment();
 		this->alicaClock = ae->getIAlicaClock();
 
-		this->ruleBook = new RuleBook();
+		this->ruleBook = new RuleBook(ae);
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 
 		double freq = (*sc)["Alica"]->get<double>("Alica.EngineFrequency", NULL);
@@ -65,7 +65,7 @@ namespace alica
 
 		if (minbcfreq > maxbcfreq)
 		{
-			AlicaEngine::getInstance()->abort(
+			ae->abort(
 					"PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
 		}
 

@@ -45,8 +45,9 @@ namespace alica
 	 * Construct a CycleManager for a RunningPlan
 	 * @param p A RunningPlan
 	 */
-	CycleManager::CycleManager(RunningPlan* p)
+	CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
 	{
+		this->ae = ae;
 		this->intervalIncFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalIncreaseFactor");
 		this->intervalDecFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalDecreaseFactor");
 		this->allocationHistory = vector<AllocationDifference*>(this->historySize);
@@ -57,8 +58,8 @@ namespace alica
 		this->newestAllocationDifference = 0;
 		this->state = CycleState::observing;
 		this->rp = p;
-		this->myID = AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
-		this->pr = AlicaEngine::getInstance()->getPlanRepository();
+		this->myID = ae->getTeamObserver()->getOwnId();
+		this->pr = ae->getPlanRepository();
 		this->overrideTimestamp = 0;
 		this->overrideShoutTime = 0;
 		this->fixedAllocation = nullptr;
@@ -99,7 +100,7 @@ namespace alica
 				this->overrideShoutTime = 0;
 				cout << "Assuming Authority for " << this->rp->getPlan()->getAuthorityTimeInterval() / 1000000000.0
 						<< "sec!" << endl;
-				this->overrideTimestamp = AlicaEngine::getInstance()->getIAlicaClock()->now();
+				this->overrideTimestamp = ae->getIAlicaClock()->now();
 			}
 			else
 			{
@@ -112,7 +113,7 @@ namespace alica
 		{
 			if (this->state == CycleState::overriding
 					&& this->overrideTimestamp + this->rp->getPlan()->getAuthorityTimeInterval()
-							< AlicaEngine::getInstance()->getIAlicaClock()->now())
+							< ae->getIAlicaClock()->now())
 			{
 #ifdef CM_DEBUG
 				cout << "Resume Observing!" << endl;
@@ -122,7 +123,7 @@ namespace alica
 			}
 			else if (this->state == CycleState::overridden
 					&& this->overrideShoutTime + this->rp->getPlan()->getAuthorityTimeInterval()
-							< AlicaEngine::getInstance()->getIAlicaClock()->now())
+							< ae->getIAlicaClock()->now())
 			{
 #ifdef CM_DEBUG
 				cout << "Resume Observing!" << endl;
@@ -248,7 +249,7 @@ namespace alica
 		if (rid > myID)
 		{
 			this->state = CycleState::overridden;
-			this->overrideShoutTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
+			this->overrideShoutTime =ae->getIAlicaClock()->now();
 			this->fixedAllocation = aai;
 		}
 		else
@@ -260,7 +261,7 @@ namespace alica
 				this->rp->getPlan()->setAuthorityTimeInterval(
 						min(maximalOverrideTimeInterval,
 							(alicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
-				this->overrideTimestamp = AlicaEngine::getInstance()->getIAlicaClock()->now();
+				this->overrideTimestamp = ae->getIAlicaClock()->now();
 				this->overrideShoutTime = 0;
 			}
 		}
@@ -270,7 +271,7 @@ namespace alica
 	{
 		return this->state == CycleState::overriding
 				&& (this->overrideShoutTime + overrideShoutInterval
-						< AlicaEngine::getInstance()->getIAlicaClock()->now());
+						< ae->getIAlicaClock()->now());
 	}
 
 	/**
@@ -278,7 +279,7 @@ namespace alica
 	 */
 	void alica::CycleManager::sent()
 	{
-		this->overrideShoutTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
+		this->overrideShoutTime = ae->getIAlicaClock()->now();
 	}
 
 	/**
