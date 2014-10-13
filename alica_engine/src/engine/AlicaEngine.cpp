@@ -26,6 +26,7 @@ using namespace std;
 #include "engine/model/Plan.h"
 #include "engine/syncmodul/SyncModul.h"
 #include "engine/IConditionCreator.h"
+#include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 
 namespace alica
@@ -58,6 +59,7 @@ namespace alica
 		this->roleSet = nullptr;
 		this->stepEngine = false;
 		this->maySendMessages = false;
+		this->pap = nullptr;
 
 //		TODO: MODULELOADER CASTOR
 //		string modName[] = (*this->sc)["Alica"]->get<string>("Alica", "Extensions", "LoadModule", NULL);
@@ -90,7 +92,6 @@ namespace alica
 //		static AlicaEngine instance;
 //		return &instance;
 //	}
-
 	/**
 	 * Intialise the engine
 	 * @param bc A behaviourcreator
@@ -150,9 +151,13 @@ namespace alica
 		this->teamObserver->init();
 		this->log = new Logger(this);
 		this->roleAssignment->init();
+		if (this->pap == nullptr)
+		{
+			pap = new PartialAssignmentPool();
+		}
 		if (planSelector == nullptr)
 		{
-			this->planSelector = new PlanSelector(this);
+			this->planSelector = new PlanSelector(this, pap);
 		}
 		//TODO
 //		ConstraintHelper.Init(this.cSolver);
@@ -228,6 +233,11 @@ namespace alica
 
 		delete planSelector;
 		planSelector = nullptr;
+
+		if(this->pap != nullptr) {
+			delete this->pap;
+			this->pap = nullptr;
+		}
 
 		this->roleSet = nullptr;
 		this->masterPlan = nullptr;
@@ -455,6 +465,10 @@ namespace alica
 	PlanBase* AlicaEngine::getPlanBase()
 	{
 		return planBase;
+	}
+
+	PartialAssignmentPool* AlicaEngine::getPartialAssignmentPool() {
+		return this->pap;
 	}
 
 } /* namespace Alica */

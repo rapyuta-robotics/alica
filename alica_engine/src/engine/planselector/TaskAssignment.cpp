@@ -9,6 +9,7 @@
 #include "engine/teamobserver/TeamObserver.h"
 #include "engine/AlicaEngine.h"
 #include "engine/planselector/PartialAssignment.h"
+#include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/Assignment.h"
 #include "engine/model/Plan.h"
 #include "engine/UtilityFunction.h"
@@ -32,7 +33,7 @@ namespace alica
 	 * @param paraRobots robots to build an assignment for
 	 * @param a bool
 	 */
-	TaskAssignment::TaskAssignment(ITeamObserver* to,list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots)
+	TaskAssignment::TaskAssignment(PartialAssignmentPool* pap, ITeamObserver* to,list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots)
 	{
 #ifdef EXPANSIONEVAL
 		this->expansionCount = 0;
@@ -56,7 +57,7 @@ namespace alica
 			curPlan->getUtilityFunction()->cacheEvalData();
 
 			// CREATE INITIAL PARTIAL ASSIGNMENTS
-			curPa = PartialAssignment::getNew(this->robots, curPlan, to->getSuccessCollection(curPlan));
+			curPa = PartialAssignment::getNew(pap, this->robots, curPlan, to->getSuccessCollection(curPlan));
 
 			// ASSIGN PREASSIGNED OTHER ROBOTS
 			if (preasingOtherRobots)
