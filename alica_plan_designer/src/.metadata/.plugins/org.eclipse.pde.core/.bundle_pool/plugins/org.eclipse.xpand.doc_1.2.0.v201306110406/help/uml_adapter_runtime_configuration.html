@@ -1,0 +1,90 @@
+<html>
+<head>
+<title>Runtime Configuration</title>
+<link href="book.css" rel="stylesheet" type="text/css"/>
+<meta content="DocBook XSL Stylesheets V1.75.1" name="generator"/>
+<link rel="home" href="index.html" title="Xpand Documentation"/>
+<link rel="up" href="uml_adapter.html" title="UML2 Adapter"/>
+<link rel="prev" href="uml_adapter_eclipse_setup.html" title="Setting up Eclipse"/>
+<link rel="next" href="xsd_reference.html" title="XSD Adapter"/>
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<h1 xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">Runtime Configuration</h1>
+<div class="section" title="Runtime Configuration">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title" style="clear: both">
+<a name="uml_adapter_runtime_configuration"/>Runtime Configuration</h2>
+</div>
+</div>
+</div>
+<p>At runtime, you just need the
+    <code class="filename">org.eclipse.xtend.typesystem.uml2-1.0.0.jar</code> (or
+    later). You can use the dependency mechanism of Eclipse from the PDE, or
+    copy or reference the respective JAR file directly. It does not matter,
+    you just have to take care that it is on the classpath.</p>
+<div class="section" title="Workflow">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="uml_adapter_runtime_workflow"/>Workflow</h3>
+</div>
+</div>
+</div>
+<p>If you have written some <span class="emphasis">
+<em>Check</em>
+</span>,
+      <span class="emphasis">
+<em>Xtend</em>
+</span> or <span class="emphasis">
+<em>Xpand</em>
+</span> files and now
+      want to execute them, you have to provide the right
+      configuration.</p>
+<p>You need to configure the UML2 metamodel and a profile metamodel
+      <span class="emphasis">
+<em>for each profile</em>
+</span> you used directly. A typical
+      configuration looks like this:</p>
+<pre class="programlisting">&lt;workflow&gt;
+	 &lt;bean class="org.eclipse.xtend.typesystem.uml2.Setup" standardUML2Setup="true" /&gt;
+	 &lt;component class="org.eclipse.xtend.typesystem.emf.XmiReader"&gt;
+			...
+	 &lt;/component&gt;
+	 &lt;component class="org.eclipse.xpand2.Generator"&gt;
+			&lt;metaModel class="org.eclipse.xtend.typesystem.uml2.UML2MetaModel"/&gt;
+			&lt;metaModel class="org.eclipse.xtend.typesystem.uml2.profile.ProfileMetaModel"&gt;
+				 &lt;profile value="myProfile.profile.uml2"/&gt;
+			&lt;/metaModel&gt;
+			...
+	 &lt;/component&gt;
+&lt;workflow&gt;</pre>
+<p>
+<span class="emphasis">
+<em>Note the bean configuration in the second line. It
+      statically configures the XmiReader to use the right factories for *.uml
+      and *.uml2 files. This is very important.</em>
+</span>
+</p>
+<p>If you are invoking several Xpand components, you should use the
+      <code class="varname">id</code> / <code class="varname">idRef</code> mechanism:</p>
+<pre class="programlisting">&lt;workflow&gt;
+	 &lt;bean class="org.eclipse.xtend.typesystem.uml2.Setup" standardUML2Setup="true" /&gt;
+	 &lt;component class="org.eclipse.xtend.typesystem.emf.XmiReader"&gt;
+			...
+	 &lt;/component&gt;
+		 &lt;component class="org.eclipse.xpand2.Generator"&gt;
+			&lt;metaModel id="uml"
+				 class="org.eclipse.xtend.typesystem.uml2.UML2MetaModel"/&gt;
+			&lt;metaModel id="profile" 
+				 class="org.eclipse.xtend.typesystem.uml2.profile.ProfileMetaModel"&gt;
+				 &lt;profile value="myProfile.profile.uml2"/&gt;
+			&lt;/metaModel&gt;
+			...
+	 &lt;/component&gt;</pre>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+«EXTENSION metagen::Extensions»
+
+«DEFINE all FOR List[xpand2::Type]»
+	«EXPAND framesetFile FOR this.get(0)»
+	«EXPAND menuFile FOR this»
+	«EXPAND typeDocFile FOREACH this»
+«ENDDEFINE»
+
+«DEFINE menuFile FOR List[xpand2::Type]»
+«FILE "menu.html" HTML-»
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Menu</title>
+</head>
+
+<body><br/><br/><br/><br/><br/><br/>
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><FONT SIZE="+1"><B>All Types</B></FONT></TD>
+</TR>
+«FOREACH this AS type-»
+	<TR BGCOLOR="white" CLASS="TableRowColor">
+		<TD ALIGN="left" VALIGN="top" WIDTH="1%">
+		<CODE>«type.linkedName("mainFrame")»</CODE></TD>
+	</TR>
+«ENDFOREACH-»
+</body>
+</html>
+«ENDFILE»
+«ENDDEFINE»
+
+«DEFINE framesetFile FOR xpand2::Type»
+«FILE "index.html" HTML-»
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>«this»</title>
+</head>
+
+  <frameset cols="200,*" frameborder="no" border="0" framespacing="0">
+    <frame src="menu.html" name="leftFrame" scrolling="No" noresize="noresize" id="leftFrame" title="leftFrame" />
+    <frame src="«this.fileName()»" name="mainFrame" id="mainFrame" title="mainFrame" />
+  </frameset>
+<noframes><body>
+</body>
+</noframes></html>
+«ENDFILE»
+«ENDDEFINE»
+
+«DEFINE typeDocFile FOR xpand2::Type»
+«FILE this.fileName() HTML-»
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>«this.name» API documentation</title>
+</head>
+<body>
+<br/>
+<H1>«this.name-» 
+ «IF superTypes.size>0-»
+ extends 
+«FOREACH superTypes AS e SEPARATOR ","-»
+«e.linkedName()-»
+«ENDFOREACH-»
+«ENDIF-»
+</H1>
+<HR>
+«documentation-»
+«IF this.getOwnedProperties().size >0-»
+<!-- properties -->
+<HR>
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Properties</B></FONT></TD>
+</TR>
+	«FOREACH getOwnedProperties() AS p»
+	<TR BGCOLOR="white" CLASS="TableRowColor">
+	<TD ALIGN="right" VALIGN="top" WIDTH="1%">
+		<FONT SIZE="-1">
+			<CODE>«p.returnType.linkedName()»</CODE>
+		</FONT>
+	</TD>
+	<TD><CODE><B>«p.name»</A></B></CODE></TD>
+	</TR>
+	<TR BGCOLOR="white" CLASS="TableRowColor">
+	  <TD ALIGN="right" VALIGN="top"></TD>
+	  <TD>«p.documentation»</TD>
+	</TR>
+	«ENDFOREACH»
+</TABLE>
+«ENDIF»
+«IF this.getOwnedOperations().size >0»
+<!-- operations -->
+<HR>
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Operations</B></FONT></TD>
+</TR>
+	«FOREACH getOwnedOperations() AS o SEPARATOR  "<!-- test -->"»
+	<TR BGCOLOR="white" CLASS="TableRowColor">
+	<TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	<FONT SIZE="-1">
+		<CODE>«o.returnType.linkedName()»</CODE>
+	</FONT>
+	</TD>
+	<TD>
+		<CODE><B>«o.name»(«FOREACH o.getParameterTypes() AS pt SEPARATOR ","»«pt.linkedName()»«ENDFOREACH»)</B></CODE>
+	</TD>
+	</TR>
+	<TR BGCOLOR="white" CLASS="TableRowColor">
+	  <TD ALIGN="right" VALIGN="top"></TD>
+	  <TD>«o.documentation»</TD>
+	</TR>
+	«ENDFOREACH»
+</TABLE>
+«ENDIF»
+<HR>
+</body>
+</html>
+«ENDFILE»
+«ENDDEFINE»

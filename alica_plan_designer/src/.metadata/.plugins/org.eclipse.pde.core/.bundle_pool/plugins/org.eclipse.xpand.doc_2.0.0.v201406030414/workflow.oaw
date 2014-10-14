@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<workflow>
+    <property name="srcGenPath" value="./src-gen/"/>
+    <property name="typeListExpression" value="{
+       Object, 
+       String, 
+       Integer, 
+       Boolean, 
+       Real, 
+       Collection, 
+       List, 
+       Set, 
+       xpand2::Type, 
+       xpand2::Feature, 
+       xpand2::Property, 
+       xpand2::Operation, 
+       xpand2::StaticProperty,
+       Void, 
+       xtend::AdviceContext,
+       xpand2::Definition,
+       xpand2::Iterator}"/>
+    
+    <component class="org.eclipse.emf.mwe.utils.DirectoryCleaner">
+		<directory value="${srcGenPath}"/>
+	</component>
+	
+	<component class="org.eclipse.xpand2.Generator">
+       <expand value="metagen::Root::Root FOR ${typeListExpression}"/>
+       <outlet path="${srcGenPath}"/>
+       <outlet path="${srcGenPath}/html" name="HTML"/>
+       <outlet path="${srcGenPath}/docbook" name="DOCBOOK"/>
+   	   <fileEncoding value="iso-8859-1"/>
+   	</component>
+</workflow>

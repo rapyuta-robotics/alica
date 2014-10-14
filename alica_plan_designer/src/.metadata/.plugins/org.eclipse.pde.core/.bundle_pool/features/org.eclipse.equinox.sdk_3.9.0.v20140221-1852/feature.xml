@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.equinox.sdk"
+      label="%featureName"
+      version="3.9.0.v20140221-1852"
+      provider-name="%providerName">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <includes
+         id="org.eclipse.equinox.compendium.sdk"
+         version="3.8.0.v20130813-1853"/>
+
+   <includes
+         id="org.eclipse.equinox.core.sdk"
+         version="3.8.0.v20140114-1344"/>
+
+   <includes
+         id="org.eclipse.equinox.p2.sdk"
+         version="3.8.1.v20140221-1852"/>
+
+   <includes
+         id="org.eclipse.equinox.serverside.sdk"
+         version="3.9.1.v20140221-1852"/>
+
+   <includes
+         id="org.eclipse.equinox.executable"
+         version="3.6.0.v20140117-1004"/>
+
+   <includes
+         id="org.eclipse.equinox.weaving.sdk"
+         version="1.0.200.v20130327-1442"/>
+
+   <includes
+         id="org.eclipse.equinox.core.feature"
+         version="1.1.0.v20140110-1610"/>
+
+   <includes
+         id="org.eclipse.equinox.p2.core.feature"
+         version="1.2.1.v20140221-1852"/>
+
+   <includes
+         id="org.eclipse.equinox.p2.extras.feature"
+         version="1.2.0.v20140221-1852"/>
+
+   <includes
+         id="org.eclipse.equinox.p2.rcp.feature"
+         version="1.2.0.v20140221-1852"/>
+
+   <includes
+         id="org.eclipse.core.runtime.feature"
+         version="1.1.0.v20140110-1610"/>
+
+</feature>

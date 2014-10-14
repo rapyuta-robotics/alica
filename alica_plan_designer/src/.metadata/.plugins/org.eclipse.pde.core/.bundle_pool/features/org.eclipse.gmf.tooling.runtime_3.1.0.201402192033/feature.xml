@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.gmf.tooling.runtime"
+      label="%featureName"
+      version="3.1.0.201402192033"
+      provider-name="%providerName">
+
+   <description url="http://eclipse.org/gmf-tooling/">
+      %description
+   </description>
+
+   <copyright url="http://www.eclipse.org/legal/epl-v10.html">
+      Copyright (c) 2012 Montages AG and others.
+All rights reserved.   This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime" version="3.7.0" match="compatible"/>
+      <import plugin="org.eclipse.gef"/>
+      <import plugin="org.eclipse.gmf.runtime.emf.commands.core"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.ui"/>
+      <import plugin="org.eclipse.gmf.runtime.notation" version="1.5.0" match="compatible"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.expressions"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.draw2d"/>
+      <import plugin="org.eclipse.gmf.runtime.common.ui.services"/>
+      <import plugin="org.eclipse.gmf.runtime.emf.type.core"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.core"/>
+      <import plugin="org.eclipse.ocl"/>
+      <import plugin="org.eclipse.ocl.ecore"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.apache.batik.bridge"/>
+      <import plugin="org.apache.batik.css"/>
+      <import plugin="org.apache.batik.dom"/>
+      <import plugin="org.apache.batik.dom.svg"/>
+      <import plugin="org.apache.batik.ext.awt"/>
+      <import plugin="org.apache.batik.svggen"/>
+      <import plugin="org.apache.batik.transcoder"/>
+      <import plugin="org.apache.batik.util"/>
+      <import plugin="org.w3c.dom.svg"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.gmf.tooling.runtime"
+         download-size="127"
+         install-size="253"
+         version="3.1.0.201402192033"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.runtime.lite.svg"
+         download-size="21"
+         install-size="37"
+         version="1.0.0.201402192033"
+         unpack="false"/>
+
+</feature>

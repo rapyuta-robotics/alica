@@ -1,0 +1,694 @@
+<html>
+<head>
+<title>Expressions</title>
+<link href="book.css" rel="stylesheet" type="text/css"/>
+<meta content="DocBook XSL Stylesheets V1.75.1" name="generator"/>
+<link rel="home" href="index.html" title="Xpand Documentation"/>
+<link rel="up" href="core_reference.html" title="Xpand / Xtend / Check Reference"/>
+<link rel="prev" href="r10_typesystem.html" title="Type System"/>
+<link rel="next" href="Check_language.html" title="Check"/>
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<h1 xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">ExpressionsExpression</h1>
+<div class="section" title="Expressions">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title" style="clear: both">
+<a name="r10_expressions_language"/>Expressions<a name="N10A0A" class="indexterm"/>
+</h2>
+</div>
+</div>
+</div>
+<p>The expression sub-language<a name="N10A0F" class="indexterm"/> is a syntactical mixture of Java and OCL<a name="N10A13" class="indexterm"/>. This documentation provides a detailed description of each
+    available expression. Let us start with some simple examples.</p>
+<p>Accessing a property:</p>
+<pre class="programlisting">myModelElement.name</pre>
+<p>Accessing an operation:</p>
+<pre class="programlisting">myModelElement.doStuff()</pre>
+<p>simple arithmetic:</p>
+<pre class="programlisting">1 + 1 * 2</pre>
+<p>boolean expressions (just an example:-)):</p>
+<pre class="programlisting">!('text'.startsWith('t') &amp;&amp; ! false)</pre>
+<div class="section" title="Literals and special operators for built-in types">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="r10_expressions_builtin"/>Literals and special operators for built-in types</h3>
+</div>
+</div>
+</div>
+<p>There are several literals<a name="N10A2D" class="indexterm"/> for built-in types:</p>
+<div class="section" title="Object">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_builtin_object"/>
+<code class="classname">Object</code> <a name="N10A37" class="indexterm"/> <a name="N10A3E" class="indexterm"/>
+</h4>
+</div>
+</div>
+</div>
+<p>There are naturally no literals for object, but we have two
+        operators:</p>
+<p>equals:</p>
+<pre class="programlisting">obj1 == obj2</pre>
+<p>not equals:</p>
+<pre class="programlisting">obj1 != obj2</pre>
+</div>
+<div class="section" title="Void">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_builtin_void"/>
+<code class="classname">Void</code>
+</h4>
+</div>
+</div>
+</div>
+<p>The only possible instance of <code class="classname">Void</code> is the
+        <code class="varname">null</code> reference. Therefore, we have one
+        literal:</p>
+<pre class="programlisting">null</pre>
+</div>
+<div class="section" title="Type literals">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_builtin_typeliterals"/>Type literals</h4>
+</div>
+</div>
+</div>
+<p>The literal for types is just the name of the type (no
+        '<code class="filename">.class</code>' suffix, etc.). Example:</p>
+<pre class="programlisting">String // the type string
+my::special::Type // evaluates to the type 'my::special::Type'</pre>
+</div>
+<div class="section" title="StaticProperty literals">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_builtin_staticproperties"/>StaticProperty literals</h4>
+</div>
+</div>
+</div>
+<p>The literal for static properties<a name="N10A6E" class="indexterm"/> (aka enum literals<a name="N10A74" class="indexterm"/>) is correlative to type literals:</p>
+<pre class="programlisting">my::Color::RED</pre>
+</div>
+<div class="section" title="String">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_builtin_string"/>
+<code class="classname">String</code>
+</h4>
+</div>
+</div>
+</div>
+<p>There are two different literal syntaxes (with the same
+        semantics):</p>
+<pre class="programlisting">'a String literal'
+"a String literal" // both are okay</pre>
+<p>For Strings the expression sub-language supports the plus
+        operator that is overloaded with concatenation:</p>
+<pre class="programlisting">'my element '+ ele.name +' is really cool!'</pre>
+<p>Note, that multi-line Strings are supported.</p>
+</div>
+<div class="section" title="Boolean">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_builtin_boolean"/>
+<code class="classname">Boolean</code>
+</h4>
+</div>
+</div>
+</div>
+<p>The boolean literals are:</p>
+<pre class="programlisting">true
+false</pre>
+<p>Operators are:</p>
+<pre class="programlisting">true &amp;&amp; false // AND
+true || false // OR
+! true        // NOT</pre>
+</div>
+<div class="section" title="Integer and Real">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_builtin_numeric"/>
+<code class="classname">Integer</code> and
+        <code class="classname">Real</code>
+</h4>
+</div>
+</div>
+</div>
+<p>The syntax for integer literals is as expected:</p>
+<pre class="programlisting">// integer literals
+3
+57278
+// real literals
+3.0
+0.75</pre>
+<p>Additionally, we have the common arithmetic operators:</p>
+<pre class="programlisting">3 + 4  // addition
+4 - 5  // subtraction
+2 * 6  // multiplication
+3 / 64 // divide
+// Unary minus operator
+- 42
+- 47.11
+</pre>
+<p>Furthermore, the well known compare operators are
+        defined:</p>
+<pre class="programlisting">4 &gt; 5 // greater than
+4 &lt; 5 // smaller than
+4 &gt;= 23 // greater equals than
+4 &lt;= 12 // smaller equals than</pre>
+</div>
+<div class="section" title="Collections">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_builtin_collections"/>Collections</h4>
+</div>
+</div>
+</div>
+<p>There is a literal for lists:</p>
+<pre class="programlisting">{1,2,3,4} // a list with four integers</pre>
+<p>There is no other special concrete syntax for collections. If
+        you need a set, you have to call the <code class="methodname">toSet()</code>
+        operation on the list literal:</p>
+<pre class="programlisting">{1,2,4,4}.toSet() // a set with 3(!) integers</pre>
+</div>
+</div>
+<div class="section" title="Special Collection operations">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="r10_expressions_collection_operations"/>Special Collection operations</h3>
+</div>
+</div>
+</div>
+<p>Like OCL, the <span class="emphasis">
+<em>Xpand</em>
+</span> expression sub-language
+      defines several special operations on collections. However, those
+      operations are not members of the type system, therefore you cannot use
+      them in a reflective manner.</p>
+<div class="section" title="select">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_collection_select"/>
+<code class="methodname">select<a name="N10AC9" class="indexterm"/>
+</code>
+</h4>
+</div>
+</div>
+</div>
+<p>Sometimes, an expression yields a large collection, but one is
+        only interested in a special subset of the collection. The expression
+        sub-language has special constructs to specify a selection out of a
+        specific collection. These are the <code class="methodname">select</code> and
+        <code class="methodname">reject</code> operations. The select specifies a
+        subset of a collection. A <code class="methodname">select</code> is an
+        operation on a collection and is specified as follows:</p>
+<pre class="programlisting">collection.select(v | boolean-expression-with-v)</pre>
+<p>
+<code class="methodname">select</code> returns a sublist of the
+        specified collection. The list contains all elements for which the
+        evaluation of <code class="varname">boolean-expression-with-v</code> results is
+        <code class="varname">true</code>. Example:</p>
+<pre class="programlisting">{1,2,3,4}.select(i | i &gt;= 3) // returns {3,4}</pre>
+</div>
+<div class="section" title="typeSelect">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_collection_typeselect"/>
+<code class="methodname">typeSelect</code> <a name="N10AEB" class="indexterm"/>
+</h4>
+</div>
+</div>
+</div>
+<p>A special version of a select expression is
+        <code class="methodname">typeSelect</code>. Rather than providing a boolean
+        expression a class name is here provided.</p>
+<pre class="programlisting">collection.typeSelect(SomeType) </pre>
+<p>
+<code class="methodname">typeSelect</code> returns that sublist of the
+        specified collection, that contains only objects which are an instance
+        of the specified class (also inherited). It is equivalent to the
+        expression</p>
+<pre class="programlisting">collection.select(e | SomeType.isInstance(e)) </pre>
+</div>
+<div class="section" title="reject">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_collection_reject"/>
+<code class="methodname">reject<a name="N10B01" class="indexterm"/>
+</code>
+</h4>
+</div>
+</div>
+</div>
+<p>The <code class="methodname">reject</code> operation is similar to the
+        <code class="methodname">select</code> operation, but with
+        <code class="methodname">reject</code> we get the subset of all the elements
+        of the collection for which the expression evaluates to
+        <code class="varname">false</code>. The <code class="methodname">reject</code> syntax
+        is identical to the <code class="methodname">select</code> syntax:</p>
+<pre class="programlisting">collection.reject(v | boolean-expression-with-v)</pre>
+<p>Example:</p>
+<pre class="programlisting">{1,2,3,4}.reject(i | i &gt;= 3) // returns {1,2}</pre>
+</div>
+<div class="section" title="collect">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_collection_collect"/>
+<code class="methodname">collect<a name="N10B23" class="indexterm"/>
+</code>
+</h4>
+</div>
+</div>
+</div>
+<p>As shown in the previous section, the
+        <code class="methodname">select</code> and <code class="methodname">reject</code>
+        operations always result in a sub-collection of the original
+        collection. Sometimes one wants to apply an operation on all elements
+        of the collection and collect the results of the evaluation in a list.
+        In such cases, we can use a <code class="methodname">collect</code>
+        operation. The <code class="methodname">collect</code> operation uses the
+        same syntax as the <code class="methodname">select</code> and
+        <code class="methodname">reject</code> and is written like this:</p>
+<pre class="programlisting">collection.collect(v | expression-with-v)</pre>
+<p>
+<code class="methodname">collect</code> again iterates over the target
+        collection and evaluates the given expression on each element. In
+        contrast to <code class="methodname">select</code>, the evaluation result is
+        collected in a list. When an iteration is finished the list with all
+        results is returned. Example:</p>
+<pre class="programlisting">namedElements.collect(ne | ne.name) // returns a list of strings
+namedElements.collect(ne | ne.name.length &gt; 3) // returns a list of boolean
+</pre>
+</div>
+<div class="section" title="Shorthand for collect (and more than that)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_collection_collect_shorthand"/>Shorthand for <code class="methodname">collect</code> (and more than
+        that)</h4>
+</div>
+</div>
+</div>
+<p>As navigation through many objects is very common, there is a
+        shorthand notation for collect <a name="N10B4E" class="indexterm"/>that makes the expressions more readable. Instead
+        of</p>
+<pre class="programlisting">self.employee.collect(e | e.birthdate) </pre>
+<p>one can also write:</p>
+<pre class="programlisting">self.employee.birthdate</pre>
+<p>In general, when a property is applied to a collection of
+        Objects, it will automatically be interpreted as a
+        <code class="methodname">collect</code> over the members of the collection
+        with the specified property.</p>
+<p>The syntax is a shorthand for <code class="methodname">collect</code>,
+        if the feature does not return a collection itself. But sometimes we
+        have the following:</p>
+<pre class="programlisting">self.buildings.rooms.windows // returns a list of windows</pre>
+<p>This syntax works, but one cannot express it using the
+        <code class="methodname">collect</code> operation in an easy way.</p>
+</div>
+<div class="section" title="forAll">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_collection_forall"/>
+<code class="methodname">forAll</code>
+</h4>
+</div>
+</div>
+</div>
+<p>Often a boolean expression has to be evaluated for all elements
+        in a collection. The <code class="methodname">forAll</code>
+<a name="N10B72" class="indexterm"/> operation allows specifying a Boolean expression, which
+        must be <code class="varname">true</code> for all objects in a collection in
+        order for the <code class="methodname">forAll</code> operation to return
+        <code class="varname">true</code>:</p>
+<pre class="programlisting">collection.forAll(v | boolean-expression-with-v)</pre>
+<p>The result of <code class="methodname">forAll</code> is
+        <code class="varname">true</code> if
+        <code class="varname">boolean-expression-with-v</code> is <code class="varname">true
+        </code>for all the elements contained in a collection. If
+        <code class="varname">boolean-expression-with-v</code> is
+        <code class="varname">false</code> for one or more of the elements in the
+        collection, then the <code class="methodname">forAll</code> expression
+        evaluates to <code class="varname">false</code>.</p>
+<h5>
+<a name="N10B9B"/>Example:</h5>
+<pre class="programlisting">{3,4,500}.forAll(i | i &lt; 10) // evaluates to false (500 &lt; 10 is false)</pre>
+</div>
+<div class="section" title="exists">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_collection_exists"/>
+<code class="methodname">exists<a name="N10BA4" class="indexterm"/>
+</code>
+</h4>
+</div>
+</div>
+</div>
+<p>Often you will need to know whether there is at least one
+        element in a collection for which a boolean is
+        <code class="varname">true</code>. The exists operation allows you to specify a
+        Boolean expression which must be <code class="varname">true</code> for at least
+        one object in a collection:</p>
+<pre class="programlisting">collection.exists(v | boolean-expression-with-v)</pre>
+<p>The result of the exists operation is <code class="varname">true</code> if
+        <code class="varname">boolean-expression-with-v</code> is
+        <code class="varname">true</code> for at least one element of collection. If the
+        <code class="varname">boolean-expression-with-v</code> is
+        <code class="varname">false</code> for all elements in collection, then the
+        complete expression evaluates to <code class="varname">false</code>.</p>
+<h5>
+<a name="N10BC5"/>Example:</h5>
+<pre class="programlisting">{3,4,500}.exists(i | i &lt; 10) // evaluates to true (e.g. 3 &lt; 10 is true)</pre>
+</div>
+<div class="section" title="sortBy">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_collection_sortby"/>
+<code class="methodname">sortBy</code>
+</h4>
+</div>
+</div>
+</div>
+<p>If you want to sort a list of elements, you can use the higher
+        order function <code class="methodname">sortBy</code> <a name="N10BD3" class="indexterm"/>. The list you invoke the
+        <code class="methodname">sortBy</code> operation on, is sorted by the results
+        of the given expression.</p>
+<h5>
+<a name="N10BDA"/>Example:</h5>
+<pre class="programlisting">myListOfEntity.sortBy(entity | entity.name)</pre>
+<p>In the example the list of entities is sorted by the name of the
+        entities. Note that there is no such <code class="classname">Comparable</code>
+        type in <span class="emphasis">
+<em>Xpand</em>
+</span>. If the values returned from the
+        expression are instances of
+        <code class="classname">java.util.Comparable</code> the
+        <code class="methodname">compareTo</code> method is used, otherwise
+        <code class="methodname">toString()</code> is invoked and the the result is
+        used.</p>
+<p>All the following expressions return
+        <code class="varname">true</code>:</p>
+<pre class="programlisting">{'C','B','A'}.sortBy(e | e) == {'A','B','C'}
+{'AAA','BB','C'}.sortBy(e | e.length) == {'C','BB','AAA'}
+{5,3,1,2}.sortBy(e | e) == {1,2,3,5}
+{5,3,1,2}.sortBy(e | e - 2 * e) == {5,3,2,1}
+...</pre>
+</div>
+</div>
+<div class="section" title="if expression">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="r10_expressions_if"/>
+<code class="methodname">if</code> expression</h3>
+</div>
+</div>
+</div>
+<a name="N10BFC" class="indexterm"/>
+<p>There are two different forms of conditional expressions. The
+      first one is the so-called <span class="emphasis">
+<em>if expression</em>
+</span>.
+      Syntax:</p>
+<pre class="programlisting">condition ? thenExpression : elseExpression</pre>
+<p>
+<span class="bold">
+<strong>Example:</strong>
+</span>
+</p>
+<pre class="programlisting">name != null ? name : 'unknown'</pre>
+<p>Alternatively, you also could write:</p>
+<pre class="programlisting">if name != null then
+  name 
+else
+  'unknown'
+    </pre>
+</div>
+<div class="section" title="switch expression">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="r10_expressions_switch"/>
+<code class="methodname">switch</code> expression</h3>
+</div>
+</div>
+</div>
+<a name="N10C18" class="indexterm"/>
+<p>The other one is called <span class="emphasis">
+<em>switch expression</em>
+</span>.
+      Syntax:</p>
+<pre class="programlisting">switch (expression) {
+   (case expression : thenExpression)*
+   default : catchAllExpression
+}</pre>
+<p>The default part is mandatory, because
+      <code class="methodname">switch</code> is an expression, therefore it needs to
+      evaluate to something in any case.</p>
+<p>
+<span class="bold">
+<strong>Example:</strong>
+</span>
+</p>
+<pre class="programlisting">switch (person.name) {
+   case 'Hansen' : 'Du kanns platt schnacken'
+   default : 'Du kanns mi nech verstohn!'
+}</pre>
+<p>There is an abbreviation for <span class="emphasis">
+<em>Boolean</em>
+</span>
+      expressions:</p>
+<pre class="programlisting">switch {
+   case booleanExpression : thenExpression
+   default : catchAllExpression
+} </pre>
+</div>
+<div class="section" title="Chain expression">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="r10_expressions_chain"/>Chain expression</h3>
+</div>
+</div>
+</div>
+<a name="N10C3A" class="indexterm"/>
+<p>Expressions and functional languages should be free of side
+      effects as far as possible. But sometimes there you need invocations
+      that do have side effects. In some cases expressions even do not have a
+      return type (i.e. the return type is <code class="classname">Void</code>). If
+      you need to call such operations, you can use the chain
+      expression.</p>
+<p>
+<span class="bold">
+<strong>Syntax:</strong>
+</span>
+</p>
+<pre class="programlisting">anExpr -&gt;
+anotherExpr -&gt;
+lastExpr </pre>
+<p>Each expression is evaluated in sequence, but only the result of
+      the last expression is returned.</p>
+<p>
+<span class="bold">
+<strong>Example</strong>
+</span>:</p>
+<pre class="programlisting">person.setName('test') -&gt;
+person</pre>
+<p>This chain expression will set the <code class="varname">name</code> of the
+      person first, before it returns the person object itself.</p>
+</div>
+<div class="section" title="new expression">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="r10_expressions_create"/>
+<code class="methodname">new</code> expression</h3>
+</div>
+</div>
+</div>
+<a name="N10C5E" class="indexterm"/>
+<p>The <code class="methodname">new</code> expression is used to instantiate
+      new objects of a given type:</p>
+<pre class="programlisting">new TypeName</pre>
+<p>Note that often <a class="link" href="">create extensions</a> are
+      the better way to instantiate objects when used for model
+      transformations.</p>
+</div>
+<div class="section" title="'GLOBALVAR' expression">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="r10_expressions_globalvar"/>'GLOBALVAR' expression</h3>
+</div>
+</div>
+</div>
+<p>Sometimes you don't want to pass everything down the call stack by
+      parameter. Therefore, we have the <code class="methodname">GLOBALVAR</code>
+      <a name="N10C79" class="indexterm"/> expression. There are two things you need to do, to use
+      global variables.</p>
+<div class="section" title="Using GLOBALVARS to configure workflows">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="r10_expressions_globalvar_workflow"/>Using GLOBALVARS to configure workflows</h4>
+</div>
+</div>
+</div>
+<p>Each workflow component using the expression framework
+        (<span class="emphasis">
+<em>Xpand</em>
+</span>, <span class="emphasis">
+<em>Check</em>
+</span> and
+        <span class="emphasis">
+<em>Xtend</em>
+</span>) can be configured with global variables.
+        <a name="N10C8C" class="indexterm"/> Here is an example:</p>
+<pre class="programlisting">&lt;workflow&gt;
+   .... stuff
+   &lt;component class="org.eclipse.xpand2.Generator"&gt;
+      ... usual stuff (see ref doc)
+      &lt;globalVarDef name="MyPSM" value="slotNameOfPSM"/&gt;
+      &lt;globalVarDef name="ImplClassSuffix" value="'Impl'"/&gt;
+   &lt;/component&gt;
+&lt;/workflow&gt;</pre>
+<p>Note that <code class="varname">value</code> contains an expression or
+        slot name. If you want to pass a string value you will have to quote
+        the value, like the value for <code class="classname">ImplClassSuffix</code>
+        in the example.</p>
+<p>If you have injected global variables into the respective
+        component, you can call them using the following syntax:</p>
+<pre class="programlisting">GLOBALVAR ImplClassSuffix</pre>
+<p>Note, we don't have any static type information. Therefore
+        <code class="classname">Object</code> is assumed. So, you have to down cast
+        the global variable to the intended type:</p>
+<pre class="programlisting">((String) GLOBALVAR ImplClassSuffix)</pre>
+<p>It is good practice to type it once, using an Extension and then
+        always refer to that extension:</p>
+<pre class="programlisting">String implClassSuffix() : GLOBALVAR ImplClassSuffix;
+// usage of the typed global var extension
+ImplName(Class c) :
+   name+implClassSuffix();</pre>
+</div>
+</div>
+<div class="section" title="Multi methods (multiple dispatch)">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="r10_expressions_multidispatch"/>Multi methods (multiple dispatch)</h3>
+</div>
+</div>
+</div>
+<p>The expressions language supports multiple dispatching <a name="N10CB1" class="indexterm"/>. This means that when there is a bunch of overloaded
+      operations, the decision which operation has to be resolved is based on
+      the dynamic type of all parameters (the implicit
+      '<code class="varname">this</code>' included).</p>
+<p>In Java only the dynamic type of the '<code class="varname">this</code>'
+      element is considered, for parameters the static type is used (this is
+      called single dispatch).</p>
+<p>Here is a Java example:</p>
+<pre class="programlisting">class MyType {
+   boolean equals(Object o) {
+      if (o instanceof MyClass) {
+         return equals((MyClass)o);
+      }
+      return super.equals(o);
+   }
+   boolean equals(MyType mt) {
+      //implementation...
+   }
+} </pre>
+<p>The method <code class="methodname">equals(Object o)</code> would not
+      have to be overwritten, if Java would support multiple dispatch.</p>
+</div>
+<div class="section" title="Casting">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="r10_expressions_casting"/>Casting<a name="N10CCB" class="indexterm"/>
+</h3>
+</div>
+</div>
+</div>
+<p>The expression language is statically type checked. Although there
+      are many concepts that help the programmer to have really good static
+      type information, sometimes. One knows more about the real type than the
+      system. To explicitly give the system such an information casts are
+      available. <span class="emphasis">
+<em>Casts are 100% static, so you do not need them, if
+      you never statically typecheck your expressions! </em>
+</span>
+</p>
+<p>The syntax for casts is very Java-like:</p>
+<pre class="programlisting">((String)unTypedList.get(0)).toUpperCase()</pre>
+</div>
+<div class="section" title="Xpand keywords and metamodel properties">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N10CD6"/>Xpand keywords and metamodel properties<a name="N10CD9" class="indexterm"/>
+</h3>
+</div>
+</div>
+</div>
+<p>When the name of a metamodel property conflicts with an
+      <span class="emphasis">
+<em>Xpand</em>
+</span> or <span class="emphasis">
+<em>Xtend</em>
+</span> keyword, the
+      conflict is resolved in favour of the keyword. To refer to the metamodel
+      property in these cases, its name must be preceded by a
+      '<code class="varname">^</code>' character.</p>
+<p>Example:</p>
+<pre class="programlisting">private String foo(Import ^import) : ^import.name;
+</pre>
+</div>
+</div>
+</body>
+</html>

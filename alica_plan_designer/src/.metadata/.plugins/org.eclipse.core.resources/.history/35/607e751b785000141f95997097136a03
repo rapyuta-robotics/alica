@@ -1,0 +1,93 @@
+«IMPORT alica»  
+
+«DEFINE Root FOR PlanningProblem»«ENDDEFINE»
+«DEFINE Root FOR Plan»
+
+	«FILE name + id ".cpp"-»
+		#include "«name»«id».h"
+		
+		«PROTECT CSTART '/*' CEND '*/' ID "eph"+this.id-»
+			//Add additional using directives here
+		«ENDPROTECT-»
+		
+		namespace Alica.Validators {	
+			//Plan:«this.name»
+			public partial class Expressions : AbstractExpressions {
+			«EXPAND abstractPlanChecking»
+			«EXPAND doExpandStates»		
+			}	
+		}
+	«ENDFILE»
+
+«ENDDEFINE»
+
+«DEFINE BehaviourConfiguration FOR BehaviourConfiguration»
+
+	«FILE behaviour.name + id + "Behaviour.cpp"-»	
+using System;
+using System.Collections.Generic;
+using Alica;
+«PROTECT CSTART '/*' CEND '*/' ID "eph"+this.id-»
+	//Add additional using directives here
+«ENDPROTECT»
+		
+namespace Alica.Validators {	
+	//BehaviourConfiguration:«this.name»
+	public partial class Expressions : AbstractExpressions {
+		«EXPAND abstractPlanChecking»	
+	}			
+}
+	«ENDFILE»
+
+«ENDDEFINE»
+«DEFINE abstractPlanChecking FOR BehaviourConfiguration»«ENDDEFINE»
+«DEFINE abstractPlanChecking FOR PlanType»«ENDDEFINE»
+«DEFINE abstractPlanChecking FOR Plan»							
+				«EXPAND planCheckingMethods»
+				«EXPAND utilityFunctionMethod»
+«ENDDEFINE»
+
+«DEFINE utilityFunctionMethod FOR Plan»
+				/* generated comment
+					«EXPAND utilFuncEntryPoints FOREACH entryPoints»
+				*/
+				public static UtilityFunction GetUtilityFunction«this.id»(Plan plan) {   
+					«PROTECT CSTART '/*' CEND '*/' ID this.id »
+					«IF Plan.isInstance(this)»
+					 	return new DefaultUtilityFunction(plan);
+					«ELSE» 
+						return null;
+					«ENDIF»
+					
+					«ENDPROTECT»					
+				}
+«ENDDEFINE»
+
+«DEFINE utilFuncEntryPoints FOR EntryPoint»
+	Task: «this.task.name»  -> EntryPoint-ID: «this.id»
+«ENDDEFINE»
+
+
+
+«DEFINE doExpandStates FOR Plan»
+	«FOREACH states AS state»
+		«EXPAND stateChecking(state)»
+		«EXPAND BehaviourConfiguration FOREACH state.plans.typeSelect(BehaviourConfiguration)»
+	«ENDFOREACH»
+«ENDDEFINE»
+
+«DEFINE stateChecking(State s) FOR Plan»
+			//State: «s.name» in Plan: «this.name»
+			«EXPAND stateCheckingMethods(s)»			
+«ENDDEFINE»
+
+
+«DEFINE stateCheckingMethods(State s) FOR Plan»
+		//Generation not implemented
+		«REM»Implementation by aspects of Conditionplugins«ENDREM»
+«ENDDEFINE»
+
+«DEFINE planCheckingMethods FOR AbstractPlan»
+		//Generation not implemented
+		«REM»Implementation by aspects of Conditionplugins«ENDREM»
+«ENDDEFINE»

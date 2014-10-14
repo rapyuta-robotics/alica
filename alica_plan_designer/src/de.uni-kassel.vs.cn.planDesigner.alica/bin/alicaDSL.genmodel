@@ -228,5 +228,20 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute alicaDSL.ecore#//Constant/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute alicaDSL.ecore#//Constant/type"/>
     </genClasses>
+    <genClasses ecoreClass="alicaDSL.ecore#//BehaviourCreator">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference alicaDSL.ecore#//BehaviourCreator/behaviours"/>
+    </genClasses>
+    <genClasses ecoreClass="alicaDSL.ecore#//ConditionCreator">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference alicaDSL.ecore#//ConditionCreator/conditions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference alicaDSL.ecore#//ConditionCreator/plans"/>
+    </genClasses>
+    <genClasses ecoreClass="alicaDSL.ecore#//UtilityFunctionCreator">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference alicaDSL.ecore#//UtilityFunctionCreator/conditions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference alicaDSL.ecore#//UtilityFunctionCreator/plans"/>
+    </genClasses>
+    <genClasses ecoreClass="alicaDSL.ecore#//ConstraintCreator">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference alicaDSL.ecore#//ConstraintCreator/conditions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference alicaDSL.ecore#//ConstraintCreator/plans"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

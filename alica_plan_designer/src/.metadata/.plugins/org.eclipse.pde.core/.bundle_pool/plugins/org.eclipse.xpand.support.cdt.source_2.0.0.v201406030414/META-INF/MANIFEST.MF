@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.3
+Eclipse-SourceBundle: org.eclipse.xpand.support.cdt;version="2.0.0.v20
+ 1406030414";roots="."
+Bundle-Vendor: Eclipse Modeling Project
+Bundle-Name: Xpand CDT Adapter Source
+Bundle-SymbolicName: org.eclipse.xpand.support.cdt.source
+Created-By: 1.6.0_45-b06 (Sun Microsystems Inc.)
+Bundle-Version: 2.0.0.v201406030414
+Bundle-ManifestVersion: 2
+
+Name: org/eclipse/xpand/support/cdt/CppBeautifier.java
+SHA1-Digest: ajGKFuY0fCb9URgIh5ETloTmcU8=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: 09gN05tobgS/MdtqyTNQhOhB73M=
+
+Name: org/eclipse/xpand/support/cdt/cdtformat-default.xml
+SHA1-Digest: FRJ0zMmiAL5iCsS34IbFFeqO49g=
+
+Name: about.html
+SHA1-Digest: t15ZOHlrGDCeslNIq+PwNJ1tf+4=
+

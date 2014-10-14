@@ -1,0 +1,81 @@
+«IMPORT alica»  
+
+«DEFINE Root FOR Plan»«ENDDEFINE»
+«DEFINE Root FOR BehaviourCreator»
+	«FILE "BehaviourCreator" + ".cpp"-»
+			using namespace std;
+			
+			#include "BehaviourCreator.h"
+			#include "engine/BasicBehaviour.h"
+			«FOREACH behaviours AS beh»
+			#include  "«beh.name».h"
+			«ENDFOREACH»
+			namespace alica
+			{
+
+				BehaviourCreator::BehaviourCreator()
+				{
+				}
+
+				BehaviourCreator::~BehaviourCreator()
+				{
+				}
+
+				unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)
+				{
+					unique_ptr<alica::BasicBehaviour> beh;
+					switch(behaviourConfId)
+					{
+						«FOREACH behaviours AS beh»
+						case «beh.id»
+							return make_shared<«beh.name»>();
+							break;
+						«ENDFOREACH»
+						default:
+						cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourConfId << endl;
+						throw new exception();
+						break;
+					}
+				}
+				
+				
+			}
+	«ENDFILE»
+«ENDDEFINE»
+«DEFINE Behaviour FOR Behaviour»
+	«FILE name +".h"-»
+		#ifndef «name»_H_
+		#define «name»_H_
+		«PROTECT CSTART '/*' CEND '*/' ID "inc"+this.id-»
+			//Add additional includes here
+		«ENDPROTECT-»
+
+		namespace alica
+		{
+			class «name» : public BasicBehaviour
+			{
+				public:
+					«name»();
+					virtual ~«name»();
+					virtual void run(void* msg);
+					«PROTECT CSTART '/*' CEND '*/' ID "pub"+this.id-»
+					//Add additional public methods here
+					«ENDPROTECT-»
+				protected:
+					int callCounter;
+					virtual void initialiseParameters();
+					«PROTECT CSTART '/*' CEND '*/' ID "pro"+this.id-»
+					//Add additional protected methods here
+					«ENDPROTECT-»
+				private:
+				«PROTECT CSTART '/*' CEND '*/' ID "prv"+this.id-»
+					//Add additional private methods here
+				«ENDPROTECT-»
+			};
+		} /* namespace alica */
+
+		#endif /* «name»_H_ */
+	«ENDFILE»
+
+«ENDDEFINE»
+

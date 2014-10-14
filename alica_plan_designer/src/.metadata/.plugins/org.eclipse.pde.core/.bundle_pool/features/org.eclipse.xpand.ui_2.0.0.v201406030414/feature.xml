@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.xpand.ui"
+      label="%featureName"
+      version="2.0.0.v201406030414"
+      provider-name="%providerName">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <includes
+         id="org.eclipse.xtend.ui"
+         version="2.0.0.v201406030414"/>
+
+   <includes
+         id="org.eclipse.xpand"
+         version="2.0.0.v201406030414"/>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.xtend.shared.ui"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.emf.mwe.core"/>
+      <import plugin="org.eclipse.xtend"/>
+      <import plugin="org.eclipse.xpand"/>
+      <import plugin="org.eclipse.xtend.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ltk.core.refactoring"/>
+      <import plugin="org.eclipse.ltk.ui.refactoring"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.emf.mwe.ui"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.xpand.ui"
+         download-size="0"
+         install-size="0"
+         version="2.0.0.v201406030414"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.xpand.activities"
+         download-size="0"
+         install-size="0"
+         version="2.0.0.v201406030414"
+         unpack="false"/>
+
+</feature>

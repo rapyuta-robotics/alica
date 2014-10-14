@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.equinox.weaving.sdk"
+      label="%featureName"
+      version="1.0.200.v20130327-1442"
+      provider-name="%providerName">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <plugin
+         id="org.eclipse.equinox.weaving.aspectj"
+         download-size="30"
+         install-size="59"
+         version="1.0.300.v20130327-1442"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.weaving.aspectj.source"
+         download-size="45"
+         install-size="148"
+         version="1.0.300.v20130327-1442"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.weaving.caching"
+         download-size="22"
+         install-size="39"
+         version="1.0.300.v20130327-1442"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.weaving.caching.source"
+         download-size="19"
+         install-size="44"
+         version="1.0.300.v20130327-1442"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.weaving.caching.j9"
+         download-size="13"
+         install-size="21"
+         version="1.0.200.v20130327-1442"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.weaving.caching.j9.source"
+         download-size="12"
+         install-size="22"
+         version="1.0.200.v20130327-1442"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.weaving.hook"
+         download-size="49"
+         install-size="100"
+         version="1.0.200.v20130327-1442"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.weaving.hook.source"
+         download-size="41"
+         install-size="128"
+         version="1.0.200.v20130327-1442"
+         unpack="false"/>
+
+</feature>

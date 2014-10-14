@@ -116,7 +116,7 @@ public interface Condition extends PlanElement {
 
 	/**
 	 * Returns the value of the '<em><b>Plugin Name</b></em>' attribute.
-	 * The default value is <code>""</code>.
+	 * The default value is <code>"DefaultPlugin"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Plugin Name</em>' attribute isn't clear,
@@ -126,7 +126,7 @@ public interface Condition extends PlanElement {
 	 * @return the value of the '<em>Plugin Name</em>' attribute.
 	 * @see #setPluginName(String)
 	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getCondition_PluginName()
-	 * @model default=""
+	 * @model default="DefaultPlugin"
 	 * @generated
 	 */
 	String getPluginName();

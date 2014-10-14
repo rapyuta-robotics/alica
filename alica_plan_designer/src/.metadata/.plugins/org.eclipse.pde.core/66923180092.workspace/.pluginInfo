@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map>
+	<bundle bundleID="1117" class="de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.provider.PmluiextensionmodelEditPlugin$Implementation" localization="plugin" name="%pluginName" project="de.uni-kassel.vs.cn.planDesigner.pmlextension" provider="%providerName">
+		<library name="."/>
+	</bundle>
+	<bundle bundleID="1116" class="de.uni_kassel.vs.cn.planDesigner.validation.ValidatorPlugin" localization="OSGI-INF/l10n/bundle" name="Validation" project="de.uni-kassel.vs.cn.planDesigner.validation"/>
+	<bundle bundleID="1118" class="de.uni_kassel.vs.cn.planDesigner.codegeneration.CodeGenActivator" localization="OSGI-INF/l10n/bundle" name="Plan Designer Codegeneration" project="de.uni-kassel.vs.cn.planDesigner.codegeneration" provider="Carpe Noctem">
+		<library name="."/>
+		<library name="libs/org.eclipse.cdt.core_5.5.0.201305221014.jar"/>
+	</bundle>
+	<bundle bundleID="1119" localization="plugin" name="ALICA DSL" project="de.uni-kassel.vs.cn.planDesigner.alica" provider="Carpe Noctem">
+		<library name="."/>
+	</bundle>
+	<bundle bundleID="1121" class="de.uni_kassel.vs.cn.plandesigner.condition.defaultPlugin.Activator" localization="OSGI-INF/l10n/bundle" name="TestA" project="de.uni-kassel.vs.cn.planDesigner.condition.defaultPlugin"/>
+	<bundle bundleID="1120" class="de.uni_kassel.vs.cn.plandesigner.condition.pl.Activator" localization="OSGI-INF/l10n/bundle" name="PropositionalLogic" project="de.uni-kassel.vs.cn.planDesigner.condition.propositionalLogic" provider="Uni-Kassel"/>
+	<bundle bundleID="1123" class="de.uni_kassel.vs.cn.planDesigner.alica.presentation.AlicaDLEditorPlugin$Implementation" localization="plugin" name="%pluginName" project="de.uni-kassel.vs.cn.planDesigner.alica.editor" provider="%providerName">
+		<library name="."/>
+	</bundle>
+	<bundle bundleID="1122" class="de.uni_kassel.vs.cn.planDesigner.ui.PlanDesignerActivator" localization="plugin" name="Plan Designer UI" project="de.uni-kassel.vs.cn.planDesigner.ui" provider="Carpe Noctem Cassel">
+		<library name="planmodellerUI.jar"/>
+	</bundle>
+	<bundle bundleID="1125" class="de.uni_kassel.vs.cn.planDesigner.alica.provider.AlicaDLEditPlugin$Implementation" localization="plugin" name="de.uni-kassel.vs.cn.planDesigner.alica.edit" project="de.uni-kassel.vs.cn.planDesigner.alica.edit" provider="%providerName">
+		<library name="."/>
+	</bundle>
+	<bundle bundleID="1124" class="de.uni_kassel.vs.cn.plandesigner.condition.core.Activator" localization="OSGI-INF/l10n/bundle" name="Core" project="de.uni-kassel.vs.cn.planDesigner.condition.core"/>
+</map>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.xtend.source"
+      label="%featureName"
+      version="1.4.0.v201306110406"
+      provider-name="%providerName">
+
+   <description url="http://www.eclipse.org/modeling/m2t">
+      %description
+   </description>
+
+   <copyright url="http://www.eclipse.org/legal/epl-v10.html">
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/modeling/m2t/updates/"/>
+   </url>
+
+   <includes
+         id="org.eclipse.xtend.dependencies.source"
+         version="1.4.0.v201306110406"/>
+
+   <includes
+         id="org.eclipse.xtend.typesystem.emf.source"
+         version="1.4.0.v201306110406"/>
+
+   <plugin
+         id="org.eclipse.xtend.source"
+         download-size="0"
+         install-size="0"
+         version="1.4.0.v201306110406"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.xtend.typesystem.emf.source"
+         download-size="0"
+         install-size="0"
+         version="1.4.0.v201306110406"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.xtend.util.stdlib.source"
+         download-size="0"
+         install-size="0"
+         version="1.4.0.v201306110406"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.xtend.typesystem.emf.ui.source"
+         download-size="0"
+         install-size="0"
+         version="1.4.0.v201306110406"
+         unpack="false"/>
+
+   <plugin
+         id="org.antlr.runtime.source"
+         download-size="0"
+         install-size="0"
+         version="3.2.0.v201101311130"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.log4j.source"
+         download-size="0"
+         install-size="0"
+         version="1.2.15.v201012070815"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.xtend.profiler.source"
+         download-size="0"
+         install-size="0"
+         version="1.4.0.v201306110406"
+         unpack="false"/>
+
+</feature>

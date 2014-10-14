@@ -25,7 +25,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="quantifiers" upperBound="-1"
         eType="#//Quantifier" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="pluginName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        defaultValueLiteral=""/>
+        defaultValueLiteral="DefaultPlugin"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//EStringToEObjectMapEntry" containment="true"/>
   </eClassifiers>
@@ -316,5 +316,27 @@
   <eClassifiers xsi:type="ecore:EClass" name="Constant">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BehaviourCreator">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="behaviours" ordered="false"
+        upperBound="-1" eType="#//Behaviour"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConditionCreator">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conditions" ordered="false"
+        upperBound="-1" eType="#//Condition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plans" upperBound="-1"
+        eType="#//AbstractPlan"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UtilityFunctionCreator">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conditions" ordered="false"
+        upperBound="-1" eType="#//Condition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plans" upperBound="-1"
+        eType="#//AbstractPlan"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstraintCreator">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conditions" ordered="false"
+        upperBound="-1" eType="#//Condition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plans" upperBound="-1"
+        eType="#//AbstractPlan"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -1,0 +1,140 @@
+<html>
+<head>
+<title>Generating the EMF tooling</title>
+<link href="book.css" rel="stylesheet" type="text/css"/>
+<meta content="DocBook XSL Stylesheets V1.75.1" name="generator"/>
+<link rel="home" href="index.html" title="Xpand Documentation"/>
+<link rel="up" href="emf_tutorial.html" title="Getting Started"/>
+<link rel="prev" href="emf_tutorial_define_metamodel.html" title="Defining an EMF metamodel"/>
+<link rel="next" href="emf_tutorial_setting_generator_project.html" title="Setting up the generator project"/>
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<h1 xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">Generating the EMF tooling</h1>
+<div class="section" title="Generating the EMF tooling">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title" style="clear: both">
+<a name="emf_tutorial_generate_emf_tooling"/>Generating the EMF tooling</h2>
+</div>
+</div>
+</div>
+<p>In addition to providing the Ecore meta-metamodel<a name="N101E8" class="indexterm"/>, EMF also comes with support for building (more or less
+    usable) editors. These are generated automatically from the metamodel we
+    just defined. In order to define example models (which we will do below)
+    we have to generate these editors. Also, we have to generate the
+    implementation classes for our metamodel. To generate all these things, we
+    have to define a markup model that contains a number of specifics to
+    control the generation of the various artifacts. This markup model is
+    called <span class="emphasis">
+<em>genmodel</em>
+</span>
+<a name="N101EE" class="indexterm"/>.</p>
+<p>So we have to define the <span class="emphasis">
+<em>genmodel</em>
+</span> first. Select
+    the <code class="filename">data.ecore</code> model in the explorer and right mouse
+    click to <span class="guimenu">New</span> → <span class="guisubmenu">Other</span> → <span class="guisubmenu">Eclipse Modelling Framework</span> → <span class="guimenuitem">EMF Generator Model</span>. Follow the following five steps; note that they are also
+    illustrated in the next figure. </p>
+<div class="orderedlist">
+<ol class="orderedlist" type="1">
+<li class="listitem">
+<p>Select EMF Generator Model</p>
+</li>
+<li class="listitem">
+<p>Define the name</p>
+</li>
+<li class="listitem">
+<p>Select the folder</p>
+</li>
+<li class="listitem">
+<p>Select Ecore model as source</p>
+</li>
+<li class="listitem">
+<p>Press the <span class="emphasis">
+<em>Load</em>
+</span> button and then
+          <span class="emphasis">
+<em>Finish</em>
+</span>
+</p>
+</li>
+</ol>
+</div>
+<p> </p>
+<div class="figure">
+<a name="emf_tutorial_creating_genmodel"/>
+<p class="title">
+<b>Figure 6. Creating the genmodel</b>
+</p>
+<div class="figure-contents">
+<div class="mediaobject">
+<img src="images/emf_tutorial/create_ecore_genmodel_step_all_admonitions.png" alt="Creating the genmodel"/>
+</div>
+</div>
+</div>
+<p>
+<br class="figure-break"/>
+</p>
+<p>As a consequence, you will get the finished EMF
+    <span class="emphasis">
+<em>genmodel</em>
+</span>. It is a kind of "wrapper" around the
+    original metamodel, thus, it has the same structure, but the model
+    elements have different properties. As of now, you do not have to change
+    any of these. </p>
+<div class="figure">
+<a name="emf_tutorial_structure_genmodel"/>
+<p class="title">
+<b>Figure 7. Structure of the genmodel</b>
+</p>
+<div class="figure-contents">
+<div class="mediaobject">
+<img src="images/emf_tutorial/create_ecore_genmodel_gm_structure.png" alt="Structure of the genmodel"/>
+</div>
+</div>
+</div>
+<p>
+<br class="figure-break"/>
+</p>
+<p>You can now generate the other projects. </p>
+<div class="figure">
+<a name="emf_tutorial_creating_editing_projects"/>
+<p class="title">
+<b>Figure 8. Generate editing projects</b>
+</p>
+<div class="figure-contents">
+<div class="mediaobject">
+<img src="images/emf_tutorial/create_ecore_genmodel_generate_all.png" alt="Generate editing projects"/>
+</div>
+</div>
+</div>
+<p>
+<br class="figure-break"/>
+</p>
+<p>You now have all the generated additional projects. </p>
+<div class="figure">
+<a name="emf_tutorial_generated_projects"/>
+<p class="title">
+<b>Figure 9. Generated projects</b>
+</p>
+<div class="figure-contents">
+<div class="mediaobject">
+<img src="images/emf_tutorial/create_ecore_genmodel_generated_projects.png" alt="Generated projects"/>
+</div>
+</div>
+</div>
+<p>
+<br class="figure-break"/>
+</p>
+<p>We will not look any deeper at these additional projects for now.
+    However, there is one important thing to point out: The generator also
+    generated the implementation classes for the metamodel. If you take a look
+    into <code class="filename">xpand.demo.emf.datamodel/src</code>
+    folder, you can find classes (actually, interfaces at the top level) that
+    represent the concepts defined in your metamodel. These can be used to
+    access the model. For some more details on how to use the EMF model APIs
+    as well as the reflective cousins, take a look at <a class="ulink" href="http://voelterblog.blogspot.com/2005/12/codeblogck-emf_10.html" target="_new">http://voelterblog.blogspot.com/2005/12/codeblogck-emf_10.html</a>.</p>
+</div>
+</body>
+</html>
