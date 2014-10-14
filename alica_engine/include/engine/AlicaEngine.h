@@ -80,7 +80,7 @@ namespace alica
 		void doStep();
 		void iterationComplete();
 		PartialAssignmentPool* getPartialAssignmentPool();
-
+		void stepNotify();
 		PlanBase* getPlanBase();
 
 		/**

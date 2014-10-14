@@ -10,11 +10,11 @@
 
 #include "engine/BasicBehaviour.h"
 
-namespace alica
+namespace alicaTests
 {
 
 
-	class MidFieldStandard : public BasicBehaviour
+	class MidFieldStandard : public alica::BasicBehaviour
 	{
 	public:
 		MidFieldStandard();

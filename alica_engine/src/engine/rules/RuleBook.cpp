@@ -343,11 +343,11 @@ namespace alica
 		shared_ptr<list<shared_ptr<RunningPlan>> > children = this->ps->getPlansForState(
 				r, &r->getActiveState()->getPlans(),
 				robots);
-		if (children->size() == 0 || children->size() < r->getActiveState()->getPlans().size())
+		if (children == nullptr || children->size() < r->getActiveState()->getPlans().size())
 		{
 			r->addFailure();
 #ifdef RULE_debug
-			cout << "RB: PlanAllocFailed" << r->getPlan()->getName() << endl;
+			cout << "RB: PlanAllocFailed " << r->getPlan()->getName() << endl;
 #endif
 			return PlanChange::FailChange;
 		}

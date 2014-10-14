@@ -29,16 +29,18 @@
 #include "engine/Assignment.h"
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/collections/StateCollection.h"
+#include "TestWorldModel.h"
 
 class AlicaMultiAgent : public ::testing::Test
 {
 protected:
 	supplementary::SystemConfig* sc;
 	alica::AlicaEngine* ae;
-	alica::TestBehaviourCreator* bc;
-	alica::TestConditionCreator* cc;
-	alica::TestUtilityFunctionCreator* uc;
-	alica::TestConstraintCreator* crc;
+	alica::AlicaEngine* ae2;
+	alicaTests::TestBehaviourCreator* bc;
+	alicaTests::TestConditionCreator* cc;
+	alicaTests::TestUtilityFunctionCreator* uc;
+	alicaTests::TestConstraintCreator* crc;
 
 	virtual void SetUp()
 	{
@@ -52,24 +54,24 @@ protected:
 		sc = supplementary::SystemConfig::getInstance();
 		sc->setRootPath(path);
 		sc->setConfigPath(path + "/etc");
-
 		// setup the engine
-		ae = new alica::AlicaEngine();
-		bc = new alica::TestBehaviourCreator();
-		cc = new alica::TestConditionCreator();
-		uc = new alica::TestUtilityFunctionCreator();
-		crc = new alica::TestConstraintCreator();
-		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+		bc = new alicaTests::TestBehaviourCreator();
+		cc = new alicaTests::TestConditionCreator();
+		uc = new alicaTests::TestUtilityFunctionCreator();
+		crc = new alicaTests::TestConstraintCreator();
+
+
 	}
 
 	virtual void TearDown()
 	{
-
 		ae->shutdown();
-		sc->shutdown();
-		delete ae->getIAlicaClock();
+		ae2->shutdown();
 		delete ae->getCommunicator();
+		delete ae2->getCommunicator();
+		delete ae->getIAlicaClock();
+		delete ae2->getIAlicaClock();
+		sc->shutdown();
 		delete cc;
 		delete bc;
 		delete uc;
@@ -77,34 +79,51 @@ protected:
 	}
 };
 /**
- * Tests whether it is possible to run a behaviour in a primitive plan.
+ * Tests whether it is possible to use multiple agents.
  */
 TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 {
+	sc->setHostname("nase");
+	ae = new alica::AlicaEngine();
+	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "RolesetTA", "MultiAgentTestMaster", ".", true))
+			<< "Unable to initialise the Alica Engine!";
 
-	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "Roleset", "SimpleTestPlan", ".", false))
+	sc->setHostname("hairy");
+	ae2 = new alica::AlicaEngine();
+	ae2->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+	ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
+	EXPECT_TRUE(ae2->init(bc, cc, uc, crc, "RolesetTA", "MultiAgentTestMaster", ".", true))
 			<< "Unable to initialise the Alica Engine!";
 
 	ae->start();
+	ae2->start();
 
-	unsigned int sleepTime = 1;
-	sleep(sleepTime);
-
-	EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1412761855746);
-	EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour()->getName(),
-				string("Attack"));
-	//Assuming 30 Hz were 11 iterations are executed by MidFieldStandard, we expect at least 29*sleeptime-15 calls on Attack
-	EXPECT_GT(
-			((Attack* )&*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour())->callCounter,
-			(sleepTime) * 29 - 15);
-	EXPECT_GT(
-			((Attack* )&*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour())->initCounter,
-			0);
-	for (auto iter : *ae->getBehaviourPool()->getAvailableBehaviours())
+	for(int i = 0; i < 100; i++)
 	{
-		if (iter.second->getName() == "MidFieldStandard")
+		ae->stepNotify();
+		ae2->stepNotify();
+		chrono::milliseconds duration(33);
+		this_thread::sleep_for(duration);
+		if(i < 5)
 		{
-			EXPECT_GT(((MidFieldStandard* )&*iter.second)->callCounter, 10);
+			EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413200842974);
+			EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413200842974);
+		}
+		if(i == 5)
+		{
+			alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(true);
+			alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(true);
+		}
+		if(i > 10 && i < 15)
+		{
+			EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
+			EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
+			EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren().begin())->getPlan()->getName(),
+						string("MultiAgentTestPlan"));
+			EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getPlan()->getName(),
+						string("MultiAgentTestPlan"));
 		}
 	}
 }

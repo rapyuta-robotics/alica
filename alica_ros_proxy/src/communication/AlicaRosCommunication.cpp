@@ -29,7 +29,10 @@ namespace alicaRosProxy
 	AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae) :
 			IAlicaCommunication(ae) //, rosNode()
 	{
+		this->isRunning = false;
+		rosNode = new ros::NodeHandle();
 		spinner = new ros::AsyncSpinner(4);
+
 
 		//supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 
@@ -39,35 +42,36 @@ namespace alicaRosProxy
 		 cout << "ATTENTION!!! OwnID is set to -1!!! ROBOT ID is not in Globals.conf [Globals][Team]!!!" << endl;
 		 }*/
 
-		AllocationAuthorityInfoPublisher = rosNode.advertise<alica_ros_proxy::AllocationAuthorityInfo>(
+		AllocationAuthorityInfoPublisher = rosNode->advertise<alica_ros_proxy::AllocationAuthorityInfo>(
 				"/AlicaEngine/AllocationAuthorityInfo", 2);
-		AllocationAuthorityInfoSubscriber = rosNode.subscribe("/AlicaEngine/AllocationAuthorityInfo", 10,
+		AllocationAuthorityInfoSubscriber = rosNode->subscribe("/AlicaEngine/AllocationAuthorityInfo", 10,
 																&AlicaRosCommunication::handleAllocationAuthorityRos,
 																(AlicaRosCommunication*)this);
 
-		BehaviourEngineInfoPublisher = rosNode.advertise<alica_ros_proxy::BehaviourEngineInfo>(
+		BehaviourEngineInfoPublisher = rosNode->advertise<alica_ros_proxy::BehaviourEngineInfo>(
 				"/AlicaEngine/BehaviourEngineInfo", 2);
-		RoleSwitchPublisher = rosNode.advertise<alica_ros_proxy::SyncTalk>("/AlicaEngine/OwnRole", 10);
+		RoleSwitchPublisher = rosNode->advertise<alica_ros_proxy::SyncTalk>("/AlicaEngine/OwnRole", 10);
 
-		PlanTreeInfoPublisher = rosNode.advertise<alica_ros_proxy::PlanTreeInfo>("/AlicaEngine/PlanTreeInfo", 10);
-		PlanTreeInfoSubscriber = rosNode.subscribe("/AlicaEngine/PlanTreeInfo", 1,
+		PlanTreeInfoPublisher = rosNode->advertise<alica_ros_proxy::PlanTreeInfo>("/AlicaEngine/PlanTreeInfo", 10);
+		PlanTreeInfoSubscriber = rosNode->subscribe("/AlicaEngine/PlanTreeInfo", 1,
 													&AlicaRosCommunication::handlePlanTreeInfoRos,
 													(AlicaRosCommunication*)this);
 
-		SyncReadyPublisher = rosNode.advertise<alica_ros_proxy::SyncTalk>("/AlicaEngine/SyncTalk", 10);
-		SyncReadySubscriber = rosNode.subscribe("/AlicaEngine/SyncTalk", 5, &AlicaRosCommunication::handleSyncTalkRos,
+		SyncReadyPublisher = rosNode->advertise<alica_ros_proxy::SyncTalk>("/AlicaEngine/SyncTalk", 10);
+		SyncReadySubscriber = rosNode->subscribe("/AlicaEngine/SyncTalk", 5, &AlicaRosCommunication::handleSyncTalkRos,
 												(AlicaRosCommunication*)this);
-		SyncTalkPublisher = rosNode.advertise<alica_ros_proxy::SyncReady>("/AlicaEngine/SyncReady", 10);
-		SyncTalkSubscriber = rosNode.subscribe("/AlicaEngine/SyncReady", 5, &AlicaRosCommunication::handleSyncReadyRos,
+		SyncTalkPublisher = rosNode->advertise<alica_ros_proxy::SyncReady>("/AlicaEngine/SyncReady", 10);
+		SyncTalkSubscriber = rosNode->subscribe("/AlicaEngine/SyncReady", 5, &AlicaRosCommunication::handleSyncReadyRos,
 												(AlicaRosCommunication*)this);
-
-		spinner->start();
 
 	}
 
 	AlicaRosCommunication::~AlicaRosCommunication()
 	{
-		spinner->stop();
+		if(this->isRunning)
+		{
+			spinner->stop();
+		}
 		delete spinner;
 
 		AllocationAuthorityInfoSubscriber.shutdown();
@@ -75,13 +79,17 @@ namespace alicaRosProxy
 		PlanTreeInfoSubscriber.shutdown();
 		SyncReadySubscriber.shutdown();
 		SyncTalkSubscriber.shutdown();
-		rosNode.shutdown();
+		rosNode->shutdown();
+		delete rosNode;
 
 	}
 
 	void AlicaRosCommunication::tick()
 	{
-		ros::spinOnce();
+		if(this->isRunning)
+		{
+			ros::spinOnce();
+		}
 	}
 
 	void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo& aai)
@@ -104,7 +112,10 @@ namespace alicaRosProxy
 			aais.entrypoints.push_back(newEP);
 		}
 
-		this->AllocationAuthorityInfoPublisher.publish(aais);
+		if(this->isRunning)
+		{
+			this->AllocationAuthorityInfoPublisher.publish(aais);
+		}
 	}
 
 	void AlicaRosCommunication::sendBehaviourEngineInfo(BehaviourEngineInfo& bi)
@@ -121,7 +132,10 @@ namespace alicaRosProxy
 		}
 		bis.senderID = bi.senderID;
 
-		this->BehaviourEngineInfoPublisher.publish(bis);
+		if(this->isRunning)
+		{
+			this->BehaviourEngineInfoPublisher.publish(bis);
+		}
 	}
 
 	void AlicaRosCommunication::sendPlanTreeInfo(PlanTreeInfo& pti)
@@ -137,7 +151,10 @@ namespace alicaRosProxy
 			ptis.succeededEps.push_back(i);
 		}
 
-		this->PlanTreeInfoPublisher.publish(ptis);
+		if(this->isRunning)
+		{
+			this->PlanTreeInfoPublisher.publish(ptis);
+		}
 	}
 
 	void AlicaRosCommunication::sendRoleSwitch(RoleSwitch& rs)
@@ -147,7 +164,10 @@ namespace alicaRosProxy
 		rss.roleID = rs.roleID;
 		rss.senderID = rs.roleID;
 
-		this->RoleSwitchPublisher.publish(rss);
+		if(this->isRunning)
+		{
+			this->RoleSwitchPublisher.publish(rss);
+		}
 	}
 
 	void AlicaRosCommunication::sendSyncReady(SyncReady& sr)
@@ -157,7 +177,10 @@ namespace alicaRosProxy
 		srs.senderID = sr.senderID;
 		srs.syncTransitionID = sr.syncTransitionID;
 
-		this->RoleSwitchPublisher.publish(srs);
+		if(this->isRunning)
+		{
+			this->RoleSwitchPublisher.publish(srs);
+		}
 	}
 
 	void AlicaRosCommunication::sendSyncTalk(SyncTalk& st)
@@ -175,7 +198,10 @@ namespace alicaRosProxy
 			sts.syncData.push_back(sds);
 		}
 
-		this->SyncTalkPublisher.publish(sts);
+		if(this->isRunning)
+		{
+			this->SyncTalkPublisher.publish(sts);
+		}
 	}
 
 	void AlicaRosCommunication::handleAllocationAuthorityRos(alica_ros_proxy::AllocationAuthorityInfoPtr aai)
@@ -195,7 +221,10 @@ namespace alicaRosProxy
 			aaiPtr->entryPointRobots.push_back(newEP);
 		}
 
-		this->onAuthorityInfoReceived(aaiPtr);
+		if(this->isRunning)
+		{
+			this->onAuthorityInfoReceived(aaiPtr);
+		}
 	}
 
 	void AlicaRosCommunication::handlePlanTreeInfoRos(alica_ros_proxy::PlanTreeInfoPtr pti)
@@ -211,7 +240,10 @@ namespace alicaRosProxy
 			ptiPtr->succeededEPs.push_back(i);
 		}
 
-		this->onPlanTreeInfoReceived(ptiPtr);
+		if(this->isRunning)
+		{
+			this->onPlanTreeInfoReceived(ptiPtr);
+		}
 	}
 
 	void AlicaRosCommunication::handleSyncReadyRos(alica_ros_proxy::SyncReadyPtr sr)
@@ -221,7 +253,10 @@ namespace alicaRosProxy
 		srPtr->senderID = sr->senderID;
 		srPtr->syncTransitionID = sr->syncTransitionID;
 
-		this->onSyncReadyReceived(srPtr);
+		if(this->isRunning)
+		{
+			this->onSyncReadyReceived(srPtr);
+		}
 	}
 
 	void AlicaRosCommunication::handleSyncTalkRos(alica_ros_proxy::SyncTalkPtr st)
@@ -239,7 +274,19 @@ namespace alicaRosProxy
 			stPtr->syncData.push_back(sds);
 		}
 
-		this->onSyncTalkReceived(stPtr);
+		if(this->isRunning)
+		{
+			this->onSyncTalkReceived(stPtr);
+		}
+	}
+
+	void AlicaRosCommunication::startCommunication() {
+		this->isRunning = true;
+		spinner->start();
+	}
+	void AlicaRosCommunication::stopCommunication() {
+		this->isRunning = false;
+		spinner->stop();
 	}
 
 } /* namespace alicaRosProxy */

@@ -9,6 +9,7 @@
     <outTransitions>#1413201388722</outTransitions>
   </states>
   <states id="1413201380359" name="Finished" comment="">
+    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/Attack.beh#1402488866727</plans>
     <inTransitions>#1413201388722</inTransitions>
   </states>
   <transitions id="1413201226246" name="" comment="" msg="">
