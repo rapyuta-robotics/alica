@@ -43,9 +43,12 @@ namespace alicaRosProxy
 		virtual void handleSyncReadyRos(alica_ros_proxy::SyncReadyPtr sr);
 		virtual void handleSyncTalkRos(alica_ros_proxy::SyncTalkPtr st);
 
+		virtual void startCommunication();
+		virtual void stopCommunication();
+
 	protected:
 		int ownID;
-		ros::NodeHandle rosNode;
+		ros::NodeHandle* rosNode;
 		ros::AsyncSpinner* spinner;
 
 		ros::Publisher BehaviourEngineInfoPublisher;
@@ -61,6 +64,8 @@ namespace alicaRosProxy
 		ros::Subscriber SyncReadySubscriber;
 		ros::Publisher SyncTalkPublisher;
 		ros::Subscriber SyncTalkSubscriber;
+
+		bool isRunning;
 	};
 
 } /* namespace alicaRosProxy */

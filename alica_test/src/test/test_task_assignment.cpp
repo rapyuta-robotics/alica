@@ -31,20 +31,20 @@ class TaskAssignmentTest : public ::testing::Test
 protected:
 	alica::AlicaEngine* ae;
 	supplementary::SystemConfig* sc;
-	alica::TestBehaviourCreator* bc;
-	alica::TestConditionCreator* cc;
-	alica::TestUtilityFunctionCreator* uc;
-	alica::TestConstraintCreator* crc;
+	alicaTests::TestBehaviourCreator* bc;
+	alicaTests::TestConditionCreator* cc;
+	alicaTests::TestUtilityFunctionCreator* uc;
+	alicaTests::TestConstraintCreator* crc;
 
 	virtual void SetUp()
 	{
 		sc = supplementary::SystemConfig::getInstance();
 		sc->setHostname("zwerg");
 		ae = new alica::AlicaEngine();
-		bc = new alica::TestBehaviourCreator();
-		cc = new alica::TestConditionCreator();
-		uc = new alica::TestUtilityFunctionCreator();
-		crc = new alica::TestConstraintCreator();
+		bc = new alicaTests::TestBehaviourCreator();
+		cc = new alicaTests::TestConditionCreator();
+		uc = new alicaTests::TestUtilityFunctionCreator();
+		crc = new alicaTests::TestConstraintCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->init(bc, cc, uc, crc, "RolesetTA", "MasterPlanTaskAssignment", ".", false);
 	}

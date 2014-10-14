@@ -40,9 +40,11 @@ namespace alica
 		void onAuthorityInfoReceived(shared_ptr<AllocationAuthorityInfo> aai);
 		void onPlanTreeInfoReceived(shared_ptr<PlanTreeInfo> pti);
 
+		virtual void startCommunication() = 0;
+		virtual void stopCommunication() = 0;
+
 	protected:
 		AlicaEngine* ae;
-
 	};
 
 } /* namespace alica */

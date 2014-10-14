@@ -166,6 +166,10 @@ namespace alica
 		this->expressionHandler->attachAll();
 		UtilityFunction::initDataStructures(this);
 		this->syncModul->init();
+		if (this->getCommunicator() != nullptr)
+		{
+			this->getCommunicator()->startCommunication();
+		}
 		return everythingWorked;
 	}
 
@@ -174,6 +178,10 @@ namespace alica
 	 */
 	void AlicaEngine::shutdown()
 	{
+		if (this->getCommunicator() != nullptr)
+		{
+			this->getCommunicator()->stopCommunication();
+		}
 		this->terminating = true;
 		this->maySendMessages = false;
 
@@ -234,7 +242,8 @@ namespace alica
 		delete planSelector;
 		planSelector = nullptr;
 
-		if(this->pap != nullptr) {
+		if (this->pap != nullptr)
+		{
 			delete this->pap;
 			this->pap = nullptr;
 		}
@@ -467,9 +476,17 @@ namespace alica
 		return planBase;
 	}
 
-	PartialAssignmentPool* AlicaEngine::getPartialAssignmentPool() {
+	PartialAssignmentPool* AlicaEngine::getPartialAssignmentPool()
+	{
 		return this->pap;
 	}
+
+	void AlicaEngine::stepNotify()
+	{
+		this->setStepCalled(true);
+		this->getPlanBase()->getStepModeCV()->notify_all();
+	}
+
 
 } /* namespace Alica */
 

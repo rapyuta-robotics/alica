@@ -5,10 +5,11 @@
     <outTransitions>#1413201368286</outTransitions>
   </states>
   <states id="1413200910490" name="State1" comment="" entryPoint="1413200890537">
-    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/MidFieldStandard.beh#1402488712657</plans>
+    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/Attack.beh#1402488866727</plans>
     <outTransitions>#1413201050743</outTransitions>
   </states>
   <states id="1413201030936" name="State2" comment="">
+    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/Attack.beh#1402488866727</plans>
     <inTransitions>#1413201050743</inTransitions>
     <outTransitions>#1413201367062</outTransitions>
   </states>

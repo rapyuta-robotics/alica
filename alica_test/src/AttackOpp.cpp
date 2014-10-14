@@ -7,10 +7,10 @@
 
 #include "AttackOpp.h"
 
-namespace alica
+namespace alicaTests
 {
 
-	AttackOpp::AttackOpp() : BasicBehaviour("AttackOpp")
+	AttackOpp::AttackOpp() : alica::BasicBehaviour("AttackOpp")
 	{
 		this->callCounter = 0;
 	}

@@ -7,10 +7,10 @@
 
 #include "Tackle.h"
 
-namespace alica
+namespace alicaTests
 {
 
-	Tackle::Tackle() : BasicBehaviour("Tackle")
+	Tackle::Tackle() : alica::BasicBehaviour("Tackle")
 	{
 		this->callCounter = 0;
 	}

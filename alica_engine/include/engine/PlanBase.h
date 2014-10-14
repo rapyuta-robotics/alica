@@ -66,7 +66,6 @@ namespace alica
 		shared_ptr<RunningPlan> getRootNode();
 		Plan* getMasterPlan();
 
-
 	private:
 		/**
 		 * List of RunningPlans scheduled for out-of-loop evaluation.

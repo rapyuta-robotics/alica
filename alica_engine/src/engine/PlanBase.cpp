@@ -39,7 +39,6 @@ namespace alica
 		this->statusPublisher = nullptr;
 		this->lastSentStatusTime = 0;
 		this->loopInterval = 0;
-		this->stepModeCV = nullptr;
 		this->deepestNode = nullptr;
 		this->log = nullptr;
 		this->rootNode = nullptr;
@@ -86,6 +85,7 @@ namespace alica
 		}
 
 		this->timerModeCV = nullptr;
+		this->stepModeCV = nullptr;
 		this->loopTimer = nullptr;
 		if (!this->ae->getStepEngine())
 		{
@@ -93,6 +93,10 @@ namespace alica
 			this->timerModeCV = new condition_variable();
 			this->loopTimer->registerCV(timerModeCV);
 			loopTimer->start();
+		}
+		else
+		{
+			this->stepModeCV = new condition_variable();
 		}
 
 #ifdef PB_DEBUG
@@ -333,6 +337,7 @@ namespace alica
 
 		if (ae->getStepEngine())
 		{
+			ae->setStepCalled(true);
 			stepModeCV->notify_one();
 		}
 		else
@@ -359,6 +364,10 @@ namespace alica
 		if (this->timerModeCV != nullptr)
 		{
 			delete this->timerModeCV;
+		}
+		if (this->stepModeCV != nullptr)
+		{
+			delete this->stepModeCV;
 		}
 		delete this->statusMessage;
 
@@ -461,3 +470,5 @@ namespace alica
 	}
 
 }
+
+

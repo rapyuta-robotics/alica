@@ -26,10 +26,14 @@
   </extensions>
   <extensions>
     <key href="MultiAgentTestMaster.pml#1413201380359"/>
-    <value xPos="474" yPos="119" width="71" height="67"/>
+    <value xPos="474" yPos="119" width="71" height="67" collapsed="false"/>
   </extensions>
   <extensions>
     <key href="MultiAgentTestMaster.pml#1413201388722"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/Attack.beh#1402488866727"/>
     <value/>
   </extensions>
 </uiextensionmodel:PmlUiExtensionMap>
