@@ -1,0 +1,41 @@
+<toc topic="help/index.html" label="Modeling Workflow Engine Reference">
+<topic href="help/index.html#workflow_reference_introduction" label="Introduction"/>
+<topic href="help/workflow_reference_workflow_components.html" label="Workflow components">
+<topic href="help/workflow_reference_workflow_components.html#workflow_reference_workflow" label="Workflow"/>
+<topic href="help/workflow_reference_workflow_components.html#workflow_reference_components_with_IDs" label="Workflow Components with IDs"/>
+<topic href="help/workflow_reference_workflow_components.html#workflow_reference_convenience" label="More convenience"/>
+</topic>
+<topic href="help/workflow_reference_included_workflow_components.html" label="Included Workflow Components">
+<topic href="help/workflow_reference_included_workflow_components.html#workflow_reference_directorycleaner" label="DirectoryCleaner (org.eclipse.emf.mwe.utils.DirectoryCleaner)"/>
+<topic href="help/workflow_reference_included_workflow_components.html#workflow_reference_ifcomponent" label="IfComponent (org.eclipse.emf.mwe.core.container.IfComponent)"/>
+<topic href="help/workflow_reference_included_workflow_components.html#workflow_reference_standalonesetup" label="StandaloneSetup (org.eclipse.emf.mwe.utils.StandaloneSetup)"/>
+<topic href="help/workflow_reference_included_workflow_components.html#workflow_reference_writer" label="Writer (org.eclipse.emf.mwe.utils.Writer)"/>
+</topic>
+<topic href="help/workflow_reference_workflow_configuration.html" label="Workflow Configuration">
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_properties" label="Properties">
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_components" label="Components">
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_accessors" label="Accessor methods"/>
+</topic>
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_component_creation" label="Component creation"/>
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_references" label="References"/>
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_simple_parameters" label="Simple Parameters">
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_converters" label="Converters"/>
+</topic>
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_including_other_workflows" label="Including other workflow files (also known as cartridges)"/>
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_inheritall" label="InheritAll Feature"/>
+</topic>
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_component_implementation" label="Component Implementation and Workflow Execution">
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_context" label="The Workflow Context"/>
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_issues" label="Issues"/>
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_controlling_workflow" label="Controlling the Workflow">
+<topic href="help/workflow_reference_workflow_configuration.html#N10284" label="Using Aspect Orientation wih Workflows"/>
+</topic>
+</topic>
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_invoking_a_workflow" label="Invoking a workflow">
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_workflowrunner" label="Starting the WorkflowRunner"/>
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_starting_with_ant" label="Starting with Ant"/>
+<topic href="help/workflow_reference_workflow_configuration.html#workflow_reference_starting_from_your_own_code" label="Starting from you own code"/>
+<topic href="help/workflow_reference_workflow_configuration.html#N102C6" label="Starting from Eclipse"/>
+</topic>
+</topic>
+</toc>

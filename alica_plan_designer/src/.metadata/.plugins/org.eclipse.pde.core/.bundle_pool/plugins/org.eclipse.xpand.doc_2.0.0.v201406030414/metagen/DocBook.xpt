@@ -1,0 +1,107 @@
+«EXTENSION metagen::Extensions»
+
+
+«DEFINE Start FOR List[xpand2::Type]»
+«FILE "builtin_api.xml" DOCBOOK-»
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="builtin_api">
+	<title>Built-in types API documentation</title>
+    «EXPAND Section FOREACH this»
+</chapter>
+«ENDFILE»
+«ENDDEFINE»
+
+«DEFINE Section FOR xpand2::Type»
+	<section id="«fileName(this)»">
+		<title><classname>«name»</classname></title>
+		<para>
+			Supertype: 
+«IF superTypes.size>0»«FOREACH superTypes AS super SEPARATOR ", "»«super.db_linkedName()»«ENDFOREACH»«ELSE»none«ENDIF»
+		</para>
+		<para>
+		«EXPAND PropertyTable»
+		</para>
+		<para>
+		«EXPAND OperationTable»
+		</para>
+	</section>
+
+«ENDDEFINE»
+
+
+«DEFINE PropertyTable FOR xpand2::Type»
+«IF !getOwnedProperties().isEmpty»
+		<table frame='all' id="«name»_Properties">
+			<title>Properties</title>
+			<tgroup cols='3' align='left' colsep='1' rowsep='1'>
+				<colspec colname='c1'/>
+				<colspec colname='c2'/>
+				<colspec colname='c3'/>
+				<thead>
+					<row>
+						<entry>Type</entry>
+						<entry>Name</entry>
+						<entry>Description</entry>
+					</row>
+				</thead>
+				<tbody>
+«FOREACH getOwnedProperties() AS prop-»
+					<row>
+						<entry>
+							«prop.returnType.db_linkedName()»
+						</entry>
+						<entry>
+							<methodname>«prop.name»</methodname>
+						</entry>
+						<entry>
+							«prop.documentation»
+						</entry>
+					</row>
+«ENDFOREACH-»					
+				</tbody>
+			</tgroup>
+		</table>
+«ELSE»
+	This type does not define any properties.
+«ENDIF»		
+«ENDDEFINE»
+
+
+
+«DEFINE OperationTable FOR xpand2::Type»
+«IF !getOwnedOperations().isEmpty»
+		<table frame='all' id="«name»_Operations">
+			<title>Operations</title>
+			<tgroup cols='3' align='left' colsep='1' rowsep='1'>
+				<colspec colname='c1'/>
+				<colspec colname='c2'/>
+				<colspec colname='c3'/>
+				<thead>	
+					<row>
+						<entry>Return type</entry>
+						<entry>Name</entry>
+						<entry>Description</entry>
+					</row>
+				</thead>
+				<tbody>
+«FOREACH getOwnedOperations() AS op-»
+					<row>
+						<entry>
+							«op.returnType.db_linkedName()»
+						</entry>
+						<entry>
+							<methodname>«op.name.replaceAll("<","&lt;").replaceAll(">","&gt;")»</methodname>
+							(«FOREACH op.getParameterTypes() AS param SEPARATOR ", "»«param.db_linkedName()»«ENDFOREACH»)
+						</entry>
+						<entry>
+							«op.documentation»
+						</entry>
+					</row>
+«ENDFOREACH-»					
+				</tbody>
+			</tgroup>
+		</table>
+«ELSE»
+	This type does not define any operations.
+«ENDIF»		
+«ENDDEFINE»

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.equinox.server.jetty"
+      label="%featureName"
+      version="1.1.1.v20140113-1859"
+      provider-name="%providerName">
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <plugin
+         id="javax.servlet"
+         download-size="196"
+         install-size="705"
+         version="3.0.0.v201112011016"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.http.jetty"
+         download-size="24"
+         install-size="44"
+         version="3.0.100.v20130327-1442"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.http.servlet"
+         download-size="43"
+         install-size="82"
+         version="1.1.400.v20130418-1354"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jetty.continuation"
+         download-size="26"
+         install-size="49"
+         version="8.1.14.v20131031"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jetty.http"
+         download-size="101"
+         install-size="200"
+         version="8.1.14.v20131031"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jetty.io"
+         download-size="110"
+         install-size="214"
+         version="8.1.14.v20131031"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jetty.security"
+         download-size="96"
+         install-size="195"
+         version="8.1.14.v20131031"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jetty.server"
+         download-size="361"
+         install-size="779"
+         version="8.1.14.v20131031"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jetty.servlet"
+         download-size="106"
+         install-size="228"
+         version="8.1.14.v20131031"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jetty.util"
+         download-size="294"
+         install-size="580"
+         version="8.1.14.v20131031"
+         unpack="false"/>
+
+</feature>

@@ -1,0 +1,690 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<repository name='download cache' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1.0.0'>
+  <properties size='2'>
+    <property name='p2.system' value='true'/>
+    <property name='p2.timestamp' value='1413054554628'/>
+  </properties>
+  <mappings size='3'>
+    <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
+    <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>
+    <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
+  </mappings>
+  <artifacts size='135'>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.gtk.linux.ppc' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='30070'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.gmf.runtime.thirdparty_root' version='1.7.0.201306111432'>
+      <properties size='1'>
+        <property name='download.size' value='8825'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.gtk.aix.ppc' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='244551'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend.typesystem.uml2_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.mwe.core_root' version='1.3.1.v201309030422'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp_root' version='4.3.2.v20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='37259'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.gtk.linux.x86' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='194222'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xpand.examples_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtext.docs_root' version='2.4.3.v201309030823'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xpand_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.cocoa.macosx.x86' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='281213'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtext.xtext.ui_root' version='2.4.3.v201309030823'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.mwe.ui_root' version='1.2.1.v201309030422'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.gmf.runtime.sdk_root' version='1.7.0.201306111432'>
+      <properties size='1'>
+        <property name='download.size' value='8825'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.mwe2.runtime.sdk_root' version='2.4.1.v201309030422'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.validation.sdk_root' version='1.7.0.201306111341'>
+      <properties size='1'>
+        <property name='download.size' value='7720'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend.dependencies_root' version='1.4.0.v201306110406'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.cdt_root' version='8.3.0.201402142303'>
+      <properties size='1'>
+        <property name='download.size' value='8076'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.gtk.linux.ppc64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='29573'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.validation.ocl_root' version='1.7.0.201306111341'>
+      <properties size='1'>
+        <property name='download.size' value='7720'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend.ui_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.cocoa.macosx.x86' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='280225'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend.typesystem.uml2_root' version='1.4.0.v201306110406'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.cocoa.macosx.x86_64' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='275066'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.cocoa.macosx.x86_64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='275084'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.win32.win32.x86_64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='123496'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.cocoa.macosx.x86_64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='275087'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.gtk.linux.ppc64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='29573'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend.typesystem.xsd_root' version='1.4.0.v201306110406'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.cvs_root' version='1.4.0.v20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='8902'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.gtk.solaris.sparc' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='24758'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.cocoa.macosx.x86' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='281211'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend.typesystem.emf_root' version='1.4.0.v201306110406'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xpand.sdk_root' version='1.4.0.v201306110406'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtext.runtime_root' version='2.4.3.v201309030823'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.win32.win32.x86_64' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='123496'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend.sdk_root' version='2.4.3.v201309030823'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.gtk.hpux.ia64' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='14443'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.gtk.linux.ppc' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='30070'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.cocoa.macosx.x86' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='281192'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.gtk.linux.x86' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='62795'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.ecoretools.sdk_root' version='1.2.0.201306071421'>
+      <properties size='1'>
+        <property name='download.size' value='8492'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.gtk.linux.s390' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='30783'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.gtk.hpux.ia64' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='14445'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.gtk.solaris.sparc' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='24758'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.gtk.linux.x86_64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='195498'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.gtk.linux.x86' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='194222'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.cocoa.macosx.x86_64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='275085'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.gtk.linux.x86_64' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='64071'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xpand.all_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.gmf.runtime.notation_root' version='1.7.0.201306101425'>
+      <properties size='1'>
+        <property name='download.size' value='8825'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.validation.doc_root' version='1.7.0.201306111341'>
+      <properties size='1'>
+        <property name='download.size' value='7720'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.win32.win32.x86' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='119978'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.core.feature_root.win32.win32.x86_64' version='1.1.0.v20140110-1610'>
+      <properties size='1'>
+        <property name='download.size' value='7451'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.gtk.aix.ppc64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='249049'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.gtk.aix.ppc' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='244553'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.gtk.linux.x86' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='194637'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.gtk.linux.ppc' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='60569'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xpand.examples_root' version='1.2.2.v201306110406'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xpand_root' version='1.4.0.v201306110406'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.win32.win32.x86' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='114275'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.win32.win32.x86_64' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='116069'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform_root' version='4.3.2.v20140221-1852'>
+      <properties size='1'>
+        <property name='download.size' value='9030'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtext.ui_root' version='2.4.3.v201309030823'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.gtk.linux.ppc' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='30485'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.gtk.hpux.ia64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='14443'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.mwe.doc_root' version='1.2.1.v201309030422'>
+      <properties size='1'>
+        <property name='download.size' value='5304'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xpand.doc_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend.dependencies_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.gtk.solaris.x86' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='23269'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend.typesystem.xsd_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.gtk.solaris.sparc' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='24758'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.workspace_root' version='1.7.0.201306111400'>
+      <properties size='1'>
+        <property name='download.size' value='7720'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.gtk.solaris.x86' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='23269'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.gtk.aix.ppc' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='244551'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.gtk.linux.s390' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='59658'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.gmf.sdk_root' version='3.1.0.201402192033'>
+      <properties size='1'>
+        <property name='download.size' value='8825'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.transaction.sdk_root' version='1.7.0.201306111400'>
+      <properties size='1'>
+        <property name='download.size' value='7720'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtext.examples_root' version='2.4.3.v201309030823'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xpand.ui_root' version='1.4.0.v201306110406'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend.typesystem.emf_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xpand.support_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.gmf_root' version='1.7.0.201306111432'>
+      <properties size='1'>
+        <property name='download.size' value='8825'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.gtk.solaris.x86' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='23269'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.cocoa.macosx.x86' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='281210'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.gtk.aix.ppc' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='244551'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.core.feature_root.win32.win32.x86' version='1.1.0.v20140110-1610'>
+      <properties size='1'>
+        <property name='download.size' value='5727'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.gtk.aix.ppc' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='244551'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.transaction_root' version='1.7.0.201306111400'>
+      <properties size='1'>
+        <property name='download.size' value='7720'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.win32.win32.x86' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='119978'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.gtk.hpux.ia64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='14443'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xpand.sdk_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.gtk.aix.ppc64' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='249049'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.jdt_root' version='3.9.2.v20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='8902'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.cocoa.macosx.x86_64' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='274099'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.win32.win32.x86_64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='123496'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.win32.win32.x86' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='119978'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.gtk.linux.s390x' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='30961'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.gtk.linux.s390x' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='59836'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.win32.win32.x86_64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='123496'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.gtk.solaris.x86' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='23271'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.gmf.examples.runtime_root' version='1.7.0.201306111432'>
+      <properties size='1'>
+        <property name='download.size' value='8076'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.mwe.sdk_root' version='1.3.1.v201309030422'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.gtk.hpux.ia64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='14443'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.gtk.aix.ppc64' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='249051'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.gtk.linux.x86_64' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='195913'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend.ui_root' version='1.4.0.v201306110406'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.gtk.linux.ppc64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='29573'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.gmf.runtime.notation.sdk_root' version='1.7.0.201306101425'>
+      <properties size='1'>
+        <property name='download.size' value='8825'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.gmf.tooling_root' version='3.1.0.201402192033'>
+      <properties size='1'>
+        <property name='download.size' value='8825'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.gtk.linux.ppc64' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='29988'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.gmf.examples.runtime.ui.pde_root' version='1.7.0.201306111432'>
+      <properties size='1'>
+        <property name='download.size' value='8076'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xpand.ui_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.gtk.linux.ppc' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='30070'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xpand.doc_root' version='1.2.2.v201306110406'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.sdk.executable.gtk.linux.x86_64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='195498'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.gmf.tooling.runtime_root' version='3.1.0.201402192033'>
+      <properties size='1'>
+        <property name='download.size' value='8825'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.gtk.aix.ppc64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='249049'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.equinox.executable_root.gtk.solaris.sparc' version='3.6.0.v20140117-1004'>
+      <properties size='1'>
+        <property name='download.size' value='24760'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.ecoretools_root' version='1.2.0.201306071421'>
+      <properties size='1'>
+        <property name='download.size' value='8492'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.mwe2.language.sdk_root' version='2.4.1.v201309030840'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.transaction.doc_root' version='1.7.0.201306111400'>
+      <properties size='1'>
+        <property name='download.size' value='7720'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.gtk.linux.x86' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='194222'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend_root' version='1.4.0.v201306110406'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtext.sdk_root' version='2.4.3.v201309030823'>
+      <properties size='1'>
+        <property name='download.size' value='8523'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.gtk.solaris.x86' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='23269'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.gtk.linux.ppc64' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='60072'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.rcp.configuration_root.win32.win32.x86' version='1.0.0.v20140117-0610'>
+      <properties size='1'>
+        <property name='download.size' value='119978'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.gtk.linux.x86_64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='195498'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.platform.ide.executable.gtk.solaris.sparc' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='24758'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.xtend.backend.sdk_root' version='2.0.0.v201406030414'>
+      <properties size='1'>
+        <property name='download.size' value='7965'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.workspace.doc_root' version='1.7.0.201306111400'>
+      <properties size='1'>
+        <property name='download.size' value='7720'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.sdk.ide.executable.gtk.aix.ppc64' version='4.3.2.M20140221-1700'>
+      <properties size='1'>
+        <property name='download.size' value='249049'/>
+      </properties>
+    </artifact>
+    <artifact classifier='binary' id='org.eclipse.emf.validation_root' version='1.7.0.201306111341'>
+      <properties size='1'>
+        <property name='download.size' value='7720'/>
+      </properties>
+    </artifact>
+  </artifacts>
+</repository>

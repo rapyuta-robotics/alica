@@ -1,0 +1,16 @@
+<plugin>
+<extension point="org.eclipse.help.toc">
+<toc primary="true" file="toc.xml"/>
+<index
+      path="org.eclipse.xpand.doc.index">
+</index>
+</extension>
+
+   <extension
+         point="org.eclipse.help.index">
+      <index
+            file="help/index.xml">
+      </index>
+   </extension>
+
+</plugin>

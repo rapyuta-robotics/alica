@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?compositeMetadataRepository version='1.0.0'?>
+<repository name='EMFT MWE Update Site' type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>
+  <properties size='1'>
+    <property name='p2.timestamp' value='1409670050672'/>
+  </properties>
+  <children size='23'>
+    <child location='R201112070431/mwe'/>
+    <child location='R201112071250/mwe2lang'/>
+    <child location='R201110310946/mwe'/>
+    <child location='R201110310946/mwe2lang'/>
+    <child location='R201108020506/mwe'/>
+    <child location='R201108020809/mwe2lang'/>
+    <child location='R201206110920/mwe'/>
+    <child location='R201206120758/mwe2lang'/>
+    <child location='helios'/>
+    <child location='R201306110341/mwe/'/>
+    <child location='R201306110940/mwe2lang/'/>
+    <child location='R201309030422/mwe/'/>
+    <child location='R201309030840/mwe2lang/'/>
+    <child location='R201312110307/mwe/'/>
+    <child location='R201312110944/mwe2lang/'/>
+    <child location='R201402030544/mwe/'/>
+    <child location='R201402030750/mwe2lang/'/>
+    <child location='R201405200714/mwe/'/>
+    <child location='R201405200939/mwe2lang/'/>
+    <child location='R201406110919/mwe/'/>
+    <child location='R201406120758/mwe2lang/'/>
+    <child location='R201409021027/mwe/'/>
+    <child location='R201409021051/mwe2lang/'/>
+  </children>
+</repository>

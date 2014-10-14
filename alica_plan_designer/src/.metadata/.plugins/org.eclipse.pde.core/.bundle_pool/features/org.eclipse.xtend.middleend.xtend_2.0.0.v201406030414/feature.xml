@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.xtend.middleend.xtend"
+      label="%featureName"
+      version="2.0.0.v201406030414"
+      provider-name="%providerName">
+
+   <description url="http://www.eclipse.org/modeling/m2t">
+      %description
+   </description>
+
+   <copyright url="http://www.eclipse.org/legal/epl-v10.html">
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/modeling/m2t/updates/"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.xtend.backend"/>
+      <import plugin="org.eclipse.xtend"/>
+      <import plugin="org.eclipse.emf.mwe.core"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.xtend.typesystem.emf"/>
+      <import plugin="org.eclipse.xpand"/>
+      <import plugin="org.apache.commons.logging"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.xtend.middleend.xtend"
+         download-size="0"
+         install-size="0"
+         version="2.0.0.v201406030414"
+         unpack="false"/>
+
+</feature>

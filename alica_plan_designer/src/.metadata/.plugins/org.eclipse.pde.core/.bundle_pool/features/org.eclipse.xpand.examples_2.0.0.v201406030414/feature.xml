@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.xpand.examples"
+      label="%featureName"
+      version="2.0.0.v201406030414"
+      provider-name="%providerName">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/modeling/m2t/updates/"/>
+   </url>
+
+   <plugin
+         id="org.eclipse.xpand.examples"
+         download-size="0"
+         install-size="0"
+         version="2.0.0.v201406030414"/>
+
+   <plugin
+         id="org.eclipse.emf.generic.editor"
+         download-size="0"
+         install-size="0"
+         version="2.0.0.v201406030414"
+         unpack="false"/>
+
+</feature>

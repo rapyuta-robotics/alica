@@ -4527,6 +4527,181 @@ public interface AlicaPackage extends EPackage {
 	int CONSTANT_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourCreatorImpl <em>Behaviour Creator</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourCreatorImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getBehaviourCreator()
+	 * @generated
+	 */
+	int BEHAVIOUR_CREATOR = 49;
+
+	/**
+	 * The feature id for the '<em><b>Behaviours</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BEHAVIOUR_CREATOR__BEHAVIOURS = 0;
+
+	/**
+	 * The number of structural features of the '<em>Behaviour Creator</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BEHAVIOUR_CREATOR_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Behaviour Creator</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BEHAVIOUR_CREATOR_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionCreatorImpl <em>Condition Creator</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionCreatorImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getConditionCreator()
+	 * @generated
+	 */
+	int CONDITION_CREATOR = 50;
+
+	/**
+	 * The feature id for the '<em><b>Conditions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION_CREATOR__CONDITIONS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Plans</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION_CREATOR__PLANS = 1;
+
+	/**
+	 * The number of structural features of the '<em>Condition Creator</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION_CREATOR_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Condition Creator</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION_CREATOR_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.UtilityFunctionCreatorImpl <em>Utility Function Creator</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.UtilityFunctionCreatorImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getUtilityFunctionCreator()
+	 * @generated
+	 */
+	int UTILITY_FUNCTION_CREATOR = 51;
+
+	/**
+	 * The feature id for the '<em><b>Conditions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UTILITY_FUNCTION_CREATOR__CONDITIONS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Plans</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UTILITY_FUNCTION_CREATOR__PLANS = 1;
+
+	/**
+	 * The number of structural features of the '<em>Utility Function Creator</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UTILITY_FUNCTION_CREATOR_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Utility Function Creator</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UTILITY_FUNCTION_CREATOR_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstraintCreatorImpl <em>Constraint Creator</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstraintCreatorImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getConstraintCreator()
+	 * @generated
+	 */
+	int CONSTRAINT_CREATOR = 52;
+
+	/**
+	 * The feature id for the '<em><b>Conditions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONSTRAINT_CREATOR__CONDITIONS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Plans</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONSTRAINT_CREATOR__PLANS = 1;
+
+	/**
+	 * The number of structural features of the '<em>Constraint Creator</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONSTRAINT_CREATOR_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Constraint Creator</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONSTRAINT_CREATOR_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningType <em>Planning Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4534,7 +4709,7 @@ public interface AlicaPackage extends EPackage {
 	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanningType()
 	 * @generated
 	 */
-	int PLANNING_TYPE = 49;
+	int PLANNING_TYPE = 53;
 
 	/**
 	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Transition <em>Transition</em>}'.
@@ -6390,6 +6565,123 @@ public interface AlicaPackage extends EPackage {
 	EAttribute getConstant_Type();
 
 	/**
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator <em>Behaviour Creator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Behaviour Creator</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator
+	 * @generated
+	 */
+	EClass getBehaviourCreator();
+
+	/**
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator#getBehaviours <em>Behaviours</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Behaviours</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator#getBehaviours()
+	 * @see #getBehaviourCreator()
+	 * @generated
+	 */
+	EReference getBehaviourCreator_Behaviours();
+
+	/**
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator <em>Condition Creator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Condition Creator</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator
+	 * @generated
+	 */
+	EClass getConditionCreator();
+
+	/**
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator#getConditions <em>Conditions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Conditions</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator#getConditions()
+	 * @see #getConditionCreator()
+	 * @generated
+	 */
+	EReference getConditionCreator_Conditions();
+
+	/**
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator#getPlans <em>Plans</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Plans</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator#getPlans()
+	 * @see #getConditionCreator()
+	 * @generated
+	 */
+	EReference getConditionCreator_Plans();
+
+	/**
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator <em>Utility Function Creator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Utility Function Creator</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator
+	 * @generated
+	 */
+	EClass getUtilityFunctionCreator();
+
+	/**
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator#getConditions <em>Conditions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Conditions</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator#getConditions()
+	 * @see #getUtilityFunctionCreator()
+	 * @generated
+	 */
+	EReference getUtilityFunctionCreator_Conditions();
+
+	/**
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator#getPlans <em>Plans</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Plans</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator#getPlans()
+	 * @see #getUtilityFunctionCreator()
+	 * @generated
+	 */
+	EReference getUtilityFunctionCreator_Plans();
+
+	/**
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator <em>Constraint Creator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Constraint Creator</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator
+	 * @generated
+	 */
+	EClass getConstraintCreator();
+
+	/**
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator#getConditions <em>Conditions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Conditions</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator#getConditions()
+	 * @see #getConstraintCreator()
+	 * @generated
+	 */
+	EReference getConstraintCreator_Conditions();
+
+	/**
+	 * Returns the meta object for the reference list '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator#getPlans <em>Plans</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Plans</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator#getPlans()
+	 * @see #getConstraintCreator()
+	 * @generated
+	 */
+	EReference getConstraintCreator_Plans();
+
+	/**
 	 * Returns the meta object for enum '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningType <em>Planning Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7903,6 +8195,102 @@ public interface AlicaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CONSTANT__TYPE = eINSTANCE.getConstant_Type();
+
+		/**
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourCreatorImpl <em>Behaviour Creator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourCreatorImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getBehaviourCreator()
+		 * @generated
+		 */
+		EClass BEHAVIOUR_CREATOR = eINSTANCE.getBehaviourCreator();
+
+		/**
+		 * The meta object literal for the '<em><b>Behaviours</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BEHAVIOUR_CREATOR__BEHAVIOURS = eINSTANCE.getBehaviourCreator_Behaviours();
+
+		/**
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionCreatorImpl <em>Condition Creator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ConditionCreatorImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getConditionCreator()
+		 * @generated
+		 */
+		EClass CONDITION_CREATOR = eINSTANCE.getConditionCreator();
+
+		/**
+		 * The meta object literal for the '<em><b>Conditions</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CONDITION_CREATOR__CONDITIONS = eINSTANCE.getConditionCreator_Conditions();
+
+		/**
+		 * The meta object literal for the '<em><b>Plans</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CONDITION_CREATOR__PLANS = eINSTANCE.getConditionCreator_Plans();
+
+		/**
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.UtilityFunctionCreatorImpl <em>Utility Function Creator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.UtilityFunctionCreatorImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getUtilityFunctionCreator()
+		 * @generated
+		 */
+		EClass UTILITY_FUNCTION_CREATOR = eINSTANCE.getUtilityFunctionCreator();
+
+		/**
+		 * The meta object literal for the '<em><b>Conditions</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference UTILITY_FUNCTION_CREATOR__CONDITIONS = eINSTANCE.getUtilityFunctionCreator_Conditions();
+
+		/**
+		 * The meta object literal for the '<em><b>Plans</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference UTILITY_FUNCTION_CREATOR__PLANS = eINSTANCE.getUtilityFunctionCreator_Plans();
+
+		/**
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstraintCreatorImpl <em>Constraint Creator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.ConstraintCreatorImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getConstraintCreator()
+		 * @generated
+		 */
+		EClass CONSTRAINT_CREATOR = eINSTANCE.getConstraintCreator();
+
+		/**
+		 * The meta object literal for the '<em><b>Conditions</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CONSTRAINT_CREATOR__CONDITIONS = eINSTANCE.getConstraintCreator_Conditions();
+
+		/**
+		 * The meta object literal for the '<em><b>Plans</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CONSTRAINT_CREATOR__PLANS = eINSTANCE.getConstraintCreator_Plans();
 
 		/**
 		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningType <em>Planning Type</em>}' enum.

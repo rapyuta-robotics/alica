@@ -1,5 +1,5 @@
 «IMPORT alica»  
-«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ExpressionsCSharp::stateCheckingMethods(State s) FOR Plan»
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ExpressionsCPlusPlus::stateCheckingMethods(State s) FOR Plan»
 «FOREACH s.outTransitions AS transition»
 «IF (transition.preCondition.pluginName == "PropositionalLogicPlugin")»
 		/*
@@ -33,7 +33,7 @@
 «ENDFOREACH»
 «ENDAROUND»
 
-«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ExpressionsCSharp::planCheckingMethods FOR AbstractPlan»
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ExpressionsCPlusPlus::planCheckingMethods FOR AbstractPlan»
 «FOREACH this.conditions.typeSelect(RuntimeCondition) AS rc»
 	«IF (rc.pluginName ==  "PropositionalLogicPlugin")»
 			  /*
@@ -74,7 +74,7 @@
 	«ENDFOREACH»
 «ENDAROUND»
 
-«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ConstraintsCSharp::stateCheckingMethods(State s) FOR Plan»
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ConstraintsCPlusPlus::stateCheckingMethods(State s) FOR Plan»
 // State: «s.name»
 «FOREACH s.outTransitions AS transition»
 «IF (transition.preCondition.pluginName == "PropositionalLogicPlugin")»
@@ -98,7 +98,7 @@ public static void GetConstraint«transition.preCondition.id»(ConstraintDescripto
 «ENDFOREACH»
 «ENDAROUND»
 
-«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ConstraintsCSharp::planCheckingMethods FOR AbstractPlan»
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ConstraintsCPlusPlus::planCheckingMethods FOR AbstractPlan»
 
 	«FOREACH this.conditions.typeSelect(RuntimeCondition) AS rc»
 	«IF (rc.pluginName == "PropositionalLogicPlugin")»
@@ -130,7 +130,7 @@ public static void GetConstraint«pc.id»(ConstraintDescriptor c, RunningPlan rp) 
 	«ENDFOREACH»
 «ENDAROUND»
 
-«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::GoalExpressionCSharp::planCheckingMethods FOR AbstractPlan»
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::GoalExpressionCPlusPlus::planCheckingMethods FOR AbstractPlan»
 
 «FOREACH this.conditions.typeSelect(RuntimeCondition) AS rc»
 	«IF (rc.pluginName == "PropositionalLogicPlugin")»

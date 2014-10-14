@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.emf.mwe.ui.MWELaunchConfigType">
+<booleanAttribute key="java_debug" value="false"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="de.uni-kassel.vs.cn.planDesigner.codegeneration"/>
+<booleanAttribute key="org.eclipse.jdt.launching.STOP_IN_MAIN" value="false"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms40m&#10;-Xmx256m"/>
+<stringAttribute key="startWorkflow" value="/de.uni-kassel.vs.cn.planDesigner.codegeneration/src/ConditionCreator.mwe"/>
+</launchConfiguration>

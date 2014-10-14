@@ -4,19 +4,19 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="de.uni_kassel.vs.cn.planDesigner.codegeneration.commands.GenerateExpressionValidatorsCommand"
-            id="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateExpressionValidators"
-            name="Generate Expression Validators">
+            defaultHandler="de.uni_kassel.vs.cn.planDesigner.codegeneration.commands.GenerateExpressionValidatorsCommandCPlusPlus"
+            id="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateExpressionValidatorsCplusplus"
+            name="Generate Expressions Validators (C++)">
          <commandParameter
-               id="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateAll"
-               name="generateAll"
+               id="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateAllCpp"
+               name="generateAllCpp"
                optional="true">
          </commandParameter>
       </command>
       <command
-            defaultHandler="de.uni_kassel.vs.cn.planDesigner.codegeneration.commands.CleanupExpressionValidatorsCommand"
-            id="de.uni_kassel.vs.cn.planDesigner.codegeneration.cleanupExpressionValidators"
-            name="Cleanup Expression Validators">
+            defaultHandler="de.uni_kassel.vs.cn.planDesigner.codegeneration.commands.CleanupExpressionValidatorsCommandCPlusPlus"
+            id="de.uni_kassel.vs.cn.planDesigner.codegeneration.cleanupExpressionValidatorsCplusplus"
+            name="Cleanup Expression Validators (C++)">
       </command>
    </extension>
    <!--<extension
@@ -47,17 +47,14 @@
                icon="icons/cn200816x16.png"
                label="Codegeneration">
             <command
-                  commandId="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateExpressionValidators"
+                  commandId="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateExpressionValidatorsCplusplus"
                   icon="icons/cn200816x16.png"
-                  label="Generate all Expression Validators"
-                  style="push"
-                  tooltip="Generates the expression validators for the this plan and all dependent plans">
+                  label="Generate all Expression Validators (C++)"
+                  style="push">
                <visibleWhen
                      checkEnabled="false">
                   <and>
-                     <iterate
-                           ifEmpty="false"
-                           operator="and">
+                     <iterate>
                         <adapt
                               type="de.uni_kassel.vs.cn.planDesigner.alica.Plan">
                         </adapt>
@@ -68,22 +65,20 @@
                   </and>
                </visibleWhen>
                <parameter
-                     name="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateAll"
+                     name="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateAllCpp"
                      value="true">
                </parameter>
             </command>
             <command
-                  commandId="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateExpressionValidators"
+                  commandId="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateExpressionValidatorsCplusplus"
                   icon="icons/cn200816x16.png"
-                  label="Generate Expression Validators"
+                  label="Generate Expression Validators (C++)"
                   style="push"
                   tooltip="Generates the expression validators for this plan">
                <visibleWhen
                      checkEnabled="false">
                   <and>
-                     <iterate
-                           ifEmpty="false"
-                           operator="and">
+                     <iterate>
                         <adapt
                               type="de.uni_kassel.vs.cn.planDesigner.alica.Plan">
                         </adapt>
@@ -102,43 +97,39 @@
                icon="icons/cn200816x16.png"
                label="Codegeneration">
             <command
-                  commandId="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateExpressionValidators"
+                  commandId="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateExpressionValidatorsCplusplus"
                   icon="icons/cn200816x16.png"
-                  label="Generate all Expression Validators"
+                  label="Generate all Expression Validators (C++)"
                   style="push"
                   tooltip="Generates the expression validators for the this plan and all dependent plans">
                <visibleWhen
                      checkEnabled="false">
                   <and>
-                     <iterate
-                           ifEmpty="false"
-                           operator="and">
+                     <count
+                           value="1">
+                     </count>
+                     <iterate>
                         <adapt
                               type="de.uni_kassel.vs.cn.planDesigner.alica.Plan">
                         </adapt>
                      </iterate>
-                     <count
-                           value="1">
-                     </count>
                   </and>
                </visibleWhen>
                <parameter
-                     name="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateAll"
+                     name="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateAllCpp"
                      value="true">
                </parameter>
             </command>
             <command
-                  commandId="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateExpressionValidators"
+                  commandId="de.uni_kassel.vs.cn.planDesigner.codegeneration.generateExpressionValidatorsCplusplus"
                   icon="icons/cn200816x16.png"
-                  label="Generate Expression Validators"
+                  label="Generate Expression Validators (C++)"
                   style="push"
                   tooltip="Generates the expression validators for this plan">
                <visibleWhen
                      checkEnabled="false">
                   <and>
-                     <iterate
-                           ifEmpty="false"
-                           operator="and">
+                     <iterate>
                         <adapt
                               type="de.uni_kassel.vs.cn.planDesigner.alica.Plan">
                         </adapt>

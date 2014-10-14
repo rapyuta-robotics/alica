@@ -1,0 +1,1708 @@
+<html>
+<head>
+<title>Stdlib extensions</title>
+<link href="book.css" rel="stylesheet" type="text/css"/>
+<meta content="DocBook XSL Stylesheets V1.75.1" name="generator"/>
+<link rel="home" href="index.html" title="Xpand Documentation"/>
+<link rel="up" href="stdlib_reference.html" title="Stdlib"/>
+<link rel="prev" href="stdlib_reference.html" title="Stdlib"/>
+<link rel="next" href="ch04s03.html" title="Stdlib workflow components"/>
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<h1 xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">Stdlib extensions</h1>
+<div class="section" title="Stdlib extensions">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title" style="clear: both">
+<a name="N123D6"/>Stdlib extensions</h2>
+</div>
+</div>
+</div>
+<p>This section describes the components and extensions provided by
+    Stdlib. We use the shortcut <span class="emphasis">
+<em>xpand.util.stdlib...</em>
+</span> for
+    component classes in package
+    <span class="package">org.eclipse.xtend.util.stdlib</span> in workflow
+    configurations for convenience.</p>
+<p>Note that many functions of the Stdlib make use of static variables
+    in their Java implementation, thus the values are kept through a complete
+    MWE workflow. Also, because of the static implementation, the features are
+    not threadsafe.</p>
+<div class="section" title="IO extensions">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N123E3"/>IO extensions</h3>
+</div>
+</div>
+</div>
+<p>This is an extremely useful library to print information to the
+      logging facility. It is really valuable through transformation processes
+      or for complex expressions to know what exactly expressions are
+      evaluated to.</p>
+<p>
+<span class="emphasis">
+<em>Extension:</em>
+</span>
+      <code class="classname">org::eclipse::xtend::util::stdlib::io</code>
+</p>
+<div class="section" title="debug (Object o)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N123EE"/>debug (Object o)</h4>
+</div>
+</div>
+</div>
+<p>Logs an object with DEBUG level to the logger.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>o - The object to dump.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The object o</p>
+</div>
+<div class="section" title="info (Object o)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N123FE"/>info (Object o)</h4>
+</div>
+</div>
+</div>
+<p>Logs an object with INFO level to the logger.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>o - The object to dump.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The object o</p>
+</div>
+<div class="section" title="error (Object o)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N1240E"/>error (Object o)</h4>
+</div>
+</div>
+</div>
+<p>Logs an object with ERROR level to the logger.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>o - The object to dump.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The object o</p>
+</div>
+<div class="section" title="syserr (Object o)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N1241E"/>syserr (Object o)</h4>
+</div>
+</div>
+</div>
+<p>Prints an object to System.err.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>o - The object that should be printed. <code class="code">null</code> is
+            allowed.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The object o</p>
+</div>
+<div class="section" title="syserr (Object o, String prefix)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N12431"/>syserr (Object o, String prefix)</h4>
+</div>
+</div>
+</div>
+<p>Prints an object to System.err.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>o - The object that should be printed. <code class="code">null</code> is
+            allowed.</p>
+</li>
+<li class="listitem">
+<p>prefix - A prefix string for the message.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The object o</p>
+</div>
+<div class="section" title="syserr (Object o)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N12447"/>syserr (Object o)</h4>
+</div>
+</div>
+</div>
+<p>Prints an object to System.err.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>o - The object that should be printed. <code class="code">null</code> is
+            allowed.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The object o</p>
+</div>
+<div class="section" title="throwError (Object o)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N1245A"/>throwError (Object o)</h4>
+</div>
+</div>
+</div>
+<p>Throws an IllegalStateMessage.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>o - The exception message.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> Nothing, since an exception is
+        thrown.</p>
+</div>
+<div class="section" title="Examples">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N1246A"/>Examples</h4>
+</div>
+</div>
+</div>
+<pre class="programlisting">import data; 
+extension org.eclipse.xtend.util.stdlib::io; 
+create DataModel this duplicate(DataModel s): 
+  entity.addAll( s.entity.duplicate() ) -&gt; 
+  setName(s.name); 
+  
+create Entity this duplicate(Entity old): 
+  (old.name+" has "+old.reference.size+" references").info() -&gt; 
+  old.reference.name.info() -&gt; 
+        </pre>
+<p>This leads to the following output on the console:</p>
+<pre class="programlisting">922  INFO  - Person has 1 references 
+923  INFO  - [autos] 
+926  INFO  - Vehicle has 0 references 
+926  INFO  - []
+        </pre>
+<p>Of course IO extension functions can also be used within Xpand,
+        but if used for logging purposes you have to deal with one side
+        effect: Since the functions return the passed object (the result of an
+        expression, in the simplest case just a string) and Xpand prints out
+        expression results to the opened file, the message will be shown on
+        the console, but also be in the result file. This you might want to
+        avoid, so you can use a small trick for this: after calling a log
+        function use the chaining operator and let the result of the
+        expression be an empty string:</p>
+<pre class="programlisting">«EXTENSION org::eclipse::xtend::util::stdlib::io» 
+... 
+«DEFINE javaClass FOR Entity» 
+  «REM»The following expression will dump the feature names without producing output 
+  as side effect«ENDREM» 
+  «features.name.info() -&gt; ""»</pre>
+<p>This will produce this output on the console:</p>
+<pre class="programlisting">1122 INFO  IOExtensions       - [name, age, address] 
+1740 INFO  IOExtensions       - [street, zip, city]</pre>
+<p>Each function returns the object on which they have been called,
+        so you can build chain expressions. Or, in other words, if you have
+        some expression like</p>
+<pre class="programlisting">element.x.y.z.select(t|t.someProp).a</pre>
+<p>you can always embed one of these io functions anywhere such as
+        in</p>
+<pre class="programlisting">element.x.<span class="emphasis">
+<em>syserr()</em>
+</span>.y.z.select(t|t.someProp.<span class="emphasis">
+<em>info()</em>
+</span>).a</pre>
+</div>
+<div class="section" title="Controlling the log level">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N1248D"/>Controlling the log level</h4>
+</div>
+</div>
+</div>
+<p>You may want to control the logging level for the messages which
+        are printed via the logging facility. How this is configured in detail
+        depends on the underlying logging framework. Xpand uses the Apache
+        Commons Logging library, which may dispatches to another logging
+        framework, mostly Log4J.</p>
+<p>To control the logging level exactly for the IO extensions you
+        have to know the category to which the messages are logged to. It is
+        common to use the class names of the classes that use the logger. In
+        the case of the IO extensions this class is
+        <code class="classname">org.eclipse.xtend.util.stdlib.IOExtensions</code>
+        .</p>
+<p>The following example shows a Log4J configuration file which
+        would disable log levels below warning. This example would only work
+        if the properties file is found at the beginning of the classpath.
+        Make sure that the file would be found before any other Log4J
+        configurations on your classpath. The file must be named
+        <code class="filename">log4j.properties</code>.</p>
+<pre class="programlisting">log4j.appender.CONSOLE = org.apache.log4j.ConsoleAppender 
+log4j.appender.CONSOLE.layout = org.apache.log4j.PatternLayout 
+log4j.appender.CONSOLE.layout.ConversionPattern = %p %C{1} %m %n 
+log4j.rootLogger = INFO, CONSOLE 
+# suppress info messages from IOExtensions 
+log4j.logger.org.eclipse.xtend.util.stdlib.IOExtensions=WARN, CONSOLE 
+log4j.additivity.org.eclipse.xtend.util.stdlib.IOExtensions=false</pre>
+</div>
+</div>
+<div class="section" title="Counter extensions">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N1249E"/>Counter extensions</h3>
+</div>
+</div>
+</div>
+<p>Sometimes it is necessary to have counters within transformation
+      code. The counter extensions enable to initialize, manipulate and
+      retrieve counters.</p>
+<p>
+<span class="emphasis">
+<em>Extension:
+      </em>
+</span>
+<code class="classname">org::eclipse:xtend:::util::stdlib::counter</code>
+</p>
+<div class="section" title="int counterInc (Object o)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N124A8"/>int counterInc (Object o)</h4>
+</div>
+</div>
+</div>
+<p>Increments a counter.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>o - A key for this counter. If this function is called with
+            a <code class="code">null</code> argument an anonymous counter is used. If no
+            counter was registered for the key a new counter instance will be
+            created and initialized with 0.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The incremented counter.</p>
+</div>
+<div class="section" title="int counterDec (Object o)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N124BB"/>int counterDec (Object o)</h4>
+</div>
+</div>
+</div>
+<p>Decrements a counter.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>o - A key for this counter. If this function is called with
+            a <code class="code">null</code> argument an anonymous counter is used. If no
+            counter was registered for the key a new counter instance will be
+            created and initialized with 0.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The decremented counter.</p>
+</div>
+<div class="section" title="int counterReset (Object o)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N124CE"/>int counterReset (Object o)</h4>
+</div>
+</div>
+</div>
+<p>Resets a counter.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>o - A key for this counter. If this function is called with
+            a <code class="code">null</code> argument an anonymous counter is used. If no
+            counter was registered for the key a new counter instance will be
+            created and initialized with 0.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> Allways 0.</p>
+</div>
+<div class="section" title="int counterGet (Object o)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N124E1"/>int counterGet (Object o)</h4>
+</div>
+</div>
+</div>
+<p>Retrieves the current state of a counter.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>o - A key for this counter. If this function is called with
+            a <code class="code">null</code> argument an anonymous counter is used.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> Current counter value.</p>
+</div>
+<div class="section" title="Example">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N124F4"/>Example</h4>
+</div>
+</div>
+</div>
+<pre class="programlisting">«DEFINE CounterExtensionsDemo FOR Object» 
+«FILE "CounterExtensions.txt"» 
+  First counter: 
+  get         : «counterGet()» 
+  inc         : «counterInc()» 
+  inc         : «counterInc()» 
+  inc         : «counterInc()» 
+  dec         : «counterDec()» 
+  Second (named) counter: 
+  inc         : «counterInc("idx")» 
+  inc         : «counterInc("idx")» 
+  inc         : «counterInc("idx")» 
+  reset       : «counterReset("idx")» 
+  inc         : «counterInc("idx")» 
+  First counter: 
+  inc         : «counterInc()» 
+  
+«ENDFILE» 
+«ENDDEFINE»</pre>
+<p>This example will create the following output:</p>
+<pre class="programlisting">  First counter: 
+  get         : 0 
+  inc         : 1 
+  inc         : 2 
+  inc         : 3 
+  dec         : 2 
+  Second (named) counter: 
+  inc         : 1 
+  inc         : 2 
+  inc         : 3 
+  reset       : 0 
+  inc         : 1 
+  First counter: 
+  inc         : 3 </pre>
+</div>
+</div>
+<div class="section" title="Properties extensions">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N124FE"/>Properties extensions</h3>
+</div>
+</div>
+</div>
+<p>You might want to specify configuration values from properties
+      files from your transformation code. The Properties extensions can help
+      you there. Before being able to access the properties through an
+      extension function the properties files must be read and its values
+      stored. This is done through the workflow component
+      <span class="emphasis">
+<em>PropertiesReader</em>
+</span>, which is described below.</p>
+<p>
+<span class="emphasis">
+<em>Extension:</em>
+</span>
+      <code class="classname">org::eclipse::xtend::util::stdlib::properties</code>
+</p>
+<div class="section" title="String getProperty (String key)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N1250C"/>String getProperty (String key)</h4>
+</div>
+</div>
+</div>
+<p>Retrieves a configuration property.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">o</code> - Property key</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> Property value, if defined, else
+        null.</p>
+</div>
+<div class="section" title="Workflow component">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N1251E"/>Workflow component</h4>
+</div>
+</div>
+</div>
+<p>The workflow component PropertiesReader is used to load
+        properties files. It is possible to configure multiple properties
+        files by adding the propertiesFile tag multiple times.</p>
+<div class="table">
+<a name="N12523"/>
+<p class="title">
+<b>Table 1. Workflow component
+          org.eclipse.xtend.util.stdlib.PropertiesReader</b>
+</p>
+<div class="table-contents">
+<table summary="Workflow component&#10;          org.eclipse.xtend.util.stdlib.PropertiesReader" cellspacing="0" cellpadding="10" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col/>
+<col/>
+<col/>
+<col/>
+</colgroup>
+<tbody>
+<tr>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">Property</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">Type</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">Mandatory</td>
+<td style="border-bottom: 2 solid #000000; ">Description</td>
+</tr>
+<tr>
+<td style="border-right: 2 solid #000000; ">propertiesFile</td>
+<td style="border-right: 2 solid #000000; ">String</td>
+<td style="border-right: 2 solid #000000; ">yes</td>
+<td style="">The properties file to read</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break"/>
+</div>
+<div class="section" title="Example">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N1253B"/>Example</h4>
+</div>
+</div>
+</div>
+<p>Workflow configuration:</p>
+<pre class="programlisting">&lt;component class="org.eclipse.xtend.util.stdlib.PropertiesReader"&gt; 
+  &lt;propertiesFile value="src/config1.properties"/&gt; 
+  &lt;propertiesFile value="src/config2.properties"/&gt; 
+&lt;/component&gt; </pre>
+<p>
+<code class="filename">config1.properties</code>:</p>
+<pre class="programlisting">shapes = box,polygon,ellipse,point</pre>
+<p>Usage in an extension:</p>
+<pre class="programlisting">extension org::eclipse::xtend::util::stdlib::properties;
+
+cached List[String] SHAPES () : getProperty("shapes").split(",").trim();</pre>
+</div>
+</div>
+<div class="section" title="Element properties extensions">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N1254C"/>Element properties extensions</h3>
+</div>
+</div>
+</div>
+<p>This allows you to temporarily associate name-value pairs with any
+      model element.</p>
+<p>
+<span class="emphasis">
+<em>Extension:</em>
+</span>
+      <code class="classname">org::eclipse::xtend::util::stdlib::elementprops</code>
+</p>
+<p/>
+<div class="section" title="Void setProperty (Object element, String name, Object value)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N12558"/>Void setProperty (Object element, String name, Object
+        value)</h4>
+</div>
+</div>
+</div>
+<p>Sets the property named <code class="code">name</code> to the value.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">element</code> - The model element</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">name</code> - Property name</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">element</code> - The property value</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> Nothing.</p>
+</div>
+<div class="section" title="Object getProperty (Object element, String name)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N12577"/>Object getProperty (Object element, String name)</h4>
+</div>
+</div>
+</div>
+<p>Retrieves a dynamic property from an element.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">element</code> - The model element</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">name</code> - Property name</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The property value.</p>
+</div>
+</div>
+<div class="section" title="Issues extensions">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N1258E"/>Issues extensions</h3>
+</div>
+</div>
+</div>
+<p>In template code there is no direct access to the Issues instance
+      of the workflow's context possible. The Issues extensions help to report
+      warnings and errors to the Issues instance during transformation.</p>
+<p>This should not encourage you to use constraint checking and
+      generally raise errors directly from within the transformations.
+      However, sometimes it is sensible and useful to be able to do
+      that.</p>
+<p>
+<span class="emphasis">
+<em>Extension:
+      </em>
+</span>
+<code class="classname">org::eclipse::xtend::util::stdlib::issues</code>
+</p>
+<div class="section" title="String reportWarning (String message)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N1259A"/>String reportWarning (String message)</h4>
+</div>
+</div>
+</div>
+<p>Reports a warning message to the workflow context.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">message</code> - A message</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The message.</p>
+</div>
+<div class="section" title="String reportWarning (Object object, String message)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N125AC"/>String reportWarning (Object object, String message)</h4>
+</div>
+</div>
+</div>
+<p>Reports a warning message and the qualified name of a context
+        object to the workflow context.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">object</code> - A context objectt</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">message</code> - A message</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The message.</p>
+</div>
+<div class="section" title="String reportError (String message)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N125C3"/>String reportError (String message)</h4>
+</div>
+</div>
+</div>
+<p>Reports a error message to the workflow context.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">message</code> - A message</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The message.</p>
+</div>
+<div class="section" title="String reportError (Object object, String message)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N125D5"/>String reportError (Object object, String message)</h4>
+</div>
+</div>
+</div>
+<p>Reports a error message and the qualified name of a context
+        object to the workflow context.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">object</code> - A context object</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">message</code> - A message</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The message.</p>
+</div>
+<div class="section" title="Workflow component">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N125EC"/>Workflow component</h4>
+</div>
+</div>
+</div>
+<p>The Issues extensions require that the workflow component
+        <code class="classname">org.eclipse.xtend.util.stdlib.ExtIssueReporter</code>
+        is configured in the workflow before calling the extensions. The
+        purpose of this component is make the workflow's Issues instance
+        available for the extensions.</p>
+<p>The <code class="classname">ExtIssueReporter</code> component does not
+        have any properties.</p>
+</div>
+<div class="section" title="Example">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N125F9"/>Example</h4>
+</div>
+</div>
+</div>
+<p>Workflow configuration:</p>
+<pre class="programlisting">&lt;?xml version="1.0"?&gt; 
+&lt;workflow&gt; 
+  ... 
+  &lt;component class="xpand.util.stdlib.ExtIssueReporter"/&gt;</pre>
+<p>Using from Xtend:</p>
+<pre class="programlisting">import metamodel; 
+extension org::eclipse::xtend::util::stdlib::issues;
+
+demo (Model this) : 
+  issuesExtensionsDemo() 
+  ; 
+
+issuesExtensionsDemo () : 
+  reportWarning("Reporting a warn message from Xtend to the workflow");</pre>
+<p>Console output:</p>
+<pre class="programlisting">INFO WorkflowRunner running workflow: workflow/generator.mwe 
+... 
+... 
+INFO CompositeComponent ExtIssueReporter: setting up issue logging from 
+   within .ext and .xpt files 
+INFO WorkflowRunner workflow completed in 1101ms! 
+WARN WorkflowRunner Reporting a warn message from Xtend to the workflow</pre>
+</div>
+</div>
+<div class="section" title="Naming extensions">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N12608"/>Naming extensions</h3>
+</div>
+</div>
+</div>
+<p>The Naming extensions are only usable with EMF models. This one
+      helps with names, qualified names and namespaces. A qualified name is
+      defined as the seuqence of primitive names of the containment hierarchy
+      of an element, seperated by a dot (e.g. java.lang.String). In order for
+      this to work, model elements are expected to have a name attribute of
+      type EString.<sup>[<a href="#ftn.N1260D" name="N1260D" class="footnote">9</a>]</sup>
+</p>
+<p>
+<span class="emphasis">
+<em>Extension:
+      </em>
+</span>
+<code class="classname">org::eclipse::xtend::util::stdlib::naming
+      </code>
+</p>
+<div class="section" title="String namespace (Object this)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N12615"/>String namespace (Object this)</h4>
+</div>
+</div>
+</div>
+<p>Returns the namespace, i.e. the qualified name minus the name of
+        the element itself.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">this</code> - A model element</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The qualified namespace name of
+        the element.</p>
+</div>
+<div class="section" title="String qualifiedName (Object this)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N12627"/>String qualifiedName (Object this)</h4>
+</div>
+</div>
+</div>
+<p>Returns the qualified name (dot separated) of an element by
+        evaluating its containment hierarchy.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">this</code> - A model element</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The qualified name of the
+        element.</p>
+</div>
+<div class="section" title="String loc (Object this)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N12639"/>String loc (Object this)</h4>
+</div>
+</div>
+</div>
+<p>Tries to build a useful description of an element in the model;
+        very useful for error reporting.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">this</code> - A model element</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> Location information about the
+        element.</p>
+</div>
+<div class="section" title="Object findByName (Collection candidates, String name)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N1264B"/>Object findByName (Collection candidates, String name)</h4>
+</div>
+</div>
+</div>
+<p>Searches the candidates for an element with a specific
+        name.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">candidates</code> - A collection of model
+            elements</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">name</code> - The searched element name</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The searched element or null if no
+        element with that name is contained in the candidates
+        collection.</p>
+</div>
+</div>
+<div class="section" title="Globalvar extensions">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N12662"/>Globalvar extensions</h3>
+</div>
+</div>
+</div>
+<p>Sometimes you might want to share information within a
+      transformation process. One alternative is the use of GLOBALVAR
+      expressions, but this needs that the variables are configured in the
+      workflow. The Globalvar extensions help to store and retrieve objects
+      within a transformation process.</p>
+<p>
+<span class="emphasis">
+<em>Extension:</em>
+</span>
+<code class="classname">
+      org::eclipse::xtend::util::stdlib::globalvar</code>
+</p>
+<div class="section" title="Example">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N1266C"/>Example</h4>
+</div>
+</div>
+</div>
+<p>Usage in Xtend:</p>
+<pre class="programlisting">import metamodel; 
+extension org::eclipse::xtend::util::stdlib::io; 
+extension org::eclipse::xtend::util::stdlib::globalvar;
+
+demo (Model this) : 
+  globalvarExtensionsDemo1() -&gt; 
+  globalvarExtensionsDemo2() 
+;
+
+globalvarExtensionsDemo1 () : 
+    "Storing global var...".info() -&gt; 
+    storeGlobalVar("msg", "Xpand is cool stuff!"); 
+    
+globalvarExtensionsDemo2 () : 
+    ("Getting message from global var: "+getGlobalVar("msg")).info();</pre>
+<p>Console output:</p>
+<pre class="programlisting">INFO IOExtensions Storing global var...
+INFO IOExtensions Getting message from global var: Xpand is cool stuff!</pre>
+<p>This a simple example storing a string, but of course you can
+        store the result of any expression this way.</p>
+</div>
+</div>
+<div class="section" title="Cloning extensions">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N12679"/>Cloning extensions</h3>
+</div>
+</div>
+</div>
+<p>The cloning utilities help you to clone a model element and all
+      its children. The <code class="code">clone(Object)</code> function clones a single
+      object and its children, whereas the <code class="code">clone(List)</code> clones a
+      list of elements. The semantics of cloning is as follows:</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>the object passed in as a parameter is duplicated</p>
+</li>
+<li class="listitem">
+<p>all objects referenced via containment references are also
+          duplicated, recursively</p>
+</li>
+<li class="listitem">
+<p>the values of the attributes are duplicated</p>
+</li>
+<li class="listitem">
+<p>non-containing references to other objects are copied while
+          the target is not cloned (a reference to the original is created in
+          the new object)</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Extension:</em>
+</span>
+      <code class="classname">org::eclipse::xtend::util::stdlib::cloning</code>
+</p>
+<div class="section" title="Object clone (Object original)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N12697"/>Object clone (Object original)</h4>
+</div>
+</div>
+</div>
+<p>Clones an object.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">original</code> - The object that should be
+            cloned.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The cloned object.</p>
+</div>
+<div class="section" title="List clone (List l)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N126A9"/>List clone (List l)</h4>
+</div>
+</div>
+</div>
+<p>Clones a list of objects.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">l</code> - Source list.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The list of cloned objects.</p>
+</div>
+</div>
+<div class="section" title="Cross references extensions">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N126BB"/>Cross references extensions</h3>
+</div>
+</div>
+</div>
+<p>Sometimes there is the need to find objects that reference a
+      specific object. This extension helps to solve this recurring task. This
+      extension can only be used for EMF based models.</p>
+<p>
+<span class="emphasis">
+<em>Extension:
+      </em>
+</span>
+<code class="classname">org::eclipse::xtend::util::stdlib::crossref</code>
+</p>
+<div class="section" title="List[EObject] getReferencingObjects(EObject target)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N126C5"/>List[EObject] getReferencingObjects(EObject target)</h4>
+</div>
+</div>
+</div>
+<p>Retrieves objects that reference a given object.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">target</code> - The target object.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> A list of objects referencing the
+        target.</p>
+</div>
+<div class="section" title="Example">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N126D7"/>Example</h4>
+</div>
+</div>
+</div>
+<p>Usage in Xtend:</p>
+<pre class="programlisting">extension org::eclipse::xtend::util::stdlib::crossref; 
+crossRefDemo (Model this) : 
+    eAllContents.typeSelect(Datatype).dumpCrossReferences(); 
+    
+dumpCrossReferences (Datatype this) : 
+    ("Number of cross references to datatype "+name+":" 
+    + getReferencingObjects().size) 
+    .info() 
+    ;</pre>
+<p>Console output:</p>
+<pre class="programlisting">INFO IOExtensions Number of cross references to datatype Integer:1 
+INFO IOExtensions Number of cross references to datatype String:4</pre>
+</div>
+</div>
+<div class="section" title="UID extensions">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N126E2"/>UID extensions</h3>
+</div>
+</div>
+</div>
+<p>Often it is required to create and retrieve unique identifiers for
+      objects through the transformation process. The UID extensions provide a
+      simple mechanism for this task. Unique identifiers are calculated from
+      the current system time plus an internal counter. The extensions
+      therefore only guarantee that the identifier stays the same within one
+      workflow execution, but will change through different runs. If you need
+      to have unique identifiers that stay the same over every generation run
+      (e.g. for Protected Regions Ids) then you need another mechanism.</p>
+<p>If you are loading the model that assigns IDs to
+      <code class="classname">EObject</code> (only for EMF based models) the
+      <code class="methodname">xmlId()</code> function will be useful. Especially
+      when using UML2 models this function will return a unique and
+      non-changing identifier for objects.</p>
+<p>
+<span class="emphasis">
+<em>Extension:</em>
+</span>
+      <code class="classname">org::eclipse::xtend::util::stdlib::uid</code>
+</p>
+<div class="section" title="cached String uid( Object o )">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N126F5"/>cached String uid( Object o )</h4>
+</div>
+</div>
+</div>
+<p>Retrieves an unique identifier for an object. Creates a new one
+        on first access.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">o</code> - A model element or other object.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The UID for this object</p>
+</div>
+<div class="section" title="String createUID( Object o )">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N12707"/>String createUID( Object o )</h4>
+</div>
+</div>
+</div>
+<p>Creates a unique identifier for an object.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">o</code> - A model element or other object.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> A newly created UID for this
+        object.</p>
+</div>
+<div class="section" title="String xmlId (ecore::EObject o)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="stdlib_uid_xmlid"/>String xmlId (ecore::EObject o)</h4>
+</div>
+</div>
+</div>
+<p>Retrieves an object's identifier. The object must be read from a
+        XMLResource.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">o</code> - An object.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The object's id. Returns null if
+        the object was not load from a XMLResource.</p>
+</div>
+</div>
+<div class="section" title="Mixin extensions">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N1272C"/>Mixin extensions</h3>
+</div>
+</div>
+</div>
+<p>These utilities help with mixin models. Mixin models are typically
+      simple models that provide additional information about model elements
+      in a source model of a transformation. They can be seen as
+      annotations.</p>
+<p>These utilities expect that the mixin models have a very specific
+      structure: A root element, and then any subtree, where the elements have
+      a name attribute. Here's an example:</p>
+<div class="figure">
+<a name="N12733"/>
+<p class="title">
+<b>Figure 1. Mixin model example</b>
+</p>
+<div class="figure-contents">
+<div class="screenshot">
+<div class="mediaobject">
+<img src="images/stdlib/mixinmodel.png" width="432" alt="Mixin model example"/>
+</div>
+</div>
+</div>
+</div>
+<br class="figure-break"/>
+<p>The mixin elements are
+      <code class="classname">ControllingServiceRefSpec</code> and
+      <code class="classname">BundleSpec</code>. They are owned by the root element,
+      <code class="classname">Cbd2OsgiMixin</code>. The name is expected to contain
+      the qualified name of the element the annotation refers to. Once the
+      model is set up like this, and made available to a transformation using
+      the workflow's GLOBALVAR facilities, you can then use the extension
+      functions.</p>
+<p>Extension: org::eclipse::xtend::util::stdlib::mixin</p>
+<div class="section" title="Object getMandatoryMixin( Object mixinModel, Object ctx, xpand2::Type t )">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N1274B"/>Object getMandatoryMixin( Object mixinModel, Object ctx,
+        xpand2::Type t )</h4>
+</div>
+</div>
+</div>
+<p>Returns the corresponding mixin element for the context object;
+        the mixin must be of type t and its name attribute must correspond to
+        the qualified name of the context. If none is found, a workflow ERROR
+        is raised and a null object is returned (so you can call additional
+        operations on it without getting a null evaluation error).</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">mixinModel</code> - The root element of the mixin
+            model.</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">ctx</code> - The context object.</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">t</code> - The type of the mixin model element.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The mixin model element
+        corresponding to ctx.</p>
+</div>
+<div class="section" title="Object getOptionalMixin( Object mixinModel, Object ctx, xpand2::Type t )">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N12767"/>Object getOptionalMixin( Object mixinModel, Object ctx,
+        xpand2::Type t )</h4>
+</div>
+</div>
+</div>
+<p>Same as getMandatoryMixin(), but does not raise an error in case
+        nothing is found.</p>
+</div>
+</div>
+<div class="section" title="Tracing extensions">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N1276C"/>Tracing extensions</h3>
+</div>
+</div>
+</div>
+<p>The tracing extensions allow to create trace paths during your
+      model transformations. This is done by creating a trace model which
+      holds references from source to target elements. Traces must be added
+      explicitly to the transformation code.</p>
+<p>
+<span class="emphasis">
+<em>Extension:</em>
+</span>
+      <code class="classname">org::eclipse::xtend::util::stdlib::tracing</code>
+</p>
+<div class="section" title="Void createTrace( Object from, Object to, String kind, String backKind )">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N12777"/>Void createTrace( Object from, Object to, String kind, String
+        backKind )</h4>
+</div>
+</div>
+</div>
+<p>Creates a trace between two elements.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">from</code> - Source element.</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">to</code> - Target element.</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">kind</code> - Name for the trace from source to
+            target.</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">backkind</code> - Name for the trace from target back
+            to source.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> Nothing.</p>
+</div>
+<div class="section" title="Void createTrace( Object from, Object to, String kind)">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N12798"/>Void createTrace( Object from, Object to, String kind)</h4>
+</div>
+</div>
+</div>
+<p>Creates a trace between two elements.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">from</code> - Source element.</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">to</code> - Target element.</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">kind</code> - Name for the trace from source to
+            target.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> Nothing.</p>
+</div>
+<div class="section" title="Void clearTrace()">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N127B4"/>Void clearTrace()</h4>
+</div>
+</div>
+</div>
+<p>Clears all traces.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span> none</p>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> Nothing.</p>
+</div>
+<div class="section" title="Object getSingleTraceTarget( Object from, String kind )">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N127C1"/>Object getSingleTraceTarget( Object from, String kind )</h4>
+</div>
+</div>
+</div>
+<p>Finds the target of a trace. This function will report an error
+        if no trace for the source element to the target of the specified kind
+        can be found.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">from</code> - Source element.</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">kind</code> - Trace kind name.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> The target element of that
+        trace.</p>
+</div>
+<div class="section" title="Boolean hasTrace( Object from, String kind )">
+<div class="titlepage">
+<div>
+<div>
+<h4 class="title">
+<a name="N127D8"/>Boolean hasTrace( Object from, String kind )</h4>
+</div>
+</div>
+</div>
+<p>Proves if a trace of a specific kind exists for some
+        element.</p>
+<p>
+<span class="emphasis">
+<em>Parameters: </em>
+</span>
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+<code class="code">from</code> - Source element.</p>
+</li>
+<li class="listitem">
+<p>
+<code class="code">kind</code> - Trace kind name.</p>
+</li>
+</ul>
+</div>
+<p>
+<span class="emphasis">
+<em>Returns:</em>
+</span> true, if a trace of that kind
+        exists for the element.</p>
+</div>
+</div>
+<div class="footnotes">
+<br/>
+<hr align="left" width="100"/>
+<div class="footnote">
+<p>
+<sup>[<a href="#N1260D" name="ftn.N1260D" class="para">9</a>] </sup>It is intended that the uml2ecore utility can add such a name
+          attribute to every meta class automatically.</p>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+Manifest-Version: 1.0
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-SymbolicName: org.eclipse.xtext.xtext.ui.examples;singleton:=tr
+ ue
+Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/tmf/or
+ g.eclipse.xtext.git
+Require-Bundle: org.eclipse.ui;bundle-version="[3.5.0,4.0.0)",org.ecli
+ pse.core.runtime;bundle-version="[3.5.0,4.0.0)",org.eclipse.emf.commo
+ n.ui;bundle-version="[2.8.0,3.0.0)",org.eclipse.core.resources;bundle
+ -version="[3.5.0,4.0.0)",org.eclipse.ui.ide;bundle-version="[3.5.0,4.
+ 0.0)"
+Bundle-Version: 2.4.3.v201309030823
+Ant-Version: Apache Ant 1.8.3
+Bundle-Vendor: %providerName
+Bundle-ActivationPolicy: lazy
+Bundle-Name: %pluginName
+Created-By: 1.6.0_21-b06 (Sun Microsystems Inc.)
+Bundle-ManifestVersion: 2
+
+Name: contents/org.eclipse.xtext.example.domainmodel.ui.zip
+SHA1-Digest: JCCmYq87DJ11rIziSVtvrlppQTM=
+
+Name: contents/org.eclipse.xtext.example.tutorial.zip
+SHA1-Digest: vhr34CpPj2cdNJRlujAXAX2UOqE=
+
+Name: contents/org.eclipse.xtext.example.tutorial.ui.zip
+SHA1-Digest: 9wTFGGzft6Goh+ALiJaqSgRGMUU=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: KyT9FF7C7t86NoBoa2kZT3ZJBfw=
+
+Name: contents/org.eclipse.xtext.example.domainmodel.zip
+SHA1-Digest: cnG/LVYnmPPVI7bF7hkPckOoTS4=
+
+Name: org/eclipse/xtext/xtext/ui/examples/ExternalEditorAwareExampleIn
+ stallerWizard.class
+SHA1-Digest: KD4PgugFLlsk7ztwwoq/eJ6azkU=
+
+Name: contents/org.eclipse.xtext.example.arithmetics.zip
+SHA1-Digest: U7+aCBWcOzPdBEUV6K3nvSj/Ovo=
+
+Name: contents/xbase.tutorial.zip
+SHA1-Digest: I8iNJxGNj+7YfzYbYxRV7QYsM7g=
+
+Name: about.html
+SHA1-Digest: m//+sZd+LYcO5OY/bjEiZVm0dk0=
+
+Name: plugin.properties
+SHA1-Digest: QF6AJ9D2i1sX9Cv1QAkH4JuA6SI=
+
+Name: contents/org.eclipse.xtext.example.fowlerdsl.zip
+SHA1-Digest: +/7maoHharVY7RJTwHGF/MdTiFo=
+
+Name: icons/genproject.gif
+SHA1-Digest: SdcrJwsBbMUpP0oskAnvWoGYY64=
+
+Name: contents/org.eclipse.xtext.example.fowlerdsl.ui.zip
+SHA1-Digest: gdNwvFlp/eFP8ji/MAg5aKzLLmQ=
+
+Name: contents/org.eclipse.xtext.example.tutorial.tests.zip
+SHA1-Digest: GRA66bQDVRj0uyY6ZfVhXojU9es=
+
+Name: contents/org.eclipse.xtext.example.domainmodel.tests.zip
+SHA1-Digest: S3KBc4+xVDfdbF+x6QuKLr9ihSM=
+
+Name: plugin.xml
+SHA1-Digest: niaU0EMTsaCEtivZGWjCmfK91kg=
+
+Name: contents/org.eclipse.xtext.example.arithmetics.tests.zip
+SHA1-Digest: 7SMHraZk+fpeODh4gh06jmuN90k=
+
+Name: contents/org.eclipse.xtext.example.arithmetics.ui.zip
+SHA1-Digest: RS97OcBeXG2NVI874Gz5hZytkSQ=
+
