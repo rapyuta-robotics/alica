@@ -149,7 +149,7 @@ namespace alica
 	 * @param curP The RunningPlan of this CycleManager, in case it has changed.
 	 * @param aldif The new AllocationDifference
 	 */
-	void alica::CycleManager::setNewAllocDiff(RunningPlan* curP, AllocationDifference* aldif)
+	void alica::CycleManager::setNewAllocDiff(AllocationDifference* aldif)
 	{
 		if (!enabled)
 		{
@@ -176,14 +176,13 @@ namespace alica
 	 * @param newAss The new Assignment
 	 * @param reas The AllocationDifference.Reason for this change.
 	 */
-	void alica::CycleManager::setNewAllocDiff(RunningPlan* curP, Assignment* oldAss, Assignment* newAss,
+	void alica::CycleManager::setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_ptr<Assignment> newAss,
 												AllocationDifference::Reason reas)
 	{
 		if (!enabled)
 		{
 			return;
 		}
-		this->rp = curP;
 		if (oldAss == nullptr)
 		{
 			return;

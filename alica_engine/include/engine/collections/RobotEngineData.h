@@ -30,13 +30,13 @@ namespace alica
 	public:
 		RobotEngineData(AlicaEngine* ae, shared_ptr<RobotProperties> properties);
 		virtual ~RobotEngineData();
-		bool isActive() const;
+		bool isActive();
 		void setActive(bool active);
-		shared_ptr<RobotProperties> getProperties() const;
+		shared_ptr<RobotProperties> getProperties() ;
 		void setProperties(shared_ptr<RobotProperties> properties);
-		SuccessMarks* getSuccessMarks() const;
-		void setSuccessMarks(SuccessMarks* successMarks);
-		unsigned long getLastMessageTime() const;
+		shared_ptr<SuccessMarks> getSuccessMarks();
+		void setSuccessMarks(shared_ptr<SuccessMarks> successMarks);
+		unsigned long getLastMessageTime();
 		void setLastMessageTime(unsigned long lastMessageTime);
 		virtual void initSortedTerms();
 		virtual Variable* getSortedVariable(string sort);
@@ -56,7 +56,7 @@ namespace alica
 		/**
 		 * The SuccessMarks of the robot, indicating which EntryPoints it completed.
 		 */
-		SuccessMarks* successMarks;
+		shared_ptr<SuccessMarks> successMarks;
 		/**
 		 * The timestamp of the last message event from this robot
 		 */

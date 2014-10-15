@@ -5,7 +5,7 @@
  *      Author: Stefan Jakob
  */
 
-#define TO_DEBUG
+//#define TO_DEBUG
 
 #include "engine/teamobserver/TeamObserver.h"
 #include <SystemConfig.h>
@@ -73,6 +73,7 @@ namespace alica
 		this->log = ae->getLog();
 
 		string ownPlayerName = ae->getRobotName();
+		cout << "TO: Initing Robot " << ownPlayerName << endl;
 		this->teamTimeOut = (*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL) * 1000000;
 		shared_ptr<vector<string> > playerNames = (*sc)["Globals"]->getSections("Globals.Team", NULL);
 		bool foundSelf = false;
@@ -165,7 +166,6 @@ namespace alica
 		{
 			if (r->isActive())
 			{
-				cout << "PASST HIER " << endl;
 				ret->push_back(r);
 			}
 
@@ -300,8 +300,7 @@ namespace alica
 			for (map<int, shared_ptr<SimplePlanTree> >::const_iterator iterator = this->simplePlanTrees->begin();
 					iterator != this->simplePlanTrees->end(); iterator++)
 			{
-				if (find(robotsAvail.begin(), robotsAvail.end(), iterator->second.get()->getRobotId())
-						!= robotsAvail.end())
+				if (find(robotsAvail.begin(), robotsAvail.end(), iterator->second->getRobotId()) != robotsAvail.end())
 				{
 					if (iterator->second->isNewSimplePlanTree())
 					{
@@ -412,7 +411,7 @@ namespace alica
 
 	EntryPoint* TeamObserver::entryPointOfState(State* state)
 	{
-		for (map<long, EntryPoint*>::const_iterator iter = state->getInPlan()->getEntryPoints().begin();
+		for (auto iter = state->getInPlan()->getEntryPoints().begin();
 				iter != state->getInPlan()->getEntryPoints().end(); iter++)
 		{
 			if (iter->second->getReachableStates().find(state) != iter->second->getReachableStates().end())
@@ -564,23 +563,41 @@ namespace alica
 	{
 		if (incoming->senderID != myId)
 		{
-			lock_guard<mutex> lock(this->simplePlanTreeMutex);
-			if (this->simplePlanTrees->find(incoming->senderID) != this->simplePlanTrees->end())
+			if (isRobotIgnored(incoming->senderID))
 			{
-				shared_ptr<SimplePlanTree> toDelete = this->simplePlanTrees->at(incoming->senderID);
-				map<int, shared_ptr<SimplePlanTree> >::iterator iterator = this->simplePlanTrees->find(
-						incoming->senderID);
-				if (iterator != this->simplePlanTrees->end())
+				return;
+			}
+
+			auto spt = sptFromMessage(incoming->senderID, incoming->stateIDs);
+			if (spt != nullptr)
+			{
+
+				for (RobotEngineData* red : allOtherRobots)
 				{
-					iterator->second = sptFromMessage(incoming->senderID, incoming->stateIDs);
+					if (red->getProperties()->getId() == incoming->senderID)
+					{
+						red->setLastMessageTime(ae->getIAlicaClock()->now());
+						red->setSuccessMarks(make_shared<SuccessMarks>(ae, incoming->succeededEPs));
+						break;
+					}
 				}
 
-			}
-			else
-			{
-				this->simplePlanTrees->insert(
-						pair<int, shared_ptr<SimplePlanTree> >(
-								incoming->senderID, sptFromMessage(incoming->senderID, incoming->stateIDs)));
+				lock_guard<mutex> lock(this->simplePlanTreeMutex);
+				if (this->simplePlanTrees->find(incoming->senderID) != this->simplePlanTrees->end())
+				{
+					shared_ptr<SimplePlanTree> toDelete = this->simplePlanTrees->at(incoming->senderID);
+					map<int, shared_ptr<SimplePlanTree> >::iterator iterator = this->simplePlanTrees->find(
+							incoming->senderID);
+					if (iterator != this->simplePlanTrees->end())
+					{
+						iterator->second = spt;
+					}
+
+				}
+				else
+				{
+					this->simplePlanTrees->insert(pair<int, shared_ptr<SimplePlanTree> >(incoming->senderID, spt));
+				}
 			}
 		}
 	}
@@ -616,8 +633,8 @@ namespace alica
 		root->setRobotId(robotId);
 		root->setReceiveTime(time);
 		root->setStateIds(ids);
-		State* s;
-		list<long>::const_iterator iter = ids.begin();
+		State* s = nullptr;
+		auto iter = ids.begin();
 		if (states.find(*iter) != states.end())
 		{
 			root->setState(states.at(*iter));
@@ -668,8 +685,8 @@ namespace alica
 					curParent->getChildren().insert(cur);
 					if (states.find(*iter) != states.end())
 					{
-						root->setState(states.at(*iter));
-						root->setEntryPoint(entryPointOfState(root->getState()));
+						cur->setState(states.at(*iter));
+						cur->setEntryPoint(entryPointOfState(root->getState()));
 						if (cur->getEntryPoint() == nullptr)
 						{
 							list<long>::const_iterator iter = ids.begin();

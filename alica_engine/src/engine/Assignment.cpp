@@ -538,6 +538,10 @@ namespace alica
 	void Assignment::moveRobots(State* from, State* to)
 	{
 		auto movingRobots = this->robotStateMapping->getRobotsInState(from);
+		if(to == nullptr)
+		{
+			cout << "Ass: to nullptr" << endl;
+		}
 		for (int r : movingRobots)
 		{
 			this->robotStateMapping->setState(r, to);

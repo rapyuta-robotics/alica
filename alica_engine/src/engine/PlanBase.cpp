@@ -127,7 +127,9 @@ namespace alica
 	 */
 	void PlanBase::run()
 	{
-		cout << "PLANBASE STARTET " << endl;
+#ifdef PB_DEBUG
+		cout << "PB: Run-Method of PlanBase started. " << endl;
+#endif
 		while (this->running)
 		{
 			//cout << "PB: RUNNING" << endl;
@@ -136,17 +138,19 @@ namespace alica
 			//cout << "PB: BEGIN TIME is: " << beginTime << endl;
 			if (ae->getStepEngine())
 			{
-				cout << "===CUR TREE===" << endl;
+#ifdef PB_DEBUG
+				cout << "PB: ===CUR TREE===" << endl;
 
 				if (this->rootNode == nullptr)
 				{
-					cout << "NULL" << endl;
+					cout << "PB: NULL" << endl;
 				}
 				else
 				{
 					rootNode->printRecursive();
 				}
-				cout << "===END CUR TREE===" << endl;
+				cout << "PB: ===END CUR TREE===" << endl;
+#endif
 				{
 					unique_lock<mutex> lckStep(stepMutex);
 					stepModeCV->wait(lckStep, [&]
@@ -258,6 +262,7 @@ namespace alica
 					while (this->running && availTime > 1000 && fpEvents.size() > 0)
 					{
 						shared_ptr<RunningPlan> rp = fpEvents.front();
+						cout << "PB: runningplan " << rp->toString() << endl;
 						fpEvents.pop();
 
 						if (rp->isActive())
@@ -288,7 +293,9 @@ namespace alica
 
 			}
 
-			/*if (!ae->getStepEngine())
+			/*
+			 * Dat war mal so, aber wir hamm nit verstanden warum. Nu isses hoffentlich besser! */
+			 /* if (!ae->getStepEngine())
 			 {
 			 {
 			 unique_lock<mutex> lckTimer(timerMutex);
@@ -303,8 +310,9 @@ namespace alica
 			 });
 			 }
 			 }*/
+#ifdef PB_DEBUG
 			cout << "PB: availTime " << availTime << endl;
-
+#endif
 			if (availTime > 1 && !ae->getStepEngine())
 			{
 				alicaClock->sleep(availTime);

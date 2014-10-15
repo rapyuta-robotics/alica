@@ -241,6 +241,10 @@ namespace alica
 	}
 	void RunningPlan::setActiveState(State* s)
 	{
+		if(s == nullptr)
+		{
+			cout << "RP: activeState == nullptr" << endl;
+		}
 		if (this->activeState != s)
 		{
 			this->activeState = s;
@@ -276,7 +280,6 @@ namespace alica
 			}
 			if (this->active)
 			{
-				cout << "RP: active " << endl;
 				r->activate();
 			}
 		}
@@ -288,10 +291,14 @@ namespace alica
 	 */
 	void RunningPlan::moveState(State* nextState)
 	{
+		if(nextState == nullptr)
+		{
+			cout << "RP: nextState == nullptr" << endl;
+		}
 		deactivateChildren();
 		clearChildren();
 		this->assignment->moveRobots(this->activeState, nextState);
-		this->activeState = nextState;
+		this->setActiveState(nextState);
 		this->failedSubPlans.clear();
 	}
 
@@ -436,7 +443,7 @@ namespace alica
 			this->activeEntryPoint = value;
 			if (this->activeEntryPoint != nullptr)
 			{
-				this->activeState = this->activeEntryPoint->getState();
+				this->setActiveState(this->activeEntryPoint->getState());
 				this->assignment->addRobot(ownId, this->activeEntryPoint, this->activeState);
 			}
 		}
@@ -562,7 +569,7 @@ namespace alica
 		this->plan = r->getPlan();
 		this->activeEntryPoint = r->getOwnEntryPoint();
 		this->assignment = r->assignment;
-		this->activeState = newState;
+		this->setActiveState(newState);
 		if (reactivate)
 		{
 			this->activate();
@@ -590,7 +597,7 @@ namespace alica
 			this->activeEntryPoint = activeEntryPoint;
 			if (this->activeEntryPoint != nullptr)
 			{
-				this->activeState = this->activeEntryPoint->getState();
+				this->setActiveState(this->activeEntryPoint->getState());
 				this->assignment->addRobot(ownId, this->activeEntryPoint, this->activeState);
 			}
 
@@ -982,7 +989,7 @@ namespace alica
 		}
 
 		aldif->setReason(AllocationDifference::Reason::message);
-		this->cycleManagement->setNewAllocDiff(this, aldif);
+		this->cycleManagement->setNewAllocDiff(aldif);
 //Update Success Collection:
 		this->to->updateSuccessCollection((Plan*)this->getPlan(), this->getAssignment()->getEpSuccessMapping());
 
