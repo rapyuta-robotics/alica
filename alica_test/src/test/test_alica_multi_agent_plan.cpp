@@ -60,7 +60,6 @@ protected:
 		uc = new alicaTests::TestUtilityFunctionCreator();
 		crc = new alicaTests::TestConstraintCreator();
 
-
 	}
 
 	virtual void TearDown()
@@ -100,23 +99,24 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 	ae->start();
 	ae2->start();
 
-	for(int i = 0; i < 100; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		ae->stepNotify();
-		ae2->stepNotify();
 		chrono::milliseconds duration(33);
 		this_thread::sleep_for(duration);
-		if(i < 5)
+		ae2->stepNotify();
+		this_thread::sleep_for(duration);
+		if (i < 10)
 		{
 			EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413200842974);
 			EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413200842974);
 		}
-		if(i == 5)
+		if (i == 10)
 		{
 			alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(true);
 			alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(true);
 		}
-		if(i > 10 && i < 15)
+		if (i > 15 && i < 25)
 		{
 			EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
 			EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
@@ -125,7 +125,35 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 			EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getPlan()->getName(),
 						string("MultiAgentTestPlan"));
 		}
+		if (i == 25)
+		{
+			cerr << (*ae->getPlanBase()->getRootNode()->getChildren().begin())->toString() << endl;
+			cerr << (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->toString() << endl;
+			cerr << (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().size() << endl;
+			cerr << (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().size() << endl;
+			cerr << (*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().begin())->toString() << endl;
+			cerr << (*(*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().begin())->toString() << endl;
+			for (auto iter : *ae->getBehaviourPool()->getAvailableBehaviours())
+			{
+				if (iter.second->getName() == "Attack")
+				{
+					EXPECT_GT(((alicaTests::Attack*)&*iter.second)->callCounter,100);
+					if (((alicaTests::Attack*)&*iter.second)->callCounter > 3)
+					{
+						alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201052549(true);
+						alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201052549(true);
+						alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201370590(true);
+						alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201370590(true);
+					}
+				}
+			}
+		}
+		if(i > 30)
+		{
+			break;
+//			EXPECT_TRUE(ae2->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201030936 ||
+//						ae->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201030936);
+		}
 	}
 }
-
 

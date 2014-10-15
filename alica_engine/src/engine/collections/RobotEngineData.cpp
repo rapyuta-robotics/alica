@@ -32,21 +32,20 @@ namespace alica
 		this->lastMessageTime = 0;
 		this->properties = properties;
 		this->initSortedTerms();
-		this->successMarks = new SuccessMarks(ae);
+		this->successMarks = make_shared<SuccessMarks>(ae);
 		this->lastRole = nullptr;
 
 	}
 
 	RobotEngineData::~RobotEngineData()
 	{
-		delete this->successMarks;
 		for(auto x : this->sortedVariables)
 		{
 			delete x.second;
 		}
 	}
 
-	bool RobotEngineData::isActive() const
+	bool RobotEngineData::isActive()
 	{
 		return active;
 	}
@@ -56,7 +55,7 @@ namespace alica
 		this->active = active;
 	}
 
-	shared_ptr<RobotProperties> RobotEngineData::getProperties() const
+	shared_ptr<RobotProperties> RobotEngineData::getProperties()
 	{
 		return properties;
 	}
@@ -65,17 +64,17 @@ namespace alica
 	{
 		this->properties = properties;
 	}
-	SuccessMarks* RobotEngineData::getSuccessMarks() const
+	shared_ptr<SuccessMarks> RobotEngineData::getSuccessMarks()
 	{
 		return successMarks;
 	}
 
-	void RobotEngineData::setSuccessMarks(SuccessMarks* successMarks)
+	void RobotEngineData::setSuccessMarks(shared_ptr<SuccessMarks> successMarks)
 	{
 		this->successMarks = successMarks;
 	}
 
-	unsigned long RobotEngineData::getLastMessageTime() const
+	unsigned long RobotEngineData::getLastMessageTime()
 	{
 		return lastMessageTime;
 	}

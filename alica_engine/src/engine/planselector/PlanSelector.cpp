@@ -229,7 +229,7 @@ namespace alica
 		} while (rpChildren == nullptr);
 		// WHEN WE GOT HERE, THIS ROBOT WONT IDLE AND WE HAVE A
 		// VALID ASSIGNMENT, WHICH PASSED ALL RUNTIME CONDITIONS
-		if(rpChildren == nullptr && rpChildren->size() != 0) // c# rpChildren != null
+		if(rpChildren != nullptr && rpChildren->size() != 0) // c# rpChildren != null
 		{
 #ifdef PSDEBUG
 				cout << "PS: Set child -> father reference" << endl;

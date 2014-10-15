@@ -21,7 +21,8 @@ namespace alica
 {
 	int PartialAssignment::maxEpsCount = 20;
 	EpByTaskComparer PartialAssignment::epByTaskComparer = EpByTaskComparer();
-	bool PartialAssignment::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling", NULL);
+	bool PartialAssignment::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>(
+			"Alica.AllowIdling", NULL);
 
 	int PartialAssignment::getHash()
 	{
@@ -96,7 +97,6 @@ namespace alica
 		return this->epRobotsMapping->getEntryPoints();
 	}
 
-
 	void PartialAssignment::clear()
 	{
 		this->min = 0.0;
@@ -115,7 +115,8 @@ namespace alica
 		pap->curIndex = 0;
 	}
 
-	PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, shared_ptr<vector<int> > robots, Plan* plan, shared_ptr<SuccessCollection> sucCol)
+	PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, shared_ptr<vector<int> > robots,
+													Plan* plan, shared_ptr<SuccessCollection> sucCol)
 	{
 		if (pap->curIndex >= pap->maxCount)
 		{
@@ -221,7 +222,11 @@ namespace alica
 			ret->unAssignedRobots.push_back(oldPA->unAssignedRobots[i]);
 		}
 
-		ret->dynCardinalities = oldPA->dynCardinalities;
+		for (int i = 0; i < oldPA->dynCardinalities.size(); i++)
+		{
+			ret->dynCardinalities[i] = make_shared<DynCardinality>(oldPA->dynCardinalities[i]->getMin(),
+																   oldPA->dynCardinalities[i]->getMax());
+		}
 
 		shared_ptr<vector<shared_ptr<vector<int> > > > oldRobotLists = oldPA->epRobotsMapping->getRobots();
 
@@ -598,7 +603,10 @@ namespace alica
 		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
 		{
 			robots = (*this->epRobotsMapping->getRobots()->at(i));
-			ss << "EPid: " << ownEps->at(i)->getId() << " Task: " << ownEps->at(i)->getTask()->getName() << " minCar: " << this->dynCardinalities[i]->getMin() << " maxCar: " << (this->dynCardinalities[i]->getMax() == INFINIT ? "*" : to_string(this->dynCardinalities[i]->getMax())) << " Assigned Robots: ";
+			ss << "EPid: " << ownEps->at(i)->getId() << " Task: " << ownEps->at(i)->getTask()->getName() << " minCar: "
+					<< this->dynCardinalities[i]->getMin() << " maxCar: "
+					<< (this->dynCardinalities[i]->getMax() == INFINIT ? "*" :
+							to_string(this->dynCardinalities[i]->getMax())) << " Assigned Robots: ";
 			for (int robot : robots)
 			{
 				ss << robot << " ";

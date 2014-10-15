@@ -42,9 +42,9 @@ namespace alica
 		return false;
 	}
 
-	EntryPoint* SimplePlanTree::getEntryPoint() const
+	EntryPoint* SimplePlanTree::getEntryPoint()
 	{
-		return entryPoint;
+		return this->entryPoint;
 	}
 
 	void SimplePlanTree::setEntryPoint(EntryPoint* entryPoint)
@@ -52,7 +52,7 @@ namespace alica
 		this->entryPoint = entryPoint;
 	}
 
-	State* SimplePlanTree::getState() const
+	State* SimplePlanTree::getState()
 	{
 		return state;
 	}
@@ -72,7 +72,7 @@ namespace alica
 		this->children = children;
 	}
 
-	int SimplePlanTree::getRobotId() const
+	int SimplePlanTree::getRobotId()
 	{
 		return robotId;
 	}

@@ -43,8 +43,8 @@ namespace alica
 		bool isOverridden();
 		bool setAssignment(shared_ptr<RunningPlan> r);
 		bool mayDoUtilityCheck();
-		void setNewAllocDiff(RunningPlan* curP, AllocationDifference* aldif);
-		void setNewAllocDiff(RunningPlan* curP, Assignment* oldAss, Assignment* newAss, AllocationDifference::Reason reas);
+		void setNewAllocDiff(AllocationDifference* aldif);
+		void setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_ptr<Assignment> newAss, AllocationDifference::Reason reas);
 		void handleAuthorityInfo(shared_ptr<AllocationAuthorityInfo> aai);
 		bool needsSending();
 		void sent();
