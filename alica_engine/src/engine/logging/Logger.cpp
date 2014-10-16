@@ -291,4 +291,8 @@ namespace alica
 		return result;
 	}
 
+	void Logger::logToConsole(string logString) {
+		cout << "Robot " << this->ae->getTeamObserver()->getOwnId() << ":\t" << logString << endl;
+	}
+
 } /* namespace alica */

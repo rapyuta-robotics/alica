@@ -8,6 +8,8 @@
 #ifndef PLANSELECTOR_H_
 #define PLANSELECTOR_H_
 
+//#define PSDEBUG
+
 #include <vector>
 #include <list>
 #include <unordered_set>

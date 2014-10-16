@@ -40,7 +40,7 @@ namespace alica
 		this->lastSentStatusTime = 0;
 		this->loopInterval = 0;
 		this->deepestNode = nullptr;
-		this->log = nullptr;
+		this->log = ae->getLog();
 		this->rootNode = nullptr;
 		this->masterPlan = masterPlan;
 		this->ae = ae;
@@ -100,8 +100,8 @@ namespace alica
 		}
 
 #ifdef PB_DEBUG
-		cout << "PB: Engine loop time is " << loopTime / 1000000 << "ms, broadcast interval is "
-				<< this->minSendInterval / 1000000 << "ms - " << this->maxSendInterval / 1000000 << "ms" << endl;
+		this->log->logToConsole("PB: Engine loop time is " + to_string(loopTime / 1000000) + "ms, broadcast interval is "
+				+ to_string(this->minSendInterval / 1000000) + "ms - " + to_string(this->maxSendInterval / 1000000) + "ms");
 #endif
 		if (halfLoopTime < this->minSendInterval)
 		{
@@ -117,7 +117,6 @@ namespace alica
 	{
 		if (!this->running)
 		{
-			this->log = ae->getLog();
 			this->running = true;
 			this->mainThread = new thread(&PlanBase::run, this);
 		}
