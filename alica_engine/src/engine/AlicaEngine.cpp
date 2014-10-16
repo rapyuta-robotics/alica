@@ -148,8 +148,8 @@ namespace alica
 		bool everythingWorked = true;
 		everythingWorked &= this->behaviourPool->init(bc);
 		this->auth = new AuthorityManager(this);
-		this->teamObserver->init();
 		this->log = new Logger(this);
+		this->teamObserver->init();
 		this->roleAssignment->init();
 		if (this->pap == nullptr)
 		{

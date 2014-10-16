@@ -157,11 +157,6 @@ namespace alica
 		auto temp = r->getParent().lock();
 		cout << "RB:" + temp->toString()<< endl;
 		vector<int> robots = vector<int>(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).size());
-		cout << "RB: robots" << endl;
-		for(int i : robots)
-		{
-			cout << i << endl;
-		}
 		copy(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
 					temp->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
 					robots.begin());
