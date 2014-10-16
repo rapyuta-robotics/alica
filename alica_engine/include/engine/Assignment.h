@@ -75,7 +75,7 @@ namespace alica
 		string toHackString();
 
 	protected:
-		static bool allowIdling;
+		bool allowIdling;
 		/**
 		 * The Plan this Assignment refers to
 		 */

@@ -195,12 +195,13 @@ namespace alica
 		{
 			ae->abort("RA: Could not establish a mapping between robots and roles. Please check capability definitions!");
 		}
-		RolePriority* rp = new RolePriority();
+		RolePriority* rp = new RolePriority(ae);
 		this->robotRoleMapping.clear();
 		while (this->robotRoleMapping.size() < this->availableRobots->size())
 		{
 			mapRoleToRobot(rp);
 		}
+		delete rp;
 	}
 
 	void RoleAssignment::setCommunication(IAlicaCommunication* communication)

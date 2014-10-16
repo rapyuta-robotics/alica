@@ -1,5 +1,5 @@
 «IMPORT alica»  
-«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ExpressionsCSharp::stateCheckingMethods(State s) FOR Plan»
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ExpressionsCPlusPlus::stateCheckingMethods(State s) FOR Plan»
 «FOREACH s.outTransitions AS transition»
 «IF (transition.preCondition.pluginName == "DefaultPlugin")»
 			/*
@@ -19,13 +19,10 @@
 			* Vars:«FOREACH transition.preCondition.vars AS var»				
 			*	- «var.name» («var.id») «ENDFOREACH»
 			*/
-			public static bool F«transition.id»(RunningPlan rp) {	
+			bool TransitionCondition«transition.preCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
+			 {	
 				«PROTECT CSTART '/*' CEND '*/' ID transition.id »
-					//WorldModel wm = WorldModel.Get();
 					--> "Transition: «transition.id»  not implemented";
-					// return false;
-					
-					
 				«ENDPROTECT»	
 				
 			}
@@ -33,7 +30,7 @@
 	«ENDFOREACH»
 «ENDAROUND»
 
-«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ExpressionsCSharp::planCheckingMethods FOR AbstractPlan»
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ExpressionsCPlusPlus::planCheckingMethods FOR AbstractPlan»
 «FOREACH this.conditions.typeSelect(RuntimeCondition) AS rc»
 	«IF (rc.pluginName == "DefaultPlugin")»
 			  //Check of RuntimeCondition - (Name): «rc.name», (ConditionString): «rc.conditionString», (Comment) : «rc.comment» 
@@ -42,10 +39,10 @@
 			  * Available Vars:«FOREACH rc.vars AS var»
 			  *	- «var.name» («var.id»)«ENDFOREACH»
 			  */
-			  public static bool F«rc.id»(RunningPlan rp) {
+			 bool RunTimeCondition«rc.id»::evaluate(shared_ptr<RunningPlan> rp)
+			 {
 			 	 «PROTECT CSTART '/*' CEND '*/' ID rc.id »
-			 	 	//WorldModel wm = WorldModel.Get();
-					return true;
+			 	 --> "RUNTIMECONDITION: «rc.id»  not implemented";
 				 «ENDPROTECT»			    
 			  }		
 	«ENDIF»		
@@ -58,9 +55,10 @@
 			  * Available Vars:«FOREACH pc.vars AS var»
 			  *	- «var.name» («var.id»)«ENDFOREACH»
 			  */
-			  public static bool F«pc.id»(RunningPlan rp){
+			 bool PreCondition«pc.id»::evaluate(shared_ptr<RunningPlan> rp)
+			{
 			 	 «PROTECT CSTART '/*' CEND '*/' ID pc.id »
-			 	 	//WorldModel wm = WorldModel.Get();
+			 	 	--> "PreCondition:«pc.id»  not implemented";
 					return true;
 				 «ENDPROTECT»			    
 			  }
@@ -68,7 +66,7 @@
 	«ENDFOREACH»
 «ENDAROUND»
 
-«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ConstraintsCSharp::stateCheckingMethods(State s) FOR Plan»
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ConstraintsCPlusPlus::stateCheckingMethods(State s) FOR Plan»
 // State: «s.name»
 «FOREACH s.outTransitions AS transition»
 «IF (transition.preCondition.pluginName == "DefaultPlugin")»
@@ -98,8 +96,7 @@ public static void GetConstraint«transition.preCondition.id»(ConstraintDescripto
 «ENDFOREACH»
 «ENDAROUND»
 
-«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ConstraintsCSharp::planCheckingMethods FOR AbstractPlan»
-
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ConstraintsCPlusPlus::planCheckingMethods FOR AbstractPlan»
 	«FOREACH this.conditions.typeSelect(RuntimeCondition) AS rc»
 	«IF (rc.pluginName == "DefaultPlugin")»
 	«IF (rc.vars.size > 0) || (rc.quantifiers.size > 0)»
@@ -112,9 +109,9 @@ public static void GetConstraint«transition.preCondition.id»(ConstraintDescripto
 * forall agents in «q.scope.name» let v = «q.sorts» 
 «ENDFOREACH»
 */
-public static void GetConstraint«rc.id»(ConstraintDescriptor c, RunningPlan rp) {
+void Constraint«rc.id»::getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan>) {
 «PROTECT CSTART '/*' CEND '*/' ID "cc"+rc.id »
-	//WorldModel wm = WorldModel.Get();	
+	//Proteced
 «ENDPROTECT»			    
 }				
 «ENDIF»
@@ -132,17 +129,17 @@ public static void GetConstraint«rc.id»(ConstraintDescriptor c, RunningPlan rp) 
 * forall agents in «q.scope.name» let v = «q.sorts» 
 «ENDFOREACH»
 */
-public static void GetConstraint«pc.id»(ConstraintDescriptor c, RunningPlan rp) {
+void Constraint«pc.id»::getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan>) {
 «PROTECT CSTART '/*' CEND '*/' ID "cc"+pc.id »
-	//WorldModel wm = WorldModel.Get();	
-«ENDPROTECT»			    
+	//Proteced
+«ENDPROTECT»	
 }
 	«ENDIF»
 	«ENDIF»			
 	«ENDFOREACH»
 «ENDAROUND»
 
-«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::GoalExpressionCSharp::planCheckingMethods FOR AbstractPlan»
+«AROUND de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::GoalExpressionCPlusPlus::planCheckingMethods FOR AbstractPlan»
 
 «FOREACH this.conditions.typeSelect(RuntimeCondition) AS rc»
 	«IF (rc.pluginName == "DefaultPlugin")»

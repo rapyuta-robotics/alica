@@ -382,6 +382,42 @@ public interface AlicaFactory extends EFactory {
 	Constant createConstant();
 
 	/**
+	 * Returns a new object of class '<em>Behaviour Creator</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Behaviour Creator</em>'.
+	 * @generated
+	 */
+	BehaviourCreator createBehaviourCreator();
+
+	/**
+	 * Returns a new object of class '<em>Condition Creator</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Condition Creator</em>'.
+	 * @generated
+	 */
+	ConditionCreator createConditionCreator();
+
+	/**
+	 * Returns a new object of class '<em>Utility Function Creator</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Utility Function Creator</em>'.
+	 * @generated
+	 */
+	UtilityFunctionCreator createUtilityFunctionCreator();
+
+	/**
+	 * Returns a new object of class '<em>Constraint Creator</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Constraint Creator</em>'.
+	 * @generated
+	 */
+	ConstraintCreator createConstraintCreator();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

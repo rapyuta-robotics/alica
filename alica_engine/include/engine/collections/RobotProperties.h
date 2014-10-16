@@ -22,12 +22,13 @@ namespace alica
 
 	class Characteristic;
 	class Capability;
+	class AlicaEngine;
 
 	class RobotProperties
 	{
 	public:
 		RobotProperties();
-		RobotProperties(string name);
+		RobotProperties(AlicaEngine* ae, string name);
 		virtual ~RobotProperties();
 		int getId() const;
 		void setId(int id);

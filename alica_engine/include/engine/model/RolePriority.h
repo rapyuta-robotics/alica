@@ -21,11 +21,12 @@ namespace alica
 {
 	class Role;
 	class RoleUsage;
+	class AlicaEngine;
 
 	class RolePriority : public AlicaElement
 	{
 	public:
-		RolePriority();
+		RolePriority(AlicaEngine* ae);
 		virtual ~RolePriority();
 		list<RoleUsage*>& getPriorityList();
 

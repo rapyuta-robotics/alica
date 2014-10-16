@@ -1,0 +1,37 @@
+Signature-Version: 1.0
+SHA1-Digest-Manifest: D+QH42FByGDFyQ5UrcmzvT/6xIc=
+Created-By: 1.6.0 (IBM Corporation)
+SHA1-Digest-Manifest-Main-Attributes: ofgHCuMzh9XF5aPhQMIbNJsn5DA=
+
+Name: about_files/LICENSE-2.0.txt
+SHA1-Digest: DMnZPrY7w/ZEOj0YI/l8KoozuvM=
+
+Name: epl-v10.html
+SHA1-Digest: xipg4kdvniXTRoluum46PzkHsAQ=
+
+Name: about_files/NOTICE
+SHA1-Digest: WZ6T40Fu3zPOKXEBn1eZXrrr/4I=
+
+Name: eclipse_update_120.jpg
+SHA1-Digest: AJpAx6G9kMZMfuPhGA7K80GxY+o=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: QdryQvJlVywlE0MGLuwYCkmkyWk=
+
+Name: license.html
+SHA1-Digest: Rp9AnRyeUIxNWe10fjaMDkQB8rU=
+
+Name: feature.properties
+SHA1-Digest: XqPke7KOK3/Uh4p0I9ZvHoFNRqA=
+
+Name: META-INF/maven/org.eclipse.gmf.runtime/org.eclipse.gmf.runtime.t
+ hirdparty.source/pom.xml
+SHA1-Digest: PGc4UBkPLxGivXcGXFfkW4JD5P4=
+
+Name: META-INF/maven/org.eclipse.gmf.runtime/org.eclipse.gmf.runtime.t
+ hirdparty.source/pom.properties
+SHA1-Digest: S/OZxi4vd2j/PFB3Mfin7R+dAWQ=
+
+Name: feature.xml
+SHA1-Digest: mFvnvUV+KGK3UCeINjEjkmTDRoY=
+

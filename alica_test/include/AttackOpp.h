@@ -10,10 +10,10 @@
 
 #include <engine/BasicBehaviour.h>
 
-namespace alica
+namespace alicaTests
 {
 
-	class AttackOpp : public BasicBehaviour
+	class AttackOpp : public alica::BasicBehaviour
 	{
 	public:
 		AttackOpp();

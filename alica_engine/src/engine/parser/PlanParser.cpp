@@ -17,13 +17,14 @@ namespace alica
 	 * Constructor
 	 * @param A PlanRepository, in which parsed elements are stored.
 	 */
-	PlanParser::PlanParser(PlanRepository* rep)
+	PlanParser::PlanParser(AlicaEngine* ae, PlanRepository* rep)
 	{
 		using namespace supplementary;
 
+		this->ae = ae;
 		this->masterPlan = nullptr;
 		this->rep = rep;
-		this->mf = shared_ptr<ModelFactory>(new ModelFactory(this, rep));
+		this->mf = shared_ptr<ModelFactory>(new ModelFactory(ae, this, rep));
 		this->sc = SystemConfig::getInstance();
 		this->domainConfigFolder = this->sc->getConfigPath();
 
@@ -64,11 +65,11 @@ namespace alica
 #endif
 		if (!(supplementary::FileSystem::fileExists(basePlanPath)))
 		{
-			AlicaEngine::getInstance()->abort("PP: BasePlanPath does not exists " + basePlanPath);
+			ae->abort("PP: BasePlanPath does not exists " + basePlanPath);
 		}
 		if (!(supplementary::FileSystem::fileExists(baseRolePath)))
 		{
-			AlicaEngine::getInstance()->abort("PP: BaseRolePath does not exists " + baseRolePath);
+			ae->abort("PP: BaseRolePath does not exists " + baseRolePath);
 		}
 	}
 
@@ -113,7 +114,7 @@ namespace alica
 		}
 		if (!supplementary::FileSystem::fileExists(roleSetName))
 		{
-			AlicaEngine::getInstance()->abort("PP: Cannot find roleset: " + roleSetName);
+			ae->abort("PP: Cannot find roleset: " + roleSetName);
 		}
 
 #ifdef PP_DEBUG
@@ -143,7 +144,7 @@ namespace alica
 
 			if (!supplementary::FileSystem::fileExists(fileToParse))
 			{
-				AlicaEngine::getInstance()->abort("PP: Cannot Find referenced file ", fileToParse);
+				ae->abort("PP: Cannot Find referenced file ", fileToParse);
 			}
 			if (supplementary::FileSystem::endsWith(fileToParse, ".rdefset"))
 			{
@@ -155,7 +156,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("PP: Cannot Parse file " + fileToParse);
+				ae->abort("PP: Cannot Parse file " + fileToParse);
 			}
 			filesParsed.push_back(fileToParse);
 
@@ -204,7 +205,7 @@ namespace alica
 		}
 		if (!supplementary::FileSystem::isDirectory(dir))
 		{
-			AlicaEngine::getInstance()->abort("PP: RoleSet directory does not exist: " + dir);
+			ae->abort("PP: RoleSet directory does not exist: " + dir);
 		}
 
 		vector<string> files = supplementary::FileSystem::findAllFiles(dir, ".rset");
@@ -234,7 +235,7 @@ namespace alica
 		{
 			return files[0];
 		}
-		AlicaEngine::getInstance()->abort("PP: Cannot find a default roleset in directory: " + dir);
+		ae->abort("PP: Cannot find a default roleset in directory: " + dir);
 		return "";
 	}
 
@@ -252,7 +253,7 @@ namespace alica
 #endif
 		if (!found)
 		{
-			AlicaEngine::getInstance()->abort("PP: Cannot find MasterPlan '" + masterplan + "'");
+			ae->abort("PP: Cannot find MasterPlan '" + masterplan + "'");
 		}
 		this->currentFile = masterPlanPath;
 		this->currentDirectory = supplementary::FileSystem::getParent(masterPlanPath);
@@ -280,7 +281,7 @@ namespace alica
 
 			if (!supplementary::FileSystem::fileExists(fileToParse))
 			{
-				AlicaEngine::getInstance()->abort("PP: Cannot Find referenced file ", fileToParse);
+				ae->abort("PP: Cannot Find referenced file ", fileToParse);
 			}
 			if (supplementary::FileSystem::endsWith(fileToParse, ".pml"))
 			{
@@ -304,7 +305,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("PP: Cannot Parse file", fileToParse);
+				ae->abort("PP: Cannot Parse file", fileToParse);
 			}
 			filesParsed.push_back(fileToParse);
 		}
@@ -455,7 +456,7 @@ namespace alica
 			}
 			catch (exception &e)
 			{
-				AlicaEngine::getInstance()->abort("PP: Cannot convert ID to long: " + idString + " WHAT?? " + e.what());
+				ae->abort("PP: Cannot convert ID to long: " + idString + " WHAT?? " + e.what());
 			}
 			return id;
 		}
@@ -494,7 +495,7 @@ namespace alica
 			cout << curAttribute->Name() << " : " << curAttribute->Value() << endl;
 			curAttribute = curAttribute->Next();
 		}
-		AlicaEngine::getInstance()->abort("PP: Couldn't resolve remote reference: " + string(node->Name()));
+		ae->abort("PP: Couldn't resolve remote reference: " + string(node->Name()));
 		return -1;
 	}
 
@@ -531,7 +532,7 @@ namespace alica
 		}
 		catch (exception& e)
 		{
-			AlicaEngine::getInstance()->abort("PP: Cannot convert ID to long: " + tokenId + " WHAT?? " + e.what());
+			ae->abort("PP: Cannot convert ID to long: " + tokenId + " WHAT?? " + e.what());
 		}
 		return id;
 	}

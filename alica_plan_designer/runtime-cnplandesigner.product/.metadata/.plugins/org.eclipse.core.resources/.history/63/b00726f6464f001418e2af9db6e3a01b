@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="SimpleTestPlan.pml#1412252439926"/>
+    <value xPos="178" yPos="126" width="81" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="SimpleTestPlan.pml#1412252439925"/>
+    <value width="568" height="393"/>
+  </extensions>
+  <extensions>
+    <key href="SimpleTestPlan.pml#1412252439927"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/Attack.beh#1402488866727"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="SimpleTestPlan.pml#1412761855746"/>
+    <value xPos="345" yPos="128" width="87" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="SimpleTestPlan.pml#1412761925032"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="SimpleTestPlan.pml#1412781693884"/>
+    <value xPos="329" yPos="301"/>
+  </extensions>
+  <extensions>
+    <key href="SimpleTestPlan.pml#1412781707952"/>
+    <value xPos="33" yPos="-22"/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>

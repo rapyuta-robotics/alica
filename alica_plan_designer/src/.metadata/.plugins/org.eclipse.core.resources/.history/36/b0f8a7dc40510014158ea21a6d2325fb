@@ -1,0 +1,31 @@
+«IMPORT alica»  
+
+«DEFINE Root FOR Plan»«ENDDEFINE»
+«DEFINE Root FOR ConstraintCreator»
+	«FILE "ConstraintCreator" + ".h"-»
+		#ifndef CONSTRAINTCREATOR_H_
+		#define CONSTRAINTCREATOR_H_
+
+		#include <engine/IConstraintCreator.h>
+
+		namespace alica
+		{
+
+			class TestConstraintCreator : public IConstraintCreator
+			{
+				public:
+				ConstraintCreator();
+				virtual ~ConstraintCreator();
+				shared_ptr<BasicConstraint> createConstraint(long constraintConfId);
+			};
+
+		} /* namespace alica */
+			«FOREACH plans AS beh»
+				«IF (beh.metaType == alica::Plan)»
+					«EXPAND Plan FOR beh»
+			«ENDFOREACH»
+#endif /* CONSTRAINTCREATOR_H_ */
+	«ENDFILE»
+«ENDDEFINE»
+«DEFINE Plan FOR Plan»
+«ENDDEFINE»

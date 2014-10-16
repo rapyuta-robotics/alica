@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?compositeArtifactRepository version='1.0.0'?>
+<repository name='EMFT MWE Update Site Helios SR2' type='org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository' version='1.0.0'>
+  <properties size='1'>
+    <property name='p2.timestamp' value='1247703511'/>
+  </properties>
+  <children size='2'>
+    <child location='R201102150556/mwe'/>
+    <child location='R201102151014/mwe2lang'/>
+  </children>
+</repository>

@@ -1,0 +1,4 @@
+«DEFINE Root FOR List[xpand2::Type]»
+«EXPAND ApiDoc::all»
+«EXPAND DocBook::Start»
+«ENDDEFINE» 

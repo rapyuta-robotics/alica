@@ -10,10 +10,10 @@
 
 #include <engine/BasicBehaviour.h>
 
-namespace alica
+namespace alicaTests
 {
 
-	class Tackle : public BasicBehaviour
+	class Tackle : public alica::BasicBehaviour
 	{
 	public:
 		Tackle();

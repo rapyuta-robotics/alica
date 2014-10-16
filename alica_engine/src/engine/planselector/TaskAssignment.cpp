@@ -9,6 +9,7 @@
 #include "engine/teamobserver/TeamObserver.h"
 #include "engine/AlicaEngine.h"
 #include "engine/planselector/PartialAssignment.h"
+#include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/Assignment.h"
 #include "engine/model/Plan.h"
 #include "engine/UtilityFunction.h"
@@ -32,13 +33,13 @@ namespace alica
 	 * @param paraRobots robots to build an assignment for
 	 * @param a bool
 	 */
-	TaskAssignment::TaskAssignment(list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots)
+	TaskAssignment::TaskAssignment(PartialAssignmentPool* pap, ITeamObserver* to,list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots)
 	{
 #ifdef EXPANSIONEVAL
 		this->expansionCount = 0;
 #endif
 		this->planList = planList;
-		ITeamObserver* to = AlicaEngine::getInstance()->getTeamObserver();
+		this->to = to;
 		this->robots = make_shared<vector<int> >(vector<int>(paraRobots->size()));
 		int k = 0;
 		for (int i : (*paraRobots))
@@ -56,7 +57,7 @@ namespace alica
 			curPlan->getUtilityFunction()->cacheEvalData();
 
 			// CREATE INITIAL PARTIAL ASSIGNMENTS
-			curPa = PartialAssignment::getNew(this->robots, curPlan, to->getSuccessCollection(curPlan));
+			curPa = PartialAssignment::getNew(pap, this->robots, curPlan, to->getSuccessCollection(curPlan));
 
 			// ASSIGN PREASSIGNED OTHER ROBOTS
 			if (preasingOtherRobots)
@@ -204,7 +205,7 @@ namespace alica
 	bool TaskAssignment::addAlreadyAssignedRobots(PartialAssignment* pa,
 													map<int, shared_ptr<SimplePlanTree> >* simplePlanTreeMap)
 	{
-		int ownRobotId = AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
+		int ownRobotId = to->getOwnId();
 		bool haveToRevalute = false;
 		shared_ptr<SimplePlanTree> spt = nullptr;
 		for (int robot : (*this->robots))

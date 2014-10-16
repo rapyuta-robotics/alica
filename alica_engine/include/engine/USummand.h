@@ -38,12 +38,12 @@ namespace alica
 		 * and stores it in the relevant entrypoint vector. This will increase the
 		 * performance of the evaluation of this utility summand.
 		 */
-		virtual void init()
+		virtual void init(AlicaEngine* ae)
 		{
 			// init relevant entrypoint vector
 			this->relevantEntryPoints = vector<EntryPoint*>(this->relevantEntryPointIds.size());
 			// find the right entrypoint for each id in relevant entrypoint id
-			map<long, EntryPoint*> elements = AlicaEngine::getInstance()->getPlanRepository()->getEntryPoints();
+			map<long, EntryPoint*> elements = ae->getPlanRepository()->getEntryPoints();
 			EntryPoint* curEp;
 			for(int i = 0; i < this->relevantEntryPoints.size(); ++i)
 			{

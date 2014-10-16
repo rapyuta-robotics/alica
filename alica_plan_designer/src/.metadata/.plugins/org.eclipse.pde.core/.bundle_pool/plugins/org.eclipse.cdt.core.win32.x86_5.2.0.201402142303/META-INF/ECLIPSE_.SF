@@ -1,0 +1,37 @@
+Signature-Version: 1.0
+SHA1-Digest-Manifest: N1UW1KvkPmur1FvCTP3uXX2VNdo=
+Created-By: 1.6.0 (IBM Corporation)
+SHA1-Digest-Manifest-Main-Attributes: 0dZ7ip72/I+pxFy7VbmCcb8RryA=
+
+Name: os/win32/x86/pty.dll
+SHA1-Digest: nZUltRgxHmhnp/p4WLftVhnvMuY=
+
+Name: os/win32/x86/spawner.dll
+SHA1-Digest: 5bqlEznQ729R/38rj/UyDNwSmBg=
+
+Name: os/win32/x86/winreg.dll
+SHA1-Digest: 7q3enlELMXH35mOohkgoPMuTuIE=
+
+Name: os/win32/x86/winpty.dll
+SHA1-Digest: 7XdZdtjbB7i7vYNNgsRxuOP6pgY=
+
+Name: os/win32/x86/starter.exe
+SHA1-Digest: /YUcr52jqojBrJQJWT+9Bz+maFM=
+
+Name: META-INF/maven/org.eclipse.cdt/org.eclipse.cdt.core.win32.x86/po
+ m.properties
+SHA1-Digest: UNGXFsqGRfT/YhkhvPqjvxRYID8=
+
+Name: about.html
+SHA1-Digest: mytKZYCHCDPgS7Y3lrPKwYXPrbw=
+
+Name: os/win32/x86/listtasks.exe
+SHA1-Digest: 1+OpmUcXnpp3cBx35Dl047XXiIg=
+
+Name: os/win32/x86/winpty-agent.exe
+SHA1-Digest: 8S9pz7ZAfI2GZ9HIc2l4MVCh708=
+
+Name: META-INF/maven/org.eclipse.cdt/org.eclipse.cdt.core.win32.x86/po
+ m.xml
+SHA1-Digest: FTH7awc6ZBOc+RMiPiDHVGQdGNU=
+

@@ -1,0 +1,307 @@
+<html>
+<head>
+<title>Using Incremental Generation</title>
+<link href="book.css" rel="stylesheet" type="text/css"/>
+<meta content="DocBook XSL Stylesheets V1.75.1" name="generator"/>
+<link rel="home" href="index.html" title="Xpand Documentation"/>
+<link rel="up" href="incrementalGeneration.html" title="Incremental Generation"/>
+<link rel="prev" href="incrementalGeneration.html" title="Incremental Generation"/>
+<link rel="next" href="incrementalGeneration_notes.html" title="Additional Notes"/>
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<h1 xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">Using Incremental Generation</h1>
+<div class="section" title="Using Incremental Generation">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title" style="clear: both">
+<a name="incrementalGeneration_usage"/>Using Incremental Generation</h2>
+</div>
+</div>
+</div>
+<div class="section" title="The Incremental Generation Facade">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="incrementalGeneration_usage_facade"/>The Incremental Generation Facade</h3>
+</div>
+</div>
+</div>
+<p>
+        The easiest way to benefit from incremental generation is to use the
+        <span class="emphasis">
+<em>IncrementalGenerationFacade</em>
+</span> workflow component:
+      </p>
+<pre class="programlisting">
+&lt;workflow&gt;
+  &lt;component id="incremental"
+      class="org.eclipse.xpand2.incremental.IncrementalGenerationFacade"&gt;
+    &lt;newModelFile value="path/to/your/model.file" /&gt;
+    &lt;oldModelFile value="path/to/backup/model.file" /&gt;
+    &lt;traceModelFile value="path/to/store/trace/model.trace" /&gt; 
+    &lt;outlet path="path/to/your/outlet/" overwrite="true"/&gt;
+  &lt;/component&gt;
+
+  &lt;component id="generator" class="org.eclipse.xpand2.Generator"&gt;
+    &lt;expand value="your::template::Root FOR model" /&gt;
+    &lt;outlet path="temp/" overwrite="true"/&gt;
+    &lt;metaModel class="org.eclipse.xtend.typesystem.emf.EmfRegistryMetaModel" /&gt;
+    &lt;vetoableCallback idRef="incremental" /&gt;
+  &lt;/component&gt;
+&lt;/workflow&gt;
+</pre>
+<p>
+        The <span class="emphasis">
+<em>IncrementalGenerationFacade</em>
+</span> takes four
+        parameters:
+        
+        </p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+<p>
+              The <span class="emphasis">
+<em>newModelFile</em>
+</span> is the file
+              path where the model to generate is stored. This file is stored
+              in a model slot named <span class="emphasis">
+<em>model</em>
+</span>
+            </p>
+</li>
+<li class="listitem">
+<p>
+              The <span class="emphasis">
+<em>oldModelFile</em>
+</span> is the file
+              path where a copy of the previous state of the model is stored.
+              The model is automatically copied to this location after the
+              generation process and kept between generator invocations.
+            </p>
+</li>
+<li class="listitem">
+<p>
+              The <span class="emphasis">
+<em>traceModelFile</em>
+</span> is the file
+              path where the <span class="emphasis">
+<em>trace model</em>
+</span> of the generation
+              process is stored between generator invocations.
+            </p>
+</li>
+<li class="listitem">
+<p>
+              A regular <span class="emphasis">
+<em>outlet</em>
+</span> list that must match the
+              one given for the regular generator invocation.
+            </p>
+</li>
+</ul>
+</div>
+<p>
+        
+        The <span class="emphasis">
+<em>IncrementalGenerationFacade</em>
+</span> component must then
+        be passed as a <span class="emphasis">
+<em>vetoableCallback</em>
+</span> parameter to the
+        invocation of the Xpand <span class="emphasis">
+<em>Generator</em>
+</span>.
+      </p>
+<p>
+        With the simple workflow given above, you should be able to observe
+        that for any given change in the model, only the files affected by
+        that change are regenerated, while all others remain untouched. Even
+        deleting elements will result in specific (previously generated) files
+        being deleted from the hard disk.
+      </p>
+<p>
+        Note that you have to use file paths for all models because they
+        are physically copied on the hard disk. Passing locations that
+        can only be resolved from the classpath is not possible.
+      </p>
+</div>
+<div class="section" title="The Incremental Generation Callback">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="incrementalGeneration_usage_callback"/>The Incremental Generation Callback</h3>
+</div>
+</div>
+</div>
+<p>
+        While the <span class="emphasis">
+<em>IncrementalGenerationFacade</em>
+</span> is easy
+        to use, it is rather restricted in its capabilities and fixed in the
+        operations it performs. Using the
+        <span class="emphasis">
+<em>IncrementalGenerationCallback</em>
+</span> gives you more
+        control over the steps involved. A typical workflow for incremental
+        generation needs to perform the following tasks:
+        
+        </p>
+<div class="orderedlist">
+<ol class="orderedlist" type="1">
+<li class="listitem">
+<p>
+              Read the (current) model into a slot.
+            </p>
+</li>
+<li class="listitem">
+<p>
+              Read the previous state of the model into another slot. This
+              may, of course, not exist, e.g. for the very first invocation.
+              Full generation must be performed in this case.
+            </p>
+</li>
+<li class="listitem">
+<p>
+              Compute the changes between the two versions of the model
+              (if possible) and
+              put that <span class="emphasis">
+<em>diff model</em>
+</span> into a slot.
+            </p>
+</li>
+<li class="listitem">
+<p>
+              Read the <span class="emphasis">
+<em>trace model</em>
+</span> computed during the
+              previous generator invocation and put it into a slot.
+              As with the old state of the model, this may not exist, which
+              also leads to full generation.
+            </p>
+</li>
+<li class="listitem">
+<p>
+              Initialize the <span class="emphasis">
+<em>IncrementalGenerationCallback</em>
+</span>
+              with the <span class="emphasis">
+<em>diff model</em>
+</span> and the
+              <span class="emphasis">
+<em>trace model</em>
+</span>.
+            </p>
+</li>
+<li class="listitem">
+<p>
+              Run the Xpand <span class="emphasis">
+<em>Generator</em>
+</span> component with
+              the <span class="emphasis">
+<em>IncrementalGenerationCallback</em>
+</span>.              
+            </p>
+</li>
+<li class="listitem">
+<p>
+              Clean obsolete files, i.e. files that need to be deleted because
+              the corresponding elements in the model have been deleted.
+            </p>
+</li>
+<li class="listitem">
+<p>
+              Write the new <span class="emphasis">
+<em>trace model</em>
+</span> computed during
+              code generation to the hard disk so that it is available
+              for the next generation process.
+            </p>
+</li>
+<li class="listitem">
+<p>
+              Make a backup copy of the model so that it can be compared with
+              the next version upon subsequent generator invocation.
+            </p>
+</li>
+</ol>
+</div>
+<p>
+      </p>
+<p>
+        This is a sample workflow that performs all these steps:
+      </p>
+<pre class="programlisting">
+&lt;workflow&gt;
+  &lt;!-- read new model --&gt;
+  &lt;component id="modelreader" class="org.eclipse.emf.mwe.utils.Reader"
+    uri="model/my.model"
+    firstElementOnly="true"
+    modelSlot="model"               
+  /&gt;
+  &lt;!-- read old model, copied from previous run. may not exist, so ignore missing model --&gt;
+  &lt;component id="oldmodelreader" class="org.eclipse.emf.mwe.utils.Reader"
+    uri="temp/old.model"
+    firstElementOnly="true"
+    ignoreMissingModel="true"
+    modelSlot="oldmodel"            
+  /&gt;
+  
+  &lt;!-- compute diff. --&gt;
+  &lt;component id="compare" class="org.eclipse.xpand2.incremental.compare.EmfCompare"
+    oldModelSlot="oldmodel"
+    newModelSlot="model"
+    diffModelSlot="diff"
+  /&gt;
+
+  &lt;!-- read trace model, produced by previous run. may not exist, so ignore missing model --&gt;
+  &lt;component id="tracemodelreader" class="org.eclipse.emf.mwe.utils.Reader"
+    uri="temp/trace.trace"
+    firstElementOnly="true"
+    ignoreMissingModel="true"
+    modelSlot="oldtrace"            
+  /&gt;
+
+  &lt;!-- this is the actual incremental generation callback --&gt;
+  &lt;component id="incremental"
+      class="org.eclipse.xpand2.incremental.IncrementalGenerationCallback"
+    diffModelSlot="diff"
+    oldTraceModelSlot="oldtrace"
+    newTraceModelSlot="trace"
+  /&gt;
+  
+  &lt;!-- generate code --&gt;
+  &lt;component id="generator" class="org.eclipse.xpand2.Generator"&gt;
+    &lt;expand value="resources::templates::Test::Test FOR model" /&gt;
+    &lt;outlet path="somewhere/" overwrite="true"/&gt;
+    &lt;metaModel class="org.eclipse.xtend.typesystem.emf.EmfRegistryMetaModel" /&gt;
+    &lt;vetoableCallback idRef="incremental" /&gt;
+  &lt;/component&gt;
+  
+  &lt;!-- clean obsolete files --&gt;
+  &lt;component id="cleaner" class="org.eclipse.xpand2.incremental.FileCleaner"&gt;
+    &lt;oldTraceModelSlot value="oldtrace" /&gt;
+    &lt;newTraceModelSlot value="trace" /&gt;
+    &lt;outlet path="somewhere/" overwrite="true"/&gt;
+  &lt;/component&gt;
+  
+  &lt;!-- write trace model --&gt;
+  &lt;component id="tracemodelwriter" class="org.eclipse.emf.mwe.utils.Writer"
+    modelSlot="trace"
+    uri="temp/trace.trace"
+  /&gt;      
+  
+  &lt;!-- make backup copy of model --&gt;
+  &lt;component id="copier" class="org.eclipse.emf.mwe.utils.FileCopy"
+    sourceFile="model/my.model"
+    targetFile="temp/old.model"
+  /&gt;
+&lt;/workflow&gt;
+</pre>
+</div>
+</div>
+</body>
+</html>

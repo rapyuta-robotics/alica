@@ -10,10 +10,10 @@
 
 #include "engine/BasicBehaviour.h"
 
-namespace alica
+namespace alicaTests
 {
 
-	class DefendMid : public BasicBehaviour
+	class DefendMid : public alica::BasicBehaviour
 	{
 	public:
 		DefendMid();

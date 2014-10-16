@@ -30,6 +30,7 @@ namespace alica
 	class Plan;
 	class Variable;
 	class RunningPlan;
+	class AlicaEngine;
 
 	/**
 	 * A quantifier encapsulates a set of Variables, belonging to a domain artifact, scoped under a AlicaElement
@@ -47,7 +48,7 @@ namespace alica
 		State* getScopedState();
 		EntryPoint* getScopedEntryPoint();
 		Plan* getScopedPlan();
-		void setScope(AlicaElement* ae);
+		void setScope(AlicaEngine* a,AlicaElement* ae);
 		AlicaElement* getScope();
 		/**
 		 * Access the list of sorted Variables under the scope of this quantifier given a runningplan.

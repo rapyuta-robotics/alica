@@ -1,0 +1,55 @@
+<html>
+<head>
+<title>Using Dynamic EMF</title>
+<link href="book.css" rel="stylesheet" type="text/css"/>
+<meta content="DocBook XSL Stylesheets V1.75.1" name="generator"/>
+<link rel="home" href="index.html" title="Xpand Documentation"/>
+<link rel="up" href="emf_tutorial.html" title="Getting Started"/>
+<link rel="prev" href="emf_tutorial_defining_sample_model.html" title="Defining an Example Data Model"/>
+<link rel="next" href="emf_tutorial_generating_code.html" title="Generating code from the example model"/>
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<h1 xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">Using Dynamic EMF</h1>
+<div class="section" title="Using Dynamic EMF">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title" style="clear: both">
+<a name="emf_tutorial_dynamic_emf"/>Using Dynamic EMF</h2>
+</div>
+</div>
+</div>
+<p>Instead of generating editors and metaclasses, you can also use
+    dynamic EMF<a name="N10328" class="indexterm"/>. This works by selecting, in the opened metamodel, the root
+    class of the model you want to create (here:
+    <span class="emphasis">
+<em>DataModel</em>
+</span>) and then selecting <span class="guimenuitem">Create Dynamic Instance</span> from the context menu. This opens an editor that can
+    dynamically edit the respective instance. The created file by default has
+    an <code class="filename">.xmi</code> extension.</p>
+<p>Note that Xpand can work completely with dynamic models, there is no
+    reason to generate code. However, if you want to programmatically work
+    with the model, the generated metaclasses (not the editors!) are really
+    helpful. Please also keep in mind: in subsequent parts of the tutorial,
+    you will specify the <span class="emphasis">
+<em>metaModelPackage</em>
+</span>
+<a name="N1033A" class="indexterm"/> in various component configurations in the workflow file,
+    like this:</p>
+<pre class="programlisting">&lt;metaModel id="mm"
+  class="org.eclipse.xtend.typesystem.emf.EmfMetaModel"&gt;
+  &lt;metaModelPackage value="data.DataPackage"/&gt;
+&lt;/metaModel&gt;
+</pre>
+<p>In case of dynamic EMF, there has no metamodel package been
+    generated. So, you have to specify the metamodel file instead, that is,
+    the <code class="filename">.ecore</code> file you just created. Note that the
+    <code class="filename">.ecore</code> file has to be in the classpath to make this
+    work.</p>
+<pre class="programlisting">&lt;metaModel id="mm"
+  class="org.eclipse.xtend.typesystem.emf.EmfMetaModel"&gt;
+  &lt;metaModelFile value="data.ecore"/&gt;
+&lt;/metaModel&gt;</pre>
+</div>
+</body>
+</html>

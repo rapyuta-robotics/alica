@@ -90,7 +90,7 @@ public abstract class ConditionImpl extends PlanElementImpl implements Condition
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String PLUGIN_NAME_EDEFAULT = "";
+	protected static final String PLUGIN_NAME_EDEFAULT = "DefaultPlugin";
 
 	/**
 	 * The cached value of the '{@link #getPluginName() <em>Plugin Name</em>}' attribute.

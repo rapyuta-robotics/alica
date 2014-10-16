@@ -19,15 +19,15 @@
 namespace alica
 {
 
-	bool Assignment::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>(
-			"Alica.AllowIdling",
-			NULL);
 	Assignment::~Assignment()
 	{
 		delete this->epRobotsMapping;
+		delete this->robotStateMapping;
 	}
 	Assignment::Assignment(Plan* p)
 	{
+		allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling",
+		NULL);
 		this->plan = p;
 		this->max = 0.0;
 		this->min = 0.0;
@@ -35,7 +35,7 @@ namespace alica
 		this->epRobotsMapping = new AssignmentCollection(this->plan->getEntryPoints().size());
 
 		list<EntryPoint*> l;
-		for(auto pair : plan->getEntryPoints())
+		for (auto pair : plan->getEntryPoints())
 		{
 			l.push_back(pair.second);
 		}
@@ -105,10 +105,10 @@ namespace alica
 		this->allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling",
 		NULL);
 		auto assCol = pa->getEpRobotsMapping();
-		shared_ptr<vector<shared_ptr<vector<int> > > >robots;
+		shared_ptr<vector<shared_ptr<vector<int> > > > robots;
 		if (allowIdling)
 		{
-			robots = make_shared<vector<shared_ptr<vector<int> > > >(assCol->getCount() - 1);// -1 for idling
+			robots = make_shared<vector<shared_ptr<vector<int> > > >(assCol->getCount() - 1); // -1 for idling
 		}
 		else
 		{
@@ -133,7 +133,8 @@ namespace alica
 		this->allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling",
 		NULL);
 		shared_ptr<vector<EntryPoint*> > eps = make_shared<vector<EntryPoint*> >(p->getEntryPoints().size());
-		shared_ptr<vector<shared_ptr<vector<int> > > > robots = make_shared<vector<shared_ptr<vector<int> > > >(p->getEntryPoints().size());
+		shared_ptr<vector<shared_ptr<vector<int> > > > robots = make_shared<vector<shared_ptr<vector<int> > > >(
+				p->getEntryPoints().size());
 		int k = 0;
 		for (auto iter : p->getEntryPoints())
 		{
@@ -432,8 +433,9 @@ namespace alica
 		{
 			if (this->epRobotsMapping->getEntryPoints()->at(i) == ep)
 			{
-				if (find(this->epRobotsMapping->getRobots()->at(i)->begin(), this->epRobotsMapping->getRobots()->at(i)->end(),
-							robot) != this->epRobotsMapping->getRobots()->at(i)->end())
+				if (find(this->epRobotsMapping->getRobots()->at(i)->begin(),
+							this->epRobotsMapping->getRobots()->at(i)->end(), robot)
+						!= this->epRobotsMapping->getRobots()->at(i)->end())
 				{
 					return false;
 				}
@@ -464,8 +466,9 @@ namespace alica
 		{
 			if (this->epRobotsMapping->getEntryPoints()->at(i) == ep)
 			{
-				if (find(this->epRobotsMapping->getRobots()->at(i)->begin(), this->epRobotsMapping->getRobots()->at(i)->end(),
-							robot) != this->epRobotsMapping->getRobots()->at(i)->end())
+				if (find(this->epRobotsMapping->getRobots()->at(i)->begin(),
+							this->epRobotsMapping->getRobots()->at(i)->end(), robot)
+						!= this->epRobotsMapping->getRobots()->at(i)->end())
 				{
 					return false;
 				}
@@ -535,6 +538,10 @@ namespace alica
 	void Assignment::moveRobots(State* from, State* to)
 	{
 		auto movingRobots = this->robotStateMapping->getRobotsInState(from);
+		if(to == nullptr)
+		{
+			cout << "Ass: to nullptr" << endl;
+		}
 		for (int r : movingRobots)
 		{
 			this->robotStateMapping->setState(r, to);

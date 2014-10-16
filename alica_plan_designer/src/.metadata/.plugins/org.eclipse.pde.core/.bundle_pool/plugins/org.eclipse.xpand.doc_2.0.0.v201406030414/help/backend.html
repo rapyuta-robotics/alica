@@ -1,0 +1,202 @@
+<html>
+<head>
+<title>Improve performance using the backend</title>
+<link href="book.css" rel="stylesheet" type="text/css"/>
+<meta content="DocBook XSL Stylesheets V1.75.1" name="generator"/>
+<link rel="home" href="index.html" title="Xpand Documentation"/>
+<link rel="up" href="Reference.html" title="Part I. Reference"/>
+<link rel="prev" href="incrementalGeneration_notes.html" title="Additional Notes"/>
+<link rel="next" href="backend_usage.html" title="Using the backend"/>
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<h1 xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">Improve performance using the backend</h1>
+<div class="chapter" title="Improve performance using the backend">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title">
+<a name="backend"/>Improve performance using the backend</h2>
+</div>
+</div>
+</div>
+<div class="toc">
+<dl>
+<dt>
+<span class="section">
+<a href="backend.html#backend_background">Technical background</a>
+</span>
+</dt>
+<dt>
+<span class="section">
+<a href="backend_usage.html">Using the backend</a>
+</span>
+</dt>
+<dt>
+<span class="section">
+<a href="call_functions_backend.html">Call functions registered at the backend from Java</a>
+</span>
+</dt>
+</dl>
+</div>
+<p>
+		Another approach to improve generation and model transformation
+		performance, is to use the M2T Backend. The M2T Backend is a new
+		execution engine for model to text (M2T) and model to model (M2M)
+		transformations that provides:
+		</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+				a foundation for compilation of M2T and M2M languages
+				supported on the backend
+      		</li>
+<li class="listitem">
+				performance improvement employing lazy string concatenation
+				and aggressive caching
+      		</li>
+<li class="listitem">
+				language interoperability, e.g. mix Xtend with operational
+				QVT
+      		</li>
+</ul>
+</div>
+<p>
+	</p>
+<p>
+		One missing feature in Xpand / Xtend / Check, is to be able to
+		compile	Xpand templates and Xtend extensions into Java bytecode to speed
+		up generator runs and hence reduce build time. The M2T Backend provides
+		the foundation for compilation of Xpand / Xtend / Check and other
+		languages by providing a common platform just like the JVM is a common
+		platform for multiple languages. Likewise the backend enables language
+		interoperability.
+		This enables you to import templates, extensions and transformations written 
+		in other languages than Xpand/Xtend/Check and call functions declared in
+		therein, e.g. call an QVT transformation from Xpand.
+	</p>
+<p>
+		Beginning with the Eclipse Helios release (Eclipse 3.6) the M2T
+		Backend is part	of M2T Xpand. Currently the M2T Backend only runs in
+		interpreted mode and includes translation of Xpand, Xtend and Check
+		resources into backend code. However performance improvements can
+		already be expected when working with large models. A compiler that
+		generates optimized Java code will become available soon.  
+	</p>
+<div class="section" title="Technical background">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title" style="clear: both">
+<a name="backend_background"/>Technical background</h2>
+</div>
+</div>
+</div>
+<p>
+			The basic idea behind the <span class="emphasis">
+<em>M2T Backend</em>
+</span>
+			is to not build a compiler for every language but use an intermediary
+			"language", i.e. the backend abstract syntax tree, that is compiled
+			into executable code. Xpand, Xtend and Check are translated into a
+			backend AST by so called <span class="emphasis">
+<em>middleends</em>
+</span>
+			Middleends are specific for each language. Hence, there exists a
+			<span class="emphasis">
+<em>language specific	middleend</em>
+</span>
+			for each supported language. If there exists a middleend
+			for a language, it will be compilable into bytecode. Xpand, Xtend and
+			Check are called <span class="emphasis">
+<em>frontend languages</em>
+</span>.
+		</p>
+<p>
+			The M2T Backend supports functional and aspect oriented
+			programming. Amongst others it supports language features such as:
+			</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+					closures
+			</li>
+<li class="listitem">
+					higher order functions - use any expression as parameters,
+					even function calls
+			</li>
+<li class="listitem">
+					currying of functions
+			</li>
+<li class="listitem">
+					multi dispatch - call a function based on the runtime
+					parameter types as in Xpand / Xtend / Check instead of the 
+					statically assigned	parameter types as in Java
+				</li>
+<li class="listitem">
+					guards on functions - constrain the execution of a
+					function to certain conditions defined in the guard
+			</li>
+<li class="listitem">
+					deferred evaluation of expressions - use the function call
+					as a placeholder and evaluate the expression later
+			</li>
+<li class="listitem">
+					AOP
+			</li>
+<li class="listitem">
+					declare functions in Java using several annotations
+				</li>
+<li class="listitem">
+					Support for multiple typesystems a.k.a metamodels.
+					Currently JavaBeans, EMF, Eclipse UML2 and XSD are supported.
+				</li>
+</ul>
+</div>
+<p>
+		</p>
+<div class="section" title="How it works in interpreted mode">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="backend_interpretation_background"/>How it works in interpreted mode</h3>
+</div>
+</div>
+</div>
+<p>
+				In interpreted mode the following steps
+				are executed:
+
+				</p>
+<div class="itemizedlist">
+<ul class="itemizedlist" type="disc">
+<li class="listitem">
+						Read a resource, e.g. an Xpand template.
+		      	</li>
+<li class="listitem">
+						Find the responsible <span class="emphasis">
+<em>middleend</em>
+</span>, 
+						that is capable to convert the <span class="emphasis">
+<em>frontend language</em>
+</span>
+						AST (e.g. Xpand) into the <span class="emphasis">
+<em>backend AST</em>
+</span>. Whether 
+						a middleend can handle the transformation of a certain
+						frontend language AST into the backend AST, is determined based on the
+						file ending of the resource, e.g ".xpt" and by trying to parse the resource
+						with the middleends	frontend parser.
+					</li>
+<li class="listitem">
+						Finally, execute the backend AST using the backend.
+					</li>
+</ul>
+</div>
+<p>
+			</p>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -10,15 +10,15 @@
 
 #include <engine/IConstraintCreator.h>
 
-namespace alica
+namespace alicaTests
 {
 
-	class TestConstraintCreator : public IConstraintCreator
+	class TestConstraintCreator : public alica::IConstraintCreator
 	{
 	public:
 		TestConstraintCreator();
 		virtual ~TestConstraintCreator();
-		shared_ptr<BasicConstraint> createConstraint(long constraintConfId);
+		shared_ptr<alica::BasicConstraint> createConstraint(long constraintConfId);
 	};
 
 } /* namespace alica */

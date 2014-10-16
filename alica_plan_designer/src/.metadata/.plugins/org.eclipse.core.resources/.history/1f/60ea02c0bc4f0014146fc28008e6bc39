@@ -1,0 +1,26 @@
+«IMPORT alica»  
+
+«DEFINE Root FOR Plan»«ENDDEFINE»
+«DEFINE Root FOR UTILITYFUNCTIONCREATOR»
+	«FILE "BehaviourCreator" + ".h"-»
+		#ifndef UTILITYFUNCTIONCREATOR_H_
+		#define UTILITYFUNCTIONCREATOR_H_
+
+		#include <engine/IUtilityCreator.h>
+
+namespace alica
+{
+
+	class TestUtilityFunctionCreator : public IUtilityCreator
+	{
+	public:
+		virtual ~TestUtilityFunctionCreator();
+		TestUtilityFunctionCreator();
+		shared_ptr<BasicUtilityFunction> createConstraint(long utilityfunctionConfId);
+	};
+
+} /* namespace alica */
+
+#endif /* ALICA_ALICA_TEST_SRC_TESTUTILITYFUNCTIONCREATOR_H_ */
+	«ENDFILE»
+«ENDDEFINE»

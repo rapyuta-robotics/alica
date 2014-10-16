@@ -1,0 +1,372 @@
+<html>
+<head>
+<title>Stdlib workflow components</title>
+<link href="book.css" rel="stylesheet" type="text/css"/>
+<meta content="DocBook XSL Stylesheets V1.75.1" name="generator"/>
+<link rel="home" href="index.html" title="Xpand Documentation"/>
+<link rel="up" href="stdlib_reference.html" title="Stdlib"/>
+<link rel="prev" href="ch04s02.html" title="Stdlib extensions"/>
+<link rel="next" href="eclipse_integration.html" title="Xpand Eclipse Integration"/>
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<h1 xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">Stdlib workflow components</h1>
+<div class="section" title="Stdlib workflow components">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title" style="clear: both">
+<a name="N127EF"/>Stdlib workflow components</h2>
+</div>
+</div>
+</div>
+<p>Besides the extensions described in the previous section Xpand's
+    Stdlib provides some workflow components.</p>
+<div class="section" title="SystemCommand">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N127F4"/>SystemCommand</h3>
+</div>
+</div>
+</div>
+<p>This component executes a system command<a name="N127F9" class="indexterm"/>.</p>
+<div class="table">
+<a name="N127FD"/>
+<p class="title">
+<b>Table 2. Workflow component
+        org.eclipse.xtend.util.stdlib.SystemCommand</b>
+</p>
+<div class="table-contents">
+<table summary="Workflow component&#10;        org.eclipse.xtend.util.stdlib.SystemCommand" cellspacing="0" cellpadding="10" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col/>
+<col/>
+<col/>
+<col/>
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; " align="center">Property</th>
+<th style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; " align="center">Type</th>
+<th style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; " align="center">Mandatory</th>
+<th style="border-bottom: 2 solid #000000; " align="center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">command</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">String</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">yes</td>
+<td style="border-bottom: 2 solid #000000; ">The command to execute.</td>
+</tr>
+<tr>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">directory</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">String</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">no</td>
+<td style="border-bottom: 2 solid #000000; ">Execution directory.</td>
+</tr>
+<tr>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">arg</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">String</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">no</td>
+<td style="border-bottom: 2 solid #000000; ">(multiple) command arguments</td>
+</tr>
+<tr>
+<td style="border-right: 2 solid #000000; ">env</td>
+<td style="border-right: 2 solid #000000; ">String</td>
+<td style="border-right: 2 solid #000000; ">no</td>
+<td style="">(multiple) additional environment entries. Format:
+              [key],[value]</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break"/>
+<p>
+<span class="bold">
+<strong>Example:</strong>
+</span>
+</p>
+<pre class="programlisting">&lt;component class="org.eclipse.xtend.util.stdlib.SystemCommand"&gt;
+  &lt;directory value="src-gen"/&gt;
+  &lt;command value="sh"/&gt;
+  &lt;arg value="processdot.sh"/&gt;
+&lt;/component&gt;</pre>
+<p>
+<span class="bold">
+<strong>Console output:</strong>
+</span>
+</p>
+<pre class="programlisting">1639 INFO  - Running command '[sh, processdot.sh]' in directory [absolutepath] ...
+1667 INFO  - processing shape_box.dot ...
+2597 INFO  - processing shape_polygon.dot ...
+...
+3564 INFO  - Execution of command was successful.</pre>
+<p>Windows tip:</p>
+<p>When executing a command on windows this is typically done with
+      the cmd as command value. It is important that the command terminates,
+      therefore the argument /c must be appended as arg value.<sup>[<a href="#ftn.N1284D" name="N1284D" class="footnote">10</a>]</sup>
+</p>
+</div>
+<div class="section" title="SlotCopier">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N12857"/>SlotCopier<a name="N1285A" class="indexterm"/>
+</h3>
+</div>
+</div>
+</div>
+<p>This component copies an element from one slot to another. The
+      slot content is not cloned.</p>
+<div class="table">
+<a name="N12860"/>
+<p class="title">
+<b>Table 3. Workflow component
+          org.eclipse.xtend.util.stdlib.SlotCopier</b>
+</p>
+<div class="table-contents">
+<table summary="Workflow component&#10;          org.eclipse.xtend.util.stdlib.SlotCopier" cellspacing="0" cellpadding="10" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col/>
+<col/>
+<col/>
+<col/>
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; " align="center">Property</th>
+<th style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; " align="center">Type</th>
+<th style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; " align="center">Mandatory</th>
+<th style="border-bottom: 2 solid #000000; " align="center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">fromSlot</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">String</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">yes</td>
+<td style="border-bottom: 2 solid #000000; ">Source slot name.</td>
+</tr>
+<tr>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">toSlot</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">String</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">yes</td>
+<td style="border-bottom: 2 solid #000000; ">Destination slot name.</td>
+</tr>
+<tr>
+<td style="border-right: 2 solid #000000; ">removeTopLevelList</td>
+<td style="border-right: 2 solid #000000; ">boolean</td>
+<td style="border-right: 2 solid #000000; ">no</td>
+<td style="">If true the source slot must contain a list and the top
+                level list is removed (i.e. the first element from the list is
+                copied to the destination slot), otherwise it is not
+                removed.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>
+<br class="table-break"/>
+<span class="bold">
+<strong>Example:</strong>
+</span>
+</p>
+<pre class="programlisting">&lt;component class="org.eclipse.xtend.util.stdlib.SlotCopier"&gt;
+    &lt;fromSlot value="model"/&gt;
+    &lt;toSlot value="target"/&gt;
+&lt;/component&gt;</pre>
+<p>
+<span class="bold">
+<strong>Console output:</strong>
+</span>
+</p>
+<pre class="programlisting">INFO SlotCopier copying org.eclipse.emf.ecore.impl.DynamicEObjectImpl@1fdbef 
+  (eClass: org.eclipse.emf.ecore.impl.EClassImpl@fc5b01 
+  (name: Model) (instanceClassName: null) (abstract: false, interface: false)) 
+  [org.eclipse.emf.ecore.impl.DynamicEObjectImpl]</pre>
+</div>
+<div class="section" title="SlotListAdder">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N128A2"/>SlotListAdder<a name="N128A5" class="indexterm"/>
+</h3>
+</div>
+</div>
+</div>
+<p>This component copies an element from one slot to a list contained
+      in another slot.</p>
+<div class="table">
+<a name="N128AA"/>
+<p class="title">
+<b>Table 4. Workflow component
+        org.eclipse.xtend.util.stdlib.SlotListAdder</b>
+</p>
+<div class="table-contents">
+<table summary="Workflow component&#10;        org.eclipse.xtend.util.stdlib.SlotListAdder" cellspacing="0" cellpadding="10" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col/>
+<col/>
+<col/>
+<col/>
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; " align="center">Property</th>
+<th style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; " align="center">Type</th>
+<th style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; " align="center">Mandatory</th>
+<th style="border-bottom: 2 solid #000000; " align="center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">modelSlot</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">String</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">yes</td>
+<td style="border-bottom: 2 solid #000000; ">Source slot name.</td>
+</tr>
+<tr>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">listSlot</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">String</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">yes</td>
+<td style="border-bottom: 2 solid #000000; ">Target slot name. This slot contains a list of
+              elements.</td>
+</tr>
+<tr>
+<td style="border-right: 2 solid #000000; ">uniqueNames</td>
+<td style="border-right: 2 solid #000000; ">boolean</td>
+<td style="border-right: 2 solid #000000; ">no</td>
+<td style="">If true, names have to be unique, otherwise not. Requires
+              that modelSlot contains an EObject.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break"/>
+<p>
+<span class="bold">
+<strong>Example:</strong>
+</span>
+</p>
+<p>This example adds the content of slot 'model' to the slot
+      'targetList'. The slot 'targetList' does not contain anything at the
+      time of execution.</p>
+<pre class="programlisting">&lt;component class="org.eclipse.xtend.util.stdlib.SlotListAdder"&gt;
+    &lt;modelSlot value="model"/&gt;
+    &lt;listSlot value="targetList"/&gt;
+&lt;/component&gt;</pre>
+<p>
+<span class="bold">
+<strong>Console output:</strong>
+</span>
+</p>
+<pre class="programlisting">INFO CompositeComponent SlotListAdder: adding contents of slot 'model' to the list of 
+   stuff in 'targetList' 
+...
+...
+INFO WorkflowRunner workflow completed in 1503ms! 
+WARN WorkflowRunner 'targetList' is empty, creating a new list. 
+   [org.eclipse.xtend.util.stdlib.SlotListAdder@7536e7]</pre>
+<p>Note that the warn messages will appear after the workflow
+      finished, since they are reported as a workflow warn issue.</p>
+</div>
+<div class="section" title="SlotPrinter">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="N128F1"/>SlotPrinter<a name="N128F4" class="indexterm"/>
+</h3>
+</div>
+</div>
+</div>
+<p>This component prints a workflow context slot content to the log.
+      This can be useful for debugging purposes.</p>
+<div class="table">
+<a name="N128F9"/>
+<p class="title">
+<b>Table 5. Workflow component
+        org.eclipse.xtend.util.stdlib.SlotPrinter</b>
+</p>
+<div class="table-contents">
+<table summary="Workflow component&#10;        org.eclipse.xtend.util.stdlib.SlotPrinter" cellspacing="0" cellpadding="10" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col/>
+<col/>
+<col/>
+<col/>
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; " align="center">Property</th>
+<th style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; " align="center">Type</th>
+<th style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; " align="center">Mandatory</th>
+<th style="border-bottom: 2 solid #000000; " align="center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">slotName</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">String</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">yes</td>
+<td style="border-bottom: 2 solid #000000; ">The name of a slot whose content should be
+              dumped.</td>
+</tr>
+<tr>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">message</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">String</td>
+<td style="border-right: 2 solid #000000; border-bottom: 2 solid #000000; ">no</td>
+<td style="border-bottom: 2 solid #000000; ">An optional message that will be prefixed to the log
+              output.</td>
+</tr>
+<tr>
+<td style="border-right: 2 solid #000000; ">level</td>
+<td style="border-right: 2 solid #000000; ">String</td>
+<td style="border-right: 2 solid #000000; ">no</td>
+<td style="">The log level for the message. Valid values are TRACE,
+              DEBUG, INFO, WARN.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break"/>
+<p>
+<span class="bold">
+<strong>Example:</strong>
+</span>
+</p>
+<pre class="programlisting">&lt;component class="org.eclipse.xtend.util.stdlib.SlotPrinter"&gt;
+    &lt;slotName value="model"/&gt;
+    &lt;message value="DUMP"/&gt;
+    &lt;level value="INFO"/&gt;
+&lt;/component&gt;</pre>
+<p>
+<span class="bold">
+<strong>Console output:</strong>
+</span>
+</p>
+<pre class="programlisting">INFO SlotPrinter DUMP: (slot: model)org.eclipse.emf.ecore.impl.DynamicEObjectImpl@d22ddb 
+  (eClass: org.eclipse.emf.ecore.impl.EClassImpl@fe0ce9 (name: Model) (instanceClassName: null) 
+  (abstract: false, interface: false))</pre>
+</div>
+<div class="footnotes">
+<br/>
+<hr align="left" width="100"/>
+<div class="footnote">
+<p>
+<sup>[<a href="#N1284D" name="ftn.N1284D" class="para">10</a>] </sup>See <a class="ulink" href="http://www.ss64.com/nt/cmd.html" target="_new">http://www.ss64.com/nt/cmd.html</a>,
+          <a class="ulink" href="http://www.java-forum.org/de/viewtopic.php?p=469059" target="_new">http://www.java-forum.org/de/viewtopic.php?p=469059</a>
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

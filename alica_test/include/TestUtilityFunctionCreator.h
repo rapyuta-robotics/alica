@@ -13,16 +13,16 @@
 
 using namespace std;
 
-namespace alica
+namespace alicaTests
 {
 	class BasicUtilityFunction;
 
-	class TestUtilityFunctionCreator : public IUtilityCreator
+	class TestUtilityFunctionCreator : public alica::IUtilityCreator
 	{
 	public:
 		virtual ~TestUtilityFunctionCreator();
 		TestUtilityFunctionCreator();
-		shared_ptr<BasicUtilityFunction> createUtility(long utilityfunctionConfId);
+		shared_ptr<alica::BasicUtilityFunction> createUtility(long utilityfunctionConfId);
 	};
 
 } /* namespace alica */

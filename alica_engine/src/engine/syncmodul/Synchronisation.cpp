@@ -19,8 +19,9 @@
 namespace alica
 {
 
-	Synchronisation::Synchronisation()
+	Synchronisation::Synchronisation(AlicaEngine* ae)
 	{
+		this->ae = ae;
 		this->syncModul = nullptr;
 		this->syncTransition = nullptr;
 		this->myID = -1;
@@ -33,11 +34,12 @@ namespace alica
 		this->lastTalkData = nullptr;
 	}
 
-	Synchronisation::Synchronisation(int myID, SyncTransition* st, SyncModul* sm)
+	Synchronisation::Synchronisation(AlicaEngine* ae, int myID, SyncTransition* st, SyncModul* sm)
 	{
+		this->ae = ae;
 		this->syncTransition = st;
 		this->myID = myID;
-		this->syncStartTime = AlicaEngine::getInstance()->getIAlicaClock()->now() / 1000000UL;
+		this->syncStartTime = ae->getIAlicaClock()->now() / 1000000UL;
 		for (Transition* t : st->getInSync())
 		{
 			connectedTransitions.push_back(t->getId());
@@ -163,7 +165,7 @@ namespace alica
 			return false;
 		}
 
-		unsigned long now = AlicaEngine::getInstance()->getIAlicaClock()->now() / 1000000UL;
+		unsigned long now = ae->getIAlicaClock()->now() / 1000000UL;
 
 		if (this->lastTalkTime != 0) //talked already
 		{
@@ -404,7 +406,7 @@ namespace alica
 		SyncTalk* talk = new SyncTalk();
 		talk->syncData.push_back(sd);
 
-		this->lastTalkTime = AlicaEngine::getInstance()->getIAlicaClock()->now() / 1000000UL;
+		this->lastTalkTime = ae->getIAlicaClock()->now() / 1000000UL;
 
 #ifdef SM_MESSAGES
 		cout << "Sending Talk TID: " << sd->transitionID << endl;

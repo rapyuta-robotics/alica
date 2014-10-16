@@ -13,17 +13,17 @@
 #include <memory>
 #include <iostream>
 
-namespace alica
+namespace alicaTests
 {
 
 	class BasicBehaviour;
 
-	class TestBehaviourCreator : public IBehaviourCreator
+	class TestBehaviourCreator : public alica::IBehaviourCreator
 	{
 	public:
 		TestBehaviourCreator();
 		virtual ~TestBehaviourCreator();
-		virtual shared_ptr<BasicBehaviour> createBehaviour(long behaviourConfId);
+		virtual shared_ptr<alica::BasicBehaviour> createBehaviour(long behaviourConfId);
 	};
 
 } /* namespace alica */

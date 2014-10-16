@@ -42,9 +42,9 @@ namespace alica
 		virtual UtilityInterval* eval(IAssignment* newAss, IAssignment* oldAss);
 		void updateAssignment(IAssignment* newAss, IAssignment* oldAss);
 		void cacheEvalData();
-		void init();
+		void init(AlicaEngine* ae);
 		virtual pair<vector<double>, double>* differentiate(IAssignment* newAss);
-		static void initDataStructures();
+		static void initDataStructures(AlicaEngine* ae);
 		virtual string toString();
 		Plan* getPlan();
 		map<TaskRoleStruct*, double>& getPriorityMartix();

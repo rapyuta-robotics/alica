@@ -1,0 +1,87 @@
+<html>
+<head>
+<title>Step 6: Execute Workflow aka Generate Code</title>
+<link href="book.css" rel="stylesheet" type="text/css"/>
+<meta content="DocBook XSL Stylesheets V1.75.1" name="generator"/>
+<link rel="home" href="index.html" title="Xpand Documentation"/>
+<link rel="up" href="xsd_tutorial.html" title="XSD Tutorial"/>
+<link rel="prev" href="xsd_tutorial_create_workflow.html" title="Step 5: Create a Workflow"/>
+<link rel="next" href="ix01.html" title="Index"/>
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<h1 xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">Step 6: Execute Workflow aka Generate Code</h1>
+<div class="section" title="Step 6: Execute Workflow aka Generate Code">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title" style="clear: both">
+<a name="xsd_tutorial_execute_workflow"/>Step 6: Execute Workflow aka Generate Code</h2>
+</div>
+</div>
+</div>
+<p>Before you actually execute the workflow, or in case of errors, you
+    can use <a class="xref" href="xsd_tutorial_execute_workflow.html#xsd_tutorial_minidemo_all" title="Figure 5. Files of this Tutorial">Figure 5, “Files of this Tutorial”</a> to double check your
+    files.</p>
+<div class="figure">
+<a name="xsd_tutorial_minidemo_all"/>
+<p class="title">
+<b>Figure 5. Files of this Tutorial</b>
+</p>
+<div class="figure-contents">
+<div class="mediaobject">
+<img src="xsd_tutorial/minidemo-all.png" alt="Files of this Tutorial"/>
+</div>
+</div>
+</div>
+<br class="figure-break"/>
+<p>To execute the workflow, click with your right mouse button on the
+    workflow file and choose <span class="emphasis">
+<em>"Run As", "MWE Workflow"</em>
+</span>, as
+    it is shown in <a class="xref" href="xsd_tutorial_execute_workflow.html" title="Step 6: Execute Workflow aka Generate Code">the section called “Step 6: Execute Workflow aka Generate Code”</a> .</p>
+<div class="figure">
+<a name="xsd_tutorial_launch_workflow"/>
+<p class="title">
+<b>Figure 6. Execute Workflow</b>
+</p>
+<div class="figure-contents">
+<div class="mediaobject">
+<img src="xsd_tutorial/execute-workflow.png" alt="Execute Workflow"/>
+</div>
+</div>
+</div>
+<br class="figure-break"/>
+<p>When executing the workflow, this output is supposed to appear in
+    Eclipse's Console View. If that View does not pop up automatically, you
+    can reach it via <span class="emphasis">
+<em>"Window", "Show View",
+    "Console"</em>
+</span>.</p>
+<pre class="programlisting">May 25, 2009 3:09:35 PM org.eclipse.emf.mwe.core.WorkflowRunner prepare
+INFO: running workflow: /Users/meysholdt/Eclipse/workspace-3.5-M7/org.eclipse.xpand.examples.xsd.m2t.minimal/src/xsd/m2t/minimal/minimal.mwe
+May 25, 2009 3:09:35 PM org.eclipse.emf.mwe.core.WorkflowRunner prepare
+INFO: 
+May 25, 2009 3:09:36 PM org.eclipse.xtend.typesystem.xsd.XSDMetaModel addSchemaFile
+INFO: Loading XSDSchema from 'xsd/m2t/minimal/metamodel.xsd'
+May 25, 2009 3:09:37 PM org.eclipse.xtend.typesystem.xsd.builder.OawXSDEcoreBuilder initEPackage
+INFO: Creating EPackage 'metamodel' from XSDSchema 'file:/.../bin/xsd/m2t/minimal/metamodel.xsd' (http://www.example.org/wizard)
+May 25, 2009 3:09:37 PM org.eclipse.emf.mwe.core.container.CompositeComponent internalInvoke
+INFO: XMLReader: Loading XML file xsd/m2t/minimal/model.xml
+May 25, 2009 3:09:37 PM org.eclipse.emf.mwe.core.container.CompositeComponent internalInvoke
+INFO: Generator: generating 'xsd::m2t::minimal::template::Root FOR model' =&gt; src-gen
+May 25, 2009 3:09:38 PM org.eclipse.xpand2.Generator invokeInternal2
+INFO: Written 1 files to outlet [default](src-gen)
+May 25, 2009 3:09:38 PM org.eclipse.emf.mwe.core.WorkflowRunner executeWorkflow
+INFO: workflow completed in 657ms!
+</pre>
+<p>After code generation, there is a file called
+    <code class="filename">wizard.txt</code> within the <code class="filename">src-gen</code>
+    folder. Its contents is supposed to look like shown below. You should be
+    able to recognize the structure you've defined within the template file
+    and the contents from your XML model.</p>
+<pre class="programlisting">Name: My Example Setup
+Welcometext: Welcome to this little demo application.
+First Page Title: Wizard Page One</pre>
+</div>
+</body>
+</html>
