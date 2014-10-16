@@ -147,8 +147,9 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 			EXPECT_TRUE(
 					(*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201030936
 					|| (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201030936)
-					<< endl << (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() << " "
-					<< (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() << endl;
+					<< endl << (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId()
+					<< " " << (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId()
+					<< endl;
 			;
 			alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(false);
 			alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(false);
@@ -157,8 +158,17 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		{
 			EXPECT_TRUE(
 					(*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201030936
-					|| (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201030936) << "AE State: "
-					<< (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() << " AE2 State: "
+					|| (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201030936)
+					<< "AE State: "
+					<< (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId()
+					<< " AE2 State: "
+					<< (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() << endl;
+			EXPECT_TRUE(
+					(*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201164999
+					|| (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201164999)
+					<< "AE State: "
+					<< (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId()
+					<< " AE2 State: "
 					<< (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() << endl;
 
 		}
