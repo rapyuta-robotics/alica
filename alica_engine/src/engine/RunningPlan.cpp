@@ -241,10 +241,6 @@ namespace alica
 	}
 	void RunningPlan::setActiveState(State* s)
 	{
-		if(s == nullptr)
-		{
-			cout << "RP: activeState == nullptr" << endl;
-		}
 		if (this->activeState != s)
 		{
 			this->activeState = s;
@@ -291,10 +287,6 @@ namespace alica
 	 */
 	void RunningPlan::moveState(State* nextState)
 	{
-		if(nextState == nullptr)
-		{
-			cout << "RP: nextState == nullptr" << endl;
-		}
 		deactivateChildren();
 		clearChildren();
 		this->assignment->moveRobots(this->activeState, nextState);

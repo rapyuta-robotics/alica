@@ -155,10 +155,9 @@ namespace alica
 		}
 
 		auto temp = r->getParent().lock();
-		cout << "RB:" + temp->toString()<< endl;
 		vector<int> robots = vector<int>(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).size());
-		copy(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
-					temp->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
+		copy(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).begin(),
+					temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).end(),
 					robots.begin());
 		shared_ptr<RunningPlan> newr = ps->getBestSimilarAssignment(r, make_shared<vector<int> >(robots));
 		if (newr == nullptr)
