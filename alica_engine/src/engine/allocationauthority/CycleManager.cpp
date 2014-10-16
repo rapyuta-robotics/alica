@@ -79,7 +79,7 @@ namespace alica
 	 */
 	void CycleManager::update()
 	{
-		if (!enabled)
+		if (!this->enabled)
 		{
 			return;
 		}

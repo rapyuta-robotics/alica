@@ -32,11 +32,11 @@
     <inState>#1413200877336</inState>
     <outState>#1413201164999</outState>
   </transitions>
-  <entryPoints id="1413200877337" name="AttackTask" comment="" successRequired="false" minCardinality="1" maxCardinality="1">
+  <entryPoints id="1413200877337" name="AttackTask" comment="" successRequired="true" minCardinality="1" maxCardinality="1">
     <task>../Misc/taskrepository.tsk#1407153522080</task>
     <state>#1413200877336</state>
   </entryPoints>
-  <entryPoints id="1413200890537" name="NewEntryPoint" comment="" successRequired="false" minCardinality="1" maxCardinality="1">
+  <entryPoints id="1413200890537" name="NewEntryPoint" comment="" successRequired="true" minCardinality="1" maxCardinality="1">
     <task>../Misc/taskrepository.tsk#1225112227903</task>
     <state>#1413200910490</state>
   </entryPoints>
