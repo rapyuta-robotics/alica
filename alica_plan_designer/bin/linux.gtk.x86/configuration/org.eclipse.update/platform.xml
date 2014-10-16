@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config transient="false" date="1403707352597">
+<config transient="false" date="1413271873251">
 	<site enabled="true" updateable="true" policy="USER-EXCLUDE" url="platform:/base/">
-		<feature id="de.uni-kassel.vs.cn.planDesigner.ui.feature" url="features/de.uni-kassel.vs.cn.planDesigner.ui.feature_1.0.0.201406251642/" version="1.0.0.201406251642">
+		<feature id="de.uni-kassel.vs.cn.planDesigner.validation.feature" url="features/de.uni-kassel.vs.cn.planDesigner.validation.feature_1.0.0.201410140930/" version="1.0.0.201410140930">
 		</feature>
-		<feature id="de.uni-kassel.vs.cn.planDesigner.core.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni-kassel.vs.cn.planDesigner.core.feature_1.0.0.201406251642/" version="1.0.0.201406251642">
+		<feature id="de.uni-kassel.vs.cn.planDesigner.ui.feature" url="features/de.uni-kassel.vs.cn.planDesigner.ui.feature_1.0.0.201410140930/" version="1.0.0.201410140930">
 		</feature>
-		<feature id="de.uni-kassel.vs.cn.planDesigner.platform.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni-kassel.vs.cn.planDesigner.platform.feature_1.0.0.201406251642/" version="1.0.0.201406251642">
+		<feature id="de.uni-kassel.vs.cn.planDesigner.core.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni-kassel.vs.cn.planDesigner.core.feature_1.0.0.201410140930/" version="1.0.0.201410140930">
 		</feature>
-		<feature id="de.uni-kassel.vs.cn.planDesigner.gef.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni-kassel.vs.cn.planDesigner.gef.feature_1.0.0.201406251642/" version="1.0.0.201406251642">
+		<feature id="de.uni-kassel.vs.cn.planDesigner.emf.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni-kassel.vs.cn.planDesigner.emf.feature_1.0.0.201410140930/" version="1.0.0.201410140930">
 		</feature>
-		<feature id="de.uni-kassel.vs.cn.planDesigner.zest.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni-kassel.vs.cn.planDesigner.zest.feature_1.0.0.201406251642/" version="1.0.0.201406251642">
+		<feature id="de.uni_kassel.vs.cn.planDesigner.condition.core.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni_kassel.vs.cn.planDesigner.condition.core.feature_1.0.0.201410140930/" version="1.0.0.201410140930">
 		</feature>
-		<feature id="de.uni_kassel.vs.cn.planDesigner.condition.core.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni_kassel.vs.cn.planDesigner.condition.core.feature_1.0.0.201406251642/" version="1.0.0.201406251642">
+		<feature id="de.uni-kassel.vs.cn.planDesigner.gef.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni-kassel.vs.cn.planDesigner.gef.feature_1.0.0.201410140930/" version="1.0.0.201410140930">
 		</feature>
-		<feature id="de.uni-kassel.vs.cn.planDesigner.emf.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni-kassel.vs.cn.planDesigner.emf.feature_1.0.0.201406251642/" version="1.0.0.201406251642">
+		<feature id="de.uni-kassel.vs.cn.planDesigner.zest.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni-kassel.vs.cn.planDesigner.zest.feature_1.0.0.201410140930/" version="1.0.0.201410140930">
 		</feature>
-		<feature id="de.uni-kassel.vs.cn.PlanDesigner.mwe.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni-kassel.vs.cn.PlanDesigner.mwe.feature_1.0.0.201406251642/" version="1.0.0.201406251642">
+		<feature id="de.uni-kassel.vs.cn.planDesigner.platform.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni-kassel.vs.cn.planDesigner.platform.feature_1.0.0.201410140930/" version="1.0.0.201410140930">
 		</feature>
-		<feature id="de.uni-kassel.vs.cn.planDesigner.validation.feature" url="features/de.uni-kassel.vs.cn.planDesigner.validation.feature_1.0.0.201406251642/" version="1.0.0.201406251642">
+		<feature id="de.uni-kassel.vs.cn.PlanDesigner.mwe.feature" plugin-identifier="de.uni-kassel.vs.cn.planDesigner.ui" url="features/de.uni-kassel.vs.cn.PlanDesigner.mwe.feature_1.0.0.201410140930/" version="1.0.0.201410140930">
 		</feature>
 	</site>
 </config>

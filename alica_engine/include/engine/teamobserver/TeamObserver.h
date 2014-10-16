@@ -32,6 +32,7 @@ namespace alica
 	class EntryPoint;
 	class State;
 	class SuccessCollection;
+	class AlicaEngine;
 
 	/**
 	 * The TeamObserver manages communication with the team. Thus it sends and receives PlanTreeInfo messages.
@@ -40,7 +41,7 @@ namespace alica
 	class TeamObserver : public virtual ITeamObserver
 	{
 	public:
-		TeamObserver();
+		TeamObserver(AlicaEngine* ae);
 		virtual ~TeamObserver();
 		//event OnTeamChange OnTeamChangeEvent;
 		void messageRecievedFrom(int rid);
@@ -70,7 +71,7 @@ namespace alica
 		EntryPoint* entryPointOfState(State* state);
 
 	protected:
-		static mutex simplePlanTreeMutex;
+		mutex simplePlanTreeMutex;
 		list<RobotEngineData*> allOtherRobots;
 		int myId;
 		RobotEngineData* me;

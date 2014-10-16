@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.sdk"
+      label="%featureName"
+      version="4.3.2.v20140221-1852"
+      provider-name="%providerName">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <includes
+         id="org.eclipse.platform"
+         version="4.3.2.v20140221-1852"/>
+
+   <includes
+         id="org.eclipse.platform.source"
+         version="4.3.2.v20140221-1852"/>
+
+   <includes
+         id="org.eclipse.cvs"
+         version="1.4.0.v20140221-1700"/>
+
+   <includes
+         id="org.eclipse.cvs.source"
+         version="1.4.0.v20140221-1700"/>
+
+   <includes
+         id="org.eclipse.jdt"
+         version="3.9.2.v20140221-1700"/>
+
+   <includes
+         id="org.eclipse.jdt.source"
+         version="3.9.2.v20140221-1700"/>
+
+   <includes
+         id="org.eclipse.pde"
+         version="3.9.1.v20140221-1700"/>
+
+   <includes
+         id="org.eclipse.pde.source"
+         version="3.9.1.v20140221-1700"/>
+
+   <includes
+         id="org.eclipse.help"
+         version="2.0.2.v20140221-1700"/>
+
+   <includes
+         id="org.eclipse.help.source"
+         version="2.0.2.v20140221-1700"/>
+
+   <plugin
+         id="org.eclipse.sdk"
+         download-size="112"
+         install-size="135"
+         version="4.3.2.v20140221-1700"/>
+
+</feature>

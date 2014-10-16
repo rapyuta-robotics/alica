@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2007, 2010 Anyware Technologies and others. All rights reserved. This program
+  and the accompanying materials are made available under the terms of the
+  Eclipse Public License v1.0 which accompanies this distribution, and is
+  available at http://www.eclipse.org/legal/epl-v10.html
+    
+  Contributors: 
+  	   Anyware Technologies - Initial API and implementation
+-->
+<feature
+      id="org.eclipse.emf.ecoretools.sdk"
+      label="%featureName"
+      version="1.2.0.201306071421"
+      provider-name="%providerName"
+      image="modeling32.png">
+
+  <description url="http://wiki.eclipse.org/index.php/Ecore_Tools">
+      %description
+   </description>
+   
+   <copyright url="http://www.eclipse.org/legal/epl-v10.html">
+      Copyright (c) 2007, 2010 Anyware Technologies and others
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+
+   <includes
+         id="org.eclipse.emf.ecoretools"
+         version="1.2.0.201306071421"/>
+
+   <plugin
+         id="org.eclipse.emf.ecoretools.source"
+         download-size="26"
+         install-size="62"
+         version="1.2.0.201306071421"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.ecoretools.diagram.source"
+         download-size="408"
+         install-size="1360"
+         version="1.2.0.201306071421"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.ecoretools.doc"
+         download-size="7"
+         install-size="8"
+         version="1.2.0.201306071421"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.ecoretools.properties.source"
+         download-size="74"
+         install-size="219"
+         version="1.2.0.201306071421"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.ecoretools.diagram.ui.outline.source"
+         download-size="37"
+         install-size="101"
+         version="1.2.0.201306071421"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.ecoretools.filters.source"
+         download-size="37"
+         install-size="83"
+         version="1.2.0.201306071421"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.ecoretools.tabbedproperties.source"
+         download-size="77"
+         install-size="218"
+         version="1.2.0.201306071421"
+         unpack="false"/>
+
+</feature>

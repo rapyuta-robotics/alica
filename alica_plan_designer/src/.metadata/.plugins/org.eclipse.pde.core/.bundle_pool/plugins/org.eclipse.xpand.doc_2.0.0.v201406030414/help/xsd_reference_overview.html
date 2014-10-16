@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>Overview</title>
+<link href="book.css" rel="stylesheet" type="text/css"/>
+<meta content="DocBook XSL Stylesheets V1.75.1" name="generator"/>
+<link rel="home" href="index.html" title="Xpand Documentation"/>
+<link rel="up" href="xsd_reference.html" title="XSD Adapter"/>
+<link rel="prev" href="xsd_reference.html" title="XSD Adapter"/>
+<link rel="next" href="xsd_reference_workflow_components.html" title="Workflow Components"/>
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<h1 xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">Overview</h1>
+<div class="section" title="Overview">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title" style="clear: both">
+<a name="xsd_reference_overview"/>Overview</h2>
+</div>
+</div>
+</div>
+<p>The XSD Adapter performs two major tasks:</p>
+<div class="orderedlist">
+<ol class="orderedlist" type="1">
+<li class="listitem">
+<p>It converts XML Schemas (XSDs) to Ecore models in a transparent
+        manner, so that the Ecore models are hidden from the user. This is
+        done in the workflow as well as in the IDE (to allow XSD-aware code
+        completion for Xtend/Xpand/Check). For details about the mapping see
+        <a class="xref" href="xsd_reference_xsd2ecore.html" title="Behind the scenes: Transforming XSD to Ecore">the section called “Behind the scenes: Transforming XSD to Ecore”</a> . For details about the
+        workflow integration see <a class="xref" href="xsd_reference_workflow_components.html" title="Workflow Components">the section called “Workflow Components”</a>
+</p>
+</li>
+<li class="listitem">
+<p>It extends the EmfMetaModel with concepts that are needed for
+        XSDs. Theses are, for example, support for feature maps (needed to
+        handle comments, nested text, CDATA and processing instructions),
+        QNames, EMaps and composed Simpletypes.</p>
+</li>
+</ol>
+</div>
+</div>
+</body>
+</html>

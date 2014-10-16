@@ -461,6 +461,30 @@ public class AlicaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case AlicaPackage.BEHAVIOUR_CREATOR: {
+				BehaviourCreator behaviourCreator = (BehaviourCreator)theEObject;
+				T result = caseBehaviourCreator(behaviourCreator);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case AlicaPackage.CONDITION_CREATOR: {
+				ConditionCreator conditionCreator = (ConditionCreator)theEObject;
+				T result = caseConditionCreator(conditionCreator);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case AlicaPackage.UTILITY_FUNCTION_CREATOR: {
+				UtilityFunctionCreator utilityFunctionCreator = (UtilityFunctionCreator)theEObject;
+				T result = caseUtilityFunctionCreator(utilityFunctionCreator);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case AlicaPackage.CONSTRAINT_CREATOR: {
+				ConstraintCreator constraintCreator = (ConstraintCreator)theEObject;
+				T result = caseConstraintCreator(constraintCreator);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -1197,6 +1221,66 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseConstant(Constant object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Behaviour Creator</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Behaviour Creator</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseBehaviourCreator(BehaviourCreator object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Condition Creator</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Condition Creator</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConditionCreator(ConditionCreator object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Utility Function Creator</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Utility Function Creator</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUtilityFunctionCreator(UtilityFunctionCreator object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Constraint Creator</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Constraint Creator</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConstraintCreator(ConstraintCreator object) {
 		return null;
 	}
 

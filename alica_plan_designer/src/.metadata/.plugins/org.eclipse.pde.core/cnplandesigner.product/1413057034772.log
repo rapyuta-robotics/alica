@@ -1,0 +1,1273 @@
+!SESSION 2014-10-11 21:50:34.272 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_55
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product de.uni-kassel.vs.cn.planDesigner.ui.planDesignerProduct ./eclipse
+Command-line arguments:  -product de.uni-kassel.vs.cn.planDesigner.ui.planDesignerProduct -data /home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/../runtime-cnplandesigner.product -dev file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/cnplandesigner.product/dev.properties -os linux -ws gtk -arch x86_64 -consoleLog -clean ./eclipse -clean
+
+!ENTRY org.eclipse.equinox.app 0 0 2014-10-11 21:50:37.469
+!MESSAGE Product de.uni-kassel.vs.cn.planDesigner.ui.planDesignerProduct could not be found.
+
+!ENTRY org.eclipse.osgi 2 0 2014-10-11 21:50:39.531
+!MESSAGE One or more bundles are not resolved because the following root constraints are not resolved:
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.531
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.ui.workbench_3.105.2.v20140211-1711.jar was not resolved.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.531
+!MESSAGE Missing imported package org.eclipse.emf.ecore.util_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.532
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_2.7.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.532
+!MESSAGE Missing imported package org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.533
+!MESSAGE Missing imported package org.eclipse.emf.common.util_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.533
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.condition.core/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.534
+!MESSAGE Missing required bundle org.eclipse.emf.transaction_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.534
+!MESSAGE Missing required bundle org.eclipse.emf.common_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.535
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.ui_3.105.0.v20130522-1122.jar was not resolved.
+!SUBENTRY 2 org.eclipse.ui 2 0 2014-10-11 21:50:39.535
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=CDC/Foundation)(version=1.0))(&(osgi.ee=JavaSE)(version=1.3)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.535
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.e4.ui.workbench_1.0.2.v20131202-1739.jar was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench 2 0 2014-10-11 21:50:39.536
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.7.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench 2 0 2014-10-11 21:50:39.536
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.change_2.5.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.537
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.alica.edit/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica.edit 2 0 2014-10-11 21:50:39.537
+!MESSAGE Missing required bundle org.eclipse.emf.edit_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.538
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.xtend_1.4.0.v201306110406.jar was not resolved.
+!SUBENTRY 2 org.eclipse.xtend 2 0 2014-10-11 21:50:39.538
+!MESSAGE Missing required bundle org.eclipse.emf.common_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.538
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.w3c.dom.smil_1.0.1.v200903091627.jar was not resolved.
+!SUBENTRY 2 org.w3c.dom.smil 2 0 2014-10-11 21:50:39.539
+!MESSAGE Missing imported package org.w3c.dom.events_[3.0.0,4.0.0).
+!SUBENTRY 2 org.w3c.dom.smil 2 0 2014-10-11 21:50:39.539
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=JavaSE)(version=1.4))(&(osgi.ee=JavaSE)(version=1.3))(&(osgi.ee=CDC/Foundation)(version=1.0)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.540
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.validation/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.540
+!MESSAGE Missing required bundle org.eclipse.emf.transaction_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.541
+!MESSAGE Missing required bundle org.eclipse.emf.validation_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.541
+!MESSAGE Missing imported package org.eclipse.emf.edit.domain_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.542
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.xtend.typesystem.emf_1.4.0.v201306110406.jar was not resolved.
+!SUBENTRY 2 org.eclipse.xtend.typesystem.emf 2 0 2014-10-11 21:50:39.542
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.542
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.emf.mwe.utils_1.3.1.v201309030422.jar was not resolved.
+!SUBENTRY 2 org.eclipse.emf.mwe.utils 2 0 2014-10-11 21:50:39.543
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_[2.5.0,3.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.543
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.ui.views.properties.tabbed_3.6.0.v20130515-1857.jar was not resolved.
+!SUBENTRY 2 org.eclipse.ui.views.properties.tabbed 2 0 2014-10-11 21:50:39.544
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=CDC/Foundation)(version=1.0))(&(osgi.ee=JavaSE)(version=1.3)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.544
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.e4.ui.workbench.addons.swt_1.0.2.v20131129-1621.jar was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.addons.swt 2 0 2014-10-11 21:50:39.545
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.7.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.545
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.platform_4.3.2.v20140221-1700/ was not resolved.
+!SUBENTRY 2 org.eclipse.platform 2 0 2014-10-11 21:50:39.545
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=JavaSE)(version=1.4))(&(osgi.ee=CDC/Foundation)(version=1.0))(&(osgi.ee=JavaSE)(version=1.3)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.546
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.codegeneration/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.546
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.547
+!MESSAGE Missing required bundle org.eclipse.xpand.support.cdt_2.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.547
+!MESSAGE Missing imported package org.eclipse.emf.transaction_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.547
+!MESSAGE Missing required bundle org.eclipse.emf.mwe2.runtime_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.548
+!MESSAGE Missing required bundle org.eclipse.gef_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.548
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.549
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.e4.ui.model.workbench_1.0.1.v20131118-1956.jar was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.model.workbench 2 0 2014-10-11 21:50:39.549
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_2.9.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.550
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.e4.ui.workbench.swt_0.12.2.v20140117-1939.jar was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.swt 2 0 2014-10-11 21:50:39.550
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.7.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.550
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.ui/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.551
+!MESSAGE Missing required bundle org.eclipse.gef_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.551
+!MESSAGE Missing required bundle org.eclipse.emf.workspace_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.552
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.552
+!MESSAGE Missing required bundle org.eclipse.zest.core_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.552
+!MESSAGE Missing required bundle org.eclipse.zest.layouts_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.553
+!MESSAGE Missing required bundle org.eclipse.emf.transaction.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.553
+!MESSAGE Missing required bundle org.eclipse.draw2d_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.554
+!MESSAGE Missing required bundle org.eclipse.emf.edit_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.554
+!MESSAGE Missing required bundle org.eclipse.emf.workspace.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.554
+!MESSAGE Missing required bundle org.eclipse.emf.common_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.555
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.555
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.emf.mwe.core_1.2.1.v201309030422.jar was not resolved.
+!SUBENTRY 2 org.eclipse.emf.mwe.core 2 0 2014-10-11 21:50:39.556
+!MESSAGE Missing required bundle org.eclipse.emf.mwe2.runtime_2.1.0.
+!SUBENTRY 2 org.eclipse.emf.mwe.core 2 0 2014-10-11 21:50:39.556
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_[2.5.0,3.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.557
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.alica/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica 2 0 2014-10-11 21:50:39.557
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica 2 0 2014-10-11 21:50:39.557
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.558
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.pmlextension/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.558
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.559
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.9.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.559
+!MESSAGE Missing required bundle org.eclipse.emf.edit_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.559
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.e4.ui.workbench.renderers.swt_0.11.2.v20140205-1834.jar was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.renderers.swt 2 0 2014-10-11 21:50:39.560
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_2.7.0.
+
+!ENTRY org.eclipse.osgi 2 0 2014-10-11 21:50:39.614
+!MESSAGE The following is a complete list of bundles which are not resolved, see the prior log entry for the root cause if it exists:
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.615
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.alica_1.0.0.qualifier [4] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica 2 0 2014-10-11 21:50:39.615
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica 2 0 2014-10-11 21:50:39.616
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.616
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.alica.edit_0.0.0 [5] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica.edit 2 0 2014-10-11 21:50:39.617
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica.edit 2 0 2014-10-11 21:50:39.617
+!MESSAGE Missing required bundle org.eclipse.emf.edit_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.617
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.codegeneration_1.0.1.qualifier [6] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.618
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.618
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.condition.core_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.619
+!MESSAGE Missing required bundle org.eclipse.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.619
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.619
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.620
+!MESSAGE Missing required bundle org.eclipse.gef_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.620
+!MESSAGE Missing required bundle org.eclipse.emf.mwe.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.621
+!MESSAGE Missing required bundle org.eclipse.emf.mwe.core_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.621
+!MESSAGE Missing required bundle org.eclipse.emf.mwe2.runtime_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.622
+!MESSAGE Missing required bundle org.eclipse.xpand_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.622
+!MESSAGE Missing required bundle org.eclipse.xtend.typesystem.emf_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.622
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.623
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.623
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.624
+!MESSAGE Missing required bundle org.eclipse.xtend_1.4.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.624
+!MESSAGE Missing required bundle org.eclipse.xpand.support.cdt_2.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.625
+!MESSAGE Missing imported package org.eclipse.emf.transaction_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.625
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.condition.core_1.0.0.qualifier [7] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.625
+!MESSAGE Missing required bundle org.eclipse.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.626
+!MESSAGE Missing required bundle org.eclipse.ui.views.properties.tabbed_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.626
+!MESSAGE Missing required bundle org.eclipse.emf.common_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.627
+!MESSAGE Missing required bundle org.eclipse.jdt.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.627
+!MESSAGE Missing required bundle org.eclipse.ui.workbench_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.628
+!MESSAGE Missing required bundle org.eclipse.emf.transaction_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.628
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.628
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.ui_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.629
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel_1.0.0.qualifier [8] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.629
+!MESSAGE Missing required bundle org.eclipse.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.630
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.630
+!MESSAGE Missing required bundle org.eclipse.emf.edit_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.631
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.9.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.631
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.ui_1.0.0 [9] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.631
+!MESSAGE Missing required bundle org.eclipse.gef_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.632
+!MESSAGE Missing required bundle org.eclipse.ui.views.properties.tabbed_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.632
+!MESSAGE Missing required bundle org.eclipse.emf.transaction.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.633
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.633
+!MESSAGE Missing required bundle org.eclipse.emf.edit_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.633
+!MESSAGE Missing required bundle org.eclipse.emf.workspace_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.634
+!MESSAGE Missing required bundle org.eclipse.emf.workspace.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.634
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.635
+!MESSAGE Missing required bundle org.eclipse.ui.navigator_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.635
+!MESSAGE Missing required bundle org.eclipse.ui.editors_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.636
+!MESSAGE Missing required bundle org.eclipse.ui.navigator.resources_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.636
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.636
+!MESSAGE Missing required bundle org.eclipse.jdt.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.637
+!MESSAGE Missing required bundle org.eclipse.ui.ide_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.637
+!MESSAGE Missing required bundle org.eclipse.zest.core_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.638
+!MESSAGE Missing required bundle org.eclipse.zest.layouts_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.638
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.638
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica.edit_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.639
+!MESSAGE Missing required bundle org.eclipse.emf.common_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.639
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench.addons.swt_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.640
+!MESSAGE Missing required bundle org.eclipse.platform_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.640
+!MESSAGE Missing required bundle org.eclipse.ui.workbench_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.641
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.641
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench.swt_0.12.1.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.641
+!MESSAGE Missing required bundle org.eclipse.draw2d_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.642
+!MESSAGE Missing imported package de.uni_kassel.vs.cn.planDesigner.ui.util_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.642
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.validation_1.0.0.qualifier [10] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.643
+!MESSAGE Missing required bundle org.eclipse.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.643
+!MESSAGE Missing required bundle org.eclipse.emf.validation_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.644
+!MESSAGE Missing required bundle org.eclipse.emf.transaction_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.644
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.645
+!MESSAGE Missing imported package de.uni_kassel.vs.cn.planDesigner.ui.edit_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.645
+!MESSAGE Missing imported package de.uni_kassel.vs.cn.planDesigner.ui.editors_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.646
+!MESSAGE Missing imported package de.uni_kassel.vs.cn.planDesigner.ui.util_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.646
+!MESSAGE Missing imported package org.eclipse.emf.edit.domain_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.647
+!MESSAGE Missing imported package org.eclipse.ui.views.properties.tabbed_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.647
+!MESSAGE Bundle org.eclipse.compare_3.5.401.v20130709-1308 [30] was not resolved.
+!SUBENTRY 2 org.eclipse.compare 2 0 2014-10-11 21:50:39.648
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.compare 2 0 2014-10-11 21:50:39.648
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.3.0,4.0.0).
+!SUBENTRY 2 org.eclipse.compare 2 0 2014-10-11 21:50:39.649
+!MESSAGE Missing required bundle org.eclipse.ui.views_[3.2.0,4.0.0).
+!SUBENTRY 2 org.eclipse.compare 2 0 2014-10-11 21:50:39.649
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.compare 2 0 2014-10-11 21:50:39.650
+!MESSAGE Missing required bundle org.eclipse.ui.editors_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.650
+!MESSAGE Bundle org.eclipse.debug.ui_3.9.0.v20130516-1713 [50] was not resolved.
+!SUBENTRY 2 org.eclipse.debug.ui 2 0 2014-10-11 21:50:39.650
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.debug.ui 2 0 2014-10-11 21:50:39.651
+!MESSAGE Missing required bundle org.eclipse.ui.console_[3.4.0,4.0.0).
+!SUBENTRY 2 org.eclipse.debug.ui 2 0 2014-10-11 21:50:39.651
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.debug.ui 2 0 2014-10-11 21:50:39.651
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.debug.ui 2 0 2014-10-11 21:50:39.652
+!MESSAGE Missing required bundle org.eclipse.ui.editors_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.652
+!MESSAGE Bundle org.eclipse.e4.ui.model.workbench_1.0.1.v20131118-1956 [61] was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.model.workbench 2 0 2014-10-11 21:50:39.652
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_2.9.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.653
+!MESSAGE Bundle org.eclipse.e4.ui.workbench_1.0.2.v20131202-1739 [64] was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench 2 0 2014-10-11 21:50:39.653
+!MESSAGE Missing required bundle org.eclipse.e4.ui.model.workbench_1.0.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench 2 0 2014-10-11 21:50:39.654
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.change_2.5.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench 2 0 2014-10-11 21:50:39.654
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.7.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.654
+!MESSAGE Bundle org.eclipse.e4.ui.workbench.addons.swt_1.0.2.v20131129-1621 [65] was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.addons.swt 2 0 2014-10-11 21:50:39.655
+!MESSAGE Missing required bundle org.eclipse.e4.ui.model.workbench_1.0.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.addons.swt 2 0 2014-10-11 21:50:39.655
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench_0.9.1.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.addons.swt 2 0 2014-10-11 21:50:39.655
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench.renderers.swt_0.9.1.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.addons.swt 2 0 2014-10-11 21:50:39.656
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.7.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.addons.swt 2 0 2014-10-11 21:50:39.656
+!MESSAGE Missing imported package org.eclipse.e4.ui.internal.workbench.swt_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.656
+!MESSAGE Bundle org.eclipse.e4.ui.workbench.renderers.swt_0.11.2.v20140205-1834 [66] was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.renderers.swt 2 0 2014-10-11 21:50:39.657
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench_0.9.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.renderers.swt 2 0 2014-10-11 21:50:39.657
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench.swt_0.9.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.renderers.swt 2 0 2014-10-11 21:50:39.658
+!MESSAGE Missing required bundle org.eclipse.e4.ui.model.workbench_0.9.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.renderers.swt 2 0 2014-10-11 21:50:39.658
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_2.7.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.658
+!MESSAGE Bundle org.eclipse.e4.ui.workbench.swt_0.12.2.v20140117-1939 [67] was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.swt 2 0 2014-10-11 21:50:39.659
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench_0.10.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.swt 2 0 2014-10-11 21:50:39.659
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.7.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.swt 2 0 2014-10-11 21:50:39.659
+!MESSAGE Missing required bundle org.eclipse.e4.ui.model.workbench_1.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.660
+!MESSAGE Bundle org.eclipse.emf.mwe.core_1.2.1.v201309030422 [76] was not resolved.
+!SUBENTRY 2 org.eclipse.emf.mwe.core 2 0 2014-10-11 21:50:39.660
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_[2.5.0,3.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.core 2 0 2014-10-11 21:50:39.661
+!MESSAGE Missing required bundle org.eclipse.emf.mwe2.runtime_2.1.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.661
+!MESSAGE Bundle org.eclipse.emf.mwe.ui_1.2.1.v201309030422 [77] was not resolved.
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.661
+!MESSAGE Missing required bundle org.eclipse.jdt.debug.ui_[3.4.0,4.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.662
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.662
+!MESSAGE Missing required bundle org.eclipse.debug.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.662
+!MESSAGE Missing required bundle org.eclipse.jdt.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.663
+!MESSAGE Missing required bundle org.eclipse.ui.editors_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.663
+!MESSAGE Missing required bundle org.eclipse.emf.mwe.core_[1.2.0,2.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.663
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.664
+!MESSAGE Bundle org.eclipse.emf.mwe.utils_1.3.1.v201309030422 [78] was not resolved.
+!SUBENTRY 2 org.eclipse.emf.mwe.utils 2 0 2014-10-11 21:50:39.664
+!MESSAGE Missing required bundle org.eclipse.emf.mwe.core_[1.2.0,2.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.utils 2 0 2014-10-11 21:50:39.665
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_[2.5.0,3.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.utils 2 0 2014-10-11 21:50:39.665
+!MESSAGE Missing optionally required bundle org.eclipse.emf.codegen.ecore_[2.5.0,3.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.665
+!MESSAGE Bundle org.eclipse.help.ui_4.0.1.v20130708-1201 [115] was not resolved.
+!SUBENTRY 2 org.eclipse.help.ui 2 0 2014-10-11 21:50:39.666
+!MESSAGE Missing required bundle org.eclipse.ui_[3.6.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.666
+!MESSAGE Bundle org.eclipse.jdt.debug.ui_3.6.200.v20130514-0841 [121] was not resolved.
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.666
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.667
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.667
+!MESSAGE Missing required bundle org.eclipse.ui.editors_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.667
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.668
+!MESSAGE Missing required bundle org.eclipse.debug.ui_[3.8.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.668
+!MESSAGE Missing required bundle org.eclipse.jdt.ui_[3.8.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.669
+!MESSAGE Missing required bundle org.eclipse.ui.console_[3.4.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.669
+!MESSAGE Missing required bundle org.eclipse.search_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.669
+!MESSAGE Bundle org.eclipse.jdt.ui_3.9.2.v20131106-1600 [123] was not resolved.
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.670
+!MESSAGE Missing required bundle org.eclipse.search_[3.7.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.670
+!MESSAGE Missing required bundle org.eclipse.debug.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.670
+!MESSAGE Missing required bundle org.eclipse.compare_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.671
+!MESSAGE Missing required bundle org.eclipse.team.ui_[3.4.100,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.671
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.671
+!MESSAGE Missing required bundle org.eclipse.ui.console_[3.4.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.672
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.8.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.672
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.673
+!MESSAGE Missing required bundle org.eclipse.ui.views_[3.3.100,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.673
+!MESSAGE Missing required bundle org.eclipse.ui.editors_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.673
+!MESSAGE Missing required bundle org.eclipse.ltk.ui.refactoring_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.674
+!MESSAGE Missing required bundle org.eclipse.ui.navigator_[3.3.200,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.674
+!MESSAGE Missing required bundle org.eclipse.ui.navigator.resources_[3.4.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.674
+!MESSAGE Bundle org.eclipse.ltk.ui.refactoring_3.7.100.v20130605-1748 [135] was not resolved.
+!SUBENTRY 2 org.eclipse.ltk.ui.refactoring 2 0 2014-10-11 21:50:39.675
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ltk.ui.refactoring 2 0 2014-10-11 21:50:39.675
+!MESSAGE Missing required bundle org.eclipse.ui.navigator_[3.3.200,4.0.0).
+!SUBENTRY 2 org.eclipse.ltk.ui.refactoring 2 0 2014-10-11 21:50:39.676
+!MESSAGE Missing required bundle org.eclipse.compare_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ltk.ui.refactoring 2 0 2014-10-11 21:50:39.676
+!MESSAGE Missing required bundle org.eclipse.team.ui_[3.4.100,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.676
+!MESSAGE Bundle org.eclipse.platform_4.3.2.v20140221-1700 [139] was not resolved.
+!SUBENTRY 2 org.eclipse.platform 2 0 2014-10-11 21:50:39.677
+!MESSAGE Missing required bundle org.eclipse.ui.intro_[3.2.0,4.0.0).
+!SUBENTRY 2 org.eclipse.platform 2 0 2014-10-11 21:50:39.677
+!MESSAGE Missing optionally required bundle org.eclipse.ui.cheatsheets_[3.2.0,4.0.0).
+!SUBENTRY 2 org.eclipse.platform 2 0 2014-10-11 21:50:39.677
+!MESSAGE Missing optionally required bundle org.eclipse.ui_[3.2.0,4.0.0).
+!SUBENTRY 2 org.eclipse.platform 2 0 2014-10-11 21:50:39.678
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=JavaSE)(version=1.4))(&(osgi.ee=CDC/Foundation)(version=1.0))(&(osgi.ee=JavaSE)(version=1.3)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.678
+!MESSAGE Bundle org.eclipse.search_3.9.1.v20131121-1346 [141] was not resolved.
+!SUBENTRY 2 org.eclipse.search 2 0 2014-10-11 21:50:39.678
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.search 2 0 2014-10-11 21:50:39.679
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.search 2 0 2014-10-11 21:50:39.679
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.search 2 0 2014-10-11 21:50:39.680
+!MESSAGE Missing required bundle org.eclipse.ltk.ui.refactoring_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.680
+!MESSAGE Bundle org.eclipse.team.ui_3.7.1.v20130729-1104 [145] was not resolved.
+!SUBENTRY 2 org.eclipse.team.ui 2 0 2014-10-11 21:50:39.680
+!MESSAGE Missing optionally required bundle org.eclipse.ui.ide_[3.3.0,4.0.0).
+!SUBENTRY 2 org.eclipse.team.ui 2 0 2014-10-11 21:50:39.681
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.team.ui 2 0 2014-10-11 21:50:39.681
+!MESSAGE Missing required bundle org.eclipse.compare_[3.3.0,4.0.0).
+!SUBENTRY 2 org.eclipse.team.ui 2 0 2014-10-11 21:50:39.681
+!MESSAGE Missing required bundle org.eclipse.ui.navigator_[3.3.0,4.0.0).
+!SUBENTRY 2 org.eclipse.team.ui 2 0 2014-10-11 21:50:39.682
+!MESSAGE Missing required bundle org.eclipse.ui.editors_[3.3.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.682
+!MESSAGE Bundle org.eclipse.ui_3.105.0.v20130522-1122 [147] was not resolved.
+!SUBENTRY 2 org.eclipse.ui 2 0 2014-10-11 21:50:39.683
+!MESSAGE Missing required bundle org.eclipse.ui.workbench_[3.105.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui 2 0 2014-10-11 21:50:39.683
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=CDC/Foundation)(version=1.0))(&(osgi.ee=JavaSE)(version=1.3)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.683
+!MESSAGE Bundle org.eclipse.ui.cheatsheets_3.4.200.v20130326-1254 [148] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.cheatsheets 2 0 2014-10-11 21:50:39.684
+!MESSAGE Missing required bundle org.eclipse.ui_[3.6.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.cheatsheets 2 0 2014-10-11 21:50:39.684
+!MESSAGE Missing optionally required bundle org.eclipse.help.ui_[4.0.0,5.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.684
+!MESSAGE Bundle org.eclipse.ui.console_3.5.200.v20130514-0954 [149] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.console 2 0 2014-10-11 21:50:39.685
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.console 2 0 2014-10-11 21:50:39.685
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.685
+!MESSAGE Bundle org.eclipse.ui.editors_3.8.100.v20130513-1637 [150] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.editors 2 0 2014-10-11 21:50:39.686
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.editors 2 0 2014-10-11 21:50:39.686
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.editors 2 0 2014-10-11 21:50:39.687
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.7.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.687
+!MESSAGE Bundle org.eclipse.ui.ide_3.9.2.v20131004-0923 [152] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.ide 2 0 2014-10-11 21:50:39.687
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.ide 2 0 2014-10-11 21:50:39.688
+!MESSAGE Missing required bundle org.eclipse.ui.workbench_[3.7.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.ide 2 0 2014-10-11 21:50:39.688
+!MESSAGE Missing optionally required bundle org.eclipse.ui.views_[3.2.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.688
+!MESSAGE Bundle org.eclipse.ui.intro_3.4.200.v20130326-1254 [153] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.intro 2 0 2014-10-11 21:50:39.689
+!MESSAGE Missing required bundle org.eclipse.ui_[3.6.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.689
+!MESSAGE Bundle org.eclipse.ui.navigator_3.5.300.v20130517-0139 [154] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.navigator 2 0 2014-10-11 21:50:39.689
+!MESSAGE Missing required bundle org.eclipse.ui_[3.6.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.690
+!MESSAGE Bundle org.eclipse.ui.navigator.resources_3.4.501.v20131021-1545 [155] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.navigator.resources 2 0 2014-10-11 21:50:39.690
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.6.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.navigator.resources 2 0 2014-10-11 21:50:39.690
+!MESSAGE Missing required bundle org.eclipse.ui_[3.6.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.navigator.resources 2 0 2014-10-11 21:50:39.691
+!MESSAGE Missing required bundle org.eclipse.ui.navigator_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.navigator.resources 2 0 2014-10-11 21:50:39.691
+!MESSAGE Missing required bundle org.eclipse.ui.views.properties.tabbed_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.navigator.resources 2 0 2014-10-11 21:50:39.692
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.6.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.navigator.resources 2 0 2014-10-11 21:50:39.692
+!MESSAGE Missing required bundle org.eclipse.ltk.ui.refactoring_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.692
+!MESSAGE Bundle org.eclipse.ui.trace_1.0.100.v20130508-1926 [156] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.trace 2 0 2014-10-11 21:50:39.693
+!MESSAGE Missing required bundle org.eclipse.ui_[3.6.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.693
+!MESSAGE Bundle org.eclipse.ui.views_3.6.100.v20130326-1250 [157] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.views 2 0 2014-10-11 21:50:39.693
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.694
+!MESSAGE Bundle org.eclipse.ui.views.log_1.0.400.v20130515-2009 [158] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.views.log 2 0 2014-10-11 21:50:39.694
+!MESSAGE Missing required bundle org.eclipse.ui_[3.3.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.views.log 2 0 2014-10-11 21:50:39.694
+!MESSAGE Missing optionally required bundle org.eclipse.ui.ide_[3.3.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.695
+!MESSAGE Bundle org.eclipse.ui.views.properties.tabbed_3.6.0.v20130515-1857 [159] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.views.properties.tabbed 2 0 2014-10-11 21:50:39.695
+!MESSAGE Missing required bundle org.eclipse.ui.views_[3.2.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.views.properties.tabbed 2 0 2014-10-11 21:50:39.696
+!MESSAGE Missing required bundle org.eclipse.ui_[3.3.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.views.properties.tabbed 2 0 2014-10-11 21:50:39.696
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=CDC/Foundation)(version=1.0))(&(osgi.ee=JavaSE)(version=1.3)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.696
+!MESSAGE Bundle org.eclipse.ui.workbench_3.105.2.v20140211-1711 [160] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.697
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench.swt_0.9.1.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.697
+!MESSAGE Missing required bundle org.eclipse.e4.ui.model.workbench_0.9.1.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.697
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench.addons.swt_0.10.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.698
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_2.7.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.698
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.698
+!MESSAGE Missing imported package org.eclipse.e4.ui.internal.workbench_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.699
+!MESSAGE Missing imported package org.eclipse.e4.ui.internal.workbench.addons_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.699
+!MESSAGE Missing imported package org.eclipse.e4.ui.internal.workbench.renderers.swt_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.700
+!MESSAGE Missing imported package org.eclipse.e4.ui.internal.workbench.swt_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.700
+!MESSAGE Missing imported package org.eclipse.e4.ui.workbench_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.700
+!MESSAGE Missing imported package org.eclipse.e4.ui.workbench.modeling_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.701
+!MESSAGE Missing imported package org.eclipse.e4.ui.workbench.renderers.swt_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.701
+!MESSAGE Missing imported package org.eclipse.emf.common.util_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.701
+!MESSAGE Missing imported package org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.702
+!MESSAGE Missing imported package org.eclipse.emf.ecore.util_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.702
+!MESSAGE Bundle org.eclipse.ui.workbench.texteditor_3.8.101.v20130729-1318 [161] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.workbench.texteditor 2 0 2014-10-11 21:50:39.702
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.703
+!MESSAGE Bundle org.eclipse.xpand_1.4.0.v201306110406 [163] was not resolved.
+!SUBENTRY 2 org.eclipse.xpand 2 0 2014-10-11 21:50:39.703
+!MESSAGE Missing required bundle org.eclipse.xtend_0.0.0.
+!SUBENTRY 2 org.eclipse.xpand 2 0 2014-10-11 21:50:39.704
+!MESSAGE Missing optionally required bundle org.eclipse.emf.mwe.core_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.704
+!MESSAGE Bundle org.eclipse.xtend_1.4.0.v201306110406 [164] was not resolved.
+!SUBENTRY 2 org.eclipse.xtend 2 0 2014-10-11 21:50:39.704
+!MESSAGE Missing required bundle org.eclipse.emf.mwe.core_0.0.0.
+!SUBENTRY 2 org.eclipse.xtend 2 0 2014-10-11 21:50:39.705
+!MESSAGE Missing required bundle org.eclipse.emf.common_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.705
+!MESSAGE Bundle org.eclipse.xtend.typesystem.emf_1.4.0.v201306110406 [165] was not resolved.
+!SUBENTRY 2 org.eclipse.xtend.typesystem.emf 2 0 2014-10-11 21:50:39.705
+!MESSAGE Missing required bundle org.eclipse.xtend_0.0.0.
+!SUBENTRY 2 org.eclipse.xtend.typesystem.emf 2 0 2014-10-11 21:50:39.706
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 org.eclipse.xtend.typesystem.emf 2 0 2014-10-11 21:50:39.706
+!MESSAGE Missing imported package org.eclipse.emf.mwe.utils_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.706
+!MESSAGE Bundle org.w3c.dom.smil_1.0.1.v200903091627 [171] was not resolved.
+!SUBENTRY 2 org.w3c.dom.smil 2 0 2014-10-11 21:50:39.707
+!MESSAGE Missing imported package org.w3c.dom.events_[3.0.0,4.0.0).
+!SUBENTRY 2 org.w3c.dom.smil 2 0 2014-10-11 21:50:39.707
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=JavaSE)(version=1.4))(&(osgi.ee=JavaSE)(version=1.3))(&(osgi.ee=CDC/Foundation)(version=1.0)))".
+
+!ENTRY org.eclipse.osgi 2 0 2014-10-11 21:50:39.811
+!MESSAGE One or more bundles are not resolved because the following root constraints are not resolved:
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.812
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.ui.workbench_3.105.2.v20140211-1711.jar was not resolved.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.812
+!MESSAGE Missing imported package org.eclipse.emf.ecore.util_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.813
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_2.7.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.813
+!MESSAGE Missing imported package org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.813
+!MESSAGE Missing imported package org.eclipse.emf.common.util_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.814
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.condition.core/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.814
+!MESSAGE Missing required bundle org.eclipse.emf.transaction_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.814
+!MESSAGE Missing required bundle org.eclipse.emf.common_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.815
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.ui_3.105.0.v20130522-1122.jar was not resolved.
+!SUBENTRY 2 org.eclipse.ui 2 0 2014-10-11 21:50:39.815
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=CDC/Foundation)(version=1.0))(&(osgi.ee=JavaSE)(version=1.3)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.815
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.e4.ui.workbench_1.0.2.v20131202-1739.jar was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench 2 0 2014-10-11 21:50:39.816
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.7.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench 2 0 2014-10-11 21:50:39.816
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.change_2.5.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.816
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.alica.edit/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica.edit 2 0 2014-10-11 21:50:39.817
+!MESSAGE Missing required bundle org.eclipse.emf.edit_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.817
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.xtend_1.4.0.v201306110406.jar was not resolved.
+!SUBENTRY 2 org.eclipse.xtend 2 0 2014-10-11 21:50:39.817
+!MESSAGE Missing required bundle org.eclipse.emf.common_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.818
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.w3c.dom.smil_1.0.1.v200903091627.jar was not resolved.
+!SUBENTRY 2 org.w3c.dom.smil 2 0 2014-10-11 21:50:39.818
+!MESSAGE Missing imported package org.w3c.dom.events_[3.0.0,4.0.0).
+!SUBENTRY 2 org.w3c.dom.smil 2 0 2014-10-11 21:50:39.819
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=JavaSE)(version=1.4))(&(osgi.ee=JavaSE)(version=1.3))(&(osgi.ee=CDC/Foundation)(version=1.0)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.819
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.validation/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.819
+!MESSAGE Missing required bundle org.eclipse.emf.transaction_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.820
+!MESSAGE Missing required bundle org.eclipse.emf.validation_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.820
+!MESSAGE Missing imported package org.eclipse.emf.edit.domain_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.820
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.xtend.typesystem.emf_1.4.0.v201306110406.jar was not resolved.
+!SUBENTRY 2 org.eclipse.xtend.typesystem.emf 2 0 2014-10-11 21:50:39.821
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.821
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.emf.mwe.utils_1.3.1.v201309030422.jar was not resolved.
+!SUBENTRY 2 org.eclipse.emf.mwe.utils 2 0 2014-10-11 21:50:39.821
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_[2.5.0,3.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.822
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.ui.views.properties.tabbed_3.6.0.v20130515-1857.jar was not resolved.
+!SUBENTRY 2 org.eclipse.ui.views.properties.tabbed 2 0 2014-10-11 21:50:39.822
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=CDC/Foundation)(version=1.0))(&(osgi.ee=JavaSE)(version=1.3)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.822
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.e4.ui.workbench.addons.swt_1.0.2.v20131129-1621.jar was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.addons.swt 2 0 2014-10-11 21:50:39.823
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.7.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.823
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.platform_4.3.2.v20140221-1700/ was not resolved.
+!SUBENTRY 2 org.eclipse.platform 2 0 2014-10-11 21:50:39.824
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=JavaSE)(version=1.4))(&(osgi.ee=CDC/Foundation)(version=1.0))(&(osgi.ee=JavaSE)(version=1.3)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.824
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.codegeneration/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.824
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.825
+!MESSAGE Missing required bundle org.eclipse.xpand.support.cdt_2.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.825
+!MESSAGE Missing imported package org.eclipse.emf.transaction_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.825
+!MESSAGE Missing required bundle org.eclipse.emf.mwe2.runtime_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.826
+!MESSAGE Missing required bundle org.eclipse.gef_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.826
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.826
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.e4.ui.model.workbench_1.0.1.v20131118-1956.jar was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.model.workbench 2 0 2014-10-11 21:50:39.827
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_2.9.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.827
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.e4.ui.workbench.swt_0.12.2.v20140117-1939.jar was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.swt 2 0 2014-10-11 21:50:39.827
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.7.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.828
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.ui/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.828
+!MESSAGE Missing required bundle org.eclipse.gef_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.829
+!MESSAGE Missing required bundle org.eclipse.emf.workspace_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.829
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.829
+!MESSAGE Missing required bundle org.eclipse.zest.core_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.830
+!MESSAGE Missing required bundle org.eclipse.zest.layouts_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.830
+!MESSAGE Missing required bundle org.eclipse.emf.transaction.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.830
+!MESSAGE Missing required bundle org.eclipse.draw2d_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.831
+!MESSAGE Missing required bundle org.eclipse.emf.edit_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.831
+!MESSAGE Missing required bundle org.eclipse.emf.workspace.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.831
+!MESSAGE Missing required bundle org.eclipse.emf.common_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.832
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.832
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.emf.mwe.core_1.2.1.v201309030422.jar was not resolved.
+!SUBENTRY 2 org.eclipse.emf.mwe.core 2 0 2014-10-11 21:50:39.832
+!MESSAGE Missing required bundle org.eclipse.emf.mwe2.runtime_2.1.0.
+!SUBENTRY 2 org.eclipse.emf.mwe.core 2 0 2014-10-11 21:50:39.833
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_[2.5.0,3.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.833
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.alica/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica 2 0 2014-10-11 21:50:39.833
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica 2 0 2014-10-11 21:50:39.834
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.834
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/de.uni-kassel.vs.cn.planDesigner.pmlextension/ was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.834
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.835
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.9.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.835
+!MESSAGE Missing required bundle org.eclipse.emf.edit_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.836
+!MESSAGE Bundle reference:file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/plugins/org.eclipse.e4.ui.workbench.renderers.swt_0.11.2.v20140205-1834.jar was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.renderers.swt 2 0 2014-10-11 21:50:39.836
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_2.7.0.
+
+!ENTRY org.eclipse.osgi 2 0 2014-10-11 21:50:39.893
+!MESSAGE The following is a complete list of bundles which are not resolved, see the prior log entry for the root cause if it exists:
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.893
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.alica_1.0.0.qualifier [4] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica 2 0 2014-10-11 21:50:39.894
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica 2 0 2014-10-11 21:50:39.894
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.894
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.alica.edit_0.0.0 [5] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica.edit 2 0 2014-10-11 21:50:39.895
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.alica.edit 2 0 2014-10-11 21:50:39.895
+!MESSAGE Missing required bundle org.eclipse.emf.edit_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.895
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.codegeneration_1.0.1.qualifier [6] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.896
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.896
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.condition.core_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.897
+!MESSAGE Missing required bundle org.eclipse.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.897
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.897
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.898
+!MESSAGE Missing required bundle org.eclipse.gef_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.898
+!MESSAGE Missing required bundle org.eclipse.emf.mwe.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.898
+!MESSAGE Missing required bundle org.eclipse.emf.mwe.core_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.899
+!MESSAGE Missing required bundle org.eclipse.emf.mwe2.runtime_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.899
+!MESSAGE Missing required bundle org.eclipse.xpand_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.899
+!MESSAGE Missing required bundle org.eclipse.xtend.typesystem.emf_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.900
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.900
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.900
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.901
+!MESSAGE Missing required bundle org.eclipse.xtend_1.4.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.901
+!MESSAGE Missing required bundle org.eclipse.xpand.support.cdt_2.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.codegeneration 2 0 2014-10-11 21:50:39.901
+!MESSAGE Missing imported package org.eclipse.emf.transaction_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.902
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.condition.core_1.0.0.qualifier [7] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.902
+!MESSAGE Missing required bundle org.eclipse.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.902
+!MESSAGE Missing required bundle org.eclipse.ui.views.properties.tabbed_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.903
+!MESSAGE Missing required bundle org.eclipse.emf.common_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.903
+!MESSAGE Missing required bundle org.eclipse.jdt.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.903
+!MESSAGE Missing required bundle org.eclipse.ui.workbench_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.904
+!MESSAGE Missing required bundle org.eclipse.emf.transaction_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.904
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.condition.core 2 0 2014-10-11 21:50:39.904
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.ui_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.905
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel_1.0.0.qualifier [8] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.905
+!MESSAGE Missing required bundle org.eclipse.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.905
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.906
+!MESSAGE Missing required bundle org.eclipse.emf.edit_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel 2 0 2014-10-11 21:50:39.906
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.9.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.906
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.ui_1.0.0 [9] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.907
+!MESSAGE Missing required bundle org.eclipse.gef_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.907
+!MESSAGE Missing required bundle org.eclipse.ui.views.properties.tabbed_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.907
+!MESSAGE Missing required bundle org.eclipse.emf.transaction.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.908
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.908
+!MESSAGE Missing required bundle org.eclipse.emf.edit_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.908
+!MESSAGE Missing required bundle org.eclipse.emf.workspace_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.909
+!MESSAGE Missing required bundle org.eclipse.emf.workspace.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.909
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.909
+!MESSAGE Missing required bundle org.eclipse.ui.navigator_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.910
+!MESSAGE Missing required bundle org.eclipse.ui.editors_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.910
+!MESSAGE Missing required bundle org.eclipse.ui.navigator.resources_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.910
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.911
+!MESSAGE Missing required bundle org.eclipse.jdt.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.911
+!MESSAGE Missing required bundle org.eclipse.ui.ide_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.911
+!MESSAGE Missing required bundle org.eclipse.zest.core_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.912
+!MESSAGE Missing required bundle org.eclipse.zest.layouts_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.912
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.913
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica.edit_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.913
+!MESSAGE Missing required bundle org.eclipse.emf.common_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.913
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench.addons.swt_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.914
+!MESSAGE Missing required bundle org.eclipse.platform_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.914
+!MESSAGE Missing required bundle org.eclipse.ui.workbench_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.914
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.915
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench.swt_0.12.1.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.915
+!MESSAGE Missing required bundle org.eclipse.draw2d_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.ui 2 0 2014-10-11 21:50:39.915
+!MESSAGE Missing imported package de.uni_kassel.vs.cn.planDesigner.ui.util_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.916
+!MESSAGE Bundle de.uni-kassel.vs.cn.planDesigner.validation_1.0.0.qualifier [10] was not resolved.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.916
+!MESSAGE Missing required bundle org.eclipse.ui_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.916
+!MESSAGE Missing required bundle org.eclipse.emf.validation_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.917
+!MESSAGE Missing required bundle org.eclipse.emf.transaction_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.917
+!MESSAGE Missing required bundle de.uni-kassel.vs.cn.planDesigner.alica_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.917
+!MESSAGE Missing imported package de.uni_kassel.vs.cn.planDesigner.ui.edit_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.918
+!MESSAGE Missing imported package de.uni_kassel.vs.cn.planDesigner.ui.editors_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.918
+!MESSAGE Missing imported package de.uni_kassel.vs.cn.planDesigner.ui.util_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.918
+!MESSAGE Missing imported package org.eclipse.emf.edit.domain_0.0.0.
+!SUBENTRY 2 de.uni-kassel.vs.cn.planDesigner.validation 2 0 2014-10-11 21:50:39.919
+!MESSAGE Missing imported package org.eclipse.ui.views.properties.tabbed_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.919
+!MESSAGE Bundle org.eclipse.compare_3.5.401.v20130709-1308 [30] was not resolved.
+!SUBENTRY 2 org.eclipse.compare 2 0 2014-10-11 21:50:39.919
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.compare 2 0 2014-10-11 21:50:39.920
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.3.0,4.0.0).
+!SUBENTRY 2 org.eclipse.compare 2 0 2014-10-11 21:50:39.920
+!MESSAGE Missing required bundle org.eclipse.ui.views_[3.2.0,4.0.0).
+!SUBENTRY 2 org.eclipse.compare 2 0 2014-10-11 21:50:39.920
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.compare 2 0 2014-10-11 21:50:39.921
+!MESSAGE Missing required bundle org.eclipse.ui.editors_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.921
+!MESSAGE Bundle org.eclipse.debug.ui_3.9.0.v20130516-1713 [50] was not resolved.
+!SUBENTRY 2 org.eclipse.debug.ui 2 0 2014-10-11 21:50:39.921
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.debug.ui 2 0 2014-10-11 21:50:39.922
+!MESSAGE Missing required bundle org.eclipse.ui.console_[3.4.0,4.0.0).
+!SUBENTRY 2 org.eclipse.debug.ui 2 0 2014-10-11 21:50:39.922
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.debug.ui 2 0 2014-10-11 21:50:39.922
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.debug.ui 2 0 2014-10-11 21:50:39.923
+!MESSAGE Missing required bundle org.eclipse.ui.editors_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.923
+!MESSAGE Bundle org.eclipse.e4.ui.model.workbench_1.0.1.v20131118-1956 [61] was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.model.workbench 2 0 2014-10-11 21:50:39.923
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_2.9.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.924
+!MESSAGE Bundle org.eclipse.e4.ui.workbench_1.0.2.v20131202-1739 [64] was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench 2 0 2014-10-11 21:50:39.924
+!MESSAGE Missing required bundle org.eclipse.e4.ui.model.workbench_1.0.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench 2 0 2014-10-11 21:50:39.924
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.change_2.5.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench 2 0 2014-10-11 21:50:39.925
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.7.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.925
+!MESSAGE Bundle org.eclipse.e4.ui.workbench.addons.swt_1.0.2.v20131129-1621 [65] was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.addons.swt 2 0 2014-10-11 21:50:39.925
+!MESSAGE Missing required bundle org.eclipse.e4.ui.model.workbench_1.0.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.addons.swt 2 0 2014-10-11 21:50:39.926
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench_0.9.1.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.addons.swt 2 0 2014-10-11 21:50:39.926
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench.renderers.swt_0.9.1.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.addons.swt 2 0 2014-10-11 21:50:39.926
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.7.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.addons.swt 2 0 2014-10-11 21:50:39.927
+!MESSAGE Missing imported package org.eclipse.e4.ui.internal.workbench.swt_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.927
+!MESSAGE Bundle org.eclipse.e4.ui.workbench.renderers.swt_0.11.2.v20140205-1834 [66] was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.renderers.swt 2 0 2014-10-11 21:50:39.927
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench_0.9.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.renderers.swt 2 0 2014-10-11 21:50:39.928
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench.swt_0.9.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.renderers.swt 2 0 2014-10-11 21:50:39.928
+!MESSAGE Missing required bundle org.eclipse.e4.ui.model.workbench_0.9.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.renderers.swt 2 0 2014-10-11 21:50:39.928
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_2.7.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.929
+!MESSAGE Bundle org.eclipse.e4.ui.workbench.swt_0.12.2.v20140117-1939 [67] was not resolved.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.swt 2 0 2014-10-11 21:50:39.929
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench_0.10.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.swt 2 0 2014-10-11 21:50:39.929
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_2.7.0.
+!SUBENTRY 2 org.eclipse.e4.ui.workbench.swt 2 0 2014-10-11 21:50:39.930
+!MESSAGE Missing required bundle org.eclipse.e4.ui.model.workbench_1.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.930
+!MESSAGE Bundle org.eclipse.emf.mwe.core_1.2.1.v201309030422 [76] was not resolved.
+!SUBENTRY 2 org.eclipse.emf.mwe.core 2 0 2014-10-11 21:50:39.930
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_[2.5.0,3.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.core 2 0 2014-10-11 21:50:39.931
+!MESSAGE Missing required bundle org.eclipse.emf.mwe2.runtime_2.1.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.931
+!MESSAGE Bundle org.eclipse.emf.mwe.ui_1.2.1.v201309030422 [77] was not resolved.
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.931
+!MESSAGE Missing required bundle org.eclipse.jdt.debug.ui_[3.4.0,4.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.932
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.932
+!MESSAGE Missing required bundle org.eclipse.debug.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.932
+!MESSAGE Missing required bundle org.eclipse.jdt.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.933
+!MESSAGE Missing required bundle org.eclipse.ui.editors_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.933
+!MESSAGE Missing required bundle org.eclipse.emf.mwe.core_[1.2.0,2.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.ui 2 0 2014-10-11 21:50:39.933
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.934
+!MESSAGE Bundle org.eclipse.emf.mwe.utils_1.3.1.v201309030422 [78] was not resolved.
+!SUBENTRY 2 org.eclipse.emf.mwe.utils 2 0 2014-10-11 21:50:39.934
+!MESSAGE Missing required bundle org.eclipse.emf.mwe.core_[1.2.0,2.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.utils 2 0 2014-10-11 21:50:39.934
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_[2.5.0,3.0.0).
+!SUBENTRY 2 org.eclipse.emf.mwe.utils 2 0 2014-10-11 21:50:39.935
+!MESSAGE Missing optionally required bundle org.eclipse.emf.codegen.ecore_[2.5.0,3.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.935
+!MESSAGE Bundle org.eclipse.help.ui_4.0.1.v20130708-1201 [115] was not resolved.
+!SUBENTRY 2 org.eclipse.help.ui 2 0 2014-10-11 21:50:39.935
+!MESSAGE Missing required bundle org.eclipse.ui_[3.6.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.936
+!MESSAGE Bundle org.eclipse.jdt.debug.ui_3.6.200.v20130514-0841 [121] was not resolved.
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.936
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.936
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.937
+!MESSAGE Missing required bundle org.eclipse.ui.editors_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.937
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.937
+!MESSAGE Missing required bundle org.eclipse.debug.ui_[3.8.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.938
+!MESSAGE Missing required bundle org.eclipse.jdt.ui_[3.8.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.938
+!MESSAGE Missing required bundle org.eclipse.ui.console_[3.4.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.debug.ui 2 0 2014-10-11 21:50:39.938
+!MESSAGE Missing required bundle org.eclipse.search_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.939
+!MESSAGE Bundle org.eclipse.jdt.ui_3.9.2.v20131106-1600 [123] was not resolved.
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.939
+!MESSAGE Missing required bundle org.eclipse.search_[3.7.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.939
+!MESSAGE Missing required bundle org.eclipse.debug.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.940
+!MESSAGE Missing required bundle org.eclipse.compare_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.940
+!MESSAGE Missing required bundle org.eclipse.team.ui_[3.4.100,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.940
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.941
+!MESSAGE Missing required bundle org.eclipse.ui.console_[3.4.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.941
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.8.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.941
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.942
+!MESSAGE Missing required bundle org.eclipse.ui.views_[3.3.100,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.942
+!MESSAGE Missing required bundle org.eclipse.ui.editors_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.942
+!MESSAGE Missing required bundle org.eclipse.ltk.ui.refactoring_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.942
+!MESSAGE Missing required bundle org.eclipse.ui.navigator_[3.3.200,4.0.0).
+!SUBENTRY 2 org.eclipse.jdt.ui 2 0 2014-10-11 21:50:39.943
+!MESSAGE Missing required bundle org.eclipse.ui.navigator.resources_[3.4.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.943
+!MESSAGE Bundle org.eclipse.ltk.ui.refactoring_3.7.100.v20130605-1748 [135] was not resolved.
+!SUBENTRY 2 org.eclipse.ltk.ui.refactoring 2 0 2014-10-11 21:50:39.943
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ltk.ui.refactoring 2 0 2014-10-11 21:50:39.944
+!MESSAGE Missing required bundle org.eclipse.ui.navigator_[3.3.200,4.0.0).
+!SUBENTRY 2 org.eclipse.ltk.ui.refactoring 2 0 2014-10-11 21:50:39.944
+!MESSAGE Missing required bundle org.eclipse.compare_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ltk.ui.refactoring 2 0 2014-10-11 21:50:39.944
+!MESSAGE Missing required bundle org.eclipse.team.ui_[3.4.100,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.945
+!MESSAGE Bundle org.eclipse.platform_4.3.2.v20140221-1700 [139] was not resolved.
+!SUBENTRY 2 org.eclipse.platform 2 0 2014-10-11 21:50:39.945
+!MESSAGE Missing required bundle org.eclipse.ui.intro_[3.2.0,4.0.0).
+!SUBENTRY 2 org.eclipse.platform 2 0 2014-10-11 21:50:39.945
+!MESSAGE Missing optionally required bundle org.eclipse.ui.cheatsheets_[3.2.0,4.0.0).
+!SUBENTRY 2 org.eclipse.platform 2 0 2014-10-11 21:50:39.946
+!MESSAGE Missing optionally required bundle org.eclipse.ui_[3.2.0,4.0.0).
+!SUBENTRY 2 org.eclipse.platform 2 0 2014-10-11 21:50:39.946
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=JavaSE)(version=1.4))(&(osgi.ee=CDC/Foundation)(version=1.0))(&(osgi.ee=JavaSE)(version=1.3)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.946
+!MESSAGE Bundle org.eclipse.search_3.9.1.v20131121-1346 [141] was not resolved.
+!SUBENTRY 2 org.eclipse.search 2 0 2014-10-11 21:50:39.947
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.search 2 0 2014-10-11 21:50:39.947
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.search 2 0 2014-10-11 21:50:39.947
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.search 2 0 2014-10-11 21:50:39.948
+!MESSAGE Missing required bundle org.eclipse.ltk.ui.refactoring_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.948
+!MESSAGE Bundle org.eclipse.team.ui_3.7.1.v20130729-1104 [145] was not resolved.
+!SUBENTRY 2 org.eclipse.team.ui 2 0 2014-10-11 21:50:39.948
+!MESSAGE Missing optionally required bundle org.eclipse.ui.ide_[3.3.0,4.0.0).
+!SUBENTRY 2 org.eclipse.team.ui 2 0 2014-10-11 21:50:39.949
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.team.ui 2 0 2014-10-11 21:50:39.949
+!MESSAGE Missing required bundle org.eclipse.compare_[3.3.0,4.0.0).
+!SUBENTRY 2 org.eclipse.team.ui 2 0 2014-10-11 21:50:39.949
+!MESSAGE Missing required bundle org.eclipse.ui.navigator_[3.3.0,4.0.0).
+!SUBENTRY 2 org.eclipse.team.ui 2 0 2014-10-11 21:50:39.950
+!MESSAGE Missing required bundle org.eclipse.ui.editors_[3.3.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.950
+!MESSAGE Bundle org.eclipse.ui_3.105.0.v20130522-1122 [147] was not resolved.
+!SUBENTRY 2 org.eclipse.ui 2 0 2014-10-11 21:50:39.950
+!MESSAGE Missing required bundle org.eclipse.ui.workbench_[3.105.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui 2 0 2014-10-11 21:50:39.951
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=CDC/Foundation)(version=1.0))(&(osgi.ee=JavaSE)(version=1.3)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.951
+!MESSAGE Bundle org.eclipse.ui.cheatsheets_3.4.200.v20130326-1254 [148] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.cheatsheets 2 0 2014-10-11 21:50:39.951
+!MESSAGE Missing required bundle org.eclipse.ui_[3.6.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.cheatsheets 2 0 2014-10-11 21:50:39.952
+!MESSAGE Missing optionally required bundle org.eclipse.help.ui_[4.0.0,5.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.952
+!MESSAGE Bundle org.eclipse.ui.console_3.5.200.v20130514-0954 [149] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.console 2 0 2014-10-11 21:50:39.952
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.console 2 0 2014-10-11 21:50:39.952
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.953
+!MESSAGE Bundle org.eclipse.ui.editors_3.8.100.v20130513-1637 [150] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.editors 2 0 2014-10-11 21:50:39.953
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.editors 2 0 2014-10-11 21:50:39.953
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.editors 2 0 2014-10-11 21:50:39.954
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.7.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.954
+!MESSAGE Bundle org.eclipse.ui.ide_3.9.2.v20131004-0923 [152] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.ide 2 0 2014-10-11 21:50:39.954
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.ide 2 0 2014-10-11 21:50:39.954
+!MESSAGE Missing required bundle org.eclipse.ui.workbench_[3.7.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.ide 2 0 2014-10-11 21:50:39.955
+!MESSAGE Missing optionally required bundle org.eclipse.ui.views_[3.2.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.955
+!MESSAGE Bundle org.eclipse.ui.intro_3.4.200.v20130326-1254 [153] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.intro 2 0 2014-10-11 21:50:39.955
+!MESSAGE Missing required bundle org.eclipse.ui_[3.6.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.956
+!MESSAGE Bundle org.eclipse.ui.navigator_3.5.300.v20130517-0139 [154] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.navigator 2 0 2014-10-11 21:50:39.956
+!MESSAGE Missing required bundle org.eclipse.ui_[3.6.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.956
+!MESSAGE Bundle org.eclipse.ui.navigator.resources_3.4.501.v20131021-1545 [155] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.navigator.resources 2 0 2014-10-11 21:50:39.956
+!MESSAGE Missing required bundle org.eclipse.ui.ide_[3.6.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.navigator.resources 2 0 2014-10-11 21:50:39.957
+!MESSAGE Missing required bundle org.eclipse.ui_[3.6.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.navigator.resources 2 0 2014-10-11 21:50:39.957
+!MESSAGE Missing required bundle org.eclipse.ui.navigator_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.navigator.resources 2 0 2014-10-11 21:50:39.957
+!MESSAGE Missing required bundle org.eclipse.ui.views.properties.tabbed_[3.5.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.navigator.resources 2 0 2014-10-11 21:50:39.958
+!MESSAGE Missing required bundle org.eclipse.ui.workbench.texteditor_[3.6.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.navigator.resources 2 0 2014-10-11 21:50:39.958
+!MESSAGE Missing required bundle org.eclipse.ltk.ui.refactoring_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.958
+!MESSAGE Bundle org.eclipse.ui.trace_1.0.100.v20130508-1926 [156] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.trace 2 0 2014-10-11 21:50:39.959
+!MESSAGE Missing required bundle org.eclipse.ui_[3.6.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.959
+!MESSAGE Bundle org.eclipse.ui.views_3.6.100.v20130326-1250 [157] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.views 2 0 2014-10-11 21:50:39.959
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.959
+!MESSAGE Bundle org.eclipse.ui.views.log_1.0.400.v20130515-2009 [158] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.views.log 2 0 2014-10-11 21:50:39.960
+!MESSAGE Missing required bundle org.eclipse.ui_[3.3.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.views.log 2 0 2014-10-11 21:50:39.960
+!MESSAGE Missing optionally required bundle org.eclipse.ui.ide_[3.3.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.960
+!MESSAGE Bundle org.eclipse.ui.views.properties.tabbed_3.6.0.v20130515-1857 [159] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.views.properties.tabbed 2 0 2014-10-11 21:50:39.960
+!MESSAGE Missing required bundle org.eclipse.ui.views_[3.2.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.views.properties.tabbed 2 0 2014-10-11 21:50:39.961
+!MESSAGE Missing required bundle org.eclipse.ui_[3.3.0,4.0.0).
+!SUBENTRY 2 org.eclipse.ui.views.properties.tabbed 2 0 2014-10-11 21:50:39.961
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=CDC/Foundation)(version=1.0))(&(osgi.ee=JavaSE)(version=1.3)))".
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.961
+!MESSAGE Bundle org.eclipse.ui.workbench_3.105.2.v20140211-1711 [160] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.961
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench.swt_0.9.1.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.962
+!MESSAGE Missing required bundle org.eclipse.e4.ui.model.workbench_0.9.1.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.962
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench.addons.swt_0.10.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.962
+!MESSAGE Missing required bundle org.eclipse.emf.ecore_2.7.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.962
+!MESSAGE Missing required bundle org.eclipse.e4.ui.workbench_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.963
+!MESSAGE Missing imported package org.eclipse.e4.ui.internal.workbench_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.963
+!MESSAGE Missing imported package org.eclipse.e4.ui.internal.workbench.addons_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.963
+!MESSAGE Missing imported package org.eclipse.e4.ui.internal.workbench.renderers.swt_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.963
+!MESSAGE Missing imported package org.eclipse.e4.ui.internal.workbench.swt_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.964
+!MESSAGE Missing imported package org.eclipse.e4.ui.workbench_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.964
+!MESSAGE Missing imported package org.eclipse.e4.ui.workbench.modeling_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.964
+!MESSAGE Missing imported package org.eclipse.e4.ui.workbench.renderers.swt_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.964
+!MESSAGE Missing imported package org.eclipse.emf.common.util_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.965
+!MESSAGE Missing imported package org.eclipse.emf.ecore_0.0.0.
+!SUBENTRY 2 org.eclipse.ui.workbench 2 0 2014-10-11 21:50:39.965
+!MESSAGE Missing imported package org.eclipse.emf.ecore.util_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.965
+!MESSAGE Bundle org.eclipse.ui.workbench.texteditor_3.8.101.v20130729-1318 [161] was not resolved.
+!SUBENTRY 2 org.eclipse.ui.workbench.texteditor 2 0 2014-10-11 21:50:39.965
+!MESSAGE Missing required bundle org.eclipse.ui_[3.5.0,4.0.0).
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.966
+!MESSAGE Bundle org.eclipse.xpand_1.4.0.v201306110406 [163] was not resolved.
+!SUBENTRY 2 org.eclipse.xpand 2 0 2014-10-11 21:50:39.966
+!MESSAGE Missing required bundle org.eclipse.xtend_0.0.0.
+!SUBENTRY 2 org.eclipse.xpand 2 0 2014-10-11 21:50:39.966
+!MESSAGE Missing optionally required bundle org.eclipse.emf.mwe.core_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.967
+!MESSAGE Bundle org.eclipse.xtend_1.4.0.v201306110406 [164] was not resolved.
+!SUBENTRY 2 org.eclipse.xtend 2 0 2014-10-11 21:50:39.967
+!MESSAGE Missing required bundle org.eclipse.emf.mwe.core_0.0.0.
+!SUBENTRY 2 org.eclipse.xtend 2 0 2014-10-11 21:50:39.967
+!MESSAGE Missing required bundle org.eclipse.emf.common_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.967
+!MESSAGE Bundle org.eclipse.xtend.typesystem.emf_1.4.0.v201306110406 [165] was not resolved.
+!SUBENTRY 2 org.eclipse.xtend.typesystem.emf 2 0 2014-10-11 21:50:39.967
+!MESSAGE Missing required bundle org.eclipse.xtend_0.0.0.
+!SUBENTRY 2 org.eclipse.xtend.typesystem.emf 2 0 2014-10-11 21:50:39.968
+!MESSAGE Missing required bundle org.eclipse.emf.ecore.xmi_0.0.0.
+!SUBENTRY 2 org.eclipse.xtend.typesystem.emf 2 0 2014-10-11 21:50:39.968
+!MESSAGE Missing imported package org.eclipse.emf.mwe.utils_0.0.0.
+!SUBENTRY 1 org.eclipse.osgi 2 0 2014-10-11 21:50:39.968
+!MESSAGE Bundle org.w3c.dom.smil_1.0.1.v200903091627 [171] was not resolved.
+!SUBENTRY 2 org.w3c.dom.smil 2 0 2014-10-11 21:50:39.969
+!MESSAGE Missing imported package org.w3c.dom.events_[3.0.0,4.0.0).
+!SUBENTRY 2 org.w3c.dom.smil 2 0 2014-10-11 21:50:39.969
+!MESSAGE Missing required capability Require-Capability: osgi.ee; filter="(|(&(osgi.ee=JavaSE)(version=1.4))(&(osgi.ee=JavaSE)(version=1.3))(&(osgi.ee=CDC/Foundation)(version=1.0)))".
+
+!ENTRY org.eclipse.osgi 4 0 2014-10-11 21:50:39.971
+!MESSAGE Application error
+!STACK 1
+java.lang.RuntimeException: No application id has been found.
+	at org.eclipse.equinox.internal.app.EclipseAppContainer.startDefaultApp(EclipseAppContainer.java:242)
+	at org.eclipse.equinox.internal.app.MainApplicationLauncher.run(MainApplicationLauncher.java:29)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:354)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:181)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:636)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:591)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1450)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1426)

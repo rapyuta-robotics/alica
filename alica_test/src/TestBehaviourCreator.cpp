@@ -14,7 +14,7 @@
 #include "Tackle.h"
 #include "AttackOpp.h"
 
-namespace alica
+namespace alicaTests
 {
 
 	TestBehaviourCreator::TestBehaviourCreator()
@@ -25,7 +25,7 @@ namespace alica
 	{
 	}
 
-	shared_ptr<BasicBehaviour> TestBehaviourCreator::createBehaviour(long behaviourConfId)
+	shared_ptr<alica::BasicBehaviour> TestBehaviourCreator::createBehaviour(long behaviourConfId)
 	{
 		//shared_ptr<alica::BasicBehaviour> beh;
 

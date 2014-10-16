@@ -29,7 +29,7 @@ namespace alica
 	{
 		list<State*> queue;
 		queue.push_front(this->state);
-		State* cs;
+		State* cs = nullptr;
 		while (queue.size() > 0)
 		{
 			cs = *queue.begin();

@@ -18,9 +18,9 @@ namespace alica
 	/**
 	 * Constructor
 	 */
-	AuthorityManager::AuthorityManager()
+	AuthorityManager::AuthorityManager(AlicaEngine* ae)
 	{
-		this->ae = AlicaEngine::getInstance();
+		this->ae = ae;
 		this->ownID = 0;
 		this->authorityPub = nullptr;
 	}
@@ -34,7 +34,7 @@ namespace alica
 	 */
 	void AuthorityManager::init()
 	{
-		this->ownID = AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
+		this->ownID = ae->getTeamObserver()->getOwnId();
 		//TODO::
 //		this.rosNode = new Node("AlicaEngine");
 //		this.rosNode.Subscribe("AllocationAuthorityInfo", HandleIncomingAuthorityMessage, 10);

@@ -37,11 +37,14 @@ namespace alica
 	class IConstraintCreator;
 	class IUtilityCreator;
 	class ExpressionHandler;
+	class PartialAssignmentPool;
 
 	class AlicaEngine
 	{
 	public:
-		static AlicaEngine* getInstance();bool init(IBehaviourCreator* bc, IConditionCreator* cc,  IUtilityCreator* uc, IConstraintCreator* crc, string roleSetName, string masterPlanName,
+		AlicaEngine();
+//		static AlicaEngine* getInstance();
+		bool init(IBehaviourCreator* bc, IConditionCreator* cc,  IUtilityCreator* uc, IConstraintCreator* crc, string roleSetName, string masterPlanName,
 													string roleSetDir, bool stepEngine);
 		void shutdown();
 		void start();bool getStepEngine();
@@ -76,7 +79,8 @@ namespace alica
 		void setIAlicaClock(IAlicaClock* clock);
 		void doStep();
 		void iterationComplete();
-
+		PartialAssignmentPool* getPartialAssignmentPool();
+		void stepNotify();
 		PlanBase* getPlanBase();
 
 		/**
@@ -99,11 +103,11 @@ namespace alica
 		IAlicaCommunication* communicator;
 		IPlanner* planner;
 		IAlicaClock* alicaClock;
+		PartialAssignmentPool* pap;
 		PlanBase* planBase;bool stepCalled;
 
 	private:
-		// private constructur/ destructor because of singleton
-		AlicaEngine();
+
 		~AlicaEngine();
 		/**
 		 * Set to have the engine's main loop wait on a signal via MayStep

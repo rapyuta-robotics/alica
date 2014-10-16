@@ -19,8 +19,9 @@
 namespace alica
 {
 
-	Logger::Logger()
+	Logger::Logger(AlicaEngine* ae)
 	{
+		this->ae = ae;
 		this->endTime = 0;
 		this->itCount = 0;
 		this->sBuild = new stringstream;
@@ -31,8 +32,8 @@ namespace alica
 		{
 			char buffer[50];
 			struct tm * timeinfo;
-			string robotName = AlicaEngine::getInstance()->getRobotName();
-			const long int time = AlicaEngine::getInstance()->getIAlicaClock()->now() / 1000000000L;
+			string robotName = ae->getRobotName();
+			const long int time = ae->getIAlicaClock()->now() / 1000000000L;
 			cout << "Alica Time: " << time << endl;
 			timeinfo = localtime(&time);
 			strftime(buffer, 1024, "%FT%T", timeinfo);
@@ -54,7 +55,7 @@ namespace alica
 
 				if (!supplementary::FileSystem::createDirectory(logPath, 777))
 				{
-					AlicaEngine::getInstance()->abort("Cannot create log folder: ", logPath);
+					ae->abort("Cannot create log folder: ", logPath);
 				}
 
 			}
@@ -62,7 +63,7 @@ namespace alica
 			this->fileWriter = new ofstream(logFile.c_str());
 			this->eventStrings = list<string>();
 			this->inIteration = false;
-			this->to = AlicaEngine::getInstance()->getTeamObserver();
+			this->to = ae->getTeamObserver();
 			this->time = 0;
 
 		}
@@ -99,7 +100,7 @@ namespace alica
 	void Logger::itertionStarts()
 	{
 		this->inIteration = true;
-		this->startTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
+		this->startTime = ae->getIAlicaClock()->now();
 	}
 
 	/**
@@ -114,7 +115,7 @@ namespace alica
 			return;
 		}
 		this->inIteration = false;
-		this->endTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
+		this->endTime = ae->getIAlicaClock()->now();
 		this->itCount++;
 		this->time += (this->endTime - this->startTime) / 1000;
 
@@ -189,7 +190,7 @@ namespace alica
 	{
 		shared_ptr<list<string> > result = make_shared<list<string> >(list<string>());
 
-		auto states = AlicaEngine::getInstance()->getPlanRepository()->getStates();
+		auto states = ae->getPlanRepository()->getStates();
 
 		State* s;
 		EntryPoint* e;

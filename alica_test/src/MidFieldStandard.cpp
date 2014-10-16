@@ -7,10 +7,10 @@
 
 #include "MidFieldStandard.h"
 
-namespace alica
+namespace alicaTests
 {
 
-	MidFieldStandard::MidFieldStandard() : BasicBehaviour ("MidFieldStandard")
+	MidFieldStandard::MidFieldStandard() : alica::BasicBehaviour ("MidFieldStandard")
 	{
 		this->callCounter = 0;
 	}

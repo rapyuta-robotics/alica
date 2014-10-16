@@ -45,6 +45,10 @@ namespace alica
 		for(auto pair : this->priorityMartix) {
 			delete pair.first;
 		}
+		delete this->simUI;
+		delete this->priResult;
+		delete this->lookupStruct;
+
 	}
 
 	list<USummand*>& UtilityFunction::getUtilSummands()
@@ -220,13 +224,13 @@ namespace alica
 	 * 'Role -> Highest Priority'-Dictionary for each role of the current roleset.
 	 * @return void
 	 */
-	void UtilityFunction::init()
+	void UtilityFunction::init(AlicaEngine* ae)
 	{
 		// CREATE MATRIX && HIGHEST PRIORITY ARRAY
 		// init dicts
 		this->roleHighestPriorityMap = map<long, double>();
 		this->priorityMartix = map<TaskRoleStruct*, double>();
-		RoleSet* roleSet = AlicaEngine::getInstance()->getRoleSet();
+		RoleSet* roleSet = ae->getRoleSet();
 		long taskId;
 		long roleId;
 		double curPrio;
@@ -247,7 +251,7 @@ namespace alica
 		                    << rtm->getRole()->getName() << " with id " << roleId
 		                    << "!\n We are in the UF for the plan "
 		                    << this->plan->getName() << "!" << endl;
-					AlicaEngine::getInstance()->abort(ss.str());
+					ae->abort(ss.str());
 				}
 				else
 				{
@@ -271,10 +275,10 @@ namespace alica
 		if (this->utilSummands.size() != 0) // it is null for default utility function
 		{
 			for(USummand* utilSum : this->utilSummands) {
-				utilSum->init();
+				utilSum->init(ae);
 			}
 		}
-		this->ae = AlicaEngine::getInstance();
+		this->ae = ae;
 		this->ra  = this->ae->getRoleAssignment();
 	}
 
@@ -283,15 +287,13 @@ namespace alica
 	 * Is called and the end of AlicaEngine.Init(..), because it
 	 * needs the current roleset (circular dependency otherwise).
 	 */
-	void UtilityFunction::initDataStructures()
+	void UtilityFunction::initDataStructures(AlicaEngine* ae)
 	{
 
-		map<long,Plan*> plans = AlicaEngine::getInstance()->getPlanRepository()->getPlans();
+		map<long,Plan*> plans = ae->getPlanRepository()->getPlans();
 
 		for(auto iter = plans.begin(); iter != plans.end(); iter++) {
-			//TODO hack to get tests running
-			//iter->second->setUtilityFunction(new DefaultUtilityFunction(iter->second));
-			iter->second->getUtilityFunction()->init();
+			iter->second->getUtilityFunction()->init(ae);
 		}
 	}
 

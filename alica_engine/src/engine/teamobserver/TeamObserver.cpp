@@ -5,7 +5,7 @@
  *      Author: Stefan Jakob
  */
 
-#define TO_DEBUG
+//#define TO_DEBUG
 
 #include "engine/teamobserver/TeamObserver.h"
 #include <SystemConfig.h>
@@ -30,9 +30,7 @@
 namespace alica
 {
 
-	mutex TeamObserver::simplePlanTreeMutex;
-
-	TeamObserver::TeamObserver()
+	TeamObserver::TeamObserver(AlicaEngine* ae)
 	{
 		this->teamTimeOut = 0;
 		this->myId = 0;
@@ -40,7 +38,7 @@ namespace alica
 				map<int, shared_ptr<SimplePlanTree> >());
 		this->me = nullptr;
 		this->log = nullptr;
-		this->ae = nullptr;
+		this->ae = ae;
 		this->allOtherRobots = list<RobotEngineData*>();
 	}
 
@@ -63,7 +61,7 @@ namespace alica
 			if (re->getProperties()->getId() == rid)
 			{
 
-				re->setLastMessageTime(AlicaEngine::getInstance()->getIAlicaClock()->now());
+				re->setLastMessageTime(ae->getIAlicaClock()->now());
 				break;
 			}
 		}
@@ -72,21 +70,21 @@ namespace alica
 	void TeamObserver::init()
 	{
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-		this->ae = AlicaEngine::getInstance();
 		this->log = ae->getLog();
 
 		string ownPlayerName = ae->getRobotName();
+		cout << "TO: Initing Robot " << ownPlayerName << endl;
 		this->teamTimeOut = (*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL) * 1000000;
 		shared_ptr<vector<string> > playerNames = (*sc)["Globals"]->getSections("Globals.Team", NULL);
 		bool foundSelf = false;
 
 		for (int i = 0; i < playerNames->size(); i++)
 		{
-			shared_ptr<RobotProperties> rp = make_shared<RobotProperties>(playerNames->at(i));
+			shared_ptr<RobotProperties> rp = make_shared<RobotProperties>(ae, playerNames->at(i));
 			if (!foundSelf && playerNames->at(i).compare(ownPlayerName) == 0)
 			{
 				foundSelf = true;
-				this->me = new RobotEngineData(rp);
+				this->me = new RobotEngineData(ae, rp);
 				this->me->setActive(true);
 				this->myId = rp->getId();
 
@@ -99,21 +97,21 @@ namespace alica
 					{
 						stringstream ss;
 						ss << "TO: Found twice Robot ID " << rp->getId() << "in globals team section" << endl;
-						AlicaEngine::getInstance()->abort(ss.str());
+						ae->abort(ss.str());
 					}
 					if (rp->getId() == myId)
 					{
 						stringstream ss2;
 						ss2 << "TO: Found myself twice Robot ID " << rp->getId() << "in globals team section" << endl;
-						AlicaEngine::getInstance()->abort(ss2.str());
+						ae->abort(ss2.str());
 					}
 				}
-				this->allOtherRobots.push_back(new RobotEngineData(rp));
+				this->allOtherRobots.push_back(new RobotEngineData(ae, rp));
 			}
 		}
 		if (!foundSelf)
 		{
-			AlicaEngine::getInstance()->abort("TO: Could not find own robot name in Globals Id = " + ownPlayerName);
+			ae->abort("TO: Could not find own robot name in Globals Id = " + ownPlayerName);
 		}
 
 		if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull", NULL))
@@ -168,7 +166,6 @@ namespace alica
 		{
 			if (r->isActive())
 			{
-				cout << "PASST HIER " << endl;
 				ret->push_back(r);
 			}
 
@@ -265,7 +262,7 @@ namespace alica
 
 	void TeamObserver::tick(shared_ptr<RunningPlan> root)
 	{
-		alicaTime time = AlicaEngine::getInstance()->getIAlicaClock()->now();
+		alicaTime time = ae->getIAlicaClock()->now();
 		bool changed = false;
 		vector<int> robotsAvail;
 		robotsAvail.push_back(this->myId);
@@ -303,8 +300,7 @@ namespace alica
 			for (map<int, shared_ptr<SimplePlanTree> >::const_iterator iterator = this->simplePlanTrees->begin();
 					iterator != this->simplePlanTrees->end(); iterator++)
 			{
-				if (find(robotsAvail.begin(), robotsAvail.end(), iterator->second.get()->getRobotId())
-						!= robotsAvail.end())
+				if (find(robotsAvail.begin(), robotsAvail.end(), iterator->second->getRobotId()) != robotsAvail.end())
 				{
 					if (iterator->second->isNewSimplePlanTree())
 					{
@@ -415,7 +411,7 @@ namespace alica
 
 	EntryPoint* TeamObserver::entryPointOfState(State* state)
 	{
-		for (map<long, EntryPoint*>::const_iterator iter = state->getInPlan()->getEntryPoints().begin();
+		for (auto iter = state->getInPlan()->getEntryPoints().begin();
 				iter != state->getInPlan()->getEntryPoints().end(); iter++)
 		{
 			if (iter->second->getReachableStates().find(state) != iter->second->getReachableStates().end())
@@ -567,23 +563,41 @@ namespace alica
 	{
 		if (incoming->senderID != myId)
 		{
-			lock_guard<mutex> lock(this->simplePlanTreeMutex);
-			if (this->simplePlanTrees->find(incoming->senderID) != this->simplePlanTrees->end())
+			if (isRobotIgnored(incoming->senderID))
 			{
-				shared_ptr<SimplePlanTree> toDelete = this->simplePlanTrees->at(incoming->senderID);
-				map<int, shared_ptr<SimplePlanTree> >::iterator iterator = this->simplePlanTrees->find(
-						incoming->senderID);
-				if (iterator != this->simplePlanTrees->end())
+				return;
+			}
+
+			auto spt = sptFromMessage(incoming->senderID, incoming->stateIDs);
+			if (spt != nullptr)
+			{
+
+				for (RobotEngineData* red : allOtherRobots)
 				{
-					iterator->second = sptFromMessage(incoming->senderID, incoming->stateIDs);
+					if (red->getProperties()->getId() == incoming->senderID)
+					{
+						red->setLastMessageTime(ae->getIAlicaClock()->now());
+						red->setSuccessMarks(make_shared<SuccessMarks>(ae, incoming->succeededEPs));
+						break;
+					}
 				}
 
-			}
-			else
-			{
-				this->simplePlanTrees->insert(
-						pair<int, shared_ptr<SimplePlanTree> >(
-								incoming->senderID, sptFromMessage(incoming->senderID, incoming->stateIDs)));
+				lock_guard<mutex> lock(this->simplePlanTreeMutex);
+				if (this->simplePlanTrees->find(incoming->senderID) != this->simplePlanTrees->end())
+				{
+					shared_ptr<SimplePlanTree> toDelete = this->simplePlanTrees->at(incoming->senderID);
+					map<int, shared_ptr<SimplePlanTree> >::iterator iterator = this->simplePlanTrees->find(
+							incoming->senderID);
+					if (iterator != this->simplePlanTrees->end())
+					{
+						iterator->second = spt;
+					}
+
+				}
+				else
+				{
+					this->simplePlanTrees->insert(pair<int, shared_ptr<SimplePlanTree> >(incoming->senderID, spt));
+				}
 			}
 		}
 	}
@@ -613,14 +627,14 @@ namespace alica
 			cerr << "TO: Empty state list for robot " << robotId << endl;
 			return nullptr;
 		}
-		map<long, State*> states = AlicaEngine::getInstance()->getPlanRepository()->getStates();
-		alicaTime time = AlicaEngine::getInstance()->getIAlicaClock()->now();
+		map<long, State*> states = ae->getPlanRepository()->getStates();
+		alicaTime time = ae->getIAlicaClock()->now();
 		shared_ptr<SimplePlanTree> root = make_shared<SimplePlanTree>();
 		root->setRobotId(robotId);
 		root->setReceiveTime(time);
 		root->setStateIds(ids);
-		State* s;
-		list<long>::const_iterator iter = ids.begin();
+		State* s = nullptr;
+		auto iter = ids.begin();
 		if (states.find(*iter) != states.end())
 		{
 			root->setState(states.at(*iter));
@@ -671,8 +685,8 @@ namespace alica
 					curParent->getChildren().insert(cur);
 					if (states.find(*iter) != states.end())
 					{
-						root->setState(states.at(*iter));
-						root->setEntryPoint(entryPointOfState(root->getState()));
+						cur->setState(states.at(*iter));
+						cur->setEntryPoint(entryPointOfState(root->getState()));
 						if (cur->getEntryPoint() == nullptr)
 						{
 							list<long>::const_iterator iter = ids.begin();

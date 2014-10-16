@@ -1,0 +1,92 @@
+<html>
+<head>
+<title>Additional Notes</title>
+<link href="book.css" rel="stylesheet" type="text/css"/>
+<meta content="DocBook XSL Stylesheets V1.75.1" name="generator"/>
+<link rel="home" href="index.html" title="Xpand Documentation"/>
+<link rel="up" href="incrementalGeneration.html" title="Incremental Generation"/>
+<link rel="prev" href="incrementalGeneration_usage.html" title="Using Incremental Generation"/>
+<link rel="next" href="backend.html" title="Improve performance using the backend"/>
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<h1 xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">Additional Notes</h1>
+<div class="section" title="Additional Notes">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title" style="clear: both">
+<a name="incrementalGeneration_notes"/>Additional Notes</h2>
+</div>
+</div>
+</div>
+<div class="section" title="Limitations">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="incrementalGeneration_limitations"/>Limitations</h3>
+</div>
+</div>
+</div>
+<p>
+        The incremental generation process can only be used with EMF-based models.
+        That's because all intermediate artifacts
+        (<span class="emphasis">
+<em>diff model</em>
+</span> and <span class="emphasis">
+<em>trace model</em>
+</span>)
+        which reference the original models are also stored as EMF models. It is
+        therefore not possible to refer to other model formats. Moreover, you
+        should make sure that your model has stable IDs for the individual
+        model elements so that the model comparison doesn't run into any
+        ambiguities.
+      </p>
+<p>
+      	Also note that at the moment, Xpand cannot track access to model elements
+      	from JAVA extensions. This can lead to cases where a change in a specific
+      	model element should trigger a specific (set of)
+      	file(s) to be regenerated, but it actually doesn't.
+      	That's because Xpand didn't know about the
+      	model element being accessed during the original file generation,
+      	so it has no indication that a regeneration is required. For that reason
+      	you should try to access your model as much as possible from Xpand or
+      	Xtend, and only resort to JAVA code when it is unavoidable.      	
+      </p>
+</div>
+<div class="section" title="Performance Considerations">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title">
+<a name="incrementalGeneration_performance"/>Performance Considerations</h3>
+</div>
+</div>
+</div>
+<p>
+        The main performance benefits of incremental generation come from
+        <span class="emphasis">
+<em>not</em>
+</span> doing things that are not necessary. Given
+        the workflow from <a class="xref" href="incrementalGeneration_usage.html#incrementalGeneration_usage_callback" title="The Incremental Generation Callback">the section called “The Incremental Generation Callback”</a>,
+        it may seem counterproductive to first
+        perform a costly model comparison operation before it can even be
+        determined whether a file has to be generated or not.
+      </p>
+<p>
+        While it is true that model comparison is a very expensive operation,
+        it turns out that it still outweighs the costs of unnecessarily
+        generating files, even if no postprocessing or subsequent compiler
+        invocation is involved.
+      </p>
+<p>
+        That said, it is definitely preferrable to do without a model comparison
+        and rather capture the changes to the model on-the-fly. So whenever
+        you are working in a controlled environment, you may want to consider a
+        customized integration of the generator invocation with the
+        model editors.
+      </p>
+</div>
+</div>
+</body>
+</html>

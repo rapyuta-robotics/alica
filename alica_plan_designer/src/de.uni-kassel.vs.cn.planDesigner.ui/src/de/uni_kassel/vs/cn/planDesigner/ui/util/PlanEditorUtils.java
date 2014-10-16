@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPart;
 
@@ -42,6 +43,7 @@ import de.uni_kassel.vs.cn.planDesigner.ui.editors.PlanEditor;
 public class PlanEditorUtils extends CommonUtils{
 	
 	public static Collection<Resource> removedResourcesUtil = new ArrayList<Resource>();
+	public static PMLTransactionalEditingDomain editingDomain;
 	public static Collection<Resource> getRemovedResourcesUtil() {
 		return removedResourcesUtil;
 	}
@@ -168,6 +170,14 @@ public class PlanEditorUtils extends CommonUtils{
 		}
 		
 		return result;
+	}
+	public static PMLTransactionalEditingDomain getEditingDomain() {
+		if(editingDomain == null){
+			// Establish a connecton to the editingDomain
+			editingDomain = (PMLTransactionalEditingDomain)TransactionalEditingDomain.Registry.INSTANCE.getEditingDomain(
+					PlanDesignerConstants.PML_TRANSACTIONAL_EDITING_DOMAIN_ID);
+		}
+		return editingDomain;
 	}
 	
 }

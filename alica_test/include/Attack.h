@@ -10,11 +10,11 @@
 
 #include <engine/BasicBehaviour.h>
 
-namespace alica
+namespace alicaTests
 {
 
 
-	class Attack : public BasicBehaviour
+	class Attack : public alica::BasicBehaviour
 	{
 	public:
 		Attack();

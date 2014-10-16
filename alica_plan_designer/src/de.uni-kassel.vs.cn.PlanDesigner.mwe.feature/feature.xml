@@ -132,6 +132,7 @@
       <import plugin="org.eclipse.core.filesystem" version="1.3.0" match="compatible"/>
       <import plugin="org.eclipse.ltk.ui.refactoring" version="3.5.0" match="compatible"/>
       <import plugin="org.antlr.runtime" version="3.2.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xpand.support.cdt"/>
    </requires>
 
    <plugin

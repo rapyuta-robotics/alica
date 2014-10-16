@@ -1060,6 +1060,98 @@ public class AlicaItemProviderAdapterFactory extends AlicaAdapterFactory impleme
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected BehaviourCreatorItemProvider behaviourCreatorItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createBehaviourCreatorAdapter() {
+		if (behaviourCreatorItemProvider == null) {
+			behaviourCreatorItemProvider = new BehaviourCreatorItemProvider(this);
+		}
+
+		return behaviourCreatorItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ConditionCreatorItemProvider conditionCreatorItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createConditionCreatorAdapter() {
+		if (conditionCreatorItemProvider == null) {
+			conditionCreatorItemProvider = new ConditionCreatorItemProvider(this);
+		}
+
+		return conditionCreatorItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UtilityFunctionCreatorItemProvider utilityFunctionCreatorItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUtilityFunctionCreatorAdapter() {
+		if (utilityFunctionCreatorItemProvider == null) {
+			utilityFunctionCreatorItemProvider = new UtilityFunctionCreatorItemProvider(this);
+		}
+
+		return utilityFunctionCreatorItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ConstraintCreatorItemProvider constraintCreatorItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createConstraintCreatorAdapter() {
+		if (constraintCreatorItemProvider == null) {
+			constraintCreatorItemProvider = new ConstraintCreatorItemProvider(this);
+		}
+
+		return constraintCreatorItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1201,6 +1293,10 @@ public class AlicaItemProviderAdapterFactory extends AlicaAdapterFactory impleme
 		if (eStringToEObjectMapEntryItemProvider != null) eStringToEObjectMapEntryItemProvider.dispose();
 		if (fluentParametersItemProvider != null) fluentParametersItemProvider.dispose();
 		if (constantItemProvider != null) constantItemProvider.dispose();
+		if (behaviourCreatorItemProvider != null) behaviourCreatorItemProvider.dispose();
+		if (conditionCreatorItemProvider != null) conditionCreatorItemProvider.dispose();
+		if (utilityFunctionCreatorItemProvider != null) utilityFunctionCreatorItemProvider.dispose();
+		if (constraintCreatorItemProvider != null) constraintCreatorItemProvider.dispose();
 	}
 
 }

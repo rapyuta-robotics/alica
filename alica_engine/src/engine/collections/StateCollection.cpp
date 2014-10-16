@@ -92,7 +92,6 @@ namespace alica
 				ret.insert(this->robots[i]);
 			}
 		}
-
 		return ret;
 	}
 

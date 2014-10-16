@@ -6,6 +6,7 @@
  */
 
 #include <engine/planselector/PartialAssignment.h>
+#include <engine/planselector/PartialAssignmentPool.h>
 
 #include "engine/planselector/EpByTaskComparer.h"
 #include "engine/planselector/DynCardinality.h"
@@ -18,13 +19,10 @@
 
 namespace alica
 {
-	int PartialAssignment::maxCount = 10100;
 	int PartialAssignment::maxEpsCount = 20;
-	int PartialAssignment::curIndex = 0;
-	vector<PartialAssignment*> PartialAssignment::daPAs = vector<PartialAssignment*>(maxCount);
 	EpByTaskComparer PartialAssignment::epByTaskComparer = EpByTaskComparer();
-	bool PartialAssignment::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling", NULL);
-	EntryPoint* PartialAssignment::idleEP;
+	bool PartialAssignment::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>(
+			"Alica.AllowIdling", NULL);
 
 	int PartialAssignment::getHash()
 	{
@@ -46,8 +44,9 @@ namespace alica
 		this->hashCalculated = hashCalculated;
 	}
 
-	PartialAssignment::PartialAssignment()
+	PartialAssignment::PartialAssignment(PartialAssignmentPool* pap)
 	{
+		this->pap = pap;
 		this->utilFunc = nullptr;
 		this->epSuccessMapping = nullptr;
 		this->hashCalculated = false;
@@ -98,39 +97,6 @@ namespace alica
 		return this->epRobotsMapping->getEntryPoints();
 	}
 
-	void PartialAssignment::init()
-	{
-		// IDLE-EntryPoint
-		idleEP = new EntryPoint();
-		idleEP->setName("IDLE-ep");
-		idleEP->setId(EntryPoint::IDLEID);
-		idleEP->setMinCardinality(0);
-		idleEP->setMaxCardinality(numeric_limits<int>::max());
-		// Add IDLE-Task
-		idleEP->setTask(new Task(true));
-		idleEP->getTask()->setName("IDLE-TASK");
-		idleEP->getTask()->setId(Task::IDLEID);
-
-		for (int i = 0; i < maxCount; i++)
-		{
-			daPAs[i] = new PartialAssignment();
-		}
-
-	}
-
-	void PartialAssignment::cleanUp()
-	{
-		for (int i = 0; i < maxCount; i++)
-		{
-			delete daPAs[i];
-			daPAs[i] = nullptr;
-		}
-		delete idleEP->getTask();
-		idleEP->setTask(nullptr);
-		delete idleEP;
-		idleEP = nullptr;
-	}
-
 	void PartialAssignment::clear()
 	{
 		this->min = 0.0;
@@ -144,18 +110,19 @@ namespace alica
 		this->hashCalculated = false;
 	}
 
-	void PartialAssignment::reset()
+	void PartialAssignment::reset(PartialAssignmentPool* pap)
 	{
-		curIndex = 0;
+		pap->curIndex = 0;
 	}
 
-	PartialAssignment* PartialAssignment::getNew(shared_ptr<vector<int> > robots, Plan* plan, shared_ptr<SuccessCollection> sucCol)
+	PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, shared_ptr<vector<int> > robots,
+													Plan* plan, shared_ptr<SuccessCollection> sucCol)
 	{
-		if (curIndex >= maxCount)
+		if (pap->curIndex >= pap->maxCount)
 		{
 			cerr << "max PA count reached!" << endl;
 		}
-		PartialAssignment* ret = daPAs[curIndex++];
+		PartialAssignment* ret = pap->daPAs[pap->curIndex++];
 		ret->clear();
 		ret->robots = robots; // Should already be sorted! (look at TaskAssignment, or PlanSelector)
 		ret->plan = plan;
@@ -166,7 +133,7 @@ namespace alica
 		{
 			ret->epRobotsMapping->setCount(plan->getEntryPoints().size() + 1);
 			// Insert IDLE-EntryPoint
-			ret->epRobotsMapping->getEntryPoints()->at(ret->epRobotsMapping->getCount() - 1) = idleEP;
+			ret->epRobotsMapping->getEntryPoints()->at(ret->epRobotsMapping->getCount() - 1) = pap->idleEP;
 		}
 		else
 		{
@@ -236,13 +203,13 @@ namespace alica
 		return ret;
 	}
 
-	PartialAssignment* PartialAssignment::getNew(PartialAssignment* oldPA)
+	PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, PartialAssignment* oldPA)
 	{
-		if (curIndex >= maxCount)
+		if (pap->curIndex >= pap->maxCount)
 		{
 			cerr << "max PA count reached!" << endl;
 		}
-		PartialAssignment* ret = daPAs[curIndex++];
+		PartialAssignment* ret = pap->daPAs[pap->curIndex++];
 		ret->clear();
 		ret->min = oldPA->min;
 		ret->max = oldPA->max;
@@ -255,7 +222,11 @@ namespace alica
 			ret->unAssignedRobots.push_back(oldPA->unAssignedRobots[i]);
 		}
 
-		ret->dynCardinalities = oldPA->dynCardinalities;
+		for (int i = 0; i < oldPA->dynCardinalities.size(); i++)
+		{
+			ret->dynCardinalities[i] = make_shared<DynCardinality>(oldPA->dynCardinalities[i]->getMin(),
+																   oldPA->dynCardinalities[i]->getMax());
+		}
 
 		shared_ptr<vector<shared_ptr<vector<int> > > > oldRobotLists = oldPA->epRobotsMapping->getRobots();
 
@@ -461,7 +432,7 @@ namespace alica
 			if (this->dynCardinalities[i]->getMax() > 0)
 			{
 				// Update the cardinalities and assign the robot
-				newPa = PartialAssignment::getNew(this);
+				newPa = PartialAssignment::getNew(pap, this);
 				newPa->assignRobot(robot, i);
 				newPas->push_back(newPa);
 			}
@@ -632,7 +603,10 @@ namespace alica
 		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
 		{
 			robots = (*this->epRobotsMapping->getRobots()->at(i));
-			ss << "EPid: " << ownEps->at(i)->getId() << " Task: " << ownEps->at(i)->getTask()->getName() << " minCar: " << this->dynCardinalities[i]->getMin() << " maxCar: " << (this->dynCardinalities[i]->getMax() == INFINIT ? "*" : to_string(this->dynCardinalities[i]->getMax())) << " Assigned Robots: ";
+			ss << "EPid: " << ownEps->at(i)->getId() << " Task: " << ownEps->at(i)->getTask()->getName() << " minCar: "
+					<< this->dynCardinalities[i]->getMin() << " maxCar: "
+					<< (this->dynCardinalities[i]->getMax() == INFINIT ? "*" :
+							to_string(this->dynCardinalities[i]->getMax())) << " Assigned Robots: ";
 			for (int robot : robots)
 			{
 				ss << robot << " ";

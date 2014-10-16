@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.3
+Bundle-Vendor: Eclipse Xtend
+Bundle-Name: Xtend Standalone Bundle
+Bundle-SymbolicName: org.eclipse.xtend.standalone
+Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/tmf/or
+ g.eclipse.xtext.git
+Require-Bundle: org.eclipse.xtend.core;bundle-version="2.4.3";visibili
+ ty:=reexport,org.eclipse.xtext.junit4;bundle-version="2.4.3";visibili
+ ty:=reexport,com.google.inject;bundle-version="3.0.0";visibility:=ree
+ xport,org.eclipse.xtext.xbase.junit;bundle-version="2.4.3";visibility
+ :=reexport,org.apache.log4j;bundle-version="1.2.15";visibility:=reexp
+ ort,org.eclipse.jdt.core;bundle-version="3.5.2";visibility:=reexport,
+ org.eclipse.emf.codegen;bundle-version="2.9.0";visibility:=reexport
+Created-By: 1.6.0_21-b06 (Sun Microsystems Inc.)
+Bundle-Version: 2.4.3.v201309030823
+Bundle-ManifestVersion: 2
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: 09gN05tobgS/MdtqyTNQhOhB73M=
+
+Name: about.html
+SHA1-Digest: 5NJCBTSdmvQK0/EKnCNmQtuXN10=
+

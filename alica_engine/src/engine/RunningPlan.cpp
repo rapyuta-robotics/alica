@@ -36,8 +36,9 @@
 namespace alica
 {
 
-	RunningPlan::RunningPlan()
+	RunningPlan::RunningPlan(AlicaEngine* ae)
 	{
+		this->ae = ae;
 		this->planType = nullptr;
 		this->plan = nullptr;
 		this->bp = nullptr;
@@ -47,7 +48,7 @@ namespace alica
 		this->planStartTime = 0;
 		this->stateStartTime = 0;
 		this->assignment = nullptr;
-		this->to = AlicaEngine::getInstance()->getTeamObserver();
+		this->to = ae->getTeamObserver();
 		this->ownId = to->getOwnId();
 		this->robotsAvail = unique_ptr<list<int> >();
 		this->status = PlanStatus::Running;
@@ -58,7 +59,7 @@ namespace alica
 		this->allocationNeeded = false;
 		this->failHandlingNeeded = false;
 		this->constraintStore = new ConstraintStore(this);
-		this->cycleManagement = new CycleManager(this);
+		this->cycleManagement = new CycleManager(ae, this);
 		this->robotsAvail = unique_ptr<list<int> >(new list<int>);
 	}
 
@@ -69,8 +70,8 @@ namespace alica
 		delete constraintStore;
 	}
 
-	RunningPlan::RunningPlan(Plan* plan) :
-			RunningPlan()
+	RunningPlan::RunningPlan(AlicaEngine* ae, Plan* plan) :
+			RunningPlan(ae)
 	{
 		this->plan = plan;
 		vector<EntryPoint*> epCol;
@@ -90,20 +91,20 @@ namespace alica
 
 	}
 
-	RunningPlan::RunningPlan(PlanType* pt) :
-			RunningPlan()
+	RunningPlan::RunningPlan(AlicaEngine* ae, PlanType* pt) :
+			RunningPlan(ae)
 	{
 		this->plan = nullptr;
 		this->planType = pt;
 		this->setBehaviour(false);
 	}
 
-	RunningPlan::RunningPlan(BehaviourConfiguration* bc) :
-			RunningPlan()
+	RunningPlan::RunningPlan(AlicaEngine* ae, BehaviourConfiguration* bc) :
+			RunningPlan(ae)
 	{
 		this->plan = bc;
 		this->setBehaviour(true);
-		this->bp = AlicaEngine::getInstance()->getBehaviourPool();
+		this->bp = ae->getBehaviourPool();
 	}
 
 	/**
@@ -240,10 +241,14 @@ namespace alica
 	}
 	void RunningPlan::setActiveState(State* s)
 	{
+		if(s == nullptr)
+		{
+			cout << "RP: activeState == nullptr" << endl;
+		}
 		if (this->activeState != s)
 		{
 			this->activeState = s;
-			this->stateStartTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
+			this->stateStartTime = ae->getIAlicaClock()->now();
 			if (this->activeState != nullptr)
 			{
 				if (this->activeState->isFailureState())
@@ -275,7 +280,6 @@ namespace alica
 			}
 			if (this->active)
 			{
-				cout << "RP: active " << endl;
 				r->activate();
 			}
 		}
@@ -287,10 +291,14 @@ namespace alica
 	 */
 	void RunningPlan::moveState(State* nextState)
 	{
+		if(nextState == nullptr)
+		{
+			cout << "RP: nextState == nullptr" << endl;
+		}
 		deactivateChildren();
 		clearChildren();
 		this->assignment->moveRobots(this->activeState, nextState);
-		this->activeState = nextState;
+		this->setActiveState(nextState);
 		this->failedSubPlans.clear();
 	}
 
@@ -342,7 +350,7 @@ namespace alica
 	{
 		if (this->plan != plan)
 		{
-			this->planStartTime = AlicaEngine::getInstance()->getIAlicaClock()->now();
+			this->planStartTime = ae->getIAlicaClock()->now();
 			this->constraintStore->clear();
 		}
 		this->plan = plan;
@@ -435,7 +443,7 @@ namespace alica
 			this->activeEntryPoint = value;
 			if (this->activeEntryPoint != nullptr)
 			{
-				this->activeState = this->activeEntryPoint->getState();
+				this->setActiveState(this->activeEntryPoint->getState());
 				this->assignment->addRobot(ownId, this->activeEntryPoint, this->activeState);
 			}
 		}
@@ -561,7 +569,7 @@ namespace alica
 		this->plan = r->getPlan();
 		this->activeEntryPoint = r->getOwnEntryPoint();
 		this->assignment = r->assignment;
-		this->activeState = newState;
+		this->setActiveState(newState);
 		if (reactivate)
 		{
 			this->activate();
@@ -589,7 +597,7 @@ namespace alica
 			this->activeEntryPoint = activeEntryPoint;
 			if (this->activeEntryPoint != nullptr)
 			{
-				this->activeState = this->activeEntryPoint->getState();
+				this->setActiveState(this->activeEntryPoint->getState());
 				this->assignment->addRobot(ownId, this->activeEntryPoint, this->activeState);
 			}
 
@@ -981,7 +989,7 @@ namespace alica
 		}
 
 		aldif->setReason(AllocationDifference::Reason::message);
-		this->cycleManagement->setNewAllocDiff(this, aldif);
+		this->cycleManagement->setNewAllocDiff(aldif);
 //Update Success Collection:
 		this->to->updateSuccessCollection((Plan*)this->getPlan(), this->getAssignment()->getEpSuccessMapping());
 

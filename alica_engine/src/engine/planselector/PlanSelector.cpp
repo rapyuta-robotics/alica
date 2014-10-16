@@ -6,6 +6,7 @@
  */
 
 #include <engine/planselector/PlanSelector.h>
+#include <engine/planselector/PartialAssignmentPool.h>
 #include "engine/AlicaEngine.h"
 #include "engine/teamobserver/TeamObserver.h"
 #include "engine/planselector/PartialAssignment.h"
@@ -32,15 +33,15 @@
 namespace alica
 {
 
-	PlanSelector::PlanSelector()
+	PlanSelector::PlanSelector(AlicaEngine* ae, PartialAssignmentPool* pap)
 	{
-		this->to = AlicaEngine::getInstance()->getTeamObserver();
-		PartialAssignment::init();
+		this->ae = ae;
+		this->to = ae->getTeamObserver();
+		this->pap = pap;
 	}
 
 	PlanSelector::~PlanSelector()
 	{
-		PartialAssignment::cleanUp();
 	}
 
 	/**
@@ -49,7 +50,7 @@ namespace alica
 	shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp)
 	{
 		// Reset set index of the partial assignment multiton
-		PartialAssignment::reset();
+		PartialAssignment::reset(pap);
 		// CREATE NEW PLAN LIST
 		list<Plan*> newPlanList;
 		if (rp->getPlanType() == nullptr)
@@ -72,7 +73,7 @@ namespace alica
 	shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp, shared_ptr<vector<int> > robots)
 	{
 		// Reset set index of the partial assignment object pool
-		PartialAssignment::reset();
+		PartialAssignment::reset(pap);
 		// CREATE NEW PLAN LIST
 		list<Plan*> newPlanList;
 		if (rp->getPlanType() == nullptr)
@@ -98,7 +99,7 @@ namespace alica
 	                                                               list<alica::AbstractPlan*>* plans,
 																	shared_ptr<vector<int> > robotIDs)
 	{
-		PartialAssignment::reset();
+		PartialAssignment::reset(pap);
 		shared_ptr<list<shared_ptr<RunningPlan>> > ll = this->getPlansForStateInternal(planningParent, plans, robotIDs);
 		return ll;
 
@@ -108,7 +109,7 @@ namespace alica
 													shared_ptr<vector<int> > robotIDs, shared_ptr<RunningPlan> oldRp,
 													PlanType* relevantPlanType)
 	{
-		list<Plan*> newPlanList = list<Plan*>();
+		list<Plan*> newPlanList;
 		// REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
 		for (Plan* plan : plans)
 		{
@@ -147,14 +148,14 @@ namespace alica
 		if (oldRp == nullptr)
 		{
 			// preassign other robots, because we dont need a similar assignment
-			rp = make_shared<RunningPlan>(relevantPlanType);
-			ta = new TaskAssignment(newPlanList, robotIDs, true);
+			rp = make_shared<RunningPlan>(ae, relevantPlanType);
+			ta = new TaskAssignment(this->ae->getPartialAssignmentPool(), this->ae->getTeamObserver(), newPlanList, robotIDs, true);
 		}
 		else
 		{
 			// dont preassign other robots, because we need a similar assignment (not the same)
-			rp = make_shared<RunningPlan>(oldRp->getPlanType());
-			ta = new TaskAssignment(newPlanList, robotIDs, false);
+			rp = make_shared<RunningPlan>(ae, oldRp->getPlanType());
+			ta = new TaskAssignment(this->ae->getPartialAssignmentPool(), this->ae->getTeamObserver(), newPlanList, robotIDs, false);
 			oldAss = oldRp->getAssignment();
 		}
 
@@ -228,7 +229,7 @@ namespace alica
 		} while (rpChildren == nullptr);
 		// WHEN WE GOT HERE, THIS ROBOT WONT IDLE AND WE HAVE A
 		// VALID ASSIGNMENT, WHICH PASSED ALL RUNTIME CONDITIONS
-		if(rpChildren == nullptr && rpChildren->size() != 0) // c# rpChildren != null
+		if(rpChildren != nullptr && rpChildren->size() != 0) // c# rpChildren != null
 		{
 #ifdef PSDEBUG
 				cout << "PS: Set child -> father reference" << endl;
@@ -252,6 +253,10 @@ namespace alica
 						<< plans->size() << " robot count: "
 						<< robotIDs->size() << " ######>" << endl;
 #endif
+		if (plans->size() == 0) {
+			cerr << "PS: Welcher Idiot ruft das hier mit 0 Plänen auf?" << endl;
+			cerr << planningParent->toString() << endl;
+		}
 		shared_ptr<RunningPlan> rp;
 		list<Plan*> planList;
 		BehaviourConfiguration* bc;
@@ -264,7 +269,7 @@ namespace alica
 			bc = dynamic_cast<BehaviourConfiguration*>(ap);
 			if (bc != nullptr)
 			{
-				rp = make_shared<RunningPlan>(bc);
+				rp = make_shared<RunningPlan>(ae, bc);
 				// A BehaviourConfiguration is a Plan too (in this context)
 				rp->setPlan(bc);
 				rps->push_back(rp);
@@ -321,7 +326,7 @@ namespace alica
 							throw new exception();
 						}
 						//TODO implement method in planner
-						Plan* myP = AlicaEngine::getInstance()->getPlanner()->requestPlan(pp);
+						Plan* myP = ae->getPlanner()->requestPlan(pp);
 						planList = list<Plan*>();
 						planList.push_back(myP);
 						rp = this->createRunningPlan(planningParent, planList, robotIDs, nullptr, nullptr);

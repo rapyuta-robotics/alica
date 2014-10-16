@@ -9,10 +9,10 @@ using namespace std;
 
 #include "Attack.h"
 
-namespace alica
+namespace alicaTests
 {
 
-	Attack::Attack() : BasicBehaviour("Attack")
+	Attack::Attack() : alica::BasicBehaviour("Attack")
 	{
 		this->callCounter = 0;
 		this->initCounter = 0;
@@ -29,6 +29,7 @@ namespace alica
 
 	void Attack::initialiseParameters()
 	{
+		callCounter = 0;
 		initCounter++;
 	}
 

@@ -21,8 +21,9 @@ namespace alica
 	/**
 	 * Basic Constructor.
 	 */
-	BehaviourPool::BehaviourPool()
+	BehaviourPool::BehaviourPool(AlicaEngine* ae)
 	{
+		this->ae = ae;
 		this->behaviourCreator = nullptr;
 		this->availableBehaviours = new map<BehaviourConfiguration*, shared_ptr<BasicBehaviour> >();
 	}
@@ -50,7 +51,7 @@ namespace alica
 
 		this->behaviourCreator = bc;
 
-		auto behaviourConfs = AlicaEngine::getInstance()->getPlanRepository()->getBehaviourConfigurations();
+		auto behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
 		for (auto iter : behaviourConfs)
 		{
 			shared_ptr<BasicBehaviour> basicBeh = this->behaviourCreator->createBehaviour(iter.first);
@@ -77,7 +78,7 @@ namespace alica
 	 */
 	void BehaviourPool::stopAll()
 	{
-		auto behaviourConfs = AlicaEngine::getInstance()->getPlanRepository()->getBehaviourConfigurations();
+		auto behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
 		for (auto iter : behaviourConfs)
 		{
 			shared_ptr<BasicBehaviour> bbPtr = this->availableBehaviours->at(iter.second);

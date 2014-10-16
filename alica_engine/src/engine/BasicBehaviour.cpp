@@ -22,7 +22,7 @@ namespace alica
 	 * @param name The name of the behaviour
 	 */
 	BasicBehaviour::BasicBehaviour(string name) :
-			name(name), parameters(nullptr), failure(false), success(false), callInit(true), started(true)
+			name(name), parameters(nullptr), failure(false), success(false), callInit(true), started(true), runCV()
 	{
 		this->timer = new supplementary::Timer(0, 0, false);
 		this->timer->registerCV(&this->runCV);
@@ -95,7 +95,7 @@ namespace alica
 	 */
 	int BasicBehaviour::getOwnId()
 	{
-		return AlicaEngine::getInstance()->getTeamObserver()->getOwnId();
+		return this->runningPlan->getOwnID();
 	}
 
 	/**
@@ -153,11 +153,12 @@ namespace alica
 	void BasicBehaviour::runInternal()
 	{
 		unique_lock<mutex> lck(runCV_mtx);
-		while (!AlicaEngine::getInstance()->isTerminating() && this->started)
+		while (this->started)
 		{
 			this->runCV.wait(lck, [&]
-			{	return !this->started || this->timer->isNotifyCalled();}); // protection against spurious wake-ups
-
+			{
+				return !this->started || this->timer->isNotifyCalled();
+			}); // protection against spurious wake-ups
 			if (!this->started)
 				return;
 

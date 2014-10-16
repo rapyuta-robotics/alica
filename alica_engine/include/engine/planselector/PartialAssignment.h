@@ -36,16 +36,17 @@ namespace alica
 	class UtilityFunction;
 	class DynCardinality;
 	class SimplePlanTree;
+	class PartialAssignmentPool;
 
 	class PartialAssignment : virtual public IAssignment
 	{
 	public:
+		PartialAssignment(PartialAssignmentPool* pap);
 		virtual ~PartialAssignment();
-		static void init();
 		void clear();
-		static void reset();
-		static PartialAssignment* getNew(shared_ptr<vector<int> > robots, Plan* plan, shared_ptr<SuccessCollection> sucCol);
-		static PartialAssignment* getNew(PartialAssignment* oldPA);
+		static void reset(PartialAssignmentPool* pap);
+		static PartialAssignment* getNew(PartialAssignmentPool* pap, shared_ptr<vector<int> > robots, Plan* plan, shared_ptr<SuccessCollection> sucCol);
+		static PartialAssignment* getNew(PartialAssignmentPool* pap, PartialAssignment* oldPA);
 		int getEntryPointCount();
 		int totalRobotCount();
 		shared_ptr<vector<int> > getRobotsWorking(EntryPoint* ep);
@@ -74,21 +75,16 @@ namespace alica
 		bool isHashCalculated();
 		void setHashCalculated(bool hashCalculated);
 		void setMax(double max);
-		static void cleanUp();
 
 	private:
 		const int INFINIT = numeric_limits<int>::max();
 		static int pow(int x, int y);
-		PartialAssignment();
 
 	protected:
-		static int maxCount;
+		PartialAssignmentPool* pap;
 		static int maxEpsCount;
-		static int curIndex;
-		static vector<PartialAssignment*> daPAs;
 		static EpByTaskComparer epByTaskComparer;
 		static bool allowIdling;
-		static EntryPoint* idleEP;
 		// UtilityFunction
 		shared_ptr<UtilityFunction> utilFunc;
 		AssignmentCollection* epRobotsMapping;

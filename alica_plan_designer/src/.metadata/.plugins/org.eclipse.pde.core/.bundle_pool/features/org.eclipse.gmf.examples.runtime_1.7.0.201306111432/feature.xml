@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.gmf.examples.runtime"
+      label="%featureName"
+      version="1.7.0.201306111432"
+      provider-name="%providerName">
+
+   <description url="http://www.eclipse.org/gmf">
+      %description
+   </description>
+
+   <copyright url="http://www.eclipse.org/legal/epl-v10.html">
+      Copyright (c) 2002, 2012 IBM Corporation and others.
+All rights reserved.   This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/modeling/gmf/updates/releases/"/>
+   </url>
+
+   <requires>
+      <import feature="org.eclipse.gmf" version="1.7.0" match="compatible"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.gmf.examples.runtime"
+         download-size="6"
+         install-size="8"
+         version="1.7.0.201306111432"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.examples.runtime.common.service"
+         download-size="15"
+         install-size="25"
+         version="1.2.0.201306111432"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.examples.runtime.diagram.decorator"
+         download-size="5"
+         install-size="6"
+         version="1.2.0.201306111432"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.examples.runtime.diagram.layout"
+         download-size="5"
+         install-size="8"
+         version="1.2.0.201306111432"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.examples.runtime.emf.clipboard"
+         download-size="20"
+         install-size="34"
+         version="1.2.0.201306111432"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.examples.runtime.diagram.geoshapes"
+         download-size="28"
+         install-size="42"
+         version="1.2.0.201306111432"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.examples.runtime.diagram.logic"
+         download-size="177"
+         install-size="352"
+         version="1.7.0.201306111432"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.examples.runtime.diagram.logic.model"
+         download-size="62"
+         install-size="302"
+         version="1.2.0.201306111432"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.examples.runtime.diagram.logic.model.edit"
+         download-size="52"
+         install-size="80"
+         version="1.2.0.201306111432"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.gmf.examples.runtime.diagram.logic.model.editor"
+         download-size="59"
+         install-size="117"
+         version="1.2.0.201306111432"
+         unpack="false"/>
+
+</feature>

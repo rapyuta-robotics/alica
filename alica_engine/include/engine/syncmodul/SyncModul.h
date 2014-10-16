@@ -32,7 +32,7 @@ namespace alica
 	class SyncModul : public ISyncModul
 	{
 	public:
-		SyncModul();
+		SyncModul(AlicaEngine* ae);
 		virtual ~SyncModul();
 		virtual void init();
 		virtual void close();

@@ -31,7 +31,7 @@ namespace alica
 	 * Constructs the PlanBase given a top-level plan to execute
 	 * @param masterplan A Plan
 	 */
-	PlanBase::PlanBase(Plan* masterPlan)
+	PlanBase::PlanBase(AlicaEngine* ae, Plan* masterPlan)
 	{
 		this->mainThread = nullptr;
 		this->treeDepth = 0;
@@ -39,19 +39,18 @@ namespace alica
 		this->statusPublisher = nullptr;
 		this->lastSentStatusTime = 0;
 		this->loopInterval = 0;
-		this->stepModeCV = nullptr;
 		this->deepestNode = nullptr;
 		this->log = nullptr;
 		this->rootNode = nullptr;
 		this->masterPlan = masterPlan;
-		this->ae = AlicaEngine::getInstance();
+		this->ae = ae;
 		this->teamObserver = ae->getTeamObserver();
 		this->syncModel = ae->getSyncModul();
 		this->authModul = ae->getAuth();
 		this->ra = ae->getRoleAssignment();
 		this->alicaClock = ae->getIAlicaClock();
 
-		this->ruleBook = new RuleBook();
+		this->ruleBook = new RuleBook(ae);
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 
 		double freq = (*sc)["Alica"]->get<double>("Alica.EngineFrequency", NULL);
@@ -65,7 +64,7 @@ namespace alica
 
 		if (minbcfreq > maxbcfreq)
 		{
-			AlicaEngine::getInstance()->abort(
+			ae->abort(
 					"PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
 		}
 
@@ -86,6 +85,7 @@ namespace alica
 		}
 
 		this->timerModeCV = nullptr;
+		this->stepModeCV = nullptr;
 		this->loopTimer = nullptr;
 		if (!this->ae->getStepEngine())
 		{
@@ -93,6 +93,10 @@ namespace alica
 			this->timerModeCV = new condition_variable();
 			this->loopTimer->registerCV(timerModeCV);
 			loopTimer->start();
+		}
+		else
+		{
+			this->stepModeCV = new condition_variable();
 		}
 
 #ifdef PB_DEBUG
@@ -123,7 +127,9 @@ namespace alica
 	 */
 	void PlanBase::run()
 	{
-		cout << "PLANBASE STARTET " << endl;
+#ifdef PB_DEBUG
+		cout << "PB: Run-Method of PlanBase started. " << endl;
+#endif
 		while (this->running)
 		{
 			//cout << "PB: RUNNING" << endl;
@@ -132,17 +138,19 @@ namespace alica
 			//cout << "PB: BEGIN TIME is: " << beginTime << endl;
 			if (ae->getStepEngine())
 			{
-				cout << "===CUR TREE===" << endl;
+#ifdef PB_DEBUG
+				cout << "PB: ===CUR TREE===" << endl;
 
 				if (this->rootNode == nullptr)
 				{
-					cout << "NULL" << endl;
+					cout << "PB: NULL" << endl;
 				}
 				else
 				{
 					rootNode->printRecursive();
 				}
-				cout << "===END CUR TREE===" << endl;
+				cout << "PB: ===END CUR TREE===" << endl;
+#endif
 				{
 					unique_lock<mutex> lckStep(stepMutex);
 					stepModeCV->wait(lckStep, [&]
@@ -254,6 +262,7 @@ namespace alica
 					while (this->running && availTime > 1000 && fpEvents.size() > 0)
 					{
 						shared_ptr<RunningPlan> rp = fpEvents.front();
+						cout << "PB: runningplan " << rp->toString() << endl;
 						fpEvents.pop();
 
 						if (rp->isActive())
@@ -284,7 +293,9 @@ namespace alica
 
 			}
 
-			/*if (!ae->getStepEngine())
+			/*
+			 * Dat war mal so, aber wir hamm nit verstanden warum. Nu isses hoffentlich besser! */
+			 /* if (!ae->getStepEngine())
 			 {
 			 {
 			 unique_lock<mutex> lckTimer(timerMutex);
@@ -299,8 +310,9 @@ namespace alica
 			 });
 			 }
 			 }*/
+#ifdef PB_DEBUG
 			cout << "PB: availTime " << availTime << endl;
-
+#endif
 			if (availTime > 1 && !ae->getStepEngine())
 			{
 				alicaClock->sleep(availTime);
@@ -333,6 +345,7 @@ namespace alica
 
 		if (ae->getStepEngine())
 		{
+			ae->setStepCalled(true);
 			stepModeCV->notify_one();
 		}
 		else
@@ -359,6 +372,10 @@ namespace alica
 		if (this->timerModeCV != nullptr)
 		{
 			delete this->timerModeCV;
+		}
+		if (this->stepModeCV != nullptr)
+		{
+			delete this->stepModeCV;
 		}
 		delete this->statusMessage;
 
@@ -461,3 +478,5 @@ namespace alica
 	}
 
 }
+
+

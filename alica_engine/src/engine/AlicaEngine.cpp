@@ -26,6 +26,7 @@ using namespace std;
 #include "engine/model/Plan.h"
 #include "engine/syncmodul/SyncModul.h"
 #include "engine/IConditionCreator.h"
+#include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 
 namespace alica
@@ -58,6 +59,7 @@ namespace alica
 		this->roleSet = nullptr;
 		this->stepEngine = false;
 		this->maySendMessages = false;
+		this->pap = nullptr;
 
 //		TODO: MODULELOADER CASTOR
 //		string modName[] = (*this->sc)["Alica"]->get<string>("Alica", "Extensions", "LoadModule", NULL);
@@ -85,12 +87,11 @@ namespace alica
 	 * The method for getting the singleton instance.
 	 * @return A pointer to the AlicaEngine object, you must not delete.
 	 */
-	AlicaEngine * AlicaEngine::getInstance()
-	{
-		static AlicaEngine instance;
-		return &instance;
-	}
-
+//	AlicaEngine * AlicaEngine::getInstance()
+//	{
+//		static AlicaEngine instance;
+//		return &instance;
+//	}
 	/**
 	 * Intialise the engine
 	 * @param bc A behaviourcreator
@@ -104,6 +105,7 @@ namespace alica
 							string roleSetName, string masterPlanName, string roleSetDir,
 							bool stepEngine)
 	{
+		this->terminating = false;
 		this->stepEngine = stepEngine;
 		if (this->planRepository == nullptr)
 		{
@@ -111,7 +113,7 @@ namespace alica
 		}
 		if (this->planParser == nullptr)
 		{
-			this->planParser = new PlanParser(this->planRepository);
+			this->planParser = new PlanParser(this, this->planRepository);
 		}
 		if (this->masterPlan == nullptr)
 		{
@@ -123,11 +125,11 @@ namespace alica
 		}
 		if (this->behaviourPool == nullptr)
 		{
-			this->behaviourPool = new BehaviourPool();
+			this->behaviourPool = new BehaviourPool(this);
 		}
 		if (this->teamObserver == nullptr)
 		{
-			this->teamObserver = new TeamObserver();
+			this->teamObserver = new TeamObserver(this);
 		}
 		if (this->roleAssignment == nullptr)
 		{
@@ -135,7 +137,7 @@ namespace alica
 		}
 		if (this->syncModul == nullptr)
 		{
-			this->syncModul = new SyncModul();
+			this->syncModul = new SyncModul(this);
 		}
 		if (this->expressionHandler == nullptr)
 		{
@@ -145,21 +147,29 @@ namespace alica
 		this->stepCalled = false;
 		bool everythingWorked = true;
 		everythingWorked &= this->behaviourPool->init(bc);
-		this->auth = new AuthorityManager();
+		this->auth = new AuthorityManager(this);
+		this->log = new Logger(this);
 		this->teamObserver->init();
-		this->log = new Logger();
 		this->roleAssignment->init();
+		if (this->pap == nullptr)
+		{
+			pap = new PartialAssignmentPool();
+		}
 		if (planSelector == nullptr)
 		{
-			this->planSelector = new PlanSelector();
+			this->planSelector = new PlanSelector(this, pap);
 		}
 		//TODO
 //		ConstraintHelper.Init(this.cSolver);
 		this->auth->init();
-		this->planBase = new PlanBase(this->masterPlan);
+		this->planBase = new PlanBase(this, this->masterPlan);
 		this->expressionHandler->attachAll();
-		UtilityFunction::initDataStructures();
+		UtilityFunction::initDataStructures(this);
 		this->syncModul->init();
+		if (this->getCommunicator() != nullptr)
+		{
+			this->getCommunicator()->startCommunication();
+		}
 		return everythingWorked;
 	}
 
@@ -168,6 +178,10 @@ namespace alica
 	 */
 	void AlicaEngine::shutdown()
 	{
+		if (this->getCommunicator() != nullptr)
+		{
+			this->getCommunicator()->stopCommunication();
+		}
 		this->terminating = true;
 		this->maySendMessages = false;
 
@@ -227,6 +241,12 @@ namespace alica
 
 		delete planSelector;
 		planSelector = nullptr;
+
+		if (this->pap != nullptr)
+		{
+			delete this->pap;
+			this->pap = nullptr;
+		}
 
 		this->roleSet = nullptr;
 		this->masterPlan = nullptr;
@@ -455,6 +475,18 @@ namespace alica
 	{
 		return planBase;
 	}
+
+	PartialAssignmentPool* AlicaEngine::getPartialAssignmentPool()
+	{
+		return this->pap;
+	}
+
+	void AlicaEngine::stepNotify()
+	{
+		this->setStepCalled(true);
+		this->getPlanBase()->getStepModeCV()->notify_all();
+	}
+
 
 } /* namespace Alica */
 

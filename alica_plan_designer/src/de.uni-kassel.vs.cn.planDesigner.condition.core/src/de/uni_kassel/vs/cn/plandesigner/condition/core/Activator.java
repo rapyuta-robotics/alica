@@ -35,7 +35,7 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;	
 		
-		// loads pluins and adds ui contributions to eclipse toolbar
+		// loads plugins and adds ui contributions to eclipse toolbar
 		ConditionPluginLoader.getInstance().init();		
 		
 	}

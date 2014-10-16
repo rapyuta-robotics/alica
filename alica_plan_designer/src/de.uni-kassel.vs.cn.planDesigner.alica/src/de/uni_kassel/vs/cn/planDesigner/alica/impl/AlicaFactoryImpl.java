@@ -134,6 +134,10 @@ public class AlicaFactoryImpl extends EFactoryImpl implements AlicaFactory {
 			case AlicaPackage.ESTRING_TO_EOBJECT_MAP_ENTRY: return (EObject)createEStringToEObjectMapEntry();
 			case AlicaPackage.FLUENT_PARAMETERS: return createFluentParameters();
 			case AlicaPackage.CONSTANT: return createConstant();
+			case AlicaPackage.BEHAVIOUR_CREATOR: return createBehaviourCreator();
+			case AlicaPackage.CONDITION_CREATOR: return createConditionCreator();
+			case AlicaPackage.UTILITY_FUNCTION_CREATOR: return createUtilityFunctionCreator();
+			case AlicaPackage.CONSTRAINT_CREATOR: return createConstraintCreator();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -597,6 +601,46 @@ public class AlicaFactoryImpl extends EFactoryImpl implements AlicaFactory {
 	public Constant createConstant() {
 		ConstantImpl constant = new ConstantImpl();
 		return constant;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public BehaviourCreator createBehaviourCreator() {
+		BehaviourCreatorImpl behaviourCreator = new BehaviourCreatorImpl();
+		return behaviourCreator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ConditionCreator createConditionCreator() {
+		ConditionCreatorImpl conditionCreator = new ConditionCreatorImpl();
+		return conditionCreator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UtilityFunctionCreator createUtilityFunctionCreator() {
+		UtilityFunctionCreatorImpl utilityFunctionCreator = new UtilityFunctionCreatorImpl();
+		return utilityFunctionCreator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ConstraintCreator createConstraintCreator() {
+		ConstraintCreatorImpl constraintCreator = new ConstraintCreatorImpl();
+		return constraintCreator;
 	}
 
 	/**

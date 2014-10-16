@@ -14,16 +14,16 @@ using namespace std;
 #include <memory>
 #include "iostream"
 
-namespace alica
+namespace alicaTests
 {
 	class BasicCondition;
 
-	class TestConditionCreator : public IConditionCreator
+	class TestConditionCreator : public alica::IConditionCreator
 	{
 	public:
 		TestConditionCreator();
 		virtual ~TestConditionCreator();
-		shared_ptr<BasicCondition> createConditions(long conditionConfId);
+		shared_ptr<alica::BasicCondition> createConditions(long conditionConfId);
 	};
 
 } /* namespace alica */

@@ -9,10 +9,10 @@ using namespace std;
 
 #include "DefendMid.h"
 
-namespace alica
+namespace alicaTests
 {
 
-	DefendMid::DefendMid() : BasicBehaviour ("DefendMid")
+	DefendMid::DefendMid() : alica::BasicBehaviour ("DefendMid")
 	{
 		this->callCounter = 0;
 	}

@@ -18,12 +18,15 @@ import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourConfiguration;
+import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator;
 import de.uni_kassel.vs.cn.planDesigner.alica.CapValue;
 import de.uni_kassel.vs.cn.planDesigner.alica.Capability;
 import de.uni_kassel.vs.cn.planDesigner.alica.CapabilityDefinitionSet;
 import de.uni_kassel.vs.cn.planDesigner.alica.Characteristic;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
+import de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator;
 import de.uni_kassel.vs.cn.planDesigner.alica.Constant;
+import de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator;
 import de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription;
 import de.uni_kassel.vs.cn.planDesigner.alica.Edge;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
@@ -60,6 +63,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.TaskRepository;
 import de.uni_kassel.vs.cn.planDesigner.alica.TaskWrapper;
 import de.uni_kassel.vs.cn.planDesigner.alica.TerminalState;
 import de.uni_kassel.vs.cn.planDesigner.alica.Transition;
+import de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator;
 import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
 
 /**
@@ -411,6 +415,34 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * @generated
 	 */
 	private EClass constantEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass behaviourCreatorEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass conditionCreatorEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass utilityFunctionCreatorEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass constraintCreatorEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2042,6 +2074,105 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getBehaviourCreator() {
+		return behaviourCreatorEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getBehaviourCreator_Behaviours() {
+		return (EReference)behaviourCreatorEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getConditionCreator() {
+		return conditionCreatorEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConditionCreator_Conditions() {
+		return (EReference)conditionCreatorEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConditionCreator_Plans() {
+		return (EReference)conditionCreatorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUtilityFunctionCreator() {
+		return utilityFunctionCreatorEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getUtilityFunctionCreator_Conditions() {
+		return (EReference)utilityFunctionCreatorEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getUtilityFunctionCreator_Plans() {
+		return (EReference)utilityFunctionCreatorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getConstraintCreator() {
+		return constraintCreatorEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConstraintCreator_Conditions() {
+		return (EReference)constraintCreatorEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConstraintCreator_Plans() {
+		return (EReference)constraintCreatorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getPlanningType() {
 		return planningTypeEEnum;
 	}
@@ -2296,6 +2427,21 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		createEAttribute(constantEClass, CONSTANT__NAME);
 		createEAttribute(constantEClass, CONSTANT__TYPE);
 
+		behaviourCreatorEClass = createEClass(BEHAVIOUR_CREATOR);
+		createEReference(behaviourCreatorEClass, BEHAVIOUR_CREATOR__BEHAVIOURS);
+
+		conditionCreatorEClass = createEClass(CONDITION_CREATOR);
+		createEReference(conditionCreatorEClass, CONDITION_CREATOR__CONDITIONS);
+		createEReference(conditionCreatorEClass, CONDITION_CREATOR__PLANS);
+
+		utilityFunctionCreatorEClass = createEClass(UTILITY_FUNCTION_CREATOR);
+		createEReference(utilityFunctionCreatorEClass, UTILITY_FUNCTION_CREATOR__CONDITIONS);
+		createEReference(utilityFunctionCreatorEClass, UTILITY_FUNCTION_CREATOR__PLANS);
+
+		constraintCreatorEClass = createEClass(CONSTRAINT_CREATOR);
+		createEReference(constraintCreatorEClass, CONSTRAINT_CREATOR__CONDITIONS);
+		createEReference(constraintCreatorEClass, CONSTRAINT_CREATOR__PLANS);
+
 		// Create enums
 		planningTypeEEnum = createEEnum(PLANNING_TYPE);
 	}
@@ -2382,7 +2528,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		initEReference(getCondition_AbstractPlan(), this.getAbstractPlan(), this.getAbstractPlan_Conditions(), "abstractPlan", null, 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCondition_Vars(), this.getVariable(), null, "vars", null, 0, -1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCondition_Quantifiers(), this.getQuantifier(), null, "quantifiers", null, 0, -1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getCondition_PluginName(), ecorePackage.getEString(), "pluginName", "", 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCondition_PluginName(), ecorePackage.getEString(), "pluginName", "DefaultPlugin", 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCondition_Parameters(), this.getEStringToEObjectMapEntry(), null, "parameters", null, 0, -1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		EOperation op = initEOperation(getCondition__EnsureVariableConsistency__AbstractPlan(), null, "ensureVariableConsistency", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -2599,6 +2745,21 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		initEClass(constantEClass, Constant.class, "Constant", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getConstant_Name(), ecorePackage.getEString(), "name", null, 1, 1, Constant.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getConstant_Type(), ecorePackage.getEString(), "type", null, 1, 1, Constant.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(behaviourCreatorEClass, BehaviourCreator.class, "BehaviourCreator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getBehaviourCreator_Behaviours(), this.getBehaviour(), null, "behaviours", null, 0, -1, BehaviourCreator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+
+		initEClass(conditionCreatorEClass, ConditionCreator.class, "ConditionCreator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getConditionCreator_Conditions(), this.getCondition(), null, "conditions", null, 0, -1, ConditionCreator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getConditionCreator_Plans(), this.getAbstractPlan(), null, "plans", null, 0, -1, ConditionCreator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(utilityFunctionCreatorEClass, UtilityFunctionCreator.class, "UtilityFunctionCreator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getUtilityFunctionCreator_Conditions(), this.getCondition(), null, "conditions", null, 0, -1, UtilityFunctionCreator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getUtilityFunctionCreator_Plans(), this.getAbstractPlan(), null, "plans", null, 0, -1, UtilityFunctionCreator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(constraintCreatorEClass, ConstraintCreator.class, "ConstraintCreator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getConstraintCreator_Conditions(), this.getCondition(), null, "conditions", null, 0, -1, ConstraintCreator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getConstraintCreator_Plans(), this.getAbstractPlan(), null, "plans", null, 0, -1, ConstraintCreator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(planningTypeEEnum, PlanningType.class, "PlanningType");

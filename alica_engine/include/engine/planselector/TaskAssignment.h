@@ -32,6 +32,8 @@ namespace alica
 	class EntryPoint;
 	class PartialAssignment;
 	class SimplePlanTree;
+	class ITeamObserver;
+	class PartialAssignmentPool;
 
 	/**
 	 * Represents an instance of an assignment problem for one plan or a plantype.
@@ -40,7 +42,7 @@ namespace alica
 	class TaskAssignment : virtual public ITaskAssignment
 	{
 	public:
-		TaskAssignment(list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots);
+		TaskAssignment(PartialAssignmentPool* pap, ITeamObserver* to, list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots);
 		virtual ~TaskAssignment();
 		shared_ptr<Assignment> getNextBestAssignment(IAssignment* oldAss);
 		string toString();
@@ -53,6 +55,7 @@ namespace alica
 
 	protected:
 		// Plan to build an assignment for
+		ITeamObserver* to;
 		list<Plan*> planList;
 		shared_ptr<vector<int> > robots;
 		vector<EntryPoint*> entryPointVector;

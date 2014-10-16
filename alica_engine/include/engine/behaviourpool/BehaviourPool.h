@@ -22,6 +22,7 @@ namespace alica
 
 	class BehaviourConfiguration;
 	class BasicBehaviour;
+	class AlicaEngine;
 
 	/**
 	 * Manages the connection between the domain specific implementation (BasicBehaviours) of Behaviours.
@@ -31,7 +32,7 @@ namespace alica
 	{
 
 	public:
-		BehaviourPool();
+		BehaviourPool(AlicaEngine* ae);
 		virtual ~BehaviourPool();
 		bool init(IBehaviourCreator* bc);
 		void startBehaviour(shared_ptr<RunningPlan> rp);
@@ -46,7 +47,7 @@ namespace alica
 		 * The value is the basic behaviour, which is the implementation of that behaviour.
 		 */
 		map<BehaviourConfiguration*, shared_ptr<BasicBehaviour> >* availableBehaviours;
-
+		AlicaEngine* ae;
 		IBehaviourCreator* behaviourCreator;
 
 	};

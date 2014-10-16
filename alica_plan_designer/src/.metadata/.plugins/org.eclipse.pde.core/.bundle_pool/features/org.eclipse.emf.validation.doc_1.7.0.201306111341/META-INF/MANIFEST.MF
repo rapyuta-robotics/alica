@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+Build-Jdk: 1.6.0_21
+Built-By: hudsonbuild
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+
+Name: epl-v10.html
+SHA1-Digest: hNPRR3joO5UV8+u/L0qjKV/Y2EE=
+
+Name: modeling32.png
+SHA1-Digest: ADlLWFV0eQ74YnLvHnPFkYLeLrs=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: 09gN05tobgS/MdtqyTNQhOhB73M=
+
+Name: META-INF/maven/org.eclipse.emf.validation.features/org.eclipse.e
+ mf.validation.doc/pom.xml
+SHA1-Digest: qbnN34FYfcZQWfXw0aR13JD9OLA=
+
+Name: META-INF/maven/org.eclipse.emf.validation.features/org.eclipse.e
+ mf.validation.doc/pom.properties
+SHA1-Digest: d4V8It5j0tbO8FpGxzjK5ag/+0c=
+
+Name: license.html
+SHA1-Digest: /vLZjlHkZSXMSfPrWwNqOUDqqbM=
+
+Name: feature.properties
+SHA1-Digest: Sn5QlSc1yQN6//FO/O1L/e0CXiU=
+
+Name: feature.xml
+SHA1-Digest: /BL/tEnKYehdiUHvdgHc4sdtvGM=
+

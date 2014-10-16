@@ -1,0 +1,71 @@
+«IMPORT alica»  
+
+«DEFINE Root FOR Plan»«ENDDEFINE»
+«DEFINE Root FOR BehaviourCreator»
+	«FILE "BehaviourCreator" + ".cpp"-»
+			using namespace std;
+			
+			#include "BehaviourCreator.h"
+			#include "engine/BasicBehaviour.h"
+			«FOREACH behaviours AS beh»
+			#include  "«beh.name»";
+			«ENDFOREACH»
+			namespace alica
+			{
+
+				TestBehaviourCreator::TestBehaviourCreator()
+				{
+				}
+
+				TestBehaviourCreator::~TestBehaviourCreator()
+				{
+				}
+
+				unique_ptr<BasicBehaviour> TestBehaviourCreator::createBehaviour(long behaviourConfId)
+				{
+					unique_ptr<alica::BasicBehaviour> beh;
+					switch(behaviourConfId)
+					{
+						«FOREACH behaviours AS beh»
+						case «beh.id»
+							beh.reset(new «beh.name»());
+							break;
+						«ENDFOREACH»
+						default:
+						cerr << "Unknown behaviour requested: " << behaviourConfId << endl;
+						throw new exception();
+						break;
+					}
+					return beh;
+				}
+				
+				
+			}
+	«ENDFILE»
+	«FILE "BehaviourCreator" + ".h"-»
+		#ifndef BEHAVIOURCREATOR_H_
+		#define BEHAVIOURCREATOR_H_
+		#include <engine/IBehaviourCreator.h>
+
+		#include <memory>
+		#include <iostream>
+
+		namespace alica
+		{
+
+			class BasicBehaviour;
+
+			class TestBehaviourCreator : public IBehaviourCreator
+			{
+				public:
+					TestBehaviourCreator();
+					virtual ~TestBehaviourCreator();
+					virtual shared_ptr<BasicBehaviour> createBehaviour(long behaviourConfId);
+			};
+
+		} /* namespace alica */
+
+		#endif /* BEHAVIOURCREATOR_H_ */
+	«ENDFILE»
+«ENDDEFINE»
+

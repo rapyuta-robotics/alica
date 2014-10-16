@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace alica
+namespace alicaTests
 {
 
 	TestConstraintCreator::TestConstraintCreator()
@@ -24,7 +24,7 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
-	shared_ptr<BasicConstraint> TestConstraintCreator::createConstraint(long constraintConfId)
+	shared_ptr<alica::BasicConstraint> TestConstraintCreator::createConstraint(long constraintConfId)
 	{
 		switch (constraintConfId)
 		{

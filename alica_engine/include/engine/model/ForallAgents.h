@@ -25,6 +25,7 @@ namespace alica
 
 	class RunningPlan;
 	class Variable;
+	class AlicaEngine;
 
 	/**
 	 * A quantifier associated with agents, i.e., the domain identifiers of this quantifier refer to properties of an agent
@@ -32,10 +33,13 @@ namespace alica
 	class ForallAgents : public Quantifier
 	{
 	public:
-		ForallAgents(long id = 0);
+		ForallAgents(AlicaEngine* ae, long id = 0);
 		virtual ~ForallAgents();
 		shared_ptr<list<vector<Variable* > > > getSortedVariables(RunningPlan* p, shared_ptr<vector<int> > agentsInScope);
 		shared_ptr<list<vector<autodiff::Term*> > > getSortedTerms(RunningPlan* p, shared_ptr<vector<int> > agentsInScope);
+
+	protected:
+		AlicaEngine* ae;
 
 
 	};

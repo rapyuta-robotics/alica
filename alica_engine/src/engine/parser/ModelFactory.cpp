@@ -81,8 +81,9 @@ namespace alica
 	 * @param p The PlanParser handling the plan and role files.
 	 * @param rep The <see PlanRepository holding all plan elements. Elements will be added to it.
 	 */
-	ModelFactory::ModelFactory(PlanParser* p, PlanRepository* rep)
+	ModelFactory::ModelFactory(AlicaEngine* ae, PlanParser* p, PlanRepository* rep)
 	{
+		this->ae = ae;
 		this->parser = p;
 		this->rep = rep;
 		this->ignoreMasterPlanId = false;
@@ -153,7 +154,7 @@ namespace alica
 
 			if (isReferenceNode(curChild))
 			{
-				AlicaEngine::getInstance()->abort("MF: Plan child is reference", curChild);
+				ae->abort("MF: Plan child is reference", curChild);
 			}
 
 			const char* val = curChild->Value();
@@ -198,7 +199,7 @@ namespace alica
 				}
 				else
 				{
-					AlicaEngine::getInstance()->abort("MF: Unknown State type:", typePtr);
+					ae->abort("MF: Unknown State type:", typePtr);
 				}
 			}
 			else if (transitions.compare(val) == 0)
@@ -216,7 +217,7 @@ namespace alica
 				}
 				if (typeString.empty())
 				{
-					AlicaEngine::getInstance()->abort("MF: Condition without xsi:type in plan", plan->getName());
+					ae->abort("MF: Condition without xsi:type in plan", plan->getName());
 				}
 				else if (typeString.compare("alica:RuntimeCondition") == 0)
 				{
@@ -237,7 +238,7 @@ namespace alica
 				}
 				else
 				{
-					AlicaEngine::getInstance()->abort("MF: Unknown Condition type", curChild);
+					ae->abort("MF: Unknown Condition type", curChild);
 				}
 			}
 			else if (vars.compare(val) == 0)
@@ -254,7 +255,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled Plan Child: ", val);
+				ae->abort("MF: Unhandled Plan Child: ", val);
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -296,7 +297,7 @@ namespace alica
 
 		if (!isDefault && !isUseable)
 		{
-			AlicaEngine::getInstance()->abort(
+			ae->abort(
 					"MF:Selected RoleSet is not default, nor useable with current masterplan");
 		}
 
@@ -318,7 +319,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled RoleSet Child:", curChild->Value());
+				ae->abort("MF: Unhandled RoleSet Child:", curChild->Value());
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -353,7 +354,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled RoleTaskMapping Child ", curChild->Value());
+				ae->abort("MF: Unhandled RoleTaskMapping Child ", curChild->Value());
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -379,7 +380,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled Behaviour Child:", curChild->Value());
+				ae->abort("MF: Unhandled Behaviour Child:", curChild->Value());
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -407,7 +408,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled Capability Child:", curChild->Value());
+				ae->abort("MF: Unhandled Capability Child:", curChild->Value());
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -435,7 +436,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled RoleDefinitionSet Child:", curChild->Value());
+				ae->abort("MF: Unhandled RoleDefinitionSet Child:", curChild->Value());
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -460,7 +461,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled Role Child:", curChild->Value());
+				ae->abort("MF: Unhandled Role Child:", curChild->Value());
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -496,7 +497,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled Characteristic Child:", curChild->Value());
+				ae->abort("MF: Unhandled Characteristic Child:", curChild->Value());
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -526,7 +527,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled Behaviour Child:", curChild->Value());
+				ae->abort("MF: Unhandled Behaviour Child:", curChild->Value());
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -614,7 +615,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled BehaviourConfiguration Child:", curChild);
+				ae->abort("MF: Unhandled BehaviourConfiguration Child:", curChild);
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -659,7 +660,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled PlanType Child:", curChild);
+				ae->abort("MF: Unhandled PlanType Child:", curChild);
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -724,7 +725,7 @@ namespace alica
 		this->rep->getSyncTransitions().insert(pair<long, SyncTransition*>(s->getId(), s));
 		if (element->FirstChild())
 		{
-			AlicaEngine::getInstance()->abort("MF: Unhandled Synchtransition Child:", element->FirstChild());
+			ae->abort("MF: Unhandled Synchtransition Child:", element->FirstChild());
 		}
 		return s;
 	}
@@ -790,7 +791,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled RuntimeCondition Child", curChild);
+				ae->abort("MF: Unhandled RuntimeCondition Child", curChild);
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -904,7 +905,7 @@ namespace alica
 				}
 				else
 				{
-					AlicaEngine::getInstance()->abort("MF: Unknown Condition type:", curChild->Value());
+					ae->abort("MF: Unknown Condition type:", curChild->Value());
 				}
 			}
 			else if (waitPlan.compare(val) == 0)
@@ -952,7 +953,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled Transition Child:", curChild);
+				ae->abort("MF: Unhandled Transition Child:", curChild);
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -1028,7 +1029,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled PreCondition Child:", curChild->Value());
+				ae->abort("MF: Unhandled PreCondition Child:", curChild->Value());
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -1047,17 +1048,17 @@ namespace alica
 			typeString = typePtr;
 			if (typeString.compare("alica:ForallAgents") == 0)
 			{
-				q = new ForallAgents();
+				q = new ForallAgents(this->ae);
 				q->setId(id);
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unsupported quantifier type! !", typeString);
+				ae->abort("MF: Unsupported quantifier type! !", typeString);
 			}
 		}
 		else
 		{
-			AlicaEngine::getInstance()->abort("MF: Quantifier without type!", id);
+			ae->abort("MF: Quantifier without type!", id);
 		}
 
 		addElement(q);
@@ -1081,7 +1082,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled Quantifier Child:", curChild);
+				ae->abort("MF: Unhandled Quantifier Child:", curChild);
 			}
 
 			curChild = curChild->NextSiblingElement();
@@ -1116,7 +1117,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled FaulireState Child: ", curChild->Value());
+				ae->abort("MF: Unhandled FaulireState Child: ", curChild->Value());
 			}
 
 			curChild = curChild->NextSiblingElement();
@@ -1148,7 +1149,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled SuccesState Child:", curChild->Value());
+				ae->abort("MF: Unhandled SuccesState Child:", curChild->Value());
 			}
 
 			curChild = curChild->NextSiblingElement();
@@ -1181,7 +1182,7 @@ namespace alica
 
 		if (element->FirstChild())
 		{
-			AlicaEngine::getInstance()->abort("MF: Unhandled Result child", element->FirstChild());
+			ae->abort("MF: Unhandled Result child", element->FirstChild());
 		}
 
 		return pos;
@@ -1232,14 +1233,14 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled EntryPoint Child: ", val);
+				ae->abort("MF: Unhandled EntryPoint Child: ", val);
 			}
 			curChild = curChild->NextSiblingElement();
 		}
 
 		if (!haveState)
 		{
-			AlicaEngine::getInstance()->abort("MF: No initial state identified for EntryPoint: ", ep->getId());
+			ae->abort("MF: No initial state identified for EntryPoint: ", ep->getId());
 		}
 
 		return ep;
@@ -1282,7 +1283,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled State Child: ", curChild->Value());
+				ae->abort("MF: Unhandled State Child: ", curChild->Value());
 			}
 
 			curChild = curChild->NextSiblingElement();
@@ -1316,7 +1317,7 @@ namespace alica
 			}
 			else
 			{
-				AlicaEngine::getInstance()->abort("MF: Unhandled Parametrisation Child:", curChild);
+				ae->abort("MF: Unhandled Parametrisation Child:", curChild);
 			}
 
 		}
@@ -1430,7 +1431,7 @@ namespace alica
 			State* st = (State*)this->elements.find(pairs.second)->second;
 			if (!st)
 			{
-				AlicaEngine::getInstance()->abort("MF: Cannot resolve transitionAimReferences target: ", pairs.first);
+				ae->abort("MF: Cannot resolve transitionAimReferences target: ", pairs.first);
 			}
 			t->setOutState(st);
 			st->getInTransitions().push_back(t);
@@ -1454,7 +1455,7 @@ namespace alica
 			State* st = (State*)this->elements.find(pairs.first)->second;
 			if (st != t->getOutState())
 			{
-				AlicaEngine::getInstance()->abort("MF: Unexpected reference in a transition! ", pairs.first);
+				ae->abort("MF: Unexpected reference in a transition! ", pairs.first);
 			}
 		}
 		this->stateInTransitionReferences.clear();
@@ -1566,7 +1567,7 @@ namespace alica
 			//TODO
 			AlicaElement* ae = (AlicaElement*)this->elements.find(pairs.second)->second;
 			Quantifier* q = (Quantifier*)this->elements.find(pairs.first)->second;
-			q->setScope(ae);
+			q->setScope(this->ae, ae);
 		}
 		this->quantifierScopeReferences.clear();
 
@@ -1650,16 +1651,16 @@ namespace alica
 		this->elements = elements;
 	}
 
-	void ModelFactory::addElement(AlicaElement* ae)
+	void ModelFactory::addElement(AlicaElement* ael)
 	{
-		if (this->elements.find(ae->getId()) != this->elements.end())
+		if (this->elements.find(ael->getId()) != this->elements.end())
 		{
-			cout << "ELEMENT " << ae->getName() << endl;
+			cout << "ELEMENT " << ael->getName() << endl;
 			stringstream ss;
-			ss << "MF: ERROR Double IDs: " << ae->getId();
-			AlicaEngine::getInstance()->abort(ss.str());
+			ss << "MF: ERROR Double IDs: " << ael->getId();
+			ae->abort(ss.str());
 		}
-		elements.insert(pair<long, AlicaElement*>(ae->getId(), ae));
+		elements.insert(pair<long, AlicaElement*>(ael->getId(), ael));
 	}
 
 } /* namespace Alica */

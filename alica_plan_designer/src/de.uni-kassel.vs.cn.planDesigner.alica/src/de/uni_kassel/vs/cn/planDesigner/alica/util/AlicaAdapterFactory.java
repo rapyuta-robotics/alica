@@ -303,6 +303,22 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 				return createConstantAdapter();
 			}
 			@Override
+			public Adapter caseBehaviourCreator(BehaviourCreator object) {
+				return createBehaviourCreatorAdapter();
+			}
+			@Override
+			public Adapter caseConditionCreator(ConditionCreator object) {
+				return createConditionCreatorAdapter();
+			}
+			@Override
+			public Adapter caseUtilityFunctionCreator(UtilityFunctionCreator object) {
+				return createUtilityFunctionCreatorAdapter();
+			}
+			@Override
+			public Adapter caseConstraintCreator(ConstraintCreator object) {
+				return createConstraintCreatorAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -1005,6 +1021,62 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createConstantAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator <em>Behaviour Creator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator
+	 * @generated
+	 */
+	public Adapter createBehaviourCreatorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator <em>Condition Creator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator
+	 * @generated
+	 */
+	public Adapter createConditionCreatorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator <em>Utility Function Creator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.UtilityFunctionCreator
+	 * @generated
+	 */
+	public Adapter createUtilityFunctionCreatorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator <em>Constraint Creator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator
+	 * @generated
+	 */
+	public Adapter createConstraintCreatorAdapter() {
 		return null;
 	}
 
