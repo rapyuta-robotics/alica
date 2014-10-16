@@ -253,6 +253,9 @@ namespace alica
 						<< plans->size() << " robot count: "
 						<< robotIDs->size() << " ######>" << endl;
 #endif
+		if (plans->size() == 0) {
+			cerr << "PS: Welcher Idiot ruft das hier mit 0 Plänen auf?" << endl;
+		}
 		shared_ptr<RunningPlan> rp;
 		list<Plan*> planList;
 		BehaviourConfiguration* bc;

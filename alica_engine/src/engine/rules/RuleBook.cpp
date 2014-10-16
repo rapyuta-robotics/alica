@@ -55,6 +55,9 @@ namespace alica
 	 */
 	shared_ptr<RunningPlan> RuleBook::initialisationRule(Plan* masterPlan)
 	{
+#ifdef RULE_debug
+		cout << "RB: Init-Rule called." << endl;
+#endif
 		if (masterPlan->getEntryPoints().size() != 1)
 		{
 			ae->abort("RB: Masterplan does not have exactly one task!");
@@ -142,6 +145,9 @@ namespace alica
 	 */
 	PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r)
 	{
+#ifdef RULE_debug
+		cout << "RB: dynAlloc-Rule called." << endl;
+#endif
 		if (r->isAllocationNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
 		if (r->getParent().expired())
@@ -193,6 +199,9 @@ namespace alica
 	 */
 	PlanChange RuleBook::authorityOverrideRule(shared_ptr<RunningPlan> r)
 	{
+#ifdef RULE_debug
+		cout << "RB: AuthorityOverride-Rule called." << endl;
+#endif
 		if (r->isBehaviour())
 			return PlanChange::NoChange;
 		if (r->getCycleManagement()->isOverridden())
@@ -212,6 +221,9 @@ namespace alica
 	 */
 	PlanChange RuleBook::planAbortRule(shared_ptr<RunningPlan> r)
 	{
+#ifdef RULE_debug
+		cout << "RB: PlanAbort-Rule called." << endl;
+#endif
 		if (r->getFailHandlingNeeded())
 			return PlanChange::NoChange;
 		if (r->isBehaviour())
@@ -240,6 +252,9 @@ namespace alica
 	 */
 	PlanChange RuleBook::planRedoRule(shared_ptr<RunningPlan> r)
 	{
+#ifdef RULE_debug
+		cout << "RB: PlanRedoRule-Rule called." << endl;
+#endif
 		if (r->getParent().expired() || !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
 		if (r->getFailure() != 1)
@@ -276,6 +291,9 @@ namespace alica
 	 */
 	PlanChange RuleBook::planReplaceRule(shared_ptr<RunningPlan> r)
 	{
+#ifdef RULE_debug
+		cout << "RB: PlanReplace-Rule called." << endl;
+#endif
 		if (r->getParent().expired()|| !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
 		if (r->getFailure() != 2)
@@ -300,6 +318,9 @@ namespace alica
 	 */
 	PlanChange RuleBook::planPropagationRule(shared_ptr<RunningPlan> r)
 	{
+#ifdef RULE_debug
+		cout << "RB: PlanPropagation-Rule called." << endl;
+#endif
 		if (r->getParent().lock()|| !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
 		if (r->getFailure() != 3)
@@ -320,6 +341,9 @@ namespace alica
 	 */
 	PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> r)
 	{
+#ifdef RULE_debug
+		cout << "RB: Allocation-Rule called." << endl;
+#endif
 		if (!r->isAllocationNeeded())
 		{
 			return PlanChange::NoChange;
@@ -335,6 +359,9 @@ namespace alica
 //			robots->at(i) = *iter;
 //			iter++;
 //		}
+#ifdef RULE_debug
+		cout << "RB: There are " << r->getActiveState()->getPlans().size() << " Plans in State " << r->getActiveState()->getName() << endl;
+#endif
 		shared_ptr<list<shared_ptr<RunningPlan>> > children = this->ps->getPlansForState(
 				r, &r->getActiveState()->getPlans(),
 				robots);
@@ -367,6 +394,9 @@ namespace alica
 	 */
 	PlanChange RuleBook::topFailRule(shared_ptr<RunningPlan> r)
 	{
+#ifdef RULE_debug
+		cout << "RB: TopFail-Rule called." << endl;
+#endif
 		if (!r->getParent().expired())
 			return PlanChange::NoChange;
 
@@ -407,6 +437,9 @@ namespace alica
 	 */
 	PlanChange RuleBook::transitionRule(shared_ptr<RunningPlan> r)
 	{
+#ifdef RULE_debug
+		cout << "RB: Transition-Rule called." << endl;
+#endif
 		if (r->getActiveState() == nullptr)
 			return PlanChange::NoChange;
 		State* nextState = nullptr;
@@ -446,6 +479,9 @@ namespace alica
 	 */
 	PlanChange RuleBook::synchTransitionRule(shared_ptr<RunningPlan> r)
 	{
+#ifdef RULE_debug
+		cout << "RB: Sync-Rule called." << endl;
+#endif
 		if (r->getActiveState() == nullptr)
 		{
 			return PlanChange::NoChange;
