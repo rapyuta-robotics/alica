@@ -149,7 +149,7 @@ namespace alica
 		}
 		else
 		{
-			shared_ptr<list<EntryPoint*> > l;
+			shared_ptr<list<EntryPoint*> > l = make_shared<list<EntryPoint*>>();
 			l->push_back(e);
 			this->getSuccessMarks().insert(pair<AbstractPlan*, shared_ptr<list<EntryPoint*> > >(p, l));
 
