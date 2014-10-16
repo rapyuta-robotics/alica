@@ -69,11 +69,11 @@ namespace alica
 		main->setAllocationNeeded(true);
 		main->setRobotsAvail(move(to->getAvailableRobotIds()));
 
-		EntryPoint* defep;
+		EntryPoint* defep = nullptr;
 		list<EntryPoint*> l;
 		defep = masterPlan->getEntryPoints().begin()->second;
 		main->getAssignment()->setAllToInitialState(move(to->getAvailableRobotIds()), defep);
-		main->setActive(true);
+		main->activate();
 		main->setOwnEntryPoint(defep);
 		this->log->eventOccured("Init");
 		return main;
@@ -238,6 +238,7 @@ namespace alica
 #ifdef RULE_debug
 			cout << "RB: PlanAbort" << r->getPlan()->getName() << endl;
 #endif
+			r->addFailure();
 			log->eventOccured("PAbort(" + r->getPlan()->getName() + ")");
 			return PlanChange::FailChange;
 		}
@@ -321,11 +322,12 @@ namespace alica
 #ifdef RULE_debug
 		cout << "RB: PlanPropagation-Rule called." << endl;
 #endif
-		if (r->getParent().lock()|| !r->getFailHandlingNeeded() || r->isBehaviour())
+		if (r->getParent().expired() || !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
-		if (r->getFailure() != 3)
+		if (r->getFailure() < 3)
 			return PlanChange::NoChange;
 		r->getParent().lock()->addFailure();
+		r->setFailHandlingNeeded(false);
 
 #ifdef RULE_debug
 		cout << "RB: PlanPropagation" << r->getPlan()->getName() << endl;
@@ -349,6 +351,7 @@ namespace alica
 			return PlanChange::NoChange;
 		}
 		r->setAllocationNeeded(false);
+
 		shared_ptr<vector<int> > robots = make_shared<vector<int> >(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
 		copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
 						r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
@@ -457,7 +460,7 @@ namespace alica
 		r->moveState(nextState);
 
 		r->setAllocationNeeded(true);
-		log->eventOccured("SynchTrans(" + r->getPlan()->getName() + ")");
+		log->eventOccured("Transition(" + r->getPlan()->getName() + "to State" + r->getActiveState()->getName() + ")");
 		if (r->getActiveState()->isSuccessState())
 			return PlanChange::SuccesChange;
 		else if (r->getActiveState()->isFailureState())
