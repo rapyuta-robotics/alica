@@ -131,13 +131,15 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 			cerr << (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->toString() << endl;
 			cerr << (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().size() << endl;
 			cerr << (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().size() << endl;
-			cerr << (*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().begin())->toString() << endl;
-			cerr << (*(*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().begin())->toString() << endl;
+			cerr << (*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().begin())->toString()
+					<< endl;
+			cerr << (*(*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().begin())->toString()
+					<< endl;
 			for (auto iter : *ae->getBehaviourPool()->getAvailableBehaviours())
 			{
 				if (iter.second->getName() == "Attack")
 				{
-					EXPECT_GT(((alicaTests::Attack*)&*iter.second)->callCounter,100);
+					EXPECT_GT(((alicaTests::Attack* )&*iter.second)->callCounter, 10);
 					if (((alicaTests::Attack*)&*iter.second)->callCounter > 3)
 					{
 						alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201052549(true);
@@ -148,11 +150,26 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 				}
 			}
 		}
-		if(i > 30)
+		if (i == 27)
+		{
+			EXPECT_TRUE(
+					ae2->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201030936
+							|| ae->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201030936);
+			alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(false);
+			alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(false);
+		}
+		if (i == 29)
+		{
+			EXPECT_TRUE(
+					ae2->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201030936
+					|| ae->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201030936) << "AE State: "
+					<< ae->getPlanBase()->getRootNode()->getActiveState()->getId() << " AE2 State: "
+					<< ae2->getPlanBase()->getRootNode()->getActiveState()->getId() << endl;
+
+		}
+		if (i == 30)
 		{
 			break;
-//			EXPECT_TRUE(ae2->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201030936 ||
-//						ae->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201030936);
 		}
 	}
 }
