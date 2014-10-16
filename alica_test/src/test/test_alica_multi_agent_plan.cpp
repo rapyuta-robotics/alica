@@ -127,14 +127,6 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		}
 		if (i == 25)
 		{
-			cerr << (*ae->getPlanBase()->getRootNode()->getChildren().begin())->toString() << endl;
-			cerr << (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->toString() << endl;
-			cerr << (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().size() << endl;
-			cerr << (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().size() << endl;
-			cerr << (*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().begin())->toString()
-					<< endl;
-			cerr << (*(*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getChildren().begin())->toString()
-					<< endl;
 			for (auto iter : *ae->getBehaviourPool()->getAvailableBehaviours())
 			{
 				if (iter.second->getName() == "Attack")
@@ -154,7 +146,10 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		{
 			EXPECT_TRUE(
 					ae2->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201030936
-							|| ae->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201030936);
+					|| ae->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201030936)
+					<< endl << ae2->getPlanBase()->getRootNode()->getActiveState()->getId() << " "
+					<< ae->getPlanBase()->getRootNode()->getActiveState()->getId() << endl;
+			;
 			alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(false);
 			alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(false);
 		}

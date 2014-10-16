@@ -71,14 +71,7 @@ namespace alica
 
 		EntryPoint* defep;
 		list<EntryPoint*> l;
-		transform(masterPlan->getEntryPoints().begin(), masterPlan->getEntryPoints().end(), back_inserter(l),
-					[](map<long, EntryPoint*>::value_type& val)
-					{	return val.second;});
-		for (EntryPoint* e : l)
-		{
-			defep = e;
-			break;
-		}
+		defep = masterPlan->getEntryPoints().begin()->second;
 		main->getAssignment()->setAllToInitialState(move(to->getAvailableRobotIds()), defep);
 		main->setActive(true);
 		main->setOwnEntryPoint(defep);
@@ -149,14 +142,26 @@ namespace alica
 		cout << "RB: dynAlloc-Rule called." << endl;
 #endif
 		if (r->isAllocationNeeded() || r->isBehaviour())
+		{
 			return PlanChange::NoChange;
+		}
 		if (r->getParent().expired())
+		{
 			return PlanChange::NoChange; //masterplan excluded
+		}
 		if (!r->getCycleManagement()->mayDoUtilityCheck())
+		{
 			return PlanChange::NoChange;
+		}
 
 		auto temp = r->getParent().lock();
-		vector<int> robots = vector<int>(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
+		cout << "RB:" + temp->toString()<< endl;
+		vector<int> robots = vector<int>(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).size());
+		cout << "RB: robots" << endl;
+		for(int i : robots)
+		{
+			cout << i << endl;
+		}
 		copy(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
 					temp->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
 					robots.begin());
@@ -269,10 +274,11 @@ namespace alica
 		r->setFailHandlingNeeded(false);
 		r->deactivateChildren();
 		r->clearChildren();
-		vector<int> robots;
+		vector<int> robots(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
 		copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
 				r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
 				robots.begin()); // backinserter
+
 		r->getAssignment()->getRobotStateMapping()->setStates(robots, r->getOwnEntryPoint()->getState());
 
 		r->setActiveState(r->getOwnEntryPoint()->getState());
@@ -404,15 +410,9 @@ namespace alica
 		{
 			r->setFailHandlingNeeded(false);
 			r->clearFailures();
-			vector<EntryPoint*> epCol;
-			transform(((Plan*)r->getPlan())->getEntryPoints().begin(), ((Plan*)r->getPlan())->getEntryPoints().end(),
-						back_inserter(epCol), [](map<long, EntryPoint*>::value_type& val)
-						{	return val.second;});
-			for (EntryPoint* e : epCol)
-			{
-				r->setOwnEntryPoint(e);
-				break;
-			}
+
+			r->setOwnEntryPoint(((Plan*)r->getPlan())->getEntryPoints().begin()->second);
+
 			r->setAllocationNeeded(true);
 			r->setRobotsAvail(move(to->getAvailableRobotIds()));
 			r->getAssignment()->clear();
