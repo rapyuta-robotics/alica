@@ -105,7 +105,7 @@ namespace alica
 			return nullptr;
 		}
 		shared_ptr<list<vector<autodiff::Term*> > > ret;
-		ITeamObserver* to = AlicaEngine::getInstance()->getTeamObserver();
+		ITeamObserver* to = ae->getTeamObserver();
 		for(int r : *(agentsInScope))
 		{
 			vector<autodiff::Term*> terms = vector<autodiff::Term*>(this->getDomainIdentifiers().size());
