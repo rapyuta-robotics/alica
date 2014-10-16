@@ -149,13 +149,21 @@ namespace alica
 	 */
 	PlanChange RunningPlan::tick(RuleBook* rules)
 	{
-
 		this->cycleManagement->update();
 		PlanChange myChange = rules->visit(shared_from_this());
 
 		PlanChange childChange = PlanChange::NoChange;
-		for (shared_ptr<RunningPlan> rp : this->children)
+		cout << this->ae->getTeamObserver()->getOwnId() << "\tRP: iterating over " << this->getChildren().size() << " children of " << this << endl;
+		for (shared_ptr<RunningPlan> rp : this->getChildren())
 		{
+			if (this->getChildren().size() == 0) {
+				cout << this->ae->getTeamObserver()->getOwnId() << "\tRP: !!! I go into, although " << this << " children size is 0" << endl;
+				if (rp == nullptr) {
+					cout << this->ae->getTeamObserver()->getOwnId() << "\tRP: !! The running plan is null." << endl;
+				} else {
+					cout << this->ae->getTeamObserver()->getOwnId() << "\tRP: !! The running plan is " << rp << endl;
+				}
+			}
 			childChange = rules->updateChange(childChange, rp->tick(rules));
 		}
 		if (childChange != PlanChange::NoChange && childChange != PlanChange::InternalChange)
@@ -527,6 +535,7 @@ namespace alica
 	 */
 	void RunningPlan::clearChildren()
 	{
+		cout << this->ae->getTeamObserver()->getOwnId() << "\tRP: clearChildren called for " << this << endl;
 		this->children.clear();
 	}
 
