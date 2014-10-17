@@ -140,6 +140,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: dynAlloc-Rule called." << endl;
+		cout << "RB: dynAlloc RP \n" << r->toString() << endl;
 #endif
 		if (r->isAllocationNeeded() || r->isBehaviour())
 		{
@@ -163,15 +164,22 @@ namespace alica
 		if (newr == nullptr)
 			return PlanChange::NoChange;
 		double curUtil;
-		if (!r->evalRuntimeCondition())
+		if (!r->evalRuntimeCondition()) {
 			curUtil = -1.0;
-		else
+		}
+		else {
 			curUtil = r->getPlan()->getUtilityFunction()->eval(r, r);
+		}
 		double possibleUtil = newr->getAssignment()->getMax();
 #ifdef RULE_debug
 		cout << "RB: Old U " << curUtil << " | " << " New U:" << possibleUtil << endl;
+		if(curUtil < -0.99) {
+			cout << "#############Assignment is valid?: " << r->getAssignment()->isValid() << endl;
+			cout << r->toString() << endl;
+		}
 		cout << "RB: New Assignment" << newr->getAssignment() << endl;
 		cout << "RB: Old Assignment" << r->getAssignment() << endl;
+//remove comments
 #endif
 
 		if (possibleUtil - curUtil > r->getPlan()->getUtilityThreshold())
@@ -200,6 +208,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: AuthorityOverride-Rule called." << endl;
+		cout << "RB: AuthorityOverride RP \n" << r->toString() << endl;
 #endif
 		if (r->isBehaviour())
 			return PlanChange::NoChange;
@@ -222,6 +231,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: PlanAbort-Rule called." << endl;
+		cout << "RB: PlanAbort RP \n" << r->toString() << endl;
 #endif
 		if (r->getFailHandlingNeeded())
 			return PlanChange::NoChange;
@@ -254,6 +264,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: PlanRedoRule-Rule called." << endl;
+		cout << "RB: PlanRedoRule RP \n" << r->toString() << endl;
 #endif
 		if (r->getParent().expired() || !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
@@ -294,6 +305,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: PlanReplace-Rule called." << endl;
+		cout << "RB: PlanReplace RP \n" << r->toString() << endl;
 #endif
 		if (r->getParent().expired()|| !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
@@ -321,6 +333,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: PlanPropagation-Rule called." << endl;
+		cout << "RB: PlanPropagation RP \n" << r->toString() << endl;
 #endif
 		if (r->getParent().expired() || !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
@@ -345,6 +358,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: Allocation-Rule called." << endl;
+		cout << "RB: Allocation RP \n" << r->toString() << endl;
 #endif
 		if (!r->isAllocationNeeded())
 		{
@@ -399,6 +413,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: TopFail-Rule called." << endl;
+		cout << "RB: TopFail RP \n" << r->toString() << endl;
 #endif
 		if (!r->getParent().expired())
 			return PlanChange::NoChange;
@@ -436,6 +451,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: Transition-Rule called." << endl;
+		cout << "RB: Transition RP \n" << r->toString() << endl;
 #endif
 		if (r->getActiveState() == nullptr)
 			return PlanChange::NoChange;
@@ -478,6 +494,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: Sync-Rule called." << endl;
+		cout << "RB: Sync RP \n" << r->toString() << endl;
 #endif
 		if (r->getActiveState() == nullptr)
 		{

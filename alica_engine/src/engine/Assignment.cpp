@@ -116,7 +116,11 @@ namespace alica
 		}
 		for (int i = 0; i < robots->size(); ++i)
 		{
-			robots->at(i) = assCol->getRobots()->at(i);
+			robots->at(i) = make_shared<vector<int>>(assCol->getRobots()->at(i)->size());
+			for (int j = 0; j < assCol->getRobots()->at(i)->size(); j++)
+			{
+				robots->at(i)->at(j) = assCol->getRobots()->at(i)->at(j);
+			}
 		}
 		shared_ptr<vector<EntryPoint*> > newEps = make_shared<vector<EntryPoint*> >(robots->size());
 		copy(assCol->getEntryPoints()->begin(), assCol->getEntryPoints()->begin() + robots->size(), newEps->begin());
@@ -538,7 +542,7 @@ namespace alica
 	void Assignment::moveRobots(State* from, State* to)
 	{
 		auto movingRobots = this->robotStateMapping->getRobotsInState(from);
-		if(to == nullptr)
+		if (to == nullptr)
 		{
 			cout << "Ass: to nullptr" << endl;
 		}

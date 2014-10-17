@@ -379,7 +379,7 @@ namespace alica
 				if (!p->isBehaviour())
 				{
 					presentPlans->insert(p->getPlan());
-					for (shared_ptr<RunningPlan> c : p->getChildren())
+					for (shared_ptr<RunningPlan> c : *p->getChildren())
 					{
 						q->push_back(c);
 					}
