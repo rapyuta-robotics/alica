@@ -4,10 +4,11 @@
  *  Created on: Oct 17, 2014
  *      Author: Philipp
  */
-//#define CQ_DEBUG
 #include "engine/constraintmodul/ConstraintQuery.h"
+//#define CQ_DEBUG
 
 #include "engine/AlicaEngine.h"
+#include "engine/IAlicaClock.h"
 #include "engine/ITeamObserver.h"
 #include "engine/RunningPlan.h"
 #include "engine/collections/RobotEngineData.h"
@@ -36,7 +37,9 @@ namespace alica
 		relevantStaticVariables = vector<Variable*>();
 		relevantDomainVariables = vector<Variable*>();
 		calls = vector<shared_ptr<ConstraintCall>>();
-		to = (new AlicaEngine())->getTeamObserver();
+		AlicaEngine* ae = new AlicaEngine();
+		to = ae->getTeamObserver();
+		alicaClock = ae->getIAlicaClock();
 	}
 
 	void ConstraintQuery::addVariable(Variable* v)
@@ -169,32 +172,163 @@ namespace alica
 
 	bool ConstraintQuery::getSolution(shared_ptr<RunningPlan> rp, vector<double>& result)
 	{
-		// TODO:
+#ifdef CQ_DEBUG
+		long time = alicaClock->now();
+#endif
+		store->clear();
+		relevantStaticVariables.clear();
+		relevantDomainVariables.clear();
+		calls.clear();
+		relevantStaticVariables.insert(relevantStaticVariables.end(), queriedStaticVariables.begin(),
+										queriedStaticVariables.end());
+		relevantDomainVariables.insert(relevantDomainVariables.end(), queriedDomainVariables.begin(),
+										queriedDomainVariables.end());
+		for (Variable* v : relevantStaticVariables)
+		{
+			store->add(v);
+		}
+#ifdef CQ_DEBUG
+		cout << "CQ: Starting Query with static Vars:";
+		for (Variable* v : relevantStaticVariables)
+		{
+			cout << " " << v->getName();
+		}
+		cout << endl;
+#endif
+		while (rp != nullptr && (relevantStaticVariables.size() > 0 || relevantDomainVariables.size() > 0))
+		{
+#ifdef CQ_DEBUG
+			cout << "CQ: Query at " << rp->getPlan()->getName() << endl;
+#endif
+			rp->getConstraintStore()->acceptQuery(shared_from_this());
+			if (rp->getPlanType() != nullptr)
+			{ //process bindings for plantype
+				vector<Variable*> tmpVector = vector<Variable*>();
+				for (Parametrisation* p : rp->getPlanType()->getParametrisation())
+				{
+					if (p->getSubPlan() == rp->getPlan()
+							&& find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar())
+									!= relevantStaticVariables.end())
+					{
+						tmpVector.push_back(p->getVar());
+						store->addVarTo(p->getSubVar(), p->getVar());
+					}
+				}
+				relevantStaticVariables = tmpVector;
+			}
+
+			shared_ptr<RunningPlan> parent;
+			if (rp->getParent().use_count() > 0 && (parent = rp->getParent().lock())->getActiveState() != nullptr)
+			{
+				vector<Variable*> tmpVector = vector<Variable*>();
+				for (Parametrisation* p : rp->getPlanType()->getParametrisation())
+				{
+					if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType())
+							&& find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar())
+									!= relevantStaticVariables.end())
+					{
+						tmpVector.push_back(p->getVar());
+						store->addVarTo(p->getSubVar(), p->getVar());
+					}
+				}
+				relevantStaticVariables = tmpVector;
+			}
+			rp = parent;
+		}
+		//now we have a list of ConstraintCalls in calls ready to be queried together with a store of unifications
+//		result = null; TODO: ka wie
+		if (calls.size() == 0)
+		{
+#ifdef CQ_DEBUG
+			cout << "CQ: Empty Query!" << endl;
+#endif
+			return false;
+		}
+
+		vector<shared_ptr<ConstraintDescriptor>> cds = vector<shared_ptr<ConstraintDescriptor>>();
+		for (shared_ptr<ConstraintCall> c : calls)
+		{
+			vector<Variable*> conditionVariables = vector<Variable*>(c->getCondition()->getVariables());
+
+			vector<shared_ptr<SolverVariable>> varr = vector<shared_ptr<SolverVariable>>(conditionVariables.size());
+			for (int j = 0; j < conditionVariables.size(); ++j)
+			{
+				varr[j] = store->getRep(conditionVariables[j])->getSolverVar();
+			}
+			vector<vector<vector<shared_ptr<SolverTerm>>> > sortedVars = vector<vector<vector<shared_ptr<SolverTerm>>>>();
+			vector<vector<int>> agentsInScope = vector<vector<int>>();
+			for (int j = 0; j < c->getSortedVariables().size(); ++j)
+			{
+				vector<vector<shared_ptr<SolverTerm>>> ll = vector<vector<shared_ptr<SolverTerm>>>();
+				agentsInScope.push_back(c->getAgentsInScope()[j]);
+				sortedVars.push_back(ll);
+				for (vector<Variable*> dvarr : c->getSortedVariables()[j])
+				{
+					vector<shared_ptr<SolverTerm>> dtvarr = vector<shared_ptr<SolverTerm>>(dvarr.size());
+					for (int i = 0; i < dtvarr.size(); ++i)
+					{
+						dtvarr[i] = dvarr[i]->getSolverVar();
+					}
+					ll.push_back(dtvarr);
+				}
+			}
+			shared_ptr<ConstraintDescriptor> cd = make_shared<ConstraintDescriptor>(varr, sortedVars);
+			cd->setAgentsInScope(agentsInScope);
+//			c->getCondition()->getConstraint(cd, c->getRunningPlan());	TODO: not implemented yet
+			cds.push_back(cd);
+		}
+		vector<Variable*> qVars = store->getAllRep();
+		int domOffset = qVars.size();
+		qVars.insert(qVars.end(), relevantDomainVariables.begin(), relevantDomainVariables.end());
+
+		vector<double> solverResult;
+#ifdef CQ_DEBUG
+		cout << "CQ: PrepTime: " (alicaClock->now()-time)/10000.0 << endl;
+#endif
+		bool ret = ConstraintHelper::getSolver()->getSolution(qVars, cds, &solverResult);
+		result = vector<double>();
+
+		if (solverResult.size() > 0) {
+			//throw "Unexpected Result in Multiple Variables Query!";
+			for (int i = 0; i < queriedStaticVariables.size(); ++i) {
+				result.push_back(solverResult[store->getIndexOf(queriedStaticVariables[i])]);
+			}
+			for (int i = 0; i < queriedDomainVariables.size(); ++i) {
+				for (int j = 0; j < relevantDomainVariables.size(); ++j) {
+					if (relevantDomainVariables[j] == queriedDomainVariables[i]) {
+						result.push_back(solverResult[domOffset+j]);
+						break;
+					}
+				}
+			}
+		}
+
+		return ret;
 	}
 
 	vector<Variable*> ConstraintQuery::getRelevantStaticVariables()
 	{
-		// TODO:
+		return relevantStaticVariables;
 	}
 
-	void ConstraintQuery::setRelevantStaticVariables(vector<Variable*> relevantStaticVariables)
+	void ConstraintQuery::setRelevantStaticVariables(vector<Variable*> value)
 	{
-		// TODO:
+		relevantStaticVariables = value;
 	}
 
 	vector<Variable*> ConstraintQuery::getRelevantDomainVariables()
 	{
-		// TODO:
+		return relevantDomainVariables;
 	}
 
-	void ConstraintQuery::setRelevantDomainVariables(vector<Variable*> relevantDomainVariables)
+	void ConstraintQuery::setRelevantDomainVariables(vector<Variable*> value)
 	{
-		// TODO:
+		relevantDomainVariables = value;
 	}
 
 	void ConstraintQuery::addConstraintCalls(vector<shared_ptr<ConstraintCall>> l)
 	{
-		// TODO:
+		calls.insert(calls.end(), l.begin(), l.end());
 	}
 
 	ConstraintQuery::UniqueVarStore::UniqueVarStore()

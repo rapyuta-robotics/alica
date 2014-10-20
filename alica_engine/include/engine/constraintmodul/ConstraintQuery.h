@@ -19,6 +19,7 @@ namespace alica
 	class ITeamObserver;
 	class RunningPlan;
 	class Variable;
+	class IAlicaClock;
 
 	/**
 	 * Encapsulates specific queries to constraint variable, usually used by behaviours.
@@ -37,9 +38,9 @@ namespace alica
 //		bool getSolution(shared_ptr<RunningPlan> rp, vector<object>& result);
 
 		vector<Variable*> getRelevantStaticVariables();
-		void setRelevantStaticVariables(vector<Variable*> relevantStaticVariables);
+		void setRelevantStaticVariables(vector<Variable*> value);
 		vector<Variable*> getRelevantDomainVariables();
-		void setRelevantDomainVariables(vector<Variable*> relevantDomainVariables);
+		void setRelevantDomainVariables(vector<Variable*> value);
 		void addConstraintCalls(vector<shared_ptr<ConstraintCall>> l);
 
 		/**
@@ -70,6 +71,8 @@ namespace alica
 
 		vector<Variable*> relevantStaticVariables;
 		vector<Variable*> relevantDomainVariables;
+
+		IAlicaClock* alicaClock;
 };
 
 }
