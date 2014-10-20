@@ -8,6 +8,10 @@
 #ifndef GSOLVER_H_
 #define GSOLVER_H_
 
+#define GSOLVER_LOG
+//#define ALWAYS_CHECK_THRESHOLD
+#define AGGREGATE_CONSTANTS
+
 #include <AutoDiff.h>
 
 #include <memory>

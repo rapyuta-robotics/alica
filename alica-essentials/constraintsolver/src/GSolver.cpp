@@ -7,10 +7,6 @@
 
 #include "GSolver.h"
 
-#define GSOLVER_LOG
-//#define ALWAYS_CHECK_THRESHOLD
-#define AGGREGATE_CONSTANTS
-
 #include "SystemConfig.h"
 #include "Configuration.h"
 
