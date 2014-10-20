@@ -9,6 +9,7 @@
 #define TERM_H_
 
 #include "ITermVisitor.h"
+#include <engine/constraintmodul/SolverTerm.h>
 
 #include <memory>
 #include <vector>
@@ -26,7 +27,7 @@ namespace autodiff
 		OR
 	};
 
-	class Term : public enable_shared_from_this<Term>
+	class Term : public enable_shared_from_this<Term>, public alica::SolverTerm
 	{
 	public:
 		Term();

@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   autodiff
   system_config
   alica_engine
+  alica_ros_proxy
 )
 
 ## System dependencies are found with CMake's conventions
@@ -85,7 +86,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES constaintsolver autodiff system_config
+ LIBRARIES constaintsolver autodiff system_config alica_engine alica_ros_proxy
  CATKIN_DEPENDS fsystem
 # DEPENDS system filesystem
 )
@@ -103,7 +104,7 @@ include_directories(
 
 ## Declare a cpp library
 add_library(constraintsolver
-#  src/CGSolver.cpp
+  src/CGSolver.cpp
   src/GSolver.cpp
   src/MSLConstraintBuilder.cpp
   src/Point2D.cpp

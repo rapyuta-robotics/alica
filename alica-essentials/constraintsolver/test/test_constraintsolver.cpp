@@ -3,7 +3,8 @@
 #include "AutoDiff.h"
 #include "GSolver.h"
 #include "MSLConstraintBuilder.h"
-#include <engine/constraintmodul/ConstraintBuilder.h>
+#include "ConstraintBuilder.h"
+#include <clock/AlicaROSClock.h>
 
 #include <ctime>
 #include <iostream>
@@ -23,6 +24,7 @@ TEST(AutoDiffTest, GSOLVER)
 	const double FIELDWIDTH = 12000;
 
 	shared_ptr<GSolver> g = make_shared<GSolver>();
+	g->setIAlicaClock(make_shared<alicaRosProxy::AlicaROSClock>());
 
 	Term::setAnd(AndType::AND);
 	Term::setOr(OrType::MAX);
@@ -87,7 +89,7 @@ TEST(AutoDiffTest, GSOLVER)
 	double actual = TermUtils::evaluate(csu, vars, res);
 	cout << "Result:" << actual << endl;
 }
-/*
+
 TEST(AutoDiffTest, GSOLVER_UTIL)
 {
 	// 12000 * 18000
@@ -95,6 +97,7 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 	const double FIELDWIDTH = 12000;
 
 	shared_ptr<GSolver> g = make_shared<GSolver>();
+	g->setIAlicaClock(make_shared<alicaRosProxy::AlicaROSClock>());
 
 	Term::setAnd(AndType::AND);
 	Term::setOr(OrType::MAX);
@@ -167,7 +170,7 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 	double actual = TermUtils::evaluate(csu, vars, res);
 	cout << "Result:" << actual << endl;
 }
-*/
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {

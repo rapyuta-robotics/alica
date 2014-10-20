@@ -14,6 +14,8 @@
 #include "SystemConfig.h"
 #include "Configuration.h"
 
+#include <engine/IAlicaClock.h>
+
 #include <limits>
 #include <string>
 #include <sstream>
@@ -39,7 +41,7 @@ namespace alica
 			_seedWithUtilOptimum = true;
 			supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 			_maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
-			_maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1000000;
+			_maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1E-6;//* 1000000;
 			_rPropConvergenceStepSize = 1E-2;
 		}
 
@@ -100,7 +102,7 @@ namespace alica
 #endif
 
 			_rResults.clear();
-			ulong begin = time(NULL);
+			alicaTime begin = alicaClock->now();
 
 			_dim = args.size();
 			_limits = limits;
@@ -154,7 +156,7 @@ namespace alica
 				//run with seeds of all other agends
 				for (int i = 0; i < seeds.size(); ++i)
 				{
-					if (begin + _maxSolveTime < time(NULL) || _fevals > _maxfevals)
+					if (begin + _maxSolveTime < alicaClock->now() || _fevals > _maxfevals)
 					{
 						break; //do not check any further seeds
 					}
@@ -170,7 +172,7 @@ namespace alica
 			}
 
 			//Here: Ignore all constraints search optimum
-			if (begin + _maxSolveTime > time(NULL) && _fevals < _maxfevals)
+			if (begin + _maxSolveTime > alicaClock->now() && _fevals < _maxfevals)
 			{
 				//if time allows, do an unconstrained run
 				if (!constraintIsConstant && !utilIsConstant && _seedWithUtilOptimum)
@@ -200,7 +202,7 @@ namespace alica
 					return rp->_finalValue;
 				}
 				_rResults.push_back(rp);
-			} while (begin + _maxSolveTime > time(NULL) && _fevals < _maxfevals);
+			} while (begin + _maxSolveTime > alicaClock->now() && _fevals < _maxfevals);
 
 			//return best result
 			int resIdx = 0;
@@ -420,6 +422,16 @@ namespace alica
 		void GSolver::setRPropConvergenceStepSize(double rPropConvergenceStepSize)
 		{
 			_rPropConvergenceStepSize = rPropConvergenceStepSize;
+		}
+
+		shared_ptr<IAlicaClock> GSolver::getIAlicaClock()
+		{
+			return alicaClock;
+		}
+
+		void GSolver::setIAlicaClock(shared_ptr<IAlicaClock> clock)
+		{
+			alicaClock = clock;
 		}
 
 		vector<double> GSolver::initialPointFromSeed(shared_ptr<RpropResult> res, vector<double> seed)

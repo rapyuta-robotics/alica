@@ -8,11 +8,13 @@
 #ifndef AutoDiffVARIABLE_H_
 #define AutoDiffVARIABLE_H_
 
+#include <engine/constraintmodul/SolverVariable.h>
+
 #include "Term.h"
 
 namespace autodiff
 {
-	class Variable : public Term
+	class Variable : public Term, public alica::SolverVariable
 	{
 	public:
 		int accept(shared_ptr<ITermVisitor> visitor);

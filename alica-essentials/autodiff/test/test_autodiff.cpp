@@ -358,21 +358,6 @@ TEST(AutoDiffTest, EQUALITY)
 	ASSERT_TRUE(TRUE == TRUE);
 }
 
-TEST(AutoDiffTest, CAST)
-{
-	Constant constant1 = 1;
-
-//	shared_ptr<Constant> constant2 = dynamic_pointer_cast<Constant>(1);
-
-//	shared_ptr<Constant> constant3 = 1;
-
-//	Term* term1 = 1;
-
-//	shared_ptr<Term> term2 = dynamic_pointer_cast<Term>(1);
-
-//	shared_ptr<Term> term3 = 1;
-}
-
 TEST(AutoDiffTest, COMPILED)
 {
 	// we will use a function of two variables

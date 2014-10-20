@@ -9,6 +9,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
  fsystem
+ alica_engine
 )
 
 ## System dependencies are found with CMake's conventions
@@ -82,7 +83,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES autodiff
+ LIBRARIES autodiff alica_engine
  CATKIN_DEPENDS fsystem
 # DEPENDS system filesystem
 )
@@ -103,6 +104,7 @@ add_library(autodiff
   src/Atan2.cpp
   src/Constant.cpp
   src/ConstPower.cpp
+  src/ConstraintBuilder.cpp
   src/ConstraintUtility.cpp
   src/Cos.cpp
   src/Exp.cpp

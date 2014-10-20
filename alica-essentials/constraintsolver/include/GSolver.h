@@ -20,6 +20,8 @@ using namespace autodiff;
 
 namespace alica
 {
+	class IAlicaClock;
+
 	namespace reasoner
 	{
 		class GSolver : public enable_shared_from_this<GSolver>
@@ -52,9 +54,14 @@ namespace alica
 			void setMaxFEvals(long maxfevals);
 			double getRPropConvergenceStepSize();
 			void setRPropConvergenceStepSize(double rPropConvergenceStepSize);
+
+			shared_ptr<IAlicaClock> getIAlicaClock();
+			void setIAlicaClock(shared_ptr<IAlicaClock> clock);
 		protected:
 			static int _fcounter;
 			bool _seedWithUtilOptimum;
+
+			shared_ptr<IAlicaClock> alicaClock;
 
 			void initLog();
 			void log(double util, vector<double> val);

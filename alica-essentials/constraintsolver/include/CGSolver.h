@@ -8,7 +8,8 @@
 #ifndef CGSOLVER_H_
 #define CGSOLVER_H_
 
-#include "IConstraintSolver.h"
+//#include "IConstraintSolver.h"
+#include <engine/constraintmodul/IConstraintSolver.h>
 
 #include <GSolver.h>
 
@@ -26,8 +27,8 @@ namespace alica
 			CGSolver();
 			virtual ~CGSolver();
 
-			bool existsSolution(vector<shared_ptr<Variable>> vars, vector<shared_ptr<ConstraintDescriptor>> calls);
-			bool getSolution(vector<shared_ptr<Variable>> vars, vector<shared_ptr<ConstraintDescriptor>> calls, vector<double>& results);
+			bool existsSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls);
+			bool getSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls, vector<double>& results);
 
 			shared_ptr<ResultStore> resultCache;
 

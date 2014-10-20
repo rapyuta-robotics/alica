@@ -14,6 +14,7 @@
 #include "CompiledDifferentiator.h"
 #include "Constant.h"
 #include "ConstPower.h"
+#include "ConstraintBuilder.h"
 #include "ConstraintUtility.h"
 #include "Cos.h"
 #include "Exp.h"

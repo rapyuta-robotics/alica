@@ -27,13 +27,13 @@ namespace alica
 			// TODO Auto-generated destructor stub
 		}
 
-		bool CGSolver::existsSolution(vector<shared_ptr<Variable>> vars, vector<shared_ptr<ConstraintDescriptor>> calls)
+		bool CGSolver::existsSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls)
 		{
 			return false;
 		}
 
-		bool CGSolver::getSolution(vector<shared_ptr<Variable>> vars, vector<shared_ptr<ConstraintDescriptor>> calls,
-									vector<double>& results)
+		bool CGSolver::getSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls,
+							vector<double>& results)
 		{
 			return false;
 		}
