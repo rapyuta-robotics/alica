@@ -8,10 +8,6 @@
 #ifndef GSOLVER_H_
 #define GSOLVER_H_
 
-#define GSOLVER_LOG
-//#define ALWAYS_CHECK_THRESHOLD
-#define AGGREGATE_CONSTANTS
-
 #include <AutoDiff.h>
 
 #include <memory>
@@ -59,13 +55,13 @@ namespace alica
 			double getRPropConvergenceStepSize();
 			void setRPropConvergenceStepSize(double rPropConvergenceStepSize);
 
-			shared_ptr<IAlicaClock> getIAlicaClock();
-			void setIAlicaClock(shared_ptr<IAlicaClock> clock);
+			IAlicaClock* getIAlicaClock();
+			void setIAlicaClock(IAlicaClock* clock);
 		protected:
 			static int _fcounter;
 			bool _seedWithUtilOptimum;
 
-			shared_ptr<IAlicaClock> alicaClock;
+			IAlicaClock* alicaClock;
 
 			void initLog();
 			void log(double util, vector<double> val);

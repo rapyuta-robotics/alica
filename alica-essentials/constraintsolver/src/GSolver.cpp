@@ -6,11 +6,15 @@
  */
 
 #include "GSolver.h"
+#define GSOLVER_LOG
+//#define ALWAYS_CHECK_THRESHOLD
+#define AGGREGATE_CONSTANTS
 
 #include "SystemConfig.h"
 #include "Configuration.h"
 
 #include <engine/IAlicaClock.h>
+#include <engine/AlicaEngine.h>
 
 #include <limits>
 #include <string>
@@ -39,6 +43,8 @@ namespace alica
 			_maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
 			_maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1E-6;//* 1000000;
 			_rPropConvergenceStepSize = 1E-2;
+
+			alicaClock = (new AlicaEngine())->getIAlicaClock();
 		}
 
 		void GSolver::initLog()
@@ -420,12 +426,12 @@ namespace alica
 			_rPropConvergenceStepSize = rPropConvergenceStepSize;
 		}
 
-		shared_ptr<IAlicaClock> GSolver::getIAlicaClock()
+		IAlicaClock* GSolver::getIAlicaClock()
 		{
 			return alicaClock;
 		}
 
-		void GSolver::setIAlicaClock(shared_ptr<IAlicaClock> clock)
+		void GSolver::setIAlicaClock(IAlicaClock* clock)
 		{
 			alicaClock = clock;
 		}

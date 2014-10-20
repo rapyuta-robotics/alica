@@ -33,7 +33,7 @@ namespace alica
 		}
 
 		bool CGSolver::getSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls,
-							vector<double>& results)
+							vector<double>* results)
 		{
 			return false;
 		}

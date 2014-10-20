@@ -24,7 +24,6 @@ TEST(AutoDiffTest, GSOLVER)
 	const double FIELDWIDTH = 12000;
 
 	shared_ptr<GSolver> g = make_shared<GSolver>();
-	g->setIAlicaClock(make_shared<alicaRosProxy::AlicaROSClock>());
 
 	Term::setAnd(AndType::AND);
 	Term::setOr(OrType::MAX);
@@ -97,7 +96,6 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 	const double FIELDWIDTH = 12000;
 
 	shared_ptr<GSolver> g = make_shared<GSolver>();
-	g->setIAlicaClock(make_shared<alicaRosProxy::AlicaROSClock>());
 
 	Term::setAnd(AndType::AND);
 	Term::setOr(OrType::MAX);

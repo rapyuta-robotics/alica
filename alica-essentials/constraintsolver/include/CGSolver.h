@@ -28,7 +28,7 @@ namespace alica
 			virtual ~CGSolver();
 
 			bool existsSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls);
-			bool getSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls, vector<double>& results);
+			bool getSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls, vector<double>* results);
 
 			shared_ptr<ResultStore> resultCache;
 
