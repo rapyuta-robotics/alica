@@ -10,18 +10,15 @@
 
 using namespace std;
 
+#include <memory>
 #include <string>
 #include <sstream>
 
 #include "AlicaElement.h"
 
-namespace autodiff
-{
-	class Variable;
-}
-
 namespace alica
 {
+	class SolverVariable;
 
 	/**
 	 * A variable is constraint by conditions, feasible values can be queried using a ConstraintQuery.
@@ -30,7 +27,7 @@ namespace alica
 	{
 	public:
 		Variable();
-		Variable(autodiff::Variable* v);
+		Variable(shared_ptr<SolverVariable> v);
 		Variable(long id, string name, string type);
 		virtual ~Variable();
 
@@ -38,15 +35,15 @@ namespace alica
 
 		string getType();
 		void setType(string type);
-		autodiff::Variable* getSolverVar();
+		shared_ptr<SolverVariable> getSolverVar();
 
 
 	private:
 		string type;
-		void setSolverVar(autodiff::Variable* solverVar);
+		void setSolverVar(shared_ptr<SolverVariable> solverVar);
 
 	protected:
-		autodiff::Variable* solverVar;
+		shared_ptr<SolverVariable> solverVar;
 	};
 
 } /* namespace Alica */

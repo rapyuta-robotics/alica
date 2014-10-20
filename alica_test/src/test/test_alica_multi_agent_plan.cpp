@@ -120,9 +120,9 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		{
 			EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
 			EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
-			EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren().begin())->getPlan()->getName(),
+			EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getPlan()->getName(),
 						string("MultiAgentTestPlan"));
-			EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getPlan()->getName(),
+			EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getPlan()->getName(),
 						string("MultiAgentTestPlan"));
 		}
 		if (i == 25)
@@ -145,10 +145,10 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		if (i == 27)
 		{
 			EXPECT_TRUE(
-					(*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201030936
-					|| (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201030936)
-					<< endl << (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId()
-					<< " " << (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId()
+					(*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936
+					|| (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936)
+					<< endl << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
+					<< " " << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
 					<< endl;
 			;
 			alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(false);
@@ -157,19 +157,19 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		if (i == 29)
 		{
 			EXPECT_TRUE(
-					(*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201030936
-					|| (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201030936)
+					(*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936
+					|| (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936)
 					<< "AE State: "
-					<< (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId()
+					<< (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
 					<< " AE2 State: "
-					<< (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() << endl;
+					<< (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << endl;
 			EXPECT_TRUE(
-					(*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201164999
-					|| (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() == 1413201164999)
+					(*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201164999
+					|| (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201164999)
 					<< "AE State: "
-					<< (*ae->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId()
+					<< (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
 					<< " AE2 State: "
-					<< (*ae2->getPlanBase()->getRootNode()->getChildren().begin())->getActiveState()->getId() << endl;
+					<< (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << endl;
 
 		}
 		if (i == 30)
