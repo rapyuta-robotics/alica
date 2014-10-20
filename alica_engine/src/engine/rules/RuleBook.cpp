@@ -420,6 +420,7 @@ namespace alica
 
 		if (r->getFailHandlingNeeded())
 		{
+			cerr << "PB: TopFailed" << endl;
 			r->setFailHandlingNeeded(false);
 			r->clearFailures();
 

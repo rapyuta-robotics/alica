@@ -106,6 +106,16 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		this_thread::sleep_for(duration);
 		ae2->stepNotify();
 		this_thread::sleep_for(duration);
+
+		if (i > 24)
+		{
+			if (ae->getPlanBase()->getDeepestNode() != nullptr)
+				cout << "AE: " << ae->getPlanBase()->getDeepestNode()->toString() << endl;
+			if (ae2->getPlanBase()->getDeepestNode() != nullptr)
+				cout << "AE2: " << ae2->getPlanBase()->getDeepestNode()->toString() << endl;
+			cout << "-------------------------" << endl;
+		}
+
 		if (i < 10)
 		{
 			EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413200842974);
@@ -113,6 +123,7 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		}
 		if (i == 10)
 		{
+			cout << "1--------- Initial State passed ---------" << endl;
 			alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(true);
 			alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(true);
 		}
@@ -141,6 +152,7 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 					}
 				}
 			}
+			cout << "2--------- Engagement to cooperative plan passed ---------" << endl;
 		}
 		if (i == 27)
 		{
@@ -150,11 +162,18 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 					<< endl << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
 					<< " " << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
 					<< endl;
-			;
+
+			EXPECT_TRUE(
+					(*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807260446
+					|| (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807260446)
+					<< endl << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
+					<< " " << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
+					<< endl;
 			alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(false);
 			alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(false);
+			cout << "3--------- Passed transitions in subplan passed ---------" << endl;
 		}
-		if (i == 29)
+		if (i == 28)
 		{
 			EXPECT_TRUE(
 					(*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936
@@ -167,10 +186,15 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 					(*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201164999
 					|| (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201164999)
 					<< "AE State: "
-					<< (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
-					<< " AE2 State: "
-					<< (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << endl;
-
+					<< (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
+					<< (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->toString() << endl
+					<< " AE2 State: " << ae2->getPlanBase()->getRootNode()->getActiveState()->getName() << " "
+					<< (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
+					<< (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState() << " "
+					//<< (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->toString()
+					<< endl;
+			cout << "4--------- Stayed in these state although previous transitions are not true anymore ---------"
+					<< endl;
 		}
 		if (i == 30)
 		{

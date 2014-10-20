@@ -613,7 +613,7 @@ namespace alica
 		}
 		ss << "Robot-State Mapping:\n";
 		ss << this->robotStateMapping->toString();
-		ss << this->epSucMapping->toString();
+		ss << this->epSucMapping->toString() << endl;
 		return ss.str();
 	}
 
