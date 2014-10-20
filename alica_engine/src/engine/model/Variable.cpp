@@ -6,7 +6,8 @@
  */
 
 #include "engine/model/Variable.h"
-#include "Variable.h"
+
+#include "engine/constraintmodul/SolverVariable.h"
 
 namespace alica
 {
@@ -16,14 +17,14 @@ namespace alica
 		this->solverVar = nullptr;
 	}
 
-	Variable::Variable(autodiff::Variable* v)
+	Variable::Variable(shared_ptr<SolverVariable> v)
 	{
 		this->solverVar = v;
 	}
 
 	Variable::~Variable()
 	{
-		delete this->solverVar;
+
 	}
 
 	Variable::Variable(long id, string name, string type) :
@@ -32,7 +33,7 @@ namespace alica
 		this->id = id;
 		this->name = name;
 		this->type = type;
-		this->solverVar = new autodiff::Variable();
+//		this->solverVar = new autodiff::Variable();
 	}
 
 	string Variable::toString()
@@ -54,12 +55,12 @@ namespace alica
 		this->type = type;
 	}
 
-	autodiff::Variable* Variable::getSolverVar()
+	shared_ptr<SolverVariable> Variable::getSolverVar()
 	{
 		return solverVar;
 	}
 
-	void alica::Variable::setSolverVar(autodiff::Variable* solverVar)
+	void alica::Variable::setSolverVar(shared_ptr<SolverVariable> solverVar)
 	{
 		this->solverVar = solverVar;
 	}

@@ -12,12 +12,15 @@
 #include <list>
 #include <unordered_set>
 
+#include <memory>
+
 using namespace std;
 
 namespace alica
 {
 	class Variable;
 	class Condition;
+	class ConstraintQuery;
 	class RunningPlan;
 
 	/**
@@ -33,7 +36,7 @@ namespace alica
 		void removeCondition(Condition* con);
 
 		//	TODO
-//		void acceptQuery(ConstraintQuery query);
+		void acceptQuery(shared_ptr<ConstraintQuery> query);
 		unordered_set<Condition*> activeConitions;
 		map<Variable*, list<Condition*> > activeVariables;
 		RunningPlan* rp;

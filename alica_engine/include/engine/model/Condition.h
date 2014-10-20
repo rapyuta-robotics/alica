@@ -11,6 +11,7 @@
 using namespace std;
 
 #include <string>
+#include <vector>
 #include <list>
 #include <memory>
 
@@ -42,8 +43,8 @@ namespace alica
 		const string& getConditionString() const;
 		void setConditionString(const string& conditionString);
 		list<Quantifier*>& getQuantifiers() ;
-		 list<Variable*>& getVariables() ;
-		void setVariables(const list<Variable*>& variables);
+		vector<Variable*>& getVariables() ;
+		void setVariables(const vector<Variable*>& variables);
 		AbstractPlan* getAbstractPlan() const;
 		void setAbstractPlan(AbstractPlan* abstractPlan);
 		const string& getPlugInName() const;
@@ -59,7 +60,7 @@ namespace alica
 		/**
 		 * The static variables used in the constraint of this condition.
 		 */
-		list<Variable*> variables;
+		vector<Variable*> variables;
 		/**
 		 * The quantifiers used in the constraint of this condition.
 		 */

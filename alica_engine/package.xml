@@ -35,7 +35,6 @@
   <build_depend>roscpp</build_depend>
   <build_depend>system_config</build_depend>
   <build_depend>fsystem</build_depend>
-  <build_depend>autodiff</build_depend>
   
   <!-- Use buildtool_depend for build tool packages: -->
   <buildtool_depend>catkin</buildtool_depend>
@@ -44,7 +43,6 @@
   <run_depend>roscpp</run_depend>
   <run_depend>system_config</run_depend>
   <run_depend>fsystem</run_depend>
-  <run_depend>autodiff</run_depend>
   
   <!-- Use test_depend for packages you need only for testing: -->
   <test_depend>gtest</test_depend>
