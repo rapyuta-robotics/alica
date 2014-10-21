@@ -473,7 +473,7 @@ namespace alica
 		{
 			for (EntryPoint* ep : *suc)
 			{
-				ret->setSuccess(me->getProperties()->getId(), ep);
+				ret->setSuccess(myId, ep);
 			}
 		}
 		return ret;
@@ -502,7 +502,7 @@ namespace alica
 		{
 			for (EntryPoint* ep : *suc)
 			{
-				sc->setSuccess(me->getProperties()->getId(), ep);
+				sc->setSuccess(myId, ep);
 			}
 		}
 	}
