@@ -39,6 +39,7 @@ using namespace std;
 //#include "engine/IAlicaCommunication.h"
 #include <communication/AlicaRosCommunication.h>
 #include "TestConditionCreator.h"
+#include "engine/parser/PlanWriter.h"
 
 class AlicaEngineTest : public ::testing::Test
 {
@@ -732,15 +733,32 @@ TEST_F(AlicaEngineTest, planParser)
 						<< endl;
 				break;
 
-
 		}
 	}
+}
+
+TEST_F(AlicaEngineTest, planWriter)
+{
+	auto plans = ae->getPlanRepository()->getPlans();
+	PlanWriter pw = PlanWriter(ae, ae->getPlanRepository());
+	Plan* plan = nullptr;
+	for (auto iter : plans)
+	{
+		if (iter.second->getId() == 1402488437260)
+		{
+			plan = iter.second;
+			break;
+		}
+	}
+	pw.saveSinglePlan(plan);
+	cout << "AlicaEngineTest: writing plan done." << endl;
+
 }
 
 int main(int argc, char **argv)
 {
 	testing::InitGoogleTest(&argc, argv);
-	ros::init(argc,argv,"AlicaEngine");
+	ros::init(argc, argv, "AlicaEngine");
 	bool ret = RUN_ALL_TESTS();
 	ros::shutdown();
 	return ret;

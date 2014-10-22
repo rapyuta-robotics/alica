@@ -29,9 +29,9 @@ namespace alica
 		this->defaultTask = defaultTask;
 	}
 
-	const string& TaskRepository::getFileName() const
+	string TaskRepository::getFileName()
 	{
-		if (this->getFileName().empty())
+		if (this->fileName.empty())
 		{
 			static string result = name + ".rdefset";
 			return result;
@@ -39,7 +39,7 @@ namespace alica
 		return fileName;
 	}
 
-	void TaskRepository::setFileName(const string& fileName)
+	void TaskRepository::setFileName(string fileName)
 	{
 		this->fileName = fileName;
 	}
