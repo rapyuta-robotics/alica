@@ -15,20 +15,20 @@
     <inTransitions>#1402489459382</inTransitions>
     <outTransitions>#1402489460694</outTransitions>
   </states>
-  <transitions id="1402489459382" name="" comment="" msg="">
-    <preCondition id="1402489460549" name="" comment="" conditionString="" pluginName="PropositionalLogicPlugin" enabled="true">
-      <quantifiers xsi:type="alica:ForallAgents" id="1403773214317" name="" comment="" scope="1402488634525">
+  <transitions id="1402489459382" name="MISSING_NAME" comment="" msg="">
+    <preCondition id="1402489460549" name="MISSING_NAME" comment="" conditionString="" pluginName="PropositionalLogicPlugin" enabled="true">
+      <quantifiers xsi:type="alica:ForallAgents" id="1403773214317" name="MISSING_NAME" comment="" scope="1402488634525">
         <sorts>X</sorts>
         <sorts>Y</sorts>
       </quantifiers>
-      <quantifiers xsi:type="alica:ForallAgents" id="1403773224776" name="" comment="" scope="1402488646220">
+      <quantifiers xsi:type="alica:ForallAgents" id="1403773224776" name="MISSING_NAME" comment="" scope="1402488646220">
         <sorts>A</sorts>
         <sorts>B</sorts>
       </quantifiers>
-      <quantifiers xsi:type="alica:ForallAgents" id="1403773234841" name="" comment="" scope="1402489396914">
+      <quantifiers xsi:type="alica:ForallAgents" id="1403773234841" name="MISSING_NAME" comment="" scope="1402489396914">
         <sorts>another one</sorts>
       </quantifiers>
-      <quantifiers xsi:type="alica:ForallAgents" id="1403773248357" name="" comment="" scope="1402488646221">
+      <quantifiers xsi:type="alica:ForallAgents" id="1403773248357" name="MISSING_NAME" comment="" scope="1402488646221">
         <sorts>TaskQuantifier</sorts>
       </quantifiers>
       <parameters id="1403773042559" name="" comment="" key="parameter_formular" value="ACED000574000E6861766554776F42616C6C732020"/>
@@ -40,7 +40,7 @@
     <inState>#1402488646220</inState>
     <outState>#1402489396914</outState>
   </transitions>
-  <transitions id="1402489460694" name="" comment="" msg="">
+  <transitions id="1402489460694" name="MISSING_NAME" comment="" msg="">
     <preCondition id="1402489462088" name="Condition-Name-Shoot-Attack" comment="" conditionString="Some nice comment!" pluginName="DefaultPlugin" enabled="true">
       <vars>#1403772778288</vars>
       <vars>#1403772797469</vars>
@@ -50,7 +50,7 @@
     <inState>#1402489396914</inState>
     <outState>#1402488646220</outState>
   </transitions>
-  <entryPoints id="1402488646221" name="" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
+  <entryPoints id="1402488646221" name="MISSING_NAME" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
     <task>../Misc/taskrepository.tsk#1225112227903</task>
     <state>#1402488646220</state>
   </entryPoints>

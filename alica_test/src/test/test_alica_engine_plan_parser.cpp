@@ -741,16 +741,18 @@ TEST_F(AlicaEngineTest, planWriter)
 {
 	auto plans = ae->getPlanRepository()->getPlans();
 	PlanWriter pw = PlanWriter(ae, ae->getPlanRepository());
-	Plan* plan = nullptr;
+//	Plan* plan = nullptr;
 	for (auto iter : plans)
 	{
-		if (iter.second->getId() == 1402488437260)
-		{
-			plan = iter.second;
-			break;
-		}
+//		if (iter.second->getId() == 1402488437260)
+//		{
+//			plan = iter.second;
+//			break;
+//		}
+		cout << "PW: Writing Plan " << iter.second->getName() << endl;
+		pw.saveSinglePlan(iter.second);
 	}
-	pw.saveSinglePlan(plan);
+//	pw.saveSinglePlan(plan);
 	cout << "AlicaEngineTest: writing plan done." << endl;
 
 }

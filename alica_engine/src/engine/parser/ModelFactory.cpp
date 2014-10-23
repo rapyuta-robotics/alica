@@ -182,6 +182,7 @@ namespace alica
 					state->setInPlan(plan);
 
 				}
+				//TODO change oush_front to push back
 				else if (typeString.compare("alica:SuccessState") == 0)
 				{
 					SuccessState* suc = createSuccessState(curChild);
@@ -919,7 +920,7 @@ namespace alica
 
 			curChild = curChild->NextSiblingElement();
 		}
-//		return p;
+	//	return p;
 	}
 	Transition * ModelFactory::createTransition(tinyxml2::XMLElement * element, Plan * plan)
 	{
@@ -1078,7 +1079,7 @@ namespace alica
 			const char* val = curChild->Value();
 			if (sorts.compare(val) == 0)
 			{
-				q->getDomainIdentifiers().push_back(val);
+				q->getDomainIdentifiers().push_back(curChild->GetText());
 			}
 			else
 			{
