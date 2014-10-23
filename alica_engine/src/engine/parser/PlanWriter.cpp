@@ -201,7 +201,7 @@ namespace alica
 			xc->SetAttribute("xsi:type", "alica:PreCondition");
 			addPlanElementAttributes(p->getPreCondition(), xc);
 			xc->SetAttribute("conditionString", p->getPreCondition()->getConditionString().c_str());
-			if(p->getPreCondition()->isEnabled())
+			if (p->getPreCondition()->isEnabled())
 			{
 				xc->SetAttribute("enabled", "true");
 			}
@@ -219,6 +219,7 @@ namespace alica
 			xc->SetAttribute("xsi:type", "alica:RuntimeCondition");
 			addPlanElementAttributes(p->getRuntimeCondition(), xc);
 			xc->SetAttribute("conditionString", p->getRuntimeCondition()->getConditionString().c_str());
+			xc->SetAttribute("pluginName", p->getRuntimeCondition()->getPlugInName().c_str());
 			addConditionChildren(p->getRuntimeCondition(), xc, doc);
 		}
 		if (p->getPostCondition() != nullptr)
@@ -228,6 +229,7 @@ namespace alica
 			xc->SetAttribute("xsi:type", "alica:Result");
 			addPlanElementAttributes(p->getPostCondition(), xc);
 			xc->SetAttribute("conditionString", p->getPostCondition()->getConditionString().c_str());
+			xc->SetAttribute("pluginName", p->getPostCondition()->getPlugInName().c_str());
 			addConditionChildren(p->getPostCondition(), xc, doc);
 		}
 		for (Variable* v : (*p->getVariables()))
@@ -237,6 +239,10 @@ namespace alica
 			if (!(v->getType().empty()))
 			{
 				xc->SetAttribute("Type", v->getType().c_str());
+			}
+			else
+			{
+				xc->SetAttribute("Type", "");
 			}
 			xp->InsertEndChild(xc);
 		}
@@ -256,9 +262,11 @@ namespace alica
 			}
 			xp->InsertEndChild(createStateXMLNode(s, doc));
 		}
-		for (Transition* t : p->getTransitions())
+		auto iter = p->getTransitions().end();
+		while (p->getTransitions().size() > 0 && iter != p->getTransitions().begin())
 		{
-			xp->InsertEndChild(createTransitionXMLNode(t, doc));
+			iter = prev(iter);
+			xp->InsertEndChild(createTransitionXMLNode(*iter, doc));
 		}
 		for (SyncTransition* s : p->getSyncTransitions())
 		{
@@ -349,16 +357,10 @@ namespace alica
 
 	void PlanWriter::addConditionChildren(Condition* c, tinyxml2::XMLElement* xn, tinyxml2::XMLDocument* doc)
 	{
-		for (Variable* v : c->getVariables())
-		{
-			tinyxml2::XMLElement* xc = doc->NewElement("vars");
-			xc->InsertEndChild(doc->NewText((string("#") + to_string(v->getId())).c_str()));
-			xn->InsertEndChild(xc);
-		}
+
 		for (Quantifier* q : c->getQuantifiers())
 		{
 			tinyxml2::XMLElement* xc = doc->NewElement("quantifiers");
-			addPlanElementAttributes(q, xc);
 			if (dynamic_cast<ForallAgents*>(q) != nullptr)
 			{
 				xc->SetAttribute("xsi:type", "alica:ForallAgents");
@@ -368,6 +370,7 @@ namespace alica
 				cout << "Unknown Quantifier: " << q->toString() << endl;
 				throw new exception();
 			}
+			addPlanElementAttributes(q, xc);
 			xc->SetAttribute("scope", to_string(q->getScope()->getId()).c_str());
 			for (string sort : q->getDomainIdentifiers())
 			{
@@ -375,6 +378,12 @@ namespace alica
 				xc->InsertEndChild(xcc);
 				xcc->InsertEndChild(doc->NewText(sort.c_str()));
 			}
+			xn->InsertEndChild(xc);
+		}
+		for (Variable* v : c->getVariables())
+		{
+			tinyxml2::XMLElement* xc = doc->NewElement("vars");
+			xc->InsertEndChild(doc->NewText((string("#") + to_string(v->getId())).c_str()));
 			xn->InsertEndChild(xc);
 		}
 	}
@@ -416,44 +425,38 @@ namespace alica
 			xs->InsertEndChild(createParametrisationXMLNode(p, doc));
 		}
 
-		for (AbstractPlan* p : s->getPlans())
+		auto iter = s->getPlans().end();
+		while (s->getPlans().size() > 0 && iter != s->getPlans().begin())
 		{
-			if (dynamic_cast<PlanType*>(p) != nullptr)
+			iter = prev(iter);
+			if (dynamic_cast<PlanType*>(*iter) != nullptr)
 			{
 				tinyxml2::XMLElement* xc = doc->NewElement("plans");
 				xs->InsertEndChild(xc);
 				xc->SetAttribute("xsi:type", "alica:PlanType");
-				xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
+				xc->InsertEndChild(doc->NewText((getRelativeFileName(*iter) + "#" + to_string((*iter)->getId())).c_str()));
 			}
-		}
-		for (AbstractPlan* p : s->getPlans())
-		{
-			if (dynamic_cast<BehaviourConfiguration*>(p) != nullptr)
+			if (dynamic_cast<BehaviourConfiguration*>(*iter) != nullptr)
 			{
 				tinyxml2::XMLElement* xc = doc->NewElement("plans");
 				xs->InsertEndChild(xc);
 				xc->SetAttribute("xsi:type", "alica:BehaviourConfiguration");
-				xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
+				xc->InsertEndChild(
+						doc->NewText((getRelativeFileName(*iter) + "#" + to_string((*iter)->getId())).c_str()));
 			}
-		}
-		for (AbstractPlan* p : s->getPlans())
-		{
-			if (dynamic_cast<Plan*>(p) != nullptr)
+			if (dynamic_cast<Plan*>(*iter) != nullptr)
 			{
 				tinyxml2::XMLElement* xc = doc->NewElement("plans");
 				xs->InsertEndChild(xc);
 				xc->SetAttribute("xsi:type", "alica:Plan");
-				xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
+				xc->InsertEndChild(doc->NewText((getRelativeFileName(*iter) + "#" + to_string((*iter)->getId())).c_str()));
 			}
-		}
-		for (AbstractPlan* p : s->getPlans())
-		{
-			if (dynamic_cast<PlanningProblem*>(p) != nullptr)
+			if (dynamic_cast<PlanningProblem*>(*iter) != nullptr)
 			{
 				tinyxml2::XMLElement* xc = doc->NewElement("plans");
 				xs->InsertEndChild(xc);
 				xc->SetAttribute("xsi:type", "alica:PlanningProblem");
-				xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
+				xc->InsertEndChild(doc->NewText((getRelativeFileName(*iter) + "#" + to_string((*iter)->getId())).c_str()));
 			}
 		}
 
@@ -522,7 +525,7 @@ namespace alica
 		addPlanElementAttributes(c, xr);
 		xr->SetAttribute("conditionString", c->getConditionString().c_str());
 		xr->SetAttribute("pluginName", c->getPlugInName().c_str());
-		if(c->isEnabled())
+		if (c->isEnabled())
 		{
 			xr->SetAttribute("enabled", "true");
 		}
@@ -539,15 +542,16 @@ namespace alica
 	{
 		tinyxml2::XMLElement* xr = doc->NewElement("synchronisations");
 		addPlanElementAttributes(s, xr);
-		xr->SetAttribute("talkTimeout", to_string(s->getTalkTimeOut()).c_str());
-		xr->SetAttribute("syncTimeout", to_string(s->getSyncTimeOut()).c_str());
-		xr->SetAttribute("failOnSyncTimeOut", "false");
 		string synched = "";
 		for (Transition* t : s->getInSync())
 		{
-			synched += t->getId() + " ";
+			synched += to_string(t->getId()) + " ";
 		}
 		xr->SetAttribute("synchedTransitions", supplementary::Configuration::trim(synched).c_str());
+		xr->SetAttribute("talkTimeout", to_string(s->getTalkTimeOut()).c_str());
+		xr->SetAttribute("syncTimeout", to_string(s->getSyncTimeOut()).c_str());
+		xr->SetAttribute("failOnSyncTimeOut", "false");
+
 		return xr;
 	}
 
@@ -579,7 +583,7 @@ namespace alica
 	{
 		tinyxml2::XMLElement* xe = doc->NewElement("entryPoints");
 		addPlanElementAttributes(e, xe);
-		if(e->isSuccessRequired())
+		if (e->isSuccessRequired())
 		{
 			xe->SetAttribute("successRequired", "true");
 		}
@@ -639,35 +643,18 @@ namespace alica
 			}
 
 		}
-		//TODO maybe think about it
 		string ret = "";
 		int pos = 0;
-		if (ufile.size() < curdir.size())
+		for (int i = 0; i < curdir.size(); i++)
 		{
-			for (int i = 0; i < ufile.size(); i++)
+			if (curdir.at(i) != ufile.at(i))
 			{
-				if (curdir.at(i) != ufile.at(i))
-				{
-					break;
-				}
-				pos++;
+				break;
 			}
-			curdir.erase(curdir.begin(), curdir.begin() + pos);
-			ret = curdir;
+			pos++;
 		}
-		else
-		{
-			for (int i = 0; i < curdir.size(); i++)
-			{
-				if (curdir.at(i) != ufile.at(i))
-				{
-					break;
-				}
-				pos++;
-			}
-			ufile.erase(ufile.begin(), ufile.begin() + pos);
-			ret = ufile;
-		}
+		ufile.erase(ufile.begin(), ufile.begin() + pos);
+		ret = ufile;
 		return ret;
 	}
 
@@ -677,11 +664,6 @@ namespace alica
 				|| find(this->plansSaved.begin(), this->plansSaved.end(), p) != this->plansSaved.end())
 		{
 			string dirfile = this->tempPlanDir;
-			//TODO should have been done by fsystem
-//			if (!dirfile.EndsWith("" + Path.DirectorySeparatorChar))
-//			{
-//				dirfile += Path.DirectorySeparatorChar;
-//			}
 			dirfile += p->getFileName();
 			return getRelativeFileName(dirfile);
 		}
@@ -702,7 +684,7 @@ namespace alica
 		xp->SetAttribute("name", r->getName().c_str());
 		xp->SetAttribute("comment", r->getComment().c_str());
 		xp->SetAttribute("usableWithPlanID", to_string(r->getUsableWithPlanId()).c_str());
-		if(r->isIsDefault())
+		if (r->isIsDefault())
 		{
 			xp->SetAttribute("default", "true");
 		}

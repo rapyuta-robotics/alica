@@ -23,25 +23,25 @@
   <states id="1402500833246" name="Shoot" comment="">
     <inTransitions>#1402500843072</inTransitions>
   </states>
-  <transitions id="1402489257607" name="" comment="" msg="">
-    <preCondition id="1402489258509" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+  <transitions id="1402489257607" name="MISSING_NAME" comment="" msg="">
+    <preCondition id="1402489258509" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
     <inState>#1402488787818</inState>
     <outState>#1402489237914</outState>
   </transitions>
-  <transitions id="1402489276995" name="" comment="" msg="">
-    <preCondition id="1402489278408" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+  <transitions id="1402489276995" name="MISSING_NAME" comment="" msg="">
+    <preCondition id="1402489278408" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
     <inState>#1402488787818</inState>
     <outState>#1402489273401</outState>
     <synchronisation>#1402500865502</synchronisation>
   </transitions>
-  <transitions id="1402500843072" name="" comment="" msg="">
-    <preCondition id="1402500844446" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+  <transitions id="1402500843072" name="MISSING_NAME" comment="" msg="">
+    <preCondition id="1402500844446" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
     <inState>#1402500830885</inState>
     <outState>#1402500833246</outState>
     <synchronisation>#1402500865502</synchronisation>
   </transitions>
   <synchronisations id="1402500865502" name="SynChro" comment="" synchedTransitions="1402500843072 1402489276995" talkTimeout="30" syncTimeout="10000" failOnSyncTimeOut="false"/>
-  <entryPoints id="1402488787819" name="" comment="" successRequired="true" minCardinality="0" maxCardinality="2147483647">
+  <entryPoints id="1402488787819" name="MISSING_NAME" comment="" successRequired="true" minCardinality="0" maxCardinality="2147483647">
     <task>../Misc/taskrepository.tsk#1225112227903</task>
     <state>#1402488787818</state>
   </entryPoints>

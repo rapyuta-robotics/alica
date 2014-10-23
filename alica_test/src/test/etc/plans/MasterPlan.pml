@@ -25,26 +25,26 @@
     <inTransitions>#1402488557864</inTransitions>
   </states>
   <transitions id="1402488517667" name="AttackToGoal" comment="AttackToGoal" msg="">
-    <preCondition id="1402488519140" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402488519140" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
     <inState>#1402488437261</inState>
     <outState>#1402488477650</outState>
   </transitions>
   <transitions id="1402488519757" name="MidFieldToGoal" comment="MidFieldToGoal" msg="">
-    <preCondition id="1402488520968" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402488520968" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
     <inState>#1402488477650</inState>
     <outState>#1402488470615</outState>
   </transitions>
   <transitions id="1402488557864" name="GoalToSucGoal" comment="GoalToSucGoal" msg="">
-    <preCondition id="1402488558741" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402488558741" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
     <inState>#1402488470615</inState>
     <outState>#1402488536570</outState>
   </transitions>
   <transitions id="1409218318661" name="AttackToDefend" comment="AttackToDefend" msg="">
-    <preCondition id="1409218319990" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1409218319990" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
     <inState>#1402488437261</inState>
     <outState>#1402488463437</outState>
   </transitions>
-  <entryPoints id="1402488437263" name="" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
+  <entryPoints id="1402488437263" name="MISSING_NAME" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
     <task>../Misc/taskrepository.tsk#1225112227903</task>
     <state>#1402488437261</state>
   </entryPoints>
