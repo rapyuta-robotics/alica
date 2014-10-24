@@ -18,6 +18,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getUtilityFunction <em>Utility Function</em>}</li>
  *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getUtilityThreshold <em>Utility Threshold</em>}</li>
  *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getVars <em>Vars</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getDestinationPath <em>Destination Path</em>}</li>
  * </ul>
  * </p>
  *
@@ -166,5 +167,32 @@ public interface AbstractPlan extends PlanElement, IInhabitable {
 	 * @generated
 	 */
 	EList<Variable> getVars();
+
+	/**
+	 * Returns the value of the '<em><b>Destination Path</b></em>' attribute.
+	 * The default value is <code>""</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Destination Path</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Destination Path</em>' attribute.
+	 * @see #setDestinationPath(String)
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getAbstractPlan_DestinationPath()
+	 * @model default=""
+	 * @generated
+	 */
+	String getDestinationPath();
+
+	/**
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getDestinationPath <em>Destination Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Destination Path</em>' attribute.
+	 * @see #getDestinationPath()
+	 * @generated
+	 */
+	void setDestinationPath(String value);
 
 } // AbstractPlan

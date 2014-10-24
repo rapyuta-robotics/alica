@@ -1,0 +1,38 @@
+«IMPORT alica»  
+«DEFINE Root FOR Behaviour»
+	«FILE name +".h"-»
+		#ifndef «name»_H_
+		#define «name»_H_
+		
+		#include "engine/BasicBehaviour.h"
+		«PROTECT CSTART '/*' CEND '*/' ID "inc"+this.id-»
+			//Add additional includes here
+		«ENDPROTECT-»
+	
+		namespace alica
+		{
+			class «name» : public BasicBehaviour
+			{
+				public:
+					«name»();
+					virtual ~«name»();
+					virtual void run(void* msg);
+					«PROTECT CSTART '/*' CEND '*/' ID "pub"+this.id-»
+					//Add additional public methods here
+					«ENDPROTECT-»
+				protected:
+					virtual void initialiseParameters();
+					«PROTECT CSTART '/*' CEND '*/' ID "pro"+this.id-»
+					//Add additional protected methods here
+					«ENDPROTECT-»
+				private:
+				«PROTECT CSTART '/*' CEND '*/' ID "prv"+this.id-»
+					//Add additional private methods here
+				«ENDPROTECT-»
+			};
+		} /* namespace alica */
+
+		#endif /* «name»_H_ */
+	«ENDFILE»
+
+«ENDDEFINE»

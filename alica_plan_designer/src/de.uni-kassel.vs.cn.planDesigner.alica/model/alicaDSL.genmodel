@@ -53,9 +53,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute alicaDSL.ecore#//AbstractPlan/utilityFunction"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute alicaDSL.ecore#//AbstractPlan/utilityThreshold"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference alicaDSL.ecore#//AbstractPlan/vars"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute alicaDSL.ecore#//AbstractPlan/destinationPath"/>
     </genClasses>
     <genClasses ecoreClass="alicaDSL.ecore#//Behaviour">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference alicaDSL.ecore#//Behaviour/configurations"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute alicaDSL.ecore#//Behaviour/destinationPath"/>
     </genClasses>
     <genClasses ecoreClass="alicaDSL.ecore#//State">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference alicaDSL.ecore#//State/plans"/>

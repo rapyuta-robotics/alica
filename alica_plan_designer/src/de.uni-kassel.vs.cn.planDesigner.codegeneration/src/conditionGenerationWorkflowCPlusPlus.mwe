@@ -16,12 +16,12 @@
 		  <metaModelPackage value="${metaModelPackage}"/> 
 		</metaModel> 
 		
-		<outlet path="${srcGenPath}/src/">
-		<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ConfigCpp.xml"/>
+		<outlet path="${srcGenPath}">
+		<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ROS_format-kepler.xml"/>
 		</outlet>
 				
 		<!-- protected regions configuration -->
-		<prSrcPaths value="${srcGenPath}/src/"/>
+		<prSrcPaths value="${srcGenPath}"/>
 		<prExcludes value="*~"/>		
 		<expand value="de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ExpressionsCPlusPlus::Root FOR model"/>
 		<beautifier class="org.eclipse.xpand.support.cdt.CppBeautifier"/>			
@@ -33,8 +33,8 @@
 		  <metaModelPackage value="${metaModelPackage}"/> 
 		</metaModel>
 		
-		<outlet path="${srcGenPath}/src/${constraintSubfolder}">
-			<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ConfigCpp.xml"/>
+		<outlet path="${srcGenPath}/${constraintSubfolder}">
+			<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ROS_format-kepler.xml"/>
 		</outlet>
 						
 		<prSrcPaths value="${srcGenPath}/${constraintSubfolder}/"/>
@@ -50,11 +50,11 @@
 		  <metaModelPackage value="${metaModelPackage}"/> 
 		</metaModel>
 		
-		<outlet path="${srcGenPath}/include/">
-			<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ConfigCpp.xml"/>
+		<outlet path="${includeGenPath}">
+			<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ROS_format-kepler.xml"/>
 		</outlet>
 						
-		<prSrcPaths value="${srcGenPath}/include/"/>
+		<prSrcPaths value="${includeGenPath}"/>
 		<prExcludes value="*~"/>		
 		
 		<expand value="de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ExpressionCPlusCplusHeader::Root FOR model"/>
@@ -67,11 +67,11 @@
 		  <metaModelPackage value="${metaModelPackage}"/> 
 		</metaModel>
 		
-		<outlet path="${srcGenPath}/include/">
-			<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ConfigCpp.xml"/>
+		<outlet path="${includeGenPath}/${constraintSubfolder}">
+			<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ROS_format-kepler.xml"/>
 		</outlet>
 						
-		<prSrcPaths value="${srcGenPath}/include/"/>
+		<prSrcPaths value="${includeGenPath}/${constraintSubfolder}"/>
 		<prExcludes value="*~"/>		
 		
 		<expand value="de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::ConstraintsCPlusPlusHeader::Root FOR model"/>

@@ -7,7 +7,7 @@
 		</metaModel> 
 		
 	<outlet path="${srcGenPath}/src">
-		<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ConfigCpp.xml"/>
+		<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ROS_format-kepler.xml"/>
 		</outlet>
 				
 		<!-- protected regions configuration -->
@@ -24,7 +24,7 @@
 		</metaModel> 
 		
 	<outlet path="${srcGenPath}/include">
-		<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ConfigCpp.xml"/>
+		<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ROS_format-kepler.xml"/>
 		</outlet>
 				
 		<!-- protected regions configuration -->

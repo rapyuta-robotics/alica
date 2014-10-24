@@ -103,7 +103,13 @@ public class PMLNewBehaviourConfigurationWizardPage extends WizardPage {
 	}
 	
 	private void initialize(){
-		configurationNameText.setText(PlanEditorUtils.removeFileExtension(behPage.getBehaviourName()) + "Default");
+		if(this.behPage != null)
+		{
+			configurationNameText.setText(this.behPage.getName() + "Default");
+		} else
+		{
+			configurationNameText.setText(this.behaviour.getName() + "Default");
+		}
 	}
 
 

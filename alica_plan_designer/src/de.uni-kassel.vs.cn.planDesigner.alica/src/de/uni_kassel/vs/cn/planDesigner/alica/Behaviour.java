@@ -13,6 +13,7 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * <ul>
  *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getConfigurations <em>Configurations</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getDestinationPath <em>Destination Path</em>}</li>
  * </ul>
  * </p>
  *
@@ -38,5 +39,32 @@ public interface Behaviour extends PlanElement {
 	 * @generated
 	 */
 	EList<BehaviourConfiguration> getConfigurations();
+
+	/**
+	 * Returns the value of the '<em><b>Destination Path</b></em>' attribute.
+	 * The default value is <code>""</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Destination Path</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Destination Path</em>' attribute.
+	 * @see #setDestinationPath(String)
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage#getBehaviour_DestinationPath()
+	 * @model default=""
+	 * @generated
+	 */
+	String getDestinationPath();
+
+	/**
+	 * Sets the value of the '{@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getDestinationPath <em>Destination Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Destination Path</em>' attribute.
+	 * @see #getDestinationPath()
+	 * @generated
+	 */
+	void setDestinationPath(String value);
 
 } // Behaviour

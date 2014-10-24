@@ -33,6 +33,9 @@ import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
+import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
+import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
+import de.uni_kassel.vs.cn.planDesigner.alica.PreCondition;
 import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.ui.adapter.IModelExclusionAdapter;
 import de.uni_kassel.vs.cn.planDesigner.ui.commands.CommandWrap4EMF;
@@ -68,6 +71,16 @@ public class PlanXYLayoutEditPolicy extends DesignerXYLayoutEditPolicy{
 			EObject newChild = (EObject)req.getNewObject();
 		
 			EObject parent = (EObject)hostEditPart.getModel();
+			Plan p = (Plan) parent;
+			boolean havePreCondition = false;
+			for(Condition c : p.getConditions())
+			{
+				if(c instanceof PreCondition)
+				{
+					havePreCondition = true;
+				}
+			}
+			
 			PMLTransactionalEditingDomain editingDomain = (PMLTransactionalEditingDomain)TransactionUtil.getEditingDomain(parent);
 			
 			IModelExclusionAdapter exclusionAdapter = (IModelExclusionAdapter)hostEditPart.getAdapter(IModelExclusionAdapter.class);
@@ -79,7 +92,8 @@ public class PlanXYLayoutEditPolicy extends DesignerXYLayoutEditPolicy{
 			if((exclusionSet == null || !exclusionSet.contains(newChild.eClass().getName())) 
 					&&  newChild.eClass() != AlicaPackage.eINSTANCE.getTask()  
 					&&  newChild.eClass() != AlicaPackage.eINSTANCE.getPlan() 
-					&&  newChild.eClass() != AlicaPackage.eINSTANCE.getPostCondition()){
+					&&  newChild.eClass() != AlicaPackage.eINSTANCE.getPostCondition() 
+					&& !havePreCondition){
 			//if(exclusionSet == null || (exclusionSet != null && !exclusionSet.contains(newChild.eClass()))){
 				CompoundCommand compound = new CompoundCommand(0);
 				
@@ -112,13 +126,13 @@ public class PlanXYLayoutEditPolicy extends DesignerXYLayoutEditPolicy{
 					compound.append(CreateChildCommand.create(editingDomain, parent, new CommandParameter(parent, AlicaPackage.eINSTANCE.getPlan_States(), newChild), Collections.emptyList()));
 				} else if(newChild.eClass().equals(AlicaPackage.eINSTANCE.getFailureState())){
 					compound.append(CreateChildCommand.create(editingDomain, parent, new CommandParameter(parent, AlicaPackage.eINSTANCE.getPlan_States(), newChild), Collections.emptyList()));
-				} else if(newChild.eClass().equals(AlicaPackage.eINSTANCE.getPreCondition())){
+				} else if(newChild.eClass().equals(AlicaPackage.eINSTANCE.getPreCondition()) && !havePreCondition){
 					compound.append(CreateChildCommand.create(editingDomain, parent, new CommandParameter(parent, AlicaPackage.eINSTANCE.getAbstractPlan_Conditions(), newChild), Collections.emptyList()));
 				} else if(newChild.eClass().equals(AlicaPackage.eINSTANCE.getRuntimeCondition())){
 					compound.append(CreateChildCommand.create(editingDomain, parent, new CommandParameter(parent, AlicaPackage.eINSTANCE.getAbstractPlan_Conditions(), newChild), Collections.emptyList()));
 				} else if(newChild.eClass().equals(AlicaPackage.eINSTANCE.getPostCondition())){
 					compound.append(CreateChildCommand.create(editingDomain, parent, new CommandParameter(parent, AlicaPackage.eINSTANCE.getAbstractPlan_Conditions(), newChild), Collections.emptyList()));
-				} 
+				}
 				
 				Rectangle constraint = (Rectangle)getConstraintFor(req);
 				compound.append(new SetUIExtensionCommand(newChild,constraint,editingDomain,editor.getUIExtensionMap()));

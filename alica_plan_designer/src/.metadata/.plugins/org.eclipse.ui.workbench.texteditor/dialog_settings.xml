@@ -13,16 +13,16 @@
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="TEST" key="selection"/>
+		<item value="trans" key="selection"/>
 		<list key="findhistory">
+			<item value="trans"/>
+			<item value="SetCo"/>
+			<item value="SetCommand"/>
+			<item value="insert_space_before_opening_paren_in_method_declaration"/>
 			<item value="TEST"/>
 			<item value="clazzName"/>
 			<item value="planCheckingMethods"/>
 			<item value="defaultPlugin"/>
-			<item value="transactionalEditingDomain"/>
-			<item value="import org.eclipse.emf.transaction.TransactionalEditingDomain;"/>
-			<item value="TransactionalEditingDomain"/>
-			<item value="beh"/>
 		</list>
 		<list key="replacehistory">
 		</list>
