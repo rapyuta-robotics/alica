@@ -1303,13 +1303,22 @@ public interface AlicaPackage extends EPackage {
 	int ABSTRACT_PLAN__VARS = PLAN_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Destination Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_PLAN__DESTINATION_PATH = PLAN_ELEMENT_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>Abstract Plan</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_PLAN_FEATURE_COUNT = PLAN_ELEMENT_FEATURE_COUNT + 6;
+	int ABSTRACT_PLAN_FEATURE_COUNT = PLAN_ELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Generate ID</em>' operation.
@@ -1376,13 +1385,22 @@ public interface AlicaPackage extends EPackage {
 	int BEHAVIOUR__CONFIGURATIONS = PLAN_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Destination Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BEHAVIOUR__DESTINATION_PATH = PLAN_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Behaviour</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BEHAVIOUR_FEATURE_COUNT = PLAN_ELEMENT_FEATURE_COUNT + 1;
+	int BEHAVIOUR_FEATURE_COUNT = PLAN_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Generate ID</em>' operation.
@@ -1492,6 +1510,15 @@ public interface AlicaPackage extends EPackage {
 	 * @ordered
 	 */
 	int PLAN__VARS = ABSTRACT_PLAN__VARS;
+
+	/**
+	 * The feature id for the '<em><b>Destination Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLAN__DESTINATION_PATH = ABSTRACT_PLAN__DESTINATION_PATH;
 
 	/**
 	 * The feature id for the '<em><b>Priority</b></em>' attribute.
@@ -1691,6 +1718,15 @@ public interface AlicaPackage extends EPackage {
 	 * @ordered
 	 */
 	int PLAN_TYPE__VARS = ABSTRACT_PLAN__VARS;
+
+	/**
+	 * The feature id for the '<em><b>Destination Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLAN_TYPE__DESTINATION_PATH = ABSTRACT_PLAN__DESTINATION_PATH;
 
 	/**
 	 * The feature id for the '<em><b>Parametrisation</b></em>' containment reference list.
@@ -2309,6 +2345,15 @@ public interface AlicaPackage extends EPackage {
 	 * @ordered
 	 */
 	int BEHAVIOUR_CONFIGURATION__VARS = ABSTRACT_PLAN__VARS;
+
+	/**
+	 * The feature id for the '<em><b>Destination Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BEHAVIOUR_CONFIGURATION__DESTINATION_PATH = ABSTRACT_PLAN__DESTINATION_PATH;
 
 	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' map.
@@ -4025,6 +4070,15 @@ public interface AlicaPackage extends EPackage {
 	int PLANNING_PROBLEM__VARS = ABSTRACT_PLAN__VARS;
 
 	/**
+	 * The feature id for the '<em><b>Destination Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLANNING_PROBLEM__DESTINATION_PATH = ABSTRACT_PLAN__DESTINATION_PATH;
+
+	/**
 	 * The feature id for the '<em><b>Plans</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5077,6 +5131,17 @@ public interface AlicaPackage extends EPackage {
 	EReference getAbstractPlan_Vars();
 
 	/**
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getDestinationPath <em>Destination Path</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Destination Path</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan#getDestinationPath()
+	 * @see #getAbstractPlan()
+	 * @generated
+	 */
+	EAttribute getAbstractPlan_DestinationPath();
+
+	/**
 	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour <em>Behaviour</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5096,6 +5161,17 @@ public interface AlicaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getBehaviour_Configurations();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getDestinationPath <em>Destination Path</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Destination Path</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.Behaviour#getDestinationPath()
+	 * @see #getBehaviour()
+	 * @generated
+	 */
+	EAttribute getBehaviour_DestinationPath();
 
 	/**
 	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.State <em>State</em>}'.
@@ -7003,6 +7079,14 @@ public interface AlicaPackage extends EPackage {
 		EReference ABSTRACT_PLAN__VARS = eINSTANCE.getAbstractPlan_Vars();
 
 		/**
+		 * The meta object literal for the '<em><b>Destination Path</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ABSTRACT_PLAN__DESTINATION_PATH = eINSTANCE.getAbstractPlan_DestinationPath();
+
+		/**
 		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl <em>Behaviour</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -7019,6 +7103,14 @@ public interface AlicaPackage extends EPackage {
 		 * @generated
 		 */
 		EReference BEHAVIOUR__CONFIGURATIONS = eINSTANCE.getBehaviour_Configurations();
+
+		/**
+		 * The meta object literal for the '<em><b>Destination Path</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BEHAVIOUR__DESTINATION_PATH = eINSTANCE.getBehaviour_DestinationPath();
 
 		/**
 		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.StateImpl <em>State</em>}' class.

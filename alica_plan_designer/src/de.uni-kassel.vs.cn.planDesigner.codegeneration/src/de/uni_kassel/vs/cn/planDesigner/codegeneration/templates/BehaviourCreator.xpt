@@ -8,7 +8,7 @@
 			#include "BehaviourCreator.h"
 			#include "engine/BasicBehaviour.h"
 			«FOREACH behaviours AS beh»
-			#include  "«beh.name».h"
+			#include  "«beh.destinationPath»/«beh.name».h"
 			«ENDFOREACH»
 			namespace alica
 			{
@@ -21,13 +21,12 @@
 				{
 				}
 
-				unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)
+				shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)
 				{
-					unique_ptr<alica::BasicBehaviour> beh;
 					switch(behaviourConfId)
 					{
 						«FOREACH behaviours AS beh»
-						case «beh.id»
+						case «beh.id»:
 							return make_shared<«beh.name»>();
 							break;
 						«ENDFOREACH»
@@ -37,9 +36,6 @@
 						break;
 					}
 				}
-				«FOREACH behaviours AS beh»
-					«EXPAND Behaviour FOR beh»
-				«ENDFOREACH»
 			}
 	«ENDFILE»
 «ENDDEFINE»

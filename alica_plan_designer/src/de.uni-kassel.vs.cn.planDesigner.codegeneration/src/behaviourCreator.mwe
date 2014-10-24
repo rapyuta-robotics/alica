@@ -7,14 +7,14 @@
 		</metaModel> 
 		
 	<outlet path="${srcGenPath}/src">
-		<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ConfigCpp.xml"/>
+		<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ROS_format-kepler.xml"/>
 		</outlet>
 				
 		<!-- protected regions configuration -->
 		<prSrcPaths value="${srcGenPath}"/>
 		<prExcludes value="*~"/>		
 		<expand value="de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::BehaviourCreator::Root FOR model"/>
-		<beautifier class="org.eclipse.xpand.support.cdt.CppBeautifier"/>			
+		<beautifier class="org.eclipse.xpand.support.cdt.CppBeautifier"/>				
 	</component>  
 	
 	<component id="generator" class="org.eclipse.xpand2.Generator" skipOnErrors="true">
@@ -24,13 +24,13 @@
 		</metaModel> 
 		
 	<outlet path="${srcGenPath}/include">
-		<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier"  configFile="ConfigCpp.xml"/>
+		<postprocessor class="org.eclipse.xpand.support.cdt.CppBeautifier" configFile="ROS_format-kepler.xml"/>
 		</outlet>
 				
 		<!-- protected regions configuration -->
 		<prSrcPaths value="${srcGenPath}"/>
 		<prExcludes value="*~"/>		
 		<expand value="de::uni_kassel::vs::cn::planDesigner::codegeneration::templates::BehaviourCreatorHeader::Root FOR model"/>
-		<beautifier class="org.eclipse.xpand.support.cdt.CppBeautifier"/>			
+	<beautifier class="org.eclipse.xpand.support.cdt.CppBeautifier"/>		
 	</component>  
 </workflow>

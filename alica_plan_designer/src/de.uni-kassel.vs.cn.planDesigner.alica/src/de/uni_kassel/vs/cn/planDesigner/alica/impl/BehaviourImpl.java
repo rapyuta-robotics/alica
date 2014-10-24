@@ -4,10 +4,12 @@ package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -23,6 +25,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourConfiguration;
  * The following features are implemented:
  * <ul>
  *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getConfigurations <em>Configurations</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.BehaviourImpl#getDestinationPath <em>Destination Path</em>}</li>
  * </ul>
  * </p>
  *
@@ -38,6 +41,25 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 	 * @ordered
 	 */
 	protected EList<BehaviourConfiguration> configurations;
+
+	/**
+	 * The default value of the '{@link #getDestinationPath() <em>Destination Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDestinationPath()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String DESTINATION_PATH_EDEFAULT = "";
+	/**
+	 * The cached value of the '{@link #getDestinationPath() <em>Destination Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDestinationPath()
+	 * @generated
+	 * @ordered
+	 */
+	protected String destinationPath = DESTINATION_PATH_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -68,6 +90,27 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 			configurations = new EObjectContainmentWithInverseEList<BehaviourConfiguration>(BehaviourConfiguration.class, this, AlicaPackage.BEHAVIOUR__CONFIGURATIONS, AlicaPackage.BEHAVIOUR_CONFIGURATION__BEHAVIOUR);
 		}
 		return configurations;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getDestinationPath() {
+		return destinationPath;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDestinationPath(String newDestinationPath) {
+		String oldDestinationPath = destinationPath;
+		destinationPath = newDestinationPath;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.BEHAVIOUR__DESTINATION_PATH, oldDestinationPath, destinationPath));
 	}
 
 	/**
@@ -109,6 +152,8 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 		switch (featureID) {
 			case AlicaPackage.BEHAVIOUR__CONFIGURATIONS:
 				return getConfigurations();
+			case AlicaPackage.BEHAVIOUR__DESTINATION_PATH:
+				return getDestinationPath();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -126,6 +171,9 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 				getConfigurations().clear();
 				getConfigurations().addAll((Collection<? extends BehaviourConfiguration>)newValue);
 				return;
+			case AlicaPackage.BEHAVIOUR__DESTINATION_PATH:
+				setDestinationPath((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -141,6 +189,9 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 			case AlicaPackage.BEHAVIOUR__CONFIGURATIONS:
 				getConfigurations().clear();
 				return;
+			case AlicaPackage.BEHAVIOUR__DESTINATION_PATH:
+				setDestinationPath(DESTINATION_PATH_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -155,8 +206,26 @@ public class BehaviourImpl extends PlanElementImpl implements Behaviour {
 		switch (featureID) {
 			case AlicaPackage.BEHAVIOUR__CONFIGURATIONS:
 				return configurations != null && !configurations.isEmpty();
+			case AlicaPackage.BEHAVIOUR__DESTINATION_PATH:
+				return DESTINATION_PATH_EDEFAULT == null ? destinationPath != null : !DESTINATION_PATH_EDEFAULT.equals(destinationPath);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (destinationPath: ");
+		result.append(destinationPath);
+		result.append(')');
+		return result.toString();
 	}
 
 } //BehaviourImpl

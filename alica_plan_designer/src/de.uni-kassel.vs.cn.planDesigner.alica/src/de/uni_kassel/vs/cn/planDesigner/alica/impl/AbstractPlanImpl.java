@@ -33,6 +33,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Variable;
  *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.AbstractPlanImpl#getUtilityFunction <em>Utility Function</em>}</li>
  *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.AbstractPlanImpl#getUtilityThreshold <em>Utility Threshold</em>}</li>
  *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.AbstractPlanImpl#getVars <em>Vars</em>}</li>
+ *   <li>{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.AbstractPlanImpl#getDestinationPath <em>Destination Path</em>}</li>
  * </ul>
  * </p>
  *
@@ -128,6 +129,26 @@ public abstract class AbstractPlanImpl extends PlanElementImpl implements Abstra
 	 * @ordered
 	 */
 	protected EList<Variable> vars;
+
+	/**
+	 * The default value of the '{@link #getDestinationPath() <em>Destination Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDestinationPath()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String DESTINATION_PATH_EDEFAULT = "";
+
+	/**
+	 * The cached value of the '{@link #getDestinationPath() <em>Destination Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDestinationPath()
+	 * @generated
+	 * @ordered
+	 */
+	protected String destinationPath = DESTINATION_PATH_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -283,6 +304,27 @@ public abstract class AbstractPlanImpl extends PlanElementImpl implements Abstra
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getDestinationPath() {
+		return destinationPath;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDestinationPath(String newDestinationPath) {
+		String oldDestinationPath = destinationPath;
+		destinationPath = newDestinationPath;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AlicaPackage.ABSTRACT_PLAN__DESTINATION_PATH, oldDestinationPath, destinationPath));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -331,6 +373,8 @@ public abstract class AbstractPlanImpl extends PlanElementImpl implements Abstra
 				return getUtilityThreshold();
 			case AlicaPackage.ABSTRACT_PLAN__VARS:
 				return getVars();
+			case AlicaPackage.ABSTRACT_PLAN__DESTINATION_PATH:
+				return getDestinationPath();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -364,6 +408,9 @@ public abstract class AbstractPlanImpl extends PlanElementImpl implements Abstra
 				getVars().clear();
 				getVars().addAll((Collection<? extends Variable>)newValue);
 				return;
+			case AlicaPackage.ABSTRACT_PLAN__DESTINATION_PATH:
+				setDestinationPath((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -394,6 +441,9 @@ public abstract class AbstractPlanImpl extends PlanElementImpl implements Abstra
 			case AlicaPackage.ABSTRACT_PLAN__VARS:
 				getVars().clear();
 				return;
+			case AlicaPackage.ABSTRACT_PLAN__DESTINATION_PATH:
+				setDestinationPath(DESTINATION_PATH_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -418,6 +468,8 @@ public abstract class AbstractPlanImpl extends PlanElementImpl implements Abstra
 				return utilityThreshold != UTILITY_THRESHOLD_EDEFAULT;
 			case AlicaPackage.ABSTRACT_PLAN__VARS:
 				return vars != null && !vars.isEmpty();
+			case AlicaPackage.ABSTRACT_PLAN__DESTINATION_PATH:
+				return DESTINATION_PATH_EDEFAULT == null ? destinationPath != null : !DESTINATION_PATH_EDEFAULT.equals(destinationPath);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -438,6 +490,8 @@ public abstract class AbstractPlanImpl extends PlanElementImpl implements Abstra
 		result.append(utilityFunction);
 		result.append(", utilityThreshold: ");
 		result.append(utilityThreshold);
+		result.append(", destinationPath: ");
+		result.append(destinationPath);
 		result.append(')');
 		return result.toString();
 	}
