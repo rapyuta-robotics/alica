@@ -38,7 +38,7 @@
 			«ENDFOREACH»
 			«FOREACH states AS s»
 				«FOREACH s.outTransitions AS transition»
-					class TransitionCondition«transition.id» : public BasicCondition
+					class TransitionCondition«transition.preCondition.id» : public BasicCondition
 					{
 						bool evaluate(shared_ptr<RunningPlan> rp);
 					};

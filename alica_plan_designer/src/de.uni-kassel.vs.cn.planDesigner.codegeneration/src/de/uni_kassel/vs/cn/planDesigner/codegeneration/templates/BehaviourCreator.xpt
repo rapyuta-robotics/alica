@@ -21,13 +21,12 @@
 				{
 				}
 
-				unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)
+				shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)
 				{
-					unique_ptr<alica::BasicBehaviour> beh;
 					switch(behaviourConfId)
 					{
 						«FOREACH behaviours AS beh»
-						case «beh.id»
+						case «beh.id»:
 							return make_shared<«beh.name»>();
 							break;
 						«ENDFOREACH»

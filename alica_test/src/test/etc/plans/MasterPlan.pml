@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488437260" name="MasterPlan" comment="comment" masterPlan="true" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="0" maxCardinality="2147483647">
+<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488437260" name="MasterPlan" comment="comment" masterPlan="true" utilityFunction="" utilityThreshold="0.1" destinationPath="Plans" priority="0.0" minCardinality="0" maxCardinality="2147483647">
   <states id="1402488437261" name="Attack" comment="" entryPoint="1402488437263">
     <plans xsi:type="alica:BehaviourConfiguration">Behaviour/Attack.beh#1402488866727</plans>
     <outTransitions>#1402488517667</outTransitions>
@@ -25,22 +25,22 @@
     <inTransitions>#1402488557864</inTransitions>
   </states>
   <transitions id="1402488517667" name="AttackToGoal" comment="AttackToGoal" msg="">
-    <preCondition id="1402488519140" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402488519140" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1402488437261</inState>
     <outState>#1402488477650</outState>
   </transitions>
   <transitions id="1402488519757" name="MidFieldToGoal" comment="MidFieldToGoal" msg="">
-    <preCondition id="1402488520968" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402488520968" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1402488477650</inState>
     <outState>#1402488470615</outState>
   </transitions>
   <transitions id="1402488557864" name="GoalToSucGoal" comment="GoalToSucGoal" msg="">
-    <preCondition id="1402488558741" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402488558741" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1402488470615</inState>
     <outState>#1402488536570</outState>
   </transitions>
   <transitions id="1409218318661" name="AttackToDefend" comment="AttackToDefend" msg="">
-    <preCondition id="1409218319990" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1409218319990" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1402488437261</inState>
     <outState>#1402488463437</outState>
   </transitions>

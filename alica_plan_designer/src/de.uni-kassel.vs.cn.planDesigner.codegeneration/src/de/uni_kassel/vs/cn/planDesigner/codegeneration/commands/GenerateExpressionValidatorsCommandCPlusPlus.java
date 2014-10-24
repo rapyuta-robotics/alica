@@ -150,6 +150,43 @@ public class GenerateExpressionValidatorsCommandCPlusPlus extends
 			}
 
 			for (Plan plan : pml) {
+				String filePath = plan.eResource().getURI().toString();
+				filePath = filePath.replace("platform:/resource", "");
+
+				filePath = filePath.replaceAll("/" + plan.getName() + "."
+						+ plan.eResource().getURI().fileExtension(), "");
+				String includePath = destinationPath + "/include" + filePath;
+
+				String forInclude = filePath.substring(1);
+
+				Command cmd = SetCommand.create(PlanEditorUtils
+						.getEditingDomain(), plan, AlicaPackage.eINSTANCE
+						.getAbstractPlan_DestinationPath(), forInclude);
+
+				PlanEditorUtils.getEditingDomain().getCommandStack()
+						.execute(cmd);
+
+				filePath = destinationPath + "/src" + filePath;
+
+				File dir = new File(filePath);
+				if (!dir.exists()) {
+					dir.mkdir();
+				}
+				File dirContraint = new File(filePath + "/constraints");
+				if (!dirContraint.exists()) {
+					dirContraint.mkdir();
+				}
+				File dirInclude = new File(includePath);
+				if (!dirInclude.exists()) {
+					dirInclude.mkdir();
+				}
+
+				File dirConstraintInclude = new File(includePath
+						+ "/constraints");
+				if (!dirConstraintInclude.exists()) {
+					dirConstraintInclude.mkdir();
+				}
+				
 				for (Condition c : plan.getConditions()) {
 					coc.getConditions().add(c);
 					cc.getConditions().add(c);
@@ -231,7 +268,6 @@ public class GenerateExpressionValidatorsCommandCPlusPlus extends
 						});
 				runner = new WorkflowRunner();
 				properties.clear();
-
 				String filePath = plan.eResource().getURI().toString();
 				filePath = filePath.replace("platform:/resource", "");
 
@@ -239,35 +275,8 @@ public class GenerateExpressionValidatorsCommandCPlusPlus extends
 						+ plan.eResource().getURI().fileExtension(), "");
 				String includePath = destinationPath + "/include" + filePath;
 
-				String forInclude = filePath.substring(1);
-
-				Command cmd = SetCommand.create(PlanEditorUtils
-						.getEditingDomain(), plan, AlicaPackage.eINSTANCE
-						.getAbstractPlan_DestinationPath(), forInclude);
-
-				PlanEditorUtils.getEditingDomain().getCommandStack()
-						.execute(cmd);
 
 				filePath = destinationPath + "/src" + filePath;
-
-				File dir = new File(filePath);
-				if (!dir.exists()) {
-					dir.mkdir();
-				}
-				File dirContraint = new File(filePath + "/constraints");
-				if (!dirContraint.exists()) {
-					dirContraint.mkdir();
-				}
-				File dirInclude = new File(includePath);
-				if (!dirInclude.exists()) {
-					dirInclude.mkdir();
-				}
-
-				File dirConstraintInclude = new File(includePath
-						+ "/constraints");
-				if (!dirConstraintInclude.exists()) {
-					dirConstraintInclude.mkdir();
-				}
 
 				properties.put("metaModelPackage", ALICA_PACKAGE_FILE);
 				properties.put("srcGenPath", filePath);

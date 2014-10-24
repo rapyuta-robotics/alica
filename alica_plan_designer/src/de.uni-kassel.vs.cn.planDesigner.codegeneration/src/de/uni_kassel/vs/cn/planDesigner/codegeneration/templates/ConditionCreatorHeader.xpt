@@ -21,7 +21,7 @@
 				public:
 				ConditionCreator();
 				virtual ~ConditionCreator();
-				hared_ptr<BasicCondition> createConditions(long conditionConfId);
+				shared_ptr<BasicCondition> createConditions(long conditionConfId);
 			};
 
 		} /* namespace alica */

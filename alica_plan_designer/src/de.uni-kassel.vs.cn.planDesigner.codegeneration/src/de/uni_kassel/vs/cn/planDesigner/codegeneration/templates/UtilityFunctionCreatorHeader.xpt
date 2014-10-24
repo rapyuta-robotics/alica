@@ -7,6 +7,7 @@
 		#define UTILITYFUNCTIONCREATOR_H_
 
 		#include <engine/IUtilityCreator.h>
+		#include <memory>
 
 		namespace alica
 		{
@@ -14,7 +15,7 @@
 			class UtilityFunctionCreator : public IUtilityCreator
 			{
 				public:
-				virtual ~TestUtilityFunctionCreator();
+				virtual ~UtilityFunctionCreator();
 				UtilityFunctionCreator();
 				shared_ptr<BasicUtilityFunction> createUtility(long utilityfunctionConfId);
 			};

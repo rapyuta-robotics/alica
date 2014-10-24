@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488634525" name="AttackPlan" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="0" maxCardinality="2147483647">
+<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488634525" name="AttackPlan" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" destinationPath="Plans" priority="0.0" minCardinality="0" maxCardinality="2147483647">
   <vars id="1403772778288" name="TestVar1" comment="This should be a double! :)" Type="double"/>
   <vars id="1403772797469" name="VarTest2" comment="Another int variable" Type="int"/>
   <vars id="1403772816953" name="NewVar" comment="Here is no type given !?" Type=""/>
@@ -16,7 +16,7 @@
     <outTransitions>#1402489460694</outTransitions>
   </states>
   <transitions id="1402489459382" name="MISSING_NAME" comment="" msg="">
-    <preCondition id="1402489460549" name="MISSING_NAME" comment="" conditionString="" pluginName="PropositionalLogicPlugin" enabled="true">
+    <preCondition id="1402489460549" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true">
       <quantifiers xsi:type="alica:ForallAgents" id="1403773214317" name="MISSING_NAME" comment="" scope="1402488634525">
         <sorts>X</sorts>
         <sorts>Y</sorts>

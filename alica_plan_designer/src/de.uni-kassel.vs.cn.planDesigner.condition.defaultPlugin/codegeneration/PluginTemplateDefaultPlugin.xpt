@@ -22,7 +22,7 @@
 			bool TransitionCondition«transition.preCondition.id»::evaluate(shared_ptr<RunningPlan> rp)
 			 {	
 				«PROTECT CSTART '/*' CEND '*/' ID transition.id »
-					--> "Transition: «transition.id»  not implemented";
+					return false;
 				«ENDPROTECT»	
 				
 			}
@@ -42,7 +42,7 @@
 			 bool RunTimeCondition«rc.id»::evaluate(shared_ptr<RunningPlan> rp)
 			 {
 			 	 «PROTECT CSTART '/*' CEND '*/' ID rc.id »
-			 	 --> "RUNTIMECONDITION: «rc.id»  not implemented";
+			 	  return true;
 				 «ENDPROTECT»			    
 			  }		
 	«ENDIF»		
@@ -58,7 +58,7 @@
 			 bool PreCondition«pc.id»::evaluate(shared_ptr<RunningPlan> rp)
 			{
 			 	 «PROTECT CSTART '/*' CEND '*/' ID pc.id »
-			 	 	--> "PreCondition:«pc.id»  not implemented";
+			 	 	//--> "PreCondition:«pc.id»  not implemented";
 					return true;
 				 «ENDPROTECT»			    
 			  }
@@ -85,9 +85,9 @@
 * forall agents in «q.scope.name» let v = «q.sorts» 
 «ENDFOREACH»
 */
-public static void GetConstraint«transition.preCondition.id»(ConstraintDescriptor c, RunningPlan rp) {
-«PROTECT CSTART '/*' CEND '*/' ID "cc"+transition.id »
-	//WorldModel wm = WorldModel.Get();
+void Constraint«transition.preCondition.id»::getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan>) {
+«PROTECT CSTART '/*' CEND '*/' ID "cc"+transition.preCondition.id »
+	//Proteced
 «ENDPROTECT»			
 }
 «ENDIF»

@@ -7,11 +7,12 @@
 		#define CONSTRAINTCREATOR_H_
 
 		#include <engine/IConstraintCreator.h>
-
+		#include <memory>
+		
 		namespace alica
 		{
 
-			class TestConstraintCreator : public IConstraintCreator
+			class ConstraintCreator : public IConstraintCreator
 			{
 				public:
 				ConstraintCreator();
