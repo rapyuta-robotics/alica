@@ -1,7 +1,7 @@
 «IMPORT alica»  
 «DEFINE Root FOR Plan»
 	«FILE name + id + "Constraints.cpp"»
-		#include «name»«id».h
+		#include "«destinationPath»/constraints/«name»«id»Constraints.h"
 		using namespace std;
 		using namespace alica;
 		«PROTECT CSTART '/*' CEND '*/' ID "ch"+this.id »
@@ -19,6 +19,7 @@
 	«ENDFILE»
 
 «ENDDEFINE»
+«DEFINE Root FOR PlanningProblem»«ENDDEFINE»
 «DEFINE description FOR Plan»
 /*		
 * Tasks: «FOREACH entryPoints AS planEntryPoint»

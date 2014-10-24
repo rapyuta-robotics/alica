@@ -6,12 +6,32 @@
 		<section name="DialogBoundsSettings">
 			<item value="600" key="DIALOG_WIDTH"/>
 			<item value="262" key="DIALOG_Y_ORIGIN"/>
-			<item value="500" key="DIALOG_HEIGHT"/>
 			<item value="722" key="DIALOG_X_ORIGIN"/>
+			<item value="528" key="DIALOG_HEIGHT"/>
 			<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		</section>
 	</section>
+	<section name="ProductExportWizard">
+		<item value="linux (gtk/x86),linux (gtk/x86_64)" key="cross-platform"/>
+		<item value="false" key="exportSource"/>
+		<item value="true" key="syncProduct"/>
+		<item value="/de.uni-kassel.vs.cn.planDesigner.ui/cnplandesigner.product" key="productConfig1"/>
+		<item value="Generate source bundles" key="exportSourceFormat"/>
+		<item value="true" key="p2metadata"/>
+		<item value="true" key="exportDirectory"/>
+		<item value="true" key="multiplatform"/>
+		<item value="/de.uni-kassel.vs.cn.planDesigner.ui/cnplandesigner.product" key="productConfig0"/>
+		<item value="/home/snook/eclipse_test" key="destination1"/>
+		<item value="/home/snook/eclipse_test" key="destination0"/>
+		<item value="true" key="allowBinaryCycles"/>
+		<item value="eclipse" key="productRoot"/>
+	</section>
 	<section name="quick_assist_proposal_size">
+	</section>
+	<section name="editBundleContainerWizard">
+		<item value="true" key="groupByCategory"/>
+		<item value="true" key="showVersions"/>
+		<item value="http://download.eclipse.org/releases/kepler/" key="selectedRepository"/>
 	</section>
 	<section name="PluginExportWizard">
 		<item value="true" key="exportUpdate"/>
@@ -28,13 +48,8 @@
 		<item value="false" key="signJAR"/>
 		<item value="/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/conditionPlugins/plugins" key="destination1"/>
 		<item value="/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/conditionPlugins/plugins" key="destination0"/>
-		<item value="201410061508" key="qualifierName"/>
 		<item value="true" key="allowBinaryCycles"/>
-	</section>
-	<section name="editBundleContainerWizard">
-		<item value="true" key="groupByCategory"/>
-		<item value="true" key="showVersions"/>
-		<item value="http://download.eclipse.org/releases/kepler/" key="selectedRepository"/>
+		<item value="201410061508" key="qualifierName"/>
 	</section>
 	<section name="PDEFormActionManager">
 		<list key="RecentLaunches">

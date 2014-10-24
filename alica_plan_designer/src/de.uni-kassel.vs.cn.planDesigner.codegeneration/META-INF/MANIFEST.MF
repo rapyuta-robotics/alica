@@ -9,7 +9,9 @@ Require-Bundle:
  de.uni-kassel.vs.cn.planDesigner.condition.core,
  org.eclipse.ui,
  org.apache.commons.logging,
+ org.eclipse.emf.edit;visibility:=reexport,
  org.antlr.runtime,
+ org.eclipse.emf.transaction,
  org.apache.commons.cli,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
@@ -35,4 +37,5 @@ Bundle-ClassPath: .,
  libs/org.eclipse.cdt.core_5.5.0.201305221014.jar
 Bundle-Activator: de.uni_kassel.vs.cn.planDesigner.codegeneration.CodeGenActivator
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.emf.transaction
+Import-Package: org.eclipse.emf.edit,
+ org.eclipse.emf.transaction

@@ -823,6 +823,15 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getAbstractPlan_DestinationPath() {
+		return (EAttribute)abstractPlanEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getBehaviour() {
 		return behaviourEClass;
 	}
@@ -834,6 +843,15 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 */
 	public EReference getBehaviour_Configurations() {
 		return (EReference)behaviourEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getBehaviour_DestinationPath() {
+		return (EAttribute)behaviourEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2246,9 +2264,11 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		createEAttribute(abstractPlanEClass, ABSTRACT_PLAN__UTILITY_FUNCTION);
 		createEAttribute(abstractPlanEClass, ABSTRACT_PLAN__UTILITY_THRESHOLD);
 		createEReference(abstractPlanEClass, ABSTRACT_PLAN__VARS);
+		createEAttribute(abstractPlanEClass, ABSTRACT_PLAN__DESTINATION_PATH);
 
 		behaviourEClass = createEClass(BEHAVIOUR);
 		createEReference(behaviourEClass, BEHAVIOUR__CONFIGURATIONS);
+		createEAttribute(behaviourEClass, BEHAVIOUR__DESTINATION_PATH);
 
 		stateEClass = createEClass(STATE);
 		createEReference(stateEClass, STATE__PLANS);
@@ -2559,9 +2579,11 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		initEAttribute(getAbstractPlan_UtilityFunction(), ecorePackage.getEString(), "utilityFunction", "", 0, 1, AbstractPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAbstractPlan_UtilityThreshold(), ecorePackage.getEDouble(), "utilityThreshold", "0.1", 0, 1, AbstractPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAbstractPlan_Vars(), this.getVariable(), null, "vars", null, 0, -1, AbstractPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAbstractPlan_DestinationPath(), ecorePackage.getEString(), "destinationPath", "", 0, 1, AbstractPlan.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(behaviourEClass, Behaviour.class, "Behaviour", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getBehaviour_Configurations(), this.getBehaviourConfiguration(), this.getBehaviourConfiguration_Behaviour(), "configurations", null, 1, -1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getBehaviour_DestinationPath(), ecorePackage.getEString(), "destinationPath", "", 0, 1, Behaviour.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(stateEClass, State.class, "State", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getState_Plans(), this.getAbstractPlan(), null, "plans", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

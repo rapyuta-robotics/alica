@@ -8,7 +8,7 @@
 			#include "BehaviourCreator.h"
 			#include "engine/BasicBehaviour.h"
 			«FOREACH behaviours AS beh»
-			#include  "«beh.name».h"
+			#include  "«beh.destinationPath»/«beh.name».h"
 			«ENDFOREACH»
 			namespace alica
 			{
@@ -37,9 +37,6 @@
 						break;
 					}
 				}
-				«FOREACH behaviours AS beh»
-					«EXPAND Behaviour FOR beh»
-				«ENDFOREACH»
 			}
 	«ENDFILE»
 «ENDDEFINE»

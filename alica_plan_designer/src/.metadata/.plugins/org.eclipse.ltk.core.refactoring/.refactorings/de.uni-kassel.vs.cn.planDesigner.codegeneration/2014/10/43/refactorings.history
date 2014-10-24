@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;de.uni-kassel.vs.cn.planDesigner.codegeneration/src/de/uni_kassel/vs/cn/planDesigner/codegeneration/templates/BehaviorCPlusPlus.xpt&apos; to &apos;BehaviourCPlusPlus.xpt&apos;" description="Rename resource &apos;BehaviorCPlusPlus.xpt&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/de/uni_kassel/vs/cn/planDesigner/codegeneration/templates/BehaviorCPlusPlus.xpt" name="BehaviourCPlusPlus.xpt" stamp="1414069626097" updateReferences="true"/>
+</session>
