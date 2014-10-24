@@ -8,6 +8,8 @@ using namespace std;
 #include <iostream>
 #include <memory>
 #include <ros/ros.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include <engine/AlicaEngine.h>
 #include "engine/PlanRepository.h"
@@ -87,6 +89,22 @@ protected:
 		delete uc;
 		delete crc;
 		delete bc;
+	}
+
+	static std::string exec(const char* cmd)
+	{
+	    FILE* pipe = popen(cmd, "r");
+	    if (!pipe)
+	        return "ERROR";
+	    char buffer[128];
+	    std::string result = "";
+	    while (!feof(pipe))
+	    {
+	        if (fgets(buffer, 128, pipe) != NULL)
+	            result += buffer;
+	    }
+	    pclose(pipe);
+	    return result;
 	}
 
 	static void checkAlicaElement(alica::AlicaElement* ae, long id, string name, string comment)
@@ -741,19 +759,16 @@ TEST_F(AlicaEngineTest, planWriter)
 {
 	auto plans = ae->getPlanRepository()->getPlans();
 	PlanWriter pw = PlanWriter(ae, ae->getPlanRepository());
-//	Plan* plan = nullptr;
 	for (auto iter : plans)
 	{
-//		if (iter.second->getId() == 1402488437260)
-//		{
-//			plan = iter.second;
-//			break;
-//		}
-		cout << "PW: Writing Plan " << iter.second->getName() << endl;
+		cout << "AlicaEngineTest, planWriter: Writing Plan " << iter.second->getName() << endl;
 		pw.saveSinglePlan(iter.second);
+		string temp = supplementary::FileSystem::combinePaths(sc->getConfigPath(), "plans/tmp");
+		temp = supplementary::FileSystem::combinePaths(temp, iter.second->getName() + string(".pml"));
+		string test = exec((string("diff ") + iter.second->getFileName() + string(" ") + temp).c_str());
+		EXPECT_EQ(0, test.size()) << "files are different! " << test << endl;
 	}
-//	pw.saveSinglePlan(plan);
-	cout << "AlicaEngineTest: writing plan done." << endl;
+	cout << "AlicaEngineTest, planWriter: writing plans done." << endl;
 
 }
 

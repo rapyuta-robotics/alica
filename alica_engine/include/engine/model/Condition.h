@@ -24,6 +24,7 @@ namespace alica
 	class AbstractPlan;
 	class BasicCondition;
 	class RunningPlan;
+	class Parameter;
 
 	/**
 	 * A condition encapsulates expressions and constraint specific to a AlicaElement, e.g., a Transition, or a Plan.
@@ -52,6 +53,8 @@ namespace alica
 		bool evaluate(shared_ptr<RunningPlan> rp);
 		shared_ptr<BasicCondition> getBasicCondition();
 		void setBasicCondition(shared_ptr<BasicCondition> basicCondition);
+		list<Parameter*>& getParameters();
+		void setParameters(list<Parameter*> parameters);
 
 	private:
 		void setQuantifiers(const list<Quantifier*>& quantifiers);
@@ -69,6 +72,7 @@ namespace alica
 		 * The Abstract Plan in which this condition occurs.
 		 */
 		AbstractPlan* abstractPlan;
+		list<Parameter*> parameters;
 		shared_ptr<BasicCondition> basicCondition;
 		string plugInName;
 
