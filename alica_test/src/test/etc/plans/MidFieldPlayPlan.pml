@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488770050" name="MidFieldPlayPlan" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="3" maxCardinality="2147483647">
-  <conditions xsi:type="alica:RuntimeCondition" id="1402489260911" name="NewRuntimeCondition" comment="Test RC" conditionString="" pluginName=""/>
+<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488770050" name="MidFieldPlayPlan" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" destinationPath="Plans" priority="0.0" minCardinality="3" maxCardinality="2147483647">
+  <conditions xsi:type="alica:RuntimeCondition" id="1402489260911" name="NewRuntimeCondition" comment="Test RC" conditionString="" pluginName="DefaultPlugin"/>
   <states id="1402488787818" name="Wander" comment="" entryPoint="1402488787819">
     <plans xsi:type="alica:BehaviourConfiguration">Behaviour/MidFieldStandard.beh#1402488712657</plans>
     <outTransitions>#1402489257607</outTransitions>
@@ -24,18 +24,18 @@
     <inTransitions>#1402500843072</inTransitions>
   </states>
   <transitions id="1402489257607" name="MISSING_NAME" comment="" msg="">
-    <preCondition id="1402489258509" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402489258509" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1402488787818</inState>
     <outState>#1402489237914</outState>
   </transitions>
   <transitions id="1402489276995" name="MISSING_NAME" comment="" msg="">
-    <preCondition id="1402489278408" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402489278408" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1402488787818</inState>
     <outState>#1402489273401</outState>
     <synchronisation>#1402500865502</synchronisation>
   </transitions>
   <transitions id="1402500843072" name="MISSING_NAME" comment="" msg="">
-    <preCondition id="1402500844446" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402500844446" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1402500830885</inState>
     <outState>#1402500833246</outState>
     <synchronisation>#1402500865502</synchronisation>

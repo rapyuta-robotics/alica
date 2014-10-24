@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1413200862180" name="MultiAgentTestPlan" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="2" maxCardinality="2147483647">
+<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1413200862180" name="MultiAgentTestPlan" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" destinationPath="Plans" priority="0.0" minCardinality="2" maxCardinality="2147483647">
   <states id="1413200877336" name="OtherState" comment="" entryPoint="1413200877337">
     <plans xsi:type="alica:BehaviourConfiguration">Behaviour/Attack.beh#1402488866727</plans>
     <outTransitions>#1413201368286</outTransitions>
@@ -23,17 +23,17 @@
     <plans xsi:type="alica:BehaviourConfiguration">Behaviour/AttackOpp.beh#1402489366699</plans>
   </states>
   <transitions id="1413201050743" name="" comment="" msg="">
-    <preCondition id="1413201052549" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1413201052549" name="" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1413200910490</inState>
     <outState>#1413201030936</outState>
   </transitions>
   <transitions id="1413201367062" name="" comment="" msg="">
-    <preCondition id="1413201367990" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1413201367990" name="" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1413201030936</inState>
     <outState>#1413552736921</outState>
   </transitions>
   <transitions id="1413201368286" name="" comment="" msg="">
-    <preCondition id="1413201370590" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1413201370590" name="" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1413200877336</inState>
     <outState>#1413201164999</outState>
   </transitions>

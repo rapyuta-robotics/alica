@@ -3,10 +3,12 @@
 	«FILE name +".h"-»
 		#ifndef «name»_H_
 		#define «name»_H_
+		
+		#include "engine/BasicBehaviour.h"
 		«PROTECT CSTART '/*' CEND '*/' ID "inc"+this.id-»
 			//Add additional includes here
 		«ENDPROTECT-»
-
+	
 		namespace alica
 		{
 			class «name» : public BasicBehaviour
@@ -19,7 +21,6 @@
 					//Add additional public methods here
 					«ENDPROTECT-»
 				protected:
-					int callCounter;
 					virtual void initialiseParameters();
 					«PROTECT CSTART '/*' CEND '*/' ID "pro"+this.id-»
 					//Add additional protected methods here
