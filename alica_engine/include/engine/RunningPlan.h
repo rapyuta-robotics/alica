@@ -60,7 +60,7 @@ namespace alica
 		bool isBehaviour();
 		void setBehaviour(bool behaviour);
 		bool isAllocationNeeded();
-		list<shared_ptr<RunningPlan>>& getChildren();
+		list<shared_ptr<RunningPlan>>* getChildren();
 		void setChildren(list<shared_ptr<RunningPlan>> children);
 		AbstractPlan* getPlan();
 		void setPlan(AbstractPlan* plan);

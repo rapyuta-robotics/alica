@@ -235,7 +235,7 @@ namespace alica
 		}
 
 		(*ss) << rp->getAssignment()->toHackString();
-		for (shared_ptr<RunningPlan> child : rp->getChildren())
+		for (shared_ptr<RunningPlan> child : *rp->getChildren())
 		{
 			evaluationAssignmentsToString(ss, child);
 		}
@@ -272,11 +272,11 @@ namespace alica
 			}
 		}
 
-		if (r->getChildren().size() != 0)
+		if (r->getChildren()->size() != 0)
 		{
 			result->push_back("-1"); //start children marker
 
-			for (shared_ptr<RunningPlan> rp : r->getChildren())
+			for (shared_ptr<RunningPlan> rp : *r->getChildren())
 			{
 				shared_ptr<list<string> > tmp = createTreeLog(rp);
 				for (string s : *tmp)
@@ -289,6 +289,10 @@ namespace alica
 		}
 
 		return result;
+	}
+
+	void Logger::logToConsole(string logString) {
+		cout << "Robot " << this->ae->getTeamObserver()->getOwnId() << ":\t" << logString << endl;
 	}
 
 } /* namespace alica */

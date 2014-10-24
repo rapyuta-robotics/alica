@@ -38,7 +38,7 @@ namespace alica
 		list<AbstractPlan*> tr;
 		for (auto iterator : this->getSuccessMarks())
 		{
-			if (active->find(iterator.first) != active->end())
+			if (active->find(iterator.first) == active->end())
 			{
 				tr.push_back(iterator.first);
 			}
@@ -208,6 +208,7 @@ namespace alica
 			for (Plan* cp : pt->getPlans())
 			{
 				auto iter = this->getSuccessMarks().find(cp);
+				l = (*iter->second);
 				if (iter != this->getSuccessMarks().end() && l.size() > 0)
 				{
 					return true;

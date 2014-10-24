@@ -48,4 +48,20 @@
     <key href="MultiAgentTestPlan.pml#1413201368286"/>
     <value/>
   </extensions>
+  <extensions>
+    <key href="MultiAgentTestPlan.pml#1413552736921"/>
+    <value xPos="627" yPos="169"/>
+  </extensions>
+  <extensions>
+    <key href="MultiAgentTestPlan.pml#1413807260446"/>
+    <value xPos="-6" yPos="146"/>
+  </extensions>
+  <extensions>
+    <key href="MultiAgentTestPlan.pml#1413807264574"/>
+    <value xPos="150" yPos="223"/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/AttackOpp.beh#1402489366699"/>
+    <value/>
+  </extensions>
 </uiextensionmodel:PmlUiExtensionMap>

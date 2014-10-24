@@ -14,7 +14,6 @@
 #include "engine/model/Plan.h"
 #include "engine/UtilityFunction.h"
 
-
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Task.h"
 
@@ -33,7 +32,8 @@ namespace alica
 	 * @param paraRobots robots to build an assignment for
 	 * @param a bool
 	 */
-	TaskAssignment::TaskAssignment(PartialAssignmentPool* pap, ITeamObserver* to,list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots)
+	TaskAssignment::TaskAssignment(PartialAssignmentPool* pap, ITeamObserver* to, list<Plan*> planList,
+									shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots)
 	{
 #ifdef EXPANSIONEVAL
 		this->expansionCount = 0;
@@ -46,7 +46,7 @@ namespace alica
 		{
 			this->robots->at(k++) = i;
 		}
-		 // sort robot ids ascending
+		// sort robot ids ascending
 		sort(robots->begin(), robots->end());
 		this->fringe = vector<PartialAssignment*>();
 		auto simplePlanTreeMap = to->getTeamPlanTrees();
@@ -108,19 +108,20 @@ namespace alica
 		ss << "--------------------TA:--------------------" << endl;
 		ss << "NumRobots: " << this->robots->size() << endl;
 		ss << "RobotIDs: ";
-		for(int i = 0; i < this->robots->size(); ++i)// RobotIds
+		for (int i = 0; i < this->robots->size(); ++i) // RobotIds
 		{
-			ss << (*this->robots)[i] <<  " ";
+			ss << (*this->robots)[i] << " ";
 		}
 		ss << endl;
 		ss << "Initial Fringe (Count " << this->fringe.size() << "):" << endl;
 		ss << "{";
-		for(int i = 0; i < this->fringe.size(); ++i)// Initial PartialAssignments
+		for (int i = 0; i < this->fringe.size(); ++i) // Initial PartialAssignments
 		{
-			ss <<  this->fringe[i]->toString();
+			ss << this->fringe[i]->toString();
 		}
 		ss << "}" << endl;
-		ss <<  "-------------------------------------------" << endl;;
+		ss << "-------------------------------------------" << endl;
+		;
 		return ss.str();
 	}
 
@@ -170,13 +171,13 @@ namespace alica
 			expansionCount++;
 #endif
 			// Every just expanded partial assignment must get an updated utility
-			for(int i = 0; i < newPas->size(); i++)
+			for (int i = 0; i < newPas->size(); i++)
 			{
 				// Update the utility values
 				auto iter = newPas->begin();
 				advance(iter, i);
 				(*iter)->getUtilFunc()->updateAssignment((*iter), oldAss);
-				if((*iter)->getMax() != -1) // add this partial assignment only, if all assigned robots does not have a priority of -1 for any task
+				if ((*iter)->getMax() != -1) // add this partial assignment only, if all assigned robots does not have a priority of -1 for any task
 				{
 					// Add to search fringe
 					this->fringe.push_back((*iter));
@@ -184,14 +185,14 @@ namespace alica
 			}
 			sort(fringe.begin(), fringe.end(), PartialAssignment::compareTo);
 #ifdef PSDEBUG
-				cout << "<---" << endl;
-				cout << "TA: AFTER fringe exp:" << endl;
-				cout << "TA: fringe size " << this->fringe.size() << endl;
-				for(int i = 0; i < this->fringe.size(); i++)
-				{
-					cout << this->fringe[i]->toString();
-				}
-				cout << "--->" << endl;
+			cout << "<---" << endl;
+			cout << "TA: AFTER fringe exp:" << endl;
+			cout << "TA: fringe size " << this->fringe.size() << endl;
+			for(int i = 0; i < this->fringe.size(); i++)
+			{
+				cout << this->fringe[i]->toString();
+			}
+			cout << "--->" << endl;
 #endif
 		}
 		return goal;

@@ -149,13 +149,16 @@ namespace alica
 	 */
 	PlanChange RunningPlan::tick(RuleBook* rules)
 	{
-
 		this->cycleManagement->update();
 		PlanChange myChange = rules->visit(shared_from_this());
 
 		PlanChange childChange = PlanChange::NoChange;
-		for (shared_ptr<RunningPlan> rp : this->children)
+		//attention: do not use for each here: children are modified
+		for (int i=0; i<this->getChildren()->size(); i++)
 		{
+			auto it = this->getChildren()->begin();
+			advance(it, i);
+			shared_ptr<RunningPlan> rp = *it;
 			childChange = rules->updateChange(childChange, rp->tick(rules));
 		}
 		if (childChange != PlanChange::NoChange && childChange != PlanChange::InternalChange)
@@ -241,10 +244,6 @@ namespace alica
 	}
 	void RunningPlan::setActiveState(State* s)
 	{
-		if(s == nullptr)
-		{
-			cout << "RP: activeState == nullptr" << endl;
-		}
 		if (this->activeState != s)
 		{
 			this->activeState = s;
@@ -291,10 +290,6 @@ namespace alica
 	 */
 	void RunningPlan::moveState(State* nextState)
 	{
-		if(nextState == nullptr)
-		{
-			cout << "RP: nextState == nullptr" << endl;
-		}
 		deactivateChildren();
 		clearChildren();
 		this->assignment->moveRobots(this->activeState, nextState);
@@ -330,9 +325,9 @@ namespace alica
 	/**
 	 * The children of this RunningPlan.
 	 */
-	list<shared_ptr<RunningPlan>>& RunningPlan::getChildren()
+	list<shared_ptr<RunningPlan>>* RunningPlan::getChildren()
 	{
-		return this->children;
+		return &this->children;
 	}
 	void RunningPlan::setChildren(list<shared_ptr<RunningPlan>> children)
 	{
@@ -554,7 +549,7 @@ namespace alica
 			this->deactivateChildren();
 			this->revokeAllConstraints();
 			this->clearChildren();
-			this->addChildren(r->getChildren());
+			this->addChildren(*r->getChildren());
 			reactivate = true;
 		}
 		else

@@ -11,6 +11,7 @@
 using namespace std;
 
 #include <string>
+#include <vector>
 #include <list>
 #include <memory>
 
@@ -23,6 +24,7 @@ namespace alica
 	class AbstractPlan;
 	class BasicCondition;
 	class RunningPlan;
+	class Parameter;
 
 	/**
 	 * A condition encapsulates expressions and constraint specific to a AlicaElement, e.g., a Transition, or a Plan.
@@ -42,8 +44,8 @@ namespace alica
 		const string& getConditionString() const;
 		void setConditionString(const string& conditionString);
 		list<Quantifier*>& getQuantifiers() ;
-		 list<Variable*>& getVariables() ;
-		void setVariables(const list<Variable*>& variables);
+		vector<Variable*>& getVariables() ;
+		void setVariables(const vector<Variable*>& variables);
 		AbstractPlan* getAbstractPlan() const;
 		void setAbstractPlan(AbstractPlan* abstractPlan);
 		const string& getPlugInName() const;
@@ -51,6 +53,8 @@ namespace alica
 		bool evaluate(shared_ptr<RunningPlan> rp);
 		shared_ptr<BasicCondition> getBasicCondition();
 		void setBasicCondition(shared_ptr<BasicCondition> basicCondition);
+		list<Parameter*>& getParameters();
+		void setParameters(list<Parameter*> parameters);
 
 	private:
 		void setQuantifiers(const list<Quantifier*>& quantifiers);
@@ -59,7 +63,7 @@ namespace alica
 		/**
 		 * The static variables used in the constraint of this condition.
 		 */
-		list<Variable*> variables;
+		vector<Variable*> variables;
 		/**
 		 * The quantifiers used in the constraint of this condition.
 		 */
@@ -68,6 +72,7 @@ namespace alica
 		 * The Abstract Plan in which this condition occurs.
 		 */
 		AbstractPlan* abstractPlan;
+		list<Parameter*> parameters;
 		shared_ptr<BasicCondition> basicCondition;
 		string plugInName;
 

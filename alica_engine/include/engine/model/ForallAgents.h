@@ -15,17 +15,13 @@
 
 #include "Quantifier.h"
 
-namespace AutoDiff
-{
-	class Term;
-}
-
 namespace alica
 {
 
 	class RunningPlan;
 	class Variable;
 	class AlicaEngine;
+	class SolverTerm;
 
 	/**
 	 * A quantifier associated with agents, i.e., the domain identifiers of this quantifier refer to properties of an agent
@@ -36,7 +32,7 @@ namespace alica
 		ForallAgents(AlicaEngine* ae, long id = 0);
 		virtual ~ForallAgents();
 		shared_ptr<list<vector<Variable* > > > getSortedVariables(RunningPlan* p, shared_ptr<vector<int> > agentsInScope);
-		shared_ptr<list<vector<AutoDiff::Term*> > > getSortedTerms(RunningPlan* p, shared_ptr<vector<int> > agentsInScope);
+		shared_ptr<list<vector<shared_ptr<SolverTerm>> > > getSortedTerms(RunningPlan* p, shared_ptr<vector<int> > agentsInScope);
 
 	protected:
 		AlicaEngine* ae;

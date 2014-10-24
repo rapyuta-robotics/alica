@@ -46,6 +46,7 @@ namespace alica
 		void iterationEnds(shared_ptr<RunningPlan> p);
 		void close();
 		void visit(shared_ptr<RunningPlan> r);
+		void logToConsole(string logString);
 
 
 	protected:

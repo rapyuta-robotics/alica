@@ -1949,7 +1949,8 @@ namespace tinyxml2
 	{
 		for (int i = 0; i < depth; ++i)
 		{
-			Print("    ");
+			//TODO if u want to change leading space here it is
+			Print("  ");
 		}
 	}
 

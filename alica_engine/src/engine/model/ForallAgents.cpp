@@ -16,12 +16,14 @@
 #include "engine/ITeamObserver.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/model/Variable.h"
-#include <AutoDiff.h>
+#include "engine/constraintmodul/SolverTerm.h"
+#include "engine/constraintmodul/SolverVariable.h"
 
 namespace alica
 {
 
-	ForallAgents::ForallAgents(AlicaEngine* ae, long id) : Quantifier(id)
+	ForallAgents::ForallAgents(AlicaEngine* ae, long id) :
+			Quantifier(id)
 	{
 		this->ae = ae;
 	}
@@ -36,35 +38,36 @@ namespace alica
 	 * @param agentsInScope A shared_ptr<vector<int> >
 	 * @return shared_ptr<list<vector<Variable*> > >
 	 */
-	shared_ptr<list<vector<Variable*> > > ForallAgents::getSortedVariables(RunningPlan* p, shared_ptr<vector<int> > agentsInScope)
+	shared_ptr<list<vector<Variable*> > > ForallAgents::getSortedVariables(RunningPlan* p,
+																			shared_ptr<vector<int> > agentsInScope)
 	{
 		agentsInScope = nullptr;
-		if(this->isScopeIsPlan())
+		if (this->isScopeIsPlan())
 		{
-			if(p->getPlan() == this->getScopedPlan())
+			if (p->getPlan() == this->getScopedPlan())
 			{
 				agentsInScope = p->getAssignment()->getAllRobotsSorted();
 			}
 		}
-		else if(this->isScopeIsEntryPoint())
+		else if (this->isScopeIsEntryPoint())
 		{
 			agentsInScope = p->getAssignment()->getRobotsWorkingSorted(this->getScopedEntryPoint());
 		}
-		else if(this->isScopeIsState())
+		else if (this->isScopeIsState())
 		{
 			agentsInScope = p->getAssignment()->getRobotStateMapping()->getRobotsInStateSorted(this->getScopedState());
 		}
-		if(agentsInScope == nullptr)
+		if (agentsInScope == nullptr)
 		{
 			return nullptr;
 		}
 		shared_ptr<list<vector<Variable*> > > ret;
 		ITeamObserver* to = ae->getTeamObserver();
-		for(int r : *(agentsInScope))
+		for (int r : *(agentsInScope))
 		{
 			vector<Variable*> terms = vector<Variable*>(this->getDomainIdentifiers().size());
 			RobotEngineData* re = to->getRobotById(r);
-			for(int i = 0; i < terms.size(); i++)
+			for (int i = 0; i < terms.size(); i++)
 			{
 
 				auto iter = this->getDomainIdentifiers().begin();
@@ -80,37 +83,39 @@ namespace alica
 	 * Returns the AutoDiff.Terms currently associated with the agents occupying the scope of this quantifier.
 	 * @param plan A RunningPlan
 	 * @param agentsInScope A shared_ptr<vector<int> >
-	 * @return shared_ptr<list<vector<AutoDiff::Term*> > >
+	 * @return shared_ptr<list<vector<shared_ptr<SolverTerm>> > >
 	 */
-	shared_ptr<list<vector<AutoDiff::Term*> > > ForallAgents::getSortedTerms(RunningPlan* plan, shared_ptr<vector<int> > agentsInScope)
+	shared_ptr<list<vector<shared_ptr<SolverTerm>> > > ForallAgents::getSortedTerms(
+			RunningPlan* plan, shared_ptr<vector<int> > agentsInScope)
 	{
 		agentsInScope = nullptr;
-		if(this->isScopeIsPlan())
+		if (this->isScopeIsPlan())
 		{
-			if(plan->getPlan() == this->getScopedPlan())
+			if (plan->getPlan() == this->getScopedPlan())
 			{
 				agentsInScope = plan->getAssignment()->getAllRobotsSorted();
 			}
 		}
-		else if(this->isScopeIsEntryPoint())
+		else if (this->isScopeIsEntryPoint())
 		{
 			agentsInScope = plan->getAssignment()->getRobotsWorkingSorted(this->getScopedEntryPoint());
 		}
-		else if(this->isScopeIsState())
+		else if (this->isScopeIsState())
 		{
-			agentsInScope = plan->getAssignment()->getRobotStateMapping()->getRobotsInStateSorted(this->getScopedState());
+			agentsInScope = plan->getAssignment()->getRobotStateMapping()->getRobotsInStateSorted(
+					this->getScopedState());
 		}
-		if(agentsInScope == nullptr)
+		if (agentsInScope == nullptr)
 		{
 			return nullptr;
 		}
-		shared_ptr<list<vector<AutoDiff::Term*> > > ret;
+		shared_ptr<list<vector<shared_ptr<SolverTerm>> > > ret;
 		ITeamObserver* to = ae->getTeamObserver();
-		for(int r : *(agentsInScope))
+		for (int r : *(agentsInScope))
 		{
-			vector<AutoDiff::Term*> terms = vector<AutoDiff::Term*>(this->getDomainIdentifiers().size());
+			vector<shared_ptr<SolverTerm>> terms = vector<shared_ptr<SolverTerm>>(this->getDomainIdentifiers().size());
 			RobotEngineData* re = to->getRobotById(r);
-			for(int i = 0; i < terms.size(); i++)
+			for (int i = 0; i < terms.size(); i++)
 			{
 
 				auto iter = this->getDomainIdentifiers().begin();
@@ -121,6 +126,5 @@ namespace alica
 		}
 		return ret;
 	}
-
 
 } /* namespace Alica */

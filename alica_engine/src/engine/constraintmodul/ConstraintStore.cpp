@@ -53,4 +53,9 @@ namespace alica
 		//TODO:
 	}
 
+	void ConstraintStore::acceptQuery(shared_ptr<ConstraintQuery> query)
+	{
+		//TODO:
+	}
+
 } /* namespace supplementary */

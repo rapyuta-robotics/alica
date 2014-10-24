@@ -36,4 +36,8 @@
     <key href="Behaviour/Attack.beh#1402488866727"/>
     <value/>
   </extensions>
+  <extensions>
+    <key href="MultiAgentTestPlan.pml#1413200862180"/>
+    <value/>
+  </extensions>
 </uiextensionmodel:PmlUiExtensionMap>

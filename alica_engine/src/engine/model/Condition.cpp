@@ -6,6 +6,8 @@
  */
 
 #include "engine/model/Condition.h"
+
+#include "engine/model/Quantifier.h"
 #include "engine/BasicCondition.h"
 
 namespace alica
@@ -62,12 +64,12 @@ namespace alica
 		this->quantifiers = quantifiers;
 	}
 
-	list<Variable*>& Condition::getVariables()
+	vector<Variable*>& Condition::getVariables()
 	{
 		return variables;
 	}
 
-	void Condition::setVariables(const list<Variable*>& variables)
+	void Condition::setVariables(const vector<Variable*>& variables)
 	{
 		this->variables = variables;
 	}
@@ -100,6 +102,15 @@ namespace alica
 	void Condition::setBasicCondition(shared_ptr<BasicCondition> basicCondition)
 	{
 		this->basicCondition = basicCondition;
+	}
+	list<Parameter*>& Condition::getParameters()
+	{
+		return parameters;
+	}
+
+	void Condition::setParameters(list<Parameter*> parameters)
+	{
+		this->parameters = parameters;
 	}
 
 } /* namespace Alica */

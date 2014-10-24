@@ -69,11 +69,11 @@ namespace alica
 		main->setAllocationNeeded(true);
 		main->setRobotsAvail(move(to->getAvailableRobotIds()));
 
-		EntryPoint* defep;
+		EntryPoint* defep = nullptr;
 		list<EntryPoint*> l;
 		defep = masterPlan->getEntryPoints().begin()->second;
 		main->getAssignment()->setAllToInitialState(move(to->getAvailableRobotIds()), defep);
-		main->setActive(true);
+		main->activate();
 		main->setOwnEntryPoint(defep);
 		this->log->eventOccured("Init");
 		return main;
@@ -140,6 +140,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: dynAlloc-Rule called." << endl;
+		cout << "RB: dynAlloc RP \n" << r->toString() << endl;
 #endif
 		if (r->isAllocationNeeded() || r->isBehaviour())
 		{
@@ -155,24 +156,30 @@ namespace alica
 		}
 
 		auto temp = r->getParent().lock();
-		cout << "RB:" + temp->toString()<< endl;
 		vector<int> robots = vector<int>(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).size());
-		copy(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
-					temp->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
+		copy(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).begin(),
+					temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).end(),
 					robots.begin());
 		shared_ptr<RunningPlan> newr = ps->getBestSimilarAssignment(r, make_shared<vector<int> >(robots));
 		if (newr == nullptr)
 			return PlanChange::NoChange;
 		double curUtil;
-		if (!r->evalRuntimeCondition())
+		if (!r->evalRuntimeCondition()) {
 			curUtil = -1.0;
-		else
+		}
+		else {
 			curUtil = r->getPlan()->getUtilityFunction()->eval(r, r);
+		}
 		double possibleUtil = newr->getAssignment()->getMax();
 #ifdef RULE_debug
 		cout << "RB: Old U " << curUtil << " | " << " New U:" << possibleUtil << endl;
+		if(curUtil < -0.99) {
+			cout << "#############Assignment is valid?: " << r->getAssignment()->isValid() << endl;
+			cout << r->toString() << endl;
+		}
 		cout << "RB: New Assignment" << newr->getAssignment() << endl;
 		cout << "RB: Old Assignment" << r->getAssignment() << endl;
+//remove comments
 #endif
 
 		if (possibleUtil - curUtil > r->getPlan()->getUtilityThreshold())
@@ -201,6 +208,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: AuthorityOverride-Rule called." << endl;
+		cout << "RB: AuthorityOverride RP \n" << r->toString() << endl;
 #endif
 		if (r->isBehaviour())
 			return PlanChange::NoChange;
@@ -223,6 +231,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: PlanAbort-Rule called." << endl;
+		cout << "RB: PlanAbort RP \n" << r->toString() << endl;
 #endif
 		if (r->getFailHandlingNeeded())
 			return PlanChange::NoChange;
@@ -239,6 +248,7 @@ namespace alica
 #ifdef RULE_debug
 			cout << "RB: PlanAbort" << r->getPlan()->getName() << endl;
 #endif
+			r->addFailure();
 			log->eventOccured("PAbort(" + r->getPlan()->getName() + ")");
 			return PlanChange::FailChange;
 		}
@@ -254,6 +264,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: PlanRedoRule-Rule called." << endl;
+		cout << "RB: PlanRedoRule RP \n" << r->toString() << endl;
 #endif
 		if (r->getParent().expired() || !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
@@ -294,6 +305,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: PlanReplace-Rule called." << endl;
+		cout << "RB: PlanReplace RP \n" << r->toString() << endl;
 #endif
 		if (r->getParent().expired()|| !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
@@ -321,12 +333,14 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: PlanPropagation-Rule called." << endl;
+		cout << "RB: PlanPropagation RP \n" << r->toString() << endl;
 #endif
-		if (r->getParent().lock()|| !r->getFailHandlingNeeded() || r->isBehaviour())
+		if (r->getParent().expired() || !r->getFailHandlingNeeded() || r->isBehaviour())
 			return PlanChange::NoChange;
-		if (r->getFailure() != 3)
+		if (r->getFailure() < 3)
 			return PlanChange::NoChange;
 		r->getParent().lock()->addFailure();
+		r->setFailHandlingNeeded(false);
 
 #ifdef RULE_debug
 		cout << "RB: PlanPropagation" << r->getPlan()->getName() << endl;
@@ -344,12 +358,14 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: Allocation-Rule called." << endl;
+		cout << "RB: Allocation RP \n" << r->toString() << endl;
 #endif
 		if (!r->isAllocationNeeded())
 		{
 			return PlanChange::NoChange;
 		}
 		r->setAllocationNeeded(false);
+
 		shared_ptr<vector<int> > robots = make_shared<vector<int> >(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
 		copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
 						r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
@@ -397,12 +413,14 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: TopFail-Rule called." << endl;
+		cout << "RB: TopFail RP \n" << r->toString() << endl;
 #endif
 		if (!r->getParent().expired())
 			return PlanChange::NoChange;
 
 		if (r->getFailHandlingNeeded())
 		{
+			cerr << "PB: TopFailed" << endl;
 			r->setFailHandlingNeeded(false);
 			r->clearFailures();
 
@@ -434,6 +452,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: Transition-Rule called." << endl;
+		cout << "RB: Transition RP \n" << r->toString() << endl;
 #endif
 		if (r->getActiveState() == nullptr)
 			return PlanChange::NoChange;
@@ -458,7 +477,7 @@ namespace alica
 		r->moveState(nextState);
 
 		r->setAllocationNeeded(true);
-		log->eventOccured("SynchTrans(" + r->getPlan()->getName() + ")");
+		log->eventOccured("Transition(" + r->getPlan()->getName() + "to State" + r->getActiveState()->getName() + ")");
 		if (r->getActiveState()->isSuccessState())
 			return PlanChange::SuccesChange;
 		else if (r->getActiveState()->isFailureState())
@@ -476,6 +495,7 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: Sync-Rule called." << endl;
+		cout << "RB: Sync RP \n" << r->toString() << endl;
 #endif
 		if (r->getActiveState() == nullptr)
 		{

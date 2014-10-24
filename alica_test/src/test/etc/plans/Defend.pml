@@ -20,26 +20,26 @@
     <outTransitions>#1402489071510</outTransitions>
   </states>
   <transitions id="1402488990761" name="TackleToGetBall" comment="GetBallToTackle" msg="">
-    <preCondition id="1402488991641" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402488991641" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
     <inState>#1402488959965</inState>
     <outState>#1402488903549</outState>
   </transitions>
   <transitions id="1402488991762" name="TackleToGetBall" comment="TackleToGetBall" msg="">
-    <preCondition id="1402488993122" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402488993122" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
     <inState>#1402488903549</inState>
     <outState>#1402488959965</outState>
   </transitions>
   <transitions id="1402489064693" name="GetBallToTryToDefendGoal" comment="TESTESTETS" msg="">
-    <preCondition id="1402489065962" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402489065962" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
     <inState>#1402488959965</inState>
     <outState>#1402489037735</outState>
   </transitions>
   <transitions id="1402489071510" name="TryToDefendGoalToGetGoal" comment="TryToDefendGoalToGetGoal" msg="">
-    <preCondition id="1402489073613" name="" comment="" conditionString="" pluginName="" enabled="true"/>
+    <preCondition id="1402489073613" name="MISSING_NAME" comment="" conditionString="" pluginName="" enabled="true"/>
     <inState>#1402489037735</inState>
     <outState>#1402488910751</outState>
   </transitions>
-  <entryPoints id="1402488903550" name="" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
+  <entryPoints id="1402488903550" name="MISSING_NAME" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
     <task>../Misc/taskrepository.tsk#1225112227903</task>
     <state>#1402488959965</state>
   </entryPoints>

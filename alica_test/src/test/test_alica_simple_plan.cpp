@@ -96,14 +96,14 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 	//Check final state
 	EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1412761855746);
 	//Check execution of final state behaviour
-	EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour()->getName(),
+	EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getBasicBehaviour()->getName(),
 				string("Attack"));
 	//Assuming 30 Hz were 11 iterations are executed by MidFieldStandard, we expect at least 29*sleeptime-15 calls on Attack
 	EXPECT_GT(
-			((alicaTests::Attack* )&*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour())->callCounter,
+			((alicaTests::Attack* )&*(*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getBasicBehaviour())->callCounter,
 			(sleepTime) * 29 - 15);
 	EXPECT_GT(
-			((alicaTests::Attack* )&*(*ae->getPlanBase()->getRootNode()->getChildren().begin())->getBasicBehaviour())->initCounter,
+			((alicaTests::Attack* )&*(*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getBasicBehaviour())->initCounter,
 			0);
 
 	//Check whether we have been in state1 to execute midfield standard

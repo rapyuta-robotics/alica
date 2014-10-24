@@ -79,7 +79,7 @@ namespace alica
 	 */
 	void CycleManager::update()
 	{
-		if (!enabled)
+		if (!this->enabled)
 		{
 			return;
 		}
@@ -371,7 +371,7 @@ namespace alica
 			if (rp->getActiveState() != nullptr)
 			{
 				auto robotsJoined = rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState());
-				for (shared_ptr<RunningPlan> c : rp->getChildren())
+				for (shared_ptr<RunningPlan> c : *rp->getChildren())
 				{
 					c->limitToRobots(robotsJoined);
 				}
