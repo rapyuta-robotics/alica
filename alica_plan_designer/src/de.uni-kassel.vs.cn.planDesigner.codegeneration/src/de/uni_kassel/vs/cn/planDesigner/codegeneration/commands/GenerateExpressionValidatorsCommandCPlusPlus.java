@@ -3,6 +3,10 @@ package de.uni_kassel.vs.cn.planDesigner.codegeneration.commands;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,9 +30,11 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreAdapterFactory;
 import org.eclipse.emf.mwe.core.WorkflowRunner;
 import org.eclipse.emf.mwe.core.monitor.NullProgressMonitor;
 import org.eclipse.emf.mwe.core.resources.AbstractResourceLoader;
@@ -40,12 +46,15 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.emf.edit.*;
+import org.eclipse.emf.edit.command.SetCommand;
 
 import de.uni_kassel.vs.cn.planDesigner.alica.AbstractPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaFactory;
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.AnnotatedPlan;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
+import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourConfiguration;
 import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator;
 import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator;
@@ -72,6 +81,7 @@ public class GenerateExpressionValidatorsCommandCPlusPlus extends
 	public static final String WORKFLOW_FILE_COC = "ConditionCreator.mwe";
 	public static final String WORKFLOW_FILE_CC = "ConstraintCreator.mwe";
 	public static final String WORKFLOW_FILE_UFC = "UtilityFunctionCreator.mwe";
+	public static final String WORKFLOW_BEHAVIOUR = "Behaviour.mwe";
 
 	private class GenerateCodeJob extends WorkspaceJob {
 		private final Set<Plan> plansToGenerateCodeFor;
@@ -109,10 +119,6 @@ public class GenerateExpressionValidatorsCommandCPlusPlus extends
 
 			Map<String, String> properties = new HashMap<String, String>();
 
-			properties.put("metaModelPackage", ALICA_PACKAGE_FILE);
-			properties.put("srcGenPath", destinationPath);
-			properties.put("constraintSubfolder", constraintSubfolder);
-
 			Set<AbstractPlan> dependentPlans = new HashSet<AbstractPlan>();
 			this.coc.getConditions().clear();
 			for (Plan plan : plansToGenerateCodeFor) {
@@ -129,7 +135,7 @@ public class GenerateExpressionValidatorsCommandCPlusPlus extends
 
 			cc = AlicaFactory.eINSTANCE.createConstraintCreator();
 			ufc = AlicaFactory.eINSTANCE.createUtilityFunctionCreator();
-			
+
 			ArrayList<Plan> pml = new ArrayList<Plan>();
 			final Set<IFile> planFiles = PlanEditorUtils
 					.collectAllFilesWithExtension("pml");
@@ -224,6 +230,50 @@ public class GenerateExpressionValidatorsCommandCPlusPlus extends
 
 						});
 				runner = new WorkflowRunner();
+				properties.clear();
+
+				String filePath = plan.eResource().getURI().toString();
+				filePath = filePath.replace("platform:/resource", "");
+
+				filePath = filePath.replaceAll("/" + plan.getName() + "."
+						+ plan.eResource().getURI().fileExtension(), "");
+				String includePath = destinationPath + "/include" + filePath;
+
+				String forInclude = filePath.substring(1);
+
+				Command cmd = SetCommand.create(PlanEditorUtils
+						.getEditingDomain(), plan, AlicaPackage.eINSTANCE
+						.getAbstractPlan_DestinationPath(), forInclude);
+
+				PlanEditorUtils.getEditingDomain().getCommandStack()
+						.execute(cmd);
+
+				filePath = destinationPath + "/src" + filePath;
+
+				File dir = new File(filePath);
+				if (!dir.exists()) {
+					dir.mkdir();
+				}
+				File dirContraint = new File(filePath + "/constraints");
+				if (!dirContraint.exists()) {
+					dirContraint.mkdir();
+				}
+				File dirInclude = new File(includePath);
+				if (!dirInclude.exists()) {
+					dirInclude.mkdir();
+				}
+
+				File dirConstraintInclude = new File(includePath
+						+ "/constraints");
+				if (!dirConstraintInclude.exists()) {
+					dirConstraintInclude.mkdir();
+				}
+
+				properties.put("metaModelPackage", ALICA_PACKAGE_FILE);
+				properties.put("srcGenPath", filePath);
+				properties.put("constraintSubfolder", constraintSubfolder);
+				properties.put("includeGenPath", includePath);
+
 				// TODO catch exceptions, which fire when the wrong template
 				// folder is selected in the Plan Designer Preference Page
 				if (!runner.run(workflowFile, new NullProgressMonitor(),
@@ -238,6 +288,63 @@ public class GenerateExpressionValidatorsCommandCPlusPlus extends
 				monitor.worked(1);
 
 			}
+			for (Behaviour b : this.beh.getBehaviours()) {
+				String filePath = b.eResource().getURI().toString();
+				filePath = filePath.replace("platform:/resource", "");
+
+				filePath = filePath.replaceAll("/" + b.getName() + "."
+						+ b.eResource().getURI().fileExtension(), "");
+				String forInclude = filePath.substring(1);
+				String includePath = destinationPath + "/include" + filePath;
+				filePath = destinationPath + "/src" + filePath;
+				File dir = new File(filePath);
+				if (!dir.exists()) {
+					dir.mkdir();
+				}
+				
+				File dirInclude = new File(includePath);
+				if (!dirInclude.exists()) {
+					dirInclude.mkdir();
+				}
+
+				Command cmd = SetCommand.create(PlanEditorUtils
+						.getEditingDomain(), b, AlicaPackage.eINSTANCE
+						.getBehaviour_DestinationPath(), forInclude);
+				
+				PlanEditorUtils.getEditingDomain().getCommandStack()
+				.execute(cmd);
+				
+				properties.clear();
+				properties.put("metaModelPackage", ALICA_PACKAGE_FILE);
+				properties.put("srcGenPath", filePath);
+				properties.put("constraintSubfolder", constraintSubfolder);
+				properties.put("includeGenPath", includePath);
+				
+				// IN C++ we need to create a BehaviourCreator
+				monitor.subTask("Generating code for BehaviourCreator");
+				String workflowFileBeh = WORKFLOW_BEHAVIOUR;
+				Map<String, Object> slotContentsBeh = new HashMap<String, Object>();
+				slotContentsBeh.put("model", b);
+				WorkflowRunner runnerBeh = new WorkflowRunner();
+				// TODO catch exceptions, which fire when the wrong template folder
+				// is selected in the Plan Designer Preference Page
+				if (!runnerBeh.run(workflowFileBeh, new NullProgressMonitor(),
+						properties, slotContentsBeh)) {
+					errors.add(new Status(IStatus.ERROR,
+							CodeGenActivator.PLUGIN_ID,
+							"Codegeneration for BehaviorCreator \"" + beh
+									+ "\"failed."));
+				} else {
+					generatedValidators++;
+				}
+				monitor.worked(1);
+			}
+			// DONE for BEHCREATOR
+			
+			properties.clear();
+			properties.put("metaModelPackage", ALICA_PACKAGE_FILE);
+			properties.put("srcGenPath", destinationPath);
+			properties.put("constraintSubfolder", constraintSubfolder);
 
 			// IN C++ we need to create a BehaviourCreator
 			monitor.subTask("Generating code for BehaviourCreator");
@@ -257,8 +364,7 @@ public class GenerateExpressionValidatorsCommandCPlusPlus extends
 				generatedValidators++;
 			}
 			monitor.worked(1);
-			// DONE for BEHCREATOR
-
+			
 			// IN C++ we need to create a CONDITIONCREATOR
 			monitor.subTask("Generating code for ConditionCreator");
 			String workflowFileCOC = WORKFLOW_FILE_COC;
@@ -405,10 +511,20 @@ public class GenerateExpressionValidatorsCommandCPlusPlus extends
 				String destPath = basePath.getLocation().append(File.separator)
 						.toOSString();
 				String constraintSubfolder = "constraints";
-				File folder = new File(destPath + File.separator
-						+ constraintSubfolder + File.separator);
-				if (!folder.exists()) {
-					folder.mkdir();
+				
+				String src = "src";
+				String include = "include";
+				
+				File folderSrc = new File(destPath + File.separator
+						+ src + File.separator);
+				if (!folderSrc.exists()) {
+					folderSrc.mkdir();
+				}
+				
+				File folderInclude = new File(destPath + File.separator
+						+ include + File.separator);
+				if (!folderInclude.exists()) {
+					folderInclude.mkdir();
 				}
 
 				Set<Plan> plansToGenerateCodeFor = new HashSet<Plan>();

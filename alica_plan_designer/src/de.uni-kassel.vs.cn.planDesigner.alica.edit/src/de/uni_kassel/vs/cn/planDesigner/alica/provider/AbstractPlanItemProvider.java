@@ -61,6 +61,7 @@ public class AbstractPlanItemProvider
 			addMasterPlanPropertyDescriptor(object);
 			addUtilityFunctionPropertyDescriptor(object);
 			addUtilityThresholdPropertyDescriptor(object);
+			addDestinationPathPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -132,6 +133,28 @@ public class AbstractPlanItemProvider
 	}
 
 	/**
+	 * This adds a property descriptor for the Destination Path feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addDestinationPathPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_AbstractPlan_destinationPath_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractPlan_destinationPath_feature", "_UI_AbstractPlan_type"),
+				 AlicaPackage.Literals.ABSTRACT_PLAN__DESTINATION_PATH,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -192,6 +215,7 @@ public class AbstractPlanItemProvider
 			case AlicaPackage.ABSTRACT_PLAN__MASTER_PLAN:
 			case AlicaPackage.ABSTRACT_PLAN__UTILITY_FUNCTION:
 			case AlicaPackage.ABSTRACT_PLAN__UTILITY_THRESHOLD:
+			case AlicaPackage.ABSTRACT_PLAN__DESTINATION_PATH:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case AlicaPackage.ABSTRACT_PLAN__RATING:

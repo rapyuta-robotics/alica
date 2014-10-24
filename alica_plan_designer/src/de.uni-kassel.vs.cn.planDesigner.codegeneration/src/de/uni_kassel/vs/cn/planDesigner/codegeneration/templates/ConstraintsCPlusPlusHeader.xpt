@@ -30,3 +30,4 @@
 		#endif /* «name»CONSTRAINT_H_ */
 	«ENDFILE»
 «ENDDEFINE»
+«DEFINE Root FOR PlanningProblem»«ENDDEFINE»

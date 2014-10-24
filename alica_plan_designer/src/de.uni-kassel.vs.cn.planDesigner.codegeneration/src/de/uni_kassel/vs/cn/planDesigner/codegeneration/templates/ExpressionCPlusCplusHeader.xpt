@@ -49,3 +49,4 @@
 		#endif
 	«ENDFILE»
 «ENDDEFINE»
+«DEFINE Root FOR PlanningProblem»«ENDDEFINE»
