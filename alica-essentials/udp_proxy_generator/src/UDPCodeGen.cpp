@@ -4,6 +4,7 @@
 #include <vector>
 #include <boost/regex.hpp>
 #include <fstream>
+#include <sstream>
 
 #include "boost/filesystem.hpp"
 using namespace boost::filesystem;
@@ -11,6 +12,23 @@ using namespace boost::filesystem;
 #include "RelayedMessage.h"
 
 using namespace std;
+
+// trim from start
+inline std::string &ltrim(std::string &s) {
+        s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+        return s;
+}
+
+// trim from end
+inline std::string &rtrim(std::string &s) {
+        s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+        return s;
+}
+
+// trim from both ends
+inline std::string &trim(std::string &s) {
+        return ltrim(rtrim(s));
+}
 
 std::string exec(const char* cmd)
 {
@@ -35,6 +53,22 @@ string getTemplateDir()
 	return pwd + "/templates";
 }
 
+bool checkForCollisions(vector<RelayedMessage*>& msgList)
+{
+	for (int i = 0; i < msgList.size(); i++)
+	{
+		for (int j = i + 1; j < msgList.size(); j++)
+		{
+			if (msgList[i]->Id == msgList[j]->Id)
+			{
+				cout << "Hashcollision between topic " << msgList[i]->Topic << " and topic " << msgList[j]->Topic;
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList)
 {
 	//regex line("Topic:\\^ ");
@@ -49,7 +83,7 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList)
 	{
 		string s;
 		std::getline(ifs, s);
-		if ((s.length() > 0 && s[0] == '#') || s.length() < 1 )
+		if ((s.length() > 0 && s[0] == '#') || s.length() < 1)
 		{
 			i++;
 			continue;
@@ -84,6 +118,154 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList)
 	return true;
 }
 
+string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList)
+{
+	string reg_string = "<\\?(.*)\\?>";
+	boost::regex markers(reg_string.c_str());
+	boost::smatch m;
+	stringstream ret;
+	while (!t.eof())
+	{
+		string s;
+		std::getline(t, s);
+		string matchType;
+		if (boost::regex_search(s, m, markers))
+		{
+			matchType = m[1];
+		}
+		else
+		{
+			ret << s << endl;
+			continue;
+		}
+		s = trim(s);
+		s= s.substr(2, s.length()-4);
+
+		if (s == "messageIncludes")
+		{
+			for (RelayedMessage* m : msgList)
+			{
+				ret << "#include \"" + m->FullName << ".h\"\n";
+			}
+		}
+		else if (s == "subscriptions")
+		{
+
+			int i = 0;
+			for (RelayedMessage* m : msgList)
+			{
+				if (m->UseRosTcp)
+				{
+					ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\","
+							<< m->Ros2UdpQueueLength << ", " << m->getRosCallBackName() << ");\n";
+				}
+				else
+				{
+					ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\","
+							<< m->Ros2UdpQueueLength << ", " << m->getRosCallBackName()
+							<< ",ros::TransportHints().unreliable().tcpNoDelay().reliable());\n";
+				}
+				i++;
+			}
+		}
+		else if (s == "rosMessageHandler")
+		{
+
+			for (RelayedMessage* m : msgList)
+			{
+				ret << m->getRosMessageHandler();
+
+			}
+		}
+		else if (s == "advertisement")
+		{
+
+			for (RelayedMessage* m : msgList)
+			{
+				ret << m->getPublisherName() << " = n.advertise<" << m->getRosClassName() << ">(\"" << m->Topic << "\","
+						<< m->Udp2RosQueueLength << ",false);\n";
+			}
+		}
+		else if (s == "rosPublisherDecl")
+		{
+			for (RelayedMessage* m : msgList)
+			{
+				ret << "ros::Publisher " << m->getPublisherName() << ";\n";
+			}
+		}
+		/*case "packageName":
+		 ret << basePackageName;
+		 break;
+		 */
+		else if (s == "udpReception")
+		{
+			for (RelayedMessage* m : msgList)
+			{
+				ret << "case " << m->Id << "ul: {\n";
+				ret << m->getRosClassName() << " m" << m->Id << ";\n";
+				ret << "ros::serialization::Serializer<" << m->getRosClassName() << ">::read(stream, m" << m->Id
+						<< ");\n";
+				ret << m->getPublisherName() << ".publish<" << m->getRosClassName() << ">(m" << m->Id << ");\n";
+				ret << "break; }\n";
+			}
+		}
+		else
+		{
+			cout << "Unknown Marker: " << s;
+			exit(1);
+		}
+	}
+
+	return ret.str();
+}
+
+vector<string> getFilesinFolder(string folder)
+{
+	namespace fs = boost::filesystem;
+	fs::path someDir(folder.c_str());
+	fs::directory_iterator end_iter;
+
+	vector<string> result_set;
+
+	if (exists(someDir) && is_directory(someDir))
+	{
+		for (fs::directory_iterator dir_iter(someDir); dir_iter != end_iter; ++dir_iter)
+		{
+			if (fs::is_regular_file(dir_iter->status()))
+			{
+				result_set.push_back(string((*dir_iter).path().c_str()));
+			}
+		}
+	}
+	return result_set;
+}
+
+void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& msgList)
+{
+
+	vector<string> tmplarr = getFilesinFolder(tmplDir); // = Directory.GetFiles(tmplDir,"*.*");
+	for (string tmpl : tmplarr)
+	{
+		cout << "Template: " << tmpl << endl;
+		int idx = tmpl.find_last_of('/');
+		string basename = tmpl.substr(idx + 1);
+		ifstream ifs(tmpl);
+		stringstream ss;
+		if (ifs)
+		{
+			ss << ifs.rdbuf();
+		}
+		ifs.close();
+
+		string content = ss.str();
+		string parsedContent = processTemplate(ss, msgList);
+
+		ofstream ofs(outDir + "/" + basename);
+		ofs << parsedContent;
+		ofs.close();
+	}
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -116,8 +298,8 @@ int main(int argc, char *argv[])
 	}
 	string msgDefFile = outputPath + "/relayMsgs.conf";
 	outputPath += "/proxy_gen";
-	//set namespace to packageName
-	//namespaceS = args[0];
+//set namespace to packageName
+//namespaceS = args[0];
 
 //	DateTime msgDefTime = File.GetLastWriteTime (msgDefFile);
 
@@ -131,19 +313,19 @@ int main(int argc, char *argv[])
 	{
 		return -1;
 	}
-//	if (!CheckForCollisions())
-//	{
-//		return -1;
-//	}
-//
-//	bool reGenerate = true;
-//	if (Directory.Exists(outputPath))
+	if (!checkForCollisions(msgList))
+	{
+		return -1;
+	}
+
+	bool reGenerate = true;
+//	if (exists(outputPath))
 //	{
 //		//Console.WriteLine("dir exists: " + outputPath);
 //		string[] tFiles = Directory.GetFiles(outputPath);
 //
 //		reGenerate = false;
-//		foreach(string f in tFiles)
+//		for(string f in tFiles)
 //		{
 //			DateTime fTime = File.GetCreationTime(f);
 //			//Console.WriteLine("fileToTest:" + f);
@@ -158,128 +340,19 @@ int main(int argc, char *argv[])
 //		if(reGenerate)
 //		Directory.Delete(outputPath,true);
 //	}
-//	if(reGenerate)
-//	{
-//		Directory.CreateDirectory(outputPath);
-//		ProcessTemplates(templateDir,outputPath);
-//	}
-//	return 0;
-	for(auto d : msgList) {
+	if (reGenerate)
+	{
+		boost::filesystem::path dir(outputPath.c_str());
+		if (!exists(outputPath) && !boost::filesystem::create_directories(dir))
+		{
+			std::cout << "Failed to create Directory: " << outputPath << endl;
+		}
+		processTemplates(templateDir, outputPath, msgList);
+	}
+	for (auto d : msgList)
+	{
 		delete d;
 	}
 	cout << "Done" << endl;
 	return 0;
 }
-
-/*using System;
- using System.IO;
- using System.Collections.Generic;
- using System.Diagnostics;
- using System.Text.RegularExpressions;
- namespace UdpCodeGen
- {
-
-
-
- public class UDPGen
- {
- static string outputPath;
- static string msgDefFile;
- static string basePackageName;
- static List<RelayedMessage> msgList;
-
- public static void ProcessTemplates(string tmplDir,string outDir) {
- string[] tmplarr = Directory.GetFiles(tmplDir,"*.*");
- foreach(string tmpl in tmplarr) {
- Console.WriteLine("Template: {0}",tmpl);
- int idx = tmpl.LastIndexOf('/');
- string basename = tmpl.Substring(idx+1);
- StreamReader read = new StreamReader(tmpl);
- string content = read.ReadToEnd();
- string parsedContent = ProcessTemplate(content);
- StreamWriter file = new StreamWriter(outDir + "/"+basename);
- file.WriteLine(parsedContent);
- file.Close();
- }
- }
-
-
- public static bool CheckForCollisions() {
- for(int i=0; i<msgList.Count; i++) {
- for(int j=i+1; j<msgList.Count;j++) {
- if (msgList[i].Id == msgList[j].Id) {
- Console.Error.WriteLine("Hashcollision between topic {0} and topic {1}!",msgList[i].Topic,msgList[j].Topic);
- return false;
- }
- }
- }
- return true;
- }
- public static string ProcessTemplate(string t) {
-
- Regex markers = new Regex(@"<\?(.*)\?>");
- return markers.Replace(t,new  MatchEvaluator(MatchReplacer));
- }
- public static string MatchReplacer(Match ma) {
- string s = ma.ToString();
- s = s.Substring(2,s.Length-4).Trim();
- string ret = "";
- switch(s) {
- case "messageIncludes":
- foreach(RelayedMessage m in msgList) {
- ret+= "#include \""+m.FullName+".h\"\n";
- }
- return ret;
- case "subscriptions":
- int i=0;
- foreach(RelayedMessage m in msgList) {
- if(m.UseRosTcp) {
- ret +="ros::Subscriber sub"+i+" = n.subscribe(\""+m.Topic+"\","+m.Ros2UdpQueueLength+", "+m.RosCallBackName+");\n";
- } else {
- ret +="ros::Subscriber sub"+i+" = n.subscribe(\""+m.Topic+"\","+m.Ros2UdpQueueLength+", "+m.RosCallBackName+",ros::TransportHints().unreliable().tcpNoDelay().reliable());\n";
- }
- i++;
- }
- return ret;
- case "rosMessageHandler":
- foreach(RelayedMessage m in msgList) {
- ret += m.GetRosMessageHandler();
-
- }
- return ret;
-
-
- case "advertisement":
- foreach(RelayedMessage m in msgList) {
- ret+=m.PublisherName+" = n.advertise<"+m.RosClassName+">(\""+m.Topic+"\","+m.Udp2RosQueueLength+",false);\n";
- }
- return ret;
- case "rosPublisherDecl":
- foreach(RelayedMessage m in msgList) {
- ret+="ros::Publisher "+m.PublisherName+";\n";
- }
- return ret;
- case "packageName":
- return basePackageName;
- case "udpReception":
- foreach(RelayedMessage m in msgList) {
- ret+="case "+m.Id+"ul: {\n";
- ret+=m.RosClassName +" m"+m.Id+";\n";
- ret+="ros::serialization::Serializer<"+m.RosClassName+">::read(stream, m"+m.Id+");\n";
- ret+=m.PublisherName+".publish<"+m.RosClassName+">(m"+m.Id+");\n";
- //ret+="std::cout << m"+m.Id+" << std::endl;\n";
- ret+="break; }\n";
- }
- return ret;
-
- default: Console.Error.WriteLine("Unknown Marker: {0}",s);
- System.Environment.Exit(-1);
- break;
- }
- return ret;
- }
-
-
-
- }
- }*/

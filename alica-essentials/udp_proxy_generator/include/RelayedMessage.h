@@ -2,6 +2,7 @@
 #define RELAYEDMESSAGE_H_
 
 #include <iostream>
+#include <functional>
 
 #include <boost/regex.hpp>
 
@@ -24,10 +25,12 @@ public:
 	int Ros2UdpQueueLength;
 	int Udp2RosQueueLength;
 
-	unsigned int Id;
+	std::hash<std::string> hash;
+	size_t Id;
 
-	string getRosCallBackName;
-	string getRosClassName;
+	string getRosCallBackName();
+	string getRosClassName();
+	string getPublisherName();
 
 	bool UseRosTcp;
 };
