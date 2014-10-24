@@ -15,6 +15,8 @@
 #include "PostCondition.h"
 #include "RuntimeCondition.h"
 #include "PlanningType.h"
+#include "AlicaElement.h"
+#include "AbstractPlan.h"
 #include <string>
 #include <iostream>
 
@@ -26,7 +28,7 @@ namespace alica
 	/**
 	 * An ALICA planningProblem
 	 */
-	class PlanningProblem : public AlicaElement
+	class PlanningProblem : public AbstractPlan
 	{
 	public:
 		PlanningProblem();

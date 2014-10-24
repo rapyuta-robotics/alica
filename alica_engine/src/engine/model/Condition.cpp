@@ -103,6 +103,15 @@ namespace alica
 	{
 		this->basicCondition = basicCondition;
 	}
+	list<Parameter*>& Condition::getParameters()
+	{
+		return parameters;
+	}
+
+	void Condition::setParameters(list<Parameter*> parameters)
+	{
+		this->parameters = parameters;
+	}
 
 } /* namespace Alica */
 

@@ -34,6 +34,7 @@
 #include "engine/model/CapabilityDefinitionSet.h"
 #include "engine/model/RoleDefinitionSet.h"
 #include "engine/model/PlanningProblem.h"
+#include "engine/model/Parameter.h"
 
 #include "engine/AlicaEngine.h"
 
@@ -182,21 +183,20 @@ namespace alica
 					state->setInPlan(plan);
 
 				}
-				//TODO change oush_front to push back
 				else if (typeString.compare("alica:SuccessState") == 0)
 				{
 					SuccessState* suc = createSuccessState(curChild);
 					suc->setInPlan(plan);
-					plan->getSuccessStates().push_front(suc);
-					plan->getStates().push_front(suc);
+					plan->getSuccessStates().push_back(suc);
+					plan->getStates().push_back(suc);
 
 				}
 				else if (typeString.compare("alica:FailureState") == 0)
 				{
 					FailureState* fail = createFailureState(curChild);
 					fail->setInPlan(plan);
-					plan->getFailureStates().push_front(fail);
-					plan->getStates().push_front(fail);
+					plan->getFailureStates().push_back(fail);
+					plan->getStates().push_back(fail);
 				}
 				else
 				{
@@ -206,7 +206,7 @@ namespace alica
 			else if (transitions.compare(val) == 0)
 			{
 				Transition* tran = createTransition(curChild, plan);
-				plan->getTransitions().push_front(tran);
+				plan->getTransitions().push_back(tran);
 			}
 			else if (conditions.compare(val) == 0)
 			{
@@ -298,8 +298,7 @@ namespace alica
 
 		if (!isDefault && !isUseable)
 		{
-			ae->abort(
-					"MF:Selected RoleSet is not default, nor useable with current masterplan");
+			ae->abort("MF:Selected RoleSet is not default, nor useable with current masterplan");
 		}
 
 		RoleSet* rs = new RoleSet();
@@ -316,7 +315,7 @@ namespace alica
 			if (mappings.compare(val) == 0)
 			{
 				RoleTaskMapping* rtm = createRoleTaskMapping(curChild);
-				rs->getRoleTaskMappings().push_front(rtm);
+				rs->getRoleTaskMappings().push_back(rtm);
 			}
 			else
 			{
@@ -776,6 +775,11 @@ namespace alica
 			//pos->ConditionFOL = null;
 		}
 
+		const char* pluginNamePtr = element->Attribute("pluginName");
+		if (pluginNamePtr)
+		{
+			r->setPlugInName(pluginNamePtr);
+		}
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
 		while (curChild != nullptr)
 		{
@@ -789,6 +793,11 @@ namespace alica
 			{
 				Quantifier* q = createQuantifier(curChild);
 				r->getQuantifiers().push_back(q);
+			}
+			else if (parameters.compare(val) == 0)
+			{
+				Parameter* p = createParameter(curChild);
+				r->getParameters().push_back(p);
 			}
 			else
 			{
@@ -870,6 +879,7 @@ namespace alica
 		{
 			p->setRequirements("");
 		}
+
 		this->rep->getPlanningProblems().insert(pair<long, PlanningProblem*>(p->getId(), p));
 
 		tinyxml2::XMLElement* curChild = element->FirstChildElement();
@@ -920,7 +930,7 @@ namespace alica
 
 			curChild = curChild->NextSiblingElement();
 		}
-	//	return p;
+		//	return p;
 	}
 	Transition * ModelFactory::createTransition(tinyxml2::XMLElement * element, Plan * plan)
 	{
@@ -1025,8 +1035,8 @@ namespace alica
 			}
 			else if (parameters.compare(val) == 0)
 			{
-				//ignore
-				//created by propositinal logic plugin
+				Parameter* p = createParameter(curChild);
+				pre->getParameters().push_back(p);
 			}
 			else
 			{
@@ -1035,6 +1045,20 @@ namespace alica
 			curChild = curChild->NextSiblingElement();
 		}
 		return pre;
+	}
+
+	Parameter* ModelFactory::createParameter(tinyxml2::XMLElement* element)
+	{
+		Parameter* p = new Parameter();
+		long id = this->parser->parserId(element);
+		p->setId(id);
+		addElement (p);
+		setAlicaElementAttributes(p, element);
+		string key = element->Attribute("key");
+		string value = element->Attribute("value");
+		p->setKey(key);
+		p->setValue(value);
+		return p;
 	}
 
 	Quantifier * ModelFactory::createQuantifier(tinyxml2::XMLElement * element)
@@ -1476,7 +1500,7 @@ namespace alica
 		{
 			State* st = (State*)this->elements.find(pairs.first)->second;
 			AbstractPlan* p = (AbstractPlan*)this->elements.find(pairs.second)->second;
-			st->getPlans().push_front(p);
+			st->getPlans().push_back(p);
 		}
 		this->statePlanReferences.clear();
 
@@ -1485,7 +1509,7 @@ namespace alica
 		{
 			PlanType* pt = (PlanType*)this->elements.find(pairs.first)->second;
 			Plan* p = (Plan*)this->elements.find(pairs.second)->second;
-			pt->getPlans().push_front(p);
+			pt->getPlans().push_back(p);
 		}
 		this->planTypePlanReferences.clear();
 
@@ -1531,7 +1555,7 @@ namespace alica
 			Transition* t = (Transition*)this->elements.find(pairs.first)->second;
 			SyncTransition* sync = (SyncTransition*)this->elements.find(pairs.second)->second;
 			t->setSyncTransition(sync);
-			sync->getInSync().push_front(t);
+			sync->getInSync().push_back(t);
 		}
 		this->transitionSynchReferences.clear();
 
@@ -1565,7 +1589,6 @@ namespace alica
 		//quantifierScopeReferences
 		for (pair<long, long> pairs : this->quantifierScopeReferences)
 		{
-			//TODO
 			AlicaElement* ae = (AlicaElement*)this->elements.find(pairs.second)->second;
 			Quantifier* q = (Quantifier*)this->elements.find(pairs.first)->second;
 			q->setScope(this->ae, ae);
@@ -1619,6 +1642,7 @@ namespace alica
 		cout << "MF: Attaching Characteristics references... done!" << endl;
 #endif
 	}
+
 	void ModelFactory::removeRedundancy()
 	{
 		for (map<long, alica::Plan*>::const_iterator iter = this->rep->getPlans().begin();

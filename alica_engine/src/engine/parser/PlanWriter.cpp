@@ -36,6 +36,7 @@
 #include "engine/model/RoleTaskMapping.h"
 #include "engine/model/Role.h"
 #include "engine/model/RoleDefinitionSet.h"
+#include "engine/model/Parameter.h"
 
 namespace alica
 {
@@ -201,6 +202,7 @@ namespace alica
 			xc->SetAttribute("xsi:type", "alica:PreCondition");
 			addPlanElementAttributes(p->getPreCondition(), xc);
 			xc->SetAttribute("conditionString", p->getPreCondition()->getConditionString().c_str());
+			xc->SetAttribute("pluginName", p->getPreCondition()->getPlugInName().c_str());
 			if (p->getPreCondition()->isEnabled())
 			{
 				xc->SetAttribute("enabled", "true");
@@ -226,7 +228,7 @@ namespace alica
 		{
 			tinyxml2::XMLElement* xc = doc->NewElement("conditions");
 			xp->InsertEndChild(xc);
-			xc->SetAttribute("xsi:type", "alica:Result");
+			xc->SetAttribute("xsi:type", "alica:postCondition");
 			addPlanElementAttributes(p->getPostCondition(), xc);
 			xc->SetAttribute("conditionString", p->getPostCondition()->getConditionString().c_str());
 			xc->SetAttribute("pluginName", p->getPostCondition()->getPlugInName().c_str());
@@ -248,25 +250,11 @@ namespace alica
 		}
 		for (State* s : p->getStates())
 		{
-			if (s->isSuccessState())
-			{
-				continue;
-			}
 			xp->InsertEndChild(createStateXMLNode(s, doc));
 		}
-		for (State* s : p->getStates())
+		for (Transition* t : p->getTransitions())
 		{
-			if (!s->isSuccessState())
-			{
-				continue;
-			}
-			xp->InsertEndChild(createStateXMLNode(s, doc));
-		}
-		auto iter = p->getTransitions().end();
-		while (p->getTransitions().size() > 0 && iter != p->getTransitions().begin())
-		{
-			iter = prev(iter);
-			xp->InsertEndChild(createTransitionXMLNode(*iter, doc));
+			xp->InsertEndChild(createTransitionXMLNode(t, doc));
 		}
 		for (SyncTransition* s : p->getSyncTransitions())
 		{
@@ -380,6 +368,14 @@ namespace alica
 			}
 			xn->InsertEndChild(xc);
 		}
+		for(Parameter* p : c->getParameters())
+		{
+			tinyxml2::XMLElement* xc = doc->NewElement("parameters");
+			addPlanElementAttributes(p, xc);
+			xc->SetAttribute("key", p->getKey().c_str());
+			xc->SetAttribute("value", p->getValue().c_str());
+			xn->InsertEndChild(xc);
+		}
 		for (Variable* v : c->getVariables())
 		{
 			tinyxml2::XMLElement* xc = doc->NewElement("vars");
@@ -394,21 +390,11 @@ namespace alica
 		if (dynamic_cast<SuccessState*>(s) != nullptr)
 		{
 			xs->SetAttribute("xsi:type", "alica:SuccessState");
-			SuccessState* su = dynamic_cast<SuccessState*>(s);
-			if (su->getPostCondition() != nullptr)
-			{
-				xs->InsertEndChild(createResultXMLNode(su->getPostCondition(), doc));
-			}
 
 		}
 		else if (dynamic_cast<FailureState*>(s) != nullptr)
 		{
 			xs->SetAttribute("xsi:type", "alica:FailureState");
-			FailureState* fu = dynamic_cast<FailureState*>(s);
-			if (fu->getPostCondition() != nullptr)
-			{
-				xs->InsertEndChild(createResultXMLNode(fu->getPostCondition(), doc));
-			}
 		}
 		else
 		{
@@ -425,38 +411,40 @@ namespace alica
 			xs->InsertEndChild(createParametrisationXMLNode(p, doc));
 		}
 
-		auto iter = s->getPlans().end();
-		while (s->getPlans().size() > 0 && iter != s->getPlans().begin())
+		for (AbstractPlan* p : s->getPlans())
 		{
-			iter = prev(iter);
-			if (dynamic_cast<PlanType*>(*iter) != nullptr)
+			if (dynamic_cast<PlanType*>(p) != nullptr)
 			{
 				tinyxml2::XMLElement* xc = doc->NewElement("plans");
 				xs->InsertEndChild(xc);
 				xc->SetAttribute("xsi:type", "alica:PlanType");
-				xc->InsertEndChild(doc->NewText((getRelativeFileName(*iter) + "#" + to_string((*iter)->getId())).c_str()));
+				xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
+				continue;
 			}
-			if (dynamic_cast<BehaviourConfiguration*>(*iter) != nullptr)
+			if (dynamic_cast<BehaviourConfiguration*>(p) != nullptr)
 			{
 				tinyxml2::XMLElement* xc = doc->NewElement("plans");
 				xs->InsertEndChild(xc);
 				xc->SetAttribute("xsi:type", "alica:BehaviourConfiguration");
-				xc->InsertEndChild(
-						doc->NewText((getRelativeFileName(*iter) + "#" + to_string((*iter)->getId())).c_str()));
+				xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
+				continue;
 			}
-			if (dynamic_cast<Plan*>(*iter) != nullptr)
+			if (dynamic_cast<Plan*>(p) != nullptr)
 			{
 				tinyxml2::XMLElement* xc = doc->NewElement("plans");
 				xs->InsertEndChild(xc);
 				xc->SetAttribute("xsi:type", "alica:Plan");
-				xc->InsertEndChild(doc->NewText((getRelativeFileName(*iter) + "#" + to_string((*iter)->getId())).c_str()));
+				xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
+				continue;
 			}
-			if (dynamic_cast<PlanningProblem*>(*iter) != nullptr)
+
+			if (dynamic_cast<PlanningProblem*>(p) != nullptr)
 			{
 				tinyxml2::XMLElement* xc = doc->NewElement("plans");
 				xs->InsertEndChild(xc);
 				xc->SetAttribute("xsi:type", "alica:PlanningProblem");
-				xc->InsertEndChild(doc->NewText((getRelativeFileName(*iter) + "#" + to_string((*iter)->getId())).c_str()));
+				xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
+				continue;
 			}
 		}
 
@@ -472,6 +460,27 @@ namespace alica
 			tinyxml2::XMLElement* xc = doc->NewElement("outTransitions");
 			xs->InsertEndChild(xc);
 			xc->InsertEndChild(doc->NewText((string("#") + to_string(t->getId())).c_str()));
+		}
+		if (dynamic_cast<SuccessState*>(s) != nullptr)
+		{
+			SuccessState* su = dynamic_cast<SuccessState*>(s);
+			if (su->getPostCondition() != nullptr)
+			{
+				xs->InsertEndChild(createResultXMLNode(su->getPostCondition(), doc));
+			}
+
+		}
+		else if (dynamic_cast<FailureState*>(s) != nullptr)
+		{
+			FailureState* fu = dynamic_cast<FailureState*>(s);
+			if (fu->getPostCondition() != nullptr)
+			{
+				xs->InsertEndChild(createResultXMLNode(fu->getPostCondition(), doc));
+			}
+		}
+		else
+		{
+
 		}
 		return xs;
 	}
@@ -512,9 +521,10 @@ namespace alica
 
 	tinyxml2::XMLElement* PlanWriter::createResultXMLNode(PostCondition* r, tinyxml2::XMLDocument* doc)
 	{
-		tinyxml2::XMLElement* xr = doc->NewElement("result");
+		tinyxml2::XMLElement* xr = doc->NewElement("postCondition");
 		addPlanElementAttributes(r, xr);
 		xr->SetAttribute("conditionString", r->getConditionString().c_str());
+		xr->SetAttribute("pluginName", r->getPlugInName().c_str());
 		addConditionChildren(r, xr, doc);
 		return xr;
 	}
@@ -543,9 +553,11 @@ namespace alica
 		tinyxml2::XMLElement* xr = doc->NewElement("synchronisations");
 		addPlanElementAttributes(s, xr);
 		string synched = "";
-		for (Transition* t : s->getInSync())
+		auto iter = s->getInSync().end();
+		while (s->getInSync().size() > 0 && iter != s->getInSync().begin())
 		{
-			synched += to_string(t->getId()) + " ";
+			iter = prev(iter);
+			synched += to_string((*iter)->getId()) + " ";
 		}
 		xr->SetAttribute("synchedTransitions", supplementary::Configuration::trim(synched).c_str());
 		xr->SetAttribute("talkTimeout", to_string(s->getTalkTimeOut()).c_str());
