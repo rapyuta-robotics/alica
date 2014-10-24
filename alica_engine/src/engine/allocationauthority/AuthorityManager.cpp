@@ -113,7 +113,7 @@ namespace alica
 				i--;
 			}
 		}
-		for (shared_ptr<RunningPlan> c : p->getChildren())
+		for (shared_ptr<RunningPlan> c : *p->getChildren())
 		{
 			processPlan(c);
 		}

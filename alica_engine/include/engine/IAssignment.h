@@ -74,6 +74,8 @@ namespace alica
 		 */
 		virtual string assignmentCollectionToString() = 0;
 
+		virtual string toString() = 0;
+
 
 		double getMax() const
 		{

@@ -45,6 +45,7 @@ namespace alica
 	class RoleSet;
 	class PlanningProblem;
 	class AlicaEngine;
+	class Parameter;
 
 	/**
 	 * Constructs Model elements, i.e., objects inheriting from <see cref="PlanElement"/> given their XML representation.
@@ -142,7 +143,7 @@ namespace alica
 		FailureState* createFailureState(tinyxml2::XMLElement* element);
 		Transition* createTransition(tinyxml2::XMLElement* element, Plan* plan);
 		SyncTransition* createSyncTransition(tinyxml2::XMLElement* element);
-
+		Parameter* createParameter(tinyxml2::XMLElement* element);
 		Parametrisation* createParametrisation(tinyxml2::XMLElement* element);
 		PreCondition* createPreCondition(tinyxml2::XMLElement* element);
 		PostCondition* createPostCondition(tinyxml2::XMLElement* element);

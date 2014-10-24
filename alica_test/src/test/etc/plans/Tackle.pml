@@ -3,7 +3,7 @@
   <states id="1402489329141" name="AttackOpp" comment="" entryPoint="1402489329142">
     <plans xsi:type="alica:BehaviourConfiguration">Behaviour/AttackOpp.beh#1402489366699</plans>
   </states>
-  <entryPoints id="1402489329142" name="" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
+  <entryPoints id="1402489329142" name="MISSING_NAME" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
     <task>../Misc/taskrepository.tsk#1225112227903</task>
     <state>#1402489329141</state>
   </entryPoints>

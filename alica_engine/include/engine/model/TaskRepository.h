@@ -26,8 +26,8 @@ namespace alica
 		virtual ~TaskRepository();
 		long getDefaultTask() const;
 		void setDefaultTask(long defaultTask);
-		const string& getFileName() const;
-		void setFileName(const string& fileName);
+		string getFileName();
+		void setFileName(string fileName);
 		list<Task*>& getTasks();
 
 	private:
