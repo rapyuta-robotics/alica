@@ -9,23 +9,51 @@
 #define ALLOCATIONAUTHORITYINFO_H_
 
 #include <vector>
+#include <tuple>
 #include "EntryPointRobots.h"
 
 using namespace std;
 
 namespace alica
 {
+	typedef tuple<int, int, int, int, int, vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
 	struct AllocationAuthorityInfo
 	{
+		AllocationAuthorityInfo()
+		{
+		}
+
 		int senderID;
-		int	planId;
-		int	parentState;
-		int	planType;
+		int planId;
+		int parentState;
+		int planType;
 		int authority;
 		vector<EntryPointRobots> entryPointRobots;
+
+		AllocationAuthorityInfo(stdAllocationAuthorityInfo &s)
+		{
+			this->senderID = get<0>(s);
+			this->planId = get<1>(s);
+			this->parentState = get<2>(s);
+			this->planType = get<3>(s);
+			this->authority = get<4>(s);
+			vector<stdEntryPointRobot>& tmp = get<5>(s);
+			for (stdEntryPointRobot& e : tmp)
+			{
+				this->entryPointRobots.push_back(EntryPointRobots(e));
+			}
+		}
+
+		stdAllocationAuthorityInfo toStandard()
+		{
+			vector<stdEntryPointRobot> r;
+			for (EntryPointRobots& e : entryPointRobots)
+			{
+				r.push_back(move(e.toStandard()));
+			}
+			return move(make_tuple(senderID, planId, parentState, planType, authority, move(r)));
+		}
 	};
 }
-
-
 
 #endif /* ALLOCATIONAUTHORITYINFO_H_ */
