@@ -118,7 +118,7 @@ add_library(alica_ros_proxy
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(alica_ros_proxy_node alica_ros_proxy_generate_messages_cpp)
+add_dependencies(alica_ros_proxy alica_ros_proxy_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(alica_ros_proxy
