@@ -3,6 +3,8 @@
 
 #include  "Plans/PlanThree1407153663917.h"
 
+#include  "Plans/Authority/AuthorityTest1414403413451.h"
+
 #include  "Plans/GoalPlan1402488870347.h"
 
 #include  "Plans/MultiAgentTestMaster1413200842973.h"
@@ -18,6 +20,8 @@
 #include  "Plans/PlanTwo1407153645238.h"
 
 #include  "Plans/MasterPlanTaskAssignment1407152758497.h"
+
+#include  "Plans/Authority/AuthorityTestMaster1414403396328.h"
 
 #include  "Plans/PlanFive1407153703092.h"
 
@@ -53,6 +57,10 @@ shared_ptr<BasicUtilityFunction> createUtility(long utilityfunctionConfId)
       return make_shared<UtilityFunction1407153663917>();
       break;
 
+    case 1414403413451:
+      return make_shared<UtilityFunction1414403413451>();
+      break;
+
     case 1402488870347:
       return make_shared<UtilityFunction1402488870347>();
       break;
@@ -83,6 +91,10 @@ shared_ptr<BasicUtilityFunction> createUtility(long utilityfunctionConfId)
 
     case 1407152758497:
       return make_shared<UtilityFunction1407152758497>();
+      break;
+
+    case 1414403396328:
+      return make_shared<UtilityFunction1414403396328>();
       break;
 
     case 1407153703092:

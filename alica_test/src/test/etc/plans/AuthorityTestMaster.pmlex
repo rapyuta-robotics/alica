@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extension>
+    <key href="AuthorityTestMaster.pml#1414403396329"/>
+    <value xPos="212" yPos="224" width="152" height="86" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="Authority/AuthorityTest.pml#1414403413451"/>
+    <value width="-1" height="-1" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <value width="632" height="551" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="AuthorityTestMaster.pml#1414403396331"/>
+    <value width="-1" height="-1" collapsed="true" visible="true"/>
+  </extension>
+</uiextensionmodel:PmlUiExtensionMap>

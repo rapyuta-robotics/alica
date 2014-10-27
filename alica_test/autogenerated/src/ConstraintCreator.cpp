@@ -3,6 +3,8 @@
 
 #include  "Plans/constraints/PlanThree1407153663917Constraints.h"
 
+#include  "Plans/Authority/constraints/AuthorityTest1414403413451Constraints.h"
+
 #include  "Plans/constraints/GoalPlan1402488870347Constraints.h"
 
 #include  "Plans/constraints/MultiAgentTestMaster1413200842973Constraints.h"
@@ -18,6 +20,8 @@
 #include  "Plans/constraints/PlanTwo1407153645238Constraints.h"
 
 #include  "Plans/constraints/MasterPlanTaskAssignment1407152758497Constraints.h"
+
+#include  "Plans/Authority/constraints/AuthorityTestMaster1414403396328Constraints.h"
 
 #include  "Plans/constraints/PlanFive1407153703092Constraints.h"
 
@@ -108,6 +112,10 @@ shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(long constraintC
 
     case 1402489462088:
       return make_shared<Constraint1402489462088>();
+      break;
+
+    case 1414403842622:
+      return make_shared<Constraint1414403842622>();
       break;
 
     case 1402488991641:
