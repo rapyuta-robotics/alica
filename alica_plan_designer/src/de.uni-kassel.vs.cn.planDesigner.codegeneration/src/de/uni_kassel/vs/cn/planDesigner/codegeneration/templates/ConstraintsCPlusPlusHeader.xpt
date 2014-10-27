@@ -21,6 +21,8 @@
 				«FOREACH conditions AS con»
 						«IF (con.metaType == alica::PreCondition)»
 							«IF (con.abstractPlan == null)»
+							«IF (con.vars.size > 0) || (con.quantifiers.size > 0)»
+							
 								class Constraint«con.id» : public BasicConstraint
 								{
 									void getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan>);
@@ -31,20 +33,25 @@
 									void getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan>);
 								};
 							«ENDIF»
+							«ENDIF»
 						«ENDIF»
 						«IF (con.metaType == alica::RuntimeCondition)»
+						«IF (con.vars.size > 0) || (con.quantifiers.size > 0)»
 							class Constraint«con.id» : public BasicConstraint
 							{
 								void getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan>);
 							};
 						«ENDIF»
+						«ENDIF»
 				«ENDFOREACH»
 					«FOREACH transitions AS con»
 					«IF (con.preCondition.metaType == alica::PreCondition)»
+					«IF (con.preCondition.vars.size > 0) || (con.preCondition.quantifiers.size > 0)»
 					class Constraint«con.preCondition.id» : public BasicConstraint
 					{
 						void getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan>);
 					};
+					«ENDIF»
 					«ENDIF»
 					«ENDFOREACH»
 		} /* namespace alica */

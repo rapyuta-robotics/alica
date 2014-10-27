@@ -4161,3 +4161,23 @@ Command-line arguments:  -product de.uni-kassel.vs.cn.planDesigner.ui.planDesign
 
 !ENTRY org.eclipse.core.resources 2 10035 2014-10-24 17:48:07.397
 !MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+!SESSION 2014-10-27 10:36:06.091 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_55
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product de.uni-kassel.vs.cn.planDesigner.ui.planDesignerProduct ./eclipse
+Command-line arguments:  -product de.uni-kassel.vs.cn.planDesigner.ui.planDesignerProduct -data /home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/../runtime-cnplandesigner.product -dev file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/cnplandesigner.product/dev.properties -os linux -ws gtk -arch x86_64 -consoleLog -clean ./eclipse -clean
+
+!ENTRY org.eclipse.osgi 4 0 2014-10-27 10:36:08.000
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: /home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/cnplandesigner.product/org.eclipse.osgi
+!SESSION 2014-10-27 13:18:46.308 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_55
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product de.uni-kassel.vs.cn.planDesigner.ui.planDesignerProduct ./eclipse
+Command-line arguments:  -product de.uni-kassel.vs.cn.planDesigner.ui.planDesignerProduct -data /home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/../runtime-cnplandesigner.product -dev file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/cnplandesigner.product/dev.properties -os linux -ws gtk -arch x86_64 -consoleLog -clean ./eclipse -clean
+
+!ENTRY org.eclipse.core.resources 2 10035 2014-10-27 13:19:00.900
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.

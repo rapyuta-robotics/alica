@@ -30,9 +30,11 @@
 					switch(constraintConfId)
 					{
 						«FOREACH conditions AS c»
-						case «c.id»:
-							return make_shared<Constraint«c.id»>();
-							break;
+							«IF (c.vars.size > 0) || (c.quantifiers.size > 0)»
+								case «c.id»:
+								return make_shared<Constraint«c.id»>();
+								break;
+							«ENDIF»
 						«ENDFOREACH»
 						default:
 						cerr << "ConstraintCreator: Unknown constraint requested: " << constraintConfId << endl;

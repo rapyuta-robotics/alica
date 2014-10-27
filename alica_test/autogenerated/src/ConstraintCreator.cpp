@@ -54,56 +54,8 @@ shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(long constraintC
   switch (constraintConfId)
   {
 
-    case 1402489131988:
-      return make_shared<Constraint1402489131988>();
-      break;
-
     case 1403773741874:
       return make_shared<Constraint1403773741874>();
-      break;
-
-    case 1402489174338:
-      return make_shared<Constraint1402489174338>();
-      break;
-
-    case 1402489206278:
-      return make_shared<Constraint1402489206278>();
-      break;
-
-    case 1402489218027:
-      return make_shared<Constraint1402489218027>();
-      break;
-
-    case 1413201227586:
-      return make_shared<Constraint1413201227586>();
-      break;
-
-    case 1413201389955:
-      return make_shared<Constraint1413201389955>();
-      break;
-
-    case 1413201052549:
-      return make_shared<Constraint1413201052549>();
-      break;
-
-    case 1413201367990:
-      return make_shared<Constraint1413201367990>();
-      break;
-
-    case 1413201370590:
-      return make_shared<Constraint1413201370590>();
-      break;
-
-    case 1412781693884:
-      return make_shared<Constraint1412781693884>();
-      break;
-
-    case 1412781707952:
-      return make_shared<Constraint1412781707952>();
-      break;
-
-    case 1412761926856:
-      return make_shared<Constraint1412761926856>();
       break;
 
     case 1402489460549:
@@ -112,58 +64,6 @@ shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(long constraintC
 
     case 1402489462088:
       return make_shared<Constraint1402489462088>();
-      break;
-
-    case 1414403842622:
-      return make_shared<Constraint1414403842622>();
-      break;
-
-    case 1402488991641:
-      return make_shared<Constraint1402488991641>();
-      break;
-
-    case 1402488993122:
-      return make_shared<Constraint1402488993122>();
-      break;
-
-    case 1402489065962:
-      return make_shared<Constraint1402489065962>();
-      break;
-
-    case 1402489073613:
-      return make_shared<Constraint1402489073613>();
-      break;
-
-    case 1402489260911:
-      return make_shared<Constraint1402489260911>();
-      break;
-
-    case 1402489258509:
-      return make_shared<Constraint1402489258509>();
-      break;
-
-    case 1402489278408:
-      return make_shared<Constraint1402489278408>();
-      break;
-
-    case 1402500844446:
-      return make_shared<Constraint1402500844446>();
-      break;
-
-    case 1402488519140:
-      return make_shared<Constraint1402488519140>();
-      break;
-
-    case 1402488520968:
-      return make_shared<Constraint1402488520968>();
-      break;
-
-    case 1402488558741:
-      return make_shared<Constraint1402488558741>();
-      break;
-
-    case 1409218319990:
-      return make_shared<Constraint1409218319990>();
       break;
 
     default:

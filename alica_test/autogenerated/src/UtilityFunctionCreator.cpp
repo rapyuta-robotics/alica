@@ -48,7 +48,7 @@ UtilityFunctionCreator::UtilityFunctionCreator()
 {
 }
 
-shared_ptr<BasicUtilityFunction> createUtility(long utilityfunctionConfId)
+shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(long utilityfunctionConfId)
 {
   switch (utilityfunctionConfId)
   {

@@ -2622,7 +2622,7 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 
 		initEClass(planElementEClass, PlanElement.class, "PlanElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPlanElement_Id(), ecorePackage.getELong(), "id", "0", 1, 1, PlanElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPlanElement_Name(), ecorePackage.getEString(), "name", "", 0, 1, PlanElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPlanElement_Name(), ecorePackage.getEString(), "name", "MISSING_NAME", 0, 1, PlanElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPlanElement_Comment(), ecorePackage.getEString(), "comment", "", 0, 1, PlanElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getPlanElement__GenerateID(), ecorePackage.getELong(), "generateID", 0, 1, IS_UNIQUE, IS_ORDERED);
