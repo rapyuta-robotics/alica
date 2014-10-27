@@ -60,7 +60,7 @@ public abstract class PlanElementImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String NAME_EDEFAULT = "";
+	protected static final String NAME_EDEFAULT = "MISSING_NAME";
 
 	/**
 	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
