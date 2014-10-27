@@ -16,7 +16,7 @@ namespace alica
 	struct UtilityInterval
 	{
 	public:
-		UtilityInterval(double min, double max);
+		UtilityInterval(double min=0, double max=0);
 		virtual ~UtilityInterval();
 		double getMax();
 		void setMax(double max);

@@ -17,11 +17,11 @@ using namespace std;
 
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
+#include "engine/UtilityInterval.h"
 
 namespace alica
 {
 
-	class UtilityInterval;
 	class EntryPoint;
 	class IAssignment;
 
@@ -32,6 +32,7 @@ namespace alica
 	{
 	public:
 
+		USummand() {}
 		virtual ~USummand()	{}
 		/**
 		 * Searches every needed entrypoint in the hashtable of the xmlparser
@@ -112,5 +113,6 @@ namespace alica
 	};
 
 } /* namespace alica */
+
 
 #endif /* USUMMAND_H_ */

@@ -6,7 +6,8 @@
 #include "engine/UtilityFunction.h"
 #include "engine/DefaultUtilityFunction.h"
 /*PROTECTED REGION ID(incl1414403396328) ENABLED START*/
-//Add inlcudes here
+#include <memory>
+using namespace std;
 /*PROTECTED REGION END*/
 using namespace alica;
 
