@@ -36,7 +36,7 @@ namespace supplementary
 		static SystemConfig* getInstance();
 		static void shutdown();
 		static string robotNodeName(const string& nodeName);
-		static int GetOwnRobotID();
+		static int getOwnRobotID();
 		static string getHostname();
 		static void setHostname(string newHostname);
 		//static void resetHostname();

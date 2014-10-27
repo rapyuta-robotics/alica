@@ -140,20 +140,19 @@ namespace supplementary
 		return nullptr;
 	}
 
-//	int SystemConfig::GetOwnRobotID()
-//	{
+	int SystemConfig::getOwnRobotID()
+	{
 //		if (ownRobotID != 0)
 //			return ownRobotID;
-//
-//		Configuration *tmp = (*SystemConfig::getInstance())["Globals"];
-//		ownRobotID = tmp->get<int>("Globals", "Team", SystemConfig::getHostname().c_str(), "ID", NULL);
-//		/* Philipp Sperber:
-//		 * Never delete a Configuration Pointer!!!
-//		 * Messes up on next call
-//		 */
-//		delete tmp;
-//		return ownRobotID;
-//	}
+
+		Configuration *tmp = (*SystemConfig::getInstance())["Globals"];
+		int ownRobotID = tmp->get<int>("Globals", "Team", SystemConfig::getHostname().c_str(), "ID", NULL);
+		/* Philipp Sperber:
+		 * Never delete a Configuration Pointer!!!
+		 * Messes up on next call
+		 */
+		return ownRobotID;
+	}
 
 	string SystemConfig::getRootPath()
 	{

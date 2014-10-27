@@ -88,7 +88,7 @@ int main (int argc, char *argv[])
 	
 	std::string baddress = proxyconf->get<std::string>("UdpProxy","MulticastAddress",NULL);
 	
-	ushort port = proxyconf->get<ushort>("UdpProxy","Port",NULL);
+	unsigned short port = (unsigned short)proxyconf->get<int>("UdpProxy","Port",NULL);
 	
 	//udp::resolver resolver(io_service);
     //udp::resolver::query query(udp::v4(), baddress, port);
