@@ -83,6 +83,8 @@ namespace alica
 		void stepNotify();
 		PlanBase* getPlanBase();
 
+		~AlicaEngine();
+
 		/**
 		 * Switch the engine between normal operation and silent mode, in which no messages other than debugging information are sent out.
 		 * This is useful for a robot on hot standby.
@@ -108,7 +110,6 @@ namespace alica
 
 	private:
 
-		~AlicaEngine();
 		/**
 		 * Set to have the engine's main loop wait on a signal via MayStep
 		 */
