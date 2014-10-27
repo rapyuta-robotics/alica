@@ -2,6 +2,8 @@
 
 #include  "Plans/PlanThree1407153663917.h"
 
+#include  "Plans/Authority/AuthorityTest1414403413451.h"
+
 #include  "Plans/GoalPlan1402488870347.h"
 
 #include  "Plans/MultiAgentTestMaster1413200842973.h"
@@ -17,6 +19,8 @@
 #include  "Plans/PlanTwo1407153645238.h"
 
 #include  "Plans/MasterPlanTaskAssignment1407152758497.h"
+
+#include  "Plans/Authority/AuthorityTestMaster1414403396328.h"
 
 #include  "Plans/PlanFive1407153703092.h"
 
@@ -133,6 +137,12 @@ shared_ptr<BasicCondition> ConditionCreator::createConditions(long conditionConf
     case 1402489462088:
 
       return make_shared<TransitionCondition1402489462088>();
+
+      break;
+
+    case 1414403842622:
+
+      return make_shared<TransitionCondition1414403842622>();
 
       break;
 
