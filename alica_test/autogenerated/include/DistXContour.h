@@ -27,7 +27,7 @@ namespace alica
 		virtual ~DistXContour();
 		void cacheEvalData();
 		double interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint);
-		UtilityInterval Eval(IAssignment* ass);
+		virtual UtilityInterval* eval(IAssignment* ass);
 
 
 	protected:

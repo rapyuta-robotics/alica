@@ -83,12 +83,12 @@ namespace alica
 		 * Evaluates the utilityfunction summand
 		 * @return The result of the evaluation
 		 */
-		virtual UtilityInterval* eval(IAssignment* ass);
+		virtual UtilityInterval* eval(IAssignment* ass)=0;
 		/**
 		 * Cache every data for the current evaluation, to
 		 * assure consistency over the complete current evaluation.
 		 */
-		virtual void cacheEvalData();
+		virtual void cacheEvalData(){};
 		virtual pair<vector<double>, double>* differentiate(IAssignment* newAss)
 		{
 			return nullptr;

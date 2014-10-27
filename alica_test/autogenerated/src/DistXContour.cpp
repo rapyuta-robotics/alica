@@ -6,6 +6,7 @@
  */
 
 #include <DistXContour.h>
+#include "TestWorldModel.h"
 
 namespace alica
 {
@@ -40,7 +41,7 @@ namespace alica
 		return ((Y2 - Y1) / (X2 - X1) * (xPoint - X1) + Y1);
 	}
 
-	UtilityInterval DistXContour::Eval(IAssignment* ass)
+	UtilityInterval* DistXContour::eval(IAssignment* ass)
 	{
 		ui.setMin(0.0);
 		ui.setMax(0.0);
@@ -57,7 +58,7 @@ namespace alica
 		if (this->contourPoints.size() == 0)
 		{
 			ui.setMax(0.0);
-			return ui;
+			return &ui;
 		}
 		for (int i = 0; i < this->contourPoints.size(); ++i)
 		{
@@ -81,7 +82,7 @@ namespace alica
 
 		ui.setMin(val);
 		ui.setMax(val);
-		return ui;
+		return &ui;
 	}
 
 } /* namespace alica */
