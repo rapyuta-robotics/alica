@@ -15,6 +15,7 @@
 #include "UtilityFunctionCreator.h"
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
+#include "TestWorldModel.h"
 
 class AlicaEngineAthorityManager : public ::testing::Test
 {

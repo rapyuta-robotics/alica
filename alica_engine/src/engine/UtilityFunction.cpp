@@ -42,6 +42,10 @@ namespace alica
 
 	UtilityFunction::~UtilityFunction()
 	{
+		for(auto summand : utilSummands) {
+			delete summand;
+		}
+
 		for(auto pair : this->priorityMartix) {
 			delete pair.first;
 		}
