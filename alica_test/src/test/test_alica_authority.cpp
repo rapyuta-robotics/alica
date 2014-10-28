@@ -16,6 +16,11 @@
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "TestWorldModel.h"
+#include "engine/PlanRepository.h"
+#include "engine/UtilityFunction.h"
+#include "engine/model/Plan.h"
+#include "DistBallRobot.h"
+#include "engine/teamobserver/TeamObserver.h"
 
 class AlicaEngineAthorityManager : public ::testing::Test
 {
@@ -85,6 +90,12 @@ TEST_F(AlicaEngineAthorityManager, authority)
 	EXPECT_TRUE(ae2->init(bc, cc, uc, crc, "RolesetTA", "AuthorityTestMaster", ".", true))
 			<< "Unable to initialise the Alica Engine!";
 
+	auto uSummandAe = *((ae->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
+	DistBallRobot* dbr = dynamic_cast<DistBallRobot*>(uSummandAe);
+	dbr->robotId = ae->getTeamObserver()->getOwnId();
+	auto uSummandAe2 = *((ae2->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
+	DistBallRobot* dbr2 = dynamic_cast<DistBallRobot*>(uSummandAe2);
+	dbr2->robotId = ae2->getTeamObserver()->getOwnId();
 	ae->start();
 	ae2->start();
 

@@ -99,7 +99,7 @@ namespace alica
 		}
 
 	protected:
-		UtilityInterval ui;
+		UtilityInterval* ui;
 		vector<long> relevantEntryPointIds;
 		/**
 		 * Weight of this UtilitySummand
