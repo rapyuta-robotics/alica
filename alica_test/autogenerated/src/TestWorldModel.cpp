@@ -29,6 +29,7 @@ namespace alicaTests
 		this->transitionCondition1413201052549 = false;
 		this->transitionCondition1413201367990 = false;
 		this->transitionCondition1413201370590 = false;
+		this->x = 0;
 	}
 
 	TestWorldModel::~TestWorldModel()
