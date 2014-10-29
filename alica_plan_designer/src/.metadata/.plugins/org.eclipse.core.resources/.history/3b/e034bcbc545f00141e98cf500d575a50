@@ -1,0 +1,21 @@
+«IMPORT alica»  
+«DEFINE Root FOR Behaviour»
+	«FILE "DomainBehaviour.cpp"-»
+	#include "DomainBehaviour.h"
+
+	namespace alica
+	{
+		DomainBehaviour::DomainBehaviour(string name) : BasicBehaviour(name)
+		{
+		}
+
+		DomainBehaviour::~DomainBehaviour()
+		{
+		}
+	} /* namespace alica */
+
+#endif /* DomainBehaviour_H_ */
+
+	«ENDFILE»
+
+«ENDDEFINE»

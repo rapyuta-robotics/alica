@@ -1,7 +1,7 @@
 #ifndef MultiAgentTestPlan_H_
 #define MultiAgentTestPlan_H_
 
-#include "engine/BasicCondition.h"
+#include "DomainCondition.h"
 #include "engine/BasicUtilityFunction.h"
 #include "engine/UtilityFunction.h"
 #include "engine/DefaultUtilityFunction.h"
@@ -20,17 +20,17 @@ class UtilityFunction1413200862180 : public BasicUtilityFunction
   shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
 
-class TransitionCondition1413201370590 : public BasicCondition
+class TransitionCondition1413201370590 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1413201052549 : public BasicCondition
+class TransitionCondition1413201052549 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1413201367990 : public BasicCondition
+class TransitionCondition1413201367990 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };

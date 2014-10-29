@@ -31,27 +31,33 @@ shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfI
   switch (behaviourConfId)
   {
 
-    case 1402488696205:
+    case 1402488712657:
+
       return make_shared<MidFieldStandard>();
       break;
 
-    case 1402489351885:
+    case 1402489366699:
+
       return make_shared<AttackOpp>();
       break;
 
-    case 1402488848841:
+    case 1402488866727:
+
       return make_shared<Attack>();
       break;
 
-    case 1402488939130:
+    case 1402488956661:
+
       return make_shared<Tackle>();
       break;
 
-    case 1402488730695:
+    case 1402488763903:
+
       return make_shared<DefendMid>();
       break;
 
-    case 1413810772726:
+    case 1413810775049:
+
       return make_shared<NewBehaviour>();
       break;
 

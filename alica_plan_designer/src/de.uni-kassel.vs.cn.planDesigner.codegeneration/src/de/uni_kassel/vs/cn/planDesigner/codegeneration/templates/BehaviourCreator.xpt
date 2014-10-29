@@ -26,7 +26,9 @@
 					switch(behaviourConfId)
 					{
 						«FOREACH behaviours AS beh»
-						case «beh.id»:
+							«FOREACH beh.configurations AS behConf»
+								case «behConf.id»:
+							«ENDFOREACH»
 							return make_shared<«beh.name»>();
 							break;
 						«ENDFOREACH»

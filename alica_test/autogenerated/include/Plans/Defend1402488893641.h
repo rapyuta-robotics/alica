@@ -1,7 +1,7 @@
 #ifndef Defend_H_
 #define Defend_H_
 
-#include "engine/BasicCondition.h"
+#include "DomainCondition.h"
 #include "engine/BasicUtilityFunction.h"
 #include "engine/UtilityFunction.h"
 #include "engine/DefaultUtilityFunction.h"
@@ -20,22 +20,22 @@ class UtilityFunction1402488893641 : public BasicUtilityFunction
   shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
 
-class TransitionCondition1402488993122 : public BasicCondition
+class TransitionCondition1402488993122 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1402488991641 : public BasicCondition
+class TransitionCondition1402488991641 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1402489065962 : public BasicCondition
+class TransitionCondition1402489065962 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1402489073613 : public BasicCondition
+class TransitionCondition1402489073613 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };

@@ -1,7 +1,7 @@
 #ifndef AuthorityTestMaster_H_
 #define AuthorityTestMaster_H_
 
-#include "engine/BasicCondition.h"
+#include "DomainCondition.h"
 #include "engine/BasicUtilityFunction.h"
 #include "engine/UtilityFunction.h"
 #include "engine/DefaultUtilityFunction.h"
@@ -21,7 +21,7 @@ class UtilityFunction1414403396328 : public BasicUtilityFunction
   shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
 
-class TransitionCondition1414403842622 : public BasicCondition
+class TransitionCondition1414403842622 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };

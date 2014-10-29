@@ -5,8 +5,9 @@ using namespace std;
 /*PROTECTED REGION END*/
 namespace alica
 {
-AttackOpp::AttackOpp() :
-    BasicBehaviour("AttackOpp")
+/*PROTECTED REGION ID(staticVars1402489351885) ENABLED START*/ //initialise static variables here
+/*PROTECTED REGION END*/AttackOpp::AttackOpp() :
+    DomainBehaviour("AttackOpp")
 {
   /*PROTECTED REGION ID(con1402489351885) ENABLED START*/ //Add additional options here
   /*PROTECTED REGION END*/}
@@ -22,4 +23,5 @@ void AttackOpp::initialiseParameters()
 {
   /*PROTECTED REGION ID(initialiseParameters1402489351885) ENABLED START*/ //Add additional options here
   /*PROTECTED REGION END*/}
-} /* namespace alica */
+/*PROTECTED REGION ID(methods1402489351885) ENABLED START*/ //Add additional methods here
+/*PROTECTED REGION END*/} /* namespace alica */

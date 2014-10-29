@@ -485,6 +485,18 @@ public class AlicaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case AlicaPackage.DOMAIN_BEHAVIOUR: {
+				DomainBehaviour domainBehaviour = (DomainBehaviour)theEObject;
+				T result = caseDomainBehaviour(domainBehaviour);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case AlicaPackage.DOMAIN_CONDITION: {
+				DomainCondition domainCondition = (DomainCondition)theEObject;
+				T result = caseDomainCondition(domainCondition);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -1281,6 +1293,36 @@ public class AlicaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseConstraintCreator(ConstraintCreator object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Domain Behaviour</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Domain Behaviour</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDomainBehaviour(DomainBehaviour object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Domain Condition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Domain Condition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDomainCondition(DomainCondition object) {
 		return null;
 	}
 
