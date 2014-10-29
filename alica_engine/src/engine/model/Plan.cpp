@@ -160,5 +160,16 @@ namespace alica
 		this->transitions = transitions;
 	}
 
+	string alica::Plan::getDestinationPath()
+	{
+		return destinationPath;
+	}
+
+	void alica::Plan::setDestinationPath(string destinationPath)
+	{
+		this->destinationPath = destinationPath;
+	}
+
 } /* namespace Alica */
+
 

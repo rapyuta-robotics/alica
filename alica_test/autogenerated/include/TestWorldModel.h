@@ -8,6 +8,10 @@
 #ifndef ALICA_ALICA_TEST_SRC_TESTWORLDMODEL_H_
 #define ALICA_ALICA_TEST_SRC_TESTWORLDMODEL_H_
 
+using namespace std;
+
+#include <vector>
+
 namespace alicaTests
 {
 
@@ -29,6 +33,7 @@ namespace alicaTests
 		bool isTransitionCondition1413201370590();
 		void setTransitionCondition1413201370590(bool transitionCondition1413201370590);
 		double x;
+		vector<double> otherRobotX;
 
 	private:
 		TestWorldModel();

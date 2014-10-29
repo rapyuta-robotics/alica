@@ -189,6 +189,7 @@ namespace alica
 		stringstream ss;
 		ss << p->getUtilityThreshold();
 		xp->SetAttribute("utilityThreshold", ss.str().c_str());
+		xp->SetAttribute("destinationPath", p->getDestinationPath().c_str());
 		stringstream ss2;
 		ss2 << "0.0";
 		xp->SetAttribute("priority", ss2.str().c_str());

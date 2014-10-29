@@ -60,6 +60,8 @@ namespace alica
 		void setSyncTransitions(const list<SyncTransition*>& syncTransitions);
 		list<Transition*>& getTransitions() ;
 		void setTransitions(const list<Transition*>& transitions);
+		string getDestinationPath();
+		void setDestinationPath(string destinationPath);
 
 	protected:
 		int minCardinality;
@@ -71,6 +73,7 @@ namespace alica
 		list<SyncTransition*> syncTransitions;
 		list<Transition*> transitions;
 		PostCondition* postCondition;
+		string destinationPath;
 
 	};
 
