@@ -18,6 +18,7 @@ using namespace std;
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
 #include "engine/UtilityInterval.h"
+#include "engine/model/EntryPoint.h"
 
 namespace alica
 {
@@ -32,8 +33,8 @@ namespace alica
 	{
 	public:
 
-		USummand() {}
-		virtual ~USummand()	{}
+		USummand() {this->ui = new UtilityInterval(); this->id = 0; this->weight = 0;}
+		virtual ~USummand()	{delete this->ui;}
 		/**
 		 * Searches every needed entrypoint in the hashtable of the xmlparser
 		 * and stores it in the relevant entrypoint vector. This will increase the
@@ -42,7 +43,7 @@ namespace alica
 		virtual void init(AlicaEngine* ae)
 		{
 			// init relevant entrypoint vector
-			this->relevantEntryPoints = vector<EntryPoint*>(this->relevantEntryPointIds.size());
+			this->relevantEntryPoints.resize(this->relevantEntryPointIds.size());
 			// find the right entrypoint for each id in relevant entrypoint id
 			map<long, EntryPoint*> elements = ae->getPlanRepository()->getEntryPoints();
 			EntryPoint* curEp;

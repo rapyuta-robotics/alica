@@ -138,6 +138,8 @@ public class AlicaFactoryImpl extends EFactoryImpl implements AlicaFactory {
 			case AlicaPackage.CONDITION_CREATOR: return createConditionCreator();
 			case AlicaPackage.UTILITY_FUNCTION_CREATOR: return createUtilityFunctionCreator();
 			case AlicaPackage.CONSTRAINT_CREATOR: return createConstraintCreator();
+			case AlicaPackage.DOMAIN_BEHAVIOUR: return createDomainBehaviour();
+			case AlicaPackage.DOMAIN_CONDITION: return createDomainCondition();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -641,6 +643,26 @@ public class AlicaFactoryImpl extends EFactoryImpl implements AlicaFactory {
 	public ConstraintCreator createConstraintCreator() {
 		ConstraintCreatorImpl constraintCreator = new ConstraintCreatorImpl();
 		return constraintCreator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DomainBehaviour createDomainBehaviour() {
+		DomainBehaviourImpl domainBehaviour = new DomainBehaviourImpl();
+		return domainBehaviour;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DomainCondition createDomainCondition() {
+		DomainConditionImpl domainCondition = new DomainConditionImpl();
+		return domainCondition;
 	}
 
 	/**

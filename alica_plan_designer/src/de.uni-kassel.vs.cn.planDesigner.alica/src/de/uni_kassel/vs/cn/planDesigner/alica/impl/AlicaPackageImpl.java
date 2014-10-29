@@ -27,6 +27,8 @@ import de.uni_kassel.vs.cn.planDesigner.alica.Condition;
 import de.uni_kassel.vs.cn.planDesigner.alica.ConditionCreator;
 import de.uni_kassel.vs.cn.planDesigner.alica.Constant;
 import de.uni_kassel.vs.cn.planDesigner.alica.ConstraintCreator;
+import de.uni_kassel.vs.cn.planDesigner.alica.DomainBehaviour;
+import de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition;
 import de.uni_kassel.vs.cn.planDesigner.alica.DomainDescription;
 import de.uni_kassel.vs.cn.planDesigner.alica.Edge;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
@@ -443,6 +445,20 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * @generated
 	 */
 	private EClass constraintCreatorEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass domainBehaviourEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass domainConditionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2191,6 +2207,24 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getDomainBehaviour() {
+		return domainBehaviourEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getDomainCondition() {
+		return domainConditionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getPlanningType() {
 		return planningTypeEEnum;
 	}
@@ -2461,6 +2495,10 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		constraintCreatorEClass = createEClass(CONSTRAINT_CREATOR);
 		createEReference(constraintCreatorEClass, CONSTRAINT_CREATOR__CONDITIONS);
 		createEReference(constraintCreatorEClass, CONSTRAINT_CREATOR__PLANS);
+
+		domainBehaviourEClass = createEClass(DOMAIN_BEHAVIOUR);
+
+		domainConditionEClass = createEClass(DOMAIN_CONDITION);
 
 		// Create enums
 		planningTypeEEnum = createEEnum(PLANNING_TYPE);
@@ -2782,6 +2820,10 @@ public class AlicaPackageImpl extends EPackageImpl implements AlicaPackage {
 		initEClass(constraintCreatorEClass, ConstraintCreator.class, "ConstraintCreator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getConstraintCreator_Conditions(), this.getCondition(), null, "conditions", null, 0, -1, ConstraintCreator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 		initEReference(getConstraintCreator_Plans(), this.getAbstractPlan(), null, "plans", null, 0, -1, ConstraintCreator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(domainBehaviourEClass, DomainBehaviour.class, "DomainBehaviour", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(domainConditionEClass, DomainCondition.class, "DomainCondition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Initialize enums and add enum literals
 		initEEnum(planningTypeEEnum, PlanningType.class, "PlanningType");

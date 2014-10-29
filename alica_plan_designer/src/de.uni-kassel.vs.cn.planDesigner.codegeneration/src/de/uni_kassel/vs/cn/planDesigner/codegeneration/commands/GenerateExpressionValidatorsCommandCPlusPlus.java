@@ -82,6 +82,8 @@ public class GenerateExpressionValidatorsCommandCPlusPlus extends
 	public static final String WORKFLOW_FILE_CC = "ConstraintCreator.mwe";
 	public static final String WORKFLOW_FILE_UFC = "UtilityFunctionCreator.mwe";
 	public static final String WORKFLOW_BEHAVIOUR = "Behaviour.mwe";
+	public static final String WORKFLOW_DOMAIN_BEH = "DomainBehaviour.mwe";
+	public static final String WORKFLOW_DOMAIN_CON = "DomainCondition.mwe";
 
 	private class GenerateCodeJob extends WorkspaceJob {
 		private final Set<Plan> plansToGenerateCodeFor;
@@ -354,7 +356,55 @@ public class GenerateExpressionValidatorsCommandCPlusPlus extends
 			properties.put("metaModelPackage", ALICA_PACKAGE_FILE);
 			properties.put("srcGenPath", destinationPath);
 			properties.put("constraintSubfolder", constraintSubfolder);
-
+			
+			//DOMAINBEHAVIOUR
+			File dirInclude = new File(destinationPath + "/src/DomainBehaviour.cpp");
+			if (!dirInclude.exists()) {
+				
+				// IN C++ we need to create a BehaviourCreator
+				monitor.subTask("Generating code for DomainBehaviour");
+				String workflowFile = WORKFLOW_DOMAIN_BEH;
+				Map<String, Object> slotContents = new HashMap<String, Object>();
+				slotContents.put("model", AlicaFactory.eINSTANCE.createDomainBehaviour());
+				WorkflowRunner runner = new WorkflowRunner();
+				// TODO catch exceptions, which fire when the wrong template folder
+				// is selected in the Plan Designer Preference Page
+				if (!runner.run(workflowFile, new NullProgressMonitor(),
+						properties, slotContents)) {
+					errors.add(new Status(IStatus.ERROR,
+							CodeGenActivator.PLUGIN_ID,
+							"Codegeneration for BehaviorCreator \"" + beh
+									+ "\"failed."));
+				} else {
+					generatedValidators++;
+				}
+				monitor.worked(1);
+				
+			}
+			
+			//DOMAIN CONDITION
+			File domainCon = new File(destinationPath + "/src/DomainCondition.cpp");
+			if (!domainCon.exists()) {
+				
+				monitor.subTask("Generating code for DomainCondition");
+				String workflowFile = WORKFLOW_DOMAIN_CON;
+				Map<String, Object> slotContents = new HashMap<String, Object>();
+				slotContents.put("model", AlicaFactory.eINSTANCE.createDomainCondition());
+				WorkflowRunner runner = new WorkflowRunner();
+				if (!runner.run(workflowFile, new NullProgressMonitor(),
+						properties, slotContents)) {
+					errors.add(new Status(IStatus.ERROR,
+							CodeGenActivator.PLUGIN_ID,
+							"Codegeneration for BehaviorCreator \"" + beh
+									+ "\"failed."));
+				} else {
+					generatedValidators++;
+				}
+				monitor.worked(1);
+				
+			}
+			
+			
 			// IN C++ we need to create a BehaviourCreator
 			monitor.subTask("Generating code for BehaviourCreator");
 			String workflowFile = WORKFLOW_FILE_BEH;

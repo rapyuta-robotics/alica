@@ -343,4 +343,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="plans" upperBound="-1"
         eType="#//AbstractPlan"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DomainBehaviour"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DomainCondition"/>
 </ecore:EPackage>

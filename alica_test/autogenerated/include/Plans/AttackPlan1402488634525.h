@@ -1,7 +1,7 @@
 #ifndef AttackPlan_H_
 #define AttackPlan_H_
 
-#include "engine/BasicCondition.h"
+#include "DomainCondition.h"
 #include "engine/BasicUtilityFunction.h"
 #include "engine/UtilityFunction.h"
 #include "engine/DefaultUtilityFunction.h"
@@ -20,12 +20,12 @@ class UtilityFunction1402488634525 : public BasicUtilityFunction
   shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
 
-class TransitionCondition1402489460549 : public BasicCondition
+class TransitionCondition1402489460549 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1402489462088 : public BasicCondition
+class TransitionCondition1402489462088 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };

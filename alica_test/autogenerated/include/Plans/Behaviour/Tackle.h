@@ -1,12 +1,12 @@
 #ifndef Tackle_H_
 #define Tackle_H_
 
-#include "engine/BasicBehaviour.h"
+#include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1402488939130) ENABLED START*/ //Add additional includes here
 /*PROTECTED REGION END*/
 namespace alica
 {
-class Tackle : public BasicBehaviour
+class Tackle : public DomainBehaviour
 {
 public:
   Tackle();

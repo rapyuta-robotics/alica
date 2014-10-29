@@ -4756,6 +4756,62 @@ public interface AlicaPackage extends EPackage {
 	int CONSTRAINT_CREATOR_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainBehaviourImpl <em>Domain Behaviour</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainBehaviourImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getDomainBehaviour()
+	 * @generated
+	 */
+	int DOMAIN_BEHAVIOUR = 53;
+
+	/**
+	 * The number of structural features of the '<em>Domain Behaviour</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOMAIN_BEHAVIOUR_FEATURE_COUNT = 0;
+
+	/**
+	 * The number of operations of the '<em>Domain Behaviour</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOMAIN_BEHAVIOUR_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainConditionImpl <em>Domain Condition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainConditionImpl
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getDomainCondition()
+	 * @generated
+	 */
+	int DOMAIN_CONDITION = 54;
+
+	/**
+	 * The number of structural features of the '<em>Domain Condition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOMAIN_CONDITION_FEATURE_COUNT = 0;
+
+	/**
+	 * The number of operations of the '<em>Domain Condition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOMAIN_CONDITION_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningType <em>Planning Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4763,7 +4819,7 @@ public interface AlicaPackage extends EPackage {
 	 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getPlanningType()
 	 * @generated
 	 */
-	int PLANNING_TYPE = 53;
+	int PLANNING_TYPE = 55;
 
 	/**
 	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.Transition <em>Transition</em>}'.
@@ -6758,6 +6814,26 @@ public interface AlicaPackage extends EPackage {
 	EReference getConstraintCreator_Plans();
 
 	/**
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainBehaviour <em>Domain Behaviour</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Domain Behaviour</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainBehaviour
+	 * @generated
+	 */
+	EClass getDomainBehaviour();
+
+	/**
+	 * Returns the meta object for class '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition <em>Domain Condition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Domain Condition</em>'.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition
+	 * @generated
+	 */
+	EClass getDomainCondition();
+
+	/**
 	 * Returns the meta object for enum '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningType <em>Planning Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8383,6 +8459,26 @@ public interface AlicaPackage extends EPackage {
 		 * @generated
 		 */
 		EReference CONSTRAINT_CREATOR__PLANS = eINSTANCE.getConstraintCreator_Plans();
+
+		/**
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainBehaviourImpl <em>Domain Behaviour</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainBehaviourImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getDomainBehaviour()
+		 * @generated
+		 */
+		EClass DOMAIN_BEHAVIOUR = eINSTANCE.getDomainBehaviour();
+
+		/**
+		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainConditionImpl <em>Domain Condition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.DomainConditionImpl
+		 * @see de.uni_kassel.vs.cn.planDesigner.alica.impl.AlicaPackageImpl#getDomainCondition()
+		 * @generated
+		 */
+		EClass DOMAIN_CONDITION = eINSTANCE.getDomainCondition();
 
 		/**
 		 * The meta object literal for the '{@link de.uni_kassel.vs.cn.planDesigner.alica.PlanningType <em>Planning Type</em>}' enum.

@@ -1,7 +1,7 @@
 #ifndef GoalPlan_H_
 #define GoalPlan_H_
 
-#include "engine/BasicCondition.h"
+#include "DomainCondition.h"
 #include "engine/BasicUtilityFunction.h"
 #include "engine/UtilityFunction.h"
 #include "engine/DefaultUtilityFunction.h"
@@ -20,27 +20,27 @@ class UtilityFunction1402488870347 : public BasicUtilityFunction
   shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
 
-class PreCondition1402489131988 : public BasicCondition
+class PreCondition1402489131988 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class RunTimeCondition1403773741874 : public BasicCondition
+class RunTimeCondition1403773741874 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1402489174338 : public BasicCondition
+class TransitionCondition1402489174338 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1402489206278 : public BasicCondition
+class TransitionCondition1402489206278 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1402489218027 : public BasicCondition
+class TransitionCondition1402489218027 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };

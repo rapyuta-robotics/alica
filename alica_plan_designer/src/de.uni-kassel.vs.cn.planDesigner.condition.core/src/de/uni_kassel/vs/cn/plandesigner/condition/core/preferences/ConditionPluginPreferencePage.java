@@ -152,6 +152,7 @@ public class ConditionPluginPreferencePage extends PreferencePage implements IWo
 		
 		String defaultName = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.PREF_DEFAULT_CONDITION_PLUGIN);
 		// defaultname kann hier wegen initalizern nicht null sein
+		ConditionPluginLoader.getInstance().refreshConditionPlugins();
 		IConditionPlugin defaultPlugin = ConditionPluginLoader.getInstance().getConditionPlugin(defaultName);
 		if (defaultPlugin == null) {
 			setValid(false);

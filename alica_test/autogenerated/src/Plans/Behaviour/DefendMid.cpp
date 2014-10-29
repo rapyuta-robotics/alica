@@ -5,8 +5,9 @@ using namespace std;
 /*PROTECTED REGION END*/
 namespace alica
 {
-DefendMid::DefendMid() :
-    BasicBehaviour("DefendMid")
+/*PROTECTED REGION ID(staticVars1402488730695) ENABLED START*/ //initialise static variables here
+/*PROTECTED REGION END*/DefendMid::DefendMid() :
+    DomainBehaviour("DefendMid")
 {
   /*PROTECTED REGION ID(con1402488730695) ENABLED START*/ //Add additional options here
   /*PROTECTED REGION END*/}
@@ -22,4 +23,5 @@ void DefendMid::initialiseParameters()
 {
   /*PROTECTED REGION ID(initialiseParameters1402488730695) ENABLED START*/ //Add additional options here
   /*PROTECTED REGION END*/}
-} /* namespace alica */
+/*PROTECTED REGION ID(methods1402488730695) ENABLED START*/ //Add additional methods here
+/*PROTECTED REGION END*/} /* namespace alica */

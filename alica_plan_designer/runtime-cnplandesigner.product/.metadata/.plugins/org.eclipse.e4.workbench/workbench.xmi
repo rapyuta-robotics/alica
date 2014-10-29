@@ -3,7 +3,7 @@
   <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;workbench>&#xA;&lt;mruList>&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.ui.DefaultTextEditor&quot; name=&quot;AttackPlan.pml&quot; tooltip=&quot;Plans/AttackPlan.pml&quot;>&#xA;&lt;persistable path=&quot;/Plans/AttackPlan.pml&quot;/>&#xA;&lt;/file>&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;de.uni_kassel.vs.cn.planDesigner.ui.pmlEditor&quot; name=&quot;SimpleTestPlan.pml&quot; tooltip=&quot;Plans/SimpleTestPlan.pml&quot;>&#xA;&lt;persistable path=&quot;/Plans/SimpleTestPlan.pml&quot;/>&#xA;&lt;/file>&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;de.uni_kassel.vs.cn.planDesigner.ui.pmlEditor&quot; name=&quot;MultiAgentTestMaster.pml&quot; tooltip=&quot;Plans/MultiAgentTestMaster.pml&quot;>&#xA;&lt;persistable path=&quot;/Plans/MultiAgentTestMaster.pml&quot;/>&#xA;&lt;/file>&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;de.uni_kassel.vs.cn.planDesigner.ui.pmlEditor&quot; name=&quot;MasterPlanTaskAssignment.pml&quot; tooltip=&quot;Plans/MasterPlanTaskAssignment.pml&quot;>&#xA;&lt;persistable path=&quot;/Plans/MasterPlanTaskAssignment.pml&quot;/>&#xA;&lt;/file>&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;de.uni_kassel.vs.cn.planDesigner.ui.pmlEditor&quot; name=&quot;MasterPlan.pml&quot; tooltip=&quot;Plans/MasterPlan.pml&quot;>&#xA;&lt;persistable path=&quot;/Plans/MasterPlan.pml&quot;/>&#xA;&lt;/file>&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;de.uni_kassel.vs.cn.planDesigner.ui.pmlEditor&quot; name=&quot;PlanFive.pml&quot; tooltip=&quot;Plans/PlanFive.pml&quot;>&#xA;&lt;persistable path=&quot;/Plans/PlanFive.pml&quot;/>&#xA;&lt;/file>&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.ui.DefaultTextEditor&quot; name=&quot;MidFieldPlayPlan.pml&quot; tooltip=&quot;Plans/MidFieldPlayPlan.pml&quot;>&#xA;&lt;persistable path=&quot;/Plans/MidFieldPlayPlan.pml&quot;/>&#xA;&lt;/file>&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.ui.DefaultTextEditor&quot; name=&quot;GoalPlan.pml&quot; tooltip=&quot;Plans/GoalPlan.pml&quot;>&#xA;&lt;persistable path=&quot;/Plans/GoalPlan.pml&quot;/>&#xA;&lt;/file>&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;de.uni_kassel.vs.cn.planDesigner.ui.pmlEditor&quot; name=&quot;Defend.pml&quot; tooltip=&quot;Plans/Defend.pml&quot;>&#xA;&lt;persistable path=&quot;/Plans/Defend.pml&quot;/>&#xA;&lt;/file>&#xA;&lt;/mruList>&#xA;&lt;/workbench>"/>
   <tags>activeSchemeId:org.eclipse.ui.defaultAcceleratorConfiguration</tags>
   <tags>ModelMigrationProcessor.001</tags>
-  <children xsi:type="basic:TrimmedWindow" xmi:id="_XIng4F3TEeSJq9NnUfhidQ" elementId="IDEWindow" contributorURI="platform:/plugin/org.eclipse.ui.workbench" selectedElement="_XIng4V3TEeSJq9NnUfhidQ" label="%trimmedwindow.label.eclipseSDK" x="1844" y="228" width="1268" height="813">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_XIng4F3TEeSJq9NnUfhidQ" elementId="IDEWindow" contributorURI="platform:/plugin/org.eclipse.ui.workbench" selectedElement="_XIng4V3TEeSJq9NnUfhidQ" label="%trimmedwindow.label.eclipseSDK" x="1844" y="228" width="1278" height="848">
     <persistedState key="coolBarVisible" value="true"/>
     <persistedState key="perspectiveBarVisible" value="true"/>
     <persistedState key="workingSets" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;workingSets/>"/>
@@ -32,10 +32,9 @@
           <tags>persp.newWizSC:de.uni_kassel.vs.cn.planDesigner.ui.wizards.PlanmodellerNewDomainDescriptionWizard</tags>
           <tags>persp.perspSC:de.uni_kassel.vs.cn.planDesigner.ui.pmleditorPerspective</tags>
           <tags>persp.perspSC:org.eclipse.team.ui.TeamSynchronizingPerspective</tags>
-          <children xsi:type="basic:PartSashContainer" xmi:id="_XIng5F3TEeSJq9NnUfhidQ" selectedElement="_XIng5V3TEeSJq9NnUfhidQ" horizontal="true">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_XIng5F3TEeSJq9NnUfhidQ" selectedElement="_XIng513TEeSJq9NnUfhidQ" horizontal="true">
             <children xsi:type="basic:PartStack" xmi:id="_XIng5V3TEeSJq9NnUfhidQ" elementId="de.uni_kassel.vs.cn.planDesigner.ui.views.pdexplorerMStack" containerData="2299" selectedElement="_XIng5l3TEeSJq9NnUfhidQ">
               <tags>newtablook</tags>
-              <tags>active</tags>
               <children xsi:type="advanced:Placeholder" xmi:id="_XIng5l3TEeSJq9NnUfhidQ" elementId="de.uni_kassel.vs.cn.planDesigner.ui.views.pdexplorer" ref="_XInhM13TEeSJq9NnUfhidQ"/>
             </children>
             <children xsi:type="basic:PartSashContainer" xmi:id="_XIng513TEeSJq9NnUfhidQ" containerData="7701" selectedElement="_XIng6F3TEeSJq9NnUfhidQ">
@@ -75,6 +74,7 @@
         <tags>newtablook</tags>
         <tags>org.eclipse.e4.primaryDataStack</tags>
         <tags>EditorStack</tags>
+        <tags>active</tags>
         <children xsi:type="basic:Part" xmi:id="_XInhKV3TEeSJq9NnUfhidQ" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="MasterPlan.pml" iconURI="platform:/plugin/de.uni-kassel.vs.cn.planDesigner.ui/icons/plan16x16.png" tooltip="Plans/MasterPlan.pml" closeable="true">
           <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;editor id=&quot;de.uni_kassel.vs.cn.planDesigner.ui.pmlEditor&quot;>&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/Plans/MasterPlan.pml&quot;/>&#xA;&lt;/editor>"/>
           <tags>Editor</tags>
@@ -100,6 +100,8 @@
           <tags>Editor</tags>
           <tags>de.uni_kassel.vs.cn.planDesigner.ui.pmlEditor</tags>
           <tags>removeOnHide</tags>
+          <tags>active</tags>
+          <tags>activeOnClose</tags>
           <menus xsi:type="menu:PopupMenu" xmi:id="_XInhLl3TEeSJq9NnUfhidQ" elementId="de.uni_kassel.vs.cn.planDesigner.ui.pmlEditor">
             <tags>menuContribution:popup</tags>
             <tags>popup:de.uni_kassel.vs.cn.planDesigner.ui.pmlEditor</tags>
@@ -129,7 +131,6 @@
       <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;view CommonNavigator.LINKING_ENABLED=&quot;1&quot;/>"/>
       <tags>View</tags>
       <tags>categoryTag:Plan Designer</tags>
-      <tags>active</tags>
       <menus xmi:id="_XInhNF3TEeSJq9NnUfhidQ" elementId="de.uni_kassel.vs.cn.planDesigner.ui.views.pdexplorer">
         <tags>ViewMenu</tags>
         <tags>menuContribution:menu</tags>
@@ -222,7 +223,7 @@
         <tags>menuContribution:popup</tags>
         <tags>popup:de.uni_kassel.vs.cn.planDesigner.ui.views.pdexplorer</tags>
       </menus>
-      <toolbar xmi:id="_XIoIAV3TEeSJq9NnUfhidQ" elementId="de.uni_kassel.vs.cn.planDesigner.ui.views.pdexplorer"/>
+      <toolbar xmi:id="_XIoIAV3TEeSJq9NnUfhidQ" elementId="de.uni_kassel.vs.cn.planDesigner.ui.views.pdexplorer" visible="false"/>
     </sharedElements>
     <sharedElements xsi:type="basic:Part" xmi:id="_XIoIBV3TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.views.PropertySheet" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="Properties" iconURI="platform:/plugin/org.eclipse.ui.views/icons/full/eview16/prop_ps.gif" tooltip="" closeable="true">
       <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;view/>"/>
@@ -232,9 +233,9 @@
         <tags>ViewMenu</tags>
         <tags>menuContribution:menu</tags>
       </menus>
-      <toolbar xmi:id="_XIoIDl3TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.views.PropertySheet"/>
+      <toolbar xmi:id="_XIoIDl3TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.views.PropertySheet" visible="false"/>
     </sharedElements>
-    <sharedElements xsi:type="basic:Part" xmi:id="_XIoIE13TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.views.ProblemView" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="Problems" iconURI="platform:/plugin/org.eclipse.ui.ide/icons/full/eview16/problems_view.gif" tooltip="" closeable="true">
+    <sharedElements xsi:type="basic:Part" xmi:id="_XIoIE13TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.views.ProblemView" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="Problems" iconURI="platform:/plugin/org.eclipse.ui.ide/icons/full/eview16/problems_view.gif" tooltip="0 items" closeable="true">
       <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;view PRIMARY_SORT_FIELD=&quot;org.eclipse.ui.ide.severityAndDescriptionField&quot; categoryGroup=&quot;org.eclipse.ui.ide.severity&quot; markerContentGenerator=&quot;org.eclipse.ui.ide.problemsGenerator&quot; partName=&quot;Problems&quot;>&#xA;&lt;columnWidths org.eclipse.ui.ide.locationField=&quot;105&quot; org.eclipse.ui.ide.markerType=&quot;105&quot; org.eclipse.ui.ide.pathField=&quot;140&quot; org.eclipse.ui.ide.resourceField=&quot;105&quot; org.eclipse.ui.ide.severityAndDescriptionField=&quot;350&quot;/>&#xA;&lt;visible IMemento.internal.id=&quot;org.eclipse.ui.ide.severityAndDescriptionField&quot;/>&#xA;&lt;visible IMemento.internal.id=&quot;org.eclipse.ui.ide.resourceField&quot;/>&#xA;&lt;visible IMemento.internal.id=&quot;org.eclipse.ui.ide.pathField&quot;/>&#xA;&lt;visible IMemento.internal.id=&quot;org.eclipse.ui.ide.locationField&quot;/>&#xA;&lt;visible IMemento.internal.id=&quot;org.eclipse.ui.ide.markerType&quot;/>&#xA;&lt;/view>"/>
       <tags>View</tags>
       <tags>categoryTag:General</tags>
@@ -366,7 +367,7 @@
         <tags>ViewMenu</tags>
         <tags>menuContribution:menu</tags>
       </menus>
-      <toolbar xmi:id="_XIoIL13TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.views.ContentOutline"/>
+      <toolbar xmi:id="_XIoIL13TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.views.ContentOutline" visible="false"/>
     </sharedElements>
     <sharedElements xsi:type="basic:Part" xmi:id="_XIoIMl3TEeSJq9NnUfhidQ" elementId="de.uni_kassel.vs.cn.planDesigner.ui.views.RepositoryView" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="Repository" iconURI="platform:/plugin/de.uni-kassel.vs.cn.planDesigner.ui/icons/cn200816x16.png" tooltip="" closeable="true">
       <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;view/>"/>
@@ -464,7 +465,7 @@
         <tags>menuContribution:popup</tags>
         <tags>popup:de.uni_kassel.vs.cn.planDesigner.ui.views.RepositoryView.repositoryContextMenu</tags>
       </menus>
-      <toolbar xmi:id="_XIoISl3TEeSJq9NnUfhidQ" elementId="de.uni_kassel.vs.cn.planDesigner.ui.views.RepositoryView"/>
+      <toolbar xmi:id="_XIoISl3TEeSJq9NnUfhidQ" elementId="de.uni_kassel.vs.cn.planDesigner.ui.views.RepositoryView" visible="false"/>
     </sharedElements>
     <trimBars xmi:id="_XIoIS13TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.main.toolbar">
       <children xsi:type="menu:ToolBar" xmi:id="_XIoITF3TEeSJq9NnUfhidQ">
@@ -478,19 +479,19 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_XIoIZl3TEeSJq9NnUfhidQ" elementId="org.eclipse.search.searchActionSet">
         <tags>Draggable</tags>
-        <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIoIZ13TEeSJq9NnUfhidQ" elementId="Search"/>
-        <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIoIaF3TEeSJq9NnUfhidQ" elementId="org.eclipse.search.OpenSearchDialogPage"/>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_kRvUUF91EeShZJP0ol4WXw" elementId="Search"/>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_kRv7YF91EeShZJP0ol4WXw" elementId="org.eclipse.search.OpenSearchDialogPage"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_XIoIaV3TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
         <tags>Draggable</tags>
-        <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIoIal3TEeSJq9NnUfhidQ" elementId="history.group"/>
-        <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIoIa13TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.edit.text.gotoNextAnnotation"/>
-        <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIoIbF3TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.edit.text.gotoPreviousAnnotation"/>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_kRv7YV91EeShZJP0ol4WXw" elementId="history.group"/>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_kRv7Yl91EeShZJP0ol4WXw" elementId="org.eclipse.ui.edit.text.gotoNextAnnotation"/>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_kRv7Y191EeShZJP0ol4WXw" elementId="org.eclipse.ui.edit.text.gotoPreviousAnnotation"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_XIoIbV3TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.edit.text.actionSet.navigation">
         <tags>Draggable</tags>
-        <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIoIbl3TEeSJq9NnUfhidQ" elementId="history.group"/>
-        <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIoIb13TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.edit.text.gotoLastEditPosition"/>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_kRwicF91EeShZJP0ol4WXw" elementId="history.group"/>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_kRwicV91EeShZJP0ol4WXw" elementId="org.eclipse.ui.edit.text.gotoLastEditPosition"/>
       </children>
       <children xsi:type="menu:ToolControl" xmi:id="_XIoIcF3TEeSJq9NnUfhidQ" elementId="PerspectiveSpacer" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.renderers.swt/org.eclipse.e4.ui.workbench.renderers.swt.LayoutModifierToolControl">
         <tags>stretch</tags>
@@ -515,14 +516,6 @@
         <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIovCF3TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.edit.text.toggleBlockSelectionMode"/>
         <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIovCV3TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.edit.text.toggleShowWhitespaceCharacters"/>
         <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIovCl3TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
-      </children>
-      <children xsi:type="menu:ToolBar" xmi:id="_XIovC13TEeSJq9NnUfhidQ" elementId="de.uni_kassel.vs.cn.planDesigner.ui.pmlEditor">
-        <tags>Draggable</tags>
-        <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIovDF3TEeSJq9NnUfhidQ"/>
-        <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIovDV3TEeSJq9NnUfhidQ" elementId="org.eclipse.gef.zoom_widget"/>
-        <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIovDl3TEeSJq9NnUfhidQ"/>
-        <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIovD13TEeSJq9NnUfhidQ"/>
-        <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIovEF3TEeSJq9NnUfhidQ"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_XIovEV3TEeSJq9NnUfhidQ" elementId="group.editor" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -992,6 +985,31 @@
         <tags>Draggable</tags>
         <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIpWPl3TEeSJq9NnUfhidQ" elementId="save"/>
         <children xsi:type="menu:OpaqueToolItem" xmi:id="_XIpWP13TEeSJq9NnUfhidQ" elementId="saveAll"/>
+      </children>
+      <children xsi:type="menu:ToolBar" xmi:id="_FNtbYF9QEeSu2M1szX4Sew">
+        <tags>Draggable</tags>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_FNxFwF9QEeSu2M1szX4Sew" elementId="save"/>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_FNxFwV9QEeSu2M1szX4Sew" elementId="saveAll"/>
+      </children>
+      <children xsi:type="menu:ToolBar" xmi:id="_xvIwkF9UEeSda5u0CRiS8A">
+        <tags>Draggable</tags>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_xvOQIF9UEeSda5u0CRiS8A" elementId="save"/>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_xvOQIV9UEeSda5u0CRiS8A" elementId="saveAll"/>
+      </children>
+      <children xsi:type="menu:ToolBar" xmi:id="_56LC4F9VEeSnGfcbvAiLfQ">
+        <tags>Draggable</tags>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_56PUUF9VEeSnGfcbvAiLfQ" elementId="save"/>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_56PUUV9VEeSnGfcbvAiLfQ" elementId="saveAll"/>
+      </children>
+      <children xsi:type="menu:ToolBar" xmi:id="_Se09EF9ZEeSZ6MR1AIbczg">
+        <tags>Draggable</tags>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_Se4AYF9ZEeSZ6MR1AIbczg" elementId="save"/>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_Se4ncF9ZEeSZ6MR1AIbczg" elementId="saveAll"/>
+      </children>
+      <children xsi:type="menu:ToolBar" xmi:id="_kPTrYF91EeShZJP0ol4WXw">
+        <tags>Draggable</tags>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_kPXVwF91EeShZJP0ol4WXw" elementId="save"/>
+        <children xsi:type="menu:OpaqueToolItem" xmi:id="_kPX80F91EeShZJP0ol4WXw" elementId="saveAll"/>
       </children>
     </trimBars>
     <trimBars xmi:id="_XIpWQF3TEeSJq9NnUfhidQ" elementId="org.eclipse.ui.trim.status" side="Bottom">

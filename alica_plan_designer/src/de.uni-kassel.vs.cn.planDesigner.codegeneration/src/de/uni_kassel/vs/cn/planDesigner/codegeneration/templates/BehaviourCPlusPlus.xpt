@@ -10,7 +10,10 @@
 
 		namespace alica
 		{
-			«name»::«name»() : BasicBehaviour("«name»")
+			«PROTECT CSTART '/*' CEND '*/' ID "staticVars"+this.id-»
+				//initialise static variables here
+			«ENDPROTECT-»
+			«name»::«name»() : DomainBehaviour("«name»")
 			{
 				«PROTECT CSTART '/*' CEND '*/' ID "con"+this.id-»
 				//Add additional options here
@@ -34,6 +37,9 @@
 				//Add additional options here
 				«ENDPROTECT-»
 			}
+			«PROTECT CSTART '/*' CEND '*/' ID "methods"+this.id-»
+				//Add additional methods here
+			«ENDPROTECT-»
 		} /* namespace alica */
 	«ENDFILE»
 

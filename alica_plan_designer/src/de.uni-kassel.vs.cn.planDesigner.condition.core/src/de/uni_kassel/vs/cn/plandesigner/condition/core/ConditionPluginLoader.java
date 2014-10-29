@@ -253,7 +253,10 @@ public class ConditionPluginLoader {
 		Map<String, IConditionPlugin> oldPlugins = plugins;
 
 		String pluginPath = getPluginPath();
-		uninstallConditionPlugins(getInstalledBundles());
+		if(getInstalledBundles().size() != 0)
+		{
+			uninstallConditionPlugins(getInstalledBundles());
+		}
 		installedBundles = installBundles(pluginPath);
 		plugins = getConditionPlugins();
 
@@ -264,7 +267,7 @@ public class ConditionPluginLoader {
 		// recreate the generation files
 		copyGenerationFiles();
 
-		firePropertyChange(PROP_REFRESHED_PLUGINS, oldPlugins, plugins);
+//		firePropertyChange(PROP_REFRESHED_PLUGINS, oldPlugins, plugins);
 	}
 
 	/**
@@ -360,7 +363,7 @@ public class ConditionPluginLoader {
 			e.printStackTrace();
 		}
 
-		firePropertyChange(PROP_INSTALLED_BUNDLES, installedBundles, oldBundles);
+//		firePropertyChange(PROP_INSTALLED_BUNDLES, installedBundles, oldBundles);
 
 		return installedBundles;
 	}
