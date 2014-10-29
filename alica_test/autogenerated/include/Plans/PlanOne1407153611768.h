@@ -1,7 +1,7 @@
 #ifndef PlanOne_H_
 #define PlanOne_H_
 
-#include "engine/BasicCondition.h"
+#include "DomainCondition.h"
 #include "engine/BasicUtilityFunction.h"
 #include "engine/UtilityFunction.h"
 #include "engine/DefaultUtilityFunction.h"

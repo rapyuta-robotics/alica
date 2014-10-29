@@ -1,7 +1,7 @@
 #ifndef MidFieldPlayPlan_H_
 #define MidFieldPlayPlan_H_
 
-#include "engine/BasicCondition.h"
+#include "DomainCondition.h"
 #include "engine/BasicUtilityFunction.h"
 #include "engine/UtilityFunction.h"
 #include "engine/DefaultUtilityFunction.h"
@@ -20,22 +20,22 @@ class UtilityFunction1402488770050 : public BasicUtilityFunction
   shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
 
-class RunTimeCondition1402489260911 : public BasicCondition
+class RunTimeCondition1402489260911 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1402489258509 : public BasicCondition
+class TransitionCondition1402489258509 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1402489278408 : public BasicCondition
+class TransitionCondition1402489278408 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1402500844446 : public BasicCondition
+class TransitionCondition1402500844446 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };

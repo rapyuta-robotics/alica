@@ -245,5 +245,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference alicaDSL.ecore#//ConstraintCreator/conditions"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference alicaDSL.ecore#//ConstraintCreator/plans"/>
     </genClasses>
+    <genClasses ecoreClass="alicaDSL.ecore#//DomainBehaviour"/>
+    <genClasses ecoreClass="alicaDSL.ecore#//DomainCondition"/>
   </genPackages>
 </genmodel:GenModel>

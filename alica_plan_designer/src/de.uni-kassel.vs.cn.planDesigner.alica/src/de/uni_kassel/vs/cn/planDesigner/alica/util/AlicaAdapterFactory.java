@@ -319,6 +319,14 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 				return createConstraintCreatorAdapter();
 			}
 			@Override
+			public Adapter caseDomainBehaviour(DomainBehaviour object) {
+				return createDomainBehaviourAdapter();
+			}
+			@Override
+			public Adapter caseDomainCondition(DomainCondition object) {
+				return createDomainConditionAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -1077,6 +1085,34 @@ public class AlicaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createConstraintCreatorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainBehaviour <em>Domain Behaviour</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainBehaviour
+	 * @generated
+	 */
+	public Adapter createDomainBehaviourAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition <em>Domain Condition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition
+	 * @generated
+	 */
+	public Adapter createDomainConditionAdapter() {
 		return null;
 	}
 

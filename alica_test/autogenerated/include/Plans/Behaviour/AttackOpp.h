@@ -1,12 +1,12 @@
 #ifndef AttackOpp_H_
 #define AttackOpp_H_
 
-#include "engine/BasicBehaviour.h"
+#include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1402489351885) ENABLED START*/ //Add additional includes here
 /*PROTECTED REGION END*/
 namespace alica
 {
-class AttackOpp : public BasicBehaviour
+class AttackOpp : public DomainBehaviour
 {
 public:
   AttackOpp();

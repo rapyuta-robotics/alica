@@ -1,12 +1,12 @@
 #ifndef MidFieldStandard_H_
 #define MidFieldStandard_H_
 
-#include "engine/BasicBehaviour.h"
+#include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1402488696205) ENABLED START*/ //Add additional includes here
 /*PROTECTED REGION END*/
 namespace alica
 {
-class MidFieldStandard : public BasicBehaviour
+class MidFieldStandard : public DomainBehaviour
 {
 public:
   MidFieldStandard();

@@ -5,15 +5,10 @@ package de.uni_kassel.vs.cn.planDesigner.alica.impl;
 import de.uni_kassel.vs.cn.planDesigner.alica.AlicaPackage;
 import de.uni_kassel.vs.cn.planDesigner.alica.Behaviour;
 import de.uni_kassel.vs.cn.planDesigner.alica.BehaviourCreator;
-
 import java.util.Collection;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
