@@ -144,6 +144,11 @@ namespace alica
 		{
 			plan->setUtilityThreshold(stod(attr));
 		}
+		attr = element->Attribute("destinationPath");
+		if (!attr.empty())
+		{
+			plan->setDestinationPath(attr);
+		}
 		// insert into elements ma
 		addElement(plan);
 		// insert into plan repository map
@@ -1052,7 +1057,7 @@ namespace alica
 		Parameter* p = new Parameter();
 		long id = this->parser->parserId(element);
 		p->setId(id);
-		addElement (p);
+		addElement(p);
 		setAlicaElementAttributes(p, element);
 		string key = element->Attribute("key");
 		string value = element->Attribute("value");
@@ -1203,6 +1208,12 @@ namespace alica
 		{
 			//TODO: aus c#
 			//pos->ConditionFOL = null;
+		}
+
+		const char* pluginNamePtr = element->Attribute("pluginName");
+		if (pluginNamePtr)
+		{
+			pos->setPlugInName(pluginNamePtr);
 		}
 
 		if (element->FirstChild())
