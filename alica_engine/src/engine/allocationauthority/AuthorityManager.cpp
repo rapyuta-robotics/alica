@@ -35,10 +35,6 @@ namespace alica
 	void AuthorityManager::init()
 	{
 		this->ownID = ae->getTeamObserver()->getOwnId();
-		//TODO::
-//		this.rosNode = new Node("AlicaEngine");
-//		this.rosNode.Subscribe("AllocationAuthorityInfo", HandleIncomingAuthorityMessage, 10);
-//		authorityPub = new Publisher(this.rosNode, "AllocationAuthorityInfo", AllocationAuthorityInfo.TypeId, 2);
 	}
 
 	/**
@@ -46,8 +42,7 @@ namespace alica
 	 */
 	void AuthorityManager::close()
 	{
-		//TODO::
-//		if(this.rosNode!= null) this.rosNode.Close();
+
 	}
 
 	/**

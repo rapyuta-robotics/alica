@@ -1152,6 +1152,52 @@ public class AlicaItemProviderAdapterFactory extends AlicaAdapterFactory impleme
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link de.uni_kassel.vs.cn.planDesigner.alica.DomainBehaviour} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DomainBehaviourItemProvider domainBehaviourItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.uni_kassel.vs.cn.planDesigner.alica.DomainBehaviour}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDomainBehaviourAdapter() {
+		if (domainBehaviourItemProvider == null) {
+			domainBehaviourItemProvider = new DomainBehaviourItemProvider(this);
+		}
+
+		return domainBehaviourItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DomainConditionItemProvider domainConditionItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.uni_kassel.vs.cn.planDesigner.alica.DomainCondition}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDomainConditionAdapter() {
+		if (domainConditionItemProvider == null) {
+			domainConditionItemProvider = new DomainConditionItemProvider(this);
+		}
+
+		return domainConditionItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1297,6 +1343,8 @@ public class AlicaItemProviderAdapterFactory extends AlicaAdapterFactory impleme
 		if (conditionCreatorItemProvider != null) conditionCreatorItemProvider.dispose();
 		if (utilityFunctionCreatorItemProvider != null) utilityFunctionCreatorItemProvider.dispose();
 		if (constraintCreatorItemProvider != null) constraintCreatorItemProvider.dispose();
+		if (domainBehaviourItemProvider != null) domainBehaviourItemProvider.dispose();
+		if (domainConditionItemProvider != null) domainConditionItemProvider.dispose();
 	}
 
 }

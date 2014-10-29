@@ -19,10 +19,12 @@
 #include "engine/PlanRepository.h"
 #include "engine/UtilityFunction.h"
 #include "engine/model/Plan.h"
-#include "DistBallRobot.h"
+#include "DummyTestSummand.h"
 #include "engine/teamobserver/TeamObserver.h"
+#include "engine/PlanBase.h"
+#include "engine/model/State.h"
 
-class AlicaEngineAthorityManager : public ::testing::Test
+class AlicaEngineAuthorityManager : public ::testing::Test
 {
 protected:
 	supplementary::SystemConfig* sc;
@@ -74,7 +76,7 @@ protected:
 
 };
 
-TEST_F(AlicaEngineAthorityManager, authority)
+TEST_F(AlicaEngineAuthorityManager, authority)
 {
 	sc->setHostname("nase");
 	ae = new alica::AlicaEngine();
@@ -90,13 +92,39 @@ TEST_F(AlicaEngineAthorityManager, authority)
 	EXPECT_TRUE(ae2->init(bc, cc, uc, crc, "RolesetTA", "AuthorityTestMaster", ".", true))
 			<< "Unable to initialise the Alica Engine!";
 
-	auto uSummandAe = *((ae->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
-	DistBallRobot* dbr = dynamic_cast<DistBallRobot*>(uSummandAe);
+	auto uSummandAe =
+			*((ae->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
+	DummyTestSummand* dbr = dynamic_cast<DummyTestSummand*>(uSummandAe);
 	dbr->robotId = ae->getTeamObserver()->getOwnId();
-	auto uSummandAe2 = *((ae2->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
-	DistBallRobot* dbr2 = dynamic_cast<DistBallRobot*>(uSummandAe2);
+	auto uSummandAe2 =
+			*((ae2->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
+	DummyTestSummand* dbr2 = dynamic_cast<DummyTestSummand*>(uSummandAe2);
 	dbr2->robotId = ae2->getTeamObserver()->getOwnId();
 	ae->start();
 	ae2->start();
+
+
+	//alicaTests::TestWorldModel::getOne()->x = 0;
+	//alicaTests::TestWorldModel::getTwo()->x = 0;
+
+	alicaTests::TestWorldModel::getOne()->otherRobotX.push_back(0);
+	alicaTests::TestWorldModel::getOne()->otherRobotX.push_back(2000);
+
+	alicaTests::TestWorldModel::getTwo()->otherRobotX.push_back(2000);
+	alicaTests::TestWorldModel::getTwo()->otherRobotX.push_back(0);
+
+	for (int i = 0; i < 20; i++)
+	{
+		ae->stepNotify();
+		chrono::milliseconds duration(33);
+		this_thread::sleep_for(duration);
+		ae2->stepNotify();
+		this_thread::sleep_for(duration);
+		if (i == 1)
+		{
+			EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(), 1414403553717);
+			EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(), 1414403553717);
+		}
+	}
 
 }

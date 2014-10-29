@@ -5,8 +5,9 @@ using namespace std;
 /*PROTECTED REGION END*/
 namespace alica
 {
-MidFieldStandard::MidFieldStandard() :
-    BasicBehaviour("MidFieldStandard")
+/*PROTECTED REGION ID(staticVars1402488696205) ENABLED START*/ //initialise static variables here
+/*PROTECTED REGION END*/MidFieldStandard::MidFieldStandard() :
+    DomainBehaviour("MidFieldStandard")
 {
   /*PROTECTED REGION ID(con1402488696205) ENABLED START*/ //Add additional options here
   /*PROTECTED REGION END*/}
@@ -22,4 +23,5 @@ void MidFieldStandard::initialiseParameters()
 {
   /*PROTECTED REGION ID(initialiseParameters1402488696205) ENABLED START*/ //Add additional options here
   /*PROTECTED REGION END*/}
-} /* namespace alica */
+/*PROTECTED REGION ID(methods1402488696205) ENABLED START*/ //Add additional methods here
+/*PROTECTED REGION END*/} /* namespace alica */

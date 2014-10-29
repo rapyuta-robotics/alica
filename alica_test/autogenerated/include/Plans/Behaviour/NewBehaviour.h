@@ -1,12 +1,12 @@
 #ifndef NewBehaviour_H_
 #define NewBehaviour_H_
 
-#include "engine/BasicBehaviour.h"
+#include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1413810772726) ENABLED START*/ //Add additional includes here
 /*PROTECTED REGION END*/
 namespace alica
 {
-class NewBehaviour : public BasicBehaviour
+class NewBehaviour : public DomainBehaviour
 {
 public:
   NewBehaviour();

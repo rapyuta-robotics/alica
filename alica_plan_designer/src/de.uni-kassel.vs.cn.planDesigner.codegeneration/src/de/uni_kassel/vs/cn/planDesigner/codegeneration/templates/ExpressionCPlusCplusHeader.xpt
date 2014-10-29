@@ -5,7 +5,7 @@
 		#ifndef «name»_H_
 		#define «name»_H_
 
-		#include "engine/BasicCondition.h"
+		#include "DomainCondition.h"
 		#include "engine/BasicUtilityFunction.h"
 		#include "engine/UtilityFunction.h"
 		#include "engine/DefaultUtilityFunction.h"
@@ -25,12 +25,12 @@
 			};
 			«FOREACH conditions AS con»
 				«IF (con.metaType == alica::PreCondition)»
-					class PreCondition«con.id» : public BasicCondition
+					class PreCondition«con.id» : public DomainCondition
 					{
 						bool evaluate(shared_ptr<RunningPlan> rp);
 					};
 				«ELSE»
-					class RunTimeCondition«con.id» : public BasicCondition
+					class RunTimeCondition«con.id» : public DomainCondition
 					{
 						bool evaluate(shared_ptr<RunningPlan> rp);
 					};
@@ -38,7 +38,7 @@
 			«ENDFOREACH»
 			«FOREACH states AS s»
 				«FOREACH s.outTransitions AS transition»
-					class TransitionCondition«transition.preCondition.id» : public BasicCondition
+					class TransitionCondition«transition.preCondition.id» : public DomainCondition
 					{
 						bool evaluate(shared_ptr<RunningPlan> rp);
 					};

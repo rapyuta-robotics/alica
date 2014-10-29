@@ -1,7 +1,7 @@
 #ifndef MasterPlan_H_
 #define MasterPlan_H_
 
-#include "engine/BasicCondition.h"
+#include "DomainCondition.h"
 #include "engine/BasicUtilityFunction.h"
 #include "engine/UtilityFunction.h"
 #include "engine/DefaultUtilityFunction.h"
@@ -20,22 +20,22 @@ class UtilityFunction1402488437260 : public BasicUtilityFunction
   shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
 
-class TransitionCondition1402488519140 : public BasicCondition
+class TransitionCondition1402488519140 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1409218319990 : public BasicCondition
+class TransitionCondition1409218319990 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1402488558741 : public BasicCondition
+class TransitionCondition1402488558741 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };
 
-class TransitionCondition1402488520968 : public BasicCondition
+class TransitionCondition1402488520968 : public DomainCondition
 {
   bool evaluate(shared_ptr<RunningPlan> rp);
 };

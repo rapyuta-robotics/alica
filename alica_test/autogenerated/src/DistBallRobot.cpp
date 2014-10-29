@@ -13,16 +13,16 @@
 namespace alica
 {
 
-	DistBallRobot::DistBallRobot(double weight, string name, long id, vector<long> relevantEntryPointIds)
+	DistBallRobot::DistBallRobot(double weight, string name, long id, vector<long>& relevantEntryPointIds)
 	{
 		this->weight = weight;
 		this->name = name;
 		this->id = id;
 		this->relevantEntryPointIds = relevantEntryPointIds;
-		this->validAngle = false;
 		this->angleBallOpp = 0;
 		this->velAngle = 0;
 		this->robotId = 0;
+		this->sb = 0;
 	}
 
 	DistBallRobot::~DistBallRobot()
@@ -44,19 +44,22 @@ namespace alica
 		double curPosition;
 		for (int i = 0; i < relevantRobots->size(); ++i)
 		{
-			if(this->robotId == 8)
+			int pos = 0;
+			if (relevantRobots->at(i) == 9)
 			{
-				curPosition = alicaTests::TestWorldModel::getOne()->x;
+				pos = 1;
+			}
+
+			if (this->robotId == 8)
+			{
+				curPosition = alicaTests::TestWorldModel::getOne()->otherRobotX[pos];
 			}
 			else
 			{
-				curPosition = alicaTests::TestWorldModel::getTwo()->x;
+				curPosition = alicaTests::TestWorldModel::getTwo()->otherRobotX[pos];
 			}
-			if (!validAngle)
-			{
-				//if no opp is near ball
-				ui->setMin(std::max(ui->getMin(), 1 - fabs(sb.first -curPosition) / 18000));
-			}
+			//if no opp is near ball
+			ui->setMin(std::max(ui->getMin(), 1 - fabs(sb - curPosition) / 18000));
 			numAssignedRobots++;
 
 		}
@@ -66,7 +69,7 @@ namespace alica
 			for (int i = 0; i < ass->getNumUnAssignedRobots(); ++i)
 			{
 				//curPosition = this.playerPositions.GetValue(ass.UnAssignedRobots[i]);
-				if(this->robotId == 8)
+				if (this->robotId == 8)
 				{
 					curPosition = alicaTests::TestWorldModel::getOne()->otherRobotX.at(i);
 				}
@@ -74,12 +77,13 @@ namespace alica
 				{
 					curPosition = alicaTests::TestWorldModel::getTwo()->otherRobotX.at(i);
 				}
-				ui->setMax(std::max(ui->getMax(), 1 - fabs(sb.first -curPosition) / 18000));
+				ui->setMax(std::max(ui->getMax(), 1 - fabs(sb - curPosition) / 18000));
 			}
 		}
 		//			Console.WriteLine("DistBallRobot: UI is " + retUI.Min + ".." + retUI.Max); // DEBUG OUTPUT
 		ui->setMin(std::max(0.0, ui->getMin()));
 		ui->setMax(std::max(0.0, ui->getMax()));
+
 		return ui;
 	}
 

@@ -46,7 +46,7 @@ shared_ptr<UtilityFunction> UtilityFunction1414403396328::getUtilityFunction(Pla
 bool TransitionCondition1414403842622::evaluate(shared_ptr<RunningPlan> rp)
 {
   /*PROTECTED REGION ID(1414403840950) ENABLED START*/
-  return false;
+  return true;
   /*PROTECTED REGION END*/
 
 }

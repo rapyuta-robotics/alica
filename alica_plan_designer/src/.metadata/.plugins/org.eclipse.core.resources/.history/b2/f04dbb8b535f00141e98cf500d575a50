@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="alica" nsURI="http:///de.uni_kassel.vs.cn" nsPrefix="alica">
+  <eClassifiers xsi:type="ecore:EClass" name="Transition" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="msg" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="preCondition" lowerBound="1"
+        eType="#//PreCondition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inState" eType="#//State"
+        eOpposite="#//State/outTransitions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outState" eType="#//State"
+        eOpposite="#//State/inTransitions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="synchronisation" eType="#//Synchronisation"
+        eOpposite="#//Synchronisation/synchedTransitions"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Condition" abstract="true" eSuperTypes="#//PlanElement">
+    <eOperations name="ensureVariableConsistency">
+      <eParameters name="parentPlan" eType="#//AbstractPlan"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="abstractPlan" eType="#//AbstractPlan"
+        eOpposite="#//AbstractPlan/conditions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vars" upperBound="-1" eType="#//Variable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="quantifiers" upperBound="-1"
+        eType="#//Quantifier" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pluginName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="DefaultPlugin"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
+        eType="#//EStringToEObjectMapEntry" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PreCondition" eSuperTypes="#//Condition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="enabled" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EntryPoint" eSuperTypes="#//IInhabitable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="task" lowerBound="1" eType="#//Task"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="successRequired" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="state" eType="#//State"
+        eOpposite="#//State/entryPoint"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="minCardinality" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxCardinality" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="2147483647"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plan" lowerBound="1" eType="#//Plan"
+        eOpposite="#//Plan/entryPoints"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TerminalState" abstract="true" eSuperTypes="#//State">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="postCondition" eType="#//PostCondition"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SuccessState" eSuperTypes="#//TerminalState"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FailureState" eSuperTypes="#//TerminalState"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractPlan" abstract="true" eSuperTypes="#//PlanElement #//IInhabitable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rating" eType="#//Rating"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conditions" upperBound="-1"
+        eType="#//Condition" containment="true" eOpposite="#//Condition/abstractPlan"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="masterPlan" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="utilityFunction" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="utilityThreshold" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="0.1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vars" upperBound="-1" eType="#//Variable"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="destinationPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Behaviour" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="configurations" lowerBound="1"
+        upperBound="-1" eType="#//BehaviourConfiguration" containment="true" eOpposite="#//BehaviourConfiguration/behaviour"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="destinationPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="State" eSuperTypes="#//PlanElement #//IInhabitable">
+    <eOperations name="ensureParametrisationConsistency"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plans" upperBound="-1"
+        eType="#//AbstractPlan"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inPlan" eType="#//Plan"
+        eOpposite="#//Plan/states"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parametrisation" upperBound="-1"
+        eType="#//Parametrisation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inTransitions" upperBound="-1"
+        eType="#//Transition" eOpposite="#//Transition/outState"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outTransitions" upperBound="-1"
+        eType="#//Transition" eOpposite="#//Transition/inState"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entryPoint" eType="#//EntryPoint"
+        eOpposite="#//EntryPoint/state"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Plan" eSuperTypes="#//AbstractPlan">
+    <eOperations name="calculateCardinalities"/>
+    <eOperations name="ensureParametrisationConsistency"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="0.0"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="states" upperBound="-1"
+        eType="#//State" containment="true" eOpposite="#//State/inPlan"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" upperBound="-1"
+        eType="#//Transition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="minCardinality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxCardinality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="2147483647"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="synchronisations" upperBound="-1"
+        eType="#//Synchronisation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entryPoints" upperBound="-1"
+        eType="#//EntryPoint" containment="true" eOpposite="#//EntryPoint/plan"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PlanType" eSuperTypes="#//AbstractPlan">
+    <eOperations name="ensureParametrisationConsistency"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parametrisation" upperBound="-1"
+        eType="#//Parametrisation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plans" upperBound="-1"
+        eType="#//AnnotatedPlan" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Rating" eSuperTypes="#//PlanElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PostCondition" eSuperTypes="#//Condition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RuntimeCondition" eSuperTypes="#//Condition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PlanElement" abstract="true">
+    <eOperations name="generateID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"
+        defaultValueLiteral="0" iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="MISSING_NAME"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Task" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EStringToEStringMapEntry" instanceClassName="java.util.Map$Entry"
+      eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BehaviourConfiguration" eSuperTypes="#//AbstractPlan">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
+        eType="#//EStringToEStringMapEntry" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="deferring" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="frequency" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="30"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="behaviour" lowerBound="1"
+        eType="#//Behaviour" eOpposite="#//Behaviour/configurations"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="eventDriven" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Role" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="characteristics" upperBound="-1"
+        eType="#//Characteristic" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RoleSet" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="usableWithPlanID" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong" defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="default" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mappings" upperBound="-1"
+        eType="#//RoleTaskMapping" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ELongToDoubleMapEntry" instanceClassName="java.util.Map$Entry"
+      eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
+        defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"
+        defaultValueLiteral="0"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RoleDefinitionSet" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roles" upperBound="-1"
+        eType="#//Role" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RoleTaskMapping" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="taskPriorities" upperBound="-1"
+        eType="#//ELongToDoubleMapEntry" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="role" eType="#//Role"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Characteristic" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="weight" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="capability" eType="#//Capability"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//CapValue"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TaskGraph">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nodes" upperBound="-1"
+        eType="#//Node" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="edges" upperBound="-1"
+        eType="#//Edge" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Edge">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="#//Node" eOpposite="#//Node/outEdge"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="to" eType="#//Node" eOpposite="#//Node/inEdge"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TaskWrapper" eSuperTypes="#//Node">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="task" eType="#//Task"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mappings" upperBound="-1"
+        eType="#//InternalRoleTaskMapping" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InternalRoleTaskMapping">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="role" eType="#//Role"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="0.0"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Node">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inEdge" upperBound="-1"
+        eType="#//Edge" eOpposite="#//Edge/to"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outEdge" upperBound="-1"
+        eType="#//Edge" eOpposite="#//Edge/from"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TaskRepository" eSuperTypes="#//PlanElement">
+    <eOperations name="createDefaultTask" eType="#//Task"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tasks" upperBound="-1"
+        eType="#//Task" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="defaultTask" eType="#//Task"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Synchronisation" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="synchedTransitions" upperBound="-1"
+        eType="#//Transition" eOpposite="#//Transition/synchronisation"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="talkTimeout" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="30"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="syncTimeout" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="10000"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="failOnSyncTimeOut" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Variable" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Parametrisation" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subplan" lowerBound="1"
+        eType="#//AbstractPlan"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subvar" lowerBound="1"
+        eType="#//Variable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="var" eType="#//Variable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AnnotatedPlan" eSuperTypes="#//PlanElement">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Wraps a plan, which is either activated or deactived in the associated plantype."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plan" eType="#//Plan"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="activated" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Quantifier" abstract="true" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scope" eType="#//IInhabitable"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sorts" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral=""/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ForallAgents" eSuperTypes="#//Quantifier"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IInhabitable" abstract="true" interface="true"
+      eSuperTypes="#//PlanElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Capability" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="capValues" upperBound="-1"
+        eType="#//CapValue" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CapValue" eSuperTypes="#//PlanElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CapabilityDefinitionSet" eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="capabilities" upperBound="-1"
+        eType="#//Capability" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PlanningProblem" eSuperTypes="#//AbstractPlan">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plans" ordered="false"
+        upperBound="-1" eType="#//AbstractPlan"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="planner" ordered="false"
+        eType="#//Planner"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="alternativePlan" eType="#//AbstractPlan"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="waitPlan" eType="#//AbstractPlan"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="updateRate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="distributeProblem" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="planningType" lowerBound="1"
+        eType="#//PlanningType" defaultValueLiteral="Online"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="requirements" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="plannerParams" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Planner">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parameters" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="command" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Fluent">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="formula" ordered="false"
+        upperBound="-1" eType="#//FluentParameters" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DomainDescription">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fluents" ordered="false"
+        upperBound="-1" eType="#//Fluent" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="types" ordered="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" upperBound="-1"
+        eType="#//Constant" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Planners">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="planners" ordered="false"
+        upperBound="-1" eType="#//Planner" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PlanningType">
+    <eLiterals name="Online"/>
+    <eLiterals name="Offline" value="1"/>
+    <eLiterals name="Interactive" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EStringToEObjectMapEntry" instanceClassName="java.util.Map$Entry"
+      eSuperTypes="#//PlanElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FluentParameters">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parameter" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Constant">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BehaviourCreator">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="behaviours" ordered="false"
+        upperBound="-1" eType="#//Behaviour"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConditionCreator">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conditions" ordered="false"
+        upperBound="-1" eType="#//Condition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plans" upperBound="-1"
+        eType="#//AbstractPlan"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UtilityFunctionCreator">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conditions" ordered="false"
+        upperBound="-1" eType="#//Condition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plans" upperBound="-1"
+        eType="#//AbstractPlan"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstraintCreator">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conditions" ordered="false"
+        upperBound="-1" eType="#//Condition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plans" upperBound="-1"
+        eType="#//AbstractPlan"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DomainBehaviour">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="behaviours" ordered="false"
+        upperBound="-1" eType="#//Behaviour"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -24,19 +24,14 @@ namespace alica
 	class DistBallRobot : public USummand
 	{
 	public:
-		DistBallRobot(double weight, string name, long id, vector<long> relevantEntryPointIds);
+		DistBallRobot(double weight, string name, long id, vector<long>& relevantEntryPointIds);
 		virtual ~DistBallRobot();
 		void cacheEvalData ();
 		UtilityInterval* eval(IAssignment* ass);
 		long robotId;
 
 	protected:
-		double weight;
-		string name;
-		long id;
-		vector<long> relevantEntryPointIds;
-		pair<double, double> sb;
-		bool validAngle;
+		double sb;
 		double angleBallOpp;
 		double velAngle;
 	};

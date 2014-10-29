@@ -418,6 +418,24 @@ public interface AlicaFactory extends EFactory {
 	ConstraintCreator createConstraintCreator();
 
 	/**
+	 * Returns a new object of class '<em>Domain Behaviour</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Domain Behaviour</em>'.
+	 * @generated
+	 */
+	DomainBehaviour createDomainBehaviour();
+
+	/**
+	 * Returns a new object of class '<em>Domain Condition</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Domain Condition</em>'.
+	 * @generated
+	 */
+	DomainCondition createDomainCondition();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

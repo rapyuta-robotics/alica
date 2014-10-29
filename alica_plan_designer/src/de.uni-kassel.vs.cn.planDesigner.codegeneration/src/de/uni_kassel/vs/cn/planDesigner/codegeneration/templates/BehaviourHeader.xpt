@@ -4,14 +4,14 @@
 		#ifndef «name»_H_
 		#define «name»_H_
 		
-		#include "engine/BasicBehaviour.h"
+		#include "DomainBehaviour.h"
 		«PROTECT CSTART '/*' CEND '*/' ID "inc"+this.id-»
 			//Add additional includes here
 		«ENDPROTECT-»
 	
 		namespace alica
 		{
-			class «name» : public BasicBehaviour
+			class «name» : public DomainBehaviour
 			{
 				public:
 					«name»();
