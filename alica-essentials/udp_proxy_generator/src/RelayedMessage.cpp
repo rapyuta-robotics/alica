@@ -80,7 +80,7 @@ string RelayedMessage::getRosMessageHandler()
 
 	ret += "\t\tros::serialization::OStream stream(buffer+sizeof(size_t), serial_size);\n";
 
-	ret += "\t\t*((size_t*)buffer) = " + to_string(Id) + "u;\n";
+	ret += "\t\t*((size_t*)buffer) = " + to_string(Id) + ";\n";
 
 	ret += "\t\tros::serialization::serialize(stream, *message);\n";
 
