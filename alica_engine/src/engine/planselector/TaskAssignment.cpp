@@ -159,6 +159,7 @@ namespace alica
 #ifdef PSDEBUG
 			cout << "<---" << endl;
 			cout << "TA: BEFORE fringe exp:" << endl;
+			cout << "TA: robotID " << this->to->getOwnId() << endl;
 			for(int i = 0; i < this->fringe.size(); i++)
 			{
 				cout << this->fringe[i]->toString();

@@ -8,6 +8,8 @@
 #include <engine/SimplePlanTree.h>
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
+#include "engine/model/Task.h"
+#include "engine/model/State.h"
 
 namespace alica
 {
@@ -15,10 +17,10 @@ namespace alica
 	SimplePlanTree::SimplePlanTree()
 	{
 		this->state = nullptr;
-		this->newSimplePlanTree = false;
+		this->newSimplePlanTree = true;
 		this->receiveTime = 0;
 		this->entryPoint = nullptr;
-		this->parent =nullptr;
+		this->parent = nullptr;
 	}
 
 	SimplePlanTree::~SimplePlanTree()
@@ -28,13 +30,13 @@ namespace alica
 
 	bool SimplePlanTree::containsPlan(AbstractPlan* plan)
 	{
-		if(this->getEntryPoint()->getPlan() == plan)
+		if (this->getEntryPoint()->getPlan() == plan)
 		{
 			return true;
 		}
-		for(shared_ptr<SimplePlanTree> spt : this->getChildren())
+		for (shared_ptr<SimplePlanTree> spt : this->getChildren())
 		{
-			if(spt->containsPlan(plan))
+			if (spt->containsPlan(plan))
 			{
 				return true;
 			}
@@ -111,6 +113,54 @@ namespace alica
 		this->stateIds = stateIds;
 	}
 
-} /* namespace alica */
+	string SimplePlanTree::toString()
+	{
+		stringstream result;
 
+		result << "RobotID: " << this->robotId << "\n";
+		result << "Parent: ";
+
+		if (this->parent != nullptr)
+		{
+			result << parent->getState()->getId();
+		}
+		result << "\n";
+
+		result << "State: ";
+		if (state != nullptr)
+		{
+			result << state->getId();
+			result << " " + state->getName();
+		}
+		else
+		{
+			result << "ERROR !!!NO STATE !!!";
+		}
+
+		result << "\n";
+
+		result << "EntryPoint: ";
+
+		if (this->entryPoint != nullptr)
+		{
+			result << entryPoint->getId() << " " << this->entryPoint->getTask()->getName();
+		}
+		else
+		{
+			result << "NoEntryPoint";
+		}
+		result << "\n";
+
+		result << "Children: " << this->children.size() << "\n";
+		for(auto spt : this->children)
+		{
+			result << spt->toString();
+		}
+
+		result << "\n\n";
+
+		return result.str();
+	}
+
+} /* namespace alica */
 

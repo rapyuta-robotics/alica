@@ -45,11 +45,26 @@ namespace alica
 			int pos = 0;
 			if (relevantRobots->at(i) == this->robotId)
 			{
-				ui->setMin(1.0);
+				ui->setMin(0.5);
 			}
 			else
 			{
 				ui->setMin(0.0);
+			}
+
+		}
+		relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[1]);
+
+		for (int i = 0; i < relevantRobots->size(); ++i)
+		{
+			int pos = 0;
+			if (relevantRobots->at(i) == this->robotId)
+			{
+				ui->setMin(ui->getMin());
+			}
+			else
+			{
+				ui->setMin(ui->getMin() + 0.5);
 			}
 
 		}

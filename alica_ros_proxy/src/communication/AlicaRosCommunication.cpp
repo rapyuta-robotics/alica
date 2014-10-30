@@ -94,6 +94,7 @@ namespace alicaRosProxy
 
 	void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo& aai)
 	{
+		cout << "ARC: send " << aai.planId << endl;
 		alica_ros_proxy::AllocationAuthorityInfo aais;
 		aais.senderID = aai.senderID;
 		aais.planID = aai.planId;
@@ -206,6 +207,7 @@ namespace alicaRosProxy
 
 	void AlicaRosCommunication::handleAllocationAuthorityRos(alica_ros_proxy::AllocationAuthorityInfoPtr aai)
 	{
+		cout << "ARC: aai " << aai->planID << endl;
 		auto aaiPtr = make_shared<AllocationAuthorityInfo>();
 		aaiPtr->senderID = aai->senderID;
 		aaiPtr->planId = aai->planID;
