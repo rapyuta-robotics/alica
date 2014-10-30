@@ -76,16 +76,16 @@ string RelayedMessage::getRosMessageHandler()
 	ret += "\ttry{\n";
 	ret += "\t\tuint32_t serial_size = ros::serialization::serializationLength(*message);\n";
 
-	ret += "\t\tbuffer = new uint8_t[serial_size+4];\n";
+	ret += "\t\tbuffer = new uint8_t[serial_size+sizeof(size_t)];\n";
 
-	ret += "\t\tros::serialization::OStream stream(buffer+4, serial_size);\n";
+	ret += "\t\tros::serialization::OStream stream(buffer+sizeof(size_t), serial_size);\n";
 
 	ret += "\t\t*((size_t*)buffer) = " + to_string(Id) + "u;\n";
 
 	ret += "\t\tros::serialization::serialize(stream, *message);\n";
 
 	ret += "\t\t// write message to UDP\n";
-	ret += "\t\tinsocket->send_to(boost::asio::buffer((void*)buffer,serial_size+4),destEndPoint);\n";
+	ret += "\t\tinsocket->send_to(boost::asio::buffer((void*)buffer,serial_size+sizeof(size_t)),destEndPoint);\n";
 	ret += "\t} catch(std::exception& e) {\n";
 	ret +=
 			"\t\tROS_ERROR_STREAM_THROTTLE(2,\"Exception while sending UDP message:\"<<e.what()<< \" Discarding message!\");\n";
