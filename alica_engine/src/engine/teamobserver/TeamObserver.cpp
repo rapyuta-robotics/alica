@@ -297,7 +297,7 @@ namespace alica
 			list<shared_ptr<SimplePlanTree> > updatespts;
 			list<int> noUpdates;
 			lock_guard<mutex> lock(this->simplePlanTreeMutex);
-			for (map<int, shared_ptr<SimplePlanTree> >::const_iterator iterator = this->simplePlanTrees->begin();
+			for (auto iterator = this->simplePlanTrees->begin();
 					iterator != this->simplePlanTrees->end(); iterator++)
 			{
 				if (find(robotsAvail.begin(), robotsAvail.end(), iterator->second->getRobotId()) != robotsAvail.end())
@@ -305,14 +305,17 @@ namespace alica
 					if (iterator->second->isNewSimplePlanTree())
 					{
 						updatespts.push_back(iterator->second);
+						cout << "TO: added to update" << endl;
 						iterator->second->setNewSimplePlanTree(false);
 					}
 					else
 					{
+						cout << "TO: added to noupdate" << endl;
 						noUpdates.push_back(iterator->second->getRobotId());
 					}
 				}
 			}
+			cout << "TO: spts size " << updatespts.size() << endl;
 			if (root->recursiveUpdateAssignment(updatespts, robotsAvail, noUpdates, time))
 			{
 				this->log->eventOccured("MsgUpdate");

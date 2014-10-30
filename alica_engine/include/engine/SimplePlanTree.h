@@ -13,6 +13,7 @@ using namespace std;
 #include <unordered_set>
 #include <list>
 #include <memory>
+#include <sstream>
 
 namespace alica
 {
@@ -44,6 +45,7 @@ namespace alica
 		list<long>& getStateIds();
 		void setStateIds(list<long>& stateIds);
 		bool containsPlan(AbstractPlan* plan);
+		string toString();
 
 	protected:
 		/**

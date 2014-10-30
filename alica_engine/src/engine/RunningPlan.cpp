@@ -864,8 +864,10 @@ namespace alica
 		//if keepTask, the task Assignment should not be changed!
 		bool ret = false;
 		AllocationDifference* aldif = new AllocationDifference();
+		cout << "RP: before spt" <<  spts.size() <<endl;
 		for (shared_ptr<SimplePlanTree> spt : spts)
 		{
+			cout << "RP: spt" << spt->toString() << endl;
 			if (spt->getState()->getInPlan() != this->plan)
 			{ //the robot is no longer participating in this plan
 				if (!keepTask & !auth)
@@ -915,7 +917,7 @@ namespace alica
 			}
 		}
 		auto eps = this->getAssignment()->getEntryPoints();
-		list<int> rem = list<int>();
+		list<int> rem;
 		if (!keepTask)
 		{ //remove any robot no longer available in the spts (auth flag obey here, as robot might be unavailable)
 		  //EntryPoint[] eps = this.Assignment.GetEntryPoints();
@@ -1020,7 +1022,7 @@ namespace alica
 			{
 				continue;
 			}
-			list<shared_ptr<SimplePlanTree> > newcspts = list<shared_ptr<SimplePlanTree> >();
+			list<shared_ptr<SimplePlanTree> > newcspts;
 			for (shared_ptr<SimplePlanTree> spt : spts)
 			{
 				if (spt->getState() == this->activeState)
@@ -1036,6 +1038,10 @@ namespace alica
 				}
 			}
 			ret |= r->recursiveUpdateAssignment(newcspts, availableAgents, noUpdates, now);
+		}
+		if(this->getPlan()->getId() == 1414403413451)
+		{
+			cout << "RP: assigment " << this->getAssignment()->toString();
 		}
 		return ret;
 

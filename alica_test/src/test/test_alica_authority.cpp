@@ -113,7 +113,7 @@ TEST_F(AlicaEngineAuthorityManager, authority)
 	alicaTests::TestWorldModel::getTwo()->otherRobotX.push_back(2000);
 	alicaTests::TestWorldModel::getTwo()->otherRobotX.push_back(0);
 
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		ae->stepNotify();
 		chrono::milliseconds duration(33);

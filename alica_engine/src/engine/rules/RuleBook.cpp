@@ -138,10 +138,10 @@ namespace alica
 	 */
 	PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r)
 	{
-#ifdef RULE_debug
+//#ifdef RULE_debug
 		cout << "RB: dynAlloc-Rule called." << endl;
-		cout << "RB: dynAlloc RP \n" << r->toString() << endl;
-#endif
+//		cout << "RB: dynAlloc RP \n" << r->toString() << endl;
+//#endif
 		if (r->isAllocationNeeded() || r->isBehaviour())
 		{
 			return PlanChange::NoChange;
@@ -177,13 +177,14 @@ namespace alica
 			cout << "#############Assignment is valid?: " << r->getAssignment()->isValid() << endl;
 			cout << r->toString() << endl;
 		}
-		cout << "RB: New Assignment" << newr->getAssignment() << endl;
-		cout << "RB: Old Assignment" << r->getAssignment() << endl;
+		cout << "RB: New Assignment" << newr->getAssignment()->toString() << endl;
+		cout << "RB: Old Assignment" << r->getAssignment()->toString() << endl;
 //remove comments
 #endif
 
 		if (possibleUtil - curUtil > r->getPlan()->getUtilityThreshold())
 		{
+			cout << "RB: AllocationDifference::Reason::utility " << endl;
 			r->getCycleManagement()->setNewAllocDiff(r->getAssignment(), newr->getAssignment(), AllocationDifference::Reason::utility);
 			State* before = r->getActiveState();
 			r->adaptAssignment(newr);

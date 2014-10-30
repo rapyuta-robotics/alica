@@ -137,9 +137,9 @@ namespace alica
 		for (int i = 0; i < this->subtractions.size(); i++)
 		{
 			ss << "+ " << this->subtractions[i]->getRobot() << " ("
-					<< this->subtractions[i]->getEntryPoint()->getId() + ")";
+					<< this->subtractions[i]->getEntryPoint()->getId() << ")";
 		}
-
+		ss << " " << this->reason ;
 		return ss.str();
 	}
 

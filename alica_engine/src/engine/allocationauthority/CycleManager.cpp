@@ -444,6 +444,7 @@ namespace alica
 							{
 								this->allocationHistory[k]->reset();
 							}
+							cout << "CM detectAllocationCycle true" << endl;
 							return true;
 						}
 						utChange = nullptr;
