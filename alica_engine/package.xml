@@ -35,7 +35,8 @@
   <build_depend>roscpp</build_depend>
   <build_depend>system_config</build_depend>
   <build_depend>fsystem</build_depend>
-  
+  <build_depend>roslint</build_depend>
+ 
   <!-- Use buildtool_depend for build tool packages: -->
   <buildtool_depend>catkin</buildtool_depend>
   
