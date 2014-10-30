@@ -54,10 +54,10 @@ void listenForPacket() {
 void handleUdpPacket(const boost::system::error_code& error,   std::size_t bytes_transferred) {
 	//std::cout << "From "<<otherEndPoint.address() << std::endl;
 	if (!error) { // && otherEndPoint.address() != localIP) {
-		size_t id = *((uint32_t*)(inBuffer.data()));
+		size_t id = *((size_t*)(inBuffer.data()));
 		//std::cout << "Got packet"<<std::endl;
 		try {	
-			ros::serialization::IStream stream(((uint8_t*)inBuffer.data())+4,bytes_transferred-4);
+			ros::serialization::IStream stream(((uint8_t*)inBuffer.data())+sizeof(size_t),bytes_transferred-sizeof(size_t));
 			switch(id) {
 				<?udpReception?>			
 			
