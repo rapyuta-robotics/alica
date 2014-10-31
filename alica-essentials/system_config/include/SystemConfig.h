@@ -30,7 +30,7 @@ namespace supplementary
 		static string hostname;
 		static mutex configsMapMutex;
 		static map<string, shared_ptr<Configuration> > configs;
-//		static const char NODE_NAME_SEPERATOR = '_';
+		static const char NODE_NAME_SEPERATOR = '_';
 
 	public:
 		static SystemConfig* getInstance();
