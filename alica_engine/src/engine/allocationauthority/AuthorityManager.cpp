@@ -22,7 +22,6 @@ namespace alica
 	{
 		this->ae = ae;
 		this->ownID = 0;
-		this->authorityPub = nullptr;
 	}
 
 	AuthorityManager::~AuthorityManager()
@@ -51,7 +50,6 @@ namespace alica
 	 */
 	void AuthorityManager::handleIncomingAuthorityMessage(shared_ptr<AllocationAuthorityInfo> aai)
 	{
-		cout << "AM: aai" << aai->authority << " " << aai->planId << endl;
 		if (ae->getTeamObserver()->isRobotIgnored(aai->senderID))
 		{
 			return;
@@ -59,13 +57,16 @@ namespace alica
 		if (aai->senderID != this->ownID)
 		{
 			ae->getTeamObserver()->messageRecievedFrom(aai->senderID);
-			for (EntryPointRobots epr : aai->entryPointRobots)
+			if (aai->senderID > this->ownID)
 			{
-				for (int rid : epr.robots)
+				for (EntryPointRobots epr : aai->entryPointRobots)
 				{
-					if (rid != this->ownID)
+					for (int rid : epr.robots)
 					{
-						ae->getTeamObserver()->messageRecievedFrom(rid);
+						if (rid != this->ownID)
+						{
+							ae->getTeamObserver()->messageRecievedFrom(rid);
+						}
 					}
 				}
 			}
@@ -100,10 +101,13 @@ namespace alica
 			sendAllocation(p);
 			p->getCycleManagement()->sent();
 		}
+		cout << "AM: outside for " << endl;
 		for (int i = 0; i < this->queue.size(); i++)
 		{
+			cout << "AM: inside for " << endl;
 			if (authorityMatchesPlan(this->queue[i], p))
 			{
+				cout << "AM: p->getCycleManagement()->handleAuthorityInfo(this->queue[i]);" << endl;
 				p->getCycleManagement()->handleAuthorityInfo(this->queue[i]);
 				this->queue.erase(this->queue.begin() + i);
 				i--;
@@ -134,30 +138,46 @@ namespace alica
 			it = EntryPointRobots();
 			it.entrypoint = eps->at(i)->getId();
 			auto robots = ass->getRobotsWorking(eps->at(i));
-			for(int j = 0; j < robots->size(); j++)
+			for (int j = 0; j < robots->size(); j++)
 			{
 				it.robots.push_back(robots->at(j));
 			}
 			aai.entryPointRobots.push_back(it);
 		}
 
-		auto temp = p->getParent().lock()->getActiveState();
-		aai.parentState = (p->getParent().expired() || temp == nullptr ? -1 : temp->getId());
+		auto shared = p->getParent().lock();
+		aai.parentState = (
+				(p->getParent().expired() || shared->getActiveState() == nullptr) ? -1 :
+						shared->getActiveState()->getId());
 		aai.planId = p->getPlan()->getId();
 		aai.authority = this->ownID;
 		aai.senderID = this->ownID;
 		aai.planType = (p->getPlanType() == nullptr ? -1 : p->getPlanType()->getId());
 
-		this->authorityPub->sendAllocationAuthority(aai);
+		this->ae->getCommunicator()->sendAllocationAuthority(aai);
 	}
 
 	bool AuthorityManager::authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p)
 	{
-		auto temp = p->getParent().lock()->getActiveState();
-		if ((p->getParent().expired() && aai->parentState == -1)
-				|| (!p->getParent().expired() && temp != nullptr
-						&& aai->parentState == temp->getId()))
+		auto shared = p->getParent().lock();
+
+		if (!p->getParent().expired())
 		{
+			cout << "AM: expired " << !p->getParent().expired() << " aai->parentState == -1 "
+					<< (aai->parentState == -1) << " shared->getActiveState() != nullptr "
+					<< (shared->getActiveState() != nullptr)
+					<< " aai->parentState == shared->getActiveState()->getId() "
+					<< (aai->parentState == shared->getActiveState()->getId()) << endl;
+		}
+		else
+		{
+			cout << "AM: expired " << aai->parentState << endl;
+		}
+		if ((p->getParent().expired() && aai->parentState == -1)
+				|| (!p->getParent().expired() && shared->getActiveState() != nullptr
+						&& aai->parentState == shared->getActiveState()->getId()))
+		{
+			cout << "AM: matches" << endl;
 			if (p->getPlan()->getId() == aai->planId)
 			{
 				return true;

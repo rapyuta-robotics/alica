@@ -141,6 +141,7 @@ namespace alica
 	 */
 	bool CycleManager::isOverridden()
 	{
+		cout << "CM: CycleState " << this->state << endl;
 		return this->state == CycleState::overridden && this->fixedAllocation != nullptr;
 	}
 
@@ -161,6 +162,7 @@ namespace alica
 			this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
 			delete this->allocationHistory[this->newestAllocationDifference];
 			this->allocationHistory[this->newestAllocationDifference] = aldif;
+			cout << "CM: aldif " << aldif->toString() << endl;
 		}
 		catch (exception &e)
 		{
@@ -297,7 +299,7 @@ namespace alica
 	bool CycleManager::setAssignment(shared_ptr<RunningPlan> r)
 	{
 #ifdef CM_DEBUG
-		cout << "Setting new Assignment " << rp->getPlan()->getName() << "!" << endl;
+		cout << "CM: Setting new Assignment " << rp->getPlan()->getName() << "!" << endl;
 #endif
 		EntryPoint* myEntryPoint = nullptr;
 		if (this->fixedAllocation == nullptr)
@@ -444,7 +446,6 @@ namespace alica
 							{
 								this->allocationHistory[k]->reset();
 							}
-							cout << "CM detectAllocationCycle true" << endl;
 							return true;
 						}
 						utChange = nullptr;
