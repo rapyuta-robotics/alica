@@ -1,5 +1,5 @@
-#ifndef CAN_H
-#define CAN_H 1
+#ifndef CANCONNECTION_CAN_H
+#define CANCONNECTION_CAN_H 1
 	/// CanDevice is used as reciever or sender id
 	enum CanDevice {
 		Eth2Can         = 0x00u,
@@ -17,4 +17,4 @@
 		CanPriNorm = 0x40u,
 		CanPriLow  = 0x80u,
 	};
-#endif
+#endif //CANCONNECTION_CAN_H

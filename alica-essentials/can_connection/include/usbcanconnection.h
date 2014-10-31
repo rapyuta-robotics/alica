@@ -42,7 +42,7 @@ class UsbCanConnection : public CanConnection {
 		int initSocket();
 
 		CanListener* listener;
-		
+
 		int socketfd;
 		struct sockaddr_can addr;
 		struct can_frame rx_frame;
@@ -54,7 +54,7 @@ class UsbCanConnection : public CanConnection {
 		int writeOk;
 
 		char ctrlmsg[CMSG_SPACE(sizeof(struct timeval)) + CMSG_SPACE(sizeof(__u32))];
-	
+
 		pthread_t listenerThread;
 
 		unsigned short waitOnId;

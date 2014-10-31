@@ -23,7 +23,7 @@ public:
 	void getCanMsg(const usb_can_proxy::CanMsg::ConstPtr& msg)
 	{
 		printf("write data to can!\n");
-		
+
 		lastCan = ros::Time::now();
 		unsigned char* p = (unsigned char*)msg->data.data();
 		//if( msg->data[0] == 9 ) {
@@ -42,23 +42,23 @@ public:
 	{
 		us = new UsbCanConnection("can0");
 		us->SetReceiver(this);
-		
+
 		//init ros stuff
-		compass = n.advertise<CNCanProxyMsg::CanMsg>("usb_can_proxy/Compass", 30);
-		rekick = n.advertise<CNCanProxyMsg::CanMsg>("usb_can_proxy/Rekick", 30);
-		ballhandler = n.advertise<CNCanProxyMsg::CanMsg>("usb_can_proxy/BallHandler", 30);
+		compass = n.advertise<usb_can_proxy::CanMsg>("usb_can_proxy/Compass", 30);
+		rekick = n.advertise<usb_can_proxy::CanMsg>("usb_can_proxy/Rekick", 30);
+		ballhandler = n.advertise<usb_can_proxy::CanMsg>("usb_can_proxy/BallHandler", 30);
 		canSub = n.subscribe("usb_can_proxy/CanSub", 30, &UsbCanProxy::getCanMsg,this);//,ros::TransportHints().unreliable().tcpNoDelay());
-		odomSub = n.subscribe("RawOdometry", 10, &UsbCanProxy::onRawOdometry, this);		
-		
+		odomSub = n.subscribe("RawOdometry", 10, &UsbCanProxy::onRawOdometry, this);
+
 		//spinner = new ros::AsyncSpinner(3);
 		//spinner->start();
-		
+
 		//add id's for can devices
 		receivers.push_back(Compass);
 		receivers.push_back(ReKick);
 		receivers.push_back(BallHandler);
 	}
-	
+
 	void Close()
 	{
 		us->Stop();
@@ -75,9 +75,9 @@ public:
 // 			ROS_INFO("is running...");
 			ros::spinOnce();
 			loop_rate.sleep();
-			
+
 			ros::Time now = ros::Time::now();
-			
+
 			if( (now-lastMotion).toSec() > 1 )
 			{
 				printf("no motion!\n");
@@ -86,11 +86,11 @@ public:
 			{
 				//resetInterface();
 			}
-			
+
 			//usleep(1000);
 		}
 	}
-	
+
 protected:
 	//while reading from usb -> publisher
 	//ros::AsyncSpinner *spinner;
@@ -102,14 +102,14 @@ protected:
 	ros::Subscriber odomSub;
 	ros::Time lastCan;
 	ros::Time lastMotion;
-	
+
 	// publisher for direct bundle restart trigger
 	ros::Publisher brtPub;
-	
-	
+
+
 	UsbCanConnection *us;
 	vector<unsigned short> receivers;
-	
+
 	void Receive(unsigned int canid,unsigned char* data, int len)
 	{
 		int found = 0;
@@ -120,7 +120,7 @@ protected:
 			if( id == receivers[i])
 			{
 				found=1;
-				
+
 				usb_can_proxy::CanMsg cm;
 // 				cm.header = 0x0;
 // 				cm.priority = (canid>>16) & 0xFF; //Priority
@@ -132,7 +132,7 @@ protected:
 				{
 					cm.data.push_back(data[i]);
 				}
-				
+
 				if( id == Compass )
 				{
 					compass.publish(cm);
@@ -144,15 +144,15 @@ protected:
 					/*printf("get rekick val from canbus!\n");
 					for(unsigned int i=0; i<cm.data.size(); i++)
 					{
-						printf("%u\n",cm.data[i]);						
+						printf("%u\n",cm.data[i]);
 					}*/
 
 				}
 				else if( id == BallHandler )
-				{					
+				{
 					ballhandler.publish(cm);
 					//printf("get actuator val from canbus!\n");
-					
+
 				}
 				else
 				{
@@ -165,7 +165,7 @@ protected:
 			fprintf(stderr,"Unkown canid received: 0x%x\n",canid);
 		}
 	}
-	
+
 	void resetInterface()
 	{
 		Close();
@@ -176,13 +176,13 @@ protected:
 		e = system("sudo ifup can0");
 		sleep(1);
 		if(!e) printf("error reseting!\n");
-		
+
 		lastCan = ros::Time::now();
 		lastMotion = ros::Time::now();
 		Start();
 	}
 };
-	
+
 UsbCanProxy *ucp;
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "usb_can_proxy");
