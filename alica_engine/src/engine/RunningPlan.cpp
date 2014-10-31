@@ -864,10 +864,8 @@ namespace alica
 		//if keepTask, the task Assignment should not be changed!
 		bool ret = false;
 		AllocationDifference* aldif = new AllocationDifference();
-		cout << "RP: before spt" <<  spts.size() <<endl;
 		for (shared_ptr<SimplePlanTree> spt : spts)
 		{
-			cout << "RP: spt" << spt->toString() << endl;
 			if (spt->getState()->getInPlan() != this->plan)
 			{ //the robot is no longer participating in this plan
 				if (!keepTask & !auth)

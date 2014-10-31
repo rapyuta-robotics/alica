@@ -28,7 +28,7 @@ namespace alica
 		void setEntryPoint(EntryPoint* entryPoint);
 		int getRobot();
 		void setRobot(int robot);
-		bool equals(EntryPointRobotPair* other);
+		static bool equals(EntryPointRobotPair* thisOne, EntryPointRobotPair* other);
 
 	protected:
 		EntryPoint* entryPoint;

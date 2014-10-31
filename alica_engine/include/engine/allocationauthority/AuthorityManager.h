@@ -38,7 +38,6 @@ namespace alica
 		void sendAllocation(shared_ptr<RunningPlan> p);
 
 	protected:
-		IAlicaCommunication* authorityPub;
 		vector<shared_ptr<AllocationAuthorityInfo>> queue;
 		AlicaEngine* ae;
 		int ownID;

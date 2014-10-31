@@ -39,15 +39,15 @@ namespace alica
 		this->robot = robot;
 	}
 
-	bool EntryPointRobotPair::equals(EntryPointRobotPair* other)
+	bool EntryPointRobotPair::equals(EntryPointRobotPair* thisOne,EntryPointRobotPair* other)
 	{
 		if (other == nullptr)
 		{
 			return false;
 		}
-		if (other->entryPoint->getId() != this->entryPoint->getId())
+		if (other->entryPoint->getId() != thisOne->entryPoint->getId())
 			return false;
-		return (other->getRobot() == this->robot);
+		return (other->getRobot() == thisOne->robot);
 	}
 
 } /* namespace alica */

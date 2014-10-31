@@ -138,10 +138,10 @@ namespace alica
 	 */
 	PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r)
 	{
-//#ifdef RULE_debug
+#ifdef RULE_debug
 		cout << "RB: dynAlloc-Rule called." << endl;
-//		cout << "RB: dynAlloc RP \n" << r->toString() << endl;
-//#endif
+		cout << "RB: dynAlloc RP \n" << r->toString() << endl;
+#endif
 		if (r->isAllocationNeeded() || r->isBehaviour())
 		{
 			return PlanChange::NoChange;
@@ -207,12 +207,13 @@ namespace alica
 	 */
 	PlanChange RuleBook::authorityOverrideRule(shared_ptr<RunningPlan> r)
 	{
-#ifdef RULE_debug
+//#ifdef RULE_debug
 		cout << "RB: AuthorityOverride-Rule called." << endl;
 		cout << "RB: AuthorityOverride RP \n" << r->toString() << endl;
-#endif
+//#endif
 		if (r->isBehaviour())
 			return PlanChange::NoChange;
+		cout << "CM: overridden " << r->getCycleManagement()->isOverridden() << endl;
 		if (r->getCycleManagement()->isOverridden())
 		{
 			if (r->getCycleManagement()->setAssignment(r))

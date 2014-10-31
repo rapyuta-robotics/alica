@@ -33,7 +33,6 @@ namespace alica
 		void setReason(AllocationDifference::Reason reason);
 		bool isEmpty();
 		void reset();
-		bool equals(AllocationDifference* other);
 		void applyDifference(AllocationDifference* other);
 		string toString();
 		vector<EntryPointRobotPair*>& getAdditions();

@@ -125,6 +125,12 @@ TEST_F(AlicaEngineAuthorityManager, authority)
 			EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(), 1414403553717);
 			EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(), 1414403553717);
 		}
+
+		if (i == 20)
+		{
+			EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(), 1414403553717);
+			EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(), 1414403429950);
+		}
 	}
 
 }
