@@ -146,9 +146,11 @@ namespace alica
 		}
 
 		auto shared = p->getParent().lock();
+		//TODO id is always 1359155945 which is not in etc/plans
 		aai.parentState = (
 				(p->getParent().expired() || shared->getActiveState() == nullptr) ? -1 :
 						shared->getActiveState()->getId());
+		cout << "AM: aai.parentState " << aai.parentState << endl;
 		aai.planId = p->getPlan()->getId();
 		aai.authority = this->ownID;
 		aai.senderID = this->ownID;
