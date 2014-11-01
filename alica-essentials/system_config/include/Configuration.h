@@ -195,6 +195,18 @@ namespace supplementary
 	};
 
 	template<>
+	inline short Configuration::convert<short>(string value)
+	{
+		return (short)stoi(value);
+	}
+
+	template<>
+	inline unsigned short Configuration::convert<unsigned short>(string value)
+	{
+		return (unsigned short)stoi(value);
+	}
+
+	template<>
 	inline int Configuration::convert<int>(string value)
 	{
 		return stoi(value);
