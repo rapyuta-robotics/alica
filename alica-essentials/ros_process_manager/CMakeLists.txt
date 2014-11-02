@@ -96,7 +96,7 @@ catkin_package(
 ## Declare a cpp executable
 add_executable(ros_process_manager 
   src/ProcessManager.cpp
-  src/ROSProcess.cpp
+  src/Process.cpp
 )
 target_link_libraries(ros_process_manager ${catkin_LIBRARIES})
 

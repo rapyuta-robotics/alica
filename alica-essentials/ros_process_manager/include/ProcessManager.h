@@ -8,10 +8,12 @@
 #ifndef PROCESSMANAGER_H_
 #define PROCESSMANAGER_H_
 
+#define PM_DEBUG // for toggling debug output
+
 #include "ros/ros.h"
 
-
 #include <map>
+#include <thread>
 
 using namespace std;
 
@@ -19,7 +21,7 @@ namespace supplementary
 {
 
 	class SystemConfig;
-	class ROSProcess;
+	class Process;
 
 	class ProcessManager
 	{
@@ -27,9 +29,17 @@ namespace supplementary
 		ProcessManager(int argc, char** argv);
 		virtual ~ProcessManager();
 		void start();
+		bool isRunning();
 	private:
 		SystemConfig* sc;
-		std::map<short,ROSProcess*> processMap;
+		std::map<short, Process*> processMap;
+
+		bool running;
+		thread* mainThread;
+		chrono::microseconds iterationTime;
+
+		void run();
+		void collectProcFS();
 	};
 
 } /* namespace alica */
