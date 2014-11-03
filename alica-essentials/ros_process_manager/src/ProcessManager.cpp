@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <dirent.h>
+
 #include <sys/types.h>
 #include <cstdlib>
 
@@ -77,16 +77,15 @@ namespace supplementary
 		{
 			auto start = chrono::system_clock::now();
 
-#ifdef PM_DEBUG
-			//cout << "PM: woke up" << endl;
-#endif
-
 			// TODO: update Process data structures
 			this->collectProcFS();
-			cout << endl;
 
 			auto timePassed = chrono::system_clock::now() - start;
-			chrono::microseconds microsecondsPassed = chrono::duration_cast<chrono::microseconds>(iterationTime);
+			chrono::microseconds microsecondsPassed = chrono::duration_cast<chrono::microseconds>(timePassed);
+
+#ifdef PM_DEBUG
+			cout << "PM: " << microsecondsPassed.count() << " microseconds passed!" << endl;
+#endif
 			chrono::microseconds availTime = this->iterationTime - microsecondsPassed;
 
 			if (availTime.count() > 10)
@@ -97,24 +96,38 @@ namespace supplementary
 		}
 	}
 
+	int ProcessManager::filterProcesses(const struct dirent *entry)
+	{
+//		for (auto processPair : this->processMap)
+//		{
+//			if (strcmp(processPair.second->getExecutable().c_str(), entry->d_name))
+//			{
+//				return true;
+//			}
+//		}
+		return false;
+	}
+
 	void ProcessManager::collectProcFS()
 	{
 
 		struct dirent **namelist;
 		int i, n;
-		n = scandir("/proc", &namelist, 0, alphasort);
+		n = scandir("/proc", &namelist, ProcessManager::filterProcesses, NULL);
 
 		if (n < 0)
 		{
 			perror("ProcessManager::collectProcFS");
 			free(namelist);
+			return;
 		}
 
 		for (i = 0; i < n; i++)
 		{
 			//cout << "ff: Namelist " << i << ": " << namelist[i]->d_name << endl;
 			string curFile = namelist[i]->d_name;
-			string curFullFile = "/proc" + curFile;
+			string curFullFile = "/proc/" + curFile;
+			cout << curFullFile << endl;
 			if (FileSystem::isDirectory(curFullFile))
 			{
 				// ignore current or parent directory
@@ -130,22 +143,27 @@ namespace supplementary
 				long curPid = strtol(namelist[i]->d_name, &endptr, 10);
 				if (*endptr != '\0')
 				{
+					free(namelist[i]);
+//					i++;
+//					break;
 					continue;
 				}
 
 				std::ifstream ifs;
 
-				ifs.open(curFullFile+"/comm", std::ifstream::in);
+				ifs.open(curFullFile + "/comm", std::ifstream::in);
 				char name[256];
 				ifs.getline(name, 256);
 
-				cout << "PM: " << name << endl;
+				//cout << "PM: " << name << endl;
 
 			}
 
 			free(namelist[i]);
 		}
 
+//		free(namelist[0]);
+//		free(namelist[1]);
 		for (; i < n; i++)
 		{
 			free(namelist[i]);

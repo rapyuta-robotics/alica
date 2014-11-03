@@ -14,6 +14,7 @@
 
 #include <map>
 #include <thread>
+#include <dirent.h>
 
 using namespace std;
 
@@ -22,6 +23,7 @@ namespace supplementary
 
 	class SystemConfig;
 	class Process;
+
 
 	class ProcessManager
 	{
@@ -40,6 +42,7 @@ namespace supplementary
 
 		void run();
 		void collectProcFS();
+		static int filterProcesses(const struct dirent *entry);
 	};
 
 } /* namespace alica */
