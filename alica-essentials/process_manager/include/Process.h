@@ -8,8 +8,13 @@
 #ifndef PROCESS_H_
 #define PROCESS_H_
 
+#define PROC_DEBUG
+
 #include <string>
 #include <vector>
+#include <sstream>
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 
@@ -19,22 +24,18 @@ namespace supplementary
 	class Process
 	{
 	public:
-		Process(short id, string rospkg, string rosexecutable, string params);
+		Process(long pid, string params);
 		virtual ~Process();
-		int getId() const;
-		void setId(int id);
-		const string& getParams() const;
-		void setParams(const string& params);
-		const string& getExecutable() const;
-		void setExecutable(const string& rosexecutable);
-
+		void update();
+		string toString();
 	private:
-		short id;
-		string executable;
+		long pid;
+		char state;
+		string robot;
 		string params;
-		vector<int> pids;
 	};
 
 } /* namespace supplementary */
 
 #endif /* PROCESS_H_ */
+

@@ -10,11 +10,14 @@
 
 #define PM_DEBUG // for toggling debug output
 
-#include "ros/ros.h"
-
 #include <map>
 #include <thread>
 #include <dirent.h>
+#include "ros/ros.h"
+
+#include "ManagedExecutable.h"
+
+
 
 using namespace std;
 
@@ -22,8 +25,6 @@ namespace supplementary
 {
 
 	class SystemConfig;
-	class Process;
-
 
 	class ProcessManager
 	{
@@ -34,15 +35,16 @@ namespace supplementary
 		bool isRunning();
 	private:
 		SystemConfig* sc;
-		std::map<short, Process*> processMap;
+		map<short, ManagedExecutable> executableMap;
+
 
 		bool running;
 		thread* mainThread;
 		chrono::microseconds iterationTime;
 
 		void run();
-		void collectProcFS();
-		static int filterProcesses(const struct dirent *entry);
+		void searchProcFS();
+		void updateMngdExecutables();
 	};
 
 } /* namespace alica */

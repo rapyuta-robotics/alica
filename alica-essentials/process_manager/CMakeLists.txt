@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(ros_process_manager)
+project(process_manager)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -94,11 +94,12 @@ catkin_package(
  include_directories(include ${catkin_INCLUDE_DIRS})
 
 ## Declare a cpp executable
-add_executable(ros_process_manager 
+add_executable(process_manager 
   src/ProcessManager.cpp
+  src/ManagedExecutable.cpp
   src/Process.cpp
 )
-target_link_libraries(ros_process_manager ${catkin_LIBRARIES})
+target_link_libraries(process_manager ${catkin_LIBRARIES})
 
 #############
 ## Install ##
