@@ -26,4 +26,8 @@
 <fullyQualifiedTypeName name="org.eclipse.emf.edit.command.SetCommand"/>
 <fullyQualifiedTypeName name="de.uni_kassel.vs.cn.planDesigner.alica.BehaviourConfiguration"/>
 <fullyQualifiedTypeName name="de.uni_kassel.vs.cn.planDesigner.alica.Behaviour"/>
+<fullyQualifiedTypeName name="de.uni_kassel.vs.cn.planDesigner.ui.wizards.pages.PMLNewBehaviourWizardPage"/>
+<fullyQualifiedTypeName name="de.uni_kassel.vs.cn.planDesigner.ui.wizards.PMLNewBehaviourWizard"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="org.eclipse.ui.PlatformUI"/>
 </qualifiedTypeNameHistroy>

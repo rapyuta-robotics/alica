@@ -102,7 +102,14 @@ public class PMLNewBehaviourConfigurationWizardPage extends WizardPage {
 		setControl(container);
 	}
 	
-	private void initialize(){
+	public void setTextOfBehConfName(String name){
+		if(configurationNameText != null)
+		{
+			this.configurationNameText.setText(name.replaceAll(".beh", "") + "Default");
+		}
+	}
+
+	public void initialize(){
 		if(this.behPage != null)
 		{
 			configurationNameText.setText(this.behPage.getName() + "Default");
@@ -111,7 +118,6 @@ public class PMLNewBehaviourConfigurationWizardPage extends WizardPage {
 			configurationNameText.setText(this.behaviour.getName() + "Default");
 		}
 	}
-
 
 	/**
 	 * Ensures that both text fields are set.

@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
 import de.uni_kassel.vs.cn.planDesigner.ui.util.PlanEditorUtils;
+import de.uni_kassel.vs.cn.planDesigner.ui.wizards.PMLNewBehaviourWizard;
 
 /**
  * The "New" wizard page allows setting the container for the new file as well
@@ -49,11 +50,14 @@ public class PMLNewBehaviourWizardPage extends WizardPage {
 
 	private ISelection selection;
 
-	public PMLNewBehaviourWizardPage(ISelection selection) {
+	private PMLNewBehaviourWizard wizard;
+
+	public PMLNewBehaviourWizardPage(ISelection selection, PMLNewBehaviourWizard wizard) {
 		super("New Behaviour");
 		setTitle("New Behaviour (.beh) File");
 		setDescription("This wizard creates a new Behaviour file with *.beh extension.");
 		this.selection = selection;
+		this.wizard = wizard;
 	}
 
 	/**
@@ -102,6 +106,7 @@ public class PMLNewBehaviourWizardPage extends WizardPage {
 		behaviourNameText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				dialogChanged();
+				wizard.getBehConfWizardPage().setTextOfBehConfName(getBehaviourName());
 			}
 		});
 		

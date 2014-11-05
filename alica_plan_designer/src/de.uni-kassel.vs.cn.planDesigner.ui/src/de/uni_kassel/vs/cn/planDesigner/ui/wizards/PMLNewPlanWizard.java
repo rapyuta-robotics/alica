@@ -48,6 +48,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.AlicaFactory;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
+import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
 import de.uni_kassel.vs.cn.planDesigner.ui.edit.PMLTransactionalEditingDomain;
 import de.uni_kassel.vs.cn.planDesigner.ui.util.CommonUtils;
@@ -120,7 +121,7 @@ public class PMLNewPlanWizard extends Wizard implements INewWizard {
 			Throwable realException = e.getTargetException();
 			MessageDialog.openError(getShell(), "Error", realException.getMessage());
 			return false;
-		}
+		} 
 		return true;
 	}
 	
@@ -140,7 +141,6 @@ public class PMLNewPlanWizard extends Wizard implements INewWizard {
 		}
 		IContainer container = (IContainer) resource;
 		final IFile file = container.getFile(new Path(fileName));
-		
 	
 		if (file.exists()) {
 			// This should not be the case cause we have unique plan names!
