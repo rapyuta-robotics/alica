@@ -2,7 +2,7 @@
 <?artifactRepository version='1.1.0'?>
 <repository name='file:/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/.metadata/.plugins/org.eclipse.pde.core/tempp2metadata - artifacts' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1.0.0'>
   <properties size='2'>
-    <property name='p2.timestamp' value='1414592349597'/>
+    <property name='p2.timestamp' value='1415206728756'/>
     <property name='p2.compressed' value='false'/>
   </properties>
   <mappings size='3'>
@@ -16,18 +16,6 @@
         <property name='artifact.size' value='73658'/>
         <property name='download.size' value='73658'/>
         <property name='download.md5' value='03a211cc6054d587dbf05ea9119e9967'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='de.uni-kassel.vs.cn.planDesigner.condition.core' version='1.0.0.201410291518'>
-      <properties size='2'>
-        <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='49406'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.ui.feature' version='1.0.0.201410291518'>
-      <properties size='2'>
-        <property name='download.contentType' value='application/zip'/>
-        <property name='download.size' value='1373'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.equinox.p2.touchpoint.eclipse' version='2.1.200.v20130327-2119'>
@@ -85,18 +73,18 @@
         <property name='download.md5' value='f597de788542216d7b042499bb9c0bff'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='org.eclipse.equinox.p2.director.app' version='1.0.300.v20130819-1621'>
-      <properties size='3'>
-        <property name='artifact.size' value='45334'/>
-        <property name='download.size' value='45334'/>
-        <property name='download.md5' value='d49ebb65f9fa83742d8b2c74a4d635a5'/>
-      </properties>
-    </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.swt.gtk.linux.x86' version='3.102.1.v20140206-1358'>
       <properties size='3'>
         <property name='artifact.size' value='2420705'/>
         <property name='download.size' value='2420705'/>
         <property name='download.md5' value='ee0db11d15de958173b185fbb4d81ac7'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.eclipse.equinox.p2.director.app' version='1.0.300.v20130819-1621'>
+      <properties size='3'>
+        <property name='artifact.size' value='45334'/>
+        <property name='download.size' value='45334'/>
+        <property name='download.md5' value='d49ebb65f9fa83742d8b2c74a4d635a5'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.jdt.debug' version='3.8.0.v20130514-0841'>
@@ -124,12 +112,6 @@
         <property name='artifact.size' value='229385'/>
         <property name='download.size' value='229385'/>
         <property name='download.md5' value='18b80cef91a23019829f2c411c90af35'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='de.uni-kassel.vs.cn.planDesigner.codegeneration' version='1.0.1.201410291518'>
-      <properties size='2'>
-        <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='4771004'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.ui.navigator.resources' version='3.4.501.v20131021-1545'>
@@ -167,6 +149,13 @@
         <property name='download.md5' value='97cd55e388d1d4e2fe36881a3c14855f'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='org.apache.commons.cli' version='1.2.0.v201105210650'>
+      <properties size='3'>
+        <property name='artifact.size' value='54355'/>
+        <property name='download.size' value='54355'/>
+        <property name='download.md5' value='9ca38ccaaf4be0062347e490fde6a16a'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.equinox.p2.metadata' version='2.2.0.v20130523-1557'>
       <properties size='3'>
         <property name='artifact.size' value='337972'/>
@@ -174,11 +163,10 @@
         <property name='download.md5' value='fab1784dc423faabb8929284e55b7e95'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='org.apache.commons.cli' version='1.2.0.v201105210650'>
-      <properties size='3'>
-        <property name='artifact.size' value='54355'/>
-        <property name='download.size' value='54355'/>
-        <property name='download.md5' value='9ca38ccaaf4be0062347e490fde6a16a'/>
+    <artifact classifier='osgi.bundle' id='de.uni-kassel.vs.cn.planDesigner.validation' version='1.0.0.201411051758'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='21682'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.ecf.identity' version='3.2.0.v20130604-1622'>
@@ -235,6 +223,12 @@
         <property name='artifact.size' value='1247140'/>
         <property name='download.size' value='1247140'/>
         <property name='download.md5' value='5b24ba4314496028de4db0013380514d'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.ui.feature' version='1.0.0.201411051758'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='1372'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.apache.ant' version='1.8.4.v201303080030'>
@@ -360,6 +354,12 @@
         <property name='download.md5' value='92ef0475cae9f91e383a5711849c66fd'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.uni_kassel.vs.cn.planDesigner.condition.core.feature' version='1.0.0.201411051758'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='557'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.cdt.core' version='5.6.0.201402142303'>
       <properties size='3'>
         <property name='artifact.size' value='5215639'/>
@@ -379,12 +379,6 @@
         <property name='artifact.size' value='103072'/>
         <property name='download.size' value='103072'/>
         <property name='download.md5' value='b281a0d8fa0cfedc7c1a1d997c2cc851'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='de.uni-kassel.vs.cn.planDesigner.validation' version='1.0.0.201410291518'>
-      <properties size='2'>
-        <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='21682'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.core.resources' version='3.8.101.v20130717-0806'>
@@ -408,10 +402,10 @@
         <property name='download.md5' value='6f663fd60dbefe3735574bb6e646b943'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.core.feature' version='1.0.0.201410291518'>
+    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.zest.feature' version='1.0.0.201411051758'>
       <properties size='2'>
         <property name='download.contentType' value='application/zip'/>
-        <property name='download.size' value='1314'/>
+        <property name='download.size' value='526'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.team.core' version='3.7.0.v20130514-1224'>
@@ -486,7 +480,7 @@
     <artifact classifier='osgi.bundle' id='de.uni-kassel.vs.cn.planDesigner.ui' version='1.0.0'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='1407492'/>
+        <property name='download.size' value='1408094'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.e4.ui.css.swt' version='0.11.0.v20130515-1857'>
@@ -533,12 +527,6 @@
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='468977'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel' version='1.0.0.201410291518'>
-      <properties size='2'>
-        <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='45105'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.ui' version='3.105.0.v20130522-1122'>
@@ -595,6 +583,12 @@
         <property name='download.md5' value='d7bb956d3fe92c3e0a3c634d0da731f7'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.uni-kassel.vs.cn.planDesigner.alica' version='1.0.0.201411051758'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='241868'/>
+      </properties>
+    </artifact>
     <artifact classifier='binary' id='org.eclipse.equinox.executable_root.win32.win32.x86' version='3.6.0.v20140117-1004'>
       <properties size='1'>
         <property name='download.size' value='114275'/>
@@ -632,6 +626,12 @@
         <property name='download.md5' value='7c4863fddb2c43cd76548443c4193f10'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.uni-kassel.vs.cn.planDesigner.codegeneration' version='1.0.1.201411051758'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='4771012'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.ui.views.properties.tabbed' version='3.6.0.v20130515-1857'>
       <properties size='3'>
         <property name='artifact.size' value='106563'/>
@@ -654,6 +654,18 @@
         <property name='artifact.size' value='1384198'/>
         <property name='download.size' value='1384198'/>
         <property name='download.md5' value='1ed482618fe2b7a318333aa3483c0068'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.uni-kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel' version='1.0.0.201411051758'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='45105'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.validation.feature' version='1.0.0.201411051758'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='420'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.w3c.dom.events' version='3.0.0.draft20060413_v201105210656'>
@@ -712,6 +724,12 @@
         <property name='download.md5' value='d3ff079b000198ac09014b02d003376c'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.core.feature' version='1.0.0.201411051758'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='1313'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.core.jobs' version='3.5.300.v20130429-1813'>
       <properties size='3'>
         <property name='artifact.size' value='92335'/>
@@ -738,12 +756,6 @@
         <property name='artifact.size' value='92875'/>
         <property name='download.size' value='92875'/>
         <property name='download.md5' value='43f466cb248c383dde28ca1b14da67f1'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.emf.feature' version='1.0.0.201410291518'>
-      <properties size='2'>
-        <property name='download.contentType' value='application/zip'/>
-        <property name='download.size' value='795'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.zest.core' version='1.5.0.201308190730'>
@@ -773,6 +785,12 @@
         <property name='download.md5' value='95622063522ec5a2796b58e60da45b32'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.platform.feature' version='1.0.0.201411051758'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='3254'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.jdt.core.manipulation' version='1.5.0.v20130605-1748'>
       <properties size='3'>
         <property name='artifact.size' value='87593'/>
@@ -787,6 +805,12 @@
         <property name='download.md5' value='c8b1f2debe374f9572979354515d8c5b'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.PlanDesigner.mwe.feature' version='1.0.0.201411051758'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='1901'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.e4.ui.workbench' version='1.0.2.v20131202-1739'>
       <properties size='3'>
         <property name='artifact.size' value='247937'/>
@@ -799,12 +823,6 @@
         <property name='artifact.size' value='472643'/>
         <property name='download.size' value='472643'/>
         <property name='download.md5' value='83920f72972afcb82ba5fab7a0c0260e'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='de.uni_kassel.vs.cn.planDesigner.condition.core.feature' version='1.0.0.201410291518'>
-      <properties size='2'>
-        <property name='download.contentType' value='application/zip'/>
-        <property name='download.size' value='557'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.e4.ui.di' version='1.0.0.v20130515-1857'>
@@ -882,12 +900,6 @@
         <property name='artifact.size' value='71112'/>
         <property name='download.size' value='71112'/>
         <property name='download.md5' value='795427ae0e8a925c09984f54d3172f11'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.gef.feature' version='1.0.0.201410291518'>
-      <properties size='2'>
-        <property name='download.contentType' value='application/zip'/>
-        <property name='download.size' value='597'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.ltk.ui.refactoring' version='3.7.100.v20130605-1748'>
@@ -1019,6 +1031,12 @@
         <property name='download.md5' value='8a7be2f286f5813fc21af41519a9f2e8'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.uni-kassel.vs.cn.planDesigner.condition.core' version='1.0.0.201411051758'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='49406'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.e4.ui.workbench.swt' version='0.12.2.v20140117-1939'>
       <properties size='3'>
         <property name='artifact.size' value='171259'/>
@@ -1045,12 +1063,6 @@
         <property name='artifact.size' value='249432'/>
         <property name='download.size' value='249432'/>
         <property name='download.md5' value='a571b13367c2b77081a99abf05dd18ec'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.platform.feature' version='1.0.0.201410291518'>
-      <properties size='2'>
-        <property name='download.contentType' value='application/zip'/>
-        <property name='download.size' value='3254'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.equinox.concurrent' version='1.1.0.v20130327-1442'>
@@ -1104,6 +1116,12 @@
         <property name='download.size' value='80491'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.emf.feature' version='1.0.0.201411051758'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='796'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.ecf' version='3.2.0.v20130604-1622'>
       <properties size='3'>
         <property name='artifact.size' value='94160'/>
@@ -1142,12 +1160,6 @@
         <property name='artifact.size' value='93711'/>
         <property name='download.size' value='93711'/>
         <property name='download.md5' value='5d2ea93c8a54c3515a87eaad0414e65b'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.zest.feature' version='1.0.0.201410291518'>
-      <properties size='2'>
-        <property name='download.contentType' value='application/zip'/>
-        <property name='download.size' value='526'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.e4.ui.workbench.addons.swt' version='1.0.2.v20131129-1621'>
@@ -1218,12 +1230,6 @@
         <property name='download.md5' value='88d6613ff78d495af27733d17095eac1'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.PlanDesigner.mwe.feature' version='1.0.0.201410291518'>
-      <properties size='2'>
-        <property name='download.contentType' value='application/zip'/>
-        <property name='download.size' value='1902'/>
-      </properties>
-    </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.osgi.services' version='3.3.100.v20130513-1956'>
       <properties size='3'>
         <property name='artifact.size' value='82934'/>
@@ -1273,6 +1279,12 @@
         <property name='download.md5' value='b4169f057ed4e0c5dc9bfd1266402c85'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.gef.feature' version='1.0.0.201411051758'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='598'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='org.w3c.css.sac' version='1.3.1.v200903091627'>
       <properties size='3'>
         <property name='artifact.size' value='32952'/>
@@ -1285,18 +1297,6 @@
         <property name='artifact.size' value='2574883'/>
         <property name='download.size' value='2574883'/>
         <property name='download.md5' value='d2b54cf1e936d502af7cfe598c706dab'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='de.uni-kassel.vs.cn.planDesigner.alica' version='1.0.0.201410291518'>
-      <properties size='2'>
-        <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='241868'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='de.uni-kassel.vs.cn.planDesigner.validation.feature' version='1.0.0.201410291518'>
-      <properties size='2'>
-        <property name='download.contentType' value='application/zip'/>
-        <property name='download.size' value='421'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.eclipse.emf.workspace.ui' version='1.3.0.201306111400'>
