@@ -22,7 +22,7 @@ namespace alica
 	public:
 		virtual ~BasicConstraint(){}
 
-		virtual void getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan>) = 0;
+		virtual void getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan> rp) = 0;
 	};
 
 } /* namespace alica */

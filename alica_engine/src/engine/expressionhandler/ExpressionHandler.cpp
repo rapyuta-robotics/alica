@@ -21,6 +21,7 @@
 #include "engine/model/RuntimeCondition.h"
 #include "engine/expressionhandler/BasicFalseCondition.h"
 #include "engine/expressionhandler/BasicTrueCondition.h"
+#include "engine/expressionhandler/DummyConstraint.h"
 
 namespace alica
 {
@@ -28,7 +29,8 @@ namespace alica
 	/**
 	 * Constructor, loads the assembly containing expressions and constraints.
 	 */
-	ExpressionHandler::ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc)
+	ExpressionHandler::ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc,
+											IConstraintCreator* crc)
 	{
 		this->ae = ae;
 		this->conditionCreator = cc;
@@ -41,11 +43,6 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
-	/**
-	 * Dummy Constraint builder in case none was found in the assembly.
-	 */
-	//Todo:
-	//		void dummyConstraint(ConstraintDescriptor cd, RunningPlan* rp);
 	/**
 	 * Attaches expressions and constraints to the plans. Called by the AlicaEngine during start up.
 	 */
@@ -60,13 +57,13 @@ namespace alica
 			//TODO hole utility function (siehe c#)
 			p->setUtilityFunction(ufGen->getUtilityFunction(p));
 
-
 			if (p->getPreCondition() != nullptr)
 			{
 				if (p->getPreCondition()->isEnabled())
 				{
 					p->getPreCondition()->setBasicCondition(
 							this->conditionCreator->createConditions(p->getPreCondition()->getId()));
+					attachConstraint(p->getPreCondition());
 				}
 				else
 				{
@@ -78,17 +75,18 @@ namespace alica
 			{
 				p->getRuntimeCondition()->setBasicCondition(
 						this->conditionCreator->createConditions(p->getRuntimeCondition()->getId()));
-
-				//TODO: Attachconstraint
+				attachConstraint(p->getRuntimeCondition());
 			}
 
-			for(auto t : p->getTransitions()) {
+			for (auto t : p->getTransitions())
+			{
 				if (t->getPreCondition() != nullptr)
 				{
 					if (t->getPreCondition()->isEnabled())
 					{
 						t->getPreCondition()->setBasicCondition(
 								this->conditionCreator->createConditions(t->getPreCondition()->getId()));
+						attachConstraint(t->getPreCondition());
 					}
 					else
 					{
@@ -116,9 +114,17 @@ namespace alica
 //	{
 //
 //	}
-//	void ExpressionHandler::attachConstraint(Condition c, T t)
-//	{
-//
-//	}
+
+	void ExpressionHandler::attachConstraint(Condition* c)
+	{
+		if (c->getVariables().size() == 0 && c->getQuantifiers().size() == 0)
+		{
+			c->setBasicConstraint(make_shared<DummyConstraint>());
+		}
+		else
+		{
+			c->setBasicConstraint(this->constraintCreator->createConstraint(c->getId()));
+		}
+	}
 
 } /* namespace alica */

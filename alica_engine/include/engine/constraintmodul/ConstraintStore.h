@@ -10,9 +10,10 @@
 
 #include <map>
 #include <list>
-#include <unordered_set>
-
+#include <vector>
+#include <mutex>
 #include <memory>
+#include <algorithm>
 
 using namespace std;
 
@@ -29,18 +30,17 @@ namespace alica
 	class ConstraintStore
 	{
 	public:
-		ConstraintStore(RunningPlan* rp);
+		ConstraintStore();
 		virtual ~ConstraintStore();
 		void clear();
 		void addCondition(Condition* con);
 		void removeCondition(Condition* con);
 
-		//	TODO
-		void acceptQuery(shared_ptr<ConstraintQuery> query);
-		unordered_set<Condition*> activeConitions;
-		map<Variable*, list<Condition*> > activeVariables;
-		RunningPlan* rp;
+		void acceptQuery(shared_ptr<ConstraintQuery> query, shared_ptr<RunningPlan> rp);
+		list<Condition*> activeConditions;
+		map<Variable*, shared_ptr<vector<Condition*>> > activeVariables;
 
+		mutex mtx;
 	};
 
 } /* namespace supplementary */

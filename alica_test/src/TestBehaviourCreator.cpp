@@ -13,6 +13,7 @@
 #include "Attack.h"
 #include "Tackle.h"
 #include "AttackOpp.h"
+#include "ConstraintUsingBehaviour.h"
 
 namespace alicaTests
 {
@@ -45,6 +46,9 @@ namespace alicaTests
 				break;
 			case 1402489366699:
 				return make_shared<AttackOpp>();
+				break;
+			case 1414068618837:
+				return make_shared<ConstraintUsingBehaviour>();
 				break;
 			default:
 			cerr << "TestBehaviourCreator: Unknown behaviour configuration id requested: " << behaviourConfId << endl;
