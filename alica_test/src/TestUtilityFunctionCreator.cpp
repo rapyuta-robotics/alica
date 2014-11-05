@@ -9,6 +9,7 @@
 #include "SimpleTestPlan1412252439925.h"
 #include "MultiAgentTestMaster1413200842973.h"
 #include "MultiAgentTestPlan1413200862180.h"
+#include "ConstraintTestPlan1414068524245.h"
 #include "engine/BasicUtilityFunction.h"
 
 #include <iostream>
@@ -52,6 +53,9 @@ namespace alicaTests
 				break;
 			case 1413200842973:
 				return make_shared<UtilityFunction1413200842973>();
+				break;
+			case 1414068524245:
+				return make_shared<UtilityFunction1414068524245>();
 				break;
 			default:
 				cerr << "TestUtilityFunctionCreator: Unknown utility function id requested: " << utilityfunctionConfId

@@ -122,6 +122,7 @@ namespace alica
 		void toMessage(list<long>& message, shared_ptr<RunningPlan>& deepestNode, int& depth, int curDepth);
 		string toString();
 		int getOwnID();
+		shared_ptr<RunningPlan> getSharedFromThis();
 
 	private:
 		void setConstraintStore(ConstraintStore* constraintStore);

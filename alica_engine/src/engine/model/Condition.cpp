@@ -9,6 +9,7 @@
 
 #include "engine/model/Quantifier.h"
 #include "engine/BasicCondition.h"
+#include "engine/BasicConstraint.h"
 
 namespace alica
 {
@@ -17,6 +18,8 @@ namespace alica
 	{
 		this->abstractPlan = nullptr;
 		this->basicCondition = nullptr;
+		this->variables = vector<Variable*>();
+		this->quantifiers = list<Quantifier*>();
 	}
 
 	Condition::Condition(long id)
@@ -24,6 +27,8 @@ namespace alica
 		this->id = id;
 		this->abstractPlan = nullptr;
 		this->basicCondition = nullptr;
+		this->variables = vector<Variable*>();
+		this->quantifiers = list<Quantifier*>();
 	}
 
 	Condition::~Condition()
@@ -111,6 +116,16 @@ namespace alica
 	void Condition::setParameters(list<Parameter*> parameters)
 	{
 		this->parameters = parameters;
+	}
+
+	void Condition::getConstraint(shared_ptr<ConstraintDescriptor> cd, shared_ptr<RunningPlan> rp)
+	{
+		this->basicConstraint->getConstraint(cd, rp);
+	}
+
+	void Condition::setBasicConstraint(shared_ptr<BasicConstraint> basicConstraint)
+	{
+		this->basicConstraint = basicConstraint;
 	}
 
 } /* namespace Alica */

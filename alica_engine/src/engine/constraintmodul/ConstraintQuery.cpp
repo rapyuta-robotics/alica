@@ -89,7 +89,7 @@ namespace alica
 #ifdef CQ_DEBUG
 			cout << "CQ: Query at " << rp->getPlan()->getName() << endl;
 #endif
-			rp->getConstraintStore()->acceptQuery(shared_from_this());
+			rp->getConstraintStore()->acceptQuery(shared_from_this(), rp);
 			if (rp->getPlanType() != nullptr)
 			{ //process bindings for plantype
 				vector<Variable*> tmpVector = vector<Variable*>();
@@ -110,14 +110,16 @@ namespace alica
 			if (rp->getParent().use_count() > 0 && (parent = rp->getParent().lock())->getActiveState() != nullptr)
 			{
 				vector<Variable*> tmpVector = vector<Variable*>();
-				for (Parametrisation* p : rp->getPlanType()->getParametrisation())
-				{
-					if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType())
-							&& find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar())
-									!= relevantStaticVariables.end())
+				if (rp->getPlanType() != nullptr) {
+					for (Parametrisation* p : rp->getPlanType()->getParametrisation())
 					{
-						tmpVector.push_back(p->getVar());
-						store->addVarTo(p->getSubVar(), p->getVar());
+						if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType())
+								&& find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar())
+										!= relevantStaticVariables.end())
+						{
+							tmpVector.push_back(p->getVar());
+							store->addVarTo(p->getSubVar(), p->getVar());
+						}
 					}
 				}
 				relevantStaticVariables = tmpVector;
@@ -162,7 +164,7 @@ namespace alica
 			}
 			shared_ptr<ConstraintDescriptor> cd = make_shared<ConstraintDescriptor>(varr, sortedVars);
 			cd->setAgentsInScope(agentsInScope);
-//			c->getCondition()->getConstraint(cd, c->getRunningPlan());	TODO: not implemented yet
+			c->getCondition()->getConstraint(cd, c->getRunningPlan());
 			cds.push_back(cd);
 		}
 		vector<Variable*> qVars = store->getAllRep();
@@ -200,7 +202,7 @@ namespace alica
 #ifdef CQ_DEBUG
 			cout << "CQ: Query at " << rp->getPlan()->getName() << endl;
 #endif
-			rp->getConstraintStore()->acceptQuery(shared_from_this());
+			rp->getConstraintStore()->acceptQuery(shared_from_this(), rp);
 			if (rp->getPlanType() != nullptr)
 			{ //process bindings for plantype
 				vector<Variable*> tmpVector = vector<Variable*>();
@@ -221,14 +223,16 @@ namespace alica
 			if (rp->getParent().use_count() > 0 && (parent = rp->getParent().lock())->getActiveState() != nullptr)
 			{
 				vector<Variable*> tmpVector = vector<Variable*>();
-				for (Parametrisation* p : rp->getPlanType()->getParametrisation())
-				{
-					if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType())
-							&& find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar())
-									!= relevantStaticVariables.end())
+				if (rp->getPlanType() != nullptr) {
+					for (Parametrisation* p : rp->getPlanType()->getParametrisation())
 					{
-						tmpVector.push_back(p->getVar());
-						store->addVarTo(p->getSubVar(), p->getVar());
+						if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType())
+								&& find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar())
+										!= relevantStaticVariables.end())
+						{
+							tmpVector.push_back(p->getVar());
+							store->addVarTo(p->getSubVar(), p->getVar());
+						}
 					}
 				}
 				relevantStaticVariables = tmpVector;
@@ -274,7 +278,7 @@ namespace alica
 			}
 			shared_ptr<ConstraintDescriptor> cd = make_shared<ConstraintDescriptor>(varr, sortedVars);
 			cd->setAgentsInScope(agentsInScope);
-//			c->getCondition()->getConstraint(cd, c->getRunningPlan());	TODO: not implemented yet
+			c->getCondition()->getConstraint(cd, c->getRunningPlan());
 			cds.push_back(cd);
 		}
 		vector<Variable*> qVars = store->getAllRep();
