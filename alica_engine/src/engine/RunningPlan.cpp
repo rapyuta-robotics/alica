@@ -58,7 +58,7 @@ namespace alica
 		this->active = false;
 		this->allocationNeeded = false;
 		this->failHandlingNeeded = false;
-		this->constraintStore = new ConstraintStore(this);
+		this->constraintStore = new ConstraintStore();
 		this->cycleManagement = new CycleManager(ae, this);
 		this->robotsAvail = unique_ptr<list<int> >(new list<int>);
 	}
@@ -154,7 +154,7 @@ namespace alica
 
 		PlanChange childChange = PlanChange::NoChange;
 		//attention: do not use for each here: children are modified
-		for (int i=0; i<this->getChildren()->size(); i++)
+		for (int i = 0; i < this->getChildren()->size(); i++)
 		{
 			auto it = this->getChildren()->begin();
 			advance(it, i);
@@ -1150,6 +1150,11 @@ namespace alica
 	int RunningPlan::getOwnID()
 	{
 		return this->ownId;
+	}
+
+	shared_ptr<RunningPlan> RunningPlan::getSharedFromThis()
+	{
+		return shared_from_this();
 	}
 
 } /* namespace alica */

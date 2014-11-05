@@ -23,8 +23,10 @@ namespace alica
 	class Quantifier;
 	class AbstractPlan;
 	class BasicCondition;
+	class BasicConstraint;
 	class RunningPlan;
 	class Parameter;
+	class ConstraintDescriptor;
 
 	/**
 	 * A condition encapsulates expressions and constraint specific to a AlicaElement, e.g., a Transition, or a Plan.
@@ -39,7 +41,7 @@ namespace alica
 		/**
 		 * The delegate type used to attach constraints to plans.
 		 */
-		//public delegate void GetConstraint(ConstraintDescriptor cd,RunningPlan rp);
+		void getConstraint(shared_ptr<ConstraintDescriptor> cd, shared_ptr<RunningPlan> rp);
 
 		const string& getConditionString() const;
 		void setConditionString(const string& conditionString);
@@ -55,6 +57,8 @@ namespace alica
 		void setBasicCondition(shared_ptr<BasicCondition> basicCondition);
 		list<Parameter*>& getParameters();
 		void setParameters(list<Parameter*> parameters);
+
+		void setBasicConstraint(shared_ptr<BasicConstraint> basicConstraint);
 
 	private:
 		void setQuantifiers(const list<Quantifier*>& quantifiers);
@@ -74,6 +78,7 @@ namespace alica
 		AbstractPlan* abstractPlan;
 		list<Parameter*> parameters;
 		shared_ptr<BasicCondition> basicCondition;
+		shared_ptr<BasicConstraint> basicConstraint;
 		string plugInName;
 
 	};

@@ -6,6 +6,7 @@
  */
 
 #include "TestConditionCreator.h"
+#include "ConstraintTestPlan1414068524245.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "MultiAgentTestMaster1413200842973.h"
 #include "MultiAgentTestPlan1413200862180.h"
@@ -35,6 +36,10 @@ namespace alicaTests
 
 			case 1412781693884:
 				return make_shared<RunTimeCondition1412781693884>();
+				break;
+
+			case 1414068566297:
+				return make_shared<RunTimeCondition1414068566297>();
 				break;
 
 			case 1412761926856:
