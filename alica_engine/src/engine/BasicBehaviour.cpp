@@ -12,6 +12,7 @@
 #include "engine/ITeamObserver.h"
 #include "engine/RunningPlan.h"
 #include "engine/model/BehaviourConfiguration.h"
+#include "engine/model/Variable.h"
 #include <Timer.h>
 
 namespace alica
@@ -62,6 +63,18 @@ namespace alica
 	shared_ptr<list<Variable*> > BasicBehaviour::getVariables()
 	{
 		return this->variables;
+	}
+
+	Variable* BasicBehaviour::getVariablesByName(string name)
+	{
+		list<Variable*>::iterator it;
+		for (it = variables->begin(); it != variables->end(); it++) {
+			Variable* v = *it;
+			if (v->getName() == name) {
+				return v;
+			}
+		}
+		return nullptr;
 	}
 
 	void BasicBehaviour::setVariables(shared_ptr<list<Variable*> > variables)

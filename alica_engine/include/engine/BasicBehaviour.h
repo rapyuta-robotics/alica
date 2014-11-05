@@ -42,6 +42,7 @@ namespace alica
 		shared_ptr<map<string,string>> getParameters();
 		void setParameters(shared_ptr<map<string,string>> parameters);
 		shared_ptr<list<Variable*>> getVariables();
+		Variable* getVariablesByName(string name);
 		void setVariables(shared_ptr<list<Variable*>> variables);
 		bool stop();
 		bool start();

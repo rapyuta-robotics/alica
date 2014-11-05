@@ -13,7 +13,8 @@ namespace alica
 
 	PlanType::PlanType()
 	{
-
+		plans = list<Plan*>();
+		parametrisation = list<Parametrisation*>();
 	}
 
 	PlanType::~PlanType()
@@ -57,7 +58,7 @@ namespace alica
 		return parametrisation;
 	}
 
-	void PlanType::setParametrisation(const list<Parametrisation*>& parametrisation)
+	void PlanType::setParametrisation(const list<Parametrisation*> parametrisation)
 	{
 		this->parametrisation = parametrisation;
 	}

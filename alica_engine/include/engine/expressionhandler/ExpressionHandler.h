@@ -39,7 +39,7 @@ namespace alica
 		AlicaEngine* ae;
 //		void attachPlanConditions(Plan* p, T exprType, T consType);
 //		void attachTransConditions(Transition* t, T exprType, T consType);
-//		void attachConstraint(Condition* c, T t);
+		void attachConstraint(Condition* c);
 
 
 	};

@@ -31,7 +31,7 @@ namespace alica
 		string toString();
 
 		const list<Parametrisation*>& getParametrisation() const;
-		void setParametrisation(const list<Parametrisation*>& parametrisation);
+		void setParametrisation(const list<Parametrisation*> parametrisation);
 		list<Plan*>& getPlans() ;
 		void setPlans(const list<Plan*>& plans);
 

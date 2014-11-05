@@ -24,7 +24,7 @@ namespace alica
 	/**
 	 * Encapsulates specific queries to constraint variable, usually used by behaviours.
 	 */
-	class ConstraintQuery : enable_shared_from_this<ConstraintQuery>
+	class ConstraintQuery : public enable_shared_from_this<ConstraintQuery>
 	{
 	public:
 		ConstraintQuery();
