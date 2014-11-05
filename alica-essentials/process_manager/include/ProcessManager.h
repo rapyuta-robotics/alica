@@ -35,7 +35,7 @@ namespace supplementary
 		bool isRunning();
 	private:
 		SystemConfig* sc;
-		map<short, ManagedExecutable> executableMap;
+		map<short, ManagedExecutable*> executableMap;
 
 
 		bool running;

@@ -27,14 +27,15 @@ namespace supplementary
 		this->sc = SystemConfig::getInstance();
 		auto processDescriptions = (*this->sc)["Processes"]->getSections("Processes.ProcessDescriptions", NULL);
 		short curId;
-		string curExecutable, curDefaultParams;
+		string curExecutable;
+		vector<string> curDefaultParams;
 		for (auto processSectionName : (*processDescriptions))
 		{
 			curId = (*this->sc)["Processes"]->get<short>("Processes.ProcessDescriptions", processSectionName.c_str(), "id", NULL);
 			curExecutable = (*this->sc)["Processes"]->get<string>("Processes.ProcessDescriptions", processSectionName.c_str(), "executable",
 			NULL);
-			curDefaultParams = (*this->sc)["Processes"]->get<string>("Processes.ProcessDescriptions", processSectionName.c_str(), "defaultParams", NULL);
-			this->executableMap.insert(pair<short, ManagedExecutable>(curId, ManagedExecutable(curId, curExecutable, curDefaultParams)));
+			curDefaultParams = (*this->sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", processSectionName.c_str(), "defaultParams", NULL);
+			this->executableMap[curId] = new ManagedExecutable(curId, curExecutable.c_str(), curDefaultParams);
 		}
 	}
 
@@ -46,6 +47,12 @@ namespace supplementary
 			mainThread->join();
 			delete mainThread;
 		}
+
+		for (auto mngdExec : executableMap)
+		{
+			delete mngdExec.second;
+		}
+		executableMap.clear();
 	}
 
 	void ProcessManager::start()
@@ -89,7 +96,7 @@ namespace supplementary
 	{
 		for (auto executableMapPair : this->executableMap)
 		{
-			executableMapPair.second.update();
+			executableMapPair.second->update();
 		}
 	}
 
@@ -126,7 +133,7 @@ namespace supplementary
 
 			for (auto executableMapPair : this->executableMap)
 			{
-				if (strcmp(execName, executableMapPair.second.getExecutable().c_str()) != 0)
+				if (strcmp(execName, executableMapPair.second->getExecutable().c_str()) != 0)
 				{
 					continue;
 				}
@@ -134,7 +141,7 @@ namespace supplementary
 #ifdef PM_DEBUG
 				cout << "PM: " << execName << " found with PID: " << curPID << endl;
 #endif
-				executableMapPair.second.queue4Update(curPID);
+				executableMapPair.second->queue4Update(curPID);
 
 			}
 		}

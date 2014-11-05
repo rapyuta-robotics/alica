@@ -10,20 +10,23 @@
 namespace supplementary
 {
 
-	ManagedExecutable::ManagedExecutable(short id, string executable, string defaultParams)
-		: id(id), executable(executable), defaultParams(defaultParams)
+	ManagedExecutable::ManagedExecutable(short id, const char* executable, vector<string> defaultStrParams) :
+			id(id), executable(executable), defaultParams(new char*[defaultStrParams.size()])
 	{
-
+		//defaultParams = new char*[defaultStrParams.size()];
+		for (int i = 0; i < defaultStrParams.size(); i++) {
+			defaultParams[i] = (char*) defaultStrParams.at(i).c_str();
+		}
 	}
 
 	ManagedExecutable::~ManagedExecutable()
 	{
-
+		delete[] defaultParams;
 	}
 
-	const string& ManagedExecutable::getExecutable() const
+	string ManagedExecutable::getExecutable() const
 	{
-		return executable;
+		return string(executable);
 	}
 
 	void ManagedExecutable::queue4Update(long pid)
@@ -39,6 +42,10 @@ namespace supplementary
 #ifdef MGND_EXEC_DEBUG
 			cout << "ME: No " << this->executable << " running!" << endl;
 #endif
+			for (auto process : processes)
+			{
+				delete process.second;
+			}
 			processes.clear();
 		}
 		else if (this->queuedPids4Update.size() != 0)
@@ -63,6 +70,32 @@ namespace supplementary
 		}
 
 		this->queuedPids4Update.clear();
+
+	}
+
+	void ManagedExecutable::startProcess(char* const* params)
+	{
+		pid_t pid = fork();
+		if (pid == 0) // child process
+		{
+			int execReturn = execv (this->executable, params);
+			if (execReturn == -1)
+			{
+				cout << "ME: Failure! execve error code=" << errno << endl;
+				//cout << getErrMsg(errno) << endl;
+			}
+		}
+		else if (pid < 0)
+		{
+#ifdef MGND_EXEC_DEBUG
+			cout << "ME: Failed to fork!" << endl;
+#endif
+		}
+	}
+
+	void ManagedExecutable::startProcess()
+	{
+		this->startProcess(this->defaultParams);
 	}
 
 } /* namespace supplementary */

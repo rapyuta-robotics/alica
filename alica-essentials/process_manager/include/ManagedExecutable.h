@@ -12,6 +12,7 @@
 
 #include <map>
 #include <iostream>
+#include <unistd.h>
 
 #include "Process.h"
 
@@ -23,16 +24,18 @@ namespace supplementary
 	class ManagedExecutable
 	{
 	public:
-		ManagedExecutable(short id, string executable, string defaultParams);
+		ManagedExecutable(short id, const char* executable, vector<string> defaultStrParams);
 		virtual ~ManagedExecutable();
-		const string& getExecutable() const;
+		string getExecutable() const;
 		void queue4Update(long pid);
 		void update();
+		void startProcess (char* const* params);
+		void startProcess ();
 	private:
 		short id;
-		string executable;
-		string defaultParams;
-		map<long, Process> processes;
+		const char* executable;
+		char ** defaultParams;
+		map<long, Process*> processes;
 		vector<long> queuedPids4Update;
 	};
 
