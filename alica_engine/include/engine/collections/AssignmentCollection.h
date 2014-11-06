@@ -14,6 +14,7 @@
 #include <memory>
 #include <iostream>
 #include <algorithm>
+#include <SystemConfig.h>
 
 using namespace std;
 
@@ -28,9 +29,7 @@ namespace alica
 	class AssignmentCollection
 	{
 	public:
-		AssignmentCollection();
 		AssignmentCollection(short size);
-		AssignmentCollection(EntryPoint* eps[], shared_ptr<vector<int>> robots[], short size);
 		virtual ~AssignmentCollection();
 		short getSize() const;
 		void setSize(short size);
@@ -43,6 +42,9 @@ namespace alica
 		void clear();
 		string toString();
 		void sortEps();
+
+		static short maxEpsCount;
+		static bool allowIdling;
 
 	protected:
 		//static short maxNumEps = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.MaxEpsPerPlan", NULL);

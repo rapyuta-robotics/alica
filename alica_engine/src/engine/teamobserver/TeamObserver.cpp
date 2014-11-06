@@ -5,7 +5,7 @@
  *      Author: Stefan Jakob
  */
 
-//#define TO_DEBUG
+
 
 #include "engine/teamobserver/TeamObserver.h"
 #include <SystemConfig.h>
@@ -305,17 +305,23 @@ namespace alica
 					if (iterator->second->isNewSimplePlanTree())
 					{
 						updatespts.push_back(iterator->second);
+#ifdef TO_DEBUG
 						cout << "TO: added to update" << endl;
+#endif
 						iterator->second->setNewSimplePlanTree(false);
 					}
 					else
 					{
+#ifdef TO_DEBUG
 						cout << "TO: added to noupdate" << endl;
+#endif
 						noUpdates.push_back(iterator->second->getRobotId());
 					}
 				}
 			}
+#ifdef TO_DEBUG
 			cout << "TO: spts size " << updatespts.size() << endl;
+#endif
 			if (root->recursiveUpdateAssignment(updatespts, robotsAvail, noUpdates, time))
 			{
 				this->log->eventOccured("MsgUpdate");

@@ -8,6 +8,8 @@
 #ifndef TEAMOBSERVER_H_
 #define TEAMOBSERVER_H_
 
+//#define TO_DEBUG
+
 using namespace std;
 
 #include <unordered_set>

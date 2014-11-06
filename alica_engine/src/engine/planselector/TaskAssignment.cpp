@@ -78,7 +78,7 @@ namespace alica
 	 */
 	shared_ptr<Assignment> TaskAssignment::getNextBestAssignment(IAssignment* oldAss)
 	{
-#ifdef PSDEBUG
+#ifdef TA_DEBUG
 		cout << "TA: Calculating next best PartialAssignment..." << endl;
 #endif
 		PartialAssignment* calculatedPa = this->calcNextBestPartialAssignment(oldAss);
@@ -87,12 +87,12 @@ namespace alica
 		{
 			return nullptr;
 		}
-#ifdef PSDEBUG
+#ifdef TA_DEBUG
 		cout << "TA: ... calculated this PartialAssignment:\n" << calculatedPa->toString();
 #endif
 
 		shared_ptr<Assignment> newAss = make_shared<Assignment>(calculatedPa);
-#ifdef PSDEBUG
+#ifdef TA_DEBUG
 		cout << "TA: Return this Assignment to PS:" << newAss->toString() << endl;
 #endif
 
@@ -143,7 +143,7 @@ namespace alica
 		{
 			curPa = this->fringe.at(0);
 			this->fringe.erase(this->fringe.begin());
-#ifdef PSDEBUG
+#ifdef TA_DEBUG
 			cout << "<---" << endl;
 			cout << "TA: NEXT PA from fringe:" << endl;
 			cout << curPa->toString() << "--->" << endl;
@@ -154,7 +154,7 @@ namespace alica
 				// Save the goal in result
 				goal = curPa;
 			}
-#ifdef PSDEBUG
+#ifdef TA_DEBUG
 			cout << "<---" << endl;
 			cout << "TA: BEFORE fringe exp:" << endl;
 			cout << "TA: robotID " << this->to->getOwnId() << endl;
@@ -182,8 +182,8 @@ namespace alica
 					this->fringe.push_back((*iter));
 				}
 			}
-			sort(fringe.begin(), fringe.end(), PartialAssignment::compareTo);
-#ifdef PSDEBUG
+			stable_sort(fringe.begin(), fringe.end(), PartialAssignment::compareTo);
+#ifdef TA_DEBUG
 			cout << "<---" << endl;
 			cout << "TA: AFTER fringe exp:" << endl;
 			cout << "TA: fringe size " << this->fringe.size() << endl;
@@ -202,8 +202,7 @@ namespace alica
 	 * @param simplePlanTreeMap never try to delete this
 	 * @return True if any robot has already assigned itself, false otherwise
 	 */
-	bool TaskAssignment::addAlreadyAssignedRobots(PartialAssignment* pa,
-													map<int, shared_ptr<SimplePlanTree> >* simplePlanTreeMap)
+	bool TaskAssignment::addAlreadyAssignedRobots(PartialAssignment* pa, map<int, shared_ptr<SimplePlanTree> >* simplePlanTreeMap)
 	{
 		int ownRobotId = to->getOwnId();
 		bool haveToRevalute = false;

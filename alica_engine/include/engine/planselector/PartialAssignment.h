@@ -8,7 +8,6 @@
 #ifndef PARTIALASSIGNMENT_H_
 #define PARTIALASSIGNMENT_H_
 
-#define PADEBUG
 //#define SUCDEBUG
 
 using namespace std;
@@ -22,7 +21,7 @@ using namespace std;
 #include <memory>
 #include <math.h>
 
-#include <SystemConfig.h>
+
 #include "engine/IAssignment.h"
 #include "engine/collections/AssignmentCollection.h"
 
@@ -60,7 +59,6 @@ namespace alica
 		bool isValid();
 		bool isGoal();
 		static bool compareTo(PartialAssignment* thisPa, PartialAssignment* newPa);
-		//int getHashCode();
 		string toString();
 		AssignmentCollection* getEpRobotsMapping();
 		Plan* getPlan();
@@ -84,9 +82,7 @@ namespace alica
 
 	protected:
 		PartialAssignmentPool* pap;
-		static int maxEpsCount;
 		static EpByTaskComparer epByTaskComparer;
-		static bool allowIdling;
 		// UtilityFunction
 		shared_ptr<UtilityFunction> utilFunc;
 		AssignmentCollection* epRobotsMapping;

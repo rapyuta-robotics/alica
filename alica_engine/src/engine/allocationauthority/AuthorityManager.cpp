@@ -102,13 +102,19 @@ namespace alica
 			sendAllocation(p);
 			p->getCycleManagement()->sent();
 		}
+#ifdef AM_DEBUG
 		cout << "AM: outside for " << endl;
+#endif
 		for (int i = 0; i < this->queue.size(); i++)
 		{
+#ifdef AM_DEBUG
 			cout << "AM: inside for " << endl;
+#endif
 			if (authorityMatchesPlan(this->queue[i], p))
 			{
+#ifdef AM_DEBUG
 				cout << "AM: p->getCycleManagement()->handleAuthorityInfo(this->queue[i]);" << endl;
+#endif
 				p->getCycleManagement()->handleAuthorityInfo(this->queue[i]);
 				this->queue.erase(this->queue.begin() + i);
 				i--;

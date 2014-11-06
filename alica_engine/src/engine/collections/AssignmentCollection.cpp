@@ -8,16 +8,12 @@
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/planselector/EpByTaskComparer.h"
+#include "engine/model/Task.h"
 
 namespace alica
 {
-	/**
-	 * Constructs an empty AssignmentCollection. (Used by the PartialAssignment-ObjectPool)
-	 */
-	AssignmentCollection::AssignmentCollection()
-	{
-		this->numEps = 0;
-	}
+	short AssignmentCollection::maxEpsCount = (*supplementary::SystemConfig::getInstance())["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
+	bool AssignmentCollection::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling", NULL);
 
 	/**
 	 * Constructs an empty AssignmentCollection of a given size. (Used by the Assignment-Constructor)
@@ -27,19 +23,10 @@ namespace alica
 		this->numEps = size;
 		this->entryPoints = new EntryPoint*[size];
 		this->robots = new shared_ptr<vector<int>> [size];
-	}
-
-	/**
-	 * Construct an AssignmentCollection from an EntryPoint* [] and a shared_ptr<vector<int>> [],
-	 * each holding the robot-ids within the corresponding EntryPoint.
-	 * @param eps EntryPoint* []
-	 * @param robots vector<int>* []
-	 */
-	AssignmentCollection::AssignmentCollection(EntryPoint* eps[], shared_ptr<vector<int>> robots[], short size)
-	{
-		this->numEps = size;
-		this->entryPoints = eps;
-		this->robots = robots;
+		for (short i = 0; i < size; i++)
+		{
+			this->robots[i] = std::make_shared<vector<int>>();
+		}
 	}
 
 	AssignmentCollection::~AssignmentCollection()
@@ -112,7 +99,7 @@ namespace alica
 		cout << "<<<< Check Sort!!!!! " << endl;
 		for (short i = 0; i < this->numEps; i++)
 		{
-			cout << i << ": " << entryPoints[i] << endl;
+			cout << i << ": " << entryPoints[i]->getTask()->getId() << endl;
 		}
 
 		// Stopfers sort style
@@ -121,7 +108,7 @@ namespace alica
 		{
 			sortedEpVec.push_back(this->entryPoints[i]);
 		}
-		sort(sortedEpVec.begin(), sortedEpVec.end(), EpByTaskComparer::compareTo);
+		stable_sort(sortedEpVec.begin(), sortedEpVec.end(), EpByTaskComparer::compareTo);
 		for (short i = 0; i < this->numEps; i++)
 		{
 			this->entryPoints[i] = sortedEpVec.at(i);
@@ -135,7 +122,7 @@ namespace alica
 		cout << "<<<<< Nachher!!!! " << endl;
 		for (short i = 0; i < this->numEps; i++)
 		{
-			cout << i << ": " << entryPoints[i] << endl;
+			cout << i << ": " << entryPoints[i]->getTask()->getId() << endl;
 		}
 	}
 
@@ -173,9 +160,13 @@ namespace alica
 		return this->numEps;
 	}
 
-	void AssignmentCollection::setSize(short count)
+	void AssignmentCollection::setSize(short size)
 	{
-		this->numEps = numEps;
+		cout << "AssCol: size set to " << size << endl;
+		if (size == 3) {
+			cout << "AssCol: Maybe wrong" << endl;
+		}
+		this->numEps = size;
 	}
 
 	EntryPoint* AssignmentCollection::getEp(short index)
@@ -199,6 +190,7 @@ namespace alica
 		}
 		else
 		{
+			cout << "AssCol: Index to HIGH!!!!!! ########################################" << endl;
 			return false;
 		}
 	}

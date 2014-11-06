@@ -156,8 +156,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		}
 		if (i == 16)
 		{
-			cout << "TEST: " << ae2->getPlanBase()->getRootNode()->toString() << endl;
-			cout << "TEST2: " << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->toString() << endl;
+			//cout << "TEST: " << ae2->getPlanBase()->getRootNode()->toString() << endl;
+//			cout << "TEST2: " << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->toString() << endl;
 			EXPECT_TRUE(
 					(*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936
 					|| (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936)
