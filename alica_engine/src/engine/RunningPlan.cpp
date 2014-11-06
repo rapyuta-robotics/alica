@@ -1111,10 +1111,10 @@ namespace alica
 			{
 				if (r->plan == nullptr)
 				{
-					ss << "NULL PLAN - ";
+					ss << "NULL PLAN, ";
 				}
 				else
-					ss << r->plan->getName() + " - ";
+					ss << r->plan->getName() + ", ";
 			}
 			ss << ")";
 		}
