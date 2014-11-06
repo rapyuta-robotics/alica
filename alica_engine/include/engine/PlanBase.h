@@ -73,9 +73,9 @@ namespace alica
 		queue<shared_ptr<RunningPlan>> fpEvents;
 //		supplementary::AutoResetEvent* signal;
 //		supplementary::AutoResetEvent* loopGuard;
-		condition_variable* timerModeCV;
+//		condition_variable* timerModeCV;
 		condition_variable* stepModeCV;
-		supplementary::Timer* loopTimer;
+//		supplementary::Timer* loopTimer;
 		void checkPlanBase(shared_ptr<RunningPlan> r);
 
 	protected:
@@ -109,8 +109,8 @@ namespace alica
 		BehaviourEngineInfo* statusMessage;
 		mutex lomutex;
 		mutex stepMutex;
-		mutex timerMutex;
-		unique_lock<mutex> lckTimer;
+//		mutex timerMutex;
+//		unique_lock<mutex> lckTimer;
 		void run();
 
 

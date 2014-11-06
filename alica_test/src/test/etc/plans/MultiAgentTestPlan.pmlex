@@ -2,7 +2,7 @@
 <uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
   <extensions>
     <key href="MultiAgentTestPlan.pml#1413200877336"/>
-    <value xPos="133" yPos="25" width="81" height="67" collapsed="false"/>
+    <value xPos="133" yPos="25" width="81" height="67"/>
   </extensions>
   <extensions>
     <key href="MultiAgentTestPlan.pml#1413200862180"/>
@@ -58,7 +58,7 @@
   </extensions>
   <extensions>
     <key href="MultiAgentTestPlan.pml#1413807264574"/>
-    <value xPos="150" yPos="223"/>
+    <value xPos="150" yPos="223" collapsed="false"/>
   </extensions>
   <extensions>
     <key href="Behaviour/AttackOpp.beh#1402489366699"/>

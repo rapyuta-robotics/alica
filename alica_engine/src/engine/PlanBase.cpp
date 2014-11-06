@@ -84,17 +84,18 @@ namespace alica
 			this->statusMessage->masterPlan = masterPlan->getName();
 		}
 
-		this->timerModeCV = nullptr;
+//		this->timerModeCV = nullptr;
 		this->stepModeCV = nullptr;
-		this->loopTimer = nullptr;
-		if (!this->ae->getStepEngine())
-		{
-			this->loopTimer = new supplementary::Timer(this->loopTime / 1000000, this->loopTime / 1000000, false);
-			this->timerModeCV = new condition_variable();
-			this->loopTimer->registerCV(timerModeCV);
-			loopTimer->start();
-		}
-		else
+//		this->loopTimer = nullptr;
+//		if (!this->ae->getStepEngine())
+//		{
+//			this->loopTimer = new supplementary::Timer(this->loopTime / 1000000, this->loopTime / 1000000, false);
+//			this->timerModeCV = new condition_variable();
+//			this->loopTimer->registerCV(timerModeCV);
+//			loopTimer->start();
+//		}
+//		else
+		if (this->ae->getStepEngine())
 		{
 			this->stepModeCV = new condition_variable();
 		}
@@ -294,7 +295,7 @@ namespace alica
 
 			/*
 			 * Dat war mal so, aber wir hamm nit verstanden warum. Nu isses hoffentlich besser! */
-			 /* if (!ae->getStepEngine())
+			/* if (!ae->getStepEngine())
 			 {
 			 {
 			 unique_lock<mutex> lckTimer(timerMutex);
@@ -327,30 +328,30 @@ namespace alica
 		this->running = false;
 		this->ae->setStepCalled(true);
 
-		if (this->loopTimer != nullptr)
-		{
-			this->loopTimer->start();
-		}
-		else
-		{
-			this->loopTimer = new supplementary::Timer(5, 0, false);
-			if (this->timerModeCV == nullptr)
-			{
-				this->timerModeCV = new condition_variable();
-			}
-			this->loopTimer->registerCV(timerModeCV);
-			this->loopTimer->start();
-		}
+//		if (this->loopTimer != nullptr)
+//		{
+//			this->loopTimer->start();
+//		}
+//		else
+//		{
+//			this->loopTimer = new supplementary::Timer(5, 0, false);
+//			if (this->timerModeCV == nullptr)
+//			{
+//				this->timerModeCV = new condition_variable();
+//			}
+//			this->loopTimer->registerCV(timerModeCV);
+//			this->loopTimer->start();
+//		}
 
 		if (ae->getStepEngine())
 		{
 			ae->setStepCalled(true);
 			stepModeCV->notify_one();
 		}
-		else
-		{
-			timerModeCV->notify_one();
-		}
+//		else
+//		{
+//			timerModeCV->notify_one();
+//		}
 
 		if (this->mainThread != nullptr)
 		{
@@ -358,30 +359,30 @@ namespace alica
 			delete this->mainThread;
 		}
 		this->mainThread = nullptr;
-		if (this->loopTimer != nullptr)
-		{
-			this->loopTimer->stop();
-		}
+//		if (this->loopTimer != nullptr)
+//		{
+//			this->loopTimer->stop();
+//		}
 
 	}
 
 	PlanBase::~PlanBase()
 	{
 		delete this->ruleBook;
-		if (this->timerModeCV != nullptr)
-		{
-			delete this->timerModeCV;
-		}
+//		if (this->timerModeCV != nullptr)
+//		{
+//			delete this->timerModeCV;
+//		}
 		if (this->stepModeCV != nullptr)
 		{
 			delete this->stepModeCV;
 		}
 		delete this->statusMessage;
 
-		if (this->loopTimer != nullptr)
-		{
-			delete this->loopTimer;
-		}
+//		if (this->loopTimer != nullptr)
+//		{
+//			delete this->loopTimer;
+//		}
 	}
 	void PlanBase::checkPlanBase(shared_ptr<RunningPlan> r)
 	{
@@ -414,7 +415,7 @@ namespace alica
 			lock_guard<mutex> lock(lomutex);
 			fpEvents.push(p);
 		}
-		timerModeCV->notify_one();
+//		timerModeCV->notify_one();
 	}
 
 	/**
@@ -477,5 +478,4 @@ namespace alica
 	}
 
 }
-
 

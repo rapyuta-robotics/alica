@@ -17,8 +17,6 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Task.h"
 
-//#define PSDEBUG
-
 namespace alica
 {
 
