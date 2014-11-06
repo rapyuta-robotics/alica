@@ -19,14 +19,23 @@
 
 namespace alica
 {
-	int PartialAssignment::maxEpsCount = 20;
+	int PartialAssignment::maxEpsCount = (*supplementary::SystemConfig::getInstance())["Alica"]->get<short>(
+			"Alica.MaxEpsPerPlan", NULL);
 	EpByTaskComparer PartialAssignment::epByTaskComparer = EpByTaskComparer();
 	bool PartialAssignment::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>(
 			"Alica.AllowIdling", NULL);
 
 	int PartialAssignment::getHash()
 	{
-		return hash;
+		if (hashCalculated)
+		{
+			return hash;
+		}
+		else
+		{
+			std::hash<alica::PartialAssignment> paHash;
+			return paHash(*this);
+		}
 	}
 
 	void PartialAssignment::setHash(int hash = 0)
@@ -92,10 +101,10 @@ namespace alica
 		return unAssignedRobots;
 	}
 
-	shared_ptr<vector<EntryPoint*> > PartialAssignment::getEntryPoints()
-	{
-		return this->epRobotsMapping->getEntryPoints();
-	}
+//	shared_ptr<vector<EntryPoint*> > PartialAssignment::getEntryPoints()
+//	{
+//		return this->epRobotsMapping->getEntryPoints();
+//	}
 
 	void PartialAssignment::clear()
 	{
@@ -103,9 +112,9 @@ namespace alica
 		this->max = 1.0;
 		this->compareVal = PRECISION;
 		this->unAssignedRobots.clear();
-		for (int i = 0; i < this->epRobotsMapping->getCount(); i++)
+		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
 		{
-			this->epRobotsMapping->getRobots()->at(i)->clear();
+			this->epRobotsMapping->getRobots(i)->clear();
 		}
 		this->hashCalculated = false;
 	}
@@ -113,6 +122,11 @@ namespace alica
 	void PartialAssignment::reset(PartialAssignmentPool* pap)
 	{
 		pap->curIndex = 0;
+	}
+
+	shared_ptr<vector<int>> PartialAssignment::getRobots ()
+	{
+		return this->robots;
 	}
 
 	PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, shared_ptr<vector<int> > robots,
@@ -131,41 +145,30 @@ namespace alica
 		// Create EP-Array
 		if (allowIdling)
 		{
-			ret->epRobotsMapping->setCount(plan->getEntryPoints().size() + 1);
+			ret->epRobotsMapping->setSize(plan->getEntryPoints().size() + 1);
 			// Insert IDLE-EntryPoint
-			ret->epRobotsMapping->getEntryPoints()->at(ret->epRobotsMapping->getCount() - 1) = pap->idleEP;
+			ret->epRobotsMapping->setEp(ret->epRobotsMapping->getSize() - 1, pap->idleEP);
 		}
 		else
 		{
-			ret->epRobotsMapping->setCount(plan->getEntryPoints().size());
+			ret->epRobotsMapping->setSize(plan->getEntryPoints().size());
 		}
 		// Insert plan entrypoints
 		int i = 0;
 		for (auto iter : plan->getEntryPoints())
 		{
-			ret->epRobotsMapping->getEntryPoints()->at(i++) = iter.second;
+			ret->epRobotsMapping->setEp(i++, iter.second);
 		}
 
 		// Sort the entrypoint array
-		if (allowIdling)
+		ret->epRobotsMapping->sortEps();
+
+
+		for (int i = 0; i < ret->epRobotsMapping->getSize(); i++)
 		{
-			auto iter1 = ret->epRobotsMapping->getEntryPoints()->begin();
-			auto iter2 = ret->epRobotsMapping->getEntryPoints()->begin();
-			advance(iter2, ret->epRobotsMapping->getCount() - 1);
-			sort(iter1, iter2, EpByTaskComparer::compareTo);
-		}
-		else
-		{
-			auto iter1 = ret->epRobotsMapping->getEntryPoints()->begin();
-			auto iter2 = ret->epRobotsMapping->getEntryPoints()->begin();
-			advance(iter2, ret->epRobotsMapping->getCount());
-			sort(iter1, iter2, EpByTaskComparer::compareTo);
-		}
-		for (int i = 0; i < ret->epRobotsMapping->getCount(); i++)
-		{
-			ret->dynCardinalities[i]->setMin(ret->epRobotsMapping->getEntryPoints()->at(i)->getMinCardinality());
-			ret->dynCardinalities[i]->setMax(ret->epRobotsMapping->getEntryPoints()->at(i)->getMaxCardinality());
-			shared_ptr<list<int> > suc = sucCol->getRobots(ret->epRobotsMapping->getEntryPoints()->at(i));
+			ret->dynCardinalities[i]->setMin(ret->epRobotsMapping->getEp(i)->getMinCardinality());
+			ret->dynCardinalities[i]->setMax(ret->epRobotsMapping->getEp(i)->getMaxCardinality());
+			shared_ptr<list<int> > suc = sucCol->getRobots(ret->epRobotsMapping->getEp(i));
 
 			if (suc != nullptr)
 			{
@@ -228,41 +231,40 @@ namespace alica
 																   oldPA->dynCardinalities[i]->getMax());
 		}
 
-		shared_ptr<vector<shared_ptr<vector<int> > > > oldRobotLists = oldPA->epRobotsMapping->getRobots();
+		ret->epRobotsMapping->setSize(oldPA->epRobotsMapping->getSize());
 
-		for (int i = 0; i < oldPA->epRobotsMapping->getCount(); i++)
+		//shared_ptr<vector<int> > > > oldRobotLists = oldPA->epRobotsMapping->getRobots();
+
+		for (int i = 0; i < oldPA->epRobotsMapping->getSize(); i++)
 		{
-			ret->epRobotsMapping->getEntryPoints()->at(i) = oldPA->epRobotsMapping->getEntryPoints()->at(i);
-			for (int j = 0; j < oldRobotLists->at(i)->size(); j++)
+			ret->epRobotsMapping->setEp(i, oldPA->epRobotsMapping->getEp(i));
+			for (int j = 0; j < oldPA->epRobotsMapping->getRobots(i)->size(); j++)
 			{
-				ret->epRobotsMapping->getRobots()->at(i)->push_back(oldRobotLists->at(i).get()->at(j));
+				ret->epRobotsMapping->getRobots(i)->push_back(oldPA->epRobotsMapping->getRobots(i)->at(j));
 			}
-
 		}
 
-		ret->epRobotsMapping->setCount(oldPA->epRobotsMapping->getCount());
 		return ret;
-
 	}
 
-	int PartialAssignment::getEntryPointCount()
+	short PartialAssignment::getEntryPointCount()
 	{
-		return this->epRobotsMapping->getCount();
+		return this->epRobotsMapping->getSize();
 	}
 
 	int PartialAssignment::totalRobotCount()
 	{
 		int c = 0;
-		for (int i = 0; i < this->epRobotsMapping->getRobots()->size(); i++)
+		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
 		{
-			c += this->epRobotsMapping->getRobots()->at(i)->size();
+			c += this->epRobotsMapping->getRobots(i)->size();
 		}
 		return this->numUnAssignedRobots() + c;
 	}
 
 	shared_ptr<vector<int> > PartialAssignment::getRobotsWorking(EntryPoint* ep)
 	{
-		return this->epRobotsMapping->getRobots(ep);
+		return this->epRobotsMapping->getRobotsByEp(ep);
 	}
 
 	shared_ptr<vector<int> > PartialAssignment::getRobotsWorking(long epid)
@@ -273,7 +275,7 @@ namespace alica
 	shared_ptr<list<int> > PartialAssignment::getRobotsWorkingAndFinished(EntryPoint* ep)
 	{
 		shared_ptr<list<int> > ret = make_shared<list<int> >(list<int>());
-		auto robots = this->epRobotsMapping->getRobots(ep);
+		auto robots = this->epRobotsMapping->getRobotsByEp(ep);
 		if (robots != nullptr)
 		{
 			for (auto iter : (*robots))
@@ -317,7 +319,7 @@ namespace alica
 	shared_ptr<list<int> > PartialAssignment::getUniqueRobotsWorkingAndFinished(EntryPoint* ep)
 	{
 		shared_ptr<list<int> > ret = make_shared<list<int> >(list<int>());
-		auto robots = this->epRobotsMapping->getRobots(ep);
+		auto robots = this->epRobotsMapping->getRobotsByEp(ep);
 
 		for (auto iter : (*robots))
 		{
@@ -349,16 +351,15 @@ namespace alica
 	{
 		if (spt->getEntryPoint()->getPlan() == this->plan)
 		{
-			shared_ptr<vector<EntryPoint*> > eps = this->epRobotsMapping->getEntryPoints();
 			EntryPoint* curEp;
-			int max = this->epRobotsMapping->getCount();
+			int max = this->epRobotsMapping->getSize();
 			if (allowIdling)
 			{
 				max--;
 			}
 			for (int i = 0; i < max; ++i)
 			{
-				curEp = eps->at(i);
+				curEp = this->epRobotsMapping->getEp(i);
 				if (spt->getEntryPoint()->getId() == curEp->getId())
 				{
 					if (!this->assignRobot(robot, i))
@@ -401,7 +402,7 @@ namespace alica
 	{
 		if (this->dynCardinalities[index]->getMax() > 0)
 		{
-			this->epRobotsMapping->getRobots()->at(index)->push_back(robot);
+			this->epRobotsMapping->getRobots(index)->push_back(robot);
 			if (this->dynCardinalities[index]->getMin() > 0)
 			{
 				this->dynCardinalities[index]->setMin(this->dynCardinalities[index]->getMin() - 1);
@@ -427,7 +428,7 @@ namespace alica
 		int robot = this->unAssignedRobots[0];
 		this->unAssignedRobots.erase(this->unAssignedRobots.begin());
 		PartialAssignment* newPa;
-		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
+		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
 		{
 			if (this->dynCardinalities[i]->getMax() > 0)
 			{
@@ -446,7 +447,7 @@ namespace alica
 	bool PartialAssignment::isValid()
 	{
 		int min = 0;
-		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
+		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
 		{
 			min += dynCardinalities[i]->getMin();
 		}
@@ -465,7 +466,7 @@ namespace alica
 			return false;
 		}
 		// Every EntryPoint should be satisfied according to his minCar
-		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
+		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
 		{
 			if (this->dynCardinalities[i]->getMin() != 0)
 			{
@@ -529,28 +530,28 @@ namespace alica
 			// this has higher actual utility
 			return false;
 		}
-		auto me = thisPa->epRobotsMapping->getRobots();
-		auto you = newPa->epRobotsMapping->getRobots();
-		for (int i = 0; i < thisPa->epRobotsMapping->getCount(); ++i)
+		//auto me = thisPa->epRobotsMapping->getRobots();
+		//auto you = newPa->epRobotsMapping->getRobots();
+		for (int i = 0; i < thisPa->epRobotsMapping->getSize(); ++i)
 		{
-			if (me->at(i)->size() < you->at(i)->size())
+			if (thisPa->epRobotsMapping->getRobots(i)->size() < newPa->epRobotsMapping->getRobots(i)->size())
 			{
 				return true;
 			}
-			else if (me->at(i)->size() < you->at(i)->size())
+			else if (thisPa->epRobotsMapping->getRobots(i)->size() < newPa->epRobotsMapping->getRobots(i)->size())
 			{
 				return false;
 			}
 		}
-		for (int i = 0; thisPa->epRobotsMapping->getCount(); ++i)
+		for (int i = 0; thisPa->epRobotsMapping->getSize(); ++i)
 		{
-			for (int j = 0; j < me->at(i)->size(); ++j)
+			for (int j = 0; j < thisPa->epRobotsMapping->getRobots(i)->size(); ++j)
 			{
-				if (me->at(i)->at(j) > you->at(i)->at(j))
+				if (thisPa->epRobotsMapping->getRobots(i)->at(j) > newPa->epRobotsMapping->getRobots(i)->at(j))
 				{
 					return true;
 				}
-				else if (me->at(i)->at(j) > you->at(i)->at(j))
+				else if (thisPa->epRobotsMapping->getRobots(i)->at(j) > newPa->epRobotsMapping->getRobots(i)->at(j))
 				{
 					return false;
 				}
@@ -560,32 +561,32 @@ namespace alica
 
 	}
 
-	//TODO c# variant has to be adapted to c++
-	/**
-	 * Calculates a HashCode, which depends on the assignments and the plan.
-	 * @return A HashCode, which should be robot independent.
-	 */
-	int PartialAssignment::getHashCode()
-	{
-		if (this->hashCalculated)
-		{
-			return this->hash;
-		}
-		int basei = this->epRobotsMapping->getCount() + 1;
-		vector<int> robots;
-		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
-		{
-			robots = (*this->epRobotsMapping->getRobots()->at(i));
-			for (int robot : robots)
-			{
-
-				//TODO find replacement for c# array.binarysearch
-				this->hash += (i + 1) * pow(basei, robots[i]);
-			}
-		}
-		this->hashCalculated = true;
-		return this->hash;
-	}
+//	//TODO c# variant has to be adapted to c++
+//	/**
+//	 * Calculates a HashCode, which depends on the assignments and the plan.
+//	 * @return A HashCode, which should be robot independent.
+//	 */
+//	int PartialAssignment::getHashCode()
+//	{
+//		if (this->hashCalculated)
+//		{
+//			return this->hash;
+//		}
+//		int basei = this->epRobotsMapping->getSize() + 1;
+//		vector<int> robots;
+//		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
+//		{
+//			robots = (*this->epRobotsMapping->getRobots(i));
+//			for (int robot : robots)
+//			{
+//
+//				//TODO find replacement for c# array.binarysearch
+//				this->hash += (i + 1) * pow(basei, robots[i]);
+//			}
+//		}
+//		this->hashCalculated = true;
+//		return this->hash;
+//	}
 
 	string PartialAssignment::toString()
 	{
@@ -598,12 +599,12 @@ namespace alica
 			ss << robot << " ";
 		}
 		ss << endl;
-		shared_ptr<vector<EntryPoint*> > ownEps = this->epRobotsMapping->getEntryPoints();
+		//shared_ptr<vector<EntryPoint*> > ownEps = this->epRobotsMapping->getEntryPoints();
 		vector<int> robots;
-		for (int i = 0; i < this->epRobotsMapping->getCount(); ++i)
+		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
 		{
-			robots = (*this->epRobotsMapping->getRobots()->at(i));
-			ss << "EPid: " << ownEps->at(i)->getId() << " Task: " << ownEps->at(i)->getTask()->getName() << " minCar: "
+			robots = (*this->epRobotsMapping->getRobots(i));
+			ss << "EPid: " << this->epRobotsMapping->getEp(i)->getId() << " Task: " << this->epRobotsMapping->getEp(i)->getTask()->getName() << " minCar: "
 					<< this->dynCardinalities[i]->getMin() << " maxCar: "
 					<< (this->dynCardinalities[i]->getMax() == INFINIT ? "*" :
 							to_string(this->dynCardinalities[i]->getMax())) << " Assigned Robots: ";
@@ -615,7 +616,7 @@ namespace alica
 		}
 
 		ss << this->epRobotsMapping->toString();
-		ss << "HashCode: " << this->getHashCode() << endl;
+		ss << "HashCode: " << this->getHash() << endl;
 
 		return ss.str();
 

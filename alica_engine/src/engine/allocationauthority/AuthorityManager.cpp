@@ -11,6 +11,7 @@
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/PlanType.h"
 #include "engine/Assignment.h"
+#include "engine/collections/AssignmentCollection.h"
 #include "engine/model/EntryPoint.h"
 
 namespace alica
@@ -132,12 +133,11 @@ namespace alica
 
 		EntryPointRobots it;
 		shared_ptr<Assignment> ass = p->getAssignment();
-		auto eps = ass->getEntryPoints();
-		for (int i = 0; i < eps->size(); i++)
+		for (int i = 0; i < ass->getEntryPointCount(); i++)
 		{
 			it = EntryPointRobots();
-			it.entrypoint = eps->at(i)->getId();
-			auto robots = ass->getRobotsWorking(eps->at(i));
+			it.entrypoint = ass->getEpRobotsMapping()->getEp(i)->getId();
+			auto robots = ass->getRobotsWorking(ass->getEpRobotsMapping()->getEp(i));
 			for (int j = 0; j < robots->size(); j++)
 			{
 				it.robots.push_back(robots->at(j));

@@ -7,77 +7,136 @@
 
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/planselector/EpByTaskComparer.h"
 
 namespace alica
 {
-
+	/**
+	 * Constructs an empty AssignmentCollection. (Used by the PartialAssignment-ObjectPool)
+	 */
 	AssignmentCollection::AssignmentCollection()
 	{
-		this->count = 0;
+		this->numEps = 0;
 	}
 
 	/**
-	 * Construct an AssignmentCollection from an shared_ptr<vector<EntryPoint*> >r and a shared_ptr<vector<shared_ptr<vector<int> > > >, each holding the robot-ids
-	 * within the corresponding EntryPoint.
-	 * @param eps A shared_ptr<vector<EntryPoint*> >
-	 * @param robots A shared_ptr<vector<shared_ptr<vector<int> > > >
+	 * Constructs an empty AssignmentCollection of a given size. (Used by the Assignment-Constructor)
 	 */
-	AssignmentCollection::AssignmentCollection(shared_ptr<vector<EntryPoint*> > eps, shared_ptr<vector<shared_ptr<vector<int> > > > robots)
+	AssignmentCollection::AssignmentCollection(short size)
 	{
-		this->count = eps->size();
+		this->numEps = size;
+		this->entryPoints = new EntryPoint*[size];
+		this->robots = new shared_ptr<vector<int>> [size];
+	}
+
+	/**
+	 * Construct an AssignmentCollection from an EntryPoint* [] and a shared_ptr<vector<int>> [],
+	 * each holding the robot-ids within the corresponding EntryPoint.
+	 * @param eps EntryPoint* []
+	 * @param robots vector<int>* []
+	 */
+	AssignmentCollection::AssignmentCollection(EntryPoint* eps[], shared_ptr<vector<int>> robots[], short size)
+	{
+		this->numEps = size;
 		this->entryPoints = eps;
 		this->robots = robots;
 	}
 
-	/**
-	 * Construct an empty AssignmentCollection of a specific size
-	 * @param maxSize An int
-	 */
-	AssignmentCollection::AssignmentCollection(int maxSize)
-	{
-		this->count = maxSize;
-		this->robots = make_shared<vector<shared_ptr<vector<int> > > >(maxSize);
-		this->entryPoints = make_shared<vector<EntryPoint*> >(maxSize);
-		for(int i = 0; i < maxSize; i++)
-		{
-			this->robots->at(i) = make_shared<vector<int> >(vector<int> ());
-		}
-	}
-
 	AssignmentCollection::~AssignmentCollection()
 	{
+		delete[] this->entryPoints;
+		delete[] this->robots;
+	}
+
+	bool AssignmentCollection::setRobots(short index, shared_ptr<vector<int>> robots)
+	{
+		if (index < this->numEps) {
+			this->robots[index] = robots;
+			return true;
+		}
+		else
+		{
+			// TODO: Do some checks where this method is used, based on the return-types
+			return false;
+		}
 	}
 
 	/**
 	 * Returns the robots in EntryPoint k
 	 * @param ep An EntryPoint
-	 * @return A shared_ptr<vector<int> >
+	 * @return shared_ptr<vector<int>>
 	 */
-	shared_ptr<vector<int> > AssignmentCollection::getRobots(EntryPoint* ep)
+	shared_ptr<vector<int>> AssignmentCollection::getRobotsByEp(EntryPoint* ep)
 	{
-		for (int i=0; i<this->count;i++) {
-			if (this->entryPoints->at(i) == ep)
+		for (int i = 0; i < this->numEps; i++)
+		{
+			if (this->entryPoints[i] == ep)
 			{
-				return this->robots->at(i);
+				return this->robots[i];
 			}
 		}
 		return nullptr;
 	}
 
 	/**
-	 * Returns the robots in the EntryPoint identifyed by id.
+	 * Returns the robots in the EntryPoint identified by id.
 	 * @param id A long
-	 * @return A shared_ptr<vector<int> >
+	 * @return vector<int>*
 	 */
-	shared_ptr<vector<int> > AssignmentCollection::getRobotsById(long id)
+	shared_ptr<vector<int>> AssignmentCollection::getRobotsById(long id)
 	{
-		for (int i=0; i<this->count;i++) {
-			if (this->entryPoints->at(i)->getId() == id)
+		for (int i = 0; i < this->numEps; i++)
+		{
+			if (this->entryPoints[i]->getId() == id)
 			{
-				return this->robots->at(i);
+				return this->robots[i];
 			}
 		}
 		return nullptr;
+	}
+
+	shared_ptr<vector<int>> AssignmentCollection::getRobots(short index)
+	{
+		if (index < this->numEps)
+		{
+			return this->robots[index];
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	void AssignmentCollection::sortEps()
+	{
+		cout << "<<<< Check Sort!!!!! " << endl;
+		for (short i = 0; i < this->numEps; i++)
+		{
+			cout << i << ": " << entryPoints[i] << endl;
+		}
+
+		// Stopfers sort style
+		vector<EntryPoint*> sortedEpVec;
+		for (short i = 0; i < this->numEps; i++)
+		{
+			sortedEpVec.push_back(this->entryPoints[i]);
+		}
+		sort(sortedEpVec.begin(), sortedEpVec.end(), EpByTaskComparer::compareTo);
+		for (short i = 0; i < this->numEps; i++)
+		{
+			this->entryPoints[i] = sortedEpVec.at(i);
+		}
+
+		// Takers sort style
+		/*
+		 std::sort(std::begin(entryPoints), std::begin(entryPoints) + this->numEps, EpByTaskComparer::compareTo);
+		 */
+
+		cout << "<<<<< Nachher!!!! " << endl;
+		for (short i = 0; i < this->numEps; i++)
+		{
+			cout << i << ": " << entryPoints[i] << endl;
+		}
 	}
 
 	/**
@@ -85,20 +144,21 @@ namespace alica
 	 */
 	void AssignmentCollection::clear()
 	{
-		for(int i=0; i<this->count; i++) {
-			this->robots->at(i)->clear();
+		for (int i = 0; i < this->numEps; i++)
+		{
+			this->robots[i]->clear();
 		}
 	}
 
 	string AssignmentCollection::toString()
 	{
 		stringstream ss;
-		for(int i=0; i<this->robots->size(); i++)
+		for (int i = 0; i < this->numEps; i++)
 		{
-			if( this->entryPoints->at(i) != nullptr )
+			if (this->entryPoints[i] != nullptr)
 			{
-				ss << this->entryPoints->at(i)->getId() << " : ";
-				for(int robot : *(this->robots->at(i)))
+				ss << this->entryPoints[i]->getId() << " : ";
+				for (short robot : *this->robots[i])
 				{
 					ss << robot << ", ";
 				}
@@ -108,34 +168,39 @@ namespace alica
 		return ss.str();
 	}
 
-	int AssignmentCollection::getCount() const
+	short AssignmentCollection::getSize() const
 	{
-		return count;
+		return this->numEps;
 	}
 
-	void AssignmentCollection::setCount(int count)
+	void AssignmentCollection::setSize(short count)
 	{
-		this->count = count;
+		this->numEps = numEps;
 	}
 
-	shared_ptr<vector<EntryPoint*> > AssignmentCollection::getEntryPoints()
+	EntryPoint* AssignmentCollection::getEp(short index)
 	{
-		return this->entryPoints;
+		if (index < this->numEps)
+		{
+			return this->entryPoints[index];
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 
-	void AssignmentCollection::setEntryPoints(shared_ptr<vector<EntryPoint*> > entryPoints)
+	bool AssignmentCollection::setEp(short index, EntryPoint* ep)
 	{
-		this->entryPoints = entryPoints;
-	}
-
-	shared_ptr<vector<shared_ptr<vector<int> > > > AssignmentCollection::getRobots()
-	{
-		return robots;
-	}
-
-	void AssignmentCollection::setRobots(shared_ptr<vector<shared_ptr<vector<int> > > > robots)
-	{
-		this->robots = robots;
+		if (index < this->numEps)
+		{
+			this->entryPoints[index] = ep;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 } /* namespace alica */

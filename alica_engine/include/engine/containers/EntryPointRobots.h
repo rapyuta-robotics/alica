@@ -15,14 +15,14 @@ using namespace std;
 
 namespace alica
 {
-	typedef tuple<int, vector<int>> stdEntryPointRobot;
+	typedef tuple<long, vector<int>> stdEntryPointRobot;
 	struct EntryPointRobots
 	{
 		EntryPointRobots()
 		{
 		}
 
-		int entrypoint;
+		long entrypoint;
 		vector<int> robots;
 
 		EntryPointRobots(stdEntryPointRobot& s)

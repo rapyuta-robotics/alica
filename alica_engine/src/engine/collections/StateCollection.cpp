@@ -50,10 +50,10 @@ namespace alica
 
 	StateCollection::StateCollection(AssignmentCollection* ac)
 	{
-		for(int i = 0;i < ac->getCount(); i ++)
+		for(int i = 0;i < ac->getSize(); i ++)
 		{
-			State* initialState = ac->getEntryPoints()->at(i)->getState();
-			for(auto r : (*ac->getRobots()->at(i)))
+			State* initialState = ac->getEp(i)->getState();
+			for(auto r : *ac->getRobots(i))
 			{
 				this->setState(r,initialState);
 			}
@@ -209,13 +209,15 @@ namespace alica
 		{
 			return;
 		}
-		shared_ptr<vector<EntryPoint*> >eps = oldOne->getEntryPoints();
-		for(int i = 0; i < eps->size(); i++)
+		//shared_ptr<vector<EntryPoint*> >eps = oldOne->getEntryPoints();
+		EntryPoint* ep;
+		for(short i = 0; i < oldOne->getEntryPointCount(); i++)
 		{
-			for(int rid : *(oldOne->getRobotsWorking(eps->at(i))))
+			ep = oldOne->getEpRobotsMapping()->getEp(i);
+			for(int rid : *(oldOne->getRobotsWorking(ep)))
 			{
-				auto iter = find(newOne->getRobotsWorking(eps->at(i))->begin(), newOne->getRobotsWorking(eps->at(i))->end(), rid);
-				if(iter != newOne->getRobotsWorking(eps->at(i))->end())
+				auto iter = find(newOne->getRobotsWorking(ep)->begin(), newOne->getRobotsWorking(ep)->end(), rid);
+				if(iter != newOne->getRobotsWorking(ep)->end())
 				{
 					this->setState(rid, oldOne->getRobotStateMapping()->getState(rid));
 				}

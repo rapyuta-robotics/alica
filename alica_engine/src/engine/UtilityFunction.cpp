@@ -10,6 +10,7 @@
 #include "engine/UtilityInterval.h"
 #include "engine/Assignment.h"
 #include "engine/RunningPlan.h"
+#include "engine/collections/AssignmentCollection.h"
 #include "engine/USummand.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/model/Plan.h"
@@ -348,13 +349,14 @@ namespace alica
 		int denum = min(this->plan->getMaxCardinality(), this->ae->getTeamObserver()->teamSize());
 		long taskId;
 		long roleId;
-		shared_ptr<vector<EntryPoint*> > eps = ass->getEntryPoints();
+	//	shared_ptr<vector<EntryPoint*> > eps = ass->getEntryPoints();
 		double curPrio = 0;
-
-		for(int i = 0; i < ass->getEntryPointCount(); ++i)
+		EntryPoint* ep;
+		for(short i = 0; i < ass->getEntryPointCount(); ++i)
 		{
-			taskId = eps->at(i)->getTask()->getId();
-			auto robotList = ass->getUniqueRobotsWorkingAndFinished(eps->at(i));
+			ep = ass->getEpRobotsMapping()->getEp(i);
+			taskId = ep->getTask()->getId();
+			auto robotList = ass->getUniqueRobotsWorkingAndFinished(ep);
 			for(int j = 0; j < robotList->size(); ++j)
 			{
 				auto iter = robotList->begin();
@@ -426,14 +428,15 @@ namespace alica
 		simUI->setMin(0.0);
 		// Calculate the similarity to the old Assignment
 		int numOldAssignedRobots = 0;
-		shared_ptr<vector<EntryPoint*> > oldAssEps = oldAss->getEntryPoints();
-
-		for(int i = 0; i < oldAss->getEntryPointCount(); ++i)
+		//shared_ptr<vector<EntryPoint*> > oldAssEps = oldAss->getEntryPoints();
+		EntryPoint* ep;
+		for(short i = 0; i < oldAss->getEntryPointCount(); ++i)
 		{
+			ep = oldAss->getEpRobotsMapping()->getEp(i);
 			// for normalisation
-			auto oldRobots = oldAss->getRobotsWorkingAndFinished(oldAssEps->at(i));
+			auto oldRobots = oldAss->getRobotsWorkingAndFinished(ep);
 			numOldAssignedRobots += oldRobots->size();
-			auto newRobots = newAss->getRobotsWorkingAndFinished(oldAssEps->at(i));
+			auto newRobots = newAss->getRobotsWorkingAndFinished(ep);
 
 			//C# newRobots != null
 			if(newRobots->size() != 0)
@@ -444,7 +447,7 @@ namespace alica
 					{
 						simUI->setMin(simUI->getMin() + 1);
 					}
-					else if(oldAssEps->at(i)->getMaxCardinality() > newRobots->size() && find(newAss->getUnassignedRobots().begin(),newAss->getUnassignedRobots().end(), oldRobot) != newAss->getUnassignedRobots().end())
+					else if(ep->getMaxCardinality() > newRobots->size() && find(newAss->getUnassignedRobots().begin(),newAss->getUnassignedRobots().end(), oldRobot) != newAss->getUnassignedRobots().end())
 					{
 						simUI->setMax(simUI->getMax() + 1);
 					}

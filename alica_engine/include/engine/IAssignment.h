@@ -15,11 +15,13 @@ using namespace std;
 #include <string>
 #include <memory>
 
+
 namespace alica
 {
 
 	class EntryPoint;
 	class SuccessCollection;
+	class AssignmentCollection;
 
 	/**
 	 *  An IAssignment describes a potentially partial assignment of robots to EntryPoints within a plan.
@@ -34,12 +36,12 @@ namespace alica
 		/**
 		 * The shared_ptr of a vector of EntryPoints relevant to this assignment.
 		 */
-		virtual shared_ptr<vector<EntryPoint*> > getEntryPoints() = 0;
+		//virtual shared_ptr<vector<EntryPoint*> > getEntryPoints() = 0;
 		/**
 		 * The number of distinct entrypoints
 		 * @param An int
 		 */
-		virtual int getEntryPointCount() = 0;
+		virtual short getEntryPointCount() = 0;
 		/**
 		 * Returns all robot Ids working on the Task defined by ep and those which successfully completed it.
 		 * Behaviour is undefined if ep is not relevant or null.
@@ -75,6 +77,9 @@ namespace alica
 		virtual string assignmentCollectionToString() = 0;
 
 		virtual string toString() = 0;
+
+
+		virtual AssignmentCollection* getEpRobotsMapping() = 0;
 
 
 		double getMax() const
