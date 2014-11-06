@@ -196,6 +196,7 @@ namespace alica
 		this->mf->createCapabilityDefinitionSet(&doc);
 
 	}
+
 	string PlanParser::findDefaultRoleSet(string dir)
 	{
 
