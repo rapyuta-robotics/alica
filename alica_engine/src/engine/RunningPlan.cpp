@@ -24,6 +24,7 @@
 #include "engine/collections/StateCollection.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/SuccessMarks.h"
+#include "engine/collections/AssignmentCollection.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
@@ -75,9 +76,8 @@ namespace alica
 	{
 		this->plan = plan;
 		vector<EntryPoint*> epCol;
-		transform(plan->getEntryPoints().begin(), plan->getEntryPoints().end(), back_inserter(epCol),
-					[](map<long, EntryPoint*>::value_type& val)
-					{	return val.second;});
+		transform(plan->getEntryPoints().begin(), plan->getEntryPoints().end(), back_inserter(epCol), [](map<long, EntryPoint*>::value_type& val)
+		{	return val.second;});
 
 		sort(epCol.begin(), epCol.end(), EntryPoint::compareTo);
 		unordered_set<int> robots[epCol.size()];
@@ -257,8 +257,7 @@ namespace alica
 				else if (this->activeState->isSuccessState())
 				{
 					this->assignment->getEpSuccessMapping()->getRobots(this->activeEntryPoint)->push_back(this->ownId);
-					this->to->getOwnEngineData()->getSuccessMarks()->markSuccessfull(this->plan,
-																						this->activeEntryPoint);
+					this->to->getOwnEngineData()->getSuccessMarks()->markSuccessfull(this->plan, this->activeEntryPoint);
 				}
 			}
 		}
@@ -820,8 +819,7 @@ namespace alica
 		{
 			if (find(curRobots->begin(), curRobots->end(), r) == curRobots->end())
 			{
-				if (this->activeState != nullptr
-						&& this->assignment->getRobotStateMapping()->stateOfRobot(r) == this->activeState)
+				if (this->activeState != nullptr && this->assignment->getRobotStateMapping()->stateOfRobot(r) == this->activeState)
 				{
 					recurse = true;
 				}
@@ -851,8 +849,7 @@ namespace alica
 		this->constraintStore->addCondition(this->plan->getRuntimeCondition());
 	}
 
-	bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents,
-												list<int> noUpdates, alicaTime now)
+	bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents, list<int> noUpdates, alicaTime now)
 	{
 		if (this->isBehaviour())
 		{
@@ -894,8 +891,7 @@ namespace alica
 					else
 					{ //robot was not expected to be here during protected assignment time, add it.
 						this->getAssignment()->addRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
-						aldif->getAdditions().push_back(
-								new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId()));
+						aldif->getAdditions().push_back(new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId()));
 
 					}
 				}
@@ -905,8 +901,7 @@ namespace alica
 					ret |= this->getAssignment()->updateRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
 					if (spt->getEntryPoint() != ep)
 					{
-						aldif->getAdditions().push_back(
-								new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId()));
+						aldif->getAdditions().push_back(new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId()));
 						if (ep != nullptr)
 							aldif->getSubtractions().push_back(new EntryPointRobotPair(ep, spt->getRobotId()));
 					}
@@ -914,16 +909,17 @@ namespace alica
 				}
 			}
 		}
-		auto eps = this->getAssignment()->getEntryPoints();
+
 		list<int> rem;
 		if (!keepTask)
 		{ //remove any robot no longer available in the spts (auth flag obey here, as robot might be unavailable)
 		  //EntryPoint[] eps = this.Assignment.GetEntryPoints();
-
-			for (int i = 0; i < eps->size(); i++)
+			EntryPoint* ep;
+			for (int i = 0; i < this->getAssignment()->getEntryPointCount(); i++)
 			{
+				ep = this->getAssignment()->getEpRobotsMapping()->getEp(i);
 				rem.clear();
-				auto robs = this->getAssignment()->getRobotsWorking(eps->at(i));
+				auto robs = this->getAssignment()->getRobotsWorking(ep);
 				for (int rob : (*robs))
 				{
 					if (rob == ownId)
@@ -946,7 +942,7 @@ namespace alica
 					{
 						rem.push_back(rob);
 						//this.Assignment.RemoveRobot(rob);
-						aldif->getSubtractions().push_back(new EntryPointRobotPair(eps->at(i), rob));
+						aldif->getSubtractions().push_back(new EntryPointRobotPair(ep, rob));
 						ret = true;
 					}
 				}
@@ -960,10 +956,12 @@ namespace alica
 		//enforce consistency between RA and PlanTree by removing robots deemed inactive:
 		if (!auth)
 		{ //under authority do not remove robots from assignment
-			for (int i = 0; i < eps->size(); i++)
+			EntryPoint* ep;
+			for (int i = 0; i < this->getAssignment()->getEntryPointCount(); i++)
 			{
+				ep = this->getAssignment()->getEpRobotsMapping()->getEp(i);
 				rem.clear();
-				auto robs = this->getAssignment()->getRobotsWorking(eps->at(i));
+				auto robs = this->getAssignment()->getRobotsWorking(ep);
 				for (int rob : (*robs))
 				{
 					//if (rob==ownId) continue;
@@ -971,7 +969,7 @@ namespace alica
 					{
 						rem.push_back(rob);
 						//this.Assignment.RemoveRobot(rob);
-						aldif->getSubtractions().push_back(new EntryPointRobotPair(eps->at(i), rob));
+						aldif->getSubtractions().push_back(new EntryPointRobotPair(ep, rob));
 						ret = true;
 					}
 				}
@@ -1037,7 +1035,7 @@ namespace alica
 			}
 			ret |= r->recursiveUpdateAssignment(newcspts, availableAgents, noUpdates, now);
 		}
-		if(this->getPlan()->getId() == 1414403413451)
+		if (this->getPlan()->getId() == 1414403413451)
 		{
 			cout << "RP: assigment " << this->getAssignment()->toString();
 		}
@@ -1082,9 +1080,7 @@ namespace alica
 		ss << "Plan: " + (plan != nullptr ? plan->getName() : "NULL") << endl;
 		ss << "PlanType: " << (planType != nullptr ? planType->getName() : "NULL") << endl;
 		ss << "ActState: " << (activeState != nullptr ? activeState->getName() : "NULL") << endl;
-		ss << "Task: "
-				<< (this->getOwnEntryPoint() != nullptr ? this->getOwnEntryPoint()->getTask()->getName() : "NULL")
-				<< endl;
+		ss << "Task: " << (this->getOwnEntryPoint() != nullptr ? this->getOwnEntryPoint()->getTask()->getName() : "NULL") << endl;
 		ss << "IsBehaviour: " << this->isBehaviour() << "\t";
 		if (this->isBehaviour())
 		{
@@ -1094,9 +1090,7 @@ namespace alica
 		ss << "FailHandlingNeeded: " << this->failHandlingNeeded << "\t";
 		ss << "FailCount: " << this->failCount << endl;
 		ss << "IsActive: " << this->active << endl;
-		ss << "Status: "
-				<< (this->status == PlanStatus::Running ? "RUNNING" :
-						(this->status == PlanStatus::Success ? "SUCCESS" : "FAILED")) << endl;
+		ss << "Status: " << (this->status == PlanStatus::Running ? "RUNNING" : (this->status == PlanStatus::Success ? "SUCCESS" : "FAILED")) << endl;
 		ss << "AvailRobots: ";
 		for (int r : (*this->robotsAvail))
 		{

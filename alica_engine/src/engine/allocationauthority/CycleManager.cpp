@@ -23,6 +23,7 @@
 #include "engine/PlanRepository.h"
 #include "engine/containers/EntryPointRobots.h"
 #include "engine/collections/StateCollection.h"
+#include "engine/collections/AssignmentCollection.h"
 
 namespace alica
 {
@@ -195,8 +196,11 @@ namespace alica
 			this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
 			this->allocationHistory[this->newestAllocationDifference]->reset();
 
-			for (EntryPoint* ep : (*oldAss->getEntryPoints()))
+			EntryPoint* ep;
+			//for (EntryPoint* ep : (*oldAss->getEntryPoints()))
+			for (short i = 0; i < oldAss->getEntryPointCount(); i++)
 			{
+				ep = oldAss->getEpRobotsMapping()->getEp(i);
 
 				auto newRobots = newAss->getRobotsWorking(ep);
 				auto oldRobots = oldAss->getRobotsWorking(ep);

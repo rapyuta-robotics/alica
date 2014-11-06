@@ -49,8 +49,8 @@ namespace alica
 		shared_ptr<vector<int> > getRobotsWorkingSorted(EntryPoint* ep);
 		shared_ptr<vector<int> > getRobotsWorking(EntryPoint* ep);
 		int totalRobotCount();
-		shared_ptr<vector<EntryPoint*> > getEntryPoints();
-		int getEntryPointCount();
+		//shared_ptr<vector<EntryPoint*> > getEntryPoints();
+		short getEntryPointCount();
 		shared_ptr<list<int> > getRobotsWorkingAndFinished(EntryPoint* ep);
 		shared_ptr<list<int> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
 		shared_ptr<list<int> > getRobotsWorkingAndFinished(long epid);

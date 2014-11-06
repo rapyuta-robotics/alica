@@ -47,7 +47,7 @@ namespace alica
 		static void reset(PartialAssignmentPool* pap);
 		static PartialAssignment* getNew(PartialAssignmentPool* pap, shared_ptr<vector<int> > robots, Plan* plan, shared_ptr<SuccessCollection> sucCol);
 		static PartialAssignment* getNew(PartialAssignmentPool* pap, PartialAssignment* oldPA);
-		int getEntryPointCount();
+		short getEntryPointCount();
 		int totalRobotCount();
 		shared_ptr<vector<int> > getRobotsWorking(EntryPoint* ep);
 		shared_ptr<vector<int> > getRobotsWorking(long epid);
@@ -60,7 +60,7 @@ namespace alica
 		bool isValid();
 		bool isGoal();
 		static bool compareTo(PartialAssignment* thisPa, PartialAssignment* newPa);
-		int getHashCode();
+		//int getHashCode();
 		string toString();
 		AssignmentCollection* getEpRobotsMapping();
 		Plan* getPlan();
@@ -75,6 +75,8 @@ namespace alica
 		bool isHashCalculated();
 		void setHashCalculated(bool hashCalculated);
 		void setMax(double max);
+		shared_ptr<vector<int>> getRobots();
+
 
 	private:
 		const int INFINIT = numeric_limits<int>::max();
@@ -88,7 +90,7 @@ namespace alica
 		// UtilityFunction
 		shared_ptr<UtilityFunction> utilFunc;
 		AssignmentCollection* epRobotsMapping;
-		shared_ptr<vector<int> > robots;
+		shared_ptr<vector<int>> robots;
 		vector<shared_ptr<DynCardinality>> dynCardinalities;
 		vector<int> unAssignedRobots;
 		Plan* plan;
@@ -109,29 +111,30 @@ namespace std
     struct hash<alica::PartialAssignment>
     {
         typedef alica::PartialAssignment argument_type;
-        typedef std::size_t value_type;
+        typedef std::size_t result_type;
 
-        value_type operator()(argument_type & pa) const
+        result_type operator()(argument_type & pa) const
         {
         	if(pa.isHashCalculated())
         	{
         		return pa.getHash();
         	}
-        	int basei = pa.getEpRobotsMapping()->getCount() + 1;
-        	vector<int> robots;
-        	for(int i = 0; i < pa.getEpRobotsMapping()->getCount(); ++i)
+        	int basei = pa.getEpRobotsMapping()->getSize() + 1;
+        	shared_ptr<vector<int>> robots;
+        	for(int i = 0; i < pa.getEpRobotsMapping()->getSize(); ++i)
         	{
-        		robots = (*pa.getEpRobotsMapping()->getRobots()->at(i));
-        		for(int robot : robots)
+        		robots = pa.getEpRobotsMapping()->getRobots(i);
+        		for(int robot : *robots)
         		{
+        			for (int idx = 0; idx < pa.getRobots()->size(); idx++) {
+        				if (pa.getRobots()->at(idx) == robot)
+        				{
+        					pa.setHash(pa.getHash() + (i + 1) * pow(basei, idx));
+        				}
+        			}
 
-        			//TODO find replacement for c# array.binarysearch
-        			pa.setHash(pa.getHash() + (i + 1) * pow(basei, robots[i]));
         		}
         	}
-//            value_type const h1 ( std::hash<std::string>()(s.first_name) );
-//            value_type const h2 ( std::hash<std::string>()(s.last_name) );
-//            return h1 ^ (h2 << 1);
             pa.setHashCalculated(true);
             return pa.getHash();
         }
