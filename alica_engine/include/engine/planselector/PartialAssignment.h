@@ -8,7 +8,7 @@
 #ifndef PARTIALASSIGNMENT_H_
 #define PARTIALASSIGNMENT_H_
 
-//#define PADEBUG
+#define PADEBUG
 //#define SUCDEBUG
 
 using namespace std;

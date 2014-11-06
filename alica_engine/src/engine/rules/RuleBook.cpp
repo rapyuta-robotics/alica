@@ -207,10 +207,10 @@ namespace alica
 	 */
 	PlanChange RuleBook::authorityOverrideRule(shared_ptr<RunningPlan> r)
 	{
-//#ifdef RULE_debug
+#ifdef RULE_debug
 		cout << "RB: AuthorityOverride-Rule called." << endl;
 		cout << "RB: AuthorityOverride RP \n" << r->toString() << endl;
-//#endif
+#endif
 		if (r->isBehaviour())
 			return PlanChange::NoChange;
 		cout << "CM: overridden " << r->getCycleManagement()->isOverridden() << endl;
