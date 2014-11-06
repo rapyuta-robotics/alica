@@ -7,8 +7,9 @@
 
 #ifndef TASKASSIGNMENT_H_
 #define TASKASSIGNMENT_H_
-#define EXPANSIONEVAL
-#define PSDEBUG
+
+//#define EXPANSIONEVAL
+#define TA_DEBUG
 
 using namespace std;
 

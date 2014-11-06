@@ -19,11 +19,7 @@
 
 namespace alica
 {
-	int PartialAssignment::maxEpsCount = (*supplementary::SystemConfig::getInstance())["Alica"]->get<short>(
-			"Alica.MaxEpsPerPlan", NULL);
 	EpByTaskComparer PartialAssignment::epByTaskComparer = EpByTaskComparer();
-	bool PartialAssignment::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>(
-			"Alica.AllowIdling", NULL);
 
 	int PartialAssignment::getHash()
 	{
@@ -60,11 +56,11 @@ namespace alica
 		this->epSuccessMapping = nullptr;
 		this->hashCalculated = false;
 		this->plan = nullptr;
-		this->epRobotsMapping = new AssignmentCollection(maxEpsCount);
+		this->epRobotsMapping = new AssignmentCollection(AssignmentCollection::maxEpsCount);
 		this->unAssignedRobots = vector<int>();
-		this->dynCardinalities = vector<shared_ptr<DynCardinality>>(maxEpsCount);
+		this->dynCardinalities = vector<shared_ptr<DynCardinality>>(AssignmentCollection::maxEpsCount);
 		this->compareVal = PRECISION;
-		for (int i = 0; i < maxEpsCount; i++)
+		for (int i = 0; i < AssignmentCollection::maxEpsCount; i++)
 		{
 			this->dynCardinalities[i] = make_shared<DynCardinality>();
 		}
@@ -100,11 +96,6 @@ namespace alica
 	{
 		return unAssignedRobots;
 	}
-
-//	shared_ptr<vector<EntryPoint*> > PartialAssignment::getEntryPoints()
-//	{
-//		return this->epRobotsMapping->getEntryPoints();
-//	}
 
 	void PartialAssignment::clear()
 	{
@@ -143,7 +134,7 @@ namespace alica
 		ret->utilFunc = plan->getUtilityFunction();
 		ret->epSuccessMapping = sucCol;
 		// Create EP-Array
-		if (allowIdling)
+		if (AssignmentCollection::allowIdling)
 		{
 			ret->epRobotsMapping->setSize(plan->getEntryPoints().size() + 1);
 			// Insert IDLE-EntryPoint
@@ -353,7 +344,7 @@ namespace alica
 		{
 			EntryPoint* curEp;
 			int max = this->epRobotsMapping->getSize();
-			if (allowIdling)
+			if (AssignmentCollection::allowIdling)
 			{
 				max--;
 			}
@@ -616,7 +607,7 @@ namespace alica
 		}
 
 		ss << this->epRobotsMapping->toString();
-		ss << "HashCode: " << this->getHash() << endl;
+		//ss << "HashCode: " << this->getHash() << endl;
 
 		return ss.str();
 

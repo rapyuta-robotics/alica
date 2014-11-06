@@ -8,6 +8,8 @@
 #ifndef AUTHORITYMANAGER_H_
 #define AUTHORITYMANAGER_H_
 
+//#define AM_DEBUG
+
 #include "../containers/AllocationAuthorityInfo.h"
 #include "../IAlicaCommunication.h"
 #include "../AlicaEngine.h"

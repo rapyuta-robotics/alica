@@ -26,8 +26,6 @@ namespace alica
 	}
 	Assignment::Assignment(Plan* p)
 	{
-		allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling",
-		NULL);
 		this->plan = p;
 		this->max = 0.0;
 		this->min = 0.0;
@@ -51,6 +49,102 @@ namespace alica
 
 		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 		this->epSucMapping = make_shared<SuccessCollection>(p);
+	}
+
+	Assignment::Assignment(PartialAssignment* pa)
+	{
+		this->max = pa->getMax();
+		this->min = max;
+		this->plan = pa->getPlan();
+
+		AssignmentCollection* assCol = pa->getEpRobotsMapping();
+		cout << "Ass: assColSize: " << assCol->getSize() << " allowIdle: " << AssignmentCollection::allowIdling << " " << true << endl;
+		if (AssignmentCollection::allowIdling)
+		{
+			this->epRobotsMapping = new AssignmentCollection(assCol->getSize() - 1);
+		}
+		else
+		{
+			this->epRobotsMapping = new AssignmentCollection(assCol->getSize());
+		}
+
+		shared_ptr<vector<int>> curRobots;
+		for (short i = 0; i < this->epRobotsMapping->getSize(); i++)
+		{
+			// set the entrypoint
+			if (!this->epRobotsMapping->setEp(i, assCol->getEp(i)))
+			{
+				cerr << "Ass: AssignmentCollection Index out of entrypoints bounds!" << endl;
+				throw new exception();
+			}
+
+			// copy robots
+			shared_ptr<vector<int>> robots = assCol->getRobots(i);
+			curRobots = make_shared<vector<int>>();
+			for (int rob : *robots)
+			{
+				curRobots->push_back(rob);
+			}
+
+			// set the robots
+			if (!this->epRobotsMapping->setRobots(i, curRobots))
+			{
+				cerr << "Ass: AssignmentCollection Index out of robots bounds!" << endl;
+				throw new exception();
+			}
+		}
+
+		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
+		this->epSucMapping = pa->getEpSuccessMapping();
+	}
+
+	Assignment::Assignment(Plan* p, shared_ptr<AllocationAuthorityInfo> aai)
+	{
+		this->plan = p;
+		this->max = 1;
+		this->min = 1;
+
+
+		this->epRobotsMapping = new AssignmentCollection(p->getEntryPoints().size());
+
+		shared_ptr<vector<int>> curRobots;
+		short i = 0;
+		for (auto epPair : p->getEntryPoints())
+		{
+			// set the entrypoint
+			if (!this->epRobotsMapping->setEp(i, epPair.second))
+			{
+				cerr << "Ass: AssignmentCollection Index out of entrypoints bounds!" << endl;
+				throw new exception();
+			}
+
+			curRobots = make_shared<vector<int>>();
+			for (auto epRobots : aai->entryPointRobots)
+			{
+				// find the right entrypoint
+				if (epRobots.entrypoint == epPair.second->getId())
+				{
+					// copy robots
+					for (int robot : epRobots.robots)
+					{
+						curRobots->push_back(robot);
+					}
+
+					// set the robots
+					if (!this->epRobotsMapping->setRobots(i, curRobots))
+					{
+						cerr << "Ass: AssignmentCollection Index out of robots bounds!" << endl;
+						throw new exception();
+					}
+
+					break;
+				}
+			}
+
+			i++;
+		}
+		this->epSucMapping = make_shared<SuccessCollection>(p);
+		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 	}
 
 	Plan* Assignment::getPlan()
@@ -101,103 +195,6 @@ namespace alica
 		shared_ptr<vector<int> > ret = getRobotsWorking(ep);
 		sort(ret->begin(), ret->end());
 		return ret;
-	}
-
-	Assignment::Assignment(PartialAssignment* pa)
-	{
-		this->max = pa->getMax();
-		this->min = max;
-		this->plan = pa->getPlan();
-		this->allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling",
-		NULL);
-
-		AssignmentCollection* assCol = pa->getEpRobotsMapping();
-		if (allowIdling)
-		{
-			this->epRobotsMapping = new AssignmentCollection(assCol->getSize() - 1);
-		}
-		else
-		{
-			this->epRobotsMapping = new AssignmentCollection(assCol->getSize());
-		}
-
-		shared_ptr<vector<int>> curRobots;
-		for (short i = 0; i < this->epRobotsMapping->getSize(); i++)
-		{
-			// set the entrypoint
-			if (!this->epRobotsMapping->setEp(i, assCol->getEp(i)))
-			{
-				cerr << "Ass: AssignmentCollection Index out of entrypoints bounds!" << endl;
-				throw new exception();
-			}
-
-			// copy robots
-			shared_ptr<vector<int>> robots = assCol->getRobots(i);
-			curRobots = make_shared<vector<int>>();
-			for (int rob : *robots)
-			{
-				curRobots->push_back(rob);
-			}
-
-			// set the robots
-			if (!this->epRobotsMapping->setRobots(i, curRobots))
-			{
-				cerr << "Ass: AssignmentCollection Index out of robots bounds!" << endl;
-				throw new exception();
-			}
-		}
-
-		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
-		this->epSucMapping = pa->getEpSuccessMapping();
-	}
-
-	Assignment::Assignment(Plan* p, shared_ptr<AllocationAuthorityInfo> aai)
-	{
-		this->plan = p;
-		this->max = 1;
-		this->min = 1;
-		this->allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling", NULL);
-
-		this->epRobotsMapping = new AssignmentCollection(p->getEntryPoints().size());
-
-		shared_ptr<vector<int>> curRobots;
-		short i = 0;
-		for (auto epPair : p->getEntryPoints())
-		{
-			// set the entrypoint
-			if (!this->epRobotsMapping->setEp(i, epPair.second))
-			{
-				cerr << "Ass: AssignmentCollection Index out of entrypoints bounds!" << endl;
-				throw new exception();
-			}
-
-			curRobots = make_shared<vector<int>>();
-			for (auto epRobots : aai->entryPointRobots)
-			{
-				// find the right entrypoint
-				if (epRobots.entrypoint == epPair.second->getId())
-				{
-					// copy robots
-					for (int robot : epRobots.robots)
-					{
-						curRobots->push_back(robot);
-					}
-
-					// set the robots
-					if (!this->epRobotsMapping->setRobots(i, curRobots))
-					{
-						cerr << "Ass: AssignmentCollection Index out of robots bounds!" << endl;
-						throw new exception();
-					}
-
-					break;
-				}
-			}
-
-			i++;
-		}
-		this->epSucMapping = make_shared<SuccessCollection>(p);
-		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 	}
 
 	/**
@@ -378,7 +375,8 @@ namespace alica
 		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
 		{
 			int c = this->epRobotsMapping->getRobots(i)->size() + success[i]->size();
-			if (c > this->epRobotsMapping->getEp(i)->getMaxCardinality() || c < this->epRobotsMapping->getEp(i)->getMinCardinality())
+			if (c > this->epRobotsMapping->getEp(i)->getMaxCardinality()
+					|| c < this->epRobotsMapping->getEp(i)->getMinCardinality())
 			{
 				return false;
 			}
@@ -396,7 +394,9 @@ namespace alica
 		{
 			if (this->epSucMapping->getEntryPoints()[i]->getSuccessRequired())
 			{
-				if (!(this->epSucMapping->getRobots()[i]->size() > 0 && this->epSucMapping->getRobots()[i]->size() >= this->epSucMapping->getEntryPoints()[i]->getMinCardinality()))
+				if (!(this->epSucMapping->getRobots()[i]->size() > 0
+						&& this->epSucMapping->getRobots()[i]->size()
+								>= this->epSucMapping->getEntryPoints()[i]->getMinCardinality()))
 				{
 					return false;
 				}
@@ -435,7 +435,8 @@ namespace alica
 
 			for (int robot : *(this->epRobotsMapping->getRobots(i)))
 			{
-				auto iter = find(otherAssignment->epRobotsMapping->getRobots(i)->begin(), otherAssignment->epRobotsMapping->getRobots(i)->end(), robot);
+				auto iter = find(otherAssignment->epRobotsMapping->getRobots(i)->begin(),
+									otherAssignment->epRobotsMapping->getRobots(i)->end(), robot);
 				if (iter == otherAssignment->epRobotsMapping->getRobots(i)->end())
 				{
 					return false;
@@ -469,7 +470,8 @@ namespace alica
 		{
 			if (this->epRobotsMapping->getEp(i) == ep)
 			{
-				if (find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(), robot) != this->epRobotsMapping->getRobots(i)->end())
+				if (find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
+							robot) != this->epRobotsMapping->getRobots(i)->end())
 				{
 					return false;
 				}
@@ -481,7 +483,8 @@ namespace alica
 			}
 			else
 			{
-				auto iter = find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(), robot);
+				auto iter = find(this->epRobotsMapping->getRobots(i)->begin(),
+									this->epRobotsMapping->getRobots(i)->end(), robot);
 				if (iter != this->epRobotsMapping->getRobots(i)->end())
 				{
 					this->epRobotsMapping->getRobots(i)->erase(iter);
@@ -499,7 +502,8 @@ namespace alica
 		{
 			if (this->epRobotsMapping->getEp(i) == ep)
 			{
-				if (find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(), robot) != this->epRobotsMapping->getRobots(i)->end())
+				if (find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
+							robot) != this->epRobotsMapping->getRobots(i)->end())
 				{
 					return false;
 				}
@@ -511,7 +515,8 @@ namespace alica
 			}
 			else
 			{
-				auto iter = find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(), robot);
+				auto iter = find(this->epRobotsMapping->getRobots(i)->begin(),
+									this->epRobotsMapping->getRobots(i)->end(), robot);
 				if (iter != this->epRobotsMapping->getRobots(i)->end())
 				{
 					this->epRobotsMapping->getRobots(i)->erase(iter);
@@ -533,7 +538,8 @@ namespace alica
 			return false;
 		}
 		this->robotStateMapping->removeRobot(robot);
-		auto iter = find(this->epRobotsMapping->getRobotsByEp(ep)->begin(), this->epRobotsMapping->getRobotsByEp(ep)->end(), robot);
+		auto iter = find(this->epRobotsMapping->getRobotsByEp(ep)->begin(),
+							this->epRobotsMapping->getRobotsByEp(ep)->end(), robot);
 		if (iter != this->epRobotsMapping->getRobotsByEp(ep)->end())
 		{
 			this->epRobotsMapping->getRobotsByEp(ep)->erase(iter);
@@ -586,7 +592,8 @@ namespace alica
 	{
 		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
 		{
-			auto iter = find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(), robot);
+			auto iter = find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
+								robot);
 			if (iter != this->epRobotsMapping->getRobots(i)->end())
 			{
 				return this->epRobotsMapping->getEp(i);
@@ -626,7 +633,8 @@ namespace alica
 		ss << "Rating: " << this->max << endl;
 		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
 		{
-			ss << "EP: " << this->epRobotsMapping->getEp(i)->getId() << " Task: " << this->epRobotsMapping->getEp(i)->getTask()->getName() << " RobotIDs: ";
+			ss << "EP: " << this->epRobotsMapping->getEp(i)->getId() << " Task: "
+					<< this->epRobotsMapping->getEp(i)->getTask()->getName() << " RobotIDs: ";
 			for (short robot : *(this->epRobotsMapping->getRobots(i)))
 			{
 				ss << robot << " ";

@@ -16,7 +16,6 @@ using namespace std;
 #include <memory>
 #include <sstream>
 #include "IAssignment.h"
-#include <SystemConfig.h>
 
 namespace alica
 {
@@ -75,7 +74,6 @@ namespace alica
 		string toHackString();
 
 	protected:
-		bool allowIdling;
 		/**
 		 * The Plan this Assignment refers to
 		 */
