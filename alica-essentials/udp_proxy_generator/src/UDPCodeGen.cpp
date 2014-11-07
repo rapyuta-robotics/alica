@@ -201,7 +201,7 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList)
 		{
 			for (RelayedMessage* m : msgList)
 			{
-				ret << "case " << m->Id << "ul: {\n";
+				ret << "case " << m->Id << ": {\n";
 				ret << m->getRosClassName() << " m" << m->Id << ";\n";
 				ret << "ros::serialization::Serializer<" << m->getRosClassName() << ">::read(stream, m" << m->Id
 						<< ");\n";

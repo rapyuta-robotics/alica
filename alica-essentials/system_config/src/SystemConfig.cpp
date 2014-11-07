@@ -202,10 +202,10 @@ namespace supplementary
 //		configs.clear();
 //	}
 
-//	string SystemConfig::robotNodeName(const string& nodeName)
-//	{
-//		return SystemConfig::getHostname() + NODE_NAME_SEPERATOR + nodeName;
-//	}
+	string SystemConfig::robotNodeName(const string& nodeName)
+	{
+		return SystemConfig::getHostname() + NODE_NAME_SEPERATOR + nodeName;
+	}
 
 	string SystemConfig::getEnv(const string & var)
 	{

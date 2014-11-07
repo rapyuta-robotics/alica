@@ -41,6 +41,13 @@ namespace supplementary
 			throw new exception();
 		}
 
+		template<typename Target>
+		vector<Target> convertList(string value)
+		{
+			cerr << "Configuration: List Type not handled! Value to be converted was: " << value << endl;
+			throw new exception();
+		}
+
 	public:
 		Configuration();
 		Configuration(string filename);
@@ -86,6 +93,29 @@ namespace supplementary
 			else
 			{
 				return convert<T>(nodes[0]->getValue());
+			}
+		}
+
+
+		template<typename T>
+		vector<T> getList(const char *path, ...)
+		{
+			va_list ap;
+			va_start(ap, path);
+			shared_ptr<vector<string> > params = getParams('.', path, ap);
+			va_end(ap);
+			vector<ConfigNode *> nodes;
+
+			collect(this->configRoot.get(), params.get(), 0, &nodes);
+
+			if (nodes.size() == 0)
+			{
+				cerr << "SC-Conf: " << pathNotFound(params.get()) << endl;
+				throw new exception();
+			}
+			else
+			{
+				return convertList<T>(nodes[0]->getValue());
 			}
 		}
 
@@ -195,6 +225,18 @@ namespace supplementary
 	};
 
 	template<>
+	inline short Configuration::convert<short>(string value)
+	{
+		return (short)stoi(value);
+	}
+
+	template<>
+	inline unsigned short Configuration::convert<unsigned short>(string value)
+	{
+		return (unsigned short)stoi(value);
+	}
+
+	template<>
 	inline int Configuration::convert<int>(string value)
 	{
 		return stoi(value);
@@ -267,6 +309,18 @@ namespace supplementary
 		}
 		cerr << "Configuration: unable to parse boolean. Value is: " << value << endl;
 		throw new exception();
+	}
+
+	template<>
+	inline vector<string> Configuration::convertList<string>(string value)
+	{
+		std::istringstream ss(value);
+		std::string listItem;
+		vector<string> itemVector;
+		while(std::getline(ss, listItem, ',')) {
+			itemVector.push_back(listItem);
+		}
+		return itemVector;
 	}
 }
 #endif /* CONFIGURATION_H_ */
