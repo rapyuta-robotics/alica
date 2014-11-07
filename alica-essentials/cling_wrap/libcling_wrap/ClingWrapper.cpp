@@ -248,6 +248,31 @@ namespace supplementary
           return this->lastModel->isTrue(this->lastSolver->symbolTable()[literalId].lit);
         }
 
+        std::unique_ptr<std::vector<Gringo::Value>> ClingWrapper::queryAllTrue(std::shared_ptr<Gringo::Value> query)
+        {
+          if (this->lastModel == nullptr || this->lastSolver == nullptr)
+            return nullptr;
+
+          std::unique_ptr<std::vector<Gringo::Value>> values(new std::vector<Gringo::Value>);
+          int literalId = -1;
+
+          for (auto lit : this->existingLiterals)
+          {
+            const Gringo::Value& value = std::get<1>(lit);
+
+            if (this->checkMatchValues(query.get(), &value))
+            {
+              literalId = std::get<0>(lit);
+              if (this->lastModel->isTrue(this->lastSolver->symbolTable()[literalId].lit))
+              {
+                values->push_back(value);
+              }
+            }
+          }
+
+          return std::move(values);
+        }
+
         void ClingWrapper::registerLiteral(unsigned int literal, Gringo::Value value)
         {
           std::lock_guard<std::mutex> guard (this->mutexLiterals);
@@ -311,7 +336,7 @@ namespace supplementary
           {
             Gringo::Value arg = value1->args()[i];
 
-            if (arg.type() == Gringo::Value::Type::STRING && arg.name() == "?")
+            if (arg.type() == Gringo::Value::Type::ID && arg.name() == "?")
               continue;
 
             if (arg != value2->args()[i])

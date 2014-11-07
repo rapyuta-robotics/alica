@@ -60,6 +60,7 @@ namespace supplementary
                                                             std::string const &ground, Gringo::FWValVec groundArgs, bool const assign);
 
                 bool query(std::string const &name, Gringo::FWValVec args);
+                std::unique_ptr<std::vector<Gringo::Value>> queryAllTrue(std::shared_ptr<Gringo::Value> query);
 
                 void registerLiteral(unsigned int literal, Gringo::Value value);
                 std::shared_ptr<BoolLiteral> const getBoolLiteral(std::string const &name, Gringo::FWValVec args);
