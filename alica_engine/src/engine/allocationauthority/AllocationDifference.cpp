@@ -88,16 +88,18 @@ namespace alica
 	string AllocationDifference::toString()
 	{
 		stringstream ss;
+		ss << "Additions: ";
 		for (int i = 0; i < this->additions.size(); i++)
 		{
 			ss << "+ " << this->additions[i]->getRobot() << " (" << this->additions[i]->getEntryPoint()->getId() << ")";
 		}
+		ss << endl << "Substractions: ";
 		for (int i = 0; i < this->subtractions.size(); i++)
 		{
 			ss << "- " << this->subtractions[i]->getRobot() << " ("
 					<< this->subtractions[i]->getEntryPoint()->getId() << ")";
 		}
-		ss << " " << this->reason ;
+		ss << endl << "Reason [0=msg, 1=util, 2=empty]:" << this->reason;
 		return ss.str();
 	}
 

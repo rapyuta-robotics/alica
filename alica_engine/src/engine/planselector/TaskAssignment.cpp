@@ -31,7 +31,7 @@ namespace alica
 	 * @param a bool
 	 */
 	TaskAssignment::TaskAssignment(PartialAssignmentPool* pap, ITeamObserver* to, list<Plan*> planList,
-									shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots)
+									shared_ptr<vector<int> > paraRobots, bool preassignOtherRobots)
 	{
 #ifdef EXPANSIONEVAL
 		this->expansionCount = 0;
@@ -58,7 +58,7 @@ namespace alica
 			curPa = PartialAssignment::getNew(pap, this->robots, curPlan, to->getSuccessCollection(curPlan));
 
 			// ASSIGN PREASSIGNED OTHER ROBOTS
-			if (preasingOtherRobots)
+			if (preassignOtherRobots)
 			{
 
 				if (this->addAlreadyAssignedRobots(curPa, &(*simplePlanTreeMap)))

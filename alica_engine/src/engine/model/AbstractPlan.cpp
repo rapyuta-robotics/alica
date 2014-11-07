@@ -71,7 +71,7 @@ namespace alica
 		this->masterPlan = masterPlan;
 	}
 
-	unsigned long AbstractPlan::getAuthorityTimeInterval() const
+	alicaTime AbstractPlan::getAuthorityTimeInterval() const
 	{
 		return authorityTimeInterval;
 	}

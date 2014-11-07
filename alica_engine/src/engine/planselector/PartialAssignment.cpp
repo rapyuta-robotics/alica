@@ -224,8 +224,6 @@ namespace alica
 
 		ret->epRobotsMapping->setSize(oldPA->epRobotsMapping->getSize());
 
-		//shared_ptr<vector<int> > > > oldRobotLists = oldPA->epRobotsMapping->getRobots();
-
 		for (int i = 0; i < oldPA->epRobotsMapping->getSize(); i++)
 		{
 			ret->epRobotsMapping->setEp(i, oldPA->epRobotsMapping->getEp(i));
@@ -361,7 +359,7 @@ namespace alica
 					auto iter = find(this->unAssignedRobots.begin(), this->unAssignedRobots.end(), robot);
 					if (this->unAssignedRobots.erase(iter) == this->unAssignedRobots.end())
 					{
-						cerr << "PA: Tried to assign robot " << robot << ", but it was not UNassigned!" << endl;
+						cerr << "PA: Tried to assign robot " << robot << ", but it was NOT UNassigned!" << endl;
 						throw new exception;
 					}
 					//return true, because we are ready, when we found the robot here
@@ -386,7 +384,7 @@ namespace alica
 	}
 
 	/**
-	 * Assigns the robot into the datastructures according to the given index.
+	 * Assigns the robot into the data structures according to the given index.
 	 * @return True, when it was possible to assign the robot. False, otherwise.
 	 */
 	bool PartialAssignment::assignRobot(int robot, int index)
@@ -521,8 +519,7 @@ namespace alica
 			// this has higher actual utility
 			return false;
 		}
-		//auto me = thisPa->epRobotsMapping->getRobots();
-		//auto you = newPa->epRobotsMapping->getRobots();
+
 		for (int i = 0; i < thisPa->epRobotsMapping->getSize(); ++i)
 		{
 			if (thisPa->epRobotsMapping->getRobots(i)->size() < newPa->epRobotsMapping->getRobots(i)->size())
@@ -552,33 +549,6 @@ namespace alica
 
 	}
 
-//	//TODO c# variant has to be adapted to c++
-//	/**
-//	 * Calculates a HashCode, which depends on the assignments and the plan.
-//	 * @return A HashCode, which should be robot independent.
-//	 */
-//	int PartialAssignment::getHashCode()
-//	{
-//		if (this->hashCalculated)
-//		{
-//			return this->hash;
-//		}
-//		int basei = this->epRobotsMapping->getSize() + 1;
-//		vector<int> robots;
-//		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
-//		{
-//			robots = (*this->epRobotsMapping->getRobots(i));
-//			for (int robot : robots)
-//			{
-//
-//				//TODO find replacement for c# array.binarysearch
-//				this->hash += (i + 1) * pow(basei, robots[i]);
-//			}
-//		}
-//		this->hashCalculated = true;
-//		return this->hash;
-//	}
-
 	string PartialAssignment::toString()
 	{
 		stringstream ss;
@@ -607,7 +577,7 @@ namespace alica
 		}
 
 		ss << this->epRobotsMapping->toString();
-		//ss << "HashCode: " << this->getHash() << endl;
+		ss << "HashCode: " << this->getHash() << endl;
 
 		return ss.str();
 

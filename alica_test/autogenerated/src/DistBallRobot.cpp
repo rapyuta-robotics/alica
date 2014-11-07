@@ -52,11 +52,11 @@ namespace alica
 
 			if (this->robotId == 8)
 			{
-				curPosition = alicaTests::TestWorldModel::getOne()->otherRobotX[pos];
+				curPosition = alicaTests::TestWorldModel::getOne()->robotsXPos[pos];
 			}
 			else
 			{
-				curPosition = alicaTests::TestWorldModel::getTwo()->otherRobotX[pos];
+				curPosition = alicaTests::TestWorldModel::getTwo()->robotsXPos[pos];
 			}
 			//if no opp is near ball
 			ui->setMin(std::max(ui->getMin(), 1 - fabs(sb - curPosition) / 18000));
@@ -71,11 +71,11 @@ namespace alica
 				//curPosition = this.playerPositions.GetValue(ass.UnAssignedRobots[i]);
 				if (this->robotId == 8)
 				{
-					curPosition = alicaTests::TestWorldModel::getOne()->otherRobotX.at(i);
+					curPosition = alicaTests::TestWorldModel::getOne()->robotsXPos.at(i);
 				}
 				else
 				{
-					curPosition = alicaTests::TestWorldModel::getTwo()->otherRobotX.at(i);
+					curPosition = alicaTests::TestWorldModel::getTwo()->robotsXPos.at(i);
 				}
 				ui->setMax(std::max(ui->getMax(), 1 - fabs(sb - curPosition) / 18000));
 			}

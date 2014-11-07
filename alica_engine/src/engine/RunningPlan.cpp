@@ -1118,6 +1118,7 @@ namespace alica
 			}
 			ss << ")";
 		}
+		ss << endl << "CycleManagement - Assignment Overridden: " << (this->getCycleManagement()->isOverridden()? "true": "false") << endl;
 		ss << "\n########## ENDRP ###########" << endl;
 		return ss.str();
 	}

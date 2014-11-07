@@ -2,7 +2,7 @@
 <uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
   <extensions>
     <key href="AuthorityTest.pml#1414403429950"/>
-    <value xPos="151" yPos="103" width="81" height="67"/>
+    <value xPos="125" yPos="51" width="93" height="67"/>
   </extensions>
   <extensions>
     <key href="AuthorityTest.pml#1414403413451"/>
@@ -18,6 +18,6 @@
   </extensions>
   <extensions>
     <key href="AuthorityTest.pml#1414403553717"/>
-    <value xPos="201" yPos="205"/>
+    <value xPos="134" yPos="197" width="93" height="67"/>
   </extensions>
 </uiextensionmodel:PmlUiExtensionMap>
