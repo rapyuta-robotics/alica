@@ -96,11 +96,11 @@ namespace alica
 
 	void AssignmentCollection::sortEps()
 	{
-		cout << "<<<< Check Sort!!!!! " << endl;
-		for (short i = 0; i < this->numEps; i++)
-		{
-			cout << i << ": " << entryPoints[i]->getTask()->getId() << endl;
-		}
+//		cout << "<<<< Check Sort!!!!! " << endl;
+//		for (short i = 0; i < this->numEps; i++)
+//		{
+//			cout << i << ": " << entryPoints[i]->getTask()->getId() << endl;
+//		}
 
 		// Stopfers sort style
 		vector<EntryPoint*> sortedEpVec;
@@ -119,11 +119,11 @@ namespace alica
 		 std::sort(std::begin(entryPoints), std::begin(entryPoints) + this->numEps, EpByTaskComparer::compareTo);
 		 */
 
-		cout << "<<<<< Nachher!!!! " << endl;
-		for (short i = 0; i < this->numEps; i++)
-		{
-			cout << i << ": " << entryPoints[i]->getTask()->getId() << endl;
-		}
+//		cout << "<<<<< Nachher!!!! " << endl;
+//		for (short i = 0; i < this->numEps; i++)
+//		{
+//			cout << i << ": " << entryPoints[i]->getTask()->getId() << endl;
+//		}
 	}
 
 	/**
@@ -162,10 +162,6 @@ namespace alica
 
 	void AssignmentCollection::setSize(short size)
 	{
-		cout << "AssCol: size set to " << size << endl;
-		if (size == 3) {
-			cout << "AssCol: Maybe wrong" << endl;
-		}
 		this->numEps = size;
 	}
 

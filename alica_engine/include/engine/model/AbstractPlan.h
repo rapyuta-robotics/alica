@@ -41,7 +41,7 @@ namespace alica
 		bool isMasterPlan() const;
 		void setMasterPlan(bool isMasterPlan);
 		virtual string toString() const;
-		unsigned long getAuthorityTimeInterval() const;
+		alicaTime getAuthorityTimeInterval() const;
 		void setAuthorityTimeInterval(alicaTime authorityTimeInterval);
 		const virtual string& getFileName() const;
 		virtual void setFileName(const string& fileName);

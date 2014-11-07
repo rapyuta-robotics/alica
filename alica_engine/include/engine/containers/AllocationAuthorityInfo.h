@@ -16,7 +16,7 @@ using namespace std;
 
 namespace alica
 {
-	typedef tuple<int, int, int, int, int, vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
+	typedef tuple<int, long, long, long, int, vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
 	struct AllocationAuthorityInfo
 	{
 		AllocationAuthorityInfo()
@@ -24,9 +24,9 @@ namespace alica
 		}
 
 		int senderID;
-		int planId;
-		int parentState;
-		int planType;
+		long planId;
+		long parentState;
+		long planType;
 		int authority;
 		vector<EntryPointRobots> entryPointRobots;
 

@@ -9,7 +9,7 @@
 #define TASKASSIGNMENT_H_
 
 //#define EXPANSIONEVAL
-#define TA_DEBUG
+//#define TA_DEBUG
 
 using namespace std;
 

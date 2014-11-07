@@ -99,8 +99,10 @@ namespace alica
 						min(maximalOverrideTimeInterval,
 							(alicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
 				this->overrideShoutTime = 0;
+#ifdef CM_DEBUG
 				cout << "Assuming Authority for " << this->rp->getPlan()->getAuthorityTimeInterval() / 1000000000.0
 						<< "sec!" << endl;
+#endif
 				this->overrideTimestamp = ae->getIAlicaClock()->now();
 			}
 			else
@@ -142,7 +144,6 @@ namespace alica
 	 */
 	bool CycleManager::isOverridden()
 	{
-		cout << "CM: CycleState " << this->state << endl;
 		return this->state == CycleState::overridden && this->fixedAllocation != nullptr;
 	}
 
@@ -163,7 +164,9 @@ namespace alica
 			this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
 			delete this->allocationHistory[this->newestAllocationDifference];
 			this->allocationHistory[this->newestAllocationDifference] = aldif;
-			cout << "CM: aldif " << aldif->toString() << endl;
+#ifdef CM_DEBUG
+			cout << "CM: SetNewAllDiff(a): " << aldif->toString() << endl;
+#endif
 		}
 		catch (exception &e)
 		{
@@ -227,6 +230,9 @@ namespace alica
 
 			}
 			this->allocationHistory[this->newestAllocationDifference]->setReason(reas);
+#ifdef CM_DEBUG
+			cout << "CM: SetNewAllDiff(b): " << this->allocationHistory[this->newestAllocationDifference]->toString() << endl;
+#endif
 		}
 		catch (exception &e)
 		{
@@ -253,6 +259,9 @@ namespace alica
 		}
 		if (rid > myID)
 		{
+#ifdef CM_DEBUG
+			cout << "CM: Assignment overridden in " << this->rp->getPlan()->getName() << " " << endl;
+#endif
 			this->state = CycleState::overridden;
 			this->overrideShoutTime = ae->getIAlicaClock()->now();
 			this->fixedAllocation = aai;
@@ -300,10 +309,14 @@ namespace alica
 	 * @param r A shared_ptr<RunningPlan>
 	 * @return A bool
 	 */
-	bool CycleManager::setAssignment(shared_ptr<RunningPlan> r)
+	bool CycleManager::setAssignment(shared_ptr<RunningPlan> rp)
+	// TODO: Why is the rp given here, when it can work on the local rp variable, which is the same!?
 	{
 #ifdef CM_DEBUG
-		cout << "CM: Setting new Assignment " << rp->getPlan()->getName() << "!" << endl;
+		cout << "CM: Setting authorative assignment for plan " << rp->getPlan()->getName()  << endl;
+		if (rp->getPlan()->getName() == "AuthorityTest") {
+			cout << "CM: Changing AuthorityTest " << endl;
+		}
 #endif
 		EntryPoint* myEntryPoint = nullptr;
 		if (this->fixedAllocation == nullptr)
@@ -313,7 +326,7 @@ namespace alica
 		bool modifiedSelf = false;
 		bool modified = false;
 		if (this->fixedAllocation->planId != rp->getPlan()->getId())
-		{
+		{//Plantype case
 			if (rp->getPlanType()->getId() != this->fixedAllocation->planType)
 			{
 				return false;
@@ -383,12 +396,6 @@ namespace alica
 				}
 			}
 		}
-#ifdef CM_DEBUG
-		if (!modifiedSelf)
-		{
-			cout << "But no change!" << endl;
-		}
-#endif
 		return modifiedSelf || modified;
 	}
 

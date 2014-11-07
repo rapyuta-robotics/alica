@@ -23,7 +23,6 @@ namespace alica
 
 	EntryPoint::~EntryPoint()
 	{
-		cout << "EP: DESTRUCTOR CALLED!!!!" << endl;
 	}
 
 	void EntryPoint::computeReachabilitySet()

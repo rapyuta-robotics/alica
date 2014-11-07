@@ -32,8 +32,8 @@ namespace alicaTests
 		void setTransitionCondition1413201367990(bool transitionCondition1413201367990);
 		bool isTransitionCondition1413201370590();
 		void setTransitionCondition1413201370590(bool transitionCondition1413201370590);
+		vector<double> robotsXPos;
 		double x;
-		vector<double> otherRobotX;
 
 	private:
 		TestWorldModel();

@@ -60,6 +60,7 @@ namespace alica
 			ae->getTeamObserver()->messageRecievedFrom(aai->senderID);
 			if (aai->senderID > this->ownID)
 			{
+				//notify TO that evidence about other robots is available
 				for (EntryPointRobots epr : aai->entryPointRobots)
 				{
 					for (int rid : epr.robots)
@@ -72,55 +73,66 @@ namespace alica
 				}
 			}
 		}
+#ifdef AM_DEBUG
+		stringstream ss;
+		ss << "AM: Received AAI Assignment from " << aai->senderID << " is: "  << endl;
+		for( EntryPointRobots epRobots : aai->entryPointRobots)
+		{
+			ss << "EP: " << epRobots.entrypoint << " Robots: ";
+			for (int robot : epRobots.robots)
+			{
+				ss << robot << ", ";
+			}
+			ss <<endl;
+		}
+		cout << ss.str();
+#endif
 		{
 			lock_guard<mutex> lock(mu);
 			this->queue.push_back(aai);
 		}
 	}
+
 	/**
 	 * Cyclic tick function, called by the plan base every iteration
 	 */
-	void AuthorityManager::tick(shared_ptr<RunningPlan> p)
+	void AuthorityManager::tick(shared_ptr<RunningPlan> rp)
 	{
+#ifdef AM_DEBUG
+		cout << "AM: Tick called! <<<<<<" << endl;
+#endif
 		lock_guard<mutex> lock(mu);
-		processPlan(p);
+		processPlan(rp);
 		this->queue.clear();
 	}
 
-	void AuthorityManager::processPlan(shared_ptr<RunningPlan> p)
+	void AuthorityManager::processPlan(shared_ptr<RunningPlan> rp)
 	{
-		if (p == nullptr || p->isBehaviour())
+		if (rp == nullptr || rp->isBehaviour())
 		{
 			return;
 		}
-		if (p->isBehaviour())
+		if (rp->getCycleManagement()->needsSending())
 		{
-			return;
+			sendAllocation(rp);
+			rp->getCycleManagement()->sent();
 		}
-		if (p->getCycleManagement()->needsSending())
-		{
-			sendAllocation(p);
-			p->getCycleManagement()->sent();
-		}
-#ifdef AM_DEBUG
-		cout << "AM: outside for " << endl;
-#endif
+//#ifdef AM_DEBUG
+//		cout << "AM: Queue size of AuthorityInfos is " << this->queue.size() << endl;
+//#endif
 		for (int i = 0; i < this->queue.size(); i++)
 		{
-#ifdef AM_DEBUG
-			cout << "AM: inside for " << endl;
-#endif
-			if (authorityMatchesPlan(this->queue[i], p))
+			if (authorityMatchesPlan(this->queue[i], rp))
 			{
-#ifdef AM_DEBUG
-				cout << "AM: p->getCycleManagement()->handleAuthorityInfo(this->queue[i]);" << endl;
-#endif
-				p->getCycleManagement()->handleAuthorityInfo(this->queue[i]);
+//#ifdef AM_DEBUG
+//				cout << "AM: Found AuthorityInfo, which matches the plan " << rp->getPlan()->getName() << endl;
+//#endif
+				rp->getCycleManagement()->handleAuthorityInfo(this->queue[i]);
 				this->queue.erase(this->queue.begin() + i);
 				i--;
 			}
 		}
-		for (shared_ptr<RunningPlan> c : *p->getChildren())
+		for (shared_ptr<RunningPlan> c : *rp->getChildren())
 		{
 			processPlan(c);
 		}
@@ -137,55 +149,71 @@ namespace alica
 		}
 		AllocationAuthorityInfo aai = AllocationAuthorityInfo();
 
-		EntryPointRobots it;
+		EntryPointRobots epRobots;
 		shared_ptr<Assignment> ass = p->getAssignment();
 		for (int i = 0; i < ass->getEntryPointCount(); i++)
 		{
-			it = EntryPointRobots();
-			it.entrypoint = ass->getEpRobotsMapping()->getEp(i)->getId();
-			auto robots = ass->getRobotsWorking(ass->getEpRobotsMapping()->getEp(i));
-			for (int j = 0; j < robots->size(); j++)
+			epRobots = EntryPointRobots();
+			epRobots.entrypoint = ass->getEpRobotsMapping()->getEp(i)->getId();
+			for (int robot : *ass->getRobotsWorking(epRobots.entrypoint))
 			{
-				it.robots.push_back(robots->at(j));
+				epRobots.robots.push_back(robot);
 			}
-			aai.entryPointRobots.push_back(it);
+			aai.entryPointRobots.push_back(epRobots);
 		}
 
 		auto shared = p->getParent().lock();
-		//TODO id is always 1359155945 which is not in etc/plans
-		aai.parentState = (
-				(p->getParent().expired() || shared->getActiveState() == nullptr) ? -1 :
-						shared->getActiveState()->getId());
-		cout << "AM: aai.parentState " << aai.parentState << endl;
+		aai.parentState = ((p->getParent().expired() || shared->getActiveState() == nullptr)
+				? -1 : shared->getActiveState()->getId());
 		aai.planId = p->getPlan()->getId();
 		aai.authority = this->ownID;
 		aai.senderID = this->ownID;
 		aai.planType = (p->getPlanType() == nullptr ? -1 : p->getPlanType()->getId());
-
+#ifdef AM_DEBUG
+		stringstream ss;
+		ss << "AM: Sending AAI Assignment from " << aai.senderID << " is: "  << endl;
+		for( EntryPointRobots epRobots : aai.entryPointRobots)
+		{
+			ss << "EP: " << epRobots.entrypoint << " Robots: ";
+			for (int robot : epRobots.robots)
+			{
+				ss << robot << ", ";
+			}
+			ss <<endl;
+		}
+		cout << ss.str();
+#endif
 		this->ae->getCommunicator()->sendAllocationAuthority(aai);
 	}
 
+	/**
+	 * TODO:
+	 * QUESTION: If you use the same plan two times, each in a different part of the plan tree.
+	 * How is it guarenteed, that this method does not match the wrong instance?!
+	 * @param aai
+	 * @param p
+	 * @return
+	 */
 	bool AuthorityManager::authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p)
 	{
 		auto shared = p->getParent().lock();
-
+/*#ifdef AM_DEBUG
 		if (!p->getParent().expired())
 		{
-			cout << "AM: expired " << !p->getParent().expired() << " aai->parentState == -1 "
-					<< (aai->parentState == -1) << " shared->getActiveState() != nullptr "
-					<< (shared->getActiveState() != nullptr)
-					<< " aai->parentState == shared->getActiveState()->getId() "
-					<< (aai->parentState == shared->getActiveState()->getId()) << endl;
+			cout << "AM: Parent-WeakPtr is NOT expired!" << endl;
+			cout << "AM: Parent-ActiveState is: " << (shared->getActiveState() != nullptr ? shared->getActiveState()->getId() : NULL) << endl;
+			cout << "AM: AAI-ParentState is: " << aai->parentState << endl;
 		}
 		else
 		{
-			cout << "AM: expired " << aai->parentState << endl;
+			cout << "AM: Parent-WeakPtr is expired!" << endl;
+			cout << "AM: Current-ActiveState is: " << p->getActiveState()->getId() << endl;
+			cout << "AM: AAI-ParentState is: " << aai->parentState << endl;
 		}
-		if ((p->getParent().expired() && aai->parentState == -1)
-				|| (!p->getParent().expired() && shared->getActiveState() != nullptr
-						&& aai->parentState == shared->getActiveState()->getId()))
+#endif*/
+
+		if ((p->getParent().expired() && aai->parentState == -1) || (!p->getParent().expired() && shared->getActiveState() != nullptr && shared->getActiveState()->getId() == aai->parentState))
 		{
-			cout << "AM: matches" << endl;
 			if (p->getPlan()->getId() == aai->planId)
 			{
 				return true;

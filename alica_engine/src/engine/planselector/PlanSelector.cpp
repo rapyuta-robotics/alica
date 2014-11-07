@@ -159,9 +159,7 @@ namespace alica
 			oldAss = oldRp->getAssignment();
 		}
 
-#ifdef PSDEBUG
-		cout << ta->toString();
-#endif
+
 		// some variables for the do while loop
 		EntryPoint* ep = nullptr;
 		shared_ptr<RobotProperties> ownRobProb = to->getOwnRobotProperties();
@@ -179,8 +177,12 @@ namespace alica
 #endif
 				return nullptr;
 			}
+
 			// PLAN (needed for Conditionchecks)
 			rp->setPlan(rp->getAssignment()->getPlan());
+#ifdef PSDEBUG
+			cout << "PS: rp.Assignment of Plan " << rp->getPlan()->getName() << " from " << ownRobProb->getId() << " is: " << rp->getAssignment()->toString();
+#endif
 			// CONDITIONCHECK
 			if (!rp->evalPreCondition())
 			{

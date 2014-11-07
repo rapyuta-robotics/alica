@@ -58,7 +58,6 @@ namespace alica
 		this->plan = pa->getPlan();
 
 		AssignmentCollection* assCol = pa->getEpRobotsMapping();
-		cout << "Ass: assColSize: " << assCol->getSize() << " allowIdle: " << AssignmentCollection::allowIdling << " " << true << endl;
 		if (AssignmentCollection::allowIdling)
 		{
 			this->epRobotsMapping = new AssignmentCollection(assCol->getSize() - 1);
@@ -575,7 +574,7 @@ namespace alica
 		auto movingRobots = this->robotStateMapping->getRobotsInState(from);
 		if (to == nullptr)
 		{
-			cout << "Ass: to nullptr" << endl;
+			cout << "Ass: MoveRobots is given a State which is NULL!" << endl;
 		}
 		for (int r : movingRobots)
 		{

@@ -82,38 +82,30 @@ TEST_F(AlicaEngineAuthorityManager, authority)
 	ae = new alica::AlicaEngine();
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "RolesetTA", "AuthorityTestMaster", ".", true))
-			<< "Unable to initialise the Alica Engine!";
+	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "RolesetTA", "AuthorityTestMaster", ".", true)) << "Unable to initialise the Alica Engine!";
 
 	sc->setHostname("hairy");
 	ae2 = new alica::AlicaEngine();
 	ae2->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
-	EXPECT_TRUE(ae2->init(bc, cc, uc, crc, "RolesetTA", "AuthorityTestMaster", ".", true))
-			<< "Unable to initialise the Alica Engine!";
+	EXPECT_TRUE(ae2->init(bc, cc, uc, crc, "RolesetTA", "AuthorityTestMaster", ".", true)) << "Unable to initialise the Alica Engine!";
 
-	auto uSummandAe =
-			*((ae->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
+	auto uSummandAe = *((ae->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
 	DummyTestSummand* dbr = dynamic_cast<DummyTestSummand*>(uSummandAe);
 	dbr->robotId = ae->getTeamObserver()->getOwnId();
-	auto uSummandAe2 =
-			*((ae2->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
+	auto uSummandAe2 = *((ae2->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
 	DummyTestSummand* dbr2 = dynamic_cast<DummyTestSummand*>(uSummandAe2);
 	dbr2->robotId = ae2->getTeamObserver()->getOwnId();
 	ae->start();
 	ae2->start();
 
+	alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(0);
+	alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(2000);
 
-	//alicaTests::TestWorldModel::getOne()->x = 0;
-	//alicaTests::TestWorldModel::getTwo()->x = 0;
+	alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(2000);
+	alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(0);
 
-	alicaTests::TestWorldModel::getOne()->otherRobotX.push_back(0);
-	alicaTests::TestWorldModel::getOne()->otherRobotX.push_back(2000);
-
-	alicaTests::TestWorldModel::getTwo()->otherRobotX.push_back(2000);
-	alicaTests::TestWorldModel::getTwo()->otherRobotX.push_back(0);
-
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 21; i++)
 	{
 		ae->stepNotify();
 		chrono::milliseconds duration(33);

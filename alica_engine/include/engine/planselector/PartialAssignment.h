@@ -21,7 +21,6 @@ using namespace std;
 #include <memory>
 #include <math.h>
 
-
 #include "engine/IAssignment.h"
 #include "engine/collections/AssignmentCollection.h"
 

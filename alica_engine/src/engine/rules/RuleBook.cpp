@@ -209,16 +209,21 @@ namespace alica
 	{
 #ifdef RULE_debug
 		cout << "RB: AuthorityOverride-Rule called." << endl;
-		cout << "RB: AuthorityOverride RP \n" << r->toString() << endl;
 #endif
 		if (r->isBehaviour())
 			return PlanChange::NoChange;
-		cout << "CM: overridden " << r->getCycleManagement()->isOverridden() << endl;
+
+//#ifdef RULE_debug
+		cout << "RB: AuthorityOverride RP \n" << r->toString() << endl;
+//#endif
 		if (r->getCycleManagement()->isOverridden())
 		{
 			if (r->getCycleManagement()->setAssignment(r))
 			{
 				log->eventOccured("AuthorityOverride(" + r->getPlan()->getName() + ")");
+//#ifdef RULE_debug
+				cout << "RB: Authorative set assignment of " << r->getPlan()->getName() << " is:" << r->getAssignment()->toString() << endl;
+//#endif
 				return PlanChange::InternalChange;
 			}
 		}
