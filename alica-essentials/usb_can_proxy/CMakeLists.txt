@@ -9,7 +9,7 @@ find_package(catkin REQUIRED
   system_config 
   roscpp 
   message_generation 
-  msl_actuator_msgs
+#  msl_actuator_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -69,7 +69,8 @@ add_message_files(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES usb_can_proxy
-  CATKIN_DEPENDS system_config can_connection roscpp message_runtime msl_actuator_msgs
+  CATKIN_DEPENDS system_config can_connection roscpp message_runtime 
+#msl_actuator_msgs
 #  DEPENDS system_lib
 )
 
@@ -83,7 +84,6 @@ catkin_package(
 include_directories(${catkin_INCLUDE_DIRS})
 
 ## Declare a cpp executable
-message ("<<<<<<<<< usb_can_proxy: ${catkin_INCLUDE_DIRS}")
 add_executable(usb_can_proxy src/UsbCanProxy.cpp)
 target_link_libraries(usb_can_proxy ${catkin_LIBRARIES} can_connection)
 set_target_properties(usb_can_proxy PROPERTIES COMPILE_FLAGS "-O3 -Wall -Werror")
