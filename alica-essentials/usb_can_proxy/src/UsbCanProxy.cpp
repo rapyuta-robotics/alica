@@ -82,7 +82,7 @@ public:
 			//{
 		//		printf("no motion!\n");
 	//		}
-			else if( (now-lastCan).toSec() > 2 )
+			if( (now-lastCan).toSec() > 2 )
 			{
 				//resetInterface();
 			}
