@@ -128,6 +128,9 @@ namespace supplementary
 
 	vector<string> FileSystem::findAllFiles(string path, string ending)
 	{
+		cout << "FileSystem.cpp: Come on, who did use this method, but did not implement it!!??" << endl;
+
+		throw new exception ();
 		return vector<string>();
 	}
 

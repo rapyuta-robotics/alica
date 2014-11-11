@@ -334,6 +334,11 @@ namespace supplementary
 		return os.str();
 	}
 
+	/**
+	 * Allows to collect the names of all sections in the given path. It does not include the keys of key-value pair in the sections.
+	 * @param path
+	 * @return A vector with the names of all sections in the given path.
+	 */
 	shared_ptr<vector<string> > Configuration::getSections(const char *path, ...)
 	{
 		va_list ap;
@@ -365,6 +370,11 @@ namespace supplementary
 		return result;
 	}
 
+	/**
+	 * Allows to collect all keys in the given path. It does not include section names.
+	 * @param path
+	 * @return A vector with all keys or names of the given path.
+	 */
 	shared_ptr<vector<string> > Configuration::getNames(const char *path, ...)
 	{
 		va_list ap;
@@ -519,7 +529,7 @@ namespace supplementary
 					p = q + 1;
 				}
 //				cout << "SC-Conf: Adding-AfterLoop: '" << string(temp, p, charString.length()-p) << "'" << endl;
-				params->emplace_back(temp, p, charString.length()-p);
+				params->emplace_back(temp, p, charString.length() - p);
 			} while ((temp = va_arg(ap, const char *)) != NULL);
 		}
 		return params;
