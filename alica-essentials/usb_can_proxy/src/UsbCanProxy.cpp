@@ -1,7 +1,7 @@
 
 #include "ros/ros.h"
 #include "usb_can_proxy/CanMsg.h"
-#include "msl_actuator_msgs/RawOdometryInfo.h"
+//#include "msl_actuator_msgs/RawOdometryInfo.h"
 #include <stdio.h>
 #include <signal.h>
 #include <sys/time.h>
@@ -34,10 +34,10 @@ public:
 		//}
 		us->SendExCanMsg(msg->id,p,msg->data.size());
 	}
-	void onRawOdometry(const msl_actuator_msgs::RawOdometryInfo::ConstPtr& msg)
-	{
-		lastMotion = ros::Time::now();
-	}
+	//void onRawOdometry(const msl_actuator_msgs::RawOdometryInfo::ConstPtr& msg)
+	//{
+//		lastMotion = ros::Time::now();
+	//}
 	UsbCanProxy()
 	{
 		us = new UsbCanConnection("can0");
@@ -48,7 +48,7 @@ public:
 		rekick = n.advertise<usb_can_proxy::CanMsg>("usb_can_proxy/Rekick", 30);
 		ballhandler = n.advertise<usb_can_proxy::CanMsg>("usb_can_proxy/BallHandler", 30);
 		canSub = n.subscribe("usb_can_proxy/CanSub", 30, &UsbCanProxy::getCanMsg,this);//,ros::TransportHints().unreliable().tcpNoDelay());
-		odomSub = n.subscribe("RawOdometry", 10, &UsbCanProxy::onRawOdometry, this);
+		//odomSub = n.subscribe("RawOdometry", 10, &UsbCanProxy::onRawOdometry, this);
 
 		//spinner = new ros::AsyncSpinner(3);
 		//spinner->start();
@@ -78,11 +78,11 @@ public:
 
 			ros::Time now = ros::Time::now();
 
-			if( (now-lastMotion).toSec() > 1 )
-			{
-				printf("no motion!\n");
-			}
-			else if( (now-lastCan).toSec() > 2 )
+			//if( (now-lastMotion).toSec() > 1 )
+			//{
+		//		printf("no motion!\n");
+	//		}
+			if( (now-lastCan).toSec() > 2 )
 			{
 				//resetInterface();
 			}
@@ -101,7 +101,7 @@ protected:
 	ros::Subscriber canSub;
 	ros::Subscriber odomSub;
 	ros::Time lastCan;
-	ros::Time lastMotion;
+	//ros::Time lastMotion;
 
 	// publisher for direct bundle restart trigger
 	ros::Publisher brtPub;
@@ -178,7 +178,7 @@ protected:
 		if(!e) printf("error reseting!\n");
 
 		lastCan = ros::Time::now();
-		lastMotion = ros::Time::now();
+		//lastMotion = ros::Time::now();
 		Start();
 	}
 };

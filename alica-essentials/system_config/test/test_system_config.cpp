@@ -18,6 +18,11 @@ TEST(SystemConfigBasics, readValues)
 	sc->setRootPath(path);
 	sc->setConfigPath(path + "/etc");
 
+
+	// read int
+	unsigned short uShortTestValue = (*sc)["Test"]->get<unsigned short>("uShortTestValue", NULL);
+	EXPECT_EQ(3, uShortTestValue);
+
 	// read int
 	int intTestValue = (*sc)["Test"]->get<int>("intTestValue", NULL);
 	EXPECT_EQ(221, intTestValue);
