@@ -7,7 +7,15 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED fsystem)
+if(catkin_FOUND)
+	find_package(catkin REQUIRED fsystem)
+else(catkin_FOUND)
+	find_package(fsystem REQUIRED)
+	set (catkin_INCLUDE_DIRS ${fsystem_INCLUDE_DIRS})
+	set (catkin_LIBRARIES "fsystem")
+#message ("CatkinIncl: ${catkin_INCLUDE_DIRS} OhneIncl: ${fsystem_INCLUDE_DIRS}")
+#message ("CatkinIncl: ${catkin_LIBRARIES} OhneIncl: ${fsystem_LIBRARIES}")
+endif(catkin_FOUND)
 
 ## System dependencies are found with CMake's conventions
 #find_package(Boost REQUIRED COMPONENTS system filesystem)
@@ -78,12 +86,14 @@ find_package(catkin REQUIRED fsystem)
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
- INCLUDE_DIRS include
- LIBRARIES system_config
- CATKIN_DEPENDS fsystem
-# DEPENDS system filesystem
-)
+if (catkin_FOUND)
+  catkin_package(
+   INCLUDE_DIRS include
+   LIBRARIES system_config
+   CATKIN_DEPENDS fsystem
+  # DEPENDS system filesystem
+  )
+endif(catkin_FOUND)
 
 ###########
 ## Build ##
@@ -91,6 +101,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
+
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 ## Declare a cpp library
@@ -104,6 +115,7 @@ add_library(system_config
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
+
 add_dependencies(system_config ${catkin_LIBRARIES})
 
 ## Specify libraries to link a library or executable target against
@@ -149,10 +161,12 @@ target_link_libraries(system_config ${catkin_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-catkin_add_gtest(${PROJECT_NAME}-test test/test_system_config.cpp)
-if(TARGET ${PROJECT_NAME}-test)
-  target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
-endif()
+if (catkin_FOUND)
+  catkin_add_gtest(${PROJECT_NAME}-test test/test_system_config.cpp)
+  if(TARGET ${PROJECT_NAME}-test)
+    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
+  endif()
+endif(catkin_FOUND)
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
