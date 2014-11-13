@@ -7,7 +7,13 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS system_config fsystem event_handling)
+if (catkin_FOUND)
+  find_package(catkin REQUIRED COMPONENTS system_config fsystem event_handling)
+else (catkin_FOUND)
+  find_package(system_config REQUIRED)
+  find_package(fsystem REQUIRED)
+  find_package(event_handling)
+endif(catkin_FOUND)
 
 ## System dependencies are found with CMake's conventions
 #find_package(Boost REQUIRED COMPONENTS program_options)
@@ -77,12 +83,14 @@ find_package(catkin REQUIRED COMPONENTS system_config fsystem event_handling)
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES alica_engine
-  CATKIN_DEPENDS roscpp fsystem
-#  DEPENDS tinyxml
-)
+if(catkin_FOUND)
+  catkin_package(
+    INCLUDE_DIRS include
+    LIBRARIES alica_engine
+    CATKIN_DEPENDS  system_config fsystem event_handling
+  #  DEPENDS tinyxml
+  )
+endif(catkin_FOUND)
 
 ###########
 ## Build ##
@@ -90,7 +98,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
- include_directories(include test/include ${catkin_INCLUDE_DIRS})
+ include_directories(include ${catkin_INCLUDE_DIRS})
 
 
 file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
