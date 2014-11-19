@@ -78,17 +78,22 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES fsystem
-#  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
-)
+if (catkin_FOUND)
+  catkin_package(
+    INCLUDE_DIRS include
+    LIBRARIES fsystem
+  #  CATKIN_DEPENDS other_catkin_pkg
+  #  DEPENDS system_lib
+  )
+endif (catkin_FOUND)
 
 ###########
 ## Build ##
 ###########
-
+#get_cmake_property(_variableNames VARIABLES)
+#foreach (_variableName ${_variableNames})
+#    message(STATUS "${_variableName}=${${_variableName}}")
+#endforeach()
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
  include_directories(include)
