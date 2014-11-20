@@ -31,6 +31,7 @@ namespace supplementary
 		void update();
 		void startProcess (char* const* params);
 		void startProcess ();
+		void stopProcess ();
 	private:
 		short id;
 		const char* executable;

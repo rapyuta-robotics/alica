@@ -17,7 +17,7 @@
 
 #include "ManagedExecutable.h"
 
-
+#include "process_manager/ProcessCommand.h"
 
 using namespace std;
 
@@ -35,7 +35,13 @@ namespace supplementary
 		bool isRunning();
 	private:
 		SystemConfig* sc;
-		map<short, ManagedExecutable*> executableMap;
+		map<uint8_t, ManagedExecutable*> executableMap;
+
+		ros::NodeHandle* rosNode;
+		ros::AsyncSpinner* spinner;
+		ros::Subscriber processCommandSub;
+
+		void handleProcessCommand(process_manager::ProcessCommandPtr pc);
 
 
 		bool running;

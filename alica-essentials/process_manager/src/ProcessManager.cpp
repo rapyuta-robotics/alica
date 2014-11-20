@@ -22,7 +22,6 @@ namespace supplementary
 	ProcessManager::ProcessManager(int argc, char** argv) :
 			iterationTime(1000000), mainThread(NULL), running(false)
 	{
-
 		// initialise the process map with data from the Processes.conf file
 		this->sc = SystemConfig::getInstance();
 		auto processDescriptions = (*this->sc)["Processes"]->getSections("Processes.ProcessDescriptions", NULL);
@@ -31,12 +30,21 @@ namespace supplementary
 		vector<string> curDefaultParams;
 		for (auto processSectionName : (*processDescriptions))
 		{
-			curId = (*this->sc)["Processes"]->get<short>("Processes.ProcessDescriptions", processSectionName.c_str(), "id", NULL);
-			curExecutable = (*this->sc)["Processes"]->get<string>("Processes.ProcessDescriptions", processSectionName.c_str(), "executable",
-			NULL);
-			curDefaultParams = (*this->sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", processSectionName.c_str(), "defaultParams", NULL);
+			curId = (*this->sc)["Processes"]->get<short>("Processes.ProcessDescriptions", processSectionName.c_str(),
+															"id", NULL);
+			curExecutable = (*this->sc)["Processes"]->get<string>("Processes.ProcessDescriptions",
+																	processSectionName.c_str(), "executable",
+																	NULL);
+			curDefaultParams = (*this->sc)["Processes"]->getList<string>("Processes.ProcessDescriptions",
+																			processSectionName.c_str(), "defaultParams",
+																			NULL);
 			this->executableMap[curId] = new ManagedExecutable(curId, curExecutable.c_str(), curDefaultParams);
 		}
+
+		rosNode = new ros::NodeHandle();
+		spinner = new ros::AsyncSpinner(4);
+		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10,
+												&ProcessManager::handleProcessCommand, (ProcessManager*)this);
 	}
 
 	ProcessManager::~ProcessManager()
@@ -53,6 +61,33 @@ namespace supplementary
 			delete mngdExec.second;
 		}
 		executableMap.clear();
+	}
+
+	void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
+	{
+		switch (pc->cmd)
+		{
+			case process_manager::ProcessCommand::START:
+				for (uint8_t proc : pc->processKeys)
+				{
+					auto mngExec = this->executableMap.find(proc);
+					if (mngExec != this->executableMap.end())
+					{
+						mngExec->second->startProcess();
+					}
+				}
+				break;
+			case process_manager::ProcessCommand::STOP:
+				for (uint8_t proc : pc->processKeys)
+				{
+					auto mngExec = this->executableMap.find(proc);
+					if (mngExec != this->executableMap.end())
+					{
+						mngExec->second->stopProcess();
+					}
+				}
+				break;
+		}
 	}
 
 	void ProcessManager::start()

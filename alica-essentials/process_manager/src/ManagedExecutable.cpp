@@ -59,6 +59,7 @@ namespace supplementary
 			cout << endl;
 #endif
 
+			// TODO:
 			// 0. remove not queued processes from processes map
 
 			// 1. find pids from que in processes map
@@ -96,6 +97,12 @@ namespace supplementary
 	void ManagedExecutable::startProcess()
 	{
 		this->startProcess(this->defaultParams);
+	}
+
+	void ManagedExecutable::stopProcess()
+	{
+		// TODO
+		throw new exception();
 	}
 
 } /* namespace supplementary */
