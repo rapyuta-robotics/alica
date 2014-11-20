@@ -33,15 +33,6 @@ namespace alicaRosProxy
 		rosNode = new ros::NodeHandle();
 		spinner = new ros::AsyncSpinner(4);
 
-
-		//supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-
-		/*ownID = ((*sc)["Globals"]->tryGet<int>(-1, "Globals", "Team", sc->getHostname().c_str(), "ID", NULL));
-		 if (ownID == -1)
-		 {
-		 cout << "ATTENTION!!! OwnID is set to -1!!! ROBOT ID is not in Globals.conf [Globals][Team]!!!" << endl;
-		 }*/
-
 		AllocationAuthorityInfoPublisher = rosNode->advertise<alica_ros_proxy::AllocationAuthorityInfo>(
 				"/AlicaEngine/AllocationAuthorityInfo", 2);
 		AllocationAuthorityInfoSubscriber = rosNode->subscribe("/AlicaEngine/AllocationAuthorityInfo", 10,
