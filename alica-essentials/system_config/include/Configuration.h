@@ -224,6 +224,19 @@ namespace supplementary
 
 	};
 
+	
+
+	template<>
+	inline short Configuration::convert<short>(string value)
+	{
+		return stoi(value);
+	}
+
+	template<>
+	inline unsigned short Configuration::convert<unsigned short>(string value)
+	{
+		return stoul(value);
+	}
 	template<>
 	inline short Configuration::convert<short>(string value)
 	{
@@ -299,11 +312,11 @@ namespace supplementary
 	template<>
 	inline bool Configuration::convert<bool>(string value)
 	{
-		if ("false" == value)
+		if ("false" == value || value == "False" || value == "0" || value == "FALSE")
 		{
 			return false;
 		}
-		else if ("true" == value)
+		else if ("true" == value || value == "True" || value == "1" || value == "TRUE")
 		{
 			return true;
 		}
