@@ -13,7 +13,6 @@ namespace supplementary
 	ManagedExecutable::ManagedExecutable(short id, const char* executable, vector<string> defaultStrParams) :
 			id(id), executable(executable), defaultParams(new char*[defaultStrParams.size()])
 	{
-		//defaultParams = new char*[defaultStrParams.size()];
 		for (int i = 0; i < defaultStrParams.size(); i++) {
 			defaultParams[i] = (char*) defaultStrParams.at(i).c_str();
 		}
@@ -22,6 +21,12 @@ namespace supplementary
 	ManagedExecutable::~ManagedExecutable()
 	{
 		delete[] defaultParams;
+		/* TODO: kill all processes, the nice way ;-)
+		 * - wait and hard kill if possible
+		 */
+		for (auto proc : processes) {
+			kill(proc.first, SIGTERM);
+		}
 	}
 
 	string ManagedExecutable::getExecutable() const
@@ -50,6 +55,7 @@ namespace supplementary
 		}
 		else if (this->queuedPids4Update.size() != 0)
 		{
+
 #ifdef MGND_EXEC_DEBUG
 			cout << "ME: Queued PIDs:  ";
 			for (long curPid : this->queuedPids4Update)
@@ -59,15 +65,50 @@ namespace supplementary
 			cout << endl;
 #endif
 
-			// TODO:
-			// 0. remove not queued processes from processes map
+			/* Remove processes from processes map, which are not present in procfs,
+			 * i.e., are not queued4update.
+			 */
+			for (auto procIter = processes.begin(); procIter != processes.end(); ++procIter)
+			{
+				bool found = false;
+				for (int i=0; i < queuedPids4Update.size(); i++)
+				{
+					if (queuedPids4Update[i] == procIter->first) {
+						found = true;
+					}
+				}
 
-			// 1. find pids from que in processes map
-			// 2. Pid found
-			// 2.1 remove it from queue
-			// 2.2. update pid
-			// 3. Pid NOT found
-			// 3.1 add new pid to processes
+				if (!found)
+				{
+					processes.erase(procIter);
+				}
+			}
+
+
+			for (int i = 0; i < this->queuedPids4Update.size(); i++)
+			{
+
+				long pid = this->queuedPids4Update[i];
+				auto process = this->processes.find(pid);
+				if (process != this->processes.end())
+				{// pid found
+					cout << "ME: Process found: " << pid << endl;
+					// Remove the pid from queue
+					this->queuedPids4Update.erase(this->queuedPids4Update.begin() + i);
+
+					// Update the corresponding process
+					process->second->update();
+				}
+				else
+				{// pid not found
+					cout << "ME: Process not found: " << pid << endl;
+					// Add new pid to processes
+
+					//TODO: make some output in case the boolean in the pair, says false
+					auto returnPair = this->processes.emplace(pid, new Process (pid));
+					returnPair.first->second->update();
+				}
+			}
 		}
 
 		this->queuedPids4Update.clear();
@@ -99,10 +140,22 @@ namespace supplementary
 		this->startProcess(this->defaultParams);
 	}
 
-	void ManagedExecutable::stopProcess()
+	bool ManagedExecutable::stopProcess(string robot)
 	{
-		// TODO
-		throw new exception();
+		/* TODO: more comprehensive process stopping
+		 * - try several times
+		 * - try harder signals, if necessary
+		 * - give better feedback than true and false (maybe console output)
+		 */
+		for (auto process : processes)
+		{
+			if (process.second->getRobot() == robot)
+			{
+				kill(process.first, SIGTERM);
+				return true;
+			}
+		}
+		return false;
 	}
 
 } /* namespace supplementary */

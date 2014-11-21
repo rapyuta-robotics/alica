@@ -25,8 +25,10 @@ namespace supplementary
 	{
 	public:
 		Process(long pid, string params);
+		Process(long pid);
 		virtual ~Process();
 		void update();
+		string getRobot();
 		string toString();
 	private:
 		long pid;

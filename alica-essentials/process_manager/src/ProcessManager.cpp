@@ -30,21 +30,21 @@ namespace supplementary
 		vector<string> curDefaultParams;
 		for (auto processSectionName : (*processDescriptions))
 		{
-			curId = (*this->sc)["Processes"]->get<short>("Processes.ProcessDescriptions", processSectionName.c_str(),
-															"id", NULL);
-			curExecutable = (*this->sc)["Processes"]->get<string>("Processes.ProcessDescriptions",
-																	processSectionName.c_str(), "executable",
-																	NULL);
-			curDefaultParams = (*this->sc)["Processes"]->getList<string>("Processes.ProcessDescriptions",
-																			processSectionName.c_str(), "defaultParams",
-																			NULL);
+			curId = (*this->sc)["Processes"]->get<short>("Processes.ProcessDescriptions", processSectionName.c_str(), "id", NULL);
+			if (this->executableMap.find(curId) != this->executableMap.end()) {
+				cerr << "ProcessManager: ERROR - ID " << curId << " found more than one time in Processes.conf!" << endl;
+				throw new exception();
+			}
+			curExecutable = (*this->sc)["Processes"]->get<string>("Processes.ProcessDescriptions", processSectionName.c_str(), "executable",
+			NULL);
+			curDefaultParams = (*this->sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", processSectionName.c_str(), "defaultParams",
+			NULL);
 			this->executableMap[curId] = new ManagedExecutable(curId, curExecutable.c_str(), curDefaultParams);
 		}
 
 		rosNode = new ros::NodeHandle();
 		spinner = new ros::AsyncSpinner(4);
-		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10,
-												&ProcessManager::handleProcessCommand, (ProcessManager*)this);
+		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10, &ProcessManager::handleProcessCommand, (ProcessManager*)this);
 	}
 
 	ProcessManager::~ProcessManager()
@@ -83,7 +83,8 @@ namespace supplementary
 					auto mngExec = this->executableMap.find(proc);
 					if (mngExec != this->executableMap.end())
 					{
-						mngExec->second->stopProcess();
+						// TODO: find robotname with given robotID
+						//mngExec->second->stopProcess(pc->robotId);
 					}
 				}
 				break;

@@ -13,6 +13,7 @@
 #include <map>
 #include <iostream>
 #include <unistd.h>
+#include <signal.h>
 
 #include "Process.h"
 
@@ -31,7 +32,7 @@ namespace supplementary
 		void update();
 		void startProcess (char* const* params);
 		void startProcess ();
-		void stopProcess ();
+		bool stopProcess (string robot);
 	private:
 		short id;
 		const char* executable;
