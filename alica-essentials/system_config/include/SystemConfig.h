@@ -39,13 +39,14 @@ namespace supplementary
 		static int getOwnRobotID();
 		static string getHostname();
 		static void setHostname(string newHostname);
-		//static void resetHostname();
+		static void resetHostname();
 		Configuration *operator[](const string s);
 		string getRootPath();
 		string getConfigPath();
 		void setRootPath(string rootPath);
 		void setConfigPath(string configPath);
 		static string getEnv(const string& var);
+
 
 	private:
 		SystemConfig();

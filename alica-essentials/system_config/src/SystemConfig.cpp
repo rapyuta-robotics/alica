@@ -185,22 +185,22 @@ namespace supplementary
 		this->configPath = configPath;
 	}
 
-//	void SystemConfig::resetHostname()
-//	{
-//		char* envname = ::getenv("ROBOT");
-//		if ((envname == NULL) || ((*envname) == 0x0))
-//		{
-//			char hn[1024];
-//			hn[1023] = '\0';
-//			gethostname(hn, 1023);
-//			SystemConfig::hostname = hn;
-//		}
-//		else
-//		{
-//			hostname = envname;
-//		}
-//		configs.clear();
-//	}
+	void SystemConfig::resetHostname()
+	{
+		char* envname = ::getenv("ROBOT");
+		if ((envname == NULL) || ((*envname) == 0x0))
+		{
+			char hn[1024];
+			hn[1023] = '\0';
+			gethostname(hn, 1023);
+			SystemConfig::hostname = hn;
+		}
+		else
+		{
+			hostname = envname;
+		}
+		configs.clear();
+	}
 
 	string SystemConfig::robotNodeName(const string& nodeName)
 	{
