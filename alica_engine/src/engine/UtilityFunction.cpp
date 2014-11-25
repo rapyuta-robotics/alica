@@ -356,6 +356,7 @@ namespace alica
 		{
 			ep = ass->getEpRobotsMapping()->getEp(i);
 			taskId = ep->getTask()->getId();
+			cout << "UF: " << i << endl;
 			auto robotList = ass->getUniqueRobotsWorkingAndFinished(ep);
 			for(int j = 0; j < robotList->size(); ++j)
 			{

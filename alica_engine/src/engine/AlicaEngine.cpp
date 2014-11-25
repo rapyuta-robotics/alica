@@ -28,6 +28,7 @@ using namespace std;
 #include "engine/IConditionCreator.h"
 #include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
+#include "engine/collections/AssignmentCollection.h"
 
 namespace alica
 {
@@ -105,6 +106,9 @@ namespace alica
 							string roleSetName, string masterPlanName, string roleSetDir,
 							bool stepEngine)
 	{
+		AssignmentCollection::maxEpsCount = (*this->sc)["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
+	    AssignmentCollection::allowIdling = (*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL);
+
 		this->terminating = false;
 		this->stepEngine = stepEngine;
 		if (this->planRepository == nullptr)
