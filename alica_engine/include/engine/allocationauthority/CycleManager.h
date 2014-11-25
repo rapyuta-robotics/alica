@@ -7,7 +7,8 @@
 
 #ifndef CYCLEMANAGER_H_
 #define CYCLEMANAGER_H_
-#define CM_DEBUG
+
+//#define CM_DEBUG
 
 using namespace std;
 

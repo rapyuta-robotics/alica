@@ -86,14 +86,14 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 	ae = new alica::AlicaEngine();
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "RolesetTA", "MultiAgentTestMaster", ".", true))
+	ASSERT_TRUE(ae->init(bc, cc, uc, crc, "RolesetTA", "MultiAgentTestMaster", ".", true))
 			<< "Unable to initialise the Alica Engine!";
 
 	sc->setHostname("hairy");
 	ae2 = new alica::AlicaEngine();
 	ae2->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
-	EXPECT_TRUE(ae2->init(bc, cc, uc, crc, "RolesetTA", "MultiAgentTestMaster", ".", true))
+	ASSERT_TRUE(ae2->init(bc, cc, uc, crc, "RolesetTA", "MultiAgentTestMaster", ".", true))
 			<< "Unable to initialise the Alica Engine!";
 
 	ae->start();
@@ -118,8 +118,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 
 		if (i < 10)
 		{
-			EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413200842974);
-			EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413200842974);
+			ASSERT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413200842974);
+			ASSERT_EQ(ae2->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413200842974);
 		}
 		if (i == 10)
 		{
@@ -129,11 +129,11 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		}
 		if (i > 11 && i < 15)
 		{
-			EXPECT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
-			EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
-			EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getPlan()->getName(),
+			ASSERT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
+			ASSERT_EQ(ae2->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
+			ASSERT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getPlan()->getName(),
 						string("MultiAgentTestPlan"));
-			EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getPlan()->getName(),
+			ASSERT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getPlan()->getName(),
 						string("MultiAgentTestPlan"));
 		}
 		if (i == 15)
@@ -142,7 +142,7 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 			{
 				if (iter.second->getName() == "Attack")
 				{
-					EXPECT_GT(((alicaTests::Attack* )&*iter.second)->callCounter, 5);
+					ASSERT_GT(((alicaTests::Attack* )&*iter.second)->callCounter, 5);
 					if (((alicaTests::Attack*)&*iter.second)->callCounter > 3)
 					{
 						alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201052549(true);
@@ -156,16 +156,14 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		}
 		if (i == 16)
 		{
-			//cout << "TEST: " << ae2->getPlanBase()->getRootNode()->toString() << endl;
-//			cout << "TEST2: " << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->toString() << endl;
-			EXPECT_TRUE(
+			ASSERT_TRUE(
 					(*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936
 					|| (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936)
 					<< endl << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
 					<< " " << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
 					<< endl;
 
-			EXPECT_TRUE(
+			ASSERT_TRUE(
 					(*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807264574
 					|| (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807264574)
 					<< endl << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
@@ -177,24 +175,22 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		}
 		if (i >= 17 && i <= 18)
 		{
-			EXPECT_TRUE(
+			ASSERT_TRUE(
 					(*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936
 					|| (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936)
 					<< "AE State: "
 					<< (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
 					<< " AE2 State: "
 					<< (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << endl;
-			EXPECT_TRUE(
+			ASSERT_TRUE(
 					(*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807264574
 					|| (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807264574)
 					<< "AE State: "
 					<< (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
 					<< (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->toString() << endl
-					<< " AE2 State: " << ae2->getPlanBase()->getRootNode()->getActiveState()->getName() << " "
+					<< " AE2 State: "
 					<< (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
-					<< (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState() << " "
-					//<< (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->toString()
-					<< endl;
+					<< (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->toString() << endl;
 			if(i==18) {
 			cout << "4--------- Stayed in these state although previous transitions are not true anymore ---------"
 					<< endl;
@@ -204,10 +200,10 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 		}
 		if (i == 19)
 		{
-			EXPECT_TRUE(
+			ASSERT_TRUE(
 					ae2->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201380359
 					&& ae->getPlanBase()->getRootNode()->getActiveState()->getId() == 1413201380359)
-					<< "AE State: "
+					<< " AE State: "
 					<< ae->getPlanBase()->getRootNode()->getActiveState()->getId()
 					<< " AE2 State: "
 					<< ae2->getPlanBase()->getRootNode()->getActiveState()->getId() << endl;
