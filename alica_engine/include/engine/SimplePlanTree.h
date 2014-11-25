@@ -34,7 +34,7 @@ namespace alica
 		void setEntryPoint(EntryPoint* entryPoint);
 		State* getState();
 		void setState(State* state);
-		unordered_set<shared_ptr<SimplePlanTree> > getChildren();
+		unordered_set<shared_ptr<SimplePlanTree> >& getChildren();
 		void setChildren(unordered_set<shared_ptr<SimplePlanTree> > children);
 		int getRobotId();
 		void setRobotId(int robotId);

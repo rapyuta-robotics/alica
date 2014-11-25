@@ -92,7 +92,7 @@ namespace alica
 		{
 			if (detectAllocationCycle())
 			{
-				cout << "Cycle Detected!" << endl;
+				cout << "CM: Cycle Detected!" << endl;
 
 				this->state = CycleState::overriding;
 				this->rp->getPlan()->setAuthorityTimeInterval(
@@ -268,9 +268,12 @@ namespace alica
 		}
 		else
 		{
-			cout << "Rcv: Rejecting Authority!" << endl;
+			cout << "CM: Rcv: Rejecting Authority!" << endl;
 			if (this->state != CycleState::overriding)
 			{
+#ifdef CM_DEBUG
+			cout << "CM: Overriding assignment of " << this->rp->getPlan()->getName() << " " << endl;
+#endif
 				this->state = CycleState::overriding;
 				this->rp->getPlan()->setAuthorityTimeInterval(
 						min(maximalOverrideTimeInterval,
@@ -309,8 +312,7 @@ namespace alica
 	 * @param r A shared_ptr<RunningPlan>
 	 * @return A bool
 	 */
-	bool CycleManager::setAssignment(shared_ptr<RunningPlan> rp)
-	// TODO: Why is the rp given here, when it can work on the local rp variable, which is the same!?
+	bool CycleManager::setAssignment()
 	{
 #ifdef CM_DEBUG
 		cout << "CM: Setting authorative assignment for plan " << rp->getPlan()->getName()  << endl;
