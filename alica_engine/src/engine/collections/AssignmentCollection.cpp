@@ -7,7 +7,6 @@
 
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/model/EntryPoint.h"
-#include "engine/planselector/EpByTaskComparer.h"
 #include "engine/model/Task.h"
 
 namespace alica
@@ -108,7 +107,7 @@ namespace alica
 		{
 			sortedEpVec.push_back(this->entryPoints[i]);
 		}
-		stable_sort(sortedEpVec.begin(), sortedEpVec.end(), EpByTaskComparer::compareTo);
+		stable_sort(sortedEpVec.begin(), sortedEpVec.end(), EntryPoint::compareTo);
 		for (short i = 0; i < this->numEps; i++)
 		{
 			this->entryPoints[i] = sortedEpVec.at(i);

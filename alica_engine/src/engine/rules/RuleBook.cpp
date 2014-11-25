@@ -213,17 +213,17 @@ namespace alica
 		if (r->isBehaviour())
 			return PlanChange::NoChange;
 
-//#ifdef RULE_debug
+#ifdef RULE_debug
 		cout << "RB: AuthorityOverride RP \n" << r->toString() << endl;
-//#endif
+#endif
 		if (r->getCycleManagement()->isOverridden())
 		{
 			if (r->getCycleManagement()->setAssignment(r))
 			{
 				log->eventOccured("AuthorityOverride(" + r->getPlan()->getName() + ")");
-//#ifdef RULE_debug
+#ifdef RULE_debug
 				cout << "RB: Authorative set assignment of " << r->getPlan()->getName() << " is:" << r->getAssignment()->toString() << endl;
-//#endif
+#endif
 				return PlanChange::InternalChange;
 			}
 		}
@@ -236,10 +236,6 @@ namespace alica
 	 */
 	PlanChange RuleBook::planAbortRule(shared_ptr<RunningPlan> r)
 	{
-#ifdef RULE_debug
-		cout << "RB: PlanAbort-Rule called." << endl;
-		cout << "RB: PlanAbort RP \n" << r->toString() << endl;
-#endif
 		if (r->getFailHandlingNeeded())
 			return PlanChange::NoChange;
 		if (r->isBehaviour())
@@ -252,9 +248,11 @@ namespace alica
 		if ((r->getActiveState() != nullptr && r->getActiveState()->isFailureState()) || !r->getAssignment()->isValid()
 				|| !r->evalRuntimeCondition())
 		{
-#ifdef RULE_debug
-			cout << "RB: PlanAbort" << r->getPlan()->getName() << endl;
-#endif
+//#ifdef RULE_debug
+			cout << "RB: PlanAbort-Rule called." << endl;
+			cout << "RB: PlanAbort RP \n" << r->toString() << endl;
+			cout << "RB: PlanAbort " << r->getPlan()->getName() << endl;
+//#endif
 			r->addFailure();
 			log->eventOccured("PAbort(" + r->getPlan()->getName() + ")");
 			return PlanChange::FailChange;
@@ -282,6 +280,9 @@ namespace alica
 		if (r->getActiveState() == r->getOwnEntryPoint()->getState())
 		{
 			r->addFailure();
+//#ifdef RULE_debug
+		cout << "RB: PlanRedoRule not executed for " << r->getPlan()->getName() << "- Unable to repair, as the current state is already the initial state." << endl;
+//#endif
 			return PlanChange::FailChange;
 		}
 		r->setFailHandlingNeeded(false);
@@ -297,7 +298,7 @@ namespace alica
 		r->setActiveState(r->getOwnEntryPoint()->getState());
 		r->setAllocationNeeded(true);
 #ifdef RULE_debug
-		cout << "RB: PlanRedo" << r->getPlan()->getName() << endl;
+		cout << "RB: PlanRedoRule executed for " << r->getPlan()->getName() << endl;
 #endif
 		log->eventOccured("PRede(" + r->getPlan()->getName() + ")");
 		return PlanChange::InternalChange;
@@ -349,9 +350,9 @@ namespace alica
 		r->getParent().lock()->addFailure();
 		r->setFailHandlingNeeded(false);
 
-#ifdef RULE_debug
-		cout << "RB: PlanPropagation" << r->getPlan()->getName() << endl;
-#endif
+//#ifdef RULE_debug
+		cout << "RB: PlanPropagation " << r->getPlan()->getName() << endl;
+//#endif
 		log->eventOccured("PProp(" + r->getPlan()->getName() + ")");
 		return PlanChange::FailChange;
 	}
@@ -392,9 +393,9 @@ namespace alica
 		if (children == nullptr || children->size() < r->getActiveState()->getPlans().size())
 		{
 			r->addFailure();
-#ifdef RULE_debug
+//#ifdef RULE_debug
 			cout << "RB: PlanAllocFailed " << r->getPlan()->getName() << endl;
-#endif
+//#endif
 			return PlanChange::FailChange;
 		}
 		r->addChildren(children);

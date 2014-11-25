@@ -78,7 +78,7 @@ namespace alica
 
 	bool EntryPoint::compareTo(EntryPoint* ep1, EntryPoint* ep2)
 	{
-		return (ep1->getTask()->getId() < ep2->getTask()->getId());
+		return (ep1->getTask()->getId() > ep2->getTask()->getId());
 	}
 
 //================== Getter and Setter =============
