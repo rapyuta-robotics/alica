@@ -42,7 +42,7 @@ namespace alica
 		virtual ~CycleManager();
 		void update();
 		bool isOverridden();
-		bool setAssignment(shared_ptr<RunningPlan> r);
+		bool setAssignment();
 		bool mayDoUtilityCheck();
 		void setNewAllocDiff(AllocationDifference* aldif);
 		void setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_ptr<Assignment> newAss, AllocationDifference::Reason reas);

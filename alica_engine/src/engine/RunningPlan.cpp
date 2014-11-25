@@ -879,7 +879,7 @@ namespace alica
 			else
 			{
 				if (keepTask || auth)
-				{ //Update only state, and that only if it is in the reachablity graph of its current entrypoint, else ignore
+				{ //Update only state, and that only if it is in the reachability graph of its current entrypoint, else ignore
 					EntryPoint* cep = this->getAssignment()->entryPointOfRobot(spt->getRobotId());
 					if (cep != nullptr)
 					{
@@ -948,7 +948,7 @@ namespace alica
 				}
 				for (int rob : rem)
 				{
-					this->getAssignment()->removeRobot(rob);
+					this->getAssignment()->removeRobot(rob, ep);
 				}
 			}
 		}
@@ -976,7 +976,7 @@ namespace alica
 
 				for (int rob : rem)
 				{
-					this->getAssignment()->removeRobot(rob);
+					this->getAssignment()->removeRobot(rob, ep);
 				}
 			}
 		}
@@ -1034,10 +1034,6 @@ namespace alica
 				}
 			}
 			ret |= r->recursiveUpdateAssignment(newcspts, availableAgents, noUpdates, now);
-		}
-		if (this->getPlan()->getId() == 1414403413451)
-		{
-			cout << "RP: assigment " << this->getAssignment()->toString();
 		}
 		return ret;
 

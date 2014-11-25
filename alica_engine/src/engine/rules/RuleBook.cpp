@@ -184,7 +184,7 @@ namespace alica
 
 		if (possibleUtil - curUtil > r->getPlan()->getUtilityThreshold())
 		{
-			cout << "RB: AllocationDifference::Reason::utility " << endl;
+			//cout << "RB: AllocationDifference::Reason::utility " << endl;
 			r->getCycleManagement()->setNewAllocDiff(r->getAssignment(), newr->getAssignment(), AllocationDifference::Reason::utility);
 			State* before = r->getActiveState();
 			r->adaptAssignment(newr);
@@ -218,7 +218,7 @@ namespace alica
 #endif
 		if (r->getCycleManagement()->isOverridden())
 		{
-			if (r->getCycleManagement()->setAssignment(r))
+			if (r->getCycleManagement()->setAssignment())
 			{
 				log->eventOccured("AuthorityOverride(" + r->getPlan()->getName() + ")");
 #ifdef RULE_debug
@@ -248,11 +248,11 @@ namespace alica
 		if ((r->getActiveState() != nullptr && r->getActiveState()->isFailureState()) || !r->getAssignment()->isValid()
 				|| !r->evalRuntimeCondition())
 		{
-//#ifdef RULE_debug
+#ifdef RULE_debug
 			cout << "RB: PlanAbort-Rule called." << endl;
 			cout << "RB: PlanAbort RP \n" << r->toString() << endl;
 			cout << "RB: PlanAbort " << r->getPlan()->getName() << endl;
-//#endif
+#endif
 			r->addFailure();
 			log->eventOccured("PAbort(" + r->getPlan()->getName() + ")");
 			return PlanChange::FailChange;
@@ -280,9 +280,9 @@ namespace alica
 		if (r->getActiveState() == r->getOwnEntryPoint()->getState())
 		{
 			r->addFailure();
-//#ifdef RULE_debug
+#ifdef RULE_debug
 		cout << "RB: PlanRedoRule not executed for " << r->getPlan()->getName() << "- Unable to repair, as the current state is already the initial state." << endl;
-//#endif
+#endif
 			return PlanChange::FailChange;
 		}
 		r->setFailHandlingNeeded(false);
@@ -350,9 +350,9 @@ namespace alica
 		r->getParent().lock()->addFailure();
 		r->setFailHandlingNeeded(false);
 
-//#ifdef RULE_debug
+#ifdef RULE_debug
 		cout << "RB: PlanPropagation " << r->getPlan()->getName() << endl;
-//#endif
+#endif
 		log->eventOccured("PProp(" + r->getPlan()->getName() + ")");
 		return PlanChange::FailChange;
 	}
@@ -393,9 +393,9 @@ namespace alica
 		if (children == nullptr || children->size() < r->getActiveState()->getPlans().size())
 		{
 			r->addFailure();
-//#ifdef RULE_debug
+#ifdef RULE_debug
 			cout << "RB: PlanAllocFailed " << r->getPlan()->getName() << endl;
-//#endif
+#endif
 			return PlanChange::FailChange;
 		}
 		r->addChildren(children);
@@ -428,7 +428,7 @@ namespace alica
 
 		if (r->getFailHandlingNeeded())
 		{
-			cerr << "PB: TopFailed" << endl;
+			//cerr << "RB: TopFailed" << endl;
 			r->setFailHandlingNeeded(false);
 			r->clearFailures();
 

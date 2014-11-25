@@ -117,16 +117,16 @@ namespace alica
 			sendAllocation(rp);
 			rp->getCycleManagement()->sent();
 		}
-//#ifdef AM_DEBUG
-//		cout << "AM: Queue size of AuthorityInfos is " << this->queue.size() << endl;
-//#endif
+#ifdef AM_DEBUG
+		cout << "AM: Queue size of AuthorityInfos is " << this->queue.size() << endl;
+#endif
 		for (int i = 0; i < this->queue.size(); i++)
 		{
 			if (authorityMatchesPlan(this->queue[i], rp))
 			{
-//#ifdef AM_DEBUG
-//				cout << "AM: Found AuthorityInfo, which matches the plan " << rp->getPlan()->getName() << endl;
-//#endif
+#ifdef AM_DEBUG
+				cout << "AM: Found AuthorityInfo, which matches the plan " << rp->getPlan()->getName() << endl;
+#endif
 				rp->getCycleManagement()->handleAuthorityInfo(this->queue[i]);
 				this->queue.erase(this->queue.begin() + i);
 				i--;
@@ -149,11 +149,10 @@ namespace alica
 		}
 		AllocationAuthorityInfo aai = AllocationAuthorityInfo();
 
-		EntryPointRobots epRobots;
 		shared_ptr<Assignment> ass = p->getAssignment();
 		for (int i = 0; i < ass->getEntryPointCount(); i++)
 		{
-			epRobots = EntryPointRobots();
+			EntryPointRobots epRobots;
 			epRobots.entrypoint = ass->getEpRobotsMapping()->getEp(i)->getId();
 			for (int robot : *ass->getRobotsWorking(epRobots.entrypoint))
 			{
