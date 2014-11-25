@@ -12,8 +12,8 @@
 
 namespace alica
 {
-	short AssignmentCollection::maxEpsCount = (*supplementary::SystemConfig::getInstance())["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
-	bool AssignmentCollection::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling", NULL);
+	short AssignmentCollection::maxEpsCount;
+	bool AssignmentCollection::allowIdling;
 
 	/**
 	 * Constructs an empty AssignmentCollection of a given size. (Used by the Assignment-Constructor)

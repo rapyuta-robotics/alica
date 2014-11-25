@@ -24,7 +24,7 @@ namespace alica
 
 	bool EpByTaskComparer::compareTo(EntryPoint* x, EntryPoint* y)
 	{
-		return (x->getTask()->getId() < y->getTask()->getId());
+		return (x->getTask()->getId() > y->getTask()->getId());
 	}
 
 } /* namespace alica */
