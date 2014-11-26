@@ -18,7 +18,7 @@ namespace alica
 	typedef tuple<long, vector<int>> stdEntryPointRobot;
 	struct EntryPointRobots
 	{
-		EntryPointRobots()
+		EntryPointRobots() : entrypoint(0)
 		{
 		}
 

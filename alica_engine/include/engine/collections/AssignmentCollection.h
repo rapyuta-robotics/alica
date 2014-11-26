@@ -43,6 +43,7 @@ namespace alica
 		string toString();
 		void sortEps();
 
+		//initialized in alica engine init
 		static short maxEpsCount;
 		static bool allowIdling;
 

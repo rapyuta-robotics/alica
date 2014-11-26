@@ -46,6 +46,7 @@ namespace alica
 		{
 			this->epRobotsMapping->setEp(i++, ep);
 		}
+		this->epRobotsMapping->sortEps();
 
 		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 		this->epSucMapping = make_shared<SuccessCollection>(p);
@@ -103,7 +104,6 @@ namespace alica
 		this->max = 1;
 		this->min = 1;
 
-
 		this->epRobotsMapping = new AssignmentCollection(p->getEntryPoints().size());
 
 		shared_ptr<vector<int>> curRobots;
@@ -142,6 +142,7 @@ namespace alica
 
 			i++;
 		}
+
 		this->epSucMapping = make_shared<SuccessCollection>(p);
 		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 	}
@@ -272,16 +273,19 @@ namespace alica
 	shared_ptr<list<int> > Assignment::getUniqueRobotsWorkingAndFinished(EntryPoint* ep)
 	{
 		shared_ptr<list<int> > ret = make_shared<list<int> >(list<int>());
-		auto robots = this->epRobotsMapping->getRobotsByEp(ep);
-		for (int i = 0; i < robots->size(); i++)
+		//if (this->plan->getEntryPoints().find(ep->getId()) != this->plan->getEntryPoints().end())
 		{
-			ret->push_back(robots->at(i));
-		}
-		for (auto r : (*this->epSucMapping->getRobots(ep)))
-		{
-			if (find(ret->begin(), ret->end(), r) == ret->end())
+			auto robots = this->epRobotsMapping->getRobotsByEp(ep);
+			for (int i = 0; i < robots->size(); i++)
 			{
-				ret->push_back(r);
+				ret->push_back(robots->at(i));
+			}
+			for (auto r : (*this->epSucMapping->getRobots(ep)))
+			{
+				if (find(ret->begin(), ret->end(), r) == ret->end())
+				{
+					ret->push_back(r);
+				}
 			}
 		}
 		return ret;

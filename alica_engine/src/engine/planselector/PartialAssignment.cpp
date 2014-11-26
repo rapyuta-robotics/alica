@@ -8,7 +8,6 @@
 #include <engine/planselector/PartialAssignment.h>
 #include <engine/planselector/PartialAssignmentPool.h>
 
-#include "engine/planselector/EpByTaskComparer.h"
 #include "engine/planselector/DynCardinality.h"
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/model/Plan.h"
@@ -19,7 +18,6 @@
 
 namespace alica
 {
-	EpByTaskComparer PartialAssignment::epByTaskComparer = EpByTaskComparer();
 
 	int PartialAssignment::getHash()
 	{

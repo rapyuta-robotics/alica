@@ -7,13 +7,12 @@
 
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/model/EntryPoint.h"
-#include "engine/planselector/EpByTaskComparer.h"
 #include "engine/model/Task.h"
 
 namespace alica
 {
-	short AssignmentCollection::maxEpsCount = (*supplementary::SystemConfig::getInstance())["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
-	bool AssignmentCollection::allowIdling = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.AllowIdling", NULL);
+	short AssignmentCollection::maxEpsCount;
+	bool AssignmentCollection::allowIdling;
 
 	/**
 	 * Constructs an empty AssignmentCollection of a given size. (Used by the Assignment-Constructor)
@@ -108,7 +107,7 @@ namespace alica
 		{
 			sortedEpVec.push_back(this->entryPoints[i]);
 		}
-		stable_sort(sortedEpVec.begin(), sortedEpVec.end(), EpByTaskComparer::compareTo);
+		stable_sort(sortedEpVec.begin(), sortedEpVec.end(), EntryPoint::compareTo);
 		for (short i = 0; i < this->numEps; i++)
 		{
 			this->entryPoints[i] = sortedEpVec.at(i);

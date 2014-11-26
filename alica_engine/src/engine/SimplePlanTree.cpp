@@ -64,7 +64,7 @@ namespace alica
 		this->state = state;
 	}
 
-	unordered_set<shared_ptr<SimplePlanTree> > SimplePlanTree::getChildren()
+	unordered_set<shared_ptr<SimplePlanTree> >& SimplePlanTree::getChildren()
 	{
 		return children;
 	}

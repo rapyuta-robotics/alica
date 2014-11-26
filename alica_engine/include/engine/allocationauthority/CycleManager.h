@@ -7,7 +7,8 @@
 
 #ifndef CYCLEMANAGER_H_
 #define CYCLEMANAGER_H_
-#define CM_DEBUG
+
+//#define CM_DEBUG
 
 using namespace std;
 
@@ -41,7 +42,7 @@ namespace alica
 		virtual ~CycleManager();
 		void update();
 		bool isOverridden();
-		bool setAssignment(shared_ptr<RunningPlan> r);
+		bool setAssignment();
 		bool mayDoUtilityCheck();
 		void setNewAllocDiff(AllocationDifference* aldif);
 		void setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_ptr<Assignment> newAss, AllocationDifference::Reason reas);
