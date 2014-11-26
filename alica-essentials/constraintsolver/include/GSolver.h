@@ -55,6 +55,7 @@ namespace alica
 			void setMaxFEvals(long maxfevals);
 			double getRPropConvergenceStepSize();
 			void setRPropConvergenceStepSize(double rPropConvergenceStepSize);
+			void setUtilitySignificanceThreshold(double utilitySignificanceThreshold);
 
 			IAlicaClock* getIAlicaClock();
 			void setIAlicaClock(IAlicaClock* clock);

@@ -13,6 +13,7 @@
 
 #include <vector>
 #include <memory>
+#include <mutex>
 
 using namespace std;
 
@@ -32,15 +33,17 @@ namespace alica
 			virtual ~CGSolver();
 
 			bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls);
-			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls, vector<double>& results);
+			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls, shared_ptr<vector<double>>& results);
 
 		protected:
 			shared_ptr<GSolver> gs;
 			shared_ptr<GSolver> sgs;
 
-//			public double LastUtil {get; private set;}
-//			public double LastRuns {get; private set;}
-//			public double LastFEvals {get; private set;}
+			mutex mtx;
+
+			double lastUtil;
+			double lastRuns;
+			double lastFEvals;
 		};
 
 	} /* namespace Reasoner */

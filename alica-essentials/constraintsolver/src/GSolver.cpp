@@ -429,6 +429,11 @@ namespace alica
 			_rPropConvergenceStepSize = rPropConvergenceStepSize;
 		}
 
+		void GSolver::setUtilitySignificanceThreshold(double utilitySignificanceThreshold)
+		{
+			_utilitySignificanceThreshold = utilitySignificanceThreshold;
+		}
+
 		IAlicaClock* GSolver::getIAlicaClock()
 		{
 			return alicaClock;
