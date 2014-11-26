@@ -33,7 +33,8 @@ namespace alica
 		this->id = id;
 		this->name = name;
 		this->type = type;
-//		this->solverVar = new autodiff::Variable();
+// TODO:		this->solverVar = new autodiff::Variable();
+		this->solverVar = nullptr;
 	}
 
 	string Variable::toString()

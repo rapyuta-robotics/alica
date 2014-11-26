@@ -36,7 +36,7 @@ namespace alica
 
 		void publishContent();
 		virtual void postResult(long vid, double result);
-		virtual shared_ptr<vector<vector<double>>> getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<vector<double>>> limits);
+		virtual shared_ptr<vector<shared_ptr<vector<double>>>> getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits);
 
 	protected:
 		supplementary::NotifyTimer<ResultStore>* timer;

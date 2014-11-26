@@ -150,21 +150,21 @@ namespace alica
 			{
 				varr->at(j) = store->getRep(conditionVariables.at(j))->getSolverVar();
 			}
-			shared_ptr<vector<vector<vector<shared_ptr<SolverTerm>>> >> sortedVars = make_shared<vector<vector<vector<shared_ptr<SolverTerm>>>>>();
-			auto agentsInScope = make_shared<vector<vector<int>>>();
+			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >>();
+			auto agentsInScope = make_shared<vector<shared_ptr<vector<int>>>>();
 			for (int j = 0; j < c->getSortedVariables()->size(); ++j)
 			{
-				vector<vector<shared_ptr<SolverTerm>>> ll = vector<vector<shared_ptr<SolverTerm>>>();
+				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>>();
 				agentsInScope->push_back(c->getAgentsInScope()->at(j));
 				sortedVars->push_back(ll);
-				for (vector<Variable*> dvarr : c->getSortedVariables()->at(j))
+				for (auto dvarr : c->getSortedVariables()->at(j))
 				{
-					vector<shared_ptr<SolverTerm>> dtvarr = vector<shared_ptr<SolverTerm>>(dvarr.size());
-					for (int i = 0; i < dtvarr.size(); ++i)
+					auto dtvarr = make_shared<vector<shared_ptr<SolverTerm>>>(dvarr.size());
+					for (int i = 0; i < dtvarr->size(); ++i)
 					{
-						dtvarr[i] = dvarr[i]->getSolverVar();
+						dtvarr->at(i) = dvarr.at(i)->getSolverVar();
 					}
-					ll.push_back(dtvarr);
+					ll->push_back(dtvarr);
 				}
 			}
 			shared_ptr<ConstraintDescriptor> cd = make_shared<ConstraintDescriptor>(varr, sortedVars);
@@ -266,21 +266,21 @@ namespace alica
 			{
 				varr->at(j) = store->getRep(conditionVariables[j])->getSolverVar();
 			}
-			auto sortedVars = make_shared<vector<vector<vector<shared_ptr<SolverTerm>>> >>();
-			auto agentsInScope = make_shared<vector<vector<int>>>();
+			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >>();
+			auto agentsInScope = make_shared<vector<shared_ptr<vector<int>>>>();
 			for (int j = 0; j < c->getSortedVariables()->size(); ++j)
 			{
-				vector<vector<shared_ptr<SolverTerm>>> ll = vector<vector<shared_ptr<SolverTerm>>>();
+				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>>();
 				agentsInScope->push_back(c->getAgentsInScope()->at(j));
 				sortedVars->push_back(ll);
-				for (vector<Variable*> dvarr : c->getSortedVariables()->at(j))
+				for (auto dvarr : c->getSortedVariables()->at(j))
 				{
-					vector<shared_ptr<SolverTerm>> dtvarr = vector<shared_ptr<SolverTerm>>(dvarr.size());
-					for (int i = 0; i < dtvarr.size(); ++i)
+					auto dtvarr = make_shared<vector<shared_ptr<SolverTerm>>>(dvarr.size());
+					for (int i = 0; i < dtvarr->size(); ++i)
 					{
-						dtvarr[i] = dvarr[i]->getSolverVar();
+						dtvarr->at(i) = dvarr.at(i)->getSolverVar();
 					}
-					ll.push_back(dtvarr);
+					ll->push_back(dtvarr);
 				}
 			}
 			shared_ptr<ConstraintDescriptor> cd = make_shared<ConstraintDescriptor>(varr, sortedVars);
@@ -298,8 +298,7 @@ namespace alica
 				<< (behaviour->getRunningPlan()->getAlicaEngine()->getIAlicaClock()->now() - time) / 10000.0 << endl;
 #endif
 		bool ret = behaviour->getRunningPlan()->getAlicaEngine()->getSolver(solverType)->getSolution(qVars, cds,
-																										&solverResult);
-		result = vector<double>();
+																										solverResult);
 
 		if (solverResult.size() > 0)
 		{

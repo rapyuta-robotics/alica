@@ -16,7 +16,7 @@ namespace alica
 {
 
 	ConstraintDescriptor::ConstraintDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars,
-	                                           shared_ptr<vector<vector<vector<shared_ptr<SolverTerm>>>>> domVars)
+	                                           shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >> domVars)
 	{
 		dim = vars->size();
 //		constraint = ConstraintBuilder::TRUE; TODO: KENNT DEN CONSTRAINTBUILDER NICH
@@ -44,24 +44,24 @@ namespace alica
 		domainVars = domVars;
 		domainRanges = make_shared<vector<vector<vector<vector<double>>>>>();
 		for (auto iter = domVars->begin(); iter != domVars->end(); iter++) {
-			vector<vector<shared_ptr<SolverTerm>>> lat = *iter;
+			auto lat = *iter;
 
 			vector<vector<vector<double>>> l = vector<vector<vector<double>>>();
 			domainRanges->push_back(l);
-			for (vector<shared_ptr<SolverTerm>> tarr : lat)
+			for (auto tarr : *lat)
 			{
 				vector<vector<double>> r = vector<vector<double>>();
-				for (int i = 0; i < tarr.size(); ++i)
+				for (int i = 0; i < tarr->size(); ++i)
 				{
 					r.push_back(vector<double>(2));
 				}
 				l.push_back(r);
-				for (int i = 0; i < tarr.size(); ++i)
+				for (int i = 0; i < tarr->size(); ++i)
 				{
 					dim++;
 					r[i][0] = min;
 					r[i][1] = max;
-					allVars->push_back(tarr[i]);
+					allVars->push_back(tarr->at(i));
 				}
 			}
 		}
@@ -137,22 +137,22 @@ namespace alica
 		staticVars = value;
 	}
 
-	shared_ptr<vector<vector<vector<shared_ptr<SolverTerm>>>>> ConstraintDescriptor::getDomainVars()
+	shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >> ConstraintDescriptor::getDomainVars()
 	{
 		return domainVars;
 	}
 
-	void ConstraintDescriptor::setDomainVars(shared_ptr<vector<vector<vector<shared_ptr<SolverTerm>>>>> value)
+	void ConstraintDescriptor::setDomainVars(shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >> value)
 	{
 		domainVars = value;
 	}
 
-	shared_ptr<vector<vector<int>>> ConstraintDescriptor::getAgentsInScope()
+	shared_ptr<vector<shared_ptr<vector<int>>>> ConstraintDescriptor::getAgentsInScope()
 	{
 		return agentsInScope;
 	}
 
-	void ConstraintDescriptor::setAgentsInScope(shared_ptr<vector<vector<int>>> value)
+	void ConstraintDescriptor::setAgentsInScope(shared_ptr<vector<shared_ptr<vector<int>>>> value)
 	{
 		agentsInScope = value;
 	}

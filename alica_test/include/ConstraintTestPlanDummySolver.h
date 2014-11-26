@@ -18,12 +18,12 @@ namespace alica
 		class ConstraintTestPlanDummySolver : public IConstraintSolver
 		{
 		public:
-			ConstraintTestPlanDummySolver();
+			ConstraintTestPlanDummySolver(AlicaEngine *ae);
 			virtual ~ConstraintTestPlanDummySolver();
 
-			bool existsSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls);
-			bool getSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls,
-								vector<double>* results);
+			bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls);
+			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls,
+								vector<double>& results);
 
 			static int getExistsSolutionCallCounter();
 			static int getGetSolutionCallCounter();

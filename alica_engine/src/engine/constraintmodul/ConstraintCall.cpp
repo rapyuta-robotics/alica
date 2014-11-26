@@ -18,16 +18,16 @@ namespace alica
 	{
 		condition = con;
 		sortedVariables = make_shared<vector<list<vector<Variable*>> >>();
-		agentsinscope = make_shared<vector<vector<int>>>();
+		agentsinscope = make_shared<vector<shared_ptr<vector<int>>>>();
 		for (Quantifier* q : condition->getQuantifiers())
 		{
 			shared_ptr<vector<int>> robots;
 			// TODO: aus rp.get() muss rp
 			sortedVariables->push_back(*q->getSortedVariables(rp.get(), robots));
 			if (robots != nullptr) {
-				agentsinscope->push_back(*robots);
+				agentsinscope->push_back(robots);
 			} else {
-				agentsinscope->push_back(vector<int>());
+				agentsinscope->push_back(make_shared<vector<int>>());
 			}
 		}
 		runningplan = rp;
@@ -64,7 +64,7 @@ namespace alica
 		return runningplan;
 	}
 
-	shared_ptr<vector<vector<int>>> ConstraintCall::getAgentsInScope()
+	shared_ptr<vector<shared_ptr<vector<int>>>> ConstraintCall::getAgentsInScope()
 	{
 		return agentsinscope;
 	}

@@ -30,12 +30,12 @@ namespace alica
 		Condition* getCondition();
 		shared_ptr<vector<list<vector<Variable* > > >> getSortedVariables();
 		shared_ptr<RunningPlan> getRunningPlan();
-		shared_ptr<vector<vector<int>>> getAgentsInScope();
+		shared_ptr<vector<shared_ptr<vector<int>>>> getAgentsInScope();
 	private:
 		Condition* condition;
 		shared_ptr<vector<list<vector<Variable* > > >> sortedVariables;
 		shared_ptr<RunningPlan> runningplan;
-		shared_ptr<vector<vector<int>>> agentsinscope;
+		shared_ptr<vector<shared_ptr<vector<int>>>> agentsinscope;
 	};
 
 }

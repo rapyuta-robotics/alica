@@ -15,19 +15,26 @@ using namespace std;
 
 namespace alica
 {
+	class AlicaEngine;
 	class ConstraintDescriptor;
 	class Variable;
 
 	class IConstraintSolver : public enable_shared_from_this<IConstraintSolver>
 	{
 	public:
+		IConstraintSolver(AlicaEngine* ae) {
+			this->ae = ae;
+		}
 		virtual ~IConstraintSolver()
 		{
 		}
 
-		virtual bool existsSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls) = 0;
-		virtual bool getSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls, vector<double>* results) = 0;
+		virtual bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls) = 0;
+		virtual bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls, vector<double>& results) = 0;
 //		virtual bool getSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls, vector<object>& results) = 0;
+
+	protected:
+		AlicaEngine* ae;
 	};
 
 } /* namespace alica */
