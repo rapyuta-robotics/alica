@@ -30,6 +30,7 @@ using namespace std;
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/constraintmodul/IConstraintSolver.h"
 #include "engine/constraintmodul/ResultStore.h"
+#include "engine/collections/AssignmentCollection.h"
 
 namespace alica
 {

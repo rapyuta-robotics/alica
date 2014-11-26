@@ -16,7 +16,8 @@ namespace alica
 		int ConstraintTestPlanDummySolver::existsSolutionCallCounter = 0;
 		int ConstraintTestPlanDummySolver::getSolutionCallCounter = 0;
 
-		ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver()
+		ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(AlicaEngine *ae) :
+				IConstraintSolver(ae)
 		{
 			// TODO Auto-generated constructor stub
 
@@ -27,8 +28,8 @@ namespace alica
 			// TODO Auto-generated destructor stub
 		}
 
-		bool ConstraintTestPlanDummySolver::existsSolution(vector<Variable*> vars,
-															vector<shared_ptr<ConstraintDescriptor>> calls)
+		bool ConstraintTestPlanDummySolver::existsSolution(vector<Variable*>& vars,
+															vector<shared_ptr<ConstraintDescriptor>>& calls)
 		{
 			existsSolutionCallCounter++;
 			std::cout << "ConstraintTestPlanDummySolver::existsSolution was called " << existsSolutionCallCounter
@@ -36,9 +37,8 @@ namespace alica
 			return false;
 		}
 
-		bool ConstraintTestPlanDummySolver::getSolution(vector<Variable*> vars,
-														vector<shared_ptr<ConstraintDescriptor>> calls,
-														vector<double>* results)
+		bool ConstraintTestPlanDummySolver::getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls,
+		                    							vector<double>& results)
 		{
 			getSolutionCallCounter++;
 			std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << getSolutionCallCounter << " times!"

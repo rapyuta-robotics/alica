@@ -126,14 +126,14 @@ namespace alica
 		this->ownResults->addValue(vid, result);
 	}
 
-	shared_ptr<vector<vector<double>>> ResultStore::getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<vector<double>>> limits)
+	shared_ptr<vector<shared_ptr<vector<double>>>> ResultStore::getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits)
 	{
 		int dim = query->size();
 		list<VotedSeed*> seeds;
 		vector<double> scaling(dim);
 		for(int i=0; i<dim; i++)
 		{
-			scaling[i] = (limits->at(i).at(1)-limits->at(i).at(0));
+			scaling[i] = (limits->at(i)->at(1)-limits->at(i)->at(0));
 			scaling[i] *= scaling[i]; //Sqr it for dist calculation speed up
 		}
 		for(int i=0; i<this->store.size(); i++)
@@ -170,7 +170,7 @@ namespace alica
 #endif
 
 		int maxNum = min((int)seeds.size(),dim);
-		shared_ptr<vector<vector<double>>> ret = make_shared<vector<vector<double>>>(maxNum);
+		auto ret = make_shared<vector<shared_ptr<vector<double>>>>(maxNum);
 
 		seeds.sort([](VotedSeed*& a, VotedSeed*& b)
 				{
@@ -187,7 +187,7 @@ namespace alica
 		auto iter = seeds.begin();
 		for(int i=0; i<maxNum;i++)
 		{
-			ret->at(i) = *((*iter)->values);
+			ret->at(i) = (*iter)->values;
 			iter++;
 		}
 
