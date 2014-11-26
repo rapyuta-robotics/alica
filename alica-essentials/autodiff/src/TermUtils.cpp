@@ -24,7 +24,7 @@ namespace autodiff
 	 *
 	 * @return A compiled representation of term that assigns values to variables in the same order as in variables
 	 */
-	shared_ptr<ICompiledTerm> TermUtils::compile(shared_ptr<Term> term, vector<shared_ptr<Variable>> variables) {
+	shared_ptr<ICompiledTerm> TermUtils::compile(shared_ptr<Term> term, shared_ptr<vector<shared_ptr<Variable>>> variables) {
 		return make_shared<CompiledDifferentiator>(term, variables);
 	}
 
@@ -38,7 +38,7 @@ namespace autodiff
 	 *
 	 * @return The value of the function represented by term at the point represented by variables and point.
 	 */
-	double TermUtils::evaluate(shared_ptr<Term> term, vector<shared_ptr<Variable>> variables, vector<double> point)
+	double TermUtils::evaluate(shared_ptr<Term> term, shared_ptr<vector<shared_ptr<Variable>>> variables, shared_ptr<vector<double>> point)
 	{
 		return compile(term, variables)->evaluate(point);
 	}
@@ -54,8 +54,8 @@ namespace autodiff
 	 *
 	 * @return The gradient of the function represented by term at the point represented by variables and point.
 	 */
-	vector<double> TermUtils::differentiate(shared_ptr<Term> term, vector<shared_ptr<Variable>> variables, vector<double> point) {
-		vector<double> result = compile(term, variables)->differentiate(point).first;
+	shared_ptr<vector<double>> TermUtils::differentiate(shared_ptr<Term> term, shared_ptr<vector<shared_ptr<Variable>>> variables, shared_ptr<vector<double>> point) {
+		shared_ptr<vector<double>> result = compile(term, variables)->differentiate(point).first;
 		return result;
 	}
 } /* namespace autodiff */

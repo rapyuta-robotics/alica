@@ -32,24 +32,24 @@ namespace autodiff
 	class CompiledDifferentiator : public ICompiledTerm
 	{
 	public:
-		CompiledDifferentiator(shared_ptr<Term> function, vector<shared_ptr<Variable>> variables);
+		CompiledDifferentiator(shared_ptr<Term> function, shared_ptr<vector<shared_ptr<Variable>>> variables);
 
-		virtual double evaluate(vector<double> arg);
-		virtual pair<vector<double>, double> differentiate(vector<double> arg);
+		virtual double evaluate(shared_ptr<vector<double>> arg);
+		virtual pair<shared_ptr<vector<double>>, double> differentiate(shared_ptr<vector<double>> arg);
 
 	private:
 		vector<shared_ptr<TapeElement>> _tape;
 		int _dimension;
-		vector<shared_ptr<Variable>> _variables;
+		shared_ptr<vector<shared_ptr<Variable>>> _variables;
 
-		void forwardSweep(vector<double> arg);
+		void forwardSweep(shared_ptr<vector<double>> arg);
 		void reverseSweep();
-		void evaluateTape(vector<double> arg);
+		void evaluateTape(shared_ptr<vector<double>> arg);
 
 		class Compiler : public ITermVisitor
 		{
 		public:
-			Compiler(vector<shared_ptr<Variable>> variables, vector<shared_ptr<TapeElement>>* tape);
+			Compiler(shared_ptr<vector<shared_ptr<Variable>>> variables, vector<shared_ptr<TapeElement>>* tape);
 			~Compiler();
 
 			void compile(shared_ptr<Term> term);

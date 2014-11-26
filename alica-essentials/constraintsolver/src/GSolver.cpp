@@ -15,6 +15,7 @@
 
 #include <engine/IAlicaClock.h>
 #include <engine/AlicaEngine.h>
+#include <clock/AlicaROSClock.h>
 
 #include <limits>
 #include <string>
@@ -41,10 +42,10 @@ namespace alica
 			_seedWithUtilOptimum = true;
 			supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 			_maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
-			_maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1E-6;//* 1000000;
+			_maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1E-6; //* 1000000;
 			_rPropConvergenceStepSize = 1E-2;
 
-			alicaClock = (new AlicaEngine())->getIAlicaClock();
+			alicaClock = new alicaRosProxy::AlicaROSClock();
 		}
 
 		void GSolver::initLog()
@@ -55,13 +56,13 @@ namespace alica
 			sw.open(logFile);
 		}
 
-		void GSolver::log(double util, vector<double> val)
+		void GSolver::log(double util, shared_ptr<vector<double>>& val)
 		{
 			sw << util;
 			sw << "\t";
 			for (int i = 0; i < _dim; ++i)
 			{
-				sw << val[i];
+				sw << val->at(i);
 				sw << "\t";
 			}
 			sw << endl;
@@ -78,21 +79,23 @@ namespace alica
 			sw.close();
 		}
 
-		vector<double> GSolver::solve(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
-										vector<vector<double>> limits, double *util)
+		shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
+													shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
+													shared_ptr<vector<shared_ptr<vector<double>>> > limits, double *util)
 		{
-			return solve(equation, args, limits, vector<vector<double>>(), numeric_limits<double>::max(), util);
+			return solve(equation, args, limits, make_shared<vector<shared_ptr<vector<double>>>>(), numeric_limits<double>::max(), util);
 		}
 
-		bool GSolver::solveSimple(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
-									vector<vector<double>> limits)
+		bool GSolver::solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
+									shared_ptr<vector<shared_ptr<vector<double>>> > limits)
 		{
-			return solveSimple(equation, args, limits, vector<vector<double>>());
+			return solveSimple(equation, args, limits, make_shared<vector<shared_ptr<vector<double>>>>());
 		}
 
-		vector<double> GSolver::solve(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
-										vector<vector<double>> limits, vector<vector<double>> seeds,
-										double sufficientUtility, double *util)
+		shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
+													shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
+													shared_ptr<vector<shared_ptr<vector<double>>> > limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds,
+		double sufficientUtility, double *util)
 		{
 			_fevals = 0;
 			_runs = 0;
@@ -106,13 +109,13 @@ namespace alica
 			_rResults.clear();
 			alicaTime begin = alicaClock->now();
 
-			_dim = args.size();
+			_dim = args->size();
 			_limits = limits;
 			_ranges = vector<double>(_dim);
 
 			for (int i = 0; i < _dim; ++i)
 			{
-				_ranges[i] = (_limits[i][1] - _limits[i][0]);
+				_ranges[i] = (_limits->at(i)->at(1) - _limits->at(i)->at(0));
 			}
 #ifdef AGGREGATE_CONSTANTS
 			equation = equation->aggregateConstants();
@@ -127,15 +130,14 @@ namespace alica
 			bool constraintIsConstant = dynamic_pointer_cast<Constant>(cu->getConstraint()) != 0;
 			if (constraintIsConstant)
 			{
-				shared_ptr<Constant> constraint = dynamic_pointer_cast<Constant>(
-						cu->getConstraint());
+				shared_ptr<Constant> constraint = dynamic_pointer_cast<Constant>(cu->getConstraint());
 				if (constraint->getValue() < 0.25)
 				{
 					*util = constraint->getValue();
-					vector<double> ret = vector<double>(_dim);
+					auto ret = make_shared<vector<double>>(_dim);
 					for (int i = 0; i < _dim; ++i)
 					{
-						ret[i] = _ranges[i] / 2.0 + _limits[i][0];
+						ret->at(i) = _ranges[i] / 2.0 + _limits->at(i)->at(0);
 					}
 					return ret;
 				}
@@ -144,11 +146,11 @@ namespace alica
 			//Optimize given seeds
 			_rpropStepWidth = vector<double>(_dim);
 			_rpropStepConvergenceThreshold = vector<double>(_dim);
-			if (seeds.size() > 0)
+			if (seeds->size() > 0)
 			{
 				_runs++;
 				//Run with prefered cached seed
-				shared_ptr<RpropResult> rpfirst = rPropLoop(seeds[0], true);
+				shared_ptr<RpropResult> rpfirst = rPropLoop(seeds->at(0), true);
 				if (rpfirst->_finalUtil > _utilityThreshold)
 				{
 					*util = rpfirst->_finalUtil;
@@ -156,14 +158,14 @@ namespace alica
 				}
 				_rResults.push_back(rpfirst);
 				//run with seeds of all other agends
-				for (int i = 0; i < seeds.size(); ++i)
+				for (int i = 0; i < seeds->size(); ++i)
 				{
 					if (begin + _maxSolveTime < alicaClock->now() || _fevals > _maxfevals)
 					{
 						break; //do not check any further seeds
 					}
 					_runs++;
-					shared_ptr<RpropResult> rp = rPropLoop(seeds[i], false);
+					shared_ptr<RpropResult> rp = rPropLoop(seeds->at(i), false);
 					if (rp->_finalUtil > _utilityThreshold)
 					{
 						*util = rp->_finalUtil;
@@ -182,7 +184,7 @@ namespace alica
 					shared_ptr<ICompiledTerm> curProb = _term;
 					_term = TermUtils::compile(cu->getUtility(), args);
 					_runs++;
-					vector<double> utilitySeed = rPropLoop(vector<double>())->_finalValue;
+					shared_ptr<vector<double>> utilitySeed = rPropLoop(make_shared<vector<double>>())->_finalValue;
 					_term = curProb;
 					//Take result and search with constraints
 					shared_ptr<RpropResult> ru = rPropLoop(utilitySeed, false);
@@ -197,14 +199,14 @@ namespace alica
 			do
 			{ //Do runs until termination criteria, running out of time, or too many function evaluations
 				_runs++;
-				shared_ptr<RpropResult> rp = rPropLoop(vector<double>(), false);
+				shared_ptr<RpropResult> rp = rPropLoop(make_shared<vector<double>>(), false);
 				if (rp->_finalUtil > _utilityThreshold)
 				{
 					*util = rp->_finalUtil;
 					return rp->_finalValue;
 				}
 				_rResults.push_back(rp);
-			} while (begin + _maxSolveTime > alicaClock->now() && _fevals < _maxfevals);
+			}while (begin + _maxSolveTime > alicaClock->now() && _fevals < _maxfevals);
 
 			//return best result
 			int resIdx = 0;
@@ -213,10 +215,10 @@ namespace alica
 			{
 				if (std::isnan(res->_finalUtil) || _rResults[i]->_finalUtil > res->_finalUtil)
 				{
-					if (resIdx == 0 && seeds.size() > 0 && !std::isnan(res->_finalUtil))
+					if (resIdx == 0 && seeds->size() > 0 && !std::isnan(res->_finalUtil))
 					{
 						if (_rResults[i]->_finalUtil - res->_finalUtil > _utilitySignificanceThreshold
-								&& _rResults[i]->_finalUtil > 0.75)
+						&& _rResults[i]->_finalUtil > 0.75)
 						{
 							res = _rResults[i];
 							resIdx = i;
@@ -238,17 +240,17 @@ namespace alica
 			return res->_finalValue;
 		}
 
-		bool GSolver::solveSimple(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
-									vector<vector<double>> limits, vector<vector<double>> seeds)
+		bool GSolver::solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
+									shared_ptr<vector<shared_ptr<vector<double>>> > limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds)
 		{
 			_rResults.clear();
 
-			_dim = args.size();
+			_dim = args->size();
 			_limits = limits;
 			_ranges = vector<double>(_dim);
 			for (int i = 0; i < _dim; ++i)
 			{
-				_ranges[i] = _limits[i][1] - _limits[i][0];
+				_ranges[i] = _limits->at(i)->at(1) - _limits->at(i)->at(0);
 			}
 			equation = equation->aggregateConstants();
 
@@ -256,11 +258,11 @@ namespace alica
 
 			_rpropStepWidth = vector<double>(_dim);
 			_rpropStepConvergenceThreshold = vector<double>(_dim);
-			if (seeds.size() > 0)
+			if (seeds->size() > 0)
 			{
-				for (int i = 0; i < seeds.size(); ++i)
+				for (int i = 0; i < seeds->size(); ++i)
 				{
-					shared_ptr<RpropResult> r = rPropLoop(seeds[i]);
+					shared_ptr<RpropResult> r = rPropLoop(seeds->at(i));
 					_rResults.push_back(r);
 					if (r->_finalUtil > 0.75)
 					{
@@ -268,10 +270,10 @@ namespace alica
 					}
 				}
 			}
-			int runs = 2 * _dim - seeds.size();
+			int runs = 2 * _dim - seeds->size();
 			for (int i = 0; i < runs; ++i)
 			{
-				shared_ptr<RpropResult> r = rPropLoop(vector<double>());
+				shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>());
 				_rResults.push_back(r);
 				if (r->_finalUtil > 0.75)
 				{
@@ -281,7 +283,7 @@ namespace alica
 			int adit = 0;
 			while (!evalResults() && adit++ < 20)
 			{
-				shared_ptr<RpropResult> r = rPropLoop(vector<double>());
+				shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>());
 				_rResults.push_back(r);
 				if (r->_finalUtil > 0.75)
 				{
@@ -296,22 +298,23 @@ namespace alica
 			return false;
 		}
 
-		vector<double> GSolver::solveTest(shared_ptr<Term> equation,
-											vector<shared_ptr<Variable>> args, vector<vector<double>> limits)
+		shared_ptr<vector<double>> GSolver::solveTest(shared_ptr<Term> equation,
+														shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
+														shared_ptr<vector<shared_ptr<vector<double>>> > limits)
 		{
 #ifdef GSOLVER_LOG
 			initLog();
 #endif
 
 			_rResults.clear();
-			vector<double> res;
+			shared_ptr<vector<double>> res;
 
-			_dim = args.size();
+			_dim = args->size();
 			_limits = limits;
 			_ranges = vector<double>(_dim);
 			for (int i = 0; i < _dim; ++i)
 			{
-				_ranges[i] = _limits[i][1] - _limits[i][0];
+				_ranges[i] = _limits->at(i)->at(1) - _limits->at(i)->at(0);
 			}
 
 			_term = TermUtils::compile(equation, args);
@@ -325,7 +328,7 @@ namespace alica
 			{
 				_runs++;
 				//shared_ptr<RpropResult> r = rPropLoopSimple(vector<double>());
-				shared_ptr<RpropResult> r = rPropLoop(vector<double>(), false);
+				shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>(), false);
 				if (r->_finalUtil > 0.75)
 				{
 					res = r->_finalValue;
@@ -340,23 +343,23 @@ namespace alica
 			return res;
 		}
 
-		vector<double> GSolver::solveTest(shared_ptr<Term> equation,
-											vector<shared_ptr<Variable>> args, vector<vector<double>> limits,
-											int maxRuns, bool *found)
+		shared_ptr<vector<double>> GSolver::solveTest(shared_ptr<Term> equation,
+														shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
+														shared_ptr<vector<shared_ptr<vector<double>>> > limits, int maxRuns, bool *found)
 		{
 #ifdef GSOLVER_LOG
 			initLog();
 #endif
 			*found = false;
 			_rResults.clear();
-			vector<double> res;
+			shared_ptr<vector<double>> res;
 
-			_dim = args.size();
+			_dim = args->size();
 			_limits = limits;
 			_ranges = vector<double>(_dim);
 			for (int i = 0; i < _dim; ++i)
 			{
-				_ranges[i] = _limits[i][1] - _limits[i][0];
+				_ranges[i] = _limits->at(i)->at(1) - _limits->at(i)->at(0);
 			}
 
 			_term = TermUtils::compile(equation, args);
@@ -370,7 +373,7 @@ namespace alica
 			{
 				_runs++;
 				//shared_ptr<RpropResult> r = rPropLoopSimple(vector<double>());
-				shared_ptr<RpropResult> r = rPropLoop(vector<double>(), false);
+				shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>(), false);
 				if (r->_finalUtil > 0.75)
 				{
 					res = r->_finalValue;
@@ -436,49 +439,50 @@ namespace alica
 			alicaClock = clock;
 		}
 
-		vector<double> GSolver::initialPointFromSeed(shared_ptr<RpropResult> res, vector<double> seed)
+		shared_ptr<vector<double>> GSolver::initialPointFromSeed(shared_ptr<RpropResult>& res,
+																	shared_ptr<vector<double>>& seed)
 		{
-			pair<vector<double>, double> tup;
+			pair<shared_ptr<vector<double>>, double> tup;
 
-			res->_initialValue = vector<double>(_dim);
-			res->_finalValue = vector<double>(_dim);
+			res->_initialValue = make_shared<vector<double>>(_dim);
+			res->_finalValue = make_shared<vector<double>>(_dim);
 			for (int i = 0; i < _dim; ++i)
 			{
-				if (std::isnan(seed[i]))
+				if (std::isnan(seed->at(i)))
 				{
-					res->_initialValue[i] = ((double)rand() / RAND_MAX) * _ranges[i] + _limits[i][0];
+					res->_initialValue->at(i) = ((double)rand() / RAND_MAX) * _ranges[i] + _limits->at(i)->at(0);
 				}
 				else
 				{
-					res->_initialValue[i] = min(max(seed[i], _limits[i][0]), _limits[i][1]);
+					res->_initialValue->at(i) = min(max(seed->at(i), _limits->at(i)->at(0)), _limits->at(i)->at(1));
 				}
 			}
 			tup = _term->differentiate(res->_initialValue);
 			res->_initialUtil = tup.second;
 			res->_finalUtil = tup.second;
 
-			res->_finalValue = vector<double>(res->_initialValue);
+			res->_finalValue = res->_initialValue;
 
 			return tup.first;
 		}
 
-		vector<double> GSolver::initialPoint(shared_ptr<RpropResult> res)
+		shared_ptr<vector<double>> GSolver::initialPoint(shared_ptr<RpropResult>& res)
 		{
-			pair<vector<double>, double> tup;
+			pair<shared_ptr<vector<double>>, double> tup;
 			bool found = true;
-			res->_initialValue = vector<double>(_dim);
-			res->_finalValue = vector<double>(_dim);
+			res->_initialValue = make_shared<vector<double>>(_dim);
+			res->_finalValue = make_shared<vector<double>>(_dim);
 			do
 			{
 				for (int i = 0; i < _dim; ++i)
 				{
-					res->_initialValue[i] = ((double)rand() / RAND_MAX) * _ranges[i] + _limits[i][0];
+					res->_initialValue->at(i) = ((double)rand() / RAND_MAX) * _ranges[i] + _limits->at(i)->at(0);
 				}
 				_fevals++;
 				tup = _term->differentiate(res->_initialValue);
 				for (int i = 0; i < _dim; ++i)
 				{
-					if (std::isnan(tup.first[i]))
+					if (std::isnan(tup.first->at(i)))
 					{
 						found = false;
 						break;
@@ -492,25 +496,25 @@ namespace alica
 			res->_initialUtil = tup.second;
 			res->_finalUtil = tup.second;
 
-			res->_finalValue = vector<double>(res->_initialValue);
+			res->_finalValue = res->_initialValue;
 
 			return tup.first;
 		}
 
-		shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(vector<double> seed)
+		shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(shared_ptr<vector<double>> seed)
 		{
 			return rPropLoop(seed, false);
 		}
 
-		shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(vector<double> seed, bool precise)
+		shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(shared_ptr<vector<double>> seed, bool precise)
 		{
 			initialStepSize();
 
-			vector<double> curGradient;
+			shared_ptr<vector<double>> curGradient;
 
 			shared_ptr<RpropResult> ret = make_shared<RpropResult>();
 
-			if (seed.size() > 0)
+			if (seed->size() > 0)
 			{
 				curGradient = initialPointFromSeed(ret, seed);
 			}
@@ -520,12 +524,12 @@ namespace alica
 			}
 			double curUtil = ret->_initialUtil;
 
-			vector<double> formerGradient = vector<double>(_dim);
-			vector<double> curValue = vector<double>(_dim);
+			auto formerGradient = make_shared<vector<double>>(_dim);
+			auto curValue = make_shared<vector<double>>(_dim);
 
-			pair<vector<double>, double> tup;
+			pair<shared_ptr<vector<double>>, double> tup;
 
-			curValue = vector<double>(ret->_initialValue);
+			curValue = ret->_initialValue;
 
 			formerGradient = curGradient;
 
@@ -552,20 +556,20 @@ namespace alica
 				convergendDims = 0;
 				for (int i = 0; i < _dim; ++i)
 				{
-					if (curGradient[i] * formerGradient[i] > 0)
+					if (curGradient->at(i) * formerGradient->at(i) > 0)
 						_rpropStepWidth[i] *= 1.3;
-					else if (curGradient[i] * formerGradient[i] < 0)
+					else if (curGradient->at(i) * formerGradient->at(i) < 0)
 						_rpropStepWidth[i] *= 0.5;
 					_rpropStepWidth[i] = max(minStep, _rpropStepWidth[i]);
-					if (curGradient[i] > 0)
-						curValue[i] += _rpropStepWidth[i];
-					else if (curGradient[i] < 0)
-						curValue[i] -= _rpropStepWidth[i];
+					if (curGradient->at(i) > 0)
+						curValue->at(i) += _rpropStepWidth[i];
+					else if (curGradient->at(i) < 0)
+						curValue->at(i) -= _rpropStepWidth[i];
 
-					if (curValue[i] > _limits[i][1])
-						curValue[i] = _limits[i][1];
-					else if (curValue[i] < _limits[i][0])
-						curValue[i] = _limits[i][0];
+					if (curValue->at(i) > _limits->at(i)->at(1))
+						curValue->at(i) = _limits->at(i)->at(1);
+					else if (curValue->at(i) < _limits->at(i)->at(0))
+						curValue->at(i) = _limits->at(i)->at(0);
 					if (_rpropStepWidth[i] < _rpropStepConvergenceThreshold[i])
 						++convergendDims;
 				}
@@ -575,7 +579,7 @@ namespace alica
 					if (curUtil > ret->_finalUtil)
 					{
 						ret->_finalUtil = curUtil;
-						ret->_finalValue = vector<double>(curValue);
+						ret->_finalValue = curValue;
 					}
 
 					return ret;
@@ -586,7 +590,7 @@ namespace alica
 				bool allZero = true;
 				for (int i = 0; i < _dim; ++i)
 				{
-					if (std::isnan(tup.first[i]))
+					if (std::isnan(tup.first->at(i)))
 					{
 						ret->_aborted = true;
 #ifdef GSOLVER_LOG
@@ -594,7 +598,7 @@ namespace alica
 #endif
 						return ret;
 					}
-					allZero &= (tup.first[i] == 0);
+					allZero &= (tup.first->at(i) == 0);
 				}
 
 				curUtil = tup.second;
@@ -609,7 +613,7 @@ namespace alica
 					badcounter = 0;
 
 					ret->_finalUtil = curUtil;
-					ret->_finalValue = vector<double>(curValue);
+					ret->_finalValue = curValue;
 
 #ifdef ALWAYS_CHECK_THRESHOLD
 					if (curUtil > _utilityThreshold)
@@ -638,14 +642,14 @@ namespace alica
 			return ret;
 		}
 
-		shared_ptr<GSolver::RpropResult> GSolver::rPropLoopSimple(vector<double> seed)
+		shared_ptr<GSolver::RpropResult> GSolver::rPropLoopSimple(shared_ptr<vector<double>> seed)
 		{
 			initialStepSize();
-			vector<double> curGradient;
+			shared_ptr<vector<double>> curGradient;
 
 			shared_ptr<RpropResult> ret = make_shared<RpropResult>();
 
-			if (seed.size() > 0)
+			if (seed->size() > 0)
 			{
 				curGradient = initialPointFromSeed(ret, seed);
 			}
@@ -660,12 +664,12 @@ namespace alica
 				return ret;
 			}
 
-			vector<double> formerGradient = vector<double>(_dim);
-			vector<double> curValue = vector<double>(_dim);
+			auto formerGradient = make_shared<vector<double>>(_dim);
+			auto curValue = make_shared<vector<double>>(_dim);
 
-			pair<vector<double>, double> tup;
+			pair<shared_ptr<vector<double>>, double> tup;
 
-			curValue = vector<double>(ret->_initialValue);
+			curValue = ret->_initialValue;
 
 			formerGradient = curGradient;
 
@@ -676,20 +680,20 @@ namespace alica
 			{
 				for (int i = 0; i < _dim; ++i)
 				{
-					if (curGradient[i] * formerGradient[i] > 0)
+					if (curGradient->at(i) * formerGradient->at(i) > 0)
 						_rpropStepWidth[i] *= 1.3;
-					else if (curGradient[i] * formerGradient[i] < 0)
+					else if (curGradient->at(i) * formerGradient->at(i) < 0)
 						_rpropStepWidth[i] *= 0.5;
 					_rpropStepWidth[i] = max(0.0001, _rpropStepWidth[i]);
-					if (curGradient[i] > 0)
-						curValue[i] += _rpropStepWidth[i];
-					else if (curGradient[i] < 0)
-						curValue[i] -= _rpropStepWidth[i];
+					if (curGradient->at(i) > 0)
+						curValue->at(i) += _rpropStepWidth[i];
+					else if (curGradient->at(i) < 0)
+						curValue->at(i) -= _rpropStepWidth[i];
 
-					if (curValue[i] > _limits[i][1])
-						curValue[i] = _limits[i][1];
-					else if (curValue[i] < _limits[i][0])
-						curValue[i] = _limits[i][0];
+					if (curValue->at(i) > _limits->at(i)->at(1))
+						curValue->at(i) = _limits->at(i)->at(1);
+					else if (curValue->at(i) < _limits->at(i)->at(0))
+						curValue->at(i) = _limits->at(i)->at(0);
 				}
 
 				tup = _term->differentiate(curValue);
@@ -697,12 +701,12 @@ namespace alica
 
 				for (int i = 0; i < _dim; ++i)
 				{
-					if (std::isnan(tup.first[i]))
+					if (std::isnan(tup.first->at(i)))
 					{
 						ret->_aborted = false;
 						return ret;
 					}
-					allZero &= (tup.first[i] == 0);
+					allZero &= (tup.first->at(i) == 0);
 				}
 
 				curUtil = tup.second;
@@ -714,7 +718,7 @@ namespace alica
 					badcounter = 0;
 
 					ret->_finalUtil = curUtil;
-					ret->_finalValue = vector<double>(curValue);
+					ret->_finalValue = curValue;
 
 					if (curUtil > 0.75)
 					{
@@ -777,7 +781,7 @@ namespace alica
 				{
 					for (int j = 0; j < _dim; ++j)
 					{
-						midInitValue[j] += _rResults[i]->_initialValue[j];
+						midInitValue[j] += _rResults[i]->_initialValue->at(j);
 					}
 				}
 			}
@@ -797,7 +801,7 @@ namespace alica
 				}
 				for (int j = 0; j < _dim; ++j)
 				{
-					valueInitDev[j] += pow((_rResults[i]->_initialValue[j] - midInitValue[j]) / _ranges[j], 2);
+					valueInitDev[j] += pow((_rResults[i]->_initialValue->at(j) - midInitValue[j]) / _ranges[j], 2);
 				}
 			}
 			for (int j = 0; j < _dim; ++j)
@@ -820,9 +824,9 @@ namespace alica
 		double GSolver::RpropResult::distanceTraveled()
 		{
 			double ret = 0;
-			for (int i = 0; i < _initialValue.size(); ++i)
+			for (int i = 0; i < _initialValue->size(); ++i)
 			{
-				ret += (_initialValue[i] - _finalValue[i]) * (_initialValue[i] - _finalValue[i]);
+				ret += (_initialValue->at(i) - _finalValue->at(i)) * (_initialValue->at(i) - _finalValue->at(i));
 			}
 			return sqrt(ret);
 		}
@@ -830,9 +834,9 @@ namespace alica
 		double GSolver::RpropResult::distanceTraveledNormed(vector<double> ranges)
 		{
 			double ret = 0;
-			for (int i = 0; i < _initialValue.size(); ++i)
+			for (int i = 0; i < _initialValue->size(); ++i)
 			{
-				ret += (_initialValue[i] - _finalValue[i]) * (_initialValue[i] - _finalValue[i])
+				ret += (_initialValue->at(i) - _finalValue->at(i)) * (_initialValue->at(i) - _finalValue->at(i))
 						/ (ranges[i] * ranges[i]);
 			}
 			return sqrt(ret);

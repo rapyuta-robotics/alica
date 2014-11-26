@@ -65,7 +65,7 @@
 
 namespace autodiff
 {
-	CompiledDifferentiator::CompiledDifferentiator(shared_ptr<Term> function, vector<shared_ptr<Variable>> variables)
+	CompiledDifferentiator::CompiledDifferentiator(shared_ptr<Term> function, shared_ptr<vector<shared_ptr<Variable>>> variables)
 	{
 		if (dynamic_pointer_cast<Variable>(function) != 0)
 		{
@@ -76,37 +76,37 @@ namespace autodiff
 		make_shared<Compiler>(variables, &tapeList)->compile(function);
 		_tape = tapeList;
 
-		_dimension = variables.size();
+		_dimension = variables->size();
 		_variables = variables;
 	}
 
-	double CompiledDifferentiator::evaluate(vector<double> arg)
+	double CompiledDifferentiator::evaluate(shared_ptr<vector<double>> arg)
 	{
 		evaluateTape(arg);
 		return _tape.back()->value;
 	}
 
-	pair<vector<double>, double> CompiledDifferentiator::differentiate(vector<double> arg)
+	pair<shared_ptr<vector<double>>, double> CompiledDifferentiator::differentiate(shared_ptr<vector<double>> arg)
 	{
 		forwardSweep(arg);
 		reverseSweep();
 		//Replacement for Linq code -- HS
-		vector<double> gradient(_dimension);
+		auto gradient = make_shared<vector<double>>(_dimension);
 
 		for (int i = 0; i < _dimension; ++i)
 		{
-			gradient[i] = _tape[i]->adjoint;
+			gradient->at(i) = _tape[i]->adjoint;
 		}
 		double value = _tape[_tape.size() - 1]->value;
 
-		return pair<vector<double>, double>(gradient, value);
+		return pair<shared_ptr<vector<double>>, double>(gradient, value);
 	}
 
-	void CompiledDifferentiator::forwardSweep(vector<double> arg)
+	void CompiledDifferentiator::forwardSweep(shared_ptr<vector<double>> arg)
 	{
 		for (int i = 0; i < _dimension; ++i)
 		{
-			_tape[i]->value = arg[i];
+			_tape[i]->value = arg->at(i);
 		}
 
 		shared_ptr<ForwardSweepVisitor> forwardDiffVisitor = make_shared<ForwardSweepVisitor>(&_tape);
@@ -140,11 +140,11 @@ namespace autodiff
 		}
 	}
 
-	void CompiledDifferentiator::evaluateTape(vector<double> arg)
+	void CompiledDifferentiator::evaluateTape(shared_ptr<vector<double>> arg)
 	{
 		for (int i = 0; i < _dimension; ++i)
 		{
-			_tape[i]->value = arg[i];
+			_tape[i]->value = arg->at(i);
 		}
 
 		shared_ptr<EvalVisitor> evalVisitor = make_shared<EvalVisitor>(&_tape);
@@ -154,13 +154,13 @@ namespace autodiff
 		}
 	}
 
-	CompiledDifferentiator::Compiler::Compiler(vector<shared_ptr<Variable>> variables,
+	CompiledDifferentiator::Compiler::Compiler(shared_ptr<vector<shared_ptr<Variable>>> variables,
 												vector<shared_ptr<TapeElement>>* tape)
 	{
 		_tape = tape;
-		for (int i = 0; i < variables.size(); ++i)
+		for (int i = 0; i < variables->size(); ++i)
 		{
-			_indexOf[variables[i]->getIndex()] = i;
+			_indexOf[variables->at(i)->getIndex()] = i;
 			tape->push_back(make_shared<CompiledVariable>());
 		}
 	}

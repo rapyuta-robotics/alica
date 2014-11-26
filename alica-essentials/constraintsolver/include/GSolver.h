@@ -16,7 +16,6 @@
 #include <fstream>
 
 using namespace std;
-using namespace autodiff;
 
 namespace alica
 {
@@ -32,19 +31,21 @@ namespace alica
 		public:
 			GSolver();
 
-			vector<double> solve(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
-									vector<vector<double>> limits, double *util);
-			bool solveSimple(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
-								vector<vector<double>> limits);
-			vector<double> solve(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
-									vector<vector<double>> limits, vector<vector<double>> seeds,
+			shared_ptr<vector<double>> solve(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
+									shared_ptr<vector<shared_ptr<vector<double>>> > limits, double *util);
+								bool solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
+								shared_ptr<vector<shared_ptr<vector<double>>> > limits);
+			shared_ptr<vector<double>> solve(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
+									shared_ptr<vector<shared_ptr<vector<double>>> > limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds,
 									double sufficientUtility, double *util);
-			bool solveSimple(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
-								vector<vector<double>> limits, vector<vector<double>> seeds);
-			vector<double> solveTest(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
-										vector<vector<double>> limits);
-			vector<double> solveTest(shared_ptr<Term> equation, vector<shared_ptr<Variable>> args,
-										vector<vector<double>> limits, int maxRuns, bool *found);
+			bool solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
+								shared_ptr<vector<shared_ptr<vector<double>>> > limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds);
+			shared_ptr<vector<double>> solveTest(shared_ptr<Term> equation,
+										shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
+										shared_ptr<vector<shared_ptr<vector<double>>> > limits);
+			shared_ptr<vector<double>> solveTest(shared_ptr<Term> equation,
+										shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
+										shared_ptr<vector<shared_ptr<vector<double>>> > limits, int maxRuns, bool *found);
 
 			long getRuns();
 			void setRuns(long runs);
@@ -64,22 +65,22 @@ namespace alica
 			IAlicaClock* alicaClock;
 
 			void initLog();
-			void log(double util, vector<double> val);
+			void log(double util, shared_ptr<vector<double>>& val);
 			void logStep();
 			void closeLog();
-			vector<double> initialPointFromSeed(shared_ptr<RpropResult> res, vector<double> seed);
-			vector<double> initialPoint(shared_ptr<RpropResult> res);
-			shared_ptr<RpropResult> rPropLoop(vector<double> seed);
-			shared_ptr<RpropResult> rPropLoop(vector<double> seed, bool precise);
-			shared_ptr<RpropResult> rPropLoopSimple(vector<double> seed);
+			shared_ptr<vector<double>> initialPointFromSeed(shared_ptr<RpropResult>& res, shared_ptr<vector<double>>& seed);
+			shared_ptr<vector<double>> initialPoint(shared_ptr<RpropResult>& res);
+			shared_ptr<RpropResult> rPropLoop(shared_ptr<vector<double>> seed);
+			shared_ptr<RpropResult> rPropLoop(shared_ptr<vector<double>> seed, bool precise);
+			shared_ptr<RpropResult> rPropLoopSimple(shared_ptr<vector<double>> seed);
 			void initialStepSize();
 			bool evalResults();
 
 			class RpropResult : public enable_shared_from_this<RpropResult>
 			{
 			public:
-				vector<double> _initialValue;
-				vector<double> _finalValue;
+				shared_ptr<vector<double>> _initialValue;
+				shared_ptr<vector<double>> _finalValue;
 				double _initialUtil;
 				double _finalUtil;
 				bool _aborted;
@@ -96,7 +97,7 @@ namespace alica
 			double _utilitySignificanceThreshold = 1E-22;
 			// Random rand;
 			int _dim;
-			vector<vector<double>> _limits;
+			shared_ptr<vector<shared_ptr<vector<double>>> > _limits;
 			vector<double> _ranges;
 			vector<double> _rpropStepWidth;
 			vector<double> _rpropStepConvergenceThreshold;
@@ -117,6 +118,6 @@ namespace alica
 
 		};
 	} /* namespace reasoner */
-} /* namespace alica */
+							} /* namespace alica */
 
 #endif /* GSOLVER_H_ */

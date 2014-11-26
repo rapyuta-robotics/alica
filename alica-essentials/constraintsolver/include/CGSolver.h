@@ -8,30 +8,33 @@
 #ifndef CGSOLVER_H_
 #define CGSOLVER_H_
 
-//#include "IConstraintSolver.h"
+#include <AutoDiff.h>
 #include <engine/constraintmodul/IConstraintSolver.h>
 
-#include <GSolver.h>
-
+#include <vector>
 #include <memory>
+
+using namespace std;
 
 namespace alica
 {
+	class AlicaEngine;
+	class IResultStore;
+
 	namespace reasoner
 	{
-		class ResultStore;
+		class GSolver;
 
 		class CGSolver : public IConstraintSolver
 		{
 		public:
-			CGSolver();
+			CGSolver(AlicaEngine* ae);
 			virtual ~CGSolver();
 
-			bool existsSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls);
-			bool getSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls, vector<double>* results);
+			bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls);
+			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls, vector<double>& results);
 
-			shared_ptr<ResultStore> resultCache;
-
+		protected:
 			shared_ptr<GSolver> gs;
 			shared_ptr<GSolver> sgs;
 

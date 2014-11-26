@@ -33,27 +33,27 @@ TEST(AutoDiffTest, GSOLVER)
 	shared_ptr<Term> equation;
 	int posCount = 30;
 	int oppCount = 3;
-	vector<shared_ptr<Variable>> vars = vector<shared_ptr<Variable>>(posCount * 2);
-	vector<vector<double>> limits = vector<vector<double>>(posCount * 2);
+	auto vars = make_shared<vector<shared_ptr<Variable>>>(posCount * 2);
+	auto limits = make_shared<vector<shared_ptr<vector<double>>>>(posCount * 2);
 	for (int i = 0; i < posCount * 2; ++i)
-		limits[i] = vector<double>(2);
+		limits->at(i) = make_shared<vector<double>>(2);
 
 	shared_ptr<Term> constraint = LTConstraint::TRUE;
 	vector<shared_ptr<TVec>> poses;
 	for (int i = 0; i < posCount; ++i)
 	{
-		vars[i * 2] = make_shared<Variable>();
-		vars[i * 2 + 1] = make_shared<Variable>();
-		poses.push_back(make_shared<TVec>(initializer_list<shared_ptr<Term>>{vars[i * 2], vars[i * 2 + 1]}));
+		vars->at(i * 2) = make_shared<Variable>();
+		vars->at(i * 2 + 1) = make_shared<Variable>();
+		poses.push_back(make_shared<TVec>(initializer_list<shared_ptr<Term>>{vars->at(i * 2), vars->at(i * 2 + 1)}));
 
 		constraint = constraint & MSLConstraintBuilder::outsideArea(Areas::OwnPenaltyArea, poses[i]);
 		constraint = constraint & MSLConstraintBuilder::outsideArea(Areas::OppPenaltyArea, poses[i]);
 		constraint = constraint & (ConstraintBuilder::distance(ball, poses[i]) > TermBuilder::constant(2000));
 
-		limits[i * 2][0] = -FIELDLENGTH / 2;
-		limits[i * 2][1] = FIELDLENGTH / 2;
-		limits[i * 2 + 1][0] = -FIELDWIDTH / 2;
-		limits[i * 2 + 1][1] = FIELDWIDTH / 2;
+		limits->at(i * 2)->at(0) = -FIELDLENGTH / 2;
+		limits->at(i * 2)->at(1) = FIELDLENGTH / 2;
+		limits->at(i * 2 + 1)->at(0) = -FIELDWIDTH / 2;
+		limits->at(i * 2 + 1)->at(1) = FIELDWIDTH / 2;
 	}
 
 	vector<shared_ptr<TVec>> opps;
@@ -69,7 +69,7 @@ TEST(AutoDiffTest, GSOLVER)
 	//cout << constraint << endl;
 	long gt = time(NULL);
 
-	vector<double> res;
+	shared_ptr<vector<double>> res;
 	int gsolved = 0;
 	int count = 1;
 	for (int i = 0; i < count; ++i)
@@ -84,7 +84,7 @@ TEST(AutoDiffTest, GSOLVER)
 
 	cout << "GSolver Took " << (gt / 10000.0) << " ms (avg: " << (gt / (10000.0 * count)) << ")" << endl;
 	cout << "GSolver Solved: " << gsolved << " times" << endl;
-	cout << "Result:" << res[0] << " " << res[1] << " with Utility " << util << endl;
+	cout << "Result:" << res->at(0) << " " << res->at(1) << " with Utility " << util << endl;
 	double actual = TermUtils::evaluate(csu, vars, res);
 	cout << "Result:" << actual << endl;
 }
@@ -105,27 +105,27 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 	shared_ptr<Term> equation;
 	int posCount = 30;
 	int oppCount = 3;
-	vector<shared_ptr<Variable>> vars = vector<shared_ptr<Variable>>(posCount * 2);
-	vector<vector<double>> limits = vector<vector<double>>(posCount * 2);
+	auto vars = make_shared<vector<shared_ptr<Variable>>>(posCount * 2);
+	auto limits = make_shared<vector<shared_ptr<vector<double>>>>(posCount * 2);
 	for (int i = 0; i < posCount * 2; ++i)
-		limits[i] = vector<double>(2);
+		limits->at(i) = make_shared<vector<double>>(2);
 
 	shared_ptr<Term> constraint = LTConstraint::TRUE;
 	vector<shared_ptr<TVec>> poses;
 	for (int i = 0; i < posCount; ++i)
 	{
-		vars[i * 2] = make_shared<Variable>();
-		vars[i * 2 + 1] = make_shared<Variable>();
-		poses.push_back(make_shared<TVec>(initializer_list<shared_ptr<Term>>{vars[i * 2], vars[i * 2 + 1]}));
+		vars->at(i * 2) = make_shared<Variable>();
+		vars->at(i * 2 + 1) = make_shared<Variable>();
+		poses.push_back(make_shared<TVec>(initializer_list<shared_ptr<Term>>{vars->at(i * 2), vars->at(i * 2 + 1)}));
 
 		constraint = constraint & MSLConstraintBuilder::outsideArea(Areas::OwnPenaltyArea, poses[i]);
 		constraint = constraint & MSLConstraintBuilder::outsideArea(Areas::OppPenaltyArea, poses[i]);
 		constraint = constraint & (ConstraintBuilder::distance(ball, poses[i]) > TermBuilder::constant(2000));
 
-		limits[i * 2][0] = -FIELDLENGTH / 2;
-		limits[i * 2][1] = FIELDLENGTH / 2;
-		limits[i * 2 + 1][0] = -FIELDWIDTH / 2;
-		limits[i * 2 + 1][1] = FIELDWIDTH / 2;
+		limits->at(i * 2)->at(0) = -FIELDLENGTH / 2;
+		limits->at(i * 2)->at(1) = FIELDLENGTH / 2;
+		limits->at(i * 2 + 1)->at(0) = -FIELDWIDTH / 2;
+		limits->at(i * 2 + 1)->at(1) = FIELDWIDTH / 2;
 	}
 
 	vector<shared_ptr<TVec>> opps;
@@ -138,7 +138,7 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 	for (int i = 0; i < posCount; ++i) {
 //		TVec ownpos = new TVec(vars[0], vars[1]);
 //	    Term util = 2*FIELDLENGTH - ConstraintBuilder::distance(ball, ownpos);
-		shared_ptr<TVec> ownpos = make_shared<TVec>(initializer_list<shared_ptr<Term>>{vars[0], vars[1]});
+		shared_ptr<TVec> ownpos = make_shared<TVec>(initializer_list<shared_ptr<Term>>{vars->at(0), vars->at(1)});
 		utilCsu = utilCsu + TermBuilder::constant(2*FIELDLENGTH) - ConstraintBuilder::distance(ball, ownpos);
 	}
 
@@ -149,7 +149,7 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 	//cout << constraint << endl;
 	long gt = time(NULL);
 
-	vector<double> res;
+	shared_ptr<vector<double>> res;
 	int gsolved = 0;
 	int count = 1;
 	for (int i = 0; i < count; ++i)
@@ -164,7 +164,7 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 
 	cout << "GSolver Took " << (gt / 10000.0) << " ms (avg: " << (gt / (10000.0 * count)) << ")" << endl;
 	cout << "GSolver Solved: " << gsolved << " times" << endl;
-	cout << "Result:" << res[0] << " " << res[1] << " with Utility " << util << endl;
+	cout << "Result:" << res->at(0) << " " << res->at(1) << " with Utility " << util << endl;
 	double actual = TermUtils::evaluate(csu, vars, res);
 	cout << "Result:" << actual << endl;
 }
