@@ -17,17 +17,17 @@ namespace alica
 	ConstraintCall::ConstraintCall(Condition* con, shared_ptr<RunningPlan> rp)
 	{
 		condition = con;
-		sortedvariables = vector<list<vector<Variable*>> >();
-		agentsinscope = vector<vector<int>>();
+		sortedVariables = make_shared<vector<list<vector<Variable*>> >>();
+		agentsinscope = make_shared<vector<vector<int>>>();
 		for (Quantifier* q : condition->getQuantifiers())
 		{
 			shared_ptr<vector<int>> robots;
 			// TODO: aus rp.get() muss rp
-			sortedvariables.push_back(*q->getSortedVariables(rp.get(), robots));
+			sortedVariables->push_back(*q->getSortedVariables(rp.get(), robots));
 			if (robots != nullptr) {
-				agentsinscope.push_back(*robots);
+				agentsinscope->push_back(*robots);
 			} else {
-				agentsinscope.push_back(vector<int>());
+				agentsinscope->push_back(vector<int>());
 			}
 		}
 		runningplan = rp;
@@ -35,7 +35,8 @@ namespace alica
 
 	bool ConstraintCall::hasVariable(Variable* v)
 	{
-		for (list<vector<Variable* > > lvarr : sortedvariables) {
+		for (auto iter = sortedVariables->begin(); iter != sortedVariables->end(); iter++) {
+			list<vector<Variable*>> lvarr = *iter;
 			for (vector<Variable* > varr : lvarr)
 			{
 				for (int i = 0; i < varr.size(); ++i) {
@@ -53,9 +54,9 @@ namespace alica
 		return condition;
 	}
 
-	vector<list<vector<Variable*> > > ConstraintCall::getSortedVariables()
+	shared_ptr<vector<list<vector<Variable* > > >> ConstraintCall::getSortedVariables()
 	{
-		return sortedvariables;
+		return sortedVariables;
 	}
 
 	shared_ptr<RunningPlan> ConstraintCall::getRunningPlan()
@@ -63,7 +64,7 @@ namespace alica
 		return runningplan;
 	}
 
-	vector<vector<int>> ConstraintCall::getAgentsInScope()
+	shared_ptr<vector<vector<int>>> ConstraintCall::getAgentsInScope()
 	{
 		return agentsinscope;
 	}

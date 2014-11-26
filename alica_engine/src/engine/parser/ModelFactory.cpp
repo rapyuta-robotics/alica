@@ -38,6 +38,8 @@
 
 #include "engine/AlicaEngine.h"
 
+#include <iostream>
+
 namespace alica
 {
 	const string ModelFactory::conditions = "conditions";
@@ -1356,6 +1358,7 @@ namespace alica
 				ae->abort("MF: Unhandled Parametrisation Child:", curChild);
 			}
 
+			curChild = curChild->NextSiblingElement();
 		}
 		return para;
 	}
@@ -1547,7 +1550,7 @@ namespace alica
 		{
 			Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
 			Variable* ap = (Variable*)this->elements.find(pairs.second)->second;
-			p->setVar(ap);
+			p->setSubVar(ap);
 		}
 		this->paramSubVarReferences.clear();
 

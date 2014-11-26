@@ -123,6 +123,7 @@ namespace alica
 		string toString();
 		int getOwnID();
 		shared_ptr<RunningPlan> getSharedFromThis();
+		AlicaEngine* getAlicaEngine();
 
 	private:
 		void setConstraintStore(ConstraintStore* constraintStore);

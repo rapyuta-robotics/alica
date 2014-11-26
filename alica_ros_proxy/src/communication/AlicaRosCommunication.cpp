@@ -11,6 +11,8 @@
 #include "engine/containers/BehaviourEngineInfo.h"
 #include "engine/containers/PlanTreeInfo.h"
 #include "engine/containers/RoleSwitch.h"
+#include "engine/containers/SolverResult.h"
+#include "engine/containers/SolverVar.h"
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
 #include "engine/containers/SyncData.h"
@@ -50,16 +52,21 @@ namespace alicaRosProxy
 
 		SyncReadyPublisher = rosNode->advertise<alica_ros_proxy::SyncTalk>("/AlicaEngine/SyncTalk", 10);
 		SyncReadySubscriber = rosNode->subscribe("/AlicaEngine/SyncTalk", 5, &AlicaRosCommunication::handleSyncTalkRos,
-												(AlicaRosCommunication*)this);
+													(AlicaRosCommunication*)this);
 		SyncTalkPublisher = rosNode->advertise<alica_ros_proxy::SyncReady>("/AlicaEngine/SyncReady", 10);
 		SyncTalkSubscriber = rosNode->subscribe("/AlicaEngine/SyncReady", 5, &AlicaRosCommunication::handleSyncReadyRos,
 												(AlicaRosCommunication*)this);
+
+		SolverResultPublisher = rosNode->advertise<alica_ros_proxy::SolverResult>("/AlicaEngine/SolverResult", 10);
+		SolverResultSubscriber = rosNode->subscribe("/AlicaEngine/SolverResult", 5,
+													&AlicaRosCommunication::handleSolverResult,
+													(AlicaRosCommunication*)this);
 
 	}
 
 	AlicaRosCommunication::~AlicaRosCommunication()
 	{
-		if(this->isRunning)
+		if (this->isRunning)
 		{
 			spinner->stop();
 		}
@@ -77,7 +84,7 @@ namespace alicaRosProxy
 
 	void AlicaRosCommunication::tick()
 	{
-		if(this->isRunning)
+		if (this->isRunning)
 		{
 			ros::spinOnce();
 		}
@@ -103,7 +110,7 @@ namespace alicaRosProxy
 			aais.entrypoints.push_back(newEP);
 		}
 
-		if(this->isRunning)
+		if (this->isRunning)
 		{
 			this->AllocationAuthorityInfoPublisher.publish(aais);
 		}
@@ -123,7 +130,7 @@ namespace alicaRosProxy
 		}
 		bis.senderID = bi.senderID;
 
-		if(this->isRunning)
+		if (this->isRunning)
 		{
 			this->BehaviourEngineInfoPublisher.publish(bis);
 		}
@@ -142,7 +149,7 @@ namespace alicaRosProxy
 			ptis.succeededEps.push_back(i);
 		}
 
-		if(this->isRunning)
+		if (this->isRunning)
 		{
 			this->PlanTreeInfoPublisher.publish(ptis);
 		}
@@ -155,7 +162,7 @@ namespace alicaRosProxy
 		rss.roleID = rs.roleID;
 		rss.senderID = rs.roleID;
 
-		if(this->isRunning)
+		if (this->isRunning)
 		{
 			this->RoleSwitchPublisher.publish(rss);
 		}
@@ -168,7 +175,7 @@ namespace alicaRosProxy
 		srs.senderID = sr.senderID;
 		srs.syncTransitionID = sr.syncTransitionID;
 
-		if(this->isRunning)
+		if (this->isRunning)
 		{
 			this->RoleSwitchPublisher.publish(srs);
 		}
@@ -189,9 +196,28 @@ namespace alicaRosProxy
 			sts.syncData.push_back(sds);
 		}
 
-		if(this->isRunning)
+		if (this->isRunning)
 		{
 			this->SyncTalkPublisher.publish(sts);
+		}
+	}
+
+	void AlicaRosCommunication::sendSolverResult(SolverResult& sr)
+	{
+		alica_ros_proxy::SolverResult srs;
+
+		srs.senderID = sr.senderID;
+		for (auto sv : sr.vars)
+		{
+			alica_ros_proxy::SolverVar svs;
+			svs.id = sv->id;
+			svs.value = sv->value;
+			srs.vars.push_back(svs);
+		}
+
+		if (this->isRunning)
+		{
+			this->SolverResultPublisher.publish(srs);
 		}
 	}
 
@@ -212,7 +238,7 @@ namespace alicaRosProxy
 			aaiPtr->entryPointRobots.push_back(newEP);
 		}
 
-		if(this->isRunning)
+		if (this->isRunning)
 		{
 			this->onAuthorityInfoReceived(aaiPtr);
 		}
@@ -231,7 +257,7 @@ namespace alicaRosProxy
 			ptiPtr->succeededEPs.push_back(i);
 		}
 
-		if(this->isRunning)
+		if (this->isRunning)
 		{
 			this->onPlanTreeInfoReceived(ptiPtr);
 		}
@@ -244,7 +270,7 @@ namespace alicaRosProxy
 		srPtr->senderID = sr->senderID;
 		srPtr->syncTransitionID = sr->syncTransitionID;
 
-		if(this->isRunning)
+		if (this->isRunning)
 		{
 			this->onSyncReadyReceived(srPtr);
 		}
@@ -265,17 +291,38 @@ namespace alicaRosProxy
 			stPtr->syncData.push_back(sds);
 		}
 
-		if(this->isRunning)
+		if (this->isRunning)
 		{
 			this->onSyncTalkReceived(stPtr);
 		}
 	}
 
-	void AlicaRosCommunication::startCommunication() {
+	void AlicaRosCommunication::handleSolverResult(alica_ros_proxy::SolverResultPtr sr)
+	{
+		auto srPtr = make_shared<SolverResult>();
+
+		srPtr->senderID = sr->senderID;
+		for (auto &sv : sr->vars)
+		{
+			SolverVar* svs = new SolverVar();
+			svs->id = sv.id;
+			svs->value = sv.value;
+			srPtr->vars.push_back(svs);
+		}
+
+		if (this->isRunning)
+		{
+			this->onSolverResult(srPtr);
+		}
+	}
+
+	void AlicaRosCommunication::startCommunication()
+	{
 		this->isRunning = true;
 		spinner->start();
 	}
-	void AlicaRosCommunication::stopCommunication() {
+	void AlicaRosCommunication::stopCommunication()
+	{
 		this->isRunning = false;
 		spinner->stop();
 	}

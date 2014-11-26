@@ -17,6 +17,7 @@
 #include "alica_ros_proxy/RoleSwitch.h"
 #include "alica_ros_proxy/SyncReady.h"
 #include "alica_ros_proxy/SyncTalk.h"
+#include "alica_ros_proxy/SolverResult.h"
 
 using namespace alica;
 
@@ -37,11 +38,13 @@ namespace alicaRosProxy
 		virtual void sendRoleSwitch(RoleSwitch& rs);
 		virtual void sendSyncReady(SyncReady& sr);
 		virtual void sendSyncTalk(SyncTalk& st);
+		virtual void sendSolverResult(SolverResult& sr);
 
 		virtual void handleAllocationAuthorityRos(alica_ros_proxy::AllocationAuthorityInfoPtr aai);
 		virtual void handlePlanTreeInfoRos(alica_ros_proxy::PlanTreeInfoPtr pti);
 		virtual void handleSyncReadyRos(alica_ros_proxy::SyncReadyPtr sr);
 		virtual void handleSyncTalkRos(alica_ros_proxy::SyncTalkPtr st);
+		virtual void handleSolverResult(alica_ros_proxy::SolverResultPtr sr);
 
 		virtual void startCommunication();
 		virtual void stopCommunication();
@@ -64,6 +67,9 @@ namespace alicaRosProxy
 		ros::Subscriber SyncReadySubscriber;
 		ros::Publisher SyncTalkPublisher;
 		ros::Subscriber SyncTalkSubscriber;
+
+		ros::Publisher SolverResultPublisher;
+		ros::Subscriber SolverResultSubscriber;
 
 		bool isRunning;
 	};

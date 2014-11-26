@@ -8,6 +8,8 @@
 #include "ConstraintUsingBehaviour.h"
 
 #include <engine/model/Variable.h>
+#include <engine/RunningPlan.h>
+#include "SolverType.h"
 
 namespace alicaTests
 {
@@ -16,7 +18,7 @@ namespace alicaTests
 			alica::BasicBehaviour("ConstraintUsingBehaviour")
 	{
 		this->callCounter = 0;
-		this->query = make_shared<alica::ConstraintQuery>();
+		this->query = make_shared<alica::ConstraintQuery>(this);
 	}
 
 	ConstraintUsingBehaviour::~ConstraintUsingBehaviour()
@@ -26,9 +28,9 @@ namespace alicaTests
 	void ConstraintUsingBehaviour::run(void* msg)
 	{
 		callCounter++;
-//		cout << "ConstraintUsingBehaviour was called " << callCounter << " times!" << endl;
+		cout << "ConstraintUsingBehaviour was called " << callCounter << " times!" << endl;
 		vector<double> result;
-		query->getSolution(runningPlan, result);
+		query->getSolution(SolverType::DUMMYSOLVER, runningPlan, result);
 	}
 
 	int ConstraintUsingBehaviour::getCallCounter()

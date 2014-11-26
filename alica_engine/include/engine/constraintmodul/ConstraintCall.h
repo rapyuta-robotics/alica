@@ -28,14 +28,14 @@ namespace alica
 		bool hasVariable(Variable* v);
 
 		Condition* getCondition();
-		vector<list<vector<Variable* > > > getSortedVariables();
+		shared_ptr<vector<list<vector<Variable* > > >> getSortedVariables();
 		shared_ptr<RunningPlan> getRunningPlan();
-		vector<vector<int>> getAgentsInScope();
+		shared_ptr<vector<vector<int>>> getAgentsInScope();
 	private:
 		Condition* condition;
-		vector<list<vector<Variable* > > > sortedvariables;
+		shared_ptr<vector<list<vector<Variable* > > >> sortedVariables;
 		shared_ptr<RunningPlan> runningplan;
-		vector<vector<int>> agentsinscope;
+		shared_ptr<vector<vector<int>>> agentsinscope;
 	};
 
 }

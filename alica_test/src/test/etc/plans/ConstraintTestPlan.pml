@@ -7,6 +7,16 @@
   <vars id="1414068572540" name="X" comment="" Type=""/>
   <vars id="1414068576620" name="Y" comment="" Type=""/>
   <states id="1414068524246" name="constraintRunner" comment="" entryPoint="1414068524247">
+    <parametrisation id="1416488166139" name="MISSING_NAME" comment="">
+      <subplan xsi:type="alica:BehaviourConfiguration">Behaviour/ConstraintUsingBehaviour.beh#1414068618837</subplan>
+      <subvar>Behaviour/ConstraintUsingBehaviour.beh#1416488161203</subvar>
+      <var>#1414068576620</var>
+    </parametrisation>
+    <parametrisation id="1416488172649" name="MISSING_NAME" comment="">
+      <subplan xsi:type="alica:BehaviourConfiguration">Behaviour/ConstraintUsingBehaviour.beh#1414068618837</subplan>
+      <subvar>Behaviour/ConstraintUsingBehaviour.beh#1416487733086</subvar>
+      <var>#1414068572540</var>
+    </parametrisation>
     <plans xsi:type="alica:BehaviourConfiguration">Behaviour/ConstraintUsingBehaviour.beh#1414068618837</plans>
   </states>
   <entryPoints id="1414068524247" name="" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">

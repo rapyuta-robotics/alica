@@ -12,6 +12,7 @@
 
 namespace alica
 {
+	struct SolverResult;
 	class RoleSwitch;
 	struct SyncTalk;
 	struct SyncReady;
@@ -31,6 +32,7 @@ namespace alica
 		virtual void sendRoleSwitch(RoleSwitch& rs) = 0;
 		virtual void sendSyncReady(SyncReady& sr) = 0;
 		virtual void sendSyncTalk(SyncTalk& st) = 0;
+		virtual void sendSolverResult(SolverResult& sr) = 0;
 
 		//TODO call
 		virtual void tick() {};
@@ -39,6 +41,7 @@ namespace alica
 		void onSyncReadyReceived(shared_ptr<SyncReady> sr);
 		void onAuthorityInfoReceived(shared_ptr<AllocationAuthorityInfo> aai);
 		void onPlanTreeInfoReceived(shared_ptr<PlanTreeInfo> pti);
+		void onSolverResult(shared_ptr<SolverResult> sr);
 
 		virtual void startCommunication() = 0;
 		virtual void stopCommunication() = 0;
