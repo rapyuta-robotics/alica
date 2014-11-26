@@ -636,7 +636,7 @@ namespace alica
 			cerr << "TO: Empty state list for robot " << robotId << endl;
 			return nullptr;
 		}
-		map<long, State*> states = ae->getPlanRepository()->getStates();
+		map<long, State*>& states = ae->getPlanRepository()->getStates();
 		alicaTime time = ae->getIAlicaClock()->now();
 		shared_ptr<SimplePlanTree> root = make_shared<SimplePlanTree>();
 		root->setRobotId(robotId);
@@ -652,14 +652,14 @@ namespace alica
 			{
 				//Warning
 				list<long>::const_iterator iter = ids.begin();
-				cerr << "TO: Cannot find ep for State (" << *iter << ") received from " << robotId << endl;
+				cout << "TO: Cannot find ep for State (" << *iter << ") received from " << robotId << endl;
 				return nullptr;
 			}
 		}
 		else
 		{
 			list<long>::const_iterator iter = ids.begin();
-			cerr << "TO: Unknown State (" << *iter << ") received from " << robotId << endl;
+			cout << "TO: Unknown State (" << *iter << ") received from " << robotId << endl;
 			return nullptr;
 		}
 
@@ -674,14 +674,14 @@ namespace alica
 				if (*iter == -1)
 				{
 					curParent = cur;
-					cur.reset();
+					cur = nullptr;
 				}
 				else if (*iter == -2)
 				{
 					cur = curParent;
 					if (cur == nullptr)
 					{
-						cerr << "TO: Malformed SptMessage from " << robotId << endl;
+						cout << "TO: Malformed SptMessage from " << robotId << endl;
 						return nullptr;
 					}
 				}
@@ -699,14 +699,14 @@ namespace alica
 						if (cur->getEntryPoint() == nullptr)
 						{
 							list<long>::const_iterator iter = ids.begin();
-							cerr << "TO: Cannot find ep for State (" << *iter << ") received from " << robotId << endl;
+							cout << "TO: Cannot find ep for State (" << *iter << ") received from " << robotId << endl;
 							return nullptr;
 						}
 					}
 					else
 					{
 						list<long>::const_iterator iter = ids.begin();
-						cerr << "Unknown State (" << *iter << ") received from " << robotId << endl;
+						cout << "Unknown State (" << *iter << ") received from " << robotId << endl;
 						return nullptr;
 					}
 				}

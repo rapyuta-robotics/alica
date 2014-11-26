@@ -262,7 +262,7 @@ namespace alica
 					while (this->running && availTime > 1000 && fpEvents.size() > 0)
 					{
 						shared_ptr<RunningPlan> rp = fpEvents.front();
-						cout << "PB: runningplan " << rp->toString() << endl;
+						//cout << "PB: runningplan " << rp->toString() << endl;
 						fpEvents.pop();
 
 						if (rp->isActive())

@@ -8,7 +8,7 @@
 #ifndef PLANSELECTOR_H_
 #define PLANSELECTOR_H_
 
-#define PSDEBUG
+//#define PSDEBUG
 
 #include <vector>
 #include <list>
