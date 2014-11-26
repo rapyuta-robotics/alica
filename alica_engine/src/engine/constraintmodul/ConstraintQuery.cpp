@@ -5,21 +5,22 @@
  *      Author: Philipp
  */
 #include "engine/constraintmodul/ConstraintQuery.h"
-//#define CQ_DEBUG
+#define CQ_DEBUG
 
 #include "engine/AlicaEngine.h"
+#include "engine/BasicBehaviour.h"
 #include "engine/IAlicaClock.h"
 #include "engine/ITeamObserver.h"
 #include "engine/RunningPlan.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/constraintmodul/ConstraintCall.h"
 #include "engine/constraintmodul/ConstraintDescriptor.h"
-#include "engine/constraintmodul/ConstraintHelper.h"
 #include "engine/constraintmodul/ConstraintStore.h"
 #include "engine/constraintmodul/IConstraintSolver.h"
 #include "engine/constraintmodul/SolverTerm.h"
 #include "engine/constraintmodul/SolverVariable.h"
 #include "engine/model/Condition.h"
+#include "engine/model/State.h"
 #include "engine/model/Parametrisation.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/Variable.h"
@@ -28,8 +29,7 @@
 
 namespace alica
 {
-
-	ConstraintQuery::ConstraintQuery()
+	ConstraintQuery::ConstraintQuery(BasicBehaviour* behaviour)
 	{
 		store = make_shared<UniqueVarStore>();
 		queriedStaticVariables = vector<Variable*>();
@@ -37,9 +37,10 @@ namespace alica
 		relevantStaticVariables = vector<Variable*>();
 		relevantDomainVariables = vector<Variable*>();
 		calls = vector<shared_ptr<ConstraintCall>>();
-		AlicaEngine* ae = new AlicaEngine();
-		to = ae->getTeamObserver();
-		alicaClock = ae->getIAlicaClock();
+//		AlicaEngine* ae = new AlicaEngine();
+//		to = ae->getTeamObserver();
+//		alicaClock = ae->getIAlicaClock();
+		this->behaviour = behaviour;
 	}
 
 	void ConstraintQuery::addVariable(Variable* v)
@@ -49,7 +50,9 @@ namespace alica
 
 	void ConstraintQuery::addVariable(int robot, string ident)
 	{
-		queriedDomainVariables.push_back(to->getRobotById(robot)->getSortedVariable(ident));
+		queriedDomainVariables.push_back(
+				behaviour->getRunningPlan()->getAlicaEngine()->getTeamObserver()->getRobotById(robot)->getSortedVariable(
+						ident));
 	}
 
 	void ConstraintQuery::clearDomainVariables()
@@ -62,7 +65,7 @@ namespace alica
 		queriedStaticVariables.clear();
 	}
 
-	bool ConstraintQuery::existsSolution(shared_ptr<RunningPlan> rp)
+	bool ConstraintQuery::existsSolution(int solverType, shared_ptr<RunningPlan> rp)
 	{
 		store->clear();
 		relevantStaticVariables.clear();
@@ -107,19 +110,21 @@ namespace alica
 			}
 
 			shared_ptr<RunningPlan> parent;
-			if (rp->getParent().use_count() > 0 && (parent = rp->getParent().lock())->getActiveState() != nullptr)
+			if (rp->getParent().use_count() > 0)
+			{
+				parent = rp->getParent().lock();
+			}
+			if (parent && parent->getActiveState() != nullptr)
 			{
 				vector<Variable*> tmpVector = vector<Variable*>();
-				if (rp->getPlanType() != nullptr) {
-					for (Parametrisation* p : rp->getPlanType()->getParametrisation())
+				for (Parametrisation* p : parent->getActiveState()->getParametrisation())
+				{
+					if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType())
+							&& find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar())
+									!= relevantStaticVariables.end())
 					{
-						if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType())
-								&& find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar())
-										!= relevantStaticVariables.end())
-						{
-							tmpVector.push_back(p->getVar());
-							store->addVarTo(p->getSubVar(), p->getVar());
-						}
+						tmpVector.push_back(p->getVar());
+						store->addVarTo(p->getSubVar(), p->getVar());
 					}
 				}
 				relevantStaticVariables = tmpVector;
@@ -140,19 +145,19 @@ namespace alica
 		{
 			vector<Variable*> conditionVariables = vector<Variable*>(c->getCondition()->getVariables());
 
-			vector<shared_ptr<SolverVariable>> varr = vector<shared_ptr<SolverVariable>>(conditionVariables.size());
+			auto varr = make_shared<vector<shared_ptr<SolverVariable>>>(conditionVariables.size());
 			for (int j = 0; j < conditionVariables.size(); ++j)
 			{
-				varr[j] = store->getRep(conditionVariables[j])->getSolverVar();
+				varr->at(j) = store->getRep(conditionVariables.at(j))->getSolverVar();
 			}
-			vector<vector<vector<shared_ptr<SolverTerm>>> > sortedVars = vector<vector<vector<shared_ptr<SolverTerm>>>>();
-			vector<vector<int>> agentsInScope = vector<vector<int>>();
-			for (int j = 0; j < c->getSortedVariables().size(); ++j)
+			shared_ptr<vector<vector<vector<shared_ptr<SolverTerm>>> >> sortedVars = make_shared<vector<vector<vector<shared_ptr<SolverTerm>>>>>();
+			auto agentsInScope = make_shared<vector<vector<int>>>();
+			for (int j = 0; j < c->getSortedVariables()->size(); ++j)
 			{
 				vector<vector<shared_ptr<SolverTerm>>> ll = vector<vector<shared_ptr<SolverTerm>>>();
-				agentsInScope.push_back(c->getAgentsInScope()[j]);
-				sortedVars.push_back(ll);
-				for (vector<Variable*> dvarr : c->getSortedVariables()[j])
+				agentsInScope->push_back(c->getAgentsInScope()->at(j));
+				sortedVars->push_back(ll);
+				for (vector<Variable*> dvarr : c->getSortedVariables()->at(j))
 				{
 					vector<shared_ptr<SolverTerm>> dtvarr = vector<shared_ptr<SolverTerm>>(dvarr.size());
 					for (int i = 0; i < dtvarr.size(); ++i)
@@ -169,13 +174,13 @@ namespace alica
 		}
 		vector<Variable*> qVars = store->getAllRep();
 		qVars.insert(qVars.end(), relevantDomainVariables.begin(), relevantDomainVariables.end());
-		return ConstraintHelper::getSolver()->existsSolution(qVars, cds);
+		return behaviour->getRunningPlan()->getAlicaEngine()->getSolver(solverType)->existsSolution(qVars, cds);
 	}
 
-	bool ConstraintQuery::getSolution(shared_ptr<RunningPlan> rp, vector<double>& result)
+	bool ConstraintQuery::getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<double>& result)
 	{
 #ifdef CQ_DEBUG
-		long time = alicaClock->now();
+		long time = behaviour->getRunningPlan()->getAlicaEngine()->getIAlicaClock()->now();
 #endif
 		store->clear();
 		relevantStaticVariables.clear();
@@ -220,19 +225,21 @@ namespace alica
 			}
 
 			shared_ptr<RunningPlan> parent;
-			if (rp->getParent().use_count() > 0 && (parent = rp->getParent().lock())->getActiveState() != nullptr)
+			if (rp->getParent().use_count() > 0)
+			{
+				parent = rp->getParent().lock();
+			}
+			if (parent && parent->getActiveState() != nullptr)
 			{
 				vector<Variable*> tmpVector = vector<Variable*>();
-				if (rp->getPlanType() != nullptr) {
-					for (Parametrisation* p : rp->getPlanType()->getParametrisation())
+				for (Parametrisation* p : parent->getActiveState()->getParametrisation())
+				{
+					if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType())
+							&& find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar())
+									!= relevantStaticVariables.end())
 					{
-						if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType())
-								&& find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar())
-										!= relevantStaticVariables.end())
-						{
-							tmpVector.push_back(p->getVar());
-							store->addVarTo(p->getSubVar(), p->getVar());
-						}
+						tmpVector.push_back(p->getVar());
+						store->addVarTo(p->getSubVar(), p->getVar());
 					}
 				}
 				relevantStaticVariables = tmpVector;
@@ -254,19 +261,19 @@ namespace alica
 		{
 			vector<Variable*> conditionVariables = vector<Variable*>(c->getCondition()->getVariables());
 
-			vector<shared_ptr<SolverVariable>> varr = vector<shared_ptr<SolverVariable>>(conditionVariables.size());
+			auto varr = make_shared<vector<shared_ptr<SolverVariable>>>(conditionVariables.size());
 			for (int j = 0; j < conditionVariables.size(); ++j)
 			{
-				varr[j] = store->getRep(conditionVariables[j])->getSolverVar();
+				varr->at(j) = store->getRep(conditionVariables[j])->getSolverVar();
 			}
-			vector<vector<vector<shared_ptr<SolverTerm>>> > sortedVars = vector<vector<vector<shared_ptr<SolverTerm>>>>();
-			vector<vector<int>> agentsInScope = vector<vector<int>>();
-			for (int j = 0; j < c->getSortedVariables().size(); ++j)
+			auto sortedVars = make_shared<vector<vector<vector<shared_ptr<SolverTerm>>> >>();
+			auto agentsInScope = make_shared<vector<vector<int>>>();
+			for (int j = 0; j < c->getSortedVariables()->size(); ++j)
 			{
 				vector<vector<shared_ptr<SolverTerm>>> ll = vector<vector<shared_ptr<SolverTerm>>>();
-				agentsInScope.push_back(c->getAgentsInScope()[j]);
-				sortedVars.push_back(ll);
-				for (vector<Variable*> dvarr : c->getSortedVariables()[j])
+				agentsInScope->push_back(c->getAgentsInScope()->at(j));
+				sortedVars->push_back(ll);
+				for (vector<Variable*> dvarr : c->getSortedVariables()->at(j))
 				{
 					vector<shared_ptr<SolverTerm>> dtvarr = vector<shared_ptr<SolverTerm>>(dvarr.size());
 					for (int i = 0; i < dtvarr.size(); ++i)
@@ -287,20 +294,27 @@ namespace alica
 
 		vector<double> solverResult;
 #ifdef CQ_DEBUG
-		cout << "CQ: PrepTime: " (alicaClock->now()-time)/10000.0 << endl;
+		cout << "CQ: PrepTime: "
+				<< (behaviour->getRunningPlan()->getAlicaEngine()->getIAlicaClock()->now() - time) / 10000.0 << endl;
 #endif
-		bool ret = ConstraintHelper::getSolver()->getSolution(qVars, cds, &solverResult);
+		bool ret = behaviour->getRunningPlan()->getAlicaEngine()->getSolver(solverType)->getSolution(qVars, cds,
+																										&solverResult);
 		result = vector<double>();
 
-		if (solverResult.size() > 0) {
+		if (solverResult.size() > 0)
+		{
 			//throw "Unexpected Result in Multiple Variables Query!";
-			for (int i = 0; i < queriedStaticVariables.size(); ++i) {
+			for (int i = 0; i < queriedStaticVariables.size(); ++i)
+			{
 				result.push_back(solverResult[store->getIndexOf(queriedStaticVariables[i])]);
 			}
-			for (int i = 0; i < queriedDomainVariables.size(); ++i) {
-				for (int j = 0; j < relevantDomainVariables.size(); ++j) {
-					if (relevantDomainVariables[j] == queriedDomainVariables[i]) {
-						result.push_back(solverResult[domOffset+j]);
+			for (int i = 0; i < queriedDomainVariables.size(); ++i)
+			{
+				for (int j = 0; j < relevantDomainVariables.size(); ++j)
+				{
+					if (relevantDomainVariables[j] == queriedDomainVariables[i])
+					{
+						result.push_back(solverResult[domOffset + j]);
 						break;
 					}
 				}

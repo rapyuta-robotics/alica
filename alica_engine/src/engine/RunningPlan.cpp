@@ -34,6 +34,8 @@
 #include "engine/SimplePlanTree.h"
 #include "engine/allocationauthority/EntryPointRobotPair.h"
 
+#include <iostream>
+
 namespace alica
 {
 
@@ -845,6 +847,7 @@ namespace alica
 
 	void RunningPlan::attachPlanConstraints()
 	{
+		cout << "attachPlanConstraints() " << this->getPlan()->getName() << endl;
 		this->constraintStore->addCondition(this->plan->getPreCondition());
 		this->constraintStore->addCondition(this->plan->getRuntimeCondition());
 	}
@@ -1150,6 +1153,11 @@ namespace alica
 	shared_ptr<RunningPlan> RunningPlan::getSharedFromThis()
 	{
 		return shared_from_this();
+	}
+
+	AlicaEngine* RunningPlan::getAlicaEngine()
+	{
+		return ae;
 	}
 
 } /* namespace alica */

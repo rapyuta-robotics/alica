@@ -13,6 +13,7 @@ using namespace std;
 #include <string>
 #include <SystemConfig.h>
 #include <list>
+#include <map>
 
 namespace alica
 {
@@ -38,6 +39,8 @@ namespace alica
 	class IUtilityCreator;
 	class ExpressionHandler;
 	class PartialAssignmentPool;
+	class IConstraintSolver;
+	class IResultStore;
 
 	class AlicaEngine
 	{
@@ -82,6 +85,10 @@ namespace alica
 		PartialAssignmentPool* getPartialAssignmentPool();
 		void stepNotify();
 		PlanBase* getPlanBase();
+		void addSolver(int identifier, IConstraintSolver* solver);
+		IConstraintSolver* getSolver(int identifier);
+		IResultStore* getResultStore();
+		void setResultStore(IResultStore* resultStore);
 
 		~AlicaEngine();
 
@@ -107,6 +114,8 @@ namespace alica
 		IAlicaClock* alicaClock;
 		PartialAssignmentPool* pap;
 		PlanBase* planBase;bool stepCalled;
+		map<int, IConstraintSolver*> solver;
+		IResultStore* resultStore;
 
 	private:
 

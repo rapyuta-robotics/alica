@@ -15,9 +15,10 @@
 #include "engine/model/Variable.h"
 #include <Timer.h>
 
+#include <iostream>
+
 namespace alica
 {
-
 	/**
 	 * Basic constructor. Initialises the timer. Should only be called from the constructor of inheriting classes.
 	 * @param name The name of the behaviour

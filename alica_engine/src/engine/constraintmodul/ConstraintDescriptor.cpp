@@ -7,7 +7,6 @@
 
 #include "engine/constraintmodul/ConstraintDescriptor.h"
 
-//#include "engine/constraintmodul/ConstraintBuilder.h"
 #include "engine/constraintmodul/SolverTerm.h"
 #include "engine/constraintmodul/SolverVariable.h"
 
@@ -16,38 +15,39 @@
 namespace alica
 {
 
-	ConstraintDescriptor::ConstraintDescriptor(vector<shared_ptr<SolverVariable>> vars,
-												vector<vector<vector<shared_ptr<SolverTerm>>> > domVars)
+	ConstraintDescriptor::ConstraintDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars,
+	                                           shared_ptr<vector<vector<vector<shared_ptr<SolverTerm>>>>> domVars)
 	{
-		dim = vars.size();
+		dim = vars->size();
 //		constraint = ConstraintBuilder::TRUE; TODO: KENNT DEN CONSTRAINTBUILDER NICH
 //		utility = TermBuilder::constant(1);	TODO: KENNT DEN TERMBUILDER NICH
 		utilitySufficiencyThreshold = numeric_limits<double>::min();
 //		fixedValues = ;
-		staticRanges = vector<vector<double>>();
+		staticRanges = make_shared<vector<vector<double>>>();
 		for (int i = 0; i < dim; ++i)
 		{
-			staticRanges.push_back(vector<double>(2));
+			staticRanges->push_back(vector<double>(2));
 		}
-		allVars = vector<shared_ptr<SolverTerm>>();
+		allVars = make_shared<vector<shared_ptr<SolverTerm>>>();
 		for (int i = 0; i < dim; ++i)
 		{
-			staticRanges[i][0] = min;
-			staticRanges[i][1] = max;
-			allVars.push_back(vars[i]);
+			staticRanges->at(i)[0] = min;
+			staticRanges->at(i)[1] = max;
+			allVars->push_back(vars->at(i));
 		}
 //		staticVars = vars;
-		staticVars = vector<shared_ptr<SolverTerm>>(vars.size());
-		for (int i = 0; i < vars.size(); ++i)
+		staticVars = make_shared<vector<shared_ptr<SolverTerm>>>(vars->size());
+		for (int i = 0; i < vars->size(); ++i)
 		{
-			staticVars[i] = vars[i];
+			staticVars->at(i) = vars->at(i);
 		}
 		domainVars = domVars;
-		domainRanges = vector<vector<vector<vector<double>>>>();
-		for (vector<vector<shared_ptr<SolverTerm>>> lat : domVars)
-		{
+		domainRanges = make_shared<vector<vector<vector<vector<double>>>>>();
+		for (auto iter = domVars->begin(); iter != domVars->end(); iter++) {
+			vector<vector<shared_ptr<SolverTerm>>> lat = *iter;
+
 			vector<vector<vector<double>>> l = vector<vector<vector<double>>>();
-			domainRanges.push_back(l);
+			domainRanges->push_back(l);
 			for (vector<shared_ptr<SolverTerm>> tarr : lat)
 			{
 				vector<vector<double>> r = vector<vector<double>>();
@@ -61,7 +61,7 @@ namespace alica
 					dim++;
 					r[i][0] = min;
 					r[i][1] = max;
-					allVars.push_back(tarr[i]);
+					allVars->push_back(tarr[i]);
 				}
 			}
 		}
@@ -127,75 +127,75 @@ namespace alica
 		utilitySufficiencyThreshold = value;
 	}
 
-	vector<shared_ptr<SolverTerm>> ConstraintDescriptor::getStaticVars()
+	shared_ptr<vector<shared_ptr<SolverTerm>>> ConstraintDescriptor::getStaticVars()
 	{
 		return staticVars;
 	}
 
-	void ConstraintDescriptor::setStaticVars(vector<shared_ptr<SolverTerm>> value)
+	void ConstraintDescriptor::setStaticVars(shared_ptr<vector<shared_ptr<SolverTerm>>> value)
 	{
 		staticVars = value;
 	}
 
-	vector<vector<vector<shared_ptr<SolverTerm>>> > ConstraintDescriptor::getDomainVars()
+	shared_ptr<vector<vector<vector<shared_ptr<SolverTerm>>>>> ConstraintDescriptor::getDomainVars()
 	{
 		return domainVars;
 	}
 
-	void ConstraintDescriptor::setDomainVars(vector<vector<vector<shared_ptr<SolverTerm>>> > value)
+	void ConstraintDescriptor::setDomainVars(shared_ptr<vector<vector<vector<shared_ptr<SolverTerm>>>>> value)
 	{
 		domainVars = value;
 	}
 
-	vector<vector<int>> ConstraintDescriptor::getAgentsInScope()
+	shared_ptr<vector<vector<int>>> ConstraintDescriptor::getAgentsInScope()
 	{
 		return agentsInScope;
 	}
 
-	void ConstraintDescriptor::setAgentsInScope(vector<vector<int>> value)
+	void ConstraintDescriptor::setAgentsInScope(shared_ptr<vector<vector<int>>> value)
 	{
 		agentsInScope = value;
 	}
 
-	vector<shared_ptr<SolverTerm>> ConstraintDescriptor::getAllVars()
+	shared_ptr<vector<shared_ptr<SolverTerm>>> ConstraintDescriptor::getAllVars()
 	{
 		return allVars;
 	}
 
-	void ConstraintDescriptor::setAllVars(vector<shared_ptr<SolverTerm>> value)
+	void ConstraintDescriptor::setAllVars(shared_ptr<vector<shared_ptr<SolverTerm>>> value)
 	{
 		allVars = value;
 	}
 
-	vector<vector<double>> ConstraintDescriptor::allRanges()
+	shared_ptr<vector<vector<double>>> ConstraintDescriptor::allRanges()
 	{
-		vector<vector<double>> allRanges = vector<vector<double>>(staticRanges);
-		for (vector<vector<vector<double>>> ld : domainRanges)
-		{
+		auto allRanges = make_shared<vector<vector<double>>>(*staticRanges);
+		for (auto iter = domainRanges->begin(); iter != domainRanges->end(); iter++) {
+			vector<vector<vector<double>>> ld = *iter;
 			for (vector<vector<double>> darr : ld)
 			{
-				allRanges.insert(allRanges.end(), darr.begin(), darr.end());
+				allRanges->insert(allRanges->end(), darr.begin(), darr.end());
 			}
 		}
 		return allRanges;
 	}
 
-	vector<vector<vector<vector<double>>> > ConstraintDescriptor::getDomainRanges()
+	shared_ptr<vector<vector<vector<vector<double>>>>> ConstraintDescriptor::getDomainRanges()
 	{
 		return domainRanges;
 	}
 
-	void ConstraintDescriptor::setDomainRanges(vector<vector<vector<vector<double>>> > value)
+	void ConstraintDescriptor::setDomainRanges(shared_ptr<vector<vector<vector<vector<double>>>>> value)
 	{
 		domainRanges = value;
 	}
 
-	vector<vector<double>> ConstraintDescriptor::getStaticRanges()
+	shared_ptr<vector<vector<double>>> ConstraintDescriptor::getStaticRanges()
 	{
 		return staticRanges;
 	}
 
-	void ConstraintDescriptor::setStaticRanges(vector<vector<double>> value)
+	void ConstraintDescriptor::setStaticRanges(shared_ptr<vector<vector<double>>> value)
 	{
 		staticRanges = value;
 	}

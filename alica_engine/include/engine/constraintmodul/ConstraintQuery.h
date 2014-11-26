@@ -10,16 +10,20 @@
 
 #include <memory>
 #include <vector>
+#include <map>
 
 using namespace std;
 
 namespace alica
 {
+	class AlicaEngine;
 	class ConstraintCall;
 	class ITeamObserver;
 	class RunningPlan;
 	class Variable;
 	class IAlicaClock;
+	class BasicBehaviour;
+	class IConstraintSolver;
 
 	/**
 	 * Encapsulates specific queries to constraint variable, usually used by behaviours.
@@ -27,14 +31,14 @@ namespace alica
 	class ConstraintQuery : public enable_shared_from_this<ConstraintQuery>
 	{
 	public:
-		ConstraintQuery();
+		ConstraintQuery(BasicBehaviour* behaviour);
 
 		void addVariable(Variable* v);
 		void addVariable(int robot, string ident);
 		void clearDomainVariables();
 		void clearStaticVariables();
-		bool existsSolution(shared_ptr<RunningPlan> rp);
-		bool getSolution(shared_ptr<RunningPlan> rp, vector<double>& result);
+		bool existsSolution(int solverType, shared_ptr<RunningPlan> rp);
+		bool getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<double>& result);
 //		bool getSolution(shared_ptr<RunningPlan> rp, vector<object>& result);
 
 		vector<Variable*> getRelevantStaticVariables();
@@ -66,13 +70,14 @@ namespace alica
 		shared_ptr<UniqueVarStore> store;
 		vector<Variable*> queriedStaticVariables;
 		vector<Variable*> queriedDomainVariables;
-		ITeamObserver* to;
+//		ITeamObserver* to;
 		vector<shared_ptr<ConstraintCall>> calls;
 
 		vector<Variable*> relevantStaticVariables;
 		vector<Variable*> relevantDomainVariables;
 
-		IAlicaClock* alicaClock;
+		BasicBehaviour* behaviour;
+//		IAlicaClock* alicaClock;
 };
 
 }

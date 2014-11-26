@@ -13,13 +13,15 @@
 #include "engine/constraintmodul/ConstraintQuery.h"
 #include "engine/model/Condition.h"
 #include "engine/model/Variable.h"
+#include "engine/model/AbstractPlan.h"
+
+#include <iostream>
 
 namespace alica
 {
 
 	/**
 	 * Default constructor
-	 * @param A RunningPlan
 	 */
 	ConstraintStore::ConstraintStore()
 	{
@@ -82,7 +84,6 @@ namespace alica
 				}
 			}
 		}
-
 #ifdef CS_DEBUG
 		cout << "CS: Added condition in " << rp->getPlan()->getName() << " with " << con->getVariables().size() << " vars" << endl;
 #endif
@@ -173,8 +174,9 @@ namespace alica
 						{
 							shared_ptr<ConstraintCall> cc = allConditions[c];
 							newConditions.insert(pair<Condition*, shared_ptr<ConstraintCall>>(c, cc));
-							for (list<vector<Variable*>> lvarr : cc->getSortedVariables())
-							{
+							auto sortedVariables = cc->getSortedVariables();
+							for (auto iter = sortedVariables->begin(); iter != sortedVariables->end(); iter++) {
+								list<vector<Variable*>> lvarr = *iter;
 								for (vector<Variable*> varr : lvarr)
 								{
 									for (int i = 0; i < varr.size(); ++i)
@@ -205,7 +207,7 @@ namespace alica
 					Variable* v = domVarsToCheck[domVarsToCheck.size() - 1];
 					domVarsToCheck.erase(domVarsToCheck.begin() + (domVarsToCheck.size() - 1));
 					domVarsChecked.push_back(v);
-					for (map<Condition*, shared_ptr<ConstraintCall>>::iterator iter = allConditions.begin();
+					for (auto iter = allConditions.begin();
 							iter != allConditions.end(); ++iter)
 					{
 						if (newConditions.find(iter->first) == newConditions.end())
@@ -222,8 +224,9 @@ namespace alica
 										varsToCheck.push_back(vv);
 									}
 								}
-								for (list<vector<Variable*>> lvarr : iter->second->getSortedVariables())
-								{
+								auto sortedVariables = iter->second->getSortedVariables();
+								for (auto iter = sortedVariables->begin(); iter != sortedVariables->end(); iter++) {
+									list<vector<Variable*>> lvarr = *iter;
 									for (vector<Variable*> varr : lvarr)
 									{
 										for (int i = 0; i < varr.size(); ++i)

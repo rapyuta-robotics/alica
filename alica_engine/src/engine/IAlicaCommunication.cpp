@@ -9,6 +9,9 @@
 #include "engine/syncmodul/SyncModul.h"
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/teamobserver/TeamObserver.h"
+#include "engine/constraintmodul/ResultStore.h"
+
+#include <iostream>
 
 using namespace alica;
 
@@ -35,4 +38,9 @@ void alica::IAlicaCommunication::onAuthorityInfoReceived(shared_ptr<AllocationAu
 void alica::IAlicaCommunication::onPlanTreeInfoReceived(shared_ptr<PlanTreeInfo> pti)
 {
 	ae->getTeamObserver()->handlePlanTreeInfo(pti);
+}
+
+void alica::IAlicaCommunication::onSolverResult(shared_ptr<SolverResult> sr)
+{
+	ae->getResultStore()->onSolverResult(sr);
 }

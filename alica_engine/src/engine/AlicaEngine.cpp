@@ -28,6 +28,8 @@ using namespace std;
 #include "engine/IConditionCreator.h"
 #include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
+#include "engine/constraintmodul/IConstraintSolver.h"
+#include "engine/constraintmodul/ResultStore.h"
 
 namespace alica
 {
@@ -60,6 +62,7 @@ namespace alica
 		this->stepEngine = false;
 		this->maySendMessages = false;
 		this->pap = nullptr;
+		this->resultStore = nullptr;
 
 //		TODO: MODULELOADER CASTOR
 //		string modName[] = (*this->sc)["Alica"]->get<string>("Alica", "Extensions", "LoadModule", NULL);
@@ -166,6 +169,9 @@ namespace alica
 		this->expressionHandler->attachAll();
 		UtilityFunction::initDataStructures(this);
 		this->syncModul->init();
+		if (this->resultStore == nullptr) {
+			this->resultStore = new ResultStore(this);
+		}
 		if (this->getCommunicator() != nullptr)
 		{
 			this->getCommunicator()->startCommunication();
@@ -184,6 +190,11 @@ namespace alica
 		}
 		this->terminating = true;
 		this->maySendMessages = false;
+
+		if (this->resultStore != nullptr) {
+			delete this->resultStore;
+			this->resultStore = nullptr;
+		}
 
 		if (this->behaviourPool != nullptr)
 		{
@@ -474,6 +485,26 @@ namespace alica
 	PlanBase* AlicaEngine::getPlanBase()
 	{
 		return planBase;
+	}
+
+	void AlicaEngine::addSolver(int identifier, IConstraintSolver* solver)
+	{
+		this->solver[identifier] = solver;
+	}
+
+	IConstraintSolver* AlicaEngine::getSolver(int identifier)
+	{
+		return this->solver[identifier];
+	}
+
+	IResultStore* AlicaEngine::getResultStore()
+	{
+		return this->resultStore;
+	}
+
+	void AlicaEngine::setResultStore(IResultStore* resultStore)
+	{
+		this->resultStore = resultStore;
 	}
 
 	PartialAssignmentPool* AlicaEngine::getPartialAssignmentPool()
