@@ -150,11 +150,11 @@ namespace alica
 			{
 				varr->at(j) = store->getRep(conditionVariables.at(j))->getSolverVar();
 			}
-			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >>();
-			auto agentsInScope = make_shared<vector<shared_ptr<vector<int>>>>();
+			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>> >> >>();
+			auto agentsInScope = make_shared<vector<shared_ptr<vector<int>>> >();
 			for (int j = 0; j < c->getSortedVariables()->size(); ++j)
 			{
-				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>>();
+				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverTerm>>> >>();
 				agentsInScope->push_back(c->getAgentsInScope()->at(j));
 				sortedVars->push_back(ll);
 				for (auto dvarr : c->getSortedVariables()->at(j))
@@ -266,11 +266,11 @@ namespace alica
 			{
 				varr->at(j) = store->getRep(conditionVariables[j])->getSolverVar();
 			}
-			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >>();
-			auto agentsInScope = make_shared<vector<shared_ptr<vector<int>>>>();
+			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>> >> >>();
+			auto agentsInScope = make_shared<vector<shared_ptr<vector<int>>> >();
 			for (int j = 0; j < c->getSortedVariables()->size(); ++j)
 			{
-				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>>();
+				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverTerm>>> >>();
 				agentsInScope->push_back(c->getAgentsInScope()->at(j));
 				sortedVars->push_back(ll);
 				for (auto dvarr : c->getSortedVariables()->at(j))
@@ -292,7 +292,7 @@ namespace alica
 		int domOffset = qVars.size();
 		qVars.insert(qVars.end(), relevantDomainVariables.begin(), relevantDomainVariables.end());
 
-		vector<double> solverResult;
+		shared_ptr<vector<double>> solverResult;
 #ifdef CQ_DEBUG
 		cout << "CQ: PrepTime: "
 				<< (behaviour->getRunningPlan()->getAlicaEngine()->getIAlicaClock()->now() - time) / 10000.0 << endl;
@@ -300,12 +300,12 @@ namespace alica
 		bool ret = behaviour->getRunningPlan()->getAlicaEngine()->getSolver(solverType)->getSolution(qVars, cds,
 																										solverResult);
 
-		if (solverResult.size() > 0)
+		if (solverResult != nullptr && solverResult->size() > 0)
 		{
 			//throw "Unexpected Result in Multiple Variables Query!";
 			for (int i = 0; i < queriedStaticVariables.size(); ++i)
 			{
-				result.push_back(solverResult[store->getIndexOf(queriedStaticVariables[i])]);
+				result.push_back(solverResult->at(store->getIndexOf(queriedStaticVariables[i])));
 			}
 			for (int i = 0; i < queriedDomainVariables.size(); ++i)
 			{
@@ -313,7 +313,7 @@ namespace alica
 				{
 					if (relevantDomainVariables[j] == queriedDomainVariables[i])
 					{
-						result.push_back(solverResult[domOffset + j]);
+						result.push_back(solverResult->at(domOffset + j));
 						break;
 					}
 				}

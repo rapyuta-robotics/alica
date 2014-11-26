@@ -23,7 +23,7 @@ namespace alica
 
 			bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls);
 			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls,
-								vector<double>& results);
+								shared_ptr<vector<double>>& results);
 
 			static int getExistsSolutionCallCounter();
 			static int getGetSolutionCallCounter();

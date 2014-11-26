@@ -37,8 +37,9 @@ namespace alica
 			return false;
 		}
 
-		bool ConstraintTestPlanDummySolver::getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls,
-		                    							vector<double>& results)
+		bool ConstraintTestPlanDummySolver::getSolution(vector<Variable*>& vars,
+														vector<shared_ptr<ConstraintDescriptor>>& calls,
+														shared_ptr<vector<double>>& results)
 		{
 			getSolutionCallCounter++;
 			std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << getSolutionCallCounter << " times!"

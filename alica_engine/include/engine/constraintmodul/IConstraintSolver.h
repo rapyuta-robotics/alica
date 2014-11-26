@@ -30,7 +30,7 @@ namespace alica
 		}
 
 		virtual bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls) = 0;
-		virtual bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls, vector<double>& results) = 0;
+		virtual bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls, shared_ptr<vector<double>>& results) = 0;
 //		virtual bool getSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls, vector<object>& results) = 0;
 
 	protected:
