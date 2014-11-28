@@ -19,10 +19,10 @@ namespace alica
 	class Variable;
 	struct SolverResult;
 
-	class IResultStore : public enable_shared_from_this<IResultStore>
+	class IVariableSyncModule : public enable_shared_from_this<IVariableSyncModule>
 	{
 	public:
-		virtual ~IResultStore() {};
+		virtual ~IVariableSyncModule() {};
 
 		virtual void init() = 0;
 		virtual void close() = 0;

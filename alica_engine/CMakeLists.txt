@@ -15,6 +15,7 @@ else (catkin_FOUND)
   find_package(event_handling)
 endif(catkin_FOUND)
 
+
 ## System dependencies are found with CMake's conventions
 #find_package(Boost REQUIRED COMPONENTS program_options)
 

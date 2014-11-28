@@ -6,6 +6,7 @@
  */
 
 #include "ConstraintTestPlanDummySolver.h"
+#include <engine/model/Variable.h>
 
 #include <iostream>
 
@@ -32,19 +33,24 @@ namespace alica
 															vector<shared_ptr<ConstraintDescriptor>>& calls)
 		{
 			existsSolutionCallCounter++;
-			std::cout << "ConstraintTestPlanDummySolver::existsSolution was called " << existsSolutionCallCounter
-					<< " times!" << std::endl;
+			//std::cout << "ConstraintTestPlanDummySolver::existsSolution was called " << existsSolutionCallCounter
+			//		<< " times!" << std::endl;
 			return false;
 		}
 
 		bool ConstraintTestPlanDummySolver::getSolution(vector<Variable*>& vars,
 														vector<shared_ptr<ConstraintDescriptor>>& calls,
-														shared_ptr<vector<double>>& results)
+														vector<void*>& results)
 		{
+			for (int i = 0; i < vars.size(); i++)
+			{
+				string* s = new string(vars.at(i)->getName());
+				results.push_back(s);
+			}
 			getSolutionCallCounter++;
-			std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << getSolutionCallCounter << " times!"
-					<< std::endl;
-			return false;
+			//std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << getSolutionCallCounter << " times!"
+			//		<< std::endl;
+			return true;
 		}
 
 		int ConstraintTestPlanDummySolver::getExistsSolutionCallCounter()

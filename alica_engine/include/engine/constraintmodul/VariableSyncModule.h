@@ -13,7 +13,7 @@
 
 #include <NotifyTimer.h>
 
-#include "engine/constraintmodul/IResultStore.h"
+#include "engine/constraintmodul/IVariableSyncModule.h"
 
 using namespace std;
 
@@ -23,11 +23,11 @@ namespace alica
 	class ResultEntry;
 	class IAlicaCommunication;
 
-	class ResultStore : public IResultStore
+	class VariableSyncModule : public IVariableSyncModule
 	{
 	public:
-		ResultStore(AlicaEngine* ae);
-		virtual ~ResultStore();
+		VariableSyncModule(AlicaEngine* ae);
+		virtual ~VariableSyncModule();
 
 		virtual void init();
 		virtual void close();
@@ -39,7 +39,7 @@ namespace alica
 		virtual shared_ptr<vector<shared_ptr<vector<double>>>> getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits);
 
 	protected:
-		supplementary::NotifyTimer<ResultStore>* timer;
+		supplementary::NotifyTimer<VariableSyncModule>* timer;
 		long ttl4Communication;
 		long ttl4Usage;
 

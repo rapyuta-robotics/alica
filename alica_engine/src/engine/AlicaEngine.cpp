@@ -29,7 +29,7 @@ using namespace std;
 #include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/constraintmodul/IConstraintSolver.h"
-#include "engine/constraintmodul/ResultStore.h"
+#include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/collections/AssignmentCollection.h"
 
 namespace alica
@@ -63,7 +63,7 @@ namespace alica
 		this->stepEngine = false;
 		this->maySendMessages = false;
 		this->pap = nullptr;
-		this->resultStore = nullptr;
+		this->variableSyncModule = nullptr;
 
 //		TODO: MODULELOADER CASTOR
 //		string modName[] = (*this->sc)["Alica"]->get<string>("Alica", "Extensions", "LoadModule", NULL);
@@ -76,7 +76,6 @@ namespace alica
 //				Console.WriteLine("AE: Loaded Module " + name);
 //			}
 //		}
-		this->maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
 
 #ifdef AE_DEBUG
 		cout << "AE: Constructor finished!" << endl;
@@ -109,6 +108,7 @@ namespace alica
 							string roleSetName, string masterPlanName, string roleSetDir,
 							bool stepEngine)
 	{
+		this->maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
 		AssignmentCollection::maxEpsCount = (*this->sc)["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
 	    AssignmentCollection::allowIdling = (*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL);
 
@@ -173,8 +173,8 @@ namespace alica
 		this->expressionHandler->attachAll();
 		UtilityFunction::initDataStructures(this);
 		this->syncModul->init();
-		if (this->resultStore == nullptr) {
-			this->resultStore = new ResultStore(this);
+		if (this->variableSyncModule == nullptr) {
+			this->variableSyncModule = new VariableSyncModule(this);
 		}
 		if (this->getCommunicator() != nullptr)
 		{
@@ -195,9 +195,9 @@ namespace alica
 		this->terminating = true;
 		this->maySendMessages = false;
 
-		if (this->resultStore != nullptr) {
-			delete this->resultStore;
-			this->resultStore = nullptr;
+		if (this->variableSyncModule != nullptr) {
+			delete this->variableSyncModule;
+			this->variableSyncModule = nullptr;
 		}
 
 		if (this->behaviourPool != nullptr)
@@ -501,14 +501,14 @@ namespace alica
 		return this->solver[identifier];
 	}
 
-	IResultStore* AlicaEngine::getResultStore()
+	IVariableSyncModule* AlicaEngine::getResultStore()
 	{
-		return this->resultStore;
+		return this->variableSyncModule;
 	}
 
-	void AlicaEngine::setResultStore(IResultStore* resultStore)
+	void AlicaEngine::setResultStore(IVariableSyncModule* resultStore)
 	{
-		this->resultStore = resultStore;
+		this->variableSyncModule = resultStore;
 	}
 
 	PartialAssignmentPool* AlicaEngine::getPartialAssignmentPool()

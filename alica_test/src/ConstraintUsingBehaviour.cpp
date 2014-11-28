@@ -13,6 +13,7 @@
 
 namespace alicaTests
 {
+	vector<string> ConstraintUsingBehaviour::result;
 
 	ConstraintUsingBehaviour::ConstraintUsingBehaviour() :
 			alica::BasicBehaviour("ConstraintUsingBehaviour")
@@ -28,8 +29,7 @@ namespace alicaTests
 	void ConstraintUsingBehaviour::run(void* msg)
 	{
 		callCounter++;
-		cout << "ConstraintUsingBehaviour was called " << callCounter << " times!" << endl;
-		vector<double> result;
+		//cout << "ConstraintUsingBehaviour was called " << callCounter << " times!" << endl;
 		query->getSolution(SolverType::DUMMYSOLVER, runningPlan, result);
 	}
 
@@ -40,7 +40,7 @@ namespace alicaTests
 
 	void ConstraintUsingBehaviour::initialiseParameters()
 	{
-		query->addVariable(getVariablesByName("X"));
+		//query->addVariable(getVariablesByName("X"));
 		query->addVariable(getVariablesByName("Y"));
 	}
 
