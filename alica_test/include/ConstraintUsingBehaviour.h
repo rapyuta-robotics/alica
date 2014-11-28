@@ -8,8 +8,12 @@
 #ifndef CONSTRAINTUSINGBEHAVIOUR_H_
 #define CONSTRAINTUSINGBEHAVIOUR_H_
 
+#include <vector>
+
 #include <engine/BasicBehaviour.h>
 #include <engine/constraintmodul/ConstraintQuery.h>
+
+using namespace std;
 
 namespace alicaTests
 {
@@ -22,6 +26,7 @@ namespace alicaTests
 		virtual void run(void* msg);
 
 		int getCallCounter();
+		static vector<string> result;
 	protected:
 		int callCounter;
 		virtual void initialiseParameters();

@@ -6,7 +6,7 @@
  */
 
 //#define RS_DEBUG
-#include "engine/constraintmodul/ResultStore.h"
+#include "engine/constraintmodul/VariableSyncModule.h"
 
 #include "SystemConfig.h"
 #include "engine/AlicaEngine.h"
@@ -19,19 +19,19 @@
 
 namespace alica
 {
-	ResultStore::ResultStore(AlicaEngine* ae)
+	VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
 	{
 		running = false;
 		this->ae = ae;
 		this->timer = nullptr;
 	}
 
-	ResultStore::~ResultStore()
+	VariableSyncModule::~VariableSyncModule()
 	{
 		delete timer;
 	}
 
-	void ResultStore::init()
+	void VariableSyncModule::init()
 	{
 		if (running)
 		{
@@ -51,12 +51,12 @@ namespace alica
 			communicator = ae->getCommunicator();
 			int interval = (int)round(
 					1000.0 / (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "CommunicationFrequency", NULL));
-			timer = new supplementary::NotifyTimer<ResultStore>(interval, &ResultStore::publishContent, this);
+			timer = new supplementary::NotifyTimer<VariableSyncModule>(interval, &VariableSyncModule::publishContent, this);
 			timer->start();
 		}
 	}
 
-	void ResultStore::close()
+	void VariableSyncModule::close()
 	{
 		this->running = false;
 		if (timer)
@@ -66,7 +66,7 @@ namespace alica
 		timer = nullptr;
 	}
 
-	void ResultStore::clear()
+	void VariableSyncModule::clear()
 	{
 		for (auto r : store)
 		{
@@ -74,7 +74,7 @@ namespace alica
 		}
 	}
 
-	void ResultStore::onSolverResult(shared_ptr<SolverResult> msg)
+	void VariableSyncModule::onSolverResult(shared_ptr<SolverResult> msg)
 	{
 		if (msg->senderID == ownId)
 		{
@@ -106,7 +106,7 @@ namespace alica
 		}
 	}
 
-	void ResultStore::publishContent()
+	void VariableSyncModule::publishContent()
 	{
 		if (!this->running)
 			return;
@@ -121,12 +121,12 @@ namespace alica
 		communicator->sendSolverResult(sr);
 	}
 
-	void ResultStore::postResult(long vid, double result)
+	void VariableSyncModule::postResult(long vid, double result)
 	{
 		this->ownResults->addValue(vid, result);
 	}
 
-	shared_ptr<vector<shared_ptr<vector<double>>>> ResultStore::getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits)
+	shared_ptr<vector<shared_ptr<vector<double>>>> VariableSyncModule::getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits)
 	{
 		int dim = query->size();
 		list<VotedSeed*> seeds;
@@ -194,7 +194,7 @@ namespace alica
 		return ret;
 	}
 
-	ResultStore::VotedSeed::VotedSeed(int dim, shared_ptr<vector<double>> v)
+	VariableSyncModule::VotedSeed::VotedSeed(int dim, shared_ptr<vector<double>> v)
 	{
 		this->values = v;
 		this->supporterCount = vector<int>(dim);
@@ -208,7 +208,7 @@ namespace alica
 		}
 	}
 
-	bool ResultStore::VotedSeed::takeVector(shared_ptr<vector<double>> v, vector<double>& scaling, double distThreshold)
+	bool VariableSyncModule::VotedSeed::takeVector(shared_ptr<vector<double>> v, vector<double>& scaling, double distThreshold)
 	{
 		int nans = 0;
 		double distSqr = 0;

@@ -9,7 +9,7 @@
 #include "engine/syncmodul/SyncModul.h"
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/teamobserver/TeamObserver.h"
-#include "engine/constraintmodul/ResultStore.h"
+#include "engine/constraintmodul/IVariableSyncModule.h"
 
 #include <iostream>
 
