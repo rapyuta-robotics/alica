@@ -9,7 +9,7 @@
 
 #include <engine/AlicaEngine.h>
 #include <engine/constraintmodul/ConstraintDescriptor.h>
-#include <engine/constraintmodul/IResultStore.h>
+#include <engine/constraintmodul/IVariableSyncModule.h>
 #include <engine/model/Variable.h>
 #include <GSolver.h>
 #include <limits>
@@ -89,11 +89,10 @@ namespace alica
 		}
 
 		bool CGSolver::getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls,
-									shared_ptr<vector<double>>& results)
+									vector<void*>& results)
 		{
 			shared_ptr<Term> constraint = ConstraintBuilder::TRUE;
 			shared_ptr<Term> utility = TermBuilder::constant(1);
-			results = nullptr;
 			int dim = vars.size();
 
 			auto cVars = make_shared<vector<shared_ptr<autodiff::Variable>>>(dim);
@@ -161,17 +160,20 @@ namespace alica
 
 			auto seeds = ae->getResultStore()->getSeeds(make_shared<vector<Variable*>>(vars), ranges);
 
+			shared_ptr<vector<double>> gresults;
 			double util = 0;
 			{ // for lock_guard
 				lock_guard<std::mutex> lock(mtx);
 				gs->setUtilitySignificanceThreshold(usigVal);
-				results = gs->solve(all, cVars, ranges, seeds, sufficientUtility, &util);
+				gresults = gs->solve(all, cVars, ranges, seeds, sufficientUtility, &util);
 			}
-			if (results != nullptr)
+			if (results.size()>0)
 			{
 				for (int i = 0; i < dim; ++i)
 				{
-					ae->getResultStore()->postResult(vars[i]->getId(), results->at(i));
+					double *rVal = new double{gresults->at(i)};
+					results.push_back(rVal);
+					ae->getResultStore()->postResult(vars[i]->getId(), gresults->at(i));
 				}
 			}
 			lastUtil = util;

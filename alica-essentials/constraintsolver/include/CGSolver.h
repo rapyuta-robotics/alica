@@ -20,7 +20,7 @@ using namespace std;
 namespace alica
 {
 	class AlicaEngine;
-	class IResultStore;
+	class IVariableSyncModule;
 
 	namespace reasoner
 	{
@@ -33,7 +33,7 @@ namespace alica
 			virtual ~CGSolver();
 
 			bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls);
-			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls, shared_ptr<vector<double>>& results);
+			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls, vector<void*>& results);
 
 		protected:
 			shared_ptr<GSolver> gs;
