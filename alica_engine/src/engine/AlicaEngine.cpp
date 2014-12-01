@@ -180,6 +180,9 @@ namespace alica
 		{
 			this->getCommunicator()->startCommunication();
 		}
+		if (this->variableSyncModule != nullptr) {
+			this->variableSyncModule->init();
+		}
 		return everythingWorked;
 	}
 

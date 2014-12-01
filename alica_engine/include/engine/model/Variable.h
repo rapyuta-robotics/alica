@@ -36,11 +36,11 @@ namespace alica
 		string getType();
 		void setType(string type);
 		shared_ptr<SolverVariable> getSolverVar();
+		void setSolverVar(shared_ptr<SolverVariable> solverVar);
 
 
 	private:
 		string type;
-		void setSolverVar(shared_ptr<SolverVariable> solverVar);
 
 	protected:
 		shared_ptr<SolverVariable> solverVar;

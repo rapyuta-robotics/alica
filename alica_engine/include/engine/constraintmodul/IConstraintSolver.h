@@ -18,6 +18,7 @@ namespace alica
 	class AlicaEngine;
 	class ConstraintDescriptor;
 	class Variable;
+	class SolverVariable;
 
 	class IConstraintSolver : public enable_shared_from_this<IConstraintSolver>
 	{
@@ -31,7 +32,7 @@ namespace alica
 
 		virtual bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls) = 0;
 		virtual bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls, vector<void*>& results) = 0;
-//		virtual bool getSolution(vector<Variable*> vars, vector<shared_ptr<ConstraintDescriptor>> calls, vector<object>& results) = 0;
+		virtual shared_ptr<SolverVariable> createVariable(long id) = 0;
 
 	protected:
 		AlicaEngine* ae;

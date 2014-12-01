@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="GSolverMaster.pml#1417423751088"/>
+    <value xPos="200" yPos="125" width="159" height="83" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="GSolverMaster.pml#1417423751087"/>
+    <value width="626" height="402"/>
+  </extensions>
+  <extensions>
+    <key href="GSolverMaster.pml#1417423751089"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="GSolverTestPlan.pml#1417423757243"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>

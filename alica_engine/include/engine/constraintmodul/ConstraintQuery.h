@@ -103,6 +103,7 @@ namespace alica
 	template<class T>
 	bool ConstraintQuery::getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<T>& result)
 	{
+		IConstraintSolver* solver = behaviour->getRunningPlan()->getAlicaEngine()->getSolver(solverType);
 #ifdef CQ_DEBUG
 		long time = behaviour->getRunningPlan()->getAlicaEngine()->getIAlicaClock()->now();
 #endif
@@ -188,6 +189,9 @@ namespace alica
 			auto varr = make_shared<vector<shared_ptr<SolverVariable>>>(conditionVariables.size());
 			for (int j = 0; j < conditionVariables.size(); ++j)
 			{
+				if(!store->getRep(conditionVariables[j])->getSolverVar().operator bool()) {
+					store->getRep(conditionVariables[j])->setSolverVar(solver->createVariable(store->getRep(conditionVariables[j])->getId()));
+				}
 				varr->at(j) = store->getRep(conditionVariables[j])->getSolverVar();
 			}
 			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>> >> >>();
@@ -202,6 +206,10 @@ namespace alica
 					auto dtvarr = make_shared<vector<shared_ptr<SolverTerm>>>(dvarr.size());
 					for (int i = 0; i < dtvarr->size(); ++i)
 					{
+						if(!dvarr.at(i)->getSolverVar().operator bool()) {
+							dvarr.at(i)->setSolverVar(solver->createVariable(dvarr.at(i)->getId()));
+						}
+
 						dtvarr->at(i) = dvarr.at(i)->getSolverVar();
 					}
 					ll->push_back(dtvarr);
@@ -221,8 +229,7 @@ namespace alica
 		cout << "CQ: PrepTime: "
 		<< (behaviour->getRunningPlan()->getAlicaEngine()->getIAlicaClock()->now() - time) / 10000.0 << endl;
 #endif
-		bool ret = behaviour->getRunningPlan()->getAlicaEngine()->getSolver(solverType)->getSolution(qVars, cds,
-																										solverResult);
+		bool ret = solver->getSolution(qVars, cds, solverResult);
 
 		if (solverResult.size() > 0)
 		{
