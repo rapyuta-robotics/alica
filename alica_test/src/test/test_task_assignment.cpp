@@ -38,7 +38,17 @@ protected:
 
 	virtual void SetUp()
 	{
+		// determine the path to the test config
+		string path = supplementary::FileSystem::getSelfPath();
+		int place = path.rfind("devel");
+		path = path.substr(0, place);
+		path = path + "src/alica/alica_test/src/test";
+
+		// bring up the SystemConfig with the corresponding path
 		sc = supplementary::SystemConfig::getInstance();
+		sc->setRootPath(path);
+		sc->setConfigPath(path + "/etc");
+
 		sc->setHostname("zwerg");
 		ae = new alica::AlicaEngine();
 		bc = new alicaTests::TestBehaviourCreator();
@@ -66,7 +76,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 
 	alica::IPlanSelector* ps = ae->getPlanSelector();
 	auto robots = make_shared<vector<int> >();
-	for(int i = 1 ; i <= 5; i++)
+	for (int i = 1; i <= 5; i++)
 	{
 		robots->push_back(i);
 	}
