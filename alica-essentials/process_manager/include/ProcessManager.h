@@ -35,6 +35,7 @@ namespace supplementary
 		bool isRunning();
 	private:
 		SystemConfig* sc;
+		string defaultHostname;
 		map<uint8_t, ManagedExecutable*> executableMap;
 
 		ros::NodeHandle* rosNode;

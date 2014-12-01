@@ -22,8 +22,10 @@ namespace supplementary
 	ProcessManager::ProcessManager(int argc, char** argv) :
 			iterationTime(1000000), mainThread(NULL), running(false)
 	{
-		// initialise the process map with data from the Processes.conf file
 		this->sc = SystemConfig::getInstance();
+		this->defaultHostname = this->sc->getHostname();
+
+		// initialise the process map with data from the Processes.conf file
 		auto processDescriptions = (*this->sc)["Processes"]->getSections("Processes.ProcessDescriptions", NULL);
 		short curId;
 		string curExecutable;
@@ -42,6 +44,7 @@ namespace supplementary
 			this->executableMap[curId] = new ManagedExecutable(curId, curExecutable.c_str(), curDefaultParams);
 		}
 
+		// initialise ROS stuff
 		rosNode = new ros::NodeHandle();
 		spinner = new ros::AsyncSpinner(4);
 		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10, &ProcessManager::handleProcessCommand, (ProcessManager*)this);

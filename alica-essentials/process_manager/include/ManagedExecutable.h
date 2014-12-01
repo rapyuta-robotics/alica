@@ -14,8 +14,9 @@
 #include <iostream>
 #include <unistd.h>
 #include <signal.h>
-
-#include "Process.h"
+#include <sstream>
+#include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -32,13 +33,29 @@ namespace supplementary
 		void update();
 		void startProcess (char* const* params);
 		void startProcess ();
-		bool stopProcess (string robot);
+		bool stopProcess ();
+
+		static const long NOTHING_MANAGED = -1;
+		static const char UNDEFINED = 'U';
+
 	private:
+		// General information (fix for object life time)
 		short id;
 		const char* executable;
 		char ** defaultParams;
-		map<long, Process*> processes;
-		vector<long> queuedPids4Update;
+
+		// Information about the managed process (updated continuously)
+		long managedPid;
+		string params;
+		char state; // The process state (zombie, running, etc)
+		// TODO: Add and update statistic fields about CPU and Memory
+
+		vector<long> queuedPids4Update; // a list of PIDs, which match this managed executable (should be only one, normally)
+
+		void updateStats(bool readParams = false);
+		void killOtherProcesses();
+		void readParams(long pid);
+		void clear();
 	};
 
 } /* namespace supplementary */
