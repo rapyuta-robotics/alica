@@ -109,7 +109,7 @@ public class PlanDesignerActionBarAdvisor extends ActionBarAdvisor {
 		fileTools.add(getAction(ActionFactory.SAVE.getId()));
 		fileTools.add(getAction(ActionFactory.SAVE_ALL.getId()));
 		coolBar.add(fileTools);
-		coolBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+//		coolBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		
 	}
 	

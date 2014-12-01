@@ -69,6 +69,7 @@ import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaResourceSet;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
 import de.uni_kassel.vs.cn.planDesigner.pmlextension.uiextensionmodel.PmlUiExtension;
 import de.uni_kassel.vs.cn.planDesigner.ui.PlanDesignerActivator;
+import de.uni_kassel.vs.cn.planDesigner.ui.commands.CommandWrap4EMF;
 import de.uni_kassel.vs.cn.planDesigner.ui.edit.PMLTransactionalEditingDomain;
 import de.uni_kassel.vs.cn.planDesigner.ui.editors.PlanEditor;
 
@@ -149,6 +150,7 @@ public class CommonUtils {
 			task = repository.getDefaultTask();
 			if (task == null) {
 				task = repository.createDefaultTask();
+				System.out.println("TASK NAME #### " + task.getId());
 				// Add the default task
 				CompoundCommand cmp = new CompoundCommand("Add default task");
 				cmp.append(CreateChildCommand.create(
@@ -161,9 +163,11 @@ public class CommonUtils {
 						repository,
 						AlicaPackage.eINSTANCE.getTaskRepository_DefaultTask(),
 						task));
-
+				
 				domain.getCommandStack().execute(cmp);
+				
 			}
+			
 		}
 		return task;
 	}
@@ -185,7 +189,6 @@ public class CommonUtils {
 		IProject miscProject = getConfigFolder(createOnDemand);
 
 		TaskRepository repository = null;
-
 		if (miscProject.exists()) {
 			// Get the filehandle to the taskrepository
 			final IFile taskrepositoryFile = miscProject.getFile(PlanDesignerConstants.TASK_REPOSITORY_FILE);
@@ -427,7 +430,6 @@ public class CommonUtils {
 	public static IPath getRoleDefinitionPath() {
 		String path = PlanDesignerActivator.getDefault().getPreferenceStore().getString(PlanDesignerConstants.PREF_ROLE_DEFINITION_CONTAINER)
 				+ Path.SEPARATOR + PlanDesignerConstants.ROLE_DEFINITION_FILE;
-
 		return new Path(path);
 	}
 

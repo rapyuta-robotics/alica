@@ -77,7 +77,7 @@ public class PlanDesignerPerspective implements IPerspectiveFactory {
 		
 		
 		layout.addPerspectiveShortcut(PlanDesignerConstants.PML_PERSPECTIVE_ID);
-		layout.addPerspectiveShortcut("org.eclipse.team.ui.TeamSynchronizingPerspective");
+//		layout.addPerspectiveShortcut("org.eclipse.team.ui.TeamSynchronizingPerspective");
 	}
 
 }

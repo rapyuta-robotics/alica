@@ -41,7 +41,6 @@
             locationURI="toolbar:de.uni-kassel.vs.cn.planDesigner.ui.planDesignerToolbar">         
             <command
                   commandId="de.uni-kassel.vs.cn.planDesigner.condition.core.refreshPluginsHandler"
-                  icon="./icons/update16x16.png"
                   tooltip="Refresh Plugins"
                   label="Refresh Plugins"
                   mode="FORCE_TEXT"

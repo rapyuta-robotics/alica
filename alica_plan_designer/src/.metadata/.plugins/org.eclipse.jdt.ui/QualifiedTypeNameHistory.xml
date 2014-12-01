@@ -30,4 +30,7 @@
 <fullyQualifiedTypeName name="de.uni_kassel.vs.cn.planDesigner.ui.wizards.PMLNewBehaviourWizard"/>
 <fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="org.eclipse.ui.PlatformUI"/>
+<fullyQualifiedTypeName name="org.eclipse.swt.widgets.Event"/>
+<fullyQualifiedTypeName name="org.eclipse.swt.widgets.Listener"/>
+<fullyQualifiedTypeName name="de.uni_kassel.vs.cn.planDesigner.alica.Capability"/>
 </qualifiedTypeNameHistroy>
