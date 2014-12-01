@@ -7,6 +7,7 @@
 
 #include "ConstraintTestPlanDummySolver.h"
 #include <engine/model/Variable.h>
+#include <engine/constraintmodul/SolverVariable.h>
 
 #include <iostream>
 
@@ -61,6 +62,11 @@ namespace alica
 		int ConstraintTestPlanDummySolver::getGetSolutionCallCounter()
 		{
 			return getSolutionCallCounter;
+		}
+
+		shared_ptr<SolverVariable> ConstraintTestPlanDummySolver::createVariable(long id) {
+			return make_shared<SolverVariable>();
+
 		}
 	}
 

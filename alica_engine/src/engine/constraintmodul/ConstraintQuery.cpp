@@ -67,6 +67,7 @@ namespace alica
 
 	bool ConstraintQuery::existsSolution(int solverType, shared_ptr<RunningPlan> rp)
 	{
+		IConstraintSolver* solver = behaviour->getRunningPlan()->getAlicaEngine()->getSolver(solverType);
 		store->clear();
 		relevantStaticVariables.clear();
 		relevantDomainVariables.clear();
@@ -148,6 +149,10 @@ namespace alica
 			auto varr = make_shared<vector<shared_ptr<SolverVariable>>>(conditionVariables.size());
 			for (int j = 0; j < conditionVariables.size(); ++j)
 			{
+				if(!store->getRep(conditionVariables[j])->getSolverVar().operator bool()) {
+					store->getRep(conditionVariables[j])->setSolverVar(solver->createVariable(store->getRep(conditionVariables[j])->getId()));
+				}
+
 				varr->at(j) = store->getRep(conditionVariables.at(j))->getSolverVar();
 			}
 			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>> >> >>();
@@ -162,6 +167,10 @@ namespace alica
 					auto dtvarr = make_shared<vector<shared_ptr<SolverTerm>>>(dvarr.size());
 					for (int i = 0; i < dtvarr->size(); ++i)
 					{
+						if(!dvarr.at(i)->getSolverVar().operator bool()) {
+							dvarr.at(i)->setSolverVar(solver->createVariable(dvarr.at(i)->getId()));
+						}
+
 						dtvarr->at(i) = dvarr.at(i)->getSolverVar();
 					}
 					ll->push_back(dtvarr);
@@ -174,7 +183,7 @@ namespace alica
 		}
 		vector<Variable*> qVars = store->getAllRep();
 		qVars.insert(qVars.end(), relevantDomainVariables.begin(), relevantDomainVariables.end());
-		return behaviour->getRunningPlan()->getAlicaEngine()->getSolver(solverType)->existsSolution(qVars, cds);
+		return solver->existsSolution(qVars, cds);
 	}
 
 
@@ -239,9 +248,9 @@ namespace alica
 
 	void ConstraintQuery::UniqueVarStore::addVarTo(Variable* representing, Variable* toAdd)
 	{
-		for (vector<Variable*> l : store)
+		for (vector<Variable*>& l : store)
 		{
-			for (Variable* cv : l)
+			for (Variable*& cv : l)
 			{
 				if (representing == cv)
 				{
