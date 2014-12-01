@@ -124,7 +124,6 @@ public class PMLNewBehaviourWizard extends Wizard implements INewWizard {
 	
 		IContainer container = (IContainer) resource;
 		final IFile file = container.getFile(new Path(fileName));
-		System.out.println("FILEPATH " + file.getFullPath().toOSString());
 		if (file.exists()) {
 			// This should not be the case since the user should have specified a filename
 			// which is equivalent to the behaviourname
@@ -169,7 +168,7 @@ public class PMLNewBehaviourWizard extends Wizard implements INewWizard {
 	
 	private void initFileWithBehaviour(final IFile file, final String configName){
 		final Resource res = editingDomain.getResourceSet().createResource(URI.createPlatformResourceURI(file.getFullPath().toOSString(), true));
-		System.out.println("HALLO BEH " + res.getURI());
+		
 		editingDomain.getCommandStack().execute(new RecordingCommand(editingDomain){
 			@Override
 			protected void doExecute() {

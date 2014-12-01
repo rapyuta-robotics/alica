@@ -35,8 +35,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
@@ -451,6 +453,11 @@ public class CapabilityDefinitionDialog extends Dialog {
 		
 		capNameText = new Text(rDataComp, SWT.BORDER);
 		capNameText.addListener(SWT.FocusIn, getEditController());
+		capNameText.addListener(SWT.FocusOut, new Listener() {
+		      public void handleEvent(Event e) {
+		    	applyCapabilityData();
+		      }
+		});
 		
 		// Layout
 		FormData fData = new FormData();
@@ -476,7 +483,11 @@ public class CapabilityDefinitionDialog extends Dialog {
 		
 		capValueText = new Text(cDataComp, SWT.BORDER);
 		capValueText.addListener(SWT.FocusIn, getEditController());
-		
+		capValueText.addListener(SWT.FocusOut, new Listener() {
+		      public void handleEvent(Event e) {
+		    	  applyCapValuesData();
+		      }
+		});
 
 		// Layout of CharNameLabel
 		FormData fData = new FormData();
@@ -546,12 +557,12 @@ public class CapabilityDefinitionDialog extends Dialog {
 
 	@Override
 	public void okPressed() {
-		if(capNameText.isFocusControl() || capValueText.isFocusControl()){
+//		if(capNameText.isFocusControl() || capValueText.isFocusControl()){
 			CapabilityDefinitionDialog.this.handleModifyEvent();
 			shell.setFocus();
-		}else{
+//		}else{
 			close();
-		}
+//		}
 	}
 	
 	private EditController getEditController() {
@@ -566,11 +577,15 @@ public class CapabilityDefinitionDialog extends Dialog {
 
 				@Override
 				protected void enterPressed(Widget source) {
+					applyCapValuesData();
+					applyCapabilityData();
 					CapabilityDefinitionDialog.this.handleModifyEvent();
 				}
 
 				@Override
 				protected void focusOutEvent(Widget source) {
+					applyCapValuesData();
+					applyCapabilityData();
 					CapabilityDefinitionDialog.this.handleModifyEvent();
 				}
 
@@ -601,10 +616,12 @@ public class CapabilityDefinitionDialog extends Dialog {
 	}
 	
 	private void handleModifyEvent(){
-		// Check which composite is visible
-		if(getCapabilityDataGroup().isVisible()){
+		if(getCapabilityDataGroup().isVisible())
+		{
 			applyCapabilityData();
-		}else if(getCapValueDataGroup().isVisible()){
+		}
+		else if (getCapValueDataGroup().isVisible())
+		{
 			applyCapValuesData();
 		}
 	}
