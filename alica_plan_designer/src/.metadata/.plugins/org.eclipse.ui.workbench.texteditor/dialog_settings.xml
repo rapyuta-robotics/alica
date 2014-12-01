@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="349" key="DIALOG_WIDTH"/>
-		<item value="166" key="DIALOG_Y_ORIGIN"/>
-		<item value="204" key="DIALOG_X_ORIGIN"/>
-		<item value="576" key="DIALOG_HEIGHT"/>
+		<item value="389" key="DIALOG_WIDTH"/>
+		<item value="98" key="DIALOG_Y_ORIGIN"/>
+		<item value="1406" key="DIALOG_X_ORIGIN"/>
+		<item value="672" key="DIALOG_HEIGHT"/>
 		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
@@ -13,16 +13,16 @@
 		<item value="false" key="isRegEx"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="PML" key="selection"/>
+		<item value="DO EX" key="selection"/>
 		<list key="findhistory">
-			<item value="PML"/>
-			<item value="line"/>
-			<item value="next line"/>
-			<item value="derive"/>
-			<item value="indent"/>
-			<item value="comment"/>
-			<item value="2"/>
-			<item value=""/>
+			<item value="DO EX"/>
+			<item value="currentSelection"/>
+			<item value="getSelection"/>
+			<item value="keyCombo"/>
+			<item value="capV"/>
+			<item value="tool"/>
+			<item value="Define Capability"/>
+			<item value="key"/>
 		</list>
 		<list key="replacehistory">
 		</list>

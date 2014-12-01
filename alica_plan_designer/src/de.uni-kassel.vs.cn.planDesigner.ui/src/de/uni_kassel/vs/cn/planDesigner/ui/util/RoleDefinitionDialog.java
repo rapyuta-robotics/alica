@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
@@ -360,7 +361,7 @@ public class RoleDefinitionDialog extends Dialog {
 		imgLabel.setLayoutData(new FormData());
 		
 		Label desc = new Label(descContainer, SWT.NONE);
-		desc.setText("Define Roles and their characteristics. \n\nThese roles can be references while associating roles with tasks. " +
+		desc.setText("Define Roles and their Capabilities. \n\nThese roles can be references while associating roles with tasks. " +
 				"\nNote: If you add/remove roles, ensure to adjust your rolesets!");
 		FormData fData = new FormData();
 		fData.left = new FormAttachment(imgLabel, 20);
@@ -422,7 +423,7 @@ public class RoleDefinitionDialog extends Dialog {
 		});
 		
 		addCharButton = new Button(buttonsContainer, SWT.PUSH);
-		addCharButton.setText("Add Characteristic");
+		addCharButton.setText("Add Capabilities");
 		addCharButton.addSelectionListener(new SelectionAdapter(){
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -535,7 +536,7 @@ public class RoleDefinitionDialog extends Dialog {
 
 	private Group createCharacterDataGroup(Composite parent) {
 		Group cDataComp = new Group(parent,SWT.NONE);
-		cDataComp.setText("Characteristic");
+		cDataComp.setText("Capabilities");
 		cDataComp.setLayout(PlanEditorUtils.createFormLayout());
 		cDataComp.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
 		
@@ -554,15 +555,24 @@ public class RoleDefinitionDialog extends Dialog {
 //		Label keyLabel1 = new Label(cDataComp, SWT.NONE);
 //		keyLabel1.setText("Key1:");
 		
-		keyCombo = new Combo(cDataComp, SWT.BORDER);
+		keyCombo = new Combo(cDataComp, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY );
 		keyCombo.addListener(SWT.FocusOut, getEditController());
-		
+//		keyCombo.addSelectionListener(new SelectionAdapter() {
+//		      public void widgetSelected(SelectionEvent e) {
+//		    	  int index =  keyCombo.getSelectionIndex();
+//		    	  System.out.println("INT############### " + index);
+//		    	  currentSelection = keyCombo.getItem(index);
+//		    	  if(currentSelection instanceof Capability)
+//		    	  {
+//		    		  System.out.println("FUNKZT");
+//		    	  }
+//		      }
+//		});
 		Label valueLabel = new Label(cDataComp, SWT.NONE);
 		valueLabel.setText("Value:");
 		
-		valueCombo = new Combo(cDataComp, SWT.BORDER);
+		valueCombo = new Combo(cDataComp, SWT.BORDER | SWT.READ_ONLY);
 		valueCombo.addListener(SWT.FocusOut, getEditController());
-
 		Label weightLabel = new Label(cDataComp, SWT.NONE);
 		weightLabel.setText("Weight:");
 		
@@ -629,7 +639,7 @@ public class RoleDefinitionDialog extends Dialog {
 	 */
 	private Composite createLeftSide(Composite parent) {
 		Group left = new Group(parent, SWT.NONE);
-		left.setText("Roles and Characteristics");
+		left.setText("Roles and Capabilities");
 		left.setLayout(new GridLayout(2,false));
 	
 		// Add the roleViewer

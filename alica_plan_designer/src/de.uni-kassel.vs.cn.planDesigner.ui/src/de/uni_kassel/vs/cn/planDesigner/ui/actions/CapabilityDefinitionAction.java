@@ -43,7 +43,6 @@ public class CapabilityDefinitionAction implements IWorkbenchWindowActionDelegat
 
 	public void run(IAction action) {
 		
-		
 		// Try to open the CapabilityDefinitionSetFile
 		IPath path = CommonUtils.getCapabilityDefinitionPath();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
