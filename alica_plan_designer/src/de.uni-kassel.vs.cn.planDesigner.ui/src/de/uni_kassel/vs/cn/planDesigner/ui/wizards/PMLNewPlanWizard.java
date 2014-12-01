@@ -48,7 +48,6 @@ import de.uni_kassel.vs.cn.planDesigner.alica.AlicaFactory;
 import de.uni_kassel.vs.cn.planDesigner.alica.EntryPoint;
 import de.uni_kassel.vs.cn.planDesigner.alica.Plan;
 import de.uni_kassel.vs.cn.planDesigner.alica.State;
-import de.uni_kassel.vs.cn.planDesigner.alica.Task;
 import de.uni_kassel.vs.cn.planDesigner.alica.util.AlicaSerializationHelper;
 import de.uni_kassel.vs.cn.planDesigner.ui.edit.PMLTransactionalEditingDomain;
 import de.uni_kassel.vs.cn.planDesigner.ui.util.CommonUtils;
@@ -148,13 +147,13 @@ public class PMLNewPlanWizard extends Wizard implements INewWizard {
 			System.err.println("Overwriting existing plan!!!");
 		} else {
 			// Create an empty file
-			file.create(null, true, monitor);
+			//file.create(null, false, monitor);
 			// Init the file with the given plan
 			initFileWithStandardTemplate(file);
 		}
 
 		monitor.worked(1);
-				
+		
 		if(openWhenFinish){
 			monitor.setTaskName("Opening file for editing...");
 			getShell().getDisplay().asyncExec(new Runnable() {
@@ -184,8 +183,6 @@ public class PMLNewPlanWizard extends Wizard implements INewWizard {
 				State s = AlicaFactory.eINSTANCE.createState();
 				s.setName("NewState");
 				p.getStates().add(s);
-				//This will add the created plan to the state. Thats Wrong!
-//				s.getPlans().add(p);
 				
 				// Add an entryPoint with default task
 				EntryPoint ep = AlicaFactory.eINSTANCE.createEntryPoint();

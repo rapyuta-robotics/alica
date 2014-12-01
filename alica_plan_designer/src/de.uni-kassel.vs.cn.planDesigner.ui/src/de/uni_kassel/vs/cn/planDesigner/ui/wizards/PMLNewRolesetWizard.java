@@ -95,10 +95,20 @@ public class PMLNewRolesetWizard extends Wizard implements INewWizard {
 	 */
 
 	public void addPages() {
+		
 		filePage = new PMLNewRolesetWizardPage(selection);
 		planSelectionPage = new PMLChoosePlanWizardPage();
-		addPage(filePage);
-		addPage(planSelectionPage);
+		if(!filePage.checkIfRoleDefinitionPathExists())
+		{
+			if(filePage.createRoleDefinitionFile())
+			{
+				if(filePage.roleDefinitionFile())
+				{
+					addPage(filePage);
+					addPage(planSelectionPage);	
+				}
+			}
+		}
 	}
 	
 	/**
@@ -162,8 +172,8 @@ public class PMLNewRolesetWizard extends Wizard implements INewWizard {
 			System.err.println("Overwriting existing roleset!!!");
 		} else {
 			// Create an empty file
-			roleSetFile.create(null, true, monitor);
-			// Init the file with the given plan
+//			roleSetFile.create(null, true, monitor);
+//			 Init the file with the given plan
 			initFileWithStandardTemplate(roleSetFile, planFile, monitor);
 		} 
 

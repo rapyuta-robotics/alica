@@ -715,22 +715,21 @@
                label="Plan Designer Toolbar">
             <command
                   commandId="de.uni_kassel.vs.cn.planDesigner.ui.defineRolesCommand"
-                  icon="icons/roleDefinition16x16.png"
-                  label="Define Roles"
+                  label="Def. Roles"
                   mode="FORCE_TEXT"
                   style="push">
             </command>
             <command
                   commandId="de.uni_kassel.vs.cn.planDesigner.ui.createProjectsCommand"
-                  icon="icons/plan16x16.png"
+                  icon="icons/defCap.png"
                   label="Create Projects"
                   mode="FORCE_TEXT"
                   style="push">
             </command>
             <command
-                  commandId="de.uni-kassel.vs.cn.planDesigner.ui.capabilityDefinitionCommand"
-                  icon="icons/cn200816x16.bmp"
-                  label="Define Capability"
+                  commandId="de.uni_kassel.vs.cn.planDesigner.ui.capabilityDefinitionCommand"
+                  icon="icons/failureTransition24x24.png"
+                  label="Def. Capability"
                   mode="FORCE_TEXT"
                   style="push">
             </command>
@@ -740,6 +739,7 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
+            description="Show Usage"
             id="de.uni_kassel.vs.cn.planDesigner.ui.showUsageCommand"
             name="Show usage">
       </command>
@@ -761,7 +761,7 @@
       </command>
       <command
             description="Define Capability"
-            id="de.uni-kassel.vs.cn.planDesigner.ui.capabilityDefinitionCommand"
+            id="de.uni_kassel.vs.cn.planDesigner.ui.capabilityDefinitionCommand"
             name="Define Capability">
       </command>
    </extension>
@@ -816,7 +816,7 @@
       </handler>
       <handler
             class="de.uni_kassel.vs.cn.planDesigner.ui.handler.CapabilityDefinitionHandler"
-            commandId="de.uni-kassel.vs.cn.planDesigner.ui.capabilityDefinitionCommand">
+            commandId="de.uni_kassel.vs.cn.planDesigner.ui.capabilityDefinitionCommand">
       </handler>
    </extension>
    <extension
