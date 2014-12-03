@@ -1,6 +1,0 @@
-eclipse.preferences.version=1
-prefConditionPluginPath=/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/conditionPlugins/plugins
-prefDefaultConditionPlugin=DefaultPlugin
-prefEncoding=ISO-8859-1
-prefPluginTemplatePath=/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/conditionPlugins/templates/PluginTemplate.xpt
-prefTemplateInterfacePath=/home/snook/Development/workspace_alica/src/alica/alica_plan_designer/src/conditionPlugins/templates/TemplateInterface.xpt
