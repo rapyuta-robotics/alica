@@ -59,7 +59,6 @@ namespace alica
 
 		template<class T>
 		bool getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<T>& result);
-//		bool getSolution(shared_ptr<RunningPlan> rp, vector<object>& result);
 
 		vector<Variable*> getRelevantStaticVariables();
 		void setRelevantStaticVariables(vector<Variable*> value);
@@ -87,6 +86,8 @@ namespace alica
 		};
 
 	private:
+		bool collectProblemStatement (shared_ptr<RunningPlan> rp, vector<Variable*>& relevantVariables, vector<shared_ptr<ConstraintDescriptor>>& cds, IConstraintSolver* solver, int& domOffset);
+
 		shared_ptr<UniqueVarStore> store;
 		vector<Variable*> queriedStaticVariables;
 		vector<Variable*> queriedDomainVariables;
@@ -103,134 +104,21 @@ namespace alica
 	template<class T>
 	bool ConstraintQuery::getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<T>& result)
 	{
+		result.clear();
 		IConstraintSolver* solver = behaviour->getRunningPlan()->getAlicaEngine()->getSolver(solverType);
-#ifdef CQ_DEBUG
-		long time = behaviour->getRunningPlan()->getAlicaEngine()->getIAlicaClock()->now();
-#endif
-		store->clear();
-		relevantStaticVariables.clear();
-		relevantDomainVariables.clear();
-		calls.clear();
-		relevantStaticVariables.insert(relevantStaticVariables.end(), queriedStaticVariables.begin(),
-										queriedStaticVariables.end());
-		relevantDomainVariables.insert(relevantDomainVariables.end(), queriedDomainVariables.begin(),
-										queriedDomainVariables.end());
-		for (Variable* v : relevantStaticVariables)
-		{
-			store->add(v);
-		}
-#ifdef CQ_DEBUG
-		cout << "CQ: Starting Query with static Vars:";
-		for (Variable* v : relevantStaticVariables)
-		{
-			cout << " " << v->getName();
-		}
-		cout << endl;
-#endif
-		while (rp != nullptr && (relevantStaticVariables.size() > 0 || relevantDomainVariables.size() > 0))
-		{
-#ifdef CQ_DEBUG
-			cout << "CQ: Query at " << rp->getPlan()->getName() << endl;
-#endif
-			rp->getConstraintStore()->acceptQuery(shared_from_this(), rp);
-			if (rp->getPlanType() != nullptr)
-			{ //process bindings for plantype
-				vector<Variable*> tmpVector = vector<Variable*>();
-				for (Parametrisation* p : rp->getPlanType()->getParametrisation())
-				{
-					if (p->getSubPlan() == rp->getPlan()
-							&& find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar())
-									!= relevantStaticVariables.end())
-					{
-						tmpVector.push_back(p->getVar());
-						store->addVarTo(p->getSubVar(), p->getVar());
-					}
-				}
-				relevantStaticVariables = tmpVector;
-			}
 
-			shared_ptr<RunningPlan> parent;
-			if (rp->getParent().use_count() > 0)
-			{
-				parent = rp->getParent().lock();
-			}
-			if (parent && parent->getActiveState() != nullptr)
-			{
-				vector<Variable*> tmpVector = vector<Variable*>();
-				for (Parametrisation* p : parent->getActiveState()->getParametrisation())
-				{
-					if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType())
-							&& find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar())
-									!= relevantStaticVariables.end())
-					{
-						tmpVector.push_back(p->getVar());
-						store->addVarTo(p->getSubVar(), p->getVar());
-					}
-				}
-				relevantStaticVariables = tmpVector;
-			}
-			rp = parent;
-		}
-		//now we have a list of ConstraintCalls in calls ready to be queried together with a store of unifications
-//		result = null; TODO: ka wie
-		if (calls.size() == 0)
-		{
-#ifdef CQ_DEBUG
-			cout << "CQ: Empty Query!" << endl;
-#endif
+		vector<shared_ptr<ConstraintDescriptor>> cds = vector<shared_ptr<ConstraintDescriptor>>();
+		vector<Variable*> relevantVariables;
+		int domOffset;
+		if(!collectProblemStatement(rp, relevantVariables, cds, solver, domOffset)) {
 			return false;
 		}
 
-		vector<shared_ptr<ConstraintDescriptor>> cds = vector<shared_ptr<ConstraintDescriptor>>();
-		for (shared_ptr<ConstraintCall> c : calls)
-		{
-			vector<Variable*> conditionVariables = vector<Variable*>(c->getCondition()->getVariables());
-
-			auto varr = make_shared<vector<shared_ptr<SolverVariable>>>(conditionVariables.size());
-			for (int j = 0; j < conditionVariables.size(); ++j)
-			{
-				if(!store->getRep(conditionVariables[j])->getSolverVar().operator bool()) {
-					store->getRep(conditionVariables[j])->setSolverVar(solver->createVariable(store->getRep(conditionVariables[j])->getId()));
-				}
-				varr->at(j) = store->getRep(conditionVariables[j])->getSolverVar();
-			}
-			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>> >> >>();
-			auto agentsInScope = make_shared<vector<shared_ptr<vector<int>>> >();
-			for (int j = 0; j < c->getSortedVariables()->size(); ++j)
-			{
-				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverTerm>>> >>();
-				agentsInScope->push_back(c->getAgentsInScope()->at(j));
-				sortedVars->push_back(ll);
-				for (auto dvarr : c->getSortedVariables()->at(j))
-				{
-					auto dtvarr = make_shared<vector<shared_ptr<SolverTerm>>>(dvarr.size());
-					for (int i = 0; i < dtvarr->size(); ++i)
-					{
-						if(!dvarr.at(i)->getSolverVar().operator bool()) {
-							dvarr.at(i)->setSolverVar(solver->createVariable(dvarr.at(i)->getId()));
-						}
-
-						dtvarr->at(i) = dvarr.at(i)->getSolverVar();
-					}
-					ll->push_back(dtvarr);
-				}
-			}
-			shared_ptr<ConstraintDescriptor> cd = make_shared<ConstraintDescriptor>(varr, sortedVars);
-			cd->setAgentsInScope(agentsInScope);
-			c->getCondition()->getConstraint(cd, c->getRunningPlan());
-			cds.push_back(cd);
-		}
-		vector<Variable*> qVars = store->getAllRep();
-		int domOffset = qVars.size();
-		qVars.insert(qVars.end(), relevantDomainVariables.begin(), relevantDomainVariables.end());
 
 		vector<void*> solverResult;
-#ifdef CQ_DEBUG
-		cout << "CQ: PrepTime: "
-		<< (behaviour->getRunningPlan()->getAlicaEngine()->getIAlicaClock()->now() - time) / 10000.0 << endl;
-#endif
-		bool ret = solver->getSolution(qVars, cds, solverResult);
+		bool ret = solver->getSolution(relevantVariables, cds, solverResult);
 
+		//Create result filtered by the queried variables
 		if (solverResult.size() > 0)
 		{
 			result.clear();

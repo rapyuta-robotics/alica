@@ -79,6 +79,7 @@ protected:
 		delete ae->getIAlicaClock();
 		delete ae->getCommunicator();
 		delete ae->getSolver(SolverType::DUMMYSOLVER);
+		delete ae->getSolver(SolverType::GRADIENTSOLVER);
 		delete cc;
 		delete bc;
 		delete uc;
@@ -91,27 +92,16 @@ protected:
 TEST_F(AlicaGSolverPlan, solverTest)
 {
 	ae->init(bc, cc, uc, crc, "Roleset", "GSolverMaster", ".", false);
+	cout << "Starting engine..." << endl;
 	ae->start();
 
-//	unsigned int sleepTime = 1;
 	chrono::milliseconds sleepTime(33);
 	this_thread::sleep_for(sleepTime);
 
-//	shared_ptr<BasicBehaviour> basicBehaviour =
-//			(*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getBasicBehaviour();
-//	shared_ptr<alicaTests::ConstraintUsingBehaviour> constraintUsingBehaviour = dynamic_pointer_cast<
-//			alicaTests::ConstraintUsingBehaviour>(basicBehaviour);
-//	EXPECT_GT(constraintUsingBehaviour->getCallCounter(), 0);
-
-	//ASSERT_GT(Constraint1414068566297::getCallCounter(), 0);
-
-	//ASSERT_GT(alica::reasoner::ConstraintTestPlanDummySolver::getGetSolutionCallCounter(), 0);
 	ASSERT_EQ(alica::SolverTestBehaviour::result.size(), 2) << "Wrong result size";
 	EXPECT_GT(alica::SolverTestBehaviour::result[0], 4000);
 	EXPECT_LT(alica::SolverTestBehaviour::result[0], 5000);
 	EXPECT_GT(alica::SolverTestBehaviour::result[1], 7000);
 	EXPECT_LT(alica::SolverTestBehaviour::result[1], 8000);
-	//cout << "Result: " << alica::SolverTestBehaviour::result[0] << " - " << alica::SolverTestBehaviour::result[1] << endl;
-
 }
 

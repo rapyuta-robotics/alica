@@ -171,7 +171,6 @@ namespace alica
 
 		int maxNum = min((int)seeds.size(),dim);
 		auto ret = make_shared<vector<shared_ptr<vector<double>>>>(maxNum);
-
 		seeds.sort([](VotedSeed*& a, VotedSeed*& b)
 				{
 					if(a->totalSupCount != b->totalSupCount)

@@ -5,7 +5,7 @@
  *      Author: Philipp
  */
 #include "engine/constraintmodul/ConstraintQuery.h"
-#define CQ_DEBUG
+//#define CQ_DEBUG
 
 #include "engine/AlicaEngine.h"
 #include "engine/BasicBehaviour.h"
@@ -68,6 +68,23 @@ namespace alica
 	bool ConstraintQuery::existsSolution(int solverType, shared_ptr<RunningPlan> rp)
 	{
 		IConstraintSolver* solver = behaviour->getRunningPlan()->getAlicaEngine()->getSolver(solverType);
+
+		vector<shared_ptr<ConstraintDescriptor>> cds = vector<shared_ptr<ConstraintDescriptor>>();
+		vector<Variable*> relevantVariables;
+		int domOffset;
+		if(!collectProblemStatement(rp, relevantVariables, cds, solver, domOffset)) {
+			return false;
+		}
+		return solver->existsSolution(relevantVariables, cds);
+	}
+
+	bool ConstraintQuery::collectProblemStatement(shared_ptr<RunningPlan> rp, vector<Variable*>& relevantVariables,
+													vector<shared_ptr<ConstraintDescriptor>>& cds,
+													IConstraintSolver* solver, int& domOffset)
+	{
+#ifdef CQ_DEBUG
+		long time = behaviour->getRunningPlan()->getAlicaEngine()->getIAlicaClock()->now();
+#endif
 		store->clear();
 		relevantStaticVariables.clear();
 		relevantDomainVariables.clear();
@@ -81,7 +98,7 @@ namespace alica
 			store->add(v);
 		}
 #ifdef CQ_DEBUG
-		cout << "CQ: Starting Existential Query with static Vars:";
+		cout << "CQ: Starting Query with static Vars:";
 		for (Variable* v : relevantStaticVariables)
 		{
 			cout << " " << v->getName();
@@ -132,7 +149,7 @@ namespace alica
 			}
 			rp = parent;
 		}
-
+		//now we have a list of ConstraintCalls in calls ready to be queried together with a store of unifications
 		if (calls.size() == 0)
 		{
 #ifdef CQ_DEBUG
@@ -141,7 +158,6 @@ namespace alica
 			return false;
 		}
 
-		vector<shared_ptr<ConstraintDescriptor>> cds = vector<shared_ptr<ConstraintDescriptor>>();
 		for (shared_ptr<ConstraintCall> c : calls)
 		{
 			vector<Variable*> conditionVariables = vector<Variable*>(c->getCondition()->getVariables());
@@ -149,11 +165,12 @@ namespace alica
 			auto varr = make_shared<vector<shared_ptr<SolverVariable>>>(conditionVariables.size());
 			for (int j = 0; j < conditionVariables.size(); ++j)
 			{
-				if(!store->getRep(conditionVariables[j])->getSolverVar().operator bool()) {
-					store->getRep(conditionVariables[j])->setSolverVar(solver->createVariable(store->getRep(conditionVariables[j])->getId()));
+				if (!store->getRep(conditionVariables[j])->getSolverVar().operator bool())
+				{
+					store->getRep(conditionVariables[j])->setSolverVar(
+							solver->createVariable(store->getRep(conditionVariables[j])->getId()));
 				}
-
-				varr->at(j) = store->getRep(conditionVariables.at(j))->getSolverVar();
+				varr->at(j) = store->getRep(conditionVariables[j])->getSolverVar();
 			}
 			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>> >> >>();
 			auto agentsInScope = make_shared<vector<shared_ptr<vector<int>>> >();
@@ -167,7 +184,8 @@ namespace alica
 					auto dtvarr = make_shared<vector<shared_ptr<SolverTerm>>>(dvarr.size());
 					for (int i = 0; i < dtvarr->size(); ++i)
 					{
-						if(!dvarr.at(i)->getSolverVar().operator bool()) {
+						if(!dvarr.at(i)->getSolverVar().operator bool())
+						{
 							dvarr.at(i)->setSolverVar(solver->createVariable(dvarr.at(i)->getId()));
 						}
 
@@ -181,12 +199,17 @@ namespace alica
 			c->getCondition()->getConstraint(cd, c->getRunningPlan());
 			cds.push_back(cd);
 		}
-		vector<Variable*> qVars = store->getAllRep();
-		qVars.insert(qVars.end(), relevantDomainVariables.begin(), relevantDomainVariables.end());
-		return solver->existsSolution(qVars, cds);
+		relevantVariables = store->getAllRep();
+		domOffset = relevantVariables.size();
+		relevantVariables.insert(relevantVariables.end(), relevantDomainVariables.begin(),
+									relevantDomainVariables.end());
+
+#ifdef CQ_DEBUG
+		cout << "CQ: PrepTime: "
+				<< (behaviour->getRunningPlan()->getAlicaEngine()->getIAlicaClock()->now() - time) / 10000.0 << endl;
+#endif
+		return true;
 	}
-
-
 
 	vector<Variable*> ConstraintQuery::getRelevantStaticVariables()
 	{
