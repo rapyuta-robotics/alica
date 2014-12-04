@@ -79,6 +79,7 @@ protected:
 		delete ae->getIAlicaClock();
 		delete ae->getCommunicator();
 		delete ae->getSolver(SolverType::DUMMYSOLVER);
+		delete ae->getSolver(SolverType::GRADIENTSOLVER);
 		delete cc;
 		delete bc;
 		delete uc;

@@ -110,7 +110,7 @@ namespace alica
 	{
 		this->maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
 		AssignmentCollection::maxEpsCount = (*this->sc)["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
-	    AssignmentCollection::allowIdling = (*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL);
+		AssignmentCollection::allowIdling = (*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL);
 
 		this->terminating = false;
 		this->stepEngine = stepEngine;
@@ -173,14 +173,16 @@ namespace alica
 		this->expressionHandler->attachAll();
 		UtilityFunction::initDataStructures(this);
 		this->syncModul->init();
-		if (this->variableSyncModule == nullptr) {
+		if (this->variableSyncModule == nullptr)
+		{
 			this->variableSyncModule = new VariableSyncModule(this);
 		}
 		if (this->getCommunicator() != nullptr)
 		{
 			this->getCommunicator()->startCommunication();
 		}
-		if (this->variableSyncModule != nullptr) {
+		if (this->variableSyncModule != nullptr)
+		{
 			this->variableSyncModule->init();
 		}
 		return everythingWorked;
@@ -197,11 +199,6 @@ namespace alica
 		}
 		this->terminating = true;
 		this->maySendMessages = false;
-
-		if (this->variableSyncModule != nullptr) {
-			delete this->variableSyncModule;
-			this->variableSyncModule = nullptr;
-		}
 
 		if (this->behaviourPool != nullptr)
 		{
@@ -273,6 +270,12 @@ namespace alica
 		{
 			delete this->expressionHandler;
 			this->expressionHandler = nullptr;
+		}
+
+		if (this->variableSyncModule != nullptr)
+		{
+			delete this->variableSyncModule;
+			this->variableSyncModule = nullptr;
 		}
 
 	}
@@ -524,7 +527,6 @@ namespace alica
 		this->setStepCalled(true);
 		this->getPlanBase()->getStepModeCV()->notify_all();
 	}
-
 
 } /* namespace Alica */
 
