@@ -159,7 +159,8 @@ namespace alica
 			}
 			shared_ptr<Term> all = make_shared<ConstraintUtility>(constraint, utility);
 
-			auto seeds = ae->getResultStore()->getSeeds(make_shared<vector<Variable*>>(vars), ranges);
+			auto tmp = make_shared<vector<Variable*>>(vars);
+			shared_ptr<vector<shared_ptr<vector<double>>>> seeds = ae->getResultStore()->getSeeds(tmp, ranges);
 
 			shared_ptr<vector<double>> gresults;
 			double util = 0;
@@ -174,7 +175,7 @@ namespace alica
 				{
 					double *rVal = new double{gresults->at(i)};
 					results.push_back(rVal);
-					ae->getResultStore()->postResult(vars[i]->getId(), gresults->at(i));
+					ae->getResultStore()->postResult(vars.at(i)->getId(), gresults->at(i));
 				}
 			}
 			lastUtil = util;
