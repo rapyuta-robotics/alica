@@ -25,6 +25,7 @@ namespace supplementary
 {
 
 	class SystemConfig;
+	class ManagedRobot;
 
 	class ProcessManager
 	{
@@ -36,7 +37,12 @@ namespace supplementary
 	private:
 		SystemConfig* sc;
 		string defaultHostname;
-		map<uint8_t, ManagedExecutable*> executableMap;
+		map<uint8_t, ManagedRobot*> robotMap;
+
+		// this is just for faster procfs checking
+		list<string> *managedExecNames;
+		map<string ,uint8_t> executableIdMap;
+		map<string, uint8_t> robotIdMap;
 
 		ros::NodeHandle* rosNode;
 		ros::AsyncSpinner* spinner;
@@ -51,7 +57,7 @@ namespace supplementary
 
 		void run();
 		void searchProcFS();
-		void updateMngdExecutables();
+		void update();
 	};
 
 } /* namespace alica */

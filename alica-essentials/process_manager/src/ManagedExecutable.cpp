@@ -19,6 +19,11 @@ namespace supplementary
 		}
 	}
 
+	ManagedExecutable::ManagedExecutable(string executable, short id, long pid) : managedPid(pid), executable(executable), id(id)
+	{
+
+	}
+
 	ManagedExecutable::~ManagedExecutable()
 	{
 		delete[] defaultParams;
@@ -134,10 +139,10 @@ namespace supplementary
 
 		if (readParams)
 		{
-			std::ifstream statFile(procPidString + "/cmdline", std::ifstream::in);
+			std::ifstream cmdlineFile(procPidString + "/cmdline", std::ifstream::in);
 			string line;
 			stringstream ss;
-			while (!statFile.eofbit)
+			while (!cmdlineFile.eofbit)
 			{
 				getline(statFile, line, '\0');
 				ss << line << " ";

@@ -27,6 +27,7 @@ namespace supplementary
 	{
 	public:
 		ManagedExecutable(short id, const char* executable, vector<string> defaultStrParams);
+		ManagedExecutable(string execName, uint8_t execid, long pid);
 		virtual ~ManagedExecutable();
 		string getExecutable() const;
 		void queue4Update(long pid);
