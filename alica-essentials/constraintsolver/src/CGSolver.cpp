@@ -134,16 +134,17 @@ namespace alica
 				utility = utility + dynamic_pointer_cast<autodiff::Term>(c->getUtility());
 				sufficientUtility += c->getUtilitySufficiencyThreshold();
 				shared_ptr<vector<vector<double>>> allRanges = c->allRanges();
+
 				for (int i = 0; i < c->getAllVars()->size(); ++i)
 				{
 					for (int j = 0; j < cVars->size(); ++j)
 					{
-						if (!(dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(j)) != 0))
+						if (!(dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(i)) != 0))
 						{
 							cerr << "CGSolver: Variabletype not compatible with selected solver" << endl;
 							return false;
 						}
-						if (cVars->at(j) == dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(j)))
+						if (cVars->at(j) == dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(i)))
 						{
 							ranges->at(j)->at(0) = min(ranges->at(j)->at(0), allRanges->at(i).at(0));
 							ranges->at(j)->at(1) = min(ranges->at(j)->at(1), allRanges->at(i).at(1));
@@ -158,7 +159,8 @@ namespace alica
 			}
 			shared_ptr<Term> all = make_shared<ConstraintUtility>(constraint, utility);
 
-			auto seeds = ae->getResultStore()->getSeeds(make_shared<vector<Variable*>>(vars), ranges);
+			auto tmp = make_shared<vector<Variable*>>(vars);
+			shared_ptr<vector<shared_ptr<vector<double>>>> seeds = ae->getResultStore()->getSeeds(tmp, ranges);
 
 			shared_ptr<vector<double>> gresults;
 			double util = 0;
@@ -167,19 +169,23 @@ namespace alica
 				gs->setUtilitySignificanceThreshold(usigVal);
 				gresults = gs->solve(all, cVars, ranges, seeds, sufficientUtility, &util);
 			}
-			if (results.size()>0)
+			if (gresults->size()>0)
 			{
 				for (int i = 0; i < dim; ++i)
 				{
 					double *rVal = new double{gresults->at(i)};
 					results.push_back(rVal);
-					ae->getResultStore()->postResult(vars[i]->getId(), gresults->at(i));
+					ae->getResultStore()->postResult(vars.at(i)->getId(), gresults->at(i));
 				}
 			}
 			lastUtil = util;
 			lastFEvals = gs->getFEvals();
 			lastRuns = gs->getRuns();
 			return util > 0.75;
+		}
+
+		shared_ptr<SolverVariable> CGSolver::createVariable(long id) {
+			return make_shared<autodiff::Variable>();
 		}
 
 	} /* namespace Reasoner */
