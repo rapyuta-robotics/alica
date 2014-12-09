@@ -159,7 +159,8 @@ namespace alica
 			}
 			shared_ptr<Term> all = make_shared<ConstraintUtility>(constraint, utility);
 
-			auto seeds = ae->getResultStore()->getSeeds(make_shared<vector<Variable*>>(vars), ranges);
+			IVariableSyncModule* iVariableSyncModule = ae->getResultStore();
+			auto seeds = iVariableSyncModule->getSeeds(make_shared<vector<Variable*>>(vars), ranges);
 
 			shared_ptr<vector<double>> gresults;
 			double util = 0;
