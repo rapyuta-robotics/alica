@@ -43,18 +43,18 @@ add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES} msl_sens
 ```
 
 * Add to to 'package-xml':
-<pre><code>
-  &#60;build_depend&#62;system_config&#60;/build_depend&#62;
-  &#60;build_depend&#62;roscpp&#60;/build_depend&#62;
-  &#60;build_depend&#62;message_generation&#60;/build_depend&#62;
-  &#60;build_depend&#62;udp_proxy_generator&#60;/build_depend&#62;
-  &#60;build_depend&#62;roslib&#60;/build_depend&#62;
+```
+  <build_depend>system_config</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>udp_proxy_generator</build_depend>
+  <build_depend>roslib</build_depend>
 
-  &#60;run_depend&#62;system_config&#60;/run_depend&#62;
-  &#60;run_depend&#62;roscpp&#60;/run_depend&#62;
-  &#60;run_depend&#62;message_runtime&#60;/run_depend&#62;
-  &#60;run_depend&#62;roslib&#60;/run_depend&#62;
-</code></pre>
+  <run_depend>system_config</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>roslib</run_depend>
+```
 
 Plus all the message dependencies you need, e.g., geometry_msgs
 
