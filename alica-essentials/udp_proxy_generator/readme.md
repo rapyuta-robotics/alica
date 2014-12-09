@@ -70,5 +70,5 @@ The only available options are Udp2RosQueueLength and Ros2UdpQueueLength. Here y
 
 ## Requirements ##
 
-You need the system_config package, that is also included in this repository/stack!
+You need the [system_config package](https://github.com/carpe-noctem-cassel/supplementary/tree/master/system_config), that is also included in this repository/stack!
 
