@@ -6,16 +6,18 @@ This is particularly useful to apply ros-multi-master solutions.
 ## Usage ##
 
 * Ensure you have set the 'DOMAIN_CONFIG_FOLDER' to the folder with your 'UdpProxy.conf'. We recommend to add the following line to your '~/.bashrc' and copy the UdpProxy.conf to the folder accordingly.
-    
-    export DOMAIN_CONFIG_FOLDER="insert_path_to_UdpProxy.conf"
+```    
+export DOMAIN_CONFIG_FOLDER="insert_path_to_UdpProxy.conf"
+```
 
 
 
 * Set a proper MulticastAddress and Port in your 'UdpProxy.conf' to the section '[UdpProxy]'. (You can also stick to the example file provided in this package!)
 
 * Create a new ros package within your catkin workspace:
-* 
-    catkin_create_pkg PROXYNAME
+```
+catkin_create_pkg PROXYNAME
+```
 
 * Copy the following lines and the end of your 'CMakelists.txt':
 ```
