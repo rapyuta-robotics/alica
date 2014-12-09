@@ -7,6 +7,7 @@ This is particularly useful to apply ros-multi-master solutions.
 
 * Ensure you have set the 'DOMAIN_CONFIG_FOLDER' to the folder to the location of your 'UdpProxy.conf'. We recommend to add the following line to your '~/.bashrc'
 > DOMAIN_CONFIG_FOLDER="${DOMAIN_FOLDER}/etc"
+
 and copy the UdpProxy.conf to the according folder
 
 * Set a proper MulticastAddress and Port in your UdpProxy.conf. (You can also stick you the example file provided in this package!)
@@ -14,11 +15,11 @@ and copy the UdpProxy.conf to the according folder
 * Create a new ros package within your catkin workspace:
 > catkin_create_pkg PROXYNAME
 
-* Copy the following lines and the end of your 'CMakelists.txt'
+* Copy the following lines and the end of your 'CMakelists.txt':
 <pre><code>
 include_directories(${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
-# Triggers the udp_proxy_generator to create the serialization source
+&#35; Triggers the udp_proxy_generator to create the serialization source
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/proxy_gen/ros2udpProxy.cpp
     COMMAND rosrun udp_proxy_generator udp_proxy_generator ${PROJECT_NAME}
@@ -27,31 +28,31 @@ add_custom_command(
     COMMENT "${PROJECT_NAME}: Generating Code ..."
  )
 
-## Declare a cpp executable
+&#35;&#35; Declare a cpp executable
 add_executable(${PROJECT_NAME}
   proxy_gen/ros2udpProxy.cpp
 )
 
-## Specify libraries to link a library or executable target against
+&#35;&#35; Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-## Add cmake target dependencies of the executable/library
-## as an example, message headers may need to be generated before nodes
+&#35;&#35; Add cmake target dependencies of the executable/library
+&#35;&#35; as an example, message headers may need to be generated before nodes
 add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES} msl_sensor_msgs_gencpp)
 </code></pre>
 
 * Add to to 'package-xml':
 <pre><code>
-  <build_depend>system_config</build_depend>
-  <build_depend>roscpp</build_depend>
-  <build_depend>message_generation</build_depend>
-  <build_depend>udp_proxy_generator</build_depend>
-  <build_depend>roslib</build_depend>
+  &#60;build_depend&#62;system_config&#60;/build_depend&#62;
+  &#60;build_depend&#62;roscpp&#60;/build_depend&#62;
+  &#60;build_depend&#62;message_generation&#60;/build_depend&#62;
+  &#60;build_depend&#62;udp_proxy_generator&#60;/build_depend&#62;
+  &#60;build_depend&#62;roslib&#60;/build_depend&#62;
 
-  <run_depend>system_config</run_depend>
-  <run_depend>roscpp</run_depend>
-  <run_depend>message_runtime</run_depend>
-  <run_depend>roslib</run_depend>
+  &#60;run_depend&#62;system_config&#60;/run_depend&#62;
+  &#60;run_depend&#62;roscpp&#60;/run_depend&#62;
+  &#60;run_depend&#62;message_runtime&#60;/run_depend&#62;
+  &#60;run_depend&#62;roslib&#60;/run_depend&#62;
 </code></pre>
 
 Plus all the message dependencies you need, e.g., geometry_msgs
@@ -65,5 +66,5 @@ The only available options are Udp2RosQueueLength and Ros2UdpQueueLength. Here y
 
 ## Requirements ##
 
-You need the system_config package
+You need the system_config package, that is also included in this repository/stack!
 
