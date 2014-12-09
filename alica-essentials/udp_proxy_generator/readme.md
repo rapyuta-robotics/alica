@@ -19,7 +19,7 @@ and copy the UdpProxy.conf to the according folder
 ```
 include_directories(${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
-&#35; Triggers the udp_proxy_generator to create the serialization source
+# Triggers the udp_proxy_generator to create the serialization source
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/proxy_gen/ros2udpProxy.cpp
     COMMAND rosrun udp_proxy_generator udp_proxy_generator ${PROJECT_NAME}
@@ -28,16 +28,16 @@ add_custom_command(
     COMMENT "${PROJECT_NAME}: Generating Code ..."
  )
 
-&#35;&#35; Declare a cpp executable
+## Declare a cpp executable
 add_executable(${PROJECT_NAME}
   proxy_gen/ros2udpProxy.cpp
 )
 
-&#35;&#35; Specify libraries to link a library or executable target against
+## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-&#35;&#35; Add cmake target dependencies of the executable/library
-&#35;&#35; as an example, message headers may need to be generated before nodes
+## Add cmake target dependencies of the executable/library
+## as an example, message headers may need to be generated before nodes
 add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES} msl_sensor_msgs_gencpp)
 ```
 
