@@ -3,15 +3,16 @@
 This tool generates a Ros-Proxy Node that serializes predefined topics/messages and transmits it via udp multicast. Vice versa multicast messages are received, deserialized, and send via the original ros topic.
 This is particularly useful to apply ros-multi-master solutions.
 
+## Requirements ##
+
+You need the [system_config](https://github.com/carpe-noctem-cassel/supplementary/tree/master/system_config) package, that is also included in this repository/stack! It is necessary to read the multicast address and port from the UdpProxy.conf file.
+
 ## Usage ##
 
 * Ensure you have set the 'DOMAIN_CONFIG_FOLDER' to the folder with your 'UdpProxy.conf'. We recommend to add the following line to your '~/.bashrc' and copy the UdpProxy.conf to the folder accordingly.
 ```    
 export DOMAIN_CONFIG_FOLDER="insert_path_to_UdpProxy.conf"
 ```
-
-
-
 * Set a proper MulticastAddress and Port in your 'UdpProxy.conf' to the section '[UdpProxy]'. (You can also stick to the example file provided in this package!)
 
 * Create a new ros package within your catkin workspace:
@@ -66,9 +67,3 @@ Plus all the message dependencies you need, e.g., geometry_msgs
  Topic: /topic                    Msg: package/messagename                     Opt:[Udp2RosQueueLength=1 Ros2UdpQueueLength=1]
 ```
 The only available options are Udp2RosQueueLength and Ros2UdpQueueLength. Here you can specify the number of message to be queued when received via udp respectivly via ros.
-
-
-## Requirements ##
-
-You need the [system_config package](https://github.com/carpe-noctem-cassel/supplementary/tree/master/system_config), that is also included in this repository/stack!
-
