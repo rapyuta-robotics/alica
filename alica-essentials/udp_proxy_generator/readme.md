@@ -16,7 +16,7 @@ and copy the UdpProxy.conf to the according folder
 > catkin_create_pkg PROXYNAME
 
 * Copy the following lines and the end of your 'CMakelists.txt':
-<pre><code>
+```
 include_directories(${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 &#35; Triggers the udp_proxy_generator to create the serialization source
@@ -39,7 +39,7 @@ target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 &#35;&#35; Add cmake target dependencies of the executable/library
 &#35;&#35; as an example, message headers may need to be generated before nodes
 add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES} msl_sensor_msgs_gencpp)
-</code></pre>
+```
 
 * Add to to 'package-xml':
 <pre><code>
