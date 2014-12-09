@@ -46,7 +46,7 @@ target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 ```
 
-* Add to to 'package-xml':
+* Add to to 'package.xml':
 ```
   <build_depend>system_config</build_depend>
   <build_depend>roscpp</build_depend>
