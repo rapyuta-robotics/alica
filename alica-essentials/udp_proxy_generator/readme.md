@@ -59,9 +59,9 @@ add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES} msl_sens
 Plus all the message dependencies you need, e.g., geometry_msgs
 
 * Add a 'relayMsgs.conf' file into your proxy node folder and add the following line for each topic/message you want transmit via multicast:
-<pre><code>
+```
  Topic: /topic                    Msg: package/messagename                     Opt:[Udp2RosQueueLength=1 Ros2UdpQueueLength=1]
-</code></pre>
+```
 The only available options are Udp2RosQueueLength and Ros2UdpQueueLength. Here you can specify the number of message to be queued when received via udp respectivly via ros.
 
 
