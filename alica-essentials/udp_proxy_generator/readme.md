@@ -20,8 +20,20 @@ export DOMAIN_CONFIG_FOLDER="insert_path_to_UdpProxy.conf"
 catkin_create_pkg PROXYNAME
 ```
 
-* Copy the following lines and the end of your 'CMakelists.txt':
+* Copy the following lines into 'CMakelists.txt':
 ```
+## Use c++ 11x std
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
+## Find catkin macros and libraries
+## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
+## is used, also find other catkin packages
+find_package(catkin REQUIRED system_config roscpp roslib PACKAGES_WITH_YOUR_MESSAGES)
+
+## System dependencies are found with CMake's conventions
+find_package(Boost REQUIRED COMPONENTS system filesystem regex)
+
+
 include_directories(${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 # Triggers the udp_proxy_generator to create the serialization source
@@ -43,8 +55,9 @@ target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES} PACKAGES_WITH_YOUR_MESSAGES_gencpp)
 ```
+Replace 'PACKAGES_WITH_YOUR_MESSAGES' with the packages that include the messages you want to serialize
 
 * Add the dependencies to 'package.xml':
 ```
