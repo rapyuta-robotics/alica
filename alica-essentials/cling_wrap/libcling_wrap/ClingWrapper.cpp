@@ -248,7 +248,20 @@ namespace supplementary
           return false;
         }
 
+
+        std::unique_ptr<std::vector<Gringo::Value>> ClingWrapper::queryAllTrue(std::string const &name, Gringo::FWValVec args)
+        {
+          Gringo::Value value(name, args);
+
+          return this->queryAllTrue(&value);
+        }
+
         std::unique_ptr<std::vector<Gringo::Value>> ClingWrapper::queryAllTrue(std::shared_ptr<Gringo::Value> query)
+        {
+          return this->queryAllTrue(query.get());
+        }
+
+        std::unique_ptr<std::vector<Gringo::Value>> ClingWrapper::queryAllTrue(Gringo::Value* query)
         {
           if (this->lastModel == nullptr || this->lastSolver == nullptr)
             return nullptr;
@@ -263,9 +276,9 @@ namespace supplementary
             value = std::get<1>(lit);
 
             if (false == this->lastModel->isTrue(this->lastSolver->symbolTable()[literalId].lit))
-            	continue;
+                continue;
 
-            if (this->checkMatchValues(query.get(), &value))
+            if (this->checkMatchValues(query, &value))
             {
                 values->push_back(value);
             }
