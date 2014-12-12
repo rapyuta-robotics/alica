@@ -234,18 +234,18 @@ namespace supplementary
           for (auto lit : this->existingLiterals)
           {
             const Gringo::Value& value = std::get<1>(lit);
+            literalId = std::get<0>(lit);
+
+            if (false == this->lastModel->isTrue(this->lastSolver->symbolTable()[literalId].lit))
+            	continue;
 
             if (this->checkMatchValues(&query, &value))
             {
-              literalId = std::get<0>(lit);
-              break;
+              return true;
             }
           }
 
-          if (literalId == -1)
-            return false;
-
-          return this->lastModel->isTrue(this->lastSolver->symbolTable()[literalId].lit);
+          return false;
         }
 
         std::unique_ptr<std::vector<Gringo::Value>> ClingWrapper::queryAllTrue(std::shared_ptr<Gringo::Value> query)
@@ -254,19 +254,20 @@ namespace supplementary
             return nullptr;
 
           std::unique_ptr<std::vector<Gringo::Value>> values(new std::vector<Gringo::Value>);
-          int literalId = -1;
+          int literalId;
+          Gringo::Value value;
 
           for (auto lit : this->existingLiterals)
           {
-            const Gringo::Value& value = std::get<1>(lit);
+            literalId = std::get<0>(lit);
+            value = std::get<1>(lit);
+
+            if (false == this->lastModel->isTrue(this->lastSolver->symbolTable()[literalId].lit))
+            	continue;
 
             if (this->checkMatchValues(query.get(), &value))
             {
-              literalId = std::get<0>(lit);
-              if (this->lastModel->isTrue(this->lastSolver->symbolTable()[literalId].lit))
-              {
                 values->push_back(value);
-              }
             }
           }
 
