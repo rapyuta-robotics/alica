@@ -17,8 +17,8 @@ namespace autodiff
 	ConstraintUtility::ConstraintUtility(shared_ptr<Term> constraint, shared_ptr<Term> utility) :
 			Term()
 	{
-		_constraint = constraint;
-		_utility = utility;
+		this->constraint = constraint;
+		this->utility = utility;
 	}
 
 	int ConstraintUtility::accept(shared_ptr<ITermVisitor> visitor)
@@ -29,8 +29,8 @@ namespace autodiff
 
 	shared_ptr<Term> ConstraintUtility::aggregateConstants()
 	{
-		_constraint = _constraint->aggregateConstants();
-		_utility = _utility->aggregateConstants();
+		constraint = constraint->aggregateConstants();
+		utility = utility->aggregateConstants();
 		return shared_from_this();
 	}
 
@@ -42,15 +42,5 @@ namespace autodiff
 	shared_ptr<Term> ConstraintUtility::negate()
 	{
 		throw "Do not negate a Constraint Utility";
-	}
-
-	const shared_ptr<Term> ConstraintUtility::getConstraint()
-	{
-		return _constraint;
-	}
-
-	const shared_ptr<Term> ConstraintUtility::getUtility()
-	{
-		return _utility;
 	}
 } /* namespace autodiff */

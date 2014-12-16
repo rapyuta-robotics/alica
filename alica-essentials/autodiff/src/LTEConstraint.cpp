@@ -18,19 +18,19 @@ namespace autodiff
 	LTEConstraint::LTEConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness) :
 			Term()
 	{
-		_left = x;
-		_right = y;
-		_steppness = steppness;
-		_negatedform = nullptr;
+		this->left = x;
+		this->right = y;
+		this->steppness = steppness;
+		this->negatedform = nullptr;
 	}
 
 	LTEConstraint::LTEConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness, shared_ptr<Term> negatedForm) :
 			Term()
 	{
-		_left = x;
-		_right = y;
-		_steppness = steppness;
-		_negatedform = negatedForm;
+		this->left = x;
+		this->right = y;
+		this->steppness = steppness;
+		this->negatedform = negatedForm;
 	}
 
 	int LTEConstraint::accept(shared_ptr<ITermVisitor> visitor)
@@ -41,13 +41,13 @@ namespace autodiff
 
 	shared_ptr<Term> LTEConstraint::aggregateConstants()
 	{
-		_left = _left->aggregateConstants();
-		_right = _right->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(_left) != 0 && dynamic_pointer_cast<Constant>(_right) != 0)
+		left = left->aggregateConstants();
+		right = right->aggregateConstants();
+		if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0)
 		{
-			shared_ptr<Constant> x = dynamic_pointer_cast<Constant>(_left);
-			shared_ptr<Constant> y = dynamic_pointer_cast<Constant>(_right);
-			if (x->getValue() <= y->getValue())
+			shared_ptr<Constant> x = dynamic_pointer_cast<Constant>(left);
+			shared_ptr<Constant> y = dynamic_pointer_cast<Constant>(right);
+			if (x->value <= y->value)
 			{
 				return Term::TRUE;
 			}
@@ -69,30 +69,10 @@ namespace autodiff
 
 	shared_ptr<Term> LTEConstraint::negate()
 	{
-		if (!(_negatedform != nullptr))
+		if (!(negatedform != nullptr))
 		{
-			_negatedform = make_shared<LTConstraint>(_left, _right, _steppness, shared_from_this());
+			negatedform = make_shared<LTConstraint>(left, right, steppness, shared_from_this());
 		}
-		return _negatedform;
-	}
-
-	const shared_ptr<Term> LTEConstraint::getLeft()
-	{
-		return _left;
-	}
-
-	const shared_ptr<Term> LTEConstraint::getRight()
-	{
-		return _right;
-	}
-
-	const double LTEConstraint::getSteppness()
-	{
-		return _steppness;
-	}
-
-	const shared_ptr<Term> LTEConstraint::getNegatedForm()
-	{
-		return _negatedform;
+		return negatedform;
 	}
 } /* namespace autodiff */

@@ -1,0 +1,179 @@
+/*
+ * FormulaTransform.cpp
+ *
+ *  Created on: Dec 4, 2014
+ *      Author: Philipp
+ */
+
+#include "FormulaTransform.h"
+//#define FORMULATRANS_DEBUG
+//#define USE_EXTENDED_EQUALITY
+
+#include "types/Clause.h"
+#include "types/Lit.h"
+#include "types/Var.h"
+#include "CNSat.h"
+
+#ifdef USE_EXTENDED_EQUALITY
+#include "TermEquality.h"
+#endif
+
+#include <iostream>
+
+namespace alica
+{
+	namespace reasoner
+	{
+		namespace cnsat
+		{
+
+			FormulaTransform::FormulaTransform()
+			{
+#ifdef USE_EXTENDED_EQUALITY
+				this->te = make_shared<TermEquality>();
+#endif
+				this->atomOccurrence = 0;
+			}
+
+			FormulaTransform::~FormulaTransform()
+			{
+				// TODO Auto-generated destructor stub
+			}
+
+			shared_ptr<vector<shared_ptr<Clause>> > FormulaTransform::transformToCNF(shared_ptr<Term> formula,
+																						shared_ptr<CNSat> solver)
+			{
+				this->solver = solver;
+				reset();
+				shared_ptr<vector<shared_ptr<Clause>>> clauses = make_shared<vector<shared_ptr<Clause>>>();
+				shared_ptr<Clause> initial = make_shared<Clause>();
+				shared_ptr<Lit> lit = make_shared<Lit>(formula, Assignment::UNASSIGNED, true);
+				initial->literals->push_back(lit);
+
+				clauses->insert(clauses->begin(), initial);
+
+				doTransform(clauses);
+
+#ifdef FORMULATRANS_DEBUG
+				cout << "Clauses: " << clauses->size() << " Lits: " << atomOccurrence << " Vars: " << solver->variables->size() << "" << endl;
+#endif
+
+				return clauses;
+			}
+
+			void FormulaTransform::reset()
+			{
+				this->atoms.clear();
+				this->atomOccurrence = 0;
+			}
+
+			shared_ptr<Var> FormulaTransform::getAtoms(int term_id)
+			{
+				cout << "FormulaTransform::getAtoms not implemented yet!" << endl;
+				throw "FormulaTransform::getAtoms not implemented yet!";
+			}
+
+			int FormulaTransform::getAtomOccurrence()
+			{
+				cout << "FormulaTransform::getAtomOccurrence not implemented yet!" << endl;
+				throw "FormulaTransform::getAtomOccurrence not implemented yet!";
+			}
+
+			void FormulaTransform::doTransform(shared_ptr<vector<shared_ptr<Clause>> > clauses)
+			{
+				shared_ptr<Clause> curClause = nullptr;
+				shared_ptr<Lit> curLit = nullptr;
+				int j = 0;
+				auto clauseIter = clauses->begin();
+				while (clauseIter != clauses->end()) {
+					shared_ptr<Clause> tmpClause = *clauseIter;
+					if (!tmpClause->isFinished) {
+						bool finished = true;
+						for (j = 0; j < tmpClause->literals->size(); ++j) {
+							if (tmpClause->literals->at(j)->isTemporary) {
+								finished = false;
+								curClause = tmpClause;
+								curLit = curClause->literals->at(j);
+								break;
+							}
+						}
+						if (!finished) {
+							clauseIter = clauses->erase(clauseIter);
+
+							curClause->literals->erase(curClause->literals->begin() + j);
+							shared_ptr<Clause> nc1 = nullptr, nc2 = nullptr;
+							performStep(curClause, curLit, nc1, nc2);
+							if (nc1 != nullptr) {
+								clauses->push_back(nc1);
+							}
+							if (nc2 != nullptr) {
+								clauses->push_back(nc2);
+							}
+						} else {
+							tmpClause->isFinished = true;
+							clauseIter++;
+						}
+					} else {
+						clauseIter++;
+					}
+				}
+			}
+
+			void FormulaTransform::performStep(shared_ptr<Clause> c, shared_ptr<Lit> lit, shared_ptr<Clause> newClause1,
+												shared_ptr<Clause> newClause2)
+			{
+				shared_ptr<Term> formula = lit->atom;
+				if (dynamic_pointer_cast<Max>(formula) != 0) {
+					shared_ptr<Max> m = dynamic_pointer_cast<Max>(formula);
+					shared_ptr<Lit> l = make_shared<Lit>(m->left, Assignment::UNASSIGNED, true);
+					shared_ptr<Lit> r = make_shared<Lit>(m->right, Assignment::UNASSIGNED, true);
+					c->addChecked(l);
+					c->addChecked(r);
+					newClause1 = c;
+					newClause2 = nullptr;
+					return;
+				}
+				if (dynamic_pointer_cast<And>(formula) != 0) {
+					shared_ptr<And> a = dynamic_pointer_cast<And>(formula);
+					shared_ptr<Lit> l = make_shared<Lit>(a->left, Assignment::UNASSIGNED, true);
+					shared_ptr<Lit> r = make_shared<Lit>(a->right, Assignment::UNASSIGNED, true);
+					shared_ptr<Clause> c2 = c->clone();
+					c->addChecked(l);
+					c->addChecked(r);
+					newClause1 = c;
+					newClause2 = c2;
+					return;
+				}
+				if (dynamic_pointer_cast<Or>(formula) != 0) {
+					cout << "FormulaTransform::performStep => Or not implemented yet!" << endl;
+					throw "FormulaTransform::performStep => Or not implemented yet!";
+				}
+				if (dynamic_pointer_cast<Min>(formula) != 0) {
+					cout << "FormulaTransform::performStep => Min not implemented yet!" << endl;
+					throw "FormulaTransform::performStep => Min not implemented yet!";
+				}
+				if (dynamic_pointer_cast<LTConstraint>(formula) != 0) {
+					cout << "FormulaTransform::performStep => LTConstaint not implemented yet!" << endl;
+					throw "FormulaTransform::performStep => LTConstraint not implemented yet!";
+				}
+				if (dynamic_pointer_cast<LTEConstraint>(formula) != 0) {
+					cout << "FormulaTransform::performStep => LTEConstraint not implemented yet!" << endl;
+					throw "FormulaTransform::performStep => LTEConstraint not implemented yet!";
+				}
+				if (dynamic_pointer_cast<Constant>(formula) != 0) {
+					cout << "FormulaTransform::performStep => Constant not implemented yet!" << endl;
+					throw "FormulaTransform::performStep => Constant not implemented yet!";
+				}
+				cerr << "Unknown constraint in transformation:  " << typeid(formula).name() << endl;
+				throw "Unknown constraint in transformation!";
+			}
+
+			bool FormulaTransform::tryGetVar(shared_ptr<Term> t, shared_ptr<Var> v)
+			{
+				cout << "FormulaTransform::tryGetVar not implemented yet!" << endl;
+				throw "FormulaTransform::tryGetVar not implemented yet!";
+			}
+
+		} /* namespace cnsat */
+	} /* namespace reasoner */
+} /* namespace alica */

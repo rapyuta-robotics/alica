@@ -155,7 +155,7 @@ namespace autodiff
 	}
 
 	CompiledDifferentiator::Compiler::Compiler(shared_ptr<vector<shared_ptr<Variable>>> variables,
-												vector<shared_ptr<TapeElement>>* tape)
+	vector<shared_ptr<TapeElement>>* tape)
 	{
 		_tape = tape;
 		for (int i = 0; i < variables->size(); ++i)
@@ -180,7 +180,7 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(abs, [&abs, &storedThis]()
 		{
-			int argIndex = abs->getArg()->accept(storedThis);
+			int argIndex = abs->arg->accept(storedThis);
 
 			shared_ptr<CompiledAbs> element = make_shared<CompiledAbs>();
 			element->_arg = argIndex;
@@ -196,8 +196,8 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(and_, [&and_, &storedThis]()
 		{
-			int leftIndex = and_->getLeft()->accept(storedThis);
-			int rightIndex = and_->getRight()->accept(storedThis);
+			int leftIndex = and_->left->accept(storedThis);
+			int rightIndex = and_->right->accept(storedThis);
 
 			shared_ptr<CompiledAnd> element = make_shared<CompiledAnd>();
 			element->_left = leftIndex;
@@ -215,8 +215,8 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(atan2, [&atan2, &storedThis]()
 		{
-			int leftIndex = atan2->getLeft()->accept(storedThis);
-			int rightIndex = atan2->getRight()->accept(storedThis);
+			int leftIndex = atan2->left->accept(storedThis);
+			int rightIndex = atan2->right->accept(storedThis);
 
 			shared_ptr<CompiledAtan2> element = make_shared<CompiledAtan2>();
 			element->_left = leftIndex;
@@ -232,13 +232,11 @@ namespace autodiff
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Constant> constant)
 	{
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
-		return compile(
-				constant,
-				[&constant, &storedThis]()
-				{
-					shared_ptr<CompiledConstant> element = make_shared<CompiledConstant>(constant->getValue());
-					return element;
-				});
+		return compile(constant, [&constant, &storedThis]()
+		{
+			shared_ptr<CompiledConstant> element = make_shared<CompiledConstant>(constant->value);
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<ConstPower> intPower)
@@ -246,11 +244,11 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(intPower, [&intPower, &storedThis]()
 		{
-			int baseIndex = intPower->getBase()->accept(storedThis);
+			int baseIndex = intPower->base->accept(storedThis);
 
 			shared_ptr<CompiledConstPower> element = make_shared<CompiledConstPower>();
 			element->_base = baseIndex;
-			element->_exponent = intPower->getExponent();
+			element->_exponent = intPower->exponent;
 			element->inputs = vector<InputEdge>(1);
 			element->inputs[0].index = baseIndex;
 
@@ -261,22 +259,20 @@ namespace autodiff
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<ConstraintUtility> cu)
 	{
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
-		return compile(
-				cu,
-				[&cu, &storedThis]()
-				{
-					int constraintIndex = cu->getConstraint()->accept(storedThis);
-					int utilityIndex = cu->getUtility()->accept(storedThis);
+		return compile(cu, [&cu, &storedThis]()
+		{
+			int constraintIndex = cu->constraint->accept(storedThis);
+			int utilityIndex = cu->utility->accept(storedThis);
 
-					shared_ptr<CompiledConstraintUtility> element = make_shared<CompiledConstraintUtility>();
-					element->_constraint = constraintIndex;
-					element->_utility = utilityIndex;
-					element->inputs = vector<InputEdge>(2);
-					element->inputs[0].index = constraintIndex;
-					element->inputs[1].index = utilityIndex;
+			shared_ptr<CompiledConstraintUtility> element = make_shared<CompiledConstraintUtility>();
+			element->_constraint = constraintIndex;
+			element->_utility = utilityIndex;
+			element->inputs = vector<InputEdge>(2);
+			element->inputs[0].index = constraintIndex;
+			element->inputs[1].index = utilityIndex;
 
-					return element;
-				});
+			return element;
+		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Cos> cos)
@@ -284,7 +280,7 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(cos, [&cos, &storedThis]()
 		{
-			int argIndex = cos->getArg()->accept(storedThis);
+			int argIndex = cos->arg->accept(storedThis);
 
 			shared_ptr<CompiledCos> element = make_shared<CompiledCos>();
 			element->_arg = argIndex;
@@ -300,7 +296,7 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(exp, [&exp, &storedThis]()
 		{
-			int argIndex = exp->getArg()->accept(storedThis);
+			int argIndex = exp->arg->accept(storedThis);
 
 			shared_ptr<CompiledExp> element = make_shared<CompiledExp>();
 			element->_arg = argIndex;
@@ -322,7 +318,7 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(sigmoid, [&sigmoid, &storedThis]()
 		{
-			int argIndex = sigmoid->getArg()->accept(storedThis);
+			int argIndex = sigmoid->arg->accept(storedThis);
 
 			//XXX: warum nich CompiledLinSigmoid?
 						shared_ptr<CompiledSigmoid> element = make_shared<CompiledSigmoid>();
@@ -339,7 +335,7 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(log, [&log, &storedThis]()
 		{
-			int argIndex = log->getArg()->accept(storedThis);
+			int argIndex = log->arg->accept(storedThis);
 
 			shared_ptr<CompiledLog> element = make_shared<CompiledLog>();
 			element->_arg = argIndex;
@@ -355,13 +351,13 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(constraint, [&constraint, &storedThis]()
 		{
-			int leftIndex = constraint->getLeft()->accept(storedThis);
-			int rightIndex = constraint->getRight()->accept(storedThis);
+			int leftIndex = constraint->left->accept(storedThis);
+			int rightIndex = constraint->right->accept(storedThis);
 
 			shared_ptr<CompiledLTConstraint> element = make_shared<CompiledLTConstraint>();
 			element->_left = leftIndex;
 			element->_right = rightIndex;
-			element->_steepness = constraint->getSteppness();
+			element->_steepness = constraint->steppness;
 			element->inputs = vector<InputEdge>(2);
 			element->inputs[0].index = leftIndex;
 			element->inputs[1].index = rightIndex;
@@ -375,13 +371,13 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(constraint, [&constraint, &storedThis]()
 		{
-			int leftIndex = constraint->getLeft()->accept(storedThis);
-			int rightIndex = constraint->getRight()->accept(storedThis);
+			int leftIndex = constraint->left->accept(storedThis);
+			int rightIndex = constraint->right->accept(storedThis);
 
 			shared_ptr<CompiledLTEConstraint> element = make_shared<CompiledLTEConstraint>();
 			element->_left = leftIndex;
 			element->_right = rightIndex;
-			element->_steepness = constraint->getSteppness();
+			element->_steepness = constraint->steppness;
 			element->inputs = vector<InputEdge>(2);
 			element->inputs[0].index = leftIndex;
 			element->inputs[1].index = rightIndex;
@@ -395,8 +391,8 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(max, [&max, &storedThis]()
 		{
-			int leftIndex = max->getLeft()->accept(storedThis);
-			int rightIndex = max->getRight()->accept(storedThis);
+			int leftIndex = max->left->accept(storedThis);
+			int rightIndex = max->right->accept(storedThis);
 
 			shared_ptr<CompiledMax> element = make_shared<CompiledMax>();
 			element->_left = leftIndex;
@@ -414,8 +410,8 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(min, [&min, &storedThis]()
 		{
-			int leftIndex = min->getLeft()->accept(storedThis);
-			int rightIndex = min->getRight()->accept(storedThis);
+			int leftIndex = min->left->accept(storedThis);
+			int rightIndex = min->right->accept(storedThis);
 
 			shared_ptr<CompiledMin> element = make_shared<CompiledMin>();
 			element->_left = leftIndex;
@@ -433,8 +429,8 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(or_, [&or_, &storedThis]()
 		{
-			int leftIndex = or_->getLeft()->accept(storedThis);
-			int rightIndex = or_->getRight()->accept(storedThis);
+			int leftIndex = or_->left->accept(storedThis);
+			int rightIndex = or_->right->accept(storedThis);
 
 			shared_ptr<CompiledOr> element = make_shared<CompiledOr>();
 			element->_left = leftIndex;
@@ -452,8 +448,8 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(product, [&product, &storedThis]()
 		{
-			int leftIndex = product->getLeft()->accept(storedThis);
-			int rightIndex = product->getRight()->accept(storedThis);
+			int leftIndex = product->left->accept(storedThis);
+			int rightIndex = product->right->accept(storedThis);
 
 			shared_ptr<CompiledProduct> element = make_shared<CompiledProduct>();
 			element->_left = leftIndex;
@@ -471,12 +467,12 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(dis, [&dis, &storedThis]()
 		{
-			int conIndex = dis->getCondition()->accept(storedThis);
-			int negConIndex = dis->getNegatedCondition()->accept(storedThis);
+			int conIndex = dis->condition->accept(storedThis);
+			int negConIndex = dis->negatedCondition->accept(storedThis);
 
 			shared_ptr<CompiledReification> element = make_shared<CompiledReification>();
-			element->_min = dis->getMin();
-			element->_max = dis->getMax();
+			element->_min = dis->min;
+			element->_max = dis->max;
 			element->_condition = conIndex;
 			element->_negatedCondition = negConIndex;
 			element->inputs = vector<InputEdge>(2);
@@ -492,8 +488,8 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(sigmoid, [&sigmoid, &storedThis]()
 		{
-			int argIndex = sigmoid->getArg()->accept(storedThis);
-			int midIndex = sigmoid->getMid()->accept(storedThis);
+			int argIndex = sigmoid->arg->accept(storedThis);
+			int midIndex = sigmoid->mid->accept(storedThis);
 
 			shared_ptr<CompiledSigmoid> element = make_shared<CompiledSigmoid>();
 			element->_arg = argIndex;
@@ -511,7 +507,7 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(sin, [&sin, &storedThis]()
 		{
-			int argIndex = sin->getArg()->accept(storedThis);
+			int argIndex = sin->arg->accept(storedThis);
 			shared_ptr<CompiledSin> element = make_shared<CompiledSin>();
 			element->_arg = argIndex;
 			element->inputs = vector<InputEdge>(1);
@@ -527,11 +523,11 @@ namespace autodiff
 		return compile(sum, [&sum, &storedThis]()
 		{
 			//replacement for linq code -- HS:
-						vector<int> indices(sum->getTerms().size());
+						vector<int> indices(sum->terms.size());
 						vector<InputEdge> inputs(indices.size());
 						for (int i = 0; i < indices.size(); ++i)
 						{
-							indices[i] = sum->getTerms()[i]->accept(storedThis);
+							indices[i] = sum->terms[i]->accept(storedThis);
 							inputs[i].index = indices[i];
 						}
 
@@ -548,8 +544,8 @@ namespace autodiff
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(power, [&power, &storedThis]()
 		{
-			int baseIndex = power->getBase()->accept(storedThis);
-			int expIndex = power->getExponent()->accept(storedThis);
+			int baseIndex = power->base->accept(storedThis);
+			int expIndex = power->exponent->accept(storedThis);
 
 			shared_ptr<CompiledTermPower> element = make_shared<CompiledTermPower>();
 			element->_base = baseIndex;
@@ -577,8 +573,7 @@ namespace autodiff
 		});
 	}
 
-	int CompiledDifferentiator::Compiler::compile(shared_ptr<Term> term,
-													function<shared_ptr<TapeElement>()> compiler)
+	int CompiledDifferentiator::Compiler::compile(shared_ptr<Term> term, function<shared_ptr<TapeElement>()> compiler)
 	{
 		int index;
 		map<int, int>::iterator it = _indexOf.find(term->getIndex());
@@ -664,8 +659,7 @@ namespace autodiff
 
 	void CompiledDifferentiator::EvalVisitor::visit(shared_ptr<CompiledGp> elem)
 	{
-		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::EvalVisitor::visit(shared_ptr<CompiledGp> elem)"
-				<< endl;
+		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::EvalVisitor::visit(shared_ptr<CompiledGp> elem)" << endl;
 		throw "NOT IMPLEMENTED YET";
 	}
 
@@ -897,8 +891,7 @@ namespace autodiff
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledGp> elem)
 	{
-		cerr
-				<< "NOT IMPLEMENTED: CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledGp> elem)"
+		cerr << "NOT IMPLEMENTED: CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledGp> elem)"
 				<< endl;
 		throw "NOT IMPLEMENTED YET";
 	}

@@ -19,7 +19,7 @@ namespace autodiff
 	Sin::Sin(shared_ptr<Term> arg) :
 			Term()
 	{
-		_arg = arg;
+		this->arg = arg;
 	}
 
 	int Sin::accept(shared_ptr<ITermVisitor> visitor)
@@ -30,13 +30,13 @@ namespace autodiff
 
 	shared_ptr<Term> Sin::aggregateConstants()
 	{
-		_arg = _arg->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(_arg) != 0)
+		arg = arg->aggregateConstants();
+		if (dynamic_pointer_cast<Constant>(arg) != 0)
 		{
-			shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(_arg);
-			return TermBuilder::constant(sin(arg->getValue()));
+			shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(arg);
+			return TermBuilder::constant(sin(arg->value));
 		} else {
-			if (dynamic_pointer_cast<Zero>(_arg) != 0) {
+			if (dynamic_pointer_cast<Zero>(arg) != 0) {
 				return TermBuilder::constant(0);
 			}
 			return shared_from_this();
@@ -45,11 +45,6 @@ namespace autodiff
 
 	shared_ptr<Term> Sin::derivative(shared_ptr<Variable> v)
 	{
-		return make_shared<Cos>(_arg) * _arg->derivative(v);
-	}
-
-	const shared_ptr<Term> Sin::getArg()
-	{
-		return _arg;
+		return make_shared<Cos>(arg) * arg->derivative(v);
 	}
 } /* namespace autodiff */

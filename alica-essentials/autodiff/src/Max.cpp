@@ -17,8 +17,8 @@ namespace autodiff
 	Max::Max(shared_ptr<Term> left, shared_ptr<Term> right) :
 			Term()
 	{
-		_left = left;
-		_right = right;
+		this->left = left;
+		this->right = right;
 	}
 
 	int Max::accept(shared_ptr<ITermVisitor> visitor)
@@ -29,29 +29,29 @@ namespace autodiff
 
 	shared_ptr<Term> Max::aggregateConstants()
 	{
-		_left = _left->aggregateConstants();
-		if (_left == Term::TRUE)
+		left = left->aggregateConstants();
+		if (left == Term::TRUE)
 		{
-			return _left;
+			return left;
 		}
-		_right = _right->aggregateConstants();
-		if (_left == Term::FALSE)
+		right = right->aggregateConstants();
+		if (left == Term::FALSE)
 		{
-			return _right;
+			return right;
 		}
-		if (_right == Term::TRUE)
+		if (right == Term::TRUE)
 		{
-			return _right;
+			return right;
 		}
-		if (_right == Term::FALSE)
+		if (right == Term::FALSE)
 		{
-			return _left;
+			return left;
 		}
-		if (dynamic_pointer_cast<Constant>(_left) != 0 && dynamic_pointer_cast<Constant>(_right) != 0)
+		if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0)
 		{
-			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(_left);
-			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(_right);
-			return make_shared<Constant>(max(left->getValue(), right->getValue()));
+			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(left);
+			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(right);
+			return make_shared<Constant>(std::max(left->value, right->value));
 		}
 		else
 		{
@@ -66,16 +66,6 @@ namespace autodiff
 
 	shared_ptr<Term> Max::negate()
 	{
-		return _left->negate() & _right->negate();
-	}
-
-	const shared_ptr<Term> Max::getLeft()
-	{
-		return _left;
-	}
-
-	const shared_ptr<Term> Max::getRight()
-	{
-		return _right;
+		return left->negate() & right->negate();
 	}
 } /* namespace autodiff */

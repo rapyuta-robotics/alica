@@ -19,18 +19,14 @@ namespace autodiff
 		Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid);
 		Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid, double steppness);
 
+		shared_ptr<Term> arg;
+		shared_ptr<Term> mid;
+		double steepness;
+
 		int accept(shared_ptr<ITermVisitor> visitor);
 
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
-
-		const shared_ptr<Term> getArg();
-		const shared_ptr<Term> getMid();
-		const double getSteepness();
-	private:
-		shared_ptr<Term> _arg;
-		shared_ptr<Term> _mid;
-		double _steepness;
 	};
 
 } /* namespace autodiff */

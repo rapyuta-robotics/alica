@@ -17,8 +17,8 @@ namespace autodiff
 	Min::Min(shared_ptr<Term> left, shared_ptr<Term> right) :
 			Term()
 	{
-		_left = left;
-		_right = right;
+		this->left = left;
+		this->right = right;
 	}
 
 	int Min::accept(shared_ptr<ITermVisitor> visitor)
@@ -29,13 +29,13 @@ namespace autodiff
 
 	shared_ptr<Term> Min::aggregateConstants()
 	{
-		_left = _left->aggregateConstants();
-		_right = _right->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(_left) != 0 && dynamic_pointer_cast<Constant>(_right) != 0)
+		left = left->aggregateConstants();
+		right = right->aggregateConstants();
+		if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0)
 		{
-			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(_left);
-			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(_right);
-			return make_shared<Constant>(min(left->getValue(), right->getValue()));
+			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(left);
+			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(right);
+			return make_shared<Constant>(std::min(left->value, right->value));
 		}
 		else
 		{
@@ -50,16 +50,6 @@ namespace autodiff
 
 	shared_ptr<Term> Min::negate()
 	{
-		return _left->negate() | _right->negate();
-	}
-
-	const shared_ptr<Term> Min::getLeft()
-	{
-		return _left;
-	}
-
-	const shared_ptr<Term> Min::getRight()
-	{
-		return _right;
+		return left->negate() | right->negate();
 	}
 } /* namespace autodiff */

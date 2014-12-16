@@ -17,6 +17,11 @@ namespace autodiff
 	class Variable : public Term, public alica::SolverVariable
 	{
 	public:
+		double globalMin;
+		double globalMax;
+
+		Variable();
+
 		int accept(shared_ptr<ITermVisitor> visitor);
 
 		shared_ptr<Term> aggregateConstants();

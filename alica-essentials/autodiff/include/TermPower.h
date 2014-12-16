@@ -18,16 +18,13 @@ namespace autodiff
 	public:
 		TermPower(shared_ptr<Term> baseTerm, shared_ptr<Term> exponent);
 
+		shared_ptr<Term> base;
+		shared_ptr<Term> exponent;
+
 		int accept(shared_ptr<ITermVisitor> visitor);
 
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
-
-		const shared_ptr<Term> getBase();
-		const shared_ptr<Term> getExponent();
-	private:
-		shared_ptr<Term> _base;
-		shared_ptr<Term> _exponent;
 	};
 
 } /* namespace autodiff */

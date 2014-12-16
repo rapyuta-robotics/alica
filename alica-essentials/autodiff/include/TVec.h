@@ -29,19 +29,18 @@ namespace autodiff
 				function<shared_ptr<Term>(shared_ptr<Term>, shared_ptr<Term>)> elemOp);
 		TVec(vector<shared_ptr<Term>> input, function<shared_ptr<Term>(shared_ptr<Term>)> elemOp);
 
+		vector<shared_ptr<Term>> terms;
+
 		shared_ptr<Term> normSquared();
 		shared_ptr<TVec> normalize();
 		int dimension();
 		shared_ptr<Term> getX();
 		shared_ptr<Term> getY();
 		shared_ptr<Term> getZ();
-		vector<shared_ptr<Term>> getTerms();
 		static shared_ptr<Term> innerProduct(shared_ptr<TVec> left, shared_ptr<TVec> right);
 		static shared_ptr<TVec> crossProduct(shared_ptr<TVec> left, shared_ptr<TVec> right);
 
 		shared_ptr<Term> operator[](int index);
-	private:
-		vector<shared_ptr<Term>> _terms;
 	};
 
 	shared_ptr<TVec> operator+(const shared_ptr<TVec>& left, const shared_ptr<TVec>& right);

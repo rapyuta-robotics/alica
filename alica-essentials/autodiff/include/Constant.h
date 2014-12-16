@@ -18,14 +18,12 @@ namespace autodiff
 	public:
 		Constant(double value);
 
+		double value;
+
 		int accept(shared_ptr<ITermVisitor> visitor);
 
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
-
-		double getValue();
-	private:
-		double _value;
 	};
 
 } /* namespace autodiff */

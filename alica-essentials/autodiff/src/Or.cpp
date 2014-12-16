@@ -17,8 +17,8 @@ namespace autodiff
 	Or::Or(shared_ptr<Term> left, shared_ptr<Term> right) :
 			Term()
 	{
-		_left = left;
-		_right = right;
+		this->left = left;
+		this->right = right;
 	}
 
 	int Or::accept(shared_ptr<ITermVisitor> visitor)
@@ -29,13 +29,13 @@ namespace autodiff
 
 	shared_ptr<Term> Or::aggregateConstants()
 	{
-		_left = _left->aggregateConstants();
-		_right = _right->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(_left) != 0 && dynamic_pointer_cast<Constant>(_right) != 0)
+		left = left->aggregateConstants();
+		right = right->aggregateConstants();
+		if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0)
 		{
-			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(_left);
-			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(_right);
-			if (left->getValue() > 0.75 || right->getValue() > 0.75)
+			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(left);
+			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(right);
+			if (left->value > 0.75 || right->value > 0.75)
 			{
 				return Term::TRUE;
 			}
@@ -57,16 +57,6 @@ namespace autodiff
 
 	shared_ptr<Term> Or::negate()
 	{
-		return _left->negate() & _right->negate();
-	}
-
-	const shared_ptr<Term> Or::getLeft()
-	{
-		return _left;
-	}
-
-	const shared_ptr<Term> Or::getRight()
-	{
-		return _right;
+		return left->negate() & right->negate();
 	}
 } /* namespace autodiff */

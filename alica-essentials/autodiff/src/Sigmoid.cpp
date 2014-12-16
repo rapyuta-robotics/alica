@@ -21,17 +21,17 @@ namespace autodiff
 	Sigmoid::Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid) :
 			Term()
 	{
-		_arg = arg;
-		_mid = mid;
-		_steepness = 1;
+		this->arg = arg;
+		this->mid = mid;
+		this->steepness = 1;
 	}
 
 	Sigmoid::Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid, double steppness) :
 			Term()
 	{
-		_arg = arg;
-		_mid = mid;
-		_steepness = steppness;
+		this->arg = arg;
+		this->mid = mid;
+		this->steepness = steppness;
 	}
 
 	int Sigmoid::accept(shared_ptr<ITermVisitor> visitor)
@@ -42,13 +42,13 @@ namespace autodiff
 
 	shared_ptr<Term> Sigmoid::aggregateConstants()
 	{
-		_arg = _arg->aggregateConstants();
-		_mid = _mid->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(_arg) != 0 && dynamic_pointer_cast<Constant>(_mid) != 0)
+		arg = arg->aggregateConstants();
+		mid = mid->aggregateConstants();
+		if (dynamic_pointer_cast<Constant>(arg) != 0 && dynamic_pointer_cast<Constant>(mid) != 0)
 		{
-			shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(_arg);
-			shared_ptr<Constant> mid = dynamic_pointer_cast<Constant>(_mid);
-			double e = exp(_steepness * (-arg->getValue() + mid->getValue()));
+			shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(arg);
+			shared_ptr<Constant> mid = dynamic_pointer_cast<Constant>(mid);
+			double e = exp(steepness * (-arg->value + mid->value));
 			if (e == numeric_limits<double>::infinity())
 			{
 				return TermBuilder::constant(Term::EPSILON);
@@ -74,23 +74,8 @@ namespace autodiff
 
 	shared_ptr<Term> Sigmoid::derivative(shared_ptr<Variable> v)
 	{
-		shared_ptr<Term> t = _steepness * (_arg->derivative(v) - _mid->derivative(v))
-				* make_shared<Exp>(_steepness * (-1 * _arg + _mid));
-		return t / make_shared<ConstPower>(make_shared<Exp>(_steepness * _arg) + make_shared<Exp>(_steepness * _mid), 2);
-	}
-
-	const shared_ptr<Term> Sigmoid::getArg()
-	{
-		return _arg;
-	}
-
-	const shared_ptr<Term> Sigmoid::getMid()
-	{
-		return _mid;
-	}
-
-	const double Sigmoid::getSteepness()
-	{
-		return _steepness;
+		shared_ptr<Term> t = steepness * (arg->derivative(v) - mid->derivative(v))
+				* make_shared<Exp>(steepness * (-1 * arg + mid));
+		return t / make_shared<ConstPower>(make_shared<Exp>(steepness * arg) + make_shared<Exp>(steepness * mid), 2);
 	}
 } /* namespace autodiff */

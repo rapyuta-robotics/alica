@@ -18,7 +18,7 @@ namespace autodiff
 	Constant::Constant(double value) :
 			Term()
 	{
-		_value = value;
+		this->value = value;
 	}
 
 	int Constant::accept(shared_ptr<ITermVisitor> visitor)
@@ -36,10 +36,4 @@ namespace autodiff
 	{
 		return 0;
 	}
-
-	double Constant::getValue()
-	{
-		return _value;
-	}
-
 } /* namespace autodiff */

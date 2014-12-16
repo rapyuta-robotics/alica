@@ -19,8 +19,8 @@ namespace autodiff
 	Product::Product(shared_ptr<Term> left, shared_ptr<Term> right) :
 			Term()
 	{
-		_left = left;
-		_right = right;
+		this->left = left;
+		this->right = right;
 	}
 
 	int Product::accept(shared_ptr<ITermVisitor> visitor)
@@ -31,36 +31,36 @@ namespace autodiff
 
 	shared_ptr<Term> Product::aggregateConstants()
 	{
-		_left = _left->aggregateConstants();
-		_right = _right->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(_left) != 0 && dynamic_pointer_cast<Constant>(_right) != 0)
+		left = left->aggregateConstants();
+		right = right->aggregateConstants();
+		if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0)
 		{
-			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(_left);
-			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(_right);
-			return TermBuilder::constant(left->getValue() * right->getValue());
+			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(left);
+			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(right);
+			return TermBuilder::constant(left->value * right->value);
 		}
-		else if (dynamic_pointer_cast<Zero>(_left) != 0)
+		else if (dynamic_pointer_cast<Zero>(left) != 0)
 		{
-			return _left;
+			return left;
 		}
-		else if (dynamic_pointer_cast<Zero>(_right) != 0)
+		else if (dynamic_pointer_cast<Zero>(right) != 0)
 		{
-			return _right;
+			return right;
 		}
-		if (dynamic_pointer_cast<Constant>(_left) != 0)
+		if (dynamic_pointer_cast<Constant>(left) != 0)
 		{
-			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(_left);
-			if (left->getValue() == 1)
+			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(left);
+			if (left->value == 1)
 			{
-				return _right;
+				return right;
 			}
 		}
-		if (dynamic_pointer_cast<Constant>(_right) != 0)
+		if (dynamic_pointer_cast<Constant>(right) != 0)
 		{
-			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(_right);
-			if (right->getValue() == 1)
+			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(right);
+			if (right->value == 1)
 			{
-				return _left;
+				return left;
 			}
 		}
 		return shared_from_this();
@@ -68,16 +68,7 @@ namespace autodiff
 
 	shared_ptr<Term> Product::derivative(shared_ptr<Variable> v)
 	{
-		return _left * _right->derivative(v) + _right * _left->derivative(v);
-	}
-
-	shared_ptr<Term> Product::getLeft()
-	{
-		return _left;
-	}
-	shared_ptr<Term> Product::getRight()
-	{
-		return _right;
+		return left * right->derivative(v) + right * left->derivative(v);
 	}
 
 } /* namespace autodiff */
