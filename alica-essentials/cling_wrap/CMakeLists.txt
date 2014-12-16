@@ -203,8 +203,7 @@ catkin_package(
 ## Add gtest based cpp test target and link libraries
  catkin_add_gtest(${PROJECT_NAME}-test 
    test/src/test_cling_wrap.cpp
-   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/test
- )
+   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/test)
  if(TARGET ${PROJECT_NAME}-test)
    target_link_libraries(${PROJECT_NAME}-test libcling_wrap)
  endif()
