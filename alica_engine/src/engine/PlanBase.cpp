@@ -168,6 +168,7 @@ namespace alica
 			this->log->itertionStarts();
 
 			//Send tick to other modules
+			this->ae->getCommunicator()->tick();
 			this->teamObserver->tick(this->rootNode);
 			this->ra->tick();
 			this->syncModel->tick();
