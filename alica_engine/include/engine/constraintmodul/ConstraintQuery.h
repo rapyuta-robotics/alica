@@ -12,7 +12,6 @@
 #include <vector>
 #include <map>
 
-
 #include "engine/AlicaEngine.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/IAlicaClock.h"
@@ -22,6 +21,7 @@
 #include "engine/constraintmodul/ConstraintDescriptor.h"
 #include "engine/constraintmodul/ConstraintStore.h"
 #include "engine/constraintmodul/IConstraintSolver.h"
+#include "engine/constraintmodul/IVariableSyncModule.h"
 #include "engine/constraintmodul/SolverTerm.h"
 #include "engine/constraintmodul/SolverVariable.h"
 #include "engine/model/Condition.h"
@@ -54,8 +54,7 @@ namespace alica
 		void addVariable(Variable* v);
 		void addVariable(int robot, string ident);
 		void clearDomainVariables();
-		void clearStaticVariables();
-		bool existsSolution(int solverType, shared_ptr<RunningPlan> rp);
+		void clearStaticVariables();bool existsSolution(int solverType, shared_ptr<RunningPlan> rp);
 
 		template<class T>
 		bool getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<T>& result);
@@ -86,7 +85,9 @@ namespace alica
 		};
 
 	private:
-		bool collectProblemStatement (shared_ptr<RunningPlan> rp, vector<Variable*>& relevantVariables, vector<shared_ptr<ConstraintDescriptor>>& cds, IConstraintSolver* solver, int& domOffset);
+		bool collectProblemStatement(shared_ptr<RunningPlan> rp, vector<Variable*>& relevantVariables,
+										vector<shared_ptr<ConstraintDescriptor>>& cds, IConstraintSolver* solver,
+										int& domOffset);
 
 		shared_ptr<UniqueVarStore> store;
 		vector<Variable*> queriedStaticVariables;
@@ -110,10 +111,10 @@ namespace alica
 		vector<shared_ptr<ConstraintDescriptor>> cds = vector<shared_ptr<ConstraintDescriptor>>();
 		vector<Variable*> relevantVariables;
 		int domOffset;
-		if(!collectProblemStatement(rp, relevantVariables, cds, solver, domOffset)) {
+		if (!collectProblemStatement(rp, relevantVariables, cds, solver, domOffset))
+		{
 			return false;
 		}
-
 
 		vector<void*> solverResult;
 		bool ret = solver->getSolution(relevantVariables, cds, solverResult);
@@ -122,6 +123,15 @@ namespace alica
 		if (solverResult.size() > 0)
 		{
 			result.clear();
+
+			if (typeid(T) == typeid(double) && ret)
+			{
+				for (int i = 0; i < solverResult.size(); i++)
+				{
+					solver->getAlicaEngine()->getResultStore()->postResult(relevantVariables.at(i)->getId(),
+																			*((double*)solverResult.at(i)));
+				}
+			}
 
 			//throw "Unexpected Result in Multiple Variables Query!";
 			for (int i = 0; i < queriedStaticVariables.size(); ++i)
@@ -140,7 +150,8 @@ namespace alica
 				}
 			}
 		}
-		for(int i=0; i<solverResult.size(); i++) {
+		for (int i = 0; i < solverResult.size(); i++)
+		{
 			delete (T*)solverResult.at(i);
 		}
 
