@@ -86,7 +86,8 @@ namespace alicaRosProxy
 	{
 		if (this->isRunning)
 		{
-			ros::spinOnce();
+			//Use this for synchronous communication!
+			//ros::spinOnce();
 		}
 	}
 
