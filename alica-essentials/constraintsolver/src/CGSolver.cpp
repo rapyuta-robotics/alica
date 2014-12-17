@@ -175,7 +175,8 @@ namespace alica
 				{
 					double *rVal = new double{gresults->at(i)};
 					results.push_back(rVal);
-					ae->getResultStore()->postResult(vars.at(i)->getId(), gresults->at(i));
+					//Is now done by query!
+					//ae->getResultStore()->postResult(vars.at(i)->getId(), gresults->at(i));
 				}
 			}
 			lastUtil = util;
