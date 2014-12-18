@@ -29,6 +29,12 @@ namespace alicaTests
 		this->transitionCondition1413201052549 = false;
 		this->transitionCondition1413201367990 = false;
 		this->transitionCondition1413201370590 = false;
+		this->preCondition1418042929966 = false;
+		this->runtimeCondition1418042967134 = false;
+
+		this->transitionCondition1418825427317 = false;
+		this->transitionCondition1418825428924 = false;
+
 		this->x = 0;
 	}
 
@@ -85,6 +91,40 @@ namespace alicaTests
 	void TestWorldModel::setTransitionCondition1413201370590(bool transitionCondition1413201370590)
 	{
 		this->transitionCondition1413201370590 = transitionCondition1413201370590;
+	}
+
+	bool TestWorldModel::isTransitionCondition1418825427317()
+	{
+		return this->transitionCondition1418825427317;
+	}
+	void TestWorldModel::setTransitionCondition1418825427317(bool transitionCondition1418825427317)
+	{
+		this->transitionCondition1418825427317 = transitionCondition1418825427317;
+	}
+	bool TestWorldModel::isTransitionCondition1418825428924()
+	{
+		return this->transitionCondition1418825428924;
+	}
+	void TestWorldModel::setTransitionCondition1418825428924(bool transitionCondition1418825428924)
+	{
+		this->transitionCondition1418825428924 = transitionCondition1418825428924;
+	}
+
+	bool TestWorldModel::isPreCondition1418042929966()
+	{
+		return preCondition1418042929966;
+	}
+	void TestWorldModel::setPreCondition1418042929966(bool preCondition1418042929966)
+	{
+		this->preCondition1418042929966 = preCondition1418042929966;
+	}
+	bool TestWorldModel::isRuntimeCondition1418042967134()
+	{
+		return runtimeCondition1418042967134;
+	}
+	void TestWorldModel::setRuntimeCondition1418042967134(bool runtimeCondition1418042967134)
+	{
+		this->runtimeCondition1418042967134 = runtimeCondition1418042967134;
 	}
 
 } /* namespace alica */

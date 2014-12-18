@@ -1,2 +1,2 @@
 int64 id
-float64 value
+uint8[] value

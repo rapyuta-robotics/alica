@@ -35,8 +35,8 @@ namespace alica
 		virtual void onSolverResult(shared_ptr<SolverResult> msg);
 
 		void publishContent();
-		virtual void postResult(long vid, double result);
-		virtual shared_ptr<vector<shared_ptr<vector<double>>>> getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits);
+		virtual void postResult(long vid, shared_ptr<vector<uint8_t>>& result);
+		virtual shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>> getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits);
 
 	protected:
 		supplementary::NotifyTimer<VariableSyncModule>* timer;
@@ -46,11 +46,11 @@ namespace alica
 		class VotedSeed
 		{
 		public:
-			VotedSeed(int dim, shared_ptr<vector<double>> v);
+			VotedSeed(int dim, shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v);
 
-			bool takeVector(shared_ptr<vector<double>> v, vector<double>& scaling, double distThreshold);
+			bool takeVector(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v, vector<double>& scaling, double distThreshold);
 
-			shared_ptr<vector<double>> values;
+			shared_ptr<vector<shared_ptr<vector<uint8_t>>>> values;
 			vector<int> supporterCount;
 			int totalSupCount;
 			int dim;

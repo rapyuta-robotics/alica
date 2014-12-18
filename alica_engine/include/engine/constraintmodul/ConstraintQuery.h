@@ -128,8 +128,16 @@ namespace alica
 			{
 				for (int i = 0; i < solverResult.size(); i++)
 				{
+					uint8_t* tmp = ((uint8_t*)solverResult.at(i));
+					shared_ptr<vector<uint8_t>> result = make_shared<vector<uint8_t>>(sizeof(T));
+					//If you have an Segfault/Error here you solver does not return what you are querying! ;)
+					for(int s=0; s<sizeof(T); s++) {
+						result->at(s) = *tmp;
+						tmp++;
+					}
+
 					solver->getAlicaEngine()->getResultStore()->postResult(relevantVariables.at(i)->getId(),
-																			*((double*)solverResult.at(i)));
+																			result);
 				}
 			}
 
