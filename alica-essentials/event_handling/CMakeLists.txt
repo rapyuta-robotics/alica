@@ -92,6 +92,10 @@ add_library(event_handling
    src/Timer.cpp
 )
 
+if (NOT catkin_FOUND)
+  target_include_directories(event_handling PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+endif(NOT catkin_FOUND)
+
 ## Declare a cpp executable
 # add_executable(event_handling_node src/event_handling_node.cpp)
 

@@ -10,11 +10,8 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 if(catkin_FOUND)
 	find_package(catkin REQUIRED fsystem)
 else(catkin_FOUND)
-	find_package(fsystem REQUIRED)
-	set (catkin_INCLUDE_DIRS ${fsystem_INCLUDE_DIRS})
+	set (catkin_INCLUDE_DIRS "${fsystem_INCLUDE_DIRS}")
 	set (catkin_LIBRARIES "fsystem")
-#message ("CatkinIncl: ${catkin_INCLUDE_DIRS} OhneIncl: ${fsystem_INCLUDE_DIRS}")
-#message ("CatkinIncl: ${catkin_LIBRARIES} OhneIncl: ${fsystem_LIBRARIES}")
 endif(catkin_FOUND)
 
 ## System dependencies are found with CMake's conventions
@@ -101,7 +98,6 @@ endif(catkin_FOUND)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 ## Declare a cpp library
@@ -116,11 +112,14 @@ add_library(system_config
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-
 add_dependencies(system_config ${catkin_LIBRARIES})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(system_config ${catkin_LIBRARIES})
+
+if (NOT catkin_FOUND)
+  target_include_directories(system_config PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+endif(NOT catkin_FOUND)
 
 #############
 ## Install ##
