@@ -14,8 +14,7 @@ using namespace std;
 #include <queue>
 #include <stdio.h>
 #include <thread>
-#include <AutoResetEvent.h>
-#include <Timer.h>
+#include <condition_variable>
 #include <algorithm>
 #include <math.h>
 #include <mutex>
@@ -71,11 +70,7 @@ namespace alica
 		 * List of RunningPlans scheduled for out-of-loop evaluation.
 		 */
 		queue<shared_ptr<RunningPlan>> fpEvents;
-//		supplementary::AutoResetEvent* signal;
-//		supplementary::AutoResetEvent* loopGuard;
-//		condition_variable* timerModeCV;
 		condition_variable* stepModeCV;
-//		supplementary::Timer* loopTimer;
 		void checkPlanBase(shared_ptr<RunningPlan> r);
 
 	protected:
@@ -109,8 +104,6 @@ namespace alica
 		BehaviourEngineInfo* statusMessage;
 		mutex lomutex;
 		mutex stepMutex;
-//		mutex timerMutex;
-//		unique_lock<mutex> lckTimer;
 		void run();
 
 
