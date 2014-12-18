@@ -31,20 +31,20 @@ namespace alica
 		virtual ~ResultEntry();
 
 		int getId();
-		void addValue(long vid, double val);
+		void addValue(long vid, shared_ptr<vector<uint8_t>> result);
 		void clear();
 		shared_ptr<vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
-		double getValue(long vid, long ttl4Usage);
-		shared_ptr<vector<double>> getValues(shared_ptr<vector<Variable*>> query, long ttl4Usage);
+		shared_ptr<vector<uint8_t>> getValue(long vid, long ttl4Usage);
+		shared_ptr<vector<shared_ptr<vector<uint8_t>>>> getValues(shared_ptr<vector<Variable*>> query, long ttl4Usage);
 
 		class VarValue
 		{
 		public:
 			long id;
-			double val;
+			shared_ptr<vector<uint8_t>> val;
 			ulong lastUpdate;
 
-			VarValue(long vid, double v, ulong now)
+			VarValue(long vid, shared_ptr<vector<uint8_t>> v, ulong now)
 			{
 				this->id = vid;
 				this->val = v;

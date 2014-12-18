@@ -29,8 +29,8 @@ namespace alica
 		virtual void clear() = 0;
 		virtual void onSolverResult(shared_ptr<SolverResult> msg) = 0;
 
-		virtual void postResult(long vid, double result) = 0;
-		virtual shared_ptr<vector<shared_ptr<vector<double>>>> getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits) = 0;
+		virtual void postResult(long vid, shared_ptr<vector<uint8_t>>& result) = 0;
+		virtual shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>> getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits) = 0;
 	};
 } /* namespace alica */
 
