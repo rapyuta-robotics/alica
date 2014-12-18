@@ -12,7 +12,7 @@ namespace alica
 {
 	struct SolverVar {
 		long id;
-		double value;
+		vector<uint8_t> value;
 	};
 
 } /* namespace alica */

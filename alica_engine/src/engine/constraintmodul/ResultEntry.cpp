@@ -34,7 +34,7 @@ namespace alica
 		return id;
 	}
 
-	void ResultEntry::addValue(long vid, double val)
+	void ResultEntry::addValue(long vid, shared_ptr<vector<uint8_t>> val)
 	{
 		long now = ae->getIAlicaClock()->now();
 		shared_ptr<VarValue> vv;
@@ -82,14 +82,14 @@ namespace alica
 			{
 				SolverVar* sv = new SolverVar();
 				sv->id = iterator->second->id;
-				sv->value = iterator->second->val;
+				sv->value = *iterator->second->val;
 				lv->push_back(sv);
 			}
 		}
 		return lv;
 	}
 
-	double ResultEntry::getValue(long vid, long ttl4Usage)
+	shared_ptr<vector<uint8_t>> ResultEntry::getValue(long vid, long ttl4Usage)
 	{
 		long now = ae->getIAlicaClock()->now();
 		lock_guard<std::mutex> lock(valueLock);
@@ -99,12 +99,12 @@ namespace alica
 				return it->second->val;
 			}
 		}
-		return std::numeric_limits<double>::max();
+		return nullptr;
 	}
 
-	shared_ptr<vector<double>> ResultEntry::getValues(shared_ptr<vector<Variable*>> query, long ttl4Usage)
+	shared_ptr<vector<shared_ptr<vector<uint8_t>>>> ResultEntry::getValues(shared_ptr<vector<Variable*>> query, long ttl4Usage)
 	{
-		shared_ptr<vector<double>> ret = make_shared<vector<double>>(query->size());
+		shared_ptr<vector<shared_ptr<vector<uint8_t>>>> ret = make_shared<vector<shared_ptr<vector<uint8_t>>>>(query->size());
 		int i = 0;
 		for(auto it = query->begin(); it != query->end(); it++, i++) {
 			ret->at(i) = getValue((*it)->getId(), ttl4Usage);
