@@ -32,6 +32,18 @@ namespace alicaTests
 		void setTransitionCondition1413201367990(bool transitionCondition1413201367990);
 		bool isTransitionCondition1413201370590();
 		void setTransitionCondition1413201370590(bool transitionCondition1413201370590);
+
+		//MasterPlanTestSyncTransition
+		bool isTransitionCondition1418825427317();
+		void setTransitionCondition1418825427317(bool transitionCondition1418825427317);
+		bool isTransitionCondition1418825428924();
+		void setTransitionCondition1418825428924(bool transitionCondition1418825428924);
+
+		bool isPreCondition1418042929966();
+		void setPreCondition1418042929966(bool preCondition1418042929966);
+		bool isRuntimeCondition1418042967134();
+		void setRuntimeCondition1418042967134(bool runtimeCondition1418042967134);
+
 		vector<double> robotsXPos;
 		double x;
 
@@ -42,6 +54,14 @@ namespace alicaTests
 		bool transitionCondition1413201052549;
 		bool transitionCondition1413201367990;
 		bool transitionCondition1413201370590;
+
+		//SyncTransitionTest
+		bool transitionCondition1418825427317;
+		bool transitionCondition1418825428924;
+
+		//PlanTypeTest
+		bool preCondition1418042929966;
+		bool runtimeCondition1418042967134;
 	};
 
 } /* namespace alica */
