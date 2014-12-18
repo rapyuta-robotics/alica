@@ -83,7 +83,40 @@ namespace alica
 					}
 				}
 			}
-			auto seeds = ae->getResultStore()->getSeeds(make_shared<vector<Variable*>>(vars), ranges);
+			auto serial_seeds = ae->getResultStore()->getSeeds(make_shared<vector<Variable*>>(vars), ranges);
+			// Desierialize seeds
+			shared_ptr<vector<shared_ptr<vector<double>>> > seeds = make_shared<vector<shared_ptr<vector<double>>>>(serial_seeds->size());
+			for (auto& serialseed : *serial_seeds)
+			{
+				shared_ptr<vector<double>> singleseed = make_shared<vector<double>>(serialseed->size());
+				for (auto& serialvalue : *serialseed)
+				{
+					if (serialvalue != nullptr)
+					{
+						double v;
+						uint8_t* pointer = (uint8_t*)&v;
+						if (serialvalue->size() == sizeof(double))
+						{
+							for (int k = 0; k < sizeof(double); k++)
+							{
+								*pointer = serialvalue->at(k);
+								pointer++;
+							}
+							singleseed->push_back(v);
+						}
+						else
+						{
+							cerr << "CGS: Received Seed that is not size of double" << endl;
+							break;
+						}
+					}
+					else
+					{
+						singleseed->push_back(std::numeric_limits<double>::max());
+					}
+				}
+				seeds->push_back(singleseed);
+			}
 
 			return sgs->solveSimple(constraint, cVars, ranges, seeds);
 		}
@@ -160,7 +193,43 @@ namespace alica
 			shared_ptr<Term> all = make_shared<ConstraintUtility>(constraint, utility);
 
 			auto tmp = make_shared<vector<Variable*>>(vars);
-			shared_ptr<vector<shared_ptr<vector<double>>>> seeds = ae->getResultStore()->getSeeds(tmp, ranges);
+			auto serial_seeds = ae->getResultStore()->getSeeds(tmp, ranges);
+			// Desierialize seeds
+			shared_ptr<vector<shared_ptr<vector<double>>> > seeds = make_shared<vector<shared_ptr<vector<double>>>>();
+			seeds->reserve(serial_seeds->size());
+			for (auto& serialseed : *serial_seeds)
+			{
+				shared_ptr<vector<double>> singleseed = make_shared<vector<double>>();
+				singleseed->reserve(serialseed->size());
+				for (auto& serialvalue : *serialseed)
+				{
+					if (serialvalue != nullptr)
+					{
+						double v;
+						uint8_t* pointer = (uint8_t*)&v;
+						if (serialvalue->size() == sizeof(double))
+						{
+							for (int k = 0; k < sizeof(double); k++)
+							{
+								*pointer = serialvalue->at(k);
+								pointer++;
+							}
+							singleseed->push_back(v);
+						}
+						else
+						{
+							cerr << "CGS: Received Seed that is not size of double" << endl;
+							cout << "CGS: Received Seed that is not size of double" << endl;
+							break;
+						}
+					}
+					else
+					{
+						singleseed->push_back(std::numeric_limits<double>::max());
+					}
+				}
+				seeds->push_back(singleseed);
+			}
 
 			shared_ptr<vector<double>> gresults;
 			double util = 0;
@@ -169,11 +238,11 @@ namespace alica
 				gs->setUtilitySignificanceThreshold(usigVal);
 				gresults = gs->solve(all, cVars, ranges, seeds, sufficientUtility, &util);
 			}
-			if (gresults->size()>0)
+			if (gresults->size() > 0)
 			{
 				for (int i = 0; i < dim; ++i)
 				{
-					double *rVal = new double{gresults->at(i)};
+					double *rVal = new double {gresults->at(i)};
 					results.push_back(rVal);
 					//Is now done by query!
 					//ae->getResultStore()->postResult(vars.at(i)->getId(), gresults->at(i));
@@ -185,7 +254,8 @@ namespace alica
 			return util > 0.75;
 		}
 
-		shared_ptr<SolverVariable> CGSolver::createVariable(long id) {
+		shared_ptr<SolverVariable> CGSolver::createVariable(long id)
+		{
 			return make_shared<autodiff::Variable>();
 		}
 
