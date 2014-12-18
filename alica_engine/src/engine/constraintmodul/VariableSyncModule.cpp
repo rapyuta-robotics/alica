@@ -102,7 +102,8 @@ namespace alica
 		}
 		for (auto sv : msg->vars)
 		{
-			re->addValue(sv->id, sv->value);
+			shared_ptr<vector<uint8_t>> tmp = make_shared<vector<uint8_t>>(sv->value);
+			re->addValue(sv->id, tmp);
 		}
 	}
 
@@ -121,15 +122,15 @@ namespace alica
 		communicator->sendSolverResult(sr);
 	}
 
-	void VariableSyncModule::postResult(long vid, double result)
+	void VariableSyncModule::postResult(long vid, shared_ptr<vector<uint8_t>>& result)
 	{
 		this->ownResults->addValue(vid, result);
 	}
 
-	shared_ptr<vector<shared_ptr<vector<double>>>> VariableSyncModule::getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits)
+	shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>> VariableSyncModule::getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits)
 	{
 		int dim = query->size();
-		list<VotedSeed*> seeds;
+		list<shared_ptr<VotedSeed>> seeds;
 		vector<double> scaling(dim);
 		for(int i=0; i<dim; i++)
 		{
@@ -139,7 +140,7 @@ namespace alica
 		for(int i=0; i<this->store.size(); i++)
 		{
 			shared_ptr<ResultEntry> re = this->store.at(i); //allow for lock free iteration (no value is deleted from store)
-			shared_ptr<vector<double>> vec = re->getValues(query, this->ttl4Usage);
+			shared_ptr<vector<shared_ptr<vector<uint8_t>>>> vec = re->getValues(query, this->ttl4Usage);
 			bool found = false;
 			for(auto s : seeds)
 			{
@@ -151,7 +152,7 @@ namespace alica
 			}
 			if(!found)
 			{
-				seeds.push_back(new VotedSeed(dim,vec));
+				seeds.push_back(make_shared<VotedSeed>(dim,vec));
 			}
 		}
 #ifdef RS_DEBUG
@@ -170,8 +171,8 @@ namespace alica
 #endif
 
 		int maxNum = min((int)seeds.size(),dim);
-		auto ret = make_shared<vector<shared_ptr<vector<double>>>>(maxNum);
-		seeds.sort([](VotedSeed*& a, VotedSeed*& b)
+		auto ret = make_shared<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>>(maxNum);
+		seeds.sort([](shared_ptr<VotedSeed>& a, shared_ptr<VotedSeed>& b)
 				{
 					if(a->totalSupCount != b->totalSupCount)
 					{
@@ -193,23 +194,24 @@ namespace alica
 		return ret;
 	}
 
-	VariableSyncModule::VotedSeed::VotedSeed(int dim, shared_ptr<vector<double>> v)
+	VariableSyncModule::VotedSeed::VotedSeed(int dim, shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v)
 	{
 		this->values = v;
 		this->supporterCount = vector<int>(dim);
 		this->dim = dim;
 		for (int i = 0; i < dim; ++i)
 		{
-			if (!std::isnan(v->at(i)))
+			//TODO
+			//if (!std::isnan(v->at(i)))
 			{
 				this->totalSupCount++;
 			}
 		}
 	}
 
-	bool VariableSyncModule::VotedSeed::takeVector(shared_ptr<vector<double>> v, vector<double>& scaling, double distThreshold)
+	bool VariableSyncModule::VotedSeed::takeVector(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v, vector<double>& scaling, double distThreshold)
 	{
-		int nans = 0;
+/*		int nans = 0;
 		double distSqr = 0;
 		for (int i = 0; i < dim; ++i)
 		{
@@ -259,6 +261,8 @@ namespace alica
 			}
 			return true;
 		}
+		return false;
+		*/
 		return false;
 	}
 } /* namespace alica */
