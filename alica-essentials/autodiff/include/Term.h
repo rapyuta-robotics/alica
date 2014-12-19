@@ -40,7 +40,7 @@ namespace autodiff
 		 */
 		virtual int accept(shared_ptr<ITermVisitor> visitor) = 0;
 
-		int getIndex() const;
+		int getId() const;
 
 		// Additions by Carpe Noctem:
 		double min;

@@ -35,13 +35,13 @@ namespace alica
 				virtual ~Var();
 
 				void reset();
-				shared_ptr<Clause> getClause();
-				void setClause(shared_ptr<Clause> reason);
+				shared_ptr<Clause> getReason();
+				void setReason(shared_ptr<Clause> reason);
 
 				void print();
 				string toString();
 
-				shared_ptr<vector<shared_ptr<Watcher>> > watchList;
+				shared_ptr<vector<Watcher*> > watchList;
 				int index;
 				int activity;
 				int negActivity;

@@ -21,7 +21,7 @@ namespace alica
 			{
 				this->clause = parent;
 				this->lit = l;
-				this->lit->var->watchList->push_back(shared_from_this());
+				this->lit->var->watchList->push_back(this);
 			}
 
 			Watcher::~Watcher()

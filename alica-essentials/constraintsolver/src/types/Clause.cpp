@@ -26,13 +26,17 @@ namespace alica
 				satisfied = false;
 				isFinished = false;
 				isTautologic = false;
-				watcher = make_shared<vector<shared_ptr<Watcher>>>(2);
+				watcher = make_shared<vector<Watcher*>>(2);
 				literals = make_shared<vector<shared_ptr<Lit>>>();
 			}
 
 			Clause::~Clause()
 			{
-				// TODO Auto-generated destructor stub
+				for (Watcher* w : *watcher)
+				{
+//					w->lit->var->watchList // TODO
+					delete w;
+				}
 			}
 
 			void Clause::addChecked(shared_ptr<Lit> l)
@@ -77,7 +81,12 @@ namespace alica
 			shared_ptr<Clause> Clause::clone()
 			{
 				shared_ptr<Clause> clone = make_shared<Clause>();
-				clone->literals->insert(clone->literals->end(), literals->begin(), literals->end());
+				//clone->literals->insert(clone->literals->end(), literals->begin(), literals->end());
+				*clone->literals = *literals;
+//				clone->literals = make_shared<vector<shared_ptr<Lit>>>();
+//				for (shared_ptr<Lit> l : *literals) {
+//					clone->literals->push_back(l);
+//				}
 				clone->isFinished = isFinished;
 				clone->isTautologic = isTautologic;
 				return clone;

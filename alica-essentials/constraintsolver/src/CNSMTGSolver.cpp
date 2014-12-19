@@ -49,7 +49,7 @@ namespace alica
 
 			supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 			maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
-			maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1E-6;
+			maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1E6;
 			rPropConvergenceStepSize = 0;
 			useIntervalProp = true;
 			optimize = false;
@@ -159,7 +159,11 @@ namespace alica
 			ss = make_shared<cnsat::CNSat>();
 
 			ss->useIntervalProp = this->useIntervalProp;
-			shared_ptr<vector<shared_ptr<cnsat::Clause>>> cnf = ft->transformToCNF(cu->constraint, ss);
+			shared_ptr<list<shared_ptr<cnsat::Clause>>> cnf = ft->transformToCNF(cu->constraint, ss);
+			for (shared_ptr<cnsat::Clause> c : *cnf)
+			{
+				c->print();
+			}
 
 			if (this->useIntervalProp)
 			{
@@ -257,7 +261,6 @@ namespace alica
 															shared_ptr<vector<shared_ptr<autodiff::Variable> > > args,
 															shared_ptr<vector<shared_ptr<vector<double>>> >& limits)
 		{
-//			lastSeed=null;
 			lastSeed->clear();
 			probeCount = 0;
 			successProbeCount = 0;
@@ -285,7 +288,7 @@ namespace alica
 
 			ss = make_shared<cnsat::CNSat>();
 
-			shared_ptr<vector<shared_ptr<cnsat::Clause>>> cnf = ft->transformToCNF(equation, ss);
+			shared_ptr<list<shared_ptr<cnsat::Clause>>> cnf = ft->transformToCNF(equation, ss);
 
 			ip->setGlobalRanges(args, limits, ss);
 
@@ -397,14 +400,11 @@ namespace alica
 				return false;
 			}
 
-			lastSeed = r1->finalValue;
-			solution = r1->finalValue;
+
+			lastSeed = make_shared<vector<double>>(*r1->finalValue);
+			solution = make_shared<vector<double>>(*r1->finalValue);
 			successProbeCount++;
 			return true;
-		}
-
-		bool CNSMTGSolver::currentCacheConsistent()
-		{
 		}
 
 		long CNSMTGSolver::getRuns()
@@ -420,6 +420,10 @@ namespace alica
 		double CNSMTGSolver::getRPropConvergenceStepSize()
 		{
 			return this->rPropConvergenceStepSize;
+		}
+
+		shared_ptr<cnsat::CNSat> CNSMTGSolver::getCNSatSolver() {
+			return this->ss;
 		}
 
 		shared_ptr<CNSMTGSolver::RpropResult> CNSMTGSolver::rPropFindFeasible(
@@ -448,8 +452,8 @@ namespace alica
 			shared_ptr<vector<double>> formerGradient = make_shared<vector<double>>(dim);
 			shared_ptr<vector<double>> curValue = make_shared<vector<double>>(dim);
 
-			ret->finalValue->insert(ret->finalValue->begin(), curValue->begin(), curValue->end());
-			formerGradient = curGradient;
+			*curValue = *ret->finalValue;
+			*formerGradient = *curGradient;
 
 			int itcounter = 0;
 			int badcounter = 0;
@@ -494,7 +498,7 @@ namespace alica
 					}
 				}
 				this->fevalsCount++;
-				formerGradient = curGradient;
+				*formerGradient = *curGradient;
 				differentiate(constraints, curValue, curGradient, &curUtil);
 			}
 
@@ -521,7 +525,7 @@ namespace alica
 				badcounter = 0;
 
 				ret->finalUtil = curUtil;
-				ret->finalValue->insert(ret->finalValue->begin(), curValue->begin(), curValue->end());
+				*ret->finalValue = *curValue;
 				if (curUtil > 0.75)
 				{
 					return ret;
@@ -585,8 +589,8 @@ namespace alica
 			shared_ptr<vector<double>> formerGradient = make_shared<vector<double>>(dim);
 			shared_ptr<vector<double>> curValue = make_shared<vector<double>>(dim);
 
-			curValue->insert(curValue->begin(), ret->initialValue->begin(), ret->initialValue->end());
-			formerGradient = curGradient;
+			*curValue = *ret->initialValue;
+			*formerGradient = *curGradient;
 
 			int itcounter = 0;
 			int badcounter = 0;
@@ -649,7 +653,7 @@ namespace alica
 					return ret;
 				}
 				this->fevalsCount++;
-				formerGradient = curGradient;
+				*formerGradient = *curGradient;
 				tup = term->differentiate(curValue);
 
 				bool allZero = true;
@@ -667,7 +671,7 @@ namespace alica
 				}
 
 				curUtil = tup.second;
-				formerGradient = curGradient;
+				*formerGradient = *curGradient;
 				curGradient = tup.first;
 #ifdef CNSMTGSOLVER_LOG
 				log(curUtil, curValue);
@@ -678,7 +682,7 @@ namespace alica
 					badcounter = 0;
 
 					ret->finalUtil = curUtil;
-					ret->finalValue->insert(ret->finalValue->begin(), curValue->begin(), curValue->end());
+					*ret->finalValue = *curValue;
 					if (curUtil > 0.75)
 					{
 						return ret;
@@ -808,7 +812,7 @@ namespace alica
 			} while (!found);
 			res->finalUtil = res->initialUtil;
 
-			res->finalValue->insert(res->finalValue->begin(), res->initialValue->begin(), res->initialValue->end());
+			*res->finalValue = *res->initialValue;
 
 			return gradient;
 		}
@@ -881,7 +885,7 @@ namespace alica
 			} while (!found);
 			res->finalUtil = res->initialUtil;
 
-			res->finalValue->insert(res->finalValue->begin(), res->initialValue->begin(), res->initialValue->end());
+			*res->finalValue = *res->initialValue;
 
 			return gradient;
 		}

@@ -160,7 +160,7 @@ namespace autodiff
 		_tape = tape;
 		for (int i = 0; i < variables->size(); ++i)
 		{
-			_indexOf[variables->at(i)->getIndex()] = i;
+			_indexOf[variables->at(i)->getId()] = i;
 			tape->push_back(make_shared<CompiledVariable>());
 		}
 	}
@@ -560,7 +560,7 @@ namespace autodiff
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Variable> var)
 	{
-		return _indexOf[var->getIndex()];
+		return _indexOf[var->getId()];
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Zero> zero)
@@ -576,7 +576,7 @@ namespace autodiff
 	int CompiledDifferentiator::Compiler::compile(shared_ptr<Term> term, function<shared_ptr<TapeElement>()> compiler)
 	{
 		int index;
-		map<int, int>::iterator it = _indexOf.find(term->getIndex());
+		map<int, int>::iterator it = _indexOf.find(term->getId());
 		if (it != _indexOf.end())
 		{
 			// already contains
@@ -589,7 +589,7 @@ namespace autodiff
 			_tape->push_back(compileResult);
 
 			index = _tape->size() - 1;
-			_indexOf.insert(pair<int, int>(term->getIndex(), index));
+			_indexOf.insert(pair<int, int>(term->getId(), index));
 		}
 		return index;
 	}

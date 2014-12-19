@@ -70,8 +70,8 @@ namespace alica
 
 				if (c->literals->size() > 1)
 				{
-					shared_ptr<Watcher> w1 = make_shared<Watcher>(c->literals->at(0), c);
-					shared_ptr<Watcher> w2 = make_shared<Watcher>(c->literals->at(1), c);
+					Watcher* w1 = new Watcher(c->literals->at(0), c);
+					Watcher* w2 = new Watcher(c->literals->at(1), c);
 					c->watcher->at(0) = w1;
 					c->watcher->at(1) = w2;
 					clauses->push_back(c);
@@ -88,7 +88,7 @@ namespace alica
 
 					c->literals->at(0)->var->assignment = c->literals->at(0)->sign;
 					c->literals->at(0)->var->decisionLevel = this->decisionLevelNull;
-					c->literals->at(0)->var->setClause(nullptr);
+					c->literals->at(0)->var->setReason(nullptr);
 
 					//TODO check this!!!
 					decisions->push_back(c->literals->at(0)->var);
@@ -143,7 +143,7 @@ namespace alica
 					//decisions.Insert(0, c->literals->at(0)->var);
 					c->literals->at(0)->var->decisionLevel = this->decisionLevel->at(0);
 					c->literals->at(0)->var->assignment = c->literals->at(0)->sign;
-					c->literals->at(0)->var->setClause(nullptr);
+					c->literals->at(0)->var->setReason(nullptr);
 					c->literals->at(0)->var->locked = true;
 					for (shared_ptr<DecisionLevel> l : *(this->decisionLevel))
 					{
@@ -151,8 +151,8 @@ namespace alica
 					}
 					return true;
 				}
-				shared_ptr<Watcher> w1 = make_shared<Watcher>(c->literals->at(0), c);
-				shared_ptr<Watcher> w2 = make_shared<Watcher>(c->literals->at(c->literals->size() - 1), c);
+				Watcher* w1 = new Watcher(c->literals->at(0), c);
+				Watcher* w2 = new Watcher(c->literals->at(c->literals->size() - 1), c);
 				c->watcher->at(0) = w1;
 				c->watcher->at(1) = w2;
 				satClauses->push_back(c);
@@ -175,7 +175,7 @@ namespace alica
 					//decisions.Insert(0, c->literals->at(0)->var);
 					c->literals->at(0)->var->decisionLevel = this->decisionLevel->at(0);
 					c->literals->at(0)->var->assignment = c->literals->at(0)->sign;
-					c->literals->at(0)->var->setClause(nullptr);
+					c->literals->at(0)->var->setReason(nullptr);
 					//Do we have to Lock T-Clauses?????
 					//c->literals->at(0)->var->locked = true;
 					for (shared_ptr<DecisionLevel> l : *(this->decisionLevel))
@@ -184,8 +184,8 @@ namespace alica
 					}
 					return true;
 				}
-				shared_ptr<Watcher> w1 = make_shared<Watcher>(c->literals->at(c->literals->size() - 2), c);
-				shared_ptr<Watcher> w2 = make_shared<Watcher>(c->literals->at(c->literals->size() - 1), c);
+				Watcher* w1 = new Watcher(c->literals->at(c->literals->size() - 2), c);
+				Watcher* w2 = new Watcher(c->literals->at(c->literals->size() - 1), c);
 				c->watcher->at(0) = w1;
 				c->watcher->at(1) = w2;
 				tClauses->push_back(c);
@@ -202,7 +202,7 @@ namespace alica
 				decisions->insert(decisions->begin(), v);
 				v->decisionLevel = this->decisionLevel->at(0);
 				v->assignment = ass;
-				v->setClause(nullptr);
+				v->setReason(nullptr);
 				v->locked = true;
 				this->decisionLevel->at(0)->level++;
 				unitDecissions++;
@@ -222,7 +222,7 @@ namespace alica
 					decisions->insert(decisions->begin(), c->literals->at(0)->var);
 					c->literals->at(0)->var->decisionLevel = this->decisionLevel->at(0);
 					c->literals->at(0)->var->assignment = c->literals->at(0)->sign;
-					c->literals->at(0)->var->setClause(nullptr);
+					c->literals->at(0)->var->setReason(nullptr);
 					c->literals->at(0)->var->locked = true;
 					for (shared_ptr<DecisionLevel> l : *(this->decisionLevel))
 					{
@@ -232,9 +232,9 @@ namespace alica
 					return true;
 				}
 				//TODO this does somehow not work! oO
-				//shared_ptr<Watcher> w1 = make_shared<Watcher>(c->literals[c->literals->size()-2], c);
-				shared_ptr<Watcher> w1 = make_shared<Watcher>(c->literals->at(0), c);
-				shared_ptr<Watcher> w2 = make_shared<Watcher>(c->literals->at(c->literals->size() - 1), c);
+				//Watcher* w1 = new Watcher(c->literals[c->literals->size()-2], c);
+				Watcher* w1 = new Watcher(c->literals->at(0), c);
+				Watcher* w2 = new Watcher(c->literals->at(c->literals->size() - 1), c);
 				c->watcher->at(0) = w1;
 				c->watcher->at(1) = w2;
 				iClauses->push_back(c);
@@ -385,8 +385,8 @@ namespace alica
 						for (int j = (decisionLevel->at(1)->level); j < decisions->size(); j++)
 						{
 							decisions->at(j)->assignment = Assignment::UNASSIGNED;
-							decisions->at(j)->setClause(nullptr);
-							for (shared_ptr<Watcher> wa : *(decisions->at(j)->watchList))
+							decisions->at(j)->setReason(nullptr);
+							for (Watcher* wa : *(decisions->at(j)->watchList))
 							{
 								wa->clause->satisfied = false;
 							}
@@ -420,10 +420,11 @@ namespace alica
 						satClauses->at(i)->watcher->at(1)->lit->var->watchList->erase(iter);
 					}
 					//shared_ptr<Lit> l = satClauses->at(i)->literals[satClauses->at(i)->literals->size()-1];
-					//if (l->var->getClause() == satClauses->at(i)) l->var->setClause(nullptr);
+					//if (l->var->getReason() == satClauses->at(i)) l->var->setReason(nullptr);
 				}
 
-				satClauses->erase(satClauses->begin() + num, satClauses->begin() + (satClauses->size() - num));
+//				satClauses->erase(satClauses->begin() + num, satClauses->begin() + (satClauses->size() - num));
+				satClauses->erase(satClauses->begin() + num, satClauses->end());
 				for (int i = 0; i < satClauses->size(); i++)
 				{
 					satClauses->at(i)->activity /= 4;
@@ -440,14 +441,14 @@ namespace alica
 
 				for (int i = lLevel; i < decisions->size(); ++i)
 				{
-					shared_ptr<vector<shared_ptr<Watcher>>> watchList = decisions->at(i)->watchList;
+					shared_ptr<vector<Watcher*>> watchList = decisions->at(i)->watchList;
 
 					for (int j = 0; j < watchList->size(); ++j)
 					{
-						shared_ptr<Watcher> w = watchList->at(j);
+						Watcher* w = watchList->at(j);
 #ifdef CNSatDebug
 						decisions->at(i)->print();
-						cout << " -> " << endl;
+						cout << " -> ";
 						w->clause->print();
 #endif
 						if (w->clause->satisfied)
@@ -479,7 +480,8 @@ namespace alica
 						bool found = false;
 						for (shared_ptr<Lit> l : *(c->literals))
 						{
-							if (c->watcher->at(oWId)->lit->var != l->var && (l->var->assignment == Assignment::UNASSIGNED || l->satisfied()))
+							if (c->watcher->at(oWId)->lit->var != l->var
+									&& (l->var->assignment == Assignment::UNASSIGNED || l->satisfied()))
 							{
 								auto iter = find(w->lit->var->watchList->begin(), w->lit->var->watchList->end(), w);
 								w->lit->var->watchList->erase(iter);
@@ -497,17 +499,17 @@ namespace alica
 						if (!found)
 						{
 							c->activity++;
-							//TODO Handle shared_ptr<Watcher> here ... do not return -> faster
-							shared_ptr<Watcher> w2 = c->watcher->at(oWId);
+							//TODO Handle Watcher* here ... do not return -> faster
+							Watcher* w2 = c->watcher->at(oWId);
 							if (w2->lit->var->assignment == Assignment::UNASSIGNED)
 							{
 								w2->lit->var->assignment = w2->lit->sign;
 								w2->clause->satisfied = true;
-								w2->lit->var->decisionLevel = decisionLevel->at(decisionLevel->size()-1);
+								w2->lit->var->decisionLevel = decisionLevel->at(decisionLevel->size() - 1);
 								decisions->push_back(w2->lit->var);
-								w2->lit->var->setClause(c);
+								w2->lit->var->setReason(c);
 
-								for (shared_ptr<Watcher> wi : *(w2->lit->var->watchList))
+								for (Watcher* wi : *(w2->lit->var->watchList))
 								{
 									wi->clause->lastModVar = w2->lit->var;
 								}
@@ -547,10 +549,10 @@ namespace alica
 				confl->print();
 
 				cout << "\nReason" << endl;
-				if (confl->lastModVar != nullptr && confl->lastModVar->getClause() != nullptr)
-				confl->lastModVar->getClause()->print();
+				if (confl->lastModVar != nullptr && confl->lastModVar->getReason() != nullptr)
+					confl->lastModVar->getReason()->print();
 				else
-				cout << "null" << endl;
+					cout << "null" << endl;
 
 				cout << "-------------------\nLearning" << endl;
 #endif
@@ -560,7 +562,7 @@ namespace alica
 #ifdef CNSatDebug
 					if (p != nullptr)
 					{
-						cout << "shared_ptr<Var> ";
+						cout << "Var ";
 						p->print();
 						cout << " -> ";
 					}
@@ -612,7 +614,7 @@ namespace alica
 						;
 
 					p = decisions->at(index + 1);
-					confl = p->getClause();
+					confl = p->getReason();
 					p->seen = false;
 					pathC--;
 #ifdef CNSatDebug
@@ -628,22 +630,24 @@ namespace alica
 				learnt->add(t);
 
 				//Store Seen Variables for later reset
-				shared_ptr<vector<shared_ptr<Lit>>> seenList = make_shared<vector<shared_ptr<Lit>>>(learnt->literals->size());
-				seenList->insert(seenList->begin(), learnt->literals->begin(), learnt->literals->end());
+				//TODO: if everything works try t initialize seenlist with copy operator!
+				shared_ptr<vector<shared_ptr<Lit>>> seenList = make_shared<vector<shared_ptr<Lit>>>();
+				*seenList = *learnt->literals;
+
 				//simplify learnt clause
 				//Here is still an error!!!!!!!
 				for (int m = 0; m < learnt->literals->size() - 1; ++m)
 				{
 					shared_ptr<Lit> l = learnt->literals->at(m);
 					//Ignore Literals without reason
-					if (l->var->getClause() == nullptr)
+					if (l->var->getReason() == nullptr)
 					{
 						continue;
 					}
 					else
 					{
 						//Check whether reason for current literal is already in learnt -> remove l
-						shared_ptr<Clause> re = l->var->getClause();
+						shared_ptr<Clause> re = l->var->getReason();
 						bool found = false;
 
 						for (shared_ptr<Lit> rel : *(re->literals))
@@ -661,6 +665,7 @@ namespace alica
 						}
 					}
 				}
+
 				//Reset Seen
 				for (shared_ptr<Lit> l : *seenList)
 				{
@@ -725,7 +730,7 @@ namespace alica
 
 #ifdef CNSatDebug
 				cout << "Backtracking from " << this->decisionLevel->at(this->decisionLevel->size() - 1)->level
-				<< " to " << db->level << endl;
+						<< " to " << db->level << endl;
 #endif
 
 				//Backtrack to db
@@ -748,7 +753,7 @@ namespace alica
 				{
 					//decisions->at(0)->assignment = learnt->literals->at(0)->sign;
 					learnt->literals->at(0)->var->assignment = learnt->literals->at(0)->sign;
-					learnt->literals->at(0)->var->setClause(nullptr);
+					learnt->literals->at(0)->var->setReason(nullptr);
 				}
 
 				//Switch assignment of UIP to satisfy learnt
@@ -763,7 +768,7 @@ namespace alica
 					l->var->assignment = l->sign;
 					learnt->satisfied = true;
 					l->var->decisionLevel = this->decisionLevel->at(this->decisionLevel->size() - 1);
-					l->var->getClause() = learnt;
+					l->var->setReason(learnt);
 					decisions->push_back(l->var);
 				}
 
@@ -786,21 +791,26 @@ namespace alica
 				for (int j = db->level; j < decisions->size(); j++)
 				{
 					decisions->at(j)->assignment = Assignment::UNASSIGNED;
-					decisions->at(j)->setClause(nullptr);
+					decisions->at(j)->setReason(nullptr);
 					//this is expensive
-					for (shared_ptr<Watcher> wa : *(decisions->at(j)->watchList))
+					for (Watcher* wa : *(decisions->at(j)->watchList))
 					{
 						wa->clause->satisfied = wa->clause->watcher->at(0)->lit->satisfied()
 								|| wa->clause->watcher->at(1)->lit->satisfied();
 						//wa->clause->satisfied = false; //this should take other watcher into account
 					}
 				}
-				decisions->erase(decisions->begin() + db->level, decisions->begin() + (decisions->size() - db->level));
+				auto beginIt = decisions->begin() + db->level;
+				//FIXME: if there is an error during backtracking check here
+				//auto endIt = decisions->begin() + (decisions->size() - db->level);
+				decisions->erase(beginIt, decisions->end());
 
 				//int i = decisionLevel.IndexOf(db);
 				int i = ndbidx;
 				i = std::max(1, i);
-				decisionLevel->erase(decisionLevel->begin() + i, decisionLevel->begin() + (decisionLevel->size() - i));
+				//FIXME: if there is an error during backtracking check ALSO here
+				//decisionLevel->erase(decisionLevel->begin() + i, decisionLevel->begin() + (decisionLevel->size() - i));
+				decisionLevel->erase(decisionLevel->begin() + i, decisionLevel->end());
 			}
 
 			void CNSat::backTrack(int decission)
@@ -821,9 +831,9 @@ namespace alica
 				for (int j = decisionLevel->at(1)->level; j < this->decisions->size(); ++j)
 				{
 					decisions->at(j)->assignment = cnsat::Assignment::UNASSIGNED;
-					decisions->at(j)->setClause(nullptr);
+					decisions->at(j)->setReason(nullptr);
 					decisions->at(j)->locked = false;
-					for (shared_ptr<Watcher> wa : *(decisions->at(j)->watchList))
+					for (Watcher* wa : *(decisions->at(j)->watchList))
 					{
 						wa->clause->satisfied = false;
 					}
@@ -894,6 +904,14 @@ namespace alica
 						return false;
 				}
 				return true;
+			}
+
+			void CNSat::printStatistics()
+			{
+				cout << "DC: " << decisionCount << "\tCC: " << conflictCount << "\tAD: " << decisions->size()
+						<< "\tLC: " << satClauses->size() << "/" << learntNum << "\t IC: " << restartCount << "\tTC: "
+						<< decisionLevel->at(0)->level << "\tRestarts: " << iClauses->size() << "\t0 Level: "
+						<< tClauses->size() << endl;
 			}
 
 			void CNSat::printAssignments()

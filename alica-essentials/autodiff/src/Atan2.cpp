@@ -33,9 +33,9 @@ namespace autodiff
 		left = left->aggregateConstants();
 		right = right->aggregateConstants();
 		if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0) {
-			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(left);
-			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(right);
-			return TermBuilder::constant(atan2(left->value, right->value));
+			shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
+			shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
+			return TermBuilder::constant(atan2(leftConstant->value, rightConstant->value));
 		} else {
 			return shared_from_this();
 		}

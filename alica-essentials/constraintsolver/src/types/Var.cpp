@@ -31,19 +31,21 @@ namespace alica
 
 				positiveRanges = nullptr;
 				negativeRanges = nullptr;
+
+				watchList = make_shared<vector<Watcher*> >();
 			}
 
 			Var::~Var()
 			{
-				// TODO Auto-generated destructor stub
+
 			}
 
-			shared_ptr<Clause> Var::getClause()
+			shared_ptr<Clause> Var::getReason()
 			{
 				return reason;
 			}
 
-			void Var::setClause(shared_ptr<Clause> reason)
+			void Var::setReason(shared_ptr<Clause> reason)
 			{
 				if (reason && reason != this->reason)
 				{

@@ -109,7 +109,7 @@ namespace alica
 				solver->decisionLevel->push_back(d);
 				v->assignment = ass;
 				solver->decisions->push_back(v);
-				v->setClause(nullptr);
+				v->setReason(nullptr);
 				v->decisionLevel = d;
 
 				return v;
@@ -160,7 +160,7 @@ namespace alica
 
 						next->assignment = ((double)rand() / RAND_MAX < rel) ? Assignment::TRUE : Assignment::FALSE;
 						solver->decisions->push_back(next);
-						next->setClause(nullptr);
+						next->setReason(nullptr);
 						next->decisionLevel = d;
 						return next;
 					}
@@ -181,7 +181,7 @@ namespace alica
 
 								next->assignment = c->watcher->at(0)->lit->sign;
 								solver->decisions->push_back(next);
-								next->setClause(nullptr);
+								next->setReason(nullptr);
 								next->decisionLevel = d;
 								return next;
 							}
@@ -193,7 +193,7 @@ namespace alica
 
 								next->assignment = c->watcher->at(1)->lit->sign;
 								solver->decisions->push_back(next);
-								next->setClause(nullptr);
+								next->setReason(nullptr);
 								next->decisionLevel = d;
 								return next;
 							}
@@ -245,7 +245,7 @@ namespace alica
 				solver->decisionLevel->push_back(d);
 				v->assignment = ass;
 				solver->decisions->push_back(v);
-				v->setClause(nullptr);
+				v->setReason(nullptr);
 				v->decisionLevel = d;
 
 				return v;

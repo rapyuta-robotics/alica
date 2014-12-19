@@ -178,6 +178,7 @@ TEST(AutoDiffTest, CNSMTGSOLVER)
 	const double FIELDWIDTH = 12000;
 
 	shared_ptr<CNSMTGSolver> g = make_shared<CNSMTGSolver>();
+	g->useIntervalProp = false;
 
 	Term::setAnd(AndType::AND);
 	Term::setOr(OrType::MAX);
@@ -250,6 +251,7 @@ TEST(AutoDiffTest, CNSMTGSOLVER_UTIL)
 	const double FIELDWIDTH = 12000;
 
 	shared_ptr<CNSMTGSolver> g = make_shared<CNSMTGSolver>();
+	g->useIntervalProp = false;
 
 	Term::setAnd(AndType::AND);
 	Term::setOr(OrType::MAX);

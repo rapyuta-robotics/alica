@@ -13,6 +13,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <list>
 
 using namespace std;
 using namespace autodiff;
@@ -36,7 +37,7 @@ namespace alica
 				virtual ~FormulaTransform();
 
 				void reset();
-				shared_ptr<vector<shared_ptr<Clause>> > transformToCNF(shared_ptr<Term> formula,
+				shared_ptr<list<shared_ptr<Clause>> > transformToCNF(shared_ptr<Term> formula,
 																		shared_ptr<CNSat> solver);
 				shared_ptr<Var> getAtoms(int term_id);
 				int getAtomOccurrence();
@@ -49,9 +50,9 @@ namespace alica
 
 				shared_ptr<TermEquality> te;
 
-				void doTransform(shared_ptr<vector<shared_ptr<Clause>> > clauses);
-				void performStep(shared_ptr<Clause> c, shared_ptr<Lit> lit, shared_ptr<Clause> newClause1,
-									shared_ptr<Clause> newClause2);
+				void doTransform(shared_ptr<list<shared_ptr<Clause>> >& clauses);
+				void performStep(shared_ptr<Clause>& c, shared_ptr<Lit>& lit, shared_ptr<Clause>& newClause1,
+									shared_ptr<Clause>& newClause2);
 				bool tryGetVar(shared_ptr<Term> t, shared_ptr<Var> v);
 			};
 

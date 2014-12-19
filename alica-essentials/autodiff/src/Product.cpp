@@ -35,9 +35,9 @@ namespace autodiff
 		right = right->aggregateConstants();
 		if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0)
 		{
-			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(left);
-			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(right);
-			return TermBuilder::constant(left->value * right->value);
+			shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
+			shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
+			return TermBuilder::constant(leftConstant->value * rightConstant->value);
 		}
 		else if (dynamic_pointer_cast<Zero>(left) != 0)
 		{
@@ -49,16 +49,16 @@ namespace autodiff
 		}
 		if (dynamic_pointer_cast<Constant>(left) != 0)
 		{
-			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(left);
-			if (left->value == 1)
+			shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
+			if (leftConstant->value == 1)
 			{
 				return right;
 			}
 		}
 		if (dynamic_pointer_cast<Constant>(right) != 0)
 		{
-			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(right);
-			if (right->value == 1)
+			shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
+			if (rightConstant->value == 1)
 			{
 				return left;
 			}

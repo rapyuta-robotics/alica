@@ -51,6 +51,7 @@ namespace alica
 				bool resolveConflict(shared_ptr<Clause> c);
 				void backTrack(shared_ptr<DecisionLevel> db);
 				void backTrack(int decission);
+				void printStatistics();
 				void printAssignments();
 
 				bool useIntervalProp;

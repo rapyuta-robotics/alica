@@ -33,9 +33,9 @@ namespace autodiff
 		right = right->aggregateConstants();
 		if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0)
 		{
-			shared_ptr<Constant> left = dynamic_pointer_cast<Constant>(left);
-			shared_ptr<Constant> right = dynamic_pointer_cast<Constant>(right);
-			if (left->value > 0.75 || right->value > 0.75)
+			shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
+			shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
+			if (leftConstant->value > 0.75 || rightConstant->value > 0.75)
 			{
 				return Term::TRUE;
 			}

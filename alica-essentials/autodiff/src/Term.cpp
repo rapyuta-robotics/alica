@@ -36,6 +36,8 @@
 #include <typeinfo>
 #include <limits>
 
+#include <iostream>
+
 namespace autodiff
 {
 	int Term::m_nextId = 0;
@@ -58,7 +60,7 @@ namespace autodiff
 	{
 	}
 
-	int Term::getIndex() const
+	int Term::getId() const
 	{
 		return m_id;
 	}

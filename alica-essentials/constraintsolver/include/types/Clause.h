@@ -45,7 +45,7 @@ namespace alica
 				bool isFinished;
 
 				bool satisfied;
-				shared_ptr<vector<shared_ptr<Watcher>> > watcher;
+				shared_ptr<vector<Watcher*> > watcher;
 				shared_ptr<Var> lastModVar;
 				int activity;
 				shared_ptr<vector<shared_ptr<Lit>>> literals;

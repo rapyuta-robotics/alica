@@ -42,7 +42,7 @@ namespace alica
 			_seedWithUtilOptimum = true;
 			supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 			_maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
-			_maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1E-6; //* 1000000;
+			_maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1E6; //* 1000000;
 			_rPropConvergenceStepSize = 1E-2;
 
 			alicaClock = new alicaRosProxy::AlicaROSClock();

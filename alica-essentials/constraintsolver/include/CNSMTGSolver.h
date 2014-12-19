@@ -13,6 +13,7 @@
 
 #include <memory>
 #include <vector>
+#include <list>
 
 #include <fstream>
 
@@ -71,11 +72,11 @@ namespace alica
 									shared_ptr<vector<shared_ptr<vector<double>> > >& curRanges);
 			bool probeForSolution(shared_ptr<vector<shared_ptr<cnsat::Var>> > decisions,
 									shared_ptr<vector<double>> solution);
-			bool currentCacheConsistent();
 
 			long getRuns();
 			long getFEvals();
 			double getRPropConvergenceStepSize();
+			shared_ptr<cnsat::CNSat> getCNSatSolver();
 
 			double utilitySignificanceThreshold = 1E-22;
 			int dim;
