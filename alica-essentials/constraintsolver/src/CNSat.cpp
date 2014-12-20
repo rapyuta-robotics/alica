@@ -22,6 +22,7 @@
 #include <algorithm>
 
 #include <iostream>
+#include <sstream>
 
 namespace alica
 {
@@ -29,6 +30,46 @@ namespace alica
 	{
 		namespace cnsat
 		{
+
+			void CNSat::readFromCNFFile(string path)
+			{
+				ifstream input(path);
+				for (string line; getline(input, line);)
+				{
+					if (line[0] == 'c')
+						continue;
+					if (line[0] == 'p')
+						continue;
+
+					shared_ptr<Clause> c = make_shared<Clause>();
+
+					stringstream ss(line);
+					string s;
+					while (!ss.eof())
+					{
+						ss >> s;
+						istringstream is(s);
+						int val;
+						is >> val;
+
+						if (val == 0)
+							continue;
+						int valn = (val < 0) ? -val : val;
+						while (this->variables->size() < valn)
+							this->newVar();
+
+						shared_ptr<Lit> l = make_shared<Lit>(this->variables->at(valn - 1), Assignment::TRUE);
+						if (val < 0)
+						{
+							l->sign = Assignment::FALSE;
+						}
+						this->variables->at(valn - 1)->preferedSign = (val > 0);
+						c->add(l);
+					}
+					this->addBasicClause(c);
+				}
+				input.close();
+			}
 
 			CNSat::CNSat()
 			{
@@ -286,9 +327,9 @@ namespace alica
 							return false;
 						}
 						if (conflictCount % 50 == 0 && cnsmtGSolver != nullptr
-								&& cnsmtGSolver->begin + cnsmtGSolver->maxSolveTime < alicaClock->now())
+								&& cnsmtGSolver->begin + cnsmtGSolver->maxSolveTime < cnsmtGSolver->getTime())
 						{
-							return false;
+							//return false;
 						}
 						if (!resolveConflict(c))
 						{
@@ -345,6 +386,7 @@ namespace alica
 					if (cnsmtGSolver != nullptr)
 					{
 						next = Decider::decideVariableCountBased(variables, shared_from_this());
+						//	next = Decider::decideActivityBased(variables, shared_from_this());
 					}
 					else
 					{
@@ -364,8 +406,11 @@ namespace alica
 #endif
 					++decisionCount;
 					if (decisionCount % 25 == 0 && cnsmtGSolver != nullptr
-							&& cnsmtGSolver->begin + cnsmtGSolver->maxSolveTime < alicaClock->now())
-						return false;
+							&& cnsmtGSolver->begin + cnsmtGSolver->maxSolveTime < cnsmtGSolver->getTime())
+					{
+						//unsigned long long test = cnsmtGSolver->getTime() - (cnsmtGSolver->begin);// + cnsmtGSolver->maxSolveTime);
+						//return false;
+					}
 					//Forget unused clauses
 					if (decisionCount % 1000 == 0)
 					{
@@ -550,9 +595,9 @@ namespace alica
 
 				cout << "\nReason" << endl;
 				if (confl->lastModVar != nullptr && confl->lastModVar->getReason() != nullptr)
-					confl->lastModVar->getReason()->print();
+				confl->lastModVar->getReason()->print();
 				else
-					cout << "null" << endl;
+				cout << "null" << endl;
 
 				cout << "-------------------\nLearning" << endl;
 #endif
@@ -730,7 +775,7 @@ namespace alica
 
 #ifdef CNSatDebug
 				cout << "Backtracking from " << this->decisionLevel->at(this->decisionLevel->size() - 1)->level
-						<< " to " << db->level << endl;
+				<< " to " << db->level << endl;
 #endif
 
 				//Backtrack to db
@@ -853,12 +898,16 @@ namespace alica
 			{
 				for (shared_ptr<Clause> c : *list)
 				{
-					c->watcher->at(0)->lit->var->watchList->erase(c->watcher->begin());
+					auto it = find(c->watcher->at(0)->lit->var->watchList->begin(),
+									c->watcher->at(0)->lit->var->watchList->end(), c->watcher->at(0));
+					c->watcher->at(0)->lit->var->watchList->erase(it);
 					c->watcher->at(0)->lit->variableCount--;
-					c->watcher->at(1)->lit->var->watchList->erase(c->watcher->begin() + 1);
+					it = find(c->watcher->at(1)->lit->var->watchList->begin(),
+								c->watcher->at(1)->lit->var->watchList->end(), c->watcher->at(1));
+					c->watcher->at(1)->lit->var->watchList->erase(it);
 					c->watcher->at(1)->lit->variableCount--;
 				}
-				list->size();
+				list->clear();
 			}
 
 			bool CNSat::solutionInsideRange(shared_ptr<vector<double> > solution,

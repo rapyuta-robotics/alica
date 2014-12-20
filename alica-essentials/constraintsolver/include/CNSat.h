@@ -35,6 +35,8 @@ namespace alica
 				CNSat();
 				virtual ~CNSat();
 
+				void readFromCNFFile(string path);
+
 				shared_ptr<Var> newVar();
 				bool addBasicClause(shared_ptr<Clause> c);
 				void emptySATClause();

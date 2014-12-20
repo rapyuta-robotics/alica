@@ -5,6 +5,7 @@
 #include "types/Lit.h"
 #include "types/Var.h"
 #include "CNSat.h"
+#include "FileSystem.h"
 
 #include <iostream>
 #include <fstream>
@@ -19,64 +20,36 @@ TEST(CNSatTest, CNSAT0)
 {
 	shared_ptr<CNSat> cns = make_shared<CNSat>();
 
-	ifstream input("/home/psp/cnws/src/supplementary/constraintsolver/test/cnf/testen.cnf");
-	for (string line; getline(input, line);)
-	{
-		if (line[0] == 'c')
-			continue;
-		if (line[0] == 'p')
-			continue;
+	string path = supplementary::FileSystem::getSelfPath();
+	int place = path.rfind("devel");
+	path = path.substr(0, place);
+	path = path + "src/supplementary/constraintsolver/test/cnf/testen.cnf";
 
-		shared_ptr<Clause> c = make_shared<Clause>();
-
-		stringstream ss(line);
-		string s;
-		while (!ss.eof())
-		{
-			ss >> s;
-			istringstream is(s);
-			int val;
-			is >> val;
-
-			if (val == 0)
-				continue;
-			int valn = (val < 0) ? -val : val;
-			while (cns->variables->size() < valn)
-				cns->newVar();
-
-			shared_ptr<Lit> l = make_shared<Lit>(cns->variables->at(valn - 1), Assignment::TRUE);
-			if (val < 0)
-			{
-				l->sign = Assignment::FALSE;
-			}
-			cns->variables->at(valn - 1)->preferedSign = (val > 0);
-			c->add(l);
-		}
-		cns->addBasicClause(c);
-	}
+	cns->readFromCNFFile(path);
 
 	/*foreach(Alica.Reasoner.CNSAT.Clause c in cns->clauses) {
 	 c->print();
 	 }*/
 	cns->init();
 	bool sf = cns->solve();
+	EXPECT_TRUE(sf);
 
-	cout << endl;
+	//cout << endl;
 
-	if (sf)
-	{
-		cout << "Satisfiable" << endl;
-		for (shared_ptr<Var> v : *(cns->variables))
-		{
-			v->print();
-			cout << " ";
-		}
-		cout << endl;
-	}
-	else
-		cout << "Unsatisfiable" << endl;
+//	if (sf)
+//	{
+//		cout << "Satisfiable" << endl;
+//		for (shared_ptr<Var> v : *(cns->variables))
+//		{
+//			v->print();
+//			cout << " ";
+//		}
+//		cout << endl;
+//	}
+//	else
+//		cout << "Unsatisfiable" << endl;
 
-	cout << "------------------\n\nChecking Solution:" << endl;
+//	cout << "------------------\n\nChecking Solution:" << endl;
 	bool isSolution = true;
 	for (shared_ptr<Clause> c : *(cns->clauses))
 	{
@@ -95,10 +68,134 @@ TEST(CNSatTest, CNSAT0)
 			 Console.Write("\n");*/
 		}
 	}
+	EXPECT_TRUE(isSolution);
 	cout << "Is Solution: " << isSolution << endl;
-	cns->printStatistics();
+	//cns->printStatistics();
+//
+//	cout << endl;
 
-	cout << endl;
+}
 
-	input.close();
+
+
+TEST(CNSatTest, CNSATaim_50_1_6_yes1_4)
+{
+	shared_ptr<CNSat> cns = make_shared<CNSat>();
+
+	string path = supplementary::FileSystem::getSelfPath();
+	int place = path.rfind("devel");
+	path = path.substr(0, place);
+	path = path + "src/supplementary/constraintsolver/test/cnf/aim-50-1_6-yes1-4.cnf";
+
+	cns->readFromCNFFile(path);
+
+	cns->init();
+	bool sf = cns->solve();
+	EXPECT_TRUE(sf);
+
+	bool isSolution = true;
+	for (shared_ptr<Clause> c : *(cns->clauses))
+	{
+		if (!c->checkSatisfied())
+		{
+			isSolution = false;
+		}
+	}
+	EXPECT_TRUE(isSolution);
+}
+
+
+TEST(CNSatTest, CNSATpar8_1_c_cnf)
+{
+	shared_ptr<CNSat> cns = make_shared<CNSat>();
+
+	string path = supplementary::FileSystem::getSelfPath();
+	int place = path.rfind("devel");
+	path = path.substr(0, place);
+	path = path + "src/supplementary/constraintsolver/test/cnf/par8-1-c.cnf";
+
+	cns->readFromCNFFile(path);
+
+	cns->init();
+	bool sf = cns->solve();
+	EXPECT_TRUE(sf);
+
+	bool isSolution = true;
+	for (shared_ptr<Clause> c : *(cns->clauses))
+	{
+		if (!c->checkSatisfied())
+		{
+			isSolution = false;
+		}
+	}
+	EXPECT_TRUE(isSolution);
+}
+
+
+
+TEST(CNSatTest, CNSAT1_aim_100_1_6_no_1cnf)
+{
+	shared_ptr<CNSat> cns = make_shared<CNSat>();
+
+	string path = supplementary::FileSystem::getSelfPath();
+	int place = path.rfind("devel");
+	path = path.substr(0, place);
+	path = path + "src/supplementary/constraintsolver/test/cnf/aim-100-1_6-no-1.cnf";
+
+	cns->readFromCNFFile(path);
+
+	cns->init();
+	bool sf = cns->solve();
+	EXPECT_FALSE(sf);
+}
+
+
+TEST(CNSatTest, CNSAT1dubois22)
+{
+	shared_ptr<CNSat> cns = make_shared<CNSat>();
+
+	string path = supplementary::FileSystem::getSelfPath();
+	int place = path.rfind("devel");
+	path = path.substr(0, place);
+	path = path + "src/supplementary/constraintsolver/test/cnf/dubois22.cnf";
+
+	cns->readFromCNFFile(path);
+
+	cns->init();
+	bool sf = cns->solve();
+	EXPECT_FALSE(sf);
+}
+
+
+TEST(CNSatTest, CNSAThole6)
+{
+	shared_ptr<CNSat> cns = make_shared<CNSat>();
+
+	string path = supplementary::FileSystem::getSelfPath();
+	int place = path.rfind("devel");
+	path = path.substr(0, place);
+	path = path + "src/supplementary/constraintsolver/test/cnf/hole6.cnf";
+
+	cns->readFromCNFFile(path);
+
+	cns->init();
+	bool sf = cns->solve();
+	EXPECT_FALSE(sf);
+}
+
+
+TEST(CNSatTest, CNSAT1_dubois20)
+{
+	shared_ptr<CNSat> cns = make_shared<CNSat>();
+
+	string path = supplementary::FileSystem::getSelfPath();
+	int place = path.rfind("devel");
+	path = path.substr(0, place);
+	path = path + "src/supplementary/constraintsolver/test/cnf/dubois20.cnf";
+
+	cns->readFromCNFFile(path);
+
+	cns->init();
+	bool sf = cns->solve();
+	EXPECT_FALSE(sf);
 }

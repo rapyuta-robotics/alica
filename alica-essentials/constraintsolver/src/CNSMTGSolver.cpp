@@ -12,8 +12,6 @@
 #include "SystemConfig.h"
 #include "Configuration.h"
 
-#include <clock/AlicaROSClock.h>
-
 #include "types/Assignment.h"
 #include "types/Clause.h"
 #include "types/Var.h"
@@ -54,9 +52,13 @@ namespace alica
 			useIntervalProp = true;
 			optimize = false;
 
-			alicaClock = new alicaRosProxy::AlicaROSClock();
-
 			this->lastSeed = nullptr;
+		}
+
+		unsigned long long CNSMTGSolver::getTime() {
+				auto now = std::chrono::high_resolution_clock::now();
+				auto duration = now.time_since_epoch();
+				return std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
 		}
 
 		CNSMTGSolver::~CNSMTGSolver()
@@ -121,7 +123,7 @@ namespace alica
 			successIntervalCount = 0;
 			fevalsCount = 0;
 			runCount = 0;
-			this->begin = alicaClock->now();
+			this->begin = this->getTime();
 
 			*util = 0;
 #ifdef CNSMTGSOLVER_LOG
@@ -160,10 +162,10 @@ namespace alica
 
 			ss->useIntervalProp = this->useIntervalProp;
 			shared_ptr<list<shared_ptr<cnsat::Clause>>> cnf = ft->transformToCNF(cu->constraint, ss);
-			for (shared_ptr<cnsat::Clause> c : *cnf)
+			/*for (shared_ptr<cnsat::Clause> c : *cnf)
 			{
 				c->print();
-			}
+			}*/
 
 			if (this->useIntervalProp)
 			{
@@ -238,7 +240,7 @@ namespace alica
 					ss->backTrack(ss->decisions->at(ss->decisions->size() - 1)->decisionLevel);
 					solutionFound = false;
 				}
-			} while (!solutionFound && this->begin + this->maxSolveTime > alicaClock->now());
+			} while (!solutionFound && this->begin + this->maxSolveTime > getTime());
 
 			if (rResults.size() > 0)
 			{
@@ -268,7 +270,7 @@ namespace alica
 			successIntervalCount = 0;
 			fevalsCount = 0;
 			runCount = 0;
-			this->begin = alicaClock->now();
+			this->begin = getTime();
 
 			double util = 0;
 #ifdef CNSMTGSOLVER_LOG
@@ -709,7 +711,7 @@ namespace alica
 		}
 
 		void CNSMTGSolver::differentiate(shared_ptr<vector<shared_ptr<cnsat::Var> > > constraints,
-											shared_ptr<vector<double> > val, shared_ptr<vector<double> > gradient,
+											shared_ptr<vector<double> >& val, shared_ptr<vector<double> >& gradient,
 											double* util)
 		{
 			pair<shared_ptr<vector<double>>, double> t1 = constraints->at(0)->curTerm->differentiate(val);

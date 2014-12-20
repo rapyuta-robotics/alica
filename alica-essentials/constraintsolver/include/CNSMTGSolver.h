@@ -51,6 +51,7 @@ namespace alica
 
 		public:
 			CNSMTGSolver();
+			unsigned long long getTime();
 			virtual ~CNSMTGSolver();
 
 			void initLog();
@@ -84,7 +85,7 @@ namespace alica
 
 			double utilityThreshold;
 			ulong maxSolveTime;
-			alicaTime begin;
+			unsigned long long begin;
 
 			ofstream sw;
 
@@ -95,8 +96,6 @@ namespace alica
 			bool useIntervalProp;
 			bool optimize;
 
-			IAlicaClock* alicaClock;
-
 		protected:
 			shared_ptr<RpropResult> rPropFindFeasible(shared_ptr<vector<shared_ptr<cnsat::Var>> > constraints,
 														shared_ptr<vector<double>> seed);
@@ -104,8 +103,8 @@ namespace alica
 															shared_ptr<autodiff::Term> ut,
 															shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
 															shared_ptr<vector<double>>& seed, bool precise);
-			void differentiate(shared_ptr<vector<shared_ptr<cnsat::Var>> > constraints, shared_ptr<vector<double>> val,
-								shared_ptr<vector<double>> gradient, double *util);
+			void differentiate(shared_ptr<vector<shared_ptr<cnsat::Var>> > constraints, shared_ptr<vector<double>>& val,
+								shared_ptr<vector<double>>& gradient, double *util);
 			shared_ptr<vector<double>> initialPointFromSeed(shared_ptr<vector<shared_ptr<cnsat::Var>> > constraints,
 															shared_ptr<RpropResult> res,
 															shared_ptr<vector<double>>& seed);
