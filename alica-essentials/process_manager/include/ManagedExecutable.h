@@ -26,8 +26,8 @@ namespace supplementary
 	class ManagedExecutable
 	{
 	public:
-		ManagedExecutable(short id, const char* executable, vector<string> defaultStrParams);
-		ManagedExecutable(string execName, uint8_t execid, long pid);
+		ManagedExecutable(uint8_t id, const char* executable, vector<string> defaultStrParams);
+		ManagedExecutable(const char* execName, uint8_t execid, long pid);
 		virtual ~ManagedExecutable();
 		string getExecutable() const;
 		void queue4Update(long pid);
@@ -41,7 +41,7 @@ namespace supplementary
 
 	private:
 		// General information (fix for object life time)
-		short id;
+		uint8_t id;
 		const char* executable;
 		char ** defaultParams;
 

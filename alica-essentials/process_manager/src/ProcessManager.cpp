@@ -252,7 +252,15 @@ namespace supplementary
 
 int main(int argc, char** argv)
 {
+
+	// TODO: test whether a process_manager is already running
+	/* if (!selfCheck())
+	{
+		return;
+	}*/
+
 	ros::init(argc, argv, "ProcessManager");
+
 	supplementary::ProcessManager* pm = new supplementary::ProcessManager(argc, argv);
 	pm->start();
 

@@ -25,7 +25,7 @@ namespace supplementary
 		ManagedRobot();
 		virtual ~ManagedRobot();
 		void queue4update(uint8_t execid, long pid);
-		void queue4update(string execName, uint8_t execid, long pid);
+		void queue4update(const char* execName, uint8_t execid, long pid);
 		void update();
 
 	private:

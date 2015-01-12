@@ -10,7 +10,7 @@
 namespace supplementary
 {
 
-	ManagedExecutable::ManagedExecutable(short id, const char* executable, vector<string> defaultStrParams) :
+	ManagedExecutable::ManagedExecutable(uint8_t id, const char* executable, vector<string> defaultStrParams) :
 			id(id), executable(executable), defaultParams(new char*[defaultStrParams.size()]), managedPid(NOTHING_MANAGED), state(UNDEFINED)
 	{
 		for (int i = 0; i < defaultStrParams.size(); i++)
@@ -19,7 +19,7 @@ namespace supplementary
 		}
 	}
 
-	ManagedExecutable::ManagedExecutable(string executable, short id, long pid) : managedPid(pid), executable(executable), id(id)
+	ManagedExecutable::ManagedExecutable(const char* executable, uint8_t id, long pid) : managedPid(pid), executable(executable), id(id)
 	{
 
 	}
