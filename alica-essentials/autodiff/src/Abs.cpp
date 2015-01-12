@@ -17,7 +17,7 @@ namespace autodiff
 	Abs::Abs(shared_ptr<Term> arg) :
 			Term()
 	{
-		_arg = arg;
+		this->arg = arg;
 	}
 
 	int Abs::accept(shared_ptr<ITermVisitor> visitor)
@@ -26,23 +26,18 @@ namespace autodiff
 		return visitor->visit(thisCasted);
 	}
 
-	const shared_ptr<Term> Abs::getArg()
-	{
-		return _arg;
-	}
-
 	shared_ptr<Term> Abs::aggregateConstants()
 	{
-		_arg = _arg->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(_arg) != 0) {
-			shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(_arg);
-			return TermBuilder::constant(fabs(arg->getValue()));
+		arg = arg->aggregateConstants();
+		if (dynamic_pointer_cast<Constant>(arg) != 0) {
+			shared_ptr<Constant> constArg = dynamic_pointer_cast<Constant>(arg);
+			return TermBuilder::constant(fabs(constArg->value));
 		} else {
 			return shared_from_this();
 		}
 	}
 	shared_ptr<Term> Abs::derivative(shared_ptr<Variable> v)
 	{
-		return _arg->derivative(v) * _arg / shared_from_this();
+		return arg->derivative(v) * arg / shared_from_this();
 	}
 } /* namespace autodiff */

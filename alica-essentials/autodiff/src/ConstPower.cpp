@@ -18,8 +18,8 @@ namespace autodiff
 	ConstPower::ConstPower(shared_ptr<Term> baseTerm, double exponent) :
 			Term()
 	{
-		_base = baseTerm;
-		_exponent = exponent;
+		this->base = baseTerm;
+		this->exponent = exponent;
 	}
 
 	int ConstPower::accept(shared_ptr<ITermVisitor> visitor)
@@ -30,28 +30,28 @@ namespace autodiff
 
 	shared_ptr<Term> ConstPower::aggregateConstants()
 	{
-		_base = _base->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(_base) != 0)
+		base = base->aggregateConstants();
+		if (dynamic_pointer_cast<Constant>(base) != 0)
 		{
-			shared_ptr<Constant> base = dynamic_pointer_cast<Constant>(_base);
-			return TermBuilder::constant(pow(base->getValue(), _exponent));
+			shared_ptr<Constant> base = dynamic_pointer_cast<Constant>(base);
+			return TermBuilder::constant(pow(base->value, exponent));
 		}
-		else if (dynamic_pointer_cast<Zero>(_base) != 0)
+		else if (dynamic_pointer_cast<Zero>(base) != 0)
 		{
-			if (_exponent >= 0)
+			if (exponent >= 0)
 			{
-				return _base;
+				return base;
 			}
 			else
 			{
 				throw "Divide By Zero";
 			}
 		}
-		else if (dynamic_pointer_cast<ConstPower>(_base) != 0)
+		else if (dynamic_pointer_cast<ConstPower>(base) != 0)
 		{
-			shared_ptr<ConstPower> base = dynamic_pointer_cast<ConstPower>(_base);
-			_exponent *= base->getExponent();
-			_base = base->getBase();
+			shared_ptr<ConstPower> base = dynamic_pointer_cast<ConstPower>(base);
+			this->exponent *= base->exponent;
+			this->base = base->base;
 			return shared_from_this();
 		}
 		else
@@ -62,16 +62,6 @@ namespace autodiff
 
 	shared_ptr<Term> ConstPower::derivative(shared_ptr<Variable> v)
 	{
-		return TermBuilder::constant(_exponent) * make_shared<ConstPower>(_base, _exponent - 1) * _base->derivative(v);
-	}
-
-	const shared_ptr<Term> ConstPower::getBase()
-	{
-		return _base;
-	}
-
-	const double ConstPower::getExponent()
-	{
-		return _exponent;
+		return TermBuilder::constant(exponent) * make_shared<ConstPower>(base, exponent - 1) * base->derivative(v);
 	}
 } /* namespace autodiff */

@@ -40,14 +40,14 @@ namespace autodiff
 		 */
 		virtual int accept(shared_ptr<ITermVisitor> visitor) = 0;
 
-		int getIndex() const;
+		int getId() const;
 
 		// Additions by Carpe Noctem:
-		double _min;
-		double _max;
+		double min;
+		double max;
 
-		shared_ptr<Term> _prev;
-		shared_ptr<Term> _next;
+		shared_ptr<Term> prev;
+		shared_ptr<Term> next;
 
 		vector<shared_ptr<Term>> parents;
 

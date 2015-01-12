@@ -14,56 +14,56 @@ namespace autodiff
 {
 	TVec::TVec(vector<shared_ptr<Term>> terms)
 	{
-		_terms = terms;
+		this->terms = terms;
 	}
 
 	TVec::TVec(initializer_list<shared_ptr<Term>> terms)
 	{
-		_terms = terms;
+		this->terms = terms;
 	}
 
 	TVec::TVec(initializer_list<double> values)
 	{
-		_terms = vector<shared_ptr<Term>>(values.size());
+		terms = vector<shared_ptr<Term>>(values.size());
 		std::initializer_list<double>::iterator it;
 		int i = 0;
 		for (it = values.begin(); it != values.end(); ++it, ++i) {
-			_terms[i] = TermBuilder::constant(*it);
+			terms[i] = TermBuilder::constant(*it);
 		}
 	}
 
 	TVec::TVec(shared_ptr<TVec> first, vector<shared_ptr<Term>> rest)
 	{
-		vector<shared_ptr<Term>> terms = first->getTerms();
+		vector<shared_ptr<Term>> terms = first->terms;
 		terms.insert(terms.end(), rest.begin(), rest.end());
-		_terms = terms;
+		this->terms = terms;
 	}
 
 	TVec::TVec(vector<shared_ptr<Term>> left, vector<shared_ptr<Term>> right,
 				function<shared_ptr<Term>(shared_ptr<Term>, shared_ptr<Term>)> elemOp)
 	{
-		_terms = vector<shared_ptr<Term>>(left.size());
-		for (int i = 0; i < _terms.size(); ++i)
+		terms = vector<shared_ptr<Term>>(left.size());
+		for (int i = 0; i < terms.size(); ++i)
 		{
-			_terms[i] = elemOp(left[i], right[i]);
+			terms[i] = elemOp(left[i], right[i]);
 		}
 	}
 
 	TVec::TVec(vector<shared_ptr<Term>> input, function<shared_ptr<Term>(shared_ptr<Term>)> elemOp)
 	{
-		_terms = vector<shared_ptr<Term>>(input.size());
+		terms = vector<shared_ptr<Term>>(input.size());
 		for (int i = 0; i < input.size(); ++i)
 		{
-			_terms[i] = elemOp(input[i]);
+			terms[i] = elemOp(input[i]);
 		}
 	}
 
 	shared_ptr<Term> TVec::normSquared()
 	{
 		vector<shared_ptr<Term>> powers;
-		for (int i = 0; i < _terms.size(); ++i)
+		for (int i = 0; i < terms.size(); ++i)
 		{
-			powers.push_back(TermBuilder::power(_terms[i], 2));
+			powers.push_back(TermBuilder::power(terms[i], 2));
 		}
 		return TermBuilder::sum(powers);
 	}
@@ -73,39 +73,34 @@ namespace autodiff
 		shared_ptr<Term> a = normSquared();
 		a = TermBuilder::power(a, 0.5);
 		vector<shared_ptr<Term>> b;
-		for (int i = 0; i < _terms.size(); ++i)
+		for (int i = 0; i < terms.size(); ++i)
 		{
-			b.push_back(_terms[i] / a);
+			b.push_back(terms[i] / a);
 		}
 		return make_shared<TVec>(b);
 	}
 
 	int TVec::dimension()
 	{
-		return _terms.size();
+		return terms.size();
 	}
 
 	shared_ptr<Term> TVec::getX()
 	{
 // TODO:		return shared_from_this()[0];
-		return _terms[0];
+		return terms[0];
 	}
 
 	shared_ptr<Term> TVec::getY()
 	{
 // TODO:		return shared_from_this()[1];
-		return _terms[1];
+		return terms[1];
 	}
 
 	shared_ptr<Term> TVec::getZ()
 	{
 // TODO:		return shared_from_this()[2];
-		return _terms[2];
-	}
-
-	vector<shared_ptr<Term>> TVec::getTerms()
-	{
-		return _terms;
+		return terms[2];
 	}
 
 	shared_ptr<Term> TVec::innerProduct(shared_ptr<TVec> left, shared_ptr<TVec> right)
@@ -113,7 +108,7 @@ namespace autodiff
 		vector<shared_ptr<Term>> products;
 		for (int i = 0; i < left->dimension(); ++i)
 		{
-			products.push_back(left->getTerms()[i] * right->getTerms()[i]);
+			products.push_back(left->terms[i] * right->terms[i]);
 		}
 		return TermBuilder::sum(products);
 	}
@@ -129,12 +124,12 @@ namespace autodiff
 
 	shared_ptr<Term> TVec::operator[](int index)
 	{
-		return _terms[index];
+		return terms[index];
 	}
 
 	shared_ptr<TVec> operator+(const shared_ptr<TVec>& left, const shared_ptr<TVec>& right)
 	{
-		return make_shared<TVec>(left->getTerms(), right->getTerms(), [] (shared_ptr<Term> left, shared_ptr<Term> right)
+		return make_shared<TVec>(left->terms, right->terms, [] (shared_ptr<Term> left, shared_ptr<Term> right)
 		{
 			return left + right;
 		});
@@ -142,7 +137,7 @@ namespace autodiff
 
 	shared_ptr<TVec> operator-(const shared_ptr<TVec>& left, const shared_ptr<TVec>& right)
 	{
-		return make_shared<TVec>(left->getTerms(), right->getTerms(), [] (shared_ptr<Term> left, shared_ptr<Term> right)
+		return make_shared<TVec>(left->terms, right->terms, [] (shared_ptr<Term> left, shared_ptr<Term> right)
 		{
 			return left - right;
 		});
@@ -155,7 +150,7 @@ namespace autodiff
 
 	shared_ptr<TVec> operator*(const shared_ptr<TVec>& vector, const shared_ptr<Term>& scalar)
 	{
-		return make_shared<TVec>(vector->getTerms(), [&scalar] (shared_ptr<Term> x)
+		return make_shared<TVec>(vector->terms, [&scalar] (shared_ptr<Term> x)
 		{
 			return scalar * x;
 		});
@@ -168,7 +163,7 @@ namespace autodiff
 
 	shared_ptr<TVec> operator*(const shared_ptr<Term>& scalar, const shared_ptr<TVec>& vector)
 	{
-		return make_shared<TVec>(vector->getTerms(), [&scalar] (shared_ptr<Term> x)
+		return make_shared<TVec>(vector->terms, [&scalar] (shared_ptr<Term> x)
 		{
 			return scalar * x;
 		});

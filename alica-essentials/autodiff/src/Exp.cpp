@@ -18,7 +18,7 @@ namespace autodiff
 	Exp::Exp(shared_ptr<Term> arg) :
 			Term()
 	{
-		_arg = arg;
+		this->arg = arg;
 	}
 
 	int Exp::accept(shared_ptr<ITermVisitor> visitor)
@@ -29,15 +29,15 @@ namespace autodiff
 
 	shared_ptr<Term> Exp::aggregateConstants()
 	{
-		_arg = _arg->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(_arg) != 0)
+		arg = arg->aggregateConstants();
+		if (dynamic_pointer_cast<Constant>(arg) != 0)
 		{
-			shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(_arg);
-			return TermBuilder::constant(exp(arg->getValue()));
+			shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(arg);
+			return TermBuilder::constant(exp(arg->value));
 		}
 		else
 		{
-			if (dynamic_pointer_cast<Constant>(_arg) != 0)
+			if (dynamic_pointer_cast<Constant>(arg) != 0)
 			{
 				return TermBuilder::constant(1);
 			}
@@ -47,12 +47,7 @@ namespace autodiff
 
 	shared_ptr<Term> Exp::derivative(shared_ptr<Variable> v)
 	{
-		return shared_from_this() * _arg->derivative(v);
-	}
-
-	shared_ptr<Term> Exp::getArg()
-	{
-		return _arg;
+		return shared_from_this() * arg->derivative(v);
 	}
 
 } /* namespace autodiff */

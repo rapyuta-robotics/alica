@@ -104,7 +104,24 @@ include_directories(
 
 ## Declare a cpp library
 add_library(constraintsolver
+  src/intervals/DownwardPropagator.cpp
+  src/intervals/IntervalPropagator.cpp
+  src/intervals/RecursivePropagate.cpp
+  src/intervals/ResetIntervals.cpp
+  src/intervals/SetParents.cpp
+  src/intervals/TermList.cpp
+  src/intervals/UnsolveableException.cpp
+  src/intervals/UpwardPropagator.cpp
+  src/types/Clause.cpp
+  src/types/DecisionLevel.cpp
+  src/types/Lit.cpp
+  src/types/Var.cpp
+  src/types/Watcher.cpp
   src/CGSolver.cpp
+  src/CNSat.cpp
+  src/CNSMTGSolver.cpp
+  src/Decider.cpp
+  src/FormulaTransform.cpp
   src/GSolver.cpp
   src/MSLConstraintBuilder.cpp
   src/Point2D.cpp
@@ -160,9 +177,9 @@ target_link_libraries(constraintsolver ${catkin_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-catkin_add_gtest(${PROJECT_NAME}-test test/test_constraintsolver.cpp)
+catkin_add_gtest(${PROJECT_NAME}-test test/test_constraintsolver.cpp test/test_cnsat.cpp test/test_solver.cpp test/test_cnsmtgsolver.cpp)
 if(TARGET ${PROJECT_NAME}-test)
-  target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES} autodiff system_config alica_engine alica_ros_proxy)
+  target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES} autodiff system_config fsystem alica_engine alica_ros_proxy)
 endif()
 
 ## Add folders to be run by python nosetests

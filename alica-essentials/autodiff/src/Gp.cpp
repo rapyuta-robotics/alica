@@ -12,9 +12,9 @@ namespace autodiff
 	Gp::Gp(vector<shared_ptr<Term>> args, shared_ptr<GaussianProcess> gp, int dc) :
 			Term()
 	{
-		_divCount = dc;
-		_args = args;
-		_gpr = gp;
+		this->divCount = dc;
+		this->args = args;
+		this->gpr = gp;
 	}
 
 	int Gp::accept(shared_ptr<ITermVisitor> visitor)
@@ -35,20 +35,5 @@ namespace autodiff
 	double Gp::eval()
 	{
 		return 0;
-	}
-
-	const vector<shared_ptr<Term>> Gp::getArgs()
-	{
-		return _args;
-	}
-
-	const shared_ptr<GaussianProcess> Gp::getGpr()
-	{
-		return _gpr;
-	}
-
-	const int Gp::getDivCount()
-	{
-		return _divCount;
 	}
 } /* namespace autodiff */

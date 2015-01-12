@@ -42,7 +42,7 @@ namespace alica
 			_seedWithUtilOptimum = true;
 			supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 			_maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
-			_maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1E-6; //* 1000000;
+			_maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1E6; //* 1000000;
 			_rPropConvergenceStepSize = 1E-2;
 
 			alicaClock = new alicaRosProxy::AlicaROSClock();
@@ -122,18 +122,18 @@ namespace alica
 #endif
 			_term = TermUtils::compile(equation, args);
 			shared_ptr<ConstraintUtility> cu = dynamic_pointer_cast<ConstraintUtility>(equation);
-			bool utilIsConstant = dynamic_pointer_cast<Constant>(cu->getUtility()) != 0;
+			bool utilIsConstant = dynamic_pointer_cast<Constant>(cu->utility) != 0;
 			if (utilIsConstant)
 			{
 				_utilityThreshold = 0.75;
 			}
-			bool constraintIsConstant = dynamic_pointer_cast<Constant>(cu->getConstraint()) != 0;
+			bool constraintIsConstant = dynamic_pointer_cast<Constant>(cu->constraint) != 0;
 			if (constraintIsConstant)
 			{
-				shared_ptr<Constant> constraint = dynamic_pointer_cast<Constant>(cu->getConstraint());
-				if (constraint->getValue() < 0.25)
+				shared_ptr<Constant> constraint = dynamic_pointer_cast<Constant>(cu->constraint);
+				if (constraint->value < 0.25)
 				{
-					*util = constraint->getValue();
+					*util = constraint->value;
 					auto ret = make_shared<vector<double>>(_dim);
 					for (int i = 0; i < _dim; ++i)
 					{
@@ -182,7 +182,7 @@ namespace alica
 				if (!constraintIsConstant && !utilIsConstant && _seedWithUtilOptimum)
 				{
 					shared_ptr<ICompiledTerm> curProb = _term;
-					_term = TermUtils::compile(cu->getUtility(), args);
+					_term = TermUtils::compile(cu->utility, args);
 					_runs++;
 					shared_ptr<vector<double>> utilitySeed = rPropLoop(make_shared<vector<double>>())->_finalValue;
 					_term = curProb;

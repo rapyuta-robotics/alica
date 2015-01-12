@@ -12,10 +12,10 @@ namespace autodiff
 	Reification::Reification(shared_ptr<Term> condition, double min, double max) :
 			Term()
 	{
-		_condition = condition;
-		_negatedCondition = condition->negate();
-		_min = min;
-		_max = max;
+		this->condition = condition;
+		this->negatedCondition = condition->negate();
+		this->min = min;
+		this->max = max;
 	}
 
 	int Reification::accept(shared_ptr<ITermVisitor> visitor)
@@ -32,25 +32,5 @@ namespace autodiff
 	shared_ptr<Term> Reification::derivative(shared_ptr<Variable> v)
 	{
 		throw "Symbolic Derivation of Discretizer not supported.";
-	}
-
-	const shared_ptr<Term> Reification::getNegatedCondition()
-	{
-		return _negatedCondition;
-	}
-
-	const shared_ptr<Term> Reification::getCondition()
-	{
-		return _condition;
-	}
-
-	const double Reification::getMin()
-	{
-		return _min;
-	}
-
-	const double Reification::getMax()
-	{
-		return _max;
 	}
 } /* namespace autodiff */

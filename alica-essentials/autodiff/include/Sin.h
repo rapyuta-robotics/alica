@@ -18,15 +18,12 @@ namespace autodiff
 	public:
 		Sin(shared_ptr<Term> arg);
 
+		shared_ptr<Term> arg;
+
 		int accept(shared_ptr<ITermVisitor> visitor);
 
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
-
-		const shared_ptr<Term> getArg();
-
-	private:
-		shared_ptr<Term> _arg;
 	};
 
 } /* namespace autodiff */

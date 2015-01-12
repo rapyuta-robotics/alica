@@ -36,6 +36,8 @@
 #include <typeinfo>
 #include <limits>
 
+#include <iostream>
+
 namespace autodiff
 {
 	int Term::m_nextId = 0;
@@ -50,15 +52,15 @@ namespace autodiff
 	Term::Term() :
 			m_id(m_nextId++)
 	{
-		_min = numeric_limits<double>::min();
-		_max = numeric_limits<double>::max();
+		min = numeric_limits<double>::min();
+		max = numeric_limits<double>::max();
 	}
 
 	Term::~Term()
 	{
 	}
 
-	int Term::getIndex() const
+	int Term::getId() const
 	{
 		return m_id;
 	}

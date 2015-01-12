@@ -18,7 +18,7 @@ namespace autodiff
 	Log::Log(shared_ptr<Term> arg) :
 			Term()
 	{
-		_arg = arg;
+		this->arg = arg;
 	}
 
 	int Log::accept(shared_ptr<ITermVisitor> visitor)
@@ -29,10 +29,10 @@ namespace autodiff
 
 	shared_ptr<Term> Log::aggregateConstants()
 	{
-		_arg = _arg->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(_arg) != 0) {
-			shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(_arg);
-			return TermBuilder::constant(log(arg->getValue()));
+		arg = arg->aggregateConstants();
+		if (dynamic_pointer_cast<Constant>(arg) != 0) {
+			shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(arg);
+			return TermBuilder::constant(log(arg->value));
 		} else {
 			return shared_from_this();
 		}
@@ -40,11 +40,6 @@ namespace autodiff
 
 	shared_ptr<Term> Log::derivative(shared_ptr<Variable> v)
 	{
-		return _arg->derivative(v) / _arg;
-	}
-
-	const shared_ptr<Term> Log::getArg()
-	{
-		return _arg;
+		return arg->derivative(v) / arg;
 	}
 } /* namespace autodiff */
