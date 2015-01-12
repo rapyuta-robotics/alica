@@ -57,6 +57,8 @@ namespace alica
 		bool isSuccess() const;
 		bool isFailure() const;
 
+		bool getParameter(string key, string& valueOut);
+
 	protected:
 		/**
 		 * The name of this behaviour.

@@ -164,6 +164,16 @@ namespace alica
 		}
 	}
 
+	bool BasicBehaviour::getParameter(string key, string& valueOut) {
+		for(auto pair : *parameters) {
+			if(pair.first == key) {
+				valueOut = pair.second;
+				return true;
+			}
+		}
+		return false;
+	}
+
 	void BasicBehaviour::runInternal()
 	{
 		unique_lock<mutex> lck(runCV_mtx);
