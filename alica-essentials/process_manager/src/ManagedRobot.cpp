@@ -14,13 +14,10 @@ namespace supplementary
 
 	ManagedRobot::ManagedRobot()
 	{
-		// TODO Auto-generated constructor stub
-
 	}
 
 	ManagedRobot::~ManagedRobot()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	void ManagedRobot::queue4update(uint8_t execid, long pid)
@@ -28,7 +25,7 @@ namespace supplementary
 		this->executableMap.at(execid)->queue4Update(pid);
 	}
 
-	void ManagedRobot::queue4update(string execName, uint8_t execid, long pid)
+	void ManagedRobot::queue4update(const char* execName, uint8_t execid, long pid)
 	{
 		ManagedExecutable* mngExec = new ManagedExecutable(execName, execid, pid);
 		mngExec->queue4Update(pid);

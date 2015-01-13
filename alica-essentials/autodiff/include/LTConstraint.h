@@ -20,21 +20,16 @@ namespace autodiff
 		LTConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness);
 		LTConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness, shared_ptr<Term> negatedForm);
 
+		shared_ptr<Term> left;
+		shared_ptr<Term> right;
+		double steppness;
+		shared_ptr<Term> negatedform;
+
 		int accept(shared_ptr<ITermVisitor> visitor);
 
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
 		shared_ptr<Term> negate();
-
-		const shared_ptr<Term> getLeft();
-		const shared_ptr<Term> getRight();
-		const double getSteppness();
-		const shared_ptr<Term> getNegatedForm();
-	private:
-		shared_ptr<Term> _left;
-		shared_ptr<Term> _right;
-		double _steppness;
-		shared_ptr<Term> _negatedform;
 	};
 
 } /* namespace autodiff */

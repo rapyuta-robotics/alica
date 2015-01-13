@@ -94,7 +94,7 @@ namespace alica
 //				friend bool operator>(const shared_ptr<RpropResult>& left, const shared_ptr<RpropResult>& right);
 			};
 
-		private:
+		protected:
 			double _utilitySignificanceThreshold = 1E-22;
 			// Random rand;
 			int _dim;

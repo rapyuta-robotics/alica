@@ -56,7 +56,7 @@ namespace supplementary
 
 			chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
 			this->notifyCalled = true;
-			for (int i = 0; i < this->registeredCVs.size(); i++)
+			for (unsigned int i = 0; i < this->registeredCVs.size(); i++)
 			{
 				if (this->notifyAll)
 				{

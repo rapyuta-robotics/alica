@@ -4,15 +4,6 @@ project(event_handling)
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
-find_package(catkin REQUIRED)
-
-## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
-
-
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
@@ -78,12 +69,14 @@ find_package(catkin REQUIRED)
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES event_handling
-#  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
-)
+if(catkin_FOUND)
+	catkin_package(
+	  INCLUDE_DIRS include
+	  LIBRARIES event_handling
+	#  CATKIN_DEPENDS other_catkin_pkg
+	#  DEPENDS system_lib
+	)
+endif(catkin_FOUND)
 
 ###########
 ## Build ##
@@ -91,13 +84,17 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
- include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(include)
 
 ## Declare a cpp library
 add_library(event_handling
    src/AutoResetEvent.cpp
    src/Timer.cpp
 )
+
+if (NOT catkin_FOUND)
+  target_include_directories(event_handling PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+endif(NOT catkin_FOUND)
 
 ## Declare a cpp executable
 # add_executable(event_handling_node src/event_handling_node.cpp)
@@ -111,7 +108,6 @@ add_library(event_handling
 # target_link_libraries(event_handling_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(event_handling ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -153,10 +149,11 @@ target_link_libraries(event_handling ${catkin_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
+if(catkin_FOUND)
  catkin_add_gtest(${PROJECT_NAME}-test test/test_event_handling.cpp)
  if(TARGET ${PROJECT_NAME}-test)
    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
  endif()
-
+endif(catkin_FOUND)
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

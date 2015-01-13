@@ -21,7 +21,7 @@ namespace autodiff
 	Sum::Sum(vector<shared_ptr<Term>> terms) :
 			Term()
 	{
-		_terms = terms;
+		this->terms = terms;
 	}
 
 	Sum::Sum(shared_ptr<Term> first, shared_ptr<Term> second, vector<shared_ptr<Term>> rest) :
@@ -29,7 +29,7 @@ namespace autodiff
 	{
 		vector<shared_ptr<Term>> terms = {first, second};
 		terms.insert(terms.end(), rest.begin(), rest.end());
-		_terms = terms;
+		this->terms = terms;
 	}
 
 	int Sum::accept(shared_ptr<ITermVisitor> visitor)
@@ -44,12 +44,12 @@ namespace autodiff
 		bool foundConst = false;
 		double sum = 0;
 		vector<shared_ptr<Term>> nonConstTerms;
-		for (int i = 0; i < _terms.size(); ++i)
+		for (int i = 0; i < terms.size(); ++i)
 		{
-			curSummand = _terms[i]->aggregateConstants();
+			curSummand = terms[i]->aggregateConstants();
 			if (dynamic_pointer_cast<Constant>(curSummand) != 0)
 			{
-				sum += dynamic_pointer_cast<Constant>(curSummand)->getValue();
+				sum += dynamic_pointer_cast<Constant>(curSummand)->value;
 				foundConst = true;
 			}
 			else
@@ -72,22 +72,17 @@ namespace autodiff
 		{
 			nonConstTerms.push_back(TermBuilder::constant(sum));
 		}
-		_terms = nonConstTerms;
+		terms = nonConstTerms;
 		return shared_from_this();
 	}
 
 	shared_ptr<Term> Sum::derivative(shared_ptr<Variable> v)
 	{
 		vector<shared_ptr<Term>> t;
-		for (int i = 0; i < _terms.size(); ++i)
+		for (int i = 0; i < terms.size(); ++i)
 		{
-			t.push_back(_terms[i]->derivative(v));
+			t.push_back(terms[i]->derivative(v));
 		}
 		return make_shared<Sum>(t);
-	}
-
-	const vector<shared_ptr<Term>> Sum::getTerms()
-	{
-		return _terms;
 	}
 } /* namespace autodiff */

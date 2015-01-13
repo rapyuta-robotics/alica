@@ -9,9 +9,18 @@
 
 #include "TermBuilder.h"
 
+#include <limits>
+
 namespace autodiff
 {
-	int Variable::accept(shared_ptr<ITermVisitor> visitor) {
+	Variable::Variable()
+	{
+		globalMin = -numeric_limits<double>::infinity();
+		globalMax = numeric_limits<double>::infinity();
+	}
+
+	int Variable::accept(shared_ptr<ITermVisitor> visitor)
+	{
 		shared_ptr<Variable> thisCasted = dynamic_pointer_cast<Variable>(shared_from_this());
 		return visitor->visit(thisCasted);
 	}
@@ -23,9 +32,12 @@ namespace autodiff
 
 	shared_ptr<Term> Variable::derivative(shared_ptr<Variable> v)
 	{
-		if (shared_from_this() == v) {
+		if (shared_from_this() == v)
+		{
 			return TermBuilder::constant(1);
-		} else {
+		}
+		else
+		{
 			return TermBuilder::constant(0);
 		}
 	}

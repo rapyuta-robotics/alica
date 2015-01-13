@@ -21,14 +21,12 @@ namespace autodiff
 		Sum(vector<shared_ptr<Term>> terms);
 		Sum(shared_ptr<Term> first, shared_ptr<Term> second, vector<shared_ptr<Term>> rest);
 
+		vector<shared_ptr<Term>> terms;
+
 		int accept(shared_ptr<ITermVisitor> visitor);
 
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
-
-		const vector<shared_ptr<Term>> getTerms();
-	private:
-		vector<shared_ptr<Term>> _terms;
 	};
 
 } /* namespace autodiff */

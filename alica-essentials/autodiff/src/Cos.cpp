@@ -18,7 +18,7 @@ namespace autodiff
 	Cos::Cos(shared_ptr<Term> arg) :
 			Term()
 	{
-		_arg = arg;
+		this->arg = arg;
 	}
 
 	int Cos::accept(shared_ptr<ITermVisitor> visitor)
@@ -29,15 +29,15 @@ namespace autodiff
 
 	shared_ptr<Term> Cos::aggregateConstants()
 	{
-		_arg = _arg->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(_arg) != 0)
+		arg = arg->aggregateConstants();
+		if (dynamic_pointer_cast<Constant>(arg) != 0)
 		{
-			shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(_arg);
-			return TermBuilder::constant(cos(arg->getValue()));
+			shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(arg);
+			return TermBuilder::constant(cos(arg->value));
 		}
 		else
 		{
-			if (dynamic_pointer_cast<Constant>(_arg) != 0)
+			if (dynamic_pointer_cast<Constant>(arg) != 0)
 			{
 				return TermBuilder::constant(1);
 			}
@@ -47,11 +47,6 @@ namespace autodiff
 
 	shared_ptr<Term> Cos::derivative(shared_ptr<Variable> v)
 	{
-		return make_shared<Sin>(_arg) * -_arg->derivative(v);
-	}
-
-	const shared_ptr<Term> Cos::getArg()
-	{
-		return _arg;
+		return make_shared<Sin>(arg) * -arg->derivative(v);
 	}
 } /* namespace autodiff */

@@ -19,8 +19,8 @@ namespace autodiff
 	TermPower::TermPower(shared_ptr<Term> baseTerm, shared_ptr<Term> exponent) :
 			Term()
 	{
-		_base = baseTerm;
-		_exponent = exponent;
+		this->base = baseTerm;
+		this->exponent = exponent;
 	}
 
 	int TermPower::accept(shared_ptr<ITermVisitor> visitor)
@@ -31,23 +31,23 @@ namespace autodiff
 
 	shared_ptr<Term> TermPower::aggregateConstants()
 	{
-		_base = _base->aggregateConstants();
-		_exponent = _exponent->aggregateConstants();
-		if (dynamic_pointer_cast<Zero>(_exponent) != 0)
+		base = base->aggregateConstants();
+		exponent = exponent->aggregateConstants();
+		if (dynamic_pointer_cast<Zero>(exponent) != 0)
 		{
 			return TermBuilder::constant(1);
 		}
-		if (dynamic_pointer_cast<Constant>(_base) != 0 && dynamic_pointer_cast<Constant>(_exponent) != 0)
+		if (dynamic_pointer_cast<Constant>(base) != 0 && dynamic_pointer_cast<Constant>(exponent) != 0)
 		{
-			shared_ptr<Constant> base = dynamic_pointer_cast<Constant>(_base);
-			shared_ptr<Constant> exponent = dynamic_pointer_cast<Constant>(_exponent);
-			return TermBuilder::constant(pow(base->getValue(), exponent->getValue()));
-		} else if (dynamic_pointer_cast<Zero>(_base) != 0) {
-			return _base;
-		} else if (dynamic_pointer_cast<TermPower>(_base) != 0) {
-			shared_ptr<TermPower> base = dynamic_pointer_cast<TermPower>(_base);
-			_exponent = _exponent * base->getExponent();
-			_base = base->getBase();
+			shared_ptr<Constant> base = dynamic_pointer_cast<Constant>(base);
+			shared_ptr<Constant> exponent = dynamic_pointer_cast<Constant>(exponent);
+			return TermBuilder::constant(pow(base->value, exponent->value));
+		} else if (dynamic_pointer_cast<Zero>(base) != 0) {
+			return base;
+		} else if (dynamic_pointer_cast<TermPower>(base) != 0) {
+			shared_ptr<TermPower> base = dynamic_pointer_cast<TermPower>(base);
+			this->exponent = exponent * base->exponent;
+			this->base = base->base;
 			return shared_from_this();
 		} else {
 			return shared_from_this();
@@ -56,17 +56,7 @@ namespace autodiff
 
 	shared_ptr<Term> TermPower::derivative(shared_ptr<Variable> v)
 	{
-		return make_shared<TermPower>(_base, _exponent - 1)
-				* (_exponent * _base->derivative(v) + _base * make_shared<Log>(_base) * _exponent->derivative(v));
-	}
-
-	const shared_ptr<Term> TermPower::getBase()
-	{
-		return _base;
-	}
-
-	const shared_ptr<Term> TermPower::getExponent()
-	{
-		return _exponent;
+		return make_shared<TermPower>(base, exponent - 1)
+				* (exponent * base->derivative(v) + base * make_shared<Log>(base) * exponent->derivative(v));
 	}
 } /* namespace autodiff */
