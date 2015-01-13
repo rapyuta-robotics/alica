@@ -167,6 +167,22 @@ namespace supplementary
 		}
 	}
 
+	std::shared_ptr<External> const ClingWrapper::getExternal(const char* p_value)
+        {
+	  Gringo::Value value = ClingWrapper::splitASPExternalString(p_value);
+
+	  if (value.type() != Gringo::Value::Type::FUNC)
+	  {
+	    // TODO
+	    std::cout << "Bad gringo value for external ";
+	    value.print(std::cout);
+
+	    return std::shared_ptr<External>();
+	  }
+
+	  return this->getExternal(*value.name(), value.args(), *value.name(), value.args());
+        }
+
         std::shared_ptr<External> const ClingWrapper::getExternal(const std::string& name, Gringo::FWValVec args)
         {
           return this->getExternal(name, args, name, args);
@@ -369,6 +385,120 @@ namespace supplementary
         {
           return this->lastSolver;
         }
+
+        Gringo::Value ClingWrapper::splitASPExternalString(const char* p_aspString)
+        {
+          char *aspString = new char[std::strlen(p_aspString)+1];
+          std::strcpy(aspString,p_aspString);
+
+          Gringo::Value value = splitASPExternalString(aspString);
+          delete[] aspString;
+
+          return value;
+        }
+
+        Gringo::Value ClingWrapper::splitASPExternalString(char* p_aspString)
+          {
+            if (std::strlen(p_aspString) == 0)
+              return Gringo::Value();
+
+            std::vector<Gringo::Value> vec;
+
+            char* values = std::strchr(p_aspString, '(');
+            char* valuesEnd = std::strrchr(p_aspString, ')');
+            char* nameEnd = values;
+            char tmpEnd, tmp;
+            char *index1, *index2;
+
+            if (values == nullptr || valuesEnd == nullptr || valuesEnd < values)
+            {
+              return Gringo::Value(p_aspString);
+            }
+
+            tmpEnd = *valuesEnd;
+            *valuesEnd = '\0';
+
+            ++values;
+
+            while (valuesEnd > values)
+            {
+//              std::cout << "##" << values << std::endl;
+              index1 = std::strchr(values, '(');
+              index2 = std::strchr(values, ',');
+
+              if (index1 >= valuesEnd)
+                index1 = nullptr;
+
+              if (index2 >= valuesEnd)
+                index2 = nullptr;
+
+              if (index2 == values)
+              {
+                ++values;
+                continue;
+              }
+
+              if (index2 != nullptr && index1 == nullptr)
+              {
+                tmp = *index2;
+                *index2 = '\0';
+                toGringoValue(values, &vec);
+                *index2 = tmp;
+                values = index2+1;
+              }
+              else if (index2 == nullptr && index1 != nullptr)
+              {
+                index1 = std::strrchr(values, ')') +1;
+                tmp = *index1 ;
+                *index1 = '\0';
+                vec.push_back(splitASPExternalString(values));
+                *index1 = tmp;
+                values = index1+1;
+              }
+              else if (index2 == nullptr && index1 == nullptr)
+              {
+                toGringoValue(values, &vec);
+                values = valuesEnd;
+              }
+              else if (index2 < index1)
+              {
+                tmp = *index2;
+                *index2 = '\0';
+                toGringoValue(values, &vec);
+                *index2 = tmp;
+                values = index2 + 1;
+              }
+              else
+              {
+                index1 = std::strrchr(values, ')')+1;
+                tmp = *index1;
+                *index1 = '\0';
+                vec.push_back(splitASPExternalString(values));
+                *index1 = tmp;
+                values = index1+1;
+              }
+            }
+
+            *valuesEnd = tmpEnd;
+
+            return Gringo::Value(std::string(p_aspString, nameEnd), vec);
+          }
+
+          void ClingWrapper::toGringoValue(const char* p_string, std::vector<Gringo::Value>* vec)
+          {
+            char* end;
+
+            int number =  std::strtol(p_string, &end, 10);
+
+            if ((end == p_string) || (*end != '\0'))
+            {
+              vec->push_back(Gringo::Value(p_string));
+            }
+            else
+            {
+              vec->push_back(Gringo::Value(number));
+            }
+          }
 
 } /* namespace supplementary */
 

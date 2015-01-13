@@ -52,6 +52,7 @@ namespace supplementary
 		virtual	bool onModel(const Clasp::Solver& s, const Clasp::Model& m);
 		void printLastModel(bool verbose = false);
 
+                std::shared_ptr<External> const getExternal(const char* p_value);
                 std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args);
 		std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args, bool const assign);
                 std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args,
@@ -86,6 +87,13 @@ namespace supplementary
 		const Clasp::Solver* lastSolver;
 		std::vector<std::tuple<unsigned int, Gringo::Value>> existingLiterals;
 		std::vector<std::shared_ptr<BaseLiteral>> baseLiterals;
+
+	public:
+                static Gringo::Value splitASPExternalString(const char* p_aspString);
+                static Gringo::Value splitASPExternalString(char* p_aspString);
+
+	private:
+                static void toGringoValue(const char* p_string,  std::vector<Gringo::Value>* vec);
 	};
 
 } /* namespace supplementary */
