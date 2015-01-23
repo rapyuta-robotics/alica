@@ -465,7 +465,7 @@ namespace supplementary
               if (index2 >= valuesEnd)
                 index2 = nullptr;
 
-              if (index2 == values)
+              if (index1 == nullptr && index2 == values)
               {
                 ++values;
                 continue;
@@ -481,7 +481,24 @@ namespace supplementary
               }
               else if (index2 == nullptr && index1 != nullptr)
               {
-                index1 = std::strrchr(values, ')') +1;
+                int count = 0;
+                ++index1;
+                while (index1 != valuesEnd)
+                {
+                  if (*index1 == ')')
+                  {
+                    if (count == 0)
+                      break;
+                    else
+                      --count;
+                  }
+                  else if (*index1 == '(')
+                    ++count;
+
+                  ++index1;
+                }
+                ++index1;
+              //  index1 = std::strrchr(values, ')') +1;
                 tmp = *index1 ;
                 *index1 = '\0';
                 vec.push_back(stringToValue(values));
@@ -503,7 +520,23 @@ namespace supplementary
               }
               else
               {
-                index1 = std::strrchr(values, ')')+1;
+                int count = 0;
+                ++index1;
+                while (index1 != valuesEnd)
+                {
+                  if (*index1 == ')')
+                  {
+                    if (count == 0)
+                      break;
+                    else
+                      --count;
+                  }
+                  else if (*index1 == '(')
+                    ++count;
+
+                  ++index1;
+                }
+                ++index1;
                 tmp = *index1;
                 *index1 = '\0';
                 vec.push_back(stringToValue(values));
