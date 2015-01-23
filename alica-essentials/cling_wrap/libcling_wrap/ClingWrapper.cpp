@@ -174,7 +174,7 @@ namespace supplementary
 
 	std::shared_ptr<External> const ClingWrapper::getExternal(const char* p_value)
         {
-	  Gringo::Value value = ClingWrapper::splitASPExternalString(p_value);
+	  Gringo::Value value = ClingWrapper::stringToValue(p_value);
 
 	  if (value.type() != Gringo::Value::Type::FUNC)
 	  {
@@ -240,30 +240,49 @@ namespace supplementary
 		}
 	}
 
+	bool ClingWrapper::query(std::string const &value)
+	{
+	        if (this->lastModel == nullptr || this->lastSolver == nullptr)
+	                return false;
+
+	        Gringo::Value query = ClingWrapper::stringToValue(value.c_str());
+
+	        return this->query(&query);
+	}
+
 	bool ClingWrapper::query(std::string const &name, Gringo::FWValVec args)
 	{
 		if (this->lastModel == nullptr || this->lastSolver == nullptr)
 			return false;
 
-		int literalId = -1;
 		Gringo::Value query(name, args);
 
-		for (auto lit : this->existingLiterals)
-		{
-			const Gringo::Value& value = std::get<1>(lit);
-			literalId = std::get<0>(lit);
-
-			if (false == this->lastModel->isTrue(this->lastSolver->symbolTable()[literalId].lit))
-				continue;
-
-			if (this->checkMatchValues(&query, &value))
-			{
-				return true;
-			}
-		}
-
-		return false;
+		return this->query(&query);
 	}
+
+        bool ClingWrapper::query(Gringo::Value* query)
+        {
+                if (this->lastModel == nullptr || this->lastSolver == nullptr)
+                        return false;
+
+                int literalId = -1;
+
+                for (auto lit : this->existingLiterals)
+                {
+                        const Gringo::Value& value = std::get<1>(lit);
+                        literalId = std::get<0>(lit);
+
+                        if (false == this->lastModel->isTrue(this->lastSolver->symbolTable()[literalId].lit))
+                                continue;
+
+                        if (this->checkMatchValues(query, &value))
+                        {
+                                return true;
+                        }
+                }
+
+                return false;
+        }
 
 	std::unique_ptr<std::vector<Gringo::Value>> ClingWrapper::queryAllTrue(std::string const &name, Gringo::FWValVec args)
 	{
@@ -386,18 +405,32 @@ namespace supplementary
 		return this->lastSolver;
 	}
 
-        Gringo::Value ClingWrapper::splitASPExternalString(const char* p_aspString)
+        const long long ClingWrapper::getSolvingTime()
+        {
+          if (this->getStats() == nullptr)
+            return -1;
+
+          auto claspFacade = this->getStats()->clasp;
+
+          if (claspFacade == nullptr)
+            return -1;
+
+          // time in seconds
+          return claspFacade->summary().solveTime * 1000;
+        }
+
+        Gringo::Value ClingWrapper::stringToValue(const char* p_aspString)
         {
           char *aspString = new char[std::strlen(p_aspString)+1];
           std::strcpy(aspString,p_aspString);
 
-          Gringo::Value value = splitASPExternalString(aspString);
+          Gringo::Value value = stringToValue(aspString);
           delete[] aspString;
 
           return value;
         }
 
-        Gringo::Value ClingWrapper::splitASPExternalString(char* p_aspString)
+        Gringo::Value ClingWrapper::stringToValue(char* p_aspString)
           {
             if (std::strlen(p_aspString) == 0)
               return Gringo::Value();
@@ -432,7 +465,7 @@ namespace supplementary
               if (index2 >= valuesEnd)
                 index2 = nullptr;
 
-              if (index2 == values)
+              if (index1 == nullptr && index2 == values)
               {
                 ++values;
                 continue;
@@ -448,10 +481,27 @@ namespace supplementary
               }
               else if (index2 == nullptr && index1 != nullptr)
               {
-                index1 = std::strrchr(values, ')') +1;
+                int count = 0;
+                ++index1;
+                while (index1 != valuesEnd)
+                {
+                  if (*index1 == ')')
+                  {
+                    if (count == 0)
+                      break;
+                    else
+                      --count;
+                  }
+                  else if (*index1 == '(')
+                    ++count;
+
+                  ++index1;
+                }
+                ++index1;
+              //  index1 = std::strrchr(values, ')') +1;
                 tmp = *index1 ;
                 *index1 = '\0';
-                vec.push_back(splitASPExternalString(values));
+                vec.push_back(stringToValue(values));
                 *index1 = tmp;
                 values = index1+1;
               }
@@ -470,10 +520,26 @@ namespace supplementary
               }
               else
               {
-                index1 = std::strrchr(values, ')')+1;
+                int count = 0;
+                ++index1;
+                while (index1 != valuesEnd)
+                {
+                  if (*index1 == ')')
+                  {
+                    if (count == 0)
+                      break;
+                    else
+                      --count;
+                  }
+                  else if (*index1 == '(')
+                    ++count;
+
+                  ++index1;
+                }
+                ++index1;
                 tmp = *index1;
                 *index1 = '\0';
-                vec.push_back(splitASPExternalString(values));
+                vec.push_back(stringToValue(values));
                 *index1 = tmp;
                 values = index1+1;
               }
