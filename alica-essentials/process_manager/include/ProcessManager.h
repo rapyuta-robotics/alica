@@ -10,22 +10,22 @@
 
 #define PM_DEBUG // for toggling debug output
 
-#include <map>
-#include <thread>
-#include <dirent.h>
 #include "ros/ros.h"
-
-#include "ManagedExecutable.h"
-
 #include "process_manager/ProcessCommand.h"
+#include <chrono>
 
 using namespace std;
+
+namespace std{
+	class thread;
+}
 
 namespace supplementary
 {
 
 	class SystemConfig;
 	class ManagedRobot;
+	class ManagedExecutable;
 
 	class ProcessManager
 	{
@@ -34,19 +34,22 @@ namespace supplementary
 		virtual ~ProcessManager();
 		void start();
 		bool isRunning();
+		static bool selfCheck();
+
 	private:
 		SystemConfig* sc;
 		string defaultHostname;
-		map<uint8_t, ManagedRobot*> robotMap;
+		map<int, ManagedRobot*> robotMap;
 
 		// this is just for faster procfs checking
-		list<string> *managedExecNames;
-		map<string ,uint8_t> executableIdMap;
-		map<string, uint8_t> robotIdMap;
+		list<string> *executableNames;
+		map<string ,int> executableIdMap;
+		map<string, int> robotIdMap;
 
 		ros::NodeHandle* rosNode;
 		ros::AsyncSpinner* spinner;
 		ros::Subscriber processCommandSub;
+
 
 		void handleProcessCommand(process_manager::ProcessCommandPtr pc);
 

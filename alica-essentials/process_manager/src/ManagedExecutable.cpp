@@ -6,11 +6,19 @@
  */
 
 #include "ManagedExecutable.h"
+#include <map>
+#include <iostream>
+#include <unistd.h>
+#include <signal.h>
+#include <sstream>
+#include <vector>
+#include <fstream>
 
 namespace supplementary
 {
+	long ManagedExecutable::kernelPageSize = 0;
 
-	ManagedExecutable::ManagedExecutable(uint8_t id, const char* executable, vector<string> defaultStrParams) :
+	ManagedExecutable::ManagedExecutable(int id, string executable, vector<string> defaultStrParams) :
 			id(id), executable(executable), defaultParams(new char*[defaultStrParams.size()]), managedPid(NOTHING_MANAGED), state(UNDEFINED)
 	{
 		for (int i = 0; i < defaultStrParams.size(); i++)
@@ -19,7 +27,8 @@ namespace supplementary
 		}
 	}
 
-	ManagedExecutable::ManagedExecutable(const char* executable, uint8_t id, long pid) : managedPid(pid), executable(executable), id(id)
+	ManagedExecutable::ManagedExecutable(string executable, int id, long pid) :
+			managedPid(pid), executable(executable), id(id)
 	{
 
 	}
@@ -58,18 +67,18 @@ namespace supplementary
 #endif
 			this->clear();
 		}
-		else if (this->queuedPids4Update.size() > 1)
+		else if (this->queuedPids4Update.size() > 0)
 		{
 #ifdef MGND_EXEC_DEBUG
-			cout << "ME: Queued PIDs:  ";
+			/*cout << "ME: " << this->executable << " Queued PIDs:  ";
 			for (long curPid : this->queuedPids4Update)
 			{
 				cout << curPid << ", ";
 			}
-			cout << endl;
+			cout << endl; */
 #endif
 
-			for (int i=0; i < this->queuedPids4Update.size(); i++)
+			for (int i = 0; i < this->queuedPids4Update.size(); i++)
 			{
 				long pid = this->queuedPids4Update.at(i);
 				if (this->managedPid == pid)
@@ -125,16 +134,40 @@ namespace supplementary
 	 */
 	void ManagedExecutable::updateStats(bool readParams)
 	{
-		// TODO: update resource infos over proc-fs
+#ifdef MGND_EXEC_DEBUG
+		//cout << "ME: Updating " << this->executable << " (" << this->managedPid << ")" << endl;
+#endif
+
 		string procPidString = "/proc/" + to_string(this->managedPid);
 		std::ifstream statFile(procPidString + "/stat", std::ifstream::in);
-		string line;
-		cout << "ME: Updating " << this->executable << " (" << this->managedPid << ")" << endl;
-		while (getline(statFile, line, ' '))
-		{
-#ifdef MGND_EXEC_DEBUG
-			cout << "ME: stat " << line << endl;
-#endif
+		string statLine;
+		getline(statFile, statLine);
+
+		//cout << "statline " << statLine << endl;
+		string tmp;
+		stringstream statStream (statLine);
+		int i = 0;
+		while (statStream.good() && i < 52) {
+			if (i == 2) { //state
+				statStream >> this->state;
+				i++;
+			} else if (i == 13){ // cpu time stuff (includes index 13-16)
+				statStream >> this->utime;
+				statStream >> this->stime;
+				statStream >> this->cutime;
+				statStream >> this->cstime;
+				i += 4;
+			} else if (i == 21){
+				statStream >> this->starttime;
+				i++;
+			} else if (i == 23) {
+				statStream >> this->memory;
+				break;
+			} else {
+				statStream >> tmp;
+				i++;
+				continue;
+			}
 		}
 
 		if (readParams)
@@ -153,7 +186,22 @@ namespace supplementary
 			this->params = ss.str();
 		}
 
-		cout << "ME: Updated " << this->executable << " (" << this->managedPid << ")" << endl;
+#ifdef MGND_EXEC_DEBUG
+		//this->printStats();
+		//cout << "ME: Updated " << this->executable << " (" << this->managedPid << ")" << endl;
+#endif
+
+
+	}
+
+	void ManagedExecutable::printStats() {
+		stringstream ss;
+		ss << "ME: Stats of " << this->executable << " (" << this->managedPid << ")" << endl;
+		ss << "ME: State: '" << this->state << "' StartTime: " << this->starttime << endl;
+		ss << "ME: Times: u '" << this->utime << "' s '" << this->stime << "' cu '" << this->cutime << "' cs '" << this->cstime << endl;
+		ss << "ME: Memory: " << this->memory*kernelPageSize/1024.0/1024.0 << "MB" << endl;
+		ss << "ME: Parameters: '" << this->params << endl;
+		cout << ss.str();
 	}
 
 	/**
@@ -176,7 +224,7 @@ namespace supplementary
 		pid_t pid = fork();
 		if (pid == 0) // child process
 		{
-			int execReturn = execv(this->executable, params);
+			int execReturn = execv(this->executable.c_str(), params);
 			if (execReturn == -1)
 			{
 				cout << "ME: Failure! execve error code=" << errno << endl;

@@ -10,13 +10,8 @@
 
 #define MGND_EXEC_DEBUG
 
-#include <map>
-#include <iostream>
-#include <unistd.h>
-#include <signal.h>
-#include <sstream>
+#include <string>
 #include <vector>
-#include <fstream>
 
 using namespace std;
 
@@ -26,8 +21,8 @@ namespace supplementary
 	class ManagedExecutable
 	{
 	public:
-		ManagedExecutable(uint8_t id, const char* executable, vector<string> defaultStrParams);
-		ManagedExecutable(const char* execName, uint8_t execid, long pid);
+		ManagedExecutable(int id, string executable, vector<string> defaultStrParams);
+		ManagedExecutable(string execName, int execid, long pid);
 		virtual ~ManagedExecutable();
 		string getExecutable() const;
 		void queue4Update(long pid);
@@ -38,25 +33,33 @@ namespace supplementary
 
 		static const long NOTHING_MANAGED = -1;
 		static const char UNDEFINED = 'U';
+		static long kernelPageSize; // in bytes
 
 	private:
 		// General information (fix for object life time)
-		uint8_t id;
-		const char* executable;
+		int id;
+		string executable;
 		char ** defaultParams;
 
 		// Information about the managed process (updated continuously)
 		long managedPid;
 		string params;
 		char state; // The process state (zombie, running, etc)
-		// TODO: Add and update statistic fields about CPU and Memory
+		unsigned long utime;
+		unsigned long stime;
+		long int cutime;
+		long int cstime;
+		unsigned long long starttime;
+		long int memory;
 
 		vector<long> queuedPids4Update; // a list of PIDs, which match this managed executable (should be only one, normally)
 
 		void updateStats(bool readParams = false);
+		void printStats();
 		void killOtherProcesses();
 		void readParams(long pid);
 		void clear();
+
 	};
 
 } /* namespace supplementary */

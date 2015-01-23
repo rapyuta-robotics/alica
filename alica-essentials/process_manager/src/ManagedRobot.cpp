@@ -6,7 +6,6 @@
  */
 
 #include "ManagedRobot.h"
-
 #include "ManagedExecutable.h"
 
 namespace supplementary
@@ -20,16 +19,18 @@ namespace supplementary
 	{
 	}
 
-	void ManagedRobot::queue4update(uint8_t execid, long pid)
+	void ManagedRobot::queue4update(string execName, int execid, long pid)
 	{
-		this->executableMap.at(execid)->queue4Update(pid);
-	}
-
-	void ManagedRobot::queue4update(const char* execName, uint8_t execid, long pid)
-	{
-		ManagedExecutable* mngExec = new ManagedExecutable(execName, execid, pid);
-		mngExec->queue4Update(pid);
-		this->executableMap.at(execid) = mngExec;
+		auto execEntry = this->executableMap.find(execid);
+		if (execEntry != this->executableMap.end())
+		{
+			execEntry->second->queue4Update(pid);
+		}
+		else
+		{
+			auto newExecEntry = this->executableMap.emplace(execid, new ManagedExecutable(execName, execid, pid));
+			newExecEntry.first->second->queue4Update(pid);
+		}
 	}
 
 	void ManagedRobot::update()

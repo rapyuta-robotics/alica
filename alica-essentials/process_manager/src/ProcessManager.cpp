@@ -10,65 +10,58 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <cstdlib>
 
+#include <map>
+#include <thread>
+#include <dirent.h>
+#include <unistd.h>
+
 #include <SystemConfig.h>
 #include "ManagedRobot.h"
+#include "ManagedExecutable.h"
 
 namespace supplementary
 {
 
+	/**
+	 * Creates an ProcessManager object, which has already parsed the process descriptions of the processes to be managed
+	 * and the robots, which are known for the ROBOT environment variable.
+	 * @param argc
+	 * @param argv
+	 */
 	ProcessManager::ProcessManager(int argc, char** argv) :
 			iterationTime(1000000), mainThread(NULL), running(false)
 	{
+
 		this->sc = SystemConfig::getInstance();
 		this->defaultHostname = this->sc->getHostname();
-		this->managedExecNames = new list<string>();
+		this->executableNames = new list<string>();
 
 		/* Initialise some data structures for faster runtime in searchProcFS-Method with
 		 * data from Globals.conf and Processes.conf file. */
 		auto processDescriptions = (*this->sc)["Processes"]->getSections("Processes.ProcessDescriptions", NULL);
 
-		short curId;
+		int curId;
 		for (auto processSectionName : (*processDescriptions))
 		{
-			this->managedExecNames->push_back(processSectionName);
-			curId = (*this->sc)["Processes"]->get<short>("Processes.ProcessDescriptions", processSectionName.c_str(),
-															"id", NULL);
+			this->executableNames->push_back(processSectionName);
+			curId = (*this->sc)["Processes"]->get<int>("Processes.ProcessDescriptions", processSectionName.c_str(), "id", NULL);
 			this->executableIdMap.emplace(processSectionName, curId);
 		}
 
 		auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
 		for (auto robotName : (*robotNames))
 		{
-			curId = (*this->sc)["Globals"]->get<short>("Globals.Team", robotName.c_str(), "id", NULL);
+			curId = (*this->sc)["Globals"]->get<int>("Globals.Team", robotName.c_str(), "ID", NULL);
 			this->robotIdMap.emplace(robotName, curId);
 		}
 
-//		short curId;
-//		string curExecutable;
-//		vector<string> curDefaultParams;
-//		for (auto processSectionName : (*processDescriptions))
-//		{
-//			curId = (*this->sc)["Processes"]->get<short>("Processes.ProcessDescriptions", processSectionName.c_str(), "id", NULL);
-//			if (this->executableMap.find(curId) != this->executableMap.end()) {
-//				cerr << "ProcessManager: ERROR - ID " << curId << " found more than one time in Processes.conf!" << endl;
-//				throw new exception();
-//			}
-//			curExecutable = (*this->sc)["Processes"]->get<string>("Processes.ProcessDescriptions", processSectionName.c_str(), "executable",
-//						NULL);
-//			curDefaultParams = (*this->sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", processSectionName.c_str(), "defaultParams",
-//			NULL);
-//			this->executableMap[curId] = new ManagedExecutable(curId, curExecutable.c_str(), curDefaultParams);
-//		}
-
-// initialise ROS stuff
+		// initialise ROS stuff
 		rosNode = new ros::NodeHandle();
 		spinner = new ros::AsyncSpinner(4);
-		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10,
-												&ProcessManager::handleProcessCommand, (ProcessManager*)this);
+		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10, &ProcessManager::handleProcessCommand, (ProcessManager*)this);
 	}
 
 	ProcessManager::~ProcessManager()
@@ -130,7 +123,7 @@ namespace supplementary
 	}
 
 	/**
-	 * The run-method of the worker thread in the ProcessManager.
+	 * The run-method of the worker thread of the ProcessManager object.
 	 */
 	void ProcessManager::run()
 	{
@@ -145,7 +138,7 @@ namespace supplementary
 			chrono::microseconds microsecondsPassed = chrono::duration_cast<chrono::microseconds>(timePassed);
 
 #ifdef PM_DEBUG
-			cout << "PM: " << microsecondsPassed.count() << " microseconds passed!" << endl;
+			cout << "PM: " << microsecondsPassed.count() << " microseconds passed!" << endl << endl;
 #endif
 			chrono::microseconds availTime = this->iterationTime - microsecondsPassed;
 
@@ -194,13 +187,13 @@ namespace supplementary
 			std::ifstream ifs;
 			curFile = "/proc/" + string(dirEntry->d_name) + "/comm";
 			ifs.open(curFile, std::ifstream::in);
-			char execName[256];
-			ifs.getline(execName, 256);
+			string execName;
+			getline(ifs, execName);
 			ifs.close();
 
-			for (auto curExecName : *(this->managedExecNames))
+			for (auto curExecName : *(this->executableNames))
 			{
-				if (strcmp(execName, curExecName.c_str()) != 0)
+				if (execName.compare(curExecName) != 0)
 				{
 					// we don't manage this executable -> continue
 					continue;
@@ -214,19 +207,26 @@ namespace supplementary
 				ifs.close();
 
 				// get the robots ID
-				string robotName = robotEnvironment.substr(6, 256);
+				string robotName;
+				if (robotEnvironment.substr(0,6).compare("ROBOT=") != 0) {
+					robotName = this->defaultHostname;
+				} else {
+					robotName = robotEnvironment.substr(6, 256);
+				}
 				auto robotId = this->robotIdMap.find(robotName);
 				if (robotId != this->robotIdMap.end())
 				{
+					int execid = this->executableIdMap[execName];
+
 					auto robotEntry = this->robotMap.find(robotId->second);
 					if (robotEntry != robotMap.end())
 					{
-						robotEntry->second->queue4update(this->executableIdMap[execName], curPID);
+						robotEntry->second->queue4update(execName, execid, curPID);
 					}
 					else
 					{
 						this->robotMap.emplace(robotId->second, new ManagedRobot());
-						this->robotMap[robotId->second]->queue4update(execName, this->executableIdMap[execName], curPID);
+						this->robotMap[robotId->second]->queue4update(execName, execid, curPID);
 					}
 				}
 				else
@@ -235,17 +235,88 @@ namespace supplementary
 				}
 
 #ifdef PM_DEBUG
-				cout << "PM: FOUND RobotEnvironment " << robotEnvironment << " Robot " << robotName << " Exec "
-						<< execName << " PID " << curPID << endl;
+				cout << "PM: Robot '" << robotName << "' executes '" << execName << "' with PID " << curPID << endl;
 #endif
 
 			}
 		}
+
+		closedir(proc);
 	}
 
+	/**
+	 * Method for checking, whether the ProcessManager's main thread is still running.
+	 * @return
+	 */
 	bool ProcessManager::isRunning()
 	{
 		return running;
+	}
+
+	/**
+	 * Checks whether another instance of the process manager executable is already
+	 * running on the system and set the kernelPageSize of ManagedExecutable.
+	 * @return True, if there is another instance running. False, otherwise.
+	 */
+	bool ProcessManager::selfCheck()
+	{
+		ManagedExecutable::kernelPageSize = sysconf(_SC_PAGESIZE);
+
+		std::ifstream ifs;
+		ifs.open("/proc/self/stat", std::ifstream::in);
+		string pid;
+		getline(ifs, pid, '\0');
+		ifs.close();
+		long ownPID =  stol(pid);
+
+
+
+		DIR* proc;
+		struct dirent *dirEntry;
+
+		if (!(proc = opendir("/proc")))
+		{
+			perror("PM: can't open /proc");
+			return true;
+		}
+
+		long curPID = 0;
+		char* endPtr;
+		string curFile;
+		string curExecutable;
+		while ((dirEntry = readdir(proc)) != NULL)
+		{
+			/* if endptr is not a null character, the directory is not
+			 * entirely numeric, so ignore it */
+			curPID = strtol(dirEntry->d_name, &endPtr, 10);
+			if (*endPtr != '\0')
+			{
+				continue;
+			}
+
+			// get the executables name
+			std::ifstream ifs;
+			curFile = "/proc/" + string(dirEntry->d_name) + "/comm";
+			ifs.open(curFile, std::ifstream::in);
+			string execName;
+			getline(ifs, execName);
+			ifs.close();
+
+			if (execName.compare("process_manager") != 0 || ownPID == curPID)
+			{
+				continue;
+			}
+			else
+			{
+				cout << "PM: My own PID is " << ownPID << endl;
+				cout << "PM: There is already another process_manager running on this system! PID: " << curPID << endl;
+				cout << "PM: Terminating myself..." << endl;
+				return true;
+			}
+		}
+
+		// No process_manager instance found!
+		return false;
 	}
 
 } /* namespace supplementary */
@@ -253,15 +324,16 @@ namespace supplementary
 int main(int argc, char** argv)
 {
 
-	// TODO: test whether a process_manager is already running
-	/* if (!selfCheck())
+	if (supplementary::ProcessManager::selfCheck())
 	{
-		return;
-	}*/
+		// A process manager is already running on the system.
+		return -1;
+	}
 
 	ros::init(argc, argv, "ProcessManager");
 
 	supplementary::ProcessManager* pm = new supplementary::ProcessManager(argc, argv);
+
 	pm->start();
 
 	while (ros::ok() && pm->isRunning())
