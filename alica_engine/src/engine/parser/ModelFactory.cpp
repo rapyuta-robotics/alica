@@ -588,7 +588,6 @@ namespace alica
 				b->setEventDriven(true);
 			}
 		}
-
 		attr = element->Attribute("deferring");
 		if (attr)
 		{
@@ -615,9 +614,9 @@ namespace alica
 			{
 				const char* key = curChild->Attribute("key");
 				const char* value = curChild->Attribute("value");
-				if (attr && value)
+				if (key && value)
 				{
-					b->getParameters()->insert(pair<string, string>(attr, value));
+					b->getParameters()->insert(pair<string, string>(key, value));
 				}
 			}
 			else
