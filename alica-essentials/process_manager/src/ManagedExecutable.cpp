@@ -6,22 +6,38 @@
  */
 
 #include "ManagedExecutable.h"
+#include <map>
+#include <iostream>
+#include <unistd.h>
+#include <signal.h>
+#include <sstream>
+#include <vector>
+#include <fstream>
+#include "SystemConfig.h"
 
 namespace supplementary
 {
+	long ManagedExecutable::kernelPageSize = 0;
 
-	ManagedExecutable::ManagedExecutable(uint8_t id, const char* executable, vector<string> defaultStrParams) :
-			id(id), executable(executable), defaultParams(new char*[defaultStrParams.size()]), managedPid(NOTHING_MANAGED), state(UNDEFINED)
+	ManagedExecutable::ManagedExecutable(string executable, int id, long pid) :
+			managedPid(pid), executable(executable), id(id), state(UNDEFINED), cutime(0), cstime(0), utime(0), stime(0), memory(0), starttime(0), shouldRun(false)
 	{
-		for (int i = 0; i < defaultStrParams.size(); i++)
+		SystemConfig* sc = supplementary::SystemConfig::getInstance();
+		vector<string> defaultParams = (*sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", executable.c_str(), "defaultParams", NULL);
+
+#ifdef MGND_EXEC_DEBUG
+		cout << "ME: Constructor of executable " << executable << endl;
+		for (string s : defaultParams)
 		{
-			defaultParams[i] = (char*)defaultStrParams.at(i).c_str();
+			cout << "'" << s << "'" << endl;
 		}
-	}
-
-	ManagedExecutable::ManagedExecutable(const char* executable, uint8_t id, long pid) : managedPid(pid), executable(executable), id(id)
-	{
-
+#endif
+		// convert vector<string> to char*[] (where each element is null-terminated)
+		std::vector<char*> vec;
+		std::transform(defaultParams.begin(), defaultParams.end(), std::back_inserter(vec), [](std::string& s)
+		{	s.push_back(0); return &s[0];});
+		vec.push_back(nullptr);
+		this->defaultParams = vec.data();
 	}
 
 	ManagedExecutable::~ManagedExecutable()
@@ -58,18 +74,18 @@ namespace supplementary
 #endif
 			this->clear();
 		}
-		else if (this->queuedPids4Update.size() > 1)
+		else if (this->queuedPids4Update.size() > 0)
 		{
 #ifdef MGND_EXEC_DEBUG
-			cout << "ME: Queued PIDs:  ";
-			for (long curPid : this->queuedPids4Update)
-			{
-				cout << curPid << ", ";
-			}
-			cout << endl;
+			/*cout << "ME: " << this->executable << " Queued PIDs:  ";
+			 for (long curPid : this->queuedPids4Update)
+			 {
+			 cout << curPid << ", ";
+			 }
+			 cout << endl; */
 #endif
 
-			for (int i=0; i < this->queuedPids4Update.size(); i++)
+			for (int i = 0; i < this->queuedPids4Update.size(); i++)
 			{
 				long pid = this->queuedPids4Update.at(i);
 				if (this->managedPid == pid)
@@ -125,16 +141,50 @@ namespace supplementary
 	 */
 	void ManagedExecutable::updateStats(bool readParams)
 	{
-		// TODO: update resource infos over proc-fs
+#ifdef MGND_EXEC_DEBUG
+		//cout << "ME: Updating " << this->executable << " (" << this->managedPid << ")" << endl;
+#endif
+
 		string procPidString = "/proc/" + to_string(this->managedPid);
 		std::ifstream statFile(procPidString + "/stat", std::ifstream::in);
-		string line;
-		cout << "ME: Updating " << this->executable << " (" << this->managedPid << ")" << endl;
-		while (getline(statFile, line, ' '))
+		string statLine;
+		getline(statFile, statLine);
+
+		//cout << "statline " << statLine << endl;
+		string tmp;
+		stringstream statStream(statLine);
+		int i = 0;
+		while (statStream.good() && i < 52)
 		{
-#ifdef MGND_EXEC_DEBUG
-			cout << "ME: stat " << line << endl;
-#endif
+			if (i == 2)
+			{ //state
+				statStream >> this->state;
+				i++;
+			}
+			else if (i == 13)
+			{ // cpu time stuff (includes index 13-16)
+				statStream >> this->utime;
+				statStream >> this->stime;
+				statStream >> this->cutime;
+				statStream >> this->cstime;
+				i += 4;
+			}
+			else if (i == 21)
+			{
+				statStream >> this->starttime;
+				i++;
+			}
+			else if (i == 23)
+			{
+				statStream >> this->memory;
+				break;
+			}
+			else
+			{
+				statStream >> tmp;
+				i++;
+				continue;
+			}
 		}
 
 		if (readParams)
@@ -153,7 +203,22 @@ namespace supplementary
 			this->params = ss.str();
 		}
 
-		cout << "ME: Updated " << this->executable << " (" << this->managedPid << ")" << endl;
+#ifdef MGND_EXEC_DEBUG
+		//this->printStats();
+		//cout << "ME: Updated " << this->executable << " (" << this->managedPid << ")" << endl;
+#endif
+
+	}
+
+	void ManagedExecutable::printStats()
+	{
+		stringstream ss;
+		ss << "ME: Stats of " << this->executable << " (" << this->managedPid << ")" << endl;
+		ss << "ME: State: '" << this->state << "' StartTime: " << this->starttime << endl;
+		ss << "ME: Times: u '" << this->utime << "' s '" << this->stime << "' cu '" << this->cutime << "' cs '" << this->cstime << endl;
+		ss << "ME: Memory: " << this->memory * kernelPageSize / 1024.0 / 1024.0 << "MB" << endl;
+		ss << "ME: Parameters: '" << this->params << endl;
+		cout << ss.str();
 	}
 
 	/**
@@ -166,6 +231,25 @@ namespace supplementary
 		this->params = "";
 	}
 
+	void ManagedExecutable::changeDesiredState(bool shouldRun)
+	{
+		if (this->managedPid != NOTHING_MANAGED && shouldRun)
+		{
+			cout << "ME: Wont start executable, as it is already running! PID: " << this->managedPid << endl;
+			return;
+		}
+
+		if (this->managedPid == NOTHING_MANAGED && !shouldRun)
+		{
+			cout << "ME: Can not stop executable, as nothing is running!" << endl;
+			return;
+		}
+
+		// remember desired executable state
+		this->lastCommandTime = chrono::steady_clock::now();
+		this->shouldRun = shouldRun;
+	}
+
 	/**
 	 * Starts a process with the given parameters.
 	 * The started process replaces already running processes.
@@ -173,10 +257,11 @@ namespace supplementary
 	 */
 	void ManagedExecutable::startProcess(char* const * params)
 	{
+
 		pid_t pid = fork();
 		if (pid == 0) // child process
 		{
-			int execReturn = execv(this->executable, params);
+			int execReturn = execv(this->executable.c_str(), params);
 			if (execReturn == -1)
 			{
 				cout << "ME: Failure! execve error code=" << errno << endl;
@@ -187,12 +272,11 @@ namespace supplementary
 		{
 			this->managedPid = pid;
 		}
-#ifdef MGND_EXEC_DEBUG
 		else if (pid < 0)
 		{
 			cout << "ME: Failed to fork!" << endl;
+			this->managedPid = NOTHING_MANAGED;
 		}
-#endif
 	}
 
 	/**

@@ -10,22 +10,22 @@
 
 #define PM_DEBUG // for toggling debug output
 
-#include <map>
-#include <thread>
-#include <dirent.h>
 #include "ros/ros.h"
-
-#include "ManagedExecutable.h"
-
 #include "process_manager/ProcessCommand.h"
+#include <chrono>
 
 using namespace std;
+
+namespace std{
+	class thread;
+}
 
 namespace supplementary
 {
 
 	class SystemConfig;
 	class ManagedRobot;
+	class ManagedExecutable;
 
 	class ProcessManager
 	{
@@ -34,30 +34,38 @@ namespace supplementary
 		virtual ~ProcessManager();
 		void start();
 		bool isRunning();
+		bool selfCheck();
+		void initCommunication(int argc, char** argv);
+
+		static void pmSigintHandler(int sig);
+
+		static bool running; /* < has to be static, to be changeable within ProcessManager::pmSignintHandler() */
+
 	private:
 		SystemConfig* sc;
 		string defaultHostname;
-		map<uint8_t, ManagedRobot*> robotMap;
+		map<int, ManagedRobot*> robotMap;
 
 		// this is just for faster procfs checking
-		list<string> *managedExecNames;
-		map<string ,uint8_t> executableIdMap;
-		map<string, uint8_t> robotIdMap;
+		list<string> *executableNames;
+		map<string ,int> executableIdMap;
+		map<string, int> robotIdMap;
 
 		ros::NodeHandle* rosNode;
 		ros::AsyncSpinner* spinner;
 		ros::Subscriber processCommandSub;
 
+
 		void handleProcessCommand(process_manager::ProcessCommandPtr pc);
 
 
-		bool running;
 		thread* mainThread;
 		chrono::microseconds iterationTime;
 
 		void run();
 		void searchProcFS();
 		void update();
+
 	};
 
 } /* namespace alica */

@@ -32,7 +32,6 @@ namespace alica
 
 		CGSolver::~CGSolver()
 		{
-			// TODO Auto-generated destructor stub
 		}
 
 		bool CGSolver::existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls)

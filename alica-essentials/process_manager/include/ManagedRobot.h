@@ -22,14 +22,16 @@ namespace supplementary
 	class ManagedRobot
 	{
 	public:
-		ManagedRobot();
+		ManagedRobot(string robotName);
 		virtual ~ManagedRobot();
-		void queue4update(uint8_t execid, long pid);
-		void queue4update(const char* execName, uint8_t execid, long pid);
+		void queue4update(string execName, int execid, long pid);
 		void update();
-
+		void startExecutable(string execName, int execid);
+		void startExecutable(string execName, int execid, char** params);
+		void changeDesiredState(int execid, bool shouldRun);
 	private:
-		map<uint8_t, ManagedExecutable*> executableMap;
+		string robotName;
+		map<int, ManagedExecutable*> executableMap;
 	};
 
 } /* namespace supplementary */

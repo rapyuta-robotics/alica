@@ -6,13 +6,13 @@
  */
 
 #include "ManagedRobot.h"
-
 #include "ManagedExecutable.h"
 
 namespace supplementary
 {
 
-	ManagedRobot::ManagedRobot()
+	ManagedRobot::ManagedRobot(string robotName) :
+			robotName(robotName)
 	{
 	}
 
@@ -20,16 +20,47 @@ namespace supplementary
 	{
 	}
 
-	void ManagedRobot::queue4update(uint8_t execid, long pid)
+	void ManagedRobot::changeDesiredState(int execid, bool shouldRun)
 	{
-		this->executableMap.at(execid)->queue4Update(pid);
+		auto execEntry = this->executableMap.find(execid);
+		if (execEntry == this->executableMap.end())
+		{
+			execEntry->second->changeDesiredState(shouldRun);
+		}
 	}
 
-	void ManagedRobot::queue4update(const char* execName, uint8_t execid, long pid)
+	void ManagedRobot::startExecutable(string execName, int execid)
 	{
-		ManagedExecutable* mngExec = new ManagedExecutable(execName, execid, pid);
-		mngExec->queue4Update(pid);
-		this->executableMap.at(execid) = mngExec;
+		auto execEntry = this->executableMap.find(execid);
+		if (execEntry == this->executableMap.end())
+		{
+			auto newExecEntry = this->executableMap.emplace(execid, new ManagedExecutable(execName, execid, ManagedExecutable::NOTHING_MANAGED));
+		}
+		execEntry->second->startProcess();
+	}
+
+	void ManagedRobot::startExecutable(string execName, int execid, char** params)
+	{
+		auto execEntry = this->executableMap.find(execid);
+		if (execEntry == this->executableMap.end())
+		{
+			auto newExecEntry = this->executableMap.emplace(execid, new ManagedExecutable(execName, execid, ManagedExecutable::NOTHING_MANAGED));
+		}
+		execEntry->second->startProcess(params);
+	}
+
+	void ManagedRobot::queue4update(string execName, int execid, long pid)
+	{
+		auto execEntry = this->executableMap.find(execid);
+		if (execEntry != this->executableMap.end())
+		{
+			execEntry->second->queue4Update(pid);
+		}
+		else
+		{
+			auto newExecEntry = this->executableMap.emplace(execid, new ManagedExecutable(execName, execid, pid));
+			newExecEntry.first->second->queue4Update(pid);
+		}
 	}
 
 	void ManagedRobot::update()

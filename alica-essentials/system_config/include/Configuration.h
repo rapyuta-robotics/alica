@@ -25,6 +25,7 @@ namespace supplementary
 
 	protected:
 
+		static const char LIST_ELEMENT_SEPERATOR = ',';
 		string filename;
 		void collect(ConfigNode *node, vector<string> *params, size_t offset, vector<ConfigNode *> *result);
 		void collectSections(ConfigNode *node, vector<string> *params, size_t offset, vector<ConfigNode *> *result);
@@ -319,7 +320,7 @@ namespace supplementary
 		std::istringstream ss(value);
 		std::string listItem;
 		vector<string> itemVector;
-		while(std::getline(ss, listItem, ',')) {
+		while(std::getline(ss, listItem, LIST_ELEMENT_SEPERATOR)) {
 			itemVector.push_back(listItem);
 		}
 		return itemVector;
