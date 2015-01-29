@@ -74,6 +74,9 @@ namespace supplementary
 		const Clasp::Model* getLastModel();
 		const Clasp::Solver* getLastSolver();
 		const long long getSolvingTime();
+                const long long getSatTime();
+                const long long getUnsatTime();
+                const long getModelCount();
 
 	private:
                 bool checkMatchValues(const Gringo::Value* value1, const Gringo::Value* value2);
