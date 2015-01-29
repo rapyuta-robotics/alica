@@ -34,7 +34,12 @@ namespace supplementary
 		virtual ~ProcessManager();
 		void start();
 		bool isRunning();
-		static bool selfCheck();
+		bool selfCheck();
+		void initCommunication(int argc, char** argv);
+
+		static void pmSigintHandler(int sig);
+
+		static bool running; /* < has to be static, to be changeable within ProcessManager::pmSignintHandler() */
 
 	private:
 		SystemConfig* sc;
@@ -54,13 +59,13 @@ namespace supplementary
 		void handleProcessCommand(process_manager::ProcessCommandPtr pc);
 
 
-		bool running;
 		thread* mainThread;
 		chrono::microseconds iterationTime;
 
 		void run();
 		void searchProcFS();
 		void update();
+
 	};
 
 } /* namespace alica */

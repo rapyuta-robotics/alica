@@ -41,6 +41,8 @@ namespace supplementary
 		static string getHostname();
 		static void setHostname(string newHostname);
 		static void resetHostname();
+
+
 		Configuration *operator[](const string s);
 		string getRootPath();
 		string getConfigPath();

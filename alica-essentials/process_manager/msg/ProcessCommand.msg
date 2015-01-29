@@ -1,15 +1,19 @@
+# Example: Hairy's ProcessManager should stop the processes with the Id 1, 2 and 3, if they run with ROBOT=nase 
+# receiverId = 8, robotId = [9], cmd = 1, processKeys = [1,2,3]
+
+#constants for cmd
 uint8 START = 0
 uint8 STOP = 1
 
+# ReceiverId determines the ProcessManager, which is addressed by this message. 0 means every ProcessManager
+int32 receiverId
+
 # RobotId determines the ROBOT-Environment Variable. 
-uint8 robotId
+int32[] robotIds
 
 # Cmd has to be set to one of the values above. 
 uint8 cmd
 
 # Array of IDs from the Processes.conf file.
-uint8[] processKeys
+int32[] processKeys
 
-# Example: Stop the processes with the Id 1, 2 and 3, if they run with ROBOT=nase 
-# robotId = 9, cmd = 1, processKeys = [1,2,3]
- 

@@ -12,6 +12,7 @@
 
 #include <string>
 #include <vector>
+#include <chrono>
 
 using namespace std;
 
@@ -21,12 +22,12 @@ namespace supplementary
 	class ManagedExecutable
 	{
 	public:
-		ManagedExecutable(int id, string executable, vector<string> defaultStrParams);
 		ManagedExecutable(string execName, int execid, long pid);
 		virtual ~ManagedExecutable();
 		string getExecutable() const;
 		void queue4Update(long pid);
 		void update();
+		void changeDesiredState(bool shouldRun);
 		void startProcess (char* const* params);
 		void startProcess ();
 		bool stopProcess ();
@@ -52,7 +53,11 @@ namespace supplementary
 		unsigned long long starttime;
 		long int memory;
 
-		vector<long> queuedPids4Update; // a list of PIDs, which match this managed executable (should be only one, normally)
+
+		chrono::time_point<chrono::steady_clock> lastCommandTime;
+		bool shouldRun;
+		char ** desiredParams;
+		vector<long> queuedPids4Update; /* < a list of PIDs, which match this managed executable (should be only one, normally)*/
 
 		void updateStats(bool readParams = false);
 		void printStats();

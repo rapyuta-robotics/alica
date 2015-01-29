@@ -12,6 +12,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <cstdlib>
+#include <signal.h>
 
 #include <map>
 #include <thread>
@@ -25,6 +26,8 @@
 namespace supplementary
 {
 
+	bool ProcessManager::running = false;
+
 	/**
 	 * Creates an ProcessManager object, which has already parsed the process descriptions of the processes to be managed
 	 * and the robots, which are known for the ROBOT environment variable.
@@ -32,25 +35,16 @@ namespace supplementary
 	 * @param argv
 	 */
 	ProcessManager::ProcessManager(int argc, char** argv) :
-			iterationTime(1000000), mainThread(NULL), running(false)
+			iterationTime(1000000), mainThread(NULL), spinner(NULL), rosNode(NULL)
 	{
-
 		this->sc = SystemConfig::getInstance();
 		this->defaultHostname = this->sc->getHostname();
 		this->executableNames = new list<string>();
 
 		/* Initialise some data structures for faster runtime in searchProcFS-Method with
 		 * data from Globals.conf and Processes.conf file. */
-		auto processDescriptions = (*this->sc)["Processes"]->getSections("Processes.ProcessDescriptions", NULL);
 
 		int curId;
-		for (auto processSectionName : (*processDescriptions))
-		{
-			this->executableNames->push_back(processSectionName);
-			curId = (*this->sc)["Processes"]->get<int>("Processes.ProcessDescriptions", processSectionName.c_str(), "id", NULL);
-			this->executableIdMap.emplace(processSectionName, curId);
-		}
-
 		auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
 		for (auto robotName : (*robotNames))
 		{
@@ -58,15 +52,33 @@ namespace supplementary
 			this->robotIdMap.emplace(robotName, curId);
 		}
 
-		// initialise ROS stuff
-		rosNode = new ros::NodeHandle();
-		spinner = new ros::AsyncSpinner(4);
-		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10, &ProcessManager::handleProcessCommand, (ProcessManager*)this);
+		bool autostart = (std::find(argv, argv + argc, "-autostart") != argv + argc);
+
+		int ownId = this->robotIdMap.at(this->defaultHostname);
+		if (autostart)
+		{
+			this->robotMap.emplace(this->robotIdMap.at(this->defaultHostname), new ManagedRobot(this->defaultHostname));
+		}
+
+		auto processDescriptions = (*this->sc)["Processes"]->getSections("Processes.ProcessDescriptions", NULL);
+		for (auto processSectionName : (*processDescriptions))
+		{
+			this->executableNames->push_back(processSectionName);
+			curId = (*this->sc)["Processes"]->get<int>("Processes.ProcessDescriptions", processSectionName.c_str(), "id", NULL);
+			this->executableIdMap.emplace(processSectionName, curId);
+			if (autostart)
+			{
+				//ManagedExecutable* curME = new ManagedExecutable(processSectionName, curId, ManagedExecutable::NOTHING_MANAGED);
+
+				this->robotMap.at(ownId)->startExecutable(processSectionName, curId);
+			}
+		}
+
 	}
 
 	ProcessManager::~ProcessManager()
 	{
-		this->running = false;
+		ProcessManager::running = false;
 		if (this->mainThread != nullptr)
 		{
 			mainThread->join();
@@ -83,41 +95,58 @@ namespace supplementary
 
 	void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
 	{
-		//TODO: handle commands the right way
-		// 1. create map entries of not present
-		// 2. trigger right commands
+		// check wether this msg is for me, 0 is a wildcard for all ProcessManagers
+		if (pc->receiverId != this->robotIdMap.at(this->defaultHostname) && pc->receiverId != 0)
+		{
+			return;
+		}
 
-//		switch (pc->cmd)
-//		{
-//			case process_manager::ProcessCommand::START:
-//				for (uint8_t proc : pc->processKeys)
-//				{
-//					auto mngExec = this->executableMap.find(proc);
-//					if (mngExec != this->executableMap.end())
-//					{
-//						mngExec->second->startProcess();
-//					}
-//				}
-//				break;
-//			case process_manager::ProcessCommand::STOP:
-//				for (uint8_t proc : pc->processKeys)
-//				{
-//					auto mngExec = this->executableMap.find(proc);
-//					if (mngExec != this->executableMap.end())
-//					{
-//						// TODO: find robotname with given robotID
-//						//mngExec->second->stopProcess(pc->robotId);
-//					}
-//				}
-//				break;
-//		}
+		switch (pc->cmd)
+		{
+			case process_manager::ProcessCommand::START:
+				for (int robotId : pc->robotIds)
+				{
+					for (int proc : pc->processKeys)
+					{
+						this->robotMap.at(robotId)->changeDesiredState(proc, true);
+					}
+				}
+				break;
+			case process_manager::ProcessCommand::STOP:
+				for (int robotId : pc->robotIds)
+				{
+					for (int proc : pc->processKeys)
+					{
+						this->robotMap.at(robotId)->changeDesiredState(proc, false);
+					}
+				}
+				break;
+		}
 	}
 
+	/**
+	 * Initialises the ROS Node of the ProcessManager. This is postponed, as we first need to check, whether there is a roscore running.
+	 * See ProcessManager::selfCheck()
+	 * @param argc
+	 * @param argv
+	 */
+	void ProcessManager::initCommunication(int argc, char** argv)
+	{
+		// initialise ROS stuff
+		ros::init(argc, argv, "ProcessManager");
+		rosNode = new ros::NodeHandle();
+		spinner = new ros::AsyncSpinner(4);
+		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10, &ProcessManager::handleProcessCommand, (ProcessManager*)this);
+	}
+
+	/**
+	 * Starts the worker thread of the ProcessManager, if not already running.
+	 */
 	void ProcessManager::start()
 	{
-		if (!this->running)
+		if (!ProcessManager::running)
 		{
-			this->running = true;
+			ProcessManager::running = true;
 			this->mainThread = new thread(&ProcessManager::run, this);
 		}
 	}
@@ -127,7 +156,7 @@ namespace supplementary
 	 */
 	void ProcessManager::run()
 	{
-		while (running)
+		while (ProcessManager::running)
 		{
 			auto start = chrono::system_clock::now();
 
@@ -150,6 +179,9 @@ namespace supplementary
 		}
 	}
 
+	/**
+	 * Calls update on all ManagedRobot instances.
+	 */
 	void ProcessManager::update()
 	{
 		for (auto const &mngdRobot : this->robotMap)
@@ -158,6 +190,9 @@ namespace supplementary
 		}
 	}
 
+	/**
+	 * Searches the proc filesystem for instances of processes, the ProcessManager has to manage.
+	 */
 	void ProcessManager::searchProcFS()
 	{
 		DIR* proc;
@@ -208,9 +243,12 @@ namespace supplementary
 
 				// get the robots ID
 				string robotName;
-				if (robotEnvironment.substr(0,6).compare("ROBOT=") != 0) {
+				if (robotEnvironment.substr(0, 6).compare("ROBOT=") != 0)
+				{
 					robotName = this->defaultHostname;
-				} else {
+				}
+				else
+				{
 					robotName = robotEnvironment.substr(6, 256);
 				}
 				auto robotId = this->robotIdMap.find(robotName);
@@ -225,7 +263,7 @@ namespace supplementary
 					}
 					else
 					{
-						this->robotMap.emplace(robotId->second, new ManagedRobot());
+						this->robotMap.emplace(robotId->second, new ManagedRobot(robotName));
 						this->robotMap[robotId->second]->queue4update(execName, execid, curPID);
 					}
 				}
@@ -246,7 +284,7 @@ namespace supplementary
 
 	/**
 	 * Method for checking, whether the ProcessManager's main thread is still running.
-	 * @return
+	 * @return running
 	 */
 	bool ProcessManager::isRunning()
 	{
@@ -255,21 +293,19 @@ namespace supplementary
 
 	/**
 	 * Checks whether another instance of the process manager executable is already
-	 * running on the system and set the kernelPageSize of ManagedExecutable.
-	 * @return True, if there is another instance running. False, otherwise.
+	 * running on the system and set the kernelPageSize of ManagedExecutable. Furthermore,
+	 * this methods starts a roscore if necessary.
+	 * @return False, if something didn't work out. True, otherwise.
 	 */
 	bool ProcessManager::selfCheck()
 	{
-		ManagedExecutable::kernelPageSize = sysconf(_SC_PAGESIZE);
-
+		string roscoreExecName = "roscore";
 		std::ifstream ifs;
 		ifs.open("/proc/self/stat", std::ifstream::in);
 		string pid;
 		getline(ifs, pid, '\0');
 		ifs.close();
-		long ownPID =  stol(pid);
-
-
+		long ownPID = stol(pid);
 
 		DIR* proc;
 		struct dirent *dirEntry;
@@ -284,6 +320,7 @@ namespace supplementary
 		char* endPtr;
 		string curFile;
 		string curExecutable;
+		bool roscoreRunning = false;
 		while ((dirEntry = readdir(proc)) != NULL)
 		{
 			/* if endptr is not a null character, the directory is not
@@ -302,47 +339,97 @@ namespace supplementary
 			getline(ifs, execName);
 			ifs.close();
 
-			if (execName.compare("process_manager") != 0 || ownPID == curPID)
-			{
-				continue;
-			}
-			else
+			if (execName.compare("process_manager") == 0 && ownPID != curPID)
 			{
 				cout << "PM: My own PID is " << ownPID << endl;
 				cout << "PM: There is already another process_manager running on this system! PID: " << curPID << endl;
 				cout << "PM: Terminating myself..." << endl;
-				return true;
+				closedir(proc);
+				return false;
+			}
+
+			if (execName.compare(roscoreExecName) == 0)
+			{
+				roscoreRunning = true;
+				cout << "PM: roscore already running! PID: " << curPID << endl;
 			}
 		}
 
-		// No process_manager instance found!
-		return false;
+		if (roscoreRunning == false)
+		{
+			cout << "PM: Starting roscore" << endl;
+			pid_t pid = fork();
+			if (pid == 0) // child process
+			{
+				char* roscoreExecNameChar = strdup(roscoreExecName.c_str());
+				char * argv[] = {roscoreExecNameChar, NULL};
+				int execReturn = execvp(roscoreExecName.c_str(), argv);
+				free(roscoreExecNameChar);
+				if (execReturn == -1)
+				{
+					cout << "ME: Failure for roscore startup! execve error code=" << errno << endl;
+					closedir(proc);
+					return false;
+				}
+			}
+			else if (pid > 0) // parent process
+			{
+				// remember started roscore in process managing data structures
+				int roscoreExecId = this->executableIdMap.at(roscoreExecName);
+				int robotId = this->robotIdMap.at(this->defaultHostname);
+				auto emplaceResult = this->robotMap.emplace(robotId, new ManagedRobot(this->defaultHostname));
+				emplaceResult.first->second->queue4update(roscoreExecName, roscoreExecId, pid);
+			}
+			else if (pid < 0)
+			{
+				cout << "ME: Failed to fork for starting roscore!" << endl;
+				closedir(proc);
+				return false;
+			}
+		}
+
+		closedir(proc);
+		return true;
+	}
+
+	/**
+	 * This is for handling Strg + C, although no ROS communication was running.
+	 * @param sig
+	 */
+	void ProcessManager::pmSigintHandler(int sig)
+	{
+		cout << endl << "PM: Caught SIGINT! Terminating ..." << endl;
+		running = false;
+
+		// Call the ros signal handler method
+		ros::shutdown();
 	}
 
 } /* namespace supplementary */
 
 int main(int argc, char** argv)
 {
-
-	if (supplementary::ProcessManager::selfCheck())
-	{
-		// A process manager is already running on the system.
-		return -1;
-	}
-
-	ros::init(argc, argv, "ProcessManager");
+	// Set kernel page size for human readable memory consumption
+	supplementary::ManagedExecutable::kernelPageSize = sysconf(_SC_PAGESIZE);
 
 	supplementary::ProcessManager* pm = new supplementary::ProcessManager(argc, argv);
-
-	pm->start();
-
-	while (ros::ok() && pm->isRunning())
+	if (pm->selfCheck())
 	{
-		chrono::milliseconds dura(500);
-		this_thread::sleep_for(dura);
-	}
+		pm->initCommunication(argc, argv);
 
-	delete pm;
+		// has to be set after ProcessManager::initCommunication() , in order to override the ROS signal handler
+		signal(SIGINT, supplementary::ProcessManager::pmSigintHandler);
+
+		pm->start();
+
+		while (pm->isRunning())
+		{
+			chrono::milliseconds dura(500);
+			this_thread::sleep_for(dura);
+		}
+
+		delete pm;
+	}
 
 	return 0;
 }

@@ -13,24 +13,31 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
+#include "SystemConfig.h"
 
 namespace supplementary
 {
 	long ManagedExecutable::kernelPageSize = 0;
 
-	ManagedExecutable::ManagedExecutable(int id, string executable, vector<string> defaultStrParams) :
-			id(id), executable(executable), defaultParams(new char*[defaultStrParams.size()]), managedPid(NOTHING_MANAGED), state(UNDEFINED)
-	{
-		for (int i = 0; i < defaultStrParams.size(); i++)
-		{
-			defaultParams[i] = (char*)defaultStrParams.at(i).c_str();
-		}
-	}
-
 	ManagedExecutable::ManagedExecutable(string executable, int id, long pid) :
-			managedPid(pid), executable(executable), id(id)
+			managedPid(pid), executable(executable), id(id), state(UNDEFINED), cutime(0), cstime(0), utime(0), stime(0), memory(0), starttime(0), shouldRun(false)
 	{
+		SystemConfig* sc = supplementary::SystemConfig::getInstance();
+		vector<string> defaultParams = (*sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", executable.c_str(), "defaultParams", NULL);
 
+#ifdef MGND_EXEC_DEBUG
+		cout << "ME: Constructor of executable " << executable << endl;
+		for (string s : defaultParams)
+		{
+			cout << "'" << s << "'" << endl;
+		}
+#endif
+		// convert vector<string> to char*[] (where each element is null-terminated)
+		std::vector<char*> vec;
+		std::transform(defaultParams.begin(), defaultParams.end(), std::back_inserter(vec), [](std::string& s)
+		{	s.push_back(0); return &s[0];});
+		vec.push_back(nullptr);
+		this->defaultParams = vec.data();
 	}
 
 	ManagedExecutable::~ManagedExecutable()
@@ -71,11 +78,11 @@ namespace supplementary
 		{
 #ifdef MGND_EXEC_DEBUG
 			/*cout << "ME: " << this->executable << " Queued PIDs:  ";
-			for (long curPid : this->queuedPids4Update)
-			{
-				cout << curPid << ", ";
-			}
-			cout << endl; */
+			 for (long curPid : this->queuedPids4Update)
+			 {
+			 cout << curPid << ", ";
+			 }
+			 cout << endl; */
 #endif
 
 			for (int i = 0; i < this->queuedPids4Update.size(); i++)
@@ -145,25 +152,35 @@ namespace supplementary
 
 		//cout << "statline " << statLine << endl;
 		string tmp;
-		stringstream statStream (statLine);
+		stringstream statStream(statLine);
 		int i = 0;
-		while (statStream.good() && i < 52) {
-			if (i == 2) { //state
+		while (statStream.good() && i < 52)
+		{
+			if (i == 2)
+			{ //state
 				statStream >> this->state;
 				i++;
-			} else if (i == 13){ // cpu time stuff (includes index 13-16)
+			}
+			else if (i == 13)
+			{ // cpu time stuff (includes index 13-16)
 				statStream >> this->utime;
 				statStream >> this->stime;
 				statStream >> this->cutime;
 				statStream >> this->cstime;
 				i += 4;
-			} else if (i == 21){
+			}
+			else if (i == 21)
+			{
 				statStream >> this->starttime;
 				i++;
-			} else if (i == 23) {
+			}
+			else if (i == 23)
+			{
 				statStream >> this->memory;
 				break;
-			} else {
+			}
+			else
+			{
 				statStream >> tmp;
 				i++;
 				continue;
@@ -191,15 +208,15 @@ namespace supplementary
 		//cout << "ME: Updated " << this->executable << " (" << this->managedPid << ")" << endl;
 #endif
 
-
 	}
 
-	void ManagedExecutable::printStats() {
+	void ManagedExecutable::printStats()
+	{
 		stringstream ss;
 		ss << "ME: Stats of " << this->executable << " (" << this->managedPid << ")" << endl;
 		ss << "ME: State: '" << this->state << "' StartTime: " << this->starttime << endl;
 		ss << "ME: Times: u '" << this->utime << "' s '" << this->stime << "' cu '" << this->cutime << "' cs '" << this->cstime << endl;
-		ss << "ME: Memory: " << this->memory*kernelPageSize/1024.0/1024.0 << "MB" << endl;
+		ss << "ME: Memory: " << this->memory * kernelPageSize / 1024.0 / 1024.0 << "MB" << endl;
 		ss << "ME: Parameters: '" << this->params << endl;
 		cout << ss.str();
 	}
@@ -214,6 +231,25 @@ namespace supplementary
 		this->params = "";
 	}
 
+	void ManagedExecutable::changeDesiredState(bool shouldRun)
+	{
+		if (this->managedPid != NOTHING_MANAGED && shouldRun)
+		{
+			cout << "ME: Wont start executable, as it is already running! PID: " << this->managedPid << endl;
+			return;
+		}
+
+		if (this->managedPid == NOTHING_MANAGED && !shouldRun)
+		{
+			cout << "ME: Can not stop executable, as nothing is running!" << endl;
+			return;
+		}
+
+		// remember desired executable state
+		this->lastCommandTime = chrono::steady_clock::now();
+		this->shouldRun = shouldRun;
+	}
+
 	/**
 	 * Starts a process with the given parameters.
 	 * The started process replaces already running processes.
@@ -221,6 +257,7 @@ namespace supplementary
 	 */
 	void ManagedExecutable::startProcess(char* const * params)
 	{
+
 		pid_t pid = fork();
 		if (pid == 0) // child process
 		{
@@ -235,12 +272,11 @@ namespace supplementary
 		{
 			this->managedPid = pid;
 		}
-#ifdef MGND_EXEC_DEBUG
 		else if (pid < 0)
 		{
 			cout << "ME: Failed to fork!" << endl;
+			this->managedPid = NOTHING_MANAGED;
 		}
-#endif
 	}
 
 	/**

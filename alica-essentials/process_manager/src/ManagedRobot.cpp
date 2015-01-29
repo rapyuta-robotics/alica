@@ -11,12 +11,42 @@
 namespace supplementary
 {
 
-	ManagedRobot::ManagedRobot()
+	ManagedRobot::ManagedRobot(string robotName) :
+			robotName(robotName)
 	{
 	}
 
 	ManagedRobot::~ManagedRobot()
 	{
+	}
+
+	void ManagedRobot::changeDesiredState(int execid, bool shouldRun)
+	{
+		auto execEntry = this->executableMap.find(execid);
+		if (execEntry == this->executableMap.end())
+		{
+			execEntry->second->changeDesiredState(shouldRun);
+		}
+	}
+
+	void ManagedRobot::startExecutable(string execName, int execid)
+	{
+		auto execEntry = this->executableMap.find(execid);
+		if (execEntry == this->executableMap.end())
+		{
+			auto newExecEntry = this->executableMap.emplace(execid, new ManagedExecutable(execName, execid, ManagedExecutable::NOTHING_MANAGED));
+		}
+		execEntry->second->startProcess();
+	}
+
+	void ManagedRobot::startExecutable(string execName, int execid, char** params)
+	{
+		auto execEntry = this->executableMap.find(execid);
+		if (execEntry == this->executableMap.end())
+		{
+			auto newExecEntry = this->executableMap.emplace(execid, new ManagedExecutable(execName, execid, ManagedExecutable::NOTHING_MANAGED));
+		}
+		execEntry->second->startProcess(params);
 	}
 
 	void ManagedRobot::queue4update(string execName, int execid, long pid)
