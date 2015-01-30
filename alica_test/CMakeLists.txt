@@ -21,7 +21,6 @@ find_package(catkin REQUIRED COMPONENTS roscpp system_config fsystem autodiff co
 
 
 
-
 ###################################
 ## catkin specific configuration ##
 ###################################

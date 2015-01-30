@@ -23,7 +23,7 @@ namespace alica
 		DummyTestSummand(double weight, string name, long id, vector<long>& relevantEntryPointIds);
 		virtual ~DummyTestSummand();
 		void cacheEvalData();
-		UtilityInterval* eval(IAssignment* ass);
+		UtilityInterval eval(IAssignment* ass);
 		long robotId;
 
 	protected:

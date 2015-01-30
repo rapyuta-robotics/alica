@@ -15,6 +15,7 @@ namespace alica
 {
 	class PartialAssignment;
 	class EntryPoint;
+	class Task;
 
 	class PartialAssignmentPool
 	{
@@ -24,6 +25,7 @@ namespace alica
 		int curIndex;
 		const static int maxCount;
 		EntryPoint* idleEP;
+		Task* idleTask;
 		vector<PartialAssignment*> daPAs;
 	};
 

@@ -38,6 +38,10 @@ namespace alica
 
 	RoleAssignment::~RoleAssignment()
 	{
+		for(auto i : this->sortedRobots)
+		{
+			delete i;
+		}
 	}
 
 	void RoleAssignment::setOwnRole(Role* ownRole)

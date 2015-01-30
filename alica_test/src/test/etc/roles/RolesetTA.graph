@@ -36,7 +36,7 @@
   </nodes>
   <nodes xsi:type="alica:TaskWrapper" inEdge="//@edges.0 //@edges.3 //@edges.6 //@edges.8 //@edges.10">
     <task href="../Misc/taskrepository.tsk#1407153522080"/>
-    <mappings priority="0.5">
+    <mappings priority="0.6">
       <role href="rolesDefinition.rdefset#1222973297047"/>
     </mappings>
     <mappings priority="0.5">

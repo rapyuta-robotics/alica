@@ -15,6 +15,7 @@
 #include "engine/containers/AllocationAuthorityInfo.h"
 #include "engine/containers/EntryPointRobots.h"
 #include "engine/model/Task.h"
+#include "engine/model/State.h"
 
 namespace alica
 {
@@ -375,6 +376,7 @@ namespace alica
 	bool Assignment::isValid()
 	{
 		auto success = this->epSucMapping->getRobots();
+
 		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
 		{
 			int c = this->epRobotsMapping->getRobots(i)->size() + success[i]->size();
@@ -469,6 +471,7 @@ namespace alica
 	{
 		this->robotStateMapping->setState(robot, s);
 		bool ret = false;
+
 		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
 		{
 			if (this->epRobotsMapping->getEp(i) == ep)

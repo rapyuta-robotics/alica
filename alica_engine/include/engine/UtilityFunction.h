@@ -18,7 +18,7 @@ using namespace std;
 #include <vector>
 #include <sstream>
 #include <memory>
-
+#include "UtilityInterval.h"
 #include "engine/RunningPlan.h"
 
 namespace alica
@@ -28,7 +28,6 @@ namespace alica
 	class IRoleAssignment;
 	class USummand;
 	class IAssignment;
-	struct UtilityInterval;
 	struct TaskRoleStruct;
 
 	class UtilityFunction
@@ -39,7 +38,7 @@ namespace alica
 		list<USummand*>& getUtilSummands();
 		void setUtilSummands(list<USummand*> utilSummands);
 		virtual double eval(shared_ptr<RunningPlan> newRp, shared_ptr<RunningPlan> oldRp);
-		virtual UtilityInterval* eval(IAssignment* newAss, IAssignment* oldAss);
+		virtual UtilityInterval eval(IAssignment* newAss, IAssignment* oldAss);
 		void updateAssignment(IAssignment* newAss, IAssignment* oldAss);
 		void cacheEvalData();
 		void init(AlicaEngine* ae);
@@ -64,10 +63,10 @@ namespace alica
 		// List of normal utility summands
 		list<USummand*> utilSummands;
 		TaskRoleStruct* lookupStruct;
-		UtilityInterval* priResult;
-		UtilityInterval* getPriorityResult(IAssignment* ass);
-		UtilityInterval* simUI;
-		UtilityInterval* getSimilarity(IAssignment* newAss, IAssignment* oldAss);
+		UtilityInterval priResult;
+		UtilityInterval getPriorityResult(IAssignment* ass);
+		UtilityInterval simUI;
+		UtilityInterval getSimilarity(IAssignment* newAss, IAssignment* oldAss);
 
 	};
 

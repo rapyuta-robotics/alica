@@ -1,29 +1,23 @@
 #include <iostream>
 #include "UtilityFunctionCreator.h"
 
-#include  "Plans/PlanThree1407153663917.h"
+#include  "Plans/PreConditionPlan1418042796751.h"
 
 #include  "Plans/Authority/AuthorityTest1414403413451.h"
 
 #include  "Plans/GoalPlan1402488870347.h"
 
-#include  "Plans/ConstraintTestPlan1414068524245.h"
-
 #include  "Plans/GSolver/GSolverMaster1417423751087.h"
 
-#include  "Plans/GSolver/GSolverTestPlan1417423757243.h"
+#include  "Plans/ConstraintTestPlan1414068524245.h"
 
-#include  "Plans/MultiAgentTestMaster1413200842973.h"
-
-#include  "Plans/MultiAgentTestPlan1413200862180.h"
-
-#include  "Plans/SimpleTestPlan1412252439925.h"
+#include  "Plans/RuntimeConditionPlan1418042806575.h"
 
 #include  "Plans/PlanOne1407153611768.h"
 
-#include  "Plans/AttackPlan1402488634525.h"
+#include  "Plans/SimpleTestPlan1412252439925.h"
 
-#include  "Plans/PlanTwo1407153645238.h"
+#include  "Plans/AttackPlan1402488634525.h"
 
 #include  "Plans/MasterPlanTaskAssignment1407152758497.h"
 
@@ -33,13 +27,31 @@
 
 #include  "Plans/Tackle1402489318663.h"
 
+#include  "Plans/PlanFour1407153683051.h"
+
 #include  "Plans/ConstraintTestMaster1414068495566.h"
+
+#include  "Plans/PlanThree1407153663917.h"
+
+#include  "Plans/OtherPlan1418042819203.h"
+
+#include  "Plans/GSolver/GSolverTestPlan1417423757243.h"
+
+#include  "Plans/MultiAgentTestMaster1413200842973.h"
+
+#include  "Plans/MultiAgentTestPlan1413200862180.h"
+
+#include  "Plans/MasterSyncTransition1418825395939.h"
+
+#include  "Plans/RealMasterPlanForSyncTest1418902217839.h"
+
+#include  "Plans/PlanTwo1407153645238.h"
+
+#include  "Plans/MidFieldPlayPlan1402488770050.h"
 
 #include  "Plans/Defend1402488893641.h"
 
-#include  "Plans/PlanFour1407153683051.h"
-
-#include  "Plans/MidFieldPlayPlan1402488770050.h"
+#include  "Plans/MasterPlanTestConditionPlanType1418042656594.h"
 
 #include  "Plans/MasterPlan1402488437260.h"
 
@@ -61,8 +73,8 @@ namespace alica
         switch (utilityfunctionConfId)
         {
 
-            case 1407153663917:
-                return make_shared<UtilityFunction1407153663917>();
+            case 1418042796751:
+                return make_shared<UtilityFunction1418042796751>();
                 break;
 
             case 1414403413451:
@@ -73,40 +85,28 @@ namespace alica
                 return make_shared<UtilityFunction1402488870347>();
                 break;
 
-            case 1414068524245:
-                return make_shared<UtilityFunction1414068524245>();
-                break;
-
             case 1417423751087:
                 return make_shared<UtilityFunction1417423751087>();
                 break;
 
-            case 1417423757243:
-                return make_shared<UtilityFunction1417423757243>();
+            case 1414068524245:
+                return make_shared<UtilityFunction1414068524245>();
                 break;
 
-            case 1413200842973:
-                return make_shared<UtilityFunction1413200842973>();
-                break;
-
-            case 1413200862180:
-                return make_shared<UtilityFunction1413200862180>();
-                break;
-
-            case 1412252439925:
-                return make_shared<UtilityFunction1412252439925>();
+            case 1418042806575:
+                return make_shared<UtilityFunction1418042806575>();
                 break;
 
             case 1407153611768:
                 return make_shared<UtilityFunction1407153611768>();
                 break;
 
-            case 1402488634525:
-                return make_shared<UtilityFunction1402488634525>();
+            case 1412252439925:
+                return make_shared<UtilityFunction1412252439925>();
                 break;
 
-            case 1407153645238:
-                return make_shared<UtilityFunction1407153645238>();
+            case 1402488634525:
+                return make_shared<UtilityFunction1402488634525>();
                 break;
 
             case 1407152758497:
@@ -125,20 +125,56 @@ namespace alica
                 return make_shared<UtilityFunction1402489318663>();
                 break;
 
+            case 1407153683051:
+                return make_shared<UtilityFunction1407153683051>();
+                break;
+
             case 1414068495566:
                 return make_shared<UtilityFunction1414068495566>();
+                break;
+
+            case 1407153663917:
+                return make_shared<UtilityFunction1407153663917>();
+                break;
+
+            case 1418042819203:
+                return make_shared<UtilityFunction1418042819203>();
+                break;
+
+            case 1417423757243:
+                return make_shared<UtilityFunction1417423757243>();
+                break;
+
+            case 1413200842973:
+                return make_shared<UtilityFunction1413200842973>();
+                break;
+
+            case 1413200862180:
+                return make_shared<UtilityFunction1413200862180>();
+                break;
+
+            case 1418825395939:
+                return make_shared<UtilityFunction1418825395939>();
+                break;
+
+            case 1418902217839:
+                return make_shared<UtilityFunction1418902217839>();
+                break;
+
+            case 1407153645238:
+                return make_shared<UtilityFunction1407153645238>();
+                break;
+
+            case 1402488770050:
+                return make_shared<UtilityFunction1402488770050>();
                 break;
 
             case 1402488893641:
                 return make_shared<UtilityFunction1402488893641>();
                 break;
 
-            case 1407153683051:
-                return make_shared<UtilityFunction1407153683051>();
-                break;
-
-            case 1402488770050:
-                return make_shared<UtilityFunction1402488770050>();
+            case 1418042656594:
+                return make_shared<UtilityFunction1418042656594>();
                 break;
 
             case 1402488437260:

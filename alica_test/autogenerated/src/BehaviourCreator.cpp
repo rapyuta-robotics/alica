@@ -15,6 +15,8 @@ using namespace std;
 
 #include  "Plans/Behaviour/Tackle.h"
 
+#include  "Plans/Behaviour/Joystick.h"
+
 #include  "Plans/Behaviour/DefendMid.h"
 
 #include  "Plans/Behaviour/NewBehaviour.h"
@@ -63,6 +65,11 @@ namespace alica
             case 1402488956661:
 
                 return make_shared<Tackle>();
+                break;
+
+            case 1421854707061:
+
+                return make_shared<Joystick>();
                 break;
 
             case 1402488763903:

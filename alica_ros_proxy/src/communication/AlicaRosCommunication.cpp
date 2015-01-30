@@ -50,11 +50,11 @@ namespace alicaRosProxy
 													&AlicaRosCommunication::handlePlanTreeInfoRos,
 													(AlicaRosCommunication*)this);
 
-		SyncReadyPublisher = rosNode->advertise<alica_ros_proxy::SyncTalk>("/AlicaEngine/SyncTalk", 10);
-		SyncReadySubscriber = rosNode->subscribe("/AlicaEngine/SyncTalk", 5, &AlicaRosCommunication::handleSyncTalkRos,
+		SyncReadyPublisher = rosNode->advertise<alica_ros_proxy::SyncReady>("/AlicaEngine/SyncReady", 10);
+		SyncReadySubscriber = rosNode->subscribe("/AlicaEngine/SyncReady", 5, &AlicaRosCommunication::handleSyncReadyRos,
 													(AlicaRosCommunication*)this);
-		SyncTalkPublisher = rosNode->advertise<alica_ros_proxy::SyncReady>("/AlicaEngine/SyncReady", 10);
-		SyncTalkSubscriber = rosNode->subscribe("/AlicaEngine/SyncReady", 5, &AlicaRosCommunication::handleSyncReadyRos,
+		SyncTalkPublisher = rosNode->advertise<alica_ros_proxy::SyncTalk>("/AlicaEngine/SyncTalk", 10);
+		SyncTalkSubscriber = rosNode->subscribe("/AlicaEngine/SyncTalk", 5, &AlicaRosCommunication::handleSyncTalkRos,
 												(AlicaRosCommunication*)this);
 
 		SolverResultPublisher = rosNode->advertise<alica_ros_proxy::SolverResult>("/AlicaEngine/SolverResult", 10);
@@ -149,7 +149,6 @@ namespace alicaRosProxy
 		{
 			ptis.succeededEps.push_back(i);
 		}
-
 		if (this->isRunning)
 		{
 			this->PlanTreeInfoPublisher.publish(ptis);
@@ -178,7 +177,7 @@ namespace alicaRosProxy
 
 		if (this->isRunning)
 		{
-			this->RoleSwitchPublisher.publish(srs);
+			this->SyncReadyPublisher.publish(srs);
 		}
 	}
 

@@ -40,6 +40,15 @@ namespace alica
 			return move(make_tuple(robotID, transitionID, conditionHolds, ack));
 		}
 
+		void toString()
+		{
+			cout << "SyncData--> ";
+			cout << "RobotId: " << this->robotID;
+			cout << " TransitionID: " << this->transitionID;
+			cout << " ConditionHolds: " << this->conditionHolds;
+			cout << " Acknowledge: " << this->ack << endl;
+		}
+
 	};
 
 } /* namespace alica */

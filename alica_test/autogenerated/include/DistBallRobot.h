@@ -27,7 +27,7 @@ namespace alica
 		DistBallRobot(double weight, string name, long id, vector<long>& relevantEntryPointIds);
 		virtual ~DistBallRobot();
 		void cacheEvalData ();
-		UtilityInterval* eval(IAssignment* ass);
+		UtilityInterval eval(IAssignment* ass);
 		long robotId;
 
 	protected:

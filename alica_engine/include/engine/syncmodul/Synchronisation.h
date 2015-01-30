@@ -52,6 +52,7 @@ namespace alica
 	protected:
 		AlicaEngine* ae;
 		mutex syncMutex;
+		mutex rowOkMutex;
 		SyncModul* syncModul;
 		SyncTransition* syncTransition;
 		int myID;

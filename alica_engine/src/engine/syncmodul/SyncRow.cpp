@@ -7,6 +7,8 @@
 
 #include <engine/syncmodul/SyncRow.h>
 #include <algorithm>
+#include <iostream>
+#include <engine/containers/SyncData.h>
 
 namespace alica
 {
@@ -23,6 +25,7 @@ namespace alica
 
 	SyncRow::~SyncRow()
 	{
+		delete syncData;
 	}
 
 	vector<int>& SyncRow::getReceivedBy()
@@ -43,7 +46,22 @@ namespace alica
 
 	void SyncRow::setSyncData(SyncData* syncData)
 	{
+		if(this->syncData != nullptr)
+		{
+			delete this->syncData;
+		}
 		this->syncData = syncData;
+	}
+	void SyncRow::toString()
+	{
+		cout << "SyncRow" << endl;
+		cout << "ReceivedBy: ";
+		for(int i : receivedBy)
+		{
+			cout << i << " ";
+		}
+		cout << endl;
+		this->syncData->toString();
 	}
 
 } /* namespace alica */

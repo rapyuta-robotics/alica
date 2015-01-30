@@ -14,13 +14,13 @@ using namespace std;
 #include <sstream>
 
 #include "engine/UtilityFunction.h"
+#include "engine/UtilityInterval.h"
 
 namespace alica
 {
 
 	class Plan;
 	class RunningPlan;
-	class UtilityInterval;
 
 	/**
 	 * A default implementation for a plan's utility function. The only occuring summand referrs to the task-role preferences.
@@ -31,7 +31,7 @@ namespace alica
 		DefaultUtilityFunction(Plan* plan);
 		virtual ~DefaultUtilityFunction();
 		double eval(RunningPlan* newRp, RunningPlan* oldRp);
-		UtilityInterval* eval (IAssignment* newAss, IAssignment* oldAss);
+		UtilityInterval eval (IAssignment* newAss, IAssignment* oldAss);
 		string toString();
 
 	};

@@ -24,6 +24,7 @@
 #include "engine/containers/EntryPointRobots.h"
 #include "engine/collections/StateCollection.h"
 #include "engine/collections/AssignmentCollection.h"
+#include "engine/model/State.h"
 
 namespace alica
 {
@@ -165,7 +166,7 @@ namespace alica
 			delete this->allocationHistory[this->newestAllocationDifference];
 			this->allocationHistory[this->newestAllocationDifference] = aldif;
 #ifdef CM_DEBUG
-			cout << "CM: SetNewAllDiff(a): " << aldif->toString() << endl;
+			cout << "CM: SetNewAllDiff(a): " << aldif->toString()  << " OWN ROBOT ID " << this->rp->getOwnID()<< endl;
 #endif
 		}
 		catch (exception &e)
@@ -209,11 +210,10 @@ namespace alica
 				auto oldRobots = oldAss->getRobotsWorking(ep);
 				for (int oldId : (*oldRobots))
 				{
-					// C# newRobots->size() == nullptr
-					if (newRobots->size() == 0 || find(newRobots->begin(), newRobots->end(), oldId) == newRobots->end())
+					if (newRobots == nullptr || find(newRobots->begin(), newRobots->end(), oldId) == newRobots->end())
 					{
 						this->allocationHistory[this->newestAllocationDifference]->getSubtractions().push_back(
-								new EntryPointRobotPair(ep, oldId));
+								shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, oldId)));
 					}
 				}
 				if (newRobots != nullptr)
@@ -223,7 +223,7 @@ namespace alica
 						if (find(oldRobots->begin(), oldRobots->end(), newId) == oldRobots->end())
 						{
 							this->allocationHistory[this->newestAllocationDifference]->getAdditions().push_back(
-									new EntryPointRobotPair(ep, newId));
+									shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, newId)));
 						}
 					}
 				}
@@ -428,7 +428,7 @@ namespace alica
 				{
 					i = this->allocationHistory.size() - 1;
 				}
-
+//				cout << "CYCLE MANAGER: REASON " << this->allocationHistory[i]->getReason() << " : " << AllocationDifference::Reason::message << endl;
 				if (this->allocationHistory[i]->getReason() == AllocationDifference::Reason::utility)
 				{
 					if (utChange != nullptr)

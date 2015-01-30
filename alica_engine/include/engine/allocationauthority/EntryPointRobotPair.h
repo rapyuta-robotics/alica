@@ -11,6 +11,7 @@
 using namespace std;
 
 #include "engine/model/EntryPoint.h"
+#include <memory>
 
 namespace alica
 {
@@ -28,7 +29,7 @@ namespace alica
 		void setEntryPoint(EntryPoint* entryPoint);
 		int getRobot();
 		void setRobot(int robot);
-		static bool equals(EntryPointRobotPair* thisOne, EntryPointRobotPair* other);
+		static bool equals(std::shared_ptr<EntryPointRobotPair> thisOne, std::shared_ptr<EntryPointRobotPair> other);
 
 	protected:
 		EntryPoint* entryPoint;

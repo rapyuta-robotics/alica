@@ -17,7 +17,7 @@ public:
 	TestConstantValueSummand(double weight, string name, long id, double val);
 	virtual ~TestConstantValueSummand();
 	void cacheEvalData();
-	UtilityInterval* eval(IAssignment* ass);
+	UtilityInterval eval(IAssignment* ass);
 	long robotId;
 
 protected:

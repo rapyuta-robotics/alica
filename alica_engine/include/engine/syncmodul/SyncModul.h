@@ -14,6 +14,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+//#define SM_SUCCES
 
 using namespace std;
 
@@ -42,8 +43,8 @@ namespace alica
 		virtual void onSyncTalk(shared_ptr<SyncTalk> st);
 		virtual void onSyncReady(shared_ptr<SyncReady> sr);
 
-		void sendSyncTalk(SyncTalk st);
-		void sendSyncReady(SyncReady sr);
+		void sendSyncTalk(SyncTalk& st);
+		void sendSyncReady(SyncReady& sr);
 		void sendAcks(vector<SyncData*> syncDataList);
 		void synchronisationDone(SyncTransition* st);
 	protected:

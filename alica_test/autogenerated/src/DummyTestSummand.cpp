@@ -34,10 +34,10 @@ namespace alica
 	{
 	}
 
-	UtilityInterval* DummyTestSummand::eval(IAssignment* ass)
+	UtilityInterval DummyTestSummand::eval(IAssignment* ass)
 	{
-		ui->setMin(0.0);
-		ui->setMax(1.0);
+		ui.setMin(0.0);
+		ui.setMax(1.0);
 		std::shared_ptr<vector<int>> relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
 
 		for (int i = 0; i < relevantRobots->size(); ++i)
@@ -45,31 +45,33 @@ namespace alica
 			int pos = 0;
 			if (relevantRobots->at(i) == this->robotId)
 			{
-				ui->setMin(0.5);
+				ui.setMin(0.5);
 			}
 			else
 			{
-				ui->setMin(0.0);
+				ui.setMin(0.0);
 			}
 
 		}
-		relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[1]);
-
-		for (int i = 0; i < relevantRobots->size(); ++i)
+		if(this->relevantEntryPoints.size() > 1)
 		{
-			int pos = 0;
-			if (relevantRobots->at(i) == this->robotId)
-			{
-				ui->setMin(ui->getMin());
-			}
-			else
-			{
-				ui->setMin(ui->getMin() + 0.5);
-			}
+			relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[1]);
 
+			for (int i = 0; i < relevantRobots->size(); ++i)
+			{
+				int pos = 0;
+				if (relevantRobots->at(i) == this->robotId)
+				{
+					ui.setMin(ui.getMin());
+				}
+				else
+				{
+					ui.setMin(ui.getMin() + 0.5);
+				}
+
+			}
 		}
-
-		ui->setMax(ui->getMin());
+		ui.setMax(ui.getMin());
 		return ui;
 	}
 

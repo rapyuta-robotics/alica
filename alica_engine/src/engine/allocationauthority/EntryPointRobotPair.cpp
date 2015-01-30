@@ -39,7 +39,7 @@ namespace alica
 		this->robot = robot;
 	}
 
-	bool EntryPointRobotPair::equals(EntryPointRobotPair* thisOne,EntryPointRobotPair* other)
+	bool EntryPointRobotPair::equals(std::shared_ptr<EntryPointRobotPair> thisOne, std::shared_ptr<EntryPointRobotPair> other)
 	{
 		if (other == nullptr)
 		{

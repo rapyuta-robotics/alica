@@ -48,8 +48,4 @@
     <key href="Roleset.graph#//@nodes.1"/>
     <value xPos="507" yPos="466" width="143" height="419" collapsed="false"/>
   </extensions>
-  <extensions>
-    <key href="Roleset.graph#//@nodes.2"/>
-    <value xPos="660" yPos="466" width="143" height="419" collapsed="false"/>
-  </extensions>
 </uiextensionmodel:PmlUiExtensionMap>

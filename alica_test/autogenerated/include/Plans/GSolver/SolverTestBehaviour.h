@@ -16,13 +16,13 @@ namespace alica
         virtual void run(void* msg);
         /*PROTECTED REGION ID(pub1417424455986) ENABLED START*/ //Add additional public methods here
         int getCallCounter();
-		static vector<double> result;
+        static vector<double> result;
         /*PROTECTED REGION END*/
     protected:
         virtual void initialiseParameters();
         /*PROTECTED REGION ID(pro1417424455986) ENABLED START*/ //Add additional protected methods here
-   		int callCounter;
-		shared_ptr<alica::ConstraintQuery> query;
+        int callCounter;
+        shared_ptr<alica::ConstraintQuery> query;
 
         /*PROTECTED REGION END*/
     private:
