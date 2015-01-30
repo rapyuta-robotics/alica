@@ -23,6 +23,7 @@ namespace alica
 
 	EntryPoint::~EntryPoint()
 	{
+
 	}
 
 	void EntryPoint::computeReachabilitySet()

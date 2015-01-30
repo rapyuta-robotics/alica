@@ -7,14 +7,14 @@ using namespace std;
 namespace alica
 {
     /*PROTECTED REGION ID(staticVars1417424455986) ENABLED START*/ //initialise static variables here
-	vector<double> SolverTestBehaviour::result;
+    vector<double> SolverTestBehaviour::result;
     /*PROTECTED REGION END*/
     SolverTestBehaviour::SolverTestBehaviour() :
             DomainBehaviour("SolverTestBehaviour")
     {
         /*PROTECTED REGION ID(con1417424455986) ENABLED START*/ //Add additional options here
-    	this->callCounter = 0;
-		this->query = make_shared<alica::ConstraintQuery>(this);
+        this->callCounter = 0;
+        this->query = make_shared < alica::ConstraintQuery > (this);
         /*PROTECTED REGION END*/
     }
     SolverTestBehaviour::~SolverTestBehaviour()
@@ -25,23 +25,23 @@ namespace alica
     void SolverTestBehaviour::run(void* msg)
     {
         /*PROTECTED REGION ID(run1417424455986) ENABLED START*/ //Add additional options here
-    	callCounter++;
-		//cout << "SolverTestBehaviour was called " << callCounter << " times!" << endl;
-		query->getSolution(SolverType::GRADIENTSOLVER, runningPlan, result);
+        callCounter++;
+        //cout << "SolverTestBehaviour was called " << callCounter << " times!" << endl;
+        query->getSolution(SolverType::GRADIENTSOLVER, runningPlan, result);
         /*PROTECTED REGION END*/
     }
     void SolverTestBehaviour::initialiseParameters()
     {
         /*PROTECTED REGION ID(initialiseParameters1417424455986) ENABLED START*/ //Add additional options here
-    	query->clearStaticVariables();
-    	query->addVariable(getVariablesByName("X"));
-		query->addVariable(getVariablesByName("Y"));
+        query->clearStaticVariables();
+        query->addVariable(getVariablesByName("X"));
+        query->addVariable(getVariablesByName("Y"));
         /*PROTECTED REGION END*/
     }
-/*PROTECTED REGION ID(methods1417424455986) ENABLED START*/ //Add additional methods here
+    /*PROTECTED REGION ID(methods1417424455986) ENABLED START*/ //Add additional methods here
     int SolverTestBehaviour::getCallCounter()
-	{
-		return callCounter;
-	}
+    {
+        return callCounter;
+    }
 /*PROTECTED REGION END*/
 } /* namespace alica */

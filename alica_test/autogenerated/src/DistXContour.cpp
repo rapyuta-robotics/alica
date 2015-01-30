@@ -41,10 +41,10 @@ namespace alica
 		return ((Y2 - Y1) / (X2 - X1) * (xPoint - X1) + Y1);
 	}
 
-	UtilityInterval* DistXContour::eval(IAssignment* ass)
+	UtilityInterval DistXContour::eval(IAssignment* ass)
 	{
-		ui->setMin(0.0);
-		ui->setMax(0.0);
+		ui.setMin(0.0);
+		ui.setMax(0.0);
 
 		pair<double, double> lastpoint;
 		lastpoint.first = -18000 / 2;
@@ -57,7 +57,7 @@ namespace alica
 		double val = 0;
 		if (this->contourPoints.size() == 0)
 		{
-			ui->setMax(0.0);
+			ui.setMax(0.0);
 			return ui;
 		}
 		for (int i = 0; i < this->contourPoints.size(); ++i)
@@ -80,8 +80,8 @@ namespace alica
 		else
 			val = interpolate2D(lastpoint.first, lastpoint.second, nextpoint.first, nextpoint.second, xAlloBall);
 
-		ui->setMin(val);
-		ui->setMax(val);
+		ui.setMin(val);
+		ui.setMax(val);
 		return ui;
 	}
 

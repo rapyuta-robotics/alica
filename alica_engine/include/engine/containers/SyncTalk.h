@@ -28,10 +28,10 @@ namespace alica
 		}
 		~SyncTalk()
 		{
-			for (auto s : syncData)
+			/*for (auto s : syncData)
 			{
 				delete s;
-			}
+			}*/
 		}
 
 		long senderID;

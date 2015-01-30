@@ -27,6 +27,8 @@ namespace alica
 		void setReceivedBy(vector<int> recievedBy);
 		SyncData* getSyncData();
 		void setSyncData(SyncData* syncData);
+		void toString();
+
 
 	protected:
 		SyncData* syncData;

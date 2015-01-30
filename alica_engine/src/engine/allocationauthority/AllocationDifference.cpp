@@ -14,10 +14,20 @@ namespace alica
 
 	AllocationDifference::AllocationDifference()
 	{
+		this->reason = Reason::empty;
 	}
 
 	AllocationDifference::~AllocationDifference()
 	{
+		// both are now shared pointers
+//		for(auto i : this->additions)
+//		{
+//			delete i;
+//		}
+//		for(auto i : this->subtractions)
+//		{
+//			delete i;
+//		}
 	}
 
 	AllocationDifference::Reason AllocationDifference::getReason()
@@ -44,6 +54,15 @@ namespace alica
 	 */
 	void AllocationDifference::reset()
 	{
+		// both are now shared pointers
+//		for(auto i : this->additions)
+//		{
+//			delete i;
+//		}
+//		for(auto i : this->subtractions)
+//		{
+//			delete i;
+//		}
 		this->additions.clear();
 		this->subtractions.clear();
 		this->reason = Reason::empty;
@@ -59,12 +78,12 @@ namespace alica
 		{
 			auto iter = other->additions.begin();
 			advance(iter, i);
-			vector<EntryPointRobotPair*>::iterator subIter = search(this->subtractions.begin(), this->subtractions.end(),iter , iter, EntryPointRobotPair::equals);
+			vector<shared_ptr<EntryPointRobotPair>>::iterator subIter = search(this->subtractions.begin(), this->subtractions.end(),iter , iter+1, EntryPointRobotPair::equals);
 			if (subIter != this->subtractions.end())
 			{
 				this->subtractions.erase(subIter);
 			}
-			else if (search(this->additions.begin(), this->additions.end(),iter, iter, EntryPointRobotPair::equals) == this->additions.end())
+			else if (search(this->additions.begin(), this->additions.end(),iter, iter+1, EntryPointRobotPair::equals) == this->additions.end())
 			{
 				this->additions.push_back(other->additions[i]);
 			}
@@ -73,12 +92,12 @@ namespace alica
 		{
 			auto iter = other->subtractions.begin();
 			advance(iter, i);
-			vector<EntryPointRobotPair*>::iterator addIter = search(this->additions.begin(), this->additions.end(),iter, iter , EntryPointRobotPair::equals);
+			vector<shared_ptr<EntryPointRobotPair>>::iterator addIter = search(this->additions.begin(), this->additions.end(),iter, iter+1, EntryPointRobotPair::equals);
 			if (addIter != this->additions.end())
 			{
 				this->additions.erase(addIter);
 			}
-			else if (search(this->subtractions.begin(), this->subtractions.end(),iter,iter, EntryPointRobotPair::equals) == this->subtractions.end())
+			else if (search(this->subtractions.begin(), this->subtractions.end(),iter,iter+1, EntryPointRobotPair::equals) == this->subtractions.end())
 			{
 				this->subtractions.push_back(other->subtractions[i]);
 			}
@@ -103,22 +122,22 @@ namespace alica
 		return ss.str();
 	}
 
-	vector<EntryPointRobotPair*>& AllocationDifference::getAdditions()
+	vector<shared_ptr<EntryPointRobotPair>>& AllocationDifference::getAdditions()
 	{
 		return additions;
 	}
 
-	void AllocationDifference::setAdditions(vector<EntryPointRobotPair*> additions)
+	void AllocationDifference::setAdditions(vector<shared_ptr<EntryPointRobotPair>> additions)
 	{
 		this->additions = additions;
 	}
 
-	vector<EntryPointRobotPair*>& AllocationDifference::getSubtractions()
+	vector<shared_ptr<EntryPointRobotPair>>& AllocationDifference::getSubtractions()
 	{
 		return subtractions;
 	}
 
-	void AllocationDifference::setSubtractions(vector<EntryPointRobotPair*> subtractions)
+	void AllocationDifference::setSubtractions(vector<shared_ptr<EntryPointRobotPair>> subtractions)
 	{
 		this->subtractions = subtractions;
 	}

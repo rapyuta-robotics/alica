@@ -2,7 +2,7 @@
 <alica:RoleSet xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1410440904638" name="RolesetTA.rset" comment="" usableWithPlanID="1407152758497" default="true">
   <mappings id="1410440904643" name="" comment="">
     <taskPriorities id="1410440904645" name="" comment="" key="1407153536219" value="0.5"/>
-    <taskPriorities id="1410440904646" name="" comment="" key="1407153522080" value="0.5"/>
+    <taskPriorities id="1410440904646" name="" comment="" key="1407153522080" value="0.6"/>
     <taskPriorities id="1410440904647" name="" comment="" key="1225112227903" value="0.5"/>
     <taskPriorities id="1410440904648" name="" comment="" key="1402488486725" value="0.5"/>
     <role>rolesDefinition.rdefset#1222973297047</role>

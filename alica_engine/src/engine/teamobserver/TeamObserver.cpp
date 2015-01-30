@@ -26,6 +26,7 @@
 #include "engine/logging/Logger.h"
 #include "engine/containers/PlanTreeInfo.h"
 #include "engine/IAlicaCommunication.h"
+#include "engine/Assignment.h"
 
 namespace alica
 {
@@ -247,13 +248,11 @@ namespace alica
 		{
 			if (r->isActive())
 			{
-				shared_ptr<SimplePlanTree> t = nullptr;
 				map<int, shared_ptr<SimplePlanTree> >::iterator iter = this->simplePlanTrees->find(
 						r->getProperties()->getId());
-				t = iter->second;
-				if (t != nullptr)
+				if (iter != simplePlanTrees->end() && iter->second != nullptr)
 				{
-					ret->insert(pair<int, shared_ptr<SimplePlanTree> >(r->getProperties()->getId(), t));
+					ret->insert(pair<int, shared_ptr<SimplePlanTree> >(r->getProperties()->getId(), iter->second));
 				}
 			}
 		}
@@ -322,6 +321,8 @@ namespace alica
 #ifdef TO_DEBUG
 			cout << "TO: spts size " << updatespts.size() << endl;
 #endif
+
+
 			if (root->recursiveUpdateAssignment(updatespts, robotsAvail, noUpdates, time))
 			{
 				this->log->eventOccured("MsgUpdate");
@@ -576,7 +577,6 @@ namespace alica
 			{
 				return;
 			}
-
 			auto spt = sptFromMessage(incoming->senderID, incoming->stateIDs);
 			if (spt != nullptr)
 			{
@@ -695,7 +695,7 @@ namespace alica
 					if (states.find(*iter) != states.end())
 					{
 						cur->setState(states.at(*iter));
-						cur->setEntryPoint(entryPointOfState(root->getState()));
+						cur->setEntryPoint(entryPointOfState(cur->getState()));
 						if (cur->getEntryPoint() == nullptr)
 						{
 							list<long>::const_iterator iter = ids.begin();

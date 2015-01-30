@@ -33,8 +33,8 @@ namespace alica
 	{
 	public:
 
-		USummand() {this->ui = new UtilityInterval(); this->id = 0; this->weight = 0;}
-		virtual ~USummand()	{delete this->ui;}
+		USummand():ui(0.0,0.0) { this->id = 0; this->weight = 0;}
+		virtual ~USummand()	{}
 		/**
 		 * Searches every needed entrypoint in the hashtable of the xmlparser
 		 * and stores it in the relevant entrypoint vector. This will increase the
@@ -84,7 +84,7 @@ namespace alica
 		 * Evaluates the utilityfunction summand
 		 * @return The result of the evaluation
 		 */
-		virtual UtilityInterval* eval(IAssignment* ass)=0;
+		virtual UtilityInterval eval(IAssignment* ass)=0;
 		/**
 		 * Cache every data for the current evaluation, to
 		 * assure consistency over the complete current evaluation.
@@ -100,7 +100,7 @@ namespace alica
 		}
 
 	protected:
-		UtilityInterval* ui;
+		UtilityInterval ui;
 		vector<long> relevantEntryPointIds;
 		/**
 		 * Weight of this UtilitySummand

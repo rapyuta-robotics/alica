@@ -13,6 +13,7 @@ using namespace std;
 #include <vector>
 #include <string>
 #include <sstream>
+#include <memory>
 #include <algorithm>
 
 namespace alica
@@ -35,18 +36,18 @@ namespace alica
 		void reset();
 		void applyDifference(AllocationDifference* other);
 		string toString();
-		vector<EntryPointRobotPair*>& getAdditions();
-		void setAdditions(vector<EntryPointRobotPair*> additions);
-		vector<EntryPointRobotPair*>& getSubtractions();
-		void setSubtractions(vector<EntryPointRobotPair*> subtractions);
+		vector<shared_ptr<EntryPointRobotPair>>& getAdditions();
+		void setAdditions(vector<shared_ptr<EntryPointRobotPair>> additions);
+		vector<shared_ptr<EntryPointRobotPair>>& getSubtractions();
+		void setSubtractions(vector<shared_ptr<EntryPointRobotPair>> subtractions);
 
 	protected:
 		/**
 		 * Denoting the reason for an allocation switch
 		 */
 		AllocationDifference::Reason reason;
-		vector<EntryPointRobotPair*> additions;
-		vector<EntryPointRobotPair*> subtractions;
+		vector<shared_ptr<EntryPointRobotPair>> additions;
+		vector<shared_ptr<EntryPointRobotPair>> subtractions;
 
 	};
 

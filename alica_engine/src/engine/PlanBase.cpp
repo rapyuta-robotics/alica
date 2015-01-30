@@ -168,17 +168,23 @@ namespace alica
 			this->log->itertionStarts();
 
 			//Send tick to other modules
+
 			this->ae->getCommunicator()->tick();
+
+
 			this->teamObserver->tick(this->rootNode);
+
+
 			this->ra->tick();
+
 			this->syncModel->tick();
+
 			this->authModul->tick(this->rootNode);
 
 			if (this->rootNode == nullptr)
 			{
 				this->rootNode = ruleBook->initialisationRule(this->masterPlan);
 			}
-
 			if (this->rootNode->tick(this->ruleBook) == PlanChange::FailChange)
 			{
 #ifdef PB_DEBUG
@@ -271,7 +277,9 @@ namespace alica
 							bool first = true;
 							while (rp != nullptr)
 							{
+								cout << "TICK FPEVENT " << endl;
 								PlanChange change = this->ruleBook->visit(rp);
+								cout << "AFTER TICK FPEVENT " << endl;
 								if (!first && change == PlanChange::NoChange)
 								{
 									break;

@@ -277,6 +277,11 @@ namespace alica
 			delete this->variableSyncModule;
 			this->variableSyncModule = nullptr;
 		}
+		if(this->roleAssignment != nullptr)
+		{
+			delete this->roleAssignment;
+			this->roleAssignment = nullptr;
+		}
 
 	}
 
@@ -521,7 +526,12 @@ namespace alica
 	{
 		return this->pap;
 	}
-
+	/**
+	 * Triggers the engine to run one iteration.
+	 * Attention: This method call is asynchronous to the triggered iteration.
+	 * So please wait long enough to let the engine do their stuff of its iteration,
+	 * before you read values, which will be changed by this iteration.
+	 */
 	void AlicaEngine::stepNotify()
 	{
 		this->setStepCalled(true);

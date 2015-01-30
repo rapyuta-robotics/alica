@@ -33,9 +33,11 @@ namespace alica
 
 	SyncModul::~SyncModul()
 	{
-		// TODO Auto-generated destructor stub
+		for (auto iter : this->synchSet)
+		{
+			delete iter.second;
+		}
 	}
-
 	void SyncModul::init()
 	{
 		this->ticks = 0;
@@ -62,6 +64,7 @@ namespace alica
 			ticks++;
 			for (Synchronisation* s : failedSyncs)
 			{
+				delete this->synchSet[s->getSyncTransition()];
 				this->synchSet.erase(s->getSyncTransition());
 			}
 		}
@@ -81,30 +84,28 @@ namespace alica
 			s = new Synchronisation(ae, myId, trans->getSyncTransition(), this);
 			s->setTick(this->ticks);
 			s->changeOwnData(trans->getId(), holds);
-			{
-				lock_guard<mutex> lock(lomutex);
-				synchSet.insert(pair<SyncTransition*, Synchronisation*>(trans->getSyncTransition(), s));
-			}
+			lock_guard<mutex> lock(this->lomutex);
+			synchSet.insert(pair<SyncTransition*, Synchronisation*>(trans->getSyncTransition(), s));
 		}
 	}
-	void SyncModul::sendSyncTalk(SyncTalk st)
+	void SyncModul::sendSyncTalk(SyncTalk& st)
 	{
-		if (this->ae->isMaySendMessages())
+		if (!this->ae->isMaySendMessages())
 			return;
 		st.senderID = this->myId;
 		this->communicator->sendSyncTalk(st);
 
 	}
-	void SyncModul::sendSyncReady(SyncReady sr)
+	void SyncModul::sendSyncReady(SyncReady& sr)
 	{
-		if (this->ae->isMaySendMessages())
+		if (!this->ae->isMaySendMessages())
 			return;
 		sr.senderID = this->myId;
 		communicator->sendSyncReady(sr);
 	}
 	void SyncModul::sendAcks(vector<SyncData*> syncDataList)
 	{
-		if (this->ae->isMaySendMessages())
+		if (!this->ae->isMaySendMessages())
 			return;
 		SyncTalk st;
 		st.senderID = this->myId;
@@ -113,19 +114,17 @@ namespace alica
 	}
 	void SyncModul::synchronisationDone(SyncTransition* st)
 	{
-#if SM_SUCCES
+#ifdef SM_SUCCES
 		cout << "SyncDONE in SYNCMODUL for synctransID: " << st->getId() << endl;
 #endif
 
-		{
-			lock_guard<mutex> lock(lomutex);
-#if SM_SUCCES
+#ifdef SM_SUCCES
 			cout << "Remove synchronisation object for syntransID: " << st->getId() << endl;
 #endif
-			this->synchSet.erase(st);
-		}
+		delete this->synchSet[st];
+		this->synchSet.erase(st);
 		this->synchedTransitions.push_back(st);
-#if SM_SUCCES
+#ifdef SM_SUCCES
 		cout << "SM: SYNC TRIGGER TIME:" << this->ae->getIAlicaClock()->now()/1000000UL << endl;
 #endif
 	}
@@ -148,19 +147,20 @@ namespace alica
 		if (this->ae->getTeamObserver()->isRobotIgnored(st->senderID))
 			return;
 
-#if SM_SUCCES
+#ifdef SM_SUCCES
 		cout << "SyncModul:Handle Synctalk" << endl;
 #endif
 
 		vector<SyncData*> toAck;
 		for (SyncData* sd : st->syncData)
 		{
-#if SM_SUCCES
-			cout << "SyncModul: TransID" << sd->transitioID << endl;
+#ifdef SM_SUCCES
+			cout << "SyncModul: TransID" << sd->transitionID << endl;
 			cout << "SyncModul: RobotID" << sd->robotID << endl;
 			cout << "SyncModul: Condition" << sd->conditionHolds << endl;
 			cout << "SyncModul: ACK" << sd->ack << endl;
 #endif
+
 			Transition* trans = nullptr;
 			SyncTransition* syncTrans = nullptr;
 
@@ -174,14 +174,14 @@ namespace alica
 				}
 				else
 				{
-					cout << "SyncModul: Transition " << trans->getId() << " is not connected to a SyncTransition"
+					cerr << "SyncModul: Transition " << trans->getId() << " is not connected to a SyncTransition"
 							<< endl;
 					return;
 				}
 			}
 			else
 			{
-				cout << "SyncModul: Could not find Element for Transition with ID: " << sd->transitionID << endl;
+				cerr << "SyncModul: Could not find Element for Transition with ID: " << sd->transitionID << endl;
 				return;
 			}
 
@@ -193,12 +193,11 @@ namespace alica
 
 				if (i != this->synchSet.end())
 				{
-					cout << "SyncModul: Synchronisation " << syncTrans->getId() << " found" << endl;
+					sync = i->second;
 					sync->integrateSyncTalk(st, this->ticks);
 				}
 				else
 				{
-					cout << "SyncModul: HandleSyncTalk: create new synchronisation" << endl;
 					sync = new Synchronisation(ae, this->myId, syncTrans, this);
 					synchSet.insert(pair<SyncTransition*, Synchronisation*>(syncTrans, sync));
 					doAck = sync->integrateSyncTalk(st, this->ticks);

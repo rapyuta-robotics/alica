@@ -25,9 +25,11 @@ namespace alica
 		idleEP->setMinCardinality(0);
 		idleEP->setMaxCardinality(numeric_limits<int>::max());
 		// Add IDLE-Task
-		idleEP->setTask(new Task(true));
-		idleEP->getTask()->setName("IDLE-TASK");
-		idleEP->getTask()->setId(Task::IDLEID);
+		idleTask = new Task(true);
+		idleTask->setName("IDLE-TASK");
+		idleTask->setId(Task::IDLEID);
+
+		idleEP->setTask(idleTask);
 
 		for (int i = 0; i < maxCount; i++)
 		{
@@ -42,6 +44,7 @@ namespace alica
 			delete daPAs[i];
 		}
 		delete idleEP;
+		delete idleTask;
 	}
 
 } /* namespace cace */

@@ -26,13 +26,11 @@
 namespace alica
 {
 
-	UtilityFunction::UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight, double similarityWeight, Plan* plan)
+	UtilityFunction::UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight, double similarityWeight, Plan* plan) : priResult(0.0, 0.0), simUI(0.0, 0.0)
 	{
 		this->ra = nullptr;
 		this->ae = nullptr;
 		this->lookupStruct = new TaskRoleStruct(0, 0);
-		this->priResult = new UtilityInterval(0.0, 0.0);
-		this->simUI = new UtilityInterval(0.0, 0.0);
 		this->name = name;
 		this->utilSummands = utilSummands;
 		this->priorityWeight = priorityWeight;
@@ -50,8 +48,6 @@ namespace alica
 		for(auto pair : this->priorityMartix) {
 			delete pair.first;
 		}
-		delete this->simUI;
-		delete this->priResult;
 		delete this->lookupStruct;
 
 	}
@@ -81,60 +77,63 @@ namespace alica
 		// Invalid Assignments have an Utility of -1 changed from 0 according to specs
 		if (!newRp->getAssignment()->isValid())
 		{
+			cout << "hier 1" << endl;
 			return -1.0;
 		}
-		UtilityInterval* sumOfUI = new UtilityInterval(0.0, 0.0);
+		UtilityInterval sumOfUI(0.0, 0.0);
 		double sumOfWeights = 0.0;
 
 		// Sum up priority summand
-		UtilityInterval* prioUI = this->getPriorityResult(&*newRp->getAssignment());
-		if (prioUI->getMax() < 0.0)
+		UtilityInterval prioUI = this->getPriorityResult(&*newRp->getAssignment());
+		if (prioUI.getMax() < 0.0)
 		{
 			// one robot has a negative priority for his task -> -1.0 for the complete assignment
+			cout << "hier 2" << endl;
 			return -1;
 		}
-		sumOfUI->setMax(sumOfUI->getMax() + this->priorityWeight * prioUI->getMax());
-		sumOfUI->setMin(sumOfUI->getMin() + this->priorityWeight * prioUI->getMin());
+		sumOfUI.setMax(sumOfUI.getMax() + this->priorityWeight * prioUI.getMax());
+		sumOfUI.setMin(sumOfUI.getMin() + this->priorityWeight * prioUI.getMin());
 		sumOfWeights += this->priorityWeight;
 
 		// Sum up all normal utility summands
-		UtilityInterval* curUI;
+		UtilityInterval curUI;
 		for (int i = 0; i < this->utilSummands.size(); ++i)
 		{
 			auto iter = utilSummands.begin();
 			advance(iter, i);
 			curUI = (*iter)->eval(&*newRp->getAssignment());
 			//if a summand deny assignment, return -1 for forbidden assignments
-			if (curUI->getMax() == -1.0)
+			if (curUI.getMax() == -1.0)
 			{
+				cout << "hier 3" << endl;
 				return -1.0;
 			}
 			sumOfWeights += (*iter)->getWeight();
-			sumOfUI->setMax(sumOfUI->getMax() + (*iter)->getWeight() * curUI->getMax());
-			sumOfUI->setMin(sumOfUI->getMin() + (*iter)->getWeight() * curUI->getMin());
+			sumOfUI.setMax(sumOfUI.getMax() + (*iter)->getWeight() * curUI.getMax());
+			sumOfUI.setMin(sumOfUI.getMin() + (*iter)->getWeight() * curUI.getMin());
 		}
 
 		if (oldRp != nullptr && this->similarityWeight > 0)
 		{
 			// Sum up similarity summand
-			UtilityInterval* simUI = this->getSimilarity(&*newRp->getAssignment(), &*oldRp->getAssignment());
-			sumOfUI->setMax(sumOfUI->getMax() + this->similarityWeight * simUI->getMax());
-			sumOfUI->setMin(sumOfUI->getMin() + this->similarityWeight * simUI->getMin());
+			UtilityInterval simUI = this->getSimilarity(&*newRp->getAssignment(), &*oldRp->getAssignment());
+			sumOfUI.setMax(sumOfUI.getMax() + this->similarityWeight * simUI.getMax());
+			sumOfUI.setMin(sumOfUI.getMin() + this->similarityWeight * simUI.getMin());
 			sumOfWeights += this->similarityWeight;
 		}
 
 		// Normalize to 0..1
 		if (sumOfWeights > 0.0)
 		{
-			sumOfUI->setMax(sumOfUI->getMax() / sumOfWeights);
-			sumOfUI->setMin(sumOfUI->getMin() / sumOfWeights);
+			sumOfUI.setMax(sumOfUI.getMax() / sumOfWeights);
+			sumOfUI.setMin(sumOfUI.getMin() / sumOfWeights);
 			// Min == Max because RP.Assignment must be an complete Assignment!
-			if ((sumOfUI->getMax() - sumOfUI->getMin()) > DIFFERENCETHRESHOLD)
+			if ((sumOfUI.getMax() - sumOfUI.getMin()) > DIFFERENCETHRESHOLD)
 			{
 				cerr << "UF: The utility min and max value differs more than " << DIFFERENCETHRESHOLD
 						<< " for an Assignment!" << endl;
 			}
-			return sumOfUI->getMax();
+			return sumOfUI.getMax();
 		}
 
 		return 0.0;
@@ -146,56 +145,56 @@ namespace alica
 	 * ATTENTION PLZ: Return value is only significant with respect to current Utility of oldAss! (SimilarityMeasure)
 	 * @return The utility interval
 	 */
-	UtilityInterval* UtilityFunction::eval(IAssignment* newAss, IAssignment* oldAss)
+	UtilityInterval UtilityFunction::eval(IAssignment* newAss, IAssignment* oldAss)
 	{
-		UtilityInterval* sumOfUI = new UtilityInterval(0.0, 0.0);
+		UtilityInterval sumOfUI(0.0, 0.0);
 		double sumOfWeights = 0.0;
 
 		// Sum up priority summand
-		UtilityInterval* prioUI = this->getPriorityResult(newAss);
-		if (prioUI->getMax() == -1.0)
+		UtilityInterval prioUI = this->getPriorityResult(newAss);
+		if (prioUI.getMax() == -1.0)
 		{
 			// one robot have a negativ priority for his task -> (-1.0, -1.0) for the complete assignment
 			return prioUI;
 		}
-		sumOfUI->setMax(sumOfUI->getMax() + this->priorityWeight * prioUI->getMax());
-		sumOfUI->setMin(sumOfUI->getMin() + this->priorityWeight * prioUI->getMin());
+		sumOfUI.setMax(sumOfUI.getMax() + this->priorityWeight * prioUI.getMax());
+		sumOfUI.setMin(sumOfUI.getMin() + this->priorityWeight * prioUI.getMin());
 		sumOfWeights += this->priorityWeight;
 		// Sum up all normal utility summands
-		UtilityInterval* curUI;
+		UtilityInterval curUI;
 		for (int i = 0; i < this->utilSummands.size(); ++i)
 		{
 			auto iter = utilSummands.begin();
 			advance(iter, i);
 			curUI = (*iter)->eval(newAss);
 			//if a summand deny assignment, return -1 for forbidden assignments
-			if (curUI->getMax() == -1.0)
+			if (curUI.getMax() == -1.0)
 			{
-				sumOfUI->setMax(-1.0);
+				sumOfUI.setMax(-1.0);
 				return sumOfUI;
 			}
 			sumOfWeights += (*iter)->getWeight();
-			sumOfUI->setMax(sumOfUI->getMax() + (*iter)->getWeight() * curUI->getMax());
-			sumOfUI->setMin(sumOfUI->getMin() + (*iter)->getWeight() * curUI->getMin());
+			sumOfUI.setMax(sumOfUI.getMax() + (*iter)->getWeight() * curUI.getMax());
+			sumOfUI.setMin(sumOfUI.getMin() + (*iter)->getWeight() * curUI.getMin());
 		}
 		if (oldAss != nullptr && this->similarityWeight > 0)
 		{
 			// Sum up similarity summand
-			UtilityInterval* simUI = this->getSimilarity(newAss, oldAss);
-			sumOfUI->setMax(sumOfUI->getMax() + this->similarityWeight * simUI->getMax());
-			sumOfUI->setMin(sumOfUI->getMin() + this->similarityWeight * simUI->getMin());
+			UtilityInterval simUI = this->getSimilarity(newAss, oldAss);
+			sumOfUI.setMax(sumOfUI.getMax() + this->similarityWeight * simUI.getMax());
+			sumOfUI.setMin(sumOfUI.getMin() + this->similarityWeight * simUI.getMin());
 			sumOfWeights += this->similarityWeight;
 		}
 		if (sumOfWeights > 0.0)
 		{
-			sumOfUI->setMax(sumOfUI->getMax() / sumOfWeights);
-			sumOfUI->setMin(sumOfUI->getMin() / sumOfWeights);
+			sumOfUI.setMax(sumOfUI.getMax() / sumOfWeights);
+			sumOfUI.setMin(sumOfUI.getMin() / sumOfWeights);
 
 			return sumOfUI;
 		}
 
-		sumOfUI->setMin(0.0);
-		sumOfUI->setMax(0.0);
+		sumOfUI.setMin(0.0);
+		sumOfUI.setMax(0.0);
 		return sumOfUI;
 	}
 
@@ -206,9 +205,9 @@ namespace alica
 	 */
 	void UtilityFunction::updateAssignment(IAssignment* newAss, IAssignment* oldAss)
 	{
-		UtilityInterval* utilityInterval = this->eval(newAss, oldAss);
-		newAss->setMin(utilityInterval->getMin());
-		newAss->setMax(utilityInterval->getMax());
+		UtilityInterval utilityInterval = this->eval(newAss, oldAss);
+		newAss->setMin(utilityInterval.getMin());
+		newAss->setMax(utilityInterval.getMax());
 	}
 
 	void UtilityFunction::cacheEvalData()
@@ -324,10 +323,10 @@ namespace alica
 	 * Calculates the priority result for the specified Assignment
 	 * @return the priority result
 	 */
-	UtilityInterval* UtilityFunction::getPriorityResult(IAssignment* ass)
+	UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass)
 	{
-		this->priResult->setMax(0.0);
-		this->priResult->setMin(0.0);
+		this->priResult.setMax(0.0);
+		this->priResult.setMin(0.0);
 		if(this->priorityWeight == 0)
 		{
 			return this->priResult;
@@ -340,7 +339,7 @@ namespace alica
 			{
 				auto iter = ass->getUnassignedRobots().begin();
 				advance(iter, i);
-				this->priResult->setMax(this->priResult->getMax() + this->roleHighestPriorityMap.at(this->ra->getRole((*iter))->getId()));
+				this->priResult.setMax(this->priResult.getMax() + this->roleHighestPriorityMap.at(this->ra->getRole((*iter))->getId()));
 			}
 		}
 		// SUM UP DEFINED PART OF PRIORITY UTILITY
@@ -374,11 +373,11 @@ namespace alica
 				}
 				if(curPrio < 0.0)// because one Robot has a negative priority for his task
 				{
-					this->priResult->setMin(-1.0);
-					this->priResult->setMax(-1.0);
+					this->priResult.setMin(-1.0);
+					this->priResult.setMax(-1.0);
 					return this->priResult;
 				}
-				this->priResult->setMin(this->priResult->getMin() + curPrio);
+				this->priResult.setMin(this->priResult.getMin() + curPrio);
 #ifdef UFDEBUG
 				double prio = 0;
 				for(auto pair : this->priorityMartix)
@@ -399,11 +398,11 @@ namespace alica
 		cout << "UF: prioUI.Max = " << priResult->getMax() << endl;
 		cout << "UF: denum = " << denum << endl;
 #endif
-			priResult->setMax(priResult->getMax() + priResult->getMin());
+			priResult.setMax(priResult.getMax() + priResult.getMin());
 			if(denum != 0)
 			{
-				priResult->setMin(priResult->getMin() / denum);
-				priResult->setMax(priResult->getMax() / denum);
+				priResult.setMin(priResult.getMin() / denum);
+				priResult.setMax(priResult.getMax() / denum);
 			}
 #ifdef UFDEBUG
 			cout << "UF: prioUI.Min = " << priResult->getMin() << endl;
@@ -422,10 +421,10 @@ namespace alica
 	 * Evaluates the similarity of the new Assignment to the old Assignment
 	 * @return The result of the evaluation
 	 */
-	UtilityInterval* UtilityFunction::getSimilarity(IAssignment* newAss, IAssignment* oldAss)
+	UtilityInterval UtilityFunction::getSimilarity(IAssignment* newAss, IAssignment* oldAss)
 	{
-		simUI->setMax(0.0);
-		simUI->setMin(0.0);
+		simUI.setMax(0.0);
+		simUI.setMin(0.0);
 		// Calculate the similarity to the old Assignment
 		int numOldAssignedRobots = 0;
 		//shared_ptr<vector<EntryPoint*> > oldAssEps = oldAss->getEntryPoints();
@@ -445,22 +444,22 @@ namespace alica
 				{
 					if(find(newRobots->begin(),newRobots->end(), oldRobot) != newRobots->end())
 					{
-						simUI->setMin(simUI->getMin() + 1);
+						simUI.setMin(simUI.getMin() + 1);
 					}
 					else if(ep->getMaxCardinality() > newRobots->size() && find(newAss->getUnassignedRobots().begin(),newAss->getUnassignedRobots().end(), oldRobot) != newAss->getUnassignedRobots().end())
 					{
-						simUI->setMax(simUI->getMax() + 1);
+						simUI.setMax(simUI.getMax() + 1);
 					}
 				}
 			}
 		}
 
-		simUI->setMax(simUI->getMax() + simUI->getMin());
+		simUI.setMax(simUI.getMax() + simUI.getMin());
 		// Normalise if possible
 		if (numOldAssignedRobots > 0)
 		{
-			simUI->setMin(simUI->getMin() / numOldAssignedRobots);
-			simUI->setMax(simUI->getMax() / numOldAssignedRobots);
+			simUI.setMin(simUI.getMin() / numOldAssignedRobots);
+			simUI.setMax(simUI.getMax() / numOldAssignedRobots);
 
 		}
 

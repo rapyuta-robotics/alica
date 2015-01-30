@@ -24,10 +24,10 @@ namespace alica {
 	void TestConstantValueSummand::cacheEvalData()
 	{
 	}
-	UtilityInterval* TestConstantValueSummand::eval(IAssignment* ass)
+	UtilityInterval TestConstantValueSummand::eval(IAssignment* ass)
 	{
-		ui->setMin(val);
-		ui->setMax(val);
+		ui.setMin(val);
+		ui.setMax(val);
 
 		return ui;
 	}

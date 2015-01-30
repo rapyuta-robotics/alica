@@ -153,7 +153,6 @@ namespace alica
 	{
 		this->cycleManagement->update();
 		PlanChange myChange = rules->visit(shared_from_this());
-
 		PlanChange childChange = PlanChange::NoChange;
 		//attention: do not use for each here: children are modified
 		for (int i = 0; i < this->getChildren()->size(); i++)
@@ -167,7 +166,6 @@ namespace alica
 		{
 			myChange = rules->updateChange(myChange, rules->visit(shared_from_this()));
 		}
-
 		return myChange;
 	}
 
@@ -847,7 +845,7 @@ namespace alica
 
 	void RunningPlan::attachPlanConstraints()
 	{
-		cout << "attachPlanConstraints() " << this->getPlan()->getName() << endl;
+		cout << "RP: attachPlanConstraints " << this->getPlan()->getName() << endl;
 		this->constraintStore->addCondition(this->plan->getPreCondition());
 		this->constraintStore->addCondition(this->plan->getRuntimeCondition());
 	}
@@ -858,7 +856,7 @@ namespace alica
 		{
 			return false;
 		}
-		bool keepTask = (this->planStartTime + assignmentProtectionTime > now);
+		bool keepTask = ((this->planStartTime + assignmentProtectionTime) > now);
 		bool auth = this->cycleManagement->haveAuthority();
 
 		//if keepTask, the task Assignment should not be changed!
@@ -875,7 +873,7 @@ namespace alica
 					{
 						this->getAssignment()->removeRobot(spt->getRobotId());
 						ret = true;
-						aldif->getSubtractions().push_back(new EntryPointRobotPair(ep, spt->getRobotId()));
+						aldif->getSubtractions().push_back(shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, spt->getRobotId())));
 					}
 				}
 			}
@@ -894,7 +892,7 @@ namespace alica
 					else
 					{ //robot was not expected to be here during protected assignment time, add it.
 						this->getAssignment()->addRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
-						aldif->getAdditions().push_back(new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId()));
+						aldif->getAdditions().push_back(shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId())));
 
 					}
 				}
@@ -904,9 +902,9 @@ namespace alica
 					ret |= this->getAssignment()->updateRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
 					if (spt->getEntryPoint() != ep)
 					{
-						aldif->getAdditions().push_back(new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId()));
+						aldif->getAdditions().push_back(shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId())));
 						if (ep != nullptr)
-							aldif->getSubtractions().push_back(new EntryPointRobotPair(ep, spt->getRobotId()));
+							aldif->getSubtractions().push_back(shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, spt->getRobotId())));
 					}
 
 				}
@@ -945,7 +943,7 @@ namespace alica
 					{
 						rem.push_back(rob);
 						//this.Assignment.RemoveRobot(rob);
-						aldif->getSubtractions().push_back(new EntryPointRobotPair(ep, rob));
+						aldif->getSubtractions().push_back(shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, rob)));
 						ret = true;
 					}
 				}
@@ -972,7 +970,7 @@ namespace alica
 					{
 						rem.push_back(rob);
 						//this.Assignment.RemoveRobot(rob);
-						aldif->getSubtractions().push_back(new EntryPointRobotPair(ep, rob));
+						aldif->getSubtractions().push_back(shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, rob)));
 						ret = true;
 					}
 				}
@@ -1014,7 +1012,7 @@ namespace alica
 				}
 			}
 		}
-//Give Plans to children
+		//Give Plans to children
 		for (shared_ptr<RunningPlan> r : this->children)
 		{
 			if (r->isBehaviour())
@@ -1039,7 +1037,6 @@ namespace alica
 			ret |= r->recursiveUpdateAssignment(newcspts, availableAgents, noUpdates, now);
 		}
 		return ret;
-
 	}
 
 	void RunningPlan::toMessage(list<long>& message, shared_ptr<RunningPlan>& deepestNode, int& depth, int curDepth)

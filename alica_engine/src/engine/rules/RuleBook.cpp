@@ -91,7 +91,6 @@ namespace alica
 	{
 		int changes = 0;
 		bool doDynAlloc = true;
-
 		PlanChange changeRecord = PlanChange::NoChange;
 		PlanChange msChange = PlanChange::NoChange;
 
@@ -123,11 +122,13 @@ namespace alica
 			PlanChange propChange = planPropagationRule(r);
 			changeRecord = updateChange(changeRecord, propChange);
 
+
 			if (propChange != PlanChange::NoChange)
+			{
 				break; //abort applying rules to this plan as propagation has
+			}
 
 		} while (changeRecord != PlanChange::NoChange && ++changes < this->maxConsecutiveChanges);
-
 		return msChange;
 	}
 
@@ -162,12 +163,16 @@ namespace alica
 					robots.begin());
 		shared_ptr<RunningPlan> newr = ps->getBestSimilarAssignment(r, make_shared<vector<int> >(robots));
 		if (newr == nullptr)
+		{
 			return PlanChange::NoChange;
-		double curUtil;
-		if (!r->evalRuntimeCondition()) {
+		}
+		double curUtil = 0;
+		if (!r->evalRuntimeCondition())
+		{
 			curUtil = -1.0;
 		}
-		else {
+		else
+		{
 			curUtil = r->getPlan()->getUtilityFunction()->eval(r, r);
 		}
 		double possibleUtil = newr->getAssignment()->getMax();
@@ -428,7 +433,6 @@ namespace alica
 
 		if (r->getFailHandlingNeeded())
 		{
-			//cerr << "RB: TopFailed" << endl;
 			r->setFailHandlingNeeded(false);
 			r->clearFailures();
 
@@ -518,7 +522,7 @@ namespace alica
 			{
 				continue;
 			}
-			if (this->sm->followSyncTransition((t)))
+			if (this->sm->followSyncTransition(t))
 			{
 				if (t->evalCondition(r))
 				{
@@ -537,11 +541,12 @@ namespace alica
 			}
 		}
 		if (nextState == nullptr)
+		{
 			return PlanChange::NoChange;
+		}
 #ifdef RULE_debug
 		cout << "RB: SynchTransition" << r->getPlan()->getName()<< endl;
 #endif
-
 		r->moveState(nextState);
 
 		r->setAllocationNeeded(true);

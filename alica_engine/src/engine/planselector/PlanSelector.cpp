@@ -142,7 +142,7 @@ namespace alica
 			return nullptr;
 		}
 		// TASKASSIGNMENT
-		TaskAssignment* ta;
+		TaskAssignment* ta = nullptr;
 		shared_ptr<Assignment> oldAss = nullptr;
 		shared_ptr<RunningPlan> rp;
 		if (oldRp == nullptr)
@@ -241,6 +241,7 @@ namespace alica
 #ifdef PSDEBUG
 		cout << "PS: Created RunningPlan: \n" << rp->toString() << endl;
 #endif
+		delete ta;
 		return rp; // If we return here, this robot is normal assigned
 	}
 
@@ -304,14 +305,13 @@ namespace alica
 						rp = this->createRunningPlan(planningParent, pt->getPlans(), robotIDs, nullptr, pt);
 						if (rp == nullptr)
 						{
-#ifdef PSDEBUG
+//#ifdef PSDEBUG
 							cout << "PS: It was not possible to create a RunningPlan for the Plan " << pt->getName()
 									<< "!" << endl;
-#endif
+//#endif
 							return nullptr;
 						}
 						rps->push_back(rp);
-						pt = nullptr;
 					}
 					else
 					{
