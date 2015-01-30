@@ -44,7 +44,7 @@ namespace supplementary
 
 		// Information about the managed process (updated continuously)
 		long managedPid;
-		string params;
+		char** params;
 		char state; // The process state (zombie, running, etc)
 		unsigned long utime;
 		unsigned long stime;
@@ -60,6 +60,7 @@ namespace supplementary
 		vector<long> queuedPids4Update; /* < a list of PIDs, which match this managed executable (should be only one, normally)*/
 
 		void updateStats(bool readParams = false);
+		void readProcParams(string procPidString);
 		void printStats();
 		void killOtherProcesses();
 		void readParams(long pid);

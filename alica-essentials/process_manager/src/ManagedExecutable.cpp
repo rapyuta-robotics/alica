@@ -13,6 +13,7 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
+#include <string.h>
 #include "SystemConfig.h"
 
 namespace supplementary
@@ -32,17 +33,25 @@ namespace supplementary
 			cout << "'" << s << "'" << endl;
 		}
 #endif
+
 		// convert vector<string> to char*[] (where each element is null-terminated)
 		std::vector<char*> vec;
 		std::transform(defaultParams.begin(), defaultParams.end(), std::back_inserter(vec), [](std::string& s)
 		{	s.push_back(0); return &s[0];});
 		vec.push_back(nullptr);
 		this->defaultParams = vec.data();
+
+		this->desiredParams = nullptr;
+		this->params = nullptr;
 	}
 
 	ManagedExecutable::~ManagedExecutable()
 	{
+		// TODO: check whether the cleanup is right -> valgrind
 		delete[] defaultParams;
+		free(desiredParams);
+		free(params);
+
 		if (this->managedPid != NOTHING_MANAGED)
 		{
 			/* TODO: more comprehensive process stopping
@@ -96,7 +105,7 @@ namespace supplementary
 					this->queuedPids4Update.clear();
 
 					// update own
-					this->updateStats();
+					this->updateStats(true);
 					break;
 				}
 			}
@@ -189,24 +198,39 @@ namespace supplementary
 
 		if (readParams)
 		{
-			std::ifstream cmdlineFile(procPidString + "/cmdline", std::ifstream::in);
-			string line;
-			stringstream ss;
-			while (!cmdlineFile.eofbit)
-			{
-				getline(statFile, line, '\0');
-				ss << line << " ";
-#ifdef MGND_EXEC_DEBUG
-				cout << "ME: cmdline arg " << line << endl;
-#endif
-			}
-			this->params = ss.str();
+			this->readProcParams(procPidString);
 		}
 
 #ifdef MGND_EXEC_DEBUG
 		//this->printStats();
 		//cout << "ME: Updated " << this->executable << " (" << this->managedPid << ")" << endl;
 #endif
+
+	}
+
+	void ManagedExecutable::readProcParams(string procPidString)
+	{
+		std::ifstream cmdlineFile(procPidString + "/cmdline", std::ifstream::in);
+		string line;
+		getline(cmdlineFile, line);
+
+		// determine the number of parameters and their length
+		vector<char const *> argv;
+		int startPos = 0;
+		int endPos = 0;
+		while (true) {
+			endPos = line.find('\0',startPos);
+			if (endPos != string::npos)
+			{
+				cout << "ME: Found '" << line.substr(startPos, endPos - startPos).c_str() << "' at (" << startPos << ", " << endPos << endl;
+				argv.push_back(line.substr(startPos, endPos - startPos).c_str());
+				startPos = endPos+1;
+			}
+			else
+			{
+				break;
+			}
+		}
 
 	}
 
@@ -228,7 +252,8 @@ namespace supplementary
 	{
 		this->managedPid = NOTHING_MANAGED;
 		this->state = UNDEFINED;
-		this->params = "";
+		free(params);
+		this->params = nullptr;
 	}
 
 	void ManagedExecutable::changeDesiredState(bool shouldRun)
@@ -264,8 +289,7 @@ namespace supplementary
 			int execReturn = execv(this->executable.c_str(), params);
 			if (execReturn == -1)
 			{
-				cout << "ME: Failure! execve error code=" << errno << endl;
-				//cout << getErrMsg(errno) << endl;
+				cout << "ME: Failure! execve error code = " << errno << " - " << strerror(errno) << endl;
 			}
 		}
 		else if (pid > 0) // parent process

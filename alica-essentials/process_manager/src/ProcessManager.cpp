@@ -85,7 +85,6 @@ namespace supplementary
 			delete mainThread;
 		}
 
-		// TODO: cleanup the double map
 		for (auto mngdRobot : this->robotMap)
 		{
 			delete mngdRobot.second;

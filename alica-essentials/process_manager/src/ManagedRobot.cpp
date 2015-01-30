@@ -18,6 +18,11 @@ namespace supplementary
 
 	ManagedRobot::~ManagedRobot()
 	{
+		for (auto mngdExec : this->executableMap)
+		{
+			delete mngdExec.second;
+		}
+		this->executableMap.clear();
 	}
 
 	void ManagedRobot::changeDesiredState(int execid, bool shouldRun)
