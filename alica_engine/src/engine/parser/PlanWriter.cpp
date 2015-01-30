@@ -109,12 +109,11 @@ namespace alica
 	void PlanWriter::saveSinglePlan(Plan* p)
 	{
 		this->currentFile = supplementary::FileSystem::combinePaths(this->tempPlanDir, p->getName() + string(".pml"));
-
 		tinyxml2::XMLDocument* doc = createPlanXMLDocument(p);
 
-		if (!supplementary::FileSystem::isDirectory(this->currentFile))
+		if (!supplementary::FileSystem::pathExists(this->tempPlanDir))
 		{
-			supplementary::FileSystem::createDirectory(this->currentFile, 777);
+			supplementary::FileSystem::createDirectory(this->tempPlanDir, 777);
 		}
 		doc->SaveFile(this->currentFile.c_str(), false);
 	}
@@ -124,10 +123,9 @@ namespace alica
 		this->currentFile = supplementary::FileSystem::combinePaths(directory, p->getFileName());
 		tinyxml2::XMLDocument* doc = createPlanXMLDocument(p);
 
-		string dir = supplementary::FileSystem::getParent(this->currentFile);
-		if (!supplementary::FileSystem::isDirectory(dir))
+		if (!supplementary::FileSystem::pathExists(directory))
 		{
-			supplementary::FileSystem::createDirectory(dir, 777);
+			supplementary::FileSystem::createDirectory(directory, 777);
 		}
 		doc->SaveFile(this->currentFile.c_str(), false);
 	}
@@ -285,10 +283,9 @@ namespace alica
 		this->currentFile = supplementary::FileSystem::combinePaths(this->tempPlanDir, name);
 		tinyxml2::XMLDocument* doc = createRoleSetXMLDocument(r);
 
-		string dir = supplementary::FileSystem::getParent(this->currentFile);
-		if (!supplementary::FileSystem::isDirectory(dir))
+		if (!supplementary::FileSystem::pathExists(this->tempPlanDir))
 		{
-			supplementary::FileSystem::createDirectory(dir, 777);
+			supplementary::FileSystem::createDirectory(this->tempPlanDir, 777);
 		}
 		doc->SaveFile(this->currentFile.c_str(), false);
 	}
@@ -298,10 +295,9 @@ namespace alica
 		this->currentFile = supplementary::FileSystem::combinePaths(directory, name);
 		tinyxml2::XMLDocument* doc = createRoleSetXMLDocument(r);
 
-		string dir = supplementary::FileSystem::getParent(this->currentFile);
-		if (!supplementary::FileSystem::isDirectory(dir))
+		if (!supplementary::FileSystem::pathExists(directory))
 		{
-			supplementary::FileSystem::createDirectory(dir, 777);
+			supplementary::FileSystem::createDirectory(directory, 777);
 		}
 		doc->SaveFile(this->currentFile.c_str(), false);
 	}
@@ -323,10 +319,9 @@ namespace alica
 		this->currentFile = supplementary::FileSystem::combinePaths(this->tempPlanDir, name);
 		tinyxml2::XMLDocument* doc = createTaskRepositoryXMLDocument(tr);
 
-		string dir = supplementary::FileSystem::getParent(this->currentFile);
-		if (!supplementary::FileSystem::isDirectory(dir))
+		if (!supplementary::FileSystem::pathExists(this->tempPlanDir))
 		{
-			supplementary::FileSystem::createDirectory(dir, 777);
+			supplementary::FileSystem::createDirectory(this->tempPlanDir, 777);
 		}
 		doc->SaveFile(this->currentFile.c_str(), false);
 	}
@@ -336,10 +331,9 @@ namespace alica
 		this->currentFile = supplementary::FileSystem::combinePaths(directory, name);
 		tinyxml2::XMLDocument* doc = createTaskRepositoryXMLDocument(tr);
 
-		string dir = supplementary::FileSystem::getParent(this->currentFile);
-		if (!supplementary::FileSystem::isDirectory(dir))
+		if (!supplementary::FileSystem::pathExists(directory))
 		{
-			supplementary::FileSystem::createDirectory(dir, 777);
+			supplementary::FileSystem::createDirectory(directory, 777);
 		}
 		doc->SaveFile(this->currentFile.c_str(), false);
 	}

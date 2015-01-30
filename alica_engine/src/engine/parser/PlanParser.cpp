@@ -63,11 +63,11 @@ namespace alica
 		cout << "PP: basePlanPath: " << basePlanPath << endl;
 		cout << "PP: baseRolePath: " << baseRolePath << endl;
 #endif
-		if (!(supplementary::FileSystem::fileExists(basePlanPath)))
+		if (!(supplementary::FileSystem::pathExists(basePlanPath)))
 		{
 			ae->abort("PP: BasePlanPath does not exists " + basePlanPath);
 		}
-		if (!(supplementary::FileSystem::fileExists(baseRolePath)))
+		if (!(supplementary::FileSystem::pathExists(baseRolePath)))
 		{
 			ae->abort("PP: BaseRolePath does not exists " + baseRolePath);
 		}
@@ -112,7 +112,7 @@ namespace alica
 		{
 			roleSetName = roleSetName + ".rset";
 		}
-		if (!supplementary::FileSystem::fileExists(roleSetName))
+		if (!supplementary::FileSystem::pathExists(roleSetName))
 		{
 			ae->abort("PP: Cannot find roleset: " + roleSetName);
 		}
@@ -142,7 +142,7 @@ namespace alica
 			this->currentDirectory = supplementary::FileSystem::getParent(fileToParse);
 			this->currentFile = fileToParse;
 
-			if (!supplementary::FileSystem::fileExists(fileToParse))
+			if (!supplementary::FileSystem::pathExists(fileToParse))
 			{
 				ae->abort("PP: Cannot Find referenced file ", fileToParse);
 			}
@@ -280,7 +280,7 @@ namespace alica
 			this->currentDirectory = supplementary::FileSystem::getParent(fileToParse);
 			this->currentFile = fileToParse;
 
-			if (!supplementary::FileSystem::fileExists(fileToParse))
+			if (!supplementary::FileSystem::pathExists(fileToParse))
 			{
 				ae->abort("PP: Cannot Find referenced file ", fileToParse);
 			}
