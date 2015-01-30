@@ -17,6 +17,7 @@ namespace alica
 		this->frequency = 30;
 		this->deferring = 0;
 		this->behaviour = nullptr;
+		parameters =  make_shared<map<string,string>>();
 
 	}
 

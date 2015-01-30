@@ -12,13 +12,10 @@ namespace alica
 
 	BasicFalseCondition::BasicFalseCondition()
 	{
-		// TODO Auto-generated constructor stub
-
 	}
 
 	BasicFalseCondition::~BasicFalseCondition()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	bool BasicFalseCondition::evaluate(shared_ptr<RunningPlan> rp)

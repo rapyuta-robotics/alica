@@ -12,13 +12,10 @@ namespace alica
 
 	BasicUtilityFunction::BasicUtilityFunction()
 	{
-		// TODO Auto-generated constructor stub
-
 	}
 
 	BasicUtilityFunction::~BasicUtilityFunction()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 } /* namespace alica */
