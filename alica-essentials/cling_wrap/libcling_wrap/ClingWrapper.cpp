@@ -240,6 +240,22 @@ namespace supplementary
 		}
 	}
 
+//	bool ClingWrapper::setConst(std::string const name, Gringo::Value value)
+//	{
+//	  auto ret = grd->defs.defs().find(name);
+////	      return ret != grd->defs.defs().end()
+////	          ? std::get<2>(ret->second)->eval()
+////	          : Gringo::Value();
+//
+//	  if (ret == grd->defs.defs().end())
+//	    return false;
+//
+//	  //Location const &loc, FWString name, UTerm &&value, bool defaultDef
+//	  this->grd->defs.add(std::get<1>(ret->second), name, TODO,std::get<0>(ret->second));
+//
+////	  grd->defs.defs().emplace(name,std::make_tuple(, std::get<1>(ret->second), std::get<2>(ret->second)));
+//	}
+
 	bool ClingWrapper::query(std::string const &value)
 	{
 	        if (this->lastModel == nullptr || this->lastSolver == nullptr)
@@ -417,6 +433,47 @@ namespace supplementary
 
           // time in seconds
           return claspFacade->summary().solveTime * 1000;
+        }
+
+        const long long ClingWrapper::getSatTime()
+        {
+          if (this->getStats() == nullptr)
+            return -1;
+
+          auto claspFacade = this->getStats()->clasp;
+
+          if (claspFacade == nullptr)
+            return -1;
+
+          // time in seconds
+          return claspFacade->summary().satTime * 1000;
+        }
+
+        const long long ClingWrapper::getUnsatTime()
+        {
+          if (this->getStats() == nullptr)
+            return -1;
+
+          auto claspFacade = this->getStats()->clasp;
+
+          if (claspFacade == nullptr)
+            return -1;
+
+          // time in seconds
+          return claspFacade->summary().unsatTime * 1000;
+        }
+
+        const long ClingWrapper::getModelCount()
+        {
+          if (this->getStats() == nullptr)
+            return -1;
+
+          auto claspFacade = this->getStats()->clasp;
+
+          if (claspFacade == nullptr)
+            return -1;
+
+          return claspFacade->summary().enumerated();
         }
 
         Gringo::Value ClingWrapper::stringToValue(const char* p_aspString)
