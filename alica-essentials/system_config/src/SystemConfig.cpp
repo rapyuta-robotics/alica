@@ -118,7 +118,7 @@ namespace supplementary
 
 		for (size_t i = 0; i < files.size(); i++)
 		{
-			if (FileSystem::fileExists(files[i]))
+			if (FileSystem::pathExists(files[i]))
 			{
 				lock_guard<mutex> lock(configsMapMutex);
 

@@ -30,7 +30,7 @@ namespace supplementary
 		static string getSelfPath ();
 		static bool findFile(const string& path,const string& file, string& path_found);
 		static vector<string> findAllFiles(string path, string ending);
-		static bool fileExists(const string& filename);
+		static bool pathExists(const string& filename);
 		static bool isPathRooted(const string& path);
 		static string combinePaths(const string& path1, const string& path2);
 		static bool endsWith(const string& file, const string& ending);

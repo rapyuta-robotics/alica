@@ -61,7 +61,7 @@ namespace supplementary
 	{
 		//cout << "ff: Path: " << path << " file: " << file << endl;
 
-		if (!fileExists(path))
+		if (!pathExists(path))
 			return false;
 
 		struct dirent **namelist;
@@ -139,7 +139,7 @@ namespace supplementary
 	 * @param filename Absolute path to file.
 	 * @return true if the file exists, false otherwise.
 	 */
-	bool FileSystem::fileExists(const string& filename)
+	bool FileSystem::pathExists(const string& filename)
 	{
 		struct stat buf;
 		if (stat(filename.c_str(), &buf) != -1)
@@ -244,7 +244,7 @@ namespace supplementary
 	 */
 	string FileSystem::getParent(const string& path)
 	{
-		if (!fileExists(path))
+		if (!pathExists(path))
 		{
 			return "";
 		}
