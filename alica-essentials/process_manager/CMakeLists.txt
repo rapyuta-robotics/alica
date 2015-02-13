@@ -97,6 +97,9 @@ add_executable(process_manager
   src/ProcessManager.cpp
   src/ManagedExecutable.cpp
   src/ManagedRobot.cpp
+  src/RobotMetaData.cpp
+  src/ExecutableMetaData.cpp
+  src/ProcessManagerRegistry.cpp
 )
 target_link_libraries(process_manager ${catkin_LIBRARIES})
 add_dependencies(process_manager process_manager_generate_messages_cpp)

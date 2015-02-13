@@ -13,22 +13,22 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include "ExecutableMetaData.h"
 
 using namespace std;
 
 namespace supplementary
 {
 
-	class ManagedExecutable
+	class ManagedExecutable : public ExecutableMetaData
 	{
 	public:
 		ManagedExecutable(string execName, int execid, long pid);
 		virtual ~ManagedExecutable();
-		string getExecutable() const;
 		void queue4Update(long pid);
 		void update();
 		void changeDesiredState(bool shouldRun);
-		void startProcess (char* const* params);
+		void startProcess (vector<char*>& params);
 		void startProcess ();
 		bool stopProcess ();
 
@@ -37,10 +37,6 @@ namespace supplementary
 		static long kernelPageSize; // in bytes
 
 	private:
-		// General information (fix for object life time)
-		int id;
-		string executable;
-		char ** defaultParams;
 
 		// Information about the managed process (updated continuously)
 		long managedPid;
@@ -54,7 +50,7 @@ namespace supplementary
 		long int memory;
 
 
-		chrono::time_point<chrono::steady_clock> lastCommandTime;
+		chrono::time_point<chrono::steady_clock> lastTimeTried;
 		bool shouldRun;
 		char ** desiredParams;
 		vector<long> queuedPids4Update; /* < a list of PIDs, which match this managed executable (should be only one, normally)*/
@@ -62,7 +58,7 @@ namespace supplementary
 		void updateStats(bool readParams = false);
 		void readProcParams(string procPidString);
 		void printStats();
-		void killOtherProcesses();
+		void killQueuedProcesses();
 		void readParams(long pid);
 		void clear();
 

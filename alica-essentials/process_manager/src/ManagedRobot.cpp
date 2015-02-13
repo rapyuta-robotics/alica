@@ -7,12 +7,18 @@
 
 #include "ManagedRobot.h"
 #include "ManagedExecutable.h"
+#include <iostream>
 
 namespace supplementary
 {
 
-	ManagedRobot::ManagedRobot(string robotName) :
-			robotName(robotName)
+	/**
+	 * Creates a ManagedRobot object.
+	 * @param robotName
+	 * @param id
+	 */
+	ManagedRobot::ManagedRobot(string robotName, int id) :
+			RobotMetaData(robotName, id)
 	{
 	}
 
@@ -25,35 +31,67 @@ namespace supplementary
 		this->executableMap.clear();
 	}
 
-	void ManagedRobot::changeDesiredState(int execid, bool shouldRun)
+	/**
+	 * This method changes the desired state (run or not) of the given executable.
+	 * @param execName
+	 * @param execid
+	 * @param shouldRun
+	 */
+	void ManagedRobot::changeDesiredState(string execName, int execid, bool shouldRun)
 	{
 		auto execEntry = this->executableMap.find(execid);
-		if (execEntry == this->executableMap.end())
+		if (execEntry != this->executableMap.end())
 		{
 			execEntry->second->changeDesiredState(shouldRun);
 		}
+		else
+		{
+			// Lazy initialisation of the executableMap
+			auto mapIter = this->executableMap.emplace(execid, new ManagedExecutable(execName, execid, ManagedExecutable::NOTHING_MANAGED));
+			mapIter.first->second->changeDesiredState(shouldRun);
+		}
 	}
 
+	/**
+	 *	This method is the internal way to start a new process. The method changeDesiredState is the way to let the ManagedRobot object
+	 *	launch a process.
+	 * @param execName
+	 * @param execid
+	 */
 	void ManagedRobot::startExecutable(string execName, int execid)
 	{
 		auto execEntry = this->executableMap.find(execid);
 		if (execEntry == this->executableMap.end())
 		{
-			auto newExecEntry = this->executableMap.emplace(execid, new ManagedExecutable(execName, execid, ManagedExecutable::NOTHING_MANAGED));
+			// This should never happen, as changeDesiredState is initialising the executableMap
+			cout << "MR: Tried to start executable " << execName << ", was not present under ID " << execid << endl;
 		}
 		execEntry->second->startProcess();
 	}
 
-	void ManagedRobot::startExecutable(string execName, int execid, char** params)
+	/**
+	 *	This method is the internal way to start a new process with the given parameters.
+	 *	The method changeDesiredState is the way to let the ManagedRobot object launch a process.
+	 * @param execName
+	 * @param execid
+	 */
+	void ManagedRobot::startExecutable(string execName, int execid, vector<char*>& params)
 	{
 		auto execEntry = this->executableMap.find(execid);
 		if (execEntry == this->executableMap.end())
 		{
-			auto newExecEntry = this->executableMap.emplace(execid, new ManagedExecutable(execName, execid, ManagedExecutable::NOTHING_MANAGED));
+			// This should never happen, as changeDesiredState is initialising the executableMap
+			cout << "MR: Tried to start executable " << execName << " with params " << params.data() << ",but it was not present under ID " << execid << endl;
 		}
 		execEntry->second->startProcess(params);
 	}
 
+	/**
+	 * This method queues the given process/ executable to be updated by reading the proc-fs.
+	 * @param execName
+	 * @param execid
+	 * @param pid
+	 */
 	void ManagedRobot::queue4update(string execName, int execid, long pid)
 	{
 		auto execEntry = this->executableMap.find(execid);
@@ -68,6 +106,9 @@ namespace supplementary
 		}
 	}
 
+	/**
+	 * This method starts to update all queued processes/ executables.
+	 */
 	void ManagedRobot::update()
 	{
 		for (auto const & managedExec : this->executableMap)

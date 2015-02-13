@@ -5,7 +5,7 @@
 uint8 START = 0
 uint8 STOP = 1
 
-# ReceiverId determines the ProcessManager, which is addressed by this message. 0 means every ProcessManager
+# ReceiverId determines the ProcessManager-Instanz, which is addressed by this message. 0 means every ProcessManager
 int32 receiverId
 
 # RobotId determines the ROBOT-Environment Variable. 

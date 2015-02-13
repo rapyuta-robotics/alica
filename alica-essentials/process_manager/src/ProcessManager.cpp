@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <cstdlib>
 #include <signal.h>
+#include <sys/wait.h>
 
 #include <map>
 #include <thread>
@@ -22,6 +23,7 @@
 #include <SystemConfig.h>
 #include "ManagedRobot.h"
 #include "ManagedExecutable.h"
+#include "ProcessManagerRegistry.h"
 
 namespace supplementary
 {
@@ -38,8 +40,8 @@ namespace supplementary
 			iterationTime(1000000), mainThread(NULL), spinner(NULL), rosNode(NULL)
 	{
 		this->sc = SystemConfig::getInstance();
-		this->defaultHostname = this->sc->getHostname();
-		this->executableNames = new list<string>();
+		this->ownHostname = this->sc->getHostname();
+		this->pmRegistry = new ProcessManagerRegistry();
 
 		/* Initialise some data structures for faster runtime in searchProcFS-Method with
 		 * data from Globals.conf and Processes.conf file. */
@@ -49,31 +51,34 @@ namespace supplementary
 		for (auto robotName : (*robotNames))
 		{
 			curId = (*this->sc)["Globals"]->get<int>("Globals.Team", robotName.c_str(), "ID", NULL);
-			this->robotIdMap.emplace(robotName, curId);
+			this->pmRegistry->addRobot(robotName, curId);
+			if (robotName == this->ownHostname)
+			{
+				this->ownId = curId;
+			}
 		}
 
+		// This autostart functionality is only for the tournament
 		bool autostart = (std::find(argv, argv + argc, "-autostart") != argv + argc);
-
-		int ownId = this->robotIdMap.at(this->defaultHostname);
 		if (autostart)
 		{
-			this->robotMap.emplace(this->robotIdMap.at(this->defaultHostname), new ManagedRobot(this->defaultHostname));
+			this->robotMap.emplace(ownId, new ManagedRobot(this->ownHostname, ownId));
 		}
 
 		auto processDescriptions = (*this->sc)["Processes"]->getSections("Processes.ProcessDescriptions", NULL);
 		for (auto processSectionName : (*processDescriptions))
 		{
-			this->executableNames->push_back(processSectionName);
 			curId = (*this->sc)["Processes"]->get<int>("Processes.ProcessDescriptions", processSectionName.c_str(), "id", NULL);
-			this->executableIdMap.emplace(processSectionName, curId);
+			this->pmRegistry->addExecutable(processSectionName, curId);
+
+			// This autostart functionality is only for the tournament. The local robot starts the processes automatically
 			if (autostart)
 			{
-				//ManagedExecutable* curME = new ManagedExecutable(processSectionName, curId, ManagedExecutable::NOTHING_MANAGED);
-
 				this->robotMap.at(ownId)->startExecutable(processSectionName, curId);
 			}
 		}
 
+		cout << "PM: OwnId is " << ownId << endl;
 	}
 
 	ProcessManager::~ProcessManager()
@@ -92,10 +97,14 @@ namespace supplementary
 		this->robotMap.clear();
 	}
 
+	/**
+	 * The callback of the ROS subscriber - it inits the message processing.
+	 * @param pc
+	 */
 	void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
 	{
-		// check wether this msg is for me, 0 is a wildcard for all ProcessManagers
-		if (pc->receiverId != this->robotIdMap.at(this->defaultHostname) && pc->receiverId != 0)
+		// check whether this msg is for me, 0 is a wildcard for all ProcessManagers
+		if (pc->receiverId != this->ownId && pc->receiverId != 0)
 		{
 			return;
 		}
@@ -103,23 +112,58 @@ namespace supplementary
 		switch (pc->cmd)
 		{
 			case process_manager::ProcessCommand::START:
-				for (int robotId : pc->robotIds)
-				{
-					for (int proc : pc->processKeys)
-					{
-						this->robotMap.at(robotId)->changeDesiredState(proc, true);
-					}
-				}
+				this->changeDesiredProcessStates(pc, true);
 				break;
 			case process_manager::ProcessCommand::STOP:
-				for (int robotId : pc->robotIds)
+				this->changeDesiredProcessStates(pc, false);
+				break;
+		}
+	}
+
+	/**
+	 * This method processes an incoming ROS-Message, received in ::handleProcessCommand.
+	 * @param pc
+	 * @param shouldRun
+	 */
+	void ProcessManager::changeDesiredProcessStates(process_manager::ProcessCommandPtr pc, bool shouldRun)
+	{
+		for (int robotId : pc->robotIds)
+		{
+			// Check whether the robot with the given id is known
+			string robotName;
+			if (this->pmRegistry->getRobotName(robotId, robotName))
+			{
+				// Find the ManagedRobot object
+				auto mapIter = this->robotMap.find(robotId);
+				ManagedRobot* mngdRobot;
+				if (mapIter == this->robotMap.end())
 				{
-					for (int proc : pc->processKeys)
+					// Lazy initialisation of the robotMap
+					mngdRobot = this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId)).first->second;
+				}
+				else
+				{
+					// ManagedRobot already exists
+					mngdRobot = mapIter->second;
+				}
+
+				for (int execId : pc->processKeys)
+				{
+					string execName;
+					if (this->pmRegistry->getExecutableName(execId, execName))
 					{
-						this->robotMap.at(robotId)->changeDesiredState(proc, false);
+						mngdRobot->changeDesiredState(execName, execId, shouldRun);
+					}
+					else
+					{
+						cout << "PM: Received command for unknown executable id: " << execId << endl;
 					}
 				}
-				break;
+			}
+			else
+			{
+				cout << "PM: Received command for unknown robot id: " << robotId << endl;
+			}
 		}
 	}
 
@@ -225,45 +269,37 @@ namespace supplementary
 			getline(ifs, execName);
 			ifs.close();
 
-			for (auto curExecName : *(this->executableNames))
+			int execId;
+			if (this->pmRegistry->getExecutableId(execName, execId))
 			{
-				if (execName.compare(curExecName) != 0)
-				{
-					// we don't manage this executable -> continue
-					continue;
-				}
-
-				// get the ROBOT environment variable
+				// get the robots name from the ROBOT environment variable
 				curFile = "/proc/" + string(dirEntry->d_name) + "/environ";
 				ifs.open(curFile, std::ifstream::in);
 				string robotEnvironment;
 				getline(ifs, robotEnvironment, '\0');
 				ifs.close();
 
-				// get the robots ID
 				string robotName;
 				if (robotEnvironment.substr(0, 6).compare("ROBOT=") != 0)
 				{
-					robotName = this->defaultHostname;
+					robotName = this->ownHostname;
 				}
 				else
 				{
 					robotName = robotEnvironment.substr(6, 256);
 				}
-				auto robotId = this->robotIdMap.find(robotName);
-				if (robotId != this->robotIdMap.end())
-				{
-					int execid = this->executableIdMap[execName];
 
-					auto robotEntry = this->robotMap.find(robotId->second);
+				int robotId;
+				if (this->pmRegistry->getRobotId(robotName, robotId))
+				{
+					auto robotEntry = this->robotMap.find(robotId);
 					if (robotEntry != robotMap.end())
 					{
-						robotEntry->second->queue4update(execName, execid, curPID);
+						robotEntry->second->queue4update(execName, execId, curPID);
 					}
 					else
 					{
-						this->robotMap.emplace(robotId->second, new ManagedRobot(robotName));
-						this->robotMap[robotId->second]->queue4update(execName, execid, curPID);
+						this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId)).first->second->queue4update(execName, execId, curPID);
 					}
 				}
 				else
@@ -276,6 +312,7 @@ namespace supplementary
 #endif
 
 			}
+			// else: continue, as this executable is unknown and not to be managed by the process manager
 		}
 
 		closedir(proc);
@@ -374,10 +411,24 @@ namespace supplementary
 			else if (pid > 0) // parent process
 			{
 				// remember started roscore in process managing data structures
-				int roscoreExecId = this->executableIdMap.at(roscoreExecName);
-				int robotId = this->robotIdMap.at(this->defaultHostname);
-				auto emplaceResult = this->robotMap.emplace(robotId, new ManagedRobot(this->defaultHostname));
-				emplaceResult.first->second->queue4update(roscoreExecName, roscoreExecId, pid);
+				int roscoreExecId;
+				if (this->pmRegistry->getExecutableId(roscoreExecName, roscoreExecId))
+				{
+					int robotId;
+					if (this->pmRegistry->getRobotId(this->ownHostname, robotId))
+					{
+						auto emplaceResult = this->robotMap.emplace(robotId, new ManagedRobot(this->ownHostname, robotId));
+						emplaceResult.first->second->changeDesiredState(roscoreExecName, roscoreExecId, true);
+					}
+					else
+					{
+						cout << "PM: The robot " << this->ownHostname << " is unknown!" << endl;
+					}
+				}
+				else
+				{
+					cout << "PM: The ID of the roscore executable is unknown!" << endl;
+				}
 			}
 			else if (pid < 0)
 			{
@@ -404,6 +455,16 @@ namespace supplementary
 		ros::shutdown();
 	}
 
+	void ProcessManager::pmSigchildHandler (int sig)
+	{
+		/* Wait for all dead processes.
+		 * We use a non-blocking call to be sure this signal handler will not
+		 * block if a child was cleaned up in another part of the program. */
+		while (waitpid(-1, NULL, WNOHANG) > 0) {
+			cout << "PM: Catched a zombie!" << endl;
+		}
+	}
+
 } /* namespace supplementary */
 
 int main(int argc, char** argv)
@@ -418,6 +479,8 @@ int main(int argc, char** argv)
 
 		// has to be set after ProcessManager::initCommunication() , in order to override the ROS signal handler
 		signal(SIGINT, supplementary::ProcessManager::pmSigintHandler);
+
+		signal(SIGCHLD, supplementary::ProcessManager::pmSigchildHandler);
 
 		pm->start();
 

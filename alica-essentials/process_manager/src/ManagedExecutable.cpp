@@ -21,7 +21,7 @@ namespace supplementary
 	long ManagedExecutable::kernelPageSize = 0;
 
 	ManagedExecutable::ManagedExecutable(string executable, int id, long pid) :
-			managedPid(pid), executable(executable), id(id), state(UNDEFINED), cutime(0), cstime(0), utime(0), stime(0), memory(0), starttime(0), shouldRun(false)
+			ExecutableMetaData(executable, id), managedPid(pid), state(UNDEFINED), cutime(0), cstime(0), utime(0), stime(0), memory(0), starttime(0), shouldRun(false)
 	{
 		SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		vector<string> defaultParams = (*sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", executable.c_str(), "defaultParams", NULL);
@@ -35,11 +35,10 @@ namespace supplementary
 #endif
 
 		// convert vector<string> to char*[] (where each element is null-terminated)
-		std::vector<char*> vec;
-		std::transform(defaultParams.begin(), defaultParams.end(), std::back_inserter(vec), [](std::string& s)
+		this->defaultParams.push_back(strdup(executable.c_str()));
+		std::transform(defaultParams.begin(), defaultParams.end(), std::back_inserter(this->defaultParams), [](std::string& s)
 		{	s.push_back(0); return &s[0];});
-		vec.push_back(nullptr);
-		this->defaultParams = vec.data();
+		this->defaultParams.push_back(nullptr);
 
 		this->desiredParams = nullptr;
 		this->params = nullptr;
@@ -48,7 +47,7 @@ namespace supplementary
 	ManagedExecutable::~ManagedExecutable()
 	{
 		// TODO: check whether the cleanup is right -> valgrind
-		delete[] defaultParams;
+		free(defaultParams[0]); // the rest is hopefully clean up by the system config, which did allocate that shit in the first place
 		free(desiredParams);
 		free(params);
 
@@ -63,62 +62,88 @@ namespace supplementary
 		}
 	}
 
-	string ManagedExecutable::getExecutable() const
-	{
-		return string(executable);
-	}
-
 	void ManagedExecutable::queue4Update(long pid)
 	{
 		this->queuedPids4Update.push_back(pid);
 	}
 
+	/**
+	 * This method processes the queued PIDs and kills, starts, and updates the processes accordingly.
+	 */
 	void ManagedExecutable::update()
 	{
-		// If there is no process left, clean up
-		if (this->queuedPids4Update.size() == 0 && this->managedPid != NOTHING_MANAGED)
+		if (this->queuedPids4Update.size() == 0)
 		{
+			if (this->shouldRun)
+			{
+				if (chrono::steady_clock::now() - this->lastTimeTried > std::chrono::milliseconds(1000)) // TODO make the wait time a parameter
+				{
 #ifdef MGND_EXEC_DEBUG
-			cout << "ME: No " << this->executable << " running!" << endl;
+					cout << "ME: Starting " << this->name << "!" << endl;
 #endif
-			this->clear();
+					this->startProcess();
+				}
+#ifdef MGND_EXEC_DEBUG
+				else
+				{
+					cout << "ME: Waiting for " << this->name << " to start!" << endl;
+				}
+#endif
+			}
+			else
+			{
+#ifdef MGND_EXEC_DEBUG
+				cout << "ME: No " << this->name << " running and none should run!" << endl;
+#endif
+				this->clear();
+			}
 		}
 		else if (this->queuedPids4Update.size() > 0)
 		{
 #ifdef MGND_EXEC_DEBUG
-			/*cout << "ME: " << this->executable << " Queued PIDs:  ";
-			 for (long curPid : this->queuedPids4Update)
-			 {
-			 cout << curPid << ", ";
-			 }
-			 cout << endl; */
+			cout << "ME: The queued PIDs for " << this->name << " are: ";
+			for (long curPid : this->queuedPids4Update)
+			{
+				cout << curPid << ", ";
+			}
+			cout << endl;
 #endif
 
-			for (int i = 0; i < this->queuedPids4Update.size(); i++)
+			if (this->shouldRun)
 			{
-				long pid = this->queuedPids4Update.at(i);
-				if (this->managedPid == pid)
+
+				for (int i = 0; i < this->queuedPids4Update.size(); i++)
 				{
-					// erase own and kill all other processes
-					this->queuedPids4Update.erase(begin(this->queuedPids4Update) + i);
-					this->killOtherProcesses();
-					this->queuedPids4Update.clear();
+					long pid = this->queuedPids4Update.at(i);
+					if (this->managedPid == pid)
+					{
+						// erase own and kill all other processes
+						this->queuedPids4Update.erase(this->queuedPids4Update.begin() + i);
+						this->killQueuedProcesses();
+
+						// update own
+						this->updateStats(true);
+						break;
+					}
+				}
+
+				if (this->queuedPids4Update.size() != 0) // we did not find our own process
+				{
+					// adapt to the first and kill the other processes
+					this->managedPid = this->queuedPids4Update.at(0);
+					this->queuedPids4Update.erase(this->queuedPids4Update.begin());
+					this->killQueuedProcesses();
 
 					// update own
 					this->updateStats(true);
-					break;
 				}
 			}
-
-			if (this->queuedPids4Update.size() != 0) // we did not find our own process
+			else
 			{
-				// adapt to the first and kill the other processes
-				this->managedPid = this->queuedPids4Update.at(0);
-				this->queuedPids4Update.erase(this->queuedPids4Update.begin());
-				this->killOtherProcesses();
-
-				// update own
-				this->updateStats(true);
+#ifdef MGND_EXEC_DEBUG
+				cout << "ME: " << this->name << " shall not run, or maybe he should?! *KILL*" << endl;
+#endif
+				this->killQueuedProcesses();
 			}
 		}
 #ifdef MGND_EXEC_DEBUG
@@ -132,7 +157,7 @@ namespace supplementary
 	/**
 	 * Kills all processes with SIGKILL, which are still in the queuedPIids4Update list.
 	 */
-	void ManagedExecutable::killOtherProcesses()
+	void ManagedExecutable::killQueuedProcesses()
 	{
 		/* TODO: more comprehensive process stopping
 		 * - try several times
@@ -141,8 +166,11 @@ namespace supplementary
 		 */
 		for (auto& pid : this->queuedPids4Update)
 		{
+			cout << "ME: Try to kill " << pid << endl;
 			kill(pid, SIGKILL);
 		}
+
+		this->queuedPids4Update.clear();
 	}
 
 	/**
@@ -208,6 +236,10 @@ namespace supplementary
 
 	}
 
+	/**
+	 * Reads the command line parameters of a given process.
+	 * @param procPidString The process ID as string
+	 */
 	void ManagedExecutable::readProcParams(string procPidString)
 	{
 		std::ifstream cmdlineFile(procPidString + "/cmdline", std::ifstream::in);
@@ -218,13 +250,14 @@ namespace supplementary
 		vector<char const *> argv;
 		int startPos = 0;
 		int endPos = 0;
-		while (true) {
-			endPos = line.find('\0',startPos);
+		while (true)
+		{
+			endPos = line.find('\0', startPos);
 			if (endPos != string::npos)
 			{
-				cout << "ME: Found '" << line.substr(startPos, endPos - startPos).c_str() << "' at (" << startPos << ", " << endPos << endl;
+				cout << "ME: Found param '" << line.substr(startPos, endPos - startPos).c_str() << "' at (" << startPos << ", " << endPos << ")" << endl;
 				argv.push_back(line.substr(startPos, endPos - startPos).c_str());
-				startPos = endPos+1;
+				startPos = endPos + 1;
 			}
 			else
 			{
@@ -237,7 +270,7 @@ namespace supplementary
 	void ManagedExecutable::printStats()
 	{
 		stringstream ss;
-		ss << "ME: Stats of " << this->executable << " (" << this->managedPid << ")" << endl;
+		ss << "ME: Stats of " << this->name << " (" << this->managedPid << ")" << endl;
 		ss << "ME: State: '" << this->state << "' StartTime: " << this->starttime << endl;
 		ss << "ME: Times: u '" << this->utime << "' s '" << this->stime << "' cu '" << this->cutime << "' cs '" << this->cstime << endl;
 		ss << "ME: Memory: " << this->memory * kernelPageSize / 1024.0 / 1024.0 << "MB" << endl;
@@ -271,7 +304,6 @@ namespace supplementary
 		}
 
 		// remember desired executable state
-		this->lastCommandTime = chrono::steady_clock::now();
 		this->shouldRun = shouldRun;
 	}
 
@@ -280,25 +312,26 @@ namespace supplementary
 	 * The started process replaces already running processes.
 	 * @param params The parameters given to the started process.
 	 */
-	void ManagedExecutable::startProcess(char* const * params)
+	void ManagedExecutable::startProcess(vector<char*>& params)
 	{
-
 		pid_t pid = fork();
 		if (pid == 0) // child process
 		{
-			int execReturn = execv(this->executable.c_str(), params);
+			int execReturn = execvp(this->name.c_str(), params.data());
 			if (execReturn == -1)
 			{
 				cout << "ME: Failure! execve error code = " << errno << " - " << strerror(errno) << endl;
+				abort();
 			}
 		}
 		else if (pid > 0) // parent process
 		{
+			this->lastTimeTried = chrono::steady_clock::now();
 			this->managedPid = pid;
 		}
 		else if (pid < 0)
 		{
-			cout << "ME: Failed to fork!" << endl;
+			cout << "ME: Failed to fork, plz consider a spoon!" << endl;
 			this->managedPid = NOTHING_MANAGED;
 		}
 	}
