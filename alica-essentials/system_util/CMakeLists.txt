@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(process_manager)
+project(system_util)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -7,7 +7,15 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED system_config system_util roscpp message_generation)
+
+
+if(catkin_FOUND)
+	find_package(catkin REQUIRED COMPONENTS system_config)
+else(catkin_FOUND)
+	set (catkin_INCLUDE_DIRS "${system_config_INCLUDE_DIRS}")
+	set (catkin_LIBRARIES "system_config")
+endif(catkin_FOUND)
+
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -43,10 +51,11 @@ find_package(catkin REQUIRED system_config system_util roscpp message_generation
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  ProcessCommand.msg
-)
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -63,10 +72,10 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
- generate_messages(
-   DEPENDENCIES
-   std_msgs
- )
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs  # Or other packages containing msgs
+# )
 
 ###################################
 ## catkin specific configuration ##
@@ -77,12 +86,14 @@ add_message_files(
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
-  INCLUDE_DIRS include
-#  LIBRARIES ros_process_manager
-  CATKIN_DEPENDS system_config system_util roscpp message_runtime
-#  DEPENDS system_lib
-)
+if (catkin_FOUND)
+  catkin_package(
+   INCLUDE_DIRS include
+   LIBRARIES system_util
+   CATKIN_DEPENDS system_config
+  # DEPENDS system filesystem
+  )
+endif(catkin_FOUND)
 
 ###########
 ## Build ##
@@ -90,20 +101,33 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
- include_directories(include ${catkin_INCLUDE_DIRS})
-
-## Declare a cpp executable
-add_executable(process_manager 
-  src/ProcessManager.cpp
-  src/ManagedExecutable.cpp
-  src/ManagedRobot.cpp
-  src/RobotMetaData.cpp
-  src/ExecutableMetaData.cpp
-  src/ProcessManagerRegistry.cpp
+# include_directories(include)
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
 )
 
-target_link_libraries(process_manager ${catkin_LIBRARIES})
-add_dependencies(process_manager ${catkin_LIBRARIES} process_manager_generate_messages_cpp)
+## Declare a cpp library
+add_library(system_util
+   src/Logging.cpp
+)
+
+if (NOT catkin_FOUND)
+  target_include_directories(system_util PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+endif(NOT catkin_FOUND)
+
+## Declare a cpp executable
+# add_executable(system_util_node src/system_util_node.cpp)
+
+## Add cmake target dependencies of the executable/library
+## as an example, message headers may need to be generated before nodes
+# add_dependencies(system_util_node system_util_generate_messages_cpp)
+
+## Specify libraries to link a library or executable target against
+# target_link_libraries(system_util_node
+#   ${catkin_LIBRARIES}
+# )
+
 #############
 ## Install ##
 #############
@@ -119,7 +143,7 @@ add_dependencies(process_manager ${catkin_LIBRARIES} process_manager_generate_me
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS ros_process_manager ros_process_manager_node
+# install(TARGETS system_util system_util_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -144,7 +168,7 @@ add_dependencies(process_manager ${catkin_LIBRARIES} process_manager_generate_me
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_ros_process_manager.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_system_util.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

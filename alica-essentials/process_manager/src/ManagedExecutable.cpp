@@ -14,7 +14,11 @@
 #include <vector>
 #include <fstream>
 #include <string.h>
+#include <ctime>
+#include <iomanip>
+#include <chrono>
 #include "SystemConfig.h"
+#include "Logging.h"
 
 namespace supplementary
 {
@@ -23,7 +27,7 @@ namespace supplementary
 	ManagedExecutable::ManagedExecutable(string executable, int id, long pid) :
 			ExecutableMetaData(executable, id), managedPid(pid), state(UNDEFINED), cutime(0), cstime(0), utime(0), stime(0), memory(0), starttime(0), shouldRun(false)
 	{
-		SystemConfig* sc = supplementary::SystemConfig::getInstance();
+		SystemConfig* sc = SystemConfig::getInstance();
 		vector<string> defaultParams = (*sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", executable.c_str(), "defaultParams", NULL);
 
 #ifdef MGND_EXEC_DEBUG
@@ -167,7 +171,7 @@ namespace supplementary
 		for (auto& pid : this->queuedPids4Update)
 		{
 			cout << "ME: Try to kill " << pid << endl;
-			kill(pid, SIGKILL);
+			kill(pid, SIGTERM);
 		}
 
 		this->queuedPids4Update.clear();
@@ -317,6 +321,18 @@ namespace supplementary
 		pid_t pid = fork();
 		if (pid == 0) // child process
 		{
+			// redirect stdout
+			string logFileName = Logging::getLogFilename(this->name);
+			FILE* fd = fopen(logFileName.c_str(), "w+");
+			dup2(fileno(fd), STDOUT_FILENO);
+			fclose(fd);
+
+			// redirect stderr
+			logFileName = Logging::getErrLogFilename(this->name);
+			fd = fopen(logFileName.c_str(), "w+");
+			dup2(fileno(fd), STDERR_FILENO);
+			fclose(fd);
+
 			int execReturn = execvp(this->name.c_str(), params.data());
 			if (execReturn == -1)
 			{

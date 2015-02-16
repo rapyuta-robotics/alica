@@ -21,6 +21,7 @@
 #include <unistd.h>
 
 #include <SystemConfig.h>
+#include <Logging.h>
 #include "ManagedRobot.h"
 #include "ManagedExecutable.h"
 #include "ProcessManagerRegistry.h"
@@ -180,6 +181,7 @@ namespace supplementary
 		rosNode = new ros::NodeHandle();
 		spinner = new ros::AsyncSpinner(4);
 		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10, &ProcessManager::handleProcessCommand, (ProcessManager*)this);
+		spinner->start();
 	}
 
 	/**
@@ -336,8 +338,7 @@ namespace supplementary
 	bool ProcessManager::selfCheck()
 	{
 		string roscoreExecName = "roscore";
-		std::ifstream ifs;
-		ifs.open("/proc/self/stat", std::ifstream::in);
+		std::ifstream ifs("/proc/self/stat", std::ifstream::in);
 		string pid;
 		getline(ifs, pid, '\0');
 		ifs.close();
@@ -368,9 +369,8 @@ namespace supplementary
 			}
 
 			// get the executables name
-			std::ifstream ifs;
 			curFile = "/proc/" + string(dirEntry->d_name) + "/comm";
-			ifs.open(curFile, std::ifstream::in);
+			std::ifstream ifs(curFile, std::ifstream::in);
 			string execName;
 			getline(ifs, execName);
 			ifs.close();
@@ -397,6 +397,18 @@ namespace supplementary
 			pid_t pid = fork();
 			if (pid == 0) // child process
 			{
+				// redirect stdout
+				string logFileName = Logging::getLogFilename("roscore");
+				FILE* fd = fopen(logFileName.c_str(), "w+");
+				dup2(fileno(fd), STDOUT_FILENO);
+				fclose(fd);
+
+				// redirect stderr
+				logFileName = Logging::getErrLogFilename("roscore");
+				fd = fopen(logFileName.c_str(), "w+");
+				dup2(fileno(fd), STDERR_FILENO);
+				fclose(fd);
+
 				char* roscoreExecNameChar = strdup(roscoreExecName.c_str());
 				char * argv[] = {roscoreExecNameChar, NULL};
 				int execReturn = execvp(roscoreExecName.c_str(), argv);
@@ -455,14 +467,25 @@ namespace supplementary
 		ros::shutdown();
 	}
 
-	void ProcessManager::pmSigchildHandler (int sig)
+	void ProcessManager::pmSigchildHandler(int sig)
 	{
 		/* Wait for all dead processes.
 		 * We use a non-blocking call to be sure this signal handler will not
 		 * block if a child was cleaned up in another part of the program. */
-		while (waitpid(-1, NULL, WNOHANG) > 0) {
-			cout << "PM: Catched a zombie!" << endl;
-		}
+		int result = 0;
+		do
+		{
+			result = waitpid(WAIT_ANY, NULL, WNOHANG);
+			if (result > 0)
+			{
+				cout << "PM: Caught SIGCHLD Signal for PID: " << result << endl;
+			}
+			else if (result < 0)
+			{
+				cerr << "PM: 'waitpid' returned an error! Something is wrong with our child processes. Result: " << result << endl;
+			}
+
+		} while (result > 0);
 	}
 
 } /* namespace supplementary */

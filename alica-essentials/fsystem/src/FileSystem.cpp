@@ -254,16 +254,22 @@ namespace supplementary
 	bool FileSystem::createDirectory(string path, int rights)
 	{
 		string result = "";
-		unsigned int pos;
-		while ((pos = path.find('/')) != string::npos)
+		int pos;
+		if (path[path.length()-1] != PATH_SEPARATOR)
 		{
-			result = result + path.substr(0, pos) + "/";
+			path = path + PATH_SEPARATOR;
+		}
+		while ((pos = path.find(PATH_SEPARATOR)) != string::npos)
+		{
+			result = result + path.substr(0, pos) + PATH_SEPARATOR;
+			//cout << "FS: Result is '" << result << "' Pos is: " << pos << endl;
 			if (path.substr(0, pos).size() != 1)
 			{
 				if (!supplementary::FileSystem::isDirectory(result))
 				{
-					if (mkdir(result.c_str(), 0777) != 0)
+					if (mkdir(result.c_str(), rights) != 0)
 					{
+						cerr << "FS: Could not create directory: " << strerror(errno) << endl;
 						return false;
 					}
 				}

@@ -11,6 +11,7 @@
 using namespace std;
 
 #include <string>
+#include <string.h>
 #include <vector>
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,7 +38,7 @@ namespace supplementary
 		static bool isDirectory(const string& path);
 		static bool isFile(const string& path);
 		static string getParent(const string& path);
-		static bool createDirectory(string path, int rights);
+		static bool createDirectory(string path, int rights = 0777);
 
 		static const string CURDIR;
 		static const string PARENTDIR;
