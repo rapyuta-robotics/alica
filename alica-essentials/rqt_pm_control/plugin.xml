@@ -1,0 +1,17 @@
+<library path="lib/librqt_msl_refbox">
+  <class name="rqt_pm_control/PMControl" type="rqt_pm_control::PMControl" base_class_type="rqt_gui_cpp::Plugin">
+    <description>
+      A GUI plugin to control process managers remotely.
+    </description>
+    <qtgui>
+      <group>
+        <label>Robot Tools</label>
+        <icon type="theme">folder</icon>
+        <statustip>Plugins related to robot tools.</statustip>
+      </group>
+      <label>MSL Refbox</label>
+      <icon type="theme">image-x-generic</icon>
+      <statustip>A GUI plugin for sending process_manager Commands.</statustip>
+    </qtgui>
+  </class>
+</library>
