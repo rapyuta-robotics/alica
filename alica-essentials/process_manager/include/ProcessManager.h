@@ -12,6 +12,8 @@
 
 #include "ros/ros.h"
 #include "process_manager/ProcessCommand.h"
+#include "process_manager/ProcessStats.h"
+#include "process_manager/ProcessStat.h"
 #include <chrono>
 
 using namespace std;
@@ -56,6 +58,7 @@ namespace supplementary
 		ros::NodeHandle* rosNode;
 		ros::AsyncSpinner* spinner;
 		ros::Subscriber processCommandSub;
+		ros::Publisher processStatePub;
 
 
 		void handleProcessCommand(process_manager::ProcessCommandPtr pc);
@@ -67,6 +70,7 @@ namespace supplementary
 		void run();
 		void searchProcFS();
 		void update();
+		void report();
 
 	};
 

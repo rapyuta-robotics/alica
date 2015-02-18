@@ -1,4 +1,4 @@
-<library path="lib/librqt_msl_refbox">
+<library path="lib/librqt_pm_control">
   <class name="rqt_pm_control/PMControl" type="rqt_pm_control::PMControl" base_class_type="rqt_gui_cpp::Plugin">
     <description>
       A GUI plugin to control process managers remotely.

@@ -117,5 +117,18 @@ namespace supplementary
 		}
 	}
 
+	void ManagedRobot::report(process_manager::ProcessStats* psts)
+	{
+		for (auto const& mngdExec : this->executableMap)
+		{
+			process_manager::ProcessStat ps;
+			ps.robotId = this->id;
+			mngdExec.second->report(&ps);
+			psts->processStats.push_back(ps);
+
+		}
+	}
+
 }
+
 /* namespace supplementary */

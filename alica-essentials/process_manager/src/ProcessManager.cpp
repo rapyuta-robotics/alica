@@ -181,6 +181,7 @@ namespace supplementary
 		rosNode = new ros::NodeHandle();
 		spinner = new ros::AsyncSpinner(4);
 		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10, &ProcessManager::handleProcessCommand, (ProcessManager*)this);
+		processStatePub = rosNode->advertise<process_manager::ProcessStats>("/process_manager/ProcessStats", 10);
 		spinner->start();
 	}
 
@@ -207,6 +208,7 @@ namespace supplementary
 
 			this->searchProcFS();
 			this->update();
+			this->report();
 
 			auto timePassed = chrono::system_clock::now() - start;
 			chrono::microseconds microsecondsPassed = chrono::duration_cast<chrono::microseconds>(timePassed);
@@ -222,6 +224,20 @@ namespace supplementary
 			}
 
 		}
+	}
+
+	/**
+	 * Sends a ProcessStats-Message to whom it may concern.
+	 */
+	void ProcessManager::report()
+	{
+		process_manager::ProcessStats psts;
+		psts.senderId = this->ownId;
+		for (auto const &mngdRobot : this->robotMap)
+		{
+			mngdRobot.second->report(&psts);
+		}
+		this->processStatePub.publish(psts);
 	}
 
 	/**

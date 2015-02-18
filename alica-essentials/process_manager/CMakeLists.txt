@@ -46,6 +46,8 @@ find_package(catkin REQUIRED system_config system_util roscpp message_generation
 add_message_files(
   FILES
   ProcessCommand.msg
+  ProcessStat.msg
+  ProcessStats.msg
 )
 
 ## Generate services in the 'srv' folder

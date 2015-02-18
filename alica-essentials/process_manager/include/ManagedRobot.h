@@ -13,7 +13,10 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "process_manager/ProcessStat.h"
+#include "process_manager/ProcessStats.h"
 #include "RobotMetaData.h"
+
 
 using namespace std;
 
@@ -31,6 +34,7 @@ namespace supplementary
 		void startExecutable(string execName, int execid);
 		void startExecutable(string execName, int execid, vector<char*>& params);
 		void changeDesiredState(string execName, int execid, bool shouldRun);
+		void report(process_manager::ProcessStats *psts);
 	private:
 		map<int, ManagedExecutable*> executableMap;
 	};

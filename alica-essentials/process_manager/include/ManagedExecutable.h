@@ -14,6 +14,7 @@
 #include <vector>
 #include <chrono>
 #include "ExecutableMetaData.h"
+#include "process_manager/ProcessStat.h"
 
 using namespace std;
 
@@ -27,13 +28,17 @@ namespace supplementary
 		virtual ~ManagedExecutable();
 		void queue4Update(long pid);
 		void update();
+		void report(process_manager::ProcessStat *ps);
 		void changeDesiredState(bool shouldRun);
 		void startProcess (vector<char*>& params);
 		void startProcess ();
 		bool stopProcess ();
 
+
 		static const long NOTHING_MANAGED = -1;
 		static const char UNDEFINED = 'U';
+		static const char RUNNING = 'R';
+		static const char DEAD = 'Z';
 		static long kernelPageSize; // in bytes
 
 	private:
