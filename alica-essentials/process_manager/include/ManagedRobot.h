@@ -34,7 +34,7 @@ namespace supplementary
 		void startExecutable(string execName, int execid);
 		void startExecutable(string execName, int execid, vector<char*>& params);
 		void changeDesiredState(string execName, int execid, bool shouldRun);
-		void report(process_manager::ProcessStats *psts);
+		void report(process_manager::ProcessStats& psts);
 	private:
 		map<int, ManagedExecutable*> executableMap;
 	};

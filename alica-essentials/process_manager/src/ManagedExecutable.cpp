@@ -158,12 +158,12 @@ namespace supplementary
 #endif
 	}
 
-	void ManagedExecutable::report(process_manager::ProcessStat *ps)
+	void ManagedExecutable::report(process_manager::ProcessStat& ps)
 	{
-		ps->cpu = 100;
-		ps->mem = this->memory * ManagedExecutable::kernelPageSize / 1024.0 / 1024.0; // MB
-		ps->processKey = this->id;
-		ps->state = process_manager::ProcessStat::RUNNING;
+		ps.cpu = 100;
+		ps.mem = this->memory * ManagedExecutable::kernelPageSize / 1024.0 / 1024.0; // MB
+		ps.processKey = this->id;
+		ps.state = process_manager::ProcessStat::RUNNING;
 
 		// TODO: make the char defines right for the process states
 		//ps.state = (mngdExec.second->state == ManagedExecutable::RUNNING ? process_manager::ProcessStat::RUNNING : process_manager::ProcessStat::DEAD);

@@ -8,6 +8,7 @@
 #include "ProcessManagerRegistry.h"
 #include "ExecutableMetaData.h"
 #include "RobotMetaData.h"
+#include <iostream>
 
 namespace supplementary
 {
@@ -86,6 +87,36 @@ namespace supplementary
 	void ProcessManagerRegistry::addRobot(string robotName, int robotId)
 	{
 		this->robotList.push_back(new RobotMetaData(robotName, robotId));
+	}
+
+	/**
+	 * Adds a robot with a new unique id to the registry.
+	 *
+	 * Note: This method is for convenient testing with PCs,
+	 * which are not in the Globals.conf, i.d., are no official robots.
+	 */
+	int ProcessManagerRegistry::addRobot(string robotName)
+	{
+		int newRandomId = 0;
+		bool idExists;
+
+		do
+		{
+			idExists = false;
+			newRandomId++;
+			for (auto entry : this->robotList)
+			{
+				if (entry->id == newRandomId)
+				{
+					idExists = true;
+					break;
+				}
+			}
+		} while (idExists);
+
+		cout << "PM Registry: Warning! Adding unknown robot " << robotName << " with ID " << newRandomId << "!" << endl;
+		this->addRobot(robotName, newRandomId);
+		return newRandomId;
 	}
 
 	const vector<RobotMetaData*>& ProcessManagerRegistry::getRobots() const

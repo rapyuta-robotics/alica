@@ -28,7 +28,7 @@ namespace supplementary
 		virtual ~ManagedExecutable();
 		void queue4Update(long pid);
 		void update();
-		void report(process_manager::ProcessStat *ps);
+		void report(process_manager::ProcessStat& ps);
 		void changeDesiredState(bool shouldRun);
 		void startProcess (vector<char*>& params);
 		void startProcess ();

@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include <signal.h>
 #include <sys/wait.h>
+#include <iostream>
 
 #include <map>
 #include <thread>
@@ -25,6 +26,7 @@
 #include "ManagedRobot.h"
 #include "ManagedExecutable.h"
 #include "ProcessManagerRegistry.h"
+
 
 namespace supplementary
 {
@@ -40,6 +42,7 @@ namespace supplementary
 	ProcessManager::ProcessManager(int argc, char** argv) :
 			iterationTime(1000000), mainThread(NULL), spinner(NULL), rosNode(NULL)
 	{
+		this->ownId = 0;
 		this->sc = SystemConfig::getInstance();
 		this->ownHostname = this->sc->getHostname();
 		this->pmRegistry = new ProcessManagerRegistry();
@@ -235,8 +238,10 @@ namespace supplementary
 		psts.senderId = this->ownId;
 		for (auto const &mngdRobot : this->robotMap)
 		{
-			mngdRobot.second->report(&psts);
+			cout << "PM: report() We try to add another ProcessStat from " << mngdRobot.second->name << "!" << endl;
+			mngdRobot.second->report(psts);
 		}
+		cout << "PM: report() We have " << psts.processStats.size() << " ProcessStats!" << endl;
 		this->processStatePub.publish(psts);
 	}
 
@@ -308,21 +313,20 @@ namespace supplementary
 				}
 
 				int robotId;
-				if (this->pmRegistry->getRobotId(robotName, robotId))
+				if (!this->pmRegistry->getRobotId(robotName, robotId))
 				{
-					auto robotEntry = this->robotMap.find(robotId);
-					if (robotEntry != robotMap.end())
-					{
-						robotEntry->second->queue4update(execName, execId, curPID);
-					}
-					else
-					{
-						this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId)).first->second->queue4update(execName, execId, curPID);
-					}
+					cout << "PM: Warning! Unknown robot '" << robotName << "' is running '" << execName << "'" << endl;
+					robotId = this->pmRegistry->addRobot(robotName);
+				}
+
+				auto robotEntry = this->robotMap.find(robotId);
+				if (robotEntry != robotMap.end())
+				{
+					robotEntry->second->queue4update(execName, execId, curPID);
 				}
 				else
 				{
-					cout << "PM: Unknown robot " << robotName << " is running " << execName << endl;
+					this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId)).first->second->queue4update(execName, execId, curPID);
 				}
 
 #ifdef PM_DEBUG

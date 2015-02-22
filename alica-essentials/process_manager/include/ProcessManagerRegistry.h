@@ -27,6 +27,7 @@ namespace supplementary
 
 		const vector<RobotMetaData*>& getRobots() const;
 		void addRobot(string robotName, int robotId);
+		int addRobot(string robotName);
 		bool getRobotId(string robotName, int& robotId);
 		bool getRobotName(int robotId, string& robotName);
 		bool robotExists(int robotId);
