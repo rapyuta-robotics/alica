@@ -10,8 +10,8 @@
 namespace supplementary
 {
 
-	ExecutableMetaData::ExecutableMetaData(string name, int id) :
-			name(name), id(id)
+	ExecutableMetaData::ExecutableMetaData(string name, int id, string mode, vector<char*> defaultParams) :
+			name(name), id(id), mode(mode), defaultParams(defaultParams)
 	{
 	}
 

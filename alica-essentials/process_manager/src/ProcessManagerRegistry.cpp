@@ -8,6 +8,7 @@
 #include "ProcessManagerRegistry.h"
 #include "ExecutableMetaData.h"
 #include "RobotMetaData.h"
+#include <SystemConfig.h>
 #include <iostream>
 
 namespace supplementary
@@ -90,33 +91,41 @@ namespace supplementary
 	}
 
 	/**
-	 * Adds a robot with a new unique id to the registry.
-	 *
-	 * Note: This method is for convenient testing with PCs,
-	 * which are not in the Globals.conf, i.d., are no official robots.
+	 * Adds a robot with its configured id, if it exists. Otherwise it generates a new unique id.
+	 * This method allows testing with systems, which are not in the Globals.conf,
+	 * i.d., are no official robots.
 	 */
 	int ProcessManagerRegistry::addRobot(string robotName)
 	{
-		int newRandomId = 0;
-		bool idExists;
-
-		do
+		SystemConfig* sc = SystemConfig::getInstance();
+		int robotId;
+		try
 		{
-			idExists = false;
-			newRandomId++;
-			for (auto entry : this->robotList)
-			{
-				if (entry->id == newRandomId)
-				{
-					idExists = true;
-					break;
-				}
-			}
-		} while (idExists);
+			robotId = (*sc)["Globals"]->get<int>("Globals.Team", robotName.c_str(), "ID", NULL);
+		}
+		catch (runtime_error& e)
+		{
+			robotId = 0;
+			bool idExists;
 
-		cout << "PM Registry: Warning! Adding unknown robot " << robotName << " with ID " << newRandomId << "!" << endl;
-		this->addRobot(robotName, newRandomId);
-		return newRandomId;
+			do
+			{
+				idExists = false;
+				robotId++;
+				for (auto entry : this->robotList)
+				{
+					if (entry->id == robotId)
+					{
+						idExists = true;
+						break;
+					}
+				}
+			} while (idExists);
+			cout << "PM Registry: Warning! Adding unknown robot " << robotName << " with ID " << robotId << "!" << endl;
+		}
+
+		this->addRobot(robotName, robotId);
+		return robotId;
 	}
 
 	const vector<RobotMetaData*>& ProcessManagerRegistry::getRobots() const
@@ -180,11 +189,81 @@ namespace supplementary
 		return false;
 	}
 
-	void ProcessManagerRegistry::addExecutable(string execName, int execId)
+	/**
+	 * This method registers the given executable, if it is listed in the Processes.conf file.
+	 * @param execName
+	 * @return -1, if the executable is not registered, due to some error. Otherwise, it returns the registered id.
+	 */
+	int ProcessManagerRegistry::addExecutable(string execName)
 	{
-		this->executableList.push_back(new ExecutableMetaData(execName, execId));
+		SystemConfig* sc = SystemConfig::getInstance();
+		int execId;
+		string processMode;
+		vector<string> defaultParamsVec;
+		try
+		{
+			execId = (*sc)["Processes"]->get<int>("Processes.ProcessDescriptions", execName.c_str(), "id", NULL);
+			processMode = (*sc)["Processes"]->get<string>("Processes.ProcessDescriptions", execName.c_str(), "mode", NULL);
+			defaultParamsVec = (*sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", execName.c_str(), "defaultParams", NULL);
+		}
+		catch (runtime_error& e)
+		{
+			cerr << "PM-Registry: Cannot add executable '" << execName << "', because of faulty values in Processes.conf!" << endl;
+			return -1;
+		}
+
+		// transform the system config default params to vector of char*, for c-compatibility.
+		vector<char*> defaultParams;
+		defaultParams.push_back(strdup(execName.c_str()));
+		std::transform(defaultParamsVec.begin(), defaultParamsVec.end(), std::back_inserter(defaultParams), [](std::string& s)
+		{	s.push_back(0); return &s[0];});
+		defaultParams.push_back(nullptr);
+
+		this->executableList.push_back(new ExecutableMetaData(execName, execId, processMode, defaultParams));
+
+		return execId;
 	}
 
+	/**
+	 * This method is for copying meta data from an entry into a real managed executable.
+	 * Don't change anything in the returns object.
+	 * @param execName is the name of the demanded entry.
+	 * @return The demanded entry, if it exists. nullptr, otherwise.
+	 */
+	ExecutableMetaData const * const ProcessManagerRegistry::getExecutable(string execName) const
+	{
+		for (auto execEntry : this->executableList)
+		{
+			if (execEntry->name == execName)
+			{
+				return execEntry;
+			}
+		}
+		return nullptr;
+	}
+
+	/**
+	 * This method is for copying meta data from an entry into a real managed executable.
+	 * Don't change anything in the returns object.
+	 * @param execId is the id of the demanded entry.
+	 * @return The demanded entry, if it exists. nullptr, otherwise.
+	 */
+	ExecutableMetaData const * const ProcessManagerRegistry::getExecutable(int execId) const
+	{
+		for (auto execEntry : this->executableList)
+		{
+			if (execEntry->id == execId)
+			{
+				return execEntry;
+			}
+		}
+		return nullptr;
+	}
+
+	/**
+	 * For accessing the internal data structure of executable meta data entries.
+	 * @return The internal data structure of executable meta data entries.
+	 */
 	const vector<ExecutableMetaData*>& ProcessManagerRegistry::getExecutables() const
 	{
 		return this->executableList;

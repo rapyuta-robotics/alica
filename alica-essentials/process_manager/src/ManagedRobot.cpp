@@ -7,6 +7,7 @@
 
 #include "ManagedRobot.h"
 #include "ManagedExecutable.h"
+#include "ProcessManagerRegistry.h"
 #include <iostream>
 
 namespace supplementary
@@ -37,9 +38,9 @@ namespace supplementary
 	 * @param execid
 	 * @param shouldRun
 	 */
-	void ManagedRobot::changeDesiredState(string execName, int execid, bool shouldRun)
+	void ManagedRobot::changeDesiredState(int execId, bool shouldRun, ProcessManagerRegistry* registry)
 	{
-		auto execEntry = this->executableMap.find(execid);
+		auto execEntry = this->executableMap.find(execId);
 		if (execEntry != this->executableMap.end())
 		{
 			execEntry->second->changeDesiredState(shouldRun);
@@ -47,8 +48,20 @@ namespace supplementary
 		else
 		{
 			// Lazy initialisation of the executableMap
-			auto mapIter = this->executableMap.emplace(execid, new ManagedExecutable(execName, execid, ManagedExecutable::NOTHING_MANAGED));
-			mapIter.first->second->changeDesiredState(shouldRun);
+			ExecutableMetaData const * const  executableMetaData = registry->getExecutable(execId);
+			if (executableMetaData != nullptr)
+			{
+				auto mapIter = this->executableMap.emplace(execId, new ManagedExecutable(executableMetaData->name,
+																						 execId,
+																						 ManagedExecutable::NOTHING_MANAGED,
+																						 executableMetaData->mode,
+																						 executableMetaData->defaultParams));
+				mapIter.first->second->changeDesiredState(shouldRun);
+			}
+			else
+			{
+				cerr << "MR: Could not change desired state of executable id '" << execId << "' as it is not registered." << endl;
+			}
 		}
 	}
 
@@ -92,28 +105,40 @@ namespace supplementary
 	 * @param execid
 	 * @param pid
 	 */
-	void ManagedRobot::queue4update(string execName, int execid, long pid)
+	void ManagedRobot::queue4update(int execId, long pid, ProcessManagerRegistry* registry)
 	{
-		auto execEntry = this->executableMap.find(execid);
+		auto execEntry = this->executableMap.find(execId);
 		if (execEntry != this->executableMap.end())
 		{
 			execEntry->second->queue4Update(pid);
 		}
 		else
 		{
-			auto newExecEntry = this->executableMap.emplace(execid, new ManagedExecutable(execName, execid, pid));
-			newExecEntry.first->second->queue4Update(pid);
+			ExecutableMetaData const * const execMetaData = registry->getExecutable(execId);
+			if (execMetaData != nullptr)
+			{
+				auto newExecEntry = this->executableMap.emplace(execId, new ManagedExecutable(execMetaData->name,
+																							  execId,
+																							  ManagedExecutable::NOTHING_MANAGED,
+																							  execMetaData->mode,
+																							  execMetaData->defaultParams));
+				newExecEntry.first->second->queue4Update(pid);
+			}
+			else
+			{
+				cerr << "MR: Unable to queue ID '" << execId << "', as it is not registered!" << endl;
+			}
 		}
 	}
 
 	/**
 	 * This method starts to update all queued processes/ executables.
 	 */
-	void ManagedRobot::update()
+	void ManagedRobot::update(unsigned long long cpuDelta)
 	{
 		for (auto const & managedExec : this->executableMap)
 		{
-			managedExec.second->update();
+			managedExec.second->update(cpuDelta);
 		}
 	}
 
@@ -121,11 +146,7 @@ namespace supplementary
 	{
 		for (auto const& mngdExec : this->executableMap)
 		{
-			process_manager::ProcessStat ps;
-			ps.robotId = this->id;
-			mngdExec.second->report(ps);
-			psts.processStats.push_back(ps);
-
+			mngdExec.second->report(psts, this->id);
 		}
 	}
 

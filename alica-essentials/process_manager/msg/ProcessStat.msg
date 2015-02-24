@@ -4,10 +4,6 @@ int32 robotId
 # ID from the Processes.conf file.
 int32 processKey
 
-#constants for state
-uint8 RUNNING = 0
-uint8 DEAD = 1
-
 # State has to be set to one of the values above. 
 uint8 state
 

@@ -24,25 +24,13 @@ namespace supplementary
 {
 	long ManagedExecutable::kernelPageSize = 0;
 
-	ManagedExecutable::ManagedExecutable(string executable, int id, long pid) :
-			ExecutableMetaData(executable, id), managedPid(pid), state(UNDEFINED), cutime(0), cstime(0), utime(0), stime(0), memory(0), starttime(0), shouldRun(false)
+	ManagedExecutable::ManagedExecutable(string executable, int id, long pid, string mode, vector<char*> defaultParams) :
+			ExecutableMetaData(executable, id, mode, defaultParams), managedPid(pid), state('X'), lastUTime(0), lastSTime(0), currentUTime(0), currentSTime(0), memory(0), starttime(0), shouldRun(false), cpu(0)
 	{
-		SystemConfig* sc = SystemConfig::getInstance();
-		vector<string> defaultParams = (*sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", executable.c_str(), "defaultParams", NULL);
 
 #ifdef MGND_EXEC_DEBUG
 		cout << "ME: Constructor of executable " << executable << endl;
-		for (string s : defaultParams)
-		{
-			cout << "'" << s << "'" << endl;
-		}
 #endif
-
-		// convert vector<string> to char*[] (where each element is null-terminated)
-		this->defaultParams.push_back(strdup(executable.c_str()));
-		std::transform(defaultParams.begin(), defaultParams.end(), std::back_inserter(this->defaultParams), [](std::string& s)
-		{	s.push_back(0); return &s[0];});
-		this->defaultParams.push_back(nullptr);
 
 		this->desiredParams = nullptr;
 		this->params = nullptr;
@@ -74,7 +62,7 @@ namespace supplementary
 	/**
 	 * This method processes the queued PIDs and kills, starts, and updates the processes accordingly.
 	 */
-	void ManagedExecutable::update()
+	void ManagedExecutable::update(unsigned long long cpuDelta)
 	{
 		if (this->queuedPids4Update.size() == 0)
 		{
@@ -102,7 +90,7 @@ namespace supplementary
 				this->clear();
 			}
 		}
-		else if (this->queuedPids4Update.size() > 0)
+		else if (this->queuedPids4Update.size() > 0) // there are process which run
 		{
 #ifdef MGND_EXEC_DEBUG
 			cout << "ME: The queued PIDs for " << this->name << " are: ";
@@ -113,60 +101,80 @@ namespace supplementary
 			cout << endl;
 #endif
 
-			if (this->shouldRun)
+			if (shouldRun) // some process should run
 			{
-
-				for (int i = 0; i < this->queuedPids4Update.size(); i++)
+				if (this->managedPid != ManagedExecutable::NOTHING_MANAGED) // we know a PID to which should run
 				{
-					long pid = this->queuedPids4Update.at(i);
-					if (this->managedPid == pid)
+					for (int i = 0; i < this->queuedPids4Update.size(); i++)
 					{
-						// erase own and kill all other processes
-						this->queuedPids4Update.erase(this->queuedPids4Update.begin() + i);
-						this->killQueuedProcesses();
+						long pid = this->queuedPids4Update.at(i);
+						if (this->managedPid == pid)
+						{
+							// erase own and kill all other processes
+							this->queuedPids4Update.erase(this->queuedPids4Update.begin() + i);
+							this->killQueuedProcesses();
 
-						// update own
-						this->updateStats(true);
-						break;
+							// update own
+							this->updateStats(cpuDelta, false, true);
+							break;
+						}
 					}
 				}
 
-				if (this->queuedPids4Update.size() != 0) // we did not find our own process
+				// We did not find our own process, or we don't have one to manage, so ...
+				if (this->queuedPids4Update.size() != 0)
 				{
-					// adapt to the first and kill the other processes
+					// ... adapt to the first and kill the other processes
 					this->managedPid = this->queuedPids4Update.at(0);
 					this->queuedPids4Update.erase(this->queuedPids4Update.begin());
 					this->killQueuedProcesses();
 
 					// update own
-					this->updateStats(true);
+					this->updateStats(cpuDelta, true, true);
+				}
+
+			}
+			else // there shouldn't run a process
+			{
+				if (this->managedPid != ManagedExecutable::NOTHING_MANAGED) // we know a process we managed
+				{
+					// kill all processes, as we need to kill them including our own
+					this->killQueuedProcesses();
+				}
+				else
+				{
+					// adapt to the first and kill the other processes
+					this->shouldRun = true;
+					this->managedPid = this->queuedPids4Update.at(0);
+					this->queuedPids4Update.erase(this->queuedPids4Update.begin());
+					this->killQueuedProcesses();
+
+					// update own
+					this->updateStats(cpuDelta, true, true);
 				}
 			}
-			else
+#ifdef MGND_EXEC_DEBUG
+			if (this->queuedPids4Update.size() != 0)
 			{
-#ifdef MGND_EXEC_DEBUG
-				cout << "ME: " << this->name << " shall not run, or maybe he should?! *KILL*" << endl;
-#endif
-				this->killQueuedProcesses();
+				cout << "ME: ERROR Update queue not cleared! " << endl;
 			}
-		}
-#ifdef MGND_EXEC_DEBUG
-		if (this->queuedPids4Update.size() != 0)
-		{
-			cout << "ME: ERROR Update queue not cleared! " << endl;
-		}
 #endif
+		}
 	}
 
-	void ManagedExecutable::report(process_manager::ProcessStat& ps)
+	void ManagedExecutable::report(process_manager::ProcessStats& psts, int robotId)
 	{
-		ps.cpu = 100;
-		ps.mem = this->memory * ManagedExecutable::kernelPageSize / 1024.0 / 1024.0; // MB
-		ps.processKey = this->id;
-		ps.state = process_manager::ProcessStat::RUNNING;
+		if (this->managedPid != ManagedExecutable::NOTHING_MANAGED)
+		{
+			process_manager::ProcessStat ps;
+			ps.robotId = robotId;
+			ps.cpu = this->cpu;
+			ps.mem = this->memory * ManagedExecutable::kernelPageSize / 1024.0 / 1024.0; // MB
+			ps.processKey = this->id;
+			ps.state = this->state;
+			psts.processStats.push_back(ps);
+		}
 
-		// TODO: make the char defines right for the process states
-		//ps.state = (mngdExec.second->state == ManagedExecutable::RUNNING ? process_manager::ProcessStat::RUNNING : process_manager::ProcessStat::DEAD);
 	}
 
 	/**
@@ -191,10 +199,11 @@ namespace supplementary
 	/**
 	 * Updates the stats of the managed process (CPU, Memory, State, etc.)
 	 */
-	void ManagedExecutable::updateStats(bool readParams)
+	void ManagedExecutable::updateStats(unsigned long long cpuDelta, bool isNew, bool readParams)
 	{
+
 #ifdef MGND_EXEC_DEBUG
-		//cout << "ME: Updating " << this->executable << " (" << this->managedPid << ")" << endl;
+		cout << "ME: Updating " << this->name << " (" << this->managedPid << ")" << endl;
 #endif
 
 		string procPidString = "/proc/" + to_string(this->managedPid);
@@ -215,11 +224,11 @@ namespace supplementary
 			}
 			else if (i == 13)
 			{ // cpu time stuff (includes index 13-16)
-				statStream >> this->utime;
-				statStream >> this->stime;
-				statStream >> this->cutime;
-				statStream >> this->cstime;
-				i += 4;
+				this->lastUTime = this->currentUTime;
+				this->lastSTime = this->currentSTime;
+				statStream >> this->currentUTime;
+				statStream >> this->currentSTime;
+				i += 2;
 			}
 			else if (i == 21)
 			{
@@ -244,9 +253,23 @@ namespace supplementary
 			this->readProcParams(procPidString);
 		}
 
+		if (!isNew)
+		{
+			cout << "ME: CPU-Update of '" << this->name << "' ";
+			double sCPU = 100.0 * double(currentSTime - lastSTime) / double(cpuDelta);
+			double uCPU = 100.0 * double(currentUTime - lastUTime) / double(cpuDelta);
+			cout << sCPU << ", " << uCPU << ", " << cpuDelta << endl;
+
+			this->cpu = sCPU + uCPU;
+		}
+		else
+		{
+			this->cpu = 0;
+		}
+
 #ifdef MGND_EXEC_DEBUG
-		//this->printStats();
-		//cout << "ME: Updated " << this->executable << " (" << this->managedPid << ")" << endl;
+		this->printStats();
+		cout << "ME: Updated " << this->name << " (" << this->managedPid << ")" << endl;
 #endif
 
 	}
@@ -270,7 +293,7 @@ namespace supplementary
 			endPos = line.find('\0', startPos);
 			if (endPos != string::npos)
 			{
-				cout << "ME: Found param '" << line.substr(startPos, endPos - startPos).c_str() << "' at (" << startPos << ", " << endPos << ")" << endl;
+				//cout << "ME: Found param '" << line.substr(startPos, endPos - startPos).c_str() << "' at (" << startPos << ", " << endPos << ")" << endl;
 				argv.push_back(line.substr(startPos, endPos - startPos).c_str());
 				startPos = endPos + 1;
 			}
@@ -287,7 +310,8 @@ namespace supplementary
 		stringstream ss;
 		ss << "ME: Stats of " << this->name << " (" << this->managedPid << ")" << endl;
 		ss << "ME: State: '" << this->state << "' StartTime: " << this->starttime << endl;
-		ss << "ME: Times: u '" << this->utime << "' s '" << this->stime << "' cu '" << this->cutime << "' cs '" << this->cstime << endl;
+		ss << "ME: Times: last u '" << this->lastUTime << "' last s '" << this->lastSTime << "' current u '" << this->currentUTime << "' current s '" << this->currentSTime << endl;
+		ss << "ME: CPU %: " << this->cpu << endl;
 		ss << "ME: Memory: " << this->memory * kernelPageSize / 1024.0 / 1024.0 << "MB" << endl;
 		ss << "ME: Parameters: '" << this->params << endl;
 		cout << ss.str();
@@ -299,7 +323,11 @@ namespace supplementary
 	void ManagedExecutable::clear()
 	{
 		this->managedPid = NOTHING_MANAGED;
-		this->state = UNDEFINED;
+		this->state = 'X';
+		this->currentSTime = 0;
+		this->currentUTime = 0;
+		this->lastSTime = 0;
+		this->lastUTime = 0;
 		free(params);
 		this->params = nullptr;
 	}

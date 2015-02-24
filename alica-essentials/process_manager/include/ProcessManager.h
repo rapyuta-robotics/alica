@@ -39,11 +39,13 @@ namespace supplementary
 		virtual ~ProcessManager();
 		void start();
 		bool isRunning();
+
 		bool selfCheck();
 		void initCommunication(int argc, char** argv);
 
 		static void pmSigintHandler(int sig);
 		static void pmSigchildHandler(int sig);
+		static int numCPUs; /* < including hyper threading cores */
 
 		static bool running; /* < has to be static, to be changeable within ProcessManager::pmSignintHandler() */
 
@@ -53,14 +55,16 @@ namespace supplementary
 		int ownId;
 		map<int, ManagedRobot*> robotMap;
 		ProcessManagerRegistry* pmRegistry;
-
+		unsigned long long lastTotalCPUTime;
+		unsigned long long currentTotalCPUTime;
 
 		ros::NodeHandle* rosNode;
 		ros::AsyncSpinner* spinner;
 		ros::Subscriber processCommandSub;
 		ros::Publisher processStatePub;
 
-
+		string getRobotEnvironmentVariable(string processId);
+		void updateTotalCPUTimes();
 		void handleProcessCommand(process_manager::ProcessCommandPtr pc);
 		void changeDesiredProcessStates(process_manager::ProcessCommandPtr pc, bool shouldRun);
 
@@ -69,7 +73,7 @@ namespace supplementary
 
 		void run();
 		void searchProcFS();
-		void update();
+		void update(unsigned long long cpuDelta);
 		void report();
 
 	};

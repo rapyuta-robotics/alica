@@ -33,8 +33,10 @@ namespace supplementary
 		bool robotExists(int robotId);
 		bool robotExists(string robotName);
 
+		ExecutableMetaData const * const getExecutable(string execName) const;
+		ExecutableMetaData const * const getExecutable(int execId) const;
 		const vector<ExecutableMetaData*>& getExecutables() const;
-		void addExecutable(string execName, int execId);
+		int addExecutable(string execName);
 		bool getExecutableId(string execName, int& execId);
 		bool getExecutableName(int execId, string& execName);
 		bool executableExists(int execId);
