@@ -513,7 +513,7 @@ namespace supplementary
 	 */
 	shared_ptr<vector<string> > Configuration::getParams(char seperator, const char *path, va_list ap)
 	{
-		shared_ptr<vector<string> > params(new vector<string>());
+		shared_ptr<vector<string> > params = make_shared <vector<string> >();
 		if (path != NULL)
 		{
 			const char *temp = path;
