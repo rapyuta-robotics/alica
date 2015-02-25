@@ -151,7 +151,6 @@ namespace alica
 
 	void BasicBehaviour::initInternal()
 	{
-		cout << "entering state" << endl;
 		this->success = false;
 		this->failure = false;
 		this->callInit = false;
