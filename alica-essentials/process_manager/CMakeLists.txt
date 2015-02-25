@@ -1,24 +1,16 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(system_config)
+project(process_manager)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-## Enable exception handling for segfaults using SigFault.h
-set(CMAKE_CXX_FLAGS "-rdynamic -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}")
-
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-if(catkin_FOUND)
-	find_package(catkin REQUIRED fsystem)
-else(catkin_FOUND)
-	set (catkin_INCLUDE_DIRS "${fsystem_INCLUDE_DIRS}")
-	set (catkin_LIBRARIES "fsystem")
-endif(catkin_FOUND)
+find_package(catkin REQUIRED system_config system_util roscpp message_generation)
 
 ## System dependencies are found with CMake's conventions
-#find_package(Boost REQUIRED COMPONENTS system filesystem)
+# find_package(Boost REQUIRED COMPONENTS system)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -51,11 +43,12 @@ endif(catkin_FOUND)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+  FILES
+  ProcessCommand.msg
+  ProcessStat.msg
+  ProcessStats.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -72,10 +65,10 @@ endif(catkin_FOUND)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
 
 ###################################
 ## catkin specific configuration ##
@@ -86,14 +79,12 @@ endif(catkin_FOUND)
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-if (catkin_FOUND)
-  catkin_package(
-   INCLUDE_DIRS include
-   LIBRARIES system_config
-   CATKIN_DEPENDS fsystem
-  # DEPENDS system filesystem
-  )
-endif(catkin_FOUND)
+catkin_package(
+  INCLUDE_DIRS include
+#  LIBRARIES ros_process_manager
+  CATKIN_DEPENDS system_config system_util roscpp message_runtime
+#  DEPENDS system_lib
+)
 
 ###########
 ## Build ##
@@ -101,29 +92,20 @@ endif(catkin_FOUND)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include ${catkin_INCLUDE_DIRS})
-
-## Declare a cpp library
-add_library(system_config
-  src/SystemConfig.cpp
-  src/Configuration.cpp
-  include/Configuration.h
-)
+ include_directories(include ${catkin_INCLUDE_DIRS})
 
 ## Declare a cpp executable
-# add_executable(system_config_node src/system_config_node.cpp)
+add_executable(process_manager 
+  src/ProcessManager.cpp
+  src/ManagedExecutable.cpp
+  src/ManagedRobot.cpp
+  src/RobotMetaData.cpp
+  src/ExecutableMetaData.cpp
+  src/ProcessManagerRegistry.cpp
+)
 
-## Add cmake target dependencies of the executable/library
-## as an example, message headers may need to be generated before nodes
-add_dependencies(system_config ${catkin_LIBRARIES})
-
-## Specify libraries to link a library or executable target against
-target_link_libraries(system_config ${catkin_LIBRARIES})
-
-if (NOT catkin_FOUND)
-  target_include_directories(system_config PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
-endif(NOT catkin_FOUND)
-
+target_link_libraries(process_manager ${catkin_LIBRARIES})
+add_dependencies(process_manager ${catkin_LIBRARIES} process_manager_generate_messages_cpp)
 #############
 ## Install ##
 #############
@@ -139,7 +121,7 @@ endif(NOT catkin_FOUND)
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS system_config system_config_node
+# install(TARGETS ros_process_manager ros_process_manager_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -164,12 +146,10 @@ endif(NOT catkin_FOUND)
 #############
 
 ## Add gtest based cpp test target and link libraries
-if (catkin_FOUND)
-  catkin_add_gtest(${PROJECT_NAME}-test test/test_system_config.cpp)
-  if(TARGET ${PROJECT_NAME}-test)
-    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
-  endif()
-endif(catkin_FOUND)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_ros_process_manager.cpp)
+# if(TARGET ${PROJECT_NAME}-test)
+#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
+# endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

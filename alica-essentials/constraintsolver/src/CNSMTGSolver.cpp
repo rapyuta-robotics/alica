@@ -63,7 +63,6 @@ namespace alica
 
 		CNSMTGSolver::~CNSMTGSolver()
 		{
-			// TODO Auto-generated destructor stub
 		}
 
 		int CNSMTGSolver::RpropResult::compareTo(shared_ptr<RpropResult> other)

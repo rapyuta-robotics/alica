@@ -10,53 +10,61 @@
 
 #define MGND_EXEC_DEBUG
 
-#include <map>
-#include <iostream>
-#include <unistd.h>
-#include <signal.h>
-#include <sstream>
+#include <string>
 #include <vector>
-#include <fstream>
+#include <chrono>
+#include "ExecutableMetaData.h"
+#include "process_manager/ProcessStats.h"
+#include "process_manager/ProcessStat.h"
 
 using namespace std;
 
 namespace supplementary
 {
 
-	class ManagedExecutable
+	class ManagedExecutable : public ExecutableMetaData
 	{
 	public:
-		ManagedExecutable(uint8_t id, const char* executable, vector<string> defaultStrParams);
-		ManagedExecutable(const char* execName, uint8_t execid, long pid);
+		ManagedExecutable(string execName, int execid, long pid, string mode, vector<char*> defaultParams);
 		virtual ~ManagedExecutable();
-		string getExecutable() const;
 		void queue4Update(long pid);
-		void update();
-		void startProcess (char* const* params);
+		void update(unsigned long long cpuDelta);
+		void report(process_manager::ProcessStats& psts, int robotId);
+		void changeDesiredState(bool shouldRun);
+		void startProcess (vector<char*>& params);
 		void startProcess ();
 		bool stopProcess ();
 
 		static const long NOTHING_MANAGED = -1;
-		static const char UNDEFINED = 'U';
+		static long kernelPageSize; /* < in bytes */
 
 	private:
-		// General information (fix for object life time)
-		uint8_t id;
-		const char* executable;
-		char ** defaultParams;
 
 		// Information about the managed process (updated continuously)
 		long managedPid;
-		string params;
+		char** params;
 		char state; // The process state (zombie, running, etc)
-		// TODO: Add and update statistic fields about CPU and Memory
+		unsigned long long lastUTime;
+		unsigned long long lastSTime;
+		unsigned long long currentUTime;
+		unsigned long long currentSTime;
+		unsigned long long starttime;
+		unsigned short cpu;
+		long int memory;
 
-		vector<long> queuedPids4Update; // a list of PIDs, which match this managed executable (should be only one, normally)
 
-		void updateStats(bool readParams = false);
-		void killOtherProcesses();
+		chrono::time_point<chrono::steady_clock> lastTimeTried;
+		bool shouldRun;
+		char ** desiredParams;
+		vector<long> queuedPids4Update; /* < a list of PIDs, which match this managed executable (should be only one, normally)*/
+
+		void updateStats(unsigned long long cpuDelta, bool isNew = false, bool readParams = false);
+		void readProcParams(string procPidString);
+		void printStats();
+		void killQueuedProcesses();
 		void readParams(long pid);
 		void clear();
+
 	};
 
 } /* namespace supplementary */

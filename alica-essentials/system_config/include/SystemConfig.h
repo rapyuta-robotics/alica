@@ -26,6 +26,7 @@ namespace supplementary
 
 	protected:
 		static string rootPath;
+		static string logPath;
 		static string configPath;
 		static string hostname;
 		static mutex configsMapMutex;
@@ -41,9 +42,12 @@ namespace supplementary
 		static string getHostname();
 		static void setHostname(string newHostname);
 		static void resetHostname();
+
+
 		Configuration *operator[](const string s);
 		string getRootPath();
 		string getConfigPath();
+		string getLogPath();
 		void setRootPath(string rootPath);
 		void setConfigPath(string configPath);
 		static string getEnv(const string& var);

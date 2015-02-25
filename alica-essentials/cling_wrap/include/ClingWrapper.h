@@ -61,7 +61,9 @@ namespace supplementary
                 std::shared_ptr<External> const getExternal(std::string const &name, Gringo::FWValVec args,
                                                             std::string const &ground, Gringo::FWValVec groundArgs, bool const assign);
 
+                bool query(std::string const &value);
                 bool query(std::string const &name, Gringo::FWValVec args);
+                bool query(Gringo::Value* query);
                 std::unique_ptr<std::vector<Gringo::Value>> queryAllTrue(std::string const &name, Gringo::FWValVec args);
                 std::unique_ptr<std::vector<Gringo::Value>> queryAllTrue(std::shared_ptr<Gringo::Value> query);
                 std::unique_ptr<std::vector<Gringo::Value>> queryAllTrue(Gringo::Value* query);
@@ -71,6 +73,10 @@ namespace supplementary
 
 		const Clasp::Model* getLastModel();
 		const Clasp::Solver* getLastSolver();
+		const long long getSolvingTime();
+                const long long getSatTime();
+                const long long getUnsatTime();
+                const long getModelCount();
 
 	private:
                 bool checkMatchValues(const Gringo::Value* value1, const Gringo::Value* value2);
@@ -90,8 +96,8 @@ namespace supplementary
 		std::vector<std::shared_ptr<BaseLiteral>> baseLiterals;
 
 	public:
-                static Gringo::Value splitASPExternalString(const char* p_aspString);
-                static Gringo::Value splitASPExternalString(char* p_aspString);
+                static Gringo::Value stringToValue(const char* p_aspString);
+                static Gringo::Value stringToValue(char* p_aspString);
 
 	private:
                 static void toGringoValue(const char* p_string,  std::vector<Gringo::Value>* vec);

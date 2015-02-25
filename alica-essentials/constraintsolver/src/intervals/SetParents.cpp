@@ -22,7 +22,6 @@ namespace alica
 
 			SetParents::~SetParents()
 			{
-				// TODO Auto-generated destructor stub
 			}
 
 			int SetParents::visit(shared_ptr<Abs> abs)

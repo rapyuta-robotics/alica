@@ -6,27 +6,43 @@
  */
 
 #include "ManagedExecutable.h"
+#include <map>
+#include <iostream>
+#include <unistd.h>
+#include <signal.h>
+#include <sstream>
+#include <vector>
+#include <fstream>
+#include <string.h>
+#include <ctime>
+#include <iomanip>
+#include <chrono>
+#include "SystemConfig.h"
+#include "Logging.h"
 
 namespace supplementary
 {
+	long ManagedExecutable::kernelPageSize = 0;
 
-	ManagedExecutable::ManagedExecutable(uint8_t id, const char* executable, vector<string> defaultStrParams) :
-			id(id), executable(executable), defaultParams(new char*[defaultStrParams.size()]), managedPid(NOTHING_MANAGED), state(UNDEFINED)
-	{
-		for (int i = 0; i < defaultStrParams.size(); i++)
-		{
-			defaultParams[i] = (char*)defaultStrParams.at(i).c_str();
-		}
-	}
-
-	ManagedExecutable::ManagedExecutable(const char* executable, uint8_t id, long pid) : managedPid(pid), executable(executable), id(id)
+	ManagedExecutable::ManagedExecutable(string executable, int id, long pid, string mode, vector<char*> defaultParams) :
+			ExecutableMetaData(executable, id, mode, defaultParams), managedPid(pid), state('X'), lastUTime(0), lastSTime(0), currentUTime(0), currentSTime(0), memory(0), starttime(0), shouldRun(false), cpu(0)
 	{
 
+#ifdef MGND_EXEC_DEBUG
+		cout << "ME: Constructor of executable " << executable << endl;
+#endif
+
+		this->desiredParams = nullptr;
+		this->params = nullptr;
 	}
 
 	ManagedExecutable::~ManagedExecutable()
 	{
-		delete[] defaultParams;
+		// TODO: check whether the cleanup is right -> valgrind
+		free(defaultParams[0]); // the rest is hopefully clean up by the system config, which did allocate that shit in the first place
+		free(desiredParams);
+		free(params);
+
 		if (this->managedPid != NOTHING_MANAGED)
 		{
 			/* TODO: more comprehensive process stopping
@@ -38,30 +54,46 @@ namespace supplementary
 		}
 	}
 
-	string ManagedExecutable::getExecutable() const
-	{
-		return string(executable);
-	}
-
 	void ManagedExecutable::queue4Update(long pid)
 	{
 		this->queuedPids4Update.push_back(pid);
 	}
 
-	void ManagedExecutable::update()
+	/**
+	 * This method processes the queued PIDs and kills, starts, and updates the processes accordingly.
+	 */
+	void ManagedExecutable::update(unsigned long long cpuDelta)
 	{
-		// If there is no process left, clean up
-		if (this->queuedPids4Update.size() == 0 && this->managedPid != NOTHING_MANAGED)
+		if (this->queuedPids4Update.size() == 0)
 		{
+			if (this->shouldRun)
+			{
+				if (chrono::steady_clock::now() - this->lastTimeTried > std::chrono::milliseconds(1000)) // TODO make the wait time a parameter
+				{
 #ifdef MGND_EXEC_DEBUG
-			cout << "ME: No " << this->executable << " running!" << endl;
+					cout << "ME: Starting " << this->name << "!" << endl;
 #endif
-			this->clear();
+					this->startProcess();
+				}
+#ifdef MGND_EXEC_DEBUG
+				else
+				{
+					cout << "ME: Waiting for " << this->name << " to start!" << endl;
+				}
+#endif
+			}
+			else
+			{
+#ifdef MGND_EXEC_DEBUG
+				cout << "ME: No " << this->name << " running and none should run!" << endl;
+#endif
+				this->clear();
+			}
 		}
-		else if (this->queuedPids4Update.size() > 1)
+		else if (this->queuedPids4Update.size() > 0) // there are process which run
 		{
 #ifdef MGND_EXEC_DEBUG
-			cout << "ME: Queued PIDs:  ";
+			cout << "ME: The queued PIDs for " << this->name << " are: ";
 			for (long curPid : this->queuedPids4Update)
 			{
 				cout << curPid << ", ";
@@ -69,45 +101,86 @@ namespace supplementary
 			cout << endl;
 #endif
 
-			for (int i=0; i < this->queuedPids4Update.size(); i++)
+			if (shouldRun) // some process should run
 			{
-				long pid = this->queuedPids4Update.at(i);
-				if (this->managedPid == pid)
+				if (this->managedPid != ManagedExecutable::NOTHING_MANAGED) // we know a PID to which should run
 				{
-					// erase own and kill all other processes
-					this->queuedPids4Update.erase(begin(this->queuedPids4Update) + i);
-					this->killOtherProcesses();
-					this->queuedPids4Update.clear();
+					for (int i = 0; i < this->queuedPids4Update.size(); i++)
+					{
+						long pid = this->queuedPids4Update.at(i);
+						if (this->managedPid == pid)
+						{
+							// erase own and kill all other processes
+							this->queuedPids4Update.erase(this->queuedPids4Update.begin() + i);
+							this->killQueuedProcesses();
+
+							// update own
+							this->updateStats(cpuDelta, false, true);
+							break;
+						}
+					}
+				}
+
+				// We did not find our own process, or we don't have one to manage, so ...
+				if (this->queuedPids4Update.size() != 0)
+				{
+					// ... adapt to the first and kill the other processes
+					this->managedPid = this->queuedPids4Update.at(0);
+					this->queuedPids4Update.erase(this->queuedPids4Update.begin());
+					this->killQueuedProcesses();
 
 					// update own
-					this->updateStats();
-					break;
+					this->updateStats(cpuDelta, true, true);
+				}
+
+			}
+			else // there shouldn't run a process
+			{
+				if (this->managedPid != ManagedExecutable::NOTHING_MANAGED) // we know a process we managed
+				{
+					// kill all processes, as we need to kill them including our own
+					this->killQueuedProcesses();
+				}
+				else
+				{
+					// adapt to the first and kill the other processes
+					this->shouldRun = true;
+					this->managedPid = this->queuedPids4Update.at(0);
+					this->queuedPids4Update.erase(this->queuedPids4Update.begin());
+					this->killQueuedProcesses();
+
+					// update own
+					this->updateStats(cpuDelta, true, true);
 				}
 			}
-
-			if (this->queuedPids4Update.size() != 0) // we did not find our own process
-			{
-				// adapt to the first and kill the other processes
-				this->managedPid = this->queuedPids4Update.at(0);
-				this->queuedPids4Update.erase(this->queuedPids4Update.begin());
-				this->killOtherProcesses();
-
-				// update own
-				this->updateStats(true);
-			}
-		}
 #ifdef MGND_EXEC_DEBUG
-		if (this->queuedPids4Update.size() != 0)
-		{
-			cout << "ME: ERROR Update queue not cleared! " << endl;
-		}
+			if (this->queuedPids4Update.size() != 0)
+			{
+				cout << "ME: ERROR Update queue not cleared! " << endl;
+			}
 #endif
+		}
+	}
+
+	void ManagedExecutable::report(process_manager::ProcessStats& psts, int robotId)
+	{
+		if (this->managedPid != ManagedExecutable::NOTHING_MANAGED)
+		{
+			process_manager::ProcessStat ps;
+			ps.robotId = robotId;
+			ps.cpu = this->cpu;
+			ps.mem = this->memory * ManagedExecutable::kernelPageSize / 1024.0 / 1024.0; // MB
+			ps.processKey = this->id;
+			ps.state = this->state;
+			psts.processStats.push_back(ps);
+		}
+
 	}
 
 	/**
 	 * Kills all processes with SIGKILL, which are still in the queuedPIids4Update list.
 	 */
-	void ManagedExecutable::killOtherProcesses()
+	void ManagedExecutable::killQueuedProcesses()
 	{
 		/* TODO: more comprehensive process stopping
 		 * - try several times
@@ -116,44 +189,132 @@ namespace supplementary
 		 */
 		for (auto& pid : this->queuedPids4Update)
 		{
-			kill(pid, SIGKILL);
+			cout << "ME: Try to kill " << pid << endl;
+			kill(pid, SIGTERM);
 		}
+
+		this->queuedPids4Update.clear();
 	}
 
 	/**
 	 * Updates the stats of the managed process (CPU, Memory, State, etc.)
 	 */
-	void ManagedExecutable::updateStats(bool readParams)
+	void ManagedExecutable::updateStats(unsigned long long cpuDelta, bool isNew, bool readParams)
 	{
-		// TODO: update resource infos over proc-fs
+
+#ifdef MGND_EXEC_DEBUG
+		cout << "ME: Updating " << this->name << " (" << this->managedPid << ")" << endl;
+#endif
+
 		string procPidString = "/proc/" + to_string(this->managedPid);
 		std::ifstream statFile(procPidString + "/stat", std::ifstream::in);
-		string line;
-		cout << "ME: Updating " << this->executable << " (" << this->managedPid << ")" << endl;
-		while (getline(statFile, line, ' '))
+		string statLine;
+		getline(statFile, statLine);
+
+		//cout << "statline " << statLine << endl;
+		string tmp;
+		stringstream statStream(statLine);
+		int i = 0;
+		while (statStream.good() && i < 52)
 		{
-#ifdef MGND_EXEC_DEBUG
-			cout << "ME: stat " << line << endl;
-#endif
+			if (i == 2)
+			{ //state
+				statStream >> this->state;
+				i++;
+			}
+			else if (i == 13)
+			{ // cpu time stuff (includes index 13-16)
+				this->lastUTime = this->currentUTime;
+				this->lastSTime = this->currentSTime;
+				statStream >> this->currentUTime;
+				statStream >> this->currentSTime;
+				i += 2;
+			}
+			else if (i == 21)
+			{
+				statStream >> this->starttime;
+				i++;
+			}
+			else if (i == 23)
+			{
+				statStream >> this->memory;
+				break;
+			}
+			else
+			{
+				statStream >> tmp;
+				i++;
+				continue;
+			}
 		}
 
 		if (readParams)
 		{
-			std::ifstream cmdlineFile(procPidString + "/cmdline", std::ifstream::in);
-			string line;
-			stringstream ss;
-			while (!cmdlineFile.eofbit)
-			{
-				getline(statFile, line, '\0');
-				ss << line << " ";
-#ifdef MGND_EXEC_DEBUG
-				cout << "ME: cmdline arg " << line << endl;
-#endif
-			}
-			this->params = ss.str();
+			this->readProcParams(procPidString);
 		}
 
-		cout << "ME: Updated " << this->executable << " (" << this->managedPid << ")" << endl;
+		if (!isNew)
+		{
+			cout << "ME: CPU-Update of '" << this->name << "' ";
+			double sCPU = 100.0 * double(currentSTime - lastSTime) / double(cpuDelta);
+			double uCPU = 100.0 * double(currentUTime - lastUTime) / double(cpuDelta);
+			cout << sCPU << ", " << uCPU << ", " << cpuDelta << endl;
+
+			this->cpu = sCPU + uCPU;
+		}
+		else
+		{
+			this->cpu = 0;
+		}
+
+#ifdef MGND_EXEC_DEBUG
+		this->printStats();
+		cout << "ME: Updated " << this->name << " (" << this->managedPid << ")" << endl;
+#endif
+
+	}
+
+	/**
+	 * Reads the command line parameters of a given process.
+	 * @param procPidString The process ID as string
+	 */
+	void ManagedExecutable::readProcParams(string procPidString)
+	{
+		std::ifstream cmdlineFile(procPidString + "/cmdline", std::ifstream::in);
+		string line;
+		getline(cmdlineFile, line);
+
+		// determine the number of parameters and their length
+		vector<char const *> argv;
+		int startPos = 0;
+		int endPos = 0;
+		while (true)
+		{
+			endPos = line.find('\0', startPos);
+			if (endPos != string::npos)
+			{
+				//cout << "ME: Found param '" << line.substr(startPos, endPos - startPos).c_str() << "' at (" << startPos << ", " << endPos << ")" << endl;
+				argv.push_back(line.substr(startPos, endPos - startPos).c_str());
+				startPos = endPos + 1;
+			}
+			else
+			{
+				break;
+			}
+		}
+
+	}
+
+	void ManagedExecutable::printStats()
+	{
+		stringstream ss;
+		ss << "ME: Stats of " << this->name << " (" << this->managedPid << ")" << endl;
+		ss << "ME: State: '" << this->state << "' StartTime: " << this->starttime << endl;
+		ss << "ME: Times: last u '" << this->lastUTime << "' last s '" << this->lastSTime << "' current u '" << this->currentUTime << "' current s '" << this->currentSTime << endl;
+		ss << "ME: CPU %: " << this->cpu << endl;
+		ss << "ME: Memory: " << this->memory * kernelPageSize / 1024.0 / 1024.0 << "MB" << endl;
+		ss << "ME: Parameters: '" << this->params << endl;
+		cout << ss.str();
 	}
 
 	/**
@@ -162,8 +323,31 @@ namespace supplementary
 	void ManagedExecutable::clear()
 	{
 		this->managedPid = NOTHING_MANAGED;
-		this->state = UNDEFINED;
-		this->params = "";
+		this->state = 'X';
+		this->currentSTime = 0;
+		this->currentUTime = 0;
+		this->lastSTime = 0;
+		this->lastUTime = 0;
+		free(params);
+		this->params = nullptr;
+	}
+
+	void ManagedExecutable::changeDesiredState(bool shouldRun)
+	{
+		if (this->managedPid != NOTHING_MANAGED && shouldRun)
+		{
+			cout << "ME: Wont start executable, as it is already running! PID: " << this->managedPid << endl;
+			return;
+		}
+
+		if (this->managedPid == NOTHING_MANAGED && !shouldRun)
+		{
+			cout << "ME: Can not stop executable, as nothing is running!" << endl;
+			return;
+		}
+
+		// remember desired executable state
+		this->shouldRun = shouldRun;
 	}
 
 	/**
@@ -171,28 +355,40 @@ namespace supplementary
 	 * The started process replaces already running processes.
 	 * @param params The parameters given to the started process.
 	 */
-	void ManagedExecutable::startProcess(char* const * params)
+	void ManagedExecutable::startProcess(vector<char*>& params)
 	{
 		pid_t pid = fork();
 		if (pid == 0) // child process
 		{
-			int execReturn = execv(this->executable, params);
+			// redirect stdout
+			string logFileName = Logging::getLogFilename(this->name);
+			FILE* fd = fopen(logFileName.c_str(), "w+");
+			dup2(fileno(fd), STDOUT_FILENO);
+			fclose(fd);
+
+			// redirect stderr
+			logFileName = Logging::getErrLogFilename(this->name);
+			fd = fopen(logFileName.c_str(), "w+");
+			dup2(fileno(fd), STDERR_FILENO);
+			fclose(fd);
+
+			int execReturn = execvp(this->name.c_str(), params.data());
 			if (execReturn == -1)
 			{
-				cout << "ME: Failure! execve error code=" << errno << endl;
-				//cout << getErrMsg(errno) << endl;
+				cout << "ME: Failure! execve error code = " << errno << " - " << strerror(errno) << endl;
+				abort();
 			}
 		}
 		else if (pid > 0) // parent process
 		{
+			this->lastTimeTried = chrono::steady_clock::now();
 			this->managedPid = pid;
 		}
-#ifdef MGND_EXEC_DEBUG
 		else if (pid < 0)
 		{
-			cout << "ME: Failed to fork!" << endl;
+			cout << "ME: Failed to fork, plz consider a spoon!" << endl;
+			this->managedPid = NOTHING_MANAGED;
 		}
-#endif
 	}
 
 	/**

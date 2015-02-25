@@ -25,6 +25,7 @@ namespace supplementary
 
 	protected:
 
+		static const char LIST_ELEMENT_SEPERATOR = ',';
 		string filename;
 		void collect(ConfigNode *node, vector<string> *params, size_t offset, vector<ConfigNode *> *result);
 		void collectSections(ConfigNode *node, vector<string> *params, size_t offset, vector<ConfigNode *> *result);
@@ -37,15 +38,17 @@ namespace supplementary
 		template<typename Target>
 		Target convert(string value)
 		{
-			cerr << "Configuration: Type not handled! Value to be converted was: " << value << endl;
-			throw new exception();
+			string errMsg = "Configuration: Type not handled! Value to be converted was: " + value;
+			cerr << errMsg << endl;
+			throw new runtime_error(errMsg);
 		}
 
 		template<typename Target>
 		vector<Target> convertList(string value)
 		{
-			cerr << "Configuration: List Type not handled! Value to be converted was: " << value << endl;
-			throw new exception();
+			string errMsg = "Configuration: List Type not handled! Value to be converted was: " + value;
+			cerr << errMsg << endl;
+			throw new runtime_error(errMsg);
 		}
 
 	public:
@@ -87,15 +90,15 @@ namespace supplementary
 
 			if (nodes.size() == 0)
 			{
-				cerr << "SC-Conf: " << pathNotFound(params.get()) << endl;
-				throw new exception();
+				string errMsg = "SC-Conf: " + pathNotFound(params.get());
+				cerr << errMsg << endl;
+				throw new runtime_error(errMsg);
 			}
 			else
 			{
 				return convert<T>(nodes[0]->getValue());
 			}
 		}
-
 
 		template<typename T>
 		vector<T> getList(const char *path, ...)
@@ -110,8 +113,9 @@ namespace supplementary
 
 			if (nodes.size() == 0)
 			{
-				cerr << "SC-Conf: " << pathNotFound(params.get()) << endl;
-				throw new exception();
+				string errMsg = "SC-Conf: " + pathNotFound(params.get());
+				cerr << errMsg << endl;
+				throw new runtime_error(errMsg);
 			}
 			else
 			{
@@ -133,8 +137,9 @@ namespace supplementary
 
 			if (nodes.size() == 0)
 			{
-				cerr << "SC-Conf: " << pathNotFound(params.get()) << endl;
-				throw new exception();
+				string errMsg = "SC-Conf: " + pathNotFound(params.get());
+				cerr << errMsg << endl;
+				throw new runtime_error(errMsg);
 			}
 			else
 			{
@@ -224,8 +229,6 @@ namespace supplementary
 
 	};
 
-	
-
 	template<>
 	inline short Configuration::convert<short>(string value)
 	{
@@ -309,8 +312,9 @@ namespace supplementary
 		{
 			return true;
 		}
-		cerr << "Configuration: unable to parse boolean. Value is: " << value << endl;
-		throw new exception();
+		string errMsg = "Configuration: unable to parse boolean. Value is: " + value;
+		cerr << errMsg << endl;
+		throw new runtime_error(errMsg);
 	}
 
 	template<>
@@ -319,7 +323,8 @@ namespace supplementary
 		std::istringstream ss(value);
 		std::string listItem;
 		vector<string> itemVector;
-		while(std::getline(ss, listItem, ',')) {
+		while (std::getline(ss, listItem, LIST_ELEMENT_SEPERATOR))
+		{
 			itemVector.push_back(listItem);
 		}
 		return itemVector;
