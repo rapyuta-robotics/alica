@@ -60,7 +60,13 @@ namespace alica
 		}
 		else
 		{
-			return basicCondition->evaluate(rp);
+			bool ret = false;
+			try {
+				ret = basicCondition->evaluate(rp);
+			} catch (std::exception& e) {
+				std::cerr << "Exception catched: " << e.what() << std::endl;
+			}
+			return ret;
 		}
 	}
 
