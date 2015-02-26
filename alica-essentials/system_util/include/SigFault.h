@@ -1,4 +1,7 @@
 
+#ifndef SIGFAULTDEBUG_H_
+#define SIGFAULTDEBUG_H_
+
 #include <signal.h>
 #include <sys/syscall.h>
 #include <stdio.h>
@@ -10,8 +13,6 @@
 #include <string>
 #include <sstream>
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <execinfo.h>
 #include <cxxabi.h>
 
@@ -113,10 +114,11 @@ namespace segfaultdebug {
                 if (status == 0) {
                     funcname = ret; // use possibly realloc()-ed string
                     char syscom[256];
-                    sprintf(syscom,"addr2line .text %p", addrlist[i]);
+                    sprintf(syscom,"addr2line -e %s .text %p", symbollist[i], addrlist[i]);
                     std::string tmp = exec(syscom);
                     tmp = tmp.substr(tmp.find("\n")+1);
-                    ss <<"["<< symbollist[i] << "] " << funcname << " " << tmp;
+                    //ss <<"["<< symbollist[i] << "] " << funcname << " " << tmp;
+                    ss << funcname << " " << tmp;
                     //ss <<"["<< symbollist[i] << "] " << funcname << " " << addrlist[i] << std::endl;
                 }
                 else {
@@ -162,6 +164,8 @@ namespace segfaultdebug {
             segfaultdebug::handler_fpe();
     }
 }
+
+
 
 #ifdef __x86_64__
 
@@ -373,3 +377,5 @@ namespace segfaultdebug {
     }
 }
 
+
+#endif
