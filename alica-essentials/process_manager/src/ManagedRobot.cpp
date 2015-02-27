@@ -38,7 +38,7 @@ namespace supplementary
 	 * @param execid
 	 * @param shouldRun
 	 */
-	void ManagedRobot::changeDesiredState(int execId, bool shouldRun, ProcessManagerRegistry* registry)
+	void ManagedRobot::changeDesiredState(int execId, bool shouldRun, RobotExecutableRegistry* registry)
 	{
 		auto execEntry = this->executableMap.find(execId);
 		if (execEntry != this->executableMap.end())
@@ -105,7 +105,7 @@ namespace supplementary
 	 * @param execid
 	 * @param pid
 	 */
-	void ManagedRobot::queue4update(int execId, long pid, ProcessManagerRegistry* registry)
+	void ManagedRobot::queue4update(int execId, long pid, RobotExecutableRegistry* registry)
 	{
 		auto execEntry = this->executableMap.find(execId);
 		if (execEntry != this->executableMap.end())

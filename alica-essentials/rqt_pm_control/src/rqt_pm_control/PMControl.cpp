@@ -10,6 +10,8 @@ namespace rqt_pm_control
 			rqt_gui_cpp::Plugin(), widget_(0)
 	{
 		setObjectName("PMControl");
+		rosNode = new ros::NodeHandle();
+		spinner = new ros::AsyncSpinner(4);
 	}
 
 	void PMControl::initPlugin(qt_gui_cpp::PluginContext& context)
@@ -24,6 +26,30 @@ namespace rqt_pm_control
 		context.addWidget(widget_);
 
 		widget_->installEventFilter(this);
+
+		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &PMControl::handleProcessStats, (PMControl*)this);
+		processCommandPub = rosNode->advertise<process_manager::ProcessCommand>("/process_manager/ProcessCommand", 10);
+		spinner->start();
+	}
+
+	/**
+	 * The callback of the ROS subscriber - it inits the message processing.
+	 * @param pc
+	 */
+	void PMControl::handleProcessStats(process_manager::ProcessStats psts)
+	{
+		cout << "PMControl: Received " << psts.processStats.size() << "Process Stats! " << endl;
+		auto procManEntry = this->procMan2RobotsMap.find(psts.senderId);
+		if (procManEntry == this->procMan2RobotsMap.end())
+		{
+			this->procMan2RobotsMap.emplace(psts.senderId, vector<ObservedRobot*>());
+		}
+
+		for (auto procStat : psts.processStats)
+		{
+			this->procMan2RobotsMap[psts.senderId].push_back(new ObservedRobot("TestName", procStat.robotId));
+		}
+
 	}
 
 	bool PMControl::eventFilter(QObject* watched, QEvent* event)
@@ -35,19 +61,16 @@ namespace rqt_pm_control
 			if (keyEvent->key() == Qt::Key_R)
 			{
 				cout << "R pressed" << endl;
-				this->showRBDialog();
 				return true;
 			}
 		}
 		return true;
 	}
 
-	void PMControl::showRBDialog()
-	{
-	}
-
 	void PMControl::shutdownPlugin()
 	{
+		this->processCommandPub.shutdown();
+		this->processStateSub.shutdown();
 	}
 
 	void PMControl::saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const

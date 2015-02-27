@@ -44,7 +44,7 @@ namespace supplementary
 		this->ownId = -1;
 		this->sc = SystemConfig::getInstance();
 		this->ownHostname = this->sc->getHostname();
-		this->pmRegistry = new ProcessManagerRegistry();
+		this->pmRegistry = new RobotExecutableRegistry();
 
 		/* Initialise some data structures for better performance in searchProcFS-Method with
 		 * data from Globals.conf and Processes.conf file. */

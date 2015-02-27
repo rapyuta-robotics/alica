@@ -19,11 +19,11 @@ namespace supplementary
 	class RobotMetaData;
 	class ExecutableMetaData;
 
-	class ProcessManagerRegistry
+	class RobotExecutableRegistry
 	{
 	public:
-		ProcessManagerRegistry();
-		virtual ~ProcessManagerRegistry();
+		RobotExecutableRegistry();
+		virtual ~RobotExecutableRegistry();
 
 		const vector<RobotMetaData*>& getRobots() const;
 		void addRobot(string robotName, int robotId);

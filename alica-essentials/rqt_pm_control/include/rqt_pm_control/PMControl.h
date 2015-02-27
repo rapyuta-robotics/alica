@@ -2,14 +2,17 @@
 #define rqt_pm_control__PMControl_H
 
 #include <rqt_gui_cpp/plugin.h>
-
+#include "ros/ros.h"
 #include <ui_PMControl.h>
-
 #include <ros/macros.h>
-
 #include <QtGui>
 #include <QWidget>
 #include <QDialog>
+
+#include "process_manager/ProcessCommand.h"
+#include "process_manager/ProcessStats.h"
+#include "process_manager/ProcessStat.h"
+#include "ObservedRobot.h"
 
 using namespace std;
 
@@ -37,9 +40,14 @@ namespace rqt_pm_control
 		QWidget* widget_;
 
 	private:
+		ros::NodeHandle* rosNode;
+		ros::AsyncSpinner* spinner;
+		ros::Subscriber processStateSub;
+		ros::Publisher processCommandPub;
 
-		void showRBDialog();
+		map<int, vector<ObservedRobot*> > procMan2RobotsMap;
 
+		void handleProcessStats(process_manager::ProcessStats psts);
 		bool eventFilter(QObject* watched, QEvent* event);
 
 	};
