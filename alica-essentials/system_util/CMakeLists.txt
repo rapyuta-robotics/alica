@@ -3,6 +3,7 @@ project(system_util)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
 ## Enable exception handling for segfaults
 set(CMAKE_CXX_FLAGS "-rdynamic -g -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}")
 
@@ -91,7 +92,7 @@ endif(catkin_FOUND)
 if (catkin_FOUND)
   catkin_package(
    INCLUDE_DIRS include
-   LIBRARIES fsystem
+   LIBRARIES system_util fsystem
    CATKIN_DEPENDS system_config fsystem
   # DEPENDS system filesystem
   )
