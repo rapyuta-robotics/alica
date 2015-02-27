@@ -6,6 +6,7 @@
  */
 
 #include "FileSystem.h"
+#include <fstream>
 
 namespace supplementary
 {
@@ -57,11 +58,34 @@ namespace supplementary
 		return NULL;
 	}
 
+	/**
+	 * Helpfull method to get currently executed executable NOT including its path.
+	 * @return The path to the running executable.
+	 */
+	string FileSystem::getSelfExeName()
+	{
+		string ret;
+		ifstream ifs("/proc/self/comm");
+		ifs >> ret;
+
+		return ret;
+	}
+
+	/**
+	 * Helpfull method to get currently executed executable including its path.
+	 * @return The path to the running executable.
+	 */
+	string FileSystem::getSelf()
+	{
+		return getSelfPath();
+	}
+
+
 	bool FileSystem::findFile(const string& path, const string& file, string& path_found)
 	{
 		//cout << "ff: Path: " << path << " file: " << file << endl;
 
-		if (!fileExists(path))
+		if (!pathExists(path))
 			return false;
 
 		struct dirent **namelist;
@@ -139,7 +163,7 @@ namespace supplementary
 	 * @param filename Absolute path to file.
 	 * @return true if the file exists, false otherwise.
 	 */
-	bool FileSystem::fileExists(const string& filename)
+	bool FileSystem::pathExists(const string& filename)
 	{
 		struct stat buf;
 		if (stat(filename.c_str(), &buf) != -1)
@@ -244,7 +268,7 @@ namespace supplementary
 	 */
 	string FileSystem::getParent(const string& path)
 	{
-		if (!fileExists(path))
+		if (!pathExists(path))
 		{
 			return "";
 		}
@@ -254,16 +278,22 @@ namespace supplementary
 	bool FileSystem::createDirectory(string path, int rights)
 	{
 		string result = "";
-		unsigned int pos;
-		while ((pos = path.find('/')) != string::npos)
+		int pos;
+		if (path[path.length()-1] != PATH_SEPARATOR)
 		{
-			result = result + path.substr(0, pos) + "/";
+			path = path + PATH_SEPARATOR;
+		}
+		while ((pos = path.find(PATH_SEPARATOR)) != string::npos)
+		{
+			result = result + path.substr(0, pos) + PATH_SEPARATOR;
+			//cout << "FS: Result is '" << result << "' Pos is: " << pos << endl;
 			if (path.substr(0, pos).size() != 1)
 			{
 				if (!supplementary::FileSystem::isDirectory(result))
 				{
-					if (mkdir(result.c_str(), 0777) != 0)
+					if (mkdir(result.c_str(), rights) != 0)
 					{
+						cerr << "FS: Could not create directory: " << strerror(errno) << endl;
 						return false;
 					}
 				}

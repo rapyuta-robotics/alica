@@ -12,6 +12,12 @@
 
 #include <map>
 #include <string>
+#include <vector>
+#include "process_manager/ProcessStat.h"
+#include "process_manager/ProcessStats.h"
+#include "ProcessManagerRegistry.h"
+#include "RobotMetaData.h"
+
 
 using namespace std;
 
@@ -19,18 +25,18 @@ namespace supplementary
 {
 	class ManagedExecutable;
 
-	class ManagedRobot
+	class ManagedRobot : public RobotMetaData
 	{
 	public:
-		ManagedRobot(string robotName);
+		ManagedRobot(string robotName, int id);
 		virtual ~ManagedRobot();
-		void queue4update(string execName, int execid, long pid);
-		void update();
+		void queue4update(int execid, long pid, RobotExecutableRegistry* registry);
+		void update(unsigned long long cpuDelta);
 		void startExecutable(string execName, int execid);
-		void startExecutable(string execName, int execid, char** params);
-		void changeDesiredState(int execid, bool shouldRun);
+		void startExecutable(string execName, int execid, vector<char*>& params);
+		void changeDesiredState(int execId, bool shouldRun, RobotExecutableRegistry* registry);
+		void report(process_manager::ProcessStats& psts);
 	private:
-		string robotName;
 		map<int, ManagedExecutable*> executableMap;
 	};
 
