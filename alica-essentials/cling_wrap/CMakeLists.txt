@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -O3 -Wall ${CMAKE_CXX_FLAGS}")
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-#find_package(catkin REQUIRED)
+find_package(catkin REQUIRED cmake_modules)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -128,11 +128,14 @@ catkin_package(
   )
 
 ### BUIDLING LIBCLASP ###
-  add_definitions(-DWITH_THREADS=0)
+  add_definitions(-DWITH_THREADS=1)
+  find_package(TBB REQUIRED)
   file(GLOB_RECURSE libclasp_SOURCES "libclasp/src/*.cpp")
   add_library(
     libclasp STATIC ${libclasp_SOURCES}
   )
+ # add_dependencies(libclasp TBB)
+  target_link_libraries(libclasp tbb)
 
 ### BUIDLING CLINGO ###
 #  file(GLOB_RECURSE clingo_SOURCES "app/clingo/src/*.cc")

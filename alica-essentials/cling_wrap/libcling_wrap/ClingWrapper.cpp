@@ -12,6 +12,7 @@
 #include "External.h"
 
 #include "clasp/solver.h"
+#include "clasp/cli/clasp_options.h"
 
 using namespace Clasp;
 using namespace Clasp::Cli;
@@ -40,6 +41,7 @@ namespace supplementary
 		this->setup();
 		bool incremental = mode_ != mode_clasp;
 		Clasp::ProblemType pt = getProblemType();
+	          this->claspConfig_.set(Clasp::Cli::OptionKey::option_category_solver, "opt-strategy=5");
 		ProgramBuilder* prg = &clasp_->start(claspConfig_, pt, incremental);
 		if (incremental)
 		{
@@ -49,12 +51,267 @@ namespace supplementary
 			grd->parse(claspAppOpts_.input, grOpts_, lp, this); // <- hier dafür sorgen, dass die clasp output classe ersetzt wird
 			this->ground("base", {});
 		}
+
 	}
 
 	void ClingWrapper::setMode(Mode mode)
 	{
 		this->mode_ = mode;
 	}
+
+        void ClingWrapper::setOptStrategie(int value)
+        {
+          this->claspConfig_.set(Clasp::Cli::OptionKey::opt_opt_strategy, std::to_string(value).c_str());
+        }
+
+        void ClingWrapper::setHeuristic(std::string value)
+        {
+          this->claspConfig_.set(Clasp::Cli::OptionKey::opt_heuristic, value.c_str());
+        }
+
+        void ClingWrapper::setParallelMode(int threadCount)
+        {
+          // works strange or does nothing?
+          this->claspConfig_.set(Clasp::Cli::OptionKey::opt_parallel_mode, std::to_string(threadCount).c_str());
+        }
+
+        void ClingWrapper::setSaveProgress(int saveProgress)
+        {
+          this->claspConfig_.set(Clasp::Cli::OptionKey::opt_save_progress, std::to_string(saveProgress).c_str());
+          this->claspConfig_.set(Clasp::Cli::OptionKey::opt_restart_on_model, "");
+        }
+
+        void ClingWrapper::setPredefConfiguration(PredefinedConfigurations config)
+        {
+          switch(config)
+          {
+            case tweety:
+              //--eq=3
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_eq, "3");
+              //--trans-ext=dynamic
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_trans_ext, "dynamic");
+              //--del-init=1000,17526
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_init, "1000,17526");
+              //--del-max=2000000
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_max, "2000000");
+              //--strengthen=recursive,0
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_strengthen, "recursive,0");
+              //--otfs=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_otfs, "2");
+              //--heuristic=Vsids
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_heuristic, "Vsids");
+              //--vsids-decay=92
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_vsids_decay, "92");
+              //--init-moms
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_init_moms, "");
+              //--score-other=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_score_other, "2");
+              //--deletion=basic,50,0
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_deletion, "basic,50,0");
+              //--del-cfl=+,2000,100,20
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_cfl, "+,2000,100,20");
+              //--del-grow=0
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_grow, "0");
+              //--del-glue=2,0
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_glue, "2,0");
+              //--update-lbd=1
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_update_lbd, "1");
+              //--del-estimate=1
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_estimate, "1");
+              //--save-progress=160
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_save_progress, "160");
+              //--init-watches=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_init_watches, "2");
+              //--restarts=L,60
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_restarts, "L,60");
+              //--local-restarts
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_local_restarts, "");
+              //--loops=shared
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_loops, "shared");
+              break;
+
+            case trendy:
+              //--sat-p=20,25,240,-1,1
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_sat_prepro, "20,25,240,-1,1");
+              //--trans-ext=dynamic
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_trans_ext, "dynamic");
+              //--heuristic=Vsids
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_heuristic, "Vsids");
+              //--restarts=D,100,0.7
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_restarts, "D,100,0.7");
+              //--deletion=basic,50,0
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_deletion, "basic,50,0");
+              //--del-init=3.0,500,19500
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_init, "3.0,500,19500");
+              //--del-grow=1.1,20.0,x,100,1.5
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_grow, "1.1,20.0,x,100,1.5");
+              //--del-cfl=+,10000,2000
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_cfl, "+,10000,2000");
+              //--del-glue=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_glue, "2");
+              //--strengthen=recursive
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_strengthen, "recursive");
+              //--update-lbd
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_update_lbd, "");
+              //--otfs=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_otfs, "2");
+              //--save-p=75
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_save_progress, "75");
+              //--counter-restarts=3
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_counter_restarts, "3");
+              //--counter-bump=1023
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_counter_bump, "1023");
+              //--reverse-arcs=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_reverse_arcs, "2");
+              //--contraction=250
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_contraction, "250");
+              //--loops=common
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_loops, "common");
+              //--opt-heu=1
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_opt_heuristic, "1");
+              //--opt-strat=5
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_opt_strategy, "5");
+              break;
+
+            case frumpy:
+              //--eq=5
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_eq, "5");
+              //--heuristic=Berkmin
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_heuristic, "Berkmin");
+              //--restarts=x,100,1.5
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_restarts, "x,100,1.5");
+              //--deletion=basic,75
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_deletion, "basic,75");
+              //--del-init=3.0,200,40000
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_init, "3.0,200,40000");
+              //--del-max=400000
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_max, "400000");
+              //--contraction=250
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_contraction, "250");
+              //--loops=common
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_loops, "common");
+              //--save-p=180
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_save_progress, "180");
+              //--del-grow=1.1
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_grow, "1.1");
+              //--strengthen=local
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_strengthen, "local");
+              //--sign-def=4
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_sign_def, "4");
+              break;
+
+            case crafty:
+              //--sat-p=10,25,240,-1,1
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_sat_prepro, "10,25,240,-1,1");
+              //--trans-ext=dynamic
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_trans_ext, "dynamic");
+              //--backprop
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_backprop, "");
+              //--save-p=180
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_save_progress, "180");
+              //--heuristic=Vsids
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_heuristic, "Vsids");
+              //--restarts=x,128,1.5
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_restarts, "x,128,1.5");
+              //--deletion=basic,75,0
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_deletion, "basic,75,0");
+              //--del-init=10.0,1000,9000
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_init, "10.0,1000,9000");
+              //--del-grow=1.1,20.0
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_grow, "1.1,20.0");
+              //--del-cfl=+,10000,1000
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_cfl, "+,10000,1000");
+              //--del-glue=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_glue, "2");
+              //--otfs=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_otfs, "2");
+              //--reverse-arcs=1
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_reverse_arcs, "1");
+              //--counter-restarts=3
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_counter_restarts, "3");
+              //--contraction=250
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_contraction, "250");
+              //--opt-heu=1
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_opt_heuristic, "1");
+              //--opt-strat=1
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_opt_strategy, "1");
+
+              break;
+            case jumpy:
+              //--sat-p=20,25,240,-1,1
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_sat_prepro, "20,25,240,-1,1");
+              //--trans-ext=dynamic
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_trans_ext, "dynamic");
+              //--heuristic=Vsids
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_heuristic, "Vsids");
+              //--restarts=L,100
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_restarts, "L,100");
+              //--deletion=basic,75,2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_deletion, "basic,75,2");
+              //--del-init=3.0,1000,20000
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_init, "3.0,1000,20000");
+              //--del-grow=1.1,25,x,100,1.5
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_grow, "1.1,25,x,100,1.5");
+              //--del-cfl=x,10000,1.1
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_cfl, "x,10000,1.1");
+              //--del-glue=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_glue, "2");
+              //--update-lbd=3
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_update_lbd, "3");
+              //--strengthen=recursive
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_strengthen, "recursive");
+              //--otfs=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_otfs, "2");
+              //--save-p=70
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_save_progress, "70");
+              //--opt-heu=3
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_opt_heuristic, "3");
+              //--opt-strat=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_opt_strategy, "2");
+              break;
+
+            case handy:
+              //--sat-p=10,25,240,-1,1
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_sat_prepro, "10,25,240,-1,1");
+              //--trans-ext=dynamic
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_trans_ext, "dynamic");
+              //--backprop
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_backprop, "");
+              //--heuristic=Vsids
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_heuristic, "Vsids");
+              //--restarts=D,100,0.7
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_restarts, "D,100,0.7");
+              //--deletion=sort,50,2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_deletion, "sort,50,2");
+              //--del-max=200000
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_max, "200000");
+              //--del-init=20.0,1000,14000
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_init, "20.0,1000,14000");
+              //--del-cfl=+,4000,600
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_cfl, "+,4000,600");
+              //--del-glue=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_del_glue, "2");
+              //--update-lbd
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_update_lbd, "");
+              //--strengthen=recursive
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_strengthen, "recursive");
+              //--otfs=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_otfs, "2");
+              //--save-p=20
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_save_progress, "20");
+              //--contraction=600
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_contraction, "600");
+              //--loops=distinct
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_loops, "distinct");
+              //--counter-restarts=7
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_counter_restarts, "7");
+              //--counter-bump=1023
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_counter_bump, "1023");
+              //--reverse-arcs=2
+              this->claspConfig_.set(Clasp::Cli::OptionKey::opt_reverse_arcs, "2");
+              break;
+          }
+        }
 
 	Gringo::SolveResult ClingWrapper::solve()
 	{
@@ -165,6 +422,8 @@ namespace supplementary
 			for (auto value : this->lastSolver->symbolTable())
 			{
 				ss << "(" << value.second.name.c_str() << ", " << value.first << ", " << (this->lastModel->isTrue(value.second.lit) ? "true" : "false") << ") ";
+
+	                        ss << std::endl;
 			}
 
 			ss << std::endl;
@@ -474,6 +733,14 @@ namespace supplementary
             return -1;
 
           return claspFacade->summary().enumerated();
+        }
+
+        const long ClingWrapper::getSymbolTableSize()
+        {
+          if (this->lastSolver != nullptr)
+            return this->lastSolver->symbolTable().size();
+
+          return -1;
         }
 
         Gringo::Value ClingWrapper::stringToValue(const char* p_aspString)
