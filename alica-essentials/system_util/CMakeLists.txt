@@ -3,6 +3,8 @@ project(system_util)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+## Enable exception handling for segfaults
+set(CMAKE_CXX_FLAGS "-rdynamic -g -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}")
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -10,10 +12,10 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 
 if(catkin_FOUND)
-	find_package(catkin REQUIRED COMPONENTS system_config)
+	find_package(catkin REQUIRED COMPONENTS system_config fsystem)
 else(catkin_FOUND)
 	set (catkin_INCLUDE_DIRS "${system_config_INCLUDE_DIRS}")
-	set (catkin_LIBRARIES "system_config")
+	set (catkin_LIBRARIES "system_config fsystem")
 endif(catkin_FOUND)
 
 
@@ -89,8 +91,8 @@ endif(catkin_FOUND)
 if (catkin_FOUND)
   catkin_package(
    INCLUDE_DIRS include
-   LIBRARIES system_util
-   CATKIN_DEPENDS system_config
+   LIBRARIES fsystem
+   CATKIN_DEPENDS system_config fsystem
   # DEPENDS system filesystem
   )
 endif(catkin_FOUND)
@@ -111,6 +113,7 @@ include_directories(
 add_library(system_util
    src/Logging.cpp
 )
+add_dependencies(system_util fsystem)
 
 if (NOT catkin_FOUND)
   target_include_directories(system_util PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

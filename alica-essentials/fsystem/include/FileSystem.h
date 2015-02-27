@@ -29,6 +29,8 @@ namespace supplementary
 	public:
 		virtual ~FileSystem();
 		static string getSelfPath ();
+		static string getSelf();
+		static string getSelfExeName();
 		static bool findFile(const string& path,const string& file, string& path_found);
 		static vector<string> findAllFiles(string path, string ending);
 		static bool pathExists(const string& filename);
