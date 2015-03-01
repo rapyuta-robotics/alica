@@ -23,9 +23,9 @@
 
 #include <SystemConfig.h>
 #include <Logging.h>
+#include <RobotExecutableRegistry.h>
 #include "ManagedRobot.h"
 #include "ManagedExecutable.h"
-#include "ProcessManagerRegistry.h"
 
 namespace supplementary
 {

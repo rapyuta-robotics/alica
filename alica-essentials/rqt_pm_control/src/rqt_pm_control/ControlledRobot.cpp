@@ -5,18 +5,20 @@
  *      Author: Stephan Opfer
  */
 
-#include "ObservedRobot.h"
+#include <rqt_pm_control/ControlledRobot.h>
 
 namespace rqt_pm_control
 {
 
-	ObservedRobot::ObservedRobot(string robotName, int robotId) : RobotMetaData(robotName, robotId)
+	unsigned long long timeLastMsgReceivedTimeOut = 0;
+
+	ControlledRobot::ControlledRobot(string robotName, int robotId) : RobotMetaData(robotName, robotId)
 	{
 		// TODO Auto-generated constructor stub
 
 	}
 
-	ObservedRobot::~ObservedRobot()
+	ControlledRobot::~ControlledRobot()
 	{
 		// TODO Auto-generated destructor stub
 	}

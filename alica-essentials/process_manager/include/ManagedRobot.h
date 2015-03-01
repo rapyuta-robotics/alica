@@ -15,7 +15,7 @@
 #include <vector>
 #include "process_manager/ProcessStat.h"
 #include "process_manager/ProcessStats.h"
-#include "ProcessManagerRegistry.h"
+#include <RobotExecutableRegistry.h>
 #include "RobotMetaData.h"
 
 

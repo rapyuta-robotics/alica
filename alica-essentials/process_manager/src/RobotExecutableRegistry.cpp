@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "ProcessManagerRegistry.h"
+#include <RobotExecutableRegistry.h>
 #include "ExecutableMetaData.h"
 #include "RobotMetaData.h"
 #include <SystemConfig.h>

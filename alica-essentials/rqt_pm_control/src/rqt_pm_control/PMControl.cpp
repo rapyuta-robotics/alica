@@ -1,7 +1,10 @@
 #include <pluginlib/class_list_macros.h>
 #include <ros/master.h>
-
 #include <rqt_pm_control/PMControl.h>
+
+#include <SystemConfig.h>
+#include <RobotExecutableRegistry.h>
+#include "ControlledProcessManager.h"
 
 namespace rqt_pm_control
 {
@@ -12,6 +15,29 @@ namespace rqt_pm_control
 		setObjectName("PMControl");
 		rosNode = new ros::NodeHandle();
 		spinner = new ros::AsyncSpinner(4);
+
+		this->sc = supplementary::SystemConfig::getInstance();
+		ControlledRobot::timeLastMsgReceivedTimeOut = (*this->sc)["PMControl"]->get<unsigned long>(
+				"timeLastMsgReceivedTimeOut", NULL);
+		this->pmRegistry = new supplementary::RobotExecutableRegistry();
+
+		/* Initialise the registry data structure for better performance
+		 * with data from Globals.conf and Processes.conf file. */
+
+		// Register robots from Globals.conf
+		int curId;
+		auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
+		for (auto robotName : (*robotNames))
+		{
+			curId = this->pmRegistry->addRobot(robotName);
+		}
+
+		// Register executables from Processes.conf
+		auto processDescriptions = (*this->sc)["Processes"]->getSections("Processes.ProcessDescriptions", NULL);
+		for (auto processSectionName : (*processDescriptions))
+		{
+			curId = this->pmRegistry->addExecutable(processSectionName);
+		}
 	}
 
 	void PMControl::initPlugin(qt_gui_cpp::PluginContext& context)
@@ -27,44 +53,38 @@ namespace rqt_pm_control
 
 		widget_->installEventFilter(this);
 
-		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &PMControl::handleProcessStats, (PMControl*)this);
+		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &PMControl::handleProcessStats,
+												(PMControl*)this);
 		processCommandPub = rosNode->advertise<process_manager::ProcessCommand>("/process_manager/ProcessCommand", 10);
 		spinner->start();
 	}
 
 	/**
-	 * The callback of the ROS subscriber - it inits the message processing.
-	 * @param pc
+	 * The callback of the ROS subscriber
+	 * @param psts
 	 */
 	void PMControl::handleProcessStats(process_manager::ProcessStats psts)
 	{
 		cout << "PMControl: Received " << psts.processStats.size() << "Process Stats! " << endl;
-		auto procManEntry = this->procMan2RobotsMap.find(psts.senderId);
-		if (procManEntry == this->procMan2RobotsMap.end())
+
+		for (auto controlledProcessManager : this->controlledProcessManagers)
 		{
-			this->procMan2RobotsMap.emplace(psts.senderId, vector<ObservedRobot*>());
-		}
-
-		for (auto procStat : psts.processStats)
-		{
-			this->procMan2RobotsMap[psts.senderId].push_back(new ObservedRobot("TestName", procStat.robotId));
-		}
-
-	}
-
-	bool PMControl::eventFilter(QObject* watched, QEvent* event)
-	{
-		if (watched == widget_ && event->type() == QEvent::KeyPress)
-		{
-			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-
-			if (keyEvent->key() == Qt::Key_R)
+			if (controlledProcessManager->processManagerId == psts.senderId)
 			{
-				cout << "R pressed" << endl;
-				return true;
+				for (auto processStat : psts.processStats)
+				{
+					for (auto controlledRobot : controlledProcessManager->controlledRobotsList)
+					{
+						if (controlledRobot->id == processStat.robotId)
+						{
+							// TODO: integrate the stuff from the message (delete old stuff etc.)
+							//controlledRobot->processStats
+							//controlledRobot->timeLastMsgReceived = chrono::system_clock::now();
+						}
+					}
+				}
 			}
 		}
-		return true;
 	}
 
 	void PMControl::shutdownPlugin()
@@ -78,7 +98,8 @@ namespace rqt_pm_control
 
 	}
 
-	void PMControl::restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings)
+	void PMControl::restoreSettings(const qt_gui_cpp::Settings& plugin_settings,
+									const qt_gui_cpp::Settings& instance_settings)
 	{
 
 	}
