@@ -8,11 +8,15 @@
 #ifndef SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_
 #define SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_
 
+#include <chrono>
+
 #include <RobotMetaData.h>
 #include <process_manager/ProcessStats.h>
 
+
 namespace rqt_pm_control
 {
+	class ControlledExecutable;
 
 	class ControlledRobot : public supplementary::RobotMetaData
 	{
@@ -21,12 +25,13 @@ namespace rqt_pm_control
 		virtual ~ControlledRobot();
 
 		static unsigned long long timeLastMsgReceivedTimeOut;
+		chrono::system_clock::time_point timeLastMsgReceived; /* < the last time a message was received for this robot */
 
-	private:
-		unsigned long long timeLastMsgReceived; /* < the last time a message was received for this robot */
-
+		map<int, ControlledExecutable*> controlledExecMap;
 		int processManagerId; /* < determines the robot/system which executes the sending process manager */
-		process_manager::ProcessStats processStats;
+	private:
+
+
 	};
 
 } /* namespace rqt_pm_control */

@@ -14,6 +14,7 @@ using namespace std;
 
 namespace rqt_pm_control
 {
+	class ControlledRobot;
 
 	class ControlledProcessManager
 	{
@@ -23,8 +24,6 @@ namespace rqt_pm_control
 
 		int processManagerId;
 		vector<ControlledRobot*> controlledRobotsList;
-
-	private:
 	};
 
 } /* namespace rqt_pm_control */

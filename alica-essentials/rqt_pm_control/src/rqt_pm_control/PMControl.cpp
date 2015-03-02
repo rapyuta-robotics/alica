@@ -4,7 +4,9 @@
 
 #include <SystemConfig.h>
 #include <RobotExecutableRegistry.h>
-#include "ControlledProcessManager.h"
+#include "rqt_pm_control/ControlledProcessManager.h"
+#include "rqt_pm_control/ControlledExecutable.h"
+#include "ExecutableMetaData.h"
 
 namespace rqt_pm_control
 {
@@ -17,8 +19,7 @@ namespace rqt_pm_control
 		spinner = new ros::AsyncSpinner(4);
 
 		this->sc = supplementary::SystemConfig::getInstance();
-		ControlledRobot::timeLastMsgReceivedTimeOut = (*this->sc)["PMControl"]->get<unsigned long>(
-				"timeLastMsgReceivedTimeOut", NULL);
+		ControlledRobot::timeLastMsgReceivedTimeOut = (*this->sc)["PMControl"]->get<unsigned long>("timeLastMsgReceivedTimeOut", NULL);
 		this->pmRegistry = new supplementary::RobotExecutableRegistry();
 
 		/* Initialise the registry data structure for better performance
@@ -53,8 +54,7 @@ namespace rqt_pm_control
 
 		widget_->installEventFilter(this);
 
-		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &PMControl::handleProcessStats,
-												(PMControl*)this);
+		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &PMControl::handleProcessStats, (PMControl*)this);
 		processCommandPub = rosNode->advertise<process_manager::ProcessCommand>("/process_manager/ProcessCommand", 10);
 		spinner->start();
 	}
@@ -77,9 +77,35 @@ namespace rqt_pm_control
 					{
 						if (controlledRobot->id == processStat.robotId)
 						{
-							// TODO: integrate the stuff from the message (delete old stuff etc.)
-							//controlledRobot->processStats
-							//controlledRobot->timeLastMsgReceived = chrono::system_clock::now();
+							controlledRobot->timeLastMsgReceived = chrono::system_clock::now();
+
+							// Get the right ControlledExecutable object
+							ControlledExecutable* contExec;
+							auto execMapEntry = controlledRobot->controlledExecMap.find(processStat.processKey);
+							if (execMapEntry != controlledRobot->controlledExecMap.end())
+							{
+								contExec = execMapEntry->second;
+							}
+							else
+							{
+								const supplementary::ExecutableMetaData* metaExec = this->pmRegistry->getExecutable(processStat.processKey);
+								if (metaExec != nullptr)
+								{
+									contExec = new ControlledExecutable(metaExec->name,metaExec->id, metaExec->mode, metaExec->defaultParams);
+									controlledRobot->controlledExecMap.emplace(processStat.processKey, contExec);
+								}
+								else
+								{
+									cerr << "PMControl: Received status for unknown executable!" << endl;
+									continue;
+								}
+							}
+
+							// Update its values
+							contExec->cpu = processStat.cpu;
+							contExec->memory = processStat.mem;
+							contExec->state = processStat.state;
+
 						}
 					}
 				}
@@ -98,8 +124,7 @@ namespace rqt_pm_control
 
 	}
 
-	void PMControl::restoreSettings(const qt_gui_cpp::Settings& plugin_settings,
-									const qt_gui_cpp::Settings& instance_settings)
+	void PMControl::restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings)
 	{
 
 	}
