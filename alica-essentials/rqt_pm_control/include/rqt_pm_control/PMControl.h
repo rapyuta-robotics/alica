@@ -4,6 +4,7 @@
 #include <rqt_gui_cpp/plugin.h>
 #include "ros/ros.h"
 #include <ui_PMControl.h>
+
 #include <ros/macros.h>
 #include <rqt_pm_control/ControlledRobot.h>
 #include <QtGui>
@@ -22,7 +23,6 @@ namespace supplementary
 	class RobotExecutableRegistry;
 }
 
-
 namespace rqt_pm_control
 {
 
@@ -39,10 +39,14 @@ namespace rqt_pm_control
 		virtual void initPlugin(qt_gui_cpp::PluginContext& context);
 		virtual void shutdownPlugin();
 		virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
-		virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
+		virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings,
+										const qt_gui_cpp::Settings& instance_settings);
 
 		Ui::PMControlWidget ui_;
+
 		QWidget* widget_;
+
+		chrono::duration<double> msgTimeOut;
 
 	private:
 		ros::NodeHandle* rosNode;
@@ -53,9 +57,15 @@ namespace rqt_pm_control
 		supplementary::SystemConfig* sc;
 		supplementary::RobotExecutableRegistry* pmRegistry;
 
-		vector<ControlledProcessManager*> controlledProcessManagers;
+		map<int, ControlledProcessManager*> processManagersMap;
 
 		void handleProcessStats(process_manager::ProcessStats psts);
+
+		QTimer* guiUpdateTimer;
+
+	public Q_SLOTS:
+
+		void updateGUI();
 	};
 
 }

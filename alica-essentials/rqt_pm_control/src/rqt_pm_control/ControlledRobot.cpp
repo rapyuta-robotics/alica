@@ -10,7 +10,7 @@
 namespace rqt_pm_control
 {
 
-	unsigned long long timeLastMsgReceivedTimeOut = 0;
+
 
 	ControlledRobot::ControlledRobot(string robotName, int robotId) : RobotMetaData(robotName, robotId)
 	{

@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "ControlledExecutable.h"
+#include "rqt_pm_control/ControlledExecutable.h"
 
 namespace rqt_pm_control
 {

@@ -9,8 +9,18 @@
 #define SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDPROCESSMANAGER_H_
 
 #include <vector>
+#include <chrono>
+#include <string>
+#include "process_manager/ProcessStats.h"
+#include "QHBoxLayout"
+#include "QFrame"
 
 using namespace std;
+
+namespace Ui
+{
+	class RobotProcessesWidget;
+}
 
 namespace rqt_pm_control
 {
@@ -19,11 +29,20 @@ namespace rqt_pm_control
 	class ControlledProcessManager
 	{
 	public:
-		ControlledProcessManager(int processManagerId);
+		ControlledProcessManager(string name, int processManagerId);
 		virtual ~ControlledProcessManager();
 
+		void ProcessMessage(process_manager::ProcessStats psts);
+		void updateGUI(QHBoxLayout* parentLayout);
+		chrono::system_clock::time_point lastTimeMsgReceived;
+	private:
+		string name;
 		int processManagerId;
-		vector<ControlledRobot*> controlledRobotsList;
+
+		map<int, ControlledRobot*> controlledRobotsMap;
+
+		QFrame* robotProc;
+		Ui::RobotProcessesWidget* _processManagerWidget;
 	};
 
 } /* namespace rqt_pm_control */

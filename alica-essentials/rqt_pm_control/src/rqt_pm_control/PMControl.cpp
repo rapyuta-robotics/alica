@@ -11,6 +11,8 @@
 namespace rqt_pm_control
 {
 
+
+
 	PMControl::PMControl() :
 			rqt_gui_cpp::Plugin(), widget_(0)
 	{
@@ -19,7 +21,7 @@ namespace rqt_pm_control
 		spinner = new ros::AsyncSpinner(4);
 
 		this->sc = supplementary::SystemConfig::getInstance();
-		ControlledRobot::timeLastMsgReceivedTimeOut = (*this->sc)["PMControl"]->get<unsigned long>("timeLastMsgReceivedTimeOut", NULL);
+		this->msgTimeOut = chrono::duration<double>((*this->sc)["PMControl"]->get<unsigned long>("timeLastMsgReceivedTimeOut", NULL));
 		this->pmRegistry = new supplementary::RobotExecutableRegistry();
 
 		/* Initialise the registry data structure for better performance
@@ -52,11 +54,36 @@ namespace rqt_pm_control
 		}
 		context.addWidget(widget_);
 
-		widget_->installEventFilter(this);
-
-		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &PMControl::handleProcessStats, (PMControl*)this);
+		// Initialise the ROS Communication
+		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &PMControl::handleProcessStats,
+												(PMControl*)this);
 		processCommandPub = rosNode->advertise<process_manager::ProcessCommand>("/process_manager/ProcessCommand", 10);
 		spinner->start();
+
+		// Initialise the GUI refresh timer
+		this->guiUpdateTimer = new QTimer();
+		QObject::connect(guiUpdateTimer, SIGNAL(timeout()), this, SLOT(updateGUI()));
+		this->guiUpdateTimer->start(50);
+	}
+
+	/**
+	 * This method is repeatedly called by the guiUpdateTimer, in order to update the GUI.
+	 */
+	void PMControl::updateGUI()
+	{
+		chrono::system_clock::time_point now = chrono::system_clock::now();
+		for (auto processManagerEntry : this->processManagersMap)
+		{
+			if ((now - processManagerEntry.second->lastTimeMsgReceived) > PMControl::msgTimeOut)
+			{
+				// TODO: Check whether this calls the destructor
+				this->processManagersMap.erase(processManagerEntry.first);
+			}
+			else
+			{
+				processManagerEntry.second->updateGUI(this->ui_.pmHorizontalLayout);
+			}
+		}
 	}
 
 	/**
@@ -65,52 +92,73 @@ namespace rqt_pm_control
 	 */
 	void PMControl::handleProcessStats(process_manager::ProcessStats psts)
 	{
-		cout << "PMControl: Received " << psts.processStats.size() << "Process Stats! " << endl;
-
-		for (auto controlledProcessManager : this->controlledProcessManagers)
+		ControlledProcessManager* controlledPM;
+		auto pmEntry = this->processManagersMap.find(psts.senderId);
+		if (pmEntry != this->processManagersMap.end())
 		{
-			if (controlledProcessManager->processManagerId == psts.senderId)
+			controlledPM = pmEntry->second;
+		}
+		else
+		{
+			string pmName;
+			if (this->pmRegistry->getRobotName(psts.senderId, pmName))
 			{
-				for (auto processStat : psts.processStats)
-				{
-					for (auto controlledRobot : controlledProcessManager->controlledRobotsList)
-					{
-						if (controlledRobot->id == processStat.robotId)
-						{
-							controlledRobot->timeLastMsgReceived = chrono::system_clock::now();
-
-							// Get the right ControlledExecutable object
-							ControlledExecutable* contExec;
-							auto execMapEntry = controlledRobot->controlledExecMap.find(processStat.processKey);
-							if (execMapEntry != controlledRobot->controlledExecMap.end())
-							{
-								contExec = execMapEntry->second;
-							}
-							else
-							{
-								const supplementary::ExecutableMetaData* metaExec = this->pmRegistry->getExecutable(processStat.processKey);
-								if (metaExec != nullptr)
-								{
-									contExec = new ControlledExecutable(metaExec->name,metaExec->id, metaExec->mode, metaExec->defaultParams);
-									controlledRobot->controlledExecMap.emplace(processStat.processKey, contExec);
-								}
-								else
-								{
-									cerr << "PMControl: Received status for unknown executable!" << endl;
-									continue;
-								}
-							}
-
-							// Update its values
-							contExec->cpu = processStat.cpu;
-							contExec->memory = processStat.mem;
-							contExec->state = processStat.state;
-
-						}
-					}
-				}
+				controlledPM = new ControlledProcessManager(pmName, psts.senderId);
+				this->processManagersMap.emplace(psts.senderId, controlledPM);
+			}
+			else
+			{
+				cerr << "PMControl: Received message from unknown process manager with sender id " << psts.senderId
+						<< "";
+				return;
 			}
 		}
+
+		controlledPM->ProcessMessage(psts);
+
+		/*
+		 if (controlledProcessManager->processManagerId == psts.senderId)
+		 {
+		 for (auto processStat : psts.processStats)
+		 {
+		 for (auto controlledRobot : controlledProcessManager->controlledRobotsList)
+		 {
+		 if (controlledRobot->id == processStat.robotId)
+		 {
+		 controlledRobot->timeLastMsgReceived = chrono::system_clock::now();
+
+		 // Get the right ControlledExecutable object
+		 ControlledExecutable* contExec;
+		 auto execMapEntry = controlledRobot->controlledExecMap.find(processStat.processKey);
+		 if (execMapEntry != controlledRobot->controlledExecMap.end())
+		 {
+		 contExec = execMapEntry->second;
+		 }
+		 else
+		 {
+		 const supplementary::ExecutableMetaData* metaExec = this->pmRegistry->getExecutable(processStat.processKey);
+		 if (metaExec != nullptr)
+		 {
+		 contExec = new ControlledExecutable(metaExec->name,metaExec->id, metaExec->mode, metaExec->defaultParams);
+		 controlledRobot->controlledExecMap.emplace(processStat.processKey, contExec);
+		 }
+		 else
+		 {
+		 cerr << "PMControl: Received status for unknown executable!" << endl;
+		 continue;
+		 }
+		 }
+
+		 // Update its values
+		 contExec->cpu = processStat.cpu;
+		 contExec->memory = processStat.mem;
+		 contExec->state = processStat.state;
+
+		 }
+		 }
+		 }
+		 }*/
+
 	}
 
 	void PMControl::shutdownPlugin()
@@ -124,7 +172,8 @@ namespace rqt_pm_control
 
 	}
 
-	void PMControl::restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings)
+	void PMControl::restoreSettings(const qt_gui_cpp::Settings& plugin_settings,
+									const qt_gui_cpp::Settings& instance_settings)
 	{
 
 	}

@@ -9,9 +9,9 @@
         <icon type="theme">folder</icon>
         <statustip>Plugins related to robot tools.</statustip>
       </group>
-      <label>MSL Refbox</label>
+      <label>Process Manager GUI</label>
       <icon type="theme">image-x-generic</icon>
-      <statustip>A GUI plugin for sending process_manager Commands.</statustip>
+      <statustip>A GUI plugin for sending process_manager commands.</statustip>
     </qtgui>
   </class>
 </library>

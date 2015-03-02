@@ -14,14 +14,22 @@ include(${QT_USE_FILE})
 
 set(rqt_pm_control_SRCS
   src/rqt_pm_control/PMControl.cpp
+  src/rqt_pm_control/ControlledExecutable.cpp
+  src/rqt_pm_control/ControlledProcessManager.cpp
+  src/rqt_pm_control/ControlledRobot.cpp
 )
 
 set(rqt_pm_control_HDRS
   include/rqt_pm_control/PMControl.h
+  include/rqt_pm_control/ControlledExecutable.h
+  include/rqt_pm_control/ControlledProcessManager.h
+  include/rqt_pm_control/ControlledRobot.h
 )
 
 set(rqt_pm_control_UIS
   src/rqt_pm_control/PMControl.ui
+  src/rqt_pm_control/ProcessWidget.ui
+  src/rqt_pm_control/RobotProcessesWidget.ui
 )
 
 set(rqt_pm_control_INCLUDE_DIRECTORIES
