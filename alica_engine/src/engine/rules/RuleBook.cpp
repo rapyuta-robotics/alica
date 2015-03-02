@@ -482,7 +482,9 @@ namespace alica
 			}
 		}
 		if (nextState == nullptr)
+		{
 			return PlanChange::NoChange;
+		}
 #ifdef RULE_debug
 		cout << "RB: SynchTransition" << r->getPlan()->getName() << endl;
 #endif
