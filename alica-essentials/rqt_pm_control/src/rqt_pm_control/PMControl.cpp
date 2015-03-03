@@ -7,11 +7,10 @@
 #include "rqt_pm_control/ControlledProcessManager.h"
 #include "rqt_pm_control/ControlledExecutable.h"
 #include "ExecutableMetaData.h"
+#include "SigFault.h"
 
 namespace rqt_pm_control
 {
-
-
 
 	PMControl::PMControl() :
 			rqt_gui_cpp::Plugin(), widget_(0)
@@ -63,7 +62,10 @@ namespace rqt_pm_control
 		// Initialise the GUI refresh timer
 		this->guiUpdateTimer = new QTimer();
 		QObject::connect(guiUpdateTimer, SIGNAL(timeout()), this, SLOT(updateGUI()));
-		this->guiUpdateTimer->start(50);
+		this->guiUpdateTimer->start(1000);
+
+		//This makes segfaults to exceptions
+		segfaultdebug::init_segfault_exceptions();
 	}
 
 	/**
@@ -77,7 +79,10 @@ namespace rqt_pm_control
 			if ((now - processManagerEntry.second->lastTimeMsgReceived) > PMControl::msgTimeOut)
 			{
 				// TODO: Check whether this calls the destructor
+				cout << "PMControl: Erase ControlledProcessManager with ID " << processManagerEntry.second->processManagerId << " from GUI!" << endl;
+				this->ui_.pmHorizontalLayout->removeWidget(processManagerEntry.second->robotProc);
 				this->processManagersMap.erase(processManagerEntry.first);
+				delete processManagerEntry.second;
 			}
 			else
 			{
@@ -96,6 +101,7 @@ namespace rqt_pm_control
 		auto pmEntry = this->processManagersMap.find(psts.senderId);
 		if (pmEntry != this->processManagersMap.end())
 		{
+			cout << "PMControl: ControlledProcessManager with ID " << psts.senderId << " is already known!" << endl;
 			controlledPM = pmEntry->second;
 		}
 		else
@@ -103,13 +109,13 @@ namespace rqt_pm_control
 			string pmName;
 			if (this->pmRegistry->getRobotName(psts.senderId, pmName))
 			{
+				cout << "PMControl: Create new ControlledProcessManager with ID " << psts.senderId << endl;
 				controlledPM = new ControlledProcessManager(pmName, psts.senderId);
 				this->processManagersMap.emplace(psts.senderId, controlledPM);
 			}
 			else
 			{
-				cerr << "PMControl: Received message from unknown process manager with sender id " << psts.senderId
-						<< "";
+				cerr << "PMControl: Received message from unknown process manager with sender id " << psts.senderId << endl;
 				return;
 			}
 		}

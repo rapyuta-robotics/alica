@@ -35,13 +35,15 @@ namespace rqt_pm_control
 		void ProcessMessage(process_manager::ProcessStats psts);
 		void updateGUI(QHBoxLayout* parentLayout);
 		chrono::system_clock::time_point lastTimeMsgReceived;
+		int processManagerId;
+		QFrame* robotProc;
+
 	private:
 		string name;
-		int processManagerId;
 
 		map<int, ControlledRobot*> controlledRobotsMap;
 
-		QFrame* robotProc;
+
 		Ui::RobotProcessesWidget* _processManagerWidget;
 	};
 

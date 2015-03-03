@@ -491,6 +491,7 @@ namespace supplementary
 			pid_t pid = fork();
 			if (pid == 0) // child process
 			{
+				setsid();
 				// redirect stdout
 				string logFileName = Logging::getLogFilename("roscore");
 				FILE* fd = fopen(logFileName.c_str(), "w+");

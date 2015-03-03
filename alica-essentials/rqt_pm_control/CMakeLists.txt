@@ -3,10 +3,13 @@ cmake_minimum_required(VERSION 2.8.3)
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
+## Enable exception handling for segfaults
+set(CMAKE_CXX_FLAGS "-rdynamic -g -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}")
+
 project(rqt_pm_control)
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager)
+find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util)
 
 find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
 
