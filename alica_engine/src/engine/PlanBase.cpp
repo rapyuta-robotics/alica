@@ -187,9 +187,9 @@ namespace alica
 			}
 			if (this->rootNode->tick(this->ruleBook) == PlanChange::FailChange)
 			{
-#ifdef PB_DEBUG
+//#ifdef PB_DEBUG
 				cout << "PB: MasterPlan Failed" << endl;
-#endif
+//#endif
 			}
 			//lock for fpEvents
 			{

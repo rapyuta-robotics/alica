@@ -845,7 +845,7 @@ namespace alica
 
 	void RunningPlan::attachPlanConstraints()
 	{
-		cout << "RP: attachPlanConstraints " << this->getPlan()->getName() << endl;
+//		cout << "RP: attachPlanConstraints " << this->getPlan()->getName() << endl;
 		this->constraintStore->addCondition(this->plan->getPreCondition());
 		this->constraintStore->addCondition(this->plan->getRuntimeCondition());
 	}

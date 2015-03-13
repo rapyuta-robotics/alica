@@ -192,7 +192,11 @@ namespace alica
 			chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
 #endif
 			// TODO: pass something like an eventarg (to be implemented) class-member, which could be set for an event triggered (to be implemented) behaviour.
-			this->run(nullptr);
+			try {
+				this->run(nullptr);
+			} catch (exception& e) {
+				cerr << "Exception catched: " << e.what() << endl;
+			}
 #ifdef BEH_DEBUG
 			BehaviourConfiguration* conf = dynamic_cast<BehaviourConfiguration*>(this->getRunningPlan()->getPlan());
 			if (conf->isEventDriven())
