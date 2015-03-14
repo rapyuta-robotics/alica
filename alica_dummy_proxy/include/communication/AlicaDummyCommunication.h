@@ -8,14 +8,8 @@
 #ifndef ALICADUMMYCOMMUNICATION_H_
 #define ALICADUMMYCOMMUNICATION_H_
 
-#include "engine/IAlicaCommunication.h"
-#include "alica_ros_proxy/AllocationAuthorityInfo.h"
-#include "alica_ros_proxy/BehaviourEngineInfo.h"
-#include "alica_ros_proxy/PlanTreeInfo.h"
-#include "alica_ros_proxy/RoleSwitch.h"
-#include "alica_ros_proxy/SyncReady.h"
-#include "alica_ros_proxy/SyncTalk.h"
-#include "alica_ros_proxy/SolverResult.h"
+#include <engine/IAlicaCommunication.h>
+
 namespace alica_dummy_proxy {
 
 	class AlicaDummyCommunication : public alica::IAlicaCommunication
