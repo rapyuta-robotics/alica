@@ -85,13 +85,14 @@ endif(catkin_FOUND)
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
+if(catkin_FOUND)
 catkin_package(
  INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
    LIBRARIES alica_dummy_proxy
   CATKIN_DEPENDS alica_engine system_config
   DEPENDS system_lib
 )
-
+endif(catkin_FOUND)
 ###########
 ## Build ##
 ###########
@@ -108,7 +109,11 @@ file(GLOB_RECURSE alica_dummy_sources "src/*.cpp")
  add_library(alica_dummy_proxy
   ${alica_dummy_sources};
 )
-
+ target_link_libraries(alica_dummy_proxy ${catkin_LIBRARIES} alica_engine system_config)
+ add_dependencies(alica_engine ${catkin_LIBRARIES} alica_engine system_config)
+if (NOT catkin_FOUND)
+ target_include_directories(alica_dummy_proxy PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include") 
+endif (NOT catkin_FOUND)
 ## Declare a cpp executable
 # add_executable(alica_dummy_proxy_node src/alica_dummy_proxy_node.cpp)
 
