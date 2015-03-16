@@ -314,11 +314,6 @@ namespace alica
 	{
 		return this->stepEngine;
 	}
-	void AlicaEngine::doStep()
-	{
-		this->stepCalled = true;
-		this->planBase->getStepModeCV()->notify_one();
-	}
 	/**
 	 * Returns the plan repository, which holds the static ALICA program.
 	 */

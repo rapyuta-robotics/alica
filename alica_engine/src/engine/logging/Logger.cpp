@@ -39,17 +39,7 @@ namespace alica
 			strftime(buffer, 1024, "%FT%T", timeinfo);
 			string timeString = buffer;
 			replace(timeString.begin(), timeString.end(), ':', '-');
-			string logPath = (*sc)["Alica"]->get<string>("Alica.EventLogging.LogFolder", NULL);
-			if (!supplementary::FileSystem::isPathRooted(logPath))
-			{
-				//TODO maybe think about it
-				logPath = ".alica/" + logPath;
-				logPath = supplementary::FileSystem::combinePaths(::getenv("HOME"), logPath);
-			}
-			if (logPath.find_last_of(supplementary::FileSystem::PATH_SEPARATOR) != logPath.size() - 1)
-			{
-				logPath += supplementary::FileSystem::PATH_SEPARATOR;
-			}
+			string logPath = sc->getLogPath();
 			if (!supplementary::FileSystem::isDirectory(logPath))
 			{
 
@@ -59,7 +49,7 @@ namespace alica
 				}
 
 			}
-			string logFile = logPath + "alica-run--" + robotName + "--" + timeString + ".txt";
+			string logFile = supplementary::Logging::getLogFilename("alica-run--" + robotName );
 			this->fileWriter = new ofstream(logFile.c_str());
 			this->eventStrings = list<string>();
 			this->inIteration = false;

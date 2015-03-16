@@ -10,9 +10,9 @@ set(CMAKE_CXX_FLAGS "-rdynamic -g -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 if (catkin_FOUND)
-  find_package(catkin REQUIRED COMPONENTS system_config fsystem event_handling)
+  find_package(catkin REQUIRED COMPONENTS system_config fsystem event_handling system_util)
 else (catkin_FOUND)
-  set(catkin_LIBRARIES "system_config" "fsystem" "event_handling")
+  set(catkin_LIBRARIES "system_config" "fsystem" "event_handling" "system_util")
 endif(catkin_FOUND)
 
 
@@ -89,7 +89,7 @@ if(catkin_FOUND)
   catkin_package(
     INCLUDE_DIRS include
     LIBRARIES alica_engine
-    CATKIN_DEPENDS  system_config fsystem event_handling
+    CATKIN_DEPENDS  system_config fsystem event_handling system_util
   #  DEPENDS tinyxml
   )
 endif(catkin_FOUND)
