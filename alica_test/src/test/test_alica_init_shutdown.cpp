@@ -8,7 +8,8 @@
 #include "engine/PlanRepository.h"
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/model/Plan.h"
-#include <communication/AlicaRosCommunication.h>
+#include <communication/AlicaDummyCommunication.h>
+#include <clock/AlicaSystemClock.h>
 #include "TestConditionCreator.h"
 
 class AlicaEngineTestInit : public ::testing::Test
@@ -41,8 +42,8 @@ protected:
 		cc = new alicaTests::TestConditionCreator();
 		uc = new alicaTests::TestUtilityFunctionCreator();
 		crc = new alicaTests::TestConstraintCreator();
-		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+		ae->setIAlicaClock(new alica_dummy_proxy::AlicaSystemClock());
+		ae->setCommunicator(new alica_dummy_proxy::AlicaDummyCommunication(ae));
 	}
 
 	virtual void TearDown()
