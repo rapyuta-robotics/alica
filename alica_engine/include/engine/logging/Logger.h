@@ -15,6 +15,7 @@ using namespace std;
 #include <fstream>
 #include <list>
 #include <SystemConfig.h>
+#include <Logging.h>
 #include "engine/AlicaEngine.h"
 #include <ctime>
 #include "engine/IAlicaClock.h"

@@ -80,7 +80,6 @@ namespace alica
 		IPlanner* getPlanner();
 		IAlicaClock* getIAlicaClock();
 		void setIAlicaClock(IAlicaClock* clock);
-		void doStep();
 		void iterationComplete();
 		PartialAssignmentPool* getPartialAssignmentPool();
 		void stepNotify();
