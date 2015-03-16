@@ -362,7 +362,8 @@ while (0)
 /* This is for the 32-bit subsystem on x86-64.  */
 
 #define sigcontext_struct sigcontext
-#include <java-signal-aux.h>
+//may be a 32 bit solution with libjava:
+//#include <java-signal-aux.h>
 
 #endif /* __x86_64__ */
 
