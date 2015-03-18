@@ -382,7 +382,7 @@ static void unblock_signal(int signum __attribute__((__unused__)))
 #endif
 }
 #endif
-
+#ifdef __x86_64__
 SIGNAL_HANDLER(catch_segv)
 {
     unblock_signal(SIGSEGV);
@@ -400,10 +400,13 @@ SIGNAL_HANDLER(catch_fpe)
 #endif
    segfaultdebug::handle_fpe();
 }
+#endif // __x86_64__
 
 namespace segfaultdebug {
     void init_segfault_exceptions() {
+#ifdef __x86_64__
         INIT_SEGV;
+#endif // __x86_64__
     }
 }
 
