@@ -1693,7 +1693,7 @@ namespace alica
 	{
 		if (this->elements.find(ael->getId()) != this->elements.end())
 		{
-			cout << "ELEMENT " << ael->getName() << endl;
+			cout << "ELEMENT >" << ael->getName() << "< >" << this->elements[ael->getId()]->getName() << "<" << endl;
 			stringstream ss;
 			ss << "MF: ERROR Double IDs: " << ael->getId();
 			ae->abort(ss.str());
