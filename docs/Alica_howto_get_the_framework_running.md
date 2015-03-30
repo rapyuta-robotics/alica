@@ -70,13 +70,11 @@ libgbm-dev-lts-utopic libegl1-mesa-dev-lts-utopic
 	export PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \[\033[01;31m\]$(__git_ps1 "[%s]")\[\033[01;34m\]\$\[\033[00m\] '
 	```
 
-*DOMAIN_FOLDER* this is the path to your project.
+	* *DOMAIN_FOLDER* this is the path to your project.
+	* *DOMAIN_CONFIG_FOLDER* the plans and behaviours will be located here. At this directory should be the Alica.conf and the Globals.conf. 
+	* *Alica.conf* represents the configuration for the engine. [Example Alica.conf](Alica_alica_conf.md)
 
-*DOMAIN_CONFIG_FOLDER* the plans and behaviours will be located here. At this directory should be the Alica.conf and the Globals.conf. 
-
-*Alica.conf* represents the configuration for the engine. [Example Alica.conf](Alica_alica_conf.md)
-
-*Globals.conf*  role matching and team ids of the robots. [Example Globals.conf](Alica_globals_conf.md)
+	* *Globals.conf*  role matching and team ids of the robots. [Example Globals.conf](Alica_globals_conf.md)
 
 
 7. Compile your catkin workspace 
