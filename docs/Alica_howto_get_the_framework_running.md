@@ -48,7 +48,7 @@ libgbm-dev-lts-utopic libegl1-mesa-dev-lts-utopic
 
 6. Set the environment variables of your bash by adding the following lines into your '~/.bashrc'-file. ROS already added its own environment variable into your '~/.bashrc'-file. The lines below have to be inserted below 'source /opt/ros/indigo/setup.bash'. The first line lets you source your workspace in every console/bash! So take care if you use multiple workspaces. Furthermore, does the next line work only if you have build your workspace once, because the first build will create the 'devel/setup.bash'-file. 
 
-**Be careful this step should be done be our teammembers**
+**Be careful this step should be done by our team members**
 
 	```
 	source <path2workspace>/<nameofworkspace>/devel/setup.bash
@@ -71,9 +71,13 @@ libgbm-dev-lts-utopic libegl1-mesa-dev-lts-utopic
 	```
 
 *DOMAIN_FOLDER* this is the path to your project.
+
 *DOMAIN_CONFIG_FOLDER* the plans and behaviours will be located here. At this directory should be the Alica.conf and the Globals.conf. 
+
 *Alica.conf* represents the configuration for the engine. [Example Alica.conf](Alica_alica_conf.md)
+
 *Globals.conf*  role matching and team ids of the robots. [Example Globals.conf](Alica_globals_conf.md)
+
 
 7. Compile your catkin workspace 
 
