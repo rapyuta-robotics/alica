@@ -10,4 +10,4 @@ Below you will find all installation steps of the framework, please follow them 
 * [Eclipse](docs/Alica_howto_setup_your_eclipse.md)
 
 **Tutorial of PlanDesigner**
-* [PlanDesigner](https://github.com/carpe-noctem-cassel/alica-plan-designer/README.md)
+* [PlanDesigner](https://github.com/carpe-noctem-cassel/alica-plan-designer/blob/master/README.md)
