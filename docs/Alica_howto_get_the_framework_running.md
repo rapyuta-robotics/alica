@@ -77,7 +77,7 @@ libgbm-dev-lts-utopic libegl1-mesa-dev-lts-utopic
 	* You can create your own confuguration files here too. The Syntax is:
 	
 	```
-	[NameOfYourConfigFile]
+	[TopLevelSection]
 		[Sub]
 			angle = 134.37;
 			speed = 10000;
@@ -89,14 +89,14 @@ libgbm-dev-lts-utopic libegl1-mesa-dev-lts-utopic
 	................................
 	................................
 	................................
-	[!NameOfYourConfigFile]
+	[!TopLevelSection]
 	```
 
-	to be able to access to your conf file you need a instance of the systemConfig, example:
+	To be able to access to your conf file you need a instance of the systemConfig, example:
 	
 	```
 	supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-	double angle = (*sc)["NameOfYourConfigFile"]->get<double>("NameOfYourConfigFile.Sub.angle", NULL);
+	double angle = (*sc)["NameOfYourConfigFile"]->get<double>("TopLevelSection.Sub.angle", NULL);
 	```
 
 7. Compile your catkin workspace 
