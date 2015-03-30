@@ -3,7 +3,7 @@
 
 **Howto Setup your Eclipse CDT**
 
-1. At first you need a compiled catkin workspace, with the folders like src, devel, build properly set. See therefore [Framework!](Alica_howto_get_the_framework_runnings.md)
+1. At first you need a compiled catkin workspace, with the folders like src, devel, build properly set. See therefore [Framework](Alica_howto_get_the_framework_runnings.md)
 
 2. Download the latest Eclipse CDT Edition from eclipse.org 
 
@@ -13,7 +13,7 @@
 	catkin_make --force-cmake -G"Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE:STRING=Debug -D_ECLIPSE_VERSION=4.4
 	```
 
-4. Start eclipse from a console, in order to have the Environment Variables properly set. For the Environment Variables see [Framework!](Alica_howto_get_the_framework_runnings.md) --> Step 7 
+4. Start eclipse from a console, in order to have the Environment Variables properly set. For the Environment Variables see [Framework](Alica_howto_get_the_framework_runnings.md) --> Step 7 
 
 5. Import the project generated in step 3 by selecting "File-->Import-->Existing projects into workspace" and hit the "next"-button. Browse to your catkin workspace root directory and do not check "Copy projects into workspace". Then press the "finish"-button. 
 
@@ -26,11 +26,14 @@
 9. Just to be sure, regenerate the index by "right-click on the project folder-->index-->rebuild". This will take a while and you can see the progress in the lower right edge of Eclipse. If you still have unresolved include errors or something similar in your error tab, double-click on those errors. Sometimes they vanish by open the corresponding files. 
 
 10. Eclipse has extensive formatting configuration capabilities. To add our formatting profile to Eclipse, perform the following steps: 
-	* Select Window -> Preferences -> C/C++ ->Code Style -> Formatter 
-	* Click Import... 
-	* Select the CNC_ROS_Format.xml from <path2cnc-msl>/configuration 
-	* Click ok 
-	* As you edit a file, Eclipse should use this new profile to format your code following our conventions. To reformat an entire file, select Edit -> Format (shortcut is Strg+Shift+F). 
+	
+	```
+	Select Window -> Preferences -> C/C++ ->Code Style -> Formatter 
+	Click Import... 
+	Select the CNC_ROS_Format.xml from <path2cnc-msl>/configuration 
+	Click ok 
+	As you edit a file, Eclipse should use this new profile to format your code following our conventions. To reformat an entire file, select Edit -> Format (shortcut is Strg+Shift+F). 
+	```
 
 11. Insert the following line into your eclipse.ini file. The file is located in your eclipse installation folder. Please replace Firstname Lastname with your full name. 
 
