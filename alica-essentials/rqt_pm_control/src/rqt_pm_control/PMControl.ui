@@ -144,7 +144,7 @@
         <number>0</number>
        </property>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QHBoxLayout" name="pmHorizontalLayout">
          <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">

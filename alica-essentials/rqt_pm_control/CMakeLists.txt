@@ -1,9 +1,15 @@
 cmake_minimum_required(VERSION 2.8.3)
 
+## Use c++ 11x std
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
+## Enable exception handling for segfaults
+set(CMAKE_CXX_FLAGS "-rdynamic -g -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}")
+
 project(rqt_pm_control)
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp)
+find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util)
 
 find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
 
@@ -11,14 +17,22 @@ include(${QT_USE_FILE})
 
 set(rqt_pm_control_SRCS
   src/rqt_pm_control/PMControl.cpp
+  src/rqt_pm_control/ControlledExecutable.cpp
+  src/rqt_pm_control/ControlledProcessManager.cpp
+  src/rqt_pm_control/ControlledRobot.cpp
 )
 
 set(rqt_pm_control_HDRS
   include/rqt_pm_control/PMControl.h
+  include/rqt_pm_control/ControlledExecutable.h
+  include/rqt_pm_control/ControlledProcessManager.h
+  include/rqt_pm_control/ControlledRobot.h
 )
 
 set(rqt_pm_control_UIS
   src/rqt_pm_control/PMControl.ui
+  src/rqt_pm_control/ProcessWidget.ui
+  src/rqt_pm_control/RobotProcessesWidget.ui
 )
 
 set(rqt_pm_control_INCLUDE_DIRECTORIES
@@ -39,6 +53,7 @@ qt4_wrap_ui(rqt_pm_control_UIS_H ${rqt_pm_control_UIS})
 include_directories(${rqt_pm_control_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
 add_library(${PROJECT_NAME} ${rqt_pm_control_SRCS} ${rqt_pm_control_MOCS} ${rqt_pm_control_UIS_H})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
+add_dependencies(${PROJECT_NAME} process_manager)
 
 find_package(class_loader)
 class_loader_hide_library_symbols(${PROJECT_NAME})

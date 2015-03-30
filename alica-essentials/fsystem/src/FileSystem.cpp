@@ -6,6 +6,7 @@
  */
 
 #include "FileSystem.h"
+#include <fstream>
 
 namespace supplementary
 {
@@ -56,6 +57,29 @@ namespace supplementary
 		}
 		return NULL;
 	}
+
+	/**
+	 * Helpfull method to get currently executed executable NOT including its path.
+	 * @return The path to the running executable.
+	 */
+	string FileSystem::getSelfExeName()
+	{
+		string ret;
+		ifstream ifs("/proc/self/comm");
+		ifs >> ret;
+
+		return ret;
+	}
+
+	/**
+	 * Helpfull method to get currently executed executable including its path.
+	 * @return The path to the running executable.
+	 */
+	string FileSystem::getSelf()
+	{
+		return getSelfPath();
+	}
+
 
 	bool FileSystem::findFile(const string& path, const string& file, string& path_found)
 	{

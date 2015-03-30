@@ -23,9 +23,9 @@
 
 #include <SystemConfig.h>
 #include <Logging.h>
+#include <RobotExecutableRegistry.h>
 #include "ManagedRobot.h"
 #include "ManagedExecutable.h"
-#include "ProcessManagerRegistry.h"
 
 namespace supplementary
 {
@@ -44,7 +44,7 @@ namespace supplementary
 		this->ownId = -1;
 		this->sc = SystemConfig::getInstance();
 		this->ownHostname = this->sc->getHostname();
-		this->pmRegistry = new ProcessManagerRegistry();
+		this->pmRegistry = new RobotExecutableRegistry();
 
 		/* Initialise some data structures for better performance in searchProcFS-Method with
 		 * data from Globals.conf and Processes.conf file. */
@@ -491,6 +491,7 @@ namespace supplementary
 			pid_t pid = fork();
 			if (pid == 0) // child process
 			{
+				setsid();
 				// redirect stdout
 				string logFileName = Logging::getLogFilename("roscore");
 				FILE* fd = fopen(logFileName.c_str(), "w+");

@@ -1,4 +1,7 @@
 
+#ifndef SIGFAULTDEBUG_H_
+#define SIGFAULTDEBUG_H_
+
 #include <signal.h>
 #include <sys/syscall.h>
 #include <stdio.h>
@@ -9,9 +12,8 @@
 #include <stdexcept>
 #include <string>
 #include <sstream>
+#include "FileSystem.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <execinfo.h>
 #include <cxxabi.h>
 
@@ -50,12 +52,12 @@ namespace segfaultdebug {
 
 
     /** Print a demangled stack backtrace of the caller function to FILE* out. */
-    static inline std::string get_stacktrace()
+    static inline std::string get_stacktrace(int startindex=1)
     {
         static int max_frames = 64;
         std::stringstream ss;
 
-        ss << "SegFaultException Stacktrace:\n";
+        ss << "Stacktrace:\n";
 
         // storage array for stack trace address data
         void* addrlist[max_frames+1];
@@ -78,7 +80,7 @@ namespace segfaultdebug {
 
         // iterate over the returned symbol lines. skip the first, it is the
         // address of this function.
-        for (int i = 5; i < addrlen; i++)
+        for (int i = startindex; i < addrlen; i++)
         {
             char *begin_name = 0, *begin_offset = 0, *end_offset = 0;
 
@@ -113,11 +115,41 @@ namespace segfaultdebug {
                 if (status == 0) {
                     funcname = ret; // use possibly realloc()-ed string
                     char syscom[256];
-                    sprintf(syscom,"addr2line .text %p", addrlist[i]);
-                    std::string tmp = exec(syscom);
-                    tmp = tmp.substr(tmp.find("\n")+1);
-                    ss <<"["<< symbollist[i] << "] " << funcname << " " << tmp;
-                    //ss <<"["<< symbollist[i] << "] " << funcname << " " << addrlist[i] << std::endl;
+
+                    //To work in a library we have to transform the address see here:
+                    //http://stackoverflow.com/questions/7556045/how-to-map-function-address-to-function-in-so-files
+                    //major problem: get the starting address of the current lib
+                    //further we have to format the return string
+                    //e.g.: This worked addr2line 0x34f3e7 -e /home/endy/cnws/devel/lib/libalica_engine.so
+                    // Here 0x34f3e7 is computed by: addrlist[i] - libalicaStartAddr (got it from pmap)
+
+                    string execname(symbollist[i]);
+                    if(execname.find(".so") != string::npos) {
+						ifstream ifs("/proc/self/smaps");
+						char blub[1024];
+						string startaddr;
+						while(!ifs.eof()) {
+							ifs.getline(blub, 1024);
+							if(strstr(blub, symbollist[i]) != NULL) {
+								if(strstr(blub, "r-xp")) {
+									startaddr = string(blub);
+								}
+							}
+						}
+
+						startaddr = startaddr.substr(0, startaddr.find("-"));
+						void* startadd=0;
+
+						sscanf(startaddr.c_str(), "%p", (void **)&startadd);
+						sprintf(syscom,"addr2line -e %s %p", symbollist[i], (void*)((char*)addrlist[i]-(char*)startadd));
+						std::string tmp = exec(syscom);
+						ss << "#" << (i-startindex+1) << " " << addrlist[i] << " " << funcname << " in " << tmp;
+                    } else {
+                    	sprintf(syscom,"addr2line -e %s .text %p", symbollist[i], addrlist[i]);
+						std::string tmp = exec(syscom);
+						tmp = tmp.substr(tmp.find("\n")+1);
+						ss << "#" << (i-startindex+1) << " " << addrlist[i] << " " << funcname << " in " << tmp;
+                    }
                 }
                 else {
                     // demangling failed. Output function name as a C function with
@@ -142,7 +174,7 @@ namespace segfaultdebug {
 
     void segfault_sigaction()
     {
-        segfaultdebug::SegFaultException s(segfaultdebug::get_stacktrace());
+        segfaultdebug::SegFaultException s(string("SegFaultException ") + segfaultdebug::get_stacktrace(5));
         //s.stacktrace = get_stacktrace();
         throw s;
     }
@@ -162,6 +194,8 @@ namespace segfaultdebug {
             segfaultdebug::handler_fpe();
     }
 }
+
+
 
 #ifdef __x86_64__
 
@@ -328,7 +362,8 @@ while (0)
 /* This is for the 32-bit subsystem on x86-64.  */
 
 #define sigcontext_struct sigcontext
-#include <java-signal-aux.h>
+//may be a 32 bit solution with libjava:
+//#include <java-signal-aux.h>
 
 #endif /* __x86_64__ */
 
@@ -348,7 +383,7 @@ static void unblock_signal(int signum __attribute__((__unused__)))
 #endif
 }
 #endif
-
+#ifdef __x86_64__
 SIGNAL_HANDLER(catch_segv)
 {
     unblock_signal(SIGSEGV);
@@ -366,10 +401,15 @@ SIGNAL_HANDLER(catch_fpe)
 #endif
    segfaultdebug::handle_fpe();
 }
+#endif // __x86_64__
 
 namespace segfaultdebug {
     void init_segfault_exceptions() {
+#ifdef __x86_64__
         INIT_SEGV;
+#endif // __x86_64__
     }
 }
 
+
+#endif

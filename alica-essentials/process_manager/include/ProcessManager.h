@@ -30,7 +30,7 @@ namespace supplementary
 	class ManagedExecutable;
 	class RobotMetaData;
 	class ExecutableMetaData;
-	class ProcessManagerRegistry;
+	class RobotExecutableRegistry;
 
 	class ProcessManager
 	{
@@ -54,7 +54,7 @@ namespace supplementary
 		string ownHostname;
 		int ownId;
 		map<int, ManagedRobot*> robotMap;
-		ProcessManagerRegistry* pmRegistry;
+		RobotExecutableRegistry* pmRegistry;
 		unsigned long long lastTotalCPUTime;
 		unsigned long long currentTotalCPUTime;
 

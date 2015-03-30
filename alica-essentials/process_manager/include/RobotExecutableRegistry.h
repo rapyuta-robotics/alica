@@ -5,8 +5,8 @@
  *      Author: Stephan Opfer
  */
 
-#ifndef SUPPLEMENTARY_PROCESS_MANAGER_SRC_PROCESSMANAGERREGISTRY_H_
-#define SUPPLEMENTARY_PROCESS_MANAGER_SRC_PROCESSMANAGERREGISTRY_H_
+#ifndef SUPPLEMENTARY_PROCESS_MANAGER_SRC_ROBOTEXECUTABLEREGISTRY_H_
+#define SUPPLEMENTARY_PROCESS_MANAGER_SRC_ROBOTEXECUTABLEREGISTRY_H_
 
 #include <vector>
 #include <string>
@@ -19,11 +19,15 @@ namespace supplementary
 	class RobotMetaData;
 	class ExecutableMetaData;
 
-	class ProcessManagerRegistry
+	/**
+	 * The RobotExecutableRegistry help the process manager and its
+	 * control GUI to remember/manage the names and ids of robots and executables.
+	 */
+	class RobotExecutableRegistry
 	{
 	public:
-		ProcessManagerRegistry();
-		virtual ~ProcessManagerRegistry();
+		RobotExecutableRegistry();
+		virtual ~RobotExecutableRegistry();
 
 		const vector<RobotMetaData*>& getRobots() const;
 		void addRobot(string robotName, int robotId);
@@ -52,4 +56,4 @@ namespace supplementary
 
 } /* namespace supplementary */
 
-#endif /* SUPPLEMENTARY_PROCESS_MANAGER_SRC_PROCESSMANAGERREGISTRY_H_ */
+#endif /* SUPPLEMENTARY_PROCESS_MANAGER_SRC_ROBOTEXECUTABLEREGISTRY_H_ */

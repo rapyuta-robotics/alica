@@ -43,15 +43,10 @@ namespace supplementary
 		free(desiredParams);
 		free(params);
 
-		if (this->managedPid != NOTHING_MANAGED)
+		/*if (this->managedPid != NOTHING_MANAGED)
 		{
-			/* TODO: more comprehensive process stopping
-			 * - try several times
-			 * - try harder signals, if necessary
-			 * - give better feedback than true and false (maybe console output)
-			 */
 			kill(this->managedPid, SIGTERM);
-		}
+		}*/
 	}
 
 	void ManagedExecutable::queue4Update(long pid)
@@ -360,6 +355,8 @@ namespace supplementary
 		pid_t pid = fork();
 		if (pid == 0) // child process
 		{
+			setsid(); // necessary to let the child process live longer than its parent
+
 			// redirect stdout
 			string logFileName = Logging::getLogFilename(this->name);
 			FILE* fd = fopen(logFileName.c_str(), "w+");

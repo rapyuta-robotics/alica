@@ -81,7 +81,7 @@ add_message_files(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-#  LIBRARIES ros_process_manager
+  LIBRARIES robot_executable_meta_data
   CATKIN_DEPENDS system_config system_util roscpp message_runtime
 #  DEPENDS system_lib
 )
@@ -93,18 +93,23 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
  include_directories(include ${catkin_INCLUDE_DIRS})
+ 
+ add_library(robot_executable_meta_data
+  src/RobotMetaData.cpp
+  src/ExecutableMetaData.cpp
+  src/RobotExecutableRegistry.cpp
+ )
+ target_link_libraries(robot_executable_meta_data ${catkin_LIBRARIES})
+ add_dependencies(robot_executable_meta_data ${catkin_LIBRARIES})
 
 ## Declare a cpp executable
 add_executable(process_manager 
   src/ProcessManager.cpp
   src/ManagedExecutable.cpp
   src/ManagedRobot.cpp
-  src/RobotMetaData.cpp
-  src/ExecutableMetaData.cpp
-  src/ProcessManagerRegistry.cpp
 )
 
-target_link_libraries(process_manager ${catkin_LIBRARIES})
+target_link_libraries(process_manager ${catkin_LIBRARIES} robot_executable_meta_data)
 add_dependencies(process_manager ${catkin_LIBRARIES} process_manager_generate_messages_cpp)
 #############
 ## Install ##

@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "ProcessManagerRegistry.h"
+#include <RobotExecutableRegistry.h>
 #include "ExecutableMetaData.h"
 #include "RobotMetaData.h"
 #include <SystemConfig.h>
@@ -14,11 +14,11 @@
 namespace supplementary
 {
 
-	ProcessManagerRegistry::ProcessManagerRegistry()
+	RobotExecutableRegistry::RobotExecutableRegistry()
 	{
 	}
 
-	ProcessManagerRegistry::~ProcessManagerRegistry()
+	RobotExecutableRegistry::~RobotExecutableRegistry()
 	{
 		for (auto metaData : this->executableList)
 		{
@@ -31,7 +31,7 @@ namespace supplementary
 		}
 	}
 
-	bool ProcessManagerRegistry::getRobotName(int robotId, string& robotName)
+	bool RobotExecutableRegistry::getRobotName(int robotId, string& robotName)
 	{
 		for (auto robotMetaData : this->robotList)
 		{
@@ -46,7 +46,7 @@ namespace supplementary
 		return false;
 	}
 
-	bool ProcessManagerRegistry::robotExists(int robotId)
+	bool RobotExecutableRegistry::robotExists(int robotId)
 	{
 		for (auto robotMetaData : this->robotList)
 		{
@@ -58,7 +58,7 @@ namespace supplementary
 		return false;
 	}
 
-	bool ProcessManagerRegistry::robotExists(string robotName)
+	bool RobotExecutableRegistry::robotExists(string robotName)
 	{
 		for (auto robotMetaData : this->robotList)
 		{
@@ -70,7 +70,7 @@ namespace supplementary
 		return false;
 	}
 
-	bool ProcessManagerRegistry::getRobotId(string robotName, int& robotId)
+	bool RobotExecutableRegistry::getRobotId(string robotName, int& robotId)
 	{
 		for (auto robotMetaData : this->robotList)
 		{
@@ -85,7 +85,7 @@ namespace supplementary
 		return false;
 	}
 
-	void ProcessManagerRegistry::addRobot(string robotName, int robotId)
+	void RobotExecutableRegistry::addRobot(string robotName, int robotId)
 	{
 		this->robotList.push_back(new RobotMetaData(robotName, robotId));
 	}
@@ -95,7 +95,7 @@ namespace supplementary
 	 * This method allows testing with systems, which are not in the Globals.conf,
 	 * i.d., are no official robots.
 	 */
-	int ProcessManagerRegistry::addRobot(string robotName)
+	int RobotExecutableRegistry::addRobot(string robotName)
 	{
 		SystemConfig* sc = SystemConfig::getInstance();
 		int robotId;
@@ -128,12 +128,12 @@ namespace supplementary
 		return robotId;
 	}
 
-	const vector<RobotMetaData*>& ProcessManagerRegistry::getRobots() const
+	const vector<RobotMetaData*>& RobotExecutableRegistry::getRobots() const
 	{
 		return this->robotList;
 	}
 
-	bool ProcessManagerRegistry::getExecutableName(int execId, string& execName)
+	bool RobotExecutableRegistry::getExecutableName(int execId, string& execName)
 	{
 		for (auto execMetaData : this->executableList)
 		{
@@ -148,7 +148,7 @@ namespace supplementary
 		return false;
 	}
 
-	bool ProcessManagerRegistry::getExecutableId(string execName, int& execId)
+	bool RobotExecutableRegistry::getExecutableId(string execName, int& execId)
 	{
 		for (auto execMetaData : this->executableList)
 		{
@@ -163,7 +163,7 @@ namespace supplementary
 		return false;
 	}
 
-	bool ProcessManagerRegistry::executableExists(int execId)
+	bool RobotExecutableRegistry::executableExists(int execId)
 	{
 		for (auto execMetaData : this->executableList)
 		{
@@ -176,7 +176,7 @@ namespace supplementary
 		return false;
 	}
 
-	bool ProcessManagerRegistry::executableExists(string execName)
+	bool RobotExecutableRegistry::executableExists(string execName)
 	{
 		for (auto execMetaData : this->executableList)
 		{
@@ -194,7 +194,7 @@ namespace supplementary
 	 * @param execName
 	 * @return -1, if the executable is not registered, due to some error. Otherwise, it returns the registered id.
 	 */
-	int ProcessManagerRegistry::addExecutable(string execName)
+	int RobotExecutableRegistry::addExecutable(string execName)
 	{
 		SystemConfig* sc = SystemConfig::getInstance();
 		int execId;
@@ -230,7 +230,7 @@ namespace supplementary
 	 * @param execName is the name of the demanded entry.
 	 * @return The demanded entry, if it exists. nullptr, otherwise.
 	 */
-	ExecutableMetaData const * const ProcessManagerRegistry::getExecutable(string execName) const
+	ExecutableMetaData const * const RobotExecutableRegistry::getExecutable(string execName) const
 	{
 		for (auto execEntry : this->executableList)
 		{
@@ -248,7 +248,7 @@ namespace supplementary
 	 * @param execId is the id of the demanded entry.
 	 * @return The demanded entry, if it exists. nullptr, otherwise.
 	 */
-	ExecutableMetaData const * const ProcessManagerRegistry::getExecutable(int execId) const
+	ExecutableMetaData const * const RobotExecutableRegistry::getExecutable(int execId) const
 	{
 		for (auto execEntry : this->executableList)
 		{
@@ -264,7 +264,7 @@ namespace supplementary
 	 * For accessing the internal data structure of executable meta data entries.
 	 * @return The internal data structure of executable meta data entries.
 	 */
-	const vector<ExecutableMetaData*>& ProcessManagerRegistry::getExecutables() const
+	const vector<ExecutableMetaData*>& RobotExecutableRegistry::getExecutables() const
 	{
 		return this->executableList;
 	}
