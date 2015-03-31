@@ -1,6 +1,6 @@
 #Autogen code
 
-![Used Plan](docs/PlanDesignerNewPlan.png)
+![Used Plan](PlanDesignerNewPlan.png)
 
 **Explanation of Plan code**
 * [PlanCode](docs/Plancode.md)
