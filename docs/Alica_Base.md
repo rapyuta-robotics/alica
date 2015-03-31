@@ -17,8 +17,6 @@
 #include "communication/AlicaRosCommunication.h"
 #include "communication/AlicaDummyCommunication.h"
 
-
-#include "SigFault.h"
 #include "robotmovement/RobotMovement.h"
 
 using namespace std;
@@ -31,32 +29,41 @@ namespace msl
 	{
 		ae = new alica::AlicaEngine();
 
-		//Will be create from the PlanDesigner
+		//Will be create from the PlanDesigner is domainspecific stuff for your robot
+		//Creators which need the engine for example to call behaviours
 		bc = new alica::BehaviourCreator();
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
 		crc = new alica::ConstraintCreator();
 
+		
+		//You can write your own clock and communication you only need to inherit from the IAlicaClock or IAlicaCommunication
+		//ROS Communicator and ROSCLOCK 
 		//For ROS use this
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 
+
+		//This will use your SystemClock and the DummyCommucation has only empty methods so cant communicate with other robots
 		//Without ros use this
 		ae->setIAlicaClock(new alicaRosProxy::AlicaSystemClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaDummyCommunication(ae));
-
+		
 		//WORLDMODEL 
 		wm = MSLWorldModel::get();
 
 		//FOR CARPE NOCTEM
 		RobotMovement::readConfigParameters();
-
+		
+		//The engine method will initialize all parameters and classes which it needs
+		//Only call init isnt enough this will only initialize stuff and parse plans, beh etc., you have to call start ae->start();  
 		ae->init(bc, cc, uc, crc, roleSetName, masterPlanName, roleSetDir, false);
 	}
 
 	void Base::start()
 	{
 		//After init the engine you should call start
+		//The PlanBase will now tick 
 		ae->start();
 	}
 
@@ -79,10 +86,9 @@ namespace msl
 int main(int argc, char** argv)
 {
 	cout << "Initing Ros" << endl;
-	ros::init(argc, argv, "AlicaEngine");
 
-	//This makes segfaults to exceptions
-	segfaultdebug::init_segfault_exceptions();
+	//Dont need if you are not using ROS
+	ros::init(argc, argv, "AlicaEngine");
 
 	cout << "Starting Base" << endl;
 	if (argc < 2)
@@ -127,7 +133,8 @@ int main(int argc, char** argv)
 	Base* base = new Base(roleset, masterplan, rolesetdir);
 
 	base->start();
-
+	
+	//If ROS --> need || !ROS --> comment out
 	while (ros::ok())
 	{
 		std::chrono::milliseconds dura(500);

@@ -4,6 +4,9 @@
 **Used Plan**
 ![Used Plan](PlanDesignerNewPlan.png)
 
+
+**First of all, please write your code in PROTECTED REGIONS. This ensures that your code is not deleted when you generate new again. **
+
 **Explanation of Plan code**
 * [PlanCode](Plancode.md)
 
