@@ -11,3 +11,6 @@ Below you will find all installation steps of the framework, please follow them 
 
 **Tutorial of PlanDesigner**
 * [PlanDesigner](https://github.com/carpe-noctem-cassel/alica-plan-designer/blob/master/README.md)
+
+**Build a Base and run the generated code with or without ros**
+* [Base](docs/Alica_Base.md)
