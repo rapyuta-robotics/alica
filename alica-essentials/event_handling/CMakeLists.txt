@@ -90,6 +90,7 @@ include_directories(include)
 add_library(event_handling
    src/AutoResetEvent.cpp
    src/Timer.cpp
+   src/EventTrigger.cpp
 )
 
 if (NOT catkin_FOUND)
