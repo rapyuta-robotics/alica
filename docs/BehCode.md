@@ -39,9 +39,9 @@ namespace alica
 	**---> Example initialize variables here or contructor**
 	**---> x = 0;**
 	**---> after 30 times the runmethod get called and we leave the state**
-	**---> c will state at 30**
+	**---> c will stay at 30**
 	**---> x will be 0 if we start this behaviour again**
-	**---> so c will be counting from 30 and x from 0 if we call this behaviour after one minute againt**
+	**---> so c will be counting from 30 and x from 0 if we call this behaviour after one minute again**
         /*PROTECTED REGION END*/
     }
 /*PROTECTED REGION ID(methods1427727877859) ENABLED START*/ //Add additional methods here

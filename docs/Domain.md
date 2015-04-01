@@ -12,6 +12,7 @@ namespace alica
     {
 	**---> start your world model here**
 	**---> you can use it then in all behaviours**
+	**---> or implement your motion command in this class, then you use it in all behaviours**
     }
 
     DomainBehaviour::~DomainBehaviour()

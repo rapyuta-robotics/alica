@@ -8,13 +8,13 @@
 **First of all, please write your code in PROTECTED REGIONS. This ensures that your code is not deleted when you generate new again. **
 
 **Explanation of Plan code**
-* [PlanCode](Plancode.md)
+* [Plan code](Plancode.md)
 
 **Explanation of Plan constraint code**
-* [PlanConstrainCode](PlanConstraintCode.md)
+* [PlanConstrain code](PlanConstraintCode.md)
 
 **Explanation of Behavoiur code**
-* [BehaviourCode](BehCode.md)
+* [Behaviour code](BehCode.md)
 
 **Explanation of Domain Behaviour**
-* [DomainBehaviourCode](Domain.md)
+* [DomainBehaviour code](Domain.md)
