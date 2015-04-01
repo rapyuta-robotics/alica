@@ -22,6 +22,6 @@ namespace alicaRosProxy
 		virtual void sleep(long us);
 	};
 
-} /* namespace supplementary */
+} /* namespace alicaRosProxy */
 
 #endif /* ALICAROSCLOCK_H_ */
