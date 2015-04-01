@@ -516,14 +516,20 @@ namespace alica
 				this->currentDirectory = this->currentDirectory + "/";
 			}
 			string path = this->currentDirectory + locator;
-			list<string>::iterator findIterParsed = find(filesParsed.begin(), filesParsed.end(), path);
-			list<string>::iterator findIterToParse = find(filesToParse.begin(), filesToParse.end(), path);
+			char s[2048];
+			realpath(path.c_str(), s);
+			string pathNew =s;
+
+			list<string>::iterator findIterParsed = find(filesParsed.begin(), filesParsed.end(), pathNew);
+			list<string>::iterator findIterToParse = find(filesToParse.begin(), filesToParse.end(), pathNew);
+
+
 			if (findIterParsed == filesParsed.end() && findIterToParse == filesToParse.end())
 			{
 #ifdef PP_DEBUG
 				cout << "PP: Adding " + path + " to parse queue " << endl;
 #endif
-				filesToParse.push_back(path);
+				filesToParse.push_back(pathNew);
 			}
 		}
 		string tokenId = idString.substr(hashPos + 1, idString.length() - hashPos);
