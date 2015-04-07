@@ -11,23 +11,19 @@
 #include <vector>
 #include <mutex>
 #include <condition_variable>
+#include "ITrigger.h"
 
 using namespace std;
 
 namespace supplementary
 {
-	class EventTrigger
+	class EventTrigger : public virtual ITrigger
 	{
 	public:
 		EventTrigger();
 		virtual ~EventTrigger();
 		void registerCV(condition_variable* condVar);
-		void trigger(bool notifyAll = false);
-
-	private:
-		mutex cv_mtx;
-		condition_variable cv;
-		vector<condition_variable*> registeredCVs;
+		void run(bool notifyAll = false);
 	};
 }
 

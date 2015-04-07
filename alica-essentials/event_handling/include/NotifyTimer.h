@@ -13,6 +13,7 @@
 #include <thread>
 #include <condition_variable>
 #include <iostream>
+#include "ITrigger.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ namespace supplementary
 	using t_notificationcallback = void (NotificationClass::*)();
 
 	template<class NotificationClass>
-	class NotifyTimer
+	class NotifyTimer : public virtual ITrigger
 	{
 	public:
 		NotifyTimer(long msInterval, t_notificationcallback<NotificationClass> callback, NotificationClass* obj);
@@ -34,6 +35,9 @@ namespace supplementary
 		bool isStarted();
 		void setInterval(long msInterval);
 		const long getInterval() const;
+		void run(bool notifyAll = false);
+		void registerCV(condition_variable* condVar);
+
 
 	private:
 		thread* runThread;
@@ -42,7 +46,6 @@ namespace supplementary
 		t_notificationcallback<NotificationClass> callback;
 		NotificationClass* obj;
 
-		void run();
 	};
 
 	template<class NotificationClass>
@@ -52,13 +55,13 @@ namespace supplementary
 		this->started = true;
 		this->running = false;
 		this->msInterval = chrono::milliseconds(msInterval);
-		this->runThread = new thread(&NotifyTimer::run, this);
+		this->runThread = new thread(&NotifyTimer::run, this, false);
 		this->callback = callback;
 		this->obj = obj;
 	}
 
 	template<class NotificationClass>
-	void NotifyTimer<NotificationClass>::run()
+	void NotifyTimer<NotificationClass>::run(bool notifyAll)
 	{
 		while (this->started)
 		{
@@ -132,5 +135,10 @@ namespace supplementary
 	}
 
 } /* namespace supplementary */
+
+template<class NotificationClass>
+inline void supplementary::NotifyTimer<NotificationClass>::registerCV(condition_variable* condVar)
+{
+}
 
 #endif /* NOTIFYTIMER_H_ */

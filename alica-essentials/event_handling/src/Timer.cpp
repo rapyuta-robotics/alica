@@ -20,7 +20,7 @@ namespace supplementary
 		this->msDelayedStart = chrono::milliseconds(msDelayedStart);
 		this->registeredCVs = vector<condition_variable*>();
 		this->notifyCalled = false;
-		this->runThread = new thread(&Timer::run, this);
+		this->runThread = new thread(&Timer::run, this, false);
 	}
 
 	Timer::~Timer()
@@ -37,7 +37,7 @@ namespace supplementary
 		this->registeredCVs.push_back(condVar);
 	}
 
-	void Timer::run()
+	void Timer::run(bool notifyAll)
 	{
 		if (msDelayedStart.count() > 0)
 		{

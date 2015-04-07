@@ -24,7 +24,7 @@ namespace supplementary
 		this->registeredCVs.push_back(condVar);
 	}
 
-	void EventTrigger::trigger(bool notifyAll)
+	void EventTrigger::run(bool notifyAll)
 	{
 		lock_guard<mutex> lock(cv_mtx);
 		for (unsigned int i = 0; i < this->registeredCVs.size(); i++)

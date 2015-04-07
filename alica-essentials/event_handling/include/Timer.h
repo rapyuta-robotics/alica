@@ -15,6 +15,7 @@ using namespace std;
 #include <thread>
 #include <condition_variable>
 #include <iostream>
+#include "ITrigger.h"
 
 namespace supplementary
 {
@@ -22,7 +23,7 @@ namespace supplementary
 	 * The TimerEvent allows to register several condition variables.
 	 * The condition variables are notified according to the timers configuration.
 	 */
-	class Timer
+	class Timer : public virtual ITrigger
 	{
 	public:
 		Timer(long msInterval, long msDelayedStart, bool notifyAll);
@@ -38,6 +39,7 @@ namespace supplementary
 		void setInterval(long msInterval);
 		const long getDelayedStart() const;
 		const long getInterval() const;
+		void run(bool notifyAll = false);
 
 	private:
 		thread* runThread;
@@ -46,11 +48,7 @@ namespace supplementary
 		bool running, started, triggered;
 		bool notifyAll;
 		bool notifyCalled;
-		mutex cv_mtx;
-		condition_variable cv;
-		vector<condition_variable*> registeredCVs; /** < These condition variables are notified each iteration of the Timer */
 
-		void run();
 	};
 } /* namespace supplementary */
 
