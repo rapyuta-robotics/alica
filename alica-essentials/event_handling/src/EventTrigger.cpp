@@ -15,28 +15,11 @@ namespace supplementary
 
 	EventTrigger::~EventTrigger()
 	{
-		cv.notify_one();
-	}
-
-	void EventTrigger::registerCV(condition_variable* condVar)
-	{
-		lock_guard<mutex> lock(cv_mtx);
-		this->registeredCVs.push_back(condVar);
 	}
 
 	void EventTrigger::run(bool notifyAll)
 	{
 		lock_guard<mutex> lock(cv_mtx);
-		for (unsigned int i = 0; i < this->registeredCVs.size(); i++)
-		{
-			if (notifyAll)
-			{
-				registeredCVs[i]->notify_all();
-			}
-			else
-			{
-				registeredCVs[i]->notify_one();
-			}
-		}
+		this->notifyAll(notifyAll);
 	}
 }

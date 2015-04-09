@@ -22,8 +22,7 @@ namespace supplementary
 	public:
 		EventTrigger();
 		virtual ~EventTrigger();
-		void registerCV(condition_variable* condVar);
-		void run(bool notifyAll = false);
+		void run(bool notifyAll = true);
 	};
 }
 

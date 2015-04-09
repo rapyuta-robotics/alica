@@ -48,7 +48,7 @@ TEST_F(EventTest, timerEvent)
 	this->cv = new condition_variable();
 	unique_lock<mutex> lck(cv_mtx);
 
-	Timer timerEvent(1000, 1000, true);
+	Timer timerEvent(1000, 1000);
 	timerEvent.registerCV(this->cv);
 	timerEvent.start();
 
@@ -68,29 +68,29 @@ TEST_F(EventTest, timerEvent)
 TEST_F(EventTest, autoResetEvent)
 {
 	std::thread first(std::bind(otherThread, "first!"));
-	std::cout << "nach FIRST" << std::endl;
+	//std::cout << "nach FIRST" << std::endl;
 
 	sleep(1);
 	while (!event.isThreadWaiting())
 	{
 		sleep(0.05);
-		std::cout << "ICH WARTE1 " << std::endl;
+	//	std::cout << "ICH WARTE1 " << std::endl;
 	}
-	std::cout << "NACHDEM WARTEN1 " << std::endl;
+	//std::cout << "NACHDEM WARTEN1 " << std::endl;
 	event.set();
-	std::cout << "NACHDEM SET1 " << std::endl;
+	//std::cout << "NACHDEM SET1 " << std::endl;
 
 	std::thread second(std::bind(otherThread, "second!"));
 	sleep(1);
-	std::cout << "nach SECOND" << std::endl;
+	//std::cout << "nach SECOND" << std::endl;
 	while (!event.isThreadWaiting())
 	{
 		sleep(0.05);
-		std::cout << "ICH WARTE2 " << std::endl;
+		//std::cout << "ICH WARTE2 " << std::endl;
 	}
-	std::cout << "NACHDEM WARTEN2 " << std::endl;
+	//std::cout << "NACHDEM WARTEN2 " << std::endl;
 	event.set();
-	std::cout << "NACHDEM SET2 " << std::endl;
+	//std::cout << "NACHDEM SET2 " << std::endl;
 	event.set();
 
 	first.join();
