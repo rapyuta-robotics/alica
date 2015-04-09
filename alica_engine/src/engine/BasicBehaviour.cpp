@@ -21,13 +21,15 @@ namespace alica
 {
 	/**
 	 * Basic constructor. Initialises the timer. Should only be called from the constructor of inheriting classes.
+	 * If using eventTrigger set behaviourTrigger and register runCV
 	 * @param name The name of the behaviour
 	 */
 	BasicBehaviour::BasicBehaviour(string name) :
 			name(name), parameters(nullptr), failure(false), success(false), callInit(true), started(true), runCV()
 	{
-		this->timer = new supplementary::Timer(0, 0, false);
+		this->timer = new supplementary::Timer(0, 0);
 		this->timer->registerCV(&this->runCV);
+		this->behaviourTrigger = nullptr;
 		this->runThread = new thread(&BasicBehaviour::runInternal, this);
 	}
 
@@ -39,6 +41,10 @@ namespace alica
 		this->runThread->join();
 		delete this->runThread;
 		delete this->timer;
+		if (behaviourTrigger != nullptr)
+		{
+			delete this->behaviourTrigger;
+		}
 	}
 
 	const string BasicBehaviour::getName() const
@@ -69,9 +75,11 @@ namespace alica
 	Variable* BasicBehaviour::getVariablesByName(string name)
 	{
 		list<Variable*>::iterator it;
-		for (it = variables->begin(); it != variables->end(); it++) {
+		for (it = variables->begin(); it != variables->end(); it++)
+		{
 			Variable* v = *it;
-			if (v->getName() == name) {
+			if (v->getName() == name)
+			{
 				return v;
 			}
 		}
@@ -149,6 +157,12 @@ namespace alica
 		return failure;
 	}
 
+	void BasicBehaviour::setTrigger(supplementary::ITrigger* trigger)
+	{
+		this->behaviourTrigger = trigger;
+		this->behaviourTrigger->registerCV(&this->runCV);
+	}
+
 	void BasicBehaviour::initInternal()
 	{
 		this->success = false;
@@ -164,9 +178,12 @@ namespace alica
 		}
 	}
 
-	bool BasicBehaviour::getParameter(string key, string& valueOut) {
-		for(auto pair : *parameters) {
-			if(pair.first == key) {
+	bool BasicBehaviour::getParameter(string key, string& valueOut)
+	{
+		for (auto pair : *parameters)
+		{
+			if (pair.first == key)
+			{
 				valueOut = pair.second;
 				return true;
 			}
@@ -181,7 +198,14 @@ namespace alica
 		{
 			this->runCV.wait(lck, [&]
 			{
-				return !this->started || this->timer->isNotifyCalled();
+				if(behaviourTrigger == nullptr)
+				{
+					return !this->started || this->timer->isNotifyCalled(&runCV);
+				}
+				else
+				{
+					return !this->started || this->behaviourTrigger->isNotifyCalled(&runCV);
+				}
 			}); // protection against spurious wake-ups
 			if (!this->started)
 				return;
@@ -192,23 +216,42 @@ namespace alica
 			chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
 #endif
 			// TODO: pass something like an eventarg (to be implemented) class-member, which could be set for an event triggered (to be implemented) behaviour.
-			try {
-				this->run(nullptr);
-			} catch (exception& e) {
+			try
+			{
+				if(behaviourTrigger == nullptr)
+				{
+					this->run((void*)timer);
+				}
+				else
+				{
+					this->run((void*)behaviourTrigger);
+				}
+			}
+			catch (exception& e)
+			{
 				cerr << "Exception catched: " << e.what() << endl;
 			}
 #ifdef BEH_DEBUG
 			BehaviourConfiguration* conf = dynamic_cast<BehaviourConfiguration*>(this->getRunningPlan()->getPlan());
 			if (conf->isEventDriven())
 			{
-				double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / conf->getFrequency() * 1000.0;
+				double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0
+						- 1.0 / conf->getFrequency() * 1000.0;
 				if (dura > 0.1)
 				{ //Behaviour "+conf.Behaviour.Name+" exceeded runtime by {0,1:0.##}ms!",delta
-					cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura << "ms!" << endl;
+					cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura
+							<< "ms!" << endl;
 				}
 			}
 #endif
-			this->timer->setNotifyCalled(false);
+			if (behaviourTrigger == nullptr)
+			{
+				this->timer->setNotifyCalled(false, &runCV);
+			}
+			else
+			{
+				this->behaviourTrigger->setNotifyCalled(false, &runCV);
+			}
 		}
 	}
 

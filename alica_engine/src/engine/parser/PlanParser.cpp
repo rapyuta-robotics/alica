@@ -517,19 +517,43 @@ namespace alica
 			}
 			string path = this->currentDirectory + locator;
 			char s[2048];
+			char s2[2048];
 			realpath(path.c_str(), s);
 			string pathNew =s;
 
-			list<string>::iterator findIterParsed = find(filesParsed.begin(), filesParsed.end(), pathNew);
-			list<string>::iterator findIterToParse = find(filesToParse.begin(), filesToParse.end(), pathNew);
+			//This is not very efficient but necessary to keep the paths as they are
+			//Here we have to check whether the file has already been parsed / is in the list for toparse files
+			//problem is the normalization /home/etc/plans != /home/etc/Misc/../plans
+			//list<string>::iterator findIterParsed = find(filesParsed.begin(), filesParsed.end(), pathNew);
+			bool found = false;
+			for(auto& it : filesParsed) {
+				realpath(it.c_str(), s2);
+				string pathNew2 =s2;
+				if(pathNew2 == pathNew) {
+					found = true;
+					break;
+				}
+			}
+
+			//list<string>::iterator findIterToParse = find(filesToParse.begin(), filesToParse.end(), pathNew);
+			if(!found) {
+				for(auto& it : filesToParse) {
+					realpath(it.c_str(), s2);
+					string pathNew2 =s2;
+					if(pathNew2 == pathNew) {
+						found = true;
+						break;
+					}
+				}
+			}
 
 
-			if (findIterParsed == filesParsed.end() && findIterToParse == filesToParse.end())
+			if (!found)
 			{
 #ifdef PP_DEBUG
 				cout << "PP: Adding " + path + " to parse queue " << endl;
 #endif
-				filesToParse.push_back(pathNew);
+				filesToParse.push_back(path);
 			}
 		}
 		string tokenId = idString.substr(hashPos + 1, idString.length() - hashPos);

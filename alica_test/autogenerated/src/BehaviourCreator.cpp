@@ -7,6 +7,10 @@ using namespace std;
 
 #include  "Plans/Behaviour/MidFieldStandard.h"
 
+#include  "Plans/Behaviour/TriggerA.h"
+
+#include  "Plans/Behaviour/TriggerB.h"
+
 #include  "Plans/GSolver/SolverTestBehaviour.h"
 
 #include  "Plans/Behaviour/AttackOpp.h"
@@ -15,7 +19,11 @@ using namespace std;
 
 #include  "Plans/Behaviour/Tackle.h"
 
+#include  "Plans/Behaviour/Joystick.h"
+
 #include  "Plans/Behaviour/DefendMid.h"
+
+#include  "Plans/Behaviour/TriggerC.h"
 
 #include  "Plans/Behaviour/NewBehaviour.h"
 
@@ -45,6 +53,16 @@ namespace alica
                 return make_shared<MidFieldStandard>();
                 break;
 
+            case 1428508312886:
+
+                return make_shared<TriggerA>();
+                break;
+
+            case 1428508331620:
+
+                return make_shared<TriggerB>();
+                break;
+
             case 1417424483320:
 
                 return make_shared<SolverTestBehaviour>();
@@ -65,9 +83,19 @@ namespace alica
                 return make_shared<Tackle>();
                 break;
 
+            case 1421854707061:
+
+                return make_shared<Joystick>();
+                break;
+
             case 1402488763903:
 
                 return make_shared<DefendMid>();
+                break;
+
+            case 1428508367402:
+
+                return make_shared<TriggerC>();
                 break;
 
             case 1413810775049:
