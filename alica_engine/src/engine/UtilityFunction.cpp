@@ -77,7 +77,6 @@ namespace alica
 		// Invalid Assignments have an Utility of -1 changed from 0 according to specs
 		if (!newRp->getAssignment()->isValid())
 		{
-			cout << "hier 1" << endl;
 			return -1.0;
 		}
 		UtilityInterval sumOfUI(0.0, 0.0);
@@ -88,7 +87,6 @@ namespace alica
 		if (prioUI.getMax() < 0.0)
 		{
 			// one robot has a negative priority for his task -> -1.0 for the complete assignment
-			cout << "hier 2" << endl;
 			return -1;
 		}
 		sumOfUI.setMax(sumOfUI.getMax() + this->priorityWeight * prioUI.getMax());
@@ -105,7 +103,6 @@ namespace alica
 			//if a summand deny assignment, return -1 for forbidden assignments
 			if (curUI.getMax() == -1.0)
 			{
-				cout << "hier 3" << endl;
 				return -1.0;
 			}
 			sumOfWeights += (*iter)->getWeight();
