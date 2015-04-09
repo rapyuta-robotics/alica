@@ -578,7 +578,6 @@ TEST_F(AlicaEngineTest, planParser)
 											1402488470615, 1402488536570, "MISSING_NAME", "", "", "DefaultPlugin", true);
 							break;
 						case 1402488517667:
-							//TODO
 							checkTransition(t, 1402488517667, "AttackToGoal", "AttackToGoal", 1402488519140,
 											1402488437261, 1402488477650, "MISSING_NAME", "", "", "DefaultPlugin", true);
 							break;
@@ -625,7 +624,6 @@ TEST_F(AlicaEngineTest, planParser)
 				cout << endl;
 				break;
 			case 1402488770050:
-				//TODO
 				checkPlan(iter.second, 1402488770050, "MidFieldPlayPlan", "", false, 0.1, 3, 2147483647);
 				checkRuntimeCondition(iter.second->getRuntimeCondition(), 1402489260911, "NewRuntimeCondition",
 										"Test RC", "", "DefaultPlugin");
