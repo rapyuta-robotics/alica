@@ -5,6 +5,9 @@
  *      Author: Stephan Opfer
  */
 
+#include <TriggerA.h>
+#include <TriggerB.h>
+#include <TriggerC.h>
 #include "TestBehaviourCreator.h"
 
 #include "engine/BasicBehaviour.h"
@@ -49,6 +52,15 @@ namespace alicaTests
 				break;
 			case 1414068618837:
 				return make_shared<ConstraintUsingBehaviour>();
+				break;
+			case 1428508312886:
+				return make_shared<TriggerA>();
+				break;
+			case 1428508331620:
+				return make_shared<TriggerB>();
+				break;
+			case 1428508367402:
+				return make_shared<TriggerC>();
 				break;
 			default:
 			cerr << "TestBehaviourCreator: Unknown behaviour configuration id requested: " << behaviourConfId << endl;

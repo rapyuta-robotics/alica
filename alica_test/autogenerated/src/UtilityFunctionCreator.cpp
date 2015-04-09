@@ -13,6 +13,8 @@
 
 #include  "Plans/RuntimeConditionPlan1418042806575.h"
 
+#include  "Plans/BehaviourTriggerTestPlan1428508768572.h"
+
 #include  "Plans/PlanOne1407153611768.h"
 
 #include  "Plans/SimpleTestPlan1412252439925.h"
@@ -95,6 +97,10 @@ namespace alica
 
             case 1418042806575:
                 return make_shared<UtilityFunction1418042806575>();
+                break;
+
+            case 1428508768572:
+                return make_shared<UtilityFunction1428508768572>();
                 break;
 
             case 1407153611768:

@@ -18,8 +18,10 @@ using namespace std;
 #include <thread>
 #include <chrono>
 #include <condition_variable>
+#include "ITrigger.h"
 namespace supplementary {
 	class Timer;
+	class Trigger;
 }
 
 namespace alica
@@ -58,7 +60,7 @@ namespace alica
 		bool isFailure() const;
 
 		bool getParameter(string key, string& valueOut);
-
+		void setTrigger(supplementary::ITrigger* trigger);
 	protected:
 		/**
 		 * The name of this behaviour.
@@ -89,7 +91,8 @@ namespace alica
 		 */
 		bool failure;
 		thread* runThread; /** < executes the runInternal and thereby the abstract run method */
-		supplementary::Timer* timer; /** < triggers the condition_variable of the runThread, if this behaviour is timer triggered */
+		supplementary::Timer* timer; /** < triggers the condition_variable of the runThread, if this behaviour is timer triggered, alternative to behaviourTrigger*/
+		supplementary::ITrigger* behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour is event triggered, alternative to timer */
 		int getOwnId();
 
 		/**
@@ -100,10 +103,11 @@ namespace alica
 
 	private:
 		mutex runCV_mtx;
-		condition_variable runCV;
 		void runInternal();
 		void initInternal();
 
+	protected:
+		condition_variable runCV;
 
 	};
 } /* namespace alica */

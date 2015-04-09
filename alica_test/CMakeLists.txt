@@ -66,6 +66,9 @@ if(TARGET ${PROJECT_NAME}-test)
 	src/Tackle.cpp;
 	src/TestBehaviourCreator.cpp;
 	src/ConstraintUsingBehaviour.cpp;
+	src/TriggerA.cpp
+	src/TriggerB.cpp
+	src/TriggerC.cpp
  ) 
    add_library(test_expression_creator
 	src/TestConditionCreator.cpp;

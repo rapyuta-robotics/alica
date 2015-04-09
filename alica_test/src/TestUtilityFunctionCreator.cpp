@@ -45,7 +45,9 @@ namespace alicaTests
 			case 1402488893641:
 			case 1402489318663:
 			case 1402488634525:
+			case 1428492704177:
 			case 1412252439925:
+			case 1428508768572:
 				return make_shared<UtilityFunction1412252439925>();
 				break;
 			case 1413200862180:

@@ -11,6 +11,8 @@
 using namespace std;
 
 #include <vector>
+#include <ITrigger.h>
+#include <SystemConfig.h>
 
 namespace alicaTests
 {
@@ -46,6 +48,8 @@ namespace alicaTests
 
 		vector<double> robotsXPos;
 		double x;
+		supplementary::ITrigger* trigger1;
+		supplementary::ITrigger* trigger2;
 
 	private:
 		TestWorldModel();
