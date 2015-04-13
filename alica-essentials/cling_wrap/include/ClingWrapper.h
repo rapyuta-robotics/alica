@@ -48,6 +48,7 @@ namespace supplementary
 		virtual ~ClingWrapper();
 		void init();
 		void setMode(Mode mode);
+                void setModelCount(int count);
 		void setOptStrategie(int value);
 		void setHeuristic(std::string value);
 		void setParallelMode(int threadCount);

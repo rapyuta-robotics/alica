@@ -41,7 +41,7 @@ namespace supplementary
 		this->setup();
 		bool incremental = mode_ != mode_clasp;
 		Clasp::ProblemType pt = getProblemType();
-	          this->claspConfig_.set(Clasp::Cli::OptionKey::option_category_solver, "opt-strategy=5");
+//	        this->claspConfig_.set(Clasp::Cli::OptionKey::option_category_solver, "opt-strategy=5");
 		ProgramBuilder* prg = &clasp_->start(claspConfig_, pt, incremental);
 		if (incremental)
 		{
@@ -58,6 +58,12 @@ namespace supplementary
 	{
 		this->mode_ = mode;
 	}
+
+
+        void ClingWrapper::setModelCount(int count)
+        {
+          this->claspConfig_.set(Clasp::Cli::OptionKey::opt_number, std::to_string(count).c_str());
+        }
 
         void ClingWrapper::setOptStrategie(int value)
         {
@@ -341,6 +347,36 @@ namespace supplementary
 			if (baseLit->getUpdateType() == LiteralUpdateType::PUSH)
 				baseLit->updateOnModel(&s, &m);
 		}
+
+//		std::string str = this->toStringLastModel(false);
+//
+//		std::vector<int> values;
+//
+//		int offset = std::string("before(tnode(1,evalSystem,evalNode").size();
+//		int index = str.find("before(tnode(1,evalSystem,evalNode");
+//
+//		while (index != std::string::npos)
+//		{
+//		  std::string p = str.substr(index + offset + 2, 1);
+//
+//		  if ( p == "u")
+//		    break;
+//
+//		  values.push_back(std::stoi(p));
+//		  index = str.find("before(tnode(1,evalSystem,evalNode", index +1);
+//		}
+//
+//		std::cout << "0 > ";
+//
+//		for (int i = values.size()-1; i >= 0; --i)
+//		{
+//		  std::cout << values[i];
+//
+//		  if (i != 0)
+//		    std: cout << " > ";
+//		}
+//
+//		std::cout << std::endl;
 
 		return true;
 	}
