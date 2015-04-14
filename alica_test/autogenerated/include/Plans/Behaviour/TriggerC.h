@@ -3,6 +3,10 @@
 
 #include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1428508355209) ENABLED START*/ //Add additional includes here
+#include <ITrigger.h>
+#include <SystemConfig.h>
+#include "TestWorldModel.h"
+
 /*PROTECTED REGION END*/
 namespace alica
 {
@@ -13,6 +17,8 @@ namespace alica
         virtual ~TriggerC();
         virtual void run(void* msg);
         /*PROTECTED REGION ID(pub1428508355209) ENABLED START*/ //Add additional public methods here
+		int callCounter;
+		int initCounter;
         /*PROTECTED REGION END*/
     protected:
         virtual void initialiseParameters();

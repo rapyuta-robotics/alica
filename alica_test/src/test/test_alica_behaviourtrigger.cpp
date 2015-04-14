@@ -9,13 +9,10 @@
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
 #include "engine/IAlicaCommunication.h"
-#include "TestConditionCreator.h"
-#include "TestConstraintCreator.h"
-#include "TestUtilityFunctionCreator.h"
-#include "TestBehaviourCreator.h"
-#include "TestConditionCreator.h"
-#include "TestConstraintCreator.h"
-#include "TestUtilityFunctionCreator.h"
+#include "ConditionCreator.h"
+#include "ConstraintCreator.h"
+#include "UtilityFunctionCreator.h"
+#include "BehaviourCreator.h"
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include <mutex>
@@ -27,9 +24,10 @@
 #include <engine/PlanBase.h>
 #include <engine/model/BehaviourConfiguration.h>
 #include <TestWorldModel.h>
-#include <TriggerA.h>
-#include <TriggerB.h>
-#include <TriggerC.h>
+#include <Plans/Behaviour/TriggerA.h>
+#include <Plans/Behaviour/TriggerB.h>
+#include <Plans/Behaviour/TriggerC.h>
+#include <Plans/Behaviour/NotToTrigger.h>
 
 using namespace std;
 
@@ -38,10 +36,10 @@ class AlicaBehaviourTrigger : public ::testing::Test
 protected:
 	supplementary::SystemConfig* sc;
 	alica::AlicaEngine* ae;
-	alicaTests::TestBehaviourCreator* bc;
-	alicaTests::TestConditionCreator* cc;
-	alicaTests::TestUtilityFunctionCreator* uc;
-	alicaTests::TestConstraintCreator* crc;
+	alica::BehaviourCreator* bc;
+	alica::ConditionCreator* cc;
+	alica::UtilityFunctionCreator* uc;
+	alica::ConstraintCreator* crc;
 
 	virtual void SetUp()
 	{
@@ -59,10 +57,10 @@ protected:
 
 		// setup the engine
 		ae = new alica::AlicaEngine();
-		bc = new alicaTests::TestBehaviourCreator();
-		cc = new alicaTests::TestConditionCreator();
-		uc = new alicaTests::TestUtilityFunctionCreator();
-		crc = new alicaTests::TestConstraintCreator();
+		bc = new alica::BehaviourCreator();
+		cc = new alica::ConditionCreator();
+		uc = new alica::UtilityFunctionCreator();
+		crc = new alica::ConstraintCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	}
@@ -117,21 +115,27 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
 	{
 		if (iter.first->getName() == "TriggerA")
 		{
-			EXPECT_EQ(((alicaTests::TriggerA*)(&*iter.second))->callCounter ,0);
+			EXPECT_EQ(((alica::TriggerA*)(&*iter.second))->callCounter ,0);
 			continue;
 		}
 		else if (iter.first->getName() == "TriggerB")
 		{
-			EXPECT_EQ(((alicaTests::TriggerB*)(&*iter.second))->callCounter ,0);
+			EXPECT_EQ(((alica::TriggerB*)(&*iter.second))->callCounter ,0);
 			continue;
 		}
 		else if (iter.first->getName() == "TriggerC")
 		{
-			EXPECT_EQ(((alicaTests::TriggerC*)(&*iter.second))->callCounter ,0);
+			EXPECT_EQ(((alica::TriggerC*)(&*iter.second))->callCounter ,0);
+			continue;
+		}
+		else if (iter.first->getName() == "NotToTriggerDefault")
+		{
+			EXPECT_EQ(((alica::NotToTrigger*)(&*iter.second))->callCounter ,0);
 			continue;
 		}
 		else
 		{
+			cout << iter.first->getName() << endl;
 			EXPECT_TRUE(false);
 		}
 	}
@@ -151,17 +155,22 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
 	{
 		if (iter.first->getName() == "TriggerA")
 		{
-			EXPECT_EQ(((alicaTests::TriggerA*)(&*iter.second))->callCounter ,3);
+			EXPECT_EQ(((alica::TriggerA*)(&*iter.second))->callCounter ,3);
 			continue;
 		}
 		else if (iter.first->getName() == "TriggerB")
 		{
-			EXPECT_EQ(((alicaTests::TriggerB*)(&*iter.second))->callCounter ,3);
+			EXPECT_EQ(((alica::TriggerB*)(&*iter.second))->callCounter ,3);
 			continue;
 		}
 		else if (iter.first->getName() == "TriggerC")
 		{
-			EXPECT_EQ(((alicaTests::TriggerC*)(&*iter.second))->callCounter ,4);
+			EXPECT_EQ(((alica::TriggerC*)(&*iter.second))->callCounter ,4);
+			continue;
+		}
+		else if (iter.first->getName() == "NotToTriggerDefault")
+		{
+			EXPECT_EQ(((alica::NotToTrigger*)(&*iter.second))->callCounter ,0);
 			continue;
 		}
 		else
