@@ -7,6 +7,8 @@ using namespace std;
 
 #include  "Plans/Behaviour/MidFieldStandard.h"
 
+#include  "Plans/Behaviour/NotToTrigger.h"
+
 #include  "Plans/Behaviour/TriggerA.h"
 
 #include  "Plans/Behaviour/TriggerB.h"
@@ -51,6 +53,11 @@ namespace alica
             case 1402488712657:
 
                 return make_shared<MidFieldStandard>();
+                break;
+
+            case 1429017293301:
+
+                return make_shared<NotToTrigger>();
                 break;
 
             case 1428508312886:

@@ -6,7 +6,7 @@
   </extensions>
   <extensions>
     <key href="BehaviourTriggerTestPlan.pml#1428508768572"/>
-    <value width="524" height="420"/>
+    <value width="684" height="463"/>
   </extensions>
   <extensions>
     <key href="BehaviourTriggerTestPlan.pml#1428508768574"/>
@@ -22,6 +22,18 @@
   </extensions>
   <extensions>
     <key href="Behaviour/TriggerC.beh#1428508367402"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="BehaviourTriggerTestPlan.pml#1429017227839"/>
+    <value xPos="305" yPos="134" width="81" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="BehaviourTriggerTestPlan.pml#1429017235181"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/NotToTrigger.beh#1429017293301"/>
     <value/>
   </extensions>
 </uiextensionmodel:PmlUiExtensionMap>
