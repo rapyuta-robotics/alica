@@ -10,6 +10,7 @@
 #include "RobotMetaData.h"
 #include <SystemConfig.h>
 #include <iostream>
+#include "ConsoleCommandHelper.h"
 
 namespace supplementary
 {
@@ -198,6 +199,7 @@ namespace supplementary
 	{
 		SystemConfig* sc = SystemConfig::getInstance();
 		int execId;
+		string absExecName;
 		string processMode;
 		vector<string> defaultParamsVec;
 		try
@@ -212,14 +214,34 @@ namespace supplementary
 			return -1;
 		}
 
+		string cmd = "catkin_find --libexec " + execName;
+		absExecName = supplementary::ConsoleCommandHelper::exec(cmd.c_str());
+
+
 		// transform the system config default params to vector of char*, for c-compatibility.
 		vector<char*> defaultParams;
-		defaultParams.push_back(strdup(execName.c_str()));
-		std::transform(defaultParamsVec.begin(), defaultParamsVec.end(), std::back_inserter(defaultParams), [](std::string& s)
-		{	s.push_back(0); return &s[0];});
+		if (absExecName.length() > 1)
+		{
+			absExecName = absExecName.substr(0, absExecName.length()-1);
+			absExecName = absExecName + "/" + execName;
+			defaultParams.push_back(strdup(absExecName.c_str()));
+		}
+		else
+		{
+			defaultParams.push_back(strdup(execName.c_str()));
+		}
+
+		for (string param : defaultParamsVec)
+		{
+			char * tmp = new char[param.size()+1];
+			strcpy(tmp, param.c_str());
+			tmp[param.size()+1] = '\0';
+			defaultParams.push_back(tmp);
+		}
+
 		defaultParams.push_back(nullptr);
 
-		this->executableList.push_back(new ExecutableMetaData(execName, execId, processMode, defaultParams));
+		this->executableList.push_back(new ExecutableMetaData(execName, execId, processMode, defaultParams, absExecName));
 
 		return execId;
 	}

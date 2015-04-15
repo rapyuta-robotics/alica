@@ -10,8 +10,8 @@
 namespace rqt_pm_control
 {
 
-	ControlledExecutable::ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams) :
-			ExecutableMetaData(execName, execId, mode, defaultParams), memory(0), state('X'), cpu(0)
+	ControlledExecutable::ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName) :
+			ExecutableMetaData(execName, execId, mode, defaultParams, absExecName), memory(0), state('X'), cpu(0)
 	{
 
 	}

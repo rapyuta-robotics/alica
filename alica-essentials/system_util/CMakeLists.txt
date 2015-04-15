@@ -113,6 +113,7 @@ include_directories(
 ## Declare a cpp library
 add_library(system_util
    src/Logging.cpp
+   src/ConsoleCommandHelper.cpp
 )
 add_dependencies(system_util fsystem)
 

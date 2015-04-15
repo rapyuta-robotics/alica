@@ -16,7 +16,7 @@ namespace rqt_pm_control
 	class ControlledExecutable : public supplementary::ExecutableMetaData
 	{
 	public:
-		ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams);
+		ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName);
 		virtual ~ControlledExecutable();
 
 		string params;

@@ -67,8 +67,17 @@ namespace supplementary
 			this->ownId = this->pmRegistry->addRobot(this->ownHostname);
 		}
 
-		// This autostart functionality is for the tournament
-		bool autostart = (std::find(argv, argv + argc, "-autostart") != argv + argc);
+		// This autostart functionality is for easier testing
+		bool autostart = false;
+		for(int i = 1; i < argc; i++)
+		{
+			if (strcmp(argv[i], "-autostart") == 0)
+			{
+				autostart = true;
+				break;
+			}
+		}
+
 		if (autostart)
 		{
 			// Create ManagedRobot-Object for local system/robot
@@ -80,9 +89,8 @@ namespace supplementary
 		for (auto processSectionName : (*processDescriptions))
 		{
 			curId = this->pmRegistry->addExecutable(processSectionName);
-
-			// This autostart functionality is only for the tournament. The local robot starts the processes automatically
-			if (autostart && curId != -1)
+			// This autostart functionality is for easier testing. The local robot starts the processes automatically
+			if (autostart && curId != -1 && this->pmRegistry->getExecutable(curId)->mode == "autostart")
 			{
 				this->robotMap.at(ownId)->changeDesiredState(curId, true, this->pmRegistry);
 			}

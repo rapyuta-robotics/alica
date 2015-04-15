@@ -25,7 +25,7 @@ namespace supplementary
 	class ManagedExecutable : public ExecutableMetaData
 	{
 	public:
-		ManagedExecutable(string execName, int execid, long pid, string mode, vector<char*> defaultParams);
+		ManagedExecutable(string execName, int execid, long pid, string mode, vector<char*> defaultParams, string absExecName);
 		virtual ~ManagedExecutable();
 		void queue4Update(long pid);
 		void update(unsigned long long cpuDelta);

@@ -55,7 +55,8 @@ namespace supplementary
 																						 execId,
 																						 ManagedExecutable::NOTHING_MANAGED,
 																						 executableMetaData->mode,
-																						 executableMetaData->defaultParams));
+																						 executableMetaData->defaultParams,
+																						 executableMetaData->absExecName));
 				mapIter.first->second->changeDesiredState(shouldRun);
 			}
 			else
@@ -121,7 +122,8 @@ namespace supplementary
 																							  execId,
 																							  ManagedExecutable::NOTHING_MANAGED,
 																							  execMetaData->mode,
-																							  execMetaData->defaultParams));
+																							  execMetaData->defaultParams,
+																							  execMetaData->absExecName));
 				newExecEntry.first->second->queue4Update(pid);
 			}
 			else

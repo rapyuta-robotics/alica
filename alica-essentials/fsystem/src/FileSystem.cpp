@@ -80,7 +80,6 @@ namespace supplementary
 		return getSelfPath();
 	}
 
-
 	bool FileSystem::findFile(const string& path, const string& file, string& path_found)
 	{
 		//cout << "ff: Path: " << path << " file: " << file << endl;
@@ -104,7 +103,7 @@ namespace supplementary
 		{
 			//cout << "ff: Namelist " << i << ": " << namelist[i]->d_name << endl;
 			string curFile = namelist[i]->d_name;
-			string curFullFile = path + curFile;
+			string curFullFile = combinePaths(path, curFile);
 			if (isDirectory(curFullFile))
 			{
 				// ignore current or parent directory
@@ -133,8 +132,7 @@ namespace supplementary
 			}
 			else
 			{
-				cout << "ff: Found a symlink, or something else, which is not a regular file or directory: "
-						<< curFullFile << endl;
+				cout << "ff: Found a symlink, or something else, which is not a regular file or directory: " << curFullFile << endl;
 			}
 
 			free(namelist[i]);
@@ -152,10 +150,60 @@ namespace supplementary
 
 	vector<string> FileSystem::findAllFiles(string path, string ending)
 	{
-		cout << "FileSystem.cpp: Come on, who did use this method, but did not implement it!!??" << endl;
+		if (!pathExists(path))
+		{
+			cerr << "FS: Path '" << path << "' does not exists!" << endl;
+			return vector<string>();
+		}
 
-		throw new exception ();
-		return vector<string>();
+		vector<string> files;
+		struct dirent **namelist;
+		int i, n;
+		n = scandir(path.c_str(), &namelist, 0, alphasort);
+
+		if (n < 0)
+		{
+			perror("FileSystem::findAllFiles");
+			free(namelist);
+			return vector<string>();
+		}
+
+		for (i = 0; i < n; i++)
+		{
+			//cout << "ff: Namelist " << i << ": " << namelist[i]->d_name << endl;
+			string curFile = namelist[i]->d_name;
+			string curFullFile = combinePaths(path, curFile);
+			if (isDirectory(curFullFile))
+			{
+				continue;
+			}
+			else if (isFile(curFullFile))
+			{
+				if (hasSuffix(namelist[i]->d_name, ending))
+				{
+					files.push_back(curFullFile);
+				}
+			}
+			else
+			{
+				cout << "FS: Found a symlink, or something else, which is not a regular file or directory: " << curFullFile << endl;
+			}
+
+			free(namelist[i]);
+		}
+
+		for (; i < n; i++)
+		{
+			free(namelist[i]);
+		}
+
+		free(namelist);
+		return files;
+	}
+
+	bool FileSystem::hasSuffix(const string& s, const string& suffix)
+	{
+	    return (s.size() >= suffix.size()) && equal(suffix.rbegin(), suffix.rend(), s.rbegin());
 	}
 
 	/**
@@ -279,7 +327,7 @@ namespace supplementary
 	{
 		string result = "";
 		int pos;
-		if (path[path.length()-1] != PATH_SEPARATOR)
+		if (path[path.length() - 1] != PATH_SEPARATOR)
 		{
 			path = path + PATH_SEPARATOR;
 		}

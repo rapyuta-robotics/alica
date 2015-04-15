@@ -19,10 +19,11 @@ namespace supplementary
 	class ExecutableMetaData
 	{
 	public:
-		ExecutableMetaData(string name, int id, string mode, vector<char*> defaultParams);
+		ExecutableMetaData(string name, int id, string mode, vector<char*> defaultParams, string absExecName);
 		virtual ~ExecutableMetaData();
 
 		int id;
+		string absExecName;
 		string name;
 		vector<char*> defaultParams;
 		string mode;

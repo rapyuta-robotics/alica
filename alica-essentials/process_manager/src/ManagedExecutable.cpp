@@ -24,8 +24,8 @@ namespace supplementary
 {
 	long ManagedExecutable::kernelPageSize = 0;
 
-	ManagedExecutable::ManagedExecutable(string executable, int id, long pid, string mode, vector<char*> defaultParams) :
-			ExecutableMetaData(executable, id, mode, defaultParams), managedPid(pid), state('X'), lastUTime(0), lastSTime(0), currentUTime(0), currentSTime(0), memory(0), starttime(0), shouldRun(false), cpu(0)
+	ManagedExecutable::ManagedExecutable(string executable, int id, long pid, string mode, vector<char*> defaultParams, string absExecName) :
+			ExecutableMetaData(executable, id, mode, defaultParams, absExecName), managedPid(pid), state('X'), lastUTime(0), lastSTime(0), currentUTime(0), currentSTime(0), memory(0), starttime(0), shouldRun(false), cpu(0)
 	{
 
 #ifdef MGND_EXEC_DEBUG
@@ -39,7 +39,7 @@ namespace supplementary
 	ManagedExecutable::~ManagedExecutable()
 	{
 		// TODO: check whether the cleanup is right -> valgrind
-		free(defaultParams[0]); // the rest is hopefully clean up by the system config, which did allocate that shit in the first place
+
 		free(desiredParams);
 		free(params);
 
@@ -352,6 +352,7 @@ namespace supplementary
 	 */
 	void ManagedExecutable::startProcess(vector<char*>& params)
 	{
+		cout << "ME: AbsExecName: " << this->absExecName << endl;
 		pid_t pid = fork();
 		if (pid == 0) // child process
 		{
@@ -369,7 +370,15 @@ namespace supplementary
 			dup2(fileno(fd), STDERR_FILENO);
 			fclose(fd);
 
-			int execReturn = execvp(this->name.c_str(), params.data());
+			int execReturn;
+			if (this->absExecName.size() > 1)
+			{
+				execReturn = execvp(this->absExecName.c_str(), params.data());
+			}
+			else
+			{
+				execReturn = execvp(this->name.c_str(), params.data());
+			}
 			if (execReturn == -1)
 			{
 				cout << "ME: Failure! execve error code = " << errno << " - " << strerror(errno) << endl;
