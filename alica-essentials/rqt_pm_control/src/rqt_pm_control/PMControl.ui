@@ -45,7 +45,7 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" name="filterHorizontalLayout" stretch="0,0">
+    <layout class="QHBoxLayout" name="filterHorizontalLayout" stretch="0,0,0">
      <item>
       <widget class="QLabel" name="SendToLabel">
        <property name="minimumSize">
@@ -103,6 +103,20 @@
          <string>Local</string>
         </property>
        </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="addRobotButton">
+       <property name="locale">
+        <locale language="English" country="UnitedKingdom"/>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../resources/Pixelmixer-Basic-Plus.ico</normaloff>../../resources/Pixelmixer-Basic-Plus.ico</iconset>
+       </property>
       </widget>
      </item>
     </layout>
