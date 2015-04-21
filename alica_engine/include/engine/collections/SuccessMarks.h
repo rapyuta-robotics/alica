@@ -8,7 +8,6 @@
 #ifndef SUCCESSMARKS_H_
 #define SUCCESSMARKS_H_
 
-using namespace std;
 
 #include <map>
 #include <memory>
@@ -16,6 +15,7 @@ using namespace std;
 #include <list>
 #include <algorithm>
 
+using namespace std;
 namespace alica
 {
 

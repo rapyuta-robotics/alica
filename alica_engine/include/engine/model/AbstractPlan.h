@@ -8,7 +8,6 @@
 #ifndef ABSTRACTPLAN_H_
 #define ABSTRACTPLAN_H_
 
-using namespace std;
 
 #include <list>
 #include <SystemConfig.h>
@@ -18,6 +17,7 @@ using namespace std;
 #include "AlicaElement.h"
 #include "engine/IAlicaClock.h"
 
+using namespace std;
 namespace alica
 {
 

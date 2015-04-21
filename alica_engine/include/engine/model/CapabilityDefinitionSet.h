@@ -8,12 +8,12 @@
 #ifndef CAPABILITYDEFINITIONSET_H_
 #define CAPABILITYDEFINITIONSET_H_
 
-using namespace std;
 
 #include <list>
 
 #include "AlicaElement.h"
 
+using namespace std;
 namespace alica
 {
 

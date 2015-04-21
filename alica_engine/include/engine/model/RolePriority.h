@@ -8,7 +8,6 @@
 #ifndef ROLEPRIORITY_H_
 #define ROLEPRIORITY_H_
 
-using namespace std;
 
 #include <map>
 #include <list>
@@ -17,6 +16,7 @@ using namespace std;
 
 #include "AlicaElement.h"
 
+using namespace std;
 namespace alica
 {
 	class Role;

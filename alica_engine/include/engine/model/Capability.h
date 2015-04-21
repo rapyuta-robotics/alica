@@ -8,14 +8,15 @@
 #ifndef CAPABILITY_H_
 #define CAPABILITY_H_
 
-using namespace std;
 
 #include <list>
 #include <iostream>
 #include <exception>
 
+
 #include "AlicaElement.h"
 
+using namespace std;
 namespace alica
 {
 	class CapValue;

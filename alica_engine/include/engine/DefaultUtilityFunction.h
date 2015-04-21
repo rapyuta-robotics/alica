@@ -8,7 +8,6 @@
 #ifndef DEFAULTUTILITYFUNCTION_H_
 #define DEFAULTUTILITYFUNCTION_H_
 
-using namespace std;
 
 #include <string>
 #include <sstream>
@@ -16,6 +15,7 @@ using namespace std;
 #include "engine/UtilityFunction.h"
 #include "engine/UtilityInterval.h"
 
+using namespace std;
 namespace alica
 {
 

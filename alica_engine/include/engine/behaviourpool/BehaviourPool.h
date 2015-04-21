@@ -8,7 +8,6 @@
 #ifndef BEHAVIOURPOOL_H_
 #define BEHAVIOURPOOL_H_
 
-using namespace std;
 
 #include <map>
 #include <typeindex>
@@ -17,6 +16,7 @@ using namespace std;
 
 #include <engine/IBehaviourPool.h>
 
+using namespace std;
 namespace alica
 {
 

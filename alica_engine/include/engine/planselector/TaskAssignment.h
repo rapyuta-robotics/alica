@@ -11,7 +11,6 @@
 //#define EXPANSIONEVAL
 //#define TA_DEBUG
 
-using namespace std;
 
 #include "engine/ITaskAssignment.h"
 
@@ -24,6 +23,7 @@ using namespace std;
 #include <algorithm>
 #include <memory>
 
+using namespace std;
 namespace alica
 {
 

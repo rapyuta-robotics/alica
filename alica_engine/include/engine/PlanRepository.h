@@ -8,12 +8,12 @@
 #ifndef PLANREPOSITORY_H_
 #define PLANREPOSITORY_H_
 
-using namespace std;
 
 #include <stdio.h>
 #include <iostream>
 #include <map>
 
+using namespace std;
 namespace alica
 {
 	class BehaviourConfiguration;

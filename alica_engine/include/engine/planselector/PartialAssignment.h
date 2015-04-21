@@ -10,7 +10,6 @@
 
 //#define SUCDEBUG
 
-using namespace std;
 
 #include <vector>
 #include <list>
@@ -24,6 +23,7 @@ using namespace std;
 #include "engine/IAssignment.h"
 #include "engine/collections/AssignmentCollection.h"
 
+using namespace std;
 namespace alica
 {
 

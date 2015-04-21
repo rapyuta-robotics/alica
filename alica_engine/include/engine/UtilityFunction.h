@@ -9,7 +9,6 @@
 #define UTILITYFUNCTION_H_
 //#define UFDEBUG
 
-using namespace std;
 
 #include <string>
 #include <map>
@@ -21,6 +20,7 @@ using namespace std;
 #include "UtilityInterval.h"
 #include "engine/RunningPlan.h"
 
+using namespace std;
 namespace alica
 {
 	class Plan;

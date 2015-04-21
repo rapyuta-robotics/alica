@@ -8,13 +8,13 @@
 #ifndef PRECONDITION_H_
 #define PRECONDITION_H_
 
-using namespace std;
 
 #include <string>
 #include <sstream>
 
 #include "Condition.h"
 
+using namespace std;
 namespace alica
 {
 

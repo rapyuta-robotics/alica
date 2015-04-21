@@ -8,7 +8,6 @@
 #ifndef UTILITYINTERVAL_H_
 #define UTILITYINTERVAL_H_
 
-using namespace std;
 
 namespace alica
 {

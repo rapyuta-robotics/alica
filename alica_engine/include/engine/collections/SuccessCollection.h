@@ -8,7 +8,6 @@
 #ifndef SUCCESSCOLLECTION_H_
 #define SUCCESSCOLLECTION_H_
 
-using namespace std;
 
 #include <list>
 #include <vector>
@@ -16,6 +15,7 @@ using namespace std;
 #include <string>
 #include <sstream>
 
+using namespace std;
 namespace alica
 {
 	class EntryPoint;

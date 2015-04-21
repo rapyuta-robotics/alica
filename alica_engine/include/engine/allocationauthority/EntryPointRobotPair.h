@@ -8,11 +8,11 @@
 #ifndef ENTRYPOINTROBOTPAIR_H_
 #define ENTRYPOINTROBOTPAIR_H_
 
-using namespace std;
 
 #include "engine/model/EntryPoint.h"
 #include <memory>
 
+using namespace std;
 namespace alica
 {
 

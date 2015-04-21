@@ -9,11 +9,11 @@
 #define RULEBOOK_H_
 //#define RULE_debug
 
-using namespace std;
 
 #include "engine/PlanChange.h"
 #include <memory>
 
+using namespace std;
 namespace alica
 {
 	class ISyncModul;

@@ -8,7 +8,6 @@
 #ifndef ROBOTPROPERTIES_H_
 #define ROBOTPROPERTIES_H_
 
-using namespace std;
 
 #include <string>
 #include <map>
@@ -17,6 +16,7 @@ using namespace std;
 #include <algorithm>
 #include <memory>
 
+using namespace std;
 namespace alica
 {
 

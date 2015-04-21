@@ -8,7 +8,6 @@
 #ifndef STATECOLLECTION_H_
 #define STATECOLLECTION_H_
 
-using namespace std;
 
 #include <vector>
 #include <unordered_set>
@@ -17,6 +16,7 @@ using namespace std;
 #include <memory>
 #include <iostream>
 
+using namespace std;
 namespace alica
 {
 

@@ -8,7 +8,6 @@
 #ifndef PLAN_H_
 #define PLAN_H_
 
-using namespace std;
 
 #include <stddef.h>
 #include <string>
@@ -17,6 +16,7 @@ using namespace std;
 
 #include "AbstractPlan.h"
 
+using namespace std;
 namespace alica
 {
 

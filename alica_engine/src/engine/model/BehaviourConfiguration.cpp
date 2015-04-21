@@ -42,10 +42,10 @@ namespace alica
 			ss << name << " " << this->getBehaviour()->getId();
 		}
 		ss << endl;
-		ss << "\t Deferring: " + this->getDeferring() << endl;
-		ss << "\t Frequency: " + this->getFrequency() << endl;
-		ss << "\t MasterPlan?: " + this->isMasterPlan() << endl;
-		ss << "\t Parameters: " + this->getParameters()->size() << endl;
+		ss << "\t Deferring: " + to_string(this->getDeferring()) << endl;
+		ss << "\t Frequency: " + to_string(this->getFrequency()) << endl;
+		ss << "\t MasterPlan?: " + to_string(this->isMasterPlan()) << endl;
+		ss << "\t Parameters: " + to_string(this->getParameters()->size()) << endl;
 
 		if (this->getParameters()->size() != 0)
 		{

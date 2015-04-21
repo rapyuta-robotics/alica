@@ -38,20 +38,20 @@ namespace alica
 		maxAllocationCycles = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "CycleCount");
 		enabled = (*sc)["Alica"]->get<bool>("Alica", "CycleDetection", "Enabled");
 		minimalOverrideTimeInterval = (*sc)["Alica"]->get<unsigned long>(
-				"Alica", "CycleDetection", "MinimalAuthorityTimeInterval") * 1000000;
+				"Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL) * 1000000;
 		maximalOverrideTimeInterval = (*sc)["Alica"]->get<unsigned long>(
-				"Alica", "CycleDetection", "MaximalAuthorityTimeInterval") * 1000000;
+				"Alica", "CycleDetection", "MaximalAuthorityTimeInterval", NULL) * 1000000;
 		overrideShoutInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
-																							"MessageTimeInterval")
+																							"MessageTimeInterval", NULL)
 				* 1000000;
 		overrideWaitInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
-																							"MessageWaitTimeInterval")
+																							"MessageWaitTimeInterval", NULL)
 				* 1000000;
-		historySize = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize");
+		historySize = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize", NULL);
 
 		this->ae = ae;
-		this->intervalIncFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalIncreaseFactor");
-		this->intervalDecFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalDecreaseFactor");
+		this->intervalIncFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalIncreaseFactor", NULL);
+		this->intervalDecFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalDecreaseFactor", NULL);
 		this->allocationHistory = vector<AllocationDifference*>(this->historySize);
 		for (int i = 0; i < this->allocationHistory.size(); i++)
 		{

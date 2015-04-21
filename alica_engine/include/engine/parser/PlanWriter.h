@@ -8,11 +8,11 @@
 #ifndef PLANWRITER_H_
 #define PLANWRITER_H_
 
-using namespace std;
 #include <vector>
 #include <string>
 #include <typeinfo>
 
+using namespace std;
 namespace tinyxml2 {
 	class XMLElement;
 	class XMLDocument;

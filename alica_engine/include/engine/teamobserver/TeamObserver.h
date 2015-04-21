@@ -10,7 +10,6 @@
 
 //#define TO_DEBUG
 
-using namespace std;
 
 #include <unordered_set>
 #include <string>
@@ -25,6 +24,7 @@ using namespace std;
 #include "engine/ITeamObserver.h"
 #include "engine/IAlicaClock.h"
 
+using namespace std;
 namespace alica
 {
 

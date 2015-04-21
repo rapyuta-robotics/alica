@@ -8,7 +8,6 @@
 #ifndef RUNNINGPLAN_H_
 #define RUNNINGPLAN_H_
 
-using namespace std;
 
 #include <map>
 #include <list>

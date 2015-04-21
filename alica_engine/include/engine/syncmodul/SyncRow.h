@@ -8,10 +8,10 @@
 #ifndef SYNCROW_H_
 #define SYNCROW_H_
 
-using namespace std;
 
 #include <vector>
 
+using namespace std;
 namespace alica
 {
 

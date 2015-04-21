@@ -394,10 +394,10 @@ namespace alica
 				string robots = "";
 				for (int robotID : row->getReceivedBy())
 				{
-					robots += robotID + ", ";
+					robots += to_string(robotID) + string(", ");
 				}
-				cout << "Row: " << row->getSyncData()->robotID << " " << row->getSyncData()->transitionID + " "
-								+ row->getSyncData()->conditionHolds << " " << row->getSyncData()->ack << " RecvBy: " << robots << endl;
+				cout << "Row: " << to_string(row->getSyncData()->robotID) << " " << to_string(row->getSyncData()->transitionID) + " "
+								+ to_string(row->getSyncData()->conditionHolds) << " " << row->getSyncData()->ack << " RecvBy: " << robots << endl;
 			}
 			cout << "ReceivedSyncreadys: ";
 			for (shared_ptr<SyncReady> sr : this->receivedSyncReadys)

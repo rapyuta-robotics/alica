@@ -8,7 +8,6 @@
 #ifndef CHARACTERISTIC_H_
 #define CHARACTERISTIC_H_
 
-using namespace std;
 
 #include <string.h>
 #include <iostream>
@@ -16,6 +15,8 @@ using namespace std;
 #include "AlicaElement.h"
 #include "Capability.h"
 #include "CapValue.h"
+
+using namespace std;
 
 namespace alica
 {

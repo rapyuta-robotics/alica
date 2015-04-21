@@ -8,7 +8,6 @@
 #ifndef QUANTIFIER_H_
 #define QUANTIFIER_H_
 
-using namespace std;
 
 #include <list>
 #include <string>
@@ -18,6 +17,7 @@ using namespace std;
 
 #include "AlicaElement.h"
 
+using namespace std;
 namespace alica
 {
 	class State;

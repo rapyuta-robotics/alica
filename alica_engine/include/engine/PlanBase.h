@@ -9,7 +9,6 @@
 #define PLANBASE_H_
 //#define PB_DEBUG
 
-using namespace std;
 
 #include <queue>
 #include <stdio.h>
@@ -24,6 +23,7 @@ using namespace std;
 #include "engine/IAlicaClock.h"
 #include "engine/RunningPlan.h"
 
+using namespace std;
 namespace alica
 {
 	class Plan;
