@@ -8,13 +8,13 @@
 #ifndef PARAMETRISATION_H_
 #define PARAMETRISATION_H_
 
-using namespace std;
 
 #include <string>
 #include <sstream>
 
 #include "AlicaElement.h"
 
+using namespace std;
 namespace alica
 {
 	class Variable;

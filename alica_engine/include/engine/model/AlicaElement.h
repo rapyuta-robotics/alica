@@ -7,12 +7,12 @@
 
 #ifndef ALICAELEMENT_H_
 #define ALICAELEMENT_H_
-using namespace std;
 
 #include <stdio.h>
 #include <string>
 #include <sstream>
 #include <iostream>
+using namespace std;
 namespace alica
 {
 

@@ -8,10 +8,10 @@
 #ifndef TASKROLESTRUCT_H_
 #define TASKROLESTRUCT_H_
 
-using namespace std;
 
 #include <functional>
 
+using namespace std;
 namespace alica
 {
 

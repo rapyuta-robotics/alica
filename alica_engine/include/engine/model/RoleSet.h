@@ -8,7 +8,6 @@
 #ifndef ROLESET_H_
 #define ROLESET_H_
 
-using namespace std;
 
 #include <list>
 #include <string>
@@ -16,6 +15,7 @@ using namespace std;
 
 #include "AlicaElement.h"
 
+using namespace std;
 namespace alica
 {
 	class RoleTaskMapping;

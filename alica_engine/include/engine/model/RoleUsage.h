@@ -8,7 +8,7 @@
 #ifndef ROLEUSAGE_H_
 #define ROLEUSAGE_H_
 
-using namespace std;
+
 
 namespace alica
 {

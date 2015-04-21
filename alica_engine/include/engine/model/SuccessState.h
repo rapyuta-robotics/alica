@@ -8,13 +8,13 @@
 #ifndef SUCCESSSTATE_H_
 #define SUCCESSSTATE_H_
 
-using namespace std;
 
 #include <string>
 #include <sstream>
 
 #include "TerminalState.h"
 
+using namespace std;
 namespace alica
 {
 	/**

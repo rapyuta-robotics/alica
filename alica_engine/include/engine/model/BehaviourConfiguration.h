@@ -8,13 +8,13 @@
 #ifndef BEHAVIOURCONFIGURATION_H_
 #define BEHAVIOURCONFIGURATION_H_
 
-using namespace std;
 
 #include <map>
 #include <string>
 
 #include "AbstractPlan.h"
 
+using namespace std;
 namespace alica
 {
 	class Behaviour;

@@ -8,7 +8,6 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
-using namespace std;
 
 #include <string>
 #include <sstream>
@@ -25,6 +24,7 @@ using namespace std;
 
 #include "engine/IPlanTreeVisitor.h"
 
+using namespace std;
 namespace alica
 {
 	class RunningPlan;

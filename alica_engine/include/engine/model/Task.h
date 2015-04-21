@@ -8,7 +8,6 @@
 #ifndef TASK_H_
 #define TASK_H_
 
-using namespace std;
 
 #include <string>
 #include <sstream>
@@ -16,6 +15,7 @@ using namespace std;
 
 #include "AlicaElement.h"
 
+using namespace std;
 namespace alica
 {
 

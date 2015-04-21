@@ -8,13 +8,13 @@
 #ifndef ROLEDEFINITIONSET_H_
 #define ROLEDEFINITIONSET_H_
 
-using namespace std;
 
 #include <list>
 #include <string>
 
 #include "AlicaElement.h"
 
+using namespace std;
 namespace alica
 {
 	class Role;

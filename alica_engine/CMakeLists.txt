@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(alica_engine)
 
+## Change to use clang ... unfortunately it doesnt work :(
+#set(CMAKE_CXX_COMPILER "clang")
+#
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ## Enable exception handling for segfaults

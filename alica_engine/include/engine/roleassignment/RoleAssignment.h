@@ -8,7 +8,6 @@
 #ifndef ROLEASSIGNMENT_H_
 #define ROLEASSIGNMENT_H_
 
-using namespace std;
 
 #include <map>
 #include <vector>
@@ -17,6 +16,7 @@ using namespace std;
 
 #include "engine/IRoleAssignment.h"
 
+using namespace std;
 namespace alica
 {
 

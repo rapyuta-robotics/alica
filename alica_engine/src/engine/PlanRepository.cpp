@@ -5,12 +5,12 @@
  *      Author: Paul Panin
  */
 
-using namespace std;
 
 #include "engine/PlanRepository.h"
 #include "engine/model/Quantifier.h"
 #include "engine/model/Plan.h"
 
+using namespace std;
 namespace alica
 {
 	PlanRepository::PlanRepository()

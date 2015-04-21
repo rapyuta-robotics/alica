@@ -8,7 +8,6 @@
 #ifndef ALLOCATIONDIFFERENCE_H_
 #define ALLOCATIONDIFFERENCE_H_
 
-using namespace std;
 
 #include <vector>
 #include <string>
@@ -16,6 +15,7 @@ using namespace std;
 #include <memory>
 #include <algorithm>
 
+using namespace std;
 namespace alica
 {
 

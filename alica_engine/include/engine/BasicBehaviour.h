@@ -8,7 +8,6 @@
 #ifndef BASICBEHAVIOUR_H_
 #define BASICBEHAVIOUR_H_
 
-using namespace std;
 
 #include <string>
 #include <iostream>
@@ -19,6 +18,7 @@ using namespace std;
 #include <chrono>
 #include <condition_variable>
 #include "ITrigger.h"
+using namespace std;
 namespace supplementary {
 	class Timer;
 	class Trigger;

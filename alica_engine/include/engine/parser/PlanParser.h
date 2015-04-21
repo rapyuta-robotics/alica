@@ -8,7 +8,6 @@
 #ifndef PLANPARSER_H_
 #define PLANPARSER_H_
 
-using namespace std;
 
 #include <iostream>
 #include <list>
@@ -21,6 +20,7 @@ using namespace std;
 #include <FileSystem.h>
 #include "../IPlanParser.h"
 
+using namespace std;
 namespace tinyxml2 {
 	class XMLElement;
 }

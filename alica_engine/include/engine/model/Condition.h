@@ -8,7 +8,6 @@
 #ifndef CONDITION_H_
 #define CONDITION_H_
 
-using namespace std;
 
 #include <string>
 #include <vector>
@@ -17,6 +16,7 @@ using namespace std;
 
 #include "AlicaElement.h"
 
+using namespace std;
 namespace alica
 {
 	class Variable;

@@ -8,13 +8,13 @@
 #ifndef RUNTIMECONDITION_H_
 #define RUNTIMECONDITION_H_
 
-using namespace std;
 
 #include <string>
 #include <sstream>
 
 #include "Condition.h"
 
+using namespace std;
 namespace alica
 {
 	class RunningPlan;

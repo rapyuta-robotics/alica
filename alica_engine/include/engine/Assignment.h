@@ -8,7 +8,6 @@
 #ifndef ASSIGNMENT_H_
 #define ASSIGNMENT_H_
 
-using namespace std;
 
 
 #include <vector>
@@ -17,6 +16,7 @@ using namespace std;
 #include <sstream>
 #include "IAssignment.h"
 
+using namespace std;
 namespace alica
 {
 

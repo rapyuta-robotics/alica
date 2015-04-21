@@ -82,12 +82,6 @@ namespace alica
 		{	return val.second;});
 
 		sort(epCol.begin(), epCol.end(), EntryPoint::compareTo);
-		unordered_set<int> robots[epCol.size()];
-
-		for (int i = 0; i < epCol.size(); i++)
-		{
-			robots[i] = unordered_set<int>();
-		}
 
 		this->setBehaviour(false);
 

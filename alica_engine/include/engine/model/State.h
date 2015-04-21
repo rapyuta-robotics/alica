@@ -8,13 +8,13 @@
 #ifndef STATE_H_
 #define STATE_H_
 
-using namespace std;
 
 #include <stdio.h>
 #include <list>
 
 #include "AlicaElement.h"
 
+using namespace std;
 namespace alica
 {
 	class Plan;

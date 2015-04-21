@@ -8,13 +8,13 @@
 #ifndef ALICAENGINE_H_
 #define ALICAENGINE_H_
 
-using namespace std;
 
 #include <string>
 #include <SystemConfig.h>
 #include <list>
 #include <map>
 
+using namespace std;
 namespace alica
 {
 	class PlanRepository;

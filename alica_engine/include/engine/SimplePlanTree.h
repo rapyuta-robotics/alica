@@ -8,13 +8,13 @@
 #ifndef SIMPLEPLANTREE_H_
 #define SIMPLEPLANTREE_H_
 
-using namespace std;
 
 #include <unordered_set>
 #include <list>
 #include <memory>
 #include <sstream>
 
+using namespace std;
 namespace alica
 {
 

@@ -8,7 +8,6 @@
 #ifndef ENTRYPOINT_H_
 #define ENTRYPOINT_H_
 
-using namespace std;
 
 #include <unordered_set>
 #include <string>
@@ -17,6 +16,7 @@ using namespace std;
 
 #include "AlicaElement.h"
 
+using namespace std;
 namespace alica
 {
 

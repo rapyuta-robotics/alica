@@ -8,7 +8,6 @@
 #ifndef PLANTYPE_H_
 #define PLANTYPE_H_
 
-using namespace std;
 
 #include <string>
 #include <sstream>
@@ -16,6 +15,7 @@ using namespace std;
 
 #include "AbstractPlan.h"
 
+using namespace std;
 namespace alica
 {
 	class Plan;

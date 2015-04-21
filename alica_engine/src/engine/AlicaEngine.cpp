@@ -6,7 +6,6 @@
  */
 #define AE_DEBUG
 
-using namespace std;
 
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
@@ -32,6 +31,7 @@ using namespace std;
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/collections/AssignmentCollection.h"
 
+using namespace std;
 namespace alica
 {
 	/**

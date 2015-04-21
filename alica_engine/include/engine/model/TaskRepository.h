@@ -8,13 +8,13 @@
 #ifndef TASKREPOSITORY_H_
 #define TASKREPOSITORY_H_
 
-using namespace std;
 
 #include <string>
 #include <list>
 
 #include "AlicaElement.h"
 
+using namespace std;
 namespace alica
 {
 	class Task;

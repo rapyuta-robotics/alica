@@ -8,12 +8,12 @@
 #ifndef ROBOTENGINEDATA_H_
 #define ROBOTENGINEDATA_H_
 
-using namespace std;
 
 #include <map>
 #include <typeinfo>
 #include <memory>
 
+using namespace std;
 namespace alica
 {
 	class RobotProperties;

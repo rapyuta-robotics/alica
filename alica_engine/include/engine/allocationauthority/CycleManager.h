@@ -10,7 +10,6 @@
 
 //#define CM_DEBUG
 
-using namespace std;
 
 #include <vector>
 #include <thread>
@@ -20,6 +19,7 @@ using namespace std;
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/IAlicaClock.h"
 
+using namespace std;
 namespace supplementary
 {
 	class SystemConfig;

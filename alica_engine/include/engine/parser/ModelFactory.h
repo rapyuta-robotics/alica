@@ -8,12 +8,12 @@
 #ifndef MODELFACTORY_H_
 #define MODELFACTORY_H_
 
-using namespace std;
 
 #include <memory>
 #include <list>
 #include <map>
 
+using namespace std;
 #include "tinyxml2.h"
 
 

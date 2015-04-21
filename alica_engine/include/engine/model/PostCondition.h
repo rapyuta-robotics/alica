@@ -8,13 +8,13 @@
 #ifndef POSTCONDITION_H_
 #define POSTCONDITION_H_
 
-using namespace std;
 
 #include <string>
 #include <sstream>
 
 #include "Condition.h"
 
+using namespace std;
 namespace alica
 {
 
