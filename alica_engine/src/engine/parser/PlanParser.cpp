@@ -508,6 +508,8 @@ namespace alica
 	long PlanParser::fetchId(const string& idString, long id)
 	{
 		int hashPos = idString.find_first_of("#");
+		char* temp = nullptr;
+		char* temp2 = nullptr;
 		string locator = idString.substr(0, hashPos);
 		if (!locator.empty())
 		{
@@ -516,10 +518,11 @@ namespace alica
 				this->currentDirectory = this->currentDirectory + "/";
 			}
 			string path = this->currentDirectory + locator;
-			char s[2048];
-			char s2[2048];
-			realpath(path.c_str(), s);
-			string pathNew =s;
+			//not working no clue why
+			//char s[2048];
+			//char s2[2048];
+			temp = realpath(path.c_str(), NULL);
+			string pathNew = temp;
 
 			//This is not very efficient but necessary to keep the paths as they are
 			//Here we have to check whether the file has already been parsed / is in the list for toparse files
@@ -527,8 +530,8 @@ namespace alica
 			//list<string>::iterator findIterParsed = find(filesParsed.begin(), filesParsed.end(), pathNew);
 			bool found = false;
 			for(auto& it : filesParsed) {
-				realpath(it.c_str(), s2);
-				string pathNew2 =s2;
+				temp2 = realpath(it.c_str(), NULL);
+				string pathNew2 =temp2;
 				if(pathNew2 == pathNew) {
 					found = true;
 					break;
@@ -538,8 +541,8 @@ namespace alica
 			//list<string>::iterator findIterToParse = find(filesToParse.begin(), filesToParse.end(), pathNew);
 			if(!found) {
 				for(auto& it : filesToParse) {
-					realpath(it.c_str(), s2);
-					string pathNew2 =s2;
+					temp2 = realpath(it.c_str(), NULL);
+					string pathNew2 =temp2;
 					if(pathNew2 == pathNew) {
 						found = true;
 						break;
@@ -565,6 +568,8 @@ namespace alica
 		{
 			ae->abort("PP: Cannot convert ID to long: " + tokenId + " WHAT?? " + e.what());
 		}
+		delete temp;
+		delete temp2;
 		return id;
 	}
 }
