@@ -22,6 +22,11 @@ namespace Ui
 	class RobotProcessesWidget;
 }
 
+namespace supplementary
+{
+	class RobotExecutableRegistry;
+}
+
 namespace rqt_pm_control
 {
 	class ControlledRobot;
@@ -32,9 +37,9 @@ namespace rqt_pm_control
 		ControlledProcessManager(string name, int processManagerId);
 		virtual ~ControlledProcessManager();
 
-		void ProcessMessage(process_manager::ProcessStats psts);
+		void handleProcessStats(process_manager::ProcessStats psts, supplementary::RobotExecutableRegistry* pmRegistry);
 		void updateGUI(QHBoxLayout* parentLayout);
-		chrono::system_clock::time_point lastTimeMsgReceived;
+		chrono::system_clock::time_point timeLastMsgReceived;
 		int processManagerId;
 		QFrame* robotProc;
 

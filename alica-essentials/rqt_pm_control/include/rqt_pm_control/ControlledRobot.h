@@ -12,11 +12,16 @@
 
 #include <RobotMetaData.h>
 #include <process_manager/ProcessStats.h>
+#include <process_manager/ProcessStat.h>
 
+namespace supplementary{
+	class RobotExecutableRegistry;
+}
 
 namespace rqt_pm_control
 {
 	class ControlledExecutable;
+
 
 	class ControlledRobot : public supplementary::RobotMetaData
 	{
@@ -28,6 +33,8 @@ namespace rqt_pm_control
 
 		map<int, ControlledExecutable*> controlledExecMap;
 		int processManagerId; /* < determines the robot/system which executes the sending process manager */
+
+		void handleProcessStat(process_manager::ProcessStat ps, supplementary::RobotExecutableRegistry* pmRegistry);
 	private:
 
 

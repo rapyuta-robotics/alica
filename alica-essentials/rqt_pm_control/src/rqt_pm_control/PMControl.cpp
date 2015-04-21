@@ -76,7 +76,7 @@ namespace rqt_pm_control
 		chrono::system_clock::time_point now = chrono::system_clock::now();
 		for (auto processManagerEntry : this->processManagersMap)
 		{
-			if ((now - processManagerEntry.second->lastTimeMsgReceived) > PMControl::msgTimeOut)
+			if ((now - processManagerEntry.second->timeLastMsgReceived) > PMControl::msgTimeOut)
 			{
 				// TODO: Check whether this calls the destructor
 				cout << "PMControl: Erase ControlledProcessManager with ID " << processManagerEntry.second->processManagerId << " from GUI!" << endl;
@@ -101,7 +101,7 @@ namespace rqt_pm_control
 		auto pmEntry = this->processManagersMap.find(psts.senderId);
 		if (pmEntry != this->processManagersMap.end())
 		{
-			cout << "PMControl: ControlledProcessManager with ID " << psts.senderId << " is already known!" << endl;
+			//cout << "PMControl: ControlledProcessManager with ID " << psts.senderId << " is already known!" << endl;
 			controlledPM = pmEntry->second;
 		}
 		else
@@ -109,7 +109,7 @@ namespace rqt_pm_control
 			string pmName;
 			if (this->pmRegistry->getRobotName(psts.senderId, pmName))
 			{
-				cout << "PMControl: Create new ControlledProcessManager with ID " << psts.senderId << endl;
+				cout << "PMControl: Create new ControlledProcessManager with ID " << psts.senderId << " and host name " << pmName << "!" << endl;
 				controlledPM = new ControlledProcessManager(pmName, psts.senderId);
 				this->processManagersMap.emplace(psts.senderId, controlledPM);
 			}
@@ -120,50 +120,7 @@ namespace rqt_pm_control
 			}
 		}
 
-		controlledPM->ProcessMessage(psts);
-
-		/*
-		 if (controlledProcessManager->processManagerId == psts.senderId)
-		 {
-		 for (auto processStat : psts.processStats)
-		 {
-		 for (auto controlledRobot : controlledProcessManager->controlledRobotsList)
-		 {
-		 if (controlledRobot->id == processStat.robotId)
-		 {
-		 controlledRobot->timeLastMsgReceived = chrono::system_clock::now();
-
-		 // Get the right ControlledExecutable object
-		 ControlledExecutable* contExec;
-		 auto execMapEntry = controlledRobot->controlledExecMap.find(processStat.processKey);
-		 if (execMapEntry != controlledRobot->controlledExecMap.end())
-		 {
-		 contExec = execMapEntry->second;
-		 }
-		 else
-		 {
-		 const supplementary::ExecutableMetaData* metaExec = this->pmRegistry->getExecutable(processStat.processKey);
-		 if (metaExec != nullptr)
-		 {
-		 contExec = new ControlledExecutable(metaExec->name,metaExec->id, metaExec->mode, metaExec->defaultParams);
-		 controlledRobot->controlledExecMap.emplace(processStat.processKey, contExec);
-		 }
-		 else
-		 {
-		 cerr << "PMControl: Received status for unknown executable!" << endl;
-		 continue;
-		 }
-		 }
-
-		 // Update its values
-		 contExec->cpu = processStat.cpu;
-		 contExec->memory = processStat.mem;
-		 contExec->state = processStat.state;
-
-		 }
-		 }
-		 }
-		 }*/
+		controlledPM->handleProcessStats(psts, this->pmRegistry);
 
 	}
 
