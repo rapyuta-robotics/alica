@@ -41,7 +41,6 @@ namespace supplementary
 		this->setup();
 		bool incremental = mode_ != mode_clasp;
 		Clasp::ProblemType pt = getProblemType();
-//	        this->claspConfig_.set(Clasp::Cli::OptionKey::option_category_solver, "opt-strategy=5");
 		ProgramBuilder* prg = &clasp_->start(claspConfig_, pt, incremental);
 		if (incremental)
 		{
@@ -52,6 +51,15 @@ namespace supplementary
 			this->ground("base", {});
 		}
 
+	}
+
+	void ClingWrapper::setNoWarnings(bool value) {
+	  grOpts_.wNoRedef       = value;
+	  grOpts_.wNoCycle        = value;
+	  grOpts_.wNoTermUndef    = value;
+	  grOpts_.wNoAtomUndef    = value;
+	  grOpts_.wNoNonMonotone  = value;
+	  grOpts_.wNoFileIncluded = value;
 	}
 
 	void ClingWrapper::setMode(Mode mode)
@@ -84,7 +92,6 @@ namespace supplementary
         void ClingWrapper::setSaveProgress(int saveProgress)
         {
           this->claspConfig_.set(Clasp::Cli::OptionKey::opt_save_progress, std::to_string(saveProgress).c_str());
-          this->claspConfig_.set(Clasp::Cli::OptionKey::opt_restart_on_model, "");
         }
 
         void ClingWrapper::setPredefConfiguration(PredefinedConfigurations config)
@@ -430,13 +437,12 @@ namespace supplementary
 
 	void ClingWrapper::printLastModel(bool verbose)
 	{
-		std::cout << toStringLastModel(verbose);
+		std::cout << "Last Model " << toStringLastModel(verbose) << std::endl;
 	}
 
 	string ClingWrapper::toStringLastModel(bool verbose)
 	{
 		stringstream ss;
-		ss << "Last Model ";
 
 		if (!lastModel)
 		{
@@ -450,10 +456,10 @@ namespace supplementary
 				ss << value.second.name.c_str() << " ";
 		}
 
-		ss << std::endl;
-
 		if (verbose)
 		{
+	                ss << std::endl;
+
 			ss << "Symbol table: ";
 			for (auto value : this->lastSolver->symbolTable())
 			{
@@ -461,8 +467,6 @@ namespace supplementary
 
 	                        ss << std::endl;
 			}
-
-			ss << std::endl;
 		}
 		return ss.str();
 	}
@@ -699,7 +703,11 @@ namespace supplementary
 			if (arg.type() == Gringo::Value::Type::ID && arg.name() == "?")
 				continue;
 
-			if (arg != value2->args()[i])
+			if (arg.type() == Gringo::Value::Type::FUNC && value2->args()[i].type() == Gringo::Value::Type::FUNC)
+			{
+			   if (false == checkMatchValues(&arg, &value2->args()[i]))
+			       return false;
+			} else if (arg != value2->args()[i])
 				return false;
 		}
 

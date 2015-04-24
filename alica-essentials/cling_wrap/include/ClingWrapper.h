@@ -47,6 +47,7 @@ namespace supplementary
 		ClingWrapper();
 		virtual ~ClingWrapper();
 		void init();
+		void setNoWarnings(bool value);
 		void setMode(Mode mode);
                 void setModelCount(int count);
 		void setOptStrategie(int value);
