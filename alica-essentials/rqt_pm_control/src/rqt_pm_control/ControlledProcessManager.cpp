@@ -13,20 +13,21 @@
 namespace rqt_pm_control
 {
 
-	ControlledProcessManager::ControlledProcessManager(string name, int processManagerId) :
-			name(name), processManagerId(processManagerId)
+	ControlledProcessManager::ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, supplementary::RobotExecutableRegistry* pmRegistry, QHBoxLayout* parentHBoxLayout) :
+			name(name), processManagerId(processManagerId), msgTimeOut(msgTimeOut), pmRegistry(pmRegistry), parentHBoxLayout(parentHBoxLayout)
 	{
 
 	}
 
 	ControlledProcessManager::~ControlledProcessManager()
 	{
-		cout << "CPMan: Destructor called!" << endl;
-		delete this->robotProc;
-		delete this->_processManagerWidget;
+		for (auto controlledRobotEntry : this->controlledRobotsMap)
+		{
+			delete controlledRobotEntry.second;
+		}
 	}
 
-	void ControlledProcessManager::handleProcessStats(process_manager::ProcessStats psts, supplementary::RobotExecutableRegistry* pmRegistry)
+	void ControlledProcessManager::handleProcessStats(process_manager::ProcessStats psts)
 	{
 		this->timeLastMsgReceived = chrono::system_clock::now();
 		cout << "CPMan: Set last message time to " << this->timeLastMsgReceived.time_since_epoch().count() << endl;
@@ -42,10 +43,10 @@ namespace rqt_pm_control
 			else
 			{ // robot is unknown
 				string robotName;
-				if (pmRegistry->getRobotName(processStat.robotId, robotName))
+				if (this->pmRegistry->getRobotName(processStat.robotId, robotName))
 				{
 					cout << "PMControl: Create new ControlledRobot with ID " << processStat.robotId << " and robot name " << robotName << "!" << endl;
-					controlledRobot = new ControlledRobot(robotName, processStat.robotId);
+					controlledRobot = new ControlledRobot(this->name, this->parentHBoxLayout,  this->msgTimeOut, this->pmRegistry, robotName, processStat.robotId);
 					this->controlledRobotsMap.emplace(processStat.robotId, controlledRobot);
 				}
 				else
@@ -56,24 +57,28 @@ namespace rqt_pm_control
 			}
 
 			// call the controlled robot to update its corresponding process statistics.
-			controlledRobot->handleProcessStat(processStat, pmRegistry);
+			controlledRobot->handleProcessStat(processStat);
 		}
 	}
 
-	void ControlledProcessManager::updateGUI(QHBoxLayout* parentLayout)
+	void ControlledProcessManager::updateGUI()
 	{
-		if (this->_processManagerWidget == nullptr)
-		{
-			this->_processManagerWidget = new Ui::RobotProcessesWidget();
-			this->robotProc = new QFrame();
-			this->_processManagerWidget->setupUi(this->robotProc);
-		}
+		chrono::system_clock::time_point now = chrono::system_clock::now();
 
-		// TODO: This is just for testing! There should be one RobotProcessesWidget per ControlledRobot!!!
-		this->_processManagerWidget->robotHostLabel->setText(QString(this->name.c_str()));
-		if (robotProc->parent() == nullptr)
+		for (auto controlledRobotEntry : this->controlledRobotsMap)
 		{
-			parentLayout->insertWidget(0, robotProc);
+			if ((now - controlledRobotEntry.second->timeLastMsgReceived) > this->msgTimeOut)
+			{ // time is over, erase controlled robot
+
+				cout << "ControlledPM: Erasing " << controlledRobotEntry.second->name << ", controlled by process manager " << this->name << " (" << this->processManagerId << ") from GUI!" << endl;
+				this->controlledRobotsMap.erase(controlledRobotEntry.first);
+				delete controlledRobotEntry.second;
+			}
+			else
+			{ // message arrived before timeout, update its GUI
+
+				controlledRobotEntry.second->updateGUI();
+			}
 		}
 	}
 

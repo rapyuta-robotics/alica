@@ -76,17 +76,17 @@ namespace rqt_pm_control
 		chrono::system_clock::time_point now = chrono::system_clock::now();
 		for (auto processManagerEntry : this->processManagersMap)
 		{
-			if ((now - processManagerEntry.second->timeLastMsgReceived) > PMControl::msgTimeOut)
-			{
-				// TODO: Check whether this calls the destructor
+			if ((now - processManagerEntry.second->timeLastMsgReceived) > this->msgTimeOut)
+			{ // time is over, remove process manager
+
 				cout << "PMControl: Erase ControlledProcessManager with ID " << processManagerEntry.second->processManagerId << " from GUI!" << endl;
-				this->ui_.pmHorizontalLayout->removeWidget(processManagerEntry.second->robotProc);
 				this->processManagersMap.erase(processManagerEntry.first);
 				delete processManagerEntry.second;
 			}
 			else
-			{
-				processManagerEntry.second->updateGUI(this->ui_.pmHorizontalLayout);
+			{ // message arrived before timeout, update its GUI
+
+				processManagerEntry.second->updateGUI();
 			}
 		}
 	}
@@ -110,7 +110,7 @@ namespace rqt_pm_control
 			if (this->pmRegistry->getRobotName(psts.senderId, pmName))
 			{
 				cout << "PMControl: Create new ControlledProcessManager with ID " << psts.senderId << " and host name " << pmName << "!" << endl;
-				controlledPM = new ControlledProcessManager(pmName, psts.senderId);
+				controlledPM = new ControlledProcessManager(pmName, msgTimeOut, psts.senderId, this->pmRegistry, this->ui_.pmHorizontalLayout);
 				this->processManagersMap.emplace(psts.senderId, controlledPM);
 			}
 			else
@@ -120,7 +120,7 @@ namespace rqt_pm_control
 			}
 		}
 
-		controlledPM->handleProcessStats(psts, this->pmRegistry);
+		controlledPM->handleProcessStats(psts);
 
 	}
 

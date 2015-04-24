@@ -8,23 +8,26 @@
 #include <rqt_pm_control/ControlledRobot.h>
 #include <rqt_pm_control/ControlledExecutable.h>
 #include <RobotExecutableRegistry.h>
+#include <ui_RobotProcessesWidget.h>
 
 namespace rqt_pm_control
 {
-
-	ControlledRobot::ControlledRobot(string robotName, int robotId) :
-			RobotMetaData(robotName, robotId)
+	ControlledRobot::ControlledRobot(string pmName, QHBoxLayout* parentHBoxLayout, chrono::duration<double> msgTimeOut, supplementary::RobotExecutableRegistry* pmRegistry, string robotName, int robotId) :
+			RobotMetaData(robotName, robotId), pmName(pmName), parentHBoxLayout(parentHBoxLayout), _robotProcessesWidget(new Ui::RobotProcessesWidget()), robotProcessesQFrame(new QFrame()), pmRegistry(pmRegistry), msgTimeOut(msgTimeOut)
 	{
-		// TODO Auto-generated constructor stub
-
+		this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
+		this->parentHBoxLayout->insertWidget(0, robotProcessesQFrame);
+		this->_robotProcessesWidget->robotHostLabel->setText(QString(string(this->name + " on " + this->pmName).c_str()));
 	}
 
 	ControlledRobot::~ControlledRobot()
 	{
-		// TODO Auto-generated destructor stub
+		this->parentHBoxLayout->removeWidget(robotProcessesQFrame);
+		delete _robotProcessesWidget;
+		delete robotProcessesQFrame;
 	}
 
-	void ControlledRobot::handleProcessStat(process_manager::ProcessStat ps, supplementary::RobotExecutableRegistry* pmRegistry)
+	void ControlledRobot::handleProcessStat(process_manager::ProcessStat ps)
 	{
 		this->timeLastMsgReceived = chrono::system_clock::now();
 		cout << "ControlledRobot: Set last message time to " << this->timeLastMsgReceived.time_since_epoch().count() << endl;
@@ -37,13 +40,11 @@ namespace rqt_pm_control
 		}
 		else
 		{ // executable is unknown
-			supplementary::ExecutableMetaData const * const execMetaData = pmRegistry->getExecutable(ps.processKey);
+			supplementary::ExecutableMetaData const * const execMetaData = this->pmRegistry->getExecutable(ps.processKey);
 			if (execMetaData != nullptr)
 			{
 				cout << "ControlledRobot: Create new ControlledExecutable with ID " << ps.processKey << " and executable name " << execMetaData->name << "!" << endl;
-				controlledExec = new ControlledExecutable(execMetaData->name, ps.processKey,
-														  execMetaData->mode, execMetaData->defaultParams,
-														  execMetaData->absExecName);
+				controlledExec = new ControlledExecutable(execMetaData->name, ps.processKey, execMetaData->mode, execMetaData->defaultParams, execMetaData->absExecName, this->_robotProcessesWidget);
 				this->controlledExecMap.emplace(ps.processKey, controlledExec);
 			}
 			else
@@ -55,6 +56,27 @@ namespace rqt_pm_control
 
 		// update the statistics of the ControlledExecutable
 		controlledExec->handleStat(ps);
+	}
+
+	void ControlledRobot::updateGUI()
+	{
+		chrono::system_clock::time_point now = chrono::system_clock::now();
+
+		for (auto controlledExecEntry : this->controlledExecMap)
+		{
+			if ((now - controlledExecEntry.second->timeLastMsgReceived) > this->msgTimeOut)
+			{ // time is over, erase controlled exec
+
+				cout << "ControlledExec: Erasing executable " << controlledExecEntry.second->name << ", of robot " << this->name << ", from GUI!" << endl;
+				this->controlledExecMap.erase(controlledExecEntry.first);
+				delete controlledExecEntry.second;
+			}
+			else
+			{ // message arrived before timeout, update its GUI
+
+				controlledExecEntry.second->updateGUI();
+			}
+		}
 	}
 
 } /* namespace rqt_pm_control */

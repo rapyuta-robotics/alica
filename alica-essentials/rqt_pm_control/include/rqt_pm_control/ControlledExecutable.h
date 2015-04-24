@@ -11,7 +11,13 @@
 #include <chrono>
 #include <ExecutableMetaData.h>
 #include <process_manager/ProcessStat.h>
+#include "QWidget"
 
+namespace Ui
+{
+	class ProcessWidget;
+	class RobotProcessesWidget;
+}
 
 namespace rqt_pm_control
 {
@@ -19,10 +25,11 @@ namespace rqt_pm_control
 	class ControlledExecutable : public supplementary::ExecutableMetaData
 	{
 	public:
-		ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName);
+		ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName, Ui::RobotProcessesWidget* parentRobotProcWidget);
 		virtual ~ControlledExecutable();
 
 		void handleStat(process_manager::ProcessStat ps);
+		void updateGUI();
 
 		chrono::system_clock::time_point timeLastMsgReceived; /* < last time a message was received for this executable */
 
@@ -30,6 +37,13 @@ namespace rqt_pm_control
 		char state; // The process state (zombie, running, etc)
 		unsigned short cpu;
 		long int memory;
+
+		QWidget* processWidget;
+		Ui::ProcessWidget* _processWidget;
+
+	private:
+		chrono::duration<double> msgTimeOut;
+		Ui::RobotProcessesWidget* parentRobotProcWidget;
 
 	};
 

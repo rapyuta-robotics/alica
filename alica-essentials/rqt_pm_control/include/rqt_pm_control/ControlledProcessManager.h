@@ -13,14 +13,8 @@
 #include <string>
 #include "process_manager/ProcessStats.h"
 #include "QHBoxLayout"
-#include "QFrame"
 
 using namespace std;
-
-namespace Ui
-{
-	class RobotProcessesWidget;
-}
 
 namespace supplementary
 {
@@ -31,25 +25,26 @@ namespace rqt_pm_control
 {
 	class ControlledRobot;
 
+
 	class ControlledProcessManager
 	{
 	public:
-		ControlledProcessManager(string name, int processManagerId);
+		ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, supplementary::RobotExecutableRegistry* pmRegistry, QHBoxLayout* parentHBoxLayout);
 		virtual ~ControlledProcessManager();
 
-		void handleProcessStats(process_manager::ProcessStats psts, supplementary::RobotExecutableRegistry* pmRegistry);
-		void updateGUI(QHBoxLayout* parentLayout);
+		void updateGUI();
+		void handleProcessStats(process_manager::ProcessStats psts);
+
 		chrono::system_clock::time_point timeLastMsgReceived;
 		int processManagerId;
-		QFrame* robotProc;
 
 	private:
-		string name;
+		string name; /* < Hostname under which this process manager is running */
+		map<int, ControlledRobot*> controlledRobotsMap; /* < The robots, which are controlled by this process manager */
+		chrono::duration<double> msgTimeOut;
+		supplementary::RobotExecutableRegistry* pmRegistry;
+		QHBoxLayout* parentHBoxLayout;
 
-		map<int, ControlledRobot*> controlledRobotsMap;
-
-
-		Ui::RobotProcessesWidget* _processManagerWidget;
 	};
 
 } /* namespace rqt_pm_control */
