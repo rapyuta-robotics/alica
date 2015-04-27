@@ -25,11 +25,11 @@ namespace rqt_pm_control
 	class ControlledExecutable : public supplementary::ExecutableMetaData
 	{
 	public:
-		ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName, Ui::RobotProcessesWidget* parentRobotProcWidget);
+		ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName);
 		virtual ~ControlledExecutable();
 
 		void handleStat(process_manager::ProcessStat ps);
-		void updateGUI();
+		void updateGUI(Ui::RobotProcessesWidget* parentRobotProcWidget);
 
 		chrono::system_clock::time_point timeLastMsgReceived; /* < last time a message was received for this executable */
 

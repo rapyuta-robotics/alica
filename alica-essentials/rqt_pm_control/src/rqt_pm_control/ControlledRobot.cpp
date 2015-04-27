@@ -12,12 +12,10 @@
 
 namespace rqt_pm_control
 {
-	ControlledRobot::ControlledRobot(string pmName, QHBoxLayout* parentHBoxLayout, chrono::duration<double> msgTimeOut, supplementary::RobotExecutableRegistry* pmRegistry, string robotName, int robotId) :
-			RobotMetaData(robotName, robotId), pmName(pmName), parentHBoxLayout(parentHBoxLayout), _robotProcessesWidget(new Ui::RobotProcessesWidget()), robotProcessesQFrame(new QFrame()), pmRegistry(pmRegistry), msgTimeOut(msgTimeOut)
+	ControlledRobot::ControlledRobot(string pmName, chrono::duration<double> msgTimeOut, supplementary::RobotExecutableRegistry* pmRegistry, string robotName, int robotId) :
+			RobotMetaData(robotName, robotId), pmName(pmName), pmRegistry(pmRegistry), msgTimeOut(msgTimeOut), robotProcessesQFrame(nullptr), _robotProcessesWidget(nullptr), parentHBoxLayout(nullptr)
 	{
-		this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
-		this->parentHBoxLayout->insertWidget(0, robotProcessesQFrame);
-		this->_robotProcessesWidget->robotHostLabel->setText(QString(string(this->name + " on " + this->pmName).c_str()));
+
 	}
 
 	ControlledRobot::~ControlledRobot()
@@ -44,7 +42,7 @@ namespace rqt_pm_control
 			if (execMetaData != nullptr)
 			{
 				cout << "ControlledRobot: Create new ControlledExecutable with ID " << ps.processKey << " and executable name " << execMetaData->name << "!" << endl;
-				controlledExec = new ControlledExecutable(execMetaData->name, ps.processKey, execMetaData->mode, execMetaData->defaultParams, execMetaData->absExecName, this->_robotProcessesWidget);
+				controlledExec = new ControlledExecutable(execMetaData->name, ps.processKey, execMetaData->mode, execMetaData->defaultParams, execMetaData->absExecName);
 				this->controlledExecMap.emplace(ps.processKey, controlledExec);
 			}
 			else
@@ -58,9 +56,19 @@ namespace rqt_pm_control
 		controlledExec->handleStat(ps);
 	}
 
-	void ControlledRobot::updateGUI()
+	void ControlledRobot::updateGUI(QHBoxLayout* parentHBoxLayout)
 	{
 		chrono::system_clock::time_point now = chrono::system_clock::now();
+
+		if (this->robotProcessesQFrame == nullptr)
+		{
+			this->parentHBoxLayout = parentHBoxLayout;
+			this->robotProcessesQFrame = new QFrame();
+			this->_robotProcessesWidget = new Ui::RobotProcessesWidget();
+			this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
+			this->parentHBoxLayout->insertWidget(0, robotProcessesQFrame);
+			this->_robotProcessesWidget->robotHostLabel->setText(QString(string(this->name + " on " + this->pmName).c_str()));
+		}
 
 		for (auto controlledExecEntry : this->controlledExecMap)
 		{
@@ -74,7 +82,7 @@ namespace rqt_pm_control
 			else
 			{ // message arrived before timeout, update its GUI
 
-				controlledExecEntry.second->updateGUI();
+				controlledExecEntry.second->updateGUI(this->_robotProcessesWidget);
 			}
 		}
 	}

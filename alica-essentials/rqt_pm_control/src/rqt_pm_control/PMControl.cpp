@@ -86,7 +86,7 @@ namespace rqt_pm_control
 			else
 			{ // message arrived before timeout, update its GUI
 
-				processManagerEntry.second->updateGUI();
+				processManagerEntry.second->updateGUI(this->ui_.pmHorizontalLayout);
 			}
 		}
 	}
@@ -110,7 +110,7 @@ namespace rqt_pm_control
 			if (this->pmRegistry->getRobotName(psts.senderId, pmName))
 			{
 				cout << "PMControl: Create new ControlledProcessManager with ID " << psts.senderId << " and host name " << pmName << "!" << endl;
-				controlledPM = new ControlledProcessManager(pmName, msgTimeOut, psts.senderId, this->pmRegistry, this->ui_.pmHorizontalLayout);
+				controlledPM = new ControlledProcessManager(pmName, msgTimeOut, psts.senderId, this->pmRegistry);
 				this->processManagersMap.emplace(psts.senderId, controlledPM);
 			}
 			else

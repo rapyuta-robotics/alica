@@ -31,13 +31,13 @@ namespace rqt_pm_control
 	class ControlledRobot : public supplementary::RobotMetaData
 	{
 	public:
-		ControlledRobot(string pmName, QHBoxLayout* parentHBoxLayout, chrono::duration<double> msgTimeOut, supplementary::RobotExecutableRegistry* pmRegistry,
+		ControlledRobot(string pmName, chrono::duration<double> msgTimeOut, supplementary::RobotExecutableRegistry* pmRegistry,
 						string robotName, int robotId);
 		virtual ~ControlledRobot();
 
 		void handleProcessStat(process_manager::ProcessStat ps);
 
-		void updateGUI();
+		void updateGUI(QHBoxLayout* parentHBoxLayout);
 
 		chrono::system_clock::time_point timeLastMsgReceived; /* < the last time a message was received for this robot */
 		map<int, ControlledExecutable*> controlledExecMap;

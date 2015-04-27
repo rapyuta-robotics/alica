@@ -29,10 +29,10 @@ namespace rqt_pm_control
 	class ControlledProcessManager
 	{
 	public:
-		ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, supplementary::RobotExecutableRegistry* pmRegistry, QHBoxLayout* parentHBoxLayout);
+		ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, supplementary::RobotExecutableRegistry* pmRegistry);
 		virtual ~ControlledProcessManager();
 
-		void updateGUI();
+		void updateGUI(QHBoxLayout* parentHBoxLayout);
 		void handleProcessStats(process_manager::ProcessStats psts);
 
 		chrono::system_clock::time_point timeLastMsgReceived;

@@ -13,7 +13,7 @@
 namespace rqt_pm_control
 {
 
-	ControlledProcessManager::ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, supplementary::RobotExecutableRegistry* pmRegistry, QHBoxLayout* parentHBoxLayout) :
+	ControlledProcessManager::ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, supplementary::RobotExecutableRegistry* pmRegistry) :
 			name(name), processManagerId(processManagerId), msgTimeOut(msgTimeOut), pmRegistry(pmRegistry), parentHBoxLayout(parentHBoxLayout)
 	{
 
@@ -46,7 +46,7 @@ namespace rqt_pm_control
 				if (this->pmRegistry->getRobotName(processStat.robotId, robotName))
 				{
 					cout << "PMControl: Create new ControlledRobot with ID " << processStat.robotId << " and robot name " << robotName << "!" << endl;
-					controlledRobot = new ControlledRobot(this->name, this->parentHBoxLayout,  this->msgTimeOut, this->pmRegistry, robotName, processStat.robotId);
+					controlledRobot = new ControlledRobot(this->name,  this->msgTimeOut, this->pmRegistry, robotName, processStat.robotId);
 					this->controlledRobotsMap.emplace(processStat.robotId, controlledRobot);
 				}
 				else
@@ -61,9 +61,13 @@ namespace rqt_pm_control
 		}
 	}
 
-	void ControlledProcessManager::updateGUI()
+	void ControlledProcessManager::updateGUI(QHBoxLayout* parentHBoxLayout)
 	{
 		chrono::system_clock::time_point now = chrono::system_clock::now();
+		if (this->parentHBoxLayout != nullptr)
+		{
+			this->parentHBoxLayout = parentHBoxLayout;
+		}
 
 		for (auto controlledRobotEntry : this->controlledRobotsMap)
 		{
@@ -77,7 +81,7 @@ namespace rqt_pm_control
 			else
 			{ // message arrived before timeout, update its GUI
 
-				controlledRobotEntry.second->updateGUI();
+				controlledRobotEntry.second->updateGUI(parentHBoxLayout);
 			}
 		}
 	}
