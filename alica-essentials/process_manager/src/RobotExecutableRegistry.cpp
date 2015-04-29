@@ -217,12 +217,11 @@ namespace supplementary
 		string cmd = "catkin_find --libexec " + execName;
 		absExecName = supplementary::ConsoleCommandHelper::exec(cmd.c_str());
 
-
 		// transform the system config default params to vector of char*, for c-compatibility.
 		vector<char*> defaultParams;
 		if (absExecName.length() > 1)
 		{
-			absExecName = absExecName.substr(0, absExecName.length()-1);
+			absExecName = absExecName.substr(0, absExecName.length() - 1);
 			absExecName = absExecName + "/" + execName;
 			defaultParams.push_back(strdup(absExecName.c_str()));
 		}
@@ -233,9 +232,14 @@ namespace supplementary
 
 		for (string param : defaultParamsVec)
 		{
-			char * tmp = new char[param.size()+1];
+			// trim white spaces!
+			size_t first = param.find_first_not_of(' ');
+			size_t last = param.find_last_not_of(' ');
+			param = param.substr(first, (last - first + 1));
+
+			char * tmp = new char[param.size() + 1];
 			strcpy(tmp, param.c_str());
-			tmp[param.size()+1] = '\0';
+			tmp[param.size() + 1] = '\0';
 			defaultParams.push_back(tmp);
 		}
 
