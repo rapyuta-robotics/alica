@@ -69,7 +69,7 @@ namespace supplementary
 
 		// This autostart functionality is for easier testing
 		bool autostart = false;
-		for(int i = 1; i < argc; i++)
+		for (int i = 1; i < argc; i++)
 		{
 			if (strcmp(argv[i], "-autostart") == 0)
 			{
@@ -217,7 +217,7 @@ namespace supplementary
 
 			this->searchProcFS();
 			this->updateTotalCPUTimes();
-			this->update((this->currentTotalCPUTime - this->lastTotalCPUTime)/ProcessManager::numCPUs);
+			this->update((this->currentTotalCPUTime - this->lastTotalCPUTime) / ProcessManager::numCPUs);
 			this->report();
 
 			auto timePassed = chrono::system_clock::now() - start;
@@ -309,7 +309,6 @@ namespace supplementary
 
 		long curPID = 0;
 		char* endPtr;
-		string curFile;
 		string curExecutable;
 		while ((dirEntry = readdir(proc)) != NULL)
 		{
@@ -322,12 +321,11 @@ namespace supplementary
 			}
 
 			// get the executables name
-			std::ifstream ifs;
-			curFile = "/proc/" + string(dirEntry->d_name) + "/comm";
-			ifs.open(curFile, std::ifstream::in);
-			string execName;
-			getline(ifs, execName);
-			ifs.close();
+			string execName = getExecNameFromCmdLine(dirEntry->d_name);
+			if (execName.length() == 0)
+				continue;
+
+
 
 			int execId;
 			if (this->pmRegistry->getExecutableId(execName, execId))
@@ -361,6 +359,42 @@ namespace supplementary
 		}
 
 		closedir(proc);
+	}
+
+	/**
+	 * Extracts the executable name from the cmdline entry of the proc-fs.
+	 * @param pid
+	 * @return The executable name as string.
+	 */
+	string ProcessManager::getExecNameFromCmdLine(char* pid)
+	{
+		std::ifstream ifs;
+		string curFile = "/proc/" + string(pid) + "/cmdline";
+		ifs.open(curFile, std::ifstream::in);
+		string execName;
+		getline(ifs, execName);
+		ifs.close();
+
+
+
+		int endPos = execName.find('\0', 0);
+		if (endPos == string::npos)
+		{
+			endPos = execName.length();
+		}
+		int startPos = execName.find_last_of('/', endPos);
+		if (startPos == string::npos)
+		{
+			startPos = 0; // no slash found, start at 0
+		}
+		else
+		{
+			startPos++; // ignore slash
+		}
+
+		cout << "PM: ExecName '" << execName << "' startPos: " << startPos << " endPos: " << endPos << endl;
+
+		return execName.substr(startPos, endPos - startPos);
 	}
 
 	/**
@@ -422,7 +456,6 @@ namespace supplementary
 
 		long curPID = 0;
 		char* endPtr;
-		string curFile;
 		string curExecutable;
 		bool roscoreRunning = false;
 		while ((dirEntry = readdir(proc)) != NULL)
@@ -436,11 +469,9 @@ namespace supplementary
 			}
 
 			// get the executables name
-			curFile = "/proc/" + string(dirEntry->d_name) + "/comm";
-			std::ifstream ifs(curFile, std::ifstream::in);
-			string execName;
-			getline(ifs, execName);
-			ifs.close();
+			string execName = getExecNameFromCmdLine(dirEntry->d_name);
+			if (execName.length() == 0)
+				continue;
 
 			// Check for already running process managers
 			if (execName.compare("process_manager") == 0 && ownPID != curPID)
@@ -495,7 +526,7 @@ namespace supplementary
 
 		if (roscoreRunning == false)
 		{
-			cerr << "PM: Starting roscore" << endl;
+			cerr << "PM: Starting roscore at startup!" << endl;
 			pid_t pid = fork();
 			if (pid == 0) // child process
 			{
@@ -611,8 +642,6 @@ int main(int argc, char** argv)
 	{
 		supplementary::ProcessManager::numCPUs++;
 	}
-
-
 
 	supplementary::ProcessManager* pm = new supplementary::ProcessManager(argc, argv);
 	if (pm->selfCheck())

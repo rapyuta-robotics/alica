@@ -51,6 +51,7 @@ namespace supplementary
 
 	void ManagedExecutable::queue4Update(long pid)
 	{
+		cout << "ME: exec: " << this->name << " NEW PID: "<< pid << endl;
 		this->queuedPids4Update.push_back(pid);
 	}
 
@@ -197,9 +198,9 @@ namespace supplementary
 	void ManagedExecutable::updateStats(unsigned long long cpuDelta, bool isNew, bool readParams)
 	{
 
-#ifdef MGND_EXEC_DEBUG
-		cout << "ME: Updating " << this->name << " (" << this->managedPid << ")" << endl;
-#endif
+//#ifdef MGND_EXEC_DEBUG
+//		cout << "ME: Updating " << this->name << " (" << this->managedPid << ")" << endl;
+//#endif
 
 		string procPidString = "/proc/" + to_string(this->managedPid);
 		std::ifstream statFile(procPidString + "/stat", std::ifstream::in);
@@ -262,10 +263,10 @@ namespace supplementary
 			this->cpu = 0;
 		}
 
-#ifdef MGND_EXEC_DEBUG
-		this->printStats();
-		cout << "ME: Updated " << this->name << " (" << this->managedPid << ")" << endl;
-#endif
+//#ifdef MGND_EXEC_DEBUG
+//		this->printStats();
+//		cout << "ME: Updated " << this->name << " (" << this->managedPid << ")" << endl;
+//#endif
 
 	}
 
@@ -373,10 +374,12 @@ namespace supplementary
 			int execReturn;
 			if (this->absExecName.size() > 1)
 			{
+				cout << "ME: Starting '"<< this->absExecName << "' ! Params: '" <<  params.data() << "'" << endl;
 				execReturn = execvp(this->absExecName.c_str(), params.data());
 			}
 			else
 			{
+				cout << "ME: Starting '"<< this->name << "' ! Params: '" <<  params.data() << "'" << endl;
 				execReturn = execvp(this->name.c_str(), params.data());
 			}
 			if (execReturn == -1)
