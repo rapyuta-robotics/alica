@@ -63,7 +63,7 @@ namespace supplementary
 		ros::Subscriber processCommandSub;
 		ros::Publisher processStatePub;
 
-		string getExecNameFromCmdLine(char* pid);
+		pair<string,string> getExecNameFromCmdLine(char* pid);
 		string getRobotEnvironmentVariable(string processId);
 		void updateTotalCPUTimes();
 		void handleProcessCommand(process_manager::ProcessCommandPtr pc);

@@ -321,14 +321,12 @@ namespace supplementary
 			}
 
 			// get the executables name
-			string execName = getExecNameFromCmdLine(dirEntry->d_name);
-			if (execName.length() == 0)
+			pair<string,string> execNames = getExecNameFromCmdLine(dirEntry->d_name);
+			if (execNames.first.length() == 0)
 				continue;
 
-
-
 			int execId;
-			if (this->pmRegistry->getExecutableId(execName, execId))
+			if (this->pmRegistry->getExecutableId(execNames.first, execId) || this->pmRegistry->getExecutableId(execNames.second, execId))
 			{
 				// get the robots name from the ROBOT environment variable
 				string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
@@ -336,7 +334,7 @@ namespace supplementary
 				int robotId;
 				if (!this->pmRegistry->getRobotId(robotName, robotId))
 				{
-					cout << "PM: Warning! Unknown robot '" << robotName << "' is running '" << execName << "'" << endl;
+					cout << "PM: Warning! Unknown robot '" << robotName << "' is running '" << execNames.first <<":"<< execNames.second << "'" << endl;
 					robotId = this->pmRegistry->addRobot(robotName);
 				}
 
@@ -351,7 +349,7 @@ namespace supplementary
 				}
 
 #ifdef PM_DEBUG
-				cout << "PM: Robot '" << robotName << "' executes '" << execName << "' with PID " << curPID << endl;
+				cout << "PM: Robot '" << robotName << "' executes '" << execNames.first <<":"<< execNames.second << "' with PID " << curPID << endl;
 #endif
 
 			}
@@ -366,8 +364,10 @@ namespace supplementary
 	 * @param pid
 	 * @return The executable name as string.
 	 */
-	string ProcessManager::getExecNameFromCmdLine(char* pid)
+	pair<string,string> ProcessManager::getExecNameFromCmdLine(char* pid)
 	{
+		pair<string,string> execNames = pair<string,string>("","");
+
 		std::ifstream ifs;
 		string curFile = "/proc/" + string(pid) + "/cmdline";
 		ifs.open(curFile, std::ifstream::in);
@@ -390,9 +390,32 @@ namespace supplementary
 			startPos++; // ignore slash
 		}
 
-		cout << "PM: ExecName '" << execName << "' startPos: " << startPos << " endPos: " << endPos << endl;
 
-		return execName.substr(startPos, endPos - startPos);
+
+		execNames.first = execName.substr(startPos, endPos - startPos);
+		if (endPos == execName.length())
+		{
+			cout << "PM: ExecNames (without second)'" << execNames.first << ":"<< execNames.second << "' startPos: " << startPos << " endPos: " << endPos << endl;
+			return execNames;
+		}
+		else
+		{
+			int oldEnd = endPos;
+			endPos = execName.find('\0', endPos+1);
+			startPos = execName.find_last_of('/', endPos);
+			if (startPos == string::npos)
+			{
+				startPos = oldEnd+1; // no slash found, start at oldEnd +1
+			}
+			else
+			{
+				startPos++; // ignore slash
+			}
+			execNames.second = execName.substr(startPos, endPos - startPos);
+		}
+
+		cout << "PM: ExecNames (with second)'" << execNames.first << ":"<< execNames.second << "' startPos: " << startPos << " endPos: " << endPos << endl;
+		return execNames;
 	}
 
 	/**
@@ -467,12 +490,12 @@ namespace supplementary
 			}
 
 			// get the executables name
-			string execName = getExecNameFromCmdLine(dirEntry->d_name);
-			if (execName.length() == 0)
+			pair<string,string> execNames = getExecNameFromCmdLine(dirEntry->d_name);
+			if (execNames.first.length() == 0)
 				continue;
 
 			// Check for already running process managers
-			if (execName.compare("process_manager") == 0 && ownPID != curPID)
+			if (execNames.first.compare("process_manager") == 0 && ownPID != curPID)
 			{
 				cerr << "PM: My own PID is " << ownPID << endl;
 				cerr << "PM: There is already another process_manager running on this system! PID: " << curPID << endl;
@@ -482,7 +505,7 @@ namespace supplementary
 			}
 
 			// Check for already running roscore
-			if (!roscoreRunning && execName.compare(roscoreExecName) == 0)
+			if (!roscoreRunning && (execNames.first.compare(roscoreExecName) == 0 || execNames.second.compare(roscoreExecName) == 0))
 			{
 				roscoreRunning = true;
 
