@@ -27,6 +27,7 @@ namespace alica
 	BasicBehaviour::BasicBehaviour(string name) :
 			name(name), parameters(nullptr), failure(false), success(false), callInit(true), started(true), runCV()
 	{
+		this->running = false;
 		this->timer = new supplementary::Timer(0, 0);
 		this->timer->registerCV(&this->runCV);
 		this->behaviourTrigger = nullptr;
@@ -125,7 +126,12 @@ namespace alica
 	 */
 	bool BasicBehaviour::stop()
 	{
-		return this->timer->stop();
+		if(behaviourTrigger == nullptr) {
+			return this->timer->stop();
+		} else {
+			this->running = false;
+		}
+		return true;
 	}
 
 	/**
@@ -134,7 +140,13 @@ namespace alica
 	bool BasicBehaviour::start()
 	{
 		this->callInit = true;
-		return this->timer->start();
+		if(behaviourTrigger == nullptr) 
+		{
+			return this->timer->start();
+		} else {
+			this->running = true;
+		}
+		return true;
 	}
 
 	shared_ptr<RunningPlan> BasicBehaviour::getRunningPlan()
@@ -204,7 +216,7 @@ namespace alica
 				}
 				else
 				{
-					return !this->started || this->behaviourTrigger->isNotifyCalled(&runCV);
+					return !this->started || (this->behaviourTrigger->isNotifyCalled(&runCV) && this->running);
 				}
 			}); // protection against spurious wake-ups
 			if (!this->started)

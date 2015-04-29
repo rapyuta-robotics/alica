@@ -80,6 +80,9 @@ namespace alica
 		shared_ptr<RunningPlan> runningPlan;
 		chrono::milliseconds msInterval;
 		chrono::milliseconds msDelayedStart;
+		/**
+		 * is always true except when the behaviour is shutting down
+		 */
 		bool started;
 		bool callInit;
 		/**
@@ -90,6 +93,13 @@ namespace alica
 		 * The Failure flag. Raised by a behaviour to indicate it has failed in some way.
 		 */
 		bool failure;
+
+
+		/**
+                 * Tells us whether the behaviour is currently running (or active)
+                 */
+                bool running;
+
 		thread* runThread; /** < executes the runInternal and thereby the abstract run method */
 		supplementary::Timer* timer; /** < triggers the condition_variable of the runThread, if this behaviour is timer triggered, alternative to behaviourTrigger*/
 		supplementary::ITrigger* behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour is event triggered, alternative to timer */
