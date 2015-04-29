@@ -375,8 +375,6 @@ namespace supplementary
 		getline(ifs, execName);
 		ifs.close();
 
-
-
 		int endPos = execName.find('\0', 0);
 		if (endPos == string::npos)
 		{
