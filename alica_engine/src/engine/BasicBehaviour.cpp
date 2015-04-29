@@ -126,6 +126,8 @@ namespace alica
 	 */
 	bool BasicBehaviour::stop()
 	{
+		this->success = false;
+		this->failure = false;
 		if(behaviourTrigger == nullptr) {
 			return this->timer->stop();
 		} else {
