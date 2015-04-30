@@ -55,6 +55,7 @@ namespace supplementary
 		int ownId;
 		map<int, ManagedRobot*> robotMap;
 		RobotExecutableRegistry* pmRegistry;
+		vector<string> interpreter;
 		unsigned long long lastTotalCPUTime;
 		unsigned long long currentTotalCPUTime;
 
@@ -63,7 +64,7 @@ namespace supplementary
 		ros::Subscriber processCommandSub;
 		ros::Publisher processStatePub;
 
-		pair<string,string> getExecNameFromCmdLine(char* pid);
+		string getExecNameFromCmdLine(char* pid);
 		string getRobotEnvironmentVariable(string processId);
 		void updateTotalCPUTimes();
 		void handleProcessCommand(process_manager::ProcessCommandPtr pc);
