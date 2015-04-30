@@ -1120,7 +1120,7 @@ namespace alica
 	 */
 	bool RunningPlan::anyChildrenStatus(PlanStatus ps)
 	{
-		cout << "RP: Plan " << this->getPlan()->getName() << " Children: " << this->children.size() << endl;
+		//cout << "RP: Plan " << this->getPlan()->getName() << " Children: " << this->children.size() << endl;
 		for (int i = 0; i < this->children.size(); i++)
 		{
 			auto iter = this->children.begin();
