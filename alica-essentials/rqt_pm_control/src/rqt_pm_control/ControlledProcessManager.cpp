@@ -30,7 +30,7 @@ namespace rqt_pm_control
 	void ControlledProcessManager::handleProcessStats(process_manager::ProcessStats psts)
 	{
 		this->timeLastMsgReceived = chrono::system_clock::now();
-		cout << "CPMan: Set last message time to " << this->timeLastMsgReceived.time_since_epoch().count() << endl;
+		//cout << "CPMan: Set last message time to " << this->timeLastMsgReceived.time_since_epoch().count() << endl;
 
 		ControlledRobot* controlledRobot;
 		for (auto processStat : psts.processStats)

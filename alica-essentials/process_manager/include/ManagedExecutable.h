@@ -8,7 +8,7 @@
 #ifndef MANAGEDEXECUTABLE_H_
 #define MANAGEDEXECUTABLE_H_
 
-#define MGND_EXEC_DEBUG
+//#define MGND_EXEC_DEBUG
 
 #include <string>
 #include <vector>
@@ -25,7 +25,7 @@ namespace supplementary
 	class ManagedExecutable : public ExecutableMetaData
 	{
 	public:
-		ManagedExecutable(string execName, int execid, long pid, string mode, vector<char*> defaultParams, string absExecName);
+		ManagedExecutable(string execName, int execid, long pid, string mode, vector<char*> defaultParams, string absExecName, string robotName);
 		virtual ~ManagedExecutable();
 		void queue4Update(long pid);
 		void update(unsigned long long cpuDelta);
@@ -51,6 +51,7 @@ namespace supplementary
 		unsigned long long starttime;
 		unsigned short cpu;
 		long int memory;
+		string robotEnvVariable;
 
 
 		chrono::time_point<chrono::steady_clock> lastTimeTried;

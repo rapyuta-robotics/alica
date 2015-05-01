@@ -28,7 +28,7 @@ namespace rqt_pm_control
 	void ControlledRobot::handleProcessStat(process_manager::ProcessStat ps)
 	{
 		this->timeLastMsgReceived = chrono::system_clock::now();
-		cout << "ControlledRobot: Set last message time to " << this->timeLastMsgReceived.time_since_epoch().count() << endl;
+		//cout << "ControlledRobot: Set last message time to " << this->timeLastMsgReceived.time_since_epoch().count() << endl;
 
 		ControlledExecutable* controlledExec;
 		auto controlledExecEntry = this->controlledExecMap.find(ps.processKey);

@@ -123,7 +123,7 @@ namespace supplementary
 	 */
 	void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
 	{
-		// check whether this msg is for me, 0 is a wildcard for all ProcessManagers
+		// check whether this message is for me, 0 is a wild card for all ProcessManagers
 		if (pc->receiverId != this->ownId && pc->receiverId != 0)
 		{
 			return;

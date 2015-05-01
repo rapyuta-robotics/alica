@@ -32,7 +32,7 @@ namespace rqt_pm_control
 	void ControlledExecutable::handleStat(process_manager::ProcessStat ps)
 	{
 		this->timeLastMsgReceived = chrono::system_clock::now();
-		cout << "ControlledExecutable: Set last message time to " << this->timeLastMsgReceived.time_since_epoch().count() << endl;
+		//cout << "ControlledExecutable: Set last message time to " << this->timeLastMsgReceived.time_since_epoch().count() << endl;
 
 		this->cpu = ps.cpu;
 		this->memory = ps.mem;
@@ -48,12 +48,14 @@ namespace rqt_pm_control
 			this->processWidget = new QWidget();
 			this->_processWidget = new Ui::ProcessWidget();
 			this->_processWidget->setupUi(this->processWidget);
-			this->parentRobotProcWidget->verticalLayout->insertWidget(0, processWidget);
+			this->parentRobotProcWidget->verticalLayout->insertWidget(2, processWidget);
 			this->_processWidget->processName->setText(QString(this->name.c_str()));
 		}
 
-		this->_processWidget->cpuState->setText(QString::number(this->cpu));
-		this->_processWidget->memState->setText(QString::number(this->memory));
+		QString cpuString = "C: " + QString::number(this->cpu) + "%";
+		QString memString = "M: " + QString::number(this->memory) + "MB";
+		this->_processWidget->cpuState->setText(cpuString);
+		this->_processWidget->memState->setText(memString);
 		// TODO: Running State, parameters, ...
 	}
 

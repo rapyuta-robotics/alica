@@ -17,6 +17,7 @@
 #include <ctime>
 #include <iomanip>
 #include <chrono>
+#include <stdlib.h>
 #include "SystemConfig.h"
 #include "Logging.h"
 
@@ -24,7 +25,7 @@ namespace supplementary
 {
 	long ManagedExecutable::kernelPageSize = 0;
 
-	ManagedExecutable::ManagedExecutable(string executable, int id, long pid, string mode, vector<char*> defaultParams, string absExecName) :
+	ManagedExecutable::ManagedExecutable(string executable, int id, long pid, string mode, vector<char*> defaultParams, string absExecName, string robotName) :
 			ExecutableMetaData(executable, id, mode, defaultParams, absExecName), managedPid(pid), state('X'), lastUTime(0), lastSTime(0), currentUTime(0), currentSTime(0), memory(0), starttime(0), shouldRun(false), cpu(0)
 	{
 
@@ -32,6 +33,7 @@ namespace supplementary
 		cout << "ME: Constructor of executable " << executable << endl;
 #endif
 
+		this->robotEnvVariable = robotName;
 		this->desiredParams = nullptr;
 		this->params = nullptr;
 	}
@@ -51,7 +53,6 @@ namespace supplementary
 
 	void ManagedExecutable::queue4Update(long pid)
 	{
-		cout << "ME: exec: " << this->name << " NEW PID: "<< pid << endl;
 		this->queuedPids4Update.push_back(pid);
 	}
 
@@ -198,9 +199,9 @@ namespace supplementary
 	void ManagedExecutable::updateStats(unsigned long long cpuDelta, bool isNew, bool readParams)
 	{
 
-//#ifdef MGND_EXEC_DEBUG
-//		cout << "ME: Updating " << this->name << " (" << this->managedPid << ")" << endl;
-//#endif
+#ifdef MGND_EXEC_DEBUG
+		cout << "ME: Updating " << this->name << " (" << this->managedPid << ")" << endl;
+#endif
 
 		string procPidString = "/proc/" + to_string(this->managedPid);
 		std::ifstream statFile(procPidString + "/stat", std::ifstream::in);
@@ -251,10 +252,14 @@ namespace supplementary
 
 		if (!isNew)
 		{
+#ifdef MGND_EXEC_DEBUG
 			cout << "ME: CPU-Update of '" << this->name << "' ";
+#endif
 			double sCPU = 100.0 * double(currentSTime - lastSTime) / double(cpuDelta);
 			double uCPU = 100.0 * double(currentUTime - lastUTime) / double(cpuDelta);
+#ifdef MGND_EXEC_DEBUG
 			cout << sCPU << ", " << uCPU << ", " << cpuDelta << endl;
+#endif
 
 			this->cpu = sCPU + uCPU;
 		}
@@ -263,10 +268,10 @@ namespace supplementary
 			this->cpu = 0;
 		}
 
-//#ifdef MGND_EXEC_DEBUG
-//		this->printStats();
-//		cout << "ME: Updated " << this->name << " (" << this->managedPid << ")" << endl;
-//#endif
+#ifdef MGND_EXEC_DEBUG
+		this->printStats();
+		cout << "ME: Updated " << this->name << " (" << this->managedPid << ")" << endl;
+#endif
 
 	}
 
@@ -358,6 +363,8 @@ namespace supplementary
 		if (pid == 0) // child process
 		{
 			setsid(); // necessary to let the child process live longer than its parent
+
+			setenv("ROBOT", this->robotEnvVariable.c_str(), 1);
 
 			// redirect stdout
 			string logFileName = Logging::getLogFilename(this->name);
