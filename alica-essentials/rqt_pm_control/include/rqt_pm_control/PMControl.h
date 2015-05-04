@@ -58,6 +58,7 @@ namespace rqt_pm_control
 		supplementary::RobotExecutableRegistry* pmRegistry;
 
 		map<int, ControlledProcessManager*> processManagersMap;
+		map<string, vector<int>> bundlesMap;
 
 		void handleProcessStats(process_manager::ProcessStats psts);
 

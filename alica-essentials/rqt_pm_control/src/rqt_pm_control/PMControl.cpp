@@ -40,6 +40,18 @@ namespace rqt_pm_control
 		{
 			curId = this->pmRegistry->addExecutable(processSectionName);
 		}
+
+		// Read bundles from Processes.conf
+		auto bundlesSections = (*this->sc)["Processes"]->getSections("Processes.Bundles", NULL);
+		for (auto bundleName : (*bundlesSections))
+		{
+			vector<string> processList = (*this->sc)["Processes"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
+			for (string process : processList)
+			{
+				this->bundlesMap[bundleName].push_back(stoi(process));
+			}
+			cout << "PMControl: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size() << " processes." << endl;
+		}
 	}
 
 	void PMControl::initPlugin(qt_gui_cpp::PluginContext& context)
@@ -110,7 +122,7 @@ namespace rqt_pm_control
 			if (this->pmRegistry->getRobotName(psts.senderId, pmName))
 			{
 				cout << "PMControl: Create new ControlledProcessManager with ID " << psts.senderId << " and host name " << pmName << "!" << endl;
-				controlledPM = new ControlledProcessManager(pmName, msgTimeOut, psts.senderId, this->pmRegistry);
+				controlledPM = new ControlledProcessManager(pmName, msgTimeOut, psts.senderId, this->pmRegistry, this->bundlesMap);
 				this->processManagersMap.emplace(psts.senderId, controlledPM);
 			}
 			else

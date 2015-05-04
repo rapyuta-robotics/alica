@@ -13,8 +13,8 @@
 namespace rqt_pm_control
 {
 
-	ControlledProcessManager::ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, supplementary::RobotExecutableRegistry* pmRegistry) :
-			name(name), processManagerId(processManagerId), msgTimeOut(msgTimeOut), pmRegistry(pmRegistry), parentHBoxLayout(parentHBoxLayout)
+	ControlledProcessManager::ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap) :
+			name(name), processManagerId(processManagerId), msgTimeOut(msgTimeOut), pmRegistry(pmRegistry), parentHBoxLayout(parentHBoxLayout), bundlesMap(bundlesMap)
 	{
 
 	}
@@ -46,7 +46,7 @@ namespace rqt_pm_control
 				if (this->pmRegistry->getRobotName(processStat.robotId, robotName))
 				{
 					cout << "PMControl: Create new ControlledRobot with ID " << processStat.robotId << " and robot name " << robotName << "!" << endl;
-					controlledRobot = new ControlledRobot(this->name,  this->msgTimeOut, this->pmRegistry, robotName, processStat.robotId);
+					controlledRobot = new ControlledRobot(this->name,  this->msgTimeOut, this->pmRegistry, this->bundlesMap, robotName, processStat.robotId);
 					this->controlledRobotsMap.emplace(processStat.robotId, controlledRobot);
 				}
 				else

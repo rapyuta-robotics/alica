@@ -9,11 +9,12 @@
 #include <rqt_pm_control/ControlledExecutable.h>
 #include <RobotExecutableRegistry.h>
 #include <ui_RobotProcessesWidget.h>
+#include <limits.h>
 
 namespace rqt_pm_control
 {
-	ControlledRobot::ControlledRobot(string pmName, chrono::duration<double> msgTimeOut, supplementary::RobotExecutableRegistry* pmRegistry, string robotName, int robotId) :
-			RobotMetaData(robotName, robotId), pmName(pmName), pmRegistry(pmRegistry), msgTimeOut(msgTimeOut), robotProcessesQFrame(nullptr), _robotProcessesWidget(nullptr), parentHBoxLayout(nullptr)
+	ControlledRobot::ControlledRobot(string pmName, chrono::duration<double> msgTimeOut, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap, string robotName, int robotId) :
+			RobotMetaData(robotName, robotId), pmName(pmName), pmRegistry(pmRegistry), msgTimeOut(msgTimeOut), robotProcessesQFrame(nullptr), _robotProcessesWidget(nullptr), parentHBoxLayout(nullptr), bundlesMap(bundlesMap)
 	{
 
 	}
@@ -68,23 +69,26 @@ namespace rqt_pm_control
 			this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
 			this->parentHBoxLayout->insertWidget(0, robotProcessesQFrame);
 			this->_robotProcessesWidget->robotHostLabel->setText(QString(string(this->name + " on " + this->pmName).c_str()));
+
+			QObject::connect(this->_robotProcessesWidget->bundleComboBox, SIGNAL(activated(QString)), this, SLOT(updateBundles(QString)));
+
+			// enter bundles in combo box
+			for (auto bundleEntry : this->bundlesMap)
+			{
+				this->_robotProcessesWidget->bundleComboBox->insertItem(INT_MAX, QString(bundleEntry.first.c_str()), QVariant(bundleEntry.first.c_str()));
+			}
 		}
 
 		for (auto controlledExecEntry : this->controlledExecMap)
 		{
-			if ((now - controlledExecEntry.second->timeLastMsgReceived) > this->msgTimeOut)
-			{ // time is over, erase controlled exec
-
-				cout << "ControlledExec: Erasing executable " << controlledExecEntry.second->name << ", of robot " << this->name << ", from GUI!" << endl;
-				this->controlledExecMap.erase(controlledExecEntry.first);
-				delete controlledExecEntry.second;
-			}
-			else
-			{ // message arrived before timeout, update its GUI
-
-				controlledExecEntry.second->updateGUI(this->_robotProcessesWidget);
-			}
+			// TODO check if bundle selection have been changed and updated the GUI accordingly
+			controlledExecEntry.second->updateGUI(this->_robotProcessesWidget);
 		}
+	}
+
+	void ControlledRobot::updateBundles(QString text)
+	{
+		cout << "ControlledRobot: updateBundles called. Param test is '" << text.toStdString() << "'" << endl;
 	}
 
 } /* namespace rqt_pm_control */

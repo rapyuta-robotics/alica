@@ -48,7 +48,7 @@ namespace rqt_pm_control
 			this->processWidget = new QWidget();
 			this->_processWidget = new Ui::ProcessWidget();
 			this->_processWidget->setupUi(this->processWidget);
-			this->parentRobotProcWidget->verticalLayout->insertWidget(2, processWidget);
+			//this->parentRobotProcWidget->verticalLayout->insertWidget(2, processWidget);
 			this->_processWidget->processName->setText(QString(this->name.c_str()));
 		}
 
@@ -56,6 +56,24 @@ namespace rqt_pm_control
 		QString memString = "M: " + QString::number(this->memory) + "MB";
 		this->_processWidget->cpuState->setText(cpuString);
 		this->_processWidget->memState->setText(memString);
+		switch (this->state)
+		{
+			case 'R': // running
+			case 'S': // interruptable sleeping
+			case 'D': // uninterruptable sleeping
+			case 'W': // paging
+				this->_processWidget->checkBox->setCheckable(true);
+				break;
+			case 'Z': // zombie
+			case 'T': // traced, or stapped
+				this->_processWidget->checkBox->setCheckable(false);
+				break;
+			default :
+				cout << "ControlledExec: Unknown process state '" <<  this->state << "' encountered!" << endl;
+				this->_processWidget->checkBox->setCheckable(false);
+				break;
+		}
+
 		// TODO: Running State, parameters, ...
 	}
 

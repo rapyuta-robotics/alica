@@ -29,7 +29,7 @@ namespace rqt_pm_control
 	class ControlledProcessManager
 	{
 	public:
-		ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, supplementary::RobotExecutableRegistry* pmRegistry);
+		ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap);
 		virtual ~ControlledProcessManager();
 
 		void updateGUI(QHBoxLayout* parentHBoxLayout);
@@ -43,6 +43,7 @@ namespace rqt_pm_control
 		map<int, ControlledRobot*> controlledRobotsMap; /* < The robots, which are controlled by this process manager */
 		chrono::duration<double> msgTimeOut;
 		supplementary::RobotExecutableRegistry* pmRegistry;
+		map<string, vector<int>> &bundlesMap;
 		QHBoxLayout* parentHBoxLayout;
 
 	};

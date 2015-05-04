@@ -11,6 +11,7 @@
 #include <chrono>
 
 #include <RobotMetaData.h>
+#include <QObject>
 #include <process_manager/ProcessStats.h>
 #include <process_manager/ProcessStat.h>
 #include "QHBoxLayout"
@@ -28,10 +29,12 @@ namespace rqt_pm_control
 {
 	class ControlledExecutable;
 
-	class ControlledRobot : public supplementary::RobotMetaData
+	class ControlledRobot : public QObject, public supplementary::RobotMetaData
 	{
+		Q_OBJECT
+
 	public:
-		ControlledRobot(string pmName, chrono::duration<double> msgTimeOut, supplementary::RobotExecutableRegistry* pmRegistry,
+		ControlledRobot(string pmName, chrono::duration<double> msgTimeOut, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap,
 						string robotName, int robotId);
 		virtual ~ControlledRobot();
 
@@ -43,9 +46,14 @@ namespace rqt_pm_control
 		map<int, ControlledExecutable*> controlledExecMap;
 		QFrame* robotProcessesQFrame; /* < The widget, used to initialise the RobotProcessesWidget */
 
+	public Q_SLOTS:
+		void updateBundles(QString text);
+
 	private:
 
 		supplementary::RobotExecutableRegistry* pmRegistry;
+		map<string, vector<int>> &bundlesMap;
+		string selectedBundle;
 		string pmName;
 		Ui::RobotProcessesWidget* _robotProcessesWidget;
 		QHBoxLayout* parentHBoxLayout;
