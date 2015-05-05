@@ -17,7 +17,7 @@ namespace rqt_pm_control
 	{
 		setObjectName("PMControl");
 		rosNode = new ros::NodeHandle();
-		spinner = new ros::AsyncSpinner(4);
+		//spinner = new ros::AsyncSpinner(4);
 
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->msgTimeOut = chrono::duration<double>((*this->sc)["PMControl"]->get<unsigned long>("timeLastMsgReceivedTimeOut", NULL));
@@ -69,7 +69,7 @@ namespace rqt_pm_control
 		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &PMControl::handleProcessStats,
 												(PMControl*)this);
 		processCommandPub = rosNode->advertise<process_manager::ProcessCommand>("/process_manager/ProcessCommand", 10);
-		spinner->start();
+		//spinner->start();
 
 		// Initialise the GUI refresh timer
 		this->guiUpdateTimer = new QTimer();
@@ -85,6 +85,7 @@ namespace rqt_pm_control
 	 */
 	void PMControl::updateGUI()
 	{
+		ros::spinOnce();
 		chrono::system_clock::time_point now = chrono::system_clock::now();
 		for (auto processManagerEntry : this->processManagersMap)
 		{
@@ -98,7 +99,7 @@ namespace rqt_pm_control
 			else
 			{ // message arrived before timeout, update its GUI
 
-				processManagerEntry.second->updateGUI(this->ui_.pmHorizontalLayout);
+				processManagerEntry.second->updateGUI();
 			}
 		}
 	}
@@ -122,7 +123,7 @@ namespace rqt_pm_control
 			if (this->pmRegistry->getRobotName(psts.senderId, pmName))
 			{
 				cout << "PMControl: Create new ControlledProcessManager with ID " << psts.senderId << " and host name " << pmName << "!" << endl;
-				controlledPM = new ControlledProcessManager(pmName, msgTimeOut, psts.senderId, this->pmRegistry, this->bundlesMap);
+				controlledPM = new ControlledProcessManager(pmName, msgTimeOut, psts.senderId, this->ui_.pmHorizontalLayout, this->pmRegistry, this->bundlesMap, &this->processCommandPub);
 				this->processManagersMap.emplace(psts.senderId, controlledPM);
 			}
 			else
@@ -132,7 +133,7 @@ namespace rqt_pm_control
 			}
 		}
 
-		controlledPM->handleProcessStats(psts);
+		controlledPM->handleProcessStats(psts, this->guiUpdateTimer->thread());
 
 	}
 

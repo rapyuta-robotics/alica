@@ -25,6 +25,10 @@ namespace supplementary{
 	class RobotExecutableRegistry;
 }
 
+namespace ros{
+	class Publisher;
+}
+
 namespace rqt_pm_control
 {
 	class ControlledExecutable;
@@ -34,13 +38,14 @@ namespace rqt_pm_control
 		Q_OBJECT
 
 	public:
-		ControlledRobot(string pmName, chrono::duration<double> msgTimeOut, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap,
-						string robotName, int robotId);
+		ControlledRobot(string pmName, chrono::duration<double> msgTimeOut, QHBoxLayout* parentHBoxLayout, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap,
+						string robotName, int robotId, ros::Publisher* processCommandPub);
 		virtual ~ControlledRobot();
+		void init();
 
 		void handleProcessStat(process_manager::ProcessStat ps);
 
-		void updateGUI(QHBoxLayout* parentHBoxLayout);
+		void updateGUI();
 
 		chrono::system_clock::time_point timeLastMsgReceived; /* < the last time a message was received for this robot */
 		map<int, ControlledExecutable*> controlledExecMap;
@@ -48,9 +53,11 @@ namespace rqt_pm_control
 
 	public Q_SLOTS:
 		void updateBundles(QString text);
+		void handleProcessCheckBoxChecked(int newState, int execId);
 
 	private:
 
+		bool initialsed;
 		supplementary::RobotExecutableRegistry* pmRegistry;
 		map<string, vector<int>> &bundlesMap;
 		string selectedBundle;
@@ -58,6 +65,8 @@ namespace rqt_pm_control
 		Ui::RobotProcessesWidget* _robotProcessesWidget;
 		QHBoxLayout* parentHBoxLayout;
 		chrono::duration<double> msgTimeOut;
+
+		ros::Publisher* processCommandPub;
 
 	};
 

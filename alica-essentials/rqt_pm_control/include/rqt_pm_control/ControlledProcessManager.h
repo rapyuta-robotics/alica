@@ -21,6 +21,11 @@ namespace supplementary
 	class RobotExecutableRegistry;
 }
 
+namespace ros
+{
+	class Publisher;
+}
+
 namespace rqt_pm_control
 {
 	class ControlledRobot;
@@ -29,11 +34,11 @@ namespace rqt_pm_control
 	class ControlledProcessManager
 	{
 	public:
-		ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap);
+		ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, QHBoxLayout* parentHBoxLayout, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap, ros::Publisher* processCommandPub);
 		virtual ~ControlledProcessManager();
 
-		void updateGUI(QHBoxLayout* parentHBoxLayout);
-		void handleProcessStats(process_manager::ProcessStats psts);
+		void updateGUI();
+		void handleProcessStats(process_manager::ProcessStats psts, QThread* thread);
 
 		chrono::system_clock::time_point timeLastMsgReceived;
 		int processManagerId;
@@ -45,6 +50,8 @@ namespace rqt_pm_control
 		supplementary::RobotExecutableRegistry* pmRegistry;
 		map<string, vector<int>> &bundlesMap;
 		QHBoxLayout* parentHBoxLayout;
+
+		ros::Publisher* processCommandPub;
 
 	};
 

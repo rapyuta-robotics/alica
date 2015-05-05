@@ -22,11 +22,15 @@ namespace Ui
 namespace rqt_pm_control
 {
 
-	class ControlledExecutable : public supplementary::ExecutableMetaData
+	class ControlledExecutable : public QObject, public supplementary::ExecutableMetaData
 	{
+
+		Q_OBJECT
+
 	public:
 		ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName);
 		virtual ~ControlledExecutable();
+		void init(Ui::RobotProcessesWidget* parentRobotProcWidget);
 
 		void handleStat(process_manager::ProcessStat ps);
 		void updateGUI(Ui::RobotProcessesWidget* parentRobotProcWidget);
@@ -41,7 +45,14 @@ namespace rqt_pm_control
 		QWidget* processWidget;
 		Ui::ProcessWidget* _processWidget;
 
+	public Q_SLOT:
+		void handleCheckBoxChecked(int);
+
+	public Q_SIGNAL:
+		void stateChanged(int, int); /* < first int is newState, second int is execId */
+
 	private:
+		bool initialised;
 		chrono::duration<double> msgTimeOut;
 		Ui::RobotProcessesWidget* parentRobotProcWidget;
 

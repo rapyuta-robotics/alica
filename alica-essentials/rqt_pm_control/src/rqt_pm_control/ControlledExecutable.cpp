@@ -8,12 +8,14 @@
 #include "rqt_pm_control/ControlledExecutable.h"
 #include "ui_ProcessWidget.h"
 #include "ui_RobotProcessesWidget.h"
+#include <QThread>
 
 namespace rqt_pm_control
 {
 
 	ControlledExecutable::ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName) :
-			ExecutableMetaData(execName, execId, mode, defaultParams, absExecName), memory(0), state('X'), cpu(0), _processWidget(nullptr), processWidget(nullptr), parentRobotProcWidget(nullptr)
+			ExecutableMetaData(execName, execId, mode, defaultParams, absExecName), memory(0), state('U'), cpu(0), _processWidget(nullptr), processWidget(
+					nullptr), parentRobotProcWidget(nullptr), initialised(false)
 	{
 
 	}
@@ -23,6 +25,19 @@ namespace rqt_pm_control
 		this->parentRobotProcWidget->verticalLayout->removeWidget(processWidget);
 		delete _processWidget;
 		delete processWidget;
+	}
+
+	void ControlledExecutable::init(Ui::RobotProcessesWidget* parentRobotProcWidget)
+	{
+		this->parentRobotProcWidget = parentRobotProcWidget;
+		this->processWidget = new QWidget();
+		this->_processWidget = new Ui::ProcessWidget();
+		this->_processWidget->setupUi(this->processWidget);
+		this->parentRobotProcWidget->verticalLayout->insertWidget(2, processWidget);
+		this->_processWidget->processName->setText(QString(this->name.c_str()));
+		QObject::connect(this->_processWidget->checkBox, SIGNAL(stateChanged(int)), this, SLOT(handleCheckBoxChecked(int)));
+		this->processWidget->show();
+		this->initialised = true;
 	}
 
 	/**
@@ -42,39 +57,43 @@ namespace rqt_pm_control
 
 	void ControlledExecutable::updateGUI(Ui::RobotProcessesWidget* parentRobotProcWidget)
 	{
-		if (this->parentRobotProcWidget == nullptr)
+		if (!this->initialised)
 		{
-			this->parentRobotProcWidget = parentRobotProcWidget;
-			this->processWidget = new QWidget();
-			this->_processWidget = new Ui::ProcessWidget();
-			this->_processWidget->setupUi(this->processWidget);
-			//this->parentRobotProcWidget->verticalLayout->insertWidget(2, processWidget);
-			this->_processWidget->processName->setText(QString(this->name.c_str()));
+			this->init(parentRobotProcWidget);
 		}
 
 		QString cpuString = "C: " + QString::number(this->cpu) + "%";
 		QString memString = "M: " + QString::number(this->memory) + "MB";
 		this->_processWidget->cpuState->setText(cpuString);
 		this->_processWidget->memState->setText(memString);
-		switch (this->state)
+		/*switch (this->state)
 		{
 			case 'R': // running
 			case 'S': // interruptable sleeping
 			case 'D': // uninterruptable sleeping
 			case 'W': // paging
-				this->_processWidget->checkBox->setCheckable(true);
+				this->_processWidget->checkBox->setChecked(true);
 				break;
 			case 'Z': // zombie
-			case 'T': // traced, or stapped
-				this->_processWidget->checkBox->setCheckable(false);
+			case 'T': // traced, or stopped
+				this->_processWidget->checkBox->setChecked(false);
 				break;
-			default :
-				cout << "ControlledExec: Unknown process state '" <<  this->state << "' encountered!" << endl;
-				this->_processWidget->checkBox->setCheckable(false);
+			case 'U':
+				this->_processWidget->checkBox->setChecked(false);
 				break;
-		}
+			default:
+				cout << "ControlledExec: Unknown process state '" << this->state << "' encountered!" << endl;
+				this->_processWidget->checkBox->setChecked(false);
+				break;
+		}*/
 
 		// TODO: Running State, parameters, ...
+	}
+
+	void ControlledExecutable::handleCheckBoxChecked(int newState)
+	{
+		cout << "ControlledExec: Checked CheckBox from executable " << this->name << " new State is " << newState << endl;
+		Q_EMIT stateChanged(newState, this->id);
 	}
 
 } /* namespace rqt_pm_control */

@@ -13,8 +13,11 @@
 namespace rqt_pm_control
 {
 
-	ControlledProcessManager::ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap) :
-			name(name), processManagerId(processManagerId), msgTimeOut(msgTimeOut), pmRegistry(pmRegistry), parentHBoxLayout(parentHBoxLayout), bundlesMap(bundlesMap)
+	ControlledProcessManager::ControlledProcessManager(string name, chrono::duration<double> msgTimeOut, int processManagerId,
+														QHBoxLayout* parentHBoxLayout, supplementary::RobotExecutableRegistry* pmRegistry,
+														map<string, vector<int>> &bundlesMap, ros::Publisher* processCommandPub) :
+			name(name), processManagerId(processManagerId), msgTimeOut(msgTimeOut), pmRegistry(pmRegistry), parentHBoxLayout(parentHBoxLayout), bundlesMap(
+					bundlesMap), processCommandPub(processCommandPub)
 	{
 
 	}
@@ -27,7 +30,7 @@ namespace rqt_pm_control
 		}
 	}
 
-	void ControlledProcessManager::handleProcessStats(process_manager::ProcessStats psts)
+	void ControlledProcessManager::handleProcessStats(process_manager::ProcessStats psts, QThread* thread)
 	{
 		this->timeLastMsgReceived = chrono::system_clock::now();
 		//cout << "CPMan: Set last message time to " << this->timeLastMsgReceived.time_since_epoch().count() << endl;
@@ -46,7 +49,9 @@ namespace rqt_pm_control
 				if (this->pmRegistry->getRobotName(processStat.robotId, robotName))
 				{
 					cout << "PMControl: Create new ControlledRobot with ID " << processStat.robotId << " and robot name " << robotName << "!" << endl;
-					controlledRobot = new ControlledRobot(this->name,  this->msgTimeOut, this->pmRegistry, this->bundlesMap, robotName, processStat.robotId);
+					controlledRobot = new ControlledRobot(this->name, this->msgTimeOut, parentHBoxLayout, this->pmRegistry, this->bundlesMap,
+															robotName, processStat.robotId, this->processCommandPub);
+					controlledRobot->moveToThread(thread);
 					this->controlledRobotsMap.emplace(processStat.robotId, controlledRobot);
 				}
 				else
@@ -61,27 +66,24 @@ namespace rqt_pm_control
 		}
 	}
 
-	void ControlledProcessManager::updateGUI(QHBoxLayout* parentHBoxLayout)
+	void ControlledProcessManager::updateGUI()
 	{
 		chrono::system_clock::time_point now = chrono::system_clock::now();
-		if (this->parentHBoxLayout != nullptr)
-		{
-			this->parentHBoxLayout = parentHBoxLayout;
-		}
 
 		for (auto controlledRobotEntry : this->controlledRobotsMap)
 		{
 			if ((now - controlledRobotEntry.second->timeLastMsgReceived) > this->msgTimeOut)
 			{ // time is over, erase controlled robot
 
-				cout << "ControlledPM: Erasing " << controlledRobotEntry.second->name << ", controlled by process manager " << this->name << " (" << this->processManagerId << ") from GUI!" << endl;
+				cout << "ControlledPM: Erasing " << controlledRobotEntry.second->name << ", controlled by process manager " << this->name << " ("
+						<< this->processManagerId << ") from GUI!" << endl;
 				this->controlledRobotsMap.erase(controlledRobotEntry.first);
 				delete controlledRobotEntry.second;
 			}
 			else
 			{ // message arrived before timeout, update its GUI
 
-				controlledRobotEntry.second->updateGUI(parentHBoxLayout);
+				controlledRobotEntry.second->updateGUI();
 			}
 		}
 	}

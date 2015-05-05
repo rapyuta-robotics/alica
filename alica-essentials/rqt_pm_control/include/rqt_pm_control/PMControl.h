@@ -50,7 +50,7 @@ namespace rqt_pm_control
 
 	private:
 		ros::NodeHandle* rosNode;
-		ros::AsyncSpinner* spinner;
+		//ros::AsyncSpinner* spinner;
 		ros::Subscriber processStateSub;
 		ros::Publisher processCommandPub;
 
