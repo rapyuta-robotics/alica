@@ -35,7 +35,7 @@ namespace rqt_pm_control
 		this->_processWidget->setupUi(this->processWidget);
 		this->parentRobotProcWidget->verticalLayout->insertWidget(2, processWidget);
 		this->_processWidget->processName->setText(QString(this->name.c_str()));
-		QObject::connect(this->_processWidget->checkBox, SIGNAL(stateChanged(int)), this, SLOT(handleCheckBoxChecked(int)));
+		QObject::connect(this->_processWidget->checkBox, SIGNAL(stateChanged(int)), this, SLOT(handleCheckBoxStateChanged(int)), Qt::DirectConnection);
 		this->processWidget->show();
 		this->initialised = true;
 	}
@@ -90,10 +90,10 @@ namespace rqt_pm_control
 		// TODO: Running State, parameters, ...
 	}
 
-	void ControlledExecutable::handleCheckBoxChecked(int newState)
+	void ControlledExecutable::handleCheckBoxStateChanged(int newState)
 	{
 		cout << "ControlledExec: Checked CheckBox from executable " << this->name << " new State is " << newState << endl;
-		Q_EMIT stateChanged(newState, this->id);
+		Q_EMIT processCheckBoxStateChanged(newState, this->id);
 	}
 
 } /* namespace rqt_pm_control */

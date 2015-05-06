@@ -57,7 +57,7 @@ namespace rqt_pm_control
 
 		for (auto controlledExecMapEntry : this->controlledExecMap)
 		{
-			QObject::connect(controlledExecMapEntry.second, SIGNAL(stateChanged(int, int)), this, SLOT(handleProcessCheckBoxChecked(int,int)));
+			QObject::connect(controlledExecMapEntry.second, SIGNAL(processCheckBoxStateChanged(int, int)), this, SLOT(handleProcessCheckBoxStateChanged(int,int)), Qt::DirectConnection);
 		}
 
 		this->initialsed = true;
@@ -153,7 +153,7 @@ namespace rqt_pm_control
 
 	}
 
-	void ControlledRobot::handleProcessCheckBoxChecked(int newState, int execId)
+	void ControlledRobot::handleProcessCheckBoxStateChanged(int newState, int execId)
 	{
 		process_manager::ProcessCommand pc;
 		pc.receiverId = this->id;

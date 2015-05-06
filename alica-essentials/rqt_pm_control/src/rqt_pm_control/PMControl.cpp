@@ -85,7 +85,7 @@ namespace rqt_pm_control
 	 */
 	void PMControl::updateGUI()
 	{
-		ros::spinOnce();
+		//ros::spinOnce();
 		chrono::system_clock::time_point now = chrono::system_clock::now();
 		for (auto processManagerEntry : this->processManagersMap)
 		{

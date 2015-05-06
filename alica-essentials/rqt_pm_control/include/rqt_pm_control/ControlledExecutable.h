@@ -24,7 +24,6 @@ namespace rqt_pm_control
 
 	class ControlledExecutable : public QObject, public supplementary::ExecutableMetaData
 	{
-
 		Q_OBJECT
 
 	public:
@@ -45,11 +44,11 @@ namespace rqt_pm_control
 		QWidget* processWidget;
 		Ui::ProcessWidget* _processWidget;
 
-	public Q_SLOT:
-		void handleCheckBoxChecked(int);
+	public Q_SLOTS:
+		void handleCheckBoxStateChanged(int newState);
 
-	public Q_SIGNAL:
-		void stateChanged(int, int); /* < first int is newState, second int is execId */
+	Q_SIGNALS:
+		void processCheckBoxStateChanged(int, int); /* < first int is newState, second int is execId */
 
 	private:
 		bool initialised;

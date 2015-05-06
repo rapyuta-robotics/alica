@@ -436,17 +436,17 @@ namespace supplementary
 		string curFile = "/proc/" + processId + "/environ";
 		std::ifstream ifs(curFile, std::ifstream::in);
 		string robotEnvironment;
-		getline(ifs, robotEnvironment, '\0');
-		ifs.close();
 
-		if (robotEnvironment.substr(0, 6).compare("ROBOT=") != 0)
+		while (!getline(ifs, robotEnvironment, '\0').eof())
 		{
-			return this->ownHostname;
+			if (robotEnvironment.substr(0, 6).compare("ROBOT=") == 0)
+			{
+				return robotEnvironment.substr(6, 256);
+			}
 		}
-		else
-		{
-			return robotEnvironment.substr(6, 256);
-		}
+
+		ifs.close();
+		return this->ownHostname;
 	}
 
 	/**

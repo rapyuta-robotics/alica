@@ -53,7 +53,7 @@ namespace rqt_pm_control
 
 	public Q_SLOTS:
 		void updateBundles(QString text);
-		void handleProcessCheckBoxChecked(int newState, int execId);
+		void handleProcessCheckBoxStateChanged(int newState, int execId);
 
 	private:
 
