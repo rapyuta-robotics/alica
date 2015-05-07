@@ -12,16 +12,17 @@
 #include <limits.h>
 #include <process_manager/ProcessCommand.h>
 #include <ros/ros.h>
+#include "rqt_pm_control/ControlledProcessManager.h"
+#include "rqt_pm_control/PMControl.h"
 
 namespace rqt_pm_control
 {
-	ControlledRobot::ControlledRobot(string pmName, chrono::duration<double> msgTimeOut, QHBoxLayout* parentHBoxLayout,
-										supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap, string robotName,
-										int robotId, ros::Publisher* processCommandPub) :
-			RobotMetaData(robotName, robotId), pmName(pmName), pmRegistry(pmRegistry), msgTimeOut(msgTimeOut), robotProcessesQFrame(nullptr), _robotProcessesWidget(
-					nullptr), parentHBoxLayout(parentHBoxLayout), bundlesMap(bundlesMap), initialsed(false), processCommandPub(processCommandPub)
+	ControlledRobot::ControlledRobot(string robotName, int robotId, ControlledProcessManager* parentProcessManager) :
+			RobotMetaData(robotName, robotId), parentProcessManager(parentProcessManager), robotProcessesQFrame(new QFrame()), _robotProcessesWidget(
+					new Ui::RobotProcessesWidget())
 	{
-		const vector<supplementary::ExecutableMetaData*>& execMetaDatas = this->pmRegistry->getExecutables();
+		// construct all known executables
+		const vector<supplementary::ExecutableMetaData*>& execMetaDatas = this->parentProcessManager->parentPMControl->pmRegistry->getExecutables();
 		ControlledExecutable* controlledExec;
 		for (auto execMetaDataEntry : execMetaDatas)
 		{
@@ -30,43 +31,32 @@ namespace rqt_pm_control
 			this->controlledExecMap.emplace(execMetaDataEntry->id, controlledExec);
 		}
 
-	}
-
-	ControlledRobot::~ControlledRobot()
-	{
-		this->parentHBoxLayout->removeWidget(robotProcessesQFrame);
-		delete _robotProcessesWidget;
-		delete robotProcessesQFrame;
-	}
-
-	void ControlledRobot::init()
-	{
-		this->robotProcessesQFrame = new QFrame();
-		this->_robotProcessesWidget = new Ui::RobotProcessesWidget();
+		// setup gui stuff
 		this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
-		this->parentHBoxLayout->insertWidget(0, robotProcessesQFrame);
-		this->_robotProcessesWidget->robotHostLabel->setText(QString(string(this->name + " on " + this->pmName).c_str()));
+		this->_robotProcessesWidget->robotHostLabel->setText(QString(string(this->name + " on " + this->parentProcessManager->name).c_str()));
 
 		QObject::connect(this->_robotProcessesWidget->bundleComboBox, SIGNAL(activated(QString)), this, SLOT(updateBundles(QString)));
 
 		// enter bundles in combo box
-		for (auto bundleEntry : this->bundlesMap)
+		for (auto bundleEntry : this->parentProcessManager->parentPMControl->bundlesMap)
 		{
 			this->_robotProcessesWidget->bundleComboBox->insertItem(INT_MAX, QString(bundleEntry.first.c_str()), QVariant(bundleEntry.first.c_str()));
 		}
+	}
 
-		for (auto controlledExecMapEntry : this->controlledExecMap)
+	ControlledRobot::~ControlledRobot()
+	{
+		delete _robotProcessesWidget;
+		delete robotProcessesQFrame;
+		for (auto execEntry : this->controlledExecMap)
 		{
-			QObject::connect(controlledExecMapEntry.second, SIGNAL(processCheckBoxStateChanged(int, int)), this, SLOT(handleProcessCheckBoxStateChanged(int,int)), Qt::DirectConnection);
+			delete execEntry.second;
 		}
-
-		this->initialsed = true;
 	}
 
 	void ControlledRobot::handleProcessStat(process_manager::ProcessStat ps)
 	{
 		this->timeLastMsgReceived = chrono::system_clock::now();
-		//cout << "ControlledRobot: Set last message time to " << this->timeLastMsgReceived.time_since_epoch().count() << endl;
 
 		ControlledExecutable* controlledExec;
 		auto controlledExecEntry = this->controlledExecMap.find(ps.processKey);
@@ -86,16 +76,10 @@ namespace rqt_pm_control
 
 	void ControlledRobot::updateGUI()
 	{
-		if (!initialsed)
-		{
-			this->init();
-		}
-
 		chrono::system_clock::time_point now = chrono::system_clock::now();
 
 		for (auto controlledExecEntry : this->controlledExecMap)
 		{
-			// TODO check if bundle selection have been changed and updated the GUI accordingly
 			controlledExecEntry.second->updateGUI(this->_robotProcessesWidget);
 		}
 	}
@@ -138,8 +122,9 @@ namespace rqt_pm_control
 		{
 			controlledExecMapEntry.second->processWidget->hide();
 		}
-		auto bundleMapEntry = this->bundlesMap.find(text.toStdString());
-		if (bundleMapEntry != this->bundlesMap.end())
+
+		auto bundleMapEntry = this->parentProcessManager->parentPMControl->bundlesMap.find(text.toStdString());
+		if (bundleMapEntry != this->parentProcessManager->parentPMControl->bundlesMap.end())
 		{
 			for (auto processKey : bundleMapEntry->second)
 			{
@@ -153,27 +138,8 @@ namespace rqt_pm_control
 
 	}
 
-	void ControlledRobot::handleProcessCheckBoxStateChanged(int newState, int execId)
+	void ControlledRobot::sendProcessCommand(vector<int> execIds, int newState)
 	{
-		process_manager::ProcessCommand pc;
-		pc.receiverId = this->id;
-		pc.robotIds.push_back(this->id);
-		pc.processKeys.push_back(execId);
-		switch (newState)
-		{
-			case Qt::CheckState::Checked:
-				pc.cmd = process_manager::ProcessCommand::START;
-				break;
-			case Qt::CheckState::PartiallyChecked:
-				cerr << "ControlledExecutable: What does it mean, that a process is partially checked?!" << endl;
-				break;
-			case Qt::CheckState::Unchecked:
-				pc.cmd = process_manager::ProcessCommand::STOP;
-				break;
-			default:
-				cerr << "ControlledExecutable: Unknown new state of a checkbox!" << endl;
-		}
-
-		this->processCommandPub->publish(pc);
+		this->parentProcessManager->sendProcessCommand(vector<int> {this->id}, execIds, newState);
 	}
 } /* namespace rqt_pm_control */

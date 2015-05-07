@@ -21,6 +21,7 @@ namespace Ui
 
 namespace rqt_pm_control
 {
+	class ControlledRobot;
 
 	class ControlledExecutable : public QObject, public supplementary::ExecutableMetaData
 	{
@@ -54,6 +55,8 @@ namespace rqt_pm_control
 		bool initialised;
 		chrono::duration<double> msgTimeOut;
 		Ui::RobotProcessesWidget* parentRobotProcWidget;
+
+		ControlledRobot* parentRobot;
 
 	};
 

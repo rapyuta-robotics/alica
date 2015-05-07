@@ -61,7 +61,7 @@ namespace supplementary
 		{
 			if (!FileSystem::createDirectory(logPath))
 			{
-				cerr << "SC: Could not create log directory: " << logPath << endl;
+				cerr << "SC: Could not create log directory: \"" << logPath << "\"" << endl;
 			}
 		}
 
@@ -79,10 +79,10 @@ namespace supplementary
 			hostname = envname;
 		}
 
-		cout << "SC: Root:          " << rootPath << endl;
-		cout << "SC: ConfigRoot:    " << configPath << endl;
-		cout << "SC: Hostname:      " << hostname << endl;
-		cout << "SC: Loggin Folder: " << logPath << endl;
+		cout << "SC: Root:           \"" << rootPath << "\"" << endl;
+		cout << "SC: ConfigRoot:     \"" << configPath << "\"" << endl;
+		cout << "SC: Hostname:       \"" << hostname << "\"" << endl;
+		cout << "SC: Logging Folder: \"" << logPath << "\"" << endl;
 	}
 
 	void SystemConfig::shutdown()

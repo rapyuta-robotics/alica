@@ -13,11 +13,10 @@ namespace rqt_pm_control
 {
 
 	PMControl::PMControl() :
-			rqt_gui_cpp::Plugin(), widget_(0)
+			rqt_gui_cpp::Plugin(), widget_(0), guiUpdateTimer(nullptr)
 	{
 		setObjectName("PMControl");
 		rosNode = new ros::NodeHandle();
-		//spinner = new ros::AsyncSpinner(4);
 
 		this->sc = supplementary::SystemConfig::getInstance();
 		this->msgTimeOut = chrono::duration<double>((*this->sc)["PMControl"]->get<unsigned long>("timeLastMsgReceivedTimeOut", NULL));
@@ -66,22 +65,20 @@ namespace rqt_pm_control
 		context.addWidget(widget_);
 
 		// Initialise the ROS Communication
-		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &PMControl::handleProcessStats,
-												(PMControl*)this);
+		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &PMControl::receiveProcessStats, (PMControl*)this);
 		processCommandPub = rosNode->advertise<process_manager::ProcessCommand>("/process_manager/ProcessCommand", 10);
-		//spinner->start();
 
 		// Initialise the GUI refresh timer
 		this->guiUpdateTimer = new QTimer();
-		QObject::connect(guiUpdateTimer, SIGNAL(timeout()), this, SLOT(updateGUI()));
-		this->guiUpdateTimer->start(1000);
+		QObject::connect(guiUpdateTimer, SIGNAL(timeout()), this, SLOT(run()));
+		this->guiUpdateTimer->start(200);
 
 		//This makes segfaults to exceptions
 		segfaultdebug::init_segfault_exceptions();
 	}
 
 	/**
-	 * This method is repeatedly called by the guiUpdateTimer, in order to update the GUI.
+	 * Updates the GUI, after ROS process stat message have been processed.
 	 */
 	void PMControl::updateGUI()
 	{
@@ -92,7 +89,7 @@ namespace rqt_pm_control
 			if ((now - processManagerEntry.second->timeLastMsgReceived) > this->msgTimeOut)
 			{ // time is over, remove process manager
 
-				cout << "PMControl: Erase ControlledProcessManager with ID " << processManagerEntry.second->processManagerId << " from GUI!" << endl;
+				cout << "PMControl: Erase ControlledProcessManager with ID " << processManagerEntry.second->id << " from GUI!" << endl;
 				this->processManagersMap.erase(processManagerEntry.first);
 				delete processManagerEntry.second;
 			}
@@ -105,36 +102,104 @@ namespace rqt_pm_control
 	}
 
 	/**
-	 * The callback of the ROS subscriber
-	 * @param psts
+	 * Processes all queued ROS process stat messages.
 	 */
-	void PMControl::handleProcessStats(process_manager::ProcessStats psts)
+	void PMControl::handleProcessStats()
 	{
-		ControlledProcessManager* controlledPM;
-		auto pmEntry = this->processManagersMap.find(psts.senderId);
-		if (pmEntry != this->processManagersMap.end())
+		lock_guard<mutex> lck(msgQueueMutex);
+		while (!this->processStatMsgQueue.empty())
 		{
-			//cout << "PMControl: ControlledProcessManager with ID " << psts.senderId << " is already known!" << endl;
-			controlledPM = pmEntry->second;
+			// unqueue the ROS process stat message
+			process_manager::ProcessStats psts = processStatMsgQueue.front();
+			processStatMsgQueue.pop();
+
+			// get the corresponding process manager object
+			ControlledProcessManager* controlledPM = this->getControlledProcessManager(psts.senderId);
+			if (controlledPM != nullptr)
+			{
+				// hand the message to the process manager, in order to let him update his data structures
+				controlledPM->handleProcessStats(psts);
+			}
+		}
+	}
+
+	/**
+	 * If the process manager, corresponding to the given ID, is known, the process manager is returned. If the
+	 * ID does not match any known process manager, it searches in the process manager registry for an entry with the
+	 * given ID and creates the process manager accordingly. If the registry does not include an entry with the given ID,
+	 * an error message is printed and nullptr is returned.
+	 * @param processManagerId
+	 * @return The ControlledProcessManager object, corresponding to the given ID, or nullptr if nothing is found for the given ID.
+	 */
+	ControlledProcessManager* PMControl::getControlledProcessManager(int processManagerId)
+	{
+		auto pmEntry = this->processManagersMap.find(processManagerId);
+		if (pmEntry != this->processManagersMap.end())
+		{ // process manager is already known
+			return pmEntry->second;
 		}
 		else
-		{
+		{ // process manager is not known, so create a corresponding instance
 			string pmName;
-			if (this->pmRegistry->getRobotName(psts.senderId, pmName))
+			if (this->pmRegistry->getRobotName(processManagerId, pmName))
 			{
-				cout << "PMControl: Create new ControlledProcessManager with ID " << psts.senderId << " and host name " << pmName << "!" << endl;
-				controlledPM = new ControlledProcessManager(pmName, msgTimeOut, psts.senderId, this->ui_.pmHorizontalLayout, this->pmRegistry, this->bundlesMap, &this->processCommandPub);
-				this->processManagersMap.emplace(psts.senderId, controlledPM);
+				cout << "PMControl: Create new ControlledProcessManager with ID " << processManagerId << " and host name " << pmName << "!" << endl;
+				ControlledProcessManager* controlledPM = new ControlledProcessManager(pmName, processManagerId, this);
+				//msgTimeOut, this->ui_.pmHorizontalLayout, this->pmRegistry, this->bundlesMap, &this->processCommandPub);
+				this->processManagersMap.emplace(processManagerId, controlledPM);
+				return controlledPM;
 			}
 			else
 			{
-				cerr << "PMControl: Received message from unknown process manager with sender id " << psts.senderId << endl;
-				return;
+				cerr << "PMControl: Received message from unknown process manager with sender id " << processManagerId << endl;
+				return nullptr;
 			}
 		}
+	}
 
-		controlledPM->handleProcessStats(psts, this->guiUpdateTimer->thread());
+	/**
+	 * The callback of the ROS subscriber on ProcessStats messages.
+	 * @param psts
+	 */
+	void PMControl::receiveProcessStats(process_manager::ProcessStats psts)
+	{
+		lock_guard<mutex> lck(msgQueueMutex);
 
+		this->processStatMsgQueue.push(psts);
+	}
+
+	void PMControl::sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, int newState)
+	{
+		process_manager::ProcessCommand pc;
+		pc.receiverId = receiverId;
+		pc.robotIds = robotIds;
+		pc.processKeys = execIds;
+		switch (newState)
+		{
+			case Qt::CheckState::Checked:
+				pc.cmd = process_manager::ProcessCommand::START;
+				break;
+			case Qt::CheckState::Unchecked:
+				pc.cmd = process_manager::ProcessCommand::STOP;
+				break;
+			case Qt::CheckState::PartiallyChecked:
+				cerr << "PMControl: What does it mean, that a process is partially checked?!" << endl;
+				break;
+			default:
+				cerr << "PMControl: Unknown new state of a checkbox!" << endl;
+		}
+
+		this->processCommandPub.publish(pc);
+	}
+
+	/**
+	 * The worker method of PMControl. It processes the received ROS messages and afterwards updates the GUI.
+	 */
+	void PMControl::run()
+	{
+		handleProcessStats();
+
+		updateGUI();
 	}
 
 	void PMControl::shutdownPlugin()
@@ -148,8 +213,7 @@ namespace rqt_pm_control
 
 	}
 
-	void PMControl::restoreSettings(const qt_gui_cpp::Settings& plugin_settings,
-									const qt_gui_cpp::Settings& instance_settings)
+	void PMControl::restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings)
 	{
 
 	}
