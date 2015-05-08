@@ -18,6 +18,8 @@
 
 #include <queue>
 #include <mutex>
+#include <utility>
+#include <chrono>
 
 using namespace std;
 
@@ -46,12 +48,13 @@ namespace rqt_pm_control
 		virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
 		void sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, int newState);
+		void addRobot(QFrame* robot);
+		void removeRobot(QFrame* robot);
+
+		static chrono::duration<double> msgTimeOut;
 
 		Ui::PMControlWidget ui_;
-
 		QWidget* widget_;
-
-		chrono::duration<double> msgTimeOut;
 
 		supplementary::RobotExecutableRegistry* pmRegistry;
 		map<string, vector<int>> bundlesMap;
@@ -60,7 +63,7 @@ namespace rqt_pm_control
 		ros::NodeHandle* rosNode;
 		ros::Subscriber processStateSub;
 		ros::Publisher processCommandPub;
-		queue<process_manager::ProcessStats> processStatMsgQueue;
+		queue<pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
 		mutex msgQueueMutex;
 
 		supplementary::SystemConfig* sc;
@@ -70,15 +73,15 @@ namespace rqt_pm_control
 
 		void handleProcessStats();
 
-		void receiveProcessStats(process_manager::ProcessStats psts);
+		void receiveProcessStats(process_manager::ProcessStatsConstPtr psts);
 		ControlledProcessManager* getControlledProcessManager(int processManagerId);
 
-		void run();
+
 
 		QTimer* guiUpdateTimer;
 
 	public Q_SLOTS:
-
+		void run();
 		void updateGUI();
 	};
 

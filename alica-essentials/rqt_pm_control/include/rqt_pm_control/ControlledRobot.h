@@ -42,13 +42,15 @@ namespace rqt_pm_control
 		ControlledRobot(string robotName, int robotId, ControlledProcessManager* parentProcessManager);
 		virtual ~ControlledRobot();
 
-		void handleProcessStat(process_manager::ProcessStat ps);
+		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
 		void sendProcessCommand(vector<int> execIds, int newState);
-		void updateGUI();
+		void updateGUI(chrono::system_clock::time_point now);
+		void addExec(QWidget* exec);
+		void removeExec(QWidget* exec);
 
-		chrono::system_clock::time_point timeLastMsgReceived; /* < the last time a message was received for this robot */
-		map<int, ControlledExecutable*> controlledExecMap;
-		QFrame* robotProcessesQFrame; /* < The widget, used to initialise the RobotProcessesWidget */
+
+		chrono::system_clock::time_point timeLastMsgReceived; /**< the last time a message was received for this robot */
+		QFrame* robotProcessesQFrame; /**< The widget, used to initialise the RobotProcessesWidget */
 
 	public Q_SLOTS:
 		void updateBundles(QString text);
@@ -57,8 +59,9 @@ namespace rqt_pm_control
 
 		string selectedBundle;
 		Ui::RobotProcessesWidget* _robotProcessesWidget;
-
 		ControlledProcessManager* parentProcessManager;
+
+		map<int, ControlledExecutable*> controlledExecMap;
 
 	};
 

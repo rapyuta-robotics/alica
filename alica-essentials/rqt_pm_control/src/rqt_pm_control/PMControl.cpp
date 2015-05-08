@@ -12,6 +12,8 @@
 namespace rqt_pm_control
 {
 
+	chrono::duration<double> PMControl::msgTimeOut = chrono::duration<double>(0);
+
 	PMControl::PMControl() :
 			rqt_gui_cpp::Plugin(), widget_(0), guiUpdateTimer(nullptr)
 	{
@@ -19,7 +21,7 @@ namespace rqt_pm_control
 		rosNode = new ros::NodeHandle();
 
 		this->sc = supplementary::SystemConfig::getInstance();
-		this->msgTimeOut = chrono::duration<double>((*this->sc)["PMControl"]->get<unsigned long>("timeLastMsgReceivedTimeOut", NULL));
+		PMControl::msgTimeOut = chrono::duration<double>((*this->sc)["PMControl"]->get<unsigned long>("timeLastMsgReceivedTimeOut", NULL));
 		this->pmRegistry = new supplementary::RobotExecutableRegistry();
 
 		/* Initialise the registry data structure for better performance
@@ -78,27 +80,46 @@ namespace rqt_pm_control
 	}
 
 	/**
+	 * The worker method of PMControl. It processes the received ROS messages and afterwards updates the GUI.
+	 */
+	void PMControl::run()
+	{
+		handleProcessStats();
+
+		updateGUI();
+	}
+
+	/**
 	 * Updates the GUI, after ROS process stat message have been processed.
 	 */
 	void PMControl::updateGUI()
 	{
-		//ros::spinOnce();
 		chrono::system_clock::time_point now = chrono::system_clock::now();
 		for (auto processManagerEntry : this->processManagersMap)
 		{
-			if ((now - processManagerEntry.second->timeLastMsgReceived) > this->msgTimeOut)
+			if ((now - processManagerEntry.second->timeLastMsgReceived) > PMControl::msgTimeOut)
 			{ // time is over, remove process manager
 
-				cout << "PMControl: Erase ControlledProcessManager with ID " << processManagerEntry.second->id << " from GUI!" << endl;
+				cout << "PMControl: The process manager on " << processManagerEntry.second->name << "(ID: " << processManagerEntry.second->id << ") seems to be dead!" << endl;
 				this->processManagersMap.erase(processManagerEntry.first);
 				delete processManagerEntry.second;
 			}
 			else
 			{ // message arrived before timeout, update its GUI
 
-				processManagerEntry.second->updateGUI();
+				processManagerEntry.second->updateGUI(now);
 			}
 		}
+	}
+
+	void PMControl::addRobot(QFrame* robot)
+	{
+		this->ui_.pmHorizontalLayout->insertWidget(0, robot);
+	}
+
+	void PMControl::removeRobot(QFrame* robot)
+	{
+		this->ui_.pmHorizontalLayout->removeWidget(robot);
 	}
 
 	/**
@@ -110,15 +131,15 @@ namespace rqt_pm_control
 		while (!this->processStatMsgQueue.empty())
 		{
 			// unqueue the ROS process stat message
-			process_manager::ProcessStats psts = processStatMsgQueue.front();
+			auto timePstsPair = processStatMsgQueue.front();
 			processStatMsgQueue.pop();
 
 			// get the corresponding process manager object
-			ControlledProcessManager* controlledPM = this->getControlledProcessManager(psts.senderId);
+			ControlledProcessManager* controlledPM = this->getControlledProcessManager(timePstsPair.second->senderId);
 			if (controlledPM != nullptr)
 			{
 				// hand the message to the process manager, in order to let him update his data structures
-				controlledPM->handleProcessStats(psts);
+				controlledPM->handleProcessStats(timePstsPair);
 			}
 		}
 	}
@@ -161,11 +182,10 @@ namespace rqt_pm_control
 	 * The callback of the ROS subscriber on ProcessStats messages.
 	 * @param psts
 	 */
-	void PMControl::receiveProcessStats(process_manager::ProcessStats psts)
+	void PMControl::receiveProcessStats(process_manager::ProcessStatsConstPtr psts)
 	{
 		lock_guard<mutex> lck(msgQueueMutex);
-
-		this->processStatMsgQueue.push(psts);
+		this->processStatMsgQueue.emplace(chrono::system_clock::now(), psts);
 	}
 
 	void PMControl::sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, int newState)
@@ -190,16 +210,6 @@ namespace rqt_pm_control
 		}
 
 		this->processCommandPub.publish(pc);
-	}
-
-	/**
-	 * The worker method of PMControl. It processes the received ROS messages and afterwards updates the GUI.
-	 */
-	void PMControl::run()
-	{
-		handleProcessStats();
-
-		updateGUI();
 	}
 
 	void PMControl::shutdownPlugin()

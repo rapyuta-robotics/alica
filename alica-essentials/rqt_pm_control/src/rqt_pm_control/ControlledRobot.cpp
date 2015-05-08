@@ -21,16 +21,6 @@ namespace rqt_pm_control
 			RobotMetaData(robotName, robotId), parentProcessManager(parentProcessManager), robotProcessesQFrame(new QFrame()), _robotProcessesWidget(
 					new Ui::RobotProcessesWidget())
 	{
-		// construct all known executables
-		const vector<supplementary::ExecutableMetaData*>& execMetaDatas = this->parentProcessManager->parentPMControl->pmRegistry->getExecutables();
-		ControlledExecutable* controlledExec;
-		for (auto execMetaDataEntry : execMetaDatas)
-		{
-			controlledExec = new ControlledExecutable(execMetaDataEntry->name, execMetaDataEntry->id, execMetaDataEntry->mode,
-														execMetaDataEntry->defaultParams, execMetaDataEntry->absExecName);
-			this->controlledExecMap.emplace(execMetaDataEntry->id, controlledExec);
-		}
-
 		// setup gui stuff
 		this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
 		this->_robotProcessesWidget->robotHostLabel->setText(QString(string(this->name + " on " + this->parentProcessManager->name).c_str()));
@@ -42,6 +32,18 @@ namespace rqt_pm_control
 		{
 			this->_robotProcessesWidget->bundleComboBox->insertItem(INT_MAX, QString(bundleEntry.first.c_str()), QVariant(bundleEntry.first.c_str()));
 		}
+
+		// construct all known executables
+		const vector<supplementary::ExecutableMetaData*>& execMetaDatas = this->parentProcessManager->parentPMControl->pmRegistry->getExecutables();
+		ControlledExecutable* controlledExec;
+		for (auto execMetaDataEntry : execMetaDatas)
+		{
+			controlledExec = new ControlledExecutable(execMetaDataEntry->name, execMetaDataEntry->id, execMetaDataEntry->mode,
+														execMetaDataEntry->defaultParams, execMetaDataEntry->absExecName, this);
+			this->controlledExecMap.emplace(execMetaDataEntry->id, controlledExec);
+		}
+
+		this->parentProcessManager->addRobot(this->robotProcessesQFrame);
 	}
 
 	ControlledRobot::~ControlledRobot()
@@ -54,33 +56,28 @@ namespace rqt_pm_control
 		}
 	}
 
-	void ControlledRobot::handleProcessStat(process_manager::ProcessStat ps)
+	void ControlledRobot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps)
 	{
-		this->timeLastMsgReceived = chrono::system_clock::now();
-
-		ControlledExecutable* controlledExec;
+		this->timeLastMsgReceived = timeMsgReceived;
 		auto controlledExecEntry = this->controlledExecMap.find(ps.processKey);
 		if (controlledExecEntry != this->controlledExecMap.end())
 		{ // executable is already known
-			controlledExec = controlledExecEntry->second;
+
+			// update the statistics of the ControlledExecutable
+			controlledExecEntry->second->handleStat(timeMsgReceived, ps);
 		}
 		else
 		{ // executable is unknown
 			cerr << "ControlledRobot: Received processStat for unknown executable with process key " << ps.processKey << endl;
 			return;
 		}
-
-		// update the statistics of the ControlledExecutable
-		controlledExec->handleStat(ps);
 	}
 
-	void ControlledRobot::updateGUI()
+	void ControlledRobot::updateGUI(chrono::system_clock::time_point now)
 	{
-		chrono::system_clock::time_point now = chrono::system_clock::now();
-
 		for (auto controlledExecEntry : this->controlledExecMap)
 		{
-			controlledExecEntry.second->updateGUI(this->_robotProcessesWidget);
+			controlledExecEntry.second->updateGUI(now);
 		}
 	}
 
@@ -136,6 +133,16 @@ namespace rqt_pm_control
 			}
 		}
 
+	}
+
+	void ControlledRobot::addExec(QWidget* exec)
+	{
+		this->_robotProcessesWidget->verticalLayout->insertWidget(2, exec);
+	}
+
+	void ControlledRobot::removeExec(QWidget* exec)
+	{
+		this->_robotProcessesWidget->verticalLayout->removeWidget(exec);
 	}
 
 	void ControlledRobot::sendProcessCommand(vector<int> execIds, int newState)

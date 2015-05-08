@@ -8,10 +8,11 @@
 #ifndef SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDEXECUTABLE_H_
 #define SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDEXECUTABLE_H_
 
-#include <chrono>
 #include <ExecutableMetaData.h>
 #include <process_manager/ProcessStat.h>
 #include "QWidget"
+
+#include <chrono>
 
 namespace Ui
 {
@@ -28,17 +29,16 @@ namespace rqt_pm_control
 		Q_OBJECT
 
 	public:
-		ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName);
+		ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName, ControlledRobot* parentRobot);
 		virtual ~ControlledExecutable();
-		void init(Ui::RobotProcessesWidget* parentRobotProcWidget);
 
-		void handleStat(process_manager::ProcessStat ps);
-		void updateGUI(Ui::RobotProcessesWidget* parentRobotProcWidget);
+		void handleStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
+		void updateGUI(chrono::system_clock::time_point now);
 
 		chrono::system_clock::time_point timeLastMsgReceived; /* < last time a message was received for this executable */
 
 		string params;
-		char state; // The process state (zombie, running, etc)
+		char state; // The process state (zombie, running, etc.)
 		unsigned short cpu;
 		long int memory;
 
@@ -49,13 +49,9 @@ namespace rqt_pm_control
 		void handleCheckBoxStateChanged(int newState);
 
 	Q_SIGNALS:
-		void processCheckBoxStateChanged(int, int); /* < first int is newState, second int is execId */
+		void processCheckBoxStateChanged(int, int); /** < first int is newState, second int is execId */
 
 	private:
-		bool initialised;
-		chrono::duration<double> msgTimeOut;
-		Ui::RobotProcessesWidget* parentRobotProcWidget;
-
 		ControlledRobot* parentRobot;
 
 	};

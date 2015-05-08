@@ -28,16 +28,17 @@ namespace rqt_pm_control
 		}
 	}
 
-	void ControlledProcessManager::handleProcessStats(process_manager::ProcessStats psts)
+	void ControlledProcessManager::handleProcessStats(pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair)
 	{
-		for (auto processStat : psts.processStats)
+		this->timeLastMsgReceived = timePstsPair.first;
+		for (auto processStat : timePstsPair.second->processStats)
 		{
 			// get the corresponding controlled robot
 			ControlledRobot* controlledRobot = this->getControlledRobot(processStat.robotId);
 			if (controlledRobot != nullptr)
 			{
 				// call the controlled robot to update its corresponding process statistics.
-				controlledRobot->handleProcessStat(processStat);
+				controlledRobot->handleProcessStat(timePstsPair.first, processStat);
 			}
 		}
 	}
@@ -54,10 +55,9 @@ namespace rqt_pm_control
 			string robotName;
 			if (this->parentPMControl->pmRegistry->getRobotName(robotId, robotName))
 			{
-				cout << "PMControl: Create new ControlledRobot with ID " << robotId << " and robot name " << robotName << "!" << endl;
+				cout << "PMControl: Create new ControlledRobot " << robotName << "(ID: " << robotId << ")" << endl;
 
 				ControlledRobot* controlledRobot = new ControlledRobot(robotName, robotId, this);
-
 				this->controlledRobotsMap.emplace(robotId, controlledRobot);
 				return controlledRobot;
 			}
@@ -69,26 +69,33 @@ namespace rqt_pm_control
 		}
 	}
 
-	void ControlledProcessManager::updateGUI()
+	void ControlledProcessManager::updateGUI(chrono::system_clock::time_point now)
 	{
-		chrono::system_clock::time_point now = chrono::system_clock::now();
-
 		for (auto controlledRobotEntry : this->controlledRobotsMap)
 		{
-			if ((now - controlledRobotEntry.second->timeLastMsgReceived) > this->parentPMControl->msgTimeOut)
+			if ((now - controlledRobotEntry.second->timeLastMsgReceived) > PMControl::msgTimeOut)
 			{ // time is over, erase controlled robot
 
-				cout << "ControlledPM: Erasing " << controlledRobotEntry.second->name << ", controlled by process manager " << this->name << " ("
-						<< this->id << ") from GUI!" << endl;
+				cout << "ControlledPM: The robot " << controlledRobotEntry.second->name << " (ID: " << controlledRobotEntry.second->id
+						<< ") on process manager " << this->name << " (ID: " << this->id << ") seems to be dead!" << endl;
 				this->controlledRobotsMap.erase(controlledRobotEntry.first);
 				delete controlledRobotEntry.second;
 			}
 			else
 			{ // message arrived before timeout, update its GUI
-
-				controlledRobotEntry.second->updateGUI();
+				controlledRobotEntry.second->updateGUI(now);
 			}
 		}
+	}
+
+	void ControlledProcessManager::addRobot(QFrame* robot)
+	{
+		this->parentPMControl->addRobot(robot);
+	}
+
+	void ControlledProcessManager::removeRobot(QFrame* robot)
+	{
+		this->parentPMControl->removeRobot(robot);
 	}
 
 	void ControlledProcessManager::sendProcessCommand(vector<int> robotIds, vector<int> execIds, int newState)
