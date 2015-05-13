@@ -52,6 +52,9 @@ namespace rqt_pm_control
 		void processCheckBoxStateChanged(int, int); /** < first int is newState, second int is execId */
 
 	private:
+		static const string redBackground;
+		static const string greenBackground;
+		static const string grayBackground;
 		ControlledRobot* parentRobot;
 
 	};
@@ -59,3 +62,4 @@ namespace rqt_pm_control
 } /* namespace rqt_pm_control */
 
 #endif /* SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDEXECUTABLE_H_ */
+

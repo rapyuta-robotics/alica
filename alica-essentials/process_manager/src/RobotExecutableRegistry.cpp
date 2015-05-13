@@ -197,6 +197,12 @@ namespace supplementary
 	 */
 	int RobotExecutableRegistry::addExecutable(string execName)
 	{
+		if (this->executableExists(execName))
+		{
+			cerr << "RobotExecutableRegistry: The executable '"<<execName<<"' is already registered!" << endl;
+			return -1;
+		}
+
 		SystemConfig* sc = SystemConfig::getInstance();
 		int execId;
 		string absExecName;

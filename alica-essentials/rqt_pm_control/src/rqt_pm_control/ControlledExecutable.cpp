@@ -14,6 +14,10 @@
 namespace rqt_pm_control
 {
 
+	const string ControlledExecutable::redBackground = "background-color:#FF4719;";
+	const string ControlledExecutable::greenBackground = "background-color:#66FF66;";
+	const string ControlledExecutable::grayBackground = "background-color:gray;";
+
 	ControlledExecutable::ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName,
 												ControlledRobot* parentRobot) :
 			ExecutableMetaData(execName, execId, mode, defaultParams, absExecName), memory(0), state('U'), cpu(0), _processWidget(new Ui::ProcessWidget()), processWidget(
@@ -22,8 +26,16 @@ namespace rqt_pm_control
 
 		this->_processWidget->setupUi(this->processWidget);
 		this->_processWidget->processName->setText(QString(this->name.c_str()));
-		QObject::connect(this->_processWidget->checkBox, SIGNAL(stateChanged(int)), this, SLOT(handleCheckBoxStateChanged(int)),
-							Qt::DirectConnection);
+		if (this->name == "roscore")
+		{
+			this->_processWidget->checkBox->setEnabled(false);
+			this->_processWidget->checkBox->setChecked(true);
+		}
+		else
+		{
+			QObject::connect(this->_processWidget->checkBox, SIGNAL(stateChanged(int)), this, SLOT(handleCheckBoxStateChanged(int)),
+										Qt::DirectConnection);
+		}
 		this->parentRobot->addExec(processWidget);
 		this->processWidget->show();
 	}
@@ -55,7 +67,7 @@ namespace rqt_pm_control
 
 			this->_processWidget->cpuState->setText(QString("C: -- %"));
 			this->_processWidget->memState->setText(QString("M: -- MB"));
-			this->processWidget->setStyleSheet("background-color:red;");
+			this->processWidget->setStyleSheet(redBackground.c_str());
 		}
 		else
 		{ // message arrived before timeout, update its GUI
@@ -71,16 +83,16 @@ namespace rqt_pm_control
 				case 'S': // interruptable sleeping
 				case 'D': // uninterruptable sleeping
 				case 'W': // paging
-					this->processWidget->setStyleSheet("background-color:green;");
+					this->processWidget->setStyleSheet(greenBackground.c_str());
 					break;
 				case 'Z': // zombie
 				case 'T': // traced, or stopped
-					this->processWidget->setStyleSheet("background-color:red;");
+					this->processWidget->setStyleSheet(redBackground.c_str());
 					break;
 				case 'U':
 				default:
 					cout << "ControlledExec: Unknown process state '" << this->state << "' encountered!" << endl;
-					this->processWidget->setStyleSheet("background-color:gray;");
+					this->processWidget->setStyleSheet(grayBackground.c_str());
 					break;
 			}
 		}
@@ -89,7 +101,7 @@ namespace rqt_pm_control
 	void ControlledExecutable::handleCheckBoxStateChanged(int newState)
 	{
 		cout << "ControlledExec: Checked CheckBox from executable " << this->name << " new State is " << newState << endl;
-		Q_EMIT processCheckBoxStateChanged(newState, this->id);
+		this->parentRobot->sendProcessCommand(vector<int>{this->id}, newState);
 	}
 
 } /* namespace rqt_pm_control */
