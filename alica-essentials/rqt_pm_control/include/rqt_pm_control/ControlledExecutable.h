@@ -29,7 +29,7 @@ namespace rqt_pm_control
 		Q_OBJECT
 
 	public:
-		ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName, ControlledRobot* parentRobot);
+		ControlledExecutable(string execName, int execId, string mode, map<int, vector<char*>> defaultParams, string absExecName, ControlledRobot* parentRobot);
 		virtual ~ControlledExecutable();
 
 		void handleStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);

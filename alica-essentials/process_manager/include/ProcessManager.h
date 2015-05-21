@@ -43,6 +43,9 @@ namespace supplementary
 		bool selfCheck();
 		void initCommunication(int argc, char** argv);
 
+		bool isKnownInterpreter(string const & execName);
+
+		static size_t getArgWithoutPath(string cmdLine, int startIdx, string& arg);
 		static void pmSigintHandler(int sig);
 		static void pmSigchildHandler(int sig);
 		static int numCPUs; /* < including hyper threading cores */

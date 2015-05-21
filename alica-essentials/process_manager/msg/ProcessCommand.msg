@@ -14,6 +14,9 @@ int32 receiverId
 # RobotId determines the ROBOT-Environment Variable. 
 int32[] robotIds
 
-# Array of IDs from the Processes.conf file.
+# Array of process IDs from the Processes.conf file.
 int32[] processKeys
+
+# Array of paramSet IDs from the Processes.conf file.
+int32[] paramSets
 

@@ -10,6 +10,8 @@
 
 #include <string>
 #include <vector>
+#include <map>
+#include <sstream>
 
 using namespace std;
 
@@ -19,17 +21,39 @@ namespace supplementary
 	class ExecutableMetaData
 	{
 	public:
-		ExecutableMetaData(string name, int id, string mode, vector<char*> defaultParams, string absExecName);
+		ExecutableMetaData(string name, int id, string mode, string absExecName);
+		ExecutableMetaData(string name, int id, string mode, map<int, vector<char*>> parameterMap, string absExecName);
 		virtual ~ExecutableMetaData();
+
+		void addParameterSet(int paramSetId, vector<char*> paramSetValues);
 
 		int id;
 		string absExecName;
 		string name;
-		vector<char*> defaultParams;
+		map<int, vector<char*>> parameterMap;
 		string mode;
+
+	private:
 
 	};
 
 } /* namespace supplementary */
+
+inline std::ostream& operator<<(std::ostream &strm, const supplementary::ExecutableMetaData &a)
+{
+	std::ostringstream resultStream;
+	resultStream << "ExecutableMetaData: " << a.name << "(" << a.id << ")\n\tAbsExecName:\t" << a.absExecName << "\n\tMode:\t\t" << a.mode << endl;
+	for (auto paramEntry : a.parameterMap)
+	{
+		resultStream << "\tParamSet " << paramEntry.first << ": ";
+		for (char* param : paramEntry.second)
+		{
+			resultStream << "\t'" << param << "' ";
+		}
+		resultStream << endl;
+	}
+	strm  << resultStream.str();
+	return strm;
+}
 
 #endif /* SUPPLEMENTARY_PROCESS_MANAGER_SRC_EXECUTABLEMETADATA_H_ */

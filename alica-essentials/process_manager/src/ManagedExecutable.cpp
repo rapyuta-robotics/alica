@@ -6,6 +6,7 @@
  */
 
 #include "ManagedExecutable.h"
+#include "ProcessManager.h"
 #include <map>
 #include <iostream>
 #include <unistd.h>
@@ -25,8 +26,11 @@ namespace supplementary
 {
 	long ManagedExecutable::kernelPageSize = 0;
 
-	ManagedExecutable::ManagedExecutable(string executable, int id, long pid, string mode, vector<char*> defaultParams, string absExecName, string robotName) :
-			ExecutableMetaData(executable, id, mode, defaultParams, absExecName), managedPid(pid), state('X'), lastUTime(0), lastSTime(0), currentUTime(0), currentSTime(0), memory(0), starttime(0), shouldRun(false), cpu(0)
+	ManagedExecutable::ManagedExecutable(string executable, int id, long pid, string mode, map<int, vector<char*>> parameterMap, string absExecName,
+											string robotName, ProcessManager* procMan) :
+			ExecutableMetaData(executable, id, mode, parameterMap, absExecName), managedPid(pid), state('X'), lastUTime(0), lastSTime(0), currentUTime(
+					0), currentSTime(0), memory(0), starttime(0), shouldRun(false), cpu(0), runningParamSet(UNKNOWN_PARAMS), desiredParamSet(
+					UNKNOWN_PARAMS), procMan(procMan)
 	{
 
 #ifdef MGND_EXEC_DEBUG
@@ -34,21 +38,11 @@ namespace supplementary
 #endif
 
 		this->robotEnvVariable = robotName;
-		this->desiredParams = nullptr;
-		this->params = nullptr;
 	}
 
 	ManagedExecutable::~ManagedExecutable()
 	{
 		// TODO: check whether the cleanup is right -> valgrind
-
-		free(desiredParams);
-		free(params);
-
-		/*if (this->managedPid != NOTHING_MANAGED)
-		{
-			kill(this->managedPid, SIGTERM);
-		}*/
 	}
 
 	void ManagedExecutable::queue4Update(long pid)
@@ -65,7 +59,7 @@ namespace supplementary
 		{
 			if (this->shouldRun)
 			{
-				if (chrono::steady_clock::now() - this->lastTimeTried > std::chrono::milliseconds(1000)) // TODO make the wait time a parameter
+				if (chrono::steady_clock::now() - this->lastTimeTried > std::chrono::milliseconds(1000)) // TODO: make the wait time a parameter
 				{
 #ifdef MGND_EXEC_DEBUG
 					cout << "ME: Starting " << this->name << "!" << endl;
@@ -100,29 +94,43 @@ namespace supplementary
 
 			if (shouldRun) // some process should run
 			{
-				if (this->managedPid != ManagedExecutable::NOTHING_MANAGED) // we know a PID to which should run
+				if (this->managedPid != NOTHING_MANAGED) // we know a PID, which we manage
 				{
-					for (int i = 0; i < this->queuedPids4Update.size(); i++)
-					{
-						long pid = this->queuedPids4Update.at(i);
-						if (this->managedPid == pid)
-						{
-							// erase own and kill all other processes
-							this->queuedPids4Update.erase(this->queuedPids4Update.begin() + i);
-							this->killQueuedProcesses();
+					// update own
+					this->updateStats(cpuDelta, false, true);
 
-							// update own
-							this->updateStats(cpuDelta, false, true);
-							break;
+					if (this->desiredParamSet == this->runningParamSet)
+					{
+						cout << "ME: " << this->name << " is running the right params!" << endl;
+						// our process is running with the right parameters, so kill all others
+						for (int i = 0; i < this->queuedPids4Update.size(); i++)
+						{
+							long pid = this->queuedPids4Update.at(i);
+							if (this->managedPid == pid)
+							{
+								// erase own and kill all other processes
+								this->queuedPids4Update.erase(this->queuedPids4Update.begin() + i);
+								this->killQueuedProcesses();
+								break;
+							}
 						}
+					}
+					else
+					{
+						cout << "ME: " << this->name << " is NOT running the right params!" << endl;
+						// our process is not running with the right parameters, so kill it and all others
+						this->managedPid = NOTHING_MANAGED;
+						this->killQueuedProcesses();
 					}
 				}
 
 				// We did not find our own process, or we don't have one to manage, so ...
 				if (this->queuedPids4Update.size() != 0)
 				{
+
 					// ... adapt to the first and kill the other processes
 					this->managedPid = this->queuedPids4Update.at(0);
+					cout << "ME: We adapt " << this->managedPid << " for " << this->name << endl;
 					this->queuedPids4Update.erase(this->queuedPids4Update.begin());
 					this->killQueuedProcesses();
 
@@ -133,8 +141,9 @@ namespace supplementary
 			}
 			else // there shouldn't run a process
 			{
-				if (this->managedPid != ManagedExecutable::NOTHING_MANAGED) // we know a process we managed
+				if (this->managedPid != NOTHING_MANAGED) // we know a PID, which we managed
 				{
+					cout << "ME: Kill all " << this->name << endl;
 					// kill all processes, as we need to kill them including our own
 					this->killQueuedProcesses();
 				}
@@ -146,6 +155,7 @@ namespace supplementary
 					this->queuedPids4Update.erase(this->queuedPids4Update.begin());
 					this->killQueuedProcesses();
 
+					cout << "ME: 2 We adapt " << this->managedPid << " for " << this->name << endl;
 					// update own
 					this->updateStats(cpuDelta, true, true);
 				}
@@ -157,6 +167,8 @@ namespace supplementary
 			}
 #endif
 		}
+
+		cout << "ME: Update for " << this->name << " called!" << endl;
 	}
 
 	void ManagedExecutable::report(process_manager::ProcessStats& psts, int robotId)
@@ -168,6 +180,7 @@ namespace supplementary
 			ps.cpu = this->cpu;
 			ps.mem = this->memory * ManagedExecutable::kernelPageSize / 1024.0 / 1024.0; // MB
 			ps.processKey = this->id;
+			ps.paramSet = this->runningParamSet;
 			ps.state = this->state;
 			psts.processStats.push_back(ps);
 		}
@@ -281,29 +294,97 @@ namespace supplementary
 	 */
 	void ManagedExecutable::readProcParams(string procPidString)
 	{
-		std::ifstream cmdlineFile(procPidString + "/cmdline", std::ifstream::in);
-		string line;
-		getline(cmdlineFile, line);
+		string cmdline;
+		std::ifstream cmdlineStream(procPidString + "/cmdline", std::ifstream::in);
+		getline(cmdlineStream, cmdline);
+		cmdlineStream.close();
 
-		// determine the number of parameters and their length
-		vector<char const *> argv;
-		int startPos = 0;
-		int endPos = 0;
+
+		this->runningParams.clear();
+
+		// read first command line argument, with special handling for interpreted executables
+		string execName;
+		int nextArgIdx = ProcessManager::getArgWithoutPath(cmdline, 0, execName);
+
+		if (this->procMan->isKnownInterpreter(execName))
+		{
+			nextArgIdx = ProcessManager::getArgWithoutPath(cmdline, nextArgIdx, execName);
+		}
+
+		this->runningParams.push_back(execName.c_str());
+
+
+		// read the rest of the command line arguments
 		while (true)
 		{
-			endPos = line.find('\0', startPos);
+			int endPos = cmdline.find('\0', nextArgIdx);
 			if (endPos != string::npos)
 			{
-				//cout << "ME: Found param '" << line.substr(startPos, endPos - startPos).c_str() << "' at (" << startPos << ", " << endPos << ")" << endl;
-				argv.push_back(line.substr(startPos, endPos - startPos).c_str());
-				startPos = endPos + 1;
+				this->runningParams.push_back(cmdline.substr(nextArgIdx, endPos - nextArgIdx).c_str());
+				nextArgIdx = endPos + 1;
 			}
 			else
 			{
+				this->runningParams.push_back(nullptr);
 				break;
 			}
 		}
 
+#ifdef MGND_EXEC_DEBUG
+		cout << "ME: PROC-FS Command-Line Parameters of " << this->name << ": " << this->runningParams.size() << endl;
+		for (auto param : this->runningParams)
+		{
+			if (param != nullptr)
+			{ // ignore nullptr, which is always the last argument in command line
+				cout << "'" << param << "'" << endl;
+			}
+		}
+#endif
+
+		for (auto paramEntry : this->parameterMap)
+		{
+#ifdef MGND_EXEC_DEBUG
+			cout << "ME: Parameter Map Entry " << paramEntry.first << ": " << paramEntry.second.size() << endl;
+			for (auto param : paramEntry.second)
+			{
+				if (param != nullptr)
+				{ // ignore nullptr, which is always the last argument in command line
+					cout << "'" << param << "'" << endl;
+				}
+			}
+#endif
+
+			if (paramEntry.second.size() != this->runningParams.size())
+			{
+#ifdef MGND_EXEC_DEBUG
+				cout << "ME: Number of parameters does not match! " << endl;
+#endif
+				continue;
+			}
+
+			int i = 0;
+			for (; i < this->runningParams.size(); i++)
+			{
+				if (strcmp(paramEntry.second[i], this->runningParams[i]) != 0)
+				{
+					break;
+				}
+			}
+
+			if (i == this->runningParams.size())
+			{
+#ifdef MGND_EXEC_DEBUG
+				cout << "ME: Parameters matched for paramSetid " << paramEntry.first << endl;
+#endif
+				this->runningParamSet == paramEntry.first;
+				return;
+			}
+		}
+#ifdef MGND_EXEC_DEBUG
+		cout << "ME: Parameters are unknown for " << this->name << endl;
+#endif
+		this->runningParamSet == UNKNOWN_PARAMS;
+		return;
 	}
 
 	void ManagedExecutable::printStats()
@@ -311,10 +392,19 @@ namespace supplementary
 		stringstream ss;
 		ss << "ME: Stats of " << this->name << " (" << this->managedPid << ")" << endl;
 		ss << "ME: State: '" << this->state << "' StartTime: " << this->starttime << endl;
-		ss << "ME: Times: last u '" << this->lastUTime << "' last s '" << this->lastSTime << "' current u '" << this->currentUTime << "' current s '" << this->currentSTime << endl;
+		ss << "ME: Times: last u '" << this->lastUTime << "' last s '" << this->lastSTime << "' current u '" << this->currentUTime << "' current s '"
+				<< this->currentSTime << endl;
 		ss << "ME: CPU %: " << this->cpu << endl;
 		ss << "ME: Memory: " << this->memory * kernelPageSize / 1024.0 / 1024.0 << "MB" << endl;
-		ss << "ME: Parameters: '" << this->params << endl;
+		ss << "ME: Parameters: ";
+		for (auto param : this->runningParams)
+		{
+			if (param != nullptr)
+			{ // ignore nullptr, which is always the last argument in command line
+				ss << "'" << param << "'";
+			}
+		}
+		ss << endl;
 		cout << ss.str();
 	}
 
@@ -324,31 +414,31 @@ namespace supplementary
 	void ManagedExecutable::clear()
 	{
 		this->managedPid = NOTHING_MANAGED;
+		this->runningParamSet = UNKNOWN_PARAMS;
+		this->desiredParamSet = UNKNOWN_PARAMS;
+		this->runningParams.clear();
 		this->state = 'X';
 		this->currentSTime = 0;
 		this->currentUTime = 0;
 		this->lastSTime = 0;
 		this->lastUTime = 0;
-		free(params);
-		this->params = nullptr;
 	}
 
-	void ManagedExecutable::changeDesiredState(bool shouldRun)
+	void ManagedExecutable::changeDesiredState(bool shouldRun, int paramSetId)
 	{
-		if (this->managedPid != NOTHING_MANAGED && shouldRun)
-		{
-			cout << "ME: Wont start executable, as it is already running! PID: " << this->managedPid << endl;
-			return;
-		}
-
 		if (this->managedPid == NOTHING_MANAGED && !shouldRun)
 		{
 			cout << "ME: Can not stop executable, as nothing is running!" << endl;
-			return;
+		}
+
+		if (this->managedPid != NOTHING_MANAGED && this->runningParamSet == paramSetId && shouldRun)
+		{
+			cout << "ME: Won't (re)start executable, as it is already running with the right parameters! PID: " << this->managedPid << endl;
 		}
 
 		// remember desired executable state
 		this->shouldRun = shouldRun;
+		this->desiredParamSet = paramSetId;
 	}
 
 	/**
@@ -381,12 +471,12 @@ namespace supplementary
 			int execReturn;
 			if (this->absExecName.size() > 1)
 			{
-				cout << "ME: Starting '"<< this->absExecName << "' ! Params: '" <<  params.data() << "'" << endl;
+				cout << "ME: Starting '" << this->absExecName << "' ! Params: '" << params.data() << "'" << endl;
 				execReturn = execvp(this->absExecName.c_str(), params.data());
 			}
 			else
 			{
-				cout << "ME: Starting '"<< this->name << "' ! Params: '" <<  params.data() << "'" << endl;
+				cout << "ME: Starting '" << this->name << "' ! Params: '" << params.data() << "'" << endl;
 				execReturn = execvp(this->name.c_str(), params.data());
 			}
 			if (execReturn == -1)
@@ -413,7 +503,7 @@ namespace supplementary
 	 */
 	void ManagedExecutable::startProcess()
 	{
-		this->startProcess(this->defaultParams);
+		this->startProcess(this->parameterMap[this->desiredParamSet]);
 	}
 
 	bool ManagedExecutable::stopProcess()

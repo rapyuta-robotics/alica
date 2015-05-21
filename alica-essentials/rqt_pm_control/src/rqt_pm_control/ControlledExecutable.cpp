@@ -18,9 +18,9 @@ namespace rqt_pm_control
 	const string ControlledExecutable::greenBackground = "background-color:#66FF66;";
 	const string ControlledExecutable::grayBackground = "background-color:gray;";
 
-	ControlledExecutable::ControlledExecutable(string execName, int execId, string mode, vector<char*> defaultParams, string absExecName,
+	ControlledExecutable::ControlledExecutable(string execName, int execId, string mode, map<int, vector<char*>> parameterMap, string absExecName,
 												ControlledRobot* parentRobot) :
-			ExecutableMetaData(execName, execId, mode, defaultParams, absExecName), memory(0), state('U'), cpu(0), _processWidget(new Ui::ProcessWidget()), processWidget(
+			ExecutableMetaData(execName, execId, mode, parameterMap, absExecName), memory(0), state('U'), cpu(0), _processWidget(new Ui::ProcessWidget()), processWidget(
 					new QWidget()), parentRobot(parentRobot)
 	{
 

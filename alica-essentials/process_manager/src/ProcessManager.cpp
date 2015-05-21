@@ -39,7 +39,7 @@ namespace supplementary
 	 * @param argv
 	 */
 	ProcessManager::ProcessManager(int argc, char** argv) :
-			iterationTime(1000000), mainThread(NULL), spinner(NULL), rosNode(NULL)
+			iterationTime(1000000), mainThread(NULL), spinner(NULL), rosNode(NULL), lastTotalCPUTime(0), currentTotalCPUTime(0)
 	{
 		this->ownId = -1;
 		this->sc = SystemConfig::getInstance();
@@ -81,7 +81,7 @@ namespace supplementary
 		if (autostart)
 		{
 			// Create ManagedRobot-Object for local system/robot
-			this->robotMap.emplace(ownId, new ManagedRobot(this->ownHostname, ownId));
+			this->robotMap.emplace(ownId, new ManagedRobot(this->ownHostname, ownId, this));
 		}
 
 		// Register executables from Processes.conf
@@ -159,7 +159,7 @@ namespace supplementary
 				if (mapIter == this->robotMap.end())
 				{
 					// Lazy initialisation of the robotMap
-					mngdRobot = this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId)).first->second;
+					mngdRobot = this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId, this)).first->second;
 				}
 				else
 				{
@@ -167,9 +167,10 @@ namespace supplementary
 					mngdRobot = mapIter->second;
 				}
 
-				for (int execId : pc->processKeys)
+				for (int i = 0; i < pc->processKeys.size(); i++)
 				{
-					mngdRobot->changeDesiredState(execId, shouldRun, this->pmRegistry);
+
+					mngdRobot->changeDesiredState(pc->processKeys[i], pc->paramSets[i], shouldRun, this->pmRegistry);
 				}
 			}
 			else
@@ -246,9 +247,10 @@ namespace supplementary
 	{
 		this->lastTotalCPUTime = currentTotalCPUTime;
 
-		std::ifstream statFile("/proc/stat", std::ifstream::in);
 		string statLine;
+		std::ifstream statFile("/proc/stat", std::ifstream::in);
 		getline(statFile, statLine);
+		statFile.close();
 
 		statLine = statLine.substr(4, statLine.length() - 4);
 		//cout << "PM: readTotalCPUTime() statline: " << statLine << endl;
@@ -347,7 +349,8 @@ namespace supplementary
 				}
 				else
 				{
-					this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId)).first->second->queue4update(execId, curPID, this->pmRegistry);
+					this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId, this)).first->second->queue4update(execId, curPID,
+																														this->pmRegistry);
 				}
 
 #ifdef PM_DEBUG
@@ -362,21 +365,59 @@ namespace supplementary
 	}
 
 	/**
-	 * Extracts the executable name from the cmdline entry of the proc-fs.
+	 * Extracts the executable name from the cmdline entry of the proc-fs. In case of interpreted
+	 * executables, it ignores known interpreters and returns the first argument of the interpreter.
 	 * @param pid
 	 * @return The executable name as string.
 	 */
 	string ProcessManager::getExecNameFromCmdLine(char* pid)
 	{
-		std::ifstream ifs;
-		string curFile = "/proc/" + string(pid) + "/cmdline";
-		ifs.open(curFile, std::ifstream::in);
-		string execName;
 		string cmdline;
-		getline(ifs, cmdline);
-		ifs.close();
+		std::ifstream cmdlineStream("/proc/" + string(pid) + "/cmdline", std::ifstream::in);
+		getline(cmdlineStream, cmdline);
+		cmdlineStream.close();
 
-		int endPos = cmdline.find('\0', 0);
+		string execName;
+		int nextArgIdx = getArgWithoutPath(cmdline, 0, execName);
+
+		/*
+		 * Check whether the found executable name is an interpreter like python, java, or ruby.
+		 * If that it the case, the "real" executable name is the next argument in the cmdline.
+		 */
+		if (isKnownInterpreter(execName))
+		{
+			getArgWithoutPath(cmdline, nextArgIdx, execName);
+		}
+
+		return execName;
+	}
+
+	/**
+	 * Checks whether the found executable name is an interpreter like python, java, or ruby.
+	 * @param execName
+	 * @return True, if it is a known interpreter. False, otherwise.
+	 */
+	bool ProcessManager::isKnownInterpreter(string const & execName)
+	{
+		return find(this->interpreter.begin(), this->interpreter.end(), execName) != this->interpreter.end();
+	}
+
+	/**
+	 * Retrieves the command line argument (starting at the given start index), without the preceding path.
+	 * @param cmdline - The complete command line arguments in one string.
+	 * @param argStartIdx - The index of the start character of the argument.
+	 * @param arg - A reference to the string in which the retrieved argument will be stored.
+	 * @return The index of the first character of the next argument, if present.
+	 */
+	size_t ProcessManager::getArgWithoutPath(string cmdline, int argStartIdx, string& arg)
+	{
+		if (argStartIdx >= arg.length())
+		{
+			arg = "";
+			return string::npos;
+		}
+
+		int endPos = cmdline.find('\0', argStartIdx);
 		if (endPos == string::npos)
 		{
 			endPos = cmdline.length();
@@ -390,39 +431,8 @@ namespace supplementary
 		{
 			startPos++; // ignore slash
 		}
-		execName = cmdline.substr(startPos, endPos - startPos);
-
-		// In case of no '\0' in cmdline, the first argument must be the executable, so return it here.
-		if (endPos == cmdline.length())
-		{
-			//cout << "PM: ExecName '" << execName << "' startPos: " << startPos << " endPos: " << endPos << endl;
-			return execName;
-		}
-
-		/*
-		 * Check whether the found executable name is an interpreter like python, java, or ruby.
-		 * If that it the case, the "real" executable name is the next argument in the cmdline.
-		 */
-		auto foundInterpreter = find(this->interpreter.begin(), this->interpreter.end(), execName);
-		if (foundInterpreter != this->interpreter.end())
-		{
-			int oldEnd = endPos;
-			endPos = cmdline.find('\0', endPos+1);
-			startPos = cmdline.find_last_of('/', endPos);
-			if (startPos == string::npos)
-			{
-				startPos = oldEnd+1; // no slash found, start at oldEnd +1
-			}
-			else
-			{
-				startPos++; // ignore slash
-			}
-			execName = cmdline.substr(startPos, endPos - startPos);
-			//cout << "PM: Interpreter: '" << (*foundInterpreter) << "' ExecName: '" << execName << "' startPos: " << startPos << " endPos: " << endPos << endl;
-		}
-
-		//cout << "PM: ExecName '" << execName << "' startPos: " << startPos << " endPos: " << endPos << endl;
-		return execName;
+		arg = cmdline.substr(startPos, endPos - startPos);
+		return endPos++;
 	}
 
 	/**
@@ -432,7 +442,6 @@ namespace supplementary
 	 */
 	string ProcessManager::getRobotEnvironmentVariable(string processId)
 	{
-
 		string curFile = "/proc/" + processId + "/environ";
 		std::ifstream ifs(curFile, std::ifstream::in);
 		string robotEnvironment;
@@ -539,7 +548,7 @@ namespace supplementary
 					else
 					{
 
-						auto emplaceResult = this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId));
+						auto emplaceResult = this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId, this));
 						emplaceResult.first->second->changeDesiredState(roscoreExecId, true, this->pmRegistry);
 					}
 				}
@@ -599,7 +608,7 @@ namespace supplementary
 						}
 						else
 						{
-							auto emplaceResult = this->robotMap.emplace(robotId, new ManagedRobot(this->ownHostname, robotId));
+							auto emplaceResult = this->robotMap.emplace(robotId, new ManagedRobot(this->ownHostname, robotId, this));
 							emplaceResult.first->second->changeDesiredState(roscoreExecId, true, this->pmRegistry);
 						}
 					}
@@ -638,6 +647,10 @@ namespace supplementary
 		ros::shutdown();
 	}
 
+	/**
+	 *
+	 * @param sig
+	 */
 	void ProcessManager::pmSigchildHandler(int sig)
 	{
 		/* Wait for all dead processes.
@@ -653,7 +666,15 @@ namespace supplementary
 			}
 			else if (result < 0)
 			{
-				cerr << "PM: 'waitpid' returned an error! Something is wrong with our child processes. Result: " << result << endl;
+				/* NOTE: I think, that we always get ECHILD, when a child process dies, because
+				 * we had to set ssid of the child processes, in order to let them live if the process
+				 * manager dies. Anyway, it is not that dramatic.
+				 */
+				if (errno != ECHILD)
+				{
+					cerr << "PM: 'waitpid' returned an error! " << endl;
+					perror("waitpid");
+				}
 			}
 
 		} while (result > 0);

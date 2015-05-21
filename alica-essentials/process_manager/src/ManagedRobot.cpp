@@ -9,6 +9,7 @@
 #include "ManagedRobot.h"
 #include "ManagedExecutable.h"
 #include <iostream>
+#include <limits>
 
 namespace supplementary
 {
@@ -18,8 +19,8 @@ namespace supplementary
 	 * @param robotName
 	 * @param id
 	 */
-	ManagedRobot::ManagedRobot(string robotName, int id) :
-			RobotMetaData(robotName, id)
+	ManagedRobot::ManagedRobot(string robotName, int id, ProcessManager* procMan) :
+			RobotMetaData(robotName, id), procMan(procMan)
 	{
 	}
 
@@ -33,32 +34,50 @@ namespace supplementary
 	}
 
 	/**
-	 * This method changes the desired state (run or not) of the given executable.
-	 * @param execName
+	 * This method changes the desired state (run or not) of the given executable. It uses the paramSet with the lowest id.
 	 * @param execid
 	 * @param shouldRun
+	 * @param registry
 	 */
 	void ManagedRobot::changeDesiredState(int execId, bool shouldRun, RobotExecutableRegistry* registry)
+	{
+		const ExecutableMetaData* exec = registry->getExecutable(execId);
+		int lowestParamId = INT_MAX;
+		for (auto paramEntry : exec->parameterMap)
+		{
+			if (paramEntry.first < lowestParamId)
+			{
+				lowestParamId = paramEntry.first;
+			}
+		}
+		changeDesiredState(execId, lowestParamId, shouldRun, registry);
+	}
+
+	/**
+	 * This method changes the desired state (run or not) of the given executable. It uses the given paramSet id.
+	 * @param execId
+	 * @param paramSetId
+	 * @param shouldRun
+	 * @param registry
+	 */
+	void ManagedRobot::changeDesiredState(int execId, int paramSetId, bool shouldRun, RobotExecutableRegistry* registry)
 	{
 		auto execEntry = this->executableMap.find(execId);
 		if (execEntry != this->executableMap.end())
 		{
-			execEntry->second->changeDesiredState(shouldRun);
+			execEntry->second->changeDesiredState(shouldRun, paramSetId);
 		}
 		else
 		{
 			// Lazy initialisation of the executableMap
-			ExecutableMetaData const * const  executableMetaData = registry->getExecutable(execId);
+			ExecutableMetaData const * const executableMetaData = registry->getExecutable(execId);
 			if (executableMetaData != nullptr)
 			{
-				auto mapIter = this->executableMap.emplace(execId, new ManagedExecutable(executableMetaData->name,
-																						 execId,
-																						 ManagedExecutable::NOTHING_MANAGED,
-																						 executableMetaData->mode,
-																						 executableMetaData->defaultParams,
-																						 executableMetaData->absExecName,
-																						 this->name));
-				mapIter.first->second->changeDesiredState(shouldRun);
+				auto mapIter = this->executableMap.emplace(
+						execId,
+						new ManagedExecutable(executableMetaData->name, execId, ManagedExecutable::NOTHING_MANAGED, executableMetaData->mode,
+												executableMetaData->parameterMap, executableMetaData->absExecName, this->name, this->procMan));
+				mapIter.first->second->changeDesiredState(shouldRun, paramSetId);
 			}
 			else
 			{
@@ -96,7 +115,8 @@ namespace supplementary
 		if (execEntry == this->executableMap.end())
 		{
 			// This should never happen, as changeDesiredState is initialising the executableMap
-			cout << "MR: Tried to start executable " << execName << " with params " << params.data() << ",but it was not present under ID " << execid << endl;
+			cout << "MR: Tried to start executable " << execName << " with params " << params.data() << ",but it was not present under ID " << execid
+					<< endl;
 		}
 		execEntry->second->startProcess(params);
 	}
@@ -119,13 +139,10 @@ namespace supplementary
 			ExecutableMetaData const * const execMetaData = registry->getExecutable(execId);
 			if (execMetaData != nullptr)
 			{
-				auto newExecEntry = this->executableMap.emplace(execId, new ManagedExecutable(execMetaData->name,
-																							  execId,
-																							  ManagedExecutable::NOTHING_MANAGED,
-																							  execMetaData->mode,
-																							  execMetaData->defaultParams,
-																							  execMetaData->absExecName,
-																							  this->name));
+				auto newExecEntry = this->executableMap.emplace(
+						execId,
+						new ManagedExecutable(execMetaData->name, execId, ManagedExecutable::NOTHING_MANAGED, execMetaData->mode,
+												execMetaData->parameterMap, execMetaData->absExecName, this->name, this->procMan));
 				newExecEntry.first->second->queue4Update(pid);
 			}
 			else

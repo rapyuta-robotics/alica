@@ -413,7 +413,7 @@ namespace supplementary
 
 		vector<ConfigNode *> nodes;
 
-		collect(this->configRoot.get(), params.get(), 0, &nodes);
+		collectSections(this->configRoot.get(), params.get(), 0, &nodes);
 
 		shared_ptr<vector<string> > result(new vector<string>());
 
@@ -435,7 +435,7 @@ namespace supplementary
 	}
 
 	/**
-	 * Collects the names of all child sections at the given level.
+	 * Allows to collect all keys in the given path. Does not include child section names.
 	 * @param d the default value which should be returned if the given path does not exist.
 	 * @param path Specifies the level inside the configuration, at which the names of the child sections should be collected.
 	 * @return The names of the sections at the given path
@@ -449,7 +449,7 @@ namespace supplementary
 
 		vector<ConfigNode *> nodes;
 
-		collect(this->configRoot.get(), params.get(), 0, &nodes);
+		collectSections(this->configRoot.get(), params.get(), 0, &nodes);
 
 		shared_ptr<vector<string> > result(new vector<string>());
 

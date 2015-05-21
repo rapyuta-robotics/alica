@@ -39,7 +39,7 @@ namespace rqt_pm_control
 		for (auto execMetaDataEntry : execMetaDatas)
 		{
 			controlledExec = new ControlledExecutable(execMetaDataEntry->name, execMetaDataEntry->id, execMetaDataEntry->mode,
-														execMetaDataEntry->defaultParams, execMetaDataEntry->absExecName, this);
+														execMetaDataEntry->parameterMap, execMetaDataEntry->absExecName, this);
 			this->controlledExecMap.emplace(execMetaDataEntry->id, controlledExec);
 		}
 
