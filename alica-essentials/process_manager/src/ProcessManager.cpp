@@ -377,6 +377,11 @@ namespace supplementary
 		getline(cmdlineStream, cmdline);
 		cmdlineStream.close();
 
+		if (cmdline.length() == 0)
+		{	// faster detection of kernel processes
+			return "";
+		}
+
 		string execName;
 		int nextArgIdx = getArgWithoutPath(cmdline, 0, execName);
 
@@ -411,12 +416,13 @@ namespace supplementary
 	 */
 	size_t ProcessManager::getArgWithoutPath(string cmdline, int argStartIdx, string& arg)
 	{
-		if (argStartIdx >= arg.length())
+		if (argStartIdx >= cmdline.length())
 		{
 			arg = "";
 			return string::npos;
 		}
 
+		// start searching at argStartIdx
 		int endPos = cmdline.find('\0', argStartIdx);
 		if (endPos == string::npos)
 		{
@@ -431,8 +437,9 @@ namespace supplementary
 		{
 			startPos++; // ignore slash
 		}
+		//cout << "PM: '" << cmdline << "' argStartIdx: " << argStartIdx << " startPos: " << startPos << " endPos: " << endPos << endl;
 		arg = cmdline.substr(startPos, endPos - startPos);
-		return endPos++;
+		return endPos+1;
 	}
 
 	/**
