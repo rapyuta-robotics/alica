@@ -42,10 +42,12 @@ namespace rqt_pm_control
 
 		void handleStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
 		void updateGUI(chrono::system_clock::time_point now);
+		void handleBundleComboBoxChanged(QString bundle);
 
 		chrono::system_clock::time_point timeLastMsgReceived; /**< last time a message was received for this executable */
 
 		int runningParamSet;
+		int desiredParamSet;
 		char state; /**< The process state (zombie, running, etc.) */
 		unsigned short cpu;
 		long int memory;

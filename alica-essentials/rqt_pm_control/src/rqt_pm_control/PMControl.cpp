@@ -199,12 +199,13 @@ namespace rqt_pm_control
 		this->processStatMsgQueue.emplace(chrono::system_clock::now(), psts);
 	}
 
-	void PMControl::sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, int newState)
+	void PMControl::sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int newState)
 	{
 		process_manager::ProcessCommand pc;
 		pc.receiverId = receiverId;
 		pc.robotIds = robotIds;
 		pc.processKeys = execIds;
+		pc.paramSets = paramSets;
 		switch (newState)
 		{
 			case Qt::CheckState::Checked:

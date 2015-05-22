@@ -47,7 +47,7 @@ namespace rqt_pm_control
 		virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
 		virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
-		void sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, int newState);
+		void sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int newState);
 		void addRobot(QFrame* robot);
 		void removeRobot(QFrame* robot);
 

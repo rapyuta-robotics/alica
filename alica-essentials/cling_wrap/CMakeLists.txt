@@ -124,7 +124,7 @@ if(NOT "${ARCH}" STREQUAL "armv7l")
  add_dependencies(libgringo CheckNonGroundLexer)
 else(NOT ${ARCH} STREQUAL "armv7l")
  message("We are on an arm-architecture, so we cannot build the ASP Solver Stuff, but that is fine...")
-endif(NOT ${ARCH} STREQUAL "armv7l")
+endif(NOT "${ARCH}" STREQUAL "armv7l")
 
 ### BUIDLING LIBOPTIONS ###
 if(NOT ${ARCH} STREQUAL "armv7l")

@@ -43,7 +43,7 @@ namespace rqt_pm_control
 		virtual ~ControlledRobot();
 
 		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
-		void sendProcessCommand(vector<int> execIds, int newState);
+		void sendProcessCommand(vector<int> execIds, vector<int> paramSets, int newState);
 		void updateGUI(chrono::system_clock::time_point now);
 		void addExec(QWidget* exec);
 		void removeExec(QWidget* exec);
@@ -51,6 +51,7 @@ namespace rqt_pm_control
 
 		chrono::system_clock::time_point timeLastMsgReceived; /**< the last time a message was received for this robot */
 		QFrame* robotProcessesQFrame; /**< The widget, used to initialise the RobotProcessesWidget */
+		ControlledProcessManager* parentProcessManager;
 
 	public Q_SLOTS:
 		void updateBundles(QString text);
@@ -59,7 +60,7 @@ namespace rqt_pm_control
 
 		string selectedBundle;
 		Ui::RobotProcessesWidget* _robotProcessesWidget;
-		ControlledProcessManager* parentProcessManager;
+
 
 		map<int, ControlledExecutable*> controlledExecMap;
 

@@ -100,9 +100,9 @@ namespace rqt_pm_control
 		this->parentPMControl->removeRobot(robot);
 	}
 
-	void ControlledProcessManager::sendProcessCommand(vector<int> robotIds, vector<int> execIds, int newState)
+	void ControlledProcessManager::sendProcessCommand(vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int newState)
 	{
-		this->parentPMControl->sendProcessCommand(this->id, robotIds, execIds, newState);
+		this->parentPMControl->sendProcessCommand(this->id, robotIds, execIds, paramSets, newState);
 	}
 
 } /* namespace rqt_pm_control */

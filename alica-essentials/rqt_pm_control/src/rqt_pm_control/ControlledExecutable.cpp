@@ -9,6 +9,7 @@
 #include "ui_ProcessWidget.h"
 #include "ui_RobotProcessesWidget.h"
 #include "ExecutableMetaData.h"
+#include "rqt_pm_control/ControlledProcessManager.h"
 
 #include "rqt_pm_control/PMControl.h"
 
@@ -19,9 +20,11 @@ namespace rqt_pm_control
 	const string ControlledExecutable::greenBackground = "background-color:#66FF66;";
 	const string ControlledExecutable::grayBackground = "background-color:gray;";
 
-	ControlledExecutable::ControlledExecutable(supplementary::ExecutableMetaData* metaExec, ControlledRobot* parentRobot) :
-			metaExec(metaExec), memory(0), state('U'), cpu(0), _processWidget(new Ui::ProcessWidget()), processWidget(new QWidget()), parentRobot(
-					parentRobot), runningParamSet(supplementary::ExecutableMetaData::UNKNOWN_PARAMS)
+	ControlledExecutable::ControlledExecutable(supplementary::ExecutableMetaData* metaExec,
+												ControlledRobot* parentRobot) :
+			metaExec(metaExec), memory(0), state('U'), cpu(0), _processWidget(new Ui::ProcessWidget()), processWidget(
+					new QWidget()), parentRobot(parentRobot), runningParamSet(
+					supplementary::ExecutableMetaData::UNKNOWN_PARAMS), desiredParamSet(INT_MAX)
 	{
 
 		this->_processWidget->setupUi(this->processWidget);
@@ -33,8 +36,8 @@ namespace rqt_pm_control
 		}
 		else
 		{
-			QObject::connect(this->_processWidget->checkBox, SIGNAL(stateChanged(int)), this, SLOT(handleCheckBoxStateChanged(int)),
-								Qt::DirectConnection);
+			QObject::connect(this->_processWidget->checkBox, SIGNAL(stateChanged(int)), this,
+								SLOT(handleCheckBoxStateChanged(int)), Qt::DirectConnection);
 		}
 		this->parentRobot->addExec(processWidget);
 		this->processWidget->show();
@@ -42,18 +45,15 @@ namespace rqt_pm_control
 
 	ControlledExecutable::~ControlledExecutable()
 	{
-		cout << "CE: 1" << endl;
-		//this->parentRobot->removeExec(processWidget);
-		//delete _processWidget;
-		//delete processWidget;
-		cout << "CE: 2" << endl;
+
 	}
 
 	/**
 	 * Updates the informations about the process with the given information.
 	 * @param ps The given information about the process.
 	 */
-	void ControlledExecutable::handleStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps)
+	void ControlledExecutable::handleStat(chrono::system_clock::time_point timeMsgReceived,
+											process_manager::ProcessStat ps)
 	{
 		this->timeLastMsgReceived = timeMsgReceived;
 		this->cpu = ps.cpu;
@@ -118,10 +118,87 @@ namespace rqt_pm_control
 		}
 	}
 
+	void ControlledExecutable::handleBundleComboBoxChanged(QString bundle)
+	{
+		for (auto paramEntry : this->metaExec->parameterMap)
+		{
+			if (this->desiredParamSet > paramEntry.first)
+			{
+				this->desiredParamSet = paramEntry.first;
+			}
+		}
+
+		if (bundle == "ALL")
+		{
+			this->processWidget->show();
+			if (this->metaExec->name != "roscore")
+			{
+				this->_processWidget->checkBox->setEnabled(true);
+				return;
+			}
+		}
+
+		if (bundle == "RUNNING")
+		{
+			switch (this->state)
+			{
+				case 'R': // running
+				case 'S': // interruptable sleeping
+				case 'D': // uninterruptable sleeping
+				case 'W': // paging
+				case 'Z': // zombie
+					this->processWidget->show();
+					if (this->metaExec->name != "roscore")
+					{
+						this->_processWidget->checkBox->setEnabled(true);
+					}
+					break;
+				case 'T': // traced, or stopped
+				case 'U': // unknown
+				default:
+					this->processWidget->hide();
+					break;
+			}
+			return;
+		}
+
+		auto bundleMapEntry = this->parentRobot->parentProcessManager->parentPMControl->bundlesMap.find(
+				bundle.toStdString());
+		if (bundleMapEntry != this->parentRobot->parentProcessManager->parentPMControl->bundlesMap.end())
+		{
+			bool found = false;
+			for (auto processParamSetPair : bundleMapEntry->second)
+			{
+				if (this->metaExec->id == processParamSetPair.first)
+				{
+					found = true;
+					this->desiredParamSet = processParamSetPair.second;
+					if (processParamSetPair.second == this->runningParamSet
+							|| this->runningParamSet == supplementary::ExecutableMetaData::UNKNOWN_PARAMS)
+					{
+						if (this->metaExec->name != "roscore")
+						{
+							this->_processWidget->checkBox->setEnabled(true);
+						}
+					}
+					else
+					{ // disable the checkbox, if the wrong bundle is selected
+						this->_processWidget->checkBox->setEnabled(false);
+					}
+				}
+			}
+			if (found)
+			{
+				this->processWidget->show();
+			}
+		}
+	}
+
 	void ControlledExecutable::handleCheckBoxStateChanged(int newState)
 	{
-		cout << "ControlledExec: Checked CheckBox from executable " << this->metaExec->name << " new State is " << newState << endl;
-		this->parentRobot->sendProcessCommand(vector<int> {this->metaExec->id}, newState);
+		cout << "ControlledExec: Checked CheckBox from executable " << this->metaExec->name << " new State is "
+				<< newState << endl;
+		this->parentRobot->sendProcessCommand(vector<int> {this->metaExec->id},vector<int> {this->desiredParamSet}, newState);
 	}
 
 } /* namespace rqt_pm_control */

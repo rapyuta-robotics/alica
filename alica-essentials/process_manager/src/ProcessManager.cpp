@@ -147,6 +147,12 @@ namespace supplementary
 	 */
 	void ProcessManager::changeDesiredProcessStates(process_manager::ProcessCommandPtr pc, bool shouldRun)
 	{
+		if (pc->processKeys.size() != pc->paramSets.size())
+		{
+			cerr << "PM: Received malformed process command! #ProcessKeys != #ParamSets" << endl;
+			return;
+		}
+
 		for (int robotId : pc->robotIds)
 		{
 			// Check whether the robot with the given id is known
@@ -169,7 +175,6 @@ namespace supplementary
 
 				for (int i = 0; i < pc->processKeys.size(); i++)
 				{
-
 					mngdRobot->changeDesiredState(pc->processKeys[i], pc->paramSets[i], shouldRun, this->pmRegistry);
 				}
 			}
