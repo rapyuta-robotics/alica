@@ -47,9 +47,18 @@ namespace rqt_pm_control
 		for (auto bundleName : (*bundlesSections))
 		{
 			vector<string> processList = (*this->sc)["Processes"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
-			for (string process : processList)
+			vector<string> processParamsList = (*this->sc)["Processes"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList",
+																							NULL);
+			if (processList.size() != processParamsList.size())
 			{
-				this->bundlesMap[bundleName].push_back(stoi(process));
+				cerr << "PMControl: Number of processes does not match the number of parameter sets for the bundle '" << bundleName
+						<< "' in the Processes.conf!" << endl;
+				continue;
+			}
+
+			for (int i = 0; i < processList.size(); i++)
+			{
+				this->bundlesMap[bundleName].push_back(pair<int, int>(stoi(processList[i]), stoi(processParamsList[i])));
 			}
 			cout << "PMControl: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size() << " processes." << endl;
 		}
@@ -58,6 +67,7 @@ namespace rqt_pm_control
 	void PMControl::initPlugin(qt_gui_cpp::PluginContext& context)
 	{
 		widget_ = new QWidget();
+		widget_->setAttribute(Qt::WA_AlwaysShowToolTips, true);
 		ui_.setupUi(widget_);
 
 		if (context.serialNumber() > 1)
@@ -95,19 +105,20 @@ namespace rqt_pm_control
 	void PMControl::updateGUI()
 	{
 		chrono::system_clock::time_point now = chrono::system_clock::now();
-		for (auto processManagerEntry : this->processManagersMap)
+		for (auto processMapIter = this->processManagersMap.begin(); processMapIter != this->processManagersMap.end();)
 		{
-			if ((now - processManagerEntry.second->timeLastMsgReceived) > PMControl::msgTimeOut)
+			if ((now - processMapIter->second->timeLastMsgReceived) > PMControl::msgTimeOut)
 			{ // time is over, remove process manager
 
-				cout << "PMControl: The process manager on " << processManagerEntry.second->name << "(ID: " << processManagerEntry.second->id << ") seems to be dead!" << endl;
-				this->processManagersMap.erase(processManagerEntry.first);
-				delete processManagerEntry.second;
+				cout << "PMControl: The process manager on " << processMapIter->second->name << " (ID: " << processMapIter->second->id
+						<< ") seems to be dead!" << endl;
+				delete processMapIter->second;
+				this->processManagersMap.erase(processMapIter++);
 			}
 			else
 			{ // message arrived before timeout, update its GUI
-
-				processManagerEntry.second->updateGUI(now);
+				processMapIter->second->updateGUI(now);
+				++processMapIter;
 			}
 		}
 	}

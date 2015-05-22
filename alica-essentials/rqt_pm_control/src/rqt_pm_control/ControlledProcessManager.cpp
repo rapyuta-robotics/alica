@@ -22,10 +22,12 @@ namespace rqt_pm_control
 
 	ControlledProcessManager::~ControlledProcessManager()
 	{
+		cout << "CPM: 1" <<endl;
 		for (auto controlledRobotEntry : this->controlledRobotsMap)
 		{
 			delete controlledRobotEntry.second;
 		}
+		cout << "CPM: 2" <<endl;
 	}
 
 	void ControlledProcessManager::handleProcessStats(pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair)

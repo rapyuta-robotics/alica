@@ -14,6 +14,8 @@
 #include <ros/ros.h>
 #include "rqt_pm_control/ControlledProcessManager.h"
 #include "rqt_pm_control/PMControl.h"
+#include "ui_ProcessWidget.h"
+#include "ExecutableMetaData.h"
 
 namespace rqt_pm_control
 {
@@ -38,8 +40,7 @@ namespace rqt_pm_control
 		ControlledExecutable* controlledExec;
 		for (auto execMetaDataEntry : execMetaDatas)
 		{
-			controlledExec = new ControlledExecutable(execMetaDataEntry->name, execMetaDataEntry->id, execMetaDataEntry->mode,
-														execMetaDataEntry->parameterMap, execMetaDataEntry->absExecName, this);
+			controlledExec = new ControlledExecutable(execMetaDataEntry, this);
 			this->controlledExecMap.emplace(execMetaDataEntry->id, controlledExec);
 		}
 
@@ -48,12 +49,17 @@ namespace rqt_pm_control
 
 	ControlledRobot::~ControlledRobot()
 	{
-		delete _robotProcessesWidget;
-		delete robotProcessesQFrame;
+		cout << "CR: 1" <<endl;
 		for (auto execEntry : this->controlledExecMap)
 		{
 			delete execEntry.second;
 		}
+		//this->parentProcessManager->removeRobot(robotProcessesQFrame);
+		cout << "CR: 2" <<endl;
+		//delete _robotProcessesWidget;
+		cout << "CR: 3" <<endl;
+		delete robotProcessesQFrame;
+		cout << "CR: 4" <<endl;
 	}
 
 	void ControlledRobot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps)
@@ -88,6 +94,10 @@ namespace rqt_pm_control
 			for (auto controlledExecMapEntry : this->controlledExecMap)
 			{
 				controlledExecMapEntry.second->processWidget->show();
+				if (controlledExecMapEntry.second->metaExec->name != "roscore")
+				{
+					controlledExecMapEntry.second->_processWidget->checkBox->setEnabled(true);
+				}
 			}
 			return;
 		}
@@ -104,6 +114,10 @@ namespace rqt_pm_control
 					case 'W': // paging
 					case 'Z': // zombie
 						controlledExecMapEntry.second->processWidget->show();
+						if (controlledExecMapEntry.second->metaExec->name != "roscore")
+						{
+							controlledExecMapEntry.second->_processWidget->checkBox->setEnabled(true);
+						}
 						break;
 					case 'T': // traced, or stopped
 					case 'U': // unknown
@@ -123,12 +137,24 @@ namespace rqt_pm_control
 		auto bundleMapEntry = this->parentProcessManager->parentPMControl->bundlesMap.find(text.toStdString());
 		if (bundleMapEntry != this->parentProcessManager->parentPMControl->bundlesMap.end())
 		{
-			for (auto processKey : bundleMapEntry->second)
+			for (auto processParamSetPair : bundleMapEntry->second)
 			{
-				auto controlledExecMapEntry = this->controlledExecMap.find(processKey);
+				auto controlledExecMapEntry = this->controlledExecMap.find(processParamSetPair.first);
 				if (controlledExecMapEntry != this->controlledExecMap.end())
 				{
 					controlledExecMapEntry->second->processWidget->show();
+					if (processParamSetPair.second == controlledExecMapEntry->second->runningParamSet
+							|| controlledExecMapEntry->second->runningParamSet == supplementary::ExecutableMetaData::UNKNOWN_PARAMS )
+					{
+						if (controlledExecMapEntry->second->metaExec->name != "roscore")
+						{
+							controlledExecMapEntry->second->_processWidget->checkBox->setEnabled(true);
+						}
+					}
+					else
+					{ // disable the checkbox, if the wrong bundle is selected
+						controlledExecMapEntry->second->_processWidget->checkBox->setEnabled(false);
+					}
 				}
 			}
 		}

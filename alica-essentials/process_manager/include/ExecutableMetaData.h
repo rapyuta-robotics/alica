@@ -27,6 +27,8 @@ namespace supplementary
 
 		void addParameterSet(int paramSetId, vector<char*> paramSetValues);
 
+		static const long NOTHING_MANAGED = -1;
+		static const int UNKNOWN_PARAMS = -1;
 		int id;
 		string absExecName;
 		string name;

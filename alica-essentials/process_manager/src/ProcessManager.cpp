@@ -279,10 +279,10 @@ namespace supplementary
 		psts.senderId = this->ownId;
 		for (auto const &mngdRobot : this->robotMap)
 		{
-			cout << "PM: report() We try to add another ProcessStat from " << mngdRobot.second->name << "!" << endl;
+			//cout << "PM: report() We try to add another ProcessStat from " << mngdRobot.second->name << "!" << endl;
 			mngdRobot.second->report(psts);
 		}
-		cout << "PM: report() We have " << psts.processStats.size() << " ProcessStats!" << endl;
+		//cout << "PM: report() We have " << psts.processStats.size() << " ProcessStats!" << endl;
 		this->processStatePub.publish(psts);
 	}
 

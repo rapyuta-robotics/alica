@@ -75,8 +75,7 @@ namespace supplementary
 			{
 				auto mapIter = this->executableMap.emplace(
 						execId,
-						new ManagedExecutable(executableMetaData->name, execId, ManagedExecutable::NOTHING_MANAGED, executableMetaData->mode,
-												executableMetaData->parameterMap, executableMetaData->absExecName, this->name, this->procMan));
+						new ManagedExecutable(executableMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name, this->procMan));
 				mapIter.first->second->changeDesiredState(shouldRun, paramSetId);
 			}
 			else
@@ -141,8 +140,7 @@ namespace supplementary
 			{
 				auto newExecEntry = this->executableMap.emplace(
 						execId,
-						new ManagedExecutable(execMetaData->name, execId, ManagedExecutable::NOTHING_MANAGED, execMetaData->mode,
-												execMetaData->parameterMap, execMetaData->absExecName, this->name, this->procMan));
+						new ManagedExecutable(execMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name, this->procMan));
 				newExecEntry.first->second->queue4Update(pid);
 			}
 			else

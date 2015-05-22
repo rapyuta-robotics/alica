@@ -8,6 +8,7 @@
 #include "rqt_pm_control/ControlledExecutable.h"
 #include "ui_ProcessWidget.h"
 #include "ui_RobotProcessesWidget.h"
+#include "ExecutableMetaData.h"
 
 #include "rqt_pm_control/PMControl.h"
 
@@ -18,15 +19,14 @@ namespace rqt_pm_control
 	const string ControlledExecutable::greenBackground = "background-color:#66FF66;";
 	const string ControlledExecutable::grayBackground = "background-color:gray;";
 
-	ControlledExecutable::ControlledExecutable(string execName, int execId, string mode, map<int, vector<char*>> parameterMap, string absExecName,
-												ControlledRobot* parentRobot) :
-			ExecutableMetaData(execName, execId, mode, parameterMap, absExecName), memory(0), state('U'), cpu(0), _processWidget(new Ui::ProcessWidget()), processWidget(
-					new QWidget()), parentRobot(parentRobot)
+	ControlledExecutable::ControlledExecutable(supplementary::ExecutableMetaData* metaExec, ControlledRobot* parentRobot) :
+			metaExec(metaExec), memory(0), state('U'), cpu(0), _processWidget(new Ui::ProcessWidget()), processWidget(new QWidget()), parentRobot(
+					parentRobot), runningParamSet(supplementary::ExecutableMetaData::UNKNOWN_PARAMS)
 	{
 
 		this->_processWidget->setupUi(this->processWidget);
-		this->_processWidget->processName->setText(QString(this->name.c_str()));
-		if (this->name == "roscore")
+		this->_processWidget->processName->setText(QString(this->metaExec->name.c_str()));
+		if (this->metaExec->name == "roscore")
 		{
 			this->_processWidget->checkBox->setEnabled(false);
 			this->_processWidget->checkBox->setChecked(true);
@@ -34,7 +34,7 @@ namespace rqt_pm_control
 		else
 		{
 			QObject::connect(this->_processWidget->checkBox, SIGNAL(stateChanged(int)), this, SLOT(handleCheckBoxStateChanged(int)),
-										Qt::DirectConnection);
+								Qt::DirectConnection);
 		}
 		this->parentRobot->addExec(processWidget);
 		this->processWidget->show();
@@ -42,9 +42,11 @@ namespace rqt_pm_control
 
 	ControlledExecutable::~ControlledExecutable()
 	{
-		this->parentRobot->removeExec(processWidget);
-		delete _processWidget;
-		delete processWidget;
+		cout << "CE: 1" << endl;
+		//this->parentRobot->removeExec(processWidget);
+		//delete _processWidget;
+		//delete processWidget;
+		cout << "CE: 2" << endl;
 	}
 
 	/**
@@ -57,7 +59,25 @@ namespace rqt_pm_control
 		this->cpu = ps.cpu;
 		this->memory = ps.mem;
 		this->state = ps.state;
-		// TODO: Maybe transmit parameters?
+		this->runningParamSet = ps.paramSet;
+		auto entry = this->metaExec->parameterMap.find(this->runningParamSet);
+		if (entry != this->metaExec->parameterMap.end())
+		{
+			stringstream ss;
+			ss << "Command: ";
+			for (auto param : entry->second)
+			{
+				if (param != nullptr)
+				{
+					ss << param << " ";
+				}
+			}
+			this->processWidget->setToolTip(QString(ss.str().c_str()));
+		}
+		else
+		{
+			this->processWidget->setToolTip(QString("Command: Unknown"));
+		}
 	}
 
 	void ControlledExecutable::updateGUI(chrono::system_clock::time_point now)
@@ -100,8 +120,8 @@ namespace rqt_pm_control
 
 	void ControlledExecutable::handleCheckBoxStateChanged(int newState)
 	{
-		cout << "ControlledExec: Checked CheckBox from executable " << this->name << " new State is " << newState << endl;
-		this->parentRobot->sendProcessCommand(vector<int>{this->id}, newState);
+		cout << "ControlledExec: Checked CheckBox from executable " << this->metaExec->name << " new State is " << newState << endl;
+		this->parentRobot->sendProcessCommand(vector<int> {this->metaExec->id}, newState);
 	}
 
 } /* namespace rqt_pm_control */

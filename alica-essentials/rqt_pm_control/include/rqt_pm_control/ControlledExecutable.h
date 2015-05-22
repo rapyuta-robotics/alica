@@ -8,11 +8,13 @@
 #ifndef SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDEXECUTABLE_H_
 #define SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDEXECUTABLE_H_
 
-#include <ExecutableMetaData.h>
 #include <process_manager/ProcessStat.h>
 #include "QWidget"
 
 #include <chrono>
+#include <string>
+#include <vector>
+#include <map>
 
 namespace Ui
 {
@@ -20,28 +22,35 @@ namespace Ui
 	class RobotProcessesWidget;
 }
 
+namespace supplementary {
+	class ExecutableMetaData;
+}
+
+using namespace std;
+
 namespace rqt_pm_control
 {
 	class ControlledRobot;
 
-	class ControlledExecutable : public QObject, public supplementary::ExecutableMetaData
+	class ControlledExecutable : public QObject
 	{
 		Q_OBJECT
 
 	public:
-		ControlledExecutable(string execName, int execId, string mode, map<int, vector<char*>> defaultParams, string absExecName, ControlledRobot* parentRobot);
+		ControlledExecutable(supplementary::ExecutableMetaData* metaExec, ControlledRobot* parentRobot);
 		virtual ~ControlledExecutable();
 
 		void handleStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
 		void updateGUI(chrono::system_clock::time_point now);
 
-		chrono::system_clock::time_point timeLastMsgReceived; /* < last time a message was received for this executable */
+		chrono::system_clock::time_point timeLastMsgReceived; /**< last time a message was received for this executable */
 
-		string params;
-		char state; // The process state (zombie, running, etc.)
+		int runningParamSet;
+		char state; /**< The process state (zombie, running, etc.) */
 		unsigned short cpu;
 		long int memory;
 
+		supplementary::ExecutableMetaData* metaExec;
 		QWidget* processWidget;
 		Ui::ProcessWidget* _processWidget;
 
@@ -49,7 +58,7 @@ namespace rqt_pm_control
 		void handleCheckBoxStateChanged(int newState);
 
 	Q_SIGNALS:
-		void processCheckBoxStateChanged(int, int); /** < first int is newState, second int is execId */
+		void processCheckBoxStateChanged(int, int); /**< first int is newState, second int is execId */
 
 	private:
 		static const string redBackground;

@@ -8,7 +8,7 @@
 #ifndef MANAGEDEXECUTABLE_H_
 #define MANAGEDEXECUTABLE_H_
 
-#define MGND_EXEC_DEBUG
+#define MNGD_EXEC_DEBUG
 
 #include <string>
 #include <vector>
@@ -22,24 +22,23 @@ using namespace std;
 namespace supplementary
 {
 	class ProcessManager;
+	class ExecutableMetaData;
 
-	class ManagedExecutable : public ExecutableMetaData
+	class ManagedExecutable
 	{
 	public:
-		ManagedExecutable(string execName, int execid, long pid, string mode, map<int, vector<char*>> parameterMap, string absExecName, string robotName, ProcessManager* procMan);
+		ManagedExecutable(ExecutableMetaData const * const metaExec, long pid, string robotName, ProcessManager* procMan);
 		virtual ~ManagedExecutable();
 		void queue4Update(long pid);
 		void update(unsigned long long cpuDelta);
 		void report(process_manager::ProcessStats& psts, int robotId);
 		void changeDesiredState(bool shouldRun, int paramSetId);
-		void startProcess (vector<char*>& params);
+		void startProcess (vector<char*> & params);
 		void startProcess ();
 		bool stopProcess ();
-
-		static const long NOTHING_MANAGED = -1;
-		static const int UNKNOWN_PARAMS = -1;
 		static long kernelPageSize; /* < in bytes */
 
+		ExecutableMetaData const * const metaExec;
 	private:
 
 		// Information about the managed process (updated continuously)
@@ -59,11 +58,12 @@ namespace supplementary
 
 		chrono::time_point<chrono::steady_clock> lastTimeTried;
 		bool shouldRun;
+		bool need2ReadParams;
 		int desiredParamSet;
 		vector<long> queuedPids4Update; /* < a list of PIDs, which match this managed executable (should be only one, normally)*/
 		ProcessManager* procMan;
 
-		void updateStats(unsigned long long cpuDelta, bool isNew = false, bool readParams = false);
+		void updateStats(unsigned long long cpuDelta, bool isNew = false);
 		void readProcParams(string procPidString);
 		void printStats();
 		void killQueuedProcesses();
