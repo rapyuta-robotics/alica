@@ -114,7 +114,7 @@ namespace supplementary
 							if (this->desiredParamSet == this->runningParamSet)
 							{ // our process is running with the right parameters, so kill all others
 
-								cout << "ME: " << this->metaExec->name << " is running the right params!" << endl;
+//								cout << "ME: " << this->metaExec->name << " is running the right params!" << endl;
 								// erase own from list and kill all remaining processes
 								this->queuedPids4Update.erase(this->queuedPids4Update.begin() + i);
 								this->killQueuedProcesses();
@@ -122,8 +122,9 @@ namespace supplementary
 							}
 							else
 							{ // our process is not running with the right parameters, so kill it and all others
-
+#ifdef MNGD_EXEC_DEBUG
 								cout << "ME: " << this->metaExec->name << " is NOT running the right params!" << endl;
+#endif
 								this->clear();
 								this->killQueuedProcesses();
 								break;
@@ -138,7 +139,9 @@ namespace supplementary
 				{
 					// ... adapt to the first and kill the other processes
 					this->managedPid = this->queuedPids4Update.at(0);
+#ifdef MNGD_EXEC_DEBUG
 					cout << "ME: We adapt " << this->managedPid << " for " << this->metaExec->name << endl;
+#endif
 					this->queuedPids4Update.erase(this->queuedPids4Update.begin());
 					this->killQueuedProcesses();
 
@@ -151,7 +154,9 @@ namespace supplementary
 			{
 				if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED) // we know a PID, which we managed
 				{
+#ifdef MNGD_EXEC_DEBUG
 					cout << "ME: Kill all " << this->metaExec->name << endl;
+#endif
 					// kill all processes, as we need to kill them including our own
 					this->clear();
 					this->killQueuedProcesses();
@@ -163,8 +168,9 @@ namespace supplementary
 					this->managedPid = this->queuedPids4Update.at(0);
 					this->queuedPids4Update.erase(this->queuedPids4Update.begin());
 					this->killQueuedProcesses();
-
+#ifdef MNGD_EXEC_DEBUG
 					cout << "ME: 2 We adapt " << this->managedPid << " for " << this->metaExec->name << endl;
+#endif
 					// update own
 					this->updateStats(cpuDelta, true);
 				}
@@ -294,8 +300,6 @@ namespace supplementary
 	 */
 	void ManagedExecutable::readProcParams(string procPidString)
 	{
-		cout << "ME: Read params for " << this->metaExec->name << endl;
-
 		this->need2ReadParams = false;
 
 		string cmdline;
@@ -313,6 +317,10 @@ namespace supplementary
 		{
 			nextArgIdx = ProcessManager::getArgWithoutPath(cmdline, nextArgIdx, execName);
 		}
+		else
+		{
+			nextArgIdx = ProcessManager::getArgWithPath(cmdline, 0, execName);
+		}
 
 		this->runningParams.push_back(strdup(execName.c_str()));
 
@@ -322,7 +330,7 @@ namespace supplementary
 			int endPos = cmdline.find('\0', nextArgIdx);
 			if (endPos != string::npos)
 			{
-				this->runningParams.push_back(cmdline.substr(nextArgIdx, endPos - nextArgIdx).c_str());
+				this->runningParams.push_back(strdup(cmdline.substr(nextArgIdx, endPos - nextArgIdx).c_str()));
 				nextArgIdx = endPos + 1;
 			}
 			else
@@ -333,27 +341,27 @@ namespace supplementary
 		}
 
 #ifdef MNGD_EXEC_DEBUG
-//		cout << "ME: PROC-FS Command-Line Parameters of " << this->name << ": " << this->runningParams.size() << endl;
-//		for (auto param : this->runningParams)
-//		{
-//			if (param != nullptr)
-//			{ // ignore nullptr, which is always the last argument in command line
-//				cout << "'" << param << "'" << endl;
-//			}
-//		}
+		cout << "ME: PROC-FS Command-Line Parameters of " << this->metaExec->name << ": " << this->runningParams.size() << endl;
+		for (auto param : this->runningParams)
+		{
+			if (param != nullptr)
+			{ // ignore nullptr, which is always the last argument in command line
+				cout << "'" << param << "'" << endl;
+			}
+		}
 #endif
 
 		for (auto paramEntry : this->metaExec->parameterMap)
 		{
 #ifdef MNGD_EXEC_DEBUG
-//			cout << "ME: Parameter Set " << paramEntry.first << ": " << paramEntry.second.size() << endl;
-//			for (auto param : paramEntry.second)
-//			{
-//				if (param != nullptr)
-//				{ // ignore nullptr, which is always the last argument in command line
-//					cout << "'" << param << "'" << endl;
-//				}
-//			}
+			cout << "ME: Parameter Set " << paramEntry.first << ": " << paramEntry.second.size() << endl;
+			for (auto param : paramEntry.second)
+			{
+				if (param != nullptr)
+				{ // ignore nullptr, which is always the last argument in command line
+					cout << "'" << param << "'" << endl;
+				}
+			}
 #endif
 
 			if (paramEntry.second.size() != this->runningParams.size())
@@ -367,7 +375,7 @@ namespace supplementary
 			int i = 0;
 			for (; i < this->runningParams.size(); i++)
 			{
-				if (paramEntry.second[i] == this->runningParams[i])
+				if (paramEntry.second[i] == nullptr	&& this->runningParams[i] == nullptr)
 				{ // this case is for the ending null pointer in the command line parameters
 					continue;
 				}
@@ -466,7 +474,6 @@ namespace supplementary
 	 */
 	void ManagedExecutable::startProcess(vector<char*> & params)
 	{
-		cout << "ME: AbsExecName: " << this->metaExec->absExecName << endl;
 		pid_t pid = fork();
 		if (pid == 0) // child process
 		{

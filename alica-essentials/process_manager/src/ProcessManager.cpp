@@ -355,7 +355,7 @@ namespace supplementary
 				else
 				{
 					this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId, this)).first->second->queue4update(execId, curPID,
-																														this->pmRegistry);
+																															this->pmRegistry);
 				}
 
 #ifdef PM_DEBUG
@@ -383,7 +383,7 @@ namespace supplementary
 		cmdlineStream.close();
 
 		if (cmdline.length() == 0)
-		{	// faster detection of kernel processes
+		{ // faster detection of kernel processes
 			return "";
 		}
 
@@ -442,9 +442,26 @@ namespace supplementary
 		{
 			startPos++; // ignore slash
 		}
-		//cout << "PM: '" << cmdline << "' argStartIdx: " << argStartIdx << " startPos: " << startPos << " endPos: " << endPos << endl;
 		arg = cmdline.substr(startPos, endPos - startPos);
-		return endPos+1;
+		return endPos + 1;
+	}
+
+	size_t ProcessManager::getArgWithPath(string cmdline, int argStartIdx, string& arg)
+	{
+		if (argStartIdx >= cmdline.length())
+		{
+			arg = "";
+			return string::npos;
+		}
+
+		// start searching at argStartIdx
+		int endPos = cmdline.find('\0', argStartIdx);
+		if (endPos == string::npos)
+		{
+			endPos = cmdline.length();
+		}
+		arg = cmdline.substr(argStartIdx, endPos - argStartIdx);
+		return endPos + 1;
 	}
 
 	/**

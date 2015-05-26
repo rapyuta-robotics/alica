@@ -27,6 +27,14 @@ namespace rqt_pm_control
 					supplementary::ExecutableMetaData::UNKNOWN_PARAMS), desiredParamSet(INT_MAX)
 	{
 
+		for (auto paramEntry : this->metaExec->parameterMap)
+		{
+			if (this->desiredParamSet > paramEntry.first)
+			{
+				this->desiredParamSet = paramEntry.first;
+			}
+		}
+
 		this->_processWidget->setupUi(this->processWidget);
 		this->_processWidget->processName->setText(QString(this->metaExec->name.c_str()));
 		if (this->metaExec->name == "roscore")
@@ -87,6 +95,8 @@ namespace rqt_pm_control
 
 			this->_processWidget->cpuState->setText(QString("C: -- %"));
 			this->_processWidget->memState->setText(QString("M: -- MB"));
+			this->runningParamSet = supplementary::ExecutableMetaData::UNKNOWN_PARAMS;
+			this->processWidget->setToolTip(QString(""));
 			this->processWidget->setStyleSheet(redBackground.c_str());
 		}
 		else
@@ -108,6 +118,8 @@ namespace rqt_pm_control
 				case 'Z': // zombie
 				case 'T': // traced, or stopped
 					this->processWidget->setStyleSheet(redBackground.c_str());
+					this->processWidget->setToolTip(QString(""));
+					this->runningParamSet = supplementary::ExecutableMetaData::UNKNOWN_PARAMS;
 					break;
 				case 'U':
 				default:
