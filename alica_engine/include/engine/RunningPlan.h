@@ -68,8 +68,8 @@ namespace alica
 		shared_ptr<Assignment> getAssignment();
 		void setAssignment(shared_ptr<Assignment> assignment);
 		void printRecursive();
-		alicaTime getPlanStartTime();
-		alicaTime getStateStartTime();
+		AlicaTime getPlanStartTime();
+		AlicaTime getStateStartTime();
 		bool isActive();
 		void setActive(bool active);
 		void setRobotsAvail(unique_ptr<list<int> > robots);
@@ -117,7 +117,7 @@ namespace alica
 		void setCycleManagement(CycleManager* cycleManagement);
 		void revokeAllConstraints();
 		void attachPlanConstraints();
-		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents,list<int> noUpdates, alicaTime now);
+		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents,list<int> noUpdates, AlicaTime now);
 		void toMessage(list<long>& message, shared_ptr<RunningPlan>& deepestNode, int& depth, int curDepth);
 		string toString();
 		int getOwnID();
@@ -141,11 +141,11 @@ namespace alica
 		/**
 		 * The (ROS-)timestamp referring to when the local robot entered the ActiveState.
 		 */
-		alicaTime stateStartTime;
+		AlicaTime stateStartTime;
 		/**
 		 * The timestamp referring to when this plan was started by the local robot
 		 */
-		alicaTime planStartTime;
+		AlicaTime planStartTime;
 		int ownId;
 		unique_ptr<list<int> > robotsAvail;
 		map<AbstractPlan*, int> failedSubPlans;
@@ -158,7 +158,7 @@ namespace alica
 		bool active;
 		IBehaviourPool* bp;
 		ITeamObserver* to;bool allocationNeeded;
-		alicaTime assignmentProtectionTime = (((*supplementary::SystemConfig::getInstance())["Alica"]->get<
+		AlicaTime assignmentProtectionTime = (((*supplementary::SystemConfig::getInstance())["Alica"]->get<
 				unsigned long>("Alica.AssignmentProtectionTime", NULL)) * 1000000);
 		CycleManager* cycleManagement;
 		ConstraintStore* constraintStore;

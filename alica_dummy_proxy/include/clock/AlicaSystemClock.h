@@ -16,7 +16,7 @@ namespace alica_dummy_proxy {
 		public:
 			AlicaSystemClock();
 			virtual ~AlicaSystemClock();
-			virtual alica::alicaTime now();
+			virtual alica::AlicaTime now();
 			virtual void sleep(long us);
 	};
 

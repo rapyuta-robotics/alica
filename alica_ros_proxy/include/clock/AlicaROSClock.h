@@ -18,7 +18,7 @@ namespace alicaRosProxy
 	public:
 		AlicaROSClock();
 		virtual ~AlicaROSClock();
-		virtual alica::alicaTime now();
+		virtual alica::AlicaTime now();
 		virtual void sleep(long us);
 	};
 

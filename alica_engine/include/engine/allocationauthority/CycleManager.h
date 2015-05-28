@@ -66,14 +66,14 @@ namespace alica
 		{
 			observing, overridden, overriding
 		};
-		alicaTime overrideTimestamp;
+		AlicaTime overrideTimestamp;
 		double intervalIncFactor;
 		double intervalDecFactor;
-		alicaTime minimalOverrideTimeInterval;
-		alicaTime maximalOverrideTimeInterval;
-		alicaTime overrideShoutInterval;
-		alicaTime overrideWaitInterval;
-		alicaTime overrideShoutTime;
+		AlicaTime minimalOverrideTimeInterval;
+		AlicaTime maximalOverrideTimeInterval;
+		AlicaTime overrideShoutInterval;
+		AlicaTime overrideWaitInterval;
+		AlicaTime overrideShoutTime;
 		int historySize;
 		CycleState state;
 		RunningPlan* rp;

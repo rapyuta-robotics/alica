@@ -41,8 +41,8 @@ namespace alica
 		bool isMasterPlan() const;
 		void setMasterPlan(bool isMasterPlan);
 		virtual string toString() const;
-		alicaTime getAuthorityTimeInterval() const;
-		void setAuthorityTimeInterval(alicaTime authorityTimeInterval);
+		AlicaTime getAuthorityTimeInterval() const;
+		void setAuthorityTimeInterval(AlicaTime authorityTimeInterval);
 		const virtual string& getFileName() const;
 		virtual void setFileName(const string& fileName);
 		shared_ptr<list<Variable*>> getVariables();
@@ -57,7 +57,7 @@ namespace alica
 		void setUtilityThreshold(double utilityThreshold = 1.0);
 
 	private:
-		alicaTime authorityTimeInterval;
+		AlicaTime authorityTimeInterval;
 		/**
 		 * This plan's runtime condition.
 		 */

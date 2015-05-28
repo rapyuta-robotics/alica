@@ -87,13 +87,13 @@ namespace alica
 		IAlicaCommunication* statusPublisher;
 		IAlicaClock* alicaClock;
 
-		alicaTime loopTime;
-		alicaTime lastSendTime;
-		alicaTime minSendInterval;
-		alicaTime maxSendInterval;
-		alicaTime loopInterval;
-		alicaTime lastSentStatusTime;
-		alicaTime sendStatusInterval;
+		AlicaTime loopTime;
+		AlicaTime lastSendTime;
+		AlicaTime minSendInterval;
+		AlicaTime maxSendInterval;
+		AlicaTime loopInterval;
+		AlicaTime lastSentStatusTime;
+		AlicaTime sendStatusInterval;
 
 		bool running;
 		bool sendStatusMessages;

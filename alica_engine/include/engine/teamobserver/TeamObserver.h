@@ -78,7 +78,7 @@ namespace alica
 		int myId;
 		RobotEngineData* me;
 		shared_ptr<map<int, shared_ptr<SimplePlanTree> > > simplePlanTrees;
-		alicaTime teamTimeOut;
+		AlicaTime teamTimeOut;
 		Logger* log;
 		unordered_set<int> ignoredRobots;
 		AlicaEngine* ae;

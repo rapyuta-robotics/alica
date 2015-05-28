@@ -383,12 +383,12 @@ namespace alica
 		this->assignment = assignment;
 	}
 
-	alicaTime RunningPlan::getPlanStartTime()
+	AlicaTime RunningPlan::getPlanStartTime()
 	{
 		return planStartTime;
 	}
 
-	alicaTime RunningPlan::getStateStartTime()
+	AlicaTime RunningPlan::getStateStartTime()
 	{
 		return stateStartTime;
 	}
@@ -844,7 +844,7 @@ namespace alica
 		this->constraintStore->addCondition(this->plan->getRuntimeCondition());
 	}
 
-	bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents, list<int> noUpdates, alicaTime now)
+	bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents, list<int> noUpdates, AlicaTime now)
 	{
 		if (this->isBehaviour())
 		{

@@ -9,13 +9,13 @@
 #define IALICATIME_H_
 namespace alica
 {
-	typedef signed long long alicaTime;
+	typedef signed long long AlicaTime;
 
 	class IAlicaClock
 	{
 	public:
 		virtual ~IAlicaClock() {}
-		virtual alicaTime now() = 0;
+		virtual AlicaTime now() = 0;
 		virtual void sleep(long us) = 0;
 	};
 

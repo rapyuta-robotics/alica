@@ -72,12 +72,12 @@ namespace alica
 		this->masterPlan = masterPlan;
 	}
 
-	alicaTime AbstractPlan::getAuthorityTimeInterval() const
+	AlicaTime AbstractPlan::getAuthorityTimeInterval() const
 	{
 		return authorityTimeInterval;
 	}
 
-	void AbstractPlan::setAuthorityTimeInterval(alicaTime authorithyTimeInterval)
+	void AbstractPlan::setAuthorityTimeInterval(AlicaTime authorithyTimeInterval)
 	{
 		this->authorityTimeInterval = authorithyTimeInterval;
 	}

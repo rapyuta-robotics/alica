@@ -56,7 +56,7 @@ namespace alica
 		double freq = (*sc)["Alica"]->get<double>("Alica.EngineFrequency", NULL);
 		double minbcfreq = (*sc)["Alica"]->get<double>("Alica.MinBroadcastFrequency", NULL);
 		double maxbcfreq = (*sc)["Alica"]->get<double>("Alica.MaxBroadcastFrequency", NULL);
-		this->loopTime = (alicaTime)fmax(1000000, lround(1.0 / freq * 1000000000));
+		this->loopTime = (AlicaTime)fmax(1000000, lround(1.0 / freq * 1000000000));
 		if (this->loopTime == 1000000)
 		{
 			cerr << "PB: ALICA should not be used with more than 1000Hz -> 1000Hz assumed" << endl;
@@ -68,17 +68,17 @@ namespace alica
 					"PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
 		}
 
-		this->minSendInterval = (alicaTime)fmax(1000000, lround(1.0 / maxbcfreq * 1000000000));
-		this->maxSendInterval = (alicaTime)fmax(1000000, lround(1.0 / minbcfreq * 1000000000));
+		this->minSendInterval = (AlicaTime)fmax(1000000, lround(1.0 / maxbcfreq * 1000000000));
+		this->maxSendInterval = (AlicaTime)fmax(1000000, lround(1.0 / minbcfreq * 1000000000));
 
-		alicaTime halfLoopTime = this->loopTime / 2;
+		AlicaTime halfLoopTime = this->loopTime / 2;
 		this->running = false;
 
 		this->sendStatusMessages = (*sc)["Alica"]->get<bool>("Alica.StatusMessages.Enabled", NULL);
 		if (sendStatusMessages)
 		{
 			double stfreq = (*sc)["Alica"]->get<double>("Alica.StatusMessages.Frequency", NULL);
-			this->sendStatusInterval = (alicaTime)max(1000000.0, round(1.0 / stfreq * 1000000000));
+			this->sendStatusInterval = (AlicaTime)max(1000000.0, round(1.0 / stfreq * 1000000000));
 			this->statusMessage = new BehaviourEngineInfo();
 			this->statusMessage->senderID = this->teamObserver->getOwnId();
 			this->statusMessage->masterPlan = masterPlan->getName();
@@ -133,7 +133,7 @@ namespace alica
 		while (this->running)
 		{
 			//cout << "PB: RUNNING" << endl;
-			alicaTime beginTime = alicaClock->now();
+			AlicaTime beginTime = alicaClock->now();
 
 			//cout << "PB: BEGIN TIME is: " << beginTime << endl;
 			if (ae->getStepEngine())
@@ -198,7 +198,7 @@ namespace alica
 				swap(this->fpEvents, empty);
 			}
 
-			alicaTime now = alicaClock->now();
+			AlicaTime now = alicaClock->now();
 
 			if ((this->ruleBook->isChangeOccured() && this->lastSendTime + this->minSendInterval < now)
 					|| this->lastSendTime + this->maxSendInterval < now)
