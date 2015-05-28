@@ -98,7 +98,7 @@ namespace alica
 				this->state = CycleState::overriding;
 				this->rp->getPlan()->setAuthorityTimeInterval(
 						min(maximalOverrideTimeInterval,
-							(alicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
+							(AlicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
 				this->overrideShoutTime = 0;
 #ifdef CM_DEBUG
 				cout << "Assuming Authority for " << this->rp->getPlan()->getAuthorityTimeInterval() / 1000000000.0
@@ -110,7 +110,7 @@ namespace alica
 			{
 				this->rp->getPlan()->setAuthorityTimeInterval(
 						max(minimalOverrideTimeInterval,
-							(alicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalDecFactor)));
+							(AlicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalDecFactor)));
 			}
 		}
 		else
@@ -277,7 +277,7 @@ namespace alica
 				this->state = CycleState::overriding;
 				this->rp->getPlan()->setAuthorityTimeInterval(
 						min(maximalOverrideTimeInterval,
-							(alicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
+							(AlicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
 				this->overrideTimestamp = ae->getIAlicaClock()->now();
 				this->overrideShoutTime = 0;
 			}

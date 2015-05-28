@@ -20,10 +20,10 @@ namespace alicaRosProxy
 	{
 	}
 
-	alica::alicaTime AlicaROSClock::now()
+	alica::AlicaTime AlicaROSClock::now()
 	{
 		ros::Time t = ros::Time::now();
-		alica::alicaTime ret = (alica::alicaTime)(t.sec * 1000000000UL + t.nsec);
+		alica::AlicaTime ret = (alica::AlicaTime)(t.sec * 1000000000UL + t.nsec);
 		return ret;
 	}
 	void AlicaROSClock::sleep(long us)

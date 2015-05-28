@@ -20,11 +20,11 @@ namespace alica_dummy_proxy {
 	{
 		// TODO Auto-generated destructor stub
 	}
-	alica::alicaTime AlicaSystemClock::now()
+	alica::AlicaTime AlicaSystemClock::now()
 	{
 		time_t t;
 		t = time(NULL);
-		alica::alicaTime ret = (alica::alicaTime)(t * 1000000000UL + t*1000*1000);
+		alica::AlicaTime ret = (alica::AlicaTime)(t * 1000000000UL + t*1000*1000);
 		return ret;
 
 
