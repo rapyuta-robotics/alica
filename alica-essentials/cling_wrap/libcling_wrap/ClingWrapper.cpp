@@ -380,7 +380,7 @@ namespace supplementary
 //		  std::cout << values[i];
 //
 //		  if (i != 0)
-//		    std: cout << " > ";
+//		    std::cout << " > ";
 //		}
 //
 //		std::cout << std::endl;
@@ -777,6 +777,45 @@ namespace supplementary
             return -1;
 
           return claspFacade->summary().enumerated();
+        }
+
+        const long ClingWrapper::getAtomCount()
+        {
+          if (this->getStats() == nullptr)
+            return -1;
+
+          auto claspFacade = this->getStats()->clasp;
+
+          if (claspFacade == nullptr)
+            return -1;
+
+          return claspFacade->summary().lpStats()->atoms;
+        }
+
+        const long ClingWrapper::getBodiesCount()
+        {
+          if (this->getStats() == nullptr)
+            return -1;
+
+          auto claspFacade = this->getStats()->clasp;
+
+          if (claspFacade == nullptr)
+            return -1;
+
+          return claspFacade->summary().lpStats()->bodies;
+        }
+
+        const long ClingWrapper::getAuxAtomsCount()
+        {
+          if (this->getStats() == nullptr)
+            return -1;
+
+          auto claspFacade = this->getStats()->clasp;
+
+          if (claspFacade == nullptr)
+            return -1;
+
+          return claspFacade->summary().lpStats()->auxAtoms;
         }
 
         const long ClingWrapper::getSymbolTableSize()

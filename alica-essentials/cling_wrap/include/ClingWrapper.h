@@ -87,6 +87,9 @@ namespace supplementary
                 const long long getSatTime();
                 const long long getUnsatTime();
                 const long getModelCount();
+                const long getAtomCount();
+                const long getBodiesCount();
+                const long getAuxAtomsCount();
                 const long getSymbolTableSize();
 
 	private:
