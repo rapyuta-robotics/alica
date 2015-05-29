@@ -325,7 +325,7 @@ namespace supplementary
 		vector<string> itemVector;
 		while (std::getline(ss, listItem, LIST_ELEMENT_SEPERATOR))
 		{
-			itemVector.push_back(listItem);
+			itemVector.push_back(trim(listItem, " "));
 		}
 		return itemVector;
 	}

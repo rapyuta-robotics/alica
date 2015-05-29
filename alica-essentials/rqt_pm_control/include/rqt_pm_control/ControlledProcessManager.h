@@ -2,54 +2,49 @@
  * ControlledProcessManager.h
  *
  *  Created on: Mar 1, 2015
- *      Author: emmeda
+ *      Author: Stephan Opfer
  */
 
 #ifndef SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDPROCESSMANAGER_H_
 #define SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDPROCESSMANAGER_H_
 
-#include <vector>
 #include <chrono>
 #include <string>
+#include <utility>
+
 #include "process_manager/ProcessStats.h"
-#include "QHBoxLayout"
-#include "QFrame"
+
+#include <QFrame>
 
 using namespace std;
-
-namespace Ui
-{
-	class RobotProcessesWidget;
-}
-
-namespace supplementary
-{
-	class RobotExecutableRegistry;
-}
 
 namespace rqt_pm_control
 {
 	class ControlledRobot;
+	class PMControl;
 
 	class ControlledProcessManager
 	{
 	public:
-		ControlledProcessManager(string name, int processManagerId);
+		ControlledProcessManager(string processManagerName, int processManagerId, PMControl* parentPMControl);// QHBoxLayout* parentHBoxLayout, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap, ros::Publisher* processCommandPub, chrono::duration<double> msgTimeOut,);
 		virtual ~ControlledProcessManager();
 
-		void handleProcessStats(process_manager::ProcessStats psts, supplementary::RobotExecutableRegistry* pmRegistry);
-		void updateGUI(QHBoxLayout* parentLayout);
-		chrono::system_clock::time_point timeLastMsgReceived;
-		int processManagerId;
-		QFrame* robotProc;
+		void updateGUI(chrono::system_clock::time_point now);
+		void handleProcessStats(pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair);
+		void sendProcessCommand(vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int newState);
+		void addRobot(QFrame* robot);
+		void removeRobot(QFrame* robot);
+
+		chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
+		string name; /* < Hostname under which this process manager is running */
+		int id; /* < The id of the host */
+		PMControl* parentPMControl; /* < Pointer to the parent PMControl */
 
 	private:
-		string name;
 
-		map<int, ControlledRobot*> controlledRobotsMap;
+		map<int, ControlledRobot*> controlledRobotsMap; /* < The robots, which are controlled by this process manager */
+		ControlledRobot* getControlledRobot(int robotId);
 
-
-		Ui::RobotProcessesWidget* _processManagerWidget;
 	};
 
 } /* namespace rqt_pm_control */

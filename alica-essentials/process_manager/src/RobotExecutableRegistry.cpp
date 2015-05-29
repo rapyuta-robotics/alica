@@ -197,16 +197,21 @@ namespace supplementary
 	 */
 	int RobotExecutableRegistry::addExecutable(string execName)
 	{
+		if (this->executableExists(execName))
+		{
+			cerr << "RobotExecutableRegistry: The executable '" << execName << "' is already registered!" << endl;
+			return -1;
+		}
+
 		SystemConfig* sc = SystemConfig::getInstance();
 		int execId;
 		string absExecName;
 		string processMode;
-		vector<string> defaultParamsVec;
+
 		try
 		{
 			execId = (*sc)["Processes"]->get<int>("Processes.ProcessDescriptions", execName.c_str(), "id", NULL);
 			processMode = (*sc)["Processes"]->get<string>("Processes.ProcessDescriptions", execName.c_str(), "mode", NULL);
-			defaultParamsVec = (*sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", execName.c_str(), "defaultParams", NULL);
 		}
 		catch (runtime_error& e)
 		{
@@ -217,32 +222,71 @@ namespace supplementary
 		string cmd = "catkin_find --libexec " + execName;
 		absExecName = supplementary::ConsoleCommandHelper::exec(cmd.c_str());
 
-
-		// transform the system config default params to vector of char*, for c-compatibility.
-		vector<char*> defaultParams;
 		if (absExecName.length() > 1)
 		{
-			absExecName = absExecName.substr(0, absExecName.length()-1);
+			absExecName = absExecName.substr(0, absExecName.length() - 1);
 			absExecName = absExecName + "/" + execName;
-			defaultParams.push_back(strdup(absExecName.c_str()));
+		}
+
+		ExecutableMetaData* execMetaData = new ExecutableMetaData(execName, execId, processMode, absExecName);
+		auto paramSets = (*sc)["Processes"]->tryGetNames("NONE", "Processes.ProcessDescriptions", execName.c_str(), "paramSets", NULL);
+		if (paramSets->size() > 1 || paramSets->at(0) != "NONE")
+		{
+			for (string paramSetKeyString : (*paramSets))
+			{
+				try
+				{
+					int paramSetKey = stoi(paramSetKeyString);
+					auto paramSetValues = (*sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", execName.c_str(), "paramSets",
+																				paramSetKeyString.c_str(), NULL);
+
+					// first param is always the executable name
+					vector<char*> currentParams;
+					if (absExecName.length() > 1)
+					{
+						currentParams.push_back(strdup(absExecName.c_str()));
+					}
+					else
+					{
+						currentParams.push_back(strdup(execName.c_str()));
+					}
+					// transform the system config params to vector of char*, for c-compatibility.
+					for (string param : paramSetValues)
+					{
+						char * tmp = new char[param.size() + 1];
+						strcpy(tmp, param.c_str());
+						tmp[param.size() + 1] = '\0';
+						currentParams.push_back(tmp);
+					}
+					currentParams.push_back(nullptr);
+
+					execMetaData->addParameterSet(paramSetKey, currentParams);
+				}
+				catch (exception & e)
+				{
+					cerr << "RobotExecutableRegistry: Unable to parse parameter set \"" << paramSetKeyString << "\" of process \"" << execName << "\""
+							<< endl;
+					cerr << e.what() << endl;
+				}
+			}
 		}
 		else
 		{
-			defaultParams.push_back(strdup(execName.c_str()));
+			vector<char*> currentParams;
+			if (absExecName.length() > 1)
+			{
+				currentParams.push_back(strdup(absExecName.c_str()));
+			}
+			else
+			{
+				currentParams.push_back(strdup(execName.c_str()));
+			}
+			currentParams.push_back(nullptr);
+			execMetaData->addParameterSet(0, currentParams);
 		}
 
-		for (string param : defaultParamsVec)
-		{
-			char * tmp = new char[param.size()+1];
-			strcpy(tmp, param.c_str());
-			tmp[param.size()+1] = '\0';
-			defaultParams.push_back(tmp);
-		}
-
-		defaultParams.push_back(nullptr);
-
-		this->executableList.push_back(new ExecutableMetaData(execName, execId, processMode, defaultParams, absExecName));
-
+		//cout << (*execMetaData) << endl;
+		this->executableList.push_back(execMetaData);
 		return execId;
 	}
 
@@ -252,7 +296,8 @@ namespace supplementary
 	 * @param execName is the name of the demanded entry.
 	 * @return The demanded entry, if it exists. nullptr, otherwise.
 	 */
-	ExecutableMetaData const * const RobotExecutableRegistry::getExecutable(string execName) const
+	ExecutableMetaData
+	const * const RobotExecutableRegistry::getExecutable(string execName) const
 	{
 		for (auto execEntry : this->executableList)
 		{
@@ -270,7 +315,8 @@ namespace supplementary
 	 * @param execId is the id of the demanded entry.
 	 * @return The demanded entry, if it exists. nullptr, otherwise.
 	 */
-	ExecutableMetaData const * const RobotExecutableRegistry::getExecutable(int execId) const
+	ExecutableMetaData
+	const * const RobotExecutableRegistry::getExecutable(int execId) const
 	{
 		for (auto execEntry : this->executableList)
 		{

@@ -107,7 +107,7 @@ namespace alica
 #endif
 
 			_rResults.clear();
-			alicaTime begin = alicaClock->now();
+			AlicaTime begin = alicaClock->now();
 
 			_dim = args->size();
 			_limits = limits;
