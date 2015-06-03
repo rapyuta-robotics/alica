@@ -1,14 +1,16 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(alica_ros_proxy)
+
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+
 find_package(catkin REQUIRED COMPONENTS
   alica_engine
   system_config
-#  cnc_turtlebots_behaviours
   roscpp
   message_generation
 )
@@ -123,7 +125,6 @@ add_dependencies(alica_ros_proxy alica_ros_proxy_generate_messages_cpp)
 ## Specify libraries to link a library or executable target against
 target_link_libraries(alica_ros_proxy
    ${catkin_LIBRARIES}
-   alica_engine
  )
 
 #############

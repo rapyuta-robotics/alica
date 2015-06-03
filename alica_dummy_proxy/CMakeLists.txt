@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS "-rdynamic -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}")
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+find_package(catkin QUIET)
 if (catkin_FOUND)
 	find_package(catkin REQUIRED COMPONENTS
 	  alica_engine
@@ -109,8 +110,9 @@ file(GLOB_RECURSE alica_dummy_sources "src/*.cpp")
  add_library(alica_dummy_proxy
   ${alica_dummy_sources};
 )
- target_link_libraries(alica_dummy_proxy ${catkin_LIBRARIES} alica_engine system_config)
- add_dependencies(alica_engine ${catkin_LIBRARIES} alica_engine system_config)
+ target_link_libraries(alica_dummy_proxy ${catkin_LIBRARIES})
+ add_dependencies(alica_dummy_proxy ${catkin_LIBRARIES})
+ 
 if (NOT catkin_FOUND)
  target_include_directories(alica_dummy_proxy PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include") 
 endif (NOT catkin_FOUND)
