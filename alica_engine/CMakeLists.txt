@@ -13,6 +13,7 @@ set(CMAKE_CXX_FLAGS "-rdynamic -g -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+find_package(catkin QUIET)
 if (catkin_FOUND)
   find_package(catkin REQUIRED COMPONENTS system_config fsystem event_handling system_util)
 else (catkin_FOUND)
