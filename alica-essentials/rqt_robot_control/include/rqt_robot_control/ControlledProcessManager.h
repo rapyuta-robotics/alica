@@ -8,18 +8,17 @@
 #ifndef SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDPROCESSMANAGER_H_
 #define SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDPROCESSMANAGER_H_
 
-
+#include <chrono>
 #include <string>
 #include <utility>
 
 #include "process_manager/ProcessStats.h"
 
 #include <QFrame>
-#include <chrono>
 
 using namespace std;
 
-namespace rqt_pm_control
+namespace rqt_robot_control
 {
 	class ControlledRobot;
 	class PMControl;
@@ -48,6 +47,6 @@ namespace rqt_pm_control
 
 	};
 
-} /* namespace rqt_pm_control */
+} /* namespace rqt_robot_control */
 
 #endif /* SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDPROCESSMANAGER_H_ */

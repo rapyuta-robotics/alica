@@ -11,10 +11,10 @@
 #include <process_manager/ProcessStat.h>
 #include "QWidget"
 
+#include <chrono>
 #include <string>
 #include <vector>
 #include <map>
-#include <chrono>
 
 namespace Ui
 {
@@ -28,7 +28,7 @@ namespace supplementary {
 
 using namespace std;
 
-namespace rqt_pm_control
+namespace rqt_robot_control
 {
 	class ControlledRobot;
 
@@ -70,7 +70,7 @@ namespace rqt_pm_control
 
 	};
 
-} /* namespace rqt_pm_control */
+} /* namespace rqt_robot_control */
 
 #endif /* SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDEXECUTABLE_H_ */
 

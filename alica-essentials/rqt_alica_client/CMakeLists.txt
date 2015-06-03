@@ -1,20 +1,21 @@
 cmake_minimum_required(VERSION 2.8.3)
+project(rqt_alica_client)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
-project(rqt_alica_client)
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp alica_ros_proxy)
 
 find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
 
+## Use c++ 11x std
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
 include(${QT_USE_FILE})
 
 set(rqt_alica_client_SRCS
   src/rqt_alica_client/AlicaClient.cpp
-
-
 )
 
 set(rqt_alica_client_HDRS

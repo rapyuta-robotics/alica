@@ -6,7 +6,7 @@
  */
 
 #include "Logging.h"
-#include "SystemConfig.h"
+#include <SystemConfig.h>
 #include "FileSystem.h"
 
 namespace supplementary

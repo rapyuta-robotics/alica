@@ -1,14 +1,15 @@
 #include <pluginlib/class_list_macros.h>
 #include <ros/master.h>
-#include <rqt_pm_control/PMControl.h>
+#include <rqt_robot_control/PMControl.h>
 
 #include <SystemConfig.h>
 #include <RobotExecutableRegistry.h>
-#include "rqt_pm_control/ControlledProcessManager.h"
-#include "rqt_pm_control/ControlledExecutable.h"
+#include "rqt_robot_control/ControlledProcessManager.h"
+#include "rqt_robot_control/ControlledExecutable.h"
 #include "ExecutableMetaData.h"
+#include "SigFault.h"
 
-namespace rqt_pm_control
+namespace rqt_robot_control
 {
 
 	chrono::duration<double> PMControl::msgTimeOut = chrono::duration<double>(0);
@@ -83,6 +84,9 @@ namespace rqt_pm_control
 		this->guiUpdateTimer = new QTimer();
 		QObject::connect(guiUpdateTimer, SIGNAL(timeout()), this, SLOT(run()));
 		this->guiUpdateTimer->start(200);
+
+		//This makes segfaults to exceptions
+		segfaultdebug::init_segfault_exceptions();
 	}
 
 	/**
@@ -238,4 +242,4 @@ namespace rqt_pm_control
 
 }
 
-PLUGINLIB_EXPORT_CLASS(rqt_pm_control::PMControl, rqt_gui_cpp::Plugin)
+PLUGINLIB_EXPORT_CLASS(rqt_robot_control::PMControl, rqt_gui_cpp::Plugin)

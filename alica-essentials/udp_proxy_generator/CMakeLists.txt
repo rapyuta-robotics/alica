@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED fsystem)
+find_package(catkin REQUIRED COMPONENTS fsystem)
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system filesystem regex)
@@ -81,7 +81,7 @@ find_package(Boost REQUIRED COMPONENTS system filesystem regex)
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES 
- CATKIN_DEPENDS 
+ CATKIN_DEPENDS fsystem
  DEPENDS system filesystem regex
 )
 

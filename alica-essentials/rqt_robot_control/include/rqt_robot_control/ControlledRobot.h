@@ -8,13 +8,14 @@
 #ifndef SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_
 #define SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_
 
+#include <chrono>
+
 #include <RobotMetaData.h>
 #include <QObject>
 #include <process_manager/ProcessStats.h>
 #include <process_manager/ProcessStat.h>
 #include "QHBoxLayout"
 #include "QFrame"
-#include <chrono>
 
 namespace Ui {
 	class RobotProcessesWidget;
@@ -28,7 +29,7 @@ namespace ros{
 	class Publisher;
 }
 
-namespace rqt_pm_control
+namespace rqt_robot_control
 {
 	class ControlledExecutable;
 	class ControlledProcessManager;
@@ -65,6 +66,6 @@ namespace rqt_pm_control
 
 	};
 
-} /* namespace rqt_pm_control */
+} /* namespace rqt_robot_control */
 
 #endif /* SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_ */

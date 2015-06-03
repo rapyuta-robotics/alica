@@ -2,7 +2,7 @@
  * FileSystem.h
  *
  *  Created on: Jun 2, 2014
- *      Author: emmeda
+ *      Author: Stephan Opfer
  */
 
 #ifndef FILESYSTEM_H_
