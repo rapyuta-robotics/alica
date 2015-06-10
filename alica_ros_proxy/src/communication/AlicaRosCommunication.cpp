@@ -8,7 +8,6 @@
 #include "communication/AlicaRosCommunication.h"
 
 #include "engine/containers/AllocationAuthorityInfo.h"
-#include "engine/containers/BehaviourEngineInfo.h"
 #include "engine/containers/PlanTreeInfo.h"
 #include "engine/containers/RoleSwitch.h"
 #include "engine/containers/SolverResult.h"
@@ -22,6 +21,7 @@
 #include <ros/subscriber.h>
 #include <SystemConfig.h>
 #include <Configuration.h>
+#include <engine/containers/AlicaEngineInfo.h>
 
 using namespace alica;
 
@@ -41,8 +41,8 @@ namespace alicaRosProxy
 																&AlicaRosCommunication::handleAllocationAuthorityRos,
 																(AlicaRosCommunication*)this);
 
-		BehaviourEngineInfoPublisher = rosNode->advertise<alica_ros_proxy::BehaviourEngineInfo>(
-				"/AlicaEngine/BehaviourEngineInfo", 2);
+		AlicaEngineInfoPublisher = rosNode->advertise<alica_ros_proxy::AlicaEngineInfo>(
+				"/AlicaEngine/AlicaEngineInfo", 2);
 		RoleSwitchPublisher = rosNode->advertise<alica_ros_proxy::SyncTalk>("/AlicaEngine/OwnRole", 10);
 
 		PlanTreeInfoPublisher = rosNode->advertise<alica_ros_proxy::PlanTreeInfo>("/AlicaEngine/PlanTreeInfo", 10);
@@ -117,9 +117,9 @@ namespace alicaRosProxy
 		}
 	}
 
-	void AlicaRosCommunication::sendBehaviourEngineInfo(BehaviourEngineInfo& bi)
+	void AlicaRosCommunication::sendAlicaEngineInfo(AlicaEngineInfo& bi)
 	{
-		alica_ros_proxy::BehaviourEngineInfo bis;
+		alica_ros_proxy::AlicaEngineInfo bis;
 		bis.currentPlan = bi.currentPlan;
 		bis.currentRole = bi.currentRole;
 		bis.currentState = bi.currentState;
@@ -133,7 +133,7 @@ namespace alicaRosProxy
 
 		if (this->isRunning)
 		{
-			this->BehaviourEngineInfoPublisher.publish(bis);
+			this->AlicaEngineInfoPublisher.publish(bis);
 		}
 	}
 

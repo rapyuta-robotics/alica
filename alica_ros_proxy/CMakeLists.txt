@@ -55,7 +55,7 @@ find_package(Boost REQUIRED COMPONENTS system)
    RoleSwitch.msg
    SolverVar.msg
    SyncReady.msg
-   BehaviourEngineInfo.msg 
+   AlicaEngineInfo.msg 
    PlanTreeInfo.msg
    SolverResult.msg
    SyncData.msg
