@@ -5,17 +5,11 @@
  *      Author: Stephan Opfer
  */
 
-#ifndef SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_
-#define SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_
+#ifndef SUPPLEMENTARY_RQT_ROBOT_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_
+#define SUPPLEMENTARY_RQT_ROBOT_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_
 
 #include <chrono>
-
 #include <RobotMetaData.h>
-#include <QObject>
-#include <process_manager/ProcessStats.h>
-#include <process_manager/ProcessStat.h>
-#include "QHBoxLayout"
-#include "QFrame"
 
 namespace Ui {
 	class RobotProcessesWidget;
@@ -31,41 +25,26 @@ namespace ros{
 
 namespace rqt_robot_control
 {
-	class ControlledExecutable;
-	class ControlledProcessManager;
+	class RobotsControl;
 
-	class ControlledRobot : public QObject, public supplementary::RobotMetaData
+	class ControlledRobot : public supplementary::RobotMetaData
 	{
-		Q_OBJECT
 
 	public:
-		ControlledRobot(string robotName, int robotId, ControlledProcessManager* parentProcessManager);
+		ControlledRobot(string robotName, int robotId, RobotsControl* parentRobotsControl);
 		virtual ~ControlledRobot();
 
-		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
-		void sendProcessCommand(vector<int> execIds, vector<int> paramSets, int newState);
 		void updateGUI(chrono::system_clock::time_point now);
-		void addExec(QWidget* exec);
-		void removeExec(QWidget* exec);
-
 
 		chrono::system_clock::time_point timeLastMsgReceived; /**< the last time a message was received for this robot */
-		QFrame* robotProcessesQFrame; /**< The widget, used to initialise the RobotProcessesWidget */
-		ControlledProcessManager* parentProcessManager;
 
-	public Q_SLOTS:
-		void updateBundles(QString text);
+		RobotsControl* parentRobotsControl;
 
 	private:
 
-		string selectedBundle;
-		Ui::RobotProcessesWidget* _robotProcessesWidget;
-
-
-		map<int, ControlledExecutable*> controlledExecMap;
 
 	};
 
 } /* namespace rqt_robot_control */
 
-#endif /* SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_ */
+#endif /* SUPPLEMENTARY_RQT_ROBOT_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_ */

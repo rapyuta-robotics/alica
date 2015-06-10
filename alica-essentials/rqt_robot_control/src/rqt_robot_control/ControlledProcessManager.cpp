@@ -5,16 +5,16 @@
  *      Author: Stephan Opfer
  */
 
+#include <rqt_robot_control/RobotsControl.h>
 #include "rqt_robot_control/ControlledProcessManager.h"
 #include "rqt_robot_control/ControlledRobot.h"
 #include <ui_RobotProcessesWidget.h>
 #include <RobotExecutableRegistry.h>
-#include "rqt_robot_control/PMControl.h"
 
 namespace rqt_robot_control
 {
 //	QHBoxLayout* parentHBoxLayout, supplementary::RobotExecutableRegistry* pmRegistry,map<string, vector<int>> &bundlesMap, ros::Publisher* processCommandPub, chrono::duration<double> msgTimeOut)
-	ControlledProcessManager::ControlledProcessManager(string processManagerName, int processManagerId, PMControl* parentPMControl) :
+	ControlledProcessManager::ControlledProcessManager(string processManagerName, int processManagerId, RobotsControl* parentPMControl) :
 			name(processManagerName), id(processManagerId), parentPMControl(parentPMControl)
 	{
 
@@ -75,7 +75,7 @@ namespace rqt_robot_control
 	{
 		for (auto controlledRobotEntry : this->controlledRobotsMap)
 		{
-			if ((now - controlledRobotEntry.second->timeLastMsgReceived) > PMControl::msgTimeOut)
+			if ((now - controlledRobotEntry.second->timeLastMsgReceived) > RobotsControl::msgTimeOut)
 			{ // time is over, erase controlled robot
 
 				cout << "ControlledPM: The robot " << controlledRobotEntry.second->name << " (ID: " << controlledRobotEntry.second->id

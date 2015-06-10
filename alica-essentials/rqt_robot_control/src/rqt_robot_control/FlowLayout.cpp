@@ -38,9 +38,9 @@
 **
 ****************************************************************************/
 
+#include <rqt_robot_control/FlowLayout.h>
 #include <QWidget>
 
-#include "rqt_robot_control/flowlayout.h"
 FlowLayout::FlowLayout(QWidget *parent, int margin, int hSpacing, int vSpacing)
     : QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing)
 {

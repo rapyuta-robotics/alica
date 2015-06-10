@@ -21,12 +21,12 @@ using namespace std;
 namespace rqt_robot_control
 {
 	class ControlledRobot;
-	class PMControl;
+	class RobotsControl;
 
 	class ControlledProcessManager
 	{
 	public:
-		ControlledProcessManager(string processManagerName, int processManagerId, PMControl* parentPMControl);// QHBoxLayout* parentHBoxLayout, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap, ros::Publisher* processCommandPub, chrono::duration<double> msgTimeOut,);
+		ControlledProcessManager(string processManagerName, int processManagerId, RobotsControl* parentPMControl);// QHBoxLayout* parentHBoxLayout, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap, ros::Publisher* processCommandPub, chrono::duration<double> msgTimeOut,);
 		virtual ~ControlledProcessManager();
 
 		void updateGUI(chrono::system_clock::time_point now);
@@ -38,7 +38,7 @@ namespace rqt_robot_control
 		chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
 		string name; /* < Hostname under which this process manager is running */
 		int id; /* < The id of the host */
-		PMControl* parentPMControl; /* < Pointer to the parent PMControl */
+		RobotsControl* parentPMControl; /* < Pointer to the parent PMControl */
 
 	private:
 

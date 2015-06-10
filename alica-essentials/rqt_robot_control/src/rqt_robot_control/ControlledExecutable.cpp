@@ -5,13 +5,13 @@
  *      Author: Stephan Opfer
  */
 
+#include <rqt_robot_control/RobotsControl.h>
 #include "rqt_robot_control/ControlledExecutable.h"
 #include "ui_ProcessWidget.h"
 #include "ui_RobotProcessesWidget.h"
 #include "ExecutableMetaData.h"
 #include "rqt_robot_control/ControlledProcessManager.h"
 
-#include "rqt_robot_control/PMControl.h"
 
 namespace rqt_robot_control
 {
@@ -90,7 +90,7 @@ namespace rqt_robot_control
 
 	void ControlledExecutable::updateGUI(chrono::system_clock::time_point now)
 	{
-		if ((now - this->timeLastMsgReceived) > PMControl::msgTimeOut)
+		if ((now - this->timeLastMsgReceived) > RobotsControl::msgTimeOut)
 		{ // time is over, erase controlled robot
 
 			this->_processWidget->cpuState->setText(QString("C: -- %"));

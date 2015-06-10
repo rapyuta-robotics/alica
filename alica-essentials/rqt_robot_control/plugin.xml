@@ -1,7 +1,7 @@
 <library path="lib/librqt_robot_control">
-  <class name="rqt_robot_control/PMControl" type="rqt_robot_control::PMControl" base_class_type="rqt_gui_cpp::Plugin">
+  <class name="rqt_robot_control/RobotsControl" type="rqt_robot_control::RobotsControl" base_class_type="rqt_gui_cpp::Plugin">
     <description>
-      A GUI plugin to control process managers remotely.
+      A GUI plugin to control and monitor robots, using ALICA, the Process Manager, and some robot specific things.
     </description>
     <qtgui>
       <group>
@@ -11,7 +11,7 @@
       </group>
       <label>Process Manager GUI</label>
       <icon type="theme">image-x-generic</icon>
-      <statustip>A GUI plugin for sending process_manager commands.</statustip>
+      <statustip>A GUI plugin for controlling and monitoring robots.</statustip>
     </qtgui>
   </class>
 </library>

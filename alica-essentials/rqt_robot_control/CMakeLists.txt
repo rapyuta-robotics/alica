@@ -15,32 +15,17 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 include(${QT_USE_FILE})
 
 set(rqt_robot_control_SRCS
-  src/rqt_robot_control/PMControl.cpp
-  src/rqt_robot_control/ControlledExecutable.cpp
-  src/rqt_robot_control/ControlledProcessManager.cpp
+  src/rqt_robot_control/RobotsControl.cpp
   src/rqt_robot_control/ControlledRobot.cpp
 )
 
-set(flowlayout_SRCS
-  src/rqt_robot_control/main.cpp
-  src/rqt_robot_control/window.cpp
-  src/rqt_robot_control/flowlayout.cpp
-)
-
 set(rqt_robot_control_HDRS
-  include/rqt_robot_control/PMControl.h
-  include/rqt_robot_control/ControlledExecutable.h
-  include/rqt_robot_control/ControlledProcessManager.h
+  include/rqt_robot_control/RobotsControl.h
   include/rqt_robot_control/ControlledRobot.h
 )
 
-set(flowlayout_HDRS
-  include/rqt_robot_control/window.h
-  include/rqt_robot_control/flowlayout.h
-)
-
 set(rqt_robot_control_UIS
-  src/rqt_robot_control/PMControl.ui
+  src/rqt_robot_control/RobotsControl.ui
   src/rqt_robot_control/ProcessWidget.ui
   src/rqt_robot_control/RobotProcessesWidget.ui
 )
@@ -60,16 +45,10 @@ catkin_python_setup()
 qt4_wrap_cpp(rqt_robot_control_MOCS ${rqt_robot_control_HDRS})
 qt4_wrap_ui(rqt_robot_control_UIS_H ${rqt_robot_control_UIS})
 
-qt4_wrap_cpp(flowlayout_MOCS ${flowlayout_HDRS})
-
-
 include_directories(${rqt_robot_control_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
 add_library(${PROJECT_NAME} ${rqt_robot_control_SRCS} ${rqt_robot_control_MOCS} ${rqt_robot_control_UIS_H})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
 add_dependencies(${PROJECT_NAME} process_manager)
-
-add_executable(flowlayoutTest ${flowlayout_SRCS} ${flowlayout_MOCS})
-target_link_libraries(flowlayoutTest ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
 
 find_package(class_loader)
 class_loader_hide_library_symbols(${PROJECT_NAME})
