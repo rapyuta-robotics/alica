@@ -1,23 +1,25 @@
 /*
- * BehaviourEngineInfo.h
+ * AlicaEngineInfo.h
  *
  *  Created on: Jun 30, 2014
  *      Author: Paul Panin
  */
 
-#ifndef BEHAVIOURENGINEINFO_H_
-#define BEHAVIOURENGINEINFO_H_
+#ifndef ALICAENGINEINFO_H_
+#define ALICAENGINEINFO_H_
 
 #include <vector>
+#include <string>
+#include <tuple>
 
 using namespace std;
 
 namespace alica
 {
-	typedef tuple<int, string, string, string, string, string, vector<int>> stdBehaviourEngineInfo;
-	struct BehaviourEngineInfo
+	typedef tuple<int, string, string, string, string, string, vector<int>> stdAlicaEngineInfo;
+	struct AlicaEngineInfo
 	{
-		BehaviourEngineInfo()
+		AlicaEngineInfo()
 		{
 		}
 		int senderID;
@@ -28,7 +30,7 @@ namespace alica
 		string currentTask;
 		vector<int> robotIDsWithMe;
 
-		BehaviourEngineInfo(stdBehaviourEngineInfo &s)
+		AlicaEngineInfo(stdAlicaEngineInfo &s)
 		{
 			senderID = get<0>(s);
 			masterPlan = move(get<1>(s));
@@ -39,7 +41,7 @@ namespace alica
 			robotIDsWithMe = move(get<6>(s));
 		}
 
-		stdBehaviourEngineInfo toStandard()
+		stdAlicaEngineInfo toStandard()
 		{
 			return move(
 					make_tuple(senderID, masterPlan, currentPlan, currentState, currentRole, currentTask,
@@ -48,4 +50,4 @@ namespace alica
 	};
 }
 
-#endif /* BEHAVIOURENGINEINFO_H_ */
+#endif /* ALICAENGINEINFO_H_ */

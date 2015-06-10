@@ -21,7 +21,7 @@ namespace alica_dummy_proxy {
 			virtual void tick();
 
 			virtual void sendAllocationAuthority(alica::AllocationAuthorityInfo& aai);
-			virtual void sendBehaviourEngineInfo(alica::BehaviourEngineInfo& bi);
+			virtual void sendAlicaEngineInfo(alica::AlicaEngineInfo& bi);
 			virtual void sendPlanTreeInfo(alica::PlanTreeInfo& pti);
 			virtual void sendRoleSwitch(alica::RoleSwitch& rs);
 			virtual void sendSyncReady(alica::SyncReady& sr);

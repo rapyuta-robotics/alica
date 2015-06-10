@@ -12,7 +12,7 @@
 #include "ros/ros.h"
 
 #include "alica_ros_proxy/AllocationAuthorityInfo.h"
-#include "alica_ros_proxy/BehaviourEngineInfo.h"
+#include "alica_ros_proxy/AlicaEngineInfo.h"
 #include "alica_ros_proxy/PlanTreeInfo.h"
 #include "alica_ros_proxy/RoleSwitch.h"
 #include "alica_ros_proxy/SyncReady.h"
@@ -33,7 +33,7 @@ namespace alicaRosProxy
 		virtual void tick();
 
 		virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai);
-		virtual void sendBehaviourEngineInfo(BehaviourEngineInfo& bi);
+		virtual void sendAlicaEngineInfo(AlicaEngineInfo& bi);
 		virtual void sendPlanTreeInfo(PlanTreeInfo& pti);
 		virtual void sendRoleSwitch(RoleSwitch& rs);
 		virtual void sendSyncReady(SyncReady& sr);
@@ -54,7 +54,7 @@ namespace alicaRosProxy
 		ros::NodeHandle* rosNode;
 		ros::AsyncSpinner* spinner;
 
-		ros::Publisher BehaviourEngineInfoPublisher;
+		ros::Publisher AlicaEngineInfoPublisher;
 		ros::Publisher RoleSwitchPublisher;
 
 		ros::Publisher AllocationAuthorityInfoPublisher;
