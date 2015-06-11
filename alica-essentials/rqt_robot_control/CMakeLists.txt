@@ -15,11 +15,13 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 include(${QT_USE_FILE})
 
 set(rqt_robot_control_SRCS
+  src/rqt_robot_control/FlowLayout.cpp
   src/rqt_robot_control/RobotsControl.cpp
   src/rqt_robot_control/ControlledRobot.cpp
 )
 
 set(rqt_robot_control_HDRS
+  include/rqt_robot_control/FlowLayout.h
   include/rqt_robot_control/RobotsControl.h
   include/rqt_robot_control/ControlledRobot.h
 )

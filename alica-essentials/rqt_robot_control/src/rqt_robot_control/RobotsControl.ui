@@ -163,7 +163,7 @@
   <customwidget>
    <class>FlowLayout</class>
    <extends>QLayout</extends>
-   <header>FlowLayout.h</header>
+   <header>rqt_robot_control/FlowLayout.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
