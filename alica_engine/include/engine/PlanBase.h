@@ -10,6 +10,7 @@
 //#define PB_DEBUG
 
 
+#include <engine/containers/AlicaEngineInfo.h>
 #include <queue>
 #include <stdio.h>
 #include <thread>
@@ -19,7 +20,6 @@
 #include <mutex>
 #include <memory>
 #include <typeinfo>
-#include "containers/BehaviourEngineInfo.h"
 #include "engine/IAlicaClock.h"
 #include "engine/RunningPlan.h"
 
@@ -101,7 +101,7 @@ namespace alica
 		thread* mainThread;
 		Logger* log;
 
-		BehaviourEngineInfo* statusMessage;
+		AlicaEngineInfo* statusMessage;
 		mutex lomutex;
 		mutex stepMutex;
 		void run();

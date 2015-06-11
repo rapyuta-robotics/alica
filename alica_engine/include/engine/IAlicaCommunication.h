@@ -16,7 +16,7 @@ namespace alica
 	class RoleSwitch;
 	struct SyncTalk;
 	struct SyncReady;
-	struct BehaviourEngineInfo;
+	struct AlicaEngineInfo;
 	struct PlanTreeInfo;
 	struct AllocationAuthorityInfo;
 
@@ -27,7 +27,7 @@ namespace alica
 		virtual ~IAlicaCommunication(){}
 
 		virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai) = 0;
-		virtual void sendBehaviourEngineInfo(BehaviourEngineInfo& bi) = 0;
+		virtual void sendAlicaEngineInfo(AlicaEngineInfo& bi) = 0;
 		virtual void sendPlanTreeInfo(PlanTreeInfo& pti) = 0;
 		virtual void sendRoleSwitch(RoleSwitch& rs) = 0;
 		virtual void sendSyncReady(SyncReady& sr) = 0;
