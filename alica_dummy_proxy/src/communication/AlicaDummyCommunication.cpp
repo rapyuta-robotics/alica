@@ -24,7 +24,7 @@ namespace alica_dummy_proxy {
 	{
 
 	}
-	void AlicaDummyCommunication::sendBehaviourEngineInfo(alica::BehaviourEngineInfo& bi)
+	void AlicaDummyCommunication::sendAlicaEngineInfo(alica::AlicaEngineInfo& ai)
 	{
 
 	}

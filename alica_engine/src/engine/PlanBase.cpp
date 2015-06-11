@@ -79,7 +79,7 @@ namespace alica
 		{
 			double stfreq = (*sc)["Alica"]->get<double>("Alica.StatusMessages.Frequency", NULL);
 			this->sendStatusInterval = (AlicaTime)max(1000000.0, round(1.0 / stfreq * 1000000000));
-			this->statusMessage = new BehaviourEngineInfo();
+			this->statusMessage = new AlicaEngineInfo();
 			this->statusMessage->senderID = this->teamObserver->getOwnId();
 			this->statusMessage->masterPlan = masterPlan->getName();
 		}
@@ -241,7 +241,7 @@ namespace alica
 						this->statusMessage->currentState = "NONE";
 					}
 					this->statusMessage->currentRole = this->ra->getOwnRole()->getName();
-					ae->getCommunicator()->sendBehaviourEngineInfo(*this->statusMessage);
+					ae->getCommunicator()->sendAlicaEngineInfo(*this->statusMessage);
 					this->lastSentStatusTime = alicaClock->now();
 				}
 			}
