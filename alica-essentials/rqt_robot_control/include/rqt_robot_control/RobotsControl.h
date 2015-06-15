@@ -78,6 +78,7 @@ namespace rqt_robot_control
 	public Q_SLOTS:
 		void run();
 		void updateGUI();
+		void showContextMenu(const QPoint& pos);
 	};
 
 }

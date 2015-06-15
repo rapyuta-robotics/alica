@@ -45,7 +45,7 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" name="filterHorizontalLayout" stretch="0,0,0">
+    <layout class="QHBoxLayout" name="filterHorizontalLayout" stretch="0,0">
      <item>
       <widget class="QLabel" name="ShowFilterLabel">
        <property name="minimumSize">
@@ -100,20 +100,6 @@
        </item>
       </widget>
      </item>
-     <item>
-      <widget class="QToolButton" name="addRobotButton">
-       <property name="locale">
-        <locale language="English" country="UnitedKingdom"/>
-       </property>
-       <property name="text">
-        <string>+</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>../../resources/Pixelmixer-Basic-Plus.ico</normaloff>../../resources/Pixelmixer-Basic-Plus.ico</iconset>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
@@ -139,7 +125,7 @@
         <height>76</height>
        </rect>
       </property>
-      <layout class="FlowLayout" name="allRobotsFlowLayout">
+      <layout class="flowlayout" name="allRobotsFlowLayout">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -161,10 +147,9 @@
  <layoutdefault spacing="0" margin="0"/>
  <customwidgets>
   <customwidget>
-   <class>FlowLayout</class>
-   <extends>QLayout</extends>
-   <header>rqt_robot_control/FlowLayout.h</header>
-   <container>1</container>
+   <class>flowlayout</class>
+   <extends>QPushButton</extends>
+   <header>rqt_robot_control/flowlayout.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

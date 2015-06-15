@@ -40,6 +40,15 @@ namespace rqt_robot_control
 		widget_->setAttribute(Qt::WA_AlwaysShowToolTips, true);
 		ui_.setupUi(widget_);
 
+		// TODO Just a test:
+		this->ui_.allRobotsFlowLayout->addWidget(new QPushButton("Test1"));
+		this->ui_.allRobotsFlowLayout->addWidget(new QPushButton("Test2"));
+		this->ui_.allRobotsFlowLayout->addWidget(new QPushButton("Test3"));
+		this->ui_.allRobotsFlowLayout->addWidget(new QPushButton("Test4"));
+		this->ui_.scrollAreaWidgetContents->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
+		QObject::connect(this->ui_.scrollAreaWidgetContents, SIGNAL(customContextMenuRequested(const QPoint&)), this,
+							SLOT(showContextMenu(const QPoint&)));
+
 		if (context.serialNumber() > 1)
 		{
 			widget_->setWindowTitle(widget_->windowTitle() + " (" + QString::number(context.serialNumber()) + ")");
@@ -56,6 +65,30 @@ namespace rqt_robot_control
 		this->guiUpdateTimer = new QTimer();
 		QObject::connect(guiUpdateTimer, SIGNAL(timeout()), this, SLOT(run()));
 		this->guiUpdateTimer->start(200);
+	}
+
+	void RobotsControl::showContextMenu(const QPoint& pos)
+	{
+		QPoint globalPos = this->ui_.scrollAreaWidgetContents->mapToGlobal(pos);
+
+		// TODO remember, if there are some problems that way:
+		// "For QAbstractScrollArea and derived classes you would use: QPoint globalPos = myWidget->viewport()->mapToGlobal(pos);"
+
+		QMenu myMenu;
+		for (auto robot : this->pmRegistry->getRobots())
+		{
+			myMenu.addAction(robot->name.c_str());
+		}
+
+		QAction* selectedItem = myMenu.exec(globalPos);
+		if (selectedItem)
+		{
+			cout << "RC: " << selectedItem->iconText().toStdString() << endl;
+		}
+		else
+		{
+			cout << "RC: Nothing choosen" << endl;
+		}
 	}
 
 	/**
