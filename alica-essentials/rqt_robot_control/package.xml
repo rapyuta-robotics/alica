@@ -14,11 +14,13 @@
   <build_depend>rqt_gui_cpp</build_depend>
   <build_depend>process_manager</build_depend>
   <build_depend>robot_executable_meta_data</build_depend>
-  
+  <build_depend>alica_ros_proxy</build_depend>
+
   <run_depend>rqt_gui</run_depend>
   <run_depend>rqt_gui_cpp</run_depend>
   <run_depend>process_manager</run_depend>
   <run_depend>robot_executable_meta_data</run_depend>
+  <run_depend>alica_ros_proxy</run_depend>
 
   <export>
     <rqt_gui plugin="${prefix}/plugin.xml"/>
