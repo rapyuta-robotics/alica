@@ -116,7 +116,7 @@ namespace geometry
 			return false;
 
 		// Create a point for line segment from p to infinite
-		CNPoint2D extreme = CNPoint2D(numeric_limits<double>::max(), point.y);
+		CNPoint2D extreme = CNPoint2D(30000, point.y);
 
 		// Count intersections of the above line with sides of polygon
 		int count = 0, i = 0;
