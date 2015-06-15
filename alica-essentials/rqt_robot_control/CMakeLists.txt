@@ -5,7 +5,7 @@ project(rqt_robot_control)
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util)
+find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util alica_ros_proxy)
 
 find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
 

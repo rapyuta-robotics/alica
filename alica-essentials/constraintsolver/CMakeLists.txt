@@ -86,7 +86,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES autodiff system_config alica_engine alica_ros_proxy
+ LIBRARIES constraintsolver
  CATKIN_DEPENDS fsystem
 # DEPENDS system filesystem
 )
@@ -179,7 +179,7 @@ target_link_libraries(constraintsolver ${catkin_LIBRARIES})
 ## Add gtest based cpp test target and link libraries
 catkin_add_gtest(${PROJECT_NAME}-test test/test_constraintsolver.cpp test/test_cnsat.cpp test/test_solver.cpp test/test_cnsmtgsolver.cpp)
 if(TARGET ${PROJECT_NAME}-test)
-  target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES} autodiff system_config fsystem alica_engine alica_ros_proxy)
+  target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
 endif()
 
 ## Add folders to be run by python nosetests
