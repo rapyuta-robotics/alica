@@ -11,26 +11,33 @@
 
 using namespace std;
 
-namespace geometry {
+namespace geometry
+{
 
-	CNVelocity2D::CNVelocity2D(double x, double y) {
+	CNVelocity2D::CNVelocity2D(double x, double y)
+	{
 		this->x = x;
 		this->y = y;
 	}
 
-	double CNVelocity2D::length() {
+	double CNVelocity2D::length()
+	{
 		return sqrt(x * x + y * y);
 	}
 
-	shared_ptr<CNVelocity2D> CNVelocity2D::rotate(double radian) {
-		return make_shared<CNVelocity2D>(this->x * cos(radian) - this->y * sin(radian), this->x * sin(radian) + this->y * cos(radian));
+	shared_ptr<CNVelocity2D> CNVelocity2D::rotate(double radian)
+	{
+		return make_shared<CNVelocity2D>(this->x * cos(radian) - this->y * sin(radian),
+											this->x * sin(radian) + this->y * cos(radian));
 	}
 
-	double CNVelocity2D::angleTo() {
+	double CNVelocity2D::angleTo()
+	{
 		return atan2(y, x);
 	}
 
-	shared_ptr<CNVelocity2D> CNVelocity2D::alloToEgo(CNPosition& me) {
+	shared_ptr<CNVelocity2D> CNVelocity2D::alloToEgo(CNPosition& me)
+	{
 		shared_ptr<CNVelocity2D> ego = make_shared<CNVelocity2D>();
 
 		double angle = atan2(y, x) - me.theta;
@@ -42,7 +49,8 @@ namespace geometry {
 		return ego;
 	}
 
-	shared_ptr<CNVelocity2D> CNVelocity2D::egoToAllo(CNPosition& me) {
+	shared_ptr<CNVelocity2D> CNVelocity2D::egoToAllo(CNPosition& me)
+	{
 		shared_ptr<CNVelocity2D> allo = make_shared<CNVelocity2D>();
 
 		allo->x += cos(me.theta) * x - sin(me.theta) * y;
@@ -51,14 +59,16 @@ namespace geometry {
 		return allo;
 	}
 
-	CNVelocity2D::~CNVelocity2D() {
+	CNVelocity2D::~CNVelocity2D()
+	{
 	}
 
-	shared_ptr<CNVelocity2D> CNVelocity2D::normalize() {
+	shared_ptr<CNVelocity2D> CNVelocity2D::normalize()
+	{
 		shared_ptr<CNVelocity2D> norm = make_shared<CNVelocity2D>();
 		double length = this->length();
 
-		if(length > 0)
+		if (length > 0)
 		{
 			norm->x = this->x / length;
 			norm->y = this->y / length;
@@ -71,13 +81,13 @@ namespace geometry {
 		return norm;
 	}
 
-	shared_ptr<CNVelocity2D> CNVelocity2D::operator*(const double& right) {
+	shared_ptr<CNVelocity2D> CNVelocity2D::operator*(const double& right)
+	{
 		auto ret = make_shared<CNVelocity2D>(this->x, this->y);
 		ret->x *= right;
 		ret->y *= right;
 		return ret;
 	}
-
 
 	shared_ptr<CNVelocity2D> operator*(const shared_ptr<CNVelocity2D>& left, const double& right)
 	{
@@ -87,14 +97,21 @@ namespace geometry {
 		return ret;
 	}
 
-
-	shared_ptr<CNVelocity2D> CNVelocity2D::operator+(const shared_ptr<CNVelocity2D>& right) {
+	shared_ptr<CNVelocity2D> CNVelocity2D::operator+(const shared_ptr<CNVelocity2D>& right)
+	{
 		auto ret = make_shared<CNVelocity2D>(this->x, this->y);
 		ret->x += right->x;
 		ret->y += right->y;
 		return ret;
 	}
 
+	shared_ptr<CNPoint2D> CNVelocity2D::operator+(const shared_ptr<CNPoint2D>& right)
+	{
+		auto ret = make_shared<CNPoint2D>(this->x, this->y);
+		ret->x += right->x;
+		ret->y += right->y;
+		return ret;
+	}
 
 	shared_ptr<CNVelocity2D> operator+(const shared_ptr<CNVelocity2D>& left, const shared_ptr<CNVelocity2D>& right)
 	{
@@ -104,6 +121,14 @@ namespace geometry {
 		return ret;
 	}
 
+	shared_ptr<CNPoint2D> operator+(const shared_ptr<CNVelocity2D>& left, const shared_ptr<CNPoint2D>& right)
+		{
+			auto ret = make_shared<CNPoint2D>(left->x, left->y);
+			ret->x += right->x;
+			ret->y += right->y;
+			return ret;
+		}
+
 	string CNVelocity2D::toString()
 	{
 		stringstream ss;
@@ -111,5 +136,4 @@ namespace geometry {
 		return ss.str();
 	}
 }
-
 
