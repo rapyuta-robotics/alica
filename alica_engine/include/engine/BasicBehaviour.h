@@ -18,6 +18,7 @@
 #include <chrono>
 #include <condition_variable>
 #include "ITrigger.h"
+#include "engine/model/EntryPoint.h"
 using namespace std;
 namespace supplementary {
 	class Timer;
@@ -110,6 +111,8 @@ namespace alica
 		 * Override for behaviour specific initialisation.
 		 */
 		virtual void initialiseParameters () {};
+
+		EntryPoint* getParentEntryPoint(string taskName);
 
 	private:
 		mutex runCV_mtx;

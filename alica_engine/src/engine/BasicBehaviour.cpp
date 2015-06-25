@@ -13,6 +13,9 @@
 #include "engine/RunningPlan.h"
 #include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/Variable.h"
+#include "engine/model/Plan.h"
+#include "engine/model/EntryPoint.h"
+#include "engine/model/Task.h"
 #include <Timer.h>
 
 #include <iostream>
@@ -128,9 +131,12 @@ namespace alica
 	{
 		this->success = false;
 		this->failure = false;
-		if(behaviourTrigger == nullptr) {
+		if (behaviourTrigger == nullptr)
+		{
 			return this->timer->stop();
-		} else {
+		}
+		else
+		{
 			this->running = false;
 		}
 		return true;
@@ -142,10 +148,12 @@ namespace alica
 	bool BasicBehaviour::start()
 	{
 		this->callInit = true;
-		if(behaviourTrigger == nullptr) 
+		if (behaviourTrigger == nullptr)
 		{
 			return this->timer->start();
-		} else {
+		}
+		else
+		{
 			this->running = true;
 		}
 		return true;
@@ -232,7 +240,7 @@ namespace alica
 			// TODO: pass something like an eventarg (to be implemented) class-member, which could be set for an event triggered (to be implemented) behaviour.
 			try
 			{
-				if(behaviourTrigger == nullptr)
+				if (behaviourTrigger == nullptr)
 				{
 					this->run((void*)timer);
 				}
@@ -267,6 +275,23 @@ namespace alica
 				this->behaviourTrigger->setNotifyCalled(false, &runCV);
 			}
 		}
+	}
+
+	EntryPoint* BasicBehaviour::getParentEntryPoint(string taskName)
+	{
+		shared_ptr<RunningPlan> parent = this->runningPlan->getParent().lock();
+		if (parent == nullptr)
+		{
+			return nullptr;
+		}
+		for (pair<long, EntryPoint*> e : ((Plan*)parent->getPlan())->getEntryPoints())
+		{
+			if (e.second->getTask()->getName() == taskName)
+			{
+				return e.second;
+			}
+		}
+		return nullptr;
 	}
 
 } /* namespace alica */
