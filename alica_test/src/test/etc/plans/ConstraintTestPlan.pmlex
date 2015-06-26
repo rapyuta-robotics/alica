@@ -2,7 +2,7 @@
 <uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
   <extensions>
     <key href="ConstraintTestPlan.pml#1414068524246"/>
-    <value xPos="35" yPos="71" width="285" height="86" collapsed="false"/>
+    <value xPos="276" yPos="178" width="285" height="86" collapsed="false"/>
   </extensions>
   <extensions>
     <key href="Behaviour/ConstraintUsingBehaviour.beh#1414068618837"/>
@@ -10,7 +10,7 @@
   </extensions>
   <extensions>
     <key href="ConstraintTestPlan.pml#1414068524245"/>
-    <value xPos="-11" yPos="-11" width="441" height="270"/>
+    <value xPos="-11" yPos="-11" width="917" height="532"/>
   </extensions>
   <extensions>
     <key href="ConstraintTestPlan.pml#1414068524247"/>
