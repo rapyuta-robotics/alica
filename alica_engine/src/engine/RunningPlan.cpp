@@ -47,7 +47,7 @@ namespace alica
 		this->bp = nullptr;
 		this->activeState = nullptr;
 		this->activeEntryPoint = nullptr;
-		this->behaviour = nullptr;
+		this->behaviour = false;
 		this->planStartTime = 0;
 		this->stateStartTime = 0;
 		this->assignment = nullptr;

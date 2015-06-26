@@ -246,7 +246,7 @@ namespace alica
 				}
 			}
 
-			this->log->iterationEnds(this->rootNode);
+//			this->log->iterationEnds(this->rootNode);
 			this->ae->iterationComplete();
 
 			long availTime;

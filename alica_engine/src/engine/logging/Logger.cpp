@@ -152,6 +152,7 @@ namespace alica
 		}
 		(*this->sBuild) << endl;
 
+		//TODO: HOW ABOUT DO SOMETHING LIKE THIS this.sBuild.Remove(0,this.sBuild.Length);?
 		evaluationAssignmentsToString(this->sBuild, p);
 	}
 

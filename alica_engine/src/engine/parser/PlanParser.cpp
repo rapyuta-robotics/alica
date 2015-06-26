@@ -523,7 +523,7 @@ namespace alica
 			//char s2[2048];
 			temp = realpath(path.c_str(), NULL);
 			string pathNew = temp;
-
+			free(temp);
 			//This is not very efficient but necessary to keep the paths as they are
 			//Here we have to check whether the file has already been parsed / is in the list for toparse files
 			//problem is the normalization /home/etc/plans != /home/etc/Misc/../plans
@@ -532,6 +532,7 @@ namespace alica
 			for(auto& it : filesParsed) {
 				temp2 = realpath(it.c_str(), NULL);
 				string pathNew2 =temp2;
+				free(temp2);
 				if(pathNew2 == pathNew) {
 					found = true;
 					break;
@@ -543,6 +544,7 @@ namespace alica
 				for(auto& it : filesToParse) {
 					temp2 = realpath(it.c_str(), NULL);
 					string pathNew2 =temp2;
+					free(temp2);
 					if(pathNew2 == pathNew) {
 						found = true;
 						break;
@@ -568,8 +570,6 @@ namespace alica
 		{
 			ae->abort("PP: Cannot convert ID to long: " + tokenId + " WHAT?? " + e.what());
 		}
-		delete temp;
-		delete temp2;
 		return id;
 	}
 }
