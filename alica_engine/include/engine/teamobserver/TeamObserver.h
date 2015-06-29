@@ -74,6 +74,7 @@ namespace alica
 
 	protected:
 		mutex simplePlanTreeMutex;
+		mutex successMark;
 		list<RobotEngineData*> allOtherRobots;
 		int myId;
 		RobotEngineData* me;

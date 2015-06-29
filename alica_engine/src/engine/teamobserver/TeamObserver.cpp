@@ -445,7 +445,10 @@ namespace alica
 		{
 			if (r->isActive())
 			{
-				suc = r->getSuccessMarks()->succeededEntryPoints(plan);
+				{
+					lock_guard<mutex> lock(this->successMark);
+					suc = r->getSuccessMarks()->succeededEntryPoints(plan);
+				}
 				if (suc != nullptr)
 				{
 					ret += suc->size();
@@ -468,7 +471,10 @@ namespace alica
 		{
 			if (r->isActive())
 			{
-				suc = r->getSuccessMarks()->succeededEntryPoints(plan);
+				{
+					lock_guard<mutex> lock(this->successMark);
+					suc = r->getSuccessMarks()->succeededEntryPoints(plan);
+				}
 				if (suc != nullptr)
 				{
 					for (EntryPoint* ep : *suc)
@@ -497,7 +503,10 @@ namespace alica
 		{
 			if (r->isActive())
 			{
-				suc = r->getSuccessMarks()->succeededEntryPoints(p);
+				{
+					lock_guard<mutex> lock(this->successMark);
+					suc = r->getSuccessMarks()->succeededEntryPoints(p);
+				}
 				if (suc != nullptr)
 				{
 					for (EntryPoint* ep : *suc)
@@ -586,7 +595,10 @@ namespace alica
 					if (red->getProperties()->getId() == incoming->senderID)
 					{
 						red->setLastMessageTime(ae->getIAlicaClock()->now());
-						red->setSuccessMarks(make_shared<SuccessMarks>(ae, incoming->succeededEPs));
+						{
+							lock_guard<mutex> lock(this->successMark);
+							red->setSuccessMarks(make_shared<SuccessMarks>(ae, incoming->succeededEPs));
+						}
 						break;
 					}
 				}
