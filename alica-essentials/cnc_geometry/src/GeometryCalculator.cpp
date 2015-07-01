@@ -132,7 +132,8 @@ namespace geometry
 				// then check if it lies on segment. If it lies, return true,
 				// otherwise false
 				if (orientation(polygon[i], point, polygon[next]) == 0)
-					return onSegment(polygon[i], point, polygon[next]);
+					//TODO added not
+					return !onSegment(polygon[i], point, polygon[next]);
 
 				count++;
 			}
