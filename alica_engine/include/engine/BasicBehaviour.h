@@ -114,6 +114,8 @@ namespace alica
 
 		EntryPoint* getParentEntryPoint(string taskName);
 
+		EntryPoint* getHigherEntryPoint(string planName,string taskName);
+
 	private:
 		mutex runCV_mtx;
 		void runInternal();

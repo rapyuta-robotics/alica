@@ -294,5 +294,26 @@ namespace alica
 		return nullptr;
 	}
 
+	EntryPoint* BasicBehaviour::getHigherEntryPoint(string planName, string taskName)
+	{
+		shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
+		while (cur != nullptr)
+		{
+			if (cur->getPlan()->getName() == planName)
+			{
+				for(pair<long, EntryPoint*> e : ((Plan*)cur->getPlan())->getEntryPoints())
+				{
+					if (e.second->getTask()->getName() == taskName)
+					{
+						return e.second;
+					}
+				}
+				return nullptr;
+			}
+			cur = cur->getParent().lock();
+		}
+		return nullptr;
+	}
+
 } /* namespace alica */
 
