@@ -27,6 +27,7 @@ namespace geometry {
 		double length();
 		shared_ptr<CNPoint2D> rotate(double radian);
 		double angleTo();
+		double distanceTo(shared_ptr<CNPoint2D> point);
 		shared_ptr<CNPoint2D> alloToEgo(CNPosition& me);
 		shared_ptr<CNPoint2D> egoToAllo(CNPosition& me);
 		shared_ptr<CNPoint2D> normalize();

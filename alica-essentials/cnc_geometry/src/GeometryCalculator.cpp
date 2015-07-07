@@ -35,9 +35,8 @@ namespace geometry
 
 	}
 
-
-
-	bool GeometryCalculator::isInsideRectangle(shared_ptr<CNPoint2D> rectPointA, shared_ptr<CNPoint2D> rectPointB, shared_ptr<CNPoint2D> point)
+	bool GeometryCalculator::isInsideRectangle(shared_ptr<CNPoint2D> rectPointA, shared_ptr<CNPoint2D> rectPointB,
+												shared_ptr<CNPoint2D> point)
 	{
 		double minX = min(rectPointA->x, rectPointB->x);
 		double maxX = max(rectPointA->x, rectPointB->x);
@@ -51,8 +50,7 @@ namespace geometry
 	// point q lies on line segment 'pr'
 	bool GeometryCalculator::onSegment(shared_ptr<CNPoint2D> p, shared_ptr<CNPoint2D> q, shared_ptr<CNPoint2D> r)
 	{
-		if (q->x <= max(p->x, r->x) && q->x >= min(p->x, r->x) && q->y <= max(p->y, r->y)
-				&& q->y >= min(p->y, r->y))
+		if (q->x <= max(p->x, r->x) && q->x >= min(p->x, r->x) && q->y <= max(p->y, r->y) && q->y >= min(p->y, r->y))
 		{
 			return true;
 		}
@@ -75,7 +73,8 @@ namespace geometry
 
 	// The function that returns true if line segment 'p1q1'
 	// and 'p2q2' intersect.
-	bool GeometryCalculator::doIntersect(shared_ptr<CNPoint2D> p1, shared_ptr<CNPoint2D> q1, shared_ptr<CNPoint2D> p2, shared_ptr<CNPoint2D> q2)
+	bool GeometryCalculator::doIntersect(shared_ptr<CNPoint2D> p1, shared_ptr<CNPoint2D> q1, shared_ptr<CNPoint2D> p2,
+											shared_ptr<CNPoint2D> q2)
 	{
 		// Find the four orientations needed for general and
 		// special cases
@@ -144,5 +143,41 @@ namespace geometry
 		return count & 1; // Same as (count%2 == 1)
 	}
 
+	double GeometryCalculator::distancePointToLineSegment(double x, double y, shared_ptr<CNPoint2D> a,
+															shared_ptr<CNPoint2D> b)
+	{
+		double abx = b->x - a->x;
+		double aby = b->y - a->y;
+		double apx = x - a->x;
+		double apy = y - a->y;
+
+		double angle1 = atan2(apy, apx);
+		double angle2 = atan2(aby, abx);
+
+		double alpha = angle1 - angle2;
+		if (alpha < -M_PI)
+		{
+			alpha += 2.0 * M_PI;
+		}
+		else if (alpha > M_PI)
+		{
+			alpha -= 2.0 * M_PI;
+		}
+		double distAtoP = sqrt(apx * apx + apy * apy);
+		if (alpha > M_PI / 2 || alpha < -M_PI / 2)
+		{
+			return distAtoP;
+		}
+
+		double dist1 = cos(alpha) * distAtoP;
+		if (dist1 > sqrt(abx * abx + aby * aby))
+		{
+			return sqrt(pow(x - b->x, 2) + pow(y - b->y, 2));
+		}
+		else
+		{
+			return abs(sin(alpha)) * distAtoP;
+		}
+	}
 } /* namespace geometry */
 
