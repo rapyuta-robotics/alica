@@ -7,16 +7,18 @@
 
 #include "container/CNPosition.h"
 #include <sstream>
-namespace geometry {
+namespace geometry
+{
 
-
-	CNPosition::CNPosition(double x, double y, double theta) {
+	CNPosition::CNPosition(double x, double y, double theta)
+	{
 		this->x = x;
 		this->y = y;
 		this->theta = theta;
 	}
 
-	CNPosition::~CNPosition() {
+	CNPosition::~CNPosition()
+	{
 	}
 
 	string CNPosition::toString()
@@ -24,6 +26,11 @@ namespace geometry {
 		stringstream ss;
 		ss << "CNPosition: x: " << this->x << " y: " << this->y << " theta: " << this->theta << endl;
 		return ss.str();
+	}
+
+	double geometry::CNPosition::distanceTo(shared_ptr<CNPoint2D> point)
+	{
+		return sqrt(pow(this->x - point->x, 2) + pow(this->y - point->y, 2));
 	}
 }
 
