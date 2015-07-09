@@ -15,8 +15,8 @@ namespace rqt_alica_client
 
 		rosNode = new ros::NodeHandle();
 
-		aliceClientSubscriber = rosNode->subscribe("/AlicaEngine/BehaviourEngineInfo", 10,
-																		&AlicaClient::handleBehaviourEngineInfo,
+		aliceClientSubscriber = rosNode->subscribe("/AlicaEngine/AlicaEngineInfo", 10,
+																		&AlicaClient::handleAlicaEngineInfo,
 																		(AlicaClient*)this);
 
 	}
@@ -51,7 +51,7 @@ namespace rqt_alica_client
 
 	}
 
-	void AlicaClient::handleBehaviourEngineInfo(
+	void AlicaClient::handleAlicaEngineInfo(
 			alica_ros_proxy::AlicaEngineInfoPtr bei) {
 		ui_.senderID->setText(QString(bei->senderID));
 		ui_.currentPlan->setText(QString(bei->currentPlan.c_str()));

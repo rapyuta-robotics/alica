@@ -35,24 +35,22 @@ namespace geometry
 
 	}
 
-
-
-	bool GeometryCalculator::isInsideRectangle(CNPoint2D rectPointA, CNPoint2D rectPointB, CNPoint2D point)
+	bool GeometryCalculator::isInsideRectangle(shared_ptr<CNPoint2D> rectPointA, shared_ptr<CNPoint2D> rectPointB,
+												shared_ptr<CNPoint2D> point)
 	{
-		double minX = min(rectPointA.x, rectPointB.x);
-		double maxX = max(rectPointA.x, rectPointB.x);
-		double minY = min(rectPointA.y, rectPointB.y);
-		double maxY = max(rectPointA.y, rectPointB.y);
+		double minX = min(rectPointA->x, rectPointB->x);
+		double maxX = max(rectPointA->x, rectPointB->x);
+		double minY = min(rectPointA->y, rectPointB->y);
+		double maxY = max(rectPointA->y, rectPointB->y);
 
-		return point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY;
+		return point->x >= minX && point->x <= maxX && point->y >= minY && point->y <= maxY;
 	}
 
 	// Given three colinear points p, q, r, the function checks if
 	// point q lies on line segment 'pr'
-	bool GeometryCalculator::onSegment(CNPoint2D p, CNPoint2D q, CNPoint2D r)
+	bool GeometryCalculator::onSegment(shared_ptr<CNPoint2D> p, shared_ptr<CNPoint2D> q, shared_ptr<CNPoint2D> r)
 	{
-		if (q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) && q.y <= max(p.y, r.y)
-				&& q.y >= min(p.y, r.y))
+		if (q->x <= max(p->x, r->x) && q->x >= min(p->x, r->x) && q->y <= max(p->y, r->y) && q->y >= min(p->y, r->y))
 		{
 			return true;
 		}
@@ -64,9 +62,9 @@ namespace geometry
 	// 0 --> p, q and r are colinear
 	// 1 --> Clockwise
 	// 2 --> Counterclockwise
-	int GeometryCalculator::orientation(CNPoint2D p, CNPoint2D q, CNPoint2D r)
+	int GeometryCalculator::orientation(shared_ptr<CNPoint2D> p, shared_ptr<CNPoint2D> q, shared_ptr<CNPoint2D> r)
 	{
-		int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+		int val = (q->y - p->y) * (r->x - q->x) - (q->x - p->x) * (r->y - q->y);
 
 		if (val == 0)
 			return 0; // colinear
@@ -75,7 +73,8 @@ namespace geometry
 
 	// The function that returns true if line segment 'p1q1'
 	// and 'p2q2' intersect.
-	bool GeometryCalculator::doIntersect(CNPoint2D p1, CNPoint2D q1, CNPoint2D p2, CNPoint2D q2)
+	bool GeometryCalculator::doIntersect(shared_ptr<CNPoint2D> p1, shared_ptr<CNPoint2D> q1, shared_ptr<CNPoint2D> p2,
+											shared_ptr<CNPoint2D> q2)
 	{
 		// Find the four orientations needed for general and
 		// special cases
@@ -109,14 +108,14 @@ namespace geometry
 	}
 
 	// Returns true if the point p lies inside the polygon[] with n vertices
-	bool GeometryCalculator::isInsidePolygon(vector<CNPoint2D> polygon, int n, CNPoint2D point)
+	bool GeometryCalculator::isInsidePolygon(vector<shared_ptr<CNPoint2D>> polygon, int n, shared_ptr<CNPoint2D> point)
 	{
 		// There must be at least 3 vertices in polygon[]
 		if (n < 3)
 			return false;
 
 		// Create a point for line segment from p to infinite
-		CNPoint2D extreme = CNPoint2D(numeric_limits<double>::max(), point.y);
+		shared_ptr<CNPoint2D> extreme = make_shared<CNPoint2D>(30000, point->y);
 
 		// Count intersections of the above line with sides of polygon
 		int count = 0, i = 0;
@@ -132,7 +131,8 @@ namespace geometry
 				// then check if it lies on segment. If it lies, return true,
 				// otherwise false
 				if (orientation(polygon[i], point, polygon[next]) == 0)
-					return onSegment(polygon[i], point, polygon[next]);
+					//TODO added not
+					return !onSegment(polygon[i], point, polygon[next]);
 
 				count++;
 			}
@@ -143,5 +143,41 @@ namespace geometry
 		return count & 1; // Same as (count%2 == 1)
 	}
 
+	double GeometryCalculator::distancePointToLineSegment(double x, double y, shared_ptr<CNPoint2D> a,
+															shared_ptr<CNPoint2D> b)
+	{
+		double abx = b->x - a->x;
+		double aby = b->y - a->y;
+		double apx = x - a->x;
+		double apy = y - a->y;
+
+		double angle1 = atan2(apy, apx);
+		double angle2 = atan2(aby, abx);
+
+		double alpha = angle1 - angle2;
+		if (alpha < -M_PI)
+		{
+			alpha += 2.0 * M_PI;
+		}
+		else if (alpha > M_PI)
+		{
+			alpha -= 2.0 * M_PI;
+		}
+		double distAtoP = sqrt(apx * apx + apy * apy);
+		if (alpha > M_PI / 2 || alpha < -M_PI / 2)
+		{
+			return distAtoP;
+		}
+
+		double dist1 = cos(alpha) * distAtoP;
+		if (dist1 > sqrt(abx * abx + aby * aby))
+		{
+			return sqrt(pow(x - b->x, 2) + pow(y - b->y, 2));
+		}
+		else
+		{
+			return abs(sin(alpha)) * distAtoP;
+		}
+	}
 } /* namespace geometry */
 

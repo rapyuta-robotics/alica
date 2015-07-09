@@ -11,27 +11,33 @@
 
 using namespace std;
 
-namespace geometry {
+namespace geometry
+{
 
-	CNPoint2D::CNPoint2D(double x, double y) {
+	CNPoint2D::CNPoint2D(double x, double y)
+	{
 		this->x = x;
 		this->y = y;
 	}
 
-	double CNPoint2D::length() {
+	double CNPoint2D::length()
+	{
 		return sqrt(x * x + y * y);
 	}
 
-	shared_ptr<CNPoint2D> CNPoint2D::rotate(double radian) {
-		return make_shared<CNPoint2D>(this->x * cos(radian) - this->y * sin(radian), this->x * sin(radian) + this->y * cos(radian));
+	shared_ptr<CNPoint2D> CNPoint2D::rotate(double radian)
+	{
+		return make_shared<CNPoint2D>(this->x * cos(radian) - this->y * sin(radian),
+										this->x * sin(radian) + this->y * cos(radian));
 	}
 
-
-	double CNPoint2D::angleTo() {
+	double CNPoint2D::angleTo()
+	{
 		return atan2(y, x);
 	}
 
-	shared_ptr<CNPoint2D> CNPoint2D::alloToEgo(CNPosition& me) {
+	shared_ptr<CNPoint2D> CNPoint2D::alloToEgo(CNPosition& me)
+	{
 		shared_ptr<CNPoint2D> ego = make_shared<CNPoint2D>();
 
 		double x = this->x - me.x;
@@ -46,7 +52,8 @@ namespace geometry {
 		return ego;
 	}
 
-	shared_ptr<CNPoint2D> CNPoint2D::egoToAllo(CNPosition& me) {
+	shared_ptr<CNPoint2D> CNPoint2D::egoToAllo(CNPosition& me)
+	{
 		shared_ptr<CNPoint2D> allo = make_shared<CNPoint2D>();
 		allo->x = me.x;
 		allo->y = me.y;
@@ -57,14 +64,16 @@ namespace geometry {
 		return allo;
 	}
 
-	CNPoint2D::~CNPoint2D() {
+	CNPoint2D::~CNPoint2D()
+	{
 	}
 
-	shared_ptr<CNPoint2D> CNPoint2D::normalize() {
+	shared_ptr<CNPoint2D> CNPoint2D::normalize()
+	{
 		shared_ptr<CNPoint2D> norm = make_shared<CNPoint2D>();
 		double length = this->length();
 
-		if(length > 0)
+		if (length > 0)
 		{
 			norm->x = this->x / length;
 			norm->y = this->y / length;
@@ -77,13 +86,13 @@ namespace geometry {
 		return norm;
 	}
 
-	shared_ptr<CNPoint2D> CNPoint2D::operator*(const double& right) {
+	shared_ptr<CNPoint2D> CNPoint2D::operator*(const double& right)
+	{
 		auto ret = make_shared<CNPoint2D>(this->x, this->y);
 		ret->x *= right;
 		ret->y *= right;
 		return ret;
 	}
-
 
 	shared_ptr<CNPoint2D> operator*(const shared_ptr<CNPoint2D>& left, const double& right)
 	{
@@ -93,20 +102,35 @@ namespace geometry {
 		return ret;
 	}
 
-
-	shared_ptr<CNPoint2D> CNPoint2D::operator+(const shared_ptr<CNPoint2D>& right) {
+	shared_ptr<CNPoint2D> CNPoint2D::operator+(const shared_ptr<CNPoint2D>& right)
+	{
 		auto ret = make_shared<CNPoint2D>(this->x, this->y);
 		ret->x += right->x;
 		ret->y += right->y;
 		return ret;
 	}
 
+	shared_ptr<CNPoint2D> CNPoint2D::operator-(const shared_ptr<CNPoint2D>& right)
+	{
+		auto ret = make_shared<CNPoint2D>(this->x, this->y);
+		ret->x -= right->x;
+		ret->y -= right->y;
+		return ret;
+	}
 
 	shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPoint2D>& left, const shared_ptr<CNPoint2D>& right)
 	{
 		auto ret = make_shared<CNPoint2D>(left->x, left->y);
 		ret->x += right->x;
 		ret->y += right->y;
+		return ret;
+	}
+
+	shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPoint2D>& left, const shared_ptr<CNPoint2D>& right)
+	{
+		auto ret = make_shared<CNPoint2D>(left->x, left->y);
+		ret->x -= right->x;
+		ret->y -= right->y;
 		return ret;
 	}
 
@@ -118,4 +142,7 @@ namespace geometry {
 	}
 }
 
-
+double geometry::CNPoint2D::distanceTo(shared_ptr<CNPoint2D> point)
+{
+	return sqrt(pow(this->x - point->x, 2) + pow(this->y - point->y, 2));
+}

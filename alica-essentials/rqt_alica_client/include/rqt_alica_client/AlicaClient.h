@@ -34,7 +34,7 @@ namespace rqt_alica_client
 
 		virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
-		void handleBehaviourEngineInfo(alica_ros_proxy::AlicaEngineInfoPtr bei);
+		void handleAlicaEngineInfo(alica_ros_proxy::AlicaEngineInfoPtr bei);
 
 		Ui::AlicaClientWidget ui_;
 
