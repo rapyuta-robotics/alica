@@ -52,7 +52,7 @@ namespace rqt_alica_client
 	}
 
 	void AlicaClient::handleBehaviourEngineInfo(
-			alica_ros_proxy::BehaviourEngineInfoPtr bei) {
+			alica_ros_proxy::AlicaEngineInfoPtr bei) {
 		ui_.senderID->setText(QString(bei->senderID));
 		ui_.currentPlan->setText(QString(bei->currentPlan.c_str()));
 		ui_.currentRole->setText(QString(bei->currentRole.c_str()));

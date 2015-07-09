@@ -9,7 +9,7 @@
 #include "process_manager/ProcessStats.h"
 #include "alica_ros_proxy/AlicaEngineInfo.h"
 
-#include <ui_PMControl.h>
+#include <ui_RobotsControl.h>
 #include <QtGui>
 #include <QWidget>
 #include <QDialog>
