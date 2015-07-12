@@ -24,6 +24,7 @@ namespace geometry {
 		static bool isInsideRectangle(shared_ptr<CNPoint2D> rectPointA, shared_ptr<CNPoint2D> rectPointB, shared_ptr<CNPoint2D> point);
 		static bool isInsidePolygon(vector<shared_ptr<CNPoint2D>> polygon, int n, shared_ptr<CNPoint2D> point);
 		static double distancePointToLineSegment (double x, double y, shared_ptr<CNPoint2D> a, shared_ptr<CNPoint2D> b);
+		static double absDeltaAngle(double angle1, double angle2);
 
 	private:
 		GeometryCalculator();

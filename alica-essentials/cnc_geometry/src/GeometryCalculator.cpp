@@ -179,5 +179,18 @@ namespace geometry
 			return abs(sin(alpha)) * distAtoP;
 		}
 	}
+
+	double GeometryCalculator::absDeltaAngle(double angle1, double angle2)
+	{
+		double ret = abs(angle1 - angle2);
+		if (ret > M_PI)
+		{
+			return M_PI * 2 - ret;
+		}
+		else
+		{
+			return ret;
+		}
+	}
 } /* namespace geometry */
 
