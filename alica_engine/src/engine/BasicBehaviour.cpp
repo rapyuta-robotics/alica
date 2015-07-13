@@ -228,6 +228,7 @@ namespace alica
 				return true;
 			}
 		}
+		valueOut = "";
 		return false;
 	}
 
