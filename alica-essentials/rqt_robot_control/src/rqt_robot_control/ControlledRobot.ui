@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>367</width>
+    <width>146</width>
     <height>225</height>
    </rect>
   </property>
@@ -43,13 +43,19 @@
    </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMaximumSize</enum>
+     </property>
      <item>
       <layout class="QHBoxLayout" name="toolbarLayout" stretch="0,0,0,0">
        <property name="spacing">
         <number>0</number>
        </property>
        <property name="sizeConstraint">
-        <enum>QLayout::SetDefaultConstraint</enum>
+        <enum>QLayout::SetMaximumSize</enum>
        </property>
        <property name="leftMargin">
         <number>0</number>
@@ -91,6 +97,12 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="maximumSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
          <property name="locale">
           <locale language="English" country="UnitedKingdom"/>
          </property>
@@ -99,19 +111,19 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../../resources/System-Monitor.png</normaloff>../../resources/System-Monitor.png</iconset>
+           <normaloff>../../resources/Alica.png</normaloff>../../resources/Alica.png</iconset>
          </property>
          <property name="iconSize">
           <size>
-           <width>32</width>
-           <height>32</height>
+           <width>16</width>
+           <height>16</height>
           </size>
          </property>
          <property name="checkable">
           <bool>true</bool>
          </property>
          <property name="flat">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -123,8 +135,24 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="maximumSize">
+          <size>
+           <width>32</width>
+           <height>24</height>
+          </size>
+         </property>
          <property name="text">
-          <string>Show Process Manager</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../resources/System-Monitor.png</normaloff>../../resources/System-Monitor.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -146,8 +174,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>363</width>
-          <height>171</height>
+          <width>142</width>
+          <height>192</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_2"/>
