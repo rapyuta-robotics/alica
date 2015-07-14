@@ -185,6 +185,24 @@ namespace alica
 		this->behaviourTrigger->registerCV(&this->runCV);
 	}
 
+	shared_ptr<vector<int>> BasicBehaviour::robotsInEntryPointOfHigherPlan(EntryPoint* ep)
+	{
+		if (ep == nullptr)
+		{
+			return nullptr;
+		}
+		shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
+		while (cur != nullptr)
+		{
+			if (((Plan*)cur->getPlan())->getEntryPoints().find(ep->getId()) != ((Plan*)cur->getPlan())->getEntryPoints().end())
+			{
+				return cur->getAssignment()->getRobotsWorking(ep);
+			}
+			cur = cur->getParent().lock();
+		}
+		return nullptr;
+	}
+
 	void BasicBehaviour::initInternal()
 	{
 		this->success = false;
@@ -210,6 +228,7 @@ namespace alica
 				return true;
 			}
 		}
+		valueOut = "";
 		return false;
 	}
 
@@ -301,7 +320,7 @@ namespace alica
 		{
 			if (cur->getPlan()->getName() == planName)
 			{
-				for(pair<long, EntryPoint*> e : ((Plan*)cur->getPlan())->getEntryPoints())
+				for (pair<long, EntryPoint*> e : ((Plan*)cur->getPlan())->getEntryPoints())
 				{
 					if (e.second->getTask()->getName() == taskName)
 					{
