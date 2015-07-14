@@ -10,7 +10,6 @@
 #include <engine/IAlicaClock.h>
 #include "engine/IAlicaCommunication.h"
 #include "engine/model/State.h"
-#include "TestBehaviourCreator.h"
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
 #include "engine/BasicBehaviour.h"
@@ -21,15 +20,16 @@
 #include  "engine/DefaultUtilityFunction.h"
 #include  "engine/ITeamObserver.h"
 #include "engine/model/Plan.h"
-#include "TestConditionCreator.h"
-#include "TestConstraintCreator.h"
-#include "TestUtilityFunctionCreator.h"
-#include "Attack.h"
-#include "MidFieldStandard.h"
+#include "BehaviourCreator.h"
+#include "ConditionCreator.h"
+#include "ConstraintCreator.h"
+#include "UtilityFunctionCreator.h"
 #include "engine/Assignment.h"
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/collections/StateCollection.h"
 #include "TestWorldModel.h"
+#include <Plans/Behaviour/Attack.h>
+
 
 class AlicaMultiAgent : public ::testing::Test
 {
@@ -37,10 +37,10 @@ protected:
 	supplementary::SystemConfig* sc;
 	alica::AlicaEngine* ae;
 	alica::AlicaEngine* ae2;
-	alicaTests::TestBehaviourCreator* bc;
-	alicaTests::TestConditionCreator* cc;
-	alicaTests::TestUtilityFunctionCreator* uc;
-	alicaTests::TestConstraintCreator* crc;
+	alica::BehaviourCreator* bc;
+	alica::ConditionCreator* cc;
+	alica::UtilityFunctionCreator* uc;
+	alica::ConstraintCreator* crc;
 
 	virtual void SetUp()
 	{
@@ -55,10 +55,10 @@ protected:
 		sc->setRootPath(path);
 		sc->setConfigPath(path + "/etc");
 		// setup the engine
-		bc = new alicaTests::TestBehaviourCreator();
-		cc = new alicaTests::TestConditionCreator();
-		uc = new alicaTests::TestUtilityFunctionCreator();
-		crc = new alicaTests::TestConstraintCreator();
+		bc = new alica::BehaviourCreator();
+		cc = new alica::ConditionCreator();
+		uc = new alica::UtilityFunctionCreator();
+		crc = new alica::ConstraintCreator();
 
 	}
 
@@ -142,8 +142,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 			{
 				if (iter.second->getName() == "Attack")
 				{
-					ASSERT_GT(((alicaTests::Attack* )&*iter.second)->callCounter, 5);
-					if (((alicaTests::Attack*)&*iter.second)->callCounter > 3)
+					ASSERT_GT(((alica::Attack*)&*iter.second)->callCounter, 5);
+					if (((alica::Attack*)&*iter.second)->callCounter > 3)
 					{
 						alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201052549(true);
 						alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201052549(true);

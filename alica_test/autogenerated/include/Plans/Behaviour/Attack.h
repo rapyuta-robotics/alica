@@ -13,6 +13,9 @@ namespace alica
         virtual ~Attack();
         virtual void run(void* msg);
         /*PROTECTED REGION ID(pub1402488848841) ENABLED START*/ //Add additional public methods here
+        int callCounter;
+        int initCounter;
+
         /*PROTECTED REGION END*/
     protected:
         virtual void initialiseParameters();

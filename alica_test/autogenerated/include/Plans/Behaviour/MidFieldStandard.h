@@ -13,6 +13,7 @@ namespace alica
         virtual ~MidFieldStandard();
         virtual void run(void* msg);
         /*PROTECTED REGION ID(pub1402488696205) ENABLED START*/ //Add additional public methods here
+        int callCounter;
         /*PROTECTED REGION END*/
     protected:
         virtual void initialiseParameters();

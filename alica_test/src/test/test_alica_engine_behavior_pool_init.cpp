@@ -2,26 +2,26 @@
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
 #include "engine/IAlicaCommunication.h"
-#include "TestBehaviourCreator.h"
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include  "engine/DefaultUtilityFunction.h"
 #include "engine/model/Plan.h"
-#include "TestConditionCreator.h"
-#include "TestConstraintCreator.h"
-#include "TestUtilityFunctionCreator.h"
+#include "BehaviourCreator.h"
+#include "ConditionCreator.h"
+#include "ConstraintCreator.h"
+#include "UtilityFunctionCreator.h"
 
 class AlicaEngineTestBehPool : public ::testing::Test
 {
 protected:
 	supplementary::SystemConfig* sc;
 	alica::AlicaEngine* ae;
-	alicaTests::TestBehaviourCreator* bc;
-	alicaTests::TestConditionCreator* cc;
-	alicaTests::TestUtilityFunctionCreator* uc;
-	alicaTests::TestConstraintCreator* crc;
+	alica::BehaviourCreator* bc;
+	alica::ConditionCreator* cc;
+	alica::UtilityFunctionCreator* uc;
+	alica::ConstraintCreator* crc;
 
 	virtual void SetUp()
 	{
@@ -39,10 +39,10 @@ protected:
 
 		// setup the engine
 		ae = new alica::AlicaEngine();
-		bc = new alicaTests::TestBehaviourCreator();
-		cc = new alicaTests::TestConditionCreator();
-		uc = new alicaTests::TestUtilityFunctionCreator();
-		crc = new alicaTests::TestConstraintCreator();
+		bc = new alica::BehaviourCreator();
+		cc = new alica::ConditionCreator();
+		uc = new alica::UtilityFunctionCreator();
+		crc = new alica::ConstraintCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	}
