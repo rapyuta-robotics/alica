@@ -9,8 +9,8 @@
         <icon type="theme">folder</icon>
         <statustip>Plugins related to robot tools.</statustip>
       </group>
-      <label>Process Manager GUI</label>
-      <icon type="theme">image-x-generic</icon>
+      <label>Robot Control</label>
+      <icon type="file">resources/Robot-Head.png</icon>
       <statustip>A GUI plugin for controlling and monitoring robots.</statustip>
     </qtgui>
   </class>

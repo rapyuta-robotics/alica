@@ -50,7 +50,7 @@ namespace rqt_robot_control
 
 		static chrono::duration<double> msgTimeOut;
 
-		Ui::PMControlWidget ui_;
+		Ui::RobotControlWidget robotControlWidget_;
 		QWidget* widget_;
 
 		supplementary::RobotExecutableRegistry* pmRegistry;

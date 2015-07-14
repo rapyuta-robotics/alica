@@ -38,15 +38,15 @@ namespace rqt_robot_control
 	{
 		widget_ = new QWidget();
 		widget_->setAttribute(Qt::WA_AlwaysShowToolTips, true);
-		ui_.setupUi(widget_);
+		robotControlWidget_.setupUi(widget_);
 
 		// TODO Just a test:
-		this->ui_.allRobotsFlowLayout->addWidget(new QPushButton("Test1"));
-		this->ui_.allRobotsFlowLayout->addWidget(new QPushButton("Test2"));
-		this->ui_.allRobotsFlowLayout->addWidget(new QPushButton("Test3"));
-		this->ui_.allRobotsFlowLayout->addWidget(new QPushButton("Test4"));
-		this->ui_.scrollAreaWidgetContents->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
-		QObject::connect(this->ui_.scrollAreaWidgetContents, SIGNAL(customContextMenuRequested(const QPoint&)), this,
+		this->robotControlWidget_.allRobotsFlowLayout->addWidget(new QPushButton("Test1"));
+		this->robotControlWidget_.allRobotsFlowLayout->addWidget(new QPushButton("Test2"));
+		this->robotControlWidget_.allRobotsFlowLayout->addWidget(new QPushButton("Test3"));
+		this->robotControlWidget_.allRobotsFlowLayout->addWidget(new QPushButton("Test4"));
+		this->robotControlWidget_.scrollAreaWidgetContents->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
+		QObject::connect(this->robotControlWidget_.scrollAreaWidgetContents, SIGNAL(customContextMenuRequested(const QPoint&)), this,
 							SLOT(showContextMenu(const QPoint&)));
 
 		if (context.serialNumber() > 1)
@@ -69,7 +69,7 @@ namespace rqt_robot_control
 
 	void RobotsControl::showContextMenu(const QPoint& pos)
 	{
-		QPoint globalPos = this->ui_.scrollAreaWidgetContents->mapToGlobal(pos);
+		QPoint globalPos = this->robotControlWidget_.scrollAreaWidgetContents->mapToGlobal(pos);
 
 		// TODO remember, if there are some problems that way:
 		// "For QAbstractScrollArea and derived classes you would use: QPoint globalPos = myWidget->viewport()->mapToGlobal(pos);"
@@ -122,6 +122,10 @@ namespace rqt_robot_control
 		this->alicaInfoMsgQueue.emplace(chrono::system_clock::now(), alicaInfo);
 	}
 
+
+	/**
+	 * Processes all queued messages from the processStatMsgsQueue and the alicaInfoMsgQueue.
+	 */
 	void RobotsControl::processMessages()
 	{
 		{
@@ -140,7 +144,7 @@ namespace rqt_robot_control
 			lock_guard<mutex> lck(alicaInfoMsgQueueMutex);
 			while (!this->alicaInfoMsgQueue.empty())
 			{
-				// unqueue the ROS process stat message
+				// unqueue the ROS alica info message
 				auto timePstsPair = alicaInfoMsgQueue.front();
 				alicaInfoMsgQueue.pop();
 

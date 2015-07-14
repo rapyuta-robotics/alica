@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(rqt_robot_control)
 
-## Use c++ 11x std
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util alica_ros_proxy)
 
@@ -19,6 +16,7 @@ set(rqt_robot_control_SRCS
   src/rqt_robot_control/RobotsControl.cpp
   src/rqt_robot_control/ControlledRobot.cpp
 )
+
 
 set(rqt_robot_control_HDRS
   include/rqt_robot_control/flowlayout.h
