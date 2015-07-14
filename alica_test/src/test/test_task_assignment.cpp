@@ -16,25 +16,25 @@ using namespace std;
 #include "engine/planselector/TaskAssignment.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/IPlanSelector.h"
-#include "TestBehaviourCreator.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/RunningPlan.h"
 #include "engine/PlanRepository.h"
 #include "engine/model/Plan.h"
 #include <clock/AlicaROSClock.h>
-#include "TestConditionCreator.h"
-#include "TestConstraintCreator.h"
-#include "TestUtilityFunctionCreator.h"
+#include "BehaviourCreator.h"
+#include "ConditionCreator.h"
+#include "ConstraintCreator.h"
+#include "UtilityFunctionCreator.h"
 
 class TaskAssignmentTest : public ::testing::Test
 {
 protected:
 	alica::AlicaEngine* ae;
 	supplementary::SystemConfig* sc;
-	alicaTests::TestBehaviourCreator* bc;
-	alicaTests::TestConditionCreator* cc;
-	alicaTests::TestUtilityFunctionCreator* uc;
-	alicaTests::TestConstraintCreator* crc;
+	alica::BehaviourCreator* bc;
+	alica::ConditionCreator* cc;
+	alica::UtilityFunctionCreator* uc;
+	alica::ConstraintCreator* crc;
 
 	virtual void SetUp()
 	{
@@ -51,10 +51,10 @@ protected:
 
 		sc->setHostname("zwerg");
 		ae = new alica::AlicaEngine();
-		bc = new alicaTests::TestBehaviourCreator();
-		cc = new alicaTests::TestConditionCreator();
-		uc = new alicaTests::TestUtilityFunctionCreator();
-		crc = new alicaTests::TestConstraintCreator();
+		bc = new alica::BehaviourCreator();
+		cc = new alica::ConditionCreator();
+		uc = new alica::UtilityFunctionCreator();
+		crc = new alica::ConstraintCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->init(bc, cc, uc, crc, "RolesetTA", "MasterPlanTaskAssignment", ".", false);
 	}
