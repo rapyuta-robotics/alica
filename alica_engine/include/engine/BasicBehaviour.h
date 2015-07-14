@@ -8,7 +8,6 @@
 #ifndef BASICBEHAVIOUR_H_
 #define BASICBEHAVIOUR_H_
 
-
 #include <string>
 #include <iostream>
 #include <map>
@@ -19,8 +18,11 @@
 #include <condition_variable>
 #include "ITrigger.h"
 #include "engine/model/EntryPoint.h"
+#include <vector>
+#include "Assignment.h"
 using namespace std;
-namespace supplementary {
+namespace supplementary
+{
 	class Timer;
 	class Trigger;
 }
@@ -42,8 +44,8 @@ namespace alica
 		virtual void run(void* msg) = 0;
 		const string getName() const;
 		void setName(string name);
-		shared_ptr<map<string,string>> getParameters();
-		void setParameters(shared_ptr<map<string,string>> parameters);
+		shared_ptr<map<string, string>> getParameters();
+		void setParameters(shared_ptr<map<string, string>> parameters);
 		shared_ptr<list<Variable*>> getVariables();
 		Variable* getVariablesByName(string name);
 		void setVariables(shared_ptr<list<Variable*>> variables);
@@ -70,7 +72,7 @@ namespace alica
 		/**
 		 * Parameters are behaviour configuration specific fixed values. They are set before the behaviour is activated.
 		 */
-		shared_ptr<map<string,string>> parameters;
+		shared_ptr<map<string, string>> parameters;
 		/**
 		 * The set of Variables attached to this behaviours as defined by the BehaviourConfiguration.
 		 */
@@ -95,11 +97,10 @@ namespace alica
 		 */
 		bool failure;
 
-
 		/**
-                 * Tells us whether the behaviour is currently running (or active)
-                 */
-                bool running;
+		 * Tells us whether the behaviour is currently running (or active)
+		 */
+		bool running;
 
 		thread* runThread; /** < executes the runInternal and thereby the abstract run method */
 		supplementary::Timer* timer; /** < triggers the condition_variable of the runThread, if this behaviour is timer triggered, alternative to behaviourTrigger*/
@@ -110,11 +111,16 @@ namespace alica
 		 * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
 		 * Override for behaviour specific initialisation.
 		 */
-		virtual void initialiseParameters () {};
+		virtual void initialiseParameters()
+		{
+		}
+		;
 
 		EntryPoint* getParentEntryPoint(string taskName);
 
-		EntryPoint* getHigherEntryPoint(string planName,string taskName);
+		EntryPoint* getHigherEntryPoint(string planName, string taskName);
+
+		shared_ptr<vector<int>> robotsInEntryPointOfHigherPlan(EntryPoint* ep);
 
 	private:
 		mutex runCV_mtx;
