@@ -32,5 +32,22 @@ namespace geometry
 	{
 		return sqrt(pow(this->x - point->x, 2) + pow(this->y - point->y, 2));
 	}
+
+	shared_ptr<CNPoint2D> geometry::CNPosition::operator +(const shared_ptr<CNPoint2D>& right)
+	{
+		auto ret = make_shared<CNPoint2D>(this->x, this->y);
+		ret->x += right->x;
+		ret->y += right->y;
+		return ret;
+	}
+
+	shared_ptr<CNPoint2D> geometry::CNPosition::operator -(const shared_ptr<CNPoint2D>& right)
+	{
+		auto ret = make_shared<CNPoint2D>(this->x, this->y);
+		ret->x += right->x;
+		ret->y += right->y;
+		return ret;
+	}
 }
+
 
