@@ -40,13 +40,10 @@ namespace rqt_robot_control
 		widget_->setAttribute(Qt::WA_AlwaysShowToolTips, true);
 		robotControlWidget_.setupUi(widget_);
 
-		// TODO Just a test:
-		this->robotControlWidget_.allRobotsFlowLayout->addWidget(new QPushButton("Test1"));
-		this->robotControlWidget_.allRobotsFlowLayout->addWidget(new QPushButton("Test2"));
-		this->robotControlWidget_.allRobotsFlowLayout->addWidget(new QPushButton("Test3"));
-		this->robotControlWidget_.allRobotsFlowLayout->addWidget(new QPushButton("Test4"));
-		this->robotControlWidget_.scrollAreaWidgetContents->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
-		QObject::connect(this->robotControlWidget_.scrollAreaWidgetContents, SIGNAL(customContextMenuRequested(const QPoint&)), this,
+		this->robotControlWidget_.scrollAreaWidgetContents->setContextMenuPolicy(
+				Qt::ContextMenuPolicy::CustomContextMenu);
+		QObject::connect(this->robotControlWidget_.scrollAreaWidgetContents,
+							SIGNAL(customContextMenuRequested(const QPoint&)), this,
 							SLOT(showContextMenu(const QPoint&)));
 
 		if (context.serialNumber() > 1)
@@ -69,10 +66,11 @@ namespace rqt_robot_control
 
 	void RobotsControl::showContextMenu(const QPoint& pos)
 	{
-		QPoint globalPos = this->robotControlWidget_.scrollAreaWidgetContents->mapToGlobal(pos);
+		/* HINT: remember, if there are some problems that way:
+		 * For QAbstractScrollArea and derived classes you would use:
+		 * QPoint globalPos = myWidget->viewport()->mapToGlobal(pos); */
 
-		// TODO remember, if there are some problems that way:
-		// "For QAbstractScrollArea and derived classes you would use: QPoint globalPos = myWidget->viewport()->mapToGlobal(pos);"
+		QPoint globalPos = this->robotControlWidget_.scrollAreaWidgetContents->mapToGlobal(pos);
 
 		QMenu myMenu;
 		for (auto robot : this->pmRegistry->getRobots())
@@ -84,10 +82,20 @@ namespace rqt_robot_control
 		if (selectedItem)
 		{
 			cout << "RC: " << selectedItem->iconText().toStdString() << endl;
+			int robotId;
+			if (this->pmRegistry->getRobotId(selectedItem->iconText().toStdString(), robotId))
+			{
+				this->checkAndInit(robotId);
+				this->controlledRobotsMap[robotId]->toggle();
+			}
+			else
+			{
+				cerr << "RC: Chosen robot is not known in the robot registry!" << endl;
+			}
 		}
 		else
 		{
-			cout << "RC: Nothing choosen" << endl;
+			cout << "RC: Nothing chosen!" << endl;
 		}
 	}
 
@@ -121,7 +129,6 @@ namespace rqt_robot_control
 		lock_guard<mutex> lck(alicaInfoMsgQueueMutex);
 		this->alicaInfoMsgQueue.emplace(chrono::system_clock::now(), alicaInfo);
 	}
-
 
 	/**
 	 * Processes all queued messages from the processStatMsgsQueue and the alicaInfoMsgQueue.

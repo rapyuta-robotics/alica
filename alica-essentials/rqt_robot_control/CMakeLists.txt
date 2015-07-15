@@ -25,14 +25,17 @@ set(rqt_robot_control_HDRS
 )
 
 set(rqt_robot_control_UIS
-  src/rqt_robot_control/RobotsControl.ui
-  src/rqt_robot_control/ProcessWidget.ui
-  src/rqt_robot_control/RobotProcessesWidget.ui
+  ui/RobotsControl.ui
+  ui/ControlledRobot.ui  
 )
 
 set(rqt_robot_control_INCLUDE_DIRECTORIES
   include
   ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+set(rqt_robot_control_RCS
+  resources/resources.qrc
 )
 
 catkin_package(
@@ -43,10 +46,11 @@ catkin_package(
 catkin_python_setup()
 
 qt4_wrap_cpp(rqt_robot_control_MOCS ${rqt_robot_control_HDRS})
+qt4_add_resources(rqt_robot_control_RESOURCES ${rqt_robot_control_RCS}) 
 qt4_wrap_ui(rqt_robot_control_UIS_H ${rqt_robot_control_UIS})
 
 include_directories(${rqt_robot_control_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
-add_library(${PROJECT_NAME} ${rqt_robot_control_SRCS} ${rqt_robot_control_MOCS} ${rqt_robot_control_UIS_H})
+add_library(${PROJECT_NAME} ${rqt_robot_control_SRCS} ${rqt_robot_control_MOCS} ${rqt_robot_control_UIS_H} ${rqt_robot_control_RESOURCES})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
 add_dependencies(${PROJECT_NAME} process_manager)
 

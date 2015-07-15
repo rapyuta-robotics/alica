@@ -7,6 +7,7 @@
 
 #include "rqt_robot_control/ControlledRobot.h"
 #include "rqt_robot_control/RobotsControl.h"
+#include "ui_ControlledRobot.h"
 
 #include <RobotExecutableRegistry.h>
 #include <limits.h>
@@ -15,42 +16,58 @@
 namespace rqt_robot_control
 {
 	ControlledRobot::ControlledRobot(string robotName, int robotId, RobotsControl* parentRobotsControl) :
-			RobotMetaData(robotName, robotId), parentRobotsControl(parentRobotsControl)
+			RobotMetaData(robotName, robotId), parentRobotsControl(parentRobotsControl), widget(new QFrame()), uiControlledRobot(
+					new Ui::ControlledRobotWidget()), shown(false)
 	{
-		//TODO: Add to GUI
-		//this->parentProcessManager->addRobot(this->robotProcessesQFrame);
+		this->uiControlledRobot->setupUi(this->widget);
+		this->uiControlledRobot->robotStartStopBtn->setText(QString(this->name.c_str()));
+		QObject::connect(this->uiControlledRobot->robotStartStopBtn, SIGNAL(toggled(bool)), this, SLOT(sendRobotCommand(bool)));
+		this->widget->hide();
+		this->parentRobotsControl->robotControlWidget_.allRobotsFlowLayout->addWidget(this->widget);
 	}
 
 	ControlledRobot::~ControlledRobot()
 	{
 	}
 
-	/*void ControlledRobot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived,
-	 process_manager::ProcessStat ps)
-	 {
-	 this->timeLastMsgReceived = timeMsgReceived;
-	 auto controlledExecEntry = this->controlledExecMap.find(ps.processKey);
-	 if (controlledExecEntry != this->controlledExecMap.end())
-	 { // executable is already known
-
-	 // update the statistics of the ControlledExecutable
-	 controlledExecEntry->second->handleStat(timeMsgReceived, ps);
-	 }
-	 else
-	 { // executable is unknown
-	 cerr << "ControlledRobot: Received processStat for unknown executable with process key " << ps.processKey
-	 << endl;
-	 return;
-	 }
-	 }*/
-
 	void ControlledRobot::updateGUI(chrono::system_clock::time_point now)
 	{
-		/*for (auto controlledExecEntry : this->controlledExecMap)
-		 {
-		 controlledExecEntry.second->updateGUI(now);
-		 }
-		 */
+	}
+
+	void ControlledRobot::sendRobotCommand(bool start)
+	{
+		if (start)
+		{
+			cout << "CR: sendStart()" << endl;
+		}
+		else
+		{
+			cout << "CR: sendStop()" << endl;
+		}
+	}
+
+	void ControlledRobot::toggle()
+	{
+		if (shown)
+		{
+			this->hide();
+		}
+		else
+		{
+			this->show();
+		}
+	}
+
+	void ControlledRobot::show()
+	{
+		this->shown = true;
+		this->widget->show();
+	}
+
+	void ControlledRobot::hide()
+	{
+		this->shown = false;
+		this->widget->hide();
 	}
 
 } /* namespace rqt_robot_control */

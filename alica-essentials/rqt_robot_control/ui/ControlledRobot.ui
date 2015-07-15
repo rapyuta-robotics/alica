@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>146</width>
+    <width>168</width>
     <height>225</height>
    </rect>
   </property>
@@ -68,8 +68,20 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start / Stop the robot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="locale">
+          <locale language="English" country="UnitedKingdom"/>
+         </property>
          <property name="text">
-          <string>Robot</string>
+          <string>Robot Name</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -99,9 +111,12 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>24</width>
-           <height>24</height>
+           <width>27</width>
+           <height>27</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show / Hide ALICA Information&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="locale">
           <locale language="English" country="UnitedKingdom"/>
@@ -111,7 +126,8 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../../resources/Alica.png</normaloff>../../resources/Alica.png</iconset>
+           <normaloff>:/Alica-Off.png</normaloff>
+           <normalon>:/Alica.png</normalon>:/Alica-Off.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -138,21 +154,31 @@
          <property name="maximumSize">
           <size>
            <width>32</width>
-           <height>24</height>
+           <height>27</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show / Hide Process Manager&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="locale">
+          <locale language="English" country="UnitedKingdom"/>
          </property>
          <property name="text">
           <string/>
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../../resources/System-Monitor.png</normaloff>../../resources/System-Monitor.png</iconset>
+           <normaloff>:/System-Monitor-Off.png</normaloff>
+           <normalon>:/System-Monitor.png</normalon>:/System-Monitor-Off.png</iconset>
          </property>
          <property name="iconSize">
           <size>
            <width>24</width>
            <height>24</height>
           </size>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -166,6 +192,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="locale">
+        <locale language="English" country="UnitedKingdom"/>
+       </property>
        <property name="widgetResizable">
         <bool>true</bool>
        </property>
@@ -174,7 +203,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>142</width>
+          <width>164</width>
           <height>192</height>
          </rect>
         </property>
