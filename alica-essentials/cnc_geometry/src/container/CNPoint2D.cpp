@@ -118,6 +118,30 @@ namespace geometry
 		return ret;
 	}
 
+	shared_ptr<CNPoint2D> CNPoint2D::operator +(const shared_ptr<CNPosition>& right)
+	{
+		auto ret = make_shared<CNPoint2D>(this->x, this->y);
+		ret->x += right->x;
+		ret->y += right->y;
+		return ret;
+	}
+
+	shared_ptr<CNPoint2D> CNPoint2D::operator -(const shared_ptr<CNPosition>& right)
+	{
+		auto ret = make_shared<CNPoint2D>(this->x, this->y);
+		ret->x -= right->x;
+		ret->y -= right->y;
+		return ret;
+	}
+
+	shared_ptr<CNPoint2D> CNPoint2D::operator /(const double& right)
+	{
+		auto ret = make_shared<CNPoint2D>(this->x, this->y);
+		ret->x /= right;
+		ret->y /= right;
+		return ret;
+	}
+
 	shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPoint2D>& left, const shared_ptr<CNPoint2D>& right)
 	{
 		auto ret = make_shared<CNPoint2D>(left->x, left->y);
@@ -134,15 +158,58 @@ namespace geometry
 		return ret;
 	}
 
+	//TODO
+	shared_ptr<CNPoint2D> operator +(const shared_ptr<CNPoint2D>& left, const shared_ptr<CNPosition>& right)
+	{
+		auto ret = make_shared<CNPoint2D>(left->x, left->y);
+		ret->x += right->x;
+		ret->y += right->y;
+		return ret;
+	}
+
+	shared_ptr<CNPoint2D> operator -(const shared_ptr<CNPoint2D>& left, const shared_ptr<CNPosition>& right)
+	{
+		auto ret = make_shared<CNPoint2D>(left->x, left->y);
+		ret->x -= right->x;
+		ret->y -= right->y;
+		return ret;
+	}
+
+	shared_ptr<CNPoint2D> operator /(const shared_ptr<CNPoint2D>& left, const double& right)
+	{
+		auto ret = make_shared<CNPoint2D>(left->x, left->y);
+		ret->x /= right;
+		ret->y /= right;
+		return ret;
+	}
+
+	shared_ptr<CNPoint2D> operator +(const shared_ptr<CNPosition>& left, const shared_ptr<CNPoint2D>& right)
+	{
+		auto ret = make_shared<CNPoint2D>(left->x, left->y);
+		ret->x += right->x;
+		ret->y += right->y;
+		return ret;
+	}
+
+	shared_ptr<CNPoint2D> operator -(const shared_ptr<CNPosition>& left, const shared_ptr<CNPoint2D>& right)
+	{
+		auto ret = make_shared<CNPoint2D>(left->x, left->y);
+		ret->x -= right->x;
+		ret->y -= right->y;
+		return ret;
+	}
+
 	string CNPoint2D::toString()
 	{
 		stringstream ss;
 		ss << "CNPoint2D: x: " << this->x << " y: " << this->y << endl;
 		return ss.str();
 	}
+
+
+	double CNPoint2D::distanceTo(shared_ptr<CNPoint2D> point)
+	{
+		return sqrt(pow(this->x - point->x, 2) + pow(this->y - point->y, 2));
+	}
 }
 
-double geometry::CNPoint2D::distanceTo(shared_ptr<CNPoint2D> point)
-{
-	return sqrt(pow(this->x - point->x, 2) + pow(this->y - point->y, 2));
-}
