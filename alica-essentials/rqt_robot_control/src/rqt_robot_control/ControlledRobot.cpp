@@ -21,13 +21,50 @@ namespace rqt_robot_control
 	{
 		this->uiControlledRobot->setupUi(this->widget);
 		this->uiControlledRobot->robotStartStopBtn->setText(QString(this->name.c_str()));
-		QObject::connect(this->uiControlledRobot->robotStartStopBtn, SIGNAL(toggled(bool)), this, SLOT(sendRobotCommand(bool)));
+		QObject::connect(this->uiControlledRobot->robotStartStopBtn, SIGNAL(toggled(bool)), this,
+							SLOT(sendRobotCommand(bool)));
+		QObject::connect(this->uiControlledRobot->alicaShowHideBtn, SIGNAL(toggled(bool)), this,
+							SLOT(toggleAlicaClient(bool)));
+		QObject::connect(this->uiControlledRobot->pmShowHideBtn, SIGNAL(toggled(bool)), this,
+							SLOT(toggleProcessManager(bool)));
 		this->widget->hide();
+		this->uiControlledRobot->scrollArea->hide();
 		this->parentRobotsControl->robotControlWidget_.allRobotsFlowLayout->addWidget(this->widget);
 	}
 
 	ControlledRobot::~ControlledRobot()
 	{
+	}
+
+	void ControlledRobot::toggleAlicaClient(bool show)
+	{
+		this->showAlicaClient = show;
+
+		if (showAlicaClient)
+		{
+			this->uiControlledRobot->scrollArea->show();
+		}
+		else if (!showAlicaClient && !showProcessManager)
+		{
+			this->uiControlledRobot->scrollArea->hide();
+		}
+		this->uiControlledRobot->scrollArea->adjustSize();
+	}
+
+	void ControlledRobot::toggleProcessManager(bool show)
+	{
+		this->showProcessManager = show;
+
+		if (showProcessManager)
+		{
+			this->uiControlledRobot->scrollArea->show();
+		}
+		else if (!showAlicaClient && !showProcessManager)
+		{
+			this->uiControlledRobot->scrollArea->hide();
+		}
+
+		this->uiControlledRobot->scrollArea->adjustSize();
 	}
 
 	void ControlledRobot::updateGUI(chrono::system_clock::time_point now)
@@ -61,12 +98,14 @@ namespace rqt_robot_control
 	void ControlledRobot::show()
 	{
 		this->shown = true;
+		this->uiControlledRobot->scrollArea->adjustSize();
 		this->widget->show();
 	}
 
 	void ControlledRobot::hide()
 	{
 		this->shown = false;
+		this->uiControlledRobot->scrollArea->adjustSize();
 		this->widget->hide();
 	}
 

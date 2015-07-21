@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>168</width>
+    <width>170</width>
     <height>225</height>
    </rect>
   </property>
@@ -24,6 +24,9 @@
     <width>4000000</width>
     <height>3000000</height>
    </size>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::Box</enum>
   </property>
   <layout class="QVBoxLayout" name="pmControlVerticalLayout" stretch="0">
    <property name="spacing">
@@ -50,12 +53,12 @@
       <enum>QLayout::SetMaximumSize</enum>
      </property>
      <item>
-      <layout class="QHBoxLayout" name="toolbarLayout" stretch="0,0,0,0">
+      <layout class="QHBoxLayout" name="toolbarLayout" stretch="0,0,0">
        <property name="spacing">
         <number>0</number>
        </property>
        <property name="sizeConstraint">
-        <enum>QLayout::SetMaximumSize</enum>
+        <enum>QLayout::SetMinimumSize</enum>
        </property>
        <property name="leftMargin">
         <number>0</number>
@@ -84,22 +87,6 @@
           <bool>true</bool>
          </property>
         </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>1</width>
-           <height>1</height>
-          </size>
-         </property>
-        </spacer>
        </item>
        <item>
         <widget class="QPushButton" name="alicaShowHideBtn">
@@ -187,7 +174,7 @@
      <item>
       <widget class="QScrollArea" name="scrollArea">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -204,7 +191,7 @@
           <x>0</x>
           <y>0</y>
           <width>164</width>
-          <height>192</height>
+          <height>108</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_2"/>

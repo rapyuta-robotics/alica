@@ -51,9 +51,13 @@ namespace rqt_robot_control
 		void show();
 		void hide();
 		bool shown;
+		bool showAlicaClient;
+		bool showProcessManager;
 
 		public Q_SLOTS:
 		void sendRobotCommand(bool start);
+		void toggleAlicaClient(bool start);
+		void toggleProcessManager(bool start);
 
 
 	private:
