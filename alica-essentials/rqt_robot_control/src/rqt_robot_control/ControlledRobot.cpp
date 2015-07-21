@@ -17,7 +17,7 @@ namespace rqt_robot_control
 {
 	ControlledRobot::ControlledRobot(string robotName, int robotId, RobotsControl* parentRobotsControl) :
 			RobotMetaData(robotName, robotId), parentRobotsControl(parentRobotsControl), widget(new QFrame()), uiControlledRobot(
-					new Ui::ControlledRobotWidget()), shown(false)
+					new Ui::ControlledRobotWidget()), shown(false), showAlicaClient(false), showProcessManager(false)
 	{
 		this->uiControlledRobot->setupUi(this->widget);
 		this->uiControlledRobot->robotStartStopBtn->setText(QString(this->name.c_str()));

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>124</width>
+    <height>177</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -26,104 +26,118 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="verticalLblLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="sizeConstraint">
+        <enum>QLayout::SetMinimumSize</enum>
+       </property>
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="masterPlanLbl">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>85</width>
+           <height>27</height>
+          </size>
+         </property>
          <property name="text">
-          <string>senderID</string>
+          <string>Master:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="roleLbl">
+         <property name="maximumSize">
+          <size>
+           <width>35</width>
+           <height>27</height>
+          </size>
+         </property>
          <property name="text">
-          <string>currentPlan</string>
+          <string>Role:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="planLbl">
+         <property name="maximumSize">
+          <size>
+           <width>35</width>
+           <height>27</height>
+          </size>
+         </property>
          <property name="text">
-          <string>masterPlan</string>
+          <string>Plan:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="stateLbl">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>27</height>
+          </size>
+         </property>
          <property name="text">
-          <string>currentState</string>
+          <string>State:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>currentRole</string>
+        <widget class="QLabel" name="taskLbl">
+         <property name="maximumSize">
+          <size>
+           <width>35</width>
+           <height>27</height>
+          </size>
          </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>currentTask</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>robotIDsWithMe</string>
+          <string>Task:</string>
          </property>
         </widget>
        </item>
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <layout class="QVBoxLayout" name="verticalValLayout">
        <item>
-        <widget class="QLabel" name="senderID">
+        <widget class="QLabel" name="masterPlanVal">
          <property name="text">
           <string/>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="currentPlan">
+        <widget class="QLabel" name="roleVal">
          <property name="text">
           <string/>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="masterPlan">
+        <widget class="QLabel" name="planVal">
          <property name="text">
           <string/>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="currentState">
+        <widget class="QLabel" name="stateVal">
          <property name="text">
           <string/>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="currentRole">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="currentTask">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="robotIDsWithMe">
+        <widget class="QLabel" name="taskVal">
          <property name="text">
           <string/>
          </property>

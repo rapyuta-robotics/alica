@@ -4,37 +4,31 @@
 #include <ros/node_handle.h>
 #include <sstream>
 
-
 namespace rqt_alica_client
 {
 
 	AlicaClient::AlicaClient() :
-			rqt_gui_cpp::Plugin(), widget_(0)
+			rqt_gui_cpp::Plugin(), widget(0)
 	{
 		setObjectName("AlicaClient");
 
 		rosNode = new ros::NodeHandle();
 
 		aliceClientSubscriber = rosNode->subscribe("/AlicaEngine/AlicaEngineInfo", 10,
-																		&AlicaClient::handleAlicaEngineInfo,
-																		(AlicaClient*)this);
+													&AlicaClient::handleAlicaEngineInfo, (AlicaClient*)this);
 
 	}
 
 	void AlicaClient::initPlugin(qt_gui_cpp::PluginContext& context)
 	{
-		widget_ = new QWidget();
-		ui_.setupUi(widget_);
+		widget = new QWidget();
+		uiAlicaClientWidget.setupUi(widget);
 
 		if (context.serialNumber() > 1)
 		{
-			widget_->setWindowTitle(widget_->windowTitle() + " (" + QString::number(context.serialNumber()) + ")");
+			widget->setWindowTitle(widget->windowTitle() + " (" + QString::number(context.serialNumber()) + ")");
 		}
-		context.addWidget(widget_);
-
-		widget_->installEventFilter(this);
-
-
+		context.addWidget(widget);
 	}
 
 	void AlicaClient::shutdownPlugin()
@@ -46,25 +40,32 @@ namespace rqt_alica_client
 
 	}
 
-	void AlicaClient::restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings)
+	void AlicaClient::restoreSettings(const qt_gui_cpp::Settings& plugin_settings,
+										const qt_gui_cpp::Settings& instance_settings)
 	{
 
 	}
 
-	void AlicaClient::handleAlicaEngineInfo(
-			alica_ros_proxy::AlicaEngineInfoPtr bei) {
-		ui_.senderID->setText(QString(bei->senderID));
-		ui_.currentPlan->setText(QString(bei->currentPlan.c_str()));
-		ui_.currentRole->setText(QString(bei->currentRole.c_str()));
-		ui_.currentState->setText(QString(bei->currentState.c_str()));
-		ui_.currentTask->setText(QString(bei->currentTask.c_str()));
-		ui_.masterPlan->setText(QString(bei->masterPlan.c_str()));
-		stringstream ss;
-		for(int id : bei->robotIDsWithMe) {
-			ss << id << ", ";
-		}
-		ui_.robotIDsWithMe->setText(QString(ss.str().c_str()));
+	void AlicaClient::handleAlicaEngineInfo(alica_ros_proxy::AlicaEngineInfoPtr bei)
+	{
+		uiAlicaClientWidget.planVal->setText(QString(bei->currentPlan.c_str()));
+		uiAlicaClientWidget.roleVal->setText(QString(bei->currentRole.c_str()));
+		uiAlicaClientWidget.taskVal->setText(QString(bei->currentTask.c_str()));
+		uiAlicaClientWidget.masterPlanVal->setText(QString(bei->masterPlan.c_str()));
 
+		stringstream ss;
+		ss << bei->currentState << " (";
+		if (bei->robotIDsWithMe.size() > 0)
+		{
+			for (int i = 0; i < bei->robotIDsWithMe.size() - 1; i++)
+			{
+				ss << bei->robotIDsWithMe[i] << ", ";
+			}
+			ss << bei->robotIDsWithMe[bei->robotIDsWithMe.size()];
+		}
+		ss << ")";
+
+		uiAlicaClientWidget.stateVal->setText(QString(ss.str().c_str()));
 	}
 
 }

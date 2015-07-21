@@ -36,9 +36,9 @@ namespace rqt_alica_client
 
 		void handleAlicaEngineInfo(alica_ros_proxy::AlicaEngineInfoPtr bei);
 
-		Ui::AlicaClientWidget ui_;
+		Ui::AlicaClientWidget uiAlicaClientWidget;
 
-		QWidget* widget_;
+		QWidget* widget;
 
 	private:
 
