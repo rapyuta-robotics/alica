@@ -16,16 +16,16 @@ include(${QT_USE_FILE})
 
 set(rqt_alica_client_SRCS
   src/rqt_alica_client/AlicaClient.cpp
+  src/rqt_alica_client/AlicaWidget.cpp
 )
 
 set(rqt_alica_client_HDRS
   include/rqt_alica_client/AlicaClient.h
-
+  include/rqt_alica_client/AlicaWidget.h
 )
 
 set(rqt_alica_client_UIS
   src/rqt_alica_client/AlicaClient.ui
-
 )
 
 set(rqt_alica_client_INCLUDE_DIRECTORIES
