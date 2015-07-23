@@ -11,6 +11,7 @@
 #include <chrono>
 #include <RobotMetaData.h>
 #include <QFrame>
+#include "alica_ros_proxy/AlicaEngineInfo.h"
 
 namespace Ui {
 	class RobotProcessesWidget;
@@ -25,28 +26,32 @@ namespace ros{
 	class Publisher;
 }
 
+namespace rqt_alica {
+	class AlicaWidget;
+}
+
 namespace rqt_robot_control
 {
 	class RobotsControl;
 
-	class ControlledRobot : public QObject, public supplementary::RobotMetaData
+	class Robot : public QObject, public supplementary::RobotMetaData
 	{
 
 		Q_OBJECT
 
 	public:
-		ControlledRobot(string robotName, int robotId, RobotsControl* parentRobotsControl);
+		Robot(string robotName, int robotId, RobotsControl* parentRobotsControl);
 
-		virtual ~ControlledRobot();
+		virtual ~Robot();
 
-		void updateGUI(chrono::system_clock::time_point now);
+		// Message processing
+		chrono::time_point<chrono::steady_clock> timeLastMsgReceived; /**< the last time a message was received for this robot */
+		void handleAlicaInfo(alica_ros_proxy::AlicaEngineInfoConstPtr aei);
 
-		chrono::system_clock::time_point timeLastMsgReceived; /**< the last time a message was received for this robot */
-
+		// GUI Methods and Members
 		RobotsControl* parentRobotsControl;
-
-
-		// GUI Methods
+		void updateGUI(chrono::system_clock::time_point now);
+		void clearGUI();
 		void toggle();
 		void show();
 		void hide();
@@ -64,6 +69,7 @@ namespace rqt_robot_control
 
 		QFrame* widget;
 		Ui::ControlledRobotWidget* uiControlledRobot;
+		rqt_alica::AlicaWidget* alicaWidget;
 
 	};
 

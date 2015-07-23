@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(rqt_robot_control)
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util alica_ros_proxy)
+find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util alica_ros_proxy rqt_alica_client)
 
 find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
 include(${QT_USE_FILE})
@@ -20,14 +20,14 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 set(rqt_robot_control_SRCS
   src/rqt_robot_control/flowlayout.cpp
   src/rqt_robot_control/RobotsControl.cpp
-  src/rqt_robot_control/ControlledRobot.cpp
+  src/rqt_robot_control/Robot.cpp
 )
 
 
 set(rqt_robot_control_HDRS
   include/rqt_robot_control/flowlayout.h
   include/rqt_robot_control/RobotsControl.h
-  include/rqt_robot_control/ControlledRobot.h
+  include/rqt_robot_control/Robot.h
 )
 
 set(rqt_robot_control_UIS
@@ -63,8 +63,10 @@ qt4_wrap_ui(rqt_robot_control_UIS_H ${rqt_robot_control_UIS})
 
 include_directories(${rqt_robot_control_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
 add_library(${PROJECT_NAME} ${rqt_robot_control_SRCS} ${rqt_robot_control_MOCS} ${rqt_robot_control_UIS_H} ${rqt_robot_control_RESOURCES})
+message ("<<< catkin libs: ${catkin_LIBRARIES}")
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
-add_dependencies(${PROJECT_NAME} process_manager)
+
+add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 find_package(class_loader)
 class_loader_hide_library_symbols(${PROJECT_NAME})

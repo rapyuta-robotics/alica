@@ -1,8 +1,8 @@
-#include "../../include/rqt_alica_client/AlicaClient.h"
+#include "rqt_alica_client/AlicaClient.h"
 #include <pluginlib/class_list_macros.h>
 #include <ros/master.h>
 #include <ros/node_handle.h>
-#include "rqt_alica_client/AlicaWidget.h"
+#include "rqt_alica/AlicaWidget.h"
 
 namespace rqt_alica_client
 {
@@ -11,11 +11,7 @@ namespace rqt_alica_client
 			rqt_gui_cpp::Plugin(), widget(0), alicaWidget (0)
 	{
 		setObjectName("AlicaClient");
-
 		rosNode = new ros::NodeHandle();
-
-
-
 	}
 
 	void AlicaClient::initPlugin(qt_gui_cpp::PluginContext& context)
@@ -43,13 +39,11 @@ namespace rqt_alica_client
 
 	void AlicaClient::saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const
 	{
-
 	}
 
 	void AlicaClient::restoreSettings(const qt_gui_cpp::Settings& plugin_settings,
 										const qt_gui_cpp::Settings& instance_settings)
 	{
-
 	}
 
 }

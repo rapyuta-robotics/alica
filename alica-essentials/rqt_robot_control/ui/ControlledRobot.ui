@@ -194,7 +194,20 @@
           <height>108</height>
          </rect>
         </property>
-        <layout class="QGridLayout" name="gridLayout_2"/>
+        <layout class="flowlayout" name="allClientsFlowLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+      </layout>
        </widget>
       </widget>
      </item>
@@ -203,6 +216,13 @@
   </layout>
  </widget>
  <layoutdefault spacing="0" margin="0"/>
+ <customwidgets>
+  <customwidget>
+   <class>flowlayout</class>
+   <extends>QPushButton</extends>
+   <header>rqt_robot_control/flowlayout.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

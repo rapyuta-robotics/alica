@@ -19,7 +19,8 @@ namespace rqt_alica
 	public:
 		AlicaWidget();
 		virtual ~AlicaWidget();
-		void handleAlicaEngineInfo(alica_ros_proxy::AlicaEngineInfoPtr bei);
+		void handleAlicaEngineInfo(alica_ros_proxy::AlicaEngineInfoConstPtr aei);
+		void clearGUI();
 
 		Ui::AlicaWidget uiAlicaWidget;
 		QFrame* qframe;

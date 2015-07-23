@@ -55,7 +55,7 @@ namespace rqt_robot_control
 		// Initialise the ROS Communication
 		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &RobotsControl::receiveProcessStats,
 												(RobotsControl*)this);
-		alicaInfoSub = rosNode->subscribe("/alica_engine/AlicaEngineInfo", 10, &RobotsControl::receiveAlicaInfo,
+		alicaInfoSub = rosNode->subscribe("/AlicaEngine/AlicaEngineInfo", 10, &RobotsControl::receiveAlicaInfo,
 											(RobotsControl*)this);
 
 		// Initialise the GUI refresh timer
@@ -114,8 +114,12 @@ namespace rqt_robot_control
 	 */
 	void RobotsControl::updateGUI()
 	{
-		chrono::system_clock::time_point now = chrono::system_clock::now();
 		// TODO: Not implemented, yet.
+		chrono::system_clock::time_point now = chrono::system_clock::now();
+		for (auto controlledRobotEntry : this->controlledRobotsMap)
+		{
+			controlledRobotEntry.second->updateGUI(now);
+		}
 	}
 
 	void RobotsControl::receiveProcessStats(process_manager::ProcessStatsConstPtr processStats)
@@ -152,10 +156,11 @@ namespace rqt_robot_control
 			while (!this->alicaInfoMsgQueue.empty())
 			{
 				// unqueue the ROS alica info message
-				auto timePstsPair = alicaInfoMsgQueue.front();
+				auto timeAlicaInfoPair = alicaInfoMsgQueue.front();
 				alicaInfoMsgQueue.pop();
 
-				this->checkAndInit(timePstsPair.second->senderID);
+				this->checkAndInit(timeAlicaInfoPair.second->senderID);
+				this->controlledRobotsMap[timeAlicaInfoPair.second->senderID]->handleAlicaInfo(timeAlicaInfoPair.second);
 			}
 		}
 
@@ -175,7 +180,7 @@ namespace rqt_robot_control
 			{
 				cout << "RobotsControl: Create new ControlledRobot with ID " << robotId << " and host name "
 						<< robotName << "!" << endl;
-				ControlledRobot* controlledRobot = new ControlledRobot(robotName, robotId, this);
+				Robot* controlledRobot = new Robot(robotName, robotId, this);
 				this->controlledRobotsMap.emplace(robotId, controlledRobot);
 			}
 			else

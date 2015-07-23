@@ -5,6 +5,7 @@
 
 #include "ros/ros.h"
 #include <ros/macros.h>
+#include <rqt_robot_control/Robot.h>
 
 #include "process_manager/ProcessStats.h"
 #include "alica_ros_proxy/AlicaEngineInfo.h"
@@ -13,8 +14,6 @@
 #include <QtGui>
 #include <QWidget>
 #include <QDialog>
-
-#include <rqt_robot_control/ControlledRobot.h>
 
 #include <queue>
 #include <mutex>
@@ -62,7 +61,7 @@ namespace rqt_robot_control
 
 		supplementary::SystemConfig* sc;
 
-		map<int, ControlledRobot*> controlledRobotsMap;
+		map<int, Robot*> controlledRobotsMap;
 		queue<pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
 		mutex processStatsMsgQueueMutex;
 		queue<pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
