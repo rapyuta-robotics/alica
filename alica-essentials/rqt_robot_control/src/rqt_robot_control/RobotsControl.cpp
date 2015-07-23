@@ -178,14 +178,14 @@ namespace rqt_robot_control
 			string robotName;
 			if (this->pmRegistry->getRobotName(robotId, robotName))
 			{
-				cout << "RobotsControl: Create new ControlledRobot with ID " << robotId << " and host name "
+				cout << "RC: Create new ControlledRobot with ID " << robotId << " and host name "
 						<< robotName << "!" << endl;
 				Robot* controlledRobot = new Robot(robotName, robotId, this);
 				this->controlledRobotsMap.emplace(robotId, controlledRobot);
 			}
 			else
 			{
-				cerr << "RobotsControl: Received message from unknown robot with sender id " << robotId << endl;
+				cerr << "RC: Received message from unknown robot with sender id " << robotId << endl;
 			}
 		}
 	}

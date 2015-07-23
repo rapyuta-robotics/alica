@@ -111,11 +111,11 @@ namespace rqt_robot_control
 	{
 		if (start)
 		{
-			cout << "CR: sendStart()" << endl;
+			cout << "Robot: sendStart()" << endl;
 		}
 		else
 		{
-			cout << "CR: sendStop()" << endl;
+			cout << "Robot: sendStop()" << endl;
 		}
 	}
 
