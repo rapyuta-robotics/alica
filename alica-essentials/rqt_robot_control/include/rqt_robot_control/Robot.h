@@ -11,6 +11,7 @@
 #include <chrono>
 #include <RobotMetaData.h>
 #include <QFrame>
+#include <ros/ros.h>
 #include "alica_ros_proxy/AlicaEngineInfo.h"
 
 namespace Ui {
@@ -70,6 +71,9 @@ namespace rqt_robot_control
 		QFrame* widget;
 		Ui::ControlledRobotWidget* uiControlledRobot;
 		rqt_alica::AlicaWidget* alicaWidget;
+
+		ros::Publisher robotCommandPub;
+
 
 	};
 

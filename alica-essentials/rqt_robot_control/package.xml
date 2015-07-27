@@ -10,6 +10,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>message_generation</build_depend>
+  <build_depend>std_msgs</build_depend>
   <build_depend>rqt_gui</build_depend>
   <build_depend>rqt_gui_cpp</build_depend>
   <build_depend>process_manager</build_depend>
@@ -17,6 +19,8 @@
   <build_depend>alica_ros_proxy</build_depend>
   <build_depend>rqt_alica_client</build_depend>
 
+  <run_depend>message_runtime</run_depend>
+  <run_depend>std_msgs</run_depend>
   <run_depend>rqt_gui</run_depend>
   <run_depend>rqt_gui_cpp</run_depend>
   <run_depend>process_manager</run_depend>

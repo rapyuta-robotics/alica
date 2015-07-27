@@ -53,9 +53,9 @@ namespace rqt_robot_control
 		QWidget* widget_;
 
 		supplementary::RobotExecutableRegistry* pmRegistry;
+		ros::NodeHandle* rosNode;
 
 	private:
-		ros::NodeHandle* rosNode;
 		ros::Subscriber processStateSub;
 		ros::Subscriber alicaInfoSub;
 

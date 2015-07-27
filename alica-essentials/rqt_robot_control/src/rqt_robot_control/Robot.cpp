@@ -5,16 +5,20 @@
  *      Author: Stephan Opfer
  */
 
+#include <rqt_robot_control/Robot.h>
+
+#include <ros/ros.h>
+#include <RobotExecutableRegistry.h>
+
+#include "rqt_robot_control/RobotCommand.h"
 #include "rqt_robot_control/RobotsControl.h"
 #include "ui_ControlledRobot.h"
 #include "rqt_alica/AlicaWidget.h"
-#include <RobotExecutableRegistry.h>
+
 #include <chrono>
-
-
 #include <limits.h>
-#include <ros/ros.h>
-#include <rqt_robot_control/Robot.h>
+
+
 
 namespace rqt_robot_control
 {
@@ -45,6 +49,8 @@ namespace rqt_robot_control
 
 		// add to parent widget
 		this->parentRobotsControl->robotControlWidget_.allRobotsFlowLayout->addWidget(this->widget);
+
+		this->robotCommandPub = this->parentRobotsControl->rosNode->advertise<rqt_robot_control::RobotCommand>("RobotCommand",5);
 	}
 
 	Robot::~Robot()
@@ -109,14 +115,17 @@ namespace rqt_robot_control
 
 	void Robot::sendRobotCommand(bool start)
 	{
+		RobotCommand rc;
+		rc.receiverId = this->id;
 		if (start)
 		{
-			cout << "Robot: sendStart()" << endl;
+			rc.cmd = RobotCommand::START;
 		}
 		else
 		{
-			cout << "Robot: sendStop()" << endl;
+			rc.cmd = RobotCommand::STOP;
 		}
+		this->robotCommandPub.publish(rc);
 	}
 
 	void Robot::toggle()
