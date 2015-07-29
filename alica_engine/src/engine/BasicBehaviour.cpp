@@ -270,7 +270,7 @@ namespace alica
 			}
 			catch (exception& e)
 			{
-				cerr << "Exception catched: " << e.what() << endl;
+				cerr << "Exception catched:  " << this->getName() << " - " << e.what() << endl;
 			}
 #ifdef BEH_DEBUG
 			BehaviourConfiguration* conf = dynamic_cast<BehaviourConfiguration*>(this->getRunningPlan()->getPlan());
