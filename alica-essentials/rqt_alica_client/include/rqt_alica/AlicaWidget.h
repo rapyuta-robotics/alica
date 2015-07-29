@@ -9,7 +9,7 @@
 #define SRC_RQT_ALICA_CLIENT_ALICAWIDGET_H_
 
 #include <alica_ros_proxy/AlicaEngineInfo.h>
-#include <ui_AlicaClient.h>
+#include <ui_AlicaWidget.h>
 namespace rqt_alica
 {
 	using namespace std;
