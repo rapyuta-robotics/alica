@@ -56,6 +56,8 @@ namespace alica
 				void printStatistics();
 				void printAssignments();
 
+				void removeRangeOfDecisions(int index, int count);
+
 				bool useIntervalProp;
 				weak_ptr<CNSMTGSolver> cnsmtGSolver;
 

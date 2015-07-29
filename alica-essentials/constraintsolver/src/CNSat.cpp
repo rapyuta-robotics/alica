@@ -436,8 +436,8 @@ namespace alica
 								wa->clause->satisfied = false;
 							}
 						}
-						decisions->erase(decisions->begin() + decisionLevel->at(1)->level,
-											decisions->begin() + (decisions->size() - decisionLevel->at(1)->level));
+						// dont use erase, because i dont want to delete the objects
+						removeRangeOfDecisions(decisionLevel->at(1)->level, decisions->size() - decisionLevel->at(1)->level);
 
 						decisionLevel->erase(decisionLevel->begin() + 1,
 												decisionLevel->begin() + (decisionLevel->size() - 1));
@@ -744,7 +744,6 @@ namespace alica
 				//End Learn Clause
 
 				//Find backtracklevel:
-
 				shared_ptr<DecisionLevel> db;
 				int i = 1, maxLitIndex;
 				shared_ptr<Lit> changeLit;
@@ -845,10 +844,8 @@ namespace alica
 						//wa->clause->satisfied = false; //this should take other watcher into account
 					}
 				}
-				auto beginIt = decisions->begin() + db->level;
-				//FIXME: if there is an error during backtracking check here
-				//auto endIt = decisions->begin() + (decisions->size() - db->level);
-				decisions->erase(beginIt, decisions->end());
+				// dont use erase, because i dont want to delete the objects
+				removeRangeOfDecisions(db->level, decisions->size() - db->level);
 
 				//int i = decisionLevel.IndexOf(db);
 				int i = ndbidx;
@@ -885,9 +882,8 @@ namespace alica
 				}
 				if (decisionLevel->at(1)->level < decisions->size())
 				{
-					auto first = decisions->begin() + decisionLevel->at(1)->level;
-					auto last = decisions->begin() + (decisions->size() - decisionLevel->at(1)->level);
-					decisions->erase(first, last);
+					// dont use erase, because i dont want to delete the objects
+					removeRangeOfDecisions(decisionLevel->at(1)->level, decisions->size() - decisionLevel->at(1)->level);
 				}
 
 				decisionLevel->erase(decisionLevel->begin() + 1, decisionLevel->begin() + (decisionLevel->size() - 1));
@@ -971,6 +967,18 @@ namespace alica
 					cout << " ";
 				}
 				cout << endl;
+			}
+
+			void CNSat::removeRangeOfDecisions(int index, int count)
+			{
+				shared_ptr<vector<shared_ptr<Var> >> newDecisions = make_shared<vector<shared_ptr<Var> >>();
+				for (int i = 0; i < index; ++i) {
+					newDecisions->push_back(decisions->at(i));
+				}
+				for (int i = index + count; i < decisions->size(); ++i) {
+					newDecisions->push_back(decisions->at(i));
+				}
+				decisions = newDecisions;
 			}
 
 		} /* namespace cnsat */
