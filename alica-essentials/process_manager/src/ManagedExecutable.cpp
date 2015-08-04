@@ -26,9 +26,11 @@ namespace supplementary
 {
 	long ManagedExecutable::kernelPageSize = 0;
 
-	ManagedExecutable::ManagedExecutable(ExecutableMetaData const * const metaExec, long pid, string robotName, ProcessManager* procMan) :
-			metaExec(metaExec), managedPid(pid), state('X'), lastUTime(0), lastSTime(0), currentUTime(0), currentSTime(0), memory(0), starttime(0), shouldRun(
-					false), cpu(0), runningParamSet(ExecutableMetaData::UNKNOWN_PARAMS), desiredParamSet(ExecutableMetaData::UNKNOWN_PARAMS), procMan(
+	ManagedExecutable::ManagedExecutable(ExecutableMetaData const * const metaExec, long pid, string robotName,
+											ProcessManager* procMan) :
+			metaExec(metaExec), managedPid(pid), state('X'), lastUTime(0), lastSTime(0), currentUTime(0), currentSTime(
+					0), memory(0), starttime(0), shouldRun(false), cpu(0), runningParamSet(
+					ExecutableMetaData::UNKNOWN_PARAMS), desiredParamSet(ExecutableMetaData::UNKNOWN_PARAMS), procMan(
 					procMan), need2ReadParams(true)
 	{
 
@@ -123,7 +125,7 @@ namespace supplementary
 							else
 							{ // our process is not running with the right parameters, so kill it and all others
 #ifdef MNGD_EXEC_DEBUG
-								cout << "ME: " << this->metaExec->name << " is NOT running the right params!" << endl;
+							cout << "ME: " << this->metaExec->name << " is NOT running the right params!" << endl;
 #endif
 								this->clear();
 								this->killQueuedProcesses();
@@ -375,7 +377,7 @@ namespace supplementary
 			int i = 0;
 			for (; i < this->runningParams.size(); i++)
 			{
-				if (paramEntry.second[i] == nullptr	&& this->runningParams[i] == nullptr)
+				if (paramEntry.second[i] == nullptr && this->runningParams[i] == nullptr)
 				{ // this case is for the ending null pointer in the command line parameters
 					continue;
 				}
@@ -388,7 +390,7 @@ namespace supplementary
 			if (i == this->runningParams.size())
 			{ // all parameters matched
 #ifdef MNGD_EXEC_DEBUG
-				cout << "ME: Parameters matched for paramSetid " << paramEntry.first << endl;
+			cout << "ME: Parameters matched for paramSetid " << paramEntry.first << endl;
 #endif
 				this->runningParamSet = paramEntry.first;
 				if (this->desiredParamSet == ExecutableMetaData::UNKNOWN_PARAMS)
@@ -410,8 +412,8 @@ namespace supplementary
 		stringstream ss;
 		ss << "ME: Stats of " << this->metaExec->name << " (" << this->managedPid << ")" << endl;
 		ss << "ME: State: '" << this->state << "' StartTime: " << this->starttime << endl;
-		ss << "ME: Times: last u '" << this->lastUTime << "' last s '" << this->lastSTime << "' current u '" << this->currentUTime << "' current s '"
-				<< this->currentSTime << endl;
+		ss << "ME: Times: last u '" << this->lastUTime << "' last s '" << this->lastSTime << "' current u '"
+				<< this->currentUTime << "' current s '" << this->currentSTime << endl;
 		ss << "ME: CPU: " << this->cpu << "%" << endl;
 		ss << "ME: Memory: " << this->memory * kernelPageSize / 1024.0 / 1024.0 << "MB" << endl;
 		ss << "ME: Parameters " << this->runningParams.size() << ": ";
@@ -459,7 +461,8 @@ namespace supplementary
 
 		if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED && this->runningParamSet == paramSetId && shouldRun)
 		{
-			cout << "ME: Won't (re)start executable, as it is already running with the right parameters! PID: " << this->managedPid << endl;
+			cout << "ME: Won't (re)start executable, as it is already running with the right parameters! PID: "
+					<< this->managedPid << endl;
 		}
 
 		// remember desired executable state
@@ -475,6 +478,8 @@ namespace supplementary
 	void ManagedExecutable::startProcess(vector<char*> & params)
 	{
 		pid_t pid = fork();
+		this->stdLogFileName = Logging::getLogFilename(this->metaExec->name);
+		this->errLogFileName = Logging::getErrLogFilename(this->metaExec->name);
 		if (pid == 0) // child process
 		{
 			setsid(); // necessary to let the child process live longer than its parent
@@ -482,21 +487,22 @@ namespace supplementary
 			setenv("ROBOT", this->robotEnvVariable.c_str(), 1);
 
 			// redirect stdout
-			string logFileName = Logging::getLogFilename(this->metaExec->name);
-			FILE* fd = fopen(logFileName.c_str(), "w+");
+
+			FILE* fd = fopen(stdLogFileName.c_str(), "w+");
 			dup2(fileno(fd), STDOUT_FILENO);
 			fclose(fd);
 
 			// redirect stderr
-			logFileName = Logging::getErrLogFilename(this->metaExec->name);
-			fd = fopen(logFileName.c_str(), "w+");
+
+			fd = fopen(errLogFileName.c_str(), "w+");
 			dup2(fileno(fd), STDERR_FILENO);
 			fclose(fd);
 
 			int execReturn;
 			if (this->metaExec->absExecName.size() > 1)
 			{
-				cout << "ME: Starting '" << this->metaExec->absExecName << "' ! Params: '" << params.data() << "'" << endl;
+				cout << "ME: Starting '" << this->metaExec->absExecName << "' ! Params: '" << params.data() << "'"
+						<< endl;
 				execReturn = execvp(this->metaExec->absExecName.c_str(), params.data());
 			}
 			else
@@ -513,6 +519,7 @@ namespace supplementary
 		else if (pid > 0) // parent process
 		{
 			this->lastTimeTried = chrono::steady_clock::now();
+			//this->startPublishingLogs();
 			this->managedPid = pid;
 		}
 		else if (pid < 0)
@@ -520,6 +527,72 @@ namespace supplementary
 			cout << "ME: Failed to fork, plz consider a spoon!" << endl;
 			this->managedPid = ExecutableMetaData::NOTHING_MANAGED;
 		}
+	}
+
+	void ManagedExecutable::startPublishingLogs()
+	{
+		this->publishLogs = true;
+		if (stdLogPublisher.joinable())
+			stdLogPublisher.join();
+		stdLogPublisher = thread(&ManagedExecutable::publishLogFile, this, ros::console::levels::Info);
+		if (errLogPublisher.joinable())
+			errLogPublisher.join();
+		errLogPublisher = thread(&ManagedExecutable::publishLogFile, this, ros::console::levels::Error);
+	}
+
+	void ManagedExecutable::stopPublishingLogs()
+	{
+		this->publishLogs = false;
+	}
+
+	void ManagedExecutable::publishLogFile(ros::console::levels::Level logLevel)
+	{
+		std::ifstream ifs;
+		if (logLevel == ros::console::levels::Info)
+		{
+			ifs.open(this->stdLogFileName.c_str());
+		}
+		else if (logLevel == ros::console::levels::Error)
+		{
+			ifs.open(this->errLogFileName.c_str());
+		}
+		else
+		{
+			cerr << "ME: Unhandled ROS Log Level!" << endl;
+			return;
+		}
+
+		if (ifs.is_open())
+		{
+			std::string line;
+			//ros::Publisher pub = ros::NodeHandle
+			while (this->publishLogs)
+			{
+				while (std::getline(ifs, line))
+				{
+					ROS_LOG_STREAM(logLevel, ROSCONSOLE_DEFAULT_NAME, line);
+				}
+				if (!ifs.eof())
+				{
+					// if getline did return false and eof is not set, we encountered an error, so end this thread
+					break;
+				}
+				// we reached the end of the log file, so reset the eof bit and start reading again in some milliseconds
+				ifs.clear();
+
+				usleep(40000); // 40 ms
+			}
+		}
+
+		if (logLevel == ros::console::levels::Info)
+		{
+			cout << "ME: STD Publishing Thread terminated!" << endl;
+		}
+		else if (logLevel == ros::console::levels::Error)
+		{
+			cout << "ME: ERR Publishing Thread terminated!" << endl;
+		}
+
 	}
 
 	/**
@@ -541,6 +614,7 @@ namespace supplementary
 		 */
 		if (this->managedPid != 0)
 		{
+			//stopPublishingLogs();
 			kill(this->managedPid, SIGTERM);
 			return true;
 		}
