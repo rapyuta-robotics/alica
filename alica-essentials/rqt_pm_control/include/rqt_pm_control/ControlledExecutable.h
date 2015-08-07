@@ -43,7 +43,7 @@ namespace rqt_pm_control
 		void handleStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
 		void updateGUI(chrono::system_clock::time_point now);
 		void handleBundleComboBoxChanged(QString bundle);
-
+		void sendProcessCommand(int cmd);
 		chrono::system_clock::time_point timeLastMsgReceived; /**< last time a message was received for this executable */
 
 		int runningParamSet;
@@ -58,6 +58,7 @@ namespace rqt_pm_control
 
 	public Q_SLOTS:
 		void handleCheckBoxStateChanged(int newState);
+		void showContextMenu(const QPoint& pos);
 
 	Q_SIGNALS:
 		void processCheckBoxStateChanged(int, int); /**< first int is newState, second int is execId */
@@ -67,6 +68,7 @@ namespace rqt_pm_control
 		static const string greenBackground;
 		static const string grayBackground;
 		ControlledRobot* parentRobot;
+
 
 	};
 

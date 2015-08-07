@@ -35,12 +35,12 @@ namespace supplementary
 		void update(unsigned long long cpuDelta);
 		void report(process_manager::ProcessStats& psts, int robotId);
 		void changeDesiredState(bool shouldRun, int paramSetId);
+		void changeDesiredLogPublishingState(bool shouldPublish);
 		void startProcess (vector<char*> & params);
 		void startProcess ();
-		bool stopProcess ();
 		void startPublishingLogs();
 		void stopPublishingLogs();
-		void publishLogFile(ros::console::levels::Level logLevel);
+		void publishLogFile(string logFileName, ros::console::levels::Level logLevel);
 
 		static long kernelPageSize; /* < in bytes */
 
@@ -62,12 +62,12 @@ namespace supplementary
 		string robotEnvVariable;
 
 		// log publishing
-		bool publishLogs;
+		bool publishing;
+		bool shouldPublish;
 		string stdLogFileName;
 		string errLogFileName;
 		thread stdLogPublisher;
 		thread errLogPublisher;
-
 
 		chrono::time_point<chrono::steady_clock> lastTimeTried;
 		bool shouldRun;

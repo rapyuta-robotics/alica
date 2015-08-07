@@ -4,6 +4,8 @@
 #constants for cmd
 uint8 START = 0
 uint8 STOP = 1
+uint8 START_LOG_PUBLISHING = 2
+uint8 STOP_LOG_PUBLISHING = 3
 
 # Cmd has to be set to one of the values above. 
 uint8 cmd

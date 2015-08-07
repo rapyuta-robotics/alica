@@ -73,7 +73,7 @@ namespace supplementary
 		void updateTotalCPUTimes();
 		void handleProcessCommand(process_manager::ProcessCommandPtr pc);
 		void changeDesiredProcessStates(process_manager::ProcessCommandPtr pc, bool shouldRun);
-
+		void changeLogPublishing(process_manager::ProcessCommandPtr pc, bool shouldPublish);
 		thread* mainThread;
 		chrono::microseconds iterationTime;
 
