@@ -51,6 +51,7 @@ namespace rqt_pm_control
 		char state; /**< The process state (zombie, running, etc.) */
 		unsigned short cpu;
 		long int memory;
+		bool publishing;
 
 		supplementary::ExecutableMetaData* metaExec;
 		QWidget* processWidget;

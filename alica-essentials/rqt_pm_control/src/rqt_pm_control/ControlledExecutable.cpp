@@ -107,6 +107,18 @@ namespace rqt_pm_control
 		this->memory = ps.mem;
 		this->state = ps.state;
 		this->runningParamSet = ps.paramSet;
+		if (ps.publishing == process_manager::ProcessStat::PUBLISHING_ON)
+		{
+			this->publishing = true;
+		}
+		else if (ps.publishing == process_manager::ProcessStat::PUBLISHING_OFF)
+		{
+			this->publishing = false;
+		}
+		else
+		{
+			cerr << "CE: Unknown publishing flag for process " << this->metaExec->name << endl;
+		}
 		auto entry = this->metaExec->parameterMap.find(this->runningParamSet);
 		if (entry != this->metaExec->parameterMap.end())
 		{
@@ -132,6 +144,7 @@ namespace rqt_pm_control
 		if ((now - this->timeLastMsgReceived) > PMControl::msgTimeOut)
 		{ // time is over, erase controlled robot
 
+			this->_processWidget->processName->setText(QString(this->metaExec->name.c_str()));
 			this->_processWidget->cpuState->setText(QString("C: -- %"));
 			this->_processWidget->memState->setText(QString("M: -- MB"));
 			this->runningParamSet = supplementary::ExecutableMetaData::UNKNOWN_PARAMS;
@@ -140,7 +153,14 @@ namespace rqt_pm_control
 		}
 		else
 		{ // message arrived before timeout, update its GUI
-
+			if (this->publishing)
+			{
+				this->_processWidget->processName->setText(QString((this->metaExec->name + " (L)").c_str()));
+			}
+			else
+			{
+				this->_processWidget->processName->setText(QString(this->metaExec->name.c_str()));
+			}
 			QString cpuString = "C: " + QString::number(this->cpu) + " %";
 			QString memString = "M: " + QString::number(this->memory) + " MB";
 			this->_processWidget->cpuState->setText(cpuString);
@@ -166,6 +186,9 @@ namespace rqt_pm_control
 					this->processWidget->setStyleSheet(grayBackground.c_str());
 					break;
 			}
+
+
+
 		}
 	}
 

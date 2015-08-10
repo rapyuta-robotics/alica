@@ -15,3 +15,10 @@ uint16 cpu
 
 # mem is the amount of MB this process needs.
 uint32 mem
+
+# flag whether logs are published
+uint8 publishing
+
+# constants for publishing
+uint8 PUBLISHING_OFF = 0
+uint8 PUBLISHING_ON = 1

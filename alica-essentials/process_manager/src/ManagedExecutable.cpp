@@ -207,6 +207,7 @@ namespace supplementary
 			ps.processKey = this->metaExec->id;
 			ps.paramSet = this->runningParamSet;
 			ps.state = this->state;
+			ps.publishing = (this->publishing ? 1 : 0);
 			psts.processStats.push_back(ps);
 		}
 
