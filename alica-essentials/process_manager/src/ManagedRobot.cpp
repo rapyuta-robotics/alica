@@ -75,12 +75,41 @@ namespace supplementary
 			{
 				auto mapIter = this->executableMap.emplace(
 						execId,
-						new ManagedExecutable(executableMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name, this->procMan));
+						new ManagedExecutable(executableMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name,
+												this->procMan));
 				mapIter.first->second->changeDesiredState(shouldRun, paramSetId);
 			}
 			else
 			{
-				cerr << "MR: Could not change desired state of executable id '" << execId << "' as it is not registered." << endl;
+				cerr << "MR: Could not change desired state of executable id '" << execId
+						<< "' as it is not registered." << endl;
+			}
+		}
+	}
+
+	void ManagedRobot::changeLogPublishing(int execId, bool shouldPublish, RobotExecutableRegistry* registry)
+	{
+		auto execEntry = this->executableMap.find(execId);
+		if (execEntry != this->executableMap.end())
+		{
+			execEntry->second->changeDesiredLogPublishingState(shouldPublish);
+		}
+		else
+		{
+			// Lazy initialisation of the executableMap
+			ExecutableMetaData const * const executableMetaData = registry->getExecutable(execId);
+			if (executableMetaData != nullptr)
+			{
+				auto mapIter = this->executableMap.emplace(
+						execId,
+						new ManagedExecutable(executableMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name,
+												this->procMan));
+				mapIter.first->second->changeDesiredLogPublishingState(shouldPublish);
+			}
+			else
+			{
+				cerr << "MR: Could not change desired state of executable id '" << execId
+						<< "' as it is not registered." << endl;
 			}
 		}
 	}
@@ -114,8 +143,8 @@ namespace supplementary
 		if (execEntry == this->executableMap.end())
 		{
 			// This should never happen, as changeDesiredState is initialising the executableMap
-			cout << "MR: Tried to start executable " << execName << " with params " << params.data() << ",but it was not present under ID " << execid
-					<< endl;
+			cout << "MR: Tried to start executable " << execName << " with params " << params.data()
+					<< ",but it was not present under ID " << execid << endl;
 		}
 		execEntry->second->startProcess(params);
 	}
@@ -140,7 +169,8 @@ namespace supplementary
 			{
 				auto newExecEntry = this->executableMap.emplace(
 						execId,
-						new ManagedExecutable(execMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name, this->procMan));
+						new ManagedExecutable(execMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name,
+												this->procMan));
 				newExecEntry.first->second->queue4Update(pid);
 			}
 			else

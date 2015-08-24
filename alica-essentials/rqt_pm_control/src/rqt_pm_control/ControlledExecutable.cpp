@@ -47,6 +47,10 @@ namespace rqt_pm_control
 			QObject::connect(this->_processWidget->checkBox, SIGNAL(stateChanged(int)), this,
 								SLOT(handleCheckBoxStateChanged(int)), Qt::DirectConnection);
 		}
+		this->processWidget->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
+		connect(this->processWidget, SIGNAL(customContextMenuRequested(const QPoint&)), this,
+				SLOT(showContextMenu(const QPoint&)));
+
 		this->parentRobot->addExec(processWidget);
 		this->processWidget->show();
 	}
@@ -54,6 +58,41 @@ namespace rqt_pm_control
 	ControlledExecutable::~ControlledExecutable()
 	{
 
+	}
+
+	void ControlledExecutable::showContextMenu(const QPoint& pos)
+	{
+		/* HINT: remember, if there are some problems that way:
+		 * For QAbstractScrollArea and derived classes you would use:
+		 * QPoint globalPos = myWidget->viewport()->mapToGlobal(pos); */
+
+		QPoint globalPos = this->processWidget->mapToGlobal(pos);
+
+		QMenu myMenu;
+		myMenu.addAction("Start publishing logs");
+		myMenu.addAction("Stop publishing logs");
+
+		QAction* selectedItem = myMenu.exec(globalPos);
+		if (selectedItem)
+		{
+			string selectedString = selectedItem->iconText().toStdString();
+			if (selectedString == "Start publishing logs")
+			{
+				this->sendProcessCommand(process_manager::ProcessCommand::START_LOG_PUBLISHING);
+			}
+			else if (selectedString == "Stop publishing logs")
+			{
+				this->sendProcessCommand(process_manager::ProcessCommand::STOP_LOG_PUBLISHING);
+			}
+			else
+			{
+				cerr << "CE: Chosen context menu option is unhandled!" << endl;
+			}
+		}
+		else
+		{
+			cout << "CE: Nothing chosen in context menu!" << endl;
+		}
 	}
 
 	/**
@@ -68,6 +107,18 @@ namespace rqt_pm_control
 		this->memory = ps.mem;
 		this->state = ps.state;
 		this->runningParamSet = ps.paramSet;
+		if (ps.publishing == process_manager::ProcessStat::PUBLISHING_ON)
+		{
+			this->publishing = true;
+		}
+		else if (ps.publishing == process_manager::ProcessStat::PUBLISHING_OFF)
+		{
+			this->publishing = false;
+		}
+		else
+		{
+			cerr << "CE: Unknown publishing flag for process " << this->metaExec->name << endl;
+		}
 		auto entry = this->metaExec->parameterMap.find(this->runningParamSet);
 		if (entry != this->metaExec->parameterMap.end())
 		{
@@ -93,6 +144,7 @@ namespace rqt_pm_control
 		if ((now - this->timeLastMsgReceived) > PMControl::msgTimeOut)
 		{ // time is over, erase controlled robot
 
+			this->_processWidget->processName->setText(QString(this->metaExec->name.c_str()));
 			this->_processWidget->cpuState->setText(QString("C: -- %"));
 			this->_processWidget->memState->setText(QString("M: -- MB"));
 			this->runningParamSet = supplementary::ExecutableMetaData::UNKNOWN_PARAMS;
@@ -101,7 +153,14 @@ namespace rqt_pm_control
 		}
 		else
 		{ // message arrived before timeout, update its GUI
-
+			if (this->publishing)
+			{
+				this->_processWidget->processName->setText(QString((this->metaExec->name + " (L)").c_str()));
+			}
+			else
+			{
+				this->_processWidget->processName->setText(QString(this->metaExec->name.c_str()));
+			}
 			QString cpuString = "C: " + QString::number(this->cpu) + " %";
 			QString memString = "M: " + QString::number(this->memory) + " MB";
 			this->_processWidget->cpuState->setText(cpuString);
@@ -127,6 +186,9 @@ namespace rqt_pm_control
 					this->processWidget->setStyleSheet(grayBackground.c_str());
 					break;
 			}
+
+
+
 		}
 	}
 
@@ -208,9 +270,27 @@ namespace rqt_pm_control
 
 	void ControlledExecutable::handleCheckBoxStateChanged(int newState)
 	{
-		cout << "ControlledExec: Checked CheckBox from executable " << this->metaExec->name << " new State is "
-				<< newState << endl;
-		this->parentRobot->sendProcessCommand(vector<int> {this->metaExec->id},vector<int> {this->desiredParamSet}, newState);
+		switch (newState)
+		{
+			case Qt::CheckState::Checked:
+				this->sendProcessCommand(process_manager::ProcessCommand::START);
+				break;
+			case Qt::CheckState::Unchecked:
+				this->sendProcessCommand(process_manager::ProcessCommand::STOP);
+				break;
+			case Qt::CheckState::PartiallyChecked:
+				cerr << "PMControl: What does it mean, that a process is partially checked?!" << endl;
+				break;
+			default:
+				cerr << "PMControl: Unknown new state of a checkbox!" << endl;
+		}
+
+	}
+
+	void ControlledExecutable::sendProcessCommand(int cmd)
+	{
+		this->parentRobot->sendProcessCommand(vector<int> {this->metaExec->id}, vector<int> {this->desiredParamSet},
+												cmd);
 	}
 
 } /* namespace rqt_pm_control */

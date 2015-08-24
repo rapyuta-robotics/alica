@@ -42,7 +42,7 @@ namespace rqt_pm_control
 		virtual ~ControlledRobot();
 
 		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
-		void sendProcessCommand(vector<int> execIds, vector<int> paramSets, int newState);
+		void sendProcessCommand(vector<int> execIds, vector<int> paramSets, int cmd);
 		void updateGUI(chrono::system_clock::time_point now);
 		void addExec(QWidget* exec);
 		void removeExec(QWidget* exec);

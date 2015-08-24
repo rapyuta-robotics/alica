@@ -53,17 +53,16 @@ namespace rqt_pm_control
 
 	ControlledRobot::~ControlledRobot()
 	{
-		cout << "CR: 1" << endl;
 		for (auto execEntry : this->controlledExecMap)
 		{
 			delete execEntry.second;
 		}
 		//this->parentProcessManager->removeRobot(robotProcessesQFrame);
-		cout << "CR: 2" << endl;
+
 		//delete _robotProcessesWidget;
-		cout << "CR: 3" << endl;
+
 		delete robotProcessesQFrame;
-		cout << "CR: 4" << endl;
+
 	}
 
 	void ControlledRobot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived,
@@ -111,8 +110,8 @@ namespace rqt_pm_control
 		this->_robotProcessesWidget->verticalLayout->removeWidget(exec);
 	}
 
-	void ControlledRobot::sendProcessCommand(vector<int> execIds, vector<int> paramSets, int newState)
+	void ControlledRobot::sendProcessCommand(vector<int> execIds, vector<int> paramSets, int cmd)
 	{
-		this->parentProcessManager->sendProcessCommand(vector<int> {this->id}, execIds, paramSets, newState);
+		this->parentProcessManager->sendProcessCommand(vector<int> {this->id}, execIds, paramSets, cmd);
 	}
 } /* namespace rqt_pm_control */
