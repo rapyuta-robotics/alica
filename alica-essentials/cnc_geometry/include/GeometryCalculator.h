@@ -26,6 +26,12 @@ namespace geometry {
 		static double distancePointToLineSegment (double x, double y, shared_ptr<CNPoint2D> a, shared_ptr<CNPoint2D> b);
 		static double absDeltaAngle(double angle1, double angle2);
 
+		//Sign function --> VORZEICHENFUNKTION
+		template <typename T> static int sgn(T val) {
+			return (T(0) < val) - (val < T(0));
+		}
+
+
 	private:
 		GeometryCalculator();
 		static bool onSegment(shared_ptr<CNPoint2D> p, shared_ptr<CNPoint2D> q, shared_ptr<CNPoint2D> r);
