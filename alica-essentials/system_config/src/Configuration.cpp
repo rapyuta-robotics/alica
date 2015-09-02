@@ -43,7 +43,7 @@ namespace supplementary
 
 			linePos++;
 
-			while (chrPos < lineLen - 1)
+			while (chrPos < lineLen - 1) // -1 for ignoring newline or null-terminating character
 			{
 
 				if (line.size() == 0)
@@ -163,7 +163,7 @@ namespace supplementary
 
 							if (eq != string::npos)
 							{
-								key = element.substr(0, eq - 1);
+								key = element.substr(0, eq);
 								value = element.substr(eq + 1, element.size() - eq - 1);
 
 								key = Configuration::trim(key);
@@ -251,7 +251,6 @@ namespace supplementary
 
 	void Configuration::collect(ConfigNode *node, vector<string> *params, size_t offset, vector<ConfigNode *> *result)
 	{
-
 		vector<ConfigNodePtr> *children = node->getChildren();
 		if (offset == params->size())
 		{
@@ -264,7 +263,6 @@ namespace supplementary
 
 			for (size_t j = 0; j < children->size(); j++)
 			{
-
 				if ((*children)[j]->getName().compare((*params)[i]) == 0)
 				{
 					collect((*children)[j].get(), params, offset + 1, result);
