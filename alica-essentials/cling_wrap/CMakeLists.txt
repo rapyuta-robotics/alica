@@ -82,7 +82,7 @@ if(NOT ${ARCH} STREQUAL "armv7l")
     libclasp STATIC ${libclasp_SOURCES}
   )
   
-  target_link_libraries(libclasp TBB)
+  target_link_libraries(libclasp LINK_PUBLIC ${TBB_LIBRARIES})
 endif(NOT ${ARCH} STREQUAL "armv7l")
 
 
@@ -105,7 +105,7 @@ if(NOT ${ARCH} STREQUAL "armv7l")
     libcling_wrap STATIC ${libcling_wrap_SOURCES}
   )
   
-  target_link_libraries(libcling_wrap ${libgringo_LIBRARIES} ${libprogram_opts_LIBRARIES} ${libclasp_LIBRARIES})
+  target_link_libraries(libcling_wrap ${libgringo_LIBRARIES} ${libprogram_opts_LIBRARIES} ${libclasp_LIBRARIES} ${TBB_LIBRARIES})
 endif(NOT ${ARCH} STREQUAL "armv7l")
 
 #############
