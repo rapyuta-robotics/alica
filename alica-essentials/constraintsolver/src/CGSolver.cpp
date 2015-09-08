@@ -22,7 +22,7 @@ namespace alica
 	{
 
 		CGSolver::CGSolver(AlicaEngine* ae) :
-				IConstraintSolver(ae)
+				IConstraintSolver(ae) , lastUtil(0.0), lastFEvals(0.0), lastRuns(0.0)
 		{
 			Term::setAnd(AndType::AND);
 			Term::setOr(OrType::MAX);
