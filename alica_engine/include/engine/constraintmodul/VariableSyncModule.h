@@ -2,7 +2,7 @@
  * ResultStore.h
  *
  *  Created on: Oct 10, 2014
- *      Author: Philipp
+ *      Author: Philipp Sperber
  */
 
 #ifndef RESULTSTORE_H_

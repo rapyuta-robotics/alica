@@ -2,7 +2,7 @@
  * ConstraintDescriptor.h
  *
  *  Created on: Sep 30, 2014
- *      Author: psp
+ *      Author: Philipp Sperber
  */
 
 #ifndef CONSTRAINTDESCRIPTOR_H_
