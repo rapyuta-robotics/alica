@@ -28,19 +28,18 @@ namespace alica
 	{
 		const int nCount = capValues.size();
 
-
 		int rlIndex = -1;
 		int rbIndex = -1;
 		int index = 0;
 
-		for (list<CapValue*>::const_iterator itRoleVal = capValues.begin(); itRoleVal != capValues.end(); itRoleVal++)
+		// determine the index of both given capability values
+		for (auto cap : capValues)
 		{
-			CapValue* cap = *itRoleVal;
-			if (*itRoleVal == roleVal)
+			if (cap == roleVal)
 			{
 				rlIndex = index;
 			}
-			if (*itRoleVal == robotVal)
+			if (cap == robotVal)
 			{
 				rbIndex = index;
 			}
@@ -57,6 +56,14 @@ namespace alica
 			cout << "Capability::similarityValue: Robot not found!" << endl;
 			throw exception();
 		}
+
+		if (nCount == 1)
+		{
+			// we found both values and there is only one value, so both must be the same
+			return 1;
+		}
+
+		// this won't work, in case of only one value (nCount=1), therefore extra handling above
 		return (nCount - 1 - abs(rlIndex - rbIndex)) / (nCount - 1);
 	}
 
