@@ -23,7 +23,7 @@ find_package(catkin REQUIRED cmake_modules)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include libgringo libgringo/src libprogram_opts libclasp
-  LIBRARIES libcling_wrap
+  LIBRARIES libcling_wrap libgringo libprogram_opts libclasp
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
@@ -84,7 +84,6 @@ if(NOT ${ARCH} STREQUAL "armv7l")
   
   target_link_libraries(libclasp LINK_PUBLIC ${TBB_LIBRARIES})
 endif(NOT ${ARCH} STREQUAL "armv7l")
-
 
 ### BUIDLING CLINGO ###
 #  file(GLOB_RECURSE clingo_SOURCES "app/clingo/src/*.cc")
