@@ -2,7 +2,7 @@
  * ResultEntry.h
  *
  *  Created on: Nov 24, 2014
- *      Author: Philipp
+ *      Author: Philipp Sperber
  */
 
 #ifndef RESULTENTRY_H_

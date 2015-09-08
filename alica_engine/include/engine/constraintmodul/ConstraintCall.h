@@ -2,7 +2,7 @@
  * ConstraintCall.h
  *
  *  Created on: Oct 17, 2014
- *      Author: Philipp
+ *      Author: Philipp Sperber
  */
 
 #ifndef CONSTRAINTCALL_H_

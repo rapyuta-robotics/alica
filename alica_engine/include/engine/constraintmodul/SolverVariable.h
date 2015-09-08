@@ -2,7 +2,7 @@
  * SolverVariable.h
  *
  *  Created on: Oct 20, 2014
- *      Author: Philipp
+ *      Author: Philipp Sperber
  */
 
 #ifndef SOLVERVARIABLE_H_

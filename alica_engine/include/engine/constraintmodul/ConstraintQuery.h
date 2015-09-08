@@ -2,7 +2,7 @@
  * ConstraintQuery.h
  *
  *  Created on: Oct 17, 2014
- *      Author: Philipp
+ *      Author: Philipp Sperber
  */
 
 #ifndef CONSTRAINTQUERY_H_
