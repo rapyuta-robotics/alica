@@ -86,7 +86,9 @@ namespace supplementary
         void ClingWrapper::setParallelMode(int threadCount)
         {
           // works strange or does nothing?
+#if WITH_THREADS
           this->claspConfig_.set(Clasp::Cli::OptionKey::opt_parallel_mode, std::to_string(threadCount).c_str());
+#endif
         }
 
         void ClingWrapper::setSaveProgress(int saveProgress)
