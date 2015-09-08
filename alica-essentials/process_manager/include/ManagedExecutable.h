@@ -16,6 +16,8 @@
 #include "ExecutableMetaData.h"
 #include "process_manager/ProcessStats.h"
 #include "process_manager/ProcessStat.h"
+ #include <ros/console.h>
+#include <thread>
 
 using namespace std;
 
@@ -33,9 +35,13 @@ namespace supplementary
 		void update(unsigned long long cpuDelta);
 		void report(process_manager::ProcessStats& psts, int robotId);
 		void changeDesiredState(bool shouldRun, int paramSetId);
+		void changeDesiredLogPublishingState(bool shouldPublish);
 		void startProcess (vector<char*> & params);
 		void startProcess ();
-		bool stopProcess ();
+		void startPublishingLogs();
+		void stopPublishingLogs();
+		void publishLogFile(string logFileName, ros::console::levels::Level logLevel);
+
 		static long kernelPageSize; /* < in bytes */
 
 		ExecutableMetaData const * const metaExec;
@@ -55,6 +61,13 @@ namespace supplementary
 		long int memory;
 		string robotEnvVariable;
 
+		// log publishing
+		bool publishing;
+		bool shouldPublish;
+		string stdLogFileName;
+		string errLogFileName;
+		thread stdLogPublisher;
+		thread errLogPublisher;
 
 		chrono::time_point<chrono::steady_clock> lastTimeTried;
 		bool shouldRun;

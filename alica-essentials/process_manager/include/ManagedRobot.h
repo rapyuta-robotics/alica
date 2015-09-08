@@ -37,6 +37,7 @@ namespace supplementary
 		void startExecutable(string execName, int execid, vector<char*>& params);
 		void changeDesiredState(int execId, int paramSetId, bool shouldRun, RobotExecutableRegistry* registry);
 		void changeDesiredState(int execId, bool shouldRun, RobotExecutableRegistry* registry);
+		void changeLogPublishing(int execId, bool shouldPublish, RobotExecutableRegistry* registry);
 		void report(process_manager::ProcessStats& psts);
 	private:
 		ProcessManager* procMan;

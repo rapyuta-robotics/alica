@@ -44,12 +44,12 @@
 #include <QLayout>
 #include <QRect>
 #include <QStyle>
-class FlowLayout : public QLayout
+class flowlayout : public QLayout
 {
 public:
-    explicit FlowLayout(QWidget *parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
-    explicit FlowLayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);
-    ~FlowLayout();
+    explicit flowlayout(QWidget *parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
+    explicit flowlayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);
+    ~flowlayout();
 
     void addItem(QLayoutItem *item);
     int horizontalSpacing() const;

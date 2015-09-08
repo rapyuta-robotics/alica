@@ -39,7 +39,8 @@ namespace supplementary
 	 * @param argv
 	 */
 	ProcessManager::ProcessManager(int argc, char** argv) :
-			iterationTime(1000000), mainThread(NULL), spinner(NULL), rosNode(NULL), lastTotalCPUTime(0), currentTotalCPUTime(0)
+			iterationTime(1000000), mainThread(NULL), spinner(NULL), rosNode(NULL), lastTotalCPUTime(0), currentTotalCPUTime(
+					0)
 	{
 		this->ownId = -1;
 		this->sc = SystemConfig::getInstance();
@@ -137,6 +138,47 @@ namespace supplementary
 			case process_manager::ProcessCommand::STOP:
 				this->changeDesiredProcessStates(pc, false);
 				break;
+			case process_manager::ProcessCommand::START_LOG_PUBLISHING:
+				this->changeLogPublishing(pc, true);
+				break;
+			case process_manager::ProcessCommand::STOP_LOG_PUBLISHING:
+				this->changeLogPublishing(pc, false);
+				break;
+		}
+	}
+
+	void ProcessManager::changeLogPublishing(process_manager::ProcessCommandPtr pc, bool shouldPublish)
+	{
+		for (int robotId : pc->robotIds)
+		{
+			// Check whether the robot with the given id is known
+			string robotName;
+			if (this->pmRegistry->getRobotName(robotId, robotName))
+			{
+				// Find the ManagedRobot object
+				auto mapIter = this->robotMap.find(robotId);
+				ManagedRobot* mngdRobot;
+				if (mapIter == this->robotMap.end())
+				{
+					// Lazy initialisation of the robotMap
+					mngdRobot =
+							this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId, this)).first->second;
+				}
+				else
+				{
+					// ManagedRobot already exists
+					mngdRobot = mapIter->second;
+				}
+
+				for (int i = 0; i < pc->processKeys.size(); i++)
+				{
+					mngdRobot->changeLogPublishing(pc->processKeys[i], shouldPublish, this->pmRegistry);
+				}
+			}
+			else
+			{
+				cout << "PM: Received command for unknown robot id: " << robotId << endl;
+			}
 		}
 	}
 
@@ -165,7 +207,8 @@ namespace supplementary
 				if (mapIter == this->robotMap.end())
 				{
 					// Lazy initialisation of the robotMap
-					mngdRobot = this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId, this)).first->second;
+					mngdRobot =
+							this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId, this)).first->second;
 				}
 				else
 				{
@@ -197,7 +240,8 @@ namespace supplementary
 		ros::init(argc, argv, "ProcessManager");
 		rosNode = new ros::NodeHandle();
 		spinner = new ros::AsyncSpinner(4);
-		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10, &ProcessManager::handleProcessCommand, (ProcessManager*)this);
+		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10,
+												&ProcessManager::handleProcessCommand, (ProcessManager*)this);
 		processStatePub = rosNode->advertise<process_manager::ProcessStats>("/process_manager/ProcessStats", 10);
 		spinner->start();
 	}
@@ -354,8 +398,8 @@ namespace supplementary
 				}
 				else
 				{
-					this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId, this)).first->second->queue4update(execId, curPID,
-																															this->pmRegistry);
+					this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId, this)).first->second->queue4update(
+							execId, curPID, this->pmRegistry);
 				}
 
 #ifdef PM_DEBUG
@@ -577,7 +621,8 @@ namespace supplementary
 					else
 					{
 
-						auto emplaceResult = this->robotMap.emplace(robotId, new ManagedRobot(robotName, robotId, this));
+						auto emplaceResult = this->robotMap.emplace(robotId,
+																	new ManagedRobot(robotName, robotId, this));
 						emplaceResult.first->second->changeDesiredState(roscoreExecId, true, this->pmRegistry);
 					}
 				}
@@ -637,7 +682,8 @@ namespace supplementary
 						}
 						else
 						{
-							auto emplaceResult = this->robotMap.emplace(robotId, new ManagedRobot(this->ownHostname, robotId, this));
+							auto emplaceResult = this->robotMap.emplace(
+									robotId, new ManagedRobot(this->ownHostname, robotId, this));
 							emplaceResult.first->second->changeDesiredState(roscoreExecId, true, this->pmRegistry);
 						}
 					}
@@ -716,7 +762,8 @@ int main(int argc, char** argv)
 	// Set kernel page size for human readable memory consumption
 	supplementary::ManagedExecutable::kernelPageSize = sysconf(_SC_PAGESIZE);
 	// Determine number of cores
-	while (supplementary::FileSystem::pathExists("/sys/devices/system/cpu/cpu" + to_string(supplementary::ProcessManager::numCPUs)))
+	while (supplementary::FileSystem::pathExists(
+			"/sys/devices/system/cpu/cpu" + to_string(supplementary::ProcessManager::numCPUs)))
 	{
 		supplementary::ProcessManager::numCPUs++;
 	}

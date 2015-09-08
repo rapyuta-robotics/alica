@@ -5,16 +5,15 @@
 
 #include "ros/ros.h"
 #include <ros/macros.h>
-#include "process_manager/ProcessCommand.h"
-#include "process_manager/ProcessStats.h"
-#include "process_manager/ProcessStat.h"
+#include <rqt_robot_control/Robot.h>
 
-#include <ui_PMControl.h>
+#include "process_manager/ProcessStats.h"
+#include "alica_ros_proxy/AlicaEngineInfo.h"
+
+#include <ui_RobotsControl.h>
 #include <QtGui>
 #include <QWidget>
 #include <QDialog>
-
-#include <rqt_robot_control/ControlledRobot.h>
 
 #include <queue>
 #include <mutex>
@@ -32,57 +31,53 @@ namespace supplementary
 namespace rqt_robot_control
 {
 
-	class ControlledProcessManager;
-
-	class PMControl : public rqt_gui_cpp::Plugin
+	class RobotsControl : public rqt_gui_cpp::Plugin
 	{
 
 	Q_OBJECT
 
 	public:
 
-		PMControl();
+		RobotsControl();
 		virtual void initPlugin(qt_gui_cpp::PluginContext& context);
 		virtual void shutdownPlugin();
 		virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
 		virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
-		void sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int newState);
-		void addRobot(QFrame* robot);
-		void removeRobot(QFrame* robot);
+		void addRobot();
+		void removeRobot();
 
 		static chrono::duration<double> msgTimeOut;
 
-		Ui::PMControlWidget ui_;
+		Ui::RobotControlWidget robotControlWidget_;
 		QWidget* widget_;
 
 		supplementary::RobotExecutableRegistry* pmRegistry;
-		map<string, vector<pair<int, int>>> bundlesMap;
+		ros::NodeHandle* rosNode;
 
 	private:
-		ros::NodeHandle* rosNode;
 		ros::Subscriber processStateSub;
-		ros::Publisher processCommandPub;
-		queue<pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
-		mutex msgQueueMutex;
+		ros::Subscriber alicaInfoSub;
 
 		supplementary::SystemConfig* sc;
 
-		map<int, ControlledProcessManager*> processManagersMap;
+		map<int, Robot*> controlledRobotsMap;
+		queue<pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
+		mutex processStatsMsgQueueMutex;
+		queue<pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
+		mutex alicaInfoMsgQueueMutex;
 
-
-		void handleProcessStats();
-
-		void receiveProcessStats(process_manager::ProcessStatsConstPtr psts);
-		ControlledProcessManager* getControlledProcessManager(int processManagerId);
-
-
+		void receiveProcessStats(process_manager::ProcessStatsConstPtr processStats);
+		void receiveAlicaInfo(alica_ros_proxy::AlicaEngineInfoConstPtr alicaInfo);
+		void processMessages();
+		void checkAndInit(int robotId);
 
 		QTimer* guiUpdateTimer;
 
 	public Q_SLOTS:
 		void run();
 		void updateGUI();
+		void showContextMenu(const QPoint& pos);
 	};
 
 }

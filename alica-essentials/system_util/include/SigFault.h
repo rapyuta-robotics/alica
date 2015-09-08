@@ -174,7 +174,7 @@ namespace segfaultdebug {
 
     void segfault_sigaction()
     {
-        segfaultdebug::SegFaultException s(string("SegFaultException ") + segfaultdebug::get_stacktrace(5));
+        segfaultdebug::SegFaultException s(string("SegFaultException ") + segfaultdebug::get_stacktrace(4));
         //s.stacktrace = get_stacktrace();
         throw s;
     }

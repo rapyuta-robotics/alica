@@ -21,14 +21,22 @@ namespace geometry {
 
 		virtual ~GeometryCalculator(){};
 		static double deltaAngle(double angle1, double angle2);
-		static bool isInsideRectangle(CNPoint2D rectPointA, CNPoint2D rectPointB, CNPoint2D point);
-		static bool isInsidePolygon(vector<CNPoint2D> polygon, int n, CNPoint2D point);
+		static bool isInsideRectangle(shared_ptr<CNPoint2D> rectPointA, shared_ptr<CNPoint2D> rectPointB, shared_ptr<CNPoint2D> point);
+		static bool isInsidePolygon(vector<shared_ptr<CNPoint2D>> polygon, int n, shared_ptr<CNPoint2D> point);
+		static double distancePointToLineSegment (double x, double y, shared_ptr<CNPoint2D> a, shared_ptr<CNPoint2D> b);
+		static double absDeltaAngle(double angle1, double angle2);
+
+		//Sign function --> VORZEICHENFUNKTION
+		template <typename T> static int sgn(T val) {
+			return (T(0) < val) - (val < T(0));
+		}
+
 
 	private:
 		GeometryCalculator();
-		static bool onSegment(CNPoint2D p, CNPoint2D q, CNPoint2D r);
-		static int orientation(CNPoint2D p, CNPoint2D q, CNPoint2D r);
-		static bool doIntersect(CNPoint2D p1, CNPoint2D q1, CNPoint2D p2, CNPoint2D q2);
+		static bool onSegment(shared_ptr<CNPoint2D> p, shared_ptr<CNPoint2D> q, shared_ptr<CNPoint2D> r);
+		static int orientation(shared_ptr<CNPoint2D> p, shared_ptr<CNPoint2D> q, shared_ptr<CNPoint2D> r);
+		static bool doIntersect(shared_ptr<CNPoint2D> p1, shared_ptr<CNPoint2D> q1, shared_ptr<CNPoint2D> p2, shared_ptr<CNPoint2D> q2);
 	};
 
 } /* namespace geometry */

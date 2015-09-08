@@ -2,9 +2,6 @@
 #define rqt_alica_client__AlicaClient_H
 
 #include <rqt_gui_cpp/plugin.h>
-#include <alica_ros_proxy/BehaviourEngineInfo.h>
-
-#include <ui_AlicaClient.h>
 
 #include <ros/macros.h>
 #include <ros/subscriber.h>
@@ -12,10 +9,13 @@
 #include <QWidget>
 #include <QDialog>
 
+namespace rqt_alica {
+	class AlicaWidget;
+}
+
 namespace rqt_alica_client
 {
 	using namespace std;
-
 
 	class AlicaClient : public rqt_gui_cpp::Plugin
 	{
@@ -34,14 +34,10 @@ namespace rqt_alica_client
 
 		virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
-		void handleBehaviourEngineInfo(alica_ros_proxy::BehaviourEngineInfoPtr bei);
-
-		Ui::AlicaClientWidget ui_;
-
-		QWidget* widget_;
-
 	private:
 
+		QWidget* widget;
+		rqt_alica::AlicaWidget* alicaWidget;
 		ros::NodeHandle* rosNode;
 		ros::Subscriber aliceClientSubscriber;
 

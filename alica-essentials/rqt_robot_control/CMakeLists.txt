@@ -1,53 +1,60 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(rqt_robot_control)
 
-## Use c++ 11x std
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util)
+find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util alica_ros_proxy rqt_alica_client std_msgs message_generation)
 
 find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
+include(${QT_USE_FILE})
+
+#set(CMAKE_INCLUDE_CURRENT_DIR ON)
+#set(CMAKE_AUTOMOC ON)
+#find_package(Qt5Gui REQUIRED)
+#find_package(Qt5Core REQUIRED)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
-include(${QT_USE_FILE})
+add_message_files(
+  FILES
+  RobotCommand.msg
+)
+
+catkin_python_setup()
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
+
 
 set(rqt_robot_control_SRCS
-  src/rqt_robot_control/PMControl.cpp
-  src/rqt_robot_control/ControlledExecutable.cpp
-  src/rqt_robot_control/ControlledProcessManager.cpp
-  src/rqt_robot_control/ControlledRobot.cpp
+  src/rqt_robot_control/flowlayout.cpp
+  src/rqt_robot_control/RobotsControl.cpp
+  src/rqt_robot_control/Robot.cpp
 )
 
-set(flowlayout_SRCS
-  src/rqt_robot_control/main.cpp
-  src/rqt_robot_control/window.cpp
-  src/rqt_robot_control/flowlayout.cpp
-)
 
 set(rqt_robot_control_HDRS
-  include/rqt_robot_control/PMControl.h
-  include/rqt_robot_control/ControlledExecutable.h
-  include/rqt_robot_control/ControlledProcessManager.h
-  include/rqt_robot_control/ControlledRobot.h
-)
-
-set(flowlayout_HDRS
-  include/rqt_robot_control/window.h
   include/rqt_robot_control/flowlayout.h
+  include/rqt_robot_control/RobotsControl.h
+  include/rqt_robot_control/Robot.h
 )
 
 set(rqt_robot_control_UIS
-  src/rqt_robot_control/PMControl.ui
-  src/rqt_robot_control/ProcessWidget.ui
-  src/rqt_robot_control/RobotProcessesWidget.ui
+  ui/RobotsControl.ui
+  ui/ControlledRobot.ui  
 )
 
 set(rqt_robot_control_INCLUDE_DIRECTORIES
   include
   ${CMAKE_CURRENT_BINARY_DIR}
+  #${Qt5Gui_INCLUDE_DIRS}
+  #${Qt5Core_INCLUDE_DIRS}
+)
+
+set(rqt_robot_control_RCS
+  resources/resources.qrc
 )
 
 catkin_package(
@@ -55,21 +62,21 @@ catkin_package(
   LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS rqt_gui rqt_gui_cpp
 )
-catkin_python_setup()
+
 
 qt4_wrap_cpp(rqt_robot_control_MOCS ${rqt_robot_control_HDRS})
+qt4_add_resources(rqt_robot_control_RESOURCES ${rqt_robot_control_RCS}) 
 qt4_wrap_ui(rqt_robot_control_UIS_H ${rqt_robot_control_UIS})
 
-qt4_wrap_cpp(flowlayout_MOCS ${flowlayout_HDRS})
-
+#qt5_wrap_cpp(rqt_robot_control_MOCS ${rqt_robot_control_HDRS})
+#qt5_add_resources(rqt_robot_control_RESOURCES ${rqt_robot_control_RCS}) 
+#qt5_wrap_ui(rqt_robot_control_UIS_H ${rqt_robot_control_UIS})
 
 include_directories(${rqt_robot_control_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
-add_library(${PROJECT_NAME} ${rqt_robot_control_SRCS} ${rqt_robot_control_MOCS} ${rqt_robot_control_UIS_H})
+add_library(${PROJECT_NAME} ${rqt_robot_control_SRCS} ${rqt_robot_control_MOCS} ${rqt_robot_control_UIS_H} ${rqt_robot_control_RESOURCES})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
-add_dependencies(${PROJECT_NAME} process_manager)
 
-add_executable(flowlayoutTest ${flowlayout_SRCS} ${flowlayout_MOCS})
-target_link_libraries(flowlayoutTest ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
+add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES} rqt_robot_control_generate_messages_cpp)
 
 find_package(class_loader)
 class_loader_hide_library_symbols(${PROJECT_NAME})

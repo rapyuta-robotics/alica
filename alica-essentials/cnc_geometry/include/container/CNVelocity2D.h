@@ -28,6 +28,7 @@ namespace geometry {
 
 			shared_ptr<CNVelocity2D> operator*(const double& right);
 			shared_ptr<CNVelocity2D> operator+(const shared_ptr<CNVelocity2D>& right);
+			shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPoint2D>& right);
 
 			virtual ~CNVelocity2D();
 			string toString();
@@ -35,5 +36,7 @@ namespace geometry {
 
 		shared_ptr<CNVelocity2D> operator+(const shared_ptr<CNVelocity2D>& left, const shared_ptr<CNVelocity2D>& right);
 		shared_ptr<CNVelocity2D> operator*(const shared_ptr<CNVelocity2D>& left, const double& right);
+		shared_ptr<CNPoint2D> operator+(const shared_ptr<CNVelocity2D>& left, const shared_ptr<CNPoint2D>& right);
+
 }
 #endif /* CNC_MSL_MSL_WORLDMODEL_INCLUDE_CONTAINER_CNVELOCITY2D_H_ */

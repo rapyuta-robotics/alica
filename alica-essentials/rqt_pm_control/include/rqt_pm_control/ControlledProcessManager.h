@@ -32,7 +32,7 @@ namespace rqt_pm_control
 
 		void updateGUI(chrono::system_clock::time_point now);
 		void handleProcessStats(pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair);
-		void sendProcessCommand(vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int newState);
+		void sendProcessCommand(vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int cmd);
 		void addRobot(QFrame* robot);
 		void removeRobot(QFrame* robot);
 

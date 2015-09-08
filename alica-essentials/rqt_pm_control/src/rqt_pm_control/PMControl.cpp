@@ -195,28 +195,14 @@ namespace rqt_pm_control
 		this->processStatMsgQueue.emplace(chrono::system_clock::now(), psts);
 	}
 
-	void PMControl::sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int newState)
+	void PMControl::sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int cmd)
 	{
 		process_manager::ProcessCommand pc;
 		pc.receiverId = receiverId;
 		pc.robotIds = robotIds;
 		pc.processKeys = execIds;
 		pc.paramSets = paramSets;
-		switch (newState)
-		{
-			case Qt::CheckState::Checked:
-				pc.cmd = process_manager::ProcessCommand::START;
-				break;
-			case Qt::CheckState::Unchecked:
-				pc.cmd = process_manager::ProcessCommand::STOP;
-				break;
-			case Qt::CheckState::PartiallyChecked:
-				cerr << "PMControl: What does it mean, that a process is partially checked?!" << endl;
-				break;
-			default:
-				cerr << "PMControl: Unknown new state of a checkbox!" << endl;
-		}
-
+		pc.cmd = cmd;
 		this->processCommandPub.publish(pc);
 	}
 

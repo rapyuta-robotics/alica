@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Alica.png</file>
+        <file>Robot-Head.png</file>
+        <file>System-Monitor.png</file>
+        <file>Pixelmixer-Basic-Plus.ico</file>
+        <file>System-Monitor-Off.png</file>
+        <file>Alica-Off.png</file>
+    </qresource>
+</RCC>

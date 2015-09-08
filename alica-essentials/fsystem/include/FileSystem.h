@@ -8,8 +8,6 @@
 #ifndef FILESYSTEM_H_
 #define FILESYSTEM_H_
 
-using namespace std;
-
 #include <string>
 #include <string.h>
 #include <vector>
@@ -20,6 +18,8 @@ using namespace std;
 #include <sys/stat.h>
 #include <dirent.h>
 #include <iostream>
+
+using namespace std;
 
 namespace supplementary
 {
