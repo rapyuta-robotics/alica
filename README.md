@@ -1,5 +1,4 @@
-# alica
-###ALICA (A Language for Interactive Cooperative Agents)
+#ALICA (A Language for Interactive Cooperative Agents)
 
 Below you will find all installation steps of the framework, please follow them to ensure that everything is working properly. 
 
