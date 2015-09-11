@@ -97,14 +97,11 @@ if(NOT ${ARCH} STREQUAL "armv7l")
   file(GLOB_RECURSE libcling_wrap_SOURCES "libcling_wrap/*.cc")
   file(GLOB_RECURSE libcling_wrap_SOURCES ${libcling_wrap_SOURCES} "libcling_wrap/*.cpp")
   file(GLOB_RECURSE libcling_wrap_SOURCES ${libcling_wrap_SOURCES} "app/clingo/src/*.cc")
-  find_library(libgringo_LIBRARIES libgringo)
-  find_library(libprogram_opts_LIBRARIES libprogram_opts)
-  find_library(libclasp_LIBRARIES libclasp)
   add_library(
     libcling_wrap STATIC ${libcling_wrap_SOURCES}
   )
   
-  target_link_libraries(libcling_wrap ${libgringo_LIBRARIES} ${libprogram_opts_LIBRARIES} ${libclasp_LIBRARIES} ${TBB_LIBRARIES})
+  target_link_libraries(libcling_wrap libgringo libprogram_opts libclasp ${TBB_LIBRARIES})
 endif(NOT ${ARCH} STREQUAL "armv7l")
 
 #############
