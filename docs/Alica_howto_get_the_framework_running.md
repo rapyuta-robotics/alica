@@ -1,5 +1,4 @@
-# alica
-###ALICA (A Language for Interactive Cooperative Agents)
+# ALICA (A Language for Interactive Cooperative Agents)
 
 **Howto Get the Framework Running**
 
@@ -65,20 +64,7 @@
 	vim ~/.gitconfig
 	```
 
-7. Set the environment variables of your bash by adding the following lines into your '~/.bashrc'-file. ROS already added its own environment variable into your '~/.bashrc'-file. The lines below have to be inserted below 'source /opt/ros/indigo/setup.bash'. The first line lets you source your workspace in every console/bash! So take care if you use multiple workspaces. Furthermore, does the next line work only if you have build your workspace once, because the first build will create the 'devel/setup.bash'-file. 
-
-	**Be careful this step should be done by our team members**
-
-	```
-	source <path2workspace>/<nameofworkspace>/devel/setup.bash
-	#this defines the domain you are working in
-	export DOMAIN_FOLDER="<path2workspace>/<nameofworkspace>/src/cnc-msl"
-	export DOMAIN_CONFIG_FOLDER="$DOMAIN_FOLDER/etc"
-	#fancy prompt that also shows the current git branch
-	export PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \[\033[01;31m\]$(__git_ps1 "[%s]")\[\033[01;34m\]\$\[\033[00m\] '
-	```
-
-	**For all other**
+7. Set the environment variables of your bash by adding the following lines into your '~/.bashrc'-file. ROS already added its own environment variable into your '~/.bashrc'-file. The lines below have to be inserted below 'source /opt/ros/indigo/setup.bash'. The first line lets you source your workspace in every console/bash! So take care if you use multiple workspaces. 
 
 	```
 	source <path2workspace>/<nameofworkspace>/devel/setup.bash
@@ -111,7 +97,7 @@
 	[!TopLevelSection]
 	```
 
-	To be able to access to your conf file you need a instance of the systemConfig, example:
+	To be able to access your .conf files you need an instance of the SystemConfig, example:
 	
 	```
 	supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
