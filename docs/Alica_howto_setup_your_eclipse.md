@@ -1,7 +1,4 @@
-# alica
-###ALICA (A Language for Interactive Cooperative Agents)
-
-**Howto Setup your Eclipse CDT**
+#Howto Setup your Eclipse CDT
 
 1. At first you need a compiled catkin workspace, with the folders like src, devel, build properly set. See therefore [Framework](Alica_howto_get_the_framework_running.md)
 
