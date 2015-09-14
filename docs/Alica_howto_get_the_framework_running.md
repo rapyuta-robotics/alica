@@ -43,14 +43,31 @@ libgbm-dev-lts-utopic libegl1-mesa-dev-lts-utopic
 	catkin_init_workspace
 	```
 
-5. Checkout the source code from the different GIT repositories into your catkin workspace src folder. Please replace <project> of the following line with the repositories you need. At the moment there are cace, symrock, ice, alica, alica-plan-designer, alica-expansion-modules, cnc-msl, cnc-msldriver, cnc-turtlebots, cnc-naos, supplementary. For the **RoboCup people of Carpe Noctem Cassel alica, alica-plan-designer, cnc-msl,alica-expansion-modules and supplementary should be enough**. For the RoboCup robot and its driver developers additionally cnc-msldriver is necessary. **For all other alica, alica-plan-designer and supplementary is enough**. 
+5. Checkout the source code from the different GIT repositories into your catkin workspace src folder. Have a look at github.com/carpe-noctem-cassel for a full list of all repositories. For the RoboCup people alica, alica-plan-designer, cnc-msl, and supplementary should be enough.
+
+   Permission denied (publickey)? You may want to create SSH keys first. 
 
 	```
-	cd <path2workspace>/<nameofworkspace>/src
-	git clone git@github.com:carpe-noctem-cassel/<project>.git
+	cd ~/cnws/src
+	git clone git@github.com:carpe-noctem-cassel/alica.git
+	git clone git@github.com:carpe-noctem-cassel/alica-plan-designer.git
+	git clone git@github.com:carpe-noctem-cassel/supplementary.git
+	git clone git@github.com:carpe-noctem-cassel/cnc-msl.git
+	```
+   For the RoboCup robot and its driver developers additionally cnc-msldriver is necessary. 
+
+	```
+	git clone git@github.com:carpe-noctem-cassel/cnc-msldriver.git
 	```
 
-6. Set the environment variables of your bash by adding the following lines into your '~/.bashrc'-file. ROS already added its own environment variable into your '~/.bashrc'-file. The lines below have to be inserted below 'source /opt/ros/indigo/setup.bash'. The first line lets you source your workspace in every console/bash! So take care if you use multiple workspaces. Furthermore, does the next line work only if you have build your workspace once, because the first build will create the 'devel/setup.bash'-file. 
+6. Copy the file 'gitconfig' from '<path2workspace>/<nameofworkspace>/src/cnc-msl/configuration' to '~/.gitconfig' and edit enter your e-mail and name in the upper part of the file. 
+
+	```
+	cp ~/cnws/src/cnc-msl/configuration/gitconfig ~/.gitconfig
+	vim ~/.gitconfig
+	```
+
+7. Set the environment variables of your bash by adding the following lines into your '~/.bashrc'-file. ROS already added its own environment variable into your '~/.bashrc'-file. The lines below have to be inserted below 'source /opt/ros/indigo/setup.bash'. The first line lets you source your workspace in every console/bash! So take care if you use multiple workspaces. Furthermore, does the next line work only if you have build your workspace once, because the first build will create the 'devel/setup.bash'-file. 
 
 	**Be careful this step should be done by our team members**
 
@@ -103,7 +120,7 @@ libgbm-dev-lts-utopic libegl1-mesa-dev-lts-utopic
 	double angle = (*sc)["NameOfYourConfigFile"]->get<double>("TopLevelSection.Sub.angle", NULL);
 	```
 
-7. Compile your catkin workspace 
+8. Compile your catkin workspace 
 
 	```
 	cd <path2workspace>/<nameofworkspace>
