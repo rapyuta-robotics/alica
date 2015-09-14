@@ -3,7 +3,7 @@
 
 **Howto Setup your Eclipse CDT**
 
-1. At first you need a compiled catkin workspace, with the folders like src, devel, build properly set. See therefore [Framework](Alica_howto_get_the_framework_runnings.md)
+1. At first you need a compiled catkin workspace, with the folders like src, devel, build properly set. See therefore [Framework](Alica_howto_get_the_framework_running.md)
 
 2. Download the latest Eclipse CDT Edition from eclipse.org 
 
@@ -13,7 +13,7 @@
 	catkin_make --force-cmake -G"Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE:STRING=Debug -D_ECLIPSE_VERSION=4.4
 	```
 
-4. Start eclipse from a console, in order to have the Environment Variables properly set. For the Environment Variables see [Framework](Alica_howto_get_the_framework_runnings.md) --> Step 7 
+4. Start eclipse from a console, in order to have the Environment Variables properly set. For the Environment Variables see [Framework](Alica_howto_get_the_framework_running.md) --> Step 7 
 
 5. Import the project generated in step 3 by selecting "File-->Import-->Existing projects into workspace" and hit the "next"-button. Browse to your catkin workspace root directory and do not check "Copy projects into workspace". Then press the "finish"-button. 
 
