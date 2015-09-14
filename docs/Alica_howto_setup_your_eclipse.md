@@ -1,6 +1,6 @@
 #Howto Setup your Eclipse CDT
 
-1. At first you need a compiled catkin workspace, with the folders like src, devel, build properly set. See therefore [Framework](Alica_howto_get_the_framework_running.md)
+1. At first you need a compiled catkin workspace, with the folders like src, devel, build properly set. (See  [How to get the Framework running](Alica_howto_get_the_framework_running.md))
 
 2. Download the latest Eclipse CDT Edition from eclipse.org 
 
