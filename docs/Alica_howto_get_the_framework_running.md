@@ -5,17 +5,21 @@
 
 1. Install Ubuntu 14.04 LTS with a partition of at least 60 GB. * is one of {U, X, K}, where U and K are recommended. 
 
-2. Download and install the following packages, **please install the gnuplot-x11 package in an extra step**, as it produces collisions with gnuplot-qt otherwise: 
-
+2. Download and install the following packages: 
 	```
-   	sudo apt-get install git vim gitk meld bison re2c libode-dev gnuplot-qt libxv-dev libtbb-dev
-   	sudo apt-get install gnuplot-x11
-   	sudo apt-get install xserver-xorg-dev-lts-utopic mesa-common-dev-lts-utopic libxatracker-dev-lts-utopic libopenvg1-mesa-dev-lts-utopic libgles2-mesa-dev-lts-utopic libgles1-mesa-dev-lts-utopic libgl1-mesa-dev-lts-utopic 
+	sudo apt-get install git vim gitk meld bison re2c libode-dev libcgal-demo libcgal-dev gnuplot-qt libxv-dev libtbb-dev
+	```
+   Please install the following package in an extra step, as it produces collisions with gnuplot-qt otherwise: 
+	```
+	sudo apt-get install gnuplot-x11
+	```
+   Install now following packages
+   
+	```
+	sudo apt-get install xsdcxx libxerces-c-dev freeglut3-dev libvtk5-dev libvtk5-qt4-dev
+	sudo apt-get install xserver-xorg-dev-lts-utopic mesa-common-dev-lts-utopic libxatracker-dev-lts-utopic libopenvg1-mesa-dev-lts-utopic libgles2-mesa-dev-lts-utopic libgles1-mesa-dev-lts-utopic libgl1-mesa-dev-lts-utopic 
 libgbm-dev-lts-utopic libegl1-mesa-dev-lts-utopic
 	```
-
-  	* Currently needed because of Cambada-Stuff: 
-		- sudo apt-get install xsdcxx libxerces-c-dev freeglut3-dev libvtk5-dev libvtk5-qt4-dev
 	
 3. Download and install ROS Indigo by typing the following lines one after another into a shell: 
 
