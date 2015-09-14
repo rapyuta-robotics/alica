@@ -24,7 +24,7 @@ at the end of "Command to get compiler specs:". Apply that...
 
 8. Furthermore you need to check, whether the **__cplusplus macro definition is present and if it is, whether it is set to 201103L**. Therefore go to the Project-Properties (as in Step 6.) and go to "C/C++ Include Paths and Symbols". Find the macro in the list on the right side of the window (if it is missing you are fine). Set __cplusplus to 201103L if necessary. 
 
-9. Just to be sure, regenerate the index by "right-click on the project folder-->index-->rebuild". This will take a while and you can see the progress in the lower right edge of Eclipse. If you still have unresolved include errors or something similar in your error tab, double-click on those errors. Sometimes they vanish by open the corresponding files. 
+9. Just to be sure, regenerate the index by "right-click on the project folder-->index-->rebuild". This will take a while and you can see the progress in the lower right edge of Eclipse. If you still have unresolved include errors or something similar in your error tab, double-click on those errors. Sometimes they vanish by opening the corresponding files. 
 
 10. Eclipse has extensive formatting configuration capabilities. To add our formatting profile to Eclipse, perform the following steps: 
 	
@@ -33,8 +33,8 @@ at the end of "Command to get compiler specs:". Apply that...
 	Click Import... 
 	Select the CNC_ROS_Format.xml from <path2cnc-msl>/configuration 
 	Click ok 
-	As you edit a file, Eclipse should use this new profile to format your code following our conventions. To reformat an entire file, select Edit -> Format (shortcut is Strg+Shift+F). 
 	```
+As you edit a file, Eclipse should use this new profile to format your code following our conventions. To reformat an entire file, select Edit -> Format (shortcut is Strg+Shift+F). 
 
 11. Insert the following line into your eclipse.ini file. The file is located in your eclipse installation folder. Please replace Firstname Lastname with your full name. 
 	```
