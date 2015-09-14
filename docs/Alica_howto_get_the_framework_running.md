@@ -1,6 +1,4 @@
-# ALICA (A Language for Interactive Cooperative Agents)
-
-**Howto Get the Framework Running**
+#Howto Get the Framework Running
 
 1. Install Ubuntu 14.04 LTS with a partition of at least 60 GB. * is one of {U, X, K}, where U and K are recommended. 
 
