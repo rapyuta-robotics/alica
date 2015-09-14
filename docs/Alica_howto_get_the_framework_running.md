@@ -17,8 +17,6 @@
    
 	```
 	sudo apt-get install xsdcxx libxerces-c-dev freeglut3-dev libvtk5-dev libvtk5-qt4-dev
-	sudo apt-get install xserver-xorg-dev-lts-utopic mesa-common-dev-lts-utopic libxatracker-dev-lts-utopic libopenvg1-mesa-dev-lts-utopic libgles2-mesa-dev-lts-utopic libgles1-mesa-dev-lts-utopic libgl1-mesa-dev-lts-utopic 
-libgbm-dev-lts-utopic libegl1-mesa-dev-lts-utopic
 	```
 	
 3. Download and install ROS Indigo by typing the following lines one after another into a shell: 
