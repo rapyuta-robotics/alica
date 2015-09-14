@@ -19,7 +19,11 @@
 
 6. You should be almost fine now. Usually the implicitly linked libraries like stdio, sstream, and so on are not included in your eclipse project at that point. In order to do so, go to the project properties (right-click the projects root folder and choose properties from the pop-up menu) and go to "C/C++ General-->Preprocessor Include Paths, Macros etc.", choose the provider tab on the right and check "CDT GCC Built-in Compiler Settings". Afterwards hit the "apply"-button. 
 
-7. Another step is to set your eclipse to use the c++ 2011 standard. Therefore, you should navigate to the same window as in step 6. Under Providers select "CDT GCC Built-in Compiler Settings" and uncheck "Use global provider shared between projects" and add **-std=c++11** at the end of "Command to get compiler specs:". Apply that... 
+7. Another step is to set your eclipse to use the c++ 2011 standard. Therefore, you should navigate to the same window as in step 6. Under Providers select "CDT GCC Built-in Compiler Settings" and uncheck "Use global provider shared between projects" and add 
+	```
+	-std=c++11 
+	```
+at the end of "Command to get compiler specs:". Apply that... 
 
 8. Furthermore you need to check, whether the **__cplusplus macro definition is present and if it is, whether it is set to 201103L**. Therefore go to the Project-Properties (as in Step 6.) and go to "C/C++ Include Paths and Symbols". Find the macro in the list on the right side of the window (if it is missing you are fine). Set __cplusplus to 201103L if necessary. 
 
@@ -36,4 +40,7 @@
 	```
 
 11. Insert the following line into your eclipse.ini file. The file is located in your eclipse installation folder. Please replace Firstname Lastname with your full name. 
+	```
+	-Duser.name=Firstname Lastname
+	```
 
