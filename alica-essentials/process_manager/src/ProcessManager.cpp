@@ -97,7 +97,7 @@ namespace supplementary
 			}
 		}
 
-		this->interpreter = (*this->sc)["Processes"]->getList<string>("Processes.Interpreter", NULL);
+		this->pmRegistry->interpreter = (*this->sc)["Processes"]->getList<string>("Processes.Interpreter", NULL);
 
 		cout << "PM: OwnId is " << ownId << endl;
 	}
@@ -284,7 +284,6 @@ namespace supplementary
 			{
 				this_thread::sleep_for(availTime);
 			}
-
 		}
 	}
 
@@ -373,13 +372,14 @@ namespace supplementary
 				continue;
 			}
 
-			// get the executables name
-			string execName = getExecNameFromCmdLine(dirEntry->d_name);
-			if (execName.length() == 0)
+			// get the cmdline
+			string cmdLine = getCmdLine(dirEntry->d_name);
+			// ignore "kernel processes"
+			if (cmdLine.length() == 0)
 				continue;
 
 			int execId;
-			if (this->pmRegistry->getExecutableId(execName, execId))
+			if (this->pmRegistry->getExecutableId(cmdLine, execId))
 			{
 				// get the robots name from the ROBOT environment variable
 				string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
@@ -387,7 +387,7 @@ namespace supplementary
 				int robotId;
 				if (!this->pmRegistry->getRobotId(robotName, robotId))
 				{
-					cout << "PM: Warning! Unknown robot '" << robotName << "' is running '" << execName << "'" << endl;
+					cout << "PM: Warning! Unknown robot '" << robotName << "' is running executable with ID '" << execId << "'" << endl;
 					robotId = this->pmRegistry->addRobot(robotName);
 				}
 
@@ -403,7 +403,7 @@ namespace supplementary
 				}
 
 #ifdef PM_DEBUG
-				cout << "PM: Robot '" << robotName << "' executes '" << execName << "' with PID " << curPID << endl;
+				cout << "PM: Robot '" << robotName << "' executes executable with ID '" << execId << "' with PID " << curPID << endl;
 #endif
 
 			}
@@ -419,93 +419,13 @@ namespace supplementary
 	 * @param pid
 	 * @return The executable name as string.
 	 */
-	string ProcessManager::getExecNameFromCmdLine(char* pid)
+	string ProcessManager::getCmdLine(char* pid)
 	{
 		string cmdline;
 		std::ifstream cmdlineStream("/proc/" + string(pid) + "/cmdline", std::ifstream::in);
 		getline(cmdlineStream, cmdline);
 		cmdlineStream.close();
-
-		if (cmdline.length() == 0)
-		{ // faster detection of kernel processes
-			return "";
-		}
-
-		string execName;
-		int nextArgIdx = getArgWithoutPath(cmdline, 0, execName);
-
-		/*
-		 * Check whether the found executable name is an interpreter like python, java, or ruby.
-		 * If that it the case, the "real" executable name is the next argument in the cmdline.
-		 */
-		if (isKnownInterpreter(execName))
-		{
-			getArgWithoutPath(cmdline, nextArgIdx, execName);
-		}
-
-		return execName;
-	}
-
-	/**
-	 * Checks whether the found executable name is an interpreter like python, java, or ruby.
-	 * @param execName
-	 * @return True, if it is a known interpreter. False, otherwise.
-	 */
-	bool ProcessManager::isKnownInterpreter(string const & execName)
-	{
-		return find(this->interpreter.begin(), this->interpreter.end(), execName) != this->interpreter.end();
-	}
-
-	/**
-	 * Retrieves the command line argument (starting at the given start index), without the preceding path.
-	 * @param cmdline - The complete command line arguments in one string.
-	 * @param argStartIdx - The index of the start character of the argument.
-	 * @param arg - A reference to the string in which the retrieved argument will be stored.
-	 * @return The index of the first character of the next argument, if present.
-	 */
-	size_t ProcessManager::getArgWithoutPath(string cmdline, int argStartIdx, string& arg)
-	{
-		if (argStartIdx >= cmdline.length())
-		{
-			arg = "";
-			return string::npos;
-		}
-
-		// start searching at argStartIdx
-		int endPos = cmdline.find('\0', argStartIdx);
-		if (endPos == string::npos)
-		{
-			endPos = cmdline.length();
-		}
-		int startPos = cmdline.find_last_of('/', endPos);
-		if (startPos == string::npos)
-		{
-			startPos = 0; // no slash found, start at 0
-		}
-		else
-		{
-			startPos++; // ignore slash
-		}
-		arg = cmdline.substr(startPos, endPos - startPos);
-		return endPos + 1;
-	}
-
-	size_t ProcessManager::getArgWithPath(string cmdline, int argStartIdx, string& arg)
-	{
-		if (argStartIdx >= cmdline.length())
-		{
-			arg = "";
-			return string::npos;
-		}
-
-		// start searching at argStartIdx
-		int endPos = cmdline.find('\0', argStartIdx);
-		if (endPos == string::npos)
-		{
-			endPos = cmdline.length();
-		}
-		arg = cmdline.substr(argStartIdx, endPos - argStartIdx);
-		return endPos + 1;
+		return cmdline;
 	}
 
 	/**
@@ -579,12 +499,12 @@ namespace supplementary
 			}
 
 			// get the executables name
-			string execName = getExecNameFromCmdLine(dirEntry->d_name);
-			if (execName.length() == 0)
+			string cmdLine = getCmdLine(dirEntry->d_name); //TODO
+			if (cmdLine.length() == 0)
 				continue;
 
 			// Check for already running process managers
-			if (execName.compare("process_manager") == 0 && ownPID != curPID)
+			if (cmdLine.find("process_manager") != string::npos && ownPID != curPID)
 			{
 				cerr << "PM: My own PID is " << ownPID << endl;
 				cerr << "PM: There is already another process_manager running on this system! PID: " << curPID << endl;
@@ -594,13 +514,13 @@ namespace supplementary
 			}
 
 			// Check for already running roscore
-			if (!roscoreRunning && execName.compare(roscoreExecName) == 0)
+			if (!roscoreRunning && cmdLine.find(roscoreExecName) != string::npos)
 			{
 				roscoreRunning = true;
 
 				// remember started roscore in process managing data structures
 				int roscoreExecId;
-				if (this->pmRegistry->getExecutableId(roscoreExecName, roscoreExecId))
+				if (this->pmRegistry->getExecutableId(cmdLine, roscoreExecId))
 				{
 					// get the ROBOT environment variable of the robot running the roscore
 					string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
@@ -669,12 +589,12 @@ namespace supplementary
 			{
 				// remember started roscore in process managing data structures
 				int roscoreExecId;
-				if (this->pmRegistry->getExecutableId(roscoreExecName, roscoreExecId))
+				if (this->pmRegistry->getExecutableIdByExecName(roscoreExecName, roscoreExecId))
 				{
 					int robotId;
 					if (this->pmRegistry->getRobotId(this->ownHostname, robotId))
 					{
-						// create managed robot if necessary and chang desired state of roscore accordingly
+						// create managed robot if necessary and change desired state of roscore accordingly
 						auto mngdRobot = this->robotMap.find(robotId);
 						if (mngdRobot != this->robotMap.end())
 						{

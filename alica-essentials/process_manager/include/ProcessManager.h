@@ -43,10 +43,6 @@ namespace supplementary
 		bool selfCheck();
 		void initCommunication(int argc, char** argv);
 
-		bool isKnownInterpreter(string const & execName);
-
-		static size_t getArgWithoutPath(string cmdLine, int startIdx, string& arg);
-		static size_t getArgWithPath(string cmdline, int argStartIdx, string& arg);
 		static void pmSigintHandler(int sig);
 		static void pmSigchildHandler(int sig);
 		static int numCPUs; /* < including hyper threading cores */
@@ -68,7 +64,7 @@ namespace supplementary
 		ros::Subscriber processCommandSub;
 		ros::Publisher processStatePub;
 
-		string getExecNameFromCmdLine(char* pid);
+		string getCmdLine(char* pid);
 		string getRobotEnvironmentVariable(string processId);
 		void updateTotalCPUTimes();
 		void handleProcessCommand(process_manager::ProcessCommandPtr pc);

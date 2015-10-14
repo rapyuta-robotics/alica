@@ -21,8 +21,8 @@ namespace supplementary
 	class ExecutableMetaData
 	{
 	public:
-		ExecutableMetaData(string name, int id, string mode, string absExecName);
-		ExecutableMetaData(string name, int id, string mode, map<int, vector<char*>> parameterMap, string absExecName);
+		ExecutableMetaData(string name, int id, string mode, string execName, string rosPackage, string prefixCmd,string absExecName);
+		ExecutableMetaData(string name, int id, string mode, string execName, string rosPackage, string prefixCmd, map<int, vector<char*>> parameterMap, string absExecName);
 		virtual ~ExecutableMetaData();
 
 		void addParameterSet(int paramSetId, vector<char*> paramSetValues);
@@ -32,6 +32,9 @@ namespace supplementary
 		int id;
 		string absExecName;
 		string name;
+		string execName;
+		string rosPackage;
+		string prefixCmd;
 		map<int, vector<char*>> parameterMap;
 		string mode;
 

@@ -10,15 +10,14 @@
 namespace supplementary
 {
 
-	ExecutableMetaData::ExecutableMetaData(string name, int id, string mode, string absExecName) :
-			name(name), id(id), mode(mode), absExecName(absExecName)
+	ExecutableMetaData::ExecutableMetaData(string name, int id, string mode, string execName, string rosPackage, string prefixCmd, string absExecName) :
+			name(name), id(id), mode(mode), execName(execName), rosPackage(rosPackage), prefixCmd(prefixCmd), absExecName(absExecName)
 	{
 	}
 
-	ExecutableMetaData::ExecutableMetaData(string name, int id, string mode, map<int, vector<char*>> parameterMap, string absExecName) :
-		name(name), id(id), mode(mode), parameterMap(parameterMap), absExecName(absExecName)
+	ExecutableMetaData::ExecutableMetaData(string name, int id, string mode, string execName, string rosPackage, string prefixCmd, map<int, vector<char*>> parameterMap, string absExecName) :
+		name(name), id(id), mode(mode), execName(execName), rosPackage(rosPackage), prefixCmd(prefixCmd), parameterMap(parameterMap), absExecName(absExecName)
 	{
-
 	}
 
 	void ExecutableMetaData::addParameterSet (int paramSetId, vector<char*> paramSetValues)

@@ -36,22 +36,26 @@ namespace supplementary
 		bool getRobotName(int robotId, string& robotName);
 		bool robotExists(int robotId);
 		bool robotExists(string robotName);
+		void setInterpreters(vector<string> interpreter);
+		bool isKnownInterpreter(string const & cmdLinePart);
 
 		ExecutableMetaData const * const getExecutable(string execName) const;
 		ExecutableMetaData const * const getExecutable(int execId) const;
 		const vector<ExecutableMetaData*>& getExecutables() const;
 		int addExecutable(string execName);
-		bool getExecutableId(string execName, int& execId);
+		bool getExecutableId(string cmdline, int& execId);
+		bool getExecutableIdByExecName(string execName, int& execId);
 		bool getExecutableName(int execId, string& execName);
 		bool executableExists(int execId);
 		bool executableExists(string execName);
+		size_t getArgWithoutPath(string cmdline, int argStartIdx, string& arg);
+		size_t getArgWithPath(string cmdline, int argStartIdx, string& arg);
 
 	private:
 		// this is just for faster lookup in case of lazy initialisation
 		vector<RobotMetaData*> robotList;
 		vector<ExecutableMetaData*> executableList;
-
-
+		vector<string> interpreter;
 
 	};
 
