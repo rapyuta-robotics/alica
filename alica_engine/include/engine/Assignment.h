@@ -67,7 +67,7 @@ namespace alica
 		string assignmentCollectionToString();
 		void addRobot(int id, EntryPoint* e);
 		void moveRobots(State* from, State* to);
-		EntryPoint* entryPointOfRobot(int robot);
+		EntryPoint* getEntryPointOfRobot(int robot);
 		shared_ptr<vector<int> >  getAllRobots();
 		void clear();
 		string toString();
