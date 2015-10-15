@@ -194,7 +194,7 @@ namespace alica
 			}
 
 			// OWN ENTRYPOINT
-			ep = rp->getAssignment()->entryPointOfRobot(ownRobProb->getId());
+			ep = rp->getAssignment()->getEntryPointOfRobot(ownRobProb->getId());
 
 			if (ep == nullptr)
 			{

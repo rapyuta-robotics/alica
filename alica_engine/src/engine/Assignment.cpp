@@ -594,7 +594,7 @@ namespace alica
 	 * @param robot an int
 	 * @return An entrypoint
 	 */
-	EntryPoint* Assignment::entryPointOfRobot(int robot)
+	EntryPoint* Assignment::getEntryPointOfRobot(int robot)
 	{
 		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
 		{

@@ -862,7 +862,7 @@ namespace alica
 			{ //the robot is no longer participating in this plan
 				if (!keepTask & !auth)
 				{
-					EntryPoint* ep = this->getAssignment()->entryPointOfRobot(spt->getRobotId());
+					EntryPoint* ep = this->getAssignment()->getEntryPointOfRobot(spt->getRobotId());
 					if (ep != nullptr)
 					{
 						this->getAssignment()->removeRobot(spt->getRobotId());
@@ -875,7 +875,7 @@ namespace alica
 			{
 				if (keepTask || auth)
 				{ //Update only state, and that only if it is in the reachability graph of its current entrypoint, else ignore
-					EntryPoint* cep = this->getAssignment()->entryPointOfRobot(spt->getRobotId());
+					EntryPoint* cep = this->getAssignment()->getEntryPointOfRobot(spt->getRobotId());
 					if (cep != nullptr)
 					{
 						if (cep->getReachableStates().find(spt->getState()) != cep->getReachableStates().end())
@@ -892,7 +892,7 @@ namespace alica
 				}
 				else
 				{ //Normal Update
-					EntryPoint* ep = this->getAssignment()->entryPointOfRobot(spt->getRobotId());
+					EntryPoint* ep = this->getAssignment()->getEntryPointOfRobot(spt->getRobotId());
 					ret |= this->getAssignment()->updateRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
 					if (spt->getEntryPoint() != ep)
 					{
