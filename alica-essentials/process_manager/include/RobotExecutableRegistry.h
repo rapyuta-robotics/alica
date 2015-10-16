@@ -43,13 +43,13 @@ namespace supplementary
 		ExecutableMetaData const * const getExecutable(int execId) const;
 		const vector<ExecutableMetaData*>& getExecutables() const;
 		int addExecutable(string execName);
-		bool getExecutableId(string cmdline, int& execId);
+		bool getExecutableId(vector<string> &splittedCmdLine, int& execId);
 		bool getExecutableIdByExecName(string execName, int& execId);
 		bool getExecutableName(int execId, string& execName);
 		bool executableExists(int execId);
 		bool executableExists(string execName);
-		size_t getArgWithoutPath(string cmdline, int argStartIdx, string& arg);
-		size_t getArgWithPath(string cmdline, int argStartIdx, string& arg);
+//		static size_t getCmdLinePartWithoutPath(string cmdline, int argStartIdx, string& arg);
+//		static size_t getCmdLinePartWithPath(string cmdline, int argStartIdx, string& arg);
 
 	private:
 		// this is just for faster lookup in case of lazy initialisation

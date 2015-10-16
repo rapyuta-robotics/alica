@@ -25,6 +25,7 @@ namespace supplementary
 		ExecutableMetaData(string name, int id, string mode, string execName, string rosPackage, string prefixCmd, map<int, vector<char*>> parameterMap, string absExecName);
 		virtual ~ExecutableMetaData();
 
+		bool matchSplittedCmdLine(vector<string>& cmdline);
 		void addParameterSet(int paramSetId, vector<char*> paramSetValues);
 
 		static const long NOTHING_MANAGED = -1;

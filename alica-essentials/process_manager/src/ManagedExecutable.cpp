@@ -7,6 +7,7 @@
 
 #include "ManagedExecutable.h"
 #include "ProcessManager.h"
+#include "RobotExecutableRegistry.h"
 #include <map>
 #include <iostream>
 #include <unistd.h>
@@ -314,37 +315,35 @@ namespace supplementary
 	void ManagedExecutable::readProcParams(string procPidString)
 	{
 		this->need2ReadParams = false;
-
-		string cmdline;
-		std::ifstream cmdlineStream(procPidString + "/cmdline", std::ifstream::in);
-		getline(cmdlineStream, cmdline);
-		cmdlineStream.close();
-
 		this->runningParams.clear();
 
-		// read first command line argument, with special handling for interpreted executables
-		string execName;
-		int nextArgIdx = ProcessManager::getArgWithoutPath(cmdline, 0, execName);
+		string cmdline = this->procMan->getCmdLine(procPidString.c_str());
+		string cmdLinePart;
+		int argIdx = 0;
+		int argIdx = RobotExecutableRegistry::getCmdLinePartWithoutPath(cmdline, argIdx, cmdLinePart);
 
-		if (this->procMan->isKnownInterpreter(execName))
+		if (this->procMan->isKnownInterpreter(cmdLinePart))
 		{
-			nextArgIdx = ProcessManager::getArgWithoutPath(cmdline, nextArgIdx, execName);
+			// ignore interpreter and get next part (without path)
+			argIdx = RobotExecutableRegistry::getCmdLinePartWithoutPath(cmdline, argIdx, cmdLinePart);
 		}
 		else
 		{
-			nextArgIdx = ProcessManager::getArgWithPath(cmdline, 0, execName);
+			// first wasn't an interpreter, so read it again with full path
+			argIdx = 0;
+			argIdx = RobotExecutableRegistry::getCmdLinePartWithPath(cmdline, argIdx, cmdLinePart);
 		}
 
-		this->runningParams.push_back(strdup(execName.c_str()));
+		this->runningParams.push_back(strdup(cmdLinePart.c_str()));
 
 		// read the rest of the command line arguments
 		while (true)
 		{
-			int endPos = cmdline.find('\0', nextArgIdx);
+			int endPos = cmdline.find('\0', argIdx);
 			if (endPos != string::npos)
 			{
-				this->runningParams.push_back(strdup(cmdline.substr(nextArgIdx, endPos - nextArgIdx).c_str()));
-				nextArgIdx = endPos + 1;
+				this->runningParams.push_back(strdup(cmdline.substr(argIdx, endPos - argIdx).c_str()));
+				argIdx = endPos + 1;
 			}
 			else
 			{

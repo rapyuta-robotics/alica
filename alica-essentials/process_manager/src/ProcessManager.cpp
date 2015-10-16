@@ -97,7 +97,8 @@ namespace supplementary
 			}
 		}
 
-		this->pmRegistry->interpreter = (*this->sc)["Processes"]->getList<string>("Processes.Interpreter", NULL);
+		this->interpreters = (*this->sc)["Processes"]->getList<string>("Processes.Interpreter", NULL);
+		this->pmRegistry->setInterpreters(interpreters);
 
 		cout << "PM: OwnId is " << ownId << endl;
 	}
@@ -373,13 +374,20 @@ namespace supplementary
 			}
 
 			// get the cmdline
-			string cmdLine = getCmdLine(dirEntry->d_name);
+			string cmdLine = this->getCmdLine(dirEntry->d_name);
 			// ignore "kernel processes"
 			if (cmdLine.length() == 0)
 				continue;
 
+			vector<string> splittedCmdLine = this->splitCmdLine(cmdLine);
+			// ignore interpreter
+			if (isKnownInterpreter(splittedCmdLine[0]))
+			{
+				splittedCmdLine.erase(splittedCmdLine.begin());
+			}
+
 			int execId;
-			if (this->pmRegistry->getExecutableId(cmdLine, execId))
+			if (this->pmRegistry->getExecutableId(splittedCmdLine, execId))
 			{
 				// get the robots name from the ROBOT environment variable
 				string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
@@ -387,7 +395,8 @@ namespace supplementary
 				int robotId;
 				if (!this->pmRegistry->getRobotId(robotName, robotId))
 				{
-					cout << "PM: Warning! Unknown robot '" << robotName << "' is running executable with ID '" << execId << "'" << endl;
+					cout << "PM: Warning! Unknown robot '" << robotName << "' is running executable with ID '" << execId
+							<< "'" << endl;
 					robotId = this->pmRegistry->addRobot(robotName);
 				}
 
@@ -403,7 +412,8 @@ namespace supplementary
 				}
 
 #ifdef PM_DEBUG
-				cout << "PM: Robot '" << robotName << "' executes executable with ID '" << execId << "' with PID " << curPID << endl;
+				cout << "PM: Robot '" << robotName << "' executes executable with ID '" << execId << "' with PID "
+						<< curPID << endl;
 #endif
 
 			}
@@ -419,7 +429,7 @@ namespace supplementary
 	 * @param pid
 	 * @return The executable name as string.
 	 */
-	string ProcessManager::getCmdLine(char* pid)
+	string ProcessManager::getCmdLine(const char* pid)
 	{
 		string cmdline;
 		std::ifstream cmdlineStream("/proc/" + string(pid) + "/cmdline", std::ifstream::in);
@@ -627,6 +637,33 @@ namespace supplementary
 
 		closedir(proc);
 		return true;
+	}
+
+	/**
+	 * Checks whether the found executable name is an interpreter like python, java, or ruby.
+	 * @param execName
+	 * @return True, if it is a known interpreter. False, otherwise.
+	 */
+	bool ProcessManager::isKnownInterpreter(string const & cmdLinePart)
+	{
+		return find(this->interpreters.begin(), this->interpreters.end(), cmdLinePart) != this->interpreters.end();
+	}
+
+	/**
+	 * Splits the given command line at '\0' characters.
+	 */
+	vector<string> ProcessManager::splitCmdLine(string cmdLine)
+	{
+		vector<string> splittedCmdLine;
+		int argIdx = 0;
+		int argEndPos = cmdLine.find('\0', argIdx);
+		while (argEndPos != string::npos)
+		{
+			splittedCmdLine.push_back(cmdLine.substr(argIdx, argEndPos - argIdx));
+			argIdx = argEndPos + 1;
+			argEndPos = cmdLine.find('\0', argIdx);
+		}
+		return splittedCmdLine;
 	}
 
 	/**

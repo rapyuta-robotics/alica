@@ -42,11 +42,13 @@ namespace supplementary
 
 		bool selfCheck();
 		void initCommunication(int argc, char** argv);
+		bool isKnownInterpreter(string const & cmdLinePart);
+		vector<string> splitCmdLine(string cmdLine);
 
 		static void pmSigintHandler(int sig);
 		static void pmSigchildHandler(int sig);
+		static string getCmdLine(const char* pid);
 		static int numCPUs; /* < including hyper threading cores */
-
 		static bool running; /* < has to be static, to be changeable within ProcessManager::pmSignintHandler() */
 
 	private:
@@ -55,7 +57,7 @@ namespace supplementary
 		int ownId;
 		map<int, ManagedRobot*> robotMap;
 		RobotExecutableRegistry* pmRegistry;
-		vector<string> interpreter;
+		vector<string> interpreters;
 		unsigned long long lastTotalCPUTime;
 		unsigned long long currentTotalCPUTime;
 
@@ -64,7 +66,6 @@ namespace supplementary
 		ros::Subscriber processCommandSub;
 		ros::Publisher processStatePub;
 
-		string getCmdLine(char* pid);
 		string getRobotEnvironmentVariable(string processId);
 		void updateTotalCPUTimes();
 		void handleProcessCommand(process_manager::ProcessCommandPtr pc);
