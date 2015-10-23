@@ -176,62 +176,7 @@ namespace supplementary
 		}
 		execId = 0;
 		return false;
-
 	}
-
-//	/**
-//	 * Retrieves the command line argument (starting at the given start index), without the preceding path.
-//	 * @param cmdline - The complete command line arguments in one string.
-//	 * @param argStartIdx - The index of the start character of the argument.
-//	 * @param arg - A reference to the string in which the retrieved argument will be stored.
-//	 * @return The index of the first character of the next argument, if present.
-//	 */
-//	size_t RobotExecutableRegistry::getCmdLinePartWithoutPath(string cmdline, int argStartIdx, string& arg)
-//	{
-//		if (argStartIdx >= cmdline.length())
-//		{
-//			arg = "";
-//			return string::npos;
-//		}
-//
-//		// start searching at argStartIdx
-//		int endPos = cmdline.find('\0', argStartIdx);
-//		if (endPos == string::npos)
-//		{
-//			endPos = cmdline.length();
-//		}
-//		int startPos = cmdline.find_last_of('/', endPos);
-//		if (startPos == string::npos)
-//		{
-//			startPos = 0; // no slash found, start at 0
-//		}
-//		else
-//		{
-//			startPos++; // ignore slash
-//		}
-//		arg = cmdline.substr(startPos, endPos - startPos);
-//		return endPos + 1;
-//	}
-//
-//	size_t RobotExecutableRegistry::getCmdLinePartWithPath(string cmdline, int argStartIdx, string& arg)
-//	{
-//		if (argStartIdx >= cmdline.length())
-//		{
-//			arg = "";
-//			return string::npos;
-//		}
-//
-//		// start searching at argStartIdx
-//		int endPos = cmdline.find('\0', argStartIdx);
-//		if (endPos == string::npos)
-//		{
-//			endPos = cmdline.length();
-//		}
-//		arg = cmdline.substr(argStartIdx, endPos - argStartIdx);
-//		return endPos + 1;
-//	}
-
-
 
 	bool RobotExecutableRegistry::executableExists(int execId)
 	{

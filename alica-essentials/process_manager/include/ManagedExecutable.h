@@ -8,7 +8,7 @@
 #ifndef MANAGEDEXECUTABLE_H_
 #define MANAGEDEXECUTABLE_H_
 
-//#define MNGD_EXEC_DEBUG
+#define MNGD_EXEC_DEBUG
 
 #include <string>
 #include <vector>

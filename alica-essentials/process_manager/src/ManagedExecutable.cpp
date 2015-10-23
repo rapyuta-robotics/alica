@@ -318,39 +318,22 @@ namespace supplementary
 		this->runningParams.clear();
 
 		string cmdline = this->procMan->getCmdLine(procPidString.c_str());
-		string cmdLinePart;
-		int argIdx = 0;
-		int argIdx = RobotExecutableRegistry::getCmdLinePartWithoutPath(cmdline, argIdx, cmdLinePart);
+		cout << "ME: Command-Line: " << cmdline << endl;
+		vector<string> splittedCmdLine = this->procMan->splitCmdLine(cmdline);
+		int checkIdx = 0;
 
-		if (this->procMan->isKnownInterpreter(cmdLinePart))
+		if (this->procMan->isKnownInterpreter(splittedCmdLine[checkIdx]))
 		{
 			// ignore interpreter and get next part (without path)
-			argIdx = RobotExecutableRegistry::getCmdLinePartWithoutPath(cmdline, argIdx, cmdLinePart);
-		}
-		else
-		{
-			// first wasn't an interpreter, so read it again with full path
-			argIdx = 0;
-			argIdx = RobotExecutableRegistry::getCmdLinePartWithPath(cmdline, argIdx, cmdLinePart);
+			checkIdx++;
 		}
 
-		this->runningParams.push_back(strdup(cmdLinePart.c_str()));
-
-		// read the rest of the command line arguments
-		while (true)
+		// add executable and params as is...
+		for (; checkIdx < splittedCmdLine.size(); checkIdx++)
 		{
-			int endPos = cmdline.find('\0', argIdx);
-			if (endPos != string::npos)
-			{
-				this->runningParams.push_back(strdup(cmdline.substr(argIdx, endPos - argIdx).c_str()));
-				argIdx = endPos + 1;
-			}
-			else
-			{
-				this->runningParams.push_back(nullptr);
-				break;
-			}
+			this->runningParams.push_back(strdup(splittedCmdLine[checkIdx].c_str()));
 		}
+		this->runningParams.push_back(nullptr);
 
 #ifdef MNGD_EXEC_DEBUG
 		cout << "ME: PROC-FS Command-Line Parameters of " << this->metaExec->name << ": " << this->runningParams.size() << endl;
@@ -359,6 +342,10 @@ namespace supplementary
 			if (param != nullptr)
 			{ // ignore nullptr, which is always the last argument in command line
 				cout << "'" << param << "'" << endl;
+			}
+			else
+			{
+				cout << "'nullptr'" << endl;
 			}
 		}
 #endif
@@ -372,6 +359,10 @@ namespace supplementary
 				if (param != nullptr)
 				{ // ignore nullptr, which is always the last argument in command line
 					cout << "'" << param << "'" << endl;
+				}
+				else
+				{
+					cout << "'nullptr'" << endl;
 				}
 			}
 #endif
@@ -580,7 +571,7 @@ namespace supplementary
 
 	/**
 	 * This method is the run method for the log publishing
-	 * threads created in the startLogPublishing() method.
+	 * threads created in the startPublishingLogs() method.
 	 * The threads terminate if the publishing flag is set to false.
 	 */
 	void ManagedExecutable::publishLogFile(string logFileName, ros::console::levels::Level logLevel)

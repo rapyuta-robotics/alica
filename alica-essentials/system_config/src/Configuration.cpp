@@ -37,18 +37,15 @@ namespace supplementary
 			getline(*content, line);
 			line = Configuration::trimLeft(line);
 
-			int lineLen = line.size();
-
+			int lineLen = line.length();//size();
+			if (lineLen == 0)
+				continue;
 			chrPos = 1;
 
 			linePos++;
 
 			while (chrPos < lineLen - 1) // -1 for ignoring newline or null-terminating character
 			{
-
-				if (line.size() == 0)
-					break;
-
 				switch (line[0])
 				{
 
@@ -89,7 +86,6 @@ namespace supplementary
 						}
 
 						string name = line.substr(1, end - 1);
-
 						if ((name[0] == '/') || (name[0] == '!'))
 						{
 
@@ -480,7 +476,7 @@ namespace supplementary
 		{
 			return ""; // no content
 		}
-		return str.substr(strBegin, str.length());
+		return str.substr(strBegin, str.length()- strBegin);
 	}
 
 	/**
@@ -511,7 +507,7 @@ namespace supplementary
 	 */
 	shared_ptr<vector<string> > Configuration::getParams(char seperator, const char *path, va_list ap)
 	{
-		shared_ptr<vector<string> > params = make_shared <vector<string> >();
+		shared_ptr<vector<string> > params = make_shared<vector<string> >();
 		if (path != NULL)
 		{
 			const char *temp = path;

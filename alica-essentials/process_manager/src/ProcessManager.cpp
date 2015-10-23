@@ -98,6 +98,7 @@ namespace supplementary
 		}
 
 		this->interpreters = (*this->sc)["Processes"]->getList<string>("Processes.Interpreter", NULL);
+		cout << "PM: Number of Interpreters: " << this->interpreters.size() << endl;
 		this->pmRegistry->setInterpreters(interpreters);
 
 		cout << "PM: OwnId is " << ownId << endl;
@@ -424,8 +425,7 @@ namespace supplementary
 	}
 
 	/**
-	 * Extracts the executable name from the cmdline entry of the proc-fs. In case of interpreted
-	 * executables, it ignores known interpreters and returns the first argument of the interpreter.
+	 * Reads the command line entry in the proc-filesystem for the given process ID.
 	 * @param pid
 	 * @return The executable name as string.
 	 */
@@ -514,7 +514,7 @@ namespace supplementary
 				continue;
 
 			// Check for already running process managers
-			if (cmdLine.find("process_manager") != string::npos && ownPID != curPID)
+			if (ownPID != curPID && cmdLine.find("process_manager") != string::npos && cmdLine.find("gdb") == string::npos)
 			{
 				cerr << "PM: My own PID is " << ownPID << endl;
 				cerr << "PM: There is already another process_manager running on this system! PID: " << curPID << endl;
@@ -530,7 +530,10 @@ namespace supplementary
 
 				// remember started roscore in process managing data structures
 				int roscoreExecId;
-				if (this->pmRegistry->getExecutableId(cmdLine, roscoreExecId))
+				vector<string> splittedCmdLine = splitCmdLine(cmdLine);
+				splittedCmdLine.erase(splittedCmdLine.begin()); // ignore python interpreter of roscore
+
+				if (this->pmRegistry->getExecutableId(splittedCmdLine, roscoreExecId))
 				{
 					// get the ROBOT environment variable of the robot running the roscore
 					string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
@@ -646,7 +649,8 @@ namespace supplementary
 	 */
 	bool ProcessManager::isKnownInterpreter(string const & cmdLinePart)
 	{
-		return find(this->interpreters.begin(), this->interpreters.end(), cmdLinePart) != this->interpreters.end();
+		int lastSlashIdx = cmdLinePart.find_last_of('/');
+		return find(this->interpreters.begin(), this->interpreters.end(), cmdLinePart.substr(lastSlashIdx+1, cmdLinePart.length())) != this->interpreters.end();
 	}
 
 	/**
@@ -657,6 +661,13 @@ namespace supplementary
 		vector<string> splittedCmdLine;
 		int argIdx = 0;
 		int argEndPos = cmdLine.find('\0', argIdx);
+
+		if (argEndPos == string::npos) // catch the case for only one argument
+		{
+			splittedCmdLine.push_back(cmdLine);
+			return splittedCmdLine;
+		}
+
 		while (argEndPos != string::npos)
 		{
 			splittedCmdLine.push_back(cmdLine.substr(argIdx, argEndPos - argIdx));

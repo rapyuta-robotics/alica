@@ -6,6 +6,7 @@
  */
 
 #include "ExecutableMetaData.h"
+#include "iostream"
 
 namespace supplementary
 {
@@ -34,11 +35,12 @@ namespace supplementary
 	 */
 	bool ExecutableMetaData::matchSplittedCmdLine(vector<string>& splittedCmdLine)
 	{
+
 		// check for prefixCmd, e.g., for roslaunch stuff
 		int checkIdx = 0;
 		if (this->prefixCmd != "NOT-FOUND")
 		{
-			if (splittedCmdLine[checkIdx].find(this->prefixCmd) == splittedCmdLine[checkIdx].end())
+			if (splittedCmdLine[checkIdx].find(this->prefixCmd) == string::npos)
 			{
 				return false;
 			}
@@ -61,12 +63,25 @@ namespace supplementary
 			}
 		}
 
-		// check for execName // TODO check, ignoring paths in cmdLine
-		if (this->absExecName != splittedCmdLine[checkIdx])
-		{
-			return false;
-		}
+		// check for execName (sometimes there is a path, sometimes not - so the check is path independent)
+		size_t lastSlashIdx = splittedCmdLine[checkIdx].find_last_of('/');
+		string execNameWithoutPath = splittedCmdLine[checkIdx].substr(lastSlashIdx + 1,
+																		splittedCmdLine[checkIdx].length());
 
+		if (this->absExecName.length() > 0)
+		{
+			if (this->absExecName.find(execNameWithoutPath) == string::npos)
+			{
+				return false;
+			}
+		}
+		else
+		{
+			if (this->execName.find(execNameWithoutPath) == string::npos)
+			{
+				return false;
+			}
+		}
 		return true;
 	}
 
