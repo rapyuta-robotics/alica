@@ -1,5 +1,22 @@
 #include "RelayedMessage.h"
 
+
+//Alternative hasing function
+//http://stackoverflow.com/questions/98153/whats-the-best-hashing-algorithm-to-use-on-a-stl-string-when-using-hash-map
+//These guys says it works well... colpa sua
+/*unsigned int
+hash(
+    const char* s,
+    unsigned int seed = 0)
+{
+    unsigned int hash = seed;
+    while (*s)
+    {
+        hash = hash * 101  +  *s++;
+    }
+    return hash;
+}*/
+
 RelayedMessage::RelayedMessage(string topic, string message, string options)
 {
 	this->Ros2UdpQueueLength = 5;
