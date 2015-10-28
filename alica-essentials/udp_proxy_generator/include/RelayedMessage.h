@@ -5,6 +5,7 @@
 #include <functional>
 
 #include <boost/regex.hpp>
+#include <cstdint>
 
 using namespace std;
 
@@ -26,7 +27,7 @@ public:
 	int Udp2RosQueueLength;
 
 	std::hash<std::string> hash;
-	size_t Id;
+	uint32_t Id;
 
 	string getRosCallBackName();
 	string getRosClassName();

@@ -1,21 +1,17 @@
 #include "RelayedMessage.h"
 
-
 //Alternative hasing function
 //http://stackoverflow.com/questions/98153/whats-the-best-hashing-algorithm-to-use-on-a-stl-string-when-using-hash-map
 //These guys says it works well... colpa sua
-/*unsigned int
-hash(
-    const char* s,
-    unsigned int seed = 0)
+uint32_t hash32(const char* s, unsigned int seed = 0)
 {
-    unsigned int hash = seed;
-    while (*s)
-    {
-        hash = hash * 101  +  *s++;
-    }
-    return hash;
-}*/
+	unsigned int hash = seed;
+	while (*s)
+	{
+		hash = hash * 101 + *s++;
+	}
+	return hash;
+}
 
 RelayedMessage::RelayedMessage(string topic, string message, string options)
 {
@@ -24,7 +20,7 @@ RelayedMessage::RelayedMessage(string topic, string message, string options)
 	this->Topic = topic;
 	this->OptionsString = options;
 
-	this->Id = hash(topic);
+	this->Id = hash32(topic.c_str());
 
 	int lastSlash = message.find_last_of('/');
 	if (lastSlash == string::npos)
@@ -72,7 +68,8 @@ string RelayedMessage::getRosCallBackName()
 string RelayedMessage::getRosClassName()
 {
 	string ret = FullName;
-	while(ret.find("/") != string::npos) {
+	while (ret.find("/") != string::npos)
+	{
 		ret.replace(ret.find("/"), 1, "::");
 	}
 
@@ -81,12 +78,13 @@ string RelayedMessage::getRosClassName()
 
 string RelayedMessage::getPublisherName()
 {
-	return string("pub")+to_string(Id);
+	return string("pub") + to_string(Id);
 }
 
 string RelayedMessage::getRosMessageHandler()
 {
-	string ret = string("void ") + getRosCallBackName() + "(const ros::MessageEvent<" + getRosClassName() + ">& event) {\n";
+	string ret = string("void ") + getRosCallBackName() + "(const ros::MessageEvent<" + getRosClassName()
+			+ ">& event) {\n";
 	ret += "\tif(0 == event.getPublisherName().compare(ownRosName)) return;\n";
 	ret += "uint8_t* buffer = NULL;\n";
 	ret += "\tconst " + getRosClassName() + "::ConstPtr& message = event.getMessage();\n";
@@ -97,7 +95,7 @@ string RelayedMessage::getRosMessageHandler()
 
 	ret += "\t\tros::serialization::OStream stream(buffer+sizeof(size_t), serial_size);\n";
 
-	ret += "\t\t*((size_t*)buffer) = " + to_string(Id) + "ul;\n";
+	ret += "\t\t*((size_t*)buffer) = " + to_string(Id) + "u;\n";
 
 	ret += "\t\tros::serialization::serialize(stream, *message);\n";
 
