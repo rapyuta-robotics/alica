@@ -123,8 +123,6 @@ add_library(constraintsolver
   src/Decider.cpp
   src/FormulaTransform.cpp
   src/GSolver.cpp
-  src/MSLConstraintBuilder.cpp
-  src/Point2D.cpp
 )
 
 ## Declare a cpp executable
