@@ -17,12 +17,15 @@ RelayedMessage::RelayedMessage(string topic, string message, string options)
 		this->BaseName = message;
 		this->NameSpace = "std_msgs/";
 		this->FullName = "std_msgs/" + message;
+		this->FullNameJava = "std_msgs." + message;
 	}
 	else
 	{
 		this->BaseName = message.substr(lastSlash + 1);
 		this->NameSpace = message.substr(0, lastSlash + 1);
 		this->FullName = message;
+		std::replace(message.begin(),message.end(),'/','.');
+		this->FullNameJava = message;
 	}
 
 	this->UseRosTcp = (options.find("tcpros") != string::npos);
@@ -52,6 +55,12 @@ string RelayedMessage::getRosCallBackName()
 {
 	return string("onRos") + BaseName + to_string(Id);
 }
+
+string RelayedMessage::getRosJavaCallBackName()
+{
+	return string("OnRos") + BaseName + to_string(Id) + "Listener";
+}
+
 string RelayedMessage::getRosClassName()
 {
 	string ret = FullName;
@@ -93,6 +102,23 @@ string RelayedMessage::getRosMessageHandler()
 	ret += "\t}\n";
 	ret += "\tif(buffer!=NULL) delete[] buffer;\n";
 	ret += "}\n";
+	return ret;
+}
+
+string RelayedMessage::getRosJavaMessageHandler() {
+	string ret = string("\tprivate class ") + getRosJavaCallBackName() + " implements MessageListener {\n";
+	ret+="\t@Override\npublic void onNewMessage(Object o) {\n";
+	ret+="\t\t" + BaseName + " converted = ("+ BaseName +") o;\n";
+	ret+="\t\tMessageSerializer<" + BaseName + "> serializer = node.getMessageSerializationFactory().newMessageSerializer(\"" + FullName +"\");\n";
+	ret+="\t\tChannelBuffer buffer = ChannelBuffers.buffer(64000);\n";
+	ret+="\t\tserializer.serialize(converted,buffer);\n";
+	ret+="\t\ttry {\n";
+	ret+="\t\t\tudpSocket.send(new DatagramPacket(buffer.array(),buffer.array().length));\n";
+	ret+="\t\t} catch (IOException e) {\n";
+	ret+="\t\t\tSystem.err.println(\"Exception while sending UDP message:\" + converted._TYPE + \" Discarding message!\");\n";
+	ret+="\t\t}\n\n";
+	ret+="\t}\n";
+	ret+="\t}\n\n";
 	return ret;
 }
 

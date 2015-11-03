@@ -15,12 +15,15 @@ public:
 	~RelayedMessage();
 
 	string getRosMessageHandler();
+	string getRosJavaMessageHandler();
 
 	string Topic;
 	string FullName;
 	string BaseName;
 	string NameSpace;
 	string OptionsString;
+
+	string FullNameJava;
 
 	int Ros2UdpQueueLength;
 	int Udp2RosQueueLength;
@@ -29,6 +32,7 @@ public:
 	size_t Id;
 
 	string getRosCallBackName();
+	string getRosJavaCallBackName();
 	string getRosClassName();
 	string getPublisherName();
 
