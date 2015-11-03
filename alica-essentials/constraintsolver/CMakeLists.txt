@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   system_config
   alica_engine
   alica_ros_proxy
+  msl_worldmodel
 )
 
 ## System dependencies are found with CMake's conventions
