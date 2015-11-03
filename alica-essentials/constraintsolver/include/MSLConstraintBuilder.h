@@ -9,7 +9,6 @@
 #define MSLCONSTRAINTBUILDER_H_
 
 #include <AutoDiff.h>
-#include "Point2D.h"
 #include <MSLFootballField.h>
 #include "GeometryCalculator.h"
 
@@ -18,7 +17,6 @@
 
 using namespace std;
 using namespace autodiff;
-using namespace carpenoctem::containers;
 
 
 
@@ -87,8 +85,8 @@ namespace carpenoctem
 			static shared_ptr<TVec> oppGoalMidT;
 			static shared_ptr<TVec> centreMarkT;
 
-			static void resolveArea(Areas area, shared_ptr<Point2D> *lowerRightCorner,
-									shared_ptr<Point2D> *upperLeftCorner);
+			static void resolveArea(Areas area, shared_ptr<geometry::CNPoint2D> *lowerRightCorner,
+									shared_ptr<geometry::CNPoint2D> *upperLeftCorner);
 		};
 
 	} /* namespace base */
