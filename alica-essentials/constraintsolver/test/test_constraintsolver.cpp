@@ -2,7 +2,7 @@
 
 #include "AutoDiff.h"
 #include "GSolver.h"
-#include "MSLConstraintBuilder.h"
+//#include "MSLConstraintBuilder.h"
 #include "ConstraintBuilder.h"
 #include <clock/AlicaROSClock.h>
 
@@ -19,7 +19,7 @@ using namespace alica;
 using namespace alica::reasoner;
 using namespace carpenoctem::base;
 
-TEST(AutoDiffTest, GSOLVER)
+/*TEST(AutoDiffTest, GSOLVER)
 {
 	// 12000 * 18000
 	const double FIELDLENGTH = 18000;
@@ -89,9 +89,9 @@ TEST(AutoDiffTest, GSOLVER)
 	cout << "Result:" << res->at(0) << " " << res->at(1) << " with Utility " << util << endl;
 	double actual = TermUtils::evaluate(csu, vars, res);
 	cout << "Result:" << actual << endl;
-}
+}*/
 
-TEST(AutoDiffTest, GSOLVER_UTIL)
+/*TEST(AutoDiffTest, GSOLVER_UTIL)
 {
 	// 12000 * 18000
 	const double FIELDLENGTH = 18000;
@@ -169,7 +169,7 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 	cout << "Result:" << res->at(0) << " " << res->at(1) << " with Utility " << util << endl;
 	double actual = TermUtils::evaluate(csu, vars, res);
 	cout << "Result:" << actual << endl;
-}
+}*/
 /*
 TEST(AutoDiffTest, CNSMTGSOLVER)
 {
