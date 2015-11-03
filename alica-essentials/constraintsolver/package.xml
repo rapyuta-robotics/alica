@@ -38,7 +38,6 @@
   <build_depend>system_config</build_depend>
   <build_depend>alica_engine</build_depend>
   <build_depend>alica_ros_proxy</build_depend>
-    <build_depend>msl_worldmodel</build_depend>
   
   <!-- Use buildtool_depend for build tool packages: -->  
   <buildtool_depend>catkin</buildtool_depend>
@@ -49,7 +48,6 @@
   <run_depend>system_config</run_depend>
   <run_depend>alica_engine</run_depend>
   <run_depend>alica_ros_proxy</run_depend>
-  <run_depend>msl_worldmodel</run_depend>
   
   <!-- Use test_depend for packages you need only for testing: -->
   <test_depend>gtest</test_depend>
