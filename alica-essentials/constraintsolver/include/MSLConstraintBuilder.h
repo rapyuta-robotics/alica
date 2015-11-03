@@ -10,6 +10,8 @@
 
 #include <AutoDiff.h>
 #include "Point2D.h"
+#include <MSLFootballField.h>
+#include "GeometryCalculator.h"
 
 #include <memory>
 #include <vector>
@@ -17,6 +19,7 @@
 using namespace std;
 using namespace autodiff;
 using namespace carpenoctem::containers;
+
 
 
 namespace carpenoctem
@@ -47,24 +50,24 @@ namespace carpenoctem
 			static shared_ptr<Term> outsideArea(Areas area, vector<shared_ptr<TVec>> points);
 
 		private:
-			//static shared_ptr<FootballField> field;
-			static shared_ptr<Point2D> ownRightSurCornerP;
-			static shared_ptr<Point2D> oppLeftSurCornerP;
-			static shared_ptr<Point2D> ownRightCornerP;
-			static shared_ptr<Point2D> oppLeftCornerP;
-			static shared_ptr<Point2D> oppLRHalfP;
-			static shared_ptr<Point2D> ownULHalfP;
-			static shared_ptr<Point2D> oppLRPenaltyAreaP;
-			static shared_ptr<Point2D> oppULPenaltyAreaP;
-			static shared_ptr<Point2D> ownLRPenaltyAreaP;
-			static shared_ptr<Point2D> ownULPenaltyAreaP;
-			static shared_ptr<Point2D> ownLRGoalAreaP;
-			static shared_ptr<Point2D> ownULGoalAreaP;
-			static shared_ptr<Point2D> oppLRGoalAreaP;
-			static shared_ptr<Point2D> oppULGoalAreaP;
-			static shared_ptr<Point2D> ownGoalMidP;
-			static shared_ptr<Point2D> oppGoalMidP;
-			static shared_ptr<Point2D> centreMarkP;
+			static msl::MSLFootballField* field;
+			static shared_ptr<geometry::CNPoint2D> ownRightSurCornerP;
+			static shared_ptr<geometry::CNPoint2D> oppLeftSurCornerP;
+			static shared_ptr<geometry::CNPoint2D> ownRightCornerP;
+			static shared_ptr<geometry::CNPoint2D> oppLeftCornerP;
+			static shared_ptr<geometry::CNPoint2D> oppLRHalfP;
+			static shared_ptr<geometry::CNPoint2D> ownULHalfP;
+			static shared_ptr<geometry::CNPoint2D> oppLRPenaltyAreaP;
+			static shared_ptr<geometry::CNPoint2D> oppULPenaltyAreaP;
+			static shared_ptr<geometry::CNPoint2D> ownLRPenaltyAreaP;
+			static shared_ptr<geometry::CNPoint2D> ownULPenaltyAreaP;
+			static shared_ptr<geometry::CNPoint2D> ownLRGoalAreaP;
+			static shared_ptr<geometry::CNPoint2D> ownULGoalAreaP;
+			static shared_ptr<geometry::CNPoint2D> oppLRGoalAreaP;
+			static shared_ptr<geometry::CNPoint2D> oppULGoalAreaP;
+			static shared_ptr<geometry::CNPoint2D> ownGoalMidP;
+			static shared_ptr<geometry::CNPoint2D> oppGoalMidP;
+			static shared_ptr<geometry::CNPoint2D> centreMarkP;
 
 			static shared_ptr<TVec> ownRightSurCornerT;
 			static shared_ptr<TVec> oppLeftSurCornerT;

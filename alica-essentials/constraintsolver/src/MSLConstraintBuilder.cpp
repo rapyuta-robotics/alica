@@ -19,18 +19,18 @@ namespace carpenoctem
 		double MSLConstraintBuilder::MIN_CORRIDOR_WIDTH = 700.0;
 		double MSLConstraintBuilder::MIN_POSITION_DIST = 650.0;
 
-		const double fieldLength = 18000;
-		const double fieldwidth = 12000;
-		const double penaltyAreaXSize = 2250.0;
-		const double penaltyAreaYSize = 6500.0;
-
 		shared_ptr<Term> MSLConstraintBuilder::outsideRectangle(shared_ptr<TVec> lowerRightCorner,
-															shared_ptr<TVec> upperLeftCorner,
-															vector<shared_ptr<TVec>> points)
+																shared_ptr<TVec> upperLeftCorner,
+																vector<shared_ptr<TVec>> points)
 		{
-			shared_ptr<Term> c = !TermBuilder::boundedRectangle(points[0], lowerRightCorner, upperLeftCorner, Term::getConstraintSteepness());;
-			for (int i = 1; i < points.size(); ++i) {
-				c = c & !TermBuilder::boundedRectangle(points[i], lowerRightCorner, upperLeftCorner, Term::getConstraintSteepness());
+			shared_ptr<Term> c = !TermBuilder::boundedRectangle(points[0], lowerRightCorner, upperLeftCorner,
+																Term::getConstraintSteepness());
+			;
+			for (int i = 1; i < points.size(); ++i)
+			{
+				c = c
+						& !TermBuilder::boundedRectangle(points[i], lowerRightCorner, upperLeftCorner,
+															Term::getConstraintSteepness());
 			}
 			return c;
 		}
@@ -47,13 +47,19 @@ namespace carpenoctem
 			shared_ptr<Point2D> lowerRightCornerP;
 			shared_ptr<Point2D> upperLeftCornerP;
 			resolveArea(area, &lowerRightCornerP, &upperLeftCornerP);
-			shared_ptr<TVec> lowerRightCorner = make_shared<TVec>(initializer_list<double>{lowerRightCornerP->getX() - AREA_TOL, lowerRightCornerP->getY() - AREA_TOL});
-			shared_ptr<TVec> upperLeftCorner = make_shared<TVec>(initializer_list<double>{upperLeftCornerP->getX() + AREA_TOL, upperLeftCornerP->getY() + AREA_TOL});
+			shared_ptr<TVec> lowerRightCorner =
+					make_shared<TVec>(
+							initializer_list<double> {lowerRightCornerP->getX() - AREA_TOL, lowerRightCornerP->getY()
+																- AREA_TOL});
+			shared_ptr<TVec> upperLeftCorner =
+					make_shared<TVec>(
+							initializer_list<double> {upperLeftCornerP->getX() + AREA_TOL, upperLeftCornerP->getY()
+																+ AREA_TOL});
 			return outsideRectangle(lowerRightCorner, upperLeftCorner, points);
 		}
 
 		// INTERN
-//		shared_ptr<FootballField> MSLConstraintBuilder::field = FootballField::getInstance();
+		msl::MSLFootballField* MSLConstraintBuilder::field = msl::MSLFootballField::getInstance();
 
 //		shared_ptr<Point2D> MSLConstraintBuilder::ownRightSurCornerP = field->posLRSurrounding;
 //		shared_ptr<Point2D> MSLConstraintBuilder::oppLeftSurCornerP = field->posULSurrounding;
@@ -61,10 +67,10 @@ namespace carpenoctem
 //		shared_ptr<Point2D> MSLConstraintBuilder::oppLeftCornerP = field->posLeftOppCorner;
 //		shared_ptr<Point2D> MSLConstraintBuilder::oppLRHalfP = field->posLROppHalf;
 //		shared_ptr<Point2D> MSLConstraintBuilder::ownULHalfP = field->posULOwnHalf;
-		shared_ptr<Point2D> MSLConstraintBuilder::oppLRPenaltyAreaP = make_shared<Point2D>(fieldLength / 2 - penaltyAreaXSize, -penaltyAreaYSize / 2);//field->posLROppPenaltyArea;
-		shared_ptr<Point2D> MSLConstraintBuilder::oppULPenaltyAreaP = make_shared<Point2D>(fieldLength / 2, penaltyAreaYSize / 2);//field->posULOppPenaltyArea;
-		shared_ptr<Point2D> MSLConstraintBuilder::ownLRPenaltyAreaP = make_shared<Point2D>(-fieldLength / 2, -penaltyAreaYSize / 2);//field->posLROwnPenaltyArea;
-		shared_ptr<Point2D> MSLConstraintBuilder::ownULPenaltyAreaP = make_shared<Point2D>(-fieldLength / 2 + penaltyAreaXSize, penaltyAreaYSize / 2);//field->posULOwnPenaltyArea;
+
+		MSLConstraintBuilder::oppLRPenaltyAreaP = field->posLROppPenaltyArea;
+		MSLConstraintBuilder::ownLRPenaltyAreaP = field->posLROwnPenaltyArea;
+		MSLConstraintBuilder::ownULPenaltyAreaP = field->posULOwnPenaltyArea;
 //		shared_ptr<Point2D> MSLConstraintBuilder::ownLRGoalAreaP = field->posLROwnGoalArea;
 //		shared_ptr<Point2D> MSLConstraintBuilder::ownULGoalAreaP = field->posULOwnGoalArea;
 //		shared_ptr<Point2D> MSLConstraintBuilder::oppLRGoalAreaP = field->posLROppGoalArea;
@@ -79,10 +85,14 @@ namespace carpenoctem
 //		shared_ptr<TVec> MSLConstraintBuilder::oppLeftCornerT;
 //		shared_ptr<TVec> MSLConstraintBuilder::oppLRHalfT;
 //		shared_ptr<TVec> MSLConstraintBuilder::ownULHalfT;
-		shared_ptr<TVec> MSLConstraintBuilder::oppLRPenaltyAreaT = make_shared<TVec>(initializer_list<double>{oppLRPenaltyAreaP->getX(), oppLRPenaltyAreaP->getY()});
-		shared_ptr<TVec> MSLConstraintBuilder::oppULPenaltyAreaT = make_shared<TVec>(initializer_list<double>{oppULPenaltyAreaP->getX(), oppULPenaltyAreaP->getY()});
-		shared_ptr<TVec> MSLConstraintBuilder::ownLRPenaltyAreaT = make_shared<TVec>(initializer_list<double>{ownLRPenaltyAreaP->getX(), ownLRPenaltyAreaP->getY()});
-		shared_ptr<TVec> MSLConstraintBuilder::ownULPenaltyAreaT = make_shared<TVec>(initializer_list<double>{ownULPenaltyAreaP->getX(), ownULPenaltyAreaP->getY()});
+		shared_ptr<TVec> MSLConstraintBuilder::oppLRPenaltyAreaT = make_shared<TVec>(initializer_list<double> {
+				oppLRPenaltyAreaP->getX(), oppLRPenaltyAreaP->getY()});
+		shared_ptr<TVec> MSLConstraintBuilder::oppULPenaltyAreaT = make_shared<TVec>(initializer_list<double> {
+				oppULPenaltyAreaP->getX(), oppULPenaltyAreaP->getY()});
+		shared_ptr<TVec> MSLConstraintBuilder::ownLRPenaltyAreaT = make_shared<TVec>(initializer_list<double> {
+				ownLRPenaltyAreaP->getX(), ownLRPenaltyAreaP->getY()});
+		shared_ptr<TVec> MSLConstraintBuilder::ownULPenaltyAreaT = make_shared<TVec>(initializer_list<double> {
+				ownULPenaltyAreaP->getX(), ownULPenaltyAreaP->getY()});
 //		shared_ptr<TVec> MSLConstraintBuilder::ownLRGoalAreaT;
 //		shared_ptr<TVec> MSLConstraintBuilder::ownULGoalAreaT;
 //		shared_ptr<TVec> MSLConstraintBuilder::oppLRGoalAreaT;
@@ -92,9 +102,10 @@ namespace carpenoctem
 //		shared_ptr<TVec> MSLConstraintBuilder::centreMarkT;
 
 		void MSLConstraintBuilder::resolveArea(Areas area, shared_ptr<Point2D> *lowerRightCorner,
-							shared_ptr<Point2D> *upperLeftCorner)
+												shared_ptr<Point2D> *upperLeftCorner)
 		{
-			switch (area) {
+			switch (area)
+			{
 				case Areas::Surrounding:
 
 					break;
