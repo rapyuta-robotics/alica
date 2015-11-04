@@ -218,11 +218,11 @@ namespace autodiff
 				& make_shared<LTConstraint>(arg, rightBound, steepness);
 	}
 
-	shared_ptr<Term> TermBuilder::boundedRectangle(shared_ptr<TVec> arg, shared_ptr<TVec> leftLower,
-													shared_ptr<TVec> rightUpper, double steepness)
+	shared_ptr<Term> TermBuilder::boundedRectangle(shared_ptr<TVec> arg, shared_ptr<TVec> rightLower,
+													shared_ptr<TVec> leftUpper, double steepness)
 	{
-		shared_ptr<Term> left = boundedValue(arg->getX(), leftLower->getX(), rightUpper->getX(), steepness);
-		shared_ptr<Term> right = boundedValue(arg->getY(), leftLower->getY(), rightUpper->getY(), steepness);
+		shared_ptr<Term> left = boundedValue(arg->getX(), rightLower->getX(), leftUpper->getX(), steepness);
+		shared_ptr<Term> right = boundedValue(arg->getY(), rightLower->getY(), leftUpper->getY(), steepness);
 		shared_ptr<Term> and_ = left & right;
 		return left & right;
 	}

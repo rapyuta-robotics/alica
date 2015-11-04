@@ -91,7 +91,7 @@ using namespace alica::reasoner;
 	cout << "Result:" << actual << endl;
 }*/
 
-/*TEST(AutoDiffTest, GSOLVER_UTIL)
+TEST(AutoDiffTest, GSOLVER_UTIL)
 {
 	// 12000 * 18000
 	const double FIELDLENGTH = 18000;
