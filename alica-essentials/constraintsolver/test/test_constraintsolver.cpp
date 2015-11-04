@@ -17,7 +17,7 @@ using namespace std;
 using namespace autodiff;
 using namespace alica;
 using namespace alica::reasoner;
-using namespace carpenoctem::base;
+//using namespace carpenoctem::base;
 
 /*TEST(AutoDiffTest, GSOLVER)
 {
