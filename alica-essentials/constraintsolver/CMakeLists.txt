@@ -87,7 +87,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES constraintsolver
- CATKIN_DEPENDS fsystem
+ CATKIN_DEPENDS fsystem autodiff
 # DEPENDS system filesystem
 )
 
