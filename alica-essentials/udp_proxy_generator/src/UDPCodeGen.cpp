@@ -256,7 +256,7 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string
 						first = false;
 					}
 					ret << "if(id == " << m->Id << "l) {\n";
-					ret << "ChannelBuffer buf = ChannelBuffers.buffer(64000);\n";
+					ret << "ChannelBuffer buf = ChannelBuffers.buffer(ByteOrder.LITTLE_ENDIAN,64000);\n";
 					ret << "MessageDeserializer<" + m->BaseName + "> deserializer = node.getMessageSerializationFactory().newMessageDeserializer(" << m->BaseName << "._TYPE);\n";
 					ret << "byte[] message = Arrays.copyOfRange(packet.getData(), Long.SIZE / Byte.SIZE, packet.getData().length);\n";
 					ret << m->BaseName << " m" << m->Id << " = deserializer.deserialize(ChannelBuffers.copiedBuffer(message));\n";
@@ -320,7 +320,7 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
 			ofstream ofs(outDir + "/" + basename);
 			ofs << parsedContent;
 			ofs.close();
-		} else {
+		} else if(outDir.find("src/main/java/util") != std::string::npos) {
 			string parsedContent = processTemplate(ss, msgList,string("java"));
 
 			ofstream ofs(outDir + "/" + basename);
@@ -364,9 +364,8 @@ int main(int argc, char *argv[])
 	string msgDefFile = outputPath + "/relayMsgs.conf";
 
 	if(argc == 3  && argv[2][0] == 'j') {
-		string a = exec((string("rospack find ") + argv[1]).c_str());
-		if(a.find_last_of('/') != std::string::npos) {
-			outputPath = a + a.substr(a.find_last_of('/')) + "src/main/java/util/";
+		if(outputPath.find_last_of('/') != std::string::npos) {
+			outputPath += outputPath.substr(outputPath.find_last_of('/')) + "/src/main/java/util";
 		}
 	} else {
 		outputPath = outputPath + "/proxy_gen";

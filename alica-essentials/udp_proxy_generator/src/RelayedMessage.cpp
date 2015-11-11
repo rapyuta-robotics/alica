@@ -125,10 +125,14 @@ string RelayedMessage::getRosJavaMessageHandler() {
 	ret+="\t@Override\npublic void onNewMessage(Object o) {\n";
 	ret+="\t\t" + BaseName + " converted = ("+ BaseName +") o;\n";
 	ret+="\t\tMessageSerializer<" + BaseName + "> serializer = node.getMessageSerializationFactory().newMessageSerializer(\"" + FullName +"\");\n";
-	ret+="\t\tChannelBuffer buffer = ChannelBuffers.buffer(64000);\n";
+	ret+="\t\tChannelBuffer buffer = ChannelBuffers.buffer(ByteOrder.LITTLE_ENDIAN,64000);\n";
 	ret+="\t\tserializer.serialize(converted,buffer);\n";
+	ret+="\t\tByteBuffer idBuf = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt((int) " + Id + "l);\n";
+	ret+="\t\tChannelBuffer finalBuf = ChannelBuffers.copiedBuffer(ByteOrder.LITTLE_ENDIAN, idBuf.array(), buffer.array());\n";
 	ret+="\t\ttry {\n";
-	ret+="\t\t\tudpSocket.send(new DatagramPacket(buffer.array(),buffer.array().length));\n";
+	ret+="\t\t\tMulticastSocket socket = new MulticastSocket();\n";
+	ret+="\t\t\tsocket.send(new DatagramPacket(finalBuf.array(),finalBuf.array().length,group,port));\n";
+	ret+="\t\t\tsocket.close();\n";
 	ret+="\t\t} catch (IOException e) {\n";
 	ret+="\t\t\tSystem.err.println(\"Exception while sending UDP message:\" + converted._TYPE + \" Discarding message!\");\n";
 	ret+="\t\t}\n\n";

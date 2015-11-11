@@ -3,7 +3,6 @@ package util;
 import android.app.Activity;
 
 import com.github.ros_java.marauders_map.R;
-import org.ini4j.Ini;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.ros.concurrent.CancellableLoop;
@@ -21,8 +20,9 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.Arrays;
-import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.util.Properties;
+import java.nio.ByteOrder;
 
 
 <?messageIncludes?>
@@ -34,11 +34,15 @@ public class ROS2UDPProxy implements NodeMain {
 
     private Activity activity;
 
-    public String ownRosName;
+    public java.lang.String ownRosName;
 
     private ConnectedNode node;
     
     private MulticastSocket udpSocket;
+    
+    private InetAddress group;
+    
+    private int port;
     
     <?rosMessageHandler?>
     
@@ -51,13 +55,14 @@ public class ROS2UDPProxy implements NodeMain {
 
     @Override
     public void onStart(ConnectedNode connectedNode) {
-        Ini udpConfig;
+        Properties udpConfig = new Properties();
         try {
-        udpConfig = new Ini(getActivity().getResources().openRawResource(R.raw.udpproxy));
-        String multiCastAdress = udpConfig.get("UdpProxy","MulticastAddress");
-        int port = udpConfig.get("UdpProxy","Port",Integer.class);
+        udpConfig.load(getActivity().getResources().openRawResource(R.raw.udpproxy));
+		java.lang.String multiCastAdress = udpConfig.getProperty("MulticastAddress");
+        port = Integer.parseInt(udpConfig.getProperty("Port"));
         udpSocket = new MulticastSocket(port);
-        udpSocket.joinGroup(InetAddress.getByName(multiCastAdress));
+        group = InetAddress.getByName(multiCastAdress);
+        udpSocket.joinGroup(group);
         udpSocket.setLoopbackMode(false);
         node = connectedNode;
         listenForPacket(udpSocket);
