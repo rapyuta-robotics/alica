@@ -82,7 +82,8 @@ int main (int argc, char *argv[])
 	
 	SystemConfig* sc = SystemConfig::getInstance();
 
-	Configuration *proxyconf = (*sc)["UdpProxy"];
+	//Configuration *proxyconf = (*sc)["UdpProxy"];
+	<?configfile?>
 	
 	//std::string port = proxyconf->get<std::string>("UdpProxy","Port",NULL);
 	

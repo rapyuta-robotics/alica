@@ -118,7 +118,7 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList)
 	return true;
 }
 
-string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string language)
+string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string language, string& pkgName)
 {
 	string reg_string = "<\\?(.*)\\?>";
 	boost::regex markers(reg_string.c_str());
@@ -265,6 +265,14 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string
 				}
 			}
 		}
+		else if (s == "configfile")
+		{
+			if(language.compare("cpp") == 0) {
+				ret << "Configuration *proxyconf = (*sc)[\"" << pkgName << "\"];";
+			} else {
+				ret << "Configuration *proxyconf = (*sc)[\"" << pkgName << "\"];";
+			}
+		}
 		else
 		{
 			cout << "Unknown Marker: " << s;
@@ -296,7 +304,7 @@ vector<string> getFilesinFolder(string folder)
 	return result_set;
 }
 
-void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& msgList)
+void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& msgList, string& pkgName)
 {
 
 	vector<string> tmplarr = getFilesinFolder(tmplDir); // = Directory.GetFiles(tmplDir,"*.*");
@@ -315,13 +323,13 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
 
 		string content = ss.str();
 		if(basename.find("cpp") != std::string::npos && outDir.find("proxy_gen") != std::string::npos) {
-			string parsedContent = processTemplate(ss, msgList,string("cpp"));
+			string parsedContent = processTemplate(ss, msgList,string("cpp"), pkgName);
 
 			ofstream ofs(outDir + "/" + basename);
 			ofs << parsedContent;
 			ofs.close();
 		} else if(outDir.find("src/main/java/util") != std::string::npos) {
-			string parsedContent = processTemplate(ss, msgList,string("java"));
+			string parsedContent = processTemplate(ss, msgList,string("java"), pkgName);
 
 			ofstream ofs(outDir + "/" + basename);
 			ofs << parsedContent;
@@ -350,6 +358,7 @@ int main(int argc, char *argv[])
 		cout << "Cannot find template directory: " << templateDir << endl;
 	}
 
+	string pkgName = argv[1];
 	/*string basePackageName=argv[1];
 	 if(basePackageName.find('/')!=string::npos) {
 	 int idx = basePackageName.find_last_of('/');
@@ -419,7 +428,7 @@ int main(int argc, char *argv[])
 		{
 			std::cout << "Failed to create Directory: " << outputPath << endl;
 		}
-		processTemplates(templateDir, outputPath, msgList);
+		processTemplates(templateDir, outputPath, msgList, pkgName);
 	}
 	for (auto d : msgList)
 	{
