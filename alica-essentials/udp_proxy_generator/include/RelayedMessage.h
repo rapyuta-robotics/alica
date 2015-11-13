@@ -5,6 +5,7 @@
 #include <functional>
 
 #include <boost/regex.hpp>
+#include <cstdint>
 
 using namespace std;
 
@@ -15,6 +16,7 @@ public:
 	~RelayedMessage();
 
 	string getRosMessageHandler();
+	string getRosJavaMessageHandler();
 
 	string Topic;
 	string FullName;
@@ -22,13 +24,16 @@ public:
 	string NameSpace;
 	string OptionsString;
 
+	string FullNameJava;
+
 	int Ros2UdpQueueLength;
 	int Udp2RosQueueLength;
 
 	std::hash<std::string> hash;
-	size_t Id;
+	uint32_t Id;
 
 	string getRosCallBackName();
+	string getRosJavaCallBackName();
 	string getRosClassName();
 	string getPublisherName();
 
