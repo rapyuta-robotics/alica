@@ -19,9 +19,9 @@ using namespace alica;
 using namespace alica::reasoner;
 //using namespace carpenoctem::base;
 
-/*TEST(AutoDiffTest, GSOLVER)
+TEST(AutoDiffTest, GSOLVER)
 {
-	// 12000 * 18000
+/*	// 12000 * 18000
 	const double FIELDLENGTH = 18000;
 	const double FIELDWIDTH = 12000;
 
@@ -88,8 +88,8 @@ using namespace alica::reasoner;
 	cout << "GSolver Solved: " << gsolved << " times" << endl;
 	cout << "Result:" << res->at(0) << " " << res->at(1) << " with Utility " << util << endl;
 	double actual = TermUtils::evaluate(csu, vars, res);
-	cout << "Result:" << actual << endl;
-}*/
+	cout << "Result:" << actual << endl;*/
+}
 /*
 TEST(AutoDiffTest, GSOLVER_UTIL)
 {
@@ -171,7 +171,6 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 	cout << "Result:" << actual << endl;
 }*/
 /*
->>>>>>> ea7675118c7ad5d2c8945f8609f985072f7b748e
 TEST(AutoDiffTest, CNSMTGSOLVER)
 {
 	// 12000 * 18000
@@ -324,7 +323,7 @@ TEST(AutoDiffTest, CNSMTGSOLVER_UTIL)
 	cout << "Result:" << res->at(0) << " " << res->at(1) << " with Utility " << util << endl;
 	double actual = TermUtils::evaluate(csu, vars, res);
 	cout << "Result:" << actual << endl;
-}
+}*/
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
