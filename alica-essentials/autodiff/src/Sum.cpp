@@ -85,4 +85,18 @@ namespace autodiff
 		}
 		return make_shared<Sum>(t);
 	}
+
+	string Sum::toString()
+	{
+		string str;
+		str.append("( ");
+		str.append(terms[0]->toString());
+		for (int i = 1; i < terms.size(); ++i)
+		{
+			str.append(" + ");
+			str.append(terms[i]->toString());
+		}
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */

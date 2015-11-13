@@ -25,6 +25,8 @@
 
 #include <cmath>
 
+#include <iostream>
+
 namespace autodiff
 {
 	/**

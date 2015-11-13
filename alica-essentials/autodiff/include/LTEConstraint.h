@@ -29,6 +29,8 @@ namespace autodiff
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
 		shared_ptr<Term> negate();
+
+		string toString();
 	};
 
 } /* namespace autodiff */

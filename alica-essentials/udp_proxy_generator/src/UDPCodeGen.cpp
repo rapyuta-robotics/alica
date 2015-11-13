@@ -256,10 +256,9 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string
 						first = false;
 					}
 					ret << "if(id == " << m->Id << "l) {\n";
-					ret << "ChannelBuffer buf = ChannelBuffers.buffer(ByteOrder.LITTLE_ENDIAN,64000);\n";
 					ret << "MessageDeserializer<" + m->BaseName + "> deserializer = node.getMessageSerializationFactory().newMessageDeserializer(" << m->BaseName << "._TYPE);\n";
-					ret << "byte[] message = Arrays.copyOfRange(packet.getData(), Long.SIZE / Byte.SIZE, packet.getData().length);\n";
-					ret << m->BaseName << " m" << m->Id << " = deserializer.deserialize(ChannelBuffers.copiedBuffer(message));\n";
+					ret << "byte[] message = Arrays.copyOfRange(packet.getData(), Integer.SIZE / Byte.SIZE, packet.getData().length-4);\n";
+					ret << m->BaseName << " m" << m->Id << " = deserializer.deserialize(ChannelBuffers.copiedBuffer(ByteOrder.LITTLE_ENDIAN,message));\n";
 					ret << m->getPublisherName() << ".publish(m" << m->Id << ");\n";
 					ret << "}\n";
 				}

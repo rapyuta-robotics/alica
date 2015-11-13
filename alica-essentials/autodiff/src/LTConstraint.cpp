@@ -71,8 +71,17 @@ namespace autodiff
 	{
 		if (!(negatedform != nullptr))
 		{
-			negatedform = make_shared<LTEConstraint>(left, right, steppness, shared_from_this());
+			negatedform = make_shared<LTEConstraint>(right, left, steppness, shared_from_this());
 		}
 		return negatedform;
+	}
+
+	string LTConstraint::toString()
+	{
+		string str;
+		str.append(left->toString());
+		str.append(" < ");
+		str.append(right->toString());
+		return str;
 	}
 } /* namespace autodiff */

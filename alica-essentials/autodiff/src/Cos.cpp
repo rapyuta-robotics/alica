@@ -49,4 +49,13 @@ namespace autodiff
 	{
 		return make_shared<Sin>(arg) * -arg->derivative(v);
 	}
+
+	string Cos::toString()
+	{
+		string str;
+		str.append("cos( ");
+		str.append(arg->toString());
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */

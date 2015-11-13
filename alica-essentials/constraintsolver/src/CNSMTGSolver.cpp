@@ -7,7 +7,8 @@
 
 #include "CNSMTGSolver.h"
 //#define CNSMTGSOLVER_LOG
-#define DO_PREPROPAGATION
+//#define DO_PREPROPAGATION
+//#define CNSMTGSolver_DEBUG
 
 #include "SystemConfig.h"
 #include "Configuration.h"
@@ -55,10 +56,11 @@ namespace alica
 			this->lastSeed = nullptr;
 		}
 
-		unsigned long long CNSMTGSolver::getTime() {
-				auto now = std::chrono::high_resolution_clock::now();
-				auto duration = now.time_since_epoch();
-				return std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+		unsigned long long CNSMTGSolver::getTime()
+		{
+			auto now = std::chrono::high_resolution_clock::now();
+			auto duration = now.time_since_epoch();
+			return std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
 		}
 
 		CNSMTGSolver::~CNSMTGSolver()
@@ -104,7 +106,7 @@ namespace alica
 		shared_ptr<vector<double> > CNSMTGSolver::solve(shared_ptr<Term> equation,
 														shared_ptr<vector<shared_ptr<autodiff::Variable> > > args,
 														shared_ptr<vector<shared_ptr<vector<double>> > >& limits,
-														double* util)
+														double& util)
 		{
 			return solve(equation, args, limits, nullptr, numeric_limits<double>::max(), util);
 		}
@@ -113,8 +115,12 @@ namespace alica
 														shared_ptr<vector<shared_ptr<autodiff::Variable> > > args,
 														shared_ptr<vector<shared_ptr<vector<double>> > >& limits,
 														shared_ptr<vector<shared_ptr<vector<double> > > > seeds,
-														double sufficientUtility, double* util)
+														double sufficientUtility, double& util)
 		{
+#ifdef CNSMTGSolver_DEBUG
+			cout << "CNSMTGSolver::solve() " << useIntervalProp << endl;
+			cout << equation->toString() << endl;
+#endif
 			lastSeed = nullptr;
 			probeCount = 0;
 			successProbeCount = 0;
@@ -124,7 +130,7 @@ namespace alica
 			runCount = 0;
 			this->begin = this->getTime();
 
-			*util = 0;
+			util = 0;
 #ifdef CNSMTGSOLVER_LOG
 			initLog();
 #endif
@@ -148,7 +154,7 @@ namespace alica
 				shared_ptr<Constant> constraint = dynamic_pointer_cast<Constant>(cu->constraint);
 				if (constraint->value < 0.25)
 				{
-					*util = constraint->value;
+					util = constraint->value;
 					shared_ptr<vector<double>> ret = make_shared<vector<double>>(dim);
 					for (int i = 0; i < dim; ++i)
 					{
@@ -162,9 +168,9 @@ namespace alica
 			ss->useIntervalProp = this->useIntervalProp;
 			shared_ptr<list<shared_ptr<cnsat::Clause>>> cnf = ft->transformToCNF(cu->constraint, ss);
 			/*for (shared_ptr<cnsat::Clause> c : *cnf)
-			{
-				c->print();
-			}*/
+			 {
+			 c->print();
+			 }*/
 
 			if (this->useIntervalProp)
 			{
@@ -177,7 +183,7 @@ namespace alica
 				{
 					if (c->literals->size() == 0)
 					{
-						*util = numeric_limits<double>::min();
+						util = numeric_limits<double>::min();
 						shared_ptr<vector<double>> ret = make_shared<vector<double>>(dim);
 						for (int i = 0; i < dim; ++i)
 						{
@@ -219,6 +225,7 @@ namespace alica
 				{
 					r1 = rPropOptimizeFeasible(ss->decisions, cu->utility, args, r1->finalValue, false);
 				}
+				util = r1->finalUtil;
 				if (!this->optimize && solutionFound)
 				{
 					return r1->finalValue;
@@ -245,9 +252,9 @@ namespace alica
 			{
 				for (shared_ptr<RpropResult> rp : rResults)
 				{
-					if (rp->finalUtil > *util)
+					if (rp->finalUtil > util)
 					{
-						*util = rp->finalUtil;
+						util = rp->finalUtil;
 						r1 = rp;
 					}
 					return r1->finalValue;
@@ -335,6 +342,9 @@ namespace alica
 		bool CNSMTGSolver::intervalPropagate(shared_ptr<vector<shared_ptr<cnsat::Var> > > decisions,
 												shared_ptr<vector<shared_ptr<vector<double> > > >& curRanges)
 		{
+#ifdef CNSMTGSolver_DEBUG
+			cout << "CNSMTGSolver::intervalPropagate()" << endl;
+#endif
 			this->intervalCount++;
 			shared_ptr<vector<shared_ptr<cnsat::Var>>> offending = nullptr;
 			if (!ip->propagate(decisions, curRanges, offending))
@@ -363,6 +373,16 @@ namespace alica
 		bool CNSMTGSolver::probeForSolution(shared_ptr<vector<shared_ptr<cnsat::Var> > > decisions,
 											shared_ptr<vector<double> > solution)
 		{
+#ifdef CNSMTGSolver_DEBUG
+			cout << "CNSMTGSolver::probeForSolution()" << endl;
+			cout << "\tDecisions:" << endl;
+			for (int i = 0; i < decisions->size(); ++i)
+			{
+				auto decision = decisions->at(i);
+				cout << "\t\t" << decision->toString() << endl;
+			}
+			cout << "\t------------------------" << endl;
+#endif
 			this->probeCount++;
 			solution = nullptr;
 			for (int i = 0; i < dim; ++i)
@@ -398,13 +418,18 @@ namespace alica
 				}
 				ss->addTClause(learnt);
 
+#ifdef CNSMTGSolver_DEBUG
+				cout << "\treturn FALSE" << endl;
+#endif
 				return false;
 			}
-
 
 			lastSeed = make_shared<vector<double>>(*r1->finalValue);
 			solution = make_shared<vector<double>>(*r1->finalValue);
 			successProbeCount++;
+#ifdef CNSMTGSolver_DEBUG
+			cout << "\treturn TRUE" << endl;
+#endif
 			return true;
 		}
 
@@ -423,13 +448,22 @@ namespace alica
 			return this->rPropConvergenceStepSize;
 		}
 
-		shared_ptr<cnsat::CNSat> CNSMTGSolver::getCNSatSolver() {
+		shared_ptr<cnsat::CNSat> CNSMTGSolver::getCNSatSolver()
+		{
 			return this->ss;
+		}
+
+		void CNSMTGSolver::setUseIntervalProp(bool useIntervalProp)
+		{
+			this->useIntervalProp = useIntervalProp;
 		}
 
 		shared_ptr<CNSMTGSolver::RpropResult> CNSMTGSolver::rPropFindFeasible(
 				shared_ptr<vector<shared_ptr<cnsat::Var> > > constraints, shared_ptr<vector<double> > seed)
 		{
+#ifdef CNSMTGSolver_DEBUG
+			cout << "CNSMTGSolver::rPropFindFeasible()" << endl;
+#endif
 			runCount++;
 			initializeStepSize();
 			shared_ptr<vector<double>> curGradient;
@@ -500,49 +534,49 @@ namespace alica
 				}
 				this->fevalsCount++;
 				*formerGradient = *curGradient;
-				differentiate(constraints, curValue, curGradient, &curUtil);
-			}
+				differentiate(constraints, curValue, curGradient, curUtil);
 
-			bool allZero = true;
-			for (int i = 0; i < dim; ++i)
-			{
-				if (std::isnan(curGradient->at(i)))
+				bool allZero = true;
+				for (int i = 0; i < dim; ++i)
 				{
-					ret->aborted = true;
+					if (std::isnan(curGradient->at(i)))
+					{
+						ret->aborted = true;
+#ifdef CNSMTGSOLVER_LOG
+						logStep();
+#endif
+						return ret;
+					}
+					allZero &= (curGradient->at(i) == 0);
+				}
+
+#ifdef CNSMTGSOLVER_LOG
+				log(curUtil, curValue);
+#endif
+
+				if (curUtil > ret->finalUtil)
+				{
+					badcounter = 0;
+
+					ret->finalUtil = curUtil;
+					*ret->finalValue = *curValue;
+					if (curUtil > 0.75)
+					{
+						return ret;
+					}
+				}
+				else
+				{
+					badcounter++;
+				}
+				if (allZero)
+				{
+					ret->aborted = false;
 #ifdef CNSMTGSOLVER_LOG
 					logStep();
 #endif
 					return ret;
 				}
-				allZero &= (curGradient->at(i) == 0);
-			}
-
-#ifdef CNSMTGSOLVER_LOG
-			log(curUtil, curValue);
-#endif
-
-			if (curUtil > ret->finalUtil)
-			{
-				badcounter = 0;
-
-				ret->finalUtil = curUtil;
-				*ret->finalValue = *curValue;
-				if (curUtil > 0.75)
-				{
-					return ret;
-				}
-			}
-			else
-			{
-				badcounter++;
-			}
-			if (allZero)
-			{
-				ret->aborted = false;
-#ifdef CNSMTGSOLVER_LOG
-				logStep();
-#endif
-				return ret;
 			}
 #ifdef CNSMTGSOLVER_LOG
 			logStep();
@@ -556,6 +590,9 @@ namespace alica
 				shared_ptr<vector<shared_ptr<autodiff::Variable> > > args, shared_ptr<vector<double> >& seed,
 				bool precise)
 		{
+#ifdef CNSMTGSolver_DEBUG
+			cout << "CNSMTGSolver::rPropOptimizeFeasible()" << endl;
+#endif
 			shared_ptr<Term> constr = Term::TRUE;
 			for (shared_ptr<cnsat::Var> v : *constraints)
 			{
@@ -711,23 +748,26 @@ namespace alica
 
 		void CNSMTGSolver::differentiate(shared_ptr<vector<shared_ptr<cnsat::Var> > > constraints,
 											shared_ptr<vector<double> >& val, shared_ptr<vector<double> >& gradient,
-											double* util)
+											double& util)
 		{
+#ifdef CNSMTGSolver_DEBUG
+			cout << "CNSMTGSolver::differentiate()" << endl;
+#endif
 			pair<shared_ptr<vector<double>>, double> t1 = constraints->at(0)->curTerm->differentiate(val);
 			gradient = t1.first;
-			*util = t1.second;
+			util = t1.second;
 			for (int i = 1; i < constraints->size(); ++i)
 			{
 				pair<shared_ptr<vector<double>>, double> tup = constraints->at(i)->curTerm->differentiate(val);
 				if (tup.second <= 0)
 				{
-					if (*util > 0)
+					if (util > 0)
 					{
-						*util = tup.second;
+						util = tup.second;
 					}
 					else
 					{
-						*util += tup.second;
+						util += tup.second;
 					}
 					for (int j = 0; j < dim; ++j)
 					{
@@ -735,12 +775,18 @@ namespace alica
 					}
 				}
 			}
+#ifdef CNSMTGSolver_DEBUG
+			cout << "\tutil = " << util << endl;
+#endif
 		}
 
 		shared_ptr<vector<double> > CNSMTGSolver::initialPointFromSeed(
 				shared_ptr<vector<shared_ptr<cnsat::Var> > > constraints, shared_ptr<CNSMTGSolver::RpropResult> res,
 				shared_ptr<vector<double> >& seed)
 		{
+#ifdef CNSMTGSolver_DEBUG
+			cout << "CNSMTGSolver::initialPointFromSeed()" << endl;
+#endif
 			pair<shared_ptr<vector<double>>, double> tup;
 			bool found = true;
 			res->initialValue = make_shared<vector<double>>(dim);
@@ -755,10 +801,16 @@ namespace alica
 				{
 					if (std::isnan(seed->at(i)))
 					{
+#ifdef CNSMTGSolver_DEBUG
+						cout << "\tstd::isnan(seed->at(i) => THEN" << endl;
+#endif
 						res->initialValue->at(i) = ((double)rand() / RAND_MAX) * ranges[i] + limits->at(i)->at(0);
 					}
 					else
 					{
+#ifdef CNSMTGSolver_DEBUG
+						cout << "\tstd::isnan(seed->at(i) => ELSE" << endl;
+#endif
 						res->initialValue->at(i) = min(max(seed->at(i), limits->at(i)->at(0)), limits->at(i)->at(1));
 					}
 				}
@@ -766,10 +818,19 @@ namespace alica
 				this->fevalsCount++;
 				for (int i = 0; i < constraints->size(); ++i)
 				{
+#ifdef CNSMTGSolver_DEBUG
+					cout << "\tconstraints => " << i << endl;
+#endif
 					if (constraints->at(i)->assignment == cnsat::Assignment::TRUE)
 					{
+#ifdef CNSMTGSolver_DEBUG
+						cout << "\tconstraints->at(i)->assignment == cnsat::Assignment::TRUE" << endl;
+#endif
 						if (constraints->at(i)->positiveTerm == nullptr)
 						{
+#ifdef CNSMTGSolver_DEBUG
+							cout << "\tconstraints->at(i)->positiveTerm == nullptr" << endl;
+#endif
 							constraints->at(i)->positiveTerm = TermUtils::compile(constraints->at(i)->term,
 																					this->currentArgs);
 						}
@@ -777,9 +838,12 @@ namespace alica
 					}
 					else
 					{
+#ifdef CNSMTGSolver_DEBUG
+						cout << "\tconstraints->at(i)->assignment != cnsat::Assignment::TRUE" << endl;
+#endif
 						if (constraints->at(i)->negativeTerm == nullptr)
 						{
-							constraints->at(i)->negativeTerm = TermUtils::compile(constraints->at(i)->term,
+							constraints->at(i)->negativeTerm = TermUtils::compile(constraints->at(i)->term->negate(),
 																					this->currentArgs);
 						}
 						constraints->at(i)->curTerm = constraints->at(i)->negativeTerm;
@@ -789,9 +853,15 @@ namespace alica
 					{
 						if (std::isnan(tup.first->at(j)))
 						{
+#ifdef CNSMTGSolver_DEBUG
+							cout << "\t" << j << " std::isnan(tup.first->at(j))" << endl;
+#endif
 							found = false;
 							break;
 						}
+#ifdef CNSMTGSolver_DEBUG
+						cout << "\t" << j << " !std::isnan(tup.first->at(j))" << endl;
+#endif
 						gradient->at(j) += tup.first->at(j);
 					}
 					if (!found)
@@ -821,6 +891,9 @@ namespace alica
 		shared_ptr<vector<double> > CNSMTGSolver::initialPoint(shared_ptr<vector<shared_ptr<cnsat::Var> > > constraints,
 																shared_ptr<CNSMTGSolver::RpropResult> res)
 		{
+#ifdef CNSMTGSolver_DEBUG
+			cout << "CNSMTGSolver::initialPoint()" << endl;
+#endif
 			pair<shared_ptr<vector<double>>, double> tup;
 			bool found = true;
 			res->initialValue = make_shared<vector<double>>(dim);
@@ -834,6 +907,7 @@ namespace alica
 				for (int i = 0; i < dim; ++i)
 				{
 					res->initialValue->at(i) = ((double)rand() / RAND_MAX) * ranges[i] + limits->at(i)->at(0);
+//					cout << "if (TMPVAR == " << TMPVAR++ << ") { res.initialValue[i] = " << res->initialValue->at(i) << "; }" << endl;
 				}
 
 				this->fevalsCount++;
@@ -893,6 +967,9 @@ namespace alica
 
 		void CNSMTGSolver::initializeStepSize()
 		{
+#ifdef CNSMTGSolver_DEBUG
+			cout << "CNSMTGSolver::initializeStepSize()" << endl;
+#endif
 			for (int i = 0; i < dim; ++i)
 			{
 				this->rpropStepWidth.at(i) = initialStepSize * ranges.at(i);

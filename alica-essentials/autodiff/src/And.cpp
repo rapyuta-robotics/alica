@@ -63,4 +63,15 @@ namespace autodiff
 	{
 		return left->negate() | right->negate();
 	}
+
+	string And::toString()
+	{
+		string str;
+		str.append("and( ");
+		str.append(left->toString());
+		str.append(", ");
+		str.append(right->toString());
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */

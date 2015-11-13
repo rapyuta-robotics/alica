@@ -36,4 +36,16 @@ namespace autodiff
 	{
 		return 0;
 	}
+
+	string Constant::toString()
+	{
+		if (shared_from_this() == Term::TRUE)
+			return "true";
+		else if (shared_from_this() == Term::FALSE)
+			return "false";
+
+		string str;
+		str.append(to_string(value));
+		return str;
+	}
 } /* namespace autodiff */

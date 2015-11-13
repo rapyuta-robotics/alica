@@ -12,6 +12,10 @@
 
 #include "Term.h"
 
+#include <iostream>
+
+using namespace std;
+
 namespace autodiff
 {
 	class Variable : public Term, public alica::SolverVariable
@@ -26,6 +30,12 @@ namespace autodiff
 
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
+
+		string toString();
+
+	private:
+		int ownId;
+		static int var_id;
 	};
 } /* namespace autodiff */
 

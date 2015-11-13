@@ -46,4 +46,15 @@ namespace autodiff
 		shared_ptr<Term> t = left * right->derivative(v) - right * left->derivative(v);
 		return t / (make_shared<ConstPower>(left, 2) + make_shared<ConstPower>(right, 2));
 	}
+
+	string Atan2::toString()
+	{
+		string str;
+		str.append("atan2( ");
+		str.append(left->toString());
+		str.append(", ");
+		str.append(right->toString());
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */

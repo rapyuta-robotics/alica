@@ -23,6 +23,10 @@ import java.util.Arrays;
 import java.nio.ByteBuffer;
 import java.util.Properties;
 import java.nio.ByteOrder;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+import java.net.Inet4Address;
 
 
 <?messageIncludes?>
@@ -43,6 +47,8 @@ public class ROS2UDPProxy implements NodeMain {
     private InetAddress group;
     
     private int port;
+    
+    private InetAddress localhost;
     
     <?rosMessageHandler?>
     
@@ -79,6 +85,27 @@ public class ROS2UDPProxy implements NodeMain {
 
     void listenForPacket(final MulticastSocket socket) {
         byte[] buffer = new byte[64000];
+        
+        try {
+			Enumeration<NetworkInterface> list = NetworkInterface.getNetworkInterfaces();
+
+			while(list.hasMoreElements() && localhost == null) {
+				NetworkInterface networkInterface = list.nextElement();
+				if(networkInterface.getName().contains("wlan")) {
+					Enumeration<InetAddress> list2 = networkInterface.getInetAddresses();
+
+					do {
+						InetAddress address = list2.nextElement();
+						if(address instanceof Inet4Address) {
+							localhost = address;
+						}
+					} while (list2.hasMoreElements() && localhost == null);
+				}
+			}
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+        
         final DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
         node.executeCancellableLoop(new CancellableLoop() {
             @Override
@@ -116,6 +143,9 @@ public class ROS2UDPProxy implements NodeMain {
     }
 
     void handleUdpPacket(DatagramPacket packet) {
+    	if(packet.getAddress().equals(localhost)) {
+			return;
+		}
         long id = ByteBuffer.wrap(Arrays.copyOfRange(packet.getData(),0,4)).getLong();
         	<?udpReception?>
             else {

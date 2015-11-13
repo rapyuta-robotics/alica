@@ -13,6 +13,7 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -59,6 +60,8 @@ namespace autodiff
 		virtual shared_ptr<Term> aggregateConstants() = 0;
 		virtual shared_ptr<Term> derivative(shared_ptr<Variable> v) = 0;
 		virtual shared_ptr<Term> negate();
+
+		virtual string toString() = 0;
 
 		static AndType getAnd();
 		static void setAnd(AndType a);

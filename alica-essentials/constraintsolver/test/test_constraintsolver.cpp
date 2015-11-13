@@ -19,9 +19,9 @@ using namespace alica;
 using namespace alica::reasoner;
 //using namespace carpenoctem::base;
 
-/*TEST(AutoDiffTest, GSOLVER)
+TEST(AutoDiffTest, GSOLVER)
 {
-	// 12000 * 18000
+/*	// 12000 * 18000
 	const double FIELDLENGTH = 18000;
 	const double FIELDWIDTH = 12000;
 
@@ -88,9 +88,9 @@ using namespace alica::reasoner;
 	cout << "GSolver Solved: " << gsolved << " times" << endl;
 	cout << "Result:" << res->at(0) << " " << res->at(1) << " with Utility " << util << endl;
 	double actual = TermUtils::evaluate(csu, vars, res);
-	cout << "Result:" << actual << endl;
-}*/
-
+	cout << "Result:" << actual << endl;*/
+}
+/*
 TEST(AutoDiffTest, GSOLVER_UTIL)
 {
 	// 12000 * 18000
@@ -157,7 +157,7 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 	for (int i = 0; i < count; ++i)
 	{
 		res = g->solve(csu, vars, limits, &util);
-		cout << ".";
+		cout << ".[" << res << "]";
 		if (util > 0.5)
 			gsolved++;
 	}
@@ -178,7 +178,7 @@ TEST(AutoDiffTest, CNSMTGSOLVER)
 	const double FIELDWIDTH = 12000;
 
 	shared_ptr<CNSMTGSolver> g = make_shared<CNSMTGSolver>();
-	g->useIntervalProp = false;
+//	g->useIntervalProp = false;
 
 	Term::setAnd(AndType::AND);
 	Term::setOr(OrType::MAX);
@@ -229,7 +229,7 @@ TEST(AutoDiffTest, CNSMTGSOLVER)
 	int count = 1;
 	for (int i = 0; i < count; ++i)
 	{
-		res = g->solve(csu, vars, limits, &util);
+		res = g->solve(csu, vars, limits, util);
 		cout << ".";
 		if (util > 0.5)
 			gsolved++;
@@ -251,7 +251,7 @@ TEST(AutoDiffTest, CNSMTGSOLVER_UTIL)
 	const double FIELDWIDTH = 12000;
 
 	shared_ptr<CNSMTGSolver> g = make_shared<CNSMTGSolver>();
-	g->useIntervalProp = false;
+//	g->useIntervalProp = false;
 
 	Term::setAnd(AndType::AND);
 	Term::setOr(OrType::MAX);
@@ -310,7 +310,7 @@ TEST(AutoDiffTest, CNSMTGSOLVER_UTIL)
 	int count = 1;
 	for (int i = 0; i < count; ++i)
 	{
-		res = g->solve(csu, vars, limits, &util);
+		res = g->solve(csu, vars, limits, util);
 		cout << ".";
 		if (util > 0.5)
 			gsolved++;
@@ -323,8 +323,8 @@ TEST(AutoDiffTest, CNSMTGSOLVER_UTIL)
 	cout << "Result:" << res->at(0) << " " << res->at(1) << " with Utility " << util << endl;
 	double actual = TermUtils::evaluate(csu, vars, res);
 	cout << "Result:" << actual << endl;
-}
-*/
+}*/
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {
