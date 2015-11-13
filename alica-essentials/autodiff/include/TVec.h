@@ -12,6 +12,8 @@
 #include <vector>
 #include <initializer_list>
 
+#include <iostream>
+
 using namespace std;
 
 namespace autodiff

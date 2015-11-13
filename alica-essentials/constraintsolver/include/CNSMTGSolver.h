@@ -60,12 +60,12 @@ namespace alica
 			void closeLog();
 			shared_ptr<vector<double>> solve(shared_ptr<Term> equation,
 												shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
-												shared_ptr<vector<shared_ptr<vector<double>> > >& limits, double *util);
+												shared_ptr<vector<shared_ptr<vector<double>> > >& limits, double &util);
 			shared_ptr<vector<double>> solve(shared_ptr<Term> equation,
 												shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
 												shared_ptr<vector<shared_ptr<vector<double>> > >& limits,
 												shared_ptr<vector<shared_ptr<vector<double>> > > seeds,
-												double sufficientUtility, double *util);
+												double sufficientUtility, double &util);
 			shared_ptr<vector<double>> solveTest(shared_ptr<Term> equation,
 													shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
 													shared_ptr<vector<shared_ptr<vector<double>> > >& limits);
@@ -78,6 +78,7 @@ namespace alica
 			long getFEvals();
 			double getRPropConvergenceStepSize();
 			shared_ptr<cnsat::CNSat> getCNSatSolver();
+			void setUseIntervalProp(bool useIntervalProp);
 
 			double utilitySignificanceThreshold = 1E-22;
 			int dim;
@@ -93,7 +94,6 @@ namespace alica
 
 			long maxfevals;
 			double initialStepSize = 0.005;
-			bool useIntervalProp;
 			bool optimize;
 
 		protected:
@@ -104,7 +104,7 @@ namespace alica
 															shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
 															shared_ptr<vector<double>>& seed, bool precise);
 			void differentiate(shared_ptr<vector<shared_ptr<cnsat::Var>> > constraints, shared_ptr<vector<double>>& val,
-								shared_ptr<vector<double>>& gradient, double *util);
+								shared_ptr<vector<double>>& gradient, double &util);
 			shared_ptr<vector<double>> initialPointFromSeed(shared_ptr<vector<shared_ptr<cnsat::Var>> > constraints,
 															shared_ptr<RpropResult> res,
 															shared_ptr<vector<double>>& seed);
@@ -149,6 +149,9 @@ namespace alica
 
 				int compareTo(shared_ptr<RpropResult> other);
 			};
+
+			private:
+				bool useIntervalProp;
 		};
 
 	} /* namespace reasoner */

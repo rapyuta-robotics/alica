@@ -78,4 +78,17 @@ namespace autodiff
 				* make_shared<Exp>(steepness * (-1 * arg + mid));
 		return t / make_shared<ConstPower>(make_shared<Exp>(steepness * arg) + make_shared<Exp>(steepness * mid), 2);
 	}
+
+	string Sigmoid::toString()
+	{
+		string str;
+		str.append("sigmoid( ");
+		str.append(arg->toString());
+		str.append(", ");
+		str.append(mid->toString());
+		str.append(", ");
+		str.append("", steepness);
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */

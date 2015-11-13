@@ -48,6 +48,11 @@ namespace alica
 			alicaClock = new alicaRosProxy::AlicaROSClock();
 		}
 
+		GSolver::~GSolver()
+		{
+			delete alicaClock;
+		}
+
 		void GSolver::initLog()
 		{
 			std::stringstream ss;
@@ -482,6 +487,8 @@ namespace alica
 				for (int i = 0; i < _dim; ++i)
 				{
 					res->_initialValue->at(i) = ((double)rand() / RAND_MAX) * _ranges[i] + _limits->at(i)->at(0);
+//					cout << " << i << "\t" << _ranges[i] << "\t" << _limits->at(i)->at(0) << "\t" << res->_initialValue->at(i) << endl;
+//					cout << "if (TMPVAR == " << TMPVAR++ << ") { res.initialValue[i] = " << res->_initialValue->at(i) << "; }" << endl;
 				}
 				_fevals++;
 				tup = _term->differentiate(res->_initialValue);

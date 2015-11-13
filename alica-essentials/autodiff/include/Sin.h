@@ -24,6 +24,8 @@ namespace autodiff
 
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
+
+		string toString();
 	};
 
 } /* namespace autodiff */

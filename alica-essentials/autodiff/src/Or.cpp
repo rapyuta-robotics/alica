@@ -59,4 +59,15 @@ namespace autodiff
 	{
 		return left->negate() & right->negate();
 	}
+
+	string Or::toString()
+	{
+		string str;
+		str.append("or( ");
+		str.append(left->toString());
+		str.append(", ");
+		str.append(right->toString());
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */

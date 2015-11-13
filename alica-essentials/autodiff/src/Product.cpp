@@ -71,4 +71,15 @@ namespace autodiff
 		return left * right->derivative(v) + right * left->derivative(v);
 	}
 
+	string Product::toString()
+	{
+		string str;
+		str.append("( ");
+		str.append(left->toString());
+		str.append(" * ");
+		str.append(right->toString());
+		str.append(" )");
+		return str;
+	}
+
 } /* namespace autodiff */

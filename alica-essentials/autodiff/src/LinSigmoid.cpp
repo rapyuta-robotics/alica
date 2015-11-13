@@ -52,4 +52,13 @@ namespace autodiff
 	{
 		return arg->derivative(v);
 	}
+
+	string LinSigmoid::toString()
+	{
+		string str;
+		str.append("sigmoid( ");
+		str.append(arg->toString());
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */

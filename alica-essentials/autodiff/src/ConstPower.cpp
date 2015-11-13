@@ -64,4 +64,15 @@ namespace autodiff
 	{
 		return TermBuilder::constant(exponent) * make_shared<ConstPower>(base, exponent - 1) * base->derivative(v);
 	}
+
+	string ConstPower::toString()
+	{
+		string str;
+		str.append("constPower( ");
+		str.append(base->toString());
+		str.append(", ");
+		str.append("", exponent);
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */
