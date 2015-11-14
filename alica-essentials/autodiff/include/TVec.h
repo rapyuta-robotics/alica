@@ -24,7 +24,7 @@ namespace autodiff
 	{
 	public:
 		TVec(vector<shared_ptr<Term>> terms);
-		TVec(initializer_list<shared_ptr<Term>> terms);
+//		TVec(initializer_list<shared_ptr<Term>> terms);
 		TVec(initializer_list<double> values);
 		TVec(shared_ptr<TVec> first, vector<shared_ptr<Term>> rest);
 		TVec(vector<shared_ptr<Term>> left, vector<shared_ptr<Term>> right,
