@@ -53,12 +53,12 @@ namespace alica
 		 * @return A shared_ptr<list<vector<Variable* > > >
 		 */
 		virtual shared_ptr<list<vector<Variable* > > >getSortedVariables(RunningPlan* p, shared_ptr<vector<int> > agentsInScope) = 0;
-		/**
-		 * Access the list of sorted AD.Terms under the scope of this quantifier given a RunningPlan.
-		 * @param agentsInScope A shared_ptr<vector<int> >
-		 * @return A shared_ptr<list<vector<shared_ptr<SolverTerm> > > >
-		 */
-		virtual shared_ptr<list<vector<shared_ptr<SolverTerm>> > > getSortedTerms(RunningPlan* p, shared_ptr<vector<int> > agentsInScope) = 0;
+//		/**
+//		 * Access the list of sorted AD.Terms under the scope of this quantifier given a RunningPlan.
+//		 * @param agentsInScope A shared_ptr<vector<int> >
+//		 * @return A shared_ptr<list<vector<shared_ptr<SolverTerm> > > >
+//		 */
+//		virtual shared_ptr<list<vector<shared_ptr<SolverTerm>> > > getSortedTerms(RunningPlan* p, shared_ptr<vector<int> > agentsInScope) = 0;
 
 	private:
 		list<string> domainIdentifiers;

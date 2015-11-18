@@ -33,16 +33,16 @@ namespace alica
 		shared_ptr<SolverTerm> constraint;
 		shared_ptr<SolverTerm> utility;
 		double utilitySufficiencyThreshold;
-		shared_ptr<vector<shared_ptr<SolverTerm>>> staticVars;
-		shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >> domainVars;
+		shared_ptr<vector<shared_ptr<SolverVariable>>> staticVars;
+		shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> domainVars;
 		shared_ptr<vector<shared_ptr<vector<int>>>> agentsInScope;
-		shared_ptr<vector<shared_ptr<SolverTerm>>> allVars;
+		shared_ptr<vector<shared_ptr<SolverVariable>>> allVars;
 
 		shared_ptr<vector<vector<vector<vector<double>>>>> domainRanges;
 		shared_ptr<vector<vector<double>>> staticRanges;
 
 	public:
-		ConstraintDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars, shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >> domVars);
+		ConstraintDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars, shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> domVars);
 
 		bool getSetsUtilitySignificanceThreshold();
 		void setSetsUtilitySignificanceThreshold(bool value);
@@ -56,14 +56,14 @@ namespace alica
 		void setUtility(shared_ptr<SolverTerm> value);
 		double getUtilitySufficiencyThreshold();
 		void setUtilitySufficiencyThreshold(double value);
-		shared_ptr<vector<shared_ptr<SolverTerm>>> getStaticVars();
-		void setStaticVars(shared_ptr<vector<shared_ptr<SolverTerm>>> value);
-		shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >> getDomainVars();
-		void setDomainVars(shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >> value);
+		shared_ptr<vector<shared_ptr<SolverVariable>>> getStaticVars();
+		void setStaticVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value);
+		shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> getDomainVars();
+		void setDomainVars(shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> value);
 		shared_ptr<vector<shared_ptr<vector<int>>>> getAgentsInScope();
 		void setAgentsInScope(shared_ptr<vector<shared_ptr<vector<int>>>> value);
-		shared_ptr<vector<shared_ptr<SolverTerm>>> getAllVars();
-		void setAllVars(shared_ptr<vector<shared_ptr<SolverTerm>>> value);
+		shared_ptr<vector<shared_ptr<SolverVariable>>> getAllVars();
+		void setAllVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value);
 
 		shared_ptr<vector<vector<double>>> allRanges();
 

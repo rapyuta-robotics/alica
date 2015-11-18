@@ -14,6 +14,7 @@
 #include <sstream>
 
 #include "AlicaElement.h"
+#include "engine/constraintmodul/SolverVariable.h"
 
 using namespace std;
 namespace alica

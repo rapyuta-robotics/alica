@@ -172,16 +172,16 @@ namespace alica
 				}
 				varr->at(j) = store->getRep(conditionVariables[j])->getSolverVar();
 			}
-			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>> >> >>();
+			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>> >> >>();
 			auto agentsInScope = make_shared<vector<shared_ptr<vector<int>>> >();
 			for (int j = 0; j < c->getSortedVariables()->size(); ++j)
 			{
-				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverTerm>>> >>();
+				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverVariable>>> >>();
 				agentsInScope->push_back(c->getAgentsInScope()->at(j));
 				sortedVars->push_back(ll);
 				for (auto dvarr : c->getSortedVariables()->at(j))
 				{
-					auto dtvarr = make_shared<vector<shared_ptr<SolverTerm>>>(dvarr.size());
+					auto dtvarr = make_shared<vector<shared_ptr<SolverVariable>>>(dvarr.size());
 					for (int i = 0; i < dtvarr->size(); ++i)
 					{
 						if(!dvarr.at(i)->getSolverVar().operator bool())
