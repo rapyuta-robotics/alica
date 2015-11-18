@@ -8,12 +8,12 @@
 #ifndef SOLVERVARIABLE_H_
 #define SOLVERVARIABLE_H_
 
-#include "engine/constraintmodul/SolverTerm.h"
+//#include "engine/constraintmodul/SolverTerm.h"
 
 namespace alica
 {
 
-	class SolverVariable : public SolverTerm
+	class SolverVariable
 	{
 	public:
 		SolverVariable();

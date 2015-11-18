@@ -7,7 +7,6 @@
 
 #include "engine/model/Variable.h"
 
-#include "engine/constraintmodul/SolverVariable.h"
 
 namespace alica
 {

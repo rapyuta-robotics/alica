@@ -16,7 +16,7 @@ namespace alica
 {
 
 	ConstraintDescriptor::ConstraintDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars,
-	                                           shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >> domVars)
+	                                           shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> domVars)
 	{
 		dim = vars->size();
 //		constraint = ConstraintBuilder::TRUE; TODO: KENNT DEN CONSTRAINTBUILDER NICH
@@ -28,7 +28,7 @@ namespace alica
 		{
 			staticRanges->push_back(vector<double>(2));
 		}
-		allVars = make_shared<vector<shared_ptr<SolverTerm>>>();
+		allVars = make_shared<vector<shared_ptr<SolverVariable>>>();
 		for (int i = 0; i < dim; ++i)
 		{
 			staticRanges->at(i)[0] = min;
@@ -36,7 +36,7 @@ namespace alica
 			allVars->push_back(vars->at(i));
 		}
 //		staticVars = vars;
-		staticVars = make_shared<vector<shared_ptr<SolverTerm>>>(vars->size());
+		staticVars = make_shared<vector<shared_ptr<SolverVariable>>>(vars->size());
 		for (int i = 0; i < vars->size(); ++i)
 		{
 			staticVars->at(i) = vars->at(i);
@@ -127,22 +127,22 @@ namespace alica
 		utilitySufficiencyThreshold = value;
 	}
 
-	shared_ptr<vector<shared_ptr<SolverTerm>>> ConstraintDescriptor::getStaticVars()
+	shared_ptr<vector<shared_ptr<SolverVariable>>> ConstraintDescriptor::getStaticVars()
 	{
 		return staticVars;
 	}
 
-	void ConstraintDescriptor::setStaticVars(shared_ptr<vector<shared_ptr<SolverTerm>>> value)
+	void ConstraintDescriptor::setStaticVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value)
 	{
 		staticVars = value;
 	}
 
-	shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >> ConstraintDescriptor::getDomainVars()
+	shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> ConstraintDescriptor::getDomainVars()
 	{
 		return domainVars;
 	}
 
-	void ConstraintDescriptor::setDomainVars(shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverTerm>>>>> >> value)
+	void ConstraintDescriptor::setDomainVars(shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> value)
 	{
 		domainVars = value;
 	}
@@ -157,12 +157,12 @@ namespace alica
 		agentsInScope = value;
 	}
 
-	shared_ptr<vector<shared_ptr<SolverTerm>>> ConstraintDescriptor::getAllVars()
+	shared_ptr<vector<shared_ptr<SolverVariable>>> ConstraintDescriptor::getAllVars()
 	{
 		return allVars;
 	}
 
-	void ConstraintDescriptor::setAllVars(shared_ptr<vector<shared_ptr<SolverTerm>>> value)
+	void ConstraintDescriptor::setAllVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value)
 	{
 		allVars = value;
 	}
