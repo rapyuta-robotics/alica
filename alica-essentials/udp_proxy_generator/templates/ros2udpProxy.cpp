@@ -117,8 +117,8 @@ int main (int argc, char *argv[])
 	listenForPacket();
 	
 	
-	 
-    ros::init(argc, argv, "udpProxy");
+<?nodename?>	 
+ //   ros::init(argc, argv, "udpProxy");
 
     ros::NodeHandle n;
     ownRosName = ros::this_node::getName();//n.getNamespace();//n.resolveName("ddsProxy",true);

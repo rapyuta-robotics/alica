@@ -272,11 +272,20 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string
 				ret << "Configuration *proxyconf = (*sc)[\"" << pkgName << "\"];";
 			}
 		}
+		else if (s == "nodename")
+		{
+			if(language.compare("cpp") == 0) {
+				ret << "ros::init(argc, argv, \""<< pkgName << "\");";
+			} else {
+				ret << "ros::init(argc, argv, \""<< pkgName << "\");";
+			}
+		}
 		else
 		{
 			cout << "Unknown Marker: " << s;
 			exit(1);
 		}
+
 	}
 
 	return ret.str();
