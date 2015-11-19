@@ -5,7 +5,7 @@
  *      Author: Philipp
  */
 #include "engine/constraintmodul/ConstraintQuery.h"
-//#define CQ_DEBUG
+#define CQ_DEBUG
 
 #include "engine/AlicaEngine.h"
 #include "engine/BasicBehaviour.h"
@@ -112,7 +112,8 @@ namespace alica
 #endif
 			rp->getConstraintStore()->acceptQuery(shared_from_this(), rp);
 			if (rp->getPlanType() != nullptr)
-			{ //process bindings for plantype
+			{
+				//process bindings for plantype
 				vector<Variable*> tmpVector = vector<Variable*>();
 				for (Parametrisation* p : rp->getPlanType()->getParametrisation())
 				{
@@ -127,8 +128,9 @@ namespace alica
 				relevantStaticVariables = tmpVector;
 			}
 
+
 			shared_ptr<RunningPlan> parent;
-			if (rp->getParent().use_count() > 0)
+			if (rp->getParent().use_count() > 0) // TODO is that a bug?
 			{
 				parent = rp->getParent().lock();
 			}
@@ -157,7 +159,6 @@ namespace alica
 #endif
 			return false;
 		}
-
 		for (shared_ptr<ConstraintCall> c : calls)
 		{
 			vector<Variable*> conditionVariables = vector<Variable*>(c->getCondition()->getVariables());
@@ -184,7 +185,7 @@ namespace alica
 					auto dtvarr = make_shared<vector<shared_ptr<SolverVariable>>>(dvarr.size());
 					for (int i = 0; i < dtvarr->size(); ++i)
 					{
-						if(!dvarr.at(i)->getSolverVar().operator bool())
+						if(dvarr.at(i)->getSolverVar() == nullptr /*!dvarr.at(i)->getSolverVar().operator bool()*/)
 						{
 							dvarr.at(i)->setSolverVar(solver->createVariable(dvarr.at(i)->getId()));
 						}

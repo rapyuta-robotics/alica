@@ -59,7 +59,7 @@ namespace alica
 		bool ignoreMasterPlanId;bool getIgnoreMasterPlanId();
 		void setIgnoreMasterPlanId(bool value);
 		Plan* createPlan(tinyxml2::XMLDocument* node);
-		const map<long, AlicaElement*>& getElements() const;
+		map<long, AlicaElement*>* getElements();
 		void setElements(const map<long, AlicaElement*>& elements);
 		string getNameOfNode(tinyxml2::XMLElement* node);
 		void createTasks(tinyxml2::XMLDocument* node);

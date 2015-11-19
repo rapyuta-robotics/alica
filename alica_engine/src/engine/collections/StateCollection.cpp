@@ -97,7 +97,7 @@ namespace alica
 
 	shared_ptr<vector<int> > StateCollection::getRobotsInStateSorted(State* s)
 	{
-		shared_ptr<vector<int> > ret= shared_ptr<vector<int> >();
+		shared_ptr<vector<int> > ret= make_shared<vector<int> >();
 		for (int i = 0; i < this->robots.size(); i++)
 		{
 			if (this->states[i] == s)

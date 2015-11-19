@@ -46,7 +46,7 @@ namespace alica
 
 		virtual Plan* parsePlanTree(string masterplan);
 		virtual void ignoreMasterPlanId(bool val);
-		virtual shared_ptr<map<long, AlicaElement> > getParsedElements();
+		virtual map<long, AlicaElement*>* getParsedElements();
 
 		string getCurrentFile();
 		void setCurrentFile(string currentFile);

@@ -115,7 +115,6 @@ namespace alica
 		{
 			return false;
 		}
-
 		vector<void*> solverResult;
 		bool ret = solver->getSolution(relevantVariables, cds, solverResult);
 

@@ -1680,9 +1680,9 @@ namespace alica
 
 	}
 
-	const map<long, AlicaElement*>& ModelFactory::getElements() const
+	map<long, AlicaElement*>* ModelFactory::getElements()
 	{
-		return this->elements;
+		return &this->elements;
 	}
 
 	void ModelFactory::setElements(const map<long, AlicaElement*>& elements)

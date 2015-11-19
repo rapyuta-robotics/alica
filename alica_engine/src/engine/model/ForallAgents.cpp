@@ -9,6 +9,7 @@
 #include "engine/RunningPlan.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Plan.h"
+#include "engine/model/State.h"
 #include "engine/Assignment.h"
 #include "engine/teamobserver/TeamObserver.h"
 #include "engine/AlicaEngine.h"
@@ -61,7 +62,7 @@ namespace alica
 		{
 			return nullptr;
 		}
-		shared_ptr<list<vector<Variable*> > > ret;
+		shared_ptr<list<vector<Variable*> > > ret = make_shared<list<vector<Variable*>>>();
 		ITeamObserver* to = ae->getTeamObserver();
 		for (int r : *(agentsInScope))
 		{
@@ -69,7 +70,6 @@ namespace alica
 			RobotEngineData* re = to->getRobotById(r);
 			for (int i = 0; i < terms.size(); i++)
 			{
-
 				auto iter = this->getDomainIdentifiers().begin();
 				advance(iter, i);
 				terms[i] = re->getSortedVariable(*iter);
