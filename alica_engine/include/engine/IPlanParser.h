@@ -28,7 +28,7 @@ namespace alica
 		virtual Plan* parsePlanTree(string masterplan) = 0;
 		virtual RoleSet* parseRoleSet(string roleSetName, string roleSetDir) = 0;
 		virtual void ignoreMasterPlanId(bool val) = 0;
-		virtual shared_ptr<map<long, AlicaElement> > getParsedElements() = 0;
+		virtual map<long, AlicaElement*>* getParsedElements() = 0;
 	};
 }
 #endif /* IPLANPARSER_H_ */

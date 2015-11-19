@@ -57,7 +57,7 @@ namespace alica
 
 	shared_ptr<SolverVariable> Variable::getSolverVar()
 	{
-		return solverVar;
+		return this->solverVar;
 	}
 
 	void alica::Variable::setSolverVar(shared_ptr<SolverVariable> solverVar)

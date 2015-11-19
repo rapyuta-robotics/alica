@@ -19,8 +19,6 @@
 using namespace std;
 namespace alica
 {
-	class SolverVariable;
-
 	/**
 	 * A variable is constraint by conditions, feasible values can be queried using a ConstraintQuery.
 	 */

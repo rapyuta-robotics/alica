@@ -404,11 +404,10 @@ namespace alica
 	 * Provides access to all parsed elements, indexed by their id.
 	 * @return A shared_ptr<map<long, alica::AlicaElement>
 	 */
-	shared_ptr<map<long, alica::AlicaElement> > PlanParser::getParsedElements()
+	map<long, alica::AlicaElement*>* PlanParser::getParsedElements()
 	{
 
-		shared_ptr<map<long, alica::AlicaElement> > map;
-		return map;
+		return mf->getElements();
 	}
 
 	void PlanParser::ignoreMasterPlanId(bool val)

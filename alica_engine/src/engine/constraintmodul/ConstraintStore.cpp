@@ -136,7 +136,6 @@ namespace alica
 		{
 			return; //nothing to do
 		}
-
 		map<Condition*, shared_ptr<ConstraintCall>> newConditions = map<Condition*, shared_ptr<ConstraintCall>>();
 		map<Condition*, shared_ptr<ConstraintCall>> allConditions = map<Condition*, shared_ptr<ConstraintCall>>();
 		mtx.lock();
@@ -145,7 +144,6 @@ namespace alica
 			allConditions.insert(pair<Condition*, shared_ptr<ConstraintCall>>(c, make_shared<ConstraintCall>(c, rp)));
 		}
 		mtx.unlock();
-
 #ifdef CS_DEBUG
 		for (Variable* v : relVars)
 		{
@@ -175,7 +173,8 @@ namespace alica
 							shared_ptr<ConstraintCall> cc = allConditions[c];
 							newConditions.insert(pair<Condition*, shared_ptr<ConstraintCall>>(c, cc));
 							auto sortedVariables = cc->getSortedVariables();
-							for (auto iter = sortedVariables->begin(); iter != sortedVariables->end(); iter++) {
+							for (auto iter = sortedVariables->begin(); iter != sortedVariables->end(); iter++)
+							{
 								list<vector<Variable*>> lvarr = *iter;
 								for (vector<Variable*> varr : lvarr)
 								{
@@ -202,42 +201,42 @@ namespace alica
 						}
 					}
 				}
-				else if (domVarsToCheck.size() > 0)
+			}
+			else if (domVarsToCheck.size() > 0)
+			{
+				Variable* v = domVarsToCheck[domVarsToCheck.size() - 1];
+				domVarsToCheck.erase(domVarsToCheck.begin() + (domVarsToCheck.size() - 1));
+				domVarsChecked.push_back(v);
+				for (auto iter = allConditions.begin(); iter != allConditions.end(); ++iter)
 				{
-					Variable* v = domVarsToCheck[domVarsToCheck.size() - 1];
-					domVarsToCheck.erase(domVarsToCheck.begin() + (domVarsToCheck.size() - 1));
-					domVarsChecked.push_back(v);
-					for (auto iter = allConditions.begin();
-							iter != allConditions.end(); ++iter)
+					if (newConditions.find(iter->first) == newConditions.end())
 					{
-						if (newConditions.find(iter->first) == newConditions.end())
+						if (iter->second->hasVariable(v))
 						{
-							if (iter->second->hasVariable(v))
+							newConditions.insert(
+									pair<Condition*, shared_ptr<ConstraintCall>>(iter->first, iter->second));
+							for (Variable* vv : iter->first->getVariables())
 							{
-								newConditions.insert(
-										pair<Condition*, shared_ptr<ConstraintCall>>(iter->first, iter->second));
-								for (Variable* vv : iter->first->getVariables())
+								if (find(varsChecked.begin(), varsChecked.end(), vv) == varsChecked.end()
+										&& find(varsToCheck.begin(), varsToCheck.end(), vv) == varsToCheck.end())
 								{
-									if (find(varsChecked.begin(), varsChecked.end(), vv) == varsChecked.end()
-											&& find(varsToCheck.begin(), varsToCheck.end(), vv) == varsToCheck.end())
-									{
-										varsToCheck.push_back(vv);
-									}
+									varsToCheck.push_back(vv);
 								}
-								auto sortedVariables = iter->second->getSortedVariables();
-								for (auto iter = sortedVariables->begin(); iter != sortedVariables->end(); iter++) {
-									list<vector<Variable*>> lvarr = *iter;
-									for (vector<Variable*> varr : lvarr)
+							}
+							auto sortedVariables = iter->second->getSortedVariables();
+							for (auto iter = sortedVariables->begin(); iter != sortedVariables->end(); iter++)
+							{
+								list<vector<Variable*>> lvarr = *iter;
+								for (vector<Variable*> varr : lvarr)
+								{
+									for (int i = 0; i < varr.size(); ++i)
 									{
-										for (int i = 0; i < varr.size(); ++i)
+										if (find(domVarsChecked.begin(), domVarsChecked.end(), varr[i])
+												== domVarsChecked.end()
+												&& find(domVarsToCheck.begin(), domVarsToCheck.end(), varr[i])
+														== domVarsToCheck.end())
 										{
-											if (find(domVarsChecked.begin(), domVarsChecked.end(), varr[i])
-													== domVarsChecked.end()
-													&& find(domVarsToCheck.begin(), domVarsToCheck.end(), varr[i])
-															== domVarsToCheck.end())
-											{
-												domVarsToCheck.push_back(varr[i]);
-											}
+											domVarsToCheck.push_back(varr[i]);
 										}
 									}
 								}

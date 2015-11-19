@@ -89,7 +89,7 @@ namespace alica
 		map<long, Quantifier*> qs = ae->getPlanRepository()->getQuantifiers();
 		for (map<long, Quantifier*>::const_iterator iter = qs.begin(); iter != qs.end(); iter++)
 		{
-			if (typeid(iter->second) == typeid(ForallAgents))
+			if (typeid(*iter->second) == typeid(ForallAgents))
 			{
 				for (string s : iter->second->getDomainIdentifiers())
 				{
