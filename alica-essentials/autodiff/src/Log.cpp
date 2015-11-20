@@ -42,4 +42,13 @@ namespace autodiff
 	{
 		return arg->derivative(v) / arg;
 	}
+
+	string Log::toString()
+	{
+		string str;
+		str.append("log( ");
+		str.append(arg->toString());
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */

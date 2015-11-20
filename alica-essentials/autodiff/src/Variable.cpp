@@ -13,10 +13,13 @@
 
 namespace autodiff
 {
+	int Variable::var_id = 0;
+
 	Variable::Variable()
 	{
 		globalMin = -numeric_limits<double>::infinity();
 		globalMax = numeric_limits<double>::infinity();
+		ownId = var_id++;
 	}
 
 	int Variable::accept(shared_ptr<ITermVisitor> visitor)
@@ -40,5 +43,18 @@ namespace autodiff
 		{
 			return TermBuilder::constant(0);
 		}
+	}
+
+	string Variable::toString()
+	{
+		string str;
+		if (ownId < 0) {
+			str.append("Var_");
+			str.append(to_string(-ownId));
+		} else {
+			str.append("Var");
+			str.append(to_string(ownId));
+		}
+		return str;
 	}
 } /* namespace autodiff */

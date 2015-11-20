@@ -30,6 +30,7 @@ namespace alica
 
 		public:
 			GSolver();
+			~GSolver();
 
 			shared_ptr<vector<double>> solve(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>> > args,
 									shared_ptr<vector<shared_ptr<vector<double>>> > limits, double *util);

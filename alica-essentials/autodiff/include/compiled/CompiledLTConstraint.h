@@ -10,6 +10,10 @@
 
 #include "TapeElement.h"
 
+#include <iostream>
+
+using namespace std;
+
 namespace autodiff
 {
 	namespace compiled

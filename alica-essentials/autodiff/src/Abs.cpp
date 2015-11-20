@@ -40,4 +40,13 @@ namespace autodiff
 	{
 		return arg->derivative(v) * arg / shared_from_this();
 	}
+
+	string Abs::toString()
+	{
+		string str;
+		str.append("abs( ");
+		str.append(arg->toString());
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */

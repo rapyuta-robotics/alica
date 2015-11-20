@@ -118,7 +118,7 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList)
 	return true;
 }
 
-string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList)
+string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string language, string& pkgName)
 {
 	string reg_string = "<\\?(.*)\\?>";
 	boost::regex markers(reg_string.c_str());
@@ -145,52 +145,89 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList)
 		{
 			for (RelayedMessage* m : msgList)
 			{
-				ret << "#include \"" + m->FullName << ".h\"\n";
+				if(language.compare("cpp") == 0) {
+					ret << "#include \"" + m->FullName << ".h\"\n";
+				} else {
+					ret << "import " + m->FullNameJava << ";\n";
+				}
 			}
 		}
 		else if (s == "subscriptions")
 		{
 
+
+
 			int i = 0;
-			for (RelayedMessage* m : msgList)
-			{
-				if (m->UseRosTcp)
+			if(language.compare("cpp") == 0) {
+				for (RelayedMessage* m : msgList)
 				{
-					ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\","
-							<< m->Ros2UdpQueueLength << ", " << m->getRosCallBackName() << ");\n";
+					if (m->UseRosTcp)
+					{
+						ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\","
+								<< m->Ros2UdpQueueLength << ", " << m->getRosCallBackName() << ");\n";
+					}
+					else
+					{
+						ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\","
+								<< m->Ros2UdpQueueLength << ", " << m->getRosCallBackName()
+								<< ",ros::TransportHints().unreliable().tcpNoDelay().reliable());\n";
+					}
+					i++;
 				}
-				else
+			} else {
+				for (RelayedMessage* m : msgList)
 				{
-					ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\","
-							<< m->Ros2UdpQueueLength << ", " << m->getRosCallBackName()
-							<< ",ros::TransportHints().unreliable().tcpNoDelay().reliable());\n";
+					ret << "final Subscriber sub" << i << " = connectedNode.newSubscriber(\"" << m->Topic << "\", \""
+						<< m->FullName << "\");\n";
+					ret << "sub" << i << ".addMessageListener(new " << m->getRosJavaCallBackName() << "());\n";
+					i++;
 				}
-				i++;
 			}
 		}
 		else if (s == "rosMessageHandler")
 		{
+			if(language.compare("cpp") == 0) {
+				for (RelayedMessage* m : msgList)
+				{
+					ret << m->getRosMessageHandler();
 
-			for (RelayedMessage* m : msgList)
-			{
-				ret << m->getRosMessageHandler();
+				}
+			} else {
+				for (RelayedMessage* m : msgList)
+				{
+					ret << m->getRosJavaMessageHandler();
 
+				}
 			}
 		}
 		else if (s == "advertisement")
 		{
 
-			for (RelayedMessage* m : msgList)
-			{
-				ret << m->getPublisherName() << " = n.advertise<" << m->getRosClassName() << ">(\"" << m->Topic << "\","
-						<< m->Udp2RosQueueLength << ",false);\n";
+			if(language.compare("cpp") == 0) {
+				for (RelayedMessage* m : msgList)
+				{
+					ret << m->getPublisherName() << " = n.advertise<" << m->getRosClassName() << ">(\"" << m->Topic << "\","
+							<< m->Udp2RosQueueLength << ",false);\n";
+				}
+			} else {
+				for (RelayedMessage* m : msgList)
+				{
+					ret << m->getPublisherName() << " = connectedNode.newPublisher(\"" << m->Topic << "\", \"" << m->FullName << "\");\n";
+				}
 			}
 		}
 		else if (s == "rosPublisherDecl")
 		{
-			for (RelayedMessage* m : msgList)
-			{
-				ret << "ros::Publisher " << m->getPublisherName() << ";\n";
+			if(language.compare("cpp") == 0) {
+				for (RelayedMessage* m : msgList)
+				{
+					ret << "ros::Publisher " << m->getPublisherName() << ";\n";
+				}
+			} else {
+				for (RelayedMessage* m : msgList)
+				{
+					ret << "private Publisher<" << m->BaseName << "> " << m->getPublisherName() << ";\n";
+				}
 			}
 		}
 		/*case "packageName":
@@ -199,14 +236,48 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList)
 		 */
 		else if (s == "udpReception")
 		{
-			for (RelayedMessage* m : msgList)
-			{
-				ret << "case " << m->Id << "ul: {\n";
-				ret << m->getRosClassName() << " m" << m->Id << ";\n";
-				ret << "ros::serialization::Serializer<" << m->getRosClassName() << ">::read(stream, m" << m->Id
-						<< ");\n";
-				ret << m->getPublisherName() << ".publish<" << m->getRosClassName() << ">(m" << m->Id << ");\n";
-				ret << "break; }\n";
+			if(language.compare("cpp") == 0) {
+				for (RelayedMessage* m : msgList)
+				{
+					ret << "case " << m->Id << "ul: {\n";
+					ret << m->getRosClassName() << " m" << m->Id << ";\n";
+					ret << "ros::serialization::Serializer<" << m->getRosClassName() << ">::read(stream, m" << m->Id
+							<< ");\n";
+					ret << m->getPublisherName() << ".publish<" << m->getRosClassName() << ">(m" << m->Id << ");\n";
+					ret << "break; }\n";
+				}
+			} else {
+				bool first = true;
+				for (RelayedMessage* m : msgList)
+				{
+					if(!first) {
+						ret << "else ";
+					} else {
+						first = false;
+					}
+					ret << "if(id == " << m->Id << "l) {\n";
+					ret << "MessageDeserializer<" + m->BaseName + "> deserializer = node.getMessageSerializationFactory().newMessageDeserializer(" << m->BaseName << "._TYPE);\n";
+					ret << "byte[] message = Arrays.copyOfRange(packet.getData(), Integer.SIZE / Byte.SIZE, packet.getData().length-4);\n";
+					ret << m->BaseName << " m" << m->Id << " = deserializer.deserialize(ChannelBuffers.copiedBuffer(ByteOrder.LITTLE_ENDIAN,message));\n";
+					ret << m->getPublisherName() << ".publish(m" << m->Id << ");\n";
+					ret << "}\n";
+				}
+			}
+		}
+		else if (s == "configfile")
+		{
+			if(language.compare("cpp") == 0) {
+				ret << "Configuration *proxyconf = (*sc)[\"" << pkgName << "\"];";
+			} else {
+				ret << "Configuration *proxyconf = (*sc)[\"" << pkgName << "\"];";
+			}
+		}
+		else if (s == "nodename")
+		{
+			if(language.compare("cpp") == 0) {
+				ret << "ros::init(argc, argv, \""<< pkgName << "\");";
+			} else {
+				ret << "ros::init(argc, argv, \""<< pkgName << "\");";
 			}
 		}
 		else
@@ -214,6 +285,7 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList)
 			cout << "Unknown Marker: " << s;
 			exit(1);
 		}
+
 	}
 
 	return ret.str();
@@ -240,7 +312,7 @@ vector<string> getFilesinFolder(string folder)
 	return result_set;
 }
 
-void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& msgList)
+void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& msgList, string& pkgName)
 {
 
 	vector<string> tmplarr = getFilesinFolder(tmplDir); // = Directory.GetFiles(tmplDir,"*.*");
@@ -258,11 +330,19 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
 		ifs.close();
 
 		string content = ss.str();
-		string parsedContent = processTemplate(ss, msgList);
+		if(basename.find("cpp") != std::string::npos && outDir.find("proxy_gen") != std::string::npos) {
+			string parsedContent = processTemplate(ss, msgList,string("cpp"), pkgName);
 
-		ofstream ofs(outDir + "/" + basename);
-		ofs << parsedContent;
-		ofs.close();
+			ofstream ofs(outDir + "/" + basename);
+			ofs << parsedContent;
+			ofs.close();
+		} else if(outDir.find("src/main/java/util") != std::string::npos) {
+			string parsedContent = processTemplate(ss, msgList,string("java"), pkgName);
+
+			ofstream ofs(outDir + "/" + basename);
+			ofs << parsedContent;
+			ofs.close();
+		}
 	}
 }
 
@@ -271,10 +351,11 @@ int main(int argc, char *argv[])
 
 	if (argc < 2)
 	{
-		cout << "Usage MakeUDPProxy.exe <packageName>" << endl;
+		cout << "Usage MakeUDPProxy.exe <packageName> <optional j>" << endl;
 		return -1;
 	}
 
+	vector<string> outputPaths;
 	string outputPath;
 	outputPath = exec((string("rospack find ") + argv[1]).c_str());
 	cout << outputPath << endl;
@@ -285,6 +366,7 @@ int main(int argc, char *argv[])
 		cout << "Cannot find template directory: " << templateDir << endl;
 	}
 
+	string pkgName = argv[1];
 	/*string basePackageName=argv[1];
 	 if(basePackageName.find('/')!=string::npos) {
 	 int idx = basePackageName.find_last_of('/');
@@ -297,7 +379,14 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	string msgDefFile = outputPath + "/relayMsgs.conf";
-	outputPath += "/proxy_gen";
+
+	if(argc == 3  && argv[2][0] == 'j') {
+		if(outputPath.find_last_of('/') != std::string::npos) {
+			outputPath += outputPath.substr(outputPath.find_last_of('/')) + "/src/main/java/util";
+		}
+	} else {
+		outputPath = outputPath + "/proxy_gen";
+	}
 //set namespace to packageName
 //namespaceS = args[0];
 
@@ -347,7 +436,7 @@ int main(int argc, char *argv[])
 		{
 			std::cout << "Failed to create Directory: " << outputPath << endl;
 		}
-		processTemplates(templateDir, outputPath, msgList);
+		processTemplates(templateDir, outputPath, msgList, pkgName);
 	}
 	for (auto d : msgList)
 	{

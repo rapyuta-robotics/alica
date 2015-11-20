@@ -13,6 +13,8 @@
 #include "intervals/TermList.h"
 #include "intervals/UpwardPropagator.h"
 
+//#define RecPropDEBUG
+
 namespace alica
 {
 	namespace reasoner
@@ -42,12 +44,14 @@ namespace alica
 				this->changed->clear();
 				term->accept(shared_from_this());
 #ifdef RecPropDEBUG
-				Console.WriteLine("Queued Terms: ");
-				foreach(Term q in this->changed)
+				cout << "Queued Terms: " << endl;
+				shared_ptr<Term> asd = this->changed->first;
+				while (asd != nullptr)
 				{
-					Console.WriteLine(q);
+					cout << asd->toString() << endl;
+					asd = asd->next;
 				}
-				Console.WriteLine("------------------------------------");
+				cout << "------------------------------------" << endl;
 #endif
 				/*
 				 foreach(Term q in this->changed) {

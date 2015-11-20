@@ -96,8 +96,15 @@ namespace alica
 
 			string Var::toString()
 			{
-				return (this->assignment == Assignment::FALSE ? "-" : (this->assignment == Assignment::TRUE ? "+" : "o"))
-						+ this->index;
+				string str;
+				if (this->assignment == Assignment::FALSE)
+					str.append("-");
+				else if (this->assignment == Assignment::TRUE)
+					str.append("+");
+				else
+					str.append("o");
+				str.append(to_string(this->index));
+				return str;
 			}
 
 		} /* namespace cnsat */

@@ -43,4 +43,15 @@ namespace autodiff
 	{
 		throw "Do not negate a Constraint Utility";
 	}
+
+	string ConstraintUtility::toString()
+	{
+		string str;
+		str.append("[ConstraintUtility: Constraint=");
+		str.append(constraint->toString());
+		str.append(", Utility=");
+		str.append(utility->toString());
+		str.append("]");
+		return str;
+	}
 } /* namespace autodiff */

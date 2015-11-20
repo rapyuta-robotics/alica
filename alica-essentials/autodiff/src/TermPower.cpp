@@ -59,4 +59,15 @@ namespace autodiff
 		return make_shared<TermPower>(base, exponent - 1)
 				* (exponent * base->derivative(v) + base * make_shared<Log>(base) * exponent->derivative(v));
 	}
+
+	string TermPower::toString()
+	{
+		string str;
+		str.append("termPower( ");
+		str.append(base->toString());
+		str.append(", ");
+		str.append(exponent->toString());
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */
