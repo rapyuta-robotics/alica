@@ -63,7 +63,7 @@ public class ROS2UDPProxy implements NodeMain {
     public void onStart(ConnectedNode connectedNode) {
         Properties udpConfig = new Properties();
         try {
-        udpConfig.load(getActivity().getResources().openRawResource(R.raw.udpproxy));
+        <?configfile?>
 		java.lang.String multiCastAdress = udpConfig.getProperty("MulticastAddress");
         port = Integer.parseInt(udpConfig.getProperty("Port"));
         udpSocket = new MulticastSocket(port);
