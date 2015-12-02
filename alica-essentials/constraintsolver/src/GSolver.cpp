@@ -102,12 +102,12 @@ namespace alica
 													shared_ptr<vector<shared_ptr<vector<double>>> > limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds,
 		double sufficientUtility, double *util)
 		{
-			cout << "GSolver" << endl;
-			cout << equation->toString() << endl;
-			cout << args->size() << endl;
-			for(auto& a : *limits) {
-				cout << a->at(0) << " " << a->at(1) << endl;
-			}
+//			cout << "GSolver" << endl;
+//			cout << equation->toString() << endl;
+//			cout << args->size() << endl;
+//			for(auto& a : *limits) {
+//				cout << a->at(0) << " " << a->at(1) << endl;
+//			}
 
 			_fevals = 0;
 			_runs = 0;

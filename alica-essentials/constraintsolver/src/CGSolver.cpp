@@ -133,7 +133,6 @@ namespace alica
 			{
 				ranges->at(i) = make_shared<vector<double>>(2);
 				ranges->at(i)->at(0) = std::numeric_limits<double>::lowest();
-				cout << "CGS " << ranges->at(i)->at(0) << endl;
 				ranges->at(i)->at(1) = std::numeric_limits<double>::max();
 				cVars->at(i) = dynamic_pointer_cast<autodiff::Variable>(vars.at(i)->getSolverVar());
 			}
