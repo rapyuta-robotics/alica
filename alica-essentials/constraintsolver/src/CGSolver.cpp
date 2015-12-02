@@ -44,7 +44,7 @@ namespace alica
 			for (int i = 0; i < vars.size(); ++i)
 			{
 				ranges->at(i) = make_shared<vector<double>>(2);
-				ranges->at(i)->at(0) = std::numeric_limits<double>::min();
+				ranges->at(i)->at(0) = std::numeric_limits<double>::lowest();
 				ranges->at(i)->at(1) = std::numeric_limits<double>::max();
 				cVars->at(i) = dynamic_pointer_cast<autodiff::Variable>(vars.at(i)->getSolverVar());
 			}
@@ -132,7 +132,8 @@ namespace alica
 			for (int i = 0; i < vars.size(); ++i)
 			{
 				ranges->at(i) = make_shared<vector<double>>(2);
-				ranges->at(i)->at(0) = std::numeric_limits<double>::min();
+				ranges->at(i)->at(0) = std::numeric_limits<double>::lowest();
+				cout << "CGS " << ranges->at(i)->at(0) << endl;
 				ranges->at(i)->at(1) = std::numeric_limits<double>::max();
 				cVars->at(i) = dynamic_pointer_cast<autodiff::Variable>(vars.at(i)->getSolverVar());
 			}
@@ -150,7 +151,7 @@ namespace alica
 
 			double sufficientUtility = 0;
 
-			for (auto c : calls)
+			for (auto& c : calls)
 			{
 				if (!(dynamic_pointer_cast<autodiff::Term>(c->getConstraint()) != 0))
 				{
@@ -173,12 +174,11 @@ namespace alica
 					{
 						if (!(dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(i)) != 0))
 						{
-							cerr << "CGSolver: Variabletype not compatible with selected solver" << endl;
 							return false;
 						}
 						if (cVars->at(j) == dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(i)))
 						{
-							ranges->at(j)->at(0) = min(ranges->at(j)->at(0), allRanges->at(i).at(0));
+							ranges->at(j)->at(0) = max(ranges->at(j)->at(0), allRanges->at(i).at(0));
 							ranges->at(j)->at(1) = min(ranges->at(j)->at(1), allRanges->at(i).at(1));
 							if (ranges->at(j)->at(0) > ranges->at(j)->at(1))
 							{

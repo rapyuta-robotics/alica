@@ -102,6 +102,13 @@ namespace alica
 													shared_ptr<vector<shared_ptr<vector<double>>> > limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds,
 		double sufficientUtility, double *util)
 		{
+			cout << "GSolver" << endl;
+			cout << equation->toString() << endl;
+			cout << args->size() << endl;
+			for(auto& a : *limits) {
+				cout << a->at(0) << " " << a->at(1) << endl;
+			}
+
 			_fevals = 0;
 			_runs = 0;
 			*util = 0;
@@ -144,6 +151,7 @@ namespace alica
 					{
 						ret->at(i) = _ranges[i] / 2.0 + _limits->at(i)->at(0);
 					}
+					cout << "GSolver ConstraintConstant" << endl;
 					return ret;
 				}
 			}
@@ -208,6 +216,7 @@ namespace alica
 				if (rp->_finalUtil > _utilityThreshold)
 				{
 					*util = rp->_finalUtil;
+					cout << "GSolver Utility Threshold" << endl;
 					return rp->_finalValue;
 				}
 				_rResults.push_back(rp);
@@ -242,6 +251,7 @@ namespace alica
 #endif
 
 			*util = res->_finalUtil;
+			cout << "GSolver Afterall " << res->_finalUtil << " runs " << _runs << endl;
 			return res->_finalValue;
 		}
 

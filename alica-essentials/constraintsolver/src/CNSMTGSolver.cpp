@@ -183,7 +183,7 @@ namespace alica
 				{
 					if (c->literals->size() == 0)
 					{
-						util = numeric_limits<double>::min();
+						util = numeric_limits<double>::lowest();
 						shared_ptr<vector<double>> ret = make_shared<vector<double>>(dim);
 						for (int i = 0; i < dim; ++i)
 						{
@@ -306,7 +306,7 @@ namespace alica
 				{
 					if (c->literals->size() == 0)
 					{
-						util = numeric_limits<double>::min();
+						util = numeric_limits<double>::lowest();
 						shared_ptr<vector<double>> ret = make_shared<vector<double>>(dim);
 						for (int i = 0; i < dim; ++i)
 						{
