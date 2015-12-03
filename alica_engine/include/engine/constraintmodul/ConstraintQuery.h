@@ -116,6 +116,7 @@ namespace alica
 			return false;
 		}
 		vector<void*> solverResult;
+
 		bool ret = solver->getSolution(relevantVariables, cds, solverResult);
 
 		//Create result filtered by the queried variables
@@ -127,6 +128,7 @@ namespace alica
 			{
 				for (int i = 0; i < solverResult.size(); i++)
 				{
+
 					uint8_t* tmp = ((uint8_t*)solverResult.at(i));
 					shared_ptr<vector<uint8_t>> result = make_shared<vector<uint8_t>>(sizeof(T));
 					//If you have an Segfault/Error here you solver does not return what you are querying! ;)
