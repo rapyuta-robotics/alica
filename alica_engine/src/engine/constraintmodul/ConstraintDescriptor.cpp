@@ -9,7 +9,7 @@
 
 #include "engine/constraintmodul/SolverTerm.h"
 #include "engine/constraintmodul/SolverVariable.h"
-
+#include <iostream>
 #include <limits>
 
 namespace alica
@@ -21,7 +21,7 @@ namespace alica
 		dim = vars->size();
 //		constraint = ConstraintBuilder::TRUE; TODO: KENNT DEN CONSTRAINTBUILDER NICH
 //		utility = TermBuilder::constant(1);	TODO: KENNT DEN TERMBUILDER NICH
-		utilitySufficiencyThreshold = numeric_limits<double>::min();
+		utilitySufficiencyThreshold = numeric_limits<double>::max();
 //		fixedValues = ;
 		staticRanges = make_shared<vector<vector<double>>>();
 		for (int i = 0; i < dim; ++i)
@@ -47,7 +47,6 @@ namespace alica
 			auto lat = *iter;
 
 			vector<vector<vector<double>>> l = vector<vector<vector<double>>>();
-			domainRanges->push_back(l);
 			for (auto tarr : *lat)
 			{
 				vector<vector<double>> r = vector<vector<double>>();
@@ -55,7 +54,6 @@ namespace alica
 				{
 					r.push_back(vector<double>(2));
 				}
-				l.push_back(r);
 				for (int i = 0; i < tarr->size(); ++i)
 				{
 					dim++;
@@ -63,7 +61,9 @@ namespace alica
 					r[i][1] = max;
 					allVars->push_back(tarr->at(i));
 				}
+				l.push_back(r);
 			}
+			domainRanges->push_back(l);
 		}
 		setSetsUtilitySignificanceThreshold(false);
 	}
@@ -177,6 +177,7 @@ namespace alica
 				allRanges->insert(allRanges->end(), darr.begin(), darr.end());
 			}
 		}
+		std::cout << std::endl;
 		return allRanges;
 	}
 

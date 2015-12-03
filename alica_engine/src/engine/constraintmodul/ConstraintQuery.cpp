@@ -5,7 +5,7 @@
  *      Author: Philipp
  */
 #include "engine/constraintmodul/ConstraintQuery.h"
-#define CQ_DEBUG
+//#define CQ_DEBUG
 
 #include "engine/AlicaEngine.h"
 #include "engine/BasicBehaviour.h"
