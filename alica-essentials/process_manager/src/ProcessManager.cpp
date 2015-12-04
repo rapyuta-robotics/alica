@@ -433,7 +433,11 @@ namespace supplementary
 	{
 		string cmdline;
 		std::ifstream cmdlineStream("/proc/" + string(pid) + "/cmdline", std::ifstream::in);
-		getline(cmdlineStream, cmdline);
+		//getline(cmdlineStream, cmdline);
+		while (!getline(cmdlineStream, cmdline, '\0').eof())
+		{
+			cout << "getCmdLine: ID " << pid << " CMD " << cmdline << endl;
+		}
 		cmdlineStream.close();
 		return cmdline;
 	}
