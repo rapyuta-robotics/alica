@@ -108,6 +108,7 @@ namespace autodiff
 	shared_ptr<Term> operator>=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
 
 	shared_ptr<Term> operator&=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
+	shared_ptr<Term> operator|=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
 
 } /* namespace autodiff */
 
