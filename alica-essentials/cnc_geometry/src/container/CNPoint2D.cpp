@@ -211,5 +211,11 @@ namespace geometry
 	{
 		return sqrt(pow(this->x - point->x, 2) + pow(this->y - point->y, 2));
 	}
+
+	double geometry::CNPoint2D::angleToPoint(shared_ptr<CNPoint2D> point)
+	{
+		return atan2(point->y - this->y,point->x-this->x);
+	}
 }
+
 

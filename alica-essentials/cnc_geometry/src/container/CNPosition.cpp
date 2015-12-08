@@ -48,6 +48,11 @@ namespace geometry
 		ret->y += right->y;
 		return ret;
 	}
+
+	shared_ptr<CNPoint2D> geometry::CNPosition::getPoint()
+	{
+		return make_shared<CNPoint2D>(this->x, this->y);
+	}
 }
 
 
