@@ -2,7 +2,7 @@
  * Variable.h
  *
  *  Created on: Jun 5, 2014
- *      Author: psp
+ *      Author: Philipp Sperber
  */
 
 #ifndef AutoDiffVARIABLE_H_

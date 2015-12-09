@@ -1,0 +1,26 @@
+<package>
+  <name>pm_control</name>
+  <version>0.0.1</version>
+  <description>pm_control provides a GUI plugin sending process_manager Commands.</description>
+  <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
+
+  <license>MIT</license>
+
+  <author>Stephan Opfer</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>rqt_gui</build_depend>
+  <build_depend>rqt_gui_cpp</build_depend>
+  <build_depend>process_manager</build_depend>
+  <build_depend>robot_executable_meta_data</build_depend>
+  
+  <run_depend>rqt_gui</run_depend>
+  <run_depend>rqt_gui_cpp</run_depend>
+  <run_depend>process_manager</run_depend>
+  <run_depend>robot_executable_meta_data</run_depend>
+
+  <export>
+    <rqt_gui plugin="${prefix}/plugin.xml"/>
+  </export>
+</package>
