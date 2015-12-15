@@ -2,7 +2,7 @@
  * IBehaviourCreator.h
  *
  *  Created on: Jun 18, 2014
- *      Author: emmeda
+ *      Author: Stephan Opfer
  */
 
 #ifndef IBEHAVIOURCREATOR_H_

@@ -29,7 +29,7 @@
 
 namespace alica
 {
-	ConstraintQuery::ConstraintQuery(BasicBehaviour* behaviour)
+	ConstraintQuery::ConstraintQuery(AlicaEngine* ae)
 	{
 		store = make_shared<UniqueVarStore>();
 		queriedStaticVariables = vector<Variable*>();
@@ -37,10 +37,7 @@ namespace alica
 		relevantStaticVariables = vector<Variable*>();
 		relevantDomainVariables = vector<Variable*>();
 		calls = vector<shared_ptr<ConstraintCall>>();
-//		AlicaEngine* ae = new AlicaEngine();
-//		to = ae->getTeamObserver();
-//		alicaClock = ae->getIAlicaClock();
-		this->behaviour = behaviour;
+		this->ae = ae;
 	}
 
 	void ConstraintQuery::addVariable(Variable* v)
@@ -51,7 +48,7 @@ namespace alica
 	void ConstraintQuery::addVariable(int robot, string ident)
 	{
 		queriedDomainVariables.push_back(
-				behaviour->getRunningPlan()->getAlicaEngine()->getTeamObserver()->getRobotById(robot)->getSortedVariable(
+				this->ae->getTeamObserver()->getRobotById(robot)->getSortedVariable(
 						ident));
 	}
 
@@ -67,7 +64,7 @@ namespace alica
 
 	bool ConstraintQuery::existsSolution(int solverType, shared_ptr<RunningPlan> rp)
 	{
-		IConstraintSolver* solver = behaviour->getRunningPlan()->getAlicaEngine()->getSolver(solverType);
+		IConstraintSolver* solver = this->ae->getSolver(solverType);
 
 		vector<shared_ptr<ConstraintDescriptor>> cds = vector<shared_ptr<ConstraintDescriptor>>();
 		vector<Variable*> relevantVariables;
@@ -207,7 +204,7 @@ namespace alica
 
 #ifdef CQ_DEBUG
 		cout << "CQ: PrepTime: "
-				<< (behaviour->getRunningPlan()->getAlicaEngine()->getIAlicaClock()->now() - time) / 10000.0 << endl;
+				<< (ae->getIAlicaClock()->now() - time) / 10000.0 << endl;
 #endif
 		return true;
 	}
