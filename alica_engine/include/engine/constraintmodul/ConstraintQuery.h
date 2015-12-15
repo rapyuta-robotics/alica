@@ -44,12 +44,12 @@ namespace alica
 	class IConstraintSolver;
 
 	/**
-	 * Encapsulates specific queries to constraint variable, usually used by behaviours.
+	 * Encapsulates queries to variables (which are associated with specific solvers).
 	 */
 	class ConstraintQuery : public enable_shared_from_this<ConstraintQuery>
 	{
 	public:
-		ConstraintQuery(BasicBehaviour* behaviour);
+		ConstraintQuery(AlicaEngine* ae);
 
 		void addVariable(Variable* v);
 		void addVariable(int robot, string ident);
@@ -92,21 +92,19 @@ namespace alica
 		shared_ptr<UniqueVarStore> store;
 		vector<Variable*> queriedStaticVariables;
 		vector<Variable*> queriedDomainVariables;
-//		ITeamObserver* to;
 		vector<shared_ptr<ConstraintCall>> calls;
 
 		vector<Variable*> relevantStaticVariables;
 		vector<Variable*> relevantDomainVariables;
 
-		BasicBehaviour* behaviour;
-//		IAlicaClock* alicaClock;
+		AlicaEngine* ae;
 	};
 
 	template<class T>
 	bool ConstraintQuery::getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<T>& result)
 	{
 		result.clear();
-		IConstraintSolver* solver = behaviour->getRunningPlan()->getAlicaEngine()->getSolver(solverType);
+		IConstraintSolver* solver = this->ae->getSolver(solverType);
 
 		vector<shared_ptr<ConstraintDescriptor>> cds = vector<shared_ptr<ConstraintDescriptor>>();
 		vector<Variable*> relevantVariables;

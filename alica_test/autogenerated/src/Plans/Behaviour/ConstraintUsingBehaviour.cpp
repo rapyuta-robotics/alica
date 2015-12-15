@@ -14,7 +14,7 @@ namespace alica
     {
         /*PROTECTED REGION ID(con1414068597716) ENABLED START*/ //Add additional options here
     	this->callCounter = 0;
-    	this->query = make_shared<alica::ConstraintQuery>(this);
+    	this->query = make_shared<alica::ConstraintQuery>(this->getRunningPlan()->getAlicaEngine());
         /*PROTECTED REGION END*/
     }
     ConstraintUsingBehaviour::~ConstraintUsingBehaviour()
