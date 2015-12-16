@@ -5,9 +5,9 @@
  *      Author: Stephan Opfer
  */
 
-#include <RobotExecutableRegistry.h>
-#include "ManagedRobot.h"
-#include "ManagedExecutable.h"
+#include <process_manager/RobotExecutableRegistry.h>
+#include "process_manager/ManagedRobot.h"
+#include "process_manager/ManagedExecutable.h"
 #include <iostream>
 #include <limits>
 

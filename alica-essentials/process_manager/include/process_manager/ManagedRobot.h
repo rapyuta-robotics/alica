@@ -13,10 +13,11 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <process_manager/RobotExecutableRegistry.h>
+
 #include "process_manager/ProcessStat.h"
 #include "process_manager/ProcessStats.h"
-#include <RobotExecutableRegistry.h>
-#include "RobotMetaData.h"
+#include "process_manager/RobotMetaData.h"
 
 
 using namespace std;

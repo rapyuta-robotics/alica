@@ -5,12 +5,12 @@
  *      Author: Stephan Opfer
  */
 
-#include <RobotExecutableRegistry.h>
-#include "ExecutableMetaData.h"
-#include "RobotMetaData.h"
+#include "process_manager/ExecutableMetaData.h"
+#include "process_manager/RobotMetaData.h"
 #include <SystemConfig.h>
 #include <iostream>
-#include "ConsoleCommandHelper.h"
+#include <process_manager/RobotExecutableRegistry.h>
+#include <ConsoleCommandHelper.h>
 
 namespace supplementary
 {

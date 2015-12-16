@@ -5,10 +5,11 @@
  *      Author: Stephan Opfer
  */
 
+#include <process_manager/RobotExecutableRegistry.h>
+#include <ui_RobotProcessesWidget.h>
+
 #include "pm_control/ControlledProcessManager.h"
 #include "pm_control/ControlledRobot.h"
-#include <ui_RobotProcessesWidget.h>
-#include <RobotExecutableRegistry.h>
 #include "pm_control/PMControl.h"
 
 namespace pm_control

@@ -9,7 +9,7 @@
 #define SUPPLEMENTARY_RQT_ROBOT_CONTROL_SRC_RQT_ROBOT_CONTROL_CONTROLLEDROBOT_H_
 
 #include <chrono>
-#include <RobotMetaData.h>
+#include <process_manager/RobotMetaData.h>
 #include <QFrame>
 #include <ros/ros.h>
 #include "alica_ros_proxy/AlicaEngineInfo.h"

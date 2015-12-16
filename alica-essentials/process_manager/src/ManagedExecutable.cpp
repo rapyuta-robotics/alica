@@ -5,9 +5,9 @@
  *      Author: Stephan Opfer
  */
 
-#include "ManagedExecutable.h"
-#include "ProcessManager.h"
-#include "RobotExecutableRegistry.h"
+#include "process_manager/ManagedExecutable.h"
+#include "process_manager/ProcessManager.h"
+#include <process_manager/RobotExecutableRegistry.h>
 #include <map>
 #include <iostream>
 #include <unistd.h>
@@ -20,8 +20,8 @@
 #include <iomanip>
 #include <chrono>
 #include <stdlib.h>
-#include "SystemConfig.h"
-#include "Logging.h"
+#include <SystemConfig.h>
+#include <Logging.h>
 
 namespace supplementary
 {
@@ -312,13 +312,12 @@ namespace supplementary
 	 * Reads the command line parameters of a given process.
 	 * @param procPidString The process ID as string
 	 */
-	void ManagedExecutable::readProcParams(string procPidString)
+	void ManagedExecutable::readProcParams(string pidString)
 	{
 		this->need2ReadParams = false;
 		this->runningParams.clear();
 
-		string cmdline = this->procMan->getCmdLine(procPidString.c_str());
-		cout << "ME: Command-Line " << procPidString << ": "<< cmdline << endl;
+		string cmdline = this->procMan->getCmdLine(pidString.c_str());
 		vector<string> splittedCmdLine = this->procMan->splitCmdLine(cmdline);
 		int checkIdx = 0;
 
@@ -328,7 +327,14 @@ namespace supplementary
 			checkIdx++;
 		}
 
-		// add executable and params as is...
+		// extract the executable name without path, in order to make the check path independent later on
+		size_t lastSlashIdx = splittedCmdLine[checkIdx].find_last_of('/');
+		string execNameWithoutPath = splittedCmdLine[checkIdx].substr(lastSlashIdx + 1,
+																		splittedCmdLine[checkIdx].length());
+		this->runningParams.push_back(strdup(execNameWithoutPath.c_str()));
+		checkIdx++;
+
+		// add params as is...
 		for (; checkIdx < splittedCmdLine.size(); checkIdx++)
 		{
 			this->runningParams.push_back(strdup(splittedCmdLine[checkIdx].c_str()));
@@ -376,15 +382,20 @@ namespace supplementary
 			}
 
 			int i = 0;
-			for (; i < this->runningParams.size(); i++)
-			{
-				if (paramEntry.second[i] == nullptr && this->runningParams[i] == nullptr)
-				{ // this case is for the ending null pointer in the command line parameters
-					continue;
-				}
-				else if (strcmp(paramEntry.second[i], this->runningParams[i]) != 0)
-				{ // we have miss matching parameters
-					break;
+
+			if (strstr(paramEntry.second[i], this->runningParams[i]) != nullptr)
+			{ // this compares the name of the executable (path-independent)
+				i++;
+				for (; i < this->runningParams.size(); i++)
+				{
+					if (paramEntry.second[i] == nullptr && this->runningParams[i] == nullptr)
+					{ // this case is for the ending null pointer in the command line parameters
+						continue;
+					}
+					else if (strcmp(paramEntry.second[i], this->runningParams[i]) != 0)
+					{ // we have miss matching parameters
+						break;
+					}
 				}
 			}
 
@@ -584,7 +595,9 @@ namespace supplementary
 			startCounter++;
 			if (startCounter > 2)
 			{
-				cout << "ME: Could not attach to log file, maybe the managed process wasn't started by the process manager!" << endl;
+				cout
+						<< "ME: Could not attach to log file, maybe the managed process wasn't started by the process manager!"
+						<< endl;
 				return;
 			}
 		}

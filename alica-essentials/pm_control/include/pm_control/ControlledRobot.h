@@ -8,12 +8,12 @@
 #ifndef SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_
 #define SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_
 
-#include <RobotMetaData.h>
-#include <QObject>
+#include <process_manager/RobotMetaData.h>
 #include <process_manager/ProcessStats.h>
 #include <process_manager/ProcessStat.h>
-#include "QHBoxLayout"
-#include "QFrame"
+#include <QObject>
+#include <QHBoxLayout>
+#include <QFrame>
 #include <chrono>
 
 namespace Ui {

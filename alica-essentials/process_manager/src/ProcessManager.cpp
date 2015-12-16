@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "ProcessManager.h"
+#include "process_manager/ProcessManager.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,9 +23,10 @@
 
 #include <SystemConfig.h>
 #include <Logging.h>
-#include <RobotExecutableRegistry.h>
-#include "ManagedRobot.h"
-#include "ManagedExecutable.h"
+#include <process_manager/RobotExecutableRegistry.h>
+
+#include "process_manager/ManagedRobot.h"
+#include "process_manager/ManagedExecutable.h"
 
 namespace supplementary
 {
@@ -388,16 +389,6 @@ namespace supplementary
 			{
 				splittedCmdLine.erase(splittedCmdLine.begin());
 			}
-
-//			if (cmdLine.find("roscore") != string::npos)
-//			{
-//			cout << "splitted: ";
-//			for (auto split : splittedCmdLine)
-//			{
-//				 cout << " '" << split << "' " << endl;
-//			}
-//			cout << endl;
-//			}
 
 			int execId;
 			if (this->pmRegistry->getExecutableId(splittedCmdLine, execId))

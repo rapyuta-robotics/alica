@@ -38,9 +38,6 @@ namespace supplementary
 		string prefixCmd;
 		map<int, vector<char*>> parameterMap;
 		string mode;
-
-	private:
-
 	};
 
 } /* namespace supplementary */

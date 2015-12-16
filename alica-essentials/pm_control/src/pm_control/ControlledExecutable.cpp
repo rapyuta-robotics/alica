@@ -5,12 +5,13 @@
  *      Author: Stephan Opfer
  */
 
-#include "pm_control/ControlledExecutable.h"
+#include <process_manager/ExecutableMetaData.h>
+
 #include "ui_ProcessWidget.h"
 #include "ui_RobotProcessesWidget.h"
-#include "ExecutableMetaData.h"
-#include "pm_control/ControlledProcessManager.h"
 
+#include "pm_control/ControlledProcessManager.h"
+#include "pm_control/ControlledExecutable.h"
 #include "pm_control/PMControl.h"
 
 namespace pm_control

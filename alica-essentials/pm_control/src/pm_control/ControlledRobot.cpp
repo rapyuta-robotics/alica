@@ -4,18 +4,19 @@
  *  Created on: Feb 27, 2015
  *      Author: Stephan Opfer
  */
+#include <ros/ros.h>
+#include <limits.h>
 
 #include <pm_control/ControlledRobot.h>
 #include <pm_control/ControlledExecutable.h>
-#include <RobotExecutableRegistry.h>
-#include <ui_RobotProcessesWidget.h>
-#include <limits.h>
+#include <process_manager/RobotExecutableRegistry.h>
+#include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
-#include <ros/ros.h>
+#include <ui_RobotProcessesWidget.h>
+
 #include "pm_control/ControlledProcessManager.h"
 #include "pm_control/PMControl.h"
 #include "ui_ProcessWidget.h"
-#include "ExecutableMetaData.h"
 
 namespace pm_control
 {

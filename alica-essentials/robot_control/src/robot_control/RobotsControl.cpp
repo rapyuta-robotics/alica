@@ -4,7 +4,7 @@
 #include <robot_control/RobotsControl.h>
 
 #include <SystemConfig.h>
-#include <RobotExecutableRegistry.h>
+#include <process_manager/RobotExecutableRegistry.h>
 
 namespace robot_control
 {

@@ -8,7 +8,7 @@
 #include <robot_control/Robot.h>
 
 #include <ros/ros.h>
-#include <RobotExecutableRegistry.h>
+#include <process_manager/RobotExecutableRegistry.h>
 
 #include "robot_control/RobotCommand.h"
 #include "robot_control/RobotsControl.h"

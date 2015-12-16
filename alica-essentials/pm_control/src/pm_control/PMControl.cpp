@@ -1,12 +1,13 @@
 #include <pluginlib/class_list_macros.h>
 #include <ros/master.h>
-#include <pm_control/PMControl.h>
 
 #include <SystemConfig.h>
-#include <RobotExecutableRegistry.h>
+#include <process_manager/RobotExecutableRegistry.h>
+#include <process_manager/ExecutableMetaData.h>
+
+#include "pm_control/PMControl.h"
 #include "pm_control/ControlledProcessManager.h"
 #include "pm_control/ControlledExecutable.h"
-#include "ExecutableMetaData.h"
 
 namespace pm_control
 {
