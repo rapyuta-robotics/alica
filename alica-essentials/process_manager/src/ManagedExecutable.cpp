@@ -243,8 +243,8 @@ namespace supplementary
 		cout << "ME: Updating " << this->metaExec->name << " (" << this->managedPid << ")" << endl;
 #endif
 
-		string procPidString = "/proc/" + to_string(this->managedPid);
-		std::ifstream statFile(procPidString + "/stat", std::ifstream::in);
+		string pidString = to_string(this->managedPid);
+		std::ifstream statFile("/proc/" + pidString + "/stat", std::ifstream::in);
 		string statLine;
 		getline(statFile, statLine);
 
@@ -287,7 +287,7 @@ namespace supplementary
 
 		if (this->need2ReadParams)
 		{
-			this->readProcParams(procPidString);
+			this->readProcParams(pidString);
 		}
 
 		if (!isNew)
@@ -318,7 +318,7 @@ namespace supplementary
 		this->runningParams.clear();
 
 		string cmdline = this->procMan->getCmdLine(procPidString.c_str());
-		cout << "ME: Command-Line: " << cmdline << endl;
+		cout << "ME: Command-Line " << procPidString << ": "<< cmdline << endl;
 		vector<string> splittedCmdLine = this->procMan->splitCmdLine(cmdline);
 		int checkIdx = 0;
 

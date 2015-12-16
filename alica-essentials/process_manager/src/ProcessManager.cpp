@@ -376,16 +376,28 @@ namespace supplementary
 
 			// get the cmdline
 			string cmdLine = this->getCmdLine(dirEntry->d_name);
+
 			// ignore "kernel processes"
 			if (cmdLine.length() == 0)
 				continue;
 
 			vector<string> splittedCmdLine = this->splitCmdLine(cmdLine);
+
 			// ignore interpreter
 			if (isKnownInterpreter(splittedCmdLine[0]))
 			{
 				splittedCmdLine.erase(splittedCmdLine.begin());
 			}
+
+//			if (cmdLine.find("roscore") != string::npos)
+//			{
+//			cout << "splitted: ";
+//			for (auto split : splittedCmdLine)
+//			{
+//				 cout << " '" << split << "' " << endl;
+//			}
+//			cout << endl;
+//			}
 
 			int execId;
 			if (this->pmRegistry->getExecutableId(splittedCmdLine, execId))
@@ -433,11 +445,14 @@ namespace supplementary
 	{
 		string cmdline;
 		std::ifstream cmdlineStream("/proc/" + string(pid) + "/cmdline", std::ifstream::in);
-		//getline(cmdlineStream, cmdline);
-		while (!getline(cmdlineStream, cmdline, '\0').eof())
-		{
-			cout << "getCmdLine: ID " << pid << " CMD " << cmdline << endl;
-		}
+		getline(cmdlineStream, cmdline);
+
+//		cout << "getCmdLine: ";
+//		while (!getline(cmdlineStream, cmdline, '\0').eof())
+//		{
+//			 cout << "'" << cmdline << "' ";
+//		}
+//		cout << "\n" << endl;
 		cmdlineStream.close();
 		return cmdline;
 	}
@@ -518,7 +533,8 @@ namespace supplementary
 				continue;
 
 			// Check for already running process managers
-			if (ownPID != curPID && cmdLine.find("process_manager") != string::npos && cmdLine.find("gdb") == string::npos)
+			if (ownPID != curPID && cmdLine.find("process_manager") != string::npos
+					&& cmdLine.find("gdb") == string::npos)
 			{
 				cerr << "PM: My own PID is " << ownPID << endl;
 				cerr << "PM: There is already another process_manager running on this system! PID: " << curPID << endl;
@@ -654,7 +670,8 @@ namespace supplementary
 	bool ProcessManager::isKnownInterpreter(string const & cmdLinePart)
 	{
 		int lastSlashIdx = cmdLinePart.find_last_of('/');
-		return find(this->interpreters.begin(), this->interpreters.end(), cmdLinePart.substr(lastSlashIdx+1, cmdLinePart.length())) != this->interpreters.end();
+		return find(this->interpreters.begin(), this->interpreters.end(),
+					cmdLinePart.substr(lastSlashIdx + 1, cmdLinePart.length())) != this->interpreters.end();
 	}
 
 	/**
