@@ -198,7 +198,7 @@ namespace alica
 				//Console.WriteLine("N: {0} {1} {2} {3}",n1,n2,n3,n4);
 				//Console.WriteLine("P: {0} {1} {2} {3}",n1*2*M_PI+a,n2*2*M_PI+b,n3*2*M_PI+c,n4*2*M_PI+d);
 				double min = numeric_limits<double>::max();
-				double max = numeric_limits<double>::min();
+				double max = numeric_limits<double>::lowest();
 				double n1a = n1 * 2 * M_PI + a;
 				double n2b = n2 * 2 * M_PI + b;
 				bool faulty = true;
@@ -231,8 +231,8 @@ namespace alica
 				}
 
 				if (min == numeric_limits<double>::max())
-					min = numeric_limits<double>::min();
-				if (max == numeric_limits<double>::min())
+					min = numeric_limits<double>::lowest();
+				if (max == numeric_limits<double>::lowest())
 					max = numeric_limits<double>::max();
 				if (updateInterval(cos->arg, min, max))
 				{
@@ -376,8 +376,8 @@ namespace alica
 					}
 					return c;
 				}
-				//bool c3 = updateInterval(max->left,numeric_limits<double>::min(),max->max);
-				//bool c4 = updateInterval(max->right,numeric_limits<double>::min(),max->max);
+				//bool c3 = updateInterval(max->left,numeric_limits<double>::lowest(),max->max);
+				//bool c4 = updateInterval(max->right,numeric_limits<double>::lowest(),max->max);
 				return false;
 			}
 
@@ -546,7 +546,7 @@ namespace alica
 				//Console.WriteLine("N: {0} {1} {2} {3}",n1,n2,n3,n4);
 				//Console.WriteLine("P: {0} {1} {2} {3}",n1*2*M_PI+a,n2*2*M_PI+b,n3*2*M_PI+c,n4*2*M_PI+d);
 				double min = numeric_limits<double>::max();
-				double max = numeric_limits<double>::min();
+				double max = numeric_limits<double>::lowest();
 				double n1a = n1 * 2 * M_PI + a;
 				double n2b = n2 * 2 * M_PI + b;
 				bool faulty = true;
@@ -598,9 +598,9 @@ namespace alica
 				 */
 				//}
 				if (min == numeric_limits<double>::max())
-					min = -numeric_limits<double>::infinity();
+					min = numeric_limits<double>::lowest();
 				if (max == numeric_limits<double>::min())
-					max = numeric_limits<double>::infinity();
+					max = numeric_limits<double>::max();
 				if (updateInterval(sin->arg, min, max))
 				{
 					addChanged(sin->arg);

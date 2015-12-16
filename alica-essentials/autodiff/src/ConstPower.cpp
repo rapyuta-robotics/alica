@@ -12,6 +12,7 @@
 #include "Zero.h"
 
 #include <cmath>
+#include <string>
 
 namespace autodiff
 {
@@ -71,7 +72,7 @@ namespace autodiff
 		str.append("constPower( ");
 		str.append(base->toString());
 		str.append(", ");
-		str.append("", exponent);
+		str.append(std::to_string(exponent));
 		str.append(" )");
 		return str;
 	}

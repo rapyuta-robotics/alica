@@ -248,6 +248,13 @@ namespace autodiff
 		}
 	}
 
+	shared_ptr<Term> operator&=(const shared_ptr<Term>& left, const shared_ptr<Term>& right) {
+		return left & right;
+	}
+	shared_ptr<Term> operator|=(const shared_ptr<Term>& left, const shared_ptr<Term>& right) {
+		return left | right;
+	}
+
 	shared_ptr<Term> operator|(const shared_ptr<Term>& left, const shared_ptr<Term>& right)
 	{
 		if (Term::getOr() == OrType::OR)

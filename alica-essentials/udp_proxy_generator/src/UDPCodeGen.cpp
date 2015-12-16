@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <vector>
 #include <boost/regex.hpp>
+#include <boost/algorithm/string.hpp>
 #include <fstream>
 #include <sstream>
 
@@ -269,7 +270,8 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string
 			if(language.compare("cpp") == 0) {
 				ret << "Configuration *proxyconf = (*sc)[\"" << pkgName << "\"];";
 			} else {
-				ret << "Configuration *proxyconf = (*sc)[\"" << pkgName << "\"];";
+				boost::algorithm::to_lower(pkgName);
+				ret << "udpConfig.load(getActivity().getResources().openRawResource(R.raw." << pkgName << "));\n";
 			}
 		}
 		else if (s == "nodename")
@@ -277,7 +279,7 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string
 			if(language.compare("cpp") == 0) {
 				ret << "ros::init(argc, argv, \""<< pkgName << "\");";
 			} else {
-				ret << "ros::init(argc, argv, \""<< pkgName << "\");";
+				// The proxy starts as part of the application in java and therefore needs no explicit start call
 			}
 		}
 		else
