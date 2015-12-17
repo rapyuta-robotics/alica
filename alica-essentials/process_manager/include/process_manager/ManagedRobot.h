@@ -35,7 +35,7 @@ namespace supplementary
 		void queue4update(int execid, long pid, RobotExecutableRegistry* registry);
 		void update(unsigned long long cpuDelta);
 		void startExecutable(string execName, int execid);
-		void startExecutable(string execName, int execid, vector<char*>& params);
+		//void startExecutable(string execName, int execid, vector<char*>& params);
 		void changeDesiredState(int execId, int paramSetId, bool shouldRun, RobotExecutableRegistry* registry);
 		void changeDesiredState(int execId, bool shouldRun, RobotExecutableRegistry* registry);
 		void changeLogPublishing(int execId, bool shouldPublish, RobotExecutableRegistry* registry);

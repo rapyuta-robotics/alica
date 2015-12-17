@@ -246,7 +246,7 @@ namespace supplementary
 		}
 
 		// create absolute executable name, if possible
-		if (rosPackage.compare("NOT-FOUND") != 0 && execName.compare("roslaunch") != 0)
+		if (rosPackage.compare("NOT-FOUND") != 0 && prefixCmd.compare("roslaunch") != 0)
 		{
 			string cmd = "catkin_find --first-only --libexec " + rosPackage;
 			absExecName = supplementary::ConsoleCommandHelper::exec(cmd.c_str());
@@ -281,7 +281,7 @@ namespace supplementary
 					}
 					else
 					{
-						currentParams.push_back(strdup(execSectionName.c_str()));
+						currentParams.push_back(strdup(execName.c_str()));
 					}
 					// transform the system config params to vector of char*, for c-compatibility.
 					for (string param : paramSetValues)

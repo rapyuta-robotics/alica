@@ -8,7 +8,7 @@
 #ifndef MANAGEDEXECUTABLE_H_
 #define MANAGEDEXECUTABLE_H_
 
-//#define MNGD_EXEC_DEBUG
+#define MNGD_EXEC_DEBUG
 
 #include <string>
 #include <vector>
@@ -25,6 +25,8 @@ namespace supplementary
 {
 	class ProcessManager;
 	class ExecutableMetaData;
+
+	enum RunState { SHOULD_RUN, SHOULDNT_RUN, MANUAL_STARTED};
 
 	class ManagedExecutable
 	{
@@ -70,7 +72,7 @@ namespace supplementary
 		thread errLogPublisher;
 
 		chrono::time_point<chrono::steady_clock> lastTimeTried;
-		bool shouldRun;
+		RunState desiredRunState;
 		bool need2ReadParams;
 		int desiredParamSet;
 		vector<long> queuedPids4Update; /* < a list of PIDs, which match this managed executable (should be only one, normally)*/
