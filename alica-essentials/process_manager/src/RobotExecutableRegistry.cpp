@@ -312,7 +312,7 @@ namespace supplementary
 			}
 			else
 			{
-				currentParams.push_back(strdup(execSectionName.c_str()));
+				currentParams.push_back(strdup(execName.c_str()));
 			}
 			currentParams.push_back(nullptr);
 			execMetaData->addParameterSet(0, currentParams);

@@ -564,9 +564,14 @@ namespace supplementary
 		if (this->metaExec->prefixCmd != "NOT-FOUND")
 		{
 			execStartString = this->metaExec->prefixCmd.c_str();
-			char * tmp;
+			// add prefixCmd to startParams
+			char* tmp = new char[this->metaExec->prefixCmd.size() + 1];
+			strcpy(tmp, this->metaExec->prefixCmd.c_str());
+			tmp[this->metaExec->prefixCmd.size() + 1] = '\0';
+			startParams.push_back(tmp);
 			if (this->metaExec->rosPackage != "NOT-FOUND")
 			{
+				// add rospackage to startParams
 				tmp = new char[this->metaExec->rosPackage.size() + 1];
 				strcpy(tmp, this->metaExec->rosPackage.c_str());
 				tmp[this->metaExec->rosPackage.size() + 1] = '\0';
@@ -583,7 +588,7 @@ namespace supplementary
 		}
 
 		for (int i = 0; i < params.size()-1; i++)
-		{
+		{ // add params to startParams
 			startParams.push_back(strdup(params[i]));
 		}
 		startParams.push_back(nullptr);

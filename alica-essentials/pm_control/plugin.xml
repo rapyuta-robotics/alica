@@ -10,7 +10,7 @@
         <statustip>Plugins related to robot tools.</statustip>
       </group>
       <label>Process Manager GUI</label>
-      <icon type="theme">image-x-generic</icon>
+      <icon type="file">resources/processor-64.png</icon>
       <statustip>A GUI plugin for sending process_manager commands.</statustip>
     </qtgui>
   </class>
