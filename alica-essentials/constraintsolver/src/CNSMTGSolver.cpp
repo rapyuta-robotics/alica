@@ -225,6 +225,9 @@ namespace alica
 				{
 					r1 = rPropOptimizeFeasible(ss->decisions, cu->utility, args, r1->finalValue, false);
 				}
+				if (!solutionFound && r1->finalUtil > 0) {
+					r1->finalUtil = -1;
+				}
 				util = r1->finalUtil;
 				if (!this->optimize && solutionFound)
 				{
@@ -260,7 +263,7 @@ namespace alica
 					return r1->finalValue;
 				}
 			}
-			cout << "Unsatisfiable" << endl;
+//			cout << "Unsatisfiable" << endl;
 
 			return nullptr;
 		}
@@ -349,8 +352,10 @@ namespace alica
 			shared_ptr<vector<shared_ptr<cnsat::Var>>> offending = nullptr;
 			if (!ip->propagate(decisions, curRanges, offending))
 			{
+				cout << "yo1" << endl;
 				if (offending != nullptr)
 				{
+					cout << "yo2" << endl;
 					shared_ptr<cnsat::Clause> learnt = make_shared<cnsat::Clause>();
 					for (shared_ptr<cnsat::Var> v : *offending)
 					{

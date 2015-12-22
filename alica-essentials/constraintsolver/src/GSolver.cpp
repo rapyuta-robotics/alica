@@ -216,7 +216,6 @@ namespace alica
 				if (rp->_finalUtil > _utilityThreshold)
 				{
 					*util = rp->_finalUtil;
-					cout << "GSolver Utility Threshold" << endl;
 					return rp->_finalValue;
 				}
 				_rResults.push_back(rp);

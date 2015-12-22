@@ -226,7 +226,7 @@ namespace alica
 				}
 				if (faulty)
 				{
-					throw new UnsolveableException();
+					throw 1;
 					//return false;//return updateInterval(cos->arg,cos->arg->max,cos->arg->min); //no solution possible
 				}
 
@@ -575,7 +575,7 @@ namespace alica
 
 				if (faulty)
 				{
-					throw new UnsolveableException();
+					throw 1;
 					//return false; //updateInterval(sin->arg,sin->arg->max,sin->arg->min); //no solution possible
 				}
 				/*if (n1 == n2) { //bound within interval
@@ -705,7 +705,7 @@ namespace alica
 				if (ret) OutputChange(t,oldmin,oldmax);
 #endif
 				if (t->min > t->max)
-					throw new UnsolveableException();
+					throw 1;
 				return ret;
 			}
 		} /* namespace intervalpropagation */
