@@ -201,7 +201,7 @@ namespace alica
 		this->dim = dim;
 		for (int i = 0; i < dim; ++i)
 		{
-			//TODO
+			//TODO voted seed is not implemented completely
 			//if (!std::isnan(v->at(i)))
 			{
 				this->totalSupCount++;

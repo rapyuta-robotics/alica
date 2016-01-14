@@ -186,7 +186,7 @@ namespace alica
 	}
 
 	/**
-	 * TODO:
+	 * FISME: Bug in authority manager
 	 * QUESTION: If you use the same plan two times, each in a different part of the plan tree.
 	 * How is it guarenteed, that this method does not match the wrong instance?!
 	 * @param aai
