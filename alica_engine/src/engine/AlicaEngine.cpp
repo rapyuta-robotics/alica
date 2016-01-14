@@ -165,8 +165,7 @@ namespace alica
 		{
 			this->planSelector = new PlanSelector(this, pap);
 		}
-		//TODO
-//		ConstraintHelper.Init(this.cSolver);
+
 		this->auth->init();
 		this->planBase = new PlanBase(this, this->masterPlan);
 		this->expressionHandler->attachAll();
@@ -289,7 +288,7 @@ namespace alica
 	 */
 	void AlicaEngine::iterationComplete()
 	{
-		//TODO:
+		//TODO: implement the trigger function for iteration complete
 	}
 
 	/**

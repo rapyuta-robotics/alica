@@ -34,7 +34,6 @@ namespace alica
 		virtual void sendSyncTalk(SyncTalk& st) = 0;
 		virtual void sendSolverResult(SolverResult& sr) = 0;
 
-		//TODO call
 		virtual void tick() {};
 
 		void onSyncTalkReceived(shared_ptr<SyncTalk> st);
