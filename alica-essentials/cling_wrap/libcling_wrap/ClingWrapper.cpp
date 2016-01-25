@@ -96,6 +96,16 @@ namespace supplementary
           this->claspConfig_.set(Clasp::Cli::OptionKey::opt_save_progress, std::to_string(saveProgress).c_str());
         }
 
+        void ClingWrapper::setRestarts(std::string value)
+        {
+          this->claspConfig_.set(Clasp::Cli::OptionKey::opt_restarts, value.c_str());
+        }
+
+        void ClingWrapper::setRandomize(std::string value)
+        {
+          this->claspConfig_.set(Clasp::Cli::OptionKey::opt_rand_prob, value.c_str());
+        }
+
         void ClingWrapper::setPredefConfiguration(PredefinedConfigurations config)
         {
           switch(config)

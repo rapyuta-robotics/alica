@@ -54,6 +54,8 @@ namespace supplementary
 		void setHeuristic(std::string value);
 		void setParallelMode(int threadCount);
                 void setSaveProgress(int saveProgress);
+                void setRestarts(std::string value);
+                void setRandomize(std::string value);
                 void setPredefConfiguration(PredefinedConfigurations config);
 		Gringo::SolveResult solve();
 		void ground(std::string const &name, Gringo::FWValVec args);
