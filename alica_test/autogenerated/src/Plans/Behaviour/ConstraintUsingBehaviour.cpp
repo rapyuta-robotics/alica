@@ -14,7 +14,6 @@ namespace alica
     {
         /*PROTECTED REGION ID(con1414068597716) ENABLED START*/ //Add additional options here
     	this->callCounter = 0;
-    	this->query = make_shared<alica::ConstraintQuery>(this->getRunningPlan()->getAlicaEngine());
         /*PROTECTED REGION END*/
     }
     ConstraintUsingBehaviour::~ConstraintUsingBehaviour()
@@ -33,6 +32,7 @@ namespace alica
     void ConstraintUsingBehaviour::initialiseParameters()
     {
         /*PROTECTED REGION ID(initialiseParameters1414068597716) ENABLED START*/ //Add additional options here
+    	this->query = make_shared<alica::ConstraintQuery>(this->getRunningPlan()->getAlicaEngine());
     	query->addVariable(getVariablesByName("Y"));
         /*PROTECTED REGION END*/
     }

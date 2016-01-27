@@ -14,7 +14,7 @@ namespace alica
     {
         /*PROTECTED REGION ID(con1417424455986) ENABLED START*/ //Add additional options here
         this->callCounter = 0;
-        this->query = make_shared < alica::ConstraintQuery > (this->getRunningPlan()->getAlicaEngine());
+
         /*PROTECTED REGION END*/
     }
     SolverTestBehaviour::~SolverTestBehaviour()
@@ -33,6 +33,7 @@ namespace alica
     void SolverTestBehaviour::initialiseParameters()
     {
         /*PROTECTED REGION ID(initialiseParameters1417424455986) ENABLED START*/ //Add additional options here
+    	this->query = make_shared < alica::ConstraintQuery > (this->getRunningPlan()->getAlicaEngine());
         query->clearStaticVariables();
         query->addVariable(getVariablesByName("X"));
         query->addVariable(getVariablesByName("Y"));

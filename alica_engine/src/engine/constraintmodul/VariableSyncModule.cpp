@@ -15,6 +15,7 @@
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/containers/SolverResult.h"
 #include <math.h>
+#include <cmath>
 #include <algorithm>
 
 namespace alica
@@ -211,58 +212,87 @@ namespace alica
 
 	bool VariableSyncModule::VotedSeed::takeVector(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v, vector<double>& scaling, double distThreshold)
 	{
-/*		int nans = 0;
+		int nans = 0;
 		double distSqr = 0;
-		for (int i = 0; i < dim; ++i)
-		{
-			if (!std::isnan(v->at(i)))
-			{
-				if (!std::isnan(values->at(i)))
-				{
-					if (scaling[i] != 0)
-					{
-						distSqr += ((values->at(i) - v->at(i)) * (values->at(i) - v->at(i))) / scaling[i];
-					}
-					else
-					{
-						distSqr += (values->at(i) - v->at(i)) * (values->at(i) - v->at(i));
-					}
-				}
-			}
-			else
-			{
-				nans++;
-			}
-		}
-		if (dim == nans)
-		{
-			return true; //silently absorb a complete NaN vector
-		}
-		if (distSqr / (dim - nans) < distThreshold)
-		{
-			for (int i = 0; i < dim; ++i)
-			{
-				if (!std::isnan(v->at(i)))
-				{
-					if (std::isnan(values->at(i)))
-					{
-						this->supporterCount[i] = 1;
-						this->totalSupCount++;
-						this->values->at(i) = v->at(i);
-					}
-					else
-					{
-						this->values->at(i) = values->at(i) * this->supporterCount[i] + v->at(i);
-						this->supporterCount[i]++;
-						this->totalSupCount++;
-						this->values->at(i) /= this->supporterCount[i];
-					}
-				}
-			}
+
+		bool nan = true;
+		bool sameRes = true;
+		bool nptrs = true;
+
+		if(v == nullptr) {
 			return true;
 		}
-		return false;
-		*/
-		return false;
+
+
+		for(int i = 0; i  < dim; ++i) {
+
+			nptrs &= (v->at(i) == nullptr);
+			if(nptrs) continue;
+			for(int j = 0; j < v->at(i)->size(); j++) {
+				nan |= false;
+				sameRes &= (values->at(i)->at(j) == v->at(i)->at(j));
+			}
+		}
+
+		if(nan || sameRes || nptrs) {
+			if(sameRes) this->totalSupCount++;
+			return true;
+		} else {
+			return false;
+		}
+
+
+
+//		for (int i = 0; i < dim; ++i)
+//		{
+//
+//			if (!std::isnan(v->at(i)))
+//			{
+//				if (!std::isnan(values->at(i)))
+//				{
+//					if (scaling[i] != 0)
+//					{
+//						distSqr += ((values->at(i) - v->at(i)) * (values->at(i) - v->at(i))) / scaling[i];
+//					}
+//					else
+//					{
+//						distSqr += (values->at(i) - v->at(i)) * (values->at(i) - v->at(i));
+//					}
+//				}
+//			}
+//			else
+//			{
+//				nans++;
+//			}
+//		}
+//		if (dim == nans)
+//		{
+//			return true; //silently absorb a complete NaN vector
+//		}
+//		if (distSqr / (dim - nans) < distThreshold)
+//		{
+//			for (int i = 0; i < dim; ++i)
+//			{
+//				if (!std::isnan(v->at(i)))
+//				{
+//					if (std::isnan(values->at(i)))
+//					{
+//						this->supporterCount[i] = 1;
+//						this->totalSupCount++;
+//						this->values->at(i) = v->at(i);
+//					}
+//					else
+//					{
+//						this->values->at(i) = values->at(i) * this->supporterCount[i] + v->at(i);
+//						this->supporterCount[i]++;
+//						this->totalSupCount++;
+//						this->values->at(i) /= this->supporterCount[i];
+//					}
+//				}
+//			}
+//			return true;
+//		}
+//		return false;
+
 	}
 } /* namespace alica */
