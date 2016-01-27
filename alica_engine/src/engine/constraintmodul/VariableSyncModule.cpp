@@ -77,7 +77,7 @@ namespace alica
 
 	void VariableSyncModule::onSolverResult(shared_ptr<SolverResult> msg)
 	{
-		if (msg->senderID == ownId)
+ 		if (msg->senderID == ownId)
 		{
 			return;
 		}
@@ -96,6 +96,7 @@ namespace alica
 				break;
 			}
 		}
+		//Lockguard here!
 		if (!found)
 		{
 			re = make_shared<ResultEntry>(msg->senderID, ae);
@@ -130,6 +131,8 @@ namespace alica
 
 	shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>> VariableSyncModule::getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits)
 	{
+		//Lockguard here!
+
 		int dim = query->size();
 		list<shared_ptr<VotedSeed>> seeds;
 		vector<double> scaling(dim);
@@ -138,6 +141,7 @@ namespace alica
 			scaling[i] = (limits->at(i)->at(1)-limits->at(i)->at(0));
 			scaling[i] *= scaling[i]; //Sqr it for dist calculation speed up
 		}
+		cout << "VSM: Number of Seeds in Store: " << this->store.size() << endl;
 		for(int i=0; i<this->store.size(); i++)
 		{
 			shared_ptr<ResultEntry> re = this->store.at(i); //allow for lock free iteration (no value is deleted from store)
@@ -177,11 +181,30 @@ namespace alica
 				{
 					if(a->totalSupCount != b->totalSupCount)
 					{
-						return a->totalSupCount < b->totalSupCount;
+						return a->totalSupCount > b->totalSupCount;
 					}
 					else
 					{
-						return a<b;
+						if(a->values == nullptr || a->values->size()==0) return true;
+						if(b->values == nullptr || b->values->size()==0) return false;
+
+						double va=0;
+						uint8_t* pointer = (uint8_t*)&va;
+						for (int k = 0; k < min(sizeof(double), a->values->at(0)->size()); k++)
+						{
+							*pointer = a->values->at(0)->at(k);
+							pointer++;
+						}
+
+						double vb=0;
+						pointer = (uint8_t*)&vb;
+						for (int k = 0; k < min(sizeof(double), b->values->at(0)->size()); k++)
+						{
+							*pointer = b->values->at(0)->at(k);
+							pointer++;
+						}
+
+						return vb > va;
 					}
 				});
 
@@ -191,6 +214,7 @@ namespace alica
 			ret->at(i) = (*iter)->values;
 			iter++;
 		}
+		cout << "VSM: Number of present seeds: " << ret->size() << " dim: "<< dim << " seedcount: "<< seeds.size() << endl;
 
 		return ret;
 	}
@@ -200,12 +224,16 @@ namespace alica
 		this->values = v;
 		this->supporterCount = vector<int>(dim);
 		this->dim = dim;
-		for (int i = 0; i < dim; ++i)
-		{
-			//TODO voted seed is not implemented completely
-			//if (!std::isnan(v->at(i)))
+		if(v!=nullptr) {
+			for (int i = 0; i < dim; ++i)
 			{
-				this->totalSupCount++;
+				if(v->at(i) == nullptr) {
+					continue;
+				}
+				if (v->at(i)->size() > 0)
+				{
+					this->totalSupCount++;
+				}
 			}
 		}
 	}
@@ -219,25 +247,43 @@ namespace alica
 		bool sameRes = true;
 		bool nptrs = true;
 
-		if(v == nullptr) {
+		if(v == nullptr || values == nullptr) {
+			cout << "1" << endl;
 			return true;
 		}
-
+		if(values->size() != v->size()) {
+			cout << "2" << endl;
+			return false;
+		}
 
 		for(int i = 0; i  < dim; ++i) {
+			if(v->at(i) != nullptr) {
+				nptrs = false;
+			}
+			else {
+				continue;
+			}
+			if(values->at(i) == nullptr) continue;
 
-			nptrs &= (v->at(i) == nullptr);
-			if(nptrs) continue;
-			for(int j = 0; j < v->at(i)->size(); j++) {
-				nan |= false;
-				sameRes &= (values->at(i)->at(j) == v->at(i)->at(j));
+			if(values->at(i)->size() == v->at(i)->size()) {
+				for(int j = 0; j < v->at(i)->size(); j++) {
+					nan = false;
+					if(values->at(i)->at(j) != v->at(i)->at(j)) {
+						sameRes = false;
+					}
+				}
+			} else {
+				cout << "3" << endl;
+				return true;
 			}
 		}
 
 		if(nan || sameRes || nptrs) {
+			cout << "VSM: takeVector true."  << nan << sameRes << nptrs << endl;
 			if(sameRes) this->totalSupCount++;
 			return true;
 		} else {
+			cout << "VSM: takeVector false." << endl;
 			return false;
 		}
 

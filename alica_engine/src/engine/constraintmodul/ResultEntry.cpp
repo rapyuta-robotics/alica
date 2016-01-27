@@ -95,7 +95,7 @@ namespace alica
 		lock_guard<std::mutex> lock(valueLock);
 		auto it = this->values.find(vid);
 		if(it != values.end()) {
-			if(it->second->lastUpdate > now) {
+			if(it->second->lastUpdate + ttl4Usage > now) {
 				return it->second->val;
 			}
 		}
