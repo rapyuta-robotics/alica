@@ -141,7 +141,7 @@ namespace alica
 			scaling[i] = (limits->at(i)->at(1)-limits->at(i)->at(0));
 			scaling[i] *= scaling[i]; //Sqr it for dist calculation speed up
 		}
-		cout << "VSM: Number of Seeds in Store: " << this->store.size() << endl;
+//		cout << "VSM: Number of Seeds in Store: " << this->store.size() << endl;
 		for(int i=0; i<this->store.size(); i++)
 		{
 			shared_ptr<ResultEntry> re = this->store.at(i); //allow for lock free iteration (no value is deleted from store)
@@ -214,7 +214,7 @@ namespace alica
 			ret->at(i) = (*iter)->values;
 			iter++;
 		}
-		cout << "VSM: Number of present seeds: " << ret->size() << " dim: "<< dim << " seedcount: "<< seeds.size() << endl;
+//		cout << "VSM: Number of present seeds: " << ret->size() << " dim: "<< dim << " seedcount: "<< seeds.size() << endl;
 
 		return ret;
 	}
@@ -248,11 +248,9 @@ namespace alica
 		bool nptrs = true;
 
 		if(v == nullptr || values == nullptr) {
-			cout << "1" << endl;
 			return true;
 		}
 		if(values->size() != v->size()) {
-			cout << "2" << endl;
 			return false;
 		}
 
@@ -273,17 +271,16 @@ namespace alica
 					}
 				}
 			} else {
-				cout << "3" << endl;
 				return true;
 			}
 		}
 
 		if(nan || sameRes || nptrs) {
-			cout << "VSM: takeVector true."  << nan << sameRes << nptrs << endl;
+//			cout << "VSM: takeVector true."  << nan << sameRes << nptrs << endl;
 			if(sameRes) this->totalSupCount++;
 			return true;
 		} else {
-			cout << "VSM: takeVector false." << endl;
+//			cout << "VSM: takeVector false." << endl;
 			return false;
 		}
 
