@@ -31,34 +31,38 @@ namespace autodiff
 
 	shared_ptr<Term> ConstPower::aggregateConstants()
 	{
-		base = base->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(base) != 0)
+		base = base->aggregateConstants(); //all your base are belong to us
+		auto constBase = dynamic_pointer_cast<Constant>(this->base);
+
+		if (constBase)
 		{
-			shared_ptr<Constant> base = dynamic_pointer_cast<Constant>(base);
-			return TermBuilder::constant(pow(base->value, exponent));
+			return TermBuilder::constant(pow(constBase->value, exponent));
 		}
-		else if (dynamic_pointer_cast<Zero>(base) != 0)
+
+		auto zeroBase = dynamic_pointer_cast<Zero>(base);
+
+		if (zeroBase)
 		{
 			if (exponent >= 0)
 			{
-				return base;
+				return zeroBase;
 			}
 			else
 			{
-				throw "Divide By Zero";
+				throw "ConstPower: Divide By Zero";
 			}
 		}
-		else if (dynamic_pointer_cast<ConstPower>(base) != 0)
+
+		auto constPowerBase = dynamic_pointer_cast<ConstPower>(base);
+
+		if (constPowerBase)
 		{
-			shared_ptr<ConstPower> base = dynamic_pointer_cast<ConstPower>(base);
-			this->exponent *= base->exponent;
-			this->base = base->base;
+			this->exponent *= constPowerBase->exponent;
+			this->base = constPowerBase->base;
 			return shared_from_this();
 		}
-		else
-		{
-			return shared_from_this();
-		}
+
+		return shared_from_this();
 	}
 
 	shared_ptr<Term> ConstPower::derivative(shared_ptr<Variable> v)
@@ -70,7 +74,10 @@ namespace autodiff
 	{
 		string str;
 		str.append("constPower( ");
-		str.append(base->toString());
+		if (base != nullptr)
+			str.append(base->toString());
+		else
+			str.append("nullptr");
 		str.append(", ");
 		str.append(std::to_string(exponent));
 		str.append(" )");
