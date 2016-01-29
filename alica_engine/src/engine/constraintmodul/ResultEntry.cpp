@@ -36,6 +36,7 @@ namespace alica
 
 	void ResultEntry::addValue(long vid, shared_ptr<vector<uint8_t>> val)
 	{
+
 		long now = ae->getIAlicaClock()->now();
 		shared_ptr<VarValue> vv;
 		auto it = this->values.find(vid);
