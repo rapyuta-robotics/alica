@@ -52,7 +52,7 @@ namespace alica
 		 * @param agentsInScope A shared_ptr<vector<int> >
 		 * @return A shared_ptr<list<vector<Variable* > > >
 		 */
-		virtual shared_ptr<list<vector<Variable* > > >getSortedVariables(RunningPlan* p, shared_ptr<vector<int> > agentsInScope) = 0;
+		virtual shared_ptr<list<vector<Variable* > > >getSortedVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<int> >& agentsInScope) = 0;
 //		/**
 //		 * Access the list of sorted AD.Terms under the scope of this quantifier given a RunningPlan.
 //		 * @param agentsInScope A shared_ptr<vector<int> >

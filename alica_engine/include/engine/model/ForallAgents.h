@@ -31,7 +31,7 @@ namespace alica
 	public:
 		ForallAgents(AlicaEngine* ae, long id = 0);
 		virtual ~ForallAgents();
-		shared_ptr<list<vector<Variable* > > > getSortedVariables(RunningPlan* p, shared_ptr<vector<int> > agentsInScope);
+		shared_ptr<list<vector<Variable* > > > getSortedVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<int> >& agentsInScope);
 
 	protected:
 		AlicaEngine* ae;
