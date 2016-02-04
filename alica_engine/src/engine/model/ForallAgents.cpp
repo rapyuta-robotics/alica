@@ -39,10 +39,9 @@ namespace alica
 	 * @param agentsInScope A shared_ptr<vector<int> >
 	 * @return shared_ptr<list<vector<Variable*> > >
 	 */
-	shared_ptr<list<vector<Variable*> > > ForallAgents::getSortedVariables(RunningPlan* p,
-																			shared_ptr<vector<int> > agentsInScope)
+	shared_ptr<list<vector<Variable*> > > ForallAgents::getSortedVariables(shared_ptr<RunningPlan>& p,
+																			shared_ptr<vector<int> >& agentsInScope)
 	{
-		agentsInScope = nullptr;
 		if (this->isScopeIsPlan())
 		{
 			if (p->getPlan() == this->getScopedPlan())

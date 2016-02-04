@@ -22,9 +22,8 @@ namespace alica
 		for (Quantifier* q : condition->getQuantifiers())
 		{
 			shared_ptr<vector<int>> robots;
-			// TODO: aus rp.get() muss rp
-			sortedVariables->push_back(*q->getSortedVariables(rp.get(), robots));
-			if (robots != nullptr) {
+			sortedVariables->push_back(*q->getSortedVariables(rp, robots));
+			if (robots) {
 				agentsinscope->push_back(robots);
 			} else {
 				agentsinscope->push_back(make_shared<vector<int>>());
