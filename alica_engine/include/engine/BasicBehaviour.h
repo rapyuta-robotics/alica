@@ -122,6 +122,8 @@ namespace alica
 
 		shared_ptr<vector<int>> robotsInEntryPointOfHigherPlan(EntryPoint* ep);
 
+		shared_ptr<vector<int>> robotsInEntryPoint(EntryPoint* ep);
+
 	private:
 		mutex runCV_mtx;
 		void runInternal();

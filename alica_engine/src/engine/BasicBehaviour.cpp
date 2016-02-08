@@ -203,6 +203,20 @@ namespace alica
 		return nullptr;
 	}
 
+	shared_ptr<vector<int> > BasicBehaviour::robotsInEntryPoint(EntryPoint* ep)
+	{
+		if (ep == nullptr)
+		{
+			return nullptr;
+		}
+		shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
+		if(cur != nullptr)
+		{
+			return cur->getAssignment()->getRobotsWorking(ep);
+		}
+		return nullptr;
+	}
+
 	void BasicBehaviour::initInternal()
 	{
 		this->success = false;
