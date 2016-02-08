@@ -35,7 +35,7 @@ namespace alica
 			{
 				ss << aei->robotIDsWithMe[i] << ", ";
 			}
-			ss << aei->robotIDsWithMe[aei->robotIDsWithMe.size()];
+			ss << aei->robotIDsWithMe[aei->robotIDsWithMe.size()-1];
 		}
 		ss << ")";
 

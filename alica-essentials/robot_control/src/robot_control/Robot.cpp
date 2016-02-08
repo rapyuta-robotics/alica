@@ -31,8 +31,8 @@ namespace robot_control
 		// manual configuration of widgets
 		this->uiControlledRobot->robotStartStopBtn->setText(QString(this->name.c_str()));
 		this->alicaWidget = new alica::AlicaWidget();
-		this->uiControlledRobot->allClientsFlowLayout->addWidget(this->alicaWidget->qframe);
-		//this->alicaWidget->qframe->hide();
+		this->uiControlledRobot->scrollAreaWidgetContents->addWidget(this->alicaWidget->qframe);
+		this->alicaWidget->qframe->hide();
 
 
 		// signals and slots
@@ -75,7 +75,6 @@ namespace robot_control
 			}
 		}
 
-		this->uiControlledRobot->scrollArea->adjustSize();
 	}
 
 	void Robot::toggleProcessManager(bool show)
@@ -96,7 +95,6 @@ namespace robot_control
 			}
 		}
 
-		this->uiControlledRobot->scrollArea->adjustSize();
 	}
 
 	void Robot::updateGUI(chrono::system_clock::time_point now)

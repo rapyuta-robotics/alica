@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>169</width>
-    <height>111</height>
+    <width>300</width>
+    <height>225</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -48,6 +48,14 @@
     <number>0</number>
    </property>
    <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="sizeConstraint">
+      <enum>QLayout::SetFixedSize</enum>
+     </property>
+     <item>
       <layout class="QHBoxLayout" name="toolbarLayout" stretch="0,0,0">
        <property name="spacing">
         <number>0</number>
@@ -180,21 +188,44 @@
        <property name="widgetResizable">
         <bool>true</bool>
        </property>
-       <layout class="QHBoxLayout" name="scrollAreaWidgetContents" stretch="0,0,0">
+       <widget class="QWidget" name="scrollAreaWidgetContents">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>163</width>
-          <height>76</height>
+          <width>164</width>
+          <height>108</height>
          </rect>
         </property>
-       </layout>
+        <layout class="flowlayout" name="allClientsFlowLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+      </layout>
+       </widget>
       </widget>
      </item>
+    </layout>
+   </item>
   </layout>
  </widget>
  <layoutdefault spacing="0" margin="0"/>
+ <customwidgets>
+  <customwidget>
+   <class>flowlayout</class>
+   <extends>QPushButton</extends>
+   <header>robot_control/flowlayout.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
