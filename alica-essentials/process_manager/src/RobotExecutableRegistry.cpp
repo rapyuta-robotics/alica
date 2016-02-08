@@ -284,11 +284,15 @@ namespace supplementary
 						currentParams.push_back(strdup(execName.c_str()));
 					}
 					// transform the system config params to vector of char*, for c-compatibility.
+					cout << currentParams[0] << endl;
 					for (string param : paramSetValues)
 					{
+						cout << "REREG: '" << param << "'" << endl;
 						char * tmp = new char[param.size() + 1];
 						strcpy(tmp, param.c_str());
-						tmp[param.size() + 1] = '\0';
+						tmp[param.size()] = '\0';
+						cout << "TMP: '"<< tmp << "' Size: "<< currentParams.size() << endl;
+
 						currentParams.push_back(tmp);
 					}
 					currentParams.push_back(nullptr);

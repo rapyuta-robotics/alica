@@ -48,6 +48,7 @@ namespace autodiff
 	shared_ptr<TVec> operator+(const shared_ptr<TVec>& left, const shared_ptr<TVec>& right);
 	shared_ptr<TVec> operator-(const shared_ptr<TVec>& left, const shared_ptr<TVec>& right);
 	shared_ptr<TVec> operator-(const shared_ptr<TVec>& vector);
+
 	shared_ptr<TVec> operator*(const shared_ptr<TVec>& vector, const shared_ptr<Term>& scalar);
 	shared_ptr<TVec> operator*(const shared_ptr<TVec>& vector, const double scalar);
 	shared_ptr<TVec> operator*(const shared_ptr<Term>& scalar, const shared_ptr<TVec>& vector);

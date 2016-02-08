@@ -56,8 +56,12 @@ namespace alica
 
 			bool IntervalPropagator::propagate(shared_ptr<vector<shared_ptr<cnsat::Var> > > decisions,
 												shared_ptr<vector<shared_ptr<vector<double> > > >& completeRanges,
-												shared_ptr<vector<shared_ptr<cnsat::Var> > > offenders)
+												shared_ptr<vector<shared_ptr<cnsat::Var> > >& offenders)
 			{
+				cout << "IntervalPropagator::propagate" << endl;
+				for (auto& it : *decisions) {
+					cout << "\t" << it->toString() << endl;
+				}
 				offenders = nullptr;
 				completeRanges = make_shared<vector<shared_ptr<vector<double>>> >(dim);
 				completeRanges->insert(completeRanges->begin(), globalRanges->begin(), globalRanges->end());
@@ -140,7 +144,7 @@ namespace alica
 				updates = 0;
 				try {
 					this->rp->propagate(term);
-				} catch(UnsolveableException &ue) {
+				} catch(int &i) {
 #ifdef RecPropDEBUG
 //				cout << "Unsolvable: " << ue << endl;
 				cout << updates << " update steps" << endl;
@@ -171,6 +175,7 @@ namespace alica
 					if (!propagate(v->term->negate()))
 						return false;
 				}
+
 				double rangeSize = 0;
 				shared_ptr<vector<shared_ptr<vector<double>>> > range = make_shared<vector<shared_ptr<vector<double>>>>(dim);
 				for (int i = dim - 1; i >= 0; --i)

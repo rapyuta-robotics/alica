@@ -280,11 +280,12 @@ namespace alica
 					//if (c->literals->at(0)->var->locked && c->literals->at(0)->sign != c->literals->at(0)->var->assignment)
 					//	return false;
 					//backTrackAndRevoke(c->literals->at(0)->var->decisionLevel);
+					auto sign = c->literals->at(0)->sign;
 					backTrack(this->decisionLevel->at(0));
 
 					decisions->insert(decisions->begin(), c->literals->at(0)->var);
 					c->literals->at(0)->var->decisionLevel = this->decisionLevel->at(0);
-					c->literals->at(0)->var->assignment = c->literals->at(0)->sign;
+					c->literals->at(0)->var->assignment = sign;
 					c->literals->at(0)->var->setReason(nullptr);
 					c->literals->at(0)->var->locked = true;
 					for (shared_ptr<DecisionLevel> l : *(this->decisionLevel))
@@ -484,6 +485,7 @@ namespace alica
 						restartCount++;
 						for (int j = (decisionLevel->at(1)->level); j < decisions->size(); j++)
 						{
+							cout << "solve strange unass" << endl;
 							decisions->at(j)->assignment = Assignment::UNASSIGNED;
 							decisions->at(j)->setReason(nullptr);
 							for (Watcher* wa : *(decisions->at(j)->watchList))

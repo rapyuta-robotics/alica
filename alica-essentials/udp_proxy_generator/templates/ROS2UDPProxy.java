@@ -146,7 +146,7 @@ public class ROS2UDPProxy implements NodeMain {
     	if(packet.getAddress().equals(localhost)) {
 			return;
 		}
-        long id = ByteBuffer.wrap(Arrays.copyOfRange(packet.getData(),0,4)).getLong();
+		long id = ChannelBuffers.copiedBuffer(ByteOrder.LITTLE_ENDIAN,Arrays.copyOfRange(packet.getData(), 0, 4)).getUnsignedInt(0);
         	<?udpReception?>
             else {
                 System.err.println("Cannot find Matching topic:" + id);

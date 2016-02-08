@@ -72,7 +72,11 @@ namespace autodiff
 		{
 			nonConstTerms.push_back(TermBuilder::constant(sum));
 		}
-		terms = nonConstTerms;
+		terms.clear();
+		for (auto term : nonConstTerms)
+		{
+			terms.push_back(term);
+		}
 		return shared_from_this();
 	}
 

@@ -72,6 +72,7 @@ namespace alica
 				this->reason = nullptr;
 				this->seen = false;
 
+				cout << "Var::reset() unass" << endl;
 				this->assignment = Assignment::UNASSIGNED;
 
 				this->activity = 0;
