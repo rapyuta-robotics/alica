@@ -26,7 +26,7 @@ namespace geometry {
 		static double distancePointToLineSegment (double x, double y, shared_ptr<CNPoint2D> a, shared_ptr<CNPoint2D> b);
 		static double absDeltaAngle(double angle1, double angle2);
 		static bool outsideTriangle (shared_ptr<CNPoint2D> a, shared_ptr<CNPoint2D> b, shared_ptr<CNPoint2D> c, double tolerance, shared_ptr<vector<shared_ptr<CNPoint2D>>> points);
-
+		static bool leftOf(shared_ptr<CNPoint2D> a, shared_ptr<CNPoint2D> b);
 		//Sign function --> VORZEICHENFUNKTION
 		template <typename T> static int sgn(T val) {
 			return (T(0) < val) - (val < T(0));

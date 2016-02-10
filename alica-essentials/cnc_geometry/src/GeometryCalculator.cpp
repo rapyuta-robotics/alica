@@ -222,5 +222,11 @@ namespace geometry
 		}
 		return true;
 	}
+
+	bool GeometryCalculator::leftOf(shared_ptr<CNPoint2D> a, shared_ptr<CNPoint2D> b)
+	{
+		return (a->x * b->y - a->y * b->x) < 0;
+	}
 } /* namespace geometry */
+
 
