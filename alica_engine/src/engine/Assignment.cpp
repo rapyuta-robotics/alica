@@ -215,7 +215,7 @@ namespace alica
 		{
 			c += this->epRobotsMapping->getRobots(i)->size();
 		}
-		return this->numUnAssignedRobots + c;
+		return this->getNumUnAssignedRobots() + c;
 	}
 
 //	/**

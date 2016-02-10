@@ -63,8 +63,6 @@ namespace alica
 		Plan* getPlan();
 		shared_ptr<UtilityFunction> getUtilFunc();
 		shared_ptr<SuccessCollection> getEpSuccessMapping();
-		int numUnAssignedRobots();
-		vector<int>& getUnAssignedRobots();
 		string assignmentCollectionToString();
 		shared_ptr<vector<EntryPoint*> > getEntryPoints();
 		int getHash();
@@ -73,6 +71,7 @@ namespace alica
 		void setHashCalculated(bool hashCalculated);
 		void setMax(double max);
 		shared_ptr<vector<int>> getRobots();
+		int hash = 0;
 
 
 	private:
@@ -87,12 +86,11 @@ namespace alica
 		AssignmentCollection* epRobotsMapping;
 		shared_ptr<vector<int>> robots;
 		vector<shared_ptr<DynCardinality>> dynCardinalities;
-		vector<int> unAssignedRobots;
 		Plan* plan;
 		const long PRECISION = 1073741824;
 		long compareVal = 0;
 		bool hashCalculated;
-		int hash = 0;
+
 		shared_ptr<SuccessCollection> epSuccessMapping;
 
 
@@ -112,7 +110,7 @@ namespace std
         {
         	if(pa.isHashCalculated())
         	{
-        		return pa.getHash();
+        		return pa.hash;
         	}
         	int basei = pa.getEpRobotsMapping()->getSize() + 1;
         	shared_ptr<vector<int>> robots;
@@ -124,14 +122,14 @@ namespace std
         			for (int idx = 0; idx < pa.getRobots()->size(); idx++) {
         				if (pa.getRobots()->at(idx) == robot)
         				{
-        					pa.setHash(pa.getHash() + (i + 1) * pow(basei, idx));
+        					pa.setHash(pa.hash + (i + 1) * pow(basei, idx));
         				}
         			}
 
         		}
         	}
             pa.setHashCalculated(true);
-            return pa.getHash();
+            return pa.hash;
         }
     };
 }

@@ -68,7 +68,7 @@ namespace alica
 	Role* RoleAssignment::getRole(int robotId)
 	{
 		Role* r = nullptr;
-		auto iter = this->robotRoleMapping.begin();
+		auto iter = this->robotRoleMapping.find(robotId);
 		if (iter != this->robotRoleMapping.end())
 		{
 			return iter->second;
@@ -105,10 +105,15 @@ namespace alica
 	 */
 	void RoleAssignment::mapRoleToRobot(RolePriority* rp)
 	{
+
+		std::sort(this->sortedRobots.begin(), this->sortedRobots.end(), &RobotRoleUtility::compareTo);
+
 		for (RoleUsage* rolUse : rp->getPriorityList())
 		{
+
 			for (RobotRoleUtility* rc : this->sortedRobots)
 			{
+
 				if (rolUse->getRole() == rc->getRole())
 				{
 					if (this->robotRoleMapping.size() != 0 && (this->robotRoleMapping.find(rc->getRobot()->getId()) != this->robotRoleMapping.end()
@@ -117,11 +122,14 @@ namespace alica
 						continue;
 					}
 					this->robotRoleMapping.insert(pair<int, Role*>(rc->getRobot()->getId(), rc->getRole()));
+
 					if (this->ownRobotProperties->getId() == rc->getRobot()->getId())
 					{
 						this->ownRole = rc->getRole();
 					}
+
 					to->getRobotById(rc->getRobot()->getId())->setLastRole(rc->getRole());
+
 					break;
 				}
 			}
@@ -188,6 +196,7 @@ namespace alica
 				}
 				if (y != 0)
 				{
+
 					dutility /= y;
 					rc = new RobotRoleUtility(dutility, rps, roleIter->second);
 					this->sortedRobots.push_back(rc);
@@ -203,6 +212,7 @@ namespace alica
 		this->robotRoleMapping.clear();
 		while (this->robotRoleMapping.size() < this->availableRobots->size())
 		{
+//			cout << "RA: manage role assignement." << endl;
 			mapRoleToRobot(rp);
 		}
 		delete rp;

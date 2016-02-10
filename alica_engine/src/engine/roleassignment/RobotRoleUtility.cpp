@@ -35,16 +35,26 @@ namespace alica
 
 	bool RobotRoleUtility::compareTo(RobotRoleUtility* thisOne, RobotRoleUtility* otherOne)
 	{
-		bool compare = (otherOne->getRole()->getId() == thisOne->getRole()->getId());
-		if(compare)
-		{
-			compare = (otherOne->getUtilityValue() == thisOne->getUtilityValue());
-		}
-		if(compare)
-		{
-			compare = (otherOne->getRobot()->getId() == thisOne->getRobot()->getId());
-		}
-		return compare;
+		if(otherOne->getRole()->getId() != thisOne->getRole()->getId())
+			return otherOne->getRole()->getId() < thisOne->getRole()->getId();
+
+		if(otherOne->getUtilityValue() != thisOne->getUtilityValue())
+			return otherOne->getUtilityValue() < thisOne->getUtilityValue();
+
+		if(otherOne->getRobot()->getId() != thisOne->getRobot()->getId())
+			return otherOne->getRobot()->getId() < thisOne->getRobot()->getId();
+
+		return false;
+//		bool compare = (otherOne->getRole()->getId() == thisOne->getRole()->getId());
+//		if(compare)
+//		{
+//			compare = (otherOne->getUtilityValue() == thisOne->getUtilityValue());
+//		}
+//		if(compare)
+//		{
+//			compare = (otherOne->getRobot()->getId() == thisOne->getRobot()->getId());
+//		}
+//		return compare;
 	}
 
 	double RobotRoleUtility::getUtilityValue()

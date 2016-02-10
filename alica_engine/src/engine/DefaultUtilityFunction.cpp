@@ -94,8 +94,8 @@ namespace alica
 		sumOfUI.setMin(sumOfUI.getMin() + this->priorityWeight * prioUI.getMin());
 		sumOfWeights += this->priorityWeight;
 #ifdef UFDEBUG
-		cout << "DF: prioUI.Min = " << prioUI->getMin() << endl;
-		cout << "DF: prioUI.Max = " << prioUI->getMax() << endl;
+		cout << "DF: prioUI.Min = " << prioUI.getMin() << endl;
+		cout << "DF: prioUI.Max = " << prioUI.getMax() << endl;
 		cout << "DF: priorityWeight = " << priorityWeight << endl;
 #endif
 		if (oldAss != nullptr && this->similarityWeight > 0.0)

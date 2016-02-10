@@ -55,7 +55,7 @@ namespace alica
 
 			}
 		}
-		this->defaultRole = (*sc)["Globals"]->tryGet<string>("Attack", "Globals", "Team", name.c_str(), "DefaultRole",
+		this->defaultRole = (*sc)["Globals"]->tryGet<string>("NOROLESPECIFIED", "Globals", "Team", name.c_str(), "DefaultRole",
 																NULL);
 	}
 

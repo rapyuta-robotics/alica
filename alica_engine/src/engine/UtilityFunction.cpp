@@ -22,11 +22,12 @@
 #include "engine/model/Role.h"
 #include "engine/DefaultUtilityFunction.h"
 
-
 namespace alica
 {
 
-	UtilityFunction::UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight, double similarityWeight, Plan* plan) : priResult(0.0, 0.0), simUI(0.0, 0.0)
+	UtilityFunction::UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight,
+										double similarityWeight, Plan* plan) :
+			priResult(0.0, 0.0), simUI(0.0, 0.0)
 	{
 		this->ra = nullptr;
 		this->ae = nullptr;
@@ -41,11 +42,13 @@ namespace alica
 
 	UtilityFunction::~UtilityFunction()
 	{
-		for(auto summand : utilSummands) {
+		for (auto summand : utilSummands)
+		{
 			delete summand;
 		}
 
-		for(auto pair : this->priorityMartix) {
+		for (auto pair : this->priorityMartix)
+		{
 			delete pair.first;
 		}
 		delete this->lookupStruct;
@@ -209,9 +212,9 @@ namespace alica
 
 	void UtilityFunction::cacheEvalData()
 	{
-		if(this->utilSummands.size() == 0) // == null for default utility function
+		if (this->utilSummands.size() == 0) // == null for default utility function
 		{
-			for(int i = 0; i < this->utilSummands.size(); ++i)
+			for (int i = 0; i < this->utilSummands.size(); ++i)
 			{
 				auto iter = this->utilSummands.begin();
 				advance(iter, i);
@@ -236,22 +239,21 @@ namespace alica
 		long roleId;
 		double curPrio;
 
-		for(RoleTaskMapping* rtm : roleSet->getRoleTaskMappings())
+		for (RoleTaskMapping* rtm : roleSet->getRoleTaskMappings())
 		{
 			roleId = rtm->getRole()->getId();
 			this->roleHighestPriorityMap.insert(pair<long, double>(roleId, 0.0));
-			for(auto epIter = this->plan->getEntryPoints().begin(); epIter != this->plan->getEntryPoints().end(); epIter++)
+			for (auto epIter = this->plan->getEntryPoints().begin(); epIter != this->plan->getEntryPoints().end();
+					epIter++)
 			{
 				taskId = epIter->second->getTask()->getId();
 				auto iter = rtm->getTaskPriorities().find(taskId);
-				if(iter == rtm->getTaskPriorities().end())
+				if (iter == rtm->getTaskPriorities().end())
 				{
 					stringstream ss;
-					ss << "UF: There is no priority for the task "
-		                    << taskId << " in the roleTaskMapping of the role "
-		                    << rtm->getRole()->getName() << " with id " << roleId
-		                    << "!\n We are in the UF for the plan "
-		                    << this->plan->getName() << "!" << endl;
+					ss << "UF: There is no priority for the task " << taskId << " in the roleTaskMapping of the role "
+							<< rtm->getRole()->getName() << " with id " << roleId
+							<< "!\n We are in the UF for the plan " << this->plan->getName() << "!" << endl;
 					ae->abort(ss.str());
 				}
 				else
@@ -259,11 +261,11 @@ namespace alica
 					curPrio = iter->second;
 				}
 				TaskRoleStruct* trs = new TaskRoleStruct(taskId, roleId);
-				if(this->priorityMartix.find(trs) == this->priorityMartix.end())
+				if (this->priorityMartix.find(trs) == this->priorityMartix.end())
 				{
 					this->priorityMartix.insert(pair<TaskRoleStruct*, double>(trs, curPrio));
 				}
-				if(this->roleHighestPriorityMap.at(roleId) < curPrio)
+				if (this->roleHighestPriorityMap.at(roleId) < curPrio)
 				{
 					this->roleHighestPriorityMap.at(roleId) = curPrio;
 				}
@@ -275,12 +277,13 @@ namespace alica
 		// INIT UTILITYSUMMANDS
 		if (this->utilSummands.size() != 0) // it is null for default utility function
 		{
-			for(USummand* utilSum : this->utilSummands) {
+			for (USummand* utilSum : this->utilSummands)
+			{
 				utilSum->init(ae);
 			}
 		}
 		this->ae = ae;
-		this->ra  = this->ae->getRoleAssignment();
+		this->ra = this->ae->getRoleAssignment();
 	}
 
 	/**
@@ -291,9 +294,10 @@ namespace alica
 	void UtilityFunction::initDataStructures(AlicaEngine* ae)
 	{
 
-		map<long,Plan*> plans = ae->getPlanRepository()->getPlans();
+		map<long, Plan*> plans = ae->getPlanRepository()->getPlans();
 
-		for(auto iter = plans.begin(); iter != plans.end(); iter++) {
+		for (auto iter = plans.begin(); iter != plans.end(); iter++)
+		{
 			iter->second->getUtilityFunction()->init(ae);
 		}
 	}
@@ -302,9 +306,9 @@ namespace alica
 	{
 
 		stringstream ss;
-		ss <<  this->name << endl;
-		ss <<  "prioW: " << this->priorityWeight << " simW: " << this->similarityWeight << endl;
-		for(USummand* utilSummand : this->utilSummands)
+		ss << this->name << endl;
+		ss << "prioW: " << this->priorityWeight << " simW: " << this->similarityWeight << endl;
+		for (USummand* utilSummand : this->utilSummands)
 		{
 			ss << utilSummand->toString();
 		}
@@ -324,19 +328,21 @@ namespace alica
 	{
 		this->priResult.setMax(0.0);
 		this->priResult.setMin(0.0);
-		if(this->priorityWeight == 0)
+		if (this->priorityWeight == 0)
 		{
 			return this->priResult;
 		}
 		//c# != null
 		// SUM UP HEURISTIC PART OF PRIORITY UTILITY
-		if(ass->getUnassignedRobots().size() != 0)  // == null, when it is a normal assignment
+
+		if (ass->getUnassignedRobots().size() != 0) // == null, when it is a normal assignment
 		{
-			for(int i = 0; i < ass->getUnassignedRobots().size(); i++)
+			for (auto robotID : ass->getUnassignedRobots())
 			{
-				auto iter = ass->getUnassignedRobots().begin();
-				advance(iter, i);
-				this->priResult.setMax(this->priResult.getMax() + this->roleHighestPriorityMap.at(this->ra->getRole((*iter))->getId()));
+
+				this->priResult.setMax(
+						this->priResult.getMax()
+								+ this->roleHighestPriorityMap.at(this->ra->getRole(robotID)->getId()));
 			}
 		}
 		// SUM UP DEFINED PART OF PRIORITY UTILITY
@@ -345,30 +351,29 @@ namespace alica
 		int denum = min(this->plan->getMaxCardinality(), this->ae->getTeamObserver()->teamSize());
 		long taskId;
 		long roleId;
-	//	shared_ptr<vector<EntryPoint*> > eps = ass->getEntryPoints();
+		//	shared_ptr<vector<EntryPoint*> > eps = ass->getEntryPoints();
 		double curPrio = 0;
 		EntryPoint* ep;
-		for(short i = 0; i < ass->getEntryPointCount(); ++i)
+		for (short i = 0; i < ass->getEntryPointCount(); ++i)
 		{
 			ep = ass->getEpRobotsMapping()->getEp(i);
 			taskId = ep->getTask()->getId();
 			auto robotList = ass->getUniqueRobotsWorkingAndFinished(ep);
-			for(int j = 0; j < robotList->size(); ++j)
+			for(auto robot : *robotList)
 			{
-				auto iter = robotList->begin();
-				advance(iter, j);
-				roleId = this->ra->getRole((*iter))->getId();
+				roleId = this->ra->getRole(robot)->getId();
 				this->lookupStruct->taskId = taskId;
 				this->lookupStruct->roleId = roleId;
-				for(auto pair : this->priorityMartix)
+				for (auto pair : this->priorityMartix)
 				{
-					if(pair.first->roleId == this->lookupStruct->roleId && pair.first->taskId == this->lookupStruct->taskId)
+					if (pair.first->roleId == this->lookupStruct->roleId
+							&& pair.first->taskId == this->lookupStruct->taskId)
 					{
 						curPrio = pair.second;
 						break;
 					}
 				}
-				if(curPrio < 0.0)// because one Robot has a negative priority for his task
+				if (curPrio < 0.0) // because one Robot has a negative priority for his task
 				{
 					this->priResult.setMin(-1.0);
 					this->priResult.setMax(-1.0);
@@ -391,22 +396,22 @@ namespace alica
 		}
 #ifdef UFDEBUG
 		cout << "##" << endl;
-		cout << "UF: prioUI.Min = " << priResult->getMin() << endl;
-		cout << "UF: prioUI.Max = " << priResult->getMax() << endl;
+		cout << "UF: prioUI.Min = " << priResult.getMin() << endl;
+		cout << "UF: prioUI.Max = " << priResult.getMax() << endl;
 		cout << "UF: denum = " << denum << endl;
 #endif
-			priResult.setMax(priResult.getMax() + priResult.getMin());
-			if(denum != 0)
-			{
-				priResult.setMin(priResult.getMin() / denum);
-				priResult.setMax(priResult.getMax() / denum);
-			}
+		priResult.setMax(priResult.getMax() + priResult.getMin());
+		if (denum != 0)
+		{
+			priResult.setMin(priResult.getMin() / denum);
+			priResult.setMax(priResult.getMax() / denum);
+		}
 #ifdef UFDEBUG
-			cout << "UF: prioUI.Min = " << priResult->getMin() << endl;
-			cout << "UF: prioUI.Max = " << priResult->getMax() << endl;
-			cout << "##" << endl;
+		cout << "UF: prioUI.Min = " << priResult.getMin() << endl;
+		cout << "UF: prioUI.Max = " << priResult.getMax() << endl;
+		cout << "##" << endl;
 #endif
-			return priResult;
+		return priResult;
 	}
 
 	pair<vector<double>, double>* UtilityFunction::differentiate(IAssignment* newAss)
@@ -426,7 +431,7 @@ namespace alica
 		int numOldAssignedRobots = 0;
 		//shared_ptr<vector<EntryPoint*> > oldAssEps = oldAss->getEntryPoints();
 		EntryPoint* ep;
-		for(short i = 0; i < oldAss->getEntryPointCount(); ++i)
+		for (short i = 0; i < oldAss->getEntryPointCount(); ++i)
 		{
 			ep = oldAss->getEpRobotsMapping()->getEp(i);
 			// for normalisation
@@ -435,15 +440,17 @@ namespace alica
 			auto newRobots = newAss->getRobotsWorkingAndFinished(ep);
 
 			//C# newRobots != null
-			if(newRobots->size() != 0)
+			if (newRobots->size() != 0)
 			{
-				for(int oldRobot : (*oldRobots))
+				for (int oldRobot : (*oldRobots))
 				{
-					if(find(newRobots->begin(),newRobots->end(), oldRobot) != newRobots->end())
+					if (find(newRobots->begin(), newRobots->end(), oldRobot) != newRobots->end())
 					{
 						simUI.setMin(simUI.getMin() + 1);
 					}
-					else if(ep->getMaxCardinality() > newRobots->size() && find(newAss->getUnassignedRobots().begin(),newAss->getUnassignedRobots().end(), oldRobot) != newAss->getUnassignedRobots().end())
+					else if (ep->getMaxCardinality() > newRobots->size()
+							&& find(newAss->getUnassignedRobots().begin(), newAss->getUnassignedRobots().end(),
+									oldRobot) != newAss->getUnassignedRobots().end())
 					{
 						simUI.setMax(simUI.getMax() + 1);
 					}
