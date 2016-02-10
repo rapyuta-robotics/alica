@@ -55,7 +55,7 @@ namespace alica
 		this->hashCalculated = false;
 		this->plan = nullptr;
 		this->epRobotsMapping = new AssignmentCollection(AssignmentCollection::maxEpsCount);
-		this->unAssignedRobots = vector<int>();
+		this->unassignedRobots = vector<int>();
 		this->dynCardinalities = vector<shared_ptr<DynCardinality>>(AssignmentCollection::maxEpsCount);
 		this->compareVal = PRECISION;
 		for (int i = 0; i < AssignmentCollection::maxEpsCount; i++)
@@ -90,17 +90,17 @@ namespace alica
 		return epSuccessMapping;
 	}
 
-	vector<int>& PartialAssignment::getUnAssignedRobots()
-	{
-		return unAssignedRobots;
-	}
+//	vector<int>& PartialAssignment::getunassignedRobots()
+//	{
+//		return unassignedRobots;
+//	}
 
 	void PartialAssignment::clear()
 	{
 		this->min = 0.0;
 		this->max = 1.0;
 		this->compareVal = PRECISION;
-		this->unAssignedRobots.clear();
+		this->unassignedRobots.clear();
 		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
 		{
 			this->epRobotsMapping->getRobots(i)->clear();
@@ -190,7 +190,7 @@ namespace alica
 		// At the beginning all robots are unassigned
 		for (int i : (*robots))
 		{
-			ret->unAssignedRobots.push_back(i);
+			ret->unassignedRobots.push_back(i);
 		}
 		return ret;
 	}
@@ -209,9 +209,9 @@ namespace alica
 		ret->robots = oldPA->robots;
 		ret->utilFunc = oldPA->utilFunc;
 		ret->epSuccessMapping = oldPA->epSuccessMapping;
-		for (int i = 0; i < oldPA->unAssignedRobots.size(); i++)
+		for (int i = 0; i < oldPA->unassignedRobots.size(); i++)
 		{
-			ret->unAssignedRobots.push_back(oldPA->unAssignedRobots[i]);
+			ret->unassignedRobots.push_back(oldPA->unassignedRobots[i]);
 		}
 
 		for (int i = 0; i < oldPA->dynCardinalities.size(); i++)
@@ -246,7 +246,7 @@ namespace alica
 		{
 			c += this->epRobotsMapping->getRobots(i)->size();
 		}
-		return this->numUnAssignedRobots() + c;
+		return this->getNumUnAssignedRobots() + c;
 	}
 
 	shared_ptr<vector<int> > PartialAssignment::getRobotsWorking(EntryPoint* ep)
@@ -354,8 +354,8 @@ namespace alica
 						break;
 					}
 					//remove robot from "To-Add-List"
-					auto iter = find(this->unAssignedRobots.begin(), this->unAssignedRobots.end(), robot);
-					if (this->unAssignedRobots.erase(iter) == this->unAssignedRobots.end())
+					auto iter = find(this->unassignedRobots.begin(), this->unassignedRobots.end(), robot);
+					if (this->unassignedRobots.erase(iter) == this->unassignedRobots.end())
 					{
 						cerr << "PA: Tried to assign robot " << robot << ", but it was NOT UNassigned!" << endl;
 						throw new exception;
@@ -406,14 +406,14 @@ namespace alica
 	shared_ptr<list<PartialAssignment*> > PartialAssignment::expand()
 	{
 		shared_ptr<list<PartialAssignment*> > newPas = make_shared<list<PartialAssignment*> >();
-		if (this->unAssignedRobots.size() == 0)
+		if (this->unassignedRobots.size() == 0)
 		{
 			// No robot left to expand
 			return newPas;
 		}
 		// Robot which should be assigned next
-		int robot = this->unAssignedRobots[0];
-		this->unAssignedRobots.erase(this->unAssignedRobots.begin());
+		int robot = this->unassignedRobots[0];
+		this->unassignedRobots.erase(this->unassignedRobots.begin());
 		PartialAssignment* newPa;
 		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
 		{
@@ -438,7 +438,7 @@ namespace alica
 		{
 			min += dynCardinalities[i]->getMin();
 		}
-		return min <= this->numUnAssignedRobots();
+		return min <= this->getNumUnAssignedRobots();
 	}
 
 	/**
@@ -448,7 +448,7 @@ namespace alica
 	bool PartialAssignment::isGoal()
 	{
 		// There should be no unassigned robots anymore
-		if (this->unAssignedRobots.size() > 0)
+		if (this->unassignedRobots.size() > 0)
 		{
 			return false;
 		}
@@ -499,11 +499,11 @@ namespace alica
 			return true;
 		}
 		// Now we are sure that both partial assignments have the same utility and the same plan id
-		if (thisPa->unAssignedRobots.size() < newPa->unAssignedRobots.size())
+		if (thisPa->unassignedRobots.size() < newPa->unassignedRobots.size())
 		{
 			return true;
 		}
-		else if (thisPa->unAssignedRobots.size() > newPa->unAssignedRobots.size())
+		else if (thisPa->unassignedRobots.size() > newPa->unassignedRobots.size())
 		{
 			return false;
 		}
@@ -550,16 +550,18 @@ namespace alica
 	string PartialAssignment::toString()
 	{
 		stringstream ss;
+
 		ss << "Plan: " << this->plan->getName() << endl;
 		ss << "Utility: " << this->min << ".." << this->max << endl;
-		ss << "UnAssignedRobots: ";
-		for (int robot : this->unAssignedRobots)
+		ss << "unassignedRobots: ";
+		for (int robot : this->unassignedRobots)
 		{
 			ss << robot << " ";
 		}
 		ss << endl;
 		//shared_ptr<vector<EntryPoint*> > ownEps = this->epRobotsMapping->getEntryPoints();
 		vector<int> robots;
+
 		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
 		{
 			robots = (*this->epRobotsMapping->getRobots(i));
@@ -576,14 +578,8 @@ namespace alica
 
 		ss << this->epRobotsMapping->toString();
 		ss << "HashCode: " << this->getHash() << endl;
-
 		return ss.str();
 
-	}
-
-	int PartialAssignment::numUnAssignedRobots()
-	{
-		return this->unAssignedRobots.size();
 	}
 
 	string PartialAssignment::assignmentCollectionToString()

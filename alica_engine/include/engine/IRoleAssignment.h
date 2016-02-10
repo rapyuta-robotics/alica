@@ -35,6 +35,7 @@ namespace alica
 		{
 			return robotRoleMapping;
 		}
+		virtual void update() = 0;
 
 	protected:
 		/**

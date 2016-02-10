@@ -104,23 +104,20 @@ namespace alica
 
 		int getNumUnAssignedRobots() const
 		{
-			return numUnAssignedRobots;
+			return unassignedRobots.size();
 		}
 
-		const list<int>& getUnassignedRobots() const
+		const vector<int>& getUnassignedRobots() const
 		{
 			return unassignedRobots;
 		}
+
 
 	protected:
 		/**
 		 * The Ids of all robots available but not yet assigned.
 		 */
-		list<int> unassignedRobots;
-		/**
-		 * The number of robots assigned
-		 */
-		int numUnAssignedRobots;
+		vector<int> unassignedRobots;
 		/**
 		 * The minimal utility this assignment can achieve.
 		 */

@@ -23,6 +23,7 @@
 
 #include "engine/ITeamObserver.h"
 #include "engine/IAlicaClock.h"
+#include "engine/IRoleAssignment.h"
 
 using namespace std;
 namespace alica

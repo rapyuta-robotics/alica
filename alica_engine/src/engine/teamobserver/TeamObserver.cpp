@@ -88,7 +88,6 @@ namespace alica
 				this->me = new RobotEngineData(ae, rp);
 				this->me->setActive(true);
 				this->myId = rp->getId();
-
 			}
 			else
 			{
@@ -183,6 +182,8 @@ namespace alica
 		unique_ptr<list<shared_ptr<RobotProperties>> > ret = unique_ptr<list<shared_ptr<RobotProperties>> >(
 				new list<shared_ptr<RobotProperties>>);
 		ret->push_back(me->getProperties());
+
+
 		for (RobotEngineData* r : this->allOtherRobots)
 		{
 			if (r->isActive())
@@ -285,11 +286,14 @@ namespace alica
 				robotsAvail.push_back(r->getProperties()->getId());
 			}
 		}
-		//TODO events missing
-//		if(changed && OnTeamChangeEvent!=null) {
-//			OnTeamChangeEvent();
-//		this->log->eventOccured("TeamChanged");
-//		}
+
+
+		// notifications for teamchanges, you can add some code below if you want to be notified when the team changed
+		if(changed) {
+			ae->getRoleAssignment()->update();
+			this->log->eventOccured("TeamChanged");
+		}
+
 		cleanOwnSuccessMarks(root);
 		if (root != nullptr)
 		{

@@ -41,6 +41,7 @@ namespace alica
 		void setOwnRole(Role* ownRole);
 		map<int, Role*>& getRobotRoleMapping();
 		void setCommunication(IAlicaCommunication* communication);
+		void update();
 
 	private:
 		AlicaEngine* ae;
@@ -61,7 +62,7 @@ namespace alica
 	protected:
 		bool updateRoles = false;
 		void roleUtilities();
-		void update();
+
 		IAlicaCommunication* communication;
 
 	};
