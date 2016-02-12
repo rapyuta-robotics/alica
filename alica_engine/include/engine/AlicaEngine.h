@@ -46,7 +46,6 @@ namespace alica
 	{
 	public:
 		AlicaEngine();
-//		static AlicaEngine* getInstance();
 		bool init(IBehaviourCreator* bc, IConditionCreator* cc,  IUtilityCreator* uc, IConstraintCreator* crc, string roleSetName, string masterPlanName,
 													string roleSetDir, bool stepEngine);
 		void shutdown();

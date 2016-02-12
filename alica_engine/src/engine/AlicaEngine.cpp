@@ -64,18 +64,6 @@ namespace alica
 		this->pap = nullptr;
 		this->variableSyncModule = nullptr;
 
-//		TODO: MODULELOADER CASTOR
-//		string modName[] = (*this->sc)["Alica"]->get<string>("Alica", "Extensions", "LoadModule", NULL);
-//		if (modName->size() > 0)
-//		{
-//			for (string name : modName)
-//			{
-//				ModuleLoader<IEngineModule> l = ModuleLoader<IEngineModule> .Load(name, null, true, true);
-//				mods.Add(l.GetInstance(null, null));
-//				Console.WriteLine("AE: Loaded Module " + name);
-//			}
-//		}
-
 #ifdef AE_DEBUG
 		cout << "AE: Constructor finished!" << endl;
 #endif
@@ -85,15 +73,6 @@ namespace alica
 	{
 	}
 
-	/**
-	 * The method for getting the singleton instance.
-	 * @return A pointer to the AlicaEngine object, you must not delete.
-	 */
-//	AlicaEngine * AlicaEngine::getInstance()
-//	{
-//		static AlicaEngine instance;
-//		return &instance;
-//	}
 	/**
 	 * Intialise the engine
 	 * @param bc A behaviourcreator
