@@ -29,36 +29,45 @@ namespace alicaRosProxy
 {
 
 	AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae) :
-			IAlicaCommunication(ae) //, rosNode()
+			IAlicaCommunication(ae)
 	{
 		this->isRunning = false;
 		rosNode = new ros::NodeHandle();
 		spinner = new ros::AsyncSpinner(4);
 
+		// read topic strings from AlicaRosProxy.conf
+		this->sc = supplementary::SystemConfig::getInstance();
+		this->allocationAuthorityInfoTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.allocationAuthorityInfoTopic", NULL);
+		this->ownRoleTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.ownRoleTopic", NULL);
+		this->alicaEngineInfoTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.alicaEngineInfoTopic", NULL);
+		this->planTreeInfoTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.planTreeInfoTopic", NULL);
+		this->syncReadyTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.syncReadyTopic", NULL);
+		this->syncTalkTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.syncTalkTopic", NULL);
+		this->solverResultTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.solverResultTopic", NULL);
+
 		AllocationAuthorityInfoPublisher = rosNode->advertise<alica_ros_proxy::AllocationAuthorityInfo>(
-				"/AlicaEngine/AllocationAuthorityInfo", 2);
-		AllocationAuthorityInfoSubscriber = rosNode->subscribe("/AlicaEngine/AllocationAuthorityInfo", 10,
+				this->allocationAuthorityInfoTopic, 2);
+		AllocationAuthorityInfoSubscriber = rosNode->subscribe(this->allocationAuthorityInfoTopic, 10,
 																&AlicaRosCommunication::handleAllocationAuthorityRos,
 																(AlicaRosCommunication*)this);
 
-		AlicaEngineInfoPublisher = rosNode->advertise<alica_ros_proxy::AlicaEngineInfo>(
-				"/AlicaEngine/AlicaEngineInfo", 2);
-		RoleSwitchPublisher = rosNode->advertise<alica_ros_proxy::SyncTalk>("/AlicaEngine/OwnRole", 10);
+		AlicaEngineInfoPublisher = rosNode->advertise<alica_ros_proxy::AlicaEngineInfo>(this->alicaEngineInfoTopic, 2);
+		RoleSwitchPublisher = rosNode->advertise<alica_ros_proxy::RoleSwitch>(this->ownRoleTopic, 10);
 
-		PlanTreeInfoPublisher = rosNode->advertise<alica_ros_proxy::PlanTreeInfo>("/AlicaEngine/PlanTreeInfo", 10);
-		PlanTreeInfoSubscriber = rosNode->subscribe("/AlicaEngine/PlanTreeInfo", 1,
+		PlanTreeInfoPublisher = rosNode->advertise<alica_ros_proxy::PlanTreeInfo>(this->planTreeInfoTopic, 10);
+		PlanTreeInfoSubscriber = rosNode->subscribe(this->planTreeInfoTopic, 1,
 													&AlicaRosCommunication::handlePlanTreeInfoRos,
 													(AlicaRosCommunication*)this);
 
-		SyncReadyPublisher = rosNode->advertise<alica_ros_proxy::SyncReady>("/AlicaEngine/SyncReady", 10);
-		SyncReadySubscriber = rosNode->subscribe("/AlicaEngine/SyncReady", 5, &AlicaRosCommunication::handleSyncReadyRos,
+		SyncReadyPublisher = rosNode->advertise<alica_ros_proxy::SyncReady>(this->syncReadyTopic, 10);
+		SyncReadySubscriber = rosNode->subscribe(this->syncReadyTopic, 5, &AlicaRosCommunication::handleSyncReadyRos,
 													(AlicaRosCommunication*)this);
-		SyncTalkPublisher = rosNode->advertise<alica_ros_proxy::SyncTalk>("/AlicaEngine/SyncTalk", 10);
-		SyncTalkSubscriber = rosNode->subscribe("/AlicaEngine/SyncTalk", 5, &AlicaRosCommunication::handleSyncTalkRos,
+		SyncTalkPublisher = rosNode->advertise<alica_ros_proxy::SyncTalk>(this->syncTalkTopic, 10);
+		SyncTalkSubscriber = rosNode->subscribe(this->syncTalkTopic, 5, &AlicaRosCommunication::handleSyncTalkRos,
 												(AlicaRosCommunication*)this);
 
-		SolverResultPublisher = rosNode->advertise<alica_ros_proxy::SolverResult>("/AlicaEngine/SolverResult", 10);
-		SolverResultSubscriber = rosNode->subscribe("/AlicaEngine/SolverResult", 5,
+		SolverResultPublisher = rosNode->advertise<alica_ros_proxy::SolverResult>(this->solverResultTopic, 10);
+		SolverResultSubscriber = rosNode->subscribe(this->solverResultTopic, 5,
 													&AlicaRosCommunication::handleSolverResult,
 													(AlicaRosCommunication*)this);
 
