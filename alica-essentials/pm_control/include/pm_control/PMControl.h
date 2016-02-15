@@ -51,7 +51,7 @@ namespace pm_control
 		void addRobot(QFrame* robot);
 		void removeRobot(QFrame* robot);
 
-		static chrono::duration<double> msgTimeOut;
+		chrono::duration<double> msgTimeOut;
 
 		Ui::PMControlWidget ui_;
 		QWidget* widget_;

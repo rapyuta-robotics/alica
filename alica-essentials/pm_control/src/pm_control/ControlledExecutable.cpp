@@ -6,13 +6,17 @@
  */
 
 #include <process_manager/ExecutableMetaData.h>
+#include <process_manager/ProcessCommand.h>
 
 #include "ui_ProcessWidget.h"
 #include "ui_RobotProcessesWidget.h"
 
 #include "pm_control/ControlledProcessManager.h"
 #include "pm_control/ControlledExecutable.h"
-#include "pm_control/PMControl.h"
+#include "pm_control/ControlledRobot.h"
+//#include "pm_control/PMControl.h"
+
+#include <QMenu>
 
 namespace pm_control
 {
@@ -25,7 +29,7 @@ namespace pm_control
 												ControlledRobot* parentRobot) :
 			metaExec(metaExec), memory(0), state('U'), cpu(0), _processWidget(new Ui::ProcessWidget()), processWidget(
 					new QWidget()), parentRobot(parentRobot), runningParamSet(
-					supplementary::ExecutableMetaData::UNKNOWN_PARAMS), desiredParamSet(INT_MAX)
+					supplementary::ExecutableMetaData::UNKNOWN_PARAMS), desiredParamSet(INT_MAX), publishing(false)
 	{
 
 		for (auto paramEntry : this->metaExec->parameterMap)
@@ -51,6 +55,8 @@ namespace pm_control
 		this->processWidget->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
 		connect(this->processWidget, SIGNAL(customContextMenuRequested(const QPoint&)), this,
 				SLOT(showContextMenu(const QPoint&)));
+
+		this->msgTimeOut = this->parentRobot->getMsgTimeout();
 
 		this->parentRobot->addExec(processWidget);
 		this->processWidget->show();
@@ -142,8 +148,8 @@ namespace pm_control
 
 	void ControlledExecutable::updateGUI(chrono::system_clock::time_point now)
 	{
-		if ((now - this->timeLastMsgReceived) > PMControl::msgTimeOut)
-		{ // time is over, erase controlled robot
+		if ((now - this->timeLastMsgReceived) > this->msgTimeOut)
+		{ // time is over, set controlled executable to not running
 
 			this->_processWidget->processName->setText(QString(this->metaExec->name.c_str()));
 			this->_processWidget->cpuState->setText(QString("C: -- %"));
@@ -187,9 +193,6 @@ namespace pm_control
 					this->processWidget->setStyleSheet(grayBackground.c_str());
 					break;
 			}
-
-
-
 		}
 	}
 
@@ -285,7 +288,6 @@ namespace pm_control
 			default:
 				cerr << "PMControl: Unknown new state of a checkbox!" << endl;
 		}
-
 	}
 
 	void ControlledExecutable::sendProcessCommand(int cmd)

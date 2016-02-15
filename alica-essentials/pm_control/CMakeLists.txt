@@ -19,48 +19,66 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 include(${QT_USE_FILE})
 
+set(pm_control_INCLUDE_DIRECTORIES
+  include
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
+include_directories(${pm_control_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
+
+catkin_package(
+  INCLUDE_DIRS ${pm_control_INCLUDE_DIRECTORIES}
+  LIBRARIES ${PROJECT_NAME} PMControlWidget
+  CATKIN_DEPENDS rqt_gui rqt_gui_cpp
+)
+catkin_python_setup()
+
+# PROCESS MANAGER CONTROL
 set(pm_control_SRCS
   src/pm_control/PMControl.cpp
+)
+
+set(pm_control_HDRS
+  include/pm_control/PMControl.h
+)
+
+set(pm_control_UIS
+  src/pm_control/PMControl.ui
+)
+
+qt4_wrap_cpp(pm_control_MOCS ${pm_control_HDRS})
+qt4_wrap_ui(pm_control_UIS_H ${pm_control_UIS})
+
+
+add_library(${PROJECT_NAME} ${pm_control_SRCS} ${pm_control_MOCS} ${pm_control_UIS_H})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY} PMControlWidget)
+add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES} process_manager_generate_messages_cpp PMControlWidget)
+
+find_package(class_loader)
+class_loader_hide_library_symbols(${PROJECT_NAME})
+
+# PROCESS MANAGER CONTROL WIDGET
+set(pm_control_widget_UIS
+  src/pm_control/ProcessWidget.ui
+  src/pm_control/RobotProcessesWidget.ui
+)
+
+set(pm_control_widget_SRCS
   src/pm_control/ControlledExecutable.cpp
   src/pm_control/ControlledProcessManager.cpp
   src/pm_control/ControlledRobot.cpp
 )
 
-set(pm_control_HDRS
-  include/pm_control/PMControl.h
+set(pm_control_widget_HDRS
   include/pm_control/ControlledExecutable.h
   include/pm_control/ControlledProcessManager.h
   include/pm_control/ControlledRobot.h
 )
 
-set(pm_control_UIS
-  src/pm_control/PMControl.ui
-  src/pm_control/ProcessWidget.ui
-  src/pm_control/RobotProcessesWidget.ui
-)
+qt4_wrap_ui(pm_control_widget_UIS_H ${pm_control_widget_UIS})
 
-set(pm_control_INCLUDE_DIRECTORIES
-  include
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
-
-catkin_package(
-  INCLUDE_DIRS ${pm_control_INCLUDE_DIRECTORIES}
-  LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS rqt_gui rqt_gui_cpp
-)
-catkin_python_setup()
-
-qt4_wrap_cpp(pm_control_MOCS ${pm_control_HDRS})
-qt4_wrap_ui(pm_control_UIS_H ${pm_control_UIS})
-
-include_directories(${pm_control_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
-add_library(${PROJECT_NAME} ${pm_control_SRCS} ${pm_control_MOCS} ${pm_control_UIS_H})
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
-add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES} process_manager_generate_messages_cpp)
-
-find_package(class_loader)
-class_loader_hide_library_symbols(${PROJECT_NAME})
+add_library(PMControlWidget ${pm_control_widget_SRCS}  ${pm_control_widget_UIS_H})
+target_link_libraries(PMControlWidget ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
+add_dependencies(PMControlWidget ${catkin_LIBRARIES} process_manager_generate_messages_cpp)
 
 install(FILES plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
@@ -82,3 +100,4 @@ install(PROGRAMS scripts/pm_control
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
+

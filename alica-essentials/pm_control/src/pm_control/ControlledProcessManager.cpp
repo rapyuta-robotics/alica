@@ -74,7 +74,7 @@ namespace pm_control
 	{
 		for (auto controlledRobotEntry : this->controlledRobotsMap)
 		{
-			if ((now - controlledRobotEntry.second->timeLastMsgReceived) > PMControl::msgTimeOut)
+			if ((now - controlledRobotEntry.second->timeLastMsgReceived) > this->msgTimeOut)
 			{ // time is over, erase controlled robot
 
 				cout << "ControlledPM: The robot " << controlledRobotEntry.second->name << " (ID: " << controlledRobotEntry.second->id

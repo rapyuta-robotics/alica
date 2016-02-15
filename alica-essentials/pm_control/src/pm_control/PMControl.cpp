@@ -11,9 +11,6 @@
 
 namespace pm_control
 {
-
-	chrono::duration<double> PMControl::msgTimeOut = chrono::duration<double>(0);
-
 	PMControl::PMControl() :
 			rqt_gui_cpp::Plugin(), widget_(0), guiUpdateTimer(nullptr)
 	{
@@ -21,7 +18,7 @@ namespace pm_control
 		rosNode = new ros::NodeHandle();
 
 		this->sc = supplementary::SystemConfig::getInstance();
-		PMControl::msgTimeOut = chrono::duration<double>((*this->sc)["PMControl"]->get<unsigned long>("timeLastMsgReceivedTimeOut", NULL));
+		this->msgTimeOut = chrono::duration<double>((*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 		this->pmRegistry = new supplementary::RobotExecutableRegistry();
 
 		/* Initialise the registry data structure for better performance
@@ -36,18 +33,18 @@ namespace pm_control
 		}
 
 		// Register executables from Processes.conf
-		auto processDescriptions = (*this->sc)["Processes"]->getSections("Processes.ProcessDescriptions", NULL);
+		auto processDescriptions = (*this->sc)["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
 		for (auto processSectionName : (*processDescriptions))
 		{
 			curId = this->pmRegistry->addExecutable(processSectionName);
 		}
 
 		// Read bundles from Processes.conf
-		auto bundlesSections = (*this->sc)["Processes"]->getSections("Processes.Bundles", NULL);
+		auto bundlesSections = (*this->sc)["ProcessManaging"]->getSections("Processes.Bundles", NULL);
 		for (auto bundleName : (*bundlesSections))
 		{
-			vector<string> processList = (*this->sc)["Processes"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
-			vector<string> processParamsList = (*this->sc)["Processes"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList",
+			vector<string> processList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
+			vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList",
 																							NULL);
 			if (processList.size() != processParamsList.size())
 			{

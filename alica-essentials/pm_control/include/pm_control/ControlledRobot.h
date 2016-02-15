@@ -47,6 +47,7 @@ namespace pm_control
 		void addExec(QWidget* exec);
 		void removeExec(QWidget* exec);
 
+		chrono::duration<double> getMsgTimeout();
 
 		chrono::system_clock::time_point timeLastMsgReceived; /**< the last time a message was received for this robot */
 		QFrame* robotProcessesQFrame; /**< The widget, used to initialise the RobotProcessesWidget */

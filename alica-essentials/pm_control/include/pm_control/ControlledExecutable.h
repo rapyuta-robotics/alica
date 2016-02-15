@@ -44,6 +44,8 @@ namespace pm_control
 		void updateGUI(chrono::system_clock::time_point now);
 		void handleBundleComboBoxChanged(QString bundle);
 		void sendProcessCommand(int cmd);
+
+		chrono::duration<double> msgTimeOut;
 		chrono::system_clock::time_point timeLastMsgReceived; /**< last time a message was received for this executable */
 
 		int runningParamSet;
