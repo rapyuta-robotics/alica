@@ -50,7 +50,6 @@ namespace alicaRosProxy
 		virtual void stopCommunication();
 
 	protected:
-		int ownID;
 		ros::NodeHandle* rosNode;
 		ros::AsyncSpinner* spinner;
 
@@ -65,13 +64,24 @@ namespace alicaRosProxy
 
 		ros::Publisher SyncReadyPublisher;
 		ros::Subscriber SyncReadySubscriber;
+
 		ros::Publisher SyncTalkPublisher;
 		ros::Subscriber SyncTalkSubscriber;
 
 		ros::Publisher SolverResultPublisher;
 		ros::Subscriber SolverResultSubscriber;
 
+		string allocationAuthorityInfoTopic;
+		string ownRoleTopic;
+		string alicaEngineInfoTopic;
+		string planTreeInfoTopic;
+		string syncReadyTopic;
+		string syncTalkTopic;
+		string solverResultTopic;
+
 		bool isRunning;
+
+		supplementary::SystemConfig* sc;
 	};
 
 } /* namespace alicaRosProxy */
