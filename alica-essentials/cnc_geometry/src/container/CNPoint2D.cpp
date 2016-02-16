@@ -86,6 +86,10 @@ namespace geometry
 		return norm;
 	}
 
+	shared_ptr<CNPoint2D> CNPoint2D::clone() {
+		return make_shared<CNPoint2D>(this->x, this->y);
+	}
+
 	shared_ptr<CNPoint2D> CNPoint2D::operator*(const double& right)
 	{
 		auto ret = make_shared<CNPoint2D>(this->x, this->y);
