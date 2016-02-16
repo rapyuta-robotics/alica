@@ -87,7 +87,7 @@ namespace supplementary
 		}
 
 		// Register executables from Processes.conf
-		auto processDescriptions = (*this->sc)["Processes"]->getSections("Processes.ProcessDescriptions", NULL);
+		auto processDescriptions = (*this->sc)["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
 		for (auto processSectionName : (*processDescriptions))
 		{
 			curId = this->pmRegistry->addExecutable(processSectionName);
@@ -98,7 +98,7 @@ namespace supplementary
 			}
 		}
 
-		this->interpreters = (*this->sc)["Processes"]->getList<string>("Processes.Interpreter", NULL);
+		this->interpreters = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Interpreter", NULL);
 		cout << "PM: Number of Interpreters: " << this->interpreters.size() << endl;
 		this->pmRegistry->setInterpreters(interpreters);
 
@@ -243,9 +243,13 @@ namespace supplementary
 		ros::init(argc, argv, "ProcessManager");
 		rosNode = new ros::NodeHandle();
 		spinner = new ros::AsyncSpinner(4);
-		processCommandSub = rosNode->subscribe("/process_manager/ProcessCommand", 10,
+
+		this->processCmdTopic = (*sc)["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
+		this->processStatsTopic = (*sc)["ProcessManaging"]->get<string>("Topics.processStatsTopic", NULL);
+
+		processCommandSub = rosNode->subscribe(this->processCmdTopic, 10,
 												&ProcessManager::handleProcessCommand, (ProcessManager*)this);
-		processStatePub = rosNode->advertise<process_manager::ProcessStats>("/process_manager/ProcessStats", 10);
+		processStatePub = rosNode->advertise<process_manager::ProcessStats>(this->processStatsTopic, 10);
 		spinner->start();
 	}
 

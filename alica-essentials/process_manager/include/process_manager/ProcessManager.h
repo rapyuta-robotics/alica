@@ -64,7 +64,9 @@ namespace supplementary
 		ros::NodeHandle* rosNode;
 		ros::AsyncSpinner* spinner;
 		ros::Subscriber processCommandSub;
+		string processCmdTopic;
 		ros::Publisher processStatePub;
+		string processStatsTopic;
 
 		string getRobotEnvironmentVariable(string processId);
 		void updateTotalCPUTimes();

@@ -205,7 +205,7 @@ namespace supplementary
 	}
 
 	/**
-	 * This method registers the given executable, if it is listed in the Processes.conf file.
+	 * This method registers the given executable, if it is listed in the ProcessManaging.conf file.
 	 * @param execName
 	 * @return -1, if the executable is not registered, due to some error. Otherwise, it returns the registered id.
 	 */
@@ -228,20 +228,20 @@ namespace supplementary
 
 		try
 		{
-			execId = (*sc)["Processes"]->get<int>("Processes.ProcessDescriptions", execSectionName.c_str(), "id", NULL);
-			processMode = (*sc)["Processes"]->get<string>("Processes.ProcessDescriptions", execSectionName.c_str(),
+			execId = (*sc)["ProcessManaging"]->get<int>("Processes.ProcessDescriptions", execSectionName.c_str(), "id", NULL);
+			processMode = (*sc)["ProcessManaging"]->get<string>("Processes.ProcessDescriptions", execSectionName.c_str(),
 															"mode", NULL);
-			execName = (*sc)["Processes"]->get<string>("Processes.ProcessDescriptions", execSectionName.c_str(),
+			execName = (*sc)["ProcessManaging"]->get<string>("Processes.ProcessDescriptions", execSectionName.c_str(),
 														"execName", NULL);
-			rosPackage = (*sc)["Processes"]->tryGet<string>("NOT-FOUND", "Processes.ProcessDescriptions",
+			rosPackage = (*sc)["ProcessManaging"]->tryGet<string>("NOT-FOUND", "Processes.ProcessDescriptions",
 															execSectionName.c_str(), "rosPackage", NULL);
-			prefixCmd = (*sc)["Processes"]->tryGet<string>("NOT-FOUND", "Processes.ProcessDescriptions",
+			prefixCmd = (*sc)["ProcessManaging"]->tryGet<string>("NOT-FOUND", "Processes.ProcessDescriptions",
 															execSectionName.c_str(), "prefixCmd", NULL);
 		}
 		catch (runtime_error& e)
 		{
 			cerr << "PM-Registry: Cannot add executable '" << execSectionName
-					<< "', because of faulty values in Processes.conf!" << endl;
+					<< "', because of faulty values in ProcessManaging.conf!" << endl;
 			return -1;
 		}
 
@@ -260,7 +260,7 @@ namespace supplementary
 
 		ExecutableMetaData* execMetaData = new ExecutableMetaData(execSectionName, execId, processMode, execName,
 																	rosPackage, prefixCmd, absExecName);
-		auto paramSets = (*sc)["Processes"]->tryGetNames("NONE", "Processes.ProcessDescriptions",
+		auto paramSets = (*sc)["ProcessManaging"]->tryGetNames("NONE", "Processes.ProcessDescriptions",
 															execSectionName.c_str(), "paramSets", NULL);
 		if (paramSets->size() > 1 || paramSets->at(0) != "NONE")
 		{
@@ -269,7 +269,7 @@ namespace supplementary
 				try
 				{
 					int paramSetKey = stoi(paramSetKeyString);
-					auto paramSetValues = (*sc)["Processes"]->getList<string>("Processes.ProcessDescriptions",
+					auto paramSetValues = (*sc)["ProcessManaging"]->getList<string>("Processes.ProcessDescriptions",
 																				execSectionName.c_str(), "paramSets",
 																				paramSetKeyString.c_str(), NULL);
 
