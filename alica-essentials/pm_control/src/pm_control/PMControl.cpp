@@ -21,7 +21,7 @@ namespace pm_control
 		rosNode = new ros::NodeHandle();
 
 		this->sc = supplementary::SystemConfig::getInstance();
-		PMControl::msgTimeOut = chrono::duration<double>((*this->sc)["PMControl"]->get<unsigned long>("timeLastMsgReceivedTimeOut", NULL));
+		PMControl::msgTimeOut = chrono::duration<double>((*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 		this->pmRegistry = new supplementary::RobotExecutableRegistry();
 
 		/* Initialise the registry data structure for better performance
