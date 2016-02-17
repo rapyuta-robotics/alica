@@ -200,6 +200,19 @@ namespace alica
 
 			AlicaTime now = alicaClock->now();
 
+			if (now < this->lastSendTime)
+			{
+				// Taker fix
+				std::cout << "PB: lastSendTime is higher than current system time, did the system time change?" << endl;
+				this->lastSendTime = now;
+			}
+
+//			std::cout << "now " << now << std::endl;
+//			std::cout << "this->ruleBook->isChangeOccured() " << this->ruleBook->isChangeOccured() << std::endl;
+//			std::cout << "this->lastSendTime " << this->lastSendTime << std::endl;
+//			std::cout << "this->minSendInterval " << this->minSendInterval << std::endl;
+//			std::cout << "this->maxSendInterval " << this->maxSendInterval << std::endl;
+
 			if ((this->ruleBook->isChangeOccured() && this->lastSendTime + this->minSendInterval < now)
 					|| this->lastSendTime + this->maxSendInterval < now)
 			{
@@ -324,6 +337,7 @@ namespace alica
 #endif
 			if (availTime > 1 && !ae->getStepEngine())
 			{
+
 				alicaClock->sleep(availTime);
 			}
 		}
