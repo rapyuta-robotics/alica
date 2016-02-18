@@ -25,7 +25,7 @@ namespace pm_control
 		this->pmRegistry = new supplementary::RobotExecutableRegistry();
 
 		/* Initialise the registry data structure for better performance
-		 * with data from Globals.conf and Processes.conf file. */
+		 * with data from Globals.conf and ProcessManaging.conf file. */
 
 		// Register robots from Globals.conf
 		int curId;
@@ -35,24 +35,24 @@ namespace pm_control
 			curId = this->pmRegistry->addRobot(robotName);
 		}
 
-		// Register executables from Processes.conf
-		auto processDescriptions = (*this->sc)["Processes"]->getSections("Processes.ProcessDescriptions", NULL);
+		// Register executables from ProcessManaging.conf
+		auto processDescriptions = (*this->sc)["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
 		for (auto processSectionName : (*processDescriptions))
 		{
 			curId = this->pmRegistry->addExecutable(processSectionName);
 		}
 
-		// Read bundles from Processes.conf
-		auto bundlesSections = (*this->sc)["Processes"]->getSections("Processes.Bundles", NULL);
+		// Read bundles from ProcessManaging.conf
+		auto bundlesSections = (*this->sc)["ProcessManaging"]->getSections("Processes.Bundles", NULL);
 		for (auto bundleName : (*bundlesSections))
 		{
-			vector<string> processList = (*this->sc)["Processes"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
-			vector<string> processParamsList = (*this->sc)["Processes"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList",
+			vector<string> processList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
+			vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList",
 																							NULL);
 			if (processList.size() != processParamsList.size())
 			{
 				cerr << "PMControl: Number of processes does not match the number of parameter sets for the bundle '" << bundleName
-						<< "' in the Processes.conf!" << endl;
+						<< "' in the ProcessManaging.conf!" << endl;
 				continue;
 			}
 
