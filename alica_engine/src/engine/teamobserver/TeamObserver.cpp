@@ -5,8 +5,6 @@
  *      Author: Stefan Jakob
  */
 
-
-
 #include "engine/teamobserver/TeamObserver.h"
 #include <SystemConfig.h>
 #include "engine/AlicaEngine.h"
@@ -61,7 +59,6 @@ namespace alica
 		{
 			if (re->getProperties()->getId() == rid)
 			{
-
 				re->setLastMessageTime(ae->getIAlicaClock()->now());
 				break;
 			}
@@ -115,7 +112,6 @@ namespace alica
 		}
 
 		if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull", NULL))
-
 		{
 			for (RobotEngineData* r : this->allOtherRobots)
 			{
@@ -182,7 +178,6 @@ namespace alica
 		unique_ptr<list<shared_ptr<RobotProperties>> > ret = unique_ptr<list<shared_ptr<RobotProperties>> >(
 				new list<shared_ptr<RobotProperties>>);
 		ret->push_back(me->getProperties());
-
 
 		for (RobotEngineData* r : this->allOtherRobots)
 		{
@@ -287,9 +282,9 @@ namespace alica
 			}
 		}
 
-
 		// notifications for teamchanges, you can add some code below if you want to be notified when the team changed
-		if(changed) {
+		if (changed)
+		{
 			ae->getRoleAssignment()->update();
 			this->log->eventOccured("TeamChanged");
 		}
@@ -300,8 +295,7 @@ namespace alica
 			list<shared_ptr<SimplePlanTree> > updatespts;
 			list<int> noUpdates;
 			lock_guard<mutex> lock(this->simplePlanTreeMutex);
-			for (auto iterator = this->simplePlanTrees->begin();
-					iterator != this->simplePlanTrees->end(); iterator++)
+			for (auto iterator = this->simplePlanTrees->begin(); iterator != this->simplePlanTrees->end(); iterator++)
 			{
 				if (find(robotsAvail.begin(), robotsAvail.end(), iterator->second->getRobotId()) != robotsAvail.end())
 				{
@@ -326,7 +320,6 @@ namespace alica
 			cout << "TO: spts size " << updatespts.size() << endl;
 #endif
 
-
 			if (root->recursiveUpdateAssignment(updatespts, robotsAvail, noUpdates, time))
 			{
 				this->log->eventOccured("MsgUpdate");
@@ -336,14 +329,7 @@ namespace alica
 
 	void TeamObserver::close()
 	{
-		//	this->onTeamChangeEvent = nullptr;
-//		if (this->rosNode != nullptr)
-//		{
-//			this.rosNode.Close();
-//		}
-//		this->rosNode = nullptr;
 		cout << "Closed TO" << endl;
-		;
 	}
 
 	/**
@@ -549,10 +535,11 @@ namespace alica
 	 */
 	void TeamObserver::unIgnoreRobot(int rid)
 	{
-		if (find(ignoredRobots.begin(), ignoredRobots.end(), rid) != ignoredRobots.end())
-		{
-			this->ignoredRobots.erase(rid);
-		}
+		// it should not be necessary to search first... it simply removes the entry if present - Stopfer
+//		if (find(ignoredRobots.begin(), ignoredRobots.end(), rid) != ignoredRobots.end())
+//		{
+		this->ignoredRobots.erase(rid);
+//		}
 	}
 
 	/**
@@ -608,16 +595,11 @@ namespace alica
 				}
 
 				lock_guard<mutex> lock(this->simplePlanTreeMutex);
-				if (this->simplePlanTrees->find(incoming->senderID) != this->simplePlanTrees->end())
+				map<int, shared_ptr<SimplePlanTree> >::iterator iterator = this->simplePlanTrees->find(
+						incoming->senderID);
+				if (iterator != this->simplePlanTrees->end())
 				{
-					shared_ptr<SimplePlanTree> toDelete = this->simplePlanTrees->at(incoming->senderID);
-					map<int, shared_ptr<SimplePlanTree> >::iterator iterator = this->simplePlanTrees->find(
-							incoming->senderID);
-					if (iterator != this->simplePlanTrees->end())
-					{
-						iterator->second = spt;
-					}
-
+					iterator->second = spt;
 				}
 				else
 				{
