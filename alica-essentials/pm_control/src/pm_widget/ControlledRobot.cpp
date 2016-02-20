@@ -7,18 +7,17 @@
 #include <ros/ros.h>
 #include <limits.h>
 
-#include <pm_control/ControlledRobot.h>
-#include <pm_control/ControlledExecutable.h>
 #include <process_manager/RobotExecutableRegistry.h>
 #include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
-#include <ui_RobotProcessesWidget.h>
 
-#include "pm_control/ControlledProcessManager.h"
-#include "pm_control/PMControl.h"
+#include "pm_widget/ControlledRobot.h"
+#include "pm_widget/ControlledExecutable.h"
+#include "pm_widget/ControlledProcessManager.h"
+#include "ui_RobotProcessesWidget.h"
 #include "ui_ProcessWidget.h"
 
-namespace pm_control
+namespace pm_widget
 {
 	ControlledRobot::ControlledRobot(string robotName, int robotId, ControlledProcessManager* parentProcessManager) :
 			RobotMetaData(robotName, robotId), parentProcessManager(parentProcessManager), robotProcessesQFrame(
@@ -33,7 +32,7 @@ namespace pm_control
 							SLOT(updateBundles(QString)));
 
 		// enter bundles in combo box
-		for (auto bundleEntry : this->parentProcessManager->parentPMControl->bundlesMap)
+		for (auto bundleEntry : *this->parentProcessManager->bundlesMap)
 		{
 			this->_robotProcessesWidget->bundleComboBox->insertItem(INT_MAX, QString(bundleEntry.first.c_str()),
 																	QVariant(bundleEntry.first.c_str()));
@@ -41,7 +40,7 @@ namespace pm_control
 
 		// construct all known executables
 		const vector<supplementary::ExecutableMetaData*>& execMetaDatas =
-				this->parentProcessManager->parentPMControl->pmRegistry->getExecutables();
+				this->parentProcessManager->pmRegistry->getExecutables();
 		ControlledExecutable* controlledExec;
 		for (auto execMetaDataEntry : execMetaDatas)
 		{
@@ -58,18 +57,12 @@ namespace pm_control
 		{
 			delete execEntry.second;
 		}
-		//this->parentProcessManager->removeRobot(robotProcessesQFrame);
-
-		//delete _robotProcessesWidget;
-
 		delete robotProcessesQFrame;
-
 	}
 
 	void ControlledRobot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived,
 											process_manager::ProcessStat ps)
 	{
-		this->timeLastMsgReceived = timeMsgReceived;
 		auto controlledExecEntry = this->controlledExecMap.find(ps.processKey);
 		if (controlledExecEntry != this->controlledExecMap.end())
 		{ // executable is already known
@@ -115,4 +108,4 @@ namespace pm_control
 	{
 		this->parentProcessManager->sendProcessCommand(vector<int> {this->id}, execIds, paramSets, cmd);
 	}
-} /* namespace pm_control */
+} /* namespace pm_widget */

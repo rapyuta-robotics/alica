@@ -5,20 +5,18 @@
  *      Author: Stephan Opfer
  */
 
+#include <QMenu>
 #include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
 
 #include "ui_ProcessWidget.h"
 #include "ui_RobotProcessesWidget.h"
 
-#include "pm_control/ControlledProcessManager.h"
-#include "pm_control/ControlledExecutable.h"
-#include "pm_control/ControlledRobot.h"
-//#include "pm_control/PMControl.h"
+#include "pm_widget/ControlledProcessManager.h"
+#include "pm_widget/ControlledExecutable.h"
+#include "pm_widget/ControlledRobot.h"
 
-#include <QMenu>
-
-namespace pm_control
+namespace pm_widget
 {
 
 	const string ControlledExecutable::redBackground = "background-color:#FF4719;";
@@ -56,7 +54,7 @@ namespace pm_control
 		connect(this->processWidget, SIGNAL(customContextMenuRequested(const QPoint&)), this,
 				SLOT(showContextMenu(const QPoint&)));
 
-		this->msgTimeOut = this->parentRobot->getMsgTimeout();
+		//this->msgTimeOut = this->parentRobot->getMsgTimeout();
 
 		this->parentRobot->addExec(processWidget);
 		this->processWidget->show();
@@ -240,9 +238,8 @@ namespace pm_control
 			return;
 		}
 
-		auto bundleMapEntry = this->parentRobot->parentProcessManager->parentPMControl->bundlesMap.find(
-				bundle.toStdString());
-		if (bundleMapEntry != this->parentRobot->parentProcessManager->parentPMControl->bundlesMap.end())
+		auto bundleMapEntry = this->bundlesMap->find(bundle.toStdString());
+		if (bundleMapEntry != this->bundlesMap->end())
 		{
 			bool found = false;
 			for (auto processParamSetPair : bundleMapEntry->second)

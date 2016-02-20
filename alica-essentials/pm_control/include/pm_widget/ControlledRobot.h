@@ -5,8 +5,8 @@
  *      Author: Stephan Opfer
  */
 
-#ifndef SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_
-#define SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_
+#ifndef SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDROBOT_H_
+#define SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDROBOT_H_
 
 #include <process_manager/RobotMetaData.h>
 #include <process_manager/ProcessStats.h>
@@ -28,7 +28,7 @@ namespace ros{
 	class Publisher;
 }
 
-namespace pm_control
+namespace pm_widget
 {
 	class ControlledExecutable;
 	class ControlledProcessManager;
@@ -47,9 +47,6 @@ namespace pm_control
 		void addExec(QWidget* exec);
 		void removeExec(QWidget* exec);
 
-		chrono::duration<double> getMsgTimeout();
-
-		chrono::system_clock::time_point timeLastMsgReceived; /**< the last time a message was received for this robot */
 		QFrame* robotProcessesQFrame; /**< The widget, used to initialise the RobotProcessesWidget */
 		ControlledProcessManager* parentProcessManager;
 
@@ -60,12 +57,10 @@ namespace pm_control
 
 		string selectedBundle;
 		Ui::RobotProcessesWidget* _robotProcessesWidget;
-
-
 		map<int, ControlledExecutable*> controlledExecMap;
 
 	};
 
-} /* namespace pm_control */
+} /* namespace pm_widget */
 
-#endif /* SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDROBOT_H_ */
+#endif /* SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDROBOT_H_ */

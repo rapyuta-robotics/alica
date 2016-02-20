@@ -6,19 +6,20 @@
  */
 
 #include <process_manager/RobotExecutableRegistry.h>
-#include <ui_RobotProcessesWidget.h>
+#include <SystemConfig.h>
 
-#include "pm_control/ControlledProcessManager.h"
-#include "pm_control/ControlledRobot.h"
-#include "pm_control/PMControl.h"
+#include "ui_RobotProcessesWidget.h"
+#include "pm_widget/ControlledProcessManager.h"
+#include "pm_widget/ControlledRobot.h"
 
-namespace pm_control
+namespace pm_widget
 {
 //	QHBoxLayout* parentHBoxLayout, supplementary::RobotExecutableRegistry* pmRegistry,map<string, vector<int>> &bundlesMap, ros::Publisher* processCommandPub, chrono::duration<double> msgTimeOut)
-	ControlledProcessManager::ControlledProcessManager(string processManagerName, int processManagerId, PMControl* parentPMControl) :
-			name(processManagerName), id(processManagerId), parentPMControl(parentPMControl)
+	ControlledProcessManager::ControlledProcessManager(string processManagerName, int processManagerId, map<string, vector<pair<int, int>>>* bundlesMap, supplementary::RobotExecutableRegistry* pmRegistry, QBoxLayout* parentLayout) :
+			name(processManagerName), id(processManagerId), bundlesMap(bundlesMap), pmRegistry(pmRegistry), parentLayout(parentLayout)
 	{
-
+		ros::NodeHandle* nh = new ros::NodeHandle();
+		processCommandPub = nh->advertise<process_manager::ProcessCommand>("/process_manager/ProcessCommand", 10);
 	}
 
 	ControlledProcessManager::~ControlledProcessManager()
@@ -29,7 +30,8 @@ namespace pm_control
 		}
 	}
 
-	void ControlledProcessManager::handleProcessStats(pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair)
+	void ControlledProcessManager::handleProcessStats(
+			pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair)
 	{
 		this->timeLastMsgReceived = timePstsPair.first;
 		for (auto processStat : timePstsPair.second->processStats)
@@ -54,7 +56,7 @@ namespace pm_control
 		else
 		{ // robot is unknown
 			string robotName;
-			if (this->parentPMControl->pmRegistry->getRobotName(robotId, robotName))
+			if (this->pmRegistry->getRobotName(robotId, robotName))
 			{
 				cout << "PMControl: Create new ControlledRobot " << robotName << "(ID: " << robotId << ")" << endl;
 
@@ -77,8 +79,9 @@ namespace pm_control
 			if ((now - controlledRobotEntry.second->timeLastMsgReceived) > this->msgTimeOut)
 			{ // time is over, erase controlled robot
 
-				cout << "ControlledPM: The robot " << controlledRobotEntry.second->name << " (ID: " << controlledRobotEntry.second->id
-						<< ") on process manager " << this->name << " (ID: " << this->id << ") seems to be dead!" << endl;
+				cout << "ControlledPM: The robot " << controlledRobotEntry.second->name << " (ID: "
+						<< controlledRobotEntry.second->id << ") on process manager " << this->name << " (ID: "
+						<< this->id << ") seems to be dead!" << endl;
 				this->controlledRobotsMap.erase(controlledRobotEntry.first);
 				delete controlledRobotEntry.second;
 			}
@@ -91,18 +94,24 @@ namespace pm_control
 
 	void ControlledProcessManager::addRobot(QFrame* robot)
 	{
-		this->parentPMControl->addRobot(robot);
+		this->parentLayout->insertWidget(0, robot);
 	}
 
 	void ControlledProcessManager::removeRobot(QFrame* robot)
 	{
-		this->parentPMControl->removeRobot(robot);
+		this->parentLayout->removeWidget(robot);
 	}
 
-	void ControlledProcessManager::sendProcessCommand(vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int cmd)
+	void ControlledProcessManager::sendProcessCommand(vector<int> robotIds, vector<int> execIds, vector<int> paramSets,	int cmd)
 	{
-		this->parentPMControl->sendProcessCommand(this->id, robotIds, execIds, paramSets, cmd);
+		process_manager::ProcessCommand pc;
+		pc.receiverId = this->id;
+		pc.robotIds = robotIds;
+		pc.processKeys = execIds;
+		pc.paramSets = paramSets;
+		pc.cmd = cmd;
+		this->processCommandPub.publish(pc);
 	}
 
-} /* namespace pm_control */
+} /* namespace pm_widget */
 

@@ -5,8 +5,8 @@
  *      Author: Stephan Opfer
  */
 
-#ifndef SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDEXECUTABLE_H_
-#define SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDEXECUTABLE_H_
+#ifndef SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDEXECUTABLE_H_
+#define SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDEXECUTABLE_H_
 
 #include <process_manager/ProcessStat.h>
 #include "QWidget"
@@ -28,7 +28,7 @@ namespace supplementary {
 
 using namespace std;
 
-namespace pm_control
+namespace pm_widget
 {
 	class ControlledRobot;
 
@@ -67,15 +67,14 @@ namespace pm_control
 		void processCheckBoxStateChanged(int, int); /**< first int is newState, second int is execId */
 
 	private:
+		map<string, vector<pair<int, int>>>* bundlesMap;
 		static const string redBackground;
 		static const string greenBackground;
 		static const string grayBackground;
 		ControlledRobot* parentRobot;
-
-
 	};
 
-} /* namespace pm_control */
+} /* namespace pm_widget */
 
-#endif /* SUPPLEMENTARY_RQT_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDEXECUTABLE_H_ */
+#endif /* SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDEXECUTABLE_H_ */
 

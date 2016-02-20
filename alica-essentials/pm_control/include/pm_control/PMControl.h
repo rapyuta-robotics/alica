@@ -5,7 +5,6 @@
 
 #include "ros/ros.h"
 #include <ros/macros.h>
-#include "process_manager/ProcessCommand.h"
 #include "process_manager/ProcessStats.h"
 #include "process_manager/ProcessStat.h"
 
@@ -14,7 +13,7 @@
 #include <QWidget>
 #include <QDialog>
 
-#include <pm_control/ControlledRobot.h>
+#include <pm_widget/ControlledRobot.h>
 
 #include <queue>
 #include <mutex>
@@ -29,11 +28,12 @@ namespace supplementary
 	class RobotExecutableRegistry;
 }
 
+namespace pm_widget {
+	class ControlledProcessManager;
+}
+
 namespace pm_control
 {
-
-	class ControlledProcessManager;
-
 	class PMControl : public rqt_gui_cpp::Plugin
 	{
 
@@ -48,8 +48,8 @@ namespace pm_control
 		virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
 		void sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int cmd);
-		void addRobot(QFrame* robot);
-		void removeRobot(QFrame* robot);
+//		void addRobot(QFrame* robot);
+//		void removeRobot(QFrame* robot);
 
 		chrono::duration<double> msgTimeOut;
 
@@ -68,13 +68,13 @@ namespace pm_control
 
 		supplementary::SystemConfig* sc;
 
-		map<int, ControlledProcessManager*> processManagersMap;
+		map<int, pm_widget::ControlledProcessManager*> processManagersMap;
 
 
 		void handleProcessStats();
 
 		void receiveProcessStats(process_manager::ProcessStatsConstPtr psts);
-		ControlledProcessManager* getControlledProcessManager(int processManagerId);
+		pm_widget::ControlledProcessManager* getControlledProcessManager(int processManagerId);
 
 
 

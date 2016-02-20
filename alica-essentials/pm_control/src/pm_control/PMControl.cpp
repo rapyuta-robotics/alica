@@ -4,10 +4,10 @@
 #include <SystemConfig.h>
 #include <process_manager/RobotExecutableRegistry.h>
 #include <process_manager/ExecutableMetaData.h>
+#include <pm_widget/ControlledProcessManager.h>
+#include <pm_widget/ControlledExecutable.h>
 
 #include "pm_control/PMControl.h"
-#include "pm_control/ControlledProcessManager.h"
-#include "pm_control/ControlledExecutable.h"
 
 namespace pm_control
 {
@@ -18,7 +18,8 @@ namespace pm_control
 		rosNode = new ros::NodeHandle();
 
 		this->sc = supplementary::SystemConfig::getInstance();
-		this->msgTimeOut = chrono::duration<double>((*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
+		this->msgTimeOut = chrono::duration<double>(
+				(*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 		this->pmRegistry = new supplementary::RobotExecutableRegistry();
 
 		/* Initialise the registry data structure for better performance
@@ -43,21 +44,27 @@ namespace pm_control
 		auto bundlesSections = (*this->sc)["ProcessManaging"]->getSections("Processes.Bundles", NULL);
 		for (auto bundleName : (*bundlesSections))
 		{
-			vector<string> processList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
-			vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList",
-																							NULL);
+			vector<string> processList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles",
+																							bundleName.c_str(),
+																							"processList", NULL);
+			vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles",
+																								bundleName.c_str(),
+																								"processParamsList",
+																								NULL);
 			if (processList.size() != processParamsList.size())
 			{
-				cerr << "PMControl: Number of processes does not match the number of parameter sets for the bundle '" << bundleName
-						<< "' in the Processes.conf!" << endl;
+				cerr << "PMControl: Number of processes does not match the number of parameter sets for the bundle '"
+						<< bundleName << "' in the Processes.conf!" << endl;
 				continue;
 			}
 
 			for (int i = 0; i < processList.size(); i++)
 			{
-				this->bundlesMap[bundleName].push_back(pair<int, int>(stoi(processList[i]), stoi(processParamsList[i])));
+				this->bundlesMap[bundleName].push_back(
+						pair<int, int>(stoi(processList[i]), stoi(processParamsList[i])));
 			}
-			cout << "PMControl: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size() << " processes." << endl;
+			cout << "PMControl: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size()
+					<< " processes." << endl;
 		}
 	}
 
@@ -74,8 +81,8 @@ namespace pm_control
 		context.addWidget(widget_);
 
 		// Initialise the ROS Communication
-		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &PMControl::receiveProcessStats, (PMControl*)this);
-		processCommandPub = rosNode->advertise<process_manager::ProcessCommand>("/process_manager/ProcessCommand", 10);
+		string statTopic = (*this->sc)["ProcessManaging"]->get<string>("Topics.processStatsTopic", NULL);
+		processStateSub = rosNode->subscribe(statTopic, 10, &PMControl::receiveProcessStats, (PMControl*)this);
 
 		// Initialise the GUI refresh timer
 		this->guiUpdateTimer = new QTimer();
@@ -104,8 +111,8 @@ namespace pm_control
 			if ((now - processMapIter->second->timeLastMsgReceived) > PMControl::msgTimeOut)
 			{ // time is over, remove process manager
 
-				cout << "PMControl: The process manager on " << processMapIter->second->name << " (ID: " << processMapIter->second->id
-						<< ") seems to be dead!" << endl;
+				cout << "PMControl: The process manager on " << processMapIter->second->name << " (ID: "
+						<< processMapIter->second->id << ") seems to be dead!" << endl;
 				delete processMapIter->second;
 				this->processManagersMap.erase(processMapIter++);
 			}
@@ -116,16 +123,16 @@ namespace pm_control
 			}
 		}
 	}
-
-	void PMControl::addRobot(QFrame* robot)
-	{
-		this->ui_.pmHorizontalLayout->insertWidget(0, robot);
-	}
-
-	void PMControl::removeRobot(QFrame* robot)
-	{
-		this->ui_.pmHorizontalLayout->removeWidget(robot);
-	}
+//
+//	void PMControl::addRobot(QFrame* robot)
+//	{
+//		this->ui_.pmHorizontalLayout->insertWidget(0, robot);
+//	}
+//
+//	void PMControl::removeRobot(QFrame* robot)
+//	{
+//		this->ui_.pmHorizontalLayout->removeWidget(robot);
+//	}
 
 	/**
 	 * Processes all queued ROS process stat messages.
@@ -140,7 +147,8 @@ namespace pm_control
 			processStatMsgQueue.pop();
 
 			// get the corresponding process manager object
-			ControlledProcessManager* controlledPM = this->getControlledProcessManager(timePstsPair.second->senderId);
+			pm_widget::ControlledProcessManager* controlledPM = this->getControlledProcessManager(
+					timePstsPair.second->senderId);
 			if (controlledPM != nullptr)
 			{
 				// hand the message to the process manager, in order to let him update his data structures
@@ -157,7 +165,7 @@ namespace pm_control
 	 * @param processManagerId
 	 * @return The ControlledProcessManager object, corresponding to the given ID, or nullptr if nothing is found for the given ID.
 	 */
-	ControlledProcessManager* PMControl::getControlledProcessManager(int processManagerId)
+	pm_widget::ControlledProcessManager* PMControl::getControlledProcessManager(int processManagerId)
 	{
 		auto pmEntry = this->processManagersMap.find(processManagerId);
 		if (pmEntry != this->processManagersMap.end())
@@ -169,15 +177,17 @@ namespace pm_control
 			string pmName;
 			if (this->pmRegistry->getRobotName(processManagerId, pmName))
 			{
-				cout << "PMControl: Create new ControlledProcessManager with ID " << processManagerId << " and host name " << pmName << "!" << endl;
-				ControlledProcessManager* controlledPM = new ControlledProcessManager(pmName, processManagerId, this);
-				//msgTimeOut, this->ui_.pmHorizontalLayout, this->pmRegistry, this->bundlesMap, &this->processCommandPub);
+				cout << "PMControl: Create new ControlledProcessManager with ID " << processManagerId
+						<< " and host name " << pmName << "!" << endl;
+				pm_widget::ControlledProcessManager* controlledPM = new pm_widget::ControlledProcessManager(
+						pmName, processManagerId, &this->bundlesMap, this->pmRegistry, this->ui_.pmHorizontalLayout);
 				this->processManagersMap.emplace(processManagerId, controlledPM);
 				return controlledPM;
 			}
 			else
 			{
-				cerr << "PMControl: Received message from unknown process manager with sender id " << processManagerId << endl;
+				cerr << "PMControl: Received message from unknown process manager with sender id " << processManagerId
+						<< endl;
 				return nullptr;
 			}
 		}
@@ -193,17 +203,6 @@ namespace pm_control
 		this->processStatMsgQueue.emplace(chrono::system_clock::now(), psts);
 	}
 
-	void PMControl::sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int cmd)
-	{
-		process_manager::ProcessCommand pc;
-		pc.receiverId = receiverId;
-		pc.robotIds = robotIds;
-		pc.processKeys = execIds;
-		pc.paramSets = paramSets;
-		pc.cmd = cmd;
-		this->processCommandPub.publish(pc);
-	}
-
 	void PMControl::shutdownPlugin()
 	{
 		this->processCommandPub.shutdown();
@@ -215,7 +214,8 @@ namespace pm_control
 
 	}
 
-	void PMControl::restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings)
+	void PMControl::restoreSettings(const qt_gui_cpp::Settings& plugin_settings,
+									const qt_gui_cpp::Settings& instance_settings)
 	{
 
 	}

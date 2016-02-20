@@ -5,29 +5,42 @@
  *      Author: Stephan Opfer
  */
 
-#ifndef SUPPLEMENTARY_PM_CONTROL_SRC_PM_CONTROL_CONTROLLEDPROCESSMANAGER_H_
-#define SUPPLEMENTARY_PM_CONTROL_SRC_PM_CONTROL_CONTROLLEDPROCESSMANAGER_H_
+#ifndef SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDPROCESSMANAGER_H_
+#define SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDPROCESSMANAGER_H_
 
 
 #include <string>
 #include <utility>
+#include <ros/ros.h>
 
-#include "process_manager/ProcessStats.h"
+#include <process_manager/ProcessStats.h>
+#include <process_manager/ProcessCommand.h>
 
 #include <QFrame>
+#include <QBoxLayout>
 #include <chrono>
 
 using namespace std;
 
-namespace pm_control
+namespace supplementary {
+	class SystemConfig;
+	class RobotExecutableRegistry;
+}
+
+namespace pm_control {
+	class PMControl;
+}
+
+namespace pm_widget
 {
 	class ControlledRobot;
-	class PMControl;
+
 
 	class ControlledProcessManager
 	{
 	public:
-		ControlledProcessManager(string processManagerName, int processManagerId, PMControl* parentPMControl);// QHBoxLayout* parentHBoxLayout, supplementary::RobotExecutableRegistry* pmRegistry, map<string, vector<int>> &bundlesMap, ros::Publisher* processCommandPub, chrono::duration<double> msgTimeOut,);
+		//ControlledProcessManager(string processManagerName, int processManagerId);
+		ControlledProcessManager(string processManagerName, int processManagerId, map<string, vector<pair<int, int>>>* bundlesMap, supplementary::RobotExecutableRegistry* pmRegistry, QBoxLayout* pmHorizontalLayout);
 		virtual ~ControlledProcessManager();
 
 		void updateGUI(chrono::system_clock::time_point now);
@@ -40,15 +53,16 @@ namespace pm_control
 		chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
 		string name; /* < Hostname under which this process manager is running */
 		int id; /* < The id of the host */
-		PMControl* parentPMControl; /* < Pointer to the parent PMControl */
+		map<string, vector<pair<int, int>>>* bundlesMap;
+		supplementary::RobotExecutableRegistry* pmRegistry;
 
 	private:
-
 		map<int, ControlledRobot*> controlledRobotsMap; /* < The robots, which are controlled by this process manager */
+		ros::Publisher processCommandPub;
+		QBoxLayout* parentLayout;
 		ControlledRobot* getControlledRobot(int robotId);
-
 	};
 
-} /* namespace pm_control */
+} /* namespace pm_widget */
 
-#endif /* SUPPLEMENTARY_PM_CONTROL_SRC_RQT_PM_CONTROL_CONTROLLEDPROCESSMANAGER_H_ */
+#endif /* SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDPROCESSMANAGER_H_ */
