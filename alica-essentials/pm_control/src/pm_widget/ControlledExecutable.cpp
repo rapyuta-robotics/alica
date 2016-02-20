@@ -8,6 +8,7 @@
 #include <QMenu>
 #include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
+#include <SystemConfig.h>
 
 #include "ui_ProcessWidget.h"
 #include "ui_RobotProcessesWidget.h"
@@ -54,7 +55,9 @@ namespace pm_widget
 		connect(this->processWidget, SIGNAL(customContextMenuRequested(const QPoint&)), this,
 				SLOT(showContextMenu(const QPoint&)));
 
-		//this->msgTimeOut = this->parentRobot->getMsgTimeout();
+
+		this->msgTimeOut = chrono::duration<double>(
+						(*supplementary::SystemConfig::getInstance())["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 
 		this->parentRobot->addExec(processWidget);
 		this->processWidget->show();
@@ -238,8 +241,8 @@ namespace pm_widget
 			return;
 		}
 
-		auto bundleMapEntry = this->bundlesMap->find(bundle.toStdString());
-		if (bundleMapEntry != this->bundlesMap->end())
+		auto bundleMapEntry = this->parentRobot->parentProcessManager->bundlesMap->find(bundle.toStdString());
+		if (bundleMapEntry != this->parentRobot->parentProcessManager->bundlesMap->end())
 		{
 			bool found = false;
 			for (auto processParamSetPair : bundleMapEntry->second)
@@ -266,6 +269,14 @@ namespace pm_widget
 			{
 				this->processWidget->show();
 			}
+			else
+			{
+				this->processWidget->hide();
+			}
+		}
+		else
+		{
+			cerr << "ControlledExecutable: Selected bundle " << bundle.toStdString() << " not found!" << endl;
 		}
 	}
 

@@ -106,9 +106,11 @@ namespace pm_control
 	void PMControl::updateGUI()
 	{
 		chrono::system_clock::time_point now = chrono::system_clock::now();
+
+		// need this kind of loop, in order to delete elements while iterating over the map
 		for (auto processMapIter = this->processManagersMap.begin(); processMapIter != this->processManagersMap.end();)
 		{
-			if ((now - processMapIter->second->timeLastMsgReceived) > PMControl::msgTimeOut)
+			if ((now - processMapIter->second->timeLastMsgReceived) > this->msgTimeOut)
 			{ // time is over, remove process manager
 
 				cout << "PMControl: The process manager on " << processMapIter->second->name << " (ID: "
@@ -123,16 +125,6 @@ namespace pm_control
 			}
 		}
 	}
-//
-//	void PMControl::addRobot(QFrame* robot)
-//	{
-//		this->ui_.pmHorizontalLayout->insertWidget(0, robot);
-//	}
-//
-//	void PMControl::removeRobot(QFrame* robot)
-//	{
-//		this->ui_.pmHorizontalLayout->removeWidget(robot);
-//	}
 
 	/**
 	 * Processes all queued ROS process stat messages.
@@ -177,8 +169,7 @@ namespace pm_control
 			string pmName;
 			if (this->pmRegistry->getRobotName(processManagerId, pmName))
 			{
-				cout << "PMControl: Create new ControlledProcessManager with ID " << processManagerId
-						<< " and host name " << pmName << "!" << endl;
+				cout << "PMControl: Create new ControlledProcessManager " << pmName << " (ID: " <<processManagerId << ")" <<endl;
 				pm_widget::ControlledProcessManager* controlledPM = new pm_widget::ControlledProcessManager(
 						pmName, processManagerId, &this->bundlesMap, this->pmRegistry, this->ui_.pmHorizontalLayout);
 				this->processManagersMap.emplace(processManagerId, controlledPM);

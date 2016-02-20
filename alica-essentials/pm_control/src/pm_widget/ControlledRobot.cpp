@@ -66,7 +66,7 @@ namespace pm_widget
 		auto controlledExecEntry = this->controlledExecMap.find(ps.processKey);
 		if (controlledExecEntry != this->controlledExecMap.end())
 		{ // executable is already known
-
+			this->timeLastMsgReceived = timeMsgReceived;
 			// update the statistics of the ControlledExecutable
 			controlledExecEntry->second->handleStat(timeMsgReceived, ps);
 		}

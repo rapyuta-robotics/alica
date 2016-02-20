@@ -14,12 +14,16 @@
 
 namespace pm_widget
 {
-//	QHBoxLayout* parentHBoxLayout, supplementary::RobotExecutableRegistry* pmRegistry,map<string, vector<int>> &bundlesMap, ros::Publisher* processCommandPub, chrono::duration<double> msgTimeOut)
 	ControlledProcessManager::ControlledProcessManager(string processManagerName, int processManagerId, map<string, vector<pair<int, int>>>* bundlesMap, supplementary::RobotExecutableRegistry* pmRegistry, QBoxLayout* parentLayout) :
 			name(processManagerName), id(processManagerId), bundlesMap(bundlesMap), pmRegistry(pmRegistry), parentLayout(parentLayout)
 	{
 		ros::NodeHandle* nh = new ros::NodeHandle();
-		processCommandPub = nh->advertise<process_manager::ProcessCommand>("/process_manager/ProcessCommand", 10);
+		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+		string cmdTopic = (*sc)["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
+		processCommandPub = nh->advertise<process_manager::ProcessCommand>(cmdTopic, 10);
+
+		this->msgTimeOut = chrono::duration<double>((*sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
+
 	}
 
 	ControlledProcessManager::~ControlledProcessManager()
@@ -58,7 +62,7 @@ namespace pm_widget
 			string robotName;
 			if (this->pmRegistry->getRobotName(robotId, robotName))
 			{
-				cout << "PMControl: Create new ControlledRobot " << robotName << "(ID: " << robotId << ")" << endl;
+				cout << "ControlledPM: Create new ControlledRobot " << robotName << " (ID: " << robotId << ")" << endl;
 
 				ControlledRobot* controlledRobot = new ControlledRobot(robotName, robotId, this);
 				this->controlledRobotsMap.emplace(robotId, controlledRobot);
@@ -66,7 +70,7 @@ namespace pm_widget
 			}
 			else
 			{
-				cerr << "ControlledRobot: Received processStat from unknown robot with sender id " << robotId << endl;
+				cerr << "ControlledPM: Received processStat from unknown robot with sender id " << robotId << endl;
 				return nullptr;
 			}
 		}
@@ -74,20 +78,20 @@ namespace pm_widget
 
 	void ControlledProcessManager::updateGUI(chrono::system_clock::time_point now)
 	{
-		for (auto controlledRobotEntry : this->controlledRobotsMap)
+		for (auto robotMapIter = this->controlledRobotsMap.begin(); robotMapIter != this->controlledRobotsMap.end();)
 		{
-			if ((now - controlledRobotEntry.second->timeLastMsgReceived) > this->msgTimeOut)
+			if ((now - robotMapIter->second->timeLastMsgReceived) > this->msgTimeOut)
 			{ // time is over, erase controlled robot
-
-				cout << "ControlledPM: The robot " << controlledRobotEntry.second->name << " (ID: "
-						<< controlledRobotEntry.second->id << ") on process manager " << this->name << " (ID: "
+				cout << "ControlledPM: The robot " << robotMapIter->second->name << " (ID: "
+						<< robotMapIter->second->id << ") on process manager " << this->name << " (ID: "
 						<< this->id << ") seems to be dead!" << endl;
-				this->controlledRobotsMap.erase(controlledRobotEntry.first);
-				delete controlledRobotEntry.second;
+				delete (robotMapIter->second);
+				robotMapIter = this->controlledRobotsMap.erase(robotMapIter);
 			}
 			else
 			{ // message arrived before timeout, update its GUI
-				controlledRobotEntry.second->updateGUI(now);
+				robotMapIter->second->updateGUI(now);
+				++robotMapIter;
 			}
 		}
 	}

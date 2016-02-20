@@ -67,7 +67,6 @@ namespace pm_widget
 		void processCheckBoxStateChanged(int, int); /**< first int is newState, second int is execId */
 
 	private:
-		map<string, vector<pair<int, int>>>* bundlesMap;
 		static const string redBackground;
 		static const string greenBackground;
 		static const string grayBackground;
