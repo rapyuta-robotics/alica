@@ -32,6 +32,7 @@ namespace geometry {
 		shared_ptr<CNPoint2D> alloToEgo(CNPosition& me);
 		shared_ptr<CNPoint2D> egoToAllo(CNPosition& me);
 		shared_ptr<CNPoint2D> normalize();
+		shared_ptr<CNPoint2D> clone();
 
 		shared_ptr<CNPoint2D> operator*(const double& right);
 		shared_ptr<CNPoint2D> operator/(const double& right);

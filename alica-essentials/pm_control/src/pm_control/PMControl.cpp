@@ -18,12 +18,14 @@ namespace pm_control
 		rosNode = new ros::NodeHandle();
 
 		this->sc = supplementary::SystemConfig::getInstance();
+
 		this->msgTimeOut = chrono::duration<double>(
 				(*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
+
 		this->pmRegistry = new supplementary::RobotExecutableRegistry();
 
 		/* Initialise the registry data structure for better performance
-		 * with data from Globals.conf and Processes.conf file. */
+		 * with data from Globals.conf and ProcessManaging.conf file. */
 
 		// Register robots from Globals.conf
 		int curId;
@@ -33,7 +35,8 @@ namespace pm_control
 			curId = this->pmRegistry->addRobot(robotName);
 		}
 
-		// Register executables from Processes.conf
+
+		// Register executables from ProcessManaging.conf
 		auto processDescriptions = (*this->sc)["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
 		for (auto processSectionName : (*processDescriptions))
 		{

@@ -19,7 +19,7 @@ namespace robot_control
 
 		this->sc = supplementary::SystemConfig::getInstance();
 		RobotsControl::msgTimeOut = chrono::duration<double>(
-				(*this->sc)["PMControl"]->get<unsigned long>("timeLastMsgReceivedTimeOut", NULL));
+				(*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 		this->pmRegistry = new supplementary::RobotExecutableRegistry();
 
 		/* Initialise the registry data structure for better performance
