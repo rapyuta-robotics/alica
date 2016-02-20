@@ -52,6 +52,7 @@ namespace robot_control
 		Ui::RobotControlWidget robotControlWidget_;
 		QWidget* widget_;
 
+		map<string, vector<pair<int, int>>> bundlesMap;
 		supplementary::RobotExecutableRegistry* pmRegistry;
 		ros::NodeHandle* rosNode;
 

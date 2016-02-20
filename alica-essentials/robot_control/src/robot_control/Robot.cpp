@@ -13,12 +13,11 @@
 #include "robot_control/RobotCommand.h"
 #include "robot_control/RobotsControl.h"
 #include "ui_ControlledRobot.h"
-#include "alica/AlicaWidget.h"
+#include <alica/AlicaWidget.h>
+#include <pm_widget/ControlledProcessManager.h>
 
 #include <chrono>
 #include <limits.h>
-
-
 
 namespace robot_control
 {
@@ -30,9 +29,13 @@ namespace robot_control
 
 		// manual configuration of widgets
 		this->uiControlledRobot->robotStartStopBtn->setText(QString(this->name.c_str()));
+
 		this->alicaWidget = new alica::AlicaWidget();
 		this->uiControlledRobot->scrollAreaWidgetContents->addWidget(this->alicaWidget->qframe);
 		this->alicaWidget->qframe->hide();
+
+		this->pmWidget = new pm_widget::ControlledProcessManager(robotName, robotId, &this->parentRobotsControl->bundlesMap ,this->parentRobotsControl->pmRegistry, this->uiControlledRobot->scrollAreaWidgetContents);
+		this->pmWidget->hide();
 
 
 		// signals and slots
@@ -84,11 +87,11 @@ namespace robot_control
 		if (showProcessManager)
 		{
 			this->uiControlledRobot->scrollArea->show();
-			// TODO: show process manager
+			this->pmWidget->show();
 		}
 		else
 		{
-			// TODO: hide process manager
+			this->pmWidget->hide();
 			if (!showAlicaClient)
 			{
 				this->uiControlledRobot->scrollArea->hide();
@@ -99,9 +102,13 @@ namespace robot_control
 
 	void Robot::updateGUI(chrono::system_clock::time_point now)
 	{
-		if (chrono::steady_clock::now() - this->timeLastMsgReceived > std::chrono::milliseconds(1000))
+		if (chrono::system_clock::now() - this->timeLastMsgReceived > std::chrono::milliseconds(1000))
 		{
 			this->clearGUI();
+		}
+		else
+		{
+			this->pmWidget->updateGUI(now);
 		}
 	}
 
@@ -152,10 +159,16 @@ namespace robot_control
 		this->widget->hide();
 	}
 
-	void Robot::handleAlicaInfo(alica_ros_proxy::AlicaEngineInfoConstPtr aei)
+	void Robot::handleAlicaInfo(pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr> timeAEIpair)
 	{
-		this->timeLastMsgReceived = chrono::steady_clock::now();
-		this->alicaWidget->handleAlicaEngineInfo(aei);
+		this->timeLastMsgReceived = timeAEIpair.first;
+		this->alicaWidget->handleAlicaEngineInfo(timeAEIpair.second);
+	}
+
+	void Robot::handleProcessStats(pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePSTSpair)
+	{
+		this->timeLastMsgReceived = timePSTSpair.first;
+		this->pmWidget->handleProcessStats(timePSTSpair);
 	}
 
 

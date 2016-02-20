@@ -32,6 +32,40 @@ namespace robot_control
 		{
 			curId = this->pmRegistry->addRobot(robotName);
 		}
+
+		// Register executables from ProcessManaging.conf
+		auto processDescriptions = (*this->sc)["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
+		for (auto processSectionName : (*processDescriptions))
+		{
+			curId = this->pmRegistry->addExecutable(processSectionName);
+		}
+
+		// Read bundles from Processes.conf
+		auto bundlesSections = (*this->sc)["ProcessManaging"]->getSections("Processes.Bundles", NULL);
+		for (auto bundleName : (*bundlesSections))
+		{
+			vector<string> processList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles",
+																							bundleName.c_str(),
+																							"processList", NULL);
+			vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles",
+																								bundleName.c_str(),
+																								"processParamsList",
+																								NULL);
+			if (processList.size() != processParamsList.size())
+			{
+				cerr << "PMControl: Number of processes does not match the number of parameter sets for the bundle '"
+						<< bundleName << "' in the Processes.conf!" << endl;
+				continue;
+			}
+
+			for (int i = 0; i < processList.size(); i++)
+			{
+				this->bundlesMap[bundleName].push_back(
+						pair<int, int>(stoi(processList[i]), stoi(processParamsList[i])));
+			}
+			cout << "PMControl: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size()
+					<< " processes." << endl;
+		}
 	}
 
 	void RobotsControl::initPlugin(qt_gui_cpp::PluginContext& context)
@@ -148,6 +182,7 @@ namespace robot_control
 				processStatMsgQueue.pop();
 
 				this->checkAndInit(timePstsPair.second->senderId);
+				this->controlledRobotsMap[timePstsPair.second->senderId]->handleProcessStats(timePstsPair);
 			}
 		}
 
@@ -160,7 +195,7 @@ namespace robot_control
 				alicaInfoMsgQueue.pop();
 
 				this->checkAndInit(timeAlicaInfoPair.second->senderID);
-				this->controlledRobotsMap[timeAlicaInfoPair.second->senderID]->handleAlicaInfo(timeAlicaInfoPair.second);
+				this->controlledRobotsMap[timeAlicaInfoPair.second->senderID]->handleAlicaInfo(timeAlicaInfoPair);
 			}
 		}
 
@@ -178,8 +213,8 @@ namespace robot_control
 			string robotName;
 			if (this->pmRegistry->getRobotName(robotId, robotName))
 			{
-				cout << "RC: Create new ControlledRobot with ID " << robotId << " and host name "
-						<< robotName << "!" << endl;
+				cout << "RC: Create new ControlledRobot with ID " << robotId << " and host name " << robotName << "!"
+						<< endl;
 				Robot* controlledRobot = new Robot(robotName, robotId, this);
 				this->controlledRobotsMap.emplace(robotId, controlledRobot);
 			}

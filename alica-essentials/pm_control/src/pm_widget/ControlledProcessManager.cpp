@@ -28,7 +28,7 @@ namespace pm_widget
 
 	ControlledProcessManager::~ControlledProcessManager()
 	{
-		for (auto controlledRobotEntry : this->controlledRobotsMap)
+		for (auto& controlledRobotEntry : this->controlledRobotsMap)
 		{
 			delete controlledRobotEntry.second;
 		}
@@ -38,7 +38,7 @@ namespace pm_widget
 			pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair)
 	{
 		this->timeLastMsgReceived = timePstsPair.first;
-		for (auto processStat : timePstsPair.second->processStats)
+		for (auto& processStat : timePstsPair.second->processStats)
 		{
 			// get the corresponding controlled robot
 			ControlledRobot* controlledRobot = this->getControlledRobot(processStat.robotId);
@@ -98,7 +98,7 @@ namespace pm_widget
 
 	void ControlledProcessManager::addRobot(QFrame* robot)
 	{
-		this->parentLayout->insertWidget(0, robot);
+		this->parentLayout->addWidget(robot);
 	}
 
 	void ControlledProcessManager::removeRobot(QFrame* robot)
@@ -117,5 +117,22 @@ namespace pm_widget
 		this->processCommandPub.publish(pc);
 	}
 
+	void ControlledProcessManager::hide()
+	{
+		for (auto& test : this->controlledRobotsMap)
+		{
+			test.second->robotProcessesQFrame->hide();
+		}
+	}
+
+	void ControlledProcessManager::show()
+	{
+		for (auto& test : this->controlledRobotsMap)
+		{
+			test.second->robotProcessesQFrame->show();
+		}
+	}
+
 } /* namespace pm_widget */
+
 

@@ -12,7 +12,8 @@
 #include <process_manager/RobotMetaData.h>
 #include <QFrame>
 #include <ros/ros.h>
-#include "alica_ros_proxy/AlicaEngineInfo.h"
+#include <alica_ros_proxy/AlicaEngineInfo.h>
+#include <process_manager/ProcessStats.h>
 
 namespace Ui {
 	class RobotProcessesWidget;
@@ -31,6 +32,10 @@ namespace alica {
 	class AlicaWidget;
 }
 
+namespace pm_widget {
+	class ControlledProcessManager;
+}
+
 namespace robot_control
 {
 	class RobotsControl;
@@ -46,8 +51,9 @@ namespace robot_control
 		virtual ~Robot();
 
 		// Message processing
-		chrono::time_point<chrono::steady_clock> timeLastMsgReceived; /**< the last time a message was received for this robot */
-		void handleAlicaInfo(alica_ros_proxy::AlicaEngineInfoConstPtr aei);
+		chrono::time_point<chrono::system_clock> timeLastMsgReceived; /**< the last time a message was received for this robot */
+		void handleAlicaInfo(pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr> timeAEIpair);
+		void handleProcessStats(pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePSTSpair);
 
 		// GUI Methods and Members
 		RobotsControl* parentRobotsControl;
@@ -70,10 +76,11 @@ namespace robot_control
 
 		QFrame* widget;
 		Ui::ControlledRobotWidget* uiControlledRobot;
+
 		alica::AlicaWidget* alicaWidget;
+		pm_widget::ControlledProcessManager* pmWidget;
 
 		ros::Publisher robotCommandPub;
-
 
 	};
 

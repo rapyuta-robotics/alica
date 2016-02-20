@@ -49,6 +49,9 @@ namespace pm_widget
 		void addRobot(QFrame* robot);
 		void removeRobot(QFrame* robot);
 
+		void hide();
+		void show();
+
 		chrono::duration<double> msgTimeOut;
 		chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
 		string name; /* < Hostname under which this process manager is running */

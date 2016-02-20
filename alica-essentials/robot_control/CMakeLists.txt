@@ -2,15 +2,10 @@ cmake_minimum_required(VERSION 2.8.3)
 project(robot_control)
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util alica_ros_proxy alica_client std_msgs message_generation)
+find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util alica_ros_proxy alica_client pm_control std_msgs message_generation)
 
 find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
 include(${QT_USE_FILE})
-
-#set(CMAKE_INCLUDE_CURRENT_DIR ON)
-#set(CMAKE_AUTOMOC ON)
-#find_package(Qt5Gui REQUIRED)
-#find_package(Qt5Core REQUIRED)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -32,13 +27,11 @@ generate_messages(
   std_msgs
 )
 
-
 set(robot_control_SRCS
   src/robot_control/flowlayout.cpp
   src/robot_control/RobotsControl.cpp
   src/robot_control/Robot.cpp
 )
-
 
 set(robot_control_HDRS
   include/robot_control/flowlayout.h
@@ -54,8 +47,6 @@ set(robot_control_UIS
 set(robot_control_INCLUDE_DIRECTORIES
   include
   ${CMAKE_CURRENT_BINARY_DIR}
-  #${Qt5Gui_INCLUDE_DIRS}
-  #${Qt5Core_INCLUDE_DIRS}
 )
 
 set(robot_control_RCS
@@ -72,10 +63,6 @@ catkin_package(
 qt4_wrap_cpp(robot_control_MOCS ${robot_control_HDRS})
 qt4_add_resources(robot_control_RESOURCES ${robot_control_RCS}) 
 qt4_wrap_ui(robot_control_UIS_H ${robot_control_UIS})
-
-#qt5_wrap_cpp(robot_control_MOCS ${robot_control_HDRS})
-#qt5_add_resources(robot_control_RESOURCES ${robot_control_RCS}) 
-#qt5_wrap_ui(robot_control_UIS_H ${robot_control_UIS})
 
 include_directories(${robot_control_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
 add_library(${PROJECT_NAME} ${robot_control_SRCS} ${robot_control_MOCS} ${robot_control_UIS_H} ${robot_control_RESOURCES})
