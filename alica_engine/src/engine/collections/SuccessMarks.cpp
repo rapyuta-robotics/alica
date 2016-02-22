@@ -100,141 +100,142 @@ namespace alica
 			if (iter != eps.end())
 			{
 				ep = iter->second;
-				list<EntryPoint*> s;
+				shared_ptr<list<EntryPoint*>> s;
 				auto i = this->getSuccessMarks().find(ep->getPlan());
 				if (i != this->getSuccessMarks().end())
 				{
-					s = (*i->second);
-					if (find(s.begin(), s.end(), ep) == s.end())
+					s = i->second;
+					if (find(s->begin(), s->end(), ep) == s->end())
 					{
-						s.push_back(ep);
-					}
-					else
-					{
-						shared_ptr<list<EntryPoint*> > s;
 						s->push_back(ep);
-						this->getSuccessMarks().insert(
-								pair<AbstractPlan*, shared_ptr<list<EntryPoint*> > >(ep->getPlan(), s));
 					}
 				}
-			}
-		}
-	}
-
-	/**
-	 * Remove all marks referring to the specified plan.
-	 * @param plan An AbstractPlan*
-	 */
-	void SuccessMarks::removePlan(AbstractPlan* plan)
-	{
-		this->getSuccessMarks().erase(plan);
-	}
-
-	/**
-	 * Mark an EntryPoint within a plan as successfully completed
-	 * @param p An AbstractPlan*
-	 * @param e An EntryPoint*
-	 */
-	void SuccessMarks::markSuccessfull(AbstractPlan* p, EntryPoint* e)
-	{
-		auto iter = this->getSuccessMarks().find(p);
-		if (iter != this->getSuccessMarks().end())
-		{
-			shared_ptr<list<EntryPoint*> > l = this->getSuccessMarks().at(p);
-			auto i = find(l->begin(), l->end(), e);
-			if (i == l->end())
-			{
-				l->push_back(e);
-			}
-		}
-		else
-		{
-			shared_ptr<list<EntryPoint*> > l = make_shared<list<EntryPoint*>>();
-			l->push_back(e);
-			this->getSuccessMarks().insert(pair<AbstractPlan*, shared_ptr<list<EntryPoint*> > >(p, l));
-
-		}
-	}
-
-	/**
-	 * Check whether an EntryPoint in a plan was completed.
-	 * @param p An AbstractPlan*
-	 * @param e An EntryPoint*
-	 * @return A bool
-	 */
-	bool SuccessMarks::succeeded(AbstractPlan* p, EntryPoint* e)
-	{
-		list<EntryPoint*> l;
-		auto iter = this->getSuccessMarks().find(p);
-		if (iter != this->getSuccessMarks().end())
-		{
-			l = (*iter->second);
-			auto i = find(l.begin(), l.end(), e);
-			return (i != l.end());
-		}
-		return false;
-	}
-
-	/**
-	 * Check whether an EntryPoint in a plan was completed.
-	 * @param planId An int
-	 * @param entryPointId An int
-	 * @return A bool
-	 */
-	bool SuccessMarks::succeeded(long planId, long entryPointId)
-	{
-		Plan* p = ae->getPlanRepository()->getPlans().at(planId);
-		EntryPoint* e = p->getEntryPoints().at(entryPointId);
-		return succeeded(p, e);
-	}
-
-	/**
-	 * Test if at least one task has succeeded within abstract plan p
-	 * @param p An AbstractPlan*
-	 * @return A bool
-	 */
-	bool SuccessMarks::anyTaskSucceeded(AbstractPlan* p)
-	{
-		list<EntryPoint*> l;
-		auto iter = this->getSuccessMarks().find(p);
-		if (iter != this->getSuccessMarks().end())
-		{
-			l = (*iter->second);
-			return (l.size() > 0);
-		}
-		PlanType* pt = dynamic_cast<PlanType*>(p);
-		if (pt != nullptr)
-		{
-			for (Plan* cp : pt->getPlans())
-			{
-				auto iter = this->getSuccessMarks().find(cp);
-				l = (*iter->second);
-				if (iter != this->getSuccessMarks().end() && l.size() > 0)
+				else
 				{
-					return true;
+					shared_ptr<list<EntryPoint*> > s = make_shared<list<EntryPoint*>>();
+					s->push_back(ep);
+					this->getSuccessMarks().insert(
+							pair<AbstractPlan*, shared_ptr<list<EntryPoint*> > >(ep->getPlan(), s));
 				}
 			}
 		}
-		return false;
 	}
 
-	/**
-	 * Serialize to a list of EntryPoint ids.
-	 * @return A list<long>
-	 */
-	list<long> SuccessMarks::toList()
+
+/**
+ * Remove all marks referring to the specified plan.
+ * @param plan An AbstractPlan*
+ */
+void SuccessMarks::removePlan(AbstractPlan* plan)
+{
+	this->getSuccessMarks().erase(plan);
+}
+
+/**
+ * Mark an EntryPoint within a plan as successfully completed
+ * @param p An AbstractPlan*
+ * @param e An EntryPoint*
+ */
+void SuccessMarks::markSuccessfull(AbstractPlan* p, EntryPoint* e)
+{
+	auto iter = this->getSuccessMarks().find(p);
+	if (iter != this->getSuccessMarks().end())
 	{
-		list<long> ret;
-		for (auto pair : this->getSuccessMarks())
+		shared_ptr < list<EntryPoint*> > l = this->getSuccessMarks().at(p);
+		auto i = find(l->begin(), l->end(), e);
+		if (i == l->end())
 		{
-			for (EntryPoint* e : (*pair.second))
-			{
-				ret.push_back(e->getId());
-			}
-
+			l->push_back(e);
 		}
-		return ret;
 	}
+	else
+	{
+		shared_ptr < list<EntryPoint*> > l = make_shared<list<EntryPoint*>>();
+		l->push_back(e);
+		this->getSuccessMarks().insert(pair<AbstractPlan*, shared_ptr<list<EntryPoint*> > >(p, l));
+
+	}
+}
+
+/**
+ * Check whether an EntryPoint in a plan was completed.
+ * @param p An AbstractPlan*
+ * @param e An EntryPoint*
+ * @return A bool
+ */
+bool SuccessMarks::succeeded(AbstractPlan* p, EntryPoint* e)
+{
+	list<EntryPoint*> l;
+	auto iter = this->getSuccessMarks().find(p);
+	if (iter != this->getSuccessMarks().end())
+	{
+		l = (*iter->second);
+		auto i = find(l.begin(), l.end(), e);
+		return (i != l.end());
+	}
+	return false;
+}
+
+/**
+ * Check whether an EntryPoint in a plan was completed.
+ * @param planId An int
+ * @param entryPointId An int
+ * @return A bool
+ */
+bool SuccessMarks::succeeded(long planId, long entryPointId)
+{
+	Plan* p = ae->getPlanRepository()->getPlans().at(planId);
+	EntryPoint* e = p->getEntryPoints().at(entryPointId);
+	return succeeded(p, e);
+}
+
+/**
+ * Test if at least one task has succeeded within abstract plan p
+ * @param p An AbstractPlan*
+ * @return A bool
+ */
+bool SuccessMarks::anyTaskSucceeded(AbstractPlan* p)
+{
+	list<EntryPoint*> l;
+	auto iter = this->getSuccessMarks().find(p);
+	if (iter != this->getSuccessMarks().end())
+	{
+		l = (*iter->second);
+		return (l.size() > 0);
+	}
+	PlanType* pt = dynamic_cast<PlanType*>(p);
+	if (pt != nullptr)
+	{
+		for (Plan* cp : pt->getPlans())
+		{
+			auto iter = this->getSuccessMarks().find(cp);
+			l = (*iter->second);
+			if (iter != this->getSuccessMarks().end() && l.size() > 0)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+/**
+ * Serialize to a list of EntryPoint ids.
+ * @return A list<long>
+ */
+list<long> SuccessMarks::toList()
+{
+	list<long> ret;
+	for (auto pair : this->getSuccessMarks())
+	{
+		for (EntryPoint* e : (*pair.second))
+		{
+			ret.push_back(e->getId());
+		}
+
+	}
+	return ret;
+}
 
 } /* namespace alica */
 
