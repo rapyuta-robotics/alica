@@ -14,6 +14,30 @@ using namespace std;
 namespace geometry
 {
 
+	double deltaAngle(double a, double b) {
+		double ret = a - b;
+		if (ret > M_PI)
+			return -2.0*M_PI + ret;
+		else if (ret < -M_PI)
+			return ret + 2.0*M_PI;
+		else
+			return ret;
+	}
+
+	double normalizeAngle(double angle) {
+		if (angle > M_PI) {
+			while (angle > M_PI) {
+				angle -= 2.0*M_PI;
+			}
+		} else if (angle < -M_PI) {
+			while (angle < -M_PI) {
+				angle += 2.0*M_PI;
+			}
+		}
+		return angle;
+	}
+
+
 	CNPoint2D::CNPoint2D(double x, double y)
 	{
 		this->x = x;
