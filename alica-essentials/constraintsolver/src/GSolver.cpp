@@ -167,6 +167,7 @@ namespace alica
 				if (rpfirst->_finalUtil > _utilityThreshold)
 				{
 					*util = rpfirst->_finalUtil;
+					cout << "GSolver: Using Solution from Seed!" << endl;
 					return rpfirst->_finalValue;
 				}
 				_rResults.push_back(rpfirst);
@@ -245,6 +246,14 @@ namespace alica
 				}
 			}
 
+			cout << "GSolver: Using Result Nr. " << resIdx << endl;
+			for(int i=0; i < seeds->size(); i++) {
+				cout << "Seed: ";
+				for (double v : *seeds->at(i)) {
+					cout << "\t" << v;
+				}
+				cout << endl;
+			}
 #ifdef GSOLVER_LOG
 			closeLog();
 #endif

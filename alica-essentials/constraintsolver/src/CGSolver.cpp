@@ -195,8 +195,9 @@ namespace alica
 			// Desierialize seeds
 			shared_ptr<vector<shared_ptr<vector<double>>> > seeds = make_shared<vector<shared_ptr<vector<double>>>>();
 			seeds->reserve(serial_seeds->size());
-			for (auto& serialseed : *serial_seeds)
+			for (int i = 0; i < serial_seeds->size(); i++)
 			{
+				auto& serialseed = serial_seeds->at(i);
 				shared_ptr<vector<double>> singleseed = make_shared<vector<double>>();
 				singleseed->reserve(serialseed->size());
 				for (auto& serialvalue : *serialseed)
@@ -229,6 +230,15 @@ namespace alica
 				seeds->push_back(singleseed);
 			}
 
+
+//			for(int i = 0; i < seeds->size(); i++) {
+//				cout << "----CGS: seed " << i << " ";
+//				for(int j = 0; j < seeds->at(i)->size(); j++) {
+//					cout << seeds->at(i)->at(j) << " ";
+//				}
+//				cout << endl;
+//			}
+
 			shared_ptr<vector<double>> gresults;
 			double util = 0;
 			{ // for lock_guard
@@ -249,6 +259,11 @@ namespace alica
 			lastUtil = util;
 			lastFEvals = gs->getFEvals();
 			lastRuns = gs->getRuns();
+			cout << "CGS: result ";
+			for(int i = 0; i < gresults->size(); i++) {
+				cout << gresults->at(i) << " ";
+			}
+			cout << endl;
 			return util > 0.75;
 		}
 
