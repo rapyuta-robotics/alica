@@ -48,10 +48,13 @@ namespace alica
 		public:
 			VotedSeed(int dim, shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v);
 
-			bool takeVector(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v, vector<double>& scaling, double distThreshold);
+			bool takeVector(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v, vector<double>& scaling, double distThreshold, bool isDouble);
+			shared_ptr<vector<double>> deserializeToDoubleVec(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v);
+			shared_ptr<vector<shared_ptr<vector<uint8_t>>>> serializeFromDoubleVec(shared_ptr<vector<double>> d);
 
 			shared_ptr<vector<shared_ptr<vector<uint8_t>>>> values;
 			vector<int> supporterCount;
+			double hash;
 			int totalSupCount;
 			int dim;
 		};

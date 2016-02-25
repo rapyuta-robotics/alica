@@ -40,6 +40,7 @@ namespace alica
 		this->ae = ae;
 	}
 
+
 	void ConstraintQuery::addVariable(Variable* v)
 	{
 		queriedStaticVariables.push_back(v);
@@ -158,12 +159,13 @@ namespace alica
 		}
 		for (shared_ptr<ConstraintCall> c : calls)
 		{
+
 			vector<Variable*> conditionVariables = vector<Variable*>(c->getCondition()->getVariables());
 
 			auto varr = make_shared<vector<shared_ptr<SolverVariable>>>(conditionVariables.size());
 			for (int j = 0; j < conditionVariables.size(); ++j)
 			{
-				if (!store->getRep(conditionVariables[j])->getSolverVar().operator bool())
+				if (store->getRep(conditionVariables[j])->getSolverVar() == nullptr)
 				{
 					store->getRep(conditionVariables[j])->setSolverVar(
 							solver->createVariable(store->getRep(conditionVariables[j])->getId()));
@@ -187,6 +189,7 @@ namespace alica
 							dvarr.at(i)->setSolverVar(solver->createVariable(dvarr.at(i)->getId()));
 						}
 
+						cout << "CQ: Var " <<  dvarr.at(i)->getId() << endl;
 						dtvarr->at(i) = dvarr.at(i)->getSolverVar();
 					}
 					ll->push_back(dtvarr);
@@ -201,6 +204,7 @@ namespace alica
 		domOffset = relevantVariables.size();
 		relevantVariables.insert(relevantVariables.end(), relevantDomainVariables.begin(),
 									relevantDomainVariables.end());
+
 
 #ifdef CQ_DEBUG
 		cout << "CQ: PrepTime: "

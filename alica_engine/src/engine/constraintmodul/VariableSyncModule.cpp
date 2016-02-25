@@ -12,6 +12,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/ITeamObserver.h"
+#include "engine/model/Variable.h"
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/containers/SolverResult.h"
 #include <math.h>
@@ -134,6 +135,13 @@ namespace alica
 		//Lockguard here!
 
 		int dim = query->size();
+
+		cout << "VSyncMod:";
+		for(auto& avar : *query) {
+			cout << " " << avar->getId();
+		}
+		cout << endl;
+
 		list<shared_ptr<VotedSeed>> seeds;
 		vector<double> scaling(dim);
 		for(int i=0; i<dim; i++)
@@ -149,7 +157,7 @@ namespace alica
 			bool found = false;
 			for(auto s : seeds)
 			{
-				if(s->takeVector(vec,scaling,distThreshold))
+				if(s->takeVector(vec,scaling,distThreshold, true))
 				{
 					found = true;
 					break;
@@ -188,23 +196,7 @@ namespace alica
 						if(a->values == nullptr || a->values->size()==0) return true;
 						if(b->values == nullptr || b->values->size()==0) return false;
 
-						double va=0;
-						uint8_t* pointer = (uint8_t*)&va;
-						for (int k = 0; k < min(sizeof(double), a->values->at(0)->size()); k++)
-						{
-							*pointer = a->values->at(0)->at(k);
-							pointer++;
-						}
-
-						double vb=0;
-						pointer = (uint8_t*)&vb;
-						for (int k = 0; k < min(sizeof(double), b->values->at(0)->size()); k++)
-						{
-							*pointer = b->values->at(0)->at(k);
-							pointer++;
-						}
-
-						return vb > va;
+						return a->hash > b->hash;
 					}
 				});
 
@@ -238,51 +230,180 @@ namespace alica
 		}
 	}
 
-	bool VariableSyncModule::VotedSeed::takeVector(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v, vector<double>& scaling, double distThreshold)
+	shared_ptr<vector<double>> VariableSyncModule::VotedSeed::deserializeToDoubleVec(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v) {
+		shared_ptr<vector<double>> singleseed = make_shared<vector<double>>();
+		singleseed->reserve(v->size());
+		for (auto& serialvalue : *v)
+		{
+			if (serialvalue != nullptr)
+			{
+				double v;
+				uint8_t* pointer = (uint8_t*)&v;
+				if (serialvalue->size() == sizeof(double))
+				{
+					for (int k = 0; k < sizeof(double); k++)
+					{
+						*pointer = serialvalue->at(k);
+						pointer++;
+					}
+					singleseed->push_back(v);
+				}
+				else
+				{
+					cerr << "VSM: Received Seed that is not size of double" << endl;
+					cout << "VSM: Received Seed that is not size of double" << endl;
+					break;
+				}
+			}
+			else
+			{
+				singleseed->push_back(std::numeric_limits<double>::max());
+			}
+		}
+
+		return singleseed;
+
+	}
+	shared_ptr<vector<shared_ptr<vector<uint8_t>>>> VariableSyncModule::VotedSeed::serializeFromDoubleVec(shared_ptr<vector<double>> d) {
+
+		shared_ptr<vector<shared_ptr<vector<uint8_t>>>> res = make_shared<vector<shared_ptr<vector<uint8_t>>>>();
+
+		for (int i = 0; i < d->size(); i++)
+		{
+
+			uint8_t* tmp = ((uint8_t*)&d->at(i));
+			shared_ptr<vector<uint8_t>> result = make_shared<vector<uint8_t>>(sizeof(double));
+			for(int s=0; s<sizeof(double); s++) {
+				result->at(s) = *tmp;
+				tmp++;
+			}
+			res->push_back(result);
+		}
+
+		return res;
+
+	}
+	bool VariableSyncModule::VotedSeed::takeVector(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v, vector<double>& scaling, double distThreshold, bool isDouble)
 	{
-		int nans = 0;
-		double distSqr = 0;
+//		if(!isDouble) {
+//
+//			int nans = 0;
+//			double distSqr = 0;
+//
+//			bool nan = true;
+//			bool sameRes = true;
+//			bool nptrs = true;
+//
+//			if(v == nullptr || values == nullptr) {
+//				return true;
+//			}
+//			if(values->size() != v->size()) {
+//				return false;
+//			}
+//
+//			for(int i = 0; i  < dim; ++i) {
+//				if(v->at(i) != nullptr) {
+//					nptrs = false;
+//				}
+//				else {
+//					continue;
+//				}
+//				if(values->at(i) == nullptr) continue;
+//
+//				if(values->at(i)->size() == v->at(i)->size()) {
+//					for(int j = 0; j < v->at(i)->size(); j++) {
+//						nan = false;
+//						if(values->at(i)->at(j) != v->at(i)->at(j)) {
+//							sameRes = false;
+//						}
+//					}
+//				} else {
+//					return true;
+//				}
+//			}
+//
+//			if(nan || sameRes || nptrs) {
+//	//			cout << "VSM: takeVector true."  << nan << sameRes << nptrs << endl;
+//				if(sameRes) this->totalSupCount++;
+//				return true;
+//			} else {
+//	//			cout << "VSM: takeVector false." << endl;
+//				return false;
+//			}
+//		} else {
+			shared_ptr<vector<double>> v1 = deserializeToDoubleVec(v);
+			shared_ptr<vector<double>> values1 = deserializeToDoubleVec(values);
+			int nans = 0;
+			double distSqr = 0;
+			for (int i = 0; i < dim; ++i)
+			{
 
-		bool nan = true;
-		bool sameRes = true;
-		bool nptrs = true;
-
-		if(v == nullptr || values == nullptr) {
-			return true;
-		}
-		if(values->size() != v->size()) {
-			return false;
-		}
-
-		for(int i = 0; i  < dim; ++i) {
-			if(v->at(i) != nullptr) {
-				nptrs = false;
-			}
-			else {
-				continue;
-			}
-			if(values->at(i) == nullptr) continue;
-
-			if(values->at(i)->size() == v->at(i)->size()) {
-				for(int j = 0; j < v->at(i)->size(); j++) {
-					nan = false;
-					if(values->at(i)->at(j) != v->at(i)->at(j)) {
-						sameRes = false;
+				if (!std::isnan(v1->at(i)))
+				{
+					if (!std::isnan(values1->at(i)))
+					{
+						if (scaling[i] != 0)
+						{
+							distSqr += ((values1->at(i) - v1->at(i)) * (values1->at(i) - v1->at(i))) / scaling[i];
+						}
+						else
+						{
+							distSqr += (values1->at(i) - v1->at(i)) * (values1->at(i) - v1->at(i));
+						}
 					}
 				}
-			} else {
+				else
+				{
+					nans++;
+				}
+			}
+			if (dim == nans)
+			{
+				hash = -1;
+				return true; //silently absorb a complete NaN vector
+			}
+			if (distSqr / (dim - nans) < distThreshold)
+			{
+				for (int i = 0; i < dim; ++i)
+				{
+					if (!std::isnan(v1->at(i)))
+					{
+						if (std::isnan(values1->at(i)))
+						{
+							this->supporterCount[i] = 1;
+							this->totalSupCount++;
+
+							values1->at(i) = v1->at(i);
+						}
+						else
+						{
+							values1->at(i) = values1->at(i) * this->supporterCount[i] + v1->at(i);
+							this->supporterCount[i]++;
+							this->totalSupCount++;
+							values1->at(i) /= this->supporterCount[i];
+						}
+					}
+				}
+
+
+				this->values = serializeFromDoubleVec(values1);
+
+				hash = 0;
+				for(double d : *values1) {
+					if(!std::isnan(d))
+						hash +=d;
+				}
 				return true;
 			}
-		}
-
-		if(nan || sameRes || nptrs) {
-//			cout << "VSM: takeVector true."  << nan << sameRes << nptrs << endl;
-			if(sameRes) this->totalSupCount++;
-			return true;
-		} else {
-//			cout << "VSM: takeVector false." << endl;
+			hash = 0;
+			for(double d : *values1) {
+				if(!std::isnan(d))
+					hash +=d;
+			}
 			return false;
-		}
+
+
+//		}
 
 
 

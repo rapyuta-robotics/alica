@@ -79,6 +79,7 @@ namespace alica
 			void addVarTo(Variable* representing, Variable* toAdd);
 			vector<Variable*> getAllRep();
 			int getIndexOf(Variable* v);
+			void sort();
 
 		private:
 			vector<vector<Variable*>> store;
@@ -114,6 +115,13 @@ namespace alica
 			return false;
 		}
 		vector<void*> solverResult;
+
+		cout << "CQ relevant variables ";
+		for(auto variable : relevantVariables) {
+			cout << variable->getId() << " ";
+		}
+		cout << endl;
+
 
 		bool ret = solver->getSolution(relevantVariables, cds, solverResult);
 
