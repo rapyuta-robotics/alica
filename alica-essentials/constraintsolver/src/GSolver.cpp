@@ -172,7 +172,7 @@ namespace alica
 				}
 				_rResults.push_back(rpfirst);
 				//run with seeds of all other agends
-				for (int i = 0; i < seeds->size(); ++i)
+				for (int i = 1; i < seeds->size(); ++i)
 				{
 					if (begin + _maxSolveTime < alicaClock->now() || _fevals > _maxfevals)
 					{
