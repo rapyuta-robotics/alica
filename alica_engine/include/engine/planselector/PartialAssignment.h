@@ -42,7 +42,7 @@ namespace alica
 		PartialAssignment(PartialAssignmentPool* pap);
 		virtual ~PartialAssignment();
 		void clear();
-		static void reset(PartialAssignmentPool* pap);
+		static void reset(PartialAssignmentPool* pap); // has to be called before calculating the task assignment
 		static PartialAssignment* getNew(PartialAssignmentPool* pap, shared_ptr<vector<int> > robots, Plan* plan, shared_ptr<SuccessCollection> sucCol);
 		static PartialAssignment* getNew(PartialAssignmentPool* pap, PartialAssignment* oldPA);
 		short getEntryPointCount();
