@@ -111,6 +111,7 @@ add_library(cnc_geometry
   src/container/CNPoint2D.cpp
   src/container/CNPoint3D.cpp
   src/container/CNVelocity2D.cpp
+  src/container/CNRobot.cpp
 )
 
 ## Declare a cpp executable
