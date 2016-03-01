@@ -189,7 +189,6 @@ namespace alica
 							dvarr.at(i)->setSolverVar(solver->createVariable(dvarr.at(i)->getId()));
 						}
 
-						cout << "CQ: Var " <<  dvarr.at(i)->getId() << endl;
 						dtvarr->at(i) = dvarr.at(i)->getSolverVar();
 					}
 					ll->push_back(dtvarr);

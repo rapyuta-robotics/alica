@@ -136,11 +136,11 @@ namespace alica
 
 		int dim = query->size();
 
-		cout << "VSyncMod:";
+		/*cout << "VSyncMod:";
 		for(auto& avar : *query) {
 			cout << " " << avar->getId();
 		}
-		cout << endl;
+		cout << endl;*/
 
 		list<shared_ptr<VotedSeed>> seeds;
 		vector<double> scaling(dim);
@@ -154,6 +154,9 @@ namespace alica
 		{
 			shared_ptr<ResultEntry> re = this->store.at(i); //allow for lock free iteration (no value is deleted from store)
 			shared_ptr<vector<shared_ptr<vector<uint8_t>>>> vec = re->getValues(query, this->ttl4Usage);
+			if(vec==nullptr) {
+				continue;
+			}
 			bool found = false;
 			for(auto s : seeds)
 			{
@@ -185,6 +188,7 @@ namespace alica
 
 		int maxNum = min((int)seeds.size(),dim);
 		auto ret = make_shared<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>>(maxNum);
+
 		seeds.sort([](shared_ptr<VotedSeed>& a, shared_ptr<VotedSeed>& b)
 				{
 					if(a->totalSupCount != b->totalSupCount)
@@ -197,6 +201,7 @@ namespace alica
 						if(b->values == nullptr || b->values->size()==0) return false;
 
 						return a->hash > b->hash;
+						//return &*a > &*b;
 					}
 				});
 
@@ -216,6 +221,7 @@ namespace alica
 		this->values = v;
 		this->supporterCount = vector<int>(dim);
 		this->dim = dim;
+		hash = 0;
 		if(v!=nullptr) {
 			for (int i = 0; i < dim; ++i)
 			{
@@ -338,7 +344,7 @@ namespace alica
 			for (int i = 0; i < dim; ++i)
 			{
 
-				if (!std::isnan(v1->at(i)))
+				if (!std::isnan(v1->at(i)) && v1->at(i) != std::numeric_limits<double>::max())
 				{
 					if (!std::isnan(values1->at(i)))
 					{
@@ -390,14 +396,14 @@ namespace alica
 
 				hash = 0;
 				for(double d : *values1) {
-					if(!std::isnan(d))
+					if(!std::isnan(d) && d != std::numeric_limits<double>::max())
 						hash +=d;
 				}
 				return true;
 			}
 			hash = 0;
 			for(double d : *values1) {
-				if(!std::isnan(d))
+				if(!std::isnan(d) && d != std::numeric_limits<double>::max())
 					hash +=d;
 			}
 			return false;

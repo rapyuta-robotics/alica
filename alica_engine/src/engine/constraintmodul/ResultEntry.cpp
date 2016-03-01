@@ -39,8 +39,8 @@ namespace alica
 
 		long now = ae->getIAlicaClock()->now();
 		shared_ptr<VarValue> vv;
-		auto it = this->values.find(vid);
 		lock_guard<std::mutex> lock(valueLock);
+		auto it = this->values.find(vid);
 		if (it != values.end())
 		{
 			vv = it->second;
@@ -49,20 +49,8 @@ namespace alica
 		}
 		else
 		{
-			//is this needed? see C# code!
-			it = this->values.find(vid);
-			if (it != values.end())
-			{
-				vv = it->second;
-				vv->val = val;
-				vv->lastUpdate = now;
-			}
-			else
-			{
-				vv = make_shared<VarValue>(vid, val, now);
-				this->values[vid] = vv;
-			}
-
+			vv = make_shared<VarValue>(vid, val, now);
+			this->values[vid] = vv;
 		}
 	}
 
@@ -107,9 +95,12 @@ namespace alica
 	{
 		shared_ptr<vector<shared_ptr<vector<uint8_t>>>> ret = make_shared<vector<shared_ptr<vector<uint8_t>>>>(query->size());
 		int i = 0;
+		int nans = 0;
 		for(auto it = query->begin(); it != query->end(); it++, i++) {
 			ret->at(i) = getValue((*it)->getId(), ttl4Usage);
+			if(ret->at(i) == nullptr) nans++;
 		}
+		if(nans == i) return nullptr;
 		return ret;
 	}
 
