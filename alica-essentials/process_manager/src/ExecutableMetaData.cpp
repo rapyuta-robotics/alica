@@ -68,20 +68,26 @@ namespace supplementary
 		string execNameWithoutPath = splittedCmdLine[checkIdx].substr(lastSlashIdx + 1,
 																		splittedCmdLine[checkIdx].length());
 
-		if (this->absExecName.length() > 0)
+		//cout << "ExecMD: execNameWithoutPath: " << execNameWithoutPath << endl;
+		if (execNameWithoutPath.find(this->execName) == string::npos)
 		{
-			if (this->absExecName.find(execNameWithoutPath) == string::npos)
-			{
-				return false;
-			}
+			return false;
 		}
-		else
-		{
-			if (this->execName.find(execNameWithoutPath) == string::npos)
-			{
-				return false;
-			}
-		}
+
+//		if (this->absExecName.length() > 0)
+//		{
+//			if (this->absExecName.find(execNameWithoutPath) == string::npos)
+//			{
+//				return false;
+//			}
+//		}
+//		else
+//		{
+//			if (this->execName.find(execNameWithoutPath) == string::npos)
+//			{
+//				return false;
+//			}
+//		}
 		return true;
 	}
 
