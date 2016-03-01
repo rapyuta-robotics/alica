@@ -116,13 +116,6 @@ namespace alica
 		}
 		vector<void*> solverResult;
 
-		cout << "CQ relevant variables ";
-		for(auto variable : relevantVariables) {
-			cout << variable->getId() << " ";
-		}
-		cout << endl;
-
-
 		bool ret = solver->getSolution(relevantVariables, cds, solverResult);
 
 		//Create result filtered by the queried variables
