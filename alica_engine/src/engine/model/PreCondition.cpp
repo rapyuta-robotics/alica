@@ -23,7 +23,7 @@ namespace alica
 	string PreCondition::toString()
 	{
 		stringstream ss;
-		ss << "#PreCondition: " << this->name << " " << this->id << endl;
+		ss << "#PreCondition: " << this->name << " " << this->id << (this->enabled ? "enabled" : "disabled") << endl;
 		ss << "\t ConditionString: " << this->conditionString << endl;
 		ss << "#EndPreCondition" << endl;
 		return ss.str();
