@@ -224,7 +224,7 @@ namespace alica
 					}
 					else
 					{
-						singleseed->push_back(std::numeric_limits<double>::max());
+						singleseed->push_back(std::numeric_limits<double>::quiet_NaN());
 					}
 				}
 				seeds->push_back(singleseed);

@@ -202,14 +202,11 @@ namespace alica
 					_term = curProb;
 					//Take result and search with constraints
 					shared_ptr<RpropResult> ru = rPropLoop(utilitySeed, false);
-					/*if (ru->_finalUtil > _utilityThreshold) {
-					 *util = ru->_finalUtil;
-					 return ru->_finalValue;
-					 }*/
 					_rResults.push_back(ru);
 				}
 			}
 
+//			if(seeds->size() == 0) {
 			do
 			{ //Do runs until termination criteria, running out of time, or too many function evaluations
 				_runs++;
@@ -221,6 +218,7 @@ namespace alica
 				}
 				_rResults.push_back(rp);
 			}while (begin + _maxSolveTime > alicaClock->now() && _fevals < _maxfevals);
+//			}
 
 			//return best result
 			int resIdx = 0;
