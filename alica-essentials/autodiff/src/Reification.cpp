@@ -33,4 +33,17 @@ namespace autodiff
 	{
 		throw "Symbolic Derivation of Discretizer not supported.";
 	}
+
+	string Reification::toString()
+	{
+		string str;
+		str.append("Discretizer( ");
+		str.append(condition->toString());
+		str.append(", ");
+		str.append("", min);
+		str.append(", ");
+		str.append("", max);
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */

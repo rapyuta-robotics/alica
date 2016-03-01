@@ -7,6 +7,7 @@
 
 #include "intervals/DownwardPropagator.h"
 //#define DEBUG_DP
+//#define DownwardPropagator_Call_Debug
 
 #include "intervals/IntervalPropagator.h"
 #include "intervals/UpwardPropagator.h"
@@ -37,6 +38,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<Abs> abs)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Abs> abs)" << endl;
+#endif
 				if (updateInterval(abs->arg, -abs->max, abs->max))
 				{
 					addChanged(abs->arg);
@@ -47,6 +51,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<And> and_)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<And> and_)" << endl;
+#endif
 				bool changed = false;
 				if (and_->min > 0)
 				{
@@ -71,11 +78,17 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<Constant> constant)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Constant> constant)" << endl;
+#endif
 				return false;
 			}
 
 			int DownwardPropagator::visit(shared_ptr<ConstPower> intPower)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<ConstPower> intPower)" << endl;
+#endif
 				if (intPower->max == numeric_limits<double>::infinity()
 						|| intPower->min == -numeric_limits<double>::infinity())
 					return false;
@@ -129,6 +142,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<ConstraintUtility> cu)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<ConstraintUtility> cu)" << endl;
+#endif
 				bool c = false;
 				if (cu->min >= 1)
 				{
@@ -148,6 +164,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<Cos> cos)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Cos> cos)" << endl;
+#endif
 				if (cos->min == -1.0 && cos->max == 1.0)
 					return false;
 				double cdist = cos->arg->max - cos->arg->min;
@@ -179,7 +198,7 @@ namespace alica
 				//Console.WriteLine("N: {0} {1} {2} {3}",n1,n2,n3,n4);
 				//Console.WriteLine("P: {0} {1} {2} {3}",n1*2*M_PI+a,n2*2*M_PI+b,n3*2*M_PI+c,n4*2*M_PI+d);
 				double min = numeric_limits<double>::max();
-				double max = numeric_limits<double>::min();
+				double max = numeric_limits<double>::lowest();
 				double n1a = n1 * 2 * M_PI + a;
 				double n2b = n2 * 2 * M_PI + b;
 				bool faulty = true;
@@ -207,13 +226,13 @@ namespace alica
 				}
 				if (faulty)
 				{
-					throw new UnsolveableException();
+					throw 1;
 					//return false;//return updateInterval(cos->arg,cos->arg->max,cos->arg->min); //no solution possible
 				}
 
 				if (min == numeric_limits<double>::max())
-					min = numeric_limits<double>::min();
-				if (max == numeric_limits<double>::min())
+					min = numeric_limits<double>::lowest();
+				if (max == numeric_limits<double>::lowest())
 					max = numeric_limits<double>::max();
 				if (updateInterval(cos->arg, min, max))
 				{
@@ -225,6 +244,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<Exp> exp)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Exp> exp)" << endl;
+#endif
 				double a = log(exp->min);
 				double b = log(exp->max);
 				if (updateInterval(exp->arg, a, b))
@@ -247,6 +269,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<Log> log)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Log> log)" << endl;
+#endif
 				double a = exp(log->min);
 				double b = exp(log->max);
 				if (updateInterval(log->arg, a, b))
@@ -259,6 +284,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<LTConstraint> constraint)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<LTConstraint> constraint)" << endl;
+#endif
 				bool changed = false;
 				if (constraint->min > 0)
 				{
@@ -291,6 +319,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<LTEConstraint> constraint)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<LTEConstraint> constraint)" << endl;
+#endif
 				bool changed = false;
 				if (constraint->min > 0)
 				{
@@ -323,6 +354,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<Max> max)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Max> max)" << endl;
+#endif
 				if (max->min > 0)
 				{
 					bool c = false;
@@ -342,13 +376,16 @@ namespace alica
 					}
 					return c;
 				}
-				//bool c3 = updateInterval(max->left,numeric_limits<double>::min(),max->max);
-				//bool c4 = updateInterval(max->right,numeric_limits<double>::min(),max->max);
+				//bool c3 = updateInterval(max->left,numeric_limits<double>::lowest(),max->max);
+				//bool c4 = updateInterval(max->right,numeric_limits<double>::lowest(),max->max);
 				return false;
 			}
 
 			int DownwardPropagator::visit(shared_ptr<Min> min)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Min> min)" << endl;
+#endif
 				bool c1 = updateInterval(min->left, min->min, numeric_limits<double>::infinity());
 				bool c2 = updateInterval(min->right, min->min, numeric_limits<double>::infinity());
 				if (c1)
@@ -365,6 +402,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<Product> product)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Product> product)" << endl;
+#endif
 				/*
 				 * a*b = c
 				 * ==> a = c/b
@@ -435,6 +475,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<Reification> reif)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Reification> reif)" << endl;
+#endif
 				bool c = false;
 				if (reif->max < reif->max)
 				{
@@ -469,6 +512,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<Sin> sin)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Sin> sin)" << endl;
+#endif
 				if (sin->min == -1.0 && sin->max == 1.0)
 					return false;
 				double cdist = sin->arg->max - sin->arg->min;
@@ -500,7 +546,7 @@ namespace alica
 				//Console.WriteLine("N: {0} {1} {2} {3}",n1,n2,n3,n4);
 				//Console.WriteLine("P: {0} {1} {2} {3}",n1*2*M_PI+a,n2*2*M_PI+b,n3*2*M_PI+c,n4*2*M_PI+d);
 				double min = numeric_limits<double>::max();
-				double max = numeric_limits<double>::min();
+				double max = numeric_limits<double>::lowest();
 				double n1a = n1 * 2 * M_PI + a;
 				double n2b = n2 * 2 * M_PI + b;
 				bool faulty = true;
@@ -529,7 +575,7 @@ namespace alica
 
 				if (faulty)
 				{
-					throw new UnsolveableException();
+					throw 1;
 					//return false; //updateInterval(sin->arg,sin->arg->max,sin->arg->min); //no solution possible
 				}
 				/*if (n1 == n2) { //bound within interval
@@ -552,9 +598,9 @@ namespace alica
 				 */
 				//}
 				if (min == numeric_limits<double>::max())
-					min = -numeric_limits<double>::infinity();
+					min = numeric_limits<double>::lowest();
 				if (max == numeric_limits<double>::min())
-					max = numeric_limits<double>::infinity();
+					max = numeric_limits<double>::max();
 				if (updateInterval(sin->arg, min, max))
 				{
 					addChanged(sin->arg);
@@ -565,6 +611,9 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<Sum> sum)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Sum> sum)" << endl;
+#endif
 				//a+b= c
 				// a= b-c
 				//a:
@@ -606,11 +655,17 @@ namespace alica
 
 			int DownwardPropagator::visit(shared_ptr<Variable> var)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Variable> var)" << endl;
+#endif
 				return false;
 			}
 
 			int DownwardPropagator::visit(shared_ptr<Zero> zero)
 			{
+#ifdef DownwardPropagator_Call_Debug
+				cout << "DownwardPropagator::visit(shared_ptr<Zero> zero)" << endl;
+#endif
 				return false;
 			}
 
@@ -650,7 +705,7 @@ namespace alica
 				if (ret) OutputChange(t,oldmin,oldmax);
 #endif
 				if (t->min > t->max)
-					throw new UnsolveableException();
+					throw 1;
 				return ret;
 			}
 		} /* namespace intervalpropagation */

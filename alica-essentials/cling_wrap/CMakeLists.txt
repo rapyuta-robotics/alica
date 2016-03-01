@@ -4,7 +4,12 @@ project(cling_wrap)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake CACHE INTERNAL "" FORCE)
 
 ## Use c++ 11x std
-set(CMAKE_CXX_FLAGS "-std=c++11 -O3 -Wall ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++11 -O3 -fPIC -Wall ${CMAKE_CXX_FLAGS}")
+if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
+	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++11" CACHE STRING "C++ version for eclipse" FORCE)
+	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
+	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
+endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 execute_process(COMMAND uname -m OUTPUT_VARIABLE ARCH OUTPUT_STRIP_TRAILING_WHITESPACE)
 ## Find catkin macros and libraries
@@ -23,7 +28,7 @@ find_package(catkin REQUIRED cmake_modules)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include libgringo libgringo/src libprogram_opts libclasp
-  LIBRARIES libcling_wrap
+  LIBRARIES libcling_wrap libgringo libprogram_opts libclasp
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
@@ -85,7 +90,6 @@ if(NOT ${ARCH} STREQUAL "armv7l")
   target_link_libraries(libclasp LINK_PUBLIC ${TBB_LIBRARIES})
 endif(NOT ${ARCH} STREQUAL "armv7l")
 
-
 ### BUIDLING CLINGO ###
 #  file(GLOB_RECURSE clingo_SOURCES "app/clingo/src/*.cc")
 #  add_executable(
@@ -98,14 +102,11 @@ if(NOT ${ARCH} STREQUAL "armv7l")
   file(GLOB_RECURSE libcling_wrap_SOURCES "libcling_wrap/*.cc")
   file(GLOB_RECURSE libcling_wrap_SOURCES ${libcling_wrap_SOURCES} "libcling_wrap/*.cpp")
   file(GLOB_RECURSE libcling_wrap_SOURCES ${libcling_wrap_SOURCES} "app/clingo/src/*.cc")
-  find_library(libgringo_LIBRARIES libgringo)
-  find_library(libprogram_opts_LIBRARIES libprogram_opts)
-  find_library(libclasp_LIBRARIES libclasp)
   add_library(
     libcling_wrap STATIC ${libcling_wrap_SOURCES}
   )
   
-  target_link_libraries(libcling_wrap ${libgringo_LIBRARIES} ${libprogram_opts_LIBRARIES} ${libclasp_LIBRARIES} ${TBB_LIBRARIES})
+  target_link_libraries(libcling_wrap libgringo libprogram_opts libclasp ${TBB_LIBRARIES})
 endif(NOT ${ARCH} STREQUAL "armv7l")
 
 #############

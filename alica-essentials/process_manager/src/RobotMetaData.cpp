@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include "RobotMetaData.h"
+#include "process_manager/RobotMetaData.h"
 
 namespace supplementary
 {

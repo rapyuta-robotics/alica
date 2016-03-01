@@ -5,9 +5,9 @@
  *      Author: Stephan Opfer
  */
 
-#include <RobotExecutableRegistry.h>
-#include "ManagedRobot.h"
-#include "ManagedExecutable.h"
+#include <process_manager/RobotExecutableRegistry.h>
+#include "process_manager/ManagedRobot.h"
+#include "process_manager/ManagedExecutable.h"
 #include <iostream>
 #include <limits>
 
@@ -137,17 +137,17 @@ namespace supplementary
 	 * @param execName
 	 * @param execid
 	 */
-	void ManagedRobot::startExecutable(string execName, int execid, vector<char*>& params)
-	{
-		auto execEntry = this->executableMap.find(execid);
-		if (execEntry == this->executableMap.end())
-		{
-			// This should never happen, as changeDesiredState is initialising the executableMap
-			cout << "MR: Tried to start executable " << execName << " with params " << params.data()
-					<< ",but it was not present under ID " << execid << endl;
-		}
-		execEntry->second->startProcess(params);
-	}
+//	void ManagedRobot::startExecutable(string execName, int execid, vector<char*>& params)
+//	{
+//		auto execEntry = this->executableMap.find(execid);
+//		if (execEntry == this->executableMap.end())
+//		{
+//			// This should never happen, as changeDesiredState is initialising the executableMap
+//			cout << "MR: Tried to start executable " << execName << " with params " << params.data()
+//					<< ",but it was not present under ID " << execid << endl;
+//		}
+//		execEntry->second->startProcess(params);
+//	}
 
 	/**
 	 * This method queues the given process/ executable to be updated by reading the proc-fs.

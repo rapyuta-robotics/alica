@@ -19,11 +19,11 @@ using namespace alica::reasoner;
 using namespace alica::reasoner::cnsat;
 using namespace autodiff;
 
-const int minCount = 2, maxCount = 10;
-const int minform = 0, maxform = 2;
-const long maxTime = 15000; //ms
-const int solverCount = 2;
-const int count = 10; //solving count
+const int minCount = 2, maxCount = 20;
+const int minform = 2, maxform = 2;
+const long maxTime = 15000;//000000; //nanos
+const int solverCount = 3;
+const int count = 1000; //solving count
 const double delta = 0.01;
 
 class SolverStats
@@ -77,7 +77,7 @@ public:
 	string toOutputString()
 	{
 		stringstream ss;
-		ss << mean << "\t" << curVariance() << "\t" + solved;
+		ss << mean << "\t" << curVariance() << "\t" << solved;
 		return ss.str();
 	}
 };
@@ -88,7 +88,9 @@ TEST(CNSMTGSolver, SOLVER)
 
 	shared_ptr<GSolver> g = make_shared<GSolver>();
 	shared_ptr<CNSMTGSolver> cnsmt = make_shared<CNSMTGSolver>();
-	cnsmt->useIntervalProp = false;
+	cnsmt->setUseIntervalProp(true);
+	shared_ptr<CNSMTGSolver> cnsmtnoIP = make_shared<CNSMTGSolver>();
+	cnsmtnoIP->setUseIntervalProp(false);
 
 	shared_ptr<vector<double>> origBallPoses = make_shared<vector<double>>(10); //{6, -6, 3, -3, 0, -6.5, 6.5};
 	shared_ptr<vector<double>> origBallPosesY = make_shared<vector<double>>(10); //{6, 6, 3, 3, 0, -6.5, -6.5};
@@ -103,7 +105,7 @@ TEST(CNSMTGSolver, SOLVER)
 
 		for (int taskCount = minCount; taskCount <= maxCount; taskCount++)
 		{
-			cout << "Formulation: " << formulation << " Taskcount " << taskCount << endl;
+			cout << "Formulation: " << formulation << " Taskcount " << taskCount << endl << flush;
 			for (int i = 0; i < solverCount; ++i)
 			{
 				solverstat.at(i)->reset();
@@ -124,6 +126,7 @@ TEST(CNSMTGSolver, SOLVER)
 						isNew = false;
 						ballPoses->at(i) = (20.0 * ((double)rand() / RAND_MAX)) - 10.0;
 						ballPosesY->at(i) = (20.0 * ((double)rand() / RAND_MAX)) - 10.0;
+
 						for (int n = 0; n < i; n++)
 						{
 							//if(Math.Abs(ballPoses->at(n) - ballPoses->at(i)) + Math.Abs(ballPosesY->at(n) - ballPosesY->at(i)) < 2*delta) {
@@ -189,56 +192,32 @@ TEST(CNSMTGSolver, SOLVER)
 
 				shared_ptr<Term> constraint = nullptr;
 
+				{
+					shared_ptr<Term> constr = lits->at(0)->at(0);
+					for (int j = 1; j < ballPoses->size(); j++)
+					{
+						constr = constr | lits->at(0)->at(j);
+					}
+					constraint = constr;
+				}
+
+				for (int i = 1; i < target->size(); i++)
+				{
+					shared_ptr<Term> constr = lits->at(i)->at(0);
+					for (int j = 1; j < ballPoses->size(); j++)
+					{
+						constr = constr | lits->at(i)->at(j);
+					}
+					constraint = constraint & constr;
+				}
+
+				///////////////////////////////////////////////
 				if (formulation == 0)
 				{
-					{
-						shared_ptr<Term> constr = lits->at(0)->at(0);
-						for (int j = 1; j < ballPoses->size(); j++)
-						{
-							constr = constr | lits->at(0)->at(j);
-						}
-						constraint = constr;
-					}
-
-					for (int i = 1; i < target->size(); i++)
-					{
-						shared_ptr<Term> constr = lits->at(i)->at(0);
-						for (int j = 1; j < ballPoses->size(); j++)
-						{
-							constr = constr | lits->at(i)->at(j);
-						}
-						constraint = constraint & constr;
-					}
-
 					for (int j = 0; j < ballPoses->size(); j++)
 					{
 						shared_ptr<Term> constr = lits->at(0)->at(j);
 						for (int i = 1; i < target->size(); i++)
-						{
-							constr = constr | lits->at(i)->at(j);
-						}
-						constraint = constraint & constr;
-					}
-				}
-
-				///////////////////////////////////////////////
-				///////////////////////////////////////////////
-				///////////////////////////////////////////////
-				if (formulation >= 1)
-				{
-					{
-						shared_ptr<Term> constr = lits->at(0)->at(0);
-						for (int j = 1; j < ballPoses->size(); j++)
-						{
-							constr = constr | lits->at(0)->at(j);
-						}
-						constraint = constr;
-					}
-
-					for (int i = 1; i < target->size(); i++)
-					{
-						shared_ptr<Term> constr = lits->at(i)->at(0);
-						for (int j = 1; j < ballPoses->size(); j++)
 						{
 							constr = constr | lits->at(i)->at(j);
 						}
@@ -286,49 +265,71 @@ TEST(CNSMTGSolver, SOLVER)
 																					TermBuilder::constant(util));
 
 				shared_ptr<vector<double>> res = nullptr;
-				long before = 0;
-				long diff = 0;
+				unsigned long long before = 0;
+				unsigned long long diff = 0;
 				util = 0;
 				int curSolver = 0;
 				if (solverstat.at(curSolver)->toSlow < 2)
 				{
-					before = time(NULL);
+					before = cnsmt->getTime();
 					res = g->solve(csu, variables, limits, &util);
-					diff = time(NULL) - before;
-					cout << "x";
+					diff = (cnsmt->getTime() - before) / 1000000;
+					cout << "x" << flush;
+					if (!(util > 0.5)) {
+						cout << "-" << flush;
+					}
 				}
 				else
 				{
-					diff = maxTime * 10000 + 1;
+					diff = maxTime + 1;
 				}
-				solverstat[curSolver]->updateStats(diff / 10000.0, util > 0.5);
+				solverstat[curSolver]->updateStats(diff, util > 0.5);
+
+				util = 0;
+				curSolver++;
+//				if (solverstat.at(curSolver)->toSlow < 2)
+//				{
+//					before = cnsmt->getTime();
+//					res = cnsmt->solve(csu, variables, limits, util);
+//					diff = (cnsmt->getTime() - before) / 1000000;
+//					cout << "." << flush;
+//					if (!(util > 0.5)) {
+//						cout << "-" << flush;
+//					}
+//				}
+//				else
+//				{
+					diff = maxTime + 1;
+//				}
+				solverstat[curSolver]->updateStats(diff, util > 0.5);
 
 				util = 0;
 				curSolver++;
 				if (solverstat.at(curSolver)->toSlow < 2)
 				{
-					before = time(NULL);
-					res = cnsmt->solve(csu, variables, limits, &util);
-					diff = time(NULL) - before;
-					cout << ".";
-
-					cout << endl;
-					cnsmt->getCNSatSolver()->printStatistics();
+					before = cnsmtnoIP->getTime();
+					res = cnsmtnoIP->solve(csu, variables, limits, util);
+					diff = (cnsmtnoIP->getTime() - before) / 1000000;
+					cout << "n" << flush;
+					if (!(util > 0.5)) {
+						cout << "-" << flush;
+					}
 				}
 				else
 				{
-					diff = maxTime * 10000 + 1;
+					diff = maxTime + 1;
 				}
-				solverstat[curSolver]->updateStats(diff / 10000.0, util > 0.5);
+				solverstat[curSolver]->updateStats(diff, util > 0.5);
 
 			}
-			cout << endl;
-			cout << taskCount;
+
+			cout << endl << flush;
+			cout << taskCount << flush;
 			for (int i = 0; i < solverstat.size(); ++i)
 			{
-				cout << "\t" << solverstat.at(i)->toOutputString();
+				cout << "\t" << solverstat.at(i)->toOutputString() << flush;
 			}
-			cout << endl;
+			cout << endl << flush;
 
 		}
 	}

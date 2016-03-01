@@ -14,6 +14,30 @@ using namespace std;
 namespace geometry
 {
 
+	double deltaAngle(double a, double b) {
+		double ret = a - b;
+		if (ret > M_PI)
+			return -2.0*M_PI + ret;
+		else if (ret < -M_PI)
+			return ret + 2.0*M_PI;
+		else
+			return ret;
+	}
+
+	double normalizeAngle(double angle) {
+		if (angle > M_PI) {
+			while (angle > M_PI) {
+				angle -= 2.0*M_PI;
+			}
+		} else if (angle < -M_PI) {
+			while (angle < -M_PI) {
+				angle += 2.0*M_PI;
+			}
+		}
+		return angle;
+	}
+
+
 	CNPoint2D::CNPoint2D(double x, double y)
 	{
 		this->x = x;
@@ -84,6 +108,10 @@ namespace geometry
 		}
 
 		return norm;
+	}
+
+	shared_ptr<CNPoint2D> CNPoint2D::clone() {
+		return make_shared<CNPoint2D>(this->x, this->y);
 	}
 
 	shared_ptr<CNPoint2D> CNPoint2D::operator*(const double& right)
@@ -211,5 +239,11 @@ namespace geometry
 	{
 		return sqrt(pow(this->x - point->x, 2) + pow(this->y - point->y, 2));
 	}
+
+	double geometry::CNPoint2D::angleToPoint(shared_ptr<CNPoint2D> point)
+	{
+		return atan2(point->y - this->y,point->x-this->x);
+	}
 }
+
 

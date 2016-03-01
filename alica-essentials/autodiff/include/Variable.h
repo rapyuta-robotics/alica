@@ -2,7 +2,7 @@
  * Variable.h
  *
  *  Created on: Jun 5, 2014
- *      Author: psp
+ *      Author: Philipp Sperber
  */
 
 #ifndef AutoDiffVARIABLE_H_
@@ -11,6 +11,10 @@
 #include <engine/constraintmodul/SolverVariable.h>
 
 #include "Term.h"
+
+#include <iostream>
+
+using namespace std;
 
 namespace autodiff
 {
@@ -26,6 +30,12 @@ namespace autodiff
 
 		shared_ptr<Term> aggregateConstants();
 		shared_ptr<Term> derivative(shared_ptr<Variable> v);
+
+		string toString();
+
+	private:
+		int ownId;
+		static int var_id;
 	};
 } /* namespace autodiff */
 

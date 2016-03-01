@@ -54,10 +54,10 @@ void listenForPacket() {
 void handleUdpPacket(const boost::system::error_code& error,   std::size_t bytes_transferred) {
 	//std::cout << "From "<<otherEndPoint.address() << std::endl;
 	if (!error) { // && otherEndPoint.address() != localIP) {
-		size_t id = *((size_t*)(inBuffer.data()));
+		__uint32_t id = *((__uint32_t*)(inBuffer.data()));
 		//std::cout << "Got packet"<<std::endl;
 		try {	
-			ros::serialization::IStream stream(((uint8_t*)inBuffer.data())+sizeof(size_t),bytes_transferred-sizeof(size_t));
+			ros::serialization::IStream stream(((uint8_t*)inBuffer.data())+sizeof(__uint32_t),bytes_transferred-sizeof(__uint32_t));
 			switch(id) {
 				<?udpReception?>			
 			
@@ -82,7 +82,8 @@ int main (int argc, char *argv[])
 	
 	SystemConfig* sc = SystemConfig::getInstance();
 
-	Configuration *proxyconf = (*sc)["UdpProxy"];
+	//Configuration *proxyconf = (*sc)["UdpProxy"];
+	<?configfile?>
 	
 	//std::string port = proxyconf->get<std::string>("UdpProxy","Port",NULL);
 	
@@ -116,8 +117,8 @@ int main (int argc, char *argv[])
 	listenForPacket();
 	
 	
-	 
-    ros::init(argc, argv, "udpProxy");
+<?nodename?>	 
+ //   ros::init(argc, argv, "udpProxy");
 
     ros::NodeHandle n;
     ownRosName = ros::this_node::getName();//n.getNamespace();//n.resolveName("ddsProxy",true);

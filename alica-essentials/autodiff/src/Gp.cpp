@@ -32,6 +32,13 @@ namespace autodiff
 		throw "NotImplementedException";
 	}
 
+	string Gp::toString()
+	{
+		throw "NotImplementedException";
+		string str;
+		return str;
+	}
+
 	double Gp::eval()
 	{
 		return 0;

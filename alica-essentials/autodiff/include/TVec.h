@@ -12,6 +12,8 @@
 #include <vector>
 #include <initializer_list>
 
+#include <iostream>
+
 using namespace std;
 
 namespace autodiff
@@ -22,7 +24,7 @@ namespace autodiff
 	{
 	public:
 		TVec(vector<shared_ptr<Term>> terms);
-		TVec(initializer_list<shared_ptr<Term>> terms);
+//		TVec(initializer_list<shared_ptr<Term>> terms);
 		TVec(initializer_list<double> values);
 		TVec(shared_ptr<TVec> first, vector<shared_ptr<Term>> rest);
 		TVec(vector<shared_ptr<Term>> left, vector<shared_ptr<Term>> right,
@@ -46,6 +48,7 @@ namespace autodiff
 	shared_ptr<TVec> operator+(const shared_ptr<TVec>& left, const shared_ptr<TVec>& right);
 	shared_ptr<TVec> operator-(const shared_ptr<TVec>& left, const shared_ptr<TVec>& right);
 	shared_ptr<TVec> operator-(const shared_ptr<TVec>& vector);
+
 	shared_ptr<TVec> operator*(const shared_ptr<TVec>& vector, const shared_ptr<Term>& scalar);
 	shared_ptr<TVec> operator*(const shared_ptr<TVec>& vector, const double scalar);
 	shared_ptr<TVec> operator*(const shared_ptr<Term>& scalar, const shared_ptr<TVec>& vector);

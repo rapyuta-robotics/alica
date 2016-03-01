@@ -48,6 +48,11 @@ namespace alica
 			alicaClock = new alicaRosProxy::AlicaROSClock();
 		}
 
+		GSolver::~GSolver()
+		{
+			delete alicaClock;
+		}
+
 		void GSolver::initLog()
 		{
 			std::stringstream ss;
@@ -97,6 +102,13 @@ namespace alica
 													shared_ptr<vector<shared_ptr<vector<double>>> > limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds,
 		double sufficientUtility, double *util)
 		{
+//			cout << "GSolver" << endl;
+//			cout << equation->toString() << endl;
+//			cout << args->size() << endl;
+//			for(auto& a : *limits) {
+//				cout << a->at(0) << " " << a->at(1) << endl;
+//			}
+
 			_fevals = 0;
 			_runs = 0;
 			*util = 0;
@@ -139,6 +151,7 @@ namespace alica
 					{
 						ret->at(i) = _ranges[i] / 2.0 + _limits->at(i)->at(0);
 					}
+					cout << "GSolver ConstraintConstant" << endl;
 					return ret;
 				}
 			}
@@ -154,11 +167,12 @@ namespace alica
 				if (rpfirst->_finalUtil > _utilityThreshold)
 				{
 					*util = rpfirst->_finalUtil;
+					cout << "GSolver: Using Solution from Seed!" << endl;
 					return rpfirst->_finalValue;
 				}
 				_rResults.push_back(rpfirst);
 				//run with seeds of all other agends
-				for (int i = 0; i < seeds->size(); ++i)
+				for (int i = 1; i < seeds->size(); ++i)
 				{
 					if (begin + _maxSolveTime < alicaClock->now() || _fevals > _maxfevals)
 					{
@@ -232,11 +246,20 @@ namespace alica
 				}
 			}
 
+			cout << "GSolver: Using Result Nr. " << resIdx << endl;
+			for(int i=0; i < seeds->size(); i++) {
+				cout << "Seed: ";
+				for (double v : *seeds->at(i)) {
+					cout << "\t" << v;
+				}
+				cout << endl;
+			}
 #ifdef GSOLVER_LOG
 			closeLog();
 #endif
 
 			*util = res->_finalUtil;
+			cout << "GSolver Afterall " << res->_finalUtil << " runs " << _runs << endl;
 			return res->_finalValue;
 		}
 
@@ -482,6 +505,8 @@ namespace alica
 				for (int i = 0; i < _dim; ++i)
 				{
 					res->_initialValue->at(i) = ((double)rand() / RAND_MAX) * _ranges[i] + _limits->at(i)->at(0);
+//					cout << " << i << "\t" << _ranges[i] << "\t" << _limits->at(i)->at(0) << "\t" << res->_initialValue->at(i) << endl;
+//					cout << "if (TMPVAR == " << TMPVAR++ << ") { res.initialValue[i] = " << res->_initialValue->at(i) << "; }" << endl;
 				}
 				_fevals++;
 				tup = _term->differentiate(res->_initialValue);

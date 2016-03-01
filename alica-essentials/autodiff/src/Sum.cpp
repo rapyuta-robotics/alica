@@ -72,7 +72,11 @@ namespace autodiff
 		{
 			nonConstTerms.push_back(TermBuilder::constant(sum));
 		}
-		terms = nonConstTerms;
+		terms.clear();
+		for (auto term : nonConstTerms)
+		{
+			terms.push_back(term);
+		}
 		return shared_from_this();
 	}
 
@@ -84,5 +88,19 @@ namespace autodiff
 			t.push_back(terms[i]->derivative(v));
 		}
 		return make_shared<Sum>(t);
+	}
+
+	string Sum::toString()
+	{
+		string str;
+		str.append("( ");
+		str.append(terms[0]->toString());
+		for (int i = 1; i < terms.size(); ++i)
+		{
+			str.append(" + ");
+			str.append(terms[i]->toString());
+		}
+		str.append(" )");
+		return str;
 	}
 } /* namespace autodiff */

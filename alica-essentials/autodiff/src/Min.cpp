@@ -52,4 +52,15 @@ namespace autodiff
 	{
 		return left->negate() | right->negate();
 	}
+
+	string Min::toString()
+	{
+		string str;
+		str.append("min( ");
+		str.append(left->toString());
+		str.append(", ");
+		str.append(right->toString());
+		str.append(" )");
+		return str;
+	}
 } /* namespace autodiff */

@@ -22,7 +22,7 @@ namespace alica
 	{
 
 		CGSolver::CGSolver(AlicaEngine* ae) :
-				IConstraintSolver(ae)
+				IConstraintSolver(ae) , lastUtil(0.0), lastFEvals(0.0), lastRuns(0.0)
 		{
 			Term::setAnd(AndType::AND);
 			Term::setOr(OrType::MAX);
@@ -44,7 +44,7 @@ namespace alica
 			for (int i = 0; i < vars.size(); ++i)
 			{
 				ranges->at(i) = make_shared<vector<double>>(2);
-				ranges->at(i)->at(0) = std::numeric_limits<double>::min();
+				ranges->at(i)->at(0) = std::numeric_limits<double>::lowest();
 				ranges->at(i)->at(1) = std::numeric_limits<double>::max();
 				cVars->at(i) = dynamic_pointer_cast<autodiff::Variable>(vars.at(i)->getSolverVar());
 			}
@@ -132,7 +132,7 @@ namespace alica
 			for (int i = 0; i < vars.size(); ++i)
 			{
 				ranges->at(i) = make_shared<vector<double>>(2);
-				ranges->at(i)->at(0) = std::numeric_limits<double>::min();
+				ranges->at(i)->at(0) = std::numeric_limits<double>::lowest();
 				ranges->at(i)->at(1) = std::numeric_limits<double>::max();
 				cVars->at(i) = dynamic_pointer_cast<autodiff::Variable>(vars.at(i)->getSolverVar());
 			}
@@ -150,7 +150,7 @@ namespace alica
 
 			double sufficientUtility = 0;
 
-			for (auto c : calls)
+			for (auto& c : calls)
 			{
 				if (!(dynamic_pointer_cast<autodiff::Term>(c->getConstraint()) != 0))
 				{
@@ -173,12 +173,11 @@ namespace alica
 					{
 						if (!(dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(i)) != 0))
 						{
-							cerr << "CGSolver: Variabletype not compatible with selected solver" << endl;
 							return false;
 						}
 						if (cVars->at(j) == dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(i)))
 						{
-							ranges->at(j)->at(0) = min(ranges->at(j)->at(0), allRanges->at(i).at(0));
+							ranges->at(j)->at(0) = max(ranges->at(j)->at(0), allRanges->at(i).at(0));
 							ranges->at(j)->at(1) = min(ranges->at(j)->at(1), allRanges->at(i).at(1));
 							if (ranges->at(j)->at(0) > ranges->at(j)->at(1))
 							{
@@ -196,8 +195,9 @@ namespace alica
 			// Desierialize seeds
 			shared_ptr<vector<shared_ptr<vector<double>>> > seeds = make_shared<vector<shared_ptr<vector<double>>>>();
 			seeds->reserve(serial_seeds->size());
-			for (auto& serialseed : *serial_seeds)
+			for (int i = 0; i < serial_seeds->size(); i++)
 			{
+				auto& serialseed = serial_seeds->at(i);
 				shared_ptr<vector<double>> singleseed = make_shared<vector<double>>();
 				singleseed->reserve(serialseed->size());
 				for (auto& serialvalue : *serialseed)
@@ -230,6 +230,15 @@ namespace alica
 				seeds->push_back(singleseed);
 			}
 
+
+//			for(int i = 0; i < seeds->size(); i++) {
+//				cout << "----CGS: seed " << i << " ";
+//				for(int j = 0; j < seeds->at(i)->size(); j++) {
+//					cout << seeds->at(i)->at(j) << " ";
+//				}
+//				cout << endl;
+//			}
+
 			shared_ptr<vector<double>> gresults;
 			double util = 0;
 			{ // for lock_guard
@@ -250,6 +259,11 @@ namespace alica
 			lastUtil = util;
 			lastFEvals = gs->getFEvals();
 			lastRuns = gs->getRuns();
+			cout << "CGS: result ";
+			for(int i = 0; i < gresults->size(); i++) {
+				cout << gresults->at(i) << " ";
+			}
+			cout << endl;
 			return util > 0.75;
 		}
 

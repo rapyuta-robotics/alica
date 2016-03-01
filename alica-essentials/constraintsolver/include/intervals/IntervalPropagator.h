@@ -40,7 +40,7 @@ namespace alica
 				static int visits;
 
 				void setGlobalRanges(shared_ptr<vector<shared_ptr<Variable>>> vars, shared_ptr<vector<shared_ptr<vector<double>>>> ranges, shared_ptr<cnsat::CNSat> solver);
-				bool propagate(shared_ptr<vector<shared_ptr<cnsat::Var>>> decisions, shared_ptr<vector<shared_ptr<vector<double>>>>& completeRanges, shared_ptr<vector<shared_ptr<cnsat::Var>>> offenders);
+				bool propagate(shared_ptr<vector<shared_ptr<cnsat::Var>>> decisions, shared_ptr<vector<shared_ptr<vector<double>>>>& completeRanges, shared_ptr<vector<shared_ptr<cnsat::Var>>>& offenders);
 				bool prePropagate(shared_ptr<vector<shared_ptr<cnsat::Var>>> vars);
 				bool propagate(shared_ptr<Term> term);
 

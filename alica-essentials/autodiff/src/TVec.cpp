@@ -6,7 +6,7 @@
  */
 
 #include "TVec.h"
-
+#include <cstdarg>
 #include "Term.h"
 #include "TermBuilder.h"
 
@@ -17,17 +17,30 @@ namespace autodiff
 		this->terms = terms;
 	}
 
-	TVec::TVec(initializer_list<shared_ptr<Term>> terms)
-	{
-		this->terms = terms;
-	}
+//	TVec::TVec(shared_ptr<Term> terms, ...)
+//	{
+//		this->terms = vector<shared_ptr<Term>>();
+//		va_list args;
+//		va_start(args, terms);
+//
+//		shared_ptr<Term> currentTerm = terms;
+//
+//		do {
+//			this->terms.push_back(currentTerm);
+//		} while((currentTerm = va_arg(terms, shared_ptr<Term>)) != NULL);
+//
+//		va_end(args);
+//	}
+
+
 
 	TVec::TVec(initializer_list<double> values)
 	{
 		terms = vector<shared_ptr<Term>>(values.size());
 		std::initializer_list<double>::iterator it;
 		int i = 0;
-		for (it = values.begin(); it != values.end(); ++it, ++i) {
+		for (it = values.begin(); it != values.end(); ++it, ++i)
+		{
 			terms[i] = TermBuilder::constant(*it);
 		}
 	}
@@ -115,11 +128,10 @@ namespace autodiff
 
 	shared_ptr<TVec> TVec::crossProduct(shared_ptr<TVec> left, shared_ptr<TVec> right)
 	{
-		return make_shared<TVec>(initializer_list<shared_ptr<Term>>{
-			left->getY() * right->getZ() - left->getZ() * right->getY(),
-			left->getZ() * right->getX() - left->getX() * right->getZ(),
-			left->getX() * right->getY() - left->getY() * right->getX()
-		});
+		return make_shared<TVec>(
+				initializer_list<shared_ptr<Term>> {left->getY() * right->getZ() - left->getZ() * right->getY(),
+													left->getZ() * right->getX() - left->getX() * right->getZ(),
+													left->getX() * right->getY() - left->getY() * right->getX()});
 	}
 
 	shared_ptr<Term> TVec::operator[](int index)

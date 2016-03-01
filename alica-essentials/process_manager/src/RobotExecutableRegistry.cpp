@@ -5,12 +5,12 @@
  *      Author: Stephan Opfer
  */
 
-#include <RobotExecutableRegistry.h>
-#include "ExecutableMetaData.h"
-#include "RobotMetaData.h"
+#include "process_manager/ExecutableMetaData.h"
+#include "process_manager/RobotMetaData.h"
 #include <SystemConfig.h>
 #include <iostream>
-#include "ConsoleCommandHelper.h"
+#include <process_manager/RobotExecutableRegistry.h>
+#include <ConsoleCommandHelper.h>
 
 namespace supplementary
 {
@@ -149,17 +149,31 @@ namespace supplementary
 		return false;
 	}
 
-	bool RobotExecutableRegistry::getExecutableId(string execName, int& execId)
+	bool RobotExecutableRegistry::getExecutableIdByExecName(string execName, int& execId)
 	{
 		for (auto execMetaData : this->executableList)
 		{
-			if (execMetaData->name == execName)
+			if (execMetaData->execName == execName)
 			{
 				execId = execMetaData->id;
 				return true;
 			}
 		}
 
+		execId = 0;
+		return false;
+	}
+
+	bool RobotExecutableRegistry::getExecutableId(vector<string>& splittedCmdLine, int& execId)
+	{
+		for (auto execMetaData : this->executableList)
+		{
+			if (execMetaData->matchSplittedCmdLine(splittedCmdLine))
+			{
+				execId = execMetaData->id;
+				return true;
+			}
+		}
 		execId = 0;
 		return false;
 	}
@@ -191,45 +205,63 @@ namespace supplementary
 	}
 
 	/**
-	 * This method registers the given executable, if it is listed in the Processes.conf file.
+	 * This method registers the given executable, if it is listed in the ProcessManaging.conf file.
 	 * @param execName
 	 * @return -1, if the executable is not registered, due to some error. Otherwise, it returns the registered id.
 	 */
-	int RobotExecutableRegistry::addExecutable(string execName)
+	int RobotExecutableRegistry::addExecutable(string execSectionName)
 	{
-		if (this->executableExists(execName))
+		if (this->executableExists(execSectionName))
 		{
-			cerr << "RobotExecutableRegistry: The executable '" << execName << "' is already registered!" << endl;
+			cerr << "RobotExecutableRegistry: The executable '" << execSectionName << "' is already registered!"
+					<< endl;
 			return -1;
 		}
 
 		SystemConfig* sc = SystemConfig::getInstance();
 		int execId;
-		string absExecName;
 		string processMode;
+		string execName;
+		string absExecName;
+		string rosPackage = "NOT-FOUND"; // optional
+		string prefixCmd = "NOT-FOUND"; // optional
 
 		try
 		{
-			execId = (*sc)["Processes"]->get<int>("Processes.ProcessDescriptions", execName.c_str(), "id", NULL);
-			processMode = (*sc)["Processes"]->get<string>("Processes.ProcessDescriptions", execName.c_str(), "mode", NULL);
+			execId = (*sc)["ProcessManaging"]->get<int>("Processes.ProcessDescriptions", execSectionName.c_str(), "id", NULL);
+			processMode = (*sc)["ProcessManaging"]->get<string>("Processes.ProcessDescriptions", execSectionName.c_str(),
+															"mode", NULL);
+			execName = (*sc)["ProcessManaging"]->get<string>("Processes.ProcessDescriptions", execSectionName.c_str(),
+														"execName", NULL);
+			rosPackage = (*sc)["ProcessManaging"]->tryGet<string>("NOT-FOUND", "Processes.ProcessDescriptions",
+															execSectionName.c_str(), "rosPackage", NULL);
+			prefixCmd = (*sc)["ProcessManaging"]->tryGet<string>("NOT-FOUND", "Processes.ProcessDescriptions",
+															execSectionName.c_str(), "prefixCmd", NULL);
 		}
 		catch (runtime_error& e)
 		{
-			cerr << "PM-Registry: Cannot add executable '" << execName << "', because of faulty values in Processes.conf!" << endl;
+			cerr << "PM-Registry: Cannot add executable '" << execSectionName
+					<< "', because of faulty values in ProcessManaging.conf!" << endl;
 			return -1;
 		}
 
-		string cmd = "catkin_find --libexec " + execName;
-		absExecName = supplementary::ConsoleCommandHelper::exec(cmd.c_str());
-
-		if (absExecName.length() > 1)
+		// create absolute executable name, if possible
+		if (rosPackage.compare("NOT-FOUND") != 0 && prefixCmd.compare("roslaunch") != 0)
 		{
-			absExecName = absExecName.substr(0, absExecName.length() - 1);
-			absExecName = absExecName + "/" + execName;
+			string cmd = "catkin_find --first-only --libexec " + rosPackage;
+			absExecName = supplementary::ConsoleCommandHelper::exec(cmd.c_str());
+
+			if (absExecName.length() > 1)
+			{
+				absExecName = absExecName.substr(0, absExecName.length() - 1);
+				absExecName = absExecName + "/" + execName;
+			}
 		}
 
-		ExecutableMetaData* execMetaData = new ExecutableMetaData(execName, execId, processMode, absExecName);
-		auto paramSets = (*sc)["Processes"]->tryGetNames("NONE", "Processes.ProcessDescriptions", execName.c_str(), "paramSets", NULL);
+		ExecutableMetaData* execMetaData = new ExecutableMetaData(execSectionName, execId, processMode, execName,
+																	rosPackage, prefixCmd, absExecName);
+		auto paramSets = (*sc)["ProcessManaging"]->tryGetNames("NONE", "Processes.ProcessDescriptions",
+															execSectionName.c_str(), "paramSets", NULL);
 		if (paramSets->size() > 1 || paramSets->at(0) != "NONE")
 		{
 			for (string paramSetKeyString : (*paramSets))
@@ -237,7 +269,8 @@ namespace supplementary
 				try
 				{
 					int paramSetKey = stoi(paramSetKeyString);
-					auto paramSetValues = (*sc)["Processes"]->getList<string>("Processes.ProcessDescriptions", execName.c_str(), "paramSets",
+					auto paramSetValues = (*sc)["ProcessManaging"]->getList<string>("Processes.ProcessDescriptions",
+																				execSectionName.c_str(), "paramSets",
 																				paramSetKeyString.c_str(), NULL);
 
 					// first param is always the executable name
@@ -251,11 +284,12 @@ namespace supplementary
 						currentParams.push_back(strdup(execName.c_str()));
 					}
 					// transform the system config params to vector of char*, for c-compatibility.
+					cout << currentParams[0] << endl;
 					for (string param : paramSetValues)
 					{
 						char * tmp = new char[param.size() + 1];
 						strcpy(tmp, param.c_str());
-						tmp[param.size() + 1] = '\0';
+						tmp[param.size()] = '\0';
 						currentParams.push_back(tmp);
 					}
 					currentParams.push_back(nullptr);
@@ -264,8 +298,8 @@ namespace supplementary
 				}
 				catch (exception & e)
 				{
-					cerr << "RobotExecutableRegistry: Unable to parse parameter set \"" << paramSetKeyString << "\" of process \"" << execName << "\""
-							<< endl;
+					cerr << "RobotExecutableRegistry: Unable to parse parameter set \"" << paramSetKeyString
+							<< "\" of process \"" << execSectionName << "\"" << endl;
 					cerr << e.what() << endl;
 				}
 			}
@@ -335,6 +369,11 @@ namespace supplementary
 	const vector<ExecutableMetaData*>& RobotExecutableRegistry::getExecutables() const
 	{
 		return this->executableList;
+	}
+
+	void RobotExecutableRegistry::setInterpreters(vector<string> interpreter)
+	{
+		this->interpreter = interpreter;
 	}
 
 } /* namespace supplementary */

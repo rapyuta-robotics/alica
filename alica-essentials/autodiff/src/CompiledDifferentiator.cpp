@@ -57,6 +57,10 @@
 #include "compiled/CompiledTermPower.h"
 #include "compiled/CompiledVariable.h"
 
+//#define ForwardSweepVisitor_DEBUG
+//#define Compiler_DEBUG
+//#define CompiledDifferentiator_DEBUG
+
 #include <cmath>
 #include <limits>
 #include <algorithm>
@@ -76,22 +80,32 @@ namespace autodiff
 		make_shared<Compiler>(variables, &tapeList)->compile(function);
 		_tape = tapeList;
 
+//		cout << "SECOND TAPE:" << endl;
+//		for (int i = 0; i < _tape.size() - 1; ++i)
+//			cout << i << "\t" << _tape.at(i)->value << endl;
+
 		_dimension = variables->size();
 		_variables = variables;
 	}
 
 	double CompiledDifferentiator::evaluate(shared_ptr<vector<double>> arg)
 	{
+#ifdef CompiledDifferentiator_DEBUG
+		cout << "CompiledDifferentiator::evaluate()" << endl;
+#endif
 		evaluateTape(arg);
 		return _tape.back()->value;
 	}
 
 	pair<shared_ptr<vector<double>>, double> CompiledDifferentiator::differentiate(shared_ptr<vector<double>> arg)
 	{
+//		cout << "THREE TAPE:" << endl;
+//		for (int i = 0; i < _tape.size() - 1; ++i)
+//			cout << i << "\t" << _tape.at(i)->value << endl;
 		forwardSweep(arg);
 		reverseSweep();
 		//Replacement for Linq code -- HS
-		auto gradient = make_shared<vector<double>>(_dimension);
+		shared_ptr<vector<double>> gradient = make_shared<vector<double>>(_dimension);
 
 		for (int i = 0; i < _dimension; ++i)
 		{
@@ -108,6 +122,9 @@ namespace autodiff
 		{
 			_tape[i]->value = arg->at(i);
 		}
+//		cout << "FOUR TAPE:" << endl;
+//		for (int i = 0; i < _tape.size() - 1; ++i)
+//			cout << i << "\t" << _tape.at(i)->value << endl;
 
 		shared_ptr<ForwardSweepVisitor> forwardDiffVisitor = make_shared<ForwardSweepVisitor>(&_tape);
 		for (int i = _dimension; i < _tape.size(); ++i)
@@ -118,6 +135,9 @@ namespace autodiff
 
 	void CompiledDifferentiator::reverseSweep()
 	{
+#ifdef CompiledDifferentiator_DEBUG
+		cout << "CompiledDifferentiator::reverseSweep()" << endl;
+#endif
 		//Removed Linq code -- HS
 		_tape[_tape.size() - 1]->adjoint = 1;
 
@@ -173,10 +193,17 @@ namespace autodiff
 	void CompiledDifferentiator::Compiler::compile(shared_ptr<Term> term)
 	{
 		term->accept(shared_from_this());
+
+//		cout << "TAPE:" << endl;
+//		for (int i = 0; i < _tape.size() - 1; ++i)
+//			cout << i << "\t" << _tape.at(i)->value << endl;
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Abs> abs)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Abs> abs)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(abs, [&abs, &storedThis]()
 		{
@@ -187,12 +214,18 @@ namespace autodiff
 			element->inputs = vector<InputEdge>(1);
 			element->inputs[0].index = argIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Abs => " << argIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<And> and_)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<And> and_)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(and_, [&and_, &storedThis]()
 		{
@@ -206,12 +239,18 @@ namespace autodiff
 			element->inputs[0].index = leftIndex;
 			element->inputs[1].index = rightIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: And => " << leftIndex << " " << rightIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Atan2> atan2)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Atan2> atan2)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(atan2, [&atan2, &storedThis]()
 		{
@@ -225,22 +264,34 @@ namespace autodiff
 			element->inputs[0].index = leftIndex;
 			element->inputs[1].index = rightIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Atan2 => " << leftIndex << " " << rightIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Constant> constant)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Constant> constant)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(constant, [&constant, &storedThis]()
 		{
 			shared_ptr<CompiledConstant> element = make_shared<CompiledConstant>(constant->value);
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Constant => " << constant->value << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<ConstPower> intPower)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<ConstPower> intPower)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(intPower, [&intPower, &storedThis]()
 		{
@@ -252,12 +303,18 @@ namespace autodiff
 			element->inputs = vector<InputEdge>(1);
 			element->inputs[0].index = baseIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: ConstPower => " << baseIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<ConstraintUtility> cu)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<ConstraintUtility> cu)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(cu, [&cu, &storedThis]()
 		{
@@ -271,12 +328,18 @@ namespace autodiff
 			element->inputs[0].index = constraintIndex;
 			element->inputs[1].index = utilityIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: ConstraintUtility => " << constraintIndex << " " << utilityIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Cos> cos)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Cos> cos)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(cos, [&cos, &storedThis]()
 		{
@@ -287,12 +350,18 @@ namespace autodiff
 			element->inputs = vector<InputEdge>(1);
 			element->inputs[0].index = argIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Cos => " << argIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Exp> exp)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Exp> exp)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(exp, [&exp, &storedThis]()
 		{
@@ -303,6 +372,9 @@ namespace autodiff
 			element->inputs = vector<InputEdge>(1);
 			element->inputs[0].index = argIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Exp => " << argIndex << endl;
+#endif
 			return element;
 		});
 	}
@@ -315,6 +387,9 @@ namespace autodiff
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<LinSigmoid> sigmoid)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<LinSigmoid> sigmoid)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(sigmoid, [&sigmoid, &storedThis]()
 		{
@@ -326,12 +401,18 @@ namespace autodiff
 						element->inputs = vector<InputEdge>(2);
 						element->inputs[0].index = argIndex;
 
+#ifdef Compiler_DEBUG
+						cout << "CompiledDifferentiator::Compiler::compile :: LinSigmoid => " << argIndex << endl;
+#endif
 						return element;
 					});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Log> log)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Log> log)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(log, [&log, &storedThis]()
 		{
@@ -342,12 +423,18 @@ namespace autodiff
 			element->inputs = vector<InputEdge>(1);
 			element->inputs[0].index = argIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Log => " << argIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<LTConstraint> constraint)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<LTConstraint> constraint)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(constraint, [&constraint, &storedThis]()
 		{
@@ -362,12 +449,18 @@ namespace autodiff
 			element->inputs[0].index = leftIndex;
 			element->inputs[1].index = rightIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: LTConstraint => " << leftIndex << " " << rightIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<LTEConstraint> constraint)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<LTEConstraint> constraint)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(constraint, [&constraint, &storedThis]()
 		{
@@ -382,12 +475,18 @@ namespace autodiff
 			element->inputs[0].index = leftIndex;
 			element->inputs[1].index = rightIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: LTEConstraint => " << leftIndex << " " << rightIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Max> max)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Max> max)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(max, [&max, &storedThis]()
 		{
@@ -401,12 +500,18 @@ namespace autodiff
 			element->inputs[0].index = leftIndex;
 			element->inputs[1].index = rightIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Max => " << leftIndex << " " << rightIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Min> min)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Min> min)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(min, [&min, &storedThis]()
 		{
@@ -420,12 +525,18 @@ namespace autodiff
 			element->inputs[0].index = leftIndex;
 			element->inputs[1].index = rightIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Min => " << leftIndex << " " << rightIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Or> or_)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Or> or_)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(or_, [&or_, &storedThis]()
 		{
@@ -439,12 +550,18 @@ namespace autodiff
 			element->inputs[0].index = leftIndex;
 			element->inputs[1].index = rightIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Or => " << leftIndex << " " << rightIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Product> product)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Product> product)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(product, [&product, &storedThis]()
 		{
@@ -458,12 +575,18 @@ namespace autodiff
 			element->inputs[0].index = leftIndex;
 			element->inputs[1].index = rightIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Product => " << leftIndex << " " << rightIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Reification> dis)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Reification> dis)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(dis, [&dis, &storedThis]()
 		{
@@ -479,12 +602,18 @@ namespace autodiff
 			element->inputs[0].index = conIndex;
 			element->inputs[1].index = negConIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Reification => " << conIndex << " " << negConIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Sigmoid> sigmoid)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Sigmoid> sigmoid)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(sigmoid, [&sigmoid, &storedThis]()
 		{
@@ -498,12 +627,18 @@ namespace autodiff
 			element->inputs[0].index = argIndex;
 			element->inputs[1].index = midIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Sigmoid => " << argIndex << " " << midIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Sin> sin)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Sin> sin)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(sin, [&sin, &storedThis]()
 		{
@@ -513,12 +648,18 @@ namespace autodiff
 			element->inputs = vector<InputEdge>(1);
 			element->inputs[0].index = argIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Sin => " << argIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Sum> sum)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Sum> sum)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(sum, [&sum, &storedThis]()
 		{
@@ -535,12 +676,23 @@ namespace autodiff
 						element->_terms = indices;
 						element->inputs = inputs;
 
+#ifdef Compiler_DEBUG
+						cout << "CompiledDifferentiator::Compiler::compile :: Sum =>";
+						for (int i = 0; i < indices.size(); ++i)
+						{
+							cout << " " << indices[i];
+						}
+						cout << endl;
+#endif
 						return element;
 					});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<TermPower> power)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<TermPower> power)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(power, [&power, &storedThis]()
 		{
@@ -554,21 +706,33 @@ namespace autodiff
 			element->inputs[0].index = baseIndex;
 			element->inputs[1].index = expIndex;
 
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: TermPower => " << baseIndex << " " << expIndex << endl;
+#endif
 			return element;
 		});
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Variable> var)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Variable> var)" << endl;
+#endif
 		return _indexOf[var->getId()];
 	}
 
 	int CompiledDifferentiator::Compiler::visit(shared_ptr<Zero> zero)
 	{
+#ifdef Compiler_DEBUG
+		cout << "CompiledDifferentiator::Compiler::visit(shared_ptr<Zero> zero)" << endl;
+#endif
 		shared_ptr<ITermVisitor> storedThis = shared_from_this();
 		return compile(zero, [&zero, &storedThis]()
 		{
 			shared_ptr<CompiledConstant> element = make_shared<CompiledConstant>(0);
+#ifdef Compiler_DEBUG
+			cout << "CompiledDifferentiator::Compiler::compile :: Zero" << endl;
+#endif
 			return element;
 		});
 	}
@@ -805,12 +969,21 @@ namespace autodiff
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledAbs> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledAbs> elem)" << endl;
+#endif
 		double arg = valueOf(elem->_arg);
 		elem->value = fabs(arg);
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledAnd> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledAnd> elem)" << endl;
+#endif
 		double left = valueOf(elem->_left);
 		double right = valueOf(elem->_right);
 		if (left > 0.75 && right > 0.75)
@@ -818,6 +991,11 @@ namespace autodiff
 			elem->value = 1;
 			elem->inputs[0].weight = 0;
 			elem->inputs[1].weight = 0;
+#ifdef ForwardSweepVisitor_DEBUG
+			cout << "\telem->value = " << elem->value;
+			cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+			cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 			return;
 		}
 		elem->value = 0;
@@ -831,10 +1009,18 @@ namespace autodiff
 			elem->value += right;
 			elem->inputs[1].weight = 1;
 		}
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledAtan2> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledAtan2> elem)" << endl;
+#endif
 		double left = valueOf(elem->_left);
 		double right = valueOf(elem->_right);
 
@@ -842,24 +1028,42 @@ namespace autodiff
 		double denom = left * left + right * right;
 		elem->inputs[0].weight = -right / denom;
 		elem->inputs[1].weight = left / denom;
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledConstant> elem)
 	{
-
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledConstant> elem)" << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledConstPower> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledConstPower> elem)" << endl;
+#endif
 		double baseVal = valueOf(elem->_base);
 		//modified to remove one Math.Pow -- HS
 		double r = pow(baseVal, elem->_exponent - 1);
 		elem->value = r * baseVal;
 		elem->inputs[0].weight = elem->_exponent * r;
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledConstraintUtility> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledConstraintUtility> elem)" << endl;
+#endif
 		double constraint = valueOf(elem->_constraint);
 		if (constraint > 0)
 		{
@@ -873,20 +1077,41 @@ namespace autodiff
 			elem->inputs[0].weight = 1;
 			elem->inputs[1].weight = 0;
 		}
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledCos> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledCos> elem)" << endl;
+#endif
 		double arg = valueOf(elem->_arg);
 
 		elem->value = cos(arg);
 		elem->inputs[0].weight = -sin(arg);
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledExp> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledExp> elem)" << endl;
+#endif
 		elem->value = exp(valueOf(elem->_arg));
 		elem->inputs[0].weight = elem->value;
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledGp> elem)
@@ -898,6 +1123,9 @@ namespace autodiff
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledLinSigmoid> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledLinSigmoid> elem)" << endl;
+#endif
 		double arg = valueOf(elem->_arg);
 		double e = exp(-arg);
 
@@ -917,23 +1145,44 @@ namespace autodiff
 		{
 			elem->inputs[0].weight = Term::EPSILON;
 			elem->inputs[1].weight = -Term::EPSILON;
+#ifdef ForwardSweepVisitor_DEBUG
+			cout << "\telem->value = " << elem->value;
+			cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+			cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 			return;
 		}
 		double e2 = e / ((e + 1) * (e + 1));
 		elem->inputs[0].weight = e2;
 		elem->inputs[1].weight = -e2;
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledLog> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledLog> elem)" << endl;
+#endif
 		double arg = valueOf(elem->_arg);
 
 		elem->value = log(arg);
 		elem->inputs[0].weight = 1 / arg;
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledLTConstraint> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledLTConstraint> elem)" << endl;
+#endif
 		double left = valueOf(elem->_left);
 		double right = valueOf(elem->_right);
 
@@ -949,10 +1198,18 @@ namespace autodiff
 			elem->inputs[0].weight = -elem->_steepness;
 			elem->inputs[1].weight = elem->_steepness;
 		}
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledLTEConstraint> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledLTEConstraint> elem)" << endl;
+#endif
 		double left = valueOf(elem->_left);
 		double right = valueOf(elem->_right);
 
@@ -968,10 +1225,18 @@ namespace autodiff
 			elem->inputs[0].weight = -elem->_steepness;
 			elem->inputs[1].weight = elem->_steepness;
 		}
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledMax> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledMax> elem)" << endl;
+#endif
 		double left = valueOf(elem->_left);
 		double right = valueOf(elem->_right);
 
@@ -986,10 +1251,18 @@ namespace autodiff
 			elem->inputs[0].weight = 0;
 			elem->inputs[1].weight = 1;
 		}
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledMin> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledMin> elem)" << endl;
+#endif
 		double left = valueOf(elem->_left);
 		double right = valueOf(elem->_right);
 
@@ -1004,10 +1277,18 @@ namespace autodiff
 			elem->inputs[0].weight = 0;
 			elem->inputs[1].weight = 1;
 		}
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledOr> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledOr> elem)" << endl;
+#endif
 		double left = valueOf(elem->_left);
 		double right = valueOf(elem->_right);
 
@@ -1016,6 +1297,11 @@ namespace autodiff
 			elem->value = 1;
 			elem->inputs[0].weight = 0;
 			elem->inputs[1].weight = 0;
+#ifdef ForwardSweepVisitor_DEBUG
+			cout << "\telem->value = " << elem->value;
+			cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+			cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 			return;
 		}
 		elem->value = 0;
@@ -1037,20 +1323,36 @@ namespace autodiff
 		{
 			elem->inputs[1].weight = 0;
 		}
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledProduct> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledProduct> eem)" << endl;
+#endif
 		double left = valueOf(elem->_left);
 		double right = valueOf(elem->_right);
 
 		elem->value = left * right;
 		elem->inputs[0].weight = right;
 		elem->inputs[1].weight = left;
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledReification> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledReification> elem)" << endl;
+#endif
 		double condition = valueOf(elem->_condition);
 		double d = elem->_max - elem->_min;
 
@@ -1066,10 +1368,18 @@ namespace autodiff
 			elem->inputs[0].weight = d;
 			elem->inputs[1].weight = 0;
 		}
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledSigmoid> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledSigmoid> elem)" << endl;
+#endif
 		double arg = valueOf(elem->_arg);
 		double mid = valueOf(elem->_mid);
 		double e = exp(elem->_steepness * (-arg + mid));
@@ -1090,23 +1400,44 @@ namespace autodiff
 		{
 			elem->inputs[0].weight = elem->_steepness * Term::EPSILON;
 			elem->inputs[1].weight = -elem->_steepness * Term::EPSILON;
+#ifdef ForwardSweepVisitor_DEBUG
+			cout << "\telem->value = " << elem->value;
+			cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+			cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 			return;
 		}
 		double e2 = elem->_steepness * e / ((e + 1) * (e + 1));
 		elem->inputs[0].weight = e2;
 		elem->inputs[1].weight = -e2;
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledSin> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledSin> elem)" << endl;
+#endif
 		double arg = valueOf(elem->_arg);
 
 		elem->value = sin(arg);
 		elem->inputs[0].weight = cos(arg);
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledSum> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledSum> elem)" << endl;
+#endif
 		elem->value = 0;
 		for (int i = 0; i < elem->_terms.size(); ++i)
 		{
@@ -1117,25 +1448,44 @@ namespace autodiff
 		{
 			elem->inputs[i].weight = 1;
 		}
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledTermPower> elem)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledTermPower> elem)" << endl;
+#endif
 		double baseVal = valueOf(elem->_base);
 		double exponent = valueOf(elem->_exponent);
 
 		elem->value = pow(baseVal, exponent);
 		elem->inputs[0].weight = exponent * pow(baseVal, exponent - 1);
 		elem->inputs[1].weight = elem->value * log(baseVal);
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "\telem->value = " << elem->value;
+		cout << "\telem->inputs[0].weight = " << elem->inputs[0].weight;
+		cout << "\telem->inputs[1].weight = " << elem->inputs[1].weight << endl;
+#endif
 	}
 
 	void CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledVariable> var)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::visit(shared_ptr<CompiledVariable> elem)" << endl;
+#endif
 
 	}
 
 	double CompiledDifferentiator::ForwardSweepVisitor::valueOf(int index)
 	{
+#ifdef ForwardSweepVisitor_DEBUG
+		cout << "CompiledDifferentiator::ForwardSweepVisitor::valueOf(" << index << ") => " << (*_tape)[index]->value << endl;
+#endif
 		return (*_tape)[index]->value;
 	}
 } /* namespace autodiff */

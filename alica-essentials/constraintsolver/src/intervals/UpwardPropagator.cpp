@@ -440,7 +440,7 @@ namespace alica
 				if (ret) OutputChange(t,oldmin,oldmax);
 #endif
 				if (t->min > t->max)
-					throw new UnsolveableException();
+					throw 1;
 				return ret;
 			}
 

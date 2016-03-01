@@ -13,6 +13,7 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -60,6 +61,8 @@ namespace autodiff
 		virtual shared_ptr<Term> derivative(shared_ptr<Variable> v) = 0;
 		virtual shared_ptr<Term> negate();
 
+		virtual string toString() = 0;
+
 		static AndType getAnd();
 		static void setAnd(AndType a);
 		static OrType getOr();
@@ -103,6 +106,10 @@ namespace autodiff
 	shared_ptr<Term> operator<(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
 	shared_ptr<Term> operator<=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
 	shared_ptr<Term> operator>=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
+
+	shared_ptr<Term> operator&=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
+	shared_ptr<Term> operator|=(const shared_ptr<Term>& left, const shared_ptr<Term>& right);
+
 } /* namespace autodiff */
 
 #endif /* TERM_H_ */

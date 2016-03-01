@@ -2,7 +2,13 @@ cmake_minimum_required(VERSION 2.8.3)
 project(constraintsolver)
 
 ## Use c++ 11x std
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++11 -ggdb ${CMAKE_CXX_FLAGS}")
+if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
+	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++11" CACHE STRING "C++ version for eclipse" FORCE)
+	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
+	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
+endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
+# -fsanitize=leak
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -87,7 +93,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES constraintsolver
- CATKIN_DEPENDS fsystem
+ CATKIN_DEPENDS fsystem autodiff
 # DEPENDS system filesystem
 )
 
@@ -123,8 +129,6 @@ add_library(constraintsolver
   src/Decider.cpp
   src/FormulaTransform.cpp
   src/GSolver.cpp
-  src/MSLConstraintBuilder.cpp
-  src/Point2D.cpp
 )
 
 ## Declare a cpp executable
@@ -177,7 +181,7 @@ target_link_libraries(constraintsolver ${catkin_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-catkin_add_gtest(${PROJECT_NAME}-test test/test_constraintsolver.cpp test/test_cnsat.cpp test/test_solver.cpp test/test_cnsmtgsolver.cpp)
+catkin_add_gtest(${PROJECT_NAME}-test test/test_constraintsolver.cpp test/test_cnsat.cpp test/test_cnsmtgsolver.cpp)
 if(TARGET ${PROJECT_NAME}-test)
   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
 endif()

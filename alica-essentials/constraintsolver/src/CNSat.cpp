@@ -7,6 +7,7 @@
 
 #include "CNSat.h"
 //#define CNSatDebug
+//#define CNSat_Call_Debug
 
 #include "types/Clause.h"
 #include "types/DecisionLevel.h"
@@ -94,11 +95,14 @@ namespace alica
 
 			CNSat::~CNSat()
 			{
-				// TODO Auto-generated destructor stub
+				delete alicaClock;
 			}
 
 			shared_ptr<Var> CNSat::newVar()
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::newVar()" << endl;
+#endif
 				shared_ptr<Var> t = make_shared<Var>(variables->size());
 				variables->push_back(t);
 				return t;
@@ -106,6 +110,9 @@ namespace alica
 
 			bool CNSat::addBasicClause(shared_ptr<Clause> c)
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::addBasicClause()" << endl;
+#endif
 				if (c->literals->size() == 0)
 					return false;
 
@@ -142,11 +149,17 @@ namespace alica
 
 			void CNSat::emptySATClause()
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::emptySATClause()" << endl;
+#endif
 				emptyClauseList(this->satClauses);
 			}
 
 			void CNSat::emptyTClause()
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::emptyTClause()" << endl;
+#endif
 				emptyClauseList(this->tClauses);
 			}
 
@@ -160,6 +173,9 @@ namespace alica
 
 			bool CNSat::addSATClause(shared_ptr<Clause> c)
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::addSATClause()" << endl;
+#endif
 				if (c->literals->size() == 1)
 				{
 					//TODO Can be removed when Locked is removed
@@ -203,6 +219,9 @@ namespace alica
 
 			bool CNSat::addTClause(shared_ptr<Clause> c)
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::addTClause()" << endl;
+#endif
 				if (c->literals->size() == 1)
 				{
 					if (c->literals->at(0)->var->locked
@@ -236,6 +255,9 @@ namespace alica
 
 			bool CNSat::preAddIUnitClause(shared_ptr<Var> v, Assignment ass)
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::preAddIUnitClause()" << endl;
+#endif
 				if ((v->assignment != Assignment::UNASSIGNED) && (v->assignment != ass))
 				{
 					return false; //problem is unsolveable
@@ -258,11 +280,12 @@ namespace alica
 					//if (c->literals->at(0)->var->locked && c->literals->at(0)->sign != c->literals->at(0)->var->assignment)
 					//	return false;
 					//backTrackAndRevoke(c->literals->at(0)->var->decisionLevel);
+					auto sign = c->literals->at(0)->sign;
 					backTrack(this->decisionLevel->at(0));
 
 					decisions->insert(decisions->begin(), c->literals->at(0)->var);
 					c->literals->at(0)->var->decisionLevel = this->decisionLevel->at(0);
-					c->literals->at(0)->var->assignment = c->literals->at(0)->sign;
+					c->literals->at(0)->var->assignment = sign;
 					c->literals->at(0)->var->setReason(nullptr);
 					c->literals->at(0)->var->locked = true;
 					for (shared_ptr<DecisionLevel> l : *(this->decisionLevel))
@@ -285,6 +308,9 @@ namespace alica
 
 			void CNSat::init()
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::init()" << endl;
+#endif
 				this->unitDecissions = decisions->size();
 				this->decisionLevel->clear();
 				this->decisionLevelNull->level = decisions->size();
@@ -302,11 +328,20 @@ namespace alica
 
 			bool CNSat::solve()
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::solve()";
+#endif
 				shared_ptr<CNSMTGSolver> cnsmtGSolver = nullptr;
 				if (this->cnsmtGSolver.use_count() > 0)
 				{
+#ifdef CNSat_Call_Debug
+					cout << " cnsmtGSolver != nullptr";
+#endif
 					cnsmtGSolver = this->cnsmtGSolver.lock();
 				}
+#ifdef CNSat_Call_Debug
+				cout << endl;
+#endif
 
 				int restartNum = 100;
 				learntNum = 700;
@@ -322,20 +357,38 @@ namespace alica
 					c = nullptr;
 					while ((c = propagate()) != nullptr) //resolve all conflicts
 					{
+//						cout << "while ((c = propagate()) != nullptr) => " << endl;
+//						cout << "\t" << "conflictCount=" << conflictCount << endl;
+//						cout << "\t" << "cnsmtGSolver->begin=" << cnsmtGSolver->begin << endl;
+//						cout << "\t" << "cnsmtGSolver->maxSolveTime=" << cnsmtGSolver->maxSolveTime << endl;
+//						cout << "\t" << "cnsmtGSolver->getTime()=" << cnsmtGSolver->getTime() << endl;
+//						cout << "\t" << "cnsmtGSolver->begin+cnsmtGSolver->maxSolveTime=" << (cnsmtGSolver->begin + cnsmtGSolver->maxSolveTime) << endl;
 						if (decisionLevel->size() == 1)
 						{
+#ifdef CNSat_Call_Debug
+							cout << "CNSat::solve() => return false => decisionLevel->size() == 1" << endl;
+#endif
 							return false;
 						}
 						if (conflictCount % 50 == 0 && cnsmtGSolver != nullptr
 								&& cnsmtGSolver->begin + cnsmtGSolver->maxSolveTime < cnsmtGSolver->getTime())
 						{
-							//return false;
+#ifdef CNSat_Call_Debug
+							cout << "CNSat::solve() => return false => " << conflictCount << " % 50 == 0 && cnsmtGSolver != nullptr && " << cnsmtGSolver->begin << " + " << cnsmtGSolver->maxSolveTime << " < " << cnsmtGSolver->getTime() << endl;
+#endif
+							return false;
 						}
 						if (!resolveConflict(c))
 						{
+#ifdef CNSat_Call_Debug
+							cout << "CNSat::solve() => return false => !resolveConflict(c)" << endl;
+#endif
 							return false;
 						}
 					}
+
+//					cout << "\tdecisionLevel->size() = " << decisionLevel->size() << endl;
+//					cout << "all conflicts resolved " << (cnsmtGSolver != nullptr) << " " << useIntervalProp << endl;
 
 					if (cnsmtGSolver != nullptr)
 					{
@@ -408,8 +461,11 @@ namespace alica
 					if (decisionCount % 25 == 0 && cnsmtGSolver != nullptr
 							&& cnsmtGSolver->begin + cnsmtGSolver->maxSolveTime < cnsmtGSolver->getTime())
 					{
+#ifdef CNSat_Call_Debug
+						cout << "CNSat::solve() => return false => " << decisionCount << " % 25 == 0 && cnsmtGSolver != nullptr && " << cnsmtGSolver->begin << " + " << cnsmtGSolver->maxSolveTime << " < " << cnsmtGSolver->getTime() << endl;
+#endif
 						//unsigned long long test = cnsmtGSolver->getTime() - (cnsmtGSolver->begin);// + cnsmtGSolver->maxSolveTime);
-						//return false;
+						return false;
 					}
 					//Forget unused clauses
 					if (decisionCount % 1000 == 0)
@@ -429,6 +485,7 @@ namespace alica
 						restartCount++;
 						for (int j = (decisionLevel->at(1)->level); j < decisions->size(); j++)
 						{
+							cout << "solve strange unass" << endl;
 							decisions->at(j)->assignment = Assignment::UNASSIGNED;
 							decisions->at(j)->setReason(nullptr);
 							for (Watcher* wa : *(decisions->at(j)->watchList))
@@ -478,15 +535,34 @@ namespace alica
 
 			shared_ptr<Clause> CNSat::propagate()
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::propagate()" << endl;
+#endif
 				int lLevel = 0;
 				if (decisionLevel->size() > 1)
 				{
 					lLevel = decisionLevel->at(decisionLevel->size() - 1)->level;
 				}
+#ifdef CNSat_Call_Debug
+				cout << "\tlLevel = " << lLevel << endl;
+				cout << "\tdecisionLevel->size() = " << decisionLevel->size() << endl;
+				cout << "\tdecisions->size() = " << decisions->size() << endl;
+#endif
 
 				for (int i = lLevel; i < decisions->size(); ++i)
 				{
 					shared_ptr<vector<Watcher*>> watchList = decisions->at(i)->watchList;
+#ifdef CNSat_Call_Debug
+					cout << "\t\twatchList->size() = " << watchList->size() << endl;
+
+					cout << "\t\t\t";
+					for (int j = 0; j < watchList->size(); ++j)
+					{
+						Watcher* w = watchList->at(j);
+						cout << j << " => " << w << "\t";
+					}
+					cout << endl;
+#endif
 
 					for (int j = 0; j < watchList->size(); ++j)
 					{
@@ -498,16 +574,25 @@ namespace alica
 #endif
 						if (w->clause->satisfied)
 						{
+#ifdef CNSat_Call_Debug
+							cout << "\tcontinue :: w->clause->satisfied" << endl;
+#endif
 							continue;
 						}
 						if (w->lit->satisfied())
 						{
+#ifdef CNSat_Call_Debug
+							cout << "\tcontinue :: w->lit->satisfied()" << endl;
+#endif
 							w->clause->satisfied = true;
 							continue;
 						}
 						//TODO Do we need this?
 						if (w->lit->var->assignment == Assignment::UNASSIGNED)
 						{
+#ifdef CNSat_Call_Debug
+							cout << "\tcontinue :: w->lit->var->assignment == Assignment::UNASSIGNED" << endl;
+#endif
 							continue;
 						}
 
@@ -518,18 +603,34 @@ namespace alica
 						int oWId = c->watcher->at(0) == w ? 1 : 0;
 						if (c->watcher->at(oWId)->lit->satisfied())
 						{
+#ifdef CNSat_Call_Debug
+							cout << "\tcontinue :: c->watcher->at(" << oWId << ")->lit->satisfied()" << endl;
+#endif
 							//TODO: Do we need this?
 							w->clause->satisfied = true;
 							continue;
 						}
+#ifdef CNSat_Call_Debug
+						cout << "\t\tc->literals->size() = " << c->literals->size() << endl;
+#endif
 						bool found = false;
 						for (shared_ptr<Lit> l : *(c->literals))
 						{
 							if (c->watcher->at(oWId)->lit->var != l->var
 									&& (l->var->assignment == Assignment::UNASSIGNED || l->satisfied()))
 							{
-								auto iter = find(w->lit->var->watchList->begin(), w->lit->var->watchList->end(), w);
-								w->lit->var->watchList->erase(iter);
+//								auto iter = find(w->lit->var->watchList->begin(), w->lit->var->watchList->end(), w);
+//								w->lit->var->watchList->erase(iter);
+								shared_ptr<vector<Watcher*> > newWatchList = make_shared<vector<Watcher*>>();
+								for (Watcher* w_tmp : *(w->lit->var->watchList))
+								{
+									if (w_tmp != w)
+									{
+										newWatchList->push_back(w_tmp);
+									}
+								}
+								w->lit->var->watchList = newWatchList;
+
 								j--;
 								w->lit = l;
 								l->var->watchList->push_back(w);
@@ -544,7 +645,7 @@ namespace alica
 						if (!found)
 						{
 							c->activity++;
-							//TODO Handle Watcher* here ... do not return -> faster
+							//TODO Handle Watcher here ... do not return -> faster
 							Watcher* w2 = c->watcher->at(oWId);
 							if (w2->lit->var->assignment == Assignment::UNASSIGNED)
 							{
@@ -561,16 +662,25 @@ namespace alica
 							}
 							else
 							{
+#ifdef CNSat_Call_Debug
+								cout << "\treturn c" << endl;
+#endif
 								return c;
 							}
 						}
 					}
 				}
+#ifdef CNSat_Call_Debug
+				cout << "\treturn nullptr" << endl;
+#endif
 				return nullptr;
 			}
 
 			bool CNSat::resolveConflict(shared_ptr<Clause> c)
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::resolveConflict()" << endl;
+#endif
 				++conflictCount;
 
 				//Learn shared_ptr<Clause> from conflict here
@@ -825,6 +935,9 @@ namespace alica
 
 			void CNSat::backTrack(shared_ptr<DecisionLevel> db)
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::backTrack() DecisionLevel" << endl;
+#endif
 				//TODO make this more efficient (linked list?)
 				recentBacktrack = true;
 				auto iter = find(decisionLevel->begin(), decisionLevel->end(), db);
@@ -857,6 +970,9 @@ namespace alica
 
 			void CNSat::backTrack(int decission)
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::backTrack(" << decission <<  ") decission" << endl;
+#endif
 				this->recentBacktrack = true;
 				if (decission < 0)
 				{
@@ -880,18 +996,28 @@ namespace alica
 						wa->clause->satisfied = false;
 					}
 				}
+#ifdef CNSat_Call_Debug
+				cout << "\tdecisionLevel->at(1)->level = " << decisionLevel->at(1)->level << endl;
+				cout << "\tdecisions->size() = " << decisions->size() << endl;
+#endif
 				if (decisionLevel->at(1)->level < decisions->size())
 				{
 					// dont use erase, because i dont want to delete the objects
 					removeRangeOfDecisions(decisionLevel->at(1)->level, decisions->size() - decisionLevel->at(1)->level);
 				}
+#ifdef CNSat_Call_Debug
+				cout << "\t_decisions->size() = " << decisions->size() << endl;
+#endif
 
-				decisionLevel->erase(decisionLevel->begin() + 1, decisionLevel->begin() + (decisionLevel->size() - 1));
+				decisionLevel->erase(decisionLevel->begin() + 1, decisionLevel->end());
 				decisionLevelNull->level = decisions->size();
 			}
 
 			void CNSat::emptyClauseList(shared_ptr<vector<shared_ptr<Clause>> > list)
 			{
+#ifdef CNSat_Call_Debug
+				cout << "CNSat::emptyClauseList()" << endl;
+#endif
 				for (shared_ptr<Clause> c : *list)
 				{
 					auto it = find(c->watcher->at(0)->lit->var->watchList->begin(),

@@ -72,6 +72,7 @@ namespace alica
 				this->reason = nullptr;
 				this->seen = false;
 
+				cout << "Var::reset() unass" << endl;
 				this->assignment = Assignment::UNASSIGNED;
 
 				this->activity = 0;
@@ -96,8 +97,15 @@ namespace alica
 
 			string Var::toString()
 			{
-				return (this->assignment == Assignment::FALSE ? "-" : (this->assignment == Assignment::TRUE ? "+" : "o"))
-						+ this->index;
+				string str;
+				if (this->assignment == Assignment::FALSE)
+					str.append("-");
+				else if (this->assignment == Assignment::TRUE)
+					str.append("+");
+				else
+					str.append("o");
+				str.append(to_string(this->index));
+				return str;
 			}
 
 		} /* namespace cnsat */
