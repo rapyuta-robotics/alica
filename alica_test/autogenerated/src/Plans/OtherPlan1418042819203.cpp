@@ -1,7 +1,7 @@
 #include "Plans/OtherPlan1418042819203.h"
 using namespace alica;
 /*PROTECTED REGION ID(eph1418042819203) ENABLED START*/ //Add additional using directives here
-#include "DistXContour.h"
+#include <DistXContourTest.h>
 #include "engine/USummand.h"
 #include "TestConstantValueSummand.h"
 /*PROTECTED REGION END*/

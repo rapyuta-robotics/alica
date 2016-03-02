@@ -1,12 +1,12 @@
 /*
- * DistXContour.h
+ * DistXContourTest.h
  *
  *  Created on: Oct 27, 2014
  *      Author: Stefan Jakob
  */
 
-#ifndef ALICA_ALICA_TEST_INCLUDE_DISTXCONTOUR_H_
-#define ALICA_ALICA_TEST_INCLUDE_DISTXCONTOUR_H_
+#ifndef ALICA_ALICA_TEST_INCLUDE_DISTXCONTOURTEST_H_
+#define ALICA_ALICA_TEST_INCLUDE_DISTXCONTOURTEST_H_
 
 #include <engine/USummand.h>
 #include <vector>
@@ -20,11 +20,11 @@ namespace alica
 	class UtilityInterval;
 	class IAssignment;
 
-	class DistXContour : public USummand
+	class DistXContourTest : public USummand
 	{
 	public:
-		DistXContour(double weight, string name, long id, vector<long>& relevantEntryPointIds, vector<pair<double, double>>& ContourPoints, double xMaxVal, double xMinVal, int ownId);
-		virtual ~DistXContour();
+		DistXContourTest(double weight, string name, long id, vector<long>& relevantEntryPointIds, vector<pair<double, double>>& ContourPoints, double xMaxVal, double xMinVal, int ownId);
+		virtual ~DistXContourTest();
 		void cacheEvalData();
 		double interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint);
 		virtual UtilityInterval eval(IAssignment* ass);
@@ -44,4 +44,4 @@ namespace alica
 
 } /* namespace alica */
 
-#endif /* ALICA_ALICA_TEST_INCLUDE_DISTXCONTOUR_H_ */
+#endif /* ALICA_ALICA_TEST_INCLUDE_DistXContourTest_H_ */

@@ -1,7 +1,7 @@
 #include "Plans/PreConditionPlan1418042796751.h"
 using namespace alica;
 /*PROTECTED REGION ID(eph1418042796751) ENABLED START*/ //Add additional using directives here
-#include "DistXContour.h"
+#include <DistXContourTest.h>
 #include "engine/USummand.h"
 #include "TestConstantValueSummand.h"
 #include "TestWorldModel.h"
