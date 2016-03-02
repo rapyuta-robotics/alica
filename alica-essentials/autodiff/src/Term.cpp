@@ -67,7 +67,7 @@ namespace autodiff
 
 	shared_ptr<Term> Term::negate()
 	{
-		return 1 - shared_from_this();
+		return Term::TRUE - shared_from_this();
 	}
 
 	AndType Term::getAnd()
@@ -160,7 +160,7 @@ namespace autodiff
 	 */
 	shared_ptr<Term> operator-(const shared_ptr<Term>& left, const shared_ptr<Term>& right)
 	{
-		return left + -1 * right;
+		return left + TermBuilder::constant(-1) * right;
 	}
 
 	/*
@@ -211,7 +211,7 @@ namespace autodiff
 
 	shared_ptr<Term> operator-(const shared_ptr<Term>& term)
 	{
-		return -1 * term;
+		return TermBuilder::constant(-1) * term;
 	}
 
 	shared_ptr<Term> operator!(const shared_ptr<Term>& term)
