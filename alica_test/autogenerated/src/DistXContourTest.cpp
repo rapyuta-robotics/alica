@@ -1,17 +1,17 @@
 /*
- * DistXContour.cpp
+ * DistXContourTest.cpp
  *
  *  Created on: Oct 27, 2014
  *      Author: Stefan Jakob
  */
 
-#include <DistXContour.h>
+#include <DistXContourTest.h>
 #include "TestWorldModel.h"
 
 namespace alica
 {
 
-	DistXContour::DistXContour(double weight, string name, long id, vector<long>& relevantEntryPointIds,
+	DistXContourTest::DistXContourTest(double weight, string name, long id, vector<long>& relevantEntryPointIds,
 								vector<pair<double, double> >& ContourPoints, double xMaxVal, double xMinVal, int ownId)
 	{
 		this->ownId = ownId;
@@ -26,22 +26,22 @@ namespace alica
 		this->xAlloBall = 0;
 	}
 
-	DistXContour::~DistXContour()
+	DistXContourTest::~DistXContourTest()
 	{
 	}
 
-	void DistXContour::cacheEvalData()
+	void DistXContourTest::cacheEvalData()
 	{
 		xAlloBall = alicaTests::TestWorldModel::getOne()->x;
 		xAlloBall = alicaTests::TestWorldModel::getTwo()->x;
 	}
 
-	double DistXContour::interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint)
+	double DistXContourTest::interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint)
 	{
 		return ((Y2 - Y1) / (X2 - X1) * (xPoint - X1) + Y1);
 	}
 
-	UtilityInterval DistXContour::eval(IAssignment* ass)
+	UtilityInterval DistXContourTest::eval(IAssignment* ass)
 	{
 		ui.setMin(0.0);
 		ui.setMax(0.0);
