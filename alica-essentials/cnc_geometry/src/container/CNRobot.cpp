@@ -16,6 +16,8 @@ namespace geometry
 		this->velocityX = 0;
 		this->velocityY = 0;
 		this->id = 0;
+		this->certainty = 0;
+		this->rotation = 0;
 	}
 
 	CNRobot::~CNRobot()

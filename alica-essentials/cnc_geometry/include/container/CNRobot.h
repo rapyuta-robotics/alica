@@ -13,7 +13,7 @@
 namespace geometry
 {
 
-	class CNRobot : CNPosition
+	class CNRobot : public CNPosition
 	{
 	public:
 		CNRobot();
@@ -22,6 +22,10 @@ namespace geometry
 		double velocityX;
 		double velocityY;
 		int id;
+		shared_ptr<vector<int>> opposer;
+		shared_ptr<vector<int>> supporter;
+		double certainty;
+		double rotation;
 		string toString();
 	};
 }
