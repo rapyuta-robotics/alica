@@ -77,7 +77,9 @@ namespace robot_control
 		QFrame* widget;
 		Ui::ControlledRobotWidget* uiControlledRobot;
 
+		QFrame* frameForAW;
 		alica::AlicaWidget* alicaWidget;
+		QFrame* frameForPM;
 		pm_widget::ControlledProcessManager* pmWidget;
 
 		ros::Publisher robotCommandPub;

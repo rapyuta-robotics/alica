@@ -74,9 +74,9 @@ namespace robot_control
 		widget_->setAttribute(Qt::WA_AlwaysShowToolTips, true);
 		robotControlWidget_.setupUi(widget_);
 
-		this->robotControlWidget_.scrollAreaWidgetContents->setContextMenuPolicy(
+		this->widget_->setContextMenuPolicy(
 				Qt::ContextMenuPolicy::CustomContextMenu);
-		QObject::connect(this->robotControlWidget_.scrollAreaWidgetContents,
+		QObject::connect(this->widget_,
 							SIGNAL(customContextMenuRequested(const QPoint&)), this,
 							SLOT(showContextMenu(const QPoint&)));
 
@@ -104,7 +104,7 @@ namespace robot_control
 		 * For QAbstractScrollArea and derived classes you would use:
 		 * QPoint globalPos = myWidget->viewport()->mapToGlobal(pos); */
 
-		QPoint globalPos = this->robotControlWidget_.scrollAreaWidgetContents->mapToGlobal(pos);
+		QPoint globalPos = this->widget_->mapToGlobal(pos);
 
 		QMenu myMenu;
 		for (auto robot : this->pmRegistry->getRobots())
