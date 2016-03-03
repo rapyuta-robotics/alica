@@ -40,6 +40,7 @@
 
 #include <robot_control/flowlayout.h>
 #include <QWidget>
+#include <iostream>
 
 flowlayout::flowlayout(QWidget *parent, int margin, int hSpacing, int vSpacing)
     : QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing)
@@ -120,7 +121,8 @@ int flowlayout::heightForWidth(int width) const
 void flowlayout::setGeometry(const QRect &rect)
 {
     QLayout::setGeometry(rect);
-    doLayout(rect, false);
+    //doLayout(rect, false);
+    doLayout(rect, true);
 }
 
 QSize flowlayout::sizeHint() const
@@ -149,7 +151,9 @@ int flowlayout::doLayout(const QRect &rect, bool testOnly) const
     int lineHeight = 0;
 
     QLayoutItem *item;
+    	std::cout << "--" << std::endl;
     foreach (item, itemList) {
+    	std::cout << item->widget() << std::endl;
         QWidget *wid = item->widget();
         int spaceX = horizontalSpacing();
         if (spaceX == -1)

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>200</width>
-    <height>200</height>
+    <width>380</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -27,8 +27,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>4000000</width>
-    <height>3000000</height>
+    <width>380</width>
+    <height>300</height>
    </size>
   </property>
   <property name="frameShape">
@@ -39,7 +39,7 @@
     <number>0</number>
    </property>
    <property name="sizeConstraint">
-    <enum>QLayout::SetDefaultConstraint</enum>
+    <enum>QLayout::SetMaximumSize</enum>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -144,6 +144,9 @@
        <property name="checkable">
         <bool>true</bool>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
        <property name="flat">
         <bool>false</bool>
        </property>
@@ -192,6 +195,9 @@
        <property name="checkable">
         <bool>true</bool>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
     </layout>
@@ -218,8 +224,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>196</width>
-        <height>167</height>
+        <width>376</width>
+        <height>267</height>
        </rect>
       </property>
       <property name="sizePolicy">

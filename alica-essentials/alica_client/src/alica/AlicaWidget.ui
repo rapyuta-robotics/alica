@@ -21,13 +21,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>50</width>
+    <width>100</width>
     <height>50</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>300</width>
+    <width>100</width>
     <height>87</height>
    </size>
   </property>
@@ -80,7 +80,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>85</width>
+         <width>20</width>
          <height>18</height>
         </size>
        </property>
@@ -88,7 +88,7 @@
         <number>0</number>
        </property>
        <property name="text">
-        <string>Master:</string>
+        <string>M:</string>
        </property>
       </widget>
      </item>
@@ -96,7 +96,7 @@
       <widget class="QLabel" name="roleLbl">
        <property name="maximumSize">
         <size>
-         <width>35</width>
+         <width>20</width>
          <height>18</height>
         </size>
        </property>
@@ -104,7 +104,7 @@
         <number>0</number>
        </property>
        <property name="text">
-        <string>Role:</string>
+        <string>R:</string>
        </property>
       </widget>
      </item>
@@ -112,7 +112,7 @@
       <widget class="QLabel" name="planLbl">
        <property name="maximumSize">
         <size>
-         <width>35</width>
+         <width>20</width>
          <height>18</height>
         </size>
        </property>
@@ -120,7 +120,7 @@
         <number>0</number>
        </property>
        <property name="text">
-        <string>Plan:</string>
+        <string>P:</string>
        </property>
       </widget>
      </item>
@@ -128,7 +128,7 @@
       <widget class="QLabel" name="stateLbl">
        <property name="maximumSize">
         <size>
-         <width>40</width>
+         <width>20</width>
          <height>18</height>
         </size>
        </property>
@@ -136,7 +136,7 @@
         <number>0</number>
        </property>
        <property name="text">
-        <string>State:</string>
+        <string>S:</string>
        </property>
       </widget>
      </item>
@@ -144,7 +144,7 @@
       <widget class="QLabel" name="taskLbl">
        <property name="maximumSize">
         <size>
-         <width>35</width>
+         <width>20</width>
          <height>18</height>
         </size>
        </property>
@@ -152,7 +152,7 @@
         <number>0</number>
        </property>
        <property name="text">
-        <string>Task:</string>
+        <string>T:</string>
        </property>
       </widget>
      </item>
@@ -164,7 +164,7 @@
       <number>0</number>
      </property>
      <property name="sizeConstraint">
-      <enum>QLayout::SetMinimumSize</enum>
+      <enum>QLayout::SetDefaultConstraint</enum>
      </property>
      <item>
       <widget class="QLabel" name="masterPlanVal">
@@ -173,6 +173,9 @@
          <width>16777215</width>
          <height>18</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Current Masterplan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string/>
@@ -187,6 +190,9 @@
          <height>18</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Current Role&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -199,6 +205,9 @@
          <width>16777215</width>
          <height>18</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Current Plan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string/>
@@ -213,6 +222,9 @@
          <height>18</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Deepest State in Plan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -225,6 +237,9 @@
          <width>16777215</width>
          <height>18</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Task of deepest State&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="lineWidth">
         <number>0</number>

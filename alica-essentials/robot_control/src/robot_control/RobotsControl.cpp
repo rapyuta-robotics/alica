@@ -86,6 +86,12 @@ namespace robot_control
 		}
 		context.addWidget(widget_);
 
+		for (auto robot : this->pmRegistry->getRobots())
+		{
+			this->checkAndInit(robot->id);
+		}
+
+
 		// Initialise the ROS Communication
 		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &RobotsControl::receiveProcessStats,
 												(RobotsControl*)this);
@@ -119,7 +125,7 @@ namespace robot_control
 			int robotId;
 			if (this->pmRegistry->getRobotId(selectedItem->iconText().toStdString(), robotId))
 			{
-				this->checkAndInit(robotId);
+				//this->checkAndInit(robotId);
 				this->controlledRobotsMap[robotId]->toggle();
 			}
 			else
@@ -181,7 +187,7 @@ namespace robot_control
 				auto timePstsPair = processStatMsgQueue.front();
 				processStatMsgQueue.pop();
 
-				this->checkAndInit(timePstsPair.second->senderId);
+//				this->checkAndInit(timePstsPair.second->senderId);
 				this->controlledRobotsMap[timePstsPair.second->senderId]->handleProcessStats(timePstsPair);
 			}
 		}
@@ -194,7 +200,7 @@ namespace robot_control
 				auto timeAlicaInfoPair = alicaInfoMsgQueue.front();
 				alicaInfoMsgQueue.pop();
 
-				this->checkAndInit(timeAlicaInfoPair.second->senderID);
+//				this->checkAndInit(timeAlicaInfoPair.second->senderID);
 				this->controlledRobotsMap[timeAlicaInfoPair.second->senderID]->handleAlicaInfo(timeAlicaInfoPair);
 			}
 		}

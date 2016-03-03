@@ -40,7 +40,7 @@ namespace robot_control
 {
 	class RobotsControl;
 
-	class Robot : public QObject, public supplementary::RobotMetaData
+	class Robot : public QFrame, public supplementary::RobotMetaData
 	{
 
 		Q_OBJECT
@@ -62,6 +62,7 @@ namespace robot_control
 		void toggle();
 		void show();
 		void hide();
+		virtual QSize sizeHint();
 		bool shown;
 		bool showAlicaClient;
 		bool showProcessManager;
