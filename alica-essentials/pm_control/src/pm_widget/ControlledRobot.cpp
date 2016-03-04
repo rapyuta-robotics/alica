@@ -51,6 +51,36 @@ namespace pm_widget
 		this->parentProcessManager->addRobot(this->robotProcessesQFrame);
 	}
 
+	// Second Constructor is for robot_control
+	ControlledRobot::ControlledRobot(string robotName, int robotId, map<string, vector<pair<int, int>>>* bundlesMap, supplementary::RobotExecutableRegistry* pmRegistry) :
+			RobotMetaData(robotName, robotId), robotProcessesQFrame(new QFrame()), _robotProcessesWidget(new Ui::RobotProcessesWidget()), parentProcessManager(nullptr)
+	{
+		// setup gui stuff
+		this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
+		this->_robotProcessesWidget->robotHostLabel->hide();
+
+		QObject::connect(this->_robotProcessesWidget->bundleComboBox, SIGNAL(activated(QString)), this,
+							SLOT(updateBundles(QString)));
+
+		// enter bundles in combo box
+		for (auto bundleEntry : *bundlesMap)
+		{
+			this->_robotProcessesWidget->bundleComboBox->insertItem(INT_MAX, QString(bundleEntry.first.c_str()),
+																	QVariant(bundleEntry.first.c_str()));
+		}
+
+		// construct all known executables
+		const vector<supplementary::ExecutableMetaData*>& execMetaDatas = pmRegistry->getExecutables();
+		ControlledExecutable* controlledExec;
+		for (auto execMetaDataEntry : execMetaDatas)
+		{
+			controlledExec = new ControlledExecutable(execMetaDataEntry, this);
+			this->controlledExecMap.emplace(execMetaDataEntry->id, controlledExec);
+		}
+
+		this->parentProcessManager->addRobot(this->robotProcessesQFrame);
+	}
+
 	ControlledRobot::~ControlledRobot()
 	{
 		for (auto execEntry : this->controlledExecMap)

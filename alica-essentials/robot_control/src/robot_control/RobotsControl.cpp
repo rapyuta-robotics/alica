@@ -26,18 +26,17 @@ namespace robot_control
 		 * with data from Globals.conf and Processes.conf file. */
 
 		// Register robots from Globals.conf
-		int curId;
 		auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
 		for (auto robotName : (*robotNames))
 		{
-			curId = this->pmRegistry->addRobot(robotName);
+			this->pmRegistry->addRobot(robotName);
 		}
 
 		// Register executables from ProcessManaging.conf
 		auto processDescriptions = (*this->sc)["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
 		for (auto processSectionName : (*processDescriptions))
 		{
-			curId = this->pmRegistry->addExecutable(processSectionName);
+			this->pmRegistry->addExecutable(processSectionName);
 		}
 
 		// Read bundles from Processes.conf
@@ -186,9 +185,13 @@ namespace robot_control
 				// unqueue the ROS process stat message
 				auto timePstsPair = processStatMsgQueue.front();
 				processStatMsgQueue.pop();
+				//cout << "RobotsControl: senderId: " << timePstsPair.second->senderId << " robotId: " << timePstsPair.second->processStats[0].robotId << endl;
 
-//				this->checkAndInit(timePstsPair.second->senderId);
-				this->controlledRobotsMap[timePstsPair.second->senderId]->handleProcessStats(timePstsPair);
+				for (auto processStat : (timePstsPair.second->processStats))
+				{
+
+					this->controlledRobotsMap[timePstsPair.second->processStats[0].robotId]->handleProcessStat(timePstsPair.first, processStat);
+				}
 			}
 		}
 
@@ -200,7 +203,6 @@ namespace robot_control
 				auto timeAlicaInfoPair = alicaInfoMsgQueue.front();
 				alicaInfoMsgQueue.pop();
 
-//				this->checkAndInit(timeAlicaInfoPair.second->senderID);
 				this->controlledRobotsMap[timeAlicaInfoPair.second->senderID]->handleAlicaInfo(timeAlicaInfoPair);
 			}
 		}

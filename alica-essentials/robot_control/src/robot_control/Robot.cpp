@@ -14,7 +14,8 @@
 #include "robot_control/RobotsControl.h"
 #include "ui_ControlledRobot.h"
 #include <alica/AlicaWidget.h>
-#include <pm_widget/ControlledProcessManager.h>
+//#include <pm_widget/ControlledProcessManager.h>
+#include <pm_widget/ControlledRobot.h>
 #include <QFrame>
 
 #include <chrono>
@@ -26,13 +27,11 @@ namespace robot_control
 			RobotMetaData(robotName, robotId), parentRobotsControl(parentRobotsControl), widget(new QFrame()), uiControlledRobot(
 					new Ui::ControlledRobotWidget()), shown(true), showAlicaClient(true), showProcessManager(true)
 	{
-		//this->uiControlledRobot->setupUi(this->widget);
 		this->uiControlledRobot->setupUi(this);
 
 		// manual configuration of widgets
 		this->uiControlledRobot->robotStartStopBtn->setText(QString(this->name.c_str()));
 
-		//frameForAW = new QFrame(this->widget);
 		frameForAW = new QFrame(this);
 		frameForAW->setFrameStyle(1);
 		frameForAW->setMaximumSize(280,500);
@@ -43,22 +42,18 @@ namespace robot_control
 		this->alicaWidget = new alica::AlicaWidget();
 		frameHBoxAw->addWidget(this->alicaWidget->qframe);
 		this->uiControlledRobot->horizontalLayout_2->addWidget(frameForAW);
-		//this->frameForAW->hide();
-		//this->alicaWidget->qframe->hide();
 
 		frameForPM = new QFrame(this);
-		//frameForPM = new QFrame(this->widget);
 		frameForPM->setFrameStyle(1);
 		frameForPM->setMaximumSize(280,500);
 		frameForPM->setContentsMargins(0,0,0,0);
 		QHBoxLayout* frameHBoxPm = new QHBoxLayout(frameForPM);
 		frameHBoxPm->setContentsMargins(0,0,0,0);
 		frameHBoxPm->setAlignment(Qt::AlignmentFlag::AlignTop);
-		this->pmWidget = new pm_widget::ControlledProcessManager(robotName, robotId, &this->parentRobotsControl->bundlesMap ,this->parentRobotsControl->pmRegistry, frameHBoxPm);
+		//this->pmWidget = new pm_widget::ControlledProcessManager(robotName, robotId, &this->parentRobotsControl->bundlesMap ,this->parentRobotsControl->pmRegistry, frameHBoxPm);
+		this->pmWidget = new pm_widget::ControlledRobot(robotName, robotId);
 		this->uiControlledRobot->horizontalLayout_2->addWidget(frameForPM);
-		//frameForPM->hide();
 
-//		this->uiControlledRobot->scrollAreaWidgetContents->setGeometry(QRect(0, 0, 300, 76));
 
 		// signals and slots
 		QObject::connect(this->uiControlledRobot->robotStartStopBtn, SIGNAL(toggled(bool)), this,
@@ -68,22 +63,10 @@ namespace robot_control
 		QObject::connect(this->uiControlledRobot->pmShowHideBtn, SIGNAL(toggled(bool)), this,
 							SLOT(toggleProcessManager(bool)));
 
-		// hide by default
-//		this->widget->hide();
-//		this->uiControlledRobot->scrollArea->hide();
-
-		// add to parent widget
-		//this->parentRobotsControl->robotControlWidget_.robotControlLayout->addWidget(this->widget);
-		//this->parentRobotsControl->robotControlWidget_.allRobotsFlowLayout->addWidget(this->widget);
-		//this->parentRobotsControl->robotControlWidget_.allRobotsFlowLayout->addWidget(this);
-//		QVBoxLayout* vBox = new QVBoxLayout();
-//		vBox->addWidget(this, 1, 0);
 		//vBox->addWidget(new QSpacerItem(0,0,QSizePolicy::Expanding, QSizePolicy::Line));
 		this->parentRobotsControl->robotControlWidget_.robotControlLayout->addWidget(this);
 
 		this->robotCommandPub = this->parentRobotsControl->rosNode->advertise<robot_control::RobotCommand>("RobotCommand",5);
-
-
 	}
 
 	Robot::~Robot()
@@ -203,10 +186,9 @@ namespace robot_control
 		this->alicaWidget->handleAlicaEngineInfo(timeAEIpair.second);
 	}
 
-	void Robot::handleProcessStats(pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePSTSpair)
+	void Robot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps)
 	{
-		this->timeLastMsgReceived = timePSTSpair.first;
-		this->pmWidget->handleProcessStats(timePSTSpair);
+		this->pmWidget->handleProcessStat(timeMsgReceived, ps);
 	}
 
 

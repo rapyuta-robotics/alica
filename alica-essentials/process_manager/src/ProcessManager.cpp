@@ -420,7 +420,7 @@ namespace supplementary
 				}
 
 #ifdef PM_DEBUG
-				cout << "PM: Robot '" << robotName << "' executes executable with ID '" << execId << "' with PID "
+				cout << "PM: Robot '" << robotName << "' (ID:" << robotId << ") executes executable with ID '" << execId << "' with PID "
 						<< curPID << endl;
 #endif
 

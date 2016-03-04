@@ -33,7 +33,7 @@ namespace alica {
 }
 
 namespace pm_widget {
-	class ControlledProcessManager;
+	class ControlledRobot;
 }
 
 namespace robot_control
@@ -53,7 +53,7 @@ namespace robot_control
 		// Message processing
 		chrono::time_point<chrono::system_clock> timeLastMsgReceived; /**< the last time a message was received for this robot */
 		void handleAlicaInfo(pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr> timeAEIpair);
-		void handleProcessStats(pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePSTSpair);
+		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
 
 		// GUI Methods and Members
 		RobotsControl* parentRobotsControl;
@@ -81,7 +81,7 @@ namespace robot_control
 		QFrame* frameForAW;
 		alica::AlicaWidget* alicaWidget;
 		QFrame* frameForPM;
-		pm_widget::ControlledProcessManager* pmWidget;
+		pm_widget::ControlledRobot* pmWidget;
 
 		ros::Publisher robotCommandPub;
 

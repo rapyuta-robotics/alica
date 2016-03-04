@@ -39,6 +39,7 @@ namespace pm_widget
 
 	public:
 		ControlledRobot(string robotName, int robotId, ControlledProcessManager* parentProcessManager);
+		ControlledRobot(string robotName, int robotId, map<string, vector<pair<int, int>>>* bundlesMap, supplementary::RobotExecutableRegistry* pmRegistry); /*<for robot_control*/
 		virtual ~ControlledRobot();
 
 		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
