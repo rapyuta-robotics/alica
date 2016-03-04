@@ -39,6 +39,7 @@ namespace alicaRosProxy
 		virtual void sendSyncReady(SyncReady& sr);
 		virtual void sendSyncTalk(SyncTalk& st);
 		virtual void sendSolverResult(SolverResult& sr);
+		virtual void sendLogMessage(int level, string& message);
 
 		virtual void handleAllocationAuthorityRos(alica_ros_proxy::AllocationAuthorityInfoPtr aai);
 		virtual void handlePlanTreeInfoRos(alica_ros_proxy::PlanTreeInfoPtr pti);

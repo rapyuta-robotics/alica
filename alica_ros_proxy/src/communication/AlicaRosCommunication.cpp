@@ -22,6 +22,7 @@
 #include <SystemConfig.h>
 #include <Configuration.h>
 #include <engine/containers/AlicaEngineInfo.h>
+#include <ros/console.h>
 
 using namespace alica;
 
@@ -324,6 +325,31 @@ namespace alicaRosProxy
 			this->onSolverResult(srPtr);
 		}
 	}
+
+	void AlicaRosCommunication::sendLogMessage(int level, string& message) {
+		switch(level) {
+			case '0':
+				ROS_DEBUG("AlicaMessage %s", message.c_str());
+				break;
+			case '1':
+				ROS_INFO("AlicaMessage %s", message.c_str());
+				break;
+			case '2':
+				ROS_WARN("AlicaMessage %s", message.c_str());
+				break;
+			case '3':
+				ROS_ERROR("AlicaMessage %s", message.c_str());
+				break;
+			case '4':
+				ROS_FATAL("AlicaMessage %s", message.c_str());
+				break;
+			default:
+				ROS_ERROR("AlicaMessage %s", message.c_str());
+				break;
+		}
+
+	}
+
 
 	void AlicaRosCommunication::startCommunication()
 	{
