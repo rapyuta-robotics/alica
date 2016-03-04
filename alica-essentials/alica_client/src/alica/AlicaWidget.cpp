@@ -44,11 +44,14 @@ namespace alica
 
 	void AlicaWidget::clearGUI()
 	{
-		uiAlicaWidget.planVal->setText(QString(""));
-		uiAlicaWidget.roleVal->setText(QString(""));
-		uiAlicaWidget.taskVal->setText(QString(""));
-		uiAlicaWidget.masterPlanVal->setText(QString(""));
-		uiAlicaWidget.stateVal->setText(QString(""));
+		if (uiAlicaWidget.planVal != nullptr)
+		{
+			uiAlicaWidget.planVal->setText(QString(""));
+			uiAlicaWidget.roleVal->setText(QString(""));
+			uiAlicaWidget.taskVal->setText(QString(""));
+			uiAlicaWidget.masterPlanVal->setText(QString(""));
+			uiAlicaWidget.stateVal->setText(QString(""));
+		}
 	}
 }
 
