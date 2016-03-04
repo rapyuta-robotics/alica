@@ -64,6 +64,8 @@ namespace alica
 
 		bool getParameter(string key, string& valueOut);
 		void setTrigger(supplementary::ITrigger* trigger);
+
+		void sendLogMessage(int level, string& message);
 	protected:
 		/**
 		 * The name of this behaviour.

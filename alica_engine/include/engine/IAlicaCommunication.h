@@ -33,6 +33,7 @@ namespace alica
 		virtual void sendSyncReady(SyncReady& sr) = 0;
 		virtual void sendSyncTalk(SyncTalk& st) = 0;
 		virtual void sendSolverResult(SolverResult& sr) = 0;
+		virtual void sendLogMessage(int level, string& message) {};
 
 		virtual void tick() {};
 

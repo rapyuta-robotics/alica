@@ -284,7 +284,9 @@ namespace alica
 			}
 			catch (exception& e)
 			{
-				cerr << "Exception catched:  " << this->getName() << " - " << e.what() << endl;
+				string err = string("Exception catched:  ") + this->getName() + string(" - ") + string(e.what());
+				sendLogMessage(4, err);
+				//cerr << "Exception catched:  " << this->getName() << " - " << e.what() << endl;
 			}
 #ifdef BEH_DEBUG
 			BehaviourConfiguration* conf = dynamic_cast<BehaviourConfiguration*>(this->getRunningPlan()->getPlan());
@@ -293,9 +295,12 @@ namespace alica
 				double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0
 						- 1.0 / conf->getFrequency() * 1000.0;
 				if (dura > 0.1)
-				{ //Behaviour "+conf.Behaviour.Name+" exceeded runtime by {0,1:0.##}ms!",delta
-					cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura
-							<< "ms!" << endl;
+				{
+					string err = string("BB: Behaviour ") + conf->getBehaviour()->getName() + string(" exceeded runtime by \t") + to_string(dura) +
+							string("ms!");
+					sendLogMessage(2, err);
+					//cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura
+						//	<< "ms!" << endl;
 				}
 			}
 #endif
@@ -346,6 +351,10 @@ namespace alica
 			cur = cur->getParent().lock();
 		}
 		return nullptr;
+	}
+
+	void BasicBehaviour::sendLogMessage(int level, string& message) {
+		runningPlan->sendLogMessage(level, message);
 	}
 
 } /* namespace alica */

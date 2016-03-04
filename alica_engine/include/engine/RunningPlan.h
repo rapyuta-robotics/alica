@@ -124,6 +124,8 @@ namespace alica
 		shared_ptr<RunningPlan> getSharedFromThis();
 		AlicaEngine* getAlicaEngine();
 
+		void sendLogMessage(int level, string& message);
+
 	private:
 		void setConstraintStore(ConstraintStore* constraintStore);
 

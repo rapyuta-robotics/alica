@@ -33,6 +33,7 @@
 #include "engine/IAlicaClock.h"
 #include "engine/SimplePlanTree.h"
 #include "engine/allocationauthority/EntryPointRobotPair.h"
+#include "engine/IAlicaCommunication.h"
 
 #include <iostream>
 
@@ -1146,6 +1147,10 @@ namespace alica
 	AlicaEngine* RunningPlan::getAlicaEngine()
 	{
 		return ae;
+	}
+
+	void RunningPlan::sendLogMessage(int level, string& message) {
+		ae->getCommunicator()->sendLogMessage(level, message);
 	}
 
 } /* namespace alica */
