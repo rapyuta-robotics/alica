@@ -55,6 +55,7 @@ namespace supplementary
 		SystemConfig* sc;
 		string ownHostname;
 		int ownId;
+		bool simMode;
 		map<int, ManagedRobot*> robotMap;
 		RobotExecutableRegistry* pmRegistry;
 		vector<string> interpreters;

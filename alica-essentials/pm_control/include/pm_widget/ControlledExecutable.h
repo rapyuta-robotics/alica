@@ -24,6 +24,7 @@ namespace Ui
 
 namespace supplementary {
 	class ExecutableMetaData;
+	class RobotExecutableRegistry;
 }
 
 using namespace std;
@@ -71,6 +72,7 @@ namespace pm_widget
 		static const string greenBackground;
 		static const string grayBackground;
 		ControlledRobot* parentRobot;
+		supplementary::RobotExecutableRegistry* pmRegistry;
 	};
 
 } /* namespace pm_widget */

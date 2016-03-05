@@ -41,12 +41,12 @@ namespace supplementary
 	 */
 	ProcessManager::ProcessManager(int argc, char** argv) :
 			iterationTime(1000000), mainThread(NULL), spinner(NULL), rosNode(NULL), lastTotalCPUTime(0), currentTotalCPUTime(
-					0)
+					0), simMode(false)
 	{
 		this->ownId = -1;
 		this->sc = SystemConfig::getInstance();
 		this->ownHostname = this->sc->getHostname();
-		this->pmRegistry = new RobotExecutableRegistry();
+		this->pmRegistry = supplementary::RobotExecutableRegistry::get();
 
 		/* Initialise some data structures for better performance in searchProcFS-Method with
 		 * data from Globals.conf and Processes.conf file. */
@@ -69,7 +69,7 @@ namespace supplementary
 			this->ownId = this->pmRegistry->addRobot(this->ownHostname);
 		}
 
-		// This autostart functionality is for easier testing
+		// autostart for robots
 		bool autostart = false;
 		for (int i = 1; i < argc; i++)
 		{
@@ -77,6 +77,10 @@ namespace supplementary
 			{
 				autostart = true;
 				break;
+			}
+			else if (strcmp(argv[i], "-sim") == 0)
+			{
+				this->simMode = true;
 			}
 		}
 
@@ -128,7 +132,7 @@ namespace supplementary
 	void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
 	{
 		// check whether this message is for me, 0 is a wild card for all ProcessManagers
-		if (pc->receiverId != this->ownId && pc->receiverId != 0)
+		if (pc->receiverId != this->ownId && !(simMode && pc->receiverId == 0))
 		{
 			return;
 		}
@@ -523,19 +527,26 @@ namespace supplementary
 			}
 
 			// get the executables name
-			string cmdLine = getCmdLine(dirEntry->d_name); //TODO
+			string cmdLine = getCmdLine(dirEntry->d_name);
 			if (cmdLine.length() == 0)
 				continue;
 
 			// Check for already running process managers
-			if (ownPID != curPID && cmdLine.find("process_manager") != string::npos
-					&& cmdLine.find("gdb") == string::npos)
+			vector<string> splittedCmdLine = splitCmdLine(cmdLine);
+			if (ownPID != curPID && cmdLine.find("gdb") == string::npos)
 			{
-				cerr << "PM: My own PID is " << ownPID << endl;
-				cerr << "PM: There is already another process_manager running on this system! PID: " << curPID << endl;
-				cerr << "PM: Terminating myself..." << endl;
-				closedir(proc);
-				return false;
+				for (string cmdLinePart : splittedCmdLine)
+				{
+					//cout << cmdLinePart << " " << cmdLinePart.find_last_of("process_manager") << " " << cmdLinePart.length()-1 << endl;
+					if (cmdLinePart.length() >= 15 && cmdLinePart.compare(cmdLinePart.length()-15, 15, "process_manager") == 0)
+					{
+						cerr << "PM: My own PID is " << ownPID << endl;
+						cerr << "PM: There is already another process_manager running on this system! PID: " << curPID << endl;
+						cerr << "PM: Terminating myself..." << endl;
+						closedir(proc);
+						return false;
+					}
+				}
 			}
 
 			// Check for already running roscore
@@ -545,7 +556,7 @@ namespace supplementary
 
 				// remember started roscore in process managing data structures
 				int roscoreExecId;
-				vector<string> splittedCmdLine = splitCmdLine(cmdLine);
+
 				splittedCmdLine.erase(splittedCmdLine.begin()); // ignore python interpreter of roscore
 
 				if (this->pmRegistry->getExecutableId(splittedCmdLine, roscoreExecId))

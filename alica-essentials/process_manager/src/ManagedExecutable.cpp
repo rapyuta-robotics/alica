@@ -218,7 +218,6 @@ namespace supplementary
 			ps.publishing = (this->publishing ? 1 : 0);
 			psts.processStats.push_back(ps);
 		}
-
 	}
 
 	/**

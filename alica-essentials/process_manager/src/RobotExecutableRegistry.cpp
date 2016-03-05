@@ -15,8 +15,15 @@
 namespace supplementary
 {
 
-	RobotExecutableRegistry::RobotExecutableRegistry()
+	RobotExecutableRegistry* RobotExecutableRegistry::get()
 	{
+		static RobotExecutableRegistry instance;
+		return &instance;
+	}
+
+	RobotExecutableRegistry::RobotExecutableRegistry() : sc(SystemConfig::getInstance())
+	{
+
 	}
 
 	RobotExecutableRegistry::~RobotExecutableRegistry()
@@ -30,6 +37,40 @@ namespace supplementary
 		{
 			delete metaData;
 		}
+	}
+
+	const map<string, vector<pair<int, int>>>* const RobotExecutableRegistry::getBundlesMap()
+	{
+		if(bundlesMap.size() == 0)
+		{
+			// Read bundles from Processes.conf
+			auto bundlesSections = (*this->sc)["ProcessManaging"]->getSections("Processes.Bundles", NULL);
+			for (auto bundleName : (*bundlesSections))
+			{
+				vector<string> processList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles",
+						bundleName.c_str(),
+						"processList", NULL);
+				vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles",
+						bundleName.c_str(),
+						"processParamsList",
+						NULL);
+				if (processList.size() != processParamsList.size())
+				{
+					cerr << "RobotExecutableReg: Number of processes does not match the number of parameter sets for the bundle '"
+					<< bundleName << "' in the ProcessManaging.conf!" << endl;
+					continue;
+				}
+
+				for (int i = 0; i < processList.size(); i++)
+				{
+					this->bundlesMap[bundleName].push_back(
+							pair<int, int>(stoi(processList[i]), stoi(processParamsList[i])));
+				}
+				cout << "RobotExecutableReg: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size()
+				<< " processes." << endl;
+			}
+		}
+		return &bundlesMap;
 	}
 
 	bool RobotExecutableRegistry::getRobotName(int robotId, string& robotName)
@@ -98,7 +139,6 @@ namespace supplementary
 	 */
 	int RobotExecutableRegistry::addRobot(string robotName)
 	{
-		SystemConfig* sc = SystemConfig::getInstance();
 		int robotId;
 		try
 		{
@@ -228,15 +268,16 @@ namespace supplementary
 
 		try
 		{
-			execId = (*sc)["ProcessManaging"]->get<int>("Processes.ProcessDescriptions", execSectionName.c_str(), "id", NULL);
-			processMode = (*sc)["ProcessManaging"]->get<string>("Processes.ProcessDescriptions", execSectionName.c_str(),
-															"mode", NULL);
+			execId = (*sc)["ProcessManaging"]->get<int>("Processes.ProcessDescriptions", execSectionName.c_str(), "id",
+														NULL);
+			processMode = (*sc)["ProcessManaging"]->get<string>("Processes.ProcessDescriptions",
+																execSectionName.c_str(), "mode", NULL);
 			execName = (*sc)["ProcessManaging"]->get<string>("Processes.ProcessDescriptions", execSectionName.c_str(),
-														"execName", NULL);
+																"execName", NULL);
 			rosPackage = (*sc)["ProcessManaging"]->tryGet<string>("NOT-FOUND", "Processes.ProcessDescriptions",
-															execSectionName.c_str(), "rosPackage", NULL);
+																	execSectionName.c_str(), "rosPackage", NULL);
 			prefixCmd = (*sc)["ProcessManaging"]->tryGet<string>("NOT-FOUND", "Processes.ProcessDescriptions",
-															execSectionName.c_str(), "prefixCmd", NULL);
+																	execSectionName.c_str(), "prefixCmd", NULL);
 		}
 		catch (runtime_error& e)
 		{
@@ -261,7 +302,7 @@ namespace supplementary
 		ExecutableMetaData* execMetaData = new ExecutableMetaData(execSectionName, execId, processMode, execName,
 																	rosPackage, prefixCmd, absExecName);
 		auto paramSets = (*sc)["ProcessManaging"]->tryGetNames("NONE", "Processes.ProcessDescriptions",
-															execSectionName.c_str(), "paramSets", NULL);
+																execSectionName.c_str(), "paramSets", NULL);
 		if (paramSets->size() > 1 || paramSets->at(0) != "NONE")
 		{
 			for (string paramSetKeyString : (*paramSets))
@@ -270,8 +311,9 @@ namespace supplementary
 				{
 					int paramSetKey = stoi(paramSetKeyString);
 					auto paramSetValues = (*sc)["ProcessManaging"]->getList<string>("Processes.ProcessDescriptions",
-																				execSectionName.c_str(), "paramSets",
-																				paramSetKeyString.c_str(), NULL);
+																					execSectionName.c_str(),
+																					"paramSets",
+																					paramSetKeyString.c_str(), NULL);
 
 					// first param is always the executable name
 					vector<char*> currentParams;

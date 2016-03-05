@@ -10,6 +10,7 @@
 #include <process_manager/RobotExecutableRegistry.h>
 #include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
+#include <SystemConfig.h>
 
 #include "pm_widget/ControlledRobot.h"
 #include "pm_widget/ControlledExecutable.h"
@@ -19,51 +20,39 @@
 
 namespace pm_widget
 {
-	ControlledRobot::ControlledRobot(string robotName, int robotId, ControlledProcessManager* parentProcessManager) :
-			RobotMetaData(robotName, robotId), parentProcessManager(parentProcessManager), robotProcessesQFrame(
-					new QFrame()), _robotProcessesWidget(new Ui::RobotProcessesWidget())
-	{
-		// setup gui stuff
-		this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
-		this->_robotProcessesWidget->robotHostLabel->setText(
-				QString(string(this->name + " on " + this->parentProcessManager->name).c_str()));
-
-		QObject::connect(this->_robotProcessesWidget->bundleComboBox, SIGNAL(activated(QString)), this,
-							SLOT(updateBundles(QString)));
-
-		// enter bundles in combo box
-		for (auto bundleEntry : *this->parentProcessManager->bundlesMap)
-		{
-			this->_robotProcessesWidget->bundleComboBox->insertItem(INT_MAX, QString(bundleEntry.first.c_str()),
-																	QVariant(bundleEntry.first.c_str()));
-		}
-
-		// construct all known executables
-		const vector<supplementary::ExecutableMetaData*>& execMetaDatas =
-				this->parentProcessManager->pmRegistry->getExecutables();
-		ControlledExecutable* controlledExec;
-		for (auto execMetaDataEntry : execMetaDatas)
-		{
-			controlledExec = new ControlledExecutable(execMetaDataEntry, this);
-			this->controlledExecMap.emplace(execMetaDataEntry->id, controlledExec);
-		}
-
-		this->parentProcessManager->addRobot(this->robotProcessesQFrame);
-	}
-
 	// Second Constructor is for robot_control
-	ControlledRobot::ControlledRobot(string robotName, int robotId, map<string, vector<pair<int, int>>>* bundlesMap, supplementary::RobotExecutableRegistry* pmRegistry) :
-			RobotMetaData(robotName, robotId), robotProcessesQFrame(new QFrame()), _robotProcessesWidget(new Ui::RobotProcessesWidget()), parentProcessManager(nullptr)
+	ControlledRobot::ControlledRobot(string robotName, int robotId, int parentPMid) :
+			RobotMetaData(robotName, robotId), robotProcessesQFrame(new QFrame()), _robotProcessesWidget(new Ui::RobotProcessesWidget()), parentPMid(parentPMid)
 	{
 		// setup gui stuff
 		this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
-		this->_robotProcessesWidget->robotHostLabel->hide();
+		auto pmRegistry = supplementary::RobotExecutableRegistry::get();
+		if (parentPMid == -1)
+		{
+			// don't show in robot_control
+			this->_robotProcessesWidget->robotHostLabel->hide();
+			this->inRobotControl = true;
+		}
+		else
+		{
+			string pmName;
+			if (pmRegistry->getRobotName(parentPMid, pmName))
+			{
+				this->_robotProcessesWidget->robotHostLabel->setText(QString((robotName + " on " + pmName).c_str()));
+			}
+			else
+			{
+				this->_robotProcessesWidget->robotHostLabel->setText(QString((robotName + " on UNKNOWN").c_str()));
+			}
+			this->inRobotControl = false;
+		}
 
 		QObject::connect(this->_robotProcessesWidget->bundleComboBox, SIGNAL(activated(QString)), this,
 							SLOT(updateBundles(QString)));
 
+
 		// enter bundles in combo box
-		for (auto bundleEntry : *bundlesMap)
+		for (auto bundleEntry : *pmRegistry->getBundlesMap())
 		{
 			this->_robotProcessesWidget->bundleComboBox->insertItem(INT_MAX, QString(bundleEntry.first.c_str()),
 																	QVariant(bundleEntry.first.c_str()));
@@ -78,7 +67,12 @@ namespace pm_widget
 			this->controlledExecMap.emplace(execMetaDataEntry->id, controlledExec);
 		}
 
-		this->parentProcessManager->addRobot(this->robotProcessesQFrame);
+		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+		this->msgTimeOut = chrono::duration<double>((*sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
+
+		ros::NodeHandle* nh = new ros::NodeHandle();
+		string cmdTopic = (*supplementary::SystemConfig::getInstance())["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
+		processCommandPub = nh->advertise<process_manager::ProcessCommand>(cmdTopic, 10);
 	}
 
 	ControlledRobot::~ControlledRobot()
@@ -91,8 +85,10 @@ namespace pm_widget
 	}
 
 	void ControlledRobot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived,
-											process_manager::ProcessStat ps)
+											process_manager::ProcessStat ps, int parentPMid)
 	{
+		this->parentPMid = parentPMid;
+
 		auto controlledExecEntry = this->controlledExecMap.find(ps.processKey);
 		if (controlledExecEntry != this->controlledExecMap.end())
 		{ // executable is already known
@@ -110,6 +106,15 @@ namespace pm_widget
 
 	void ControlledRobot::updateGUI(chrono::system_clock::time_point now)
 	{
+		if ((now - this->timeLastMsgReceived) > this->msgTimeOut && !inRobotControl)
+		{ // time is over, erase controlled robot
+			this->robotProcessesQFrame->hide();
+		}
+		else
+		{
+			this->robotProcessesQFrame->show();
+		}
+
 		for (auto controlledExecEntry : this->controlledExecMap)
 		{
 			controlledExecEntry.second->updateGUI(now);
@@ -136,6 +141,18 @@ namespace pm_widget
 
 	void ControlledRobot::sendProcessCommand(vector<int> execIds, vector<int> paramSets, int cmd)
 	{
-		this->parentProcessManager->sendProcessCommand(vector<int> {this->id}, execIds, paramSets, cmd);
+//		if (this->parentPMid == -1)
+//		{
+//			cerr << "ControlledRobot: Don't know the responsible process manager for " << this->name << " (" << this->id << ")" << endl;
+//			return;
+//		}
+
+		process_manager::ProcessCommand pc;
+		pc.receiverId = (this->parentPMid == -1? 0 : this->parentPMid);
+		pc.robotIds = vector<int> {this->id};
+		pc.processKeys = execIds;
+		pc.paramSets = paramSets;
+		pc.cmd = cmd;
+		this->processCommandPub.publish(pc);
 	}
 } /* namespace pm_widget */

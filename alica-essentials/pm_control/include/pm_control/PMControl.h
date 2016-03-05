@@ -57,7 +57,6 @@ namespace pm_control
 		QWidget* widget_;
 
 		supplementary::RobotExecutableRegistry* pmRegistry;
-		map<string, vector<pair<int, int>>> bundlesMap;
 
 	private:
 		ros::NodeHandle* rosNode;

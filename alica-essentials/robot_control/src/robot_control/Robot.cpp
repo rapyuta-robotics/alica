@@ -50,10 +50,9 @@ namespace robot_control
 		QHBoxLayout* frameHBoxPm = new QHBoxLayout(frameForPM);
 		frameHBoxPm->setContentsMargins(0,0,0,0);
 		frameHBoxPm->setAlignment(Qt::AlignmentFlag::AlignTop);
-		//this->pmWidget = new pm_widget::ControlledProcessManager(robotName, robotId, &this->parentRobotsControl->bundlesMap ,this->parentRobotsControl->pmRegistry, frameHBoxPm);
-		this->pmWidget = new pm_widget::ControlledRobot(robotName, robotId);
+		this->controlledRobotWidget = new pm_widget::ControlledRobot(robotName, robotId, -1); // -1 means, there is no process manager responsible
+		frameHBoxPm->addWidget(this->controlledRobotWidget->robotProcessesQFrame);
 		this->uiControlledRobot->horizontalLayout_2->addWidget(frameForPM);
-
 
 		// signals and slots
 		QObject::connect(this->uiControlledRobot->robotStartStopBtn, SIGNAL(toggled(bool)), this,
@@ -86,15 +85,13 @@ namespace robot_control
 		{
 			this->frameForAW->show();
 			this->uiControlledRobot->scrollArea->show();
-			//this->parentRobotsControl->robotControlWidget_.robotControlLayout->setAlignment(this, Qt::AlignHCenter);
 		}
 		else
 		{
 			this->frameForAW->hide();
 			if (!showProcessManager)
 			{
-				//this->uiControlledRobot->scrollArea->hide();
-				//this->parentRobotsControl->robotControlWidget_.robotControlLayout->setAlignment(this, Qt::AlignTop);
+				this->uiControlledRobot->scrollArea->hide();
 			}
 		}
 
@@ -108,15 +105,13 @@ namespace robot_control
 		{
 			this->frameForPM->show();
 			this->uiControlledRobot->scrollArea->show();
-			//this->parentRobotsControl->robotControlWidget_.robotControlLayout->setAlignment(this, Qt::AlignHCenter);
 		}
 		else
 		{
 			this->frameForPM->hide();
 			if (!showAlicaClient)
 			{
-				//this->uiControlledRobot->scrollArea->hide();
-				//this->parentRobotsControl->robotControlWidget_.robotControlLayout->setAlignment(this, Qt::AlignTop);
+				this->uiControlledRobot->scrollArea->hide();
 			}
 		}
 
@@ -124,19 +119,11 @@ namespace robot_control
 
 	void Robot::updateGUI(chrono::system_clock::time_point now)
 	{
-		if (chrono::system_clock::now() - this->timeLastMsgReceived > std::chrono::milliseconds(1000))
+		if ((now - this->timeLastMsgReceived) > std::chrono::milliseconds(1000))
 		{
-			this->clearGUI();
+			this->alicaWidget->clearGUI();
 		}
-		else
-		{
-			this->pmWidget->updateGUI(now);
-		}
-	}
-
-	void Robot::clearGUI()
-	{
-		this->alicaWidget->clearGUI();
+		this->controlledRobotWidget->updateGUI(now);
 	}
 
 	void Robot::sendRobotCommand(bool start)
@@ -186,9 +173,10 @@ namespace robot_control
 		this->alicaWidget->handleAlicaEngineInfo(timeAEIpair.second);
 	}
 
-	void Robot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps)
+	void Robot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, int parentPMid)
 	{
-		this->pmWidget->handleProcessStat(timeMsgReceived, ps);
+		this->timeLastMsgReceived = timeMsgReceived;
+		this->controlledRobotWidget->handleProcessStat(timeMsgReceived, ps, parentPMid);
 	}
 
 

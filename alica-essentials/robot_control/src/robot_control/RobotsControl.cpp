@@ -20,7 +20,7 @@ namespace robot_control
 		this->sc = supplementary::SystemConfig::getInstance();
 		RobotsControl::msgTimeOut = chrono::duration<double>(
 				(*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
-		this->pmRegistry = new supplementary::RobotExecutableRegistry();
+		this->pmRegistry = supplementary::RobotExecutableRegistry::get();
 
 		/* Initialise the registry data structure for better performance
 		 * with data from Globals.conf and Processes.conf file. */
@@ -153,7 +153,6 @@ namespace robot_control
 	 */
 	void RobotsControl::updateGUI()
 	{
-		// TODO: Not implemented, yet.
 		chrono::system_clock::time_point now = chrono::system_clock::now();
 		for (auto controlledRobotEntry : this->controlledRobotsMap)
 		{
@@ -185,12 +184,11 @@ namespace robot_control
 				// unqueue the ROS process stat message
 				auto timePstsPair = processStatMsgQueue.front();
 				processStatMsgQueue.pop();
-				//cout << "RobotsControl: senderId: " << timePstsPair.second->senderId << " robotId: " << timePstsPair.second->processStats[0].robotId << endl;
 
 				for (auto processStat : (timePstsPair.second->processStats))
 				{
-
-					this->controlledRobotsMap[timePstsPair.second->processStats[0].robotId]->handleProcessStat(timePstsPair.first, processStat);
+//					cout << "RobotsControl: senderId: " << timePstsPair.second->senderId << " robotId: " << processStat.robotId << endl;
+					this->controlledRobotsMap[processStat.robotId]->handleProcessStat(timePstsPair.first, processStat, timePstsPair.second->senderId);
 				}
 			}
 		}

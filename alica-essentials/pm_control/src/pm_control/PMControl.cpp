@@ -22,7 +22,7 @@ namespace pm_control
 		this->msgTimeOut = chrono::duration<double>(
 				(*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 
-		this->pmRegistry = new supplementary::RobotExecutableRegistry();
+		this->pmRegistry = supplementary::RobotExecutableRegistry::get();
 
 		/* Initialise the registry data structure for better performance
 		 * with data from Globals.conf and ProcessManaging.conf file. */
@@ -43,32 +43,6 @@ namespace pm_control
 			curId = this->pmRegistry->addExecutable(processSectionName);
 		}
 
-		// Read bundles from Processes.conf
-		auto bundlesSections = (*this->sc)["ProcessManaging"]->getSections("Processes.Bundles", NULL);
-		for (auto bundleName : (*bundlesSections))
-		{
-			vector<string> processList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles",
-																							bundleName.c_str(),
-																							"processList", NULL);
-			vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles",
-																								bundleName.c_str(),
-																								"processParamsList",
-																								NULL);
-			if (processList.size() != processParamsList.size())
-			{
-				cerr << "PMControl: Number of processes does not match the number of parameter sets for the bundle '"
-						<< bundleName << "' in the Processes.conf!" << endl;
-				continue;
-			}
-
-			for (int i = 0; i < processList.size(); i++)
-			{
-				this->bundlesMap[bundleName].push_back(
-						pair<int, int>(stoi(processList[i]), stoi(processParamsList[i])));
-			}
-			cout << "PMControl: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size()
-					<< " processes." << endl;
-		}
 	}
 
 	void PMControl::initPlugin(qt_gui_cpp::PluginContext& context)
@@ -174,7 +148,7 @@ namespace pm_control
 			{
 				cout << "PMControl: Create new ControlledProcessManager " << pmName << " (ID: " <<processManagerId << ")" <<endl;
 				pm_widget::ControlledProcessManager* controlledPM = new pm_widget::ControlledProcessManager(
-						pmName, processManagerId, &this->bundlesMap, this->pmRegistry, this->ui_.pmHorizontalLayout);
+						pmName, processManagerId, this->ui_.pmHorizontalLayout);
 				this->processManagersMap.emplace(processManagerId, controlledPM);
 				return controlledPM;
 			}

@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -18,6 +19,7 @@ namespace supplementary
 
 	class RobotMetaData;
 	class ExecutableMetaData;
+	class SystemConfig;
 
 	/**
 	 * The RobotExecutableRegistry help the process manager and its
@@ -26,9 +28,7 @@ namespace supplementary
 	class RobotExecutableRegistry
 	{
 	public:
-		RobotExecutableRegistry();
-		virtual ~RobotExecutableRegistry();
-
+		static RobotExecutableRegistry* get();
 		const vector<RobotMetaData*>& getRobots() const;
 		void addRobot(string robotName, int robotId);
 		int addRobot(string robotName);
@@ -39,6 +39,7 @@ namespace supplementary
 		void setInterpreters(vector<string> interpreter);
 		bool isKnownInterpreter(string const & cmdLinePart);
 
+		map<string, vector<pair<int, int>>> const * const getBundlesMap();
 		ExecutableMetaData const * const getExecutable(string execName) const;
 		ExecutableMetaData const * const getExecutable(int execId) const;
 		const vector<ExecutableMetaData*>& getExecutables() const;
@@ -52,10 +53,15 @@ namespace supplementary
 //		static size_t getCmdLinePartWithPath(string cmdline, int argStartIdx, string& arg);
 
 	private:
+		RobotExecutableRegistry();
+		virtual ~RobotExecutableRegistry();
+
 		// this is just for faster lookup in case of lazy initialisation
 		vector<RobotMetaData*> robotList;
 		vector<ExecutableMetaData*> executableList;
 		vector<string> interpreter;
+		map<string, vector<pair<int, int>>> bundlesMap;
+		SystemConfig* sc;
 
 	};
 

@@ -8,6 +8,7 @@
 #include <QMenu>
 #include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
+#include <process_manager/RobotExecutableRegistry.h>
 #include <SystemConfig.h>
 
 #include "ui_ProcessWidget.h"
@@ -55,9 +56,11 @@ namespace pm_widget
 		connect(this->processWidget, SIGNAL(customContextMenuRequested(const QPoint&)), this,
 				SLOT(showContextMenu(const QPoint&)));
 
-
 		this->msgTimeOut = chrono::duration<double>(
-						(*supplementary::SystemConfig::getInstance())["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
+				(*supplementary::SystemConfig::getInstance())["ProcessManaging"]->get<unsigned long>(
+						"PMControl.timeLastMsgReceivedTimeOut", NULL));
+
+		this->pmRegistry = supplementary::RobotExecutableRegistry::get();
 
 		this->parentRobot->addExec(processWidget);
 		this->processWidget->show();
@@ -241,8 +244,8 @@ namespace pm_widget
 			return;
 		}
 
-		auto bundleMapEntry = this->parentRobot->parentProcessManager->bundlesMap->find(bundle.toStdString());
-		if (bundleMapEntry != this->parentRobot->parentProcessManager->bundlesMap->end())
+		auto bundleMapEntry = this->pmRegistry->getBundlesMap()->find(bundle.toStdString());
+		if (bundleMapEntry != this->pmRegistry->getBundlesMap()->end())
 		{
 			bool found = false;
 			for (auto processParamSetPair : bundleMapEntry->second)

@@ -40,12 +40,11 @@ namespace pm_widget
 	{
 	public:
 		//ControlledProcessManager(string processManagerName, int processManagerId);
-		ControlledProcessManager(string processManagerName, int processManagerId, map<string, vector<pair<int, int>>>* bundlesMap, supplementary::RobotExecutableRegistry* pmRegistry, QBoxLayout* pmHorizontalLayout);
+		ControlledProcessManager(string processManagerName, int processManagerId, QBoxLayout* pmHorizontalLayout);
 		virtual ~ControlledProcessManager();
 
 		void updateGUI(chrono::system_clock::time_point now);
 		void handleProcessStats(pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair);
-		void sendProcessCommand(vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int cmd);
 		void addRobot(QFrame* robot);
 		void removeRobot(QFrame* robot);
 
@@ -56,12 +55,10 @@ namespace pm_widget
 		chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
 		string name; /* < Hostname under which this process manager is running */
 		int id; /* < The id of the host */
-		map<string, vector<pair<int, int>>>* bundlesMap;
 		supplementary::RobotExecutableRegistry* pmRegistry;
 
 	private:
 		map<int, ControlledRobot*> controlledRobotsMap; /* < The robots, which are controlled by this process manager */
-		ros::Publisher processCommandPub;
 		QBoxLayout* parentLayout;
 		ControlledRobot* getControlledRobot(int robotId);
 	};

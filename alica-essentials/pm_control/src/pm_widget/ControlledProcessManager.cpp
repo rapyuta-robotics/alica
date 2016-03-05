@@ -14,16 +14,11 @@
 
 namespace pm_widget
 {
-	ControlledProcessManager::ControlledProcessManager(string processManagerName, int processManagerId, map<string, vector<pair<int, int>>>* bundlesMap, supplementary::RobotExecutableRegistry* pmRegistry, QBoxLayout* parentLayout) :
-			name(processManagerName), id(processManagerId), bundlesMap(bundlesMap), pmRegistry(pmRegistry), parentLayout(parentLayout)
+	ControlledProcessManager::ControlledProcessManager(string processManagerName, int processManagerId, QBoxLayout* parentLayout) :
+			name(processManagerName), id(processManagerId), pmRegistry(supplementary::RobotExecutableRegistry::get()),parentLayout(parentLayout)
 	{
-		ros::NodeHandle* nh = new ros::NodeHandle();
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-		string cmdTopic = (*sc)["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
-		processCommandPub = nh->advertise<process_manager::ProcessCommand>(cmdTopic, 10);
-
 		this->msgTimeOut = chrono::duration<double>((*sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
-
 	}
 
 	ControlledProcessManager::~ControlledProcessManager()
@@ -45,7 +40,7 @@ namespace pm_widget
 			if (controlledRobot != nullptr)
 			{
 				// call the controlled robot to update its corresponding process statistics.
-				controlledRobot->handleProcessStat(timePstsPair.first, processStat);
+				controlledRobot->handleProcessStat(timePstsPair.first, processStat, timePstsPair.second->senderId);
 			}
 		}
 	}
@@ -64,8 +59,9 @@ namespace pm_widget
 			{
 				cout << "ControlledPM: Create new ControlledRobot " << robotName << " (ID: " << robotId << ")" << endl;
 
-				ControlledRobot* controlledRobot = new ControlledRobot(robotName, robotId, this);
+				ControlledRobot* controlledRobot = new ControlledRobot(robotName, robotId, this->id);
 				this->controlledRobotsMap.emplace(robotId, controlledRobot);
+				this->addRobot(controlledRobot->robotProcessesQFrame);
 				return controlledRobot;
 			}
 			else
@@ -104,17 +100,6 @@ namespace pm_widget
 	void ControlledProcessManager::removeRobot(QFrame* robot)
 	{
 		this->parentLayout->removeWidget(robot);
-	}
-
-	void ControlledProcessManager::sendProcessCommand(vector<int> robotIds, vector<int> execIds, vector<int> paramSets,	int cmd)
-	{
-		process_manager::ProcessCommand pc;
-		pc.receiverId = this->id;
-		pc.robotIds = robotIds;
-		pc.processKeys = execIds;
-		pc.paramSets = paramSets;
-		pc.cmd = cmd;
-		this->processCommandPub.publish(pc);
 	}
 
 	void ControlledProcessManager::hide()

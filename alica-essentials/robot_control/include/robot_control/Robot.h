@@ -53,12 +53,11 @@ namespace robot_control
 		// Message processing
 		chrono::time_point<chrono::system_clock> timeLastMsgReceived; /**< the last time a message was received for this robot */
 		void handleAlicaInfo(pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr> timeAEIpair);
-		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
+		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, int parentPMid);
 
 		// GUI Methods and Members
 		RobotsControl* parentRobotsControl;
 		void updateGUI(chrono::system_clock::time_point now);
-		void clearGUI();
 		void toggle();
 		void show();
 		void hide();
@@ -81,7 +80,7 @@ namespace robot_control
 		QFrame* frameForAW;
 		alica::AlicaWidget* alicaWidget;
 		QFrame* frameForPM;
-		pm_widget::ControlledRobot* pmWidget;
+		pm_widget::ControlledRobot* controlledRobotWidget;
 
 		ros::Publisher robotCommandPub;
 
