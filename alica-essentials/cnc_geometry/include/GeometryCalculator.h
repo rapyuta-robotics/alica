@@ -20,6 +20,7 @@ namespace geometry {
 	public:
 
 		virtual ~GeometryCalculator(){};
+		static double normalizeAngle(double angle);
 		static double deltaAngle(double angle1, double angle2);
 		static bool isInsideRectangle(shared_ptr<CNPoint2D> rectPointA, shared_ptr<CNPoint2D> rectPointB, shared_ptr<CNPoint2D> point);
 		static bool isInsidePolygon(vector<shared_ptr<CNPoint2D>> polygon, int n, shared_ptr<CNPoint2D> point);

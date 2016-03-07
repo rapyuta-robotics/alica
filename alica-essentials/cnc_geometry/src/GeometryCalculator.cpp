@@ -17,6 +17,24 @@ namespace geometry
 
 	}
 
+	/**
+	 * @return angle normalized between M_PI and -M_PI.
+	 */
+	double GeometryCalculator::normalizeAngle(double angle)
+	{
+		if (angle > M_PI)
+		{
+			while(angle > M_PI)
+				angle -= 2*M_PI;
+		}
+		else if (angle < -M_PI)
+		{
+			while(angle < -M_PI)
+				angle += 2*M_PI;
+		}
+		return angle;
+	}
+
 	double GeometryCalculator::deltaAngle(double angle1, double angle2)
 	{
 		double ret = angle2 - angle1;
