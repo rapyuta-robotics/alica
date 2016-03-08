@@ -240,6 +240,11 @@ namespace geometry
 		return sqrt(pow(this->x - point->x, 2) + pow(this->y - point->y, 2));
 	}
 
+	double CNPoint2D::distanceTo(shared_ptr<CNPosition> pos)
+	{
+		return sqrt(pow(this->x - pos->x, 2) + pow(this->y - pos->y, 2));
+	}
+
 	double geometry::CNPoint2D::angleToPoint(shared_ptr<CNPoint2D> point)
 	{
 		return atan2(point->y - this->y,point->x-this->x);
