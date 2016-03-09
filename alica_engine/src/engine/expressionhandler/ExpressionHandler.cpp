@@ -54,7 +54,6 @@ namespace alica
 			auto p = it.second;
 
 			auto ufGen = utilityCreator->createUtility(p->getId());
-			//TODO hole utility function (siehe c#)
 			p->setUtilityFunction(ufGen->getUtilityFunction(p));
 
 			if (p->getPreCondition() != nullptr)

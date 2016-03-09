@@ -60,7 +60,6 @@ namespace alica
 		list<Plan*> planList;
 		shared_ptr<vector<int> > robots;
 		vector<EntryPoint*> entryPointVector;
-		//TODO has to be sorted every time used
 		// Fringe of the search tree
 		vector<PartialAssignment*> fringe;
 		bool addAlreadyAssignedRobots(PartialAssignment* pa, map<int, shared_ptr<SimplePlanTree> >* simplePlanTreeMap);
