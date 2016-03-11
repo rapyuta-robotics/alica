@@ -53,6 +53,9 @@ void listenForPacket() {
 }
 void handleUdpPacket(const boost::system::error_code& error,   std::size_t bytes_transferred) {
 	//std::cout << "From "<<otherEndPoint.address() << std::endl;
+	if (bytes_transferred > 64000) {
+		return;
+	}
 	if (!error) { // && otherEndPoint.address() != localIP) {
 		__uint32_t id = *((__uint32_t*)(inBuffer.data()));
 		//std::cout << "Got packet"<<std::endl;
