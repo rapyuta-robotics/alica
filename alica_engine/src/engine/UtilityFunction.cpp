@@ -212,7 +212,7 @@ namespace alica
 
 	void UtilityFunction::cacheEvalData()
 	{
-		if (this->utilSummands.size() == 0) // == null for default utility function
+		if (this->utilSummands.size() != 0) // == null for default utility function
 		{
 			for (int i = 0; i < this->utilSummands.size(); ++i)
 			{
