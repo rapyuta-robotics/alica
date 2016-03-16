@@ -114,15 +114,20 @@ namespace robot_control
 		QMenu myMenu;
 		for (auto robot : this->pmRegistry->getRobots())
 		{
-			myMenu.addAction(robot->name.c_str());
+			myMenu.addAction(std::string(robot->name + " (" + std::to_string(robot->id) + ")" ).c_str());
 		}
 
 		QAction* selectedItem = myMenu.exec(globalPos);
 		if (selectedItem)
 		{
-			cout << "RC: " << selectedItem->iconText().toStdString() << endl;
 			int robotId;
-			if (this->pmRegistry->getRobotId(selectedItem->iconText().toStdString(), robotId))
+
+			std::string name = selectedItem->iconText().toStdString().substr();
+			name = name.substr(0, name.find('(') - 1);
+
+                        cout << "RC: '" << name << "'" << endl;
+
+			if (this->pmRegistry->getRobotId(name, robotId))
 			{
 				//this->checkAndInit(robotId);
 				this->controlledRobotsMap[robotId]->toggle();
