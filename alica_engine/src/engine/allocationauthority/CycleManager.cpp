@@ -52,9 +52,9 @@ namespace alica
 		this->ae = ae;
 		this->intervalIncFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalIncreaseFactor", NULL);
 		this->intervalDecFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalDecreaseFactor", NULL);
-		lock_guard<mutex> lock(this->allocationHistoryMutex);
-		this->allocationHistory = vector<AllocationDifference*>(this->historySize);
-		for (int i = 0; i < this->allocationHistory.size(); i++)
+
+		this->allocationHistory.resize(this->historySize);
+		for (int i = 0; i < this->historySize; i++)
 		{
 			this->allocationHistory[i] = new AllocationDifference();
 		}
