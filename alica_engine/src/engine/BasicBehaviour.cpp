@@ -289,7 +289,7 @@ namespace alica
 				//cerr << "Exception catched:  " << this->getName() << " - " << e.what() << endl;
 			}
 #ifdef BEH_DEBUG
-			BehaviourConfiguration* conf = dynamic_cast<BehaviourConfiguration*>(this->getRunningPlan()->getPlan());
+			BehaviourConfiguration* conf = dynamic_cast<BehaviourConfiguration*>(this->runningPlan->getPlan());
 			if (conf->isEventDriven())
 			{
 				double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0

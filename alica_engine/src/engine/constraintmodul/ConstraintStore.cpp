@@ -25,8 +25,7 @@ namespace alica
 	 */
 	ConstraintStore::ConstraintStore()
 	{
-		this->activeConditions = list<Condition*>();
-		this->activeVariables = map<Variable*, shared_ptr<vector<Condition*>> >();
+
 	}
 
 	ConstraintStore::~ConstraintStore()

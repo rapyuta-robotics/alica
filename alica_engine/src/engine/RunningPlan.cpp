@@ -42,6 +42,8 @@ namespace alica
 
 	RunningPlan::RunningPlan(AlicaEngine* ae)
 	{
+	        this->assignmentProtectionTime = (((*supplementary::SystemConfig::getInstance())["Alica"]->get<
+	                                  unsigned long>("Alica.AssignmentProtectionTime", NULL)) * 1000000);
 		this->ae = ae;
 		this->planType = nullptr;
 		this->plan = nullptr;
@@ -54,24 +56,22 @@ namespace alica
 		this->assignment = nullptr;
 		this->to = ae->getTeamObserver();
 		this->ownId = to->getOwnId();
-		this->robotsAvail = unique_ptr<list<int> >();
 		this->status = PlanStatus::Running;
 		this->failCount = 0;
 		this->basicBehaviour = nullptr;
-		this->failedSubPlans = map<AbstractPlan*, int>();
 		this->active = false;
 		this->allocationNeeded = false;
 		this->failHandlingNeeded = false;
-		this->constraintStore = new ConstraintStore();
-		this->cycleManagement = new CycleManager(ae, this);
-		this->robotsAvail = unique_ptr<list<int> >(new list<int>);
+		this->constraintStore = std::make_shared<ConstraintStore>();
+		this->cycleManagement = std::make_shared<CycleManager>(ae, this);
+		this->robotsAvail = unique_ptr<list<int>>(new list<int>);
 	}
 
 	RunningPlan::~RunningPlan()
 	{
-		this->basicBehaviour.reset();
-		delete cycleManagement;
-		delete constraintStore;
+//		this->basicBehaviour.reset();
+//		delete this->constraintStore;
+//                delete this->cycleManagement;
 	}
 
 	RunningPlan::RunningPlan(AlicaEngine* ae, Plan* plan) :
@@ -294,14 +294,14 @@ namespace alica
 	/**
 	 * Gets/Sets the constraint store, which contains all constrains associated with this RunningPlan.
 	 */
-	ConstraintStore* RunningPlan::getConstraintStore() const
+	std::shared_ptr<ConstraintStore> RunningPlan::getConstraintStore() const
 	{
 		return this->constraintStore;
 	}
-	void RunningPlan::setConstraintStore(ConstraintStore* constraintStore)
-	{
-		this->constraintStore = constraintStore;
-	}
+//	void RunningPlan::setConstraintStore(ConstraintStore* constraintStore)
+//	{
+//		this->constraintStore = constraintStore;
+//	}
 
 	/**
 	 * Indicates whether this running plan represents a behaviour.
@@ -568,10 +568,10 @@ namespace alica
 	/**
 	 * Returns all robots currently participating in this plan.
 	 */
-	unique_ptr<list<int> > RunningPlan::getRobotsAvail()
-	{
-		return move(robotsAvail);
-	}
+//	unique_ptr<list<int> > RunningPlan::getRobotsAvail()
+//	{
+//		return move(robotsAvail); // TODO so ultra evil!
+//	}
 
 	EntryPoint* RunningPlan::getActiveEntryPoint()
 	{
@@ -596,14 +596,9 @@ namespace alica
 	/**
 	 * Indicates whether this running plan represents a behaviour.
 	 */
-	CycleManager* RunningPlan::getCycleManagement()
+	std::shared_ptr<CycleManager> RunningPlan::getCycleManagement()
 	{
 		return cycleManagement;
-	}
-
-	void RunningPlan::setCycleManagement(CycleManager* cycleManagement)
-	{
-		this->cycleManagement = cycleManagement;
 	}
 
 	/**
@@ -1139,10 +1134,10 @@ namespace alica
 		return this->ownId;
 	}
 
-	shared_ptr<RunningPlan> RunningPlan::getSharedFromThis()
-	{
-		return shared_from_this();
-	}
+//	shared_ptr<RunningPlan> RunningPlan::getSharedFromThis()
+//	{
+//		return shared_from_this();
+//	}
 
 	AlicaEngine* RunningPlan::getAlicaEngine()
 	{

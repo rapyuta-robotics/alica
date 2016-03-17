@@ -162,20 +162,15 @@ namespace alica
 			return;
 		}
 		lock_guard<mutex> lock(this->allocationHistoryMutex);
-		try
-		{
-			this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
-			delete this->allocationHistory[this->newestAllocationDifference];
-			this->allocationHistory[this->newestAllocationDifference] = aldif;
+
+                this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
+                AllocationDifference* old = this->allocationHistory[this->newestAllocationDifference];
+                this->allocationHistory[this->newestAllocationDifference] = aldif;
+                delete old;
 #ifdef CM_DEBUG
-			cout << "CM: SetNewAllDiff(a): " << aldif->toString()  << " OWN ROBOT ID " << this->rp->getOwnID()<< endl;
+		cout << "CM: SetNewAllDiff(a): " << aldif->toString()  << " OWN ROBOT ID " << this->rp->getOwnID()<< endl;
 #endif
-		}
-		catch (exception &e)
-		{
-			cerr << "Exception in Alloc Difference Calculation:" << endl;
-			cerr << e.what();
-		}
+
 	}
 
 	/**
@@ -422,54 +417,53 @@ namespace alica
 		AllocationDifference* utChange = nullptr;
 		shared_ptr<AllocationDifference> temp = make_shared<AllocationDifference>();
 		lock_guard<mutex> lock(this->allocationHistoryMutex);
-		{
-			for (int i = this->newestAllocationDifference; count < this->allocationHistory.size(); i--)
-			{
-				count++;
-				if (i < 0)
-				{
-					i = this->allocationHistory.size() - 1;
-				}
+
+                for (int i = this->newestAllocationDifference; count < this->allocationHistory.size(); i--)
+                {
+                        count++;
+                        if (i < 0)
+                        {
+                                i = this->allocationHistory.size() - 1;
+                        }
 //				cout << "CYCLE MANAGER: REASON " << this->allocationHistory[i]->getReason() << " : " << AllocationDifference::Reason::message << endl;
-				if (this->allocationHistory[i]->getReason() == AllocationDifference::Reason::utility)
-				{
-					if (utChange != nullptr)
-					{
-						return false;
-					}
-					utChange = this->allocationHistory[i];
-					temp->reset();
-					temp->applyDifference(utChange);
-				}
-				else
-				{
-					if (this->allocationHistory[i]->getReason() == AllocationDifference::Reason::empty)
-					{
-						return false;
-					}
-					if (utChange == nullptr)
-					{
-						continue;
-					}
-					temp->applyDifference(this->allocationHistory[i]);
-					if (temp->isEmpty())
-					{
-						cyclesFound++;
-						if (cyclesFound > maxAllocationCycles)
-						{
-							for (int k = 0; k < this->allocationHistory.size(); k++)
-							{
-								this->allocationHistory[k]->reset();
-							}
-							return true;
-						}
-						utChange = nullptr;
-					}
+                        if (this->allocationHistory[i]->getReason() == AllocationDifference::Reason::utility)
+                        {
+                                if (utChange != nullptr)
+                                {
+                                        return false;
+                                }
+                                utChange = this->allocationHistory[i];
+                                temp->reset();
+                                temp->applyDifference(utChange);
+                        }
+                        else
+                        {
+                                if (this->allocationHistory[i]->getReason() == AllocationDifference::Reason::empty)
+                                {
+                                        return false;
+                                }
+                                if (utChange == nullptr)
+                                {
+                                        continue;
+                                }
+                                temp->applyDifference(this->allocationHistory[i]);
+                                if (temp->isEmpty())
+                                {
+                                        cyclesFound++;
+                                        if (cyclesFound > maxAllocationCycles)
+                                        {
+                                                for (int k = 0; k < this->allocationHistory.size(); k++)
+                                                {
+                                                        this->allocationHistory[k]->reset();
+                                                }
+                                                return true;
+                                        }
+                                        utChange = nullptr;
+                                }
 
-				}
-			}
+                        }
+                }
 
-		}
 		return false;
 	}
 

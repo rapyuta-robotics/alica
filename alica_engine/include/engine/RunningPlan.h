@@ -77,7 +77,7 @@ namespace alica
 		void setFailHandlingNeeded(bool failHandlingNeeded);
 		void setOwnEntryPoint(EntryPoint* value);
 		PlanChange tick(RuleBook* rules);
-		ConstraintStore* getConstraintStore() const;
+		std::shared_ptr<ConstraintStore> getConstraintStore() const;
 		EntryPoint* getOwnEntryPoint() const;
 		void setParent(weak_ptr<RunningPlan> s);
 		weak_ptr<RunningPlan> getParent() const;
@@ -99,7 +99,7 @@ namespace alica
 		void clearChildren();
 		void adaptAssignment(shared_ptr<RunningPlan> r);
 		void setFailedChild(AbstractPlan* child);
-		unique_ptr<list<int> > getRobotsAvail();
+//		unique_ptr<list<int> > getRobotsAvail();
 		void setRobotAvail(int robot);
 		void setRobotUnAvail(int robot);
 		void accept(IPlanTreeVisitor* vis);
@@ -113,21 +113,19 @@ namespace alica
 		EntryPoint* getActiveEntryPoint();
 		void setActiveEntryPoint(EntryPoint* activeEntryPoint);
 		void limitToRobots(unordered_set<int> robots);
-		CycleManager* getCycleManagement();
-		void setCycleManagement(CycleManager* cycleManagement);
+		std::shared_ptr<CycleManager> getCycleManagement();
 		void revokeAllConstraints();
 		void attachPlanConstraints();
 		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents,list<int> noUpdates, AlicaTime now);
 		void toMessage(list<long>& message, shared_ptr<RunningPlan>& deepestNode, int& depth, int curDepth);
 		string toString();
 		int getOwnID();
-		shared_ptr<RunningPlan> getSharedFromThis();
 		AlicaEngine* getAlicaEngine();
 
 		void sendLogMessage(int level, string& message);
 
 	private:
-		void setConstraintStore(ConstraintStore* constraintStore);
+//		void setConstraintStore(ConstraintStore* constraintStore);
 
 	protected:
 		AlicaEngine* ae;
@@ -159,11 +157,11 @@ namespace alica
 		 */
 		bool active;
 		IBehaviourPool* bp;
-		ITeamObserver* to;bool allocationNeeded;
-		AlicaTime assignmentProtectionTime = (((*supplementary::SystemConfig::getInstance())["Alica"]->get<
-				unsigned long>("Alica.AssignmentProtectionTime", NULL)) * 1000000);
-		CycleManager* cycleManagement;
-		ConstraintStore* constraintStore;
+		ITeamObserver* to;
+		bool allocationNeeded;
+		AlicaTime assignmentProtectionTime;
+		std::shared_ptr<CycleManager> cycleManagement;
+		std::shared_ptr<ConstraintStore> constraintStore;
 	};
 
 }
