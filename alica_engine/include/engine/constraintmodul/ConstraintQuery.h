@@ -63,7 +63,7 @@ namespace alica
 		void setRelevantStaticVariables(vector<Variable*> value);
 		vector<Variable*> getRelevantDomainVariables();
 		void setRelevantDomainVariables(vector<Variable*> value);
-		void addConstraintCalls(vector<shared_ptr<ConstraintCall>> l);
+		void addConstraintCalls(vector<shared_ptr<ConstraintCall>>& l);
 
 		/**
 		 * Internal class to deal with bindings in states and plantypes

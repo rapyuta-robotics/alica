@@ -29,15 +29,9 @@
 
 namespace alica
 {
-	ConstraintQuery::ConstraintQuery(AlicaEngine* ae)
+	ConstraintQuery::ConstraintQuery(AlicaEngine* ae) : ae(ae)
 	{
 		store = make_shared<UniqueVarStore>();
-		queriedStaticVariables = vector<Variable*>();
-		queriedDomainVariables = vector<Variable*>();
-		relevantStaticVariables = vector<Variable*>();
-		relevantDomainVariables = vector<Variable*>();
-		calls = vector<shared_ptr<ConstraintCall>>();
-		this->ae = ae;
 	}
 
 
@@ -232,7 +226,7 @@ namespace alica
 		relevantDomainVariables = value;
 	}
 
-	void ConstraintQuery::addConstraintCalls(vector<shared_ptr<ConstraintCall>> l)
+	void ConstraintQuery::addConstraintCalls(vector<shared_ptr<ConstraintCall>>& l)
 	{
 		calls.insert(calls.end(), l.begin(), l.end());
 	}
