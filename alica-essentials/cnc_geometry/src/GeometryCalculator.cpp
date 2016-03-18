@@ -53,8 +53,8 @@ namespace geometry
 
 	}
 
-	bool GeometryCalculator::isInsideRectangle(shared_ptr<CNPoint2D> rectPointA, shared_ptr<CNPoint2D> rectPointB,
-												shared_ptr<CNPoint2D> point)
+	bool GeometryCalculator::isInsideRectangle(shared_ptr<CNPoint2D>& rectPointA, shared_ptr<CNPoint2D>& rectPointB,
+												shared_ptr<CNPoint2D>& point)
 	{
 		double minX = min(rectPointA->x, rectPointB->x);
 		double maxX = max(rectPointA->x, rectPointB->x);
@@ -66,7 +66,7 @@ namespace geometry
 
 	// Given three colinear points p, q, r, the function checks if
 	// point q lies on line segment 'pr'
-	bool GeometryCalculator::onSegment(shared_ptr<CNPoint2D> p, shared_ptr<CNPoint2D> q, shared_ptr<CNPoint2D> r)
+	bool GeometryCalculator::onSegment(shared_ptr<CNPoint2D>& p, shared_ptr<CNPoint2D>& q, shared_ptr<CNPoint2D>& r)
 	{
 		if (q->x <= max(p->x, r->x) && q->x >= min(p->x, r->x) && q->y <= max(p->y, r->y) && q->y >= min(p->y, r->y))
 		{
@@ -80,7 +80,7 @@ namespace geometry
 	// 0 --> p, q and r are colinear
 	// 1 --> Clockwise
 	// 2 --> Counterclockwise
-	int GeometryCalculator::orientation(shared_ptr<CNPoint2D> p, shared_ptr<CNPoint2D> q, shared_ptr<CNPoint2D> r)
+	int GeometryCalculator::orientation(shared_ptr<CNPoint2D>& p, shared_ptr<CNPoint2D>& q, shared_ptr<CNPoint2D>& r)
 	{
 		int val = (q->y - p->y) * (r->x - q->x) - (q->x - p->x) * (r->y - q->y);
 
@@ -91,8 +91,8 @@ namespace geometry
 
 	// The function that returns true if line segment 'p1q1'
 	// and 'p2q2' intersect.
-	bool GeometryCalculator::doIntersect(shared_ptr<CNPoint2D> p1, shared_ptr<CNPoint2D> q1, shared_ptr<CNPoint2D> p2,
-											shared_ptr<CNPoint2D> q2)
+	bool GeometryCalculator::doIntersect(shared_ptr<CNPoint2D>& p1, shared_ptr<CNPoint2D>& q1, shared_ptr<CNPoint2D>& p2,
+											shared_ptr<CNPoint2D>& q2)
 	{
 		// Find the four orientations needed for general and
 		// special cases
@@ -126,7 +126,7 @@ namespace geometry
 	}
 
 	// Returns true if the point p lies inside the polygon
-	bool GeometryCalculator::isInsidePolygon(vector<shared_ptr<CNPoint2D>> polygon, shared_ptr<CNPoint2D> point)
+	bool GeometryCalculator::isInsidePolygon(vector<shared_ptr<CNPoint2D>>& polygon, shared_ptr<CNPoint2D>& point)
 	{
 		// There must be at least 3 points to build a polygon
 		if (polygon.size() < 3)
@@ -161,8 +161,8 @@ namespace geometry
 		return count & 1; // Same as (count%2 == 1)
 	}
 
-	double GeometryCalculator::distancePointToLineSegment(double x, double y, shared_ptr<CNPoint2D> a,
-															shared_ptr<CNPoint2D> b)
+	double GeometryCalculator::distancePointToLineSegment(double x, double y, shared_ptr<CNPoint2D>& a,
+                                                                                          shared_ptr<CNPoint2D>& b)
 	{
 		double abx = b->x - a->x;
 		double aby = b->y - a->y;
@@ -211,8 +211,8 @@ namespace geometry
 		}
 	}
 
-	bool GeometryCalculator::outsideTriangle(shared_ptr<CNPoint2D> a, shared_ptr<CNPoint2D> b, shared_ptr<CNPoint2D> c, double tolerance,
-							shared_ptr<vector<shared_ptr<CNPoint2D>>> points)
+	bool GeometryCalculator::outsideTriangle(shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b, shared_ptr<CNPoint2D>& c, double tolerance,
+							shared_ptr<vector<shared_ptr<CNPoint2D>>>& points)
 	{
 		shared_ptr<CNPoint2D> a2b = b - a;
 		shared_ptr<CNPoint2D> b2c = c - b;
@@ -241,7 +241,7 @@ namespace geometry
 		return true;
 	}
 
-	bool GeometryCalculator::leftOf(shared_ptr<CNPoint2D> a, shared_ptr<CNPoint2D> b)
+	bool GeometryCalculator::leftOf(shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b)
 	{
 		return (a->x * b->y - a->y * b->x) < 0;
 	}
