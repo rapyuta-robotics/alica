@@ -91,6 +91,9 @@ namespace alica
 		{
 			return;
 		}
+
+		AbstractPlan* plan = this->rp->getPlan();
+
 		if (this->state == CycleState::observing)
 		{
 			if (detectAllocationCycle())
@@ -98,27 +101,27 @@ namespace alica
 				cout << "CM: Cycle Detected!" << endl;
 
 				this->state = CycleState::overriding;
-				this->rp->getPlan()->setAuthorityTimeInterval(
+				plan->setAuthorityTimeInterval(
 						min(maximalOverrideTimeInterval,
-							(AlicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
+							(AlicaTime)(plan->getAuthorityTimeInterval() * intervalIncFactor)));
 				this->overrideShoutTime = 0;
 #ifdef CM_DEBUG
-				cout << "Assuming Authority for " << this->rp->getPlan()->getAuthorityTimeInterval() / 1000000000.0
+				cout << "Assuming Authority for " << plan->getAuthorityTimeInterval() / 1000000000.0
 						<< "sec!" << endl;
 #endif
 				this->overrideTimestamp = ae->getIAlicaClock()->now();
 			}
 			else
 			{
-				this->rp->getPlan()->setAuthorityTimeInterval(
+				plan->setAuthorityTimeInterval(
 						max(minimalOverrideTimeInterval,
-							(AlicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalDecFactor)));
+							(AlicaTime)(plan->getAuthorityTimeInterval() * intervalDecFactor)));
 			}
 		}
 		else
 		{
 			if (this->state == CycleState::overriding
-					&& this->overrideTimestamp + this->rp->getPlan()->getAuthorityTimeInterval()
+					&& this->overrideTimestamp + plan->getAuthorityTimeInterval()
 							< ae->getIAlicaClock()->now())
 			{
 #ifdef CM_DEBUG
@@ -128,7 +131,7 @@ namespace alica
 				this->fixedAllocation = nullptr;
 			}
 			else if (this->state == CycleState::overridden
-					&& this->overrideShoutTime + this->rp->getPlan()->getAuthorityTimeInterval()
+					&& this->overrideShoutTime + plan->getAuthorityTimeInterval()
 							< ae->getIAlicaClock()->now())
 			{
 #ifdef CM_DEBUG

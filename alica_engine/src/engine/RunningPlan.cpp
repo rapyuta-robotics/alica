@@ -69,9 +69,7 @@ namespace alica
 
 	RunningPlan::~RunningPlan()
 	{
-//		this->basicBehaviour.reset();
-//		delete this->constraintStore;
-//                delete this->cycleManagement;
+
 	}
 
 	RunningPlan::RunningPlan(AlicaEngine* ae, Plan* plan) :
@@ -84,7 +82,7 @@ namespace alica
 
 		sort(epCol.begin(), epCol.end(), EntryPoint::compareTo);
 
-		this->setBehaviour(false);
+		this->behaviour = false;
 
 	}
 
@@ -93,15 +91,15 @@ namespace alica
 	{
 		this->plan = nullptr;
 		this->planType = pt;
-		this->setBehaviour(false);
+		this->behaviour = false;
 	}
 
 	RunningPlan::RunningPlan(AlicaEngine* ae, BehaviourConfiguration* bc) :
 			RunningPlan(ae)
 	{
 		this->plan = bc;
-		this->setBehaviour(true);
 		this->bp = ae->getBehaviourPool();
+                this->behaviour = true;
 	}
 
 	/**
@@ -150,9 +148,9 @@ namespace alica
 		PlanChange myChange = rules->visit(shared_from_this());
 		PlanChange childChange = PlanChange::NoChange;
 		//attention: do not use for each here: children are modified
-		for (int i = 0; i < this->getChildren()->size(); i++)
+		for (int i = 0; i < this->children.size(); i++)
 		{
-			auto it = this->getChildren()->begin();
+			auto it = this->children.begin();
 			advance(it, i);
 			shared_ptr<RunningPlan> rp = *it;
 			childChange = rules->updateChange(childChange, rp->tick(rules));
@@ -258,18 +256,16 @@ namespace alica
 		}
 	}
 
-	void RunningPlan::addChildren(shared_ptr<list<shared_ptr<RunningPlan>>> runningPlans)
+	void RunningPlan::addChildren(shared_ptr<list<shared_ptr<RunningPlan>>>& runningPlans)
 	{
 		for (shared_ptr<RunningPlan> r : (*runningPlans))
 		{
 			r->setParent(shared_from_this());
 			this->children.push_back(r);
-			int f = 0;
-			auto iter = this->failedSubPlans.find(r->plan);
+			auto iter = this->failedSubPlans.find(r->getPlan());
 			if (iter != this->failedSubPlans.end())
 			{
-				f = iter->second;
-				r->failCount = f;
+				r->failCount = iter->second;
 			}
 			if (this->active)
 			{
@@ -277,6 +273,25 @@ namespace alica
 			}
 		}
 	}
+
+        void RunningPlan::addChildren(list<shared_ptr<RunningPlan>>& children)
+        {
+                for (shared_ptr<RunningPlan> r : children)
+                {
+                        r->setParent(shared_from_this());
+                        this->children.push_back(r);
+
+                        auto iter = this->failedSubPlans.find(r->getPlan());
+                        if (iter != this->failedSubPlans.end())
+                        {
+                                r->failCount = iter->second;
+                        }
+                        if (this->active)
+                        {
+                                r->activate();
+                        }
+                }
+        }
 
 	/**
 	 * Move this very robot to another state. Performs all neccessary operations, such as updating the assignment.
@@ -321,8 +336,9 @@ namespace alica
 	 */
 	list<shared_ptr<RunningPlan>>* RunningPlan::getChildren()
 	{
-		return &this->children;
+		return &this->children; // TODO irgendwie ist das doch eher uncool
 	}
+
 	void RunningPlan::setChildren(list<shared_ptr<RunningPlan>> children)
 	{
 		this->children = children;
@@ -484,25 +500,6 @@ namespace alica
 		this->failHandlingNeeded = true;
 	}
 
-	void RunningPlan::addChildren(list<shared_ptr<RunningPlan>>& children)
-	{
-		for (shared_ptr<RunningPlan> r : children)
-		{
-			r->setParent(shared_from_this());
-			this->children.push_back(r);
-			int f = 0;
-			auto iter = this->failedSubPlans.find(r->getPlan());
-			if (iter != this->failedSubPlans.end())
-			{
-				r->failCount = iter->second;
-			}
-			if (this->active)
-			{
-				r->activate();
-			}
-		}
-	}
-
 	/**
 	 * Returns the number of failures detected while this RunningPlan was executed.
 	 */
@@ -644,11 +641,15 @@ namespace alica
 	void RunningPlan::accept(IPlanTreeVisitor* vis)
 	{
 		vis->visit(shared_from_this());
-		for (int i = 0; i < this->children.size(); i++)
+//		for (int i = 0; i < this->children.size(); i++)
+//		{
+//			auto iter = this->children.begin();
+//			advance(iter, i);
+//			(*iter)->accept(vis);
+//		}
+		for (auto child : this->children)
 		{
-			auto iter = this->children.begin();
-			advance(iter, i);
-			(*iter)->accept(vis);
+		        child->accept(vis);
 		}
 	}
 
@@ -678,14 +679,21 @@ namespace alica
 	 */
 	bool RunningPlan::allChildrenStatus(PlanStatus ps)
 	{
-		for (int i = 0; i < this->children.size(); i++)
+//		for (int i = 0; i < this->children.size(); i++)
+//		{
+//			auto iter = this->children.begin();
+//			advance(iter, i);
+//			if (ps != (*iter)->getStatus())
+//			{
+//				return false;
+//			}
+//		}
+		for (auto child : this->children)
 		{
-			auto iter = this->children.begin();
-			advance(iter, i);
-			if (ps != (*iter)->getStatus())
-			{
-				return false;
-			}
+		        if (ps != child->getStatus())
+                        {
+                                return false;
+                        }
 		}
 		return true;
 	}
@@ -696,32 +704,58 @@ namespace alica
 	 */
 	bool RunningPlan::anyChildrenTaskSuccess()
 	{
-		for (int i = 0; i < this->children.size(); i++)
-		{
-			auto iter = this->children.begin();
-			advance(iter, i);
-			if ((*iter)->isBehaviour())
-			{
-				if ((*iter)->getStatus() == PlanStatus::Success)
-				{
-					return true;
-				}
-			}
-			else if ((*iter)->getActiveState() != nullptr && (*iter)->getActiveState()->isSuccessState())
-			{
-				return true;
-			}
-			if ((*iter)->getAssignment() != nullptr)
-			{
-				for (shared_ptr<list<int> > successes : (*iter)->getAssignment()->getEpSuccessMapping()->getRobots())
-				{
-					if (find(successes->begin(), successes->end(), this->ownId) != successes->end())
-					{
-						return true;
-					}
-				}
-			}
-		}
+//		for (int i = 0; i < this->children.size(); i++)
+//		{
+//			auto iter = this->children.begin();
+//			advance(iter, i);
+//			if ((*iter)->isBehaviour())
+//			{
+//				if ((*iter)->getStatus() == PlanStatus::Success)
+//				{
+//					return true;
+//				}
+//			}
+//			else if ((*iter)->getActiveState() != nullptr && (*iter)->getActiveState()->isSuccessState())
+//			{
+//				return true;
+//			}
+//			if ((*iter)->getAssignment() != nullptr)
+//			{
+//				for (shared_ptr<list<int> > successes : (*iter)->getAssignment()->getEpSuccessMapping()->getRobots())
+//				{
+//					if (find(successes->begin(), successes->end(), this->ownId) != successes->end())
+//					{
+//						return true;
+//					}
+//				}
+//			}
+//		}
+
+		for (auto child : this->children)
+                {
+                        if (child->isBehaviour())
+                        {
+                                if (child->getStatus() == PlanStatus::Success)
+                                {
+                                        return true;
+                                }
+                        }
+                        else if (child->getActiveState() != nullptr && child->getActiveState()->isSuccessState())
+                        {
+                                return true;
+                        }
+                        if (child->getAssignment() != nullptr)
+                        {
+                                for (shared_ptr<list<int> > successes : child->getAssignment()->getEpSuccessMapping()->getRobots())
+                                {
+                                        if (find(successes->begin(), successes->end(), this->ownId) != successes->end())
+                                        {
+                                                return true;
+                                        }
+                                }
+                        }
+                }
+
 		return false;
 	}
 
@@ -731,19 +765,30 @@ namespace alica
 	 */
 	bool RunningPlan::anyChildrenTaskFailure()
 	{
-		for (int i = 0; i < this->children.size(); i++)
-		{
-			auto iter = this->children.begin();
-			advance(iter, i);
-			if ((*iter)->getStatus() == PlanStatus::Failed)
-			{
-				return true;
-			}
-			if ((*iter)->getActiveState() != nullptr && (*iter)->getActiveState()->isFailureState())
-			{
-				return true;
-			}
-		}
+//		for (int i = 0; i < this->children.size(); i++)
+//		{
+//			auto iter = this->children.begin();
+//			advance(iter, i);
+//			if ((*iter)->getStatus() == PlanStatus::Failed)
+//			{
+//				return true;
+//			}
+//			if ((*iter)->getActiveState() != nullptr && (*iter)->getActiveState()->isFailureState())
+//			{
+//				return true;
+//			}
+//		}
+                for (auto child : this->children)
+                {
+                        if (child->getStatus() == PlanStatus::Failed)
+                        {
+                                return true;
+                        }
+                        if (child->getActiveState() != nullptr && child->getActiveState()->isFailureState())
+                        {
+                                return true;
+                        }
+                }
 		return false;
 	}
 
@@ -753,22 +798,38 @@ namespace alica
 	 */
 	bool RunningPlan::anyChildrenTaskTerminated()
 	{
-		for (int i = 0; i < this->children.size(); i++)
-		{
-			auto iter = this->children.begin();
-			advance(iter, i);
-			if ((*iter)->isBehaviour())
-			{
-				if ((*iter)->getStatus() == PlanStatus::Failed || (*iter)->getStatus() == PlanStatus::Success)
-				{
-					return true;
-				}
-			}
-			else if ((*iter)->getActiveState() != nullptr && (*iter)->getActiveState()->isTerminal())
-			{
-				return true;
-			}
-		}
+//		for (int i = 0; i < this->children.size(); i++)
+//		{
+//			auto iter = this->children.begin();
+//			advance(iter, i);
+//			if ((*iter)->isBehaviour())
+//			{
+//				if ((*iter)->getStatus() == PlanStatus::Failed || (*iter)->getStatus() == PlanStatus::Success)
+//				{
+//					return true;
+//				}
+//			}
+//			else if ((*iter)->getActiveState() != nullptr && (*iter)->getActiveState()->isTerminal())
+//			{
+//				return true;
+//			}
+//		}
+
+		for (auto child : this->children)
+                {
+		        if (child->isBehaviour())
+                        {
+                                if (child->getStatus() == PlanStatus::Failed || child->getStatus() == PlanStatus::Success)
+                                {
+                                        return true;
+                                }
+                        }
+                        else if (child->getActiveState() != nullptr && child->getActiveState()->isTerminal())
+                        {
+                                return true;
+                        }
+                }
+
 		return false;
 	}
 
@@ -1117,15 +1178,22 @@ namespace alica
 	bool RunningPlan::anyChildrenStatus(PlanStatus ps)
 	{
 		//cout << "RP: Plan " << this->getPlan()->getName() << " Children: " << this->children.size() << endl;
-		for (int i = 0; i < this->children.size(); i++)
-		{
-			auto iter = this->children.begin();
-			advance(iter, i);
-			if (ps == (*iter)->getStatus())
-			{
-				return true;
-			}
-		}
+//		for (int i = 0; i < this->children.size(); i++)
+//		{
+//			auto iter = this->children.begin();
+//			advance(iter, i);
+//			if (ps == (*iter)->getStatus())
+//			{
+//				return true;
+//			}
+//		}
+                for (auto child : this->children)
+                {
+                        if (ps == child->getStatus())
+                        {
+                                return false;
+                        }
+                }
 		return false;
 	}
 

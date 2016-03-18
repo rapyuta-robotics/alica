@@ -194,7 +194,7 @@ namespace alica
 			//lock for fpEvents
 			{
 				lock_guard<mutex> lock(lomutex);
-				this->fpEvents = {};
+				this->fpEvents = queue<shared_ptr<RunningPlan>>();
 			}
 
 			AlicaTime now = alicaClock->now();
