@@ -88,12 +88,12 @@ namespace alica
 		bool evalRuntimeCondition();
 		State* getActiveState();
 		void setActiveState(State* activeState);
-		void addChildren(shared_ptr<list<shared_ptr<RunningPlan>>> runningPlans);
+		void addChildren(shared_ptr<list<shared_ptr<RunningPlan>>>& runningPlans);
+                void addChildren(list<shared_ptr<RunningPlan>>& children);
 		void moveState(State* nextState);
 		void clearFailures();
 		void clearFailedChildren();
 		void addFailure();
-		void addChildren(list<shared_ptr<RunningPlan>>& children);
 		int getFailure();
 		void deactivateChildren();
 		void clearChildren();
