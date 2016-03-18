@@ -1054,13 +1054,17 @@ namespace alica
 		else if (auth)
 		{ // in case of authority, remove all that are not assigned to same task
 			auto robotsJoined = this->getAssignment()->getRobotsWorking(this->getOwnEntryPoint());
-			for (int i = 0; i < availableAgents.size(); i++)
+
+			if (robotsJoined)
 			{
-				if (find(robotsJoined->begin(), robotsJoined->end(), availableAgents[i]) == robotsJoined->end())
-				{
-					availableAgents.erase(availableAgents.begin() + i);
-					i--;
-				}
+                                for (int i = 0; i < availableAgents.size(); i++)
+                                {
+                                        if (find(robotsJoined->begin(), robotsJoined->end(), availableAgents[i]) == robotsJoined->end())
+                                        {
+                                                availableAgents.erase(availableAgents.begin() + i);
+                                                i--;
+                                        }
+                                }
 			}
 		}
 		//Give Plans to children
