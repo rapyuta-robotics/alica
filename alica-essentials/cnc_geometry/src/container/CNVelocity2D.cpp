@@ -81,6 +81,11 @@ namespace geometry
 		return norm;
 	}
 
+	shared_ptr<CNVelocity2D> CNVelocity2D::clone()
+	{
+		return make_shared<CNVelocity2D>(x, y);
+	}
+
 	shared_ptr<CNVelocity2D> CNVelocity2D::operator*(const double& right)
 	{
 		auto ret = make_shared<CNVelocity2D>(this->x, this->y);
