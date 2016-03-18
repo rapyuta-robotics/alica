@@ -125,11 +125,11 @@ namespace geometry
 		return false; // Doesn't fall in any of the above cases
 	}
 
-	// Returns true if the point p lies inside the polygon[] with n vertices
-	bool GeometryCalculator::isInsidePolygon(vector<shared_ptr<CNPoint2D>> polygon, int n, shared_ptr<CNPoint2D> point)
+	// Returns true if the point p lies inside the polygon
+	bool GeometryCalculator::isInsidePolygon(vector<shared_ptr<CNPoint2D>> polygon, shared_ptr<CNPoint2D> point)
 	{
-		// There must be at least 3 vertices in polygon[]
-		if (n < 3)
+		// There must be at least 3 points to build a polygon
+		if (polygon.size() < 3)
 			return false;
 
 		// Create a point for line segment from p to infinite
@@ -139,7 +139,7 @@ namespace geometry
 		int count = 0, i = 0;
 		do
 		{
-			int next = (i + 1) % n;
+			int next = (i + 1) % polygon.size();
 
 			// Check if the line segment from 'p' to 'extreme' intersects
 			// with the line segment from 'polygon[i]' to 'polygon[next]'
