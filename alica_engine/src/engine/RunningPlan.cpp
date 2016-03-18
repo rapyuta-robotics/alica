@@ -1195,7 +1195,7 @@ namespace alica
                 {
                         if (ps == child->getStatus())
                         {
-                                return false;
+                                return true;
                         }
                 }
 		return false;
