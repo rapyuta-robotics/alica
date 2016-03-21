@@ -12,15 +12,10 @@
 namespace geometry
 {
 
-	GeometryCalculator::GeometryCalculator()
-	{
-
-	}
-
 	/**
 	 * @return angle normalized between M_PI and -M_PI.
 	 */
-	double GeometryCalculator::normalizeAngle(double angle)
+	double normalizeAngle(double angle)
 	{
 		if (angle > M_PI)
 		{
@@ -35,25 +30,12 @@ namespace geometry
 		return angle;
 	}
 
-	double GeometryCalculator::deltaAngle(double angle1, double angle2)
+	double deltaAngle(double angle1, double angle2)
 	{
-		double ret = angle2 - angle1;
-		if (ret > M_PI)
-		{
-			return -2 * M_PI + ret;
-		}
-		else if (ret < -M_PI)
-		{
-			return ret + 2 * M_PI;
-		}
-		else
-		{
-			return ret;
-		}
-
+		return normalizeAngle(angle2 - angle1);
 	}
 
-	bool GeometryCalculator::isInsideRectangle(shared_ptr<CNPoint2D>& rectPointA, shared_ptr<CNPoint2D>& rectPointB,
+	bool isInsideRectangle(shared_ptr<CNPoint2D>& rectPointA, shared_ptr<CNPoint2D>& rectPointB,
 												shared_ptr<CNPoint2D>& point)
 	{
 		double minX = min(rectPointA->x, rectPointB->x);
@@ -66,7 +48,7 @@ namespace geometry
 
 	// Given three colinear points p, q, r, the function checks if
 	// point q lies on line segment 'pr'
-	bool GeometryCalculator::onSegment(shared_ptr<CNPoint2D>& p, shared_ptr<CNPoint2D>& q, shared_ptr<CNPoint2D>& r)
+	bool onSegment(shared_ptr<CNPoint2D>& p, shared_ptr<CNPoint2D>& q, shared_ptr<CNPoint2D>& r)
 	{
 		if (q->x <= max(p->x, r->x) && q->x >= min(p->x, r->x) && q->y <= max(p->y, r->y) && q->y >= min(p->y, r->y))
 		{
@@ -80,7 +62,7 @@ namespace geometry
 	// 0 --> p, q and r are colinear
 	// 1 --> Clockwise
 	// 2 --> Counterclockwise
-	int GeometryCalculator::orientation(shared_ptr<CNPoint2D>& p, shared_ptr<CNPoint2D>& q, shared_ptr<CNPoint2D>& r)
+	int orientation(shared_ptr<CNPoint2D>& p, shared_ptr<CNPoint2D>& q, shared_ptr<CNPoint2D>& r)
 	{
 		int val = (q->y - p->y) * (r->x - q->x) - (q->x - p->x) * (r->y - q->y);
 
@@ -91,7 +73,7 @@ namespace geometry
 
 	// The function that returns true if line segment 'p1q1'
 	// and 'p2q2' intersect.
-	bool GeometryCalculator::doIntersect(shared_ptr<CNPoint2D>& p1, shared_ptr<CNPoint2D>& q1, shared_ptr<CNPoint2D>& p2,
+	bool doIntersect(shared_ptr<CNPoint2D>& p1, shared_ptr<CNPoint2D>& q1, shared_ptr<CNPoint2D>& p2,
 											shared_ptr<CNPoint2D>& q2)
 	{
 		// Find the four orientations needed for general and
@@ -126,7 +108,7 @@ namespace geometry
 	}
 
 	// Returns true if the point p lies inside the polygon
-	bool GeometryCalculator::isInsidePolygon(vector<shared_ptr<CNPoint2D>>& polygon, shared_ptr<CNPoint2D>& point)
+	bool isInsidePolygon(vector<shared_ptr<CNPoint2D>>& polygon, shared_ptr<CNPoint2D>& point)
 	{
 		// There must be at least 3 points to build a polygon
 		if (polygon.size() < 3)
@@ -149,7 +131,6 @@ namespace geometry
 				// then check if it lies on segment. If it lies, return true,
 				// otherwise false
 				if (orientation(polygon[i], point, polygon[next]) == 0)
-					//TODO added not
 					return !onSegment(polygon[i], point, polygon[next]);
 
 				count++;
@@ -161,7 +142,7 @@ namespace geometry
 		return count & 1; // Same as (count%2 == 1)
 	}
 
-	double GeometryCalculator::distancePointToLineSegment(double x, double y, shared_ptr<CNPoint2D>& a,
+	double distancePointToLineSegment(double x, double y, shared_ptr<CNPoint2D>& a,
                                                                                           shared_ptr<CNPoint2D>& b)
 	{
 		double abx = b->x - a->x;
@@ -198,7 +179,7 @@ namespace geometry
 		}
 	}
 
-	double GeometryCalculator::absDeltaAngle(double angle1, double angle2)
+	double absDeltaAngle(double angle1, double angle2)
 	{
 		double ret = abs(angle1 - angle2);
 		if (ret > M_PI)
@@ -211,7 +192,7 @@ namespace geometry
 		}
 	}
 
-	bool GeometryCalculator::outsideTriangle(shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b, shared_ptr<CNPoint2D>& c, double tolerance,
+	bool outsideTriangle(shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b, shared_ptr<CNPoint2D>& c, double tolerance,
 							shared_ptr<vector<shared_ptr<CNPoint2D>>>& points)
 	{
 		shared_ptr<CNPoint2D> a2b = b - a;
@@ -241,7 +222,7 @@ namespace geometry
 		return true;
 	}
 
-	bool GeometryCalculator::leftOf(shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b)
+	bool leftOf(shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b)
 	{
 		return (a->x * b->y - a->y * b->x) < 0;
 	}
