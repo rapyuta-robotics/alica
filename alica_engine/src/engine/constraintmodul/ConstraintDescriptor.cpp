@@ -177,7 +177,6 @@ namespace alica
 				allRanges->insert(allRanges->end(), darr.begin(), darr.end());
 			}
 		}
-		std::cout << std::endl;
 		return allRanges;
 	}
 
