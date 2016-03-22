@@ -18,6 +18,7 @@ namespace geometry {
 
 		double normalizeAngle(double angle);
 		double deltaAngle(double angle1, double angle2);
+                double distance(double x1, double y1, double x2, double y2);
 		bool isInsideRectangle(shared_ptr<CNPoint2D>& rectPointA, shared_ptr<CNPoint2D>& rectPointB, shared_ptr<CNPoint2D>& point);
 		bool isInsidePolygon(vector<shared_ptr<CNPoint2D>>& polygon, shared_ptr<CNPoint2D>& point);
 		double distancePointToLineSegment (double x, double y, shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b);

@@ -35,6 +35,14 @@ namespace geometry
 		return normalizeAngle(angle2 - angle1);
 	}
 
+	double distance(double x1, double y1, double x2, double y2)
+	{
+	        double dx = (x1 - x2);
+                double dy = (y1 - y2);
+
+                return sqrt(dx * dx + dy * dy);
+	}
+
 	bool isInsideRectangle(shared_ptr<CNPoint2D>& rectPointA, shared_ptr<CNPoint2D>& rectPointB,
 												shared_ptr<CNPoint2D>& point)
 	{
