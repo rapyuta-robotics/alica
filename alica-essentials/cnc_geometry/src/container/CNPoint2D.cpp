@@ -15,7 +15,7 @@ namespace geometry
 {
 
 	double deltaAngle(double a, double b) {
-		double ret = a - b;
+		double ret = b - a;
 		if (ret > M_PI)
 			return -2.0*M_PI + ret;
 		else if (ret < -M_PI)
