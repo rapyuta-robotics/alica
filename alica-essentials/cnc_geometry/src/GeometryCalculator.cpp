@@ -12,6 +12,8 @@
 namespace geometry
 {
 
+
+
 	/**
 	 * @return angle normalized between M_PI and -M_PI.
 	 */
@@ -150,13 +152,17 @@ namespace geometry
 		return count & 1; // Same as (count%2 == 1)
 	}
 
-	double distancePointToLineSegment(double x, double y, shared_ptr<CNPoint2D>& a,
-                                                                                          shared_ptr<CNPoint2D>& b)
+	double distancePointToLineSegment(double x, double y, shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b)
 	{
-		double abx = b->x - a->x;
-		double aby = b->y - a->y;
-		double apx = x - a->x;
-		double apy = y - a->y;
+		return distancePointToLineSegment(x,y, a->x, a->y, b->x, b->y);
+	}
+
+	double distancePointToLineSegment(double px, double py, double lx1, double ly1, double lx2, double ly2)
+	{
+		double abx = lx2 - lx1;
+		double aby = ly2 - ly1;
+		double apx = px - lx1;
+		double apy = py - ly1;
 
 		double angle1 = atan2(apy, apx);
 		double angle2 = atan2(aby, abx);
@@ -179,7 +185,7 @@ namespace geometry
 		double dist1 = cos(alpha) * distAtoP;
 		if (dist1 > sqrt(abx * abx + aby * aby))
 		{
-			return sqrt(pow(x - b->x, 2) + pow(y - b->y, 2));
+			return sqrt(pow(px - lx2, 2) + pow(py - ly2, 2));
 		}
 		else
 		{
