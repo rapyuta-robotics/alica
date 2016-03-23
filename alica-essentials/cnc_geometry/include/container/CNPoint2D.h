@@ -17,9 +17,6 @@ using namespace std;
 namespace geometry {
 	class CNPosition;
 
-	double deltaAngle(double a, double b);
-	double normalizeAngle(double angle);
-
 	class CNPoint2D : public geometry_msgs::Point {
 	public:
 

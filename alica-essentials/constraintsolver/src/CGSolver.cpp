@@ -259,11 +259,11 @@ namespace alica
 			lastUtil = util;
 			lastFEvals = gs->getFEvals();
 			lastRuns = gs->getRuns();
-			cout << "CGS: result ";
-			for(int i = 0; i < gresults->size(); i++) {
-				cout << gresults->at(i) << " ";
-			}
-			cout << endl;
+//			cout << "CGS: result ";
+//			for(int i = 0; i < gresults->size(); i++) {
+//				cout << gresults->at(i) << " ";
+//			}
+//			cout << endl;
 			return util > 0.75;
 		}
 
