@@ -22,6 +22,7 @@ namespace geometry {
 		bool isInsideRectangle(shared_ptr<CNPoint2D>& rectPointA, shared_ptr<CNPoint2D>& rectPointB, shared_ptr<CNPoint2D>& point);
 		bool isInsidePolygon(vector<shared_ptr<CNPoint2D>>& polygon, shared_ptr<CNPoint2D>& point);
 		double distancePointToLineSegment (double x, double y, shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b);
+		double distancePointToLineSegment(double px, double py, double lx1, double ly1, double lx2, double ly2);
 		double absDeltaAngle(double angle1, double angle2);
 		bool outsideTriangle (shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b, shared_ptr<CNPoint2D>& c, double tolerance, shared_ptr<vector<shared_ptr<CNPoint2D>>>& points);
 		bool leftOf(shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b);
