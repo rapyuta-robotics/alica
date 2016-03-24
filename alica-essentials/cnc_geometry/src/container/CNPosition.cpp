@@ -49,10 +49,43 @@ namespace geometry
 		return ret;
 	}
 
+        shared_ptr<CNPoint2D> geometry::CNPosition::operator +(const shared_ptr<CNPosition>& right)
+        {
+                auto ret = make_shared<CNPoint2D>(this->x, this->y);
+                ret->x += right->x;
+                ret->y += right->y;
+                return ret;
+        }
+
+        shared_ptr<CNPoint2D> geometry::CNPosition::operator -(const shared_ptr<CNPosition>& right)
+        {
+                auto ret = make_shared<CNPoint2D>(this->x, this->y);
+                ret->x += right->x;
+                ret->y += right->y;
+                return ret;
+        }
+
 	shared_ptr<CNPoint2D> geometry::CNPosition::getPoint()
 	{
 		return make_shared<CNPoint2D>(this->x, this->y);
 	}
+
+
+	shared_ptr<CNPoint2D> operator +(const shared_ptr<CNPosition>& left, const shared_ptr<CNPosition>& right)
+        {
+                auto ret = make_shared<CNPoint2D>(left->x, left->y);
+                ret->x += right->x;
+                ret->y += right->y;
+                return ret;
+        }
+
+        shared_ptr<CNPoint2D> operator -(const shared_ptr<CNPosition>& left, const shared_ptr<CNPosition>& right)
+        {
+                auto ret = make_shared<CNPoint2D>(left->x, left->y);
+                ret->x -= right->x;
+                ret->y -= right->y;
+                return ret;
+        }
 }
 
 

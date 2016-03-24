@@ -22,8 +22,13 @@ namespace geometry {
 		double distanceTo(shared_ptr<CNPoint2D> point);
 		shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPoint2D>& right);
 		shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPoint2D>& right);
+                shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPosition>& right);
+                shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPosition>& right);
 		shared_ptr<CNPoint2D> getPoint();
 	};
+
+        shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPosition>& left, const shared_ptr<CNPosition>& right);
+        shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPosition>& left, const shared_ptr<CNPosition>& right);
 
 }
 
