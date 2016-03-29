@@ -156,6 +156,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QLabel" name="kickVoltLbl">
+       <property name="text">
+        <string>KiVolt:</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -244,6 +251,13 @@
        <property name="lineWidth">
         <number>0</number>
        </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kickVoltVal">
        <property name="text">
         <string/>
        </property>
