@@ -657,7 +657,7 @@ namespace alica
 		else
 		{
 			list<long>::const_iterator iter = ids.begin();
-			cout << "TO: Unknown State (" << *iter << ") received from " << robotId << endl;
+			//cout << "TO: Unknown State (" << *iter << ") received from " << robotId << endl;
 			return nullptr;
 		}
 
