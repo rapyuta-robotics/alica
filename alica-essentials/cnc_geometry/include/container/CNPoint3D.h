@@ -23,7 +23,9 @@ namespace geometry {
 
 		CNPoint3D(double x, double y, double z);
 		CNPoint3D() : CNPoint3D(0,0,0) {}
-
+		shared_ptr<CNPoint3D> alloToEgo(CNPosition& me);
+		shared_ptr<CNPoint3D> egoToAllo(CNPosition& me);
+		shared_ptr<CNPoint3D> normalize();
 		double length();
 		string toString();
 		virtual ~CNPoint3D();
