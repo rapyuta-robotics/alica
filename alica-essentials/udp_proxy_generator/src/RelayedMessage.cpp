@@ -138,6 +138,7 @@ string RelayedMessage::getRosJavaMessageHandler() {
 	ret+="\t\t}\n\n";
 	ret+="\t}\n";
 	ret+="\t}\n\n";
+	ret += "{Root.topicHashmap.put(\"" + Topic + "\", " + to_string(Id)  + "l);}";
 	return ret;
 }
 

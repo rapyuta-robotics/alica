@@ -45,7 +45,8 @@ namespace robot_control
 		{
 			vector<string> processList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles",
 																							bundleName.c_str(),
-																							"processList", NULL);
+																							"processList",
+																							NULL);
 			vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles",
 																								bundleName.c_str(),
 																								"processParamsList",
@@ -73,10 +74,8 @@ namespace robot_control
 		widget_->setAttribute(Qt::WA_AlwaysShowToolTips, true);
 		robotControlWidget_.setupUi(widget_);
 
-		this->widget_->setContextMenuPolicy(
-				Qt::ContextMenuPolicy::CustomContextMenu);
-		QObject::connect(this->widget_,
-							SIGNAL(customContextMenuRequested(const QPoint&)), this,
+		this->widget_->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
+		QObject::connect(this->widget_, SIGNAL(customContextMenuRequested(const QPoint&)), this,
 							SLOT(showContextMenu(const QPoint&)));
 
 		if (context.serialNumber() > 1)
@@ -90,12 +89,13 @@ namespace robot_control
 			this->checkAndInit(robot->id);
 		}
 
-
 		// Initialise the ROS Communication
 		processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &RobotsControl::receiveProcessStats,
 												(RobotsControl*)this);
 		alicaInfoSub = rosNode->subscribe("/AlicaEngine/AlicaEngineInfo", 10, &RobotsControl::receiveAlicaInfo,
 											(RobotsControl*)this);
+		kickerStatInfoSub = rosNode->subscribe("/KickerStatInfo", 10, &RobotsControl::receiveKickerStatInfo,
+												(RobotsControl*)this);
 
 		// Initialise the GUI refresh timer
 		this->guiUpdateTimer = new QTimer();
@@ -114,7 +114,7 @@ namespace robot_control
 		QMenu myMenu;
 		for (auto robot : this->pmRegistry->getRobots())
 		{
-			myMenu.addAction(std::string(robot->name + " (" + std::to_string(robot->id) + ")" ).c_str());
+			myMenu.addAction(std::string(robot->name + " (" + std::to_string(robot->id) + ")").c_str());
 		}
 
 		QAction* selectedItem = myMenu.exec(globalPos);
@@ -125,7 +125,7 @@ namespace robot_control
 			std::string name = selectedItem->iconText().toStdString().substr();
 			name = name.substr(0, name.find('(') - 1);
 
-                        cout << "RC: '" << name << "'" << endl;
+			cout << "RC: '" << name << "'" << endl;
 
 			if (this->pmRegistry->getRobotId(name, robotId))
 			{
@@ -177,6 +177,12 @@ namespace robot_control
 		this->alicaInfoMsgQueue.emplace(chrono::system_clock::now(), alicaInfo);
 	}
 
+	void RobotsControl::receiveKickerStatInfo(msl_actuator_msgs::KickerStatInfoPtr kickerStatInfo)
+	{
+		lock_guard<mutex> lck(kickerStatInfoMsgQueueMutex);
+		this->kickerStatInfoMsgQueue.emplace(chrono::system_clock::now(), kickerStatInfo);
+	}
+
 	/**
 	 * Processes all queued messages from the processStatMsgsQueue and the alicaInfoMsgQueue.
 	 */
@@ -193,7 +199,8 @@ namespace robot_control
 				for (auto processStat : (timePstsPair.second->processStats))
 				{
 //					cout << "RobotsControl: senderId: " << timePstsPair.second->senderId << " robotId: " << processStat.robotId << endl;
-					this->controlledRobotsMap[processStat.robotId]->handleProcessStat(timePstsPair.first, processStat, timePstsPair.second->senderId);
+					this->controlledRobotsMap[processStat.robotId]->handleProcessStat(timePstsPair.first, processStat,
+																						timePstsPair.second->senderId);
 				}
 			}
 		}
@@ -207,6 +214,18 @@ namespace robot_control
 				alicaInfoMsgQueue.pop();
 
 				this->controlledRobotsMap[timeAlicaInfoPair.second->senderID]->handleAlicaInfo(timeAlicaInfoPair);
+			}
+		}
+
+		{
+			lock_guard<mutex> lck(kickerStatInfoMsgQueueMutex);
+			while (!this->kickerStatInfoMsgQueue.empty())
+			{
+				// unqueue the ROS alica info message
+				auto timeKickerStatInfoPair = kickerStatInfoMsgQueue.front();
+				kickerStatInfoMsgQueue.pop();
+
+				this->controlledRobotsMap[timeKickerStatInfoPair.second->senderID]->handleKickerStatInfo(timeKickerStatInfoPair);
 			}
 		}
 
