@@ -121,7 +121,7 @@ namespace geometry
 	{
 		auto a2p = p-a;
 		auto a2b = b-a;
-		cout << "DistToLine: " << (a2p->x * a2b->y - a2p->y * a2b->x) / a2p->length() << "\n A:" << a->toString() << " B: " <<  b->toString() << " P: " << p->toString()  << endl;
+	//	cout << "DistToLine: " << (a2p->x * a2b->y - a2p->y * a2b->x) / a2p->length() << "\n A:" << a->toString() << " B: " <<  b->toString() << " P: " << p->toString()  << endl;
 		return (a2p->x * a2b->y - a2p->y * a2b->x) / a2p->length();
 	}
 
