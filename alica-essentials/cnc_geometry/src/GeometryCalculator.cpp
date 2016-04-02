@@ -117,6 +117,14 @@ namespace geometry
 		return false; // Doesn't fall in any of the above cases
 	}
 
+	double distancePointToLine (shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b, shared_ptr<CNPoint2D>& p)
+	{
+		auto a2p = p-a;
+		auto a2b = b-a;
+		cout << "DistToLine: " << (a2p->x * a2b->y - a2p->y * a2b->x) / a2p->length() << "\n A:" << a->toString() << " B: " <<  b->toString() << " P: " << p->toString()  << endl;
+		return (a2p->x * a2b->y - a2p->y * a2b->x) / a2p->length();
+	}
+
 	// Returns true if the point p lies inside the polygon
 	bool isInsidePolygon(vector<shared_ptr<CNPoint2D>>& polygon, shared_ptr<CNPoint2D>& point)
 	{
