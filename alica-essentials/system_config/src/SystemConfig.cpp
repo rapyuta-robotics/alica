@@ -114,7 +114,7 @@ namespace supplementary
 		string file = s + ".conf";
 
 		// Check the local config
-		files.push_back(file);
+		//files.push_back(file);
 
 		// Check the host-specific config
 		string tempConfigPath = configPath;
