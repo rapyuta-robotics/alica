@@ -105,12 +105,19 @@ add_executable(udp_proxy_generator
   #src/Configuration.cpp
 )
 
+add_executable(wrapped_msg_handler_generator
+  src/WrappedMessageHandlerGen.cpp
+  src/WrappedMessage.cpp
+  #src/Configuration.cpp
+)
 ## Declare a cpp executable
 # add_executable(system_config_node src/system_config_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 add_dependencies(udp_proxy_generator ${catkin_LIBRARIES})
+add_dependencies(wrapped_msg_handler_generator ${catkin_LIBRARIES})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(udp_proxy_generator ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(wrapped_msg_handler_generator ${catkin_LIBRARIES} ${Boost_LIBRARIES})
