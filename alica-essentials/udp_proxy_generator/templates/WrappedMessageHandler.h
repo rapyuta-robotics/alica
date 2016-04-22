@@ -17,7 +17,7 @@ namespace ttb
     {
     private:
         int robotID;
-        ros::NodeHandle* n;
+        ros::NodeHandle n;
         // get incoming wrapped messages and publish them (unwrapped) on the local ros core
 
 
@@ -28,10 +28,9 @@ namespace ttb
         <?rosPublisherDecl?>
 
         <?rosMessageHandler?>
-        void init(int& id, ros::NodeHandle* nh, TTBWorldModel* those)
+        void init(int& id)
         {
             this->robotID = id;
-            this->n = nh;
 
             <?subscriptions?>
 

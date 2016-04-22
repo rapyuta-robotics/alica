@@ -139,13 +139,13 @@ string processTemplate(stringstream &t, vector<WrappedMessage*>& msgList)
             int i = 0;
             for (WrappedMessage* m : msgList)
             {
-                ret << "sub" << i++ << " = n->subscribe(\"/wrapped" << m->topic << "\","
-                << m->Ros2UdpQueueLength << ", " << m->getRosWrappedCallBackName()
-                << ",(TTBWorldModel*) those);\n";
+                ret << "sub" << i++ << " = n.subscribe(\"/wrapped" << m->topic << "\","
+                << m->Ros2UdpQueueLength << ", &WrappedMessageHandler::" << m->getRosWrappedCallBackName()
+                << ",this);\n";
 
-                ret << "sub" << i++ << " = n->subscribe(\"" << m->topic << "\","
-                << m->Ros2UdpQueueLength << ", " << m->getRosCallBackName()
-                << ",(TTBWorldModel*) those);\n";
+                ret << "sub" << i++ << " = n.subscribe(\"" << m->topic << "\","
+                << m->Ros2UdpQueueLength << ", &WrappedMessageHandler::" << m->getRosCallBackName()
+                << ",this);\n";
             }
         }
         else if (s == "rosMessageHandler")
@@ -161,9 +161,9 @@ string processTemplate(stringstream &t, vector<WrappedMessage*>& msgList)
         {
             for (WrappedMessage* m : msgList)
             {
-                ret << m->getWrappedPublisherName() << " = n->advertise<" << m->getWrappedRosClassName() << ">(\"/wrapped" << m->topic << "\","
+                ret << m->getWrappedPublisherName() << " = n.advertise<" << m->getWrappedRosClassName() << ">(\"/wrapped" << m->topic << "\","
                 << m->Udp2RosQueueLength << ",false);\n";
-                ret << m->getPublisherName() << " = n->advertise<" << m->getRosClassName() << ">(\"" << m->topic << "\","
+                ret << m->getPublisherName() << " = n.advertise<" << m->getRosClassName() << ">(\"" << m->topic << "\","
                 << m->Udp2RosQueueLength << ",false);\n";
             }
         }

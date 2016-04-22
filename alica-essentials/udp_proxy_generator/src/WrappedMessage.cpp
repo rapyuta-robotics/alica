@@ -103,13 +103,16 @@ string WrappedMessage::getRosClassName() {
 
 string WrappedMessage::getPublisherName()
 {
-    return string("pub") + get(getRosClassName()) + this->topic;
+    string topicChanged = this->topic;
+    replace(topicChanged.begin(),topicChanged.end(), '/','_');
+    return string("pub") + get(getRosClassName()) + topicChanged;
 }
 
 string WrappedMessage::getWrappedPublisherName()
 {
-
-    return string("pub") + get(getWrappedRosClassName()) + this->topic;
+    string topicChanged = this->topic;
+    replace(topicChanged.begin(),topicChanged.end(), '/','_');
+    return string("pub") + get(getWrappedRosClassName()) + topicChanged;
 }
 
 string WrappedMessage::getRosMessageHandler()
@@ -129,7 +132,7 @@ string WrappedMessage::getRosWrappedMessageHandler()
     string ret = string("void ") + getRosWrappedCallBackName() + "(const ros::MessageEvent<" + getWrappedRosClassName()
                  + ">& event) {\n";
     ret += "\tconst " + getWrappedRosClassName() + "::ConstPtr& message = event.getMessage();\n";
-    ret += "\tif(message->receiverId == robotID)\n";
+    ret += "\tif(message->receiverId == robotID && event.getPublisherName().compare(ros::this_node::getName()) != 0)\n";
     ret += "\t{";
     ret += "\t\t" + getPublisherName() + ".publish(message->msg);\n";
     ret += "\t}\n";
