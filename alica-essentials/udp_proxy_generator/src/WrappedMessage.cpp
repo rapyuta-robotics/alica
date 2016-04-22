@@ -103,13 +103,13 @@ string WrappedMessage::getRosClassName() {
 
 string WrappedMessage::getPublisherName()
 {
-    return string("pub") + get(getRosClassName());
+    return string("pub") + get(getRosClassName()) + this->topic;
 }
 
 string WrappedMessage::getWrappedPublisherName()
 {
 
-    return string("pub") + get(getWrappedRosClassName());
+    return string("pub") + get(getWrappedRosClassName()) + this->topic;
 }
 
 string WrappedMessage::getRosMessageHandler()

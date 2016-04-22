@@ -49,6 +49,14 @@ public class ROS2UDPProxy implements NodeMain {
     private int port;
     
     private InetAddress localhost;
+
+    public InetAddress getGroup() {
+        return group;
+    }
+
+    public int getPort() {
+        return port;
+    }
     
     <?rosMessageHandler?>
     
@@ -71,12 +79,13 @@ public class ROS2UDPProxy implements NodeMain {
         udpSocket.joinGroup(group);
         udpSocket.setLoopbackMode(false);
         node = connectedNode;
-        listenForPacket(udpSocket);
-        ownRosName = connectedNode.getName().toString();
         
         <?subscriptions?>
         
         <?advertisement?>
+
+        listenForPacket(udpSocket);
+        ownRosName = connectedNode.getName().toString();
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -170,14 +170,9 @@ string processTemplate(stringstream &t, vector<WrappedMessage*>& msgList)
         else if (s == "rosPublisherDecl")
         {
             int i = 0;
-            vector<string> pubNames;
             for (WrappedMessage* m : msgList)
             {
-
-                if(find(pubNames.begin(), pubNames.end(),m->getPublisherName()) == pubNames.end()) {
-                    ret << "ros::Publisher " << m->getPublisherName() << ";\n";
-                    pubNames.push_back(m->getPublisherName());
-                }
+                ret << "ros::Publisher " << m->getPublisherName() << ";\n";
                 ret << "ros::Publisher " << m->getWrappedPublisherName() << ";\n";
                 ret << "ros::Subscriber sub" << i++ << ";\n";
                 ret << "ros::Subscriber sub" << i++ << ";\n";
