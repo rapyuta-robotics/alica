@@ -11,6 +11,7 @@
 #include <tuple>
 
 #include "container/CNPoint2D.h"
+#include "container/CNPoint3D.h"
 
 using namespace std;
 
@@ -27,6 +28,7 @@ namespace geometry {
 		double absDeltaAngle(double angle1, double angle2);
 		bool outsideTriangle (shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b, shared_ptr<CNPoint2D>& c, double tolerance, shared_ptr<vector<shared_ptr<CNPoint2D>>>& points);
 		bool leftOf(shared_ptr<CNPoint2D>& a, shared_ptr<CNPoint2D>& b);
+		shared_ptr<CNPoint3D> calculateMean(vector<shared_ptr<CNPoint3D>> values);
 		//Sign function --> VORZEICHENFUNKTION
 		template <typename T> static int sgn(T val) {
 			return (T(0) < val) - (val < T(0));

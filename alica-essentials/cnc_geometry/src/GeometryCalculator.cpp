@@ -248,6 +248,25 @@ namespace geometry
 	{
 		return (a->x * b->y - a->y * b->x) < 0;
 	}
+
+	shared_ptr<CNPoint3D> calculateMean(vector<shared_ptr<CNPoint3D> > values)
+	{
+		if(values.size() == 0)
+		{
+			return nullptr;
+		}
+		shared_ptr<CNPoint3D> ret = make_shared<CNPoint3D>(0.0, 0.0, 0.0);
+		for(shared_ptr<CNPoint3D> iter : values)
+		{
+			ret->x += iter->x;
+			ret->y += iter->y;
+			ret->z += iter->z;
+		}
+		ret->x /= values.size();
+		ret->y /= values.size();
+		ret->z /= values.size();
+		return ret;
+	}
 } /* namespace geometry */
 
 
