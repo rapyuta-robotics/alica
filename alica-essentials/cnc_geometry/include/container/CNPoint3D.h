@@ -29,6 +29,16 @@ namespace geometry {
 		double length();
 		string toString();
 		virtual ~CNPoint3D();
+
+		shared_ptr<CNPoint3D> operator*(const double& right);
+		shared_ptr<CNPoint3D> operator/(const double& right);
+		shared_ptr<CNPoint3D> operator+(const shared_ptr<CNPoint3D>& right);
+		shared_ptr<CNPoint3D> operator-(const shared_ptr<CNPoint3D>& right);
 	};
+
+	shared_ptr<CNPoint3D> operator+(const shared_ptr<CNPoint3D>& left, const shared_ptr<CNPoint3D>& right);
+	shared_ptr<CNPoint3D> operator-(const shared_ptr<CNPoint3D>& left, const shared_ptr<CNPoint3D>& right);
+	shared_ptr<CNPoint3D> operator*(const shared_ptr<CNPoint3D>& left, const double& right);
+	shared_ptr<CNPoint3D> operator/(const shared_ptr<CNPoint3D>& left, const double& right);
 }
 #endif /* CNC_MSL_MSL_WORLDMODEL_SRC_CONTAINER_POINT2D_H_ */
