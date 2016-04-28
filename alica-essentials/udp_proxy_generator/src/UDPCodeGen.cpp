@@ -233,7 +233,7 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string
 	return ret.str();
 }
 
-void processTemplateJava(stringstream &t, vector<RelayedMessage*>& msgList, string& pkgName)
+string processTemplateJava(stringstream &t, vector<RelayedMessage*>& msgList, string& pkgName)
 {
 	string reg_string = "<\\?(.*)\\?>";
 	boost::regex markers(reg_string.c_str());
