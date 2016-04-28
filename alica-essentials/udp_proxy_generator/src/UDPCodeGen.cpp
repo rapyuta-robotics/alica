@@ -11,6 +11,7 @@
 using namespace boost::filesystem;
 
 #include "RelayedMessage.h"
+#include "../include/RelayedMessage.h"
 
 using namespace std;
 
@@ -74,7 +75,7 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList)
 {
 	//regex line("Topic:\\^ ");
 	//regex line("Topic:\\.*(\\.+)\\.*Msg:\\.*(\\.+)\\.*Opt:\\.*\\[(.*)\\]");
-	string regstr = "Topic:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
+	string regstr = "(send|receive){0,1}Topic:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
 	boost::regex line(regstr);
 	//regex line("Topic:\s*(^ )\s*Msg:\s*(^ )\s*Opt:\s*\[(.*)\]");
 	ifstream ifs(msgDefFile);
@@ -92,12 +93,20 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList)
 		if (boost::regex_match(s, line))
 		{
 			boost::smatch m;
-			string topic, message, options;
+			string topic, message, options,sendReceive;
 			if (boost::regex_search(s, m, line))
 			{
-				topic = m[1];
-				message = m[2];
-				options = m[3];
+				if(m[1].compare("send") == 0 || m[1].compare("receive") == 0) {
+					sendReceive = m[1];
+					topic = m[2];
+					message = m[3];
+					options = m[4];
+				} else {
+					topic = m[1];
+					message = m[2];
+					options = m[3];
+					sendReceive = "";
+				}
 				//for (int n=1; n<m.size(); n++)
 				//	std::cout << m[n] << " " << n << " ";
 				//std::cout << std::endl;
@@ -105,7 +114,7 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList)
 			}
 
 			//Match m = line.Match(s);
-			RelayedMessage* msg = new RelayedMessage(topic, message, options);
+			RelayedMessage* msg = new RelayedMessage(topic, message, options,sendReceive);
 			msgList.push_back(msg);
 		}
 		else
@@ -119,7 +128,7 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList)
 	return true;
 }
 
-string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string language, string& pkgName)
+string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string& pkgName)
 {
 	string reg_string = "<\\?(.*)\\?>";
 	boost::regex markers(reg_string.c_str());
@@ -146,11 +155,7 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string
 		{
 			for (RelayedMessage* m : msgList)
 			{
-				if(language.compare("cpp") == 0) {
-					ret << "#include \"" + m->FullName << ".h\"\n";
-				} else {
-					ret << "import " + m->FullNameJava << ";\n";
-				}
+				ret << "#include \"" + m->FullName << ".h\"\n";
 			}
 		}
 		else if (s == "subscriptions")
@@ -159,27 +164,116 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string
 
 
 			int i = 0;
-			if(language.compare("cpp") == 0) {
-				for (RelayedMessage* m : msgList)
+			for (RelayedMessage* m : msgList)
+			{
+				if (m->UseRosTcp)
 				{
-					if (m->UseRosTcp)
-					{
-						ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\","
-								<< m->Ros2UdpQueueLength << ", " << m->getRosCallBackName() << ");\n";
-					}
-					else
-					{
-						ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\","
-								<< m->Ros2UdpQueueLength << ", " << m->getRosCallBackName()
-								<< ",ros::TransportHints().unreliable().tcpNoDelay().reliable());\n";
-					}
-					i++;
+					ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\","
+							<< m->Ros2UdpQueueLength << ", " << m->getRosCallBackName() << ");\n";
 				}
-			} else {
-				for (RelayedMessage* m : msgList)
+				else
 				{
+					ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\","
+							<< m->Ros2UdpQueueLength << ", " << m->getRosCallBackName()
+							<< ",ros::TransportHints().unreliable().tcpNoDelay().reliable());\n";
+				}
+				i++;
+			}
+		}
+		else if (s == "rosMessageHandler")
+		{
+			for (RelayedMessage* m : msgList)
+			{
+				ret << m->getRosMessageHandler();
+			}
+		}
+		else if (s == "advertisement")
+		{
+			for (RelayedMessage* m : msgList)
+			{
+				ret << m->getPublisherName() << " = n.advertise<" << m->getRosClassName() << ">(\"" << m->Topic << "\","
+						<< m->Udp2RosQueueLength << ",false);\n";
+			}
+		}
+		else if (s == "rosPublisherDecl")
+		{
+			for (RelayedMessage* m : msgList)
+			{
+				ret << "ros::Publisher " << m->getPublisherName() << ";\n";
+			}
+		}
+		else if (s == "udpReception")
+		{
+			for (RelayedMessage* m : msgList)
+			{
+				ret << "case " << m->Id << "ul: {\n";
+				ret << m->getRosClassName() << " m" << m->Id << ";\n";
+				ret << "ros::serialization::Serializer<" << m->getRosClassName() << ">::read(stream, m" << m->Id
+						<< ");\n";
+				ret << m->getPublisherName() << ".publish<" << m->getRosClassName() << ">(m" << m->Id << ");\n";
+				ret << "break; }\n";
+			}
+		}
+		else if (s == "configfile")
+		{
+			ret << "Configuration *proxyconf = (*sc)[\"" << pkgName << "\"];";
+		}
+		else if (s == "nodename")
+		{
+			ret << "ros::init(argc, argv, \""<< pkgName << "\");";
+		}
+		else
+		{
+			cout << "Unknown Marker: " << s;
+			exit(1);
+		}
+
+	}
+
+	return ret.str();
+}
+
+void processTemplateJava(stringstream &t, vector<RelayedMessage*>& msgList, string& pkgName)
+{
+	string reg_string = "<\\?(.*)\\?>";
+	boost::regex markers(reg_string.c_str());
+	boost::smatch m;
+	stringstream ret;
+	while (!t.eof())
+	{
+		string s;
+		std::getline(t, s);
+		string matchType;
+		if (boost::regex_search(s, m, markers))
+		{
+			matchType = m[1];
+		}
+		else
+		{
+			ret << s << endl;
+			continue;
+		}
+		s = trim(s);
+		s= s.substr(2, s.length()-4);
+
+		if (s == "messageIncludes")
+		{
+			for (RelayedMessage* m : msgList)
+			{
+				ret << "import " + m->FullNameJava << ";\n";
+			}
+		}
+		else if (s == "subscriptions")
+		{
+
+
+
+			int i = 0;
+			for (RelayedMessage* m : msgList)
+			{
+				if(m->SendReceiveString.compare("send") == 0 || m->SendReceiveString.compare("") == 0) {
 					ret << "final Subscriber sub" << i << " = connectedNode.newSubscriber(\"" << m->Topic << "\", \""
-						<< m->FullName << "\");\n";
+					<< m->FullName << "\");\n";
 					ret << "sub" << i << ".addMessageListener(new " << m->getRosJavaCallBackName() << "());\n";
 					i++;
 				}
@@ -187,70 +281,35 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string
 		}
 		else if (s == "rosMessageHandler")
 		{
-			if(language.compare("cpp") == 0) {
-				for (RelayedMessage* m : msgList)
-				{
-					ret << m->getRosMessageHandler();
-
-				}
-			} else {
-				for (RelayedMessage* m : msgList)
-				{
+			for (RelayedMessage* m : msgList)
+			{
+				if(m->SendReceiveString.compare("send") == 0 || m->SendReceiveString.compare("") == 0) {
 					ret << m->getRosJavaMessageHandler();
-
 				}
+
 			}
 		}
 		else if (s == "advertisement")
 		{
 
-			if(language.compare("cpp") == 0) {
-				for (RelayedMessage* m : msgList)
-				{
-					ret << m->getPublisherName() << " = n.advertise<" << m->getRosClassName() << ">(\"" << m->Topic << "\","
-							<< m->Udp2RosQueueLength << ",false);\n";
-				}
-			} else {
-				for (RelayedMessage* m : msgList)
-				{
-					ret << m->getPublisherName() << " = connectedNode.newPublisher(\"" << m->Topic << "\", \"" << m->FullName << "\");\n";
-				}
+			for (RelayedMessage* m : msgList)
+			{
+				ret << m->getPublisherName() << " = connectedNode.newPublisher(\"" << m->Topic << "\", \"" << m->FullName << "\");\n";
 			}
 		}
 		else if (s == "rosPublisherDecl")
 		{
-			if(language.compare("cpp") == 0) {
-				for (RelayedMessage* m : msgList)
-				{
-					ret << "ros::Publisher " << m->getPublisherName() << ";\n";
-				}
-			} else {
-				for (RelayedMessage* m : msgList)
-				{
-					ret << "private Publisher<" << m->BaseName << "> " << m->getPublisherName() << ";\n";
-				}
+			for (RelayedMessage* m : msgList)
+			{
+				ret << "private Publisher<" << m->BaseName << "> " << m->getPublisherName() << ";\n";
 			}
 		}
-		/*case "packageName":
-		 ret << basePackageName;
-		 break;
-		 */
 		else if (s == "udpReception")
 		{
-			if(language.compare("cpp") == 0) {
-				for (RelayedMessage* m : msgList)
-				{
-					ret << "case " << m->Id << "ul: {\n";
-					ret << m->getRosClassName() << " m" << m->Id << ";\n";
-					ret << "ros::serialization::Serializer<" << m->getRosClassName() << ">::read(stream, m" << m->Id
-							<< ");\n";
-					ret << m->getPublisherName() << ".publish<" << m->getRosClassName() << ">(m" << m->Id << ");\n";
-					ret << "break; }\n";
-				}
-			} else {
-				bool first = true;
-				for (RelayedMessage* m : msgList)
-				{
+			bool first = true;
+			for (RelayedMessage* m : msgList)
+			{
+				if(m->SendReceiveString.compare("receive") == 0 || m->SendReceiveString.compare("") == 0) {
 					if(!first) {
 						ret << "else ";
 					} else {
@@ -267,20 +326,12 @@ string processTemplate(stringstream &t, vector<RelayedMessage*>& msgList, string
 		}
 		else if (s == "configfile")
 		{
-			if(language.compare("cpp") == 0) {
-				ret << "Configuration *proxyconf = (*sc)[\"" << pkgName << "\"];";
-			} else {
-				boost::algorithm::to_lower(pkgName);
-				ret << "udpConfig.load(getActivity().getResources().openRawResource(R.raw." << pkgName << "));\n";
-			}
+			boost::algorithm::to_lower(pkgName);
+			ret << "udpConfig.load(getActivity().getResources().openRawResource(R.raw." << pkgName << "));\n";
 		}
 		else if (s == "nodename")
 		{
-			if(language.compare("cpp") == 0) {
-				ret << "ros::init(argc, argv, \""<< pkgName << "\");";
-			} else {
-				// The proxy starts as part of the application in java and therefore needs no explicit start call
-			}
+			// The proxy starts as part of the application in java and therefore needs no explicit start call
 		}
 		else
 		{
@@ -333,13 +384,13 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
 
 		string content = ss.str();
 		if(basename.find("cpp") != std::string::npos && outDir.find("proxy_gen") != std::string::npos) {
-			string parsedContent = processTemplate(ss, msgList,string("cpp"), pkgName);
+			string parsedContent = processTemplate(ss, msgList, pkgName);
 
 			ofstream ofs(outDir + "/" + basename);
 			ofs << parsedContent;
 			ofs.close();
 		} else if(outDir.find("src/main/java/util") != std::string::npos) {
-			string parsedContent = processTemplate(ss, msgList,string("java"), pkgName);
+			string parsedContent = processTemplate(ss, msgList, pkgName);
 
 			ofstream ofs(outDir + "/" + basename);
 			ofs << parsedContent;

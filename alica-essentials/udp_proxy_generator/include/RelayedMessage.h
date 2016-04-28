@@ -12,7 +12,7 @@ using namespace std;
 class RelayedMessage
 {
 public:
-	RelayedMessage(string topic, string message, string options);
+	RelayedMessage(string topic, string message, string options, string sendReceive);
 	~RelayedMessage();
 
 	string getRosMessageHandler();
@@ -23,6 +23,7 @@ public:
 	string BaseName;
 	string NameSpace;
 	string OptionsString;
+	string SendReceiveString;
 
 	string FullNameJava;
 

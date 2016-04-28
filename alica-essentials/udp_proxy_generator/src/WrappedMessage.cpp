@@ -24,12 +24,13 @@ string get(string  arg)
 }
 
 WrappedMessage::WrappedMessage(const string &topic, const string &wrappedMessage, const string &message,
-                               const string &options)
+                               const string &options, const string &sendReceive)
 {
     this->Ros2UdpQueueLength = 5;
     this->Udp2RosQueueLength = 5;
     this->topic = topic;
     this->options = options;
+    this->sendReceive = sendReceive;
 
     this->Id = hash32(topic.c_str());
 

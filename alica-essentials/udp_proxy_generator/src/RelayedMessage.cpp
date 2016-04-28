@@ -13,12 +13,13 @@ uint32_t hash32(const char* s, unsigned int seed = 0)
 	return hash;
 }
 
-RelayedMessage::RelayedMessage(string topic, string message, string options)
+RelayedMessage::RelayedMessage(string topic, string message, string options, string sendReceive)
 {
 	this->Ros2UdpQueueLength = 5;
 	this->Udp2RosQueueLength = 5;
 	this->Topic = topic;
 	this->OptionsString = options;
+	this->SendReceiveString = sendReceive;
 
 	this->Id = hash32(topic.c_str());
 

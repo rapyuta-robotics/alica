@@ -60,7 +60,7 @@ string getTemplateDir()
 
 bool parseDefinitionFile(string msgDefFile, vector<WrappedMessage*>& msgList)
 {
-    string regstr = "Topic:\\s*(\\S+)\\s*WrappedMsg:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
+    string regstr = "(send|receive){0,1}Topic:\\s*(\\S+)\\s*WrappedMsg:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
     boost::regex line(regstr);
     ifstream ifs(msgDefFile);
 
@@ -77,16 +77,25 @@ bool parseDefinitionFile(string msgDefFile, vector<WrappedMessage*>& msgList)
         if (boost::regex_match(s, line))
         {
             boost::smatch m;
-            string topic, wrappedMessage, message, options;
+            string topic, wrappedMessage, message, options,sendReceive;
             if (boost::regex_search(s, m, line))
             {
-                topic = m[1];
-                wrappedMessage = m[2];
-                message = m[3];
-                options = m[4];
+                if(m[1].compare("send") == 0 || m[1].compare("receive") == 0) {
+                    sendReceive = m[1];
+                    topic = m[2];
+                    wrappedMessage = m[3];
+                    message = m[4];
+                    options = m[5];
+                } else {
+                    topic = m[1];
+                    wrappedMessage = m[2];
+                    message = m[3];
+                    options = m[4];
+                    sendReceive = "";
+                }
             }
 
-            WrappedMessage* msg = new WrappedMessage(topic, wrappedMessage, message, options);
+            WrappedMessage* msg = new WrappedMessage(topic, wrappedMessage, message, options,sendReceive);
             msgList.push_back(msg);
         }
         else
@@ -139,13 +148,17 @@ string processTemplate(stringstream &t, vector<WrappedMessage*>& msgList)
             int i = 0;
             for (WrappedMessage* m : msgList)
             {
-                ret << "sub" << i++ << " = n.subscribe(\"/wrapped" << m->topic << "\","
-                << m->Ros2UdpQueueLength << ", &WrappedMessageHandler::" << m->getRosWrappedCallBackName()
-                << ",this);\n";
+                if(m->sendReceive.compare("receive") == 0 || m->sendReceive.compare("") == 0) {
+                    ret << "sub" << i++ << " = n.subscribe(\"/wrapped" << m->topic << "\","
+                    << m->Ros2UdpQueueLength << ", &WrappedMessageHandler::" << m->getRosWrappedCallBackName()
+                    << ",this);\n";
+                }
 
-                ret << "sub" << i++ << " = n.subscribe(\"" << m->topic << "\","
-                << m->Ros2UdpQueueLength << ", &WrappedMessageHandler::" << m->getRosCallBackName()
-                << ",this);\n";
+                if(m->sendReceive.compare("send") == 0 || m->sendReceive.compare("") == 0) {
+                    ret << "sub" << i++ << " = n.subscribe(\"" << m->topic << "\","
+                    << m->Ros2UdpQueueLength << ", &WrappedMessageHandler::" << m->getRosCallBackName()
+                    << ",this);\n";
+                }
             }
         }
         else if (s == "rosMessageHandler")
