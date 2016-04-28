@@ -75,7 +75,7 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList)
 {
 	//regex line("Topic:\\^ ");
 	//regex line("Topic:\\.*(\\.+)\\.*Msg:\\.*(\\.+)\\.*Opt:\\.*\\[(.*)\\]");
-	string regstr = "(send|receive){0,1}Topic:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
+	string regstr = "(send|receive)*Topic:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
 	boost::regex line(regstr);
 	//regex line("Topic:\s*(^ )\s*Msg:\s*(^ )\s*Opt:\s*\[(.*)\]");
 	ifstream ifs(msgDefFile);
