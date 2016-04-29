@@ -71,11 +71,16 @@ bool checkForCollisions(vector<RelayedMessage*>& msgList)
 	return true;
 }
 
-bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList)
+bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList, string& lang)
 {
 	//regex line("Topic:\\^ ");
 	//regex line("Topic:\\.*(\\.+)\\.*Msg:\\.*(\\.+)\\.*Opt:\\.*\\[(.*)\\]");
-	string regstr = "(send|receive)*Topic:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
+	string regstr;
+	if ( lang.compare("java") == 0) {
+		regstr = "(send|receive)Topic:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
+	} else {
+		regstr = "Topic:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
+	}
 	boost::regex line(regstr);
 	//regex line("Topic:\s*(^ )\s*Msg:\s*(^ )\s*Opt:\s*\[(.*)\]");
 	ifstream ifs(msgDefFile);
@@ -390,7 +395,7 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
 			ofs << parsedContent;
 			ofs.close();
 		} else if(outDir.find("src/main/java/util") != std::string::npos) {
-			string parsedContent = processTemplate(ss, msgList, pkgName);
+			string parsedContent = processTemplateJava(ss, msgList, pkgName);
 
 			ofstream ofs(outDir + "/" + basename);
 			ofs << parsedContent;
@@ -432,12 +437,14 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	string msgDefFile = outputPath + "/relayMsgs.conf";
-
+	string lang;
 	if(argc == 3  && argv[2][0] == 'j') {
 		if(outputPath.find_last_of('/') != std::string::npos) {
 			outputPath += outputPath.substr(outputPath.find_last_of('/')) + "/src/main/java/util";
 		}
+		lang = "java";
 	} else {
+		lang = "cpp";
 		outputPath = outputPath + "/proxy_gen";
 	}
 //set namespace to packageName
@@ -451,7 +458,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	vector<RelayedMessage*> msgList;
-	if (!parseDefinitionFile(msgDefFile, msgList))
+	if (!parseDefinitionFile(msgDefFile, msgList,lang))
 	{
 		return -1;
 	}

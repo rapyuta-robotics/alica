@@ -60,7 +60,7 @@ string getTemplateDir()
 
 bool parseDefinitionFile(string msgDefFile, vector<WrappedMessage*>& msgList)
 {
-    string regstr = "(send|receive)*Topic:\\s*(\\S+)\\s*WrappedMsg:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
+    string regstr = "(send|receive)Topic:\\s*(\\S+)\\s*WrappedMsg:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
     boost::regex line(regstr);
     ifstream ifs(msgDefFile);
 
