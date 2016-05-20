@@ -13,8 +13,10 @@ namespace alica
 	/**
 	 * Reflects the status of a RunningPlan
 	 */
-		enum PlanStatus{Success, Failed,Running};
-
+	enum PlanStatus
+	{
+		Success, Failed, Running
+	};
 
 } /* namespace alica */
 

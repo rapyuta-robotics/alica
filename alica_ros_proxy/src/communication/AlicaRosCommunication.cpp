@@ -328,23 +328,23 @@ namespace alicaRosProxy
 
 	void AlicaRosCommunication::sendLogMessage(int level, string& message) {
 		switch(level) {
-			case '0':
-				ROS_DEBUG("AlicaMessage %s", message.c_str());
+			case ::ros::console::levels::Debug:
+				ROS_DEBUG("AlicaMessage: %s", message.c_str());
 				break;
-			case '1':
-				ROS_INFO("AlicaMessage %s", message.c_str());
+			case ::ros::console::levels::Info:
+				ROS_INFO("AlicaMessage: %s", message.c_str());
 				break;
-			case '2':
-				ROS_WARN("AlicaMessage %s", message.c_str());
+			case ::ros::console::levels::Warn:
+				ROS_WARN("AlicaMessage: %s", message.c_str());
 				break;
-			case '3':
-				ROS_ERROR("AlicaMessage %s", message.c_str());
+			case ::ros::console::levels::Error:
+				ROS_ERROR("AlicaMessage: %s", message.c_str());
 				break;
-			case '4':
-				ROS_FATAL("AlicaMessage %s", message.c_str());
+			case ::ros::console::levels::Fatal:
+				ROS_FATAL("AlicaMessage: %s", message.c_str());
 				break;
 			default:
-				ROS_ERROR("AlicaMessage %s", message.c_str());
+				ROS_ERROR("AlicaMessage: %s", message.c_str());
 				break;
 		}
 

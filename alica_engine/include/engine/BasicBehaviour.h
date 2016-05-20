@@ -51,8 +51,6 @@ namespace alica
 		void setVariables(shared_ptr<list<Variable*>> variables);
 		bool stop();
 		bool start();
-		bool pause();
-		bool restart();
 		int getDelayedStart() const;
 		void setDelayedStart(long msDelayedStart);
 		int getInterval() const;
@@ -60,7 +58,9 @@ namespace alica
 		shared_ptr<RunningPlan> getRunningPlan();
 		void setRunningPlan(shared_ptr<RunningPlan> runningPlan);
 		bool isSuccess() const;
+		void setSuccess(bool success);
 		bool isFailure() const;
+		void setFailure(bool failure);
 
 		bool getParameter(string key, string& valueOut);
 		void setTrigger(supplementary::ITrigger* trigger);
@@ -90,14 +90,7 @@ namespace alica
 		 */
 		bool started;
 		bool callInit;
-		/**
-		 * The Success flag. Raised by a behaviour to indicate it reached whatever it meant to reach.
-		 */
-		bool success;
-		/**
-		 * The Failure flag. Raised by a behaviour to indicate it has failed in some way.
-		 */
-		bool failure;
+
 
 		/**
 		 * Tells us whether the behaviour is currently running (or active)
@@ -115,8 +108,7 @@ namespace alica
 		 */
 		virtual void initialiseParameters()
 		{
-		}
-		;
+		};
 
 		EntryPoint* getParentEntryPoint(string taskName);
 
@@ -127,9 +119,18 @@ namespace alica
 		shared_ptr<vector<int>> robotsInEntryPoint(EntryPoint* ep);
 
 	private:
-		mutex runCV_mtx;
 		void runInternal();
 		void initInternal();
+
+		mutex runCV_mtx;
+		/**
+		 * The Success flag. Raised by a behaviour to indicate it reached whatever it meant to reach.
+		 */
+		bool success;
+		/**
+		 * The Failure flag. Raised by a behaviour to indicate it has failed in some way.
+		 */
+		bool failure;
 
 	protected:
 		condition_variable runCV;

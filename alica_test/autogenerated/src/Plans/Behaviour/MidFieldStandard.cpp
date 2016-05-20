@@ -25,7 +25,7 @@ namespace alica
     	callCounter++;
 		if(callCounter>10)
 		{
-			this->success = true;
+			this->setSuccess(true);
 		}
         /*PROTECTED REGION END*/
     }

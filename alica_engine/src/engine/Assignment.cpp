@@ -390,7 +390,8 @@ namespace alica
 	}
 
 	/**
-	 * Tests weather all required tasks have been successfully completed and thus the plan can be considered as successful.
+	 * Tests weather all required tasks have been successfully completed and
+	 * thus the plan can be considered as successful.
 	 * @return A bool
 	 */
 	bool Assignment::isSuccessfull()

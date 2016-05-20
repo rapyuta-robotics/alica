@@ -83,7 +83,7 @@ namespace alica
 	/**
 	 * Called in every iteration by a RunningPlan to apply rules to it.
 	 * Will consecutively apply rules until no further changes can be made or
-	 * maxConsecutiveChangesare made. This method also dictates the sequence in which rules are applied.
+	 * maxConsecutiveChanges are made. This method also dictates the sequence in which rules are applied.
 	 * @param r A shared_ptr of a RunningPlan
 	 * @return A PlanChange
 	 */
@@ -125,7 +125,7 @@ namespace alica
 
 			if (propChange != PlanChange::NoChange)
 			{
-				break; //abort applying rules to this plan as propagation has
+				break; //abort applying rules to this plan as propagation has occurred
 			}
 
 		} while (changeRecord != PlanChange::NoChange && ++changes < this->maxConsecutiveChanges);
@@ -367,51 +367,46 @@ namespace alica
 	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
 	 */
-	PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> r)
+	PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp)
 	{
 #ifdef RULE_debug
 		cout << "RB: Allocation-Rule called." << endl;
-		cout << "RB: Allocation RP \n" << r->toString() << endl;
+		cout << "RB: Allocation RP \n" << rp->toString() << endl;
 #endif
-		if (!r->isAllocationNeeded())
+		if (!rp->isAllocationNeeded())
 		{
 			return PlanChange::NoChange;
 		}
-		r->setAllocationNeeded(false);
+		rp->setAllocationNeeded(false);
 
-		shared_ptr<vector<int> > robots = make_shared<vector<int> >(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
-		copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
-						r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
-						robots->begin()); //Was before: back_inserter(*robots)
-//		auto iter = r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin();
-//		for (int i = 0; i < robots->size();i++)
-//		{
-//			robots->at(i) = *iter;
-//			iter++;
-//		}
+		shared_ptr<vector<int> > robots = make_shared<vector<int> >(rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).size());
+		copy(rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).begin(),
+						rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).end(),
+						robots->begin());
+
 #ifdef RULE_debug
-		cout << "RB: There are " << r->getActiveState()->getPlans().size() << " Plans in State " << r->getActiveState()->getName() << endl;
+		cout << "RB: There are " << rp->getActiveState()->getPlans().size() << " Plans in State " << rp->getActiveState()->getName() << endl;
 #endif
 		shared_ptr<list<shared_ptr<RunningPlan>> > children = this->ps->getPlansForState(
-				r, &r->getActiveState()->getPlans(),
+				rp, &rp->getActiveState()->getPlans(),
 				robots);
-		if (children == nullptr || children->size() < r->getActiveState()->getPlans().size())
+		if (children == nullptr || children->size() < rp->getActiveState()->getPlans().size())
 		{
-			r->addFailure();
+			rp->addFailure();
 #ifdef RULE_debug
-			cout << "RB: PlanAllocFailed " << r->getPlan()->getName() << endl;
+			cout << "RB: PlanAllocFailed " << rp->getPlan()->getName() << endl;
 #endif
 			return PlanChange::FailChange;
 		}
-		r->addChildren(children);
+		rp->addChildren(children);
 #ifdef RULE_debug
 		cout << "RB: after add children" << endl;
-		cout << "RB: PlanAlloc " <<  r->getPlan()->getName() << endl;
+		cout << "RB: PlanAlloc " <<  rp->getPlan()->getName() << endl;
 #endif
 
 		if (children->size() > 0)
 		{
-			log->eventOccured("PAlloc(" + r->getPlan()->getName() + " in State " + r->getActiveState()->getName() + ")");
+			log->eventOccured("PAlloc(" + rp->getPlan()->getName() + " in State " + rp->getActiveState()->getName() + ")");
 			return PlanChange::InternalChange;
 		}
 		return PlanChange::NoChange;
@@ -486,12 +481,12 @@ namespace alica
 			return PlanChange::NoChange;
 		}
 #ifdef RULE_debug
-		cout << "RB: SynchTransition" << r->getPlan()->getName() << endl;
+		cout << "RB: Transition " << r->getPlan()->getName() << endl;
 #endif
 		r->moveState(nextState);
 
 		r->setAllocationNeeded(true);
-		log->eventOccured("Transition(" + r->getPlan()->getName() + "to State" + r->getActiveState()->getName() + ")");
+		log->eventOccured("Transition(" + r->getPlan()->getName() + " to State " + r->getActiveState()->getName() + ")");
 		if (r->getActiveState()->isSuccessState())
 			return PlanChange::SuccesChange;
 		else if (r->getActiveState()->isFailureState())
@@ -500,7 +495,7 @@ namespace alica
 	}
 
 	/**
-	 * Moves the agent along a synchronized transition, if the corresponding transition holds and the
+	 * Moves the agent along a synchronized transition, if the corresponding transition holds and the team
 	 * deems the transition as synchronized.
 	 * @param r A shared_ptr of a RunningPlan
 	 * @return PlanChange
