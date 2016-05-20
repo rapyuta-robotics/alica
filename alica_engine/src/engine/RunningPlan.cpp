@@ -42,8 +42,8 @@ namespace alica
 
 	RunningPlan::RunningPlan(AlicaEngine* ae)
 	{
-	        this->assignmentProtectionTime = (((*supplementary::SystemConfig::getInstance())["Alica"]->get<
-	                                  unsigned long>("Alica.AssignmentProtectionTime", NULL)) * 1000000);
+		this->assignmentProtectionTime = (((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>(
+				"Alica.AssignmentProtectionTime", NULL)) * 1000000);
 		this->ae = ae;
 		this->planType = nullptr;
 		this->plan = nullptr;
@@ -77,8 +77,9 @@ namespace alica
 	{
 		this->plan = plan;
 		vector<EntryPoint*> epCol;
-		transform(plan->getEntryPoints().begin(), plan->getEntryPoints().end(), back_inserter(epCol), [](map<long, EntryPoint*>::value_type& val)
-		{	return val.second;});
+		transform(plan->getEntryPoints().begin(), plan->getEntryPoints().end(), back_inserter(epCol),
+					[](map<long, EntryPoint*>::value_type& val)
+					{	return val.second;});
 
 		sort(epCol.begin(), epCol.end(), EntryPoint::compareTo);
 
@@ -99,7 +100,7 @@ namespace alica
 	{
 		this->plan = bc;
 		this->bp = ae->getBehaviourPool();
-                this->behaviour = true;
+		this->behaviour = true;
 	}
 
 	/**
@@ -250,7 +251,8 @@ namespace alica
 				else if (this->activeState->isSuccessState())
 				{
 					this->assignment->getEpSuccessMapping()->getRobots(this->activeEntryPoint)->push_back(this->ownId);
-					this->to->getOwnEngineData()->getSuccessMarks()->markSuccessfull(this->plan, this->activeEntryPoint);
+					this->to->getOwnEngineData()->getSuccessMarks()->markSuccessfull(this->plan,
+																						this->activeEntryPoint);
 				}
 			}
 		}
@@ -274,24 +276,24 @@ namespace alica
 		}
 	}
 
-        void RunningPlan::addChildren(list<shared_ptr<RunningPlan>>& children)
-        {
-                for (shared_ptr<RunningPlan> r : children)
-                {
-                        r->setParent(shared_from_this());
-                        this->children.push_back(r);
+	void RunningPlan::addChildren(list<shared_ptr<RunningPlan>>& children)
+	{
+		for (shared_ptr<RunningPlan> r : children)
+		{
+			r->setParent(shared_from_this());
+			this->children.push_back(r);
 
-                        auto iter = this->failedSubPlans.find(r->getPlan());
-                        if (iter != this->failedSubPlans.end())
-                        {
-                                r->failCount = iter->second;
-                        }
-                        if (this->active)
-                        {
-                                r->activate();
-                        }
-                }
-        }
+			auto iter = this->failedSubPlans.find(r->getPlan());
+			if (iter != this->failedSubPlans.end())
+			{
+				r->failCount = iter->second;
+			}
+			if (this->active)
+			{
+				r->activate();
+			}
+		}
+	}
 
 	/**
 	 * Move this very robot to another state. Performs all neccessary operations, such as updating the assignment.
@@ -351,6 +353,7 @@ namespace alica
 	{
 		return plan;
 	}
+
 	void RunningPlan::setPlan(AbstractPlan* plan)
 	{
 		if (this->plan != plan)
@@ -462,23 +465,36 @@ namespace alica
 		if (this->basicBehaviour != nullptr)
 		{
 			if (this->basicBehaviour->isSuccess())
+			{
+				//cout << "RP: " << this->plan->getName() << " BEH Success" << endl;
 				return PlanStatus::Success;
-			if (this->basicBehaviour->isFailure())
+			}
+			else if (this->basicBehaviour->isFailure())
+			{
+				//cout << "RP: " << this->plan->getName() << " BEH Failed" << endl;
 				return PlanStatus::Failed;
-			return PlanStatus::Running;
+			}
+			else
+			{
+				//cout << "RP: " << this->plan->getName() << " BEH Running" << endl;
+				return PlanStatus::Running;
+			}
 		}
 		if (this->assignment != nullptr && this->assignment->isSuccessfull())
+		{
+			//cout << "RP: " << this->plan->getName() << " ASS Success" << endl;
 			return PlanStatus::Success;
+		}
+		//cout << "RP: " << this->plan->getName() << " STATUS " << (this->status == PlanStatus::Running ? "RUNNING" : (this->status == PlanStatus::Success ? "SUCCESS" : "FAILED")) << endl;
 		return this->status;
 	}
 
 	/**
-	 * Gets the PlanType of the currently executed plan. Null if the AbstractPlan associated does not belong to a PlanType.
+	 * Gets the PlanType of the currently executed plan. nullptr if the AbstractPlan associated does not belong to a PlanType.
 	 */
 	PlanType* RunningPlan::getPlanType()
 	{
 		return planType;
-
 	}
 
 	void RunningPlan::clearFailures()
@@ -569,7 +585,6 @@ namespace alica
 //	{
 //		return move(robotsAvail); // TODO so ultra evil!
 //	}
-
 	EntryPoint* RunningPlan::getActiveEntryPoint()
 	{
 		return activeEntryPoint;
@@ -649,7 +664,7 @@ namespace alica
 //		}
 		for (auto child : this->children)
 		{
-		        child->accept(vis);
+			child->accept(vis);
 		}
 	}
 
@@ -673,162 +688,56 @@ namespace alica
 	}
 
 	/**
-	 * Tests whether all child has a specific status.
+	 * Tests whether all children have the specific status.
 	 * @param A PlanStatus
 	 * @returns bool
 	 */
 	bool RunningPlan::allChildrenStatus(PlanStatus ps)
 	{
-//		for (int i = 0; i < this->children.size(); i++)
-//		{
-//			auto iter = this->children.begin();
-//			advance(iter, i);
-//			if (ps != (*iter)->getStatus())
-//			{
-//				return false;
-//			}
-//		}
 		for (auto child : this->children)
 		{
-		        if (ps != child->getStatus())
-                        {
-                                return false;
-                        }
+			if (ps != child->getStatus())
+			{
+				return false;
+			}
 		}
 		return true;
 	}
 
 	/**
-	 * Tests whether for any child, the robot completed a task
+	 * Tests whether any child has a task with the given status.
+	 * @param A TaskStatus
 	 * @return bool
 	 */
 	bool RunningPlan::anyChildrenTaskSuccess()
 	{
-//		for (int i = 0; i < this->children.size(); i++)
-//		{
-//			auto iter = this->children.begin();
-//			advance(iter, i);
-//			if ((*iter)->isBehaviour())
-//			{
-//				if ((*iter)->getStatus() == PlanStatus::Success)
-//				{
-//					return true;
-//				}
-//			}
-//			else if ((*iter)->getActiveState() != nullptr && (*iter)->getActiveState()->isSuccessState())
-//			{
-//				return true;
-//			}
-//			if ((*iter)->getAssignment() != nullptr)
-//			{
-//				for (shared_ptr<list<int> > successes : (*iter)->getAssignment()->getEpSuccessMapping()->getRobots())
-//				{
-//					if (find(successes->begin(), successes->end(), this->ownId) != successes->end())
-//					{
-//						return true;
-//					}
-//				}
-//			}
-//		}
-
 		for (auto child : this->children)
-                {
-                        if (child->isBehaviour())
-                        {
-                                if (child->getStatus() == PlanStatus::Success)
-                                {
-                                        return true;
-                                }
-                        }
-                        else if (child->getActiveState() != nullptr && child->getActiveState()->isSuccessState())
-                        {
-                                return true;
-                        }
-                        if (child->getAssignment() != nullptr)
-                        {
-                                for (shared_ptr<list<int> > successes : child->getAssignment()->getEpSuccessMapping()->getRobots())
-                                {
-                                        if (find(successes->begin(), successes->end(), this->ownId) != successes->end())
-                                        {
-                                                return true;
-                                        }
-                                }
-                        }
-                }
+		{
+			if (child->isBehaviour())
+			{
+				// Behaviours have no task status!
+				continue;
+			}
 
-		return false;
-	}
+			auto childAssignment = child->getAssignment();
+			if (!childAssignment)
+			{
+				// no assignment, so no successful task
+				continue;
+			}
 
-	/**
-	 * Tests whether for any child, the robot failed a task
-	 * @returns bool
-	 */
-	bool RunningPlan::anyChildrenTaskFailure()
-	{
-//		for (int i = 0; i < this->children.size(); i++)
-//		{
-//			auto iter = this->children.begin();
-//			advance(iter, i);
-//			if ((*iter)->getStatus() == PlanStatus::Failed)
-//			{
-//				return true;
-//			}
-//			if ((*iter)->getActiveState() != nullptr && (*iter)->getActiveState()->isFailureState())
-//			{
-//				return true;
-//			}
-//		}
-                for (auto child : this->children)
-                {
-                        if (child->getStatus() == PlanStatus::Failed)
-                        {
-                                return true;
-                        }
-                        if (child->getActiveState() != nullptr && child->getActiveState()->isFailureState())
-                        {
-                                return true;
-                        }
-                }
-		return false;
-	}
+			for (int i = 0; i < childAssignment->getEpSuccessMapping()->getCount(); i++)
+			{
+				// at least one robot must be successful && at least as much as minCard robots must be successful
+				if (childAssignment->getEpSuccessMapping()->getRobots()[i]->size() > 0
+						&& childAssignment->getEpSuccessMapping()->getRobots()[i]->size()
+							>= childAssignment->getEpSuccessMapping()->getEntryPoints()[i]->getMinCardinality())
+				{
+					return true;
+				}
+			}
 
-	/**
-	 * Tests whether for any child, the robot reached a terminal state
-	 * @return bool
-	 */
-	bool RunningPlan::anyChildrenTaskTerminated()
-	{
-//		for (int i = 0; i < this->children.size(); i++)
-//		{
-//			auto iter = this->children.begin();
-//			advance(iter, i);
-//			if ((*iter)->isBehaviour())
-//			{
-//				if ((*iter)->getStatus() == PlanStatus::Failed || (*iter)->getStatus() == PlanStatus::Success)
-//				{
-//					return true;
-//				}
-//			}
-//			else if ((*iter)->getActiveState() != nullptr && (*iter)->getActiveState()->isTerminal())
-//			{
-//				return true;
-//			}
-//		}
-
-		for (auto child : this->children)
-                {
-		        if (child->isBehaviour())
-                        {
-                                if (child->getStatus() == PlanStatus::Failed || child->getStatus() == PlanStatus::Success)
-                                {
-                                        return true;
-                                }
-                        }
-                        else if (child->getActiveState() != nullptr && child->getActiveState()->isTerminal())
-                        {
-                                return true;
-                        }
-                }
+		}
 
 		return false;
 	}
@@ -870,7 +779,8 @@ namespace alica
 		{
 			if (find(curRobots->begin(), curRobots->end(), r) == curRobots->end())
 			{
-				if (this->activeState != nullptr && this->assignment->getRobotStateMapping()->stateOfRobot(r) == this->activeState)
+				if (this->activeState != nullptr
+						&& this->assignment->getRobotStateMapping()->stateOfRobot(r) == this->activeState)
 				{
 					recurse = true;
 				}
@@ -901,7 +811,8 @@ namespace alica
 		this->constraintStore->addCondition(this->plan->getRuntimeCondition());
 	}
 
-	bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents, list<int> noUpdates, AlicaTime now)
+	bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents,
+												list<int> noUpdates, AlicaTime now)
 	{
 		if (this->isBehaviour())
 		{
@@ -924,7 +835,8 @@ namespace alica
 					{
 						this->getAssignment()->removeRobot(spt->getRobotId());
 						ret = true;
-						aldif->getSubtractions().push_back(shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, spt->getRobotId())));
+						aldif->getSubtractions().push_back(
+								shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, spt->getRobotId())));
 					}
 				}
 			}
@@ -943,7 +855,9 @@ namespace alica
 					else
 					{ //robot was not expected to be here during protected assignment time, add it.
 						this->getAssignment()->addRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
-						aldif->getAdditions().push_back(shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId())));
+						aldif->getAdditions().push_back(
+								shared_ptr<EntryPointRobotPair>(
+										new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId())));
 
 					}
 				}
@@ -953,9 +867,12 @@ namespace alica
 					ret |= this->getAssignment()->updateRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
 					if (spt->getEntryPoint() != ep)
 					{
-						aldif->getAdditions().push_back(shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId())));
+						aldif->getAdditions().push_back(
+								shared_ptr<EntryPointRobotPair>(
+										new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId())));
 						if (ep != nullptr)
-							aldif->getSubtractions().push_back(shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, spt->getRobotId())));
+							aldif->getSubtractions().push_back(
+									shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, spt->getRobotId())));
 					}
 
 				}
@@ -994,7 +911,8 @@ namespace alica
 					{
 						rem.push_back(rob);
 						//this.Assignment.RemoveRobot(rob);
-						aldif->getSubtractions().push_back(shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, rob)));
+						aldif->getSubtractions().push_back(
+								shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, rob)));
 						ret = true;
 					}
 				}
@@ -1021,7 +939,8 @@ namespace alica
 					{
 						rem.push_back(rob);
 						//this.Assignment.RemoveRobot(rob);
-						aldif->getSubtractions().push_back(shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, rob)));
+						aldif->getSubtractions().push_back(
+								shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, rob)));
 						ret = true;
 					}
 				}
@@ -1057,14 +976,14 @@ namespace alica
 
 			if (robotsJoined)
 			{
-                                for (int i = 0; i < availableAgents.size(); i++)
-                                {
-                                        if (find(robotsJoined->begin(), robotsJoined->end(), availableAgents[i]) == robotsJoined->end())
-                                        {
-                                                availableAgents.erase(availableAgents.begin() + i);
-                                                i--;
-                                        }
-                                }
+				for (int i = 0; i < availableAgents.size(); i++)
+				{
+					if (find(robotsJoined->begin(), robotsJoined->end(), availableAgents[i]) == robotsJoined->end())
+					{
+						availableAgents.erase(availableAgents.begin() + i);
+						i--;
+					}
+				}
 			}
 		}
 		//Give Plans to children
@@ -1131,7 +1050,9 @@ namespace alica
 		ss << "Plan: " + (plan != nullptr ? plan->getName() : "NULL") << endl;
 		ss << "PlanType: " << (planType != nullptr ? planType->getName() : "NULL") << endl;
 		ss << "ActState: " << (activeState != nullptr ? activeState->getName() : "NULL") << endl;
-		ss << "Task: " << (this->getOwnEntryPoint() != nullptr ? this->getOwnEntryPoint()->getTask()->getName() : "NULL") << endl;
+		ss << "Task: "
+				<< (this->getOwnEntryPoint() != nullptr ? this->getOwnEntryPoint()->getTask()->getName() : "NULL")
+				<< endl;
 		ss << "IsBehaviour: " << this->isBehaviour() << "\t";
 		if (this->isBehaviour())
 		{
@@ -1141,7 +1062,9 @@ namespace alica
 		ss << "FailHandlingNeeded: " << this->failHandlingNeeded << "\t";
 		ss << "FailCount: " << this->failCount << endl;
 		ss << "IsActive: " << this->active << endl;
-		ss << "Status: " << (this->status == PlanStatus::Running ? "RUNNING" : (this->status == PlanStatus::Success ? "SUCCESS" : "FAILED")) << endl;
+		ss << "Status: "
+				<< (this->status == PlanStatus::Running ? "RUNNING" :
+						(this->status == PlanStatus::Success ? "SUCCESS" : "FAILED")) << endl;
 		ss << "AvailRobots: ";
 		for (int r : (*this->robotsAvail))
 		{
@@ -1169,7 +1092,8 @@ namespace alica
 			}
 			ss << ")";
 		}
-		ss << endl << "CycleManagement - Assignment Overridden: " << (this->getCycleManagement()->isOverridden()? "true": "false") << endl;
+		ss << endl << "CycleManagement - Assignment Overridden: "
+				<< (this->getCycleManagement()->isOverridden() ? "true" : "false") << endl;
 		ss << "\n########## ENDRP ###########" << endl;
 		return ss.str();
 	}
@@ -1181,23 +1105,13 @@ namespace alica
 	 */
 	bool RunningPlan::anyChildrenStatus(PlanStatus ps)
 	{
-		//cout << "RP: Plan " << this->getPlan()->getName() << " Children: " << this->children.size() << endl;
-//		for (int i = 0; i < this->children.size(); i++)
-//		{
-//			auto iter = this->children.begin();
-//			advance(iter, i);
-//			if (ps == (*iter)->getStatus())
-//			{
-//				return true;
-//			}
-//		}
-                for (auto child : this->children)
-                {
-                        if (ps == child->getStatus())
-                        {
-                                return true;
-                        }
-                }
+		for (auto child : this->children)
+		{
+			if (ps == child->getStatus())
+			{
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -1206,17 +1120,13 @@ namespace alica
 		return this->ownId;
 	}
 
-//	shared_ptr<RunningPlan> RunningPlan::getSharedFromThis()
-//	{
-//		return shared_from_this();
-//	}
-
 	AlicaEngine* RunningPlan::getAlicaEngine()
 	{
 		return ae;
 	}
 
-	void RunningPlan::sendLogMessage(int level, string& message) {
+	void RunningPlan::sendLogMessage(int level, string& message)
+	{
 		ae->getCommunicator()->sendLogMessage(level, message);
 	}
 

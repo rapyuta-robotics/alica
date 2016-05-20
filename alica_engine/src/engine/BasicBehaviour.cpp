@@ -9,6 +9,7 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/model/Behaviour.h"
 #include "engine/AlicaEngine.h"
+#include "engine/PlanBase.h"
 #include "engine/ITeamObserver.h"
 #include "engine/RunningPlan.h"
 #include "engine/model/BehaviourConfiguration.h"
@@ -169,14 +170,32 @@ namespace alica
 		this->runningPlan = runningPlan;
 	}
 
+	void BasicBehaviour::setSuccess(bool success)
+	{
+		if (!this->success && success)
+		{
+			this->runningPlan->getAlicaEngine()->getPlanBase()->addFastPathEvent(this->runningPlan);
+		}
+		this->success = success;
+	}
+
 	bool BasicBehaviour::isSuccess() const
 	{
-		return success;
+		return success && !this->callInit;
+	}
+
+	void BasicBehaviour::setFailure(bool failure)
+	{
+		if (!this->failure && failure)
+		{
+			this->runningPlan->getAlicaEngine()->getPlanBase()->addFastPathEvent(this->runningPlan);
+		}
+		this->failure = failure;
 	}
 
 	bool BasicBehaviour::isFailure() const
 	{
-		return failure;
+		return failure && !this->callInit;
 	}
 
 	void BasicBehaviour::setTrigger(supplementary::ITrigger* trigger)
@@ -194,7 +213,8 @@ namespace alica
 		shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
 		while (cur != nullptr)
 		{
-			if (((Plan*)cur->getPlan())->getEntryPoints().find(ep->getId()) != ((Plan*)cur->getPlan())->getEntryPoints().end())
+			if (((Plan*)cur->getPlan())->getEntryPoints().find(ep->getId())
+					!= ((Plan*)cur->getPlan())->getEntryPoints().end())
 			{
 				return cur->getAssignment()->getRobotsWorking(ep);
 			}
@@ -210,7 +230,7 @@ namespace alica
 			return nullptr;
 		}
 		shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
-		if(cur != nullptr)
+		if (cur != nullptr)
 		{
 			return cur->getAssignment()->getRobotsWorking(ep);
 		}
@@ -286,7 +306,6 @@ namespace alica
 			{
 				string err = string("Exception catched:  ") + this->getName() + string(" - ") + string(e.what());
 				sendLogMessage(4, err);
-				//cerr << "Exception catched:  " << this->getName() << " - " << e.what() << endl;
 			}
 #ifdef BEH_DEBUG
 			BehaviourConfiguration* conf = dynamic_cast<BehaviourConfiguration*>(this->runningPlan->getPlan());
@@ -296,11 +315,11 @@ namespace alica
 						- 1.0 / conf->getFrequency() * 1000.0;
 				if (dura > 0.1)
 				{
-					string err = string("BB: Behaviour ") + conf->getBehaviour()->getName() + string(" exceeded runtime by \t") + to_string(dura) +
-							string("ms!");
+					string err = string("BB: Behaviour ") + conf->getBehaviour()->getName()
+							+ string(" exceeded runtime by \t") + to_string(dura) + string("ms!");
 					sendLogMessage(2, err);
 					//cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura
-						//	<< "ms!" << endl;
+					//	<< "ms!" << endl;
 				}
 			}
 #endif
@@ -353,7 +372,8 @@ namespace alica
 		return nullptr;
 	}
 
-	void BasicBehaviour::sendLogMessage(int level, string& message) {
+	void BasicBehaviour::sendLogMessage(int level, string& message)
+	{
 		runningPlan->sendLogMessage(level, message);
 	}
 

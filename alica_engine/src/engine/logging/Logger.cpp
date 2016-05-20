@@ -15,6 +15,7 @@
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/ITeamObserver.h"
+#include "engine/SimplePlanTree.h"
 
 namespace alica
 {
@@ -24,7 +25,7 @@ namespace alica
 		this->ae = ae;
 		this->endTime = 0;
 		this->itCount = 0;
-		this->sBuild = new stringstream;
+		this->sBuild = new stringstream();
 		this->startTime = 0;
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 		this->active = (*sc)["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
@@ -34,7 +35,6 @@ namespace alica
 			struct tm * timeinfo;
 			string robotName = ae->getRobotName();
 			const long int time = ae->getIAlicaClock()->now() / 1000000000L;
-			cout << "Alica Time: " << time << endl;
 			timeinfo = localtime(&time);
 			strftime(buffer, 1024, "%FT%T", timeinfo);
 			string timeString = buffer;
@@ -42,12 +42,10 @@ namespace alica
 			string logPath = sc->getLogPath();
 			if (!supplementary::FileSystem::isDirectory(logPath))
 			{
-
 				if (!supplementary::FileSystem::createDirectory(logPath, 777))
 				{
 					ae->abort("Cannot create log folder: ", logPath);
 				}
-
 			}
 			string logFile = supplementary::Logging::getLogFilename("alica-run--" + robotName );
 			this->fileWriter = new ofstream(logFile.c_str());
@@ -55,7 +53,6 @@ namespace alica
 			this->inIteration = false;
 			this->to = ae->getTeamObserver();
 			this->time = 0;
-
 		}
 		this->recievedEvent = false;
 	}
@@ -94,11 +91,11 @@ namespace alica
 	}
 
 	/**
-	 *  Notify that the current iteration is finished, triggering the Logger to write an entry if an event occurred in the current iteration.
+	 * Notify that the current iteration is finished, triggering the Logger to write an entry if an event occurred in the current iteration.
 	 * Called by the PlanBase.
 	 * @param p The root RunningPlan of the plan base.
 	 */
-	void Logger::iterationEnds(shared_ptr<RunningPlan> p)
+	void Logger::iterationEnds(shared_ptr<RunningPlan> rp)
 	{
 		if (!this->active)
 		{
@@ -107,14 +104,14 @@ namespace alica
 		this->inIteration = false;
 		this->endTime = ae->getIAlicaClock()->now();
 		this->itCount++;
-		this->time += (this->endTime - this->startTime) / 1000;
+		this->time += (this->endTime - this->startTime) / 1000UL; // us
 
 		if (!this->recievedEvent)
 		{
 			return;
 		}
 		this->recievedEvent = false;
-		shared_ptr<list<string> > ownTree = createTreeLog(p);
+		shared_ptr<list<string> > ownTree = createTreeLog(rp);
 
 		(*this->sBuild) << "START:\t";
 		(*this->sBuild) << to_string((this->startTime / 1000000UL)) << endl;
@@ -135,7 +132,7 @@ namespace alica
 		(*this->sBuild) << "TeamSize:\t";
 		(*this->sBuild) << to_string(robots->size());
 
-		(*this->sBuild) << "TeamMember:";
+		(*this->sBuild) << " TeamMember:";
 		for (int id : (*robots))
 		{
 			(*this->sBuild) << "\t";
@@ -145,15 +142,43 @@ namespace alica
 
 		(*this->sBuild) << "LocalTree:";
 
-		for (string id : *ownTree)
+		for (string treeString : *ownTree)
 		{
 			(*this->sBuild) << "\t";
-			(*this->sBuild) << id;
+			(*this->sBuild) << treeString;
 		}
 		(*this->sBuild) << endl;
 
-		//TODO: HOW ABOUT DO SOMETHING LIKE THIS this.sBuild.Remove(0,this.sBuild.Length);?
-		evaluationAssignmentsToString(this->sBuild, p);
+		evaluationAssignmentsToString(this->sBuild, rp);
+
+		auto teamPlanTrees = this->to->getTeamPlanTrees();
+		if(teamPlanTrees != nullptr)
+		{
+			(*this->sBuild) << "OtherTrees:" << endl;
+			for(auto kvp : (*teamPlanTrees)) {
+
+				(*this->sBuild) << "OPT:\t";
+				(*this->sBuild) << kvp.first;
+				(*this->sBuild) << "\t";
+
+				auto ids = this->createHumanReadablePlanTree(kvp.second->getStateIds());
+
+				for (string name : (*ids)) {
+					(*this->sBuild) << name << "\t";
+				}
+				(*this->sBuild) << endl;
+			}
+		}
+		else {
+			(*this->sBuild) << "NO OtherPlanTrees" << endl;
+		}
+		(*this->sBuild) << "END" << endl;
+		(*this->fileWriter) << this->sBuild->str();
+		this->fileWriter->flush();
+		this->sBuild->str(""); // this clears the string stream
+		this->time = 0;
+		this->itCount = 0;
+		this->eventStrings.clear();
 	}
 
 	/**
@@ -183,7 +208,6 @@ namespace alica
 
 		auto states = ae->getPlanRepository()->getStates();
 
-		State* s;
 		EntryPoint* e;
 		for (long id : l)
 		{
@@ -192,9 +216,9 @@ namespace alica
 				auto iter = states.find(id);
 				if (iter != states.end())
 				{
-					e = entryPointOfState(s);
+					e = entryPointOfState(iter->second);
 					result->push_back(e->getTask()->getName());
-					result->push_back(s->getName());
+					result->push_back(iter->second->getName());
 				}
 			}
 			else

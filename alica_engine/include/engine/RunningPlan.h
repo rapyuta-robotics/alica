@@ -99,7 +99,6 @@ namespace alica
 		void clearChildren();
 		void adaptAssignment(shared_ptr<RunningPlan> r);
 		void setFailedChild(AbstractPlan* child);
-//		unique_ptr<list<int> > getRobotsAvail();
 		void setRobotAvail(int robot);
 		void setRobotUnAvail(int robot);
 		void accept(IPlanTreeVisitor* vis);
@@ -107,8 +106,6 @@ namespace alica
 		bool anyChildrenStatus(PlanStatus ps);
 		bool allChildrenStatus(PlanStatus ps);
 		bool anyChildrenTaskSuccess();
-		bool anyChildrenTaskFailure();
-		bool anyChildrenTaskTerminated();
 		void activate();
 		EntryPoint* getActiveEntryPoint();
 		void setActiveEntryPoint(EntryPoint* activeEntryPoint);
@@ -123,9 +120,6 @@ namespace alica
 		AlicaEngine* getAlicaEngine();
 
 		void sendLogMessage(int level, string& message);
-
-	private:
-//		void setConstraintStore(ConstraintStore* constraintStore);
 
 	protected:
 		AlicaEngine* ae;

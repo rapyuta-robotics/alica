@@ -31,7 +31,6 @@ namespace alicaRosProxy
 		int sec = us/1000000;
 		int nsec = (us%1000000)*1000;
 		ros::Duration(sec, nsec).sleep();
-		//ros::Duration(us/1000).sleep();
 	}
 
 } /* namespace supplementary */

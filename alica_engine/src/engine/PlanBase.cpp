@@ -84,26 +84,16 @@ namespace alica
 			this->statusMessage->masterPlan = masterPlan->getName();
 		}
 
-//		this->timerModeCV = nullptr;
 		this->stepModeCV = nullptr;
-//		this->loopTimer = nullptr;
-//		if (!this->ae->getStepEngine())
-//		{
-//			this->loopTimer = new supplementary::Timer(this->loopTime / 1000000, this->loopTime / 1000000, false);
-//			this->timerModeCV = new condition_variable();
-//			this->loopTimer->registerCV(timerModeCV);
-//			loopTimer->start();
-//		}
-//		else
 		if (this->ae->getStepEngine())
 		{
 			this->stepModeCV = new condition_variable();
 		}
 
-#ifdef PB_DEBUG
-		this->log->logToConsole("PB: Engine loop time is " + to_string(loopTime / 1000000) + "ms, broadcast interval is "
-				+ to_string(this->minSendInterval / 1000000) + "ms - " + to_string(this->maxSendInterval / 1000000) + "ms");
-#endif
+//#ifdef PB_DEBUG
+		cout << "PB: Engine loop time is " << to_string(loopTime / 1000000) << "ms, broadcast interval is "
+				<< to_string(this->minSendInterval / 1000000) << "ms - " << to_string(this->maxSendInterval / 1000000) << "ms" << endl;
+//#endif
 		if (halfLoopTime < this->minSendInterval)
 		{
 			this->minSendInterval -= halfLoopTime;
@@ -132,10 +122,9 @@ namespace alica
 #endif
 		while (this->running)
 		{
-			//cout << "PB: RUNNING" << endl;
 			AlicaTime beginTime = alicaClock->now();
+			this->log->itertionStarts();
 
-			//cout << "PB: BEGIN TIME is: " << beginTime << endl;
 			if (ae->getStepEngine())
 			{
 #ifdef PB_DEBUG
@@ -165,7 +154,6 @@ namespace alica
 
 			}
 
-			this->log->itertionStarts();
 
 			//Send tick to other modules
 
@@ -187,9 +175,7 @@ namespace alica
 			}
 			if (this->rootNode->tick(this->ruleBook) == PlanChange::FailChange)
 			{
-//#ifdef PB_DEBUG
 				cout << "PB: MasterPlan Failed" << endl;
-//#endif
 			}
 			//lock for fpEvents
 			{
@@ -202,15 +188,9 @@ namespace alica
 			if (now < this->lastSendTime)
 			{
 				// Taker fix
-				std::cout << "PB: lastSendTime is higher than current system time, did the system time change?" << endl;
+				std::cout << "PB: lastSendTime is in the future of the current system time, did the system time change?" << endl;
 				this->lastSendTime = now;
 			}
-
-//			std::cout << "now " << now << std::endl;
-//			std::cout << "this->ruleBook->isChangeOccured() " << this->ruleBook->isChangeOccured() << std::endl;
-//			std::cout << "this->lastSendTime " << this->lastSendTime << std::endl;
-//			std::cout << "this->minSendInterval " << this->minSendInterval << std::endl;
-//			std::cout << "this->maxSendInterval " << this->maxSendInterval << std::endl;
 
 			if ((this->ruleBook->isChangeOccured() && this->lastSendTime + this->minSendInterval < now)
 					|| this->lastSendTime + this->maxSendInterval < now)
@@ -258,7 +238,8 @@ namespace alica
 				}
 			}
 
-//			this->log->iterationEnds(this->rootNode);
+			this->log->iterationEnds(this->rootNode);
+
 			this->ae->iterationComplete();
 
 			long availTime;
@@ -281,7 +262,6 @@ namespace alica
 					while (this->running && availTime > 1000 && fpEvents.size() > 0)
 					{
 						shared_ptr<RunningPlan> rp = fpEvents.front();
-						//cout << "PB: runningplan " << rp->toString() << endl;
 						fpEvents.pop();
 
 						if (rp->isActive())
@@ -314,29 +294,11 @@ namespace alica
 
 			}
 
-			/*
-			 * Dat war mal so, aber wir hamm nit verstanden warum. Nu isses hoffentlich besser! */
-			/* if (!ae->getStepEngine())
-			 {
-			 {
-			 unique_lock<mutex> lckTimer(timerMutex);
-			 timerModeCV->wait(lckTimer, [&]
-			 {
-			 if(this->loopTimer->isNotifyCalled())
-			 {
-			 this->loopTimer->setNotifyCalled(false);
-			 return true;
-			 }
-			 return false;
-			 });
-			 }
-			 }*/
 #ifdef PB_DEBUG
 			cout << "PB: availTime " << availTime << endl;
 #endif
 			if (availTime > 1 && !ae->getStepEngine())
 			{
-
 				alicaClock->sleep(availTime);
 			}
 		}
@@ -350,30 +312,11 @@ namespace alica
 		this->running = false;
 		this->ae->setStepCalled(true);
 
-//		if (this->loopTimer != nullptr)
-//		{
-//			this->loopTimer->start();
-//		}
-//		else
-//		{
-//			this->loopTimer = new supplementary::Timer(5, 0, false);
-//			if (this->timerModeCV == nullptr)
-//			{
-//				this->timerModeCV = new condition_variable();
-//			}
-//			this->loopTimer->registerCV(timerModeCV);
-//			this->loopTimer->start();
-//		}
-
 		if (ae->getStepEngine())
 		{
 			ae->setStepCalled(true);
 			stepModeCV->notify_one();
 		}
-//		else
-//		{
-//			timerModeCV->notify_one();
-//		}
 
 		if (this->mainThread != nullptr)
 		{
@@ -381,30 +324,16 @@ namespace alica
 			delete this->mainThread;
 		}
 		this->mainThread = nullptr;
-//		if (this->loopTimer != nullptr)
-//		{
-//			this->loopTimer->stop();
-//		}
-
 	}
 
 	PlanBase::~PlanBase()
 	{
 		delete this->ruleBook;
-//		if (this->timerModeCV != nullptr)
-//		{
-//			delete this->timerModeCV;
-//		}
 		if (this->stepModeCV != nullptr)
 		{
 			delete this->stepModeCV;
 		}
 		delete this->statusMessage;
-
-//		if (this->loopTimer != nullptr)
-//		{
-//			delete this->loopTimer;
-//		}
 	}
 	void PlanBase::checkPlanBase(shared_ptr<RunningPlan> r)
 	{
@@ -437,7 +366,6 @@ namespace alica
 			lock_guard<mutex> lock(lomutex);
 			fpEvents.push(p);
 		}
-//		timerModeCV->notify_one();
 	}
 
 	/**
