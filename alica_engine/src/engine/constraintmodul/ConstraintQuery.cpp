@@ -75,7 +75,7 @@ namespace alica
 													IConstraintSolver* solver, int& domOffset)
 	{
 #ifdef CQ_DEBUG
-		long time = behaviour->getRunningPlan()->getAlicaEngine()->getIAlicaClock()->now();
+		long time = rp->getAlicaEngine()->getIAlicaClock()->now();
 #endif
 		store->clear();
 		relevantStaticVariables.clear();
@@ -122,7 +122,7 @@ namespace alica
 
 
 			shared_ptr<RunningPlan> parent;
-			if (rp->getParent().use_count() > 0) // TODO is that a bug?
+			if (!rp->getParent().expired())
 			{
 				parent = rp->getParent().lock();
 			}

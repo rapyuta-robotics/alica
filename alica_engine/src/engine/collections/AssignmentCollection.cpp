@@ -42,7 +42,6 @@ namespace alica
 		}
 		else
 		{
-			// TODO: Do some checks where this method is used, based on the return-types
 			return false;
 		}
 	}
