@@ -84,7 +84,7 @@ namespace alica
 			}
 		}
 #ifdef CS_DEBUG
-		cout << "CS: Added condition in " << rp->getPlan()->getName() << " with " << con->getVariables().size() << " vars" << endl;
+		cout << "CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " vars" << endl;
 #endif
 	}
 
@@ -116,19 +116,20 @@ namespace alica
 		}
 
 #ifdef CS_DEBUG
-		cout << "CS: Removed condition in " << rp->getPlan()->getName() << " with " << con->getVariables().size() << " vars" << endl;
+		cout << "CS: Removed condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " vars" << endl;
 #endif
 	}
 
 	void ConstraintStore::acceptQuery(shared_ptr<ConstraintQuery> query, shared_ptr<RunningPlan> rp)
 	{
+#ifdef CS_DEBUG
+		cout << "CS: Accepting Query - Store size is " << activeConditions.size() << endl;
+#endif
 		if (activeConditions.size() == 0)
 		{
 			return;
 		}
-#ifdef CS_DEBUG
-		cout << "CS: Accepting Query - Store size is " << activeConditions.size() << endl;
-#endif
+
 		vector<Variable*> relVars = query->getRelevantStaticVariables(); //get the set of variables that are relevant in the current
 		vector<Variable*> relDomainVars = query->getRelevantDomainVariables(); //get all the domain variables
 		if (relVars.size() == 0 && relDomainVars.size() == 0)

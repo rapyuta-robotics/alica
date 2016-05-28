@@ -31,7 +31,6 @@ namespace alica
 
 	class Logger;
 	class AlicaEngine;
-	class SystemConfig;
 	class EntryPoint;
 	class State;
 	class SuccessCollection;
