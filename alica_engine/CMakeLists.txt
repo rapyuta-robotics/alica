@@ -15,9 +15,6 @@ endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 ## Enable exception handling for segfaults
 set(CMAKE_CXX_FLAGS "-rdynamic -g -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}")
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
 find_package(catkin QUIET)
 if (catkin_FOUND)
   find_package(catkin REQUIRED COMPONENTS system_config fsystem event_handling system_util)
@@ -25,77 +22,6 @@ else (catkin_FOUND)
   set(catkin_LIBRARIES "system_config" "fsystem" "event_handling" "system_util")
 endif(catkin_FOUND)
 
-
-## System dependencies are found with CMake's conventions
-#find_package(Boost REQUIRED COMPONENTS program_options)
-
-## Uncomment this if the package has a setup.py. This macro ensures
-## modules and global scripts declared therein get installed
-## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-# catkin_python_setup()
-#
-
-
-################################################
-## Declare ROS messages, services and actions ##
-################################################
- 
-## To declare and build messages, services or actions from within this
-## package, follow these steps:
-## * Let MSG_DEP_SET be the set of packages whose message types you use in
-##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
-## * In the file package.xml:
-##   * add a build_depend and a run_depend tag for each package in MSG_DEP_SET
-##   * If MSG_DEP_SET isn't empty the following dependencies might have been
-##     pulled in transitively but can be declared for certainty nonetheless:
-##     * add a build_depend tag for "message_generation"
-##     * add a run_depend tag for "message_runtime"
-## * In this file (CMakeLists.txt):
-##   * add "message_generation" and every package in MSG_DEP_SET to
-##     find_package(catkin REQUIRED COMPONENTS ...)
-##   * add "message_runtime" and every package in MSG_DEP_SET to
-##     catkin_package(CATKIN_DEPENDS ...)
-##   * uncomment the add_*_files sections below as needed
-##     and list every .msg/.srv/.action file to be processed
-##   * uncomment the generate_messages entry below
-##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
-
-## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
-
-## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
-
-## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
-
-## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
-
-###################################
-## catkin specific configuration ##
-###################################
-## The catkin_package macro generates cmake config files for your package
-## Declare things to be passed to dependent projects
-## INCLUDE_DIRS: uncomment this if you package contains header files
-## LIBRARIES: libraries you create in this project that dependent projects also need
-## CATKIN_DEPENDS: catkin_packages dependent projects also need
-## DEPENDS: system dependencies of this project that dependent projects also need
 if(catkin_FOUND)
   catkin_package(
     INCLUDE_DIRS include
@@ -111,49 +37,17 @@ endif(catkin_FOUND)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
- include_directories(include ${catkin_INCLUDE_DIRS})
-
+include_directories(include ${catkin_INCLUDE_DIRS})
 
 file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 
-## Declare a cpp library
- add_library(alica_engine
-	${alica_SOURCES};
- )
-## Declare a cpp library
- ##add_library(alica
-   ##src/engine/AlicaEngine.cpp
-   ##src/engine/PlanRepository.cpp
-   ##src/engine/parser/PlanParser.cpp
-   ##src/engine/parser/ModelFactory.cpp
-   ##src/engine/parser/tinyxml2.cpp
-   ##src/engine/model/AlicaElement.cpp
-   ##src/engine/model/Plan.cpp
-   ##src/engine/model/AbstractPlan.cpp
-   ##src/engine/model/RuntimeCondition.cpp
-   ##src/engine/model/Condition.cpp
-   ##src/engine/model/EntryPoint.cpp
-   ##src/engine/model/TaskRepository.cpp
-   ##src/engine/model/Task.cpp
-   ##src/engine/model/Role.cpp
-   ##src/engine/model/Characteristic.cpp
-   ##src/engine/model/SyncTransition.cpp
-   ##src/engine/model/Transition.cpp
-   ##src/engine/model/Quantifier.cpp
-   ##src/engine/model/Variable.cpp
-   ##src/engine/model/Behaviour.cpp
-   ##src/engine/model/State.cpp
-   ##src/engine/model/PlanType.cpp
-   ##src/engine/model/BehaviourConfiguration.cpp
-   ##src/engine/model/RoleDefinitionSet.cpp
-   ##src/engine/model/Capability.cpp
-   ##src/engine/UtilityFunction.cpp
-   ##src/engine/model/PreCondition.cpp
-   ##src/engine/BasicBehaviour.cpp
-   ##src/engine/model/CapValue.cpp;
- ## )
- target_link_libraries(alica_engine ${catkin_LIBRARIES})
- add_dependencies(alica_engine ${catkin_LIBRARIES})
+
+add_library(alica_engine
+    ${alica_SOURCES};
+)
+target_link_libraries(alica_engine ${catkin_LIBRARIES})
+add_dependencies(alica_engine ${catkin_LIBRARIES})
+
 if (NOT catkin_FOUND)
  target_include_directories(alica_engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include") 
 endif (NOT catkin_FOUND)
