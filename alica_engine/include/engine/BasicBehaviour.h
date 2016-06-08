@@ -8,6 +8,8 @@
 #ifndef BASICBEHAVIOUR_H_
 #define BASICBEHAVIOUR_H_
 
+using namespace std;
+
 #include <string>
 #include <iostream>
 #include <map>
@@ -16,15 +18,12 @@
 #include <thread>
 #include <chrono>
 #include <condition_variable>
-#include "ITrigger.h"
-#include "engine/model/EntryPoint.h"
 #include <vector>
-#include "Assignment.h"
-using namespace std;
+
 namespace supplementary
 {
 	class Timer;
-	class Trigger;
+	class ITrigger;
 }
 
 namespace alica
@@ -32,6 +31,7 @@ namespace alica
 	class Variable;
 	class RunningPlan;
 	class BehaviourConfiguration;
+	class EntryPoint;
 
 	/**
 	 * The base class for all behaviours. All Behaviours must inherit from this class.
