@@ -6,6 +6,8 @@
  */
 #define BEH_DEBUG
 
+#include "ITrigger.h"
+#include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/model/Behaviour.h"
 #include "engine/AlicaEngine.h"
