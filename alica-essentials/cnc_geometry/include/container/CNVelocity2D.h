@@ -30,6 +30,7 @@ namespace geometry {
 			shared_ptr<CNVelocity2D> operator*(const double& right);
 			shared_ptr<CNVelocity2D> operator+(const shared_ptr<CNVelocity2D>& right);
 			shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPoint2D>& right);
+			shared_ptr<CNPoint2D> getPoint();
 
 			virtual ~CNVelocity2D();
 			string toString();
