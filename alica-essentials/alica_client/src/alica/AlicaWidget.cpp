@@ -42,10 +42,10 @@ namespace alica
 		uiAlicaWidget.stateVal->setText(QString(ss.str().c_str()));
 	}
 
-	/*void AlicaWidget::handleKickerStatInfo(msl_actuator_msgs::KickerStatInfoPtr kickStatInfo)
+	void AlicaWidget::handleKickerStatInfo(msl_actuator_msgs::KickerStatInfoPtr kickStatInfo)
 	{
 		uiAlicaWidget.kickVoltVal->setText(QString::number(kickStatInfo->capVoltage));
-	}*/
+	}
 
 	void AlicaWidget::clearGUI()
 	{
