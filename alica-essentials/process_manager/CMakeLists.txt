@@ -105,7 +105,7 @@ catkin_package(
   src/RobotExecutableRegistry.cpp
  )
  target_link_libraries(robot_executable_meta_data ${catkin_LIBRARIES})
- add_dependencies(robot_executable_meta_data ${catkin_LIBRARIES})
+ #add_dependencies(robot_executable_meta_data ${catkin_LIBRARIES})
 
 ## Declare a cpp executable
 add_executable(process_manager 
@@ -115,7 +115,7 @@ add_executable(process_manager
 )
 
 target_link_libraries(process_manager ${catkin_LIBRARIES} robot_executable_meta_data)
-add_dependencies(process_manager ${catkin_LIBRARIES} process_manager_generate_messages_cpp)
+add_dependencies(process_manager process_manager_generate_messages_cpp)
 #############
 ## Install ##
 #############
