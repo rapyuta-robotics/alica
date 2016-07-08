@@ -11,6 +11,7 @@
 #include <alica_ros_proxy/AlicaEngineInfo.h>
 #include <msl_actuator_msgs/KickerStatInfo.h>
 #include <ui_AlicaWidget.h>
+#include <QtGui>
 namespace alica
 {
 	using namespace std;

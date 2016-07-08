@@ -5,6 +5,7 @@
 
 #include <SystemConfig.h>
 #include <process_manager/RobotExecutableRegistry.h>
+#include <QMenu>
 
 namespace robot_control
 {
