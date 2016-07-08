@@ -26,8 +26,14 @@ get_target_property(Qt5Widgets_location Qt5::Widgets LOCATION)
 SET( QT_USE_QTXML TRUE )
 SET( QT_WRAP_CPP TRUE )
 
+
 set(pm_control_INCLUDE_DIRECTORIES
   include
+  ${Qt5Widgets_INCLUDE_DIRS}
+  ${Qt5Core_INCLUDE_DIRS}
+  ${Qt5OpenGL_INCLUDE_DIRS}
+  ${Qt5Network_INCLUDE_DIRS}
+  ${Qt5Gui_INCLUDE_DIRS}
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 include_directories(${pm_control_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
@@ -54,8 +60,6 @@ set(pm_control_UIS
 
 QT5_WRAP_CPP(pm_control_MOCS ${pm_control_HDRS})
 QT5_WRAP_UI(pm_control_UIS_H ${pm_control_UIS})
-
-message(---------------------->: "${Qt5Widgets_location}")
 
 add_library(${PROJECT_NAME} ${pm_control_SRCS} ${pm_control_MOCS} ${pm_control_UIS_H})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Qt5Core_location} ${Qt5Gui_location} ${Qt5Network_location} ${Qt5OpenGL_location} ${Qt5Widgets_location} PMWidget)
