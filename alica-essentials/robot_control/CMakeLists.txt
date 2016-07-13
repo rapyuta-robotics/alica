@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(robot_control)
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util alica_ros_proxy alica_client pm_control std_msgs message_generation msl_actuator_msgs)
+find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util alica_ros_proxy alica_client pm_control std_msgs message_generation)
 
 find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
 include(${QT_USE_FILE})

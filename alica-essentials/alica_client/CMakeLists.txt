@@ -10,7 +10,7 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp alica_ros_proxy msl_actuator_msgs)
+find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp alica_ros_proxy)
 
 find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
 
@@ -54,7 +54,7 @@ qt4_wrap_ui(alica_client_UIS_H ${alica_UIS})
 
 add_library(AlicaWidget src/alica/AlicaWidget.cpp  ${alica_client_UIS_H})
 target_link_libraries(AlicaWidget ${catkin_LIBRARIES}) # ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
-add_dependencies(AlicaWidget ${catkin_LIBRARIES} msl_actuator_msgs_generate_messages_cpp)
+add_dependencies(AlicaWidget ${catkin_LIBRARIES})
 
 install(FILES plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
