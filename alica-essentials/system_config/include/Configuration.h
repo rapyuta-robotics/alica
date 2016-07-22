@@ -227,6 +227,34 @@ namespace supplementary
 			}
 		}
 
+		/**
+		 * This method creates the configuration parameter if it not already exists
+		 */
+		template<typename T>
+		void setCreateIfNotExistent(T value, const char *path, ...)
+		{
+			va_list ap;
+			va_start(ap, path);
+			shared_ptr<vector<string> > params = getParams('.', path, ap);
+			va_end(ap);
+
+			vector<ConfigNode *> nodes;
+
+			collect(this->configRoot.get(), params.get(), 0, &nodes);
+			if (nodes.size() == 0)
+			{
+
+			}
+
+			for (int i = 0; i < nodes.size(); i++)
+			{
+				if (nodes[i]->getType() == ConfigNode::Leaf)
+				{
+					nodes[i]->setValue(value);
+				}
+			}
+		}
+
 	};
 
 	template<>
