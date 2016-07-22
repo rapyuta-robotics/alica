@@ -15,6 +15,7 @@ using namespace std;
 #include <stdint.h>
 #include <stdlib.h>
 #include <algorithm>
+#include "boost/lexical_cast.hpp"
 
 #include "ConfigNode.h"
 
@@ -243,7 +244,60 @@ namespace supplementary
 			collect(this->configRoot.get(), params.get(), 0, &nodes);
 			if (nodes.size() == 0)
 			{
+				if(params.get()[0].size() > 0)
+				{
+					vector<string> newParams;
+					for(int i = 0; i < params.get()[0].size();  i ++)
+					{
+						nodes.clear();
+						if (newParams.size() == 0)
+						{
+							collect(this->configRoot.get(), params.get(), 0, &nodes);
+							if (nodes.size() > 0)
+							{
+								newParams.push_back(params.get()[0].at(i));
+							}
+							else
+							{
+								break;
+							}
+						}
+						else
+						{
+							newParams.push_back(params.get()[0].at(i));
+							collect(this->configRoot.get(), &newParams, 0, &nodes);
+							cout << "Size nodes: "<< nodes.size() << "iteration:" << i <<endl;
+							if (nodes.size() > 0)
+							{
+								newParams.push_back(params.get()[0].at(i));
+							}
+							else
+							{
+								newParams.pop_back();
+								collect(this->configRoot.get(), &newParams, 0, &nodes);
 
+								cout << " FINAL Size nodes: "<< nodes.size() << "iteration:" << i <<endl;
+								break;
+							}
+						}
+					}
+
+					vector<string> newSubList(params.get()[0].begin() + newParams.size(), params.get()[0].end());
+					ConfigNode * currentNode = NULL;
+					for (string newNode : newSubList)
+					{
+						if (currentNode == NULL)
+						{
+							currentNode=nodes[0]->create(newNode);
+						}
+						else if(newNode.compare(newSubList.back()) != 0)
+						{
+							currentNode = currentNode->create(newNode);
+						} else {
+							currentNode = currentNode->create(newNode,value);
+						}
+					}
+				}
 			}
 
 			for (int i = 0; i < nodes.size(); i++)
