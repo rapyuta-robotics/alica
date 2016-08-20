@@ -35,6 +35,7 @@ namespace supplementary
 		ConfigNodePtr configRoot;
 
 		void serialize_internal(ostringstream *ss, ConfigNode *node);
+		void serialize_without_root(ostringstream *ss, ConfigNode *node)
 
 		template<typename Target>
 		Target convert(string value)
