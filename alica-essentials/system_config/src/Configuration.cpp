@@ -233,7 +233,7 @@ namespace supplementary
 		ostringstream ss;
 		ofstream os(filename.c_str(), ios_base::out);
 
-		serialize_without_root(&ss, this->configRoot->getChildren()->at(0).get());
+		serialize_without_root(&ss, this->configRoot.get());
 
 		os << ss.str();
 	}
