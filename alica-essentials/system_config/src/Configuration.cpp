@@ -233,7 +233,7 @@ namespace supplementary
 		ostringstream ss;
 		ofstream os(filename.c_str(), ios_base::out);
 
-		serialize_internal(&ss, this->configRoot.get());
+		serialize_without_root(&ss, this->configRoot.get());
 
 		os << ss.str();
 	}
@@ -243,6 +243,39 @@ namespace supplementary
 		ostringstream ss;
 		serialize_internal(&ss, this->configRoot.get());
 		return ss.str();
+	}
+
+	void Configuration::serialize_without_root(ostringstream *ss, ConfigNode *node)
+	{
+		if (node == NULL)
+					return;
+
+				if (node->getType() == ConfigNode::Node)
+				{
+
+					//*ss << string(node->getDepth(), '\t') << "[" << node->getName() << "]" << endl;
+
+					for (vector<ConfigNodePtr>::iterator itr = node->getChildren()->begin(); itr != node->getChildren()->end();
+							itr++)
+					{
+						serialize_internal(ss, (*itr).get());
+					}
+
+					//*ss << string(node->getDepth(), '\t') << "[!" << node->getName() << "]" << endl;
+
+				}
+				else if (node->getType() == ConfigNode::Leaf)
+				{
+
+					*ss << string(node->getDepth(), '\t') << node->getName() << " = " << node->getValue() << endl;
+
+				}
+				else
+				{ // Comment
+
+					*ss << string(node->getDepth(), '\t') << "# " << node->getName() << endl;
+
+				}
 	}
 
 	void Configuration::collect(ConfigNode *node, vector<string> *params, size_t offset, vector<ConfigNode *> *result)

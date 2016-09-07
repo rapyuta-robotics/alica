@@ -95,8 +95,8 @@ namespace robot_control
 												(RobotsControl*)this);
 		alicaInfoSub = rosNode->subscribe("/AlicaEngine/AlicaEngineInfo", 10, &RobotsControl::receiveAlicaInfo,
 											(RobotsControl*)this);
-		kickerStatInfoSub = rosNode->subscribe("/KickerStatInfo", 10, &RobotsControl::receiveKickerStatInfo,
-												(RobotsControl*)this);
+		//kickerStatInfoSub = rosNode->subscribe("/KickerStatInfo", 10, &RobotsControl::receiveKickerStatInfo,
+		//										(RobotsControl*)this);
 
 		// Initialise the GUI refresh timer
 		this->guiUpdateTimer = new QTimer();
@@ -178,11 +178,11 @@ namespace robot_control
 		this->alicaInfoMsgQueue.emplace(chrono::system_clock::now(), alicaInfo);
 	}
 
-	void RobotsControl::receiveKickerStatInfo(msl_actuator_msgs::KickerStatInfoPtr kickerStatInfo)
+	/*void RobotsControl::receiveKickerStatInfo(msl_actuator_msgs::KickerStatInfoPtr kickerStatInfo)
 	{
 		lock_guard<mutex> lck(kickerStatInfoMsgQueueMutex);
 		this->kickerStatInfoMsgQueue.emplace(chrono::system_clock::now(), kickerStatInfo);
-	}
+	}*/
 
 	/**
 	 * Processes all queued messages from the processStatMsgsQueue and the alicaInfoMsgQueue.
@@ -218,7 +218,7 @@ namespace robot_control
 			}
 		}
 
-		{
+		/*{
 			lock_guard<mutex> lck(kickerStatInfoMsgQueueMutex);
 			while (!this->kickerStatInfoMsgQueue.empty())
 			{
@@ -228,7 +228,7 @@ namespace robot_control
 
 				this->controlledRobotsMap[timeKickerStatInfoPair.second->senderID]->handleKickerStatInfo(timeKickerStatInfoPair);
 			}
-		}
+		}*/
 
 	}
 
