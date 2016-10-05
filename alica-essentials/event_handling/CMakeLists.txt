@@ -108,8 +108,8 @@ endif(NOT catkin_FOUND)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(event_handling_node event_handling_generate_messages_cpp)
-#add_dependencies(event_handling ${catkin_LIBRARIES})
+
+
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(event_handling_node

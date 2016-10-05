@@ -42,7 +42,7 @@ add_library(system_util
    src/Logging.cpp
    src/ConsoleCommandHelper.cpp
 )
-#add_dependencies(system_util fsystem)
+
 
 if (NOT catkin_FOUND)
   target_include_directories(system_util PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
