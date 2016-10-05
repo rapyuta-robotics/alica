@@ -38,7 +38,7 @@ if(TARGET ${PROJECT_NAME}-test)
  ) 
  target_link_libraries(autogen_code ${catkin_LIBRARIES})
 
- add_dependencies(${PROJECT_NAME}-test autogen_code )
+
  target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} autogen_code )
 endif()
 
