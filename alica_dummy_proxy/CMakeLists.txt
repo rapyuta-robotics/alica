@@ -21,7 +21,7 @@ endif(catkin_FOUND)
 
 if(catkin_FOUND)
  catkin_package(
-  INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
+  INCLUDE_DIRS include
   LIBRARIES alica_dummy_proxy
   CATKIN_DEPENDS alica_engine system_config
   DEPENDS system_lib
@@ -35,7 +35,7 @@ include_directories(
 file(GLOB_RECURSE alica_dummy_sources "src/*.cpp")
 add_library(alica_dummy_proxy ${alica_dummy_sources})
 target_link_libraries(alica_dummy_proxy ${catkin_LIBRARIES})
- 
+
 if (NOT catkin_FOUND)
- target_include_directories(alica_dummy_proxy PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include") 
+ target_include_directories(alica_dummy_proxy PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif (NOT catkin_FOUND)
