@@ -13,12 +13,10 @@
   <build_depend>rqt_gui</build_depend>
   <build_depend>alica_ros_proxy</build_depend>
   <build_depend>rqt_gui_cpp</build_depend>
-  <build_depend>msl_actuator_msgs</build_depend>
   
   <run_depend>rqt_gui</run_depend>
   <run_depend>alica_ros_proxy</run_depend>
   <run_depend>rqt_gui_cpp</run_depend>
-  <run_depend>msl_actuator_msgs</run_depend>
 
   <export>
     <rqt_gui plugin="${prefix}/plugin.xml"/>
