@@ -35,6 +35,7 @@ namespace geometry
 
 	shared_ptr<CNPoint2D> CNPosition::alloToEgo(CNPosition& me)
 	{
+		//TODO: rotate ego
 		shared_ptr<CNPoint2D> ego = make_shared<CNPoint2D>();
 
 		double x = this->x - me.x;
@@ -51,6 +52,7 @@ namespace geometry
 
 	shared_ptr<CNPoint2D> CNPosition::egoToAllo(CNPosition& me)
 	{
+		// TODO: rotate ego
 		shared_ptr<CNPoint2D> allo = make_shared<CNPoint2D>();
 		allo->x = me.x;
 		allo->y = me.y;
@@ -114,4 +116,3 @@ namespace geometry
 		return ret;
 	}
 }
-

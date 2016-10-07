@@ -10,6 +10,7 @@
 
 #include "geometry_msgs/Point.h"
 #include <memory>
+#include <Macros.h>
 
 using namespace std;
 
@@ -20,7 +21,6 @@ namespace geometry {
 	class CNPoint2D : public geometry_msgs::Point {
 	public:
 
-
 		CNPoint2D(double x, double y);
 		CNPoint2D() : CNPoint2D(0,0) {}
 
@@ -30,8 +30,8 @@ namespace geometry {
 		double angleToPoint(shared_ptr<CNPoint2D> point);
 		double distanceTo(shared_ptr<CNPoint2D> point);
 		double distanceTo(shared_ptr<CNPosition> pos);
-		shared_ptr<CNPoint2D> alloToEgo(CNPosition& me);
-		shared_ptr<CNPoint2D> egoToAllo(CNPosition& me);
+		DEPRECATED shared_ptr<CNPoint2D> alloToEgo(CNPosition& me);
+		DEPRECATED shared_ptr<CNPoint2D> egoToAllo(CNPosition& me);
 		shared_ptr<CNPoint2D> normalize();
 		shared_ptr<CNPoint2D> clone();
 

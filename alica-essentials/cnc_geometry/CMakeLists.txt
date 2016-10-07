@@ -14,6 +14,7 @@ endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
+  system_util
 )
 
 ## System dependencies are found with CMake's conventions
@@ -88,7 +89,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES cnc_geometry
-  CATKIN_DEPENDS geometry_msgs
+  CATKIN_DEPENDS geometry_msgs system_util
 #  DEPENDS system_lib
 )
 

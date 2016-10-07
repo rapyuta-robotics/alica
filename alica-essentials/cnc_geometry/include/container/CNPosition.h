@@ -10,13 +10,22 @@
 
 #include "geometry_msgs/Pose2D.h"
 #include "container/CNPoint2D.h"
+#include <Macros.h>
 using namespace std;
 
 namespace geometry {
 	class CNPosition : public geometry_msgs::Pose2D {
 	public:
-		CNPosition() : CNPosition(0,0,0) {}
-		CNPosition(double x, double y, double theta);
+		/*
+			Deprecated: Use CNPositionAllo or CNPositionEgo instead
+		*/
+		DEPRECATED CNPosition() : CNPosition(0, 0, 0) {}
+
+		/*
+			Deprecated: Use CNPositionAllo or CNPositionEgo instead
+		*/
+		DEPRECATED CNPosition(double x, double y, double theta);
+
 		virtual ~CNPosition();
 		string toString();
 		double distanceTo(shared_ptr<CNPoint2D> point);
