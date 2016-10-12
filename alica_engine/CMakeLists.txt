@@ -46,7 +46,7 @@ add_library(alica_engine
     ${alica_SOURCES};
 )
 target_link_libraries(alica_engine ${catkin_LIBRARIES})
-
+#add_dependencies(alica_engine ${catkin_LIBRARIES})
 
 if (NOT catkin_FOUND)
  target_include_directories(alica_engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include") 
