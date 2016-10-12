@@ -60,11 +60,11 @@ find_package(Boost REQUIRED COMPONENTS system)
    RoleSwitch.msg
    SolverVar.msg
    SyncReady.msg
-   AlicaEngineInfo.msg
+   AlicaEngineInfo.msg 
    PlanTreeInfo.msg
    SolverResult.msg
    SyncData.msg
-   SyncTalk.msg
+   SyncTalk.msg   
 )
 
 ## Generate services in the 'srv' folder
@@ -97,7 +97,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
+  INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
   LIBRARIES alica_ros_proxy
   CATKIN_DEPENDS alica_engine roscpp message_runtime
   DEPENDS system_lib
