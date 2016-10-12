@@ -50,13 +50,13 @@ set(robot_control_HDRS
 
 set(robot_control_UIS
   ui/RobotsControl.ui
-  ui/ControlledRobot.ui
+  ui/ControlledRobot.ui  
 )
 
 set(robot_control_INCLUDE_DIRECTORIES
   include
-  ${Qt5Core_INCLUDE_DIRS}
-  ${Qt5Gui_INCLUDE_DIRS}
+  ${Qt5Core_INCLUDE_DIRS} 
+  ${Qt5Gui_INCLUDE_DIRS} 
   ${Qt5Network_INCLUDE_DIRS}
   ${Qt5Widgets_INCLUDE_DIRS}
   ${CMAKE_CURRENT_BINARY_DIR}
@@ -68,20 +68,20 @@ set(robot_control_RCS
 )
 
 catkin_package(
-  INCLUDE_DIRS include ${CMAKE_CURRENT_BINARY_DIR} # for QT moc files
+  INCLUDE_DIRS ${robot_control_INCLUDE_DIRECTORIES}
   LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS rqt_gui rqt_gui_cpp
 )
 
 
 QT5_WRAP_CPP(robot_control_MOCS ${robot_control_HDRS})
-QT5_ADD_RESOURCES(robot_control_RESOURCES ${robot_control_RCS})
+QT5_ADD_RESOURCES(robot_control_RESOURCES ${robot_control_RCS}) 
 QT5_WRAP_UI(robot_control_UIS_H ${robot_control_UIS})
 
 add_library(${PROJECT_NAME} ${robot_control_SRCS} ${robot_control_MOCS} ${robot_control_UIS_H} ${robot_control_RESOURCES})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Qt5Core_location} ${Qt5Gui_location} ${Qt5Network_location})
 
-
+add_dependencies(${PROJECT_NAME} robot_control_generate_messages_cpp)
 
 find_package(class_loader)
 class_loader_hide_library_symbols(${PROJECT_NAME})

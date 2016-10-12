@@ -53,7 +53,7 @@ add_library(system_config
   include/Configuration.h
 )
 
-
+#add_dependencies(system_config ${catkin_LIBRARIES})
 
 target_link_libraries(system_config ${catkin_LIBRARIES})
 

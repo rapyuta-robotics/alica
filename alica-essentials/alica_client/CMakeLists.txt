@@ -34,7 +34,7 @@ set(alica_client_INCLUDE_DIRECTORIES
 include_directories(${alica_client_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
 
 catkin_package(
-  INCLUDE_DIRS include ${CMAKE_CURRENT_BINARY_DIR} # for QT moc files
+  INCLUDE_DIRS ${alica_client_INCLUDE_DIRECTORIES}
   LIBRARIES ${PROJECT_NAME} AlicaWidget
   CATKIN_DEPENDS rqt_gui rqt_gui_cpp alica_ros_proxy
 )
@@ -49,7 +49,7 @@ QT5_WRAP_CPP(alica_client_MOCS ${alica_client_HDRS})
 
 add_library(${PROJECT_NAME} src/alica_client/AlicaClient.cpp ${alica_client_MOCS})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} AlicaWidget)
-
+add_dependencies(${PROJECT_NAME} AlicaWidget)
 
 find_package(class_loader)
 class_loader_hide_library_symbols(${PROJECT_NAME})
@@ -63,6 +63,7 @@ QT5_WRAP_UI(alica_client_UIS_H ${alica_UIS})
 add_library(AlicaWidget src/alica/AlicaWidget.cpp  ${alica_client_UIS_H})
 
 target_link_libraries(AlicaWidget ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTWIDGETS_LIBRARY})
+add_dependencies(AlicaWidget msl_actuator_msgs_generate_messages_cpp)
 
 install(FILES plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}

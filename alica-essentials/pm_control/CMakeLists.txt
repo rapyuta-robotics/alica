@@ -39,7 +39,7 @@ set(pm_control_INCLUDE_DIRECTORIES
 include_directories(${pm_control_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
 
 catkin_package(
-  INCLUDE_DIRS include ${CMAKE_CURRENT_BINARY_DIR} # for QT moc files
+  INCLUDE_DIRS ${pm_control_INCLUDE_DIRECTORIES}
   LIBRARIES ${PROJECT_NAME} PMWidget
   CATKIN_DEPENDS rqt_gui rqt_gui_cpp
 )
@@ -63,7 +63,7 @@ QT5_WRAP_UI(pm_control_UIS_H ${pm_control_UIS})
 
 add_library(${PROJECT_NAME} ${pm_control_SRCS} ${pm_control_MOCS} ${pm_control_UIS_H})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Qt5Core_location} ${Qt5Gui_location} ${Qt5Network_location} ${Qt5OpenGL_location} ${Qt5Widgets_location} PMWidget)
-
+add_dependencies(${PROJECT_NAME} process_manager_generate_messages_cpp PMWidget)
 
 find_package(class_loader)
 class_loader_hide_library_symbols(${PROJECT_NAME})
@@ -91,7 +91,7 @@ QT5_WRAP_UI(pm_widget_UIS_H ${pm_widget_UIS})
 
 add_library(PMWidget ${pm_widget_SRCS} ${pm_widget_MOCS} ${pm_widget_UIS_H})
 target_link_libraries(PMWidget ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTWIDGETS_LIBRARY})
-
+add_dependencies(PMWidget process_manager_generate_messages_cpp)
 
 install(FILES plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
@@ -113,3 +113,4 @@ install(PROGRAMS scripts/pm_control
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
+

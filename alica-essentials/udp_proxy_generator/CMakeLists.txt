@@ -29,7 +29,7 @@ find_package(Boost REQUIRED COMPONENTS system filesystem regex)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES
+ LIBRARIES 
  CATKIN_DEPENDS fsystem
  DEPENDS system filesystem regex
 )
@@ -59,8 +59,8 @@ add_executable(wrapped_msg_handler_generator
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-
-
+#add_dependencies(udp_proxy_generator ${catkin_LIBRARIES})
+#add_dependencies(wrapped_msg_handler_generator ${catkin_LIBRARIES})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(udp_proxy_generator ${catkin_LIBRARIES} ${Boost_LIBRARIES})

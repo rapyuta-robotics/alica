@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(process_manager)
-
+ 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
@@ -98,17 +98,17 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
  include_directories(include ${catkin_INCLUDE_DIRS})
-
+ 
  add_library(robot_executable_meta_data
   src/RobotMetaData.cpp
   src/ExecutableMetaData.cpp
   src/RobotExecutableRegistry.cpp
  )
  target_link_libraries(robot_executable_meta_data ${catkin_LIBRARIES})
-
+ #add_dependencies(robot_executable_meta_data ${catkin_LIBRARIES})
 
 ## Declare a cpp executable
-add_executable(process_manager
+add_executable(process_manager 
   src/ProcessManager.cpp
   src/ManagedExecutable.cpp
   src/ManagedRobot.cpp
