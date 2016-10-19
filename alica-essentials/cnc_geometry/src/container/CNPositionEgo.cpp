@@ -19,7 +19,7 @@ namespace geometry
 	string CNPositionEgo::toString()
 	{
 		stringstream ss;
-		ss << "CNPositionAllo: x: " << this->x << " y: " << this->y << " theta: " << this->theta << endl;
+		ss << "CNPositionEgo: x: " << this->x << " y: " << this->y << " theta: " << this->theta << endl;
 		return ss.str();
 	}
 
@@ -41,40 +41,35 @@ namespace geometry
         return allo;
     }
 
-	shared_ptr<CNPositionEgo> CNPositionEgo::operator +(const shared_ptr<CNPositionEgo>& right)
-	{
-		auto ret = make_shared<CNPositionEgo>(this->x, this->y);
-		ret->x += right->x;
-		ret->y += right->y;
-		return ret;
-	}
+    shared_ptr<CNPositionEgo> CNPositionEgo::operator +(const shared_ptr<CNPoint2D>& right)
+    {
+        auto ret = make_shared<CNPositionEgo>(this->x, this->y, this->theta);
+        ret->x += right->x;
+        ret->y += right->y;
+        return ret;
+    }
 
-	shared_ptr<CNPositionEgo> CNPositionEgo::operator -(const shared_ptr<CNPositionEgo>& right)
-	{
-		auto ret = make_shared<CNPositionEgo>(this->x, this->y);
-		ret->x += right->x;
-		ret->y += right->y;
-		return ret;
-	}
+    shared_ptr<CNPositionEgo> CNPositionEgo::operator -(const shared_ptr<CNPoint2D>& right)
+    {
+        auto ret = make_shared<CNPositionEgo>(this->x, this->y, this->theta);
+        ret->x += right->x;
+        ret->y += right->y;
+        return ret;
+    }
 
-	shared_ptr<CNPositionEgo> CNPositionEgo::getEgoPoint()
-	{
-		return make_shared<CNPositionEgo>(this->x, this->y);
-	}
+    shared_ptr<CNPositionEgo> operator +(const shared_ptr<CNPositionEgo>& left, const shared_ptr<CNPoint2D>& right)
+    {
+        auto ret = make_shared<CNPositionEgo>(left->x, left->y, this->theta);
+        ret->x += right->x;
+        ret->y += right->y;
+        return ret;
+    }
 
-	shared_ptr<CNPositionEgo> operator +(const shared_ptr<CNPositionEgo>& left, const shared_ptr<CNPositionEgo>& right)
-	{
-		auto ret = make_shared<CNPositionEgo>(left->x, left->y);
-		ret->x += right->x;
-		ret->y += right->y;
-		return ret;
-	}
-
-	shared_ptr<CNPositionEgo> operator -(const shared_ptr<CNPositionEgo>& left, const shared_ptr<CNPositionEgo>& right)
-	{
-		auto ret = make_shared<CNPositionEgo>(left->x, left->y);
-		ret->x -= right->x;
-		ret->y -= right->y;
-		return ret;
-	}
+    shared_ptr<CNPositionEgo> operator -(const shared_ptr<CNPositionEgo>& left, const shared_ptr<CNPoint2D>& right)
+    {
+        auto ret = make_shared<CNPositionEgo>(left->x, left->y, this->theta);
+        ret->x -= right->x;
+        ret->y -= right->y;
+        return ret;
+    }
 }

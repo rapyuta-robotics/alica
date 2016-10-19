@@ -19,5 +19,10 @@ namespace geometry
 		ss << "CNPositionBase: x: " << this->x << " y: " << this->y << " theta: " << this->theta << endl;
 		return ss.str();
 	}
+
+	shared_ptr<CNPoint2D> CNPositionBase::getPoint()
+	{
+		return make_shared<CNPoint2D>(this->x, this->y);
+	}
 	
 }
