@@ -51,7 +51,7 @@ qt4_wrap_ui(pm_control_UIS_H ${pm_control_UIS})
 
 add_library(${PROJECT_NAME} ${pm_control_SRCS} ${pm_control_MOCS} ${pm_control_UIS_H})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY} PMWidget)
-add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES} process_manager_generate_messages_cpp PMWidget)
+add_dependencies(${PROJECT_NAME} process_manager_generate_messages_cpp)
 
 find_package(class_loader)
 class_loader_hide_library_symbols(${PROJECT_NAME})
@@ -79,7 +79,7 @@ qt4_wrap_ui(pm_widget_UIS_H ${pm_widget_UIS})
 
 add_library(PMWidget ${pm_widget_SRCS} ${pm_widget_MOCS} ${pm_widget_UIS_H})
 target_link_libraries(PMWidget ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
-add_dependencies(PMWidget ${catkin_LIBRARIES} process_manager_generate_messages_cpp)
+add_dependencies(PMWidget process_manager_generate_messages_cpp)
 
 install(FILES plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
