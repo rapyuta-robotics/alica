@@ -24,7 +24,7 @@ if(catkin_FOUND)
   INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
   LIBRARIES alica_dummy_proxy
   CATKIN_DEPENDS alica_engine system_config
-  DEPENDS system_lib
+  #DEPENDS 
  )
 endif(catkin_FOUND)
 
