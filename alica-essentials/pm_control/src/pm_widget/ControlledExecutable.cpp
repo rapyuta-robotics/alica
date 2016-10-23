@@ -5,7 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#include <QMenu>
+#include <qt5/QtWidgets/QMenu>
 #include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
 #include <process_manager/RobotExecutableRegistry.h>

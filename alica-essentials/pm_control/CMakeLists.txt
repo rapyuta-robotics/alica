@@ -12,15 +12,28 @@ endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util)
 
-find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
+#find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
+find_package(Qt5Core REQUIRED)
+get_target_property(Qt5Core_location Qt5::Core LOCATION)
+find_package(Qt5Gui REQUIRED)
+get_target_property(Qt5Gui_location Qt5::Gui LOCATION)
+find_package(Qt5OpenGL REQUIRED)
+get_target_property(Qt5OpenGL_location Qt5::OpenGL LOCATION)
+find_package(Qt5Network REQUIRED)
+get_target_property(Qt5Network_location Qt5::Network LOCATION)
+find_package(Qt5Widgets REQUIRED)
+get_target_property(Qt5Widgets_location Qt5::Widgets LOCATION)
+SET( QT_USE_QTXML TRUE )
+SET( QT_WRAP_CPP TRUE )
 
-## Use c++ 11x std
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-
-include(${QT_USE_FILE})
 
 set(pm_control_INCLUDE_DIRECTORIES
   include
+  ${Qt5Widgets_INCLUDE_DIRS}
+  ${Qt5Core_INCLUDE_DIRS}
+  ${Qt5OpenGL_INCLUDE_DIRS}
+  ${Qt5Network_INCLUDE_DIRS}
+  ${Qt5Gui_INCLUDE_DIRS}
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 include_directories(${pm_control_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
@@ -45,12 +58,11 @@ set(pm_control_UIS
   src/pm_control/PMControl.ui
 )
 
-qt4_wrap_cpp(pm_control_MOCS ${pm_control_HDRS})
-qt4_wrap_ui(pm_control_UIS_H ${pm_control_UIS})
-
+QT5_WRAP_CPP(pm_control_MOCS ${pm_control_HDRS})
+QT5_WRAP_UI(pm_control_UIS_H ${pm_control_UIS})
 
 add_library(${PROJECT_NAME} ${pm_control_SRCS} ${pm_control_MOCS} ${pm_control_UIS_H})
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY} PMWidget)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Qt5Core_location} ${Qt5Gui_location} ${Qt5Network_location} ${Qt5OpenGL_location} ${Qt5Widgets_location} PMWidget)
 add_dependencies(${PROJECT_NAME} process_manager_generate_messages_cpp)
 
 find_package(class_loader)
@@ -74,11 +86,11 @@ set(pm_widget_HDRS
   include/pm_widget/ControlledRobot.h
 )
 
-qt4_wrap_cpp(pm_widget_MOCS ${pm_widget_HDRS})
-qt4_wrap_ui(pm_widget_UIS_H ${pm_widget_UIS})
+QT5_WRAP_CPP(pm_widget_MOCS ${pm_widget_HDRS})
+QT5_WRAP_UI(pm_widget_UIS_H ${pm_widget_UIS})
 
 add_library(PMWidget ${pm_widget_SRCS} ${pm_widget_MOCS} ${pm_widget_UIS_H})
-target_link_libraries(PMWidget ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
+target_link_libraries(PMWidget ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTWIDGETS_LIBRARY})
 add_dependencies(PMWidget process_manager_generate_messages_cpp)
 
 install(FILES plugin.xml

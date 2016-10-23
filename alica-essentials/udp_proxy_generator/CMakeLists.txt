@@ -13,7 +13,6 @@ find_package(catkin REQUIRED COMPONENTS fsystem)
 
 find_package(Boost REQUIRED COMPONENTS system filesystem regex)
 
-
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES 

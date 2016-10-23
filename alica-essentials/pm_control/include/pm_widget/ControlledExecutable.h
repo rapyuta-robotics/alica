@@ -9,7 +9,7 @@
 #define SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDEXECUTABLE_H_
 
 #include <process_manager/ProcessStat.h>
-#include "QWidget"
+#include <qt5/QtWidgets/QWidget>
 
 #include <string>
 #include <vector>
