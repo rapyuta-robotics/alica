@@ -36,6 +36,7 @@ set(pm_control_INCLUDE_DIRECTORIES
   ${Qt5Gui_INCLUDE_DIRS}
   ${CMAKE_CURRENT_BINARY_DIR}
 )
+
 include_directories(${pm_control_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
 
 catkin_package(
