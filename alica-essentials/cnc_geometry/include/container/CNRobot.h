@@ -8,26 +8,29 @@
 #ifndef SUPPLEMENTARY_CNC_GEOMETRY_SRC_CONTAINER_CNROBOT_H_
 #define SUPPLEMENTARY_CNC_GEOMETRY_SRC_CONTAINER_CNROBOT_H_
 
-#include "container/CNPosition.h"
+#include "container/CNPositionAllo.h"
+#include "container/CNVelocity2DEgo.h"
 
 namespace geometry
 {
 
-	class CNRobot : public CNPosition
-	{
-	public:
-		CNRobot();
-		virtual ~CNRobot();
-		double radius;
-		double velocityX;
-		double velocityY;
-		int id;
-		shared_ptr<vector<int>> opposer;
-		shared_ptr<vector<int>> supporter;
-		double certainty;
-		double rotation;
-		string toString();
-	};
-}
+class CNRobot
+{
+  public:
+    CNRobot();
+    virtual ~CNRobot();
+
+	string toString();
+
+	int id;
+	CNPositionAllo position;
+	CNVelocity2DEgo velocity;
+	double radius;
+    shared_ptr<vector<int>> opposer;
+    shared_ptr<vector<int>> supporter;
+    double certainty;
+};
+
+} /* namespace geometry */
 
 #endif /* SUPPLEMENTARY_CNC_GEOMETRY_SRC_CONTAINER_CNROBOT_H_ */

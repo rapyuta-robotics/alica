@@ -1,6 +1,7 @@
-
-#include "container/CNPositionBaseBase.h"
 #include <sstream>
+
+#include "container/CNPositionBase.h"
+
 namespace geometry
 {
 
@@ -20,7 +21,7 @@ namespace geometry
 		return ss.str();
 	}
 
-	shared_ptr<CNPoint2D> CNPositionBase::getPoint()
+	shared_ptr<CNPoint2D> CNPositionBase::toPoint()
 	{
 		return make_shared<CNPoint2D>(this->x, this->y);
 	}

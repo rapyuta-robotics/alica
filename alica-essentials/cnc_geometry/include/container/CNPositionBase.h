@@ -3,18 +3,23 @@
 
 #include "geometry_msgs/Pose2D.h"
 
-namespace geometry {
+namespace geometry
+{
 
-	using namespace std;
+using namespace std;
 
-	class CNPositionBase : public geometry_msgs::Pose2D {
-	public:
-	    CNPositionBase() : CNPositionBase(0, 0, 0) { }
-		CNPositionBase(double x, double y, double theta);
-		virtual ~CNPositionBase();
-		virtual string toString();
-	};
+class CNPositionBase : public geometry_msgs::Pose2D
+{
+  public:
+    CNPositionBase() : CNPositionBase(0, 0, 0) {}
+    CNPositionBase(double x, double y, double theta);
+    virtual ~CNPositionBase();
 
-}
+    virtual string toString();
+
+    shared_ptr<CNVec2D> toPoint();
+};
+
+} /* namespace geometry */
 
 #endif /* CNC_GEOMETRY_CONTAINER_CNPOSITIONBASE_H_ */

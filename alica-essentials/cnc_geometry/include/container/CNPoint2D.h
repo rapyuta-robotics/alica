@@ -14,45 +14,48 @@
 
 using namespace std;
 
+namespace geometry
+{
 
-namespace geometry {
-	class CNPosition;
+class CNPosition;
 
-	class CNPoint2D : public geometry_msgs::Point {
-	public:
+class CNPoint2D : public geometry_msgs::Point
+{
+  public:
+    CNPoint2D(double x, double y);
+    CNPoint2D() : CNPoint2D(0, 0) {}
 
-		CNPoint2D(double x, double y);
-		CNPoint2D() : CNPoint2D(0,0) {}
+    double length();
+    shared_ptr<CNPoint2D> rotate(double radian);
+    double angleTo();
+    double angleToPoint(shared_ptr<CNPoint2D> point);
+    double distanceTo(shared_ptr<CNPoint2D> point);
+    double distanceTo(shared_ptr<CNPosition> pos);
+    DEPRECATED shared_ptr<CNPoint2D> alloToEgo(CNPosition &me);
+    DEPRECATED shared_ptr<CNPoint2D> egoToAllo(CNPosition &me);
+    shared_ptr<CNPoint2D> normalize();
+    shared_ptr<CNPoint2D> clone();
 
-		double length();
-		shared_ptr<CNPoint2D> rotate(double radian);
-		double angleTo();
-		double angleToPoint(shared_ptr<CNPoint2D> point);
-		double distanceTo(shared_ptr<CNPoint2D> point);
-		double distanceTo(shared_ptr<CNPosition> pos);
-		DEPRECATED shared_ptr<CNPoint2D> alloToEgo(CNPosition& me);
-		DEPRECATED shared_ptr<CNPoint2D> egoToAllo(CNPosition& me);
-		shared_ptr<CNPoint2D> normalize();
-		shared_ptr<CNPoint2D> clone();
+    shared_ptr<CNPoint2D> operator*(const double &right);
+    shared_ptr<CNPoint2D> operator/(const double &right);
+    shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPoint2D> &right);
+    shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPoint2D> &right);
+    shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPosition> &right);
+    shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPosition> &right);
 
-		shared_ptr<CNPoint2D> operator*(const double& right);
-		shared_ptr<CNPoint2D> operator/(const double& right);
-		shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPoint2D>& right);
-		shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPoint2D>& right);
-		shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPosition>& right);
-		shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPosition>& right);
+    virtual ~CNPoint2D();
+    string toString();
+};
 
-		virtual ~CNPoint2D();
-		string toString();
-	};
+shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPoint2D> &left, const shared_ptr<CNPoint2D> &right);
+shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPoint2D> &left, const shared_ptr<CNPoint2D> &right);
+shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPoint2D> &left, const shared_ptr<CNPosition> &right);
+shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPoint2D> &left, const shared_ptr<CNPosition> &right);
+shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPosition> &left, const shared_ptr<CNPoint2D> &right);
+shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPosition> &left, const shared_ptr<CNPoint2D> &right);
+shared_ptr<CNPoint2D> operator*(const shared_ptr<CNPoint2D> &left, const double &right);
+shared_ptr<CNPoint2D> operator/(const shared_ptr<CNPoint2D> &left, const double &right);
 
-	shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPoint2D>& left, const shared_ptr<CNPoint2D>& right);
-	shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPoint2D>& left, const shared_ptr<CNPoint2D>& right);
-	shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPoint2D>& left, const shared_ptr<CNPosition>& right);
-	shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPoint2D>& left, const shared_ptr<CNPosition>& right);
-	shared_ptr<CNPoint2D> operator+(const shared_ptr<CNPosition>& left, const shared_ptr<CNPoint2D>& right);
-	shared_ptr<CNPoint2D> operator-(const shared_ptr<CNPosition>& left, const shared_ptr<CNPoint2D>& right);
-	shared_ptr<CNPoint2D> operator*(const shared_ptr<CNPoint2D>& left, const double& right);
-	shared_ptr<CNPoint2D> operator/(const shared_ptr<CNPoint2D>& left, const double& right);
-}
+} /* namespace */
+
 #endif /* CNC_MSL_MSL_WORLDMODEL_SRC_CONTAINER_POINT2D_H_ */
