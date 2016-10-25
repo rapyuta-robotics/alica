@@ -1,3 +1,10 @@
+/*
+ * CNPositionAllo.cpp
+ *
+ *  Created on: 24.10.2016
+ *      Author: Philipp Mandler
+ */
+
 #include "container/CNPositionAllo.h"
 
 #include <sstream>
@@ -41,7 +48,29 @@ shared_ptr<CNPositionEgo> CNPosition::toEgo(CNPositionAllo &me)
 
 /* Operators */
 
-shared_ptr<CNPositionAllo> CNPositionAllo::operator+(const shared_ptr<CNPoint2D> &right)
+// CNPositionAllo
+
+shared_ptr<CNPositionAllo> CNPositionAllo::operator+(const shared_ptr<CNPositionAllo> &right)
+{
+    auto ret = make_shared<CNPositionAllo>(this->x, this->y, this->theta);
+    ret->x += right->x;
+    ret->y += right->y;
+    // TODO
+    return ret;
+}
+
+shared_ptr<CNPositionAllo> CNPositionAllo::operator-(const shared_ptr<CNPositionAllo> &right)
+{
+    auto ret = make_shared<CNPositionAllo>(this->x, this->y, this->theta);
+    ret->x += right->x;
+    ret->y += right->y;
+    // TODO
+    return ret;
+}
+
+// CNVec2D
+
+shared_ptr<CNPositionAllo> CNPositionAllo::operator+(const shared_ptr<CNVec2D> &right)
 {
     auto ret = make_shared<CNPositionAllo>(this->x, this->y, this->theta);
     ret->x += right->x;
@@ -49,7 +78,7 @@ shared_ptr<CNPositionAllo> CNPositionAllo::operator+(const shared_ptr<CNPoint2D>
     return ret;
 }
 
-shared_ptr<CNPositionAllo> CNPositionAllo::operator-(const shared_ptr<CNPoint2D> &right)
+shared_ptr<CNPositionAllo> CNPositionAllo::operator-(const shared_ptr<CNVec2D> &right)
 {
     auto ret = make_shared<CNPositionAllo>(this->x, this->y, this->theta);
     ret->x += right->x;
@@ -57,20 +86,24 @@ shared_ptr<CNPositionAllo> CNPositionAllo::operator-(const shared_ptr<CNPoint2D>
     return ret;
 }
 
-shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNPoint2D> &right)
+/* Right handed operators */
+
+// CNVec2D
+
+shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPositionAllo> &right)
 {
-    auto ret = make_shared<CNPositionAllo>(left->x, left->y, this->theta);
-    ret->x += right->x;
-    ret->y += right->y;
+    auto ret = make_shared<CNPositionAllo>(right->x, right->y, right->theta);
+    ret->x += left->x;
+    ret->y += left->y;
     return ret;
 }
 
-shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNPoint2D> &right)
+shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNVec2D> &right)
 {
-    auto ret = make_shared<CNPositionAllo>(left->x, left->y, this->theta);
-    ret->x -= right->x;
-    ret->y -= right->y;
+    auto ret = make_shared<CNPositionAllo>(right->x, right->y, right->theta);
+    ret->x -= left->x;
+    ret->y -= left->y;
     return ret;
 }
 
-} /* namespace */
+} /* namespace geometry */

@@ -14,7 +14,7 @@ CNRobot::CNRobot()
 {
 	this->id = 0;
     this->position = CNPositionAllo();
-	this->velocity = CNVelocity2D();
+	this->velocity = CNVelocity2DEgo();
     this->radius = 0;
     this->certainty = 0;
 }
@@ -24,7 +24,7 @@ CNRobot::~CNRobot() {}
 string CNRobot::toString()
 {
     stringstream ss;
-    ss << "CNRobot: position = (" << this->position.toString() << ") velX: " << this->velocityX << " velY: " << this->velocityY << " id: " << this->id << endl;
+    ss << "CNRobot: position: (" << this->position.toString() << ")" << " velocity: (" << this->velocity.toString() << ") id: " << this->id << endl;
     return ss.str();
 }
 

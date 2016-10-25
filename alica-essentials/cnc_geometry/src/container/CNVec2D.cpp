@@ -20,6 +20,21 @@ CNVec2D::CNVec2D(double x, double y)
     this->y = y;
 }
 
+CNVec2D::~CNVec2D() {}
+
+string CNVec2D::toString()
+{
+    stringstream ss;
+    ss << "CNVec2D: x: " << this->x << " y: " << this->y << endl;
+    return ss.str();
+}
+
+shared_ptr<CNVec2D> CNVec2D::clone()
+{
+    return make_shared<CNVec2D>(this->x, this->y);
+}
+
+
 double CNVec2D::length()
 {
     return sqrt(x * x + y * y);
@@ -63,7 +78,6 @@ double CNVec2D::angleTo()
 //     return allo;
 // }
 
-CNVec2D::~CNVec2D() {}
 
 shared_ptr<CNVec2D> CNVec2D::normalize()
 {
@@ -83,11 +97,25 @@ shared_ptr<CNVec2D> CNVec2D::normalize()
     return norm;
 }
 
-shared_ptr<CNVec2D> CNVec2D::clone()
+
+double CNVec2D::distanceTo(shared_ptr<CNVec2D> point)
 {
-    return make_shared<CNVec2D>(this->x, this->y);
+    return sqrt(pow(this->x - point->x, 2) + pow(this->y - point->y, 2));
 }
 
+double CNVec2D::distanceTo(shared_ptr<CNPosition> pos)
+{
+    return sqrt(pow(this->x - pos->x, 2) + pow(this->y - pos->y, 2));
+}
+
+double geometry::CNVec2D::angleToPoint(shared_ptr<CNVec2D> point)
+{
+    return atan2(point->y - this->y, point->x - this->x);
+}
+
+/* Operators */
+
+// Scalar
 shared_ptr<CNVec2D> CNVec2D::operator*(const double &right)
 {
     auto ret = make_shared<CNVec2D>(this->x, this->y);
@@ -96,13 +124,15 @@ shared_ptr<CNVec2D> CNVec2D::operator*(const double &right)
     return ret;
 }
 
-shared_ptr<CNVec2D> operator*(const shared_ptr<CNVec2D> &left, const double &right)
+shared_ptr<CNVec2D> CNVec2D::operator/(const double &right)
 {
-    auto ret = make_shared<CNVec2D>(left->x, left->y);
-    ret->x *= right;
-    ret->y *= right;
+    auto ret = make_shared<CNVec2D>(this->x, this->y);
+    ret->x /= right;
+    ret->y /= right;
     return ret;
 }
+
+// CNVec2D
 
 shared_ptr<CNVec2D> CNVec2D::operator+(const shared_ptr<CNVec2D> &right)
 {
@@ -120,107 +150,16 @@ shared_ptr<CNVec2D> CNVec2D::operator-(const shared_ptr<CNVec2D> &right)
     return ret;
 }
 
-shared_ptr<CNVec2D> CNVec2D::operator+(const shared_ptr<CNPosition> &right)
+/* Right handed operators */
+
+// Scalar
+
+shared_ptr<CNVec2D> operator*(const double &left, const shared_ptr<CNVec2D> &right)
 {
-    auto ret = make_shared<CNVec2D>(this->x, this->y);
-    ret->x += right->x;
-    ret->y += right->y;
+    auto ret = make_shared<CNVec2D>(right->x, right->y);
+    ret->x *= left;
+    ret->y *= left;
     return ret;
 }
 
-shared_ptr<CNVec2D> CNVec2D::operator-(const shared_ptr<CNPosition> &right)
-{
-    auto ret = make_shared<CNVec2D>(this->x, this->y);
-    ret->x -= right->x;
-    ret->y -= right->y;
-    return ret;
-}
-
-shared_ptr<CNVec2D> CNVec2D::operator/(const double &right)
-{
-    auto ret = make_shared<CNVec2D>(this->x, this->y);
-    ret->x /= right;
-    ret->y /= right;
-    return ret;
-}
-
-shared_ptr<CNVec2D> operator+(const shared_ptr<CNVec2D> &left, const shared_ptr<CNVec2D> &right)
-{
-    auto ret = make_shared<CNVec2D>(left->x, left->y);
-    ret->x += right->x;
-    ret->y += right->y;
-    return ret;
-}
-
-shared_ptr<CNVec2D> operator-(const shared_ptr<CNVec2D> &left, const shared_ptr<CNVec2D> &right)
-{
-    auto ret = make_shared<CNVec2D>(left->x, left->y);
-    ret->x -= right->x;
-    ret->y -= right->y;
-    return ret;
-}
-
-//TODO
-shared_ptr<CNVec2D> operator+(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPosition> &right)
-{
-    auto ret = make_shared<CNVec2D>(left->x, left->y);
-    ret->x += right->x;
-    ret->y += right->y;
-    return ret;
-}
-
-shared_ptr<CNVec2D> operator-(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPosition> &right)
-{
-    auto ret = make_shared<CNVec2D>(left->x, left->y);
-    ret->x -= right->x;
-    ret->y -= right->y;
-    return ret;
-}
-
-shared_ptr<CNVec2D> operator/(const shared_ptr<CNVec2D> &left, const double &right)
-{
-    auto ret = make_shared<CNVec2D>(left->x, left->y);
-    ret->x /= right;
-    ret->y /= right;
-    return ret;
-}
-
-shared_ptr<CNVec2D> operator+(const shared_ptr<CNPosition> &left, const shared_ptr<CNVec2D> &right)
-{
-    auto ret = make_shared<CNVec2D>(left->x, left->y);
-    ret->x += right->x;
-    ret->y += right->y;
-    return ret;
-}
-
-shared_ptr<CNVec2D> operator-(const shared_ptr<CNPosition> &left, const shared_ptr<CNVec2D> &right)
-{
-    auto ret = make_shared<CNVec2D>(left->x, left->y);
-    ret->x -= right->x;
-    ret->y -= right->y;
-    return ret;
-}
-
-string CNVec2D::toString()
-{
-    stringstream ss;
-    ss << "CNVec2D: x: " << this->x << " y: " << this->y << endl;
-    return ss.str();
-}
-
-double CNVec2D::distanceTo(shared_ptr<CNVec2D> point)
-{
-    return sqrt(pow(this->x - point->x, 2) + pow(this->y - point->y, 2));
-}
-
-double CNVec2D::distanceTo(shared_ptr<CNPosition> pos)
-{
-    return sqrt(pow(this->x - pos->x, 2) + pow(this->y - pos->y, 2));
-}
-
-double geometry::CNVec2D::angleToPoint(shared_ptr<CNVec2D> point)
-{
-    return atan2(point->y - this->y, point->x - this->x);
-}
-
-} /* namespace */
+} /* namespace geometry */

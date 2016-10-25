@@ -1,7 +1,15 @@
+/*
+ * CNPositionAllo.h
+ *
+ *  Created on: 24.10.2016
+ *      Author: Philipp Mandler
+ */
+
 #ifndef CNC_GEOMETRY_CONTAINER_CNPOSITIONALLO_H_
 #define CNC_GEOMETRY_CONTAINER_CNPOSITIONALLO_H_
 
 #include "container/CNPositionBase.h"
+#include "container/CNVec2D.h"
 
 namespace geometry
 {
@@ -20,13 +28,23 @@ class CNPositionAllo : public CNPositionBase
     double distanceTo(shared_ptr<CNPositionAllo> alloPos);
     shared_ptr<CNPositionEgo> toEgo(CNPositionAllo &origin);
 
+    /* Operators */
+
+    // CNPositionAllo
     shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNPositionAllo> &right);
     shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNPositionAllo> &right);
+
+    // CNVec2D
+    shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNVec2D> &right);
+    shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNVec2D> &right);
 };
 
-shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNPositionAllo> &right);
-shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNPositionAllo> &right);
+/* Right handed operators */
 
-} /* namespace */
+// CNVec2D
+shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPositionAllo> &right);
+shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPositionAllo> &right);
+
+} /* namespace geometry */
 
 #endif /* CNC_GEOMETRY_CONTAINER_CNPOSITIONALLO_H_ */

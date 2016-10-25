@@ -59,9 +59,7 @@ shared_ptr<CNVelocity2D> CNVelocity2D::egoToAllo(CNPosition &me)
     return allo;
 }
 
-CNVelocity2D::~CNVelocity2D()
-{
-}
+CNVelocity2D::~CNVelocity2D() {}
 
 shared_ptr<CNVelocity2D> CNVelocity2D::normalize()
 {
@@ -70,12 +68,12 @@ shared_ptr<CNVelocity2D> CNVelocity2D::normalize()
 
     if (length > 0)
     {
-	norm->x = this->x / length;
-	norm->y = this->y / length;
+		norm->x = this->x / length;
+		norm->y = this->y / length;
     }
     else
     {
-	cerr << "CNVelocity2D: Trying to normalize 0.0!" << endl;
+		cerr << "CNVelocity2D: Trying to normalize 0.0!" << endl;
     }
 
     return norm;
@@ -129,5 +127,4 @@ string CNVelocity2D::toString()
     ss << "CNVelocity2D: x: " << this->x << " y: " << this->y << endl;
     return ss.str();
 }
-
 }

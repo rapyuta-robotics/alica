@@ -35,22 +35,21 @@ class CNVec2D : public geometry_msgs::Point
     double distanceTo(shared_ptr<CNPositionBase> pos);
     shared_ptr<CNVec2D> normalize();
 
-    shared_ptr<CNVec2D> operator*(const double &right);
-    shared_ptr<CNVec2D> operator/(const double &right);
-    shared_ptr<CNVec2D> operator+(const shared_ptr<CNVec2D> &right);
-    shared_ptr<CNVec2D> operator-(const shared_ptr<CNVec2D> &right);
-    shared_ptr<CNVec2D> operator+(const shared_ptr<CNPositionBase> &right);
-    shared_ptr<CNVec2D> operator-(const shared_ptr<CNPositionBase> &right);
+    /* Operators */
+
+    // Scalar
+    virtual shared_ptr<CNVec2D> operator*(const double &right);
+    virtual shared_ptr<CNVec2D> operator/(const double &right);
+
+    // CNVec2D
+    virtual shared_ptr<CNVec2D> operator+(const shared_ptr<CNVec2D> &right);
+    virtual shared_ptr<CNVec2D> operator-(const shared_ptr<CNVec2D> &right);
 };
 
-shared_ptr<CNVec2D> operator+(const shared_ptr<CNVec2D> &left, const shared_ptr<CNVec2D> &right);
-shared_ptr<CNVec2D> operator-(const shared_ptr<CNVec2D> &left, const shared_ptr<CNVec2D> &right);
-shared_ptr<CNVec2D> operator+(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPositionBase> &right);
-shared_ptr<CNVec2D> operator-(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPositionBase> &right);
-shared_ptr<CNVec2D> operator+(const shared_ptr<CNPositionBase> &left, const shared_ptr<CNVec2D> &right);
-shared_ptr<CNVec2D> operator-(const shared_ptr<CNPositionBase> &left, const shared_ptr<CNVec2D> &right);
-shared_ptr<CNVec2D> operator*(const shared_ptr<CNVec2D> &left, const double &right);
-shared_ptr<CNVec2D> operator/(const shared_ptr<CNVec2D> &left, const double &right);
+/* Right handed operators */
+
+// Scalar
+shared_ptr<CNVec2D> operator*(const double &left, const shared_ptr<CNVec2D> &right);
 
 } /* namespace geometry */
 

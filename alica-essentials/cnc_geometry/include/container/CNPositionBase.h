@@ -1,7 +1,15 @@
+/*
+ * CNPositionBase.h
+ *
+ *  Created on: 24.10.2016
+ *      Author: Philipp Mandler
+ */
+
 #ifndef CNC_GEOMETRY_CONTAINER_CNPOSITIONBASE_H_
 #define CNC_GEOMETRY_CONTAINER_CNPOSITIONBASE_H_
 
 #include "geometry_msgs/Pose2D.h"
+#include "container/CNVec2D.h"
 
 namespace geometry
 {

@@ -13,10 +13,12 @@
 namespace geometry
 {
 
+class CNVelocity2DAllo;
+
 class CNVelocity2DEgo : public CNVec2D
 {
   public:
-    CNVelocity2DEgo(double x, double y) : CNVec2(x, y);
+    CNVelocity2DEgo(double x, double y) : CNVec2D(x, y) {};
     CNVelocity2DEgo() : CNVelocity2DEgo(0, 0) {}
     virtual ~CNVelocity2DEgo();
 
