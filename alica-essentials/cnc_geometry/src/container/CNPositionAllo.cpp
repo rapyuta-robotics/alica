@@ -31,17 +31,21 @@ double CNPositionAllo::distanceTo(shared_ptr<CNPositionAllo> alloPos)
 
 shared_ptr<CNPositionEgo> CNPosition::toEgo(CNPositionAllo &me)
 {
-    //TODO: rotate ego
     shared_ptr<CNPositionEgo> ego = make_shared<CNPositionEgo>();
 
+    // unrotated pos
     double x = this->x - me.x;
     double y = this->y - me.y;
 
+    // rotated pos
     double angle = atan2(y, x) - me.theta;
     double dist = sqrt(x * x + y * y);
 
     ego->x = cos(angle) * dist;
     ego->y = sin(angle) * dist;
+
+    // rotate theta
+    ego->theta = this->theta - me->theta;
 
     return ego;
 }
@@ -55,16 +59,16 @@ shared_ptr<CNPositionAllo> CNPositionAllo::operator+(const shared_ptr<CNPosition
     auto ret = make_shared<CNPositionAllo>(this->x, this->y, this->theta);
     ret->x += right->x;
     ret->y += right->y;
-    // TODO
+    ret->theta += right->theta;
     return ret;
 }
 
 shared_ptr<CNPositionAllo> CNPositionAllo::operator-(const shared_ptr<CNPositionAllo> &right)
 {
     auto ret = make_shared<CNPositionAllo>(this->x, this->y, this->theta);
-    ret->x += right->x;
-    ret->y += right->y;
-    // TODO
+    ret->x -= right->x;
+    ret->y -= right->y;
+    ret->theta -= right->theta;
     return ret;
 }
 
@@ -81,8 +85,8 @@ shared_ptr<CNPositionAllo> CNPositionAllo::operator+(const shared_ptr<CNVec2D> &
 shared_ptr<CNPositionAllo> CNPositionAllo::operator-(const shared_ptr<CNVec2D> &right)
 {
     auto ret = make_shared<CNPositionAllo>(this->x, this->y, this->theta);
-    ret->x += right->x;
-    ret->y += right->y;
+    ret->x -= right->x;
+    ret->y -= right->y;
     return ret;
 }
 
