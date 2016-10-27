@@ -31,17 +31,16 @@ double CNPositionEgo::distanceTo(shared_ptr<CNPositionEgo> egoPos)
 
 shared_ptr<CNPositionAllo> CNPositionEgo::toAllo(CNPositionAllo &me)
 {
-    // TODO: rotate ego
     shared_ptr<CNPositionAllo> allo = make_shared<CNPositionAllo>();
 
-    // rotate pos
-    double angle = atan2(y, x) - me.theta;
-    double dist = sqrt(x * x + y * y);
+    // rotate rel point arround origin -> rel point with allo orientation
+    double sin = sin(me.theta);
+    double cos = cos(me.theta);
 
-    double x = cos(-angle) * dist;
-    double y = sin(-angle) * dist;
+    double x = cos * this->x - sin * this->y;
+    double y = sin * this->x - cos * this->y;
 
-    // sum pos
+    // sum me pos and rel pos -> allo pos with allo rotaion
     allo->x = x + me.x;
     allo->y = y + me.y;
 

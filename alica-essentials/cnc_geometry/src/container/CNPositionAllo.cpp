@@ -33,16 +33,16 @@ shared_ptr<CNPositionEgo> CNPosition::toEgo(CNPositionAllo &me)
 {
     shared_ptr<CNPositionEgo> ego = make_shared<CNPositionEgo>();
 
-    // unrotated pos
-    double x = this->x - me.x;
-    double y = this->y - me.y;
+    // sub me pos from allo pos -> rel pos with allo orientation
+    double relX = this->x - me.x;
+    double relY = this->y - me.y;
 
-    // rotated pos
-    double angle = atan2(y, x) - me.theta;
-    double dist = sqrt(x * x + y * y);
+    // rotate rel point arround origin -> rel point with ego orientation
+    double sin = sin(-me.theta);
+    double cos = cos(-me.theta);
 
-    ego->x = cos(angle) * dist;
-    ego->y = sin(angle) * dist;
+    double x = cos * relX - sin * relY;
+    double y = sin * relX - cos * relY;
 
     // rotate theta
     ego->theta = this->theta - me->theta;
