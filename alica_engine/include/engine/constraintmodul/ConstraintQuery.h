@@ -123,6 +123,7 @@ namespace alica
 		{
 			result.clear();
 
+			// currently only synch variables if the result/their value is a double
 			if (typeid(T) == typeid(double) && ret)
 			{
 				for (int i = 0; i < solverResult.size(); i++)
