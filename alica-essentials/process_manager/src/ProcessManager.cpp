@@ -602,13 +602,13 @@ namespace supplementary
 			{
 				setsid();
 				// redirect stdout
-				string logFileName = Logging::getLogFilename("roscore");
+				string logFileName = logging::getLogFilename("roscore");
 				FILE* fd = fopen(logFileName.c_str(), "w+");
 				dup2(fileno(fd), STDOUT_FILENO);
 				fclose(fd);
 
 				// redirect stderr
-				logFileName = Logging::getErrLogFilename("roscore");
+				logFileName = logging::getErrLogFilename("roscore");
 				fd = fopen(logFileName.c_str(), "w+");
 				dup2(fileno(fd), STDERR_FILENO);
 				fclose(fd);
