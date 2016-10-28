@@ -79,7 +79,7 @@ namespace supplementary
 			std::cout << std::endl;
 		}
 
-#define LOG(msg) (supplementary::logging::Log(basename(__FILE__), __FUNCTION__, __LINE__, supplementary::logging::LogData<supplementary::logging::None>() << msg))
+		#define LOG(msg) (supplementary::logging::Log(basename(__FILE__), __FUNCTION__, __LINE__, supplementary::logging::LogData<supplementary::logging::None>() << msg))
 	}
 } /* namespace supplementary */
 
