@@ -54,7 +54,8 @@ namespace alica
 		void addVariable(Variable* v);
 		void addVariable(int robot, string ident);
 		void clearDomainVariables();
-		void clearStaticVariables();bool existsSolution(int solverType, shared_ptr<RunningPlan> rp);
+		void clearStaticVariables();
+		bool existsSolution(int solverType, shared_ptr<RunningPlan> rp);
 
 		template<class T>
 		bool getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<T>& result);
@@ -86,9 +87,9 @@ namespace alica
 		};
 
 	private:
-		bool collectProblemStatement(shared_ptr<RunningPlan> rp, vector<Variable*>& relevantVariables,
-										vector<shared_ptr<ConstraintDescriptor>>& cds, IConstraintSolver* solver,
-										int& domOffset);
+		bool collectProblemStatement(shared_ptr<RunningPlan> rp, IConstraintSolver* solver,
+										vector<shared_ptr<ConstraintDescriptor>>& cds,
+										vector<Variable*>& relevantVariables, int& domOffset);
 
 		shared_ptr<UniqueVarStore> store;
 		vector<Variable*> queriedStaticVariables;
@@ -110,7 +111,7 @@ namespace alica
 		vector<shared_ptr<ConstraintDescriptor>> cds = vector<shared_ptr<ConstraintDescriptor>>();
 		vector<Variable*> relevantVariables;
 		int domOffset;
-		if (!collectProblemStatement(rp, relevantVariables, cds, solver, domOffset))
+		if (!collectProblemStatement(rp, solver, cds, relevantVariables, domOffset))
 		{
 			return false;
 		}
@@ -132,13 +133,13 @@ namespace alica
 					uint8_t* tmp = ((uint8_t*)solverResult.at(i));
 					shared_ptr<vector<uint8_t>> result = make_shared<vector<uint8_t>>(sizeof(T));
 					//If you have an Segfault/Error here you solver does not return what you are querying! ;)
-					for(int s=0; s<sizeof(T); s++) {
+					for (int s = 0; s < sizeof(T); s++)
+					{
 						result->at(s) = *tmp;
 						tmp++;
 					}
 
-					solver->getAlicaEngine()->getResultStore()->postResult(relevantVariables.at(i)->getId(),
-																			result);
+					solver->getAlicaEngine()->getResultStore()->postResult(relevantVariables.at(i)->getId(), result);
 				}
 			}
 
@@ -147,6 +148,7 @@ namespace alica
 			{
 				result.push_back(*((T*)solverResult.at(store->getIndexOf(queriedStaticVariables[i]))));
 			}
+
 			for (int i = 0; i < queriedDomainVariables.size(); ++i)
 			{
 				for (int j = 0; j < relevantDomainVariables.size(); ++j)

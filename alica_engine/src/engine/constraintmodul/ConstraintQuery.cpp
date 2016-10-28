@@ -29,11 +29,11 @@
 
 namespace alica
 {
-	ConstraintQuery::ConstraintQuery(AlicaEngine* ae) : ae(ae)
+	ConstraintQuery::ConstraintQuery(AlicaEngine* ae) :
+			ae(ae)
 	{
 		store = make_shared<UniqueVarStore>();
 	}
-
 
 	void ConstraintQuery::addVariable(Variable* v)
 	{
@@ -42,9 +42,7 @@ namespace alica
 
 	void ConstraintQuery::addVariable(int robot, string ident)
 	{
-		queriedDomainVariables.push_back(
-				this->ae->getTeamObserver()->getRobotById(robot)->getSortedVariable(
-						ident));
+		queriedDomainVariables.push_back(this->ae->getTeamObserver()->getRobotById(robot)->getSortedVariable(ident));
 	}
 
 	void ConstraintQuery::clearDomainVariables()
@@ -64,15 +62,16 @@ namespace alica
 		vector<shared_ptr<ConstraintDescriptor>> cds = vector<shared_ptr<ConstraintDescriptor>>();
 		vector<Variable*> relevantVariables;
 		int domOffset;
-		if(!collectProblemStatement(rp, relevantVariables, cds, solver, domOffset)) {
+		if (!collectProblemStatement(rp, solver, cds, relevantVariables, domOffset))
+		{
 			return false;
 		}
 		return solver->existsSolution(relevantVariables, cds);
 	}
 
-	bool ConstraintQuery::collectProblemStatement(shared_ptr<RunningPlan> rp, vector<Variable*>& relevantVariables,
+	bool ConstraintQuery::collectProblemStatement(shared_ptr<RunningPlan> rp, IConstraintSolver* solver,
 													vector<shared_ptr<ConstraintDescriptor>>& cds,
-													IConstraintSolver* solver, int& domOffset)
+													vector<Variable*>& relevantVariables, int& domOffset)
 	{
 #ifdef CQ_DEBUG
 		long time = rp->getAlicaEngine()->getIAlicaClock()->now();
@@ -119,7 +118,6 @@ namespace alica
 				}
 				relevantStaticVariables = tmpVector;
 			}
-
 
 			shared_ptr<RunningPlan> parent;
 			if (!rp->getParent().expired())
@@ -198,10 +196,8 @@ namespace alica
 		relevantVariables.insert(relevantVariables.end(), relevantDomainVariables.begin(),
 									relevantDomainVariables.end());
 
-
 #ifdef CQ_DEBUG
-		cout << "CQ: PrepTime: "
-				<< (ae->getIAlicaClock()->now() - time) / 10000.0 << endl;
+		cout << "CQ: PrepTime: " << (ae->getIAlicaClock()->now() - time) / 10000.0 << endl;
 #endif
 		return true;
 	}

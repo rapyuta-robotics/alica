@@ -47,7 +47,7 @@ namespace alica
 					ae->abort("Cannot create log folder: ", logPath);
 				}
 			}
-			string logFile = supplementary::Logging::getLogFilename("alica-run--" + robotName );
+			string logFile = supplementary::logging::getLogFilename("alica-run--" + robotName );
 			this->fileWriter = new ofstream(logFile.c_str());
 			this->eventStrings = list<string>();
 			this->inIteration = false;
