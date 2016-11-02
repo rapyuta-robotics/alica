@@ -39,12 +39,6 @@ class CNPositionAllo : public CNPositionBase
     shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNVec2D> &right);
 };
 
-/* Right handed operators */
-
-// CNVec2D
-shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPositionAllo> &right);
-shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPositionAllo> &right);
-
 } /* namespace geometry */
 
 #endif /* CNC_GEOMETRY_CONTAINER_CNPOSITIONALLO_H_ */

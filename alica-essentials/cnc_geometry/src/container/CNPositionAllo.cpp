@@ -90,24 +90,4 @@ shared_ptr<CNPositionAllo> CNPositionAllo::operator-(const shared_ptr<CNVec2D> &
     return ret;
 }
 
-/* Right handed operators */
-
-// CNVec2D
-
-shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPositionAllo> &right)
-{
-    auto ret = make_shared<CNPositionAllo>(right->x, right->y, right->theta);
-    ret->x += left->x;
-    ret->y += left->y;
-    return ret;
-}
-
-shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNVec2D> &right)
-{
-    auto ret = make_shared<CNPositionAllo>(right->x, right->y, right->theta);
-    ret->x -= left->x;
-    ret->y -= left->y;
-    return ret;
-}
-
 } /* namespace geometry */

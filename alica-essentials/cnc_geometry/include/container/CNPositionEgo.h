@@ -45,10 +45,6 @@ class CNPositionEgo : public CNPositionBase
 
 /* Right handed operators */
 
-// CNVec2D
-shared_ptr<CNPositionEgo> operator+(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPositionEgo> &right);
-shared_ptr<CNPositionEgo> operator-(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPositionEgo> &right);
-
 // Scalar
 shared_ptr<CNPositionEgo> operator+(const double &left, const shared_ptr<CNPositionEgo> &right);
 shared_ptr<CNPositionEgo> operator-(const double &left, const shared_ptr<CNPositionEgo> &right);

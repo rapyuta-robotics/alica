@@ -29,7 +29,7 @@ class CNVec2D : public geometry_msgs::Point
 
     double length();
     shared_ptr<CNVec2D> rotate(double radian);
-    double angleTo();
+    double angle();
     double angleToPoint(shared_ptr<CNVec2D> point);
     double distanceTo(shared_ptr<CNVec2D> point);
     double distanceTo(shared_ptr<CNPositionBase> pos);

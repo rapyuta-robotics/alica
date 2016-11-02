@@ -8,7 +8,7 @@
 #include "container/CNPositionEgo.h"
 
 #include <sstream>
-#include "container/CNPositionAllo.h"
+#include "CNPositionAllo.h"
 
 using namespace std;
 
@@ -109,24 +109,6 @@ shared_ptr<CNPositionEgo> CNPositionEgo::operator/(const double &right)
 }
 
 /* Right handed operators */
-
-// CNVec2D
-
-shared_ptr<CNPositionEgo> operator+(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPositionEgo> &right)
-{
-    auto ret = make_shared<CNPositionEgo>(right->x, right->y, right->theta);
-    ret->x += left->x;
-    ret->y += left->y;
-    return ret;
-}
-
-shared_ptr<CNPositionEgo> operator-(const shared_ptr<CNVec2D> &left, const shared_ptr<CNPositionEgo> &right)
-{
-    auto ret = make_shared<CNPositionEgo>(right->x, right->y, right->theta);
-    ret->x -= left->x;
-    ret->y -= left->y;
-    return ret;
-}
 
 // Scalar
 
