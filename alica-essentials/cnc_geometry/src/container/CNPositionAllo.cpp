@@ -41,8 +41,8 @@ shared_ptr<CNPositionEgo> CNPosition::toEgo(CNPositionAllo &me)
     double sin = sin(-me.theta);
     double cos = cos(-me.theta);
 
-    double x = cos * relX - sin * relY;
-    double y = sin * relX - cos * relY;
+    ego->x = cos * relX - sin * relY;
+    ego->y = sin * relX - cos * relY;
 
     // rotate theta
     ego->theta = this->theta - me->theta;

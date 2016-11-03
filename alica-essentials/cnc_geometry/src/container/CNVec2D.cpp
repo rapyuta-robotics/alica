@@ -63,37 +63,9 @@ double CNVec2D::angle()
     return atan2(y, x);
 }
 
-// shared_ptr<CNVec2D> CNVec2D::alloToEgo(CNPosition &me)
-// {
-//     shared_ptr<CNVec2D> ego = make_shared<CNVec2D>();
-
-//     double x = this->x - me.x;
-//     double y = this->y - me.y;
-
-//     double angle = atan2(y, x) - me.theta;
-//     double dist = sqrt(x * x + y * y);
-
-//     ego->x = cos(angle) * dist;
-//     ego->y = sin(angle) * dist;
-
-//     return ego;
-// }
-
-// shared_ptr<CNVec2D> CNVec2D::egoToAllo(CNPosition &me)
-// {
-//     shared_ptr<CNVec2D> allo = make_shared<CNVec2D>();
-//     allo->x = me.x;
-//     allo->y = me.y;
-
-//     allo->x += cos(me.theta) * x - sin(me.theta) * y;
-//     allo->y += sin(me.theta) * x + cos(me.theta) * y;
-
-//     return allo;
-// }
-
 shared_ptr<CNVec2D> CNPositionEgo::egoToAllo(CNPositionAllo &me)
 {
-    shared_ptr<CNPositionAllo> alloVec = make_shared<CNPositionAllo>();
+    shared_ptr<CNVec2D> alloVec = make_shared<CNVec2D>();
 
     // rotate rel point arround origin -> rel point with allo orientation
     double sin = sin(me.theta);
@@ -107,6 +79,24 @@ shared_ptr<CNVec2D> CNPositionEgo::egoToAllo(CNPositionAllo &me)
     alloVec->y = y + me.y;
 
     return alloVec;
+}
+
+shared_ptr<CNVec2D> CNPosition::alloToEgo(CNPositionAllo &me)
+{
+    shared_ptr<CNVec2D> egoVec = make_shared<CNVec2D>();
+
+    // sub me pos from allo pos -> rel pos with allo orientation
+    double relX = this->x - me.x;
+    double relY = this->y - me.y;
+
+    // rotate rel point arround origin -> rel point with ego orientation
+    double sin = sin(-me.theta);
+    double cos = cos(-me.theta);
+
+    egoVec->x = cos * relX - sin * relY;
+    egoVec->y = sin * relX - cos * relY;
+
+    return egoVec;
 }
 
 /**
