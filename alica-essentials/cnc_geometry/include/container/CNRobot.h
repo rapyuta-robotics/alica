@@ -9,7 +9,7 @@
 #define SUPPLEMENTARY_CNC_GEOMETRY_SRC_CONTAINER_CNROBOT_H_
 
 #include "container/CNPositionAllo.h"
-#include "container/CNVelocity2DEgo.h"
+#include "container/CNVec2DEgo.h"
 
 namespace geometry
 {
@@ -24,7 +24,7 @@ class CNRobot
 
 	int id;
 	CNPositionAllo position;
-	CNVelocity2DEgo velocity;
+	CNVec2DEgo velocity; //TODO: check if ego or allo
 	double radius;
     shared_ptr<vector<int>> opposer;
     shared_ptr<vector<int>> supporter;

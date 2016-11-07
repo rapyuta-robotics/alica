@@ -14,7 +14,7 @@ CNRobot::CNRobot()
 {
 	this->id = 0;
     this->position = CNPositionAllo();
-	this->velocity = CNVelocity2DEgo();
+	this->velocity = CNVec2DEgo();
     this->radius = 0;
     this->certainty = 0;
 }

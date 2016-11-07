@@ -8,35 +8,29 @@
 #ifndef CNC_GEOMETRY_CONTAINER_CNPOSITIONALLO_H_
 #define CNC_GEOMETRY_CONTAINER_CNPOSITIONALLO_H_
 
-#include "container/CNPositionBase.h"
-#include "container/CNVec2D.h"
+#include "container/CNPositionTemplate.h"
+#include "container/CNPositionAllo.h"
+#include "container/CNPositionAllo.h"
+#include "container/CNVec2DAllo.h"
 
 namespace geometry
 {
 
 class CNPositionEgo;
 
-class CNPositionAllo : public CNPositionBase
+class CNPositionAllo : public CNPositionTemplate<CNPositionAllo>
 {
   public:
     CNPositionAllo() : CNPositionAllo(0, 0, 0) {};
-    CNPositionAllo(double x, double y, double theta) : CNPositionBase(x, y, theta) {};
+    CNPositionAllo(double x, double y, double theta);
     virtual ~CNPositionAllo();
 
     string toString();
 
-    double distanceTo(shared_ptr<CNPositionAllo> alloPos);
     shared_ptr<CNPositionEgo> toEgo(CNPositionAllo &origin);
 
-    /* Operators */
-
-    // CNPositionAllo
-    shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNPositionAllo> &right);
-    shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNPositionAllo> &right);
-
-    // CNVec2D
-    shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNVec2D> &right);
-    shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNVec2D> &right);
+    shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNVec2DAllo> &right);
+    shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNVec2DAllo> &right);
 };
 
 } /* namespace geometry */
