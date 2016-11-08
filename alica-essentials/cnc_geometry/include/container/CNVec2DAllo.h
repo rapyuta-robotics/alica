@@ -15,6 +15,7 @@ namespace geometry
 
 class CNVec2DEgo;
 class CNPositionAllo;
+class CNVec2DEgo;
 
 class CNVec2DAllo : public CNVec2DTemplate<CNVec2DAllo>
 {

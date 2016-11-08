@@ -10,6 +10,7 @@
 
 #include "container/CNPoint2DAllo.h"
 #include "container/CNPositionAllo.h"
+#include "container/CNVec2DEgo.h"
 
 namespace geometry
 {
@@ -45,6 +46,20 @@ shared_ptr<CNPoint2DAllo> CNPoint2DEgo::toAllo(CNPositionAllo &me)
 	allo->y = y + me.y;
 
 	return allo;
+}
+
+shared_ptr<CNPoint2DEgo> operator+(const shared_ptr<CNPoint2DEgo> &left, const shared_ptr<CNVec2DEgo> &right)
+{
+	return make_shared<CNPoint2DEgo>(
+			left->x + right->x,
+			left->y + right->y);
+}
+
+shared_ptr<CNPoint2DEgo> operator-(const shared_ptr<CNPoint2DEgo> &left, const shared_ptr<CNVec2DEgo> &right)
+{
+	return make_shared<CNPoint2DEgo>(
+			left->x - right->x,
+			left->y - right->y);
 }
 
 } /* namespace geometry */

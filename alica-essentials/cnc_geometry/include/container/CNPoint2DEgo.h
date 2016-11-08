@@ -15,6 +15,7 @@ namespace geometry
 
 class CNPoint2DAllo;
 class CNPositionAllo;
+class CNVec2DEgo;
 
 class CNPoint2DEgo : public CNPoint2DTemplate<CNPoint2DEgo>
 {
@@ -26,7 +27,11 @@ class CNPoint2DEgo : public CNPoint2DTemplate<CNPoint2DEgo>
     string toString();
 
     shared_ptr<CNPoint2DAllo> toAllo(CNPositionAllo &origin);
+
 };
+
+shared_ptr<CNPoint2DEgo> operator+(const shared_ptr<CNPoint2DEgo> &left, const shared_ptr<CNVec2DEgo> &right);
+shared_ptr<CNPoint2DEgo> operator-(const shared_ptr<CNPoint2DEgo> &left, const shared_ptr<CNVec2DEgo> &right);
 
 } /* namespace geometry */
 

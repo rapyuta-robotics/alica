@@ -9,6 +9,7 @@
 #define INCLUDE_CONTAINER_CNVEC2DTEMPLATE_H_
 
 #include "geometry_msgs/Point.h"
+#include "container/CNPosition.h" // TODO: remove
 
 using namespace std;
 
@@ -16,6 +17,7 @@ namespace geometry {
 
 template <class T> class CNPoint2DTemplate : public geometry_msgs::Point
 {
+  public:
 	shared_ptr<T> clone()
 	{
 		return make_shared<T>(this->x, this->y);
@@ -98,6 +100,20 @@ template <class T> class CNPoint2DTemplate : public geometry_msgs::Point
 		return make_shared<T>(
 				this->x * right,
 				this->y * right);
+	}
+
+    static shared_ptr<T> fromOld(shared_ptr<CNPoint2D> oldPos) {
+    	//TODO: remove function
+		return make_shared<T>(
+				oldPos->x,
+				oldPos->y);
+	}
+
+    shared_ptr<CNPoint2D> toOld() {
+		//TODO: remove function
+		return make_shared<CNPoint2D>(
+				this->x,
+				this->y);
 	}
 
 };

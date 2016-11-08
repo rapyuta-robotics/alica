@@ -10,9 +10,11 @@
 
 #include "geometry_msgs/Pose2D.h"
 #include "container/CNVec2DTemplate.h"
+#include "container/CNPosition.h" // TODO: remove
 
 namespace geometry
 {
+
 
 using namespace std;
 
@@ -69,6 +71,22 @@ template <class T> class CNPositionTemplate : public geometry_msgs::Pose2D
 		return make_shared<T>(
 				this->x * right,
 				this->y * right,
+				this->theta);
+	}
+
+    static shared_ptr<T> fromOld(shared_ptr<CNPosition> oldPos) {
+    	//TODO: remove function
+    	return make_shared<T>(
+    			oldPos->x,
+				oldPos->y,
+				oldPos->theta);
+    }
+
+    shared_ptr<CNPosition> toOld() {
+		//TODO: remove function
+		return make_shared<CNPosition>(
+				this->x,
+				this->y,
 				this->theta);
 	}
 };

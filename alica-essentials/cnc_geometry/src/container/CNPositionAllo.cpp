@@ -9,6 +9,7 @@
 
 #include <sstream>
 #include "container/CNPositionEgo.h"
+#include "container/CNVec2DAllo.h"
 
 using namespace std;
 
@@ -45,20 +46,20 @@ shared_ptr<CNPositionEgo> CNPositionAllo::toEgo(CNPositionAllo &me)
     return ego;
 }
 
-shared_ptr<CNPositionAllo> CNPositionAllo::operator+(const shared_ptr<CNVec2DAllo> &right)
+shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNVec2DAllo> &right)
 {
 	return make_shared<CNPositionAllo>(
-			this->x + right->x,
-			this->y + right->y,
-			this->theta);
+			left->x + right->x,
+			left->y + right->y,
+			left->theta);
 }
 
-shared_ptr<CNPositionAllo> CNPositionAllo::operator-(const shared_ptr<CNVec2DAllo> &right)
+shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNVec2DAllo> &right)
 {
 	return make_shared<CNPositionAllo>(
-			this->x - right->x,
-			this->y - right->y,
-			this->theta);
+			left->x - right->x,
+			left->y - right->y,
+			left->theta);
 }
 
 } /* namespace geometry */

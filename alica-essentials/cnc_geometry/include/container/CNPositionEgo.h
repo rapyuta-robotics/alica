@@ -28,9 +28,10 @@ class CNPositionEgo : public CNPositionTemplate<CNPositionEgo>
 
     shared_ptr<CNPositionAllo> toAllo(CNPositionAllo &origin);
 
-    shared_ptr<CNPositionEgo> operator+(const shared_ptr<CNVec2DEgo> &right);
-    shared_ptr<CNPositionEgo> operator-(const shared_ptr<CNVec2DEgo> &right);
 };
+
+shared_ptr<CNPositionEgo> operator+(const shared_ptr<CNPositionEgo> &left, const shared_ptr<CNVec2DEgo> &right);
+shared_ptr<CNPositionEgo> operator-(const shared_ptr<CNPositionEgo> &left, const shared_ptr<CNVec2DEgo> &right);
 
 } /* namespace geometry */
 
