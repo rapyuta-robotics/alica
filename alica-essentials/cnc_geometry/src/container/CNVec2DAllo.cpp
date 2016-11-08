@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include "container/CNVec2DEgo.h"
+#include "container/CNPositionAllo.h"
 
 namespace geometry
 {
@@ -30,7 +31,16 @@ string CNVec2DAllo::toString()
 
 shared_ptr<CNVec2DEgo> CNVec2DAllo::toEgo(CNPositionAllo &me)
 {
-    return nullptr; // TODO
+    shared_ptr<CNVec2DEgo> ego = make_shared<CNVec2DEgo>();
+
+    // rotate rel point around origin -> rel point with ego orientation
+    double s = sin(-me.theta);
+    double c = cos(-me.theta);
+
+    ego->x = c * this->x - s * this->y;
+    ego->y = s * this->x - c * this->y;
+
+    return ego;
 }
 
 } /* namespace geometry */

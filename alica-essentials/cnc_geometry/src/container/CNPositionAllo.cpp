@@ -32,7 +32,7 @@ shared_ptr<CNPositionEgo> CNPositionAllo::toEgo(CNPositionAllo &me)
     double relX = this->x - me.x;
     double relY = this->y - me.y;
 
-    // rotate rel point arround origin -> rel point with ego orientation
+    // rotate rel point around origin -> rel point with ego orientation
     double s = sin(-me.theta);
     double c = cos(-me.theta);
 

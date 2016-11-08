@@ -30,7 +30,7 @@ shared_ptr<CNPositionAllo> CNPositionEgo::toAllo(CNPositionAllo &me)
 {
 	shared_ptr<CNPositionAllo> allo = make_shared<CNPositionAllo>();
 
-	// rotate rel point arround origin -> rel point with allo orientation
+	// rotate rel point around origin -> rel point with allo orientation
 	double s = sin(me.theta);
 	double c = cos(me.theta);
 
