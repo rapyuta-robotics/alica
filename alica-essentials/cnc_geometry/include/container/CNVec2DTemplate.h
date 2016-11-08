@@ -102,20 +102,6 @@ template <class T> class CNVec2DTemplate : public geometry_msgs::Point
 				this->y * right);
 	}
 
-    static shared_ptr<T> fromOld(shared_ptr<CNPoint2D> oldPos) {
-    	//TODO: remove function
-		return make_shared<T>(
-				oldPos->x,
-				oldPos->y);
-	}
-
-    shared_ptr<CNPoint2D> toOld() {
-		//TODO: remove function
-		return make_shared<CNPoint2D>(
-				this->x,
-				this->y);
-	}
-
 };
 
 } /* namespace geometry */

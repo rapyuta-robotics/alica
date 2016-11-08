@@ -74,21 +74,6 @@ template <class T> class CNPositionTemplate : public geometry_msgs::Pose2D
 				this->theta);
 	}
 
-    static shared_ptr<T> fromOld(shared_ptr<CNPosition> oldPos) {
-    	//TODO: remove function
-    	return make_shared<T>(
-    			oldPos->x,
-				oldPos->y,
-				oldPos->theta);
-    }
-
-    shared_ptr<CNPosition> toOld() {
-		//TODO: remove function
-		return make_shared<CNPosition>(
-				this->x,
-				this->y,
-				this->theta);
-	}
 };
 
 } /* namespace geometry */
