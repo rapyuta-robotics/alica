@@ -32,45 +32,46 @@ template <class T> class CNPositionTemplate : public geometry_msgs::Pose2D
     	return sqrt(x * x + y * y);
     }
 
-    // Operators
-
-    // Self
-
-    std::shared_ptr<T> operator+(const std::shared_ptr<T> &right)
-    {
-        return std::make_shared<T>(
-        		this->x + right->x,
-				this->y + right->y,
-				this->theta + right->theta);
-    }
-
-    std::shared_ptr<T> operator-(const std::shared_ptr<T> &right)
-    {
-        return std::make_shared<T>(
-        		this->x - right->x,
-				this->y - right->y,
-				this->theta - right->theta);
-    }
-
-    // Scalar
-
-    std::shared_ptr<T> operator/(const double &right)
-	{
-		return std::make_shared<T>(
-				this->x / right,
-				this->y / right,
-				this->theta);
-	}
-
-    std::shared_ptr<T> operator*(const double &right)
-	{
-		return std::make_shared<T>(
-				this->x * right,
-				this->y * right,
-				this->theta);
-	}
-
 };
+
+
+// Operators
+
+// Self
+
+template <typename T> CNPositionTemplate<T> operator+(const CNPositionTemplate<T> &left, const CNPositionTemplate<T> &right)
+{
+    return std::make_shared<T>(
+    		left->x + right->x,
+			left->y + right->y,
+			left->theta + right->theta);
+}
+
+template <typename T> CNPositionTemplate<T> operator-(const CNPositionTemplate<T> &left, const CNPositionTemplate<T> &right)
+{
+    return std::make_shared<T>(
+    		left->x - right->x,
+			left->y - right->y,
+			left->theta - right->theta);
+}
+
+// Scalar
+
+template <typename T> CNPositionTemplate<T> operator/(const CNPositionTemplate<T> &left, const double &right)
+{
+	return std::make_shared<T>(
+			left->x / right,
+			left->y / right,
+			left->theta);
+}
+
+template <typename T> CNPositionTemplate<T> operator*(const CNPositionTemplate<T> &left, const double &right)
+{
+	return std::make_shared<T>(
+			left->x * right,
+			left->y * right,
+			left->theta);
+}
 
 } /* namespace geometry */
 

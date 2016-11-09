@@ -10,7 +10,8 @@
 
 #include "geometry_msgs/Point.h"
 
-namespace geometry {
+namespace geometry
+{
 
 template <class T> class CNVec2DTemplate : public geometry_msgs::Point
 {
@@ -65,41 +66,48 @@ template <class T> class CNVec2DTemplate : public geometry_msgs::Point
     	return sqrt(x * x + y * y);
     }
 
-    // Operators
-
-    // Self
-
-    std::shared_ptr<T> operator+(const std::shared_ptr<T> &right)
-    {
-        return std::make_shared<T>(
-        		this->x + right->x,
-				this->y + right->y);
-    }
-
-    std::shared_ptr<T> operator-(const std::shared_ptr<T> &right)
-    {
-        return std::make_shared<T>(
-        		this->x - right->x,
-				this->y - right->y);
-    }
-
-    // Scalar
-
-    std::shared_ptr<T> operator/(const double &right)
-	{
-		return std::make_shared<T>(
-				this->x / right,
-				this->y / right);
-	}
-
     std::shared_ptr<T> operator*(const double &right)
-	{
-		return std::make_shared<T>(
-				this->x * right,
+    {
+    	return std::make_shared<T>(
+    			this->x * right,
 				this->y * right);
-	}
+    }
 
 };
+
+// Operators
+
+// Self
+
+template <class T> std::shared_ptr<CNVec2DTemplate<T>> operator+(const std::shared_ptr<CNVec2DTemplate<T>> &left, const std::shared_ptr<CNVec2DTemplate<T>> &right)
+{
+    return std::make_shared<T>(
+    		left->x + right->x,
+			left->y + right->y);
+}
+
+template <class T> std::shared_ptr<CNVec2DTemplate<T>> operator-(const std::shared_ptr<CNVec2DTemplate<T>> &left, const std::shared_ptr<CNVec2DTemplate<T>> &right)
+{
+    return std::make_shared<T>(
+    		left->x - right->x,
+			left->y - right->y);
+}
+
+// Scalar
+
+template <class T> std::shared_ptr<CNVec2DTemplate<T>> operator/(const std::shared_ptr<CNVec2DTemplate<T>> &left, const double &right)
+{
+	return std::make_shared<T>(
+			left->x / right,
+			left->y / right);
+}
+
+template <class T> std::shared_ptr<T> operator*(const std::shared_ptr<CNVec2DTemplate<T>> &left, const double &right)
+{
+	return std::make_shared<T>(
+			left->x * right,
+			left->y * right);
+}
 
 } /* namespace geometry */
 
