@@ -10,7 +10,6 @@
 
 #include "container/CNPositionTemplate.h"
 #include "container/CNPositionAllo.h"
-#include "container/CNPositionAllo.h"
 #include "container/CNVec2DAllo.h"
 
 namespace geometry
@@ -25,13 +24,13 @@ class CNPositionAllo : public CNPositionTemplate<CNPositionAllo>
     CNPositionAllo(double x, double y, double theta);
     virtual ~CNPositionAllo();
 
-    string toString();
+    std::string toString();
 
-    shared_ptr<CNPositionEgo> toEgo(CNPositionAllo &origin);
+    std::shared_ptr<CNPositionEgo> toEgo(CNPositionAllo &origin);
 };
 
-shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNVec2DAllo> &right);
-shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNVec2DAllo> &right);
+std::shared_ptr<CNPositionAllo> operator+(const std::shared_ptr<CNPositionAllo> &left, const std::shared_ptr<CNVec2DAllo> &right);
+std::shared_ptr<CNPositionAllo> operator-(const std::shared_ptr<CNPositionAllo> &left, const std::shared_ptr<CNVec2DAllo> &right);
 
 } /* namespace geometry */
 

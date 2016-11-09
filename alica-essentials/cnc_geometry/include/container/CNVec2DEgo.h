@@ -24,9 +24,9 @@ class CNVec2DEgo : public CNVec2DTemplate<CNVec2DEgo>
 	CNVec2DEgo(double x, double y);
     virtual ~CNVec2DEgo();
 
-    string toString();
+    std::string toString();
 
-    shared_ptr<CNVec2DAllo> toAllo(CNPositionAllo &origin);
+    std::shared_ptr<CNVec2DAllo> toAllo(CNPositionAllo &origin);
 };
 
 } /* namespace geometry */

@@ -10,23 +10,19 @@
 
 #include "geometry_msgs/Pose2D.h"
 #include "container/CNVec2DTemplate.h"
-#include "container/CNPosition.h" // TODO: remove
 
 namespace geometry
 {
 
-
-using namespace std;
-
 template <class T> class CNPositionTemplate : public geometry_msgs::Pose2D
 {
   public:
-	shared_ptr<T> clone()
+	std::shared_ptr<T> clone()
 	{
-		return make_shared<T>(this->x, this->y, this->theta);
+		return std::make_shared<T>(this->x, this->y, this->theta);
 	}
 
-    double distanceTo(shared_ptr<T> pos)
+    double distanceTo(std::shared_ptr<T> pos)
     {
     	T delta = this - pos;
     	return delta->length();
@@ -40,17 +36,17 @@ template <class T> class CNPositionTemplate : public geometry_msgs::Pose2D
 
     // Self
 
-    shared_ptr<T> operator+(const shared_ptr<T> &right)
+    std::shared_ptr<T> operator+(const std::shared_ptr<T> &right)
     {
-        return make_shared<T>(
+        return std::make_shared<T>(
         		this->x + right->x,
 				this->y + right->y,
 				this->theta + right->theta);
     }
 
-    shared_ptr<T> operator-(const shared_ptr<T> &right)
+    std::shared_ptr<T> operator-(const std::shared_ptr<T> &right)
     {
-        return make_shared<T>(
+        return std::make_shared<T>(
         		this->x - right->x,
 				this->y - right->y,
 				this->theta - right->theta);
@@ -58,17 +54,17 @@ template <class T> class CNPositionTemplate : public geometry_msgs::Pose2D
 
     // Scalar
 
-    shared_ptr<T> operator/(const double &right)
+    std::shared_ptr<T> operator/(const double &right)
 	{
-		return make_shared<T>(
+		return std::make_shared<T>(
 				this->x / right,
 				this->y / right,
 				this->theta);
 	}
 
-    shared_ptr<T> operator*(const double &right)
+    std::shared_ptr<T> operator*(const double &right)
 	{
-		return make_shared<T>(
+		return std::make_shared<T>(
 				this->x * right,
 				this->y * right,
 				this->theta);

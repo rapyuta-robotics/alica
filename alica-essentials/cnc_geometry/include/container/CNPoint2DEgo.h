@@ -24,14 +24,14 @@ class CNPoint2DEgo : public CNPoint2DTemplate<CNPoint2DEgo>
 	CNPoint2DEgo(double x, double y);
     virtual ~CNPoint2DEgo();
 
-    string toString();
+    std::string toString();
 
-    shared_ptr<CNPoint2DAllo> toAllo(CNPositionAllo &origin);
+    std::shared_ptr<CNPoint2DAllo> toAllo(CNPositionAllo &origin);
 
 };
 
-shared_ptr<CNPoint2DEgo> operator+(const shared_ptr<CNPoint2DEgo> &left, const shared_ptr<CNVec2DEgo> &right);
-shared_ptr<CNPoint2DEgo> operator-(const shared_ptr<CNPoint2DEgo> &left, const shared_ptr<CNVec2DEgo> &right);
+std::shared_ptr<CNPoint2DEgo> operator+(const std::shared_ptr<CNPoint2DEgo> &left, const std::shared_ptr<CNVec2DEgo> &right);
+std::shared_ptr<CNPoint2DEgo> operator-(const std::shared_ptr<CNPoint2DEgo> &left, const std::shared_ptr<CNVec2DEgo> &right);
 
 } /* namespace geometry */
 

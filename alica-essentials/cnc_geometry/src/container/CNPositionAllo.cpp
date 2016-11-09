@@ -16,6 +16,13 @@ using namespace std;
 namespace geometry
 {
 
+CNPositionAllo::CNPositionAllo(double x, double y, double theta)
+{
+	this->x = x;
+	this->y = y;
+	this->theta = theta;
+}
+
 CNPositionAllo::~CNPositionAllo() {}
 
 string CNPositionAllo::toString()

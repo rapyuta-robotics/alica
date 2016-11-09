@@ -11,6 +11,8 @@
 #include "container/CNVec2DAllo.h"
 #include "container/CNPositionAllo.h"
 
+using namespace std;
+
 namespace geometry
 {
 

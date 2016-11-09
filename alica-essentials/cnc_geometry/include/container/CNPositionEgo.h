@@ -24,14 +24,14 @@ class CNPositionEgo : public CNPositionTemplate<CNPositionEgo>
     CNPositionEgo(double x, double y, double theta);
     virtual ~CNPositionEgo();
 
-    string toString();
+    std::string toString();
 
-    shared_ptr<CNPositionAllo> toAllo(CNPositionAllo &origin);
+    std::shared_ptr<CNPositionAllo> toAllo(CNPositionAllo &origin);
 
 };
 
-shared_ptr<CNPositionEgo> operator+(const shared_ptr<CNPositionEgo> &left, const shared_ptr<CNVec2DEgo> &right);
-shared_ptr<CNPositionEgo> operator-(const shared_ptr<CNPositionEgo> &left, const shared_ptr<CNVec2DEgo> &right);
+std::shared_ptr<CNPositionEgo> operator+(const std::shared_ptr<CNPositionEgo> &left, const std::shared_ptr<CNVec2DEgo> &right);
+std::shared_ptr<CNPositionEgo> operator-(const std::shared_ptr<CNPositionEgo> &left, const std::shared_ptr<CNVec2DEgo> &right);
 
 } /* namespace geometry */
 

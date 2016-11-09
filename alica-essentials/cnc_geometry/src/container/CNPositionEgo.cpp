@@ -16,6 +16,13 @@ using namespace std;
 namespace geometry
 {
 
+CNPositionEgo::CNPositionEgo(double x, double y, double theta)
+{
+	this->x = x;
+	this->y = y;
+	this->theta = theta;
+}
+
 CNPositionEgo::~CNPositionEgo()
 {
 }
