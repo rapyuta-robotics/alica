@@ -16,13 +16,10 @@ namespace alica
 {
 
 	ConstraintDescriptor::ConstraintDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars,
-	                                           shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> domVars)
+	                                           shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>> domVars)
 	{
 		dim = vars->size();
-//		constraint = ConstraintBuilder::TRUE; TODO: KENNT DEN CONSTRAINTBUILDER NICH
-//		utility = TermBuilder::constant(1);	TODO: KENNT DEN TERMBUILDER NICH
 		utilitySufficiencyThreshold = numeric_limits<double>::max();
-//		fixedValues = ;
 		staticRanges = make_shared<vector<vector<double>>>();
 		for (int i = 0; i < dim; ++i)
 		{
@@ -35,7 +32,6 @@ namespace alica
 			staticRanges->at(i)[1] = max;
 			allVars->push_back(vars->at(i));
 		}
-//		staticVars = vars;
 		staticVars = make_shared<vector<shared_ptr<SolverVariable>>>(vars->size());
 		for (int i = 0; i < vars->size(); ++i)
 		{
@@ -88,14 +84,6 @@ namespace alica
 		utilitySignificanceThreshold = value;
 		setSetsUtilitySignificanceThreshold(true);
 	}
-
-//		void ConstraintDescriptor::setFixedValue(shared_ptr<SolverTerm> SolverVariable, object value)
-//		{
-//		}
-
-//		object ConstraintDescriptor::getFixedValue(shared_ptr<SolverTerm> SolverVariable)
-//		{
-//		}
 
 	shared_ptr<SolverTerm> ConstraintDescriptor::getConstraint()
 	{
