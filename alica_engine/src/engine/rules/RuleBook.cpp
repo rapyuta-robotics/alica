@@ -5,6 +5,7 @@
  *      Author: Paul Panin
  */
 
+#include <engine/constraintmodul/ConditionStore.h>
 #include "engine/rules/RuleBook.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
@@ -18,7 +19,6 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/model/State.h"
 #include "engine/model/Transition.h"
-#include "engine/constraintmodul/ConstraintStore.h"
 #include "engine/IPlanSelector.h"
 #include "engine/collections/StateCollection.h"
 #include "engine/allocationauthority/CycleManager.h"

@@ -14,7 +14,7 @@ using namespace std;
 
 namespace alica
 {
-	class ConstraintDescriptor;
+	class ProblemDescriptor;
 	class RunningPlan;
 
 	class BasicConstraint
@@ -22,7 +22,7 @@ namespace alica
 	public:
 		virtual ~BasicConstraint(){}
 
-		virtual void getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan> rp) = 0;
+		virtual void getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp) = 0;
 	};
 
 } /* namespace alica */

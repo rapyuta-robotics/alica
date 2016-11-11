@@ -39,7 +39,7 @@ namespace alica
 	class IUtilityCreator;
 	class ExpressionHandler;
 	class PartialAssignmentPool;
-	class IConstraintSolver;
+	class ISolver;
 	class IVariableSyncModule;
 
 	class AlicaEngine
@@ -83,8 +83,8 @@ namespace alica
 		PartialAssignmentPool* getPartialAssignmentPool();
 		void stepNotify();
 		PlanBase* getPlanBase();
-		void addSolver(int identifier, IConstraintSolver* solver);
-		IConstraintSolver* getSolver(int identifier);
+		void addSolver(int identifier, ISolver* solver);
+		ISolver* getSolver(int identifier);
 		IVariableSyncModule* getResultStore();
 		void setResultStore(IVariableSyncModule* resultStore);
 
@@ -112,7 +112,7 @@ namespace alica
 		IAlicaClock* alicaClock;
 		PartialAssignmentPool* pap;
 		PlanBase* planBase;bool stepCalled;
-		map<int, IConstraintSolver*> solver;
+		map<int, ISolver*> solver;
 		IVariableSyncModule* variableSyncModule;
 
 	private:

@@ -38,7 +38,7 @@ namespace alica
 	class ITeamObserver;
 	class Plan;
 	class RuleBook;
-	class ConstraintStore;
+	class ConditionStore;
 	class CycleManager;
 	class BehaviourConfiguration;
 	class IPlanTreeVisitor;
@@ -77,7 +77,7 @@ namespace alica
 		void setFailHandlingNeeded(bool failHandlingNeeded);
 		void setOwnEntryPoint(EntryPoint* value);
 		PlanChange tick(RuleBook* rules);
-		std::shared_ptr<ConstraintStore> getConstraintStore() const;
+		std::shared_ptr<ConditionStore> getConstraintStore() const;
 		EntryPoint* getOwnEntryPoint() const;
 		void setParent(weak_ptr<RunningPlan> s);
 		weak_ptr<RunningPlan> getParent() const;
@@ -155,7 +155,7 @@ namespace alica
 		bool allocationNeeded;
 		AlicaTime assignmentProtectionTime;
 		std::shared_ptr<CycleManager> cycleManagement;
-		std::shared_ptr<ConstraintStore> constraintStore;
+		std::shared_ptr<ConditionStore> constraintStore;
 	};
 
 }

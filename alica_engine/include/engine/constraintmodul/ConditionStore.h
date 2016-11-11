@@ -21,24 +21,24 @@ namespace alica
 {
 	class Variable;
 	class Condition;
-	class ConstraintQuery;
+	class Query;
 	class RunningPlan;
 
 	/**
 	 * Holds information about active constraints in the corresponding RunningPlan
 	 */
-	class ConstraintStore
+	class ConditionStore
 	{
 	public:
-		ConstraintStore();
-		virtual ~ConstraintStore();
+		ConditionStore();
+		virtual ~ConditionStore();
 		void clear();
 		void addCondition(Condition* con);
 		void removeCondition(Condition* con);
 
-		void acceptQuery(shared_ptr<ConstraintQuery> query, shared_ptr<RunningPlan> rp);
+		void acceptQuery(shared_ptr<Query> query, shared_ptr<RunningPlan> rp);
 		list<Condition*> activeConditions;
-		map<Variable*, shared_ptr<vector<Condition*>> > activeVariables;
+		map<Variable*, shared_ptr<vector<Condition*>> > activeVar2CondMap;
 
 		mutex mtx;
 	};

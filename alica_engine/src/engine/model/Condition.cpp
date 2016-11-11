@@ -124,7 +124,7 @@ namespace alica
 		this->parameters = parameters;
 	}
 
-	void Condition::getConstraint(shared_ptr<ConstraintDescriptor> cd, shared_ptr<RunningPlan> rp)
+	void Condition::getConstraint(shared_ptr<ProblemDescriptor> cd, shared_ptr<RunningPlan> rp)
 	{
 		this->basicConstraint->getConstraint(cd, rp);
 	}

@@ -10,6 +10,7 @@
 #include "engine/PlanBase.h"
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
+#include <engine/constraintmodul/Query.h>
 #include  "engine/DefaultUtilityFunction.h"
 #include  "engine/ITeamObserver.h"
 #include "engine/model/Plan.h"
@@ -20,8 +21,6 @@
 #include <thread>
 #include <iostream>
 #include "SolverType.h"
-#include <engine/constraintmodul/ConstraintQuery.h>
-
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"

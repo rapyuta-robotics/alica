@@ -1,3 +1,4 @@
+
 /*
  * AlicaEngine.cpp
  *
@@ -26,7 +27,7 @@
 #include "engine/IConditionCreator.h"
 #include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
-#include "engine/constraintmodul/IConstraintSolver.h"
+#include <engine/constraintmodul/ISolver.h>
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/collections/AssignmentCollection.h"
 
@@ -474,12 +475,12 @@ namespace alica
 		return planBase;
 	}
 
-	void AlicaEngine::addSolver(int identifier, IConstraintSolver* solver)
+	void AlicaEngine::addSolver(int identifier, ISolver* solver)
 	{
 		this->solver[identifier] = solver;
 	}
 
-	IConstraintSolver* AlicaEngine::getSolver(int identifier)
+	ISolver* AlicaEngine::getSolver(int identifier)
 	{
 		return this->solver[identifier];
 	}

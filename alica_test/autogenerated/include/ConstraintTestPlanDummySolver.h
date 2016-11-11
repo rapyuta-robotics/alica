@@ -8,21 +8,21 @@
 #ifndef CONSTRAINTTESTPLANDUMMYSOLVER_H_
 #define CONSTRAINTTESTPLANDUMMYSOLVER_H_
 
-#include <engine/constraintmodul/IConstraintSolver.h>
+#include <engine/constraintmodul/ISolver.h>
 
 namespace alica
 {
 	namespace reasoner
 	{
 
-		class ConstraintTestPlanDummySolver : public IConstraintSolver
+		class ConstraintTestPlanDummySolver : public ISolver
 		{
 		public:
 			ConstraintTestPlanDummySolver(AlicaEngine *ae);
 			virtual ~ConstraintTestPlanDummySolver();
 
-			bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls);
-			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls,
+			bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls);
+			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls,
 								vector<void*>& results);
 			shared_ptr<SolverVariable> createVariable(long id);
 
