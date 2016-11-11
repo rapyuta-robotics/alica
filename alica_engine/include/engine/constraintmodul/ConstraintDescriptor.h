@@ -25,10 +25,8 @@ namespace alica
 		const double min = -10E29;
 		const double max = 10E29;
 
-		double utilitySignificanceThreshold = 1E-22;
+		double utilitySignificanceThreshold = 1E-22; /*<< minimum delta for adapting a better utility */
 		bool setsUtilitySignificanceThreshold;
-
-// TODO:		map<int, object> fixedValues;
 
 		shared_ptr<SolverTerm> constraint;
 		shared_ptr<SolverTerm> utility;
@@ -48,8 +46,6 @@ namespace alica
 		void setSetsUtilitySignificanceThreshold(bool value);
 		double getUtilitySignificanceThreshold();
 		void setUtilitySignificanceThreshold(double value);
-//		void setFixedValue(shared_ptr<SolverTerm> SolverVariable, object value);
-//		object getFixedValue(shared_ptr<SolverTerm> SolverVariable);
 		shared_ptr<SolverTerm> getConstraint();
 		void setConstraint(shared_ptr<SolverTerm> value);
 		shared_ptr<SolverTerm> getUtility();
