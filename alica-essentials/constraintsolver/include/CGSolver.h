@@ -9,8 +9,7 @@
 #define CGSOLVER_H_
 
 #include <AutoDiff.h>
-#include <engine/constraintmodul/IConstraintSolver.h>
-
+#include <engine/constraintmodul/ISolver.h>
 #include <vector>
 #include <memory>
 #include <mutex>
@@ -26,14 +25,14 @@ namespace alica
 	{
 		class GSolver;
 
-		class CGSolver : public IConstraintSolver
+		class CGSolver : public ISolver
 		{
 		public:
 			CGSolver(AlicaEngine* ae);
 			virtual ~CGSolver();
 
-			bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls);
-			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls, vector<void*>& results);
+			bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls);
+			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results);
 			shared_ptr<SolverVariable> createVariable(long id);
 
 		protected:
