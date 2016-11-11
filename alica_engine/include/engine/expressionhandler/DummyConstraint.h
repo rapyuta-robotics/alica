@@ -15,12 +15,12 @@ using namespace std;
 
 namespace alica
 {
-	class ConstraintDescriptor;
+	class ProblemDescriptor;
 	class RunningPlan;
 
 	class DummyConstraint : public BasicConstraint
 	{
-		void getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan> rp);
+		void getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp);
 	};
 
 } /* namespace alica */

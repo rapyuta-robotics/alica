@@ -26,7 +26,7 @@ namespace alica
 	class Transition;
 	class State;
 	class EntryPoint;
-	class ConstraintStore;
+	class ConditionStore;
 	class StateCollection;
 	class CycleManager;
 	class UtilityFunction;

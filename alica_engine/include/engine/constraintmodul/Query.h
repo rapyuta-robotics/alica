@@ -8,6 +8,10 @@
 #ifndef CONSTRAINTQUERY_H_
 #define CONSTRAINTQUERY_H_
 
+#include <engine/constraintmodul/ConditionStore.h>
+#include <engine/constraintmodul/ISolver.h>
+#include <engine/constraintmodul/ProblemDescriptor.h>
+#include <engine/constraintmodul/ProblemPart.h>
 #include <memory>
 #include <vector>
 #include <map>
@@ -17,10 +21,6 @@
 #include "engine/IAlicaClock.h"
 #include "engine/ITeamObserver.h"
 #include "engine/RunningPlan.h"
-#include "engine/constraintmodul/ConstraintCall.h"
-#include "engine/constraintmodul/ConstraintDescriptor.h"
-#include "engine/constraintmodul/ConstraintStore.h"
-#include "engine/constraintmodul/IConstraintSolver.h"
 #include "engine/constraintmodul/IVariableSyncModule.h"
 #include "engine/constraintmodul/SolverTerm.h"
 #include "engine/constraintmodul/SolverVariable.h"
@@ -35,21 +35,21 @@ using namespace std;
 namespace alica
 {
 	class AlicaEngine;
-	class ConstraintCall;
+	class ProblemPart;
 	class ITeamObserver;
 	class RunningPlan;
 	class Variable;
 	class IAlicaClock;
 	class BasicBehaviour;
-	class IConstraintSolver;
+	class ISolver;
 
 	/**
 	 * Encapsulates queries to variables (which are associated with specific solvers).
 	 */
-	class ConstraintQuery : public enable_shared_from_this<ConstraintQuery>
+	class Query : public enable_shared_from_this<Query>
 	{
 	public:
-		ConstraintQuery(AlicaEngine* ae);
+		Query(AlicaEngine* ae);
 
 		void addVariable(Variable* v);
 		void addVariable(int robot, string ident);
@@ -64,7 +64,7 @@ namespace alica
 		void setRelevantStaticVariables(vector<Variable*> value);
 		vector<Variable*> getRelevantDomainVariables();
 		void setRelevantDomainVariables(vector<Variable*> value);
-		void addConstraintCalls(vector<shared_ptr<ConstraintCall>>& l);
+		void addProblemParts(vector<shared_ptr<ProblemPart>>& l);
 
 		/**
 		 * Internal class to deal with bindings in states and plantypes
@@ -87,14 +87,14 @@ namespace alica
 		};
 
 	private:
-		bool collectProblemStatement(shared_ptr<RunningPlan> rp, IConstraintSolver* solver,
-										vector<shared_ptr<ConstraintDescriptor>>& cds,
+		bool collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
+										vector<shared_ptr<ProblemDescriptor>>& cds,
 										vector<Variable*>& relevantVariables, int& domOffset);
 
-		shared_ptr<UniqueVarStore> store;
+		shared_ptr<UniqueVarStore> uniqueVarStore;
 		vector<Variable*> queriedStaticVariables;
 		vector<Variable*> queriedDomainVariables;
-		vector<shared_ptr<ConstraintCall>> calls;
+		vector<shared_ptr<ProblemPart>> problemParts;
 
 		vector<Variable*> relevantStaticVariables;
 		vector<Variable*> relevantDomainVariables;
@@ -103,20 +103,21 @@ namespace alica
 	};
 
 	template<class T>
-	bool ConstraintQuery::getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<T>& result)
+	bool Query::getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<T>& result)
 	{
 		result.clear();
-		IConstraintSolver* solver = this->ae->getSolver(solverType);
 
-		vector<shared_ptr<ConstraintDescriptor>> cds = vector<shared_ptr<ConstraintDescriptor>>();
+		// Collect the complete problem specification
+		vector<shared_ptr<ProblemDescriptor>> cds;// = vector<shared_ptr<ProblemDescriptor>>();
 		vector<Variable*> relevantVariables;
 		int domOffset;
-		if (!collectProblemStatement(rp, solver, cds, relevantVariables, domOffset))
+		ISolver* solver = this->ae->getSolver(solverType);
+		if (!this->collectProblemStatement(rp, solver, cds, relevantVariables, domOffset))
 		{
 			return false;
 		}
-		vector<void*> solverResult;
 
+		vector<void*> solverResult;
 		bool ret = solver->getSolution(relevantVariables, cds, solverResult);
 
 		//Create result filtered by the queried variables
@@ -146,7 +147,7 @@ namespace alica
 			//throw "Unexpected Result in Multiple Variables Query!";
 			for (int i = 0; i < queriedStaticVariables.size(); ++i)
 			{
-				result.push_back(*((T*)solverResult.at(store->getIndexOf(queriedStaticVariables[i]))));
+				result.push_back(*((T*)solverResult.at(uniqueVarStore->getIndexOf(queriedStaticVariables[i]))));
 			}
 
 			for (int i = 0; i < queriedDomainVariables.size(); ++i)

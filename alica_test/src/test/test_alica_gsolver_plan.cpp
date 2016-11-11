@@ -25,8 +25,8 @@
 #include <thread>
 #include <iostream>
 #include "SolverType.h"
-#include <engine/constraintmodul/ConstraintQuery.h>
 #include <CGSolver.h>
+#include <engine/constraintmodul/Query.h>
 #include "ConstraintTestPlanDummySolver.h"
 
 

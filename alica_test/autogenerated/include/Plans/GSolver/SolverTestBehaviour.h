@@ -1,10 +1,10 @@
 #ifndef SolverTestBehaviour_H_
 #define SolverTestBehaviour_H_
 
+#include <engine/constraintmodul/Query.h>
 #include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1417424455986) ENABLED START*/ //Add additional includes here
 #include <vector>
-#include <engine/constraintmodul/ConstraintQuery.h>
 /*PROTECTED REGION END*/
 namespace alica
 {
@@ -22,7 +22,7 @@ namespace alica
         virtual void initialiseParameters();
         /*PROTECTED REGION ID(pro1417424455986) ENABLED START*/ //Add additional protected methods here
         int callCounter;
-        shared_ptr<alica::ConstraintQuery> query;
+        shared_ptr<alica::Query> query;
 
         /*PROTECTED REGION END*/
     private:

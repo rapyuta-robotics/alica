@@ -16,25 +16,25 @@ using namespace std;
 namespace alica
 {
 	class AlicaEngine;
-	class ConstraintDescriptor;
+	class ProblemDescriptor;
 	class Variable;
 	class SolverVariable;
 
-	class IConstraintSolver : public enable_shared_from_this<IConstraintSolver>
+	class ISolver : public enable_shared_from_this<ISolver>
 	{
 	public:
-		IConstraintSolver(AlicaEngine* ae) {
+		ISolver(AlicaEngine* ae) {
 			this->ae = ae;
 		}
-		virtual ~IConstraintSolver()
+		virtual ~ISolver()
 		{
 		}
 
-		virtual bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls) = 0;
-		virtual bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls, vector<void*>& results) = 0;
+		virtual bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls) = 0;
+		virtual bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results) = 0;
 		virtual shared_ptr<SolverVariable> createVariable(long id) = 0;
 
-		virtual double utilityEstimate(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls) {
+		virtual double utilityEstimate(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls) {
 			return 0;
 		}
 

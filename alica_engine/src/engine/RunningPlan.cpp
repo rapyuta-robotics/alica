@@ -5,6 +5,7 @@
  *      Author: Stefan Jakob
  */
 
+#include <engine/constraintmodul/ConditionStore.h>
 #include "engine/RunningPlan.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/AlicaEngine.h"
@@ -12,7 +13,6 @@
 #include "engine/model/Plan.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/Assignment.h"
-#include "engine/constraintmodul/ConstraintStore.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/model/State.h"
 #include "engine/rules/RuleBook.h"
@@ -62,7 +62,7 @@ namespace alica
 		this->active = false;
 		this->allocationNeeded = false;
 		this->failHandlingNeeded = false;
-		this->constraintStore = std::make_shared<ConstraintStore>();
+		this->constraintStore = std::make_shared<ConditionStore>();
 		this->cycleManagement = std::make_shared<CycleManager>(ae, this);
 		this->robotsAvail = unique_ptr<list<int>>(new list<int>);
 	}
@@ -311,7 +311,7 @@ namespace alica
 	/**
 	 * Gets/Sets the constraint store, which contains all constrains associated with this RunningPlan.
 	 */
-	std::shared_ptr<ConstraintStore> RunningPlan::getConstraintStore() const
+	std::shared_ptr<ConditionStore> RunningPlan::getConstraintStore() const
 	{
 		return this->constraintStore;
 	}

@@ -10,7 +10,7 @@
 namespace alica
 {
 
-	void DummyConstraint::getConstraint(shared_ptr<ConstraintDescriptor> c, shared_ptr<RunningPlan> rp)
+	void DummyConstraint::getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp)
 	{
 
 	}

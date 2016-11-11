@@ -18,7 +18,7 @@ namespace alica
 	class SolverTerm;
 	class SolverVariable;
 
-	class ConstraintDescriptor : public enable_shared_from_this<ConstraintDescriptor>
+	class ProblemDescriptor : public enable_shared_from_this<ProblemDescriptor>
 	{
 	private:
 		int dim;
@@ -40,7 +40,7 @@ namespace alica
 		shared_ptr<vector<vector<double>>> staticRanges;
 
 	public:
-		ConstraintDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars, shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> domVars);
+		ProblemDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars, shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> domVars);
 
 		bool getSetsUtilitySignificanceThreshold();
 		void setSetsUtilitySignificanceThreshold(bool value);

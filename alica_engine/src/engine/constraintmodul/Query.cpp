@@ -2,21 +2,19 @@
  * ConstraintQuery.cpp
  *
  *  Created on: Oct 17, 2014
- *      Author: Philipp
+ *      Author: Philipp Sperber
  */
-#include "engine/constraintmodul/ConstraintQuery.h"
-//#define CQ_DEBUG
-
+#include <engine/constraintmodul/ConditionStore.h>
+#include <engine/constraintmodul/ISolver.h>
+#include <engine/constraintmodul/ProblemDescriptor.h>
+#include <engine/constraintmodul/ProblemPart.h>
+#include <engine/constraintmodul/Query.h>
 #include "engine/AlicaEngine.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/IAlicaClock.h"
 #include "engine/ITeamObserver.h"
 #include "engine/RunningPlan.h"
 #include "engine/collections/RobotEngineData.h"
-#include "engine/constraintmodul/ConstraintCall.h"
-#include "engine/constraintmodul/ConstraintDescriptor.h"
-#include "engine/constraintmodul/ConstraintStore.h"
-#include "engine/constraintmodul/IConstraintSolver.h"
 #include "engine/constraintmodul/SolverTerm.h"
 #include "engine/constraintmodul/SolverVariable.h"
 #include "engine/model/Condition.h"
@@ -29,37 +27,37 @@
 
 namespace alica
 {
-	ConstraintQuery::ConstraintQuery(AlicaEngine* ae) :
+	Query::Query(AlicaEngine* ae) :
 			ae(ae)
 	{
-		store = make_shared<UniqueVarStore>();
+		uniqueVarStore = make_shared<UniqueVarStore>();
 	}
 
-	void ConstraintQuery::addVariable(Variable* v)
+	void Query::addVariable(Variable* v)
 	{
 		queriedStaticVariables.push_back(v);
 	}
 
-	void ConstraintQuery::addVariable(int robot, string ident)
+	void Query::addVariable(int robot, string ident)
 	{
 		queriedDomainVariables.push_back(this->ae->getTeamObserver()->getRobotById(robot)->getSortedVariable(ident));
 	}
 
-	void ConstraintQuery::clearDomainVariables()
+	void Query::clearDomainVariables()
 	{
 		queriedDomainVariables.clear();
 	}
 
-	void ConstraintQuery::clearStaticVariables()
+	void Query::clearStaticVariables()
 	{
 		queriedStaticVariables.clear();
 	}
 
-	bool ConstraintQuery::existsSolution(int solverType, shared_ptr<RunningPlan> rp)
+	bool Query::existsSolution(int solverType, shared_ptr<RunningPlan> rp)
 	{
-		IConstraintSolver* solver = this->ae->getSolver(solverType);
+		ISolver* solver = this->ae->getSolver(solverType);
 
-		vector<shared_ptr<ConstraintDescriptor>> cds = vector<shared_ptr<ConstraintDescriptor>>();
+		vector<shared_ptr<ProblemDescriptor>> cds = vector<shared_ptr<ProblemDescriptor>>();
 		vector<Variable*> relevantVariables;
 		int domOffset;
 		if (!collectProblemStatement(rp, solver, cds, relevantVariables, domOffset))
@@ -69,37 +67,44 @@ namespace alica
 		return solver->existsSolution(relevantVariables, cds);
 	}
 
-	bool ConstraintQuery::collectProblemStatement(shared_ptr<RunningPlan> rp, IConstraintSolver* solver,
-													vector<shared_ptr<ConstraintDescriptor>>& cds,
+	bool Query::collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
+													vector<shared_ptr<ProblemDescriptor>>& pds,
 													vector<Variable*>& relevantVariables, int& domOffset)
 	{
 #ifdef CQ_DEBUG
 		long time = rp->getAlicaEngine()->getIAlicaClock()->now();
 #endif
-		store->clear();
+		// Clear variable stuff and calls
+		uniqueVarStore->clear();
 		relevantStaticVariables.clear();
 		relevantDomainVariables.clear();
-		calls.clear();
+		problemParts.clear();
+
+		// insert queried variables of this query
 		relevantStaticVariables.insert(relevantStaticVariables.end(), queriedStaticVariables.begin(),
 										queriedStaticVariables.end());
 		relevantDomainVariables.insert(relevantDomainVariables.end(), queriedDomainVariables.begin(),
 										queriedDomainVariables.end());
+
+		// add static variables to unique variable store
 		for (Variable* v : relevantStaticVariables)
 		{
-			store->add(v);
+			uniqueVarStore->add(v);
 		}
+
 #ifdef CQ_DEBUG
-		cout << "CQ: Starting Query with static Vars:";
+		cout << "Query: Starting Query with static Vars:";
 		for (Variable* v : relevantStaticVariables)
 		{
 			cout << " " << v->getName();
 		}
 		cout << endl;
 #endif
+
 		while (rp != nullptr && (relevantStaticVariables.size() > 0 || relevantDomainVariables.size() > 0))
 		{
 #ifdef CQ_DEBUG
-			cout << "CQ: Query at " << rp->getPlan()->getName() << endl;
+			cout << "Query: Query at " << rp->getPlan()->getName() << endl;
 #endif
 			rp->getConstraintStore()->acceptQuery(shared_from_this(), rp);
 			if (rp->getPlanType() != nullptr)
@@ -113,7 +118,7 @@ namespace alica
 									!= relevantStaticVariables.end())
 					{
 						tmpVector.push_back(p->getVar());
-						store->addVarTo(p->getSubVar(), p->getVar());
+						uniqueVarStore->addVarTo(p->getSubVar(), p->getVar());
 					}
 				}
 				relevantStaticVariables = tmpVector;
@@ -134,22 +139,24 @@ namespace alica
 									!= relevantStaticVariables.end())
 					{
 						tmpVector.push_back(p->getVar());
-						store->addVarTo(p->getSubVar(), p->getVar());
+						uniqueVarStore->addVarTo(p->getSubVar(), p->getVar());
 					}
 				}
 				relevantStaticVariables = tmpVector;
 			}
 			rp = parent;
 		}
+
 		//now we have a list of ConstraintCalls in calls ready to be queried together with a store of unifications
-		if (calls.size() == 0)
+		if (problemParts.size() == 0)
 		{
 #ifdef CQ_DEBUG
 			cout << "CQ: Empty Query!" << endl;
 #endif
 			return false;
 		}
-		for (shared_ptr<ConstraintCall> c : calls)
+
+		for (shared_ptr<ProblemPart> c : problemParts)
 		{
 
 			vector<Variable*> conditionVariables = vector<Variable*>(c->getCondition()->getVariables());
@@ -157,21 +164,21 @@ namespace alica
 			auto varr = make_shared<vector<shared_ptr<SolverVariable>>>(conditionVariables.size());
 			for (int j = 0; j < conditionVariables.size(); ++j)
 			{
-				if (store->getRep(conditionVariables[j])->getSolverVar() == nullptr)
+				if (uniqueVarStore->getRep(conditionVariables[j])->getSolverVar() == nullptr)
 				{
-					store->getRep(conditionVariables[j])->setSolverVar(
-							solver->createVariable(store->getRep(conditionVariables[j])->getId()));
+					uniqueVarStore->getRep(conditionVariables[j])->setSolverVar(
+							solver->createVariable(uniqueVarStore->getRep(conditionVariables[j])->getId()));
 				}
-				varr->at(j) = store->getRep(conditionVariables[j])->getSolverVar();
+				varr->at(j) = uniqueVarStore->getRep(conditionVariables[j])->getSolverVar();
 			}
 			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>> >> >>();
 			auto agentsInScope = make_shared<vector<shared_ptr<vector<int>>> >();
-			for (int j = 0; j < c->getSortedVariables()->size(); ++j)
+			for (int j = 0; j < c->getDomainVariables()->size(); ++j)
 			{
 				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverVariable>>> >>();
 				agentsInScope->push_back(c->getAgentsInScope()->at(j));
 				sortedVars->push_back(ll);
-				for (auto dvarr : c->getSortedVariables()->at(j))
+				for (auto dvarr : c->getDomainVariables()->at(j))
 				{
 					auto dtvarr = make_shared<vector<shared_ptr<SolverVariable>>>(dvarr.size());
 					for (int i = 0; i < dtvarr->size(); ++i)
@@ -186,12 +193,12 @@ namespace alica
 					ll->push_back(dtvarr);
 				}
 			}
-			shared_ptr<ConstraintDescriptor> cd = make_shared<ConstraintDescriptor>(varr, sortedVars);
+			shared_ptr<ProblemDescriptor> cd = make_shared<ProblemDescriptor>(varr, sortedVars);
 			cd->setAgentsInScope(agentsInScope);
 			c->getCondition()->getConstraint(cd, c->getRunningPlan());
-			cds.push_back(cd);
+			pds.push_back(cd);
 		}
-		relevantVariables = store->getAllRep();
+		relevantVariables = uniqueVarStore->getAllRep();
 		domOffset = relevantVariables.size();
 		relevantVariables.insert(relevantVariables.end(), relevantDomainVariables.begin(),
 									relevantDomainVariables.end());
@@ -202,49 +209,52 @@ namespace alica
 		return true;
 	}
 
-	vector<Variable*> ConstraintQuery::getRelevantStaticVariables()
+	vector<Variable*> Query::getRelevantStaticVariables()
 	{
 		return relevantStaticVariables;
 	}
 
-	void ConstraintQuery::setRelevantStaticVariables(vector<Variable*> value)
+	void Query::setRelevantStaticVariables(vector<Variable*> value)
 	{
 		relevantStaticVariables = value;
 	}
 
-	vector<Variable*> ConstraintQuery::getRelevantDomainVariables()
+	vector<Variable*> Query::getRelevantDomainVariables()
 	{
 		return relevantDomainVariables;
 	}
 
-	void ConstraintQuery::setRelevantDomainVariables(vector<Variable*> value)
+	void Query::setRelevantDomainVariables(vector<Variable*> value)
 	{
 		relevantDomainVariables = value;
 	}
 
-	void ConstraintQuery::addConstraintCalls(vector<shared_ptr<ConstraintCall>>& l)
+	void Query::addProblemParts(vector<shared_ptr<ProblemPart>>& l)
 	{
-		calls.insert(calls.end(), l.begin(), l.end());
+		problemParts.insert(problemParts.end(), l.begin(), l.end());
 	}
 
-	ConstraintQuery::UniqueVarStore::UniqueVarStore()
+	Query::UniqueVarStore::UniqueVarStore()
 	{
 		store = vector<vector<Variable*>>();
 	}
 
-	void ConstraintQuery::UniqueVarStore::clear()
+	void Query::UniqueVarStore::clear()
 	{
 		store.clear();
 	}
 
-	void ConstraintQuery::UniqueVarStore::add(Variable* v)
+	/**
+	 * Initializes a list with the given variable and put that list into the internal store.
+	 */
+	void Query::UniqueVarStore::add(Variable* v)
 	{
 		vector<Variable*> l = vector<Variable*>();
 		l.push_back(v);
 		store.push_back(l);
 	}
 
-	Variable* ConstraintQuery::UniqueVarStore::getRep(Variable* v)
+	Variable* Query::UniqueVarStore::getRep(Variable* v)
 	{
 		for (vector<Variable*> l : store)
 		{
@@ -260,7 +270,7 @@ namespace alica
 		return v;
 	}
 
-	void ConstraintQuery::UniqueVarStore::addVarTo(Variable* representing, Variable* toAdd)
+	void Query::UniqueVarStore::addVarTo(Variable* representing, Variable* toAdd)
 	{
 		for (vector<Variable*>& l : store)
 		{
@@ -279,7 +289,7 @@ namespace alica
 		store.push_back(nl);
 	}
 
-	vector<Variable*> ConstraintQuery::UniqueVarStore::getAllRep()
+	vector<Variable*> Query::UniqueVarStore::getAllRep()
 	{
 		vector<Variable*> ret = vector<Variable*>();
 		for (vector<Variable*> l : store)
@@ -289,7 +299,7 @@ namespace alica
 		return ret;
 	}
 
-	int ConstraintQuery::UniqueVarStore::getIndexOf(Variable* v)
+	int Query::UniqueVarStore::getIndexOf(Variable* v)
 	{
 		for (int i = 0; i < store.size(); ++i)
 		{

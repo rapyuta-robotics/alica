@@ -26,7 +26,7 @@ namespace alica
 	class BasicConstraint;
 	class RunningPlan;
 	class Parameter;
-	class ConstraintDescriptor;
+	class ProblemDescriptor;
 
 	/**
 	 * A condition encapsulates expressions and constraint specific to a AlicaElement, e.g., a Transition, or a Plan.
@@ -41,7 +41,7 @@ namespace alica
 		/**
 		 * The delegate type used to attach constraints to plans.
 		 */
-		void getConstraint(shared_ptr<ConstraintDescriptor> cd, shared_ptr<RunningPlan> rp);
+		void getConstraint(shared_ptr<ProblemDescriptor> cd, shared_ptr<RunningPlan> rp);
 
 		const string& getConditionString() const;
 		void setConditionString(const string& conditionString);

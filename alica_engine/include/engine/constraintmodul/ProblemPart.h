@@ -20,22 +20,22 @@ namespace alica
 	class RunningPlan;
 	class Variable;
 
-	class ConstraintCall
+	class ProblemPart
 	{
 	public:
-		ConstraintCall(Condition* con, shared_ptr<RunningPlan> rp);
+		ProblemPart(Condition* con, shared_ptr<RunningPlan> rp);
 
 		bool hasVariable(Variable* v);
 
 		Condition* getCondition();
-		shared_ptr<vector<list<vector<Variable* > > >> getSortedVariables();
+		shared_ptr<vector<list<vector<Variable* > > >> getDomainVariables();
 		shared_ptr<RunningPlan> getRunningPlan();
 		shared_ptr<vector<shared_ptr<vector<int>>>> getAgentsInScope();
 	private:
 		Condition* condition;
-		shared_ptr<vector<list<vector<Variable* > > >> sortedVariables;
+		shared_ptr<vector<list<vector<Variable* > > >> domainVariables;
 		shared_ptr<RunningPlan> runningplan;
-		shared_ptr<vector<shared_ptr<vector<int>>>> agentsinscope;
+		shared_ptr<vector<shared_ptr<vector<int>>>> agentsInScope;
 	};
 
 }

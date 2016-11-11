@@ -5,8 +5,7 @@
  *      Author: psp
  */
 
-#include "engine/constraintmodul/ConstraintDescriptor.h"
-
+#include <engine/constraintmodul/ProblemDescriptor.h>
 #include "engine/constraintmodul/SolverTerm.h"
 #include "engine/constraintmodul/SolverVariable.h"
 #include <iostream>
@@ -15,7 +14,7 @@
 namespace alica
 {
 
-	ConstraintDescriptor::ConstraintDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars,
+	ProblemDescriptor::ProblemDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars,
 	                                           shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>> domVars)
 	{
 		dim = vars->size();
@@ -64,98 +63,98 @@ namespace alica
 		setSetsUtilitySignificanceThreshold(false);
 	}
 
-	bool ConstraintDescriptor::getSetsUtilitySignificanceThreshold()
+	bool ProblemDescriptor::getSetsUtilitySignificanceThreshold()
 	{
 		return setsUtilitySignificanceThreshold;
 	}
 
-	void ConstraintDescriptor::setSetsUtilitySignificanceThreshold(bool value)
+	void ProblemDescriptor::setSetsUtilitySignificanceThreshold(bool value)
 	{
 		setsUtilitySignificanceThreshold = value;
 	}
 
-	double ConstraintDescriptor::getUtilitySignificanceThreshold()
+	double ProblemDescriptor::getUtilitySignificanceThreshold()
 	{
 		return utilitySignificanceThreshold;
 	}
 
-	void ConstraintDescriptor::setUtilitySignificanceThreshold(double value)
+	void ProblemDescriptor::setUtilitySignificanceThreshold(double value)
 	{
 		utilitySignificanceThreshold = value;
 		setSetsUtilitySignificanceThreshold(true);
 	}
 
-	shared_ptr<SolverTerm> ConstraintDescriptor::getConstraint()
+	shared_ptr<SolverTerm> ProblemDescriptor::getConstraint()
 	{
 		return constraint;
 	}
 
-	void ConstraintDescriptor::setConstraint(shared_ptr<SolverTerm> value)
+	void ProblemDescriptor::setConstraint(shared_ptr<SolverTerm> value)
 	{
 		constraint = value;
 	}
 
-	shared_ptr<SolverTerm> ConstraintDescriptor::getUtility()
+	shared_ptr<SolverTerm> ProblemDescriptor::getUtility()
 	{
 		return utility;
 	}
 
-	void ConstraintDescriptor::setUtility(shared_ptr<SolverTerm> value)
+	void ProblemDescriptor::setUtility(shared_ptr<SolverTerm> value)
 	{
 		utility = value;
 	}
 
-	double ConstraintDescriptor::getUtilitySufficiencyThreshold()
+	double ProblemDescriptor::getUtilitySufficiencyThreshold()
 	{
 		return utilitySufficiencyThreshold;
 	}
 
-	void ConstraintDescriptor::setUtilitySufficiencyThreshold(double value)
+	void ProblemDescriptor::setUtilitySufficiencyThreshold(double value)
 	{
 		utilitySufficiencyThreshold = value;
 	}
 
-	shared_ptr<vector<shared_ptr<SolverVariable>>> ConstraintDescriptor::getStaticVars()
+	shared_ptr<vector<shared_ptr<SolverVariable>>> ProblemDescriptor::getStaticVars()
 	{
 		return staticVars;
 	}
 
-	void ConstraintDescriptor::setStaticVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value)
+	void ProblemDescriptor::setStaticVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value)
 	{
 		staticVars = value;
 	}
 
-	shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> ConstraintDescriptor::getDomainVars()
+	shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> ProblemDescriptor::getDomainVars()
 	{
 		return domainVars;
 	}
 
-	void ConstraintDescriptor::setDomainVars(shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> value)
+	void ProblemDescriptor::setDomainVars(shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> value)
 	{
 		domainVars = value;
 	}
 
-	shared_ptr<vector<shared_ptr<vector<int>>>> ConstraintDescriptor::getAgentsInScope()
+	shared_ptr<vector<shared_ptr<vector<int>>>> ProblemDescriptor::getAgentsInScope()
 	{
 		return agentsInScope;
 	}
 
-	void ConstraintDescriptor::setAgentsInScope(shared_ptr<vector<shared_ptr<vector<int>>>> value)
+	void ProblemDescriptor::setAgentsInScope(shared_ptr<vector<shared_ptr<vector<int>>>> value)
 	{
 		agentsInScope = value;
 	}
 
-	shared_ptr<vector<shared_ptr<SolverVariable>>> ConstraintDescriptor::getAllVars()
+	shared_ptr<vector<shared_ptr<SolverVariable>>> ProblemDescriptor::getAllVars()
 	{
 		return allVars;
 	}
 
-	void ConstraintDescriptor::setAllVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value)
+	void ProblemDescriptor::setAllVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value)
 	{
 		allVars = value;
 	}
 
-	shared_ptr<vector<vector<double>>> ConstraintDescriptor::allRanges()
+	shared_ptr<vector<vector<double>>> ProblemDescriptor::allRanges()
 	{
 		auto allRanges = make_shared<vector<vector<double>>>(*staticRanges);
 		for (auto iter = domainRanges->begin(); iter != domainRanges->end(); iter++) {
@@ -168,22 +167,22 @@ namespace alica
 		return allRanges;
 	}
 
-	shared_ptr<vector<vector<vector<vector<double>>>>> ConstraintDescriptor::getDomainRanges()
+	shared_ptr<vector<vector<vector<vector<double>>>>> ProblemDescriptor::getDomainRanges()
 	{
 		return domainRanges;
 	}
 
-	void ConstraintDescriptor::setDomainRanges(shared_ptr<vector<vector<vector<vector<double>>>>> value)
+	void ProblemDescriptor::setDomainRanges(shared_ptr<vector<vector<vector<vector<double>>>>> value)
 	{
 		domainRanges = value;
 	}
 
-	shared_ptr<vector<vector<double>>> ConstraintDescriptor::getStaticRanges()
+	shared_ptr<vector<vector<double>>> ProblemDescriptor::getStaticRanges()
 	{
 		return staticRanges;
 	}
 
-	void ConstraintDescriptor::setStaticRanges(shared_ptr<vector<vector<double>>> value)
+	void ProblemDescriptor::setStaticRanges(shared_ptr<vector<vector<double>>> value)
 	{
 		staticRanges = value;
 	}
