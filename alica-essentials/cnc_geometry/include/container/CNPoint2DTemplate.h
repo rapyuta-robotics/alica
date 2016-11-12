@@ -57,7 +57,7 @@ template <class T> class CNPoint2DTemplate : public geometry_msgs::Point
 
     double distanceTo(std::shared_ptr<T> pos)
     {
-    	T delta = this - pos;
+    	T delta = this - pos; // TODO
     	return delta->length();
     }
 
@@ -65,7 +65,7 @@ template <class T> class CNPoint2DTemplate : public geometry_msgs::Point
     	return sqrt(x * x + y * y);
     }
 
-    // Operators
+    // Operatorsma
 
     // Self
 

@@ -10,6 +10,7 @@
 
 #include "geometry_msgs/Pose2D.h"
 #include "container/CNVec2DTemplate.h"
+#include <type_traits>
 
 namespace geometry
 {
@@ -22,13 +23,14 @@ template <class T> class CNPositionTemplate : public geometry_msgs::Pose2D
 		return std::make_shared<T>(this->x, this->y, this->theta);
 	}
 
-    double distanceTo(std::shared_ptr<T> pos)
+    double distanceTo(T pos)
     {
     	T delta = this - pos;
     	return delta->length();
     }
 
-    double length() {
+    double length()
+	{
     	return sqrt(x * x + y * y);
     }
 
@@ -39,7 +41,8 @@ template <class T> class CNPositionTemplate : public geometry_msgs::Pose2D
 
 // Self
 
-template <typename T> CNPositionTemplate<T> operator+(const CNPositionTemplate<T> &left, const CNPositionTemplate<T> &right)
+template <typename T, typename U, typename = typename std::enable_if<std::is_base_of<CNPositionTemplate<U>, T>::value>::type>
+std::shared_ptr<T> operator+(const std::shared_ptr<T> &left, const std::shared_ptr<T> &right)
 {
     return std::make_shared<T>(
     		left->x + right->x,
@@ -47,7 +50,8 @@ template <typename T> CNPositionTemplate<T> operator+(const CNPositionTemplate<T
 			left->theta + right->theta);
 }
 
-template <typename T> CNPositionTemplate<T> operator-(const CNPositionTemplate<T> &left, const CNPositionTemplate<T> &right)
+template <typename T, typename U, typename = typename std::enable_if<std::is_base_of<CNPositionTemplate<U>, T>::value>::type>
+std::shared_ptr<T> operator-(const std::shared_ptr<T> &left, const std::shared_ptr<T> &right)
 {
     return std::make_shared<T>(
     		left->x - right->x,
@@ -57,7 +61,8 @@ template <typename T> CNPositionTemplate<T> operator-(const CNPositionTemplate<T
 
 // Scalar
 
-template <typename T> CNPositionTemplate<T> operator/(const CNPositionTemplate<T> &left, const double &right)
+template <typename T, typename U, typename = typename std::enable_if<std::is_base_of<CNPositionTemplate<U>, T>::value>::type>
+std::shared_ptr<T> operator/(const std::shared_ptr<T> &left, const double &right)
 {
 	return std::make_shared<T>(
 			left->x / right,
@@ -65,7 +70,8 @@ template <typename T> CNPositionTemplate<T> operator/(const CNPositionTemplate<T
 			left->theta);
 }
 
-template <typename T> CNPositionTemplate<T> operator*(const CNPositionTemplate<T> &left, const double &right)
+template <typename T, typename U, typename = typename std::enable_if<std::is_base_of<CNPositionTemplate<U>, T>::value>::type>
+std::shared_ptr<T> operator*(const std::shared_ptr<T> &left, const double &right)
 {
 	return std::make_shared<T>(
 			left->x * right,
