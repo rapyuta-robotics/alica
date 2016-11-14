@@ -65,41 +65,49 @@ template <class T> class CNPoint2DTemplate : public geometry_msgs::Point
     	return sqrt(x * x + y * y);
     }
 
-    // Operatorsma
-
-    // Self
-
-    std::shared_ptr<T> operator+(const std::shared_ptr<T> &right)
-    {
-        return std::make_shared<T>(
-        		this->x + right->x,
-				this->y + right->y);
-    }
-
-    std::shared_ptr<T> operator-(const std::shared_ptr<T> &right)
-    {
-        return std::make_shared<T>(
-        		this->x - right->x,
-				this->y - right->y);
-    }
-
-    // Scalar
-
-    std::shared_ptr<T> operator/(const double &right)
-	{
-		return std::make_shared<T>(
-				this->x / right,
-				this->y / right);
-	}
-
-    std::shared_ptr<T> operator*(const double &right)
-	{
-		return std::make_shared<T>(
-				this->x * right,
-				this->y * right);
-	}
-
 };
+
+// Operators
+
+// Self
+
+template <typename T>
+typename std::enable_if<std::is_base_of<CNPoint2DTemplate<T>, T>::value, std::shared_ptr<T>>::type
+operator+(const std::shared_ptr<T> &left, const std::shared_ptr<T> &right)
+{
+    return std::make_shared<T>(
+    		left->x + right->x,
+			left->y + right->y);
+}
+
+template <typename T>
+typename std::enable_if<std::is_base_of<CNPoint2DTemplate<T>, T>::value, std::shared_ptr<T>>::type
+operator-(const std::shared_ptr<T> &left, const std::shared_ptr<T> &right)
+{
+    return std::make_shared<T>(
+    		left->x - right->x,
+			left->y - right->y);
+}
+
+// Scalar
+
+template <typename T>
+typename std::enable_if<std::is_base_of<CNPoint2DTemplate<T>, T>::value, std::shared_ptr<T>>::type
+operator/(const std::shared_ptr<T> &left, const double &right)
+{
+	return std::make_shared<T>(
+			left->x / right,
+			left->y / right);
+}
+
+template <typename T>
+typename std::enable_if<std::is_base_of<CNPoint2DTemplate<T>, T>::value, std::shared_ptr<T>>::type
+operator*(const std::shared_ptr<T> &left, const double &right)
+{
+	return std::make_shared<T>(
+			left->x * right,
+			left->y * right);
+}
 
 } /* namespace geometry */
 
