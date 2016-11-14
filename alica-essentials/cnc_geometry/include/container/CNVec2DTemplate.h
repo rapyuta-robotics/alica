@@ -79,14 +79,18 @@ template <class T> class CNVec2DTemplate : public geometry_msgs::Point
 
 // Self
 
-template <class T> std::shared_ptr<CNVec2DTemplate<T>> operator+(const std::shared_ptr<CNVec2DTemplate<T>> &left, const std::shared_ptr<CNVec2DTemplate<T>> &right)
+template <typename T>
+typename std::enable_if<std::is_base_of<CNVec2DTemplate<T>, T>::value, std::shared_ptr<T>>::type
+operator+(const std::shared_ptr<T> &left, const std::shared_ptr<T> &right)
 {
     return std::make_shared<T>(
     		left->x + right->x,
 			left->y + right->y);
 }
 
-template <class T> std::shared_ptr<CNVec2DTemplate<T>> operator-(const std::shared_ptr<CNVec2DTemplate<T>> &left, const std::shared_ptr<CNVec2DTemplate<T>> &right)
+template <typename T>
+typename std::enable_if<std::is_base_of<CNVec2DTemplate<T>, T>::value, std::shared_ptr<T>>::type
+operator-(const std::shared_ptr<T> &left, const std::shared_ptr<T> &right)
 {
     return std::make_shared<T>(
     		left->x - right->x,
@@ -95,14 +99,18 @@ template <class T> std::shared_ptr<CNVec2DTemplate<T>> operator-(const std::shar
 
 // Scalar
 
-template <class T> std::shared_ptr<CNVec2DTemplate<T>> operator/(const std::shared_ptr<CNVec2DTemplate<T>> &left, const double &right)
+template <typename T>
+typename std::enable_if<std::is_base_of<CNVec2DTemplate<T>, T>::value, std::shared_ptr<T>>::type
+operator/(const std::shared_ptr<T> &left, const double &right)
 {
 	return std::make_shared<T>(
 			left->x / right,
 			left->y / right);
 }
 
-template <class T> std::shared_ptr<T> operator*(const std::shared_ptr<CNVec2DTemplate<T>> &left, const double &right)
+template <typename T>
+typename std::enable_if<std::is_base_of<CNVec2DTemplate<T>, T>::value, std::shared_ptr<T>>::type
+operator*(const std::shared_ptr<T> &left, const double &right)
 {
 	return std::make_shared<T>(
 			left->x * right,
