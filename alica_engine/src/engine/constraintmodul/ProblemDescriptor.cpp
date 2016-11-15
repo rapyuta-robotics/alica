@@ -1,8 +1,8 @@
 /*
- * ConstraintDescriptor.cpp
+ * ProblemDescriptor.cpp
  *
  *  Created on: Sep 30, 2014
- *      Author: psp
+ *      Author: Philipp Sperber
  */
 
 #include <engine/constraintmodul/ProblemDescriptor.h>

@@ -80,13 +80,13 @@ namespace alica
 		relevantDomainVariables.clear();
 		problemParts.clear();
 
-		// insert queried variables of this query
+		// insert _queried_ variables of this query into the _relevant_ variables
 		relevantStaticVariables.insert(relevantStaticVariables.end(), queriedStaticVariables.begin(),
 										queriedStaticVariables.end());
 		relevantDomainVariables.insert(relevantDomainVariables.end(), queriedDomainVariables.begin(),
 										queriedDomainVariables.end());
 
-		// add static variables to unique variable store
+		// add static variables into the clean unique variable store
 		for (Variable* v : relevantStaticVariables)
 		{
 			uniqueVarStore->add(v);
@@ -101,15 +101,19 @@ namespace alica
 		cout << endl;
 #endif
 
+		// Goes recursive upwards in the plan tree and does three steps on each level.
 		while (rp != nullptr && (relevantStaticVariables.size() > 0 || relevantDomainVariables.size() > 0))
 		{
 #ifdef CQ_DEBUG
 			cout << "Query: Query at " << rp->getPlan()->getName() << endl;
 #endif
+
+			//1. fill the queries static and domain variables, as well as its problem parts
 			rp->getConstraintStore()->acceptQuery(shared_from_this(), rp);
+
+			//2. process bindings for plantype
 			if (rp->getPlanType() != nullptr)
 			{
-				//process bindings for plantype
 				vector<Variable*> tmpVector = vector<Variable*>();
 				for (Parametrisation* p : rp->getPlanType()->getParametrisation())
 				{
@@ -124,6 +128,7 @@ namespace alica
 				relevantStaticVariables = tmpVector;
 			}
 
+			//3. process bindings for state
 			shared_ptr<RunningPlan> parent;
 			if (!rp->getParent().expired())
 			{
@@ -147,43 +152,47 @@ namespace alica
 			rp = parent;
 		}
 
-		//now we have a list of ConstraintCalls in calls ready to be queried together with a store of unifications
+		//now we have a vector<ProblemPart> in problemParts ready to be queried together with a store of unifications
 		if (problemParts.size() == 0)
 		{
 #ifdef CQ_DEBUG
-			cout << "CQ: Empty Query!" << endl;
+			cout << "Query: Empty Query!" << endl;
 #endif
 			return false;
 		}
 
-		for (shared_ptr<ProblemPart> c : problemParts)
+		for (shared_ptr<ProblemPart> probPart : problemParts)
 		{
+			vector<Variable*> staticCondVariables = vector<Variable*>(probPart->getCondition()->getVariables());
 
-			vector<Variable*> conditionVariables = vector<Variable*>(c->getCondition()->getVariables());
-
-			auto varr = make_shared<vector<shared_ptr<SolverVariable>>>(conditionVariables.size());
-			for (int j = 0; j < conditionVariables.size(); ++j)
+			// create a vector of solver variables from the static condition variables
+			auto staticSolverVars = make_shared<vector<shared_ptr<SolverVariable>>>();
+			staticSolverVars->reserve(staticCondVariables.size());
+			for (auto& variable : staticCondVariables)
 			{
-				if (uniqueVarStore->getRep(conditionVariables[j])->getSolverVar() == nullptr)
+				auto representingVariable = uniqueVarStore->getRep(variable);
+				if (representingVariable->getSolverVar() == nullptr)
 				{
-					uniqueVarStore->getRep(conditionVariables[j])->setSolverVar(
-							solver->createVariable(uniqueVarStore->getRep(conditionVariables[j])->getId()));
+					representingVariable->setSolverVar(solver->createVariable(representingVariable->getId()));
 				}
-				varr->at(j) = uniqueVarStore->getRep(conditionVariables[j])->getSolverVar();
+
+				staticSolverVars->push_back(representingVariable->getSolverVar());
 			}
-			auto sortedVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>> >> >>();
-			auto agentsInScope = make_shared<vector<shared_ptr<vector<int>>> >();
-			for (int j = 0; j < c->getDomainVariables()->size(); ++j)
+
+			// create a vector of solver variables from the domain variables of the currently iterated problem part
+			auto domainSolverVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>>();
+			auto agentsInScope = make_shared<vector<shared_ptr<vector<int>>>>();
+			for (int j = 0; j < probPart->getDomainVariables()->size(); ++j)
 			{
-				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverVariable>>> >>();
-				agentsInScope->push_back(c->getAgentsInScope()->at(j));
-				sortedVars->push_back(ll);
-				for (auto dvarr : c->getDomainVariables()->at(j))
+				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>();
+				agentsInScope->push_back(probPart->getAgentsInScope()->at(j));
+				domainSolverVars->push_back(ll);
+				for (auto dvarr : probPart->getDomainVariables()->at(j))
 				{
 					auto dtvarr = make_shared<vector<shared_ptr<SolverVariable>>>(dvarr.size());
 					for (int i = 0; i < dtvarr->size(); ++i)
 					{
-						if(dvarr.at(i)->getSolverVar() == nullptr /*!dvarr.at(i)->getSolverVar().operator bool()*/)
+						if(dvarr.at(i)->getSolverVar() == nullptr)
 						{
 							dvarr.at(i)->setSolverVar(solver->createVariable(dvarr.at(i)->getId()));
 						}
@@ -193,18 +202,24 @@ namespace alica
 					ll->push_back(dtvarr);
 				}
 			}
-			shared_ptr<ProblemDescriptor> cd = make_shared<ProblemDescriptor>(varr, sortedVars);
+
+			// fill a new problem descriptor and put it into the out-parameter "pds"
+			shared_ptr<ProblemDescriptor> cd = make_shared<ProblemDescriptor>(staticSolverVars, domainSolverVars);
 			cd->setAgentsInScope(agentsInScope);
-			c->getCondition()->getConstraint(cd, c->getRunningPlan());
+			probPart->getCondition()->getConstraint(cd, probPart->getRunningPlan()); // this insert the actual problem description
 			pds.push_back(cd);
 		}
+
+		// write all static variables into the out-parameter "relevantVariables"
 		relevantVariables = uniqueVarStore->getAllRep();
+		// the index of the first domain variable after the static variables
 		domOffset = relevantVariables.size();
+		// write all domain variables into the out-parameter "relevantVariables"
 		relevantVariables.insert(relevantVariables.end(), relevantDomainVariables.begin(),
 									relevantDomainVariables.end());
 
 #ifdef CQ_DEBUG
-		cout << "CQ: PrepTime: " << (ae->getIAlicaClock()->now() - time) / 10000.0 << endl;
+		cout << "Query: PrepTime: " << (ae->getIAlicaClock()->now() - time) / 10000.0 << endl;
 #endif
 		return true;
 	}
@@ -234,6 +249,8 @@ namespace alica
 		problemParts.insert(problemParts.end(), l.begin(), l.end());
 	}
 
+	/// Part for the implementation of the internal class UniqueVarStore
+
 	Query::UniqueVarStore::UniqueVarStore()
 	{
 		store = vector<vector<Variable*>>();
@@ -254,31 +271,19 @@ namespace alica
 		store.push_back(l);
 	}
 
-	Variable* Query::UniqueVarStore::getRep(Variable* v)
-	{
-		for (vector<Variable*> l : store)
-		{
-			for (Variable* s : l)
-			{
-				if (s == v)
-				{
-					return l.front();
-				}
-			}
-		}
-		add(v);
-		return v;
-	}
-
+	/**
+	 * Add the variable "toAdd" to the list of variables that contains the variable "representing".
+	 * If such a list does not exist, a new list will be created.
+	 */
 	void Query::UniqueVarStore::addVarTo(Variable* representing, Variable* toAdd)
 	{
-		for (vector<Variable*>& l : store)
+		for (auto& variables : store)
 		{
-			for (Variable*& cv : l)
+			for (auto& variable : variables)
 			{
-				if (representing == cv)
+				if (representing == variable)
 				{
-					l.insert(l.begin(), toAdd);
+					variables.insert(variables.begin(), toAdd);
 					return;
 				}
 			}
@@ -299,6 +304,26 @@ namespace alica
 		return ret;
 	}
 
+	Variable* Query::UniqueVarStore::getRep(Variable* v)
+	{
+		for (vector<Variable*> l : store)
+		{
+			for (Variable* s : l)
+			{
+				if (s == v)
+				{
+					return l.front();
+				}
+			}
+		}
+		add(v);
+		return v;
+	}
+
+	/**
+	 * Returns the index of the unification-list that contains the given variable.
+	 * Returns -1, if the variable is not present.
+	 */
 	int Query::UniqueVarStore::getIndexOf(Variable* v)
 	{
 		for (int i = 0; i < store.size(); ++i)
