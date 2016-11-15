@@ -41,48 +41,57 @@ namespace alica
 		/**
 		 * The delegate type used to attach constraints to plans.
 		 */
-		void getConstraint(shared_ptr<ProblemDescriptor> cd, shared_ptr<RunningPlan> rp);
+		void getConstraint(shared_ptr<ProblemDescriptor> pd, shared_ptr<RunningPlan> rp);
 
 		const string& getConditionString() const;
 		void setConditionString(const string& conditionString);
-		list<Quantifier*>& getQuantifiers() ;
-		vector<Variable*>& getVariables() ;
+
+		vector<Variable*>& getVariables();
 		void setVariables(const vector<Variable*>& variables);
+
 		AbstractPlan* getAbstractPlan() const;
 		void setAbstractPlan(AbstractPlan* abstractPlan);
+
 		const string& getPlugInName() const;
 		void setPlugInName(const string& plugInName);
-		bool evaluate(shared_ptr<RunningPlan> rp);
-		shared_ptr<BasicCondition> getBasicCondition();
-		void setBasicCondition(shared_ptr<BasicCondition> basicCondition);
+
 		list<Parameter*>& getParameters();
 		void setParameters(list<Parameter*> parameters);
 
+		shared_ptr<BasicCondition> getBasicCondition();
 		void setBasicConstraint(shared_ptr<BasicConstraint> basicConstraint);
 
-	private:
-		void setQuantifiers(const list<Quantifier*>& quantifiers);
+		list<Quantifier*>& getQuantifiers();
+
+		bool evaluate(shared_ptr<RunningPlan> rp);
+		void setBasicCondition(shared_ptr<BasicCondition> basicCondition);
+
 	protected:
 		string conditionString;
+
 		/**
 		 * The static variables used in the constraint of this condition.
 		 */
 		vector<Variable*> variables;
+
 		/**
 		 * The quantifiers used in the constraint of this condition.
 		 */
 		list<Quantifier*> quantifiers;
+
 		/**
 		 * The Abstract Plan in which this condition occurs.
 		 */
 		AbstractPlan* abstractPlan;
+
 		list<Parameter*> parameters;
 		shared_ptr<BasicCondition> basicCondition;
 		shared_ptr<BasicConstraint> basicConstraint;
 		string plugInName;
 
+	private:
+		void setQuantifiers(const list<Quantifier*>& quantifiers);
 	};
-
 } /* namespace Alica */
 
 #endif /* CONDITION_H_ */
