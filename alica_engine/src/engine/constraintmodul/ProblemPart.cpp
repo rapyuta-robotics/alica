@@ -31,14 +31,19 @@ namespace alica
 		runningplan = rp;
 	}
 
+	/**
+	 * Checks whether the given variable is one of the domain variables.
+	 */
 	bool ProblemPart::hasVariable(Variable* v)
 	{
-		for (auto iter = domainVariables->begin(); iter != domainVariables->end(); iter++) {
-			list<vector<Variable*>> lvarr = *iter;
-			for (vector<Variable* > varr : lvarr)
+		for (auto& listOfRobots : (*domainVariables))
+		{
+			for (vector<Variable*> variables : listOfRobots)
 			{
-				for (int i = 0; i < varr.size(); ++i) {
-					if (varr[i] == v) {
+				for(auto variable : variables)
+				{
+					if (variable == v)
+					{
 						return true;
 					}
 				}
