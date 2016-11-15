@@ -135,12 +135,12 @@ namespace alica
 			return; //nothing to do
 		}
 
-		map<Condition*, shared_ptr<ProblemPart>> newConditions = map<Condition*, shared_ptr<ProblemPart>>();
-		map<Condition*, shared_ptr<ProblemPart>> allConditions = map<Condition*, shared_ptr<ProblemPart>>();
+		map<Condition*, shared_ptr<ProblemPart>> newCondProbPartMap = map<Condition*, shared_ptr<ProblemPart>>();
+		map<Condition*, shared_ptr<ProblemPart>> allCondProbPartMap = map<Condition*, shared_ptr<ProblemPart>>();
 		mtx.lock();
 		for (Condition* cond : activeConditions)
 		{
-			allConditions.insert(pair<Condition*, shared_ptr<ProblemPart>>(cond, make_shared<ProblemPart>(cond, rp)));
+			allCondProbPartMap.insert(pair<Condition*, shared_ptr<ProblemPart>>(cond, make_shared<ProblemPart>(cond, rp)));
 		}
 		mtx.unlock();
 
@@ -155,16 +155,15 @@ namespace alica
 		vector<Variable*> domVarsToCheck = relDomainVars;
 		vector<Variable*> staticVarsChecked = vector<Variable*>();
 		vector<Variable*> domVarsChecked = vector<Variable*>();
-		while (newConditions.size() < allConditions.size() && (domVarsToCheck.size() > 0 || staticVarsToCheck.size() > 0))
+		while (newCondProbPartMap.size() < allCondProbPartMap.size() && (domVarsToCheck.size() > 0 || staticVarsToCheck.size() > 0))
 		{
 			if (staticVarsToCheck.size() > 0)
 			{
-				Variable* curVariable = staticVarsToCheck[staticVarsToCheck.size() - 1];
-				//staticVarsToCheck.erase(staticVarsToCheck.begin() + (staticVarsToCheck.size() - 1));
+				Variable* curStaticVariable = staticVarsToCheck[staticVarsToCheck.size() - 1];
 				staticVarsToCheck.pop_back();
-				staticVarsChecked.push_back(curVariable);
+				staticVarsChecked.push_back(curStaticVariable);
 
-				auto it = activeVar2CondMap.find(curVariable);
+				auto it = activeVar2CondMap.find(curStaticVariable);
 				if (it == activeVar2CondMap.end())
 				{
 					// the current variable wasn't active
@@ -173,82 +172,96 @@ namespace alica
 
 				for (Condition* c : *it->second)
 				{
-					if (newConditions.find(c) != newConditions.end())
+					if (newCondProbPartMap.find(c) != newCondProbPartMap.end())
 					{
-						// condition was already inserted into the newConditions list
+						// condition was already inserted into the newCondProbPartMap
 						continue;
 					}
 
-					shared_ptr<ProblemPart> problemPart = allConditions[c];
-					newConditions.insert(pair<Condition*, shared_ptr<ProblemPart>>(c, problemPart));
+					shared_ptr<ProblemPart> problemPart = allCondProbPartMap[c];
+					newCondProbPartMap.insert(pair<Condition*, shared_ptr<ProblemPart>>(c, problemPart));
+					/**
+					 *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
+					 * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
+					 * 2. List of Robots, e.g., An agent has variables X,Y.
+					 * 3. Vector of Variables, e.g., variables X,Y.
+					 * 4. Variable, e.g., variable X.
+					 */
 					auto domainVariables = problemPart->getDomainVariables();
-					//for (auto iter = domainVariables->begin(); iter != domainVariables->end(); iter++)
-					for (auto& lvarr : (*domainVariables))
+					for (auto& listOfRobots : (*domainVariables))
 					{
-						//list<vector<Variable*>> lvarr = *iter;
-						for (vector<Variable*> varr : lvarr)
+						for (vector<Variable*> variables : listOfRobots)
 						{
-							for (int i = 0; i < varr.size(); ++i)
+							for(auto variable : variables)
 							{
-								if (find(domVarsChecked.begin(), domVarsChecked.end(), varr[i])
-										== domVarsChecked.end()
-										&& find(domVarsToCheck.begin(), domVarsToCheck.end(), varr[i])
-												== domVarsToCheck.end())
+								if (find(domVarsChecked.begin(), domVarsChecked.end(), variable) == domVarsChecked.end()
+										&& find(domVarsToCheck.begin(), domVarsToCheck.end(), variable) == domVarsToCheck.end())
 								{
-									domVarsToCheck.push_back(varr[i]);
+									domVarsToCheck.push_back(variable);
 								}
 							}
 						}
 					}
-					for (Variable* vv : c->getVariables())
+					for (Variable* variable : c->getVariables())
 					{
-						if (find(staticVarsChecked.begin(), staticVarsChecked.end(), vv) == staticVarsChecked.end()
-								&& find(staticVarsToCheck.begin(), staticVarsToCheck.end(), vv) == staticVarsToCheck.end())
+						if (find(staticVarsChecked.begin(), staticVarsChecked.end(), variable) == staticVarsChecked.end()
+								&& find(staticVarsToCheck.begin(), staticVarsToCheck.end(), variable) == staticVarsToCheck.end())
 						{
-							staticVarsToCheck.push_back(vv);
+							staticVarsToCheck.push_back(variable);
 						}
 					}
 				}
 			}
 			else if (domVarsToCheck.size() > 0)
 			{
-				Variable* v = domVarsToCheck[domVarsToCheck.size() - 1];
-				domVarsToCheck.erase(domVarsToCheck.begin() + (domVarsToCheck.size() - 1));
-				domVarsChecked.push_back(v);
-				for (auto iter = allConditions.begin(); iter != allConditions.end(); ++iter)
+				Variable* curDomainVariable = domVarsToCheck[domVarsToCheck.size() - 1];
+				domVarsToCheck.pop_back();
+				domVarsChecked.push_back(curDomainVariable);
+
+				for (auto& condProbPartPair : allCondProbPartMap)
 				{
-					if (newConditions.find(iter->first) == newConditions.end())
+					if (newCondProbPartMap.find(condProbPartPair.first) != newCondProbPartMap.end())
 					{
-						if (iter->second->hasVariable(v))
+						// condition was already in the newCondProbPartMap
+						continue;
+					}
+
+					if (condProbPartPair.second->hasVariable(curDomainVariable))
+					{
+						// curDomainVariable does not exist in the problem part
+						continue;
+					}
+
+					newCondProbPartMap.insert(pair<Condition*, shared_ptr<ProblemPart>>(condProbPartPair.first, condProbPartPair.second));
+
+					/**
+					 *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
+					 * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
+					 * 2. List of Robots, e.g., An agent has variables X,Y.
+					 * 3. Vector of Variables, e.g., variables X,Y.
+					 * 4. Variable, e.g., variable X.
+					 */
+					for (auto& listOfRobots : (*condProbPartPair.second->getDomainVariables()))
+					{
+						for (auto& variables : listOfRobots)
 						{
-							newConditions.insert(
-									pair<Condition*, shared_ptr<ProblemPart>>(iter->first, iter->second));
-							for (Variable* vv : iter->first->getVariables())
+							for (auto& variable : variables)
 							{
-								if (find(staticVarsChecked.begin(), staticVarsChecked.end(), vv) == staticVarsChecked.end()
-										&& find(staticVarsToCheck.begin(), staticVarsToCheck.end(), vv) == staticVarsToCheck.end())
+								if (find(domVarsChecked.begin(), domVarsChecked.end(), variable) == domVarsChecked.end()
+										&& find(domVarsToCheck.begin(), domVarsToCheck.end(), variable) == domVarsToCheck.end())
 								{
-									staticVarsToCheck.push_back(vv);
+									domVarsToCheck.push_back(variable);
 								}
 							}
-							auto sortedVariables = iter->second->getDomainVariables();
-							for (auto iter = sortedVariables->begin(); iter != sortedVariables->end(); iter++)
-							{
-								list<vector<Variable*>> lvarr = *iter;
-								for (vector<Variable*> varr : lvarr)
-								{
-									for (int i = 0; i < varr.size(); ++i)
-									{
-										if (find(domVarsChecked.begin(), domVarsChecked.end(), varr[i])
-												== domVarsChecked.end()
-												&& find(domVarsToCheck.begin(), domVarsToCheck.end(), varr[i])
-														== domVarsToCheck.end())
-										{
-											domVarsToCheck.push_back(varr[i]);
-										}
-									}
-								}
-							}
+						}
+					}
+
+					for (Variable* variable : condProbPartPair.first->getVariables())
+					{
+						if (find(staticVarsChecked.begin(), staticVarsChecked.end(), variable) == staticVarsChecked.end()
+								&& find(staticVarsToCheck.begin(), staticVarsToCheck.end(), variable) == staticVarsToCheck.end())
+						{
+							staticVarsToCheck.push_back(variable);
 						}
 					}
 				}
@@ -258,14 +271,13 @@ namespace alica
 
 		domVarsChecked.insert(domVarsChecked.end(), domVarsToCheck.begin(), domVarsToCheck.end());
 
-		//writeback relevant variables, this contains variables obtained earlier
+		//write back relevant variables, this contains variables obtained earlier
 		query->setRelevantStaticVariables(staticVarsChecked);
 		query->setRelevantDomainVariables(domVarsChecked);
 
+		// write back problem parts
 		vector<shared_ptr<ProblemPart>> problemParts = vector<shared_ptr<ProblemPart>>();
-		//for (map<Condition*, shared_ptr<ProblemPart>>::iterator iter = newConditions.begin();
-				//iter != newConditions.end(); ++iter)
-		for (auto& pair : newConditions)
+		for (auto& pair : newCondProbPartMap)
 		{
 			shared_ptr<ProblemPart> problemPart = pair.second;
 			if (find(problemParts.begin(), problemParts.end(), problemPart) == problemParts.end())

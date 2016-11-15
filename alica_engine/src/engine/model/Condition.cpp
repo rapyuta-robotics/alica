@@ -55,7 +55,7 @@ namespace alica
 	{
 		if (basicCondition == nullptr)
 		{
-			cerr << "Condition: Missing implementation of Condition: " << this->getId() << endl;
+			std::cerr << "Condition: Missing implementation of condition: ID " << this->getId() << std::endl;
 			return false;
 		}
 		else
@@ -64,7 +64,7 @@ namespace alica
 			try {
 				ret = basicCondition->evaluate(rp);
 			} catch (std::exception& e) {
-				std::cerr << "Exception catched: " << e.what() << std::endl;
+				std::cerr << "Condition: Exception during evaluation catched: " << std::endl << e.what() << std::endl;
 			}
 			return ret;
 		}
@@ -114,6 +114,7 @@ namespace alica
 	{
 		this->basicCondition = basicCondition;
 	}
+
 	list<Parameter*>& Condition::getParameters()
 	{
 		return parameters;
@@ -124,9 +125,9 @@ namespace alica
 		this->parameters = parameters;
 	}
 
-	void Condition::getConstraint(shared_ptr<ProblemDescriptor> cd, shared_ptr<RunningPlan> rp)
+	void Condition::getConstraint(shared_ptr<ProblemDescriptor> pd, shared_ptr<RunningPlan> rp)
 	{
-		this->basicConstraint->getConstraint(cd, rp);
+		this->basicConstraint->getConstraint(pd, rp);
 	}
 
 	void Condition::setBasicConstraint(shared_ptr<BasicConstraint> basicConstraint)
