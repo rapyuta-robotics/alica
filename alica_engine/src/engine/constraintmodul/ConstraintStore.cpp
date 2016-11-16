@@ -101,7 +101,7 @@ namespace alica
 		}
 		bool modified = false;
 		mtx.lock();
-		if (find(activeConditions.begin(), activeConditions.end(), con) == activeConditions.end())
+		if (find(activeConditions.begin(), activeConditions.end(), con) != activeConditions.end())
 		{
 			modified = true;
 			activeConditions.remove(con);
