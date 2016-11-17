@@ -24,20 +24,4 @@
     <taskPriorities id="1402500951788" name="" comment="" key="1225112227903" value="0.5"/>
     <role>rolesDefinition.rdefset#1222973297056</role>
   </mappings>
-  <mappings id="1402500951789" name="" comment="">
-    <taskPriorities id="1402500951792" name="" comment="" key="1225112227903" value="0.5"/>
-    <role>rolesDefinition.rdefset#1301084991775</role>
-  </mappings>
-  <mappings id="1402500951793" name="" comment="">
-    <taskPriorities id="1402500951795" name="" comment="" key="1225112227903" value="0.5"/>
-    <role>rolesDefinition.rdefset#1301085012645</role>
-  </mappings>
-  <mappings id="1402500951796" name="" comment="">
-    <taskPriorities id="1402500951798" name="" comment="" key="1225112227903" value="0.5"/>
-    <role>rolesDefinition.rdefset#1309349068496</role>
-  </mappings>
-  <mappings id="1402500951799" name="" comment="">
-    <taskPriorities id="1402500951801" name="" comment="" key="1225112227903" value="0.5"/>
-    <role>rolesDefinition.rdefset#1309349121234</role>
-  </mappings>
 </alica:RoleSet>

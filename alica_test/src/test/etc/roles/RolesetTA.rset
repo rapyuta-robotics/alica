@@ -42,32 +42,4 @@
     <taskPriorities id="1410440904675" name="" comment="" key="1402488486725" value="0.5"/>
     <role>rolesDefinition.rdefset#1222973297056</role>
   </mappings>
-  <mappings id="1410440904676" name="" comment="">
-    <taskPriorities id="1410440904677" name="" comment="" key="1407153536219" value="0.5"/>
-    <taskPriorities id="1410440904678" name="" comment="" key="1407153522080" value="0.5"/>
-    <taskPriorities id="1410440904679" name="" comment="" key="1225112227903" value="0.5"/>
-    <taskPriorities id="1410440904680" name="" comment="" key="1402488486725" value="0.5"/>
-    <role>rolesDefinition.rdefset#1301084991775</role>
-  </mappings>
-  <mappings id="1410440904682" name="" comment="">
-    <taskPriorities id="1410440904683" name="" comment="" key="1407153536219" value="0.5"/>
-    <taskPriorities id="1410440904684" name="" comment="" key="1407153522080" value="0.5"/>
-    <taskPriorities id="1410440904685" name="" comment="" key="1225112227903" value="0.5"/>
-    <taskPriorities id="1410440904686" name="" comment="" key="1402488486725" value="0.5"/>
-    <role>rolesDefinition.rdefset#1301085012645</role>
-  </mappings>
-  <mappings id="1410440904687" name="" comment="">
-    <taskPriorities id="1410440904688" name="" comment="" key="1407153536219" value="0.5"/>
-    <taskPriorities id="1410440904689" name="" comment="" key="1407153522080" value="0.5"/>
-    <taskPriorities id="1410440904690" name="" comment="" key="1225112227903" value="0.5"/>
-    <taskPriorities id="1410440904691" name="" comment="" key="1402488486725" value="0.5"/>
-    <role>rolesDefinition.rdefset#1309349068496</role>
-  </mappings>
-  <mappings id="1410440904692" name="" comment="">
-    <taskPriorities id="1410440904693" name="" comment="" key="1407153536219" value="0.5"/>
-    <taskPriorities id="1410440904694" name="" comment="" key="1407153522080" value="0.5"/>
-    <taskPriorities id="1410440904695" name="" comment="" key="1225112227903" value="0.5"/>
-    <taskPriorities id="1410440904696" name="" comment="" key="1402488486725" value="0.5"/>
-    <role>rolesDefinition.rdefset#1309349121234</role>
-  </mappings>
 </alica:RoleSet>

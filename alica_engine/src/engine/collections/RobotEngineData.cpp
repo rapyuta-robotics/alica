@@ -31,7 +31,7 @@ namespace alica
 		this->active = false;
 		this->lastMessageTime = 0;
 		this->properties = properties;
-		this->initSortedTerms();
+		this->initDomainVariables();
 		this->successMarks = make_shared<SuccessMarks>(ae);
 		this->lastRole = nullptr;
 
@@ -39,7 +39,7 @@ namespace alica
 
 	RobotEngineData::~RobotEngineData()
 	{
-		for(auto x : this->sortedVariables)
+		for(auto x : this->domainVariables)
 		{
 			delete x.second;
 		}
@@ -84,26 +84,27 @@ namespace alica
 		this->lastMessageTime = lastMessageTime;
 	}
 
-	void RobotEngineData::initSortedTerms()
+	void RobotEngineData::initDomainVariables()
 	{
-		map<long, Quantifier*> qs = ae->getPlanRepository()->getQuantifiers();
-		for (map<long, Quantifier*>::const_iterator iter = qs.begin(); iter != qs.end(); iter++)
+		auto qs = ae->getPlanRepository()->getQuantifiers();
+		//for (map<long, Quantifier*>::const_iterator iter = qs.begin(); iter != qs.end(); iter++)
+		for (auto quantifierPair : qs)
 		{
-			if (typeid(*iter->second) == typeid(ForallAgents))
+			if (typeid(quantifierPair.second) == typeid(ForallAgents))
 			{
-				for (string s : iter->second->getDomainIdentifiers())
+				for (string s : quantifierPair.second->getDomainIdentifiers())
 				{
 					Variable* v = new Variable(makeUniqueId(s), this->getProperties()->getName() + "." + s,"");
-					this->sortedVariables.insert(pair<string, Variable*>(s,v));
+					this->domainVariables.insert(pair<string, Variable*>(s,v));
 				}
 			}
 		}
 	}
 
-	Variable* RobotEngineData::getSortedVariable(string sort)
+	Variable* RobotEngineData::getDomainVariable(string ident)
 	{
-		auto iterator = this->sortedVariables.find(sort);
-		if(iterator != this->sortedVariables.end())
+		auto iterator = this->domainVariables.find(ident);
+		if(iterator != this->domainVariables.end())
 		{
 			return iterator->second;
 		}

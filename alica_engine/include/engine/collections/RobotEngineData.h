@@ -38,8 +38,8 @@ namespace alica
 		void setSuccessMarks(shared_ptr<SuccessMarks> successMarks);
 		unsigned long getLastMessageTime();
 		void setLastMessageTime(unsigned long lastMessageTime);
-		virtual void initSortedTerms();
-		virtual Variable* getSortedVariable(string sort);
+		virtual void initDomainVariables();
+		virtual Variable* getDomainVariable(string sort);
 		Role* getLastRole();
 		void setLastRole(Role* lastRole);
 
@@ -61,7 +61,7 @@ namespace alica
 		 * The timestamp of the last message event from this robot
 		 */
 		unsigned long lastMessageTime;
-		map<string, Variable*> sortedVariables;
+		map<string, Variable*> domainVariables;
 		long makeUniqueId(string s);
 		Role* lastRole;
 	};
