@@ -1,5 +1,5 @@
 /*
- * ConstraintQuery.cpp
+ * Query.cpp
  *
  *  Created on: Oct 17, 2014
  *      Author: Philipp Sperber
@@ -40,7 +40,7 @@ namespace alica
 
 	void Query::addVariable(int robot, string ident)
 	{
-		queriedDomainVariables.push_back(this->ae->getTeamObserver()->getRobotById(robot)->getSortedVariable(ident));
+		queriedDomainVariables.push_back(this->ae->getTeamObserver()->getRobotById(robot)->getDomainVariable(ident));
 	}
 
 	void Query::clearDomainVariables()

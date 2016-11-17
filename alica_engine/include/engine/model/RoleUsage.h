@@ -8,14 +8,12 @@
 #ifndef ROLEUSAGE_H_
 #define ROLEUSAGE_H_
 
-
-
 namespace alica
 {
 	class Role;
 
 	/**
-	 * RoleUsage contains a role with it's priorty.
+	 * RoleUsage contains a role with it's priority.
 	 */
 	class RoleUsage
 	{
@@ -32,7 +30,7 @@ namespace alica
 	protected:
 		int priorityOrder;
 		Role* role;
-		bool bUsed;
+		bool used;
 	};
 
 } /* namespace alica */

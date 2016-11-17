@@ -25,39 +25,23 @@
     <value collapsed="false"/>
   </extensions>
   <extensions>
-    <key href="rolesDefinition.rdefset#1301084991775"/>
-    <value collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="rolesDefinition.rdefset#1301085012645"/>
-    <value collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="rolesDefinition.rdefset#1309349068496"/>
-    <value collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="rolesDefinition.rdefset#1309349121234"/>
-    <value collapsed="false"/>
-  </extensions>
-  <extensions>
     <key href="RolesetTA.graph#//@nodes.0"/>
-    <value xPos="352" yPos="31" width="15" height="15" collapsed="false"/>
+    <value xPos="586" yPos="31" width="15" height="15" collapsed="false"/>
   </extensions>
   <extensions>
     <key href="RolesetTA.graph#//@nodes.1"/>
-    <value xPos="609" yPos="63" width="143" height="419" collapsed="false"/>
+    <value xPos="586" yPos="310" width="143" height="263" collapsed="false"/>
   </extensions>
   <extensions>
     <key href="RolesetTA.graph#//@nodes.2"/>
-    <value xPos="102" yPos="114" width="143" height="419" collapsed="false"/>
+    <value xPos="436" yPos="589" width="143" height="263" collapsed="false"/>
   </extensions>
   <extensions>
     <key href="RolesetTA.graph#//@nodes.3"/>
-    <value xPos="283" yPos="139" width="143" height="419" collapsed="false"/>
+    <value xPos="589" yPos="589" width="143" height="263" collapsed="false"/>
   </extensions>
   <extensions>
     <key href="RolesetTA.graph#//@nodes.4"/>
-    <value xPos="444" yPos="131" width="143" height="419" collapsed="false"/>
+    <value xPos="742" yPos="589" width="143" height="263" collapsed="false"/>
   </extensions>
 </uiextensionmodel:PmlUiExtensionMap>

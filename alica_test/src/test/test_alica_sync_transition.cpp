@@ -76,36 +76,35 @@ protected:
 	}
 
 };
+
 /**
- * Test for Runtime or PreCondition are false with plantypes
+ * Test for SyncTransition
  */
 TEST_F(AlicaSyncTransition, syncTransitionTest)
 {
-	//Test SyncTransition
-
-	sc->setHostname("nase");
+	sc->setHostname("hairy");
 	ae = new alica::AlicaEngine();
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ros = new alicaRosProxy::AlicaRosCommunication(ae);
 	ae->setCommunicator(ros);
 	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "RolesetTA", "RealMasterPlanForSyncTest", ".", true)) << "Unable to initialise the Alica Engine!";
 
-	sc->setHostname("hairy");
+	sc->setHostname("nase");
 	ae2 = new alica::AlicaEngine();
 	ae2->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ros2 = new alicaRosProxy::AlicaRosCommunication(ae2);
 	ae2->setCommunicator(ros2);
 	EXPECT_TRUE(ae2->init(bc, cc, uc, crc, "RolesetTA", "RealMasterPlanForSyncTest", ".", true)) << "Unable to initialise the Alica Engine!";
 
-
 	ae->start();
 	ae2->start();
+	chrono::milliseconds duration(33);
 
 	for (int i = 0; i < 20; i++)
 	{
 		ae->stepNotify();
-		chrono::milliseconds duration(33);
 		this_thread::sleep_for(duration);
+
 		ae2->stepNotify();
 		this_thread::sleep_for(duration);
 
@@ -119,7 +118,7 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
 			alicaTests::TestWorldModel::getTwo()->setTransitionCondition1418825428924(true);
 			alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825428924(true);
 		}
-		if(i > 5 && i < 2)
+		if(i > 1 && i < 4)
 		{
 			EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(), 1418825395940);
 			EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(), 1418825404963);

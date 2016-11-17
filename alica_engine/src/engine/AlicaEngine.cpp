@@ -1,4 +1,3 @@
-
 /*
  * AlicaEngine.cpp
  *
@@ -21,6 +20,7 @@
 #include "engine/teamobserver/TeamObserver.h"
 #include "engine/logging/Logger.h"
 #include "engine/roleassignment/RoleAssignment.h"
+#include "engine/staticroleassignment/StaticRoleAssignment.h"
 #include "engine/UtilityFunction.h"
 #include "engine/model/Plan.h"
 #include "engine/syncmodul/SyncModul.h"
@@ -64,6 +64,7 @@ namespace alica
 		this->maySendMessages = false;
 		this->pap = nullptr;
 		this->variableSyncModule = nullptr;
+		this->useStaticRoles = false;
 
 #ifdef AE_DEBUG
 		cout << "AE: Constructor finished!" << endl;
@@ -84,10 +85,10 @@ namespace alica
 	 * @return bool true if everything worked false otherwise
 	 */
 	bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc,
-							string roleSetName, string masterPlanName, string roleSetDir,
-							bool stepEngine)
+							string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine)
 	{
 		this->maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
+		this->useStaticRoles = (*sc)["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
 		AssignmentCollection::maxEpsCount = (*this->sc)["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
 		AssignmentCollection::allowIdling = (*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL);
 
@@ -119,7 +120,16 @@ namespace alica
 		}
 		if (this->roleAssignment == nullptr)
 		{
-			this->roleAssignment = new RoleAssignment(this);
+			if (this->useStaticRoles)
+			{
+				this->roleAssignment = new StaticRoleAssignment(this);
+			}
+			else
+			{
+				this->roleAssignment = new RoleAssignment(this);
+			}
+			// the communicator is expected to be set before init() is called
+			this->roleAssignment->setCommunication(communicator);
 		}
 		if (this->syncModul == nullptr)
 		{
@@ -255,7 +265,7 @@ namespace alica
 			delete this->variableSyncModule;
 			this->variableSyncModule = nullptr;
 		}
-		if(this->roleAssignment != nullptr)
+		if (this->roleAssignment != nullptr)
 		{
 			delete this->roleAssignment;
 			this->roleAssignment = nullptr;
@@ -456,7 +466,6 @@ namespace alica
 	void AlicaEngine::setCommunicator(IAlicaCommunication * communicator)
 	{
 		this->communicator = communicator;
-		//this->roleAssignment->setCommunication(communicator);
 	}
 
 	/**

@@ -13,23 +13,21 @@ namespace alica
 	{
 		this->priorityOrder = priorityOrder;
 		this->role = role;
-		this->bUsed = false;
+		this->used = false;
 	}
-
 
 	RoleUsage::~RoleUsage()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	bool RoleUsage::isUsed() const
 	{
-		return bUsed;
+		return this->used;
 	}
 
 	void RoleUsage::setUsed(bool used)
 	{
-		bUsed = used;
+		this->used = used;
 	}
 
 	int RoleUsage::getPriorityOrder() const
