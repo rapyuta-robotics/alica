@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="ProblemBuildingMaster.pml#1479556022227"/>
+    <value xPos="84" yPos="111" width="82" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="ProblemBuildingMaster.pml#1479556022226"/>
+    <value width="721" height="392"/>
+  </extensions>
+  <extensions>
+    <key href="ProblemBuildingMaster.pml#1479556022228"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="ProbBuildingLevel1.pml#1479557378264"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="ProblemBuildingMaster.pml#1479557585252"/>
+    <value xPos="343" yPos="112" width="210" height="86" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="ProblemBuildingMaster.pml#1479557591331"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="ProbBuildingLevel1_1.pml#1479557664989"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>
