@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="QueryPlan2.pml#1479718449393"/>
+    <value xPos="143" yPos="112" width="82" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="QueryPlan2.pml#1479718449392"/>
+    <value width="537" height="418"/>
+  </extensions>
+  <extensions>
+    <key href="QueryPlan2.pml#1479718449394"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="QueryBehaviour1.beh#1479556115746"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>
