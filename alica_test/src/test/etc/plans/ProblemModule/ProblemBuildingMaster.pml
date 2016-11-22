@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1479556022226" name="ProblemBuildingMaster" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" destinationPath="" priority="0.0" minCardinality="0" maxCardinality="2147483647">
+<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1479556022226" name="ProblemBuildingMaster" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" destinationPath="Plans/ProblemModule" priority="0.0" minCardinality="0" maxCardinality="2147483647">
   <vars id="1479557337956" name="PBMX" comment="" Type=""/>
   <vars id="1479557345903" name="PBMY" comment="" Type=""/>
   <states id="1479556022227" name="State1" comment="" entryPoint="1479556022228">

@@ -7,13 +7,13 @@ using namespace std;
 namespace alica
 {
     /*PROTECTED REGION ID(staticVars1414068597716) ENABLED START*/ //initialise static variables here
-	vector<string> ConstraintUsingBehaviour::result;
+    vector<string> ConstraintUsingBehaviour::result;
     /*PROTECTED REGION END*/
     ConstraintUsingBehaviour::ConstraintUsingBehaviour() :
             DomainBehaviour("ConstraintUsingBehaviour")
     {
         /*PROTECTED REGION ID(con1414068597716) ENABLED START*/ //Add additional options here
-    	this->callCounter = 0;
+        this->callCounter = 0;
         /*PROTECTED REGION END*/
     }
     ConstraintUsingBehaviour::~ConstraintUsingBehaviour()
@@ -24,22 +24,22 @@ namespace alica
     void ConstraintUsingBehaviour::run(void* msg)
     {
         /*PROTECTED REGION ID(run1414068597716) ENABLED START*/ //Add additional options here
-    	callCounter++;
-		cout << "ConstraintUsingBehaviour was called " << callCounter << " times!" << endl;
-		query->getSolution(SolverType::DUMMYSOLVER, runningPlan, result);
+        callCounter++;
+        cout << "ConstraintUsingBehaviour was called " << callCounter << " times!" << endl;
+        query->getSolution(SolverType::DUMMYSOLVER, runningPlan, result);
         /*PROTECTED REGION END*/
     }
     void ConstraintUsingBehaviour::initialiseParameters()
     {
         /*PROTECTED REGION ID(initialiseParameters1414068597716) ENABLED START*/ //Add additional options here
-    	this->query = make_shared<alica::Query>(this->getRunningPlan()->getAlicaEngine());
-    	query->addVariable(getVariablesByName("Y"));
+        this->query = make_shared < alica::Query > (this->getRunningPlan()->getAlicaEngine());
+        query->addStaticVariable(getVariablesByName("Y"));
         /*PROTECTED REGION END*/
     }
-/*PROTECTED REGION ID(methods1414068597716) ENABLED START*/ //Add additional methods here
+    /*PROTECTED REGION ID(methods1414068597716) ENABLED START*/ //Add additional methods here
     int ConstraintUsingBehaviour::getCallCounter()
-	{
-		return callCounter;
-	}
+    {
+        return callCounter;
+    }
 /*PROTECTED REGION END*/
 } /* namespace alica */

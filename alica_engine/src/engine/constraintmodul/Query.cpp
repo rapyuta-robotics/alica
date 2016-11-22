@@ -33,12 +33,12 @@ namespace alica
 		uniqueVarStore = make_shared<UniqueVarStore>();
 	}
 
-	void Query::addVariable(Variable* v)
+	void Query::addStaticVariable(Variable* v)
 	{
 		queriedStaticVariables.push_back(v);
 	}
 
-	void Query::addVariable(int robot, string ident)
+	void Query::addDomainVariable(int robot, string ident)
 	{
 		queriedDomainVariables.push_back(this->ae->getTeamObserver()->getRobotById(robot)->getDomainVariable(ident));
 	}

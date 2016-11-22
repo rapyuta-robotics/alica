@@ -2,7 +2,7 @@
 <uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
   <extensions>
     <key href="ProbBuildingLevel1_1.pml#1479557690962"/>
-    <value xPos="231" yPos="118" width="82" height="67"/>
+    <value xPos="231" yPos="118" width="82" height="67" collapsed="false"/>
   </extensions>
   <extensions>
     <key href="ProbBuildingLevel1_1.pml#1479557664989"/>
@@ -10,6 +10,10 @@
   </extensions>
   <extensions>
     <key href="ProbBuildingLevel1_1.pml#1479557690963"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="QueryPlan2.pml#1479718449392"/>
     <value/>
   </extensions>
 </uiextensionmodel:PmlUiExtensionMap>

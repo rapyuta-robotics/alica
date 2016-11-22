@@ -51,8 +51,8 @@ namespace alica
 	public:
 		Query(AlicaEngine* ae);
 
-		void addVariable(Variable* v);
-		void addVariable(int robot, string ident);
+		void addStaticVariable(Variable* v);
+		void addDomainVariable(int robot, string ident);
 		void clearDomainVariables();
 		void clearStaticVariables();
 		bool existsSolution(int solverType, shared_ptr<RunningPlan> rp);
