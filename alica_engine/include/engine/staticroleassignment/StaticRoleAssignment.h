@@ -18,7 +18,8 @@ namespace alica
 	{
 	public:
 		StaticRoleAssignment(AlicaEngine* ae);
-		virtual ~StaticRoleAssignment();
+		~StaticRoleAssignment() = default;
+
 		void init();
 		void tick();
 		Role* getRole(int robotId);

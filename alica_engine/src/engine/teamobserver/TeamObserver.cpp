@@ -329,7 +329,7 @@ namespace alica
 
 	void TeamObserver::close()
 	{
-		cout << "Closed TO" << endl;
+		cout << "TO: Closed Team Observer" << endl;
 	}
 
 	/**

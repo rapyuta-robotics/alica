@@ -5,6 +5,8 @@
  *      Author: Stephan Opfer
  */
 
+//#define STATIC_RA_DEBUG
+
 #include "engine/staticroleassignment/StaticRoleAssignment.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/AlicaEngine.h"
@@ -19,10 +21,9 @@ namespace alica
 	{
 	}
 
-	StaticRoleAssignment::~StaticRoleAssignment()
-	{
-	}
-
+	/**
+	 * Initially calculates the robot-role mapping once.
+	 */
 	void StaticRoleAssignment::init()
 	{
 		this->to = ae->getTeamObserver();
@@ -30,6 +31,9 @@ namespace alica
 		this->calculateRoles();
 	}
 
+	/**
+	 * Triggers the recalculation of the robot-role mapping, if the updateRoles flag is set to true.
+	 */
 	void StaticRoleAssignment::tick()
 	{
 		if (this->updateRoles)
@@ -39,11 +43,17 @@ namespace alica
 		}
 	}
 
+	/**
+	 * Sets the updateRoles flag to true, in order to recalculate the robot-role mapping on the next tick.
+	 */
 	void StaticRoleAssignment::update()
 	{
 		this->updateRoles = true;
 	}
 
+	/**
+	 * Recalculates the complete mapping from robot to role.
+	 */
 	void StaticRoleAssignment::calculateRoles()
 	{
 		// clear current map
@@ -63,22 +73,25 @@ namespace alica
 				// make entry in the map if the roles match
 				if (role.second->getName() == robot->getDefaultRole())
 				{
+#ifdef STATIC_RA_DEBUG
+					std::cout << "Static RA: Setting Role " << role.second->getName() << " for robot ID " << robot->getId() << std::endl;
+#endif
 					this->robotRoleMapping.emplace(robot->getId(), role.second);
 
-					// set own role, if its me
-					if (robot->getId() == this->to->getOwnId())
-					{
-						if (this->ownRole != role.second)
-						{
-							this->ownRole = role.second;
+					// also set the role in the RobotEngineData container of the team observer
+					this->to->getRobotById(robot->getId())->setLastRole(role.second);
 
-							// probably nothing is reacting on this message, but anyway we send it
-							if (this->communication != nullptr)
-							{
-								RoleSwitch rs;
-								rs.roleID = role.first;
-								this->communication->sendRoleSwitch(rs);
-							}
+					// set own role, if its me
+					if (robot->getId() == this->to->getOwnId() && this->ownRole != role.second)
+					{
+						this->ownRole = role.second;
+
+						// probably nothing is reacting on this message, but anyway we send it
+						if (this->communication != nullptr)
+						{
+							RoleSwitch rs;
+							rs.roleID = role.first;
+							this->communication->sendRoleSwitch(rs);
 						}
 					}
 					roleIsAssigned = true;
