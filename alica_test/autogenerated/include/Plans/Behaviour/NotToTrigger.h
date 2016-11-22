@@ -16,8 +16,8 @@ namespace alica
         virtual ~NotToTrigger();
         virtual void run(void* msg);
         /*PROTECTED REGION ID(pub1429017274116) ENABLED START*/ //Add additional public methods here
-		int callCounter;
-		int initCounter;
+        int callCounter;
+        int initCounter;
         /*PROTECTED REGION END*/
     protected:
         virtual void initialiseParameters();

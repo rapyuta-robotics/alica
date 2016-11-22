@@ -33,10 +33,10 @@ namespace alica
     void SolverTestBehaviour::initialiseParameters()
     {
         /*PROTECTED REGION ID(initialiseParameters1417424455986) ENABLED START*/ //Add additional options here
-    	this->query = make_shared < alica::Query > (this->getRunningPlan()->getAlicaEngine());
+        this->query = make_shared < alica::Query > (this->getRunningPlan()->getAlicaEngine());
         query->clearStaticVariables();
-        query->addVariable(getVariablesByName("X"));
-        query->addVariable(getVariablesByName("Y"));
+        query->addStaticVariable(getVariablesByName("X"));
+        query->addStaticVariable(getVariablesByName("Y"));
         /*PROTECTED REGION END*/
     }
     /*PROTECTED REGION ID(methods1417424455986) ENABLED START*/ //Add additional methods here

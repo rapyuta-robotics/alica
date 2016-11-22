@@ -11,7 +11,7 @@ namespace alica
             DomainBehaviour("MidFieldStandard")
     {
         /*PROTECTED REGION ID(con1402488696205) ENABLED START*/ //Add additional options here
-    	this->callCounter = 0;
+        this->callCounter = 0;
         /*PROTECTED REGION END*/
     }
     MidFieldStandard::~MidFieldStandard()
@@ -22,17 +22,17 @@ namespace alica
     void MidFieldStandard::run(void* msg)
     {
         /*PROTECTED REGION ID(run1402488696205) ENABLED START*/ //Add additional options here
-    	callCounter++;
-		if(callCounter>10)
-		{
-			this->setSuccess(true);
-		}
+        callCounter++;
+        if (callCounter > 10)
+        {
+            this->setSuccess(true);
+        }
         /*PROTECTED REGION END*/
     }
     void MidFieldStandard::initialiseParameters()
     {
         /*PROTECTED REGION ID(initialiseParameters1402488696205) ENABLED START*/ //Add additional options here
-    	this->callCounter = 0;
+        this->callCounter = 0;
         /*PROTECTED REGION END*/
     }
 /*PROTECTED REGION ID(methods1402488696205) ENABLED START*/ //Add additional methods here

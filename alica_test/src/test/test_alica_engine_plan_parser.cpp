@@ -10,6 +10,7 @@ using namespace std;
 #include <ros/ros.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <cstdio>
 
 #include <engine/AlicaEngine.h>
 #include "engine/PlanRepository.h"
@@ -767,9 +768,9 @@ TEST_F(AlicaEngineTest, planWriter)
 		temp = supplementary::FileSystem::combinePaths(temp, iter.second->getName() + string(".pml"));
 		string test = exec((string("diff ") + iter.second->getFileName() + string(" ") + temp).c_str());
 		EXPECT_EQ(0, test.size()) << "files are different! " << test << endl;
+		std::remove(temp.c_str());// delete the file after comparing it
 	}
 	cout << "AlicaEngineTest, planWriter: writing plans done." << endl;
-
 }
 
 int main(int argc, char **argv)

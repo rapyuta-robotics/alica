@@ -1,11 +1,11 @@
 #ifndef ConstraintUsingBehaviour_H_
 #define ConstraintUsingBehaviour_H_
 
-#include <engine/constraintmodul/Query.h>
 #include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1414068597716) ENABLED START*/ //Add additional includes here
 #include <vector>
 #include "SolverType.h"
+#include <engine/constraintmodul/Query.h>
 /*PROTECTED REGION END*/
 namespace alica
 {
@@ -17,7 +17,7 @@ namespace alica
         virtual void run(void* msg);
         /*PROTECTED REGION ID(pub1414068597716) ENABLED START*/ //Add additional public methods here
         int getCallCounter();
-		static vector<string> result;
+        static vector<string> result;
         /*PROTECTED REGION END*/
     protected:
         virtual void initialiseParameters();
