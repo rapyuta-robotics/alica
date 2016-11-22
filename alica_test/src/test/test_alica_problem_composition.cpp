@@ -1,17 +1,20 @@
 #include <BehaviourCreator.h>
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
+#include <CGSolver.h>
 #include <ConditionCreator.h>
 #include <ConstraintCreator.h>
+#include <ConstraintTestPlanDummySolver.h>
 #include <engine/AlicaEngine.h>
 #include <engine/constraintmodul/Query.h>
 #include <engine/model/Variable.h>
 #include <engine/PlanBase.h>
 #include <engine/RunningPlan.h>
+#include <FileSystem.h>
 #include <gtest/gtest.h>
-#include <gtest/gtest-message.h>
 #include <gtest/internal/gtest-internal.h>
 #include <Plans/ProblemModule/QueryBehaviour1.h>
+#include <SolverType.h>
 #include <SystemConfig.h>
 #include <UtilityFunctionCreator.h>
 #include <chrono>
@@ -54,6 +57,8 @@ protected:
 		ae = new alica::AlicaEngine();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+		ae->addSolver(SolverType::DUMMYSOLVER, new alica::reasoner::ConstraintTestPlanDummySolver(ae));
+		ae->addSolver(SolverType::GRADIENTSOLVER, new alica::reasoner::CGSolver(ae));
 		ae->init(bc, cc, uc, crc, "Roleset", "ProblemBuildingMaster", ".", false);
 	}
 

@@ -118,6 +118,9 @@ namespace alica
 		vector<Variable*> relevantVariables;
 		int domOffset;
 		ISolver* solver = this->ae->getSolver(solverType);
+		if (solver == nullptr)
+			return false;
+
 		if (!this->collectProblemStatement(rp, solver, cds, relevantVariables, domOffset))
 		{
 			return false;
