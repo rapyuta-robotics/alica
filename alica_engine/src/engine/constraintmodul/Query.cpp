@@ -338,4 +338,12 @@ namespace alica
 		}
 		return -1;
 	}
+
+	/**
+	 * ONLY FOR TESTING!
+	 */
+	shared_ptr<Query::UniqueVarStore> Query::getUniqueVariableStore()
+	{
+		return this->uniqueVarStore;
+	}
 } /* namespace alica */
