@@ -48,8 +48,9 @@ protected:
 		sc = supplementary::SystemConfig::getInstance();
 		sc->setRootPath(path);
 		sc->setConfigPath(path + "/etc");
+		cout << sc->getConfigPath() << endl;
 
-		sc->setHostname("zwerg");
+		sc->setHostname("nase");
 		ae = new alica::AlicaEngine();
 		bc = new alica::BehaviourCreator();
 		cc = new alica::ConditionCreator();
@@ -76,7 +77,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 
 	alica::IPlanSelector* ps = ae->getPlanSelector();
 	auto robots = make_shared<vector<int> >();
-	for (int i = 1; i <= 5; i++)
+	for (int i = 8; i <= 11; i++)
 	{
 		robots->push_back(i);
 	}

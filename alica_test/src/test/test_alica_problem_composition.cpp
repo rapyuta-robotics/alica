@@ -25,6 +25,7 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
+#include "Plans/ProblemModule/QueryBehaviour1.h"
 
 class AlicaProblemCompositionTest : public ::testing::Test
 {
@@ -57,5 +58,15 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
 	ASSERT_TRUE(ae->init(bc, cc, uc, crc, "Roleset", "ProblemBuildingMaster", ".", false))<< "Unable to initialise the Alica Engine!";
 
 	ae->start();
+
+	this_thread::sleep_for(chrono::milliseconds (100));
+
+	auto queryBehaviour1 = dynamic_pointer_cast<QueryBehaviour1>( ae->getPlanBase()->getDeepestNode()->getBasicBehaviour());
+	queryBehaviour1->query->getRelevantStaticVariables();
+	auto allReps = queryBehaviour1->query->getUniqueVariableStore()->getAllRep();
+	for (auto& rep : allReps)
+	{
+		cout << "Test: '" << rep->getName() << "'" << endl;
+	}
 }
 

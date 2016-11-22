@@ -90,6 +90,8 @@ namespace alica
 			vector<vector<Variable*>> store;
 		};
 
+		shared_ptr<UniqueVarStore> getUniqueVariableStore();/*< for testing only!!! */
+
 	private:
 		bool collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
 										vector<shared_ptr<ProblemDescriptor>>& cds,
