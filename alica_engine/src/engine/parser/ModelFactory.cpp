@@ -665,9 +665,19 @@ namespace alica
 				}
 
 			}
+			else if (vars.compare(val) == 0)
+			{
+				Variable* var = createVariable(curChild);
+				pt->getVariables()->push_back(var);
+			}
+			else if (parametrisation.compare(val) == 0)
+			{
+				Parametrisation* para = createParametrisation(curChild);
+				pt->getParametrisation().push_back(para);
+			}
 			else
 			{
-				ae->abort("MF: Unhandled PlanType Child:", curChild);
+				ae->abort("MF: Unhandled PlanType Child:", val);
 			}
 			curChild = curChild->NextSiblingElement();
 		}
@@ -1321,7 +1331,7 @@ namespace alica
 			}
 			else
 			{
-				ae->abort("MF: Unhandled State Child: ", curChild->Value());
+				ae->abort("MF: Unhandled State Child: ", val);
 			}
 
 			curChild = curChild->NextSiblingElement();

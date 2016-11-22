@@ -137,15 +137,12 @@ namespace alica
 		double dutility = 0;
 		RobotRoleUtility* rc;
 		this->sortedRobots.clear();
-		//for (auto roleIter = this->roles.begin(); roleIter != this->roles.end(); roleIter++)
 		for (auto& roleEntry : this->roles)
 		{
 			for (auto robProperties : (*this->availableRobots))
 			{
 				int y = 0;
 				dutility = 0;
-//				for (auto charIter = roleEntry.second->getCharacteristics().begin();
-//						charIter != roleEntry.second->getCharacteristics().end(); charIter++)
 				for (auto& roleCharacEntry : roleEntry.second->getCharacteristics())
 				{
 					// find the characteristics object of a robot

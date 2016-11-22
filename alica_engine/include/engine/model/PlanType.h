@@ -30,7 +30,7 @@ namespace alica
 		const virtual string& getFileName() const;
 		string toString();
 
-		const list<Parametrisation*>& getParametrisation() const;
+		list<Parametrisation*>& getParametrisation();
 		void setParametrisation(const list<Parametrisation*> parametrisation);
 		list<Plan*>& getPlans() ;
 		void setPlans(const list<Plan*>& plans);

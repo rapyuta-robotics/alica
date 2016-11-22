@@ -1,31 +1,25 @@
-#include <gtest/gtest.h>
-#include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
-#include "engine/IAlicaCommunication.h"
-#include "engine/model/State.h"
-#include "engine/model/Behaviour.h"
-#include "engine/PlanRepository.h"
-#include "engine/BasicBehaviour.h"
-#include "engine/IBehaviourPool.h"
-#include "engine/PlanBase.h"
+#include <BehaviourCreator.h>
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
+#include <ConditionCreator.h>
+#include <ConstraintCreator.h>
+#include <engine/AlicaEngine.h>
 #include <engine/constraintmodul/Query.h>
-#include  "engine/DefaultUtilityFunction.h"
-#include  "engine/ITeamObserver.h"
-#include "engine/model/Plan.h"
-#include "engine/model/RuntimeCondition.h"
-#include "engine/Assignment.h"
-#include "engine/collections/AssignmentCollection.h"
-#include "engine/collections/StateCollection.h"
-#include <thread>
+#include <engine/model/Variable.h>
+#include <engine/PlanBase.h>
+#include <engine/RunningPlan.h>
+#include <gtest/gtest.h>
+#include <gtest/gtest-message.h>
+#include <gtest/internal/gtest-internal.h>
+#include <Plans/ProblemModule/QueryBehaviour1.h>
+#include <SystemConfig.h>
+#include <UtilityFunctionCreator.h>
+#include <chrono>
 #include <iostream>
-#include "SolverType.h"
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
-#include "UtilityFunctionCreator.h"
-#include "Plans/ProblemModule/QueryBehaviour1.h"
+#include <memory>
+#include <string>
+#include <thread>
+#include <vector>
 
 class AlicaProblemCompositionTest : public ::testing::Test
 {
@@ -39,10 +33,40 @@ protected:
 
 	virtual void SetUp()
 	{
+		// determine the path to the test config
+		string path = supplementary::FileSystem::getSelfPath();
+		int place = path.rfind("devel");
+		path = path.substr(0, place);
+		path = path + "src/alica/alica_test/src/test";
+
+		// bring up the SystemConfig with the corresponding path
+		sc = supplementary::SystemConfig::getInstance();
+		sc->setRootPath(path);
+		sc->setConfigPath(path + "/etc");
+
+		// setup the engine
+		bc = new alica::BehaviourCreator();
+		cc = new alica::ConditionCreator();
+		uc = new alica::UtilityFunctionCreator();
+		crc = new alica::ConstraintCreator();
+
+		sc->setHostname("nase");
+		ae = new alica::AlicaEngine();
+		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+		ae->init(bc, cc, uc, crc, "Roleset", "ProblemBuildingMaster", ".", false);
 	}
 
 	virtual void TearDown()
 	{
+		ae->shutdown();
+		delete ae->getCommunicator();
+		delete ae->getIAlicaClock();
+		sc->shutdown();
+		delete cc;
+		delete bc;
+		delete uc;
+		delete crc;
 	}
 };
 
@@ -51,12 +75,6 @@ protected:
  */
 TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
 {
-	sc->setHostname("nase");
-	ae = new alica::AlicaEngine();
-	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-	ASSERT_TRUE(ae->init(bc, cc, uc, crc, "Roleset", "ProblemBuildingMaster", ".", false))<< "Unable to initialise the Alica Engine!";
-
 	ae->start();
 
 	this_thread::sleep_for(chrono::milliseconds (100));

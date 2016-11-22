@@ -70,7 +70,7 @@ namespace alica
 		this->inTransitions = inTransitions;
 	}
 
-	 list<Transition*>& State::getOutTransitions()
+	list<Transition*>& State::getOutTransitions()
 	{
 		return outTransitions;
 	}
@@ -80,7 +80,7 @@ namespace alica
 		this->outTransitions = outTransition;
 	}
 
-	 list<Parametrisation*>& State::getParametrisation()
+	list<Parametrisation*>& State::getParametrisation()
 	{
 		return parametrisation;
 	}
@@ -119,12 +119,12 @@ namespace alica
 	{
 		this->terminal = terminal;
 	}
-	 EntryPoint* alica::State::getEntryPoint()
+	EntryPoint* alica::State::getEntryPoint()
 	{
 		return entryPoint;
 	}
 
-	void alica::State::setEntryPoint( EntryPoint* entryPoint)
+	void alica::State::setEntryPoint(EntryPoint* entryPoint)
 	{
 		this->entryPoint = entryPoint;
 	}
@@ -136,5 +136,4 @@ namespace alica
 	}
 
 } /* namespace Alica */
-
 

@@ -53,7 +53,7 @@ namespace alica
 		}
 	}
 
-	const list<Parametrisation*>& PlanType::getParametrisation() const
+	list<Parametrisation*>& PlanType::getParametrisation()
 	{
 		return parametrisation;
 	}
