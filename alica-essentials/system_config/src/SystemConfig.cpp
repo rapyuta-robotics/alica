@@ -194,16 +194,19 @@ namespace supplementary
 	{
 		hostname = newHostname;
 		configs.clear();
+		cout << "SC: Update Hostname:       \"" << hostname << "\"" << endl;
 	}
 
 	void SystemConfig::setRootPath(string rootPath)
 	{
 		this->rootPath = rootPath;
+		cout << "SC: Update Root:           \"" << rootPath << "\"" << endl;
 	}
 
 	void SystemConfig::setConfigPath(string configPath)
 	{
 		this->configPath = configPath;
+		cout << "SC: Update ConfigRoot:     \"" << configPath << "\"" << endl;
 	}
 
 	void SystemConfig::resetHostname()
