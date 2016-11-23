@@ -16,4 +16,8 @@
     <key href="QueryPlantype.pty#1479557395790"/>
     <value/>
   </extensions>
+  <extensions>
+    <key href="ProbBuildingLevel1.pml#1479892648665"/>
+    <value xPos="263" yPos="423"/>
+  </extensions>
 </uiextensionmodel:PmlUiExtensionMap>

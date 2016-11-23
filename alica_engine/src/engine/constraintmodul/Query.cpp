@@ -25,6 +25,8 @@
 
 #include <iostream>
 
+#define CQ_DEBUG
+
 namespace alica
 {
 	Query::Query(AlicaEngine* ae) :
@@ -187,19 +189,20 @@ namespace alica
 				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>();
 				agentsInScope->push_back(probPart->getAgentsInScope()->at(j));
 				domainSolverVars->push_back(ll);
-				for (auto dvarr : probPart->getDomainVariables()->at(j))
+				for (auto domainVars : probPart->getDomainVariables()->at(j))
 				{
-					auto dtvarr = make_shared<vector<shared_ptr<SolverVariable>>>(dvarr.size());
-					for (int i = 0; i < dtvarr->size(); ++i)
+					auto domainSolverVars = make_shared<vector<shared_ptr<SolverVariable>>>();
+					domainSolverVars->reserve(domainVars.size());
+					for (int i = 0; i < domainSolverVars->size(); ++i)
 					{
-						if(dvarr.at(i)->getSolverVar() == nullptr)
+						if(domainVars.at(i)->getSolverVar() == nullptr)
 						{
-							dvarr.at(i)->setSolverVar(solver->createVariable(dvarr.at(i)->getId()));
+							domainVars.at(i)->setSolverVar(solver->createVariable(domainVars.at(i)->getId()));
 						}
 
-						dtvarr->at(i) = dvarr.at(i)->getSolverVar();
+						domainSolverVars->at(i) = domainVars.at(i)->getSolverVar();
 					}
-					ll->push_back(dtvarr);
+					ll->push_back(domainSolverVars);
 				}
 			}
 
