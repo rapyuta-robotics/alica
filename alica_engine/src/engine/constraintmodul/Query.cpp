@@ -153,6 +153,7 @@ namespace alica
 			}
 			rp = parent;
 		}
+		cout << "Query: " << this->uniqueVarStore << endl;
 
 		//now we have a vector<ProblemPart> in problemParts ready to be queried together with a store of unifications
 		if (problemParts.size() == 0)
@@ -257,6 +258,20 @@ namespace alica
 	Query::UniqueVarStore::UniqueVarStore()
 	{
 		store = vector<vector<Variable*>>();
+	}
+
+	std::ostream& Query::UniqueVarStore::operator<<(std::ostream& os)
+	{
+		// write obj to stream
+		for (auto& variableList : this->store)
+		{
+			for (auto& variable : variableList)
+			{
+				os << variable->getName() << "(" << variable->getId() << "), ";
+			}
+			os << std::endl;
+		}
+		return os << std::endl;
 	}
 
 	void Query::UniqueVarStore::clear()
