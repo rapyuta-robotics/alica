@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
 <alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1479557378264" name="ProbBuildingLevel1" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" destinationPath="Plans/ProblemModule" priority="0.0" minCardinality="0" maxCardinality="2147483647">
-  <conditions xsi:type="alica:RuntimeCondition" id="1479892648665" name="NewRuntimeCondition" comment="" conditionString="" pluginName="DefaultPlugin">
-    <quantifiers xsi:type="alica:ForallAgents" id="1479892652932" name="MISSING_NAME" comment="" scope="1479557378265">
-      <sorts>X</sorts>
-      <sorts>Y</sorts>
-      <sorts>Z</sorts>
-    </quantifiers>
-  </conditions>
   <vars id="1479557432793" name="PBL1X" comment="" Type=""/>
   <vars id="1479557444388" name="PBL1Y" comment="" Type=""/>
   <states id="1479557378265" name="PTState" comment="" entryPoint="1479557378266">

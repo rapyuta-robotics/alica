@@ -80,6 +80,7 @@ namespace alica
 			void addVarTo(Variable* representing, Variable* toAdd);
 			vector<Variable*> getAllRep();
 			int getIndexOf(Variable* v);
+			std::ostream& operator<<(std::ostream& os);
 
 		private:
 			// TODO implement this store with a vector of lists, because a list is more efficient in this use case
