@@ -15,6 +15,8 @@
 
 #include <iostream>
 
+#define CS_DEBUG
+
 namespace alica
 {
 
@@ -140,15 +142,18 @@ namespace alica
 		mtx.lock();
 		for (Condition* cond : activeConditions)
 		{
-			allCondProbPartMap.insert(pair<Condition*, shared_ptr<ProblemPart>>(cond, make_shared<ProblemPart>(cond, rp)));
+			//allCondProbPartMap.insert(pair<Condition*, shared_ptr<ProblemPart>>(cond, make_shared<ProblemPart>(cond, rp)));
+			allCondProbPartMap.emplace(cond, make_shared<ProblemPart>(cond, rp));
 		}
 		mtx.unlock();
 
 #ifdef CS_DEBUG
+		std::cout << "CS: Relevant Static Vars: ";
 		for (Variable* v : relStaticVars)
 		{
-			cout << "CS: related vars : " << v->getName() << endl;
+			 std::cout << v->getName() << ", ";
 		}
+		std::cout << std::endl;
 #endif
 
 		vector<Variable*> staticVarsToCheck = relStaticVars;
@@ -163,6 +168,10 @@ namespace alica
 				staticVarsToCheck.pop_back();
 				staticVarsChecked.push_back(curStaticVariable);
 
+#ifdef CS_DEBUG
+				std::cout << "CS: Checking static variable " << curStaticVariable->getName() << "(" << curStaticVariable->getId() << ")" << std::endl;
+#endif
+
 				auto it = activeVar2CondMap.find(curStaticVariable);
 				if (it == activeVar2CondMap.end())
 				{
@@ -170,7 +179,10 @@ namespace alica
 					continue;
 				}
 
-				for (Condition* c : *it->second)
+#ifdef CS_DEBUG
+				std::cout << "CS: Conditions active under variable " << it->first->getName() << ": " << it->second->size() << std::endl;
+#endif
+				for (Condition* c : *(it->second))
 				{
 					if (newCondProbPartMap.find(c) != newCondProbPartMap.end())
 					{
@@ -179,7 +191,7 @@ namespace alica
 					}
 
 					shared_ptr<ProblemPart> problemPart = allCondProbPartMap[c];
-					newCondProbPartMap.insert(pair<Condition*, shared_ptr<ProblemPart>>(c, problemPart));
+					newCondProbPartMap.emplace(c, problemPart);
 					/**
 					 *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
 					 * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
@@ -197,6 +209,7 @@ namespace alica
 								if (find(domVarsChecked.begin(), domVarsChecked.end(), variable) == domVarsChecked.end()
 										&& find(domVarsToCheck.begin(), domVarsToCheck.end(), variable) == domVarsToCheck.end())
 								{
+									cout << "CS: Adding DomVar : " << variable->getName() << endl;
 									domVarsToCheck.push_back(variable);
 								}
 							}
@@ -226,13 +239,13 @@ namespace alica
 						continue;
 					}
 
-					if (condProbPartPair.second->hasVariable(curDomainVariable))
+					if (!condProbPartPair.second->hasVariable(curDomainVariable))
 					{
 						// curDomainVariable does not exist in the problem part
 						continue;
 					}
 
-					newCondProbPartMap.insert(pair<Condition*, shared_ptr<ProblemPart>>(condProbPartPair.first, condProbPartPair.second));
+					newCondProbPartMap.emplace(condProbPartPair.first, condProbPartPair.second);
 
 					/**
 					 *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
@@ -267,9 +280,15 @@ namespace alica
 				}
 			}
 		}
-		staticVarsChecked.insert(staticVarsChecked.end(), staticVarsToCheck.begin(), staticVarsToCheck.end());
+		if (!staticVarsChecked.empty())
+		{
+			staticVarsChecked.insert(staticVarsChecked.end(), staticVarsToCheck.begin(), staticVarsToCheck.end());
+		}
 
-		domVarsChecked.insert(domVarsChecked.end(), domVarsToCheck.begin(), domVarsToCheck.end());
+		if (!domVarsToCheck.empty())
+		{
+			domVarsChecked.insert(domVarsChecked.end(), domVarsToCheck.begin(), domVarsToCheck.end());
+		}
 
 		//write back relevant variables, this contains variables obtained earlier
 		query->setRelevantStaticVariables(staticVarsChecked);
@@ -279,10 +298,10 @@ namespace alica
 		vector<shared_ptr<ProblemPart>> problemParts = vector<shared_ptr<ProblemPart>>();
 		for (auto& pair : newCondProbPartMap)
 		{
-			shared_ptr<ProblemPart> problemPart = pair.second;
+			auto problemPart = pair.second;
 			if (find(problemParts.begin(), problemParts.end(), problemPart) == problemParts.end())
 			{
-				problemParts.push_back(pair.second);
+				problemParts.push_back(problemPart);
 			}
 		}
 		query->addProblemParts(problemParts);

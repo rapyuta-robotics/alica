@@ -90,7 +90,7 @@ namespace alica
 		//for (map<long, Quantifier*>::const_iterator iter = qs.begin(); iter != qs.end(); iter++)
 		for (auto quantifierPair : qs)
 		{
-			if (typeid(quantifierPair.second) == typeid(ForallAgents))
+			if (dynamic_cast<ForallAgents*>(quantifierPair.second) != nullptr)
 			{
 				for (string s : quantifierPair.second->getDomainIdentifiers())
 				{
@@ -110,6 +110,7 @@ namespace alica
 		}
 		else
 		{
+//			cout << "RobotEngineData: DomainVarible not found returning nullptr" << endl;
 			return nullptr;
 		}
 	}

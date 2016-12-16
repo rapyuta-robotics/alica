@@ -25,8 +25,6 @@
 
 #include <iostream>
 
-#define CQ_DEBUG
-
 namespace alica
 {
 	Query::Query(AlicaEngine* ae) :
@@ -73,7 +71,7 @@ namespace alica
 													vector<shared_ptr<ProblemDescriptor>>& pds,
 													vector<Variable*>& relevantVariables, int& domOffset)
 	{
-#ifdef CQ_DEBUG
+#ifdef Q_DEBUG
 		long time = rp->getAlicaEngine()->getIAlicaClock()->now();
 #endif
 		// Clear variable stuff and calls
@@ -83,10 +81,19 @@ namespace alica
 		problemParts.clear();
 
 		// insert _queried_ variables of this query into the _relevant_ variables
-		relevantStaticVariables.insert(relevantStaticVariables.end(), queriedStaticVariables.begin(),
-										queriedStaticVariables.end());
-		relevantDomainVariables.insert(relevantDomainVariables.end(), queriedDomainVariables.begin(),
-										queriedDomainVariables.end());
+		if (!queriedStaticVariables.empty())
+		{
+			relevantStaticVariables.insert(relevantStaticVariables.end(), queriedStaticVariables.begin(),
+										   queriedStaticVariables.end());
+		}
+		std::cout << "Query: queriedDomainVariables Size: " << queriedDomainVariables.size() << std::endl;
+		if (!queriedDomainVariables.empty())
+		{
+			relevantDomainVariables.insert(relevantDomainVariables.end(), queriedDomainVariables.begin(),
+										   queriedDomainVariables.end());
+		}
+		std::cout << "Query: relevantDomainVariables Size: " << relevantDomainVariables.size() << std::endl;
+
 
 		// add static variables into the clean unique variable store
 		for (Variable* v : relevantStaticVariables)
@@ -94,25 +101,24 @@ namespace alica
 			uniqueVarStore->add(v);
 		}
 
-#ifdef CQ_DEBUG
+#ifdef Q_DEBUG
 		cout << "Query: Starting Query with static Vars:";
-		for (Variable* v : relevantStaticVariables)
-		{
-			cout << " " << v->getName();
-		}
-		cout << endl;
+		cout << "Query: " << (*this->uniqueVarStore) << endl;
 #endif
-
 		// Goes recursive upwards in the plan tree and does three steps on each level.
 		while (rp != nullptr && (relevantStaticVariables.size() > 0 || relevantDomainVariables.size() > 0))
 		{
-#ifdef CQ_DEBUG
+#ifdef Q_DEBUG
 			cout << "Query: Query at " << rp->getPlan()->getName() << endl;
+			cout << "Query: " << (*this->uniqueVarStore) << endl;
 #endif
 
-			//1. fill the queries static and domain variables, as well as its problem parts
+			//1. fill the query's static and domain variables, as well as its problem parts
 			rp->getConstraintStore()->acceptQuery(shared_from_this(), rp);
 
+#ifdef Q_DEBUG
+			std::cout << "Query: Size of problemParts is " << this->problemParts.size() << std::endl;
+#endif
 			//2. process bindings for plantype
 			if (rp->getPlanType() != nullptr)
 			{
@@ -127,6 +133,11 @@ namespace alica
 						uniqueVarStore->addVarTo(p->getSubVar(), p->getVar());
 					}
 				}
+				/**
+				 * Overwrite relevantStaticVariables for having only the
+				 * static variables of the current plan tree level for
+				 * the next iteration. Each while-iteration goes one level up.
+				 */
 				relevantStaticVariables = tmpVector;
 			}
 
@@ -149,20 +160,29 @@ namespace alica
 						uniqueVarStore->addVarTo(p->getSubVar(), p->getVar());
 					}
 				}
+				/**
+				 * Overwrite relevantStaticVariables for having only the
+				 * static variables of the current plan tree level for
+				 * the next iteration. Each-iteration goes one level up.
+				 */
 				relevantStaticVariables = tmpVector;
 			}
 			rp = parent;
 		}
-		cout << "Query: " << this->uniqueVarStore << endl;
+		cout << "Query: " << (*this->uniqueVarStore) << endl;
 
 		//now we have a vector<ProblemPart> in problemParts ready to be queried together with a store of unifications
 		if (problemParts.size() == 0)
 		{
-#ifdef CQ_DEBUG
+#ifdef Q_DEBUG
 			cout << "Query: Empty Query!" << endl;
 #endif
 			return false;
 		}
+
+#ifdef Q_DEBUG
+			std::cout << "Query: Size of problemParts is " << this->problemParts.size() << std::endl;
+#endif
 
 		for (shared_ptr<ProblemPart> probPart : problemParts)
 		{
@@ -215,14 +235,21 @@ namespace alica
 		}
 
 		// write all static variables into the out-parameter "relevantVariables"
+		std::cout << "Query: RelevantVariables Size: " << relevantVariables.size() << std::endl;
 		relevantVariables = uniqueVarStore->getAllRep();
+		std::cout << "Query: RelevantVariables Size: " << relevantVariables.size() << std::endl;
 		// the index of the first domain variable after the static variables
 		domOffset = relevantVariables.size();
 		// write all domain variables into the out-parameter "relevantVariables"
-		relevantVariables.insert(relevantVariables.end(), relevantDomainVariables.begin(),
+		std::cout << "Query: relevantDomainVariables Size: " << relevantDomainVariables.size() << std::endl;
+		if (!relevantDomainVariables.empty())
+		{
+			relevantVariables.insert(relevantVariables.end(), relevantDomainVariables.begin(),
 									relevantDomainVariables.end());
+		}
+		std::cout << "Query: RelevantVariables Size: " << relevantVariables.size() << std::endl;
 
-#ifdef CQ_DEBUG
+#ifdef Q_DEBUG
 		cout << "Query: PrepTime: " << (ae->getIAlicaClock()->now() - time) / 10000.0 << endl;
 #endif
 		return true;
@@ -255,26 +282,14 @@ namespace alica
 
 	/// Part for the implementation of the internal class UniqueVarStore
 
-	Query::UniqueVarStore::UniqueVarStore()
+	UniqueVarStore::UniqueVarStore()
 	{
 		store = vector<vector<Variable*>>();
 	}
 
-	std::ostream& Query::UniqueVarStore::operator<<(std::ostream& os)
-	{
-		// write obj to stream
-		for (auto& variableList : this->store)
-		{
-			for (auto& variable : variableList)
-			{
-				os << variable->getName() << "(" << variable->getId() << "), ";
-			}
-			os << std::endl;
-		}
-		return os << std::endl;
-	}
 
-	void Query::UniqueVarStore::clear()
+
+	void UniqueVarStore::clear()
 	{
 		store.clear();
 	}
@@ -282,7 +297,7 @@ namespace alica
 	/**
 	 * Initializes a list with the given variable and put that list into the internal store.
 	 */
-	void Query::UniqueVarStore::add(Variable* v)
+	void UniqueVarStore::add(Variable* v)
 	{
 		vector<Variable*> l = vector<Variable*>();
 		l.push_back(v);
@@ -293,7 +308,7 @@ namespace alica
 	 * Add the variable "toAdd" to the list of variables that contains the variable "representing".
 	 * If such a list does not exist, a new list will be created.
 	 */
-	void Query::UniqueVarStore::addVarTo(Variable* representing, Variable* toAdd)
+	void UniqueVarStore::addVarTo(Variable* representing, Variable* toAdd)
 	{
 		for (auto& variables : store)
 		{
@@ -312,7 +327,7 @@ namespace alica
 		store.push_back(nl);
 	}
 
-	vector<Variable*> Query::UniqueVarStore::getAllRep()
+	vector<Variable*> UniqueVarStore::getAllRep()
 	{
 		vector<Variable*> ret = vector<Variable*>();
 		for (vector<Variable*> l : store)
@@ -322,7 +337,7 @@ namespace alica
 		return ret;
 	}
 
-	Variable* Query::UniqueVarStore::getRep(Variable* v)
+	Variable* UniqueVarStore::getRep(Variable* v)
 	{
 		for (vector<Variable*> l : store)
 		{
@@ -342,7 +357,7 @@ namespace alica
 	 * Returns the index of the unification-list that contains the given variable.
 	 * Returns -1, if the variable is not present.
 	 */
-	int Query::UniqueVarStore::getIndexOf(Variable* v)
+	int UniqueVarStore::getIndexOf(Variable* v)
 	{
 		for (int i = 0; i < store.size(); ++i)
 		{
@@ -360,7 +375,7 @@ namespace alica
 	/**
 	 * ONLY FOR TESTING!
 	 */
-	shared_ptr<Query::UniqueVarStore> Query::getUniqueVariableStore()
+	shared_ptr<UniqueVarStore> Query::getUniqueVariableStore()
 	{
 		return this->uniqueVarStore;
 	}
