@@ -8,6 +8,8 @@
 #ifndef CONSTRAINTQUERY_H_
 #define CONSTRAINTQUERY_H_
 
+#define Q_DEBUG
+
 #include <engine/constraintmodul/ConditionStore.h>
 #include <engine/constraintmodul/ISolver.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
@@ -44,6 +46,45 @@ namespace alica
 	class ISolver;
 
 	/**
+	 * Internal class to deal with bindings in states and plantypes
+	 */
+	class UniqueVarStore
+	{
+	public:
+		UniqueVarStore();
+
+		void clear();
+		void add(Variable* v);
+		Variable* getRep(Variable* v);
+		void addVarTo(Variable* representing, Variable* toAdd);
+		vector<Variable*> getAllRep();
+		int getIndexOf(Variable* v);
+		friend std::ostream& operator<<(std::ostream& os,const UniqueVarStore& store)
+		{
+			os << "UniqueVarStore: " << std::endl;
+			// write obj to stream
+			for (auto& variableList : store.store)
+			{
+				os << "VariableList: ";
+				for (auto& variable : variableList)
+				{
+					os << variable->getName() << "(" << variable->getId() << "), ";
+				}
+				os << std::endl;
+			}
+			return os;
+		}
+
+	private:
+		// TODO implement this store with a vector of lists, because a list is more efficient in this use case
+		/**
+		 *  Each inner list of variables is sorted from variables of the top most plan to variables of the deepest plan.
+		 *  Therefore, the first element is always the variable in the top most plan, where this variable occurs.
+		 */
+		vector<vector<Variable*>> store;
+	};
+
+	/**
 	 * Encapsulates queries to variables (which are associated with specific solvers).
 	 */
 	class Query : public enable_shared_from_this<Query>
@@ -66,30 +107,7 @@ namespace alica
 		void setRelevantDomainVariables(vector<Variable*> value);
 		void addProblemParts(vector<shared_ptr<ProblemPart>>& l);
 
-		/**
-		 * Internal class to deal with bindings in states and plantypes
-		 */
-		class UniqueVarStore
-		{
-		public:
-			UniqueVarStore();
 
-			void clear();
-			void add(Variable* v);
-			Variable* getRep(Variable* v);
-			void addVarTo(Variable* representing, Variable* toAdd);
-			vector<Variable*> getAllRep();
-			int getIndexOf(Variable* v);
-			std::ostream& operator<<(std::ostream& os);
-
-		private:
-			// TODO implement this store with a vector of lists, because a list is more efficient in this use case
-			/**
-			 *  Each inner list of variables is sorted from variables of the top most plan to variables of the deepest plan.
-			 *  Therefore, the first element is always the variable in the top most plan, where this variable occurs.
-			 */
-			vector<vector<Variable*>> store;
-		};
 
 		shared_ptr<UniqueVarStore> getUniqueVariableStore();/*< for testing only!!! */
 
@@ -127,6 +145,15 @@ namespace alica
 			return false;
 		}
 
+#ifdef Q_DEBUG
+		std::cout << "Query: " << (*this->uniqueVarStore) << std::endl;
+//		std::cout << "Query: Relevant Variables: " << std::endl;
+//		for (auto variable : relevantVariables)
+//		{
+//			std::cout << variable->getName() << std::endl;
+//		}
+//		std::cout << std::endl;
+#endif
 
 		// the result of the solver (including all relevant variables)
 		vector<void*> solverResult;
@@ -183,7 +210,10 @@ namespace alica
 		return ret;
 	}
 
-}
-/* namespace alica */
+
+
+}/* namespace alica */
+
+
 
 #endif /* CONSTRAINTQUERY_H_ */
