@@ -86,14 +86,17 @@ namespace alica
 			relevantStaticVariables.insert(relevantStaticVariables.end(), queriedStaticVariables.begin(),
 										   queriedStaticVariables.end());
 		}
+#ifdef Q_DEBUG
 		std::cout << "Query: queriedDomainVariables Size: " << queriedDomainVariables.size() << std::endl;
+#endif
 		if (!queriedDomainVariables.empty())
 		{
 			relevantDomainVariables.insert(relevantDomainVariables.end(), queriedDomainVariables.begin(),
 										   queriedDomainVariables.end());
 		}
+#ifdef Q_DEBUG
 		std::cout << "Query: relevantDomainVariables Size: " << relevantDomainVariables.size() << std::endl;
-
+#endif
 
 		// add static variables into the clean unique variable store
 		for (Variable* v : relevantStaticVariables)
@@ -169,8 +172,9 @@ namespace alica
 			}
 			rp = parent;
 		}
+#ifdef Q_DEBUG
 		cout << "Query: " << (*this->uniqueVarStore) << endl;
-
+#endif
 		//now we have a vector<ProblemPart> in problemParts ready to be queried together with a store of unifications
 		if (problemParts.size() == 0)
 		{
@@ -235,19 +239,27 @@ namespace alica
 		}
 
 		// write all static variables into the out-parameter "relevantVariables"
+#ifdef Q_DEBUG
 		std::cout << "Query: RelevantVariables Size: " << relevantVariables.size() << std::endl;
+#endif
 		relevantVariables = uniqueVarStore->getAllRep();
+#ifdef Q_DEBUG
 		std::cout << "Query: RelevantVariables Size: " << relevantVariables.size() << std::endl;
+#endif
 		// the index of the first domain variable after the static variables
 		domOffset = relevantVariables.size();
 		// write all domain variables into the out-parameter "relevantVariables"
+#ifdef Q_DEBUG
 		std::cout << "Query: relevantDomainVariables Size: " << relevantDomainVariables.size() << std::endl;
+#endif
 		if (!relevantDomainVariables.empty())
 		{
 			relevantVariables.insert(relevantVariables.end(), relevantDomainVariables.begin(),
 									relevantDomainVariables.end());
 		}
+#ifdef Q_DEBUG
 		std::cout << "Query: RelevantVariables Size: " << relevantVariables.size() << std::endl;
+#endif
 
 #ifdef Q_DEBUG
 		cout << "Query: PrepTime: " << (ae->getIAlicaClock()->now() - time) / 10000.0 << endl;
