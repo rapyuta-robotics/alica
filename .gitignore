@@ -79,3 +79,7 @@ alica_plan_designer/bin/linux.gtk.x86_64/workspace
 alica_plan_designer/bin/linux.gtk.x86_64/configuration
 alica_plan_designer/bin/linux.gtk.x86/workspace
 alica_plan_designer/bin/linux.gtk.x86/configuration
+
+# coala
+*.orig
+
