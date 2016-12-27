@@ -3,3 +3,7 @@ cling_wrap/libgringo/src/input/nongroundgrammar/grammar.cc
 cling_wrap/libgringo/src/input/nongroundgrammar/grammar.hh
 cling_wrap/libgringo/src/input/nongroundgrammar/grammar.out
 cling_wrap/libgringo/src/input/nongroundgrammar/stack.hh
+
+# coala
+*.orig
+
