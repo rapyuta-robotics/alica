@@ -8,7 +8,7 @@
 #ifndef CONSTRAINTQUERY_H_
 #define CONSTRAINTQUERY_H_
 
-#define Q_DEBUG
+//#define Q_DEBUG
 
 #include <engine/constraintmodul/ConditionStore.h>
 #include <engine/constraintmodul/ISolver.h>
