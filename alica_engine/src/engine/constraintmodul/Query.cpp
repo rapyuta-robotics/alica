@@ -218,14 +218,13 @@ namespace alica
 				{
 					auto domainSolverVars = make_shared<vector<shared_ptr<SolverVariable>>>();
 					domainSolverVars->reserve(domainVars.size());
-					for (int i = 0; i < domainSolverVars->size(); ++i)
+					for (int i = 0; i < domainVars.size(); ++i)
 					{
 						if(domainVars.at(i)->getSolverVar() == nullptr)
 						{
 							domainVars.at(i)->setSolverVar(solver->createVariable(domainVars.at(i)->getId()));
 						}
-
-						domainSolverVars->at(i) = domainVars.at(i)->getSolverVar();
+						domainSolverVars->push_back(domainVars.at(i)->getSolverVar());
 					}
 					ll->push_back(domainSolverVars);
 				}
