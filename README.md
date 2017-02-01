@@ -1,4 +1,5 @@
 #ALICA (A Language for Interactive Cooperative Agents)
+[Reference](https://carpe-noctem-cassel.github.io/alica) | [Documentation](https://carpe-noctem-cassel.github.io)
 
 Below you will find all installation steps of the framework, please follow them to ensure that everything is working properly. 
 
