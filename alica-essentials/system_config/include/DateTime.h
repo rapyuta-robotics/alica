@@ -1,6 +1,7 @@
 #ifndef SUPPLEMENTARY_DATETIME_H
 #define SUPPLEMENTARY_DATETIME_H 1
 
+#include <cstring>
 #include <sys/time.h>
 #include <time.h>
 
