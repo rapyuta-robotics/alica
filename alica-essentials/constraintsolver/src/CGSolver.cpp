@@ -8,8 +8,8 @@
 #include "CGSolver.h"
 
 #include <engine/AlicaEngine.h>
-#include <engine/constraintmodul/ConstraintDescriptor.h>
 #include <engine/constraintmodul/IVariableSyncModule.h>
+#include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>
 #include <GSolver.h>
 #include <limits>
@@ -22,7 +22,7 @@ namespace alica
 	{
 
 		CGSolver::CGSolver(AlicaEngine* ae) :
-				IConstraintSolver(ae) , lastUtil(0.0), lastFEvals(0.0), lastRuns(0.0)
+				ISolver(ae) , lastUtil(0.0), lastFEvals(0.0), lastRuns(0.0)
 		{
 			Term::setAnd(AndType::AND);
 			Term::setOr(OrType::MAX);
@@ -34,7 +34,7 @@ namespace alica
 		{
 		}
 
-		bool CGSolver::existsSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls)
+		bool CGSolver::existsSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls)
 		{
 			shared_ptr<Term> constraint = ConstraintBuilder::TRUE;
 			int dim = vars.size();
@@ -120,7 +120,7 @@ namespace alica
 			return sgs->solveSimple(constraint, cVars, ranges, seeds);
 		}
 
-		bool CGSolver::getSolution(vector<Variable*>& vars, vector<shared_ptr<ConstraintDescriptor>>& calls,
+		bool CGSolver::getSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls,
 									vector<void*>& results)
 		{
 			shared_ptr<Term> constraint = ConstraintBuilder::TRUE;

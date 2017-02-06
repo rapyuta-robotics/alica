@@ -15,7 +15,7 @@ using namespace std;
 #include <stdint.h>
 #include <stdlib.h>
 #include <algorithm>
-#include "boost/lexical_cast.hpp"
+//#include "boost/lexical_cast.hpp"
 
 #include "ConfigNode.h"
 
