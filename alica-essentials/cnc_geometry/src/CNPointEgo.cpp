@@ -29,7 +29,6 @@ string CNPointEgo::toString()
 
 CNPointAllo CNPointEgo::toAllo(CNPositionAllo &me)
 {
-	// TODO: fix
     auto allo = CNPointAllo();
 
     // rotate rel point around origin -> rel point with allo orientation
@@ -37,7 +36,7 @@ CNPointAllo CNPointEgo::toAllo(CNPositionAllo &me)
     double c = cos(me.theta);
 
     double x = c * this->x - s * this->y;
-    double y = s * this->x - c * this->y;
+    double y = s * this->x - c * this->y; // TODO: fix
 
     // sum me pos and rel pos -> allo pos with allo rotaion
     allo.x = x + me.x;

@@ -9,7 +9,6 @@ template <class T> class CNPointTemplate : public geometry_msgs::Point
   public:
     T rotateZ(double radian)
     {
-    	// TODO: fix
     	return T(
     			x * cos(radian) - y * sin(radian),
 				x * sin(radian) + y * cos(radian),
@@ -18,13 +17,11 @@ template <class T> class CNPointTemplate : public geometry_msgs::Point
 
     double angleZ()
     {
-    	// TODO: fix
     	return atan2(y, x);
     }
 
     double angleZToPoint(T &point)
     {
-    	// TODO: fix
     	return atan2(point->y - this->y, point->x - this->x);
     }
 
@@ -49,8 +46,7 @@ template <class T> class CNPointTemplate : public geometry_msgs::Point
 
     double distanceTo(T &pos)
     {
-    	// TODO: fix
-    	T delta = this - pos; // TODO
+    	T delta = this - pos;
     	return delta.length();
     }
 

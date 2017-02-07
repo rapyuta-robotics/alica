@@ -11,7 +11,6 @@ template <class T> class CNVecTemplate : public geometry_msgs::Point
 
     T rotateZ(double radian)
     {
-    	// TODO: fix
     	return T(
     			x * cos(radian) - y * sin(radian),
 				x * sin(radian) + y * cos(radian),
@@ -20,13 +19,11 @@ template <class T> class CNVecTemplate : public geometry_msgs::Point
 
     double angleZ()
     {
-    	// TODO: fix
     	return atan2(y, x);
     }
 
     double angleZTo(T point)
     {
-    	// TODO: fix
     	return atan2(point->y - this->y, point->x - this->x);
     }
 
@@ -51,7 +48,6 @@ template <class T> class CNVecTemplate : public geometry_msgs::Point
 
     double distanceTo(T pos)
     {
-    	// TODO: fix
     	T delta = this - pos;
     	return delta.length();
     }

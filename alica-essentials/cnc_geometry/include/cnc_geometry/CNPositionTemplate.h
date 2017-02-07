@@ -10,7 +10,6 @@ template <class T> class CNPositionTemplate : public geometry_msgs::Pose2D
   public:
     double distanceTo(T pos)
     {
-    	// TODO
     	T delta = this - pos;
     	return delta.length();
     }

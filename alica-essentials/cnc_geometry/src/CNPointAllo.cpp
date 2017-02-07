@@ -35,7 +35,6 @@ string CNPointAllo::toString()
  */
 CNPointEgo CNPointAllo::toEgo(CNPositionAllo &alloPos)
 {
-	// TODO: fix
     CNPointEgo ego = CNPointEgo();
 
     // sub me pos from allo pos -> rel pos with allo orientation
@@ -47,7 +46,7 @@ CNPointEgo CNPointAllo::toEgo(CNPositionAllo &alloPos)
     double c = cos(-alloPos.theta);
 
     ego.x = c * relX - s * relY;
-    ego.y = s * relX - c * relY;
+    ego.y = s * relX - c * relY; // TODO: fix
     ego.z = this->z;
 
     return ego;

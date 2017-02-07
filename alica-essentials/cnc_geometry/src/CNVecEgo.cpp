@@ -37,7 +37,6 @@ string CNVecEgo::toString()
 
 CNVecAllo CNVecEgo::toAllo(CNPositionAllo &me)
 {
-	// TODO: fix
 	auto allo = CNVecAllo();
 
 	// rotate rel point around origin -> rel point with allo orientation
@@ -45,7 +44,7 @@ CNVecAllo CNVecEgo::toAllo(CNPositionAllo &me)
 	double c = cos(me.theta);
 
 	allo.x = c * this->x - s * this->y;
-	allo.y = s * this->x - c * this->y;
+	allo.y = s * this->x - c * this->y; // TODO: fix
 	allo.z = this->z;
 
 	return allo;
