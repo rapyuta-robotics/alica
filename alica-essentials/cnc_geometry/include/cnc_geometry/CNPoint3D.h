@@ -5,8 +5,7 @@
  *      Author: Tobias Schellien
  */
 
-#ifndef CNC_MSL_MSL_WORLDMODEL_SRC_CONTAINER_POINT3D_H_
-#define CNC_MSL_MSL_WORLDMODEL_SRC_CONTAINER_POINT3D_H_
+#pragma once
 
 #include "geometry_msgs/Point.h"
 #include <memory>
@@ -41,4 +40,3 @@ namespace geometry {
 	shared_ptr<CNPoint3D> operator*(const shared_ptr<CNPoint3D>& left, const double& right);
 	shared_ptr<CNPoint3D> operator/(const shared_ptr<CNPoint3D>& left, const double& right);
 }
-#endif /* CNC_MSL_MSL_WORLDMODEL_SRC_CONTAINER_POINT2D_H_ */

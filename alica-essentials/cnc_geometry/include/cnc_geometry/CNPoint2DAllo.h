@@ -5,8 +5,7 @@
  *      Author: Philipp Mandler
  */
 
-#ifndef CNC_GEOMETRY_CONTAINER_CNPOINT2DALLO_H_
-#define CNC_GEOMETRY_CONTAINER_CNPOINT2DALLO_H_
+#pragma once
 
 #include "CNPoint2DTemplate.h"
 
@@ -36,5 +35,3 @@ std::shared_ptr<CNPoint2DAllo> operator+(const std::shared_ptr<CNPoint2DAllo> &l
 std::shared_ptr<CNPoint2DAllo> operator-(const std::shared_ptr<CNPoint2DAllo> &left, const std::shared_ptr<CNVec2DAllo> &right);
 
 } /* namespace geometry */
-
-#endif /* CNC_GEOMETRY_CONTAINER_CNPOINT2DALLO_H_ */

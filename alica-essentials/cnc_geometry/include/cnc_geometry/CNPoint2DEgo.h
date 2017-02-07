@@ -5,8 +5,7 @@
  *      Author: Philipp Mandler
  */
 
-#ifndef CNC_GEOMETRY_CONTAINER_CNPOINT2DEGO_H_
-#define CNC_GEOMETRY_CONTAINER_CNPOINT2DEGO_H_
+#pragma once
 
 #include "container/CNPoint2DTemplate.h"
 
@@ -34,5 +33,3 @@ std::shared_ptr<CNPoint2DEgo> operator+(const std::shared_ptr<CNPoint2DEgo> &lef
 std::shared_ptr<CNPoint2DEgo> operator-(const std::shared_ptr<CNPoint2DEgo> &left, const std::shared_ptr<CNVec2DEgo> &right);
 
 } /* namespace geometry */
-
-#endif /* CNC_GEOMETRY_CONTAINER_CNPOINT2DEGO_H_ */

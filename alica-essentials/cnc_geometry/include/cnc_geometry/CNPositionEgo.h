@@ -5,8 +5,7 @@
  *      Author: Philipp Mandler
  */
 
-#ifndef CNC_GEOMETRY_CONTAINER_CNPOSITIONEGO_H_
-#define CNC_GEOMETRY_CONTAINER_CNPOSITIONEGO_H_
+#pragma once
 
 #include "cnc_geometry/container/CNPositionTemplate.h"
 #include "cnc_geometry/container/CNPositionAllo.h"
@@ -34,5 +33,3 @@ std::shared_ptr<CNPositionEgo> operator+(const std::shared_ptr<CNPositionEgo> &l
 std::shared_ptr<CNPositionEgo> operator-(const std::shared_ptr<CNPositionEgo> &left, const std::shared_ptr<CNVec2DEgo> &right);
 
 } /* namespace geometry */
-
-#endif /* CNC_GEOMETRY_CONTAINER_CNPOSITIONEGO_H_ */

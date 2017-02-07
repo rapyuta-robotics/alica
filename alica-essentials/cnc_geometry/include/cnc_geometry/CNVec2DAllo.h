@@ -5,8 +5,7 @@
  *      Author: Philipp Mandler
  */
 
-#ifndef CNC_GEOMETRY_CONTAINER_CNVEC2DALLO_H_
-#define CNC_GEOMETRY_CONTAINER_CNVEC2DALLO_H_
+#pragma once
 
 #include "container/CNVec2DTemplate.h"
 
@@ -33,5 +32,3 @@ class CNVec2DAllo : public CNVec2DTemplate<CNVec2DAllo>
 };
 
 } /* namespace geometry */
-
-#endif /* CNC_GEOMETRY_CONTAINER_CNVEC2DALLO_H_ */

@@ -5,8 +5,7 @@
  *      Author: Stephan Opfer
  */
 
-#ifndef SUPPLEMENTARY_CNC_GEOMETRY_SRC_CONTAINER_CNROBOT_H_
-#define SUPPLEMENTARY_CNC_GEOMETRY_SRC_CONTAINER_CNROBOT_H_
+#pragma once
 
 #include "cnc_geometry/container/CNPositionAllo.h"
 #include "cnc_geometry/container/CNVec2DAllo.h"
@@ -38,5 +37,3 @@ class CNRobot : public CNPositionAllo
     double certainty;                  /**< Some certainty value about the trueness of the data about this robot.*/
 };
 }
-
-#endif /* SUPPLEMENTARY_CNC_GEOMETRY_SRC_CONTAINER_CNROBOT_H_ */

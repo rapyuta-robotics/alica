@@ -5,8 +5,7 @@
  *      Author: Tobias Schellien
  */
 
-#ifndef CNC_GEOMETRY_GEOMETRY_GEOMETRYCALCULATOR_H_
-#define CNC_GEOMETRY_GEOMETRY_GEOMETRYCALCULATOR_H_
+#pragma once
 
 #include <tuple>
 
@@ -42,5 +41,3 @@ int orientation(shared_ptr<CNPoint2D> &p, shared_ptr<CNPoint2D> &q, shared_ptr<C
 bool doIntersect(shared_ptr<CNPoint2D> &p1, shared_ptr<CNPoint2D> &q1, shared_ptr<CNPoint2D> &p2, shared_ptr<CNPoint2D> &q2);
 
 } /* namespace geometry */
-
-#endif /* CNC_GEOMETRY_GEOMETRY_GEOMETRYCALCULATOR_H_ */

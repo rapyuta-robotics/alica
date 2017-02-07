@@ -5,8 +5,7 @@
  *      Author: cn
  */
 
-#ifndef INCLUDE_CONTAINER_CNVEC2DTEMPLATE_H_
-#define INCLUDE_CONTAINER_CNVEC2DTEMPLATE_H_
+#pragma once
 
 #include "geometry_msgs/Point.h"
 
@@ -110,5 +109,3 @@ operator*(const std::shared_ptr<T> &left, const double &right)
 }
 
 } /* namespace geometry */
-
-#endif /* INCLUDE_CONTAINER_CNVEC2DTEMPLATE_H_ */

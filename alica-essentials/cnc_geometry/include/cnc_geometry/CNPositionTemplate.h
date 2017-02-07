@@ -5,8 +5,7 @@
  *      Author: Philipp Mandler
  */
 
-#ifndef CNC_GEOMETRY_CONTAINER_CNPOSITIONTEMPLATE_H_
-#define CNC_GEOMETRY_CONTAINER_CNPOSITIONTEMPLATE_H_
+#pragma once
 
 #include "geometry_msgs/Pose2D.h"
 #include "container/CNVec2DTemplate.h"
@@ -84,5 +83,3 @@ operator*(const std::shared_ptr<T> &left, const double &right)
 }
 
 } /* namespace geometry */
-
-#endif /* CNC_GEOMETRY_CONTAINER_CNPOSITIONTEMPLATE_H_ */
