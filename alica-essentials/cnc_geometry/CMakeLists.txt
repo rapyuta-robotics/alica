@@ -30,11 +30,12 @@ include_directories(
 )
 
 add_library(cnc_geometry
-  #src/GeometryCalculator.cpp
   #src/CNPosition.cpp
   #src/CNPoint2D.cpp
   #src/CNPoint3D.cpp
   #src/CNVelocity2D.cpp
+  
+  src/Calculator.cpp
   
   src/CNPositionEgo.cpp
   src/CNPositionAllo.cpp
