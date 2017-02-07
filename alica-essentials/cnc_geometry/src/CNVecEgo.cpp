@@ -35,17 +35,18 @@ string CNVecEgo::toString()
     return ss.str();
 }
 
-shared_ptr<CNVecAllo> CNVecEgo::toAllo(CNPositionAllo &me)
+CNVecAllo CNVecEgo::toAllo(CNPositionAllo &me)
 {
 	// TODO: fix
-	shared_ptr<CNVecAllo> allo = make_shared<CNVecAllo>();
+	auto allo = CNVecAllo();
 
 	// rotate rel point around origin -> rel point with allo orientation
 	double s = sin(me.theta);
 	double c = cos(me.theta);
 
-	double x = c * this->x - s * this->y;
-	double y = s * this->x - c * this->y;
+	allo.x = c * this->x - s * this->y;
+	allo.y = s * this->x - c * this->y;
+	allo.z = this->z;
 
 	return allo;
 }

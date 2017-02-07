@@ -33,17 +33,18 @@ string CNVecAllo::toString()
     return ss.str();
 }
 
-shared_ptr<CNVecEgo> CNVecAllo::toEgo(CNPositionAllo &me)
+CNVecEgo CNVecAllo::toEgo(CNPositionAllo &me)
 {
 	// TODO: fix
-    shared_ptr<CNVecEgo> ego = std::make_shared<CNVecEgo>();
+    auto ego = CNVecEgo();
 
     // rotate rel point around origin -> rel point with ego orientation
     double s = sin(-me.theta);
     double c = cos(-me.theta);
 
-    ego->x = c * this->x - s * this->y;
-    ego->y = s * this->x - c * this->y;
+    ego.x = c * this->x - s * this->y;
+    ego.y = s * this->x - c * this->y;
+    ego.z = this->z;
 
     return ego;
 }

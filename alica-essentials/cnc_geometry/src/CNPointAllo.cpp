@@ -33,10 +33,10 @@ string CNPointAllo::toString()
  * @param alloPos the allocentric reference position
  * @return an egocentric 2d point with alloPos as origin of ordinates
  */
-shared_ptr<CNPointEgo> CNPointAllo::toEgo(CNPositionAllo &alloPos)
+CNPointEgo CNPointAllo::toEgo(CNPositionAllo &alloPos)
 {
 	// TODO: fix
-    shared_ptr<CNPointEgo> ego = std::make_shared<CNPointEgo>();
+    CNPointEgo ego = CNPointEgo();
 
     // sub me pos from allo pos -> rel pos with allo orientation
     double relX = this->x - alloPos.x;
@@ -46,26 +46,27 @@ shared_ptr<CNPointEgo> CNPointAllo::toEgo(CNPositionAllo &alloPos)
     double s = sin(-alloPos.theta);
     double c = cos(-alloPos.theta);
 
-    ego->x = c * relX - s * relY;
-    ego->y = s * relX - c * relY;
+    ego.x = c * relX - s * relY;
+    ego.y = s * relX - c * relY;
+    ego.z = this->z;
 
     return ego;
 }
 
-shared_ptr<CNPointAllo> operator+(const shared_ptr<CNPointAllo> &left, const shared_ptr<CNVecAllo> &right)
+CNPointAllo CNPointAllo::operator+(const CNVecAllo &right)
 {
-    return std::make_shared<CNPointAllo>(
-    		left->x + right->x,
-			left->y + right->y,
-			left->z + right->z);
+    return CNPointAllo(
+    		this->x + right.x,
+			this->y + right.y,
+			this->z + right.z);
 }
 
-shared_ptr<CNPointAllo> operator-(const shared_ptr<CNPointAllo> &left, const shared_ptr<CNVecAllo> &right)
+CNPointAllo CNPointAllo::operator-(const CNVecAllo &right)
 {
-    return std::make_shared<CNPointAllo>(
-    		left->x - right->x,
-			left->y - right->y,
-			left->z - right->z);
+    return CNPointAllo(
+    		this->x - right.x,
+			this->y - right.y,
+			this->z - right.z);
 }
 
 } /* namespace geometry */

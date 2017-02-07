@@ -8,17 +8,14 @@ namespace geometry
 template <class T> class CNVecTemplate : public geometry_msgs::Point
 {
   public:
-	std::shared_ptr<T> clone()
-	{
-		return std::make_shared<T>(x, y, z);
-	}
 
-    std::shared_ptr<T> rotate(double radian)
+    T rotateZ(double radian)
     {
     	// TODO: fix
-    	return std::make_shared<T>(
-    			this->x * cos(radian) - this->y * sin(radian),
-				this->x * sin(radian) + this->y * cos(radian));
+    	return T(
+    			x * cos(radian) - y * sin(radian),
+				x * sin(radian) + y * cos(radian),
+    			z);
     }
 
     double angle()
@@ -27,15 +24,15 @@ template <class T> class CNVecTemplate : public geometry_msgs::Point
     	return atan2(y, x);
     }
 
-    double angleTo(std::shared_ptr<T> point)
+    double angleTo(T point)
     {
     	// TODO: fix
     	return atan2(point->y - this->y, point->x - this->x);
     }
 
-    std::shared_ptr<T> normalize()
+    T normalize()
 	{
-        std::shared_ptr<T> norm = std::make_shared<T>();
+        T norm = T();
         double length = this->length();
 
         if (length > 0)
@@ -52,70 +49,51 @@ template <class T> class CNVecTemplate : public geometry_msgs::Point
         return norm;
 	}
 
-    double distanceTo(std::shared_ptr<T> pos)
+    double distanceTo(T pos)
     {
     	// TODO: fix
     	T delta = this - pos;
-    	return delta->length();
+    	return delta.length();
     }
 
-    double length() {
+    double length()
+    {
     	return sqrt(x*x + y*y + z*z);
     }
 
-    std::shared_ptr<T> operator*(const double &right)
+    // Self
+    T operator+(const std::shared_ptr<T> &right)
     {
-    	return std::make_shared<T>(
-    			this->x * right,
-				this->y * right);
+        return T(
+        		this->x + right->x,
+				this->y + right->y,
+				this->z + right->z);
     }
 
+    T operator-(const std::shared_ptr<T> &right)
+    {
+        return T(
+        		this->x - right->x,
+				this->y - right->y,
+				this->z - right->z);
+    }
+
+    // Scalar
+    T operator/(const double &right)
+    {
+    	return T(
+    			this->x / right,
+				this->y / right,
+				this->z / right);
+    }
+
+    T operator*(const double &right)
+    {
+    	return T(
+    			this->x * right,
+				this->y * right,
+				this->z * right);
+    }
 };
-
-// Operators
-
-// Self
-
-template <typename T>
-typename std::enable_if<std::is_base_of<CNVecTemplate<T>, T>::value, std::shared_ptr<T>>::type
-operator+(const std::shared_ptr<T> &left, const std::shared_ptr<T> &right)
-{
-    return std::make_shared<T>(
-    		left->x + right->x,
-			left->y + right->y,
-			left->z + right->z);
-}
-
-template <typename T>
-typename std::enable_if<std::is_base_of<CNVecTemplate<T>, T>::value, std::shared_ptr<T>>::type
-operator-(const std::shared_ptr<T> &left, const std::shared_ptr<T> &right)
-{
-    return std::make_shared<T>(
-    		left->x - right->x,
-			left->y - right->y,
-			left->z - right->z);
-}
-
-// Scalar
-
-template <typename T>
-typename std::enable_if<std::is_base_of<CNVecTemplate<T>, T>::value, std::shared_ptr<T>>::type
-operator/(const std::shared_ptr<T> &left, const double &right)
-{
-	return std::make_shared<T>(
-			left->x / right,
-			left->y / right,
-			left->z / right);
-}
-
-template <typename T>
-typename std::enable_if<std::is_base_of<CNVecTemplate<T>, T>::value, std::shared_ptr<T>>::type
-operator*(const std::shared_ptr<T> &left, const double &right)
-{
-	return std::make_shared<T>(
-			left->x * right,
-			left->y * right,
-			left->z * right);
-}
 
 } /* namespace geometry */

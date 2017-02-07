@@ -18,10 +18,10 @@ class CNPointAllo : public CNPointTemplate<CNPointAllo>
 
     std::string toString();
 
-    std::shared_ptr<CNPointEgo> toEgo(CNPositionAllo &origin);
-};
+    CNPointEgo toEgo(CNPositionAllo &origin);
 
-std::shared_ptr<CNPointAllo> operator+(const std::shared_ptr<CNPointAllo> &left, const std::shared_ptr<CNVecAllo> &right);
-std::shared_ptr<CNPointAllo> operator-(const std::shared_ptr<CNPointAllo> &left, const std::shared_ptr<CNVecAllo> &right);
+    CNPointAllo operator+(const CNVecAllo &right);
+    CNPointAllo operator-(const CNVecAllo &right);
+};
 
 } /* namespace geometry */

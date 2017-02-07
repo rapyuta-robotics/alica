@@ -27,9 +27,9 @@ string CNPositionAllo::toString()
     return ss.str();
 }
 
-shared_ptr<CNPositionEgo> CNPositionAllo::toEgo(CNPositionAllo &me)
+CNPositionEgo CNPositionAllo::toEgo(CNPositionAllo &me)
 {
-    shared_ptr<CNPositionEgo> ego = std::make_shared<CNPositionEgo>();
+    auto ego = CNPositionEgo();
 
     // sub me pos from allo pos -> rel pos with allo orientation
     double relX = this->x - me.x;
@@ -39,29 +39,29 @@ shared_ptr<CNPositionEgo> CNPositionAllo::toEgo(CNPositionAllo &me)
     double s = sin(-me.theta);
     double c = cos(-me.theta);
 
-    ego->x = c * relX - s * relY;
-    ego->y = s * relX - c * relY; // TODO: fix
+    ego.x = c * relX - s * relY;
+    ego.y = s * relX - c * relY; // TODO: fix
 
     // rotate theta
-    ego->theta = this->theta - me.theta;
+    ego.theta = this->theta - me.theta;
 
     return ego;
 }
 
-shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNVecAllo> &right)
+CNPositionAllo CNPositionAllo::operator+(const CNVecAllo &right)
 {
-	return std::make_shared<CNPositionAllo>(
-			left->x + right->x,
-			left->y + right->y,
-			left->theta);
+	return CNPositionAllo(
+			this->x + right.x,
+			this->y + right.y,
+			this->theta);
 }
 
-shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNVecAllo> &right)
+CNPositionAllo CNPositionAllo::operator-(const CNVecAllo &right)
 {
-	return std::make_shared<CNPositionAllo>(
-			left->x - right->x,
-			left->y - right->y,
-			left->theta);
+	return CNPositionAllo(
+			this->x - right.x,
+			this->y - right.y,
+			this->theta);
 }
 
 } /* namespace geometry */

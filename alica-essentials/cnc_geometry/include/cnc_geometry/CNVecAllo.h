@@ -18,7 +18,7 @@ class CNVecAllo : public CNVecTemplate<CNVecAllo>
 
     std::string toString();
 
-    std::shared_ptr<CNVecEgo> toEgo(CNPositionAllo &origin);
+    CNVecEgo toEgo(CNPositionAllo &origin);
 };
 
 } /* namespace geometry */
