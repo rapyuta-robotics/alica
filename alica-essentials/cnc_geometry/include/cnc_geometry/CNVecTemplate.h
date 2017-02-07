@@ -18,13 +18,13 @@ template <class T> class CNVecTemplate : public geometry_msgs::Point
     			z);
     }
 
-    double angle()
+    double angleZ()
     {
     	// TODO: fix
     	return atan2(y, x);
     }
 
-    double angleTo(T point)
+    double angleZTo(T point)
     {
     	// TODO: fix
     	return atan2(point->y - this->y, point->x - this->x);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cnc_geometry/CNVecAllo.h>
+#include "CNVecAllo.h"
 #include "CNPositionAllo.h"
 
 namespace geometry
