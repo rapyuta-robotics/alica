@@ -10,6 +10,9 @@
 
 #include "container/CNVec2DTemplate.h"
 
+#include <memory>
+#include <string>
+
 namespace geometry
 {
 

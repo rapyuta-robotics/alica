@@ -8,7 +8,10 @@
 #ifndef CNC_GEOMETRY_CONTAINER_CNPOINT2DALLO_H_
 #define CNC_GEOMETRY_CONTAINER_CNPOINT2DALLO_H_
 
-#include "container/CNPoint2DTemplate.h"
+#include "CNPoint2DTemplate.h"
+
+#include <string>
+#include <memory>
 
 namespace geometry
 {

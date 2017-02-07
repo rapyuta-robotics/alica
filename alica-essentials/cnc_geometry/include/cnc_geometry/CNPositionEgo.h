@@ -8,9 +8,9 @@
 #ifndef CNC_GEOMETRY_CONTAINER_CNPOSITIONEGO_H_
 #define CNC_GEOMETRY_CONTAINER_CNPOSITIONEGO_H_
 
-#include "container/CNPositionTemplate.h"
-#include "container/CNPositionAllo.h"
-#include "container/CNVec2DEgo.h"
+#include "cnc_geometry/container/CNPositionTemplate.h"
+#include "cnc_geometry/container/CNPositionAllo.h"
+#include "cnc_geometry/container/CNVec2DEgo.h"
 
 namespace geometry
 {

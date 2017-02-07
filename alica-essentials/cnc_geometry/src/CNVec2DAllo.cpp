@@ -5,13 +5,14 @@
  *      Author: Philipp Mandler
  */
 
-#include "container/CNVec2DAllo.h"
+#include "cnc_geometry/container/CNVec2DAllo.h"
+#include "cnc_geometry/container/CNVec2DEgo.h"
+#include "cnc_geometry/container/CNPositionAllo.h"
+
 #include <sstream>
 
-#include "container/CNVec2DEgo.h"
-#include "container/CNPositionAllo.h"
-
-using namespace std;
+using std::string;
+using std::shared_ptr;
 
 namespace geometry
 {

@@ -5,7 +5,7 @@
  *      Author: Tobias Schellien
  */
 
-#include <GeometryCalculator.h>
+#include "cnc_geometry/GeometryCalculator.h"
 
 #include <limits>
 

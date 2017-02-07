@@ -5,11 +5,11 @@
  *      Author: Philipp Mandler
  */
 
-#include "container/CNPositionEgo.h"
+#include "cnc_geometry/container/CNPositionEgo.h"
 
 #include <sstream>
-#include "container/CNPositionAllo.h"
-#include "container/CNVec2DEgo.h"
+#include "cnc_geometry/container/CNPositionAllo.h"
+#include "cnc_geometry/container/CNVec2DEgo.h"
 
 using namespace std;
 
@@ -30,7 +30,7 @@ CNPositionEgo::~CNPositionEgo()
 string CNPositionEgo::toString()
 {
 	stringstream ss;
-	ss << "CNPositionEgo: x: " << this->x << " y: " << this->y << " theta: " << this->theta << endl;
+	ss << "CNPositionEgo: X: " << this->x << " Y: " << this->y << " Orientation: " << this->theta << endl;
 	return ss.str();
 }
 

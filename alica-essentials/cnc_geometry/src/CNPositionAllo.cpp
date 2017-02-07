@@ -5,13 +5,14 @@
  *      Author: Philipp Mandler
  */
 
-#include "container/CNPositionAllo.h"
+#include "cnc_geometry/container/CNPositionAllo.h"
 
 #include <sstream>
-#include "container/CNPositionEgo.h"
-#include "container/CNVec2DAllo.h"
+#include "cnc_geometry/container/CNPositionEgo.h"
+#include "cnc_geometry/container/CNVec2DAllo.h"
 
-using namespace std;
+using std::string;
+using std::shared_ptr;
 
 namespace geometry
 {
@@ -27,14 +28,14 @@ CNPositionAllo::~CNPositionAllo() {}
 
 string CNPositionAllo::toString()
 {
-    stringstream ss;
-    ss << "CNPositionAllo: x: " << this->x << " y: " << this->y << " theta: " << this->theta << endl;
+    std::stringstream ss;
+    ss << "CNPositionAllo: X: " << this->x << " Y: " << this->y << " Orientation: " << this->theta << std::endl;
     return ss.str();
 }
 
 shared_ptr<CNPositionEgo> CNPositionAllo::toEgo(CNPositionAllo &me)
 {
-    shared_ptr<CNPositionEgo> ego = make_shared<CNPositionEgo>();
+    shared_ptr<CNPositionEgo> ego = std::make_shared<CNPositionEgo>();
 
     // sub me pos from allo pos -> rel pos with allo orientation
     double relX = this->x - me.x;
@@ -55,7 +56,7 @@ shared_ptr<CNPositionEgo> CNPositionAllo::toEgo(CNPositionAllo &me)
 
 shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNVec2DAllo> &right)
 {
-	return make_shared<CNPositionAllo>(
+	return std::make_shared<CNPositionAllo>(
 			left->x + right->x,
 			left->y + right->y,
 			left->theta);
@@ -63,7 +64,7 @@ shared_ptr<CNPositionAllo> operator+(const shared_ptr<CNPositionAllo> &left, con
 
 shared_ptr<CNPositionAllo> operator-(const shared_ptr<CNPositionAllo> &left, const shared_ptr<CNVec2DAllo> &right)
 {
-	return make_shared<CNPositionAllo>(
+	return std::make_shared<CNPositionAllo>(
 			left->x - right->x,
 			left->y - right->y,
 			left->theta);
