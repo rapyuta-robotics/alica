@@ -7,10 +7,7 @@
 
 #pragma once
 
-#include "container/CNVec2DTemplate.h"
-
-#include <memory>
-#include <string>
+#include "CNVec2DTemplate.h"
 
 namespace geometry
 {

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "geometry_msgs/Point.h"
+#include <geometry_msgs/Point.h>
 
 namespace geometry
 {

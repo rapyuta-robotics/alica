@@ -5,8 +5,8 @@
  *      Author: Tobias Schellien
  */
 
-#include "container/CNPoint3D.h"
-#include "container/CNPosition.h"
+#include "CNPoint3D.h"
+#include "CNPosition.h"
 
 using namespace std;
 

@@ -5,11 +5,12 @@
  *      Author: Philipp Mandler
  */
 
-#include "cnc_geometry/container/CNPositionAllo.h"
+#include "cnc_geometry/CNPositionAllo.h"
 
 #include <sstream>
-#include "cnc_geometry/container/CNPositionEgo.h"
-#include "cnc_geometry/container/CNVec2DAllo.h"
+
+#include "cnc_geometry/CNPositionEgo.h"
+#include "cnc_geometry/CNVec2DAllo.h"
 
 using std::string;
 using std::shared_ptr;

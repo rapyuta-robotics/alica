@@ -9,9 +9,6 @@
 
 #include "CNPoint2DTemplate.h"
 
-#include <string>
-#include <memory>
-
 namespace geometry
 {
 

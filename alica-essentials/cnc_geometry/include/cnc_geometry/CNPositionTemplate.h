@@ -7,9 +7,7 @@
 
 #pragma once
 
-#include "geometry_msgs/Pose2D.h"
-#include "container/CNVec2DTemplate.h"
-#include <type_traits>
+#include <geometry_msgs/Pose2D.h>
 
 namespace geometry
 {

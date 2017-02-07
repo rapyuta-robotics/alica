@@ -7,36 +7,34 @@
 
 #pragma once
 
-#include "geometry_msgs/Point.h"
-#include <memory>
-
-using namespace std;
-
+#include <geometry_msgs/Point.h>
 
 namespace geometry {
-	class CNPosition;
 
-	class CNPoint3D : public geometry_msgs::Point {
-	public:
+class CNPosition;
+
+class CNPoint3D : public geometry_msgs::Point {
+public:
 
 
-		CNPoint3D(double x, double y, double z);
-		CNPoint3D() : CNPoint3D(0,0,0) {}
-		shared_ptr<CNPoint3D> alloToEgo(CNPosition& me);
-		shared_ptr<CNPoint3D> egoToAllo(CNPosition& me);
-		shared_ptr<CNPoint3D> normalize();
-		double length();
-		string toString();
-		virtual ~CNPoint3D();
+	CNPoint3D(double x, double y, double z);
+	CNPoint3D() : CNPoint3D(0,0,0) {}
+	std::shared_ptr<CNPoint3D> alloToEgo(CNPosition& me);
+	std::shared_ptr<CNPoint3D> egoToAllo(CNPosition& me);
+	std::shared_ptr<CNPoint3D> normalize();
+	double length();
+	std::string toString();
+	virtual ~CNPoint3D();
 
-		shared_ptr<CNPoint3D> operator*(const double& right);
-		shared_ptr<CNPoint3D> operator/(const double& right);
-		shared_ptr<CNPoint3D> operator+(const shared_ptr<CNPoint3D>& right);
-		shared_ptr<CNPoint3D> operator-(const shared_ptr<CNPoint3D>& right);
-	};
+	std::shared_ptr<CNPoint3D> operator*(const double& right);
+	std::shared_ptr<CNPoint3D> operator/(const double& right);
+	std::shared_ptr<CNPoint3D> operator+(const std::shared_ptr<CNPoint3D>& right);
+	std::shared_ptr<CNPoint3D> operator-(const std::shared_ptr<CNPoint3D>& right);
+};
 
-	shared_ptr<CNPoint3D> operator+(const shared_ptr<CNPoint3D>& left, const shared_ptr<CNPoint3D>& right);
-	shared_ptr<CNPoint3D> operator-(const shared_ptr<CNPoint3D>& left, const shared_ptr<CNPoint3D>& right);
-	shared_ptr<CNPoint3D> operator*(const shared_ptr<CNPoint3D>& left, const double& right);
-	shared_ptr<CNPoint3D> operator/(const shared_ptr<CNPoint3D>& left, const double& right);
+std::shared_ptr<CNPoint3D> operator+(const std::shared_ptr<CNPoint3D>& left, const std::shared_ptr<CNPoint3D>& right);
+std::shared_ptr<CNPoint3D> operator-(const std::shared_ptr<CNPoint3D>& left, const std::shared_ptr<CNPoint3D>& right);
+std::shared_ptr<CNPoint3D> operator*(const std::shared_ptr<CNPoint3D>& left, const double& right);
+std::shared_ptr<CNPoint3D> operator/(const std::shared_ptr<CNPoint3D>& left, const double& right);
+
 }

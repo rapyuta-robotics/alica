@@ -9,8 +9,8 @@
 
 #include <tuple>
 
-#include "container/CNPoint2D.h"
-#include "container/CNPoint3D.h"
+#include "CNPoint2D.h"
+#include "CNPoint3D.h"
 
 using namespace std;
 

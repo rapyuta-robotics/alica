@@ -5,12 +5,13 @@
  *      Author: Philipp Mandler
  */
 
-#include "cnc_geometry/container/CNPoint2DEgo.h"
-#include "cnc_geometry/container/CNPoint2DAllo.h"
-#include "cnc_geometry/container/CNPositionAllo.h"
-#include "cnc_geometry/container/CNVec2DEgo.h"
+#include "cnc_geometry/CNPoint2DEgo.h"
 
 #include <sstream>
+
+#include "cnc_geometry/CNPoint2DAllo.h"
+#include "cnc_geometry/CNPositionAllo.h"
+#include "cnc_geometry/CNVec2DEgo.h"
 
 using std::string;
 using std::shared_ptr;

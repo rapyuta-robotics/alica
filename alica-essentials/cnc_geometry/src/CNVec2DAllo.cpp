@@ -5,11 +5,12 @@
  *      Author: Philipp Mandler
  */
 
-#include "cnc_geometry/container/CNVec2DAllo.h"
-#include "cnc_geometry/container/CNVec2DEgo.h"
-#include "cnc_geometry/container/CNPositionAllo.h"
+#include "cnc_geometry/CNVec2DAllo.h"
 
 #include <sstream>
+
+#include "cnc_geometry/CNVec2DEgo.h"
+#include "cnc_geometry/CNPositionAllo.h"
 
 using std::string;
 using std::shared_ptr;
@@ -27,14 +28,14 @@ CNVec2DAllo::~CNVec2DAllo() {}
 
 string CNVec2DAllo::toString()
 {
-    stringstream ss;
-    ss << "CNVec2DAllo: x: " << this->x << " y: " << this->y << endl;
+    std::stringstream ss;
+    ss << "CNVec2DAllo: x: " << this->x << " y: " << this->y << std::endl;
     return ss.str();
 }
 
 shared_ptr<CNVec2DEgo> CNVec2DAllo::toEgo(CNPositionAllo &me)
 {
-    shared_ptr<CNVec2DEgo> ego = make_shared<CNVec2DEgo>();
+    shared_ptr<CNVec2DEgo> ego = std::make_shared<CNVec2DEgo>();
 
     // rotate rel point around origin -> rel point with ego orientation
     double s = sin(-me.theta);

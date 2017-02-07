@@ -5,11 +5,12 @@
  *      Author: Philipp Mandler
  */
 
-#include "cnc_geometry/container/CNPositionEgo.h"
+#include "cnc_geometry/CNPositionEgo.h"
 
 #include <sstream>
-#include "cnc_geometry/container/CNPositionAllo.h"
-#include "cnc_geometry/container/CNVec2DEgo.h"
+
+#include "cnc_geometry/CNPositionAllo.h"
+#include "cnc_geometry/CNVec2DEgo.h"
 
 using namespace std;
 

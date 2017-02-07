@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "container/CNPoint2DTemplate.h"
+#include "CNPoint2DTemplate.h"
 
 namespace geometry
 {

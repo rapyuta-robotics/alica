@@ -5,13 +5,17 @@
  *      Author: Philipp Mandler
  */
 
-#include "container/CNVec2DEgo.h"
+#include "cnc_geometry/CNVec2DEgo.h"
+
 #include <sstream>
 
-#include "container/CNVec2DAllo.h"
-#include "container/CNPositionAllo.h"
+#include "cnc_geometry/CNVec2DAllo.h"
+#include "cnc_geometry/CNPositionAllo.h"
 
-using namespace std;
+using std::endl;
+using std::string;
+using std::shared_ptr;
+using std::make_shared;
 
 namespace geometry
 {
@@ -26,7 +30,7 @@ CNVec2DEgo::~CNVec2DEgo() {}
 
 string CNVec2DEgo::toString()
 {
-    stringstream ss;
+    std::stringstream ss;
     ss << "CNVec2DEgo: x: " << this->x << " y: " << this->y << endl;
     return ss.str();
 }

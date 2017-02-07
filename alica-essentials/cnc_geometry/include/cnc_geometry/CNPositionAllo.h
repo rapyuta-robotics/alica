@@ -7,11 +7,9 @@
 
 #pragma once
 
-#include "cnc_geometry/container/CNPositionTemplate.h"
-#include "cnc_geometry/container/CNPositionAllo.h"
-#include "cnc_geometry/container/CNVec2DAllo.h"
-#include <memory>
-#include <string>
+#include "CNPositionTemplate.h"
+#include "CNPositionAllo.h"
+#include "CNVec2DAllo.h"
 
 namespace geometry
 {

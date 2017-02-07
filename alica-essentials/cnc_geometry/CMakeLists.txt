@@ -30,18 +30,18 @@ include_directories(
 )
 
 add_library(cnc_geometry
-  src/GeometryCalculator.cpp
-  #src/container/CNPosition.cpp
-  #src/container/CNPoint2D.cpp
-  #src/container/CNPoint3D.cpp
-  #src/container/CNVelocity2D.cpp
-  src/container/CNPositionEgo.cpp
-  src/container/CNPositionAllo.cpp
-  src/container/CNVec2DEgo.cpp
-  src/container/CNVec2DAllo.cpp
-  src/container/CNPoint2DEgo.cpp
-  src/container/CNPoint2DAllo.cpp
-  src/container/CNRobot.cpp
+  #src/GeometryCalculator.cpp
+  #src/CNPosition.cpp
+  #src/CNPoint2D.cpp
+  #src/CNPoint3D.cpp
+  #src/CNVelocity2D.cpp
+  src/CNPositionEgo.cpp
+  src/CNPositionAllo.cpp
+  src/CNVec2DEgo.cpp
+  src/CNVec2DAllo.cpp
+  src/CNPoint2DEgo.cpp
+  src/CNPoint2DAllo.cpp
+  src/CNRobot.cpp
 )
 
 target_link_libraries(cnc_geometry
