@@ -20,9 +20,7 @@ CNRobot::CNRobot() : CNPositionAllo()
     this->supporter = std::make_shared<std::vector<int>>();
 }
 
-CNRobot::~CNRobot()
-{
-}
+CNRobot::~CNRobot() {}
 
 /**
  * Creates a string representation of this robot.

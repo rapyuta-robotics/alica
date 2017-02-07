@@ -1,10 +1,3 @@
-/*
- * CNPositionTemplate.h
- *
- *  Created on: 07.11.2016
- *      Author: Philipp Mandler
- */
-
 #pragma once
 
 #include <geometry_msgs/Pose2D.h>
@@ -17,18 +10,19 @@ template <class T> class CNPositionTemplate : public geometry_msgs::Pose2D
   public:
 	std::shared_ptr<T> clone()
 	{
-		return std::make_shared<T>(this->x, this->y, this->theta);
+		return std::make_shared<T>(x, y, theta);
 	}
 
     double distanceTo(T pos)
     {
+    	// TODO
     	T delta = this - pos;
     	return delta->length();
     }
 
     double length()
 	{
-    	return sqrt(x * x + y * y);
+    	return sqrt(x*x + y*y);
     }
 
 };

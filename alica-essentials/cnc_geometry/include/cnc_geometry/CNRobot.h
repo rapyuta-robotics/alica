@@ -1,14 +1,7 @@
-/*
- * CNRobot.h
- *
- *  Created on: Feb 27, 2016
- *      Author: Stephan Opfer
- */
-
 #pragma once
 
+#include <cnc_geometry/CNVecAllo.h>
 #include "CNPositionAllo.h"
-#include "CNVec2DAllo.h"
 
 namespace geometry
 {
@@ -22,7 +15,7 @@ class CNRobot : public CNPositionAllo
 
     int id;               /**< The ID of this robot. Its either the robots id in our team, or some specific value for artificial robots or real opponents.*/
     double radius;        /**< Radius of the disc this robot fits into.*/
-    CNVec2DAllo velocity; /**< Allocentric velocity of this robot.  */
+    CNVecAllo velocity; /**< Allocentric velocity of this robot.  */
     double rotation;      /**< Rotation velocity of this robot. */
 
     std::shared_ptr<std::vector<int>> opposer;   /**< List of robots (identified by their id) that are not seeing this robot, although they should.*/

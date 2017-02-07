@@ -35,12 +35,16 @@ add_library(cnc_geometry
   #src/CNPoint2D.cpp
   #src/CNPoint3D.cpp
   #src/CNVelocity2D.cpp
+  
   src/CNPositionEgo.cpp
   src/CNPositionAllo.cpp
-  src/CNVec2DEgo.cpp
-  src/CNVec2DAllo.cpp
-  src/CNPoint2DEgo.cpp
-  src/CNPoint2DAllo.cpp
+  
+  src/CNVecEgo.cpp
+  src/CNVecAllo.cpp
+  
+  src/CNPointEgo.cpp
+  src/CNPointAllo.cpp
+  
   src/CNRobot.cpp
 )
 

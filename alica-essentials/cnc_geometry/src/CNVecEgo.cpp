@@ -5,11 +5,10 @@
  *      Author: Philipp Mandler
  */
 
-#include "cnc_geometry/CNVec2DEgo.h"
-
+#include <cnc_geometry/CNVecAllo.h>
+#include <cnc_geometry/CNVecEgo.h>
 #include <sstream>
 
-#include "cnc_geometry/CNVec2DAllo.h"
 #include "cnc_geometry/CNPositionAllo.h"
 
 using std::endl;
@@ -20,24 +19,26 @@ using std::make_shared;
 namespace geometry
 {
 
-CNVec2DEgo::CNVec2DEgo(double x, double y)
+CNVecEgo::CNVecEgo(double x, double y, double z)
 {
 	this->x = x;
 	this->y = y;
+	this->z = z;
 }
 
-CNVec2DEgo::~CNVec2DEgo() {}
+CNVecEgo::~CNVecEgo() {}
 
-string CNVec2DEgo::toString()
+string CNVecEgo::toString()
 {
     std::stringstream ss;
-    ss << "CNVec2DEgo: x: " << this->x << " y: " << this->y << endl;
+    ss << "CNVecEgo: x: " << x << " y: " << y << " z: " << z << endl;
     return ss.str();
 }
 
-shared_ptr<CNVec2DAllo> CNVec2DEgo::toAllo(CNPositionAllo &me)
+shared_ptr<CNVecAllo> CNVecEgo::toAllo(CNPositionAllo &me)
 {
-	shared_ptr<CNVec2DAllo> allo = make_shared<CNVec2DAllo>();
+	// TODO: fix
+	shared_ptr<CNVecAllo> allo = make_shared<CNVecAllo>();
 
 	// rotate rel point around origin -> rel point with allo orientation
 	double s = sin(me.theta);

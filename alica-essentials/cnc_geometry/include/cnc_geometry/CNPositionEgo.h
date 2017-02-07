@@ -1,15 +1,8 @@
-/*
- * CNPositionEgo.h
- *
- *  Created on: 24.10.2016
- *      Author: Philipp Mandler
- */
-
 #pragma once
 
 #include "CNPositionTemplate.h"
 #include "CNPositionAllo.h"
-#include "CNVec2DEgo.h"
+#include "CNVecEgo.h"
 
 namespace geometry
 {
@@ -29,7 +22,7 @@ class CNPositionEgo : public CNPositionTemplate<CNPositionEgo>
 
 };
 
-std::shared_ptr<CNPositionEgo> operator+(const std::shared_ptr<CNPositionEgo> &left, const std::shared_ptr<CNVec2DEgo> &right);
-std::shared_ptr<CNPositionEgo> operator-(const std::shared_ptr<CNPositionEgo> &left, const std::shared_ptr<CNVec2DEgo> &right);
+std::shared_ptr<CNPositionEgo> operator+(const std::shared_ptr<CNPositionEgo> &left, const std::shared_ptr<CNVecEgo> &right);
+std::shared_ptr<CNPositionEgo> operator-(const std::shared_ptr<CNPositionEgo> &left, const std::shared_ptr<CNVecEgo> &right);
 
 } /* namespace geometry */

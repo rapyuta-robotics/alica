@@ -1,26 +1,20 @@
-/*
- * CNVec2DBase.h
- *
- *  Created on: Nov 7, 2016
- *      Author: cn
- */
-
 #pragma once
 
 #include <geometry_msgs/Point.h>
 
 namespace geometry {
 
-template <class T> class CNPoint2DTemplate : public geometry_msgs::Point
+template <class T> class CNPointTemplate : public geometry_msgs::Point
 {
   public:
 	std::shared_ptr<T> clone()
 	{
-		return std::make_shared<T>(this->x, this->y);
+		return std::make_shared<T>(x, y, z);
 	}
 
     std::shared_ptr<T> rotate(double radian)
     {
+    	// TODO: fix
     	return std::make_shared<T>(
     			this->x * cos(radian) - this->y * sin(radian),
 				this->x * sin(radian) + this->y * cos(radian));
@@ -28,11 +22,13 @@ template <class T> class CNPoint2DTemplate : public geometry_msgs::Point
 
     double angle()
     {
+    	// TODO: fix
     	return atan2(y, x);
     }
 
     double angleToPoint(std::shared_ptr<T> point)
     {
+    	// TODO: fix
     	return atan2(point->y - this->y, point->x - this->x);
     }
 
@@ -45,10 +41,11 @@ template <class T> class CNPoint2DTemplate : public geometry_msgs::Point
         {
             norm->x = this->x / length;
             norm->y = this->y / length;
+            norm->z = this->z / length;
         }
         else
         {
-            std::cerr << "CNVec2D: Trying to normalize (0, 0)!" << std::endl;
+            std::cerr << "CNPoint: Trying to normalize (0, 0, 0)!" << std::endl;
         }
 
         return norm;
@@ -56,12 +53,13 @@ template <class T> class CNPoint2DTemplate : public geometry_msgs::Point
 
     double distanceTo(std::shared_ptr<T> pos)
     {
+    	// TODO: fix
     	T delta = this - pos; // TODO
     	return delta->length();
     }
 
     double length() {
-    	return sqrt(x * x + y * y);
+    	return sqrt(x*x + y*y + z*z);
     }
 
 };
@@ -71,41 +69,45 @@ template <class T> class CNPoint2DTemplate : public geometry_msgs::Point
 // Self
 
 template <typename T>
-typename std::enable_if<std::is_base_of<CNPoint2DTemplate<T>, T>::value, std::shared_ptr<T>>::type
+typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, std::shared_ptr<T>>::type
 operator+(const std::shared_ptr<T> &left, const std::shared_ptr<T> &right)
 {
     return std::make_shared<T>(
     		left->x + right->x,
-			left->y + right->y);
+			left->y + right->y,
+			left->z + right->z);
 }
 
 template <typename T>
-typename std::enable_if<std::is_base_of<CNPoint2DTemplate<T>, T>::value, std::shared_ptr<T>>::type
+typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, std::shared_ptr<T>>::type
 operator-(const std::shared_ptr<T> &left, const std::shared_ptr<T> &right)
 {
     return std::make_shared<T>(
     		left->x - right->x,
-			left->y - right->y);
+			left->y - right->y,
+			left->z - right->z);
 }
 
 // Scalar
 
 template <typename T>
-typename std::enable_if<std::is_base_of<CNPoint2DTemplate<T>, T>::value, std::shared_ptr<T>>::type
+typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, std::shared_ptr<T>>::type
 operator/(const std::shared_ptr<T> &left, const double &right)
 {
 	return std::make_shared<T>(
 			left->x / right,
-			left->y / right);
+			left->y / right,
+			left->z / right);
 }
 
 template <typename T>
-typename std::enable_if<std::is_base_of<CNPoint2DTemplate<T>, T>::value, std::shared_ptr<T>>::type
+typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, std::shared_ptr<T>>::type
 operator*(const std::shared_ptr<T> &left, const double &right)
 {
 	return std::make_shared<T>(
 			left->x * right,
-			left->y * right);
+			left->y * right,
+			left->z * right);
 }
 
 } /* namespace geometry */

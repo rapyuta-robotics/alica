@@ -1,15 +1,8 @@
-/*
- * CNPositionAllo.h
- *
- *  Created on: 24.10.2016
- *      Author: Philipp Mandler
- */
-
 #pragma once
 
+#include <cnc_geometry/CNVecAllo.h>
 #include "CNPositionTemplate.h"
 #include "CNPositionAllo.h"
-#include "CNVec2DAllo.h"
 
 namespace geometry
 {
@@ -28,7 +21,7 @@ class CNPositionAllo : public CNPositionTemplate<CNPositionAllo>
     std::shared_ptr<CNPositionEgo> toEgo(CNPositionAllo &origin);
 };
 
-std::shared_ptr<CNPositionAllo> operator+(const std::shared_ptr<CNPositionAllo> &left, const std::shared_ptr<CNVec2DAllo> &right);
-std::shared_ptr<CNPositionAllo> operator-(const std::shared_ptr<CNPositionAllo> &left, const std::shared_ptr<CNVec2DAllo> &right);
+std::shared_ptr<CNPositionAllo> operator+(const std::shared_ptr<CNPositionAllo> &left, const std::shared_ptr<CNVecAllo> &right);
+std::shared_ptr<CNPositionAllo> operator-(const std::shared_ptr<CNPositionAllo> &left, const std::shared_ptr<CNVecAllo> &right);
 
 } /* namespace geometry */
