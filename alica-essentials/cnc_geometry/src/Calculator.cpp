@@ -337,23 +337,22 @@ bool leftOf(const CNPointTemplate<T> &a, const CNPointTemplate<T> &b)
  * @param points
  * @return The mean of all given points.
  */
-template <class T>
-CNPointTemplate<T> calculateMean(const vector<CNPointTemplate<T>> &points)
+CNPointAllo calculateMean(const vector<CNPointAllo> &points)
 {
-    if (points)
+    if (points.empty())
     {
-        return nullptr;
+        return CNPointAllo();
     }
-    CNPointTemplate<T> ret(0.0, 0.0, 0.0);
+    CNPointAllo ret;
     for (auto &iter : points)
     {
-        ret->x += iter->x;
-        ret->y += iter->y;
-        ret->z += iter->z;
+        ret.x += iter.x;
+        ret.y += iter.y;
+        ret.z += iter.z;
     }
-    ret->x /= points.size();
-    ret->y /= points.size();
-    ret->z /= points.size();
+    ret.x /= points.size();
+    ret.y /= points.size();
+    ret.z /= points.size();
     return ret;
 }
 

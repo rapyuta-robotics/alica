@@ -7,6 +7,7 @@
 #pragma once
 
 #include "CNPointTemplate.h"
+#include "CNPointAllo.h"
 
 #include <vector>
 
@@ -34,8 +35,8 @@ bool outsideTriangle(const CNPointTemplate<T> &a, const CNPointTemplate<T> &b, c
                      const vector<CNPointTemplate<T>> &points);
 template <class T>
 bool leftOf(const CNPointTemplate<T> &a, const CNPointTemplate<T> &b);
-template <class T>
-CNPointTemplate<T> calculateMean(const vector<CNPointTemplate<T>> values);
+
+CNPointAllo calculateMean(const vector<CNPointAllo> values);
 template <class T>
 bool onSegment(const CNPointTemplate<T> &p, const CNPointTemplate<T> &q, const CNPointTemplate<T> &r);
 template <class T>
