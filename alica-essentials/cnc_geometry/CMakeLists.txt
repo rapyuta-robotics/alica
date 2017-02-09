@@ -35,8 +35,6 @@ add_library(cnc_geometry
   #src/CNPoint3D.cpp
   #src/CNVelocity2D.cpp
   
-  src/Calculator.cpp
-  
   src/CNPositionEgo.cpp
   src/CNPositionAllo.cpp
   
