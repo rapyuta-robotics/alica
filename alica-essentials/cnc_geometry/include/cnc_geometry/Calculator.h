@@ -35,8 +35,8 @@ bool outsideTriangle(const CNPointTemplate<T> &a, const CNPointTemplate<T> &b, c
                      const vector<CNPointTemplate<T>> &points);
 template <class T>
 bool leftOf(const CNPointTemplate<T> &a, const CNPointTemplate<T> &b);
-
-CNPointAllo calculateMean(const vector<CNPointAllo> values);
+template <class T>
+T calculateMean(const vector<CNPointTemplate<T>> &values);
 template <class T>
 bool onSegment(const CNPointTemplate<T> &p, const CNPointTemplate<T> &q, const CNPointTemplate<T> &r);
 template <class T>

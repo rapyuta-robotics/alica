@@ -337,13 +337,14 @@ bool leftOf(const CNPointTemplate<T> &a, const CNPointTemplate<T> &b)
  * @param points
  * @return The mean of all given points.
  */
-CNPointAllo calculateMean(const vector<CNPointAllo> &points)
+template <class T>
+T calculateMean(const vector<CNPointTemplate<T>> &points)
 {
     if (points.empty())
     {
-        return CNPointAllo();
+        return T();
     }
-    CNPointAllo ret;
+    T ret;
     for (auto &iter : points)
     {
         ret.x += iter.x;

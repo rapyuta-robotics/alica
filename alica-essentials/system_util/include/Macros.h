@@ -2,8 +2,7 @@
  * Common Macros
 */
 
-#ifndef SUPPLEMENTARY_SYSTEM_UTIL_MACROS_H_
-#define SUPPLEMENTARY_SYSTEM_UTIL_MACROS_H_
+#pragma once
 
 namespace supplementary
 {
@@ -18,5 +17,3 @@ namespace supplementary
 #endif
 
 }
-
-#endif /* end of include guard: SUPPLEMENTARY_SYSTEM_UTIL_MACROS_H_ */
