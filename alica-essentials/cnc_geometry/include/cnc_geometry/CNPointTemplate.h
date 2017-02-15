@@ -30,9 +30,9 @@ template <class T> class CNPointTemplate : public geometry_msgs::Point
 
         if (length > 0)
         {
-            norm->x = this->x / length;
-            norm->y = this->y / length;
-            norm->z = this->z / length;
+            norm.x = this->x / length;
+            norm.y = this->y / length;
+            norm.z = this->z / length;
         }
         else
         {
@@ -42,7 +42,7 @@ template <class T> class CNPointTemplate : public geometry_msgs::Point
         return norm;
     }
 
-    double distanceTo(T &pos)
+    double distanceTo(CNPointTemplate<T> &pos)
     {
         T delta = this - pos;
         return delta.length();

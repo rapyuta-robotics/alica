@@ -23,6 +23,7 @@ class CNPointAllo : public CNPointTemplate<CNPointAllo>
 
     CNPointAllo operator+(const CNVecAllo &right);
     CNPointAllo operator-(const CNVecAllo &right);
+    CNVecAllo operator-(const CNPointAllo &right);
 };
 
 } /* namespace geometry */

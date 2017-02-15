@@ -75,4 +75,12 @@ CNPointAllo CNPointAllo::operator-(const CNVecAllo &right)
 			this->z - right.z);
 }
 
+CNVecAllo CNPointAllo::operator-(const CNPointAllo &right)
+{
+    return CNVecAllo(
+    		this->x - right.x,
+			this->y - right.y,
+			this->z - right.z);
+}
+
 } /* namespace geometry */
