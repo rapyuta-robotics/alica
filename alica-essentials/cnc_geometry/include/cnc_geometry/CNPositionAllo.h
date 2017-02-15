@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cnc_geometry/CNVecAllo.h>
+#include "cnc_geometry/CNPointAllo.h"
 #include "CNPositionTemplate.h"
 #include "CNPositionAllo.h"
 
@@ -20,6 +21,7 @@ class CNPositionAllo : public CNPositionTemplate<CNPositionAllo>
     std::string toString();
 
     CNPositionEgo toEgo(CNPositionAllo &origin);
+    CNPointAllo getPoint();
 
     CNPositionAllo operator+(const CNVecAllo &right);
     CNPositionAllo operator-(const CNVecAllo &right);

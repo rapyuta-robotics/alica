@@ -1,9 +1,9 @@
-#include <cnc_geometry/CNVecAllo.h>
+
 #include "cnc_geometry/CNPositionAllo.h"
+#include "cnc_geometry/CNVecAllo.h"
+#include "cnc_geometry/CNPositionEgo.h"
 
 #include <sstream>
-
-#include "cnc_geometry/CNPositionEgo.h"
 
 using std::string;
 using std::shared_ptr;
@@ -53,6 +53,11 @@ CNPositionEgo CNPositionAllo::toEgo(CNPositionAllo &me)
     ego.theta = this->theta - me.theta;
 
     return ego;
+}
+
+CNPointAllo CNPositionAllo::getPoint()
+{
+	return CNPointAllo(this->x, this->y, 0);
 }
 
 CNPositionAllo CNPositionAllo::operator+(const CNVecAllo &right)
