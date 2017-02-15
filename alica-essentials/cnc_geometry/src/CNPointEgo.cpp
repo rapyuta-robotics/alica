@@ -18,6 +18,13 @@ CNPointEgo::CNPointEgo(double x, double y, double z)
     this->z = z;
 }
 
+CNPointEgo::CNPointEgo(const CNPointEgo &obj)
+{
+	this->x = obj.x;
+	this->y = obj.y;
+	this->z = obj.z;
+}
+
 CNPointEgo::~CNPointEgo() {}
 
 string CNPointEgo::toString()

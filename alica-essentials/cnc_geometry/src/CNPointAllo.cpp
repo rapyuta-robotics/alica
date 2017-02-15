@@ -18,6 +18,13 @@ CNPointAllo::CNPointAllo(double x, double y, double z)
     this->z = z;
 }
 
+CNPointAllo::CNPointAllo(const CNPointAllo &obj)
+{
+	this->x = obj.x;
+	this->y = obj.y;
+	this->z = obj.z;
+}
+
 CNPointAllo::~CNPointAllo() {}
 
 string CNPointAllo::toString()

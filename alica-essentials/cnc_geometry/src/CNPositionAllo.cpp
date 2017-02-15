@@ -18,6 +18,13 @@ CNPositionAllo::CNPositionAllo(double x, double y, double theta)
 	this->theta = theta;
 }
 
+CNPositionAllo::CNPositionAllo(const CNPositionAllo &obj)
+{
+	this->x = obj.x;
+	this->y = obj.y;
+	this->theta = obj.theta;
+}
+
 CNPositionAllo::~CNPositionAllo() {}
 
 string CNPositionAllo::toString()

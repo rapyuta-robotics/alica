@@ -24,6 +24,13 @@ CNPositionEgo::CNPositionEgo(double x, double y, double theta)
 	this->theta = theta;
 }
 
+CNPositionEgo::CNPositionEgo(const CNPositionEgo &obj)
+{
+	this->x = obj.x;
+	this->y = obj.y;
+	this->theta = obj.theta;
+}
+
 CNPositionEgo::~CNPositionEgo() {}
 
 string CNPositionEgo::toString()
