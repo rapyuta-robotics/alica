@@ -30,22 +30,16 @@ template <class T> class CNPointTemplate : public geometry_msgs::Point
 
         if (length > 0)
         {
-            norm->x = this->x / length;
-            norm->y = this->y / length;
-            norm->z = this->z / length;
+            norm.x = this->x / length;
+            norm.y = this->y / length;
+            norm.z = this->z / length;
         }
         else
         {
-            std::cerr << "CNPoint: Trying to normalize (0, 0, 0)!" << std::endl;
+            std::cerr << "CNPointTemplate: Trying to normalize (0, 0, 0)!" << std::endl;
         }
 
         return norm;
-    }
-
-    double distanceTo(T &pos)
-    {
-        T delta = this - pos;
-        return delta.length();
     }
 
     double length()

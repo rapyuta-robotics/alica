@@ -52,6 +52,11 @@ CNPointEgo CNPointAllo::toEgo(CNPositionAllo &alloPos)
     return ego;
 }
 
+double CNPointAllo::distanceTo(const CNPointAllo &other)
+{
+	return (this - other)->length();
+}
+
 CNPointAllo CNPointAllo::operator+(const CNVecAllo &right)
 {
     return CNPointAllo(
@@ -68,4 +73,14 @@ CNPointAllo CNPointAllo::operator-(const CNVecAllo &right)
 			this->z - right.z);
 }
 
+CNVecAllo CNPointAllo::operator-(const CNPointAllo &right)
+{
+    return CNVecAllo(
+    		this->x - right.x,
+			this->y - right.y,
+			this->z - right.z);
+}
+
 } /* namespace geometry */
+
+

@@ -19,9 +19,11 @@ class CNPointAllo : public CNPointTemplate<CNPointAllo>
     std::string toString();
 
     CNPointEgo toEgo(CNPositionAllo &origin);
+    double distanceTo(const CNPointAllo &other);
 
     CNPointAllo operator+(const CNVecAllo &right);
     CNPointAllo operator-(const CNVecAllo &right);
+    CNVecAllo operator-(const CNPointAllo &right);
 };
 
 } /* namespace geometry */

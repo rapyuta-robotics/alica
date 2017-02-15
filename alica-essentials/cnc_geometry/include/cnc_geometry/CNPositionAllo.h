@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cnc_geometry/CNVecAllo.h>
+#include "CNVecAllo.h"
+#include "CNPointAllo.h"
 #include "CNPositionTemplate.h"
-#include "CNPositionAllo.h"
 
 namespace geometry
 {
@@ -18,10 +18,12 @@ class CNPositionAllo : public CNPositionTemplate<CNPositionAllo>
 
     std::string toString();
 
-    CNPositionEgo toEgo(CNPositionAllo &origin);
+    CNPositionEgo toEgo(const CNPositionAllo &origin) const;
+    CNPointAllo getPoint() const;
+    double distanceTo(const CNPointAllo &other) const;
 
-    CNPositionAllo operator+(const CNVecAllo &right);
-    CNPositionAllo operator-(const CNVecAllo &right);
+    CNPositionAllo operator+(const CNVecAllo &right) const;
+    CNPositionAllo operator-(const CNVecAllo &right) const;
 };
 
 } /* namespace geometry */
