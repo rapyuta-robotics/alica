@@ -77,4 +77,12 @@ CNPositionEgo CNPositionEgo::operator-(const CNVecEgo &right)
 			this->theta);
 }
 
+CNVecEgo CNPositionEgo::operator-(const CNPositionEgo &right)
+{
+	return CNVecEgo(
+			this->x - right.x,
+			this->y - right.y,
+			this->theta);
+}
+
 } /* namespace geometry */

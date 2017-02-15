@@ -42,9 +42,9 @@ template <class T> class CNPointTemplate : public geometry_msgs::Point
         return norm;
     }
 
-    double distanceTo(CNPointTemplate<T> &pos)
+    double distanceTo(T &pos)
     {
-        T delta = this - pos;
+        T delta = *this - pos;
         return delta.length();
     }
 
@@ -56,12 +56,12 @@ template <class T> class CNPointTemplate : public geometry_msgs::Point
     // Self
     T operator+(const T &right)
     {
-        return T(this->x + right->x, this->y + right->y, this->z + right->z);
+        return T(this->x + right.x, this->y + right.y, this->z + right.z);
     }
 
-    T operator-(const T &right)
+    T operator-(const CNPointTemplate<T> &right)
     {
-        return T(this->x - right->x, this->y - right->y, this->z - right->z);
+        return T(this->x - right.x, this->y - right.y, this->z - right.z);
     }
 
     // Scalar

@@ -23,6 +23,7 @@ class CNPositionAllo : public CNPositionTemplate<CNPositionAllo>
 
     CNPositionAllo operator+(const CNVecAllo &right);
     CNPositionAllo operator-(const CNVecAllo &right);
+    CNVecAllo operator-(const CNPositionAllo &right);
 };
 
 } /* namespace geometry */

@@ -23,6 +23,7 @@ class CNPositionEgo : public CNPositionTemplate<CNPositionEgo>
 
     CNPositionEgo operator+(const CNVecEgo &right);
     CNPositionEgo operator-(const CNVecEgo &right);
+    CNVecEgo operator-(const CNPositionEgo &right);
 };
 
 } /* namespace geometry */

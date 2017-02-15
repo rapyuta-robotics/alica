@@ -71,4 +71,12 @@ CNPositionAllo CNPositionAllo::operator-(const CNVecAllo &right)
 			this->theta);
 }
 
+CNVecAllo CNPositionAllo::operator-(const CNPositionAllo &right)
+{
+	return CNVecAllo(
+			this->x - right.x,
+			this->y - right.y,
+			this->theta);
+}
+
 } /* namespace geometry */
