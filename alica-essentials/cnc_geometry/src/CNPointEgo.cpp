@@ -55,7 +55,7 @@ CNPointAllo CNPointEgo::toAllo(const CNPositionAllo &me)
 
 double CNPointEgo::distanceTo(const CNPointEgo &other)
 {
-	return (this - other)->length();
+	return (*this - other).length();
 }
 
 CNPointEgo CNPointEgo::operator+(const CNVecEgo &right)
