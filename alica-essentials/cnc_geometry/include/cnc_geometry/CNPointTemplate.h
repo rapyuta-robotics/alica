@@ -42,15 +42,13 @@ template <class T> class CNPointTemplate : public geometry_msgs::Point
         return norm;
     }
 
-<<<<<<< HEAD
-=======
+
     double distanceTo(T &pos)
     {
         T delta = *this - pos;
         return delta.length();
     }
 
->>>>>>> a78438f2ae3acd9f63012a4ade3d62d557c7acf6
     double length()
     {
         return sqrt(x * x + y * y + z * z);

@@ -34,7 +34,7 @@ string CNPointEgo::toString()
     return ss.str();
 }
 
-CNPointAllo CNPointEgo::toAllo(CNPositionAllo &me)
+CNPointAllo CNPointEgo::toAllo(const CNPositionAllo &me)
 {
     auto allo = CNPointAllo();
 

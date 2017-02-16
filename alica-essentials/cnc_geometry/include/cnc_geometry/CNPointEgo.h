@@ -19,7 +19,7 @@ class CNPointEgo : public CNPointTemplate<CNPointEgo>
 
     std::string toString();
 
-    CNPointAllo toAllo(CNPositionAllo &origin);
+    CNPointAllo toAllo(const CNPositionAllo &origin);
     double distanceTo(const CNPointEgo &other);
 
     CNPointEgo operator+(const CNVecEgo &right);
