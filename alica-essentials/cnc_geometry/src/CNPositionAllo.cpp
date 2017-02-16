@@ -34,6 +34,12 @@ string CNPositionAllo::toString()
     return ss.str();
 }
 
+double CNPositionAllo::distanceTo(CNPointAllo &pos)
+{
+	CNVecAllo delta = *this - pos;
+	return delta.length();
+}
+
 CNPositionEgo CNPositionAllo::toEgo(CNPositionAllo &me)
 {
     auto ego = CNPositionEgo();
@@ -77,6 +83,14 @@ CNPositionAllo CNPositionAllo::operator-(const CNVecAllo &right)
 }
 
 CNVecAllo CNPositionAllo::operator-(const CNPositionAllo &right)
+{
+	return CNVecAllo(
+			this->x - right.x,
+			this->y - right.y,
+			this->theta);
+}
+
+CNVecAllo CNPositionAllo::operator-(const CNPointAllo &right)
 {
 	return CNVecAllo(
 			this->x - right.x,
