@@ -26,6 +26,13 @@ CNVecEgo::CNVecEgo(double x, double y, double z)
 	this->z = z;
 }
 
+CNVecEgo::CNVecEgo(const CNVecEgo &obj)
+{
+	this->x = obj.x;
+	this->y = obj.y;
+	this->z = obj.z;
+}
+
 CNVecEgo::~CNVecEgo() {}
 
 string CNVecEgo::toString()

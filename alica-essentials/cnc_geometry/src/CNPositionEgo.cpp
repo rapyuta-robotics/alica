@@ -24,6 +24,13 @@ CNPositionEgo::CNPositionEgo(double x, double y, double theta)
 	this->theta = theta;
 }
 
+CNPositionEgo::CNPositionEgo(const CNPositionEgo &obj)
+{
+	this->x = obj.x;
+	this->y = obj.y;
+	this->theta = obj.theta;
+}
+
 CNPositionEgo::~CNPositionEgo() {}
 
 string CNPositionEgo::toString()
@@ -65,6 +72,14 @@ CNPositionEgo CNPositionEgo::operator+(const CNVecEgo &right)
 CNPositionEgo CNPositionEgo::operator-(const CNVecEgo &right)
 {
 	return CNPositionEgo(
+			this->x - right.x,
+			this->y - right.y,
+			this->theta);
+}
+
+CNVecEgo CNPositionEgo::operator-(const CNPositionEgo &right)
+{
+	return CNVecEgo(
 			this->x - right.x,
 			this->y - right.y,
 			this->theta);

@@ -18,6 +18,13 @@ CNPositionAllo::CNPositionAllo(double x, double y, double theta)
 	this->theta = theta;
 }
 
+CNPositionAllo::CNPositionAllo(const CNPositionAllo &obj)
+{
+	this->x = obj.x;
+	this->y = obj.y;
+	this->theta = obj.theta;
+}
+
 CNPositionAllo::~CNPositionAllo() {}
 
 string CNPositionAllo::toString()
@@ -27,7 +34,7 @@ string CNPositionAllo::toString()
     return ss.str();
 }
 
-CNPositionEgo CNPositionAllo::toEgo(const CNPositionAllo &me) const
+CNPositionEgo CNPositionAllo::toEgo(CNPositionAllo &me)
 {
     auto ego = CNPositionEgo();
 
@@ -48,17 +55,12 @@ CNPositionEgo CNPositionAllo::toEgo(const CNPositionAllo &me) const
     return ego;
 }
 
-CNPointAllo CNPositionAllo::getPoint() const
+CNPointAllo CNPositionAllo::getPoint()
 {
 	return CNPointAllo(this->x, this->y, 0);
 }
 
-double CNPositionAllo::distanceTo(const CNPointAllo &other) const
-{
-	return (this - other)->length();
-}
-
-CNPositionAllo CNPositionAllo::operator+(const CNVecAllo &right) const
+CNPositionAllo CNPositionAllo::operator+(const CNVecAllo &right)
 {
 	return CNPositionAllo(
 			this->x + right.x,
@@ -66,7 +68,7 @@ CNPositionAllo CNPositionAllo::operator+(const CNVecAllo &right) const
 			this->theta);
 }
 
-CNPositionAllo CNPositionAllo::operator-(const CNVecAllo &right) const
+CNPositionAllo CNPositionAllo::operator-(const CNVecAllo &right)
 {
 	return CNPositionAllo(
 			this->x - right.x,
@@ -74,6 +76,12 @@ CNPositionAllo CNPositionAllo::operator-(const CNVecAllo &right) const
 			this->theta);
 }
 
+CNVecAllo CNPositionAllo::operator-(const CNPositionAllo &right)
+{
+	return CNVecAllo(
+			this->x - right.x,
+			this->y - right.y,
+			this->theta);
+}
+
 } /* namespace geometry */
-
-

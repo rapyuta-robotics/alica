@@ -14,6 +14,7 @@ class CNPositionEgo : public CNPositionTemplate<CNPositionEgo>
   public:
     CNPositionEgo() : CNPositionEgo(0, 0, 0) {}
     CNPositionEgo(double x, double y, double theta);
+    CNPositionEgo(const CNPositionEgo &obj);
     virtual ~CNPositionEgo();
 
     std::string toString();
@@ -22,6 +23,7 @@ class CNPositionEgo : public CNPositionTemplate<CNPositionEgo>
 
     CNPositionEgo operator+(const CNVecEgo &right);
     CNPositionEgo operator-(const CNVecEgo &right);
+    CNVecEgo operator-(const CNPositionEgo &right);
 };
 
 } /* namespace geometry */

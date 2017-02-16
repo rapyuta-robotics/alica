@@ -5,11 +5,11 @@
 
 #include "cnc_geometry/CNPositionAllo.h"
 
-using std::string;
-using std::shared_ptr;
-
 namespace geometry
 {
+
+using std::string;
+using std::shared_ptr;
 
 CNPointAllo::CNPointAllo(double x, double y, double z)
 {
@@ -18,7 +18,16 @@ CNPointAllo::CNPointAllo(double x, double y, double z)
     this->z = z;
 }
 
-CNPointAllo::~CNPointAllo() {}
+CNPointAllo::CNPointAllo(const CNPointAllo &obj)
+{
+    this->x = obj.x;
+    this->y = obj.y;
+    this->z = obj.z;
+}
+
+CNPointAllo::~CNPointAllo()
+{
+}
 
 string CNPointAllo::toString()
 {
@@ -59,18 +68,17 @@ double CNPointAllo::distanceTo(const CNPointAllo &other)
 
 CNPointAllo CNPointAllo::operator+(const CNVecAllo &right)
 {
-    return CNPointAllo(
-    		this->x + right.x,
-			this->y + right.y,
-			this->z + right.z);
+    return CNPointAllo(this->x + right.x, this->y + right.y, this->z + right.z);
 }
 
 CNPointAllo CNPointAllo::operator-(const CNVecAllo &right)
 {
-    return CNPointAllo(
-    		this->x - right.x,
-			this->y - right.y,
-			this->z - right.z);
+    return CNPointAllo(this->x - right.x, this->y - right.y, this->z - right.z);
+}
+
+CNVecAllo CNPointAllo::operator-(const CNPointAllo &right)
+{
+    return CNVecAllo(this->x - right.x, this->y - right.y, this->z - right.z);
 }
 
 CNVecAllo CNPointAllo::operator-(const CNPointAllo &right)

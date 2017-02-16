@@ -24,6 +24,13 @@ CNVecAllo::CNVecAllo(double x, double y, double z)
 	this->z = z;
 }
 
+CNVecAllo::CNVecAllo(const CNVecAllo &obj)
+{
+	this->x = obj.x;
+	this->y = obj.y;
+	this->z = obj.z;
+}
+
 CNVecAllo::~CNVecAllo() {}
 
 string CNVecAllo::toString()
