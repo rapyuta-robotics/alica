@@ -29,7 +29,7 @@ CNPointAllo::~CNPointAllo()
 {
 }
 
-string CNPointAllo::toString()
+string CNPointAllo::toString() const
 {
     std::stringstream ss;
     ss << "CNPointAllo: x: " << x << " y: " << y << " z: " << z << std::endl;
@@ -42,7 +42,7 @@ string CNPointAllo::toString()
  * @param alloPos the allocentric reference position
  * @return an egocentric 2d point with alloPos as origin of ordinates
  */
-CNPointEgo CNPointAllo::toEgo(CNPositionAllo &alloPos)
+CNPointEgo CNPointAllo::toEgo(CNPositionAllo &alloPos) const
 {
     CNPointEgo ego = CNPointEgo();
 
@@ -61,22 +61,22 @@ CNPointEgo CNPointAllo::toEgo(CNPositionAllo &alloPos)
     return ego;
 }
 
-double CNPointAllo::distanceTo(const CNPointAllo &other)
+double CNPointAllo::distanceTo(const CNPointAllo &other) const
 {
     return (*this - other).length();
 }
 
-CNPointAllo CNPointAllo::operator+(const CNVecAllo &right)
+CNPointAllo CNPointAllo::operator+(const CNVecAllo &right) const
 {
     return CNPointAllo(this->x + right.x, this->y + right.y, this->z + right.z);
 }
 
-CNPointAllo CNPointAllo::operator-(const CNVecAllo &right)
+CNPointAllo CNPointAllo::operator-(const CNVecAllo &right) const
 {
     return CNPointAllo(this->x - right.x, this->y - right.y, this->z - right.z);
 }
 
-CNVecAllo CNPointAllo::operator-(const CNPointAllo &right)
+CNVecAllo CNPointAllo::operator-(const CNPointAllo &right) const
 {
     return CNVecAllo(this->x - right.x, this->y - right.y, this->z - right.z);
 }

@@ -23,7 +23,7 @@ CNRobotEgo::~CNRobotEgo()
  * Creates a string representation of this robot.
  * @return the string representing the robot.
  */
-std::string CNRobotEgo::toString()
+std::string CNRobotEgo::toString() const
 {
     std::stringstream ss;
     ss << "CNRobotEgo: ID: " << this->id << " Pose X: " << this->x << " Y: " << this->y
@@ -31,4 +31,5 @@ std::string CNRobotEgo::toString()
        << std::endl;
     return ss.str();
 }
-}
+
+} /* namespace geometry */

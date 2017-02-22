@@ -17,9 +17,9 @@ class CNVecAllo : public CNVecTemplate<CNVecAllo>
 	CNVecAllo(const CNVecAllo &obj);
     virtual ~CNVecAllo();
 
-    virtual std::string toString();
+    virtual std::string toString() const;
 
-    CNVecEgo toEgo(CNPositionAllo &origin);
+    CNVecEgo toEgo(CNPositionAllo &origin) const;
 };
 
 } /* namespace geometry */

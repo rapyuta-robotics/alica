@@ -23,11 +23,12 @@ CNRobotAllo::~CNRobotAllo()
  * Creates a string representation of this robot.
  * @return the string representing the robot.
  */
-std::string CNRobotAllo::toString()
+std::string CNRobotAllo::toString() const
 {
     std::stringstream ss;
     ss << "CNRobot: ID: " << this->id << " Pose X: " << this->x << " Y: " << this->y << " Orientation: " << this->theta
        << " Velocity X: " << this->velocity.x << " Y: " << this->velocity.y << std::endl;
     return ss.str();
 }
-}
+
+} /* namespace geometry */

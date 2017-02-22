@@ -27,14 +27,14 @@ CNPointEgo::CNPointEgo(const CNPointEgo &obj)
 
 CNPointEgo::~CNPointEgo() {}
 
-string CNPointEgo::toString()
+string CNPointEgo::toString() const
 {
     std::stringstream ss;
     ss << "CNPointEgo: X: " << x << " Y: " << y << " z: " << z << std::endl;
     return ss.str();
 }
 
-CNPointAllo CNPointEgo::toAllo(const CNPositionAllo &me)
+CNPointAllo CNPointEgo::toAllo(const CNPositionAllo &me) const
 {
     auto allo = CNPointAllo();
 
@@ -53,12 +53,12 @@ CNPointAllo CNPointEgo::toAllo(const CNPositionAllo &me)
     return allo;
 }
 
-double CNPointEgo::distanceTo(const CNPointEgo &other)
+double CNPointEgo::distanceTo(const CNPointEgo &other) const
 {
 	return (*this - other).length();
 }
 
-CNPointEgo CNPointEgo::operator+(const CNVecEgo &right)
+CNPointEgo CNPointEgo::operator+(const CNVecEgo &right) const
 {
     return CNPointEgo(
     		this->x + right.x,
@@ -66,7 +66,7 @@ CNPointEgo CNPointEgo::operator+(const CNVecEgo &right)
 			this->z + right.z);
 }
 
-CNPointEgo CNPointEgo::operator-(const CNVecEgo &right)
+CNPointEgo CNPointEgo::operator-(const CNVecEgo &right) const
 {
     return CNPointEgo(
     		this->x - right.x,
@@ -74,7 +74,7 @@ CNPointEgo CNPointEgo::operator-(const CNVecEgo &right)
 			this->z - right.z);
 }
 
-CNVecEgo CNPointEgo::operator-(const CNPointEgo &right)
+CNVecEgo CNPointEgo::operator-(const CNPointEgo &right) const
 {
     return CNVecEgo(
     		this->x - right.x,

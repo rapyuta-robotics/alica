@@ -35,14 +35,14 @@ CNVecEgo::CNVecEgo(const CNVecEgo &obj)
 
 CNVecEgo::~CNVecEgo() {}
 
-string CNVecEgo::toString()
+string CNVecEgo::toString() const
 {
     std::stringstream ss;
     ss << "CNVecEgo: x: " << x << " y: " << y << " z: " << z << endl;
     return ss.str();
 }
 
-CNVecAllo CNVecEgo::toAllo(CNPositionAllo &me)
+CNVecAllo CNVecEgo::toAllo(CNPositionAllo &me) const
 {
 	auto allo = CNVecAllo();
 

@@ -8,22 +8,22 @@ namespace geometry
 template <class T> class CNPointTemplate : public geometry_msgs::Point
 {
   public:
-    T rotateZ(double radian)
+    T rotateZ(double radian) const
     {
         return T(x * cos(radian) - y * sin(radian), x * sin(radian) + y * cos(radian), z);
     }
 
-    double angleZ()
+    double angleZ() const
     {
         return atan2(y, x);
     }
 
-    double angleZToPoint(T &point)
+    double angleZToPoint(T &point) const
     {
         return atan2(point->y - this->y, point->x - this->x);
     }
 
-    T normalize()
+    T normalize() const
     {
         T norm = T();
         double length = this->length();
@@ -43,35 +43,35 @@ template <class T> class CNPointTemplate : public geometry_msgs::Point
     }
 
 
-    double distanceTo(T &pos)
+    double distanceTo(T &pos) const
     {
         T delta = *this - pos;
         return delta.length();
     }
 
-    double length()
+    double length() const
     {
         return sqrt(x * x + y * y + z * z);
     }
 
     // Self
-    T operator+(const T &right)
+    T operator+(const T &right) const
     {
         return T(this->x + right.x, this->y + right.y, this->z + right.z);
     }
 
-    T operator-(const CNPointTemplate<T> &right)
+    T operator-(const CNPointTemplate<T> &right) const
     {
         return T(this->x - right.x, this->y - right.y, this->z - right.z);
     }
 
     // Scalar
-    T operator/(const double &right)
+    T operator/(const double &right) const
     {
         return T(this->x / right, this->y / right, this->z / right);
     }
 
-    T operator*(const double &right)
+    T operator*(const double &right) const
     {
         return T(this->x * right, this->y * right, this->z * right);
     }

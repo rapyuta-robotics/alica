@@ -27,20 +27,20 @@ CNPositionAllo::CNPositionAllo(const CNPositionAllo &obj)
 
 CNPositionAllo::~CNPositionAllo() {}
 
-string CNPositionAllo::toString()
+string CNPositionAllo::toString() const
 {
     std::stringstream ss;
     ss << "CNPositionAllo: X: " << this->x << " Y: " << this->y << " Orientation: " << this->theta << std::endl;
     return ss.str();
 }
 
-double CNPositionAllo::distanceTo(CNPointAllo &pos)
+double CNPositionAllo::distanceTo(CNPointAllo &pos) const
 {
 	CNVecAllo delta = *this - pos;
 	return delta.length();
 }
 
-CNPositionEgo CNPositionAllo::toEgo(CNPositionAllo &me)
+CNPositionEgo CNPositionAllo::toEgo(CNPositionAllo &me) const
 {
     auto ego = CNPositionEgo();
 
@@ -61,12 +61,12 @@ CNPositionEgo CNPositionAllo::toEgo(CNPositionAllo &me)
     return ego;
 }
 
-CNPointAllo CNPositionAllo::getPoint()
+CNPointAllo CNPositionAllo::getPoint() const
 {
 	return CNPointAllo(this->x, this->y, 0);
 }
 
-CNPositionAllo CNPositionAllo::operator+(const CNVecAllo &right)
+CNPositionAllo CNPositionAllo::operator+(const CNVecAllo &right) const
 {
 	return CNPositionAllo(
 			this->x + right.x,
@@ -74,7 +74,7 @@ CNPositionAllo CNPositionAllo::operator+(const CNVecAllo &right)
 			this->theta);
 }
 
-CNPositionAllo CNPositionAllo::operator-(const CNVecAllo &right)
+CNPositionAllo CNPositionAllo::operator-(const CNVecAllo &right) const
 {
 	return CNPositionAllo(
 			this->x - right.x,
@@ -82,15 +82,7 @@ CNPositionAllo CNPositionAllo::operator-(const CNVecAllo &right)
 			this->theta);
 }
 
-CNVecAllo CNPositionAllo::operator-(const CNPositionAllo &right)
-{
-	return CNVecAllo(
-			this->x - right.x,
-			this->y - right.y,
-			this->theta);
-}
-
-CNVecAllo CNPositionAllo::operator-(const CNPointAllo &right)
+CNVecAllo CNPositionAllo::operator-(const CNPointAllo &right) const
 {
 	return CNVecAllo(
 			this->x - right.x,

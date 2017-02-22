@@ -33,14 +33,14 @@ CNPositionEgo::CNPositionEgo(const CNPositionEgo &obj)
 
 CNPositionEgo::~CNPositionEgo() {}
 
-string CNPositionEgo::toString()
+string CNPositionEgo::toString() const
 {
 	stringstream ss;
 	ss << "CNPositionEgo: X: " << this->x << " Y: " << this->y << " Orientation: " << this->theta << endl;
 	return ss.str();
 }
 
-CNPositionAllo CNPositionEgo::toAllo(CNPositionAllo &me)
+CNPositionAllo CNPositionEgo::toAllo(CNPositionAllo &me) const
 {
 	auto allo = CNPositionAllo();
 
@@ -61,7 +61,7 @@ CNPositionAllo CNPositionEgo::toAllo(CNPositionAllo &me)
 	return allo;
 }
 
-CNPositionEgo CNPositionEgo::operator+(const CNVecEgo &right)
+CNPositionEgo CNPositionEgo::operator+(const CNVecEgo &right) const
 {
 	return CNPositionEgo(
 			this->x + right.x,
@@ -69,17 +69,9 @@ CNPositionEgo CNPositionEgo::operator+(const CNVecEgo &right)
 			this->theta);
 }
 
-CNPositionEgo CNPositionEgo::operator-(const CNVecEgo &right)
+CNPositionEgo CNPositionEgo::operator-(const CNVecEgo &right) const
 {
 	return CNPositionEgo(
-			this->x - right.x,
-			this->y - right.y,
-			this->theta);
-}
-
-CNVecEgo CNPositionEgo::operator-(const CNPositionEgo &right)
-{
-	return CNVecEgo(
 			this->x - right.x,
 			this->y - right.y,
 			this->theta);

@@ -11,7 +11,7 @@ class CNRobotEgo : public CNPositionEgo
   public:
     CNRobotEgo();
     virtual ~CNRobotEgo();
-    virtual std::string toString();
+    virtual std::string toString() const;
 
     /**
      * The ID of this robot. Its either the robots id in our team, or some specific value for artificial robots or real

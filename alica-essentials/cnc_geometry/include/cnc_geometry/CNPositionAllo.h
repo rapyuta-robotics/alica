@@ -18,16 +18,16 @@ class CNPositionAllo : public CNPositionTemplate<CNPositionAllo>
     CNPositionAllo(const CNPositionAllo& obj);
     virtual ~CNPositionAllo();
 
-    virtual std::string toString();
+    virtual std::string toString() const;
 
-    CNPositionEgo toEgo(CNPositionAllo &origin);
-    double distanceTo(CNPointAllo &pos);
-    CNPointAllo getPoint();
+    CNPositionEgo toEgo(CNPositionAllo &origin) const;
+    double distanceTo(CNPointAllo &pos) const;
+    CNPointAllo getPoint() const;
 
-    CNPositionAllo operator+(const CNVecAllo &right);
-    CNPositionAllo operator-(const CNVecAllo &right);
-    CNVecAllo operator-(const CNPositionAllo &right);
-    CNVecAllo operator-(const CNPointAllo &right);
+    CNPositionAllo operator+(const CNVecAllo &right) const;
+    CNPositionAllo operator-(const CNVecAllo &right) const;
+    CNVecAllo operator-(const CNPositionAllo &right) const;
+    CNVecAllo operator-(const CNPointAllo &right) const;
 };
 
 } /* namespace geometry */

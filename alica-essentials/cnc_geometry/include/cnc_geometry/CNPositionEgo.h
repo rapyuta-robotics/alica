@@ -17,13 +17,13 @@ class CNPositionEgo : public CNPositionTemplate<CNPositionEgo>
     CNPositionEgo(const CNPositionEgo &obj);
     virtual ~CNPositionEgo();
 
-    virtual std::string toString();
+    virtual std::string toString() const;
 
-    CNPositionAllo toAllo(CNPositionAllo &origin);
+    CNPositionAllo toAllo(CNPositionAllo &origin) const;
 
-    CNPositionEgo operator+(const CNVecEgo &right);
-    CNPositionEgo operator-(const CNVecEgo &right);
-    CNVecEgo operator-(const CNPositionEgo &right);
+    CNPositionEgo operator+(const CNVecEgo &right) const;
+    CNPositionEgo operator-(const CNVecEgo &right) const;
+    CNVecEgo operator-(const CNPositionEgo &right) const;
 };
 
 } /* namespace geometry */

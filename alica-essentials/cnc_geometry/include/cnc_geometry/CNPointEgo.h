@@ -17,14 +17,14 @@ class CNPointEgo : public CNPointTemplate<CNPointEgo>
 	CNPointEgo(const CNPointEgo &obj);
     virtual ~CNPointEgo();
 
-    virtual std::string toString();
+    virtual std::string toString() const;
 
-    CNPointAllo toAllo(const CNPositionAllo &origin);
-    double distanceTo(const CNPointEgo &other);
+    CNPointAllo toAllo(const CNPositionAllo &origin) const;
+    double distanceTo(const CNPointEgo &other) const;
 
-    CNPointEgo operator+(const CNVecEgo &right);
-    CNPointEgo operator-(const CNVecEgo &right);
-    CNVecEgo operator-(const CNPointEgo &right);
+    CNPointEgo operator+(const CNVecEgo &right) const;
+    CNPointEgo operator-(const CNVecEgo &right) const;
+    CNVecEgo operator-(const CNPointEgo &right) const;
 };
 
 } /* namespace geometry */
