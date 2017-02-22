@@ -18,7 +18,7 @@ class CNPositionAllo : public CNPositionTemplate<CNPositionAllo>
     CNPositionAllo(const CNPositionAllo& obj);
     virtual ~CNPositionAllo();
 
-    std::string toString();
+    virtual std::string toString();
 
     CNPositionEgo toEgo(CNPositionAllo &origin);
     double distanceTo(CNPointAllo &pos);

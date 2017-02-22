@@ -17,7 +17,7 @@ class CNVecEgo : public CNVecTemplate<CNVecEgo>
 	CNVecEgo(const CNVecEgo &obj);
     virtual ~CNVecEgo();
 
-    std::string toString();
+    virtual std::string toString();
 
     CNVecAllo toAllo(CNPositionAllo &origin);
 };
