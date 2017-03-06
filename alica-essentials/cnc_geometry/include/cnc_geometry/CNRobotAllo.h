@@ -32,7 +32,7 @@ class CNRobotAllo : public CNPositionAllo
     /**
      * Rotation velocity of this robot.
      */
-    double rotation;
+    double rotationVel;
 
     /**
      * List of robots (identified by their id) that are not seeing this robot, although they should.

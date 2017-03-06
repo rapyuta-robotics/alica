@@ -10,7 +10,7 @@ CNRobotAllo::CNRobotAllo()
     this->radius = 0;
     this->id = 0;
     this->certainty = 0;
-    this->rotation = 0;
+    this->rotationVel = 0;
     this->opposer = std::make_shared<std::vector<int>>();
     this->supporter = std::make_shared<std::vector<int>>();
 }
