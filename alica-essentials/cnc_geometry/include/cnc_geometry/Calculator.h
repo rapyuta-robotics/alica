@@ -182,7 +182,7 @@ double distancePointToLine(const CNPointTemplate<T> &a, const CNPointTemplate<T>
 {
     auto a2p = p - a;
     auto a2b = b - a;
-    return (a2p->x * a2b->y - a2p->y * a2b->x) / a2p->length();
+    return (a2p.x * a2b.y - a2p.y * a2b.x) / a2p.length();
 }
 
 /**
@@ -196,7 +196,7 @@ double distancePointToLine(const CNPointTemplate<T> &a, const CNPointTemplate<T>
 template <class T>
 double distancePointToLineSegment(double x, double y, const CNPointTemplate<T> &a, const CNPointTemplate<T> &b)
 {
-    return distancePointToLineSegment(x, y, a->x, a->y, b->x, b->y);
+    return distancePointToLineSegment(x, y, a.x, a.y, b.x, b.y);
 }
 
 /**
