@@ -1,16 +1,24 @@
 #pragma once
 
-#include "CNPositionEgo.h"
 #include "CNVecEgo.h"
+#include "CNPositionEgo.h"
 
 namespace geometry
 {
 
-class CNRobotEgo : public CNPositionEgo
+class CNPositionAllo;
+class CNRobotAllo;
+
+class CNRobotEgo
 {
   public:
     CNRobotEgo();
     virtual ~CNRobotEgo();
+
+    /**
+     * Creates a string representation of this robot.
+     * @return the string representing the robot.
+     */
     virtual std::string toString() const;
 
     /**
@@ -28,6 +36,11 @@ class CNRobotEgo : public CNPositionEgo
      * Egocentric velocity of this robot.
      */
     CNVecEgo velocity; // TODO: allo or ego?
+
+    /**
+     * Egocentric position of this robot.
+     */
+    CNPositionEgo position;
 
     /**
      * Rotation velocity of this robot.
@@ -48,6 +61,13 @@ class CNRobotEgo : public CNPositionEgo
      * Some certainty value about the trueness of the data about this robot.
      */
     double certainty;
+
+
+    /**
+     * Creates the allocentric representation of this robot.
+     */
+    CNRobotAllo toAllo(CNPositionAllo ownPos);
+
 };
 
 } /* namespace geometry */

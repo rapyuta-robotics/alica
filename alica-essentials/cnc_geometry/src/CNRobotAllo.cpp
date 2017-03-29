@@ -1,34 +1,52 @@
 #include "cnc_geometry/CNRobotAllo.h"
 
+#include "cnc_geometry/CNPositionAllo.h"
+#include "cnc_geometry/CNRobotEgo.h"
+
+using std::make_shared;
+using std::vector;
+using std::string;
+using std::endl;
+
 namespace geometry
 {
 
 CNRobotAllo::CNRobotAllo()
-    : CNPositionAllo()
-    , velocity()
+    : velocity()
 {
     this->radius = 0;
     this->id = 0;
     this->certainty = 0;
     this->rotationVel = 0;
-    this->opposer = std::make_shared<std::vector<int>>();
-    this->supporter = std::make_shared<std::vector<int>>();
+    this->opposer = make_shared<vector<int>>();
+    this->supporter = make_shared<vector<int>>();
 }
 
 CNRobotAllo::~CNRobotAllo()
 {
 }
 
-/**
- * Creates a string representation of this robot.
- * @return the string representing the robot.
- */
-std::string CNRobotAllo::toString() const
+string CNRobotAllo::toString() const
 {
     std::stringstream ss;
-    ss << "CNRobot: ID: " << this->id << " Pose X: " << this->x << " Y: " << this->y << " Orientation: " << this->theta
-       << " Velocity X: " << this->velocity.x << " Y: " << this->velocity.y << std::endl;
+    ss << "CNRobot: ID: " << this->id << " Pos: " << this->position << " Velocity: " << this->velocity << endl;
     return ss.str();
+}
+
+CNRobotEgo CNRobotAllo::toEgo(CNPositionAllo ownPos)
+{
+    auto robotEgo = CNRobotEgo();
+
+    robotEgo.radius = this->radius;
+    robotEgo.id = this->id;
+    robotEgo.certainty = this->certainty;
+    robotEgo.rotationVel = this->rotationVel;
+    robotEgo.opposer = make_shared<vector<int>>(*this->opposer);
+    robotEgo.supporter = make_shared<vector<int>>(*this->supporter);
+    robotEgo.position = this->position.toEgo(ownPos);
+    robotEgo.velocity = this->velocity.toEgo(ownPos);
+
+    return robotEgo;
 }
 
 } /* namespace geometry */
