@@ -22,6 +22,7 @@ class CNPointEgo : public CNPointTemplate<CNPointEgo>
     CNPointAllo toAllo(const CNPositionAllo &origin) const;
     double distanceTo(const CNPointEgo &other) const;
 
+    CNPointEgo operator+(const CNPointEgo &right) const;
     CNPointEgo operator+(const CNVecEgo &right) const;
     CNPointEgo operator-(const CNVecEgo &right) const;
     CNVecEgo operator-(const CNPointEgo &right) const;

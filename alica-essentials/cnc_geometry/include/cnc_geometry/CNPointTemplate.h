@@ -55,7 +55,7 @@ template <class T> class CNPointTemplate : public geometry_msgs::Point
     }
 
     // Self
-    T operator+(const T &right) const
+    T operator+(const CNPointTemplate<T> &right) const
     {
         return T(this->x + right.x, this->y + right.y, this->z + right.z);
     }

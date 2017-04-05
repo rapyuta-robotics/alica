@@ -58,6 +58,14 @@ double CNPointEgo::distanceTo(const CNPointEgo &other) const
 	return (*this - other).length();
 }
 
+CNPointEgo CNPointEgo::operator+(const CNPointEgo &right) const
+{
+    return CNPointEgo(
+    		this->x + right.x,
+			this->y + right.y,
+			this->z + right.z);
+}
+
 CNPointEgo CNPointEgo::operator+(const CNVecEgo &right) const
 {
     return CNPointEgo(
