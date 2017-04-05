@@ -20,7 +20,7 @@ template <class T> class CNPointTemplate : public geometry_msgs::Point
 
     double angleZToPoint(T &point) const
     {
-        return atan2(point->y - this->y, point->x - this->x);
+        return atan2(point.y - this->y, point.x - this->x);
     }
 
     T normalize() const

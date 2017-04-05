@@ -9,6 +9,7 @@
 #include "CNPointTemplate.h"
 #include "CNPointAllo.h"
 #include "CNPointEgo.h"
+#include "CNVecTemplate.h"
 
 #include <vector>
 
@@ -326,15 +327,27 @@ bool outsideTriangle(const CNPointTemplate<T> &a, const CNPointTemplate<T> &b, c
 }
 
 /**
- * Determines whether the point a is left of vector b
+ * Determines whether the point a is left of point b
  * @param a point
- * @param b vector
+ * @param b point
  * @return True is a is left of b.
  */
 template <class T>
 bool leftOf(const CNPointTemplate<T> &a, const CNPointTemplate<T> &b)
 {
-    return (a->x * b->y - a->y * b->x) < 0;
+    return (a.x * b.y - a.y * b.x) < 0;
+}
+
+/**
+ * Determines whether the vector a is left of vector b
+ * @param a vector
+ * @param b vector
+ * @return True is a is left of b.
+ */
+template <class T>
+bool leftOf(const CNVecTemplate<T> &a, const CNVecTemplate<T> &b)
+{
+    return (a.x * b.y - a.y * b.x) < 0;
 }
 
 /**
