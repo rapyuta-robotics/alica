@@ -87,12 +87,12 @@ inline double distance(double x1, double y1, double x2, double y2)
 template <class T>
 bool isInsideRectangle(const CNPointTemplate<T> &rectPointA, const CNPointTemplate<T> &rectPointB, const CNPointTemplate<T> &point)
 {
-    double minX = min(rectPointA->x, rectPointB->x);
-    double maxX = max(rectPointA->x, rectPointB->x);
-    double minY = min(rectPointA->y, rectPointB->y);
-    double maxY = max(rectPointA->y, rectPointB->y);
+    double minX = min(rectPointA.x, rectPointB.x);
+    double maxX = max(rectPointA.x, rectPointB.x);
+    double minY = min(rectPointA.y, rectPointB.y);
+    double maxY = max(rectPointA.y, rectPointB.y);
 
-    return point->x >= minX && point->x <= maxX && point->y >= minY && point->y <= maxY;
+    return point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY;
 }
 
 /**
@@ -105,7 +105,7 @@ bool isInsideRectangle(const CNPointTemplate<T> &rectPointA, const CNPointTempla
 template <class T>
 bool onSegment(const CNPointTemplate<T> &p, const CNPointTemplate<T> &q, const CNPointTemplate<T> &r)
 {
-    if (q->x <= max(p->x, r->x) && q->x >= min(p->x, r->x) && q->y <= max(p->y, r->y) && q->y >= min(p->y, r->y))
+    if (q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) && q.y <= max(p.y, r.y) && q.y >= min(p.y, r.y))
     {
         return true;
     }
@@ -122,7 +122,7 @@ bool onSegment(const CNPointTemplate<T> &p, const CNPointTemplate<T> &q, const C
 template <class T>
 int orientation(const CNPointTemplate<T> &p, const CNPointTemplate<T> &q, const CNPointTemplate<T> &r)
 {
-    int val = (q->y - p->y) * (r->x - q->x) - (q->x - p->x) * (r->y - q->y);
+    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
 
     if (val == 0)
         return 0;             // colinear
@@ -260,7 +260,7 @@ bool isInsidePolygon(const vector<CNPointTemplate<T>> &polygon, const CNPointTem
         return false;
 
     // Create a point for line segment from p to infinite
-    CNPointTemplate<T> extreme = CNPointTemplate<T>(30000, p->y);
+    CNPointTemplate<T> extreme = CNPointTemplate<T>(30000, p.y);
 
     // Count intersections of the above line with sides of polygon
     int count = 0, i = 0;
@@ -309,16 +309,16 @@ bool outsideTriangle(const CNPointTemplate<T> &a, const CNPointTemplate<T> &b, c
     T c2p;
     T p;
 
-    for (int i = 0; i < points->size(); i++)
+    for (int i = 0; i < points.size(); i++)
     {
-        p = points->at(i);
+        p = points.at(i);
         a2p = p - a;
         b2p = p - b;
         c2p = p - c;
 
-        if ((a2p->x * a2b->y - a2p->y * a2b->x) / a2p->normalize()->length() < tolerance &&
-            (b2p->x * b2c->y - b2p->y * b2c->x) / b2p->normalize()->length() < tolerance &&
-            (c2p->x * c2a->y - c2p->y * c2a->x) / c2p->normalize()->length() < tolerance)
+        if ((a2p.x * a2b.y - a2p.y * a2b.x) / a2p.normalize().length() < tolerance &&
+            (b2p.x * b2c.y - b2p.y * b2c.x) / b2p.normalize().length() < tolerance &&
+            (c2p.x * c2a.y - c2p.y * c2a.x) / c2p.normalize().length() < tolerance)
         {
             return false;
         }
