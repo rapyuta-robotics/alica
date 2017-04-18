@@ -252,8 +252,9 @@ inline double distancePointToLineSegment(double px, double py, double lx1, doubl
  * @param p point to check
  * @return True if the point p lies inside the polygon
  */
-template <class T>
-bool isInsidePolygon(const vector<CNPointTemplate<T>> &polygon, const CNPointTemplate<T> &p)
+template <typename T>
+typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::type
+isInsidePolygon(const vector<T> &polygon, const T &p)
 {
     // There must be at least 3 points to build a polygon
     if (polygon.size() < 3)
