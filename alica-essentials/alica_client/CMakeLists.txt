@@ -10,7 +10,7 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp alica_ros_proxy)# msl_actuator_msgs)
+find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp alica_ros_proxy msl_actuator_msgs)
 find_package(Qt5Core REQUIRED)
 get_target_property(Qt5Core_location Qt5::Core LOCATION)
 find_package(Qt5Gui REQUIRED)
@@ -36,7 +36,7 @@ include_directories(${alica_client_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
 catkin_package(
   INCLUDE_DIRS ${alica_client_INCLUDE_DIRECTORIES}
   LIBRARIES ${PROJECT_NAME} AlicaWidget
-  CATKIN_DEPENDS rqt_gui rqt_gui_cpp alica_ros_proxy
+  CATKIN_DEPENDS rqt_gui rqt_gui_cpp alica_ros_proxy msl_actuator_msgs
 )
 catkin_python_setup()
 
