@@ -179,6 +179,12 @@ namespace robot_control
 		this->alicaWidget->handleKickerStatInfo(timeKSIpair.second);
 	}
 
+	void Robot::handleSharedWorldInfo(pair<chrono::system_clock::time_point, msl_sensor_msgs::SharedWorldInfoPtr> timeSWIpair)
+	{
+		this->timeLastMsgReceived = timeSWIpair.first;
+		this->alicaWidget->handleSharedWorldInfo(timeSWIpair.second);
+	}
+
 	void Robot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, int parentPMid)
 	{
 		this->timeLastMsgReceived = timeMsgReceived;

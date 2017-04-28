@@ -10,7 +10,7 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp alica_ros_proxy msl_actuator_msgs)
+find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp alica_ros_proxy msl_actuator_msgs msl_sensor_msgs)
 find_package(Qt5Core REQUIRED)
 get_target_property(Qt5Core_location Qt5::Core LOCATION)
 find_package(Qt5Gui REQUIRED)
@@ -36,7 +36,7 @@ include_directories(${alica_client_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
 catkin_package(
   INCLUDE_DIRS ${alica_client_INCLUDE_DIRECTORIES}
   LIBRARIES ${PROJECT_NAME} AlicaWidget
-  CATKIN_DEPENDS rqt_gui rqt_gui_cpp alica_ros_proxy msl_actuator_msgs
+  CATKIN_DEPENDS rqt_gui rqt_gui_cpp alica_ros_proxy msl_actuator_msgs msl_sensor_msgs
 )
 catkin_python_setup()
 
@@ -63,7 +63,7 @@ QT5_WRAP_UI(alica_client_UIS_H ${alica_UIS})
 add_library(AlicaWidget src/alica/AlicaWidget.cpp  ${alica_client_UIS_H})
 
 target_link_libraries(AlicaWidget ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTWIDGETS_LIBRARY})
-add_dependencies(AlicaWidget msl_actuator_msgs_generate_messages_cpp)
+add_dependencies(AlicaWidget msl_actuator_msgs_generate_messages_cpp msl_sensor_msgs_generate_messages_cpp)
 
 install(FILES plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}

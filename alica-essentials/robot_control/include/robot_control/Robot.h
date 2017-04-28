@@ -15,6 +15,7 @@
 #include <alica_ros_proxy/AlicaEngineInfo.h>
 #include <process_manager/ProcessStats.h>
 #include <msl_actuator_msgs/KickerStatInfo.h>
+#include <msl_sensor_msgs/SharedWorldInfo.h>
 
 namespace Ui {
 	class RobotProcessesWidget;
@@ -55,6 +56,7 @@ namespace robot_control
 		chrono::time_point<chrono::system_clock> timeLastMsgReceived; /**< the last time a message was received for this robot */
 		void handleAlicaInfo(pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr> timeAEIpair);
 		void handleKickerStatInfo(pair<chrono::system_clock::time_point, msl_actuator_msgs::KickerStatInfoPtr> timeKSIpair);
+		void handleSharedWorldInfo(pair<chrono::system_clock::time_point, msl_sensor_msgs::SharedWorldInfoPtr> timeSWIpair);
 		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, int parentPMid);
 
 		// GUI Methods and Members

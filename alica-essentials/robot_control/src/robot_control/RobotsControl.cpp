@@ -5,6 +5,7 @@
 
 #include <SystemConfig.h>
 #include <process_manager/RobotExecutableRegistry.h>
+
 #include <QMenu>
 
 namespace robot_control
@@ -97,6 +98,8 @@ namespace robot_control
 											(RobotsControl*)this);
 		kickerStatInfoSub = rosNode->subscribe("/KickerStatInfo", 10, &RobotsControl::receiveKickerStatInfo,
 												(RobotsControl*)this);
+		sharedWorldInfoSub = rosNode->subscribe("/WorldModel/SharedWorldInfo", 10,
+												&RobotsControl::receiveSharedWorldInfo, (RobotsControl*)this);
 
 		// Initialise the GUI refresh timer
 		this->guiUpdateTimer = new QTimer();
@@ -184,6 +187,12 @@ namespace robot_control
 		this->kickerStatInfoMsgQueue.emplace(chrono::system_clock::now(), kickerStatInfo);
 	}
 
+	void RobotsControl::receiveSharedWorldInfo(msl_sensor_msgs::SharedWorldInfoPtr sharedWorldInfo)
+	{
+		lock_guard<mutex> lck(sharedWorldInfoMsgQueueMutex);
+		this->sharedWorldInfoMsgQueue.emplace(chrono::system_clock::now(), sharedWorldInfo);
+	}
+
 	/**
 	 * Processes all queued messages from the processStatMsgsQueue and the alicaInfoMsgQueue.
 	 */
@@ -222,11 +231,25 @@ namespace robot_control
 			lock_guard<mutex> lck(kickerStatInfoMsgQueueMutex);
 			while (!this->kickerStatInfoMsgQueue.empty())
 			{
-				// unqueue the ROS alica info message
+				// unqueue the ROS kicker stat info message
 				auto timeKickerStatInfoPair = kickerStatInfoMsgQueue.front();
 				kickerStatInfoMsgQueue.pop();
 
-				this->controlledRobotsMap[timeKickerStatInfoPair.second->senderID]->handleKickerStatInfo(timeKickerStatInfoPair);
+				this->controlledRobotsMap[timeKickerStatInfoPair.second->senderID]->handleKickerStatInfo(
+						timeKickerStatInfoPair);
+			}
+		}
+
+		{
+			lock_guard<mutex> lck(sharedWorldInfoMsgQueueMutex);
+			while (!this->sharedWorldInfoMsgQueue.empty())
+			{
+				// unqueue the ROS shared world info message
+				auto timeSharedWorldInfoPair = sharedWorldInfoMsgQueue.front();
+				sharedWorldInfoMsgQueue.pop();
+
+				this->controlledRobotsMap[timeSharedWorldInfoPair.second->senderID]->handleSharedWorldInfo(
+						timeSharedWorldInfoPair);
 			}
 		}
 
