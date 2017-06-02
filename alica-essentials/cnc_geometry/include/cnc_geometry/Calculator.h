@@ -261,7 +261,7 @@ isInsidePolygon(const vector<T> &polygon, const T &p)
         return false;
 
     // Create a point for line segment from p to infinite
-    CNPointTemplate<T> extreme = CNPointTemplate<T>(30000, p.y);
+    T extreme = T(30000, p.y);
 
     // Count intersections of the above line with sides of polygon
     int count = 0, i = 0;
