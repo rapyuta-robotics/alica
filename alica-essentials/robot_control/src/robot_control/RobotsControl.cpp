@@ -41,7 +41,7 @@ namespace robot_control
 			this->pmRegistry->addExecutable(processSectionName);
 		}
 
-		// Read bundles from Processes.conf
+		// Read bundles from ProcessManaging.conf
 		auto bundlesSections = (*this->sc)["ProcessManaging"]->getSections("Processes.Bundles", NULL);
 		for (auto bundleName : (*bundlesSections))
 		{
@@ -283,6 +283,8 @@ namespace robot_control
 	{
 		this->processStateSub.shutdown();
 		this->alicaInfoSub.shutdown();
+		this->kickerStatInfoSub.shutdown();
+		this->sharedWorldInfoSub.shutdown();
 	}
 
 	void RobotsControl::saveSettings(qt_gui_cpp::Settings& plugin_settings,
