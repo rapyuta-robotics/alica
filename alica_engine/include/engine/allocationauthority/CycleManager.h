@@ -11,14 +11,15 @@
 //#define CM_DEBUG
 
 
-#include <vector>
-#include <thread>
-#include <mutex>
 
 
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/IAlicaClock.h"
+#include "engine/IRobotID.h"
 
+#include <vector>
+#include <thread>
+#include <mutex>
 using namespace std;
 namespace supplementary
 {
@@ -61,7 +62,7 @@ namespace alica
 		vector<AllocationDifference*> allocationHistory;
 		PlanRepository* pr;
 		int newestAllocationDifference;
-		int myID;
+		alica::IRobotID myID;
 		enum CycleState
 		{
 			observing, overridden, overriding

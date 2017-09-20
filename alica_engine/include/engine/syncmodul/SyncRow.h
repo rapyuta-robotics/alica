@@ -8,6 +8,7 @@
 #ifndef SYNCROW_H_
 #define SYNCROW_H_
 
+#include "engine/IRobotID.h"
 
 #include <vector>
 
@@ -23,8 +24,8 @@ namespace alica
 		SyncRow();
 		SyncRow(SyncData* sd);
 		virtual ~SyncRow();
-		vector<int>& getReceivedBy();
-		void setReceivedBy(vector<int> recievedBy);
+		vector<alica::IRobotID>& getReceivedBy();
+		void setReceivedBy(vector<alica::IRobotID> recievedBy);
 		SyncData* getSyncData();
 		void setSyncData(SyncData* syncData);
 		void toString();
@@ -33,7 +34,7 @@ namespace alica
 	protected:
 		SyncData* syncData;
 		//this vector always has to be sorted
-		vector<int> receivedBy;
+		vector<alica::IRobotID> receivedBy;
 	};
 
 } /* namespace alica */

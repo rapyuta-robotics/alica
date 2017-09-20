@@ -26,7 +26,6 @@
 #include "engine/parser/PlanParser.h"
 #include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/planselector/PlanSelector.h"
-#include "engine/roleassignment/RoleAssignment.h"
 #include "engine/staticroleassignment/StaticRoleAssignment.h"
 #include "engine/syncmodul/SyncModul.h"
 #include "engine/teamobserver/TeamObserver.h"
@@ -128,7 +127,7 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
         }
         else
         {
-            this->roleAssignment = new RoleAssignment(this);
+        	this->abort("Unknown RoleAssignment Type!");
         }
         // the communicator is expected to be set before init() is called
         this->roleAssignment->setCommunication(communicator);

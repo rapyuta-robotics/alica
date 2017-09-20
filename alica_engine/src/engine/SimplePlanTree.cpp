@@ -74,12 +74,12 @@ namespace alica
 		this->children = children;
 	}
 
-	int SimplePlanTree::getRobotId()
+	alica::IRobotID SimplePlanTree::getRobotId()
 	{
 		return robotId;
 	}
 
-	void SimplePlanTree::setRobotId(int robotId)
+	void SimplePlanTree::setRobotId(alica::IRobotID robotId)
 	{
 		this->robotId = robotId;
 	}

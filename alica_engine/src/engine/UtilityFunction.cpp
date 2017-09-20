@@ -335,9 +335,9 @@ namespace alica
 		//c# != null
 		// SUM UP HEURISTIC PART OF PRIORITY UTILITY
 
-		if (ass->getUnassignedRobots().size() != 0) // == null, when it is a normal assignment
+		if (ass->getUnassignedRobotIds().size() != 0) // == null, when it is a normal assignment
 		{
-			for (auto robotID : ass->getUnassignedRobots())
+			for (auto robotID : ass->getUnassignedRobotIds())
 			{
 
 				this->priResult.setMax(
@@ -442,15 +442,15 @@ namespace alica
 			//C# newRobots != null
 			if (newRobots->size() != 0)
 			{
-				for (int oldRobot : (*oldRobots))
+				for (auto& oldRobot : (*oldRobots))
 				{
 					if (find(newRobots->begin(), newRobots->end(), oldRobot) != newRobots->end())
 					{
 						simUI.setMin(simUI.getMin() + 1);
 					}
 					else if (ep->getMaxCardinality() > newRobots->size()
-							&& find(newAss->getUnassignedRobots().begin(), newAss->getUnassignedRobots().end(),
-									oldRobot) != newAss->getUnassignedRobots().end())
+							&& find(newAss->getUnassignedRobotIds().begin(), newAss->getUnassignedRobotIds().end(),
+									oldRobot) != newAss->getUnassignedRobotIds().end())
 					{
 						simUI.setMax(simUI.getMax() + 1);
 					}

@@ -5,7 +5,8 @@
  *      Author: Philipp
  */
 
-#include <engine/constraintmodul/ProblemPart.h>
+#include "engine/constraintmodul/ProblemPart.h"
+
 #include "engine/RunningPlan.h"
 #include "engine/model/Condition.h"
 #include "engine/model/Quantifier.h"
@@ -17,15 +18,15 @@ namespace alica
 	{
 		condition = con;
 		domainVariables = make_shared<vector<list<vector<Variable*>> >>();
-		agentsInScope = make_shared<vector<shared_ptr<vector<int>>>>();
+		agentsInScope = make_shared<vector<shared_ptr<vector<alica::IRobotID>>>>();
 		for (Quantifier* quantifier : condition->getQuantifiers())
 		{
-			shared_ptr<vector<int>> robots;
+			shared_ptr<vector<alica::IRobotID>> robots;
 			domainVariables->push_back(*quantifier->getDomainVariables(rp, robots));
 			if (robots) {
 				agentsInScope->push_back(robots);
 			} else {
-				agentsInScope->push_back(make_shared<vector<int>>());
+				agentsInScope->push_back(make_shared<vector<alica::IRobotID>>());
 			}
 		}
 		runningplan = rp;
@@ -74,7 +75,7 @@ namespace alica
 		return runningplan;
 	}
 
-	shared_ptr<vector<shared_ptr<vector<int>>>> ProblemPart::getAgentsInScope()
+	shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> ProblemPart::getAgentsInScope()
 	{
 		return agentsInScope;
 	}

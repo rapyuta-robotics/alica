@@ -21,23 +21,23 @@ namespace alica
 	{
 		this->numEps = size;
 		this->entryPoints = new EntryPoint*[size];
-		this->robots = new shared_ptr<vector<int>> [size];
+		this->robotIds = new shared_ptr<vector<alica::IRobotID>> [size];
 		for (short i = 0; i < size; i++)
 		{
-			this->robots[i] = std::make_shared<vector<int>>();
+			this->robotIds[i] = std::make_shared<vector<alica::IRobotID>>();
 		}
 	}
 
 	AssignmentCollection::~AssignmentCollection()
 	{
 		delete[] this->entryPoints;
-		delete[] this->robots;
+		delete[] this->robotIds;
 	}
 
-	bool AssignmentCollection::setRobots(short index, shared_ptr<vector<int>> robots)
+	bool AssignmentCollection::setRobots(short index, shared_ptr<vector<alica::IRobotID>> robotIds)
 	{
 		if (index < this->numEps) {
-			this->robots[index] = robots;
+			this->robotIds[index] = robotIds;
 			return true;
 		}
 		else
@@ -51,13 +51,13 @@ namespace alica
 	 * @param ep An EntryPoint
 	 * @return shared_ptr<vector<int>>
 	 */
-	shared_ptr<vector<int>> AssignmentCollection::getRobotsByEp(EntryPoint* ep)
+	shared_ptr<vector<alica::IRobotID>> AssignmentCollection::getRobotsByEp(EntryPoint* ep)
 	{
 		for (int i = 0; i < this->numEps; i++)
 		{
 			if (this->entryPoints[i] == ep)
 			{
-				return this->robots[i];
+				return this->robotIds[i];
 			}
 		}
 		return nullptr;
@@ -68,23 +68,23 @@ namespace alica
 	 * @param id A long
 	 * @return vector<int>*
 	 */
-	shared_ptr<vector<int>> AssignmentCollection::getRobotsById(long id)
+	shared_ptr<vector<alica::IRobotID>> AssignmentCollection::getRobotsByEpId(long id)
 	{
 		for (int i = 0; i < this->numEps; i++)
 		{
 			if (this->entryPoints[i]->getId() == id)
 			{
-				return this->robots[i];
+				return this->robotIds[i];
 			}
 		}
 		return nullptr;
 	}
 
-	shared_ptr<vector<int>> AssignmentCollection::getRobots(short index)
+	shared_ptr<vector<alica::IRobotID>> AssignmentCollection::getRobots(short index)
 	{
 		if (index < this->numEps)
 		{
-			return this->robots[index];
+			return this->robotIds[index];
 		}
 		else
 		{
@@ -131,7 +131,7 @@ namespace alica
 	{
 		for (int i = 0; i < this->numEps; i++)
 		{
-			this->robots[i]->clear();
+			this->robotIds[i]->clear();
 		}
 	}
 
@@ -143,9 +143,9 @@ namespace alica
 			if (this->entryPoints[i] != nullptr)
 			{
 				ss << this->entryPoints[i]->getId() << " : ";
-				for (short robot : *this->robots[i])
+				for (alica::IRobotID& robotId : *this->robotIds[i])
 				{
-					ss << robot << ", ";
+					ss << robotId << ", ";
 				}
 				ss << endl;
 			}

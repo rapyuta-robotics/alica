@@ -8,6 +8,9 @@
 #ifndef ASSIGNMENTCOLLECTION_H_
 #define ASSIGNMENTCOLLECTION_H_
 
+
+#include "engine/IRobotID.h"
+
 #include <vector>
 #include <string>
 #include <sstream>
@@ -35,10 +38,10 @@ namespace alica
 		void setSize(short size);
 		EntryPoint* getEp(short index);
 		bool setEp(short index, EntryPoint* ep);
-		shared_ptr<vector<int>> getRobots(short index);
-		shared_ptr<vector<int>> getRobotsByEp(EntryPoint* ep);
-		shared_ptr<vector<int>> getRobotsById(long id);
-		bool setRobots(short index, shared_ptr<vector<int>> robots);
+		shared_ptr<vector<alica::IRobotID>> getRobots(short index);
+		shared_ptr<vector<alica::IRobotID>> getRobotsByEp(EntryPoint* ep);
+		shared_ptr<vector<alica::IRobotID>> getRobotsByEpId(long id);
+		bool setRobots(short index, shared_ptr<vector<alica::IRobotID>> robotIds);
 		void clear();
 		string toString();
 		void sortEps();
@@ -62,7 +65,7 @@ namespace alica
 		 * The robots mapped to EntryPoints in this AssignmentCollection.
 		 */
 		//shared_ptr<vector<shared_ptr<vector<int> > > > robots;
-		shared_ptr<vector<int>> * robots;
+		shared_ptr<vector<alica::IRobotID>> * robotIds;
 	};
 
 } /* namespace alica */

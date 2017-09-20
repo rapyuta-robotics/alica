@@ -23,18 +23,18 @@ namespace alica
 		this->entryPoint = entryPoint;
 	}
 
-	int EntryPointRobotPair::getRobot()
+	alica::IRobotID EntryPointRobotPair::getRobot()
 	{
 		return robot;
 	}
 
-	EntryPointRobotPair::EntryPointRobotPair(EntryPoint* ep, int r)
+	EntryPointRobotPair::EntryPointRobotPair(EntryPoint* ep, alica::IRobotID r)
 	{
 		this->entryPoint = ep;
 		this->robot = r;
 	}
 
-	void EntryPointRobotPair::setRobot(int robot)
+	void EntryPointRobotPair::setRobot(alica::IRobotID robot)
 	{
 		this->robot = robot;
 	}

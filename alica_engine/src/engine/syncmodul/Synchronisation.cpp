@@ -25,7 +25,6 @@ namespace alica
 		this->ae = ae;
 		this->syncModul = nullptr;
 		this->syncTransition = nullptr;
-		this->myID = -1;
 		this->syncStartTime = 0;
 		this->readyForSync = false;
 		this->lastTick = 0;
@@ -35,7 +34,7 @@ namespace alica
 		this->lastTalkData = nullptr;
 	}
 
-	Synchronisation::Synchronisation(AlicaEngine* ae, int myID, SyncTransition* st, SyncModul* sm)
+	Synchronisation::Synchronisation(AlicaEngine* ae, alica::IRobotID myID, SyncTransition* st, SyncModul* sm)
 	{
 		this->ae = ae;
 		this->syncTransition = st;
@@ -357,7 +356,7 @@ namespace alica
 	bool Synchronisation::allSyncReady()
 	{
 		//test if all robots who acknowledged myRow have sent a SyncReady
-		for (int robotID : this->myRow->getReceivedBy())
+		for (auto& robotID : this->myRow->getReceivedBy())
 		{
 			if (robotID != myID) //we do not necessarily need an ack from ourselves
 			{
@@ -391,13 +390,13 @@ namespace alica
 
 			for (SyncRow* row : this->syncMatrix)
 			{
-				string robots = "";
-				for (int robotID : row->getReceivedBy())
+				cout << "Row: " << row->getSyncData()->robotID << " " << to_string(row->getSyncData()->transitionID) + " "
+								+ to_string(row->getSyncData()->conditionHolds) << " " << row->getSyncData()->ack << " RecvBy: ";
+				for (auto& robotID : row->getReceivedBy())
 				{
-					robots += to_string(robotID) + string(", ");
+					cout << robotID << ", ";
 				}
-				cout << "Row: " << to_string(row->getSyncData()->robotID) << " " << to_string(row->getSyncData()->transitionID) + " "
-								+ to_string(row->getSyncData()->conditionHolds) << " " << row->getSyncData()->ack << " RecvBy: " << robots << endl;
+				cout << endl;
 			}
 			cout << "ReceivedSyncreadys: ";
 			for (shared_ptr<SyncReady> sr : this->receivedSyncReadys)

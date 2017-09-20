@@ -8,13 +8,13 @@ using namespace std;
 
 namespace alica
 {
-	typedef tuple<int, list<long>, list<long>> stdPlanTreeInfo;
+	typedef tuple<alica::IRobotID, list<long>, list<long>> stdPlanTreeInfo;
 	struct PlanTreeInfo
 	{
 		PlanTreeInfo()
 		{
 		}
-		int senderID;
+		alica::IRobotID senderID;
 		list<long> stateIDs;
 		list<long> succeededEPs;
 

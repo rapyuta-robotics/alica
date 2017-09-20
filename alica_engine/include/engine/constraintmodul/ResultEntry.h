@@ -8,6 +8,8 @@
 #ifndef RESULTENTRY_H_
 #define RESULTENTRY_H_
 
+#include "engine/IRobotID.h"
+
 #include <list>
 #include <map>
 #include <vector>
@@ -27,10 +29,10 @@ namespace alica
 	class ResultEntry
 	{
 	public:
-		ResultEntry(int robotId, AlicaEngine* ae);
+		ResultEntry(alica::IRobotID robotId, AlicaEngine* ae);
 		virtual ~ResultEntry();
 
-		int getId();
+		alica::IRobotID getId();
 		void addValue(long vid, shared_ptr<vector<uint8_t>> result);
 		void clear();
 		shared_ptr<vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
@@ -53,7 +55,7 @@ namespace alica
 		};
 
 	protected:
-		int id;
+		alica::IRobotID id;
 		AlicaEngine* ae;
 		map<long, shared_ptr<VarValue>> values;
 		mutex valueLock;

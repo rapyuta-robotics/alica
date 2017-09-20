@@ -8,6 +8,7 @@
 #ifndef SYNCTALK_H_
 #define SYNCTALK_H_
 
+#include "engine/IRobotID.h"
 #include <engine/containers/SyncData.h>
 
 #include <vector>
@@ -20,7 +21,7 @@ using namespace std;
 namespace alica
 {
 
-	typedef tuple<long, vector<stdSyncData>> stdSyncTalk;
+	typedef tuple<alica::IRobotID, vector<stdSyncData>> stdSyncTalk;
 	struct SyncTalk
 	{
 		SyncTalk()
@@ -34,7 +35,7 @@ namespace alica
 			}*/
 		}
 
-		long senderID;
+		alica::IRobotID senderID;
 		vector<SyncData*> syncData;
 
 		SyncTalk(stdSyncTalk &s)

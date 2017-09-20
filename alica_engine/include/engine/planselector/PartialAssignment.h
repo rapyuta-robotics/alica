@@ -10,6 +10,9 @@
 
 //#define SUCDEBUG
 
+#include "engine/IRobotID.h"
+#include "engine/IAssignment.h"
+#include "engine/collections/AssignmentCollection.h"
 
 #include <vector>
 #include <list>
@@ -19,9 +22,6 @@
 #include <algorithm>
 #include <memory>
 #include <math.h>
-
-#include "engine/IAssignment.h"
-#include "engine/collections/AssignmentCollection.h"
 
 using namespace std;
 namespace alica
@@ -43,17 +43,17 @@ namespace alica
 		virtual ~PartialAssignment();
 		void clear();
 		static void reset(PartialAssignmentPool* pap); // has to be called before calculating the task assignment
-		static PartialAssignment* getNew(PartialAssignmentPool* pap, shared_ptr<vector<int> > robots, Plan* plan, shared_ptr<SuccessCollection> sucCol);
+		static PartialAssignment* getNew(PartialAssignmentPool* pap, shared_ptr<vector<alica::IRobotID> > robotIds, Plan* plan, shared_ptr<SuccessCollection> sucCol);
 		static PartialAssignment* getNew(PartialAssignmentPool* pap, PartialAssignment* oldPA);
 		short getEntryPointCount();
 		int totalRobotCount();
-		shared_ptr<vector<int> > getRobotsWorking(EntryPoint* ep);
-		shared_ptr<vector<int> > getRobotsWorking(long epid);
-		shared_ptr<list<int> > getRobotsWorkingAndFinished(EntryPoint* ep);
-		shared_ptr<list<int> > getRobotsWorkingAndFinished(long epid);
-		shared_ptr<list<int> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
-		bool addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, int robot);
-		bool assignRobot(int robot, int index);
+		shared_ptr<vector<alica::IRobotID> > getRobotsWorking(EntryPoint* ep);
+		shared_ptr<vector<alica::IRobotID> > getRobotsWorking(long epid);
+		shared_ptr<list<alica::IRobotID> > getRobotsWorkingAndFinished(EntryPoint* ep);
+		shared_ptr<list<alica::IRobotID> > getRobotsWorkingAndFinished(long epid);
+		shared_ptr<list<alica::IRobotID> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
+		bool addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, alica::IRobotID robot);
+		bool assignRobot(alica::IRobotID robotId, int index);
 		shared_ptr<list<PartialAssignment*> > expand();
 		bool isValid();
 		bool isGoal();
@@ -70,9 +70,8 @@ namespace alica
 		bool isHashCalculated();
 		void setHashCalculated(bool hashCalculated);
 		void setMax(double max);
-		shared_ptr<vector<int>> getRobots();
+		shared_ptr<vector<alica::IRobotID>> getRobotIds();
 		int hash = 0;
-
 
 	private:
 		const int INFINIT = numeric_limits<int>::max();
@@ -84,7 +83,7 @@ namespace alica
 		// UtilityFunction
 		shared_ptr<UtilityFunction> utilFunc;
 		AssignmentCollection* epRobotsMapping;
-		shared_ptr<vector<int>> robots;
+		shared_ptr<vector<alica::IRobotID>> robotIds;
 		vector<shared_ptr<DynCardinality>> dynCardinalities;
 		Plan* plan;
 		const long PRECISION = 1073741824;
@@ -113,14 +112,14 @@ namespace std
         		return pa.hash;
         	}
         	int basei = pa.getEpRobotsMapping()->getSize() + 1;
-        	shared_ptr<vector<int>> robots;
+        	shared_ptr<vector<alica::IRobotID>> robots;
         	for(int i = 0; i < pa.getEpRobotsMapping()->getSize(); ++i)
         	{
         		robots = pa.getEpRobotsMapping()->getRobots(i);
-        		for(int robot : *robots)
+        		for(alica::IRobotID robot : *robots)
         		{
-        			for (int idx = 0; idx < pa.getRobots()->size(); idx++) {
-        				if (pa.getRobots()->at(idx) == robot)
+        			for (int idx = 0; idx < pa.getRobotIds()->size(); idx++) {
+        				if (pa.getRobotIds()->at(idx) == robot)
         				{
         					pa.setHash(pa.hash + (i + 1) * pow(basei, idx));
         				}

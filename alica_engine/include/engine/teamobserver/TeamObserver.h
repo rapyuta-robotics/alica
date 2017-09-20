@@ -10,6 +10,10 @@
 
 //#define TO_DEBUG
 
+#include "engine/IRobotID.h"
+#include "engine/ITeamObserver.h"
+#include "engine/IAlicaClock.h"
+#include "engine/IRoleAssignment.h"
 
 #include <unordered_set>
 #include <string>
@@ -21,9 +25,6 @@
 #include <ctime>
 #include <map>
 
-#include "engine/ITeamObserver.h"
-#include "engine/IAlicaClock.h"
-#include "engine/IRoleAssignment.h"
 
 using namespace std;
 namespace alica
@@ -46,25 +47,25 @@ namespace alica
 		TeamObserver(AlicaEngine* ae);
 		virtual ~TeamObserver();
 		//event OnTeamChange OnTeamChangeEvent;
-		void messageRecievedFrom(int rid);
-		virtual int getOwnId();
-		RobotEngineData* getRobotById(int id);
+		void messageRecievedFrom(alica::IRobotID rid);
+		virtual alica::IRobotID getOwnId();
+		RobotEngineData* getRobotById(alica::IRobotID id);
 		unique_ptr<list<RobotEngineData*> > getAvailableRobots();
 		unique_ptr<list<shared_ptr<RobotProperties>> > getAvailableRobotProperties();
-		unique_ptr<list<int> > getAvailableRobotIds();
+		unique_ptr<list<alica::IRobotID> > getAvailableRobotIds();
 		shared_ptr<RobotProperties> getOwnRobotProperties();
 		RobotEngineData* getOwnEngineData();
 		int teamSize();
-		unique_ptr<map<int, shared_ptr<SimplePlanTree> > > getTeamPlanTrees();
+		unique_ptr<map<alica::IRobotID, shared_ptr<SimplePlanTree> > > getTeamPlanTrees();
 		void init();
 		void tick(shared_ptr<RunningPlan> root);
 		void doBroadCast(list<long>& msg);
 		int successesInPlan(Plan* plan);
 		shared_ptr<SuccessCollection> getSuccessCollection(Plan* plan);
 		void updateSuccessCollection(Plan* p, shared_ptr<SuccessCollection> sc);
-		void ignoreRobot(int rid);
-		void unIgnoreRobot(int rid);
-		bool isRobotIgnored(int rid);
+		void ignoreRobot(alica::IRobotID rid);
+		void unIgnoreRobot(alica::IRobotID rid);
+		bool isRobotIgnored(alica::IRobotID rid);
 		void notifyRobotLeftPlan(AbstractPlan* plan);
 		virtual void handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming);
 		void close();
@@ -76,15 +77,15 @@ namespace alica
 		mutex simplePlanTreeMutex;
 		mutex successMark;
 		list<RobotEngineData*> allOtherRobots;
-		int myId;
+		alica::IRobotID myId;
 		RobotEngineData* me;
-		shared_ptr<map<int, shared_ptr<SimplePlanTree> > > simplePlanTrees;
+		shared_ptr<map<alica::IRobotID, shared_ptr<SimplePlanTree> > > simplePlanTrees;
 		AlicaTime teamTimeOut;
 		Logger* log;
-		unordered_set<int> ignoredRobots;
+		unordered_set<alica::IRobotID> ignoredRobots;
 		AlicaEngine* ae;
 		void cleanOwnSuccessMarks(shared_ptr<RunningPlan> root);
-		shared_ptr<SimplePlanTree> sptFromMessage(int robotId, list<long> ids);
+		shared_ptr<SimplePlanTree> sptFromMessage(alica::IRobotID robotId, list<long> ids);
 
 	};
 

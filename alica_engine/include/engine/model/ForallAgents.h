@@ -8,12 +8,14 @@
 #ifndef FORALLAGENTS_H_
 #define FORALLAGENTS_H_
 
+#include "Quantifier.h"
+#include "engine/IRobotID.h"
+
 #include <list>
 #include <vector>
 #include <memory>
 
 
-#include "Quantifier.h"
 
 namespace alica
 {
@@ -31,7 +33,7 @@ namespace alica
 	public:
 		ForallAgents(AlicaEngine* ae, long id = 0);
 		virtual ~ForallAgents();
-		shared_ptr<list<vector<Variable* > > > getDomainVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<int> >& agentsInScope);
+		shared_ptr<list<vector<Variable* > > > getDomainVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<alica::IRobotID> >& agentsInScope);
 
 	protected:
 		AlicaEngine* ae;

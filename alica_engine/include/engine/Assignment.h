@@ -9,12 +9,12 @@
 #define ASSIGNMENT_H_
 
 
-
-#include <vector>
-#include <algorithm>
-#include <memory>
-#include <sstream>
 #include "IAssignment.h"
+#include "IRobotID.h"
+#include <vector>
+#include <memory>
+#include <algorithm>
+#include <sstream>
 
 using namespace std;
 namespace alica
@@ -42,33 +42,33 @@ namespace alica
 		Plan* getPlan();
 		void setPlan(Plan* plan);
 		StateCollection* getRobotStateMapping();
-		shared_ptr<vector<int> > getAllRobotsSorted();
+		shared_ptr<vector<alica::IRobotID> > getAllRobotsSorted();
 		AssignmentCollection* getEpRobotsMapping();
-		shared_ptr<vector<int> > getRobotsWorking(long epid);
-		shared_ptr<vector<int> > getRobotsWorkingSorted(EntryPoint* ep);
-		shared_ptr<vector<int> > getRobotsWorking(EntryPoint* ep);
+		shared_ptr<vector<alica::IRobotID> > getRobotsWorking(long epid);
+		shared_ptr<vector<alica::IRobotID> > getRobotsWorkingSorted(EntryPoint* ep);
+		shared_ptr<vector<alica::IRobotID> > getRobotsWorking(EntryPoint* ep);
 		int totalRobotCount();
 		//shared_ptr<vector<EntryPoint*> > getEntryPoints();
 		short getEntryPointCount();
-		shared_ptr<list<int> > getRobotsWorkingAndFinished(EntryPoint* ep);
-		shared_ptr<list<int> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
-		shared_ptr<list<int> > getRobotsWorkingAndFinished(long epid);
+		shared_ptr<list<alica::IRobotID> > getRobotsWorkingAndFinished(EntryPoint* ep);
+		shared_ptr<list<alica::IRobotID> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
+		shared_ptr<list<alica::IRobotID> > getRobotsWorkingAndFinished(long epid);
 		shared_ptr<SuccessCollection> getEpSuccessMapping();
-		void setAllToInitialState(unique_ptr<list<int> > robots, EntryPoint* defep);
-		bool removeRobot(int robotId);
-		void addRobot(int id, EntryPoint* e, State* s);
+		void setAllToInitialState(unique_ptr<list<alica::IRobotID> > robotIds, EntryPoint* defep);
+		bool removeRobot(alica::IRobotID robotId);
+		void addRobot(alica::IRobotID robotId, EntryPoint* e, State* s);
 		bool isValid();
 		bool isSuccessfull();
 		bool isEqual(Assignment* otherAssignment);
 		bool isEntryPointNonEmpty(EntryPoint* ep);
-		bool updateRobot(int robot, EntryPoint* ep, State* s);
-		bool updateRobot(int robot, EntryPoint* ep);
-		bool removeRobot(int robot, EntryPoint* ep);
+		bool updateRobot(alica::IRobotID robotId, EntryPoint* ep, State* s);
+		bool updateRobot(alica::IRobotID robotId, EntryPoint* ep);
+		bool removeRobot(alica::IRobotID robotId, EntryPoint* ep);
 		string assignmentCollectionToString();
-		void addRobot(int id, EntryPoint* e);
+		void addRobot(alica::IRobotID robotId, EntryPoint* e);
 		void moveRobots(State* from, State* to);
-		EntryPoint* getEntryPointOfRobot(int robot);
-		shared_ptr<vector<int> >  getAllRobots();
+		EntryPoint* getEntryPointOfRobot(alica::IRobotID robotId);
+		shared_ptr<vector<alica::IRobotID> >  getAllRobots();
 		void clear();
 		string toString();
 		string toHackString();

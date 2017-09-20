@@ -8,26 +8,28 @@
 #ifndef ALLOCATIONAUTHORITYINFO_H_
 #define ALLOCATIONAUTHORITYINFO_H_
 
+#include "engine/IRobotID.h"
+#include "EntryPointRobots.h"
+
 #include <vector>
 #include <tuple>
-#include "EntryPointRobots.h"
 
 using namespace std;
 
 namespace alica
 {
-	typedef tuple<int, long, long, long, int, vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
+	typedef tuple<alica::IRobotID, long, long, long, alica::IRobotID, vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
 	struct AllocationAuthorityInfo
 	{
 		AllocationAuthorityInfo()
 		{
 		}
 
-		int senderID;
+		alica::IRobotID senderID;
 		long planId;
 		long parentState;
 		long planType;
-		int authority;
+		alica::IRobotID authority;
 		vector<EntryPointRobots> entryPointRobots;
 
 		AllocationAuthorityInfo(stdAllocationAuthorityInfo &s)

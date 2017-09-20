@@ -5,8 +5,9 @@
  *      Author: Stefan Jakob
  */
 
-#include <engine/constraintmodul/ConditionStore.h>
 #include "engine/RunningPlan.h"
+
+#include "engine/constraintmodul/ConditionStore.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/AlicaEngine.h"
 #include "engine/ITeamObserver.h"
@@ -64,7 +65,7 @@ namespace alica
 		this->failHandlingNeeded = false;
 		this->constraintStore = std::make_shared<ConditionStore>();
 		this->cycleManagement = std::make_shared<CycleManager>(ae, this);
-		this->robotsAvail = unique_ptr<list<int>>(new list<int>);
+		this->robotsAvail = unique_ptr<list<alica::IRobotID>>(new list<alica::IRobotID>);
 	}
 
 	RunningPlan::~RunningPlan()
@@ -426,7 +427,7 @@ namespace alica
 	/**
 	 * Sets the set of robots currently participating in this plan.
 	 */
-	void RunningPlan::setRobotsAvail(unique_ptr<list<int> > robots)
+	void RunningPlan::setRobotsAvail(unique_ptr<list<alica::IRobotID> > robots)
 	{
 		this->robotsAvail->clear();
 		this->robotsAvail = move(robots);
@@ -629,7 +630,7 @@ namespace alica
 
 	}
 
-	void RunningPlan::setRobotAvail(int robot)
+	void RunningPlan::setRobotAvail(alica::IRobotID robot)
 	{
 		auto iter = find(this->robotsAvail->begin(), this->robotsAvail->end(), robot);
 		if (iter != this->robotsAvail->end())
@@ -639,7 +640,7 @@ namespace alica
 		this->robotsAvail->push_back(robot);
 	}
 
-	void RunningPlan::setRobotUnAvail(int robot)
+	void RunningPlan::setRobotUnAvail(alica::IRobotID robot)
 	{
 		auto iter = find(this->robotsAvail->begin(), this->robotsAvail->end(), robot);
 		if (iter != this->robotsAvail->end())
@@ -763,7 +764,7 @@ namespace alica
 	 * Removes any robot not in robots
 	 * @param robots The set of robots that can participate in this running plan.
 	 */
-	void RunningPlan::limitToRobots(unordered_set<int> robots)
+	void RunningPlan::limitToRobots(unordered_set<alica::IRobotID> robots)
 	{
 		if (this->isBehaviour())
 		{
@@ -775,7 +776,7 @@ namespace alica
 		}
 		bool recurse = false;
 		auto curRobots = this->assignment->getAllRobots();
-		for (int r : (*curRobots))
+		for (auto& r : (*curRobots))
 		{
 			if (find(curRobots->begin(), curRobots->end(), r) == curRobots->end())
 			{
@@ -811,8 +812,8 @@ namespace alica
 		this->constraintStore->addCondition(this->plan->getRuntimeCondition());
 	}
 
-	bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<int> availableAgents,
-												list<int> noUpdates, AlicaTime now)
+	bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<alica::IRobotID> availableAgents,
+												list<alica::IRobotID> noUpdates, AlicaTime now)
 	{
 		if (this->isBehaviour())
 		{
@@ -879,7 +880,7 @@ namespace alica
 			}
 		}
 
-		list<int> rem;
+		list<alica::IRobotID> rem;
 		if (!keepTask)
 		{ //remove any robot no longer available in the spts (auth flag obey here, as robot might be unavailable)
 		  //EntryPoint[] eps = this.Assignment.GetEntryPoints();
@@ -889,7 +890,7 @@ namespace alica
 				ep = this->getAssignment()->getEpRobotsMapping()->getEp(i);
 				rem.clear();
 				auto robs = this->getAssignment()->getRobotsWorking(ep);
-				for (int rob : (*robs))
+				for (auto& rob : (*robs))
 				{
 					if (rob == ownId)
 						continue;
@@ -916,7 +917,7 @@ namespace alica
 						ret = true;
 					}
 				}
-				for (int rob : rem)
+				for (auto& rob : rem)
 				{
 					this->getAssignment()->removeRobot(rob, ep);
 				}
@@ -932,7 +933,7 @@ namespace alica
 				ep = this->getAssignment()->getEpRobotsMapping()->getEp(i);
 				rem.clear();
 				auto robs = this->getAssignment()->getRobotsWorking(ep);
-				for (int rob : (*robs))
+				for (auto& rob : (*robs))
 				{
 					//if (rob==ownId) continue;
 					if (find(availableAgents.begin(), availableAgents.end(), rob) == availableAgents.end())
@@ -945,7 +946,7 @@ namespace alica
 					}
 				}
 
-				for (int rob : rem)
+				for (auto& rob : rem)
 				{
 					this->getAssignment()->removeRobot(rob, ep);
 				}
@@ -1066,7 +1067,7 @@ namespace alica
 				<< (this->status == PlanStatus::Running ? "RUNNING" :
 						(this->status == PlanStatus::Success ? "SUCCESS" : "FAILED")) << endl;
 		ss << "AvailRobots: ";
-		for (int r : (*this->robotsAvail))
+		for (auto& r : (*this->robotsAvail))
 		{
 			ss << " " << r;
 		}
@@ -1115,7 +1116,7 @@ namespace alica
 		return false;
 	}
 
-	int RunningPlan::getOwnID()
+	alica::IRobotID RunningPlan::getOwnID()
 	{
 		return this->ownId;
 	}

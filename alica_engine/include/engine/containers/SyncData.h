@@ -14,7 +14,7 @@ using namespace std;
 
 namespace alica
 {
-	typedef tuple<long, long, bool, bool> stdSyncData;
+	typedef tuple<alica::IRobotID, long, bool, bool> stdSyncData;
 
 	struct SyncData
 	{
@@ -22,7 +22,7 @@ namespace alica
 		{
 		}
 
-		long robotID;
+		alica::IRobotID robotID;
 		long transitionID;
 		bool conditionHolds;
 		bool ack;
@@ -43,7 +43,7 @@ namespace alica
 		void toString()
 		{
 			cout << "SyncData--> ";
-			cout << "RobotId: " << this->robotID;
+			cout << " RobotId: " << this->robotID;
 			cout << " TransitionID: " << this->transitionID;
 			cout << " ConditionHolds: " << this->conditionHolds;
 			cout << " Acknowledge: " << this->ack << endl;

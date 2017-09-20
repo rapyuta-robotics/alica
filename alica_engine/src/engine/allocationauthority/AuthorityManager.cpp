@@ -22,7 +22,6 @@ namespace alica
 	AuthorityManager::AuthorityManager(AlicaEngine* ae)
 	{
 		this->ae = ae;
-		this->ownID = 0;
 	}
 
 	AuthorityManager::~AuthorityManager()
@@ -63,7 +62,7 @@ namespace alica
 				//notify TO that evidence about other robots is available
 				for (EntryPointRobots epr : aai->entryPointRobots)
 				{
-					for (int rid : epr.robots)
+					for (auto rid : epr.robots)
 					{
 						if (rid != this->ownID)
 						{
@@ -154,7 +153,7 @@ namespace alica
 		{
 			EntryPointRobots epRobots;
 			epRobots.entrypoint = ass->getEpRobotsMapping()->getEp(i)->getId();
-			for (int robot : *ass->getRobotsWorking(epRobots.entrypoint))
+			for (auto robot : *ass->getRobotsWorking(epRobots.entrypoint))
 			{
 				epRobots.robots.push_back(robot);
 			}

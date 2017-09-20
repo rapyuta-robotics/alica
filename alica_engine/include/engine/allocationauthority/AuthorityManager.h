@@ -42,7 +42,7 @@ namespace alica
 	protected:
 		vector<shared_ptr<AllocationAuthorityInfo>> queue;
 		AlicaEngine* ae;
-		int ownID;
+		alica::IRobotID ownID;
 		mutex mu;
 		void processPlan(shared_ptr<RunningPlan> p);
 		bool authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p);

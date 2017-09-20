@@ -70,7 +70,7 @@ namespace alica
 	/**
 	 * Edits data from the old running plan to call the method CreateRunningPlan appropriately.
 	 */
-	shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp, shared_ptr<vector<int> > robots)
+	shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp, shared_ptr<vector<alica::IRobotID> > robots)
 	{
 		// Reset set index of the partial assignment object pool
 		PartialAssignment::reset(pap);
@@ -97,7 +97,7 @@ namespace alica
 	 */
 	shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForState(shared_ptr<RunningPlan> planningParent,
 	                                                               list<alica::AbstractPlan*>* plans,
-																	shared_ptr<vector<int> > robotIDs)
+																	shared_ptr<vector<alica::IRobotID> > robotIDs)
 	{
 		PartialAssignment::reset(pap);
 		shared_ptr<list<shared_ptr<RunningPlan>> > ll = this->getPlansForStateInternal(planningParent, plans, robotIDs);
@@ -106,7 +106,7 @@ namespace alica
 	}
 
 	shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> planningParent, list<Plan*> plans,
-													shared_ptr<vector<int> > robotIDs, shared_ptr<RunningPlan> oldRp,
+													shared_ptr<vector<alica::IRobotID> > robotIDs, shared_ptr<RunningPlan> oldRp,
 													PlanType* relevantPlanType)
 	{
 		list<Plan*> newPlanList;
@@ -247,7 +247,7 @@ namespace alica
 
 	shared_ptr<list<shared_ptr<RunningPlan>> > PlanSelector::getPlansForStateInternal(shared_ptr<RunningPlan> planningParent,
 	                                                                      list<alica::AbstractPlan*>* plans,
-																			shared_ptr<vector<int> > robotIDs)
+																			shared_ptr<vector<alica::IRobotID> > robotIDs)
 	{
 		shared_ptr<list<shared_ptr<RunningPlan>> > rps = make_shared<list<shared_ptr<RunningPlan>> >();
 #ifdef PSDEBUG

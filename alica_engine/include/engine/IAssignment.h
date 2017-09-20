@@ -10,6 +10,8 @@
 
 using namespace std;
 
+#include "engine/IRobotID.h"
+
 #include <vector>
 #include <list>
 #include <string>
@@ -30,8 +32,8 @@ namespace alica
 	{
 	public:
 		virtual ~IAssignment() {}
-		virtual shared_ptr<vector<int> > getRobotsWorking(EntryPoint* ep) = 0;
-		virtual shared_ptr<vector<int> > getRobotsWorking(long epid) = 0;
+		virtual shared_ptr<vector<alica::IRobotID> > getRobotsWorking(EntryPoint* ep) = 0;
+		virtual shared_ptr<vector<alica::IRobotID> > getRobotsWorking(long epid) = 0;
 		virtual int totalRobotCount() = 0;
 		/**
 		 * The shared_ptr of a vector of EntryPoints relevant to this assignment.
@@ -48,21 +50,21 @@ namespace alica
 		 * @param ep The EntryPoint queried
 		 * @return A shared_ptr of a list of int of robot ids
 		 */
-		virtual shared_ptr<list<int> > getRobotsWorkingAndFinished(EntryPoint* ep) = 0;
+		virtual shared_ptr<list<alica::IRobotID> > getRobotsWorkingAndFinished(EntryPoint* ep) = 0;
 		/**
 		 * Similar to GetRobotsWorkingAndFinished, with duplicates removed.
 		 * Behaviour is undefined if ep is not relevant or null.
 		 * @param ep The EntryPoint queried
 		 * @return A shared_ptr of a list of int of robot ids
 		 */
-		virtual shared_ptr<list<int> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep) = 0;
+		virtual shared_ptr<list<alica::IRobotID> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep) = 0;
 		/**
 		 * Returns all robot Ids working on the Task defined by ep
 		 * Behaviour is undefined if ep is not relevant or null.
 		 * @param ep The EntryPoint queried
 		 * @return A shared_ptr of a list of int of robot ids
 		 */
-		virtual shared_ptr<list<int> > getRobotsWorkingAndFinished(long epid) = 0;
+		virtual shared_ptr<list<alica::IRobotID> > getRobotsWorkingAndFinished(long epid) = 0;
 		/**
 		 * Information about succeeded tasks.
 		 */
@@ -102,14 +104,14 @@ namespace alica
 			this->min = min;
 		}
 
-		int getNumUnAssignedRobots() const
+		int getNumUnAssignedRobotIds() const
 		{
-			return unassignedRobots.size();
+			return unassignedRobotIds.size();
 		}
 
-		const vector<int>& getUnassignedRobots() const
+		const vector<alica::IRobotID>& getUnassignedRobotIds() const
 		{
-			return unassignedRobots;
+			return unassignedRobotIds;
 		}
 
 
@@ -117,7 +119,7 @@ namespace alica
 		/**
 		 * The Ids of all robots available but not yet assigned.
 		 */
-		vector<int> unassignedRobots;
+		vector<alica::IRobotID> unassignedRobotIds;
 		/**
 		 * The minimal utility this assignment can achieve.
 		 */

@@ -122,7 +122,7 @@ namespace alica
 	 * Convenience method to obtain the robot's own id.
 	 * @return the own robot id
 	 */
-	int BasicBehaviour::getOwnId()
+	alica::IRobotID BasicBehaviour::getOwnId()
 	{
 		return this->runningPlan->getOwnID();
 	}
@@ -206,7 +206,7 @@ namespace alica
 		this->behaviourTrigger->registerCV(&this->runCV);
 	}
 
-	shared_ptr<vector<int>> BasicBehaviour::robotsInEntryPointOfHigherPlan(EntryPoint* ep)
+	shared_ptr<vector<alica::IRobotID>> BasicBehaviour::robotsInEntryPointOfHigherPlan(EntryPoint* ep)
 	{
 		if (ep == nullptr)
 		{
@@ -225,7 +225,7 @@ namespace alica
 		return nullptr;
 	}
 
-	shared_ptr<vector<int> > BasicBehaviour::robotsInEntryPoint(EntryPoint* ep)
+	shared_ptr<vector<alica::IRobotID> > BasicBehaviour::robotsInEntryPoint(EntryPoint* ep)
 	{
 		if (ep == nullptr)
 		{

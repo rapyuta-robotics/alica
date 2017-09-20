@@ -10,6 +10,8 @@
 
 using namespace std;
 
+#include "engine/IRobotID.h"
+
 #include "model/Role.h"
 #include "ITeamObserver.h"
 #include "engine/collections/RobotEngineData.h"
@@ -33,7 +35,7 @@ namespace alica
 		virtual void update() = 0;
 
 		Role* getOwnRole();
-		Role* getRole(int robotId);
+		Role* getRole(alica::IRobotID robotId);
 		void setCommunication(IAlicaCommunication* communication);
 
 	protected:
@@ -41,7 +43,7 @@ namespace alica
 		 * Current Robot's role.
 		 */
 		Role* ownRole;
-		map<int, Role*> robotRoleMapping;
+		map<alica::IRobotID, Role*> robotRoleMapping;
 		IAlicaCommunication* communication;
 		ITeamObserver* to;
 

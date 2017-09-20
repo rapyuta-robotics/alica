@@ -31,16 +31,16 @@ namespace alica
 	 * @param a bool
 	 */
 	TaskAssignment::TaskAssignment(PartialAssignmentPool* pap, ITeamObserver* to, list<Plan*> planList,
-									shared_ptr<vector<int> > paraRobots, bool preassignOtherRobots)
+									shared_ptr<vector<alica::IRobotID> > paraRobots, bool preassignOtherRobots)
 	{
 #ifdef EXPANSIONEVAL
 		this->expansionCount = 0;
 #endif
 		this->planList = planList;
 		this->to = to;
-		this->robots = make_shared<vector<int> >(vector<int>(paraRobots->size()));
+		this->robots = make_shared<vector<alica::IRobotID> >(vector<alica::IRobotID>(paraRobots->size()));
 		int k = 0;
-		for (int i : (*paraRobots))
+		for (auto& i : (*paraRobots))
 		{
 			this->robots->at(k++) = i;
 		}
@@ -202,12 +202,12 @@ namespace alica
 	 * @param simplePlanTreeMap never try to delete this
 	 * @return True if any robot has already assigned itself, false otherwise
 	 */
-	bool TaskAssignment::addAlreadyAssignedRobots(PartialAssignment* pa, map<int, shared_ptr<SimplePlanTree> >* simplePlanTreeMap)
+	bool TaskAssignment::addAlreadyAssignedRobots(PartialAssignment* pa, map<alica::IRobotID, shared_ptr<SimplePlanTree> >* simplePlanTreeMap)
 	{
-		int ownRobotId = to->getOwnId();
+		alica::IRobotID ownRobotId = to->getOwnId();
 		bool haveToRevalute = false;
 		shared_ptr<SimplePlanTree> spt = nullptr;
-		for (int robot : (*this->robots))
+		for (auto& robot : (*this->robots))
 		{
 			if (ownRobotId == robot)
 			{

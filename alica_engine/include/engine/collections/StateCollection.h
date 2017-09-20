@@ -9,6 +9,7 @@
 #define STATECOLLECTION_H_
 
 
+#include "engine/IRobotID.h"
 #include <vector>
 #include <unordered_set>
 #include <algorithm>
@@ -29,30 +30,30 @@ namespace alica
 	{
 	public:
 		StateCollection();
-		StateCollection(vector<int> robots, vector<State*> states);
+		StateCollection(vector<alica::IRobotID> robotIds, vector<State*> states);
 		StateCollection(int maxSize);
 		StateCollection(AssignmentCollection* ac);
 		virtual ~StateCollection();
-		vector<int>& getRobots();
-		void setRobots(vector<int> robots);
+		vector<alica::IRobotID>& getRobots();
+		void setRobots(vector<alica::IRobotID> robotIds);
 		vector<State*>& getStates();
 		void setStates(vector<State*> states);
 		int getCount();
-		State* getState(int r);
-		unordered_set<int> getRobotsInState(State* s);
-		shared_ptr<vector<int> > getRobotsInStateSorted(State* s);
-		unordered_set<int> getRobotsInState(long sid);
-		void removeRobot(int r);
+		State* getState(alica::IRobotID robotId);
+		unordered_set<alica::IRobotID> getRobotsInState(State* s);
+		shared_ptr<vector<alica::IRobotID> > getRobotsInStateSorted(State* s);
+		unordered_set<alica::IRobotID> getRobotsInState(long sid);
+		void removeRobot(alica::IRobotID robotId);
 		void clear();
-		State* stateOfRobot(int robot);
-		void setState(int robot, State* state);
-		void setStates(vector<int> robots, State* state);
+		State* stateOfRobot(alica::IRobotID robotId);
+		void setState(alica::IRobotID robotId, State* state);
+		void setStates(vector<alica::IRobotID> robotIds, State* state);
 		string toString();
-		void setInitialState(int robot, EntryPoint* ep);
+		void setInitialState(alica::IRobotID robotId, EntryPoint* ep);
 		void reconsiderOldAssignment(shared_ptr<Assignment> oldOne, shared_ptr<Assignment> newOne);
 
 	protected:
-		vector<int> robots;
+		vector<alica::IRobotID> robotIds;
 		vector<State*> states;
 	};
 

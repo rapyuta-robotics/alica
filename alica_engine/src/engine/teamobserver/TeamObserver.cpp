@@ -32,9 +32,8 @@ namespace alica
 	TeamObserver::TeamObserver(AlicaEngine* ae)
 	{
 		this->teamTimeOut = 0;
-		this->myId = 0;
-		this->simplePlanTrees = make_shared<map<int, shared_ptr<SimplePlanTree> > >(
-				map<int, shared_ptr<SimplePlanTree> >());
+		this->simplePlanTrees = make_shared<map<alica::IRobotID, shared_ptr<SimplePlanTree> > >(
+				map<alica::IRobotID, shared_ptr<SimplePlanTree> >());
 		this->me = nullptr;
 		this->log = nullptr;
 		this->ae = ae;
@@ -53,7 +52,7 @@ namespace alica
 		}
 	}
 
-	void TeamObserver::messageRecievedFrom(int rid)
+	void TeamObserver::messageRecievedFrom(alica::IRobotID rid)
 	{
 		for (RobotEngineData* re : this->allOtherRobots)
 		{
@@ -124,7 +123,7 @@ namespace alica
 	 *  Returns this robot's own unique id.
 	 *  @return an int
 	 */
-	int TeamObserver::getOwnId()
+	alica::IRobotID TeamObserver::getOwnId()
 	{
 		return this->myId;
 	}
@@ -134,7 +133,7 @@ namespace alica
 	 * @param id an int the robot id
 	 * @return a RobotEngineData*
 	 */
-	RobotEngineData* TeamObserver::getRobotById(int id)
+	RobotEngineData* TeamObserver::getRobotById(alica::IRobotID id)
 	{
 		if (id == myId)
 		{
@@ -194,9 +193,9 @@ namespace alica
 	 * Returns the ids of robots from which message have been received recently. Includes own id.
 	 * @return a unique_ptr of a list of int
 	 */
-	unique_ptr<list<int> > TeamObserver::getAvailableRobotIds()
+	unique_ptr<list<alica::IRobotID> > TeamObserver::getAvailableRobotIds()
 	{
-		unique_ptr<list<int> > ret = unique_ptr<list<int> >(new list<int>);
+		unique_ptr<list<alica::IRobotID> > ret = unique_ptr<list<alica::IRobotID> >(new list<alica::IRobotID>);
 		ret->push_back(myId);
 		for (RobotEngineData* r : this->allOtherRobots)
 		{
@@ -235,20 +234,20 @@ namespace alica
 		return i;
 	}
 
-	unique_ptr<map<int, shared_ptr<SimplePlanTree> > > TeamObserver::getTeamPlanTrees()
+	unique_ptr<map<alica::IRobotID, shared_ptr<SimplePlanTree> > > TeamObserver::getTeamPlanTrees()
 	{
-		unique_ptr<map<int, shared_ptr<SimplePlanTree> > > ret = unique_ptr<map<int, shared_ptr<SimplePlanTree> > >(
-				new map<int, shared_ptr<SimplePlanTree> >);
+		unique_ptr<map<alica::IRobotID, shared_ptr<SimplePlanTree> > > ret = unique_ptr<map<alica::IRobotID, shared_ptr<SimplePlanTree> > >(
+				new map<alica::IRobotID, shared_ptr<SimplePlanTree> >);
 		lock_guard<mutex> lock(this->simplePlanTreeMutex);
 		for (RobotEngineData* r : this->allOtherRobots)
 		{
 			if (r->isActive())
 			{
-				map<int, shared_ptr<SimplePlanTree> >::iterator iter = this->simplePlanTrees->find(
+				map<alica::IRobotID, shared_ptr<SimplePlanTree> >::iterator iter = this->simplePlanTrees->find(
 						r->getProperties()->getId());
 				if (iter != simplePlanTrees->end() && iter->second != nullptr)
 				{
-					ret->insert(pair<int, shared_ptr<SimplePlanTree> >(r->getProperties()->getId(), iter->second));
+					ret->insert(pair<alica::IRobotID, shared_ptr<SimplePlanTree> >(r->getProperties()->getId(), iter->second));
 				}
 			}
 		}
@@ -259,7 +258,7 @@ namespace alica
 	{
 		AlicaTime time = ae->getIAlicaClock()->now();
 		bool changed = false;
-		vector<int> robotsAvail;
+		vector<alica::IRobotID> robotsAvail;
 		robotsAvail.push_back(this->myId);
 		for (RobotEngineData* r : this->allOtherRobots)
 		{
@@ -293,7 +292,7 @@ namespace alica
 		if (root != nullptr)
 		{
 			list<shared_ptr<SimplePlanTree> > updatespts;
-			list<int> noUpdates;
+			list<alica::IRobotID> noUpdates;
 			lock_guard<mutex> lock(this->simplePlanTreeMutex);
 			for (auto iterator = this->simplePlanTrees->begin(); iterator != this->simplePlanTrees->end(); iterator++)
 			{
@@ -520,7 +519,7 @@ namespace alica
 	 * Ignore all messages received by a robot.
 	 * @param rid an int identifying the robot to ignore
 	 */
-	void TeamObserver::ignoreRobot(int rid)
+	void TeamObserver::ignoreRobot(alica::IRobotID rid)
 	{
 		if (find(ignoredRobots.begin(), ignoredRobots.end(), rid) != ignoredRobots.end())
 		{
@@ -533,7 +532,7 @@ namespace alica
 	 * Stops ignoring the messages received by a robot
 	 * @param rid an int identifying the robot
 	 */
-	void TeamObserver::unIgnoreRobot(int rid)
+	void TeamObserver::unIgnoreRobot(alica::IRobotID rid)
 	{
 		// it should not be necessary to search first... it simply removes the entry if present - Stopfer
 //		if (find(ignoredRobots.begin(), ignoredRobots.end(), rid) != ignoredRobots.end())
@@ -546,7 +545,7 @@ namespace alica
 	 * Checks if a robot is ignored
 	 * @param rid an int identifying the robot
 	 */
-	bool TeamObserver::isRobotIgnored(int rid)
+	bool TeamObserver::isRobotIgnored(alica::IRobotID rid)
 	{
 		return (find(ignoredRobots.begin(), ignoredRobots.end(), rid) != ignoredRobots.end());
 	}
@@ -595,7 +594,7 @@ namespace alica
 				}
 
 				lock_guard<mutex> lock(this->simplePlanTreeMutex);
-				map<int, shared_ptr<SimplePlanTree> >::iterator iterator = this->simplePlanTrees->find(
+				map<alica::IRobotID, shared_ptr<SimplePlanTree> >::iterator iterator = this->simplePlanTrees->find(
 						incoming->senderID);
 				if (iterator != this->simplePlanTrees->end())
 				{
@@ -603,7 +602,7 @@ namespace alica
 				}
 				else
 				{
-					this->simplePlanTrees->insert(pair<int, shared_ptr<SimplePlanTree> >(incoming->senderID, spt));
+					this->simplePlanTrees->insert(pair<alica::IRobotID, shared_ptr<SimplePlanTree> >(incoming->senderID, spt));
 				}
 			}
 		}
@@ -615,7 +614,7 @@ namespace alica
 	 * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
 	 * @return shared_ptr of a SimplePlanTree
 	 */
-	shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(int robotId, list<long> ids)
+	shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(alica::IRobotID robotId, list<long> ids)
 	{
 #ifdef TO_DEBUG
 		cout << "Spt from robot " << robotId << endl;

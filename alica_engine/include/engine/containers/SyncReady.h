@@ -8,17 +8,18 @@
 #ifndef SYNCREADY_H_
 #define SYNCREADY_H_
 
+#include "engine/IRobotID.h"
 #include <tuple>
 
 using namespace std;
 
 namespace alica
 {
-	typedef tuple<long, long> stdSyncReady;
+	typedef tuple<alica::IRobotID, long> stdSyncReady;
 	struct SyncReady
 	{
 		SyncReady() {}
-		long senderID;
+		alica::IRobotID senderID;
 		long syncTransitionID;
 
 		SyncReady(stdSyncReady &s) {
