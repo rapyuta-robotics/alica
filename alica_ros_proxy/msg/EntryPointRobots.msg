@@ -1,2 +1,2 @@
 int64 entryPoint
-int32[] robots
+RobotID[] robots
