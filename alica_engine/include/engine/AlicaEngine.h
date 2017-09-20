@@ -29,6 +29,7 @@ namespace alica
 	class IRoleAssignment;
 	class IPlanSelector;
 	class IAlicaCommunication;
+	class IRobotIDFactory;
 	class IEngineModule;
 	class IPlanner;
 	class IAlicaClock;
@@ -76,6 +77,8 @@ namespace alica
 		RoleSet* getRoleSet();
 		IAlicaCommunication* getCommunicator();
 		void setCommunicator(IAlicaCommunication * communicator);
+		IRobotIDFactory* getRobotIDFactory();
+		void setRobotIDFactory(IRobotIDFactory * factory);
 		IPlanSelector* getPlanSelector();
 		IPlanner* getPlanner();
 		IAlicaClock* getIAlicaClock();
@@ -109,6 +112,7 @@ namespace alica
 		list<IEngineModule*> mods;
 		IPlanSelector* planSelector;
 		IAlicaCommunication* communicator;
+		IRobotIDFactory* robotIDFactory;
 		IPlanner* planner;
 		IAlicaClock* alicaClock;
 		PartialAssignmentPool* pap;
