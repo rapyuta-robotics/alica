@@ -1,4 +1,4 @@
-int32 senderID
+RobotID senderID
 string masterPlan
 string currentPlan
 string currentState

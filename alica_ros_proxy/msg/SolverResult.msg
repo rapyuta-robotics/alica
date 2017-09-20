@@ -1,2 +1,2 @@
-int32 senderID
+RobotID senderID
 SolverVar[] vars

@@ -31,6 +31,7 @@ add_message_files(
   SolverResult.msg
   SyncData.msg
   SyncTalk.msg   
+  RobotID.msg
 )
 
 ## Generate added messages and services with any dependencies listed here

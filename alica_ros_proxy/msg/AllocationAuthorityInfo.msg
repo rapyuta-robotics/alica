@@ -1,6 +1,6 @@
-int32 senderID
+RobotID senderID
 int64 planID
 int64 parentState
 int64 planType
-int32 authority
+RobotID authority
 EntryPointRobots[] entrypoints
