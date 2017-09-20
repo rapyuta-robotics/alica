@@ -10,7 +10,7 @@
 namespace alica
 {
 	IRoleAssignment::IRoleAssignment(AlicaEngine* ae) :
-			ownRole(nullptr), robotRoleMapping(map<int, Role*>()), to(nullptr), communication(nullptr)
+			ownRole(nullptr), robotRoleMapping(map<alica::IRobotID, Role*>()), to(nullptr), communication(nullptr)
 	{
 	}
 
@@ -19,7 +19,7 @@ namespace alica
 		return ownRole;
 	}
 
-	Role* IRoleAssignment::getRole(int robotId)
+	Role* IRoleAssignment::getRole(alica::IRobotID robotId)
 	{
 		Role* r = nullptr;
 		auto iter = this->robotRoleMapping.find(robotId);

@@ -8,6 +8,7 @@
 #ifndef SYNCMODUL_H_
 #define SYNCMODUL_H_
 
+#include "engine/IRobotID.h"
 #include <list>
 #include "../ISyncModul.h"
 #include <mutex>
@@ -50,7 +51,7 @@ namespace alica
 	protected:
 		bool running;
 		AlicaEngine* ae;
-		int myId;
+		alica::IRobotID myId;
 		unsigned long ticks;
 		PlanRepository* pr;
 		map<SyncTransition*, Synchronisation*> synchSet;

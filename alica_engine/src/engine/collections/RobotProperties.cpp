@@ -1,10 +1,4 @@
-/*
- * RobotProperties.cpp
- *
- *  Created on: Jun 13, 2014
- *      Author: Stefan Jakob
- */
-
+#include "engine/IRobotIDFactory.h"
 #include <engine/collections/RobotProperties.h>
 #include <engine/model/Characteristic.h>
 #include <engine/AlicaEngine.h>
@@ -14,14 +8,15 @@
 namespace alica
 {
 
-	RobotProperties::RobotProperties()
+	RobotProperties::RobotProperties() : id(IRobotID())
 	{
 	}
 
 	RobotProperties::RobotProperties(AlicaEngine* ae, string name)
 	{
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-		this->id = (*sc)["Globals"]->tryGet<int>(-1, "Globals", "Team", name.c_str(), "ID", NULL);
+		int tmpID = (*sc)["Globals"]->tryGet<int>(-1, "Globals", "Team", name.c_str(), "ID", NULL);
+		this->id = ae->getRobotIDFactory()->create((uint8_t*) &tmpID, sizeof(int));
 		this->name = name;
 		this->characteristics = map<string, Characteristic*>();
 		this->capabilities = ae->getPlanRepository()->getCapabilities();
@@ -67,12 +62,12 @@ namespace alica
 		}
 	}
 
-	int RobotProperties::getId() const
+	IRobotID RobotProperties::getId() const
 	{
 		return id;
 	}
 
-	void RobotProperties::setId(int id)
+	void RobotProperties::setId(IRobotID id)
 	{
 		this->id = id;
 	}

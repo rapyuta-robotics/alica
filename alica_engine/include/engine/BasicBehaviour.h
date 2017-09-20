@@ -10,6 +10,8 @@
 
 using namespace std;
 
+#include "engine/IRobotID.h"
+
 #include <string>
 #include <iostream>
 #include <map>
@@ -100,7 +102,7 @@ namespace alica
 		thread* runThread; /** < executes the runInternal and thereby the abstract run method */
 		supplementary::Timer* timer; /** < triggers the condition_variable of the runThread, if this behaviour is timer triggered, alternative to behaviourTrigger*/
 		supplementary::ITrigger* behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour is event triggered, alternative to timer */
-		int getOwnId();
+		alica::IRobotID getOwnId();
 
 		/**
 		 * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
@@ -114,9 +116,9 @@ namespace alica
 
 		EntryPoint* getHigherEntryPoint(string planName, string taskName);
 
-		shared_ptr<vector<int>> robotsInEntryPointOfHigherPlan(EntryPoint* ep);
+		shared_ptr<vector<alica::IRobotID>> robotsInEntryPointOfHigherPlan(EntryPoint* ep);
 
-		shared_ptr<vector<int>> robotsInEntryPoint(EntryPoint* ep);
+		shared_ptr<vector<alica::IRobotID>> robotsInEntryPoint(EntryPoint* ep);
 
 	private:
 		void runInternal();

@@ -23,7 +23,6 @@ namespace alica
 	SyncModul::SyncModul(AlicaEngine* ae)
 	{
 		this->ae = ae;
-		this->myId = 0;
 		this->pr = nullptr;
 		this->running = false;
 		this->ticks = 0;

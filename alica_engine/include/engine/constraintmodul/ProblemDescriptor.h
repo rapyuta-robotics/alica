@@ -8,6 +8,8 @@
 #ifndef PROBLEMDESCRIPTOR_H_
 #define PROBLEMDESCRIPTOR_H_
 
+#include "engine/IRobotID.h"
+
 #include <memory>
 #include <vector>
 
@@ -37,8 +39,8 @@ namespace alica
 		void setStaticVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value);
 		shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> getDomainVars();
 		void setDomainVars(shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> value);
-		shared_ptr<vector<shared_ptr<vector<int>>>> getAgentsInScope();
-		void setAgentsInScope(shared_ptr<vector<shared_ptr<vector<int>>>> value);
+		shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> getAgentsInScope();
+		void setAgentsInScope(shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> value);
 		shared_ptr<vector<shared_ptr<SolverVariable>>> getAllVars();
 		void setAllVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value);
 
@@ -62,7 +64,7 @@ namespace alica
 		double utilitySufficiencyThreshold;
 		shared_ptr<vector<shared_ptr<SolverVariable>>> staticVars;
 		shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> domainVars;
-		shared_ptr<vector<shared_ptr<vector<int>>>> agentsInScope;
+		shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> agentsInScope;
 		shared_ptr<vector<shared_ptr<SolverVariable>>> allVars;
 
 		shared_ptr<vector<vector<vector<vector<double>>>>> domainRanges;

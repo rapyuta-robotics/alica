@@ -18,7 +18,7 @@ namespace alica
 	{
 		this->count = plan->getEntryPoints().size();
 		this->entryPoints = new EntryPoint*[this->count];
-		this->robots = vector<shared_ptr<list<int> > >(this->count);
+		this->robotIds = vector<shared_ptr<list<alica::IRobotID> > >(this->count);
 		int i = 0;
 		list<EntryPoint*> eps;
 		for (map<long, EntryPoint*>::const_iterator iter = plan->getEntryPoints().begin();
@@ -30,7 +30,7 @@ namespace alica
 		for (EntryPoint* ep : eps)
 		{
 			this->entryPoints[i] = ep;
-			this->robots[i] = make_shared<list<int> >();
+			this->robotIds[i] = make_shared<list<alica::IRobotID> >();
 			i++;
 		}
 	}
@@ -55,13 +55,13 @@ namespace alica
 		return entryPoints;
 	}
 
-	void SuccessCollection::setSuccess(int robot, EntryPoint* ep)
+	void SuccessCollection::setSuccess(alica::IRobotID robotId, EntryPoint* ep)
 	{
 		for (int i = 0; i < this->count; i++)
 		{
 			if (this->entryPoints[i] == ep)
 			{
-				this->robots[i]->push_back(robot);
+				this->robotIds[i]->push_back(robotId);
 				return;
 			}
 		}
@@ -70,39 +70,39 @@ namespace alica
 	{
 		for (int i = 0; i < this->count; i++)
 		{
-			this->robots[i]->clear();
+			this->robotIds[i]->clear();
 		}
 	}
 
-	vector<shared_ptr<list<int> > >& SuccessCollection::getRobots()
+	vector<shared_ptr<list<alica::IRobotID> > >& SuccessCollection::getRobots()
 	{
-		return robots;
+		return robotIds;
 	}
 
-	void SuccessCollection::setRobots(vector<shared_ptr<list<int> > >& robots)
+	void SuccessCollection::setRobots(vector<shared_ptr<list<alica::IRobotID> > >& robotIds)
 	{
-		this->robots = robots;
+		this->robotIds = robotIds;
 	}
 
-	shared_ptr<list<int> > SuccessCollection::getRobots(EntryPoint* ep)
+	shared_ptr<list<alica::IRobotID> > SuccessCollection::getRobots(EntryPoint* ep)
 	{
 		for (int i = 0; i < this->count; i++)
 		{
 			if (this->getEntryPoints()[i] == ep)
 			{
-				return this->robots[i];
+				return this->robotIds[i];
 			}
 		}
 		return nullptr;
 	}
 
-	shared_ptr<list<int> > SuccessCollection::getRobotsById(long id)
+	shared_ptr<list<alica::IRobotID> > SuccessCollection::getRobotsById(long id)
 	{
 		for (int i = 0; i < this->count; i++)
 		{
 			if (this->getEntryPoints()[i]->getId() == id)
 			{
-				return this->robots[i];
+				return this->robotIds[i];
 			}
 		}
 		return nullptr;
@@ -114,10 +114,10 @@ namespace alica
 		ss << "";
 		for (int i = 0; i < this->count; i++)
 		{
-			if (this->robots[i]->size() > 0)
+			if (this->robotIds[i]->size() > 0)
 			{
 				ss << this->entryPoints[i]->getTask()->getId() << ": ";
-				for (int r : *(this->robots[i]))
+				for (alica::IRobotID r : *(this->robotIds[i]))
 				{
 					ss << r << " ";
 				}

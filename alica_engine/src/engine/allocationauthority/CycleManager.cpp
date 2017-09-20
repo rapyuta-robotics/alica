@@ -208,7 +208,7 @@ namespace alica
 
 				auto newRobots = newAss->getRobotsWorking(ep);
 				auto oldRobots = oldAss->getRobotsWorking(ep);
-				for (int oldId : (*oldRobots))
+				for (auto& oldId : (*oldRobots))
 				{
 					if (newRobots == nullptr || find(newRobots->begin(), newRobots->end(), oldId) == newRobots->end())
 					{
@@ -218,7 +218,7 @@ namespace alica
 				}
 				if (newRobots != nullptr)
 				{
-					for (int newId : (*newRobots))
+					for (auto& newId : (*newRobots))
 					{
 						if (find(oldRobots->begin(), oldRobots->end(), newId) == oldRobots->end())
 						{
@@ -252,7 +252,7 @@ namespace alica
 		{
 			return;
 		}
-		long rid = aai->authority;
+		alica::IRobotID rid = aai->authority;
 		if (rid == myID)
 		{
 			return;
@@ -359,7 +359,7 @@ namespace alica
 		{
 			for (EntryPointRobots epr : this->fixedAllocation->entryPointRobots)
 			{
-				for (int robot : epr.robots)
+				for (auto& robot : epr.robots)
 				{
 					EntryPoint* e = pr->getEntryPoints().at(epr.entrypoint);
 					bool changed = rp->getAssignment()->updateRobot(robot, e);

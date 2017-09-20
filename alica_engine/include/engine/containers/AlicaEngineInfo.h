@@ -8,6 +8,7 @@
 #ifndef ALICAENGINEINFO_H_
 #define ALICAENGINEINFO_H_
 
+#include "engine/IRobotID.h"
 #include <vector>
 #include <string>
 #include <tuple>
@@ -16,19 +17,19 @@ using namespace std;
 
 namespace alica
 {
-	typedef tuple<int, string, string, string, string, string, vector<int>> stdAlicaEngineInfo;
+	typedef tuple<alica::IRobotID, string, string, string, string, string, vector<alica::IRobotID>> stdAlicaEngineInfo;
 	struct AlicaEngineInfo
 	{
 		AlicaEngineInfo()
 		{
 		}
-		int senderID;
+		alica::IRobotID senderID;
 		string masterPlan;
 		string currentPlan;
 		string currentState;
 		string currentRole;
 		string currentTask;
-		vector<int> robotIDsWithMe;
+		vector<alica::IRobotID> robotIDsWithMe;
 
 		AlicaEngineInfo(stdAlicaEngineInfo &s)
 		{

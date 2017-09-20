@@ -23,14 +23,14 @@ namespace alica
 	{
 	}
 
-	vector<int>& StateCollection::getRobots()
+	vector<alica::IRobotID>& StateCollection::getRobots()
 	{
-		return robots;
+		return robotIds;
 	}
 
-	void StateCollection::setRobots(vector<int> robots)
+	void StateCollection::setRobots(vector<alica::IRobotID> robots)
 	{
-		this->robots = robots;
+		this->robotIds = robots;
 	}
 
 	vector<State*>& StateCollection::getStates()
@@ -38,13 +38,13 @@ namespace alica
 		return states;
 	}
 
-	StateCollection::StateCollection(vector<int> robots, vector<State*> states)
+	StateCollection::StateCollection(vector<alica::IRobotID> robots, vector<State*> states)
 	{
-		this->robots = robots;
+		this->robotIds = robots;
 		this->states = states;
 	}
 
-	StateCollection::StateCollection(int maxSize) : robots(maxSize), states(maxSize)
+	StateCollection::StateCollection(int maxSize) : robotIds(maxSize), states(maxSize)
 	{
 	}
 
@@ -53,9 +53,9 @@ namespace alica
 		for(int i = 0;i < ac->getSize(); i ++)
 		{
 			State* initialState = ac->getEp(i)->getState();
-			for(auto r : *ac->getRobots(i))
+			for(auto& robotId : *ac->getRobots(i))
 			{
-				this->setState(r,initialState);
+				this->setState(robotId,initialState);
 			}
 		}
 	}
@@ -67,14 +67,14 @@ namespace alica
 
 	int StateCollection::getCount()
 	{
-		return this->robots.size();
+		return this->robotIds.size();
 	}
 
-	State* StateCollection::getState(int r)
+	State* StateCollection::getState(alica::IRobotID robotId)
 	{
-		for (int i = 0; i < this->robots.size(); i++)
+		for (int i = 0; i < this->robotIds.size(); i++)
 		{
-			if (this->robots[i] == r)
+			if (this->robotIds[i] == robotId)
 			{
 				return this->states[i];
 			}
@@ -82,54 +82,54 @@ namespace alica
 		return nullptr;
 	}
 
-	unordered_set<int> StateCollection::getRobotsInState(State* s)
+	unordered_set<alica::IRobotID> StateCollection::getRobotsInState(State* s)
 	{
-		unordered_set<int> ret;
-		for (int i = 0; i < this->robots.size(); i++)
+		unordered_set<alica::IRobotID> ret;
+		for (int i = 0; i < this->robotIds.size(); i++)
 		{
 			if (this->states[i] == s)
 			{
-				ret.insert(this->robots[i]);
+				ret.insert(this->robotIds[i]);
 			}
 		}
 		return ret;
 	}
 
-	shared_ptr<vector<int> > StateCollection::getRobotsInStateSorted(State* s)
+	shared_ptr<vector<alica::IRobotID> > StateCollection::getRobotsInStateSorted(State* s)
 	{
-		shared_ptr<vector<int> > ret= make_shared<vector<int> >();
-		for (int i = 0; i < this->robots.size(); i++)
+		shared_ptr<vector<alica::IRobotID> > ret= make_shared<vector<alica::IRobotID> >();
+		for (int i = 0; i < this->robotIds.size(); i++)
 		{
 			if (this->states[i] == s)
 			{
-				ret->push_back(this->robots[i]);
+				ret->push_back(this->robotIds[i]);
 			}
 		}
 		sort(ret->begin(), ret->end());
 		return ret;
 	}
 
-	unordered_set<int> StateCollection::getRobotsInState(long sid)
+	unordered_set<alica::IRobotID> StateCollection::getRobotsInState(long sid)
 	{
-		unordered_set<int> ret;
-		for (int i = 0; i < this->robots.size(); i++)
+		unordered_set<alica::IRobotID> ret;
+		for (int i = 0; i < this->robotIds.size(); i++)
 		{
 			if (this->states[i]->getId() == sid)
 			{
-				ret.insert(this->robots[i]);
+				ret.insert(this->robotIds[i]);
 			}
 		}
 
 		return ret;
 	}
 
-	void StateCollection::removeRobot(int r)
+	void StateCollection::removeRobot(alica::IRobotID robotId)
 	{
 		for(int i = 0; i < this->states.size();i++)
 		{
-			if(this->robots[i] == r)
+			if(this->robotIds[i] == robotId)
 			{
-				this->robots.erase(robots.begin() + i);
+				this->robotIds.erase(robotIds.begin() + i);
 				this->states.erase(states.begin() + i);
 				return;
 			}
@@ -138,15 +138,15 @@ namespace alica
 
 	void StateCollection::clear()
 	{
-		this->robots.clear();
+		this->robotIds.clear();
 		this->states.clear();
 	}
 
-	State* StateCollection::stateOfRobot(int robot)
+	State* StateCollection::stateOfRobot(alica::IRobotID robotId)
 	{
-		for (int i = 0; i < this->robots.size(); i++)
+		for (int i = 0; i < this->robotIds.size(); i++)
 		{
-			if (this->robots[i] == robot)
+			if (this->robotIds[i] == robotId)
 			{
 				return this->states[i];
 			}
@@ -154,17 +154,17 @@ namespace alica
 		return nullptr;
 	}
 
-	void StateCollection::setState(int robot, State* state)
+	void StateCollection::setState(alica::IRobotID robotId, State* state)
 	{
-		for (int i = 0; i < this->robots.size(); i++)
+		for (int i = 0; i < this->robotIds.size(); i++)
 		{
-			if (this->robots[i] == robot)
+			if (this->robotIds[i] == robotId)
 			{
 				this->states[i] = state;
 				return;
 			}
 		}
-		this->robots.push_back(robot);
+		this->robotIds.push_back(robotId);
 		this->states.push_back(state);
 
 	}
@@ -172,9 +172,9 @@ namespace alica
 	string StateCollection::toString()
 	{
 		stringstream ss;
-		for(int i = 0; i < robots.size();i++)
+		for(int i = 0; i < robotIds.size();i++)
 		{
-			ss << "R: " << this->robots[i] << " in State: ";
+			ss << "R: " << this->robotIds[i] << " in State: ";
 			if(this->states[i] == nullptr)
 			{
 				ss << "NULL" << endl;
@@ -187,16 +187,16 @@ namespace alica
 		return ss.str();
 	}
 
-	void StateCollection::setInitialState(int robot, EntryPoint* ep)
+	void StateCollection::setInitialState(alica::IRobotID robotId, EntryPoint* ep)
 	{
-		setState(robot, ep->getState());
+		setState(robotId, ep->getState());
 	}
 
-	void StateCollection::setStates(vector<int> robots, State* state)
+	void StateCollection::setStates(vector<alica::IRobotID> robotIds, State* state)
 	{
-		for(int i = 0; i <  robots.size(); i++)
+		for(int i = 0; i <  robotIds.size(); i++)
 		{
-			setState(robots[i], state);
+			setState(robotIds[i], state);
 		}
 	}
 
@@ -214,7 +214,7 @@ namespace alica
 		for(short i = 0; i < oldOne->getEntryPointCount(); i++)
 		{
 			ep = oldOne->getEpRobotsMapping()->getEp(i);
-			for(int rid : *(oldOne->getRobotsWorking(ep)))
+			for(alica::IRobotID& rid : *(oldOne->getRobotsWorking(ep)))
 			{
 				auto iter = find(newOne->getRobotsWorking(ep)->begin(), newOne->getRobotsWorking(ep)->end(), rid);
 				if(iter != newOne->getRobotsWorking(ep)->end())

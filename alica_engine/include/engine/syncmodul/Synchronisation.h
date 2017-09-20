@@ -12,6 +12,7 @@
 //#define SM_FAILURE
 //#define SM_MESSAGES
 
+#include "engine/IRobotID.h"
 #include <list>
 #include <mutex>
 #include <memory>
@@ -35,7 +36,7 @@ namespace alica
 	{
 	public:
 		Synchronisation(AlicaEngine* ae);
-		Synchronisation(AlicaEngine* ae, int myID, SyncTransition* st, SyncModul* sm);
+		Synchronisation(AlicaEngine* ae, alica::IRobotID myID, SyncTransition* st, SyncModul* sm);
 		virtual ~Synchronisation();
 		void setTick(unsigned long now);
 		void changeOwnData (long transitionID, bool conditionHolds);
@@ -55,7 +56,7 @@ namespace alica
 		mutex rowOkMutex;
 		SyncModul* syncModul;
 		SyncTransition* syncTransition;
-		int myID;
+		alica::IRobotID myID;
 		unsigned long lastTalkTime;
 		SyncData* lastTalkData;
 		unsigned long syncStartTime;

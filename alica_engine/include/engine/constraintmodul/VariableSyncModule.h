@@ -8,12 +8,14 @@
 #ifndef RESULTSTORE_H_
 #define RESULTSTORE_H_
 
-#include <memory>
-#include <vector>
+#include "engine/IRobotID.h"
+#include "engine/constraintmodul/IVariableSyncModule.h"
 
 #include <NotifyTimer.h>
 
-#include "engine/constraintmodul/IVariableSyncModule.h"
+#include <memory>
+#include <vector>
+
 
 using namespace std;
 
@@ -61,7 +63,7 @@ namespace alica
 
 	private:
 		AlicaEngine* ae;
-		int ownId;
+		alica::IRobotID ownId;
 		IAlicaCommunication* communicator;
 		bool running;
 		bool communicationEnabled;

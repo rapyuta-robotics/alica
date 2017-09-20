@@ -71,7 +71,7 @@ namespace alica
 		 */
 		queue<shared_ptr<RunningPlan>> fpEvents;
 		condition_variable* stepModeCV;
-		void checkPlanBase(shared_ptr<RunningPlan> r);
+//		void checkPlanBase(shared_ptr<RunningPlan> r);
 
 	protected:
 		Plan* masterPlan;

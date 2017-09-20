@@ -18,7 +18,7 @@ using namespace std;
 namespace alica
 {
 
-	ResultEntry::ResultEntry(int robotId, AlicaEngine* ae)
+	ResultEntry::ResultEntry(alica::IRobotID robotId, AlicaEngine* ae)
 	{
 		this->ae = ae;
 		this->id = robotId;
@@ -29,7 +29,7 @@ namespace alica
 		// TODO Auto-generated destructor stub
 	}
 
-	int ResultEntry::getId()
+	alica::IRobotID ResultEntry::getId()
 	{
 		return id;
 	}

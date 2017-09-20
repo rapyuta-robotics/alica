@@ -8,6 +8,7 @@
 #ifndef SUCCESSCOLLECTION_H_
 #define SUCCESSCOLLECTION_H_
 
+#include "engine/IRobotID.h"
 
 #include <list>
 #include <vector>
@@ -29,19 +30,19 @@ namespace alica
 		int getCount() const;
 		void setCount(int count);
 		EntryPoint** getEntryPoints();
-		void setSuccess(int robot, EntryPoint* ep);
+		void setSuccess(alica::IRobotID robot, EntryPoint* ep);
 		void clear();
-		vector<shared_ptr<list<int> > >& getRobots();
-		void setRobots(vector<shared_ptr<list<int> > >& robots);
-		shared_ptr<list<int> > getRobots(EntryPoint* ep);
-		shared_ptr<list<int> > getRobotsById(long id);
+		vector<shared_ptr<list<alica::IRobotID> > >& getRobots();
+		void setRobots(vector<shared_ptr<list<alica::IRobotID> > >& robots);
+		shared_ptr<list<alica::IRobotID> > getRobots(EntryPoint* ep);
+		shared_ptr<list<alica::IRobotID> > getRobotsById(long id);
 		string toString();
 
 	private:
 
 	protected:
 		EntryPoint** entryPoints;
-		vector<shared_ptr<list<int> > > robots;
+		vector<shared_ptr<list<alica::IRobotID> > > robotIds;
 		int count = 0;
 	};
 

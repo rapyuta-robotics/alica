@@ -7,7 +7,7 @@
 
 #ifndef CONSTRAINTCALL_H_
 #define CONSTRAINTCALL_H_
-
+#include "engine/IRobotID.h"
 #include <memory>
 #include <vector>
 #include <list>
@@ -30,7 +30,7 @@ namespace alica
 		Condition* getCondition();
 		shared_ptr<vector<list<vector<Variable* > > >> getDomainVariables();
 		shared_ptr<RunningPlan> getRunningPlan();
-		shared_ptr<vector<shared_ptr<vector<int>>>> getAgentsInScope();
+		shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> getAgentsInScope();
 	private:
 		Condition* condition;
 		/**
@@ -42,7 +42,7 @@ namespace alica
 		 */
 		shared_ptr<vector<list<vector<Variable* > > >> domainVariables;
 		shared_ptr<RunningPlan> runningplan;
-		shared_ptr<vector<shared_ptr<vector<int>>>> agentsInScope;
+		shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> agentsInScope;
 	};
 
 }

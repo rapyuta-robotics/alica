@@ -157,11 +157,11 @@ namespace alica
 		}
 
 		auto temp = r->getParent().lock();
-		vector<int> robots = vector<int>(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).size());
+		vector<alica::IRobotID> robots = vector<alica::IRobotID>(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).size());
 		copy(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).begin(),
 					temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).end(),
 					robots.begin());
-		shared_ptr<RunningPlan> newr = ps->getBestSimilarAssignment(r, make_shared<vector<int> >(robots));
+		shared_ptr<RunningPlan> newr = ps->getBestSimilarAssignment(r, make_shared<vector<alica::IRobotID> >(robots));
 		if (newr == nullptr)
 		{
 			return PlanChange::NoChange;
@@ -293,7 +293,7 @@ namespace alica
 		r->setFailHandlingNeeded(false);
 		r->deactivateChildren();
 		r->clearChildren();
-		vector<int> robots(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
+		vector<alica::IRobotID> robots(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
 		copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
 				r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
 				robots.begin()); // backinserter
@@ -379,7 +379,7 @@ namespace alica
 		}
 		rp->setAllocationNeeded(false);
 
-		shared_ptr<vector<int> > robots = make_shared<vector<int> >(rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).size());
+		shared_ptr<vector<alica::IRobotID> > robots = make_shared<vector<alica::IRobotID> >(rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).size());
 		copy(rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).begin(),
 						rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).end(),
 						robots->begin());

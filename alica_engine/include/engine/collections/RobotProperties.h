@@ -8,6 +8,7 @@
 #ifndef ROBOTPROPERTIES_H_
 #define ROBOTPROPERTIES_H_
 
+#include "engine/IRobotID.h"
 
 #include <string>
 #include <map>
@@ -30,8 +31,8 @@ namespace alica
 		RobotProperties();
 		RobotProperties(AlicaEngine* ae, string name);
 		virtual ~RobotProperties();
-		int getId() const;
-		void setId(int id);
+		IRobotID getId() const;
+		void setId(IRobotID id);
 		const string& getName() const;
 		void setName(const string& name);
 		map<string, Characteristic*>& getCharacteristics();
@@ -40,7 +41,7 @@ namespace alica
 		string toString();
 
 	protected:
-		int id = -1;
+		IRobotID id;
 		string name;
 		string defaultRole;
 		map<string, Characteristic*> characteristics;

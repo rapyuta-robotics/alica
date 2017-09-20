@@ -9,12 +9,13 @@
 #define SOLVERRESULT_H_
 
 #include "SolverVar.h"
+#include "engine/IRobotID.h"
 
 namespace alica
 {
 	struct SolverResult
 	{
-		int senderID;
+		alica::IRobotID senderID;
 		vector<SolverVar*> vars;
 
 		~SolverResult()

@@ -133,10 +133,10 @@ namespace alica
 		(*this->sBuild) << to_string(robots->size());
 
 		(*this->sBuild) << " TeamMember:";
-		for (int id : (*robots))
+		for (auto& id : (*robots))
 		{
 			(*this->sBuild) << "\t";
-			(*this->sBuild) << to_string(id);
+			(*this->sBuild) << id;
 		}
 		(*this->sBuild) << endl;
 

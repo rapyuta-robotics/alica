@@ -335,31 +335,30 @@ namespace alica
 		}
 		delete this->statusMessage;
 	}
-	void PlanBase::checkPlanBase(shared_ptr<RunningPlan> r)
-	{
-		if (r == nullptr)
-			return;
-		if (r->isBehaviour())
-			return;
-		shared_ptr<vector<int> > robots = r->getAssignment()->getAllRobots();
-		for (shared_ptr<RunningPlan> rp : *r->getChildren())
-		{
-			if (rp->isBehaviour())
-				continue;
-
-			shared_ptr<vector<int> > cr = rp->getAssignment()->getAllRobots();
-
-			for (int i = 0; i < cr->size(); i++)
-			{
-				if (find(robots->begin(), robots->end(), i) != robots->end())
-				{
-					ae->abort("Mismatch Assignment in Plan", rp->getPlan()->getName());
-				}
-			}
-			checkPlanBase(rp);
-		}
-
-	}
+//	void PlanBase::checkPlanBase(shared_ptr<RunningPlan> r)
+//	{
+//		if (r == nullptr)
+//			return;
+//		if (r->isBehaviour())
+//			return;
+//		shared_ptr<vector<alica::IRobotID> > robots = r->getAssignment()->getAllRobots();
+//		for (shared_ptr<RunningPlan> rp : *r->getChildren())
+//		{
+//			if (rp->isBehaviour())
+//				continue;
+//
+//			shared_ptr<vector<alica::IRobotID> > cr = rp->getAssignment()->getAllRobots();
+//
+//			for (int i = 0; i < cr->size(); i++)
+//			{
+//				if (find(robots->begin(), robots->end(), i) != robots->end())
+//				{
+//					ae->abort("Mismatch Assignment in Plan", rp->getPlan()->getName());
+//				}
+//			}
+//			checkPlanBase(rp);
+//		}
+//	}
 	void PlanBase::addFastPathEvent(shared_ptr<RunningPlan> p)
 	{
 		{

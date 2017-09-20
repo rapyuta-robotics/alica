@@ -127,10 +127,8 @@ namespace alica
 
 	long RobotEngineData::makeUniqueId(string s)
 	{
-		long ret = (long)this->getProperties()->getId() << 32;
-		ret += (unsigned int) hash<string>()(s);
-		auto iterator = this->ae->getPlanParser()->getParsedElements()->find(ret);
-		if(iterator != ae->getPlanParser()->getParsedElements()->end())
+		long ret = (long) (std::hash<alica::IRobotID>()(this->getProperties()->getId()) + std::hash<string>()(s));
+		if(this->ae->getPlanParser()->getParsedElements()->find(ret) != ae->getPlanParser()->getParsedElements()->end())
 		{
 			ae->abort("TO: Hash Collision in generating unique ID: ", ret);
 		}

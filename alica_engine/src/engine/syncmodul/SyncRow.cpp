@@ -28,13 +28,13 @@ namespace alica
 		delete syncData;
 	}
 
-	vector<int>& SyncRow::getReceivedBy()
+	vector<alica::IRobotID>& SyncRow::getReceivedBy()
 	{
 		sort(this->receivedBy.begin(), this->receivedBy.end());
 		return receivedBy;
 	}
 
-	void SyncRow::setReceivedBy(vector<int> receivedBy)
+	void SyncRow::setReceivedBy(vector<alica::IRobotID> receivedBy)
 	{
 		this->receivedBy = receivedBy;
 	}
@@ -56,7 +56,7 @@ namespace alica
 	{
 		cout << "SyncRow" << endl;
 		cout << "ReceivedBy: ";
-		for(int i : receivedBy)
+		for(auto& i : receivedBy)
 		{
 			cout << i << " ";
 		}
