@@ -9,9 +9,9 @@
 #include "engine/AlicaEngine.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IEngineModule.h"
+#include "engine/IRobotIDFactory.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/ISyncModul.h"
-#include "engine/IRobotIDFactory.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
 #include "engine/UtilityFunction.h"
@@ -29,6 +29,7 @@
 #include "engine/staticroleassignment/StaticRoleAssignment.h"
 #include "engine/syncmodul/SyncModul.h"
 #include "engine/teamobserver/TeamObserver.h"
+#include "engine/teammanager/TeamManager.h"
 #include <engine/constraintmodul/ISolver.h>
 
 using namespace std;
@@ -38,34 +39,33 @@ namespace alica
  * The main class.
  */
 AlicaEngine::AlicaEngine()
+    : stepCalled(false)
+    , planBase(nullptr)
+    , planner(nullptr)
+    , planSelector(nullptr)
+    , communicator(nullptr)
+    , alicaClock(nullptr)
+    , sc(supplementary::SystemConfig::getInstance())
+    , terminating(false)
+    , teamObserver(nullptr)
+    , roleAssignment(nullptr)
+    , behaviourPool(nullptr)
+    , syncModul(nullptr)
+    , expressionHandler(nullptr)
+    , masterPlan(nullptr)
+    , planParser(nullptr)
+    , log(nullptr)
+    , planRepository(nullptr)
+    , auth(nullptr)
+    , roleSet(nullptr)
+    , stepEngine(false)
+    , maySendMessages(false)
+    , pap(nullptr)
+    , variableSyncModule(nullptr)
+    , useStaticRoles(false)
+    , robotIDFactory(nullptr)
+	, teamManager(nullptr)
 {
-    this->stepCalled = false;
-    this->planBase = nullptr;
-    this->planner = nullptr;
-    this->planSelector = nullptr;
-    this->communicator = nullptr;
-    this->alicaClock = nullptr;
-    this->syncModul = nullptr;
-    this->sc = supplementary::SystemConfig::getInstance();
-    this->terminating = false;
-    this->teamObserver = nullptr;
-    this->roleAssignment = nullptr;
-    this->behaviourPool = nullptr;
-    this->syncModul = nullptr;
-    this->roleSet = nullptr;
-    this->expressionHandler = nullptr;
-    this->masterPlan = nullptr;
-    this->planParser = nullptr;
-    this->log = nullptr;
-    this->planRepository = nullptr;
-    this->auth = nullptr;
-    this->roleSet = nullptr;
-    this->stepEngine = false;
-    this->maySendMessages = false;
-    this->pap = nullptr;
-    this->variableSyncModule = nullptr;
-    this->useStaticRoles = false;
-    this->robotIDFactory = nullptr;
 
 #ifdef AE_DEBUG
     cout << "AE: Constructor finished!" << endl;
@@ -95,31 +95,35 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
 
     this->terminating = false;
     this->stepEngine = stepEngine;
-    if (this->planRepository == nullptr)
+    if (!this->planRepository)
     {
         this->planRepository = new PlanRepository();
     }
-    if (this->planParser == nullptr)
+    if (!this->planParser)
     {
         this->planParser = new PlanParser(this, this->planRepository);
     }
-    if (this->masterPlan == nullptr)
+    if (!this->masterPlan)
     {
         this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
     }
-    if (this->roleSet == nullptr)
+    if (!this->roleSet)
     {
         this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
     }
-    if (this->behaviourPool == nullptr)
+    if (!this->behaviourPool)
     {
         this->behaviourPool = new BehaviourPool(this);
     }
-    if (this->teamObserver == nullptr)
+    if (!this->teamManager)
+    {
+    	this->teamManager = new TeamManager(this);
+    }
+    if (!this->teamObserver)
     {
         this->teamObserver = new TeamObserver(this);
     }
-    if (this->roleAssignment == nullptr)
+    if (!this->roleAssignment)
     {
         if (this->useStaticRoles)
         {
@@ -127,16 +131,16 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
         }
         else
         {
-        	this->abort("Unknown RoleAssignment Type!");
+            this->abort("Unknown RoleAssignment Type!");
         }
         // the communicator is expected to be set before init() is called
         this->roleAssignment->setCommunication(communicator);
     }
-    if (this->syncModul == nullptr)
+    if (!this->syncModul)
     {
         this->syncModul = new SyncModul(this);
     }
-    if (this->expressionHandler == nullptr)
+    if (!this->expressionHandler)
     {
         this->expressionHandler = new ExpressionHandler(this, cc, uc, crc);
     }
@@ -148,11 +152,11 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
     this->log = new Logger(this);
     this->teamObserver->init();
     this->roleAssignment->init();
-    if (this->pap == nullptr)
+    if (!this->pap)
     {
         pap = new PartialAssignmentPool();
     }
-    if (planSelector == nullptr)
+    if (!planSelector)
     {
         this->planSelector = new PlanSelector(this, pap);
     }
@@ -162,15 +166,15 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
     this->expressionHandler->attachAll();
     UtilityFunction::initDataStructures(this);
     this->syncModul->init();
-    if (this->variableSyncModule == nullptr)
+    if (!this->variableSyncModule)
     {
         this->variableSyncModule = new VariableSyncModule(this);
     }
-    if (this->getCommunicator() != nullptr)
+    if (this->getCommunicator())
     {
         this->getCommunicator()->startCommunication();
     }
-    if (this->variableSyncModule != nullptr)
+    if (this->variableSyncModule)
     {
         this->variableSyncModule->init();
     }
@@ -522,12 +526,12 @@ void AlicaEngine::stepNotify()
 
 IRobotIDFactory *AlicaEngine::getRobotIDFactory()
 {
-	return this->robotIDFactory;
+    return this->robotIDFactory;
 }
 
 void AlicaEngine::setRobotIDFactory(IRobotIDFactory *factory)
 {
-	this->robotIDFactory = factory;
+    this->robotIDFactory = factory;
 }
 
 } /* namespace Alica */
