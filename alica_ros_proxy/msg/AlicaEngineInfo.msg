@@ -4,4 +4,4 @@ string currentPlan
 string currentState
 string currentRole
 string currentTask
-int32[] robotIDsWithMe
+RobotID[] robotIDsWithMe
