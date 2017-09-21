@@ -41,6 +41,7 @@ namespace alica
 	class PartialAssignmentPool;
 	class ISolver;
 	class IVariableSyncModule;
+	class ITeamManager;
 
 	class AlicaEngine
 	{
@@ -115,6 +116,7 @@ namespace alica
 		IRobotIDFactory* robotIDFactory;
 		IPlanner* planner;
 		IAlicaClock* alicaClock;
+		ITeamManager* teamManager;
 		PartialAssignmentPool* pap;
 		PlanBase* planBase;
 		bool stepCalled;
