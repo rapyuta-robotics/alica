@@ -9,6 +9,7 @@
 #define ALICAROSCOMMUNICATION_H_
 
 #include "engine/IAlicaCommunication.h"
+#include "engine/IRobotID.h"
 #include "ros/ros.h"
 
 #include "alica_ros_proxy/AllocationAuthorityInfo.h"
@@ -83,7 +84,11 @@ namespace alicaRosProxy
 		bool isRunning;
 
 		supplementary::SystemConfig* sc;
-	};
+
+	private:
+		void convertToRosID(alica::IRobotID& a, std::vector<uint8_t>&  b);
+		alica::IRobotID convertToAlicaID( std::vector<uint8_t>& robotRosID);
+};
 
 } /* namespace alicaRosProxy */
 
