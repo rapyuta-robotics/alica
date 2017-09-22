@@ -1,12 +1,4 @@
-/*
- * IAlicaCommunication.h
- *
- *  Created on: Jun 24, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef IALICACOMMUNICATION_H_
-#define IALICACOMMUNICATION_H_
+#pragma once
 
 #include "AlicaEngine.h"
 
@@ -26,7 +18,7 @@ namespace alica
 		IAlicaCommunication(AlicaEngine* ae);
 		virtual ~IAlicaCommunication(){}
 
-		virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai) = 0;
+		virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai) const = 0;
 		virtual void sendAlicaEngineInfo(AlicaEngineInfo& bi) = 0;
 		virtual void sendPlanTreeInfo(PlanTreeInfo& pti) = 0;
 		virtual void sendRoleSwitch(RoleSwitch& rs) = 0;
@@ -51,5 +43,3 @@ namespace alica
 	};
 
 } /* namespace alica */
-
-#endif /* IALICACOMMUNICATION_H_ */

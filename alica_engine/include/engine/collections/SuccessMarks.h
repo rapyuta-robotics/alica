@@ -29,8 +29,8 @@ namespace alica
 	class SuccessMarks
 	{
 	public:
-		SuccessMarks(AlicaEngine* ae);
-		SuccessMarks(AlicaEngine* ae, list<long> epIds);
+		SuccessMarks(const AlicaEngine* ae);
+		SuccessMarks(const AlicaEngine* ae, list<long> epIds);
 		virtual ~SuccessMarks();
 
 
@@ -49,7 +49,7 @@ namespace alica
 
 	protected:
 		map<AbstractPlan*,shared_ptr<list<EntryPoint*> > > succesMarks;
-		AlicaEngine* ae;
+		const AlicaEngine* ae;
 	};
 
 } /* namespace alica */

@@ -1,9 +1,3 @@
-/*
- * BasicBehaviour.cpp
- *
- *  Created on: Jun 4, 2014
- *      Author: Stefan Jakob
- */
 #define BEH_DEBUG
 
 #include "ITrigger.h"
@@ -122,7 +116,7 @@ namespace alica
 	 * Convenience method to obtain the robot's own id.
 	 * @return the own robot id
 	 */
-	alica::IRobotID BasicBehaviour::getOwnId()
+	const alica::IRobotID* BasicBehaviour::getOwnId()
 	{
 		return this->runningPlan->getOwnID();
 	}
@@ -206,7 +200,7 @@ namespace alica
 		this->behaviourTrigger->registerCV(&this->runCV);
 	}
 
-	shared_ptr<vector<alica::IRobotID>> BasicBehaviour::robotsInEntryPointOfHigherPlan(EntryPoint* ep)
+	shared_ptr<vector<const alica::IRobotID*>> BasicBehaviour::robotsInEntryPointOfHigherPlan(EntryPoint* ep)
 	{
 		if (ep == nullptr)
 		{
@@ -225,7 +219,7 @@ namespace alica
 		return nullptr;
 	}
 
-	shared_ptr<vector<alica::IRobotID> > BasicBehaviour::robotsInEntryPoint(EntryPoint* ep)
+	shared_ptr<vector<const alica::IRobotID*> > BasicBehaviour::robotsInEntryPoint(EntryPoint* ep)
 	{
 		if (ep == nullptr)
 		{

@@ -1,12 +1,4 @@
-/*
- * AllocationAuthorityInfo.h
- *
- *  Created on: Jul 7, 2014
- *      Author: Paul Panin
- */
-
-#ifndef ALLOCATIONAUTHORITYINFO_H_
-#define ALLOCATIONAUTHORITYINFO_H_
+#pragma once
 
 #include "engine/IRobotID.h"
 #include "EntryPointRobots.h"
@@ -14,22 +6,23 @@
 #include <vector>
 #include <tuple>
 
-using namespace std;
-
 namespace alica
 {
-	typedef tuple<alica::IRobotID, long, long, long, alica::IRobotID, vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
+	using std::tuple;
+	using std::vector;
+
+	typedef tuple<const alica::IRobotID*, long, long, long, const alica::IRobotID*, vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
 	struct AllocationAuthorityInfo
 	{
 		AllocationAuthorityInfo()
 		{
 		}
 
-		alica::IRobotID senderID;
+		const alica::IRobotID* senderID;
 		long planId;
 		long parentState;
 		long planType;
-		alica::IRobotID authority;
+		const alica::IRobotID* authority;
 		vector<EntryPointRobots> entryPointRobots;
 
 		AllocationAuthorityInfo(stdAllocationAuthorityInfo &s)
@@ -56,6 +49,4 @@ namespace alica
 			return move(make_tuple(senderID, planId, parentState, planType, authority, move(r)));
 		}
 	};
-}
-
-#endif /* ALLOCATIONAUTHORITYINFO_H_ */
+} /* namespace alica */

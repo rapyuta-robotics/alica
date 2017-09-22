@@ -31,12 +31,12 @@ class TeamManager : public ITeamManager
     virtual ~TeamManager();
 
     void init();
-    void tick();
 
     const IRobotID * getLocalAgentID() const;
     std::unique_ptr<std::list<const IRobotID *>> getActiveAgentIDs() const;
     const Agent* getAgentByID(const IRobotID* agentId) const;
     void setTimeLastMsgReceived(const IRobotID *agendId, AlicaTime timeLastMsgReceived);
+    bool isAgentIgnored(const IRobotID* agentId) const;
 
   private:
     AlicaTime teamTimeOut;

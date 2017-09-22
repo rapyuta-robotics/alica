@@ -1,12 +1,4 @@
-/*
- * AuthorityManager.h
- *
- *  Created on: Jun 17, 2014
- *      Author: Paul Panin
- */
-
-#ifndef AUTHORITYMANAGER_H_
-#define AUTHORITYMANAGER_H_
+#pragma once
 
 //#define AM_DEBUG
 
@@ -18,8 +10,6 @@
 
 #include <memory>
 #include <vector>
-
-using namespace std;
 
 namespace alica
 {
@@ -41,13 +31,10 @@ namespace alica
 
 	protected:
 		vector<shared_ptr<AllocationAuthorityInfo>> queue;
-		AlicaEngine* ae;
-		alica::IRobotID ownID;
+		const AlicaEngine* engine;
+		const alica::IRobotID* localAgentID;
 		mutex mu;
 		void processPlan(shared_ptr<RunningPlan> p);
 		bool authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p);
-
-
 	};
-}
-#endif /* AUTHORITYMANAGER_H_ */
+} /* namespace alica */

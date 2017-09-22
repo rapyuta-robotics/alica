@@ -54,12 +54,12 @@ namespace alica
 		bool getStepEngine();
 		void abort(string msg) const;
 		template<typename T> void abort(string msg, const T tail) const;
-		PlanRepository* getPlanRepository();
+		PlanRepository* getPlanRepository() const;
 		IBehaviourPool* getBehaviourPool();
 		string getRobotName() const;
 		Logger* getLog();
 		void setLog(Logger* log);
-		ITeamObserver* getTeamObserver();
+		ITeamObserver* getTeamObserver() const;
 		void setTeamObserver(ITeamObserver* teamObserver);
 
 		void setSyncModul(ISyncModul* syncModul);
@@ -68,7 +68,7 @@ namespace alica
 		void setAuth(AuthorityManager* auth);
 		IRoleAssignment* getRoleAssignment();
 		void setRoleAssignment(IRoleAssignment* roleAssignment);
-		IPlanParser* getPlanParser();
+		IPlanParser* getPlanParser() const;
 		bool isTerminating() const;
 		void setTerminating(bool terminating);
 		void setStepCalled(bool stepCalled);
@@ -76,7 +76,7 @@ namespace alica
 		bool isMaySendMessages() const;
 		void setMaySendMessages(bool maySendMessages);
 		RoleSet* getRoleSet();
-		IAlicaCommunication* getCommunicator();
+		const IAlicaCommunication* getCommunicator() const;
 		void setCommunicator(IAlicaCommunication * communicator);
 		IRobotIDFactory* getRobotIDFactory() const;
 		void setRobotIDFactory(IRobotIDFactory * factory);
@@ -85,7 +85,7 @@ namespace alica
 		IAlicaClock* getIAlicaClock() const;
 		void setIAlicaClock(IAlicaClock* clock);
 		void iterationComplete();
-		PartialAssignmentPool* getPartialAssignmentPool();
+		PartialAssignmentPool* getPartialAssignmentPool() const;
 		void stepNotify();
 		PlanBase* getPlanBase();
 		void addSolver(int identifier, ISolver* solver);
