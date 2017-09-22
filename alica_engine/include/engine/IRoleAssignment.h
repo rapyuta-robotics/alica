@@ -1,24 +1,17 @@
-/*
- * IRoleAssignment.h
- *
- *  Created on: Jun 17, 2014
- *      Author: Paul Panin
- */
-
-#ifndef IROLEASSIGNMENT_H_
-#define IROLEASSIGNMENT_H_
-
-using namespace std;
+#pragma once
 
 #include "engine/IRobotID.h"
 
 #include "model/Role.h"
 #include "ITeamObserver.h"
 #include "engine/collections/RobotEngineData.h"
+
 #include <map>
 
 namespace alica
 {
+
+	class AlicaEngine;
 	class IAlicaCommunication;
 
 	class IRoleAssignment
@@ -34,19 +27,18 @@ namespace alica
 		virtual void tick() = 0;
 		virtual void update() = 0;
 
-		Role* getOwnRole();
-		Role* getRole(alica::IRobotID robotId);
+		const Role* getOwnRole();
+		const Role* getRole(alica::IRobotID robotId);
 		void setCommunication(IAlicaCommunication* communication);
 
 	protected:
+		AlicaEngine * engine;
 		/**
 		 * Current Robot's role.
 		 */
 		Role* ownRole;
 		map<alica::IRobotID, Role*> robotRoleMapping;
 		IAlicaCommunication* communication;
-		ITeamObserver* to;
 
 	};
 }
-#endif /* IROLEASSIGNMENT_H_ */

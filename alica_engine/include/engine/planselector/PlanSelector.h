@@ -1,12 +1,4 @@
-/*
- * PlanSelector.h
- *
- *  Created on: Jul 4, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef PLANSELECTOR_H_
-#define PLANSELECTOR_H_
+#pragma once
 
 //#define PSDEBUG
 
@@ -42,17 +34,15 @@ namespace alica
 		virtual ~PlanSelector();
 
 		virtual shared_ptr<RunningPlan> getBestSimilarAssignment(shared_ptr<RunningPlan> rp);
-		virtual shared_ptr<RunningPlan> getBestSimilarAssignment(shared_ptr<RunningPlan> rp, shared_ptr<vector<alica::IRobotID> > robots);
-		virtual shared_ptr<list<shared_ptr<RunningPlan>> > getPlansForState(shared_ptr<RunningPlan>planningParent, list<alica::AbstractPlan*>* plans, shared_ptr<vector<alica::IRobotID> > robotIDs);
-		shared_ptr<RunningPlan> createRunningPlan(weak_ptr<RunningPlan> planningParent, list<Plan*> plans, shared_ptr<vector<alica::IRobotID> >  robotIDs, shared_ptr<RunningPlan> oldRp, PlanType* relevantPlanType);
+		virtual shared_ptr<RunningPlan> getBestSimilarAssignment(shared_ptr<RunningPlan> rp, shared_ptr<vector<const alica::IRobotID*> > robots);
+		virtual shared_ptr<list<shared_ptr<RunningPlan>> > getPlansForState(shared_ptr<RunningPlan>planningParent, list<alica::AbstractPlan*>* plans, shared_ptr<vector<const alica::IRobotID*> > robotIDs);
+		shared_ptr<RunningPlan> createRunningPlan(weak_ptr<RunningPlan> planningParent, list<Plan*> plans, shared_ptr<vector<const alica::IRobotID*> >  robotIDs, shared_ptr<RunningPlan> oldRp, PlanType* relevantPlanType);
 
 	private:
 		PartialAssignmentPool* pap;
 		ITeamObserver* to;
 		AlicaEngine* ae;
-		shared_ptr<list<shared_ptr<RunningPlan>> > getPlansForStateInternal(shared_ptr<RunningPlan> planningParent, list<alica::AbstractPlan*>* plans, shared_ptr<vector<alica::IRobotID> > robotIDs);
+		shared_ptr<list<shared_ptr<RunningPlan>> > getPlansForStateInternal(shared_ptr<RunningPlan> planningParent, list<alica::AbstractPlan*>* plans, shared_ptr<vector<const alica::IRobotID*> > robotIDs);
 	};
 
 } /* namespace alica */
-
-#endif /* PLANSELECTOR_H_ */

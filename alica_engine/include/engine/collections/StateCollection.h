@@ -30,30 +30,30 @@ namespace alica
 	{
 	public:
 		StateCollection();
-		StateCollection(vector<alica::IRobotID> robotIds, vector<State*> states);
+		StateCollection(vector<const alica::IRobotID*> robotIds, vector<State*> states);
 		StateCollection(int maxSize);
 		StateCollection(AssignmentCollection* ac);
 		virtual ~StateCollection();
-		vector<alica::IRobotID>& getRobots();
-		void setRobots(vector<alica::IRobotID> robotIds);
+		vector<const alica::IRobotID*>& getRobots();
+		void setRobots(vector<const alica::IRobotID*> robotIds);
 		vector<State*>& getStates();
 		void setStates(vector<State*> states);
 		int getCount();
-		State* getState(alica::IRobotID robotId);
-		unordered_set<alica::IRobotID> getRobotsInState(State* s);
-		shared_ptr<vector<alica::IRobotID> > getRobotsInStateSorted(State* s);
-		unordered_set<alica::IRobotID> getRobotsInState(long sid);
-		void removeRobot(alica::IRobotID robotId);
+		State* getState(const alica::IRobotID* robotId);
+		unordered_set<const alica::IRobotID*> getRobotsInState(State* s);
+		shared_ptr<vector<const alica::IRobotID*> > getRobotsInStateSorted(State* s);
+		unordered_set<const alica::IRobotID*> getRobotsInState(long sid);
+		void removeRobot(const alica::IRobotID* robotId);
 		void clear();
-		State* stateOfRobot(alica::IRobotID robotId);
-		void setState(alica::IRobotID robotId, State* state);
-		void setStates(vector<alica::IRobotID> robotIds, State* state);
+		State* stateOfRobot(const alica::IRobotID* robotId);
+		void setState(const alica::IRobotID* robotId, State* state);
+		void setStates(vector<const alica::IRobotID*> robotIds, State* state);
 		string toString();
-		void setInitialState(alica::IRobotID robotId, EntryPoint* ep);
+		void setInitialState(const alica::IRobotID* robotId, EntryPoint* ep);
 		void reconsiderOldAssignment(shared_ptr<Assignment> oldOne, shared_ptr<Assignment> newOne);
 
 	protected:
-		vector<alica::IRobotID> robotIds;
+		vector<const alica::IRobotID*> robotIds;
 		vector<State*> states;
 	};
 

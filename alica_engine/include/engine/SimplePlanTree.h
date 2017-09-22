@@ -37,7 +37,7 @@ namespace alica
 		void setState(State* state);
 		unordered_set<shared_ptr<SimplePlanTree> >& getChildren();
 		void setChildren(unordered_set<shared_ptr<SimplePlanTree> > children);
-		alica::IRobotID getRobotId();
+		const alica::IRobotID* getRobotId();
 		void setRobotId(alica::IRobotID robotId);
 		bool isNewSimplePlanTree() const;
 		void setNewSimplePlanTree(bool newSimplePlanTree);
@@ -62,7 +62,7 @@ namespace alica
 		/**
 		 * The id of the robot to which this tree refers to
 		 */
-		alica::IRobotID robotId;
+		const alica::IRobotID *robotId;
 		bool newSimplePlanTree;
 		/**
 		 * The timestamp denoting when this tree was received.

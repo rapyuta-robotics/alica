@@ -1,15 +1,8 @@
-/*
- * AssignmentCollection.h
- *
- *  Created on: Jun 26, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef ASSIGNMENTCOLLECTION_H_
-#define ASSIGNMENTCOLLECTION_H_
-
+#pragma once
 
 #include "engine/IRobotID.h"
+
+#include <SystemConfig.h>
 
 #include <vector>
 #include <string>
@@ -17,7 +10,6 @@
 #include <memory>
 #include <iostream>
 #include <algorithm>
-#include <SystemConfig.h>
 
 using namespace std;
 
@@ -38,10 +30,10 @@ namespace alica
 		void setSize(short size);
 		EntryPoint* getEp(short index);
 		bool setEp(short index, EntryPoint* ep);
-		shared_ptr<vector<alica::IRobotID>> getRobots(short index);
-		shared_ptr<vector<alica::IRobotID>> getRobotsByEp(EntryPoint* ep);
-		shared_ptr<vector<alica::IRobotID>> getRobotsByEpId(long id);
-		bool setRobots(short index, shared_ptr<vector<alica::IRobotID>> robotIds);
+		shared_ptr<vector<const alica::IRobotID *>> getRobots(short index);
+		shared_ptr<vector<const alica::IRobotID *>> getRobotsByEp(EntryPoint* ep);
+		shared_ptr<vector<const alica::IRobotID *>> getRobotsByEpId(long id);
+		bool setRobots(short index, shared_ptr<vector<const alica::IRobotID*>> robotIds);
 		void clear();
 		string toString();
 		void sortEps();
@@ -51,11 +43,9 @@ namespace alica
 		static bool allowIdling;
 
 	protected:
-		//static short maxNumEps = (*supplementary::SystemConfig::getInstance())["Alica"]->get<bool>("Alica.MaxEpsPerPlan", NULL);
 		/**
 		 * The EntryPoints referred to
 		 */
-		//shared_ptr<vector<EntryPoint*> > entryPoints;
 		EntryPoint** entryPoints;
 		/**
 		 * The number of EntryPoints in this AssignmentCollection.
@@ -64,10 +54,7 @@ namespace alica
 		/**
 		 * The robots mapped to EntryPoints in this AssignmentCollection.
 		 */
-		//shared_ptr<vector<shared_ptr<vector<int> > > > robots;
-		shared_ptr<vector<alica::IRobotID>> * robotIds;
+		shared_ptr<vector<const alica::IRobotID *>> * robotIds;
 	};
 
 } /* namespace alica */
-
-#endif /* ASSIGNMENTCOLLECTION_H_ */

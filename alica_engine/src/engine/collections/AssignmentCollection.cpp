@@ -1,10 +1,3 @@
-/*
- * AssignmentCollection.cpp
- *
- *  Created on: Jun 26, 2014
- *      Author: Stefan Jakob
- */
-
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Task.h"
@@ -34,7 +27,7 @@ namespace alica
 		delete[] this->robotIds;
 	}
 
-	bool AssignmentCollection::setRobots(short index, shared_ptr<vector<alica::IRobotID>> robotIds)
+	bool AssignmentCollection::setRobots(short index, shared_ptr<vector<const alica::IRobotID *>> robotIds)
 	{
 		if (index < this->numEps) {
 			this->robotIds[index] = robotIds;
@@ -51,7 +44,7 @@ namespace alica
 	 * @param ep An EntryPoint
 	 * @return shared_ptr<vector<int>>
 	 */
-	shared_ptr<vector<alica::IRobotID>> AssignmentCollection::getRobotsByEp(EntryPoint* ep)
+	shared_ptr<vector<const alica::IRobotID *>> AssignmentCollection::getRobotsByEp(EntryPoint* ep)
 	{
 		for (int i = 0; i < this->numEps; i++)
 		{
@@ -68,7 +61,7 @@ namespace alica
 	 * @param id A long
 	 * @return vector<int>*
 	 */
-	shared_ptr<vector<alica::IRobotID>> AssignmentCollection::getRobotsByEpId(long id)
+	shared_ptr<vector<const alica::IRobotID *>> AssignmentCollection::getRobotsByEpId(long id)
 	{
 		for (int i = 0; i < this->numEps; i++)
 		{
@@ -80,7 +73,7 @@ namespace alica
 		return nullptr;
 	}
 
-	shared_ptr<vector<alica::IRobotID>> AssignmentCollection::getRobots(short index)
+	shared_ptr<vector<const alica::IRobotID *>> AssignmentCollection::getRobots(short index)
 	{
 		if (index < this->numEps)
 		{
@@ -94,13 +87,6 @@ namespace alica
 
 	void AssignmentCollection::sortEps()
 	{
-//		cout << "<<<< Check Sort!!!!! " << endl;
-//		for (short i = 0; i < this->numEps; i++)
-//		{
-//			cout << i << ": " << entryPoints[i]->getTask()->getId() << endl;
-//		}
-
-		// Stopfers sort style
 		vector<EntryPoint*> sortedEpVec;
 		for (short i = 0; i < this->numEps; i++)
 		{
@@ -111,17 +97,6 @@ namespace alica
 		{
 			this->entryPoints[i] = sortedEpVec.at(i);
 		}
-
-		// Takers sort style
-		/*
-		 std::sort(std::begin(entryPoints), std::begin(entryPoints) + this->numEps, EpByTaskComparer::compareTo);
-		 */
-
-//		cout << "<<<<< Nachher!!!! " << endl;
-//		for (short i = 0; i < this->numEps; i++)
-//		{
-//			cout << i << ": " << entryPoints[i]->getTask()->getId() << endl;
-//		}
 	}
 
 	/**
@@ -143,7 +118,7 @@ namespace alica
 			if (this->entryPoints[i] != nullptr)
 			{
 				ss << this->entryPoints[i]->getId() << " : ";
-				for (alica::IRobotID& robotId : *this->robotIds[i])
+				for (auto& robotId : *this->robotIds[i])
 				{
 					ss << robotId << ", ";
 				}
@@ -184,7 +159,7 @@ namespace alica
 		}
 		else
 		{
-			cout << "AssCol: Index to HIGH!!!!!! ########################################" << endl;
+			cerr << "AssCol: Index to HIGH!!!!!! ########################################" << endl;
 			return false;
 		}
 	}

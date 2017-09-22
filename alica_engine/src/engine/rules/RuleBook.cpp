@@ -12,6 +12,7 @@
 #include "engine/model/Plan.h"
 #include "engine/RunningPlan.h"
 #include "engine/ITeamObserver.h"
+#include "engine/teammanager/TeamManager.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/logging/Logger.h"
 #include "engine/RunningPlan.h"
@@ -35,6 +36,7 @@ namespace alica
 	{
 		this->ae = ae;
 		this->to = ae->getTeamObserver();
+		this->tm = ae->getTeamManager();
 		this->ps = ae->getPlanSelector();
 		this->sm = ae->getSyncModul();
 		this->log = ae->getLog();
@@ -45,7 +47,6 @@ namespace alica
 
 	RuleBook::~RuleBook()
 	{
-		// TODO Auto-generated destructor stub
 	}
 
 	/**
@@ -67,12 +68,12 @@ namespace alica
 		main->setAssignment(make_shared<Assignment>(masterPlan));
 
 		main->setAllocationNeeded(true);
-		main->setRobotsAvail(move(to->getAvailableRobotIds()));
+		main->setRobotsAvail(move(this->tm->getActiveAgentIDs()));
 
 		EntryPoint* defep = nullptr;
 		list<EntryPoint*> l;
 		defep = masterPlan->getEntryPoints().begin()->second;
-		main->getAssignment()->setAllToInitialState(move(to->getAvailableRobotIds()), defep);
+		main->getAssignment()->setAllToInitialState(move(this->tm->getActiveAgentIDs()), defep);
 		main->activate();
 		main->setOwnEntryPoint(defep);
 		this->log->eventOccured("Init");
@@ -293,7 +294,7 @@ namespace alica
 		r->setFailHandlingNeeded(false);
 		r->deactivateChildren();
 		r->clearChildren();
-		vector<alica::IRobotID> robots(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
+		vector<const alica::IRobotID*> robots(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
 		copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
 				r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
 				robots.begin()); // backinserter
@@ -434,9 +435,9 @@ namespace alica
 			r->setOwnEntryPoint(((Plan*)r->getPlan())->getEntryPoints().begin()->second);
 
 			r->setAllocationNeeded(true);
-			r->setRobotsAvail(move(to->getAvailableRobotIds()));
+			r->setRobotsAvail(move(this->tm->getActiveAgentIDs()));
 			r->getAssignment()->clear();
-			r->getAssignment()->setAllToInitialState(move(to->getAvailableRobotIds()), r->getOwnEntryPoint());
+			r->getAssignment()->setAllToInitialState(move(this->tm->getActiveAgentIDs()), r->getOwnEntryPoint());
 			r->setActiveState(r->getOwnEntryPoint()->getState());
 			r->clearFailedChildren();
 #ifdef RULE_debug

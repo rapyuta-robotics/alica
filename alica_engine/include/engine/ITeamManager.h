@@ -3,13 +3,14 @@
 #include "engine/IAlicaClock.h"
 
 #include <memory>
-#include <vector>
+#include <list>
 
 namespace alica
 {
 
 class IRobotID;
 class AlicaEngine;
+class Agent;
 
 class ITeamManager
 {
@@ -19,9 +20,9 @@ class ITeamManager
     virtual ~ITeamManager();
 
     virtual void init() = 0;
-    virtual void tick() = 0;
-    virtual const IRobotID *getOwnRobotID() const = 0;
-    virtual std::unique_ptr<std::vector<const IRobotID *>> getActiveRobots() const = 0;
+    virtual const IRobotID *getLocalAgentID() const = 0;
+    virtual std::unique_ptr<std::list<const IRobotID *>> getActiveAgentIDs() const = 0;
+    virtual const Agent* getAgentByID(const IRobotID* agentId) const = 0;
     virtual void setTimeLastMsgReceived(const IRobotID *, AlicaTime) = 0;
 
     const AlicaEngine *engine;

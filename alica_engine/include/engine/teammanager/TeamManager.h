@@ -2,9 +2,10 @@
 
 #include "engine/ITeamManager.h"
 #include "engine/IAlicaClock.h"
+#include "engine/teammanager/Agent.h"
 
 #include <map>
-#include <vector>
+#include <list>
 #include <memory>
 #include <unordered_set>
 
@@ -15,14 +16,13 @@ namespace supplementary {
 namespace alica
 {
 
-using std::vector;
+using std::list;
 using std::map;
 using std::unique_ptr;
 using std::unordered_set;
 
 class IRobotID;
 class AlicaEngine;
-class Agent;
 
 class TeamManager : public ITeamManager
 {
@@ -34,13 +34,15 @@ class TeamManager : public ITeamManager
     void tick();
 
     const IRobotID * getLocalAgentID() const;
-    void setTimeLastMsgReceived(const IRobotID *robotID, AlicaTime timeLastMsgReceived);
+    std::unique_ptr<std::list<const IRobotID *>> getActiveAgentIDs() const;
+    const Agent* getAgentByID(const IRobotID* agentId) const;
+    void setTimeLastMsgReceived(const IRobotID *agendId, AlicaTime timeLastMsgReceived);
 
   private:
     AlicaTime teamTimeOut;
     Agent * localAgent;
     map<const IRobotID *, Agent *> agents;
-    unordered_set<const alica::IRobotID *> ignoredRobots;
+    unordered_set<const alica::IRobotID *> ignoredAgents;
     bool useConfigForTeam;
 
     void readTeamFromConfig(supplementary::SystemConfig *sc);

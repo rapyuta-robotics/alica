@@ -1,7 +1,6 @@
 #pragma once
 
 #include "engine/IAlicaClock.h"
-#include "engine/IRobotID.h"
 
 #include <string>
 
@@ -11,33 +10,39 @@ namespace alica
 class AlicaEngine;
 class RobotProperties;
 class RobotEngineData;
+class IRobotID;
+class TeamManager;
 
 class Agent
 {
+    // allows the TeamManager to call setTimeLastMsgReceived(..)
+    friend ::alica::TeamManager;
+
   public:
-    Agent(AlicaEngine* engine, AlicaTime timeout, IRobotID *id);
-    Agent(AlicaEngine* engine, AlicaTime timeout, IRobotID *id, std::string name);
     virtual ~Agent();
 
-    const IRobotID* getID();
+    const IRobotID *getID();
     std::string getName();
-    const RobotProperties* getProperties();
-    const RobotEngineData* getEngineData();
+    const RobotProperties *getProperties() const;
+    const RobotEngineData *getEngineData() const;
     bool isActive();
     void setActive(bool active);
 
   protected:
-    IRobotID* id;
+    Agent(const AlicaEngine *engine, AlicaTime timeout, const IRobotID *id);
+    Agent(const AlicaEngine *engine, AlicaTime timeout, const IRobotID *id, std::string name);
+
+    const IRobotID *id;
     std::string name;
     bool active;
     AlicaTime timeout;
     AlicaTime timeLastMsgReceived;
-    RobotProperties* properties;
-    RobotEngineData* engineData;
+    RobotProperties *properties;
+    RobotEngineData *engineData;
 
     void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived);
 
-    AlicaEngine* engine;
+    const AlicaEngine *engine;
 };
 
 } /* namespace alica */

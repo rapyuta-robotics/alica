@@ -1,11 +1,4 @@
-/*
- * Logger.cpp
- *
- *  Created on: Jun 13, 2014
- *      Author: Stefan Jakob
- */
-
-#include <engine/logging/Logger.h>
+#include "engine/logging/Logger.h"
 #include "engine/model/State.h"
 #include "engine/model/Plan.h"
 #include "engine/model/EntryPoint.h"
@@ -15,6 +8,7 @@
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/ITeamObserver.h"
+#include "engine/ITeamManager.h"
 #include "engine/SimplePlanTree.h"
 
 namespace alica
@@ -52,6 +46,7 @@ namespace alica
 			this->eventStrings = list<string>();
 			this->inIteration = false;
 			this->to = ae->getTeamObserver();
+			this->tm = ae->getTeamManager();
 			this->time = 0;
 		}
 		this->recievedEvent = false;
@@ -127,7 +122,7 @@ namespace alica
 		}
 		(*this->sBuild) << endl;
 
-		auto robots = this->to->getAvailableRobotIds();
+		auto robots = this->tm->getActiveAgentIDs();
 
 		(*this->sBuild) << "TeamSize:\t";
 		(*this->sBuild) << to_string(robots->size());

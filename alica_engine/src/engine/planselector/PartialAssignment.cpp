@@ -1,10 +1,3 @@
-/*
- * PartialAssignment.cpp
- *
- *  Created on: Jul 4, 2014
- *      Author: Stefan Jakob
- */
-
 #include <engine/planselector/PartialAssignment.h>
 #include <engine/planselector/PartialAssignmentPool.h>
 
@@ -55,7 +48,7 @@ namespace alica
 		this->hashCalculated = false;
 		this->plan = nullptr;
 		this->epRobotsMapping = new AssignmentCollection(AssignmentCollection::maxEpsCount);
-		this->unassignedRobotIds = vector<alica::IRobotID>();
+		this->unassignedRobotIds = vector<const alica::IRobotID*>();
 		this->dynCardinalities = vector<shared_ptr<DynCardinality>>(AssignmentCollection::maxEpsCount);
 		this->compareVal = PRECISION;
 		for (int i = 0; i < AssignmentCollection::maxEpsCount; i++)
@@ -113,12 +106,12 @@ namespace alica
 		pap->curIndex = 0;
 	}
 
-	shared_ptr<vector<alica::IRobotID>> PartialAssignment::getRobotIds ()
+	shared_ptr<vector<const alica::IRobotID*>> PartialAssignment::getRobotIds ()
 	{
 		return this->robotIds;
 	}
 
-	PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, shared_ptr<vector<alica::IRobotID> > robotIds,
+	PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, shared_ptr<vector<const alica::IRobotID*> > robotIds,
 													Plan* plan, shared_ptr<SuccessCollection> sucCol)
 	{
 		if (pap->curIndex >= pap->maxCount)
@@ -157,7 +150,7 @@ namespace alica
 		{
 			ret->dynCardinalities[i]->setMin(ret->epRobotsMapping->getEp(i)->getMinCardinality());
 			ret->dynCardinalities[i]->setMax(ret->epRobotsMapping->getEp(i)->getMaxCardinality());
-			shared_ptr<list<alica::IRobotID> > suc = sucCol->getRobots(ret->epRobotsMapping->getEp(i));
+			shared_ptr<list<const alica::IRobotID*> > suc = sucCol->getRobots(ret->epRobotsMapping->getEp(i));
 
 			if (suc != nullptr)
 			{
@@ -249,19 +242,19 @@ namespace alica
 		return this->getNumUnAssignedRobotIds() + c;
 	}
 
-	shared_ptr<vector<alica::IRobotID> > PartialAssignment::getRobotsWorking(EntryPoint* ep)
+	shared_ptr<vector<const alica::IRobotID*> > PartialAssignment::getRobotsWorking(EntryPoint* ep)
 	{
 		return this->epRobotsMapping->getRobotsByEp(ep);
 	}
 
-	shared_ptr<vector<alica::IRobotID> > PartialAssignment::getRobotsWorking(long epid)
+	shared_ptr<vector<const alica::IRobotID*> > PartialAssignment::getRobotsWorking(long epid)
 	{
 		return this->epRobotsMapping->getRobotsByEpId(epid);
 	}
 
-	shared_ptr<list<alica::IRobotID> > PartialAssignment::getRobotsWorkingAndFinished(EntryPoint* ep)
+	shared_ptr<list<const alica::IRobotID*> > PartialAssignment::getRobotsWorkingAndFinished(EntryPoint* ep)
 	{
-		shared_ptr<list<alica::IRobotID> > ret = make_shared<list<alica::IRobotID> >(list<alica::IRobotID>());
+		shared_ptr<list<const alica::IRobotID*> > ret = make_shared<list<const alica::IRobotID*> >(list<const alica::IRobotID*>());
 		auto robotIds = this->epRobotsMapping->getRobotsByEp(ep);
 		if (robotIds != nullptr)
 		{
@@ -281,9 +274,9 @@ namespace alica
 		return ret;
 	}
 
-	shared_ptr<list<alica::IRobotID> > PartialAssignment::getRobotsWorkingAndFinished(long epid)
+	shared_ptr<list<const alica::IRobotID*> > PartialAssignment::getRobotsWorkingAndFinished(long epid)
 	{
-		shared_ptr<list<alica::IRobotID> > ret = make_shared<list<alica::IRobotID> >(list<alica::IRobotID>());
+		shared_ptr<list<const alica::IRobotID*> > ret = make_shared<list<const alica::IRobotID*> >(list<const alica::IRobotID*>());
 		auto robots = this->epRobotsMapping->getRobotsByEpId(epid);
 		if (robots != nullptr)
 		{
@@ -303,9 +296,9 @@ namespace alica
 		return ret;
 	}
 
-	shared_ptr<list<alica::IRobotID> > PartialAssignment::getUniqueRobotsWorkingAndFinished(EntryPoint* ep)
+	shared_ptr<list<const alica::IRobotID*> > PartialAssignment::getUniqueRobotsWorkingAndFinished(EntryPoint* ep)
 	{
-		shared_ptr<list<alica::IRobotID> > ret = make_shared<list<alica::IRobotID> >(list<alica::IRobotID>());
+		auto ret = make_shared<list<const alica::IRobotID*> >(list<const alica::IRobotID*>());
 		auto robots = this->epRobotsMapping->getRobotsByEp(ep);
 
 		for (auto iter : (*robots))
@@ -325,7 +318,6 @@ namespace alica
 			}
 		}
 		return ret;
-
 	}
 
 	/**
@@ -334,7 +326,7 @@ namespace alica
 	 * @param An int
 	 * @return A bool
 	 */
-	bool PartialAssignment::addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, alica::IRobotID robotId)
+	bool PartialAssignment::addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, const alica::IRobotID* robotId)
 	{
 		if (spt->getEntryPoint()->getPlan() == this->plan)
 		{
@@ -385,7 +377,7 @@ namespace alica
 	 * Assigns the robot into the data structures according to the given index.
 	 * @return True, when it was possible to assign the robot. False, otherwise.
 	 */
-	bool PartialAssignment::assignRobot(alica::IRobotID robotId, int index)
+	bool PartialAssignment::assignRobot(const alica::IRobotID* robotId, int index)
 	{
 		if (this->dynCardinalities[index]->getMax() > 0)
 		{
@@ -412,7 +404,7 @@ namespace alica
 			return newPas;
 		}
 		// Robot which should be assigned next
-		alica::IRobotID robot = this->unassignedRobotIds[0];
+		const alica::IRobotID* robot = this->unassignedRobotIds[0];
 		this->unassignedRobotIds.erase(this->unassignedRobotIds.begin());
 		PartialAssignment* newPa;
 		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
@@ -560,7 +552,7 @@ namespace alica
 		}
 		ss << endl;
 		//shared_ptr<vector<EntryPoint*> > ownEps = this->epRobotsMapping->getEntryPoints();
-		vector<alica::IRobotID> robots;
+		vector<const alica::IRobotID*> robots;
 
 		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
 		{

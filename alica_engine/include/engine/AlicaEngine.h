@@ -52,8 +52,8 @@ namespace alica
 		void shutdown();
 		void start();
 		bool getStepEngine();
-		void abort(string msg);
-		template<typename T> void abort(string msg, const T tail);
+		void abort(string msg) const;
+		template<typename T> void abort(string msg, const T tail) const;
 		PlanRepository* getPlanRepository();
 		IBehaviourPool* getBehaviourPool();
 		string getRobotName() const;
@@ -78,11 +78,11 @@ namespace alica
 		RoleSet* getRoleSet();
 		IAlicaCommunication* getCommunicator();
 		void setCommunicator(IAlicaCommunication * communicator);
-		IRobotIDFactory* getRobotIDFactory();
+		IRobotIDFactory* getRobotIDFactory() const;
 		void setRobotIDFactory(IRobotIDFactory * factory);
 		IPlanSelector* getPlanSelector();
 		IPlanner* getPlanner();
-		IAlicaClock* getIAlicaClock();
+		IAlicaClock* getIAlicaClock() const;
 		void setIAlicaClock(IAlicaClock* clock);
 		void iterationComplete();
 		PartialAssignmentPool* getPartialAssignmentPool();
@@ -92,6 +92,7 @@ namespace alica
 		ISolver* getSolver(int identifier);
 		IVariableSyncModule* getResultStore();
 		void setResultStore(IVariableSyncModule* resultStore);
+		ITeamManager * getTeamManager() const;
 
 		~AlicaEngine();
 
@@ -149,9 +150,8 @@ namespace alica
 	};
 
 	template<typename T>
-	void AlicaEngine::abort(string msg, const T tail)
+	void AlicaEngine::abort(string msg, const T tail) const
 	{
-		this->maySendMessages = false;
 		stringstream ss;
 		ss << msg << tail;
 		AlicaEngine::abort(ss.str());

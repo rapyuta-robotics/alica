@@ -117,7 +117,7 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
     }
     if (!this->teamManager)
     {
-    	this->teamManager = new TeamManager(this);
+    	this->teamManager = new TeamManager(this, true);
     }
     if (!this->teamObserver)
     {
@@ -324,7 +324,7 @@ IPlanSelector *AlicaEngine::getPlanSelector()
 /**
  * Returns the Alica Clock interface
  */
-IAlicaClock *AlicaEngine::getIAlicaClock()
+IAlicaClock *AlicaEngine::getIAlicaClock() const
 {
     return this->alicaClock;
 }
@@ -416,7 +416,7 @@ void AlicaEngine::setStepEngine(bool stepEngine)
  * Abort execution with a message, called if initialization fails.
  * @param msg A string
  */
-void AlicaEngine::abort(string msg)
+void AlicaEngine::abort(string msg) const
 {
     cerr << "ABORT: " << msg << endl;
     exit(EXIT_FAILURE);
@@ -515,7 +515,7 @@ PartialAssignmentPool *AlicaEngine::getPartialAssignmentPool()
 /**
  * Triggers the engine to run one iteration.
  * Attention: This method call is asynchronous to the triggered iteration.
- * So please wait long enough to let the engine do their stuff of its iteration,
+ * So please wait long enough to let the engine do its stuff of its iteration,
  * before you read values, which will be changed by this iteration.
  */
 void AlicaEngine::stepNotify()
@@ -524,7 +524,7 @@ void AlicaEngine::stepNotify()
     this->getPlanBase()->getStepModeCV()->notify_all();
 }
 
-IRobotIDFactory *AlicaEngine::getRobotIDFactory()
+IRobotIDFactory *AlicaEngine::getRobotIDFactory() const
 {
     return this->robotIDFactory;
 }
@@ -532,6 +532,11 @@ IRobotIDFactory *AlicaEngine::getRobotIDFactory()
 void AlicaEngine::setRobotIDFactory(IRobotIDFactory *factory)
 {
     this->robotIDFactory = factory;
+}
+
+ITeamManager * AlicaEngine::getTeamManager() const
+{
+	return this->teamManager;
 }
 
 } /* namespace Alica */

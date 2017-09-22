@@ -14,7 +14,7 @@
 namespace alica
 {
 
-	SimplePlanTree::SimplePlanTree()
+	SimplePlanTree::SimplePlanTree() : robotId(nullptr)
 	{
 		this->state = nullptr;
 		this->newSimplePlanTree = true;
@@ -74,12 +74,12 @@ namespace alica
 		this->children = children;
 	}
 
-	alica::IRobotID SimplePlanTree::getRobotId()
+	const alica::IRobotID* SimplePlanTree::getRobotId()
 	{
 		return robotId;
 	}
 
-	void SimplePlanTree::setRobotId(alica::IRobotID robotId)
+	void SimplePlanTree::setRobotId(const alica::IRobotID* robotId)
 	{
 		this->robotId = robotId;
 	}

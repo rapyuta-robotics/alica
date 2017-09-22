@@ -1,24 +1,17 @@
-/*
- * EntryPointRobots.h
- *
- *  Created on: Jul 7, 2014
- *      Author: Paul Panin
- */
-
-#ifndef ENTRYPOINTROBOTS_H_
-#define ENTRYPOINTROBOTS_H_
-
+#pragma once
 
 #include "engine/IRobotID.h"
 
 #include <vector>
 #include <tuple>
 
-using namespace std;
-
 namespace alica
 {
-	typedef tuple<long, vector<alica::IRobotID>> stdEntryPointRobot;
+	using std::vector;
+	using std::tuple;
+	using std::get;
+
+	typedef tuple<long, vector<const alica::IRobotID*>> stdEntryPointRobot;
 	struct EntryPointRobots
 	{
 		EntryPointRobots() : entrypoint(0)
@@ -26,7 +19,7 @@ namespace alica
 		}
 
 		long entrypoint;
-		vector<alica::IRobotID> robots;
+		vector<const alica::IRobotID*> robots;
 
 		EntryPointRobots(stdEntryPointRobot& s)
 		{
@@ -40,5 +33,3 @@ namespace alica
 		}
 	};
 }
-
-#endif /* ENTRYPOINTROBOTS_H_ */

@@ -1,17 +1,5 @@
-/*
- * CycleManager.h
- *
- *  Created on: Jul 10, 2014
- *      Author: Paul Panin
- */
-
-#ifndef CYCLEMANAGER_H_
-#define CYCLEMANAGER_H_
-
+#pragma once
 //#define CM_DEBUG
-
-
-
 
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/IAlicaClock.h"
@@ -83,5 +71,3 @@ namespace alica
 	};
 
 } /* namespace supplementary */
-
-#endif /* CYCLEMANAGER_H_ */
