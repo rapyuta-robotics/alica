@@ -43,7 +43,7 @@ namespace alica
 	class TaskAssignment : virtual public ITaskAssignment
 	{
 	public:
-		TaskAssignment(PartialAssignmentPool* pap, ITeamObserver* to, list<Plan*> planList, shared_ptr<vector<alica::IRobotID> > paraRobots, bool preasingOtherRobots);
+		TaskAssignment(PartialAssignmentPool* pap, ITeamObserver* to, list<Plan*> planList, shared_ptr<vector<const alica::IRobotID*> > paraRobots, bool preasingOtherRobots);
 		virtual ~TaskAssignment();
 		shared_ptr<Assignment> getNextBestAssignment(IAssignment* oldAss);
 		string toString();
@@ -58,11 +58,11 @@ namespace alica
 		// Plan to build an assignment for
 		ITeamObserver* to;
 		list<Plan*> planList;
-		shared_ptr<vector<alica::IRobotID> > robots;
+		shared_ptr<vector<const alica::IRobotID*> > robots;
 		vector<EntryPoint*> entryPointVector;
 		// Fringe of the search tree
 		vector<PartialAssignment*> fringe;
-		bool addAlreadyAssignedRobots(PartialAssignment* pa, map<alica::IRobotID, shared_ptr<SimplePlanTree> >* simplePlanTreeMap);
+		bool addAlreadyAssignedRobots(PartialAssignment* pa, map<const alica::IRobotID*, shared_ptr<SimplePlanTree> >* simplePlanTreeMap);
 
 #ifdef EXPANSIONEVAL
 		int expansionCount;

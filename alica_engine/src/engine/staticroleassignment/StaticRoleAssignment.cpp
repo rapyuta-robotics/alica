@@ -26,8 +26,6 @@ namespace alica
 	 */
 	void StaticRoleAssignment::init()
 	{
-		this->to = ae->getTeamObserver();
-
 		this->calculateRoles();
 	}
 
@@ -78,11 +76,8 @@ namespace alica
 #endif
 					this->robotRoleMapping.emplace(robot->getId(), role.second);
 
-					// also set the role in the RobotEngineData container of the team observer
-					this->to->getRobotById(robot->getId())->setLastRole(role.second);
-
 					// set own role, if its me
-					if (robot->getId() == this->to->getOwnId() && this->ownRole != role.second)
+					if (robot->getId() == this->ae->getTeamManager()->getOwnRobotID() && this->ownRole != role.second)
 					{
 						this->ownRole = role.second;
 

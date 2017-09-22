@@ -53,6 +53,7 @@ namespace alica
 	protected:
 		AlicaEngine* ae;
 		ITeamObserver* to;
+		ITeamManager* tm;
 		bool active = false;
 		ofstream* fileWriter;
 		bool recievedEvent;

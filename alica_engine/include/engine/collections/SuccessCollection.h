@@ -30,19 +30,19 @@ namespace alica
 		int getCount() const;
 		void setCount(int count);
 		EntryPoint** getEntryPoints();
-		void setSuccess(alica::IRobotID robot, EntryPoint* ep);
+		void setSuccess(const alica::IRobotID* robot, EntryPoint* ep);
 		void clear();
-		vector<shared_ptr<list<alica::IRobotID> > >& getRobots();
-		void setRobots(vector<shared_ptr<list<alica::IRobotID> > >& robots);
-		shared_ptr<list<alica::IRobotID> > getRobots(EntryPoint* ep);
-		shared_ptr<list<alica::IRobotID> > getRobotsById(long id);
+		vector<shared_ptr<list<const alica::IRobotID*> > >& getRobots();
+		void setRobots(vector<shared_ptr<list<const alica::IRobotID*> > >& robots);
+		shared_ptr<list<const alica::IRobotID*> > getRobots(EntryPoint* ep);
+		shared_ptr<list<const alica::IRobotID*> > getRobotsById(long id);
 		string toString();
 
 	private:
 
 	protected:
 		EntryPoint** entryPoints;
-		vector<shared_ptr<list<alica::IRobotID> > > robotIds;
+		vector<shared_ptr<list<const alica::IRobotID*> > > robotIds;
 		int count = 0;
 	};
 

@@ -1,12 +1,4 @@
-/*
- * RunningPlan.h
- *
- *  Created on: Jun 10, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef RUNNINGPLAN_H_
-#define RUNNINGPLAN_H_
+#pragma once
 
 #include "engine/PlanStatus.h"
 #include "engine/PlanChange.h"
@@ -74,7 +66,7 @@ namespace alica
 		AlicaTime getStateStartTime();
 		bool isActive();
 		void setActive(bool active);
-		void setRobotsAvail(unique_ptr<list<alica::IRobotID> > robots);
+		void setRobotsAvail(unique_ptr<list<const alica::IRobotID*> > robots);
 		void setAllocationNeeded(bool allocationNeeded);
 		void setFailHandlingNeeded(bool failHandlingNeeded);
 		void setOwnEntryPoint(EntryPoint* value);
@@ -101,8 +93,8 @@ namespace alica
 		void clearChildren();
 		void adaptAssignment(shared_ptr<RunningPlan> r);
 		void setFailedChild(AbstractPlan* child);
-		void setRobotAvail(alica::IRobotID robot);
-		void setRobotUnAvail(alica::IRobotID robot);
+		void setRobotAvail(const alica::IRobotID* robot);
+		void setRobotUnAvail(const alica::IRobotID* robot);
 		void accept(IPlanTreeVisitor* vis);
 		void deactivate();
 		bool anyChildrenStatus(PlanStatus ps);
@@ -111,14 +103,14 @@ namespace alica
 		void activate();
 		EntryPoint* getActiveEntryPoint();
 		void setActiveEntryPoint(EntryPoint* activeEntryPoint);
-		void limitToRobots(unordered_set<alica::IRobotID> robots);
+		void limitToRobots(unordered_set<const alica::IRobotID*> robots);
 		std::shared_ptr<CycleManager> getCycleManagement();
 		void revokeAllConstraints();
 		void attachPlanConstraints();
-		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<alica::IRobotID> availableAgents,list<alica::IRobotID> noUpdates, AlicaTime now);
+		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<const alica::IRobotID*> availableAgents,list<const alica::IRobotID*> noUpdates, AlicaTime now);
 		void toMessage(list<long>& message, shared_ptr<RunningPlan>& deepestNode, int& depth, int curDepth);
 		string toString();
-		alica::IRobotID getOwnID();
+		const alica::IRobotID* getOwnID();
 		AlicaEngine* getAlicaEngine();
 
 		void sendLogMessage(int level, string& message);
@@ -142,8 +134,8 @@ namespace alica
 		 * The timestamp referring to when this plan was started by the local robot
 		 */
 		AlicaTime planStartTime;
-		alica::IRobotID ownId;
-		unique_ptr<list<alica::IRobotID> > robotsAvail;
+		const alica::IRobotID* ownId;
+		unique_ptr<list<const alica::IRobotID*> > robotsAvail;
 		map<AbstractPlan*, int> failedSubPlans;
 		PlanType* planType;
 		int failCount;
@@ -160,7 +152,4 @@ namespace alica
 		std::shared_ptr<ConditionStore> constraintStore;
 	};
 
-}
-/* namespace alica */
-
-#endif /* RUNNINGPLAN_H_ */
+}/* namespace alica */

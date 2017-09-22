@@ -1,10 +1,3 @@
-/*
- * StateCollection.cpp
- *
- *  Created on: Jun 26, 2014
- *      Author: Stefan Jakob
- */
-
 #include "engine/collections/StateCollection.h"
 #include "engine/model/State.h"
 #include "engine/model/EntryPoint.h"
@@ -23,12 +16,12 @@ namespace alica
 	{
 	}
 
-	vector<alica::IRobotID>& StateCollection::getRobots()
+	vector<const alica::IRobotID*>& StateCollection::getRobots()
 	{
 		return robotIds;
 	}
 
-	void StateCollection::setRobots(vector<alica::IRobotID> robots)
+	void StateCollection::setRobots(vector<const alica::IRobotID*> robots)
 	{
 		this->robotIds = robots;
 	}
@@ -38,7 +31,7 @@ namespace alica
 		return states;
 	}
 
-	StateCollection::StateCollection(vector<alica::IRobotID> robots, vector<State*> states)
+	StateCollection::StateCollection(vector<const alica::IRobotID*> robots, vector<State*> states)
 	{
 		this->robotIds = robots;
 		this->states = states;
@@ -70,7 +63,7 @@ namespace alica
 		return this->robotIds.size();
 	}
 
-	State* StateCollection::getState(alica::IRobotID robotId)
+	State* StateCollection::getState(const alica::IRobotID* robotId)
 	{
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
@@ -82,9 +75,9 @@ namespace alica
 		return nullptr;
 	}
 
-	unordered_set<alica::IRobotID> StateCollection::getRobotsInState(State* s)
+	unordered_set<const alica::IRobotID*> StateCollection::getRobotsInState(State* s)
 	{
-		unordered_set<alica::IRobotID> ret;
+		unordered_set<const alica::IRobotID*> ret;
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
 			if (this->states[i] == s)
@@ -95,9 +88,9 @@ namespace alica
 		return ret;
 	}
 
-	shared_ptr<vector<alica::IRobotID> > StateCollection::getRobotsInStateSorted(State* s)
+	shared_ptr<vector<const alica::IRobotID*> > StateCollection::getRobotsInStateSorted(State* s)
 	{
-		shared_ptr<vector<alica::IRobotID> > ret= make_shared<vector<alica::IRobotID> >();
+		shared_ptr<vector<const alica::IRobotID*> > ret= make_shared<vector<const alica::IRobotID*> >();
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
 			if (this->states[i] == s)
@@ -109,9 +102,9 @@ namespace alica
 		return ret;
 	}
 
-	unordered_set<alica::IRobotID> StateCollection::getRobotsInState(long sid)
+	unordered_set<const alica::IRobotID*> StateCollection::getRobotsInState(long sid)
 	{
-		unordered_set<alica::IRobotID> ret;
+		unordered_set<const alica::IRobotID*> ret;
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
 			if (this->states[i]->getId() == sid)
@@ -123,7 +116,7 @@ namespace alica
 		return ret;
 	}
 
-	void StateCollection::removeRobot(alica::IRobotID robotId)
+	void StateCollection::removeRobot(const alica::IRobotID* robotId)
 	{
 		for(int i = 0; i < this->states.size();i++)
 		{
@@ -142,7 +135,7 @@ namespace alica
 		this->states.clear();
 	}
 
-	State* StateCollection::stateOfRobot(alica::IRobotID robotId)
+	State* StateCollection::stateOfRobot(const alica::IRobotID* robotId)
 	{
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
@@ -154,7 +147,7 @@ namespace alica
 		return nullptr;
 	}
 
-	void StateCollection::setState(alica::IRobotID robotId, State* state)
+	void StateCollection::setState(const alica::IRobotID* robotId, State* state)
 	{
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
@@ -187,12 +180,12 @@ namespace alica
 		return ss.str();
 	}
 
-	void StateCollection::setInitialState(alica::IRobotID robotId, EntryPoint* ep)
+	void StateCollection::setInitialState(const alica::IRobotID* robotId, EntryPoint* ep)
 	{
 		setState(robotId, ep->getState());
 	}
 
-	void StateCollection::setStates(vector<alica::IRobotID> robotIds, State* state)
+	void StateCollection::setStates(vector<const alica::IRobotID*> robotIds, State* state)
 	{
 		for(int i = 0; i <  robotIds.size(); i++)
 		{
@@ -214,7 +207,7 @@ namespace alica
 		for(short i = 0; i < oldOne->getEntryPointCount(); i++)
 		{
 			ep = oldOne->getEpRobotsMapping()->getEp(i);
-			for(alica::IRobotID& rid : *(oldOne->getRobotsWorking(ep)))
+			for(const alica::IRobotID*& rid : *(oldOne->getRobotsWorking(ep)))
 			{
 				auto iter = find(newOne->getRobotsWorking(ep)->begin(), newOne->getRobotsWorking(ep)->end(), rid);
 				if(iter != newOne->getRobotsWorking(ep)->end())

@@ -27,7 +27,7 @@ namespace alica
 		virtual ~IPlanSelector() {}
 		//normal plan selection
 //		virtual list<RunningPlan*> getPlansForState(RunningPlan* planningParent,list<AbstractPlan*> plans, unordered_set<int> robotIDs) = 0;
-		virtual shared_ptr<list<shared_ptr<RunningPlan>> > getPlansForState(shared_ptr<RunningPlan> planningParent,list<alica::AbstractPlan*>* plans, shared_ptr<vector<alica::IRobotID> > robotIDs) = 0;
+		virtual shared_ptr<list<shared_ptr<RunningPlan>> > getPlansForState(shared_ptr<RunningPlan> planningParent,list<alica::AbstractPlan*>* plans, shared_ptr<vector<const alica::IRobotID*> > robotIDs) = 0;
 
 		/**
 		 * Get the best Assignment for this RP with its plan and old Assignment, which is also similar to the old Assignment
@@ -36,7 +36,7 @@ namespace alica
 		 */
 		virtual shared_ptr<RunningPlan> getBestSimilarAssignment(shared_ptr<RunningPlan> rp) = 0;
 //		virtual RunningPlan* getBestSimilarAssignment(RunningPlan* rp, unordered_set<int> robots) = 0;
-		virtual shared_ptr<RunningPlan> getBestSimilarAssignment(shared_ptr<RunningPlan>rp, shared_ptr<vector<alica::IRobotID> > robots) = 0;
+		virtual shared_ptr<RunningPlan> getBestSimilarAssignment(shared_ptr<RunningPlan>rp, shared_ptr<vector<const alica::IRobotID*> > robots) = 0;
 
 	};
 }
