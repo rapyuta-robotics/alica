@@ -1,22 +1,12 @@
-/*
- * EntryPointRobotPair.h
- *
- *  Created on: Jul 17, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef ENTRYPOINTROBOTPAIR_H_
-#define ENTRYPOINTROBOTPAIR_H_
+#pragma once
 
 #include <memory>
 
 #include "engine/IRobotID.h"
 #include "engine/model/EntryPoint.h"
 
-using namespace std;
 namespace alica
 {
-
 
 	/**
 	 * A simple helper class for conflict detection
@@ -24,17 +14,17 @@ namespace alica
 	class EntryPointRobotPair
 	{
 	public:
-		EntryPointRobotPair(EntryPoint* ep, alica::IRobotID r);
+		EntryPointRobotPair(EntryPoint* ep, const alica::IRobotID* r);
 		virtual ~EntryPointRobotPair();
 		EntryPoint* getEntryPoint();
 		void setEntryPoint(EntryPoint* entryPoint);
-		alica::IRobotID getRobot();
-		void setRobot(alica::IRobotID robot);
+		const alica::IRobotID* getRobot();
+		void setRobot(const alica::IRobotID* robot);
 		static bool equals(std::shared_ptr<EntryPointRobotPair> thisOne, std::shared_ptr<EntryPointRobotPair> other);
 
 	protected:
 		EntryPoint* entryPoint;
-		alica::IRobotID robot;
+		const alica::IRobotID* robot;
 	};
 
 } /* namespace alica */
@@ -49,8 +39,7 @@ namespace std
 
         value_type operator()(argument_type & eprp) const
         {
-            return std::hash<long int>()(eprp.getEntryPoint()->getId()) + std::hash<alica::IRobotID>()(eprp.getRobot());
+            return std::hash<long int>()(eprp.getEntryPoint()->getId()) + std::hash<alica::IRobotID>()(*eprp.getRobot());
         }
     };
 }
-#endif /* ENTRYPOINTROBOTPAIR_H_ */

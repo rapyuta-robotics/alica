@@ -76,7 +76,7 @@ const Variable *RobotEngineData::getDomainVariable(string ident) const
 
 long RobotEngineData::makeUniqueId(string s)
 {
-    long ret = (long)(std::hash<alica::IRobotID>()(this->agentId) + std::hash<string>()(s));
+    long ret = (long)(std::hash<alica::IRobotID>()(*this->agentId) + std::hash<string>()(s));
     if (this->engine->getPlanParser()->getParsedElements()->find(ret) !=
         this->engine->getPlanParser()->getParsedElements()->end())
     {

@@ -142,20 +142,20 @@ namespace alica
 		{
 			// preassign other robots, because we dont need a similar assignment
 			rp = make_shared<RunningPlan>(ae, relevantPlanType);
-			ta = new TaskAssignment(this->ae->getPartialAssignmentPool(), this->ae->getTeamObserver(), newPlanList, robotIDs, true);
+			ta = new TaskAssignment(this->ae, newPlanList, robotIDs, true);
 		}
 		else
 		{
 			// dont preassign other robots, because we need a similar assignment (not the same)
 			rp = make_shared<RunningPlan>(ae, oldRp->getPlanType());
-			ta = new TaskAssignment(this->ae->getPartialAssignmentPool(), this->ae->getTeamObserver(), newPlanList, robotIDs, false);
+			ta = new TaskAssignment(this->ae, newPlanList, robotIDs, false);
 			oldAss = oldRp->getAssignment();
 		}
 
 
 		// some variables for the do while loop
 		EntryPoint* ep = nullptr;
-		shared_ptr<RobotProperties> ownRobProb = to->getOwnRobotProperties();
+		auto localAgentID = this->ae->getTeamManager()->getLocalAgentID();
 		// PLANNINGPARENT
 		rp->setParent(planningParent);
 		shared_ptr<list<shared_ptr<RunningPlan>>> rpChildren = nullptr;
@@ -187,12 +187,12 @@ namespace alica
 			}
 
 			// OWN ENTRYPOINT
-			ep = rp->getAssignment()->getEntryPointOfRobot(ownRobProb->getId());
+			ep = rp->getAssignment()->getEntryPointOfRobot(localAgentID);
 
 			if (ep == nullptr)
 			{
 #ifdef PSDEBUG
-				cout << "PS: The robot " << ownRobProb->getName() << "(Id: " << ownRobProb->getId()
+				cout << "PS: The robot " << ownRobProb->getName() << "(Id: " << localAgentID
 						<< ") is not assigned to enter the plan " << rp->getPlan()->getName() << " and will IDLE!"
 						<< endl;
 #endif

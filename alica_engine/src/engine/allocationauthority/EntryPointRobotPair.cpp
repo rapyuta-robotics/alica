@@ -1,11 +1,4 @@
-/*
- * EntryPointRobotPair.cpp
- *
- *  Created on: Jul 17, 2014
- *      Author: Stefan Jakob
- */
-
-#include <engine/allocationauthority/EntryPointRobotPair.h>
+#include "engine/allocationauthority/EntryPointRobotPair.h"
 
 namespace alica
 {
@@ -23,18 +16,18 @@ namespace alica
 		this->entryPoint = entryPoint;
 	}
 
-	alica::IRobotID EntryPointRobotPair::getRobot()
+	const alica::IRobotID* EntryPointRobotPair::getRobot()
 	{
 		return robot;
 	}
 
-	EntryPointRobotPair::EntryPointRobotPair(EntryPoint* ep, alica::IRobotID r)
+	EntryPointRobotPair::EntryPointRobotPair(EntryPoint* ep, const alica::IRobotID* r)
 	{
 		this->entryPoint = ep;
 		this->robot = r;
 	}
 
-	void EntryPointRobotPair::setRobot(alica::IRobotID robot)
+	void EntryPointRobotPair::setRobot(const alica::IRobotID* robot)
 	{
 		this->robot = robot;
 	}

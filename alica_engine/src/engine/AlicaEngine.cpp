@@ -309,7 +309,7 @@ bool AlicaEngine::getStepEngine()
 /**
  * Returns the plan repository, which holds the static ALICA program.
  */
-PlanRepository *AlicaEngine::getPlanRepository()
+PlanRepository *AlicaEngine::getPlanRepository() const
 {
     return this->planRepository;
 }
@@ -344,7 +344,7 @@ IBehaviourPool *AlicaEngine::getBehaviourPool()
 /**
  * Returns the TeamObserver, which handles most communication tasks.
  */
-ITeamObserver *AlicaEngine::getTeamObserver()
+ITeamObserver *AlicaEngine::getTeamObserver() const
 {
     return this->teamObserver;
 }
@@ -394,7 +394,7 @@ void AlicaEngine::setRoleAssignment(IRoleAssignment *roleAssignment)
 /**
  * Returns the parser which reads ALICAs XML representation
  */
-IPlanParser *AlicaEngine::getPlanParser()
+IPlanParser *AlicaEngine::getPlanParser() const
 {
     return planParser;
 }
@@ -462,7 +462,7 @@ void AlicaEngine::setTerminating(bool terminating)
     this->terminating = terminating;
 }
 
-IAlicaCommunication *AlicaEngine::getCommunicator()
+const IAlicaCommunication *AlicaEngine::getCommunicator() const
 {
     return communicator;
 }
@@ -508,7 +508,7 @@ void AlicaEngine::setResultStore(IVariableSyncModule *resultStore)
     this->variableSyncModule = resultStore;
 }
 
-PartialAssignmentPool *AlicaEngine::getPartialAssignmentPool()
+PartialAssignmentPool *AlicaEngine::getPartialAssignmentPool() const
 {
     return this->pap;
 }

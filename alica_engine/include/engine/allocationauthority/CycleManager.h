@@ -50,7 +50,7 @@ namespace alica
 		vector<AllocationDifference*> allocationHistory;
 		PlanRepository* pr;
 		int newestAllocationDifference;
-		alica::IRobotID myID;
+		const alica::IRobotID* myID;
 		enum CycleState
 		{
 			observing, overridden, overriding

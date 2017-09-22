@@ -24,6 +24,7 @@ class ITeamManager
     virtual std::unique_ptr<std::list<const IRobotID *>> getActiveAgentIDs() const = 0;
     virtual const Agent* getAgentByID(const IRobotID* agentId) const = 0;
     virtual void setTimeLastMsgReceived(const IRobotID *, AlicaTime) = 0;
+    virtual bool isAgentIgnored(const IRobotID* agentId) const =0;
 
     const AlicaEngine *engine;
 };

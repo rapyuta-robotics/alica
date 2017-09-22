@@ -14,10 +14,10 @@ namespace alica
 	{
 		this->numEps = size;
 		this->entryPoints = new EntryPoint*[size];
-		this->robotIds = new shared_ptr<vector<alica::IRobotID>> [size];
+		this->robotIds = new shared_ptr<vector<const alica::IRobotID*>> [size];
 		for (short i = 0; i < size; i++)
 		{
-			this->robotIds[i] = std::make_shared<vector<alica::IRobotID>>();
+			this->robotIds[i] = std::make_shared<vector<const alica::IRobotID*>>();
 		}
 	}
 

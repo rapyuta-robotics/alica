@@ -1,12 +1,12 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include "engine/AlicaEngine.h"
-#include "engine/collections/RobotProperties.h"
 #include "engine/IRobotIDFactory.h"
+#include "engine/collections/RobotProperties.h"
 
 #include <SystemConfig.h>
-#include <utility>
 #include <iostream>
+#include <utility>
 
 namespace alica
 {
@@ -21,10 +21,10 @@ TeamManager::TeamManager(const AlicaEngine *engine, bool useConfigForTeam = true
 
 TeamManager::~TeamManager()
 {
-	for (auto& agentEntry : this->agents)
-	{
-		delete agentEntry.second;
-	}
+    for (auto &agentEntry : this->agents)
+    {
+        delete agentEntry.second;
+    }
 }
 
 void TeamManager::init()
@@ -48,8 +48,7 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig *sc)
     for (auto &agentName : *agentNames)
     {
         int tmpID = (*sc)["Globals"]->tryGet<int>(-1, "Globals", "Team", agentName.c_str(), "ID", NULL);
-        agent = new Agent(this->engine, this->teamTimeOut,
-                          this->engine->getRobotIDFactory()->create((uint8_t *)&tmpID, sizeof(int)), agentName);
+        agent = new Agent(this->engine, this->teamTimeOut, this->engine->getRobotIDFactory()->create((uint8_t *)&tmpID, sizeof(int)), agentName);
         if (!foundSelf && agentName.compare(localAgentName) == 0)
         {
             foundSelf = true;
@@ -58,7 +57,7 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig *sc)
         }
         else
         {
-            for (auto& agentEntry : this->agents)
+            for (auto &agentEntry : this->agents)
             {
                 if (*(agentEntry.first) == *(agent->getID()))
                 {
@@ -84,28 +83,28 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig *sc)
 
 std::unique_ptr<std::list<const IRobotID *>> TeamManager::getActiveAgentIDs() const
 {
-	auto activeAgentIDs = unique_ptr<std::list<const IRobotID *>>(new list<const IRobotID *>());
-	for (auto& agentEntry : this->agents)
-	{
-		if (agentEntry.second->isActive())
-		{
-			activeAgentIDs->push_back(agentEntry.first);
-		}
-	}
-	return std::move(activeAgentIDs);
+    auto activeAgentIDs = unique_ptr<std::list<const IRobotID *>>(new list<const IRobotID *>());
+    for (auto &agentEntry : this->agents)
+    {
+        if (agentEntry.second->isActive())
+        {
+            activeAgentIDs->push_back(agentEntry.first);
+        }
+    }
+    return std::move(activeAgentIDs);
 }
 
-const Agent* TeamManager::getAgentByID(const IRobotID* agentId) const
+const Agent *TeamManager::getAgentByID(const IRobotID *agentId) const
 {
-	auto agentEntry = this->agents.find(agentId);
-	if (agentEntry != this->agents.end())
-	{
-		return agentEntry->second;
-	}
-	else
-	{
-		return nullptr;
-	}
+    auto agentEntry = this->agents.find(agentId);
+    if (agentEntry != this->agents.end())
+    {
+        return agentEntry->second;
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 const IRobotID *TeamManager::getLocalAgentID() const
@@ -122,10 +121,15 @@ void TeamManager::setTimeLastMsgReceived(const IRobotID *robotID, AlicaTime time
     }
     else
     {
-    	Agent * agent = new Agent(this->engine, this->teamTimeOut, robotID);
-    	agent->setTimeLastMsgReceived(timeLastMsgReceived);
+        Agent *agent = new Agent(this->engine, this->teamTimeOut, robotID);
+        agent->setTimeLastMsgReceived(timeLastMsgReceived);
         auto mapEntry = this->agents.emplace(robotID, agent);
     }
+}
+
+bool TeamManager::isAgentIgnored(const IRobotID *agentId) const
+{
+    return std::find(this->ignoredAgents.begin(), this->ignoredAgents.end(), agentId) != this->ignoredAgents.end();
 }
 
 } /* namespace alica */

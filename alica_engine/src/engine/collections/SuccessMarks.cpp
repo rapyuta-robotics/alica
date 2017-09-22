@@ -7,128 +7,126 @@
 
 #include <engine/collections/SuccessMarks.h>
 
-#include <engine/model/EntryPoint.h>
-#include <engine/model/PlanType.h>
-#include <engine/model/AbstractPlan.h>
-#include <engine/model/Plan.h>
 #include <engine/AlicaEngine.h>
 #include <engine/PlanRepository.h>
+#include <engine/model/AbstractPlan.h>
+#include <engine/model/EntryPoint.h>
+#include <engine/model/Plan.h>
+#include <engine/model/PlanType.h>
 
 namespace alica
 {
 
-	/**
-	 * Default Constructor
-	 */
-	SuccessMarks::SuccessMarks(AlicaEngine* ae)
-	{
-		this->ae = ae;
-	}
+/**
+ * Default Constructor
+ */
+SuccessMarks::SuccessMarks(const AlicaEngine *ae)
+{
+    this->ae = ae;
+}
 
-	SuccessMarks::~SuccessMarks()
-	{
-	}
+/**
+ * Construct from a list of EntryPoint id, as received by a message
+ * @param epIds A list<long>
+ */
+SuccessMarks::SuccessMarks(const AlicaEngine *ae, list<long> epIds)
+{
+    this->ae = ae;
+    map<long, EntryPoint *> eps = ae->getPlanRepository()->getEntryPoints();
+    for (long id : epIds)
+    {
+        EntryPoint *ep;
+        auto iter = eps.find(id);
+        if (iter != eps.end())
+        {
+            ep = iter->second;
+            shared_ptr<list<EntryPoint *>> s;
+            auto i = this->getSuccessMarks().find(ep->getPlan());
+            if (i != this->getSuccessMarks().end())
+            {
+                s = i->second;
+                if (find(s->begin(), s->end(), ep) == s->end())
+                {
+                    s->push_back(ep);
+                }
+            }
+            else
+            {
+                shared_ptr<list<EntryPoint *>> s = make_shared<list<EntryPoint *>>();
+                s->push_back(ep);
+                this->getSuccessMarks().insert(pair<AbstractPlan *, shared_ptr<list<EntryPoint *>>>(ep->getPlan(), s));
+            }
+        }
+    }
+}
 
-	/**
-	 * Drop every mark not occurring in plans passed as argument.
-	 * @param active An unique_ptr<unordered_set<AbstractPlan*> >
-	 */
-	void SuccessMarks::limitToPlans(unique_ptr<unordered_set<AbstractPlan*> > active)
-	{
-		list<AbstractPlan*> tr;
-		for (auto iterator : this->getSuccessMarks())
-		{
-			if (active->find(iterator.first) == active->end())
-			{
-				tr.push_back(iterator.first);
-			}
-		}
-		for (AbstractPlan* p : tr)
-		{
-			this->getSuccessMarks().erase(p);
-		}
-	}
+SuccessMarks::~SuccessMarks()
+{
+}
 
-	map<AbstractPlan*, shared_ptr<list<EntryPoint*> > >& SuccessMarks::getSuccessMarks()
-	{
-		return succesMarks;
-	}
+/**
+ * Drop every mark not occurring in plans passed as argument.
+ * @param active An unique_ptr<unordered_set<AbstractPlan*> >
+ */
+void SuccessMarks::limitToPlans(unique_ptr<unordered_set<AbstractPlan *>> active)
+{
+    list<AbstractPlan *> tr;
+    for (auto iterator : this->getSuccessMarks())
+    {
+        if (active->find(iterator.first) == active->end())
+        {
+            tr.push_back(iterator.first);
+        }
+    }
+    for (AbstractPlan *p : tr)
+    {
+        this->getSuccessMarks().erase(p);
+    }
+}
 
-	void SuccessMarks::setSuccesMarks(map<AbstractPlan*, shared_ptr<list<EntryPoint*> > > succesMarks)
-	{
-		this->succesMarks = succesMarks;
-	}
+map<AbstractPlan *, shared_ptr<list<EntryPoint *>>> &SuccessMarks::getSuccessMarks()
+{
+    return succesMarks;
+}
 
-	/**
-	 * Clear all marks
-	 */
-	void SuccessMarks::clear()
-	{
-		this->succesMarks.clear();
-	}
+void SuccessMarks::setSuccesMarks(map<AbstractPlan *, shared_ptr<list<EntryPoint *>>> succesMarks)
+{
+    this->succesMarks = succesMarks;
+}
 
-	/**
-	 * Get all EntryPoints succeeded in a plan. May return nullptr.
-	 * @param p An AbstractPlan*
-	 * @return A shared_ptr<list<EntryPoint*> >
-	 */
-	shared_ptr<list<EntryPoint*> > SuccessMarks::succeededEntryPoints(AbstractPlan* p)
-	{
-		for (map<AbstractPlan*, shared_ptr<list<EntryPoint*> > >::const_iterator iterator =
-				this->getSuccessMarks().begin(); iterator != this->getSuccessMarks().end(); iterator++)
-		{
-			if (iterator->first == p)
-			{
-				return iterator->second;
-			}
-		}
-		return nullptr;
-	}
+/**
+ * Clear all marks
+ */
+void SuccessMarks::clear()
+{
+    this->succesMarks.clear();
+}
 
-	/**
-	 * Construct from a list of EntryPoint id, as received by a message
-	 * @param epIds A list<long>
-	 */
-	SuccessMarks::SuccessMarks(AlicaEngine* ae, list<long> epIds)
-	{
-		this->ae = ae;
-		map<long, EntryPoint*> eps = ae->getPlanRepository()->getEntryPoints();
-		for (long id : epIds)
-		{
-			EntryPoint* ep;
-			auto iter = eps.find(id);
-			if (iter != eps.end())
-			{
-				ep = iter->second;
-				shared_ptr<list<EntryPoint*>> s;
-				auto i = this->getSuccessMarks().find(ep->getPlan());
-				if (i != this->getSuccessMarks().end())
-				{
-					s = i->second;
-					if (find(s->begin(), s->end(), ep) == s->end())
-					{
-						s->push_back(ep);
-					}
-				}
-				else
-				{
-					shared_ptr<list<EntryPoint*> > s = make_shared<list<EntryPoint*>>();
-					s->push_back(ep);
-					this->getSuccessMarks().insert(
-							pair<AbstractPlan*, shared_ptr<list<EntryPoint*> > >(ep->getPlan(), s));
-				}
-			}
-		}
-	}
-
+/**
+ * Get all EntryPoints succeeded in a plan. May return nullptr.
+ * @param p An AbstractPlan*
+ * @return A shared_ptr<list<EntryPoint*> >
+ */
+shared_ptr<list<EntryPoint *>> SuccessMarks::succeededEntryPoints(AbstractPlan *p)
+{
+    for (map<AbstractPlan *, shared_ptr<list<EntryPoint *>>>::const_iterator iterator = this->getSuccessMarks().begin();
+         iterator != this->getSuccessMarks().end(); iterator++)
+    {
+        if (iterator->first == p)
+        {
+            return iterator->second;
+        }
+    }
+    return nullptr;
+}
 
 /**
  * Remove all marks referring to the specified plan.
  * @param plan An AbstractPlan*
  */
-void SuccessMarks::removePlan(AbstractPlan* plan)
+void SuccessMarks::removePlan(AbstractPlan *plan)
 {
-	this->getSuccessMarks().erase(plan);
+    this->getSuccessMarks().erase(plan);
 }
 
 /**
@@ -136,25 +134,24 @@ void SuccessMarks::removePlan(AbstractPlan* plan)
  * @param p An AbstractPlan*
  * @param e An EntryPoint*
  */
-void SuccessMarks::markSuccessfull(AbstractPlan* p, EntryPoint* e)
+void SuccessMarks::markSuccessfull(AbstractPlan *p, EntryPoint *e)
 {
-	auto iter = this->getSuccessMarks().find(p);
-	if (iter != this->getSuccessMarks().end())
-	{
-		shared_ptr < list<EntryPoint*> > l = this->getSuccessMarks().at(p);
-		auto i = find(l->begin(), l->end(), e);
-		if (i == l->end())
-		{
-			l->push_back(e);
-		}
-	}
-	else
-	{
-		shared_ptr < list<EntryPoint*> > l = make_shared<list<EntryPoint*>>();
-		l->push_back(e);
-		this->getSuccessMarks().insert(pair<AbstractPlan*, shared_ptr<list<EntryPoint*> > >(p, l));
-
-	}
+    auto iter = this->getSuccessMarks().find(p);
+    if (iter != this->getSuccessMarks().end())
+    {
+        shared_ptr<list<EntryPoint *>> l = this->getSuccessMarks().at(p);
+        auto i = find(l->begin(), l->end(), e);
+        if (i == l->end())
+        {
+            l->push_back(e);
+        }
+    }
+    else
+    {
+        shared_ptr<list<EntryPoint *>> l = make_shared<list<EntryPoint *>>();
+        l->push_back(e);
+        this->getSuccessMarks().insert(pair<AbstractPlan *, shared_ptr<list<EntryPoint *>>>(p, l));
+    }
 }
 
 /**
@@ -163,17 +160,17 @@ void SuccessMarks::markSuccessfull(AbstractPlan* p, EntryPoint* e)
  * @param e An EntryPoint*
  * @return A bool
  */
-bool SuccessMarks::succeeded(AbstractPlan* p, EntryPoint* e)
+bool SuccessMarks::succeeded(AbstractPlan *p, EntryPoint *e)
 {
-	list<EntryPoint*> l;
-	auto iter = this->getSuccessMarks().find(p);
-	if (iter != this->getSuccessMarks().end())
-	{
-		l = (*iter->second);
-		auto i = find(l.begin(), l.end(), e);
-		return (i != l.end());
-	}
-	return false;
+    list<EntryPoint *> l;
+    auto iter = this->getSuccessMarks().find(p);
+    if (iter != this->getSuccessMarks().end())
+    {
+        l = (*iter->second);
+        auto i = find(l.begin(), l.end(), e);
+        return (i != l.end());
+    }
+    return false;
 }
 
 /**
@@ -184,9 +181,9 @@ bool SuccessMarks::succeeded(AbstractPlan* p, EntryPoint* e)
  */
 bool SuccessMarks::succeeded(long planId, long entryPointId)
 {
-	Plan* p = ae->getPlanRepository()->getPlans().at(planId);
-	EntryPoint* e = p->getEntryPoints().at(entryPointId);
-	return succeeded(p, e);
+    Plan *p = ae->getPlanRepository()->getPlans().at(planId);
+    EntryPoint *e = p->getEntryPoints().at(entryPointId);
+    return succeeded(p, e);
 }
 
 /**
@@ -194,29 +191,29 @@ bool SuccessMarks::succeeded(long planId, long entryPointId)
  * @param p An AbstractPlan*
  * @return A bool
  */
-bool SuccessMarks::anyTaskSucceeded(AbstractPlan* p)
+bool SuccessMarks::anyTaskSucceeded(AbstractPlan *p)
 {
-	list<EntryPoint*> l;
-	auto iter = this->getSuccessMarks().find(p);
-	if (iter != this->getSuccessMarks().end())
-	{
-		l = (*iter->second);
-		return (l.size() > 0);
-	}
-	PlanType* pt = dynamic_cast<PlanType*>(p);
-	if (pt != nullptr)
-	{
-		for (Plan* cp : pt->getPlans())
-		{
-			auto iter = this->getSuccessMarks().find(cp);
-			l = (*iter->second);
-			if (iter != this->getSuccessMarks().end() && l.size() > 0)
-			{
-				return true;
-			}
-		}
-	}
-	return false;
+    list<EntryPoint *> l;
+    auto iter = this->getSuccessMarks().find(p);
+    if (iter != this->getSuccessMarks().end())
+    {
+        l = (*iter->second);
+        return (l.size() > 0);
+    }
+    PlanType *pt = dynamic_cast<PlanType *>(p);
+    if (pt != nullptr)
+    {
+        for (Plan *cp : pt->getPlans())
+        {
+            auto iter = this->getSuccessMarks().find(cp);
+            l = (*iter->second);
+            if (iter != this->getSuccessMarks().end() && l.size() > 0)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 /**
@@ -225,17 +222,15 @@ bool SuccessMarks::anyTaskSucceeded(AbstractPlan* p)
  */
 list<long> SuccessMarks::toList()
 {
-	list<long> ret;
-	for (auto pair : this->getSuccessMarks())
-	{
-		for (EntryPoint* e : (*pair.second))
-		{
-			ret.push_back(e->getId());
-		}
-
-	}
-	return ret;
+    list<long> ret;
+    for (auto pair : this->getSuccessMarks())
+    {
+        for (EntryPoint *e : (*pair.second))
+        {
+            ret.push_back(e->getId());
+        }
+    }
+    return ret;
 }
 
 } /* namespace alica */
-

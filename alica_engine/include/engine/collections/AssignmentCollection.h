@@ -11,8 +11,6 @@
 #include <iostream>
 #include <algorithm>
 
-using namespace std;
-
 namespace alica
 {
 

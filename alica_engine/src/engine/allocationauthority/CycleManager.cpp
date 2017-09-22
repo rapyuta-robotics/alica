@@ -236,7 +236,7 @@ void alica::CycleManager::handleAuthorityInfo(shared_ptr<AllocationAuthorityInfo
     {
         return;
     }
-    alica::IRobotID rid = aai->authority;
+    auto rid = aai->authority;
     if (rid == myID)
     {
         return;
