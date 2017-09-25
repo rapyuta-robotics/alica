@@ -18,7 +18,7 @@ namespace alica
 	{
 	public:
 
-		IRoleAssignment(AlicaEngine* ae);
+		IRoleAssignment(const AlicaEngine* ae);
 		virtual ~IRoleAssignment()
 		{
 		}
@@ -28,17 +28,17 @@ namespace alica
 		virtual void update() = 0;
 
 		const Role* getOwnRole();
-		const Role* getRole(alica::IRobotID robotId);
-		void setCommunication(IAlicaCommunication* communication);
+		const Role* getRole(const alica::IRobotID* robotId);
+		void setCommunication(const IAlicaCommunication* communication);
 
 	protected:
-		AlicaEngine * engine;
+		const AlicaEngine * engine;
 		/**
 		 * Current Robot's role.
 		 */
 		Role* ownRole;
-		map<alica::IRobotID, Role*> robotRoleMapping;
-		IAlicaCommunication* communication;
+		map<const alica::IRobotID*, Role*> robotRoleMapping;
+		const IAlicaCommunication* communication;
 
 	};
 }

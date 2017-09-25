@@ -1,51 +1,40 @@
-/*
- * ConstraintCall.h
- *
- *  Created on: Oct 17, 2014
- *      Author: Philipp Sperber
- */
+#pragma once
 
-#ifndef CONSTRAINTCALL_H_
-#define CONSTRAINTCALL_H_
 #include "engine/IRobotID.h"
+#include <list>
 #include <memory>
 #include <vector>
-#include <list>
-
-using namespace std;
 
 namespace alica
 {
-	class Condition;
-	class RunningPlan;
-	class Variable;
+class Condition;
+class RunningPlan;
+class Variable;
 
-	class ProblemPart
-	{
-	public:
-		ProblemPart(Condition* con, shared_ptr<RunningPlan> rp);
+class ProblemPart
+{
+  public:
+    ProblemPart(Condition *con, std::shared_ptr<RunningPlan> rp);
 
-		bool hasVariable(Variable* v);
+    bool hasVariable(Variable *v);
 
-		Condition* getCondition();
-		shared_ptr<vector<list<vector<Variable* > > >> getDomainVariables();
-		shared_ptr<RunningPlan> getRunningPlan();
-		shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> getAgentsInScope();
-	private:
-		Condition* condition;
-		/**
-		 *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
-		 * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
-		 * 2. List of Robots, e.g., An agent has variables X,Y.
-		 * 3. Vector of Variables, e.g., variables X,Y.
-		 * 4. Variable, e.g., variable X.
-		 */
-		shared_ptr<vector<list<vector<Variable* > > >> domainVariables;
-		shared_ptr<RunningPlan> runningplan;
-		shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> agentsInScope;
-	};
+    Condition *getCondition();
+    std::shared_ptr<std::vector<std::list<std::vector<const Variable *>>>> getDomainVariables();
+    std::shared_ptr<RunningPlan> getRunningPlan();
+    std::shared_ptr<std::vector<std::shared_ptr<std::vector<const alica::IRobotID *>>>> getAgentsInScope();
 
-}
-/* namespace alica */
+  private:
+    Condition *condition;
+    /**
+     *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
+     * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
+     * 2. List of Robots, e.g., An agent has variables X,Y.
+     * 3. Vector of Variables, e.g., variables X,Y.
+     * 4. Variable, e.g., variable X.
+     */
+    std::shared_ptr<std::vector<std::list<std::vector<const Variable *>>>> domainVariables;
+    std::shared_ptr<RunningPlan> runningplan;
+    std::shared_ptr<std::vector<std::shared_ptr<std::vector<const alica::IRobotID *>>>> agentsInScope;
+};
 
-#endif /* CONSTRAINTCALL_H_ */
+} /* namespace alica */

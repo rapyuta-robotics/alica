@@ -26,6 +26,7 @@ namespace alica
 	class State;
 	class SuccessCollection;
 	class AlicaEngine;
+	class ITeamManager;
 
 	/**
 	 * The TeamObserver manages communication with the team. Thus it sends and receives PlanTreeInfo messages.
@@ -58,6 +59,7 @@ namespace alica
 		Logger* log;
 		const alica::IRobotID* myId;
 		RobotEngineData* me;
+		const ITeamManager* teamManager;
 
 		mutex simplePlanTreeMutex;
 		mutex successMark;
@@ -65,7 +67,7 @@ namespace alica
 		shared_ptr<map<const alica::IRobotID*, shared_ptr<SimplePlanTree> > > simplePlanTrees;
 
 		void cleanOwnSuccessMarks(shared_ptr<RunningPlan> root);
-		shared_ptr<SimplePlanTree> sptFromMessage(alica::IRobotID robotId, list<long> ids);
+		shared_ptr<SimplePlanTree> sptFromMessage(const alica::IRobotID* robotId, list<long> ids);
 
 	};
 

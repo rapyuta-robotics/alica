@@ -34,9 +34,15 @@ class TeamManager : public ITeamManager
 
     const IRobotID * getLocalAgentID() const;
     std::unique_ptr<std::list<const IRobotID *>> getActiveAgentIDs() const;
+    std::unique_ptr<std::list<const RobotEngineData*>> getInactiveAgentEngineDatas() const;
+    std::unique_ptr<std::list<const RobotProperties*>> getActiveAgentProperties() const;
+    int getTeamSize() const;
     const Agent* getAgentByID(const IRobotID* agentId) const;
     void setTimeLastMsgReceived(const IRobotID *agendId, AlicaTime timeLastMsgReceived);
     bool isAgentIgnored(const IRobotID* agentId) const;
+    bool isAgentActive(const IRobotID* agentId) const;
+    void ignoreAgent(const alica::IRobotID *agentId);
+    void unIgnoreAgent(const alica::IRobotID *agentId);
 
   private:
     AlicaTime teamTimeOut;

@@ -1,22 +1,11 @@
-/*
- * Variable.h
- *
- *  Created on: Mar 8, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef VARIABLE_H_
-#define VARIABLE_H_
-
-
-#include <memory>
-#include <string>
-#include <sstream>
+#pragma once
 
 #include "AlicaElement.h"
 #include "engine/constraintmodul/SolverVariable.h"
 
-using namespace std;
+#include <memory>
+#include <string>
+
 namespace alica
 {
 	/**
@@ -26,25 +15,22 @@ namespace alica
 	{
 	public:
 		Variable();
-		Variable(shared_ptr<SolverVariable> v);
-		Variable(long id, string name, string type);
+		Variable(std::shared_ptr<SolverVariable> v);
+		Variable(long id, std::string name, std::string type);
 		virtual ~Variable();
 
-		string toString();
+		std::string toString();
 
-		string getType();
-		void setType(string type);
-		shared_ptr<SolverVariable> getSolverVar();
-		void setSolverVar(shared_ptr<SolverVariable> solverVar);
-
+		std::string getType();
+		void setType(std::string type);
+		std::shared_ptr<SolverVariable> getSolverVar();
+		void setSolverVar(std::shared_ptr<SolverVariable> solverVar);
 
 	private:
-		string type;
+		std::string type;
 
 	protected:
-		shared_ptr<SolverVariable> solverVar;
+		std::shared_ptr<SolverVariable> solverVar;
 	};
 
-} /* namespace Alica */
-
-#endif /* VARIABLE_H_ */
+} /* namespace alica */

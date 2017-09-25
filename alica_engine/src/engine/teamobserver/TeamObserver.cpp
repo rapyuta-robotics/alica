@@ -1,15 +1,9 @@
-/*
- * TeamObserver.cpp
- *
- *  Created on: Jun 13, 2014
- *      Author: Stefan Jakob
- */
-
 #include "engine/teamobserver/TeamObserver.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/IAlicaClock.h"
 #include "engine/IAlicaCommunication.h"
+#include "engine/ITeamManager.h"
 #include "engine/PlanRepository.h"
 #include "engine/RunningPlan.h"
 #include "engine/SimplePlanTree.h"
@@ -31,6 +25,7 @@ namespace alica
 
 TeamObserver::TeamObserver(AlicaEngine *ae)
     : ae(ae)
+    , teamManager(ae->getTeamManager())
 {
     this->simplePlanTrees = make_shared<map<const alica::IRobotID *, shared_ptr<SimplePlanTree>>>(
         map<const alica::IRobotID *, shared_ptr<SimplePlanTree>>());
@@ -52,7 +47,7 @@ unique_ptr<map<const alica::IRobotID *, shared_ptr<SimplePlanTree>>> TeamObserve
     auto tm = this->ae->getTeamManager();
     for (auto &agentId : *(tm->getActiveAgentIDs()))
     {
-        map<alica::IRobotID, shared_ptr<SimplePlanTree>>::iterator iter = this->simplePlanTrees->find(agentId);
+        auto iter = this->simplePlanTrees->find(agentId);
         if (iter != simplePlanTrees->end() && iter->second != nullptr)
         {
             ret->insert(pair<const alica::IRobotID *, shared_ptr<SimplePlanTree>>(agentId, iter->second));
@@ -65,28 +60,32 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root)
 {
     AlicaTime time = ae->getIAlicaClock()->now();
     bool changed = false;
-    vector<const alica::IRobotID *> robotsAvail;
-    robotsAvail.push_back(this->myId);
-    for (RobotEngineData *r : this->allOtherRobots)
+
+    // todo clean up and implement here...
+
+    for (auto inactiveAgent : *this->teamManager->getInactiveAgentEngineDatas())
     {
-        if ((r->getLastMessageTime() + teamTimeOut) < time)
-        {
-            changed |= r->isActive();
-            r->setActive(false);
-            r->getSuccessMarks()->clear();
-            lock_guard<mutex> lock(this->simplePlanTreeMutex);
-            this->simplePlanTrees->erase(r->getProperties()->getId());
-        }
-        else if (!r->isActive())
-        {
-            r->setActive(true);
-            changed = true;
-        }
-        if (r->isActive())
-        {
-            robotsAvail.push_back(r->getProperties()->getId());
-        }
+    	inactiveAgent->getSuccessMarks()->clear();
+        lock_guard<mutex> lock(this->simplePlanTreeMutex);
+        this->simplePlanTrees->erase(inactiveAgent->getId());
     }
+
+//    for (RobotEngineData *r : this->allOtherRobots)
+//    {
+//        if ((r->getLastMessageTime() + teamTimeOut) < time)
+//        {
+//            changed |= r->isActive();
+//            r->setActive(false);
+//            r->getSuccessMarks()->clear();
+//            lock_guard<mutex> lock(this->simplePlanTreeMutex);
+//            this->simplePlanTrees->erase(r->getProperties()->getId());
+//        }
+//        else if (!r->isActive())
+//        {
+//            r->setActive(true);
+//            changed = true;
+//        }
+//    }
 
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
     if (changed)
@@ -98,35 +97,39 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root)
     cleanOwnSuccessMarks(root);
     if (root != nullptr)
     {
+        auto activeAgents = this->teamManager->getActiveAgentIDs();
         list<shared_ptr<SimplePlanTree>> updatespts;
         list<const alica::IRobotID *> noUpdates;
         lock_guard<mutex> lock(this->simplePlanTreeMutex);
         for (auto iterator = this->simplePlanTrees->begin(); iterator != this->simplePlanTrees->end(); iterator++)
         {
-            if (find(robotsAvail.begin(), robotsAvail.end(), iterator->second->getRobotId()) != robotsAvail.end())
+            if (!this->teamManager->isAgentActive(iterator->second->getRobotId()))
             {
-                if (iterator->second->isNewSimplePlanTree())
-                {
-                    updatespts.push_back(iterator->second);
+                continue;
+            }
+
+            if (iterator->second->isNewSimplePlanTree())
+            {
+                updatespts.push_back(iterator->second);
 #ifdef TO_DEBUG
-                    cout << "TO: added to update" << endl;
+                cout << "TO: added to update" << endl;
 #endif
-                    iterator->second->setNewSimplePlanTree(false);
-                }
-                else
-                {
+                iterator->second->setNewSimplePlanTree(false);
+            }
+            else
+            {
 #ifdef TO_DEBUG
-                    cout << "TO: added to noupdate" << endl;
+                cout << "TO: added to noupdate" << endl;
 #endif
-                    noUpdates.push_back(iterator->second->getRobotId());
-                }
+                noUpdates.push_back(iterator->second->getRobotId());
             }
         }
 #ifdef TO_DEBUG
         cout << "TO: spts size " << updatespts.size() << endl;
 #endif
 
-        if (root->recursiveUpdateAssignment(updatespts, robotsAvail, noUpdates, time))
+        list<const IRobotID *> listActiveAgents = list<const IRobotID *>(*activeAgents);
+        if (root->recursiveUpdateAssignment(updatespts, listActiveAgents, noUpdates, time))
         {
             this->log->eventOccured("MsgUpdate");
         }
@@ -152,7 +155,7 @@ void TeamObserver::doBroadCast(list<long> &msg)
     PlanTreeInfo pti = PlanTreeInfo();
     pti.senderID = this->myId;
     pti.stateIDs = msg;
-    pti.succeededEPs = this->getOwnEngineData()->getSuccessMarks()->toList();
+    pti.succeededEPs = this->me->getSuccessMarks()->toList();
     ae->getCommunicator()->sendPlanTreeInfo(pti);
 #ifdef TO_DEBUG
     cout << "TO: Sending Plan Message: " << endl;
@@ -212,7 +215,7 @@ void TeamObserver::cleanOwnSuccessMarks(shared_ptr<RunningPlan> root)
             queue.push_back(c);
         }
     }
-    this->getOwnEngineData()->getSuccessMarks()->limitToPlans(move(presentPlans));
+    this->me->getSuccessMarks()->limitToPlans(move(presentPlans));
 }
 
 EntryPoint *TeamObserver::entryPointOfState(State *state)
@@ -320,41 +323,6 @@ void TeamObserver::updateSuccessCollection(Plan *p, shared_ptr<SuccessCollection
             sc->setSuccess(myId, ep);
         }
     }
-}
-
-/**
- * Ignore all messages received by a robot.
- * @param rid an int identifying the robot to ignore
- */
-void TeamObserver::ignoreRobot(const alica::IRobotID *rid)
-{
-    if (find(ignoredRobots.begin(), ignoredRobots.end(), rid) != ignoredRobots.end())
-    {
-        return;
-    }
-    this->ignoredRobots.insert(rid);
-}
-
-/**
- * Stops ignoring the messages received by a robot
- * @param rid an int identifying the robot
- */
-void TeamObserver::unIgnoreRobot(const alica::IRobotID *rid)
-{
-    // it should not be necessary to search first... it simply removes the entry if present - Stopfer
-    //		if (find(ignoredRobots.begin(), ignoredRobots.end(), rid) != ignoredRobots.end())
-    //		{
-    this->ignoredRobots.erase(rid);
-    //		}
-}
-
-/**
- * Checks if a robot is ignored
- * @param rid an int identifying the robot
- */
-bool TeamObserver::isRobotIgnored(const alica::IRobotID *rid)
-{
-    return (find(ignoredRobots.begin(), ignoredRobots.end(), rid) != ignoredRobots.end());
 }
 
 /**

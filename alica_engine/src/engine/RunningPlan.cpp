@@ -4,6 +4,7 @@
 #include "engine/model/AbstractPlan.h"
 #include "engine/AlicaEngine.h"
 #include "engine/ITeamObserver.h"
+#include "engine/ITeamManager.h"
 #include "engine/model/Plan.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/Assignment.h"
@@ -49,7 +50,7 @@ namespace alica
 		this->stateStartTime = 0;
 		this->assignment = nullptr;
 		this->to = ae->getTeamObserver();
-		this->ownId = to->getOwnId();
+		this->ownId = ae->getTeamManager()->getLocalAgentID();
 		this->status = PlanStatus::Running;
 		this->failCount = 0;
 		this->basicBehaviour = nullptr;
@@ -805,7 +806,7 @@ namespace alica
 		this->constraintStore->addCondition(this->plan->getRuntimeCondition());
 	}
 
-	bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<const alica::IRobotID*> availableAgents,
+	bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, list<const alica::IRobotID*> availableAgents,
 												list<const alica::IRobotID*> noUpdates, AlicaTime now)
 	{
 		if (this->isBehaviour())

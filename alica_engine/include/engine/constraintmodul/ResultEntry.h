@@ -1,12 +1,4 @@
-/*
- * ResultEntry.h
- *
- *  Created on: Nov 24, 2014
- *      Author: Philipp Sperber
- */
-
-#ifndef RESULTENTRY_H_
-#define RESULTENTRY_H_
+#pragma once
 
 #include "engine/IRobotID.h"
 
@@ -15,9 +7,6 @@
 #include <vector>
 #include <mutex>
 #include <memory>
-
-using namespace std;
-
 
 namespace alica
 {
@@ -29,24 +18,24 @@ namespace alica
 	class ResultEntry
 	{
 	public:
-		ResultEntry(alica::IRobotID robotId, AlicaEngine* ae);
+		ResultEntry(const alica::IRobotID* robotId, const AlicaEngine* ae);
 		virtual ~ResultEntry();
 
-		alica::IRobotID getId();
-		void addValue(long vid, shared_ptr<vector<uint8_t>> result);
+		const alica::IRobotID* getId();
+		void addValue(long vid, std::shared_ptr<std::vector<uint8_t>> result);
 		void clear();
-		shared_ptr<vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
-		shared_ptr<vector<uint8_t>> getValue(long vid, long ttl4Usage);
-		shared_ptr<vector<shared_ptr<vector<uint8_t>>>> getValues(shared_ptr<vector<Variable*>> query, long ttl4Usage);
+		std::shared_ptr<std::vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
+		std::shared_ptr<std::vector<uint8_t>> getValue(long vid, long ttl4Usage);
+		std::shared_ptr<std::vector<std::shared_ptr<std::vector<uint8_t>>>> getValues(std::shared_ptr<std::vector<Variable*>> query, long ttl4Usage);
 
 		class VarValue
 		{
 		public:
 			long id;
-			shared_ptr<vector<uint8_t>> val;
+			std::shared_ptr<std::vector<uint8_t>> val;
 			ulong lastUpdate;
 
-			VarValue(long vid, shared_ptr<vector<uint8_t>> v, ulong now)
+			VarValue(long vid, std::shared_ptr<std::vector<uint8_t>> v, ulong now)
 			{
 				this->id = vid;
 				this->val = v;
@@ -55,12 +44,10 @@ namespace alica
 		};
 
 	protected:
-		alica::IRobotID id;
-		AlicaEngine* ae;
-		map<long, shared_ptr<VarValue>> values;
-		mutex valueLock;
+		const alica::IRobotID* id;
+		const AlicaEngine* ae;
+		std::map<long, std::shared_ptr<VarValue>> values;
+		std::mutex valueLock;
 	};
 
 } /* namespace alica */
-
-#endif /* RESULTENTRY_H_ */

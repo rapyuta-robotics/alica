@@ -1,12 +1,4 @@
-/*
- * ResultStore.h
- *
- *  Created on: Oct 10, 2014
- *      Author: Philipp Sperber
- */
-
-#ifndef RESULTSTORE_H_
-#define RESULTSTORE_H_
+#pragma once
 
 #include "engine/IRobotID.h"
 #include "engine/constraintmodul/IVariableSyncModule.h"
@@ -15,9 +7,6 @@
 
 #include <memory>
 #include <vector>
-
-
-using namespace std;
 
 namespace alica
 {
@@ -62,9 +51,9 @@ namespace alica
 		};
 
 	private:
-		AlicaEngine* ae;
-		alica::IRobotID ownId;
-		IAlicaCommunication* communicator;
+		const AlicaEngine* ae;
+		const alica::IRobotID* ownId;
+		const IAlicaCommunication* communicator;
 		bool running;
 		bool communicationEnabled;
 
@@ -73,5 +62,3 @@ namespace alica
 		double distThreshold;
 	};
 } /* namespace alica */
-
-#endif /* RESULTSTORE_H_ */

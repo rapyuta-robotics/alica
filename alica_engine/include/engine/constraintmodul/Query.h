@@ -1,12 +1,4 @@
-/*
- * ConstraintQuery.h
- *
- *  Created on: Oct 17, 2014
- *      Author: Philipp Sperber
- */
-
-#ifndef CONSTRAINTQUERY_H_
-#define CONSTRAINTQUERY_H_
+#pragma once
 
 //#define Q_DEBUG
 
@@ -32,15 +24,12 @@
 #include "engine/model/PlanType.h"
 #include "engine/model/Variable.h"
 
-using namespace std;
-
 namespace alica
 {
 	class AlicaEngine;
 	class ProblemPart;
 	class ITeamObserver;
 	class RunningPlan;
-	class Variable;
 	class IAlicaClock;
 	class BasicBehaviour;
 	class ISolver;
@@ -58,7 +47,7 @@ namespace alica
 		Variable* getRep(Variable* v);
 		void addVarTo(Variable* representing, Variable* toAdd);
 		vector<Variable*> getAllRep();
-		int getIndexOf(Variable* v);
+		int getIndexOf(const Variable* v);
 		friend std::ostream& operator<<(std::ostream& os,const UniqueVarStore& store)
 		{
 			os << "UniqueVarStore: " << std::endl;
@@ -92,8 +81,8 @@ namespace alica
 	public:
 		Query(AlicaEngine* ae);
 
-		void addStaticVariable(Variable* v);
-		void addDomainVariable(alica::IRobotID robot, string ident);
+		void addStaticVariable(const Variable* v);
+		void addDomainVariable(const alica::IRobotID* robot, string ident);
 		void clearDomainVariables();
 		void clearStaticVariables();
 		bool existsSolution(int solverType, shared_ptr<RunningPlan> rp);
@@ -117,8 +106,8 @@ namespace alica
 										vector<Variable*>& relevantVariables, int& domOffset);
 
 		shared_ptr<UniqueVarStore> uniqueVarStore;
-		vector<Variable*> queriedStaticVariables;
-		vector<Variable*> queriedDomainVariables;
+		vector<const Variable*> queriedStaticVariables;
+		vector<const Variable*> queriedDomainVariables;
 		vector<shared_ptr<ProblemPart>> problemParts;
 
 		vector<Variable*> relevantStaticVariables;
@@ -213,7 +202,3 @@ namespace alica
 
 
 }/* namespace alica */
-
-
-
-#endif /* CONSTRAINTQUERY_H_ */

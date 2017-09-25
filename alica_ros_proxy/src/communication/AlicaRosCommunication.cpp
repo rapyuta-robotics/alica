@@ -102,7 +102,7 @@ namespace alicaRosProxy
 		}
 	}
 
-	void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo& aai)
+	void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo& aai) const
 	{
 		alica_ros_proxy::AllocationAuthorityInfo aais;
 		for (int i = 0; i < aai.senderID.getSize(); i++)
@@ -225,7 +225,7 @@ namespace alicaRosProxy
 		}
 	}
 
-	void AlicaRosCommunication::sendSolverResult(SolverResult& sr)
+	void AlicaRosCommunication::sendSolverResult(SolverResult& sr) const
 	{
 		alica_ros_proxy::SolverResult srs;
 

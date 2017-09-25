@@ -48,7 +48,8 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig *sc)
     for (auto &agentName : *agentNames)
     {
         int tmpID = (*sc)["Globals"]->tryGet<int>(-1, "Globals", "Team", agentName.c_str(), "ID", NULL);
-        agent = new Agent(this->engine, this->teamTimeOut, this->engine->getRobotIDFactory()->create((uint8_t *)&tmpID, sizeof(int)), agentName);
+        agent = new Agent(this->engine, this->teamTimeOut,
+                          this->engine->getRobotIDFactory()->create((uint8_t *)&tmpID, sizeof(int)), agentName);
         if (!foundSelf && agentName.compare(localAgentName) == 0)
         {
             foundSelf = true;
@@ -94,6 +95,45 @@ std::unique_ptr<std::list<const IRobotID *>> TeamManager::getActiveAgentIDs() co
     return std::move(activeAgentIDs);
 }
 
+std::unique_ptr<std::list<const RobotEngineData *>> TeamManager::getInactiveAgentEngineDatas() const
+{
+    auto agentProperties = unique_ptr<std::list<const RobotEngineData *>>(new list<const RobotEngineData *>());
+    for (auto &agentEntry : this->agents)
+    {
+        if (!agentEntry.second->isActive())
+        {
+            agentProperties->push_back(agentEntry.second->getEngineData());
+        }
+    }
+    return std::move(agentProperties);
+}
+
+std::unique_ptr<std::list<const RobotProperties *>> TeamManager::getActiveAgentProperties() const
+{
+    auto agentProperties = unique_ptr<std::list<const RobotProperties *>>(new list<const RobotProperties *>());
+    for (auto &agentEntry : this->agents)
+    {
+        if (agentEntry.second->isActive())
+        {
+            agentProperties->push_back(agentEntry.second->getProperties());
+        }
+    }
+    return std::move(agentProperties);
+}
+
+int TeamManager::getTeamSize() const
+{
+    int teamSize = 0;
+    for (auto &agentEntry : this->agents)
+    {
+        if (agentEntry.second->isActive())
+        {
+            teamSize++;
+        }
+    }
+    return teamSize;
+}
+
 const Agent *TeamManager::getAgentByID(const IRobotID *agentId) const
 {
     auto agentEntry = this->agents.find(agentId);
@@ -127,9 +167,40 @@ void TeamManager::setTimeLastMsgReceived(const IRobotID *robotID, AlicaTime time
     }
 }
 
+bool TeamManager::isAgentActive(const IRobotID *agentId) const
+{
+    auto agentEntry = this->agents.find(agentId);
+    if (agentEntry != this->agents.end())
+    {
+        return agentEntry->second->isActive();
+    }
+    else
+    {
+        return false;
+    }
+}
+
+/**
+ * Checks if an agent is ignored
+ * @param agentId an IRobotID identifying the agent
+ */
 bool TeamManager::isAgentIgnored(const IRobotID *agentId) const
 {
     return std::find(this->ignoredAgents.begin(), this->ignoredAgents.end(), agentId) != this->ignoredAgents.end();
+}
+
+void TeamManager::ignoreAgent(const alica::IRobotID *agentId)
+{
+    if (find(ignoredAgents.begin(), ignoredAgents.end(), agentId) != ignoredAgents.end())
+    {
+        return;
+    }
+    this->ignoredAgents.insert(agentId);
+}
+
+void TeamManager::unIgnoreAgent(const alica::IRobotID *agentId)
+{
+    this->ignoredAgents.erase(agentId);
 }
 
 } /* namespace alica */

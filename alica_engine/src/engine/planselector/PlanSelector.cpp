@@ -1,7 +1,8 @@
 #include <engine/planselector/PlanSelector.h>
 #include <engine/planselector/PartialAssignmentPool.h>
 #include "engine/AlicaEngine.h"
-#include "engine/teamobserver/TeamObserver.h"
+#include "engine/ITeamObserver.h"
+#include "engine/ITeamManager.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/model/Plan.h"
 #include "engine/RunningPlan.h"

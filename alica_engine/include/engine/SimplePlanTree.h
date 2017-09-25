@@ -1,13 +1,3 @@
-/*
- * SimplePlanTree.h
- *
- *  Created on: Jun 16, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef SIMPLEPLANTREE_H_
-#define SIMPLEPLANTREE_H_
-
 #include "engine/IRobotID.h"
 
 #include <unordered_set>
@@ -38,7 +28,7 @@ namespace alica
 		unordered_set<shared_ptr<SimplePlanTree> >& getChildren();
 		void setChildren(unordered_set<shared_ptr<SimplePlanTree> > children);
 		const alica::IRobotID* getRobotId();
-		void setRobotId(alica::IRobotID robotId);
+		void setRobotId(const alica::IRobotID* robotId);
 		bool isNewSimplePlanTree() const;
 		void setNewSimplePlanTree(bool newSimplePlanTree);
 		long getReceiveTime() const;
@@ -74,5 +64,3 @@ namespace alica
 	};
 
 } /* namespace alica */
-
-#endif /* SIMPLEPLANTREE_H_ */

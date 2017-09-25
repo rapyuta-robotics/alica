@@ -1,13 +1,4 @@
-/*
- * SolverResult.h
- *
- *  Created on: Nov 24, 2014
- *      Author: Philipp
- */
-
-#ifndef SOLVERRESULT_H_
-#define SOLVERRESULT_H_
-
+#pragma once
 #include "SolverVar.h"
 #include "engine/IRobotID.h"
 
@@ -15,7 +6,7 @@ namespace alica
 {
 	struct SolverResult
 	{
-		alica::IRobotID senderID;
+		const alica::IRobotID* senderID;
 		vector<SolverVar*> vars;
 
 		~SolverResult()
@@ -26,5 +17,3 @@ namespace alica
 		}
 	};
 } /* namespace alica */
-
-#endif /* SOLVERRESULT_H_ */
