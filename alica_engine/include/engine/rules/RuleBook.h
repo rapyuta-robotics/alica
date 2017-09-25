@@ -35,9 +35,9 @@ class RuleBook
     virtual ~RuleBook();
     bool isChangeOccured() const;
     void setChangeOccured(bool changeOccured);
-    PlanChange visit(shared_ptr<RunningPlan> r);
+    PlanChange visit(std::shared_ptr<RunningPlan> r);
     PlanChange updateChange(PlanChange cur, PlanChange update);
-    shared_ptr<RunningPlan> initialisationRule(Plan *masterPlan);
+    std::shared_ptr<RunningPlan> initialisationRule(Plan *masterPlan);
 
   protected:
     AlicaEngine *ae;
@@ -48,15 +48,15 @@ class RuleBook
     IPlanSelector *ps;
     Logger *log;
     bool changeOccured;
-    PlanChange synchTransitionRule(shared_ptr<RunningPlan> r);
-    PlanChange transitionRule(shared_ptr<RunningPlan> r);
-    PlanChange topFailRule(shared_ptr<RunningPlan> r);
-    PlanChange allocationRule(shared_ptr<RunningPlan> r);
-    PlanChange authorityOverrideRule(shared_ptr<RunningPlan> r);
-    PlanChange planAbortRule(shared_ptr<RunningPlan> r);
-    PlanChange planRedoRule(shared_ptr<RunningPlan> r);
-    PlanChange planReplaceRule(shared_ptr<RunningPlan> r);
-    PlanChange planPropagationRule(shared_ptr<RunningPlan> r);
-    PlanChange dynamicAllocationRule(shared_ptr<RunningPlan> r);
+    PlanChange synchTransitionRule(std::shared_ptr<RunningPlan> r);
+    PlanChange transitionRule(std::shared_ptr<RunningPlan> r);
+    PlanChange topFailRule(std::shared_ptr<RunningPlan> r);
+    PlanChange allocationRule(std::shared_ptr<RunningPlan> r);
+    PlanChange authorityOverrideRule(std::shared_ptr<RunningPlan> r);
+    PlanChange planAbortRule(std::shared_ptr<RunningPlan> r);
+    PlanChange planRedoRule(std::shared_ptr<RunningPlan> r);
+    PlanChange planReplaceRule(std::shared_ptr<RunningPlan> r);
+    PlanChange planPropagationRule(std::shared_ptr<RunningPlan> r);
+    PlanChange dynamicAllocationRule(std::shared_ptr<RunningPlan> r);
 };
 }

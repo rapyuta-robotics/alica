@@ -1,9 +1,3 @@
-/*
- * Query.cpp
- *
- *  Created on: Oct 17, 2014
- *      Author: Philipp Sperber
- */
 #include <engine/constraintmodul/ConditionStore.h>
 #include <engine/constraintmodul/ISolver.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
@@ -13,6 +7,8 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/IAlicaClock.h"
 #include "engine/ITeamObserver.h"
+#include "engine/ITeamManager.h"
+#include "engine/teammanager/Agent.h"
 #include "engine/RunningPlan.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/constraintmodul/SolverTerm.h"
@@ -33,14 +29,14 @@ namespace alica
 		uniqueVarStore = make_shared<UniqueVarStore>();
 	}
 
-	void Query::addStaticVariable(Variable* v)
+	void Query::addStaticVariable(const Variable* v)
 	{
 		queriedStaticVariables.push_back(v);
 	}
 
-	void Query::addDomainVariable(alica::IRobotID robot, string ident)
+	void Query::addDomainVariable(const alica::IRobotID* robot, string ident)
 	{
-		queriedDomainVariables.push_back(this->ae->getTeamObserver()->getRobotById(robot)->getDomainVariable(ident));
+		queriedDomainVariables.push_back(this->ae->getTeamManager()->getAgentByID(robot)->getEngineData()->getDomainVariable(ident));
 	}
 
 	void Query::clearDomainVariables()
@@ -208,7 +204,7 @@ namespace alica
 
 			// create a vector of solver variables from the domain variables of the currently iterated problem part
 			auto domainSolverVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>>();
-			auto agentsInScope = make_shared<vector<shared_ptr<vector<alica::IRobotID>>>>();
+			auto agentsInScope = make_shared<vector<shared_ptr<vector<const alica::IRobotID*>>>>();
 			for (int j = 0; j < probPart->getDomainVariables()->size(); ++j)
 			{
 				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>();
@@ -220,21 +216,21 @@ namespace alica
 					domainSolverVars->reserve(domainVars.size());
 					for (int i = 0; i < domainVars.size(); ++i)
 					{
-						if(domainVars.at(i)->getSolverVar() == nullptr)
+						if(domainVars.at(i)->solverVar == nullptr)
 						{
-							domainVars.at(i)->setSolverVar(solver->createVariable(domainVars.at(i)->getId()));
+							domainVars.at(i)->solverVar = solver->createVariable(domainVars.at(i)->getId());
 						}
-						domainSolverVars->push_back(domainVars.at(i)->getSolverVar());
+						domainSolverVars->push_back(domainVars.at(i)->solverVar);
 					}
 					ll->push_back(domainSolverVars);
 				}
 			}
 
 			// fill a new problem descriptor and put it into the out-parameter "pds"
-			shared_ptr<ProblemDescriptor> cd = make_shared<ProblemDescriptor>(staticSolverVars, domainSolverVars);
-			cd->setAgentsInScope(agentsInScope);
-			probPart->getCondition()->getConstraint(cd, probPart->getRunningPlan()); // this insert the actual problem description
-			pds.push_back(cd);
+			auto pd = make_shared<ProblemDescriptor>(staticSolverVars, domainSolverVars);
+			pd->setAgentsInScope(agentsInScope);
+			probPart->getCondition()->getConstraint(pd, probPart->getRunningPlan()); // this insert the actual problem description
+			pds.push_back(pd);
 		}
 
 		// write all static variables into the out-parameter "relevantVariables"
@@ -368,7 +364,7 @@ namespace alica
 	 * Returns the index of the unification-list that contains the given variable.
 	 * Returns -1, if the variable is not present.
 	 */
-	int UniqueVarStore::getIndexOf(Variable* v)
+	int UniqueVarStore::getIndexOf(const Variable* v)
 	{
 		for (int i = 0; i < store.size(); ++i)
 		{

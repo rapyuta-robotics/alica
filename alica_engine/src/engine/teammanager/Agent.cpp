@@ -45,13 +45,7 @@ std::string Agent::getName()
 
 bool Agent::isActive()
 {
-    AlicaTime now = this->engine->getIAlicaClock()->now();
-    return this->timeLastMsgReceived + timeout < now;
-}
-
-void Agent::setActive(bool active)
-{
-    this->active = active;
+    return this->active;
 }
 
 const RobotProperties *Agent::getProperties() const
@@ -67,6 +61,16 @@ const RobotEngineData *Agent::getEngineData() const
 void Agent::setTimeLastMsgReceived(AlicaTime timeLastMsgReceived)
 {
     this->timeLastMsgReceived = timeLastMsgReceived;
+}
+
+bool Agent::update()
+{
+	if (this->active && this->timeLastMsgReceived + this->timeout > this->engine->getIAlicaClock()->now())
+	{
+		// timeout triggered
+		this->engineData->successMarks.clear();
+		// todo implement
+	}
 }
 
 } /* namespace alica */

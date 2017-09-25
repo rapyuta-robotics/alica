@@ -1,12 +1,4 @@
-/*
- * AlicaRosCommunication.h
- *
- *  Created on: 10.09.2014
- *      Author: endy
- */
-
-#ifndef ALICAROSCOMMUNICATION_H_
-#define ALICAROSCOMMUNICATION_H_
+#pragma once
 
 #include "engine/IAlicaCommunication.h"
 #include "ros/ros.h"
@@ -32,14 +24,14 @@ namespace alicaRosProxy
 
 		virtual void tick();
 
-		virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai);
-		virtual void sendAlicaEngineInfo(AlicaEngineInfo& bi);
-		virtual void sendPlanTreeInfo(PlanTreeInfo& pti);
-		virtual void sendRoleSwitch(RoleSwitch& rs);
-		virtual void sendSyncReady(SyncReady& sr);
-		virtual void sendSyncTalk(SyncTalk& st);
-		virtual void sendSolverResult(SolverResult& sr);
-		virtual void sendLogMessage(int level, string& message);
+		virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai) const;
+		virtual void sendAlicaEngineInfo(AlicaEngineInfo& bi) const;
+		virtual void sendPlanTreeInfo(PlanTreeInfo& pti) const;
+		virtual void sendRoleSwitch(RoleSwitch& rs) const;
+		virtual void sendSyncReady(SyncReady& sr) const;
+		virtual void sendSyncTalk(SyncTalk& st) const;
+		virtual void sendSolverResult(SolverResult& sr) const;
+		virtual void sendLogMessage(int level, string& message) const;
 
 		virtual void handleAllocationAuthorityRos(alica_ros_proxy::AllocationAuthorityInfoPtr aai);
 		virtual void handlePlanTreeInfoRos(alica_ros_proxy::PlanTreeInfoPtr pti);
@@ -86,5 +78,3 @@ namespace alicaRosProxy
 	};
 
 } /* namespace alicaRosProxy */
-
-#endif /* ALICAROSCOMMUNICATION_H_ */

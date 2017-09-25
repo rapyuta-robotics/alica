@@ -302,7 +302,7 @@ namespace alica
 	}
 
 	void Logger::logToConsole(string logString) {
-		cout << "Robot " << this->ae->getTeamObserver()->getOwnId() << ":\t" << logString << endl;
+		cout << "Agent " << this->ae->getTeamManager()->getLocalAgentID() << ":\t" << logString << endl;
 	}
 
 } /* namespace alica */

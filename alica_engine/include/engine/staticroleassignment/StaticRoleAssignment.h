@@ -1,12 +1,4 @@
-/*
- * StaticRoleAssignment.h
- *
- *  Created on: 17 Nov 2016
- *      Author: Stephan Opfer
- */
-
-#ifndef SRC_ENGINE_STATICROLEASSIGNMENT_STATICROLEASSIGNMENT_H_
-#define SRC_ENGINE_STATICROLEASSIGNMENT_STATICROLEASSIGNMENT_H_
+#pragma once
 
 #include <engine/IRoleAssignment.h>
 
@@ -36,10 +28,8 @@ namespace alica
 		bool updateRoles;
 
 		AlicaEngine* ae;
-		map<long, Role*> roles;
-		unique_ptr<list<shared_ptr<RobotProperties>> > availableRobots;
+		std::map<long, Role*> roles;
+		std::unique_ptr<std::list<const RobotProperties*> > agentProperties;
 	};
 
 } /* namespace alica */
-
-#endif /* SRC_ENGINE_STATICROLEASSIGNMENT_STATICROLEASSIGNMENT_H_ */

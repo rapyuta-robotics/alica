@@ -1,10 +1,3 @@
-/*
- * StaticRoleAssignment.cpp
- *
- *  Created on: 17 Nov 2016
- *      Author: Stephan Opfer
- */
-
 //#define STATIC_RA_DEBUG
 
 #include "engine/staticroleassignment/StaticRoleAssignment.h"
@@ -12,6 +5,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
 #include "engine/containers/RoleSwitch.h"
+#include "engine/ITeamManager.h"
 #include "engine/IAlicaCommunication.h"
 
 namespace alica
@@ -19,6 +13,7 @@ namespace alica
 
 	StaticRoleAssignment::StaticRoleAssignment(AlicaEngine* ae) : IRoleAssignment(ae), ae(ae), updateRoles(false)
 	{
+		this->agentProperties = this->ae->getTeamManager()->getActiveAgentProperties();
 	}
 
 	/**
@@ -59,25 +54,24 @@ namespace alica
 
 		// get data for "calculations"
 		this->roles = ae->getPlanRepository()->getRoles();
-		this->availableRobots = ae->getTeamObserver()->getAvailableRobotProperties();
 
 		// assign a role for each robot if you have match
-		for (auto& robot : *availableRobots)
+		for (auto& agent : *this->agentProperties)
 		{
 			bool roleIsAssigned = false;
 
 			for (auto& role : roles)
 			{
 				// make entry in the map if the roles match
-				if (role.second->getName() == robot->getDefaultRole())
+				if (role.second->getName() == agent->getDefaultRole())
 				{
 #ifdef STATIC_RA_DEBUG
-					std::cout << "Static RA: Setting Role " << role.second->getName() << " for robot ID " << robot->getId() << std::endl;
+					std::cout << "Static RA: Setting Role " << role.second->getName() << " for robot ID " << agent->getId() << std::endl;
 #endif
-					this->robotRoleMapping.emplace(robot->getId(), role.second);
+					this->robotRoleMapping.emplace(agent->getId(), role.second);
 
 					// set own role, if its me
-					if (robot->getId() == this->ae->getTeamManager()->getOwnRobotID() && this->ownRole != role.second)
+					if (agent->getId() == this->ae->getTeamManager()->getLocalAgentID() && this->ownRole != role.second)
 					{
 						this->ownRole = role.second;
 
@@ -96,7 +90,7 @@ namespace alica
 
 			if (!roleIsAssigned)
 			{
-				ae->abort("RA: Could not set a role for robot " + robot->getName() + " with default role " + robot->getDefaultRole() + "!");
+				ae->abort("RA: Could not set a role (Default: " + agent->getDefaultRole() + ") for robot: ", agent->getId());
 			}
 		}
 	}

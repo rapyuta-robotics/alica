@@ -1,13 +1,8 @@
-/*
- * ProblemDescriptor.cpp
- *
- *  Created on: Sep 30, 2014
- *      Author: Philipp Sperber
- */
+#include "engine/constraintmodul/ProblemDescriptor.h"
 
-#include <engine/constraintmodul/ProblemDescriptor.h>
 #include "engine/constraintmodul/SolverTerm.h"
 #include "engine/constraintmodul/SolverVariable.h"
+
 #include <iostream>
 #include <limits>
 
@@ -134,12 +129,12 @@ namespace alica
 		domainVars = value;
 	}
 
-	shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> ProblemDescriptor::getAgentsInScope()
+	shared_ptr<vector<shared_ptr<vector<const alica::IRobotID*>>>> ProblemDescriptor::getAgentsInScope()
 	{
 		return agentsInScope;
 	}
 
-	void ProblemDescriptor::setAgentsInScope(shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> value)
+	void ProblemDescriptor::setAgentsInScope(shared_ptr<vector<shared_ptr<vector<const alica::IRobotID*>>>> value)
 	{
 		agentsInScope = value;
 	}

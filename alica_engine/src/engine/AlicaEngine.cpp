@@ -1,9 +1,3 @@
-/*
- * AlicaEngine.cpp
- *
- *  Created on: Mar 3, 2014
- *      Author: Stephan Opfer
- */
 #define AE_DEBUG
 
 #include "engine/AlicaEngine.h"
@@ -150,7 +144,6 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
     everythingWorked &= this->behaviourPool->init(bc);
     this->auth = new AuthorityManager(this);
     this->log = new Logger(this);
-    this->teamObserver->init();
     this->roleAssignment->init();
     if (!this->pap)
     {
@@ -170,9 +163,9 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
     {
         this->variableSyncModule = new VariableSyncModule(this);
     }
-    if (this->getCommunicator())
+    if (this->communicator)
     {
-        this->getCommunicator()->startCommunication();
+        this->communicator->startCommunication();
     }
     if (this->variableSyncModule)
     {
@@ -186,9 +179,9 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
  */
 void AlicaEngine::shutdown()
 {
-    if (this->getCommunicator() != nullptr)
+    if (this->communicator != nullptr)
     {
-        this->getCommunicator()->stopCommunication();
+        this->communicator->stopCommunication();
     }
     this->terminating = true;
     this->maySendMessages = false;

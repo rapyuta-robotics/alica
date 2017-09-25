@@ -16,9 +16,6 @@
 #include <unordered_set>
 #include <algorithm>
 
-
-using namespace std;
-
 namespace alica
 {
 
@@ -107,7 +104,7 @@ namespace alica
 		std::shared_ptr<CycleManager> getCycleManagement();
 		void revokeAllConstraints();
 		void attachPlanConstraints();
-		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, vector<const alica::IRobotID*> availableAgents,list<const alica::IRobotID*> noUpdates, AlicaTime now);
+		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, list<const alica::IRobotID*> availableAgents,list<const alica::IRobotID*> noUpdates, AlicaTime now);
 		void toMessage(list<long>& message, shared_ptr<RunningPlan>& deepestNode, int& depth, int curDepth);
 		string toString();
 		const alica::IRobotID* getOwnID();

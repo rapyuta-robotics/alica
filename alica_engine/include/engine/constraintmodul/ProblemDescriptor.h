@@ -1,27 +1,21 @@
-/*
- * ProblemDescriptor.h
- *
- *  Created on: Sep 30, 2014
- *      Author: Philipp Sperber
- */
-
-#ifndef PROBLEMDESCRIPTOR_H_
-#define PROBLEMDESCRIPTOR_H_
+#pragma once
 
 #include "engine/IRobotID.h"
 
 #include <memory>
 #include <vector>
 
-using namespace std;
-
 namespace alica
 {
 	class SolverTerm;
 	class SolverVariable;
 
-	class ProblemDescriptor : public enable_shared_from_this<ProblemDescriptor>
+	using std::shared_ptr;
+	using std::vector;
+
+	class ProblemDescriptor : public std::enable_shared_from_this<ProblemDescriptor>
 	{
+
 	public:
 		ProblemDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars, shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> domVars);
 
@@ -39,8 +33,8 @@ namespace alica
 		void setStaticVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value);
 		shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> getDomainVars();
 		void setDomainVars(shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> value);
-		shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> getAgentsInScope();
-		void setAgentsInScope(shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> value);
+		shared_ptr<vector<shared_ptr<vector<const alica::IRobotID*>>>> getAgentsInScope();
+		void setAgentsInScope(shared_ptr<vector<shared_ptr<vector<const alica::IRobotID*>>>> value);
 		shared_ptr<vector<shared_ptr<SolverVariable>>> getAllVars();
 		void setAllVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value);
 
@@ -64,7 +58,7 @@ namespace alica
 		double utilitySufficiencyThreshold;
 		shared_ptr<vector<shared_ptr<SolverVariable>>> staticVars;
 		shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>> >> domainVars;
-		shared_ptr<vector<shared_ptr<vector<alica::IRobotID>>>> agentsInScope;
+		shared_ptr<vector<shared_ptr<vector<const alica::IRobotID*>>>> agentsInScope;
 		shared_ptr<vector<shared_ptr<SolverVariable>>> allVars;
 
 		shared_ptr<vector<vector<vector<vector<double>>>>> domainRanges;
@@ -72,5 +66,3 @@ namespace alica
 	};
 
 } /* namespace Alica */
-
-#endif /* PROBLEMDESCRIPTOR_H_ */

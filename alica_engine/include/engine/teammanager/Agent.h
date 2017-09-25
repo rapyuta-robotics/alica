@@ -12,11 +12,13 @@ class RobotProperties;
 class RobotEngineData;
 class IRobotID;
 class TeamManager;
+class TeamObserver;
 
 class Agent
 {
     // allows the TeamManager to call setTimeLastMsgReceived(..)
     friend ::alica::TeamManager;
+    friend ::alica::TeamObserver;
 
   public:
     virtual ~Agent();
@@ -26,7 +28,6 @@ class Agent
     const RobotProperties *getProperties() const;
     const RobotEngineData *getEngineData() const;
     bool isActive();
-    void setActive(bool active);
 
   protected:
     Agent(const AlicaEngine *engine, AlicaTime timeout, const IRobotID *id);
@@ -41,6 +42,7 @@ class Agent
     RobotEngineData *engineData;
 
     void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived);
+    bool update();
 
     const AlicaEngine *engine;
 };

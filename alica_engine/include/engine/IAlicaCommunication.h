@@ -19,12 +19,12 @@ namespace alica
 		virtual ~IAlicaCommunication(){}
 
 		virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai) const = 0;
-		virtual void sendAlicaEngineInfo(AlicaEngineInfo& bi) = 0;
-		virtual void sendPlanTreeInfo(PlanTreeInfo& pti) = 0;
-		virtual void sendRoleSwitch(RoleSwitch& rs) = 0;
-		virtual void sendSyncReady(SyncReady& sr) = 0;
-		virtual void sendSyncTalk(SyncTalk& st) = 0;
-		virtual void sendSolverResult(SolverResult& sr) = 0;
+		virtual void sendAlicaEngineInfo(AlicaEngineInfo& bi) const = 0;
+		virtual void sendPlanTreeInfo(PlanTreeInfo& pti) const = 0;
+		virtual void sendRoleSwitch(RoleSwitch& rs) const = 0;
+		virtual void sendSyncReady(SyncReady& sr) const = 0;
+		virtual void sendSyncTalk(SyncTalk& st) const = 0;
+		virtual void sendSolverResult(SolverResult& sr) const = 0;
 		virtual void sendLogMessage(int level, string& message) {};
 
 		virtual void tick() {};
