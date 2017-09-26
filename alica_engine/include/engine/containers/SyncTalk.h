@@ -1,30 +1,18 @@
-/*
- * SyncTalk.h
- *
- *  Created on: Aug 27, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef SYNCTALK_H_
-#define SYNCTALK_H_
+#pragma once
 
 #include "engine/IRobotID.h"
-#include <engine/containers/SyncData.h>
+#include "engine/containers/SyncData.h"
 
 #include <vector>
 #include <tuple>
 
-
-using namespace std;
-
-
 namespace alica
 {
 
-	typedef tuple<alica::IRobotID, vector<stdSyncData>> stdSyncTalk;
+	typedef std::tuple<const alica::IRobotID*, std::vector<stdSyncData>> stdSyncTalk;
 	struct SyncTalk
 	{
-		SyncTalk()
+		SyncTalk() : senderID(nullptr)
 		{
 		}
 		~SyncTalk()
@@ -35,13 +23,13 @@ namespace alica
 			}*/
 		}
 
-		alica::IRobotID senderID;
-		vector<SyncData*> syncData;
+		const alica::IRobotID* senderID;
+		std::vector<SyncData*> syncData;
 
 		SyncTalk(stdSyncTalk &s)
 		{
-			this->senderID = get<0>(s);
-			vector<stdSyncData>& tmp = get<1>(s);
+			this->senderID = std::get<0>(s);
+			std::vector<stdSyncData>& tmp = std::get<1>(s);
 			for (auto d : tmp)
 			{
 				syncData.push_back(new SyncData(d));
@@ -50,15 +38,13 @@ namespace alica
 
 		stdSyncTalk toStandard()
 		{
-			vector<stdSyncData> r;
+			std::vector<stdSyncData> r;
 			for (auto s : syncData)
 			{
-				r.push_back(move(s->toStandard()));
+				r.push_back(std::move(s->toStandard()));
 			}
-			return move(make_tuple(senderID, move(r)));
+			return std::move(std::make_tuple(senderID, std::move(r)));
 		}
 	};
 
 } /* namespace alica */
-
-#endif /* SYNCTALK_H_ */

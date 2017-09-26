@@ -1,12 +1,4 @@
-/*
- * SyncRow.h
- *
- *  Created on: Aug 27, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef SYNCROW_H_
-#define SYNCROW_H_
+#pragma once
 
 #include "engine/IRobotID.h"
 
@@ -24,8 +16,8 @@ namespace alica
 		SyncRow();
 		SyncRow(SyncData* sd);
 		virtual ~SyncRow();
-		vector<alica::IRobotID>& getReceivedBy();
-		void setReceivedBy(vector<alica::IRobotID> recievedBy);
+		vector<const alica::IRobotID*>& getReceivedBy();
+		void setReceivedBy(vector<const alica::IRobotID*> recievedBy);
 		SyncData* getSyncData();
 		void setSyncData(SyncData* syncData);
 		void toString();
@@ -34,9 +26,7 @@ namespace alica
 	protected:
 		SyncData* syncData;
 		//this vector always has to be sorted
-		vector<alica::IRobotID> receivedBy;
+		vector<const alica::IRobotID*> receivedBy;
 	};
 
 } /* namespace alica */
-
-#endif /* SYNCROW_H_ */

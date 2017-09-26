@@ -25,7 +25,7 @@ namespace alica
 		virtual void sendSyncReady(SyncReady& sr) const = 0;
 		virtual void sendSyncTalk(SyncTalk& st) const = 0;
 		virtual void sendSolverResult(SolverResult& sr) const = 0;
-		virtual void sendLogMessage(int level, string& message) {};
+		virtual void sendLogMessage(int level, string& message) const {};
 
 		virtual void tick() {};
 

@@ -25,7 +25,7 @@ namespace alica
 	public:
 		ForallAgents(AlicaEngine* ae, long id = 0);
 		virtual ~ForallAgents();
-		shared_ptr<list<vector<const Variable* > > > getDomainVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<const alica::IRobotID*> >& agentsInScope);
+		shared_ptr<list<vector<Variable* > > > getDomainVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<const alica::IRobotID*> >& agentsInScope);
 
 	protected:
 		AlicaEngine* ae;

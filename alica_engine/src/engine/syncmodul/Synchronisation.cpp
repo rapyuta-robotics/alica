@@ -1,11 +1,4 @@
-/*
- * Synchronisation.cpp
- *
- *  Created on: Aug 27, 2014
- *      Author: Stefan Jakob
- */
-
-#include <engine/syncmodul/Synchronisation.h>
+#include "engine/syncmodul/Synchronisation.h"
 #include "engine/AlicaEngine.h"
 #include "engine/model/Transition.h"
 #include "engine/IAlicaClock.h"
@@ -20,7 +13,7 @@
 namespace alica
 {
 
-	Synchronisation::Synchronisation(AlicaEngine* ae)
+	Synchronisation::Synchronisation(AlicaEngine* ae) : myID(nullptr)
 	{
 		this->ae = ae;
 		this->syncModul = nullptr;
@@ -34,7 +27,7 @@ namespace alica
 		this->lastTalkData = nullptr;
 	}
 
-	Synchronisation::Synchronisation(AlicaEngine* ae, alica::IRobotID myID, SyncTransition* st, SyncModul* sm)
+	Synchronisation::Synchronisation(AlicaEngine* ae, const alica::IRobotID* myID, SyncTransition* st, SyncModul* sm)
 	{
 		this->ae = ae;
 		this->syncTransition = st;

@@ -51,13 +51,13 @@ namespace alica
 	protected:
 		bool running;
 		AlicaEngine* ae;
-		alica::IRobotID myId;
+		const alica::IRobotID* myId;
 		unsigned long ticks;
 		PlanRepository* pr;
 		map<SyncTransition*, Synchronisation*> synchSet;
 		list<SyncTransition*> synchedTransitions;
 		mutex lomutex;
-		IAlicaCommunication* communicator;
+		const IAlicaCommunication* communicator;
 
 	};
 

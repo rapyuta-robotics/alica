@@ -8,6 +8,8 @@
 
 namespace alica
 {
+	using std::numeric_limits;
+	using std::make_shared;
 
 	ProblemDescriptor::ProblemDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars,
 	                                           shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>> domVars)

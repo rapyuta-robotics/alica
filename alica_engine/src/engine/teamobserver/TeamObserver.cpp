@@ -18,6 +18,7 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
+#include "engine/teammanager/Agent.h"
 #include <SystemConfig.h>
 
 namespace alica
@@ -59,36 +60,22 @@ unique_ptr<map<const alica::IRobotID *, shared_ptr<SimplePlanTree>>> TeamObserve
 void TeamObserver::tick(shared_ptr<RunningPlan> root)
 {
     AlicaTime time = ae->getIAlicaClock()->now();
-    bool changed = false;
 
-    // todo clean up and implement here...
-
-    for (auto inactiveAgent : *this->teamManager->getInactiveAgentEngineDatas())
+    bool changedSomeAgent = false;
+    bool changedCurrentAgent = false;
+    for (auto agent : *this->teamManager->getAllAgents())
     {
-    	inactiveAgent->getSuccessMarks()->clear();
-        lock_guard<mutex> lock(this->simplePlanTreeMutex);
-        this->simplePlanTrees->erase(inactiveAgent->getId());
+        changedCurrentAgent = agent->update();
+        if (changedCurrentAgent && !agent->isActive())
+        {
+            lock_guard<mutex> lock(this->simplePlanTreeMutex);
+            this->simplePlanTrees->erase(agent->getID());
+        }
+        changedSomeAgent |= changedCurrentAgent;
     }
 
-//    for (RobotEngineData *r : this->allOtherRobots)
-//    {
-//        if ((r->getLastMessageTime() + teamTimeOut) < time)
-//        {
-//            changed |= r->isActive();
-//            r->setActive(false);
-//            r->getSuccessMarks()->clear();
-//            lock_guard<mutex> lock(this->simplePlanTreeMutex);
-//            this->simplePlanTrees->erase(r->getProperties()->getId());
-//        }
-//        else if (!r->isActive())
-//        {
-//            r->setActive(true);
-//            changed = true;
-//        }
-//    }
-
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
-    if (changed)
+    if (changedSomeAgent)
     {
         ae->getRoleAssignment()->update();
         this->log->eventOccured("TeamChanged");
@@ -239,19 +226,16 @@ EntryPoint *TeamObserver::entryPointOfState(State *state)
 int TeamObserver::successesInPlan(Plan *plan)
 {
     int ret = 0;
-    shared_ptr<list<EntryPoint *>> suc = make_shared<list<EntryPoint *>>(list<EntryPoint *>());
-    for (RobotEngineData *r : this->allOtherRobots)
+    auto suc = make_shared<list<EntryPoint *>>(list<EntryPoint *>());
+    for (auto &agent : *this->teamManager->getActiveAgents())
     {
-        if (r->isActive())
         {
-            {
-                lock_guard<mutex> lock(this->successMark);
-                suc = r->getSuccessMarks()->succeededEntryPoints(plan);
-            }
-            if (suc != nullptr)
-            {
-                ret += suc->size();
-            }
+            lock_guard<mutex> lock(this->successMark);
+            suc = agent->getSucceededEntryPoints(plan);
+        }
+        if (suc != nullptr)
+        {
+            ret += suc->size();
         }
     }
     suc = me->getSuccessMarks()->succeededEntryPoints(plan);
@@ -266,20 +250,17 @@ shared_ptr<SuccessCollection> TeamObserver::getSuccessCollection(Plan *plan)
 {
     shared_ptr<SuccessCollection> ret = make_shared<SuccessCollection>(plan);
     shared_ptr<list<EntryPoint *>> suc;
-    for (RobotEngineData *r : this->allOtherRobots)
+    for (auto &agent : *this->teamManager->getActiveAgents())
     {
-        if (r->isActive())
         {
+            lock_guard<mutex> lock(this->successMark);
+            suc = agent->getSucceededEntryPoints(plan);
+        }
+        if (suc != nullptr)
+        {
+            for (EntryPoint *ep : *suc)
             {
-                lock_guard<mutex> lock(this->successMark);
-                suc = r->getSuccessMarks()->succeededEntryPoints(plan);
-            }
-            if (suc != nullptr)
-            {
-                for (EntryPoint *ep : *suc)
-                {
-                    ret->setSuccess(r->getProperties()->getId(), ep);
-                }
+                ret->setSuccess(agent->getID(), ep);
             }
         }
     }
@@ -298,20 +279,17 @@ void TeamObserver::updateSuccessCollection(Plan *p, shared_ptr<SuccessCollection
 {
     sc->clear();
     shared_ptr<list<EntryPoint *>> suc;
-    for (RobotEngineData *r : this->allOtherRobots)
+    for (auto &agent : *this->teamManager->getActiveAgents())
     {
-        if (r->isActive())
         {
+            lock_guard<mutex> lock(this->successMark);
+            suc = agent->getSucceededEntryPoints(p);
+        }
+        if (suc != nullptr)
+        {
+            for (EntryPoint *ep : *suc)
             {
-                lock_guard<mutex> lock(this->successMark);
-                suc = r->getSuccessMarks()->succeededEntryPoints(p);
-            }
-            if (suc != nullptr)
-            {
-                for (EntryPoint *ep : *suc)
-                {
-                    sc->setSuccess(r->getProperties()->getId(), ep);
-                }
+                sc->setSuccess(agent->getID(), ep);
             }
         }
     }
@@ -347,33 +325,24 @@ void TeamObserver::handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming)
 {
     if (incoming->senderID != myId)
     {
-        if (isRobotIgnored(incoming->senderID))
+        if (this->teamManager->isAgentIgnored(incoming->senderID))
         {
             return;
         }
         auto spt = sptFromMessage(incoming->senderID, incoming->stateIDs);
         if (spt != nullptr)
         {
-
-            for (RobotEngineData *red : allOtherRobots)
+            this->teamManager->setTimeLastMsgReceived(incoming->senderID, ae->getIAlicaClock()->now());
             {
-                if (red->getProperties()->getId() == incoming->senderID)
-                {
-                    red->setLastMessageTime(ae->getIAlicaClock()->now());
-                    {
-                        lock_guard<mutex> lock(this->successMark);
-                        red->setSuccessMarks(make_shared<SuccessMarks>(ae, incoming->succeededEPs));
-                    }
-                    break;
-                }
+                lock_guard<mutex> lock(this->successMark);
+                this->teamManager->setSuccessMarks(incoming->senderID, make_shared<SuccessMarks>(ae, incoming->succeededEPs));
             }
 
             lock_guard<mutex> lock(this->simplePlanTreeMutex);
-            map<const alica::IRobotID *, shared_ptr<SimplePlanTree>>::iterator iterator =
-                this->simplePlanTrees->find(incoming->senderID);
-            if (iterator != this->simplePlanTrees->end())
+            auto sptEntry = this->simplePlanTrees->find(incoming->senderID);
+            if (sptEntry != this->simplePlanTrees->end())
             {
-                iterator->second = spt;
+            	sptEntry->second = spt;
             }
             else
             {

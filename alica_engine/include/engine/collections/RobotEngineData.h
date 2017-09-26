@@ -28,8 +28,9 @@ class RobotEngineData
 
     shared_ptr<SuccessMarks> getSuccessMarks();
     void setSuccessMarks(shared_ptr<SuccessMarks> successMarks);
+    void clearSuccessMarks();
 
-    const Variable *getDomainVariable(string sort) const;
+    Variable *getDomainVariable(string sort) const;
 
   protected:
     const AlicaEngine *engine;
