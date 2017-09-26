@@ -19,7 +19,7 @@ class ProblemPart
     bool hasVariable(Variable *v);
 
     Condition *getCondition();
-    std::shared_ptr<std::vector<std::list<std::vector<const Variable *>>>> getDomainVariables();
+    std::shared_ptr<std::vector<std::list<std::vector<Variable *>>>> getDomainVariables();
     std::shared_ptr<RunningPlan> getRunningPlan();
     std::shared_ptr<std::vector<std::shared_ptr<std::vector<const alica::IRobotID *>>>> getAgentsInScope();
 
@@ -32,7 +32,7 @@ class ProblemPart
      * 3. Vector of Variables, e.g., variables X,Y.
      * 4. Variable, e.g., variable X.
      */
-    std::shared_ptr<std::vector<std::list<std::vector<const Variable *>>>> domainVariables;
+    std::shared_ptr<std::vector<std::list<std::vector<Variable *>>>> domainVariables;
     std::shared_ptr<RunningPlan> runningplan;
     std::shared_ptr<std::vector<std::shared_ptr<std::vector<const alica::IRobotID *>>>> agentsInScope;
 };

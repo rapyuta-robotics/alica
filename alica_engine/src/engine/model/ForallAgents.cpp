@@ -33,7 +33,7 @@ namespace alica
 	 * @param agentsInScope A shared_ptr<vector<int> >
 	 * @return shared_ptr<list<vector<Variable*> > >
 	 */
-	shared_ptr<list<vector<const Variable*> > > ForallAgents::getDomainVariables(shared_ptr<RunningPlan>& p,
+	shared_ptr<list<vector<Variable*> > > ForallAgents::getDomainVariables(shared_ptr<RunningPlan>& p,
 																			shared_ptr<vector<const alica::IRobotID*> >& agentsInScope)
 	{
 		if (this->isScopeIsPlan())
@@ -55,11 +55,11 @@ namespace alica
 		{
 			return nullptr;
 		}
-		auto ret = make_shared<list<vector<const Variable*>>>();
+		auto ret = make_shared<list<vector<Variable*>>>();
 		ITeamManager* tm = ae->getTeamManager();
 		for (auto& r : *(agentsInScope))
 		{
-			vector<const Variable*> terms = vector<const Variable*>(this->getDomainIdentifiers().size());
+			vector<Variable*> terms = vector<Variable*>(this->getDomainIdentifiers().size());
 			auto robotEngineData = tm->getAgentByID(r)->getEngineData();
 			for (int i = 0; i < terms.size(); i++)
 			{

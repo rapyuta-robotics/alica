@@ -47,7 +47,7 @@ namespace alica
 		Variable* getRep(Variable* v);
 		void addVarTo(Variable* representing, Variable* toAdd);
 		vector<Variable*> getAllRep();
-		int getIndexOf(const Variable* v);
+		int getIndexOf(Variable* v);
 		friend std::ostream& operator<<(std::ostream& os,const UniqueVarStore& store)
 		{
 			os << "UniqueVarStore: " << std::endl;
@@ -81,7 +81,7 @@ namespace alica
 	public:
 		Query(AlicaEngine* ae);
 
-		void addStaticVariable(const Variable* v);
+		void addStaticVariable(Variable* v);
 		void addDomainVariable(const alica::IRobotID* robot, string ident);
 		void clearDomainVariables();
 		void clearStaticVariables();
@@ -106,8 +106,8 @@ namespace alica
 										vector<Variable*>& relevantVariables, int& domOffset);
 
 		shared_ptr<UniqueVarStore> uniqueVarStore;
-		vector<const Variable*> queriedStaticVariables;
-		vector<const Variable*> queriedDomainVariables;
+		vector<Variable*> queriedStaticVariables;
+		vector<Variable*> queriedDomainVariables;
 		vector<shared_ptr<ProblemPart>> problemParts;
 
 		vector<Variable*> relevantStaticVariables;

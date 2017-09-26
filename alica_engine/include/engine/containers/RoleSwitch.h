@@ -1,12 +1,4 @@
-/*
- * RoleSwitch.h
- *
- *  Created on: Jul 3, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef ROLESWITCH_H_
-#define ROLESWITCH_H_
+#pragma once
 
 using namespace std;
 
@@ -19,5 +11,3 @@ namespace alica
 
 
 } /* namespace alica */
-
-#endif /* ROLESWITCH_H_ */

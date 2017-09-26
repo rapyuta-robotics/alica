@@ -1,12 +1,4 @@
-/*
- * ConstraintStore.h
- *
- *  Created on: Jul 15, 2014
- *      Author: Paul Panin
- */
-
-#ifndef CONSTRAINTSTORE_H_
-#define CONSTRAINTSTORE_H_
+#pragma once
 
 #include <map>
 #include <list>
@@ -15,14 +7,18 @@
 #include <memory>
 #include <algorithm>
 
-using namespace std;
-
 namespace alica
 {
 	class Variable;
 	class Condition;
 	class Query;
 	class RunningPlan;
+
+	using std::shared_ptr;
+	using std::list;
+	using std::map;
+	using std::vector;
+	using std::mutex;
 
 	/**
 	 * Holds information about active constraints in the corresponding RunningPlan
@@ -44,5 +40,3 @@ namespace alica
 	};
 
 } /* namespace supplementary */
-
-#endif /* CONSTRAINTSTORE_H_ */

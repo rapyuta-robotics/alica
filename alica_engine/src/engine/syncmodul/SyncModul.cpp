@@ -1,10 +1,3 @@
-/*
- * SyncModul.cpp
- *
- *  Created on: Aug 27, 2014
- *      Author: Paul Panin
- */
-
 #include "engine/syncmodul/SyncModul.h"
 #include "engine/AlicaEngine.h"
 #include "engine/teamobserver/TeamObserver.h"
@@ -16,18 +9,18 @@
 #include "engine/containers/SyncTalk.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/model/SyncTransition.h"
+#include "engine/ITeamManager.h"
 
 namespace alica
 {
 
-	SyncModul::SyncModul(AlicaEngine* ae)
+	SyncModul::SyncModul(AlicaEngine* ae) : myId(nullptr)
 	{
 		this->ae = ae;
 		this->pr = nullptr;
 		this->running = false;
 		this->ticks = 0;
 		this->communicator = nullptr;
-
 	}
 
 	SyncModul::~SyncModul()
@@ -41,7 +34,7 @@ namespace alica
 	{
 		this->ticks = 0;
 		this->running = true;
-		this->myId = ae->getTeamObserver()->getOwnId();
+		this->myId = ae->getTeamManager()->getLocalAgentID();
 		this->pr = this->ae->getPlanRepository();
 		this->communicator = this->ae->getCommunicator();
 	}
@@ -143,7 +136,7 @@ namespace alica
 	{
 		if (!this->running || st->senderID == this->myId)
 			return;
-		if (this->ae->getTeamObserver()->isRobotIgnored(st->senderID))
+		if (this->ae->getTeamManager()->isAgentIgnored(st->senderID))
 			return;
 
 #ifdef SM_SUCCES
@@ -223,7 +216,7 @@ namespace alica
 	{
 		if (!this->running || sr->senderID == this->myId)
 			return;
-		if (this->ae->getTeamObserver()->isRobotIgnored(sr->senderID))
+		if (this->ae->getTeamManager()->isAgentActive(sr->senderID))
 			return;
 		SyncTransition* syncTrans = nullptr;
 		map<long, SyncTransition*>::iterator iter = this->pr->getSyncTransitions().find(sr->syncTransitionID);

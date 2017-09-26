@@ -1,12 +1,4 @@
-/*
- * Synchronisation.h
- *
- *  Created on: Aug 27, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef SYNCHRONISATION_H_
-#define SYNCHRONISATION_H_
+#pragma once
 //#define SM_MISC
 //#define SM_SUCCESS
 //#define SM_FAILURE
@@ -17,10 +9,11 @@
 #include <mutex>
 #include <memory>
 
-using namespace std;
-
 namespace alica
 {
+	using std::shared_ptr;
+	using std::mutex;
+	using std::list;
 
 	class SyncModul;
 	class SyncTransition;
@@ -31,12 +24,11 @@ namespace alica
 	struct SyncTalk;
 	class AlicaEngine;
 
-
 	class Synchronisation
 	{
 	public:
 		Synchronisation(AlicaEngine* ae);
-		Synchronisation(AlicaEngine* ae, alica::IRobotID myID, SyncTransition* st, SyncModul* sm);
+		Synchronisation(AlicaEngine* ae, const alica::IRobotID* myID, SyncTransition* st, SyncModul* sm);
 		virtual ~Synchronisation();
 		void setTick(unsigned long now);
 		void changeOwnData (long transitionID, bool conditionHolds);
@@ -56,7 +48,7 @@ namespace alica
 		mutex rowOkMutex;
 		SyncModul* syncModul;
 		SyncTransition* syncTransition;
-		alica::IRobotID myID;
+		const alica::IRobotID* myID;
 		unsigned long lastTalkTime;
 		SyncData* lastTalkData;
 		unsigned long syncStartTime;
@@ -75,5 +67,3 @@ namespace alica
 	};
 
 } /* namespace alica */
-
-#endif /* SYNCHRONISATION_H_ */

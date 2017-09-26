@@ -10,7 +10,7 @@ namespace alica
 ProblemPart::ProblemPart(Condition *con, shared_ptr<RunningPlan> rp)
 {
     condition = con;
-    domainVariables = make_shared<vector<list<vector<const Variable *>>>>();
+    domainVariables = make_shared<vector<list<vector<Variable *>>>>();
     agentsInScope = make_shared<vector<shared_ptr<vector<const alica::IRobotID *>>>>();
     for (Quantifier *quantifier : condition->getQuantifiers())
     {
@@ -35,7 +35,7 @@ bool ProblemPart::hasVariable(Variable *v)
 {
     for (auto &listOfRobots : (*domainVariables))
     {
-        for (std::vector<const Variable *> variables : listOfRobots)
+        for (std::vector<Variable *> variables : listOfRobots)
         {
             for (auto variable : variables)
             {
@@ -61,7 +61,7 @@ Condition *ProblemPart::getCondition()
  * 3. Vector of Variables, e.g., variables X,Y.
  * 4. Variable, e.g., variable X.
  */
-std::shared_ptr<std::vector<std::list<std::vector<const Variable *>>>> ProblemPart::getDomainVariables()
+std::shared_ptr<std::vector<std::list<std::vector<Variable *>>>> ProblemPart::getDomainVariables()
 {
     return domainVariables;
 }

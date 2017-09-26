@@ -1,18 +1,11 @@
-/*
- * SuccessMarks.cpp
- *
- *  Created on: Jun 16, 2014
- *      Author: Stefan Jakob
- */
+#include "engine/collections/SuccessMarks.h"
 
-#include <engine/collections/SuccessMarks.h>
-
-#include <engine/AlicaEngine.h>
-#include <engine/PlanRepository.h>
-#include <engine/model/AbstractPlan.h>
-#include <engine/model/EntryPoint.h>
-#include <engine/model/Plan.h>
-#include <engine/model/PlanType.h>
+#include "engine/AlicaEngine.h"
+#include "engine/PlanRepository.h"
+#include "engine/model/AbstractPlan.h"
+#include "engine/model/EntryPoint.h"
+#include "engine/model/Plan.h"
+#include "engine/model/PlanType.h"
 
 namespace alica
 {
@@ -41,8 +34,8 @@ SuccessMarks::SuccessMarks(const AlicaEngine *ae, list<long> epIds)
         {
             ep = iter->second;
             shared_ptr<list<EntryPoint *>> s;
-            auto i = this->getSuccessMarks().find(ep->getPlan());
-            if (i != this->getSuccessMarks().end())
+            auto i = this->successMarks.find(ep->getPlan());
+            if (i != this->successMarks.end())
             {
                 s = i->second;
                 if (find(s->begin(), s->end(), ep) == s->end())
@@ -54,7 +47,7 @@ SuccessMarks::SuccessMarks(const AlicaEngine *ae, list<long> epIds)
             {
                 shared_ptr<list<EntryPoint *>> s = make_shared<list<EntryPoint *>>();
                 s->push_back(ep);
-                this->getSuccessMarks().insert(pair<AbstractPlan *, shared_ptr<list<EntryPoint *>>>(ep->getPlan(), s));
+                this->successMarks.insert(pair<AbstractPlan *, shared_ptr<list<EntryPoint *>>>(ep->getPlan(), s));
             }
         }
     }
@@ -71,27 +64,27 @@ SuccessMarks::~SuccessMarks()
 void SuccessMarks::limitToPlans(unique_ptr<unordered_set<AbstractPlan *>> active)
 {
     list<AbstractPlan *> tr;
-    for (auto iterator : this->getSuccessMarks())
+    for (auto successMarkEntry : this->successMarks)
     {
-        if (active->find(iterator.first) == active->end())
+        if (active->find(successMarkEntry.first) == active->end())
         {
-            tr.push_back(iterator.first);
+            tr.push_back(successMarkEntry.first);
         }
     }
     for (AbstractPlan *p : tr)
     {
-        this->getSuccessMarks().erase(p);
+        this->successMarks.erase(p);
     }
 }
 
 map<AbstractPlan *, shared_ptr<list<EntryPoint *>>> &SuccessMarks::getSuccessMarks()
 {
-    return succesMarks;
+    return successMarks;
 }
 
-void SuccessMarks::setSuccesMarks(map<AbstractPlan *, shared_ptr<list<EntryPoint *>>> succesMarks)
+void SuccessMarks::setSuccessMarks(map<AbstractPlan *, shared_ptr<list<EntryPoint *>>> successMarks)
 {
-    this->succesMarks = succesMarks;
+    this->successMarks = successMarks;
 }
 
 /**
@@ -99,7 +92,7 @@ void SuccessMarks::setSuccesMarks(map<AbstractPlan *, shared_ptr<list<EntryPoint
  */
 void SuccessMarks::clear()
 {
-    this->succesMarks.clear();
+    this->successMarks.clear();
 }
 
 /**
@@ -107,16 +100,13 @@ void SuccessMarks::clear()
  * @param p An AbstractPlan*
  * @return A shared_ptr<list<EntryPoint*> >
  */
-shared_ptr<list<EntryPoint *>> SuccessMarks::succeededEntryPoints(AbstractPlan *p)
+shared_ptr<list<EntryPoint *>> SuccessMarks::succeededEntryPoints(AbstractPlan *p) const
 {
-    for (map<AbstractPlan *, shared_ptr<list<EntryPoint *>>>::const_iterator iterator = this->getSuccessMarks().begin();
-         iterator != this->getSuccessMarks().end(); iterator++)
-    {
-        if (iterator->first == p)
-        {
-            return iterator->second;
-        }
-    }
+	auto successMarkEntry = this->successMarks.find(p);
+	if (successMarkEntry != this->successMarks.end())
+	{
+		return successMarkEntry->second;
+	}
     return nullptr;
 }
 
@@ -126,7 +116,7 @@ shared_ptr<list<EntryPoint *>> SuccessMarks::succeededEntryPoints(AbstractPlan *
  */
 void SuccessMarks::removePlan(AbstractPlan *plan)
 {
-    this->getSuccessMarks().erase(plan);
+    this->successMarks.erase(plan);
 }
 
 /**
@@ -136,10 +126,10 @@ void SuccessMarks::removePlan(AbstractPlan *plan)
  */
 void SuccessMarks::markSuccessfull(AbstractPlan *p, EntryPoint *e)
 {
-    auto iter = this->getSuccessMarks().find(p);
-    if (iter != this->getSuccessMarks().end())
+    auto iter = this->successMarks.find(p);
+    if (iter != this->successMarks.end())
     {
-        shared_ptr<list<EntryPoint *>> l = this->getSuccessMarks().at(p);
+        shared_ptr<list<EntryPoint *>> l = this->successMarks.at(p);
         auto i = find(l->begin(), l->end(), e);
         if (i == l->end())
         {
@@ -148,9 +138,9 @@ void SuccessMarks::markSuccessfull(AbstractPlan *p, EntryPoint *e)
     }
     else
     {
-        shared_ptr<list<EntryPoint *>> l = make_shared<list<EntryPoint *>>();
+        auto l = make_shared<list<EntryPoint *>>();
         l->push_back(e);
-        this->getSuccessMarks().insert(pair<AbstractPlan *, shared_ptr<list<EntryPoint *>>>(p, l));
+        this->successMarks.insert(pair<AbstractPlan *, shared_ptr<list<EntryPoint *>>>(p, l));
     }
 }
 
@@ -163,8 +153,8 @@ void SuccessMarks::markSuccessfull(AbstractPlan *p, EntryPoint *e)
 bool SuccessMarks::succeeded(AbstractPlan *p, EntryPoint *e)
 {
     list<EntryPoint *> l;
-    auto iter = this->getSuccessMarks().find(p);
-    if (iter != this->getSuccessMarks().end())
+    auto iter = this->successMarks.find(p);
+    if (iter != this->successMarks.end())
     {
         l = (*iter->second);
         auto i = find(l.begin(), l.end(), e);
@@ -194,8 +184,8 @@ bool SuccessMarks::succeeded(long planId, long entryPointId)
 bool SuccessMarks::anyTaskSucceeded(AbstractPlan *p)
 {
     list<EntryPoint *> l;
-    auto iter = this->getSuccessMarks().find(p);
-    if (iter != this->getSuccessMarks().end())
+    auto iter = this->successMarks.find(p);
+    if (iter != this->successMarks.end())
     {
         l = (*iter->second);
         return (l.size() > 0);
@@ -205,9 +195,9 @@ bool SuccessMarks::anyTaskSucceeded(AbstractPlan *p)
     {
         for (Plan *cp : pt->getPlans())
         {
-            auto iter = this->getSuccessMarks().find(cp);
+            auto iter = this->successMarks.find(cp);
             l = (*iter->second);
-            if (iter != this->getSuccessMarks().end() && l.size() > 0)
+            if (iter != this->successMarks.end() && l.size() > 0)
             {
                 return true;
             }
@@ -220,10 +210,10 @@ bool SuccessMarks::anyTaskSucceeded(AbstractPlan *p)
  * Serialize to a list of EntryPoint ids.
  * @return A list<long>
  */
-list<long> SuccessMarks::toList()
+list<long> SuccessMarks::toList() const
 {
     list<long> ret;
-    for (auto pair : this->getSuccessMarks())
+    for (auto pair : this->successMarks)
     {
         for (EntryPoint *e : (*pair.second))
         {

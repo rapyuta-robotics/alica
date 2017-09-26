@@ -26,18 +26,18 @@ namespace alica
 		//TODO uses ICollection in C# so far only unordered_set needed
 		void limitToPlans(std::unique_ptr<std::unordered_set<AbstractPlan*> > active);
 		std::map<AbstractPlan*,std::shared_ptr<std::list<EntryPoint*> > >& getSuccessMarks();
-		void setSuccesMarks(std::map<AbstractPlan*,std::shared_ptr<std::list<EntryPoint*> > > succesMarks);
+		void setSuccessMarks(std::map<AbstractPlan*,std::shared_ptr<std::list<EntryPoint*> > > successMarks);
 		void clear();
-		std::shared_ptr<std::list<EntryPoint*> >succeededEntryPoints(AbstractPlan* p);
+		std::shared_ptr<std::list<EntryPoint*> >succeededEntryPoints(AbstractPlan* p) const;
 		void removePlan(AbstractPlan* plan);
 		void markSuccessfull(AbstractPlan* p, EntryPoint* e);
 		bool succeeded(AbstractPlan* p, EntryPoint* e);
 		bool succeeded(long planId, long entryPointId);
 		bool anyTaskSucceeded(AbstractPlan* p);
-		std::list<long> toList();
+		std::list<long> toList() const;
 
 	protected:
-		std::map<AbstractPlan*,std::shared_ptr<std::list<EntryPoint*> > > succesMarks;
+		std::map<AbstractPlan*,std::shared_ptr<std::list<EntryPoint*> > > successMarks;
 		const AlicaEngine* ae;
 	};
 

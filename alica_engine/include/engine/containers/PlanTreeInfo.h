@@ -1,5 +1,4 @@
-#ifndef PLANTREEINFO_H_
-#define PLANTREEINFO_H_
+#pragma once
 
 #include <vector>
 #include <tuple>
@@ -8,13 +7,13 @@ using namespace std;
 
 namespace alica
 {
-	typedef tuple<alica::IRobotID, list<long>, list<long>> stdPlanTreeInfo;
+	typedef tuple<const alica::IRobotID*, list<long>, list<long>> stdPlanTreeInfo;
 	struct PlanTreeInfo
 	{
-		PlanTreeInfo()
+		PlanTreeInfo() : senderID(nullptr)
 		{
 		}
-		alica::IRobotID senderID;
+		const alica::IRobotID* senderID;
 		list<long> stateIDs;
 		list<long> succeededEPs;
 
@@ -30,6 +29,4 @@ namespace alica
 			return move(make_tuple(senderID, stateIDs, succeededEPs));
 		}
 	};
-}
-
-#endif /* BEHAVIOURENGINEINFO_H_ */
+} /* namespace alica*/

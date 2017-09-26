@@ -59,7 +59,7 @@ namespace alica
 		Logger* log;
 		const alica::IRobotID* myId;
 		RobotEngineData* me;
-		const ITeamManager* teamManager;
+		ITeamManager* teamManager;
 
 		mutex simplePlanTreeMutex;
 		mutex successMark;

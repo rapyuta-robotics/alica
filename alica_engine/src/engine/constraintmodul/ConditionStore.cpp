@@ -1,10 +1,3 @@
-/*
- * ConstraintStore.cpp
- *
- *  Created on: Jul 15, 2014
- *      Author: Paul Panin
- */
-
 #include <engine/constraintmodul/ConditionStore.h>
 #include <engine/constraintmodul/ProblemPart.h>
 #include <engine/constraintmodul/Query.h>

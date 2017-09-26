@@ -1,12 +1,4 @@
-/*
- * SolverVar.h
- *
- *  Created on: Nov 24, 2014
- *      Author: Philipp
- */
-
-#ifndef SOLVERVAR_H_
-#define SOLVERVAR_H_
+#pragma once
 
 namespace alica
 {
@@ -16,5 +8,3 @@ namespace alica
 	};
 
 } /* namespace alica */
-
-#endif /* SOLVERVAR_H_ */

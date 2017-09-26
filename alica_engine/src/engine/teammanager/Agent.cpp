@@ -1,9 +1,12 @@
 #include "engine/teammanager/Agent.h"
 
-#include "engine/IRobotID.h"
 #include "engine/AlicaEngine.h"
+#include "engine/IRobotID.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
+#include "engine/collections/SuccessMarks.h"
+#include "engine/model/AbstractPlan.h"
+#include "engine/model/EntryPoint.h"
 
 namespace alica
 {
@@ -17,6 +20,7 @@ Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const IRobotID *id)
     , engineData(nullptr)
     , timeout(timeout)
     , active(false)
+    , local(false)
 {
 }
 
@@ -48,6 +52,11 @@ bool Agent::isActive()
     return this->active;
 }
 
+void Agent::setLocal(bool local)
+{
+    this->local = local;
+}
+
 const RobotProperties *Agent::getProperties() const
 {
     return this->properties;
@@ -63,14 +72,44 @@ void Agent::setTimeLastMsgReceived(AlicaTime timeLastMsgReceived)
     this->timeLastMsgReceived = timeLastMsgReceived;
 }
 
+void Agent::setSuccess(AbstractPlan *plan, EntryPoint *entryPoint)
+{
+    this->engineData->getSuccessMarks()->markSuccessfull(plan, entryPoint);
+}
+
+void Agent::setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks)
+{
+    this->engineData->setSuccessMarks(successMarks);
+}
+
+Variable *Agent::getDomainVariable(std::string sort)
+{
+    return this->engineData->getDomainVariable(sort);
+}
+
+std::shared_ptr<std::list<EntryPoint *>> Agent::getSucceededEntryPoints(AbstractPlan *plan)
+{
+    return this->engineData->getSuccessMarks()->succeededEntryPoints(plan);
+}
+
 bool Agent::update()
 {
-	if (this->active && this->timeLastMsgReceived + this->timeout > this->engine->getIAlicaClock()->now())
-	{
-		// timeout triggered
-		this->engineData->successMarks.clear();
-		// todo implement
-	}
+    if (this->active && this->timeLastMsgReceived + this->timeout < this->engine->getIAlicaClock()->now())
+    {
+        // timeout triggered
+        this->engineData->clearSuccessMarks();
+        this->active = false;
+        return true;
+    }
+
+    if (!this->active && this->timeLastMsgReceived + this->timeout > this->engine->getIAlicaClock()->now())
+    {
+        // reactivate because of new messages
+        this->active = true;
+        return true;
+    }
+
+    return false;
 }
 
 } /* namespace alica */

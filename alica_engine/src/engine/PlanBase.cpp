@@ -1,10 +1,3 @@
-/*
- * PlanBase.cpp
- *
- *  Created on: Jun 17, 2014
- *      Author: Paul Panin
- */
-
 #include "engine/PlanBase.h"
 
 #include "engine/RunningPlan.h"
@@ -12,11 +5,11 @@
 #include "engine/rules/RuleBook.h"
 #include "engine/AlicaEngine.h"
 #include "engine/ITeamObserver.h"
+#include "engine/ITeamManager.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/logging/Logger.h"
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/ISyncModul.h"
-#include "math.h"
 #include "engine/model/Task.h"
 #include "engine/model/State.h"
 #include "engine/model/EntryPoint.h"
@@ -24,6 +17,8 @@
 #include "engine/Assignment.h"
 #include "engine/collections/StateCollection.h"
 #include "engine/IAlicaCommunication.h"
+
+#include <math.h>
 
 namespace alica
 {
@@ -80,7 +75,7 @@ namespace alica
 			double stfreq = (*sc)["Alica"]->get<double>("Alica.StatusMessages.Frequency", NULL);
 			this->sendStatusInterval = (AlicaTime)max(1000000.0, round(1.0 / stfreq * 1000000000));
 			this->statusMessage = new AlicaEngineInfo();
-			this->statusMessage->senderID = this->teamObserver->getOwnId();
+			this->statusMessage->senderID = this->ae->getTeamManager()->getLocalAgentID();
 			this->statusMessage->masterPlan = masterPlan->getName();
 		}
 
@@ -156,17 +151,10 @@ namespace alica
 
 
 			//Send tick to other modules
-
-			this->ae->getCommunicator()->tick();
-
-
+			//this->ae->getCommunicator()->tick(); // not implemented as ros does work asynchronous
 			this->teamObserver->tick(this->rootNode);
-
-
 			this->ra->tick();
-
 			this->syncModel->tick();
-
 			this->authModul->tick(this->rootNode);
 
 			if (this->rootNode == nullptr)

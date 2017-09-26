@@ -29,14 +29,14 @@ namespace alica
 		uniqueVarStore = make_shared<UniqueVarStore>();
 	}
 
-	void Query::addStaticVariable(const Variable* v)
+	void Query::addStaticVariable(Variable* v)
 	{
 		queriedStaticVariables.push_back(v);
 	}
 
 	void Query::addDomainVariable(const alica::IRobotID* robot, string ident)
 	{
-		queriedDomainVariables.push_back(this->ae->getTeamManager()->getAgentByID(robot)->getEngineData()->getDomainVariable(ident));
+		queriedDomainVariables.push_back(this->ae->getTeamManager()->getDomainVariable(robot, ident));
 	}
 
 	void Query::clearDomainVariables()
@@ -95,7 +95,7 @@ namespace alica
 #endif
 
 		// add static variables into the clean unique variable store
-		for (Variable* v : relevantStaticVariables)
+		for (auto& v : relevantStaticVariables)
 		{
 			uniqueVarStore->add(v);
 		}
@@ -216,11 +216,11 @@ namespace alica
 					domainSolverVars->reserve(domainVars.size());
 					for (int i = 0; i < domainVars.size(); ++i)
 					{
-						if(domainVars.at(i)->solverVar == nullptr)
+						if(domainVars.at(i)->getSolverVar() == nullptr)
 						{
-							domainVars.at(i)->solverVar = solver->createVariable(domainVars.at(i)->getId());
+							domainVars.at(i)->setSolverVar(solver->createVariable(domainVars.at(i)->getId()));
 						}
-						domainSolverVars->push_back(domainVars.at(i)->solverVar);
+						domainSolverVars->push_back(domainVars.at(i)->getSolverVar());
 					}
 					ll->push_back(domainSolverVars);
 				}
@@ -364,7 +364,7 @@ namespace alica
 	 * Returns the index of the unification-list that contains the given variable.
 	 * Returns -1, if the variable is not present.
 	 */
-	int UniqueVarStore::getIndexOf(const Variable* v)
+	int UniqueVarStore::getIndexOf(Variable* v)
 	{
 		for (int i = 0; i < store.size(); ++i)
 		{

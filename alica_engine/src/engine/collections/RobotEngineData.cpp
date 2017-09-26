@@ -61,9 +61,9 @@ void RobotEngineData::initDomainVariables()
     }
 }
 
-const Variable *RobotEngineData::getDomainVariable(string ident) const
+Variable *RobotEngineData::getDomainVariable(string sort) const
 {
-    auto iterator = this->domainVariables.find(ident);
+    auto iterator = this->domainVariables.find(sort);
     if (iterator != this->domainVariables.end())
     {
         return iterator->second;
@@ -83,6 +83,11 @@ long RobotEngineData::makeUniqueId(string s)
         this->engine->abort("TO: Hash Collision in generating a quantified variable's unique ID: ", ret);
     }
     return ret;
+}
+
+void RobotEngineData::clearSuccessMarks()
+{
+	this->successMarks->clear();
 }
 
 } /* namespace alica */
