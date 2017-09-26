@@ -5,6 +5,7 @@
 
 #include <SystemConfig.h>
 #include <process_manager/RobotExecutableRegistry.h>
+#include <msl/robot/IntRobotIDFactory.h>
 
 #include <QMenu>
 
@@ -18,8 +19,18 @@ namespace robot_control
 	{
 		setObjectName("RobotsControl");
 		rosNode = new ros::NodeHandle();
-
 		this->sc = supplementary::SystemConfig::getInstance();
+		auto robotIDType = (*this->sc)["ProcessManaging"]->get<string>("RobotControl.robotIDType", NULL);
+		if (robotIDType.compare("int") == 0)
+		{
+			this->robotIDFactory = new msl::robot::IntRobotIDFactory();
+		}
+		else
+		{
+			std::cerr << "RobotsControl::RobotsControl(): Unknown robot id type!" << std::endl;
+			return;
+		}
+
 		RobotsControl::msgTimeOut = chrono::duration<double>(
 				(*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 		this->pmRegistry = supplementary::RobotExecutableRegistry::get();
@@ -297,6 +308,12 @@ namespace robot_control
 										const qt_gui_cpp::Settings& instance_settings)
 	{
 
+	}
+
+	const alica::IRobotID *RobotsControl::convertToAlicaID(std::vector<uint8_t> &robotRosID) const
+	{
+	    unsigned char *_robotRosID = reinterpret_cast<unsigned char *>(robotRosID.data());
+	    return this->robotIDFactory->create(_robotRosID, sizeof(robotRosID));
 	}
 
 }

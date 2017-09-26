@@ -30,6 +30,11 @@ namespace supplementary
 	class RobotExecutableRegistry;
 }
 
+namespace alica {
+	class IRobotID;
+	class IRobotIDFactory;
+}
+
 namespace robot_control
 {
 
@@ -66,7 +71,8 @@ namespace robot_control
 
 		supplementary::SystemConfig* sc;
 
-		map<int, Robot*> controlledRobotsMap;
+		alica::IRobotIDFactory* robotIDFactory;
+		map<const alica::IRobotID*, Robot*> controlledRobotsMap;
 		queue<pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
 		mutex processStatsMsgQueueMutex;
 		queue<pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
@@ -82,6 +88,7 @@ namespace robot_control
 		void receiveSharedWorldInfo(msl_sensor_msgs::SharedWorldInfoPtr sharedWorldInfo);
 		void processMessages();
 		void checkAndInit(int robotId);
+		const alica::IRobotID *convertToAlicaID(std::vector<uint8_t> &robotRosID) const;
 
 		QTimer* guiUpdateTimer;
 
