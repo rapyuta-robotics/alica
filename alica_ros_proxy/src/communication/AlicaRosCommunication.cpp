@@ -16,6 +16,7 @@
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
 #include "engine/containers/SyncData.h"
+#include "engine/teamobserver/TeamObserver.h"
 
 #include <ros/node_handle.h>
 #include <ros/publisher.h>
@@ -102,20 +103,34 @@ namespace alicaRosProxy
 		}
 	}
 
-	void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo& aai) const
+
+	void AlicaRosCommunication::convertToRosID(alica::IRobotID& robotID, std::vector<uint8_t>& robotRosID)
+	{
+		for (int i = 0; i < robotID.getSize(); i++)
+		{
+			robotRosID.push_back(*(robotID.getRaw() + i));
+		}
+	}
+
+	alica::IRobotID AlicaRosCommunication::convertToAlicaID( std::vector<uint8_t>& robotRosID)
+	{
+		unsigned char* _robotRosID = reinterpret_cast<unsigned char*>(robotRosID.data());
+		return this->ae->getRobotIDFactory()->create(_robotRosID, sizeof(robotRosID));
+	}
+
+
+	void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo& aai)
 	{
 		alica_ros_proxy::AllocationAuthorityInfo aais;
-		for (int i = 0; i < aai.senderID.getSize(); i++)
-		{
-			aais.senderID.id.push_back(*(aai.senderID.getRaw()+i));
-		}
+
+		convertToRosID(aai.senderID, aais.senderID.id);
+		
 		aais.planID = aai.planId;
 		aais.parentState = aai.parentState;
 		aais.planType = aai.planType;
-		for (int i = 0; i < aai.authority.getSize(); i++)
-		{
-			aais.authority.id.push_back(*(aai.authority.getRaw()+i));
-		}
+		
+		convertToRosID(aai.authority, aais.authority.id);
+
 		for (auto &ep : aai.entryPointRobots)
 		{
 			alica_ros_proxy::EntryPointRobots newEP;
@@ -130,7 +145,6 @@ namespace alicaRosProxy
 				}
 				i++;
 			}
-
 			aais.entrypoints.push_back(newEP);
 		}
 
@@ -148,11 +162,16 @@ namespace alicaRosProxy
 		bis.currentState = bi.currentState;
 		bis.currentTask = bi.currentTask;
 		bis.masterPlan = bi.masterPlan;
-		for (int i : bi.robotIDsWithMe)
+
+		for (alica::IRobotID robotID : bi.robotIDsWithMe)
 		{
-			bis.robotIDsWithMe.push_back(i);
+
+			alica_ros_proxy::AllocationAuthorityInfo::_senderID_type rosRobotID;
+			convertToRosID(robotID, rosRobotID.id);
+			bis.robotIDsWithMe.push_back(rosRobotID);
 		}
-		bis.senderID = bi.senderID;
+
+		convertToRosID(bi.senderID, bis.senderID.id);
 
 		if (this->isRunning)
 		{
@@ -163,7 +182,7 @@ namespace alicaRosProxy
 	void AlicaRosCommunication::sendPlanTreeInfo(PlanTreeInfo& pti)
 	{
 		alica_ros_proxy::PlanTreeInfo ptis;
-		ptis.senderID = pti.senderID.getRaw();
+		convertToRosID(pti.senderID, ptis.senderID.id);
 		for (long i : pti.stateIDs)
 		{
 			ptis.stateIDs.push_back(i);
@@ -183,7 +202,8 @@ namespace alicaRosProxy
 		alica_ros_proxy::RoleSwitch rss;
 
 		rss.roleID = rs.roleID;
-		rss.senderID = rs.roleID;
+		alica::IRobotID robotID = this->ae->getTeamObserver()->getOwnId();
+		convertToRosID(robotID, rss.senderID.id);
 
 		if (this->isRunning)
 		{
@@ -195,7 +215,7 @@ namespace alicaRosProxy
 	{
 		alica_ros_proxy::SyncReady srs;
 
-		srs.senderID = sr.senderID.getRaw();
+		convertToRosID(sr.senderID, srs.senderID.id);
 		srs.syncTransitionID = sr.syncTransitionID;
 
 		if (this->isRunning)
@@ -207,14 +227,14 @@ namespace alicaRosProxy
 	void AlicaRosCommunication::sendSyncTalk(SyncTalk& st)
 	{
 		alica_ros_proxy::SyncTalk sts;
+		convertToRosID(st.senderID, sts.senderID.id);
 
-		sts.senderID = st.senderID.getRaw();
 		for (auto sd : st.syncData)
 		{
 			alica_ros_proxy::SyncData sds;
 			sds.ack = sd->ack;
 			sds.conditionHolds = sd->conditionHolds;
-			sds.robotID = sd->robotID;
+			convertToRosID(sd->robotID,sds.robotID.id);
 			sds.transitionID = sd->transitionID;
 			sts.syncData.push_back(sds);
 		}
@@ -228,8 +248,8 @@ namespace alicaRosProxy
 	void AlicaRosCommunication::sendSolverResult(SolverResult& sr) const
 	{
 		alica_ros_proxy::SolverResult srs;
+		convertToRosID(sr.senderID, srs.senderID.id);
 
-		srs.senderID = sr.senderID.getRaw();
 		for (auto sv : sr.vars)
 		{
 			alica_ros_proxy::SolverVar svs;
@@ -244,19 +264,25 @@ namespace alicaRosProxy
 		}
 	}
 
+
 	void AlicaRosCommunication::handleAllocationAuthorityRos(alica_ros_proxy::AllocationAuthorityInfoPtr aai)
 	{
 		auto aaiPtr = make_shared<AllocationAuthorityInfo>();
-		aaiPtr->senderID = this->ae->getRobotIDFactory()->create(aai->senderID.data(), aai->senderID.size());
+		aaiPtr->senderID = convertToAlicaID(aai->senderID.id);
 		aaiPtr->planId = aai->planID;
 		aaiPtr->parentState = aai->parentState;
 		aaiPtr->planType = aai->planType;
-		aaiPtr->authority = aai->authority;
+		aaiPtr->authority = convertToAlicaID(aai->authority.id);
+
 		for (auto &ep : aai->entrypoints)
 		{
 			alica::EntryPointRobots newEP;
 			newEP.entrypoint = ep.entryPoint;
-			newEP.robots = ep.robots;
+
+			for (auto robotID : ep.robots)
+			{
+				newEP.robots.push_back(convertToAlicaID(robotID.id));
+			}
 
 			aaiPtr->entryPointRobots.push_back(newEP);
 		}
@@ -270,7 +296,7 @@ namespace alicaRosProxy
 	void AlicaRosCommunication::handlePlanTreeInfoRos(alica_ros_proxy::PlanTreeInfoPtr pti)
 	{
 		auto ptiPtr = make_shared<PlanTreeInfo>();
-		ptiPtr->senderID = pti->senderID;
+		ptiPtr->senderID = convertToAlicaID(pti->senderID.id);
 		for (long i : pti->stateIDs)
 		{
 			ptiPtr->stateIDs.push_back(i);
@@ -289,8 +315,7 @@ namespace alicaRosProxy
 	void AlicaRosCommunication::handleSyncReadyRos(alica_ros_proxy::SyncReadyPtr sr)
 	{
 		auto srPtr = make_shared<SyncReady>();
-
-		srPtr->senderID = sr->senderID;
+		srPtr->senderID = convertToAlicaID(sr->senderID.id);
 		srPtr->syncTransitionID = sr->syncTransitionID;
 
 		if (this->isRunning)
@@ -302,14 +327,15 @@ namespace alicaRosProxy
 	void AlicaRosCommunication::handleSyncTalkRos(alica_ros_proxy::SyncTalkPtr st)
 	{
 		auto stPtr = make_shared<SyncTalk>();
+		//stPtr->senderID = st->senderID;
+		stPtr->senderID = convertToAlicaID(st->senderID.id);
 
-		stPtr->senderID = st->senderID;
 		for (auto &sd : st->syncData)
 		{
 			SyncData* sds = new SyncData();
 			sds->ack = sd.ack;
 			sds->conditionHolds = sd.conditionHolds;
-			sds->robotID = sd.robotID;
+			sds->robotID = convertToAlicaID(sd.robotID.id);
 			sds->transitionID = sd.transitionID;
 			stPtr->syncData.push_back(sds);
 		}
@@ -323,8 +349,8 @@ namespace alicaRosProxy
 	void AlicaRosCommunication::handleSolverResult(alica_ros_proxy::SolverResultPtr sr)
 	{
 		auto srPtr = make_shared<SolverResult>();
+		srPtr->senderID = convertToAlicaID(sr->senderID.id);
 
-		srPtr->senderID = sr->senderID;
 		for (auto &sv : sr->vars)
 		{
 			SolverVar* svs = new SolverVar();
