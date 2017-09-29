@@ -77,9 +77,6 @@ class AlicaRosCommunication : public alica::IAlicaCommunication
 
     supplementary::SystemConfig *sc;
 
-  private:
-    void convertToRosID(const alica::IRobotID *a, std::vector<uint8_t> &b) const;
-    const alica::IRobotID *convertToAlicaID(std::vector<uint8_t> &robotRosID) const;
 };
 
 } /* namespace alicaRosProxy */

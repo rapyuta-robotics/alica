@@ -8,7 +8,7 @@ namespace alica{
 	{
 	public:
 		virtual ~IRobotIDFactory() {};
-		virtual const IRobotID * create(uint8_t* idBytes, int idSize) const = 0;
+		virtual const IRobotID * create(std::vector<uint8_t > &b) const = 0;
 
 	};
 
