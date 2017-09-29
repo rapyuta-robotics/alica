@@ -48,8 +48,15 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig *sc)
     for (auto &agentName : *agentNames)
     {
         int tmpID = (*sc)["Globals"]->tryGet<int>(-1, "Globals", "Team", agentName.c_str(), "ID", NULL);
+
+        std::vector<uint8_t> robotId;
+
+        for(int i = 0; i < sizeof(int); i++) {
+        	robotId.push_back( *(((uint8_t*)&tmpID) + i) );
+        }
+
         agent = new Agent(this->engine, this->teamTimeOut,
-                          this->engine->getRobotIDFactory()->create((uint8_t *)&tmpID, sizeof(int)), agentName);
+                          this->engine->getRobotIDFactory()->create(robotId), agentName);
         if (!foundSelf && agentName.compare(localAgentName) == 0)
         {
             foundSelf = true;

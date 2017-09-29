@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <vector>
+
 namespace alica
 {
 
@@ -32,6 +34,8 @@ class IRobotID
     {
     	return 0;
     };
+
+    std::vector<uint8_t> toByteVector() const;
 };
 
 } /* namespace alica */
