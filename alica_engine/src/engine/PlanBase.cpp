@@ -329,13 +329,13 @@ namespace alica
 //			return;
 //		if (r->isBehaviour())
 //			return;
-//		shared_ptr<vector<alica::IRobotID> > robots = r->getAssignment()->getAllRobots();
+//		shared_ptr<vector<supplementary::IAgentID> > robots = r->getAssignment()->getAllRobots();
 //		for (shared_ptr<RunningPlan> rp : *r->getChildren())
 //		{
 //			if (rp->isBehaviour())
 //				continue;
 //
-//			shared_ptr<vector<alica::IRobotID> > cr = rp->getAssignment()->getAllRobots();
+//			shared_ptr<vector<supplementary::IAgentID> > cr = rp->getAssignment()->getAllRobots();
 //
 //			for (int i = 0; i < cr->size(); i++)
 //			{

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/IRobotID.h"
+#include "supplementary/IAgentID.h"
 
 #include <vector>
 
@@ -16,8 +16,8 @@ namespace alica
 		SyncRow();
 		SyncRow(SyncData* sd);
 		virtual ~SyncRow();
-		vector<const alica::IRobotID*>& getReceivedBy();
-		void setReceivedBy(vector<const alica::IRobotID*> recievedBy);
+		vector<const supplementary::IAgentID*>& getReceivedBy();
+		void setReceivedBy(vector<const supplementary::IAgentID*> recievedBy);
 		SyncData* getSyncData();
 		void setSyncData(SyncData* syncData);
 		void toString();
@@ -26,7 +26,7 @@ namespace alica
 	protected:
 		SyncData* syncData;
 		//this vector always has to be sorted
-		vector<const alica::IRobotID*> receivedBy;
+		vector<const supplementary::IAgentID*> receivedBy;
 	};
 
 } /* namespace alica */

@@ -34,7 +34,7 @@ namespace alica
 	 * @return shared_ptr<list<vector<Variable*> > >
 	 */
 	shared_ptr<list<vector<Variable*> > > ForallAgents::getDomainVariables(shared_ptr<RunningPlan>& p,
-																			shared_ptr<vector<const alica::IRobotID*> >& agentsInScope)
+																			shared_ptr<vector<const supplementary::IAgentID*> >& agentsInScope)
 	{
 		if (this->isScopeIsPlan())
 		{

@@ -14,10 +14,10 @@ namespace alica
 	{
 		this->numEps = size;
 		this->entryPoints = new EntryPoint*[size];
-		this->robotIds = new shared_ptr<vector<const alica::IRobotID*>> [size];
+		this->robotIds = new shared_ptr<vector<const supplementary::IAgentID*>> [size];
 		for (short i = 0; i < size; i++)
 		{
-			this->robotIds[i] = std::make_shared<vector<const alica::IRobotID*>>();
+			this->robotIds[i] = std::make_shared<vector<const supplementary::IAgentID*>>();
 		}
 	}
 
@@ -27,7 +27,7 @@ namespace alica
 		delete[] this->robotIds;
 	}
 
-	bool AssignmentCollection::setRobots(short index, shared_ptr<vector<const alica::IRobotID *>> robotIds)
+	bool AssignmentCollection::setRobots(short index, shared_ptr<vector<const supplementary::IAgentID *>> robotIds)
 	{
 		if (index < this->numEps) {
 			this->robotIds[index] = robotIds;
@@ -44,7 +44,7 @@ namespace alica
 	 * @param ep An EntryPoint
 	 * @return shared_ptr<vector<int>>
 	 */
-	shared_ptr<vector<const alica::IRobotID *>> AssignmentCollection::getRobotsByEp(EntryPoint* ep)
+	shared_ptr<vector<const supplementary::IAgentID *>> AssignmentCollection::getRobotsByEp(EntryPoint* ep)
 	{
 		for (int i = 0; i < this->numEps; i++)
 		{
@@ -61,7 +61,7 @@ namespace alica
 	 * @param id A long
 	 * @return vector<int>*
 	 */
-	shared_ptr<vector<const alica::IRobotID *>> AssignmentCollection::getRobotsByEpId(long id)
+	shared_ptr<vector<const supplementary::IAgentID *>> AssignmentCollection::getRobotsByEpId(long id)
 	{
 		for (int i = 0; i < this->numEps; i++)
 		{
@@ -73,7 +73,7 @@ namespace alica
 		return nullptr;
 	}
 
-	shared_ptr<vector<const alica::IRobotID *>> AssignmentCollection::getRobots(short index)
+	shared_ptr<vector<const supplementary::IAgentID *>> AssignmentCollection::getRobots(short index)
 	{
 		if (index < this->numEps)
 		{

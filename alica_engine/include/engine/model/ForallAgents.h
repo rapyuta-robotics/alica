@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Quantifier.h"
-#include "engine/IRobotID.h"
+#include "supplementary/IAgentID.h"
 
 #include <list>
 #include <vector>
@@ -25,7 +25,7 @@ namespace alica
 	public:
 		ForallAgents(AlicaEngine* ae, long id = 0);
 		virtual ~ForallAgents();
-		shared_ptr<list<vector<Variable* > > > getDomainVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<const alica::IRobotID*> >& agentsInScope);
+		shared_ptr<list<vector<Variable* > > > getDomainVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<const supplementary::IAgentID*> >& agentsInScope);
 
 	protected:
 		AlicaEngine* ae;

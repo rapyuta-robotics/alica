@@ -30,15 +30,15 @@ add_message_files(
   PlanTreeInfo.msg
   SolverResult.msg
   SyncData.msg
-  SyncTalk.msg   
-  RobotID.msg
+  SyncTalk.msg
 )
 
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-  std_msgs  # Or other packages containing msgs
+  std_msgs  
+  agent_id # Or other packages containing msgs
 )
 
 catkin_package(
@@ -57,7 +57,7 @@ add_library(alica_ros_proxy
 	src/clock/AlicaROSClock.cpp src/communication/AlicaRosCommunication.cpp
 )
 
-add_dependencies(alica_ros_proxy alica_ros_proxy_generate_messages_cpp)
+add_dependencies(alica_ros_proxy alica_ros_proxy_generate_messages_cpp agent_id_generate_messages_cpp)
 
 target_link_libraries(alica_ros_proxy
   ${catkin_LIBRARIES}

@@ -1,7 +1,7 @@
-RobotID senderID
+agent_id/AgentID senderID
 string masterPlan
 string currentPlan
 string currentState
 string currentRole
 string currentTask
-RobotID[] robotIDsWithMe
+agent_id/AgentID[] robotIDsWithMe

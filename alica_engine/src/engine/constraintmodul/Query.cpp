@@ -34,7 +34,7 @@ namespace alica
 		queriedStaticVariables.push_back(v);
 	}
 
-	void Query::addDomainVariable(const alica::IRobotID* robot, string ident)
+	void Query::addDomainVariable(const supplementary::IAgentID* robot, string ident)
 	{
 		queriedDomainVariables.push_back(this->ae->getTeamManager()->getDomainVariable(robot, ident));
 	}
@@ -204,7 +204,7 @@ namespace alica
 
 			// create a vector of solver variables from the domain variables of the currently iterated problem part
 			auto domainSolverVars = make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>>();
-			auto agentsInScope = make_shared<vector<shared_ptr<vector<const alica::IRobotID*>>>>();
+			auto agentsInScope = make_shared<vector<shared_ptr<vector<const supplementary::IAgentID*>>>>();
 			for (int j = 0; j < probPart->getDomainVariables()->size(); ++j)
 			{
 				auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>();

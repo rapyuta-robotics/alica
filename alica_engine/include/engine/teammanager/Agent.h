@@ -6,13 +6,16 @@
 #include <memory>
 #include <list>
 
+namespace supplementary {
+	class IAgentID;
+}
+
 namespace alica
 {
 
 class AlicaEngine;
 class RobotProperties;
 class RobotEngineData;
-class IRobotID;
 class TeamManager;
 class TeamObserver;
 class AbstractPlan;
@@ -29,17 +32,17 @@ class Agent
   public:
     virtual ~Agent();
 
-    const IRobotID *getID();
+    const supplementary::IAgentID *getID();
     std::string getName();
     const RobotProperties *getProperties() const;
     const RobotEngineData *getEngineData() const;
     bool isActive();
 
   protected:
-    Agent(const AlicaEngine *engine, AlicaTime timeout, const IRobotID *id);
-    Agent(const AlicaEngine *engine, AlicaTime timeout, const IRobotID *id, std::string name);
+    Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::IAgentID *id);
+    Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::IAgentID *id, std::string name);
 
-    const IRobotID *id;
+    const supplementary::IAgentID *id;
     std::string name;
     bool active;
     bool local;

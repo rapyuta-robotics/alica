@@ -2,7 +2,7 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/IPlanParser.h"
-#include "engine/IRobotID.h"
+#include "supplementary/IAgentID.h"
 #include "engine/PlanRepository.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/collections/SuccessMarks.h"
@@ -17,7 +17,7 @@ namespace alica
 /**
  * Basic constructor
  */
-RobotEngineData::RobotEngineData(const AlicaEngine *engine, const IRobotID *agentId)
+RobotEngineData::RobotEngineData(const AlicaEngine *engine, const supplementary::IAgentID *agentId)
     : engine(engine), agentId(agentId)
 {
     this->initDomainVariables();
@@ -76,7 +76,7 @@ Variable *RobotEngineData::getDomainVariable(string sort) const
 
 long RobotEngineData::makeUniqueId(string s)
 {
-    long ret = (long)(std::hash<alica::IRobotID>()(*this->agentId) + std::hash<string>()(s));
+    long ret = (long)(std::hash<supplementary::IAgentID>()(*this->agentId) + std::hash<string>()(s));
     if (this->engine->getPlanParser()->getParsedElements()->find(ret) !=
         this->engine->getPlanParser()->getParsedElements()->end())
     {

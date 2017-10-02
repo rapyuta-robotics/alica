@@ -1,19 +1,19 @@
 #include "communication/AlicaRosCommunication.h"
 
-#include "engine/IRobotIDFactory.h"
-#include "engine/containers/AllocationAuthorityInfo.h"
-#include "engine/containers/PlanTreeInfo.h"
-#include "engine/containers/RoleSwitch.h"
-#include "engine/containers/SolverResult.h"
-#include "engine/containers/SolverVar.h"
-#include "engine/containers/SyncData.h"
-#include "engine/containers/SyncReady.h"
-#include "engine/containers/SyncTalk.h"
-#include "engine/ITeamManager.h"
-
+#include <supplementary/IAgentIDFactory.h>
+#include <engine/containers/AllocationAuthorityInfo.h>
+#include <engine/containers/PlanTreeInfo.h>
+#include <engine/containers/RoleSwitch.h>
+#include <engine/containers/SolverResult.h>
+#include <engine/containers/SolverVar.h>
+#include <engine/containers/SyncData.h>
+#include <engine/containers/SyncReady.h>
+#include <engine/containers/SyncTalk.h>
+#include <engine/ITeamManager.h>
+#include <engine/containers/AlicaEngineInfo.h>
 #include <Configuration.h>
 #include <SystemConfig.h>
-#include <engine/containers/AlicaEngineInfo.h>
+
 #include <ros/console.h>
 #include <ros/node_handle.h>
 #include <ros/publisher.h>

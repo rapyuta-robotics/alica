@@ -3,7 +3,7 @@
 
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/IAlicaClock.h"
-#include "engine/IRobotID.h"
+#include "supplementary/IAgentID.h"
 
 #include <vector>
 #include <thread>
@@ -50,7 +50,7 @@ namespace alica
 		vector<AllocationDifference*> allocationHistory;
 		PlanRepository* pr;
 		int newestAllocationDifference;
-		const alica::IRobotID* myID;
+		const supplementary::IAgentID* myID;
 		enum CycleState
 		{
 			observing, overridden, overriding

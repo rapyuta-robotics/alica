@@ -16,18 +16,18 @@ namespace alica
 		this->entryPoint = entryPoint;
 	}
 
-	const alica::IRobotID* EntryPointRobotPair::getRobot()
+	const supplementary::IAgentID* EntryPointRobotPair::getRobot()
 	{
 		return robot;
 	}
 
-	EntryPointRobotPair::EntryPointRobotPair(EntryPoint* ep, const alica::IRobotID* r)
+	EntryPointRobotPair::EntryPointRobotPair(EntryPoint* ep, const supplementary::IAgentID* r)
 	{
 		this->entryPoint = ep;
 		this->robot = r;
 	}
 
-	void EntryPointRobotPair::setRobot(const alica::IRobotID* robot)
+	void EntryPointRobotPair::setRobot(const supplementary::IAgentID* robot)
 	{
 		this->robot = robot;
 	}

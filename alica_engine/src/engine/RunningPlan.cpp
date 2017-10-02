@@ -60,7 +60,7 @@ RunningPlan::RunningPlan(AlicaEngine *ae)
     this->failHandlingNeeded = false;
     this->constraintStore = std::make_shared<ConditionStore>();
     this->cycleManagement = std::make_shared<CycleManager>(ae, this);
-    this->robotsAvail = unique_ptr<list<const alica::IRobotID *>>(new list<const alica::IRobotID *>);
+    this->robotsAvail = unique_ptr<list<const supplementary::IAgentID *>>(new list<const supplementary::IAgentID *>);
 }
 
 RunningPlan::~RunningPlan()
@@ -418,7 +418,7 @@ void RunningPlan::setActive(bool active)
 /**
  * Sets the set of robots currently participating in this plan.
  */
-void RunningPlan::setRobotsAvail(unique_ptr<list<const alica::IRobotID *>> robots)
+void RunningPlan::setRobotsAvail(unique_ptr<list<const supplementary::IAgentID *>> robots)
 {
     this->robotsAvail->clear();
     this->robotsAvail = move(robots);
@@ -622,7 +622,7 @@ void RunningPlan::setFailedChild(AbstractPlan *child)
     }
 }
 
-void RunningPlan::setRobotAvail(const alica::IRobotID *robot)
+void RunningPlan::setRobotAvail(const supplementary::IAgentID *robot)
 {
     auto iter = find(this->robotsAvail->begin(), this->robotsAvail->end(), robot);
     if (iter != this->robotsAvail->end())
@@ -632,7 +632,7 @@ void RunningPlan::setRobotAvail(const alica::IRobotID *robot)
     this->robotsAvail->push_back(robot);
 }
 
-void RunningPlan::setRobotUnAvail(const alica::IRobotID *robot)
+void RunningPlan::setRobotUnAvail(const supplementary::IAgentID *robot)
 {
     auto iter = find(this->robotsAvail->begin(), this->robotsAvail->end(), robot);
     if (iter != this->robotsAvail->end())
@@ -754,7 +754,7 @@ void RunningPlan::activate()
  * Removes any robot not in robots
  * @param robots The set of robots that can participate in this running plan.
  */
-void RunningPlan::limitToRobots(unordered_set<const alica::IRobotID *> robots)
+void RunningPlan::limitToRobots(unordered_set<const supplementary::IAgentID *> robots)
 {
     if (this->isBehaviour())
     {
@@ -803,8 +803,8 @@ void RunningPlan::attachPlanConstraints()
 }
 
 bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts,
-                                            list<const alica::IRobotID *> availableAgents,
-                                            list<const alica::IRobotID *> noUpdates, AlicaTime now)
+                                            list<const supplementary::IAgentID *> availableAgents,
+                                            list<const supplementary::IAgentID *> noUpdates, AlicaTime now)
 {
     if (this->isBehaviour())
     {
@@ -868,7 +868,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
         }
     }
 
-    list<const alica::IRobotID *> rem;
+    list<const supplementary::IAgentID *> rem;
     if (!keepTask)
     { // remove any robot no longer available in the spts (auth flag obey here, as robot might be unavailable)
         // EntryPoint[] eps = this.Assignment.GetEntryPoints();
@@ -1108,7 +1108,7 @@ bool RunningPlan::anyChildrenStatus(PlanStatus ps)
     return false;
 }
 
-const alica::IRobotID *RunningPlan::getOwnID()
+const supplementary::IAgentID *RunningPlan::getOwnID()
 {
     return this->ownId;
 }

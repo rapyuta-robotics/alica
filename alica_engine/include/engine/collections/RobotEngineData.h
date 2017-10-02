@@ -5,12 +5,15 @@
 #include <typeinfo>
 #include <string>
 
+namespace supplementary{
+	class IAgentID;
+}
+
 namespace alica
 {
 class SuccessMarks;
 class Variable;
 class AlicaEngine;
-class IRobotID;
 
 using std::string;
 using std::map;
@@ -22,7 +25,7 @@ using std::shared_ptr;
 class RobotEngineData
 {
   public:
-	RobotEngineData(const AlicaEngine *engine, const IRobotID *agentId);
+	RobotEngineData(const AlicaEngine *engine, const supplementary::IAgentID *agentId);
     virtual ~RobotEngineData();
     virtual void initDomainVariables();
 
@@ -34,7 +37,7 @@ class RobotEngineData
 
   protected:
     const AlicaEngine *engine;
-    const IRobotID * agentId;
+    const supplementary::IAgentID * agentId;
     /**
      * The SuccessMarks of the robot, indicating which EntryPoints are completed.
      */

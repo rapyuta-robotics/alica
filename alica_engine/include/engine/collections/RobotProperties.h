@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/IRobotID.h"
+#include "supplementary/IAgentID.h"
 #include "engine/model/Characteristic.h"
 
 #include <SystemConfig.h>
@@ -21,12 +21,12 @@ class AlicaEngine;
 class RobotProperties
 {
   public:
-    RobotProperties(const IRobotID *agentId);
-    RobotProperties(const IRobotID *agentId, AlicaEngine *ae, string name);
+    RobotProperties(const supplementary::IAgentID *agentId);
+    RobotProperties(const supplementary::IAgentID *agentId, AlicaEngine *ae, string name);
     virtual ~RobotProperties();
     void readFromConfig(AlicaEngine *engine, string name);
-    const IRobotID *getId() const;
-    void setId(const IRobotID *agentId);
+    const supplementary::IAgentID *getId() const;
+    void setId(const supplementary::IAgentID *agentId);
     const map<string, Characteristic *> &getCharacteristics() const;
     const string &getDefaultRole() const;
     void setDefaultRole(const string &defaultRole);
@@ -41,7 +41,7 @@ class RobotProperties
     }
 
   protected:
-    const IRobotID *agentId;
+    const supplementary::IAgentID *agentId;
 
     string defaultRole;
     map<string, Characteristic *> characteristics;

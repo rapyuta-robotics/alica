@@ -1,7 +1,7 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include "engine/AlicaEngine.h"
-#include "engine/IRobotIDFactory.h"
+#include "supplementary/IAgentIDFactory.h"
 #include "engine/collections/RobotProperties.h"
 
 #include <SystemConfig.h>
@@ -89,9 +89,9 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig *sc)
     }
 }
 
-std::unique_ptr<std::list<const IRobotID *>> TeamManager::getActiveAgentIDs() const
+std::unique_ptr<std::list<const supplementary::IAgentID *>> TeamManager::getActiveAgentIDs() const
 {
-    auto activeAgentIDs = unique_ptr<std::list<const IRobotID *>>(new list<const IRobotID *>());
+    auto activeAgentIDs = unique_ptr<std::list<const supplementary::IAgentID *>>(new list<const supplementary::IAgentID *>());
     for (auto &agentEntry : this->agents)
     {
         if (agentEntry.second->isActive())
@@ -151,7 +151,7 @@ int TeamManager::getTeamSize() const
     return teamSize;
 }
 
-const Agent *TeamManager::getAgentByID(const IRobotID *agentId) const
+const Agent *TeamManager::getAgentByID(const supplementary::IAgentID *agentId) const
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end())
@@ -164,12 +164,12 @@ const Agent *TeamManager::getAgentByID(const IRobotID *agentId) const
     }
 }
 
-const IRobotID *TeamManager::getLocalAgentID() const
+const supplementary::IAgentID *TeamManager::getLocalAgentID() const
 {
     return this->localAgent->getID();
 }
 
-void TeamManager::setTimeLastMsgReceived(const IRobotID *robotID, AlicaTime timeLastMsgReceived)
+void TeamManager::setTimeLastMsgReceived(const supplementary::IAgentID *robotID, AlicaTime timeLastMsgReceived)
 {
     auto mapIter = this->agents.find(robotID);
     if (mapIter != this->agents.end())
@@ -184,7 +184,7 @@ void TeamManager::setTimeLastMsgReceived(const IRobotID *robotID, AlicaTime time
     }
 }
 
-bool TeamManager::isAgentActive(const IRobotID *agentId) const
+bool TeamManager::isAgentActive(const supplementary::IAgentID *agentId) const
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end())
@@ -199,14 +199,14 @@ bool TeamManager::isAgentActive(const IRobotID *agentId) const
 
 /**
  * Checks if an agent is ignored
- * @param agentId an IRobotID identifying the agent
+ * @param agentId an supplementary::IAgentID identifying the agent
  */
-bool TeamManager::isAgentIgnored(const IRobotID *agentId) const
+bool TeamManager::isAgentIgnored(const supplementary::IAgentID *agentId) const
 {
     return std::find(this->ignoredAgents.begin(), this->ignoredAgents.end(), agentId) != this->ignoredAgents.end();
 }
 
-void TeamManager::ignoreAgent(const alica::IRobotID *agentId)
+void TeamManager::ignoreAgent(const supplementary::IAgentID *agentId)
 {
     if (find(ignoredAgents.begin(), ignoredAgents.end(), agentId) != ignoredAgents.end())
     {
@@ -215,12 +215,12 @@ void TeamManager::ignoreAgent(const alica::IRobotID *agentId)
     this->ignoredAgents.insert(agentId);
 }
 
-void TeamManager::unIgnoreAgent(const alica::IRobotID *agentId)
+void TeamManager::unIgnoreAgent(const supplementary::IAgentID *agentId)
 {
     this->ignoredAgents.erase(agentId);
 }
 
-bool TeamManager::setSuccess(const IRobotID *agentId, AbstractPlan *plan, EntryPoint *entryPoint)
+bool TeamManager::setSuccess(const supplementary::IAgentID *agentId, AbstractPlan *plan, EntryPoint *entryPoint)
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end())
@@ -231,7 +231,7 @@ bool TeamManager::setSuccess(const IRobotID *agentId, AbstractPlan *plan, EntryP
     return false;
 }
 
-bool TeamManager::setSuccessMarks(const IRobotID *agentId, std::shared_ptr<SuccessMarks> successMarks)
+bool TeamManager::setSuccessMarks(const supplementary::IAgentID *agentId, std::shared_ptr<SuccessMarks> successMarks)
 {
 	auto agentEntry = this->agents.find(agentId);
 	if (agentEntry != this->agents.end())
@@ -242,7 +242,7 @@ bool TeamManager::setSuccessMarks(const IRobotID *agentId, std::shared_ptr<Succe
 	return false;
 }
 
-Variable *TeamManager::getDomainVariable(const IRobotID *agentId, string sort)
+Variable *TeamManager::getDomainVariable(const supplementary::IAgentID *agentId, string sort)
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end())

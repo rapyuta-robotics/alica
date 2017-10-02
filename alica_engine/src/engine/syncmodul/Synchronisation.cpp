@@ -27,7 +27,7 @@ namespace alica
 		this->lastTalkData = nullptr;
 	}
 
-	Synchronisation::Synchronisation(AlicaEngine* ae, const alica::IRobotID* myID, SyncTransition* st, SyncModul* sm)
+	Synchronisation::Synchronisation(AlicaEngine* ae, const supplementary::IAgentID* myID, SyncTransition* st, SyncModul* sm)
 	{
 		this->ae = ae;
 		this->syncTransition = st;

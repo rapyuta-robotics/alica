@@ -10,7 +10,7 @@
 
 #include "AlicaElement.h"
 
-#include "engine/IRobotID.h"
+#include "supplementary/IAgentID.h"
 
 #include <list>
 #include <string>
@@ -54,7 +54,7 @@ namespace alica
 		 * @param agentsInScope A shared_ptr<vector<int> >
 		 * @return A shared_ptr<list<vector<Variable* > > >
 		 */
-		virtual shared_ptr<list<vector<Variable* > > >getDomainVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<const alica::IRobotID*> >& agentsInScope) = 0;
+		virtual shared_ptr<list<vector<Variable* > > >getDomainVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<const supplementary::IAgentID*> >& agentsInScope) = 0;
 //		/**
 //		 * Access the list of sorted AD.Terms under the scope of this quantifier given a RunningPlan.
 //		 * @param agentsInScope A shared_ptr<vector<int> >

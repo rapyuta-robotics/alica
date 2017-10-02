@@ -28,8 +28,8 @@ TeamObserver::TeamObserver(AlicaEngine *ae)
     : ae(ae)
     , teamManager(ae->getTeamManager())
 {
-    this->simplePlanTrees = make_shared<map<const alica::IRobotID *, shared_ptr<SimplePlanTree>>>(
-        map<const alica::IRobotID *, shared_ptr<SimplePlanTree>>());
+    this->simplePlanTrees = make_shared<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>>(
+        map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>());
     this->me = nullptr;
     this->myId = nullptr;
     this->log = nullptr;
@@ -40,10 +40,10 @@ TeamObserver::~TeamObserver()
 {
 }
 
-unique_ptr<map<const alica::IRobotID *, shared_ptr<SimplePlanTree>>> TeamObserver::getTeamPlanTrees()
+unique_ptr<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>> TeamObserver::getTeamPlanTrees()
 {
-    auto ret = unique_ptr<map<const alica::IRobotID *, shared_ptr<SimplePlanTree>>>(
-        new map<const alica::IRobotID *, shared_ptr<SimplePlanTree>>);
+    auto ret = unique_ptr<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>>(
+        new map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>);
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
     auto tm = this->ae->getTeamManager();
     for (auto &agentId : *(tm->getActiveAgentIDs()))
@@ -51,7 +51,7 @@ unique_ptr<map<const alica::IRobotID *, shared_ptr<SimplePlanTree>>> TeamObserve
         auto iter = this->simplePlanTrees->find(agentId);
         if (iter != simplePlanTrees->end() && iter->second != nullptr)
         {
-            ret->insert(pair<const alica::IRobotID *, shared_ptr<SimplePlanTree>>(agentId, iter->second));
+            ret->insert(pair<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>(agentId, iter->second));
         }
     }
     return move(ret);
@@ -86,7 +86,7 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root)
     {
         auto activeAgents = this->teamManager->getActiveAgentIDs();
         list<shared_ptr<SimplePlanTree>> updatespts;
-        list<const alica::IRobotID *> noUpdates;
+        list<const supplementary::IAgentID *> noUpdates;
         lock_guard<mutex> lock(this->simplePlanTreeMutex);
         for (auto iterator = this->simplePlanTrees->begin(); iterator != this->simplePlanTrees->end(); iterator++)
         {
@@ -115,7 +115,7 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root)
         cout << "TO: spts size " << updatespts.size() << endl;
 #endif
 
-        list<const IRobotID *> listActiveAgents = list<const IRobotID *>(*activeAgents);
+        list<const supplementary::IAgentID *> listActiveAgents = list<const supplementary::IAgentID *>(*activeAgents);
         if (root->recursiveUpdateAssignment(updatespts, listActiveAgents, noUpdates, time))
         {
             this->log->eventOccured("MsgUpdate");
@@ -347,7 +347,7 @@ void TeamObserver::handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming)
             else
             {
                 this->simplePlanTrees->insert(
-                    pair<const alica::IRobotID *, shared_ptr<SimplePlanTree>>(incoming->senderID, spt));
+                    pair<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>(incoming->senderID, spt));
             }
         }
     }
@@ -359,7 +359,7 @@ void TeamObserver::handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming)
  * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
  * @return shared_ptr of a SimplePlanTree
  */
-shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(const alica::IRobotID *robotId, list<long> ids)
+shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(const supplementary::IAgentID *robotId, list<long> ids)
 {
 #ifdef TO_DEBUG
     cout << "Spt from robot " << robotId << endl;

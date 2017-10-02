@@ -1,9 +1,4 @@
 #pragma once
-
-#include "engine/IAlicaCommunication.h"
-#include "engine/IRobotID.h"
-#include "ros/ros.h"
-
 #include "alica_ros_proxy/AlicaEngineInfo.h"
 #include "alica_ros_proxy/AllocationAuthorityInfo.h"
 #include "alica_ros_proxy/PlanTreeInfo.h"
@@ -11,6 +6,10 @@
 #include "alica_ros_proxy/SolverResult.h"
 #include "alica_ros_proxy/SyncReady.h"
 #include "alica_ros_proxy/SyncTalk.h"
+
+#include <engine/IAlicaCommunication.h>
+#include <supplementary/IAgentID.h>
+#include <ros/ros.h>
 
 using namespace alica;
 
