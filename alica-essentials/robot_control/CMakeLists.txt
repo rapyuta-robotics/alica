@@ -37,16 +37,17 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
-add_message_files(
-  FILES
-  RobotCommand.msg
-)
-
 catkin_python_setup()
 
 generate_messages(
   DEPENDENCIES
+  alica_ros_proxy
   std_msgs
+)
+
+add_message_files(
+  FILES
+  RobotCommand.msg
 )
 
 set(robot_control_SRCS
@@ -83,7 +84,7 @@ set(robot_control_RCS
 catkin_package(
   INCLUDE_DIRS ${robot_control_INCLUDE_DIRECTORIES}
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS rqt_gui rqt_gui_cpp msl_actuator_msgs msl_sensor_msgs
+  CATKIN_DEPENDS rqt_gui rqt_gui_cpp msl_actuator_msgs msl_sensor_msgs alica_ros_proxy
 )
 
 

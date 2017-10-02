@@ -1,10 +1,3 @@
-/*
- * ManagedExecutable.cpp
- *
- *  Created on: Nov 4, 2014
- *      Author: Stephan Opfer
- */
-
 #include "process_manager/ManagedExecutable.h"
 #include "process_manager/ProcessManager.h"
 #include <process_manager/RobotExecutableRegistry.h>

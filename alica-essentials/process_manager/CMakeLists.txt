@@ -9,7 +9,7 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
-find_package(catkin REQUIRED system_config system_util roscpp message_generation)
+find_package(catkin REQUIRED alica_ros_proxy system_config system_util roscpp message_generation)
 
 ## Generate messages in the 'msg' folder
 add_message_files(
@@ -19,17 +19,17 @@ add_message_files(
   ProcessStats.msg
 )
 
-
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
    DEPENDENCIES
+   alica_ros_proxy
    std_msgs
  )
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES robot_executable_meta_data
-  CATKIN_DEPENDS system_config system_util roscpp message_runtime
+  CATKIN_DEPENDS alica_ros_proxy system_config system_util roscpp message_runtime
 #  DEPENDS system_lib
 )
 
