@@ -1,10 +1,3 @@
-/*
- * ManagedRobot.cpp
- *
- *  Created on: Nov 28, 2014
- *      Author: Stephan Opfer
- */
-
 #include <process_manager/RobotExecutableRegistry.h>
 #include "process_manager/ManagedRobot.h"
 #include "process_manager/ManagedExecutable.h"
@@ -19,8 +12,8 @@ namespace supplementary
 	 * @param robotName
 	 * @param id
 	 */
-	ManagedRobot::ManagedRobot(string robotName, int id, ProcessManager* procMan) :
-			RobotMetaData(robotName, id), procMan(procMan)
+	ManagedRobot::ManagedRobot(string robotName, const IAgentID* agentID, ProcessManager* procMan) :
+			RobotMetaData(robotName, agentID), procMan(procMan)
 	{
 	}
 
@@ -199,6 +192,4 @@ namespace supplementary
 		}
 	}
 
-}
-
-/* namespace supplementary */
+}/* namespace supplementary */

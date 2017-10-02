@@ -1,12 +1,14 @@
-/*
- * ProcessManager.cpp
- *
- *  Created on: Nov 1, 2014
- *      Author: Stephan Opfer
- */
-
 #include "process_manager/ProcessManager.h"
 
+#include "process_manager/ManagedRobot.h"
+#include "process_manager/ManagedExecutable.h"
+#include "process_manager/RobotExecutableRegistry.h"
+
+#include <SystemConfig.h>
+#include <Logging.h>
+
+#include <map>
+#include <thread>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -15,18 +17,8 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <iostream>
-
-#include <map>
-#include <thread>
 #include <dirent.h>
 #include <unistd.h>
-
-#include <SystemConfig.h>
-#include <Logging.h>
-#include <process_manager/RobotExecutableRegistry.h>
-
-#include "process_manager/ManagedRobot.h"
-#include "process_manager/ManagedExecutable.h"
 
 namespace supplementary
 {

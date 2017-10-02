@@ -1,17 +1,12 @@
-/*
- * RobotMetaData.cpp
- *
- *  Created on: Feb 12, 2015
- *      Author: Stephan Opfer
- */
-
 #include "process_manager/RobotMetaData.h"
+
+#include <supplementary/IAgentID.h>
 
 namespace supplementary
 {
 
-	RobotMetaData::RobotMetaData(string name, int id) :
-			name(name), id(id)
+	RobotMetaData::RobotMetaData(std::string name, const IAgentID* agentID) :
+		name(name), agentID(agentID)
 	{
 
 	}

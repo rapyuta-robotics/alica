@@ -18,6 +18,7 @@ namespace supplementary
 {
 	class ProcessManager;
 	class ExecutableMetaData;
+	class IAgentID;
 
 	enum RunState { SHOULD_RUN, SHOULDNT_RUN, MANUAL_STARTED};
 
@@ -28,7 +29,7 @@ namespace supplementary
 		virtual ~ManagedExecutable();
 		void queue4Update(long pid);
 		void update(unsigned long long cpuDelta);
-		void report(process_manager::ProcessStats& psts, const supplementary::IAgentID* robotId);
+		void report(process_manager::ProcessStats& psts, const IAgentID* robotId);
 		void changeDesiredState(bool shouldRun, int paramSetId);
 		void changeDesiredLogPublishingState(bool shouldPublish);
 		void startProcess (std::vector<char*> & params);
@@ -64,7 +65,7 @@ namespace supplementary
 		std::thread stdLogPublisher;
 		std::thread errLogPublisher;
 
-		chrono::time_point<chrono::steady_clock> lastTimeTried;
+		std::chrono::time_point<std::chrono::steady_clock> lastTimeTried;
 		RunState desiredRunState;
 		bool need2ReadParams;
 		int desiredParamSet;
