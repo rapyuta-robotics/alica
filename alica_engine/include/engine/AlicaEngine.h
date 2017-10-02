@@ -1,12 +1,4 @@
-/*
- * AlicaEngine.h
- *
- *  Created on: Mar 3, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef ALICAENGINE_H_
-#define ALICAENGINE_H_
+#pragma once
 
 #include <string>
 #include <SystemConfig.h>
@@ -14,6 +6,10 @@
 #include <map>
 
 using namespace std;
+
+namespace supplementary {
+	class IAgentIDFactory;
+}
 namespace alica
 {
 	class PlanRepository;
@@ -29,7 +25,6 @@ namespace alica
 	class IRoleAssignment;
 	class IPlanSelector;
 	class IAlicaCommunication;
-	class IRobotIDFactory;
 	class IEngineModule;
 	class IPlanner;
 	class IAlicaClock;
@@ -78,8 +73,8 @@ namespace alica
 		RoleSet* getRoleSet();
 		const IAlicaCommunication* getCommunicator() const;
 		void setCommunicator(IAlicaCommunication * communicator);
-		IRobotIDFactory* getRobotIDFactory() const;
-		void setRobotIDFactory(IRobotIDFactory * factory);
+		supplementary::IAgentIDFactory* getRobotIDFactory() const;
+		void setRobotIDFactory(supplementary::IAgentIDFactory * factory);
 		IPlanSelector* getPlanSelector();
 		IPlanner* getPlanner();
 		IAlicaClock* getIAlicaClock() const;
@@ -114,7 +109,7 @@ namespace alica
 		list<IEngineModule*> mods;
 		IPlanSelector* planSelector;
 		IAlicaCommunication* communicator;
-		IRobotIDFactory* robotIDFactory;
+		supplementary::IAgentIDFactory* robotIDFactory;
 		IPlanner* planner;
 		IAlicaClock* alicaClock;
 		ITeamManager* teamManager;
@@ -158,5 +153,3 @@ namespace alica
 	}
 
 } /* namespace Alica */
-
-#endif /* ALICAENGINE_H_ */

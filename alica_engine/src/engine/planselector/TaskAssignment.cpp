@@ -25,7 +25,7 @@ TaskAssignment::~TaskAssignment()
  * @param a bool
  */
 TaskAssignment::TaskAssignment(const AlicaEngine* engine, list<Plan *> planList,
-                               shared_ptr<vector<const alica::IRobotID *>> paraRobots, bool preassignOtherRobots)
+                               shared_ptr<vector<const supplementary::IAgentID *>> paraRobots, bool preassignOtherRobots)
 {
 #ifdef EXPANSIONEVAL
     this->expansionCount = 0;
@@ -33,7 +33,7 @@ TaskAssignment::TaskAssignment(const AlicaEngine* engine, list<Plan *> planList,
     this->planList = planList;
     this->to = engine->getTeamObserver();
     this->tm = engine->getTeamManager();
-    this->robots = make_shared<vector<const alica::IRobotID *>>(vector<const alica::IRobotID *>(paraRobots->size()));
+    this->robots = make_shared<vector<const supplementary::IAgentID *>>(vector<const supplementary::IAgentID *>(paraRobots->size()));
     int k = 0;
     for (auto &i : (*paraRobots))
     {
@@ -197,9 +197,9 @@ PartialAssignment *TaskAssignment::calcNextBestPartialAssignment(IAssignment *ol
  * @param simplePlanTreeMap never try to delete this
  * @return True if any robot has already assigned itself, false otherwise
  */
-bool TaskAssignment::addAlreadyAssignedRobots(PartialAssignment *pa, map<const alica::IRobotID *, shared_ptr<SimplePlanTree>> *simplePlanTreeMap)
+bool TaskAssignment::addAlreadyAssignedRobots(PartialAssignment *pa, map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>> *simplePlanTreeMap)
 {
-    const alica::IRobotID *ownRobotId = this->tm->getLocalAgentID();
+    const supplementary::IAgentID *ownRobotId = this->tm->getLocalAgentID();
     bool haveToRevalute = false;
     shared_ptr<SimplePlanTree> spt = nullptr;
     for (auto &robot : (*this->robots))

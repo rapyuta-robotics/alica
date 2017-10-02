@@ -1,7 +1,7 @@
 #include "engine/teammanager/Agent.h"
 
 #include "engine/AlicaEngine.h"
-#include "engine/IRobotID.h"
+#include "supplementary/IAgentID.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/collections/SuccessMarks.h"
@@ -11,7 +11,7 @@
 namespace alica
 {
 
-Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const IRobotID *id)
+Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::IAgentID *id)
     : id(id)
     , name("")
     , timeLastMsgReceived(0)
@@ -24,7 +24,7 @@ Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const IRobotID *id)
 {
 }
 
-Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const IRobotID *id, std::string name)
+Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::IAgentID *id, std::string name)
     : Agent(engine, timeout, id)
 {
     this->name = name;
@@ -37,7 +37,7 @@ Agent::~Agent()
     delete this->properties;
 }
 
-const IRobotID *Agent::getID()
+const supplementary::IAgentID *Agent::getID()
 {
     return this->id;
 }

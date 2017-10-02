@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/IRobotID.h"
+#include "supplementary/IAgentID.h"
 
 #include <SystemConfig.h>
 
@@ -28,10 +28,10 @@ namespace alica
 		void setSize(short size);
 		EntryPoint* getEp(short index);
 		bool setEp(short index, EntryPoint* ep);
-		shared_ptr<vector<const alica::IRobotID *>> getRobots(short index);
-		shared_ptr<vector<const alica::IRobotID *>> getRobotsByEp(EntryPoint* ep);
-		shared_ptr<vector<const alica::IRobotID *>> getRobotsByEpId(long id);
-		bool setRobots(short index, shared_ptr<vector<const alica::IRobotID*>> robotIds);
+		shared_ptr<vector<const supplementary::IAgentID *>> getRobots(short index);
+		shared_ptr<vector<const supplementary::IAgentID *>> getRobotsByEp(EntryPoint* ep);
+		shared_ptr<vector<const supplementary::IAgentID *>> getRobotsByEpId(long id);
+		bool setRobots(short index, shared_ptr<vector<const supplementary::IAgentID*>> robotIds);
 		void clear();
 		string toString();
 		void sortEps();
@@ -52,7 +52,7 @@ namespace alica
 		/**
 		 * The robots mapped to EntryPoints in this AssignmentCollection.
 		 */
-		shared_ptr<vector<const alica::IRobotID *>> * robotIds;
+		shared_ptr<vector<const supplementary::IAgentID *>> * robotIds;
 	};
 
 } /* namespace alica */

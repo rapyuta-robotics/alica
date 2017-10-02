@@ -1,12 +1,12 @@
 #pragma once
 #include "SolverVar.h"
-#include "engine/IRobotID.h"
+#include "supplementary/IAgentID.h"
 
 namespace alica
 {
 	struct SolverResult
 	{
-		const alica::IRobotID* senderID;
+		const supplementary::IAgentID* senderID;
 		vector<SolverVar*> vars;
 
 		~SolverResult()

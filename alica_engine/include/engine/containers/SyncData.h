@@ -3,7 +3,7 @@
 
 namespace alica
 {
-typedef std::tuple<const alica::IRobotID *, long, bool, bool> stdSyncData;
+typedef std::tuple<const supplementary::IAgentID *, long, bool, bool> stdSyncData;
 
 struct SyncData
 {
@@ -15,7 +15,7 @@ struct SyncData
     {
     }
 
-    const alica::IRobotID *robotID;
+    const supplementary::IAgentID *robotID;
     long transitionID;
     bool conditionHolds;
     bool ack;

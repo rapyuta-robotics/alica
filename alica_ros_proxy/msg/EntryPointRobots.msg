@@ -1,2 +1,2 @@
 int64 entryPoint
-RobotID[] robots
+agent_id/AgentID[] robots

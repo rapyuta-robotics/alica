@@ -11,10 +11,10 @@ ProblemPart::ProblemPart(Condition *con, shared_ptr<RunningPlan> rp)
 {
     condition = con;
     domainVariables = make_shared<vector<list<vector<Variable *>>>>();
-    agentsInScope = make_shared<vector<shared_ptr<vector<const alica::IRobotID *>>>>();
+    agentsInScope = make_shared<vector<shared_ptr<vector<const supplementary::IAgentID *>>>>();
     for (Quantifier *quantifier : condition->getQuantifiers())
     {
-        shared_ptr<vector<const alica::IRobotID *>> robots;
+        shared_ptr<vector<const supplementary::IAgentID *>> robots;
         domainVariables->push_back(*quantifier->getDomainVariables(rp, robots));
         if (robots)
         {
@@ -22,7 +22,7 @@ ProblemPart::ProblemPart(Condition *con, shared_ptr<RunningPlan> rp)
         }
         else
         {
-            agentsInScope->push_back(make_shared<vector<const alica::IRobotID*>>());
+            agentsInScope->push_back(make_shared<vector<const supplementary::IAgentID*>>());
         }
     }
     runningplan = rp;
@@ -71,7 +71,7 @@ std::shared_ptr<RunningPlan> ProblemPart::getRunningPlan()
     return runningplan;
 }
 
-std::shared_ptr<std::vector<std::shared_ptr<std::vector<const alica::IRobotID*>>>> ProblemPart::getAgentsInScope()
+std::shared_ptr<std::vector<std::shared_ptr<std::vector<const supplementary::IAgentID*>>>> ProblemPart::getAgentsInScope()
 {
     return agentsInScope;
 }

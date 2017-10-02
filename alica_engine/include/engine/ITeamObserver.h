@@ -23,7 +23,7 @@ namespace alica
 		virtual void close() = 0;
 		virtual void tick(shared_ptr<RunningPlan> root) = 0;
 
-		virtual unique_ptr<map<const alica::IRobotID*, shared_ptr<SimplePlanTree> > > getTeamPlanTrees() = 0;
+		virtual unique_ptr<map<const supplementary::IAgentID*, shared_ptr<SimplePlanTree> > > getTeamPlanTrees() = 0;
 		virtual void handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming) = 0;
 
 		virtual int successesInPlan(Plan* p) = 0;

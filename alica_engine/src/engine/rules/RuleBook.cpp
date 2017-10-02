@@ -157,12 +157,12 @@ PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r)
     }
 
     auto temp = r->getParent().lock();
-    vector<const alica::IRobotID*> robots = vector<const alica::IRobotID*>(
+    vector<const supplementary::IAgentID*> robots = vector<const supplementary::IAgentID*>(
         temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).size());
     copy(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).begin(),
          temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).end(), robots.begin());
     shared_ptr<RunningPlan> newr =
-        ps->getBestSimilarAssignment(r, make_shared<vector<const alica::IRobotID *>>(robots));
+        ps->getBestSimilarAssignment(r, make_shared<vector<const supplementary::IAgentID *>>(robots));
     if (newr == nullptr)
     {
         return PlanChange::NoChange;
@@ -302,7 +302,7 @@ PlanChange RuleBook::planRedoRule(shared_ptr<RunningPlan> r)
     r->setFailHandlingNeeded(false);
     r->deactivateChildren();
     r->clearChildren();
-    vector<const alica::IRobotID *> robots(
+    vector<const supplementary::IAgentID *> robots(
         r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
     copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
          r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
@@ -389,7 +389,7 @@ PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp)
     }
     rp->setAllocationNeeded(false);
 
-    auto robots = make_shared<vector<const alica::IRobotID*>>(
+    auto robots = make_shared<vector<const supplementary::IAgentID*>>(
         rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).size());
     copy(rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).begin(),
          rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).end(), robots->begin());

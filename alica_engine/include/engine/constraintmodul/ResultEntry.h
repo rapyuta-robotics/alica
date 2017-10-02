@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/IRobotID.h"
+#include "supplementary/IAgentID.h"
 
 #include <list>
 #include <map>
@@ -18,10 +18,10 @@ namespace alica
 	class ResultEntry
 	{
 	public:
-		ResultEntry(const alica::IRobotID* robotId, const AlicaEngine* ae);
+		ResultEntry(const supplementary::IAgentID* robotId, const AlicaEngine* ae);
 		virtual ~ResultEntry();
 
-		const alica::IRobotID* getId();
+		const supplementary::IAgentID* getId();
 		void addValue(long vid, std::shared_ptr<std::vector<uint8_t>> result);
 		void clear();
 		std::shared_ptr<std::vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
@@ -44,7 +44,7 @@ namespace alica
 		};
 
 	protected:
-		const alica::IRobotID* id;
+		const supplementary::IAgentID* id;
 		const AlicaEngine* ae;
 		std::map<long, std::shared_ptr<VarValue>> values;
 		std::mutex valueLock;

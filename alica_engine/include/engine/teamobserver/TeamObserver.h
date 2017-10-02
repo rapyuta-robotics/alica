@@ -1,7 +1,7 @@
 #pragma once
 //#define TO_DEBUG
 
-#include "engine/IRobotID.h"
+#include "supplementary/IAgentID.h"
 #include "engine/ITeamObserver.h"
 #include "engine/IAlicaClock.h"
 #include "engine/IRoleAssignment.h"
@@ -41,7 +41,7 @@ namespace alica
 		void tick(shared_ptr<RunningPlan> root);
 		void doBroadCast(list<long>& msg);
 
-		unique_ptr<map<const alica::IRobotID*, shared_ptr<SimplePlanTree> > > getTeamPlanTrees();
+		unique_ptr<map<const supplementary::IAgentID*, shared_ptr<SimplePlanTree> > > getTeamPlanTrees();
 
 		int successesInPlan(Plan* plan);
 		shared_ptr<SuccessCollection> getSuccessCollection(Plan* plan);
@@ -57,17 +57,17 @@ namespace alica
 	protected:
 		AlicaEngine* ae;
 		Logger* log;
-		const alica::IRobotID* myId;
+		const supplementary::IAgentID* myId;
 		RobotEngineData* me;
 		ITeamManager* teamManager;
 
 		mutex simplePlanTreeMutex;
 		mutex successMark;
 
-		shared_ptr<map<const alica::IRobotID*, shared_ptr<SimplePlanTree> > > simplePlanTrees;
+		shared_ptr<map<const supplementary::IAgentID*, shared_ptr<SimplePlanTree> > > simplePlanTrees;
 
 		void cleanOwnSuccessMarks(shared_ptr<RunningPlan> root);
-		shared_ptr<SimplePlanTree> sptFromMessage(const alica::IRobotID* robotId, list<long> ids);
+		shared_ptr<SimplePlanTree> sptFromMessage(const supplementary::IAgentID* robotId, list<long> ids);
 
 	};
 

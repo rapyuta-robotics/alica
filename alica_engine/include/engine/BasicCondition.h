@@ -1,12 +1,4 @@
-/*
- * BasicCondition.h
- *
- *  Created on: Oct 8, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef ALICA_ALICA_ENGINE_INCLUDE_ENGINE_BASICCONDITION_H_
-#define ALICA_ALICA_ENGINE_INCLUDE_ENGINE_BASICCONDITION_H_
+#pragma once
 
 #include <memory>
 
@@ -30,5 +22,3 @@ namespace alica
 	};
 
 } /* namespace alica */
-
-#endif /* ALICA_ALICA_ENGINE_INCLUDE_ENGINE_BASICCONDITION_H_ */

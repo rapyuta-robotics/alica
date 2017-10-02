@@ -3,7 +3,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IEngineModule.h"
-#include "engine/IRobotIDFactory.h"
+#include "supplementary/IAgentIDFactory.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/ISyncModul.h"
 #include "engine/PlanBase.h"
@@ -517,12 +517,12 @@ void AlicaEngine::stepNotify()
     this->getPlanBase()->getStepModeCV()->notify_all();
 }
 
-IRobotIDFactory *AlicaEngine::getRobotIDFactory() const
+supplementary::IAgentIDFactory *AlicaEngine::getRobotIDFactory() const
 {
     return this->robotIDFactory;
 }
 
-void AlicaEngine::setRobotIDFactory(IRobotIDFactory *factory)
+void AlicaEngine::setRobotIDFactory(supplementary::IAgentIDFactory *factory)
 {
     this->robotIDFactory = factory;
 }

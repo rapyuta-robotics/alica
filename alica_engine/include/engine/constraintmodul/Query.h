@@ -82,7 +82,7 @@ namespace alica
 		Query(AlicaEngine* ae);
 
 		void addStaticVariable(Variable* v);
-		void addDomainVariable(const alica::IRobotID* robot, string ident);
+		void addDomainVariable(const supplementary::IAgentID* robot, string ident);
 		void clearDomainVariables();
 		void clearStaticVariables();
 		bool existsSolution(int solverType, shared_ptr<RunningPlan> rp);

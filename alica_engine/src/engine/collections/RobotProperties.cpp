@@ -1,4 +1,4 @@
-#include "engine/IRobotIDFactory.h"
+#include "supplementary/IAgentIDFactory.h"
 #include <engine/AlicaEngine.h>
 #include <engine/PlanRepository.h>
 #include <engine/collections/RobotProperties.h>
@@ -7,12 +7,12 @@
 namespace alica
 {
 
-RobotProperties::RobotProperties(const IRobotID *agentId)
+RobotProperties::RobotProperties(const supplementary::IAgentID *agentId)
     : agentId(agentId)
 {
 }
 
-RobotProperties::RobotProperties(const IRobotID *agentId, AlicaEngine *engine, string name)
+RobotProperties::RobotProperties(const supplementary::IAgentID *agentId, AlicaEngine *engine, string name)
     : agentId(agentId)
 {
     this->readFromConfig(engine, name);
@@ -67,7 +67,7 @@ RobotProperties::~RobotProperties()
     }
 }
 
-const IRobotID *RobotProperties::getId() const
+const supplementary::IAgentID *RobotProperties::getId() const
 {
     return agentId;
 }

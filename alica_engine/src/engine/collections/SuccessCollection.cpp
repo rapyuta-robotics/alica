@@ -18,7 +18,7 @@ namespace alica
 	{
 		this->count = plan->getEntryPoints().size();
 		this->entryPoints = new EntryPoint*[this->count];
-		this->robotIds = vector<shared_ptr<list<const alica::IRobotID*> > >(this->count);
+		this->robotIds = vector<shared_ptr<list<const supplementary::IAgentID*> > >(this->count);
 		int i = 0;
 		list<EntryPoint*> eps;
 		for (map<long, EntryPoint*>::const_iterator iter = plan->getEntryPoints().begin();
@@ -30,7 +30,7 @@ namespace alica
 		for (EntryPoint* ep : eps)
 		{
 			this->entryPoints[i] = ep;
-			this->robotIds[i] = make_shared<list<const alica::IRobotID*> >();
+			this->robotIds[i] = make_shared<list<const supplementary::IAgentID*> >();
 			i++;
 		}
 	}
@@ -55,7 +55,7 @@ namespace alica
 		return entryPoints;
 	}
 
-	void SuccessCollection::setSuccess(const alica::IRobotID* robotId, EntryPoint* ep)
+	void SuccessCollection::setSuccess(const supplementary::IAgentID* robotId, EntryPoint* ep)
 	{
 		for (int i = 0; i < this->count; i++)
 		{
@@ -74,17 +74,17 @@ namespace alica
 		}
 	}
 
-	vector<shared_ptr<list<const alica::IRobotID*> > >& SuccessCollection::getRobots()
+	vector<shared_ptr<list<const supplementary::IAgentID*> > >& SuccessCollection::getRobots()
 	{
 		return robotIds;
 	}
 
-	void SuccessCollection::setRobots(vector<shared_ptr<list<const alica::IRobotID*> > >& robotIds)
+	void SuccessCollection::setRobots(vector<shared_ptr<list<const supplementary::IAgentID*> > >& robotIds)
 	{
 		this->robotIds = robotIds;
 	}
 
-	shared_ptr<list<const alica::IRobotID*> > SuccessCollection::getRobots(EntryPoint* ep)
+	shared_ptr<list<const supplementary::IAgentID*> > SuccessCollection::getRobots(EntryPoint* ep)
 	{
 		for (int i = 0; i < this->count; i++)
 		{
@@ -96,7 +96,7 @@ namespace alica
 		return nullptr;
 	}
 
-	shared_ptr<list<const alica::IRobotID*> > SuccessCollection::getRobotsById(long id)
+	shared_ptr<list<const supplementary::IAgentID*> > SuccessCollection::getRobotsById(long id)
 	{
 		for (int i = 0; i < this->count; i++)
 		{
@@ -117,7 +117,7 @@ namespace alica
 			if (this->robotIds[i]->size() > 0)
 			{
 				ss << this->entryPoints[i]->getTask()->getId() << ": ";
-				for (const alica::IRobotID* r : *(this->robotIds[i]))
+				for (const supplementary::IAgentID* r : *(this->robotIds[i]))
 				{
 					ss << r << " ";
 				}

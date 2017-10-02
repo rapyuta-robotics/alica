@@ -9,7 +9,7 @@
 #define STATECOLLECTION_H_
 
 
-#include "engine/IRobotID.h"
+#include "supplementary/IAgentID.h"
 #include <vector>
 #include <unordered_set>
 #include <algorithm>
@@ -30,30 +30,30 @@ namespace alica
 	{
 	public:
 		StateCollection();
-		StateCollection(vector<const alica::IRobotID*> robotIds, vector<State*> states);
+		StateCollection(vector<const supplementary::IAgentID*> robotIds, vector<State*> states);
 		StateCollection(int maxSize);
 		StateCollection(AssignmentCollection* ac);
 		virtual ~StateCollection();
-		vector<const alica::IRobotID*>& getRobots();
-		void setRobots(vector<const alica::IRobotID*> robotIds);
+		vector<const supplementary::IAgentID*>& getRobots();
+		void setRobots(vector<const supplementary::IAgentID*> robotIds);
 		vector<State*>& getStates();
 		void setStates(vector<State*> states);
 		int getCount();
-		State* getState(const alica::IRobotID* robotId);
-		unordered_set<const alica::IRobotID*> getRobotsInState(State* s);
-		shared_ptr<vector<const alica::IRobotID*> > getRobotsInStateSorted(State* s);
-		unordered_set<const alica::IRobotID*> getRobotsInState(long sid);
-		void removeRobot(const alica::IRobotID* robotId);
+		State* getState(const supplementary::IAgentID* robotId);
+		unordered_set<const supplementary::IAgentID*> getRobotsInState(State* s);
+		shared_ptr<vector<const supplementary::IAgentID*> > getRobotsInStateSorted(State* s);
+		unordered_set<const supplementary::IAgentID*> getRobotsInState(long sid);
+		void removeRobot(const supplementary::IAgentID* robotId);
 		void clear();
-		State* stateOfRobot(const alica::IRobotID* robotId);
-		void setState(const alica::IRobotID* robotId, State* state);
-		void setStates(vector<const alica::IRobotID*> robotIds, State* state);
+		State* stateOfRobot(const supplementary::IAgentID* robotId);
+		void setState(const supplementary::IAgentID* robotId, State* state);
+		void setStates(vector<const supplementary::IAgentID*> robotIds, State* state);
 		string toString();
-		void setInitialState(const alica::IRobotID* robotId, EntryPoint* ep);
+		void setInitialState(const supplementary::IAgentID* robotId, EntryPoint* ep);
 		void reconsiderOldAssignment(shared_ptr<Assignment> oldOne, shared_ptr<Assignment> newOne);
 
 	protected:
-		vector<const alica::IRobotID*> robotIds;
+		vector<const supplementary::IAgentID*> robotIds;
 		vector<State*> states;
 	};
 
