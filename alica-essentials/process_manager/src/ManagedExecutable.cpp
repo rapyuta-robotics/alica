@@ -197,12 +197,12 @@ namespace supplementary
 		}
 	}
 
-	void ManagedExecutable::report(process_manager::ProcessStats& psts, int robotId)
+	void ManagedExecutable::report(process_manager::ProcessStats& psts, const IAgentID* agentID)
 	{
 		if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED)
 		{
 			process_manager::ProcessStat ps;
-			ps.robotId = robotId;
+			ps.robotId.id = agentID->toByteVector();
 			ps.cpu = this->cpu;
 			ps.mem = this->memory * ManagedExecutable::kernelPageSize / 1024.0 / 1024.0; // MB
 			ps.processKey = this->metaExec->id;

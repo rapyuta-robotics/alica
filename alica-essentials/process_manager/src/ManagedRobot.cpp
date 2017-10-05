@@ -4,6 +4,12 @@
 #include <iostream>
 #include <limits>
 
+
+using std::string;
+using std::cerr;
+using std::cout;
+using std::endl;
+
 namespace supplementary
 {
 
@@ -188,7 +194,7 @@ namespace supplementary
 	{
 		for (auto const& mngdExec : this->executableMap)
 		{
-			mngdExec.second->report(psts, this->id);
+			mngdExec.second->report(psts, this->agentID);
 		}
 	}
 

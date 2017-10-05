@@ -13,7 +13,7 @@ namespace supplementary
 
 	RobotMetaData::~RobotMetaData()
 	{
-
+		delete agentID;
 	}
 
 } /* namespace supplementary */

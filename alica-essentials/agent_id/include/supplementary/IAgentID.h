@@ -15,8 +15,8 @@ class IAgentID
     virtual bool operator>(const IAgentID &other) const = 0;
     virtual uint8_t *getRaw() const = 0;
     virtual int getSize() const = 0;
-		virtual std::vector<uint8_t> toByteVector() const = 0;
-		
+    virtual std::vector<uint8_t> toByteVector() const = 0;
+
     friend std::ostream &operator<<(std::ostream &os, const supplementary::IAgentID &obj);
 };
 

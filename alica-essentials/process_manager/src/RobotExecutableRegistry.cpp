@@ -1,10 +1,10 @@
 #include "process_manager/ExecutableMetaData.h"
 #include "process_manager/RobotMetaData.h"
 
-
 #include <ConsoleCommandHelper.h>
 #include <SystemConfig.h>
 #include <iostream>
+#include <msl/robot/IntRobotIDFactory.h>
 #include <process_manager/RobotExecutableRegistry.h>
 #include <supplementary/IAgentIDFactory.h>
 
@@ -20,9 +20,24 @@ RobotExecutableRegistry *RobotExecutableRegistry::get()
 }
 
 RobotExecutableRegistry::RobotExecutableRegistry()
-    : sc(SystemConfig::getInstance()), agentIDFactory(new msl::robot::IntRobotIDFactory())
+    : sc(SystemConfig::getInstance())
+    , agentIDFactory(nullptr)
 {
-	// todo distinguish between different types of ids (uuid, int, etc.). I think that need to be configured in the ProcessManging.conf
+    string idType = (*sc)["ProcessManaging"]->get<string>("ProcessManager.agentIDType", NULL);
+    if (idType.compare("int") == 0)
+    {
+        this->agentIDFactory = new ::msl::robot::IntRobotIDFactory();
+    }
+    else if (idType.compare("uuid") == 0)
+    {
+        // TODO
+        throw new runtime_error("RobotExecutableRegistry: UUID Factory needs to be implemented!");
+    }
+    else
+    {
+        throw new runtime_error("RobotExecutableRegistry: Unknown Agent ID Type in ProcessManaging.conf: '" + idType +
+                                "'");
+    }
 }
 
 RobotExecutableRegistry::~RobotExecutableRegistry()
@@ -36,6 +51,8 @@ RobotExecutableRegistry::~RobotExecutableRegistry()
     {
         delete metaData;
     }
+
+    delete this->agentIDFactory;
 }
 
 const map<string, vector<pair<int, int>>> *const RobotExecutableRegistry::getBundlesMap()
@@ -120,8 +137,38 @@ bool RobotExecutableRegistry::getRobotId(string robotName, const IAgentID *agent
         }
     }
 
-    agentID = 0;
+    agentID = nullptr;
     return false;
+}
+
+const IAgentID* RobotExecutableRegistry::getRobotId(vector<uint8_t>& idVector, string& robotName)
+{
+	auto agentID = this->agentIDFactory->create(idVector);
+    for (auto robotMetaData : this->robotList)
+    {
+    	if (robotMetaData->agentID == agentID)
+    	{
+    		robotName = robotMetaData->name;
+    		return robotMetaData->agentID;
+    	}
+    }
+
+    robotName = "";
+    return nullptr;
+}
+
+const IAgentID* RobotExecutableRegistry::getRobotId(vector<uint8_t>& idVector)
+{
+	auto agentID = this->agentIDFactory->create(idVector);
+    for (auto robotMetaData : this->robotList)
+    {
+    	if (robotMetaData->agentID == agentID)
+    	{
+    		return robotMetaData->agentID;
+    	}
+    }
+
+    return nullptr;
 }
 
 void RobotExecutableRegistry::addRobot(string robotName, const IAgentID *agentID)
@@ -134,7 +181,7 @@ void RobotExecutableRegistry::addRobot(string robotName, const IAgentID *agentID
  * This method allows testing with systems, which are not in the Globals.conf,
  * i.d., are no official robots.
  */
-int RobotExecutableRegistry::addRobot(string agentName)
+const IAgentID *RobotExecutableRegistry::addRobot(string agentName)
 {
     const IAgentID *agentID;
 
@@ -144,29 +191,30 @@ int RobotExecutableRegistry::addRobot(string agentName)
         std::vector<uint8_t> agentIDVector;
         for (int i = 0; i < sizeof(int); i++)
         {
-        	agentIDVector.push_back(*(((uint8_t *)&tmpID) + i));
+            agentIDVector.push_back(*(((uint8_t *)&tmpID) + i));
         }
         agentID = this->agentIDFactory->create(agentIDVector);
     }
-    catch (runtime_error &e)
+    catch (const std::runtime_error* e)
     {
-        agentID = 0;
+        agentID = nullptr;
         bool idExists;
 
         do
         {
             idExists = false;
-            agentID++;
+            // generates random ID
+            agentID = this->agentIDFactory->generateID();
             for (auto entry : this->robotList)
             {
-                if (entry->agentID == agentID)
+                if (*(entry->agentID) == *(agentID))
                 {
                     idExists = true;
                     break;
                 }
             }
         } while (idExists);
-        std::cout << "PM Registry: Warning! Adding unknown robot " << agentName << " with ID " << agentID << "!"
+        std::cout << "PM Registry: Warning! Adding unknown agent " << agentName << " with ID " << agentID << "!"
                   << std::endl;
     }
 
