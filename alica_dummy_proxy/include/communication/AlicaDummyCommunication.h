@@ -20,13 +20,13 @@ namespace alica_dummy_proxy {
 
 			virtual void tick();
 
-			virtual void sendAllocationAuthority(alica::AllocationAuthorityInfo& aai);
-			virtual void sendAlicaEngineInfo(alica::AlicaEngineInfo& bi);
-			virtual void sendPlanTreeInfo(alica::PlanTreeInfo& pti);
-			virtual void sendRoleSwitch(alica::RoleSwitch& rs);
-			virtual void sendSyncReady(alica::SyncReady& sr);
-			virtual void sendSyncTalk(alica::SyncTalk& st);
-			virtual void sendSolverResult(alica::SolverResult& sr);
+			virtual void sendAllocationAuthority(alica::AllocationAuthorityInfo& aai) const ;
+			virtual void sendAlicaEngineInfo(alica::AlicaEngineInfo& bi) const ;
+			virtual void sendPlanTreeInfo(alica::PlanTreeInfo& pti) const ;
+			virtual void sendRoleSwitch(alica::RoleSwitch& rs) const ;
+			virtual void sendSyncReady(alica::SyncReady& sr) const ;
+			virtual void sendSyncTalk(alica::SyncTalk& st) const ;
+			virtual void sendSolverResult(alica::SolverResult& sr) const ;
 
 
 			virtual void startCommunication();

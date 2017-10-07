@@ -1,11 +1,6 @@
-/*
- * IAlicaCommunication.cpp
- *
- *  Created on: 09.09.2014
- *      Author: endy
- */
 
 #include "engine/IAlicaCommunication.h"
+#include "engine/AlicaEngine.h"
 #include "engine/syncmodul/SyncModul.h"
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/teamobserver/TeamObserver.h"
@@ -13,12 +8,6 @@
 
 #include <iostream>
 
-using namespace alica;
-
-IAlicaCommunication::IAlicaCommunication(AlicaEngine* ae)
-{
-	this->ae = ae;
-}
 
 void alica::IAlicaCommunication::onSyncTalkReceived(shared_ptr<SyncTalk> st)
 {

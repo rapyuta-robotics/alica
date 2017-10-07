@@ -1,12 +1,12 @@
 #include "engine/teammanager/Agent.h"
 
 #include "engine/AlicaEngine.h"
-#include "supplementary/IAgentID.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/collections/SuccessMarks.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
+#include "supplementary/IAgentID.h"
 
 namespace alica
 {

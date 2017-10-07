@@ -39,7 +39,8 @@
   <build_depend>alica_dummy_proxy</build_depend>
   <build_depend>autodiff</build_depend>
   <build_depend>constraintsolver</build_depend>
-
+  <build_depend>agent_id</build_depend> 
+  <build_depend>msl_robot_id</build_depend> 
   
   <!-- Use buildtool_depend for build tool packages: -->
   <buildtool_depend>catkin</buildtool_depend>
@@ -48,10 +49,13 @@
   <run_depend>alica_engine</run_depend>
   <run_depend>system_config</run_depend>
   <run_depend>roscpp</run_depend>
-   <run_depend>alica_dummy_proxy</run_depend>
+  <run_depend>alica_dummy_proxy</run_depend>
   <run_depend>alica_ros_proxy</run_depend>
   <run_depend>autodiff</run_depend>
   <run_depend>constraintsolver</run_depend>
+  <run_depend>agent_id</run_depend>
+   <run_depend>msl_robot_id</run_depend>
+  
 
   <!-- Use test_depend for packages you need only for testing: -->
   <test_depend>gtest</test_depend>

@@ -19,6 +19,10 @@
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/teammanager/Agent.h"
+#include "supplementary/IAgentID.h"
+#include "engine/ITeamObserver.h"
+#include "engine/IAlicaClock.h"
+#include "engine/IRoleAssignment.h"
 #include <SystemConfig.h>
 
 namespace alica

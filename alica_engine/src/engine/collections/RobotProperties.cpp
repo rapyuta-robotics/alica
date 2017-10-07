@@ -1,7 +1,7 @@
+#include <engine/collections/RobotProperties.h>
 #include "supplementary/IAgentIDFactory.h"
 #include <engine/AlicaEngine.h>
 #include <engine/PlanRepository.h>
-#include <engine/collections/RobotProperties.h>
 #include <engine/model/CapValue.h>
 
 namespace alica
@@ -55,8 +55,7 @@ void RobotProperties::readFromConfig(AlicaEngine *engine, string name)
             }
         }
     }
-    this->defaultRole =
-        (*sc)["Globals"]->tryGet<string>("NOROLESPECIFIED", "Globals", "Team", name.c_str(), "DefaultRole", NULL);
+    this->defaultRole = (*sc)["Globals"]->tryGet<string>("NOROLESPECIFIED", "Globals", "Team", name.c_str(), "DefaultRole", NULL);
 }
 
 RobotProperties::~RobotProperties()

@@ -14,9 +14,9 @@
 namespace alica
 {
 
+class AlicaEngine;
 class Characteristic;
 class Capability;
-class AlicaEngine;
 
 class RobotProperties
 {

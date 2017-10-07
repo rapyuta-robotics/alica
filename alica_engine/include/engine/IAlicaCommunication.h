@@ -1,21 +1,23 @@
 #pragma once
 
-#include "AlicaEngine.h"
+#include <memory>
+#include <string>
 
 namespace alica
 {
+	struct AlicaEngineInfo;
+	struct AllocationAuthorityInfo;
+	struct PlanTreeInfo;
 	struct SolverResult;
-	class RoleSwitch;
 	struct SyncTalk;
 	struct SyncReady;
-	struct AlicaEngineInfo;
-	struct PlanTreeInfo;
-	struct AllocationAuthorityInfo;
+	class AlicaEngine;
+	class RoleSwitch;
 
 	class IAlicaCommunication
 	{
 	public:
-		IAlicaCommunication(AlicaEngine* ae);
+		IAlicaCommunication(AlicaEngine* ae):ae(ae) {};
 		virtual ~IAlicaCommunication(){}
 
 		virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai) const = 0;
@@ -25,15 +27,15 @@ namespace alica
 		virtual void sendSyncReady(SyncReady& sr) const = 0;
 		virtual void sendSyncTalk(SyncTalk& st) const = 0;
 		virtual void sendSolverResult(SolverResult& sr) const = 0;
-		virtual void sendLogMessage(int level, string& message) const {};
+		virtual void sendLogMessage(int level, std::string& message) const {};
 
 		virtual void tick() {};
 
-		void onSyncTalkReceived(shared_ptr<SyncTalk> st);
-		void onSyncReadyReceived(shared_ptr<SyncReady> sr);
-		void onAuthorityInfoReceived(shared_ptr<AllocationAuthorityInfo> aai);
-		void onPlanTreeInfoReceived(shared_ptr<PlanTreeInfo> pti);
-		void onSolverResult(shared_ptr<SolverResult> sr);
+		void onSyncTalkReceived(std::shared_ptr<SyncTalk> st);
+		void onSyncReadyReceived(std::shared_ptr<SyncReady> sr);
+		void onAuthorityInfoReceived(std::shared_ptr<AllocationAuthorityInfo> aai);
+		void onPlanTreeInfoReceived(std::shared_ptr<PlanTreeInfo> pti);
+		void onSolverResult(std::shared_ptr<SolverResult> sr);
 
 		virtual void startCommunication() = 0;
 		virtual void stopCommunication() = 0;

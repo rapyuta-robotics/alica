@@ -21,6 +21,7 @@
 #include "engine/model/Plan.h"
 #include "DummyTestSummand.h"
 #include "engine/teamobserver/TeamObserver.h"
+#include "engine/teammanager/TeamManager.h"
 #include "engine/PlanBase.h"
 #include "engine/model/State.h"
 
@@ -92,10 +93,10 @@ TEST_F(AlicaEngineAuthorityManager, authority)
 
 	auto uSummandAe = *((ae->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
 	DummyTestSummand* dbr = dynamic_cast<DummyTestSummand*>(uSummandAe);
-	dbr->robotId = ae->getTeamObserver()->getOwnId();
+	dbr->robotId = ae->getTeamManager()->getLocalAgentID();
 	auto uSummandAe2 = *((ae2->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
 	DummyTestSummand* dbr2 = dynamic_cast<DummyTestSummand*>(uSummandAe2);
-	dbr2->robotId = ae2->getTeamObserver()->getOwnId();
+	dbr2->robotId = ae2->getTeamManager()->getLocalAgentID();
 	ae->start();
 	ae2->start();
 

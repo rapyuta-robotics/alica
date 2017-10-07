@@ -9,7 +9,7 @@
 
 namespace alica {
 
-	TestConstantValueSummand::TestConstantValueSummand(double weight, string name,long id, double val)
+	TestConstantValueSummand::TestConstantValueSummand(double weight, string name, long id, double val)
 	{
 		this->weight = weight;
 		this->name = name;

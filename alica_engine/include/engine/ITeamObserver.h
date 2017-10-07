@@ -5,6 +5,10 @@ using namespace std;
 #include <map>
 #include <memory>
 
+namespace supplementary {
+	class IAgentID;
+}
+
 namespace alica
 {
 	class RunningPlan;

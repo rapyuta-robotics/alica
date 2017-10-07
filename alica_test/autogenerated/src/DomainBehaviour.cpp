@@ -2,6 +2,8 @@
 
 namespace alica
 {
+
+
 DomainBehaviour::DomainBehaviour(string name) :
     BasicBehaviour(name)
 {
@@ -10,4 +12,5 @@ DomainBehaviour::DomainBehaviour(string name) :
 DomainBehaviour::~DomainBehaviour()
 {
 }
+
 } /* namespace alica */

@@ -6,12 +6,17 @@
 #include "alica_ros_proxy/SolverResult.h"
 #include "alica_ros_proxy/SyncReady.h"
 #include "alica_ros_proxy/SyncTalk.h"
+#include "engine/IAlicaCommunication.h"
+#include "supplementary/IAgentID.h"
 
-#include <engine/IAlicaCommunication.h>
-#include <supplementary/IAgentID.h>
 #include <ros/ros.h>
+#include <string>
 
 using namespace alica;
+
+namespace supplementary {
+	class SystemConfig;
+}
 
 namespace alicaRosProxy
 {
@@ -31,7 +36,7 @@ class AlicaRosCommunication : public alica::IAlicaCommunication
     virtual void sendSyncReady(SyncReady &sr) const;
     virtual void sendSyncTalk(SyncTalk &st) const;
     virtual void sendSolverResult(SolverResult &sr) const;
-    virtual void sendLogMessage(int level, string &message) const;
+    virtual void sendLogMessage(int level, std::string &message) const;
 
     virtual void handleAllocationAuthorityRos(alica_ros_proxy::AllocationAuthorityInfoPtr aai);
     virtual void handlePlanTreeInfoRos(alica_ros_proxy::PlanTreeInfoPtr pti);
@@ -64,13 +69,13 @@ class AlicaRosCommunication : public alica::IAlicaCommunication
     ros::Publisher SolverResultPublisher;
     ros::Subscriber SolverResultSubscriber;
 
-    string allocationAuthorityInfoTopic;
-    string ownRoleTopic;
-    string alicaEngineInfoTopic;
-    string planTreeInfoTopic;
-    string syncReadyTopic;
-    string syncTalkTopic;
-    string solverResultTopic;
+    std::string allocationAuthorityInfoTopic;
+    std::string ownRoleTopic;
+    std::string alicaEngineInfoTopic;
+    std::string planTreeInfoTopic;
+    std::string syncReadyTopic;
+    std::string syncTalkTopic;
+    std::string solverResultTopic;
 
     bool isRunning;
 

@@ -1,10 +1,6 @@
 #pragma once
 //#define TO_DEBUG
-
-#include "supplementary/IAgentID.h"
 #include "engine/ITeamObserver.h"
-#include "engine/IAlicaClock.h"
-#include "engine/IRoleAssignment.h"
 
 #include <unordered_set>
 #include <string>

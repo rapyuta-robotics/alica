@@ -11,7 +11,6 @@ namespace supplementary {
 
 namespace alica
 {
-
 class AlicaEngine;
 class Agent;
 class RobotProperties;
@@ -26,7 +25,7 @@ class ITeamManager
   public:
     ITeamManager(const AlicaEngine *engine)
         : engine(engine){};
-    virtual ~ITeamManager();
+    virtual ~ITeamManager(){};
 
     virtual void init() = 0;
     virtual const supplementary::IAgentID *getLocalAgentID() const = 0;
