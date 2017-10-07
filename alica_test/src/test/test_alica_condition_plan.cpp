@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
-#include "engine/IAlicaCommunication.h"
+//#include "engine/IAlicaCommunication.h"
 #include "engine/model/State.h"
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"

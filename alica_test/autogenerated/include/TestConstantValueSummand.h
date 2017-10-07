@@ -10,6 +10,10 @@
 
 #include <engine/USummand.h>
 
+namespace supplementary {
+	class IAgentID;
+}
+
 namespace alica {
 
 class TestConstantValueSummand: public USummand {
@@ -18,7 +22,7 @@ public:
 	virtual ~TestConstantValueSummand();
 	void cacheEvalData();
 	UtilityInterval eval(IAssignment* ass);
-	long robotId;
+	const supplementary::IAgentID* robotId;
 
 protected:
 	double val;

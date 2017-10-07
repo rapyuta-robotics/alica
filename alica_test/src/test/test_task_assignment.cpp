@@ -7,26 +7,31 @@
 
 using namespace std;
 
-#include <gtest/gtest.h>
-#include <list>
-#include <vector>
-#include <memory>
 
-#include "engine/AlicaEngine.h"
-#include "engine/planselector/TaskAssignment.h"
-#include "engine/planselector/PlanSelector.h"
-#include "engine/IPlanSelector.h"
-#include "engine/ITeamObserver.h"
-#include "engine/collections/RobotEngineData.h"
-#include "engine/model/AbstractPlan.h"
-#include "engine/RunningPlan.h"
-#include "engine/PlanRepository.h"
-#include "engine/model/Plan.h"
-#include <clock/AlicaROSClock.h>
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
+#include "clock/AlicaROSClock.h"
+#include "engine/AlicaEngine.h"
+#include "engine/IPlanSelector.h"
+#include "engine/ITeamManager.h"
+#include "engine/RunningPlan.h"
+#include "engine/PlanRepository.h"
+#include "engine/collections/RobotEngineData.h"
+#include "engine/collections/RobotProperties.h"
+#include "engine/model/AbstractPlan.h"
+#include "engine/model/Plan.h"
+//#include "engine/planselector/TaskAssignment.h"
+#include "engine/planselector/PlanSelector.h"
+#include "engine/teammanager/Agent.h"
+#include "msl/robot/IntRobotIDFactory.h"
+#include "supplementary/IAgentID.h"
+
+#include <gtest/gtest.h>
+#include <list>
+#include <vector>
+#include <memory>
 
 
 class TaskAssignmentTest : public ::testing::Test
@@ -78,20 +83,23 @@ protected:
 TEST_F(TaskAssignmentTest, constructTaskAssignment)
 {
 	// fake a list of existing robots
-	auto robots = make_shared<vector<int> >();
-	for (int i = 8; i <= 11; i++)
+	msl::robot::IntRobotIDFactory factory;
+	auto robots = make_shared<vector<const supplementary::IAgentID* > >();
+	for (int number = 8; number <= 11; number++)
 	{
-		robots->push_back(i);
+		std::vector<uint8_t> id(reinterpret_cast<const uint8_t*>(&number), (reinterpret_cast<const uint8_t*>(&number) + sizeof(number)));
+		const supplementary::IAgentID * agentID =  factory.create(id);
+		robots->push_back(agentID);
 	}
 
 	// fake inform the team observer about roles of none existing robots
 	auto& roles = ae->getPlanRepository()->getRoles();
-	int i = 8;
+	int i = 0;
 	for (auto& role : roles)
 	{
-		ae->getTeamObserver()->getRobotById(i)->setLastRole(role.second);
+//		ae->getTeamManager()->getAgentByID(robots->at(i))->getEngineData()->setLastRole(role.second);
 		i++;
-		if (i > 11)
+		if (i > 4)
 			break;
 	}
 

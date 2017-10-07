@@ -20,31 +20,31 @@ namespace alica_dummy_proxy {
 	{
 		// TODO Auto-generated destructor stub
 	}
-	void AlicaDummyCommunication::sendAllocationAuthority(alica::AllocationAuthorityInfo& aai)
+	void AlicaDummyCommunication::sendAllocationAuthority(alica::AllocationAuthorityInfo& aai) const
 	{
 
 	}
-	void AlicaDummyCommunication::sendAlicaEngineInfo(alica::AlicaEngineInfo& ai)
+	void AlicaDummyCommunication::sendAlicaEngineInfo(alica::AlicaEngineInfo& ai) const
 	{
 
 	}
-	void AlicaDummyCommunication::sendPlanTreeInfo(alica::PlanTreeInfo& pti)
+	void AlicaDummyCommunication::sendPlanTreeInfo(alica::PlanTreeInfo& pti) const
 	{
 
 	}
-	void AlicaDummyCommunication::sendRoleSwitch(alica::RoleSwitch& rs)
+	void AlicaDummyCommunication::sendRoleSwitch(alica::RoleSwitch& rs) const
 	{
 
 	}
-	void AlicaDummyCommunication::sendSyncReady(alica::SyncReady& sr)
+	void AlicaDummyCommunication::sendSyncReady(alica::SyncReady& sr) const
 	{
 
 	}
-	void AlicaDummyCommunication::sendSyncTalk(alica::SyncTalk& st)
+	void AlicaDummyCommunication::sendSyncTalk(alica::SyncTalk& st) const
 	{
 
 	}
-	void AlicaDummyCommunication::sendSolverResult(alica::SolverResult& sr)
+	void AlicaDummyCommunication::sendSolverResult(alica::SolverResult& sr) const
 	{
 
 	}

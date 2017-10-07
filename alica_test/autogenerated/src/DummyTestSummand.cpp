@@ -8,6 +8,7 @@
 #include "DummyTestSummand.h"
 #include "engine/IAssignment.h"
 #include "engine/model/EntryPoint.h"
+#include "supplementary/IAgentID.h"
 #include <TestWorldModel.h>
 
 namespace alica
@@ -21,7 +22,7 @@ namespace alica
 		this->relevantEntryPointIds = relevantEntryPointIds;
 		this->angleBallOpp = 0;
 		this->velAngle = 0;
-		this->robotId = 0;
+		this->robotId = nullptr;
 		this->sb = 0;
 	}
 
@@ -38,7 +39,7 @@ namespace alica
 	{
 		ui.setMin(0.0);
 		ui.setMax(1.0);
-		std::shared_ptr<vector<int>> relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
+		std::shared_ptr<vector<const supplementary::IAgentID*>> relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
 
 		for (int i = 0; i < relevantRobots->size(); ++i)
 		{

@@ -8,6 +8,8 @@
 #include "DistBallRobot.h"
 #include "engine/IAssignment.h"
 #include "engine/model/EntryPoint.h"
+#include "msl/robot/IntRobotIDFactory.h"
+#include "supplementary/IAgentID.h"
 #include <TestWorldModel.h>
 
 namespace alica
@@ -21,7 +23,7 @@ namespace alica
 		this->relevantEntryPointIds = relevantEntryPointIds;
 		this->angleBallOpp = 0;
 		this->velAngle = 0;
-		this->robotId = 0;
+		this->robotId = nullptr;
 		this->sb = 0;
 	}
 
@@ -39,18 +41,29 @@ namespace alica
 		ui.setMin(0.0);
 		ui.setMax(1.0);
 		int numAssignedRobots = 0;
-		std::shared_ptr<vector<int>> relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
+		msl::robot::IntRobotIDFactory factory;
+
+		long x8 = 8;
+		std::vector<uint8_t> id8(reinterpret_cast<const uint8_t*>(&x8), (reinterpret_cast<const uint8_t*>(&x8) + sizeof(x8)));
+		const supplementary::IAgentID * agentID8 =  factory.create(id8);
+
+		long x9 = 9;
+		std::vector<uint8_t> id9(reinterpret_cast<const uint8_t*>(&x9), (reinterpret_cast<const uint8_t*>(&x9) + sizeof(x9)));
+		const supplementary::IAgentID * agentID9 =  factory.create(id9);
+
+
+		std::shared_ptr<vector<const supplementary::IAgentID*>> relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
 
 		double curPosition;
 		for (int i = 0; i < relevantRobots->size(); ++i)
 		{
 			int pos = 0;
-			if (relevantRobots->at(i) == 9)
+			if (relevantRobots->at(i) == agentID9)
 			{
 				pos = 1;
 			}
 
-			if (this->robotId == 8)
+			if (this->robotId == agentID8)
 			{
 				curPosition = alicaTests::TestWorldModel::getOne()->robotsXPos[pos];
 			}
@@ -64,12 +77,12 @@ namespace alica
 
 		}
 		ui.setMax(ui.getMin());
-		if (this->relevantEntryPoints[0]->getMaxCardinality() > numAssignedRobots && ass->getNumUnAssignedRobots() > 0)
+		if (this->relevantEntryPoints[0]->getMaxCardinality() > numAssignedRobots && ass->getNumUnAssignedRobotIds() > 0)
 		{
-			for (int i = 0; i < ass->getNumUnAssignedRobots(); ++i)
+			for (int i = 0; i < ass->getNumUnAssignedRobotIds(); ++i)
 			{
 				//curPosition = this.playerPositions.GetValue(ass.UnAssignedRobots[i]);
-				if (this->robotId == 8)
+				if (this->robotId == agentID8)
 				{
 					curPosition = alicaTests::TestWorldModel::getOne()->robotsXPos.at(i);
 				}
