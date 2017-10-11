@@ -1,10 +1,3 @@
-/*
- * ControlledProcessManager.cpp
- *
- *  Created on: Mar 1, 2015
- *      Author: Stephan Opfer
- */
-
 #include <process_manager/RobotExecutableRegistry.h>
 #include <SystemConfig.h>
 
@@ -78,9 +71,9 @@ namespace pm_widget
 		{
 			if ((now - robotMapIter->second->timeLastMsgReceived) > this->msgTimeOut)
 			{ // time is over, erase controlled robot
-				cout << "ControlledPM: The robot " << robotMapIter->second->name << " (ID: "
+				std::cout << "ControlledPM: The robot " << robotMapIter->second->name << " (ID: "
 						<< robotMapIter->second->id << ") on process manager " << this->name << " (ID: "
-						<< this->id << ") seems to be dead!" << endl;
+						<< this->id << ") seems to be dead!" << std::endl;
 				delete (robotMapIter->second);
 				robotMapIter = this->controlledRobotsMap.erase(robotMapIter);
 			}

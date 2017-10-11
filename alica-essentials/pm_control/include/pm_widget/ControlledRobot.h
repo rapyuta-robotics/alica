@@ -1,12 +1,4 @@
-/*
- * ControlledRobot.h
- *
- *  Created on: Feb 27, 2015
- *      Author: Stephan Opfer
- */
-
-#ifndef SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDROBOT_H_
-#define SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDROBOT_H_
+#pragma once
 
 #include <process_manager/RobotMetaData.h>
 #include <process_manager/ProcessStats.h>
@@ -23,6 +15,7 @@ namespace Ui {
 
 namespace supplementary{
 	class RobotExecutableRegistry;
+	class IAgentID;
 }
 
 namespace ros{
@@ -38,10 +31,10 @@ namespace pm_widget
 		Q_OBJECT
 
 	public:
-		ControlledRobot(string robotName, int robotId, int parentPMid); /*<for robot_control*/
+		ControlledRobot(string robotName, const supplementary::IAgentID* robotId, const supplementary::IAgentID* parentPMid); /*<for robot_control*/
 		virtual ~ControlledRobot();
 
-		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived,process_manager::ProcessStat ps, int parentPMid);
+		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived,process_manager::ProcessStat ps, const supplementary::IAgentID* parentPMid);
 		void sendProcessCommand(vector<int> execIds, vector<int> paramSets, int cmd);
 		void updateGUI(chrono::system_clock::time_point now);
 		void addExec(QWidget* exec);
@@ -61,9 +54,7 @@ namespace pm_widget
 		Ui::RobotProcessesWidget* _robotProcessesWidget;
 		map<int, ControlledExecutable*> controlledExecMap;
 		ros::Publisher processCommandPub;
-		int parentPMid;
+		const supplementary::IAgentID* parentPMid;
 	};
 
 } /* namespace pm_widget */
-
-#endif /* SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDROBOT_H_ */

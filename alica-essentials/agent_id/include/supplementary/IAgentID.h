@@ -20,6 +20,14 @@ class IAgentID
     friend std::ostream &operator<<(std::ostream &os, const supplementary::IAgentID &obj);
 };
 
+struct IAgentIDComparator
+{
+    bool operator()(const IAgentID *a, const IAgentID *b) const
+    {
+        return *a < *b;
+    }
+};
+
 } /* namespace supplementary */
 
 

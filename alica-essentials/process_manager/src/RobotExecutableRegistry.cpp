@@ -148,11 +148,13 @@ const IAgentID* RobotExecutableRegistry::getRobotId(vector<uint8_t>& idVector, s
     {
     	if (robotMetaData->agentID == agentID)
     	{
+    		delete agentID;
     		robotName = robotMetaData->name;
     		return robotMetaData->agentID;
     	}
     }
 
+    delete agentID;
     robotName = "";
     return nullptr;
 }
@@ -164,10 +166,12 @@ const IAgentID* RobotExecutableRegistry::getRobotId(vector<uint8_t>& idVector)
     {
     	if (robotMetaData->agentID == agentID)
     	{
+    		delete agentID;
     		return robotMetaData->agentID;
     	}
     }
 
+    delete agentID;
     return nullptr;
 }
 

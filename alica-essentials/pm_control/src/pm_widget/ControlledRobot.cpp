@@ -1,27 +1,21 @@
-/*
- * ControlledRobot.cpp
- *
- *  Created on: Feb 27, 2015
- *      Author: Stephan Opfer
- */
-#include <ros/ros.h>
-#include <limits.h>
-
-#include <process_manager/RobotExecutableRegistry.h>
-#include <process_manager/ExecutableMetaData.h>
-#include <process_manager/ProcessCommand.h>
-#include <SystemConfig.h>
-
 #include "pm_widget/ControlledRobot.h"
 #include "pm_widget/ControlledExecutable.h"
 #include "pm_widget/ControlledProcessManager.h"
 #include "ui_RobotProcessesWidget.h"
 #include "ui_ProcessWidget.h"
 
+#include <supplementary/IAgentID.h>
+#include <process_manager/RobotExecutableRegistry.h>
+#include <process_manager/ExecutableMetaData.h>
+#include <process_manager/ProcessCommand.h>
+#include <SystemConfig.h>
+
+#include <ros/ros.h>
+#include <limits.h>
 namespace pm_widget
 {
 	// Second Constructor is for robot_control
-	ControlledRobot::ControlledRobot(string robotName, int robotId, int parentPMid) :
+	ControlledRobot::ControlledRobot(string robotName, const supplementary::IAgentID* robotId, const supplementary::IAgentID* parentPMid) :
 			RobotMetaData(robotName, robotId), robotProcessesQFrame(new QFrame()), _robotProcessesWidget(new Ui::RobotProcessesWidget()), parentPMid(parentPMid)
 	{
 		// setup gui stuff
@@ -85,7 +79,7 @@ namespace pm_widget
 	}
 
 	void ControlledRobot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived,
-											process_manager::ProcessStat ps, int parentPMid)
+											process_manager::ProcessStat ps, const supplementary::IAgentID* parentPMid)
 	{
 		this->parentPMid = parentPMid;
 
@@ -149,7 +143,8 @@ namespace pm_widget
 
 		process_manager::ProcessCommand pc;
 		pc.receiverId = (this->parentPMid == -1? 0 : this->parentPMid);
-		pc.robotIds = vector<int> {this->id};
+		// TODO check whether this works
+		pc.robotIds = vector<vector<uint8_t>> {this->agentID->toByteVector()};
 		pc.processKeys = execIds;
 		pc.paramSets = paramSets;
 		pc.cmd = cmd;

@@ -26,14 +26,6 @@ class RobotMetaData;
 class ExecutableMetaData;
 class RobotExecutableRegistry;
 
-struct IAgentIDComparator
-{
-    bool operator()(const IAgentID *a, const IAgentID *b) const
-    {
-        return *a < *b;
-    }
-};
-
 class ProcessManager
 {
   public:
