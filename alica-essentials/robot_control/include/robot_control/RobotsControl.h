@@ -1,9 +1,9 @@
-#ifndef robot_control__PMControl_H
-#define robot_control__PMControl_H
+#pragma once
 
 #include <rqt_gui_cpp/plugin.h>
 
-#include "ros/ros.h"
+#include <supplementary/IAgentID.h>
+#include <ros/ros.h>
 #include <ros/macros.h>
 #include <robot_control/Robot.h>
 
@@ -28,11 +28,7 @@ namespace supplementary
 {
 	class SystemConfig;
 	class RobotExecutableRegistry;
-}
-
-namespace alica {
-	class IRobotID;
-	class IRobotIDFactory;
+	class IAgentIDFactory;
 }
 
 namespace robot_control
@@ -71,8 +67,8 @@ namespace robot_control
 
 		supplementary::SystemConfig* sc;
 
-		alica::IRobotIDFactory* robotIDFactory;
-		map<const alica::IRobotID*, Robot*> controlledRobotsMap;
+		supplementary::IAgentIDFactory* robotIDFactory;
+		std::map<const supplementary::IAgentID*, Robot*, supplementary::IAgentIDComparator> controlledRobotsMap;
 		queue<pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
 		mutex processStatsMsgQueueMutex;
 		queue<pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
@@ -87,8 +83,7 @@ namespace robot_control
 		void receiveKickerStatInfo(msl_actuator_msgs::KickerStatInfoPtr kickerStatInfo);
 		void receiveSharedWorldInfo(msl_sensor_msgs::SharedWorldInfoPtr sharedWorldInfo);
 		void processMessages();
-		void checkAndInit(int robotId);
-		const alica::IRobotID *convertToAlicaID(std::vector<uint8_t> &robotRosID) const;
+		void checkAndInit(const supplementary::IAgentID* robotId);
 
 		QTimer* guiUpdateTimer;
 
@@ -99,5 +94,3 @@ namespace robot_control
 	};
 
 }
-
-#endif // rqt_msl_refbox__RefBox_H

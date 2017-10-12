@@ -1,36 +1,36 @@
-/*
- * ControlledRobot.cpp
- *
- *  Created on: Feb 27, 2015
- *      Author: Stephan Opfer
- */
-
-#include <robot_control/Robot.h>
-
-#include <ros/ros.h>
-#include <process_manager/RobotExecutableRegistry.h>
+#include "robot_control/Robot.h"
 
 #include "robot_control/RobotCommand.h"
 #include "robot_control/RobotsControl.h"
 #include "ui_ControlledRobot.h"
-#include <alica/AlicaWidget.h>
-//#include <pm_widget/ControlledProcessManager.h>
-#include <pm_widget/ControlledRobot.h>
-#include <QFrame>
 
+#include <pm_widget/ControlledRobot.h>
+
+#include <supplementary/BroadcastID.h>
+#include <process_manager/RobotExecutableRegistry.h>
+
+#include <alica/AlicaWidget.h>
+
+#include <ros/ros.h>
+#include <QFrame>
 #include <chrono>
 #include <limits.h>
 
+using std::string;
+using std::pair;
+
 namespace robot_control
 {
-	Robot::Robot(string robotName, int robotId, RobotsControl* parentRobotsControl) :
+	Robot::Robot(string robotName, const supplementary::IAgentID* robotId, RobotsControl* parentRobotsControl) :
 			RobotMetaData(robotName, robotId), parentRobotsControl(parentRobotsControl), widget(new QFrame()), uiControlledRobot(
 					new Ui::ControlledRobotWidget()), shown(true), showAlicaClient(true), showProcessManager(true)
 	{
 		this->uiControlledRobot->setupUi(this);
 
 		// manual configuration of widgets
-		this->uiControlledRobot->robotStartStopBtn->setText(QString(std::string(this->name + " (" + std::to_string(robotId) + ")" ).c_str()));
+		stringstream ss;
+		ss << robotId;
+		this->uiControlledRobot->robotStartStopBtn->setText(QString(std::string(this->name + " (" + ss.str() + ")" ).c_str()));
 
 		frameForAW = new QFrame(this);
 		frameForAW->setFrameStyle(1);
@@ -50,7 +50,8 @@ namespace robot_control
 		QHBoxLayout* frameHBoxPm = new QHBoxLayout(frameForPM);
 		frameHBoxPm->setContentsMargins(0,0,0,0);
 		frameHBoxPm->setAlignment(Qt::AlignmentFlag::AlignTop);
-		this->controlledRobotWidget = new pm_widget::ControlledRobot(robotName, robotId, -1); // -1 means, there is no process manager responsible
+		this->broadcastId = new supplementary::BroadcastID(nullptr, 0);
+		this->controlledRobotWidget = new pm_widget::ControlledRobot(robotName, robotId, this->broadcastId);
 		frameHBoxPm->addWidget(this->controlledRobotWidget->robotProcessesQFrame);
 		this->uiControlledRobot->horizontalLayout_2->addWidget(frameForPM);
 
@@ -70,6 +71,7 @@ namespace robot_control
 
 	Robot::~Robot()
 	{
+		delete this->broadcastId;
 	}
 
 	QSize Robot::sizeHint()
@@ -117,7 +119,7 @@ namespace robot_control
 
 	}
 
-	void Robot::updateGUI(chrono::system_clock::time_point now)
+	void Robot::updateGUI(std::chrono::system_clock::time_point now)
 	{
 		if ((now - this->timeLastMsgReceived) > std::chrono::milliseconds(1000))
 		{
@@ -129,7 +131,7 @@ namespace robot_control
 	void Robot::sendRobotCommand(bool start)
 	{
 		RobotCommand rc;
-		rc.receiverId = this->id;
+		rc.receiverId.id = this->agentID->toByteVector();
 		if (start)
 		{
 			rc.cmd = RobotCommand::START;
@@ -167,26 +169,27 @@ namespace robot_control
 		QFrame::hide();
 	}
 
-	void Robot::handleAlicaInfo(pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr> timeAEIpair)
+	void Robot::handleAlicaInfo(pair<std::chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr> timeAEIpair)
 	{
 		this->timeLastMsgReceived = timeAEIpair.first;
 		this->alicaWidget->handleAlicaEngineInfo(timeAEIpair.second);
 	}
 
-	void Robot::handleKickerStatInfo(pair<chrono::system_clock::time_point, msl_actuator_msgs::KickerStatInfoPtr> timeKSIpair)
+	void Robot::handleKickerStatInfo(pair<std::chrono::system_clock::time_point, msl_actuator_msgs::KickerStatInfoPtr> timeKSIpair)
 	{
 		this->timeLastMsgReceived = timeKSIpair.first;
 		this->alicaWidget->handleKickerStatInfo(timeKSIpair.second);
 	}
 
-	void Robot::handleSharedWorldInfo(pair<chrono::system_clock::time_point, msl_sensor_msgs::SharedWorldInfoPtr> timeSWIpair)
+	void Robot::handleSharedWorldInfo(pair<std::chrono::system_clock::time_point, msl_sensor_msgs::SharedWorldInfoPtr> timeSWIpair)
 	{
 		this->timeLastMsgReceived = timeSWIpair.first;
 		this->alicaWidget->handleSharedWorldInfo(timeSWIpair.second);
 	}
 
-	void Robot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, int parentPMid)
-	{
+        void Robot::handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived,
+                                      process_manager::ProcessStat ps, const supplementary::IAgentID *parentPMid)
+        {
 		this->timeLastMsgReceived = timeMsgReceived;
 		this->controlledRobotWidget->handleProcessStat(timeMsgReceived, ps, parentPMid);
 	}

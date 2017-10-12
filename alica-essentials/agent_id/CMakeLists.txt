@@ -33,9 +33,10 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-
-add_library(${PROJECT_NAME} INTERFACE)
-target_link_libraries(${PROJECT_NAME} INTERFACE roscpp)
+add_library(${PROJECT_NAME}
+  src/BroadcastID.cpp
+)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 target_include_directories(${PROJECT_NAME} INTERFACE include ${catkin_INCLUDE_DIRS})
 

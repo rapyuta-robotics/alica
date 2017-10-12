@@ -5,6 +5,7 @@
 #include "ui_ProcessWidget.h"
 
 #include <supplementary/IAgentID.h>
+#include <supplementary/BroadcastID.h>
 #include <process_manager/RobotExecutableRegistry.h>
 #include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
@@ -21,15 +22,14 @@ namespace pm_widget
 		// setup gui stuff
 		this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
 		auto pmRegistry = supplementary::RobotExecutableRegistry::get();
-		// TODO: If everything works (real robots, local testing, simulation (-sim flags)), then delete the commented if case
-//		if (parentPMid == -1)
-//		{
-//			// don't show in robot_control
-//			this->_robotProcessesWidget->robotHostLabel->hide();
-//			this->inRobotControl = true;
-//		}
-//		else
-//		{
+		if (dynamic_cast<const supplementary::BroadcastID*>(parentPMid))
+		{
+			// don't show in robot_control
+			this->_robotProcessesWidget->robotHostLabel->hide();
+			this->inRobotControl = true;
+		}
+		else
+		{
 			string pmName;
 			if (pmRegistry->getRobotName(parentPMid, pmName))
 			{
@@ -40,7 +40,7 @@ namespace pm_widget
 				this->_robotProcessesWidget->robotHostLabel->setText(QString((robotName + " on UNKNOWN").c_str()));
 			}
 			this->inRobotControl = false;
-//		}
+		}
 
 		QObject::connect(this->_robotProcessesWidget->bundleComboBox, SIGNAL(activated(QString)), this,
 							SLOT(updateBundles(QString)));
@@ -136,15 +136,7 @@ namespace pm_widget
 
 	void ControlledRobot::sendProcessCommand(vector<int> execIds, vector<int> paramSets, int cmd)
 	{
-//		if (this->parentPMid == -1)
-//		{
-//			cerr << "ControlledRobot: Don't know the responsible process manager for " << this->name << " (" << this->id << ")" << endl;
-//			return;
-//		}
-
 		process_manager::ProcessCommand pc;
-		// TODO: Do we really have the case where we should send 0 here? If not, delete this
-		//pc.receiverId = (this->parentPMid == -1? 0 : this->parentPMid);
 		pc.receiverId.id = this->parentPMid->toByteVector();
 		pc.robotIds.push_back(agent_id::AgentID());
 		pc.robotIds[0].id = this->agentID->toByteVector();
