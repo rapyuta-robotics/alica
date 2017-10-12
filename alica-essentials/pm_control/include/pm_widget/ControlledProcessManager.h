@@ -1,30 +1,17 @@
-/*
- * ControlledProcessManager.h
- *
- *  Created on: Mar 1, 2015
- *      Author: Stephan Opfer
- */
-
-#ifndef SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDPROCESSMANAGER_H_
-#define SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDPROCESSMANAGER_H_
-
-
-#include <string>
-#include <utility>
-#include <ros/ros.h>
-
 #include <process_manager/ProcessStats.h>
 #include <process_manager/ProcessCommand.h>
 
+#include <ros/ros.h>
 #include <QFrame>
 #include <QBoxLayout>
+#include <string>
+#include <utility>
 #include <chrono>
-
-using namespace std;
 
 namespace supplementary {
 	class SystemConfig;
 	class RobotExecutableRegistry;
+	class IAgentID;
 }
 
 namespace pm_control {
@@ -39,30 +26,27 @@ namespace pm_widget
 	class ControlledProcessManager
 	{
 	public:
-		//ControlledProcessManager(string processManagerName, int processManagerId);
-		ControlledProcessManager(string processManagerName, int processManagerId, QBoxLayout* pmHorizontalLayout);
+		ControlledProcessManager(std::string processManagerName, const supplementary::IAgentID* processManagerId, QBoxLayout* pmHorizontalLayout);
 		virtual ~ControlledProcessManager();
 
-		void updateGUI(chrono::system_clock::time_point now);
-		void handleProcessStats(pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair);
+		void updateGUI(std::chrono::system_clock::time_point now);
+		void handleProcessStats(pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair);
 		void addRobot(QFrame* robot);
 		void removeRobot(QFrame* robot);
 
 		void hide();
 		void show();
 
-		chrono::duration<double> msgTimeOut;
-		chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
-		string name; /* < Hostname under which this process manager is running */
-		int id; /* < The id of the host */
+		std::chrono::duration<double> msgTimeOut;
+		std::chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
+		std::string name; /* < Hostname under which this process manager is running */
+		const supplementary::IAgentID* id; /* < The id of the host */
 		supplementary::RobotExecutableRegistry* pmRegistry;
 
 	private:
-		map<int, ControlledRobot*> controlledRobotsMap; /* < The robots, which are controlled by this process manager */
+		std::map<const supplementary::IAgentID*, ControlledRobot*> controlledRobotsMap; /* < The robots, which are controlled by this process manager */
 		QBoxLayout* parentLayout;
-		ControlledRobot* getControlledRobot(int robotId);
+		ControlledRobot* getControlledRobot(const supplementary::IAgentID* robotId);
 	};
 
 } /* namespace pm_widget */
-
-#endif /* SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDPROCESSMANAGER_H_ */

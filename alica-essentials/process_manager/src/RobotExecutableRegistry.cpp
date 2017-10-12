@@ -159,7 +159,7 @@ const IAgentID* RobotExecutableRegistry::getRobotId(vector<uint8_t>& idVector, s
     return nullptr;
 }
 
-const IAgentID* RobotExecutableRegistry::getRobotId(vector<uint8_t>& idVector)
+const IAgentID* RobotExecutableRegistry::getRobotId(const vector<uint8_t>& idVector)
 {
 	auto agentID = this->agentIDFactory->create(idVector);
     for (auto robotMetaData : this->robotList)

@@ -31,16 +31,16 @@ namespace pm_widget
 		Q_OBJECT
 
 	public:
-		ControlledRobot(string robotName, const supplementary::IAgentID* robotId, const supplementary::IAgentID* parentPMid); /*<for robot_control*/
+		ControlledRobot(std::string robotName, const supplementary::IAgentID* robotId, const supplementary::IAgentID* parentPMid); /*<for robot_control*/
 		virtual ~ControlledRobot();
 
-		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived,process_manager::ProcessStat ps, const supplementary::IAgentID* parentPMid);
-		void sendProcessCommand(vector<int> execIds, vector<int> paramSets, int cmd);
-		void updateGUI(chrono::system_clock::time_point now);
+		void handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived,process_manager::ProcessStat ps, const supplementary::IAgentID* parentPMid);
+		void sendProcessCommand(std::vector<int> execIds, std::vector<int> paramSets, int cmd);
+		void updateGUI(std::chrono::system_clock::time_point now);
 		void addExec(QWidget* exec);
 		void removeExec(QWidget* exec);
 
-		chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
+		std::chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
 		QFrame* robotProcessesQFrame; /**< The widget, used to initialise the RobotProcessesWidget */
 		//ControlledProcessManager* parentProcessManager;
 
@@ -48,11 +48,11 @@ namespace pm_widget
 		void updateBundles(QString text);
 
 	private:
-		chrono::duration<double> msgTimeOut;
+		std::chrono::duration<double> msgTimeOut;
 		bool inRobotControl;
-		string selectedBundle;
+		std::string selectedBundle;
 		Ui::RobotProcessesWidget* _robotProcessesWidget;
-		map<int, ControlledExecutable*> controlledExecMap;
+		std::map<int, ControlledExecutable*> controlledExecMap;
 		ros::Publisher processCommandPub;
 		const supplementary::IAgentID* parentPMid;
 	};

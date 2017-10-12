@@ -21,14 +21,15 @@ namespace pm_widget
 		// setup gui stuff
 		this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
 		auto pmRegistry = supplementary::RobotExecutableRegistry::get();
-		if (parentPMid == -1)
-		{
-			// don't show in robot_control
-			this->_robotProcessesWidget->robotHostLabel->hide();
-			this->inRobotControl = true;
-		}
-		else
-		{
+		// TODO: If everything works (real robots, local testing, simulation (-sim flags)), then delete the commented if case
+//		if (parentPMid == -1)
+//		{
+//			// don't show in robot_control
+//			this->_robotProcessesWidget->robotHostLabel->hide();
+//			this->inRobotControl = true;
+//		}
+//		else
+//		{
 			string pmName;
 			if (pmRegistry->getRobotName(parentPMid, pmName))
 			{
@@ -39,7 +40,7 @@ namespace pm_widget
 				this->_robotProcessesWidget->robotHostLabel->setText(QString((robotName + " on UNKNOWN").c_str()));
 			}
 			this->inRobotControl = false;
-		}
+//		}
 
 		QObject::connect(this->_robotProcessesWidget->bundleComboBox, SIGNAL(activated(QString)), this,
 							SLOT(updateBundles(QString)));
@@ -142,9 +143,11 @@ namespace pm_widget
 //		}
 
 		process_manager::ProcessCommand pc;
-		pc.receiverId = (this->parentPMid == -1? 0 : this->parentPMid);
-		// TODO check whether this works
-		pc.robotIds = vector<vector<uint8_t>> {this->agentID->toByteVector()};
+		// TODO: Do we really have the case where we should send 0 here? If not, delete this
+		//pc.receiverId = (this->parentPMid == -1? 0 : this->parentPMid);
+		pc.receiverId.id = this->parentPMid->toByteVector();
+		pc.robotIds.push_back(agent_id::AgentID());
+		pc.robotIds[0].id = this->agentID->toByteVector();
 		pc.processKeys = execIds;
 		pc.paramSets = paramSets;
 		pc.cmd = cmd;

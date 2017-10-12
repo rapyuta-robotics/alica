@@ -5,7 +5,7 @@
 #include <ui_PMControl.h>
 #include <process_manager/ProcessStats.h>
 #include <process_manager/ProcessStat.h>
-#include <supplmentary/IAgentID.h>
+#include <supplementary/IAgentID.h>
 
 #include <QtGui>
 #include <QWidget>
@@ -46,7 +46,7 @@ namespace pm_control
 
 		void sendProcessCommand(const supplementary::IAgentID* receiverId, std::vector<const supplementary::IAgentID*> robotIds, std::vector<int> execIds, std::vector<int> paramSets, int cmd);
 
-		chrono::duration<double> msgTimeOut;
+		std::chrono::duration<double> msgTimeOut;
 
 		Ui::PMControlWidget ui_;
 		QWidget* widget_;
@@ -57,7 +57,7 @@ namespace pm_control
 		ros::NodeHandle* rosNode;
 		ros::Subscriber processStateSub;
 		ros::Publisher processCommandPub;
-		std::queue<std::pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
+		std::queue<std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
 		std::mutex msgQueueMutex;
 
 		supplementary::SystemConfig* sc;
@@ -67,7 +67,7 @@ namespace pm_control
 		void handleProcessStats();
 
 		void receiveProcessStats(process_manager::ProcessStatsConstPtr psts);
-		pm_widget::ControlledProcessManager* getControlledProcessManager(std::vector<uint8_t>& processManagerId);
+		pm_widget::ControlledProcessManager* getControlledProcessManager(const std::vector<uint8_t>& processManagerId);
 
 		QTimer* guiUpdateTimer;
 

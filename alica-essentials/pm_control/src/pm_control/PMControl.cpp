@@ -30,18 +30,19 @@ PMControl::PMControl()
      * with data from Globals.conf and ProcessManaging.conf file. */
 
     // Register robots from Globals.conf
-    int curId;
+    const supplementary::IAgentID* tmpAgentID;
     auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
     for (auto robotName : (*robotNames))
     {
-        curId = this->pmRegistry->addRobot(robotName);
+    	tmpAgentID = this->pmRegistry->addRobot(robotName);
     }
 
     // Register executables from ProcessManaging.conf
+    int tmpExecID;
     auto processDescriptions = (*this->sc)["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
     for (auto processSectionName : (*processDescriptions))
     {
-        curId = this->pmRegistry->addExecutable(processSectionName);
+    	tmpExecID = this->pmRegistry->addExecutable(processSectionName);
     }
 }
 
@@ -135,12 +136,13 @@ void PMControl::handleProcessStats()
  * @return The ControlledProcessManager object, corresponding to the given ID, or nullptr if nothing is found for the
  * given ID.
  */
-pm_widget::ControlledProcessManager *PMControl::getControlledProcessManager(vector<uint8_t> &processManagerId)
+pm_widget::ControlledProcessManager *PMControl::getControlledProcessManager(const vector<uint8_t> &processManagerId)
 {
     const supplementary::IAgentID *id = this->pmRegistry->getRobotId(processManagerId);
     if (!id)
     {
-        cerr << "PMControl: Received message from unknown process manager with sender id " << processManagerId << endl;
+    	int tmpId = *reinterpret_cast<const int*>(processManagerId.data());
+        cerr << "PMControl: Received message from unknown process manager with sender id " << tmpId << endl;
         return nullptr;
     }
 
@@ -150,18 +152,14 @@ pm_widget::ControlledProcessManager *PMControl::getControlledProcessManager(vect
     { // process manager is already known
         return pmEntry->second;
     }
-    else if (this->pmRegistry->getRobotName(id, pmName))
-    { // process manager is not known, so create a corresponding instance
 
-        cout << "PMControl: Create new ControlledProcessManager " << pmName << " (ID: " << id << ")" << endl;
-        pm_widget::ControlledProcessManager *controlledPM =
-            new pm_widget::ControlledProcessManager(pmName, id, this->ui_.pmHorizontalLayout);
-        this->processManagersMap.emplace(id, controlledPM);
-        return controlledPM;
-    }
-
-    cerr << "PMControl: Received message from unknown process manager with sender id " << processManagerId << endl;
-    return nullptr;
+    // process manager is not known, so create a corresponding instance
+	this->pmRegistry->getRobotName(id, pmName);
+	cout << "PMControl: Create new ControlledProcessManager " << pmName << " (ID: " << id << ")" << endl;
+	pm_widget::ControlledProcessManager *controlledPM =
+		new pm_widget::ControlledProcessManager(pmName, id, this->ui_.pmHorizontalLayout);
+	this->processManagersMap.emplace(id, controlledPM);
+	return controlledPM;
 }
 
 /**
