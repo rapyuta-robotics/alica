@@ -23,7 +23,7 @@ generate_messages(
 
 catkin_package(
   INCLUDE_DIRS include
-#  LIBRARIES
+  LIBRARIES agent_id
   CATKIN_DEPENDS roscpp message_runtime
 #  DEPENDS system_lib
 )
