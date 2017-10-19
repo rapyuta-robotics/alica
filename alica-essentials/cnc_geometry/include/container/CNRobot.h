@@ -1,14 +1,14 @@
-/*
- * CNRobot.h
- *
- *  Created on: Feb 27, 2016
- *      Author: Carpe Noctem
- */
-
-#ifndef SUPPLEMENTARY_CNC_GEOMETRY_SRC_CONTAINER_CNROBOT_H_
-#define SUPPLEMENTARY_CNC_GEOMETRY_SRC_CONTAINER_CNROBOT_H_
+#pragma once
 
 #include "container/CNPosition.h"
+
+namespace msl
+{
+namespace robot
+{
+	class IntRobotID;
+}
+}
 
 namespace geometry
 {
@@ -21,7 +21,7 @@ namespace geometry
 		double radius;
 		double velocityX;
 		double velocityY;
-		int id;
+		const msl::robot::IntRobotID* id;
 		shared_ptr<vector<int>> opposer;
 		shared_ptr<vector<int>> supporter;
 		double certainty;
@@ -29,5 +29,3 @@ namespace geometry
 		string toString();
 	};
 }
-
-#endif /* SUPPLEMENTARY_CNC_GEOMETRY_SRC_CONTAINER_CNROBOT_H_ */
