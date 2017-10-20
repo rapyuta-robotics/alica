@@ -32,7 +32,7 @@ RobotEngineData::~RobotEngineData()
     }
 }
 
-shared_ptr<SuccessMarks> RobotEngineData::getSuccessMarks()
+shared_ptr<SuccessMarks> RobotEngineData::getSuccessMarks() const
 {
     return successMarks;
 }

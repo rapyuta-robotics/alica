@@ -77,7 +77,7 @@ void SuccessMarks::limitToPlans(unique_ptr<unordered_set<AbstractPlan *>> active
     }
 }
 
-map<AbstractPlan *, shared_ptr<list<EntryPoint *>>> &SuccessMarks::getSuccessMarks()
+const map<AbstractPlan *, shared_ptr<list<EntryPoint *>>> &SuccessMarks::getSuccessMarks()
 {
     return successMarks;
 }
@@ -150,7 +150,7 @@ void SuccessMarks::markSuccessfull(AbstractPlan *p, EntryPoint *e)
  * @param e An EntryPoint*
  * @return A bool
  */
-bool SuccessMarks::succeeded(AbstractPlan *p, EntryPoint *e)
+const bool SuccessMarks::succeeded(AbstractPlan *p, EntryPoint *e) const
 {
     list<EntryPoint *> l;
     auto iter = this->successMarks.find(p);
@@ -169,7 +169,7 @@ bool SuccessMarks::succeeded(AbstractPlan *p, EntryPoint *e)
  * @param entryPointId An int
  * @return A bool
  */
-bool SuccessMarks::succeeded(long planId, long entryPointId)
+const bool SuccessMarks::succeeded(long planId, long entryPointId) const
 {
     Plan *p = ae->getPlanRepository()->getPlans().at(planId);
     EntryPoint *e = p->getEntryPoints().at(entryPointId);

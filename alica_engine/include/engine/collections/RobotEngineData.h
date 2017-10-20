@@ -29,7 +29,7 @@ class RobotEngineData
     virtual ~RobotEngineData();
     virtual void initDomainVariables();
 
-    shared_ptr<SuccessMarks> getSuccessMarks();
+    shared_ptr<SuccessMarks> getSuccessMarks() const;
     void setSuccessMarks(shared_ptr<SuccessMarks> successMarks);
     void clearSuccessMarks();
 
