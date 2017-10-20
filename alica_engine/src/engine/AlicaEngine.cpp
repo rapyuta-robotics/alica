@@ -112,6 +112,7 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
     if (!this->teamManager)
     {
     	this->teamManager = new TeamManager(this, true);
+        this->teamManager->init();
     }
     if (!this->teamObserver)
     {
