@@ -67,7 +67,9 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root)
 
     bool changedSomeAgent = false;
     bool changedCurrentAgent = false;
-    for (auto agent : *this->teamManager->getAllAgents())
+    std::unique_ptr<std::list<Agent *>> agents = this->teamManager->getAllAgents();
+
+    for (auto agent : *agents)
     {
         changedCurrentAgent = agent->update();
         if (changedCurrentAgent && !agent->isActive())
