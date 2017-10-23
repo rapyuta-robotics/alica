@@ -34,8 +34,8 @@ TeamObserver::TeamObserver(AlicaEngine *ae)
 {
     this->simplePlanTrees = make_shared<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>>(
         map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>());
-    this->me = nullptr;
-    this->myId = nullptr;
+    this->myId = this->teamManager->getLocalAgentID();
+    this->me = this->teamManager->getAgentByID(this->myId)->getEngineData();
     this->log = nullptr;
     this->log = ae->getLog();
 }

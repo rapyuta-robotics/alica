@@ -71,7 +71,7 @@ namespace alica
 					this->robotRoleMapping.emplace(agent->getId(), role.second);
 
 					// set own role, if its me
-					if (agent->getId() == this->ae->getTeamManager()->getLocalAgentID() && this->ownRole != role.second)
+					if (*agent->getId() == *this->ae->getTeamManager()->getLocalAgentID() && this->ownRole != role.second)
 					{
 						this->ownRole = role.second;
 

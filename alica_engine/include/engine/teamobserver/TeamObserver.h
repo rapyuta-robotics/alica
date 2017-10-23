@@ -54,7 +54,7 @@ namespace alica
 		AlicaEngine* ae;
 		Logger* log;
 		const supplementary::IAgentID* myId;
-		RobotEngineData* me;
+		const RobotEngineData* me;
 		ITeamManager* teamManager;
 
 		mutex simplePlanTreeMutex;
