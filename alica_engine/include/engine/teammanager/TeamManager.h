@@ -4,6 +4,8 @@
 #include "engine/IAlicaClock.h"
 #include "engine/teammanager/Agent.h"
 
+#include <supplementary/IAgentID.h>
+
 #include <map>
 #include <list>
 #include <memory>
@@ -11,7 +13,6 @@
 
 namespace supplementary {
 	class SystemConfig;
-	class IAgentID;
 }
 
 namespace alica
@@ -53,7 +54,7 @@ class TeamManager : public ITeamManager
   private:
     AlicaTime teamTimeOut;
     Agent* localAgent;
-    map<const supplementary::IAgentID*, Agent*> agents;
+    map<const supplementary::IAgentID*, Agent*, supplementary::IAgentIDComparator> agents;
     unordered_set<const supplementary::IAgentID*> ignoredAgents;
     bool useConfigForTeam;
 

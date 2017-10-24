@@ -220,7 +220,15 @@ namespace alica
 					{
 						this->statusMessage->currentState = "NONE";
 					}
-					this->statusMessage->currentRole = this->ra->getOwnRole()->getName();
+					auto tmpRole = this->ra->getOwnRole();
+					if(tmpRole)
+					{
+						this->statusMessage->currentRole = this->ra->getOwnRole()->getName();
+					}
+					else
+					{
+						this->statusMessage->currentRole = "No Role";
+					}
 					ae->getCommunicator()->sendAlicaEngineInfo(*this->statusMessage);
 					this->lastSentStatusTime = alicaClock->now();
 				}

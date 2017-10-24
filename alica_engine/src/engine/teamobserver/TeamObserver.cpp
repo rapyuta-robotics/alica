@@ -50,7 +50,8 @@ unique_ptr<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>> Tea
         new map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>);
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
     auto tm = this->ae->getTeamManager();
-    for (auto &agentId : *(tm->getActiveAgentIDs()))
+    auto tmp = tm->getActiveAgentIDs();
+    for (auto &agentId : *tmp)
     {
         auto iter = this->simplePlanTrees->find(agentId);
         if (iter != simplePlanTrees->end() && iter->second != nullptr)
