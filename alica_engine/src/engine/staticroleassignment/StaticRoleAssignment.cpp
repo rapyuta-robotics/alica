@@ -32,6 +32,7 @@ namespace alica
 		if (this->updateRoles)
 		{
 			this->updateRoles = false;
+			this->agentProperties = this->ae->getTeamManager()->getActiveAgentProperties();
 			this->calculateRoles();
 		}
 	}

@@ -4,6 +4,8 @@
 #include "supplementary/IAgentIDFactory.h"
 #include "engine/collections/RobotProperties.h"
 
+#include <msl/robot/IntRobotID.h>
+
 #include <SystemConfig.h>
 #include <iostream>
 #include <utility>
