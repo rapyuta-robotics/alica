@@ -8,7 +8,6 @@
 
 namespace supplementary
 {
-class IAgentIDFactory;
 class IAgentID;
 
 class AgentIDManager

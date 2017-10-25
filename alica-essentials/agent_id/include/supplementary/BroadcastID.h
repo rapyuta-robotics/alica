@@ -18,11 +18,7 @@ class BroadcastID : public supplementary::IAgentID
     uint8_t *getRaw() const;
     int getSize() const;
 
-    friend std::ostream &operator<<(std::ostream &os, const supplementary::BroadcastID &obj)
-    {
-        os << "BroadcastID";
-        return os;
-    }
+    std::string toString() const;
     bool operator==(const supplementary::IAgentID &obj) const;
     bool operator!=(const supplementary::IAgentID &obj) const;
     bool operator<(const supplementary::IAgentID &other) const;

@@ -16,8 +16,13 @@ class IAgentID
     virtual uint8_t *getRaw() const = 0;
     virtual int getSize() const = 0;
     virtual std::vector<uint8_t> toByteVector() const = 0;
+    virtual std::string toString() const = 0;
 
-    friend std::ostream &operator<<(std::ostream &os, const supplementary::IAgentID &obj);
+    friend std::ostream &operator<<(std::ostream &os, const supplementary::IAgentID &obj)
+    {
+        os << obj.toString();
+        return os;
+    }
 };
 
 struct IAgentIDComparator
@@ -29,8 +34,6 @@ struct IAgentIDComparator
 };
 
 } /* namespace supplementary */
-
-
 
 namespace std
 {

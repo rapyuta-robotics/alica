@@ -1,5 +1,5 @@
 #include "supplementary/AgentIDManager.h"
-
+#include "supplementary/IAgentIDFactory.h"
 namespace supplementary{
 /**
  * The method for getting the singleton instance.

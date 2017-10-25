@@ -68,4 +68,10 @@ std::vector<uint8_t> BroadcastID::toByteVector() const
     return bytes;
 }
 
+std::string BroadcastID::toString() const
+{
+	return "BroadcastID (0)";
+}
+
 } /* namespace supplementary*/
+
