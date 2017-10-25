@@ -8,6 +8,8 @@
 #include "engine/ITeamManager.h"
 #include "engine/IAlicaCommunication.h"
 
+#include <supplementary/IAgentID.h>
+
 namespace alica
 {
 
@@ -91,7 +93,9 @@ namespace alica
 
 			if (!roleIsAssigned)
 			{
-				ae->abort("RA: Could not set a role (Default: " + agent->getDefaultRole() + ") for robot: ", agent->getId());
+				stringstream ss;
+				ss << *(agent->getId());
+				ae->abort("RA: Could not set a role (Default: " + agent->getDefaultRole() + ") for robot: ", ss.str());
 			}
 		}
 	}

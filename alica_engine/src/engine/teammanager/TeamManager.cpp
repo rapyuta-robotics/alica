@@ -4,8 +4,6 @@
 #include "supplementary/IAgentIDFactory.h"
 #include "engine/collections/RobotProperties.h"
 
-#include <msl/robot/IntRobotID.h>
-
 #include <SystemConfig.h>
 #include <iostream>
 #include <utility>
@@ -180,6 +178,7 @@ void TeamManager::setTimeLastMsgReceived(const supplementary::IAgentID *robotID,
     }
     else
     {
+    	//TODO alex robot properties protokoll anstoßen
         Agent *agent = new Agent(this->engine, this->teamTimeOut, robotID);
         agent->setTimeLastMsgReceived(timeLastMsgReceived);
         auto mapEntry = this->agents.emplace(robotID, agent);

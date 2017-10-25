@@ -28,7 +28,7 @@ Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::
     : Agent(engine, timeout, id)
 {
     this->name = name;
-    this->properties = new RobotProperties(id);
+    this->properties = new RobotProperties(id, engine, name);
     this->engineData = new RobotEngineData(engine, id);
 }
 

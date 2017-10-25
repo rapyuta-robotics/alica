@@ -99,8 +99,6 @@ void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo &aai
 {
     alica_ros_proxy::AllocationAuthorityInfo aais;
 
-    aais.senderID.id = aai.senderID->toByteVector();
-
     aais.planID = aai.planId;
     aais.parentState = aai.parentState;
     aais.planType = aai.planType;
