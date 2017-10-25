@@ -47,17 +47,17 @@ namespace alica
 		{
 			return;
 		}
-		if (aai->senderID != this->localAgentID)
+		if (*(aai->senderID) != *(this->localAgentID))
 		{
 			this->engine->getTeamManager()->setTimeLastMsgReceived(aai->senderID, now);
-			if (aai->senderID > this->localAgentID)
+			if (*(aai->senderID) > *(this->localAgentID))
 			{
 				//notify TO that evidence about other robots is available
 				for (EntryPointRobots epr : aai->entryPointRobots)
 				{
 					for (auto rid : epr.robots)
 					{
-						if (rid != this->localAgentID)
+						if (*rid != *(this->localAgentID))
 						{
 							this->engine->getTeamManager()->setTimeLastMsgReceived(rid, now);
 						}

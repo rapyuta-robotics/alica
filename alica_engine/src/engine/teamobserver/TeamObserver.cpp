@@ -36,8 +36,6 @@ TeamObserver::TeamObserver(AlicaEngine *ae)
         map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>());
     this->myId = this->teamManager->getLocalAgentID();
     this->me = this->teamManager->getAgentByID(this->myId)->getEngineData();
-    this->log = nullptr;
-    this->log = ae->getLog();
 }
 
 TeamObserver::~TeamObserver()
@@ -85,7 +83,7 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root)
     if (changedSomeAgent)
     {
         ae->getRoleAssignment()->update();
-        this->log->eventOccured("TeamChanged");
+        this->ae->getLog()->eventOccured("TeamChanged");
     }
 
     cleanOwnSuccessMarks(root);
@@ -125,7 +123,7 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root)
         list<const supplementary::IAgentID *> listActiveAgents = list<const supplementary::IAgentID *>(*activeAgents);
         if (root->recursiveUpdateAssignment(updatespts, listActiveAgents, noUpdates, time))
         {
-            this->log->eventOccured("MsgUpdate");
+            this->ae->getLog()->eventOccured("MsgUpdate");
         }
     }
 }
@@ -286,7 +284,8 @@ void TeamObserver::updateSuccessCollection(Plan *p, shared_ptr<SuccessCollection
 {
     sc->clear();
     shared_ptr<list<EntryPoint *>> suc;
-    for (auto &agent : *this->teamManager->getActiveAgents())
+    auto tmp = this->teamManager->getActiveAgents();
+    for (auto &agent : *tmp)
     {
         {
             lock_guard<mutex> lock(this->successMark);
@@ -330,7 +329,7 @@ void TeamObserver::notifyRobotLeftPlan(AbstractPlan *plan)
 
 void TeamObserver::handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming)
 {
-    if (incoming->senderID != myId)
+    if (*(incoming->senderID) != *myId)
     {
         if (this->teamManager->isAgentIgnored(incoming->senderID))
         {

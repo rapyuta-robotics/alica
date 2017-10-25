@@ -21,10 +21,9 @@ class Capability;
 class RobotProperties
 {
   public:
-    RobotProperties(const supplementary::IAgentID *agentId);
-    RobotProperties(const supplementary::IAgentID *agentId, AlicaEngine *ae, string name);
+    RobotProperties(const supplementary::IAgentID *agentId, const AlicaEngine *ae, string name);
     virtual ~RobotProperties();
-    void readFromConfig(AlicaEngine *engine, string name);
+    void readFromConfig(const AlicaEngine *engine, string name);
     const supplementary::IAgentID *getId() const;
     void setId(const supplementary::IAgentID *agentId);
     const map<string, Characteristic *> &getCharacteristics() const;

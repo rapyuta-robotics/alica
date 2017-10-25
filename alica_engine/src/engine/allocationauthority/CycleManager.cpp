@@ -237,11 +237,11 @@ void alica::CycleManager::handleAuthorityInfo(shared_ptr<AllocationAuthorityInfo
         return;
     }
     auto rid = aai->authority;
-    if (rid == myID)
+    if (*rid == *myID)
     {
         return;
     }
-    if (rid > myID)
+    if (*rid > *myID)
     {
 #ifdef CM_DEBUG
         cout << "CM: Assignment overridden in " << this->rp->getPlan()->getName() << " " << endl;

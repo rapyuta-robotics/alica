@@ -7,12 +7,8 @@
 namespace alica
 {
 
-RobotProperties::RobotProperties(const supplementary::IAgentID *agentId)
-    : agentId(agentId)
-{
-}
 
-RobotProperties::RobotProperties(const supplementary::IAgentID *agentId, AlicaEngine *engine, string name)
+RobotProperties::RobotProperties(const supplementary::IAgentID *agentId, const AlicaEngine *engine, string name)
     : agentId(agentId)
 {
     this->readFromConfig(engine, name);
@@ -21,7 +17,7 @@ RobotProperties::RobotProperties(const supplementary::IAgentID *agentId, AlicaEn
 /**
  * Reads the default role as well as the capabilities and characteristics from the Globals.conf.
  */
-void RobotProperties::readFromConfig(AlicaEngine *engine, string name)
+void RobotProperties::readFromConfig(const AlicaEngine *engine, string name)
 {
     supplementary::SystemConfig *sc = supplementary::SystemConfig::getInstance();
     this->characteristics = map<string, Characteristic *>();

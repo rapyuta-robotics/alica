@@ -14,11 +14,9 @@
   <build_depend>event_handling</build_depend>
   <build_depend>system_util</build_depend>
   <build_depend>agent_id</build_depend>
-  <build_depend>msl_robot_id</build_depend>
   
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>msl_robot_id</run_depend>
   <run_depend>system_config</run_depend>
   <run_depend>fsystem</run_depend>
   <run_depend>event_handling</run_depend>

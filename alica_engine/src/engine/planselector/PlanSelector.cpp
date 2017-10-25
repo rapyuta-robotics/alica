@@ -93,6 +93,8 @@ namespace alica
 	                                                               list<alica::AbstractPlan*>* plans,
 																	shared_ptr<vector<const supplementary::IAgentID*> > robotIDs)
 	{
+		for (auto& p : *plans)
+			std::cout << "PS: "<< p->getName() << std::endl;
 		PartialAssignment::reset(pap);
 		shared_ptr<list<shared_ptr<RunningPlan>> > ll = this->getPlansForStateInternal(planningParent, plans, robotIDs);
 		return ll;

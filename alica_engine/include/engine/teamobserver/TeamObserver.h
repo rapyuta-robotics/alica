@@ -52,7 +52,6 @@ namespace alica
 
 	protected:
 		AlicaEngine* ae;
-		Logger* log;
 		const supplementary::IAgentID* myId;
 		const RobotEngineData* me;
 		ITeamManager* teamManager;

@@ -102,6 +102,7 @@ void SuccessMarks::clear()
  */
 shared_ptr<list<EntryPoint *>> SuccessMarks::succeededEntryPoints(AbstractPlan *p) const
 {
+	std::cout << "SM: " << p->getName() << std::endl;
 	auto successMarkEntry = this->successMarks.find(p);
 	if (successMarkEntry != this->successMarks.end())
 	{
