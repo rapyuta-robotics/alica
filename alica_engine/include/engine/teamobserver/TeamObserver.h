@@ -2,6 +2,8 @@
 //#define TO_DEBUG
 #include "engine/ITeamObserver.h"
 
+#include <supplementary/IAgentID.h>
+
 #include <unordered_set>
 #include <string>
 #include <iostream>
@@ -37,7 +39,7 @@ namespace alica
 		void tick(shared_ptr<RunningPlan> root);
 		void doBroadCast(list<long>& msg);
 
-		unique_ptr<map<const supplementary::IAgentID*, shared_ptr<SimplePlanTree> > > getTeamPlanTrees();
+		unique_ptr<map<const supplementary::IAgentID*, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator > > getTeamPlanTrees();
 
 		int successesInPlan(Plan* plan);
 		shared_ptr<SuccessCollection> getSuccessCollection(Plan* plan);
@@ -59,7 +61,7 @@ namespace alica
 		mutex simplePlanTreeMutex;
 		mutex successMark;
 
-		shared_ptr<map<const supplementary::IAgentID*, shared_ptr<SimplePlanTree> > > simplePlanTrees;
+		shared_ptr<map<const supplementary::IAgentID*, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator > > simplePlanTrees;
 
 		void cleanOwnSuccessMarks(shared_ptr<RunningPlan> root);
 		shared_ptr<SimplePlanTree> sptFromMessage(const supplementary::IAgentID* robotId, list<long> ids);

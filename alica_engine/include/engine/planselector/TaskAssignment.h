@@ -55,7 +55,7 @@ class TaskAssignment : virtual public ITaskAssignment
     vector<EntryPoint *> entryPointVector;
     // Fringe of the search tree
     vector<PartialAssignment *> fringe;
-    bool addAlreadyAssignedRobots(PartialAssignment *pa, map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>> *simplePlanTreeMap);
+    bool addAlreadyAssignedRobots(PartialAssignment *pa, map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree> , supplementary::IAgentIDComparator> *simplePlanTreeMap);
 
 #ifdef EXPANSIONEVAL
     int expansionCount;

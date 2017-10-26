@@ -11,6 +11,8 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Task.h"
 
+#include <supplementary/IAgentID.h>
+
 namespace alica
 {
 
@@ -24,8 +26,8 @@ TaskAssignment::~TaskAssignment()
  * @param paraRobots robots to build an assignment for
  * @param a bool
  */
-TaskAssignment::TaskAssignment(const AlicaEngine* engine, list<Plan *> planList,
-                               shared_ptr<vector<const supplementary::IAgentID *>> paraRobots, bool preassignOtherRobots)
+TaskAssignment::TaskAssignment(const AlicaEngine *engine, list<Plan *> planList, shared_ptr<vector<const supplementary::IAgentID *>> paraRobots,
+                               bool preassignOtherRobots)
 {
 #ifdef EXPANSIONEVAL
     this->expansionCount = 0;
@@ -40,7 +42,7 @@ TaskAssignment::TaskAssignment(const AlicaEngine* engine, list<Plan *> planList,
         this->robots->at(k++) = i;
     }
     // sort robot ids ascending
-    sort(robots->begin(), robots->end());
+    sort(robots->begin(), robots->end(), supplementary::IAgentIDComparator());
     this->fringe = vector<PartialAssignment *>();
     auto simplePlanTreeMap = to->getTeamPlanTrees();
     PartialAssignment *curPa;
@@ -197,14 +199,15 @@ PartialAssignment *TaskAssignment::calcNextBestPartialAssignment(IAssignment *ol
  * @param simplePlanTreeMap never try to delete this
  * @return True if any robot has already assigned itself, false otherwise
  */
-bool TaskAssignment::addAlreadyAssignedRobots(PartialAssignment *pa, map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>> *simplePlanTreeMap)
+bool TaskAssignment::addAlreadyAssignedRobots(
+    PartialAssignment *pa, map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator> *simplePlanTreeMap)
 {
     const supplementary::IAgentID *ownRobotId = this->tm->getLocalAgentID();
     bool haveToRevalute = false;
     shared_ptr<SimplePlanTree> spt = nullptr;
     for (auto &robot : (*this->robots))
     {
-        if (ownRobotId == robot)
+        if (*ownRobotId == *robot)
         {
             continue;
         }

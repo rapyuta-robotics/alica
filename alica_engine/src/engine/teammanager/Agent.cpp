@@ -54,6 +54,10 @@ bool Agent::isActive()
 
 void Agent::setLocal(bool local)
 {
+	if (local)
+	{
+		this->active = true;
+	}
     this->local = local;
 }
 
@@ -98,7 +102,10 @@ bool Agent::update()
     {
         // timeout triggered
         this->engineData->clearSuccessMarks();
-        this->active = false;
+        if (!this->local)
+        {
+        	this->active = false;
+        }
         return true;
     }
 

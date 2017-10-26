@@ -40,7 +40,7 @@ namespace alica
 		}
 		if (other->entryPoint->getId() != thisOne->entryPoint->getId())
 			return false;
-		return (other->getRobot() == thisOne->robot);
+		return (*(other->getRobot()) == *(thisOne->robot));
 	}
 
 } /* namespace alica */

@@ -7,7 +7,7 @@ namespace alica
 IRoleAssignment::IRoleAssignment(const AlicaEngine *engine)
     : ownRole(nullptr)
 	, engine(engine)
-    , robotRoleMapping(map<const supplementary::IAgentID*, Role *>())
+    , robotRoleMapping(map<const supplementary::IAgentID*, Role *, supplementary::IAgentIDComparator>())
     , communication(nullptr)
 {
 }

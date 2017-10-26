@@ -157,13 +157,12 @@ void alica::CycleManager::setNewAllocDiff(AllocationDifference *aldif)
     this->allocationHistory[this->newestAllocationDifference] = aldif;
     delete old;
 #ifdef CM_DEBUG
-    cout << "CM: SetNewAllDiff(a): " << aldif->toString() << " OWN ROBOT ID " << this->rp->getOwnID() << endl;
+    cout << "CM: SetNewAllDiff(a): " << aldif->toString() << " OWN ROBOT ID " << *(this->rp->getOwnID()) << endl;
 #endif
 }
 
 /**
  * Notify the CycleManager of a change in the assignment
- * @param curP The RunningPlan of this CycleManager, in case it has changed.
  * @param oldAss The former Assignment
  * @param newAss The new Assignment
  * @param reas The AllocationDifference.Reason for this change.
@@ -195,7 +194,7 @@ void alica::CycleManager::setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_
             auto oldRobots = oldAss->getRobotsWorking(ep);
             for (auto &oldId : (*oldRobots))
             {
-                if (newRobots == nullptr || find(newRobots->begin(), newRobots->end(), oldId) == newRobots->end())
+                if (newRobots == nullptr || find_if(newRobots->begin(), newRobots->end(), [&oldId](const supplementary::IAgentID *id) { return *oldId == *id; }) == newRobots->end())
                 {
                     this->allocationHistory[this->newestAllocationDifference]->getSubtractions().push_back(
                         shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, oldId)));
@@ -205,7 +204,7 @@ void alica::CycleManager::setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_
             {
                 for (auto &newId : (*newRobots))
                 {
-                    if (find(oldRobots->begin(), oldRobots->end(), newId) == oldRobots->end())
+                    if (find_if(oldRobots->begin(), oldRobots->end(), [&newId](const supplementary::IAgentID *id) { return *newId == *id; }) == oldRobots->end())
                     {
                         this->allocationHistory[this->newestAllocationDifference]->getAdditions().push_back(
                             shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, newId)));
@@ -331,7 +330,7 @@ bool CycleManager::setAssignment()
         rp->setAssignment(make_shared<Assignment>(newPlan, this->fixedAllocation));
         for (EntryPointRobots epr : this->fixedAllocation->entryPointRobots)
         {
-            if (find(epr.robots.begin(), epr.robots.end(), myID) != epr.robots.end())
+            if (find_if(epr.robots.begin(), epr.robots.end(), [this](const supplementary::IAgentID *id) { return *(this->myID) == *id; }) != epr.robots.end())
             {
                 myEntryPoint = pr->getEntryPoints().at(epr.entrypoint);
             }
@@ -349,7 +348,7 @@ bool CycleManager::setAssignment()
                 bool changed = rp->getAssignment()->updateRobot(robot, e);
                 if (changed)
                 {
-                    if (robot == myID)
+                    if (*robot == *myID)
                     {
                         modifiedSelf = true;
                         myEntryPoint = e;

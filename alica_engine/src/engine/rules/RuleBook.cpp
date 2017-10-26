@@ -199,12 +199,12 @@ PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r)
         r->adaptAssignment(newr);
         if (r->getActiveState() != nullptr && r->getActiveState() != before)
             r->setAllocationNeeded(true);
-#ifdef RULE_debug
+//#ifdef RULE_debug
         cout << "RB: B4 dynChange: Util is " << curUtil << " | "
              << " suggested is " << possibleUtil << " | "
              << " threshold " << r->getPlan()->getUtilityThreshold() << endl;
         cout << "RB: DynAlloc" << r->getPlan()->getName() << endl;
-#endif
+//#endif
 
         log->eventOccured("DynAlloc(" + r->getPlan()->getName() + ")");
         return PlanChange::InternalChange;
@@ -388,7 +388,6 @@ PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp)
         return PlanChange::NoChange;
     }
     rp->setAllocationNeeded(false);
-
     auto robots = make_shared<vector<const supplementary::IAgentID*>>(
         rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).size());
     copy(rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).begin(),

@@ -32,8 +32,8 @@ TeamObserver::TeamObserver(AlicaEngine *ae)
     : ae(ae)
     , teamManager(ae->getTeamManager())
 {
-    this->simplePlanTrees = make_shared<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>>(
-        map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>());
+    this->simplePlanTrees = make_shared<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree> ,supplementary::IAgentIDComparator>>(
+        map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator>());
     this->myId = this->teamManager->getLocalAgentID();
     this->me = this->teamManager->getAgentByID(this->myId)->getEngineData();
 }
@@ -42,10 +42,10 @@ TeamObserver::~TeamObserver()
 {
 }
 
-unique_ptr<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>> TeamObserver::getTeamPlanTrees()
+unique_ptr<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator>> TeamObserver::getTeamPlanTrees()
 {
-    auto ret = unique_ptr<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>>(
-        new map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>);
+    auto ret = unique_ptr<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator>>(
+        new map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator>);
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
     auto tm = this->ae->getTeamManager();
     auto tmp = tm->getActiveAgentIDs();
@@ -232,7 +232,8 @@ int TeamObserver::successesInPlan(Plan *plan)
 {
     int ret = 0;
     auto suc = make_shared<list<EntryPoint *>>(list<EntryPoint *>());
-    for (auto &agent : *this->teamManager->getActiveAgents())
+    auto tmp = this->teamManager->getActiveAgents();
+    for (auto &agent : *tmp)
     {
         {
             lock_guard<mutex> lock(this->successMark);
@@ -255,7 +256,8 @@ shared_ptr<SuccessCollection> TeamObserver::getSuccessCollection(Plan *plan)
 {
     shared_ptr<SuccessCollection> ret = make_shared<SuccessCollection>(plan);
     shared_ptr<list<EntryPoint *>> suc;
-    for (auto &agent : *this->teamManager->getActiveAgents())
+    auto tmp = this->teamManager->getActiveAgents();
+    for (auto &agent : *tmp)
     {
         {
             lock_guard<mutex> lock(this->successMark);

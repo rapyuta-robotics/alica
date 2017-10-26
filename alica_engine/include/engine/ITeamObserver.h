@@ -1,13 +1,11 @@
 #pragma once
 using namespace std;
 
+#include <supplementary/IAgentID.h>
+
 #include <list>
 #include <map>
 #include <memory>
-
-namespace supplementary {
-	class IAgentID;
-}
 
 namespace alica
 {
@@ -27,7 +25,7 @@ namespace alica
 		virtual void close() = 0;
 		virtual void tick(shared_ptr<RunningPlan> root) = 0;
 
-		virtual unique_ptr<map<const supplementary::IAgentID*, shared_ptr<SimplePlanTree> > > getTeamPlanTrees() = 0;
+		virtual unique_ptr<map<const supplementary::IAgentID*, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator > > getTeamPlanTrees() = 0;
 		virtual void handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming) = 0;
 
 		virtual int successesInPlan(Plan* p) = 0;

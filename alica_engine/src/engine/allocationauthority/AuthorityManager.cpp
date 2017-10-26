@@ -55,7 +55,7 @@ namespace alica
 				//notify TO that evidence about other robots is available
 				for (EntryPointRobots epr : aai->entryPointRobots)
 				{
-					for (auto rid : epr.robots)
+					for (auto &rid : epr.robots)
 					{
 						if (*rid != *(this->localAgentID))
 						{

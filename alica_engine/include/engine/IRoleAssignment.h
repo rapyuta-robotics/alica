@@ -37,7 +37,7 @@ namespace alica
 		 * Current Robot's role.
 		 */
 		Role* ownRole;
-		map<const supplementary::IAgentID*, Role*> robotRoleMapping;
+		std::map<const supplementary::IAgentID*, Role*, supplementary::IAgentIDComparator> robotRoleMapping;
 		const IAlicaCommunication* communication;
 
 	};

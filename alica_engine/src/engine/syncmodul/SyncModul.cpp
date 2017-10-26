@@ -134,7 +134,7 @@ namespace alica
 	}
 	void SyncModul::onSyncTalk(shared_ptr<SyncTalk> st)
 	{
-		if (!this->running || st->senderID == this->myId)
+		if (!this->running || *(st->senderID) == *(this->myId))
 			return;
 		if (this->ae->getTeamManager()->isAgentIgnored(st->senderID))
 			return;
@@ -196,7 +196,7 @@ namespace alica
 				}
 
 			}
-			if (!sd->ack && st->senderID == sd->robotID && doAck)
+			if (!sd->ack && *(st->senderID) == *(sd->robotID) && doAck)
 			{
 				toAck.push_back(sd);
 			}
@@ -214,7 +214,7 @@ namespace alica
 	}
 	void SyncModul::onSyncReady(shared_ptr<SyncReady> sr)
 	{
-		if (!this->running || sr->senderID == this->myId)
+		if (!this->running || *(sr->senderID) == *(this->myId))
 			return;
 		if (this->ae->getTeamManager()->isAgentActive(sr->senderID))
 			return;

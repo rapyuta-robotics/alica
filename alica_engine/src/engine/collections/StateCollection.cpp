@@ -67,7 +67,7 @@ namespace alica
 	{
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
-			if (this->robotIds[i] == robotId)
+			if (*(this->robotIds[i]) == *(robotId))
 			{
 				return this->states[i];
 			}
@@ -120,7 +120,7 @@ namespace alica
 	{
 		for(int i = 0; i < this->states.size();i++)
 		{
-			if(this->robotIds[i] == robotId)
+			if(*(this->robotIds[i]) == *(robotId))
 			{
 				this->robotIds.erase(robotIds.begin() + i);
 				this->states.erase(states.begin() + i);
@@ -139,7 +139,7 @@ namespace alica
 	{
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
-			if (this->robotIds[i] == robotId)
+			if (*(this->robotIds[i]) == *robotId)
 			{
 				return this->states[i];
 			}
@@ -151,7 +151,7 @@ namespace alica
 	{
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
-			if (this->robotIds[i] == robotId)
+			if (*(this->robotIds[i]) == *robotId)
 			{
 				this->states[i] = state;
 				return;
