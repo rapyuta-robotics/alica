@@ -274,7 +274,7 @@ namespace alica
 			}
 			for (auto r : (*this->epSucMapping->getRobots(ep)))
 			{
-				if (find(ret->begin(), ret->end(), r) == ret->end())
+				if (find_if(ret->begin(), ret->end(), [&r](const supplementary::IAgentID *id) { return *r == *id; }) == ret->end())
 				{
 					ret->push_back(r);
 				}
@@ -337,7 +337,7 @@ namespace alica
 		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
 		{
 			curRobots = this->epRobotsMapping->getRobots(i);
-			auto iter = find(curRobots->begin(), curRobots->end(), robotId);
+			auto iter = find_if(curRobots->begin(), curRobots->end(), [&robotId](const supplementary::IAgentID *id) { return *robotId == *id; });
 			if (iter != curRobots->end())
 			{
 				curRobots->erase(iter);
@@ -430,8 +430,8 @@ namespace alica
 
 			for (auto& robot : *(this->epRobotsMapping->getRobots(i)))
 			{
-				auto iter = find(otherAssignment->epRobotsMapping->getRobots(i)->begin(),
-									otherAssignment->epRobotsMapping->getRobots(i)->end(), robot);
+				auto iter = find_if(otherAssignment->epRobotsMapping->getRobots(i)->begin(),
+									otherAssignment->epRobotsMapping->getRobots(i)->end(), [&robot](const supplementary::IAgentID *id) { return *robot == *id; });
 				if (iter == otherAssignment->epRobotsMapping->getRobots(i)->end())
 				{
 					return false;
@@ -466,8 +466,8 @@ namespace alica
 		{
 			if (this->epRobotsMapping->getEp(i) == ep)
 			{
-				if (find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-							robot) != this->epRobotsMapping->getRobots(i)->end())
+				if (find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
+						[&robot](const supplementary::IAgentID *id) { return *robot == *id; }) != this->epRobotsMapping->getRobots(i)->end())
 				{
 					return false;
 				}
@@ -479,8 +479,8 @@ namespace alica
 			}
 			else
 			{
-				auto iter = find(this->epRobotsMapping->getRobots(i)->begin(),
-									this->epRobotsMapping->getRobots(i)->end(), robot);
+				auto iter = find_if(this->epRobotsMapping->getRobots(i)->begin(),
+									this->epRobotsMapping->getRobots(i)->end(), [&robot](const supplementary::IAgentID *id) { return *robot == *id; });
 				if (iter != this->epRobotsMapping->getRobots(i)->end())
 				{
 					this->epRobotsMapping->getRobots(i)->erase(iter);
@@ -498,8 +498,8 @@ namespace alica
 		{
 			if (this->epRobotsMapping->getEp(i) == ep)
 			{
-				if (find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-							robot) != this->epRobotsMapping->getRobots(i)->end())
+				if (find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
+						[&robot](const supplementary::IAgentID *id) { return *robot == *id; }) != this->epRobotsMapping->getRobots(i)->end())
 				{
 					return false;
 				}
@@ -511,8 +511,8 @@ namespace alica
 			}
 			else
 			{
-				auto iter = find(this->epRobotsMapping->getRobots(i)->begin(),
-									this->epRobotsMapping->getRobots(i)->end(), robot);
+				auto iter = find_if(this->epRobotsMapping->getRobots(i)->begin(),
+									this->epRobotsMapping->getRobots(i)->end(), [&robot](const supplementary::IAgentID *id) { return *robot == *id; });
 				if (iter != this->epRobotsMapping->getRobots(i)->end())
 				{
 					this->epRobotsMapping->getRobots(i)->erase(iter);
@@ -534,8 +534,8 @@ namespace alica
 			return false;
 		}
 		this->robotStateMapping->removeRobot(robot);
-		auto iter = find(this->epRobotsMapping->getRobotsByEp(ep)->begin(),
-							this->epRobotsMapping->getRobotsByEp(ep)->end(), robot);
+		auto iter = find_if(this->epRobotsMapping->getRobotsByEp(ep)->begin(),
+							this->epRobotsMapping->getRobotsByEp(ep)->end(), [&robot](const supplementary::IAgentID *id) { return *robot == *id; });
 		if (iter != this->epRobotsMapping->getRobotsByEp(ep)->end())
 		{
 			this->epRobotsMapping->getRobotsByEp(ep)->erase(iter);
@@ -588,8 +588,8 @@ namespace alica
 	{
 		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
 		{
-			auto iter = find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-								robot);
+			auto iter = find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
+					[&robot](const supplementary::IAgentID *id) { return *robot == *id; });
 			if (iter != this->epRobotsMapping->getRobots(i)->end())
 			{
 				return this->epRobotsMapping->getEp(i);

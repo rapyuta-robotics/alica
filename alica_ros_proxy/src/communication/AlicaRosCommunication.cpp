@@ -104,6 +104,7 @@ void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo &aai
     aais.planType = aai.planType;
 
     aais.senderID.id = aai.senderID->toByteVector();
+    aais.authority.id = aai.authority->toByteVector();
 
     for (auto &ep : aai.entryPointRobots)
     {

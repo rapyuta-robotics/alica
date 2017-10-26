@@ -77,7 +77,7 @@ void VariableSyncModule::clear()
 
 void VariableSyncModule::onSolverResult(shared_ptr<SolverResult> msg)
 {
-    if (msg->senderID == ownId)
+    if (*(msg->senderID) == *(ownId))
     {
         return;
     }
@@ -90,7 +90,7 @@ void VariableSyncModule::onSolverResult(shared_ptr<SolverResult> msg)
     for (int i = 0; i < this->store.size(); ++i)
     {
         re = store[i];
-        if (re->getId() == msg->senderID)
+        if (*(re->getId()) == *(msg->senderID))
         {
             found = true;
             break;

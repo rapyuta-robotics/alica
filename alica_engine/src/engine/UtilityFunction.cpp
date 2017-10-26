@@ -436,13 +436,13 @@ UtilityInterval UtilityFunction::getSimilarity(IAssignment *newAss, IAssignment 
         {
             for (auto &oldRobot : (*oldRobots))
             {
-                if (find(newRobots->begin(), newRobots->end(), oldRobot) != newRobots->end())
+                if (find_if(newRobots->begin(), newRobots->end(), [&oldRobot](const supplementary::IAgentID *id) { return *oldRobot == *id; }) != newRobots->end())
                 {
                     simUI.setMin(simUI.getMin() + 1);
                 }
                 else if (ep->getMaxCardinality() > newRobots->size() &&
-                         find(newAss->getUnassignedRobotIds().begin(), newAss->getUnassignedRobotIds().end(),
-                              oldRobot) != newAss->getUnassignedRobotIds().end())
+                         find_if(newAss->getUnassignedRobotIds().begin(), newAss->getUnassignedRobotIds().end(),
+                        		 [&oldRobot](const supplementary::IAgentID *id) { return *oldRobot == *id; }) != newAss->getUnassignedRobotIds().end())
                 {
                     simUI.setMax(simUI.getMax() + 1);
                 }

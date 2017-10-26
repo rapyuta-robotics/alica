@@ -90,7 +90,7 @@ namespace alica
 
 				if (/*sd->ack != myRow->getSyncData()->ack
 						||*/ sd->conditionHolds != myRow->getSyncData()->conditionHolds
-						|| sd->robotID != myRow->getSyncData()->robotID
+						|| *(sd->robotID) != *(myRow->getSyncData()->robotID)
 						|| sd->transitionID != myRow->getSyncData()->transitionID)
 				{
 					//my sync row has changed
@@ -241,7 +241,7 @@ namespace alica
 
 					if (/*sd->ack == row->getSyncData()->ack
 							&&*/ sd->conditionHolds == row->getSyncData()->conditionHolds
-							&& sd->robotID == row->getSyncData()->robotID
+							&& *(sd->robotID) == *(row->getSyncData()->robotID)
 							&& sd->transitionID == row->getSyncData()->transitionID)
 					{
 						rowInMatrix = row;
@@ -310,7 +310,7 @@ namespace alica
 		bool found = false;
 		for (shared_ptr<SyncReady> sr : this->receivedSyncReadys)
 		{
-			if (sr->senderID == ready->senderID)
+			if (*(sr->senderID) == *(ready->senderID))
 			{
 				found = true;
 				break;
@@ -351,12 +351,12 @@ namespace alica
 		//test if all robots who acknowledged myRow have sent a SyncReady
 		for (auto& robotID : this->myRow->getReceivedBy())
 		{
-			if (robotID != myID) //we do not necessarily need an ack from ourselves
+			if (*robotID != *myID) //we do not necessarily need an ack from ourselves
 			{
 				bool foundRobot = false;
 				for (shared_ptr<SyncReady> sr : this->receivedSyncReadys)
 				{
-					if (sr->senderID == robotID)
+					if (*(sr->senderID) == *(robotID))
 					{
 						foundRobot = true;
 						break;
@@ -461,9 +461,9 @@ namespace alica
 //		check for acks in own row
 		for (SyncRow* row : this->rowsOK)
 		{
-
-			if (find(this->myRow->getReceivedBy().begin(), this->myRow->getReceivedBy().end(),
-						row->getSyncData()->robotID) == this->myRow->getReceivedBy().end())
+			auto tmp = row->getSyncData()->robotID;
+			if (find_if(this->myRow->getReceivedBy().begin(), this->myRow->getReceivedBy().end(),[&tmp](const supplementary::IAgentID *id) { return *tmp == *id; }
+						) == this->myRow->getReceivedBy().end())
 			{
 				return false;
 			}

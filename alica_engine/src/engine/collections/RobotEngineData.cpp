@@ -34,7 +34,6 @@ RobotEngineData::~RobotEngineData()
 
 shared_ptr<SuccessMarks> RobotEngineData::getSuccessMarks() const
 {
-	std::cout << "RED:" << std::endl;
     return successMarks;
 }
 

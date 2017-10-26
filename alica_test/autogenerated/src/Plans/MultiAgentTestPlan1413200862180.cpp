@@ -56,7 +56,7 @@ shared_ptr<UtilityFunction> UtilityFunction1413200862180::getUtilityFunction(Pla
 bool TransitionCondition1413201370590::evaluate(shared_ptr<RunningPlan> rp)
 {
   /*PROTECTED REGION ID(1413201368286) ENABLED START*/
-	long x8 = 8;
+	int x8 = 8;
 	std::vector<uint8_t> id8(reinterpret_cast<const uint8_t*>(&x8), (reinterpret_cast<const uint8_t*>(&x8) + sizeof(x8)));
 	msl::robot::IntRobotIDFactory factory;
 	const supplementary::IAgentID * agentID8 =  factory.create(id8);
@@ -101,7 +101,7 @@ bool TransitionCondition1413201370590::evaluate(shared_ptr<RunningPlan> rp)
 bool TransitionCondition1413201052549::evaluate(shared_ptr<RunningPlan> rp)
 {
   /*PROTECTED REGION ID(1413201050743) ENABLED START*/
-	long x8 = 8;
+	int x8 = 8;
 	std::vector<uint8_t> id8(reinterpret_cast<const uint8_t*>(&x8), (reinterpret_cast<const uint8_t*>(&x8) + sizeof(x8)));
 	msl::robot::IntRobotIDFactory factory;
 	const supplementary::IAgentID * agentID8 =  factory.create(id8);
@@ -146,7 +146,7 @@ bool TransitionCondition1413201052549::evaluate(shared_ptr<RunningPlan> rp)
 bool TransitionCondition1413201367990::evaluate(shared_ptr<RunningPlan> rp)
 {
   /*PROTECTED REGION ID(1413201367062) ENABLED START*/
-	long x8 = 8;
+	int x8 = 8;
 	std::vector<uint8_t> id8(reinterpret_cast<const uint8_t*>(&x8), (reinterpret_cast<const uint8_t*>(&x8) + sizeof(x8)));
 	msl::robot::IntRobotIDFactory factory;
 	const supplementary::IAgentID * agentID8 =  factory.create(id8);
