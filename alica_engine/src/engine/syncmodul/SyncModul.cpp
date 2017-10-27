@@ -57,7 +57,8 @@ namespace alica
 			for (Synchronisation* s : failedSyncs)
 			{
 				delete this->synchSet[s->getSyncTransition()];
-				this->synchSet.erase(s->getSyncTransition());
+				//was without iter before
+				iter = this->synchSet.erase(s->getSyncTransition());
 			}
 		}
 
