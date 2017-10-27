@@ -944,7 +944,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
         {
             if (std::find_if(robotsJoined.begin(), robotsJoined.end(), [&iter](const supplementary::IAgentID *id) { return *(*iter) == *id; }) == robotsJoined.end())
             {
-                availableAgents.erase(iter);
+                iter = availableAgents.erase(iter);
             }
             else
             {
@@ -962,7 +962,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
             {
                 if (find_if(robotsJoined->begin(), robotsJoined->end(), [&iter](const supplementary::IAgentID *id) { return *(*iter) == *id; }) == robotsJoined->end())
                 {
-                    availableAgents.erase(iter);
+                    iter = availableAgents.erase(iter);
                 }
             }
         }
