@@ -29,7 +29,7 @@ namespace robot_control
 
 		// manual configuration of widgets
 		stringstream ss;
-		ss << robotId;
+		ss << *robotId;
 		this->uiControlledRobot->robotStartStopBtn->setText(QString(std::string(this->name + " (" + ss.str() + ")" ).c_str()));
 
 		frameForAW = new QFrame(this);

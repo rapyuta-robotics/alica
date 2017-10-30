@@ -22,7 +22,7 @@ RobotsControl::RobotsControl()
     setObjectName("RobotsControl");
     rosNode = new ros::NodeHandle();
     this->sc = supplementary::SystemConfig::getInstance();
-    auto robotIDType = (*this->sc)["ProcessManaging"]->get<string>("RobotControl.robotIDType", NULL);
+    auto robotIDType = (*this->sc)["ProcessManaging"]->get<string>("RobotControl.agentIDType", NULL);
     if (robotIDType.compare("int") == 0)
     {
         this->robotIDFactory = new msl::robot::IntRobotIDFactory();
@@ -134,14 +134,14 @@ void RobotsControl::showContextMenu(const QPoint &pos)
     QAction *selectedItem = myMenu.exec(globalPos);
     if (selectedItem)
     {
-        const supplementary::IAgentID *robotId;
 
         std::string name = selectedItem->iconText().toStdString().substr();
         name = name.substr(0, name.find('(') - 1);
 
         cout << "RC: '" << name << "'" << endl;
 
-        if (this->pmRegistry->getRobotId(name, robotId))
+        const supplementary::IAgentID *robotId = this->pmRegistry->getRobotId(name);
+        if (robotId != nullptr)
         {
             // this->checkAndInit(robotId);
             this->controlledRobotsMap[robotId]->toggle();
