@@ -126,19 +126,17 @@ bool RobotExecutableRegistry::robotExists(string robotName)
     return false;
 }
 
-bool RobotExecutableRegistry::getRobotId(string robotName, const IAgentID *agentID)
+const IAgentID* RobotExecutableRegistry::getRobotId(string robotName)
 {
     for (auto robotMetaData : this->robotList)
     {
         if (robotMetaData->name == robotName)
         {
-            agentID = robotMetaData->agentID;
-            return true;
+            return robotMetaData->agentID;
         }
     }
 
-    agentID = nullptr;
-    return false;
+    return nullptr;
 }
 
 const IAgentID* RobotExecutableRegistry::getRobotId(vector<uint8_t>& idVector, string& robotName)

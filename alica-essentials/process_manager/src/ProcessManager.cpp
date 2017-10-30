@@ -105,7 +105,7 @@ ProcessManager::ProcessManager(int argc, char **argv)
     cout << "PM: Number of Interpreters: " << this->interpreters.size() << endl;
     this->pmRegistry->setInterpreters(interpreters);
 
-    cout << "PM: OwnId is " << ownId << endl;
+    cout << "PM: OwnId is " << *ownId << endl;
 }
 
 ProcessManager::~ProcessManager()
@@ -402,9 +402,8 @@ void ProcessManager::searchProcFS()
         {
             // get the robots name from the ROBOT environment variable
             string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
-
-            const IAgentID* agentID;
-            if (!this->pmRegistry->getRobotId(robotName, agentID))
+            const IAgentID* agentID = this->pmRegistry->getRobotId(robotName);
+            if (!agentID)
             {
                 cout << "PM: Warning! Unknown robot '" << robotName << "' is running executable with ID '" << execId
                      << "'" << endl;
@@ -423,7 +422,7 @@ void ProcessManager::searchProcFS()
             }
 
 #ifdef PM_DEBUG
-            cout << "PM: Robot '" << robotName << "' (ID:" << agentID << ") executes executable with ID '" << execId
+            cout << "PM: Robot '" << robotName << "' (ID:" << *agentID << ") executes executable with ID '" << execId
                  << "' with PID " << curPID << endl;
 #endif
         }
@@ -566,8 +565,8 @@ bool ProcessManager::selfCheck()
                 string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
 
                 // get the Robot Id of the robot running the roscore
-                const IAgentID* agentID;
-                if (!this->pmRegistry->getRobotId(robotName, agentID))
+                const IAgentID* agentID = this->pmRegistry->getRobotId(robotName);
+                if (!agentID)
                 {
                 	agentID = this->pmRegistry->addRobot(robotName);
                 }
@@ -629,8 +628,8 @@ bool ProcessManager::selfCheck()
             int roscoreExecId;
             if (this->pmRegistry->getExecutableIdByExecName(roscoreExecName, roscoreExecId))
             {
-                const IAgentID* agentID;
-                if (this->pmRegistry->getRobotId(this->ownHostname, agentID))
+                const IAgentID* agentID = this->pmRegistry->getRobotId(this->ownHostname);
+                if (agentID != nullptr)
                 {
                     // create managed robot if necessary and change desired state of roscore accordingly
                     auto mngdRobot = this->robotMap.find(agentID);

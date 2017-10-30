@@ -24,7 +24,7 @@ namespace supplementary
 		const std::vector<RobotMetaData*>& getRobots() const;
 		void addRobot(std::string agentName, const IAgentID* agentID);
 		const IAgentID * addRobot(std::string agentName);
-		bool getRobotId(std::string agentName, const IAgentID* agentID);
+		const IAgentID* getRobotId(std::string agentName);
 		const IAgentID* getRobotId(const std::vector<uint8_t>& idVector);
 		const IAgentID* getRobotId(std::vector<uint8_t>& idVector, std::string& robotName);
 		bool getRobotName(const IAgentID* agentID, std::string& robotName);
