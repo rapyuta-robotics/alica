@@ -42,10 +42,38 @@ namespace alica
 		uiAlicaWidget.stateVal->setText(QString(ss.str().c_str()));
 	}
 
-	/*void AlicaWidget::handleKickerStatInfo(msl_actuator_msgs::KickerStatInfoPtr kickStatInfo)
+	void AlicaWidget::handleKickerStatInfo(msl_actuator_msgs::KickerStatInfoPtr kickStatInfo)
 	{
 		uiAlicaWidget.kickVoltVal->setText(QString::number(kickStatInfo->capVoltage));
-	}*/
+	}
+
+	void AlicaWidget::handleSharedWorldInfo(msl_sensor_msgs::SharedWorldInfoPtr sharedWorldInfo)
+	{
+		if (sharedWorldInfo->ballPossessionStatus == msl_sensor_msgs::SharedWorldInfo::HAVE_BALL)
+		{
+			uiAlicaWidget.ballPossStateVal->setText(QString("HaveBall"));
+		}
+		else if (sharedWorldInfo->ballPossessionStatus == msl_sensor_msgs::SharedWorldInfo::NO_BALL_SEEN)
+		{
+			uiAlicaWidget.ballPossStateVal->setText(QString("NoBallSeen"));
+		}
+		else if (sharedWorldInfo->ballPossessionStatus == msl_sensor_msgs::SharedWorldInfo::ASIDE_OF_KICKER)
+		{
+			uiAlicaWidget.ballPossStateVal->setText(QString("ASideOfKicker"));
+		}
+		else if (sharedWorldInfo->ballPossessionStatus == msl_sensor_msgs::SharedWorldInfo::NOT_IN_KICKER_DISTANCE)
+		{
+			uiAlicaWidget.ballPossStateVal->setText(QString("NotInKickerDistance"));
+		}
+		else if (sharedWorldInfo->ballPossessionStatus == msl_sensor_msgs::SharedWorldInfo::LIGHT_BARRIER_UNBLOCKED)
+		{
+			uiAlicaWidget.ballPossStateVal->setText(QString("LightBarrierUnblocked"));
+		}
+		else
+		{
+			uiAlicaWidget.ballPossStateVal->setText(QString("Unknown"));
+		}
+	}
 
 	void AlicaWidget::clearGUI()
 	{

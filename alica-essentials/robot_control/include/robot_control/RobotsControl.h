@@ -9,7 +9,8 @@
 
 #include <process_manager/ProcessStats.h>
 #include <alica_ros_proxy/AlicaEngineInfo.h>
-//#include <msl_actuator_msgs/KickerStatInfo.h>
+#include <msl_actuator_msgs/KickerStatInfo.h>
+#include <msl_sensor_msgs/SharedWorldInfo.h>
 
 #include <ui_RobotsControl.h>
 #include <QtGui>
@@ -61,6 +62,7 @@ namespace robot_control
 		ros::Subscriber processStateSub;
 		ros::Subscriber alicaInfoSub;
 		ros::Subscriber kickerStatInfoSub;
+		ros::Subscriber sharedWorldInfoSub;
 
 		supplementary::SystemConfig* sc;
 
@@ -69,12 +71,15 @@ namespace robot_control
 		mutex processStatsMsgQueueMutex;
 		queue<pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
 		mutex alicaInfoMsgQueueMutex;
-//		queue<pair<chrono::system_clock::time_point, msl_actuator_msgs::KickerStatInfoPtr>> kickerStatInfoMsgQueue;
-//		mutex kickerStatInfoMsgQueueMutex;
+		queue<pair<chrono::system_clock::time_point, msl_actuator_msgs::KickerStatInfoPtr>> kickerStatInfoMsgQueue;
+		mutex kickerStatInfoMsgQueueMutex;
+		queue<pair<chrono::system_clock::time_point, msl_sensor_msgs::SharedWorldInfoPtr>> sharedWorldInfoMsgQueue;
+		mutex sharedWorldInfoMsgQueueMutex;
 
 		void receiveProcessStats(process_manager::ProcessStatsConstPtr processStats);
 		void receiveAlicaInfo(alica_ros_proxy::AlicaEngineInfoConstPtr alicaInfo);
-//		void receiveKickerStatInfo(msl_actuator_msgs::KickerStatInfoPtr kickerStatInfo);
+		void receiveKickerStatInfo(msl_actuator_msgs::KickerStatInfoPtr kickerStatInfo);
+		void receiveSharedWorldInfo(msl_sensor_msgs::SharedWorldInfoPtr sharedWorldInfo);
 		void processMessages();
 		void checkAndInit(int robotId);
 

@@ -555,8 +555,8 @@ namespace supplementary
 	 */
 	void ManagedExecutable::startProcess(vector<char*> & params)
 	{
-		this->stdLogFileName = logging::getLogFilename(this->metaExec->name);
-		this->errLogFileName = logging::getErrLogFilename(this->metaExec->name);
+		this->stdLogFileName = logging::getLogFilename(this->robotEnvVariable + '_' + metaExec->name);
+		this->errLogFileName = logging::getErrLogFilename(this->robotEnvVariable + '_' + this->metaExec->name);
 
 		const char* execStartString;
 		vector<char*> startParams;

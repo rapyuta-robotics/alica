@@ -50,16 +50,7 @@
    <property name="sizeConstraint">
     <enum>QLayout::SetMinimumSize</enum>
    </property>
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>0</number>
    </property>
    <item>
@@ -163,6 +154,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QLabel" name="ballPossStateLbl">
+       <property name="text">
+        <string>BallPoss:</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -258,6 +256,13 @@
      </item>
      <item>
       <widget class="QLabel" name="kickVoltVal">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ballPossStateVal">
        <property name="text">
         <string/>
        </property>
