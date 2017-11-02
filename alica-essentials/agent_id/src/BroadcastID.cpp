@@ -21,7 +21,12 @@ uint8_t *BroadcastID::getRaw() const
 int BroadcastID::getSize() const
 {
     return sizeof(uint8_t);
-};
+}
+
+uint8_t BroadcastID::getType() const
+{
+	return BroadcastID::TYPE;
+}
 
 bool BroadcastID::operator==(const supplementary::IAgentID &other) const
 {

@@ -137,6 +137,7 @@ namespace pm_widget
 	void ControlledRobot::sendProcessCommand(vector<int> execIds, vector<int> paramSets, int cmd)
 	{
 		process_manager::ProcessCommand pc;
+		pc.receiverId.type = this->parentPMid->getType();
 		pc.receiverId.id = this->parentPMid->toByteVector();
 		pc.robotIds.push_back(process_manager::ProcessCommand::_robotIds_type::value_type());
 		pc.robotIds[0].id = this->agentID->toByteVector();

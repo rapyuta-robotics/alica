@@ -17,6 +17,7 @@ class BroadcastID : public supplementary::IAgentID
 
     uint8_t *getRaw() const;
     int getSize() const;
+    uint8_t getType() const;
 
     std::string toString() const;
     bool operator==(const supplementary::IAgentID &obj) const;
@@ -25,6 +26,8 @@ class BroadcastID : public supplementary::IAgentID
     bool operator>(const supplementary::IAgentID &other) const;
 
     std::vector<uint8_t> toByteVector() const;
+
+    static const uint8_t TYPE = 1;
 
   private:
     uint8_t id;
