@@ -127,7 +127,7 @@ void RobotsControl::showContextMenu(const QPoint &pos)
     for (auto robot : this->pmRegistry->getRobots())
     {
         stringstream ss;
-        ss << robot->agentID;
+        ss << *(robot->agentID);
         myMenu.addAction(std::string(robot->name + " (" + ss.str() + ")").c_str());
     }
 
