@@ -138,7 +138,7 @@ namespace pm_widget
 	{
 		process_manager::ProcessCommand pc;
 		pc.receiverId.id = this->parentPMid->toByteVector();
-		pc.robotIds.push_back(agent_id::AgentID());
+		pc.robotIds.push_back(process_manager::ProcessCommand::_robotIds_type::value_type());
 		pc.robotIds[0].id = this->agentID->toByteVector();
 		pc.processKeys = execIds;
 		pc.paramSets = paramSets;

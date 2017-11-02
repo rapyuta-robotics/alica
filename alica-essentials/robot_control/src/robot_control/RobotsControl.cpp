@@ -233,7 +233,6 @@ void RobotsControl::processMessages()
             // unqueue the ROS alica info message
             auto timeAlicaInfoPair = alicaInfoMsgQueue.front();
             alicaInfoMsgQueue.pop();
-
             this->controlledRobotsMap[this->pmRegistry->getRobotId(timeAlicaInfoPair.second->senderID.id)]->handleAlicaInfo(timeAlicaInfoPair);
         }
     }
@@ -277,14 +276,14 @@ void RobotsControl::checkAndInit(const supplementary::IAgentID *robotId)
         string robotName;
         if (this->pmRegistry->getRobotName(robotId, robotName))
         {
-            cout << "RC: Create new ControlledRobot with ID " << robotId << " and host name " << robotName << "!"
+            cout << "RC: Create new ControlledRobot with ID " << *robotId << " and host name " << robotName << "!"
                  << endl;
             Robot *controlledRobot = new Robot(robotName, robotId, this);
             this->controlledRobotsMap.emplace(robotId, controlledRobot);
         }
         else
         {
-            cerr << "RC: Received message from unknown robot with sender id " << robotId << endl;
+            cerr << "RC: Received message from unknown robot with sender id " << *robotId << endl;
         }
     }
 }

@@ -8,10 +8,11 @@
 #include <utility>
 #include <chrono>
 
+#include <supplementary/IAgentID.h>
+
 namespace supplementary {
 	class SystemConfig;
 	class RobotExecutableRegistry;
-	class IAgentID;
 }
 
 namespace pm_control {
@@ -44,7 +45,7 @@ namespace pm_widget
 		supplementary::RobotExecutableRegistry* pmRegistry;
 
 	private:
-		std::map<const supplementary::IAgentID*, ControlledRobot*> controlledRobotsMap; /* < The robots, which are controlled by this process manager */
+		std::map<const supplementary::IAgentID*, ControlledRobot*, supplementary::IAgentIDComparator> controlledRobotsMap; /* < The robots, which are controlled by this process manager */
 		QBoxLayout* parentLayout;
 		ControlledRobot* getControlledRobot(const supplementary::IAgentID* robotId);
 	};

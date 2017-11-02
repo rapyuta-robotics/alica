@@ -91,7 +91,7 @@ bool RobotExecutableRegistry::getRobotName(const IAgentID *agentID, string &robo
 {
     for (auto robotMetaData : this->robotList)
     {
-        if (robotMetaData->agentID == agentID)
+        if (*(robotMetaData->agentID) == *agentID)
         {
             robotName = robotMetaData->name;
             return true;
@@ -106,7 +106,7 @@ bool RobotExecutableRegistry::robotExists(const IAgentID *agentID)
 {
     for (auto robotMetaData : this->robotList)
     {
-        if (robotMetaData->agentID == agentID)
+        if (*(robotMetaData->agentID) == *agentID)
         {
             return true;
         }
@@ -144,7 +144,7 @@ const IAgentID* RobotExecutableRegistry::getRobotId(vector<uint8_t>& idVector, s
 	auto agentID = this->agentIDFactory->create(idVector);
     for (auto robotMetaData : this->robotList)
     {
-    	if (robotMetaData->agentID == agentID)
+    	if (*(robotMetaData->agentID) == *agentID)
     	{
     		delete agentID;
     		robotName = robotMetaData->name;
@@ -162,7 +162,7 @@ const IAgentID* RobotExecutableRegistry::getRobotId(const vector<uint8_t>& idVec
 	auto agentID = this->agentIDFactory->create(idVector);
     for (auto robotMetaData : this->robotList)
     {
-    	if (robotMetaData->agentID == agentID)
+    	if (*(robotMetaData->agentID) == *agentID)
     	{
     		delete agentID;
     		return robotMetaData->agentID;

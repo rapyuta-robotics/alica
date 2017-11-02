@@ -49,7 +49,6 @@ void AlicaWidget::handleAlicaEngineInfo(alica_ros_proxy::AlicaEngineInfoConstPtr
         ss << tmpId;
     }
     ss << ")";
-    std::cout << ss.str() << std::endl;
 
     uiAlicaWidget.stateVal->setText(QString(ss.str().c_str()));
 }

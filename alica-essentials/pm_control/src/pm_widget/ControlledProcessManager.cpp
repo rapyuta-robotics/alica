@@ -56,7 +56,7 @@ namespace pm_widget
 			string robotName;
 			if (this->pmRegistry->getRobotName(robotId, robotName))
 			{
-				cout << "ControlledPM: Create new ControlledRobot " << robotName << " (ID: " << robotId << ")" << endl;
+				cout << "ControlledPM: Create new ControlledRobot " << robotName << " (ID: " << *robotId << ")" << endl;
 
 				ControlledRobot* controlledRobot = new ControlledRobot(robotName, robotId, this->id);
 				this->controlledRobotsMap.emplace(robotId, controlledRobot);
@@ -65,7 +65,7 @@ namespace pm_widget
 			}
 			else
 			{
-				cerr << "ControlledPM: Received processStat from unknown robot with sender id " << robotId << endl;
+				cerr << "ControlledPM: Received processStat from unknown robot with sender id " << *robotId << endl;
 				return nullptr;
 			}
 		}
