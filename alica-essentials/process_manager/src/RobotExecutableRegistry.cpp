@@ -47,9 +47,9 @@ RobotExecutableRegistry::~RobotExecutableRegistry()
         delete metaData;
     }
 
-    for (auto metaData : this->robotList)
+    for (auto agentEntry: this->robotMap)
     {
-        delete metaData;
+        delete agentEntry.second;
     }
 
     delete this->agentIDFactory;
@@ -89,36 +89,28 @@ const map<string, vector<pair<int, int>>> *const RobotExecutableRegistry::getBun
 
 bool RobotExecutableRegistry::getRobotName(const IAgentID *agentID, string &robotName)
 {
-    for (auto robotMetaData : this->robotList)
+    for (auto &agentEntry : this->robotMap)
     {
-        if (*(robotMetaData->agentID) == *agentID)
+        if (*(agentEntry.second->agentID) == *agentID)
         {
-            robotName = robotMetaData->name;
+            robotName = agentEntry.second->name;
             return true;
         }
     }
-
     robotName = "";
     return false;
 }
 
 bool RobotExecutableRegistry::robotExists(const IAgentID *agentID)
 {
-    for (auto robotMetaData : this->robotList)
-    {
-        if (*(robotMetaData->agentID) == *agentID)
-        {
-            return true;
-        }
-    }
-    return false;
+    return this->robotMap.find(agentID) != this->robotMap.end();
 }
 
 bool RobotExecutableRegistry::robotExists(string robotName)
 {
-    for (auto robotMetaData : this->robotList)
+    for (auto &agentEntry : this->robotMap)
     {
-        if (robotMetaData->name == robotName)
+        if (agentEntry.second->name == robotName)
         {
             return true;
         }
@@ -126,56 +118,74 @@ bool RobotExecutableRegistry::robotExists(string robotName)
     return false;
 }
 
-const IAgentID* RobotExecutableRegistry::getRobotId(string robotName)
+const IAgentID *RobotExecutableRegistry::getRobotId(string robotName)
 {
-    for (auto robotMetaData : this->robotList)
+    for (auto &agentEntry : this->robotMap)
     {
-        if (robotMetaData->name == robotName)
+        if (agentEntry.second->name == robotName)
         {
-            return robotMetaData->agentID;
+            return agentEntry.second->agentID;
         }
     }
-
     return nullptr;
 }
 
-const IAgentID* RobotExecutableRegistry::getRobotId(vector<uint8_t>& idVector, string& robotName)
+const IAgentID *RobotExecutableRegistry::getRobotId(vector<uint8_t> &idVector, string &robotName)
 {
-	auto agentID = this->agentIDFactory->create(idVector);
-    for (auto robotMetaData : this->robotList)
-    {
-    	if (*(robotMetaData->agentID) == *agentID)
-    	{
-    		delete agentID;
-    		robotName = robotMetaData->name;
-    		return robotMetaData->agentID;
-    	}
+    auto agentID = this->agentIDFactory->create(idVector);
+    auto agentEntry = this->robotMap.find(agentID);
+    if (agentEntry != this->robotMap.end())
+    { // entry already exists -> delete created id and return existing data
+        delete agentID;
+        robotName = agentEntry->second->name;
+        return agentEntry->first;
     }
-
-    delete agentID;
-    robotName = "";
-    return nullptr;
+    else
+    { // add unknown agent to map and return created id;
+        this->addRobot(agentID);
+        return agentID;
+    }
 }
 
-const IAgentID* RobotExecutableRegistry::getRobotId(const vector<uint8_t>& idVector)
+const IAgentID *RobotExecutableRegistry::getRobotId(const vector<uint8_t> &idVector)
 {
-	auto agentID = this->agentIDFactory->create(idVector);
-    for (auto robotMetaData : this->robotList)
-    {
-    	if (*(robotMetaData->agentID) == *agentID)
-    	{
-    		delete agentID;
-    		return robotMetaData->agentID;
-    	}
-    }
+    auto agentID = this->agentIDFactory->create(idVector);
+    auto agentEntry = this->robotMap.find(agentID);
 
-    delete agentID;
-    return nullptr;
+    if (agentEntry != this->robotMap.end())
+    {
+        delete agentID;
+        return agentEntry->first;
+    }
+    else
+    {
+        this->addRobot(agentID);
+        return agentID;
+    }
 }
 
 void RobotExecutableRegistry::addRobot(string robotName, const IAgentID *agentID)
 {
-    this->robotList.push_back(new RobotMetaData(robotName, agentID));
+    auto robotEntry = this->robotMap.find(agentID);
+    if (robotEntry == this->robotMap.end())
+    {
+        this->robotMap.emplace(agentID, new RobotMetaData(robotName, agentID));
+    }
+}
+
+/**
+ * Adds a robot with its id, if it does not exists. The name is created from
+ * the string representation of the given id.
+ * This method allows testing with systems, which are not in the Globals.conf,
+ * i.d., are no official robots.
+ */
+std::string RobotExecutableRegistry::addRobot(const IAgentID *agentID)
+{
+    stringstream ss;
+    ss << *agentID;
+    string agentName = ss.str();
+    this->addRobot(agentName, agentID);
+    return agentName;
 }
 
 /**
@@ -197,25 +207,14 @@ const IAgentID *RobotExecutableRegistry::addRobot(string agentName)
         }
         agentID = this->agentIDFactory->create(agentIDVector);
     }
-    catch (const std::runtime_error* e)
+    catch (const std::runtime_error *e)
     {
         agentID = nullptr;
-        bool idExists;
-
         do
         {
-            idExists = false;
             // generates random ID
             agentID = this->agentIDFactory->generateID();
-            for (auto entry : this->robotList)
-            {
-                if (*(entry->agentID) == *(agentID))
-                {
-                    idExists = true;
-                    break;
-                }
-            }
-        } while (idExists);
+        } while (this->robotMap.find(agentID) != this->robotMap.end());
         std::cout << "PM Registry: Warning! Adding unknown agent " << agentName << " with ID " << agentID << "!"
                   << std::endl;
     }
@@ -224,9 +223,9 @@ const IAgentID *RobotExecutableRegistry::addRobot(string agentName)
     return agentID;
 }
 
-const vector<RobotMetaData *> &RobotExecutableRegistry::getRobots() const
+const std::map<const IAgentID *, RobotMetaData *, supplementary::IAgentIDComparator> &RobotExecutableRegistry::getRobots() const
 {
-    return this->robotList;
+    return this->robotMap;
 }
 
 bool RobotExecutableRegistry::getExecutableName(int execId, string &execName)

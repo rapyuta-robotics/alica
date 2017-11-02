@@ -94,9 +94,9 @@ void RobotsControl::initPlugin(qt_gui_cpp::PluginContext &context)
     }
     context.addWidget(widget_);
 
-    for (auto robot : this->pmRegistry->getRobots())
+    for (auto &robot : this->pmRegistry->getRobots())
     {
-        this->checkAndInit(robot->agentID);
+        this->checkAndInit(robot.second->agentID);
     }
 
     // Initialise the ROS Communication
@@ -124,11 +124,20 @@ void RobotsControl::showContextMenu(const QPoint &pos)
     QPoint globalPos = this->widget_->mapToGlobal(pos);
 
     QMenu myMenu;
-    for (auto robot : this->pmRegistry->getRobots())
+    for (auto &robot : this->pmRegistry->getRobots())
     {
         stringstream ss;
-        ss << *(robot->agentID);
-        myMenu.addAction(std::string(robot->name + " (" + ss.str() + ")").c_str());
+        ss << *(robot.second->agentID);
+        QIcon icon;
+        if (this->controlledRobotsMap[robot.first]->isHidden())
+        {
+            icon = QIcon::fromTheme("user-offline", QIcon("user-offline"));
+        }
+        else
+        {
+            icon = QIcon::fromTheme("user-available", QIcon("user-available"));
+        }
+        auto tmpAction = myMenu.addAction(icon, std::string(robot.second->name + " (" + ss.str() + ")").c_str());
     }
 
     QAction *selectedItem = myMenu.exec(globalPos);
@@ -143,7 +152,6 @@ void RobotsControl::showContextMenu(const QPoint &pos)
         const supplementary::IAgentID *robotId = this->pmRegistry->getRobotId(name);
         if (robotId != nullptr)
         {
-            // this->checkAndInit(robotId);
             this->controlledRobotsMap[robotId]->toggle();
         }
         else
@@ -218,10 +226,12 @@ void RobotsControl::processMessages()
 
             for (auto processStat : (timePstsPair.second->processStats))
             {
-                //					cout << "RobotsControl: senderId: " << timePstsPair.second->senderId <<
-                //" robotId: " << processStat.robotId << endl;
-                this->controlledRobotsMap[this->pmRegistry->getRobotId(processStat.robotId.id)]->handleProcessStat(
-                    timePstsPair.first, processStat, this->pmRegistry->getRobotId(timePstsPair.second->senderId.id));
+                auto agentID = this->pmRegistry->getRobotId(processStat.robotId.id);
+                this->checkAndInit(agentID);
+
+                auto senderAgentID = this->pmRegistry->getRobotId(timePstsPair.second->senderId.id);
+
+                this->controlledRobotsMap[agentID]->handleProcessStat(timePstsPair.first, processStat, senderAgentID);
             }
         }
     }
@@ -233,7 +243,9 @@ void RobotsControl::processMessages()
             // unqueue the ROS alica info message
             auto timeAlicaInfoPair = alicaInfoMsgQueue.front();
             alicaInfoMsgQueue.pop();
-            this->controlledRobotsMap[this->pmRegistry->getRobotId(timeAlicaInfoPair.second->senderID.id)]->handleAlicaInfo(timeAlicaInfoPair);
+            auto agentID = this->pmRegistry->getRobotId(timeAlicaInfoPair.second->senderID.id);
+            this->checkAndInit(agentID);
+            this->controlledRobotsMap[agentID]->handleAlicaInfo(timeAlicaInfoPair);
         }
     }
 
@@ -244,9 +256,9 @@ void RobotsControl::processMessages()
             // unqueue the ROS kicker stat info message
             auto timeKickerStatInfoPair = kickerStatInfoMsgQueue.front();
             kickerStatInfoMsgQueue.pop();
-
-            this->controlledRobotsMap[this->pmRegistry->getRobotId(timeKickerStatInfoPair.second->senderID.id)]->handleKickerStatInfo(
-                timeKickerStatInfoPair);
+            auto agentID = this->pmRegistry->getRobotId(timeKickerStatInfoPair.second->senderID.id);
+            this->checkAndInit(agentID);
+            this->controlledRobotsMap[agentID]->handleKickerStatInfo(timeKickerStatInfoPair);
         }
     }
 
@@ -257,9 +269,9 @@ void RobotsControl::processMessages()
             // unqueue the ROS shared world info message
             auto timeSharedWorldInfoPair = sharedWorldInfoMsgQueue.front();
             sharedWorldInfoMsgQueue.pop();
-
-            this->controlledRobotsMap[this->pmRegistry->getRobotId(timeSharedWorldInfoPair.second->senderID.id)]->handleSharedWorldInfo(
-                timeSharedWorldInfoPair);
+            auto agentID = this->pmRegistry->getRobotId(timeSharedWorldInfoPair.second->senderID.id);
+            this->checkAndInit(agentID);
+            this->controlledRobotsMap[agentID]->handleSharedWorldInfo(timeSharedWorldInfoPair);
         }
     }
 }

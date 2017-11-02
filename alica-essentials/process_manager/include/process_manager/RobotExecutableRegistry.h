@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <supplementary/IAgentID.h>
 
 namespace supplementary
 {
@@ -21,9 +22,10 @@ namespace supplementary
 	{
 	public:
 		static RobotExecutableRegistry* get();
-		const std::vector<RobotMetaData*>& getRobots() const;
+		const std::map<const IAgentID *, RobotMetaData *, supplementary::IAgentIDComparator>& getRobots() const;
 		void addRobot(std::string agentName, const IAgentID* agentID);
 		const IAgentID * addRobot(std::string agentName);
+		std::string addRobot(const IAgentID *agentID);
 		const IAgentID* getRobotId(std::string agentName);
 		const IAgentID* getRobotId(const std::vector<uint8_t>& idVector);
 		const IAgentID* getRobotId(std::vector<uint8_t>& idVector, std::string& robotName);
@@ -48,8 +50,7 @@ namespace supplementary
 		RobotExecutableRegistry();
 		virtual ~RobotExecutableRegistry();
 
-		// this is just for faster lookup in case of lazy initialisation
-		std::vector<RobotMetaData*> robotList;
+		std::map<const IAgentID*, RobotMetaData*, supplementary::IAgentIDComparator> robotMap;
 		std::vector<ExecutableMetaData*> executableList;
 		std::vector<std::string> interpreter;
 		std::map<std::string, std::vector<std::pair<int, int>>> bundlesMap;

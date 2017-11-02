@@ -45,6 +45,7 @@ const IDType *AgentIDManager::createIDFromBytes(const std::vector<uint8_t> &idBy
 template <class IDType, class Prototype>
 const IDType *AgentIDManager::createID(Prototype &idPrototype)
 {
+	// little-endian encoding
     std::vector<uint8_t> idByteVector;
     for (int i = 0; i < sizeof(Prototype); i++)
     {
