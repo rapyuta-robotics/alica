@@ -1,15 +1,8 @@
-/*
- * DistBallRobot.cpp
- *
- *  Created on: Oct 27, 2014
- *      Author: Stefan Jakob
- */
-
 #include "DistBallRobot.h"
 #include "engine/IAssignment.h"
 #include "engine/model/EntryPoint.h"
-#include "msl/robot/IntRobotIDFactory.h"
 #include "supplementary/IAgentID.h"
+#include <msl/robot/IntRobotIDFactory.h>
 #include <TestWorldModel.h>
 
 namespace alica
@@ -58,12 +51,12 @@ namespace alica
 		for (int i = 0; i < relevantRobots->size(); ++i)
 		{
 			int pos = 0;
-			if (relevantRobots->at(i) == agentID9)
+			if (*(relevantRobots->at(i)) == *agentID9)
 			{
 				pos = 1;
 			}
 
-			if (this->robotId == agentID8)
+			if (*(this->robotId) == *agentID8)
 			{
 				curPosition = alicaTests::TestWorldModel::getOne()->robotsXPos[pos];
 			}
@@ -82,7 +75,7 @@ namespace alica
 			for (int i = 0; i < ass->getNumUnAssignedRobotIds(); ++i)
 			{
 				//curPosition = this.playerPositions.GetValue(ass.UnAssignedRobots[i]);
-				if (this->robotId == agentID8)
+				if (*(this->robotId) == *agentID8)
 				{
 					curPosition = alicaTests::TestWorldModel::getOne()->robotsXPos.at(i);
 				}
@@ -97,6 +90,8 @@ namespace alica
 		ui.setMin(std::max(0.0, ui.getMin()));
 		ui.setMax(std::max(0.0, ui.getMax()));
 
+		delete agentID8;
+		delete agentID9;
 		return ui;
 	}
 

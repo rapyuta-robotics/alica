@@ -11,7 +11,7 @@
 namespace alica
 {
 
-TeamManager::TeamManager(const AlicaEngine *engine, bool useConfigForTeam = true)
+TeamManager::TeamManager(AlicaEngine *engine, bool useConfigForTeam = true)
     : ITeamManager(engine)
     , localAgent(nullptr)
     , teamTimeOut(0)
@@ -47,16 +47,16 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig *sc)
     bool foundSelf = false;
     for (auto &agentName : *agentNames)
     {
-        int tmpID = (*sc)["Globals"]->tryGet<int>(-1, "Globals", "Team", agentName.c_str(), "ID", NULL);
+        int id = (*sc)["Globals"]->tryGet<int>(-1, "Globals", "Team", agentName.c_str(), "ID", NULL);
 
-        std::vector<uint8_t> robotId;
+//        std::vector<uint8_t> robotId;
+//
+//        for (int i = 0; i < sizeof(int); i++)
+//        {
+//            robotId.push_back(*(((uint8_t *)&tmpID) + i));
+//        }
 
-        for (int i = 0; i < sizeof(int); i++)
-        {
-            robotId.push_back(*(((uint8_t *)&tmpID) + i));
-        }
-
-        agent = new Agent(this->engine, this->teamTimeOut, this->engine->getRobotIDFactory()->create(robotId), agentName);
+        agent = new Agent(this->engine, this->teamTimeOut, this->engine->getID(id), agentName);
         if (!foundSelf && agentName.compare(localAgentName) == 0)
         {
             foundSelf = true;

@@ -25,7 +25,6 @@ using namespace std;
 //#include "engine/planselector/TaskAssignment.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/Agent.h"
-#include "msl/robot/IntRobotIDFactory.h"
 #include "supplementary/IAgentID.h"
 
 #include <gtest/gtest.h>
@@ -83,12 +82,10 @@ protected:
 TEST_F(TaskAssignmentTest, constructTaskAssignment)
 {
 	// fake a list of existing robots
-	msl::robot::IntRobotIDFactory factory;
 	auto robots = make_shared<vector<const supplementary::IAgentID* > >();
 	for (int number = 8; number <= 11; number++)
 	{
-		std::vector<uint8_t> id(reinterpret_cast<const uint8_t*>(&number), (reinterpret_cast<const uint8_t*>(&number) + sizeof(number)));
-		const supplementary::IAgentID * agentID =  factory.create(id);
+		const supplementary::IAgentID * agentID =  ae->getID<int>(number);
 		robots->push_back(agentID);
 	}
 

@@ -3,7 +3,6 @@
 #include "engine/AlicaEngine.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IEngineModule.h"
-#include "supplementary/IAgentIDFactory.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/ISyncModul.h"
 #include "engine/PlanBase.h"
@@ -12,6 +11,7 @@
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/behaviourpool/BehaviourPool.h"
 #include "engine/collections/AssignmentCollection.h"
+#include "engine/constraintmodul/ISolver.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/logging/Logger.h"
@@ -22,9 +22,11 @@
 #include "engine/planselector/PlanSelector.h"
 #include "engine/staticroleassignment/StaticRoleAssignment.h"
 #include "engine/syncmodul/SyncModul.h"
-#include "engine/teamobserver/TeamObserver.h"
 #include "engine/teammanager/TeamManager.h"
-#include <engine/constraintmodul/ISolver.h>
+#include "engine/teamobserver/TeamObserver.h"
+
+#include <supplementary/AgentIDManager.h>
+#include <supplementary/IAgentIDFactory.h>
 
 using namespace std;
 namespace alica
@@ -58,9 +60,9 @@ AlicaEngine::AlicaEngine()
     , variableSyncModule(nullptr)
     , useStaticRoles(false)
     , robotIDFactory(nullptr)
-	, teamManager(nullptr)
+    , teamManager(nullptr)
+    , agentIDManager(nullptr)
 {
-
 #ifdef AE_DEBUG
     cout << "AE: Constructor finished!" << endl;
 #endif
@@ -71,7 +73,7 @@ AlicaEngine::~AlicaEngine()
 }
 
 /**
- * Intialise the engine
+ * Initialise the engine
  * @param bc A behaviourcreator
  * @param roleSetName A string, the roleset to be used. If empty, a default roleset is looked for
  * @param masterPlanName A string, the top-level plan to be used
@@ -80,7 +82,8 @@ AlicaEngine::~AlicaEngine()
  * @return bool true if everything worked false otherwise
  */
 bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCreator *uc, IConstraintCreator *crc,
-                       string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine)
+                       supplementary::AgentIDManager *idManager, string roleSetName, string masterPlanName,
+                       string roleSetDir, bool stepEngine)
 {
     this->maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
     this->useStaticRoles = (*sc)["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
@@ -89,6 +92,7 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
 
     this->terminating = false;
     this->stepEngine = stepEngine;
+    this->agentIDManager = idManager;
     if (!this->planRepository)
     {
         this->planRepository = new PlanRepository();
@@ -111,7 +115,7 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
     }
     if (!this->teamManager)
     {
-    	this->teamManager = new TeamManager(this, true);
+        this->teamManager = new TeamManager(this, true);
         this->teamManager->init();
     }
     if (!this->teamObserver)
@@ -287,10 +291,12 @@ void AlicaEngine::start()
     this->planBase->start();
     cout << "AE: Engine started" << endl;
 }
+
 void AlicaEngine::setStepCalled(bool stepCalled)
 {
     this->stepCalled = stepCalled;
 }
+
 bool AlicaEngine::getStepCalled() const
 {
     return this->stepCalled;
@@ -300,6 +306,7 @@ bool AlicaEngine::getStepEngine()
 {
     return this->stepEngine;
 }
+
 /**
  * Returns the plan repository, which holds the static ALICA program.
  */
@@ -506,6 +513,7 @@ PartialAssignmentPool *AlicaEngine::getPartialAssignmentPool() const
 {
     return this->pap;
 }
+
 /**
  * Triggers the engine to run one iteration.
  * Attention: This method call is asynchronous to the triggered iteration.
@@ -518,19 +526,21 @@ void AlicaEngine::stepNotify()
     this->getPlanBase()->getStepModeCV()->notify_all();
 }
 
-supplementary::IAgentIDFactory *AlicaEngine::getRobotIDFactory() const
+ITeamManager *AlicaEngine::getTeamManager() const
 {
-    return this->robotIDFactory;
+    return this->teamManager;
 }
 
-void AlicaEngine::setRobotIDFactory(supplementary::IAgentIDFactory *factory)
+/**
+ * If present, returns the ID corresponding to the given prototype.
+ * Otherwise, it creates a new one, stores and returns it.
+ *
+ * This method can be used, e.g., for passing a part of a ROS
+ * message and receiving a pointer to a corresponding IAgentID object.
+ */
+const supplementary::IAgentID* AlicaEngine::getIDFromBytes(const std::vector<uint8_t> &idByteVector)
 {
-    this->robotIDFactory = factory;
-}
-
-ITeamManager * AlicaEngine::getTeamManager() const
-{
-	return this->teamManager;
+    return this->agentIDManager->getIDFromBytes(idByteVector);
 }
 
 } /* namespace Alica */
