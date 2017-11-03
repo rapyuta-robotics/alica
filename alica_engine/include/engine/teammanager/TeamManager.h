@@ -30,7 +30,7 @@ class SuccessMarks;
 class TeamManager : public ITeamManager
 {
   public:
-	TeamManager(const AlicaEngine * engine, bool useConfigForTeam);
+	TeamManager(AlicaEngine * engine, bool useConfigForTeam);
     virtual ~TeamManager();
 
     void init();

@@ -23,7 +23,7 @@ class SuccessMarks;
 class ITeamManager
 {
   public:
-    ITeamManager(const AlicaEngine *engine)
+    ITeamManager(AlicaEngine *engine)
         : engine(engine){};
     virtual ~ITeamManager(){};
 
@@ -44,6 +44,6 @@ class ITeamManager
     virtual bool setSuccessMarks(const supplementary::IAgentID *agentId, std::shared_ptr<SuccessMarks> successMarks) = 0;
     virtual Variable* getDomainVariable(const supplementary::IAgentID* robot, std::string ident) = 0;
 
-    const AlicaEngine *engine;
+    AlicaEngine *engine;
 };
 }
