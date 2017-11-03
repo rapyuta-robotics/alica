@@ -67,7 +67,6 @@ namespace robot_control
 
 		supplementary::SystemConfig* sc;
 
-		supplementary::IAgentIDFactory* robotIDFactory;
 		std::map<const supplementary::IAgentID*, Robot*, supplementary::IAgentIDComparator> controlledRobotsMap;
 		queue<pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
 		mutex processStatsMsgQueueMutex;

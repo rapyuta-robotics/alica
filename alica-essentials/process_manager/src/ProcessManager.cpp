@@ -7,7 +7,6 @@
 #include <Logging.h>
 #include <SystemConfig.h>
 #include <supplementary/BroadcastID.h>
-#include <msl/robot/IntRobotIDFactory.h>
 
 #include <cstdlib>
 #include <dirent.h>

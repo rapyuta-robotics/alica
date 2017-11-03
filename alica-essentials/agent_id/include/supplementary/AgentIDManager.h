@@ -2,9 +2,9 @@
 
 #include "supplementary/IAgentIDFactory.h"
 
+#include <mutex>
 #include <unordered_set>
 #include <vector>
-
 
 namespace supplementary
 {
@@ -13,47 +13,39 @@ class IAgentID;
 class AgentIDManager
 {
   public:
-    static AgentIDManager *getInstance();
-
-    template <class IDType>
-    const IDType *createIDFromBytes(const std::vector<uint8_t> &vectorID);
-
-    template <class IDType, class Prototype>
-    const IDType *createID(Prototype &idPrototype);
-
-  private:
-    AgentIDManager();
+    // static AgentIDManager *getInstance();
+    AgentIDManager(IAgentIDFactory* idFactory);
     virtual ~AgentIDManager();
 
+    const IAgentID *getIDFromBytes(const std::vector<uint8_t> &vectorID);
+
+    template <class Prototype>
+    const IAgentID *getID(Prototype &idPrototype);
+
+  private:
     std::unordered_set<const IAgentID *> agentIDs;
     IAgentIDFactory *idFactory;
+    std::mutex mutex;
 };
 
-template <class IDType>
-const IDType *AgentIDManager::createIDFromBytes(const std::vector<uint8_t> &idByteVector)
+/**
+ * If present, returns the ID corresponding to the given prototype.
+ * Otherwise, it creates a new one, stores and returns it.
+ *
+ * This method can be used, e.g., for passing an int and receiving
+ * a pointer to a corresponding IAgentID object (in that case an
+ * IntRobotID).
+ */
+template <class Prototype>
+const IAgentID *AgentIDManager::getID(Prototype &idPrototype)
 {
-    const IDType *tmpID = this->idFactory->create(idByteVector);
-    auto entry = this->agentIDs.insert(tmpID);
-    if (!entry.second)
-    {
-        delete tmpID;
-    }
-
-    return entry.first;
-}
-
-template <class IDType, class Prototype>
-const IDType *AgentIDManager::createID(Prototype &idPrototype)
-{
-	// little-endian encoding
+    // little-endian encoding
     std::vector<uint8_t> idByteVector;
     for (int i = 0; i < sizeof(Prototype); i++)
     {
-    	idByteVector.push_back(*(((uint8_t *)&idPrototype) + i));
+        idByteVector.push_back(*(((uint8_t *)&idPrototype) + i));
     }
-    return this->createIDFromBytes<IDType>(idByteVector);
+    return this->getIDFromBytes(idByteVector);
 }
-
-
 
 } /* namespace supplementary */

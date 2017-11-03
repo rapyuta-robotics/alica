@@ -2,12 +2,9 @@
 
 #include "container/CNPosition.h"
 
-namespace msl
+namespace supplementary
 {
-namespace robot
-{
-	class IntRobotID;
-}
+	class IAgentID;
 }
 
 namespace geometry
@@ -21,7 +18,7 @@ namespace geometry
 		double radius;
 		double velocityX;
 		double velocityY;
-		const msl::robot::IntRobotID* id;
+		const supplementary::IAgentID* id;
 		shared_ptr<vector<int>> opposer;
 		shared_ptr<vector<int>> supporter;
 		double certainty;

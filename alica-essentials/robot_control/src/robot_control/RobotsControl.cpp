@@ -2,7 +2,6 @@
 #include <ros/master.h>
 
 #include <SystemConfig.h>
-#include <msl/robot/IntRobotIDFactory.h>
 #include <process_manager/RobotExecutableRegistry.h>
 #include <robot_control/RobotsControl.h>
 #include <supplementary/IAgentID.h>
@@ -22,16 +21,6 @@ RobotsControl::RobotsControl()
     setObjectName("RobotsControl");
     rosNode = new ros::NodeHandle();
     this->sc = supplementary::SystemConfig::getInstance();
-    auto robotIDType = (*this->sc)["ProcessManaging"]->get<string>("RobotControl.agentIDType", NULL);
-    if (robotIDType.compare("int") == 0)
-    {
-        this->robotIDFactory = new msl::robot::IntRobotIDFactory();
-    }
-    else
-    {
-        std::cerr << "RobotsControl::RobotsControl(): Unknown robot id type!" << std::endl;
-        return;
-    }
 
     RobotsControl::msgTimeOut = chrono::duration<double>(
         (*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
