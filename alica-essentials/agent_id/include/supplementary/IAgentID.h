@@ -34,6 +34,14 @@ struct IAgentIDComparator
     }
 };
 
+struct IAgentIDEqualsComparator
+{
+    bool operator()(const IAgentID *a, const IAgentID *b) const
+    {
+        return *a == *b;
+    }
+};
+
 } /* namespace supplementary */
 
 namespace std
@@ -46,6 +54,7 @@ struct hash<supplementary::IAgentID>
 
     result_type operator()(argument_type &pa) const
     {
+    	std::cout << "IAgentID: hash" << std::endl;
         return 0;
     }
 };

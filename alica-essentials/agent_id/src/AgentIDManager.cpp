@@ -46,15 +46,17 @@ const IAgentID *AgentIDManager::getIDFromBytes(const std::vector<uint8_t> &idByt
 
     // lookup the ID and insert it, if not available, yet
     auto entry = this->agentIDs.insert(tmpID);
+    std::cout << "getIDFromBytes: tmpID: " << *tmpID << " " << tmpID << std::endl;
     if (!entry.second)
     { // delete tmpID if already present in agentIDs
+    	std::cout << "entry second = false getIDFromBytes: Entry: " << *(*(entry.first)) << " " <<  *(entry.first) << " tmp: " << *tmpID << " " << tmpID << std::endl;
     	if (*(entry.first) == tmpID)
     	{
-    		std::cout << "getIDFromBytes: Entry: " << *(entry.first) << " tmp: " << tmpID << std::endl;
+    		std::cout << "entry second = false && ids are identicalgetIDFromBytes: Entry: " << *(*(entry.first)) << *(entry.first) << " tmp: " << *tmpID << " " << tmpID <<  std::endl;
     	}
         delete tmpID;
     }
-
+    std::cout << "getIDFromBytes: returning: " << *(*(entry.first)) << " " << *(entry.first) << std::endl;
     return *(entry.first);
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "supplementary/IAgentIDFactory.h"
+#include "supplementary/IAgentID.h"
 
 #include <mutex>
 #include <unordered_set>
@@ -8,7 +9,6 @@
 
 namespace supplementary
 {
-class IAgentID;
 
 class AgentIDManager
 {
@@ -23,7 +23,7 @@ class AgentIDManager
     const IAgentID *getID(Prototype &idPrototype);
 
   private:
-    std::unordered_set<const IAgentID *> agentIDs;
+    std::unordered_set<const IAgentID *, std::hash<const IAgentID *>, supplementary::IAgentIDEqualsComparator> agentIDs;
     IAgentIDFactory *idFactory;
     std::mutex mutex;
 };
