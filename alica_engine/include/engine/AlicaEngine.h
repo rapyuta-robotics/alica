@@ -115,7 +115,7 @@ class AlicaEngine
     AuthorityManager *auth;
     IRoleAssignment *roleAssignment;
     ExpressionHandler *expressionHandler;
-    list<IEngineModule *> mods;
+    std::list<IEngineModule *> mods;
     IPlanSelector *planSelector;
     IAlicaCommunication *communicator;
     supplementary::IAgentIDFactory *robotIDFactory;
