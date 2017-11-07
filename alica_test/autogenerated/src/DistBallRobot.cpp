@@ -3,6 +3,7 @@
 #include "engine/model/EntryPoint.h"
 #include "supplementary/IAgentID.h"
 #include <msl/robot/IntRobotIDFactory.h>
+#include <supplementary/AgentIDManager.h>
 #include <TestWorldModel.h>
 
 namespace alica
@@ -18,11 +19,13 @@ namespace alica
 		this->velAngle = 0;
 		this->robotId = nullptr;
 		this->sb = 0;
+		this->manager = new supplementary::AgentIDManager(new msl::robot::IntRobotIDFactory);
+
 	}
 
 	DistBallRobot::~DistBallRobot()
 	{
-		// TODO Auto-generated destructor stub
+		delete manager;
 	}
 
 	void DistBallRobot::cacheEvalData()
@@ -34,15 +37,14 @@ namespace alica
 		ui.setMin(0.0);
 		ui.setMax(1.0);
 		int numAssignedRobots = 0;
-		msl::robot::IntRobotIDFactory factory;
 
 		long x8 = 8;
 		std::vector<uint8_t> id8(reinterpret_cast<const uint8_t*>(&x8), (reinterpret_cast<const uint8_t*>(&x8) + sizeof(x8)));
-		const supplementary::IAgentID * agentID8 =  factory.create(id8);
+		const supplementary::IAgentID * agentID8 =  this->manager->getIDFromBytes(id8);
 
 		long x9 = 9;
 		std::vector<uint8_t> id9(reinterpret_cast<const uint8_t*>(&x9), (reinterpret_cast<const uint8_t*>(&x9) + sizeof(x9)));
-		const supplementary::IAgentID * agentID9 =  factory.create(id9);
+		const supplementary::IAgentID * agentID9 =  this->manager->getIDFromBytes(id9);
 
 
 		std::shared_ptr<vector<const supplementary::IAgentID*>> relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
@@ -90,8 +92,6 @@ namespace alica
 		ui.setMin(std::max(0.0, ui.getMin()));
 		ui.setMax(std::max(0.0, ui.getMax()));
 
-		delete agentID8;
-		delete agentID9;
 		return ui;
 	}
 

@@ -40,9 +40,9 @@ namespace alica
 		void setStates(vector<State*> states);
 		int getCount();
 		State* getState(const supplementary::IAgentID* robotId);
-		unordered_set<const supplementary::IAgentID*, std::hash<const supplementary::IAgentID *>, supplementary::IAgentIDEqualsComparator> getRobotsInState(State* s);
+		unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> getRobotsInState(State* s);
 		shared_ptr<vector<const supplementary::IAgentID*> > getRobotsInStateSorted(State* s);
-		unordered_set<const supplementary::IAgentID*, std::hash<const supplementary::IAgentID *>, supplementary::IAgentIDEqualsComparator> getRobotsInState(long sid);
+		unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> getRobotsInState(long sid);
 		void removeRobot(const supplementary::IAgentID* robotId);
 		void clear();
 		State* stateOfRobot(const supplementary::IAgentID* robotId);

@@ -20,6 +20,7 @@ using namespace std;
 namespace supplementary
 {
     class IAgentID;
+    class AgentIDManager;
 }
 
 namespace alica
@@ -41,6 +42,7 @@ namespace alica
 		double sb;
 		double angleBallOpp;
 		double velAngle;
+		supplementary::AgentIDManager* manager;
 	};
 
 } /* namespace alica */

@@ -100,7 +100,7 @@ namespace alica
 		void activate();
 		EntryPoint* getActiveEntryPoint();
 		void setActiveEntryPoint(EntryPoint* activeEntryPoint);
-		void limitToRobots(unordered_set<const supplementary::IAgentID*, std::hash<const supplementary::IAgentID *>, supplementary::IAgentIDEqualsComparator> robots);
+		void limitToRobots(unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> robots);
 		std::shared_ptr<CycleManager> getCycleManagement();
 		void revokeAllConstraints();
 		void attachPlanConstraints();

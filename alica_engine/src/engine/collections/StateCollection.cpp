@@ -75,9 +75,9 @@ namespace alica
 		return nullptr;
 	}
 
-	unordered_set<const supplementary::IAgentID*, std::hash<const supplementary::IAgentID *>, supplementary::IAgentIDEqualsComparator> StateCollection::getRobotsInState(State* s)
+	unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> StateCollection::getRobotsInState(State* s)
 	{
-		unordered_set<const supplementary::IAgentID*, std::hash<const supplementary::IAgentID *>, supplementary::IAgentIDEqualsComparator> ret;
+		unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> ret;
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
 			if (this->states[i] == s)
@@ -102,9 +102,9 @@ namespace alica
 		return ret;
 	}
 
-	unordered_set<const supplementary::IAgentID*, std::hash<const supplementary::IAgentID *>, supplementary::IAgentIDEqualsComparator> StateCollection::getRobotsInState(long sid)
+	unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> StateCollection::getRobotsInState(long sid)
 	{
-		unordered_set<const supplementary::IAgentID*, std::hash<const supplementary::IAgentID *>, supplementary::IAgentIDEqualsComparator> ret;
+		unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> ret;
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
 			if (this->states[i]->getId() == sid)
