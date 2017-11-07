@@ -55,7 +55,7 @@ class TeamManager : public ITeamManager
     AlicaTime teamTimeOut;
     Agent* localAgent;
     map<const supplementary::IAgentID*, Agent*, supplementary::IAgentIDComparator> agents;
-    unordered_set<const supplementary::IAgentID*, std::hash<const supplementary::IAgentID *>, supplementary::IAgentIDEqualsComparator> ignoredAgents;
+    unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> ignoredAgents;
     bool useConfigForTeam;
 
     void readTeamFromConfig(supplementary::SystemConfig* sc);

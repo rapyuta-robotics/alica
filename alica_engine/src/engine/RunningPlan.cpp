@@ -757,8 +757,7 @@ void RunningPlan::activate()
  * @param robots The set of robots that can participate in this running plan.
  */
 void RunningPlan::limitToRobots(
-    unordered_set<const supplementary::IAgentID *, std::hash<const supplementary::IAgentID *>,
-                  supplementary::IAgentIDEqualsComparator>
+    unordered_set<const supplementary::IAgentID *, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator>
         robots)
 {
     if (this->isBehaviour())
