@@ -39,7 +39,7 @@ namespace std
 
         value_type operator()(argument_type & eprp) const
         {
-            return std::hash<long int>()(eprp.getEntryPoint()->getId()) + std::hash<supplementary::IAgentID>()(*eprp.getRobot());
+            return std::hash<long int>()(eprp.getEntryPoint()->getId()) + supplementary::IAgentIDHash()(eprp.getRobot());
         }
     };
 }
