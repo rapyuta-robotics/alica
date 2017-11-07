@@ -76,7 +76,7 @@ Variable *RobotEngineData::getDomainVariable(string sort) const
 
 long RobotEngineData::makeUniqueId(string s)
 {
-    long ret = (long)(std::hash<supplementary::IAgentID>()(*this->agentId) + std::hash<string>()(s));
+    long ret = (long)(supplementary::IAgentIDHash()(this->agentId) + std::hash<string>()(s));
     if (this->engine->getPlanParser()->getParsedElements()->find(ret) !=
         this->engine->getPlanParser()->getParsedElements()->end())
     {
