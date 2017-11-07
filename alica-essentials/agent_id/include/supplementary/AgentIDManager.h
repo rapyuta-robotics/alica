@@ -22,6 +22,8 @@ class AgentIDManager
     template <class Prototype>
     const IAgentID *getID(Prototype &idPrototype);
 
+    const IAgentID *generateID();
+
   private:
     std::unordered_set<const IAgentID *, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> agentIDs;
     IAgentIDFactory *idFactory;

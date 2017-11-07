@@ -29,6 +29,11 @@ AgentIDManager::~AgentIDManager()
 	}
 }
 
+const IAgentID *AgentIDManager::generateID()
+{
+	return this->idFactory->generateID();
+}
+
 /**
  * If present, returns the ID corresponding to the given prototype.
  * Otherwise, it creates a new one, stores and returns it.
@@ -52,5 +57,5 @@ const IAgentID *AgentIDManager::getIDFromBytes(const std::vector<uint8_t> &idByt
     }
     return *(entry.first);
 }
-
 }
+

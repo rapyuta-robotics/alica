@@ -10,6 +10,7 @@ namespace supplementary
 
 	class IAgentIDFactory;
 	class IAgentID;
+	class AgentIDManager;
 	class RobotMetaData;
 	class ExecutableMetaData;
 	class SystemConfig;
@@ -55,7 +56,7 @@ namespace supplementary
 		std::vector<std::string> interpreter;
 		std::map<std::string, std::vector<std::pair<int, int>>> bundlesMap;
 		SystemConfig* sc;
-		IAgentIDFactory* agentIDFactory;
+		supplementary::AgentIDManager* agentIDManager;
 	};
 
 } /* namespace supplementary */

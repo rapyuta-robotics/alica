@@ -7,6 +7,7 @@
 #include <msl/robot/IntRobotIDFactory.h>
 #include <process_manager/RobotExecutableRegistry.h>
 #include <supplementary/IAgentIDFactory.h>
+#include <supplementary/AgentIDManager.h>
 
 using std::string;
 
@@ -21,12 +22,13 @@ RobotExecutableRegistry *RobotExecutableRegistry::get()
 
 RobotExecutableRegistry::RobotExecutableRegistry()
     : sc(SystemConfig::getInstance())
-    , agentIDFactory(nullptr)
+    , agentIDManager(nullptr)
 {
     string idType = (*sc)["ProcessManaging"]->get<string>("ProcessManager.agentIDType", NULL);
     if (idType.compare("int") == 0)
     {
-        this->agentIDFactory = new ::msl::robot::IntRobotIDFactory();
+
+        this->agentIDManager = new supplementary::AgentIDManager(new msl::robot::IntRobotIDFactory());
     }
     else if (idType.compare("uuid") == 0)
     {
@@ -52,7 +54,7 @@ RobotExecutableRegistry::~RobotExecutableRegistry()
         delete agentEntry.second;
     }
 
-    delete this->agentIDFactory;
+    delete this->agentIDManager;
 }
 
 const map<string, vector<pair<int, int>>> *const RobotExecutableRegistry::getBundlesMap()
@@ -132,11 +134,10 @@ const IAgentID *RobotExecutableRegistry::getRobotId(string robotName)
 
 const IAgentID *RobotExecutableRegistry::getRobotId(vector<uint8_t> &idVector, string &robotName)
 {
-    auto agentID = this->agentIDFactory->create(idVector);
+    auto agentID = this->agentIDManager->getIDFromBytes(idVector);
     auto agentEntry = this->robotMap.find(agentID);
     if (agentEntry != this->robotMap.end())
     { // entry already exists -> delete created id and return existing data
-        delete agentID;
         robotName = agentEntry->second->name;
         return agentEntry->first;
     }
@@ -149,12 +150,11 @@ const IAgentID *RobotExecutableRegistry::getRobotId(vector<uint8_t> &idVector, s
 
 const IAgentID *RobotExecutableRegistry::getRobotId(const vector<uint8_t> &idVector)
 {
-    auto agentID = this->agentIDFactory->create(idVector);
+    auto agentID = this->agentIDManager->getIDFromBytes(idVector);
     auto agentEntry = this->robotMap.find(agentID);
 
     if (agentEntry != this->robotMap.end())
     {
-        delete agentID;
         return agentEntry->first;
     }
     else
@@ -205,7 +205,7 @@ const IAgentID *RobotExecutableRegistry::addRobot(string agentName)
         {
             agentIDVector.push_back(*(((uint8_t *)&tmpID) + i));
         }
-        agentID = this->agentIDFactory->create(agentIDVector);
+        agentID = this->agentIDManager->getIDFromBytes(agentIDVector);
     }
     catch (const std::runtime_error *e)
     {
@@ -213,7 +213,7 @@ const IAgentID *RobotExecutableRegistry::addRobot(string agentName)
         do
         {
             // generates random ID
-            agentID = this->agentIDFactory->generateID();
+            agentID = this->agentIDManager->generateID();
         } while (this->robotMap.find(agentID) != this->robotMap.end());
         std::cout << "PM Registry: Warning! Adding unknown agent " << agentName << " with ID " << agentID << "!"
                   << std::endl;
