@@ -23,7 +23,7 @@ class AgentIDManager
     const IAgentID *getID(Prototype &idPrototype);
 
   private:
-    std::unordered_set<const IAgentID *, std::hash<const IAgentID *>, supplementary::IAgentIDEqualsComparator> agentIDs;
+    std::unordered_set<const IAgentID *, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> agentIDs;
     IAgentIDFactory *idFactory;
     std::mutex mutex;
 };

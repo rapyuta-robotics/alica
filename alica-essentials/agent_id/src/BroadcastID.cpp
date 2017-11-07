@@ -78,5 +78,10 @@ std::string BroadcastID::toString() const
 	return "BroadcastID (0)";
 }
 
+std::size_t BroadcastID::hash() const
+{
+	return 0;
+}
+
 } /* namespace supplementary*/
 

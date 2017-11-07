@@ -7,6 +7,7 @@ namespace supplementary
 
 class IAgentID
 {
+	friend struct std::hash<supplementary::IAgentID>;
   public:
     virtual ~IAgentID(){};
     virtual bool operator==(const IAgentID &obj) const = 0;
@@ -18,6 +19,7 @@ class IAgentID
     virtual uint8_t getType() const = 0;
     virtual std::vector<uint8_t> toByteVector() const = 0;
     virtual std::string toString() const = 0;
+    virtual std::size_t hash() const = 0;
 
     friend std::ostream &operator<<(std::ostream &os, const supplementary::IAgentID &obj)
     {
@@ -36,26 +38,20 @@ struct IAgentIDComparator
 
 struct IAgentIDEqualsComparator
 {
-    bool operator()(const IAgentID *a, const IAgentID *b) const
+    bool operator()(const IAgentID *const &a, const IAgentID *&b) const
     {
         return *a == *b;
     }
 };
 
-} /* namespace supplementary */
-
-namespace std
+struct IAgentIDHash
 {
-template <>
-struct hash<supplementary::IAgentID>
-{
-    typedef const supplementary::IAgentID &argument_type;
-    typedef std::size_t result_type;
-
-    result_type operator()(argument_type &pa) const
+    std::size_t operator()(const supplementary::IAgentID* const &obj) const
     {
-    	std::cout << "IAgentID: hash" << std::endl;
-        return 0;
+    	return obj->hash();
     }
 };
-}
+
+} /* namespace supplementary */
+
+
