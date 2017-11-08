@@ -1,13 +1,4 @@
-/*
- * PlanParser.h
- *
- *  Created on: Mar 27, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef PLANPARSER_H_
-#define PLANPARSER_H_
-
+#pragma once
 
 #include <iostream>
 #include <list>
@@ -18,9 +9,7 @@
 
 #include <SystemConfig.h>
 #include <FileSystem.h>
-#include "../IPlanParser.h"
 
-using namespace std;
 namespace tinyxml2 {
 	class XMLElement;
 }
@@ -38,7 +27,7 @@ namespace alica
 	/**
 	 * The default parser, parsing the XML encoding of an ALICA plan-tree
 	 */
-	class PlanParser : public IPlanParser
+	class PlanParser
 	{
 	public:
 		PlanParser(AlicaEngine* ae, PlanRepository* rep);
@@ -82,5 +71,3 @@ namespace alica
 
 	};
 } /* namespace Alica */
-
-#endif /* PLANPARSER_H_ */

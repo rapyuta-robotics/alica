@@ -7,8 +7,6 @@
 #include <vector>
 #include <memory>
 
-
-
 namespace alica
 {
 
@@ -25,12 +23,10 @@ namespace alica
 	public:
 		ForallAgents(AlicaEngine* ae, long id = 0);
 		virtual ~ForallAgents();
-		shared_ptr<list<vector<Variable* > > > getDomainVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<const supplementary::IAgentID*> >& agentsInScope);
+		std::shared_ptr<std::list<std::vector<Variable* > > > getDomainVariables(std::shared_ptr<RunningPlan>& p, std::shared_ptr<std::vector<const supplementary::IAgentID*> >& agentsInScope);
 
 	protected:
 		AlicaEngine* ae;
-
-
 	};
 
 } /* namespace Alica */

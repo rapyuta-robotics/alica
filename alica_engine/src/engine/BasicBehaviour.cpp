@@ -6,7 +6,7 @@
 #include "engine/model/Behaviour.h"
 #include "engine/AlicaEngine.h"
 #include "engine/PlanBase.h"
-#include "engine/ITeamObserver.h"
+#include "engine/TeamObserver.h"
 #include "engine/RunningPlan.h"
 #include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/Variable.h"

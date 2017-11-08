@@ -2,18 +2,14 @@
 
 //#define Q_DEBUG
 
-#include <engine/constraintmodul/ConditionStore.h>
-#include <engine/constraintmodul/ISolver.h>
-#include <engine/constraintmodul/ProblemDescriptor.h>
-#include <engine/constraintmodul/ProblemPart.h>
-#include <memory>
-#include <vector>
-#include <map>
-
+#include "engine/constraintmodul/ConditionStore.h"
+#include "engine/constraintmodul/ISolver.h"
+#include "engine/constraintmodul/ProblemDescriptor.h"
+#include "engine/constraintmodul/ProblemPart.h"
 #include "engine/AlicaEngine.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/IAlicaClock.h"
-#include "engine/ITeamObserver.h"
+#include "engine/TeamObserver.h"
 #include "engine/RunningPlan.h"
 #include "engine/constraintmodul/IVariableSyncModule.h"
 #include "engine/constraintmodul/SolverTerm.h"
@@ -23,12 +19,16 @@
 #include "engine/model/Parametrisation.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/Variable.h"
+#include "engine/constraintmodul/VariableSyncModule.h"
+
+#include <memory>
+#include <vector>
+#include <map>
 
 namespace alica
 {
 	class AlicaEngine;
 	class ProblemPart;
-	class ITeamObserver;
 	class RunningPlan;
 	class IAlicaClock;
 	class BasicBehaviour;
@@ -198,7 +198,4 @@ namespace alica
 
 		return ret;
 	}
-
-
-
 }/* namespace alica */

@@ -18,15 +18,14 @@
 
 namespace alica
 {
-
+	class BehaviourPool;
 	class BasicBehaviour;
 	class AbstractPlan;
 	class Assignment;
 	class State;
 	class EntryPoint;
 	class PlanType;
-	class IBehaviourPool;
-	class ITeamObserver;
+	class TeamObserver;
 	class Plan;
 	class RuleBook;
 	class ConditionStore;
@@ -100,7 +99,7 @@ namespace alica
 		void activate();
 		EntryPoint* getActiveEntryPoint();
 		void setActiveEntryPoint(EntryPoint* activeEntryPoint);
-		void limitToRobots(unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> robots);
+		void limitToRobots(std::unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> robots);
 		std::shared_ptr<CycleManager> getCycleManagement();
 		void revokeAllConstraints();
 		void attachPlanConstraints();
@@ -132,8 +131,8 @@ namespace alica
 		 */
 		AlicaTime planStartTime;
 		const supplementary::IAgentID* ownId;
-		unique_ptr<list<const supplementary::IAgentID*> > robotsAvail;
-		map<AbstractPlan*, int> failedSubPlans;
+		std::unique_ptr<std::list<const supplementary::IAgentID*> > robotsAvail;
+		std::map<AbstractPlan*, int> failedSubPlans;
 		PlanType* planType;
 		int failCount;
 		bool failHandlingNeeded;
@@ -141,8 +140,8 @@ namespace alica
 		 * Whether or not this running plan is active or has been removed from the plan tree
 		 */
 		bool active;
-		IBehaviourPool* bp;
-		ITeamObserver* to;
+		BehaviourPool* bp;
+		TeamObserver* to;
 		bool allocationNeeded;
 		AlicaTime assignmentProtectionTime;
 		std::shared_ptr<CycleManager> cycleManagement;

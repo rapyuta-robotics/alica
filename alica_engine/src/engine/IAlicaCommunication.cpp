@@ -1,13 +1,15 @@
+#include "engine/IAlicaCommunication.h"
 
+#include "engine/syncmodule/SyncModul.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/AlicaEngine.h"
-#include "engine/syncmodul/SyncModul.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/teamobserver/TeamObserver.h"
-#include "engine/constraintmodul/IVariableSyncModule.h"
+#include "engine/TeamObserver.h"
+#include "engine/constraintmodul/VariableSyncModule.h"
 
 #include <iostream>
 
+using std::shared_ptr;
 
 void alica::IAlicaCommunication::onSyncTalkReceived(shared_ptr<SyncTalk> st)
 {

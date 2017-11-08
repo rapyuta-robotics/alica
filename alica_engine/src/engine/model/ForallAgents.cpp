@@ -5,10 +5,10 @@
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/Assignment.h"
-#include "engine/ITeamManager.h"
+#include "engine/teammanager/TeamManager.h"
 #include "engine/AlicaEngine.h"
 #include "engine/collections/StateCollection.h"
-#include "engine/ITeamObserver.h"
+#include "engine/TeamObserver.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/model/Variable.h"
 #include "engine/constraintmodul/SolverTerm.h"
@@ -56,7 +56,7 @@ namespace alica
 			return nullptr;
 		}
 		auto ret = make_shared<list<vector<Variable*>>>();
-		ITeamManager* tm = ae->getTeamManager();
+		auto tm = ae->getTeamManager();
 		for (auto& r : *(agentsInScope))
 		{
 			vector<Variable*> terms = vector<Variable*>(this->getDomainIdentifiers().size());

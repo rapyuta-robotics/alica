@@ -1,11 +1,15 @@
 #pragma once
 
 #include <engine/IRoleAssignment.h>
+#include <memory>
+#include <list>
 
 namespace alica
 {
 	class AlicaEngine;
 	class TeamObserver;
+	class RobotProperties;
+
 	class StaticRoleAssignment : public IRoleAssignment
 	{
 	public:

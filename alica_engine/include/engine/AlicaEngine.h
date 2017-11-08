@@ -6,39 +6,39 @@
 #include <string>
 #include <supplementary/AgentIDManager.h>
 
-using namespace std;
-
 namespace supplementary
 {
 class IAgentIDFactory;
 }
+
 namespace alica
 {
 class PlanRepository;
 class Plan;
-class IPlanParser;
-class IBehaviourPool;
+class PlanParser;
+class BehaviourPool;
 class Logger;
 class RoleSet;
-class ITeamObserver;
-class IBehaviourCreator;
-class ISyncModul;
+class TeamObserver;
+class SyncModul;
 class AuthorityManager;
-class IRoleAssignment;
-class IPlanSelector;
-class IAlicaCommunication;
-class IEngineModule;
-class IPlanner;
-class IAlicaClock;
+class PlanSelector;
 class PlanBase;
-class IConditionCreator;
-class IConstraintCreator;
-class IUtilityCreator;
 class ExpressionHandler;
 class PartialAssignmentPool;
+class VariableSyncModule;
+class TeamManager;
+
+class IBehaviourCreator;
+class IUtilityCreator;
+class IConditionCreator;
+class IConstraintCreator;
+
+class IAlicaCommunication;
+class IAlicaClock;
+
 class ISolver;
-class IVariableSyncModule;
-class ITeamManager;
+class IRoleAssignment;
 
 class AlicaEngine
 {
@@ -54,20 +54,20 @@ class AlicaEngine
     template <typename T>
     void abort(string msg, const T tail) const;
     PlanRepository *getPlanRepository() const;
-    IBehaviourPool *getBehaviourPool();
+    BehaviourPool *getBehaviourPool();
     string getRobotName() const;
     Logger *getLog();
     void setLog(Logger *log);
-    ITeamObserver *getTeamObserver() const;
-    void setTeamObserver(ITeamObserver *teamObserver);
+    TeamObserver *getTeamObserver() const;
+    void setTeamObserver(TeamObserver *teamObserver);
 
-    void setSyncModul(ISyncModul *syncModul);
-    ISyncModul *getSyncModul();
+    void setSyncModul(SyncModul *syncModul);
+    SyncModul *getSyncModul();
     AuthorityManager *getAuth();
     void setAuth(AuthorityManager *auth);
     IRoleAssignment *getRoleAssignment();
     void setRoleAssignment(IRoleAssignment *roleAssignment);
-    IPlanParser *getPlanParser() const;
+    PlanParser *getPlanParser() const;
     bool isTerminating() const;
     void setTerminating(bool terminating);
     void setStepCalled(bool stepCalled);
@@ -77,8 +77,7 @@ class AlicaEngine
     RoleSet *getRoleSet();
     const IAlicaCommunication *getCommunicator() const;
     void setCommunicator(IAlicaCommunication *communicator);
-    IPlanSelector *getPlanSelector();
-    IPlanner *getPlanner();
+    PlanSelector *getPlanSelector();
     IAlicaClock *getIAlicaClock() const;
     void setIAlicaClock(IAlicaClock *clock);
     void iterationComplete();
@@ -87,9 +86,9 @@ class AlicaEngine
     PlanBase *getPlanBase();
     void addSolver(int identifier, ISolver *solver);
     ISolver *getSolver(int identifier);
-    IVariableSyncModule *getResultStore();
-    void setResultStore(IVariableSyncModule *resultStore);
-    ITeamManager *getTeamManager() const;
+    VariableSyncModule *getResultStore();
+    void setResultStore(VariableSyncModule *resultStore);
+    TeamManager *getTeamManager() const;
 
 
 	const supplementary::IAgentID* getIDFromBytes(const std::vector<uint8_t> &vectorID);
@@ -107,27 +106,26 @@ class AlicaEngine
     bool maySendMessages;
 
   protected:
-    supplementary::SystemConfig *sc;
-    Plan *masterPlan;
+
     Logger *log;
     RoleSet *roleSet;
-    ISyncModul *syncModul;
+    SyncModul *syncModul;
     AuthorityManager *auth;
-    IRoleAssignment *roleAssignment;
     ExpressionHandler *expressionHandler;
-    std::list<IEngineModule *> mods;
-    IPlanSelector *planSelector;
-    IAlicaCommunication *communicator;
-    supplementary::IAgentIDFactory *robotIDFactory;
-    IPlanner *planner;
-    IAlicaClock *alicaClock;
-    ITeamManager *teamManager;
+    PlanSelector *planSelector;
+    TeamManager *teamManager;
     PartialAssignmentPool *pap;
     PlanBase *planBase;
-    bool stepCalled;
-    map<int, ISolver *> solver;
-    IVariableSyncModule *variableSyncModule;
+    VariableSyncModule *variableSyncModule;
+    PlanRepository *planRepository;
+    PlanParser *planParser;
+    BehaviourPool *behaviourPool;
+    TeamObserver *teamObserver;
     supplementary::AgentIDManager *agentIDManager;
+
+    IRoleAssignment *roleAssignment;
+    IAlicaCommunication *communicator;
+    IAlicaClock *alicaClock;
 
   private:
     /**
@@ -144,12 +142,14 @@ class AlicaEngine
      * that is based on default roles, or not.
      */
     bool useStaticRoles;
+
+    supplementary::SystemConfig *sc;
+    bool stepCalled;
+    Plan *masterPlan;
+    map<int, ISolver *> solver;
+
     void setStepEngine(bool stepEngine);
 
-    PlanRepository *planRepository;
-    IPlanParser *planParser;
-    IBehaviourPool *behaviourPool;
-    ITeamObserver *teamObserver;
 };
 
 /**

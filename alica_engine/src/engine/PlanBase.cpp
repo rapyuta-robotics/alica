@@ -2,14 +2,14 @@
 
 #include "engine/RunningPlan.h"
 #include "engine/model/Plan.h"
-#include "engine/rules/RuleBook.h"
+#include "engine/RuleBook.h"
 #include "engine/AlicaEngine.h"
-#include "engine/ITeamObserver.h"
-#include "engine/ITeamManager.h"
+#include "engine/TeamObserver.h"
+#include "engine/teammanager/TeamManager.h"
 #include "engine/IRoleAssignment.h"
-#include "engine/logging/Logger.h"
+#include "engine//Logger.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/ISyncModul.h"
+#include "engine/syncmodule/SyncModul.h"
 #include "engine/model/Task.h"
 #include "engine/model/State.h"
 #include "engine/model/EntryPoint.h"
@@ -209,7 +209,7 @@ namespace alica
 					if (this->deepestNode->getActiveState() != nullptr)
 					{
 						this->statusMessage->currentState = this->deepestNode->getActiveState()->getName();
-						copy(this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(
+						std::copy(this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(
 								this->deepestNode->getActiveState()).begin(),
 								this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(
 										this->deepestNode->getActiveState()).end(),

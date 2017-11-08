@@ -1,29 +1,21 @@
-/*
- * RuleBook.cpp
- *
- *  Created on: Jun 17, 2014
- *      Author: Paul Panin
- */
-
-#include "engine/rules/RuleBook.h"
+#include "engine/RuleBook.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
-#include "engine/IPlanSelector.h"
-#include "engine/ISyncModul.h"
-#include "engine/ITeamObserver.h"
 #include "engine/RunningPlan.h"
 #include "engine/RunningPlan.h"
 #include "engine/UtilityFunction.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/collections/StateCollection.h"
-#include "engine/logging/Logger.h"
+#include "engine/Logger.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/model/Transition.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/planselector/PlanSelector.h"
 #include <engine/constraintmodul/ConditionStore.h>
+#include <engine/syncmodule/SyncModul.h>
 
 #include <SystemConfig.h>
 
@@ -54,7 +46,7 @@ RuleBook::~RuleBook()
  * @param masterPlan A Plan
  * @return the shared_ptr of a Runningplan constructed from the given plan
  */
-shared_ptr<RunningPlan> RuleBook::initialisationRule(Plan *masterPlan)
+std::shared_ptr<RunningPlan> RuleBook::initialisationRule(Plan *masterPlan)
 {
 #ifdef RULE_debug
     cout << "RB: Init-Rule called." << endl;
@@ -64,7 +56,7 @@ shared_ptr<RunningPlan> RuleBook::initialisationRule(Plan *masterPlan)
         ae->abort("RB: Masterplan does not have exactly one task!");
     }
 
-    shared_ptr<RunningPlan> main = make_shared<RunningPlan>(ae, masterPlan);
+    std::shared_ptr<RunningPlan> main = std::make_shared<RunningPlan>(ae, masterPlan);
     main->setAssignment(make_shared<Assignment>(masterPlan));
 
     main->setAllocationNeeded(true);
@@ -426,7 +418,7 @@ PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp)
  * @param r A shared_ptr of a RunningPlan
  * @return PlanChnage
  */
-PlanChange RuleBook::topFailRule(shared_ptr<RunningPlan> r)
+PlanChange RuleBook::topFailRule(std::shared_ptr<RunningPlan> r)
 {
 #ifdef RULE_debug
     cout << "RB: TopFail-Rule called." << endl;
@@ -509,7 +501,7 @@ PlanChange RuleBook::transitionRule(shared_ptr<RunningPlan> r)
  * @param r A shared_ptr of a RunningPlan
  * @return PlanChange
  */
-PlanChange RuleBook::synchTransitionRule(shared_ptr<RunningPlan> r)
+PlanChange RuleBook::synchTransitionRule(std::shared_ptr<RunningPlan> r)
 {
 #ifdef RULE_debug
     cout << "RB: Sync-Rule called." << endl;

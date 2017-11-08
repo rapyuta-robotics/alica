@@ -1,32 +1,31 @@
+
 #define AE_DEBUG
 
 #include "engine/AlicaEngine.h"
 #include "engine/IConditionCreator.h"
-#include "engine/IEngineModule.h"
 #include "engine/IRoleAssignment.h"
-#include "engine/ISyncModul.h"
+#include <engine/syncmodule/SyncModul.h>
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
 #include "engine/UtilityFunction.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/behaviourpool/BehaviourPool.h"
+#include "engine/BehaviourPool.h"
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
-#include "engine/logging/Logger.h"
+#include "engine/Logger.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
 #include "engine/parser/PlanParser.h"
 #include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/planselector/PlanSelector.h"
-#include "engine/staticroleassignment/StaticRoleAssignment.h"
-#include "engine/syncmodul/SyncModul.h"
+#include "engine/StaticRoleAssignment.h"
+#include <engine/syncmodule/SyncModul.h>
 #include "engine/teammanager/TeamManager.h"
-#include "engine/teamobserver/TeamObserver.h"
+#include "engine/TeamObserver.h"
 
 #include <supplementary/AgentIDManager.h>
-#include <supplementary/IAgentIDFactory.h>
 
 using namespace std;
 namespace alica
@@ -37,7 +36,6 @@ namespace alica
 AlicaEngine::AlicaEngine()
     : stepCalled(false)
     , planBase(nullptr)
-    , planner(nullptr)
     , planSelector(nullptr)
     , communicator(nullptr)
     , alicaClock(nullptr)
@@ -59,7 +57,6 @@ AlicaEngine::AlicaEngine()
     , pap(nullptr)
     , variableSyncModule(nullptr)
     , useStaticRoles(false)
-    , robotIDFactory(nullptr)
     , teamManager(nullptr)
     , agentIDManager(nullptr)
 {
@@ -318,7 +315,7 @@ PlanRepository *AlicaEngine::getPlanRepository() const
 /**
  * Returns the planselector
  */
-IPlanSelector *AlicaEngine::getPlanSelector()
+PlanSelector *AlicaEngine::getPlanSelector()
 {
     return this->planSelector;
 }
@@ -337,7 +334,7 @@ void AlicaEngine::setIAlicaClock(IAlicaClock *clock)
 /**
  * Returns the behaviourpool
  */
-IBehaviourPool *AlicaEngine::getBehaviourPool()
+BehaviourPool *AlicaEngine::getBehaviourPool()
 {
     return this->behaviourPool;
 }
@@ -345,11 +342,11 @@ IBehaviourPool *AlicaEngine::getBehaviourPool()
 /**
  * Returns the TeamObserver, which handles most communication tasks.
  */
-ITeamObserver *AlicaEngine::getTeamObserver() const
+TeamObserver *AlicaEngine::getTeamObserver() const
 {
     return this->teamObserver;
 }
-void AlicaEngine::setTeamObserver(ITeamObserver *teamObserver)
+void AlicaEngine::setTeamObserver(TeamObserver *teamObserver)
 {
     this->teamObserver = teamObserver;
 }
@@ -357,12 +354,12 @@ void AlicaEngine::setTeamObserver(ITeamObserver *teamObserver)
 /**
  * Gets the SyncModul, which enables synchronized transitions.
  */
-ISyncModul *AlicaEngine::getSyncModul()
+SyncModul *AlicaEngine::getSyncModul()
 {
     return syncModul;
 }
 
-void AlicaEngine::setSyncModul(ISyncModul *syncModul)
+void AlicaEngine::setSyncModul(SyncModul *syncModul)
 {
     this->syncModul = syncModul;
 }
@@ -395,7 +392,7 @@ void AlicaEngine::setRoleAssignment(IRoleAssignment *roleAssignment)
 /**
  * Returns the parser which reads ALICAs XML representation
  */
-IPlanParser *AlicaEngine::getPlanParser() const
+PlanParser *AlicaEngine::getPlanParser() const
 {
     return planParser;
 }
@@ -474,14 +471,6 @@ void AlicaEngine::setCommunicator(IAlicaCommunication *communicator)
 }
 
 /**
- * Returns the problem planner
- */
-IPlanner *AlicaEngine::getPlanner()
-{
-    return planner;
-}
-
-/**
  * Returns Alica Main clase that manages the current alica state
  */
 PlanBase *AlicaEngine::getPlanBase()
@@ -499,12 +488,12 @@ ISolver *AlicaEngine::getSolver(int identifier)
     return this->solver[identifier];
 }
 
-IVariableSyncModule *AlicaEngine::getResultStore()
+VariableSyncModule *AlicaEngine::getResultStore()
 {
     return this->variableSyncModule;
 }
 
-void AlicaEngine::setResultStore(IVariableSyncModule *resultStore)
+void AlicaEngine::setResultStore(VariableSyncModule *resultStore)
 {
     this->variableSyncModule = resultStore;
 }
@@ -526,7 +515,7 @@ void AlicaEngine::stepNotify()
     this->getPlanBase()->getStepModeCV()->notify_all();
 }
 
-ITeamManager *AlicaEngine::getTeamManager() const
+TeamManager *AlicaEngine::getTeamManager() const
 {
     return this->teamManager;
 }

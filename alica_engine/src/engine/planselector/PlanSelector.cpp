@@ -1,8 +1,8 @@
 #include <engine/planselector/PlanSelector.h>
 #include <engine/planselector/PartialAssignmentPool.h>
 #include "engine/AlicaEngine.h"
-#include "engine/ITeamObserver.h"
-#include "engine/ITeamManager.h"
+#include "engine/TeamObserver.h"
+#include "engine/teammanager/TeamManager.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/model/Plan.h"
 #include "engine/RunningPlan.h"
@@ -12,7 +12,6 @@
 #include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/PlanningProblem.h"
 #include "engine/model/Behaviour.h"
-#include "engine/IPlanner.h"
 #include "engine/planselector/TaskAssignment.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/collections/RobotProperties.h"
@@ -23,6 +22,9 @@
 
 #include "engine/model/Task.h"
 
+using std::shared_ptr;
+using std::list;
+using std::vector;
 
 namespace alica
 {
@@ -96,7 +98,6 @@ namespace alica
 		PartialAssignment::reset(pap);
 		shared_ptr<list<shared_ptr<RunningPlan>> > ll = this->getPlansForStateInternal(planningParent, plans, robotIDs);
 		return ll;
-
 	}
 
 	shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> planningParent, list<Plan*> plans,
@@ -303,30 +304,6 @@ namespace alica
 							cout << "PS: It was not possible to create a RunningPlan for the Plan " << pt->getName()
 									<< "!" << endl;
 //#endif
-							return nullptr;
-						}
-						rps->push_back(rp);
-					}
-					else
-					{
-						pp = dynamic_cast<PlanningProblem*>(ap);
-						if (pp == nullptr)
-						{
-							cerr
-									<< "PS: WTF? An AbstractPlan wasnt a BehaviourConfiguration, a Plan, a PlanType nor a PlannigProblem: "
-									<< ap->getId() << endl;
-							throw new exception();
-						}
-						//TODO implement method in planner
-						Plan* myP = ae->getPlanner()->requestPlan(pp);
-						planList = list<Plan*>();
-						planList.push_back(myP);
-						rp = this->createRunningPlan(planningParent, planList, robotIDs, nullptr, nullptr);
-						if (rp == nullptr)
-						{
-#ifdef PSDEBUG
-							cout << "PS: Unable to execute planning result" << endl;
-#endif
 							return nullptr;
 						}
 						rps->push_back(rp);

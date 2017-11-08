@@ -13,8 +13,7 @@
 #include "engine/model/RoleSet.h"
 #include "engine/model/RoleTaskMapping.h"
 #include "engine/model/Task.h"
-#include "engine/ITeamObserver.h"
-#include "engine/ITeamManager.h"
+#include "engine/teammanager/TeamManager.h"
 
 namespace alica
 {

@@ -3,7 +3,6 @@
 #include "supplementary/IAgentID.h"
 
 #include "model/Role.h"
-#include "ITeamObserver.h"
 #include "engine/collections/RobotEngineData.h"
 
 #include <map>

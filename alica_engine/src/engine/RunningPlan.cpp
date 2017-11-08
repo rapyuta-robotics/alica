@@ -5,10 +5,10 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/IAlicaClock.h"
 #include "engine/IAlicaCommunication.h"
-#include "engine/IBehaviourPool.h"
+#include "engine/BehaviourPool.h"
 #include "engine/IPlanTreeVisitor.h"
-#include "engine/ITeamManager.h"
-#include "engine/ITeamObserver.h"
+#include "engine/teammanager/TeamManager.h"
+#include "engine/TeamObserver.h"
 #include "engine/SimplePlanTree.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/allocationauthority/EntryPointRobotPair.h"
@@ -28,9 +28,11 @@
 #include "engine/model/State.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
-#include "engine/rules/RuleBook.h"
+#include "engine/RuleBook.h"
 
 #include <iostream>
+
+using std::shared_ptr;
 
 namespace alica
 {

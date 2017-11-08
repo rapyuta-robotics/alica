@@ -1,8 +1,7 @@
 #include "engine/collections/RobotEngineData.h"
 
 #include "engine/AlicaEngine.h"
-#include "engine/IPlanParser.h"
-#include "supplementary/IAgentID.h"
+#include "engine/parser/PlanParser.h"
 #include "engine/PlanRepository.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/collections/SuccessMarks.h"
@@ -10,6 +9,8 @@
 #include "engine/model/ForallAgents.h"
 #include "engine/model/Quantifier.h"
 #include "engine/model/Variable.h"
+
+#include <supplementary/IAgentID.h>
 
 namespace alica
 {

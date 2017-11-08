@@ -5,7 +5,6 @@
 #include "../containers/AllocationAuthorityInfo.h"
 #include "../IAlicaCommunication.h"
 #include "../AlicaEngine.h"
-#include "../ITeamObserver.h"
 #include "../RunningPlan.h"
 
 #include <memory>
@@ -25,16 +24,16 @@ namespace alica
 		virtual ~AuthorityManager();
 		void init();
 		void close();
-		void handleIncomingAuthorityMessage(shared_ptr<AllocationAuthorityInfo> aai);
-		void tick(shared_ptr<RunningPlan> p);
-		void sendAllocation(shared_ptr<RunningPlan> p);
+		void handleIncomingAuthorityMessage(std::shared_ptr<AllocationAuthorityInfo> aai);
+		void tick(std::shared_ptr<RunningPlan> p);
+		void sendAllocation(std::shared_ptr<RunningPlan> p);
 
 	protected:
-		vector<shared_ptr<AllocationAuthorityInfo>> queue;
+		vector<std::shared_ptr<AllocationAuthorityInfo>> queue;
 		const AlicaEngine* engine;
 		const supplementary::IAgentID* localAgentID;
 		mutex mu;
-		void processPlan(shared_ptr<RunningPlan> p);
-		bool authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p);
+		void processPlan(std::shared_ptr<RunningPlan> p);
+		bool authorityMatchesPlan(std::shared_ptr<AllocationAuthorityInfo> aai, std::shared_ptr<RunningPlan> p);
 	};
 } /* namespace alica */

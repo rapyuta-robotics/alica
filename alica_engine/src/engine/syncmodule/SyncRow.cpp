@@ -5,10 +5,10 @@
  *      Author: Stefan Jakob
  */
 
-#include <engine/syncmodul/SyncRow.h>
 #include <algorithm>
 #include <iostream>
 #include <engine/containers/SyncData.h>
+#include <engine/syncmodule/SyncRow.h>
 
 namespace alica
 {

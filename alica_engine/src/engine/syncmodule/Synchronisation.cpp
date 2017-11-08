@@ -1,4 +1,6 @@
-#include "engine/syncmodul/Synchronisation.h"
+#include <engine/syncmodule/Synchronisation.h>
+#include <engine/syncmodule/SyncModul.h>
+#include <engine/syncmodule/SyncRow.h>
 #include "engine/AlicaEngine.h"
 #include "engine/model/Transition.h"
 #include "engine/IAlicaClock.h"
@@ -6,9 +8,7 @@
 #include "engine/containers/SyncData.h"
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
-#include "engine/syncmodul/SyncRow.h"
-#include "engine/syncmodul/SyncModul.h"
-#include "engine/teamobserver/TeamObserver.h"
+#include "engine/TeamObserver.h"
 
 namespace alica
 {
