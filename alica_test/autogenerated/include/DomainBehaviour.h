@@ -1,5 +1,4 @@
-#ifndef DomainBehaviour_H_
-#define DomainBehaviour_H_
+#pragma once
 
 #include "engine/BasicBehaviour.h"
 
@@ -8,10 +7,8 @@ namespace alica
 class DomainBehaviour : public BasicBehaviour
 {
 public:
-  DomainBehaviour(string name);
+  DomainBehaviour(std::string name);
   virtual ~DomainBehaviour();
 };
 } /* namespace alica */
-
-#endif /* DomainBehaviour_H_ */
 
