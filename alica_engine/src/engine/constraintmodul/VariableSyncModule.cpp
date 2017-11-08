@@ -4,8 +4,8 @@
 #include "SystemConfig.h"
 #include "engine/AlicaEngine.h"
 #include "engine/IAlicaCommunication.h"
-#include "engine/ITeamManager.h"
-#include "engine/ITeamObserver.h"
+#include "engine/teammanager/TeamManager.h"
+#include "engine/TeamObserver.h"
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/containers/SolverResult.h"
 #include "engine/model/Variable.h"
@@ -24,6 +24,7 @@ VariableSyncModule::VariableSyncModule(AlicaEngine *ae)
 	, ttl4Communication(0)
 	, ttl4Usage(0)
 	, communicationEnabled(false)
+	, ownId(nullptr)
 {
 }
 

@@ -8,11 +8,9 @@
 
 namespace alica
 {
-class ISyncModul;
-class IPlanSelector;
+class SyncModul;
+class PlanSelector;
 class Logger;
-class ITeamObserver;
-class ITeamManager;
 class RunningPlan;
 class Plan;
 class EntryPoint;
@@ -24,6 +22,8 @@ class StateCollection;
 class CycleManager;
 class UtilityFunction;
 class AlicaEngine;
+class TeamObserver;
+class TeamManager;
 
 /**
  * Defines the operational semantics of the used ALICA dialect.
@@ -41,11 +41,11 @@ class RuleBook
 
   protected:
     AlicaEngine *ae;
-    ITeamObserver *to;
-    ITeamManager *tm;
-    ISyncModul *sm;
+    TeamObserver *to;
+    TeamManager *tm;
+    SyncModul *sm;
     int maxConsecutiveChanges;
-    IPlanSelector *ps;
+    PlanSelector *ps;
     Logger *log;
     bool changeOccured;
     PlanChange synchTransitionRule(std::shared_ptr<RunningPlan> r);

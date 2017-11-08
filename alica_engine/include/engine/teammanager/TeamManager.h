@@ -1,6 +1,5 @@
 #pragma once
 
-#include "engine/ITeamManager.h"
 #include "engine/IAlicaClock.h"
 #include "engine/teammanager/Agent.h"
 
@@ -27,7 +26,7 @@ class AlicaEngine;
 class Variable;
 class SuccessMarks;
 
-class TeamManager : public ITeamManager
+class TeamManager
 {
   public:
 	TeamManager(AlicaEngine * engine, bool useConfigForTeam);
@@ -54,8 +53,9 @@ class TeamManager : public ITeamManager
   private:
     AlicaTime teamTimeOut;
     Agent* localAgent;
-    map<const supplementary::IAgentID*, Agent*, supplementary::IAgentIDComparator> agents;
-    unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> ignoredAgents;
+    AlicaEngine* engine;
+    std::map<const supplementary::IAgentID*, Agent*, supplementary::IAgentIDComparator> agents;
+    std::unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> ignoredAgents;
     bool useConfigForTeam;
 
     void readTeamFromConfig(supplementary::SystemConfig* sc);

@@ -1,4 +1,4 @@
-#include "engine/logging/Logger.h"
+#include "engine/Logger.h"
 #include "engine/model/State.h"
 #include "engine/model/Plan.h"
 #include "engine/model/EntryPoint.h"
@@ -7,9 +7,11 @@
 #include "engine/RunningPlan.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/ITeamObserver.h"
-#include "engine/ITeamManager.h"
+#include "engine/TeamObserver.h"
+#include "engine/teammanager/TeamManager.h"
 #include "engine/SimplePlanTree.h"
+
+using std::endl;
 
 namespace alica
 {

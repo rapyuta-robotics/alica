@@ -1,14 +1,4 @@
-/*
- * PlanBase.h
- *
- *  Created on: Jun 17, 2014
- *      Author: Paul Panin
- */
-
-#ifndef PLANBASE_H_
-#define PLANBASE_H_
-//#define PB_DEBUG
-
+#pragma once
 
 #include <engine/containers/AlicaEngineInfo.h>
 #include <queue>
@@ -29,11 +19,11 @@ namespace alica
 	class Plan;
 	class RuleBook;
 	class AlicaEngine;
-	class ITeamObserver;
+	class TeamObserver;
 	class IRoleAssignment;
 	class Logger;
 	class AuthorityManager;
-	class ISyncModul;
+	class SyncModul;
 	class IAlicaCommunication;
 	class Task;
 	class State;
@@ -80,9 +70,9 @@ namespace alica
 		AlicaEngine* ae;
 		int treeDepth;
 		RuleBook* ruleBook;
-		ITeamObserver* teamObserver;
+		TeamObserver* teamObserver;
 		IRoleAssignment* ra;
-		ISyncModul* syncModel;
+		SyncModul* syncModel;
 		AuthorityManager* authModul;
 		IAlicaCommunication* statusPublisher;
 		IAlicaClock* alicaClock;
@@ -110,4 +100,3 @@ namespace alica
 	};
 
 } /* namespace Alica */
-#endif /* PLANBASE_H_ */

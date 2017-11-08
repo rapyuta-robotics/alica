@@ -12,8 +12,7 @@ namespace alica
 {
 
 TeamManager::TeamManager(AlicaEngine *engine, bool useConfigForTeam = true)
-    : ITeamManager(engine)
-    , localAgent(nullptr)
+    : localAgent(nullptr)
     , teamTimeOut(0)
     , useConfigForTeam(useConfigForTeam)
 {

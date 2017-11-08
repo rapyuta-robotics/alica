@@ -1,37 +1,28 @@
-/*
- * Logger.h
- *
- *  Created on: Jun 13, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef LOGGER_H_
-#define LOGGER_H_
+#include <SystemConfig.h>
+#include <Logging.h>
+#include "engine/AlicaEngine.h"
+#include "engine/IAlicaClock.h"
+#include "engine/IPlanTreeVisitor.h"
 
-
+#include <ctime>
+#include <sys/stat.h>
+#include <iomanip>
+#include <time.h>
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <list>
-#include <SystemConfig.h>
-#include <Logging.h>
-#include "engine/AlicaEngine.h"
-#include <ctime>
-#include "engine/IAlicaClock.h"
-#include <time.h>
-#include <sys/stat.h>
-#include <iomanip>
 
-#include "engine/IPlanTreeVisitor.h"
-
-using namespace std;
 namespace alica
 {
 	class RunningPlan;
-	class ITeamObserver;
+	class TeamObserver;
 	class EntryPoint;
 	class State;
 	class AlicaEngine;
+	class TeamManager;
 
 	/**
 	 * The Plan Logger will write a log file according to the settings in the Alica.conf file.
@@ -49,11 +40,10 @@ namespace alica
 		void visit(shared_ptr<RunningPlan> r);
 		void logToConsole(string logString);
 
-
 	protected:
 		AlicaEngine* ae;
-		ITeamObserver* to;
-		ITeamManager* tm;
+		TeamObserver* to;
+		TeamManager* tm;
 		bool active = false;
 		ofstream* fileWriter;
 		bool recievedEvent;
@@ -68,10 +58,6 @@ namespace alica
 		EntryPoint* entryPointOfState(State* s);
 		void evaluationAssignmentsToString(stringstream* ss, shared_ptr<RunningPlan> rp);
 		shared_ptr<list<string> > createTreeLog(shared_ptr<RunningPlan> r);
-
-
 	};
 
 } /* namespace alica */
-
-#endif /* LOGGER_H_ */

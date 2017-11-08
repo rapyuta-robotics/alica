@@ -24,8 +24,8 @@ class Plan;
 class EntryPoint;
 class PartialAssignment;
 class SimplePlanTree;
-class ITeamManager;
-class ITeamObserver;
+class TeamManager;
+class TeamObserver;
 class PartialAssignmentPool;
 
 /**
@@ -48,8 +48,8 @@ class TaskAssignment : virtual public ITaskAssignment
 
   protected:
     // Plan to build an assignment for
-    ITeamManager *tm;
-    ITeamObserver *to;
+    TeamManager *tm;
+    TeamObserver *to;
     list<Plan *> planList;
     shared_ptr<vector<const supplementary::IAgentID *>> robots;
     vector<EntryPoint *> entryPointVector;

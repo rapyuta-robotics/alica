@@ -1,12 +1,6 @@
-/*
- * BehaviourPool.cpp
- *
- *  Created on: Jun 13, 2014
- *      Author: emmeda
- */
 #define BP_DEBUG
 
-#include "engine/behaviourpool/BehaviourPool.h"
+#include "engine/BehaviourPool.h"
 #include "engine/RunningPlan.h"
 #include "engine/IBehaviourCreator.h"
 #include "engine/AlicaEngine.h"
@@ -25,7 +19,7 @@ namespace alica
 	{
 		this->ae = ae;
 		this->behaviourCreator = nullptr;
-		this->availableBehaviours = new map<BehaviourConfiguration*, shared_ptr<BasicBehaviour> >();
+		this->availableBehaviours = new std::map<BehaviourConfiguration*, std::shared_ptr<BasicBehaviour> >();
 	}
 
 	/**
@@ -54,7 +48,7 @@ namespace alica
 		auto behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
 		for (auto iter : behaviourConfs)
 		{
-			shared_ptr<BasicBehaviour> basicBeh = this->behaviourCreator->createBehaviour(iter.first);
+			auto basicBeh = this->behaviourCreator->createBehaviour(iter.first);
 			if (basicBeh != nullptr)
 			{
 				// set stuff from behaviour configuration in basic behaviour object
@@ -81,7 +75,7 @@ namespace alica
 		auto behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
 		for (auto iter : behaviourConfs)
 		{
-			shared_ptr<BasicBehaviour> bbPtr = this->availableBehaviours->at(iter.second);
+			auto bbPtr = this->availableBehaviours->at(iter.second);
 			if (bbPtr == nullptr)
 			{
 				cerr << "BP::stop(): Found Behaviour without an BasicBehaviour attached!" << endl;
@@ -96,11 +90,11 @@ namespace alica
 	 * Enables the thread of the BasicBehaviour in the given RunningPlan.
 	 * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
 	 */
-	void BehaviourPool::startBehaviour(shared_ptr<RunningPlan> rp)
+	void BehaviourPool::startBehaviour(std::shared_ptr<RunningPlan> rp)
 	{
 		if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp->getPlan()))
 		{
-			shared_ptr<BasicBehaviour> bb = this->availableBehaviours->at(bc);
+			auto bb = this->availableBehaviours->at(bc);
 			if (bb != nullptr)
 			{
 				// set both directions rp <-> bb
@@ -120,11 +114,11 @@ namespace alica
 	 * Disables the thread of the BasicBehaviour in the given RunningPlan.
 	 * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
 	 */
-	void BehaviourPool::stopBehaviour(shared_ptr<RunningPlan> rp)
+	void BehaviourPool::stopBehaviour(std::shared_ptr<RunningPlan> rp)
 	{
 		if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp->getPlan()))
 		{
-			shared_ptr<BasicBehaviour> bb = this->availableBehaviours->at(bc);
+			auto bb = this->availableBehaviours->at(bc);
 			if (bb != nullptr)
 			{
 				bb->stop();
@@ -137,7 +131,7 @@ namespace alica
 	}
 
 
-	map<BehaviourConfiguration*, shared_ptr<BasicBehaviour> >* BehaviourPool::getAvailableBehaviours() {
+	std::map<BehaviourConfiguration*, std::shared_ptr<BasicBehaviour> >* BehaviourPool::getAvailableBehaviours() {
 		return availableBehaviours;
 	}
 

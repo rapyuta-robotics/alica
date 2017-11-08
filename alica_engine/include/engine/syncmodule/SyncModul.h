@@ -1,23 +1,14 @@
-/*
- * SyncModul.h
- *
- *  Created on: Aug 27, 2014
- *      Author: Paul Panin
- */
-
-#ifndef SYNCMODUL_H_
-#define SYNCMODUL_H_
+#pragma once
 
 #include "supplementary/IAgentID.h"
+
 #include <list>
-#include "../ISyncModul.h"
 #include <mutex>
 #include <iostream>
 #include <map>
 #include <vector>
+#include <memory>
 //#define SM_SUCCES
-
-using namespace std;
 
 namespace alica
 {
@@ -31,7 +22,7 @@ namespace alica
 	struct SyncTalk;
 	class IAlicaCommunication;
 
-	class SyncModul : public ISyncModul
+	class SyncModul
 	{
 	public:
 		SyncModul(AlicaEngine* ae);
@@ -41,12 +32,12 @@ namespace alica
 		virtual void tick();
 		virtual void setSynchronisation(Transition* trans, bool holds);
 		virtual bool followSyncTransition(Transition* trans);
-		virtual void onSyncTalk(shared_ptr<SyncTalk> st);
-		virtual void onSyncReady(shared_ptr<SyncReady> sr);
+		virtual void onSyncTalk(std::shared_ptr<SyncTalk> st);
+		virtual void onSyncReady(std::shared_ptr<SyncReady> sr);
 
 		void sendSyncTalk(SyncTalk& st);
 		void sendSyncReady(SyncReady& sr);
-		void sendAcks(vector<SyncData*> syncDataList);
+		void sendAcks(std::vector<SyncData*> syncDataList);
 		void synchronisationDone(SyncTransition* st);
 	protected:
 		bool running;
@@ -54,13 +45,11 @@ namespace alica
 		const supplementary::IAgentID* myId;
 		unsigned long ticks;
 		PlanRepository* pr;
-		map<SyncTransition*, Synchronisation*> synchSet;
-		list<SyncTransition*> synchedTransitions;
-		mutex lomutex;
+		std::map<SyncTransition*, Synchronisation*> synchSet;
+		std::list<SyncTransition*> synchedTransitions;
+		std::mutex lomutex;
 		const IAlicaCommunication* communicator;
 
 	};
 
 } /* namespace supplementary */
-
-#endif /* SYNCMODUL_H_ */

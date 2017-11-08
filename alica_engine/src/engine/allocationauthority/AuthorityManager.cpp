@@ -6,7 +6,7 @@
 #include "engine/Assignment.h"
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/model/EntryPoint.h"
-#include "engine/ITeamManager.h"
+#include "engine/teammanager/TeamManager.h"
 
 namespace alica
 {

@@ -1,6 +1,10 @@
 #pragma once
 #include <tuple>
 
+namespace supplementary {
+	class IAgentID;
+}
+
 namespace alica
 {
 typedef std::tuple<const supplementary::IAgentID *, long, bool, bool> stdSyncData;

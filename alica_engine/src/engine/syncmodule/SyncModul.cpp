@@ -1,15 +1,15 @@
-#include "engine/syncmodul/SyncModul.h"
+#include <engine/syncmodule/Synchronisation.h>
+#include <engine/syncmodule/SyncModul.h>
 #include "engine/AlicaEngine.h"
-#include "engine/teamobserver/TeamObserver.h"
+#include "engine/TeamObserver.h"
 #include "engine/PlanRepository.h"
-#include "engine/syncmodul/Synchronisation.h"
 #include "engine/model/Transition.h"
 #include "engine/containers/SyncData.h"
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/model/SyncTransition.h"
-#include "engine/ITeamManager.h"
+#include "engine/teammanager/TeamManager.h"
 
 namespace alica
 {

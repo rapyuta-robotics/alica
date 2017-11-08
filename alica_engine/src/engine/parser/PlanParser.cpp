@@ -1,9 +1,3 @@
-/*
- * PlanParser.cpp
- *
- *  Created on: Mar 27, 2014
- *      Author: Stephan Opfer
- */
 //#define PP_DEBUG
 #include "engine/parser/PlanParser.h"
 #include "engine/parser/ModelFactory.h"
