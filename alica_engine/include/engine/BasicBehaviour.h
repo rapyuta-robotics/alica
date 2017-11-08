@@ -35,7 +35,7 @@ namespace alica
 		virtual ~BasicBehaviour();
 		virtual void run(void* msg) = 0;
 		const std::string getName() const;
-		void setName(string name);
+		void setName(std::string name);
 		std::shared_ptr<std::map<std::string, std::string>> getParameters();
 		void setParameters(std::shared_ptr<std::map<std::string, std::string>> parameters);
 		std::shared_ptr<std::list<Variable*>> getVariables();
@@ -54,10 +54,10 @@ namespace alica
 		bool isFailure() const;
 		void setFailure(bool failure);
 
-		bool getParameter(string key, string& valueOut);
+		bool getParameter(std::string key, std::string& valueOut);
 		void setTrigger(supplementary::ITrigger* trigger);
 
-		void sendLogMessage(int level, string& message);
+		void sendLogMessage(int level, std::string& message);
 	protected:
 		/**
 		 * The name of this behaviour.
@@ -75,8 +75,8 @@ namespace alica
 		 * The running plan representing this behaviour within the PlanBase.
 		 */
 		std::shared_ptr<RunningPlan> runningPlan;
-		chrono::milliseconds msInterval;
-		chrono::milliseconds msDelayedStart;
+		std::chrono::milliseconds msInterval;
+		std::chrono::milliseconds msDelayedStart;
 		/**
 		 * is always true except when the behaviour is shutting down
 		 */

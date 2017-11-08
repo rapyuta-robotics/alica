@@ -3,7 +3,7 @@
 #include "Configuration.h"
 #include "SystemConfig.h"
 #include "engine/AlicaEngine.h"
-#include "engine/ITeamManager.h"
+#include "engine/teammanager/TeamManager.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
 #include "engine/containers/PlanTreeInfo.h"
 #include "engine/containers/RoleSwitch.h"

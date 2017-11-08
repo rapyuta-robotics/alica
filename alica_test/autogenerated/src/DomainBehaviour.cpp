@@ -2,10 +2,8 @@
 
 namespace alica
 {
-
-
-DomainBehaviour::DomainBehaviour(string name) :
-    BasicBehaviour(name)
+DomainBehaviour::DomainBehaviour(std::string name)
+    : BasicBehaviour(name)
 {
 }
 
