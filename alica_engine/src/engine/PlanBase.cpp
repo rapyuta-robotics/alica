@@ -1,3 +1,4 @@
+#include <engine/syncmodule/SyncModule.h>
 #include "engine/PlanBase.h"
 
 #include "engine/RunningPlan.h"
@@ -9,7 +10,6 @@
 #include "engine/IRoleAssignment.h"
 #include "engine//Logger.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/syncmodule/SyncModul.h"
 #include "engine/model/Task.h"
 #include "engine/model/State.h"
 #include "engine/model/EntryPoint.h"

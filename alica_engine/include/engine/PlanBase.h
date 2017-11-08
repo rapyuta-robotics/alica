@@ -23,7 +23,7 @@ namespace alica
 	class IRoleAssignment;
 	class Logger;
 	class AuthorityManager;
-	class SyncModul;
+	class SyncModule;
 	class IAlicaCommunication;
 	class Task;
 	class State;
@@ -72,7 +72,7 @@ namespace alica
 		RuleBook* ruleBook;
 		TeamObserver* teamObserver;
 		IRoleAssignment* ra;
-		SyncModul* syncModel;
+		SyncModule* syncModel;
 		AuthorityManager* authModul;
 		IAlicaCommunication* statusPublisher;
 		IAlicaClock* alicaClock;

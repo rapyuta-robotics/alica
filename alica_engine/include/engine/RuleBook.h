@@ -8,7 +8,7 @@
 
 namespace alica
 {
-class SyncModul;
+class SyncModule;
 class PlanSelector;
 class Logger;
 class RunningPlan;
@@ -43,7 +43,7 @@ class RuleBook
     AlicaEngine *ae;
     TeamObserver *to;
     TeamManager *tm;
-    SyncModul *sm;
+    SyncModule *sm;
     int maxConsecutiveChanges;
     PlanSelector *ps;
     Logger *log;

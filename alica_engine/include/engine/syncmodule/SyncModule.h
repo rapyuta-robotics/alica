@@ -22,11 +22,11 @@ namespace alica
 	struct SyncTalk;
 	class IAlicaCommunication;
 
-	class SyncModul
+	class SyncModule
 	{
 	public:
-		SyncModul(AlicaEngine* ae);
-		virtual ~SyncModul();
+		SyncModule(AlicaEngine* ae);
+		virtual ~SyncModule();
 		virtual void init();
 		virtual void close();
 		virtual void tick();

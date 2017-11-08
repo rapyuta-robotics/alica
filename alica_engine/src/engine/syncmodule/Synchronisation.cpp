@@ -1,5 +1,5 @@
 #include <engine/syncmodule/Synchronisation.h>
-#include <engine/syncmodule/SyncModul.h>
+#include <engine/syncmodule/SyncModule.h>
 #include <engine/syncmodule/SyncRow.h>
 #include "engine/AlicaEngine.h"
 #include "engine/model/Transition.h"
@@ -27,7 +27,7 @@ namespace alica
 		this->lastTalkData = nullptr;
 	}
 
-	Synchronisation::Synchronisation(AlicaEngine* ae, const supplementary::IAgentID* myID, SyncTransition* st, SyncModul* sm)
+	Synchronisation::Synchronisation(AlicaEngine* ae, const supplementary::IAgentID* myID, SyncTransition* st, SyncModule* sm)
 	{
 		this->ae = ae;
 		this->syncTransition = st;

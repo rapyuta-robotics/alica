@@ -15,7 +15,7 @@ namespace alica
 	using std::mutex;
 	using std::list;
 
-	class SyncModul;
+	class SyncModule;
 	class SyncTransition;
 	class SyncRow;
 	class RunningPlan;
@@ -28,7 +28,7 @@ namespace alica
 	{
 	public:
 		Synchronisation(AlicaEngine* ae);
-		Synchronisation(AlicaEngine* ae, const supplementary::IAgentID* myID, SyncTransition* st, SyncModul* sm);
+		Synchronisation(AlicaEngine* ae, const supplementary::IAgentID* myID, SyncTransition* st, SyncModule* sm);
 		virtual ~Synchronisation();
 		void setTick(unsigned long now);
 		void changeOwnData (long transitionID, bool conditionHolds);
@@ -46,7 +46,7 @@ namespace alica
 		AlicaEngine* ae;
 		mutex syncMutex;
 		mutex rowOkMutex;
-		SyncModul* syncModul;
+		SyncModule* syncModul;
 		SyncTransition* syncTransition;
 		const supplementary::IAgentID* myID;
 		unsigned long lastTalkTime;
