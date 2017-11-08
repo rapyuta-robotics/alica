@@ -4,7 +4,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IRoleAssignment.h"
-#include <engine/syncmodule/SyncModul.h>
+#include <engine/syncmodule/SyncModule.h>
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
 #include "engine/UtilityFunction.h"
@@ -21,7 +21,7 @@
 #include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/StaticRoleAssignment.h"
-#include <engine/syncmodule/SyncModul.h>
+#include <engine/syncmodule/SyncModule.h>
 #include "engine/teammanager/TeamManager.h"
 #include "engine/TeamObserver.h"
 
@@ -134,7 +134,7 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
     }
     if (!this->syncModul)
     {
-        this->syncModul = new SyncModul(this);
+        this->syncModul = new SyncModule(this);
     }
     if (!this->expressionHandler)
     {
@@ -354,12 +354,12 @@ void AlicaEngine::setTeamObserver(TeamObserver *teamObserver)
 /**
  * Gets the SyncModul, which enables synchronized transitions.
  */
-SyncModul *AlicaEngine::getSyncModul()
+SyncModule *AlicaEngine::getSyncModul()
 {
     return syncModul;
 }
 
-void AlicaEngine::setSyncModul(SyncModul *syncModul)
+void AlicaEngine::setSyncModul(SyncModule *syncModul)
 {
     this->syncModul = syncModul;
 }

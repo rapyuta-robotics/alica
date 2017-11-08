@@ -15,8 +15,7 @@
 #include "engine/teammanager/TeamManager.h"
 #include "engine/planselector/PlanSelector.h"
 #include <engine/constraintmodul/ConditionStore.h>
-#include <engine/syncmodule/SyncModul.h>
-
+#include <engine/syncmodule/SyncModule.h>
 #include <SystemConfig.h>
 
 namespace alica

@@ -1,6 +1,6 @@
+#include <engine/syncmodule/SyncModule.h>
 #include "engine/IAlicaCommunication.h"
 
-#include "engine/syncmodule/SyncModul.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/AlicaEngine.h"
 #include "engine/allocationauthority/AuthorityManager.h"

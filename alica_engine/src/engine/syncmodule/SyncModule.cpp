@@ -1,5 +1,5 @@
 #include <engine/syncmodule/Synchronisation.h>
-#include <engine/syncmodule/SyncModul.h>
+#include <engine/syncmodule/SyncModule.h>
 #include "engine/AlicaEngine.h"
 #include "engine/TeamObserver.h"
 #include "engine/PlanRepository.h"
@@ -14,7 +14,7 @@
 namespace alica
 {
 
-	SyncModul::SyncModul(AlicaEngine* ae) : myId(nullptr)
+	SyncModule::SyncModule(AlicaEngine* ae) : myId(nullptr)
 	{
 		this->ae = ae;
 		this->pr = nullptr;
@@ -23,14 +23,14 @@ namespace alica
 		this->communicator = nullptr;
 	}
 
-	SyncModul::~SyncModul()
+	SyncModule::~SyncModule()
 	{
 		for (auto iter : this->synchSet)
 		{
 			delete iter.second;
 		}
 	}
-	void SyncModul::init()
+	void SyncModule::init()
 	{
 		this->ticks = 0;
 		this->running = true;
@@ -38,12 +38,12 @@ namespace alica
 		this->pr = this->ae->getPlanRepository();
 		this->communicator = this->ae->getCommunicator();
 	}
-	void SyncModul::close()
+	void SyncModule::close()
 	{
 		this->running = false;
 		cout << "SynchModul: Closed SynchModul" << endl;
 	}
-	void SyncModul::tick()
+	void SyncModule::tick()
 	{
 		list<Synchronisation*> failedSyncs;
 		lock_guard<mutex> lock(lomutex);
@@ -63,7 +63,7 @@ namespace alica
 		}
 
 	}
-	void SyncModul::setSynchronisation(Transition* trans, bool holds)
+	void SyncModule::setSynchronisation(Transition* trans, bool holds)
 	{
 		Synchronisation* s;
 		map<SyncTransition*, Synchronisation*>::iterator i = this->synchSet.find(trans->getSyncTransition());
@@ -81,7 +81,7 @@ namespace alica
 			synchSet.insert(pair<SyncTransition*, Synchronisation*>(trans->getSyncTransition(), s));
 		}
 	}
-	void SyncModul::sendSyncTalk(SyncTalk& st)
+	void SyncModule::sendSyncTalk(SyncTalk& st)
 	{
 		if (!this->ae->isMaySendMessages())
 			return;
@@ -89,14 +89,14 @@ namespace alica
 		this->communicator->sendSyncTalk(st);
 
 	}
-	void SyncModul::sendSyncReady(SyncReady& sr)
+	void SyncModule::sendSyncReady(SyncReady& sr)
 	{
 		if (!this->ae->isMaySendMessages())
 			return;
 		sr.senderID = this->myId;
 		communicator->sendSyncReady(sr);
 	}
-	void SyncModul::sendAcks(vector<SyncData*> syncDataList)
+	void SyncModule::sendAcks(vector<SyncData*> syncDataList)
 	{
 		if (!this->ae->isMaySendMessages())
 			return;
@@ -105,7 +105,7 @@ namespace alica
 		st.syncData = syncDataList;
 		this->communicator->sendSyncTalk(st);
 	}
-	void SyncModul::synchronisationDone(SyncTransition* st)
+	void SyncModule::synchronisationDone(SyncTransition* st)
 	{
 #ifdef SM_SUCCES
 		cout << "SyncDONE in SYNCMODUL for synctransID: " << st->getId() << endl;
@@ -122,7 +122,7 @@ namespace alica
 #endif
 	}
 
-	bool SyncModul::followSyncTransition(Transition* trans)
+	bool SyncModule::followSyncTransition(Transition* trans)
 	{
 		list<SyncTransition*>::iterator it = find(this->synchedTransitions.begin(), this->synchedTransitions.end(),
 													trans->getSyncTransition());
@@ -133,7 +133,7 @@ namespace alica
 		}
 		return false;
 	}
-	void SyncModul::onSyncTalk(shared_ptr<SyncTalk> st)
+	void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
 	{
 		if (!this->running || *(st->senderID) == *(this->myId))
 			return;
@@ -213,7 +213,7 @@ namespace alica
 		}
 
 	}
-	void SyncModul::onSyncReady(shared_ptr<SyncReady> sr)
+	void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
 	{
 		if (!this->running || *(sr->senderID) == *(this->myId))
 			return;

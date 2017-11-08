@@ -20,7 +20,7 @@ class BehaviourPool;
 class Logger;
 class RoleSet;
 class TeamObserver;
-class SyncModul;
+class SyncModule;
 class AuthorityManager;
 class PlanSelector;
 class PlanBase;
@@ -61,8 +61,8 @@ class AlicaEngine
     TeamObserver *getTeamObserver() const;
     void setTeamObserver(TeamObserver *teamObserver);
 
-    void setSyncModul(SyncModul *syncModul);
-    SyncModul *getSyncModul();
+    void setSyncModul(SyncModule *syncModul);
+    SyncModule *getSyncModul();
     AuthorityManager *getAuth();
     void setAuth(AuthorityManager *auth);
     IRoleAssignment *getRoleAssignment();
@@ -109,7 +109,7 @@ class AlicaEngine
 
     Logger *log;
     RoleSet *roleSet;
-    SyncModul *syncModul;
+    SyncModule *syncModul;
     AuthorityManager *auth;
     ExpressionHandler *expressionHandler;
     PlanSelector *planSelector;
