@@ -139,13 +139,6 @@ void PMControl::handleProcessStats()
 pm_widget::ControlledProcessManager *PMControl::getControlledProcessManager(const vector<uint8_t> &processManagerId)
 {
     const supplementary::IAgentID *id = this->pmRegistry->getRobotId(processManagerId);
-    if (!id)
-    {
-    	int tmpId = *reinterpret_cast<const int*>(processManagerId.data());
-        cerr << "PMControl: Received message from unknown process manager with sender id " << tmpId << endl;
-        return nullptr;
-    }
-
     string pmName;
     auto pmEntry = this->processManagersMap.find(id);
     if (pmEntry != this->processManagersMap.end())
