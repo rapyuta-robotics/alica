@@ -22,10 +22,6 @@ namespace geometry
 
 	CNRobot::~CNRobot()
 	{
-		if(id != nullptr)
-		{
-			delete this->id;
-		}
 	}
 
 	string CNRobot::toString()
