@@ -163,15 +163,6 @@ class AlicaEngine
 template <class Prototype>
 const supplementary::IAgentID* AlicaEngine::getID(Prototype &idPrototype)
 {
-	if(this == nullptr)
-	{
-		std::cout << "this null" << std::endl;
-	}
-	AlicaEngine* ptr = dynamic_cast<AlicaEngine*>(this);
-	if(nullptr == ptr->agentIDManager)
-	{
-		std::cout << "manager null" << std::endl;
-	}
     return this->agentIDManager->getID<Prototype>(idPrototype);
 }
 
