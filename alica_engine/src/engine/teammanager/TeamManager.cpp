@@ -15,6 +15,7 @@ TeamManager::TeamManager(AlicaEngine *engine, bool useConfigForTeam = true)
     : localAgent(nullptr)
     , teamTimeOut(0)
     , useConfigForTeam(useConfigForTeam)
+	, engine(engine)
 {
 }
 

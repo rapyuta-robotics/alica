@@ -27,7 +27,8 @@
 
 #include <supplementary/AgentIDManager.h>
 
-using namespace std;
+using std::cout;
+using std::endl;
 namespace alica
 {
 /**
