@@ -43,16 +43,14 @@ class IRoleAssignment;
 class AlicaEngine
 {
   public:
-    AlicaEngine();
-    bool init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCreator *uc, IConstraintCreator *crc,
-              supplementary::AgentIDManager *idManager, string roleSetName, string masterPlanName, string roleSetDir,
-              bool stepEngine);
+    AlicaEngine(supplementary::AgentIDManager *idManager, string roleSetName, string masterPlanName,
+            string roleSetDir, bool stepEngine);
+    bool init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCreator *uc, IConstraintCreator *crc);
     void shutdown();
     void start();
     bool getStepEngine();
     void abort(string msg) const;
-    template <typename T>
-    void abort(string msg, const T tail) const;
+    template <typename T> void abort(string msg, const T tail) const;
     PlanRepository *getPlanRepository() const;
     BehaviourPool *getBehaviourPool();
     string getRobotName() const;
@@ -90,11 +88,9 @@ class AlicaEngine
     void setResultStore(VariableSyncModule *resultStore);
     TeamManager *getTeamManager() const;
 
+    const supplementary::IAgentID *getIDFromBytes(const std::vector<uint8_t> &vectorID);
 
-	const supplementary::IAgentID* getIDFromBytes(const std::vector<uint8_t> &vectorID);
-
-	template <class Prototype>
-	const supplementary::IAgentID* getID(Prototype &idPrototype);
+    template <class Prototype> const supplementary::IAgentID *getID(Prototype &idPrototype);
 
     ~AlicaEngine();
 
@@ -106,7 +102,6 @@ class AlicaEngine
     bool maySendMessages;
 
   protected:
-
     Logger *log;
     RoleSet *roleSet;
     SyncModule *syncModul;
@@ -149,7 +144,6 @@ class AlicaEngine
     map<int, ISolver *> solver;
 
     void setStepEngine(bool stepEngine);
-
 };
 
 /**
@@ -160,14 +154,12 @@ class AlicaEngine
  * a pointer to a corresponding IAgentID object (in that case an
  * IntRobotID).
  */
-template <class Prototype>
-const supplementary::IAgentID* AlicaEngine::getID(Prototype &idPrototype)
+template <class Prototype> const supplementary::IAgentID *AlicaEngine::getID(Prototype &idPrototype)
 {
     return this->agentIDManager->getID<Prototype>(idPrototype);
 }
 
-template <typename T>
-void AlicaEngine::abort(string msg, const T tail) const
+template <typename T> void AlicaEngine::abort(string msg, const T tail) const
 {
     stringstream ss;
     ss << msg << tail;

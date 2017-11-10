@@ -24,6 +24,7 @@ namespace alica
 	class RunningPlan;
 	class BehaviourConfiguration;
 	class EntryPoint;
+	class AlicaEngine;
 
 	/**
 	 * The base class for all behaviours. All Behaviours must inherit from this class.
@@ -51,6 +52,7 @@ namespace alica
 		void setRunningPlan(std::shared_ptr<RunningPlan> runningPlan);
 		bool isSuccess() const;
 		void setSuccess(bool success);
+		void setEngine(AlicaEngine* engine);
 		bool isFailure() const;
 		void setFailure(bool failure);
 
@@ -58,6 +60,11 @@ namespace alica
 		void setTrigger(supplementary::ITrigger* trigger);
 
 		void sendLogMessage(int level, std::string& message);
+
+		virtual void init()
+		{
+
+		};
 	protected:
 		/**
 		 * The name of this behaviour.
@@ -92,6 +99,7 @@ namespace alica
 		std::thread* runThread; /** < executes the runInternal and thereby the abstract run method */
 		supplementary::Timer* timer; /** < triggers the condition_variable of the runThread, if this behaviour is timer triggered, alternative to behaviourTrigger*/
 		supplementary::ITrigger* behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour is event triggered, alternative to timer */
+		std::condition_variable runCV;
 		const supplementary::IAgentID* getOwnId();
 
 		/**
@@ -110,6 +118,7 @@ namespace alica
 
 		std::shared_ptr<std::vector<const supplementary::IAgentID*>> robotsInEntryPoint(EntryPoint* ep);
 
+
 	private:
 		void runInternal();
 		void initInternal();
@@ -124,8 +133,8 @@ namespace alica
 		 */
 		bool failure;
 
-	protected:
-		std::condition_variable runCV;
+		AlicaEngine* engine;
+
 
 	};
 } /* namespace alica */

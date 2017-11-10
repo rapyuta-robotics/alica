@@ -56,6 +56,8 @@ namespace alica
 				basicBeh->setVariables(iter.second->getVariables());
 				basicBeh->setDelayedStart(iter.second->getDeferring());
 				basicBeh->setInterval(1000 / iter.second->getFrequency());
+				basicBeh->setEngine(this->ae);
+				basicBeh->init();
 
 				this->availableBehaviours->insert(make_pair(iter.second, basicBeh));
 			}

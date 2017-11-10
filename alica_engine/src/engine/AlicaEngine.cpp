@@ -2,28 +2,28 @@
 #define AE_DEBUG
 
 #include "engine/AlicaEngine.h"
+#include "engine/BehaviourPool.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IRoleAssignment.h"
-#include <engine/syncmodule/SyncModule.h>
+#include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
+#include "engine/StaticRoleAssignment.h"
+#include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/BehaviourPool.h"
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
-#include "engine/Logger.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
 #include "engine/parser/PlanParser.h"
 #include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/planselector/PlanSelector.h"
-#include "engine/StaticRoleAssignment.h"
-#include <engine/syncmodule/SyncModule.h>
 #include "engine/teammanager/TeamManager.h"
-#include "engine/TeamObserver.h"
+#include <engine/syncmodule/SyncModule.h>
+#include <engine/syncmodule/SyncModule.h>
 
 #include <supplementary/AgentIDManager.h>
 
@@ -34,7 +34,7 @@ namespace alica
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine()
+AlicaEngine::AlicaEngine(supplementary::AgentIDManager *idManager, string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine)
     : stepCalled(false)
     , planBase(nullptr)
     , planSelector(nullptr)
@@ -42,28 +42,41 @@ AlicaEngine::AlicaEngine()
     , alicaClock(nullptr)
     , sc(supplementary::SystemConfig::getInstance())
     , terminating(false)
-    , teamObserver(nullptr)
-    , roleAssignment(nullptr)
-    , behaviourPool(nullptr)
-    , syncModul(nullptr)
     , expressionHandler(nullptr)
-    , masterPlan(nullptr)
-    , planParser(nullptr)
     , log(nullptr)
-    , planRepository(nullptr)
     , auth(nullptr)
-    , roleSet(nullptr)
-    , stepEngine(false)
-    , maySendMessages(false)
+    , stepEngine(stepEngine)
     , pap(nullptr)
     , variableSyncModule(nullptr)
-    , useStaticRoles(false)
-    , teamManager(nullptr)
-    , agentIDManager(nullptr)
+    , agentIDManager(idManager)
 {
 #ifdef AE_DEBUG
     cout << "AE: Constructor finished!" << endl;
 #endif
+    this->maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
+    this->useStaticRoles = (*sc)["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
+    AssignmentCollection::maxEpsCount = (*this->sc)["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
+    AssignmentCollection::allowIdling = (*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL);
+
+    this->planRepository = new PlanRepository();
+    this->planParser = new PlanParser(this, this->planRepository);
+    this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
+    this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
+    this->teamManager = new TeamManager(this, true);
+    this->teamManager->init();
+    this->behaviourPool = new BehaviourPool(this);
+    this->teamObserver = new TeamObserver(this);
+    if (this->useStaticRoles)
+    {
+        this->roleAssignment = new StaticRoleAssignment(this);
+    }
+    else
+    {
+        this->abort("Unknown RoleAssignment Type!");
+    }
+    // the communicator is expected to be set before init() is called
+    this->roleAssignment->setCommunication(communicator);
+    this->syncModul = new SyncModule(this);
 }
 
 AlicaEngine::~AlicaEngine()
@@ -79,64 +92,8 @@ AlicaEngine::~AlicaEngine()
  * @param stepEngine A bool, whether or not the engine should start in stepped mode
  * @return bool true if everything worked false otherwise
  */
-bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCreator *uc, IConstraintCreator *crc,
-                       supplementary::AgentIDManager *idManager, string roleSetName, string masterPlanName,
-                       string roleSetDir, bool stepEngine)
+bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCreator *uc, IConstraintCreator *crc)
 {
-    this->maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
-    this->useStaticRoles = (*sc)["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
-    AssignmentCollection::maxEpsCount = (*this->sc)["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
-    AssignmentCollection::allowIdling = (*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL);
-
-    this->terminating = false;
-    this->stepEngine = stepEngine;
-    this->agentIDManager = idManager;
-    if (!this->planRepository)
-    {
-        this->planRepository = new PlanRepository();
-    }
-    if (!this->planParser)
-    {
-        this->planParser = new PlanParser(this, this->planRepository);
-    }
-    if (!this->masterPlan)
-    {
-        this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
-    }
-    if (!this->roleSet)
-    {
-        this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
-    }
-    if (!this->behaviourPool)
-    {
-        this->behaviourPool = new BehaviourPool(this);
-    }
-    if (!this->teamManager)
-    {
-        this->teamManager = new TeamManager(this, true);
-        this->teamManager->init();
-    }
-    if (!this->teamObserver)
-    {
-        this->teamObserver = new TeamObserver(this);
-    }
-    if (!this->roleAssignment)
-    {
-        if (this->useStaticRoles)
-        {
-            this->roleAssignment = new StaticRoleAssignment(this);
-        }
-        else
-        {
-            this->abort("Unknown RoleAssignment Type!");
-        }
-        // the communicator is expected to be set before init() is called
-        this->roleAssignment->setCommunication(communicator);
-    }
-    if (!this->syncModul)
-    {
-        this->syncModul = new SyncModule(this);
-    }
     if (!this->expressionHandler)
     {
         this->expressionHandler = new ExpressionHandler(this, cc, uc, crc);
@@ -528,7 +485,7 @@ TeamManager *AlicaEngine::getTeamManager() const
  * This method can be used, e.g., for passing a part of a ROS
  * message and receiving a pointer to a corresponding IAgentID object.
  */
-const supplementary::IAgentID* AlicaEngine::getIDFromBytes(const std::vector<uint8_t> &idByteVector)
+const supplementary::IAgentID *AlicaEngine::getIDFromBytes(const std::vector<uint8_t> &idByteVector)
 {
     return this->agentIDManager->getIDFromBytes(idByteVector);
 }
