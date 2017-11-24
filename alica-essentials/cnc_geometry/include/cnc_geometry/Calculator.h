@@ -186,19 +186,7 @@ double distancePointToLine(const CNPointTemplate<T> &a, const CNPointTemplate<T>
     return (a2p.x * a2b.y - a2p.y * a2b.x) / a2p.length();
 }
 
-/**
- * Distance between the point (x,y) and the line segment described by point a and b.
- * @param x X coordinate of the point to check
- * @param y Y coordinate of the point to check
- * @param a first point of the line segment
- * @param b second point of the line segment
- * @return Distance between (x,y) and line segment ab
- */
-template <class T>
-double distancePointToLineSegment(double x, double y, const CNPointTemplate<T> &a, const CNPointTemplate<T> &b)
-{
-    return distancePointToLineSegment(x, y, a.x, a.y, b.x, b.y);
-}
+
 
 /**
  * Distance between the point (px,py) and the line segment described by point (lx1, ly1) and (lx2, ly2).
@@ -210,7 +198,7 @@ double distancePointToLineSegment(double x, double y, const CNPointTemplate<T> &
  * @param ly2
  * @return Distance between (x,y) and line segment (lx1, ly1) and (lx2, ly2).
  */
-inline double distancePointToLineSegment(double px, double py, double lx1, double ly1, double lx2, double ly2)
+inline double distancePointToLineSegmentCalc(double px, double py, double lx1, double ly1, double lx2, double ly2)
 {
     double abx = lx2 - lx1;
     double aby = ly2 - ly1;
@@ -244,6 +232,21 @@ inline double distancePointToLineSegment(double px, double py, double lx1, doubl
     {
         return abs(sin(alpha)) * distAtoP;
     }
+}
+
+/**
+ * Distance between the point (x,y) and the line segment described by point a and b.
+ * @param x X coordinate of the point to check
+ * @param y Y coordinate of the point to check
+ * @param a first point of the line segment
+ * @param b second point of the line segment
+ * @return Distance between (x,y) and line segment ab
+ */
+template <class T>
+typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, double>::type
+ distancePointToLineSegment(double x, double y, const T &a, const T &b)
+{
+    return distancePointToLineSegmentCalc(x, y, a.x, a.y, b.x, b.y);
 }
 
 /**
@@ -298,24 +301,20 @@ isInsidePolygon(const vector<T> &polygon, const T &p)
  * @return True if all points are outside the triangle (a,b,c).
  */
 template <class T>
-bool outsideTriangle(const CNPointTemplate<T> &a, const CNPointTemplate<T> &b, const CNPointTemplate<T> &c, double tolerance,
-                     const vector<CNPointTemplate<T>> &points)
+typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::type
+outsideTriangle(const T &a, const T &b, const T &c, double tolerance,
+                     const vector<T> &points)
 {
-    T a2b = b - a;
-    T b2c = c - b;
-    T c2a = a - c;
-
-    T a2p;
-    T b2p;
-    T c2p;
-    T p;
+    auto a2b = b - a;
+    auto b2c = c - b;
+    auto c2a = a - c;
 
     for (int i = 0; i < points.size(); i++)
     {
-        p = points.at(i);
-        a2p = p - a;
-        b2p = p - b;
-        c2p = p - c;
+        auto p = points.at(i);
+        auto a2p = p - a;
+        auto b2p = p - b;
+        auto c2p = p - c;
 
         if ((a2p.x * a2b.y - a2p.y * a2b.x) / a2p.normalize().length() < tolerance &&
             (b2p.x * b2c.y - b2p.y * b2c.x) / b2p.normalize().length() < tolerance &&
