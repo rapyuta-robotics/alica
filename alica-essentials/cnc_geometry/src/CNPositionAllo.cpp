@@ -82,6 +82,14 @@ CNPositionAllo CNPositionAllo::operator-(const CNVecAllo &right) const
 			this->theta);
 }
 
+CNVecAllo CNPositionAllo::operator-(const CNPositionAllo &right) const
+{
+        return CNVecAllo(
+                        this->x - right.x,
+                        this->y - right.y,
+                        this->theta);
+}
+
 CNVecAllo CNPositionAllo::operator-(const CNPointAllo &right) const
 {
 	return CNVecAllo(
