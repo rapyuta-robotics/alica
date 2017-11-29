@@ -43,7 +43,7 @@ CNPointAllo CNPointEgo::toAllo(const CNPositionAllo &me) const
     double c = cos(me.theta);
 
     double x = c * this->x - s * this->y;
-    double y = s * this->x - c * this->y; // TODO: fix
+    double y = s * this->x + c * this->y; //TODO FIXME was - before
 
     // sum me pos and rel pos -> allo pos with allo rotaion
     allo.x = x + me.x;
