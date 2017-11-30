@@ -49,7 +49,7 @@ CNVecEgo CNVecAllo::toEgo(CNPositionAllo &me) const
     double c = cos(-me.theta);
 
     ego.x = c * this->x - s * this->y;
-    ego.y = s * this->x - c * this->y; // TODO: fix
+    ego.y = s * this->x + c * this->y;
     ego.z = this->z;
 
     return ego;

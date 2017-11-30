@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "cnc_geometry/CNPositionEgo.h"
+#include "cnc_geometry/Calculator.h"
 
 using std::string;
 using std::shared_ptr;
@@ -54,6 +55,7 @@ namespace geometry
 
         ego.x = cos(angle) * dist;
         ego.y = sin(angle) * dist;
+        ego.theta = normalizeAngle(this->theta - me.theta);
 
         return ego;
 //

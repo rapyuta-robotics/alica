@@ -54,6 +54,7 @@ namespace geometry
 
         ego.x = cos(angle) * dist;
         ego.y = sin(angle) * dist;
+        ego.z = this->z;
 
         return ego;
     }

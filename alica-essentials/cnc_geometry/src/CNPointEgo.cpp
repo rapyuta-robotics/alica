@@ -37,17 +37,15 @@ string CNPointEgo::toString() const
 CNPointAllo CNPointEgo::toAllo(const CNPositionAllo &me) const
 {
     auto allo = CNPointAllo();
-
+    allo.x = me.x;
+	allo.y = me.y;
     // rotate rel point around origin -> rel point with allo orientation
     double s = sin(me.theta);
     double c = cos(me.theta);
 
-    double x = c * this->x - s * this->y;
-    double y = s * this->x + c * this->y; //TODO FIXME was - before
-
     // sum me pos and rel pos -> allo pos with allo rotaion
-    allo.x = x + me.x;
-    allo.y = y + me.y;
+    allo.x += c * this->x - s * this->y;
+    allo.y += s * this->x + c * this->y;
     allo.z = this->z;
 
     return allo;

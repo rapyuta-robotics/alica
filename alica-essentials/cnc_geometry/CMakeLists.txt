@@ -44,8 +44,6 @@ add_library(cnc_geometry
     src/CNPointEgo.cpp
     src/CNPointAllo.cpp
 
-    src/CNRobotEgo.cpp
-    src/CNRobotAllo.cpp
 )
 
 target_link_libraries(cnc_geometry

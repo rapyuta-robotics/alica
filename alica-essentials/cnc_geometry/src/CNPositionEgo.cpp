@@ -11,8 +11,7 @@
 #include <sstream>
 
 #include "cnc_geometry/CNPositionAllo.h"
-
-using namespace std;
+#include <cnc_geometry/Calculator.h>
 
 namespace geometry
 {
@@ -35,10 +34,10 @@ namespace geometry
     {
     }
 
-    string CNPositionEgo::toString() const
+    std::string CNPositionEgo::toString() const
     {
-        stringstream ss;
-        ss << "CNPositionEgo: X: " << this->x << " Y: " << this->y << " Orientation: " << this->theta << endl;
+        std::stringstream ss;
+        ss << "CNPositionEgo: X: " << this->x << " Y: " << this->y << " Orientation: " << this->theta << std::endl;
         return ss.str();
     }
     CNPointEgo CNPositionEgo::getPoint() const
@@ -48,20 +47,18 @@ namespace geometry
     CNPositionAllo CNPositionEgo::toAllo(CNPositionAllo &me) const
     {
         auto allo = CNPositionAllo();
-
+        allo.x = me.x;
+    	allo.y = me.y;
         // rotate rel point around origin -> rel point with allo orientation
         double s = sin(me.theta);
         double c = cos(me.theta);
 
-        double x = c * this->x - s * this->y;
-        double y = s * this->x + c * this->y; // TODO: fix was - before
-
         // sum me pos and rel pos -> allo pos with allo rotaion
-        allo.x = x + me.x;
-        allo.y = y + me.y;
+        allo.x += c * this->x - s * this->y;
+        allo.y += s * this->x + c * this->y;
 
         // rotate theta
-        allo.theta = this->theta + me.theta;
+        allo.theta = normalizeAngle(this->theta + me.theta);
 
         return allo;
     }

@@ -9,7 +9,7 @@
 #include "cnc_geometry/CNPositionAllo.h"
 #include "cnc_geometry/CNPositionEgo.h"
 
-#include "cnc_geometry/CNRobotAllo.h"
-#include "cnc_geometry/CNRobotEgo.h"
-
 #include "cnc_geometry/Calculator.h"
+
+#include "../../../cnc-msl/msl_worldmodel/include/obstaclehandler/CNRobot.h"
+#include "../../../cnc-msl/msl_worldmodel/include/obstaclehandler/CNRobotEgo.h"

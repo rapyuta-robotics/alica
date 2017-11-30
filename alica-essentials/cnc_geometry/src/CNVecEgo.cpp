@@ -51,7 +51,7 @@ CNVecAllo CNVecEgo::toAllo(CNPositionAllo &me) const
 	double c = cos(me.theta);
 
 	allo.x = c * this->x - s * this->y;
-	allo.y = s * this->x + c * this->y; // TODO: fix was - before
+	allo.y = s * this->x + c * this->y;
 	allo.z = this->z;
 
 	return allo;
