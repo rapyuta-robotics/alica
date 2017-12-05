@@ -9,6 +9,7 @@ find_package(catkin REQUIRED system_config alica_engine nonstd)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES world_model
+  CATKIN_DEPENDS system_config alica_engine nonstd
 )
 
 include_directories(

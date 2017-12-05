@@ -16,9 +16,10 @@ namespace supplementary{
 		supplementary::InfoTime getTime();
 	    bool isMaySendMessages() const;
 	    void setMaySendMessages(bool maySendMessages);
-	    int getOwnId();
+	    int getOwnID();
 	    bool setEngine(alica::AlicaEngine *ae);
 	    alica::AlicaEngine* getEngine();
+	    supplementary::SystemConfig* getSystemConfig();
 
 	protected:
 		SystemConfig* sc;

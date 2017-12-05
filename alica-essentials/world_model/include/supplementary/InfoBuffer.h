@@ -38,18 +38,6 @@ namespace supplementary
          * If you REALLY need to copy the buffer, do it by hand.
          */
         InfoBuffer(const InfoBuffer &obj) = delete;
-        // TODO: delete?
-        /*InfoBuffer(const InfoBuffer &obj)
-         : mtx_()
-         {
-         // Do not copy the mutex!
-         this->bufferSize = obj.bufferSize;
-         this->infoElementCounter = obj.infoElementCounter;
-         this->index = obj.index;
-
-         auto buffer = new std::shared_ptr<const InformationElement<T>>[this->bufferSize];
-         this->ringBuffer = make_shared<>(*obj.ringBuffer);
-         }*/
 
         /**
          *  Default destructor.

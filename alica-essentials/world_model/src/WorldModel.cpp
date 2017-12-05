@@ -32,9 +32,9 @@ bool WorldModel::setEngine(alica::AlicaEngine *ae)
     }
 }
 
-alica::AlicaEngine* WorldModel::getEngine()
+alica::AlicaEngine *WorldModel::getEngine()
 {
-	return this->alicaEngine;
+    return this->alicaEngine;
 }
 
 InfoTime WorldModel::getTime()
@@ -59,9 +59,13 @@ void WorldModel::setMaySendMessages(bool maySendMessages)
     this->maySendMessages = maySendMessages;
 }
 
-int WorldModel::getOwnId()
+int WorldModel::getOwnID()
 {
     return this->ownID;
 }
 
+supplementary::SystemConfig *WorldModel::getSystemConfig()
+{
+    return this->sc;
+}
 }
