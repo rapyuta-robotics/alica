@@ -59,7 +59,7 @@ void WorldModel::setMaySendMessages(bool maySendMessages)
     this->maySendMessages = maySendMessages;
 }
 
-int WorldModel::getOwnID()
+int WorldModel::getOwnId()
 {
     return this->ownID;
 }
