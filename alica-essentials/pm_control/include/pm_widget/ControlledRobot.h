@@ -1,12 +1,4 @@
-/*
- * ControlledRobot.h
- *
- *  Created on: Feb 27, 2015
- *      Author: Stephan Opfer
- */
-
-#ifndef SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDROBOT_H_
-#define SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDROBOT_H_
+#pragma once
 
 #include <process_manager/RobotMetaData.h>
 #include <process_manager/ProcessStats.h>
@@ -38,16 +30,16 @@ namespace pm_widget
 		Q_OBJECT
 
 	public:
-		ControlledRobot(string robotName, int robotId, int parentPMid); /*<for robot_control*/
+		ControlledRobot(std::string robotName, int robotId, int parentPMid); /*<for robot_control*/
 		virtual ~ControlledRobot();
 
-		void handleProcessStat(chrono::system_clock::time_point timeMsgReceived,process_manager::ProcessStat ps, int parentPMid);
-		void sendProcessCommand(vector<int> execIds, vector<int> paramSets, int cmd);
-		void updateGUI(chrono::system_clock::time_point now);
+		void handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived,process_manager::ProcessStat ps, int parentPMid);
+		void sendProcessCommand(std::vector<int> execIds, std::vector<int> paramSets, int cmd);
+		void updateGUI(std::chrono::system_clock::time_point now);
 		void addExec(QWidget* exec);
 		void removeExec(QWidget* exec);
 
-		chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
+		std::chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
 		QFrame* robotProcessesQFrame; /**< The widget, used to initialise the RobotProcessesWidget */
 		//ControlledProcessManager* parentProcessManager;
 
@@ -55,15 +47,13 @@ namespace pm_widget
 		void updateBundles(QString text);
 
 	private:
-		chrono::duration<double> msgTimeOut;
+		std::chrono::duration<double> msgTimeOut;
 		bool inRobotControl;
-		string selectedBundle;
+		std::string selectedBundle;
 		Ui::RobotProcessesWidget* _robotProcessesWidget;
-		map<int, ControlledExecutable*> controlledExecMap;
+		std::map<int, ControlledExecutable*> controlledExecMap;
 		ros::Publisher processCommandPub;
 		int parentPMid;
 	};
 
 } /* namespace pm_widget */
-
-#endif /* SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDROBOT_H_ */
