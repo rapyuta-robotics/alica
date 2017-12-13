@@ -1,5 +1,4 @@
-#ifndef robot_control__PMControl_H
-#define robot_control__PMControl_H
+#pragma once
 
 #include <rqt_gui_cpp/plugin.h>
 
@@ -9,8 +8,6 @@
 
 #include <process_manager/ProcessStats.h>
 #include <alica_ros_proxy/AlicaEngineInfo.h>
-#include <msl_actuator_msgs/KickerStatInfo.h>
-#include <msl_sensor_msgs/SharedWorldInfo.h>
 
 #include <ui_RobotsControl.h>
 #include <QtGui>
@@ -21,8 +18,6 @@
 #include <mutex>
 #include <utility>
 #include <chrono>
-
-using namespace std;
 
 namespace supplementary
 {
@@ -49,12 +44,12 @@ namespace robot_control
 		void addRobot();
 		void removeRobot();
 
-		static chrono::duration<double> msgTimeOut;
+		static std::chrono::duration<double> msgTimeOut;
 
 		Ui::RobotControlWidget robotControlWidget_;
 		QWidget* widget_;
 
-		map<string, vector<pair<int, int>>> bundlesMap;
+		std::map<std::string, std::vector<std::pair<int, int>>> bundlesMap;
 		supplementary::RobotExecutableRegistry* pmRegistry;
 		ros::NodeHandle* rosNode;
 
@@ -66,15 +61,15 @@ namespace robot_control
 
 		supplementary::SystemConfig* sc;
 
-		map<int, Robot*> controlledRobotsMap;
-		queue<pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
-		mutex processStatsMsgQueueMutex;
-		queue<pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
-		mutex alicaInfoMsgQueueMutex;
-		queue<pair<chrono::system_clock::time_point, msl_actuator_msgs::KickerStatInfoPtr>> kickerStatInfoMsgQueue;
-		mutex kickerStatInfoMsgQueueMutex;
-		queue<pair<chrono::system_clock::time_point, msl_sensor_msgs::SharedWorldInfoPtr>> sharedWorldInfoMsgQueue;
-		mutex sharedWorldInfoMsgQueueMutex;
+		std::map<int, Robot*> controlledRobotsMap;
+		std::queue<std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
+		std::mutex processStatsMsgQueueMutex;
+		std::queue<std::pair<std::chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
+		std::mutex alicaInfoMsgQueueMutex;
+		std::queue<std::pair<std::chrono::system_clock::time_point, msl_actuator_msgs::KickerStatInfoPtr>> kickerStatInfoMsgQueue;
+		std::mutex kickerStatInfoMsgQueueMutex;
+		std::queue<std::pair<std::chrono::system_clock::time_point, msl_sensor_msgs::SharedWorldInfoPtr>> sharedWorldInfoMsgQueue;
+		std::mutex sharedWorldInfoMsgQueueMutex;
 
 		void receiveProcessStats(process_manager::ProcessStatsConstPtr processStats);
 		void receiveAlicaInfo(alica_ros_proxy::AlicaEngineInfoConstPtr alicaInfo);
@@ -92,5 +87,3 @@ namespace robot_control
 	};
 
 }
-
-#endif // rqt_msl_refbox__RefBox_H
