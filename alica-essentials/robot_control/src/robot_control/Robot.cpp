@@ -117,7 +117,7 @@ namespace robot_control
 
 	}
 
-	void Robot::updateGUI(chrono::system_clock::time_point now)
+	void Robot::updateGUI(std::chrono::system_clock::time_point now)
 	{
 		if ((now - this->timeLastMsgReceived) > std::chrono::milliseconds(1000))
 		{
@@ -167,25 +167,13 @@ namespace robot_control
 		QFrame::hide();
 	}
 
-	void Robot::handleAlicaInfo(pair<chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr> timeAEIpair)
+	void Robot::handleAlicaInfo(std::pair<std::chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr> timeAEIpair)
 	{
 		this->timeLastMsgReceived = timeAEIpair.first;
 		this->alicaWidget->handleAlicaEngineInfo(timeAEIpair.second);
 	}
 
-	void Robot::handleKickerStatInfo(pair<chrono::system_clock::time_point, msl_actuator_msgs::KickerStatInfoPtr> timeKSIpair)
-	{
-		this->timeLastMsgReceived = timeKSIpair.first;
-		this->alicaWidget->handleKickerStatInfo(timeKSIpair.second);
-	}
-
-	void Robot::handleSharedWorldInfo(pair<chrono::system_clock::time_point, msl_sensor_msgs::SharedWorldInfoPtr> timeSWIpair)
-	{
-		this->timeLastMsgReceived = timeSWIpair.first;
-		this->alicaWidget->handleSharedWorldInfo(timeSWIpair.second);
-	}
-
-	void Robot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, int parentPMid)
+	void Robot::handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, int parentPMid)
 	{
 		this->timeLastMsgReceived = timeMsgReceived;
 		this->controlledRobotWidget->handleProcessStat(timeMsgReceived, ps, parentPMid);

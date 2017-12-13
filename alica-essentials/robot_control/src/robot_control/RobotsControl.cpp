@@ -181,18 +181,6 @@ namespace robot_control
 		this->alicaInfoMsgQueue.emplace(chrono::system_clock::now(), alicaInfo);
 	}
 
-	void RobotsControl::receiveKickerStatInfo(msl_actuator_msgs::KickerStatInfoPtr kickerStatInfo)
-	{
-		lock_guard<mutex> lck(kickerStatInfoMsgQueueMutex);
-		this->kickerStatInfoMsgQueue.emplace(chrono::system_clock::now(), kickerStatInfo);
-	}
-
-	void RobotsControl::receiveSharedWorldInfo(msl_sensor_msgs::SharedWorldInfoPtr sharedWorldInfo)
-	{
-		lock_guard<mutex> lck(sharedWorldInfoMsgQueueMutex);
-		this->sharedWorldInfoMsgQueue.emplace(chrono::system_clock::now(), sharedWorldInfo);
-	}
-
 	/**
 	 * Processes all queued messages from the processStatMsgsQueue and the alicaInfoMsgQueue.
 	 */
@@ -224,32 +212,6 @@ namespace robot_control
 				alicaInfoMsgQueue.pop();
 
 				this->controlledRobotsMap[timeAlicaInfoPair.second->senderID]->handleAlicaInfo(timeAlicaInfoPair);
-			}
-		}
-
-		{
-			lock_guard<mutex> lck(kickerStatInfoMsgQueueMutex);
-			while (!this->kickerStatInfoMsgQueue.empty())
-			{
-				// unqueue the ROS kicker stat info message
-				auto timeKickerStatInfoPair = kickerStatInfoMsgQueue.front();
-				kickerStatInfoMsgQueue.pop();
-
-				this->controlledRobotsMap[timeKickerStatInfoPair.second->senderID]->handleKickerStatInfo(
-						timeKickerStatInfoPair);
-			}
-		}
-
-		{
-			lock_guard<mutex> lck(sharedWorldInfoMsgQueueMutex);
-			while (!this->sharedWorldInfoMsgQueue.empty())
-			{
-				// unqueue the ROS shared world info message
-				auto timeSharedWorldInfoPair = sharedWorldInfoMsgQueue.front();
-				sharedWorldInfoMsgQueue.pop();
-
-				this->controlledRobotsMap[timeSharedWorldInfoPair.second->senderID]->handleSharedWorldInfo(
-						timeSharedWorldInfoPair);
 			}
 		}
 
