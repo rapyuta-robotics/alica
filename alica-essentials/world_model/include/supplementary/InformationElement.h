@@ -88,7 +88,7 @@ class InformationElement
     }
 
   private:
-    const T information;                  /**< the stored information */
+    const T information;            /**< the stored information */
     InfoTime creationTime;          /**< time this information was created */
     InfoTime validityTime;          /**< the latest time this information is considered to be valid */
     double certainty;               /**< how certain the information was at the moment it was created */
