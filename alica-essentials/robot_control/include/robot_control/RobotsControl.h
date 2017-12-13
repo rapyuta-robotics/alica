@@ -56,8 +56,6 @@ namespace robot_control
 	private:
 		ros::Subscriber processStateSub;
 		ros::Subscriber alicaInfoSub;
-		ros::Subscriber kickerStatInfoSub;
-		ros::Subscriber sharedWorldInfoSub;
 
 		supplementary::SystemConfig* sc;
 
@@ -66,15 +64,9 @@ namespace robot_control
 		std::mutex processStatsMsgQueueMutex;
 		std::queue<std::pair<std::chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
 		std::mutex alicaInfoMsgQueueMutex;
-		std::queue<std::pair<std::chrono::system_clock::time_point, msl_actuator_msgs::KickerStatInfoPtr>> kickerStatInfoMsgQueue;
-		std::mutex kickerStatInfoMsgQueueMutex;
-		std::queue<std::pair<std::chrono::system_clock::time_point, msl_sensor_msgs::SharedWorldInfoPtr>> sharedWorldInfoMsgQueue;
-		std::mutex sharedWorldInfoMsgQueueMutex;
 
 		void receiveProcessStats(process_manager::ProcessStatsConstPtr processStats);
 		void receiveAlicaInfo(alica_ros_proxy::AlicaEngineInfoConstPtr alicaInfo);
-		void receiveKickerStatInfo(msl_actuator_msgs::KickerStatInfoPtr kickerStatInfo);
-		void receiveSharedWorldInfo(msl_sensor_msgs::SharedWorldInfoPtr sharedWorldInfo);
 		void processMessages();
 		void checkAndInit(int robotId);
 

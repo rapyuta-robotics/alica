@@ -96,10 +96,6 @@ namespace robot_control
 												(RobotsControl*)this);
 		alicaInfoSub = rosNode->subscribe("/AlicaEngine/AlicaEngineInfo", 10, &RobotsControl::receiveAlicaInfo,
 											(RobotsControl*)this);
-		kickerStatInfoSub = rosNode->subscribe("/KickerStatInfo", 10, &RobotsControl::receiveKickerStatInfo,
-												(RobotsControl*)this);
-		sharedWorldInfoSub = rosNode->subscribe("/WorldModel/SharedWorldInfo", 10,
-												&RobotsControl::receiveSharedWorldInfo, (RobotsControl*)this);
 
 		// Initialise the GUI refresh timer
 		this->guiUpdateTimer = new QTimer();
@@ -245,8 +241,6 @@ namespace robot_control
 	{
 		this->processStateSub.shutdown();
 		this->alicaInfoSub.shutdown();
-		this->kickerStatInfoSub.shutdown();
-		this->sharedWorldInfoSub.shutdown();
 	}
 
 	void RobotsControl::saveSettings(qt_gui_cpp::Settings& plugin_settings,
