@@ -15,7 +15,6 @@
   <build_depend>roscpp</build_depend>
   <build_depend>message_generation</build_depend>
   <build_depend>agent_id</build_depend>
-  <build_depend>msl_robot_id</build_depend>
   
   <buildtool_depend>catkin</buildtool_depend>
   
@@ -24,7 +23,6 @@
   <run_depend>roscpp</run_depend>
   <run_depend>message_runtime</run_depend>
   <run_depend>agent_id</run_depend>
-  <run_depend>msl_robot_id</run_depend>
   
   <export>
   </export>

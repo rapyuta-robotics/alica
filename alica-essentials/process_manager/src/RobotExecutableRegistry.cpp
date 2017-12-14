@@ -4,9 +4,8 @@
 #include <ConsoleCommandHelper.h>
 #include <SystemConfig.h>
 #include <iostream>
-#include <msl/robot/IntRobotIDFactory.h>
 #include <process_manager/RobotExecutableRegistry.h>
-#include <supplementary/IAgentIDFactory.h>
+#include <supplementary/AgentIDFactory.h>
 #include <supplementary/AgentIDManager.h>
 
 using std::string;

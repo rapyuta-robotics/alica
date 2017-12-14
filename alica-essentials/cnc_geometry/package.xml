@@ -11,10 +11,8 @@
   <buildtool_depend>catkin</buildtool_depend>
   
   <build_depend>geometry_msgs</build_depend>
-  <build_depend>msl_robot_id</build_depend>
   
   <run_depend>geometry_msgs</run_depend>
-  <run_depend>msl_robot_id</run_depend>
 
   <export>
   </export>

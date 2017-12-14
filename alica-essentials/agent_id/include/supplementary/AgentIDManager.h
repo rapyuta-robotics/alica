@@ -1,7 +1,7 @@
 #pragma once
 
-#include "supplementary/IAgentIDFactory.h"
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentIDFactory.h"
+#include "supplementary/AgentID.h"
 
 #include <mutex>
 #include <unordered_set>
@@ -14,19 +14,19 @@ class AgentIDManager
 {
   public:
     // static AgentIDManager *getInstance();
-    AgentIDManager(IAgentIDFactory* idFactory);
+    AgentIDManager(AgentIDFactory* idFactory);
     virtual ~AgentIDManager();
 
-    const IAgentID *getIDFromBytes(const std::vector<uint8_t> &vectorID);
+    const AgentID *getIDFromBytes(const std::vector<uint8_t> &vectorID);
 
     template <class Prototype>
-    const IAgentID *getID(Prototype &idPrototype);
+    const AgentID *getID(Prototype &idPrototype);
 
-    const IAgentID *generateID();
+    const AgentID *generateID();
 
   private:
-    std::unordered_set<const IAgentID *, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> agentIDs;
-    IAgentIDFactory *idFactory;
+    std::unordered_set<const AgentID *, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator> agentIDs;
+    AgentIDFactory *idFactory;
     std::mutex mutex;
 };
 
@@ -39,7 +39,7 @@ class AgentIDManager
  * IntRobotID).
  */
 template <class Prototype>
-const IAgentID *AgentIDManager::getID(Prototype &idPrototype)
+const AgentID *AgentIDManager::getID(Prototype &idPrototype)
 {
     // little-endian encoding
     std::vector<uint8_t> idByteVector;

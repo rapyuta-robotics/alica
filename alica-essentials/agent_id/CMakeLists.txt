@@ -10,6 +10,7 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 find_package(catkin REQUIRED roscpp message_generation)
+find_package(UUID)
 
 add_message_files(
   FILES
@@ -25,19 +26,25 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES agent_id
   CATKIN_DEPENDS roscpp message_runtime
-#  DEPENDS system_lib
+  DEPENDS UUID 
 )
 
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${UUID_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME}
+  src/AgentID.cpp
+  src/AgentIDFactory.cpp
   src/BroadcastID.cpp
   src/AgentIDManager.cpp
 )
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} 
+  ${catkin_LIBRARIES}
+  ${UUID_LIBRARIES}
+)
 
 target_include_directories(${PROJECT_NAME} PUBLIC include ${catkin_INCLUDE_DIRS})
 

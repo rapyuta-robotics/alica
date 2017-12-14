@@ -9,7 +9,7 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
-find_package(catkin REQUIRED agent_id msl_robot_id system_config system_util roscpp message_generation)
+find_package(catkin REQUIRED agent_id system_config system_util roscpp message_generation)
 
 ## Generate messages in the 'msg' folder
 add_message_files(
@@ -29,7 +29,7 @@ add_message_files(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES robot_executable_meta_data
-  CATKIN_DEPENDS agent_id msl_robot_id system_config system_util roscpp message_runtime
+  CATKIN_DEPENDS agent_id system_config system_util roscpp message_runtime
 #  DEPENDS system_lib
 )
 

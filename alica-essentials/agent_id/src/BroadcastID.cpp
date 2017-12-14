@@ -5,7 +5,7 @@ namespace supplementary
 {
 
 BroadcastID::BroadcastID(const uint8_t *idBytes, int idSize)
-    : id(0)
+    : AgentID(idBytes, idSize, BC_TYPE)
 {
 }
 
@@ -13,22 +13,7 @@ BroadcastID::~BroadcastID()
 {
 }
 
-uint8_t *BroadcastID::getRaw() const
-{
-    return (uint8_t *)&this->id;
-}
-
-int BroadcastID::getSize() const
-{
-    return sizeof(uint8_t);
-}
-
-uint8_t BroadcastID::getType() const
-{
-	return BroadcastID::TYPE;
-}
-
-bool BroadcastID::operator==(const supplementary::IAgentID &other) const
+bool BroadcastID::operator==(const supplementary::AgentID &other) const
 {
     try
     {
@@ -42,7 +27,7 @@ bool BroadcastID::operator==(const supplementary::IAgentID &other) const
     return true;
 }
 
-bool BroadcastID::operator!=(const supplementary::IAgentID &other) const
+bool BroadcastID::operator!=(const supplementary::AgentID &other) const
 {
     try
     {
@@ -56,21 +41,14 @@ bool BroadcastID::operator!=(const supplementary::IAgentID &other) const
     return false;
 }
 
-bool BroadcastID::operator<(const supplementary::IAgentID &other) const
+bool BroadcastID::operator<(const supplementary::AgentID &other) const
 {
     return true;
 }
 
-bool BroadcastID::operator>(const supplementary::IAgentID &other) const
+bool BroadcastID::operator>(const supplementary::AgentID &other) const
 {
     return false;
-}
-
-std::vector<uint8_t> BroadcastID::toByteVector() const
-{
-    std::vector<uint8_t> bytes;
-    bytes.push_back(this->id);
-    return bytes;
 }
 
 std::string BroadcastID::toString() const
