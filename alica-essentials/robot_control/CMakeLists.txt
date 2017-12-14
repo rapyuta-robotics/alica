@@ -2,7 +2,20 @@ cmake_minimum_required(VERSION 2.8.3)
 project(robot_control)
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp process_manager system_util alica_ros_proxy alica_client pm_control std_msgs message_generation msl_actuator_msgs msl_sensor_msgs)
+find_package(catkin REQUIRED COMPONENTS 
+    rqt_gui 
+    rqt_gui_cpp 
+    process_manager 
+    system_util
+    agent_id 
+    alica_client 
+    pm_control 
+    std_msgs 
+    message_generation 
+    msl_actuator_msgs 
+    msl_sensor_msgs
+    msl_robot_id
+)
 
 #find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
 find_package(Qt5Core REQUIRED)
@@ -24,15 +37,16 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
+catkin_python_setup()
+
 add_message_files(
   FILES
   RobotCommand.msg
 )
 
-catkin_python_setup()
-
 generate_messages(
   DEPENDENCIES
+  agent_id
   std_msgs
 )
 
@@ -70,7 +84,7 @@ set(robot_control_RCS
 catkin_package(
   INCLUDE_DIRS ${robot_control_INCLUDE_DIRECTORIES}
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS rqt_gui rqt_gui_cpp msl_actuator_msgs msl_sensor_msgs
+  CATKIN_DEPENDS rqt_gui rqt_gui_cpp msl_actuator_msgs msl_sensor_msgs agent_id
 )
 
 

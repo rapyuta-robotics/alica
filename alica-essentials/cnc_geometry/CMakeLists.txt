@@ -11,13 +11,13 @@ endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 find_package(catkin REQUIRED COMPONENTS
     geometry_msgs
-    system_util
+    msl_robot_id
 )
 
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES cnc_geometry
-    CATKIN_DEPENDS geometry_msgs system_util
+    CATKIN_DEPENDS geometry_msgs msl_robot_id
     # DEPENDS system_lib
 )
 
@@ -43,9 +43,8 @@ add_library(cnc_geometry
 
     src/CNPointEgo.cpp
     src/CNPointAllo.cpp
-
 )
 
 target_link_libraries(cnc_geometry
-    ${catkin_LIBRARIES}
+  ${catkin_LIBRARIES}
 )

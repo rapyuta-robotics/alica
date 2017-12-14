@@ -1,14 +1,7 @@
-/*
- * CGSolver.cpp
- *
- *  Created on: Oct 10, 2014
- *      Author: Philipp
- */
-
 #include "CGSolver.h"
 
 #include <engine/AlicaEngine.h>
-#include <engine/constraintmodul/IVariableSyncModule.h>
+#include <engine/constraintmodul/VariableSyncModule.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>
 #include <GSolver.h>
@@ -82,7 +75,7 @@ namespace alica
 					}
 				}
 			}
-			auto serial_seeds = ae->getResultStore()->getSeeds(make_shared<vector<Variable*>>(vars), ranges);
+			auto serial_seeds = ae->getResultStore()->getSeeds(std::make_shared<std::vector<Variable*>>(vars), ranges);
 			// Desierialize seeds
 			shared_ptr<vector<shared_ptr<vector<double>>> > seeds = make_shared<vector<shared_ptr<vector<double>>>>(serial_seeds->size());
 			for (auto& serialseed : *serial_seeds)

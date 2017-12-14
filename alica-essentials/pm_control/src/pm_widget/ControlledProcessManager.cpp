@@ -1,10 +1,3 @@
-/*
- * ControlledProcessManager.cpp
- *
- *  Created on: Mar 1, 2015
- *      Author: Stephan Opfer
- */
-
 #include <process_manager/RobotExecutableRegistry.h>
 #include <SystemConfig.h>
 
@@ -12,9 +5,14 @@
 #include "pm_widget/ControlledProcessManager.h"
 #include "pm_widget/ControlledRobot.h"
 
+using std::string;
+using std::chrono::duration;
+using std::cout;
+using std::endl;
+
 namespace pm_widget
 {
-	ControlledProcessManager::ControlledProcessManager(string processManagerName, int processManagerId, QBoxLayout* parentLayout) :
+	ControlledProcessManager::ControlledProcessManager(string processManagerName, const supplementary::IAgentID* processManagerId, QBoxLayout* parentLayout) :
 			name(processManagerName), id(processManagerId), pmRegistry(supplementary::RobotExecutableRegistry::get()),parentLayout(parentLayout)
 	{
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
@@ -30,22 +28,23 @@ namespace pm_widget
 	}
 
 	void ControlledProcessManager::handleProcessStats(
-			pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair)
+			pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair)
 	{
 		this->timeLastMsgReceived = timePstsPair.first;
 		for (auto& processStat : timePstsPair.second->processStats)
 		{
 			// get the corresponding controlled robot
-			ControlledRobot* controlledRobot = this->getControlledRobot(processStat.robotId);
+			auto agentID = this->pmRegistry->getRobotId(processStat.robotId.id);
+			ControlledRobot* controlledRobot = this->getControlledRobot(agentID);
 			if (controlledRobot != nullptr)
 			{
 				// call the controlled robot to update its corresponding process statistics.
-				controlledRobot->handleProcessStat(timePstsPair.first, processStat, timePstsPair.second->senderId);
+				controlledRobot->handleProcessStat(timePstsPair.first, processStat, agentID);
 			}
 		}
 	}
 
-	ControlledRobot* ControlledProcessManager::getControlledRobot(int robotId)
+	ControlledRobot* ControlledProcessManager::getControlledRobot(const supplementary::IAgentID* robotId)
 	{
 		auto controlledRobotEntry = this->controlledRobotsMap.find(robotId);
 		if (controlledRobotEntry != this->controlledRobotsMap.end())
@@ -57,7 +56,7 @@ namespace pm_widget
 			string robotName;
 			if (this->pmRegistry->getRobotName(robotId, robotName))
 			{
-				cout << "ControlledPM: Create new ControlledRobot " << robotName << " (ID: " << robotId << ")" << endl;
+				cout << "ControlledPM: Create new ControlledRobot " << robotName << " (ID: " << *robotId << ")" << endl;
 
 				ControlledRobot* controlledRobot = new ControlledRobot(robotName, robotId, this->id);
 				this->controlledRobotsMap.emplace(robotId, controlledRobot);
@@ -66,7 +65,7 @@ namespace pm_widget
 			}
 			else
 			{
-				cerr << "ControlledPM: Received processStat from unknown robot with sender id " << robotId << endl;
+				cerr << "ControlledPM: Received processStat from unknown robot with sender id " << *robotId << endl;
 				return nullptr;
 			}
 		}
@@ -78,9 +77,9 @@ namespace pm_widget
 		{
 			if ((now - robotMapIter->second->timeLastMsgReceived) > this->msgTimeOut)
 			{ // time is over, erase controlled robot
-				cout << "ControlledPM: The robot " << robotMapIter->second->name << " (ID: "
-						<< robotMapIter->second->id << ") on process manager " << this->name << " (ID: "
-						<< this->id << ") seems to be dead!" << endl;
+				std::cout << "ControlledPM: The robot " << robotMapIter->second->name << " (ID: "
+						<< robotMapIter->second->agentID << ") on process manager " << this->name << " (ID: "
+						<< this->id << ") seems to be dead!" << std::endl;
 				delete (robotMapIter->second);
 				robotMapIter = this->controlledRobotsMap.erase(robotMapIter);
 			}

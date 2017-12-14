@@ -16,11 +16,12 @@
   <build_depend>rqt_gui_cpp</build_depend>
   <build_depend>process_manager</build_depend>
   <build_depend>robot_executable_meta_data</build_depend>
-  <build_depend>alica_ros_proxy</build_depend>
+  <build_depend>agent_id</build_depend>
   <build_depend>alica_client</build_depend>
   <build_depend>pm_control</build_depend>
   <build_depend>msl_actuator_msgs</build_depend>
   <build_depend>msl_sensor_msgs</build_depend>
+  <build_depend>msl_robot_id</build_depend>
 
   <run_depend>message_runtime</run_depend>
   <run_depend>std_msgs</run_depend>
@@ -28,11 +29,12 @@
   <run_depend>rqt_gui_cpp</run_depend>
   <run_depend>process_manager</run_depend>
   <run_depend>robot_executable_meta_data</run_depend>
-  <run_depend>alica_ros_proxy</run_depend>
+  <run_depend>agent_id</run_depend>
   <run_depend>alica_client</run_depend>
   <run_depend>pm_control</run_depend>
   <run_depend>msl_actuator_msgs</run_depend>
   <run_depend>msl_sensor_msgs</run_depend>
+  <run_depend>msl_robot_id</run_depend>
 
   <export>
     <rqt_gui plugin="${prefix}/plugin.xml"/>

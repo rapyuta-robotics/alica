@@ -2,7 +2,8 @@
 
 #include <rqt_gui_cpp/plugin.h>
 
-#include "ros/ros.h"
+#include <supplementary/IAgentID.h>
+#include <ros/ros.h>
 #include <ros/macros.h>
 #include <robot_control/Robot.h>
 
@@ -23,6 +24,7 @@ namespace supplementary
 {
 	class SystemConfig;
 	class RobotExecutableRegistry;
+	class IAgentIDFactory;
 }
 
 namespace robot_control
@@ -59,7 +61,7 @@ namespace robot_control
 
 		supplementary::SystemConfig* sc;
 
-		std::map<int, Robot*> controlledRobotsMap;
+		std::map<const supplementary::IAgentID*, Robot*, supplementary::IAgentIDComparator> controlledRobotsMap;
 		std::queue<std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
 		std::mutex processStatsMsgQueueMutex;
 		std::queue<std::pair<std::chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
@@ -68,7 +70,7 @@ namespace robot_control
 		void receiveProcessStats(process_manager::ProcessStatsConstPtr processStats);
 		void receiveAlicaInfo(alica_ros_proxy::AlicaEngineInfoConstPtr alicaInfo);
 		void processMessages();
-		void checkAndInit(int robotId);
+		void checkAndInit(const supplementary::IAgentID* robotId);
 
 		QTimer* guiUpdateTimer;
 
