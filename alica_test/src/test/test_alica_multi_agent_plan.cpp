@@ -1,10 +1,3 @@
-/*
- * test_alica_multi_agent_plan.cpp
- *
- *  Created on: Oct 13, 2014
- *      Author: Stefan Jakob
- */
-
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
@@ -13,12 +6,12 @@
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/IBehaviourPool.h"
+#include "engine/BehaviourPool.h"
 #include "engine/PlanBase.h"
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include  "engine/DefaultUtilityFunction.h"
-#include  "engine/ITeamObserver.h"
+#include  "engine/TeamObserver.h"
 #include "engine/model/Plan.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
@@ -28,6 +21,7 @@
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/collections/StateCollection.h"
 #include "TestWorldModel.h"
+#include <supplementary/AgentIDManager.h>
 #include <Plans/Behaviour/Attack.h>
 
 
@@ -83,17 +77,17 @@ protected:
 TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 {
 	sc->setHostname("nase");
-	ae = new alica::AlicaEngine();
+	ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "MultiAgentTestMaster", ".", true);
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-	ASSERT_TRUE(ae->init(bc, cc, uc, crc, "RolesetTA", "MultiAgentTestMaster", ".", true))
+	ASSERT_TRUE(ae->init(bc, cc, uc, crc))
 			<< "Unable to initialise the Alica Engine!";
 
 	sc->setHostname("hairy");
-	ae2 = new alica::AlicaEngine();
+	ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "MultiAgentTestMaster", ".", true);
 	ae2->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
-	ASSERT_TRUE(ae2->init(bc, cc, uc, crc, "RolesetTA", "MultiAgentTestMaster", ".", true))
+	ASSERT_TRUE(ae2->init(bc, cc, uc, crc))
 			<< "Unable to initialise the Alica Engine!";
 
 	ae->start();

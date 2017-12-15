@@ -15,7 +15,7 @@ using namespace std;
 #include <memory>
 
 namespace supplementary {
-	class IAgentID;
+	class AgentID;
 }
 
 namespace alica
@@ -28,7 +28,7 @@ namespace alica
 		virtual ~DummyTestSummand();
 		void cacheEvalData();
 		UtilityInterval eval(IAssignment* ass);
-		const supplementary::IAgentID* robotId;
+		const supplementary::AgentID* robotId;
 
 	protected:
 		double sb;

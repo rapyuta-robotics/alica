@@ -15,7 +15,7 @@ using namespace std;
 #include <engine/AlicaEngine.h>
 #include "engine/PlanRepository.h"
 #include "engine/model/Plan.h"
-#include "engine/IBehaviourPool.h"
+#include "engine/BehaviourPool.h"
 #include "engine/model/Behaviour.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/model/EntryPoint.h"
@@ -70,14 +70,14 @@ protected:
 		sc->setHostname("nase");
 
 		// setup the engine
-		ae = new alica::AlicaEngine();
+		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "MasterPlan", ".", false);
 		bc = new alica::BehaviourCreator();
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
 		crc = new alica::ConstraintCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-		ae->init(bc, cc, uc, crc, "Roleset", "MasterPlan", ".", false);
+		ae->init(bc, cc, uc, crc);
 	}
 
 	virtual void TearDown()

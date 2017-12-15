@@ -6,12 +6,12 @@
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/IBehaviourPool.h"
+#include "engine/BehaviourPool.h"
 #include "engine/PlanBase.h"
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include  "engine/DefaultUtilityFunction.h"
-#include  "engine/ITeamObserver.h"
+#include  "engine/TeamObserver.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RuntimeCondition.h"
 #include "BehaviourCreator.h"
@@ -53,7 +53,7 @@ protected:
 		sc->setHostname("nase");
 
 		// setup the engine
-		ae = new alica::AlicaEngine();
+		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "SimpleTestPlan", ".", false);
 		bc = new alica::BehaviourCreator();
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
@@ -81,7 +81,7 @@ protected:
 TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 {
 
-	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "Roleset", "SimpleTestPlan", ".", false))
+	EXPECT_TRUE(ae->init(bc, cc, uc, crc))
 			<< "Unable to initialise the Alica Engine!";
 
 	ae->start();

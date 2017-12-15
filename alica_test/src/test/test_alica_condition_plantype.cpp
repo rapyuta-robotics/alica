@@ -1,9 +1,3 @@
-/*
- * test_alica_condition_plantype.cpp
- *
- *  Created on: Dec 10, 2014
- *      Author: Paul Panin
- */
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
@@ -19,7 +13,7 @@
 #include "engine/UtilityFunction.h"
 #include "engine/model/Plan.h"
 #include "TestConstantValueSummand.h"
-#include "engine/teamobserver/TeamObserver.h"
+#include "engine/TeamObserver.h"
 #include "engine/teammanager/TeamManager.h"
 #include "engine/PlanBase.h"
 #include "engine/model/State.h"
@@ -48,7 +42,7 @@ protected:
 		sc->setHostname("nase");
 
 		// setup the engine
-		ae = new alica::AlicaEngine();
+		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "MasterPlanTestConditionPlanType", ".", true);
 		bc = new alica::BehaviourCreator();
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
@@ -75,7 +69,7 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
 {
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "Roleset", "MasterPlanTestConditionPlanType", ".", true)) << "Unable to initialise the Alica Engine!";
+	EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
 	auto uSummandPreConditionPlan = *((ae->getPlanRepository()->getPlans().find(1418042796751))->second->getUtilityFunction()->getUtilSummands().begin());
 	TestConstantValueSummand* dbrPre = dynamic_cast<TestConstantValueSummand*>(uSummandPreConditionPlan);

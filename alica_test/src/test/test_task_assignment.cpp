@@ -1,21 +1,11 @@
-/*
- * test_task_assignment.cpp
- *
- *  Created on: Jul 29, 2014
- *      Author: Stefan Jakob
- */
-
-using namespace std;
-
-
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
 #include "clock/AlicaROSClock.h"
 #include "engine/AlicaEngine.h"
-#include "engine/IPlanSelector.h"
-#include "engine/ITeamManager.h"
+#include "engine/planselector/PlanSelector.h"
+#include "engine/teammanager/TeamManager.h"
 #include "engine/RunningPlan.h"
 #include "engine/PlanRepository.h"
 #include "engine/collections/RobotEngineData.h"
@@ -25,7 +15,7 @@ using namespace std;
 //#include "engine/planselector/TaskAssignment.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/Agent.h"
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include <gtest/gtest.h>
 #include <list>
@@ -58,13 +48,13 @@ protected:
 		cout << sc->getConfigPath() << endl;
 
 		sc->setHostname("nase");
-		ae = new alica::AlicaEngine();
+		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()),"RolesetTA", "MasterPlanTaskAssignment", ".", false);
 		bc = new alica::BehaviourCreator();
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
 		crc = new alica::ConstraintCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-		ae->init(bc, cc, uc, crc, "RolesetTA", "MasterPlanTaskAssignment", ".", false);
+		ae->init(bc, cc, uc, crc);
 	}
 
 	virtual void TearDown()
@@ -82,10 +72,10 @@ protected:
 TEST_F(TaskAssignmentTest, constructTaskAssignment)
 {
 	// fake a list of existing robots
-	auto robots = make_shared<vector<const supplementary::IAgentID* > >();
+	auto robots = make_shared<vector<const supplementary::AgentID* > >();
 	for (int number = 8; number <= 11; number++)
 	{
-		const supplementary::IAgentID * agentID =  ae->getID<int>(number);
+		const supplementary::AgentID * agentID =  ae->getID<int>(number);
 		robots->push_back(agentID);
 	}
 
@@ -104,7 +94,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 	auto rp = make_shared<alica::RunningPlan>(ae, (*planMap.find(1407152758497)).second);
 	list<alica::AbstractPlan*>* planList = new list<alica::AbstractPlan*>();
 	planList->push_back((*planMap.find(1407152758497)).second);
-	alica::IPlanSelector* ps = ae->getPlanSelector();
+	alica::PlanSelector* ps = ae->getPlanSelector();
 	auto plans = ps->getPlansForState(rp, planList, robots);
 }
 

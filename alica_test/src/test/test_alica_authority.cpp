@@ -1,10 +1,3 @@
-/*
- * test_alica_authority.cpp
- *
- *  Created on: Oct 27, 2014
- *      Author: Stefan Jakob
- */
-
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
@@ -20,7 +13,7 @@
 #include "engine/UtilityFunction.h"
 #include "engine/model/Plan.h"
 #include "DummyTestSummand.h"
-#include "engine/teamobserver/TeamObserver.h"
+#include "engine/TeamObserver.h"
 #include "engine/teammanager/TeamManager.h"
 #include "engine/PlanBase.h"
 #include "engine/model/State.h"
@@ -51,7 +44,7 @@ protected:
 		sc->setHostname("nase");
 
 		// setup the engine
-		ae = new alica::AlicaEngine();
+		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", ".", true);
 		bc = new alica::BehaviourCreator();
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
@@ -80,16 +73,16 @@ protected:
 TEST_F(AlicaEngineAuthorityManager, authority)
 {
 	sc->setHostname("nase");
-	ae = new alica::AlicaEngine();
+	ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", ".", true);
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "RolesetTA", "AuthorityTestMaster", ".", true)) << "Unable to initialise the Alica Engine!";
+	EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
 	sc->setHostname("hairy");
-	ae2 = new alica::AlicaEngine();
+	ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", ".", true);
 	ae2->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
-	EXPECT_TRUE(ae2->init(bc, cc, uc, crc, "RolesetTA", "AuthorityTestMaster", ".", true)) << "Unable to initialise the Alica Engine!";
+	EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
 	auto uSummandAe = *((ae->getPlanRepository()->getPlans().find(1414403413451))->second->getUtilityFunction()->getUtilSummands().begin());
 	DummyTestSummand* dbr = dynamic_cast<DummyTestSummand*>(uSummandAe);

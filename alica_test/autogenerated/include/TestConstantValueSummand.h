@@ -11,7 +11,7 @@
 #include <engine/USummand.h>
 
 namespace supplementary {
-	class IAgentID;
+	class AgentID;
 }
 
 namespace alica {
@@ -22,7 +22,7 @@ public:
 	virtual ~TestConstantValueSummand();
 	void cacheEvalData();
 	UtilityInterval eval(IAssignment* ass);
-	const supplementary::IAgentID* robotId;
+	const supplementary::AgentID* robotId;
 
 protected:
 	double val;
