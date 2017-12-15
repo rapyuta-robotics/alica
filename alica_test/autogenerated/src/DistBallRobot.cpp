@@ -1,8 +1,7 @@
 #include "DistBallRobot.h"
 #include "engine/IAssignment.h"
 #include "engine/model/EntryPoint.h"
-#include "supplementary/IAgentID.h"
-#include <msl/robot/IntRobotIDFactory.h>
+#include <supplementary/AgentID.h>
 #include <supplementary/AgentIDManager.h>
 #include <TestWorldModel.h>
 
@@ -19,7 +18,7 @@ namespace alica
 		this->velAngle = 0;
 		this->robotId = nullptr;
 		this->sb = 0;
-		this->manager = new supplementary::AgentIDManager(new msl::robot::IntRobotIDFactory);
+		this->manager = new supplementary::AgentIDManager(new supplementary::AgentIDFactory());
 
 	}
 
@@ -40,14 +39,14 @@ namespace alica
 
 		long x8 = 8;
 		std::vector<uint8_t> id8(reinterpret_cast<const uint8_t*>(&x8), (reinterpret_cast<const uint8_t*>(&x8) + sizeof(x8)));
-		const supplementary::IAgentID * agentID8 =  this->manager->getIDFromBytes(id8);
+		const supplementary::AgentID * agentID8 =  this->manager->getIDFromBytes(id8);
 
 		long x9 = 9;
 		std::vector<uint8_t> id9(reinterpret_cast<const uint8_t*>(&x9), (reinterpret_cast<const uint8_t*>(&x9) + sizeof(x9)));
-		const supplementary::IAgentID * agentID9 =  this->manager->getIDFromBytes(id9);
+		const supplementary::AgentID * agentID9 =  this->manager->getIDFromBytes(id9);
 
 
-		std::shared_ptr<vector<const supplementary::IAgentID*>> relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
+		std::shared_ptr<vector<const supplementary::AgentID*>> relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
 
 		double curPosition;
 		for (int i = 0; i < relevantRobots->size(); ++i)

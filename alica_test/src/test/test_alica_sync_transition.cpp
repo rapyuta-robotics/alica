@@ -1,10 +1,3 @@
-/*
- * test_alica_sync_transition.cpp
- *
- *  Created on: Dec 17, 2014
- *      Author: Paul Panin
- */
-
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
@@ -20,7 +13,7 @@
 #include "engine/UtilityFunction.h"
 #include "engine/model/Plan.h"
 #include "TestConstantValueSummand.h"
-#include "engine/teamobserver/TeamObserver.h"
+#include "engine/TeamObserver.h"
 #include "engine/PlanBase.h"
 #include "engine/model/State.h"
 #include "TestWorldModel.h"
@@ -83,18 +76,18 @@ protected:
 TEST_F(AlicaSyncTransition, syncTransitionTest)
 {
 	sc->setHostname("hairy");
-	ae = new alica::AlicaEngine();
+	ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", ".", true);
 	ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ros = new alicaRosProxy::AlicaRosCommunication(ae);
 	ae->setCommunicator(ros);
-	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "RolesetTA", "RealMasterPlanForSyncTest", ".", true)) << "Unable to initialise the Alica Engine!";
+	EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
 	sc->setHostname("nase");
-	ae2 = new alica::AlicaEngine();
+	ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", ".", true);
 	ae2->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 	ros2 = new alicaRosProxy::AlicaRosCommunication(ae2);
 	ae2->setCommunicator(ros2);
-	EXPECT_TRUE(ae2->init(bc, cc, uc, crc, "RolesetTA", "RealMasterPlanForSyncTest", ".", true)) << "Unable to initialise the Alica Engine!";
+	EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
 	ae->start();
 	ae2->start();

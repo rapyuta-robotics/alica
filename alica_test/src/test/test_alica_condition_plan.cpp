@@ -1,17 +1,16 @@
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
-//#include "engine/IAlicaCommunication.h"
 #include "engine/model/State.h"
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/IBehaviourPool.h"
+#include "engine/BehaviourPool.h"
 #include "engine/PlanBase.h"
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include  "engine/DefaultUtilityFunction.h"
-#include  "engine/ITeamObserver.h"
+#include  "engine/TeamObserver.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RuntimeCondition.h"
 #include "BehaviourCreator.h"
@@ -57,7 +56,7 @@ protected:
 		sc->setHostname("nase");
 
 		// setup the engine
-		ae = new alica::AlicaEngine();
+		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ConstraintTestPlan", ".", false);
 		bc = new alica::BehaviourCreator();
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
@@ -88,7 +87,7 @@ protected:
  */
 TEST_F(AlicaConditionPlan, solverTest)
 {
-	ae->init(bc, cc, uc, crc, "Roleset", "ConstraintTestPlan", ".", false);
+	ae->init(bc, cc, uc, crc);
 	ae->start();
 
 //	unsigned int sleepTime = 1;

@@ -38,7 +38,7 @@ protected:
 		sc->setHostname("nase");
 
 		// setup the engine
-		ae = new alica::AlicaEngine();
+		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "MasterPlan", ".", false);
 		bc = new alica::BehaviourCreator();
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
@@ -64,10 +64,10 @@ protected:
  */
 TEST_F(AlicaEngineTestBehPool, behaviourPoolInit)
 {
-	EXPECT_TRUE(ae->init(bc, cc, uc, crc, "Roleset", "MasterPlan", ".", false))
+	EXPECT_TRUE(ae->init(bc, cc, uc, crc))
 			<< "Unable to initialise the Alica Engine!";
 	auto behaviours = ae->getPlanRepository()->getBehaviours();
-	alica::IBehaviourPool* bp = ae->getBehaviourPool();
+	alica::BehaviourPool* bp = ae->getBehaviourPool();
 	for (auto behaviourPair : behaviours)
 	{
 		cout << "Behaviour: " << behaviourPair.second->getName() << endl;

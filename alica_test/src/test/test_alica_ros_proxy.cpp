@@ -41,14 +41,14 @@ protected:
 
 
 		// setup the engine
-		ae = new alica::AlicaEngine();
+		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "MasterPlan", ".", false);
 		bc = new alica::BehaviourCreator();
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
 		crc = new alica::ConstraintCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-		ae->init(bc, cc, uc, crc, "Roleset", "MasterPlan", ".", false);
+		ae->init(bc, cc, uc, crc);
 	}
 
 	virtual void TearDown()

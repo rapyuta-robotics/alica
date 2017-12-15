@@ -1,10 +1,3 @@
-/*
- * testalicabehaviourtrigger.cpp
- *
- *  Created on: Apr 8, 2015
- *      Author: Stefan Jakob
- */
-
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
@@ -19,7 +12,7 @@
 #include <condition_variable>
 #include "EventTrigger.h"
 #include <SystemConfig.h>
-#include <engine/IBehaviourPool.h>
+#include <engine/BehaviourPool.h>
 #include <engine/BasicBehaviour.h>
 #include <engine/PlanBase.h>
 #include <engine/model/BehaviourConfiguration.h>
@@ -56,7 +49,7 @@ protected:
 		sc->setHostname("nase");
 
 		// setup the engine
-		ae = new alica::AlicaEngine();
+		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "BehaviourTriggerTestPlan", ".", false);
 		bc = new alica::BehaviourCreator();
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
@@ -83,7 +76,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
 {
 	alicaTests::TestWorldModel::getOne()->trigger1 = new supplementary::EventTrigger();
 	alicaTests::TestWorldModel::getOne()->trigger2 = new supplementary::EventTrigger();
-	ae->init(bc, cc, uc, crc, "Roleset", "BehaviourTriggerTestPlan", ".", false);
+	ae->init(bc, cc, uc, crc);
 	ae->start();
 	chrono::milliseconds duration(33);
 	this_thread::sleep_for(duration);

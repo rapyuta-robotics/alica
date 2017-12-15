@@ -19,7 +19,7 @@ using namespace std;
 
 namespace supplementary
 {
-    class IAgentID;
+    class AgentID;
     class AgentIDManager;
 }
 
@@ -36,7 +36,7 @@ namespace alica
 		virtual ~DistBallRobot();
 		void cacheEvalData ();
 		UtilityInterval eval(IAssignment* ass);
-		supplementary::IAgentID * robotId;
+		supplementary::AgentID * robotId;
 
 	protected:
 		double sb;

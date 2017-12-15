@@ -54,12 +54,12 @@ protected:
 		crc = new alica::ConstraintCreator();
 
 		sc->setHostname("nase");
-		ae = new alica::AlicaEngine();
+		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ProblemBuildingMaster", ".", false);
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 		ae->addSolver(SolverType::DUMMYSOLVER, new alica::reasoner::ConstraintTestPlanDummySolver(ae));
 		ae->addSolver(SolverType::GRADIENTSOLVER, new alica::reasoner::CGSolver(ae));
-		ae->init(bc, cc, uc, crc, "Roleset", "ProblemBuildingMaster", ".", false);
+		ae->init(bc, cc, uc, crc);
 	}
 
 	virtual void TearDown()
