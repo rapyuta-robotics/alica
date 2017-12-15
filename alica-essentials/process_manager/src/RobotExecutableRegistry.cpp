@@ -1,13 +1,18 @@
+#include "process_manager/RobotExecutableRegistry.h"
+
 #include "process_manager/ExecutableMetaData.h"
 #include "process_manager/RobotMetaData.h"
 
 #include <ConsoleCommandHelper.h>
 #include <SystemConfig.h>
-#include <iostream>
-#include <process_manager/RobotExecutableRegistry.h>
 #include <supplementary/AgentIDFactory.h>
 #include <supplementary/AgentIDManager.h>
 
+#include <iostream>
+
+
+using std::endl;
+using std::cout;
 using std::string;
 
 namespace supplementary
@@ -21,24 +26,8 @@ RobotExecutableRegistry *RobotExecutableRegistry::get()
 
 RobotExecutableRegistry::RobotExecutableRegistry()
     : sc(SystemConfig::getInstance())
-    , agentIDManager(nullptr)
+    , agentIDManager(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()))
 {
-    string idType = (*sc)["ProcessManaging"]->get<string>("ProcessManager.agentIDType", NULL);
-    if (idType.compare("int") == 0)
-    {
-
-        this->agentIDManager = new supplementary::AgentIDManager(new msl::robot::IntRobotIDFactory());
-    }
-    else if (idType.compare("uuid") == 0)
-    {
-        // TODO
-        throw new runtime_error("RobotExecutableRegistry: UUID Factory needs to be implemented!");
-    }
-    else
-    {
-        throw new runtime_error("RobotExecutableRegistry: Unknown Agent ID Type in ProcessManaging.conf: '" + idType +
-                                "'");
-    }
 }
 
 RobotExecutableRegistry::~RobotExecutableRegistry()
@@ -48,7 +37,7 @@ RobotExecutableRegistry::~RobotExecutableRegistry()
         delete metaData;
     }
 
-    for (auto agentEntry: this->robotMap)
+    for (auto agentEntry : this->robotMap)
     {
         delete agentEntry.second;
     }
@@ -88,7 +77,7 @@ const map<string, vector<pair<int, int>>> *const RobotExecutableRegistry::getBun
     return &bundlesMap;
 }
 
-bool RobotExecutableRegistry::getRobotName(const IAgentID *agentID, string &robotName)
+bool RobotExecutableRegistry::getRobotName(const AgentID *agentID, string &robotName)
 {
     for (auto &agentEntry : this->robotMap)
     {
@@ -102,7 +91,7 @@ bool RobotExecutableRegistry::getRobotName(const IAgentID *agentID, string &robo
     return false;
 }
 
-bool RobotExecutableRegistry::robotExists(const IAgentID *agentID)
+bool RobotExecutableRegistry::robotExists(const AgentID *agentID)
 {
     return this->robotMap.find(agentID) != this->robotMap.end();
 }
@@ -119,7 +108,7 @@ bool RobotExecutableRegistry::robotExists(string robotName)
     return false;
 }
 
-const IAgentID *RobotExecutableRegistry::getRobotId(string robotName)
+const AgentID *RobotExecutableRegistry::getRobotId(string robotName)
 {
     for (auto &agentEntry : this->robotMap)
     {
@@ -131,7 +120,7 @@ const IAgentID *RobotExecutableRegistry::getRobotId(string robotName)
     return nullptr;
 }
 
-const IAgentID *RobotExecutableRegistry::getRobotId(vector<uint8_t> &idVector, string &robotName)
+const AgentID *RobotExecutableRegistry::getRobotId(vector<uint8_t> &idVector, string &robotName)
 {
     auto agentID = this->agentIDManager->getIDFromBytes(idVector);
     auto agentEntry = this->robotMap.find(agentID);
@@ -147,7 +136,7 @@ const IAgentID *RobotExecutableRegistry::getRobotId(vector<uint8_t> &idVector, s
     }
 }
 
-const IAgentID *RobotExecutableRegistry::getRobotId(const vector<uint8_t> &idVector)
+const AgentID *RobotExecutableRegistry::getRobotId(const vector<uint8_t> &idVector)
 {
     auto agentID = this->agentIDManager->getIDFromBytes(idVector);
     auto agentEntry = this->robotMap.find(agentID);
@@ -163,7 +152,7 @@ const IAgentID *RobotExecutableRegistry::getRobotId(const vector<uint8_t> &idVec
     }
 }
 
-void RobotExecutableRegistry::addRobot(string robotName, const IAgentID *agentID)
+void RobotExecutableRegistry::addRobot(string robotName, const AgentID *agentID)
 {
     auto robotEntry = this->robotMap.find(agentID);
     if (robotEntry == this->robotMap.end())
@@ -178,7 +167,7 @@ void RobotExecutableRegistry::addRobot(string robotName, const IAgentID *agentID
  * This method allows testing with systems, which are not in the Globals.conf,
  * i.d., are no official robots.
  */
-std::string RobotExecutableRegistry::addRobot(const IAgentID *agentID)
+std::string RobotExecutableRegistry::addRobot(const AgentID *agentID)
 {
     stringstream ss;
     ss << *agentID;
@@ -192,9 +181,9 @@ std::string RobotExecutableRegistry::addRobot(const IAgentID *agentID)
  * This method allows testing with systems, which are not in the Globals.conf,
  * i.d., are no official robots.
  */
-const IAgentID *RobotExecutableRegistry::addRobot(string agentName)
+const AgentID *RobotExecutableRegistry::addRobot(string agentName)
 {
-    const IAgentID *agentID;
+    const AgentID *agentID;
 
     try
     {
@@ -222,7 +211,7 @@ const IAgentID *RobotExecutableRegistry::addRobot(string agentName)
     return agentID;
 }
 
-const std::map<const IAgentID *, RobotMetaData *, supplementary::IAgentIDComparator> &RobotExecutableRegistry::getRobots() const
+const std::map<const AgentID *, RobotMetaData *, supplementary::AgentIDComparator> &RobotExecutableRegistry::getRobots() const
 {
     return this->robotMap;
 }

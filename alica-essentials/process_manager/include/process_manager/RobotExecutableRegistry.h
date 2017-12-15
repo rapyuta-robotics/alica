@@ -1,15 +1,17 @@
 #pragma once
 
+#include <supplementary/AgentID.h>
+
 #include <vector>
 #include <string>
 #include <map>
-#include <supplementary/IAgentID.h>
+#include <stdint.h>
 
 namespace supplementary
 {
 
-	class IAgentIDFactory;
-	class IAgentID;
+	class AgentIDFactory;
+	class AgentID;
 	class AgentIDManager;
 	class RobotMetaData;
 	class ExecutableMetaData;
@@ -23,15 +25,15 @@ namespace supplementary
 	{
 	public:
 		static RobotExecutableRegistry* get();
-		const std::map<const IAgentID *, RobotMetaData *, supplementary::IAgentIDComparator>& getRobots() const;
-		void addRobot(std::string agentName, const IAgentID* agentID);
-		const IAgentID * addRobot(std::string agentName);
-		std::string addRobot(const IAgentID *agentID);
-		const IAgentID* getRobotId(std::string agentName);
-		const IAgentID* getRobotId(const std::vector<uint8_t>& idVector);
-		const IAgentID* getRobotId(std::vector<uint8_t>& idVector, std::string& robotName);
-		bool getRobotName(const IAgentID* agentID, std::string& robotName);
-		bool robotExists(const IAgentID* agentID);
+		const std::map<const AgentID *, RobotMetaData *, supplementary::AgentIDComparator>& getRobots() const;
+		void addRobot(std::string agentName, const AgentID* agentID);
+		const AgentID * addRobot(std::string agentName);
+		std::string addRobot(const AgentID *agentID);
+		const AgentID* getRobotId(std::string agentName);
+		const AgentID* getRobotId(const std::vector<uint8_t>& idVector);
+		const AgentID* getRobotId(std::vector<uint8_t>& idVector, std::string& robotName);
+		bool getRobotName(const AgentID* agentID, std::string& robotName);
+		bool robotExists(const AgentID* agentID);
 		bool robotExists(std::string agentName);
 		void setInterpreters(std::vector<std::string> interpreter);
 		bool isKnownInterpreter(std::string const & cmdLinePart);
@@ -51,7 +53,7 @@ namespace supplementary
 		RobotExecutableRegistry();
 		virtual ~RobotExecutableRegistry();
 
-		std::map<const IAgentID*, RobotMetaData*, supplementary::IAgentIDComparator> robotMap;
+		std::map<const AgentID*, RobotMetaData*, supplementary::AgentIDComparator> robotMap;
 		std::vector<ExecutableMetaData*> executableList;
 		std::vector<std::string> interpreter;
 		std::map<std::string, std::vector<std::pair<int, int>>> bundlesMap;

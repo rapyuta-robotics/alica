@@ -5,7 +5,7 @@
 #include "process_manager/ProcessStats.h"
 #include "process_manager/ProcessStat.h"
 
-#include <supplementary/IAgentID.h>
+#include <supplementary/AgentID.h>
 
 #include <ros/console.h>
 
@@ -18,7 +18,7 @@ namespace supplementary
 {
 	class ProcessManager;
 	class ExecutableMetaData;
-	class IAgentID;
+	class AgentID;
 
 	enum RunState { SHOULD_RUN, SHOULDNT_RUN, MANUAL_STARTED};
 
@@ -29,7 +29,7 @@ namespace supplementary
 		virtual ~ManagedExecutable();
 		void queue4Update(long pid);
 		void update(unsigned long long cpuDelta);
-		void report(process_manager::ProcessStats& psts, const IAgentID* robotId);
+		void report(process_manager::ProcessStats& psts, const AgentID* robotId);
 		void changeDesiredState(bool shouldRun, int paramSetId);
 		void changeDesiredLogPublishingState(bool shouldPublish);
 		void startProcess (std::vector<char*> & params);

@@ -1,6 +1,10 @@
 #include "process_manager/ManagedExecutable.h"
 #include "process_manager/ProcessManager.h"
 #include <process_manager/RobotExecutableRegistry.h>
+
+#include <SystemConfig.h>
+#include <Logging.h>
+
 #include <cassert>
 #include <map>
 #include <iostream>
@@ -14,8 +18,6 @@
 #include <iomanip>
 #include <chrono>
 #include <stdlib.h>
-#include <SystemConfig.h>
-#include <Logging.h>
 
 namespace supplementary
 {
@@ -197,7 +199,7 @@ namespace supplementary
 		}
 	}
 
-	void ManagedExecutable::report(process_manager::ProcessStats& psts, const IAgentID* agentID)
+	void ManagedExecutable::report(process_manager::ProcessStats& psts, const AgentID* agentID)
 	{
 		if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED)
 		{

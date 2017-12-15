@@ -6,7 +6,7 @@
 #include "process_manager/ProcessStat.h"
 #include "process_manager/ProcessStats.h"
 
-#include <supplementary/IAgentID.h>
+#include <supplementary/AgentID.h>
 #include <ros/ros.h>
 #include <chrono>
 
@@ -18,7 +18,7 @@ class thread;
 namespace supplementary
 {
 
-class IAgentIDFactory;
+class AgentIDFactory;
 class SystemConfig;
 class ManagedRobot;
 class ManagedExecutable;
@@ -48,9 +48,9 @@ class ProcessManager
   private:
     SystemConfig *sc;
     std::string ownHostname;
-    const IAgentID *ownId;
+    const AgentID *ownId;
     bool simMode;
-    std::map<const IAgentID *, ManagedRobot *, IAgentIDComparator> robotMap;
+    std::map<const AgentID *, ManagedRobot *, AgentIDComparator> robotMap;
     RobotExecutableRegistry *pmRegistry;
     std::vector<std::string> interpreters;
     unsigned long long lastTotalCPUTime;

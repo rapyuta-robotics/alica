@@ -1,11 +1,11 @@
 #include "process_manager/RobotMetaData.h"
 
-#include <supplementary/IAgentID.h>
+#include <supplementary/AgentID.h>
 
 namespace supplementary
 {
 
-	RobotMetaData::RobotMetaData(std::string name, const IAgentID* agentID) :
+	RobotMetaData::RobotMetaData(std::string name, const AgentID* agentID) :
 		name(name), agentID(agentID)
 	{
 

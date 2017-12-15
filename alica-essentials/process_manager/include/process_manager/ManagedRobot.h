@@ -19,7 +19,7 @@ namespace supplementary
 	class ManagedRobot : public RobotMetaData
 	{
 	public:
-		ManagedRobot(std::string robotName, const IAgentID* agentID, ProcessManager* procMan);
+		ManagedRobot(std::string robotName, const AgentID* agentID, ProcessManager* procMan);
 		virtual ~ManagedRobot();
 		void queue4update(int execid, long pid, RobotExecutableRegistry* registry);
 		void update(unsigned long long cpuDelta);

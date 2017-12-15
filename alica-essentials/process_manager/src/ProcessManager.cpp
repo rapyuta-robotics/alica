@@ -50,7 +50,7 @@ ProcessManager::ProcessManager(int argc, char **argv)
      * data from Globals.conf and Processes.conf file. */
 
     // Register robots from Globals.conf
-    const IAgentID *tmpAgentID;
+    const AgentID *tmpAgentID;
     auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
     for (auto robotName : (*robotNames))
     {
@@ -131,8 +131,8 @@ ProcessManager::~ProcessManager()
 void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
 {
     // check whether this message is for me, 0 is a wild card for all ProcessManagers
-	const IAgentID *receiverId;
-    if (pc->receiverId.type == supplementary::BroadcastID::TYPE)
+	const AgentID *receiverId;
+    if (pc->receiverId.type == supplementary::AgentID::BC_TYPE)
     {
     	receiverId = new supplementary::BroadcastID(nullptr, 0);
     }
@@ -168,7 +168,7 @@ void ProcessManager::changeLogPublishing(process_manager::ProcessCommandPtr pc, 
     {
         // Check whether the robot with the given id is known
         string robotName;
-        if (const IAgentID *agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName))
+        if (const AgentID *agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName))
         {
             // Find the ManagedRobot object
             auto mapIter = this->robotMap.find(agentID);
@@ -213,7 +213,7 @@ void ProcessManager::changeDesiredProcessStates(process_manager::ProcessCommandP
     {
         // Check whether the robot with the given id is known
         string robotName;
-        if (const IAgentID *agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName))
+        if (const AgentID *agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName))
         {
             // Find the ManagedRobot object
             auto mapIter = this->robotMap.find(agentID);
@@ -410,7 +410,7 @@ void ProcessManager::searchProcFS()
         {
             // get the robots name from the ROBOT environment variable
             string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
-            const IAgentID *agentID = this->pmRegistry->getRobotId(robotName);
+            const AgentID *agentID = this->pmRegistry->getRobotId(robotName);
             if (!agentID)
             {
                 cout << "PM: Warning! Unknown robot '" << robotName << "' is running executable with ID '" << execId
@@ -573,7 +573,7 @@ bool ProcessManager::selfCheck()
                 string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
 
                 // get the Robot Id of the robot running the roscore
-                const IAgentID *agentID = this->pmRegistry->getRobotId(robotName);
+                const AgentID *agentID = this->pmRegistry->getRobotId(robotName);
                 if (!agentID)
                 {
                     agentID = this->pmRegistry->addRobot(robotName);
@@ -636,7 +636,7 @@ bool ProcessManager::selfCheck()
             int roscoreExecId;
             if (this->pmRegistry->getExecutableIdByExecName(roscoreExecName, roscoreExecId))
             {
-                const IAgentID *agentID = this->pmRegistry->getRobotId(this->ownHostname);
+                const AgentID *agentID = this->pmRegistry->getRobotId(this->ownHostname);
                 if (agentID != nullptr)
                 {
                     // create managed robot if necessary and change desired state of roscore accordingly

@@ -4,15 +4,15 @@
 
 namespace supplementary
 {
-	class IAgentID;
+	class AgentID;
 
 	class RobotMetaData
 	{
 	public:
-		RobotMetaData(std::string name, const IAgentID* agentID);
+		RobotMetaData(std::string name, const AgentID* agentID);
 		virtual ~RobotMetaData();
 
-		const IAgentID* agentID;
+		const AgentID* agentID;
 		std::string name;
 	};
 } /* namespace supplementary */

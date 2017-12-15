@@ -18,7 +18,7 @@ namespace supplementary
 	 * @param robotName
 	 * @param id
 	 */
-	ManagedRobot::ManagedRobot(string robotName, const IAgentID* agentID, ProcessManager* procMan) :
+	ManagedRobot::ManagedRobot(string robotName, const AgentID* agentID, ProcessManager* procMan) :
 			RobotMetaData(robotName, agentID), procMan(procMan)
 	{
 	}
