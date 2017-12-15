@@ -12,9 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
     pm_control 
     std_msgs 
     message_generation 
-    msl_actuator_msgs 
-    msl_sensor_msgs
-    msl_robot_id
 )
 
 #find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
