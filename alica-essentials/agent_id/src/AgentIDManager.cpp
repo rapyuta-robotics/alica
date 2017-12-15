@@ -19,9 +19,9 @@ AgentIDManager::~AgentIDManager()
 	}
 }
 
-const AgentID *AgentIDManager::generateID()
+const AgentID *AgentIDManager::generateID(int size)
 {
-	return this->idFactory->generateID();
+	return this->idFactory->generateID(size);
 }
 
 /**

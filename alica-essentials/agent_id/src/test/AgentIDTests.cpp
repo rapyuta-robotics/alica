@@ -192,6 +192,24 @@ TEST(AgentIDManager, GuarenteeSingleEntities)
     ASSERT_EQ(intId1, intId2);
 }
 
+TEST(AgentIDManager, GenerateIDsOfVariousLength)
+{
+	supplementary::AgentIDFactory *factory = new supplementary::AgentIDFactory();
+    supplementary::AgentIDManager idManager(factory);
+
+    auto id1 = idManager.generateID(1);
+    ASSERT_EQ(id1->getSize(), 1);
+
+    auto id4 = idManager.generateID(4);
+    ASSERT_EQ(id4->getSize(), 4);
+
+    auto id15 = idManager.generateID(15);
+    ASSERT_EQ(id15->getSize(), 15);
+
+    auto id18 = idManager.generateID(18);
+    ASSERT_EQ(id18->getSize(), 18);
+}
+
 int main(int argc, char **argv)
 {
     testing::InitGoogleTest(&argc, argv);

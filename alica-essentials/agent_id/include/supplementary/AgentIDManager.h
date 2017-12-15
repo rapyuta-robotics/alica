@@ -22,7 +22,7 @@ class AgentIDManager
     template <class Prototype>
     const AgentID *getID(Prototype &idPrototype);
 
-    const AgentID *generateID();
+    const AgentID *generateID(int size = 16);
 
   private:
     std::unordered_set<const AgentID *, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator> agentIDs;
