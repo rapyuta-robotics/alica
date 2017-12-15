@@ -8,6 +8,7 @@ namespace alica{
 
 namespace supplementary{
 	class SystemConfig;
+	class AgentID;
 
 	class WorldModel {
 	public:
@@ -16,7 +17,7 @@ namespace supplementary{
     	supplementary::InfoTime getTime();
     	bool isMaySendMessages() const;
     	void setMaySendMessages(bool maySendMessages);
-    	int getOwnId();
+    	const supplementary::AgentID* getOwnId();
     	bool setEngine(alica::AlicaEngine *ae);
     	alica::AlicaEngine* getEngine();
     	supplementary::SystemConfig* getSystemConfig();
@@ -25,6 +26,6 @@ namespace supplementary{
 		SystemConfig* sc;
 		alica::AlicaEngine* alicaEngine;
 		bool maySendMessages;
-		int ownID;
+		const supplementary::AgentID* ownID;
 	};
 }

@@ -1,17 +1,18 @@
 #include "supplementary/WorldModel.h"
 
 #include <engine/AlicaEngine.h>
+#include <engine/teammanager/TeamManager.h>
 #include <engine/IAlicaClock.h>
+#include <supplementary/AgentID.h>
 
 namespace supplementary
 {
 WorldModel::WorldModel()
     : maySendMessages(true)
     , alicaEngine(nullptr)
+	, ownID(nullptr)
 {
-    this->ownID = supplementary::SystemConfig::getOwnRobotID();
-
-    this->sc = supplementary::SystemConfig::getInstance();
+	this->sc = supplementary::SystemConfig::getInstance();
     this->maySendMessages = (*this->sc)["WorldModel"]->get<bool>("WorldModel", "MaySendMessages", NULL);
 }
 
@@ -59,8 +60,15 @@ void WorldModel::setMaySendMessages(bool maySendMessages)
     this->maySendMessages = maySendMessages;
 }
 
-int WorldModel::getOwnId()
+/**
+ * The AlicaEngine must be set, before this method is called!
+ */
+const supplementary::AgentID* WorldModel::getOwnId()
 {
+	if (!this->ownID)
+	{
+		this->ownID = this->alicaEngine->getTeamManager()->getLocalAgentID();
+	}
     return this->ownID;
 }
 

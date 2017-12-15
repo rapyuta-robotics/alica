@@ -4,12 +4,12 @@ project(world_model)
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
 
-find_package(catkin REQUIRED system_config alica_engine nonstd)
+find_package(catkin REQUIRED system_config alica_engine nonstd agent_id)
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES world_model
-  CATKIN_DEPENDS system_config alica_engine nonstd
+  CATKIN_DEPENDS system_config alica_engine nonstd agent_id
 )
 
 include_directories(
