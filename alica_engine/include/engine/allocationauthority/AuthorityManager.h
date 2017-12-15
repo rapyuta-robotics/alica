@@ -31,7 +31,7 @@ namespace alica
 	protected:
 		vector<std::shared_ptr<AllocationAuthorityInfo>> queue;
 		const AlicaEngine* engine;
-		const supplementary::IAgentID* localAgentID;
+		const supplementary::AgentID* localAgentID;
 		mutex mu;
 		void processPlan(std::shared_ptr<RunningPlan> p);
 		bool authorityMatchesPlan(std::shared_ptr<AllocationAuthorityInfo> aai, std::shared_ptr<RunningPlan> p);

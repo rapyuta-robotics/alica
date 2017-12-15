@@ -74,12 +74,12 @@ namespace alica
 		this->children = children;
 	}
 
-	const supplementary::IAgentID* SimplePlanTree::getRobotId()
+	const supplementary::AgentID* SimplePlanTree::getRobotId()
 	{
 		return robotId;
 	}
 
-	void SimplePlanTree::setRobotId(const supplementary::IAgentID* robotId)
+	void SimplePlanTree::setRobotId(const supplementary::AgentID* robotId)
 	{
 		this->robotId = robotId;
 	}

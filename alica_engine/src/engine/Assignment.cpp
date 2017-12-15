@@ -62,7 +62,7 @@ namespace alica
 			this->epRobotsMapping = new AssignmentCollection(assCol->getSize());
 		}
 
-		shared_ptr<vector<const supplementary::IAgentID*>> curRobots;
+		shared_ptr<vector<const supplementary::AgentID*>> curRobots;
 		for (short i = 0; i < this->epRobotsMapping->getSize(); i++)
 		{
 			// set the entrypoint
@@ -74,7 +74,7 @@ namespace alica
 
 			// copy robots
 			auto robots = assCol->getRobots(i);
-			curRobots = make_shared<vector<const supplementary::IAgentID*>>();
+			curRobots = make_shared<vector<const supplementary::AgentID*>>();
 			for (auto& rob : *robots)
 			{
 				curRobots->push_back(rob);
@@ -100,7 +100,7 @@ namespace alica
 
 		this->epRobotsMapping = new AssignmentCollection(p->getEntryPoints().size());
 
-		shared_ptr<vector<const supplementary::IAgentID*>> curRobots;
+		shared_ptr<vector<const supplementary::AgentID*>> curRobots;
 		short i = 0;
 		for (auto epPair : p->getEntryPoints())
 		{
@@ -111,7 +111,7 @@ namespace alica
 				throw new exception();
 			}
 
-			curRobots = make_shared<vector<const supplementary::IAgentID*>>();
+			curRobots = make_shared<vector<const supplementary::AgentID*>>();
 			for (auto epRobots : aai->entryPointRobots)
 			{
 				// find the right entrypoint
@@ -155,9 +155,9 @@ namespace alica
 		return robotStateMapping;
 	}
 
-	shared_ptr<vector<const supplementary::IAgentID*> > Assignment::getAllRobotsSorted()
+	shared_ptr<vector<const supplementary::AgentID*> > Assignment::getAllRobotsSorted()
 	{
-		shared_ptr<vector<const supplementary::IAgentID*> > ret = shared_ptr<vector<const supplementary::IAgentID*> >();
+		shared_ptr<vector<const supplementary::AgentID*> > ret = shared_ptr<vector<const supplementary::AgentID*> >();
 		for (int i = 0; i < this->getEpRobotsMapping()->getSize(); i++)
 		{
 			for (int j = 0; j < this->getEpRobotsMapping()->getRobots(i)->size(); j++)
@@ -179,12 +179,12 @@ namespace alica
 	 * @param epid EntryPoint id
 	 * @return A vector of int
 	 */
-	shared_ptr<vector<const supplementary::IAgentID*> > Assignment::getRobotsWorking(long epid)
+	shared_ptr<vector<const supplementary::AgentID*> > Assignment::getRobotsWorking(long epid)
 	{
 		return this->getEpRobotsMapping()->getRobotsByEpId(epid);
 	}
 
-	shared_ptr<vector<const supplementary::IAgentID*> > Assignment::getRobotsWorkingSorted(EntryPoint* ep)
+	shared_ptr<vector<const supplementary::AgentID*> > Assignment::getRobotsWorkingSorted(EntryPoint* ep)
 	{
 		auto ret = getRobotsWorking(ep);
 		sort(ret->begin(), ret->end());
@@ -196,7 +196,7 @@ namespace alica
 	 * @param ep An EntryPoint
 	 * @return A vector of int
 	 */
-	shared_ptr<vector<const supplementary::IAgentID*> > Assignment::getRobotsWorking(EntryPoint* ep)
+	shared_ptr<vector<const supplementary::AgentID*> > Assignment::getRobotsWorking(EntryPoint* ep)
 	{
 		return this->getEpRobotsMapping()->getRobotsByEp(ep);
 	}
@@ -232,9 +232,9 @@ namespace alica
 	 * @param ep An EntryPoint
 	 * @return a shared_ptr of a list of int
 	 */
-	shared_ptr<list<const supplementary::IAgentID*> > Assignment::getRobotsWorkingAndFinished(EntryPoint* ep)
+	shared_ptr<list<const supplementary::AgentID*> > Assignment::getRobotsWorkingAndFinished(EntryPoint* ep)
 	{
-		auto ret = make_shared<list<const supplementary::IAgentID*> >(list<const supplementary::IAgentID*>());
+		auto ret = make_shared<list<const supplementary::AgentID*> >(list<const supplementary::AgentID*>());
 		auto robots = this->epRobotsMapping->getRobotsByEp(ep);
 		if (robots != nullptr)
 		{
@@ -262,9 +262,9 @@ namespace alica
 	 * @param ep An entrypoint
 	 * @return a shared_ptr of a list of int
 	 */
-	shared_ptr<list<const supplementary::IAgentID*> > Assignment::getUniqueRobotsWorkingAndFinished(EntryPoint* ep)
+	shared_ptr<list<const supplementary::AgentID*> > Assignment::getUniqueRobotsWorkingAndFinished(EntryPoint* ep)
 	{
-		auto ret = make_shared<list<const supplementary::IAgentID*> >(list<const supplementary::IAgentID*>());
+		auto ret = make_shared<list<const supplementary::AgentID*> >(list<const supplementary::AgentID*>());
 		//if (this->plan->getEntryPoints().find(ep->getId()) != this->plan->getEntryPoints().end())
 		{
 			auto robots = this->epRobotsMapping->getRobotsByEp(ep);
@@ -274,7 +274,7 @@ namespace alica
 			}
 			for (auto r : (*this->epSucMapping->getRobots(ep)))
 			{
-				if (find_if(ret->begin(), ret->end(), [&r](const supplementary::IAgentID *id) { return *r == *id; }) == ret->end())
+				if (find_if(ret->begin(), ret->end(), [&r](const supplementary::AgentID *id) { return *r == *id; }) == ret->end())
 				{
 					ret->push_back(r);
 				}
@@ -288,9 +288,9 @@ namespace alica
 	 * @param epid EntryPoint id
 	 * @return a shared_ptr of a list of int
 	 */
-	shared_ptr<list<const supplementary::IAgentID*> > Assignment::getRobotsWorkingAndFinished(long epid)
+	shared_ptr<list<const supplementary::AgentID*> > Assignment::getRobotsWorkingAndFinished(long epid)
 	{
-		auto ret = make_shared<list<const supplementary::IAgentID*> >(list<const supplementary::IAgentID*>());
+		auto ret = make_shared<list<const supplementary::AgentID*> >(list<const supplementary::AgentID*>());
 		auto robots = this->epRobotsMapping->getRobotsByEpId(epid);
 		if (robots != nullptr)
 		{
@@ -317,7 +317,7 @@ namespace alica
 		return this->epSucMapping;
 	}
 
-	void Assignment::setAllToInitialState(unique_ptr<list<const supplementary::IAgentID*> > robots, EntryPoint* defep)
+	void Assignment::setAllToInitialState(unique_ptr<list<const supplementary::AgentID*> > robots, EntryPoint* defep)
 	{
 		auto rlist = this->epRobotsMapping->getRobotsByEp(defep);
 		for (auto& r : (*robots))
@@ -330,14 +330,14 @@ namespace alica
 		}
 	}
 
-	bool Assignment::removeRobot(const supplementary::IAgentID* robotId)
+	bool Assignment::removeRobot(const supplementary::AgentID* robotId)
 	{
 		this->robotStateMapping->removeRobot(robotId);
-		shared_ptr<vector<const supplementary::IAgentID*>> curRobots;
+		shared_ptr<vector<const supplementary::AgentID*>> curRobots;
 		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
 		{
 			curRobots = this->epRobotsMapping->getRobots(i);
-			auto iter = find_if(curRobots->begin(), curRobots->end(), [&robotId](const supplementary::IAgentID *id) { return *robotId == *id; });
+			auto iter = find_if(curRobots->begin(), curRobots->end(), [&robotId](const supplementary::AgentID *id) { return *robotId == *id; });
 			if (iter != curRobots->end())
 			{
 				curRobots->erase(iter);
@@ -347,7 +347,7 @@ namespace alica
 		return false;
 	}
 
-	void Assignment::addRobot(const supplementary::IAgentID* id, EntryPoint* e, State* s)
+	void Assignment::addRobot(const supplementary::AgentID* id, EntryPoint* e, State* s)
 	{
 		if (e == nullptr)
 		{
@@ -431,7 +431,7 @@ namespace alica
 			for (auto& robot : *(this->epRobotsMapping->getRobots(i)))
 			{
 				auto iter = find_if(otherAssignment->epRobotsMapping->getRobots(i)->begin(),
-									otherAssignment->epRobotsMapping->getRobots(i)->end(), [&robot](const supplementary::IAgentID *id) { return *robot == *id; });
+									otherAssignment->epRobotsMapping->getRobots(i)->end(), [&robot](const supplementary::AgentID *id) { return *robot == *id; });
 				if (iter == otherAssignment->epRobotsMapping->getRobots(i)->end())
 				{
 					return false;
@@ -457,7 +457,7 @@ namespace alica
 		return (epSuc != nullptr && epSuc->size() > 0);
 	}
 
-	bool Assignment::updateRobot(const supplementary::IAgentID* robot, EntryPoint* ep, State* s)
+	bool Assignment::updateRobot(const supplementary::AgentID* robot, EntryPoint* ep, State* s)
 	{
 		this->robotStateMapping->setState(robot, s);
 		bool ret = false;
@@ -467,7 +467,7 @@ namespace alica
 			if (this->epRobotsMapping->getEp(i) == ep)
 			{
 				if (find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-						[&robot](const supplementary::IAgentID *id) { return *robot == *id; }) != this->epRobotsMapping->getRobots(i)->end())
+						[&robot](const supplementary::AgentID *id) { return *robot == *id; }) != this->epRobotsMapping->getRobots(i)->end())
 				{
 					return false;
 				}
@@ -480,7 +480,7 @@ namespace alica
 			else
 			{
 				auto iter = find_if(this->epRobotsMapping->getRobots(i)->begin(),
-									this->epRobotsMapping->getRobots(i)->end(), [&robot](const supplementary::IAgentID *id) { return *robot == *id; });
+									this->epRobotsMapping->getRobots(i)->end(), [&robot](const supplementary::AgentID *id) { return *robot == *id; });
 				if (iter != this->epRobotsMapping->getRobots(i)->end())
 				{
 					this->epRobotsMapping->getRobots(i)->erase(iter);
@@ -491,7 +491,7 @@ namespace alica
 		return ret;
 	}
 
-	bool Assignment::updateRobot(const supplementary::IAgentID* robot, EntryPoint* ep)
+	bool Assignment::updateRobot(const supplementary::AgentID* robot, EntryPoint* ep)
 	{
 		bool ret = false;
 		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
@@ -499,7 +499,7 @@ namespace alica
 			if (this->epRobotsMapping->getEp(i) == ep)
 			{
 				if (find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-						[&robot](const supplementary::IAgentID *id) { return *robot == *id; }) != this->epRobotsMapping->getRobots(i)->end())
+						[&robot](const supplementary::AgentID *id) { return *robot == *id; }) != this->epRobotsMapping->getRobots(i)->end())
 				{
 					return false;
 				}
@@ -512,7 +512,7 @@ namespace alica
 			else
 			{
 				auto iter = find_if(this->epRobotsMapping->getRobots(i)->begin(),
-									this->epRobotsMapping->getRobots(i)->end(), [&robot](const supplementary::IAgentID *id) { return *robot == *id; });
+									this->epRobotsMapping->getRobots(i)->end(), [&robot](const supplementary::AgentID *id) { return *robot == *id; });
 				if (iter != this->epRobotsMapping->getRobots(i)->end())
 				{
 					this->epRobotsMapping->getRobots(i)->erase(iter);
@@ -527,7 +527,7 @@ namespace alica
 		return ret;
 	}
 
-	bool Assignment::removeRobot(const supplementary::IAgentID* robot, EntryPoint* ep)
+	bool Assignment::removeRobot(const supplementary::AgentID* robot, EntryPoint* ep)
 	{
 		if (ep == nullptr)
 		{
@@ -535,7 +535,7 @@ namespace alica
 		}
 		this->robotStateMapping->removeRobot(robot);
 		auto iter = find_if(this->epRobotsMapping->getRobotsByEp(ep)->begin(),
-							this->epRobotsMapping->getRobotsByEp(ep)->end(), [&robot](const supplementary::IAgentID *id) { return *robot == *id; });
+							this->epRobotsMapping->getRobotsByEp(ep)->end(), [&robot](const supplementary::AgentID *id) { return *robot == *id; });
 		if (iter != this->epRobotsMapping->getRobotsByEp(ep)->end())
 		{
 			this->epRobotsMapping->getRobotsByEp(ep)->erase(iter);
@@ -555,7 +555,7 @@ namespace alica
 		return ss.str();
 	}
 
-	void Assignment::addRobot(const supplementary::IAgentID* id, EntryPoint* e)
+	void Assignment::addRobot(const supplementary::AgentID* id, EntryPoint* e)
 	{
 
 		if (e == nullptr)
@@ -584,12 +584,12 @@ namespace alica
 	 * @param robot an int
 	 * @return An entrypoint
 	 */
-	EntryPoint* Assignment::getEntryPointOfRobot(const supplementary::IAgentID* robot)
+	EntryPoint* Assignment::getEntryPointOfRobot(const supplementary::AgentID* robot)
 	{
 		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
 		{
 			auto iter = find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-					[&robot](const supplementary::IAgentID *id) { return *robot == *id; });
+					[&robot](const supplementary::AgentID *id) { return *robot == *id; });
 			if (iter != this->epRobotsMapping->getRobots(i)->end())
 			{
 				return this->epRobotsMapping->getEp(i);
@@ -602,9 +602,9 @@ namespace alica
 	 * The list of all robots currently allocated by this assignment to work on any task within the plan.
 	 * @return A shared_ptr of a vector of int
 	 */
-	shared_ptr<vector<const supplementary::IAgentID*> > Assignment::getAllRobots()
+	shared_ptr<vector<const supplementary::AgentID*> > Assignment::getAllRobots()
 	{
-		auto ret = make_shared<vector<const supplementary::IAgentID*> >(vector<const supplementary::IAgentID*>());
+		auto ret = make_shared<vector<const supplementary::AgentID*> >(vector<const supplementary::AgentID*>());
 		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
 		{
 			for (int j = 0; j < this->epRobotsMapping->getRobots(i)->size(); j++)

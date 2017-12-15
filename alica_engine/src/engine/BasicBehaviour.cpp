@@ -124,7 +124,7 @@ void BasicBehaviour::setInterval(long msInterval)
  * Convenience method to obtain the robot's own id.
  * @return the own robot id
  */
-const supplementary::IAgentID *BasicBehaviour::getOwnId()
+const supplementary::AgentID *BasicBehaviour::getOwnId()
 {
     return this->engine->getTeamManager()->getLocalAgentID();
 }
@@ -208,7 +208,7 @@ void BasicBehaviour::setTrigger(supplementary::ITrigger *trigger)
     this->behaviourTrigger->registerCV(&this->runCV);
 }
 
-shared_ptr<vector<const supplementary::IAgentID *>> BasicBehaviour::robotsInEntryPointOfHigherPlan(EntryPoint *ep)
+shared_ptr<vector<const supplementary::AgentID *>> BasicBehaviour::robotsInEntryPointOfHigherPlan(EntryPoint *ep)
 {
     if (ep == nullptr)
     {
@@ -226,7 +226,7 @@ shared_ptr<vector<const supplementary::IAgentID *>> BasicBehaviour::robotsInEntr
     return nullptr;
 }
 
-shared_ptr<vector<const supplementary::IAgentID *>> BasicBehaviour::robotsInEntryPoint(EntryPoint *ep)
+shared_ptr<vector<const supplementary::AgentID *>> BasicBehaviour::robotsInEntryPoint(EntryPoint *ep)
 {
     if (ep == nullptr)
     {

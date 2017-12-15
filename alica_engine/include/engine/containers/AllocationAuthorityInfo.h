@@ -1,7 +1,7 @@
 #pragma once
 
 #include "EntryPointRobots.h"
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include <tuple>
 #include <vector>
@@ -11,7 +11,7 @@ namespace alica
 using std::tuple;
 using std::vector;
 
-typedef tuple<const supplementary::IAgentID *, long, long, long, const supplementary::IAgentID *, vector<stdEntryPointRobot>>
+typedef tuple<const supplementary::AgentID *, long, long, long, const supplementary::AgentID *, vector<stdEntryPointRobot>>
     stdAllocationAuthorityInfo;
 struct AllocationAuthorityInfo
 {
@@ -24,11 +24,11 @@ struct AllocationAuthorityInfo
     {
     }
 
-    const supplementary::IAgentID *senderID;
+    const supplementary::AgentID *senderID;
     long planId;
     long parentState;
     long planType;
-    const supplementary::IAgentID *authority;
+    const supplementary::AgentID *authority;
     vector<EntryPointRobots> entryPointRobots;
 
     AllocationAuthorityInfo(stdAllocationAuthorityInfo &s)

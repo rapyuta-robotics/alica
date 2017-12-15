@@ -1,6 +1,6 @@
 #pragma once
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include <list>
 #include <memory>
@@ -28,8 +28,8 @@ class IAssignment
     virtual ~IAssignment()
     {
     }
-    virtual shared_ptr<vector<const supplementary::IAgentID *>> getRobotsWorking(EntryPoint *ep) = 0;
-    virtual shared_ptr<vector<const supplementary::IAgentID *>> getRobotsWorking(long epid) = 0;
+    virtual shared_ptr<vector<const supplementary::AgentID *>> getRobotsWorking(EntryPoint *ep) = 0;
+    virtual shared_ptr<vector<const supplementary::AgentID *>> getRobotsWorking(long epid) = 0;
     virtual int totalRobotCount() = 0;
     /**
      * The shared_ptr of a vector of EntryPoints relevant to this assignment.
@@ -46,21 +46,21 @@ class IAssignment
      * @param ep The EntryPoint queried
      * @return A shared_ptr of a list of int of robot ids
      */
-    virtual shared_ptr<list<const supplementary::IAgentID *>> getRobotsWorkingAndFinished(EntryPoint *ep) = 0;
+    virtual shared_ptr<list<const supplementary::AgentID *>> getRobotsWorkingAndFinished(EntryPoint *ep) = 0;
     /**
      * Similar to GetRobotsWorkingAndFinished, with duplicates removed.
      * Behaviour is undefined if ep is not relevant or null.
      * @param ep The EntryPoint queried
      * @return A shared_ptr of a list of int of robot ids
      */
-    virtual shared_ptr<list<const supplementary::IAgentID *>> getUniqueRobotsWorkingAndFinished(EntryPoint *ep) = 0;
+    virtual shared_ptr<list<const supplementary::AgentID *>> getUniqueRobotsWorkingAndFinished(EntryPoint *ep) = 0;
     /**
      * Returns all robot Ids working on the Task defined by ep
      * Behaviour is undefined if ep is not relevant or null.
      * @param ep The EntryPoint queried
      * @return A shared_ptr of a list of int of robot ids
      */
-    virtual shared_ptr<list<const supplementary::IAgentID *>> getRobotsWorkingAndFinished(long epid) = 0;
+    virtual shared_ptr<list<const supplementary::AgentID *>> getRobotsWorkingAndFinished(long epid) = 0;
     /**
      * Information about succeeded tasks.
      */
@@ -103,7 +103,7 @@ class IAssignment
         return unassignedRobotIds.size();
     }
 
-    const vector<const supplementary::IAgentID *> &getUnassignedRobotIds() const
+    const vector<const supplementary::AgentID *> &getUnassignedRobotIds() const
     {
         return unassignedRobotIds;
     }
@@ -112,7 +112,7 @@ class IAssignment
     /**
      * The Ids of all robots available but not yet assigned.
      */
-    vector<const supplementary::IAgentID *> unassignedRobotIds;
+    vector<const supplementary::AgentID *> unassignedRobotIds;
     /**
      * The minimal utility this assignment can achieve.
      */

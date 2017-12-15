@@ -193,7 +193,7 @@ void alica::CycleManager::setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_
             auto oldRobots = oldAss->getRobotsWorking(ep);
             for (auto &oldId : (*oldRobots))
             {
-                if (newRobots == nullptr || find_if(newRobots->begin(), newRobots->end(), [&oldId](const supplementary::IAgentID *id) { return *oldId == *id; }) == newRobots->end())
+                if (newRobots == nullptr || find_if(newRobots->begin(), newRobots->end(), [&oldId](const supplementary::AgentID *id) { return *oldId == *id; }) == newRobots->end())
                 {
                     this->allocationHistory[this->newestAllocationDifference]->getSubtractions().push_back(
                         shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, oldId)));
@@ -203,7 +203,7 @@ void alica::CycleManager::setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_
             {
                 for (auto &newId : (*newRobots))
                 {
-                    if (find_if(oldRobots->begin(), oldRobots->end(), [&newId](const supplementary::IAgentID *id) { return *newId == *id; }) == oldRobots->end())
+                    if (find_if(oldRobots->begin(), oldRobots->end(), [&newId](const supplementary::AgentID *id) { return *newId == *id; }) == oldRobots->end())
                     {
                         this->allocationHistory[this->newestAllocationDifference]->getAdditions().push_back(
                             shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, newId)));
@@ -329,7 +329,7 @@ bool CycleManager::setAssignment()
         rp->setAssignment(make_shared<Assignment>(newPlan, this->fixedAllocation));
         for (EntryPointRobots epr : this->fixedAllocation->entryPointRobots)
         {
-            if (find_if(epr.robots.begin(), epr.robots.end(), [this](const supplementary::IAgentID *id) { return *(this->myID) == *id; }) != epr.robots.end())
+            if (find_if(epr.robots.begin(), epr.robots.end(), [this](const supplementary::AgentID *id) { return *(this->myID) == *id; }) != epr.robots.end())
             {
                 myEntryPoint = pr->getEntryPoints().at(epr.entrypoint);
             }

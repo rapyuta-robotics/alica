@@ -1,6 +1,6 @@
 #pragma once
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 #include "engine/constraintmodul/IVariableSyncModule.h"
 
 #include <NotifyTimer.h>
@@ -52,7 +52,7 @@ namespace alica
 
 	private:
 		const AlicaEngine* ae;
-		const supplementary::IAgentID* ownId;
+		const supplementary::AgentID* ownId;
 		const IAlicaCommunication* communicator;
 		bool running;
 		bool communicationEnabled;

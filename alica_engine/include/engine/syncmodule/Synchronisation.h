@@ -4,7 +4,7 @@
 //#define SM_FAILURE
 //#define SM_MESSAGES
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 #include <list>
 #include <mutex>
 #include <memory>
@@ -28,7 +28,7 @@ namespace alica
 	{
 	public:
 		Synchronisation(AlicaEngine* ae);
-		Synchronisation(AlicaEngine* ae, const supplementary::IAgentID* myID, SyncTransition* st, SyncModule* sm);
+		Synchronisation(AlicaEngine* ae, const supplementary::AgentID* myID, SyncTransition* st, SyncModule* sm);
 		virtual ~Synchronisation();
 		void setTick(unsigned long now);
 		void changeOwnData (long transitionID, bool conditionHolds);
@@ -48,7 +48,7 @@ namespace alica
 		mutex rowOkMutex;
 		SyncModule* syncModul;
 		SyncTransition* syncTransition;
-		const supplementary::IAgentID* myID;
+		const supplementary::AgentID* myID;
 		unsigned long lastTalkTime;
 		SyncData* lastTalkData;
 		unsigned long syncStartTime;

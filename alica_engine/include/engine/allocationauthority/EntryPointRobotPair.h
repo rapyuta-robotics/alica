@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 #include "engine/model/EntryPoint.h"
 
 namespace alica
@@ -14,17 +14,17 @@ namespace alica
 	class EntryPointRobotPair
 	{
 	public:
-		EntryPointRobotPair(EntryPoint* ep, const supplementary::IAgentID* r);
+		EntryPointRobotPair(EntryPoint* ep, const supplementary::AgentID* r);
 		virtual ~EntryPointRobotPair();
 		EntryPoint* getEntryPoint();
 		void setEntryPoint(EntryPoint* entryPoint);
-		const supplementary::IAgentID* getRobot();
-		void setRobot(const supplementary::IAgentID* robot);
+		const supplementary::AgentID* getRobot();
+		void setRobot(const supplementary::AgentID* robot);
 		static bool equals(std::shared_ptr<EntryPointRobotPair> thisOne, std::shared_ptr<EntryPointRobotPair> other);
 
 	protected:
 		EntryPoint* entryPoint;
-		const supplementary::IAgentID* robot;
+		const supplementary::AgentID* robot;
 	};
 
 } /* namespace alica */
@@ -39,7 +39,7 @@ namespace std
 
         value_type operator()(argument_type & eprp) const
         {
-            return std::hash<long int>()(eprp.getEntryPoint()->getId()) + supplementary::IAgentIDHash()(eprp.getRobot());
+            return std::hash<long int>()(eprp.getEntryPoint()->getId()) + supplementary::AgentIDHash()(eprp.getRobot());
         }
     };
 }

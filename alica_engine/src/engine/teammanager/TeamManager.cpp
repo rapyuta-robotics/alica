@@ -2,7 +2,7 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/collections/RobotProperties.h"
-#include "supplementary/IAgentIDFactory.h"
+#include "supplementary/AgentIDFactory.h"
 
 #include <SystemConfig.h>
 #include <iostream>
@@ -82,9 +82,9 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig *sc)
     }
 }
 
-std::unique_ptr<std::list<const supplementary::IAgentID *>> TeamManager::getActiveAgentIDs() const
+std::unique_ptr<std::list<const supplementary::AgentID *>> TeamManager::getActiveAgentIDs() const
 {
-    auto activeAgentIDs = unique_ptr<std::list<const supplementary::IAgentID *>>(new list<const supplementary::IAgentID *>());
+    auto activeAgentIDs = unique_ptr<std::list<const supplementary::AgentID *>>(new list<const supplementary::AgentID *>());
     for (auto &agentEntry : this->agents)
     {
         if (agentEntry.second->isActive())
@@ -144,7 +144,7 @@ int TeamManager::getTeamSize() const
     return teamSize;
 }
 
-const Agent *TeamManager::getAgentByID(const supplementary::IAgentID *agentId) const
+const Agent *TeamManager::getAgentByID(const supplementary::AgentID *agentId) const
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end())
@@ -157,12 +157,12 @@ const Agent *TeamManager::getAgentByID(const supplementary::IAgentID *agentId) c
     }
 }
 
-const supplementary::IAgentID *TeamManager::getLocalAgentID() const
+const supplementary::AgentID *TeamManager::getLocalAgentID() const
 {
     return this->localAgent->getID();
 }
 
-void TeamManager::setTimeLastMsgReceived(const supplementary::IAgentID *robotID, AlicaTime timeLastMsgReceived)
+void TeamManager::setTimeLastMsgReceived(const supplementary::AgentID *robotID, AlicaTime timeLastMsgReceived)
 {
     auto mapIter = this->agents.find(robotID);
     if (mapIter != this->agents.end())
@@ -178,7 +178,7 @@ void TeamManager::setTimeLastMsgReceived(const supplementary::IAgentID *robotID,
     }
 }
 
-bool TeamManager::isAgentActive(const supplementary::IAgentID *agentId) const
+bool TeamManager::isAgentActive(const supplementary::AgentID *agentId) const
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end())
@@ -193,29 +193,29 @@ bool TeamManager::isAgentActive(const supplementary::IAgentID *agentId) const
 
 /**
  * Checks if an agent is ignored
- * @param agentId an supplementary::IAgentID identifying the agent
+ * @param agentId an supplementary::AgentID identifying the agent
  */
-bool TeamManager::isAgentIgnored(const supplementary::IAgentID *agentId) const
+bool TeamManager::isAgentIgnored(const supplementary::AgentID *agentId) const
 {
-    return std::find_if(this->ignoredAgents.begin(), this->ignoredAgents.end(), [&agentId](const supplementary::IAgentID *id) { return *agentId == *id; }) !=
+    return std::find_if(this->ignoredAgents.begin(), this->ignoredAgents.end(), [&agentId](const supplementary::AgentID *id) { return *agentId == *id; }) !=
            this->ignoredAgents.end();
 }
 
-void TeamManager::ignoreAgent(const supplementary::IAgentID *agentId)
+void TeamManager::ignoreAgent(const supplementary::AgentID *agentId)
 {
-    if (find_if(ignoredAgents.begin(), ignoredAgents.end(), [&agentId](const supplementary::IAgentID *id) { return *agentId == *id; }) != ignoredAgents.end())
+    if (find_if(ignoredAgents.begin(), ignoredAgents.end(), [&agentId](const supplementary::AgentID *id) { return *agentId == *id; }) != ignoredAgents.end())
     {
         return;
     }
     this->ignoredAgents.insert(agentId);
 }
 
-void TeamManager::unIgnoreAgent(const supplementary::IAgentID *agentId)
+void TeamManager::unIgnoreAgent(const supplementary::AgentID *agentId)
 {
     this->ignoredAgents.erase(agentId);
 }
 
-bool TeamManager::setSuccess(const supplementary::IAgentID *agentId, AbstractPlan *plan, EntryPoint *entryPoint)
+bool TeamManager::setSuccess(const supplementary::AgentID *agentId, AbstractPlan *plan, EntryPoint *entryPoint)
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end())
@@ -226,7 +226,7 @@ bool TeamManager::setSuccess(const supplementary::IAgentID *agentId, AbstractPla
     return false;
 }
 
-bool TeamManager::setSuccessMarks(const supplementary::IAgentID *agentId, std::shared_ptr<SuccessMarks> successMarks)
+bool TeamManager::setSuccessMarks(const supplementary::AgentID *agentId, std::shared_ptr<SuccessMarks> successMarks)
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end())
@@ -237,7 +237,7 @@ bool TeamManager::setSuccessMarks(const supplementary::IAgentID *agentId, std::s
     return false;
 }
 
-Variable *TeamManager::getDomainVariable(const supplementary::IAgentID *agentId, string sort)
+Variable *TeamManager::getDomainVariable(const supplementary::AgentID *agentId, string sort)
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end())

@@ -8,7 +8,7 @@
 #include "engine/teammanager/TeamManager.h"
 #include "engine/IAlicaCommunication.h"
 
-#include <supplementary/IAgentID.h>
+#include <supplementary/AgentID.h>
 
 namespace alica
 {

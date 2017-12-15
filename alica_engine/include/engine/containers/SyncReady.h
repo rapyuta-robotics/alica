@@ -1,17 +1,17 @@
 #pragma once
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 #include <tuple>
 
 namespace alica
 {
-typedef std::tuple<const supplementary::IAgentID *, long> stdSyncReady;
+typedef std::tuple<const supplementary::AgentID *, long> stdSyncReady;
 struct SyncReady
 {
     SyncReady() : senderID(nullptr), syncTransitionID(0)
     {
     }
-    const supplementary::IAgentID *senderID;
+    const supplementary::AgentID *senderID;
     long syncTransitionID;
 
     SyncReady(stdSyncReady &s)

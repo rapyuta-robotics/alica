@@ -3,7 +3,7 @@
 //#define EXPANSIONEVAL
 //#define TA_DEBUG
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 #include "engine/ITaskAssignment.h"
 #include <algorithm>
 #include <list>
@@ -35,7 +35,7 @@ class PartialAssignmentPool;
 class TaskAssignment : virtual public ITaskAssignment
 {
   public:
-    TaskAssignment(const AlicaEngine *engine, list<Plan *> planList, shared_ptr<vector<const supplementary::IAgentID *>> paraRobots, bool preassignOtherRobots);
+    TaskAssignment(const AlicaEngine *engine, list<Plan *> planList, shared_ptr<vector<const supplementary::AgentID *>> paraRobots, bool preassignOtherRobots);
     virtual ~TaskAssignment();
     shared_ptr<Assignment> getNextBestAssignment(IAssignment *oldAss);
     string toString();
@@ -51,11 +51,11 @@ class TaskAssignment : virtual public ITaskAssignment
     TeamManager *tm;
     TeamObserver *to;
     list<Plan *> planList;
-    shared_ptr<vector<const supplementary::IAgentID *>> robots;
+    shared_ptr<vector<const supplementary::AgentID *>> robots;
     vector<EntryPoint *> entryPointVector;
     // Fringe of the search tree
     vector<PartialAssignment *> fringe;
-    bool addAlreadyAssignedRobots(PartialAssignment *pa, map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree> , supplementary::IAgentIDComparator> *simplePlanTreeMap);
+    bool addAlreadyAssignedRobots(PartialAssignment *pa, map<const supplementary::AgentID *, shared_ptr<SimplePlanTree> , supplementary::AgentIDComparator> *simplePlanTreeMap);
 
 #ifdef EXPANSIONEVAL
     int expansionCount;

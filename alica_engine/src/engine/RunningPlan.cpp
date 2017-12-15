@@ -62,7 +62,7 @@ RunningPlan::RunningPlan(AlicaEngine *ae)
     this->failHandlingNeeded = false;
     this->constraintStore = std::make_shared<ConditionStore>();
     this->cycleManagement = std::make_shared<CycleManager>(ae, this);
-    this->robotsAvail = unique_ptr<list<const supplementary::IAgentID *>>(new list<const supplementary::IAgentID *>);
+    this->robotsAvail = unique_ptr<list<const supplementary::AgentID *>>(new list<const supplementary::AgentID *>);
 }
 
 RunningPlan::~RunningPlan()
@@ -420,7 +420,7 @@ void RunningPlan::setActive(bool active)
 /**
  * Sets the set of robots currently participating in this plan.
  */
-void RunningPlan::setRobotsAvail(unique_ptr<list<const supplementary::IAgentID *>> robots)
+void RunningPlan::setRobotsAvail(unique_ptr<list<const supplementary::AgentID *>> robots)
 {
     this->robotsAvail->clear();
     this->robotsAvail = move(robots);
@@ -624,10 +624,10 @@ void RunningPlan::setFailedChild(AbstractPlan *child)
     }
 }
 
-void RunningPlan::setRobotAvail(const supplementary::IAgentID *robot)
+void RunningPlan::setRobotAvail(const supplementary::AgentID *robot)
 {
     auto iter = std::find_if(this->robotsAvail->begin(), this->robotsAvail->end(),
-                             [&robot](const supplementary::IAgentID *id) { return *robot == *id; });
+                             [&robot](const supplementary::AgentID *id) { return *robot == *id; });
     if (iter != this->robotsAvail->end())
     {
         return;
@@ -635,10 +635,10 @@ void RunningPlan::setRobotAvail(const supplementary::IAgentID *robot)
     this->robotsAvail->push_back(robot);
 }
 
-void RunningPlan::setRobotUnAvail(const supplementary::IAgentID *robot)
+void RunningPlan::setRobotUnAvail(const supplementary::AgentID *robot)
 {
     auto iter = std::find_if(this->robotsAvail->begin(), this->robotsAvail->end(),
-                             [&robot](const supplementary::IAgentID *id) { return *robot == *id; });
+                             [&robot](const supplementary::AgentID *id) { return *robot == *id; });
     if (iter != this->robotsAvail->end())
     {
         this->robotsAvail->erase(iter);
@@ -759,7 +759,7 @@ void RunningPlan::activate()
  * @param robots The set of robots that can participate in this running plan.
  */
 void RunningPlan::limitToRobots(
-    unordered_set<const supplementary::IAgentID *, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator>
+    unordered_set<const supplementary::AgentID *, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>
         robots)
 {
     if (this->isBehaviour())
@@ -775,7 +775,7 @@ void RunningPlan::limitToRobots(
     for (auto &r : (*curRobots))
     {
         if (find_if(curRobots->begin(), curRobots->end(),
-                    [&r](const supplementary::IAgentID *id) { return *r == *id; }) == curRobots->end())
+                    [&r](const supplementary::AgentID *id) { return *r == *id; }) == curRobots->end())
         {
             if (this->activeState != nullptr &&
                 this->assignment->getRobotStateMapping()->stateOfRobot(r) == this->activeState)
@@ -810,8 +810,8 @@ void RunningPlan::attachPlanConstraints()
 }
 
 bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts,
-                                            list<const supplementary::IAgentID *> availableAgents,
-                                            list<const supplementary::IAgentID *> noUpdates, AlicaTime now)
+                                            list<const supplementary::AgentID *> availableAgents,
+                                            list<const supplementary::AgentID *> noUpdates, AlicaTime now)
 {
     if (this->isBehaviour())
     {
@@ -875,7 +875,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
         }
     }
 
-    list<const supplementary::IAgentID *> rem;
+    list<const supplementary::AgentID *> rem;
     if (!keepTask)
     { // remove any robot no longer available in the spts (auth flag obey here, as robot might be unavailable)
         // EntryPoint[] eps = this.Assignment.GetEntryPoints();
@@ -891,7 +891,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
                     continue;
                 bool found = false;
                 if (find_if(noUpdates.begin(), noUpdates.end(),
-                            [&rob](const supplementary::IAgentID *id) { return *rob == *id; }) != noUpdates.end())
+                            [&rob](const supplementary::AgentID *id) { return *rob == *id; }) != noUpdates.end())
                 {
                     // found = true;
                     continue;
@@ -932,7 +932,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
             for (auto &rob : (*robs))
             {
                 if (find_if(availableAgents.begin(), availableAgents.end(),
-                            [&rob](const supplementary::IAgentID *id) { return *rob == *id; }) == availableAgents.end())
+                            [&rob](const supplementary::AgentID *id) { return *rob == *id; }) == availableAgents.end())
                 {
                     rem.push_back(rob);
                     aldif->getSubtractions().push_back(
@@ -960,7 +960,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
         auto robotsJoined = this->getAssignment()->getRobotStateMapping()->getRobotsInState(this->getActiveState());
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();)
         {
-            if (std::find_if(robotsJoined.begin(), robotsJoined.end(), [&iter](const supplementary::IAgentID *id) {
+            if (std::find_if(robotsJoined.begin(), robotsJoined.end(), [&iter](const supplementary::AgentID *id) {
                     return *(*iter) == *id;
                 }) == robotsJoined.end())
             {
@@ -980,7 +980,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
         {
             for (auto iter = availableAgents.begin(); iter != availableAgents.end();)
             {
-                if (find_if(robotsJoined->begin(), robotsJoined->end(), [&iter](const supplementary::IAgentID *id) {
+                if (find_if(robotsJoined->begin(), robotsJoined->end(), [&iter](const supplementary::AgentID *id) {
                         return *(*iter) == *id;
                     }) == robotsJoined->end())
                 {
@@ -1119,7 +1119,7 @@ bool RunningPlan::anyChildrenStatus(PlanStatus ps)
     return false;
 }
 
-const supplementary::IAgentID *RunningPlan::getOwnID()
+const supplementary::AgentID *RunningPlan::getOwnID()
 {
     return this->ownId;
 }

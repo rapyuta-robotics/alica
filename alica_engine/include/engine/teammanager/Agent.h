@@ -7,7 +7,7 @@
 #include <list>
 
 namespace supplementary {
-	class IAgentID;
+	class AgentID;
 }
 
 namespace alica
@@ -32,17 +32,17 @@ class Agent
   public:
     virtual ~Agent();
 
-    const supplementary::IAgentID *getID();
+    const supplementary::AgentID *getID();
     std::string getName();
     const RobotProperties *getProperties() const;
     const RobotEngineData *getEngineData() const;
     bool isActive();
 
   protected:
-    Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::IAgentID *id);
-    Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::IAgentID *id, std::string name);
+    Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::AgentID *id);
+    Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::AgentID *id, std::string name);
 
-    const supplementary::IAgentID *id;
+    const supplementary::AgentID *id;
     std::string name;
     bool active;
     bool local;
