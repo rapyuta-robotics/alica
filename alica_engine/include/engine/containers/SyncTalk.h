@@ -1,6 +1,6 @@
 #pragma once
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 #include "engine/containers/SyncData.h"
 
 #include <vector>
@@ -9,7 +9,7 @@
 namespace alica
 {
 
-	typedef std::tuple<const supplementary::IAgentID*, std::vector<stdSyncData>> stdSyncTalk;
+	typedef std::tuple<const supplementary::AgentID*, std::vector<stdSyncData>> stdSyncTalk;
 	struct SyncTalk
 	{
 		SyncTalk() : senderID(nullptr)
@@ -23,7 +23,7 @@ namespace alica
 			}*/
 		}
 
-		const supplementary::IAgentID* senderID;
+		const supplementary::AgentID* senderID;
 		std::vector<SyncData*> syncData;
 
 		SyncTalk(stdSyncTalk &s)

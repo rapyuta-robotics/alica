@@ -8,7 +8,7 @@
 
 namespace supplementary
 {
-class IAgentIDFactory;
+class AgentIDFactory;
 }
 
 namespace alica
@@ -88,9 +88,9 @@ class AlicaEngine
     void setResultStore(VariableSyncModule *resultStore);
     TeamManager *getTeamManager() const;
 
-    const supplementary::IAgentID *getIDFromBytes(const std::vector<uint8_t> &vectorID);
+    const supplementary::AgentID *getIDFromBytes(const std::vector<uint8_t> &vectorID);
 
-    template <class Prototype> const supplementary::IAgentID *getID(Prototype &idPrototype);
+    template <class Prototype> const supplementary::AgentID *getID(Prototype &idPrototype);
 
     ~AlicaEngine();
 
@@ -151,10 +151,10 @@ class AlicaEngine
  * Otherwise, it creates a new one, stores and returns it.
  *
  * This method can be used, e.g., for passing an int and receiving
- * a pointer to a corresponding IAgentID object (in that case an
+ * a pointer to a corresponding AgentID object (in that case an
  * IntRobotID).
  */
-template <class Prototype> const supplementary::IAgentID *AlicaEngine::getID(Prototype &idPrototype)
+template <class Prototype> const supplementary::AgentID *AlicaEngine::getID(Prototype &idPrototype)
 {
     return this->agentIDManager->getID<Prototype>(idPrototype);
 }

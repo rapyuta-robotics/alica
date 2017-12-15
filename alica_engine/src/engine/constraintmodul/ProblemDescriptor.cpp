@@ -131,12 +131,12 @@ namespace alica
 		domainVars = value;
 	}
 
-	shared_ptr<vector<shared_ptr<vector<const supplementary::IAgentID*>>>> ProblemDescriptor::getAgentsInScope()
+	shared_ptr<vector<shared_ptr<vector<const supplementary::AgentID*>>>> ProblemDescriptor::getAgentsInScope()
 	{
 		return agentsInScope;
 	}
 
-	void ProblemDescriptor::setAgentsInScope(shared_ptr<vector<shared_ptr<vector<const supplementary::IAgentID*>>>> value)
+	void ProblemDescriptor::setAgentsInScope(shared_ptr<vector<shared_ptr<vector<const supplementary::AgentID*>>>> value)
 	{
 		agentsInScope = value;
 	}

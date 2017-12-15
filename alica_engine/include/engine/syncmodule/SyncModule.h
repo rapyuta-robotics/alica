@@ -1,6 +1,6 @@
 #pragma once
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include <list>
 #include <mutex>
@@ -42,7 +42,7 @@ namespace alica
 	protected:
 		bool running;
 		AlicaEngine* ae;
-		const supplementary::IAgentID* myId;
+		const supplementary::AgentID* myId;
 		unsigned long ticks;
 		PlanRepository* pr;
 		std::map<SyncTransition*, Synchronisation*> synchSet;

@@ -11,7 +11,7 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Task.h"
 
-#include <supplementary/IAgentID.h>
+#include <supplementary/AgentID.h>
 
 namespace alica
 {
@@ -26,7 +26,7 @@ TaskAssignment::~TaskAssignment()
  * @param paraRobots robots to build an assignment for
  * @param a bool
  */
-TaskAssignment::TaskAssignment(const AlicaEngine *engine, list<Plan *> planList, shared_ptr<vector<const supplementary::IAgentID *>> paraRobots,
+TaskAssignment::TaskAssignment(const AlicaEngine *engine, list<Plan *> planList, shared_ptr<vector<const supplementary::AgentID *>> paraRobots,
                                bool preassignOtherRobots)
 {
 #ifdef EXPANSIONEVAL
@@ -35,14 +35,14 @@ TaskAssignment::TaskAssignment(const AlicaEngine *engine, list<Plan *> planList,
     this->planList = planList;
     this->to = engine->getTeamObserver();
     this->tm = engine->getTeamManager();
-    this->robots = make_shared<vector<const supplementary::IAgentID *>>(vector<const supplementary::IAgentID *>(paraRobots->size()));
+    this->robots = make_shared<vector<const supplementary::AgentID *>>(vector<const supplementary::AgentID *>(paraRobots->size()));
     int k = 0;
     for (auto &i : (*paraRobots))
     {
         this->robots->at(k++) = i;
     }
     // sort robot ids ascending
-    sort(robots->begin(), robots->end(), supplementary::IAgentIDComparator());
+    sort(robots->begin(), robots->end(), supplementary::AgentIDComparator());
     this->fringe = vector<PartialAssignment *>();
     auto simplePlanTreeMap = to->getTeamPlanTrees();
     PartialAssignment *curPa;
@@ -200,9 +200,9 @@ PartialAssignment *TaskAssignment::calcNextBestPartialAssignment(IAssignment *ol
  * @return True if any robot has already assigned itself, false otherwise
  */
 bool TaskAssignment::addAlreadyAssignedRobots(
-    PartialAssignment *pa, map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator> *simplePlanTreeMap)
+    PartialAssignment *pa, map<const supplementary::AgentID *, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator> *simplePlanTreeMap)
 {
-    const supplementary::IAgentID *ownRobotId = this->tm->getLocalAgentID();
+    const supplementary::AgentID *ownRobotId = this->tm->getLocalAgentID();
     bool haveToRevalute = false;
     shared_ptr<SimplePlanTree> spt = nullptr;
     for (auto &robot : (*this->robots))

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include <string>
 #include <iostream>
@@ -100,7 +100,7 @@ namespace alica
 		supplementary::Timer* timer; /** < triggers the condition_variable of the runThread, if this behaviour is timer triggered, alternative to behaviourTrigger*/
 		supplementary::ITrigger* behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour is event triggered, alternative to timer */
 		std::condition_variable runCV;
-		const supplementary::IAgentID* getOwnId();
+		const supplementary::AgentID* getOwnId();
 
 		/**
 		 * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
@@ -114,9 +114,9 @@ namespace alica
 
 		EntryPoint* getHigherEntryPoint(std::string planName, std::string taskName);
 
-		std::shared_ptr<std::vector<const supplementary::IAgentID*>> robotsInEntryPointOfHigherPlan(EntryPoint* ep);
+		std::shared_ptr<std::vector<const supplementary::AgentID*>> robotsInEntryPointOfHigherPlan(EntryPoint* ep);
 
-		std::shared_ptr<std::vector<const supplementary::IAgentID*>> robotsInEntryPoint(EntryPoint* ep);
+		std::shared_ptr<std::vector<const supplementary::AgentID*>> robotsInEntryPoint(EntryPoint* ep);
 
 
 	private:

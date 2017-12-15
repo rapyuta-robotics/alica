@@ -19,7 +19,7 @@
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/teammanager/Agent.h"
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 #include "engine/IAlicaClock.h"
 #include "engine/IRoleAssignment.h"
 #include <SystemConfig.h>
@@ -31,8 +31,8 @@ TeamObserver::TeamObserver(AlicaEngine *ae)
     : ae(ae)
     , teamManager(ae->getTeamManager())
 {
-    this->simplePlanTrees = make_shared<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree> ,supplementary::IAgentIDComparator>>(
-        map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator>());
+    this->simplePlanTrees = make_shared<map<const supplementary::AgentID *, shared_ptr<SimplePlanTree> ,supplementary::AgentIDComparator>>(
+        map<const supplementary::AgentID *, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>());
     this->myId = this->teamManager->getLocalAgentID();
     this->me = this->teamManager->getAgentByID(this->myId)->getEngineData();
 }
@@ -41,10 +41,10 @@ TeamObserver::~TeamObserver()
 {
 }
 
-unique_ptr<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator>> TeamObserver::getTeamPlanTrees()
+unique_ptr<map<const supplementary::AgentID *, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>> TeamObserver::getTeamPlanTrees()
 {
-    auto ret = unique_ptr<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator>>(
-        new map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>, supplementary::IAgentIDComparator>);
+    auto ret = unique_ptr<map<const supplementary::AgentID *, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>>(
+        new map<const supplementary::AgentID *, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>);
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
     auto tm = this->ae->getTeamManager();
     auto tmp = tm->getActiveAgentIDs();
@@ -53,7 +53,7 @@ unique_ptr<map<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>, supp
         auto iter = this->simplePlanTrees->find(agentId);
         if (iter != simplePlanTrees->end() && iter->second != nullptr)
         {
-            ret->insert(pair<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>(agentId, iter->second));
+            ret->insert(pair<const supplementary::AgentID *, shared_ptr<SimplePlanTree>>(agentId, iter->second));
         }
     }
     return move(ret);
@@ -90,7 +90,7 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root)
     {
         auto activeAgents = this->teamManager->getActiveAgentIDs();
         list<shared_ptr<SimplePlanTree>> updatespts;
-        list<const supplementary::IAgentID *> noUpdates;
+        list<const supplementary::AgentID *> noUpdates;
         lock_guard<mutex> lock(this->simplePlanTreeMutex);
         for (auto iterator = this->simplePlanTrees->begin(); iterator != this->simplePlanTrees->end(); iterator++)
         {
@@ -119,7 +119,7 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root)
         cout << "TO: spts size " << updatespts.size() << endl;
 #endif
 
-        list<const supplementary::IAgentID *> listActiveAgents = list<const supplementary::IAgentID *>(*activeAgents);
+        list<const supplementary::AgentID *> listActiveAgents = list<const supplementary::AgentID *>(*activeAgents);
         if (root->recursiveUpdateAssignment(updatespts, listActiveAgents, noUpdates, time))
         {
             this->ae->getLog()->eventOccured("MsgUpdate");
@@ -354,7 +354,7 @@ void TeamObserver::handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming)
             else
             {
                 this->simplePlanTrees->insert(
-                    pair<const supplementary::IAgentID *, shared_ptr<SimplePlanTree>>(incoming->senderID, spt));
+                    pair<const supplementary::AgentID *, shared_ptr<SimplePlanTree>>(incoming->senderID, spt));
             }
         }
     }
@@ -366,7 +366,7 @@ void TeamObserver::handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming)
  * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
  * @return shared_ptr of a SimplePlanTree
  */
-shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(const supplementary::IAgentID *robotId, list<long> ids)
+shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(const supplementary::AgentID *robotId, list<long> ids)
 {
 #ifdef TO_DEBUG
     cout << "Spt from robot " << robotId << endl;

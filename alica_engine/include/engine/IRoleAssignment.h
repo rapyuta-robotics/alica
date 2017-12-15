@@ -1,6 +1,6 @@
 #pragma once
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include "model/Role.h"
 #include "engine/collections/RobotEngineData.h"
@@ -27,7 +27,7 @@ namespace alica
 		virtual void update() = 0;
 
 		const Role* getOwnRole();
-		const Role* getRole(const supplementary::IAgentID* robotId);
+		const Role* getRole(const supplementary::AgentID* robotId);
 		void setCommunication(const IAlicaCommunication* communication);
 
 	protected:
@@ -36,7 +36,7 @@ namespace alica
 		 * Current Robot's role.
 		 */
 		Role* ownRole;
-		std::map<const supplementary::IAgentID*, Role*, supplementary::IAgentIDComparator> robotRoleMapping;
+		std::map<const supplementary::AgentID*, Role*, supplementary::AgentIDComparator> robotRoleMapping;
 		const IAlicaCommunication* communication;
 
 	};

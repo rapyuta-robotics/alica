@@ -148,12 +148,12 @@ PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r)
     }
 
     auto temp = r->getParent().lock();
-    vector<const supplementary::IAgentID*> robots = vector<const supplementary::IAgentID*>(
+    vector<const supplementary::AgentID*> robots = vector<const supplementary::AgentID*>(
         temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).size());
     copy(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).begin(),
          temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).end(), robots.begin());
     shared_ptr<RunningPlan> newr =
-        ps->getBestSimilarAssignment(r, make_shared<vector<const supplementary::IAgentID *>>(robots));
+        ps->getBestSimilarAssignment(r, make_shared<vector<const supplementary::AgentID *>>(robots));
     if (newr == nullptr)
     {
         return PlanChange::NoChange;
@@ -293,7 +293,7 @@ PlanChange RuleBook::planRedoRule(shared_ptr<RunningPlan> r)
     r->setFailHandlingNeeded(false);
     r->deactivateChildren();
     r->clearChildren();
-    vector<const supplementary::IAgentID *> robots(
+    vector<const supplementary::AgentID *> robots(
         r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
     copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
          r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
@@ -379,7 +379,7 @@ PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp)
         return PlanChange::NoChange;
     }
     rp->setAllocationNeeded(false);
-    auto robots = make_shared<vector<const supplementary::IAgentID*>>(
+    auto robots = make_shared<vector<const supplementary::AgentID*>>(
         rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).size());
     copy(rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).begin(),
          rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).end(), robots->begin());

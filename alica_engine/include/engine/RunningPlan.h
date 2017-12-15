@@ -3,7 +3,7 @@
 #include "engine/PlanStatus.h"
 #include "engine/PlanChange.h"
 #include "engine/IAlicaClock.h"
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include <SystemConfig.h>
 
@@ -62,7 +62,7 @@ namespace alica
 		AlicaTime getStateStartTime();
 		bool isActive();
 		void setActive(bool active);
-		void setRobotsAvail(unique_ptr<list<const supplementary::IAgentID*> > robots);
+		void setRobotsAvail(unique_ptr<list<const supplementary::AgentID*> > robots);
 		void setAllocationNeeded(bool allocationNeeded);
 		void setFailHandlingNeeded(bool failHandlingNeeded);
 		void setOwnEntryPoint(EntryPoint* value);
@@ -89,8 +89,8 @@ namespace alica
 		void clearChildren();
 		void adaptAssignment(shared_ptr<RunningPlan> r);
 		void setFailedChild(AbstractPlan* child);
-		void setRobotAvail(const supplementary::IAgentID* robot);
-		void setRobotUnAvail(const supplementary::IAgentID* robot);
+		void setRobotAvail(const supplementary::AgentID* robot);
+		void setRobotUnAvail(const supplementary::AgentID* robot);
 		void accept(IPlanTreeVisitor* vis);
 		void deactivate();
 		bool anyChildrenStatus(PlanStatus ps);
@@ -99,14 +99,14 @@ namespace alica
 		void activate();
 		EntryPoint* getActiveEntryPoint();
 		void setActiveEntryPoint(EntryPoint* activeEntryPoint);
-		void limitToRobots(std::unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> robots);
+		void limitToRobots(std::unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator> robots);
 		std::shared_ptr<CycleManager> getCycleManagement();
 		void revokeAllConstraints();
 		void attachPlanConstraints();
-		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, list<const supplementary::IAgentID*> availableAgents,list<const supplementary::IAgentID*> noUpdates, AlicaTime now);
+		bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree> > spts, list<const supplementary::AgentID*> availableAgents,list<const supplementary::AgentID*> noUpdates, AlicaTime now);
 		void toMessage(list<long>& message, shared_ptr<RunningPlan>& deepestNode, int& depth, int curDepth);
 		string toString();
-		const supplementary::IAgentID* getOwnID();
+		const supplementary::AgentID* getOwnID();
 		AlicaEngine* getAlicaEngine();
 
 		void sendLogMessage(int level, string& message);
@@ -130,8 +130,8 @@ namespace alica
 		 * The timestamp referring to when this plan was started by the local robot
 		 */
 		AlicaTime planStartTime;
-		const supplementary::IAgentID* ownId;
-		std::unique_ptr<std::list<const supplementary::IAgentID*> > robotsAvail;
+		const supplementary::AgentID* ownId;
+		std::unique_ptr<std::list<const supplementary::AgentID*> > robotsAvail;
 		std::map<AbstractPlan*, int> failedSubPlans;
 		PlanType* planType;
 		int failCount;

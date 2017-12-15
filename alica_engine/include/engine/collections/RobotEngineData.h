@@ -6,7 +6,7 @@
 #include <string>
 
 namespace supplementary{
-	class IAgentID;
+	class AgentID;
 }
 
 namespace alica
@@ -25,7 +25,7 @@ using std::shared_ptr;
 class RobotEngineData
 {
   public:
-	RobotEngineData(const AlicaEngine *engine, const supplementary::IAgentID *agentId);
+	RobotEngineData(const AlicaEngine *engine, const supplementary::AgentID *agentId);
     virtual ~RobotEngineData();
     virtual void initDomainVariables();
 
@@ -37,7 +37,7 @@ class RobotEngineData
 
   protected:
     const AlicaEngine *engine;
-    const supplementary::IAgentID * agentId;
+    const supplementary::AgentID * agentId;
     /**
      * The SuccessMarks of the robot, indicating which EntryPoints are completed.
      */

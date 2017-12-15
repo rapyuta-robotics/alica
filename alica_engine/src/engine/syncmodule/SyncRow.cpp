@@ -28,13 +28,13 @@ namespace alica
 		delete syncData;
 	}
 
-	vector<const supplementary::IAgentID*>& SyncRow::getReceivedBy()
+	vector<const supplementary::AgentID*>& SyncRow::getReceivedBy()
 	{
 		sort(this->receivedBy.begin(), this->receivedBy.end());
 		return receivedBy;
 	}
 
-	void SyncRow::setReceivedBy(vector<const supplementary::IAgentID*> receivedBy)
+	void SyncRow::setReceivedBy(vector<const supplementary::AgentID*> receivedBy)
 	{
 		this->receivedBy = receivedBy;
 	}

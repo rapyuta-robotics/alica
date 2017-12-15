@@ -2,12 +2,12 @@
 #include <tuple>
 
 namespace supplementary {
-	class IAgentID;
+	class AgentID;
 }
 
 namespace alica
 {
-typedef std::tuple<const supplementary::IAgentID *, long, bool, bool> stdSyncData;
+typedef std::tuple<const supplementary::AgentID *, long, bool, bool> stdSyncData;
 
 struct SyncData
 {
@@ -19,7 +19,7 @@ struct SyncData
     {
     }
 
-    const supplementary::IAgentID *robotID;
+    const supplementary::AgentID *robotID;
     long transitionID;
     bool conditionHolds;
     bool ack;

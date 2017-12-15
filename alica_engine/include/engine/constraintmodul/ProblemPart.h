@@ -1,6 +1,6 @@
 #pragma once
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 #include <list>
 #include <memory>
 #include <vector>
@@ -21,7 +21,7 @@ class ProblemPart
     Condition *getCondition();
     std::shared_ptr<std::vector<std::list<std::vector<Variable *>>>> getDomainVariables();
     std::shared_ptr<RunningPlan> getRunningPlan();
-    std::shared_ptr<std::vector<std::shared_ptr<std::vector<const supplementary::IAgentID *>>>> getAgentsInScope();
+    std::shared_ptr<std::vector<std::shared_ptr<std::vector<const supplementary::AgentID *>>>> getAgentsInScope();
 
   private:
     Condition *condition;
@@ -34,7 +34,7 @@ class ProblemPart
      */
     std::shared_ptr<std::vector<std::list<std::vector<Variable *>>>> domainVariables;
     std::shared_ptr<RunningPlan> runningplan;
-    std::shared_ptr<std::vector<std::shared_ptr<std::vector<const supplementary::IAgentID *>>>> agentsInScope;
+    std::shared_ptr<std::vector<std::shared_ptr<std::vector<const supplementary::AgentID *>>>> agentsInScope;
 };
 
 } /* namespace alica */

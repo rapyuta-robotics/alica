@@ -9,7 +9,7 @@
 #include <sstream>
 
 namespace supplementary {
-	class IAgentID;
+	class AgentID;
 }
 
 namespace alica
@@ -34,15 +34,15 @@ namespace alica
 		virtual ~PlanSelector();
 
 		virtual std::shared_ptr<RunningPlan> getBestSimilarAssignment(std::shared_ptr<RunningPlan> rp);
-		virtual std::shared_ptr<RunningPlan> getBestSimilarAssignment(std::shared_ptr<RunningPlan> rp, std::shared_ptr<std::vector<const supplementary::IAgentID*> > robots);
-		virtual std::shared_ptr<std::list<std::shared_ptr<RunningPlan>> > getPlansForState(std::shared_ptr<RunningPlan>planningParent, std::list<alica::AbstractPlan*>* plans, std::shared_ptr<std::vector<const supplementary::IAgentID*> > robotIDs);
-		std::shared_ptr<RunningPlan> createRunningPlan(std::weak_ptr<RunningPlan> planningParent, std::list<Plan*> plans, std::shared_ptr<std::vector<const supplementary::IAgentID*> >  robotIDs, std::shared_ptr<RunningPlan> oldRp, PlanType* relevantPlanType);
+		virtual std::shared_ptr<RunningPlan> getBestSimilarAssignment(std::shared_ptr<RunningPlan> rp, std::shared_ptr<std::vector<const supplementary::AgentID*> > robots);
+		virtual std::shared_ptr<std::list<std::shared_ptr<RunningPlan>> > getPlansForState(std::shared_ptr<RunningPlan>planningParent, std::list<alica::AbstractPlan*>* plans, std::shared_ptr<std::vector<const supplementary::AgentID*> > robotIDs);
+		std::shared_ptr<RunningPlan> createRunningPlan(std::weak_ptr<RunningPlan> planningParent, std::list<Plan*> plans, std::shared_ptr<std::vector<const supplementary::AgentID*> >  robotIDs, std::shared_ptr<RunningPlan> oldRp, PlanType* relevantPlanType);
 
 	private:
 		PartialAssignmentPool* pap;
 		TeamObserver* to;
 		AlicaEngine* ae;
-		std::shared_ptr<std::list<std::shared_ptr<RunningPlan>> > getPlansForStateInternal(std::shared_ptr<RunningPlan> planningParent, std::list<alica::AbstractPlan*>* plans, std::shared_ptr<std::vector<const supplementary::IAgentID*> > robotIDs);
+		std::shared_ptr<std::list<std::shared_ptr<RunningPlan>> > getPlansForStateInternal(std::shared_ptr<RunningPlan> planningParent, std::list<alica::AbstractPlan*>* plans, std::shared_ptr<std::vector<const supplementary::AgentID*> > robotIDs);
 	};
 
 } /* namespace alica */

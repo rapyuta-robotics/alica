@@ -1,6 +1,6 @@
 #pragma once
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include <vector>
 #include <tuple>
@@ -11,7 +11,7 @@ namespace alica
 	using std::tuple;
 	using std::get;
 
-	typedef tuple<long, vector<const supplementary::IAgentID*>> stdEntryPointRobot;
+	typedef tuple<long, vector<const supplementary::AgentID*>> stdEntryPointRobot;
 	struct EntryPointRobots
 	{
 		EntryPointRobots() : entrypoint(0)
@@ -19,7 +19,7 @@ namespace alica
 		}
 
 		long entrypoint;
-		vector<const supplementary::IAgentID*> robots;
+		vector<const supplementary::AgentID*> robots;
 
 		EntryPointRobots(stdEntryPointRobot& s)
 		{

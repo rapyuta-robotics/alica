@@ -483,9 +483,9 @@ TeamManager *AlicaEngine::getTeamManager() const
  * Otherwise, it creates a new one, stores and returns it.
  *
  * This method can be used, e.g., for passing a part of a ROS
- * message and receiving a pointer to a corresponding IAgentID object.
+ * message and receiving a pointer to a corresponding AgentID object.
  */
-const supplementary::IAgentID *AlicaEngine::getIDFromBytes(const std::vector<uint8_t> &idByteVector)
+const supplementary::AgentID *AlicaEngine::getIDFromBytes(const std::vector<uint8_t> &idByteVector)
 {
     return this->agentIDManager->getIDFromBytes(idByteVector);
 }

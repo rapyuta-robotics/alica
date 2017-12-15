@@ -3,7 +3,7 @@
 #include "engine/IAlicaClock.h"
 #include "engine/teammanager/Agent.h"
 
-#include <supplementary/IAgentID.h>
+#include <supplementary/AgentID.h>
 
 #include <map>
 #include <list>
@@ -36,26 +36,26 @@ class TeamManager
 
     std::unique_ptr<std::list<Agent*>> getAllAgents();
     std::unique_ptr<std::list<Agent*>> getActiveAgents();
-    const supplementary::IAgentID * getLocalAgentID() const;
-    std::unique_ptr<std::list<const supplementary::IAgentID *>> getActiveAgentIDs() const;
+    const supplementary::AgentID * getLocalAgentID() const;
+    std::unique_ptr<std::list<const supplementary::AgentID *>> getActiveAgentIDs() const;
     std::unique_ptr<std::list<const RobotProperties*>> getActiveAgentProperties() const;
     int getTeamSize() const;
-    const Agent* getAgentByID(const supplementary::IAgentID* agentId) const;
-    void setTimeLastMsgReceived(const supplementary::IAgentID *agendId, AlicaTime timeLastMsgReceived);
-    bool isAgentIgnored(const supplementary::IAgentID* agentId) const;
-    bool isAgentActive(const supplementary::IAgentID* agentId) const;
-    void ignoreAgent(const supplementary::IAgentID *agentId);
-    void unIgnoreAgent(const supplementary::IAgentID *agentId);
-    bool setSuccess(const supplementary::IAgentID* agentId, AbstractPlan* plan, EntryPoint* entryPoint);
-    bool setSuccessMarks(const supplementary::IAgentID *agentId, std::shared_ptr<SuccessMarks> successMarks);
-    Variable* getDomainVariable(const supplementary::IAgentID* robot, std::string sort);
+    const Agent* getAgentByID(const supplementary::AgentID* agentId) const;
+    void setTimeLastMsgReceived(const supplementary::AgentID *agendId, AlicaTime timeLastMsgReceived);
+    bool isAgentIgnored(const supplementary::AgentID* agentId) const;
+    bool isAgentActive(const supplementary::AgentID* agentId) const;
+    void ignoreAgent(const supplementary::AgentID *agentId);
+    void unIgnoreAgent(const supplementary::AgentID *agentId);
+    bool setSuccess(const supplementary::AgentID* agentId, AbstractPlan* plan, EntryPoint* entryPoint);
+    bool setSuccessMarks(const supplementary::AgentID *agentId, std::shared_ptr<SuccessMarks> successMarks);
+    Variable* getDomainVariable(const supplementary::AgentID* robot, std::string sort);
 
   private:
     AlicaTime teamTimeOut;
     Agent* localAgent;
     AlicaEngine* engine;
-    std::map<const supplementary::IAgentID*, Agent*, supplementary::IAgentIDComparator> agents;
-    std::unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> ignoredAgents;
+    std::map<const supplementary::AgentID*, Agent*, supplementary::AgentIDComparator> agents;
+    std::unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator> ignoredAgents;
     bool useConfigForTeam;
 
     void readTeamFromConfig(supplementary::SystemConfig* sc);

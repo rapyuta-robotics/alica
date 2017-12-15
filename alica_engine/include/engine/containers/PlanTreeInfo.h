@@ -7,13 +7,13 @@ using namespace std;
 
 namespace alica
 {
-	typedef tuple<const supplementary::IAgentID*, list<long>, list<long>> stdPlanTreeInfo;
+	typedef tuple<const supplementary::AgentID*, list<long>, list<long>> stdPlanTreeInfo;
 	struct PlanTreeInfo
 	{
 		PlanTreeInfo() : senderID(nullptr)
 		{
 		}
-		const supplementary::IAgentID* senderID;
+		const supplementary::AgentID* senderID;
 		list<long> stateIDs;
 		list<long> succeededEPs;
 

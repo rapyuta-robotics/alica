@@ -8,7 +8,7 @@
 #ifndef SUCCESSCOLLECTION_H_
 #define SUCCESSCOLLECTION_H_
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include <list>
 #include <vector>
@@ -30,19 +30,19 @@ namespace alica
 		int getCount() const;
 		void setCount(int count);
 		EntryPoint** getEntryPoints();
-		void setSuccess(const supplementary::IAgentID* robot, EntryPoint* ep);
+		void setSuccess(const supplementary::AgentID* robot, EntryPoint* ep);
 		void clear();
-		vector<shared_ptr<list<const supplementary::IAgentID*> > >& getRobots();
-		void setRobots(vector<shared_ptr<list<const supplementary::IAgentID*> > >& robots);
-		shared_ptr<list<const supplementary::IAgentID*> > getRobots(EntryPoint* ep);
-		shared_ptr<list<const supplementary::IAgentID*> > getRobotsById(long id);
+		vector<shared_ptr<list<const supplementary::AgentID*> > >& getRobots();
+		void setRobots(vector<shared_ptr<list<const supplementary::AgentID*> > >& robots);
+		shared_ptr<list<const supplementary::AgentID*> > getRobots(EntryPoint* ep);
+		shared_ptr<list<const supplementary::AgentID*> > getRobotsById(long id);
 		string toString();
 
 	private:
 
 	protected:
 		EntryPoint** entryPoints;
-		vector<shared_ptr<list<const supplementary::IAgentID*> > > robotIds;
+		vector<shared_ptr<list<const supplementary::AgentID*> > > robotIds;
 		int count = 0;
 	};
 

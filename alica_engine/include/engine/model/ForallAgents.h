@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Quantifier.h"
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include <list>
 #include <vector>
@@ -23,7 +23,7 @@ namespace alica
 	public:
 		ForallAgents(AlicaEngine* ae, long id = 0);
 		virtual ~ForallAgents();
-		std::shared_ptr<std::list<std::vector<Variable* > > > getDomainVariables(std::shared_ptr<RunningPlan>& p, std::shared_ptr<std::vector<const supplementary::IAgentID*> >& agentsInScope);
+		std::shared_ptr<std::list<std::vector<Variable* > > > getDomainVariables(std::shared_ptr<RunningPlan>& p, std::shared_ptr<std::vector<const supplementary::AgentID*> >& agentsInScope);
 
 	protected:
 		AlicaEngine* ae;

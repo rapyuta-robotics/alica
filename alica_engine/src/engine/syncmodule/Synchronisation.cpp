@@ -27,7 +27,7 @@ namespace alica
 		this->lastTalkData = nullptr;
 	}
 
-	Synchronisation::Synchronisation(AlicaEngine* ae, const supplementary::IAgentID* myID, SyncTransition* st, SyncModule* sm)
+	Synchronisation::Synchronisation(AlicaEngine* ae, const supplementary::AgentID* myID, SyncTransition* st, SyncModule* sm)
 	{
 		this->ae = ae;
 		this->syncTransition = st;
@@ -462,7 +462,7 @@ namespace alica
 		for (SyncRow* row : this->rowsOK)
 		{
 			auto tmp = row->getSyncData()->robotID;
-			if (find_if(this->myRow->getReceivedBy().begin(), this->myRow->getReceivedBy().end(),[&tmp](const supplementary::IAgentID *id) { return *tmp == *id; }
+			if (find_if(this->myRow->getReceivedBy().begin(), this->myRow->getReceivedBy().end(),[&tmp](const supplementary::AgentID *id) { return *tmp == *id; }
 						) == this->myRow->getReceivedBy().end())
 			{
 				return false;

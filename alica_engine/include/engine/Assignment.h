@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IAssignment.h"
-#include <supplementary/IAgentID.h>
+#include <supplementary/AgentID.h>
 #include <vector>
 #include <memory>
 #include <algorithm>
@@ -33,33 +33,33 @@ namespace alica
 		Plan* getPlan();
 		void setPlan(Plan* plan);
 		StateCollection* getRobotStateMapping();
-		shared_ptr<vector<const supplementary::IAgentID*> > getAllRobotsSorted();
+		shared_ptr<vector<const supplementary::AgentID*> > getAllRobotsSorted();
 		AssignmentCollection* getEpRobotsMapping();
-		shared_ptr<vector<const supplementary::IAgentID*> > getRobotsWorking(long epid);
-		shared_ptr<vector<const supplementary::IAgentID*> > getRobotsWorkingSorted(EntryPoint* ep);
-		shared_ptr<vector<const supplementary::IAgentID*> > getRobotsWorking(EntryPoint* ep);
+		shared_ptr<vector<const supplementary::AgentID*> > getRobotsWorking(long epid);
+		shared_ptr<vector<const supplementary::AgentID*> > getRobotsWorkingSorted(EntryPoint* ep);
+		shared_ptr<vector<const supplementary::AgentID*> > getRobotsWorking(EntryPoint* ep);
 		int totalRobotCount();
 		//shared_ptr<vector<EntryPoint*> > getEntryPoints();
 		short getEntryPointCount();
-		shared_ptr<list<const supplementary::IAgentID*> > getRobotsWorkingAndFinished(EntryPoint* ep);
-		shared_ptr<list<const supplementary::IAgentID*> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
-		shared_ptr<list<const supplementary::IAgentID*> > getRobotsWorkingAndFinished(long epid);
+		shared_ptr<list<const supplementary::AgentID*> > getRobotsWorkingAndFinished(EntryPoint* ep);
+		shared_ptr<list<const supplementary::AgentID*> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
+		shared_ptr<list<const supplementary::AgentID*> > getRobotsWorkingAndFinished(long epid);
 		shared_ptr<SuccessCollection> getEpSuccessMapping();
-		void setAllToInitialState(unique_ptr<list<const supplementary::IAgentID*> > robotIds, EntryPoint* defep);
-		bool removeRobot(const supplementary::IAgentID* robotId);
-		void addRobot(const supplementary::IAgentID* robotId, EntryPoint* e, State* s);
+		void setAllToInitialState(unique_ptr<list<const supplementary::AgentID*> > robotIds, EntryPoint* defep);
+		bool removeRobot(const supplementary::AgentID* robotId);
+		void addRobot(const supplementary::AgentID* robotId, EntryPoint* e, State* s);
 		bool isValid();
 		bool isSuccessfull();
 		bool isEqual(Assignment* otherAssignment);
 		bool isEntryPointNonEmpty(EntryPoint* ep);
-		bool updateRobot(const supplementary::IAgentID* robotId, EntryPoint* ep, State* s);
-		bool updateRobot(const supplementary::IAgentID* robotId, EntryPoint* ep);
-		bool removeRobot(const supplementary::IAgentID* robotId, EntryPoint* ep);
+		bool updateRobot(const supplementary::AgentID* robotId, EntryPoint* ep, State* s);
+		bool updateRobot(const supplementary::AgentID* robotId, EntryPoint* ep);
+		bool removeRobot(const supplementary::AgentID* robotId, EntryPoint* ep);
 		string assignmentCollectionToString();
-		void addRobot(const supplementary::IAgentID* robotId, EntryPoint* e);
+		void addRobot(const supplementary::AgentID* robotId, EntryPoint* e);
 		void moveRobots(State* from, State* to);
-		EntryPoint* getEntryPointOfRobot(const supplementary::IAgentID* robotId);
-		shared_ptr<vector<const supplementary::IAgentID*> >  getAllRobots();
+		EntryPoint* getEntryPointOfRobot(const supplementary::AgentID* robotId);
+		shared_ptr<vector<const supplementary::AgentID*> >  getAllRobots();
 		void clear();
 		string toString();
 		string toHackString();

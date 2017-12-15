@@ -6,12 +6,12 @@
 #include "engine/collections/SuccessMarks.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 namespace alica
 {
 
-Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::IAgentID *id)
+Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::AgentID *id)
     : id(id)
     , name("")
     , timeLastMsgReceived(0)
@@ -24,7 +24,7 @@ Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::
 {
 }
 
-Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::IAgentID *id, std::string name)
+Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::AgentID *id, std::string name)
     : Agent(engine, timeout, id)
 {
     this->name = name;
@@ -37,7 +37,7 @@ Agent::~Agent()
     delete this->properties;
 }
 
-const supplementary::IAgentID *Agent::getID()
+const supplementary::AgentID *Agent::getID()
 {
     return this->id;
 }

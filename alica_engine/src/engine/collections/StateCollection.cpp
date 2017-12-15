@@ -16,12 +16,12 @@ namespace alica
 	{
 	}
 
-	vector<const supplementary::IAgentID*>& StateCollection::getRobots()
+	vector<const supplementary::AgentID*>& StateCollection::getRobots()
 	{
 		return robotIds;
 	}
 
-	void StateCollection::setRobots(vector<const supplementary::IAgentID*> robots)
+	void StateCollection::setRobots(vector<const supplementary::AgentID*> robots)
 	{
 		this->robotIds = robots;
 	}
@@ -31,7 +31,7 @@ namespace alica
 		return states;
 	}
 
-	StateCollection::StateCollection(vector<const supplementary::IAgentID*> robots, vector<State*> states)
+	StateCollection::StateCollection(vector<const supplementary::AgentID*> robots, vector<State*> states)
 	{
 		this->robotIds = robots;
 		this->states = states;
@@ -63,7 +63,7 @@ namespace alica
 		return this->robotIds.size();
 	}
 
-	State* StateCollection::getState(const supplementary::IAgentID* robotId)
+	State* StateCollection::getState(const supplementary::AgentID* robotId)
 	{
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
@@ -75,9 +75,9 @@ namespace alica
 		return nullptr;
 	}
 
-	unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> StateCollection::getRobotsInState(State* s)
+	unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator> StateCollection::getRobotsInState(State* s)
 	{
-		unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> ret;
+		unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator> ret;
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
 			if (this->states[i] == s)
@@ -88,9 +88,9 @@ namespace alica
 		return ret;
 	}
 
-	shared_ptr<vector<const supplementary::IAgentID*> > StateCollection::getRobotsInStateSorted(State* s)
+	shared_ptr<vector<const supplementary::AgentID*> > StateCollection::getRobotsInStateSorted(State* s)
 	{
-		shared_ptr<vector<const supplementary::IAgentID*> > ret= make_shared<vector<const supplementary::IAgentID*> >();
+		shared_ptr<vector<const supplementary::AgentID*> > ret= make_shared<vector<const supplementary::AgentID*> >();
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
 			if (this->states[i] == s)
@@ -102,9 +102,9 @@ namespace alica
 		return ret;
 	}
 
-	unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> StateCollection::getRobotsInState(long sid)
+	unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator> StateCollection::getRobotsInState(long sid)
 	{
-		unordered_set<const supplementary::IAgentID*, supplementary::IAgentIDHash, supplementary::IAgentIDEqualsComparator> ret;
+		unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator> ret;
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
 			if (this->states[i]->getId() == sid)
@@ -116,7 +116,7 @@ namespace alica
 		return ret;
 	}
 
-	void StateCollection::removeRobot(const supplementary::IAgentID* robotId)
+	void StateCollection::removeRobot(const supplementary::AgentID* robotId)
 	{
 		for(int i = 0; i < this->states.size();i++)
 		{
@@ -135,7 +135,7 @@ namespace alica
 		this->states.clear();
 	}
 
-	State* StateCollection::stateOfRobot(const supplementary::IAgentID* robotId)
+	State* StateCollection::stateOfRobot(const supplementary::AgentID* robotId)
 	{
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
@@ -147,7 +147,7 @@ namespace alica
 		return nullptr;
 	}
 
-	void StateCollection::setState(const supplementary::IAgentID* robotId, State* state)
+	void StateCollection::setState(const supplementary::AgentID* robotId, State* state)
 	{
 		for (int i = 0; i < this->robotIds.size(); i++)
 		{
@@ -180,12 +180,12 @@ namespace alica
 		return ss.str();
 	}
 
-	void StateCollection::setInitialState(const supplementary::IAgentID* robotId, EntryPoint* ep)
+	void StateCollection::setInitialState(const supplementary::AgentID* robotId, EntryPoint* ep)
 	{
 		setState(robotId, ep->getState());
 	}
 
-	void StateCollection::setStates(vector<const supplementary::IAgentID*> robotIds, State* state)
+	void StateCollection::setStates(vector<const supplementary::AgentID*> robotIds, State* state)
 	{
 		for(int i = 0; i <  robotIds.size(); i++)
 		{
@@ -207,7 +207,7 @@ namespace alica
 		for(short i = 0; i < oldOne->getEntryPointCount(); i++)
 		{
 			ep = oldOne->getEpRobotsMapping()->getEp(i);
-			for(const supplementary::IAgentID*& rid : *(oldOne->getRobotsWorking(ep)))
+			for(const supplementary::AgentID*& rid : *(oldOne->getRobotsWorking(ep)))
 			{
 				auto iter = find(newOne->getRobotsWorking(ep)->begin(), newOne->getRobotsWorking(ep)->end(), rid);
 				if(iter != newOne->getRobotsWorking(ep)->end())

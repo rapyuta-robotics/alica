@@ -1,4 +1,4 @@
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include <unordered_set>
 #include <list>
@@ -27,8 +27,8 @@ namespace alica
 		void setState(State* state);
 		unordered_set<shared_ptr<SimplePlanTree> >& getChildren();
 		void setChildren(unordered_set<shared_ptr<SimplePlanTree> > children);
-		const supplementary::IAgentID* getRobotId();
-		void setRobotId(const supplementary::IAgentID* robotId);
+		const supplementary::AgentID* getRobotId();
+		void setRobotId(const supplementary::AgentID* robotId);
 		bool isNewSimplePlanTree() const;
 		void setNewSimplePlanTree(bool newSimplePlanTree);
 		long getReceiveTime() const;
@@ -52,7 +52,7 @@ namespace alica
 		/**
 		 * The id of the robot to which this tree refers to
 		 */
-		const supplementary::IAgentID *robotId;
+		const supplementary::AgentID *robotId;
 		bool newSimplePlanTree;
 		/**
 		 * The timestamp denoting when this tree was received.

@@ -10,7 +10,7 @@
 #include "engine/model/Quantifier.h"
 #include "engine/model/Variable.h"
 
-#include <supplementary/IAgentID.h>
+#include <supplementary/AgentID.h>
 
 namespace alica
 {
@@ -18,7 +18,7 @@ namespace alica
 /**
  * Basic constructor
  */
-RobotEngineData::RobotEngineData(const AlicaEngine *engine, const supplementary::IAgentID *agentId)
+RobotEngineData::RobotEngineData(const AlicaEngine *engine, const supplementary::AgentID *agentId)
     : engine(engine), agentId(agentId)
 {
     this->initDomainVariables();
@@ -77,7 +77,7 @@ Variable *RobotEngineData::getDomainVariable(string sort) const
 
 long RobotEngineData::makeUniqueId(string s)
 {
-    long ret = (long)(supplementary::IAgentIDHash()(this->agentId) + std::hash<string>()(s));
+    long ret = (long)(supplementary::AgentIDHash()(this->agentId) + std::hash<string>()(s));
     if (this->engine->getPlanParser()->getParsedElements()->find(ret) !=
         this->engine->getPlanParser()->getParsedElements()->end())
     {

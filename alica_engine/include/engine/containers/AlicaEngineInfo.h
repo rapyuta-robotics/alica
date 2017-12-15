@@ -1,6 +1,6 @@
 #pragma once
 
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include <string>
 #include <tuple>
@@ -8,8 +8,8 @@
 
 namespace alica
 {
-typedef std::tuple<const supplementary::IAgentID *, std::string, std::string, std::string, std::string, std::string,
-                   std::vector<const supplementary::IAgentID *>>
+typedef std::tuple<const supplementary::AgentID *, std::string, std::string, std::string, std::string, std::string,
+                   std::vector<const supplementary::AgentID *>>
     stdAlicaEngineInfo;
 struct AlicaEngineInfo
 {
@@ -17,13 +17,13 @@ struct AlicaEngineInfo
         : senderID(nullptr)
     {
     }
-    const supplementary::IAgentID *senderID;
+    const supplementary::AgentID *senderID;
     std::string masterPlan;
     std::string currentPlan;
     std::string currentState;
     std::string currentRole;
     std::string currentTask;
-    std::vector<const supplementary::IAgentID *> robotIDsWithMe;
+    std::vector<const supplementary::AgentID *> robotIDsWithMe;
 
     AlicaEngineInfo(stdAlicaEngineInfo &s)
     {
