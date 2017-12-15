@@ -4,7 +4,7 @@
 #include <SystemConfig.h>
 #include <process_manager/RobotExecutableRegistry.h>
 #include <robot_control/RobotsControl.h>
-#include <supplementary/IAgentID.h>
+#include <supplementary/AgentID.h>
 
 #include <QMenu>
 
@@ -134,7 +134,7 @@ void RobotsControl::showContextMenu(const QPoint &pos)
 
         cout << "RC: '" << name << "'" << endl;
 
-        const supplementary::IAgentID *robotId = this->pmRegistry->getRobotId(name);
+        const supplementary::AgentID *robotId = this->pmRegistry->getRobotId(name);
         if (robotId != nullptr)
         {
             this->controlledRobotsMap[robotId]->toggle();
@@ -178,7 +178,7 @@ void RobotsControl::receiveProcessStats(process_manager::ProcessStatsConstPtr pr
     this->processStatMsgQueue.emplace(chrono::system_clock::now(), processStats);
 }
 
-void RobotsControl::receiveAlicaInfo(alica_ros_proxy::AlicaEngineInfoConstPtr alicaInfo)
+void RobotsControl::receiveAlicaInfo(alica_msgs::AlicaEngineInfoConstPtr alicaInfo)
 {
     lock_guard<mutex> lck(alicaInfoMsgQueueMutex);
     this->alicaInfoMsgQueue.emplace(chrono::system_clock::now(), alicaInfo);
@@ -227,7 +227,7 @@ void RobotsControl::processMessages()
  * If the given robot ID is already known, nothing is done.
  * Otherwise a new entry in the controlled robot map is created.
  */
-void RobotsControl::checkAndInit(const supplementary::IAgentID *robotId)
+void RobotsControl::checkAndInit(const supplementary::AgentID *robotId)
 {
     auto pmEntry = this->controlledRobotsMap.find(robotId);
     if (pmEntry == this->controlledRobotsMap.end())

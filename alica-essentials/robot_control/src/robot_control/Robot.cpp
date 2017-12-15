@@ -18,11 +18,12 @@
 
 using std::string;
 using std::pair;
+using std::stringstream;
 
 namespace robot_control
 {
 
-Robot::Robot(string robotName, const supplementary::IAgentID *robotId, RobotsControl *parentRobotsControl)
+Robot::Robot(string robotName, const supplementary::AgentID *robotId, RobotsControl *parentRobotsControl)
     : RobotMetaData(robotName, robotId)
     , parentRobotsControl(parentRobotsControl)
     , widget(new QFrame())
@@ -176,14 +177,14 @@ void Robot::hide()
 }
 
 void Robot::handleAlicaInfo(
-    pair<std::chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr> timeAEIpair)
+    pair<std::chrono::system_clock::time_point, alica_msgs::AlicaEngineInfoConstPtr> timeAEIpair)
 {
     this->timeLastMsgReceived = timeAEIpair.first;
     this->alicaWidget->handleAlicaEngineInfo(timeAEIpair.second);
 }
 
 void Robot::handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps,
-                              const supplementary::IAgentID *parentPMid)
+                              const supplementary::AgentID *parentPMid)
 {
     this->timeLastMsgReceived = timeMsgReceived;
     this->controlledRobotWidget->handleProcessStat(timeMsgReceived, ps, parentPMid);

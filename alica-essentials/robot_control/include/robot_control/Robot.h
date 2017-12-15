@@ -1,15 +1,14 @@
 #pragma once
 
-#include <QFrame>
-#include <alica_ros_proxy/AlicaEngineInfo.h>
-#include <chrono>
-#include <chrono>
+#include <alica_msgs/AlicaEngineInfo.h>
 #include <msl_actuator_msgs/KickerStatInfo.h>
 #include <msl_sensor_msgs/SharedWorldInfo.h>
 #include <process_manager/ProcessStats.h>
 #include <process_manager/RobotMetaData.h>
-#include <process_manager/RobotMetaData.h>
 #include <ros/ros.h>
+
+#include <QFrame>
+#include <chrono>
 
 namespace Ui
 {
@@ -20,7 +19,7 @@ class ControlledRobotWidget;
 namespace supplementary
 {
 class RobotExecutableRegistry;
-class IAgentID;
+class AgentID;
 }
 
 namespace ros
@@ -48,7 +47,7 @@ class Robot : public QFrame, public supplementary::RobotMetaData
     Q_OBJECT
 
   public:
-    Robot(std::string robotName, const supplementary::IAgentID *robotId, RobotsControl *parentRobotsControl);
+    Robot(std::string robotName, const supplementary::AgentID *robotId, RobotsControl *parentRobotsControl);
 
     virtual ~Robot();
 
@@ -56,9 +55,9 @@ class Robot : public QFrame, public supplementary::RobotMetaData
     std::chrono::time_point<std::chrono::system_clock>
         timeLastMsgReceived; /**< the last time a message was received for this robot */
     void handleAlicaInfo(
-        std::pair<std::chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr> timeAEIpair);
+        std::pair<std::chrono::system_clock::time_point, alica_msgs::AlicaEngineInfoConstPtr> timeAEIpair);
     void handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps,
-                           const supplementary::IAgentID *parentPMid);
+                           const supplementary::AgentID *parentPMid);
 
     // GUI Methods and Members
     RobotsControl *parentRobotsControl;
@@ -84,7 +83,7 @@ class Robot : public QFrame, public supplementary::RobotMetaData
     alica::AlicaWidget *alicaWidget;
     QFrame *frameForPM;
     pm_widget::ControlledRobot *controlledRobotWidget;
-    const supplementary::IAgentID *broadcastId;
+    const supplementary::AgentID *broadcastId;
 
     ros::Publisher robotCommandPub;
 };

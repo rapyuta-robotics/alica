@@ -15,7 +15,7 @@ AlicaWidget::~AlicaWidget()
     delete qframe;
 }
 
-void AlicaWidget::handleAlicaEngineInfo(alica_ros_proxy::AlicaEngineInfoConstPtr aei)
+void AlicaWidget::handleAlicaEngineInfo(alica_msgs::AlicaEngineInfoConstPtr aei)
 {
     uiAlicaWidget.planVal->setText(QString(aei->currentPlan.c_str()));
     uiAlicaWidget.roleVal->setText(QString(aei->currentRole.c_str()));

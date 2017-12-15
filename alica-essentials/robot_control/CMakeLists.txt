@@ -81,7 +81,7 @@ set(robot_control_RCS
 catkin_package(
   INCLUDE_DIRS ${robot_control_INCLUDE_DIRECTORIES}
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS rqt_gui rqt_gui_cpp msl_actuator_msgs msl_sensor_msgs agent_id
+  CATKIN_DEPENDS rqt_gui rqt_gui_cpp agent_id alica_msgs
 )
 
 
