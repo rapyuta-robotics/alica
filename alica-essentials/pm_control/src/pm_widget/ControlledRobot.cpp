@@ -4,7 +4,7 @@
 #include "ui_RobotProcessesWidget.h"
 #include "ui_ProcessWidget.h"
 
-#include <supplementary/IAgentID.h>
+#include <supplementary/AgentID.h>
 #include <supplementary/BroadcastID.h>
 #include <process_manager/RobotExecutableRegistry.h>
 #include <process_manager/ExecutableMetaData.h>
@@ -16,7 +16,7 @@
 namespace pm_widget
 {
 	// Second Constructor is for robot_control
-	ControlledRobot::ControlledRobot(string robotName, const supplementary::IAgentID* robotId, const supplementary::IAgentID* parentPMid) :
+	ControlledRobot::ControlledRobot(string robotName, const supplementary::AgentID* robotId, const supplementary::AgentID* parentPMid) :
 			RobotMetaData(robotName, robotId), robotProcessesQFrame(new QFrame()), _robotProcessesWidget(new Ui::RobotProcessesWidget()), parentPMid(parentPMid)
 	{
 		// setup gui stuff
@@ -80,7 +80,7 @@ namespace pm_widget
 	}
 
 	void ControlledRobot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived,
-											process_manager::ProcessStat ps, const supplementary::IAgentID* parentPMid)
+											process_manager::ProcessStat ps, const supplementary::AgentID* parentPMid)
 	{
 		this->parentPMid = parentPMid;
 

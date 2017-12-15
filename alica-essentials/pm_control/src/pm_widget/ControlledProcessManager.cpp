@@ -12,7 +12,7 @@ using std::endl;
 
 namespace pm_widget
 {
-	ControlledProcessManager::ControlledProcessManager(string processManagerName, const supplementary::IAgentID* processManagerId, QBoxLayout* parentLayout) :
+	ControlledProcessManager::ControlledProcessManager(string processManagerName, const supplementary::AgentID* processManagerId, QBoxLayout* parentLayout) :
 			name(processManagerName), id(processManagerId), pmRegistry(supplementary::RobotExecutableRegistry::get()),parentLayout(parentLayout)
 	{
 		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
@@ -44,7 +44,7 @@ namespace pm_widget
 		}
 	}
 
-	ControlledRobot* ControlledProcessManager::getControlledRobot(const supplementary::IAgentID* robotId)
+	ControlledRobot* ControlledProcessManager::getControlledRobot(const supplementary::AgentID* robotId)
 	{
 		auto controlledRobotEntry = this->controlledRobotsMap.find(robotId);
 		if (controlledRobotEntry != this->controlledRobotsMap.end())

@@ -8,7 +8,7 @@
 #include <utility>
 #include <chrono>
 
-#include <supplementary/IAgentID.h>
+#include <supplementary/AgentID.h>
 
 namespace supplementary {
 	class SystemConfig;
@@ -27,7 +27,7 @@ namespace pm_widget
 	class ControlledProcessManager
 	{
 	public:
-		ControlledProcessManager(std::string processManagerName, const supplementary::IAgentID* processManagerId, QBoxLayout* pmHorizontalLayout);
+		ControlledProcessManager(std::string processManagerName, const supplementary::AgentID* processManagerId, QBoxLayout* pmHorizontalLayout);
 		virtual ~ControlledProcessManager();
 
 		void updateGUI(std::chrono::system_clock::time_point now);
@@ -41,13 +41,13 @@ namespace pm_widget
 		std::chrono::duration<double> msgTimeOut;
 		std::chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
 		std::string name; /* < Hostname under which this process manager is running */
-		const supplementary::IAgentID* id; /* < The id of the host */
+		const supplementary::AgentID* id; /* < The id of the host */
 		supplementary::RobotExecutableRegistry* pmRegistry;
 
 	private:
-		std::map<const supplementary::IAgentID*, ControlledRobot*, supplementary::IAgentIDComparator> controlledRobotsMap; /* < The robots, which are controlled by this process manager */
+		std::map<const supplementary::AgentID*, ControlledRobot*, supplementary::AgentIDComparator> controlledRobotsMap; /* < The robots, which are controlled by this process manager */
 		QBoxLayout* parentLayout;
-		ControlledRobot* getControlledRobot(const supplementary::IAgentID* robotId);
+		ControlledRobot* getControlledRobot(const supplementary::AgentID* robotId);
 	};
 
 } /* namespace pm_widget */

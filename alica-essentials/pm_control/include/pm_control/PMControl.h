@@ -5,7 +5,7 @@
 #include <ui_PMControl.h>
 #include <process_manager/ProcessStats.h>
 #include <process_manager/ProcessStat.h>
-#include <supplementary/IAgentID.h>
+#include <supplementary/AgentID.h>
 
 #include <QtGui>
 #include <QWidget>
@@ -44,7 +44,7 @@ namespace pm_control
 		virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
 		virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
-		void sendProcessCommand(const supplementary::IAgentID* receiverId, std::vector<const supplementary::IAgentID*> robotIds, std::vector<int> execIds, std::vector<int> paramSets, int cmd);
+		void sendProcessCommand(const supplementary::AgentID* receiverId, std::vector<const supplementary::AgentID*> robotIds, std::vector<int> execIds, std::vector<int> paramSets, int cmd);
 
 		std::chrono::duration<double> msgTimeOut;
 
@@ -62,7 +62,7 @@ namespace pm_control
 
 		supplementary::SystemConfig* sc;
 
-		std::map<const supplementary::IAgentID*, pm_widget::ControlledProcessManager*, supplementary::IAgentIDComparator> processManagersMap;
+		std::map<const supplementary::AgentID*, pm_widget::ControlledProcessManager*, supplementary::AgentIDComparator> processManagersMap;
 
 		void handleProcessStats();
 
