@@ -13,7 +13,7 @@
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
 #include "engine/containers/AlicaEngineInfo.h"
-#include "supplementary/IAgentIDFactory.h"
+#include "supplementary/AgentIDFactory.h"
 
 #include <ros/console.h>
 #include <ros/node_handle.h>
@@ -44,26 +44,26 @@ AlicaRosCommunication::AlicaRosCommunication(AlicaEngine *ae)
     this->solverResultTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.solverResultTopic", NULL);
 
     AllocationAuthorityInfoPublisher =
-        rosNode->advertise<alica_ros_proxy::AllocationAuthorityInfo>(this->allocationAuthorityInfoTopic, 2);
+        rosNode->advertise<alica_msgs::AllocationAuthorityInfo>(this->allocationAuthorityInfoTopic, 2);
     AllocationAuthorityInfoSubscriber =
         rosNode->subscribe(this->allocationAuthorityInfoTopic, 10, &AlicaRosCommunication::handleAllocationAuthorityRos,
                            (AlicaRosCommunication *)this);
 
-    AlicaEngineInfoPublisher = rosNode->advertise<alica_ros_proxy::AlicaEngineInfo>(this->alicaEngineInfoTopic, 2);
-    RoleSwitchPublisher = rosNode->advertise<alica_ros_proxy::RoleSwitch>(this->ownRoleTopic, 10);
+    AlicaEngineInfoPublisher = rosNode->advertise<alica_msgs::AlicaEngineInfo>(this->alicaEngineInfoTopic, 2);
+    RoleSwitchPublisher = rosNode->advertise<alica_msgs::RoleSwitch>(this->ownRoleTopic, 10);
 
-    PlanTreeInfoPublisher = rosNode->advertise<alica_ros_proxy::PlanTreeInfo>(this->planTreeInfoTopic, 10);
+    PlanTreeInfoPublisher = rosNode->advertise<alica_msgs::PlanTreeInfo>(this->planTreeInfoTopic, 10);
     PlanTreeInfoSubscriber = rosNode->subscribe(
         this->planTreeInfoTopic, 1, &AlicaRosCommunication::handlePlanTreeInfoRos, (AlicaRosCommunication *)this);
 
-    SyncReadyPublisher = rosNode->advertise<alica_ros_proxy::SyncReady>(this->syncReadyTopic, 10);
+    SyncReadyPublisher = rosNode->advertise<alica_msgs::SyncReady>(this->syncReadyTopic, 10);
     SyncReadySubscriber = rosNode->subscribe(this->syncReadyTopic, 5, &AlicaRosCommunication::handleSyncReadyRos,
                                              (AlicaRosCommunication *)this);
-    SyncTalkPublisher = rosNode->advertise<alica_ros_proxy::SyncTalk>(this->syncTalkTopic, 10);
+    SyncTalkPublisher = rosNode->advertise<alica_msgs::SyncTalk>(this->syncTalkTopic, 10);
     SyncTalkSubscriber = rosNode->subscribe(this->syncTalkTopic, 5, &AlicaRosCommunication::handleSyncTalkRos,
                                             (AlicaRosCommunication *)this);
 
-    SolverResultPublisher = rosNode->advertise<alica_ros_proxy::SolverResult>(this->solverResultTopic, 10);
+    SolverResultPublisher = rosNode->advertise<alica_msgs::SolverResult>(this->solverResultTopic, 10);
     SolverResultSubscriber = rosNode->subscribe(this->solverResultTopic, 5, &AlicaRosCommunication::handleSolverResult,
                                                 (AlicaRosCommunication *)this);
 }
@@ -97,7 +97,7 @@ void AlicaRosCommunication::tick()
 
 void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo &aai) const
 {
-    alica_ros_proxy::AllocationAuthorityInfo aais;
+    alica_msgs::AllocationAuthorityInfo aais;
 
     aais.planID = aai.planId;
     aais.parentState = aai.parentState;
@@ -108,12 +108,12 @@ void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo &aai
 
     for (auto &ep : aai.entryPointRobots)
     {
-        alica_ros_proxy::EntryPointRobots newEP;
+        alica_msgs::EntryPointRobots newEP;
         newEP.entryPoint = ep.entrypoint;
         int i = 0;
         for (auto &robotId : ep.robots)
         {
-            newEP.robots.push_back(alica_ros_proxy::EntryPointRobots::_robots_type::value_type());
+            newEP.robots.push_back(alica_msgs::EntryPointRobots::_robots_type::value_type());
             for (int j = 0; j < robotId->getSize(); j++)
             {
                 newEP.robots[i].id.push_back(*(robotId->getRaw() + j));
@@ -131,7 +131,7 @@ void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo &aai
 
 void AlicaRosCommunication::sendAlicaEngineInfo(AlicaEngineInfo &bi) const
 {
-    alica_ros_proxy::AlicaEngineInfo bis;
+    alica_msgs::AlicaEngineInfo bis;
     bis.currentPlan = bi.currentPlan;
     bis.currentRole = bi.currentRole;
     bis.currentState = bi.currentState;
@@ -141,7 +141,7 @@ void AlicaRosCommunication::sendAlicaEngineInfo(AlicaEngineInfo &bi) const
     for (auto& robotID : bi.robotIDsWithMe)
     {
 
-        alica_ros_proxy::AllocationAuthorityInfo::_senderID_type rosRobotID;
+        alica_msgs::AllocationAuthorityInfo::_senderID_type rosRobotID;
         rosRobotID.id = robotID->toByteVector();
         bis.robotIDsWithMe.push_back(rosRobotID);
     }
@@ -156,7 +156,7 @@ void AlicaRosCommunication::sendAlicaEngineInfo(AlicaEngineInfo &bi) const
 
 void AlicaRosCommunication::sendPlanTreeInfo(PlanTreeInfo &pti) const
 {
-    alica_ros_proxy::PlanTreeInfo ptis;
+    alica_msgs::PlanTreeInfo ptis;
     ptis.senderID.id = pti.senderID->toByteVector();
 
     for (long i : pti.stateIDs)
@@ -175,7 +175,7 @@ void AlicaRosCommunication::sendPlanTreeInfo(PlanTreeInfo &pti) const
 
 void AlicaRosCommunication::sendRoleSwitch(RoleSwitch &rs) const
 {
-    alica_ros_proxy::RoleSwitch rss;
+    alica_msgs::RoleSwitch rss;
 
     rss.roleID = rs.roleID;
     auto robotID = this->ae->getTeamManager()->getLocalAgentID();
@@ -189,7 +189,7 @@ void AlicaRosCommunication::sendRoleSwitch(RoleSwitch &rs) const
 
 void AlicaRosCommunication::sendSyncReady(SyncReady &sr) const
 {
-    alica_ros_proxy::SyncReady srs;
+    alica_msgs::SyncReady srs;
 
     srs.senderID.id = sr.senderID->toByteVector();
     srs.syncTransitionID = sr.syncTransitionID;
@@ -202,12 +202,12 @@ void AlicaRosCommunication::sendSyncReady(SyncReady &sr) const
 
 void AlicaRosCommunication::sendSyncTalk(SyncTalk &st) const
 {
-    alica_ros_proxy::SyncTalk sts;
+    alica_msgs::SyncTalk sts;
     sts.senderID.id = st.senderID->toByteVector();
 
     for (auto sd : st.syncData)
     {
-        alica_ros_proxy::SyncData sds;
+        alica_msgs::SyncData sds;
         sds.ack = sd->ack;
         sds.conditionHolds = sd->conditionHolds;
         sds.robotID.id = sd->robotID->toByteVector();
@@ -223,12 +223,12 @@ void AlicaRosCommunication::sendSyncTalk(SyncTalk &st) const
 
 void AlicaRosCommunication::sendSolverResult(SolverResult &sr) const
 {
-    alica_ros_proxy::SolverResult srs;
+    alica_msgs::SolverResult srs;
     srs.senderID.id = sr.senderID->toByteVector();
 
     for (auto sv : sr.vars)
     {
-        alica_ros_proxy::SolverVar svs;
+        alica_msgs::SolverVar svs;
         svs.id = sv->id;
         svs.value = sv->value;
         srs.vars.push_back(svs);
@@ -240,7 +240,7 @@ void AlicaRosCommunication::sendSolverResult(SolverResult &sr) const
     }
 }
 
-void AlicaRosCommunication::handleAllocationAuthorityRos(alica_ros_proxy::AllocationAuthorityInfoPtr aai)
+void AlicaRosCommunication::handleAllocationAuthorityRos(alica_msgs::AllocationAuthorityInfoPtr aai)
 {
     auto aaiPtr = make_shared<AllocationAuthorityInfo>();
     aaiPtr->senderID =  this->ae->getIDFromBytes(aai->senderID.id);
@@ -268,7 +268,7 @@ void AlicaRosCommunication::handleAllocationAuthorityRos(alica_ros_proxy::Alloca
     }
 }
 
-void AlicaRosCommunication::handlePlanTreeInfoRos(alica_ros_proxy::PlanTreeInfoPtr pti)
+void AlicaRosCommunication::handlePlanTreeInfoRos(alica_msgs::PlanTreeInfoPtr pti)
 {
     auto ptiPtr = make_shared<PlanTreeInfo>();
     ptiPtr->senderID =  this->ae->getIDFromBytes(pti->senderID.id);
@@ -287,7 +287,7 @@ void AlicaRosCommunication::handlePlanTreeInfoRos(alica_ros_proxy::PlanTreeInfoP
     }
 }
 
-void AlicaRosCommunication::handleSyncReadyRos(alica_ros_proxy::SyncReadyPtr sr)
+void AlicaRosCommunication::handleSyncReadyRos(alica_msgs::SyncReadyPtr sr)
 {
     auto srPtr = make_shared<SyncReady>();
     srPtr->senderID =  this->ae->getIDFromBytes(sr->senderID.id);
@@ -299,7 +299,7 @@ void AlicaRosCommunication::handleSyncReadyRos(alica_ros_proxy::SyncReadyPtr sr)
     }
 }
 
-void AlicaRosCommunication::handleSyncTalkRos(alica_ros_proxy::SyncTalkPtr st)
+void AlicaRosCommunication::handleSyncTalkRos(alica_msgs::SyncTalkPtr st)
 {
     auto stPtr = make_shared<SyncTalk>();
     stPtr->senderID =  this->ae->getIDFromBytes(st->senderID.id);
@@ -321,7 +321,7 @@ void AlicaRosCommunication::handleSyncTalkRos(alica_ros_proxy::SyncTalkPtr st)
     }
 }
 
-void AlicaRosCommunication::handleSolverResult(alica_ros_proxy::SolverResultPtr sr)
+void AlicaRosCommunication::handleSolverResult(alica_msgs::SolverResultPtr sr)
 {
     auto srPtr = make_shared<SolverResult>();
     srPtr->senderID =  this->ae->getIDFromBytes(sr->senderID.id);

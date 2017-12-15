@@ -1,13 +1,13 @@
 #pragma once
-#include "alica_ros_proxy/AlicaEngineInfo.h"
-#include "alica_ros_proxy/AllocationAuthorityInfo.h"
-#include "alica_ros_proxy/PlanTreeInfo.h"
-#include "alica_ros_proxy/RoleSwitch.h"
-#include "alica_ros_proxy/SolverResult.h"
-#include "alica_ros_proxy/SyncReady.h"
-#include "alica_ros_proxy/SyncTalk.h"
+#include "alica_msgs/AlicaEngineInfo.h"
+#include "alica_msgs/AllocationAuthorityInfo.h"
+#include "alica_msgs/PlanTreeInfo.h"
+#include "alica_msgs/RoleSwitch.h"
+#include "alica_msgs/SolverResult.h"
+#include "alica_msgs/SyncReady.h"
+#include "alica_msgs/SyncTalk.h"
 #include "engine/IAlicaCommunication.h"
-#include "supplementary/IAgentID.h"
+#include "supplementary/AgentID.h"
 
 #include <ros/ros.h>
 #include <string>
@@ -38,11 +38,11 @@ class AlicaRosCommunication : public alica::IAlicaCommunication
     virtual void sendSolverResult(SolverResult &sr) const;
     virtual void sendLogMessage(int level, std::string &message) const;
 
-    virtual void handleAllocationAuthorityRos(alica_ros_proxy::AllocationAuthorityInfoPtr aai);
-    virtual void handlePlanTreeInfoRos(alica_ros_proxy::PlanTreeInfoPtr pti);
-    virtual void handleSyncReadyRos(alica_ros_proxy::SyncReadyPtr sr);
-    virtual void handleSyncTalkRos(alica_ros_proxy::SyncTalkPtr st);
-    virtual void handleSolverResult(alica_ros_proxy::SolverResultPtr sr);
+    virtual void handleAllocationAuthorityRos(alica_msgs::AllocationAuthorityInfoPtr aai);
+    virtual void handlePlanTreeInfoRos(alica_msgs::PlanTreeInfoPtr pti);
+    virtual void handleSyncReadyRos(alica_msgs::SyncReadyPtr sr);
+    virtual void handleSyncTalkRos(alica_msgs::SyncTalkPtr st);
+    virtual void handleSolverResult(alica_msgs::SolverResultPtr sr);
 
     virtual void startCommunication();
     virtual void stopCommunication();
