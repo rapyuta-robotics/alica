@@ -11,12 +11,14 @@
   <buildtool_depend>catkin</buildtool_depend>
   
   <build_depend>alica_engine</build_depend>
+  <build_depend>alica_msgs</build_depend>
   <build_depend>system_config</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>agent_id</build_depend>
   <build_depend>message_generation</build_depend>
   
   <run_depend>alica_engine</run_depend>
+  <run_depend>alica_msgs</run_depend>
   <run_depend>system_config</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>agent_id</run_depend>
