@@ -19,7 +19,6 @@ class AgentID
     virtual const uint8_t *getRaw() const;
     virtual int getSize() const;
     virtual std::vector<uint8_t> toByteVector() const;
-    virtual std::string toString() const;
     virtual std::size_t hash() const;
     virtual uint8_t getType() const;
 

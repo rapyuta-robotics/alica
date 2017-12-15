@@ -35,8 +35,7 @@ class AgentIDManager
  * Otherwise, it creates a new one, stores and returns it.
  *
  * This method can be used, e.g., for passing an int and receiving
- * a pointer to a corresponding IAgentID object (in that case an
- * IntRobotID).
+ * a pointer to a corresponding AgentID object.
  */
 template <class Prototype>
 const AgentID *AgentIDManager::getID(Prototype &idPrototype)

@@ -9,6 +9,9 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
+# Define where to find modules for UUID
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake CACHE INTERNAL "" FORCE)
+
 find_package(catkin REQUIRED roscpp message_generation)
 find_package(UUID)
 
@@ -48,3 +51,12 @@ target_link_libraries(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} PUBLIC include ${catkin_INCLUDE_DIRS})
 
+# Tests for agent_id
+find_package(GTest REQUIRED)
+include_directories(
+  ${GTEST_INCLUDE_DIRS}
+)
+add_executable(${PROJECT_NAME}-tests
+  src/test/AgentIDTests.cpp
+)
+target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} ${GTEST_LIBRARIES})
