@@ -22,6 +22,7 @@ WorldModel::~WorldModel()
 
 bool WorldModel::setEngine(alica::AlicaEngine *ae)
 {
+	std::cout << "WorldModel: SetEngine called!" << std::endl;
     if (this->alicaEngine == nullptr)
     {
         this->alicaEngine = ae;

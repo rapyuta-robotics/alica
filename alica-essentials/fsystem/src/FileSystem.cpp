@@ -284,9 +284,13 @@ namespace supplementary
 		{
 			return path1;
 		}
-		if (path1.find_last_of(PATH_SEPARATOR) != path1.size() - 1)
+		if (path1.find_last_of(PATH_SEPARATOR) != path1.size() - 1 && path2.find_first_of(PATH_SEPARATOR) != 0)
 		{
 			return path1 + PATH_SEPARATOR + path2;
+		}
+		else if (path1.find_last_of(PATH_SEPARATOR) == path1.size() - 1 && path2.find_first_of(PATH_SEPARATOR) == 0)
+		{
+			return path1.substr(0, path1.size()-1) + path2;
 		}
 		return path1 + path2;
 	}
