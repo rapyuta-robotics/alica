@@ -633,7 +633,7 @@ namespace alica
 					<< this->epRobotsMapping->getEp(i)->getTask()->getName() << " RobotIDs: ";
 			for (auto& robot : *(this->epRobotsMapping->getRobots(i)))
 			{
-				ss << robot << " ";
+				ss << *robot << " ";
 			}
 			ss << endl;
 		}
@@ -653,7 +653,7 @@ namespace alica
 			ss << this->epRobotsMapping->getEp(i)->getTask()->getName() << " ";
 			for (auto& robotID : *(this->epRobotsMapping->getRobots(i)))
 			{
-				ss << robotID << string(" ");
+				ss << *robotID << string(" ");
 			}
 
 			if (suc[i]->size() > 0)
@@ -661,7 +661,7 @@ namespace alica
 				ss << "\t Success: ";
 				for (auto& robotID : (*suc[i]))
 				{
-					ss << robotID << string(" ");
+					ss << *robotID << string(" ");
 				}
 			}
 
