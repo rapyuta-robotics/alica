@@ -24,10 +24,30 @@ class AgentID
 
     friend std::ostream &operator<<(std::ostream &os, const supplementary::AgentID &obj)
     {
-    	for (auto byte : obj.id)
-    	{
-    		os << byte << " ";
-    	}
+        if (obj.id.size() <= sizeof(int))
+        {
+            std::vector<uint8_t> tmpLong;
+            for (int i = 0; i < obj.id.size(); i++)
+            {
+                tmpLong.push_back(obj.id[i]);
+            }
+            for (int i = 0; i < sizeof(int) - obj.id.size(); i++)
+            {
+                tmpLong.push_back(0);
+            }
+            os << (int)(*tmpLong.data());
+        }
+        else
+        {
+            std::vector<uint8_t> tmpShort;
+            tmpShort.push_back(obj.id[0]);
+            tmpShort.push_back(obj.id[1]);
+            os << (short)(*tmpShort.data()) << "[...]";
+            tmpShort.clear();
+            tmpShort.push_back(obj.id[obj.id.size() - 2]);
+            tmpShort.push_back(obj.id[obj.id.size() - 1]);
+            os << (short)(*tmpShort.data());
+        }
         return os;
     }
 
