@@ -192,8 +192,10 @@ namespace alica
 				this->ruleBook->setChangeOccured(false);
 			}
 
+
 			if (this->sendStatusMessages && this->lastSentStatusTime + this->sendStatusInterval < alicaClock->now())
 			{
+
 				if (this->deepestNode != nullptr)
 				{
 					this->statusMessage->robotIDsWithMe.clear();
@@ -238,7 +240,7 @@ namespace alica
 
 			this->ae->iterationComplete();
 
-			long availTime;
+			AlicaTime availTime;
 
 			now = alicaClock->now();
 			if (this->loopTime > (now - beginTime))
