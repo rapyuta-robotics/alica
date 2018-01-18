@@ -203,7 +203,7 @@ const AgentID *RobotExecutableRegistry::addRobot(string agentName)
             // generates random ID
             agentID = this->agentIDManager->generateID();
         } while (this->robotMap.find(agentID) != this->robotMap.end());
-        std::cout << "PM Registry: Warning! Adding unknown agent " << agentName << " with ID " << agentID << "!"
+        std::cout << "PM Registry: Warning! Adding unknown agent " << agentName << " with ID " << *agentID << "!"
                   << std::endl;
     }
 
