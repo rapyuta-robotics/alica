@@ -1071,7 +1071,7 @@ string RunningPlan::toString()
     ss << "AvailRobots: ";
     for (auto &r : (*this->robotsAvail))
     {
-        ss << " " << r;
+        ss << " " << *r;
     }
     ss << "\n";
     if (this->assignment != nullptr)
