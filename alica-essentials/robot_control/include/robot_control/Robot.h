@@ -1,8 +1,6 @@
 #pragma once
 
 #include <alica_msgs/AlicaEngineInfo.h>
-#include <msl_actuator_msgs/KickerStatInfo.h>
-#include <msl_sensor_msgs/SharedWorldInfo.h>
 #include <process_manager/ProcessStats.h>
 #include <process_manager/RobotMetaData.h>
 #include <ros/ros.h>

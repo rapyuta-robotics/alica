@@ -26,7 +26,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES alica_msgs
-  CATKIN_DEPENDS std_msgs geometry_msgs message_runtime
+   CATKIN_DEPENDS std_msgs geometry_msgs message_runtime agent_id
 #  DEPENDS system_lib
 )
 
