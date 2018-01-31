@@ -401,6 +401,19 @@ namespace supplementary
 	}
 
 	template<>
+	inline vector<int> Configuration::convertList<int>(string value)
+	{
+		std::istringstream ss(value);
+		std::string listItem;
+		vector<int> itemVector;
+		while (std::getline(ss, listItem, LIST_ELEMENT_SEPERATOR))
+		{
+			itemVector.push_back(stoi(trim(listItem, " ")));
+		}
+		return itemVector;
+	}
+
+	template<>
 	inline vector<string> Configuration::convertList<string>(string value)
 	{
 		std::istringstream ss(value);
