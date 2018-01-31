@@ -14,6 +14,7 @@ namespace supplementary{
 	public:
     	WorldModel(); /* <-- Attention: Derived World Models should implement the singleton pattern */
     	virtual ~WorldModel();
+    	virtual void init();
     	supplementary::InfoTime getTime();
     	bool isMaySendMessages() const;
     	void setMaySendMessages(bool maySendMessages);

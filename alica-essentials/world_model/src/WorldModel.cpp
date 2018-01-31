@@ -20,6 +20,10 @@ WorldModel::~WorldModel()
 {
 }
 
+void WorldModel::init()
+{
+}
+
 bool WorldModel::setEngine(alica::AlicaEngine *ae)
 {
 	std::cout << "WorldModel: SetEngine called!" << std::endl;
