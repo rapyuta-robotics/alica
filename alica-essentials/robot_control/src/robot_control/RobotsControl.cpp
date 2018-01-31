@@ -47,7 +47,7 @@ RobotsControl::RobotsControl()
     auto bundlesSections = (*this->sc)["ProcessManaging"]->getSections("Processes.Bundles", NULL);
     for (auto bundleName : (*bundlesSections))
     {
-        vector<string> processList = (*this->sc)["ProcessManaging"]->getList<string>(
+        vector<int> processList = (*this->sc)["ProcessManaging"]->getList<int>(
             "Processes.Bundles", bundleName.c_str(), "processList", NULL);
         vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>(
             "Processes.Bundles", bundleName.c_str(), "processParamsList", NULL);
@@ -60,7 +60,7 @@ RobotsControl::RobotsControl()
 
         for (int i = 0; i < processList.size(); i++)
         {
-            this->bundlesMap[bundleName].push_back(pair<int, int>(stoi(processList[i]), stoi(processParamsList[i])));
+            this->bundlesMap[bundleName].push_back(pair<int, int>(processList[i], stoi(processParamsList[i])));
         }
         cout << "PMControl: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size() << " processes."
              << endl;
