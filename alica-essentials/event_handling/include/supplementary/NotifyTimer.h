@@ -1,21 +1,12 @@
-/*
- * NotifyTimer.h
- *
- *  Created on: Nov 24, 2014
- *      Author: Philipp
- */
+#pragma once
 
-#ifndef NOTIFYTIMER_H_
-#define NOTIFYTIMER_H_
+#include "ITrigger.h"
 
 #include <vector>
 #include <chrono>
 #include <thread>
 #include <condition_variable>
 #include <iostream>
-#include "ITrigger.h"
-
-using namespace std;
 
 namespace supplementary
 {
@@ -140,5 +131,3 @@ template<class NotificationClass>
 inline void supplementary::NotifyTimer<NotificationClass>::registerCV(condition_variable* condVar)
 {
 }
-
-#endif /* NOTIFYTIMER_H_ */

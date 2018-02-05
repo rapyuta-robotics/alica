@@ -1,14 +1,4 @@
-/*
- * AutoResetEvent.h
- *
- *  Created on: Jun 18, 2014
- *      Author: Paul Panin
- */
-
-#ifndef AUTORESETEVENT_H_
-#define AUTORESETEVENT_H_
-
-using namespace std;
+#pragma once
 
 #include <thread>
 #include <condition_variable>
@@ -34,11 +24,9 @@ namespace supplementary
 		AutoResetEvent& operator=(const AutoResetEvent&); // non-copyable
 		bool flag;
 
-		mutex protect;
-		mutex protectWatingThread;
-		condition_variable signal;
+		std::mutex protect;
+		std::mutex protectWatingThread;
+		std::condition_variable signal;
 	};
 
 } /* namespace supplementary */
-
-#endif /* AUTORESETEVENT_H_ */

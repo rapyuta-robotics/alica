@@ -1,19 +1,9 @@
-/*
- * ITrigger.h
- *
- *  Created on: Apr 7, 2015
- *      Author: Stefan Jakob
- */
-
-#ifndef SUPPLEMENTARY_EVENT_HANDLING_SRC_ITRIGGER_H_
-#define SUPPLEMENTARY_EVENT_HANDLING_SRC_ITRIGGER_H_
+#pragma once
 
 #include <map>
 #include <mutex>
 #include <condition_variable>
 #include <iostream>
-
-using namespace std;
 
 namespace supplementary
 {
@@ -24,17 +14,17 @@ namespace supplementary
 		virtual ~ITrigger()
 		{
 		}
-		void registerCV(condition_variable* condVar)
+		void registerCV(std::condition_variable* condVar)
 		{
-			lock_guard<mutex> lock(cvVec_mtx);
+			std::lock_guard<std::mutex> lock(cvVec_mtx);
 			registeredCVs[condVar] = false;
 		}
 		virtual void run(bool notifyAll = true) = 0;
-		bool isNotifyCalled(condition_variable* cv)
+		bool isNotifyCalled(std::condition_variable* cv)
 		{
 			return registeredCVs.find(cv) != registeredCVs.end() && registeredCVs[cv];
 		}
-		void setNotifyCalled(bool called, condition_variable* cv)
+		void setNotifyCalled(bool called, std::condition_variable* cv)
 		{
 			if (registeredCVs.find(cv) != registeredCVs.end())
 			{
@@ -59,11 +49,9 @@ namespace supplementary
 
 			}
 		}
-		mutex cv_mtx;
-		mutex cvVec_mtx;
-		map<condition_variable*, bool> registeredCVs;
+		std::mutex cv_mtx;
+		std::mutex cvVec_mtx;
+		std::map<std::condition_variable*, bool> registeredCVs;
 	};
 
 } /* namespace supplementary */
-
-#endif /* SUPPLEMENTARY_EVENT_HANDLING_SRC_ITRIGGER_H_ */

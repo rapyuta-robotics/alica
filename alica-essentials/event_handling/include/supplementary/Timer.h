@@ -1,21 +1,12 @@
-/*
- * Timer.h
- *
- *  Created on: Jun 27, 2014
- *      Author: Stephan Opfer
- */
+#pragma once
 
-#ifndef TIMER_H_
-#define TIMER_H_
-
-using namespace std;
+#include "supplementary/ITrigger.h"
 
 #include <vector>
 #include <chrono>
 #include <thread>
 #include <condition_variable>
 #include <iostream>
-#include "ITrigger.h"
 
 namespace supplementary
 {
@@ -39,13 +30,11 @@ namespace supplementary
 		void run(bool notifyAll = true);
 
 	private:
-		thread* runThread;
-		chrono::milliseconds msInterval; /** < The time between two fired events */
-		chrono::milliseconds msDelayedStart; /** < The time between starting the TimerEvent and the first fired event */
+		std::thread* runThread;
+		std::chrono::milliseconds msInterval; /** < The time between two fired events */
+		std::chrono::milliseconds msDelayedStart; /** < The time between starting the TimerEvent and the first fired event */
 		bool running, started, triggered;
-		condition_variable cv;
+		std::condition_variable cv;
 
 	};
 } /* namespace supplementary */
-
-#endif /* TIMER_H_ */

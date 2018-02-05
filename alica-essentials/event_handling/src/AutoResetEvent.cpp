@@ -1,11 +1,4 @@
-/*
- * AutoResetEvent.cpp
- *
- *  Created on: Jun 18, 2014
- *      Author:  Paul Panin
- */
-
-#include "AutoResetEvent.h"
+#include "supplementary/AutoResetEvent.h"
 
 namespace supplementary
 {
@@ -21,22 +14,22 @@ namespace supplementary
 	}
 	void AutoResetEvent::set()
 	{
-		lock_guard<mutex> lock(protect);
+		std::lock_guard<std::mutex> lock(protect);
 		flag = true;
 		signal.notify_one();
 	}
 
 	void AutoResetEvent::reset()
 	{
-		lock_guard<mutex> lock(protect);
+		std::lock_guard<std::mutex> lock(protect);
 		flag = false;
 	}
 
 	void AutoResetEvent::waitOne()
 	{
-		unique_lock<mutex> lk(protect);
+		std::unique_lock<std::mutex> lk(protect);
 		{
-			lock_guard<mutex> lockWaiting(protectWatingThread);
+			std::lock_guard<std::mutex> lockWaiting(protectWatingThread);
 			this->waitingThread++;
 		}
 		while (!flag)
@@ -44,14 +37,14 @@ namespace supplementary
 			signal.wait(lk);
 		}
 		{
-			lock_guard<mutex> lockWaiting(protectWatingThread);
+			std::lock_guard<std::mutex> lockWaiting(protectWatingThread);
 			this->waitingThread++;
 		}
 		flag = false;
 	}
 	bool AutoResetEvent::isThreadWaiting()
 	{
-		lock_guard<mutex> lockWaiting(protectWatingThread);
+		std::lock_guard<std::mutex> lockWaiting(protectWatingThread);
 		if (this->waitingThread > 0)
 		{
 			return true;
