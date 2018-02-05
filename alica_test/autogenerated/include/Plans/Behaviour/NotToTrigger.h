@@ -3,9 +3,10 @@
 
 #include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1429017274116) ENABLED START*/ //Add additional includes here
-#include <ITrigger.h>
-#include <SystemConfig.h>
 #include "TestWorldModel.h"
+
+#include <supplementary/ITrigger.h>
+#include <SystemConfig.h>
 /*PROTECTED REGION END*/
 namespace alica
 {
