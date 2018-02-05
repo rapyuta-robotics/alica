@@ -3,7 +3,7 @@
 
 #include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1428508297492) ENABLED START*/ //Add additional includes here
-#include <ITrigger.h>
+#include <supplementary/ITrigger.h>
 #include <SystemConfig.h>
 #include "TestWorldModel.h"
 /*PROTECTED REGION END*/

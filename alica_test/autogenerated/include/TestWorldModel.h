@@ -11,7 +11,7 @@
 using namespace std;
 
 #include <vector>
-#include <ITrigger.h>
+#include <supplementary/ITrigger.h>
 #include <SystemConfig.h>
 
 namespace alicaTests

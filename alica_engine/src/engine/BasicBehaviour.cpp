@@ -1,7 +1,6 @@
 #define BEH_DEBUG
 
 #include "engine/BasicBehaviour.h"
-#include "ITrigger.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/PlanBase.h"
@@ -14,7 +13,9 @@
 #include "engine/model/Plan.h"
 #include "engine/model/Task.h"
 #include "engine/model/Variable.h"
-#include <Timer.h>
+
+#include <supplementary/ITrigger.h>
+#include <supplementary/Timer.h>
 
 #include <iostream>
 
