@@ -62,7 +62,7 @@ namespace supplementary
          */
         const int getSize() const
         {
-            return (this->bufferSize < this->infoElementCounter) ? this->bufferSize : this->infoElementCounter;
+            return std::min(this->bufferSize, this->infoElementCounter);
         }
 
         /**
@@ -164,7 +164,7 @@ namespace supplementary
                 return nullptr;
             }
 
-            auto closest = std::make_shared<const InformationElement<T>>;
+            std::shared_ptr<const InformationElement<T>> closest = nullptr;
 
             InfoTime timeDiffOfClosest = std::numeric_limits<long long>::max();
             int numberOfAvailableElements = std::min(this->bufferSize, this->infoElementCounter);
@@ -252,8 +252,8 @@ namespace supplementary
     private:
         mutable std::mutex mtx_;
         std::shared_ptr<const InformationElement<T>> *ringBuffer; /**< Ring buffer of elements */
-        int bufferSize; /**< number of stored elements */
-        int index; /**< Current index of the last added element */
+        unsigned long long bufferSize; /**< number of stored elements */
+        unsigned long long index; /**< Current index of the last added element */
         unsigned long long infoElementCounter; /**< Counter of elements added to the buffer */
     };
 
