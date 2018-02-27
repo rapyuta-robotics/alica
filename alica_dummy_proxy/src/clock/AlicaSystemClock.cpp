@@ -1,10 +1,3 @@
-/*
- * AlicaSystemClock.cpp
- *
- *  Created on: Mar 13, 2015
- *      Author: Paul Panin
- */
-
 #include "clock/AlicaSystemClock.h"
 #include <time.h>
 #include <unistd.h>
