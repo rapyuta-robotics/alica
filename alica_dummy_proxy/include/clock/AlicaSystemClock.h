@@ -1,12 +1,4 @@
-/*
- * AlicaSystemClock.h
- *
- *  Created on: Mar 13, 2015
- *      Author: Paul Panin
- */
-
-#ifndef ALICA_ALICA_DUMMY_PROXY_INCLUDE_CLOCK_ALICASYSTEMCLOCK_H_
-#define ALICA_ALICA_DUMMY_PROXY_INCLUDE_CLOCK_ALICASYSTEMCLOCK_H_
+#pragma once
 
 #include "engine/IAlicaClock.h"
 namespace alica_dummy_proxy {
@@ -21,5 +13,3 @@ namespace alica_dummy_proxy {
 	};
 
 } /* namespace alica */
-
-#endif /* ALICA_ALICA_DUMMY_PROXY_INCLUDE_CLOCK_ALICASYSTEMCLOCK_H_ */
