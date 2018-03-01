@@ -14,8 +14,7 @@ find_package(catkin REQUIRED alica_engine)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES dummy_solver
-#  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
+  CATKIN_DEPENDS alica_engine
 )
 
 include_directories(

@@ -1,12 +1,4 @@
-/*
- * CGSolver.h
- *
- *  Created on: Oct 10, 2014
- *      Author: Philipp
- */
-
-#ifndef CGSOLVER_H_
-#define CGSOLVER_H_
+#pragma once
 
 #include <AutoDiff.h>
 #include <engine/constraintmodul/ISolver.h>
@@ -14,7 +6,7 @@
 #include <memory>
 #include <mutex>
 
-using namespace std;
+//#define CGSolver_DEBUG
 
 namespace alica
 {
@@ -48,5 +40,3 @@ namespace alica
 
 	} /* namespace Reasoner */
 } /* namespace Alica */
-
-#endif /* CGSOLVER_H_ */

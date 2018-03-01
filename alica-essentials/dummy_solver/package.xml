@@ -6,19 +6,11 @@
 
   <maintainer email="jakob@vs.uni-kassel.de">Stefan Jakob</maintainer>
 
-
   <license>MIT</license>
-
-
-  <!-- <url type="website">http://wiki.ros.org/dummy_solver</url> -->
 
   <depend>alica_engine</depend>
   <buildtool_depend>catkin</buildtool_depend>
 
-
-  <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <!-- Other tools can request additional information be placed here -->
-
   </export>
 </package>
