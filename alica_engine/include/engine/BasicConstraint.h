@@ -1,16 +1,6 @@
-/*
- * BasicContraint.h
- *
- *  Created on: Oct 8, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef ALICA_ALICA_ENGINE_SRC_ENGINE_BASICCONTRAINT_H_
-#define ALICA_ALICA_ENGINE_SRC_ENGINE_BASICCONTRAINT_H_
+#pragma once
 
 #include <memory>
-
-using namespace std;
 
 namespace alica
 {
@@ -22,9 +12,7 @@ namespace alica
 	public:
 		virtual ~BasicConstraint(){}
 
-		virtual void getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp) = 0;
+		virtual void getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp) = 0;
 	};
 
 } /* namespace alica */
-
-#endif /* ALICA_ALICA_ENGINE_SRC_ENGINE_BASICCONTRAINT_H_ */

@@ -1,12 +1,4 @@
-/*
- * Parameters.h
- *
- *  Created on: Oct 24, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef ALICA_ALICA_ENGINE_SRC_ENGINE_MODEL_PARAMETERS_H_
-#define ALICA_ALICA_ENGINE_SRC_ENGINE_MODEL_PARAMETERS_H_
+#pragma once
 
 #include <string>
 
@@ -20,16 +12,14 @@ namespace alica
 	public:
 		Parameter();
 		virtual ~Parameter();
-		string getKey();
-		void setKey(string key);
-		string getValue();
-		void setValue(string value);
+		std::string getKey();
+		void setKey(std::string key);
+		std::string getValue();
+		void setValue(std::string value);
 
 	protected:
-		string key;
-		string value;
+		std::string key;
+		std::string value;
 	};
 
 } /* namespace alica */
-
-#endif /* ALICA_ALICA_ENGINE_SRC_ENGINE_MODEL_PARAMETERS_H_ */

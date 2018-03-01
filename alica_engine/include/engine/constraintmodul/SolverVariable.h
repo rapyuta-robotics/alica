@@ -1,14 +1,4 @@
-/*
- * SolverVariable.h
- *
- *  Created on: Oct 20, 2014
- *      Author: Philipp Sperber
- */
-
-#ifndef SOLVERVARIABLE_H_
-#define SOLVERVARIABLE_H_
-
-//#include "engine/constraintmodul/SolverTerm.h"
+#pragma once
 
 namespace alica
 {
@@ -21,5 +11,3 @@ namespace alica
 	};
 
 } /* namespace alica */
-
-#endif /* SOLVERVARIABLE_H_ */

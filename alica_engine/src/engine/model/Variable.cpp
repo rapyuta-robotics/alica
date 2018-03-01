@@ -29,8 +29,8 @@ namespace alica
 
 	std::string Variable::toString()
 	{
-		stringstream ss;
-		ss << "[Variable: Name=" << name << " Id=" << id << endl;
+		std::stringstream ss;
+		ss << "[Variable: Name=" << name << " Id=" << id << std::endl;
 		return ss.str();
 	}
 

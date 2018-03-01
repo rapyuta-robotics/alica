@@ -1,10 +1,3 @@
-/*
- * Parameters.cpp
- *
- *  Created on: Oct 24, 2014
- *      Author: Stefan Jakob
- */
-
 #include <engine/model/Parameter.h>
 
 namespace alica
@@ -20,22 +13,22 @@ namespace alica
 	{
 	}
 
-	string Parameter::getKey()
+	std::string Parameter::getKey()
 	{
 		return key;
 	}
 
-	void Parameter::setKey(string key)
+	void Parameter::setKey(std::string key)
 	{
 		this->key = key;
 	}
 
-	string Parameter::getValue()
+	std::string Parameter::getValue()
 	{
 		return value;
 	}
 
-	void Parameter::setValue(string value)
+	void Parameter::setValue(std::string value)
 	{
 		this->value = value;
 	}
