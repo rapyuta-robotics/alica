@@ -1,17 +1,7 @@
-/*
- * IConstraintSolver.h
- *
- *  Created on: Sep 30, 2014
- *      Author: Philipp Sperber
- */
-
-#ifndef ICONSTRAINTSOLVER_H_
-#define ICONSTRAINTSOLVER_H_
+#pragma once
 
 #include <memory>
 #include <vector>
-
-using namespace std;
 
 namespace alica
 {
@@ -20,7 +10,7 @@ namespace alica
 	class Variable;
 	class SolverVariable;
 
-	class ISolver : public enable_shared_from_this<ISolver>
+	class ISolver : public std::enable_shared_from_this<ISolver>
 	{
 	public:
 		ISolver(AlicaEngine* ae) {
@@ -30,11 +20,11 @@ namespace alica
 		{
 		}
 
-		virtual bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls) = 0;
-		virtual bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results) = 0;
-		virtual shared_ptr<SolverVariable> createVariable(long id) = 0;
+		virtual bool existsSolution(std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) = 0;
+		virtual bool getSolution(std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<void*>& results) = 0;
+		virtual std::shared_ptr<SolverVariable> createVariable(long id) = 0;
 
-		virtual double utilityEstimate(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls) {
+		virtual double utilityEstimate(std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
 			return 0;
 		}
 
@@ -47,5 +37,3 @@ namespace alica
 	};
 
 } /* namespace alica */
-
-#endif /* ICONSTRAINTSOLVER_H_ */

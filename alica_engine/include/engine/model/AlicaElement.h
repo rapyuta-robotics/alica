@@ -1,18 +1,10 @@
-/*
- * PlanElement.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef ALICAELEMENT_H_
-#define ALICAELEMENT_H_
+#pragma once
 
 #include <stdio.h>
 #include <string>
 #include <sstream>
 #include <iostream>
-using namespace std;
+
 namespace alica
 {
 
@@ -25,14 +17,14 @@ namespace alica
 		AlicaElement();
 		virtual ~AlicaElement();
 
-		void setName(string name);
-		string getName() const;
-		void setComment(string comment);
-		string getComment();
+		void setName(std::string name);
+		std::string getName() const;
+		void setComment(std::string comment);
+		std::string getComment();
 		long getId() const;
 		void setId(long id);
 
-		virtual string toString() const;
+		virtual std::string toString() const;
 
 	protected:
 		/**
@@ -42,10 +34,8 @@ namespace alica
 		/**
 		 * This element's descriptive name.
 		 */
-		string name;
-		string comment;
+		std::string name;
+		std::string comment;
 	};
 
 } /* namespace Alica */
-
-#endif /* ALICAELEMENT_H_ */

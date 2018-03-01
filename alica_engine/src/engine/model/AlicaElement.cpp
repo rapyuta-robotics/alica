@@ -1,12 +1,4 @@
-/*
- * AlicaElement.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/AlicaElement.h"
-
 
 namespace alica
 {
@@ -20,19 +12,19 @@ namespace alica
 	{
 	}
 
-	void AlicaElement::setName(string name)
+	void AlicaElement::setName(std::string name)
 	{
 		this->name = name;
 	}
-	string AlicaElement::getName() const
+	std::string AlicaElement::getName() const
 	{
 		return this->name;
 	}
-	void AlicaElement::setComment(string comment)
+	void AlicaElement::setComment(std::string comment)
 	{
 		this->comment = comment;
 	}
-	string AlicaElement::getComment()
+	std::string AlicaElement::getComment()
 	{
 		return this->comment;
 	}
@@ -44,11 +36,11 @@ namespace alica
 	{
 		this->id = id;
 	}
-	string AlicaElement::toString() const
+	std::string AlicaElement::toString() const
 	{
-		stringstream ss;
-		ss << "ID: " << this->getId() << " Name: " << this->name << endl;
-		ss << "Comment: " << this->comment << endl;
+		std::stringstream ss;
+		ss << "ID: " << this->getId() << " Name: " << this->name << std::endl;
+		ss << "Comment: " << this->comment << std::endl;
 		return ss.str();
 	}
 
