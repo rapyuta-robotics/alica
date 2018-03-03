@@ -81,16 +81,15 @@ namespace alica
 			relevantStaticVariables.insert(relevantStaticVariables.end(), queriedStaticVariables.begin(),
 										   queriedStaticVariables.end());
 		}
-#ifdef Q_DEBUG
-		std::cout << "Query: queriedDomainVariables Size: " << queriedDomainVariables.size() << std::endl;
-#endif
+
 		if (!queriedDomainVariables.empty())
 		{
 			relevantDomainVariables.insert(relevantDomainVariables.end(), queriedDomainVariables.begin(),
 										   queriedDomainVariables.end());
 		}
 #ifdef Q_DEBUG
-		std::cout << "Query: relevantDomainVariables Size: " << relevantDomainVariables.size() << std::endl;
+		std::cout << "Query: Initial relevantStaticVariables Size: " << relevantStaticVariables.size() << std::endl;
+		std::cout << "Query: Initial relevantDomainVariables Size: " << relevantDomainVariables.size() << std::endl;
 #endif
 
 		// add static variables into the clean unique variable store
@@ -100,15 +99,13 @@ namespace alica
 		}
 
 #ifdef Q_DEBUG
-		cout << "Query: Starting Query with static Vars:";
-		cout << "Query: " << (*this->uniqueVarStore) << endl;
+		cout << "Query: Starting Query with static Vars:" << endl << (*this->uniqueVarStore) << endl;
 #endif
 		// Goes recursive upwards in the plan tree and does three steps on each level.
 		while (rp != nullptr && (relevantStaticVariables.size() > 0 || relevantDomainVariables.size() > 0))
 		{
 #ifdef Q_DEBUG
-			cout << "Query: Query at " << rp->getPlan()->getName() << endl;
-			cout << "Query: " << (*this->uniqueVarStore) << endl;
+			cout << "Query: Plantree-LVL of " << rp->getPlan()->getName() << endl << (*this->uniqueVarStore) << endl;
 #endif
 
 			//1. fill the query's static and domain variables, as well as its problem parts
@@ -147,7 +144,7 @@ namespace alica
 			}
 			if (parent && parent->getActiveState() != nullptr)
 			{
-				vector<Variable*> tmpVector = vector<Variable*>();
+				vector<Variable*> tmpVector;
 				for (Parametrisation* p : parent->getActiveState()->getParametrisation())
 				{
 					if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType())
@@ -161,7 +158,7 @@ namespace alica
 				/**
 				 * Overwrite relevantStaticVariables for having only the
 				 * static variables of the current plan tree level for
-				 * the next iteration. Each-iteration goes one level up.
+				 * the next iteration. Each while-iteration goes one level up.
 				 */
 				relevantStaticVariables = tmpVector;
 			}
@@ -233,29 +230,22 @@ namespace alica
 		}
 
 		// write all static variables into the out-parameter "relevantVariables"
-#ifdef Q_DEBUG
-		std::cout << "Query: RelevantVariables Size: " << relevantVariables.size() << std::endl;
-#endif
 		relevantVariables = uniqueVarStore->getAllRep();
-#ifdef Q_DEBUG
-		std::cout << "Query: RelevantVariables Size: " << relevantVariables.size() << std::endl;
-#endif
+
 		// the index of the first domain variable after the static variables
 		domOffset = relevantVariables.size();
+
 		// write all domain variables into the out-parameter "relevantVariables"
-#ifdef Q_DEBUG
-		std::cout << "Query: relevantDomainVariables Size: " << relevantDomainVariables.size() << std::endl;
-#endif
 		if (!relevantDomainVariables.empty())
 		{
 			relevantVariables.insert(relevantVariables.end(), relevantDomainVariables.begin(),
 									relevantDomainVariables.end());
 		}
-#ifdef Q_DEBUG
-		std::cout << "Query: RelevantVariables Size: " << relevantVariables.size() << std::endl;
-#endif
 
 #ifdef Q_DEBUG
+		std::cout << "Query: Number of relevant static variables: " << domOffset << std::endl;
+		std::cout << "Query: Number of relevant domain variables: " << relevantDomainVariables.size() << std::endl;
+		std::cout << "Query: Total number of relevant variables: " << relevantVariables.size() << std::endl;
 		cout << "Query: PrepTime: " << (ae->getIAlicaClock()->now() - time) / 10000.0 << endl;
 #endif
 		return true;
@@ -293,8 +283,6 @@ namespace alica
 		store = vector<vector<Variable*>>();
 	}
 
-
-
 	void UniqueVarStore::clear()
 	{
 		store.clear();
@@ -311,7 +299,7 @@ namespace alica
 	}
 
 	/**
-	 * Add the variable "toAdd" to the list of variables that contains the variable "representing".
+	 * Add the variable "toAdd" to the front of the list of variables that contains the variable "representing".
 	 * If such a list does not exist, a new list will be created.
 	 */
 	void UniqueVarStore::addVarTo(Variable* representing, Variable* toAdd)
@@ -327,7 +315,7 @@ namespace alica
 				}
 			}
 		}
-		vector<Variable*> nl = vector<Variable*>();
+		vector<Variable*> nl;
 		nl.insert(nl.begin(), representing);
 		nl.insert(nl.begin(), toAdd);
 		store.push_back(nl);

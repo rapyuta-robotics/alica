@@ -5,7 +5,6 @@
 #include "engine/Assignment.h"
 #include "engine/PlanBase.h"
 #include "engine/RunningPlan.h"
-#include "engine/teammanager/TeamManager.h"
 #include "engine/TeamObserver.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
@@ -13,6 +12,7 @@
 #include "engine/model/Plan.h"
 #include "engine/model/Task.h"
 #include "engine/model/Variable.h"
+#include "engine/teammanager/TeamManager.h"
 
 #include <supplementary/ITrigger.h>
 #include <supplementary/Timer.h>
@@ -84,13 +84,11 @@ shared_ptr<list<Variable *>> BasicBehaviour::getVariables()
 
 Variable *BasicBehaviour::getVariablesByName(string name)
 {
-    list<Variable *>::iterator it;
-    for (it = variables->begin(); it != variables->end(); it++)
+    for (auto variable : (*variables))
     {
-        Variable *v = *it;
-        if (v->getName() == name)
+        if (variable->getName() == name)
         {
-            return v;
+            return variable;
         }
     }
     return nullptr;
@@ -218,7 +216,8 @@ shared_ptr<vector<const supplementary::AgentID *>> BasicBehaviour::robotsInEntry
     shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr)
     {
-        if (((Plan *)cur->getPlan())->getEntryPoints().find(ep->getId()) != ((Plan *)cur->getPlan())->getEntryPoints().end())
+        if (((Plan *)cur->getPlan())->getEntryPoints().find(ep->getId()) !=
+            ((Plan *)cur->getPlan())->getEntryPoints().end())
         {
             return cur->getAssignment()->getRobotsWorking(ep);
         }
@@ -293,7 +292,8 @@ void BasicBehaviour::runInternal()
 #ifdef BEH_DEBUG
         chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
 #endif
-        // TODO: pass something like an eventarg (to be implemented) class-member, which could be set for an event triggered (to be implemented) behaviour.
+        // TODO: pass something like an eventarg (to be implemented) class-member, which could be set for an event
+        // triggered (to be implemented) behaviour.
         try
         {
             if (behaviourTrigger == nullptr)
@@ -314,10 +314,12 @@ void BasicBehaviour::runInternal()
         BehaviourConfiguration *conf = dynamic_cast<BehaviourConfiguration *>(this->runningPlan->getPlan());
         if (conf->isEventDriven())
         {
-            double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / conf->getFrequency() * 1000.0;
+            double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 -
+                          1.0 / conf->getFrequency() * 1000.0;
             if (dura > 0.1)
             {
-                string err = string("BB: Behaviour ") + conf->getBehaviour()->getName() + string(" exceeded runtime by \t") + to_string(dura) + string("ms!");
+                string err = string("BB: Behaviour ") + conf->getBehaviour()->getName() +
+                             string(" exceeded runtime by \t") + to_string(dura) + string("ms!");
                 sendLogMessage(2, err);
                 // cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura
                 //	<< "ms!" << endl;
@@ -380,7 +382,7 @@ void BasicBehaviour::sendLogMessage(int level, string &message)
 
 void BasicBehaviour::setEngine(AlicaEngine *engine)
 {
-	this->engine = engine;
+    this->engine = engine;
 }
 
 } /* namespace alica */

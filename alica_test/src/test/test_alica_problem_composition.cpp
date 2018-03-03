@@ -85,7 +85,6 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
 	this_thread::sleep_for(chrono::milliseconds (100));
 
 	auto queryBehaviour1 = dynamic_pointer_cast<QueryBehaviour1>( ae->getPlanBase()->getDeepestNode()->getBasicBehaviour());
-	queryBehaviour1->query->getRelevantStaticVariables();
 	auto allReps = queryBehaviour1->query->getUniqueVariableStore()->getAllRep();
 	for (auto& rep : allReps)
 	{

@@ -1,15 +1,14 @@
-/*
- * ConstraintTestPlanDummySolver.cpp
- *
- *  Created on: Nov 24, 2014
- *      Author: Philipp
- */
-
 #include "ConstraintTestPlanDummySolver.h"
 #include <engine/model/Variable.h>
 #include <engine/constraintmodul/SolverVariable.h>
 
+#include <string>
 #include <iostream>
+
+using std::vector;
+using std::shared_ptr;
+using std::make_shared;
+using std::string;
 
 namespace alica
 {
@@ -21,13 +20,10 @@ namespace alica
 		ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(AlicaEngine *ae) :
 				ISolver(ae)
 		{
-			// TODO Auto-generated constructor stub
-
 		}
 
 		ConstraintTestPlanDummySolver::~ConstraintTestPlanDummySolver()
 		{
-			// TODO Auto-generated destructor stub
 		}
 
 		bool ConstraintTestPlanDummySolver::existsSolution(vector<Variable*>& vars,
