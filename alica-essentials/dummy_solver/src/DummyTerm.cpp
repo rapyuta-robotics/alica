@@ -1,4 +1,5 @@
-#include "DummyTerm.h"
+#include "alica/reasoner/DummyTerm.h"
+#include "alica/reasoner/DummyVariable.h"
 
 namespace alica
 {
@@ -13,29 +14,29 @@ DummyTerm::~DummyTerm()
 {
 }
 
-void DummyTerm::setVariable(std::shared_ptr<alica::reasoner::DummyVariable> variable, std::string value)
+void DummyTerm::setVariable(std::shared_ptr<DummyVariable> variable, std::string value)
 {
-    auto mapEntry = this->variableValueMap.find(variable.id);
+    auto mapEntry = this->variableValueMap.find(variable->getID());
     if (mapEntry != this->variableValueMap.end())
     {
         mapEntry->second = value;
     }
     else
     {
-        this->variableValueMap.emplace(variable.id, value);
+        this->variableValueMap.emplace(variable->getID(), value);
     }
 }
 
-std::string DummyTerm::getValue(std::shared_ptr<alica::reasoner::DummyVariable> variable)
+std::string DummyTerm::getValue(std::shared_ptr<DummyVariable> variable)
 {
-    auto mapEntry = this->variableValueMap.find(variable.id);
+    auto mapEntry = this->variableValueMap.find(variable->getID());
     if (mapEntry != this->variableValueMap.end())
     {
         return mapEntry->second;
     }
     else
     {
-        return "";
+        return DummyVariable::NO_VALUE;
     }
 }
 

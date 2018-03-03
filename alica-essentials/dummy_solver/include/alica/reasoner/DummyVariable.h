@@ -14,9 +14,13 @@ class DummyVariable : public DummyTerm, public alica::SolverVariable
   public:
     DummyVariable(long representingVariableID);
     virtual ~DummyVariable();
+    long getID() const;
 
+    static long ID_COUNTER;
+    static std::string NO_VALUE;
   private:
     long representingVariableID;
+    long id;
 };
 
 } /* namespace reasoner */

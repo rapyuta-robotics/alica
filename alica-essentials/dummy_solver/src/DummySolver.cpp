@@ -28,8 +28,8 @@ bool DummySolver::existsSolution(std::vector<Variable *> &vars, std::vector<std:
 bool DummySolver::getSolution(std::vector<Variable *> &vars, std::vector<std::shared_ptr<ProblemDescriptor>> &calls,
                               std::vector<void *> &results)
 {
-	std::vector<std::shared_ptr<DummyVariable>> variables;
-	variables.resize(vars.size());
+    std::vector<std::shared_ptr<DummyVariable>> dummyVariables;
+    dummyVariables.reserve(vars.size());
     for (auto variable : vars)
     {
         auto dummyVariable = std::dynamic_pointer_cast<alica::reasoner::DummyVariable>(variable->getSolverVar());
@@ -37,8 +37,10 @@ bool DummySolver::getSolution(std::vector<Variable *> &vars, std::vector<std::sh
         {
             std::cerr << "DummySolver: Variable type does not match Solver type!" << std::endl;
         }
-        variables.push_back(dummyVariable);
+        dummyVariables.push_back(dummyVariable);
     }
+
+    std::map<long, std::string> dummyVariableValueMap;
 
     for (auto &c : calls)
     {
@@ -48,15 +50,33 @@ bool DummySolver::getSolution(std::vector<Variable *> &vars, std::vector<std::sh
             std::cerr << "DummySolver: Constraint type not compatible with selected solver!" << std::endl;
             return false;
         }
+        for (auto dummyVariable : dummyVariables)
+        {
+            std::string value = constraintTerm->getValue(dummyVariable);
+            auto mapEntry = dummyVariableValueMap.find(dummyVariable->getID());
+            if (mapEntry == dummyVariableValueMap.end())
+            {
+                // insert new value
+            	dummyVariableValueMap.emplace(dummyVariable->getID(), value);
+            	continue;
+            }
 
-        constraintTerm->getValue(dummyVariable);
+            // check consistence of values
+            if (mapEntry->second != value)
+            {
+                return false;
+            }
+        }
     }
-    // TODO: compare set values of variables
 
     // TODO: set results
-}
+    results.reserve(dummyVariables.size());
+    for (auto dummyVariable : dummyVariables)
+    {
+    	results.push_back(new std::string(dummyVariableValueMap[dummyVariable->getID()]));
+    }
 
-return true;
+    return true;
 }
 
 std::shared_ptr<SolverVariable> DummySolver::createVariable(long representingVariableID)
