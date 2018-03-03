@@ -1,14 +1,8 @@
-/*
- * ConstraintTestPlanDummySolver.h
- *
- *  Created on: Nov 24, 2014
- *      Author: Philipp
- */
-
-#ifndef CONSTRAINTTESTPLANDUMMYSOLVER_H_
-#define CONSTRAINTTESTPLANDUMMYSOLVER_H_
+#pragma once
 
 #include <engine/constraintmodul/ISolver.h>
+#include <vector>
+#include <memory>
 
 namespace alica
 {
@@ -21,10 +15,10 @@ namespace alica
 			ConstraintTestPlanDummySolver(AlicaEngine *ae);
 			virtual ~ConstraintTestPlanDummySolver();
 
-			bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls);
-			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls,
-								vector<void*>& results);
-			shared_ptr<SolverVariable> createVariable(long id);
+			bool existsSolution(std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
+			bool getSolution(std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+								std::vector<void*>& results);
+			std::shared_ptr<SolverVariable> createVariable(long id);
 
 			static int getExistsSolutionCallCounter();
 			static int getGetSolutionCallCounter();
@@ -35,5 +29,3 @@ namespace alica
 	} /* namespace reasoner */
 
 } /* namespace alica */
-
-#endif /* CONSTRAINTTESTPLANDUMMYSOLVER_H_ */
