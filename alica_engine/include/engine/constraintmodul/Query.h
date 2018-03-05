@@ -1,6 +1,6 @@
 #pragma once
 
-#define Q_DEBUG
+//#define Q_DEBUG
 
 #include "engine/AlicaEngine.h"
 #include "engine/BasicBehaviour.h"

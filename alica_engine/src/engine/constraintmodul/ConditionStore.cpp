@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-#define CS_DEBUG
+//#define CS_DEBUG
 
 namespace alica
 {
