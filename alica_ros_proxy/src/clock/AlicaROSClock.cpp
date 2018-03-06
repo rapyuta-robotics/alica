@@ -1,10 +1,3 @@
-/*
- * AlicaROSClock.cpp
- *
- *  Created on: Jul 18, 2014
- *      Author: Paul Panin
- */
-
 #include "clock/AlicaROSClock.h"
 #include "ros/time.h"
 

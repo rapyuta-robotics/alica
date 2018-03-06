@@ -1,12 +1,5 @@
-/*
- * IAlicaTime.h
- *
- *  Created on: Jul 16, 2014
- *      Author: snook
- */
+#pragma once
 
-#ifndef IALICATIME_H_
-#define IALICATIME_H_
 namespace alica
 {
 	typedef signed long long AlicaTime;
@@ -20,4 +13,3 @@ namespace alica
 	};
 
 }
-#endif /* IALICATIME_H_ */

@@ -1,12 +1,4 @@
-/*
- * AlicaROSClock.h
- *
- *  Created on: Jul 18, 2014
- *      Author: Paul Panin
- */
-
-#ifndef ALICAROSCLOCK_H_
-#define ALICAROSCLOCK_H_
+#pragma
 
 #include <engine/IAlicaClock.h>
 
@@ -23,5 +15,3 @@ namespace alicaRosProxy
 	};
 
 } /* namespace alicaRosProxy */
-
-#endif /* ALICAROSCLOCK_H_ */
