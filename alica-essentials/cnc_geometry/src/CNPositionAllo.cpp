@@ -78,7 +78,7 @@ namespace geometry
 
     CNPointAllo CNPositionAllo::getPoint() const
     {
-        return CNPointAllo(this->x, this->y, 0);
+        return CNPointAllo(this->x, this->y);
     }
 
     CNPositionAllo CNPositionAllo::operator+(const CNVecAllo &right) const
@@ -93,12 +93,12 @@ namespace geometry
 
     CNVecAllo CNPositionAllo::operator-(const CNPositionAllo &right) const
     {
-        return CNVecAllo(this->x - right.x, this->y - right.y, this->theta);
+        return CNVecAllo(this->x - right.x, this->y - right.y);
     }
 
     CNVecAllo CNPositionAllo::operator-(const CNPointAllo &right) const
     {
-        return CNVecAllo(this->x - right.x, this->y - right.y, this->theta);
+        return CNVecAllo(this->x - right.x, this->y - right.y);
     }
 
 } /* namespace geometry */
