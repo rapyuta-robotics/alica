@@ -18,7 +18,7 @@ Emphasize readability. Code will be read many times, but only written once.
 ## Attitude
 
 There may be plenty of code violating this convention. Do not use this as justification to deviate from the style guide.
-Instead, use common courtesy and try to leave a place cleaner or at least as clean than you entered it.
+Instead, use common courtesy and try to leave a place cleaner or at least as clean as you entered it.
 
 
 
