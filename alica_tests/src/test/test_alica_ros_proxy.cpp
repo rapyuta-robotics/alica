@@ -1,19 +1,20 @@
+#include <iostream>
+#include <typeinfo>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
-#include "engine/IAlicaCommunication.h"
-#include "engine/model/Behaviour.h"
-#include "engine/PlanRepository.h"
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
-#include  "engine/DefaultUtilityFunction.h"
+#include "engine/IAlicaCommunication.h"
+#include "engine/PlanRepository.h"
 #include "engine/model/Plan.h"
+#include "engine/DefaultUtilityFunction.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
 
-class AlicaEngineTestBehPool : public ::testing::Test
+class PlanBaseTest : public ::testing::Test
 {
 protected:
 	supplementary::SystemConfig* sc;
@@ -29,13 +30,15 @@ protected:
 		string path = supplementary::FileSystem::getSelfPath();
 		int place = path.rfind("devel");
 		path = path.substr(0, place);
-		path = path + "src/alica/alica_test/src/test";
+		path = path + "src/alica/alica_tests/src/test";
 
 		// bring up the SystemConfig with the corresponding path
 		sc = supplementary::SystemConfig::getInstance();
+		sc->setHostname("nase");
 		sc->setRootPath(path);
 		sc->setConfigPath(path + "/etc");
 		sc->setHostname("nase");
+
 
 		// setup the engine
 		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "MasterPlan", ".", false);
@@ -45,33 +48,27 @@ protected:
 		crc = new alica::ConstraintCreator();
 		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+		ae->init(bc, cc, uc, crc);
 	}
 
 	virtual void TearDown()
 	{
 		ae->shutdown();
 		sc->shutdown();
-		delete ae->getCommunicator();
 		delete ae->getIAlicaClock();
+		delete ae->getCommunicator();
 		delete cc;
 		delete bc;
 		delete uc;
 		delete crc;
 	}
 };
-/**
- * Tests the initialisation of the behaviourPool
- */
-TEST_F(AlicaEngineTestBehPool, behaviourPoolInit)
+// Declare a test
+TEST_F(PlanBaseTest, planBaseTest)
 {
-	EXPECT_TRUE(ae->init(bc, cc, uc, crc))
-			<< "Unable to initialise the Alica Engine!";
-	auto behaviours = ae->getPlanRepository()->getBehaviours();
-	alica::BehaviourPool* bp = ae->getBehaviourPool();
-	for (auto behaviourPair : behaviours)
-	{
-		cout << "Behaviour: " << behaviourPair.second->getName() << endl;
-	}
-
+	//TODO test something
+	ae->start();
+	sleep(1);
 }
+
 

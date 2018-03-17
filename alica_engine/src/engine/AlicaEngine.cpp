@@ -34,7 +34,8 @@ namespace alica
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(supplementary::AgentIDManager *idManager, string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine)
+AlicaEngine::AlicaEngine(supplementary::AgentIDManager *idManager, string roleSetName, string masterPlanName,
+                         string roleSetDir, bool stepEngine)
     : stepCalled(false)
     , planBase(nullptr)
     , planSelector(nullptr)
@@ -374,7 +375,7 @@ void AlicaEngine::setStepEngine(bool stepEngine)
  */
 void AlicaEngine::abort(string msg) const
 {
-    cerr << "ABORT: " << msg << endl;
+    std::cerr << "ABORT: " << msg << std::endl;
     exit(EXIT_FAILURE);
 }
 

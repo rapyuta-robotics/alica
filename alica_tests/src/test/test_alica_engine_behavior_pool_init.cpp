@@ -1,18 +1,19 @@
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaClock.h>
+#include "engine/IAlicaCommunication.h"
+#include "engine/model/Behaviour.h"
+#include "engine/PlanRepository.h"
+#include <clock/AlicaROSClock.h>
+#include <communication/AlicaRosCommunication.h>
+#include  "engine/DefaultUtilityFunction.h"
+#include "engine/model/Plan.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include <clock/AlicaROSClock.h>
-#include "engine/PlanRepository.h"
-#include "engine/DefaultUtilityFunction.h"
-#include "engine/model/Plan.h"
-#include <communication/AlicaDummyCommunication.h>
-#include <clock/AlicaSystemClock.h>
 
-class AlicaEngineTestInit : public ::testing::Test
+class AlicaEngineTestBehPool : public ::testing::Test
 {
 protected:
 	supplementary::SystemConfig* sc;
@@ -28,7 +29,7 @@ protected:
 		string path = supplementary::FileSystem::getSelfPath();
 		int place = path.rfind("devel");
 		path = path.substr(0, place);
-		path = path + "src/alica/alica_test/src/test";
+		path = path + "src/alica/alica_tests/src/test";
 
 		// bring up the SystemConfig with the corresponding path
 		sc = supplementary::SystemConfig::getInstance();
@@ -37,34 +38,40 @@ protected:
 		sc->setHostname("nase");
 
 		// setup the engine
-		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "MasterPlan",".", false);
+		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "MasterPlan", ".", false);
 		bc = new alica::BehaviourCreator();
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
 		crc = new alica::ConstraintCreator();
-		ae->setIAlicaClock(new alica_dummy_proxy::AlicaSystemClock());
-		ae->setCommunicator(new alica_dummy_proxy::AlicaDummyCommunication(ae));
+		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 	}
 
 	virtual void TearDown()
 	{
 		ae->shutdown();
 		sc->shutdown();
-		delete ae->getIAlicaClock();
 		delete ae->getCommunicator();
+		delete ae->getIAlicaClock();
 		delete cc;
+		delete bc;
 		delete uc;
 		delete crc;
-		delete bc;
 	}
 };
-
 /**
- * Initialises an instance of the AlicaEngine and shuts it down again. This test is nice for basic memory leak testing.
+ * Tests the initialisation of the behaviourPool
  */
-TEST_F(AlicaEngineTestInit, initAndShutdown)
+TEST_F(AlicaEngineTestBehPool, behaviourPoolInit)
 {
-	EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
+	EXPECT_TRUE(ae->init(bc, cc, uc, crc))
+			<< "Unable to initialise the Alica Engine!";
+	auto behaviours = ae->getPlanRepository()->getBehaviours();
+	alica::BehaviourPool* bp = ae->getBehaviourPool();
+	for (auto behaviourPair : behaviours)
+	{
+		cout << "Behaviour: " << behaviourPair.second->getName() << endl;
+	}
 
 }
 
