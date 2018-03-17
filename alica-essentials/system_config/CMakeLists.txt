@@ -44,7 +44,6 @@ if (NOT catkin_FOUND)
 endif(NOT catkin_FOUND)
 
 # SYSTEM_CONFIG TESTS
-enable_testing()
 find_package(GTest REQUIRED)
 include_directories(BEFORE
   ${GTEST_INCLUDE_DIRS}
