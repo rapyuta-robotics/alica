@@ -39,4 +39,4 @@ include_directories(BEFORE
   ${GTEST_INCLUDE_DIRS}
 )
 add_executable(${PROJECT_NAME}-tests test/test_event_handling.cpp)
-target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} pthread gtest ${GTEST_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} pthread ${GTEST_LIBRARIES})
