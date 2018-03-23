@@ -56,8 +56,9 @@ namespace alica
         double freq = (*sc)["Alica"]->get<double>("Alica.EngineFrequency", NULL);
         double minbcfreq = (*sc)["Alica"]->get<double>("Alica.MinBroadcastFrequency", NULL);
         double maxbcfreq = (*sc)["Alica"]->get<double>("Alica.MaxBroadcastFrequency", NULL);
+
         _loopTime = (AlicaTime)fmax(1000000, lround(1.0 / freq * 1000000000));
-        if (_loopTime >= 1000000)
+        if (_loopTime <= 1000000)
         {
             cerr << "PB: ALICA should not be used with more than 1000Hz -> 1000Hz assumed" << endl;
         }
