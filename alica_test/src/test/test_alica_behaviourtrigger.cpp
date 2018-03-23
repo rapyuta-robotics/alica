@@ -10,7 +10,7 @@
 #include <communication/AlicaRosCommunication.h>
 #include <mutex>
 #include <condition_variable>
-#include "EventTrigger.h"
+#include <supplementary/EventTrigger.h>
 #include <SystemConfig.h>
 #include <engine/BehaviourPool.h>
 #include <engine/BasicBehaviour.h>
