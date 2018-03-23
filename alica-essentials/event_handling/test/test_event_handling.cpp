@@ -9,8 +9,8 @@
 #include <thread>
 #include <string>
 
-#include "AutoResetEvent.h"
-#include "Timer.h"
+#include <supplementary/AutoResetEvent.h>
+#include <supplementary/Timer.h>
 
 using namespace supplementary;
 
@@ -21,8 +21,8 @@ class EventTest : public ::testing::Test
 {
 public:
 	int callbackInt = 0;
-	condition_variable* cv;
-	mutex cv_mtx;
+	std::condition_variable* cv;
+	std::mutex cv_mtx;
 
 	static void otherThread(std::string which)
 	{
@@ -45,23 +45,23 @@ public:
 
 TEST_F(EventTest, timerEvent)
 {
-	this->cv = new condition_variable();
-	unique_lock<mutex> lck(cv_mtx);
+	this->cv = new std::condition_variable();
+	std::unique_lock<std::mutex> lck(cv_mtx);
 
 	Timer timerEvent(1000, 1000);
 	timerEvent.registerCV(this->cv);
 	timerEvent.start();
 
-	cv->wait_for(lck, chrono::seconds(5), [&]
+	cv->wait_for(lck, std::chrono::seconds(5), [this]
 	{
 		this->callback();
-		cout << "callbackInt is " << callbackInt << endl;
+		std::cout << "callbackInt is " << callbackInt << std::endl;
 		return callbackInt == 3;
 	});
 
 	timerEvent.stop();
 
-	EXPECT_EQ(3, callbackInt) << "WRONG value of times!" << endl;
+	EXPECT_EQ(3, callbackInt) << "WRONG value of times!" << std::endl;
 }
 
 // TODO cleanup this test...
