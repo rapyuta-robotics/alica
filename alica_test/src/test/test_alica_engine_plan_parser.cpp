@@ -773,11 +773,3 @@ TEST_F(AlicaEngineTest, planWriter)
 	cout << "AlicaEngineTest, planWriter: writing plans done." << endl;
 }
 
-int main(int argc, char **argv)
-{
-	testing::InitGoogleTest(&argc, argv);
-	ros::init(argc, argv, "AlicaEngine");
-	bool ret = RUN_ALL_TESTS();
-	ros::shutdown();
-	return ret;
-}
