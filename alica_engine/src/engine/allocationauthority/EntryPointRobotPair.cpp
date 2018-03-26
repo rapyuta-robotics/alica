@@ -37,8 +37,9 @@ void EntryPointRobotPair::setRobot(const supplementary::AgentID* robot)
 
 bool EntryPointRobotPair::operator==(const EntryPointRobotPair& other) const
 {
-    if (other._entryPoint->getId() != _entryPoint->getId())
+    if (other._entryPoint != _entryPoint) { //entrypoints are supposed to be uniquely instantiated.
         return false;
+    }
     return (*other._robot == *_robot);
 }
 
