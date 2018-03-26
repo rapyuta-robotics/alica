@@ -31,7 +31,6 @@
   
 
   <test_depend>gtest</test_depend>
-  <test_depend>autogen_code</test_depend>
   <export>
   </export>
 </package>
