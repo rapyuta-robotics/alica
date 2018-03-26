@@ -15,46 +15,50 @@
 #include <memory>
 #include <algorithm>
 
-using namespace std;
+#include "EntryPointRobotPair.h"
+
 namespace alica
 {
 
-	class EntryPointRobotPair;
 
-	/**
-	 * A representation of the difference between two allocations
-	 */
-	class AllocationDifference
-	{
-	public:
-		AllocationDifference();
-		virtual ~AllocationDifference();
-		enum Reason {message, utility, empty};
-		AllocationDifference::Reason getReason();
-		void setReason(AllocationDifference::Reason reason);
-		bool isEmpty();
-		void reset();
-		void applyDifference(AllocationDifference* other);
-		string toString();
-		vector<shared_ptr<EntryPointRobotPair>>& getAdditions();
-		void setAdditions(vector<shared_ptr<EntryPointRobotPair>> additions);
-		vector<shared_ptr<EntryPointRobotPair>>& getSubtractions();
-		void setSubtractions(vector<shared_ptr<EntryPointRobotPair>> subtractions);
+    /**
+     * A representation of the difference between two allocations
+     */
+    class AllocationDifference final
+    {
+    public:
+        AllocationDifference();
+        ~AllocationDifference();
+        enum Reason {message, utility, empty};
+        AllocationDifference::Reason getReason() const;
+        void setReason(AllocationDifference::Reason reason);
+        bool isEmpty() const;
+        void reset();
+        void applyDifference(const AllocationDifference& other);
+        std::string toString() const;
 
-	protected:
-		/**
-		 * Denoting the reason for an allocation switch
-		 */
-		AllocationDifference::Reason reason;
-		vector<shared_ptr<EntryPointRobotPair>> additions;
-		vector<shared_ptr<EntryPointRobotPair>> subtractions;
+        const std::vector<EntryPointRobotPair>& getAdditions() const;
+        std::vector<EntryPointRobotPair>& editAdditions();
 
-	};
+        void setAdditions(const vector<EntryPointRobotPair>& additions);
+        const std::vector<EntryPointRobotPair>& getSubtractions() const;
+        std::vector<EntryPointRobotPair>& editSubtractions();
+        void setSubtractions(const vector<EntryPointRobotPair>& subtractions);
+
+    private:
+        std::vector<EntryPointRobotPair> _additions;
+        std::vector<EntryPointRobotPair> _subtractions;
+        /**
+         * Denoting the reason for an allocation switch
+         */
+        AllocationDifference::Reason _reason;
+
+    };
 
 } /* namespace alica */
 
 
-//TODO this about other hash calculation
+//TODO Get rid of this, toString was meant to be a debug facility.
 namespace std
 {
     template<>

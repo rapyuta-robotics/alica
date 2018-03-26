@@ -2,45 +2,44 @@
 
 namespace alica
 {
-	EntryPointRobotPair::~EntryPointRobotPair()
-	{
-	}
 
-	EntryPoint* EntryPointRobotPair::getEntryPoint()
-	{
-		return entryPoint;
-	}
+EntryPointRobotPair::EntryPointRobotPair(EntryPoint* ep, const supplementary::AgentID* r)
+    : _entryPoint(ep)
+    , _robot(r)
+{
+}
 
-	void EntryPointRobotPair::setEntryPoint(EntryPoint* entryPoint)
-	{
-		this->entryPoint = entryPoint;
-	}
+EntryPointRobotPair::~EntryPointRobotPair()
+{
+}
 
-	const supplementary::AgentID* EntryPointRobotPair::getRobot()
-	{
-		return robot;
-	}
+EntryPoint* EntryPointRobotPair::getEntryPoint() const
+{
+    return _entryPoint;
+}
 
-	EntryPointRobotPair::EntryPointRobotPair(EntryPoint* ep, const supplementary::AgentID* r)
-	{
-		this->entryPoint = ep;
-		this->robot = r;
-	}
+void EntryPointRobotPair::setEntryPoint(EntryPoint* entryPoint)
+{
+    _entryPoint = entryPoint;
+}
 
-	void EntryPointRobotPair::setRobot(const supplementary::AgentID* robot)
-	{
-		this->robot = robot;
-	}
+const supplementary::AgentID* EntryPointRobotPair::getRobot() const
+{
+    return _robot;
+}
 
-	bool EntryPointRobotPair::equals(std::shared_ptr<EntryPointRobotPair> thisOne, std::shared_ptr<EntryPointRobotPair> other)
-	{
-		if (other == nullptr)
-		{
-			return false;
-		}
-		if (other->entryPoint->getId() != thisOne->entryPoint->getId())
-			return false;
-		return (*(other->getRobot()) == *(thisOne->robot));
-	}
+
+
+void EntryPointRobotPair::setRobot(const supplementary::AgentID* robot)
+{
+    _robot = robot;
+}
+
+bool EntryPointRobotPair::operator==(const EntryPointRobotPair& other) const
+{
+    if (other._entryPoint->getId() != _entryPoint->getId())
+        return false;
+    return (*other._robot == *_robot);
+}
 
 } /* namespace alica */
