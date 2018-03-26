@@ -195,8 +195,7 @@ void alica::CycleManager::setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_
             {
                 if (newRobots == nullptr || find_if(newRobots->begin(), newRobots->end(), [&oldId](const supplementary::AgentID *id) { return *oldId == *id; }) == newRobots->end())
                 {
-                    this->allocationHistory[this->newestAllocationDifference]->getSubtractions().push_back(
-                        shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, oldId)));
+                    this->allocationHistory[this->newestAllocationDifference]->editSubtractions().emplace_back(ep, oldId);
                 }
             }
             if (newRobots != nullptr)
@@ -205,8 +204,7 @@ void alica::CycleManager::setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_
                 {
                     if (find_if(oldRobots->begin(), oldRobots->end(), [&newId](const supplementary::AgentID *id) { return *newId == *id; }) == oldRobots->end())
                     {
-                        this->allocationHistory[this->newestAllocationDifference]->getAdditions().push_back(
-                            shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, newId)));
+                        this->allocationHistory[this->newestAllocationDifference]->editAdditions().emplace_back(ep, newId);
                     }
                 }
             }
@@ -399,18 +397,17 @@ bool CycleManager::detectAllocationCycle()
     int cyclesFound = 0;
     int count = 0;
     AllocationDifference *utChange = nullptr;
-    shared_ptr<AllocationDifference> temp = make_shared<AllocationDifference>();
+    AllocationDifference temp;
     lock_guard<mutex> lock(this->allocationHistoryMutex);
 
-    for (int i = this->newestAllocationDifference; count < this->allocationHistory.size(); i--)
+    for (int i = this->newestAllocationDifference; count < this->allocationHistory.size(); --i)
     {
-        count++;
+        ++count;
         if (i < 0)
         {
             i = this->allocationHistory.size() - 1;
         }
-        //				cout << "CYCLE MANAGER: REASON " << this->allocationHistory[i]->getReason() << " : "
-        //<< AllocationDifference::Reason::message << endl;
+
         if (this->allocationHistory[i]->getReason() == AllocationDifference::Reason::utility)
         {
             if (utChange != nullptr)
@@ -418,8 +415,8 @@ bool CycleManager::detectAllocationCycle()
                 return false;
             }
             utChange = this->allocationHistory[i];
-            temp->reset();
-            temp->applyDifference(utChange);
+            temp.reset();
+            temp.applyDifference(*utChange);
         }
         else
         {
@@ -431,10 +428,10 @@ bool CycleManager::detectAllocationCycle()
             {
                 continue;
             }
-            temp->applyDifference(this->allocationHistory[i]);
-            if (temp->isEmpty())
+            temp.applyDifference(*this->allocationHistory[i]);
+            if (temp.isEmpty())
             {
-                cyclesFound++;
+                ++cyclesFound;
                 if (cyclesFound > maxAllocationCycles)
                 {
                     for (int k = 0; k < this->allocationHistory.size(); k++)

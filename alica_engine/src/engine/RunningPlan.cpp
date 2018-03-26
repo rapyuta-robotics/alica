@@ -834,8 +834,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
                 {
                     this->getAssignment()->removeRobot(spt->getRobotId());
                     ret = true;
-                    aldif->getSubtractions().push_back(
-                        shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, spt->getRobotId())));
+                    aldif->editSubtractions().emplace_back(ep, spt->getRobotId());
                 }
             }
         }
@@ -855,8 +854,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
                 else
                 { // robot was not expected to be here during protected assignment time, add it.
                     this->getAssignment()->addRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
-                    aldif->getAdditions().push_back(shared_ptr<EntryPointRobotPair>(
-                        new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId())));
+                    aldif->editAdditions().emplace_back(spt->getEntryPoint(), spt->getRobotId());
                 }
             }
             else
@@ -865,11 +863,10 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
                 ret |= this->getAssignment()->updateRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
                 if (spt->getEntryPoint() != ep)
                 {
-                    aldif->getAdditions().push_back(shared_ptr<EntryPointRobotPair>(
-                        new EntryPointRobotPair(spt->getEntryPoint(), spt->getRobotId())));
-                    if (ep != nullptr)
-                        aldif->getSubtractions().push_back(
-                            shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, spt->getRobotId())));
+                    aldif->editAdditions().emplace_back(spt->getEntryPoint(), spt->getRobotId());
+                    if (ep != nullptr) {
+                        aldif->editSubtractions().emplace_back(ep, spt->getRobotId());
+                    }
                 }
             }
         }
@@ -908,8 +905,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
                 {
                     rem.push_back(rob);
                     // this.Assignment.RemoveRobot(rob);
-                    aldif->getSubtractions().push_back(
-                        shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, rob)));
+                    aldif->editSubtractions().emplace_back(ep, rob);
                     ret = true;
                 }
             }
@@ -935,8 +931,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
                             [&rob](const supplementary::AgentID *id) { return *rob == *id; }) == availableAgents.end())
                 {
                     rem.push_back(rob);
-                    aldif->getSubtractions().push_back(
-                        shared_ptr<EntryPointRobotPair>(new EntryPointRobotPair(ep, rob)));
+                    aldif->editSubtractions().emplace_back(ep, rob);
                     ret = true;
                 }
             }
@@ -957,24 +952,23 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
     // state.
     if (this->stateStartTime + assignmentProtectionTime > now)
     {
-        auto robotsJoined = this->getAssignment()->getRobotStateMapping()->getRobotsInState(this->getActiveState());
+        unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator> robotsJoined
+            = this->getAssignment()->getRobotStateMapping()->getRobotsInState(this->getActiveState());
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();)
         {
             if (std::find_if(robotsJoined.begin(), robotsJoined.end(), [&iter](const supplementary::AgentID *id) {
                     return *(*iter) == *id;
-                }) == robotsJoined.end())
-            {
+                }) == robotsJoined.end()) {
                 iter = availableAgents.erase(iter);
             }
-            else
-            {
+            else {
                 ++iter;
             }
         }
     }
     else if (auth)
     { // in case of authority, remove all that are not assigned to same task
-        auto robotsJoined = this->getAssignment()->getRobotsWorking(this->getOwnEntryPoint());
+        shared_ptr<vector<const supplementary::AgentID*>> robotsJoined = this->getAssignment()->getRobotsWorking(this->getOwnEntryPoint());
 
         if (robotsJoined)
         {
@@ -982,9 +976,10 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
             {
                 if (find_if(robotsJoined->begin(), robotsJoined->end(), [&iter](const supplementary::AgentID *id) {
                         return *(*iter) == *id;
-                    }) == robotsJoined->end())
-                {
+                    }) == robotsJoined->end()) {
                     iter = availableAgents.erase(iter);
+                } else {
+                    ++iter;
                 }
             }
         }
