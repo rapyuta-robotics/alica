@@ -32,8 +32,21 @@ namespace alica
         enum Reason {message, utility, empty};
         AllocationDifference::Reason getReason() const;
         void setReason(AllocationDifference::Reason reason);
+
+        /**
+        * Returns whether the difference is empty, i.e., the corresponding allocations are the same
+        */
         bool isEmpty() const;
+
+        /**
+        * Reset this difference to the empty difference
+        */
         void reset();
+
+        /**
+        * Apply another difference to this one resulting in the composition of both
+        * @param other the AllocationDifference to apply.
+        */
         void applyDifference(const AllocationDifference& other);
         std::string toString() const;
 
