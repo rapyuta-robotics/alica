@@ -31,18 +31,11 @@ void AllocationDifference::setReason(AllocationDifference::Reason reason)
     _reason = reason;
 }
 
-/**
- * Returns whether the difference is empty, i.e., the corresponding allocations are the same
- * @return A bool
- */
 bool AllocationDifference::isEmpty() const
 {
     return _additions.empty() && _subtractions.empty();
 }
 
-/**
- * Reset this difference to the empty difference
- */
 void AllocationDifference::reset()
 {
     _additions.clear();
@@ -50,10 +43,6 @@ void AllocationDifference::reset()
     _reason = Reason::empty;
 }
 
-/**
- * Apply another difference to this one resulting in the composition of both
- * @param other A AllocationDifference*
- */
 void AllocationDifference::applyDifference(const AllocationDifference& other)
 {
     for (int i = 0; i < other._additions.size(); i++)
