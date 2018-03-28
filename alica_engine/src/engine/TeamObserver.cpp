@@ -256,8 +256,11 @@ shared_ptr<SuccessCollection> TeamObserver::getSuccessCollection(Plan *plan)
     shared_ptr<SuccessCollection> ret = make_shared<SuccessCollection>(plan);
     shared_ptr<list<EntryPoint *>> suc;
     auto tmp = this->teamManager->getActiveAgents();
-    for (auto &agent : *tmp)
+    for (const Agent* agent : *tmp)
     {
+        if(teamManager->getLocalAgent()==agent){
+            continue;
+        }
         {
             lock_guard<mutex> lock(this->successMark);
             suc = agent->getSucceededEntryPoints(plan);
