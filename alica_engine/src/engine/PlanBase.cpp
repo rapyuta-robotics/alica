@@ -20,6 +20,8 @@
 
 #include <math.h>
 
+#define PB_DEBUG
+
 namespace alica
 {
     /**
@@ -130,7 +132,7 @@ namespace alica
                 }
                 else
                 {
-                    rootNode->printRecursive();
+                    _rootNode->printRecursive();
                 }
                 cout << "PB: ===END CUR TREE===" << endl;
 #endif
