@@ -105,8 +105,9 @@ bool Agent::update()
         if (!this->local)
         {
         	this->active = false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     if (!this->active && this->timeLastMsgReceived + this->timeout > this->engine->getIAlicaClock()->now())
