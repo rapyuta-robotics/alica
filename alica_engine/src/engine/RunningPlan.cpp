@@ -968,7 +968,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
     }
     else if (auth)
     { // in case of authority, remove all that are not assigned to same task
-        shared_ptr<vector<const supplementary::AgentID*>> robotsJoined = this->getAssignment()->getRobotsWorking(this->getOwnEntryPoint());
+        std::shared_ptr<std::vector<const supplementary::AgentID*>> robotsJoined = this->getAssignment()->getRobotsWorking(this->getOwnEntryPoint());
 
         if (robotsJoined)
         {

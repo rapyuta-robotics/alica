@@ -45,13 +45,13 @@ void AllocationDifference::reset()
 
 void AllocationDifference::applyDifference(const AllocationDifference& other)
 {
-    for (int i = 0; i < other._additions.size(); i++)
+    for (const EntryPointRobotPair& otherAdds : other._additions)
     {
         bool found = false;
         for (int j = 0; j < _subtractions.size(); j++)
         {
 
-            if (other._additions[i] == _subtractions[j])
+            if (otherAdds == _subtractions[j])
             {
                 _subtractions.erase(_subtractions.begin() + j);
                 found = true;
@@ -62,24 +62,24 @@ void AllocationDifference::applyDifference(const AllocationDifference& other)
         if(!found) {
             for (int j = 0; j < _additions.size(); j++)
             {
-                if (other._additions[i] == _additions[j])
+                if (otherAdds == _additions[j])
                 {
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                _additions.push_back(other._additions[i]);
+                _additions.push_back(otherAdds);
             }
         }
     }
 
-    for (int i = 0; i < other._subtractions.size(); i++)
+    for (const EntryPointRobotPair& otherDels : other._subtractions)
     {
         bool found = false;
         for (int j = 0; j < _additions.size(); j++)
         {
-            if (other._subtractions[i] == _additions[j])
+            if (otherDels == _additions[j])
             {
                 _additions.erase(_additions.begin() + j);
                 found = true;
@@ -90,14 +90,14 @@ void AllocationDifference::applyDifference(const AllocationDifference& other)
         if(!found) {
             for (int j = 0; j < _subtractions.size(); j++)
             {
-                if (other._subtractions[i] == _subtractions[j])
+                if (otherDels == _subtractions[j])
                 {
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                _subtractions.push_back(other._subtractions[i]);
+                _subtractions.push_back(otherDels);
             }
         }
     }
@@ -107,14 +107,14 @@ string AllocationDifference::toString() const
 {
     stringstream ss;
     ss << "Additions: ";
-    for (int i = 0; i < _additions.size(); i++)
+    for (const EntryPointRobotPair& erp : _additions)
     {
-        ss << "+ " << *(_additions[i].getRobot()) << " (" << _additions[i].getEntryPoint()->getId() << ")";
+        ss << "+ " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
     }
     ss << endl << "Substractions: ";
-    for (int i = 0; i < _subtractions.size(); i++)
+    for (const EntryPointRobotPair& erp : _subtractions)
     {
-        ss << "- " << *(_subtractions[i].getRobot()) << " (" << _subtractions[i].getEntryPoint()->getId() << ")";
+        ss << "- " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
     }
     ss << endl << "Reason [0=msg, 1=util, 2=empty]:" << _reason;
     return ss.str();
