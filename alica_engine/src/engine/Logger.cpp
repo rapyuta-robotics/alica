@@ -130,10 +130,10 @@ namespace alica
 		(*this->sBuild) << to_string(robots->size());
 
 		(*this->sBuild) << " TeamMember:";
-		for (auto& id : (*robots))
+		for (const supplementary::AgentID* id : (*robots))
 		{
 			(*this->sBuild) << "\t";
-			(*this->sBuild) << id;
+			(*this->sBuild) << *id;
 		}
 		(*this->sBuild) << endl;
 
@@ -155,7 +155,7 @@ namespace alica
 			for(auto kvp : (*teamPlanTrees)) {
 
 				(*this->sBuild) << "OPT:\t";
-				(*this->sBuild) << kvp.first;
+				(*this->sBuild) << *kvp.first;
 				(*this->sBuild) << "\t";
 
 				auto ids = this->createHumanReadablePlanTree(kvp.second->getStateIds());
