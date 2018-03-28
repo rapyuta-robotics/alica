@@ -98,16 +98,15 @@ std::shared_ptr<std::list<EntryPoint *>> Agent::getSucceededEntryPoints(Abstract
 
 bool Agent::update()
 {
+    if(this->local) {
+        return false;
+    }
     if (this->active && this->timeLastMsgReceived + this->timeout < this->engine->getIAlicaClock()->now())
     {
         // timeout triggered
         this->engineData->clearSuccessMarks();
-        if (!this->local)
-        {
-        	this->active = false;
-            return true;
-        }
-        return false;
+        this->active = false;
+        return true;
     }
 
     if (!this->active && this->timeLastMsgReceived + this->timeout > this->engine->getIAlicaClock()->now())
