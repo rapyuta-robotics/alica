@@ -19,7 +19,7 @@
 #include "engine/model/Variable.h"
 
 #include <iostream>
-#define Q_DEBUG
+//#define Q_DEBUG
 
 namespace alica
 {
