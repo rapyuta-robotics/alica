@@ -79,7 +79,7 @@ bool CGSolver::existsSolution(vector<Variable *> &vars, vector<shared_ptr<Proble
         }
     }
     auto serial_seeds = ae->getResultStore()->getSeeds(std::make_shared<std::vector<Variable *>>(vars), ranges);
-    // Desierialize seeds
+    // Deserialize seeds
     shared_ptr<vector<shared_ptr<vector<double>>>> seeds =
         make_shared<vector<shared_ptr<vector<double>>>>(serial_seeds->size());
     for (auto &serialseed : *serial_seeds)
@@ -152,8 +152,8 @@ bool CGSolver::getSolution(vector<Variable *> &vars, vector<shared_ptr<ProblemDe
 
     for (auto &c : calls)
     {
-        auto constraintTerm = dynamic_pointer_cast<autodiff::Term>(c->getConstraint());
-        if (!constraintTerm)
+        std::shared_ptr<autodiff::Term> constraintTerm = dynamic_pointer_cast<autodiff::Term>(c->getConstraint());
+        if (constraintTerm.get() == nullptr)
         {
             std::cerr << "CGSolver: Constraint type not compatible with selected solver" << std::endl;
             return false;
@@ -161,8 +161,8 @@ bool CGSolver::getSolution(vector<Variable *> &vars, vector<shared_ptr<ProblemDe
         constraint = constraint & constraintTerm;
 
 
-        auto utilityTerm = dynamic_pointer_cast<autodiff::Term>(c->getUtility());
-        if (!utilityTerm)
+        std::shared_ptr<autodiff::Term> utilityTerm = dynamic_pointer_cast<autodiff::Term>(c->getUtility());
+        if (utilityTerm.get() == nullptr)
         {
             std::cerr << "CGSolver: Utility type not compatible with selected solver" << std::endl;
             return false;
@@ -175,8 +175,8 @@ bool CGSolver::getSolution(vector<Variable *> &vars, vector<shared_ptr<ProblemDe
         auto allRanges = c->allRanges();
         for (int i = 0; i < c->getAllVars()->size(); ++i)
         {
-            auto variableTerm = dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(i));
-            if (!variableTerm)
+            std::shared_ptr<autodiff::Term> variableTerm = dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(i));
+            if (variableTerm.get() == nullptr)
             {
                 std::cerr << "CGSolver: Variable is not of Type autodiff::Term!" << std::endl;
                 return false;
