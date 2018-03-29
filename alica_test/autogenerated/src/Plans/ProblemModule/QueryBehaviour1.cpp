@@ -32,7 +32,7 @@ namespace alica
     void QueryBehaviour1::initialiseParameters()
     {
         /*PROTECTED REGION ID(initialiseParameters1479556104511) ENABLED START*/ //Add additional options here
-        this->query = make_shared < alica::Query > (this->getRunningPlan()->getAlicaEngine());
+        this->query = make_shared < alica::Query > ();
         query->clearStaticVariables();
         query->addStaticVariable(getVariablesByName("QBX"));
         query->addStaticVariable(getVariablesByName("QBY"));

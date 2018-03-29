@@ -65,7 +65,6 @@ class UniqueVarStore
     }
 
   private:
-    // TODO implement this store with a vector of lists, because a list is more efficient in this use case
     /**
      *  Each inner list of variables is sorted from variables of the top most plan to variables of the deepest plan.
      *  Therefore, the first element is always the variable in the top most plan, where this variable occurs.
@@ -76,13 +75,13 @@ class UniqueVarStore
 /**
  * Encapsulates queries to variables (which are associated with specific solvers).
  */
-class Query : public enable_shared_from_this<Query>
+class Query
 {
   public:
-    Query(AlicaEngine *ae);
+    Query();
 
     void addStaticVariable(Variable *v);
-    void addDomainVariable(const supplementary::AgentID *robot, string ident);
+    void addDomainVariable(const supplementary::AgentID* robot, string ident, AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
     bool existsSolution(int solverType, shared_ptr<RunningPlan> rp);
@@ -111,7 +110,6 @@ class Query : public enable_shared_from_this<Query>
     vector<Variable *> relevantStaticVariables;
     vector<Variable *> relevantDomainVariables;
 
-    AlicaEngine *ae;
 };
 
 template <class T>
@@ -123,7 +121,7 @@ bool Query::getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<T> &r
     vector<shared_ptr<ProblemDescriptor>> cds;
     vector<Variable *> relevantVariables;
     int domOffset;
-    ISolver *solver = this->ae->getSolver(solverType);
+    ISolver *solver = rp->getAlicaEngine()->getSolver(solverType);
     if (solver == nullptr)
     {
         std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available."

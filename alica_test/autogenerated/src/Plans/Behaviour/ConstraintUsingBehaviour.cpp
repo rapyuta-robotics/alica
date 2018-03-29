@@ -32,7 +32,7 @@ namespace alica
     void ConstraintUsingBehaviour::initialiseParameters()
     {
         /*PROTECTED REGION ID(initialiseParameters1414068597716) ENABLED START*/ //Add additional options here
-        this->query = make_shared < alica::Query > (this->getRunningPlan()->getAlicaEngine());
+        this->query = make_shared < alica::Query > ();
         query->addStaticVariable(getVariablesByName("Y"));
         /*PROTECTED REGION END*/
     }

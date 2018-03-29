@@ -32,7 +32,7 @@ namespace alica
 		void addCondition(Condition* con);
 		void removeCondition(Condition* con);
 
-		void acceptQuery(shared_ptr<Query> query, shared_ptr<RunningPlan> rp);
+		void acceptQuery(Query& query, shared_ptr<RunningPlan> rp);
 		list<Condition*> activeConditions;
 		map<Variable*, shared_ptr<vector<Condition*>> > activeVar2CondMap;
 
