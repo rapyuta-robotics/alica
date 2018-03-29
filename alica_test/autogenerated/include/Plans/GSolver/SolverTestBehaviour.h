@@ -21,8 +21,8 @@ namespace alica
     protected:
         virtual void initialiseParameters();
         /*PROTECTED REGION ID(pro1417424455986) ENABLED START*/ //Add additional protected methods here
+        alica::Query _query;
         int callCounter;
-        shared_ptr<alica::Query> query;
 
         /*PROTECTED REGION END*/
     private:
