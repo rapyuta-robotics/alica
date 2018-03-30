@@ -1,0 +1,31 @@
+#!/bin/bash
+# Brief: This is a git hook script to format C/C++ files before git commit.
+# Usage:
+#   Create a proper symlink: ln -sr pre-commit .git/hooks
+
+CLANG="clang-format-5.0"
+
+format_file() {
+    file="${1}"
+
+    # only if C/C++ files
+    if [[ ${file} == *.c || ${file} == *.cc || ${file} == *.h || ${file} == *.cpp || ${file} == *.hpp ]]
+    then
+        cmd="${CLANG} -i ${1}" # in case of .clang-format
+        echo "Running ${CLANG} on ${file}"
+        eval ${cmd}
+        git add ${1}
+    fi
+}
+
+case "${1}" in
+    --about )
+        echo "Runs ${CLANG} on modified C/C++ source files"
+    ;;
+    * )
+        # find staged files, excluding D/deleted ones 
+        for file in `git diff-index --cached --name-status HEAD | awk '$1 != "D" { print $2 }'` ; do
+            format_file "${file}"
+        done
+    ;;
+esac
