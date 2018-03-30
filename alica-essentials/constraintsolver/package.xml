@@ -51,6 +51,8 @@
   
   <!-- Use test_depend for packages you need only for testing: -->
   <test_depend>gtest</test_depend>
+  <build_depend>roslib</build_depend>
+  <run_depend>roslib</run_depend>
   
 
   <!-- The export tag contains other, unspecified, tags -->
