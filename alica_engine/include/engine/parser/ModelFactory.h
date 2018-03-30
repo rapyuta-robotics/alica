@@ -41,7 +41,6 @@ class Capability;
 class RoleTaskMapping;
 class RoleSet;
 class PlanningProblem;
-class AlicaEngine;
 class Parameter;
 
 /**
@@ -49,7 +48,7 @@ class Parameter;
  */
 class ModelFactory {
 public:
-    ModelFactory(AlicaEngine* ae, PlanParser* p, PlanRepository* rep);
+    ModelFactory(PlanParser* p, PlanRepository* rep);
     virtual ~ModelFactory();
 
     bool ignoreMasterPlanId;
@@ -132,7 +131,7 @@ private:
     list<pair<long, long>> planningProblemPlanWaitReferences;
     list<pair<long, long>> planningProblemPlanAlternativeReferences;
 
-    void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele);
+    void setAlicaElementAttributes(AlicaElement* ael, tinyxml2::XMLElement* ele);
     EntryPoint* createEntryPoint(tinyxml2::XMLElement* element);
     State* createState(tinyxml2::XMLElement* element);
     SuccessState* createSuccessState(tinyxml2::XMLElement* element);
@@ -152,10 +151,9 @@ private:
     Characteristic* createCharacteristic(tinyxml2::XMLElement* element);
     Variable* createVariable(tinyxml2::XMLElement* element);
     bool isReferenceNode(tinyxml2::XMLElement* node);
-    void addElement(AlicaElement* ae);
+    void addElement(AlicaElement* ael);
 
 protected:
-    AlicaEngine* ae;
     void removeRedundancy();
 };
 }  // namespace alica

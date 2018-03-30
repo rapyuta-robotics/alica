@@ -78,8 +78,7 @@ const string ModelFactory::alternativePlan = "alternativePlan";
  * @param p The PlanParser handling the plan and role files.
  * @param rep The <see PlanRepository holding all plan elements. Elements will be added to it.
  */
-ModelFactory::ModelFactory(AlicaEngine* ae, PlanParser* p, PlanRepository* rep) {
-    this->ae = ae;
+ModelFactory::ModelFactory(PlanParser* p, PlanRepository* rep) {
     this->parser = p;
     this->rep = rep;
     this->ignoreMasterPlanId = false;
@@ -851,7 +850,7 @@ Quantifier* ModelFactory::createQuantifier(tinyxml2::XMLElement* element) {
     if (typePtr) {
         typeString = typePtr;
         if (typeString.compare("alica:ForallAgents") == 0) {
-            q = new ForallAgents(this->ae);
+            q = new ForallAgents();
             q->setId(id);
         } else {
             AlicaEngine::abort("MF: Unsupported quantifier type! !", typeString);
@@ -1104,18 +1103,18 @@ bool ModelFactory::isReferenceNode(tinyxml2::XMLElement* node) {
     return false;
 }
 
-void ModelFactory::setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele) {
+void ModelFactory::setAlicaElementAttributes(AlicaElement* ael, tinyxml2::XMLElement* ele) {
     string name = ele->Attribute("name");
     string comment = ele->Attribute("comment");
 
     if (!name.empty()) {
-        ae->setName(name);
+        ael->setName(name);
     } else
-        ae->setName("MISSING_NAME");
+        ael->setName("MISSING_NAME");
     if (!comment.empty()) {
-        ae->setComment(comment);
+        ael->setComment(comment);
     } else
-        ae->setComment("");
+        ael->setComment("");
 }
 
 /**
@@ -1274,9 +1273,9 @@ void ModelFactory::attachPlanReferences() {
 
     // quantifierScopeReferences
     for (pair<long, long> pairs : this->quantifierScopeReferences) {
-        AlicaElement* ae = (AlicaElement*) this->elements.find(pairs.second)->second;
+        AlicaElement* ael = (AlicaElement*) this->elements.find(pairs.second)->second;
         Quantifier* q = (Quantifier*) this->elements.find(pairs.first)->second;
-        q->setScope(ae);
+        q->setScope(ael);
     }
     this->quantifierScopeReferences.clear();
 
