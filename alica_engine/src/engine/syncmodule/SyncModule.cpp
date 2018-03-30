@@ -11,6 +11,7 @@
 #include "engine/model/SyncTransition.h"
 #include "engine/teammanager/TeamManager.h"
 
+
 namespace alica
 {
 
@@ -217,7 +218,7 @@ namespace alica
 	{
 		if (!this->running || *(sr->senderID) == *(this->myId))
 			return;
-		if (this->ae->getTeamManager()->isAgentActive(sr->senderID))
+		if (this->ae->getTeamManager()->isAgentIgnored(sr->senderID))
 			return;
 		SyncTransition* syncTrans = nullptr;
 		map<long, SyncTransition*>::iterator iter = this->pr->getSyncTransitions().find(sr->syncTransitionID);
