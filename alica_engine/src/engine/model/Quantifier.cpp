@@ -78,7 +78,7 @@ Plan* Quantifier::getScopedPlan() {
  * Set the scope of this quantifier, called by the ModelFactory
  * @param ae An AlicaElement
  */
-void Quantifier::setScope(AlicaEngine* engine, AlicaElement* element) {
+void Quantifier::setScope(AlicaElement* element) {
     scopeIsEntryPoint = (dynamic_cast<EntryPoint*>(element) != 0);
     scopeIsPlan = (dynamic_cast<Plan*>(element) != 0);
     scopeIsState = (dynamic_cast<State*>(element) != 0);
