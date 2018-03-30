@@ -1276,7 +1276,7 @@ void ModelFactory::attachPlanReferences() {
     for (pair<long, long> pairs : this->quantifierScopeReferences) {
         AlicaElement* ae = (AlicaElement*) this->elements.find(pairs.second)->second;
         Quantifier* q = (Quantifier*) this->elements.find(pairs.first)->second;
-        q->setScope(this->ae, ae);
+        q->setScope(ae);
     }
     this->quantifierScopeReferences.clear();
 

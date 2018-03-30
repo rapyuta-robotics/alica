@@ -15,7 +15,6 @@ class EntryPoint;
 class Plan;
 class Variable;
 class RunningPlan;
-class AlicaEngine;
 class SolverTerm;
 
 /**
@@ -33,7 +32,7 @@ public:
     State* getScopedState();
     EntryPoint* getScopedEntryPoint();
     Plan* getScopedPlan();
-    void setScope(AlicaEngine* a, AlicaElement* ae);
+    void setScope(AlicaElement* ae);
     AlicaElement* getScope();
     /**
      * Access the std::list of sorted Variables under the scope of this quantifier given a runningplan.
