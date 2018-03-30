@@ -7,7 +7,7 @@ using namespace std;
 namespace alica
 {
     /*PROTECTED REGION ID(staticVars1479556104511) ENABLED START*/ //initialise static variables here
-	vector<double> QueryBehaviour1::result;
+    vector<double> QueryBehaviour1::result;
     /*PROTECTED REGION END*/
     QueryBehaviour1::QueryBehaviour1() :
             DomainBehaviour("QueryBehaviour1")
@@ -24,25 +24,24 @@ namespace alica
     void QueryBehaviour1::run(void* msg)
     {
         /*PROTECTED REGION ID(run1479556104511) ENABLED START*/ //Add additional options here
-    	callCounter++;
-		//cout << "QueryBehaviour1 was called " << callCounter << " times!" << endl;
-		query->getSolution(SolverType::GRADIENTSOLVER, runningPlan, result);
+        callCounter++;
+        //cout << "QueryBehaviour1 was called " << callCounter << " times!" << endl;
+        query->getSolution(SolverType::GRADIENTSOLVER, runningPlan, result);
         /*PROTECTED REGION END*/
     }
     void QueryBehaviour1::initialiseParameters()
     {
         /*PROTECTED REGION ID(initialiseParameters1479556104511) ENABLED START*/ //Add additional options here
-        this->query = make_shared < alica::Query > ();
+        this->query = make_shared<alica::Query>();
         query->clearStaticVariables();
         query->addStaticVariable(getVariablesByName("QBX"));
         query->addStaticVariable(getVariablesByName("QBY"));
         /*PROTECTED REGION END*/
     }
-
-/*PROTECTED REGION ID(methods1479556104511) ENABLED START*/ //Add additional methods here
+    /*PROTECTED REGION ID(methods1479556104511) ENABLED START*/ //Add additional methods here
     int QueryBehaviour1::getCallCounter()
-	{
-		return callCounter;
-	}
+    {
+        return callCounter;
+    }
 /*PROTECTED REGION END*/
 } /* namespace alica */

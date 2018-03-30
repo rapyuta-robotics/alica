@@ -47,6 +47,8 @@
 
 #include  "Plans/PlanTwo1407153645238.h"
 
+#include  "Plans/BehaviorSuccessSpamMaster1522377375148.h"
+
 #include  "Plans/ProblemModule/ProblemBuildingMaster1479556022226.h"
 
 #include  "Plans/MultiAgentTestPlan1413200862180.h"
@@ -175,6 +177,10 @@ namespace alica
 
             case 1407153645238:
                 return make_shared<UtilityFunction1407153645238>();
+                break;
+
+            case 1522377375148:
+                return make_shared<UtilityFunction1522377375148>();
                 break;
 
             case 1479556022226:
