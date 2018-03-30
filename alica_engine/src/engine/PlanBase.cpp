@@ -20,7 +20,7 @@
 
 #include <math.h>
 
-#define PB_DEBUG
+//#define PB_DEBUG
 
 namespace alica
 {
@@ -248,19 +248,17 @@ namespace alica
             AlicaTime availTime;
 
             now = _alicaClock->now();
-            if (_loopTime > (now - beginTime))
-            {
-                //TODO: FIXME: the division by 1000 is brittle and should not be needed
-                //replace AlicaTime with a proper time class.
-                availTime = (AlicaTime)((_loopTime - (now - beginTime)) / 1000UL);
-            }
-            else
-            {
-                availTime = 0;
-            }
-            //TODO: FIXME: Need to wait for a signal from an fpEvent here.
 
-            if (_fpEvents.size() > 0)
+            //TODO: FIXME: the division by 1000 is brittle and should not be needed
+            //replace AlicaTime with a proper time class.
+            availTime = (AlicaTime)((_loopTime - (now - beginTime)) / 1000L);
+            bool checkFp = false;
+            if(availTime > 1000) {
+                std::unique_lock<std::mutex> lock(_lomutex);
+                checkFp = std::cv_status::no_timeout == _fpEventWait.wait_for(lock,std::chrono::microseconds(availTime));
+            }
+
+            if (checkFp && _fpEvents.size() > 0)
             {
                 //lock for fpEvents
                 {
@@ -287,23 +285,19 @@ namespace alica
                             }
                         }
                         now = _alicaClock->now();
-                        if (_loopTime > (now - beginTime))
-                        {
-                            availTime = (long)((_loopTime - (now - beginTime)) / 1000UL);
-                        }
-                        else
-                        {
-                            availTime = 0;
-                        }
+                        availTime = (AlicaTime)((_loopTime - (now - beginTime)) / 1000L);
                     }
                 }
 
             }
 
-#ifdef PB_DEBUG
-            cout << "PB: availTime " << availTime << endl;
-#endif
-            if (availTime > 1 && !_ae->getStepEngine())
+            now = _alicaClock->now();
+            availTime = (AlicaTime)((_loopTime - (now - beginTime)) / 1000L);
+
+            #ifdef PB_DEBUG
+                cout << "PB: availTime " << availTime << endl;
+            #endif
+            if (availTime > 100 && !_ae->getStepEngine())
             {
                 _alicaClock->sleep(availTime);
             }
@@ -343,6 +337,7 @@ namespace alica
             lock_guard<mutex> lock(_lomutex);
             _fpEvents.push(p);
         }
+        _fpEventWait.notify_all();
     }
 
 

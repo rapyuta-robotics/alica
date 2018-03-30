@@ -13,8 +13,7 @@ namespace alica
             DomainBehaviour("SolverTestBehaviour")
     {
         /*PROTECTED REGION ID(con1417424455986) ENABLED START*/ //Add additional options here
-        this->callCounter = 0;
-
+        callCounter = 0;
         /*PROTECTED REGION END*/
     }
     SolverTestBehaviour::~SolverTestBehaviour()
@@ -26,17 +25,17 @@ namespace alica
     {
         /*PROTECTED REGION ID(run1417424455986) ENABLED START*/ //Add additional options here
         callCounter++;
-        //cout << "SolverTestBehaviour was called " << callCounter << " times!" << endl;
-        query->getSolution(SolverType::GRADIENTSOLVER, runningPlan, result);
+        //std::cout << "SolverTestBehaviour was called " << callCounter << " times!" << std::endl;
+
+        _query.getSolution(SolverType::GRADIENTSOLVER, runningPlan, result);
         /*PROTECTED REGION END*/
     }
     void SolverTestBehaviour::initialiseParameters()
     {
         /*PROTECTED REGION ID(initialiseParameters1417424455986) ENABLED START*/ //Add additional options here
-        this->query = make_shared < alica::Query > (this->getRunningPlan()->getAlicaEngine());
-        query->clearStaticVariables();
-        query->addStaticVariable(getVariablesByName("X"));
-        query->addStaticVariable(getVariablesByName("Y"));
+        _query.clearStaticVariables();
+        _query.addStaticVariable(getVariablesByName("X"));
+        _query.addStaticVariable(getVariablesByName("Y"));
         /*PROTECTED REGION END*/
     }
     /*PROTECTED REGION ID(methods1417424455986) ENABLED START*/ //Add additional methods here

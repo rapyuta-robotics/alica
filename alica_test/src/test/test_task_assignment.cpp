@@ -15,6 +15,8 @@
 //#include "engine/planselector/TaskAssignment.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/Agent.h"
+#include "engine/TeamObserver.h"
+#include "engine/IRoleAssignment.h"
 #include "supplementary/AgentID.h"
 
 #include <gtest/gtest.h>
@@ -22,6 +24,12 @@
 #include <vector>
 #include <memory>
 #include <ros/ros.h>
+
+class StillClock : public alica::IAlicaClock {
+    virtual alica::AlicaTime now() override { return 555;}
+    virtual void sleep(long us) override { std::this_thread::sleep_for(std::chrono::microseconds(us));}
+};
+
 
 class TaskAssignmentTest : public ::testing::Test
 {
@@ -52,7 +60,7 @@ protected:
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
 		crc = new alica::ConstraintCreator();
-		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+		ae->setIAlicaClock(new StillClock());
 		ae->init(bc, cc, uc, crc);
 	}
 
@@ -74,26 +82,20 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 	auto robots = make_shared<vector<const supplementary::AgentID* > >();
 	for (int number = 8; number <= 11; number++)
 	{
-		const supplementary::AgentID * agentID =  ae->getID<int>(number);
+		const supplementary::AgentID* agentID =  ae->getID<int>(number);
 		robots->push_back(agentID);
+        ae->getTeamManager()->setTimeLastMsgReceived(agentID, ae->getIAlicaClock()->now());
 	}
-
+    ae->getTeamObserver()->tick(nullptr);
+    ae->getRoleAssignment()->tick();
 	// fake inform the team observer about roles of none existing robots
-	auto& roles = ae->getPlanRepository()->getRoles();
-	int i = 0;
-	for (auto& role : roles)
-	{
-//		ae->getTeamManager()->getAgentByID(robots->at(i))->getEngineData()->setLastRole(role.second);
-		i++;
-		if (i > 4)
-			break;
-	}
-
+	
 	auto planMap = ae->getPlanRepository()->getPlans();
 	auto rp = make_shared<alica::RunningPlan>(ae, (*planMap.find(1407152758497)).second);
 	list<alica::AbstractPlan*>* planList = new list<alica::AbstractPlan*>();
 	planList->push_back((*planMap.find(1407152758497)).second);
 	alica::PlanSelector* ps = ae->getPlanSelector();
 	auto plans = ps->getPlansForState(rp, planList, robots);
+    EXPECT_EQ(plans->size(),1);
 }
 

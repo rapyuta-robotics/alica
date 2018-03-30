@@ -1,7 +1,5 @@
 #pragma once
 
-//#define PB_DEBUG
-
 #include <engine/containers/AlicaEngineInfo.h>
 #include <queue>
 #include <stdio.h>
@@ -93,11 +91,11 @@ namespace alica
         std::mutex _stepMutex;
 
         queue<shared_ptr<RunningPlan>> _fpEvents;
+        std::condition_variable _fpEventWait;
         std::condition_variable _stepModeCV;
         RuleBook _ruleBook;
 
         int _treeDepth;
-
         bool _running;
         bool _sendStatusMessages;
         bool _isWaiting;
