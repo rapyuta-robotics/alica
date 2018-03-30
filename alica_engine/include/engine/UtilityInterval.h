@@ -8,24 +8,21 @@
 #ifndef UTILITYINTERVAL_H_
 #define UTILITYINTERVAL_H_
 
+namespace alica {
 
-namespace alica
-{
+struct UtilityInterval {
+public:
+    UtilityInterval(double min = 0, double max = 0);
+    virtual ~UtilityInterval();
+    double getMax();
+    void setMax(double max);
+    double getMin();
+    void setMin(double min);
 
-	struct UtilityInterval
-	{
-	public:
-		UtilityInterval(double min=0, double max=0);
-		virtual ~UtilityInterval();
-		double getMax();
-		void setMax(double max);
-		double getMin();
-		void setMin(double min);
-
-	private:
-		double min;
-		double max;
-	};
+private:
+    double min;
+    double max;
+};
 
 } /* namespace alica */
 

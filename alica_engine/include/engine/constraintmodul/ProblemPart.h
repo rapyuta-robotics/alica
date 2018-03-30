@@ -5,26 +5,24 @@
 #include <memory>
 #include <vector>
 
-namespace alica
-{
+namespace alica {
 class Condition;
 class RunningPlan;
 class Variable;
 
-class ProblemPart
-{
-  public:
-    ProblemPart(Condition *con, std::shared_ptr<RunningPlan> rp);
+class ProblemPart {
+public:
+    ProblemPart(Condition* con, std::shared_ptr<RunningPlan> rp);
 
-    bool hasVariable(Variable *v);
+    bool hasVariable(Variable* v);
 
-    Condition *getCondition();
-    std::shared_ptr<std::vector<std::list<std::vector<Variable *>>>> getDomainVariables();
+    Condition* getCondition();
+    std::shared_ptr<std::vector<std::list<std::vector<Variable*>>>> getDomainVariables();
     std::shared_ptr<RunningPlan> getRunningPlan();
-    std::shared_ptr<std::vector<std::shared_ptr<std::vector<const supplementary::AgentID *>>>> getAgentsInScope();
+    std::shared_ptr<std::vector<std::shared_ptr<std::vector<const supplementary::AgentID*>>>> getAgentsInScope();
 
-  private:
-    Condition *condition;
+private:
+    Condition* condition;
     /**
      *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
      * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
@@ -32,9 +30,9 @@ class ProblemPart
      * 3. Vector of Variables, e.g., variables X,Y.
      * 4. Variable, e.g., variable X.
      */
-    std::shared_ptr<std::vector<std::list<std::vector<Variable *>>>> domainVariables;
+    std::shared_ptr<std::vector<std::list<std::vector<Variable*>>>> domainVariables;
     std::shared_ptr<RunningPlan> runningplan;
-    std::shared_ptr<std::vector<std::shared_ptr<std::vector<const supplementary::AgentID *>>>> agentsInScope;
+    std::shared_ptr<std::vector<std::shared_ptr<std::vector<const supplementary::AgentID*>>>> agentsInScope;
 };
 
 } /* namespace alica */

@@ -9,26 +9,19 @@
 
 namespace alica {
 
-	TestConstantValueSummand::TestConstantValueSummand(double weight, string name, long id, double val)
-	{
-		this->weight = weight;
-		this->name = name;
-		this->id = id;
-		this->val = val;
-	}
+TestConstantValueSummand::TestConstantValueSummand(double weight, string name, long id, double val) {
+    this->weight = weight;
+    this->name = name;
+    this->id = id;
+    this->val = val;
+}
 
-	TestConstantValueSummand::~TestConstantValueSummand()
-	{
+TestConstantValueSummand::~TestConstantValueSummand() {}
+void TestConstantValueSummand::cacheEvalData() {}
+UtilityInterval TestConstantValueSummand::eval(IAssignment* ass) {
+    ui.setMin(val);
+    ui.setMax(val);
 
-	}
-	void TestConstantValueSummand::cacheEvalData()
-	{
-	}
-	UtilityInterval TestConstantValueSummand::eval(IAssignment* ass)
-	{
-		ui.setMin(val);
-		ui.setMax(val);
-
-		return ui;
-	}
+    return ui;
+}
 } /* namespace alica */

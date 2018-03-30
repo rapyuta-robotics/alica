@@ -8,109 +8,89 @@
 #include "engine/model/EntryPoint.h"
 #include "supplementary/AgentID.h"
 
-namespace alica
-{
+namespace alica {
 
-Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::AgentID *id)
-    : id(id)
-    , name("")
-    , timeLastMsgReceived(0)
-    , engine(engine)
-    , properties(nullptr)
-    , engineData(nullptr)
-    , timeout(timeout)
-    , active(false)
-    , local(false)
-{
-}
+Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id)
+        : id(id)
+        , name("")
+        , timeLastMsgReceived(0)
+        , engine(engine)
+        , properties(nullptr)
+        , engineData(nullptr)
+        , timeout(timeout)
+        , active(false)
+        , local(false) {}
 
-Agent::Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::AgentID *id, std::string name)
-    : Agent(engine, timeout, id)
-{
+Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id, std::string name)
+        : Agent(engine, timeout, id) {
     this->name = name;
     this->properties = new RobotProperties(id, engine, name);
     this->engineData = new RobotEngineData(engine, id);
 }
 
-Agent::~Agent()
-{
+Agent::~Agent() {
     delete this->properties;
 }
 
-const supplementary::AgentID* Agent::getID() const
-{
+const supplementary::AgentID* Agent::getID() const {
     return this->id;
 }
 
-const std::string& Agent::getName() const
-{
+const std::string& Agent::getName() const {
     return this->name;
 }
 
-bool Agent::isActive() const
-{
+bool Agent::isActive() const {
     return this->active;
 }
 
-void Agent::setLocal(bool local)
-{
-	if (local)
-	{
-		this->active = true;
-	}
+void Agent::setLocal(bool local) {
+    if (local) {
+        this->active = true;
+    }
     this->local = local;
 }
 
-const RobotProperties *Agent::getProperties() const
-{
+const RobotProperties* Agent::getProperties() const {
     return this->properties;
 }
 
-const RobotEngineData *Agent::getEngineData() const
-{
+const RobotEngineData* Agent::getEngineData() const {
     return this->engineData;
 }
 
-void Agent::setTimeLastMsgReceived(AlicaTime timeLastMsgReceived)
-{
+void Agent::setTimeLastMsgReceived(AlicaTime timeLastMsgReceived) {
     this->timeLastMsgReceived = timeLastMsgReceived;
 }
 
-void Agent::setSuccess(AbstractPlan *plan, EntryPoint *entryPoint)
-{
+void Agent::setSuccess(AbstractPlan* plan, EntryPoint* entryPoint) {
     this->engineData->getSuccessMarks()->markSuccessfull(plan, entryPoint);
 }
 
-void Agent::setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks)
-{
+void Agent::setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks) {
     this->engineData->setSuccessMarks(successMarks);
 }
 
-Variable *Agent::getDomainVariable(std::string sort)
-{
+Variable* Agent::getDomainVariable(std::string sort) {
     return this->engineData->getDomainVariable(sort);
 }
 
-std::shared_ptr<std::list<EntryPoint *>> Agent::getSucceededEntryPoints(AbstractPlan *plan) const
-{
+std::shared_ptr<std::list<EntryPoint*>> Agent::getSucceededEntryPoints(AbstractPlan* plan) const {
     return this->engineData->getSuccessMarks()->succeededEntryPoints(plan);
 }
 
-bool Agent::update()
-{
-    if(this->local) {
+bool Agent::update() {
+    if (this->local) {
         return false;
     }
-    if (this->active && this->timeLastMsgReceived + this->timeout < this->engine->getIAlicaClock()->now())
-    {
+    if (this->active && this->timeLastMsgReceived + this->timeout < this->engine->getIAlicaClock()->now()) {
         // timeout triggered
         this->engineData->clearSuccessMarks();
         this->active = false;
         return true;
     }
 
-    if (!this->active && this->timeLastMsgReceived + this->timeout > this->engine->getIAlicaClock()->now())
-    {
+    if (!this->active && this->timeLastMsgReceived + this->timeout > this->engine->getIAlicaClock()->now()) {
         // reactivate because of new messages
         this->active = true;
         return true;

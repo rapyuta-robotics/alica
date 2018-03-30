@@ -7,38 +7,29 @@
 
 #include "engine/model/PreCondition.h"
 
-namespace alica
-{
+namespace alica {
 
-	PreCondition::PreCondition(long id)
-	{
-		this->id = id;
-		this->enabled = true;
-	}
+PreCondition::PreCondition(long id) {
+    this->id = id;
+    this->enabled = true;
+}
 
-	PreCondition::~PreCondition()
-	{
-	}
+PreCondition::~PreCondition() {}
 
-	string PreCondition::toString()
-	{
-		stringstream ss;
-		ss << "#PreCondition: " << this->name << " " << this->id << (this->enabled ? "enabled" : "disabled") << endl;
-		ss << "\t ConditionString: " << this->conditionString << endl;
-		ss << "#EndPreCondition" << endl;
-		return ss.str();
-	}
+string PreCondition::toString() {
+    stringstream ss;
+    ss << "#PreCondition: " << this->name << " " << this->id << (this->enabled ? "enabled" : "disabled") << endl;
+    ss << "\t ConditionString: " << this->conditionString << endl;
+    ss << "#EndPreCondition" << endl;
+    return ss.str();
+}
 
-	bool PreCondition::isEnabled() const
-	{
-		return enabled;
-	}
+bool PreCondition::isEnabled() const {
+    return enabled;
+}
 
-	void PreCondition::setEnabled(bool enabled)
-	{
-		this->enabled = enabled;
-	}
+void PreCondition::setEnabled(bool enabled) {
+    this->enabled = enabled;
+}
 
-} /* namespace Alica */
-
-
+}  // namespace alica

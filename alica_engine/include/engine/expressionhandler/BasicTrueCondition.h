@@ -10,17 +10,15 @@
 
 #include <engine/BasicCondition.h>
 
-namespace alica
-{
+namespace alica {
 
-	class BasicTrueCondition : public BasicCondition
-	{
-	public:
-		BasicTrueCondition();
-		virtual ~BasicTrueCondition();
+class BasicTrueCondition : public BasicCondition {
+public:
+    BasicTrueCondition();
+    virtual ~BasicTrueCondition();
 
-		bool evaluate(shared_ptr<RunningPlan> rp);
-	};
+    bool evaluate(shared_ptr<RunningPlan> rp);
+};
 
 } /* namespace alica */
 

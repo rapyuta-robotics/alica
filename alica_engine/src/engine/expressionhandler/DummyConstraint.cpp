@@ -7,12 +7,8 @@
 
 #include "engine/expressionhandler/DummyConstraint.h"
 
-namespace alica
-{
+namespace alica {
 
-	void DummyConstraint::getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp)
-	{
-
-	}
+void DummyConstraint::getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp) {}
 
 } /* namespace alica */

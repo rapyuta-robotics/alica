@@ -8,38 +8,33 @@
 #ifndef CAPABILITY_H_
 #define CAPABILITY_H_
 
-
 #include <list>
 #include <iostream>
 #include <exception>
 
-
 #include "AlicaElement.h"
 
 using namespace std;
-namespace alica
-{
-	class CapValue;
+namespace alica {
+class CapValue;
 
-	/**
-	 * A capability is used to match agents to roles.
-	 */
-	class Capability : public AlicaElement
-	{
-	public:
-		Capability();
-		virtual ~Capability();
+/**
+ * A capability is used to match agents to roles.
+ */
+class Capability : public AlicaElement {
+public:
+    Capability();
+    virtual ~Capability();
 
-		double similarityValue(CapValue* roleVal, CapValue* robotVal);
+    double similarityValue(CapValue* roleVal, CapValue* robotVal);
 
-		list<CapValue*>& getCapValues() ;
+    list<CapValue*>& getCapValues();
 
-
-	protected:
-		/**
-		 * List of possible values for this capability
-		 */
-		list<CapValue*> capValues;
-	};
-}
+protected:
+    /**
+     * List of possible values for this capability
+     */
+    list<CapValue*> capValues;
+};
+}  // namespace alica
 #endif /* CAPABILITY_H_ */

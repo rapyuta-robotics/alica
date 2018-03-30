@@ -4,24 +4,18 @@
 #include "engine/model/Condition.h"
 #include "engine/model/Quantifier.h"
 
-namespace alica
-{
+namespace alica {
 
-ProblemPart::ProblemPart(Condition *con, shared_ptr<RunningPlan> rp)
-{
+ProblemPart::ProblemPart(Condition* con, shared_ptr<RunningPlan> rp) {
     condition = con;
-    domainVariables = make_shared<vector<list<vector<Variable *>>>>();
-    agentsInScope = make_shared<vector<shared_ptr<vector<const supplementary::AgentID *>>>>();
-    for (Quantifier *quantifier : condition->getQuantifiers())
-    {
-        shared_ptr<vector<const supplementary::AgentID *>> robots;
+    domainVariables = make_shared<vector<list<vector<Variable*>>>>();
+    agentsInScope = make_shared<vector<shared_ptr<vector<const supplementary::AgentID*>>>>();
+    for (Quantifier* quantifier : condition->getQuantifiers()) {
+        shared_ptr<vector<const supplementary::AgentID*>> robots;
         domainVariables->push_back(*quantifier->getDomainVariables(rp, robots));
-        if (robots)
-        {
+        if (robots) {
             agentsInScope->push_back(robots);
-        }
-        else
-        {
+        } else {
             agentsInScope->push_back(make_shared<vector<const supplementary::AgentID*>>());
         }
     }
@@ -31,16 +25,11 @@ ProblemPart::ProblemPart(Condition *con, shared_ptr<RunningPlan> rp)
 /**
  * Checks whether the given variable is one of the domain variables.
  */
-bool ProblemPart::hasVariable(Variable *v)
-{
-    for (auto &listOfRobots : (*domainVariables))
-    {
-        for (std::vector<Variable *> variables : listOfRobots)
-        {
-            for (auto variable : variables)
-            {
-                if (variable == v)
-                {
+bool ProblemPart::hasVariable(Variable* v) {
+    for (auto& listOfRobots : (*domainVariables)) {
+        for (std::vector<Variable*> variables : listOfRobots) {
+            for (auto variable : variables) {
+                if (variable == v) {
                     return true;
                 }
             }
@@ -49,8 +38,7 @@ bool ProblemPart::hasVariable(Variable *v)
     return false;
 }
 
-Condition *ProblemPart::getCondition()
-{
+Condition* ProblemPart::getCondition() {
     return condition;
 }
 
@@ -61,18 +49,16 @@ Condition *ProblemPart::getCondition()
  * 3. Vector of Variables, e.g., variables X,Y.
  * 4. Variable, e.g., variable X.
  */
-std::shared_ptr<std::vector<std::list<std::vector<Variable *>>>> ProblemPart::getDomainVariables()
-{
+std::shared_ptr<std::vector<std::list<std::vector<Variable*>>>> ProblemPart::getDomainVariables() {
     return domainVariables;
 }
 
-std::shared_ptr<RunningPlan> ProblemPart::getRunningPlan()
-{
+std::shared_ptr<RunningPlan> ProblemPart::getRunningPlan() {
     return runningplan;
 }
 
-std::shared_ptr<std::vector<std::shared_ptr<std::vector<const supplementary::AgentID*>>>> ProblemPart::getAgentsInScope()
-{
+std::shared_ptr<std::vector<std::shared_ptr<std::vector<const supplementary::AgentID*>>>>
+ProblemPart::getAgentsInScope() {
     return agentsInScope;
 }
 

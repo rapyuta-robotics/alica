@@ -7,47 +7,37 @@
 
 #include "engine/model/RoleUsage.h"
 
-namespace alica
-{
-	RoleUsage::RoleUsage(int priorityOrder, Role* role)
-	{
-		this->priorityOrder = priorityOrder;
-		this->role = role;
-		this->used = false;
-	}
+namespace alica {
+RoleUsage::RoleUsage(int priorityOrder, Role* role) {
+    this->priorityOrder = priorityOrder;
+    this->role = role;
+    this->used = false;
+}
 
-	RoleUsage::~RoleUsage()
-	{
-	}
+RoleUsage::~RoleUsage() {}
 
-	bool RoleUsage::isUsed() const
-	{
-		return this->used;
-	}
+bool RoleUsage::isUsed() const {
+    return this->used;
+}
 
-	void RoleUsage::setUsed(bool used)
-	{
-		this->used = used;
-	}
+void RoleUsage::setUsed(bool used) {
+    this->used = used;
+}
 
-	int RoleUsage::getPriorityOrder() const
-	{
-		return priorityOrder;
-	}
+int RoleUsage::getPriorityOrder() const {
+    return priorityOrder;
+}
 
-	void RoleUsage::setPriorityOrder(int priorityOrder)
-	{
-		this->priorityOrder = priorityOrder;
-	}
+void RoleUsage::setPriorityOrder(int priorityOrder) {
+    this->priorityOrder = priorityOrder;
+}
 
-	Role* RoleUsage::getRole() const
-	{
-		return role;
-	}
+Role* RoleUsage::getRole() const {
+    return role;
+}
 
-	void RoleUsage::setRole(Role* role)
-	{
-		this->role = role;
-	}
+void RoleUsage::setRole(Role* role) {
+    this->role = role;
+}
 
 } /* namespace alica */

@@ -6,134 +6,108 @@
  */
 
 #include "engine/model/State.h"
-namespace alica
-{
+namespace alica {
 
-	/**
-	 * Basic constructor
-	 */
-	State::State()
-	{
-		this->terminal = false;
-		this->successState = false;
-		this->failureState = false;
-		this->inPlan = nullptr;
-		this->entryPoint = nullptr;
+/**
+ * Basic constructor
+ */
+State::State() {
+    this->terminal = false;
+    this->successState = false;
+    this->failureState = false;
+    this->inPlan = nullptr;
+    this->entryPoint = nullptr;
+}
 
-	}
+/**
+ * Constructor which accepts a unique id.
+ * @param id A int
+ */
+State::State(long id) {
+    this->id = id;
+    this->terminal = false;
+    this->successState = false;
+    this->failureState = false;
+    this->inPlan = nullptr;
+    this->entryPoint = nullptr;
+}
 
-	/**
-	 * Constructor which accepts a unique id.
-	 * @param id A int
-	 */
-	State::State(long id)
-	{
-		this->id = id;
-		this->terminal = false;
-		this->successState = false;
-		this->failureState = false;
-		this->inPlan = nullptr;
-		this->entryPoint = nullptr;
-	}
+State::~State() {}
 
-	State::~State()
-	{
-	}
+bool State::isFailureState() const {
+    return failureState;
+}
 
-	bool State::isFailureState() const
-	{
-		return failureState;
-	}
+void State::setFailureState(bool failureState) {
+    this->failureState = failureState;
+}
 
-	void State::setFailureState(bool failureState)
-	{
-		this->failureState = failureState;
-	}
+Plan* State::getInPlan() const {
+    return inPlan;
+}
 
-	Plan* State::getInPlan() const
-	{
-		return inPlan;
-	}
+void State::setInPlan(Plan* inPlan) {
+    this->inPlan = inPlan;
+}
 
-	void State::setInPlan(Plan* inPlan)
-	{
-		this->inPlan = inPlan;
-	}
+list<Transition*>& State::getInTransitions() {
+    return inTransitions;
+}
 
-	list<Transition*>& State::getInTransitions()
-	{
-		return inTransitions;
-	}
+void State::setInTransitions(const list<Transition*>& inTransitions) {
+    this->inTransitions = inTransitions;
+}
 
-	void State::setInTransitions(const list<Transition*>& inTransitions)
-	{
-		this->inTransitions = inTransitions;
-	}
+list<Transition*>& State::getOutTransitions() {
+    return outTransitions;
+}
 
-	list<Transition*>& State::getOutTransitions()
-	{
-		return outTransitions;
-	}
+void State::setOutTransitions(list<Transition*> outTransition) {
+    this->outTransitions = outTransition;
+}
 
-	void State::setOutTransitions(list<Transition*> outTransition)
-	{
-		this->outTransitions = outTransition;
-	}
+list<Parametrisation*>& State::getParametrisation() {
+    return parametrisation;
+}
 
-	list<Parametrisation*>& State::getParametrisation()
-	{
-		return parametrisation;
-	}
+void State::setParametrisation(const list<Parametrisation*>& parametrisation) {
+    this->parametrisation = parametrisation;
+}
 
-	void State::setParametrisation(const list<Parametrisation*>& parametrisation)
-	{
-		this->parametrisation = parametrisation;
-	}
+list<AbstractPlan*>& State::getPlans() {
+    return plans;
+}
 
-	list<AbstractPlan*>& State::getPlans()
-	{
-		return plans;
-	}
+void State::setPlans(const list<AbstractPlan*>& plans) {
+    this->plans = plans;
+}
 
-	void State::setPlans(const list<AbstractPlan*>& plans)
-	{
-		this->plans = plans;
-	}
+bool State::isSuccessState() const {
+    return successState;
+}
 
-	bool State::isSuccessState() const
-	{
-		return successState;
-	}
+void State::setSuccessState(bool successState) {
+    this->successState = successState;
+}
 
-	void State::setSuccessState(bool successState)
-	{
-		this->successState = successState;
-	}
+bool State::isTerminal() const {
+    return terminal;
+}
 
-	bool State::isTerminal() const
-	{
-		return terminal;
-	}
+void State::setTerminal(bool terminal) {
+    this->terminal = terminal;
+}
+EntryPoint* alica::State::getEntryPoint() {
+    return entryPoint;
+}
 
-	void State::setTerminal(bool terminal)
-	{
-		this->terminal = terminal;
-	}
-	EntryPoint* alica::State::getEntryPoint()
-	{
-		return entryPoint;
-	}
+void alica::State::setEntryPoint(EntryPoint* entryPoint) {
+    this->entryPoint = entryPoint;
+}
+string State::toString() const {
+    stringstream ss;
+    ss << AlicaElement::toString();
+    return ss.str();
+}
 
-	void alica::State::setEntryPoint(EntryPoint* entryPoint)
-	{
-		this->entryPoint = entryPoint;
-	}
-	string State::toString() const
-	{
-		stringstream ss;
-		ss << AlicaElement::toString();
-		return ss.str();
-	}
-
-} /* namespace Alica */
-
+}  // namespace alica
