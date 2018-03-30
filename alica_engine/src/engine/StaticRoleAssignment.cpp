@@ -84,7 +84,8 @@ void StaticRoleAssignment::calculateRoles() {
         if (!roleIsAssigned) {
             stringstream ss;
             ss << *(agent->getId());
-            ae->abort("RA: Could not set a role (Default: " + agent->getDefaultRole() + ") for robot: ", ss.str());
+            AlicaEngine::abort(
+                    "RA: Could not set a role (Default: " + agent->getDefaultRole() + ") for robot: ", ss.str());
         }
     }
 }
