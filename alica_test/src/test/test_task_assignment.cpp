@@ -30,6 +30,7 @@ class StillClock : public alica::IAlicaClock {
     virtual void sleep(long us) override { std::this_thread::sleep_for(std::chrono::microseconds(us));}
 };
 
+
 class TaskAssignmentTest : public ::testing::Test
 {
 protected:
