@@ -10,13 +10,12 @@ namespace alica {
  * Constructor
  * @param A PlanRepository, in which parsed elements are stored.
  */
-PlanParser::PlanParser(AlicaEngine* ae, PlanRepository* rep) {
+PlanParser::PlanParser(PlanRepository* rep) {
     using namespace supplementary;
 
-    this->ae = ae;
     this->masterPlan = nullptr;
     this->rep = rep;
-    this->mf = shared_ptr<ModelFactory>(new ModelFactory(ae, this, rep));
+    this->mf = shared_ptr<ModelFactory>(new ModelFactory(this, rep));
     this->sc = SystemConfig::getInstance();
     this->domainConfigFolder = this->sc->getConfigPath();
 

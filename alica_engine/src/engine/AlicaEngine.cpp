@@ -67,7 +67,7 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, string roleSe
     AssignmentCollection::allowIdling = (*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL);
 
     this->planRepository = new PlanRepository();
-    this->planParser = new PlanParser(this, this->planRepository);
+    this->planParser = new PlanParser(this->planRepository);
     this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
     this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
     this->teamManager = new TeamManager(this, true);
