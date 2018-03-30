@@ -9,15 +9,11 @@
 #define ASSIGNMENT_H_
 
 namespace alica {
-	namespace reasoner {
-		namespace cnsat {
-			enum Assignment {
-				FALSE = 0,
-				TRUE = 1,
-				UNASSIGNED = 2
-			};
-		}  // namespace cnsat
-	}  // namespace reasoner
+namespace reasoner {
+namespace cnsat {
+enum Assignment { FALSE = 0, TRUE = 1, UNASSIGNED = 2 };
+}  // namespace cnsat
+}  // namespace reasoner
 }  // namespace alica
 
 #endif /* ASSIGNMENT_H_ */

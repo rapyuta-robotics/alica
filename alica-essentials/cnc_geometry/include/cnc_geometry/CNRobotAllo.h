@@ -3,14 +3,12 @@
 #include "CNVecAllo.h"
 #include "CNPositionAllo.h"
 
-namespace geometry
-{
+namespace geometry {
 
 class CNRobotEgo;
 
-class CNRobotAllo
-{
-  public:
+class CNRobotAllo {
+public:
     CNRobotAllo();
     virtual ~CNRobotAllo();
 

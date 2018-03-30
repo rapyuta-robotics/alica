@@ -15,18 +15,15 @@
 
 using namespace std;
 
-namespace autodiff
-{
-	namespace compiled
-	{
-		class CompiledSum : public TapeElement
-		{
-		public:
-			vector<int> _terms;
+namespace autodiff {
+namespace compiled {
+class CompiledSum : public TapeElement {
+public:
+    vector<int> _terms;
 
-			void accept(shared_ptr<ITapeVisitor> visitor);
-		};
-	} /* namespace compiled */
+    void accept(shared_ptr<ITapeVisitor> visitor);
+};
+} /* namespace compiled */
 } /* namespace autodiff */
 
 #endif /* COMPILEDSUM_H_ */

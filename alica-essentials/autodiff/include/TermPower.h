@@ -10,24 +10,22 @@
 
 #include "Term.h"
 
-namespace autodiff
-{
+namespace autodiff {
 
-	class TermPower : public Term
-	{
-	public:
-		TermPower(shared_ptr<Term> baseTerm, shared_ptr<Term> exponent);
+class TermPower : public Term {
+public:
+    TermPower(shared_ptr<Term> baseTerm, shared_ptr<Term> exponent);
 
-		shared_ptr<Term> base;
-		shared_ptr<Term> exponent;
+    shared_ptr<Term> base;
+    shared_ptr<Term> exponent;
 
-		int accept(shared_ptr<ITermVisitor> visitor);
+    int accept(shared_ptr<ITermVisitor> visitor);
 
-		shared_ptr<Term> aggregateConstants();
-		shared_ptr<Term> derivative(shared_ptr<Variable> v);
+    shared_ptr<Term> aggregateConstants();
+    shared_ptr<Term> derivative(shared_ptr<Variable> v);
 
-		string toString();
-	};
+    string toString();
+};
 
 } /* namespace autodiff */
 

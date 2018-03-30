@@ -8,35 +8,32 @@
 
 //#define CGSolver_DEBUG
 
-namespace alica
-{
-	class AlicaEngine;
-	class IVariableSyncModule;
+namespace alica {
+class AlicaEngine;
+class IVariableSyncModule;
 
-	namespace reasoner
-	{
-		class GSolver;
+namespace reasoner {
+class GSolver;
 
-		class CGSolver : public ISolver
-		{
-		public:
-			CGSolver(AlicaEngine* ae);
-			virtual ~CGSolver();
+class CGSolver : public ISolver {
+public:
+    CGSolver(AlicaEngine* ae);
+    virtual ~CGSolver();
 
-			bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls);
-			bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results);
-			shared_ptr<SolverVariable> createVariable(long id);
+    bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls);
+    bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results);
+    shared_ptr<SolverVariable> createVariable(long id);
 
-		protected:
-			shared_ptr<GSolver> gs;
-			shared_ptr<GSolver> sgs;
+protected:
+    shared_ptr<GSolver> gs;
+    shared_ptr<GSolver> sgs;
 
-			mutex mtx;
+    mutex mtx;
 
-			double lastUtil;
-			double lastRuns;
-			double lastFEvals;
-		};
+    double lastUtil;
+    double lastRuns;
+    double lastFEvals;
+};
 
-	} /* namespace Reasoner */
-} /* namespace Alica */
+}  // namespace reasoner
+}  // namespace alica

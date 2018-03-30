@@ -9,18 +9,15 @@
 
 #include "compiled/ITapeVisitor.h"
 
-namespace autodiff
-{
-	namespace compiled
-	{
-		CompiledConstant::CompiledConstant(double value) {
-			this->value = value;
-		}
+namespace autodiff {
+namespace compiled {
+CompiledConstant::CompiledConstant(double value) {
+    this->value = value;
+}
 
-		void CompiledConstant::accept(shared_ptr<ITapeVisitor> visitor)
-		{
-			shared_ptr<CompiledConstant> thisCasted = dynamic_pointer_cast<CompiledConstant>(shared_from_this());
-			visitor->visit(thisCasted);
-		}
-	} /* namespace compiled */
+void CompiledConstant::accept(shared_ptr<ITapeVisitor> visitor) {
+    shared_ptr<CompiledConstant> thisCasted = dynamic_pointer_cast<CompiledConstant>(shared_from_this());
+    visitor->visit(thisCasted);
+}
+} /* namespace compiled */
 } /* namespace autodiff */

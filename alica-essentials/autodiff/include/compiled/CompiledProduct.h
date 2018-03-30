@@ -14,20 +14,17 @@
 
 using namespace std;
 
-namespace autodiff
-{
-	namespace compiled
-	{
-		class CompiledProduct : public TapeElement
-		{
-		public:
-			int _left;
-			int _right;
+namespace autodiff {
+namespace compiled {
+class CompiledProduct : public TapeElement {
+public:
+    int _left;
+    int _right;
 
-			void accept(shared_ptr<ITapeVisitor> visitor);
-		};
+    void accept(shared_ptr<ITapeVisitor> visitor);
+};
 
-	} /* namespace compiled */
+} /* namespace compiled */
 } /* namespace autodiff */
 
 #endif /* COMPILEDPRODUCT_H_ */

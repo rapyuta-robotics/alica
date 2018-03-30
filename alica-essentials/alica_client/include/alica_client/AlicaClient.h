@@ -10,39 +10,34 @@
 #include <QDialog>
 
 namespace alica {
-	class AlicaWidget;
+class AlicaWidget;
 }
 
-namespace alica_client
-{
-	using namespace std;
+namespace alica_client {
+using namespace std;
 
-	class AlicaClient : public rqt_gui_cpp::Plugin
-	{
+class AlicaClient : public rqt_gui_cpp::Plugin {
+    Q_OBJECT
 
-	Q_OBJECT
+public:
+    AlicaClient();
 
-	public:
+    virtual void initPlugin(qt_gui_cpp::PluginContext& context);
 
-		AlicaClient();
+    virtual void shutdownPlugin();
 
-		virtual void initPlugin(qt_gui_cpp::PluginContext& context);
+    virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
 
-		virtual void shutdownPlugin();
+    virtual void restoreSettings(
+            const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
-		virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
+private:
+    QWidget* widget;
+    alica::AlicaWidget* alicaWidget;
+    ros::NodeHandle* rosNode;
+    ros::Subscriber aliceClientSubscriber;
+};
 
-		virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
+}  // namespace alica_client
 
-	private:
-
-		QWidget* widget;
-		alica::AlicaWidget* alicaWidget;
-		ros::NodeHandle* rosNode;
-		ros::Subscriber aliceClientSubscriber;
-
-	};
-
-}
-
-#endif // alica_client__AlicaClient_H
+#endif  // alica_client__AlicaClient_H

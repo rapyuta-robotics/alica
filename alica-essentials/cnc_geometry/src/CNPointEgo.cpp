@@ -5,40 +5,35 @@
 
 #include "cnc_geometry/CNPositionAllo.h"
 
-using std::string;
 using std::shared_ptr;
+using std::string;
 
-namespace geometry
-{
+namespace geometry {
 
-CNPointEgo::CNPointEgo(double x, double y, double z)
-{
+CNPointEgo::CNPointEgo(double x, double y, double z) {
     this->x = x;
     this->y = y;
     this->z = z;
 }
 
-CNPointEgo::CNPointEgo(const CNPointEgo &obj)
-{
-	this->x = obj.x;
-	this->y = obj.y;
-	this->z = obj.z;
+CNPointEgo::CNPointEgo(const CNPointEgo& obj) {
+    this->x = obj.x;
+    this->y = obj.y;
+    this->z = obj.z;
 }
 
 CNPointEgo::~CNPointEgo() {}
 
-string CNPointEgo::toString() const
-{
+string CNPointEgo::toString() const {
     std::stringstream ss;
     ss << "CNPointEgo: X: " << x << " Y: " << y << " z: " << z << std::endl;
     return ss.str();
 }
 
-CNPointAllo CNPointEgo::toAllo(const CNPositionAllo &me) const
-{
+CNPointAllo CNPointEgo::toAllo(const CNPositionAllo& me) const {
     auto allo = CNPointAllo();
     allo.x = me.x;
-	allo.y = me.y;
+    allo.y = me.y;
     // rotate rel point around origin -> rel point with allo orientation
     double s = sin(me.theta);
     double c = cos(me.theta);
@@ -51,42 +46,24 @@ CNPointAllo CNPointEgo::toAllo(const CNPositionAllo &me) const
     return allo;
 }
 
-double CNPointEgo::distanceTo(const CNPointEgo &other) const
-{
-	return (*this - other).length();
+double CNPointEgo::distanceTo(const CNPointEgo& other) const {
+    return (*this - other).length();
 }
 
-CNPointEgo CNPointEgo::operator+(const CNPointEgo &right) const
-{
-    return CNPointEgo(
-    		this->x + right.x,
-			this->y + right.y,
-			this->z + right.z);
+CNPointEgo CNPointEgo::operator+(const CNPointEgo& right) const {
+    return CNPointEgo(this->x + right.x, this->y + right.y, this->z + right.z);
 }
 
-CNPointEgo CNPointEgo::operator+(const CNVecEgo &right) const
-{
-    return CNPointEgo(
-    		this->x + right.x,
-			this->y + right.y,
-			this->z + right.z);
+CNPointEgo CNPointEgo::operator+(const CNVecEgo& right) const {
+    return CNPointEgo(this->x + right.x, this->y + right.y, this->z + right.z);
 }
 
-CNPointEgo CNPointEgo::operator-(const CNVecEgo &right) const
-{
-    return CNPointEgo(
-    		this->x - right.x,
-			this->y - right.y,
-			this->z - right.z);
+CNPointEgo CNPointEgo::operator-(const CNVecEgo& right) const {
+    return CNPointEgo(this->x - right.x, this->y - right.y, this->z - right.z);
 }
 
-CNVecEgo CNPointEgo::operator-(const CNPointEgo &right) const
-{
-    return CNVecEgo(
-    		this->x - right.x,
-			this->y - right.y,
-			this->z - right.z);
+CNVecEgo CNPointEgo::operator-(const CNPointEgo& right) const {
+    return CNVecEgo(this->x - right.x, this->y - right.y, this->z - right.z);
 }
 
 } /* namespace geometry */
-

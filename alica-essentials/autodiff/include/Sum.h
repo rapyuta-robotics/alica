@@ -12,24 +12,22 @@
 
 #include <vector>
 
-namespace autodiff
-{
+namespace autodiff {
 
-	class Sum : public Term
-	{
-	public:
-		Sum(vector<shared_ptr<Term>> terms);
-		Sum(shared_ptr<Term> first, shared_ptr<Term> second, vector<shared_ptr<Term>> rest);
+class Sum : public Term {
+public:
+    Sum(vector<shared_ptr<Term>> terms);
+    Sum(shared_ptr<Term> first, shared_ptr<Term> second, vector<shared_ptr<Term>> rest);
 
-		vector<shared_ptr<Term>> terms;
+    vector<shared_ptr<Term>> terms;
 
-		int accept(shared_ptr<ITermVisitor> visitor);
+    int accept(shared_ptr<ITermVisitor> visitor);
 
-		shared_ptr<Term> aggregateConstants();
-		shared_ptr<Term> derivative(shared_ptr<Variable> v);
+    shared_ptr<Term> aggregateConstants();
+    shared_ptr<Term> derivative(shared_ptr<Variable> v);
 
-		string toString();
-	};
+    string toString();
+};
 
 } /* namespace autodiff */
 

@@ -14,24 +14,22 @@
 
 using namespace std;
 
-namespace autodiff
-{
+namespace autodiff {
 
-	class ConstPower : public Term
-	{
-	public:
-		ConstPower(shared_ptr<Term> baseTerm, double exponent);
+class ConstPower : public Term {
+public:
+    ConstPower(shared_ptr<Term> baseTerm, double exponent);
 
-		shared_ptr<Term> base;
-		double exponent;
+    shared_ptr<Term> base;
+    double exponent;
 
-		int accept(shared_ptr<ITermVisitor> visitor);
+    int accept(shared_ptr<ITermVisitor> visitor);
 
-		shared_ptr<Term> aggregateConstants();
-		shared_ptr<Term> derivative(shared_ptr<Variable> v);
+    shared_ptr<Term> aggregateConstants();
+    shared_ptr<Term> derivative(shared_ptr<Variable> v);
 
-		string toString();
-	};
+    string toString();
+};
 
 } /* namespace autodiff */
 
