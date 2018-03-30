@@ -194,7 +194,7 @@ PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r)
         cout << "RB: B4 dynChange: Util is " << curUtil << " | "
              << " suggested is " << possibleUtil << " | "
              << " threshold " << r->getPlan()->getUtilityThreshold() << endl;
-        cout << "RB: DynAlloc" << r->getPlan()->getName() << endl;
+        cout << "RB: DynAlloc in " << r->getPlan()->getName() << endl;
 //#endif
 
         log->eventOccured("DynAlloc(" + r->getPlan()->getName() + ")");

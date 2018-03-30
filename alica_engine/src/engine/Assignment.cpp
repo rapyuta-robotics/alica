@@ -364,7 +364,8 @@ namespace alica
 	 */
 	bool Assignment::isValid()
 	{
-		auto success = this->epSucMapping->getRobots();
+
+		const vector<shared_ptr<std::list<const supplementary::AgentID*>>>& success = this->epSucMapping->getRobots();
 
 		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
 		{
@@ -631,7 +632,7 @@ namespace alica
 		{
 			ss << "EP: " << this->epRobotsMapping->getEp(i)->getId() << " Task: "
 					<< this->epRobotsMapping->getEp(i)->getTask()->getName() << " RobotIDs: ";
-			for (auto& robot : *(this->epRobotsMapping->getRobots(i)))
+			for (const supplementary::AgentID* robot : *(this->epRobotsMapping->getRobots(i)))
 			{
 				ss << *robot << " ";
 			}

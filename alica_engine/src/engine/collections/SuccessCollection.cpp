@@ -119,7 +119,7 @@ namespace alica
 				ss << this->entryPoints[i]->getTask()->getId() << ": ";
 				for (const supplementary::AgentID* r : *(this->robotIds[i]))
 				{
-					ss << r << " ";
+					ss << *r << " ";
 				}
 				ss << endl;
 			}

@@ -36,7 +36,8 @@ class TeamManager
 
     std::unique_ptr<std::list<Agent*>> getAllAgents();
     std::unique_ptr<std::list<Agent*>> getActiveAgents();
-    const supplementary::AgentID * getLocalAgentID() const;
+    const supplementary::AgentID* getLocalAgentID() const;
+    const Agent* getLocalAgent() const {return localAgent;}
     std::unique_ptr<std::list<const supplementary::AgentID *>> getActiveAgentIDs() const;
     std::unique_ptr<std::list<const RobotProperties*>> getActiveAgentProperties() const;
     int getTeamSize() const;

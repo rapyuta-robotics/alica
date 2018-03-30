@@ -8,24 +8,25 @@
 namespace alica
 {
 
-	/**
-	 * A simple helper class for conflict detection
-	 */
-	class EntryPointRobotPair
-	{
-	public:
-		EntryPointRobotPair(EntryPoint* ep, const supplementary::AgentID* r);
-		virtual ~EntryPointRobotPair();
-		EntryPoint* getEntryPoint();
-		void setEntryPoint(EntryPoint* entryPoint);
-		const supplementary::AgentID* getRobot();
-		void setRobot(const supplementary::AgentID* robot);
-		static bool equals(std::shared_ptr<EntryPointRobotPair> thisOne, std::shared_ptr<EntryPointRobotPair> other);
+    /**
+     * A simple helper class for conflict detection
+     */
+    class EntryPointRobotPair
+    {
+    public:
+        EntryPointRobotPair(EntryPoint* ep, const supplementary::AgentID* r);
+        virtual ~EntryPointRobotPair();
+        EntryPoint* getEntryPoint() const;
+        void setEntryPoint(EntryPoint* entryPoint);
+        const supplementary::AgentID* getRobot() const;
+        void setRobot(const supplementary::AgentID* robot);
+        bool operator==(const EntryPointRobotPair& o) const;
+        bool operator!=(const EntryPointRobotPair& o) const {return !(*this==o);}
 
-	protected:
-		EntryPoint* entryPoint;
-		const supplementary::AgentID* robot;
-	};
+    protected:
+        EntryPoint* _entryPoint; //TODO: should be const
+        const supplementary::AgentID* _robot;
+    };
 
 } /* namespace alica */
 
