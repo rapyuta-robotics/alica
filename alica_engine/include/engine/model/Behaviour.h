@@ -15,43 +15,41 @@ using namespace std;
 
 #include "AlicaElement.h"
 
-namespace alica
-{
+namespace alica {
 
-	class BehaviourConfiguration;
-	class BasicBehaviour;
+class BehaviourConfiguration;
+class BasicBehaviour;
 
-	/**
-	 * Represents a Behaviour within the plan tree
-	 */
-	class Behaviour : public AlicaElement
-	{
-	public:
-		Behaviour();
-		Behaviour(string name);
-		virtual ~Behaviour();
+/**
+ * Represents a Behaviour within the plan tree
+ */
+class Behaviour : public AlicaElement {
+public:
+    Behaviour();
+    Behaviour(string name);
+    virtual ~Behaviour();
 
-		string toString();
+    string toString();
 
-		list<BehaviourConfiguration*>& getConfigurations();
-		void setConfigurations(const list<BehaviourConfiguration*>& configurations);
-		const string& getFileName() const;
-		void setFileName(const string& fileName);
-		BasicBehaviour* getImplementation();
-		void setImplementation(BasicBehaviour* implementation);
+    list<BehaviourConfiguration*>& getConfigurations();
+    void setConfigurations(const list<BehaviourConfiguration*>& configurations);
+    const string& getFileName() const;
+    void setFileName(const string& fileName);
+    BasicBehaviour* getImplementation();
+    void setImplementation(BasicBehaviour* implementation);
 
-	private:
-		/**
-		 * The set of static configurations of this Behaviour
-		 */
-		list<BehaviourConfiguration*> configurations;
-		/**
-		 * The actual implementation of this behaviour, a subclass of BasicBehaviour
-		 */
-		BasicBehaviour* implementation;
-		string fileName;
-	};
+private:
+    /**
+     * The set of static configurations of this Behaviour
+     */
+    list<BehaviourConfiguration*> configurations;
+    /**
+     * The actual implementation of this behaviour, a subclass of BasicBehaviour
+     */
+    BasicBehaviour* implementation;
+    string fileName;
+};
 
-} /* namespace Alica */
+}  // namespace alica
 
 #endif /* BEHAVIOUR_H_ */

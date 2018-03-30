@@ -7,13 +7,12 @@
 #include <string>
 #include <vector>
 
-namespace alica
-{
+namespace alica {
 
-using std::shared_ptr;
-using std::vector;
 using std::list;
+using std::shared_ptr;
 using std::string;
+using std::vector;
 
 class EntryPoint;
 class SuccessCollection;
@@ -22,14 +21,11 @@ class AssignmentCollection;
 /**
  *  An IAssignment describes a potentially partial assignment of robots to EntryPoints within a plan.
  */
-class IAssignment
-{
-  public:
-    virtual ~IAssignment()
-    {
-    }
-    virtual shared_ptr<vector<const supplementary::AgentID *>> getRobotsWorking(EntryPoint *ep) = 0;
-    virtual shared_ptr<vector<const supplementary::AgentID *>> getRobotsWorking(long epid) = 0;
+class IAssignment {
+public:
+    virtual ~IAssignment() {}
+    virtual shared_ptr<vector<const supplementary::AgentID*>> getRobotsWorking(EntryPoint* ep) = 0;
+    virtual shared_ptr<vector<const supplementary::AgentID*>> getRobotsWorking(long epid) = 0;
     virtual int totalRobotCount() = 0;
     /**
      * The shared_ptr of a vector of EntryPoints relevant to this assignment.
@@ -46,21 +42,21 @@ class IAssignment
      * @param ep The EntryPoint queried
      * @return A shared_ptr of a list of int of robot ids
      */
-    virtual shared_ptr<list<const supplementary::AgentID *>> getRobotsWorkingAndFinished(EntryPoint *ep) = 0;
+    virtual shared_ptr<list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(EntryPoint* ep) = 0;
     /**
      * Similar to GetRobotsWorkingAndFinished, with duplicates removed.
      * Behaviour is undefined if ep is not relevant or null.
      * @param ep The EntryPoint queried
      * @return A shared_ptr of a list of int of robot ids
      */
-    virtual shared_ptr<list<const supplementary::AgentID *>> getUniqueRobotsWorkingAndFinished(EntryPoint *ep) = 0;
+    virtual shared_ptr<list<const supplementary::AgentID*>> getUniqueRobotsWorkingAndFinished(EntryPoint* ep) = 0;
     /**
      * Returns all robot Ids working on the Task defined by ep
      * Behaviour is undefined if ep is not relevant or null.
      * @param ep The EntryPoint queried
      * @return A shared_ptr of a list of int of robot ids
      */
-    virtual shared_ptr<list<const supplementary::AgentID *>> getRobotsWorkingAndFinished(long epid) = 0;
+    virtual shared_ptr<list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(long epid) = 0;
     /**
      * Information about succeeded tasks.
      */
@@ -76,43 +72,37 @@ class IAssignment
 
     virtual string toString() = 0;
 
-    virtual AssignmentCollection *getEpRobotsMapping() = 0;
+    virtual AssignmentCollection* getEpRobotsMapping() = 0;
 
-    double getMax() const
-    {
+    double getMax() const {
         return max;
     }
 
-    virtual void setMax(double max)
-    {
+    virtual void setMax(double max) {
         this->max = max;
     }
 
-    double getMin() const
-    {
+    double getMin() const {
         return min;
     }
 
-    void setMin(double min)
-    {
+    void setMin(double min) {
         this->min = min;
     }
 
-    int getNumUnAssignedRobotIds() const
-    {
+    int getNumUnAssignedRobotIds() const {
         return unassignedRobotIds.size();
     }
 
-    const vector<const supplementary::AgentID *> &getUnassignedRobotIds() const
-    {
+    const vector<const supplementary::AgentID*>& getUnassignedRobotIds() const {
         return unassignedRobotIds;
     }
 
-  protected:
+protected:
     /**
      * The Ids of all robots available but not yet assigned.
      */
-    vector<const supplementary::AgentID *> unassignedRobotIds;
+    vector<const supplementary::AgentID*> unassignedRobotIds;
     /**
      * The minimal utility this assignment can achieve.
      */

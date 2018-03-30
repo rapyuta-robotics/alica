@@ -7,51 +7,40 @@
 
 #include "engine/model/TaskRepository.h"
 
-namespace alica
-{
+namespace alica {
 
-	TaskRepository::TaskRepository()
-	{
-		this->defaultTask = 0;
-	}
+TaskRepository::TaskRepository() {
+    this->defaultTask = 0;
+}
 
-	TaskRepository::~TaskRepository()
-	{
-	}
+TaskRepository::~TaskRepository() {}
 
-	long TaskRepository::getDefaultTask() const
-	{
-		return defaultTask;
-	}
+long TaskRepository::getDefaultTask() const {
+    return defaultTask;
+}
 
-	void TaskRepository::setDefaultTask(long defaultTask)
-	{
-		this->defaultTask = defaultTask;
-	}
+void TaskRepository::setDefaultTask(long defaultTask) {
+    this->defaultTask = defaultTask;
+}
 
-	string TaskRepository::getFileName()
-	{
-		if (this->fileName.empty())
-		{
-			static string result = name + ".rdefset";
-			return result;
-		}
-		return fileName;
-	}
+string TaskRepository::getFileName() {
+    if (this->fileName.empty()) {
+        static string result = name + ".rdefset";
+        return result;
+    }
+    return fileName;
+}
 
-	void TaskRepository::setFileName(string fileName)
-	{
-		this->fileName = fileName;
-	}
+void TaskRepository::setFileName(string fileName) {
+    this->fileName = fileName;
+}
 
-	 list<Task*>& TaskRepository::getTasks()
-	{
-		return tasks;
-	}
+list<Task*>& TaskRepository::getTasks() {
+    return tasks;
+}
 
-	void TaskRepository::setTasks(const list<Task*>& tasks)
-	{
-		this->tasks = tasks;
-	}
+void TaskRepository::setTasks(const list<Task*>& tasks) {
+    this->tasks = tasks;
+}
 
-} /* namespace Alica */
+}  // namespace alica

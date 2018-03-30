@@ -19,25 +19,25 @@
 #include "engine/model/State.h"
 #include <SystemConfig.h>
 
-namespace alica
-{
+namespace alica {
 /**
  * Construct a CycleManager for a RunningPlan
  * @param p A RunningPlan
  */
-CycleManager::CycleManager(AlicaEngine *ae, RunningPlan *p)
-{
+CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p) {
     sc = supplementary::SystemConfig::getInstance();
     maxAllocationCycles = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "CycleCount");
     enabled = (*sc)["Alica"]->get<bool>("Alica", "CycleDetection", "Enabled");
     minimalOverrideTimeInterval =
-        (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL) * 1000000;
+            (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL) *
+            1000000;
     maximalOverrideTimeInterval =
-        (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MaximalAuthorityTimeInterval", NULL) * 1000000;
+            (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MaximalAuthorityTimeInterval", NULL) *
+            1000000;
     overrideShoutInterval =
-        (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageTimeInterval", NULL) * 1000000;
+            (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageTimeInterval", NULL) * 1000000;
     overrideWaitInterval =
-        (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageWaitTimeInterval", NULL) * 1000000;
+            (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageWaitTimeInterval", NULL) * 1000000;
     historySize = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize", NULL);
 
     this->ae = ae;
@@ -45,8 +45,7 @@ CycleManager::CycleManager(AlicaEngine *ae, RunningPlan *p)
     this->intervalDecFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalDecreaseFactor", NULL);
 
     this->allocationHistory.resize(this->historySize);
-    for (int i = 0; i < this->historySize; i++)
-    {
+    for (int i = 0; i < this->historySize; i++) {
         this->allocationHistory[i] = new AllocationDifference();
     }
     this->newestAllocationDifference = 0;
@@ -59,11 +58,9 @@ CycleManager::CycleManager(AlicaEngine *ae, RunningPlan *p)
     this->fixedAllocation = nullptr;
 }
 
-CycleManager::~CycleManager()
-{
+CycleManager::~CycleManager() {
     lock_guard<mutex> lock(this->allocationHistoryMutex);
-    for (int i = 0; i < this->allocationHistory.size(); i++)
-    {
+    for (int i = 0; i < this->allocationHistory.size(); i++) {
         delete this->allocationHistory[i];
     }
 }
@@ -72,54 +69,42 @@ CycleManager::~CycleManager()
  * Called once per engine iteration by the corresponding RunningPlan.
  * Checks whether a state change is needed.
  */
-void CycleManager::update()
-{
-    if (!this->enabled)
-    {
+void CycleManager::update() {
+    if (!this->enabled) {
         return;
     }
-    if (this->rp->isBehaviour())
-    {
+    if (this->rp->isBehaviour()) {
         return;
     }
 
-    AbstractPlan *plan = this->rp->getPlan();
+    AbstractPlan* plan = this->rp->getPlan();
 
-    if (this->state == CycleState::observing)
-    {
-        if (detectAllocationCycle())
-        {
+    if (this->state == CycleState::observing) {
+        if (detectAllocationCycle()) {
             cout << "CM: Cycle Detected!" << endl;
 
             this->state = CycleState::overriding;
-            plan->setAuthorityTimeInterval(
-                min(maximalOverrideTimeInterval, (AlicaTime)(plan->getAuthorityTimeInterval() * intervalIncFactor)));
+            plan->setAuthorityTimeInterval(min(
+                    maximalOverrideTimeInterval, (AlicaTime)(plan->getAuthorityTimeInterval() * intervalIncFactor)));
             this->overrideShoutTime = 0;
 #ifdef CM_DEBUG
             cout << "Assuming Authority for " << plan->getAuthorityTimeInterval() / 1000000000.0 << "sec!" << endl;
 #endif
             this->overrideTimestamp = ae->getIAlicaClock()->now();
+        } else {
+            plan->setAuthorityTimeInterval(max(
+                    minimalOverrideTimeInterval, (AlicaTime)(plan->getAuthorityTimeInterval() * intervalDecFactor)));
         }
-        else
-        {
-            plan->setAuthorityTimeInterval(
-                max(minimalOverrideTimeInterval, (AlicaTime)(plan->getAuthorityTimeInterval() * intervalDecFactor)));
-        }
-    }
-    else
-    {
+    } else {
         if (this->state == CycleState::overriding &&
-            this->overrideTimestamp + plan->getAuthorityTimeInterval() < ae->getIAlicaClock()->now())
-        {
+                this->overrideTimestamp + plan->getAuthorityTimeInterval() < ae->getIAlicaClock()->now()) {
 #ifdef CM_DEBUG
             cout << "Resume Observing!" << endl;
 #endif
             this->state = CycleState::observing;
             this->fixedAllocation = nullptr;
-        }
-        else if (this->state == CycleState::overridden &&
-                 this->overrideShoutTime + plan->getAuthorityTimeInterval() < ae->getIAlicaClock()->now())
-        {
+        } else if (this->state == CycleState::overridden &&
+                   this->overrideShoutTime + plan->getAuthorityTimeInterval() < ae->getIAlicaClock()->now()) {
 #ifdef CM_DEBUG
             cout << "Resume Observing!" << endl;
 #endif
@@ -133,8 +118,7 @@ void CycleManager::update()
  * Indicates whether an authorative allocation is present
  * @return bool
  */
-bool CycleManager::isOverridden()
-{
+bool CycleManager::isOverridden() {
     return this->state == CycleState::overridden && this->fixedAllocation != nullptr;
 }
 
@@ -143,16 +127,14 @@ bool CycleManager::isOverridden()
  * @param curP The RunningPlan of this CycleManager, in case it has changed.
  * @param aldif The new AllocationDifference
  */
-void alica::CycleManager::setNewAllocDiff(AllocationDifference *aldif)
-{
-    if (!enabled)
-    {
+void alica::CycleManager::setNewAllocDiff(AllocationDifference* aldif) {
+    if (!enabled) {
         return;
     }
     lock_guard<mutex> lock(this->allocationHistoryMutex);
 
     this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
-    AllocationDifference *old = this->allocationHistory[this->newestAllocationDifference];
+    AllocationDifference* old = this->allocationHistory[this->newestAllocationDifference];
     this->allocationHistory[this->newestAllocationDifference] = aldif;
     delete old;
 #ifdef CM_DEBUG
@@ -166,45 +148,42 @@ void alica::CycleManager::setNewAllocDiff(AllocationDifference *aldif)
  * @param newAss The new Assignment
  * @param reas The AllocationDifference.Reason for this change.
  */
-void alica::CycleManager::setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_ptr<Assignment> newAss,
-                                          AllocationDifference::Reason reas)
-{
-    if (!enabled)
-    {
+void alica::CycleManager::setNewAllocDiff(
+        shared_ptr<Assignment> oldAss, shared_ptr<Assignment> newAss, AllocationDifference::Reason reas) {
+    if (!enabled) {
         return;
     }
-    if (oldAss == nullptr)
-    {
+    if (oldAss == nullptr) {
         return;
     }
     lock_guard<mutex> lock(this->allocationHistoryMutex);
-    try
-    {
+    try {
         this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
         this->allocationHistory[this->newestAllocationDifference]->reset();
 
-        EntryPoint *ep;
+        EntryPoint* ep;
         // for (EntryPoint* ep : (*oldAss->getEntryPoints()))
-        for (short i = 0; i < oldAss->getEntryPointCount(); i++)
-        {
+        for (short i = 0; i < oldAss->getEntryPointCount(); i++) {
             ep = oldAss->getEpRobotsMapping()->getEp(i);
 
             auto newRobots = newAss->getRobotsWorking(ep);
             auto oldRobots = oldAss->getRobotsWorking(ep);
-            for (auto &oldId : (*oldRobots))
-            {
-                if (newRobots == nullptr || find_if(newRobots->begin(), newRobots->end(), [&oldId](const supplementary::AgentID *id) { return *oldId == *id; }) == newRobots->end())
-                {
-                    this->allocationHistory[this->newestAllocationDifference]->editSubtractions().emplace_back(ep, oldId);
+            for (auto& oldId : (*oldRobots)) {
+                if (newRobots == nullptr ||
+                        find_if(newRobots->begin(), newRobots->end(), [&oldId](const supplementary::AgentID* id) {
+                            return *oldId == *id;
+                        }) == newRobots->end()) {
+                    this->allocationHistory[this->newestAllocationDifference]->editSubtractions().emplace_back(
+                            ep, oldId);
                 }
             }
-            if (newRobots != nullptr)
-            {
-                for (auto &newId : (*newRobots))
-                {
-                    if (find_if(oldRobots->begin(), oldRobots->end(), [&newId](const supplementary::AgentID *id) { return *newId == *id; }) == oldRobots->end())
-                    {
-                        this->allocationHistory[this->newestAllocationDifference]->editAdditions().emplace_back(ep, newId);
+            if (newRobots != nullptr) {
+                for (auto& newId : (*newRobots)) {
+                    if (find_if(oldRobots->begin(), oldRobots->end(), [&newId](const supplementary::AgentID* id) {
+                            return *newId == *id;
+                        }) == oldRobots->end()) {
+                        this->allocationHistory[this->newestAllocationDifference]->editAdditions().emplace_back(
+                                ep, newId);
                     }
                 }
             }
@@ -214,9 +193,7 @@ void alica::CycleManager::setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_
         cout << "CM: SetNewAllDiff(b): " << this->allocationHistory[this->newestAllocationDifference]->toString()
              << endl;
 #endif
-    }
-    catch (exception &e)
-    {
+    } catch (exception& e) {
         cerr << "Exception in Alloc Difference Calculation:" << endl;
         cerr << e.what();
     }
@@ -226,37 +203,29 @@ void alica::CycleManager::setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_
  * Message Handler
  * @param aai A shared_ptr<AllocationAuthorityInfo>
  */
-void alica::CycleManager::handleAuthorityInfo(shared_ptr<AllocationAuthorityInfo> aai)
-{
-    if (!enabled)
-    {
+void alica::CycleManager::handleAuthorityInfo(shared_ptr<AllocationAuthorityInfo> aai) {
+    if (!enabled) {
         return;
     }
     auto rid = aai->authority;
-    if (*rid == *myID)
-    {
+    if (*rid == *myID) {
         return;
     }
-    if (*rid > *myID)
-    {
+    if (*rid > *myID) {
 #ifdef CM_DEBUG
         cout << "CM: Assignment overridden in " << this->rp->getPlan()->getName() << " " << endl;
 #endif
         this->state = CycleState::overridden;
         this->overrideShoutTime = ae->getIAlicaClock()->now();
         this->fixedAllocation = aai;
-    }
-    else
-    {
+    } else {
         cout << "CM: Rcv: Rejecting Authority!" << endl;
-        if (this->state != CycleState::overriding)
-        {
+        if (this->state != CycleState::overriding) {
 #ifdef CM_DEBUG
             cout << "CM: Overriding assignment of " << this->rp->getPlan()->getName() << " " << endl;
 #endif
             this->state = CycleState::overriding;
-            this->rp->getPlan()->setAuthorityTimeInterval(
-                min(maximalOverrideTimeInterval,
+            this->rp->getPlan()->setAuthorityTimeInterval(min(maximalOverrideTimeInterval,
                     (AlicaTime)(this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
             this->overrideTimestamp = ae->getIAlicaClock()->now();
             this->overrideShoutTime = 0;
@@ -264,8 +233,7 @@ void alica::CycleManager::handleAuthorityInfo(shared_ptr<AllocationAuthorityInfo
     }
 }
 
-bool alica::CycleManager::needsSending()
-{
+bool alica::CycleManager::needsSending() {
     return this->state == CycleState::overriding &&
            (this->overrideShoutTime + overrideShoutInterval < ae->getIAlicaClock()->now());
 }
@@ -273,8 +241,7 @@ bool alica::CycleManager::needsSending()
 /**
  * Indicate to the manager that a corresponding message has been sent.
  */
-void alica::CycleManager::sent()
-{
+void alica::CycleManager::sent() {
     this->overrideShoutTime = ae->getIAlicaClock()->now();
 }
 
@@ -282,8 +249,7 @@ void alica::CycleManager::sent()
  * Indicates whether the local agent currently holds authority over the plan.
  * @return A bool
  */
-bool alica::CycleManager::haveAuthority()
-{
+bool alica::CycleManager::haveAuthority() {
     return this->state == CycleState::overriding;
 }
 
@@ -292,87 +258,67 @@ bool alica::CycleManager::haveAuthority()
  * @param r A shared_ptr<RunningPlan>
  * @return A bool
  */
-bool CycleManager::setAssignment()
-{
+bool CycleManager::setAssignment() {
 #ifdef CM_DEBUG
     cout << "CM: Setting authorative assignment for plan " << rp->getPlan()->getName() << endl;
-    if (rp->getPlan()->getName() == "AuthorityTest")
-    {
+    if (rp->getPlan()->getName() == "AuthorityTest") {
         cout << "CM: Changing AuthorityTest " << endl;
     }
 #endif
-    EntryPoint *myEntryPoint = nullptr;
-    if (this->fixedAllocation == nullptr)
-    {
+    EntryPoint* myEntryPoint = nullptr;
+    if (this->fixedAllocation == nullptr) {
         return false;
     }
     bool modifiedSelf = false;
     bool modified = false;
-    if (this->fixedAllocation->planId != rp->getPlan()->getId())
-    { // Plantype case
-        if (rp->getPlanType()->getId() != this->fixedAllocation->planType)
-        {
+    if (this->fixedAllocation->planId != rp->getPlan()->getId()) {  // Plantype case
+        if (rp->getPlanType()->getId() != this->fixedAllocation->planType) {
             return false;
         }
-        Plan *newPlan = nullptr;
-        for (Plan *p : rp->getPlanType()->getPlans())
-        {
-            if (p->getId() == this->fixedAllocation->planId)
-            {
+        Plan* newPlan = nullptr;
+        for (Plan* p : rp->getPlanType()->getPlans()) {
+            if (p->getId() == this->fixedAllocation->planId) {
                 newPlan = p;
                 rp->setPlan(p);
                 break;
             }
         }
         rp->setAssignment(make_shared<Assignment>(newPlan, this->fixedAllocation));
-        for (EntryPointRobots epr : this->fixedAllocation->entryPointRobots)
-        {
-            if (find_if(epr.robots.begin(), epr.robots.end(), [this](const supplementary::AgentID *id) { return *(this->myID) == *id; }) != epr.robots.end())
-            {
+        for (EntryPointRobots epr : this->fixedAllocation->entryPointRobots) {
+            if (find_if(epr.robots.begin(), epr.robots.end(), [this](const supplementary::AgentID* id) {
+                    return *(this->myID) == *id;
+                }) != epr.robots.end()) {
                 myEntryPoint = pr->getEntryPoints().at(epr.entrypoint);
             }
         }
 
         modifiedSelf = true;
-    }
-    else
-    {
-        for (EntryPointRobots epr : this->fixedAllocation->entryPointRobots)
-        {
-            for (auto &robot : epr.robots)
-            {
-                EntryPoint *e = pr->getEntryPoints().at(epr.entrypoint);
+    } else {
+        for (EntryPointRobots epr : this->fixedAllocation->entryPointRobots) {
+            for (auto& robot : epr.robots) {
+                EntryPoint* e = pr->getEntryPoints().at(epr.entrypoint);
                 bool changed = rp->getAssignment()->updateRobot(robot, e);
-                if (changed)
-                {
-                    if (*robot == *myID)
-                    {
+                if (changed) {
+                    if (*robot == *myID) {
                         modifiedSelf = true;
                         myEntryPoint = e;
-                    }
-                    else
-                    {
+                    } else {
                         modified = true;
                     }
                 }
             }
         }
     }
-    if (modifiedSelf)
-    {
+    if (modifiedSelf) {
         rp->setOwnEntryPoint(myEntryPoint);
         rp->deactivateChildren();
         rp->clearChildren();
         rp->clearFailedChildren();
         rp->setAllocationNeeded(true);
-    }
-    else
-    {
-        if (rp->getActiveState() != nullptr)
-        {
+    } else {
+        if (rp->getActiveState() != nullptr) {
             auto robotsJoined = rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState());
-            for (shared_ptr<RunningPlan> c : *rp->getChildren())
-            {
+            for (shared_ptr<RunningPlan> c : *rp->getChildren()) {
                 c->limitToRobots(robotsJoined);
             }
         }
@@ -384,58 +330,45 @@ bool CycleManager::setAssignment()
  * Indicates wether authority allows the assignment of this plan to be changed.
  * @return A bool
  */
-bool CycleManager::mayDoUtilityCheck()
-{
+bool CycleManager::mayDoUtilityCheck() {
     return this->state != CycleState::overridden;
 }
 
-bool CycleManager::detectAllocationCycle()
-{
+bool CycleManager::detectAllocationCycle() {
     // A Cycle occurs n-times,
     // Consists of 1 UtilityChange, m message update
     // after uc, allocation is same again (delta = 0)
     int cyclesFound = 0;
     int count = 0;
-    AllocationDifference *utChange = nullptr;
+    AllocationDifference* utChange = nullptr;
     AllocationDifference temp;
     lock_guard<mutex> lock(this->allocationHistoryMutex);
 
-    for (int i = this->newestAllocationDifference; count < this->allocationHistory.size(); --i)
-    {
+    for (int i = this->newestAllocationDifference; count < this->allocationHistory.size(); --i) {
         ++count;
-        if (i < 0)
-        {
+        if (i < 0) {
             i = this->allocationHistory.size() - 1;
         }
 
-        if (this->allocationHistory[i]->getReason() == AllocationDifference::Reason::utility)
-        {
-            if (utChange != nullptr)
-            {
+        if (this->allocationHistory[i]->getReason() == AllocationDifference::Reason::utility) {
+            if (utChange != nullptr) {
                 return false;
             }
             utChange = this->allocationHistory[i];
             temp.reset();
             temp.applyDifference(*utChange);
-        }
-        else
-        {
-            if (this->allocationHistory[i]->getReason() == AllocationDifference::Reason::empty)
-            {
+        } else {
+            if (this->allocationHistory[i]->getReason() == AllocationDifference::Reason::empty) {
                 return false;
             }
-            if (utChange == nullptr)
-            {
+            if (utChange == nullptr) {
                 continue;
             }
             temp.applyDifference(*this->allocationHistory[i]);
-            if (temp.isEmpty())
-            {
+            if (temp.isEmpty()) {
                 ++cyclesFound;
-                if (cyclesFound > maxAllocationCycles)
-                {
-                    for (int k = 0; k < this->allocationHistory.size(); k++)
-                    {
+                if (cyclesFound > maxAllocationCycles) {
+                    for (int k = 0; k < this->allocationHistory.size(); k++) {
                         this->allocationHistory[k]->reset();
                     }
                     return true;
@@ -448,4 +381,4 @@ bool CycleManager::detectAllocationCycle()
     return false;
 }
 
-} /* namespace supplementary */
+}  // namespace alica

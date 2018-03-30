@@ -14,33 +14,31 @@
 
 using namespace std;
 
-namespace alica
-{
+namespace alica {
 
-	class UtilityInterval;
-	class IAssignment;
+class UtilityInterval;
+class IAssignment;
 
-	class DistXContourTest : public USummand
-	{
-	public:
-		DistXContourTest(double weight, string name, long id, vector<long>& relevantEntryPointIds, vector<pair<double, double>>& ContourPoints, double xMaxVal, double xMinVal, int ownId);
-		virtual ~DistXContourTest();
-		void cacheEvalData();
-		double interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint);
-		virtual UtilityInterval eval(IAssignment* ass);
+class DistXContourTest : public USummand {
+public:
+    DistXContourTest(double weight, string name, long id, vector<long>& relevantEntryPointIds,
+            vector<pair<double, double>>& ContourPoints, double xMaxVal, double xMinVal, int ownId);
+    virtual ~DistXContourTest();
+    void cacheEvalData();
+    double interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint);
+    virtual UtilityInterval eval(IAssignment* ass);
 
-
-	protected:
-		int ownId;
-		double weight;
-		string name;
-		long id;
-		vector<long> relevantEntryPointIds;
-		vector<pair<double, double>> contourPoints;
-		double xAlloBall;
-		double xMaxVal;
-		double xMinVal;
-	};
+protected:
+    int ownId;
+    double weight;
+    string name;
+    long id;
+    vector<long> relevantEntryPointIds;
+    vector<pair<double, double>> contourPoints;
+    double xAlloBall;
+    double xMaxVal;
+    double xMinVal;
+};
 
 } /* namespace alica */
 

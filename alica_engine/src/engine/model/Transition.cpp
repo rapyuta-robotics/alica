@@ -11,64 +11,49 @@
 #include "engine/model/Plan.h"
 #include "engine/RunningPlan.h"
 
-namespace alica
-{
+namespace alica {
 
-	Transition::Transition()
-	{
-		this->preCondition = nullptr;
-		this->inState = nullptr;
-		this->outState = nullptr;
-		this->syncTransition = nullptr;
-	}
+Transition::Transition() {
+    this->preCondition = nullptr;
+    this->inState = nullptr;
+    this->outState = nullptr;
+    this->syncTransition = nullptr;
+}
 
-	Transition::~Transition()
-	{
-	}
+Transition::~Transition() {}
 
-	PreCondition* Transition::getPreCondition()
-	{
-		return preCondition;
-	}
+PreCondition* Transition::getPreCondition() {
+    return preCondition;
+}
 
-	void Transition::setPreCondition(PreCondition* preCondition)
-	{
-		this->preCondition = preCondition;
-	}
-	State* Transition::getInState()
-	{
-		return inState;
-	}
+void Transition::setPreCondition(PreCondition* preCondition) {
+    this->preCondition = preCondition;
+}
+State* Transition::getInState() {
+    return inState;
+}
 
-	void Transition::setInState(State* inState)
-	{
-		this->inState = inState;
-	}
+void Transition::setInState(State* inState) {
+    this->inState = inState;
+}
 
-	State* Transition::getOutState()
-	{
-		return outState;
-	}
+State* Transition::getOutState() {
+    return outState;
+}
 
-	void Transition::setOutState( State* outState)
-	{
-		this->outState = outState;
-	}
+void Transition::setOutState(State* outState) {
+    this->outState = outState;
+}
 
-	SyncTransition* Transition::getSyncTransition()
-	{
-		return syncTransition;
-	}
-	bool Transition::evalCondition(shared_ptr<RunningPlan> r)
-	{
-		return this->preCondition->evaluate(r);
-	}
+SyncTransition* Transition::getSyncTransition() {
+    return syncTransition;
+}
+bool Transition::evalCondition(shared_ptr<RunningPlan> r) {
+    return this->preCondition->evaluate(r);
+}
 
-	void Transition::setSyncTransition(SyncTransition* syncTransition)
-	{
-		this->syncTransition = syncTransition;
-	}
+void Transition::setSyncTransition(SyncTransition* syncTransition) {
+    this->syncTransition = syncTransition;
+}
 
-} /* namespace Alica */
-
-
+}  // namespace alica

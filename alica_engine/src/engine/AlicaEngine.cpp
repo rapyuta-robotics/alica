@@ -29,27 +29,26 @@
 
 using std::cout;
 using std::endl;
-namespace alica
-{
+namespace alica {
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(supplementary::AgentIDManager *idManager, string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine)
-    : stepCalled(false)
-    , planBase(nullptr)
-    , planSelector(nullptr)
-    , communicator(nullptr)
-    , alicaClock(nullptr)
-    , sc(supplementary::SystemConfig::getInstance())
-    , terminating(false)
-    , expressionHandler(nullptr)
-    , log(nullptr)
-    , auth(nullptr)
-    , stepEngine(stepEngine)
-    , pap(nullptr)
-    , variableSyncModule(nullptr)
-    , agentIDManager(idManager)
-{
+AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, string roleSetName, string masterPlanName,
+        string roleSetDir, bool stepEngine)
+        : stepCalled(false)
+        , planBase(nullptr)
+        , planSelector(nullptr)
+        , communicator(nullptr)
+        , alicaClock(nullptr)
+        , sc(supplementary::SystemConfig::getInstance())
+        , terminating(false)
+        , expressionHandler(nullptr)
+        , log(nullptr)
+        , auth(nullptr)
+        , stepEngine(stepEngine)
+        , pap(nullptr)
+        , variableSyncModule(nullptr)
+        , agentIDManager(idManager) {
 #ifdef AE_DEBUG
     cout << "AE: Constructor finished!" << endl;
 #endif
@@ -66,12 +65,9 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager *idManager, string roleSe
     this->teamManager->init();
     this->behaviourPool = new BehaviourPool(this);
     this->teamObserver = new TeamObserver(this);
-    if (this->useStaticRoles)
-    {
+    if (this->useStaticRoles) {
         this->roleAssignment = new StaticRoleAssignment(this);
-    }
-    else
-    {
+    } else {
         this->abort("Unknown RoleAssignment Type!");
     }
     // the communicator is expected to be set before init() is called
@@ -79,9 +75,7 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager *idManager, string roleSe
     this->syncModul = new SyncModule(this);
 }
 
-AlicaEngine::~AlicaEngine()
-{
-}
+AlicaEngine::~AlicaEngine() {}
 
 /**
  * Initialise the engine
@@ -92,10 +86,8 @@ AlicaEngine::~AlicaEngine()
  * @param stepEngine A bool, whether or not the engine should start in stepped mode
  * @return bool true if everything worked false otherwise
  */
-bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCreator *uc, IConstraintCreator *crc)
-{
-    if (!this->expressionHandler)
-    {
+bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc) {
+    if (!this->expressionHandler) {
         this->expressionHandler = new ExpressionHandler(this, cc, uc, crc);
     }
 
@@ -105,12 +97,10 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
     this->auth = new AuthorityManager(this);
     this->log = new Logger(this);
     this->roleAssignment->init();
-    if (!this->pap)
-    {
+    if (!this->pap) {
         pap = new PartialAssignmentPool();
     }
-    if (!planSelector)
-    {
+    if (!planSelector) {
         this->planSelector = new PlanSelector(this, pap);
     }
 
@@ -119,16 +109,13 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
     this->expressionHandler->attachAll();
     UtilityFunction::initDataStructures(this);
     this->syncModul->init();
-    if (!this->variableSyncModule)
-    {
+    if (!this->variableSyncModule) {
         this->variableSyncModule = new VariableSyncModule(this);
     }
-    if (this->communicator)
-    {
+    if (this->communicator) {
         this->communicator->startCommunication();
     }
-    if (this->variableSyncModule)
-    {
+    if (this->variableSyncModule) {
         this->variableSyncModule->init();
     }
     return everythingWorked;
@@ -137,65 +124,55 @@ bool AlicaEngine::init(IBehaviourCreator *bc, IConditionCreator *cc, IUtilityCre
 /**
  * Closes the engine for good.
  */
-void AlicaEngine::shutdown()
-{
-    if (this->communicator != nullptr)
-    {
+void AlicaEngine::shutdown() {
+    if (this->communicator != nullptr) {
         this->communicator->stopCommunication();
     }
     this->terminating = true;
     this->maySendMessages = false;
 
-    if (this->behaviourPool != nullptr)
-    {
+    if (this->behaviourPool != nullptr) {
         this->behaviourPool->stopAll();
         delete this->behaviourPool;
         this->behaviourPool = nullptr;
     }
 
-    if (this->planBase != nullptr)
-    {
+    if (this->planBase != nullptr) {
         this->planBase->stop();
         delete this->planBase;
         this->planBase = nullptr;
     }
 
-    if (this->auth != nullptr)
-    {
+    if (this->auth != nullptr) {
         this->auth->close();
         delete this->auth;
         this->auth = nullptr;
     }
 
-    if (this->syncModul != nullptr)
-    {
+    if (this->syncModul != nullptr) {
         this->syncModul->close();
         delete this->syncModul;
         this->syncModul = nullptr;
     }
 
-    if (this->teamObserver != nullptr)
-    {
+    if (this->teamObserver != nullptr) {
         this->teamObserver->close();
         delete this->teamObserver;
         this->teamObserver = nullptr;
     }
 
-    if (this->log != nullptr)
-    {
+    if (this->log != nullptr) {
         this->log->close();
         delete this->log;
         this->log = nullptr;
     }
 
-    if (this->planRepository != nullptr)
-    {
+    if (this->planRepository != nullptr) {
         delete this->planRepository;
         this->planRepository = nullptr;
     }
 
-    if (this->planParser != nullptr)
-    {
+    if (this->planParser != nullptr) {
         delete this->planParser;
         this->planParser = nullptr;
     }
@@ -203,8 +180,7 @@ void AlicaEngine::shutdown()
     delete planSelector;
     planSelector = nullptr;
 
-    if (this->pap != nullptr)
-    {
+    if (this->pap != nullptr) {
         delete this->pap;
         this->pap = nullptr;
     }
@@ -212,19 +188,16 @@ void AlicaEngine::shutdown()
     this->roleSet = nullptr;
     this->masterPlan = nullptr;
 
-    if (this->expressionHandler != nullptr)
-    {
+    if (this->expressionHandler != nullptr) {
         delete this->expressionHandler;
         this->expressionHandler = nullptr;
     }
 
-    if (this->variableSyncModule != nullptr)
-    {
+    if (this->variableSyncModule != nullptr) {
         delete this->variableSyncModule;
         this->variableSyncModule = nullptr;
     }
-    if (this->roleAssignment != nullptr)
-    {
+    if (this->roleAssignment != nullptr) {
         delete this->roleAssignment;
         this->roleAssignment = nullptr;
     }
@@ -233,138 +206,117 @@ void AlicaEngine::shutdown()
 /**
  * Register with this EngineTrigger to be called after an engine iteration is complete.
  */
-void AlicaEngine::iterationComplete()
-{
+void AlicaEngine::iterationComplete() {
     // TODO: implement the trigger function for iteration complete
 }
 
 /**
  * Starts the engine.
  */
-void AlicaEngine::start()
-{
+void AlicaEngine::start() {
     this->planBase->start();
     cout << "AE: Engine started" << endl;
 }
 
-void AlicaEngine::setStepCalled(bool stepCalled)
-{
+void AlicaEngine::setStepCalled(bool stepCalled) {
     this->stepCalled = stepCalled;
 }
 
-bool AlicaEngine::getStepCalled() const
-{
+bool AlicaEngine::getStepCalled() const {
     return this->stepCalled;
 }
 
-bool AlicaEngine::getStepEngine()
-{
+bool AlicaEngine::getStepEngine() {
     return this->stepEngine;
 }
 
 /**
  * Returns the plan repository, which holds the static ALICA program.
  */
-PlanRepository *AlicaEngine::getPlanRepository() const
-{
+PlanRepository* AlicaEngine::getPlanRepository() const {
     return this->planRepository;
 }
 
 /**
  * Returns the planselector
  */
-PlanSelector *AlicaEngine::getPlanSelector()
-{
+PlanSelector* AlicaEngine::getPlanSelector() {
     return this->planSelector;
 }
 /**
  * Returns the Alica Clock interface
  */
-IAlicaClock *AlicaEngine::getIAlicaClock() const
-{
+IAlicaClock* AlicaEngine::getIAlicaClock() const {
     return this->alicaClock;
 }
-void AlicaEngine::setIAlicaClock(IAlicaClock *clock)
-{
+void AlicaEngine::setIAlicaClock(IAlicaClock* clock) {
     this->alicaClock = clock;
 }
 
 /**
  * Returns the behaviourpool
  */
-BehaviourPool *AlicaEngine::getBehaviourPool()
-{
+BehaviourPool* AlicaEngine::getBehaviourPool() {
     return this->behaviourPool;
 }
 
 /**
  * Returns the TeamObserver, which handles most communication tasks.
  */
-TeamObserver *AlicaEngine::getTeamObserver() const
-{
+TeamObserver* AlicaEngine::getTeamObserver() const {
     return this->teamObserver;
 }
-void AlicaEngine::setTeamObserver(TeamObserver *teamObserver)
-{
+void AlicaEngine::setTeamObserver(TeamObserver* teamObserver) {
     this->teamObserver = teamObserver;
 }
 
 /**
  * Gets the SyncModul, which enables synchronized transitions.
  */
-SyncModule *AlicaEngine::getSyncModul()
-{
+SyncModule* AlicaEngine::getSyncModul() {
     return syncModul;
 }
 
-void AlicaEngine::setSyncModul(SyncModule *syncModul)
-{
+void AlicaEngine::setSyncModul(SyncModule* syncModul) {
     this->syncModul = syncModul;
 }
 
 /**
  * Gets AuthorityManager, which detects and resolvs conflicts in task allocation.
  */
-AuthorityManager *AlicaEngine::getAuth()
-{
+AuthorityManager* AlicaEngine::getAuth() {
     return auth;
 }
-void AlicaEngine::setAuth(AuthorityManager *auth)
-{
+void AlicaEngine::setAuth(AuthorityManager* auth) {
     this->auth = auth;
 }
 
 /**
  * Gets the RoleAssignment, responsible for allocating roles to robots.
  */
-IRoleAssignment *AlicaEngine::getRoleAssignment()
-{
+IRoleAssignment* AlicaEngine::getRoleAssignment() {
     return roleAssignment;
 }
 
-void AlicaEngine::setRoleAssignment(IRoleAssignment *roleAssignment)
-{
+void AlicaEngine::setRoleAssignment(IRoleAssignment* roleAssignment) {
     this->roleAssignment = roleAssignment;
 }
 
 /**
  * Returns the parser which reads ALICAs XML representation
  */
-PlanParser *AlicaEngine::getPlanParser() const
-{
+PlanParser* AlicaEngine::getPlanParser() const {
     return planParser;
 }
 
 /**
  * Returns the RoleSet in use.
  */
-RoleSet *AlicaEngine::getRoleSet()
-{
+RoleSet* AlicaEngine::getRoleSet() {
     return roleSet;
 }
 
-void AlicaEngine::setStepEngine(bool stepEngine)
-{
+void AlicaEngine::setStepEngine(bool stepEngine) {
     this->stepEngine = stepEngine;
 }
 
@@ -372,8 +324,7 @@ void AlicaEngine::setStepEngine(bool stepEngine)
  * Abort execution with a message, called if initialization fails.
  * @param msg A string
  */
-void AlicaEngine::abort(string msg) const
-{
+void AlicaEngine::abort(string msg) const {
     cerr << "ABORT: " << msg << endl;
     exit(EXIT_FAILURE);
 }
@@ -382,82 +333,67 @@ void AlicaEngine::abort(string msg) const
  * Gets the robot name, either by access the environment variable "ROBOT", or if that isn't set, the hostname.
  * @return The robot name under which the engine operates, a string
  */
-string AlicaEngine::getRobotName() const
-{
+string AlicaEngine::getRobotName() const {
     return sc->getHostname();
 }
 
 /**
  * Gets the Logger
  */
-Logger *AlicaEngine::getLog()
-{
+Logger* AlicaEngine::getLog() {
     return log;
 }
 
-void AlicaEngine::setLog(Logger *log)
-{
+void AlicaEngine::setLog(Logger* log) {
     this->log = log;
 }
 
-bool AlicaEngine::isTerminating() const
-{
+bool AlicaEngine::isTerminating() const {
     return terminating;
 }
-bool AlicaEngine::isMaySendMessages() const
-{
+bool AlicaEngine::isMaySendMessages() const {
     return maySendMessages;
 }
-void AlicaEngine::setMaySendMessages(bool maySendMessages)
-{
+void AlicaEngine::setMaySendMessages(bool maySendMessages) {
     this->maySendMessages = maySendMessages;
 }
 
-void AlicaEngine::setTerminating(bool terminating)
-{
+void AlicaEngine::setTerminating(bool terminating) {
     this->terminating = terminating;
 }
 
-const IAlicaCommunication *AlicaEngine::getCommunicator() const
-{
+const IAlicaCommunication* AlicaEngine::getCommunicator() const {
     return communicator;
 }
 
-void AlicaEngine::setCommunicator(IAlicaCommunication *communicator)
-{
+void AlicaEngine::setCommunicator(IAlicaCommunication* communicator) {
     this->communicator = communicator;
 }
 
 /**
  * Returns Alica Main clase that manages the current alica state
  */
-PlanBase *AlicaEngine::getPlanBase()
-{
+PlanBase* AlicaEngine::getPlanBase() {
     return planBase;
 }
 
-void AlicaEngine::addSolver(int identifier, ISolver *solver)
-{
+void AlicaEngine::addSolver(int identifier, ISolver* solver) {
     this->solver[identifier] = solver;
 }
 
-ISolver *AlicaEngine::getSolver(int identifier)
-{
+ISolver* AlicaEngine::getSolver(int identifier) {
     return this->solver[identifier];
 }
 
-VariableSyncModule *AlicaEngine::getResultStore()
-{
+VariableSyncModule* AlicaEngine::getResultStore() {
     return this->variableSyncModule;
 }
 
-void AlicaEngine::setResultStore(VariableSyncModule *resultStore)
-{
+void AlicaEngine::setResultStore(VariableSyncModule* resultStore) {
     this->variableSyncModule = resultStore;
 }
 
-PartialAssignmentPool *AlicaEngine::getPartialAssignmentPool() const
-{
+PartialAssignmentPool* AlicaEngine::getPartialAssignmentPool() const {
     return this->pap;
 }
 
@@ -467,14 +403,12 @@ PartialAssignmentPool *AlicaEngine::getPartialAssignmentPool() const
  * So please wait long enough to let the engine do its stuff of its iteration,
  * before you read values, which will be changed by this iteration.
  */
-void AlicaEngine::stepNotify()
-{
+void AlicaEngine::stepNotify() {
     this->setStepCalled(true);
     this->getPlanBase()->getStepModeCV()->notify_all();
 }
 
-TeamManager *AlicaEngine::getTeamManager() const
-{
+TeamManager* AlicaEngine::getTeamManager() const {
     return this->teamManager;
 }
 
@@ -485,9 +419,8 @@ TeamManager *AlicaEngine::getTeamManager() const
  * This method can be used, e.g., for passing a part of a ROS
  * message and receiving a pointer to a corresponding AgentID object.
  */
-const supplementary::AgentID *AlicaEngine::getIDFromBytes(const std::vector<uint8_t> &idByteVector)
-{
+const supplementary::AgentID* AlicaEngine::getIDFromBytes(const std::vector<uint8_t>& idByteVector) {
     return this->agentIDManager->getIDFromBytes(idByteVector);
 }
 
-} /* namespace Alica */
+}  // namespace alica
