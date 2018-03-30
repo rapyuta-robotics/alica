@@ -11,6 +11,8 @@ using namespace std;
 
 #include  "Plans/Behaviour/NotToTrigger.h"
 
+#include  "Plans/Behaviour/SuccessSpam.h"
+
 #include  "Plans/Behaviour/AttackOpp.h"
 
 #include  "Plans/Behaviour/TriggerA.h"
@@ -65,6 +67,11 @@ namespace alica
             case 1429017293301:
 
                 return make_shared<NotToTrigger>();
+                break;
+
+            case 1522377419087:
+
+                return make_shared<SuccessSpam>();
                 break;
 
             case 1402489366699:
