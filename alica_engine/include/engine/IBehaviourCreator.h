@@ -13,17 +13,15 @@ using namespace std;
 #include <string>
 #include <memory>
 
-namespace alica
-{
-	class AlicaEngine;
-	class BasicBehaviour;
+namespace alica {
+class AlicaEngine;
+class BasicBehaviour;
 
-	class IBehaviourCreator
-	{
-	public:
-		virtual ~IBehaviourCreator() {}
-		virtual shared_ptr<BasicBehaviour> createBehaviour(long behaviourConfId) = 0;
-	};
+class IBehaviourCreator {
+public:
+    virtual ~IBehaviourCreator() {}
+    virtual shared_ptr<BasicBehaviour> createBehaviour(long behaviourConfId) = 0;
+};
 
 } /* namespace alica */
 

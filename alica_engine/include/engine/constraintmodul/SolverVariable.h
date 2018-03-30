@@ -1,13 +1,11 @@
 #pragma once
 
-namespace alica
-{
+namespace alica {
 
-	class SolverVariable
-	{
-	public:
-		SolverVariable();
-		virtual ~SolverVariable();
-	};
+class SolverVariable {
+public:
+    SolverVariable();
+    virtual ~SolverVariable();
+};
 
 } /* namespace alica */

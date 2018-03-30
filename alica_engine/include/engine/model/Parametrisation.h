@@ -8,40 +8,36 @@
 #ifndef PARAMETRISATION_H_
 #define PARAMETRISATION_H_
 
-
 #include <string>
 #include <sstream>
 
 #include "AlicaElement.h"
 
 using namespace std;
-namespace alica
-{
-	class Variable;
-	class AbstractPlan;
+namespace alica {
+class Variable;
+class AbstractPlan;
 
-	class Parametrisation : public AlicaElement
-	{
-	public:
-		Parametrisation();
-		virtual ~Parametrisation();
+class Parametrisation : public AlicaElement {
+public:
+    Parametrisation();
+    virtual ~Parametrisation();
 
-		string ToString();
+    string ToString();
 
-		AbstractPlan* getSubPlan();
-		void setSubPlan(AbstractPlan* subPlan);
-		Variable* getSubVar();
-		void setSubVar(Variable* subVar);
-		Variable* getVar();
-		void setVar(Variable* var);
+    AbstractPlan* getSubPlan();
+    void setSubPlan(AbstractPlan* subPlan);
+    Variable* getSubVar();
+    void setSubVar(Variable* subVar);
+    Variable* getVar();
+    void setVar(Variable* var);
 
-	protected:
-		Variable* var;
-		Variable* subVar;
-		AbstractPlan* subPlan;
+protected:
+    Variable* var;
+    Variable* subVar;
+    AbstractPlan* subPlan;
+};
 
-	};
-
-} /* namespace Alica */
+}  // namespace alica
 
 #endif /* PARAMETRISATION_H_ */

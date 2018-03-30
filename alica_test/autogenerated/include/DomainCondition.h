@@ -3,15 +3,12 @@
 
 #include "engine/BasicCondition.h"
 
-namespace alica
-{
-class DomainCondition : public BasicCondition
-{
+namespace alica {
+class DomainCondition : public BasicCondition {
 public:
-  DomainCondition();
-  virtual ~DomainCondition();
+    DomainCondition();
+    virtual ~DomainCondition();
 };
 } /* namespace alica */
 
 #endif /* DomainBehaviour_H_ */
-

@@ -8,7 +8,6 @@
 #ifndef CHARACTERISTIC_H_
 #define CHARACTERISTIC_H_
 
-
 #include <string.h>
 #include <iostream>
 
@@ -18,40 +17,37 @@
 
 using namespace std;
 
-namespace alica
-{
+namespace alica {
 
-	class Capability;
-	class CapValue;
+class Capability;
+class CapValue;
 
-	/**
-	 * A characteristic encapsulates a Capability and aCapValue.
-	 */
-	class Characteristic : public AlicaElement
-	{
-	public:
-		Characteristic();
-		virtual ~Characteristic();
+/**
+ * A characteristic encapsulates a Capability and aCapValue.
+ */
+class Characteristic : public AlicaElement {
+public:
+    Characteristic();
+    virtual ~Characteristic();
 
-		string toString();
+    string toString();
 
-		Capability* getCapability();
-		void setCapability(Capability* capability);
-		CapValue* getCapValue();
-		void setCapValue(CapValue* capValue);
-		double getWeight() const;
-		void setWeight(double weight);
+    Capability* getCapability();
+    void setCapability(Capability* capability);
+    CapValue* getCapValue();
+    void setCapValue(CapValue* capValue);
+    double getWeight() const;
+    void setWeight(double weight);
 
-	protected:
-		Capability* capability;
-		CapValue* capValue;
-		/**
-		 * The weight, used for role allocation.
-		 */
-		double weight = 0;
+protected:
+    Capability* capability;
+    CapValue* capValue;
+    /**
+     * The weight, used for role allocation.
+     */
+    double weight = 0;
+};
 
-	};
-
-} /* namespace Alica */
+}  // namespace alica
 
 #endif /* CHARACTERISTIC_H_ */

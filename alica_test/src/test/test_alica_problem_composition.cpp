@@ -24,70 +24,66 @@
 #include <thread>
 #include <vector>
 
-class AlicaProblemCompositionTest : public ::testing::Test
-{
+class AlicaProblemCompositionTest : public ::testing::Test {
 protected:
-	supplementary::SystemConfig* sc;
-	alica::AlicaEngine* ae;
-	alica::BehaviourCreator* bc;
-	alica::ConditionCreator* cc;
-	alica::UtilityFunctionCreator* uc;
-	alica::ConstraintCreator* crc;
+    supplementary::SystemConfig* sc;
+    alica::AlicaEngine* ae;
+    alica::BehaviourCreator* bc;
+    alica::ConditionCreator* cc;
+    alica::UtilityFunctionCreator* uc;
+    alica::ConstraintCreator* crc;
 
-	virtual void SetUp()
-	{
-		// determine the path to the test config
+    virtual void SetUp() {
+        // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
-        nh.param<std::string>("/rootPath",path,".");
+        nh.param<std::string>("/rootPath", path, ".");
 
-		// bring up the SystemConfig with the corresponding path
-		sc = supplementary::SystemConfig::getInstance();
-		sc->setRootPath(path);
-		sc->setConfigPath(path + "/etc");
+        // bring up the SystemConfig with the corresponding path
+        sc = supplementary::SystemConfig::getInstance();
+        sc->setRootPath(path);
+        sc->setConfigPath(path + "/etc");
 
-		// setup the engine
-		bc = new alica::BehaviourCreator();
-		cc = new alica::ConditionCreator();
-		uc = new alica::UtilityFunctionCreator();
-		crc = new alica::ConstraintCreator();
+        // setup the engine
+        bc = new alica::BehaviourCreator();
+        cc = new alica::ConditionCreator();
+        uc = new alica::UtilityFunctionCreator();
+        crc = new alica::ConstraintCreator();
 
-		sc->setHostname("nase");
-		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ProblemBuildingMaster", ".", false);
-		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-		ae->addSolver(SolverType::DUMMYSOLVER, new alica::reasoner::ConstraintTestPlanDummySolver(ae));
-		ae->addSolver(SolverType::GRADIENTSOLVER, new alica::reasoner::CGSolver(ae));
-		ae->init(bc, cc, uc, crc);
-	}
+        sc->setHostname("nase");
+        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
+                "ProblemBuildingMaster", ".", false);
+        ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+        ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+        ae->addSolver(SolverType::DUMMYSOLVER, new alica::reasoner::ConstraintTestPlanDummySolver(ae));
+        ae->addSolver(SolverType::GRADIENTSOLVER, new alica::reasoner::CGSolver(ae));
+        ae->init(bc, cc, uc, crc);
+    }
 
-	virtual void TearDown()
-	{
-		ae->shutdown();
-		delete ae->getCommunicator();
-		delete ae->getIAlicaClock();
-		sc->shutdown();
-		delete cc;
-		delete bc;
-		delete uc;
-		delete crc;
-	}
+    virtual void TearDown() {
+        ae->shutdown();
+        delete ae->getCommunicator();
+        delete ae->getIAlicaClock();
+        sc->shutdown();
+        delete cc;
+        delete bc;
+        delete uc;
+        delete crc;
+    }
 };
 
 /**
  * Tests if static variables and binded correctly.
  */
-TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
-{
-	ae->start();
+TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition) {
+    ae->start();
 
-	this_thread::sleep_for(chrono::milliseconds (100));
+    this_thread::sleep_for(chrono::milliseconds(100));
 
-	auto queryBehaviour1 = dynamic_pointer_cast<QueryBehaviour1>( ae->getPlanBase()->getDeepestNode()->getBasicBehaviour());
-	auto allReps = queryBehaviour1->query->getUniqueVariableStore()->getAllRep();
-	for (auto& rep : allReps)
-	{
-		cout << "Test: '" << rep->getName() << "'" << endl;
-	}
+    auto queryBehaviour1 =
+            dynamic_pointer_cast<QueryBehaviour1>(ae->getPlanBase()->getDeepestNode()->getBasicBehaviour());
+    auto allReps = queryBehaviour1->query->getUniqueVariableStore()->getAllRep();
+    for (auto& rep : allReps) {
+        cout << "Test: '" << rep->getName() << "'" << endl;
+    }
 }
-

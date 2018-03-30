@@ -7,15 +7,10 @@
 
 #include "engine/BasicUtilityFunction.h"
 
-namespace alica
-{
+namespace alica {
 
-	BasicUtilityFunction::BasicUtilityFunction()
-	{
-	}
+BasicUtilityFunction::BasicUtilityFunction() {}
 
-	BasicUtilityFunction::~BasicUtilityFunction()
-	{
-	}
+BasicUtilityFunction::~BasicUtilityFunction() {}
 
 } /* namespace alica */

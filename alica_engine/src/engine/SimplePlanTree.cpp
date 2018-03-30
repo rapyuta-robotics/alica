@@ -11,156 +11,123 @@
 #include "engine/model/Task.h"
 #include "engine/model/State.h"
 
-namespace alica
-{
+namespace alica {
 
-	SimplePlanTree::SimplePlanTree() : robotId(nullptr)
-	{
-		this->state = nullptr;
-		this->newSimplePlanTree = true;
-		this->receiveTime = 0;
-		this->entryPoint = nullptr;
-		this->parent = nullptr;
-	}
+SimplePlanTree::SimplePlanTree() : robotId(nullptr) {
+    this->state = nullptr;
+    this->newSimplePlanTree = true;
+    this->receiveTime = 0;
+    this->entryPoint = nullptr;
+    this->parent = nullptr;
+}
 
-	SimplePlanTree::~SimplePlanTree()
-	{
+SimplePlanTree::~SimplePlanTree() {}
 
-	}
+bool SimplePlanTree::containsPlan(AbstractPlan* plan) {
+    if (this->getEntryPoint()->getPlan() == plan) {
+        return true;
+    }
+    for (shared_ptr<SimplePlanTree> spt : this->getChildren()) {
+        if (spt->containsPlan(plan)) {
+            return true;
+        }
+    }
+    return false;
+}
 
-	bool SimplePlanTree::containsPlan(AbstractPlan* plan)
-	{
-		if (this->getEntryPoint()->getPlan() == plan)
-		{
-			return true;
-		}
-		for (shared_ptr<SimplePlanTree> spt : this->getChildren())
-		{
-			if (spt->containsPlan(plan))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+EntryPoint* SimplePlanTree::getEntryPoint() {
+    return this->entryPoint;
+}
 
-	EntryPoint* SimplePlanTree::getEntryPoint()
-	{
-		return this->entryPoint;
-	}
+void SimplePlanTree::setEntryPoint(EntryPoint* entryPoint) {
+    this->entryPoint = entryPoint;
+}
 
-	void SimplePlanTree::setEntryPoint(EntryPoint* entryPoint)
-	{
-		this->entryPoint = entryPoint;
-	}
+State* SimplePlanTree::getState() {
+    return state;
+}
 
-	State* SimplePlanTree::getState()
-	{
-		return state;
-	}
+void SimplePlanTree::setState(State* state) {
+    this->state = state;
+}
 
-	void SimplePlanTree::setState(State* state)
-	{
-		this->state = state;
-	}
+unordered_set<shared_ptr<SimplePlanTree>>& SimplePlanTree::getChildren() {
+    return children;
+}
 
-	unordered_set<shared_ptr<SimplePlanTree> >& SimplePlanTree::getChildren()
-	{
-		return children;
-	}
+void SimplePlanTree::setChildren(unordered_set<shared_ptr<SimplePlanTree>> children) {
+    this->children = children;
+}
 
-	void SimplePlanTree::setChildren(unordered_set<shared_ptr<SimplePlanTree> > children)
-	{
-		this->children = children;
-	}
+const supplementary::AgentID* SimplePlanTree::getRobotId() {
+    return robotId;
+}
 
-	const supplementary::AgentID* SimplePlanTree::getRobotId()
-	{
-		return robotId;
-	}
+void SimplePlanTree::setRobotId(const supplementary::AgentID* robotId) {
+    this->robotId = robotId;
+}
 
-	void SimplePlanTree::setRobotId(const supplementary::AgentID* robotId)
-	{
-		this->robotId = robotId;
-	}
+bool SimplePlanTree::isNewSimplePlanTree() const {
+    return newSimplePlanTree;
+}
 
-	bool SimplePlanTree::isNewSimplePlanTree() const
-	{
-		return newSimplePlanTree;
-	}
+void SimplePlanTree::setNewSimplePlanTree(bool newSimplePlanTree) {
+    this->newSimplePlanTree = newSimplePlanTree;
+}
+long SimplePlanTree::getReceiveTime() const {
+    return receiveTime;
+}
 
-	void SimplePlanTree::setNewSimplePlanTree(bool newSimplePlanTree)
-	{
-		this->newSimplePlanTree = newSimplePlanTree;
-	}
-	long SimplePlanTree::getReceiveTime() const
-	{
-		return receiveTime;
-	}
+void SimplePlanTree::setReceiveTime(long receiveTime) {
+    this->receiveTime = receiveTime;
+}
 
-	void SimplePlanTree::setReceiveTime(long receiveTime)
-	{
-		this->receiveTime = receiveTime;
-	}
+list<long>& SimplePlanTree::getStateIds() {
+    return stateIds;
+}
 
-	list<long>& SimplePlanTree::getStateIds()
-	{
-		return stateIds;
-	}
+void SimplePlanTree::setStateIds(list<long>& stateIds) {
+    this->stateIds = stateIds;
+}
 
-	void SimplePlanTree::setStateIds(list<long>& stateIds)
-	{
-		this->stateIds = stateIds;
-	}
+string SimplePlanTree::toString() {
+    stringstream result;
 
-	string SimplePlanTree::toString()
-	{
-		stringstream result;
+    result << "RobotID: " << this->robotId << "\n";
+    result << "Parent: ";
 
-		result << "RobotID: " << this->robotId << "\n";
-		result << "Parent: ";
+    if (this->parent != nullptr) {
+        result << parent->getState()->getId();
+    }
+    result << "\n";
 
-		if (this->parent != nullptr)
-		{
-			result << parent->getState()->getId();
-		}
-		result << "\n";
+    result << "State: ";
+    if (state != nullptr) {
+        result << state->getId();
+        result << " " + state->getName();
+    } else {
+        result << "ERROR !!!NO STATE !!!";
+    }
 
-		result << "State: ";
-		if (state != nullptr)
-		{
-			result << state->getId();
-			result << " " + state->getName();
-		}
-		else
-		{
-			result << "ERROR !!!NO STATE !!!";
-		}
+    result << "\n";
 
-		result << "\n";
+    result << "EntryPoint: ";
 
-		result << "EntryPoint: ";
+    if (this->entryPoint != nullptr) {
+        result << entryPoint->getId() << " " << this->entryPoint->getTask()->getName();
+    } else {
+        result << "NoEntryPoint";
+    }
+    result << "\n";
 
-		if (this->entryPoint != nullptr)
-		{
-			result << entryPoint->getId() << " " << this->entryPoint->getTask()->getName();
-		}
-		else
-		{
-			result << "NoEntryPoint";
-		}
-		result << "\n";
+    result << "Children: " << this->children.size() << "\n";
+    for (auto spt : this->children) {
+        result << spt->toString();
+    }
 
-		result << "Children: " << this->children.size() << "\n";
-		for(auto spt : this->children)
-		{
-			result << spt->toString();
-		}
+    result << "\n\n";
 
-		result << "\n\n";
-
-		return result.str();
-	}
+    return result.str();
+}
 
 } /* namespace alica */
-

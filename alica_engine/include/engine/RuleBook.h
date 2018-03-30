@@ -6,8 +6,7 @@
 
 #include <memory>
 
-namespace alica
-{
+namespace alica {
 class SyncModule;
 class PlanSelector;
 class Logger;
@@ -28,25 +27,24 @@ class TeamManager;
 /**
  * Defines the operational semantics of the used ALICA dialect.
  */
-class RuleBook
-{
-  public:
-    RuleBook(AlicaEngine *ae);
+class RuleBook {
+public:
+    RuleBook(AlicaEngine* ae);
     virtual ~RuleBook();
     bool isChangeOccured() const;
     void setChangeOccured(bool changeOccured);
     PlanChange visit(std::shared_ptr<RunningPlan> r);
     PlanChange updateChange(PlanChange cur, PlanChange update);
-    std::shared_ptr<RunningPlan> initialisationRule(Plan *masterPlan);
+    std::shared_ptr<RunningPlan> initialisationRule(Plan* masterPlan);
 
-  protected:
-    AlicaEngine *ae;
-    TeamObserver *to;
-    TeamManager *tm;
-    SyncModule *sm;
+protected:
+    AlicaEngine* ae;
+    TeamObserver* to;
+    TeamManager* tm;
+    SyncModule* sm;
     int maxConsecutiveChanges;
-    PlanSelector *ps;
-    Logger *log;
+    PlanSelector* ps;
+    Logger* log;
     bool changeOccured;
     PlanChange synchTransitionRule(std::shared_ptr<RunningPlan> r);
     PlanChange transitionRule(std::shared_ptr<RunningPlan> r);
@@ -59,4 +57,4 @@ class RuleBook
     PlanChange planPropagationRule(std::shared_ptr<RunningPlan> r);
     PlanChange dynamicAllocationRule(std::shared_ptr<RunningPlan> r);
 };
-}
+}  // namespace alica

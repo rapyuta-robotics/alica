@@ -8,7 +8,6 @@
 #ifndef ROLEPRIORITY_H_
 #define ROLEPRIORITY_H_
 
-
 #include <map>
 #include <list>
 #include <string>
@@ -17,28 +16,25 @@
 #include "AlicaElement.h"
 
 using namespace std;
-namespace alica
-{
-	class Role;
-	class RoleUsage;
-	class AlicaEngine;
+namespace alica {
+class Role;
+class RoleUsage;
+class AlicaEngine;
 
-	class RolePriority : public AlicaElement
-	{
-	public:
-		RolePriority(AlicaEngine* ae);
-		virtual ~RolePriority();
-		list<RoleUsage*>& getPriorityList();
+class RolePriority : public AlicaElement {
+public:
+    RolePriority(AlicaEngine* ae);
+    virtual ~RolePriority();
+    list<RoleUsage*>& getPriorityList();
 
-	private:
-		map<long, Role*> roles;
-		Role* role;
-		list<RoleUsage*> priorityList;
+private:
+    map<long, Role*> roles;
+    Role* role;
+    list<RoleUsage*> priorityList;
 
-	protected:
+protected:
+};
 
-	};
-
-} /* namespace Alica */
+}  // namespace alica
 
 #endif /* ROLEPRIORITY_H_ */

@@ -7,42 +7,29 @@
 
 #include "engine/model/RoleDefinitionSet.h"
 
-namespace alica
-{
+namespace alica {
 
-	RoleDefinitionSet::RoleDefinitionSet()
-	{
+RoleDefinitionSet::RoleDefinitionSet() {}
 
-	}
+RoleDefinitionSet::~RoleDefinitionSet() {}
 
-	RoleDefinitionSet::~RoleDefinitionSet()
-	{
-	}
+const string& RoleDefinitionSet::getFileName() const {
+    if (this->getFileName().empty()) {
+        static string result = name + ".rdefset";
+        return result;
+    }
+    return fileName;
+}
 
-	const string& RoleDefinitionSet::getFileName() const
-	{
-		if (this->getFileName().empty())
-		{
-			static string result = name + ".rdefset";
-			return result;
-		}
-		return fileName;
-	}
+void RoleDefinitionSet::setFileName(const string& fileName) {
+    this->fileName = fileName;
+}
 
-	void RoleDefinitionSet::setFileName(const string& fileName)
-	{
-		this->fileName = fileName;
-	}
+list<Role*>& RoleDefinitionSet::getRoles() {
+    return roles;
+}
 
-	list<Role*>& RoleDefinitionSet::getRoles()
-	{
-		return roles;
-	}
-
-	void RoleDefinitionSet::setRoles(const list<Role*>& roles)
-	{
-		this->roles = roles;
-	}
-} /* namespace Alica */
-
-
+void RoleDefinitionSet::setRoles(const list<Role*>& roles) {
+    this->roles = roles;
+}
+}  // namespace alica

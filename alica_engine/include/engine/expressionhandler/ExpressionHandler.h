@@ -8,41 +8,37 @@
 #ifndef EXPRESSIONHANDLER_H_
 #define EXPRESSIONHANDLER_H_
 
-namespace alica
-{
-	class RunningPlan;
-	class Plan;
-	class Condition;
-	class Transition;
-	class IConditionCreator;
-	class IConstraintCreator;
-	class IUtilityCreator;
-	class AlicaEngine;
+namespace alica {
+class RunningPlan;
+class Plan;
+class Condition;
+class Transition;
+class IConditionCreator;
+class IConstraintCreator;
+class IUtilityCreator;
+class AlicaEngine;
 
-	/**
-	 * The ExpressionHandler attaches expressions and constraints to plans during start-up of the engine.
-	 */
-	class ExpressionHandler
-	{
-	public:
-		ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc);
-		virtual ~ExpressionHandler();
-		void attachAll();
-//		void dummyConstraint(ConstraintDescriptor cd, RunningPlan* rp);
-		bool dummyTrue(RunningPlan* rp);
-		bool dummyFalse(RunningPlan* rp);
+/**
+ * The ExpressionHandler attaches expressions and constraints to plans during start-up of the engine.
+ */
+class ExpressionHandler {
+public:
+    ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc);
+    virtual ~ExpressionHandler();
+    void attachAll();
+    //		void dummyConstraint(ConstraintDescriptor cd, RunningPlan* rp);
+    bool dummyTrue(RunningPlan* rp);
+    bool dummyFalse(RunningPlan* rp);
 
-	protected:
-		IConditionCreator* conditionCreator;
-		IUtilityCreator* utilityCreator;
-		IConstraintCreator* constraintCreator;
-		AlicaEngine* ae;
-//		void attachPlanConditions(Plan* p, T exprType, T consType);
-//		void attachTransConditions(Transition* t, T exprType, T consType);
-		void attachConstraint(Condition* c);
-
-
-	};
+protected:
+    IConditionCreator* conditionCreator;
+    IUtilityCreator* utilityCreator;
+    IConstraintCreator* constraintCreator;
+    AlicaEngine* ae;
+    //		void attachPlanConditions(Plan* p, T exprType, T consType);
+    //		void attachTransConditions(Transition* t, T exprType, T consType);
+    void attachConstraint(Condition* c);
+};
 
 } /* namespace alica */
 

@@ -15,26 +15,24 @@ using namespace std;
 #include <memory>
 
 namespace supplementary {
-	class AgentID;
+class AgentID;
 }
 
-namespace alica
-{
+namespace alica {
 
-	class DummyTestSummand : public USummand
-	{
-	public:
-		DummyTestSummand(double weight, string name, long id, vector<long>& relevantEntryPointIds);
-		virtual ~DummyTestSummand();
-		void cacheEvalData();
-		UtilityInterval eval(IAssignment* ass);
-		const supplementary::AgentID* robotId;
+class DummyTestSummand : public USummand {
+public:
+    DummyTestSummand(double weight, string name, long id, vector<long>& relevantEntryPointIds);
+    virtual ~DummyTestSummand();
+    void cacheEvalData();
+    UtilityInterval eval(IAssignment* ass);
+    const supplementary::AgentID* robotId;
 
-	protected:
-		double sb;
-		double angleBallOpp;
-		double velAngle;
-	};
+protected:
+    double sb;
+    double angleBallOpp;
+    double velAngle;
+};
 
 } /* namespace alica */
 

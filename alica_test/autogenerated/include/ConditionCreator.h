@@ -7,17 +7,15 @@ using namespace std;
 #include <memory>
 #include "iostream"
 
-namespace alica
-{
-    class BasicCondition;
+namespace alica {
+class BasicCondition;
 
-    class ConditionCreator : public IConditionCreator
-    {
-    public:
-        ConditionCreator();
-        virtual ~ConditionCreator();
-        shared_ptr<BasicCondition> createConditions(long conditionConfId);
-    };
+class ConditionCreator : public IConditionCreator {
+public:
+    ConditionCreator();
+    virtual ~ConditionCreator();
+    shared_ptr<BasicCondition> createConditions(long conditionConfId);
+};
 
 } /* namespace alica */
 

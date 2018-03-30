@@ -7,18 +7,14 @@
 
 #include "engine/constraintmodul/SolverTerm.h"
 
-namespace alica
-{
+namespace alica {
 
-	SolverTerm::SolverTerm()
-	{
-		// TODO Auto-generated constructor stub
+SolverTerm::SolverTerm() {
+    // TODO Auto-generated constructor stub
+}
 
-	}
-
-	SolverTerm::~SolverTerm()
-	{
-		// TODO Auto-generated destructor stub
-	}
+SolverTerm::~SolverTerm() {
+    // TODO Auto-generated destructor stub
+}
 
 } /* namespace alica */
