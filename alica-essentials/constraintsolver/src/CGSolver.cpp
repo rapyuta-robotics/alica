@@ -49,7 +49,7 @@ bool CGSolver::existsSolution(vector<Variable *> &vars, vector<shared_ptr<Proble
 
     for (auto c : calls)
     {
-        if (!(dynamic_pointer_cast<autodiff::Term>(c->getConstraint()) != 0))
+        if (dynamic_pointer_cast<autodiff::Term>(c->getConstraint()).get() == nullptr)
         {
             cerr << "CGSolver: Constrainttype not compatible with selected solver" << endl;
             return false;
@@ -60,7 +60,7 @@ bool CGSolver::existsSolution(vector<Variable *> &vars, vector<shared_ptr<Proble
         {
             for (int j = 0; j < cVars->size(); ++j)
             {
-                if (!(dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(j)) != 0))
+                if (dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(j)).get() == nullptr)
                 {
                     cerr << "CGSolver: Variabletype not compatible with selected solver" << endl;
                     return false;

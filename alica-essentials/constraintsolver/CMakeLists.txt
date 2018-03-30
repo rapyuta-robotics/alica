@@ -15,13 +15,13 @@ find_package(catkin REQUIRED COMPONENTS
   system_config
   alica_engine
   alica_ros_proxy
+  roslib
 )
 
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES constraintsolver
- CATKIN_DEPENDS fsystem autodiff
-# DEPENDS system filesystem
+ CATKIN_DEPENDS fsystem autodiff roslib
 )
 
 include_directories(
