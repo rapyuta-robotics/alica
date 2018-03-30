@@ -29,7 +29,7 @@
   <run_depend>constraintsolver</run_depend>
   <run_depend>agent_id</run_depend>
   
-
+  <test_depend>rostest</test_depend>
   <test_depend>gtest</test_depend>
   <export>
   </export>

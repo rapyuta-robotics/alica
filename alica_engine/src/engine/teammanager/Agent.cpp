@@ -37,17 +37,17 @@ Agent::~Agent()
     delete this->properties;
 }
 
-const supplementary::AgentID *Agent::getID()
+const supplementary::AgentID* Agent::getID() const
 {
     return this->id;
 }
 
-std::string Agent::getName()
+const std::string& Agent::getName() const
 {
     return this->name;
 }
 
-bool Agent::isActive()
+bool Agent::isActive() const
 {
     return this->active;
 }
@@ -91,21 +91,21 @@ Variable *Agent::getDomainVariable(std::string sort)
     return this->engineData->getDomainVariable(sort);
 }
 
-std::shared_ptr<std::list<EntryPoint *>> Agent::getSucceededEntryPoints(AbstractPlan *plan)
+std::shared_ptr<std::list<EntryPoint *>> Agent::getSucceededEntryPoints(AbstractPlan *plan) const
 {
     return this->engineData->getSuccessMarks()->succeededEntryPoints(plan);
 }
 
 bool Agent::update()
 {
+    if(this->local) {
+        return false;
+    }
     if (this->active && this->timeLastMsgReceived + this->timeout < this->engine->getIAlicaClock()->now())
     {
         // timeout triggered
         this->engineData->clearSuccessMarks();
-        if (!this->local)
-        {
-        	this->active = false;
-        }
+        this->active = false;
         return true;
     }
 

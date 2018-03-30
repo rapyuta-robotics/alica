@@ -167,7 +167,7 @@ namespace alica
 		stringstream ss;
 		for(int i = 0; i < robotIds.size();i++)
 		{
-			ss << "R: " << this->robotIds[i] << " in State: ";
+			ss << "R: " << *this->robotIds[i] << " in State: ";
 			if(this->states[i] == nullptr)
 			{
 				ss << "NULL" << endl;

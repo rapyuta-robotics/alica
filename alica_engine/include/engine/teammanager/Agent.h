@@ -32,11 +32,11 @@ class Agent
   public:
     virtual ~Agent();
 
-    const supplementary::AgentID *getID();
-    std::string getName();
-    const RobotProperties *getProperties() const;
-    const RobotEngineData *getEngineData() const;
-    bool isActive();
+    const supplementary::AgentID* getID() const;
+    const std::string& getName() const;
+    const RobotProperties* getProperties() const;
+    const RobotEngineData* getEngineData() const;
+    bool isActive() const;
 
   protected:
     Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::AgentID *id);
@@ -56,7 +56,7 @@ class Agent
     void setSuccess(AbstractPlan* plan, EntryPoint* entryPoint);
     void setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks);
     Variable* getDomainVariable(std::string sort);
-    std::shared_ptr<std::list<EntryPoint*>> getSucceededEntryPoints(AbstractPlan* plan);
+    std::shared_ptr<std::list<EntryPoint*>> getSucceededEntryPoints(AbstractPlan* plan) const;
     bool update();
 
     const AlicaEngine *engine;
