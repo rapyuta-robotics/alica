@@ -20,7 +20,7 @@ const Role* IRoleAssignment::getRole(const supplementary::AgentID* robotId) {
     } else {
         stringstream ss;
         ss << "RA: There is no role assigned for robot: " << robotId << std::endl;
-        this->engine->abort(ss.str());
+        AlicaEngine::abort(ss.str());
         return nullptr;
     }
 }

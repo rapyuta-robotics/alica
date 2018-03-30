@@ -45,14 +45,14 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig* sc) {
         } else {
             for (auto& agentEntry : this->agents) {
                 if (*(agentEntry.first) == *(agent->getID())) {
-                    this->engine->abort("TM: Two robots with the same ID in Globals.conf. ID: ", agent->getID());
+                    AlicaEngine::abort("TM: Two robots with the same ID in Globals.conf. ID: ", agent->getID());
                 }
             }
         }
         this->agents.emplace(agent->getID(), agent);
     }
     if (!foundSelf) {
-        this->engine->abort("TM: Could not find own agent name in Globals Id = " + localAgentName);
+        AlicaEngine::abort("TM: Could not find own agent name in Globals Id = " + localAgentName);
     }
 
     if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull", NULL)) {

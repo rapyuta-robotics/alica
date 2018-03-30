@@ -90,7 +90,7 @@ void Quantifier::setScope(AlicaEngine* engine, AlicaElement* element) {
     } else if (scopeIsState) {
         this->state = (State*) element;
     } else {
-        engine->abort("Scope of Quantifier is not an entrypoint, plan, or state", element->getId());
+        AlicaEngine::abort("Scope of Quantifier is not an entrypoint, plan, or state", element->getId());
     }
 }
 
