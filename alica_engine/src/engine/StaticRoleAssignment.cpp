@@ -12,7 +12,7 @@
 
 namespace alica {
 
-StaticRoleAssignment::StaticRoleAssignment(AlicaEngine* ae) : IRoleAssignment(ae), ae(ae), updateRoles(false) {
+StaticRoleAssignment::StaticRoleAssignment(AlicaEngine* ae) : IRoleAssignment(), ae(ae), updateRoles(false) {
     this->agentProperties = this->ae->getTeamManager()->getActiveAgentProperties();
 }
 

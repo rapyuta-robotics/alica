@@ -3,9 +3,8 @@
 #include "engine/AlicaEngine.h"
 
 namespace alica {
-IRoleAssignment::IRoleAssignment(const AlicaEngine* engine)
+IRoleAssignment::IRoleAssignment()
         : ownRole(nullptr)
-        , engine(engine)
         , robotRoleMapping(map<const supplementary::AgentID*, Role*, supplementary::AgentIDComparator>())
         , communication(nullptr) {}
 
