@@ -248,6 +248,7 @@ namespace alica
             AlicaTime availTime;
 
             now = _alicaClock->now();
+
             //TODO: FIXME: the division by 1000 is brittle and should not be needed
             //replace AlicaTime with a proper time class.
             availTime = (AlicaTime)((_loopTime - (now - beginTime)) / 1000L);
@@ -289,7 +290,6 @@ namespace alica
                 }
 
             }
-
 
             now = _alicaClock->now();
             availTime = (AlicaTime)((_loopTime - (now - beginTime)) / 1000L);

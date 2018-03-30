@@ -96,7 +96,6 @@ namespace alica
         RuleBook _ruleBook;
 
         int _treeDepth;
-
         bool _running;
         bool _sendStatusMessages;
         bool _isWaiting;

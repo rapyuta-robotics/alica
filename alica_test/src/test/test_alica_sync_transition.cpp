@@ -67,7 +67,6 @@ protected:
         delete ros;
         delete ros2;
     }
-
 };
 
 /**
