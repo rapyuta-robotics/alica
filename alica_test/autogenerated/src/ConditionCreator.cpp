@@ -46,6 +46,8 @@
 
 #include  "Plans/PlanTwo1407153645238.h"
 
+#include  "Plans/BehaviorSuccessSpamMaster1522377375148.h"
+
 #include  "Plans/ProblemModule/ProblemBuildingMaster1479556022226.h"
 
 #include  "Plans/MultiAgentTestPlan1413200862180.h"
@@ -253,6 +255,18 @@ namespace alica
             case 1418825428924:
 
                 return make_shared<TransitionCondition1418825428924>();
+
+                break;
+
+            case 1522377944921:
+
+                return make_shared<TransitionCondition1522377944921>();
+
+                break;
+
+            case 1522377946607:
+
+                return make_shared<TransitionCondition1522377946607>();
 
                 break;
 

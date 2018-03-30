@@ -47,6 +47,8 @@
 
 #include  "Plans/constraints/PlanTwo1407153645238Constraints.h"
 
+#include  "Plans/constraints/BehaviorSuccessSpamMaster1522377375148Constraints.h"
+
 #include  "Plans/ProblemModule/constraints/ProblemBuildingMaster1479556022226Constraints.h"
 
 #include  "Plans/constraints/MultiAgentTestPlan1413200862180Constraints.h"
