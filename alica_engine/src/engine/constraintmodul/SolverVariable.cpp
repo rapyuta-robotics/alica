@@ -7,18 +7,14 @@
 
 #include "engine/constraintmodul/SolverVariable.h"
 
-namespace alica
-{
+namespace alica {
 
-	SolverVariable::SolverVariable()
-	{
-		// TODO Auto-generated constructor stub
+SolverVariable::SolverVariable() {
+    // TODO Auto-generated constructor stub
+}
 
-	}
-
-	SolverVariable::~SolverVariable()
-	{
-		// TODO Auto-generated destructor stub
-	}
+SolverVariable::~SolverVariable() {
+    // TODO Auto-generated destructor stub
+}
 
 } /* namespace alica */

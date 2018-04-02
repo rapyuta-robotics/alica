@@ -8,7 +8,6 @@
 #ifndef PLANTYPE_H_
 #define PLANTYPE_H_
 
-
 #include <string>
 #include <sstream>
 #include <list>
@@ -16,30 +15,28 @@
 #include "AbstractPlan.h"
 
 using namespace std;
-namespace alica
-{
-	class Plan;
-	class Parametrisation;
+namespace alica {
+class Plan;
+class Parametrisation;
 
-	class PlanType : public AbstractPlan
-	{
-	public:
-		PlanType();
-		virtual ~PlanType();
+class PlanType : public AbstractPlan {
+public:
+    PlanType();
+    virtual ~PlanType();
 
-		const virtual string& getFileName() const;
-		string toString();
+    const virtual string& getFileName() const;
+    string toString();
 
-		list<Parametrisation*>& getParametrisation();
-		void setParametrisation(const list<Parametrisation*> parametrisation);
-		list<Plan*>& getPlans() ;
-		void setPlans(const list<Plan*>& plans);
+    list<Parametrisation*>& getParametrisation();
+    void setParametrisation(const list<Parametrisation*> parametrisation);
+    list<Plan*>& getPlans();
+    void setPlans(const list<Plan*>& plans);
 
-	protected:
-		list<Plan*> plans;
-		list<Parametrisation*> parametrisation;
-	};
+protected:
+    list<Plan*> plans;
+    list<Parametrisation*> parametrisation;
+};
 
-} /* namespace Alica */
+}  // namespace alica
 
 #endif /* PLANTYPE_H_ */

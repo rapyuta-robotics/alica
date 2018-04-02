@@ -13,16 +13,13 @@
 
 using namespace std;
 
-namespace alica
-{
+namespace alica {
 
-
-	class IConstraintCreator
-	{
-	public:
-		virtual ~IConstraintCreator(){}
-		virtual shared_ptr<BasicConstraint> createConstraint(long constraintConfId) = 0;
-	};
+class IConstraintCreator {
+public:
+    virtual ~IConstraintCreator() {}
+    virtual shared_ptr<BasicConstraint> createConstraint(long constraintConfId) = 0;
+};
 
 } /* namespace alica */
 

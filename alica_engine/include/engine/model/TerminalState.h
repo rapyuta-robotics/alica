@@ -10,25 +10,23 @@
 
 #include "State.h"
 
-namespace alica
-{
-	class PostCondition;
+namespace alica {
+class PostCondition;
 
-	/**
-	 * A terminal state within a plan. Indicates termination of the corresponding task
-	 */
-	class TerminalState : public State
-	{
-	public:
-		TerminalState();
-		virtual ~TerminalState();
-		PostCondition* getPostCondition();
-		void setPostCondition(PostCondition* posCondition);
+/**
+ * A terminal state within a plan. Indicates termination of the corresponding task
+ */
+class TerminalState : public State {
+public:
+    TerminalState();
+    virtual ~TerminalState();
+    PostCondition* getPostCondition();
+    void setPostCondition(PostCondition* posCondition);
 
-	protected:
-		PostCondition* postCondition;
-	};
+protected:
+    PostCondition* postCondition;
+};
 
-} /* namespace Alica */
+}  // namespace alica
 
 #endif /* TERMINALSTATE_H_ */

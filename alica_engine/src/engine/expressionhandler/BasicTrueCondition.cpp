@@ -7,20 +7,14 @@
 
 #include "engine/expressionhandler/BasicTrueCondition.h"
 
-namespace alica
-{
+namespace alica {
 
-	BasicTrueCondition::BasicTrueCondition()
-	{
-	}
+BasicTrueCondition::BasicTrueCondition() {}
 
-	BasicTrueCondition::~BasicTrueCondition()
-	{
-	}
+BasicTrueCondition::~BasicTrueCondition() {}
 
-	bool BasicTrueCondition::evaluate(shared_ptr<RunningPlan> rp)
-	{
-		return true;
-	}
+bool BasicTrueCondition::evaluate(shared_ptr<RunningPlan> rp) {
+    return true;
+}
 
 } /* namespace alica */

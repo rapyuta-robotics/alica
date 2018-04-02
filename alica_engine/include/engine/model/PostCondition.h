@@ -8,24 +8,21 @@
 #ifndef POSTCONDITION_H_
 #define POSTCONDITION_H_
 
-
 #include <string>
 #include <sstream>
 
 #include "Condition.h"
 
 using namespace std;
-namespace alica
-{
+namespace alica {
 
-	class PostCondition : public Condition
-	{
-	public:
-		PostCondition(long id = 0);
-		virtual ~PostCondition();
-		string toString();
-	};
+class PostCondition : public Condition {
+public:
+    PostCondition(long id = 0);
+    virtual ~PostCondition();
+    string toString();
+};
 
-} /* namespace Alica */
+}  // namespace alica
 
 #endif /* POSTCONDITION_H_ */
