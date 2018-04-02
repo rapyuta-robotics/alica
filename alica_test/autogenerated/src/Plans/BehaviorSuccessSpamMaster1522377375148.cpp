@@ -40,9 +40,7 @@ shared_ptr<UtilityFunction> UtilityFunction1522377375148::getUtilityFunction(Pla
  */
 bool TransitionCondition1522377944921::evaluate(shared_ptr<RunningPlan> rp) {
     /*PROTECTED REGION ID(1522377944058) ENABLED START*/
-    bool ok = rp->anyChildrenStatus(alica::PlanStatus::Success);
-    // std::cout << "A "<<ok <<std::endl;
-    return ok;
+    return rp->anyChildrenStatus(alica::PlanStatus::Success);
     /*PROTECTED REGION END*/
 }
 

@@ -93,16 +93,12 @@ TEST_F(AlicaSyncTransition, syncTransitionTest) {
     chrono::milliseconds duration(33);
 
     for (int i = 0; i < 20; i++) {
-        std::cout << "AE ----------------------------------------------- " << *ae->getTeamManager()->getLocalAgentID()
-                  << std::endl;
         ae->stepNotify();
         this_thread::sleep_for(duration);
         do {
             this_thread::sleep_for(duration);
         } while (!ae->getPlanBase()->isWaiting());
 
-        std::cout << "AE ----------------------------------------------- " << *ae2->getTeamManager()->getLocalAgentID()
-                  << std::endl;
         ae2->stepNotify();
         do {
             this_thread::sleep_for(duration);
