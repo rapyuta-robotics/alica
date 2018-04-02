@@ -38,7 +38,7 @@ public:
     const Agent* getLocalAgent() const {
         return localAgent;
     }
-    std::unique_ptr<std::list<const supplementary::AgentID*>> getActiveAgentIDs() const;
+    void fillWithActiveAgentIDs(std::vector<const supplementary::AgentID*>& oIds) const;
     std::unique_ptr<std::list<const RobotProperties*>> getActiveAgentProperties() const;
     int getTeamSize() const;
     const Agent* getAgentByID(const supplementary::AgentID* agentId) const;
@@ -50,7 +50,7 @@ public:
     bool setSuccess(const supplementary::AgentID* agentId, AbstractPlan* plan, EntryPoint* entryPoint);
     bool setSuccessMarks(const supplementary::AgentID* agentId, std::shared_ptr<SuccessMarks> successMarks);
     Variable* getDomainVariable(const supplementary::AgentID* robot, std::string sort);
-
+    
 private:
     AlicaTime teamTimeOut;
     Agent* localAgent;

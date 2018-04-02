@@ -51,11 +51,10 @@ public:
     void notifyRobotLeftPlan(AbstractPlan* plan);
     virtual void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
     void close();
-
+    
 private:
     EntryPoint* entryPointOfState(State* state);
 
-protected:
     AlicaEngine* ae;
     const supplementary::AgentID* myId;
     const RobotEngineData* me;

@@ -27,7 +27,7 @@ public:
     CycleManager(AlicaEngine* ae, RunningPlan* p);
     virtual ~CycleManager();
     void update();
-    bool isOverridden();
+    bool isOverridden() const;
     bool setAssignment();
     bool mayDoUtilityCheck();
     void setNewAllocDiff(AllocationDifference* aldif);

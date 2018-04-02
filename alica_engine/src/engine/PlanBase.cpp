@@ -324,7 +324,7 @@ void PlanBase::setRootNode(shared_ptr<RunningPlan> rootNode) {
 /**
  * Returns the deepest ALICA node
  */
-shared_ptr<RunningPlan> PlanBase::getDeepestNode() {
+shared_ptr<const RunningPlan> PlanBase::getDeepestNode() const {
     return _deepestNode;
 }
 
