@@ -1,13 +1,7 @@
 #include "DomainCondition.h"
 
-namespace alica
-{
-DomainCondition::DomainCondition() :
-    BasicCondition()
-{
-}
+namespace alica {
+DomainCondition::DomainCondition() : BasicCondition() {}
 
-DomainCondition::~DomainCondition()
-{
-}
+DomainCondition::~DomainCondition() {}
 } /* namespace alica */

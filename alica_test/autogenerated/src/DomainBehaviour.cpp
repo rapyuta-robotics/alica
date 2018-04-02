@@ -1,14 +1,8 @@
 #include "DomainBehaviour.h"
 
-namespace alica
-{
-DomainBehaviour::DomainBehaviour(std::string name)
-    : BasicBehaviour(name)
-{
-}
+namespace alica {
+DomainBehaviour::DomainBehaviour(std::string name) : BasicBehaviour(name) {}
 
-DomainBehaviour::~DomainBehaviour()
-{
-}
+DomainBehaviour::~DomainBehaviour() {}
 
 } /* namespace alica */

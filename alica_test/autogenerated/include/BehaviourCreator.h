@@ -5,18 +5,16 @@
 #include <memory>
 #include <iostream>
 
-namespace alica
-{
+namespace alica {
 
-    class BasicBehaviour;
+class BasicBehaviour;
 
-    class BehaviourCreator : public IBehaviourCreator
-    {
-    public:
-        BehaviourCreator();
-        virtual ~BehaviourCreator();
-        virtual shared_ptr<BasicBehaviour> createBehaviour(long behaviourConfId);
-    };
+class BehaviourCreator : public IBehaviourCreator {
+public:
+    BehaviourCreator();
+    virtual ~BehaviourCreator();
+    virtual shared_ptr<BasicBehaviour> createBehaviour(long behaviourConfId);
+};
 
 } /* namespace alica */
 

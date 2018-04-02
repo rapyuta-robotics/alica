@@ -8,57 +8,46 @@
 #include "engine/model/RoleTaskMapping.h"
 #include "engine/model/Role.h"
 
-namespace alica
-{
+namespace alica {
 
-	RoleTaskMapping::RoleTaskMapping()
-	{
-		this->role = nullptr;
-	}
+RoleTaskMapping::RoleTaskMapping() {
+    this->role = nullptr;
+}
 
-	RoleTaskMapping::~RoleTaskMapping()
-	{
-	}
+RoleTaskMapping::~RoleTaskMapping() {}
 
-	string RoleTaskMapping::toString()
-	{
-		stringstream ss;
-		ss << "#RoleTaskMapping: " << this->name << " " << this->id << endl;
-		ss << "\t Role-Name: " << this->role->getName() << endl;
-		ss << "\t TaskPriorities: " << this->taskPriorities.size() << endl;
-		for(map<long, double>::const_iterator iterator = this->taskPriorities.begin(); iterator != this->taskPriorities.end(); iterator++)
-		{
-			const long l = iterator->first;
-			const double val = iterator->second;
-			ss << "\t" << l << " : " << val << endl;
-		}
-		ss << endl;
-		ss << "#EndRoleTaskMapping" << endl;
-		return ss.str();
-	}
+string RoleTaskMapping::toString() {
+    stringstream ss;
+    ss << "#RoleTaskMapping: " << this->name << " " << this->id << endl;
+    ss << "\t Role-Name: " << this->role->getName() << endl;
+    ss << "\t TaskPriorities: " << this->taskPriorities.size() << endl;
+    for (map<long, double>::const_iterator iterator = this->taskPriorities.begin();
+            iterator != this->taskPriorities.end(); iterator++) {
+        const long l = iterator->first;
+        const double val = iterator->second;
+        ss << "\t" << l << " : " << val << endl;
+    }
+    ss << endl;
+    ss << "#EndRoleTaskMapping" << endl;
+    return ss.str();
+}
 
 //========================= Getter and Setter ======================
 
-	const Role* RoleTaskMapping::getRole() const
-	{
-		return role;
-	}
+const Role* RoleTaskMapping::getRole() const {
+    return role;
+}
 
-	void RoleTaskMapping::setRole(const Role* role)
-	{
-		this->role = role;
-	}
+void RoleTaskMapping::setRole(const Role* role) {
+    this->role = role;
+}
 
-	map<long, double>& RoleTaskMapping::getTaskPriorities()
-	{
-		return taskPriorities;
-	}
+map<long, double>& RoleTaskMapping::getTaskPriorities() {
+    return taskPriorities;
+}
 
-	void RoleTaskMapping::setTaskPriorities(const map<long, double>& taskPriorities)
-	{
-		this->taskPriorities = taskPriorities;
-	}
+void RoleTaskMapping::setTaskPriorities(const map<long, double>& taskPriorities) {
+    this->taskPriorities = taskPriorities;
+}
 
-} /* namespace Alica */
-
-
+}  // namespace alica

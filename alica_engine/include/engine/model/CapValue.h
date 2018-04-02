@@ -10,18 +10,16 @@
 
 #include "AlicaElement.h"
 
-namespace alica
-{
+namespace alica {
 
-	/**
-	 * A value for a Capability.
-	 */
-	class CapValue : public AlicaElement
-	{
-	public:
-		CapValue();
-		virtual ~CapValue();
-	};
+/**
+ * A value for a Capability.
+ */
+class CapValue : public AlicaElement {
+public:
+    CapValue();
+    virtual ~CapValue();
+};
 
 } /* namespace alica */
 

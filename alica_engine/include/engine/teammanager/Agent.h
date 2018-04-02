@@ -7,11 +7,10 @@
 #include <list>
 
 namespace supplementary {
-	class AgentID;
+class AgentID;
 }
 
-namespace alica
-{
+namespace alica {
 
 class AlicaEngine;
 class RobotProperties;
@@ -23,13 +22,12 @@ class EntryPoint;
 class Variable;
 class SuccessMarks;
 
-class Agent
-{
+class Agent {
     // allows the TeamManager to call setTimeLastMsgReceived(..)
     friend ::alica::TeamManager;
     friend ::alica::TeamObserver;
 
-  public:
+public:
     virtual ~Agent();
 
     const supplementary::AgentID* getID() const;
@@ -38,18 +36,18 @@ class Agent
     const RobotEngineData* getEngineData() const;
     bool isActive() const;
 
-  protected:
-    Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::AgentID *id);
-    Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::AgentID *id, std::string name);
+protected:
+    Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id);
+    Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id, std::string name);
 
-    const supplementary::AgentID *id;
+    const supplementary::AgentID* id;
     std::string name;
     bool active;
     bool local;
     AlicaTime timeout;
     AlicaTime timeLastMsgReceived;
-    RobotProperties *properties;
-    RobotEngineData *engineData;
+    RobotProperties* properties;
+    RobotEngineData* engineData;
 
     void setLocal(bool local);
     void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived);
@@ -59,7 +57,7 @@ class Agent
     std::shared_ptr<std::list<EntryPoint*>> getSucceededEntryPoints(AbstractPlan* plan) const;
     bool update();
 
-    const AlicaEngine *engine;
+    const AlicaEngine* engine;
 };
 
 } /* namespace alica */

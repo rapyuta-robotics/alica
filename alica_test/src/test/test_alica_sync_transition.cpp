@@ -20,7 +20,7 @@
 #include "DummyTestSummand.h"
 #include "engine/teammanager/TeamManager.h"
 
-class AlicaSyncTransition: public ::testing::Test { /* namespace alicaTests */
+class AlicaSyncTransition : public ::testing::Test { /* namespace alicaTests */
 protected:
     supplementary::SystemConfig* sc;
     alica::AlicaEngine* ae;
@@ -36,7 +36,7 @@ protected:
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
-        nh.param<std::string>("/rootPath",path,".");
+        nh.param<std::string>("/rootPath", path, ".");
 
         // bring up the SystemConfig with the corresponding path
         sc = supplementary::SystemConfig::getInstance();
@@ -52,7 +52,6 @@ protected:
     }
 
     virtual void TearDown() {
-
         ae->shutdown();
         ae2->shutdown();
         sc->shutdown();
@@ -72,17 +71,18 @@ protected:
 /**
  * Test for SyncTransition
  */
-TEST_F(AlicaSyncTransition, syncTransitionTest)
-{
+TEST_F(AlicaSyncTransition, syncTransitionTest) {
     sc->setHostname("hairy");
-    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", ".", true);
+    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
+            "RealMasterPlanForSyncTest", ".", true);
     ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
     ros = new alicaRosProxy::AlicaRosCommunication(ae);
     ae->setCommunicator(ros);
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("nase");
-    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", ".", true);
+    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
+            "RealMasterPlanForSyncTest", ".", true);
     ae2->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
     ros2 = new alicaRosProxy::AlicaRosCommunication(ae2);
     ae2->setCommunicator(ros2);
@@ -92,43 +92,41 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
     ae2->start();
     chrono::milliseconds duration(33);
 
-    for (int i = 0; i < 20; i++)
-    {
-
-        std::cout << "AE ----------------------------------------------- "<<* ae->getTeamManager()->getLocalAgentID()<<std::endl;
+    for (int i = 0; i < 20; i++) {
+        std::cout << "AE ----------------------------------------------- " << *ae->getTeamManager()->getLocalAgentID()
+                  << std::endl;
         ae->stepNotify();
         this_thread::sleep_for(duration);
-         do {
+        do {
             this_thread::sleep_for(duration);
-        } while(!ae->getPlanBase()->isWaiting());
+        } while (!ae->getPlanBase()->isWaiting());
 
-        std::cout << "AE ----------------------------------------------- "<<* ae2->getTeamManager()->getLocalAgentID()<<std::endl;
+        std::cout << "AE ----------------------------------------------- " << *ae2->getTeamManager()->getLocalAgentID()
+                  << std::endl;
         ae2->stepNotify();
         do {
             this_thread::sleep_for(duration);
-        } while(!ae2->getPlanBase()->isWaiting() || !ae->getPlanBase()->isWaiting());
+        } while (!ae2->getPlanBase()->isWaiting() || !ae->getPlanBase()->isWaiting());
 
-
-        if(i == 2)
-        {
+        if (i == 2) {
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825427317(true);
             alicaTests::TestWorldModel::getTwo()->setTransitionCondition1418825427317(true);
         }
-        if(i == 3)
-        {
+        if (i == 3) {
             alicaTests::TestWorldModel::getTwo()->setTransitionCondition1418825428924(true);
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825428924(true);
         }
-        if(i > 1 && i < 4)
-        {
-            EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(), 1418825395940);
-            EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(), 1418825404963);
+        if (i > 1 && i < 4) {
+            EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
+                    1418825395940);
+            EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
+                    1418825404963);
         }
-        if(i == 5)
-        {
-            EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(), 1418825409988);
-            EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(), 1418825411686);
+        if (i == 5) {
+            EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
+                    1418825409988);
+            EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
+                    1418825411686);
         }
-
     }
 }

@@ -7,23 +7,17 @@
 
 #include <engine/TaskRoleStruct.h>
 
-namespace alica
-{
+namespace alica {
 
+TaskRoleStruct::TaskRoleStruct(long tid, long rid) {
+    taskId = tid;
+    roleId = rid;
+}
 
-	TaskRoleStruct::TaskRoleStruct(long tid, long rid)
-	{
-		taskId = tid;
-		roleId = rid;
-	}
+TaskRoleStruct::~TaskRoleStruct() {}
 
-	TaskRoleStruct::~TaskRoleStruct()
-	{
-	}
-
-	bool TaskRoleStruct::equals(TaskRoleStruct trs)
-	{
-		return taskId==trs.taskId && roleId==trs.roleId;
-	}
+bool TaskRoleStruct::equals(TaskRoleStruct trs) {
+    return taskId == trs.taskId && roleId == trs.roleId;
+}
 
 } /* namespace alica */
