@@ -118,7 +118,7 @@ void CycleManager::update() {
  * Indicates whether an authorative allocation is present
  * @return bool
  */
-bool CycleManager::isOverridden() {
+bool CycleManager::isOverridden() const {
     return this->state == CycleState::overridden && this->fixedAllocation != nullptr;
 }
 

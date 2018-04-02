@@ -65,15 +65,13 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig* sc) {
     }
 }
 
-std::unique_ptr<std::list<const supplementary::AgentID*>> TeamManager::getActiveAgentIDs() const {
-    auto activeAgentIDs =
-            unique_ptr<std::list<const supplementary::AgentID*>>(new list<const supplementary::AgentID*>());
-    for (auto& agentEntry : this->agents) {
+void TeamManager::fillWithActiveAgentIDs(std::vector<const supplementary::AgentID*>& oIds) const {
+    oIds.clear();
+    for (const std::pair<const supplementary::AgentID*, Agent*>& agentEntry : agents) {
         if (agentEntry.second->isActive()) {
-            activeAgentIDs->push_back(agentEntry.first);
+            oIds.push_back(agentEntry.first);
         }
     }
-    return std::move(activeAgentIDs);
 }
 
 std::unique_ptr<std::list<Agent*>> TeamManager::getAllAgents() {

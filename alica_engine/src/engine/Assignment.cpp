@@ -270,13 +270,11 @@ shared_ptr<SuccessCollection> Assignment::getEpSuccessMapping() {
     return this->epSucMapping;
 }
 
-void Assignment::setAllToInitialState(unique_ptr<list<const supplementary::AgentID*>> robots, EntryPoint* defep) {
+void Assignment::setAllToInitialState(const std::vector<const supplementary::AgentID*>& robots, EntryPoint* defep) {
     auto rlist = this->epRobotsMapping->getRobotsByEp(defep);
-    for (auto& r : (*robots)) {
+    for (const supplementary::AgentID* r : robots) {
         rlist->push_back(r);
-    }
-    for (auto& r : (*robots)) {
-        this->robotStateMapping->setState(r, defep->getState());
+        robotStateMapping->setState(r, defep->getState());
     }
 }
 

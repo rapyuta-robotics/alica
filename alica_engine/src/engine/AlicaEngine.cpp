@@ -118,6 +118,7 @@ bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCre
     if (this->variableSyncModule) {
         this->variableSyncModule->init();
     }
+    RunningPlan::init();
     return everythingWorked;
 }
 
