@@ -65,7 +65,8 @@ RunningPlan::RunningPlan(AlicaEngine* ae) {
 
 RunningPlan::~RunningPlan() {}
 
-RunningPlan::RunningPlan(AlicaEngine* ae, Plan* plan) : RunningPlan(ae) {
+RunningPlan::RunningPlan(AlicaEngine* ae, Plan* plan)
+        : RunningPlan(ae) {
     this->plan = plan;
     vector<EntryPoint*> epCol;
     transform(plan->getEntryPoints().begin(), plan->getEntryPoints().end(), back_inserter(epCol),
@@ -76,13 +77,15 @@ RunningPlan::RunningPlan(AlicaEngine* ae, Plan* plan) : RunningPlan(ae) {
     this->behaviour = false;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, PlanType* pt) : RunningPlan(ae) {
+RunningPlan::RunningPlan(AlicaEngine* ae, PlanType* pt)
+        : RunningPlan(ae) {
     this->plan = nullptr;
     this->planType = pt;
     this->behaviour = false;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, BehaviourConfiguration* bc) : RunningPlan(ae) {
+RunningPlan::RunningPlan(AlicaEngine* ae, BehaviourConfiguration* bc)
+        : RunningPlan(ae) {
     this->plan = bc;
     this->bp = ae->getBehaviourPool();
     this->behaviour = true;

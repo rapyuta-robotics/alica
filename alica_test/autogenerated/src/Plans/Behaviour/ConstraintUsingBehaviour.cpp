@@ -8,7 +8,8 @@ namespace alica {
 /*PROTECTED REGION ID(staticVars1414068597716) ENABLED START*/  // initialise static variables here
 vector<string> ConstraintUsingBehaviour::result;
 /*PROTECTED REGION END*/
-ConstraintUsingBehaviour::ConstraintUsingBehaviour() : DomainBehaviour("ConstraintUsingBehaviour") {
+ConstraintUsingBehaviour::ConstraintUsingBehaviour()
+        : DomainBehaviour("ConstraintUsingBehaviour") {
     /*PROTECTED REGION ID(con1414068597716) ENABLED START*/  // Add additional options here
     this->callCounter = 0;
     /*PROTECTED REGION END*/

@@ -18,7 +18,8 @@ BehaviourConfiguration::BehaviourConfiguration() {
     parameters = make_shared<map<string, string>>();
 }
 
-BehaviourConfiguration::BehaviourConfiguration(long id) : BehaviourConfiguration() {
+BehaviourConfiguration::BehaviourConfiguration(long id)
+        : BehaviourConfiguration() {
     this->id = id;
 }
 

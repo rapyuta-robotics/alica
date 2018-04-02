@@ -12,7 +12,8 @@
 
 namespace alica {
 
-Synchronisation::Synchronisation(AlicaEngine* ae) : myID(nullptr) {
+Synchronisation::Synchronisation(AlicaEngine* ae)
+        : myID(nullptr) {
     this->ae = ae;
     this->syncModul = nullptr;
     this->syncTransition = nullptr;

@@ -13,7 +13,9 @@
 namespace alica {
 const int PartialAssignmentPool::maxCount = 10100;
 
-PartialAssignmentPool::PartialAssignmentPool() : daPAs(maxCount), curIndex(0) {
+PartialAssignmentPool::PartialAssignmentPool()
+        : daPAs(maxCount)
+        , curIndex(0) {
     // IDLE-EntryPoint
     idleEP = new EntryPoint();
     idleEP->setName("IDLE-ep");

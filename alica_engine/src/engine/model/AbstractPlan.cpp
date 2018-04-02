@@ -10,7 +10,8 @@
 
 namespace alica {
 
-AbstractPlan::AbstractPlan() : AlicaElement() {
+AbstractPlan::AbstractPlan()
+        : AlicaElement() {
     this->masterPlan = false;
     this->variables = make_shared<list<Variable*>>();
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();

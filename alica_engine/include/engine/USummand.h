@@ -30,7 +30,8 @@ class IAssignment;
  */
 class USummand {
 public:
-    USummand() : ui(0.0, 0.0) {
+    USummand()
+            : ui(0.0, 0.0) {
         this->id = 0;
         this->weight = 0;
     }

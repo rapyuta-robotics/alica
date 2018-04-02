@@ -16,7 +16,8 @@
 
 namespace alica {
 
-ForallAgents::ForallAgents(AlicaEngine* ae, long id) : Quantifier(id) {
+ForallAgents::ForallAgents(AlicaEngine* ae, long id)
+        : Quantifier(id) {
     this->ae = ae;
 }
 

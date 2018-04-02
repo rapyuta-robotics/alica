@@ -10,7 +10,8 @@ namespace alica {
 
 typedef std::tuple<const supplementary::AgentID*, std::vector<stdSyncData>> stdSyncTalk;
 struct SyncTalk {
-    SyncTalk() : senderID(nullptr) {}
+    SyncTalk()
+            : senderID(nullptr) {}
     ~SyncTalk() {
         /*for (auto s : syncData)
         {

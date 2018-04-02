@@ -12,7 +12,8 @@ Variable::Variable(std::shared_ptr<SolverVariable> v) {
 
 Variable::~Variable() {}
 
-Variable::Variable(long id, std::string name, std::string type) : Variable() {
+Variable::Variable(long id, std::string name, std::string type)
+        : Variable() {
     this->id = id;
     this->name = name;
     this->type = type;

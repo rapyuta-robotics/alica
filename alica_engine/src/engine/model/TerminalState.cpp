@@ -10,7 +10,8 @@
 
 namespace alica {
 
-TerminalState::TerminalState() : State() {
+TerminalState::TerminalState()
+        : State() {
     this->terminal = true;
     this->postCondition = nullptr;
 }

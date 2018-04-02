@@ -6,7 +6,9 @@
 namespace alica {
 typedef std::tuple<const supplementary::AgentID*, long> stdSyncReady;
 struct SyncReady {
-    SyncReady() : senderID(nullptr), syncTransitionID(0) {}
+    SyncReady()
+            : senderID(nullptr)
+            , syncTransitionID(0) {}
     const supplementary::AgentID* senderID;
     long syncTransitionID;
 

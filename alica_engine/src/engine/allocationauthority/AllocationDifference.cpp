@@ -11,7 +11,8 @@
 
 namespace alica {
 
-AllocationDifference::AllocationDifference() : _reason(Reason::empty) {}
+AllocationDifference::AllocationDifference()
+        : _reason(Reason::empty) {}
 
 AllocationDifference::~AllocationDifference() {}
 

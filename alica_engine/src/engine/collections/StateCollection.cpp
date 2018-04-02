@@ -27,7 +27,9 @@ StateCollection::StateCollection(vector<const supplementary::AgentID*> robots, v
     this->states = states;
 }
 
-StateCollection::StateCollection(int maxSize) : robotIds(maxSize), states(maxSize) {}
+StateCollection::StateCollection(int maxSize)
+        : robotIds(maxSize)
+        , states(maxSize) {}
 
 StateCollection::StateCollection(AssignmentCollection* ac) {
     for (int i = 0; i < ac->getSize(); i++) {

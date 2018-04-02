@@ -26,7 +26,9 @@
 
 namespace alica {
 
-TeamObserver::TeamObserver(AlicaEngine* ae) : ae(ae), teamManager(ae->getTeamManager()) {
+TeamObserver::TeamObserver(AlicaEngine* ae)
+        : ae(ae)
+        , teamManager(ae->getTeamManager()) {
     this->simplePlanTrees = make_shared<
             map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>>(
             map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>());

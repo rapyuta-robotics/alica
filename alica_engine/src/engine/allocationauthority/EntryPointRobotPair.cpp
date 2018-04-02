@@ -3,7 +3,8 @@
 namespace alica {
 
 EntryPointRobotPair::EntryPointRobotPair(EntryPoint* ep, const supplementary::AgentID* r)
-        : _entryPoint(ep), _robot(r) {}
+        : _entryPoint(ep)
+        , _robot(r) {}
 
 EntryPointRobotPair::~EntryPointRobotPair() {}
 

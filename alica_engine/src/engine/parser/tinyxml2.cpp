@@ -504,7 +504,13 @@ bool XMLDocument::Accept(XMLVisitor* visitor) const {
 // --------- XMLNode ----------- //
 
 XMLNode::XMLNode(XMLDocument* doc)
-        : _document(doc), _parent(0), _firstChild(0), _lastChild(0), _prev(0), _next(0), _memPool(0) {}
+        : _document(doc)
+        , _parent(0)
+        , _firstChild(0)
+        , _lastChild(0)
+        , _prev(0)
+        , _next(0)
+        , _memPool(0) {}
 
 XMLNode::~XMLNode() {
     DeleteChildren();
@@ -802,7 +808,8 @@ bool XMLText::Accept(XMLVisitor* visitor) const {
 
 // --------- XMLComment ---------- //
 
-XMLComment::XMLComment(XMLDocument* doc) : XMLNode(doc) {}
+XMLComment::XMLComment(XMLDocument* doc)
+        : XMLNode(doc) {}
 
 XMLComment::~XMLComment() {}
 
@@ -834,7 +841,8 @@ bool XMLComment::Accept(XMLVisitor* visitor) const {
 
 // --------- XMLDeclaration ---------- //
 
-XMLDeclaration::XMLDeclaration(XMLDocument* doc) : XMLNode(doc) {}
+XMLDeclaration::XMLDeclaration(XMLDocument* doc)
+        : XMLNode(doc) {}
 
 XMLDeclaration::~XMLDeclaration() {
     // printf( "~XMLDeclaration\n" );
@@ -868,7 +876,8 @@ bool XMLDeclaration::Accept(XMLVisitor* visitor) const {
 
 // --------- XMLUnknown ---------- //
 
-XMLUnknown::XMLUnknown(XMLDocument* doc) : XMLNode(doc) {}
+XMLUnknown::XMLUnknown(XMLDocument* doc)
+        : XMLNode(doc) {}
 
 XMLUnknown::~XMLUnknown() {}
 
@@ -1010,7 +1019,10 @@ void XMLAttribute::SetAttribute(float v) {
 }
 
 // --------- XMLElement ---------- //
-XMLElement::XMLElement(XMLDocument* doc) : XMLNode(doc), _closingType(0), _rootAttribute(0) {}
+XMLElement::XMLElement(XMLDocument* doc)
+        : XMLNode(doc)
+        , _closingType(0)
+        , _rootAttribute(0) {}
 
 XMLElement::~XMLElement() {
     while (_rootAttribute) {

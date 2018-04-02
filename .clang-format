@@ -12,7 +12,7 @@ AccessModifierOffset: -4
 AlwaysBreakTemplateDeclarations: true
 
 BreakConstructorInitializersBeforeComma: true
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
 
 AllowShortBlocksOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: false

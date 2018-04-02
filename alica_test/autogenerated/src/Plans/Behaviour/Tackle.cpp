@@ -6,7 +6,8 @@ using namespace std;
 namespace alica {
 /*PROTECTED REGION ID(staticVars1402488939130) ENABLED START*/  // initialise static variables here
 /*PROTECTED REGION END*/
-Tackle::Tackle() : DomainBehaviour("Tackle") {
+Tackle::Tackle()
+        : DomainBehaviour("Tackle") {
     /*PROTECTED REGION ID(con1402488939130) ENABLED START*/  // Add additional options here
     /*PROTECTED REGION END*/
 }
