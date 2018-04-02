@@ -11,7 +11,8 @@ typedef std::tuple<const supplementary::AgentID*, std::string, std::string, std:
         std::vector<const supplementary::AgentID*>>
         stdAlicaEngineInfo;
 struct AlicaEngineInfo {
-    AlicaEngineInfo() : senderID(nullptr) {}
+    AlicaEngineInfo()
+            : senderID(nullptr) {}
     const supplementary::AgentID* senderID;
     std::string masterPlan;
     std::string currentPlan;

@@ -22,7 +22,8 @@
 //#define Q_DEBUG
 
 namespace alica {
-Query::Query() : uniqueVarStore(make_shared<UniqueVarStore>()) {}
+Query::Query()
+        : uniqueVarStore(make_shared<UniqueVarStore>()) {}
 
 void Query::addStaticVariable(Variable* v) {
     queriedStaticVariables.push_back(v);

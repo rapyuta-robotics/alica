@@ -18,7 +18,8 @@ namespace alica {
  * Basic constructor
  */
 RobotEngineData::RobotEngineData(const AlicaEngine* engine, const supplementary::AgentID* agentId)
-        : engine(engine), agentId(agentId) {
+        : engine(engine)
+        , agentId(agentId) {
     this->initDomainVariables();
     this->successMarks = make_shared<SuccessMarks>(engine);
 }

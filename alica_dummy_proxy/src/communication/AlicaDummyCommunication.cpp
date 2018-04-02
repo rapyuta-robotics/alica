@@ -9,7 +9,8 @@
 
 namespace alica_dummy_proxy {
 
-AlicaDummyCommunication::AlicaDummyCommunication(alica::AlicaEngine* ae) : alica::IAlicaCommunication(ae) {
+AlicaDummyCommunication::AlicaDummyCommunication(alica::AlicaEngine* ae)
+        : alica::IAlicaCommunication(ae) {
     // TODO Auto-generated constructor stub
 }
 

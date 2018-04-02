@@ -10,7 +10,8 @@
 #include "engine/model/EntryPoint.h"
 
 namespace alica {
-Plan::Plan(long id) : AbstractPlan() {
+Plan::Plan(long id)
+        : AbstractPlan() {
     this->postCondition = nullptr;
     this->id = id;
     this->minCardinality = 0;

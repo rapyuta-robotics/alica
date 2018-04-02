@@ -165,7 +165,10 @@ public:
         COMMENT = NEEDS_NEWLINE_NORMALIZATION
     };
 
-    StrPair() : _flags(0), _start(0), _end(0) {}
+    StrPair()
+            : _flags(0)
+            , _start(0)
+            , _end(0) {}
     ~StrPair();
 
     void Set(char* start, char* end, int flags) {
@@ -324,7 +327,12 @@ public:
 template <int SIZE>
 class MemPoolT : public MemPool {
 public:
-    MemPoolT() : _root(0), _currentAllocs(0), _nAllocs(0), _maxAllocs(0), _nUntracked(0) {}
+    MemPoolT()
+            : _root(0)
+            , _currentAllocs(0)
+            , _nAllocs(0)
+            , _maxAllocs(0)
+            , _nUntracked(0) {}
     ~MemPoolT() {
         // Delete the blocks.
         for (int i = 0; i < _blockPtrs.Size(); ++i) {
@@ -876,7 +884,9 @@ public:
     virtual bool ShallowEqual(const XMLNode* compare) const;
 
 protected:
-    XMLText(XMLDocument* doc) : XMLNode(doc), _isCData(false) {}
+    XMLText(XMLDocument* doc)
+            : XMLNode(doc)
+            , _isCData(false) {}
     virtual ~XMLText() {}
     XMLText(const XMLText&);             // not supported
     XMLText& operator=(const XMLText&);  // not supported
@@ -1090,7 +1100,9 @@ public:
 private:
     enum { BUF_SIZE = 200 };
 
-    XMLAttribute() : _next(0), _memPool(0) {}
+    XMLAttribute()
+            : _next(0)
+            , _memPool(0) {}
     virtual ~XMLAttribute() {}
 
     XMLAttribute(const XMLAttribute&);    // not supported
@@ -1250,7 +1262,7 @@ public:
         doesn't exist. It is overloaded for the primitive types,
                 and is a generally more convenient replacement of
                 QueryIntAttribute() and related functions.
-                
+                
                 If successful, the result of the conversion
         will be written to 'value'. If not successful, nothing will
         be written to 'value'. This allows you to provide default
@@ -1378,7 +1390,7 @@ public:
         @verbatim
                 <foo>Hullaballoo!<b>This is text</b></foo>
         @endverbatim
-                
+                
                 For this XML:
         @verbatim
                 <foo />
