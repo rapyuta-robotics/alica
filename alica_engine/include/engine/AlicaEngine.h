@@ -44,7 +44,6 @@ public:
     template <typename T>
     static void abort(string msg, const T tail);
 
-public:
     AlicaEngine(supplementary::AgentIDManager* idManager, string roleSetName, string masterPlanName, string roleSetDir,
             bool stepEngine);
     bool init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc);
