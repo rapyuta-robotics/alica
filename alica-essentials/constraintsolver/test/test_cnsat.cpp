@@ -18,10 +18,7 @@ using namespace std;
 using namespace alica::reasoner;
 using namespace alica::reasoner::cnsat;
 
-
-
-TEST(CNSatTest, CNSAT0)
-{
+TEST(CNSatTest, CNSAT0) {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
 
     std::string path = ros::package::getPath("constraintsolver");
@@ -29,7 +26,8 @@ TEST(CNSatTest, CNSAT0)
     std::cout << path << std::endl;
     {
         ifstream test(path);
-        ASSERT_TRUE(test.good()) << "Cannot find file "<<path<<std::endl;;
+        ASSERT_TRUE(test.good()) << "Cannot find file " << path << std::endl;
+        ;
     }
     cns->readFromCNFFile(path);
 
@@ -40,27 +38,25 @@ TEST(CNSatTest, CNSAT0)
     bool sf = cns->solve();
     EXPECT_TRUE(sf);
 
-    //cout << endl;
+    // cout << endl;
 
-//    if (sf)
-//    {
-//        cout << "Satisfiable" << endl;
-//        for (shared_ptr<Var> v : *(cns->variables))
-//        {
-//            v->print();
-//            cout << " ";
-//        }
-//        cout << endl;
-//    }
-//    else
-//        cout << "Unsatisfiable" << endl;
+    //    if (sf)
+    //    {
+    //        cout << "Satisfiable" << endl;
+    //        for (shared_ptr<Var> v : *(cns->variables))
+    //        {
+    //            v->print();
+    //            cout << " ";
+    //        }
+    //        cout << endl;
+    //    }
+    //    else
+    //        cout << "Unsatisfiable" << endl;
 
-//    cout << "------------------\n\nChecking Solution:" << endl;
+    //    cout << "------------------\n\nChecking Solution:" << endl;
     bool isSolution = true;
-    for (shared_ptr<Clause> c : *(cns->clauses))
-    {
-        if (!c->checkSatisfied())
-        {
+    for (shared_ptr<Clause> c : *(cns->clauses)) {
+        if (!c->checkSatisfied()) {
             isSolution = false;
             /*c->print();
              foreach(Lit l in c.Literals) {
@@ -76,23 +72,20 @@ TEST(CNSatTest, CNSAT0)
     }
     EXPECT_TRUE(isSolution);
     cout << "Is Solution: " << isSolution << endl;
-    //cns->printStatistics();
-//
-//    cout << endl;
-
+    // cns->printStatistics();
+    //
+    //    cout << endl;
 }
 
-
-
-TEST(CNSatTest, CNSATaim_50_1_6_yes1_4)
-{
+TEST(CNSatTest, CNSATaim_50_1_6_yes1_4) {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test/cnf/aim-50-1_6-yes1-4.cnf";
     std::cout << path << std::endl;
     {
         ifstream test(path);
-        ASSERT_TRUE(test.good()) << "Cannot find file "<<path<<std::endl;;
+        ASSERT_TRUE(test.good()) << "Cannot find file " << path << std::endl;
+        ;
     }
     cns->readFromCNFFile(path);
 
@@ -101,26 +94,23 @@ TEST(CNSatTest, CNSATaim_50_1_6_yes1_4)
     EXPECT_TRUE(sf);
 
     bool isSolution = true;
-    for (shared_ptr<Clause> c : *(cns->clauses))
-    {
-        if (!c->checkSatisfied())
-        {
+    for (shared_ptr<Clause> c : *(cns->clauses)) {
+        if (!c->checkSatisfied()) {
             isSolution = false;
         }
     }
     EXPECT_TRUE(isSolution);
 }
 
-
-TEST(CNSatTest, CNSATpar8_1_c_cnf)
-{
+TEST(CNSatTest, CNSATpar8_1_c_cnf) {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test/cnf/par8-1-c.cnf";
     std::cout << path << std::endl;
     {
         ifstream test(path);
-        ASSERT_TRUE(test.good()) << "Cannot find file "<<path<<std::endl;;
+        ASSERT_TRUE(test.good()) << "Cannot find file " << path << std::endl;
+        ;
     }
 
     cns->readFromCNFFile(path);
@@ -130,27 +120,23 @@ TEST(CNSatTest, CNSATpar8_1_c_cnf)
     EXPECT_TRUE(sf);
 
     bool isSolution = true;
-    for (shared_ptr<Clause> c : *(cns->clauses))
-    {
-        if (!c->checkSatisfied())
-        {
+    for (shared_ptr<Clause> c : *(cns->clauses)) {
+        if (!c->checkSatisfied()) {
             isSolution = false;
         }
     }
     EXPECT_TRUE(isSolution);
 }
 
-
-
-TEST(CNSatTest, CNSAT1_aim_100_1_6_no_1cnf)
-{
+TEST(CNSatTest, CNSAT1_aim_100_1_6_no_1cnf) {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test/cnf/aim-100-1_6-no-1.cnf";
     std::cout << path << std::endl;
     {
         ifstream test(path);
-        ASSERT_TRUE(test.good()) << "Cannot find file "<<path<<std::endl;;
+        ASSERT_TRUE(test.good()) << "Cannot find file " << path << std::endl;
+        ;
     }
 
     cns->readFromCNFFile(path);
@@ -160,16 +146,15 @@ TEST(CNSatTest, CNSAT1_aim_100_1_6_no_1cnf)
     EXPECT_FALSE(sf);
 }
 
-
-TEST(CNSatTest, CNSAT1dubois22)
-{
+TEST(CNSatTest, CNSAT1dubois22) {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test/cnf/dubois22.cnf";
     std::cout << path << std::endl;
     {
         ifstream test(path);
-        ASSERT_TRUE(test.good()) << "Cannot find file "<<path<<std::endl;;
+        ASSERT_TRUE(test.good()) << "Cannot find file " << path << std::endl;
+        ;
     }
 
     cns->readFromCNFFile(path);
@@ -179,18 +164,16 @@ TEST(CNSatTest, CNSAT1dubois22)
     EXPECT_FALSE(sf);
 }
 
-
-TEST(CNSatTest, CNSAThole6)
-{
+TEST(CNSatTest, CNSAThole6) {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test/cnf/hole6.cnf";
     std::cout << path << std::endl;
     {
         ifstream test(path);
-        ASSERT_TRUE(test.good()) << "Cannot find file "<<path<<std::endl;;
+        ASSERT_TRUE(test.good()) << "Cannot find file " << path << std::endl;
+        ;
     }
-
 
     cns->readFromCNFFile(path);
 
@@ -199,16 +182,15 @@ TEST(CNSatTest, CNSAThole6)
     EXPECT_FALSE(sf);
 }
 
-
-TEST(CNSatTest, CNSAT1_dubois20)
-{
+TEST(CNSatTest, CNSAT1_dubois20) {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test/cnf/dubois20.cnf";
     std::cout << path << std::endl;
     {
         ifstream test(path);
-        ASSERT_TRUE(test.good()) << "Cannot find file "<<path<<std::endl;;
+        ASSERT_TRUE(test.good()) << "Cannot find file " << path << std::endl;
+        ;
     }
 
     cns->readFromCNFFile(path);

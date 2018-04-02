@@ -10,20 +10,17 @@
 
 #include "TapeElement.h"
 
-namespace autodiff
-{
-	namespace compiled
-	{
+namespace autodiff {
+namespace compiled {
 
-		class CompiledCos : public TapeElement
-		{
-		public:
-			int _arg;
+class CompiledCos : public TapeElement {
+public:
+    int _arg;
 
-			void accept(shared_ptr<ITapeVisitor> visitor);
-		};
+    void accept(shared_ptr<ITapeVisitor> visitor);
+};
 
-	} /* namespace compiled */
+} /* namespace compiled */
 } /* namespace autodiff */
 
 #endif /* COMPILEDCOS_H_ */

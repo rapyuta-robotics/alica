@@ -14,12 +14,12 @@
 using namespace std;
 
 class WrappedMessage {
-
 public:
-    WrappedMessage(const string &topic, const string &wrappedMessage, const string &message, const string &options, const string &sendReceive);
+    WrappedMessage(const string& topic, const string& wrappedMessage, const string& message, const string& options,
+            const string& sendReceive);
     ~WrappedMessage();
 
-    string topic, message, wrappedMessage, options,sendReceive;
+    string topic, message, wrappedMessage, options, sendReceive;
 
     int Ros2UdpQueueLength;
     int Udp2RosQueueLength;
@@ -42,5 +42,4 @@ public:
     string getWrappedPublisherName();
 };
 
-
-#endif //SUPPLEMENTARY_WRAPPEDMESSAGE_H
+#endif  // SUPPLEMENTARY_WRAPPEDMESSAGE_H

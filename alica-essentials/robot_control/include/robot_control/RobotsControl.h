@@ -20,64 +20,61 @@
 #include <utility>
 #include <chrono>
 
-namespace supplementary
-{
-	class SystemConfig;
-	class RobotExecutableRegistry;
-	class AgentIDFactory;
-}
+namespace supplementary {
+class SystemConfig;
+class RobotExecutableRegistry;
+class AgentIDFactory;
+}  // namespace supplementary
 
-namespace robot_control
-{
+namespace robot_control {
 
-	class RobotsControl : public rqt_gui_cpp::Plugin
-	{
+class RobotsControl : public rqt_gui_cpp::Plugin {
+    Q_OBJECT
 
-	Q_OBJECT
+public:
+    RobotsControl();
+    virtual void initPlugin(qt_gui_cpp::PluginContext& context);
+    virtual void shutdownPlugin();
+    virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
+    virtual void restoreSettings(
+            const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
-	public:
+    void addRobot();
+    void removeRobot();
 
-		RobotsControl();
-		virtual void initPlugin(qt_gui_cpp::PluginContext& context);
-		virtual void shutdownPlugin();
-		virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
-		virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
+    static std::chrono::duration<double> msgTimeOut;
 
-		void addRobot();
-		void removeRobot();
+    Ui::RobotControlWidget robotControlWidget_;
+    QWidget* widget_;
 
-		static std::chrono::duration<double> msgTimeOut;
+    std::map<std::string, std::vector<std::pair<int, int>>> bundlesMap;
+    supplementary::RobotExecutableRegistry* pmRegistry;
+    ros::NodeHandle* rosNode;
 
-		Ui::RobotControlWidget robotControlWidget_;
-		QWidget* widget_;
+private:
+    ros::Subscriber processStateSub;
+    ros::Subscriber alicaInfoSub;
 
-		std::map<std::string, std::vector<std::pair<int, int>>> bundlesMap;
-		supplementary::RobotExecutableRegistry* pmRegistry;
-		ros::NodeHandle* rosNode;
+    supplementary::SystemConfig* sc;
 
-	private:
-		ros::Subscriber processStateSub;
-		ros::Subscriber alicaInfoSub;
+    std::map<const supplementary::AgentID*, Robot*, supplementary::AgentIDComparator> controlledRobotsMap;
+    std::queue<std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>>
+            processStatMsgQueue;
+    std::mutex processStatsMsgQueueMutex;
+    std::queue<std::pair<std::chrono::system_clock::time_point, alica_msgs::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
+    std::mutex alicaInfoMsgQueueMutex;
 
-		supplementary::SystemConfig* sc;
+    void receiveProcessStats(process_manager::ProcessStatsConstPtr processStats);
+    void receiveAlicaInfo(alica_msgs::AlicaEngineInfoConstPtr alicaInfo);
+    void processMessages();
+    void checkAndInit(const supplementary::AgentID* robotId);
 
-		std::map<const supplementary::AgentID*, Robot*, supplementary::AgentIDComparator> controlledRobotsMap;
-		std::queue<std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
-		std::mutex processStatsMsgQueueMutex;
-		std::queue<std::pair<std::chrono::system_clock::time_point, alica_msgs::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
-		std::mutex alicaInfoMsgQueueMutex;
+    QTimer* guiUpdateTimer;
 
-		void receiveProcessStats(process_manager::ProcessStatsConstPtr processStats);
-		void receiveAlicaInfo(alica_msgs::AlicaEngineInfoConstPtr alicaInfo);
-		void processMessages();
-		void checkAndInit(const supplementary::AgentID* robotId);
+public Q_SLOTS:
+    void run();
+    void updateGUI();
+    void showContextMenu(const QPoint& pos);
+};
 
-		QTimer* guiUpdateTimer;
-
-	public Q_SLOTS:
-		void run();
-		void updateGUI();
-		void showContextMenu(const QPoint& pos);
-	};
-
-}
+}  // namespace robot_control

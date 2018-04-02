@@ -1,65 +1,46 @@
 #include "supplementary/BroadcastID.h"
 #include <typeinfo>
 
-namespace supplementary
-{
+namespace supplementary {
 
-BroadcastID::BroadcastID(const uint8_t *idBytes, int idSize)
-    : AgentID(idBytes, idSize, BC_TYPE)
-{
-}
+BroadcastID::BroadcastID(const uint8_t* idBytes, int idSize) : AgentID(idBytes, idSize, BC_TYPE) {}
 
-BroadcastID::~BroadcastID()
-{
-}
+BroadcastID::~BroadcastID() {}
 
-bool BroadcastID::operator==(const supplementary::AgentID &other) const
-{
-    try
-    {
-        dynamic_cast<const BroadcastID &>(other);
-    }
-    catch (const std::bad_cast &e)
-    {
+bool BroadcastID::operator==(const supplementary::AgentID& other) const {
+    try {
+        dynamic_cast<const BroadcastID&>(other);
+    } catch (const std::bad_cast& e) {
         return false;
     }
 
     return true;
 }
 
-bool BroadcastID::operator!=(const supplementary::AgentID &other) const
-{
-    try
-    {
-        dynamic_cast<const BroadcastID &>(other);
-    }
-    catch (const std::bad_cast &e)
-    {
+bool BroadcastID::operator!=(const supplementary::AgentID& other) const {
+    try {
+        dynamic_cast<const BroadcastID&>(other);
+    } catch (const std::bad_cast& e) {
         return true;
     }
 
     return false;
 }
 
-bool BroadcastID::operator<(const supplementary::AgentID &other) const
-{
+bool BroadcastID::operator<(const supplementary::AgentID& other) const {
     return true;
 }
 
-bool BroadcastID::operator>(const supplementary::AgentID &other) const
-{
+bool BroadcastID::operator>(const supplementary::AgentID& other) const {
     return false;
 }
 
-std::string BroadcastID::toString() const
-{
-	return "BroadcastID (0)";
+std::string BroadcastID::toString() const {
+    return "BroadcastID (0)";
 }
 
-std::size_t BroadcastID::hash() const
-{
-	return 0;
+std::size_t BroadcastID::hash() const {
+    return 0;
 }
 
 } /* namespace supplementary*/
-

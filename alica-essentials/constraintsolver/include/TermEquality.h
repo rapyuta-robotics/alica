@@ -8,22 +8,18 @@
 #ifndef TERMEQUALITY_H_
 #define TERMEQUALITY_H_
 
-namespace alica
-{
-	namespace reasoner
-	{
-		namespace cnsat
-		{
+namespace alica {
+namespace reasoner {
+namespace cnsat {
 
-			class TermEquality
-			{
-			public:
-				TermEquality();
-				virtual ~TermEquality();
-			};
+class TermEquality {
+public:
+    TermEquality();
+    virtual ~TermEquality();
+};
 
-		} /* namespace cnsat */
-	} /* namespace reasoner */
+} /* namespace cnsat */
+} /* namespace reasoner */
 } /* namespace alica */
 
 #endif /* TERMEQUALITY_H_ */

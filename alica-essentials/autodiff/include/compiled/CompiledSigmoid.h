@@ -10,22 +10,19 @@
 
 #include "TapeElement.h"
 
-namespace autodiff
-{
-	namespace compiled
-	{
+namespace autodiff {
+namespace compiled {
 
-		class CompiledSigmoid : public TapeElement
-		{
-		public:
-			int _arg;
-			int _mid;
-			double _steepness;
+class CompiledSigmoid : public TapeElement {
+public:
+    int _arg;
+    int _mid;
+    double _steepness;
 
-			void accept(shared_ptr<ITapeVisitor> visitor);
-		};
+    void accept(shared_ptr<ITapeVisitor> visitor);
+};
 
-	} /* namespace compiled */
+} /* namespace compiled */
 } /* namespace autodiff */
 
 #endif /* COMPILEDSIGMOID_H_ */

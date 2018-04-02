@@ -15,28 +15,26 @@
 
 using namespace std;
 
-namespace autodiff
-{
-	class GaussianProcess; // XXX: class is missing, TODO: import
+namespace autodiff {
+class GaussianProcess;  // XXX: class is missing, TODO: import
 
-	class Gp : public Term
-	{
-	public:
-		Gp(vector<shared_ptr<Term>> args, shared_ptr<GaussianProcess> gp, int dc);
+class Gp : public Term {
+public:
+    Gp(vector<shared_ptr<Term>> args, shared_ptr<GaussianProcess> gp, int dc);
 
-		vector<shared_ptr<Term>> args;
-		shared_ptr<GaussianProcess> gpr;
-		int divCount;
+    vector<shared_ptr<Term>> args;
+    shared_ptr<GaussianProcess> gpr;
+    int divCount;
 
-		int accept(shared_ptr<ITermVisitor> visitor);
+    int accept(shared_ptr<ITermVisitor> visitor);
 
-		shared_ptr<Term> aggregateConstants();
-		shared_ptr<Term> derivative(shared_ptr<Variable> v);
+    shared_ptr<Term> aggregateConstants();
+    shared_ptr<Term> derivative(shared_ptr<Variable> v);
 
-		string toString();
+    string toString();
 
-		double eval();
-	};
+    double eval();
+};
 
 } /* namespace autodiff */
 

@@ -14,22 +14,19 @@
 
 using namespace std;
 
-namespace autodiff
-{
-	namespace compiled
-	{
+namespace autodiff {
+namespace compiled {
 
-		class CompiledLTEConstraint : public TapeElement
-		{
-		public:
-			int _left;
-			int _right;
-			double _steepness;
+class CompiledLTEConstraint : public TapeElement {
+public:
+    int _left;
+    int _right;
+    double _steepness;
 
-			void accept(shared_ptr<ITapeVisitor> visitor);
-		};
+    void accept(shared_ptr<ITapeVisitor> visitor);
+};
 
-	} /* namespace compiled */
+} /* namespace compiled */
 } /* namespace autodiff */
 
 #endif /* COMPILEDLTECONSTRAINT_H_ */

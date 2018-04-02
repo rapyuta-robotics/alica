@@ -9,14 +9,11 @@
 
 #include "compiled/ITapeVisitor.h"
 
-namespace autodiff
-{
-	namespace compiled
-	{
-		void CompiledAbs::accept(shared_ptr<ITapeVisitor> visitor)
-		{
-			shared_ptr<CompiledAbs> thisCasted = dynamic_pointer_cast<CompiledAbs>(shared_from_this());
-			visitor->visit(thisCasted);
-		}
-	} /* namespace compiled */
+namespace autodiff {
+namespace compiled {
+void CompiledAbs::accept(shared_ptr<ITapeVisitor> visitor) {
+    shared_ptr<CompiledAbs> thisCasted = dynamic_pointer_cast<CompiledAbs>(shared_from_this());
+    visitor->visit(thisCasted);
+}
+} /* namespace compiled */
 } /* namespace autodiff */

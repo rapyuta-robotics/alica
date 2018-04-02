@@ -7,17 +7,14 @@
 
 #define WORKER_DEBUG
 
-namespace std
-{
+namespace std {
 class thread;
 }
 
-namespace supplementary
-{
+namespace supplementary {
 class Timer;
-class Worker
-{
-  public:
+class Worker {
+public:
     Worker(std::string name);
     virtual ~Worker();
     virtual void run() = 0; /** < Meant to be overwritten by derived classes. */
@@ -28,19 +25,19 @@ class Worker
 
     std::string name; /** < The name of this worker. */
 
-  protected:
+protected:
     std::condition_variable runCV;
 
     bool started; /** < Is always true except when the worker is shutting down. */
     bool running; /** < Tells us whether the worker is currently running (or active). */
 
-    std::thread *runThread;      /** < Executes the runInternal and thereby the abstract run method. */
-    supplementary::Timer *timer; /** < Triggers the condition_variable of the runThread. */
+    std::thread* runThread;      /** < Executes the runInternal and thereby the abstract run method. */
+    supplementary::Timer* timer; /** < Triggers the condition_variable of the runThread. */
 
-  private:
+private:
     void runInternal();
 
     std::mutex runCV_mtx;
 };
 
-} /* namespace discovery */
+}  // namespace supplementary

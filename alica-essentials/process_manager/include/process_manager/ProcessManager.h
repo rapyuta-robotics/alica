@@ -1,6 +1,6 @@
 #pragma once
 
-#define PM_DEBUG // for toggling debug output
+#define PM_DEBUG  // for toggling debug output
 
 #include "process_manager/ProcessCommand.h"
 #include "process_manager/ProcessStat.h"
@@ -10,13 +10,11 @@
 #include <ros/ros.h>
 #include <chrono>
 
-namespace std
-{
+namespace std {
 class thread;
 }
 
-namespace supplementary
-{
+namespace supplementary {
 
 class AgentIDFactory;
 class SystemConfig;
@@ -26,38 +24,37 @@ class RobotMetaData;
 class ExecutableMetaData;
 class RobotExecutableRegistry;
 
-class ProcessManager
-{
-  public:
-    ProcessManager(int argc, char **argv);
+class ProcessManager {
+public:
+    ProcessManager(int argc, char** argv);
     virtual ~ProcessManager();
     void start();
     bool isRunning();
 
     bool selfCheck();
-    void initCommunication(int argc, char **argv);
-    bool isKnownInterpreter(std::string const &cmdLinePart);
+    void initCommunication(int argc, char** argv);
+    bool isKnownInterpreter(std::string const& cmdLinePart);
     std::vector<std::string> splitCmdLine(std::string cmdLine);
 
     static void pmSigintHandler(int sig);
     static void pmSigchildHandler(int sig);
-    static std::string getCmdLine(const char *pid);
+    static std::string getCmdLine(const char* pid);
     static int numCPUs;  /* < including hyper threading cores */
     static bool running; /* < has to be static, to be changeable within ProcessManager::pmSignintHandler() */
 
-  private:
-    SystemConfig *sc;
+private:
+    SystemConfig* sc;
     std::string ownHostname;
-    const AgentID *ownId;
+    const AgentID* ownId;
     bool simMode;
-    std::map<const AgentID *, ManagedRobot *, AgentIDComparator> robotMap;
-    RobotExecutableRegistry *pmRegistry;
+    std::map<const AgentID*, ManagedRobot*, AgentIDComparator> robotMap;
+    RobotExecutableRegistry* pmRegistry;
     std::vector<std::string> interpreters;
     unsigned long long lastTotalCPUTime;
     unsigned long long currentTotalCPUTime;
 
-    ros::NodeHandle *rosNode;
-    ros::AsyncSpinner *spinner;
+    ros::NodeHandle* rosNode;
+    ros::AsyncSpinner* spinner;
     ros::Subscriber processCommandSub;
     std::string processCmdTopic;
     ros::Publisher processStatePub;
@@ -68,7 +65,7 @@ class ProcessManager
     void handleProcessCommand(process_manager::ProcessCommandPtr pc);
     void changeDesiredProcessStates(process_manager::ProcessCommandPtr pc, bool shouldRun);
     void changeLogPublishing(process_manager::ProcessCommandPtr pc, bool shouldPublish);
-    std::thread *mainThread;
+    std::thread* mainThread;
     std::chrono::microseconds iterationTime;
 
     void run();
@@ -77,4 +74,4 @@ class ProcessManager
     void report();
 };
 
-} /* namespace alica */
+}  // namespace supplementary

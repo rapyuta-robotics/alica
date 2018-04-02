@@ -13,74 +13,57 @@
 
 using namespace std;
 
-namespace supplementary
-{
-	namespace logging
-	{
-		string getLogFilename(const string& file);
-		string getErrLogFilename(const string & file);
+namespace supplementary {
+namespace logging {
+string getLogFilename(const string& file);
+string getErrLogFilename(const string& file);
 
+struct None {};
 
+template <typename List>
+struct LogData {
+    List list;
+};
 
-		struct None
-		{
-		};
+template <typename Begin, typename Value>
+constexpr LogData<std::pair<Begin&&, Value&&>> operator<<(LogData<Begin>&& begin, Value&& value) noexcept {
+    return {{std::forward<Begin>(begin.list), std::forward<Value>(value)}};
+}
 
-		template<typename List>
-		struct LogData
-		{
-			List list;
-		};
+template <typename Begin, size_t n>
+constexpr LogData<std::pair<Begin&&, const char*>> operator<<(LogData<Begin>&& begin, const char (&value)[n]) noexcept {
+    return {{std::forward<Begin>(begin.list), value}};
+}
 
-		template<typename Begin, typename Value>
-		constexpr LogData<std::pair<Begin&&, Value&&>> operator<<(LogData<Begin> && begin, Value&& value) noexcept
-		{
-			return
-			{
-				{	std::forward<Begin>(begin.list), std::forward<Value>(value)}};
-		}
+typedef std::ostream& (*PfnManipulator)(std::ostream&);
 
-		template<typename Begin, size_t n>
-		constexpr LogData<std::pair<Begin&&, const char*>> operator<<(LogData<Begin> && begin, const char (&value)[n]) noexcept
-		{
-			return
-			{
-				{	std::forward<Begin>(begin.list), value}};
-		}
+template <typename Begin>
+constexpr LogData<std::pair<Begin&&, PfnManipulator>> operator<<(
+        LogData<Begin>&& begin, PfnManipulator value) noexcept {
+    return {{std::forward<Begin>(begin.list), value}};
+}
 
-		typedef std::ostream& (*PfnManipulator)(std::ostream&);
+template <typename Begin, typename Last>
+void output(std::ostream& os, std::pair<Begin, Last>&& data) {
+    output(os, std::move(data.first));
+    os << data.second;
+}
 
-		template<typename Begin>
-		constexpr LogData<std::pair<Begin&&, PfnManipulator>> operator<<(LogData<Begin> && begin, PfnManipulator value) noexcept
-		{
-			return
-			{
-				{	std::forward<Begin>(begin.list), value}};
-		}
+inline void output(std::ostream& os, None) {}
 
-		template<typename Begin, typename Last>
-		void output(std::ostream& os, std::pair<Begin, Last>&& data)
-		{
-			output(os, std::move(data.first));
-			os << data.second;
-		}
+#define NOINLINE_ATTRIBUTE
 
-		inline void output(std::ostream& os, None)
-		{
-		}
+template <typename List>
+void Log(const char* file, const char* function, int line, LogData<List>&& data) NOINLINE_ATTRIBUTE {
+    std::cout << "[" << file << "::" << function << ":" << line << "] ";
+    output(std::cout, std::move(data.list));
+    std::cout << std::endl;
+}
 
-		#define NOINLINE_ATTRIBUTE
-
-		template<typename List>
-		void Log(const char* file, const char* function, int line, LogData<List> && data) NOINLINE_ATTRIBUTE
-		{
-			std::cout << "[" << file << "::" << function << ":" << line << "] ";
-			output(std::cout, std::move(data.list));
-			std::cout << std::endl;
-		}
-
-		#define LOG(msg) (supplementary::logging::Log(basename(__FILE__), __FUNCTION__, __LINE__, supplementary::logging::LogData<supplementary::logging::None>() << msg))
-	}
+#define LOG(msg)                                                             \
+    (supplementary::logging::Log(basename(__FILE__), __FUNCTION__, __LINE__, \
+            supplementary::logging::LogData<supplementary::logging::None>() << msg))
+}  // namespace logging
 } /* namespace supplementary */
 
 #endif /* SUPPLEMENTARY_SYSTEM_UTIL_SRC_LOGGING_H_ */

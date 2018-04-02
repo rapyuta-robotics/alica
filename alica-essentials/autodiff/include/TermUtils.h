@@ -15,16 +15,16 @@
 
 using namespace std;
 
-namespace autodiff
-{
+namespace autodiff {
 
-	class TermUtils
-	{
-	public:
-		static shared_ptr<ICompiledTerm> compile(shared_ptr<Term> term, shared_ptr<vector<shared_ptr<Variable>>> variables);
-		static double evaluate(shared_ptr<Term> term, shared_ptr<vector<shared_ptr<Variable>>> variables, shared_ptr<vector<double>> point);
-		static shared_ptr<vector<double>> differentiate(shared_ptr<Term> term, shared_ptr<vector<shared_ptr<Variable>>> variables, shared_ptr<vector<double>> point);
-	};
+class TermUtils {
+public:
+    static shared_ptr<ICompiledTerm> compile(shared_ptr<Term> term, shared_ptr<vector<shared_ptr<Variable>>> variables);
+    static double evaluate(shared_ptr<Term> term, shared_ptr<vector<shared_ptr<Variable>>> variables,
+            shared_ptr<vector<double>> point);
+    static shared_ptr<vector<double>> differentiate(shared_ptr<Term> term,
+            shared_ptr<vector<shared_ptr<Variable>>> variables, shared_ptr<vector<double>> point);
+};
 
 } /* namespace autodiff */
 

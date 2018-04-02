@@ -10,29 +10,27 @@
 
 #include "Term.h"
 
-namespace autodiff
-{
-	class LTEConstraint;
+namespace autodiff {
+class LTEConstraint;
 
-	class LTConstraint : public Term
-	{
-	public:
-		LTConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness);
-		LTConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness, shared_ptr<Term> negatedForm);
+class LTConstraint : public Term {
+public:
+    LTConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness);
+    LTConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness, shared_ptr<Term> negatedForm);
 
-		shared_ptr<Term> left;
-		shared_ptr<Term> right;
-		double steppness;
-		shared_ptr<Term> negatedform;
+    shared_ptr<Term> left;
+    shared_ptr<Term> right;
+    double steppness;
+    shared_ptr<Term> negatedform;
 
-		int accept(shared_ptr<ITermVisitor> visitor);
+    int accept(shared_ptr<ITermVisitor> visitor);
 
-		shared_ptr<Term> aggregateConstants();
-		shared_ptr<Term> derivative(shared_ptr<Variable> v);
-		shared_ptr<Term> negate();
+    shared_ptr<Term> aggregateConstants();
+    shared_ptr<Term> derivative(shared_ptr<Variable> v);
+    shared_ptr<Term> negate();
 
-		string toString();
-	};
+    string toString();
+};
 
 } /* namespace autodiff */
 

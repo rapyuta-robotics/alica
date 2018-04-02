@@ -10,68 +10,60 @@
 #include "TermBuilder.h"
 #include "Constant.h"
 
-namespace autodiff
-{
-	And::And(shared_ptr<Term> left, shared_ptr<Term> right) :
-			Term()
-	{
-		this->left = left;
-		this->right = right;
-	}
+namespace autodiff {
+And::And(shared_ptr<Term> left, shared_ptr<Term> right) : Term() {
+    this->left = left;
+    this->right = right;
+}
 
-	int And::accept(shared_ptr<ITermVisitor> visitor)
-	{
-		shared_ptr<And> thisCasted = dynamic_pointer_cast<And>(shared_from_this());
-		return visitor->visit(thisCasted);
-	}
+int And::accept(shared_ptr<ITermVisitor> visitor) {
+    shared_ptr<And> thisCasted = dynamic_pointer_cast<And>(shared_from_this());
+    return visitor->visit(thisCasted);
+}
 
-	shared_ptr<Term> And::aggregateConstants()
-	{
-		left = left->aggregateConstants();
-		if (left == Term::FALSE) {
-			return left;
-		}
-		right = right->aggregateConstants();
-		if (left == Term::TRUE) {
-			return right;
-		}
-		if (right == Term::FALSE) {
-			return right;
-		}
-		if (right == Term::TRUE) {
-			return left;
-		}
-		if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0) {
-			shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
-			shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
-			if (leftConstant->value > 0.75 && rightConstant->value > 0.75) {
-				return Term::TRUE;
-			} else {
-				return Term::FALSE;
-			}
-		} else {
-			return shared_from_this();
-		}
-	}
+shared_ptr<Term> And::aggregateConstants() {
+    left = left->aggregateConstants();
+    if (left == Term::FALSE) {
+        return left;
+    }
+    right = right->aggregateConstants();
+    if (left == Term::TRUE) {
+        return right;
+    }
+    if (right == Term::FALSE) {
+        return right;
+    }
+    if (right == Term::TRUE) {
+        return left;
+    }
+    if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0) {
+        shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
+        shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
+        if (leftConstant->value > 0.75 && rightConstant->value > 0.75) {
+            return Term::TRUE;
+        } else {
+            return Term::FALSE;
+        }
+    } else {
+        return shared_from_this();
+    }
+}
 
-	shared_ptr<Term> And::derivative(shared_ptr<Variable> v)
-	{
-		throw "Symbolic Derivation of And not supported";
-	}
+shared_ptr<Term> And::derivative(shared_ptr<Variable> v) {
+    throw "Symbolic Derivation of And not supported";
+}
 
-	shared_ptr<Term> And::negate()
-	{
-		return left->negate() | right->negate();
-	}
+shared_ptr<Term> And::negate() {
+    return left->negate() | right->negate();
+}
 
-	string And::toString()
-	{
-		string str;
-		str.append("and( ");
-		str.append(left->toString());
-		str.append(", ");
-		str.append(right->toString());
-		str.append(" )");
-		return str;
-	}
+string And::toString() {
+    string str;
+    str.append("and( ");
+    str.append(left->toString());
+    str.append(", ");
+    str.append(right->toString());
+    str.append(" )");
+    return str;
+}
 } /* namespace autodiff */

@@ -10,19 +10,14 @@
 
 #include <exception>
 
-namespace alica
-{
-	namespace reasoner
-	{
-		namespace intervalpropagation
-		{
+namespace alica {
+namespace reasoner {
+namespace intervalpropagation {
 
-			class UnsolveableException : public std::exception
-			{
-			};
+class UnsolveableException : public std::exception {};
 
-		} /* namespace intervalpropagation */
-	} /* namespace reasoner */
+} /* namespace intervalpropagation */
+} /* namespace reasoner */
 } /* namespace alica */
 
 #endif /* UNSOLVEABLEEXCEPTION_H_ */
