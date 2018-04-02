@@ -22,7 +22,9 @@ class PMControl;
 namespace pm_widget {
 class ControlledRobot;
 
-class ControlledProcessManager {
+class ControlledProcessManager : public QObject {
+    Q_OBJECT
+
 public:
     ControlledProcessManager(std::string processManagerName, const supplementary::AgentID* processManagerId,
             QBoxLayout* pmHorizontalLayout);
@@ -30,7 +32,7 @@ public:
 
     void updateGUI(std::chrono::system_clock::time_point now);
     void handleProcessStats(
-            pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair);
+            std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair);
     void addRobot(QFrame* robot);
     void removeRobot(QFrame* robot);
 
