@@ -216,7 +216,7 @@ void UtilityFunction::init(AlicaEngine* ae) {
                 ss << "UF: There is no priority for the task " << taskId << " in the roleTaskMapping of the role "
                    << rtm->getRole()->getName() << " with id " << roleId << "!\n We are in the UF for the plan "
                    << this->plan->getName() << "!" << endl;
-                ae->abort(ss.str());
+                AlicaEngine::abort(ss.str());
             } else {
                 curPrio = iter->second;
             }
