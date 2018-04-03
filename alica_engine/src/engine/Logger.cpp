@@ -35,7 +35,7 @@ Logger::Logger(AlicaEngine* ae) {
         string logPath = sc->getLogPath();
         if (!supplementary::FileSystem::isDirectory(logPath)) {
             if (!supplementary::FileSystem::createDirectory(logPath, 777)) {
-                ae->abort("Cannot create log folder: ", logPath);
+                AlicaEngine::abort("Cannot create log folder: ", logPath);
             }
         }
         string logFile = supplementary::logging::getLogFilename("alica-run--" + robotName);

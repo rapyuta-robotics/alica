@@ -13,7 +13,7 @@
 namespace alica {
 
 StaticRoleAssignment::StaticRoleAssignment(AlicaEngine* ae)
-        : IRoleAssignment(ae)
+        : IRoleAssignment()
         , ae(ae)
         , updateRoles(false) {
     this->agentProperties = this->ae->getTeamManager()->getActiveAgentProperties();
@@ -87,7 +87,8 @@ void StaticRoleAssignment::calculateRoles() {
         if (!roleIsAssigned) {
             stringstream ss;
             ss << *(agent->getId());
-            ae->abort("RA: Could not set a role (Default: " + agent->getDefaultRole() + ") for robot: ", ss.str());
+            AlicaEngine::abort(
+                    "RA: Could not set a role (Default: " + agent->getDefaultRole() + ") for robot: ", ss.str());
         }
     }
 }

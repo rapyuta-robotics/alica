@@ -16,10 +16,9 @@
 
 namespace alica {
 
-ForallAgents::ForallAgents(AlicaEngine* ae, long id)
-        : Quantifier(id) {
-    this->ae = ae;
-}
+
+ForallAgents::ForallAgents(long id)
+        : Quantifier(id) {}
 
 ForallAgents::~ForallAgents() {}
 
@@ -30,21 +29,21 @@ ForallAgents::~ForallAgents() {}
  * @return shared_ptr<list<vector<Variable*> > >
  */
 shared_ptr<list<vector<Variable*>>> ForallAgents::getDomainVariables(
-        shared_ptr<RunningPlan>& p, shared_ptr<vector<const supplementary::AgentID*>>& agentsInScope) {
+        shared_ptr<RunningPlan>& rp, shared_ptr<vector<const supplementary::AgentID*>>& agentsInScope) {
     if (this->isScopeIsPlan()) {
-        if (p->getPlan() == this->getScopedPlan()) {
-            agentsInScope = p->getAssignment()->getAllRobotsSorted();
+        if (rp->getPlan() == this->getScopedPlan()) {
+            agentsInScope = rp->getAssignment()->getAllRobotsSorted();
         }
     } else if (this->isScopeIsEntryPoint()) {
-        agentsInScope = p->getAssignment()->getRobotsWorkingSorted(this->getScopedEntryPoint());
+        agentsInScope = rp->getAssignment()->getRobotsWorkingSorted(this->getScopedEntryPoint());
     } else if (this->isScopeIsState()) {
-        agentsInScope = p->getAssignment()->getRobotStateMapping()->getRobotsInStateSorted(this->getScopedState());
+        agentsInScope = rp->getAssignment()->getRobotStateMapping()->getRobotsInStateSorted(this->getScopedState());
     }
     if (agentsInScope == nullptr) {
         return nullptr;
     }
     auto ret = make_shared<list<vector<Variable*>>>();
-    auto tm = ae->getTeamManager();
+    auto tm = rp->getAlicaEngine()->getTeamManager();
     for (auto& r : *(agentsInScope)) {
         auto robotEngineData = tm->getAgentByID(r)->getEngineData();
 

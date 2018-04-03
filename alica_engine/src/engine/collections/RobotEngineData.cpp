@@ -66,7 +66,7 @@ long RobotEngineData::makeUniqueId(string s) {
     long ret = (long) (supplementary::AgentIDHash()(this->agentId) + std::hash<string>()(s));
     if (this->engine->getPlanParser()->getParsedElements()->find(ret) !=
             this->engine->getPlanParser()->getParsedElements()->end()) {
-        this->engine->abort("TO: Hash Collision in generating a quantified variable's unique ID: ", ret);
+        AlicaEngine::abort("TO: Hash Collision in generating a quantified variable's unique ID: ", ret);
     }
     return ret;
 }

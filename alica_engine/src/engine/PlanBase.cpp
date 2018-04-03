@@ -63,7 +63,8 @@ PlanBase::PlanBase(AlicaEngine* ae, Plan* masterPlan)
     }
 
     if (minbcfreq > maxbcfreq) {
-        ae->abort("PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
+        AlicaEngine::abort(
+                "PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
     }
 
     _minSendInterval = (AlicaTime) fmax(1000000, lround(1.0 / maxbcfreq * 1000000000));

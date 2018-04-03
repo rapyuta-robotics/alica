@@ -31,6 +31,15 @@ using std::cout;
 using std::endl;
 namespace alica {
 /**
+ * Abort execution with a message, called if initialization fails.
+ * @param msg A string
+ */
+void AlicaEngine::abort(string msg) {
+    cerr << "ABORT: " << msg << endl;
+    exit(EXIT_FAILURE);
+}
+
+/**
  * The main class.
  */
 AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, string roleSetName, string masterPlanName,
@@ -58,7 +67,7 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, string roleSe
     AssignmentCollection::allowIdling = (*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL);
 
     this->planRepository = new PlanRepository();
-    this->planParser = new PlanParser(this, this->planRepository);
+    this->planParser = new PlanParser(this->planRepository);
     this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
     this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
     this->teamManager = new TeamManager(this, true);
@@ -68,7 +77,7 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, string roleSe
     if (this->useStaticRoles) {
         this->roleAssignment = new StaticRoleAssignment(this);
     } else {
-        this->abort("Unknown RoleAssignment Type!");
+        AlicaEngine::abort("Unknown RoleAssignment Type!");
     }
     // the communicator is expected to be set before init() is called
     this->roleAssignment->setCommunication(communicator);
@@ -319,15 +328,6 @@ RoleSet* AlicaEngine::getRoleSet() {
 
 void AlicaEngine::setStepEngine(bool stepEngine) {
     this->stepEngine = stepEngine;
-}
-
-/**
- * Abort execution with a message, called if initialization fails.
- * @param msg A string
- */
-void AlicaEngine::abort(string msg) const {
-    cerr << "ABORT: " << msg << endl;
-    exit(EXIT_FAILURE);
 }
 
 /**
