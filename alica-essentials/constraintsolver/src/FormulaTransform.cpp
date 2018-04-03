@@ -113,7 +113,7 @@ void FormulaTransform::doTransform(shared_ptr<list<shared_ptr<Clause>>>& clauses
                 clauseIter = clauses->erase(clauseIter);
 
                 //							clauseIter =
-                //clauses->erase(find(clauses->begin(),  clauses->end(), tmpClause));
+                // clauses->erase(find(clauses->begin(),  clauses->end(), tmpClause));
             } else {
                 tmpClause->isFinished = true;
                 clauseIter++;

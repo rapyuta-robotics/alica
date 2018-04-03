@@ -15,7 +15,8 @@
 #include <cmath>
 
 namespace autodiff {
-TermPower::TermPower(shared_ptr<Term> baseTerm, shared_ptr<Term> exponent) : Term() {
+TermPower::TermPower(shared_ptr<Term> baseTerm, shared_ptr<Term> exponent)
+        : Term() {
     this->base = baseTerm;
     this->exponent = exponent;
 }

@@ -26,7 +26,7 @@ class Clause;
 class DecisionLevel;
 class Var;
 
-class CNSat : public enable_shared_from_this<CNSat> {
+class CNSat {
 public:
     CNSat();
     virtual ~CNSat();
@@ -78,7 +78,7 @@ protected:
     int learnedCount = 0;
     int learntNum;
     int restartCount = 0;
-    shared_ptr<DecisionLevel> decisionLevelNull;
+    std::shared_ptr<DecisionLevel> decisionLevelNull;
     bool recentBacktrack = false;
 
     IAlicaClock* alicaClock;

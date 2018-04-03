@@ -5,7 +5,8 @@ namespace supplementary {
 /**
  * Attention: The idFactory will be deleted by the AgentIDManager's destructor.
  */
-AgentIDManager::AgentIDManager(AgentIDFactory* idFactory) : idFactory(idFactory) {}
+AgentIDManager::AgentIDManager(AgentIDFactory* idFactory)
+        : idFactory(idFactory) {}
 
 AgentIDManager::~AgentIDManager() {
     delete this->idFactory;

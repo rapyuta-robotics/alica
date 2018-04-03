@@ -13,7 +13,8 @@
 #include <cmath>
 
 namespace autodiff {
-Or::Or(shared_ptr<Term> left, shared_ptr<Term> right) : Term() {
+Or::Or(shared_ptr<Term> left, shared_ptr<Term> right)
+        : Term() {
     this->left = left;
     this->right = right;
 }

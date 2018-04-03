@@ -14,7 +14,8 @@
 #include <limits>
 
 namespace autodiff {
-Log::Log(shared_ptr<Term> arg) : Term() {
+Log::Log(shared_ptr<Term> arg)
+        : Term() {
     this->arg = arg;
 }
 

@@ -9,7 +9,8 @@ namespace alica {
 
 namespace reasoner {
 
-DummySolver::DummySolver(AlicaEngine* ae) : alica::ISolver(ae) {}
+DummySolver::DummySolver(AlicaEngine* ae)
+        : alica::ISolver(ae) {}
 
 DummySolver::~DummySolver() {}
 

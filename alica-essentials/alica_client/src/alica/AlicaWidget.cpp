@@ -3,7 +3,8 @@
 #include <sstream>
 
 namespace alica {
-AlicaWidget::AlicaWidget() : qframe(new QFrame()) {
+AlicaWidget::AlicaWidget()
+        : qframe(new QFrame()) {
     this->uiAlicaWidget.setupUi(qframe);
 }
 

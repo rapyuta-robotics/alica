@@ -17,11 +17,13 @@ namespace autodiff {
 /**
  *
  */
-Sum::Sum(vector<shared_ptr<Term>> terms) : Term() {
+Sum::Sum(vector<shared_ptr<Term>> terms)
+        : Term() {
     this->terms = terms;
 }
 
-Sum::Sum(shared_ptr<Term> first, shared_ptr<Term> second, vector<shared_ptr<Term>> rest) : Term() {
+Sum::Sum(shared_ptr<Term> first, shared_ptr<Term> second, vector<shared_ptr<Term>> rest)
+        : Term() {
     vector<shared_ptr<Term>> terms = {first, second};
     terms.insert(terms.end(), rest.begin(), rest.end());
     this->terms = terms;

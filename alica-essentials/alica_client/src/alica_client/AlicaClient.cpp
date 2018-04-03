@@ -6,7 +6,10 @@
 
 namespace alica_client {
 
-AlicaClient::AlicaClient() : rqt_gui_cpp::Plugin(), widget(0), alicaWidget(0) {
+AlicaClient::AlicaClient()
+        : rqt_gui_cpp::Plugin()
+        , widget(0)
+        , alicaWidget(0) {
     setObjectName("AlicaClient");
     rosNode = new ros::NodeHandle();
 }

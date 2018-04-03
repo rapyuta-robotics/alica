@@ -34,11 +34,29 @@ protected:
     Type type;
 
 public:
-    ConfigNode(string name) : name(name), value(), parent(NULL), children(), depth(0), type(Node) {}
+    ConfigNode(string name)
+            : name(name)
+            , value()
+            , parent(NULL)
+            , children()
+            , depth(0)
+            , type(Node) {}
 
-    ConfigNode(Type type, string name) : name(name), value(), parent(NULL), children(), depth(0), type(type) {}
+    ConfigNode(Type type, string name)
+            : name(name)
+            , value()
+            , parent(NULL)
+            , children()
+            , depth(0)
+            , type(type) {}
 
-    ConfigNode(string name, string& value) : name(name), value(value), parent(NULL), children(), depth(0), type(Leaf) {}
+    ConfigNode(string name, string& value)
+            : name(name)
+            , value(value)
+            , parent(NULL)
+            , children()
+            , depth(0)
+            , type(Leaf) {}
 
     ConfigNode(const ConfigNode& other)
             : name(other.name)

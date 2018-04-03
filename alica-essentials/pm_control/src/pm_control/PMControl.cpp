@@ -10,7 +10,10 @@
 #include "pm_control/PMControl.h"
 
 namespace pm_control {
-PMControl::PMControl() : rqt_gui_cpp::Plugin(), widget_(0), guiUpdateTimer(nullptr) {
+PMControl::PMControl()
+        : rqt_gui_cpp::Plugin()
+        , widget_(0)
+        , guiUpdateTimer(nullptr) {
     setObjectName("PMControl");
     rosNode = new ros::NodeHandle();
 

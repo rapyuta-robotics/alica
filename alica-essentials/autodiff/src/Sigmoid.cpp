@@ -17,13 +17,15 @@
 
 namespace autodiff {
 
-Sigmoid::Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid) : Term() {
+Sigmoid::Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid)
+        : Term() {
     this->arg = arg;
     this->mid = mid;
     this->steepness = 1;
 }
 
-Sigmoid::Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid, double steppness) : Term() {
+Sigmoid::Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid, double steppness)
+        : Term() {
     this->arg = arg;
     this->mid = mid;
     this->steepness = steppness;

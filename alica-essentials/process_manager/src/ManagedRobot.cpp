@@ -17,7 +17,8 @@ namespace supplementary {
  * @param id
  */
 ManagedRobot::ManagedRobot(string robotName, const AgentID* agentID, ProcessManager* procMan)
-        : RobotMetaData(robotName, agentID), procMan(procMan) {}
+        : RobotMetaData(robotName, agentID)
+        , procMan(procMan) {}
 
 ManagedRobot::~ManagedRobot() {
     for (auto mngdExec : this->executableMap) {

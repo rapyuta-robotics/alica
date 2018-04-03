@@ -11,7 +11,8 @@
 #include "Constant.h"
 
 namespace autodiff {
-And::And(shared_ptr<Term> left, shared_ptr<Term> right) : Term() {
+And::And(shared_ptr<Term> left, shared_ptr<Term> right)
+        : Term() {
     this->left = left;
     this->right = right;
 }

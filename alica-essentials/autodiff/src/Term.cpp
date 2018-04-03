@@ -48,7 +48,8 @@ const double Term::EPSILON = 10.0e-10;
 OrType Term::_orop = OrType::MAX;
 AndType Term::_andop = AndType::MIN;
 
-Term::Term() : m_id(m_nextId++) {
+Term::Term()
+        : m_id(m_nextId++) {
     min = numeric_limits<double>::min();
     max = numeric_limits<double>::max();
 }

@@ -2,7 +2,8 @@
 
 namespace supplementary {
 
-AgentID::AgentID(const uint8_t* idBytes, int idSize, uint8_t type) : TYPE(type) {
+AgentID::AgentID(const uint8_t* idBytes, int idSize, uint8_t type)
+        : TYPE(type) {
     for (int i = 0; i < idSize; i++) {
         this->id.push_back(idBytes[i]);
     }

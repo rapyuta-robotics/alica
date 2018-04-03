@@ -6,7 +6,10 @@
 
 namespace supplementary {
 
-Worker::Worker(std::string name) : name(name), started(true), runCV() {
+Worker::Worker(std::string name)
+        : name(name)
+        , started(true)
+        , runCV() {
     this->running = false;
     this->timer = new supplementary::Timer(0, 0);
     this->timer->registerCV(&this->runCV);

@@ -21,7 +21,7 @@ namespace alica {
 class IAlicaClock;
 
 namespace reasoner {
-class GSolver : public enable_shared_from_this<GSolver> {
+class GSolver {
 protected:
     class RpropResult;
 

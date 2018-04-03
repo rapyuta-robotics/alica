@@ -8,7 +8,8 @@
 #include "Gp.h"
 
 namespace autodiff {
-Gp::Gp(vector<shared_ptr<Term>> args, shared_ptr<GaussianProcess> gp, int dc) : Term() {
+Gp::Gp(vector<shared_ptr<Term>> args, shared_ptr<GaussianProcess> gp, int dc)
+        : Term() {
     this->divCount = dc;
     this->args = args;
     this->gpr = gp;

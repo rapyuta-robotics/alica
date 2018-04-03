@@ -14,7 +14,8 @@
 
 namespace autodiff {
 
-Exp::Exp(shared_ptr<Term> arg) : Term() {
+Exp::Exp(shared_ptr<Term> arg)
+        : Term() {
     this->arg = arg;
 }
 

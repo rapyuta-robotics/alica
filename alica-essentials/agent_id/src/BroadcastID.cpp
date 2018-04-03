@@ -3,7 +3,8 @@
 
 namespace supplementary {
 
-BroadcastID::BroadcastID(const uint8_t* idBytes, int idSize) : AgentID(idBytes, idSize, BC_TYPE) {}
+BroadcastID::BroadcastID(const uint8_t* idBytes, int idSize)
+        : AgentID(idBytes, idSize, BC_TYPE) {}
 
 BroadcastID::~BroadcastID() {}
 

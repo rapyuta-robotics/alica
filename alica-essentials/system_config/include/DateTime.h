@@ -18,9 +18,11 @@ public:
      * Initialize structure using a time value in 100 ns resolution
      * @param ticks Tocks (100 ns resolution
      */
-    DateTime(long long t) : ticks(t) {}
+    DateTime(long long t)
+            : ticks(t) {}
 
-    DateTime(const DateTime& other) : ticks(other.ticks) {}
+    DateTime(const DateTime& other)
+            : ticks(other.ticks) {}
 
     static inline DateTime getUtcNow() {
         struct timeval tv;

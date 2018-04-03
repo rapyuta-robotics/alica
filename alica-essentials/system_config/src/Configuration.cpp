@@ -1,14 +1,19 @@
 #include "Configuration.h"
 
 namespace supplementary {
-Configuration::Configuration() : filename(), configRoot(new ConfigNode("root")) {}
+Configuration::Configuration()
+        : filename()
+        , configRoot(new ConfigNode("root")) {}
 
-Configuration::Configuration(string filename) : filename(filename), configRoot(new ConfigNode("root")) {
+Configuration::Configuration(string filename)
+        : filename(filename)
+        , configRoot(new ConfigNode("root")) {
     load(filename);
 }
 
 Configuration::Configuration(string filename, const string content)
-        : filename(filename), configRoot(new ConfigNode("root")) {
+        : filename(filename)
+        , configRoot(new ConfigNode("root")) {
     load(filename, shared_ptr<istream>(new istringstream(content)), false, false);
 }
 
@@ -448,12 +453,15 @@ shared_ptr<vector<string>> Configuration::getParams(char seperator, const char* 
             string::size_type q;
             string charString = temp;
             while ((q = charString.find(seperator, p)) != string::npos) {
-                //					cout << "SC-Conf: Adding-InLoop: '" << string(temp, p, q-p) << "'"
+                //					cout << "SC-Conf: Adding-InLoop: '" << string(temp, p, q-p) <<
+                //"'"
                 //<<  endl;
                 params->emplace_back(temp, p, q - p);
                 p = q + 1;
             }
-            //				cout << "SC-Conf: Adding-AfterLoop: '" << string(temp, p, charString.length()-p) << "'"
+            //				cout << "SC-Conf: Adding-AfterLoop: '" << string(temp, p, charString.length()-p)
+            //<<
+            //"'"
             //<<  endl;
             params->emplace_back(temp, p, charString.length() - p);
         } while ((temp = va_arg(ap, const char*)) != NULL);

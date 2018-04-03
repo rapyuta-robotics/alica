@@ -14,7 +14,8 @@
 #include <cmath>
 
 namespace autodiff {
-Cos::Cos(shared_ptr<Term> arg) : Term() {
+Cos::Cos(shared_ptr<Term> arg)
+        : Term() {
     this->arg = arg;
 }
 

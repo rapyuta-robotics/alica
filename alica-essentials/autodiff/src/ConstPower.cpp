@@ -15,7 +15,8 @@
 #include <string>
 
 namespace autodiff {
-ConstPower::ConstPower(shared_ptr<Term> baseTerm, double exponent) : Term() {
+ConstPower::ConstPower(shared_ptr<Term> baseTerm, double exponent)
+        : Term() {
     this->base = baseTerm;
     this->exponent = exponent;
 }

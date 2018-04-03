@@ -12,7 +12,10 @@ namespace robot_control {
 
 chrono::duration<double> RobotsControl::msgTimeOut = chrono::duration<double>(0);
 
-RobotsControl::RobotsControl() : rqt_gui_cpp::Plugin(), widget_(0), guiUpdateTimer(nullptr) {
+RobotsControl::RobotsControl()
+        : rqt_gui_cpp::Plugin()
+        , widget_(0)
+        , guiUpdateTimer(nullptr) {
     setObjectName("RobotsControl");
     rosNode = new ros::NodeHandle();
     this->sc = supplementary::SystemConfig::getInstance();

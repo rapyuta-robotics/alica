@@ -14,7 +14,8 @@
 #include <cmath>
 
 namespace autodiff {
-LTEConstraint::LTEConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness) : Term() {
+LTEConstraint::LTEConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness)
+        : Term() {
     this->left = x;
     this->right = y;
     this->steppness = steppness;

@@ -43,11 +43,15 @@
 #include <iostream>
 
 flowlayout::flowlayout(QWidget* parent, int margin, int hSpacing, int vSpacing)
-        : QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing) {
+        : QLayout(parent)
+        , m_hSpace(hSpacing)
+        , m_vSpace(vSpacing) {
     setContentsMargins(margin, margin, margin, margin);
 }
 
-flowlayout::flowlayout(int margin, int hSpacing, int vSpacing) : m_hSpace(hSpacing), m_vSpace(vSpacing) {
+flowlayout::flowlayout(int margin, int hSpacing, int vSpacing)
+        : m_hSpace(hSpacing)
+        , m_vSpace(vSpacing) {
     setContentsMargins(margin, margin, margin, margin);
 }
 

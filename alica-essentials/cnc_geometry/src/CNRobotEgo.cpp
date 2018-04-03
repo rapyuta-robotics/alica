@@ -9,7 +9,8 @@ using std::vector;
 
 namespace geometry {
 
-CNRobotEgo::CNRobotEgo() : velocity() {
+CNRobotEgo::CNRobotEgo()
+        : velocity() {
     this->radius = 0;
     this->id = 0;
     this->certainty = 0;

@@ -13,7 +13,8 @@
 #include <cmath>
 
 namespace autodiff {
-ConstraintUtility::ConstraintUtility(shared_ptr<Term> constraint, shared_ptr<Term> utility) : Term() {
+ConstraintUtility::ConstraintUtility(shared_ptr<Term> constraint, shared_ptr<Term> utility)
+        : Term() {
     this->constraint = constraint;
     this->utility = utility;
 }

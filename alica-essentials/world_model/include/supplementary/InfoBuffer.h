@@ -19,7 +19,8 @@ public:
      * Default constructor.
      * @param bufferSize Number of elements which can be stored within the information buffer
      */
-    InfoBuffer(const int bufferSize) : mtx_() {
+    InfoBuffer(const int bufferSize)
+            : mtx_() {
         this->bufferSize = bufferSize;
         this->infoElementCounter = 0;
         this->index = -1;

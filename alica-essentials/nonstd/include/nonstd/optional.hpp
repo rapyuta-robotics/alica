@@ -533,7 +533,8 @@ const nullopt_t nullopt((nullopt_t::init()));
 
 class bad_optional_access : public std::logic_error {
 public:
-    explicit bad_optional_access() : logic_error("bad optional access") {}
+    explicit bad_optional_access()
+            : logic_error("bad optional access") {}
 };
 
 /// optional
@@ -550,7 +551,8 @@ public:
 
     optional_constexpr optional(nullopt_t) optional_noexcept : has_value_(false), contained() {}
 
-    optional(optional const& rhs) : has_value_(rhs.has_value()) {
+    optional(optional const& rhs)
+            : has_value_(rhs.has_value()) {
         if (rhs.has_value())
             contained.construct_value(rhs.contained.value());
     }
@@ -563,19 +565,25 @@ public:
     }
 #endif
 
-    optional_constexpr optional(value_type const& value) : has_value_(true), contained(value) {}
+    optional_constexpr optional(value_type const& value)
+            : has_value_(true)
+            , contained(value) {}
 
 #if optional_CPP11_OR_GREATER
 
-    optional_constexpr optional(value_type&& value) : has_value_(true), contained(std::move(value)) {}
+    optional_constexpr optional(value_type&& value)
+            : has_value_(true)
+            , contained(std::move(value)) {}
 
     template <class... Args>
     optional_constexpr explicit optional(nonstd_lite_in_place_type_t(T), Args&&... args)
-            : has_value_(true), contained(T(std::forward<Args>(args)...)) {}
+            : has_value_(true)
+            , contained(T(std::forward<Args>(args)...)) {}
 
     template <class U, class... Args>
     optional_constexpr explicit optional(nonstd_lite_in_place_type_t(T), std::initializer_list<U> il, Args&&... args)
-            : has_value_(true), contained(T(il, std::forward<Args>(args)...)) {}
+            : has_value_(true)
+            , contained(T(il, std::forward<Args>(args)...)) {}
 
 #endif  // optional_CPP11_OR_GREATER
 

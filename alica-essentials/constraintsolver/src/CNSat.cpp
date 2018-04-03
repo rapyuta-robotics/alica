@@ -324,11 +324,14 @@ bool CNSat::solve() {
             //						cout << "\t" << "conflictCount=" << conflictCount << endl;
             //						cout << "\t" << "cnsmtGSolver->begin=" << cnsmtGSolver->begin <<
             // endl;
-            //						cout << "\t" << "cnsmtGSolver->maxSolveTime=" << cnsmtGSolver->maxSolveTime
+            //						cout << "\t" << "cnsmtGSolver->maxSolveTime=" <<
+            // cnsmtGSolver->maxSolveTime
             //<<  endl;
-            //						cout << "\t" << "cnsmtGSolver->getTime()=" << cnsmtGSolver->getTime()
+            //						cout << "\t" << "cnsmtGSolver->getTime()=" <<
+            // cnsmtGSolver->getTime()
             //<<  endl;
-            //						cout << "\t" << "cnsmtGSolver->begin+cnsmtGSolver->maxSolveTime=" << (cnsmtGSolver->begin
+            //						cout << "\t" << "cnsmtGSolver->begin+cnsmtGSolver->maxSolveTime="
+            //<< (cnsmtGSolver->begin
             //+  cnsmtGSolver->maxSolveTime) << endl;
             if (decisionLevel->size() == 1) {
 #ifdef CNSat_Call_Debug
@@ -396,10 +399,9 @@ bool CNSat::solve() {
         }
         shared_ptr<Var> next;
         if (cnsmtGSolver != nullptr) {
-            next = Decider::decideVariableCountBased(variables, shared_from_this());
-            //	next = Decider::decideActivityBased(variables, shared_from_this());
+            next = Decider::decideVariableCountBased(variables, *this);
         } else {
-            next = Decider::decideActivityBased(variables, shared_from_this());
+            next = Decider::decideActivityBased(variables, *this);
         }
 
         if (next == nullptr) {  // if no unassigned vars
@@ -555,8 +557,8 @@ shared_ptr<Clause> CNSat::propagate() {
             for (shared_ptr<Lit> l : *(c->literals)) {
                 if (c->watcher->at(oWId)->lit->var != l->var &&
                         (l->var->assignment == Assignment::UNASSIGNED || l->satisfied())) {
-                    //								auto iter = find(w->lit->var->watchList->begin(),
-                    //w->lit->var->watchList->end(),  w);
+                    //								auto iter =
+                    // find(w->lit->var->watchList->begin(),  w->lit->var->watchList->end(),  w);
                     //								w->lit->var->watchList->erase(iter);
                     shared_ptr<vector<Watcher*>> newWatchList = make_shared<vector<Watcher*>>();
                     for (Watcher* w_tmp : *(w->lit->var->watchList)) {

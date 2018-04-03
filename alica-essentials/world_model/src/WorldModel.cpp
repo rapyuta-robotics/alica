@@ -6,7 +6,10 @@
 #include <supplementary/AgentID.h>
 
 namespace supplementary {
-WorldModel::WorldModel() : maySendMessages(true), alicaEngine(nullptr), ownID(nullptr) {
+WorldModel::WorldModel()
+        : maySendMessages(true)
+        , alicaEngine(nullptr)
+        , ownID(nullptr) {
     this->sc = supplementary::SystemConfig::getInstance();
     this->maySendMessages = (*this->sc)["WorldModel"]->get<bool>("WorldModel", "MaySendMessages", NULL);
 }

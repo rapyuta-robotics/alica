@@ -2,7 +2,8 @@
 
 namespace supplementary {
 
-AutoResetEvent::AutoResetEvent(bool initial) : flag(initial) {
+AutoResetEvent::AutoResetEvent(bool initial)
+        : flag(initial) {
     this->waitingThread = 0;
 }
 

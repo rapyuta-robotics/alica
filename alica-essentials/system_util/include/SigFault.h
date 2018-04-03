@@ -36,7 +36,8 @@ using std::runtime_error;
 
 class SegFaultException : public runtime_error {
 public:
-    SegFaultException(std::string s) : runtime_error(s.c_str()) {}
+    SegFaultException(std::string s)
+            : runtime_error(s.c_str()) {}
     /*const char* what() const throw()
     {
       return "";//stacktrace.c_str();

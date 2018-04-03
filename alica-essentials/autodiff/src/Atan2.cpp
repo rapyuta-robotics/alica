@@ -14,7 +14,8 @@
 #include <cmath>
 
 namespace autodiff {
-Atan2::Atan2(shared_ptr<Term> left, shared_ptr<Term> right) : Term() {
+Atan2::Atan2(shared_ptr<Term> left, shared_ptr<Term> right)
+        : Term() {
     this->left = left;
     this->right = right;
 }

@@ -127,7 +127,8 @@ public:
 // Math.Abs(ballPosesY->at(n) - ballPosesY->at(i)) < 2*delta) {
 //							if ((ballPoses->at(n) - ballPoses->at(i)) * (ballPoses->at(n) -
 // ballPoses->at(i))
-//									+ (ballPosesY->at(n) - ballPosesY->at(i)) * (ballPosesY->at(n)
+//									+ (ballPosesY->at(n) - ballPosesY->at(i)) *
+//(ballPosesY->at(n)
 //-  ballPosesY->at(i)) 									< 4 * delta * delta)
 //							{
 //								isNew = true;
@@ -171,12 +172,13 @@ public:
 //					for (int j = 0; j < ballPoses->size(); j++)
 //					{
 //						//lits[agents,j] = new AD.Abs(target->at(agents) - ballPoses->at(j)) +
-//new  AD.Abs(targetY->at(agents) - ballPosesY->at(j)) < delta;
+// new  AD.Abs(targetY->at(agents) - ballPosesY->at(j)) < delta;
 //						shared_ptr<Term> t1 = target->at(agents) - ballPoses->at(j);
 //						shared_ptr<Term> t2 = target->at(agents) - ballPoses->at(j);
 //						shared_ptr<Term> t3 = targetY->at(agents) - ballPosesY->at(j);
 //						shared_ptr<Term> t4 = targetY->at(agents) - ballPosesY->at(j);
-//						lits->at(agents)->at(j) = t1 * t2 + t3 * t4 < TermBuilder::constant(delta
+//						lits->at(agents)->at(j) = t1 * t2 + t3 * t4 <
+// TermBuilder::constant(delta
 //*  delta);
 //					}
 //					agents++;
@@ -187,8 +189,8 @@ public:
 //				// (p1=X1 o p1=X2) u (p2=X2 o p2=X1) u
 //				// (p1=X1 o p2=X1) u (p2=X2 o p1=X2)
 //				//
-//				// (p1 = X1 u p2 = X2 u p3 = X3) o (p1 = X2 u p2 = X1 u p3 = X3) o (p1 = X3 u p2 = X2 u p3
-//=  X2) o (p1 = X3 u p2 = X1 u p3 = X2) o (p1 = X1 u p2 = X3 u p3 = X1) o (p1 = X2 u p2 = X3 u p3 = X1)
+//				// (p1 = X1 u p2 = X2 u p3 = X3) o (p1 = X2 u p2 = X1 u p3 = X3) o (p1 = X3 u p2 = X2 u
+// p3 =  X2) o (p1 = X3 u p2 = X1 u p3 = X2) o (p1 = X1 u p2 = X3 u p3 = X1) o (p1 = X2 u p2 = X3 u p3 = X1)
 //				//
 //				// (p1 = X1 o p1 = X2 o p1 = X3) u ...
 //				// (p1 = X1 o p2 = X1 o p3 = X1) u ...
@@ -253,15 +255,19 @@ public:
 //					{
 //						for (int k = 0; k < i; k++)
 //						{
-//							//constraint =  constraint &new AD.Abs(target->at(i) - target->at(k)) +
-//new
+//							//constraint =  constraint &new AD.Abs(target->at(i) -
+//target->at(k))
+//+  new
 // AD.Abs(targetY->at(i) - targetY->at(k)) > 2*delta; 							constraint =
 // constraint
-//									& (target->at(i) - target->at(k)) * (target->at(i)
+//									& (target->at(i) - target->at(k)) *
+//(target->at(i)
 //-  target->at(k))
-//											+ (targetY->at(i) - targetY->at(k))
+//											+ (targetY->at(i) -
+// targetY->at(k))
 //* (targetY->at(i) - targetY->at(k))
-//											> TermBuilder::constant(4 * delta
+//											> TermBuilder::constant(4 *
+// delta
 //*  delta);
 //						}
 //					}

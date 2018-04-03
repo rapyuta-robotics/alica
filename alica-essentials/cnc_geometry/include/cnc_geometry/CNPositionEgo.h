@@ -11,7 +11,8 @@ class CNPositionAllo;
 
 class CNPositionEgo : public CNPositionTemplate<CNPositionEgo> {
 public:
-    CNPositionEgo() : CNPositionEgo(0, 0, 0) {}
+    CNPositionEgo()
+            : CNPositionEgo(0, 0, 0) {}
     CNPositionEgo(double x, double y, double theta);
     CNPositionEgo(const CNPositionEgo& obj);
     virtual ~CNPositionEgo();

@@ -22,10 +22,9 @@ class Var;
 
 class Decider {
 public:
-    static shared_ptr<Var> decideRangeBased(shared_ptr<vector<shared_ptr<Var>>> variables, shared_ptr<CNSat> solver);
-    static shared_ptr<Var> decideActivityBased(shared_ptr<vector<shared_ptr<Var>>> variables, shared_ptr<CNSat> solver);
-    static shared_ptr<Var> decideVariableCountBased(
-            shared_ptr<vector<shared_ptr<Var>>> variables, shared_ptr<CNSat> solver);
+    static shared_ptr<Var> decideRangeBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver);
+    static shared_ptr<Var> decideActivityBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver);
+    static shared_ptr<Var> decideVariableCountBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver);
     static bool litRangeCompare(shared_ptr<Lit> a, shared_ptr<Lit> b);
 };
 

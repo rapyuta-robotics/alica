@@ -13,7 +13,8 @@
 #include <cmath>
 
 namespace autodiff {
-Min::Min(shared_ptr<Term> left, shared_ptr<Term> right) : Term() {
+Min::Min(shared_ptr<Term> left, shared_ptr<Term> right)
+        : Term() {
     this->left = left;
     this->right = right;
 }

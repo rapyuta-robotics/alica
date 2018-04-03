@@ -13,7 +13,8 @@
 #include <cmath>
 
 namespace autodiff {
-Abs::Abs(shared_ptr<Term> arg) : Term() {
+Abs::Abs(shared_ptr<Term> arg)
+        : Term() {
     this->arg = arg;
 }
 

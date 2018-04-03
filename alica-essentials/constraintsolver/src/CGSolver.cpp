@@ -12,11 +12,13 @@
 namespace alica {
 namespace reasoner {
 
-CGSolver::CGSolver(AlicaEngine* ae) : ISolver(ae), lastUtil(0.0), lastFEvals(0.0), lastRuns(0.0) {
+CGSolver::CGSolver(AlicaEngine* ae)
+        : ISolver(ae)
+        , _lastUtil(0.0)
+        , _lastFEvals(0.0)
+        , _lastRuns(0.0) {
     Term::setAnd(AndType::AND);
     Term::setOr(OrType::MAX);
-    gs = make_shared<GSolver>();
-    sgs = make_shared<GSolver>();
 }
 
 CGSolver::~CGSolver() {}
@@ -87,7 +89,7 @@ bool CGSolver::existsSolution(vector<Variable*>& vars, vector<shared_ptr<Problem
         seeds->push_back(singleseed);
     }
 
-    return sgs->solveSimple(constraint, cVars, ranges, seeds);
+    return _sgs.solveSimple(constraint, cVars, ranges, seeds);
 }
 
 bool CGSolver::getSolution(
@@ -203,9 +205,9 @@ bool CGSolver::getSolution(
     shared_ptr<vector<double>> gresults;
     double util = 0;
     {  // for lock_guard
-        lock_guard<std::mutex> lock(this->mtx);
-        this->gs->setUtilitySignificanceThreshold(usigVal);
-        gresults = this->gs->solve(all, constraintVariables, ranges, seeds, sufficientUtility, &util);
+        lock_guard<std::mutex> lock(_mtx);
+        _gs.setUtilitySignificanceThreshold(usigVal);
+        gresults = _gs.solve(all, constraintVariables, ranges, seeds, sufficientUtility, &util);
     }
     if (gresults->size() > 0) {
         for (int i = 0; i < dim; ++i) {
@@ -213,9 +215,9 @@ bool CGSolver::getSolution(
             results.push_back(rVal);
         }
     }
-    this->lastUtil = util;
-    this->lastFEvals = this->gs->getFEvals();
-    this->lastRuns = this->gs->getRuns();
+    _lastUtil = util;
+    _lastFEvals = _gs.getFEvals();
+    _lastRuns = _gs.getRuns();
 #ifdef CGSolver_DEBUG
     cout << "CGS: result ";
     for (int i = 0; i < gresults->size(); i++) {

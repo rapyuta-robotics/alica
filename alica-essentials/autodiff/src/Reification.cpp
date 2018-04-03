@@ -8,7 +8,8 @@
 #include "Reification.h"
 
 namespace autodiff {
-Reification::Reification(shared_ptr<Term> condition, double min, double max) : Term() {
+Reification::Reification(shared_ptr<Term> condition, double min, double max)
+        : Term() {
     this->condition = condition;
     this->negatedCondition = condition->negate();
     this->min = min;

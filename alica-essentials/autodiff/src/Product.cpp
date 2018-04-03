@@ -15,7 +15,8 @@
 
 namespace autodiff {
 
-Product::Product(shared_ptr<Term> left, shared_ptr<Term> right) : Term() {
+Product::Product(shared_ptr<Term> left, shared_ptr<Term> right)
+        : Term() {
     this->left = left;
     this->right = right;
 }

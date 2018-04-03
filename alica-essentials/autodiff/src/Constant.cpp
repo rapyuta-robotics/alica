@@ -14,7 +14,8 @@
 
 namespace autodiff {
 
-Constant::Constant(double value) : Term() {
+Constant::Constant(double value)
+        : Term() {
     this->value = value;
 }
 

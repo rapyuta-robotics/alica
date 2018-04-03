@@ -2,16 +2,15 @@
 #include <iostream>
 #include <typeinfo>
 #include <gtest/gtest.h>
+#include <ros/package.h>
 
 using namespace supplementary;
 // Declare a test
 TEST(SystemConfigBasics, readValues) {
     // determine the path to the test config
-    string path = FileSystem::getSelfPath();
+    std::string path = ros::package::getPath("system_config");
+    path = path + "/test";
 
-    int place = path.rfind("devel");
-    path = path.substr(0, place);
-    path = path + "src/supplementary/system_config/test";
     // bring up the SystemConfig with the corresponding path
     SystemConfig* sc = SystemConfig::getInstance();
     sc->setRootPath(path);

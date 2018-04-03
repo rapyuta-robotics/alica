@@ -18,7 +18,7 @@ set(CMAKE_CXX_FLAGS "-rdynamic -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}")
 ## is used, also find other catkin packages
 find_package(catkin QUIET)
 if(catkin_FOUND)
-	find_package(catkin REQUIRED COMPONENTS fsystem)
+	find_package(catkin REQUIRED COMPONENTS fsystem roslib)
 else(catkin_FOUND)
 	set (catkin_INCLUDE_DIRS "${fsystem_INCLUDE_DIRS}")
 	set (catkin_LIBRARIES "fsystem")
@@ -37,20 +37,23 @@ if (catkin_FOUND)
   catkin_package(
    INCLUDE_DIRS include
    LIBRARIES system_config
-   CATKIN_DEPENDS fsystem
+   CATKIN_DEPENDS fsystem roslib
   # DEPENDS 
   )
 endif(catkin_FOUND)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+)
 
 ## Declare a cpp library
 add_library(system_config
   src/SystemConfig.cpp
   src/Configuration.cpp
-  include/Configuration.h
+  #include/Configuration.h
 )
 
 #add_dependencies(system_config ${catkin_LIBRARIES})

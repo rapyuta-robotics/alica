@@ -15,7 +15,8 @@
 #include <cmath>
 
 namespace autodiff {
-Sin::Sin(shared_ptr<Term> arg) : Term() {
+Sin::Sin(shared_ptr<Term> arg)
+        : Term() {
     this->arg = arg;
 }
 

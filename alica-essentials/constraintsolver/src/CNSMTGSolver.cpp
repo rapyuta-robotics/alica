@@ -762,7 +762,7 @@ shared_ptr<vector<double>> CNSMTGSolver::initialPoint(
         for (int i = 0; i < dim; ++i) {
             res->initialValue->at(i) = ((double) rand() / RAND_MAX) * ranges[i] + limits->at(i)->at(0);
             //					cout << "if (TMPVAR == " << TMPVAR++ << ") { res.initialValue[i] = " <<
-            //res->initialValue->at(i)
+            // res->initialValue->at(i)
             //<< "; }" << endl;
         }
 

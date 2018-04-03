@@ -14,7 +14,8 @@
 #include <limits>
 
 namespace autodiff {
-LinSigmoid::LinSigmoid(shared_ptr<Term> arg) : Term() {
+LinSigmoid::LinSigmoid(shared_ptr<Term> arg)
+        : Term() {
     this->arg = arg;
 }
 
