@@ -21,14 +21,13 @@ class PlanRepository;
 class Plan;
 class RoleSet;
 class AlicaElement;
-class AlicaEngine;
 
 /**
  * The default parser, parsing the XML encoding of an ALICA plan-tree
  */
 class PlanParser {
 public:
-    PlanParser(AlicaEngine* ae, PlanRepository* rep);
+    PlanParser(PlanRepository* rep);
     virtual ~PlanParser();
 
     virtual Plan* parsePlanTree(string masterplan);
@@ -42,7 +41,6 @@ public:
     long parserId(tinyxml2::XMLElement* node);
 
 private:
-    AlicaEngine* ae;
     supplementary::SystemConfig* sc;
     shared_ptr<ModelFactory> mf;
     PlanRepository* rep;

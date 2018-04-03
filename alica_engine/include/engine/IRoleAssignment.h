@@ -14,7 +14,7 @@ class IAlicaCommunication;
 
 class IRoleAssignment {
 public:
-    IRoleAssignment(const AlicaEngine* ae);
+    IRoleAssignment();
     virtual ~IRoleAssignment() {}
 
     virtual void init() = 0;
@@ -26,7 +26,6 @@ public:
     void setCommunication(const IAlicaCommunication* communication);
 
 protected:
-    const AlicaEngine* engine;
     /**
      * Current Robot's role.
      */
