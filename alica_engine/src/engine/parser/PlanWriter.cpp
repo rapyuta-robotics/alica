@@ -70,10 +70,10 @@ std::string PlanWriter::getConfigPath() const {
 /**
  *  Gets or sets the plans to save.
  */
-std::vector<const AlicaElement*>& PlanWriter::getPlansToSave() const {
+const AlicaElementSet& PlanWriter::getPlansToSave() const {
     return plansToSave;
 }
-void PlanWriter::setPlansToSave(vector<AlicaElement*>& plansToSave) {
+void PlanWriter::setPlansToSave(AlicaElementSet& plansToSave) {
     this->plansToSave = plansToSave;
 }
 

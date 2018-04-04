@@ -8,6 +8,7 @@
 #include <iostream>
 #include <utility>
 
+
 namespace alica {
 
 TeamManager::TeamManager(AlicaEngine* engine, bool useConfigForTeam = true)
@@ -59,8 +60,8 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig* sc) {
     }
 
     if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull", NULL)) {
-        for (auto& agentPair : this->agents) {
-            this->ignoredAgents.insert(agentPair.first);
+        for (auto& agentEntry : this->agents) {
+            agentEntry.second->setIgnored(true);
         }
     }
 }
@@ -133,7 +134,7 @@ void TeamManager::setTimeLastMsgReceived(const supplementary::AgentID* robotID, 
         // TODO alex robot properties protokoll anstoßen
         Agent* agent = new Agent(this->engine, this->teamTimeOut, robotID);
         agent->setTimeLastMsgReceived(timeLastMsgReceived);
-        auto mapEntry = this->agents.emplace(robotID, agent);
+        this->agents.emplace(robotID, agent);
     }
 }
 
@@ -151,24 +152,22 @@ bool TeamManager::isAgentActive(const supplementary::AgentID* agentId) const {
  * @param agentId an supplementary::AgentID identifying the agent
  */
 bool TeamManager::isAgentIgnored(const supplementary::AgentID* agentId) const {
-    return std::find_if(this->ignoredAgents.begin(), this->ignoredAgents.end(),
-                   [&agentId](const supplementary::AgentID* id) { return *agentId == *id; }) !=
-           this->ignoredAgents.end();
-}
-
-void TeamManager::ignoreAgent(const supplementary::AgentID* agentId) {
-    if (find_if(ignoredAgents.begin(), ignoredAgents.end(),
-                [&agentId](const supplementary::AgentID* id) { return *agentId == *id; }) != ignoredAgents.end()) {
-        return;
+    auto agentEntry = this->agents.find(agentId);
+    if (agentEntry != this->agents.end()) {
+        return agentEntry->second->isIgnored();
+    } else {
+        return false;
     }
-    this->ignoredAgents.insert(agentId);
 }
 
-void TeamManager::unIgnoreAgent(const supplementary::AgentID* agentId) {
-    this->ignoredAgents.erase(agentId);
+void TeamManager::setAgentIgnored(const supplementary::AgentID* agentId, const bool ignored) const {
+    auto agentEntry = this->agents.find(agentId);
+    if (agentEntry != this->agents.end()) {
+        agentEntry->second->setIgnored(ignored);
+    }
 }
 
-bool TeamManager::setSuccess(const supplementary::AgentID* agentId, AbstractPlan* plan, EntryPoint* entryPoint) {
+bool TeamManager::setSuccess(const supplementary::AgentID* agentId, const AbstractPlan* plan, const EntryPoint* entryPoint) {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end()) {
         agentEntry->second->setSuccess(plan, entryPoint);
