@@ -163,7 +163,7 @@ TEST_F(AlicaEngineAuthorityManager, authority)
         this_thread::sleep_for(duration);
         ae2->stepNotify();
         this_thread::sleep_for(duration);
-        while(!ae->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting()) {
+        while(ae->getPlanBase()->isWaiting() && ae2->getPlanBase()->isWaiting()) {
             this_thread::sleep_for(duration);
         }
         
