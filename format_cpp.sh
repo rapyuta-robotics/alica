@@ -8,4 +8,4 @@ find . \
     -not \( -path "*/build/*" -prune \) \
     -not \( -path "*/install/*" -prune \) \
     \( -name *.h -o -name *.hpp -o -name *.c -o -name *.cc -o -name *.cpp \) \
-    | xargs clang-format-5.0 -i
+    | xargs clang-format-5.0 -style=file -i

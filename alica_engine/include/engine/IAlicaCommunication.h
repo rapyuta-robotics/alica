@@ -15,7 +15,8 @@ class RoleSwitch;
 
 class IAlicaCommunication {
 public:
-    IAlicaCommunication(AlicaEngine* ae) : ae(ae){};
+    IAlicaCommunication(AlicaEngine* ae)
+            : ae(ae){};
     virtual ~IAlicaCommunication() {}
 
     virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai) const = 0;

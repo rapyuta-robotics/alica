@@ -8,7 +8,8 @@ namespace alica {
 /*PROTECTED REGION ID(staticVars1417424455986) ENABLED START*/  // initialise static variables here
 vector<double> SolverTestBehaviour::result;
 /*PROTECTED REGION END*/
-SolverTestBehaviour::SolverTestBehaviour() : DomainBehaviour("SolverTestBehaviour") {
+SolverTestBehaviour::SolverTestBehaviour()
+        : DomainBehaviour("SolverTestBehaviour") {
     /*PROTECTED REGION ID(con1417424455986) ENABLED START*/  // Add additional options here
     callCounter = 0;
     /*PROTECTED REGION END*/

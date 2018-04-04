@@ -26,7 +26,9 @@
 
 namespace alica {
 
-TeamObserver::TeamObserver(AlicaEngine* ae) : ae(ae), teamManager(ae->getTeamManager()) {
+TeamObserver::TeamObserver(AlicaEngine* ae)
+        : ae(ae)
+        , teamManager(ae->getTeamManager()) {
     this->simplePlanTrees = make_shared<
             map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>>(
             map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>());
@@ -42,9 +44,10 @@ TeamObserver::getTeamPlanTrees() {
             map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>>(
             new map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>);
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
-    auto tm = this->ae->getTeamManager();
-    auto tmp = tm->getActiveAgentIDs();
-    for (auto& agentId : *tmp) {
+
+    std::vector<const supplementary::AgentID*> tmp; //TODO get rid of this once teamManager gets a datastructure overhaul
+    teamManager->fillWithActiveAgentIDs(tmp);
+    for (const supplementary::AgentID* agentId : tmp) {
         auto iter = this->simplePlanTrees->find(agentId);
         if (iter != simplePlanTrees->end() && iter->second != nullptr) {
             ret->insert(pair<const supplementary::AgentID*, shared_ptr<SimplePlanTree>>(agentId, iter->second));
@@ -77,7 +80,9 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root) {
 
     cleanOwnSuccessMarks(root);
     if (root != nullptr) {
-        auto activeAgents = this->teamManager->getActiveAgentIDs();
+        std::vector<const supplementary::AgentID*> activeAgents; //TODO get rid of this once teamManager gets a datastructure overhaul
+        teamManager->fillWithActiveAgentIDs(activeAgents);
+
         list<shared_ptr<SimplePlanTree>> updatespts;
         list<const supplementary::AgentID*> noUpdates;
         lock_guard<mutex> lock(this->simplePlanTreeMutex);
@@ -103,8 +108,7 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root) {
         cout << "TO: spts size " << updatespts.size() << endl;
 #endif
 
-        list<const supplementary::AgentID*> listActiveAgents = list<const supplementary::AgentID*>(*activeAgents);
-        if (root->recursiveUpdateAssignment(updatespts, listActiveAgents, noUpdates, time)) {
+        if (root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time)) {
             this->ae->getLog()->eventOccured("MsgUpdate");
         }
     }

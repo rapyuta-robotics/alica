@@ -9,7 +9,11 @@ namespace alica {
 typedef std::tuple<const supplementary::AgentID*, long, bool, bool> stdSyncData;
 
 struct SyncData {
-    SyncData() : robotID(nullptr), ack(false), conditionHolds(false), transitionID(0) {}
+    SyncData()
+            : robotID(nullptr)
+            , ack(false)
+            , conditionHolds(false)
+            , transitionID(0) {}
 
     const supplementary::AgentID* robotID;
     long transitionID;

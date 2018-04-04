@@ -13,12 +13,6 @@ class Condition;
 class Query;
 class RunningPlan;
 
-using std::list;
-using std::map;
-using std::mutex;
-using std::shared_ptr;
-using std::vector;
-
 /**
  * Holds information about active constraints in the corresponding RunningPlan
  */
@@ -30,11 +24,11 @@ public:
     void addCondition(Condition* con);
     void removeCondition(Condition* con);
 
-    void acceptQuery(Query& query, shared_ptr<RunningPlan> rp);
-    list<Condition*> activeConditions;
-    map<Variable*, shared_ptr<vector<Condition*>>> activeVar2CondMap;
+    void acceptQuery(Query& query, std::shared_ptr<RunningPlan> rp) const;
+    std::list<Condition*> activeConditions;
+    std::map<Variable*, std::shared_ptr<std::vector<Condition*>>> activeVar2CondMap;
 
-    mutex mtx;
+    mutable std::mutex mtx;
 };
 
 }  // namespace alica

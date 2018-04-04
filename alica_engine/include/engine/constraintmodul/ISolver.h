@@ -27,7 +27,7 @@ public:
         return 0;
     }
 
-    AlicaEngine* getAlicaEngine() {
+    AlicaEngine* getAlicaEngine() const {
         return ae;
     }
 

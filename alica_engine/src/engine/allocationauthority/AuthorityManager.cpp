@@ -12,7 +12,9 @@ namespace alica {
 /**
  * Constructor
  */
-AuthorityManager::AuthorityManager(AlicaEngine* engine) : engine(engine), localAgentID(nullptr) {}
+AuthorityManager::AuthorityManager(AlicaEngine* engine)
+        : engine(engine)
+        , localAgentID(nullptr) {}
 
 AuthorityManager::~AuthorityManager() {}
 

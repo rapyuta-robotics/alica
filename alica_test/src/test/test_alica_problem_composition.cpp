@@ -85,12 +85,13 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition) {
         }
         ae->stepNotify();
     }
-    std::shared_ptr<RunningPlan> deep = ae->getPlanBase()->getDeepestNode();
-    ASSERT_FALSE(deep == nullptr);
-    ASSERT_EQ(deep->getChildren()->size(), 1);
-    ASSERT_TRUE((*deep->getChildren()->begin())->isBehaviour());
+    std::shared_ptr<const RunningPlan> deep = ae->getPlanBase()->getDeepestNode();
+    RunningPlan* dp = const_cast<RunningPlan*>(deep.get());
+    ASSERT_FALSE(dp == nullptr);
+    ASSERT_EQ(dp->getChildren()->size(), 1);
+    ASSERT_TRUE((*dp->getChildren()->begin())->isBehaviour());
 
-    auto queryBehaviour1 = dynamic_pointer_cast<QueryBehaviour1>((*deep->getChildren()->begin())->getBasicBehaviour());
+    auto queryBehaviour1 = dynamic_pointer_cast<QueryBehaviour1>((*dp->getChildren()->begin())->getBasicBehaviour());
     auto allReps = queryBehaviour1->query->getUniqueVariableStore()->getAllRep();
     for (auto& rep : allReps) {
         EXPECT_TRUE(rep->getName() == "PBMX" || rep->getName() == "PBMY");
