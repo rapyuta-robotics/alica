@@ -27,13 +27,14 @@
 class AlicaProblemCompositionTest : public ::testing::Test
 {
 protected:
-	supplementary::SystemConfig* sc;
-	alica::AlicaEngine* ae;
-	alica::BehaviourCreator* bc;
-	alica::ConditionCreator* cc;
-	alica::UtilityFunctionCreator* uc;
-	alica::ConstraintCreator* crc;
+    supplementary::SystemConfig* sc;
+    alica::AlicaEngine* ae;
+    alica::BehaviourCreator* bc;
+    alica::ConditionCreator* cc;
+    alica::UtilityFunctionCreator* uc;
+    alica::ConstraintCreator* crc;
 
+<<<<<<< HEAD:alica_tests/src/test/test_alica_problem_composition.cpp
 	virtual void SetUp()
 	{
 		// determine the path to the test config
@@ -41,38 +42,46 @@ protected:
 		int place = path.rfind("devel");
 		path = path.substr(0, place);
 		path = path + "src/alica/alica_tests/src/test";
+=======
+    virtual void SetUp()
+    {
+        // determine the path to the test config
+        ros::NodeHandle nh;
+        std::string path;
+        nh.param<std::string>("/rootPath",path,".");
+>>>>>>> 0f99712c0168624ff1a0fe24262cd3bf0db42a64:alica_test/src/test/test_alica_problem_composition.cpp
 
-		// bring up the SystemConfig with the corresponding path
-		sc = supplementary::SystemConfig::getInstance();
-		sc->setRootPath(path);
-		sc->setConfigPath(path + "/etc");
+        // bring up the SystemConfig with the corresponding path
+        sc = supplementary::SystemConfig::getInstance();
+        sc->setRootPath(path);
+        sc->setConfigPath(path + "/etc");
 
-		// setup the engine
-		bc = new alica::BehaviourCreator();
-		cc = new alica::ConditionCreator();
-		uc = new alica::UtilityFunctionCreator();
-		crc = new alica::ConstraintCreator();
+        // setup the engine
+        bc = new alica::BehaviourCreator();
+        cc = new alica::ConditionCreator();
+        uc = new alica::UtilityFunctionCreator();
+        crc = new alica::ConstraintCreator();
 
-		sc->setHostname("nase");
-		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ProblemBuildingMaster", ".", false);
-		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-		ae->addSolver(SolverType::DUMMYSOLVER, new alica::reasoner::ConstraintTestPlanDummySolver(ae));
-		ae->addSolver(SolverType::GRADIENTSOLVER, new alica::reasoner::CGSolver(ae));
-		ae->init(bc, cc, uc, crc);
-	}
+        sc->setHostname("nase");
+        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ProblemBuildingMaster", ".", true);
+        ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+        ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+        ae->addSolver(SolverType::DUMMYSOLVER, new alica::reasoner::ConstraintTestPlanDummySolver(ae));
+        ae->addSolver(SolverType::GRADIENTSOLVER, new alica::reasoner::CGSolver(ae));
+        ae->init(bc, cc, uc, crc);
+    }
 
-	virtual void TearDown()
-	{
-		ae->shutdown();
-		delete ae->getCommunicator();
-		delete ae->getIAlicaClock();
-		sc->shutdown();
-		delete cc;
-		delete bc;
-		delete uc;
-		delete crc;
-	}
+    virtual void TearDown()
+    {
+        ae->shutdown();
+        delete ae->getCommunicator();
+        delete ae->getIAlicaClock();
+        sc->shutdown();
+        delete cc;
+        delete bc;
+        delete uc;
+        delete crc;
+    }
 };
 
 /**
@@ -80,15 +89,28 @@ protected:
  */
 TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
 {
-	ae->start();
+    ae->start();
+    ae->stepNotify();
+    this_thread::sleep_for(chrono::milliseconds (33));
+    for(int i=0; i<5; ++i) {
+        while(!ae->getPlanBase()->isWaiting()) {
+            this_thread::sleep_for(chrono::milliseconds (33));
+        }
+        ae->stepNotify();
+    }
+    std::shared_ptr<RunningPlan> deep =  ae->getPlanBase()->getDeepestNode();
+    ASSERT_FALSE(deep == nullptr);
+    ASSERT_EQ(deep->getChildren()->size(),1);
+    ASSERT_TRUE((*deep->getChildren()->begin())->isBehaviour());
 
-	this_thread::sleep_for(chrono::milliseconds (100));
 
-	auto queryBehaviour1 = dynamic_pointer_cast<QueryBehaviour1>( ae->getPlanBase()->getDeepestNode()->getBasicBehaviour());
-	auto allReps = queryBehaviour1->query->getUniqueVariableStore()->getAllRep();
-	for (auto& rep : allReps)
-	{
-		cout << "Test: '" << rep->getName() << "'" << endl;
-	}
+
+    auto queryBehaviour1 = dynamic_pointer_cast<QueryBehaviour1>( (*deep->getChildren()->begin())->getBasicBehaviour());
+    auto allReps = queryBehaviour1->query->getUniqueVariableStore()->getAllRep();
+    for (auto& rep : allReps)
+    {
+        EXPECT_TRUE(rep->getName() == "PBMX" || rep->getName() == "PBMY");
+        //cout << "Test: '" << rep->getName() << "'" << endl;
+    }
 }
 

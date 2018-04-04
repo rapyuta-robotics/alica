@@ -6,8 +6,8 @@ namespace alica
 {
 IRoleAssignment::IRoleAssignment(const AlicaEngine *engine)
     : ownRole(nullptr)
-    , engine(engine)
-    , robotRoleMapping(map<const supplementary::AgentID *, Role *, supplementary::AgentIDComparator>())
+	, engine(engine)
+    , robotRoleMapping(map<const supplementary::AgentID*, Role *, supplementary::AgentIDComparator>())
     , communication(nullptr)
 {
 }
@@ -17,7 +17,7 @@ const Role *IRoleAssignment::getOwnRole()
     return ownRole;
 }
 
-const Role *IRoleAssignment::getRole(const supplementary::AgentID *robotId)
+const Role *IRoleAssignment::getRole(const supplementary::AgentID* robotId)
 {
     auto iter = this->robotRoleMapping.find(robotId);
     if (iter != this->robotRoleMapping.end())

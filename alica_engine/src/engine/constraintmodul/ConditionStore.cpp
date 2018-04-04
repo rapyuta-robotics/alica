@@ -114,7 +114,7 @@ void ConditionStore::removeCondition(Condition *con)
 /**
  * Writes static and domain variables, as well as, problem parts into the query.
  */
-void ConditionStore::acceptQuery(shared_ptr<Query> query, shared_ptr<RunningPlan> rp)
+void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp)
 {
 #ifdef CS_DEBUG
     std::cout << "ConditionStore: Accepting Query - Active conditions in store is " << activeConditions.size()
@@ -125,8 +125,8 @@ void ConditionStore::acceptQuery(shared_ptr<Query> query, shared_ptr<RunningPlan
         return;
     }
 
-    vector<Variable *> staticVarsToCheck = query->getRelevantStaticVariables();
-    vector<Variable *> domVarsToCheck = query->getRelevantDomainVariables();
+    vector<Variable *> staticVarsToCheck = query.getRelevantStaticVariables();
+    vector<Variable *> domVarsToCheck = query.getRelevantDomainVariables();
     if (staticVarsToCheck.size() == 0 && domVarsToCheck.size() == 0)
     {
         return; // nothing to do
@@ -286,11 +286,11 @@ void ConditionStore::acceptQuery(shared_ptr<Query> query, shared_ptr<RunningPlan
     }
 
     // write back relevant variables, this contains variables obtained earlier
-    query->setRelevantStaticVariables(staticVarsChecked);
-    query->setRelevantDomainVariables(domVarsChecked);
+    query.setRelevantStaticVariables(staticVarsChecked);
+    query.setRelevantDomainVariables(domVarsChecked);
 
     // write back problem parts
-    vector<shared_ptr<ProblemPart>> problemParts = vector<shared_ptr<ProblemPart>>();
+    vector<shared_ptr<ProblemPart>> problemParts;
     for (auto &pair : newCondProbPartMap)
     {
         auto problemPart = pair.second;
@@ -299,7 +299,7 @@ void ConditionStore::acceptQuery(shared_ptr<Query> query, shared_ptr<RunningPlan
             problemParts.push_back(problemPart);
         }
     }
-    query->addProblemParts(problemParts);
+    query.addProblemParts(problemParts);
 }
 
 } /* namespace supplementary */
