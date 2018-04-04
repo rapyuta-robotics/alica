@@ -4,6 +4,7 @@
 #include "engine/PlanChange.h"
 #include "engine/IAlicaClock.h"
 #include "engine/AlicaEngine.h"
+#include "engine/Types.h"
 #include "engine/teammanager/TeamManager.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "supplementary/AgentID.h"
@@ -43,9 +44,9 @@ class RunningPlan : public enable_shared_from_this<RunningPlan> {
 public:
     static void init();
     RunningPlan(AlicaEngine* ae);
-    RunningPlan(AlicaEngine* ae, Plan* plan);
-    RunningPlan(AlicaEngine* ae, PlanType* pt);
-    RunningPlan(AlicaEngine* ae, BehaviourConfiguration* bc);
+    RunningPlan(AlicaEngine* ae, const Plan* plan);
+    RunningPlan(AlicaEngine* ae, const PlanType* pt);
+    RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc);
     virtual ~RunningPlan();
     /**
     * Indicates whether this running plan represents a behaviour.
@@ -59,8 +60,8 @@ public:
     /**
     * The abstract plan associated with this running plan, a model element.
     */
-    AbstractPlan* getPlan() const {return _plan;}
-    void setPlan(AbstractPlan* plan);
+    const AbstractPlan* getPlan() const {return _plan;}
+    void setPlan(const AbstractPlan* plan);
     shared_ptr<BasicBehaviour> getBasicBehaviour();
     void setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour);
     shared_ptr<Assignment> getAssignment() const;
@@ -77,7 +78,7 @@ public:
 
     void setAllocationNeeded(bool allocationNeeded);
     void setFailHandlingNeeded(bool failHandlingNeeded);
-    void setOwnEntryPoint(EntryPoint* value);
+    void setOwnEntryPoint(const EntryPoint* value);
     PlanChange tick(RuleBook* rules);
     
     const ConditionStore& getConstraintStore() const {return _constraintStore;}
@@ -92,14 +93,14 @@ public:
     * Gets the PlanType of the currently executed plan. nullptr if the AbstractPlan associated does not belong to a
     * PlanType.
     */
-    PlanType* getPlanType() const {return _planType;}
+    const PlanType* getPlanType() const {return _planType;}
     bool evalPreCondition();
     bool evalRuntimeCondition();
-    State* getActiveState() const {return _activeState;}
-    void setActiveState(State* activeState);
+    const State* getActiveState() const {return _activeState;}
+    void setActiveState(const State* activeState);
     void addChildren(shared_ptr<list<shared_ptr<RunningPlan>>>& runningPlans);
     void addChildren(list<shared_ptr<RunningPlan>>& children);
-    void moveState(State* nextState);
+    void moveState(const State* nextState);
     void clearFailures();
     void clearFailedChildren();
     void addFailure();
@@ -107,7 +108,7 @@ public:
     void deactivateChildren();
     void clearChildren();
     void adaptAssignment(shared_ptr<RunningPlan> r);
-    void setFailedChild(AbstractPlan* child);
+    void setFailedChild(const AbstractPlan* child);
     void setRobotAvail(const supplementary::AgentID* robot);
     void setRobotUnAvail(const supplementary::AgentID* robot);
     void accept(IPlanTreeVisitor* vis);
@@ -116,11 +117,9 @@ public:
     bool allChildrenStatus(PlanStatus ps);
     bool anyChildrenTaskSuccess();
     void activate();
-    EntryPoint* getActiveEntryPoint() const {return _activeEntryPoint;}
+    const EntryPoint* getActiveEntryPoint() const {return _activeEntryPoint;}
     void setActiveEntryPoint(EntryPoint* activeEntryPoint);
-    void limitToRobots(std::unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash,
-            supplementary::AgentIDEqualsComparator>
-                    robots);
+    void limitToRobots(const AgentSet& robots);
     std::shared_ptr<CycleManager> getCycleManagement();
     void revokeAllConstraints();
     void attachPlanConstraints();
@@ -135,15 +134,15 @@ public:
     void sendLogMessage(int level, string& message);
 
 protected:
-    State* _activeState;
-    EntryPoint* _activeEntryPoint;
+    const State* _activeState;
+    const EntryPoint* _activeEntryPoint;
 
     AlicaEngine* _ae;
 
-    AbstractPlan* _plan;
-    PlanType* _planType;
+    const AbstractPlan* _plan;
+    const PlanType* _planType;
     std::vector<const supplementary::AgentID*> _robotsAvail;
-    std::map<AbstractPlan*, int> _failedSubPlans;
+    std::map<const AbstractPlan*, int> _failedSubPlans;
     weak_ptr<RunningPlan> _parent;
     list<shared_ptr<RunningPlan>> _children;
     std::shared_ptr<Assignment> _assignment;

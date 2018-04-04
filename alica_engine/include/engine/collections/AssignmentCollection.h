@@ -18,39 +18,45 @@ class EntryPoint;
 /**
  * Holds the mapping from EntryPoints to robots.
  */
-class AssignmentCollection {
+class AssignmentCollection final {
 public:
-    AssignmentCollection(short size);
-    virtual ~AssignmentCollection();
+    AssignmentCollection(int size);
+    ~AssignmentCollection();
+    AssignmentCollection(const AssignmentCollection& o);
+    AssignmentCollection& operator=(const AssignmentCollection& o);
     short getSize() const;
     void setSize(short size);
-    EntryPoint* getEp(short index);
-    bool setEp(short index, EntryPoint* ep);
-    shared_ptr<vector<const supplementary::AgentID*>> getRobots(short index);
-    shared_ptr<vector<const supplementary::AgentID*>> getRobotsByEp(EntryPoint* ep);
-    shared_ptr<vector<const supplementary::AgentID*>> getRobotsByEpId(long id);
-    bool setRobots(short index, shared_ptr<vector<const supplementary::AgentID*>> robotIds);
-    void clear();
-    string toString();
-    void sortEps();
+    const EntryPoint* getEp(short index) const;
+    void setEp(short index, const EntryPoint* ep);
+    const std::vector<const supplementary::AgentID*>* getRobots(short index) const;
+    const std::vector<const supplementary::AgentID*>* getRobotsByEp(const EntryPoint* ep) const;
+    const std::vector<const supplementary::AgentID*>* getRobotsByEpId(long id) const;
+    //bool setRobots(short index, shared_ptr<vector<const supplementary::AgentID*>> robotIds);
+    void assignRobot(short index, const supplementary::AgentID* agent);
 
+    void clear();
+    std::string toString() const;
+    void sortEps();
+    void sortRobots(const EntryPoint* ep);
     // initialized in alica engine init
     static short maxEpsCount;
     static bool allowIdling;
 
-protected:
+
+private:
     /**
      * The EntryPoints referred to
      */
-    EntryPoint** entryPoints;
-    /**
-     * The number of EntryPoints in this AssignmentCollection.
-     */
-    short numEps;
+    const EntryPoint** _entryPoints;
     /**
      * The robots mapped to EntryPoints in this AssignmentCollection.
      */
-    shared_ptr<vector<const supplementary::AgentID*>>* robotIds;
+    //TODO: clean this up
+    std::vector<const supplementary::AgentID*>* _robotIds;
+     /**
+     * The number of EntryPoints in this AssignmentCollection.
+     */
+    short _numEps;
 };
 
 } /* namespace alica */

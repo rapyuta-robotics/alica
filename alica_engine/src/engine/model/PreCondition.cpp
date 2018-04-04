@@ -9,27 +9,25 @@
 
 namespace alica {
 
-PreCondition::PreCondition(long id) {
-    this->id = id;
-    this->enabled = true;
-}
+PreCondition::PreCondition(int64_t id)
+    : Condition(id)
+    , _enabled(true)
+{}
 
 PreCondition::~PreCondition() {}
 
-string PreCondition::toString() {
+std::string PreCondition::toString() const {
     stringstream ss;
-    ss << "#PreCondition: " << this->name << " " << this->id << (this->enabled ? "enabled" : "disabled") << endl;
-    ss << "\t ConditionString: " << this->conditionString << endl;
+    ss << "#PreCondition: " << getName() << " " << getId() << (_enabled ? "enabled" : "disabled") << endl;
+    ss << "\t ConditionString: " << getConditionString() << endl;
     ss << "#EndPreCondition" << endl;
     return ss.str();
 }
 
-bool PreCondition::isEnabled() const {
-    return enabled;
-}
+
 
 void PreCondition::setEnabled(bool enabled) {
-    this->enabled = enabled;
+    _enabled = enabled;
 }
 
 }  // namespace alica

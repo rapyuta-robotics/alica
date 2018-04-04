@@ -25,7 +25,7 @@ public:
     void startBehaviour(std::shared_ptr<RunningPlan> rp);
     void stopBehaviour(std::shared_ptr<RunningPlan> rp);
     void stopAll();
-    std::map<BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>* getAvailableBehaviours();
+    std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>* getAvailableBehaviours();
 
 private:
     /**
@@ -33,7 +33,7 @@ private:
      * The key of the map is the behaviour configuration, which is created through the plan designer.
      * The value is the basic behaviour, which is the implementation of that behaviour.
      */
-    std::map<BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>* availableBehaviours;
+    std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>* availableBehaviours;
     AlicaEngine* ae;
     IBehaviourCreator* behaviourCreator;
 };

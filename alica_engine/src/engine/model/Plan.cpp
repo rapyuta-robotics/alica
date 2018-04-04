@@ -10,128 +10,92 @@
 #include "engine/model/EntryPoint.h"
 
 namespace alica {
-Plan::Plan(long id)
-        : AbstractPlan() {
-    this->postCondition = nullptr;
-    this->id = id;
-    this->minCardinality = 0;
-    this->maxCardinality = 0;
-}
+Plan::Plan(int64_t id)
+        : AbstractPlan(id) 
+        , _postCondition = nullptr;
+        , _minCardinality(0);
+        , _maxCardinality(0);
+
+{}
 
 Plan::~Plan() {}
 
-string Plan::toString() const {
-    stringstream ss;
+std::string Plan::toString() const {
+    std::stringstream ss;
     ss << AbstractPlan::toString();
-    ss << "Filename: " << this->fileName << endl;
+    ss << "Filename: " << _fileName << std::endl;
     return ss.str();
 }
 
-EntryPoint* Plan::getEntryPointTaskID(long taskID) {
-    for (map<long, alica::EntryPoint*>::const_iterator iter = entryPoints.begin(); iter != entryPoints.end(); iter++) {
-        const Task* task = iter->second->getTask();
-        if (task != nullptr) {
-            if (task->getId() == taskID) {
-                return iter->second;
-            }
-        } else {
-            cout << "Model: Class Plan: Entrypoint with ID " << iter->second->getId() << " does not have a Task"
-                 << endl;
-            throw new exception();
+const EntryPoint* Plan::getEntryPointTaskID(int64_t taskID) const {
+    for (const EntryPoint* ep : _entryPoints) {
+        const Task* task = ep->getTask();
+        assert(task != nullptr);
+        if (task->getId() == taskID) {
+            return ep;
         }
     }
     return nullptr;
 }
 
+const EntryPoint* Plan::getEntryPointByID(int64_t epID) const {
+    for (const EntryPoint* ep : _entryPoints) {
+        if (ep->getId() == epID) {
+            return ep;
+        }
+    }
+    return nullptr;
+}
+
+
 //===================== Getter and Setter ==================
 
-const string& Plan::getFileName() const {
-    if (this->fileName.empty()) {
-        static string result = this->name + ".pml";
-        return result;
+const std::string& Plan::getFileName() const {
+    if (_fileName.empty()) {
+        return result = getName() + ".pml";
     } else {
-        return this->fileName;
+        return _fileName;
     }
 }
 
-map<long, EntryPoint*>& Plan::getEntryPoints() {
-    return entryPoints;
+void Plan::setEntryPoints(const EntryPointSet& entryPoints) {
+    _entryPoints = entryPoints;
 }
 
-void Plan::setEntryPoints(const map<long, EntryPoint*>& entryPoints) {
-    this->entryPoints = entryPoints;
-}
-
-list<FailureState*>& Plan::getFailureStates() {
-    return failureStates;
-}
-
-void Plan::setFailureStates(const list<FailureState*>& failureStates) {
-    this->failureStates = failureStates;
-}
-
-int Plan::getMaxCardinality() {
-    return this->maxCardinality;
+void Plan::setFailureStates(const FailureStateSet& failureStates) {
+    _failureStates = failureStates;
 }
 
 void Plan::setMaxCardinality(int maxCardinality) {
-    this->maxCardinality = maxCardinality;
-}
-
-int Plan::getMinCardinality() {
-    return this->minCardinality;
+    _maxCardinality = maxCardinality;
 }
 
 void Plan::setMinCardinality(int minCardinality) {
-    this->minCardinality = minCardinality;
+    _minCardinality = minCardinality;
 }
 
-PostCondition* Plan::getPostCondition() {
-    return postCondition;
+void Plan::setPostCondition(const PostCondition* postCondition) {
+    _postCondition = postCondition;
 }
 
-void Plan::setPostCondition(PostCondition* postCondition) {
-    this->postCondition = postCondition;
+void Plan::setStates(const StateSet& states) {
+    _states = states;
 }
 
-list<State*>& Plan::getStates() {
-    return states;
+void Plan::setSuccessStates(const SuccessStateSet& successStates) {
+    _successStates = successStates;
 }
 
-void Plan::setStates(const list<State*>& states) {
-    this->states = states;
+void Plan::setSyncTransitions(const SyncTransitionSet& syncTransitions) {
+    _syncTransitions = syncTransitions;
 }
 
-list<SuccessState*>& Plan::getSuccessStates() {
-    return successStates;
+lvoid Plan::setTransitions(const TransitionSet& transitions) {
+    _transitions = transitions;
 }
 
-void Plan::setSuccessStates(const list<SuccessState*>& successStates) {
-    this->successStates = successStates;
-}
-
-list<SyncTransition*>& Plan::getSyncTransitions() {
-    return syncTransitions;
-}
-
-void Plan::setSyncTransitions(const list<SyncTransition*>& syncTransitions) {
-    this->syncTransitions = syncTransitions;
-}
-
-list<Transition*>& Plan::getTransitions() {
-    return transitions;
-}
-
-void Plan::setTransitions(const list<Transition*>& transitions) {
-    this->transitions = transitions;
-}
-
-string alica::Plan::getDestinationPath() {
-    return destinationPath;
-}
-
-void alica::Plan::setDestinationPath(string destinationPath) {
-    this->destinationPath = destinationPath;
+void alica::Plan::setDestinationPath(const std::string& destinationPath) {
+    _destinationPath = destinationPath;
 }
 
 }  // namespace alica

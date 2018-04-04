@@ -63,7 +63,7 @@ void Agent::setTimeLastMsgReceived(AlicaTime timeLastMsgReceived) {
     this->timeLastMsgReceived = timeLastMsgReceived;
 }
 
-void Agent::setSuccess(AbstractPlan* plan, EntryPoint* entryPoint) {
+void Agent::setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint) {
     this->engineData->getSuccessMarks()->markSuccessfull(plan, entryPoint);
 }
 
@@ -71,11 +71,11 @@ void Agent::setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks) {
     this->engineData->setSuccessMarks(successMarks);
 }
 
-Variable* Agent::getDomainVariable(std::string sort) {
+const Variable* Agent::getDomainVariable(const std::string& sort) const {
     return this->engineData->getDomainVariable(sort);
 }
 
-std::shared_ptr<std::list<EntryPoint*>> Agent::getSucceededEntryPoints(AbstractPlan* plan) const {
+std::shared_ptr<std::list<const EntryPoint*>> Agent::getSucceededEntryPoints(const AbstractPlan* plan) const {
     return this->engineData->getSuccessMarks()->succeededEntryPoints(plan);
 }
 

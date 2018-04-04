@@ -12,14 +12,15 @@
 #include <list>
 
 #include "AlicaElement.h"
+#include "engine/Types.h"
 
-using namespace std;
 namespace alica {
 class Plan;
 class Transition;
 class AbstractPlan;
 class Parametrisation;
 class EntryPoint;
+class ModelFactory;
 
 /**
  * A State is a plan element inhabitable by agents, which contains sub-plans, sub-plantypes, and behaviours.
@@ -27,65 +28,77 @@ class EntryPoint;
 class State : public AlicaElement {
 public:
     State();
-    State(long id);
+    State(int64_t id);
     virtual ~State();
-    virtual string toString() const;
-    bool isFailureState() const;
-    void setFailureState(bool failureState);
-    Plan* getInPlan() const;
+    virtual std::string toString() const;
+
+    const Plan* getInPlan() const {return _inPlan;}
+    const EntryPoint* getEntryPoint() const {return _entryPoint;}
+    const AbstractPlanSet& getPlans() const {return _plans;}
+    const TransitionSet& getInTransitions() const {return _inTransitions;}
+    const TransitionSet& getOutTransitions() const {return _outTransitions;}
+    const std::vector<const Parametrisation*>& getParametrisation() {return _parametrisation;}
+
+    bool isTerminal() const {return _terminal;}
+    bool isSuccessState() const {return _successState;}
+    bool isFailureState() const {return _failureState;}
+
+private:
+    friend ModelFactory;
     void setInPlan(Plan* inPlan);
-    list<Transition*>& getInTransitions();
+    
     void setInTransitions(const list<Transition*>& inTransitions);
-    list<Transition*>& getOutTransitions();
+    
     void setOutTransitions(list<Transition*> outTransition);
-    list<Parametrisation*>& getParametrisation();
+    
     void setParametrisation(const list<Parametrisation*>& parametrisation);
-    list<AbstractPlan*>& getPlans();
-    void setPlans(const list<AbstractPlan*>& plans);
-    bool isSuccessState() const;
+    
+    void setPlans(const AbstractPlanSet& plans);
+    
     void setSuccessState(bool successState);
-    bool isTerminal() const;
+    void setFailureState(bool failureState);
+
     void setTerminal(bool terminal);
-    EntryPoint* getEntryPoint();
+    
     void setEntryPoint(EntryPoint* entryPoint);
 
-protected:
+
     /**
      * The list of AbstractPlans meant to be executed in the context of this state.
      */
-    list<AbstractPlan*> plans;
+    AbstractPlanSet _plans;
     /**
      * The list of Transitions leading to this state.
      */
-    list<Transition*> inTransitions;
+    TransitionSet _inTransitions;
     /**
      * The list ofTransitions going from this state to another one.
      */
-    list<Transition*> outTransitions;
+    TransitionSet _outTransitions;
     /**
      * The list of Parametrisations, which bind variables of sub-plans to variables in this state's plan.
      */
-    list<Parametrisation*> parametrisation;
+    std::vector<const Parametrisation*> _parametrisation;
     /**
      * The plan containing this state.
      */
-    Plan* inPlan;
-    /**
-     * whether or not this is a terminal state.
-     */
-    bool terminal;
-    /**
-     * whether or not this is a FailureState, used to avoid casting and type checking during runtime.
-     */
-    bool failureState;
-    /**
-     * whether or not this is a SuccessState, used to avoid casting and type checking during runtime.
-     */
-    bool successState;
+    const Plan* _inPlan;
     /**
      * EntryPoint of the State
      */
-    EntryPoint* entryPoint;
+    const EntryPoint* _entryPoint;
+    /**
+     * whether or not this is a terminal state.
+     */
+    bool _terminal;
+    /**
+     * whether or not this is a FailureState, used to avoid casting and type checking during runtime.
+     */
+    bool _failureState;
+    /**
+     * whether or not this is a SuccessState, used to avoid casting and type checking during runtime.
+     */
+    bool _successState;
 };
 
 }  // namespace alica

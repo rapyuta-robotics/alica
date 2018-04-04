@@ -13,38 +13,30 @@
 
 namespace alica {
 
-Condition::Condition() {
-    this->abstractPlan = nullptr;
-    this->basicCondition = nullptr;
-    this->variables = vector<Variable*>();
-    this->quantifiers = list<Quantifier*>();
-}
+Condition::Condition()
+    : _abstractPlan(nullptr)
+    , _basicCondition(nullptr) {}
 
-Condition::Condition(long id) {
-    this->id = id;
-    this->abstractPlan = nullptr;
-    this->basicCondition = nullptr;
-    this->variables = vector<Variable*>();
-    this->quantifiers = list<Quantifier*>();
-}
+Condition::Condition(int64_t id)
+    : AlicaElement(id)
+    , _abstractPlan(nullptr)
+    , _basicCondition(nullptr) {}
 
 Condition::~Condition() {}
 
-const string& Condition::getConditionString() const {
-    return conditionString;
+
+void Condition::getConstraint(shared_ptr<ProblemDescriptor> pd, shared_ptr<RunningPlan> rp) const {
+    _basicConstraint->getConstraint(pd, rp);
 }
 
-void Condition::setConditionString(const string& conditionString) {
-    this->conditionString = conditionString;
+
+void Condition::setConditionString(const std::string& conditionString) {
+    _conditionString = conditionString;
 }
 
-list<Quantifier*>& Condition::getQuantifiers() {
-    return quantifiers;
-}
-
-bool Condition::evaluate(shared_ptr<RunningPlan> rp) {
+bool Condition::evaluate(shared_ptr<RunningPlan> rp) const {
     if (basicCondition == nullptr) {
-        std::cerr << "Condition: Missing implementation of condition: ID " << this->getId() << std::endl;
+        std::cerr << "Condition: Missing implementation of condition: ID " << getId() << std::endl;
         return false;
     } else {
         bool ret = false;
@@ -57,56 +49,32 @@ bool Condition::evaluate(shared_ptr<RunningPlan> rp) {
     }
 }
 
-void Condition::setQuantifiers(const list<Quantifier*>& quantifiers) {
-    this->quantifiers = quantifiers;
+void Condition::setQuantifiers(const QuantifierSet& quantifiers) {
+    _quantifiers = quantifiers;
 }
 
-vector<Variable*>& Condition::getVariables() {
-    return variables;
-}
-
-void Condition::setVariables(const vector<Variable*>& variables) {
-    this->variables = variables;
-}
-
-AbstractPlan* Condition::getAbstractPlan() const {
-    return abstractPlan;
+void Condition::setVariables(const VariableSet& variables) {
+    _variables = variables;
 }
 
 void Condition::setAbstractPlan(AbstractPlan* abstractPlan) {
-    this->abstractPlan = abstractPlan;
+    _abstractPlan = abstractPlan;
 }
 
-const string& Condition::getPlugInName() const {
-    return plugInName;
+void Condition::setPlugInName(const std::string& plugInName) {
+    _plugInName = plugInName;
 }
 
-void Condition::setPlugInName(const string& plugInName) {
-    this->plugInName = plugInName;
-}
-
-shared_ptr<BasicCondition> Condition::getBasicCondition() {
-    return basicCondition;
-}
-
-void Condition::setBasicCondition(shared_ptr<BasicCondition> basicCondition) {
-    this->basicCondition = basicCondition;
-}
-
-list<Parameter*>& Condition::getParameters() {
-    return parameters;
+void Condition::setBasicCondition(const shared_ptr<BasicCondition>& basicCondition) {
+    _basicCondition = basicCondition;
 }
 
 void Condition::setParameters(list<Parameter*> parameters) {
-    this->parameters = parameters;
+    _parameters = parameters;
 }
 
-void Condition::getConstraint(shared_ptr<ProblemDescriptor> pd, shared_ptr<RunningPlan> rp) {
-    this->basicConstraint->getConstraint(pd, rp);
-}
-
-void Condition::setBasicConstraint(shared_ptr<BasicConstraint> basicConstraint) {
-    this->basicConstraint = basicConstraint;
+void Condition::setBasicConstraint(const shared_ptr<BasicConstraint>& basicConstraint) {
+    _basicConstraint = basicConstraint;
 }
 
 }  // namespace alica

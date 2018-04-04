@@ -11,11 +11,10 @@
 #include <stddef.h>
 #include <string>
 #include <list>
-#include <map>
 
 #include "AbstractPlan.h"
+#include "engine/Types.h"
 
-using namespace std;
 namespace alica {
 
 class EntryPoint;
@@ -25,51 +24,62 @@ class PostCondition;
 class State;
 class SyncTransition;
 class Transition;
-
+class ModelFactory;
+class ExpressionHandler;
 /**
  * An ALICA plan
  */
 class Plan : public AbstractPlan {
 public:
-    Plan(long id = 0);
+    Plan(int64_t id = 0);
     virtual ~Plan();
 
-    virtual string toString() const;
-    EntryPoint* getEntryPointTaskID(long taskID);
+    virtual std::string toString() const override;
+    const EntryPoint* getEntryPointTaskID(int64_t taskID) const;
+    const EntryPoint* getEntryPointByID(int64_t epID) const;
 
-    const virtual string& getFileName() const;
-    map<long, EntryPoint*>& getEntryPoints();
-    void setEntryPoints(const map<long, EntryPoint*>& entryPoints);
-    list<FailureState*>& getFailureStates();
-    void setFailureStates(const list<FailureState*>& failurePoints);
-    int getMaxCardinality();
-    void setMaxCardinality(int maxCardinality = 0);
-    int getMinCardinality();
-    void setMinCardinality(int minCardinality = 0);
-    PostCondition* getPostCondition();
-    void setPostCondition(PostCondition* postCondition);
-    list<State*>& getStates();
-    void setStates(const list<State*>& states);
-    list<SuccessState*>& getSuccessStates();
-    void setSuccessStates(const list<SuccessState*>& succesPoints);
-    list<SyncTransition*>& getSyncTransitions();
-    void setSyncTransitions(const list<SyncTransition*>& syncTransitions);
-    list<Transition*>& getTransitions();
-    void setTransitions(const list<Transition*>& transitions);
-    string getDestinationPath();
-    void setDestinationPath(string destinationPath);
+    const EntryPointSet& getEntryPoints() const {return _entryPoints;}
 
-protected:
-    int minCardinality;
-    int maxCardinality;
-    map<long, EntryPoint*> entryPoints;
-    list<State*> states;
-    list<FailureState*> failureStates;
-    list<SuccessState*> successStates;
-    list<SyncTransition*> syncTransitions;
-    list<Transition*> transitions;
-    PostCondition* postCondition;
-    string destinationPath;
+    const StateSet& getStates() const {return _states;}
+    const FailureStateSet& getFailureStates() const {return _failureStates;}
+    const SuccessStateSet& getSuccessStates() const {return _successStates;}
+
+    int getMaxCardinality() const {return _maxCardinality;}
+    int getMinCardinality() const {return _minCardinality;}
+    
+    const PostCondition* getPostCondition() const {return _postCondition;}
+
+    const TransitionSet& getTransitions() const {return _transitions;}
+    const SyncTransitionSet& getSyncTransitions() const {return _syncTransitions;}
+
+    const std::string& getDestinationPath() const {return _destinationPath;}
+    const std::string& getFileName() const;
+
+private:
+    friend ModelFactory;
+    friend ExpressionHandler; //TODO: get rid of this
+    void setEntryPoints(const EntryPointSet& entryPoints);
+    void setFailureStates(const FailureStateSet& failurePoints);
+    void setSuccessStates(const SuccessStateSet& succesPoints);
+    void setMaxCardinality(int maxCardinality);
+    void setMinCardinality(int minCardinality);
+    void setPostCondition(const PostCondition* postCondition);
+    void setStates(const StateSet& states);
+    void setSyncTransitions(const SyncTransitionSet& syncTransitions);
+    void setTransitions(const TransitionSet& transitions);
+    void setDestinationPath(const std::string& destinationPath);
+
+    int _minCardinality;
+    int _maxCardinality;
+    EntryPointSet _entryPoints;
+    StateSet _states;
+    SuccessStateSet _successStates;
+    FailureStateSet _failureStates;
+    SyncTransitionSet _syncTransitions;
+    TransitionSet _transitions;
+    const PostCondition* _postCondition;
+    
+    std::string _destinationPath;
 };
 
 }  // namespace alica

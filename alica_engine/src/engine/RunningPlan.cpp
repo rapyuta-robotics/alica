@@ -66,7 +66,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae)
 
 RunningPlan::~RunningPlan() {}
 
-RunningPlan::RunningPlan(AlicaEngine* ae, Plan* plan)
+RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
         : RunningPlan(ae) {
     _plan = plan;
     /*
@@ -79,12 +79,12 @@ RunningPlan::RunningPlan(AlicaEngine* ae, Plan* plan)
     */
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, PlanType* pt)
+RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
         : RunningPlan(ae) {
     _planType = pt;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, BehaviourConfiguration* bc)
+RunningPlan::RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc)
     : _ae(ae)
     , _planType(nullptr)
     , _plan(bc)
@@ -201,7 +201,7 @@ bool RunningPlan::evalRuntimeCondition() {
     }
 }
 
-void RunningPlan::setActiveState(State* s) {
+void RunningPlan::setActiveState(const State* s) {
     if (_activeState != s) {
         _activeState = s;
         _stateStartTime = _ae->getIAlicaClock()->now();
@@ -250,7 +250,7 @@ void RunningPlan::addChildren(list<shared_ptr<RunningPlan>>& children) {
  * Move this very robot to another state. Performs all neccessary operations, such as updating the assignment.
  * @param nextState A State
  */
-void RunningPlan::moveState(State* nextState) {
+void RunningPlan::moveState(const State* nextState) {
     deactivateChildren();
     clearChildren();
     _assignment->moveRobots(_activeState, nextState);
@@ -272,7 +272,7 @@ void RunningPlan::setChildren(list<shared_ptr<RunningPlan>> children) {
 }
 
 
-void RunningPlan::setPlan(AbstractPlan* plan) {
+void RunningPlan::setPlan(const AbstractPlan* plan) {
     if (_plan != plan) {
         _planStartTime = _ae->getIAlicaClock()->now();
         revokeAllConstraints();
@@ -294,7 +294,7 @@ void RunningPlan::setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour) {
  * Simple method to recursively print the plan-tree.
  */
 void RunningPlan::printRecursive() {
-    for (shared_ptr<RunningPlan> c : _children) {
+    for (shared_ptr<RunningPlan>& c : _children) {
         c->printRecursive();
     }
     if (_children.size() > 0) {
@@ -328,7 +328,7 @@ EntryPoint* RunningPlan::getOwnEntryPoint() const {
 /**
  * The robot's current EntryPoint. Null if it is idling
  */
-void RunningPlan::setOwnEntryPoint(EntryPoint* value) {
+void RunningPlan::setOwnEntryPoint(const EntryPoint* value) {
     if (_activeEntryPoint != value) {
         const supplementary::AgentID* mid = getOwnID();
         _assignment->removeRobot(mid);
@@ -406,7 +406,7 @@ void RunningPlan::clearChildren() {
  * @param r A RunningPlan
  */
 void RunningPlan::adaptAssignment(shared_ptr<RunningPlan> r) {
-    State* newState = r->getAssignment()->getRobotStateMapping()->getState(getOwnID());
+    const State* newState = r->getAssignment()->getRobotStateMapping()->getState(getOwnID());
     r->getAssignment()->getRobotStateMapping()->reconsiderOldAssignment(_assignment, r->getAssignment());
     bool reactivate = false;
 
@@ -457,11 +457,11 @@ std::shared_ptr<CycleManager> RunningPlan::getCycleManagement() {
  * Indicate that an AbstractPlan has failed while being a child of this plan.
  * @param child a AbstractPlan
  */
-void RunningPlan::setFailedChild(AbstractPlan* child) {
+void RunningPlan::setFailedChild(const AbstractPlan* child) {
     if (_failedSubPlans.find(child) != _failedSubPlans.end()) {
         _failedSubPlans.at(child)++;
     } else {
-        _failedSubPlans.insert(pair<AbstractPlan*, int>(child, 1));
+        _failedSubPlans.insert(pair<const AbstractPlan*, int>(child, 1));
     }
 }
 
@@ -574,9 +574,7 @@ void RunningPlan::activate() {
  * Removes any robot not in robots
  * @param robots The set of robots that can participate in this running plan.
  */
-void RunningPlan::limitToRobots(
-        unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>
-                robots) {
+void RunningPlan::limitToRobots(const AgentSet& robots) {
     if (isBehaviour()) {
         return;
     }
@@ -584,9 +582,12 @@ void RunningPlan::limitToRobots(
         return;
     }
     bool recurse = false;
-    auto curRobots = _assignment->getAllRobots();
+    
+    //TODO: move this code into assignment to avoid the call to getAllRobots.
+    AgentSet curRobots;
+    _assignment->getAllRobots(curRobots);
     for (auto& r : (*curRobots)) {
-        if (find_if(curRobots->begin(), curRobots->end(),
+        if (find_if(robots->begin(), robots->end(),
                     [&r](const supplementary::AgentID* id) { return *r == *id; }) == curRobots->end()) {
             if (_activeState != nullptr &&
                     _assignment->getRobotStateMapping()->stateOfRobot(r) == _activeState) {
@@ -596,7 +597,7 @@ void RunningPlan::limitToRobots(
         }
     }
     if (recurse) {
-        for (shared_ptr<RunningPlan> c : _children) {
+        for (shared_ptr<RunningPlan>& c : _children) {
             c->limitToRobots(robots);
         }
     }

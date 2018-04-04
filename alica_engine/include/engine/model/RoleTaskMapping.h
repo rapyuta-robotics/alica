@@ -8,32 +8,31 @@
 #ifndef ROLETASKMAPPING_H_
 #define ROLETASKMAPPING_H_
 
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <sstream>
 
 #include "AlicaElement.h"
 
-using namespace std;
 namespace alica {
 
 class Role;
+class ModelFactory;
 
 class RoleTaskMapping : public AlicaElement {
 public:
     RoleTaskMapping();
     virtual ~RoleTaskMapping();
+    std::string toString() const;
+    const Role* getRole() const {return _role;}    
+    const unordered_map<long, double>& getTaskPriorities() const {return _taskPriorities;}
 
-    string toString();
-
-    const Role* getRole() const;
+private:
+    friend ModelFactory;
     void setRole(const Role* role);
-    map<long, double>& getTaskPriorities();
     void setTaskPriorities(const map<long, double>& taskPriorities);
-
-protected:
-    const Role* role;
-    map<long, double> taskPriorities;
+    const Role* _role;
+    std::unordered_map<int64_t, double> _taskPriorities;
 };
 
 }  // namespace alica

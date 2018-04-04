@@ -13,7 +13,6 @@
 
 #include "TerminalState.h"
 
-using namespace std;
 namespace alica {
 
 /**
@@ -23,7 +22,7 @@ class FailureState : public TerminalState {
 public:
     FailureState();
     virtual ~FailureState();
-    string toString();
+    std::string toString();
 };
 
 }  // namespace alica

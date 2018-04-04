@@ -4,8 +4,6 @@
 #include <list>
 #include <vector>
 #include <mutex>
-#include <memory>
-#include <algorithm>
 
 namespace alica {
 class Variable;
@@ -21,12 +19,12 @@ public:
     ConditionStore();
     virtual ~ConditionStore();
     void clear();
-    void addCondition(Condition* con);
-    void removeCondition(Condition* con);
+    void addCondition(const Condition* con);
+    void removeCondition(const Condition* con);
 
     void acceptQuery(Query& query, std::shared_ptr<RunningPlan> rp) const;
-    std::list<Condition*> activeConditions;
-    std::map<Variable*, std::shared_ptr<std::vector<Condition*>>> activeVar2CondMap;
+    std::list<const Condition*> activeConditions;
+    std::map<const Variable*, std::shared_ptr<std::vector<const Condition*>>> activeVar2CondMap;
 
     mutable std::mutex mtx;
 };

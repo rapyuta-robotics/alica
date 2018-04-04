@@ -28,7 +28,7 @@ bool SimplePlanTree::containsPlan(AbstractPlan* plan) {
     if (this->getEntryPoint()->getPlan() == plan) {
         return true;
     }
-    for (shared_ptr<SimplePlanTree> spt : this->getChildren()) {
+    for (shared_ptr<SimplePlanTree>& spt : this->getChildren()) {
         if (spt->containsPlan(plan)) {
             return true;
         }
@@ -36,19 +36,12 @@ bool SimplePlanTree::containsPlan(AbstractPlan* plan) {
     return false;
 }
 
-EntryPoint* SimplePlanTree::getEntryPoint() {
-    return this->entryPoint;
-}
 
-void SimplePlanTree::setEntryPoint(EntryPoint* entryPoint) {
+void SimplePlanTree::setEntryPoint(const EntryPoint* entryPoint) {
     this->entryPoint = entryPoint;
 }
 
-State* SimplePlanTree::getState() {
-    return state;
-}
-
-void SimplePlanTree::setState(State* state) {
+void SimplePlanTree::setState(const State* state) {
     this->state = state;
 }
 
@@ -83,16 +76,16 @@ void SimplePlanTree::setReceiveTime(long receiveTime) {
     this->receiveTime = receiveTime;
 }
 
-list<long>& SimplePlanTree::getStateIds() {
+const std::list<int64_t>& SimplePlanTree::getStateIds() const {
     return stateIds;
 }
 
-void SimplePlanTree::setStateIds(list<long>& stateIds) {
+void SimplePlanTree::setStateIds(const std::list<int64_t>& stateIds) {
     this->stateIds = stateIds;
 }
 
-string SimplePlanTree::toString() {
-    stringstream result;
+std::string SimplePlanTree::toString() const {
+    std::stringstream result;
 
     result << "RobotID: " << this->robotId << "\n";
     result << "Parent: ";

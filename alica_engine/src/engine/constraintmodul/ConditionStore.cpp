@@ -33,7 +33,7 @@ void ConditionStore::clear() {
  * Add a condition to the store
  * @param con A Condition
  */
-void ConditionStore::addCondition(Condition* con) {
+void ConditionStore::addCondition(const Condition* con) {
     if (con == nullptr || (con->getVariables().size() == 0 && con->getQuantifiers().size() == 0)) {
         return;
     }
@@ -46,7 +46,7 @@ void ConditionStore::addCondition(Condition* con) {
     }
     mtx.unlock();
     if (modified) {
-        for (Variable* variable : con->getVariables()) {
+        for (const Variable* variable : con->getVariables()) {
             auto it = activeVar2CondMap.find(variable);
             if (it != activeVar2CondMap.end()) {
                 it->second->push_back(con);
@@ -68,7 +68,7 @@ void ConditionStore::addCondition(Condition* con) {
  *
  * @param con The condition to be removed
  */
-void ConditionStore::removeCondition(Condition* con) {
+void ConditionStore::removeCondition(const Condition* con) {
     if (con == nullptr) {
         return;
     }
@@ -150,7 +150,7 @@ void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const
             std::cout << "ConditionStore: Conditions active under variable " << (*activeVar2CondMapEntry->first) << ": "
                       << activeVar2CondMapEntry->second->size() << std::endl;
 #endif
-            for (Condition* c : *(activeVar2CondMapEntry->second)) {
+            for (const Condition* c : *(activeVar2CondMapEntry->second)) {
                 if (newCondProbPartMap.find(c) != newCondProbPartMap.end()) {
                     // condition was already inserted into the newCondProbPartMap
                     continue;
