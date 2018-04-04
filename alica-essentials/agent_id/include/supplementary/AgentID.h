@@ -71,6 +71,7 @@ struct AgentIDComparator
 
 struct AgentIDEqualsComparator
 {
+    AgentID *test;
     bool operator()(const AgentID *const &a, const AgentID *&b) const
     {
         return *a == *b;
