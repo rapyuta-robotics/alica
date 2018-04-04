@@ -109,14 +109,14 @@ void Logger::iterationEnds(shared_ptr<RunningPlan> rp) {
         (*this->sBuild) << reason;
     }
     (*this->sBuild) << endl;
-
-    auto robots = this->tm->getActiveAgentIDs();
+    std::vector<const supplementary::AgentID*> robots;
+    this->tm->fillWithActiveAgentIDs(robots);
 
     (*this->sBuild) << "TeamSize:\t";
-    (*this->sBuild) << to_string(robots->size());
+    (*this->sBuild) << to_string(robots.size());
 
     (*this->sBuild) << " TeamMember:";
-    for (const supplementary::AgentID* id : (*robots)) {
+    for (const supplementary::AgentID* id : robots) {
         (*this->sBuild) << "\t";
         (*this->sBuild) << *id;
     }

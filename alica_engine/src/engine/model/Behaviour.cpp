@@ -16,7 +16,8 @@ Behaviour::Behaviour() {
     this->implementation = nullptr;
 }
 
-Behaviour::Behaviour(string name) : Behaviour() {
+Behaviour::Behaviour(string name)
+        : Behaviour() {
     this->name = name;
 }
 

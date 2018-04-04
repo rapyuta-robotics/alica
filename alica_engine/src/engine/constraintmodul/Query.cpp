@@ -22,7 +22,8 @@
 //#define Q_DEBUG
 
 namespace alica {
-Query::Query() : uniqueVarStore(make_shared<UniqueVarStore>()) {}
+Query::Query()
+        : uniqueVarStore(make_shared<UniqueVarStore>()) {}
 
 void Query::addStaticVariable(Variable* v) {
     queriedStaticVariables.push_back(v);
@@ -93,7 +94,7 @@ bool Query::collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
 #endif
 
         // 1. fill the query's static and domain variables, as well as its problem parts
-        rp->getConstraintStore()->acceptQuery(*this, rp);
+        rp->getConstraintStore().acceptQuery(*this, rp);
 
 #ifdef Q_DEBUG
         std::cout << "Query: Size of problemParts is " << this->problemParts.size() << std::endl;

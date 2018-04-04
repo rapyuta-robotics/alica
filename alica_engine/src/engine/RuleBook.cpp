@@ -53,12 +53,10 @@ std::shared_ptr<RunningPlan> RuleBook::initialisationRule(Plan* masterPlan) {
     main->setAssignment(make_shared<Assignment>(masterPlan));
 
     main->setAllocationNeeded(true);
-    main->setRobotsAvail(move(this->tm->getActiveAgentIDs()));
+    tm->fillWithActiveAgentIDs(main->editRobotsAvail());
 
-    EntryPoint* defep = nullptr;
-    list<EntryPoint*> l;
-    defep = masterPlan->getEntryPoints().begin()->second;
-    main->getAssignment()->setAllToInitialState(move(this->tm->getActiveAgentIDs()), defep);
+    EntryPoint* defep = masterPlan->getEntryPoints().begin()->second;
+    main->getAssignment()->setAllToInitialState(main->getRobotsAvail(), defep);
     main->activate();
     main->setOwnEntryPoint(defep);
     this->log->eventOccured("Init");
@@ -399,9 +397,9 @@ PlanChange RuleBook::topFailRule(std::shared_ptr<RunningPlan> r) {
         r->setOwnEntryPoint(((Plan*) r->getPlan())->getEntryPoints().begin()->second);
 
         r->setAllocationNeeded(true);
-        r->setRobotsAvail(move(this->tm->getActiveAgentIDs()));
+        tm->fillWithActiveAgentIDs(r->editRobotsAvail());
         r->getAssignment()->clear();
-        r->getAssignment()->setAllToInitialState(move(this->tm->getActiveAgentIDs()), r->getOwnEntryPoint());
+        r->getAssignment()->setAllToInitialState(r->getRobotsAvail(), r->getOwnEntryPoint());
         r->setActiveState(r->getOwnEntryPoint()->getState());
         r->clearFailedChildren();
 #ifdef RULE_debug
@@ -434,7 +432,7 @@ PlanChange RuleBook::transitionRule(shared_ptr<RunningPlan> r) {
             continue;
         if (t->evalCondition(r)) {
             nextState = t->getOutState();
-            r->getConstraintStore()->addCondition(((Condition*) t->getPreCondition()));
+            r->editConstraintStore().addCondition(((Condition*) t->getPreCondition()));
             break;
         }
     }
@@ -479,7 +477,7 @@ PlanChange RuleBook::synchTransitionRule(std::shared_ptr<RunningPlan> r) {
         if (this->sm->followSyncTransition(t)) {
             if (t->evalCondition(r)) {
                 nextState = t->getOutState();
-                r->getConstraintStore()->addCondition(((Condition*) t->getPreCondition()));
+                r->editConstraintStore().addCondition(((Condition*) t->getPreCondition()));
                 break;
             } else {
                 this->sm->setSynchronisation(t, false);

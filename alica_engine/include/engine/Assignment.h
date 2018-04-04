@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <sstream>
 
-using namespace std;
 namespace alica {
 
 class Plan;
@@ -32,19 +31,19 @@ public:
     Plan* getPlan();
     void setPlan(Plan* plan);
     StateCollection* getRobotStateMapping();
-    shared_ptr<vector<const supplementary::AgentID*>> getAllRobotsSorted();
+    std::shared_ptr<std::vector<const supplementary::AgentID*>> getAllRobotsSorted();
     AssignmentCollection* getEpRobotsMapping();
-    shared_ptr<vector<const supplementary::AgentID*>> getRobotsWorking(long epid);
-    shared_ptr<vector<const supplementary::AgentID*>> getRobotsWorkingSorted(EntryPoint* ep);
-    shared_ptr<vector<const supplementary::AgentID*>> getRobotsWorking(EntryPoint* ep);
+    std::shared_ptr<std::vector<const supplementary::AgentID*>> getRobotsWorking(long epid);
+    std::shared_ptr<std::vector<const supplementary::AgentID*>> getRobotsWorkingSorted(EntryPoint* ep);
+    std::shared_ptr<std::vector<const supplementary::AgentID*>> getRobotsWorking(EntryPoint* ep);
     int totalRobotCount();
     // shared_ptr<vector<EntryPoint*> > getEntryPoints();
     short getEntryPointCount();
-    shared_ptr<list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(EntryPoint* ep);
-    shared_ptr<list<const supplementary::AgentID*>> getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
-    shared_ptr<list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(long epid);
-    shared_ptr<SuccessCollection> getEpSuccessMapping();
-    void setAllToInitialState(unique_ptr<list<const supplementary::AgentID*>> robotIds, EntryPoint* defep);
+    std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(EntryPoint* ep);
+    std::shared_ptr<std::list<const supplementary::AgentID*>> getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
+    std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(long epid);
+    std::shared_ptr<SuccessCollection> getEpSuccessMapping();
+    void setAllToInitialState(const std::vector<const supplementary::AgentID*>& robotIds, EntryPoint* defep);
     bool removeRobot(const supplementary::AgentID* robotId);
     void addRobot(const supplementary::AgentID* robotId, EntryPoint* e, State* s);
     bool isValid();
@@ -60,8 +59,8 @@ public:
     EntryPoint* getEntryPointOfRobot(const supplementary::AgentID* robotId);
     shared_ptr<vector<const supplementary::AgentID*>> getAllRobots();
     void clear();
-    string toString();
-    string toHackString();
+    std::string toString();
+    std::string toHackString();
 
 protected:
     /**

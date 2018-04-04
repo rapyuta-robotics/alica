@@ -95,7 +95,7 @@ void ConditionStore::removeCondition(Condition* con) {
 /**
  * Writes static and domain variables, as well as, problem parts into the query.
  */
-void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) {
+void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const {
 #ifdef CS_DEBUG
     std::cout << "ConditionStore: Accepting Query - Active conditions in store is " << activeConditions.size()
               << std::endl;

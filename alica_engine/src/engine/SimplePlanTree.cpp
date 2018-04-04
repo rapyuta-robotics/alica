@@ -13,7 +13,8 @@
 
 namespace alica {
 
-SimplePlanTree::SimplePlanTree() : robotId(nullptr) {
+SimplePlanTree::SimplePlanTree()
+        : robotId(nullptr) {
     this->state = nullptr;
     this->newSimplePlanTree = true;
     this->receiveTime = 0;

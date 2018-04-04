@@ -12,7 +12,8 @@ using std::vector;
 
 typedef tuple<long, vector<const supplementary::AgentID*>> stdEntryPointRobot;
 struct EntryPointRobots {
-    EntryPointRobots() : entrypoint(0) {}
+    EntryPointRobots()
+            : entrypoint(0) {}
 
     long entrypoint;
     vector<const supplementary::AgentID*> robots;

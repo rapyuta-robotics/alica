@@ -13,7 +13,8 @@
 
 namespace alica {
 
-SyncModule::SyncModule(AlicaEngine* ae) : myId(nullptr) {
+SyncModule::SyncModule(AlicaEngine* ae)
+        : myId(nullptr) {
     this->ae = ae;
     this->pr = nullptr;
     this->running = false;

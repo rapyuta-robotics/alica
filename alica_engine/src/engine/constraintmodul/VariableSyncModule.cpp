@@ -183,7 +183,7 @@ shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>> VariableSync
         iter++;
     }
     //		cout << "VSM: Number of present seeds: " << ret->size() << " dim: "<< dim << " seedcount: "<<
-    //seeds.size()
+    // seeds.size()
     //<<  endl;
 
     return ret;

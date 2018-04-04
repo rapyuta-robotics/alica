@@ -48,7 +48,7 @@ public:
     void stop();
     void start();
     void addFastPathEvent(shared_ptr<RunningPlan> p);
-    std::shared_ptr<RunningPlan> getDeepestNode();
+    std::shared_ptr<const RunningPlan> getDeepestNode() const;
     std::shared_ptr<RunningPlan> getRootNode();
 
     /*const*/ Plan* getMasterPlan() const {
@@ -76,7 +76,7 @@ private:
     IAlicaClock* _alicaClock;
 
     shared_ptr<RunningPlan> _rootNode;
-    shared_ptr<RunningPlan> _deepestNode;
+    shared_ptr<const RunningPlan> _deepestNode;
 
     thread* _mainThread;
     Logger* _log;

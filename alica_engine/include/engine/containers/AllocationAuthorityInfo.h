@@ -14,7 +14,12 @@ typedef tuple<const supplementary::AgentID*, long, long, long, const supplementa
         vector<stdEntryPointRobot>>
         stdAllocationAuthorityInfo;
 struct AllocationAuthorityInfo {
-    AllocationAuthorityInfo() : senderID(nullptr), planId(0), parentState(0), planType(0), authority(nullptr) {}
+    AllocationAuthorityInfo()
+            : senderID(nullptr)
+            , planId(0)
+            , parentState(0)
+            , planType(0)
+            , authority(nullptr) {}
 
     const supplementary::AgentID* senderID;
     long planId;

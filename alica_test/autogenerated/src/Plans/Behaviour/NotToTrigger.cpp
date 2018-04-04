@@ -6,7 +6,8 @@ using namespace std;
 namespace alica {
 /*PROTECTED REGION ID(staticVars1429017274116) ENABLED START*/  // initialise static variables here
 /*PROTECTED REGION END*/
-NotToTrigger::NotToTrigger() : DomainBehaviour("NotToTrigger") {
+NotToTrigger::NotToTrigger()
+        : DomainBehaviour("NotToTrigger") {
     /*PROTECTED REGION ID(con1429017274116) ENABLED START*/  // Add additional options here
     this->callCounter = 0;
     this->initCounter = 0;

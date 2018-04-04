@@ -24,7 +24,8 @@ using namespace alica;
 
 namespace alicaRosProxy {
 
-AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae) : IAlicaCommunication(ae) {
+AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae)
+        : IAlicaCommunication(ae) {
     this->isRunning = false;
     rosNode = new ros::NodeHandle();
     spinner = new ros::AsyncSpinner(4);
