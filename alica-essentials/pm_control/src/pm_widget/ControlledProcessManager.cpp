@@ -29,7 +29,7 @@ ControlledProcessManager::~ControlledProcessManager() {
 }
 
 void ControlledProcessManager::handleProcessStats(
-        pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair) {
+        std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair) {
     this->timeLastMsgReceived = timePstsPair.first;
     for (auto& processStat : timePstsPair.second->processStats) {
         // get the corresponding controlled robot
