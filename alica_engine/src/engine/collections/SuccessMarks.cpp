@@ -82,11 +82,6 @@ const map<AbstractPlan *, shared_ptr<list<EntryPoint *>>> &SuccessMarks::getSucc
     return successMarks;
 }
 
-void SuccessMarks::setSuccessMarks(map<AbstractPlan *, shared_ptr<list<EntryPoint *>>> successMarks)
-{
-    this->successMarks = successMarks;
-}
-
 /**
  * Clear all marks
  */
