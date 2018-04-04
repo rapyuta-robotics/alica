@@ -1,16 +1,16 @@
-using namespace std;
-
 #include "SystemConfig.h"
+
+#include "Configuration.h"
 
 namespace supplementary
 {
 // Initialize static variables
-string SystemConfig::rootPath;
-string SystemConfig::logPath;
-string SystemConfig::configPath;
-string SystemConfig::hostname;
-mutex SystemConfig::configsMapMutex;
-map<string, shared_ptr<Configuration>> SystemConfig::configs;
+std::string SystemConfig::rootPath;
+std::string SystemConfig::logPath;
+std::string SystemConfig::configPath;
+std::string SystemConfig::hostname;
+std::mutex SystemConfig::configsMapMutex;
+std::map<std::string, std::shared_ptr<Configuration>> SystemConfig::configs;
 
 /**
  * The method for getting the singleton instance.
