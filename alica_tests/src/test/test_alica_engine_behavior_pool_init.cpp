@@ -26,16 +26,10 @@ protected:
 	virtual void SetUp()
 	{
 		// determine the path to the test config
-<<<<<<< HEAD:alica_tests/src/test/test_alica_engine_behavior_pool_init.cpp
 		string path = supplementary::FileSystem::getSelfPath();
 		int place = path.rfind("devel");
 		path = path.substr(0, place);
 		path = path + "src/alica/alica_tests/src/test";
-=======
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath",path,".");
->>>>>>> 0f99712c0168624ff1a0fe24262cd3bf0db42a64:alica_test/src/test/test_alica_engine_behavior_pool_init.cpp
 
 		// bring up the SystemConfig with the corresponding path
 		sc = supplementary::SystemConfig::getInstance();

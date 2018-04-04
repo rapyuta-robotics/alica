@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(alica_test)
+project(alica_tests)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -33,7 +33,7 @@ if (CATKIN_ENABLE_TESTING)
 
     find_package(rostest REQUIRED)
     file(GLOB_RECURSE test_alica_SOURCES "src/test/*.cpp")
-    add_rostest_gtest(${PROJECT_NAME}-test test/alica_test.test ${test_alica_SOURCES})
+    add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})
 
 
     if(TARGET ${PROJECT_NAME}-test)
