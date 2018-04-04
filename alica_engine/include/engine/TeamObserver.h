@@ -44,16 +44,16 @@ public:
             std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>>
     getTeamPlanTrees();
 
-    int successesInPlan(Plan* plan);
-    std::shared_ptr<SuccessCollection> getSuccessCollection(Plan* plan);
-    void updateSuccessCollection(Plan* p, std::shared_ptr<SuccessCollection> sc);
+    int successesInPlan(const Plan* plan);
+    std::shared_ptr<SuccessCollection> getSuccessCollection(const Plan* plan);
+    void updateSuccessCollection(const Plan* p, std::shared_ptr<SuccessCollection> sc);
 
-    void notifyRobotLeftPlan(AbstractPlan* plan);
+    void notifyRobotLeftPlan(const AbstractPlan* plan);
     virtual void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
     void close();
     
 private:
-    EntryPoint* entryPointOfState(State* state);
+    const EntryPoint* entryPointOfState(const State* state) const;
 
     AlicaEngine* ae;
     const supplementary::AgentID* myId;
@@ -68,7 +68,7 @@ private:
             simplePlanTrees;
 
     void cleanOwnSuccessMarks(std::shared_ptr<RunningPlan> root);
-    std::shared_ptr<SimplePlanTree> sptFromMessage(const supplementary::AgentID* robotId, std::list<long> ids);
+    std::shared_ptr<SimplePlanTree> sptFromMessage(const supplementary::AgentID* robotId, const std::list<int64_t>& ids);
 };
 
 } /* namespace alica */

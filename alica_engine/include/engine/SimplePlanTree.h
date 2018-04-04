@@ -3,9 +3,7 @@
 #include <unordered_set>
 #include <list>
 #include <memory>
-#include <sstream>
 
-using namespace std;
 namespace alica {
 
 class State;
@@ -20,10 +18,10 @@ class SimplePlanTree {
 public:
     SimplePlanTree();
     virtual ~SimplePlanTree();
-    EntryPoint* getEntryPoint();
-    void setEntryPoint(EntryPoint* entryPoint);
-    State* getState();
-    void setState(State* state);
+    const EntryPoint* getEntryPoint() const {return entryPoint;}
+    void setEntryPoint(const EntryPoint* entryPoint);
+    const State* getState() const {return state;}
+    void setState(const State* state);
     unordered_set<shared_ptr<SimplePlanTree>>& getChildren();
     void setChildren(unordered_set<shared_ptr<SimplePlanTree>> children);
     const supplementary::AgentID* getRobotId();
@@ -32,10 +30,10 @@ public:
     void setNewSimplePlanTree(bool newSimplePlanTree);
     long getReceiveTime() const;
     void setReceiveTime(long receiveTime);
-    list<long>& getStateIds();
-    void setStateIds(list<long>& stateIds);
-    bool containsPlan(AbstractPlan* plan);
-    string toString();
+    const std::list<int64_t>& getStateIds() const;
+    void setStateIds(const std::list<int64_t>& stateIds);
+    bool containsPlan(const AbstractPlan* plan) const;
+    std::string toString() const;
 
 protected:
     /**
@@ -46,8 +44,8 @@ protected:
     /**
      * The state occupied by the respective robot.
      */
-    State* state;
-    EntryPoint* entryPoint;
+    const State* state;
+    const EntryPoint* entryPoint;
     /**
      * The id of the robot to which this tree refers to
      */

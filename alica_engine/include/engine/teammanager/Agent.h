@@ -51,10 +51,10 @@ protected:
 
     void setLocal(bool local);
     void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived);
-    void setSuccess(AbstractPlan* plan, EntryPoint* entryPoint);
+    void setSuccess(const AbstractPlan* plan,const EntryPoint* entryPoint);
     void setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks);
-    Variable* getDomainVariable(std::string sort);
-    std::shared_ptr<std::list<EntryPoint*>> getSucceededEntryPoints(AbstractPlan* plan) const;
+    const Variable* getDomainVariable(const std::string& sort) const;
+    std::shared_ptr<std::list<const EntryPoint*>> getSucceededEntryPoints(const AbstractPlan* plan) const;
     bool update();
 
     const AlicaEngine* engine;

@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <map>
+#include <unordered_map>
 
 using namespace std;
 namespace alica {
@@ -31,7 +31,7 @@ class Task;
 class Transition;
 class Variable;
 class PlanningProblem;
-
+class ModelFactory;
 /**
  * The PlanRepository holds the ALICA program, neatly separated into different Dictionaries.
  * It is especially useful to map element Ids back to their object, e.g., when receiving messages referring to plan
@@ -42,59 +42,93 @@ public:
     PlanRepository();
     virtual ~PlanRepository();
 
-    map<long, BehaviourConfiguration*>& getBehaviourConfigurations();
-    map<long, Behaviour*>& getBehaviours();
-    map<long, Capability*>& getCapabilities();
-    map<long, Characteristic*>& getCharacteristics();
-    map<long, EntryPoint*>& getEntryPoints();
-    map<long, Plan*>& getPlans();
-    map<long, PlanType*>& getPlanTypes();
-    map<long, Quantifier*>& getQuantifiers();
-    map<long, RoleDefinitionSet*>& getRoleDefinitionSets();
-    map<long, Role*>& getRoles();
-    map<long, State*>& getStates();
-    map<long, SyncTransition*>& getSyncTransitions();
-    map<long, TaskRepository*>& getTaskRepositorys();
-    map<long, Task*>& getTasks();
-    map<long, Transition*>& getTransitions();
-    map<long, Variable*>& getVariables();
-    map<long, PlanningProblem*>& getPlanningProblems();
+    template<typename T>
+    using MapType=std::unordered_map<int64_t, T*>;
+
+    template<typename T>
+    class Accessor {
+        class iterator {
+        public:
+            iterator(typename MapType<T>::const_iterator inner) : _innerIter(inner) {}
+            bool operator!=(const iterator& o) const {return _innerIter!=o._innerIter;}
+            bool operator==(const iterator& o) const {return _innerIter==o._innerIter;}
+            const T* operator*() const {return _innerIter->second;}
+            
+            iterator& operator++() {++_innerIter; return *this;}
+
+        private:
+            typename MapType<T>::const_iterator _innerIter;
+        };
+    public:
+        Accessor(const MapType<T>& map) : _ref(map) {}
+
+        const T* operator[](int64_t id) const {return find(id);}
+        const T* find(int64_t id) const {
+            typename MapType<T>::const_iterator it = _ref.find(id);
+            return (it==_ref.end()?nullptr:it->second);
+        }
+        Accessor(const Accessor&) = delete;
+        Accessor(Accessor&&) = default;
+
+        Accessor& operator=(const Accessor&) = delete;
+        Accessor& operator=(Accessor&&) = delete;
+
+        iterator begin() const {
+            return iterator(_ref.begin());
+        }
+        iterator end() const {
+            return iterator(_ref.end());
+        }
+    private:
+        const MapType<T>& _ref;
+    };
+
+    const Accessor<BehaviourConfiguration> getBehaviourConfigurations() const {return Accessor<BehaviourConfiguration>(_behaviourConfigurations);}
+    const Accessor<Behaviour> getBehaviours() const {return Accessor<Behaviour>(_behaviours);}
+    const Accessor<Capability> getCapabilities() const {return Accessor<Capability>(_capabilities);}
+    const Accessor<Characteristic> getCharacteristics() const {return Accessor<Characteristic>(_characteristics);}
+    const Accessor<EntryPoint> getEntryPoints() const {return Accessor<EntryPoint>(_entryPoints);}
+    const Accessor<Plan> getPlans() const {return Accessor<Plan>(_plans);}
+    const Accessor<PlanType> getPlanTypes() const {return Accessor<PlanType>(_planTypes);}
+    const Accessor<Quantifier> getQuantifiers() const {return Accessor<Quantifier>(_quantifiers);}
+    const Accessor<RoleDefinitionSet> getRoleDefinitionSets() const {return Accessor<RoleDefinitionSet>(_roleDefinitionSets);}
+    const Accessor<Role> getRoles() const {return Accessor<Role>(_roles);}
+    const Accessor<State> getStates() const {return Accessor<State>(_states);}
+    const Accessor<SyncTransition> getSyncTransitions() const {return Accessor<SyncTransition>(_syncTransitions);}
+    const Accessor<TaskRepository> getTaskRepositorys() const {return Accessor<TaskRepository>(_taskRepositories);}
+    const Accessor<Task> getTasks() const {return Accessor<Task>(_tasks);}
+    const Accessor<Transition> getTransitions() const {return Accessor<Transition>(_transitions);}
+    const Accessor<Variable> getVariables() const {return Accessor<Variable>(_variables);}
+    const Accessor<PlanningProblem> getPlanningProblems() const {return Accessor<PlanningProblem>(_planningProblems);}
+
+    PlanRepository(const PlanRepository&) = delete;
+    PlanRepository(PlanRepository&&) = delete;
+
+    PlanRepository& operator=(const PlanRepository&) = delete;
+    PlanRepository& operator=(PlanRepository&&) = delete;
+
+    bool verifyPlanBase() const;
 
 private:
-    map<long, Plan*> plans;
-    map<long, Task*> tasks;
-    map<long, Behaviour*> behaviours;
-    map<long, BehaviourConfiguration*> behaviourConfigurations;
-    map<long, PlanType*> planTypes;
-    map<long, Role*> roles;
-    map<long, Characteristic*> characteristics;
-    map<long, Capability*> capabilities;
-    map<long, State*> states;
-    map<long, EntryPoint*> entryPoints;
-    map<long, Transition*> transitions;
-    map<long, SyncTransition*> syncTransitions;
-    map<long, Quantifier*> quantifiers;
-    map<long, Variable*> variables;
-    map<long, RoleDefinitionSet*> roleDefinitionSets;
-    map<long, TaskRepository*> taskRepositorys;
-    map<long, PlanningProblem*> planningProblems;
-
-    void setBehaviourConfigurations(const map<long, BehaviourConfiguration*>& behaviourConfigurations);
-    void setBehaviours(const map<long, Behaviour*>& behaviours);
-    void setCapabilities(const map<long, Capability*>& capabilities);
-    void setCharacteristics(const map<long, Characteristic*>& characteristics);
-    void setEntryPoints(const map<long, EntryPoint*>& entryPoints);
-    void setPlans(const map<long, Plan*>& plans);
-    void setPlanTypes(const map<long, PlanType*>& planTypes);
-    void setQuantifiers(const map<long, Quantifier*>& quantifiers);
-    void setRoleDefinitionSets(const map<long, RoleDefinitionSet*>& roleDefinitionSets);
-    void setRoles(const map<long, Role*>& roles);
-    void setStates(const map<long, State*>& states);
-    void setSyncTransitions(const map<long, SyncTransition*>& syncTransitions);
-    void setTaskRepositorys(const map<long, TaskRepository*>& taskRepositorys);
-    void setTasks(const map<long, Task*>& tasks);
-    void setTransitions(const map<long, Transition*>& transitions);
-    void setVariables(const map<long, Variable*>& variables);
+    friend ModelFactory;
+    friend ExpressionHandler;
+    MapType<Plan> _plans;
+    MapType<Task> _tasks;
+    MapType<Behaviour> _behaviours;
+    MapType<BehaviourConfiguration> _behaviourConfigurations;
+    MapType<PlanType> _planTypes;
+    MapType<Role> _roles;
+    MapType<Characteristic> _characteristics;
+    MapType<Capability> _capabilities;
+    MapType<State> _states;
+    MapType<EntryPoint> _entryPoints;
+    MapType<Transition> _transitions;
+    MapType<SyncTransition> _syncTransitions;
+    MapType<Quantifier> _quantifiers;
+    MapType<Variable> _variables;
+    MapType<RoleDefinitionSet> _roleDefinitionSets;
+    MapType<TaskRepository> _taskRepositories;
+    MapType<PlanningProblem> _planningProblems;
 };
 }  // namespace alica
 #endif /* PLANREPOSITORY_H_ */

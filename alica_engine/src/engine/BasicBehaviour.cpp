@@ -53,7 +53,7 @@ BasicBehaviour::~BasicBehaviour() {
     }
 }
 
-const string BasicBehaviour::getName() const {
+const std::string& BasicBehaviour::getName() const {
     return this->name;
 }
 
@@ -172,14 +172,14 @@ void BasicBehaviour::setTrigger(supplementary::ITrigger* trigger) {
     this->behaviourTrigger->registerCV(&this->runCV);
 }
 
-shared_ptr<vector<const supplementary::AgentID*>> BasicBehaviour::robotsInEntryPointOfHigherPlan(EntryPoint* ep) {
+const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryPointOfHigherPlan(const EntryPoint* ep) {
     if (ep == nullptr) {
         return nullptr;
     }
     shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
-        if (((Plan*) cur->getPlan())->getEntryPoints().find(ep->getId()) !=
-                ((Plan*) cur->getPlan())->getEntryPoints().end()) {
+        const EntryPointSet& eps = static_cast<const Plan*>(cur->getPlan())->getEntryPoints();
+        if(std::find(eps.begin(), eps.end(), ep)!=eps.end()) {
             return cur->getAssignment()->getRobotsWorking(ep);
         }
         cur = cur->getParent().lock();
@@ -187,7 +187,7 @@ shared_ptr<vector<const supplementary::AgentID*>> BasicBehaviour::robotsInEntryP
     return nullptr;
 }
 
-shared_ptr<vector<const supplementary::AgentID*>> BasicBehaviour::robotsInEntryPoint(EntryPoint* ep) {
+const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryPoint(const EntryPoint* ep) {
     if (ep == nullptr) {
         return nullptr;
     }
@@ -251,7 +251,7 @@ void BasicBehaviour::runInternal() {
             sendLogMessage(4, err);
         }
 #ifdef BEH_DEBUG
-        BehaviourConfiguration* conf = dynamic_cast<BehaviourConfiguration*>(this->runningPlan->getPlan());
+        const BehaviourConfiguration* conf = dynamic_cast<const BehaviourConfiguration*>(this->runningPlan->getPlan());
         if (conf->isEventDriven()) {
             double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 -
                           1.0 / conf->getFrequency() * 1000.0;
@@ -272,26 +272,26 @@ void BasicBehaviour::runInternal() {
     }
 }
 
-EntryPoint* BasicBehaviour::getParentEntryPoint(string taskName) {
+const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskName) {
     shared_ptr<RunningPlan> parent = this->runningPlan->getParent().lock();
     if (parent == nullptr) {
         return nullptr;
     }
-    for (pair<long, EntryPoint*> e : ((Plan*) parent->getPlan())->getEntryPoints()) {
-        if (e.second->getTask()->getName() == taskName) {
-            return e.second;
+    for (const EntryPoint* e : static_cast<const Plan*>(parent->getPlan())->getEntryPoints()) {
+        if (e->getTask()->getName() == taskName) {
+            return e;
         }
     }
     return nullptr;
 }
 
-EntryPoint* BasicBehaviour::getHigherEntryPoint(string planName, string taskName) {
+const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planName, const std::string& taskName) {
     shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
         if (cur->getPlan()->getName() == planName) {
-            for (pair<long, EntryPoint*> e : ((Plan*) cur->getPlan())->getEntryPoints()) {
-                if (e.second->getTask()->getName() == taskName) {
-                    return e.second;
+            for (const EntryPoint* e : ((Plan*) cur->getPlan())->getEntryPoints()) {
+                if (e->getTask()->getName() == taskName) {
+                    return e;
                 }
             }
             return nullptr;

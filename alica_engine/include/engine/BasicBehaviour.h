@@ -1,7 +1,7 @@
 #pragma once
 
 #include "supplementary/AgentID.h"
-
+#include "engine/Types.h"
 #include <string>
 #include <iostream>
 #include <map>
@@ -32,7 +32,7 @@ public:
     BasicBehaviour(std::string name);
     virtual ~BasicBehaviour();
     virtual void run(void* msg) = 0;
-    const std::string getName() const;
+    const std::string& getName() const;
     void setName(std::string name);
     std::shared_ptr<std::map<std::string, std::string>> getParameters();
     void setParameters(std::shared_ptr<std::map<std::string, std::string>> parameters);
@@ -106,13 +106,14 @@ protected:
      */
     virtual void initialiseParameters(){};
 
-    EntryPoint* getParentEntryPoint(std::string taskName);
+    const EntryPoint* getParentEntryPoint(const std::string& taskName);
 
-    EntryPoint* getHigherEntryPoint(std::string planName, std::string taskName);
+    const EntryPoint* getHigherEntryPoint(const std::string& planName, const std::string& taskName);
 
-    std::shared_ptr<std::vector<const supplementary::AgentID*>> robotsInEntryPointOfHigherPlan(EntryPoint* ep);
+    //TODO: these methods may have race conditions, check and refactor
+    const AgentSet* robotsInEntryPointOfHigherPlan(const EntryPoint* ep);
 
-    std::shared_ptr<std::vector<const supplementary::AgentID*>> robotsInEntryPoint(EntryPoint* ep);
+    const AgentSet* robotsInEntryPoint(const EntryPoint* ep);
 
 private:
     void runInternal();

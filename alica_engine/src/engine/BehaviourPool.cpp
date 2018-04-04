@@ -40,19 +40,19 @@ bool BehaviourPool::init(IBehaviourCreator* bc) {
 
     this->behaviourCreator = bc;
 
-    auto behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
-    for (auto iter : behaviourConfs) {
-        auto basicBeh = this->behaviourCreator->createBehaviour(iter.first);
+    const PlanRepository::Accessor<BehaviourConfiguration> behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
+    for (const BehaviourConfiguration* beh : behaviourConfs) {
+        auto basicBeh = this->behaviourCreator->createBehaviour(beh->getId());
         if (basicBeh != nullptr) {
             // set stuff from behaviour configuration in basic behaviour object
-            basicBeh->setParameters(iter.second->getParameters());
-            basicBeh->setVariables(iter.second->getVariables());
-            basicBeh->setDelayedStart(iter.second->getDeferring());
-            basicBeh->setInterval(1000 / iter.second->getFrequency());
+            basicBeh->setParameters(beh->getParameters());
+            basicBeh->setVariables(beh->getVariables());
+            basicBeh->setDelayedStart(beh->getDeferring());
+            basicBeh->setInterval(1000 / beh->getFrequency());
             basicBeh->setEngine(this->ae);
             basicBeh->init();
 
-            this->availableBehaviours->insert(make_pair(iter.second, basicBeh));
+            this->availableBehaviours->insert(make_pair(beh, basicBeh));
         } else {
             return false;
         }
@@ -64,9 +64,9 @@ bool BehaviourPool::init(IBehaviourCreator* bc) {
  * Calls stop on all BasicBehaviours.
  */
 void BehaviourPool::stopAll() {
-    auto behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
-    for (auto iter : behaviourConfs) {
-        auto bbPtr = this->availableBehaviours->at(iter.second);
+    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
+    for (const BehaviourConfiguration* beh : behaviourConfs) {
+        auto bbPtr = this->availableBehaviours->at(beh);
         if (bbPtr == nullptr) {
             cerr << "BP::stop(): Found Behaviour without an BasicBehaviour attached!" << endl;
             continue;
@@ -81,7 +81,7 @@ void BehaviourPool::stopAll() {
  * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
  */
 void BehaviourPool::startBehaviour(std::shared_ptr<RunningPlan> rp) {
-    if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp->getPlan())) {
+    if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp->getPlan())) {
         auto bb = this->availableBehaviours->at(bc);
         if (bb != nullptr) {
             // set both directions rp <-> bb
@@ -101,7 +101,7 @@ void BehaviourPool::startBehaviour(std::shared_ptr<RunningPlan> rp) {
  * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
  */
 void BehaviourPool::stopBehaviour(std::shared_ptr<RunningPlan> rp) {
-    if (BehaviourConfiguration* bc = dynamic_cast<BehaviourConfiguration*>(rp->getPlan())) {
+    if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp->getPlan())) {
         auto bb = this->availableBehaviours->at(bc);
         if (bb != nullptr) {
             bb->stop();
@@ -112,7 +112,7 @@ void BehaviourPool::stopBehaviour(std::shared_ptr<RunningPlan> rp) {
     }
 }
 
-std::map<BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>* BehaviourPool::getAvailableBehaviours() {
+std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>* BehaviourPool::getAvailableBehaviours() {
     return availableBehaviours;
 }
 

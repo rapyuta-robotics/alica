@@ -13,37 +13,43 @@
 #include <sstream>
 
 #include "AlicaElement.h"
+#include "engine/Types.h"
 
-using namespace std;
 namespace alica {
 
 class Plan;
 class Transition;
+class ModelFactory;
 
 class SyncTransition : public AlicaElement {
 public:
     SyncTransition();
     virtual ~SyncTransition();
 
-    string toString();
+    bool isFailOnSyncTimeOut() const {return _failOnSyncTimeOut;}
+    
+    unsigned long getSyncTimeOut() const {return _syncTimeOut;}
+    unsigned long getTalkTimeOut() const {return _talkTimeOut;}
 
-    bool isFailOnSyncTimeOut() const;
-    void setFailOnSyncTimeOut(bool failOnSyncTimeOut);
-    unsigned long getSyncTimeOut() const;
-    void setSyncTimeOut(unsigned long syncTimeOut);
-    unsigned long getTalkTimeOut() const;
-    void setTalkTimeOut(unsigned long talkTimeOut);
-    const Plan* getPlan() const;
-    void setPlan(Plan* plan);
-    list<Transition*>& getInSync();
-    void setInSync(const list<Transition*>& inSync);
+    const Plan* getPlan() const {return _plan;}
 
+    const TransitionSet& getInSync() const {return _inSync;}
+
+    std::string toString() const;
 private:
-    unsigned long talkTimeOut;
-    unsigned long syncTimeOut;
-    bool failOnSyncTimeOut;
-    Plan* plan;
-    list<Transition*> inSync;
+    friend ModelFactory;
+    void setFailOnSyncTimeOut(bool failOnSyncTimeOut);
+    void setSyncTimeOut(unsigned long syncTimeOut);
+    void setInSync(const list<Transition*>& inSync);
+    void setTalkTimeOut(unsigned long talkTimeOut);
+    void setPlan(const Plan* plan);
+
+    TransitionSet _inSync;
+    const Plan* _plan;
+
+    unsigned long _talkTimeOut;
+    unsigned long _syncTimeOut;
+    bool _failOnSyncTimeOut;
 };
 
 }  // namespace alica

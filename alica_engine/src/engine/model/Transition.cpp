@@ -13,47 +13,35 @@
 
 namespace alica {
 
-Transition::Transition() {
-    this->preCondition = nullptr;
-    this->inState = nullptr;
-    this->outState = nullptr;
-    this->syncTransition = nullptr;
+Transition::Transition() 
+    : _preCondition(nullptr)
+    , _inState(nullptr)
+    , _outState(nullptr)
+    , _syncTransition(nullptr) {
 }
 
 Transition::~Transition() {}
 
-PreCondition* Transition::getPreCondition() {
-    return preCondition;
+
+bool Transition::evalCondition(shared_ptr<RunningPlan> r) const {
+    return _preCondition->evaluate(r);
 }
 
+
 void Transition::setPreCondition(PreCondition* preCondition) {
-    this->preCondition = preCondition;
-}
-State* Transition::getInState() {
-    return inState;
+    _preCondition = preCondition;
 }
 
 void Transition::setInState(State* inState) {
-    this->inState = inState;
-}
-
-State* Transition::getOutState() {
-    return outState;
+    _inState = inState;
 }
 
 void Transition::setOutState(State* outState) {
-    this->outState = outState;
-}
-
-SyncTransition* Transition::getSyncTransition() {
-    return syncTransition;
-}
-bool Transition::evalCondition(shared_ptr<RunningPlan> r) {
-    return this->preCondition->evaluate(r);
+    _outState = outState;
 }
 
 void Transition::setSyncTransition(SyncTransition* syncTransition) {
-    this->syncTransition = syncTransition;
+    _syncTransition = syncTransition;
 }
 
 }  // namespace alica

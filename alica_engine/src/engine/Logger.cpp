@@ -179,16 +179,16 @@ void Logger::visit(shared_ptr<RunningPlan> r) {}
 shared_ptr<list<string>> Logger::createHumanReadablePlanTree(list<long> l) {
     shared_ptr<list<string>> result = make_shared<list<string>>(list<string>());
 
-    auto states = ae->getPlanRepository()->getStates();
+    const PlanRepository::Accessor<State>& states = ae->getPlanRepository()->getStates();
 
-    EntryPoint* e;
+    const EntryPoint* e;
     for (long id : l) {
         if (id > 0) {
-            auto iter = states.find(id);
-            if (iter != states.end()) {
-                e = entryPointOfState(iter->second);
+            const State* s = states.find(id);
+            if (s) {
+                e = entryPointOfState(s);
                 result->push_back(e->getTask()->getName());
-                result->push_back(iter->second->getName());
+                result->push_back(s->getName());
             }
         } else {
             result->push_back(to_string(id));
@@ -198,10 +198,10 @@ shared_ptr<list<string>> Logger::createHumanReadablePlanTree(list<long> l) {
     return result;
 }
 
-EntryPoint* Logger::entryPointOfState(State* s) {
-    for (auto pair : s->getInPlan()->getEntryPoints()) {
-        if (pair.second->getReachableStates().find(s) != pair.second->getReachableStates().end()) {
-            return pair.second;
+const EntryPoint* Logger::entryPointOfState(const State* s) const {
+    for (const EntryPoint* ep : s->getInPlan()->getEntryPoints()) {
+        if (ep->isStateReachable(s)) {
+            return ep;
         }
     }
     return nullptr;

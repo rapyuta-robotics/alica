@@ -185,15 +185,9 @@ void PlanBase::run() {
                 }
                 if (_deepestNode->getActiveState() != nullptr) {
                     _statusMessage->currentState = _deepestNode->getActiveState()->getName();
-                    std::copy(_deepestNode->getAssignment()
+                    _deepestNode->getAssignment()
                                       ->getRobotStateMapping()
-                                      ->getRobotsInState(_deepestNode->getActiveState())
-                                      .begin(),
-                            _deepestNode->getAssignment()
-                                    ->getRobotStateMapping()
-                                    ->getRobotsInState(_deepestNode->getActiveState())
-                                    .end(),
-                            back_inserter(_statusMessage->robotIDsWithMe));
+                                      ->getRobotsInState(_deepestNode->getActiveState(),_statusMessage->robotIDsWithMe);
 
                 } else {
                     _statusMessage->currentState = "NONE";

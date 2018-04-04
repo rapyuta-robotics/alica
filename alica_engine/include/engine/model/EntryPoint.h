@@ -8,14 +8,13 @@
 #ifndef ENTRYPOINT_H_
 #define ENTRYPOINT_H_
 
-#include <unordered_set>
+
 #include <string>
 #include <sstream>
 #include <list>
 
 #include "AlicaElement.h"
-
-using namespace std;
+#include "engine/Types.h"
 namespace alica {
 
 class Plan;
@@ -34,56 +33,60 @@ public:
     /**
      * A value encoding the do-nothing task used in loosely coupled task allocation.
      */
-    const static long IDLEID = -1;  // For Idle EntryPoint...
+    constexpr static int64_t IDLEID = -1;  // For Idle EntryPoint...
+    
+    std::string toString() const;
+    static bool compareTo(const EntryPoint* ep1, const EntryPoint* ep2);
+
+    const Task* getTask() const {return _task;}
+    
+    const Plan* getPlan() const {return _plan;}
+    const State* getState() const {return _state;}
+
+    int getMaxCardinality() const {return _maxCardinality;}
+    int getMinCardinality() const {return _minCardinality;}
+    bool isSuccessRequired() const {return _successRequired;}
+
+    const StateSet& getReachableStates() const {return _reachableStates;}
+    bool isStateReachable(const State* s) const;
+private:
+    friend ModelFactory;
     void computeReachabilitySet();
-    string toString();
-    static bool compareTo(EntryPoint* ep1, EntryPoint* ep2);
-
-    Task* getTask();
     void setTask(Task* task);
-    Plan* getPlan() const;
     void setPlan(Plan* plan);
-    const int getMaxCardinality() const;
-    void setMaxCardinality(int maxCardinality = 0);
-    const int getMinCardinality() const;
-    void setMinCardinality(int minCardinality = 0);
-    void setSuccessRequired(bool successRequired);
-    const bool getSuccessRequired() const;
-    bool isSuccessRequired() const;
-    const unordered_set<State*>& getReachableStates() const;
-    void setReachableStates(const unordered_set<State*>& reachableStates);
-    State* getState();
     void setState(State* state);
-
-protected:
+    void setMaxCardinality(int maxCardinality);
+    void setMinCardinality(int minCardinality);
+    void setSuccessRequired(bool successRequired);
+    
     /**
      * The initial state of this entrypoint's task.
      */
-    State* state;
+    const State* _state;
     /**
      * The task of this entrypoint.
      */
-    Task* task;
+    const Task* _task;
     /**
      * The plan to which this entrypoint belongs.
      */
-    Plan* plan;
+    const Plan* _plan;
     /**
      * The minimum amount of agents required to execute this entrypoint's task within Plan.
      */
-    int minCardinality = 0;
+    int _minCardinality;
     /**
      * The maximum amount of agents allowed to execute this entrypoint's task within Plan.
      */
-    int maxCardinality = 0;
+    int _maxCardinality;
     /**
      * whether or not a success of this task is required for Plan to be successful. Otherwise, this task is optional.
      */
-    bool successRequired;
+    bool _successRequired;
     /**
      * The set of states reachable from the initial state.
      */
-    unordered_set<State*> reachableStates;
+    StateSet _reachableStates;
 };
 
 }  // namespace alica

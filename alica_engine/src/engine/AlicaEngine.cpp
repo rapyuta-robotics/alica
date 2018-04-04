@@ -73,6 +73,10 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, string roleSe
     // the communicator is expected to be set before init() is called
     this->roleAssignment->setCommunication(communicator);
     this->syncModul = new SyncModule(this);
+
+    if(!planRepository->verifyPlanBase()) {
+        abort("Error in parsed plans.");
+    }
 }
 
 AlicaEngine::~AlicaEngine() {}

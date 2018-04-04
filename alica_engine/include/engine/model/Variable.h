@@ -24,7 +24,7 @@ public:
     std::shared_ptr<SolverVariable> getSolverVar();
     void setSolverVar(std::shared_ptr<SolverVariable> solverVar);
     friend std::ostream& operator<<(std::ostream& os, const Variable& variable) {
-        return os << variable.name << "(" << variable.id << ")";
+        return os << variable.getName() << "(" << variable.getId() << ")";
     }
 
 private:

@@ -12,6 +12,7 @@
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/model/Transition.h"
+#include "engine/model/PreCondition.h"
 #include "engine/teammanager/TeamManager.h"
 #include "engine/planselector/PlanSelector.h"
 #include <engine/constraintmodul/ConditionStore.h>
@@ -55,7 +56,7 @@ std::shared_ptr<RunningPlan> RuleBook::initialisationRule(Plan* masterPlan) {
     main->setAllocationNeeded(true);
     tm->fillWithActiveAgentIDs(main->editRobotsAvail());
 
-    EntryPoint* defep = masterPlan->getEntryPoints().begin()->second;
+    const EntryPoint* defep = masterPlan->getEntryPoints()[0];
     main->getAssignment()->setAllToInitialState(main->getRobotsAvail(), defep);
     main->activate();
     main->setOwnEntryPoint(defep);
@@ -131,13 +132,9 @@ PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r) {
     }
 
     auto temp = r->getParent().lock();
-    vector<const supplementary::AgentID*> robots = vector<const supplementary::AgentID*>(
-            temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).size());
-    copy(temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).begin(),
-            temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState()).end(),
-            robots.begin());
-    shared_ptr<RunningPlan> newr =
-            ps->getBestSimilarAssignment(r, make_shared<vector<const supplementary::AgentID*>>(robots));
+    AgentSet robots;
+    temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState(), robots);
+    shared_ptr<RunningPlan> newr = ps->getBestSimilarAssignment(r, robots);
     if (newr == nullptr) {
         return PlanChange::NoChange;
     }
@@ -164,7 +161,7 @@ PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r) {
         // cout << "RB: AllocationDifference::Reason::utility " << endl;
         r->getCycleManagement()->setNewAllocDiff(
                 r->getAssignment(), newr->getAssignment(), AllocationDifference::Reason::utility);
-        State* before = r->getActiveState();
+        const State* before = r->getActiveState();
         r->adaptAssignment(newr);
         if (r->getActiveState() != nullptr && r->getActiveState() != before)
             r->setAllocationNeeded(true);
@@ -264,12 +261,8 @@ PlanChange RuleBook::planRedoRule(shared_ptr<RunningPlan> r) {
     r->setFailHandlingNeeded(false);
     r->deactivateChildren();
     r->clearChildren();
-    vector<const supplementary::AgentID*> robots(
-            r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).size());
-    copy(r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).begin(),
-            r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState()).end(),
-            robots.begin());  // backinserter
-
+    AgentSet robots;
+    r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState(),robots);
     r->getAssignment()->getRobotStateMapping()->setStates(robots, r->getOwnEntryPoint()->getState());
 
     r->setActiveState(r->getOwnEntryPoint()->getState());
@@ -346,17 +339,16 @@ PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp) {
         return PlanChange::NoChange;
     }
     rp->setAllocationNeeded(false);
-    auto robots = make_shared<vector<const supplementary::AgentID*>>(
-            rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).size());
-    copy(rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).begin(),
-            rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState()).end(), robots->begin());
+
+    AgentSet robots;
+    rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState(),robots);
 
 #ifdef RULE_debug
     cout << "RB: There are " << rp->getActiveState()->getPlans().size() << " Plans in State "
          << rp->getActiveState()->getName() << endl;
 #endif
     shared_ptr<list<shared_ptr<RunningPlan>>> children =
-            this->ps->getPlansForState(rp, &rp->getActiveState()->getPlans(), robots);
+            this->ps->getPlansForState(rp, rp->getActiveState()->getPlans(), robots);
     if (children == nullptr || children->size() < rp->getActiveState()->getPlans().size()) {
         rp->addFailure();
 #ifdef RULE_debug
@@ -380,7 +372,7 @@ PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp) {
 /**
  * Handles a failure at the top-level plan by resetting everything.
  * @param r A shared_ptr of a RunningPlan
- * @return PlanChnage
+ * @return PlanChange
  */
 PlanChange RuleBook::topFailRule(std::shared_ptr<RunningPlan> r) {
 #ifdef RULE_debug
@@ -394,7 +386,7 @@ PlanChange RuleBook::topFailRule(std::shared_ptr<RunningPlan> r) {
         r->setFailHandlingNeeded(false);
         r->clearFailures();
 
-        r->setOwnEntryPoint(((Plan*) r->getPlan())->getEntryPoints().begin()->second);
+        r->setOwnEntryPoint(static_cast<const Plan*>(r->getPlan())->getEntryPoints()[0]);
 
         r->setAllocationNeeded(true);
         tm->fillWithActiveAgentIDs(r->editRobotsAvail());
@@ -425,9 +417,9 @@ PlanChange RuleBook::transitionRule(shared_ptr<RunningPlan> r) {
 #endif
     if (r->getActiveState() == nullptr)
         return PlanChange::NoChange;
-    State* nextState = nullptr;
+    const State* nextState = nullptr;
 
-    for (Transition* t : r->getActiveState()->getOutTransitions()) {
+    for (const Transition* t : r->getActiveState()->getOutTransitions()) {
         if (t->getSyncTransition() != nullptr)
             continue;
         if (t->evalCondition(r)) {
@@ -461,23 +453,23 @@ PlanChange RuleBook::transitionRule(shared_ptr<RunningPlan> r) {
  */
 PlanChange RuleBook::synchTransitionRule(std::shared_ptr<RunningPlan> r) {
 #ifdef RULE_debug
-    cout << "RB: Sync-Rule called." << endl;
-    cout << "RB: Sync RP \n" << r->toString() << endl;
+    std::cout << "RB: Sync-Rule called." << std::endl;
+    std::cout << "RB: Sync RP \n" << r->toString() << std::endl;
 #endif
     if (r->getActiveState() == nullptr) {
         return PlanChange::NoChange;
     }
 
-    State* nextState = nullptr;
+    const State* nextState = nullptr;
 
-    for (Transition* t : r->getActiveState()->getOutTransitions()) {
+    for (const Transition* t : r->getActiveState()->getOutTransitions()) {
         if (t->getSyncTransition() == nullptr) {
             continue;
         }
         if (this->sm->followSyncTransition(t)) {
             if (t->evalCondition(r)) {
                 nextState = t->getOutState();
-                r->editConstraintStore().addCondition(((Condition*) t->getPreCondition()));
+                r->editConstraintStore().addCondition(t->getPreCondition());
                 break;
             } else {
                 this->sm->setSynchronisation(t, false);
@@ -490,7 +482,7 @@ PlanChange RuleBook::synchTransitionRule(std::shared_ptr<RunningPlan> r) {
         return PlanChange::NoChange;
     }
 #ifdef RULE_debug
-    cout << "RB: SynchTransition" << r->getPlan()->getName() << endl;
+    std::cout << "RB: SynchTransition" << r->getPlan()->getName() << std::endl;
 #endif
     r->moveState(nextState);
 

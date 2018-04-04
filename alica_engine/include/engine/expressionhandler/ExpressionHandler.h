@@ -30,7 +30,7 @@ public:
     bool dummyTrue(RunningPlan* rp);
     bool dummyFalse(RunningPlan* rp);
 
-protected:
+private:
     IConditionCreator* conditionCreator;
     IUtilityCreator* utilityCreator;
     IConstraintCreator* constraintCreator;

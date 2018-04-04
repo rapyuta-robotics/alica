@@ -23,26 +23,22 @@ TaskAssignment::~TaskAssignment() {}
  * @param paraRobots robots to build an assignment for
  * @param a bool
  */
-TaskAssignment::TaskAssignment(const AlicaEngine* engine, list<Plan*> planList,
-        shared_ptr<vector<const supplementary::AgentID*>> paraRobots, bool preassignOtherRobots) {
+TaskAssignment::TaskAssignment(const AlicaEngine* engine, const PlanSet& planList,
+        const AgentSet& paraRobots, bool preassignOtherRobots) 
+        : robots(paraRobots)
+        , planList(planList)
+        {
 #ifdef EXPANSIONEVAL
     this->expansionCount = 0;
 #endif
-    this->planList = planList;
     this->to = engine->getTeamObserver();
     this->tm = engine->getTeamManager();
-    this->robots = make_shared<vector<const supplementary::AgentID*>>(
-            vector<const supplementary::AgentID*>(paraRobots->size()));
-    int k = 0;
-    for (auto& i : (*paraRobots)) {
-        this->robots->at(k++) = i;
-    }
     // sort robot ids ascending
-    sort(robots->begin(), robots->end(), supplementary::AgentIDComparator());
+    std::sort(robots.begin(), robots.end(), supplementary::AgentIDComparator());
     this->fringe = vector<PartialAssignment*>();
     auto simplePlanTreeMap = to->getTeamPlanTrees();
     PartialAssignment* curPa;
-    for (Plan* curPlan : this->planList) {
+    for (const Plan* curPlan : this->planList) {
         // CACHE EVALUATION DATA IN EACH USUMMAND
         curPlan->getUtilityFunction()->cacheEvalData();
 
@@ -66,7 +62,7 @@ TaskAssignment::TaskAssignment(const AlicaEngine* engine, list<Plan*> planList,
  * @param oldAss old Assignment
  * @return An Assignment for the plan
  */
-shared_ptr<Assignment> TaskAssignment::getNextBestAssignment(IAssignment* oldAss) {
+std::shared_ptr<Assignment> TaskAssignment::getNextBestAssignment(IAssignment* oldAss) {
 #ifdef TA_DEBUG
     cout << "TA: Calculating next best PartialAssignment..." << endl;
 #endif
@@ -87,25 +83,25 @@ shared_ptr<Assignment> TaskAssignment::getNextBestAssignment(IAssignment* oldAss
     return newAss;
 }
 
-string TaskAssignment::toString() {
-    stringstream ss;
+std::string TaskAssignment::toString() {
+    std::stringstream ss;
     ss << endl;
-    ss << "--------------------TA:--------------------" << endl;
-    ss << "NumRobots: " << this->robots->size() << endl;
+    ss << "--------------------TA:--------------------" << std::endl;
+    ss << "NumRobots: " << this->robots.size() << std::endl;
     ss << "RobotIDs: ";
-    for (int i = 0; i < this->robots->size(); ++i)  // RobotIds
+    for (int i = 0; i < this->robots.size(); ++i)  // RobotIds
     {
-        ss << (*this->robots)[i] << " ";
+        ss << this->robots[i] << " ";
     }
     ss << endl;
-    ss << "Initial Fringe (Count " << this->fringe.size() << "):" << endl;
+    ss << "Initial Fringe (Count " << this->fringe.size() << "):" << std::endl;
     ss << "{";
     for (int i = 0; i < this->fringe.size(); ++i)  // Initial PartialAssignments
     {
         ss << this->fringe[i]->toString();
     }
-    ss << "}" << endl;
-    ss << "-------------------------------------------" << endl;
+    ss << "}" << std::endl;
+    ss << "-------------------------------------------" << std::endl;
     ;
     return ss.str();
 }
@@ -183,12 +179,12 @@ PartialAssignment* TaskAssignment::calcNextBestPartialAssignment(IAssignment* ol
  * @return True if any robot has already assigned itself, false otherwise
  */
 bool TaskAssignment::addAlreadyAssignedRobots(PartialAssignment* pa,
-        map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>*
+        std::map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>*
                 simplePlanTreeMap) {
     const supplementary::AgentID* ownRobotId = this->tm->getLocalAgentID();
     bool haveToRevalute = false;
-    shared_ptr<SimplePlanTree> spt = nullptr;
-    for (auto& robot : (*this->robots)) {
+    std::shared_ptr<SimplePlanTree> spt = nullptr;
+    for (const supplementary::AgentID* robot : robots) {
         if (*ownRobotId == *robot) {
             continue;
         }

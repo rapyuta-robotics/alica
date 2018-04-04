@@ -5,6 +5,7 @@
 
 #include "supplementary/AgentID.h"
 #include "engine/ITaskAssignment.h"
+#include "engine/Types.h"
 #include <algorithm>
 #include <list>
 #include <map>
@@ -14,7 +15,7 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+
 namespace alica {
 
 class IAssignment;
@@ -31,13 +32,13 @@ class PartialAssignmentPool;
  * Represents an instance of an assignment problem for one plan or a plantype.
  * All parameters, which are static for this problem, are stored here.
  */
-class TaskAssignment : virtual public ITaskAssignment {
+class TaskAssignment final : public ITaskAssignment {
 public:
-    TaskAssignment(const AlicaEngine* engine, list<Plan*> planList,
-            shared_ptr<vector<const supplementary::AgentID*>> paraRobots, bool preassignOtherRobots);
+    TaskAssignment(const AlicaEngine* engine, const PlanSet& planList,
+            const AgentSet& paraRobots, bool preassignOtherRobots);
     virtual ~TaskAssignment();
-    shared_ptr<Assignment> getNextBestAssignment(IAssignment* oldAss);
-    string toString();
+    std::shared_ptr<Assignment> getNextBestAssignment(IAssignment* oldAss);
+    std::string toString();
 #ifdef EXPANSIONEVAL
     int getExpansionCount();
     void setExpansionCount(int expansionCount);
@@ -45,17 +46,16 @@ public:
 private:
     PartialAssignment* calcNextBestPartialAssignment(IAssignment* oldAss);
 
-protected:
     // Plan to build an assignment for
     TeamManager* tm;
     TeamObserver* to;
-    list<Plan*> planList;
-    shared_ptr<vector<const supplementary::AgentID*>> robots;
-    vector<EntryPoint*> entryPointVector;
+    PlanSet planList;
+    AgentSet robots;
+    std::vector<EntryPoint*> entryPointVector;
     // Fringe of the search tree
-    vector<PartialAssignment*> fringe;
+    std::vector<PartialAssignment*> fringe;
     bool addAlreadyAssignedRobots(PartialAssignment* pa,
-            map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>*
+            std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>*
                     simplePlanTreeMap);
 
 #ifdef EXPANSIONEVAL

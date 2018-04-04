@@ -13,11 +13,12 @@
 #include <list>
 
 #include "AbstractPlan.h"
+#include "engine/Types.h"
 
-using namespace std;
 namespace alica {
 class Plan;
 class Parametrisation;
+class ModelFactory;
 
 class PlanType : public AbstractPlan {
 public:
@@ -25,16 +26,17 @@ public:
     virtual ~PlanType();
 
     const virtual string& getFileName() const;
-    string toString();
+    std::string toString() const;
 
-    list<Parametrisation*>& getParametrisation();
-    void setParametrisation(const list<Parametrisation*> parametrisation);
-    list<Plan*>& getPlans();
-    void setPlans(const list<Plan*>& plans);
+    const std::list<const Parametrisation*>& getParametrisation() const {return _parametrisation;}
+    const PlanSet& getPlans() const {return _plans;}
+private:
+    friend ModelFactory;
+    void setParametrisation(const list<Parametrisation*>& parametrisation);
+    void setPlans(const PlanSet& plans);
 
-protected:
-    list<Plan*> plans;
-    list<Parametrisation*> parametrisation;
+    PlanSet _plans;
+    std::list<const Parametrisation*> _parametrisation;
 };
 
 }  // namespace alica
