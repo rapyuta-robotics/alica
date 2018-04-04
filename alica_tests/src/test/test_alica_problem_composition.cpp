@@ -33,23 +33,14 @@ protected:
     alica::ConditionCreator* cc;
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
-
-<<<<<<< HEAD:alica_tests/src/test/test_alica_problem_composition.cpp
-	virtual void SetUp()
-	{
-		// determine the path to the test config
-		string path = supplementary::FileSystem::getSelfPath();
-		int place = path.rfind("devel");
-		path = path.substr(0, place);
-		path = path + "src/alica/alica_tests/src/test";
-=======
+    
     virtual void SetUp()
     {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath",path,".");
->>>>>>> 0f99712c0168624ff1a0fe24262cd3bf0db42a64:alica_test/src/test/test_alica_problem_composition.cpp
+       // determine the path to the test config
+       string path = supplementary::FileSystem::getSelfPath();
+       int place = path.rfind("devel");
+       path = path.substr(0, place);
+       path = path + "src/alica/alica_tests/src/test";
 
         // bring up the SystemConfig with the corresponding path
         sc = supplementary::SystemConfig::getInstance();
