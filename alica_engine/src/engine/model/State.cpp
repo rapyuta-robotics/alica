@@ -12,23 +12,27 @@ namespace alica {
  * Basic constructor
  */
 State::State() {
-    : _id(0)
-    , _terminal(false)
-    , _successState(false)
-    , _failureState(false)
+    : AlicaElement(0)
+    , _type(Normal)
     , _inPlan(nullptr)
     , _entryPoint(nullptr)
 {}
+
+State::State(StateType t) {
+    : AlicaElement(0)
+    , _type(t)
+    , _inPlan(nullptr)
+    , _entryPoint(nullptr)
+{}
+
 
 /**
  * Constructor which accepts a unique id.
  * @param id A int
  */
 State::State(int64_t id) 
-    : _id(id)
-    , _terminal(false)
-    , _successState(false)
-    , _failureState(false)
+    : AlicaElement(id)
+    , _type(Normal)
     , _inPlan(nullptr)
     , _entryPoint(nullptr)
 {}
@@ -54,7 +58,7 @@ void State::setOutTransitions(const TransitionSet& outTransition) {
     _outTransitions = outTransition;
 }
 
-void State::setParametrisation(const std::vector<const Parametrisation*>& parametrisation) {
+void State::setParametrisation(const ParametrisationSet& parametrisation) {
     _parametrisation = parametrisation;
 }
 
@@ -70,7 +74,7 @@ void State::setTerminal(bool terminal) {
     _terminal = terminal;
 }
 
-void alica::State::setEntryPoint(EntryPoint* entryPoint) {
+void alica::State::setEntryPoint(const EntryPoint* entryPoint) {
     _entryPoint = entryPoint;
 }
 

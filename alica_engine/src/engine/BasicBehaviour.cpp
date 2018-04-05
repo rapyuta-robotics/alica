@@ -25,15 +25,14 @@ namespace alica {
  * If using eventTrigger set behaviourTrigger and register runCV
  * @param name The name of the behaviour
  */
-BasicBehaviour::BasicBehaviour(string name)
+BasicBehaviour::BasicBehaviour(const std::string& name)
         : name(name)
-        , parameters(nullptr)
         , engine(nullptr)
         , failure(false)
         , success(false)
         , callInit(true)
         , started(true)
-        , runCV() {
+        {
     this->running = false;
     this->timer = new supplementary::Timer(0, 0);
     this->timer->registerCV(&this->runCV);
@@ -57,24 +56,18 @@ const std::string& BasicBehaviour::getName() const {
     return this->name;
 }
 
-void BasicBehaviour::setName(string name) {
+void BasicBehaviour::setName(const std::string& name) {
     this->name = name;
 }
 
-shared_ptr<map<string, string>> BasicBehaviour::getParameters() {
-    return this->parameters;
+void BasicBehaviour::setConfiguration(const BehaviourConfiguration* beh) {
+    _configuration = beh;
 }
 
-void BasicBehaviour::setParameters(shared_ptr<map<string, string>> parameters) {
-    this->parameters = parameters;
-}
 
-shared_ptr<list<Variable*>> BasicBehaviour::getVariables() {
-    return this->variables;
-}
 
-Variable* BasicBehaviour::getVariablesByName(string name) {
-    for (auto variable : (*variables)) {
+const Variable* BasicBehaviour::getVariableByName(const std::string& name) const {
+    for (const Variable* variable : _configuration->getVariables()) {
         if (variable->getName() == name) {
             return variable;
         }
@@ -82,9 +75,6 @@ Variable* BasicBehaviour::getVariablesByName(string name) {
     return nullptr;
 }
 
-void BasicBehaviour::setVariables(shared_ptr<list<Variable*>> variables) {
-    this->variables = variables;
-}
 
 int BasicBehaviour::getDelayedStart() const {
     return this->timer->getDelayedStart();
@@ -106,7 +96,7 @@ void BasicBehaviour::setInterval(long msInterval) {
  * Convenience method to obtain the robot's own id.
  * @return the own robot id
  */
-const supplementary::AgentID* BasicBehaviour::getOwnId() {
+const supplementary::AgentID* BasicBehaviour::getOwnId() const {
     return this->engine->getTeamManager()->getLocalAgentID();
 }
 
@@ -137,7 +127,7 @@ bool BasicBehaviour::start() {
     return true;
 }
 
-shared_ptr<RunningPlan> BasicBehaviour::getRunningPlan() {
+shared_ptr<RunningPlan> BasicBehaviour::getRunningPlan() const {
     return runningPlan;
 }
 
@@ -209,8 +199,8 @@ void BasicBehaviour::initInternal() {
     }
 }
 
-bool BasicBehaviour::getParameter(string key, string& valueOut) {
-    for (auto pair : *parameters) {
+bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const {
+    for (const auto& pair : _configuration->getParameters()) {
         if (pair.first == key) {
             valueOut = pair.second;
             return true;

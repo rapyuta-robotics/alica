@@ -6,26 +6,21 @@
  */
 
 #include "engine/model/Plan.h"
+
+#include <assert.h>
+
 #include "engine/model/Task.h"
 #include "engine/model/EntryPoint.h"
 
 namespace alica {
 Plan::Plan(int64_t id)
         : AbstractPlan(id) 
-        , _postCondition = nullptr;
-        , _minCardinality(0);
-        , _maxCardinality(0);
-
+        , _postCondition(nullptr)
+        , _minCardinality(0)
+        , _maxCardinality(0)
 {}
 
 Plan::~Plan() {}
-
-std::string Plan::toString() const {
-    std::stringstream ss;
-    ss << AbstractPlan::toString();
-    ss << "Filename: " << _fileName << std::endl;
-    return ss.str();
-}
 
 const EntryPoint* Plan::getEntryPointTaskID(int64_t taskID) const {
     for (const EntryPoint* ep : _entryPoints) {
@@ -50,13 +45,6 @@ const EntryPoint* Plan::getEntryPointByID(int64_t epID) const {
 
 //===================== Getter and Setter ==================
 
-const std::string& Plan::getFileName() const {
-    if (_fileName.empty()) {
-        return result = getName() + ".pml";
-    } else {
-        return _fileName;
-    }
-}
 
 void Plan::setEntryPoints(const EntryPointSet& entryPoints) {
     _entryPoints = entryPoints;
@@ -90,7 +78,7 @@ void Plan::setSyncTransitions(const SyncTransitionSet& syncTransitions) {
     _syncTransitions = syncTransitions;
 }
 
-lvoid Plan::setTransitions(const TransitionSet& transitions) {
+void Plan::setTransitions(const TransitionSet& transitions) {
     _transitions = transitions;
 }
 

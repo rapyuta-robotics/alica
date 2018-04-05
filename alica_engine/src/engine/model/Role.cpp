@@ -18,17 +18,17 @@ Role::Role() {
 
 Role::~Role() {}
 
-double Role::getPriority(long taskId) {
+double Role::getPriority(int64_t taskId) {
     if (this->roleTaskMapping->getTaskPriorities().find(taskId) != this->roleTaskMapping->getTaskPriorities().end()) {
         return this->roleTaskMapping->getTaskPriorities().find(taskId)->second;
     } else {
-        cerr << "ROLE DOES NOT HAVE A PRIORITY FOR TASK: " << taskId << endl;
+        std::cerr << "ROLE DOES NOT HAVE A PRIORITY FOR TASK: " << taskId << std::endl;
         throw new exception;
     }
 }
 
-string Role::toString() {
-    stringstream ss;
+std::string Role::toString() const {
+    std::stringstream ss;
     ss << "#Role: " << this->name << " " << this->id << endl;
     ss << "\t Characteristics: " << this->characteristics.size() << endl;
     for (map<string, Characteristic*>::const_iterator iter = this->characteristics.begin();

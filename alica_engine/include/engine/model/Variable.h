@@ -7,31 +7,33 @@
 #include <string>
 
 namespace alica {
+class ModelFactory;
 /**
  * A variable is constraint by conditions, feasible values can be queried using a ConstraintQuery.
  */
 class Variable : public AlicaElement {
 public:
     Variable();
-    Variable(std::shared_ptr<SolverVariable> v);
-    Variable(long id, std::string name, std::string type);
+    Variable(const std::shared_ptr<SolverVariable>& v);
+    Variable(int64_t id, const std::string& type);
     virtual ~Variable();
 
-    std::string toString();
+    std::string toString() const;
 
-    std::string getType();
-    void setType(std::string type);
-    std::shared_ptr<SolverVariable> getSolverVar();
-    void setSolverVar(std::shared_ptr<SolverVariable> solverVar);
+    const std::string& getType() const {return _type;}
+    std::shared_ptr<SolverVariable> getSolverVar() const {return _solverVar;}
+
     friend std::ostream& operator<<(std::ostream& os, const Variable& variable) {
         return os << variable.getName() << "(" << variable.getId() << ")";
     }
 
 private:
-    std::string type;
+    friend ModelFactory;
+    void setType(const std::string& type);
+    void setSolverVar(const std::shared_ptr<SolverVariable>& solverVar);
+    std::shared_ptr<SolverVariable> _solverVar;
+    std::string _type;
 
-protected:
-    std::shared_ptr<SolverVariable> solverVar;
 };
 
 } /* namespace alica */

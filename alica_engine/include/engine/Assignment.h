@@ -50,15 +50,15 @@ public:
     std::shared_ptr<SuccessCollection> getEpSuccessMapping() override;
     void setAllToInitialState(const AgentSet& robotIds, const EntryPoint* defep);
     bool removeRobot(const supplementary::AgentID* robotId);
-    void addRobot(const supplementary::AgentID* robotId, EntryPoint* e, State* s);
-    bool isValid() override;
+    void addRobot(const supplementary::AgentID* robotId, const EntryPoint* e, const State* s);
+    bool isValid() const override;
     bool isSuccessfull() const;
     bool isEqual(Assignment* otherAssignment);
     bool isEntryPointNonEmpty(const EntryPoint* ep) const;
     bool updateRobot(const supplementary::AgentID* robotId, const EntryPoint* ep, const State* s);
     bool updateRobot(const supplementary::AgentID* robotId, const EntryPoint* ep);
     bool removeRobot(const supplementary::AgentID* robotId, const EntryPoint* ep);
-    string assignmentCollectionToString();
+    std::string assignmentCollectionToString();
     void addRobot(const supplementary::AgentID* robotId, const EntryPoint* e);
     void moveRobots(const State* from,const State* to);
     const EntryPoint* getEntryPointOfRobot(const supplementary::AgentID* robotId);

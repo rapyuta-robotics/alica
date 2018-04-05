@@ -27,7 +27,11 @@ class ModelFactory;
  */
 class State : public AlicaElement {
 public:
+    enum StateType {
+        Normal, Success, Failure
+    };
     State();
+    State(StateType t);
     State(int64_t id);
     virtual ~State();
     virtual std::string toString() const;
@@ -37,21 +41,21 @@ public:
     const AbstractPlanSet& getPlans() const {return _plans;}
     const TransitionSet& getInTransitions() const {return _inTransitions;}
     const TransitionSet& getOutTransitions() const {return _outTransitions;}
-    const std::vector<const Parametrisation*>& getParametrisation() {return _parametrisation;}
+    const ParametrisationSet& getParametrisation() const {return _parametrisation;}
 
-    bool isTerminal() const {return _terminal;}
-    bool isSuccessState() const {return _successState;}
-    bool isFailureState() const {return _failureState;}
+    bool isTerminal() const {return _type != Normal;}
+    bool isSuccessState() const {return _type == Success;}
+    bool isFailureState() const {return _type == Failure;}
 
 private:
     friend ModelFactory;
-    void setInPlan(Plan* inPlan);
+    void setInPlan(const Plan* inPlan);
     
-    void setInTransitions(const list<Transition*>& inTransitions);
+    void setInTransitions(const TransitionSet& inTransitions);
     
-    void setOutTransitions(list<Transition*> outTransition);
+    void setOutTransitions(const TransitionSet& outTransition);
     
-    void setParametrisation(const list<Parametrisation*>& parametrisation);
+    void setParametrisation(const ParametrisationSet& parametrisation);
     
     void setPlans(const AbstractPlanSet& plans);
     
@@ -60,7 +64,7 @@ private:
 
     void setTerminal(bool terminal);
     
-    void setEntryPoint(EntryPoint* entryPoint);
+    void setEntryPoint(const EntryPoint* entryPoint);
 
 
     /**
@@ -78,7 +82,7 @@ private:
     /**
      * The list of Parametrisations, which bind variables of sub-plans to variables in this state's plan.
      */
-    std::vector<const Parametrisation*> _parametrisation;
+    ParametrisationSet _parametrisation;
     /**
      * The plan containing this state.
      */
@@ -88,17 +92,9 @@ private:
      */
     const EntryPoint* _entryPoint;
     /**
-     * whether or not this is a terminal state.
+     * whethe this is a success state or a normal state etc.
      */
-    bool _terminal;
-    /**
-     * whether or not this is a FailureState, used to avoid casting and type checking during runtime.
-     */
-    bool _failureState;
-    /**
-     * whether or not this is a SuccessState, used to avoid casting and type checking during runtime.
-     */
-    bool _successState;
+    StateType _type;
 };
 
 }  // namespace alica

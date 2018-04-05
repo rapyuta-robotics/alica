@@ -1,7 +1,8 @@
 #pragma once
 
 #include <vector>
-
+#include <string>
+#include <unordered_map>
 
 namespace supplementary {
     class AgentID;
@@ -10,6 +11,7 @@ namespace supplementary {
 namespace alica {
     class AbstractPlan;
     class AlicaElement;
+    class BehaviourConfiguration;
     class EntryPoint;
     class FailureState;
     class Parameter;
@@ -21,13 +23,17 @@ namespace alica {
     class Task;
     class Transition;
     class Variable;
+    class Parametrisation;
+
 
     using AbstractPlanSet = std::vector<const AbstractPlan*>;
     using AgentSet = std::vector<const supplementary::AgentID*>;
     using AlicaElementSet = std::vector<const AlicaElement*>;
+    using BehaviourConfigurationSet = std::vector<const AlicaElement*>;
     using EntryPointSet = std::vector<const EntryPoint*>;
     using FailureStateSet = std::vector<const FailureState*>;
     using ParameterSet = std::vector<const Parameter*>;
+    using ParametrisationSet = std::vector<const Parametrisation*>;
     using PlanSet = std::vector<const Plan*>;
     using QuantifierSet = std::vector<const Quantifier*>;
     using StateSet = std::vector<const State*>;
@@ -36,4 +42,8 @@ namespace alica {
     using TaskSet = std::vector<const Task*>;
     using TransitionSet = std::vector<const Transition*>;    
     using VariableSet = std::vector<const Variable*>;
+
+
+
+    using BehaviourParameterMap = std::unordered_map<std::string, std::string>;
 }

@@ -10,9 +10,8 @@
 
 namespace alica {
 
-TerminalState::TerminalState()
-        : State() 
-        , _terminal(true)
+TerminalState::TerminalState(StateType t)
+        : State(t) 
         , _postCondition(nullptr) {}
 
 TerminalState::~TerminalState() {

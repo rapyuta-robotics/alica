@@ -12,53 +12,34 @@
 
 namespace alica {
 
-Behaviour::Behaviour() {
-    this->implementation = nullptr;
-}
+Behaviour::Behaviour() 
+    : _implementation(nullptr)
+{}
 
-Behaviour::Behaviour(string name)
-        : Behaviour() {
-    this->name = name;
-}
 
 Behaviour::~Behaviour() {}
 
-string Behaviour::toString() {
-    stringstream ss;
-    ss << "#Behaviour: " << this->getName() << endl;
-    ss << "\t Configurations: " << this->getConfigurations().size() << endl;
-    for (BehaviourConfiguration* bc : this->getConfigurations()) {
-        ss << "\t" << bc->getName() << " " << bc->getId() << endl;
+std::string Behaviour::toString() const {
+    std::stringstream ss;
+    ss << "#Behaviour: " << getName() << std::endl;
+    ss << "\t Configurations: " << getConfigurations().size() << std::endl;
+    for (const BehaviourConfiguration* bc : getConfigurations()) {
+        ss << "\t" << bc->getName() << " " << bc->getId() << std::endl;
     }
-    ss << "#EndBehaviour" << endl;
+    ss << "#EndBehaviour" << std::endl;
     return ss.str();
 }
 
-list<BehaviourConfiguration*>& Behaviour::getConfigurations() {
-    return configurations;
+
+void Behaviour::setConfigurations(const BehaviourConfigurationSet& configurations) {
+    _configurations = configurations;
 }
 
-void Behaviour::setConfigurations(const list<BehaviourConfiguration*>& configurations) {
-    this->configurations = configurations;
+void Behaviour::setFileName(const std::string& fileName) {
+    _fileName = fileName;
 }
 
-const string& Behaviour::getFileName() const {
-    if (this->getFileName().empty()) {
-        static string result = name + ".beh";
-        return result;
-    }
-    return fileName;
-}
-
-void Behaviour::setFileName(const string& fileName) {
-    this->fileName = fileName;
-}
-
-BasicBehaviour* alica::Behaviour::getImplementation() {
-    return implementation;
-}
-
-void alica::Behaviour::setImplementation(BasicBehaviour* implementation) {
-    this->implementation = implementation;
+void Behaviour::setImplementation(BasicBehaviour* implementation) {
+    _implementation = implementation;
 }
 }  // namespace alica

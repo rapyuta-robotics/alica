@@ -53,7 +53,6 @@ public:
     const SyncTransitionSet& getSyncTransitions() const {return _syncTransitions;}
 
     const std::string& getDestinationPath() const {return _destinationPath;}
-    const std::string& getFileName() const;
 
 private:
     friend ModelFactory;

@@ -40,7 +40,7 @@ private:
     friend ModelFactory;
     void setFailOnSyncTimeOut(bool failOnSyncTimeOut);
     void setSyncTimeOut(unsigned long syncTimeOut);
-    void setInSync(const list<Transition*>& inSync);
+    void setInSync(const TransitionSet& inSync);
     void setTalkTimeOut(unsigned long talkTimeOut);
     void setPlan(const Plan* plan);
 

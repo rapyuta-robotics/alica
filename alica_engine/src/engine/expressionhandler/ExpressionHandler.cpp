@@ -46,7 +46,7 @@ ExpressionHandler::~ExpressionHandler() {
 void ExpressionHandler::attachAll() {
     PlanRepository* pr = ae->getPlanRepository();
     for (const std::pair<const int64_t, Plan*>& it : pr->_plans) {
-        Plan* p = it->second;
+        Plan* p = it.second;
         auto ufGen = utilityCreator->createUtility(p->getId());
         p->setUtilityFunction(ufGen->getUtilityFunction(p));
 
@@ -66,8 +66,7 @@ void ExpressionHandler::attachAll() {
             attachConstraint(p->_runtimeCondition);
         }
 
-        for (const std::pair<const int64_t, Transition*>& it : p->_transitions) {
-            Transition* t = it->second;
+        for (const Transition* t : p->_transitions) {            
             if (t->getPreCondition() != nullptr) {
                 if (t->getPreCondition()->isEnabled()) {
                     t->_preCondition->setBasicCondition(

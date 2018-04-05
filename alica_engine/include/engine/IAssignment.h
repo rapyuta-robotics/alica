@@ -64,7 +64,7 @@ public:
     /**
      * Checks whether the current assignment is valid
      */
-    virtual bool isValid() = 0;
+    virtual bool isValid() const = 0;
     /**
      * Print AssignmentCollection
      */

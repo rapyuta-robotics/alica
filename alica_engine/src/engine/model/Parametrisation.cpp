@@ -21,7 +21,7 @@ Parametrisation::Parametrisation()
 
 Parametrisation::~Parametrisation() {}
 
-std::string Parametrisation::ToString() {
+std::string Parametrisation::toString() const {
     std::stringstream ss;
     ss << "[Parametrisation: Var=" << _var->getId();
     ss << " SubVar=" << _subVar->getName() << " (" << _subVar->getName() << "), ";
@@ -29,15 +29,15 @@ std::string Parametrisation::ToString() {
     return ss.str();
 }
 
-void Parametrisation::setSubPlan(AbstractPlan* subPlan) {
+void Parametrisation::setSubPlan(const AbstractPlan* subPlan) {
     _subPlan = subPlan;
 }
 
-void Parametrisation::setSubVar(Variable* subVar) {
+void Parametrisation::setSubVar(const Variable* subVar) {
     _subVar = subVar;
 }
 
-void Parametrisation::setVar(Variable* var) {
+void Parametrisation::setVar(const Variable* var) {
     _var = var;
 }
 

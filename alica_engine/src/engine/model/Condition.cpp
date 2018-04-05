@@ -35,13 +35,13 @@ void Condition::setConditionString(const std::string& conditionString) {
 }
 
 bool Condition::evaluate(shared_ptr<RunningPlan> rp) const {
-    if (basicCondition == nullptr) {
+    if (_basicCondition == nullptr) {
         std::cerr << "Condition: Missing implementation of condition: ID " << getId() << std::endl;
         return false;
     } else {
         bool ret = false;
         try {
-            ret = basicCondition->evaluate(rp);
+            ret = _basicCondition->evaluate(rp);
         } catch (std::exception& e) {
             std::cerr << "Condition: Exception during evaluation catched: " << std::endl << e.what() << std::endl;
         }
@@ -57,7 +57,7 @@ void Condition::setVariables(const VariableSet& variables) {
     _variables = variables;
 }
 
-void Condition::setAbstractPlan(AbstractPlan* abstractPlan) {
+void Condition::setAbstractPlan(const AbstractPlan* abstractPlan) {
     _abstractPlan = abstractPlan;
 }
 
@@ -69,7 +69,7 @@ void Condition::setBasicCondition(const shared_ptr<BasicCondition>& basicConditi
     _basicCondition = basicCondition;
 }
 
-void Condition::setParameters(list<Parameter*> parameters) {
+void Condition::setParameters(const ParameterSet& parameters) {
     _parameters = parameters;
 }
 
