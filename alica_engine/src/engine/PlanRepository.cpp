@@ -6,18 +6,19 @@
  */
 
 #include "engine/PlanRepository.h"
+#include "engine/model/EntryPoint.h"
 #include "engine/model/Quantifier.h"
 #include "engine/model/Plan.h"
+
+#include <cassert>
 
 namespace alica {
 PlanRepository::PlanRepository() {}
 PlanRepository::~PlanRepository() {}
 
-
-
 bool PlanRepository::verifyPlanBase() const {
 
-    for(const Entrypoint* ep : getEntryPoints()) {
+    for(const EntryPoint* ep : getEntryPoints()) {
         if(ep->getTask() == nullptr) {
             std::cerr << "EntryPoint "<<ep->toString()<<" does not have a task."<<std::endl;
             assert(false);
@@ -25,8 +26,8 @@ bool PlanRepository::verifyPlanBase() const {
         }
     }
     for(const Plan* p : getPlans()) {
-        for(int=0; i < p->getEntryPoints().size()-1; ++i) {
-            if(p->getEntryPoints[i]->getId() >= p->getEntryPoints[i+1]->getId()) {
+        for(int i = 0; i < p->getEntryPoints().size() - 1; ++i) {
+            if(p->getEntryPoints()[i]->getId() >= p->getEntryPoints()[i+1]->getId()) {
                 std::cerr << "Wrong sorting of entrypoints in plan "<<p->toString()<<std::endl;
                 assert(false);
                 return false;
@@ -35,9 +36,6 @@ bool PlanRepository::verifyPlanBase() const {
     }
 
     return true;
-
-
 }
-
 
 }  // namespace alica

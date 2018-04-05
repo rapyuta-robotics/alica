@@ -9,6 +9,7 @@ namespace supplementary {
 
 namespace alica {
     class AbstractPlan;
+    class AlicaElement;
     class EntryPoint;
     class FailureState;
     class Parameter;
@@ -21,9 +22,9 @@ namespace alica {
     class Transition;
     class Variable;
 
-    using AgentSet = std::vector<const supplementary::AgentID*>;
-
     using AbstractPlanSet = std::vector<const AbstractPlan*>;
+    using AgentSet = std::vector<const supplementary::AgentID*>;
+    using AlicaElementSet = std::vector<const AlicaElement*>;
     using EntryPointSet = std::vector<const EntryPoint*>;
     using FailureStateSet = std::vector<const FailureState*>;
     using ParameterSet = std::vector<const Parameter*>;
@@ -35,6 +36,4 @@ namespace alica {
     using TaskSet = std::vector<const Task*>;
     using TransitionSet = std::vector<const Transition*>;    
     using VariableSet = std::vector<const Variable*>;
-
-
 }

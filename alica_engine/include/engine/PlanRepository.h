@@ -8,7 +8,6 @@
 #ifndef PLANREPOSITORY_H_
 #define PLANREPOSITORY_H_
 
-#include <stdio.h>
 #include <iostream>
 #include <unordered_map>
 
@@ -32,6 +31,8 @@ class Transition;
 class Variable;
 class PlanningProblem;
 class ModelFactory;
+class ExpressionHandler;
+
 /**
  * The PlanRepository holds the ALICA program, neatly separated into different Dictionaries.
  * It is especially useful to map element Ids back to their object, e.g., when receiving messages referring to plan
