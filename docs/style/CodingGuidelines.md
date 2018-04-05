@@ -79,7 +79,7 @@ When declaring pointers and references, prefer placing the operator adjacent to 
 ## Common Pitfalls
 
 * Shared Pointers: They are not the solution to all your memory problems. Even though they are very common in this codebase, avoid using them. They are slow, cannot deal with cyclic relationships and often hinder readability, as they obscure the true ownership relationship. Use other techniques if at all possible (unique_ptr especially are fabulous). IF you need to introduce a new shared pointer, discuss your intent, including why this problem requires a shared pointer and the ownership model that you want to use with some senior developer. 
-Especially Hendrik (hendrik.skubch@rapyuta-robotics.com) will help you to avoid shared_ptr whereever possible.
+   * Especially Hendrik (hendrik.skubch@rapyuta-robotics.com) will help you to avoid shared_ptr wherever possible.
 
 * `using` and `using namespace`: 
    * Never write using in a header file. Ever. 
