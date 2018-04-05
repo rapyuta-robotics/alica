@@ -2,7 +2,7 @@
 #include <thread>
 #include <string>
 
-#include "supplementary/Timer.h"
+#include <supplementary/Timer.h>
 
 class EventTest : public ::testing::Test
 {
@@ -10,6 +10,7 @@ public:
 	int callbackInt = 0;
 	std::condition_variable* cv;
 	std::mutex cv_mtx;
+
 	void callback()
 	{
 		callbackInt++;
@@ -27,7 +28,7 @@ TEST_F(EventTest, timerEvent)
 	timerEvent.registerCV(this->cv);
 	timerEvent.start();
 
-	cv->wait_for(lck, std::chrono::seconds(5), [&]
+	cv->wait_for(lck, std::chrono::seconds(5), [this]
 	{
 		this->callback();
 		std::cout << "callbackInt is " << callbackInt << std::endl;

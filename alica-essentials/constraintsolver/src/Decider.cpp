@@ -118,7 +118,7 @@ namespace alica
 			shared_ptr<Var> Decider::decideActivityBased(shared_ptr<vector<shared_ptr<Var> > > variables,
 															shared_ptr<CNSat> solver)
 			{
-				cout << "Decider::decideActivityBased()" << endl;
+				//cout << "Decider::decideActivityBased()" << endl;
 				shared_ptr<CNSMTGSolver> cnsmtGSolver = nullptr;
 				if (solver->cnsmtGSolver.use_count() > 0)
 				{
@@ -132,8 +132,8 @@ namespace alica
 				//Search Lit with highest Activity
 				if (cnsmtGSolver == nullptr)
 				{
-					cout << "\tvars = " << vars << endl;
-					cout << "\tinit = " << init << endl;
+					//cout << "\tvars = " << vars << endl;
+					//cout << "\tinit = " << init << endl;
 					for (int i = 0; i < vars; i++)
 					{
 						int p = (init + i) % vars;
