@@ -61,7 +61,7 @@ When declaring pointers and references, prefer placing the operator adjacent to 
     4. include from third party libraries: `#include <ros/ros.h>`
     5. include system library headers: `#include <vector>`
 * sort the includes alphabetically in each section and keep a newline between those sections (this is done automatically by clang-format)
-* don't include with relative paths, e.g., ´#include "../../folder/header.h"´
+* don't include with relative paths, e.g., `#include "../../folder/header.h"`
 
 ## Namespaces
 
