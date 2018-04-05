@@ -11,88 +11,61 @@
 namespace alica {
 
 Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id)
-        : id(id)
-        , name("")
-        , timeLastMsgReceived(0)
-        , engine(engine)
-        , properties(nullptr)
-        , engineData(nullptr)
-        , timeout(timeout)
-        , active(false)
-        , local(false) {}
+        : _id(id)
+        , _name("")
+        , _timeLastMsgReceived(0)
+        , _engine(engine)
+        , _properties(nullptr)
+        , _engineData(nullptr)
+        , _timeout(timeout)
+        , _active(false)
+        , _ignored(false)
+        , _local(false) {}
 
 Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id, std::string name)
         : Agent(engine, timeout, id) {
-    this->name = name;
-    this->properties = new RobotProperties(id, engine, name);
-    this->engineData = new RobotEngineData(engine, id);
-}
-
-Agent::~Agent() {
-    delete this->properties;
-}
-
-const supplementary::AgentID* Agent::getID() const {
-    return this->id;
-}
-
-const std::string& Agent::getName() const {
-    return this->name;
-}
-
-bool Agent::isActive() const {
-    return this->active;
+    _name = name;
+    _properties = new RobotProperties(id, engine, name);
+    _engineData = new RobotEngineData(engine, id);
 }
 
 void Agent::setLocal(bool local) {
     if (local) {
-        this->active = true;
+        _active = true;
     }
-    this->local = local;
-}
-
-const RobotProperties* Agent::getProperties() const {
-    return this->properties;
-}
-
-const RobotEngineData* Agent::getEngineData() const {
-    return this->engineData;
-}
-
-void Agent::setTimeLastMsgReceived(AlicaTime timeLastMsgReceived) {
-    this->timeLastMsgReceived = timeLastMsgReceived;
+    _local = local;
 }
 
 void Agent::setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint) {
-    this->engineData->getSuccessMarks()->markSuccessfull(plan, entryPoint);
+    _engineData->getSuccessMarks()->markSuccessfull(plan, entryPoint);
 }
 
 void Agent::setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks) {
-    this->engineData->setSuccessMarks(successMarks);
+    _engineData->setSuccessMarks(successMarks);
 }
 
 const Variable* Agent::getDomainVariable(const std::string& sort) const {
-    return this->engineData->getDomainVariable(sort);
+    return _engineData->getDomainVariable(sort);
 }
 
 std::shared_ptr<std::list<const EntryPoint*>> Agent::getSucceededEntryPoints(const AbstractPlan* plan) const {
-    return this->engineData->getSuccessMarks()->succeededEntryPoints(plan);
+    return _engineData->getSuccessMarks()->succeededEntryPoints(plan);
 }
 
 bool Agent::update() {
-    if (this->local) {
+    if (_local) {
         return false;
     }
-    if (this->active && this->timeLastMsgReceived + this->timeout < this->engine->getIAlicaClock()->now()) {
+    if (_active && _timeLastMsgReceived + _timeout < _engine->getIAlicaClock()->now()) {
         // timeout triggered
-        this->engineData->clearSuccessMarks();
-        this->active = false;
+        _engineData->clearSuccessMarks();
+        _active = false;
         return true;
     }
 
-    if (!this->active && this->timeLastMsgReceived + this->timeout > this->engine->getIAlicaClock()->now()) {
+    if (!_active && _timeLastMsgReceived + _timeout > _engine->getIAlicaClock()->now()) {
         // reactivate because of new messages
-        this->active = true;
+        _active = true;
         return true;
     }
 
