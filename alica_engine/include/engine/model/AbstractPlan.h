@@ -10,6 +10,7 @@
 
 
 #include <string>
+#include <memory>
 
 #include "AlicaElement.h"
 #include "engine/IAlicaClock.h"
@@ -43,7 +44,7 @@ public:
     const VariableSet& getVariables() const {return _variables;}
     const RuntimeCondition* getRuntimeCondition() const {return _runtimeCondition;}
     const PreCondition* getPreCondition() const {return _preCondition;}
-    const shared_ptr<UtilityFunction>& getUtilityFunction() const {return _utilityFunction;}
+    const std::shared_ptr<UtilityFunction>& getUtilityFunction() const {return _utilityFunction;}
     double getUtilityThreshold() const {return _utilityThreshold;}
 
     std::string toString() const;
@@ -61,7 +62,7 @@ private:
     void setVariables(const VariableSet& variables);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
-    void setUtilityFunction(shared_ptr<UtilityFunction> utilityFunction);
+    void setUtilityFunction(std::shared_ptr<UtilityFunction> utilityFunction);
     void setUtilityThreshold(double utilityThreshold);
 
     //TODO: move this to the authority module
@@ -77,7 +78,7 @@ private:
     /**
      * This plan's Utility function
      */
-    shared_ptr<UtilityFunction> _utilityFunction; //TODO why the heck is this a shared ptr, livetime is bout to this object
+    std::shared_ptr<UtilityFunction> _utilityFunction; //TODO why the heck is this a shared ptr, livetime is bout to this object
 
     
     VariableSet _variables;

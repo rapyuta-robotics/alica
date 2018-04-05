@@ -2,11 +2,11 @@
 #include "AlicaElement.h"
 
 #include "supplementary/AgentID.h"
+#include "Plan.h"
+#include "EntryPoint.h"
+#include "State.h"
 
-#include <list>
-#include <memory>
 #include <string>
-#include <typeinfo>
 #include <vector>
 
 namespace alica {
@@ -17,24 +17,23 @@ class Variable;
 class RunningPlan;
 class AlicaEngine;
 class SolverTerm;
-
+class ModelFactory;
 /**
  * A quantifier encapsulates a set of Variables, belonging to a domain artifact, scoped under a AlicaElement
  */
 class Quantifier : public AlicaElement {
 public:
-    Quantifier(long id = 0);
+    Quantifier(int64_t id = 0);
     virtual ~Quantifier();
-    std::list<std::string>& getDomainIdentifiers();
-    void setDomainIdentifiers(const std::list<std::string>& domainIdentifiers);
-    bool isScopeIsEntryPoint() const;
-    bool isScopeIsPlan() const;
-    bool isScopeIsState() const;
-    State* getScopedState();
-    EntryPoint* getScopedEntryPoint();
-    Plan* getScopedPlan();
-    void setScope(AlicaEngine* a, AlicaElement* ae);
-    AlicaElement* getScope();
+    const std::vector<std::string>& getDomainIdentifiers() const {return _domainIdentifiers;}
+    bool isScopeIsEntryPoint() const {return _scopeType == entryPointScope;}
+    bool isScopeIsPlan() const {return _scopeType == planScope;}
+    bool isScopeIsState() const {return _scopeType == stateScope;}
+    const State* getScopedState()  const {return _scopeType == stateScope ? static_cast<const State*>(_scope) : nullptr;}
+    const EntryPoint* getScopedEntryPoint() const {return _scopeType == entryPointScope ? static_cast<const EntryPoint*>(_scope) : nullptr;}
+    const Plan* getScopedPlan() const {return _scopeType == planScope ? static_cast<const Plan*>(_scope) : nullptr;}
+    const AlicaElement* getScope() const {return _scope;}
+    
     /**
      * Access the std::list of sorted Variables under the scope of this quantifier given a runningplan.
      * @param p A RunningPlan
@@ -45,27 +44,18 @@ public:
             std::shared_ptr<std::vector<const supplementary::AgentID*>>& agentsInScope) = 0;
 
 private:
-    std::list<std::string> domainIdentifiers;
-    void setScopeIsEntryPoint(bool scopeIsEntryPoint);
-    void setScopeIsPlan(bool scopeIsPlan);
-    void setScopeIsState(bool scopeIsState);
+    enum Scope {
+        planScope, entryPointScope, stateScope
+    };
+    friend ModelFactory;
+    void setScope(const AlicaElement* ae);
+    void setScopeType(Scope scope);
+    void setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers);
 
-protected:
-    /**
-     * Indicates that the scope of this quantifier is an EntryPoint
-     */
-    bool scopeIsEntryPoint;
-    /**
-     * Indicates that the scope of this quantifier is a Plan
-     */
-    bool scopeIsPlan;
-    /**
-     * Indicates that the scope of this quantifier is an State
-     */
-    bool scopeIsState;
-    EntryPoint* entryPoint;
-    State* state;
-    Plan* plan;
+    std::vector<std::string> _domainIdentifiers;
+
+    const AlicaElement* _scope; 
+    Scope _scopeType;
 };
 
 }  // namespace alica

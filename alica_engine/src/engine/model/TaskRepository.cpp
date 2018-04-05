@@ -20,10 +20,10 @@ void TaskRepository::setDefaultTask(int64_t defaultTask) {
 }
 
 std::string TaskRepository::getFileName() const {
-    if (this->fileName.empty()) {
-        return name + ".rdefset";
+    if (_fileName.empty()) {
+        return getName() + ".rdefset";
     }
-    return fileName;
+    return _fileName;
 }
 
 void TaskRepository::setFileName(const std::string& fileName) {

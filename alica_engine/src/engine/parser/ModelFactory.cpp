@@ -136,7 +136,7 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node) {
     // insert into elements ma
     addElement(plan);
     // insert into plan repository map
-    this->rep->_plans.insert(pair<int64_t,const Plan*>(plan->getId(), plan));
+    this->rep->_plans.emplace(plan->getId(), plan);
 
     tinyxml2::XMLElement* curChild = element->FirstChildElement();
     while (curChild != nullptr) {
@@ -427,7 +427,7 @@ void ModelFactory::createBehaviour(tinyxml2::XMLDocument* node) {
             BehaviourConfiguration* bc = createBehaviourConfiguration(curChild);
             this->rep->_behaviourConfigurations.insert(pair<int64_t, BehaviourConfiguration*>(bc->getId(), bc));
             bc->setBehaviour(beh);
-            beh->getConfigurations().push_back(bc);
+            beh->_configurations.push_back(bc);
         } else {
             ae->abort("MF: Unhandled Behaviour Child:", curChild->Value());
         }
@@ -494,7 +494,7 @@ BehaviourConfiguration* ModelFactory::createBehaviourConfiguration(tinyxml2::XML
             const char* key = curChild->Attribute("key");
             const char* value = curChild->Attribute("value");
             if (key && value) {
-                b->getParameters()->insert(pair<string, string>(key, value));
+                b->_parameters.emplace(key, value);
             }
         } else {
             ae->abort("MF: Unhandled BehaviourConfiguration Child:", curChild);
@@ -610,7 +610,8 @@ Variable* ModelFactory::createVariable(tinyxml2::XMLElement* element) {
     if (namePtr) {
         name = namePtr;
     }
-    Variable* v = new Variable(this->parser->parserId(element), name, type);
+    Variable* v = new Variable(this->parser->parserId(element), type);
+    v->setName(name);
     setAlicaElementAttributes(v, element);
     addElement(v);
     this->rep->_variables.insert(pair<int64_t, Variable*>(v->getId(), v));
@@ -875,7 +876,7 @@ Quantifier* ModelFactory::createQuantifier(tinyxml2::XMLElement* element) {
     while (curChild != nullptr) {
         const char* val = curChild->Value();
         if (sorts.compare(val) == 0) {
-            q->getDomainIdentifiers().push_back(curChild->GetText());
+            q->_domainIdentifiers.emplace_back(curChild->GetText());
         } else {
             ae->abort("MF: Unhandled Quantifier Child:", curChild);
         }
@@ -1268,7 +1269,7 @@ void ModelFactory::attachPlanReferences() {
     for (pair<int64_t, int64_t> pairs : this->quantifierScopeReferences) {
         AlicaElement* ae = (AlicaElement*) this->elements.find(pairs.second)->second;
         Quantifier* q = (Quantifier*) this->elements.find(pairs.first)->second;
-        q->setScope(this->ae, ae);
+        q->setScope(ae);
     }
     this->quantifierScopeReferences.clear();
 

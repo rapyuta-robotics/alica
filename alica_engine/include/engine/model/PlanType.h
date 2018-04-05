@@ -25,18 +25,20 @@ public:
     PlanType();
     virtual ~PlanType();
 
-    const virtual string& getFileName() const;
+
     std::string toString() const;
 
-    const std::list<const Parametrisation*>& getParametrisation() const {return _parametrisation;}
+    const ParametrisationSet& getParametrisation() const {return _parametrisation;}
     const PlanSet& getPlans() const {return _plans;}
 private:
     friend ModelFactory;
-    void setParametrisation(const list<Parametrisation*>& parametrisation);
+    void setParametrisation(const ParametrisationSet& parametrisation);
     void setPlans(const PlanSet& plans);
+    void setFileName(const std::string& filename);
 
     PlanSet _plans;
-    std::list<const Parametrisation*> _parametrisation;
+    ParametrisationSet _parametrisation;
+    std::string _fileName;
 };
 
 }  // namespace alica

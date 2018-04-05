@@ -18,7 +18,7 @@ class ModelFactory;
  */
 class TerminalState : public State {
 public:
-    TerminalState();
+    TerminalState(StateType t);
     virtual ~TerminalState();
     const PostCondition* getPostCondition() const {return _postCondition;}
 

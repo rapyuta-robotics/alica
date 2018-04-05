@@ -7,6 +7,7 @@
 
 #include "engine/model/PlanType.h"
 #include "engine/model/Plan.h"
+#include <sstream>
 
 namespace alica {
 
@@ -15,9 +16,9 @@ PlanType::PlanType() {}
 PlanType::~PlanType() {}
 
 std::string PlanType::toString() const {
-    stringstream ss;
-    ss << "#PlanType: " << getName() << " " << _getId() << std::endl;
-    ss << "\t Plans: " << _plans.size() << endl;
+    std::stringstream ss;
+    ss << "#PlanType: " << getName() << " " << getId() << std::endl;
+    ss << "\t Plans: " << _plans.size() << std::endl;
     if (_plans.size() != 0) {
         for (const Plan* p : _plans) {
             ss << "\t" << p->getId() << " " << p->getName() << std::endl;
@@ -27,19 +28,9 @@ std::string PlanType::toString() const {
     return ss.str();
 }
 
-//====================== Getter and Setter =========================
-
-const std::string& PlanType::getFileName() const {
-    if (this->fileName.empty()) {
-        static string result = this->name + ".pty";
-        return result;
-    } else {
-        return this->fileName;
-    }
-}
 
 
-void PlanType::setParametrisation(const list<Parametrisation*> parametrisation) {
+void PlanType::setParametrisation(const ParametrisationSet& parametrisation) {
     _parametrisation = parametrisation;
 }
 

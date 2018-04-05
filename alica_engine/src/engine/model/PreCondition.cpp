@@ -6,7 +6,7 @@
  */
 
 #include "engine/model/PreCondition.h"
-
+#include <sstream>
 namespace alica {
 
 PreCondition::PreCondition(int64_t id)
@@ -17,10 +17,10 @@ PreCondition::PreCondition(int64_t id)
 PreCondition::~PreCondition() {}
 
 std::string PreCondition::toString() const {
-    stringstream ss;
-    ss << "#PreCondition: " << getName() << " " << getId() << (_enabled ? "enabled" : "disabled") << endl;
-    ss << "\t ConditionString: " << getConditionString() << endl;
-    ss << "#EndPreCondition" << endl;
+    std::stringstream ss;
+    ss << "#PreCondition: " << getName() << " " << getId() << (_enabled ? "enabled" : "disabled") << std::endl;
+    ss << "\t ConditionString: " << getConditionString() << std::endl;
+    ss << "#EndPreCondition" << std::endl;
     return ss.str();
 }
 

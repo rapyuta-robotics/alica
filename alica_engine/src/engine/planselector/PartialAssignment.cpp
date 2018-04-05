@@ -335,7 +335,7 @@ shared_ptr<list<PartialAssignment*>> PartialAssignment::expand() {
 /**
  * Checks whether the current assignment is valid
  */
-bool PartialAssignment::isValid() {
+bool PartialAssignment::isValid() const {
     int min = 0;
     for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
         min += dynCardinalities[i]->getMin();

@@ -10,25 +10,23 @@
 
 namespace alica {
 
-FailureState::FailureState() {
-    this->terminal = true;
-    this->successState = false;
-    this->failureState = true;
-}
+FailureState::FailureState()
+    : TerminalState(Failure)
+{}
 
 FailureState::~FailureState() {}
 
-string FailureState::toString() {
-    stringstream ss;
-    ss << "#FailureState: " << this->name << " " << this->id << endl;
-    ss << "\t Result:" << endl;
-    ss << "\t InTransitions: " << this->inTransitions.size() << endl;
-    if (this->inTransitions.size() != 0) {
-        for (Transition* t : this->getInTransitions()) {
-            ss << "\t" << t->getId() << " " << t->getName() << endl;
+std::string FailureState::toString() const {
+    std::stringstream ss;
+    ss << "#FailureState: " << getName() << " " << getId() << std::endl;
+    ss << "\t Result:" << std::endl;
+    ss << "\t InTransitions: " << getInTransitions().size() << std::endl;
+    if (getInTransitions().size() != 0) {
+        for (const Transition* t : getInTransitions()) {
+            ss << "\t" << t->getId() << " " << t->getName() << std::endl;
         }
     }
-    ss << "#EndFailureState" << endl;
+    ss << "#EndFailureState" << std::endl;
     return ss.str();
 }
 

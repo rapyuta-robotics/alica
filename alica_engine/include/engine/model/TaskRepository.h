@@ -22,7 +22,7 @@ public:
     virtual ~TaskRepository();
     int64_t getDefaultTask() const {return _defaultTask;}
     const TaskSet& getTasks() const {return _tasks;}
-    std::string getFileName() const {return _fileName;}
+    std::string getFileName() const;
 
 private:
     friend ModelFactory;

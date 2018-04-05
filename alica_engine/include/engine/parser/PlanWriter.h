@@ -40,8 +40,8 @@ public:
     PlanWriter(AlicaEngine* ae, PlanRepository* rep);
     virtual ~PlanWriter();
 
-    std::string getTempPlanDir();
-    std::string getConfigPath() const;
+    const std::string& getTempPlanDir() const;
+    const std::string& getConfigPath() const;
     const AlicaElementSet& getPlansToSave() const;
 
     void saveAllPlans();
@@ -52,7 +52,7 @@ public:
     void saveRoleSet(const RoleSet* r, std::string directory, std::string name);
     void saveTaskRepository(const TaskRepository* tr, std::string name);
     void saveTaskRepository(const TaskRepository* tr, std::string directory, std::string name);
-    void setTempPlanDir(std::string directory);
+    void setTempPlanDir(const std::string& directory);
     void createPlanXMLNode(const Plan* p, tinyxml2::XMLDocument* doc);
 
     tinyxml2::XMLDocument* createPlanXMLDocument(const Plan* p);
@@ -67,7 +67,7 @@ private:
     std::string getRelativeFileName(std::string file);
     std::string getRelativeFileName(const AbstractPlan* p);
     
-    void setPlansToSave(AlicaElementSet& plansToSave);
+    void setPlansToSave(const AlicaElementSet& plansToSave);
     void addConditionChildren(const Condition* c, tinyxml2::XMLElement* xn, tinyxml2::XMLDocument* doc);
     void addPlanElementAttributes(const AlicaElement* p, tinyxml2::XMLElement* x);
     //		tinyxml2::XMLAttribute* getXsiTypeAttribute(string type, tinyxml2::XMLDocument* doc);

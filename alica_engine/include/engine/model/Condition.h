@@ -9,6 +9,7 @@
 #define CONDITION_H_
 
 #include <string>
+#include <memory>
 
 #include "AlicaElement.h"
 #include "engine/Types.h"
@@ -19,6 +20,8 @@ class BasicCondition;
 class BasicConstraint;
 class RunningPlan;
 class ProblemDescriptor;
+class ModelFactory;
+class ExpressionHandler;
 
 /**
  * A condition encapsulates expressions and constraint specific to a AlicaElement, e.g., a Transition, or a Plan.
@@ -40,7 +43,7 @@ public:
     const std::string& getPlugInName() const {return _plugInName;}
 
     const VariableSet& getVariables() const {return _variables;}
-    const ParameterSet& getParameters() {return _parameters;}
+    const ParameterSet& getParameters() const {return _parameters;}
     const QuantifierSet& getQuantifiers() const {return _quantifiers;}
 
     const std::shared_ptr<BasicCondition>& getBasicCondition() const {return _basicCondition;}
@@ -58,6 +61,7 @@ private:
     void setParameters(const ParameterSet& parameters);
     void setBasicConstraint(const std::shared_ptr<BasicConstraint>& basicConstraint);
     void setBasicCondition(const std::shared_ptr<BasicCondition>& basicCondition);
+    void setQuantifiers(const QuantifierSet& quantifiers);
 
     std::shared_ptr<BasicCondition> _basicCondition;
     std::shared_ptr<BasicConstraint> _basicConstraint;
@@ -79,13 +83,7 @@ private:
     const AbstractPlan* _abstractPlan;
 
     std::string _conditionString;
-
-
-    
     std::string _plugInName; //TODO: is this needed?!
-
-
-    void setQuantifiers(const list<Quantifier*>& quantifiers);
 };
 }  // namespace alica
 

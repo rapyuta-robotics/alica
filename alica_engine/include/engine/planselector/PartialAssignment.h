@@ -55,7 +55,7 @@ public:
     bool addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, const supplementary::AgentID* robot);
     bool assignRobot(const supplementary::AgentID* robotId, int index);
     shared_ptr<list<PartialAssignment*>> expand();
-    bool isValid();
+    bool isValid() const override;
     bool isGoal();
     static bool compareTo(PartialAssignment* thisPa, PartialAssignment* newPa);
     std::string toString();

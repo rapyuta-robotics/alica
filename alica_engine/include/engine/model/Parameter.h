@@ -10,14 +10,14 @@ class Parameter : public AlicaElement {
 public:
     Parameter();
     virtual ~Parameter();
-    std::string getKey();
-    void setKey(std::string key);
-    std::string getValue();
-    void setValue(std::string value);
+    const std::string& getKey() const {return _key;}
+    void setKey(const std::string& key) {_key = key;}
+    const std::string& getValue() const {return _value;}
+    void setValue(const std::string& value) {_value = value;}
 
 protected:
-    std::string key;
-    std::string value;
+    std::string _key;
+    std::string _value;
 };
 
 } /* namespace alica */

@@ -16,7 +16,7 @@
 
 #include "AlicaElement.h"
 
-using namespace std;
+
 namespace alica {
 class RoleTaskMapping;
 class RoleDefinitionSet;

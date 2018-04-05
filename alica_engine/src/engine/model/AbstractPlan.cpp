@@ -46,6 +46,7 @@ std::string AbstractPlan::toString() const {
     std::stringstream ss;
     ss << AlicaElement::toString();
     ss << "IsMasterPlan: " << (isMasterPlan() ? "true" : "false") << std::endl;
+    ss << "Filename: " << _fileName << std::endl;
     return ss.str();
 }
 

@@ -21,7 +21,7 @@ std::string RoleTaskMapping::toString() const {
     ss << "#RoleTaskMapping: " << getName() << " " << getId() << std::endl;
     ss << "\t Role-Name: " << _role->getName() << std::endl;
     ss << "\t TaskPriorities: " << _taskPriorities.size() << std::endl;
-    for (unordered_map<long, double>::const_iterator iterator = _taskPriorities.begin();
+    for (std::unordered_map<int64_t, double>::const_iterator iterator = _taskPriorities.begin();
             iterator != _taskPriorities.end(); ++iterator) {
         const long l = iterator->first;
         const double val = iterator->second;
@@ -36,7 +36,7 @@ void RoleTaskMapping::setRole(const Role* role) {
     _role = role;
 }
 
-void RoleTaskMapping::setTaskPriorities(const map<long, double>& taskPriorities) {
+void RoleTaskMapping::setTaskPriorities(const std::unordered_map<int64_t, double>& taskPriorities) {
     _taskPriorities = taskPriorities;
 }
 

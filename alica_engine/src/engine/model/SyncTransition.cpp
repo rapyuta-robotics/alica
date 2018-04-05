@@ -22,7 +22,7 @@ SyncTransition::~SyncTransition() {}
 
 std::string SyncTransition::toString() const {
     std::stringstream ss;
-    ss << "#SyncTransition: " << getName() << " " << getId()) << std::endl;
+    ss << "#SyncTransition: " << getName() << " " << getId() << std::endl;
     if (_plan != nullptr) {
         ss << "\t Plan: " << _plan->getId() << " " << _plan->getName() << std::endl;
     }
@@ -51,11 +51,11 @@ void SyncTransition::setTalkTimeOut(unsigned long talkTimeOut) {
     _talkTimeOut = talkTimeOut;
 }
 
-void SyncTransition::setPlan(Plan* plan) {
+void SyncTransition::setPlan(const Plan* plan) {
     _plan = plan;
 }
 
-void SyncTransition::setInSync(const list<Transition*>& inSync) {
+void SyncTransition::setInSync(const TransitionSet& inSync) {
     _inSync = inSync;
 }
 
