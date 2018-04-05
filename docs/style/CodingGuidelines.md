@@ -7,6 +7,7 @@ Emphasize readability. Code will be read many times, but only written once.
 ## History of this document.
 
 * 2018/03/13 Initial version.
+* 2018/04/05 Merged with Carpe-Noctem-Cassel code style.
 
 
 ## Baseline
