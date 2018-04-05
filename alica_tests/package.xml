@@ -2,7 +2,7 @@
 <package>
   <name>alica_tests</name>
   <version>0.0.1</version>
-  <description>The alica_test package</description>
+  <description>The alica_tests package</description>
 
   <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
   <maintainer email="witsch@vs.uni-kassel.de">Andreas Witsch</maintainer>
