@@ -29,6 +29,12 @@ If your team shares development PCs, please note that uncommitted changes on tho
 * Do not indent namespaces. Almost all code is inside a namespace or even nested namespace. Indentation here wastes precious screen real estate.
 * If possible use the common clang-format file that resides aside of these Coding Guidelines and integrate it into your workflow/IDE.
 
+## General Remarks
+
+* Write C++11 not C and avoid utilising Boost when this needed feature is in C++11, already.
+* Try to write Object-Oriented code.
+* Avoid code duplication at all costs.
+
 ## Naming Conventions
 
 * Classnames and structs are written in `CamelCase` (first letter capitalized).
@@ -43,12 +49,6 @@ When declaring pointers and references, prefer placing the operator adjacent to 
    * Prefer `int* p` instead of `int *p`.
    * Prefer `Vector3& pos` over `Vector3 &pos`.
    
-## Coding in General
-
-* Write C++11 not C and avoid utilising Boost when this needed feature is in C++11, already.
-* Try to write Object-Oriented code.
-* Avoid code duplication at all costs.
-
 ## Includes
 
 * in header files do forward declaration instead of includes whenever possible: It compiles faster and avoids cycling include dependencies.
@@ -67,8 +67,8 @@ When declaring pointers and references, prefer placing the operator adjacent to 
 
 - always use at least one namespace
 - As a rule of thumb - Use one namespace per repository:
-    * cnc-msl: msl:: + nested namespaces
-    * alica: alica:: + nested namespaces
+    * supplementary: supplementary[::nested_namespace]
+    * alica: alica[::nested_namespace]
 
 ## Header
 
