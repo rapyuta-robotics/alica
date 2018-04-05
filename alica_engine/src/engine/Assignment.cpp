@@ -133,7 +133,7 @@ StateCollection* Assignment::getRobotStateMapping() {
 }
 
 shared_ptr<vector<const supplementary::AgentID*>> Assignment::getAllRobotsSorted() {
-    shared_ptr<vector<const supplementary::AgentID*>> ret = shared_ptr<vector<const supplementary::AgentID*>>();
+    shared_ptr<vector<const supplementary::AgentID*>> ret = make_shared<vector<const supplementary::AgentID*>>();
     for (int i = 0; i < this->getEpRobotsMapping()->getSize(); i++) {
         for (int j = 0; j < this->getEpRobotsMapping()->getRobots(i)->size(); j++) {
             ret->push_back(this->getEpRobotsMapping()->getRobots(i)->at(j));
