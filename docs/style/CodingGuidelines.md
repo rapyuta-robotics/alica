@@ -52,7 +52,6 @@ When declaring pointers and references, prefer placing the operator adjacent to 
 ## Includes
 
 * in header files do forward declaration instead of includes whenever possible: It compiles faster and avoids cycling include dependencies.
-* use `#pragma once` instead of include guards whenever possible: Nowadays all common compilers support that feature and it facilitates refactoring and avoids include guard clashes.
 * use `"Bla.h"` for header files that are inside your local include folder
 * use `<Bla.h>` for header files that are outside your local include folder
 * sort the header files from local to general:
@@ -62,6 +61,7 @@ When declaring pointers and references, prefer placing the operator adjacent to 
     4. include from third party libraries: `#include <ros/ros.h>`
     5. include system library headers: `#include <vector>`
 * sort the includes alphabetically in each section and keep a newline between those sections (this is done automatically by clang-format)
+* don't include with relative paths, e.g., ´#include "../../folder/header.h"´
 
 ## Namespaces
 
@@ -72,6 +72,7 @@ When declaring pointers and references, prefer placing the operator adjacent to 
 
 ## Header
 
+* use `#pragma once` instead of include guards whenever possible: Nowadays all common compilers support that feature and it facilitates refactoring and avoids include guard clashes.
 * have at most one 'public:', 'protected:', and 'private:' section and list them in this order
 * in each section place functions first, then member variables
 * especially place constructors and destructor at first
