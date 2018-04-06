@@ -6,20 +6,20 @@
  */
 
 #include "engine/model/RuntimeCondition.h"
+#include <sstream>
 
 namespace alica {
 
-RuntimeCondition::RuntimeCondition(long id) {
-    this->id = id;
-}
+RuntimeCondition::RuntimeCondition(int64_t id)
+    : Condition(id) {}
 
 RuntimeCondition::~RuntimeCondition() {}
 
-string RuntimeCondition::toString() {
-    stringstream ss;
-    ss << "#RuntimeCondition: " << this->name << " " << this->id << endl;
-    ss << "\t ConditionString: " << this->conditionString << endl;
-    ss << "#EndRuntimeCondition" << endl;
+std::string RuntimeCondition::toString() const {
+    std::stringstream ss;
+    ss << "#RuntimeCondition: " << getName() << " " << getId() << std::endl;
+    ss << "\t ConditionString: " << getConditionString() << std::endl;
+    ss << "#EndRuntimeCondition" << std::endl;
     return ss.str();
 }
 

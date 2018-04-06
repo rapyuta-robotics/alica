@@ -22,7 +22,7 @@ public:
     ForallAgents(AlicaEngine* ae, long id = 0);
     virtual ~ForallAgents();
     std::shared_ptr<std::list<std::vector<Variable*>>> getDomainVariables(std::shared_ptr<RunningPlan>& p,
-            std::shared_ptr<std::vector<const supplementary::AgentID*>>& agentsInScope);
+            std::shared_ptr<AgentSet>& agentsInScope);
 
 protected:
     AlicaEngine* ae;

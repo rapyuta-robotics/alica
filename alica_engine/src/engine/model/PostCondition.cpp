@@ -6,20 +6,21 @@
  */
 
 #include "engine/model/PostCondition.h"
+#include <sstream>
 
 namespace alica {
 
-PostCondition::PostCondition(long id) {
-    this->id = id;
-}
+PostCondition::PostCondition(int64_t id)
+    : Condition(id)
+{}
 
 PostCondition::~PostCondition() {}
 
-string PostCondition::toString() {
-    stringstream ss;
-    ss << "#PostCondition: " + this->name << " " << this->id << endl;
-    ss << "\t ConditionString: " << this->conditionString << endl;
-    ss << "#PostCondition" << endl;
+std::string PostCondition::toString() {
+    std::stringstream ss;
+    ss << "#PostCondition: " + getName() << " " << getId() << std::endl;
+    ss << "\t ConditionString: " << getConditionString() <<  std::endl;
+    ss << "#PostCondition" <<  std::endl;
     return ss.str();
 }
 

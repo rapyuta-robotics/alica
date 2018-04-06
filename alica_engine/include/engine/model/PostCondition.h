@@ -9,18 +9,17 @@
 #define POSTCONDITION_H_
 
 #include <string>
-#include <sstream>
 
 #include "Condition.h"
 
-using namespace std;
+
 namespace alica {
 
 class PostCondition : public Condition {
 public:
-    PostCondition(long id = 0);
+    PostCondition(int64_t id = 0);
     virtual ~PostCondition();
-    string toString();
+    std::string toString() const;
 };
 
 }  // namespace alica

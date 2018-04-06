@@ -374,7 +374,7 @@ Role* ModelFactory::createRole(tinyxml2::XMLElement* element) {
         const char* val = curChild->Value();
         if (characteristics.compare(val) == 0) {
             Characteristic* cha = createCharacteristic(curChild);
-            r->getCharacteristics().insert(pair<string, Characteristic*>(cha->getName(), cha));
+            r->_characteristics.insert(pair<string, Characteristic*>(cha->getName(), cha));
         } else {
             ae->abort("MF: Unhandled Role Child:", curChild->Value());
         }
