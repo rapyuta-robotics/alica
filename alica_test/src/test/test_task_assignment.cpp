@@ -2,7 +2,7 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include "clock/AlicaROSClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/TeamManager.h"
@@ -25,12 +25,9 @@
 #include <memory>
 #include <ros/ros.h>
 
-class StillClock : public alica::IAlicaClock {
+class StillClock : public alica::AlicaClock {
     virtual alica::AlicaTime now() override {
-        return 555;
-    }
-    virtual void sleep(long us) override {
-        std::this_thread::sleep_for(std::chrono::microseconds(us));
+        return AlicaTime(555);
     }
 };
 
@@ -62,7 +59,7 @@ protected:
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new StillClock());
+        ae->setAlicaClock(new StillClock());
         ae->init(bc, cc, uc, crc);
     }
 
@@ -73,7 +70,6 @@ protected:
         delete cc;
         delete uc;
         delete crc;
-        delete ae->getIAlicaClock();
     }
 };
 

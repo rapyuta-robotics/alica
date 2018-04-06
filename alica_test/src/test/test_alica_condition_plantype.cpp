@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include <clock/AlicaROSClock.h>
+#include <engine/AlicaClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "TestWorldModel.h"
 #include "engine/PlanRepository.h"
@@ -47,13 +47,13 @@ protected:
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+        ae->setAlicaClock(new alica::AlicaClock());
     }
 
     virtual void TearDown() {
         ae->shutdown();
         sc->shutdown();
-        delete ae->getIAlicaClock();
+        delete ae->getAlicaClock();
         delete cc;
         delete bc;
         delete uc;
@@ -64,7 +64,7 @@ protected:
  * Test for Runtime or PreCondition are false with plantypes
  */
 TEST_F(AlicaConditionPlanType, conditionPlanTypeTest) {
-    ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+    ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 

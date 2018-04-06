@@ -14,7 +14,7 @@
 #include <algorithm>
 
 #include "AlicaElement.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 
 using namespace std;
 namespace alica {

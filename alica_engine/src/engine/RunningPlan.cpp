@@ -3,7 +3,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/BehaviourPool.h"
 #include "engine/IPlanTreeVisitor.h"
@@ -204,7 +204,7 @@ bool RunningPlan::evalRuntimeCondition() {
 void RunningPlan::setActiveState(State* s) {
     if (_activeState != s) {
         _activeState = s;
-        _stateStartTime = _ae->getIAlicaClock()->now();
+        _stateStartTime = _ae->getAlicaClock()->now();
         if (_activeState != nullptr) {
             if (_activeState->isFailureState()) {
                 _status = PlanStatus::Failed;
@@ -274,7 +274,7 @@ void RunningPlan::setChildren(list<shared_ptr<RunningPlan>> children) {
 
 void RunningPlan::setPlan(AbstractPlan* plan) {
     if (_plan != plan) {
-        _planStartTime = _ae->getIAlicaClock()->now();
+        _planStartTime = _ae->getAlicaClock()->now();
         revokeAllConstraints();
     }
     _plan = plan;

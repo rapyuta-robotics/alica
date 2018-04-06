@@ -83,14 +83,14 @@ bool Agent::update() {
     if (this->local) {
         return false;
     }
-    if (this->active && this->timeLastMsgReceived + this->timeout < this->engine->getIAlicaClock()->now()) {
+    if (this->active && this->timeLastMsgReceived + this->timeout < this->engine->getAlicaClock()->now()) {
         // timeout triggered
         this->engineData->clearSuccessMarks();
         this->active = false;
         return true;
     }
 
-    if (!this->active && this->timeLastMsgReceived + this->timeout > this->engine->getIAlicaClock()->now()) {
+    if (!this->active && this->timeLastMsgReceived + this->timeout > this->engine->getAlicaClock()->now()) {
         // reactivate because of new messages
         this->active = true;
         return true;

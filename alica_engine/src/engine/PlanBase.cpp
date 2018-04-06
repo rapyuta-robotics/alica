@@ -13,7 +13,7 @@
 #include "engine/model/Task.h"
 #include "engine/model/State.h"
 #include "engine/model/EntryPoint.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/Assignment.h"
 #include "engine/collections/StateCollection.h"
 #include "engine/IAlicaCommunication.h"
@@ -35,7 +35,7 @@ PlanBase::PlanBase(AlicaEngine* ae, Plan* masterPlan)
         , _syncModel(ae->getSyncModul())
         , _authModul(ae->getAuth())
         , _statusPublisher(nullptr)
-        , _alicaClock(ae->getIAlicaClock())
+        , _alicaClock(ae->getAlicaClock())
         , _rootNode(nullptr)
         , _deepestNode(nullptr)
         , _mainThread(nullptr)

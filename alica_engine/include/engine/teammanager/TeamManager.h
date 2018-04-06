@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/teammanager/Agent.h"
 
 #include <supplementary/AgentID.h>

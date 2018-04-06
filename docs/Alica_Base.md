@@ -9,9 +9,7 @@
 #include <chrono>
 #include "ros/ros.h"
 #include "Base.h"
-//Choose one
-#include "clock/AlicaROSClock.h"
-#include "clock/AlicaSystemClock.h"
+#include "engine/AlicaClock.h"
 
 //Choose one
 #include "communication/AlicaRosCommunication.h"
@@ -36,17 +34,14 @@ namespace msl
 		uc = new alica::UtilityFunctionCreator();
 		crc = new alica::ConstraintCreator();
 
+		ae->setAlicaClock(new alica::AlicaClock());
 		
-		//You can write your own clock and communication you only need to inherit from the IAlicaClock or IAlicaCommunication
-		//ROS Communicator and ROSCLOCK 
+		//ROS Communicator
 		//For ROS use this
-		ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 
-
-		//This will use your SystemClock and the DummyCommucation has only empty methods so cant communicate with other robots
+		//DummyCommucation has only empty methods so cant communicate with other robots
 		//Without ros use this
-		ae->setIAlicaClock(new alicaRosProxy::AlicaSystemClock());
 		ae->setCommunicator(new alicaRosProxy::AlicaDummyCommunication(ae));
 		
 		//WORLDMODEL 
@@ -71,7 +66,7 @@ namespace msl
 	{
 		//Shutdown the engine will delete all pointer in the engine terminate it
 		ae->shutdown();
-		delete ae->getIAlicaClock();
+		delete ae->getAlicaClock();
 		delete ae->getCommunicator();
 		delete ae;
 		delete cc;

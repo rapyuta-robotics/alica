@@ -1,7 +1,7 @@
 #include "engine/TeamObserver.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/teammanager/TeamManager.h"
 #include "engine/PlanRepository.h"
@@ -20,7 +20,7 @@
 #include "engine/model/State.h"
 #include "engine/teammanager/Agent.h"
 #include "supplementary/AgentID.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/IRoleAssignment.h"
 #include <SystemConfig.h>
 
@@ -57,7 +57,7 @@ TeamObserver::getTeamPlanTrees() {
 }
 
 void TeamObserver::tick(shared_ptr<RunningPlan> root) {
-    AlicaTime time = ae->getIAlicaClock()->now();
+    AlicaTime time = ae->getAlicaClock()->now();
 
     bool changedSomeAgent = false;
     bool changedCurrentAgent = false;
@@ -290,7 +290,7 @@ void TeamObserver::handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming) {
         }
         auto spt = sptFromMessage(incoming->senderID, incoming->stateIDs);
         if (spt != nullptr) {
-            this->teamManager->setTimeLastMsgReceived(incoming->senderID, ae->getIAlicaClock()->now());
+            this->teamManager->setTimeLastMsgReceived(incoming->senderID, ae->getAlicaClock()->now());
             {
                 lock_guard<mutex> lock(this->successMark);
                 this->teamManager->setSuccessMarks(
@@ -332,7 +332,7 @@ shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(const supplementary::Age
         return nullptr;
     }
     map<long, State*>& states = ae->getPlanRepository()->getStates();
-    AlicaTime time = ae->getIAlicaClock()->now();
+    AlicaTime time = ae->getAlicaClock()->now();
     shared_ptr<SimplePlanTree> root = make_shared<SimplePlanTree>();
     root->setRobotId(robotId);
     root->setReceiveTime(time);

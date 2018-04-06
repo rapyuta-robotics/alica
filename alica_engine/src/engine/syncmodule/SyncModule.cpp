@@ -99,7 +99,7 @@ void SyncModule::synchronisationDone(SyncTransition* st) {
     this->synchSet.erase(st);
     this->synchedTransitions.push_back(st);
 #ifdef SM_SUCCES
-    cout << "SM: SYNC TRIGGER TIME:" << this->ae->getIAlicaClock()->now() / 1000000UL << endl;
+    cout << "SM: SYNC TRIGGER TIME:" << this->ae->getAlicaClock()->now() / 1000000UL << endl;
 #endif
 }
 

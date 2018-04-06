@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
 #include "BehaviourCreator.h"
-#include <clock/AlicaROSClock.h>
+#include <engine/AlicaClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include <mutex>
 #include <condition_variable>
@@ -52,14 +52,14 @@ protected:
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+        ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     }
 
     virtual void TearDown() {
         ae->shutdown();
         sc->shutdown();
-        delete ae->getIAlicaClock();
+        delete ae->getAlicaClock();
         delete ae->getCommunicator();
         delete cc;
         delete bc;
