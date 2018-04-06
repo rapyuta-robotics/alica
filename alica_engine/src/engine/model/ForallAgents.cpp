@@ -30,7 +30,7 @@ ForallAgents::~ForallAgents() {}
  * @return shared_ptr<list<vector<Variable*> > >
  */
 shared_ptr<list<vector<Variable*>>> ForallAgents::getDomainVariables(
-        shared_ptr<RunningPlan>& p, shared_ptr<vector<const supplementary::AgentID*>>& agentsInScope) {
+        shared_ptr<RunningPlan>& p, std::shared_ptr<AgentSet>& agentsInScope) {
     if (this->isScopeIsPlan()) {
         if (p->getPlan() == this->getScopedPlan()) {
             agentsInScope = p->getAssignment()->getAllRobotsSorted();

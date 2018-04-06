@@ -9,20 +9,18 @@
 #define RUNTIMECONDITION_H_
 
 #include <string>
-#include <sstream>
 
 #include "Condition.h"
 
-using namespace std;
 namespace alica {
 class RunningPlan;
 
 class RuntimeCondition : public Condition {
 public:
-    RuntimeCondition(long id = 0);
+    RuntimeCondition(int64_t id = 0);
     virtual ~RuntimeCondition();
 
-    string toString();
+    std::string toString() const;
 };
 
 }  // namespace alica

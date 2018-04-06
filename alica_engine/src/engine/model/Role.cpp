@@ -6,22 +6,29 @@
  */
 
 #include "engine/model/Role.h"
+
 #include "engine/model/RoleTaskMapping.h"
 #include "engine/model/Characteristic.h"
 
+#include <sstream>
+#include <exception>
+#include <iostream>
+
+
 namespace alica {
 
-Role::Role() {
-    this->roleDefinitionSet = nullptr;
-    this->roleTaskMapping = nullptr;
-}
+Role::Role() 
+    : _roleDefinitionSet(nullptr)
+    , _roleTaskMapping(nullptr)
+{}
 
 Role::~Role() {}
 
-double Role::getPriority(int64_t taskId) {
-    if (this->roleTaskMapping->getTaskPriorities().find(taskId) != this->roleTaskMapping->getTaskPriorities().end()) {
-        return this->roleTaskMapping->getTaskPriorities().find(taskId)->second;
-    } else {
+double Role::getPriority(int64_t taskId) const {
+    std::unordered_map<std::string, const Characteristic*>::const_iterator it = _roleTaskMapping->getTaskPriorities().find(taskId);
+    if (it != _roleTaskMapping->getTaskPriorities().end()) {
+        return it->second;
+    } else { //TODO move this check to start up
         std::cerr << "ROLE DOES NOT HAVE A PRIORITY FOR TASK: " << taskId << std::endl;
         throw new exception;
     }
@@ -29,45 +36,34 @@ double Role::getPriority(int64_t taskId) {
 
 std::string Role::toString() const {
     std::stringstream ss;
-    ss << "#Role: " << this->name << " " << this->id << endl;
-    ss << "\t Characteristics: " << this->characteristics.size() << endl;
-    for (map<string, Characteristic*>::const_iterator iter = this->characteristics.begin();
-            iter != this->characteristics.end(); iter++) {
-        ss << "t" << iter->second->getName() << " : " << iter->second->getCapValue()->getName() << endl;
+    ss << "#Role: " << getName() << " " << getId() << std::endl;
+    ss << "\t Characteristics: " << _characteristics.size() << std::endl;
+    for (std::unordered_map<std::string, const Characteristic*>::const_iterator iter = _characteristics.begin();
+            iter != _characteristics.end(); ++iter) {
+        ss << "t" << iter->second->getName() << " : " << iter->second->getCapValue()->getName() << std::endl;
     }
-    ss << endl;
-    ss << "\tRTM TaskPriorities (" << this->roleTaskMapping->getId()
-       << "): " << this->roleTaskMapping->getTaskPriorities().size() << endl;
-    for (map<long, double>::const_iterator iterator = this->roleTaskMapping->getTaskPriorities().begin();
-            iterator != this->roleTaskMapping->getTaskPriorities().end(); iterator++) {
+    ss << std::endl;
+    ss << "\tRTM TaskPriorities (" << _roleTaskMapping->getId()
+       << "): " << _roleTaskMapping->getTaskPriorities().size() << std::endl;
+    for (std::unordered_map<long, double>::const_iterator iterator = _roleTaskMapping->getTaskPriorities().begin();
+            iterator != _roleTaskMapping->getTaskPriorities().end(); ++iterator) {
         const long l = iterator->first;
         const double val = iterator->second;
-        ss << "\t" << l << " : " << val << endl;
+        ss << "\t" << l << " : " << val << std::endl;
     }
-    ss << endl;
-    ss << "#EndRole" << endl;
+    ss << std::endl;
+    ss << "#EndRole" << std::endl;
     return ss.str();
 }
 
 //====================== Getter and Setter ==================
 
-map<string, Characteristic*>& Role::getCharacteristics() {
-    return characteristics;
-}
-
-const RoleDefinitionSet* Role::getRoleDefinitionSet() const {
-    return roleDefinitionSet;
-}
 
 void Role::setRoleDefinitionSet(const RoleDefinitionSet* roleDefinitionSet) {
-    this->roleDefinitionSet = roleDefinitionSet;
+    _roleDefinitionSet = roleDefinitionSet;
 }
 
-const RoleTaskMapping* Role::getRoleTaskMapping() const {
-    return roleTaskMapping;
-}
-
-void Role::setRoleTaskMapping(RoleTaskMapping* roleTaskMapping) {
-    this->roleTaskMapping = roleTaskMapping;
+void Role::setRoleTaskMapping(const RoleTaskMapping* roleTaskMapping) {
+    _roleTaskMapping = roleTaskMapping;
 }
 }  // namespace alica
