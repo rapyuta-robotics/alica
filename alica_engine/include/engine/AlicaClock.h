@@ -1,35 +1,91 @@
 #pragma once
 
 #include <cstdint>
-#include <chrono>
 
 namespace alica {
 
 class AlicaTime {
 public:
+    template <typename T>
+    constexpr AlicaTime(T t)
+            : _time(t) {}
+    constexpr AlicaTime()
+            : _time(0LL) {}
 
-    using nanoseconds = std::chrono::nanoseconds;
-    using microseconds = std::chrono::microseconds;
-    using milliseconds = std::chrono::milliseconds;
-    using seconds = std::chrono::seconds;
-    using minutes = std::chrono::minutes;
-    using hours = std::chrono::hours;
+    constexpr int64_t inNanoseconds() const {
+        return _time;
+    }
+    constexpr int64_t inMicroseconds() const {
+        return _time / 1000LL;
+    }
+    constexpr int64_t inMilliseconds() const {
+        return _time / 1000000LL;
+    }
+    constexpr int64_t inSeconds() const {
+        return _time / 1000000000LL;
+    }
+    constexpr int64_t inMinutes() const {
+        return _time / 1000000000LL / 60LL;
+    }
+    constexpr int64_t inHours() const {
+        return _time / 1000000000LL / 60LL / 60LL;
+    }
 
-    template <typename T, typename U, typename = typename std::enable_if<std::is_arithmetic<T>::value && std::is_same<U, nanoseconds>::value, T>::type
-    AlicaTime(T time) : _time(time) {}
+    template <typename T>
+    static constexpr AlicaTime nanoseconds(T n) {
+        return AlicaTime(n);
+    }
 
-    AlicaTime<milliseconds> ms(500);
-    AlicaTime<seconds> s(4);
+    template <typename T>
+    static constexpr AlicaTime microseconds(T n) {
+        return AlicaTime(1000LL * n);
+    }
 
-    AlicaTime();
-    ~AlicaTime();
-    // TODO Use compare, arithmetic operators
-    // TODO Keep the current internal precision (10000 == 1 ms)
-    // TODO Unit tests
-    // TODO Add accessors that provide miliseconds, seconds and higher units of time.
-    // TODO Constexpr
-    // TODO Make current usage consistent
-    template
+    template <typename T>
+    static constexpr AlicaTime milliseconds(T n) {
+        return AlicaTime(1000000LL * n);
+    }
+
+    template <typename T>
+    static constexpr AlicaTime seconds(T n) {
+        return AlicaTime(1000000000LL * n);
+    }
+
+    template <typename T>
+    static constexpr AlicaTime minutes(T n) {
+        return AlicaTime(1000000000LL * 60LL * n);
+    }
+
+    template <typename T>
+    static constexpr AlicaTime hours(T n) {
+        return AlicaTime(1000000000LL * 60LL * 60LL * n);
+    }
+
+    constexpr AlicaTime operator+(const AlicaTime& t) const {
+        return AlicaTime(_time + t.inNanoseconds());
+    }
+
+    constexpr AlicaTime operator-(const AlicaTime& t) const {
+        return AlicaTime(_time - t.inNanoseconds());
+    }
+
+    template <typename T>
+    constexpr AlicaTime operator/(T t) const {
+        return AlicaTime(_time / t);
+    }
+
+    template <typename T>
+    constexpr AlicaTime operator*(T t) const {
+        return AlicaTime(_time * t);
+    }
+
+    constexpr bool operator==(const AlicaTime& t) const {
+        return _time == t.inNanoseconds();
+    }
+
+    constexpr bool operator!=(const AlicaTime& t) const {
+        return _time != t.inNanoseconds();
+    }
 
 private:
     int64_t _time;
@@ -37,10 +93,10 @@ private:
 
 class AlicaClock {
 public:
-    AlicaClock();
-    virtual ~AlicaClock();
+    AlicaClock() {}
+    virtual ~AlicaClock() {}
     virtual AlicaTime now();
-    void sleep(long us);
+    void sleep(const AlicaTime&);
 };
 
 }  // namespace alica
