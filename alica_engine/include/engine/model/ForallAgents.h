@@ -2,6 +2,7 @@
 
 #include "Quantifier.h"
 #include "supplementary/AgentID.h"
+#include <engine/Types.h>
 
 #include <list>
 #include <memory>
@@ -19,13 +20,10 @@ class SolverTerm;
  */
 class ForallAgents : public Quantifier {
 public:
-    ForallAgents(AlicaEngine* ae, long id = 0);
+    ForallAgents(int64_t id = 0);
     virtual ~ForallAgents();
-    std::shared_ptr<std::list<std::vector<Variable*>>> getDomainVariables(std::shared_ptr<RunningPlan>& p,
-            std::shared_ptr<AgentSet>& agentsInScope);
-
-protected:
-    AlicaEngine* ae;
+    virtual std::shared_ptr<std::list<VariableSet>> getDomainVariables(std::shared_ptr<RunningPlan>& p,
+            AgentSet& o_agentsInScope) const override;
 };
 
 }  // namespace alica

@@ -2,6 +2,7 @@
 #include "AlicaElement.h"
 
 #include "supplementary/AgentID.h"
+#include "engine/Types.h"
 #include "Plan.h"
 #include "EntryPoint.h"
 #include "State.h"
@@ -26,9 +27,9 @@ public:
     Quantifier(int64_t id = 0);
     virtual ~Quantifier();
     const std::vector<std::string>& getDomainIdentifiers() const {return _domainIdentifiers;}
-    bool isScopeIsEntryPoint() const {return _scopeType == entryPointScope;}
-    bool isScopeIsPlan() const {return _scopeType == planScope;}
-    bool isScopeIsState() const {return _scopeType == stateScope;}
+    bool isScopeEntryPoint() const {return _scopeType == entryPointScope;}
+    bool isScopePlan() const {return _scopeType == planScope;}
+    bool isScopeState() const {return _scopeType == stateScope;}
     const State* getScopedState()  const {return _scopeType == stateScope ? static_cast<const State*>(_scope) : nullptr;}
     const EntryPoint* getScopedEntryPoint() const {return _scopeType == entryPointScope ? static_cast<const EntryPoint*>(_scope) : nullptr;}
     const Plan* getScopedPlan() const {return _scopeType == planScope ? static_cast<const Plan*>(_scope) : nullptr;}
@@ -37,11 +38,11 @@ public:
     /**
      * Access the std::list of sorted Variables under the scope of this quantifier given a runningplan.
      * @param p A RunningPlan
-     * @param agentsInScope A std::shared_ptr<std::vector<int> >
+     * @param o_agentsInScope the set of agents currently under the scope of this quantifier
      * @return A std::shared_ptr<std::list<std::vector<Variable* > > >
      */
-    virtual std::shared_ptr<std::list<std::vector<Variable*>>> getDomainVariables(std::shared_ptr<RunningPlan>& p,
-            std::shared_ptr<std::vector<const supplementary::AgentID*>>& agentsInScope) = 0;
+    virtual std::shared_ptr<std::list<VariableSet>> getDomainVariables(std::shared_ptr<RunningPlan>& p,
+            AgentSet& o_agentsInScope) const = 0;
 
 private:
     enum Scope {

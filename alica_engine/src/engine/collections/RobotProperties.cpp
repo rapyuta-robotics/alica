@@ -16,26 +16,24 @@ RobotProperties::RobotProperties(const supplementary::AgentID* agentId, const Al
  */
 void RobotProperties::readFromConfig(const AlicaEngine* engine, string name) {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-    this->characteristics = map<string, Characteristic*>();
-    this->capabilities = engine->getPlanRepository()->getCapabilities();
-    string key = "";
-    string kvalue = "";
-    shared_ptr<vector<string>> caps = (*sc)["Globals"]->getNames("Globals", "Team", name.c_str(), NULL);
-    for (string s : *caps) {
+    std::string key = "";
+    std::string kvalue = "";
+    std::shared_ptr<std::vector<std::string>> caps = (*sc)["Globals"]->getNames("Globals", "Team", name.c_str(), NULL);
+    for (const std::string& s : *caps) {
         if (s.compare("ID") == 0 || s.compare("DefaultRole") == 0) {
             continue;
         }
         key = s;
-        kvalue = (*sc)["Globals"]->get<string>("Globals", "Team", name.c_str(), s.c_str(), NULL);
-        for (auto p : this->capabilities) {
-            if (p.second->getName().compare(key) == 0) {
-                for (CapValue* val : p.second->getCapValues()) {
+        kvalue = (*sc)["Globals"]->get<std::string>("Globals", "Team", name.c_str(), s.c_str(), NULL);
+        for (const Capability* cap : engine->getPlanRepository()->getCapabilities()) {
+            if (cap->getName().compare(key) == 0) {
+                for (const CapValue* val : cap->getCapValues()) {
                     // transform(kvalue.begin(), kvalue.end(), kvalue.begin(), ::tolower);
                     if (val->getName().compare(kvalue) == 0) {
                         Characteristic* cha = new Characteristic();
-                        cha->setCapability(p.second);
+                        cha->setCapability(cap);
                         cha->setCapValue(val);
-                        this->characteristics.insert(pair<string, Characteristic*>(key, cha));
+                        this->characteristics.insert(std::pair<std::string, const Characteristic*>(key, cha));
                     }
                 }
             }
@@ -55,15 +53,15 @@ const supplementary::AgentID* RobotProperties::getId() const {
     return agentId;
 }
 
-const map<string, Characteristic*>& RobotProperties::getCharacteristics() const {
+const std::map<std::string, const Characteristic*>& RobotProperties::getCharacteristics() const {
     return this->characteristics;
 }
 
-const string& RobotProperties::getDefaultRole() const {
+const std::string& RobotProperties::getDefaultRole() const {
     return defaultRole;
 }
 
-void RobotProperties::setDefaultRole(const string& defaultRole) {
+void RobotProperties::setDefaultRole(const std::string& defaultRole) {
     this->defaultRole = defaultRole;
 }
 

@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <string>
+#include <iostream>
 
 namespace alica {
 class ModelFactory;
@@ -15,7 +16,7 @@ class Variable : public AlicaElement {
 public:
     Variable();
     Variable(const std::shared_ptr<SolverVariable>& v);
-    Variable(int64_t id, const std::string& type);
+    Variable(int64_t id, const std::string& name, const std::string& type);
     virtual ~Variable();
 
     std::string toString() const;
@@ -26,12 +27,11 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Variable& variable) {
         return os << variable.getName() << "(" << variable.getId() << ")";
     }
-
+    void setSolverVar(const std::shared_ptr<SolverVariable>& solverVar) const;
 private:
     friend ModelFactory;
-    void setType(const std::string& type);
-    void setSolverVar(const std::shared_ptr<SolverVariable>& solverVar);
-    std::shared_ptr<SolverVariable> _solverVar;
+    void setType(const std::string& type);    
+    mutable std::shared_ptr<SolverVariable> _solverVar;  //TODO: move out of here
     std::string _type;
 
 };

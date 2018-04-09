@@ -1,15 +1,6 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
-
-#include <SystemConfig.h>
-
-#include <vector>
-#include <string>
-#include <sstream>
-#include <memory>
-#include <iostream>
-#include <algorithm>
+#include "engine/Types.h"
 
 namespace alica {
 

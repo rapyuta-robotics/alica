@@ -11,7 +11,7 @@
 #include "engine/model/Variable.h"
 
 #include <supplementary/AgentID.h>
-
+#include <typeinfo>
 namespace alica {
 
 /**
@@ -39,21 +39,20 @@ void RobotEngineData::setSuccessMarks(shared_ptr<SuccessMarks> successMarks) {
 }
 
 void RobotEngineData::initDomainVariables() {
-    auto qs = this->engine->getPlanRepository()->getQuantifiers();
     stringstream ss;
     ss << this->agentId << ".";
     string agentIdString = ss.str();
-    for (auto quantifierPair : qs) {
-        if (dynamic_cast<ForallAgents*>(quantifierPair.second) != nullptr) {
-            for (string s : quantifierPair.second->getDomainIdentifiers()) {
+    for (const Quantifier* quantifier : engine->getPlanRepository()->getQuantifiers()) {
+        if (dynamic_cast<const ForallAgents*>(quantifier) != nullptr) {
+            for (const std::string& s : quantifier->getDomainIdentifiers()) {
                 Variable* v = new Variable(makeUniqueId(s), agentIdString + s, "");
-                this->domainVariables.insert(pair<string, Variable*>(s, v));
+                this->domainVariables.insert(std::pair<std::string, const Variable*>(s, v));
             }
         }
     }
 }
 
-Variable* RobotEngineData::getDomainVariable(string sort) const {
+const Variable* RobotEngineData::getDomainVariable(const std::string& sort) const {
     auto iterator = this->domainVariables.find(sort);
     if (iterator != this->domainVariables.end()) {
         return iterator->second;
@@ -62,8 +61,8 @@ Variable* RobotEngineData::getDomainVariable(string sort) const {
     }
 }
 
-long RobotEngineData::makeUniqueId(string s) {
-    long ret = (long) (supplementary::AgentIDHash()(this->agentId) + std::hash<string>()(s));
+int64_t RobotEngineData::makeUniqueId(const std::string& s) const {
+    int64_t ret = (int64_t) (supplementary::AgentIDHash()(this->agentId) + std::hash<string>()(s));
     if (this->engine->getPlanParser()->getParsedElements()->find(ret) !=
             this->engine->getPlanParser()->getParsedElements()->end()) {
         this->engine->abort("TO: Hash Collision in generating a quantified variable's unique ID: ", ret);

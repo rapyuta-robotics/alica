@@ -22,8 +22,10 @@ public:
     void setEntryPoint(const EntryPoint* entryPoint);
     const State* getState() const {return state;}
     void setState(const State* state);
-    unordered_set<shared_ptr<SimplePlanTree>>& getChildren();
-    void setChildren(unordered_set<shared_ptr<SimplePlanTree>> children);
+    const std::unordered_set<std::shared_ptr<SimplePlanTree>>& getChildren() const;
+    std::unordered_set<std::shared_ptr<SimplePlanTree>>& editChildren() {return children;}
+
+    void setChildren(const std::unordered_set<std::shared_ptr<SimplePlanTree>>& children);
     const supplementary::AgentID* getRobotId();
     void setRobotId(const supplementary::AgentID* robotId);
     bool isNewSimplePlanTree() const;
@@ -40,7 +42,7 @@ protected:
      * The parent SimplePlanTree
      */
     SimplePlanTree* parent;
-    unordered_set<shared_ptr<SimplePlanTree>> children;
+    std::unordered_set<std::shared_ptr<SimplePlanTree>> children;
     /**
      * The state occupied by the respective robot.
      */
@@ -55,7 +57,7 @@ protected:
      * The timestamp denoting when this tree was received.
      */
     long receiveTime;
-    list<long> stateIds;
+    std::list<long> stateIds;
 };
 
 } /* namespace alica */

@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 #include <mutex>
+#include <memory>
 
 namespace alica {
 class Variable;

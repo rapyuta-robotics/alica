@@ -29,7 +29,7 @@ public:
 
 protected:
     friend ModelFactory;
-    void setRoleTaskMappings(const list<RoleTaskMapping*> roleTaskMappings);
+    void setRoleTaskMappings(const std::vector<RoleTaskMapping*>& roleTaskMappings);
     void setIsDefault(bool isDefault);
     void setUsableWithPlanId(int64_t usableWithPlanId);
 

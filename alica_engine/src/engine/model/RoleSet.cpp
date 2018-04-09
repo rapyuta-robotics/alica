@@ -36,7 +36,7 @@ void RoleSet::setRoleTaskMappings(const std::vector<RoleTaskMapping*>& roleTaskM
 }
 
 void RoleSet::setUsableWithPlanId(int64_t usableWithPlanId) {
-    usableWithPlanID = usableWithPlanId;
+    _usableWithPlanID = usableWithPlanId;
 }
 
 }  // namespace alica

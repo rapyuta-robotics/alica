@@ -20,16 +20,14 @@ SuccessMarks::SuccessMarks(const AlicaEngine* ae)
  * Construct from a list of EntryPoint id, as received by a message
  * @param epIds A list<long>
  */
-SuccessMarks::SuccessMarks(const AlicaEngine* ae, copnst list<int64_t>& epIds) 
+SuccessMarks::SuccessMarks(const AlicaEngine* ae, const std::list<int64_t>& epIds) 
     :   ae(ae) {
 
-    map<long, EntryPoint*> eps = ae->getPlanRepository()->getEntryPoints();
+    const PlanRepository::Accessor<EntryPoint>& eps = ae->getPlanRepository()->getEntryPoints();
     for (int64_t id : epIds) {
-        const EntryPoint* ep;
-        auto iter = eps.find(id);
-        if (iter != eps.end()) {
-            ep = iter->second;
-            shared_ptr<list<const EntryPoint*>> s;
+        const EntryPoint* ep = eps.find(id);
+        if (ep != nullptr) {
+            std::shared_ptr<std::list<const EntryPoint*>> s;
             auto i = this->successMarks.find(ep->getPlan());
             if (i != this->successMarks.end()) {
                 s = i->second;
@@ -37,9 +35,9 @@ SuccessMarks::SuccessMarks(const AlicaEngine* ae, copnst list<int64_t>& epIds)
                     s->push_back(ep);
                 }
             } else {
-                shared_ptr<list<EntryPoint*>> s = make_shared<list<EntryPoint*>>();
+                std::shared_ptr<std::list<const EntryPoint*>> s = std::make_shared<std::list<const EntryPoint*>>();
                 s->push_back(ep);
-                this->successMarks.insert(pair<const AbstractPlan*, shared_ptr<list<const EntryPoint*>>>(ep->getPlan(), s));
+                this->successMarks.insert(pair<const AbstractPlan*, std::shared_ptr<std::list<const EntryPoint*>>>(ep->getPlan(), s));
             }
         }
     }
@@ -51,14 +49,14 @@ SuccessMarks::~SuccessMarks() {}
  * Drop every mark not occurring in plans passed as argument.
  */
 void SuccessMarks::limitToPlans(const AbstractPlanSet& active) {
-    list<const AbstractPlan*> tr;
+    std::list<const AbstractPlan*> tr;
 
     for (auto successMarkEntry : this->successMarks) {
         if (std::find(active.begin(), active.end(), successMarkEntry.first) == active.end()) {
             tr.push_back(successMarkEntry.first);
         }
     }
-    for (AbstractPlan* p : tr) {
+    for (const AbstractPlan* p : tr) {
         this->successMarks.erase(p);
     }
 }
@@ -101,15 +99,15 @@ void SuccessMarks::removePlan(const AbstractPlan* plan) {
 void SuccessMarks::markSuccessfull(const AbstractPlan* p, const EntryPoint* e) {
     auto iter = this->successMarks.find(p);
     if (iter != this->successMarks.end()) {
-        shared_ptr<list<EntryPoint*>> l = this->successMarks.at(p);
+        std::shared_ptr<std::list<const EntryPoint*>> l = this->successMarks.at(p);
         auto i = find(l->begin(), l->end(), e);
         if (i == l->end()) {
             l->push_back(e);
         }
     } else {
-        auto l = make_shared<list<EntryPoint*>>();
+        auto l = std::make_shared<std::list<const EntryPoint*>>();
         l->push_back(e);
-        this->successMarks.insert(pair<AbstractPlan*, shared_ptr<list<EntryPoint*>>>(p, l));
+        this->successMarks.insert(std::pair<const AbstractPlan*, std::shared_ptr<std::list<const EntryPoint*>>>(p, l));
     }
 }
 
@@ -137,7 +135,7 @@ bool SuccessMarks::succeeded(const AbstractPlan* p, const EntryPoint* e) const {
  * @return A bool
  */
 bool SuccessMarks::succeeded(int64_t planId, int64_t entryPointId) const {
-    const Plan* p = ae->getPlanRepository()->getPlans().at(planId);
+    const Plan* p = ae->getPlanRepository()->getPlans()[planId];
     const EntryPoint* e = p->getEntryPoints().at(entryPointId);
     return succeeded(p, e);
 }
@@ -148,7 +146,7 @@ bool SuccessMarks::succeeded(int64_t planId, int64_t entryPointId) const {
  * @return A bool
  */
 bool SuccessMarks::anyTaskSucceeded(const AbstractPlan* p) const {
-    list<const EntryPoint*> l;
+    std::list<const EntryPoint*> l;
     auto iter = this->successMarks.find(p);
     if (iter != this->successMarks.end()) {
         l = (*iter->second);
