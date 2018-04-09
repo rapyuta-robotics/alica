@@ -6,9 +6,6 @@ namespace alica {
 
 class AlicaTime {
 public:
-    template <typename T>
-    constexpr AlicaTime(T t)
-            : _time(t) {}
     constexpr AlicaTime()
             : _time(0LL) {}
 
@@ -89,6 +86,10 @@ public:
 
 private:
     int64_t _time;
+    
+    template <typename T>
+    constexpr AlicaTime(T t)
+            : _time(t) {}
 };
 
 class AlicaClock {
