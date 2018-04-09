@@ -52,30 +52,30 @@ void StaticRoleAssignment::calculateRoles() {
     this->robotRoleMapping.clear();
 
     // get data for "calculations"
-    this->roles = ae->getPlanRepository()->getRoles();
+    const PlanRepository::Accessor<Role>& roles = ae->getPlanRepository()->getRoles();
 
     // assign a role for each robot if you have match
     for (auto& agent : *this->agentProperties) {
         bool roleIsAssigned = false;
 
-        for (auto& role : roles) {
+        for (const Role* role : roles) {
             // make entry in the map if the roles match
-            if (role.second->getName() == agent->getDefaultRole()) {
+            if (role->getName() == agent->getDefaultRole()) {
 #ifdef STATIC_RA_DEBUG
                 std::cout << "Static RA: Setting Role " << role.second->getName() << " for robot ID " << agent->getId()
                           << std::endl;
 #endif
-                this->robotRoleMapping.emplace(agent->getId(), role.second);
+                this->robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me
                 if (*(agent->getId()) == *(this->ae->getTeamManager()->getLocalAgentID()) &&
-                        this->ownRole != role.second) {
-                    this->ownRole = role.second;
+                        this->ownRole != role) {
+                    this->ownRole = role;
 
                     // probably nothing is reacting on this message, but anyway we send it
                     if (this->communication != nullptr) {
                         RoleSwitch rs;
-                        rs.roleID = role.first;
+                        rs.roleID = role->getId();
                         this->communication->sendRoleSwitch(rs);
                     }
                 }
@@ -85,7 +85,7 @@ void StaticRoleAssignment::calculateRoles() {
         }
 
         if (!roleIsAssigned) {
-            stringstream ss;
+            std::stringstream ss;
             ss << *(agent->getId());
             ae->abort("RA: Could not set a role (Default: " + agent->getDefaultRole() + ") for robot: ", ss.str());
         }

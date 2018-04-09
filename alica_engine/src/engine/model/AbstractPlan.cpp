@@ -8,6 +8,7 @@
 
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Variable.h"
+#include <SystemConfig.h>
 
 namespace alica {
 
@@ -27,7 +28,7 @@ AbstractPlan::AbstractPlan()
 }
 
 AbstractPlan::AbstractPlan(int64_t id)
-        : AlicaElement(id) {
+        : AlicaElement(id)
         , _utilityThreshold(1.0) 
         , _masterPlan(false)
         , _utilityFunction(nullptr)
@@ -56,12 +57,12 @@ std::string AbstractPlan::toString() const {
  * @return A bool
  */
 bool AbstractPlan::containsVar(const Variable* v) const {
-    return find(variables->begin(), variables->end(), v) != variables->end();
+    return find(_variables.begin(), _variables.end(), v) != _variables.end();
 }
 
 bool AbstractPlan::containsVar(const std::string& name) const {
     
-    for (const Variable* v : *variables) {
+    for (const Variable* v : _variables) {
         if (v->getName() == name) {
             return true;
         }
@@ -82,7 +83,7 @@ void AbstractPlan::setFileName(const std::string& fileName) {
     _fileName = fileName;
 }
 
-void AbstractPlan::setVariables(shared_ptr<list<Variable*>> variables) {
+void AbstractPlan::setVariables(const VariableSet& variables) {
     _variables = variables;
 }
 

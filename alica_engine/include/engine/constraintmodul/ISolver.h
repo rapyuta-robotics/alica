@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <vector>
+#include "engine/Types.h"
 
 namespace alica {
 class AlicaEngine;
@@ -17,8 +17,8 @@ public:
     virtual ~ISolver() {}
 
     virtual bool existsSolution(
-            std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) = 0;
-    virtual bool getSolution(std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+            const VariableSet& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) = 0;
+    virtual bool getSolution(const VariableSet& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
             std::vector<void*>& results) = 0;
     virtual std::shared_ptr<SolverVariable> createVariable(long id) = 0;
 

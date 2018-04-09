@@ -38,7 +38,7 @@ void Quantifier::setScope(const AlicaElement* element) {
     }
 }
  void Quantifier::setScopeType(Scope scope) {
-     _scope = scope;
+     _scopeType = scope;
 }
  void Quantifier::setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers) {
      _domainIdentifiers = domainIdentifiers;

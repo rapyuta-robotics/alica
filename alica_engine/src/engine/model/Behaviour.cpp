@@ -10,6 +10,8 @@
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
 
+#include <sstream>
+
 namespace alica {
 
 Behaviour::Behaviour() 
@@ -29,7 +31,6 @@ std::string Behaviour::toString() const {
     ss << "#EndBehaviour" << std::endl;
     return ss.str();
 }
-
 
 void Behaviour::setConfigurations(const BehaviourConfigurationSet& configurations) {
     _configurations = configurations;

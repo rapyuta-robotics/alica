@@ -44,7 +44,7 @@ int StateCollection::getRobotsInState(const State* s, AgentSet& o_robots) const 
     int c = 0;
     for (int i = 0; i < _robotIds.size(); ++i) {
         if (_states[i] == s) {
-            o_robots.push_back(_robotIds[i]));
+            o_robots.push_back(_robotIds[i]);
             ++c;
         }
     }
@@ -55,30 +55,24 @@ int StateCollection::getRobotsInState(int64_t sid, AgentSet& o_robots) const {
     int c = 0;
     for (int i = 0; i < _robotIds.size(); ++i) {
         if (_states[i]->getId() == sid) {
-            o_robots.push_back(_robotIds[i]));
+            o_robots.push_back(_robotIds[i]);
             ++c;
         }
     }
     return c;
 }
 
-shared_ptr<vector<const supplementary::AgentID*>> StateCollection::getRobotsInStateSorted(State* s) const {
-    shared_ptr<vector<const supplementary::AgentID*>> ret = make_shared<vector<const supplementary::AgentID*>>();
-    for (int i = 0; i < _robotIds.size(); ++i) {
-        if (_states[i] == s) {
-            ret->push_back(_robotIds[i]);
-        }
-    }
-    sort(ret->begin(), ret->end());
-    return ret;
+void StateCollection::getRobotsInStateSorted(const State* s, AgentSet& o_robots) const {
+    getRobotsInState(s, o_robots);
+    sort(o_robots.begin(), o_robots.end());
 }
 
 
 void StateCollection::removeRobot(const supplementary::AgentID* robotId) {
     for (int i = 0; i < _states.size(); i++) {
         if (*(_robotIds[i]) == *(robotId)) {
-            _robotIds.erase(robotIds.begin() + i);
-            _states.erase(states.begin() + i);
+            _robotIds.erase(_robotIds.begin() + i);
+            _states.erase(_states.begin() + i);
             return;
         }
     }
@@ -103,7 +97,7 @@ void StateCollection::setState(const supplementary::AgentID* robotId, const Stat
 
 std::string StateCollection::toString() const {
     std::stringstream ss;
-    for (int i = 0; i < robotIds.size(); i++) {
+    for (int i = 0; i < _robotIds.size(); i++) {
         ss << "R: " << *_robotIds[i] << " in State: ";
         if (_states[i] == nullptr) {
             ss << "NULL" << std::endl;
@@ -119,12 +113,12 @@ void StateCollection::setInitialState(const supplementary::AgentID* robotId, con
 }
 
 void StateCollection::setStates(const AgentSet& robotIds,const State* state) {
-    for (const supplementart::AgentID* r : robotIds) {
+    for (const supplementary::AgentID* r : robotIds) {
         setState(r, state);
     }
 }
 
-void moveAllFromTo(const State* from, const State* to) {
+void StateCollection::moveAllFromTo(const State* from, const State* to) {
     for(int i=0; i<_states.size(); ++i) {
         if(_states[i]==from) {
             _states[i] = to;
@@ -143,10 +137,10 @@ void StateCollection::reconsiderOldAssignment(shared_ptr<Assignment> oldOne, sha
     const EntryPoint* ep;
     for (short i = 0; i < oldOne->getEntryPointCount(); i++) {
         ep = oldOne->getEpRobotsMapping()->getEp(i);
-        for (const supplementary::AgentID*& rid : *(oldOne->getRobotsWorking(ep))) {
+        for (const supplementary::AgentID* rid : *(oldOne->getRobotsWorking(ep))) {
             auto iter = find(newOne->getRobotsWorking(ep)->begin(), newOne->getRobotsWorking(ep)->end(), rid);
             if (iter != newOne->getRobotsWorking(ep)->end()) {
-                setState(rid, oldOne->getRobotStateMapping()->getState(rid));
+                setState(rid, oldOne->getRobotStateMapping()->getStateOfRobot(rid));
             }
         }
     }

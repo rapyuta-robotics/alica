@@ -19,7 +19,6 @@
 #include "UtilityInterval.h"
 #include "engine/RunningPlan.h"
 
-using namespace std;
 namespace alica {
 class Plan;
 class AlicaEngine;
@@ -31,25 +30,30 @@ struct TaskRoleStruct;
 class UtilityFunction {
 public:
     UtilityFunction(
-            string name, list<USummand*> utilSummands, double priorityWeight, double similarityWeight, Plan* plan);
+            const std::string& name, std::list<USummand*> utilSummands, double priorityWeight, double similarityWeight, const Plan* plan);
     virtual ~UtilityFunction();
-    list<USummand*>& getUtilSummands();
-    void setUtilSummands(list<USummand*> utilSummands);
-    virtual double eval(shared_ptr<RunningPlan> newRp, shared_ptr<RunningPlan> oldRp);
+    std::list<USummand*>& getUtilSummands();
+    void setUtilSummands(std::list<USummand*> utilSummands);
+    virtual double eval(std::shared_ptr<RunningPlan> newRp, std::shared_ptr<RunningPlan> oldRp);
     virtual UtilityInterval eval(IAssignment* newAss, IAssignment* oldAss);
     void updateAssignment(IAssignment* newAss, IAssignment* oldAss);
     void cacheEvalData();
     void init(AlicaEngine* ae);
-    virtual pair<vector<double>, double>* differentiate(IAssignment* newAss);
+    virtual std::pair<std::vector<double>, double>* differentiate(IAssignment* newAss);
     static void initDataStructures(AlicaEngine* ae);
-    virtual string toString();
-    Plan* getPlan();
-    map<TaskRoleStruct*, double>& getPriorityMartix();
+    virtual std::string toString() const;
+    const Plan* getPlan() const {return plan;}
+    const std::map<TaskRoleStruct*, double>& getPriorityMartix() const;
 
     const double DIFFERENCETHRESHOLD = 0.0001;  // Max difference for the same result
+
 protected:
-    Plan* plan;
-    string name = "DefaultUtilityFunction";
+    UtilityInterval getPriorityResult(IAssignment* ass);
+    UtilityInterval getSimilarity(IAssignment* newAss, IAssignment* oldAss);
+
+    const Plan* plan;
+
+    std::string name = "DefaultUtilityFunction";
     // For default priority based utility summand (which is integrated in every UF)
     map<TaskRoleStruct*, double> priorityMartix;
     map<long, double> roleHighestPriorityMap;
@@ -62,9 +66,8 @@ protected:
     list<USummand*> utilSummands;
     TaskRoleStruct* lookupStruct;
     UtilityInterval priResult;
-    UtilityInterval getPriorityResult(IAssignment* ass);
+
     UtilityInterval simUI;
-    UtilityInterval getSimilarity(IAssignment* newAss, IAssignment* oldAss);
 };
 
 } /* namespace alica */

@@ -331,7 +331,7 @@ Capability* ModelFactory::createCapability(tinyxml2::XMLElement* element) {
             cval->setId(this->parser->parserId(curChild));
             setAlicaElementAttributes(cval, curChild);
             addElement(cval);
-            cap->getCapValues().push_back(cval);
+            cap->_capValues.push_back(cval);
         } else {
             ae->abort("MF: Unhandled Capability Child:", curChild->Value());
         }
@@ -353,7 +353,7 @@ void ModelFactory::createRoleDefinitionSet(tinyxml2::XMLDocument* node) {
         const char* val = curChild->Value();
         if (roles.compare(val) == 0) {
             Role* role = createRole(curChild);
-            r->getRoles().push_back(role);
+            r->_roles.push_back(role);
             role->setRoleDefinitionSet(r);
         } else {
             ae->abort("MF: Unhandled RoleDefinitionSet Child:", curChild->Value());
@@ -610,8 +610,7 @@ Variable* ModelFactory::createVariable(tinyxml2::XMLElement* element) {
     if (namePtr) {
         name = namePtr;
     }
-    Variable* v = new Variable(this->parser->parserId(element), type);
-    v->setName(name);
+    Variable* v = new Variable(this->parser->parserId(element), name, type);
     setAlicaElementAttributes(v, element);
     addElement(v);
     this->rep->_variables.insert(pair<int64_t, Variable*>(v->getId(), v));
@@ -853,7 +852,7 @@ Quantifier* ModelFactory::createQuantifier(tinyxml2::XMLElement* element) {
     if (typePtr) {
         typeString = typePtr;
         if (typeString.compare("alica:ForallAgents") == 0) {
-            q = new ForallAgents(this->ae);
+            q = new ForallAgents();
             q->setId(id);
         } else {
             ae->abort("MF: Unsupported quantifier type! !", typeString);

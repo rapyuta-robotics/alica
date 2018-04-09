@@ -10,6 +10,9 @@
 #include "engine/planselector/DynCardinality.h"
 
 namespace alica {
+namespace {
+constexpr int INFINIT = std::numeric_limits<int>::max();
+}
 
 int PartialAssignment::getHash() {
     if (hashCalculated) {
@@ -303,7 +306,7 @@ bool PartialAssignment::assignRobot(const supplementary::AgentID* robotId, int i
         if (this->dynCardinalities[index]->getMin() > 0) {
             this->dynCardinalities[index]->setMin(this->dynCardinalities[index]->getMin() - 1);
         }
-        if (this->dynCardinalities[index]->getMax() != INFINITY) {
+        if (this->dynCardinalities[index]->getMax() != INFINIT) {
             this->dynCardinalities[index]->setMax(this->dynCardinalities[index]->getMax() - 1);
         }
         return true;
@@ -423,8 +426,8 @@ bool PartialAssignment::compareTo(PartialAssignment* thisPa, PartialAssignment* 
     return false;
 }
 
-string PartialAssignment::toString() {
-    stringstream ss;
+std::string PartialAssignment::toString() {
+    std::stringstream ss;
 
     ss << "Plan: " << this->plan->getName() << endl;
     ss << "Utility: " << this->min << ".." << this->max << endl;

@@ -1,4 +1,5 @@
 #include "engine/model/Variable.h"
+#include <sstream>
 
 namespace alica {
 
@@ -12,8 +13,8 @@ Variable::Variable(const std::shared_ptr<SolverVariable>& v)
 
 Variable::~Variable() {}
 
-Variable::Variable(int64_t id, const std::string& type)
-    : AlicaElement(id) 
+Variable::Variable(int64_t id, const std::string& name, const std::string& type)
+    : AlicaElement(id, name) 
     , _type(type)
     , _solverVar(nullptr)
 
@@ -30,7 +31,7 @@ void Variable::setType(const std::string& type) {
     _type = type;
 }
 
-void alica::Variable::setSolverVar(const std::shared_ptr<SolverVariable>& solverVar) {
+void alica::Variable::setSolverVar(const std::shared_ptr<SolverVariable>& solverVar) const {
     _solverVar = solverVar;
 }
 }  // namespace alica

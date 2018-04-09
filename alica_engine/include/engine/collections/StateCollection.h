@@ -45,8 +45,7 @@ public:
     int getRobotsInState(const State* s, AgentSet& o_robots) const;
     int getRobotsInState(int64_t sid, AgentSet& o_robots) const;
 
-    //TODO: fix me
-    shared_ptr<vector<const supplementary::AgentID*>> getRobotsInStateSorted(const State* s) const;
+    void getRobotsInStateSorted(const State* s, AgentSet& o_robots) const;
     
     std::string toString() const;
     
@@ -57,8 +56,8 @@ public:
     void setStates(const AgentSet& robotIds,const State* state);
     void moveAllFromTo(const State* from, const State* to);
     
-    void setInitialState(const supplementary::AgentID* robotId, EntryPoint* ep);
-    void reconsiderOldAssignment(std::shared_ptr<Assignment> oldOne, shared_ptr<Assignment> newOne);
+    void setInitialState(const supplementary::AgentID* robotId, const EntryPoint* ep);
+    void reconsiderOldAssignment(std::shared_ptr<Assignment> oldOne, std::shared_ptr<Assignment> newOne);
 
 private:
     AgentSet _robotIds;

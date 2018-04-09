@@ -185,7 +185,7 @@ bool TeamManager::setSuccessMarks(const supplementary::AgentID* agentId, std::sh
     return false;
 }
 
-Variable* TeamManager::getDomainVariable(const supplementary::AgentID* agentId, string sort) {
+const Variable* TeamManager::getDomainVariable(const supplementary::AgentID* agentId, std::string sort) const {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end()) {
         return agentEntry->second->getDomainVariable(sort);

@@ -8,16 +8,18 @@
 #include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/Behaviour.h"
 
+#include <sstream>
+
 namespace alica {
 
 BehaviourConfiguration::BehaviourConfiguration() 
     : _eventDriven(false)
     , _frequency(30)
     , _deferring(0)
-    , _behaviour(nullptr) {}}
+    , _behaviour(nullptr) {}
 
 BehaviourConfiguration::BehaviourConfiguration(int64_t id)
-    : AlicaElement(id)
+    : AbstractPlan(id)
     , _eventDriven(false)
     , _frequency(30)
     , _deferring(0)
@@ -27,20 +29,20 @@ BehaviourConfiguration::~BehaviourConfiguration() {}
 
 std::string BehaviourConfiguration::toString() const {
     std::stringstream ss;
-    ss << "#BehaviourConfiguration: " << getName() << " " << getId() << endl;
+    ss << "#BehaviourConfiguration: " << getName() << " " << getId() << std::endl;
     ss << "\t Behaviour: ";
-    if (getBehaviour() != NULL) {
-        ss << name << " " << getBehaviour()->getId();
+    if (getBehaviour() != nullptr) {
+        ss << getBehaviour()->getName() << " " << getBehaviour()->getId();
     }
     ss << std::endl;
-    ss << "\t Deferring: " + to_string(getDeferring()) << std::endl;
-    ss << "\t Frequency: " + to_string(getFrequency()) << std::endl;
-    ss << "\t MasterPlan?: " + to_string(isMasterPlan()) << std::endl;
-    ss << "\t Parameters: " + to_string(getParameters()->size()) << std::endl;
+    ss << "\t Deferring: " << getDeferring() << std::endl;
+    ss << "\t Frequency: " << getFrequency() << std::endl;
+    ss << "\t MasterPlan?: " << isMasterPlan() << std::endl;
+    ss << "\t Parameters: " << getParameters().size() << std::endl;
 
-    if (getParameters()->size() != 0) {
-        for (BehaviourParameterMap::const_iterator iter = getParameters()->begin();
-                iter != getParameters()->end(); iter++) {
+    if (!getParameters().empty()) {
+        for (BehaviourParameterMap::const_iterator iter = getParameters().begin();
+                iter != getParameters().end(); ++iter) {
             const std::string& s = iter->first;
             const std::string& val = iter->second;
             ss << "\t" + s << " : " << val << std::endl;
@@ -64,10 +66,9 @@ void BehaviourConfiguration::setFrequency(int frequency) {
     _frequency = frequency;
 }
 
-void BehaviourConfiguration::setParameters(shared_ptr<map<string, string>> parameters) {
+void BehaviourConfiguration::setParameters(const BehaviourParameterMap& parameters) {
     _parameters = parameters;
 }
-
 
 void BehaviourConfiguration::setBehaviour(const Behaviour* behaviour) {
     _behaviour = behaviour;

@@ -11,14 +11,14 @@ namespace alica {
 /**
  * Basic constructor
  */
-State::State() {
+State::State()
     : AlicaElement(0)
     , _type(Normal)
     , _inPlan(nullptr)
     , _entryPoint(nullptr)
 {}
 
-State::State(StateType t) {
+State::State(StateType t)
     : AlicaElement(0)
     , _type(t)
     , _inPlan(nullptr)
@@ -40,15 +40,9 @@ State::State(int64_t id)
 State::~State() {}
 
 
-void State::setFailureState(bool failureState) {
-    _failureState = failureState;
-}
-
-
 void State::setInPlan(const Plan* inPlan) {
     _inPlan = inPlan;
 }
-
 
 void State::setInTransitions(const TransitionSet& inTransitions) {
     _inTransitions = inTransitions;
@@ -66,22 +60,8 @@ void State::setPlans(const AbstractPlanSet& plans) {
     _plans = plans;
 }
 
-void State::setSuccessState(bool successState) {
-    _successState = successState;
-}
-
-void State::setTerminal(bool terminal) {
-    _terminal = terminal;
-}
-
 void alica::State::setEntryPoint(const EntryPoint* entryPoint) {
     _entryPoint = entryPoint;
-}
-
-std::string State::toString() const {
-    std::stringstream ss;
-    ss << AlicaElement::toString();
-    return ss.str();
 }
 
 }  // namespace alica

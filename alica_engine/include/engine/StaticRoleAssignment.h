@@ -16,7 +16,6 @@ public:
 
     void init();
     void tick();
-    Role* getRole(int robotId);
     void setCommunication(IAlicaCommunication* communication);
     void update();
 
@@ -30,7 +29,6 @@ private:
     bool updateRoles;
 
     AlicaEngine* ae;
-    std::map<long, Role*> roles;
     std::unique_ptr<std::list<const RobotProperties*>> agentProperties;
 };
 

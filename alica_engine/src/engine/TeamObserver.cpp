@@ -374,7 +374,7 @@ std::shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(const supplementary
                 cur->setRobotId(robotId);
                 cur->setReceiveTime(time);
 
-                curParent->getChildren().insert(cur);
+                curParent->editChildren().insert(cur);
                 const State* s2 = states.find(*iter);
                 if (s2) {
                     cur->setState(s2);

@@ -72,8 +72,8 @@ public:
     bool isActive() const {return _active; }
     void setActive(bool active);
 
-    const std::vector<const supplementary::AgentID*>& getRobotsAvail() const {return _robotsAvail;}
-    std::vector<const supplementary::AgentID*>& editRobotsAvail() {return _robotsAvail;}
+    const AgentSet& getRobotsAvail() const {return _robotsAvail;}
+    AgentSet& editRobotsAvail() {return _robotsAvail;}
     
 
     void setAllocationNeeded(bool allocationNeeded);
@@ -84,7 +84,7 @@ public:
     const ConditionStore& getConstraintStore() const {return _constraintStore;}
     ConditionStore& editConstraintStore() {return _constraintStore;}
 
-    EntryPoint* getOwnEntryPoint() const;
+    const EntryPoint* getOwnEntryPoint() const;
     void setParent(weak_ptr<RunningPlan> s);
     weak_ptr<RunningPlan> getParent() const;
     bool getFailHandlingNeeded() const;
@@ -124,12 +124,12 @@ public:
     void revokeAllConstraints();
     void attachPlanConstraints();
     bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts,
-            std::vector<const supplementary::AgentID*>& availableAgents, list<const supplementary::AgentID*> noUpdates,
+            AgentSet& availableAgents, list<const supplementary::AgentID*> noUpdates,
             AlicaTime now);
     void toMessage(list<long>& message, shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const;
     std::string toString() const;
     const supplementary::AgentID* getOwnID() const {return _ae->getTeamManager()->getLocalAgentID();}
-    AlicaEngine* getAlicaEngine() const{ return _ae;}
+    AlicaEngine* getAlicaEngine() const { return _ae;}
 
     void sendLogMessage(int level, string& message);
 
@@ -141,7 +141,7 @@ protected:
 
     const AbstractPlan* _plan;
     const PlanType* _planType;
-    std::vector<const supplementary::AgentID*> _robotsAvail;
+    AgentSet _robotsAvail;
     std::map<const AbstractPlan*, int> _failedSubPlans;
     weak_ptr<RunningPlan> _parent;
     list<shared_ptr<RunningPlan>> _children;

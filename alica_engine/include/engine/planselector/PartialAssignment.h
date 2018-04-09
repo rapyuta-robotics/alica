@@ -74,7 +74,6 @@ public:
     int hash = 0; //TODO: fix me
 
 private:
-    const int INFINIT = numeric_limits<int>::max();
     static int pow(int x, int y);
 
     PartialAssignmentPool* pap;

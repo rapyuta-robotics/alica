@@ -11,23 +11,25 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Task.h"
 
+#include <sstream>
+#include <algorithm>
+
 namespace alica {
 
 SuccessCollection::SuccessCollection(const Plan* plan) {
     this->count = plan->getEntryPoints().size();
-    this->entryPoints = new EntryPoint*[this->count];
-    this->robotIds = vector<shared_ptr<list<const supplementary::AgentID*>>>(this->count);
+    this->entryPoints = new const EntryPoint*[this->count];
+    this->robotIds = std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>(this->count);
     int i = 0;
     
-    for (map<long, const EntryPoint*>::const_iterator iter = plan->getEntryPoints().begin();
-            iter != plan->getEntryPoints().end(); ++iter) {
-        eps[i] =iter->second;
-        
+    for (const EntryPoint* ep : plan->getEntryPoints()) {
+        entryPoints[i] =  ep;
         ++i;
     }
+    //TODO: entrypoints should be presorted: add test and remove
     std::sort(entryPoints,entryPoints+count,EntryPoint::compareTo);
     for(int j=0; j<count; ++j) {
-        this->robotIds[j] = make_shared<list<const supplementary::AgentID*>>();
+        this->robotIds[j] = std::make_shared<std::list<const supplementary::AgentID*>>();
     }
 }
 
@@ -43,7 +45,7 @@ void SuccessCollection::setCount(int count) {
     this->count = count;
 }
 
-const EntryPoint** SuccessCollection::getEntryPoints() {
+const EntryPoint** SuccessCollection::getEntryPoints() const {
     return entryPoints;
 }
 
@@ -61,11 +63,11 @@ void SuccessCollection::clear() {
     }
 }
 
-vector<shared_ptr<list<const supplementary::AgentID*>>>& SuccessCollection::getRobots() {
+std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>& SuccessCollection::getRobots() {
     return robotIds;
 }
 
-void SuccessCollection::setRobots(vector<shared_ptr<list<const supplementary::AgentID*>>>& robotIds) {
+void SuccessCollection::setRobots(std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>& robotIds) {
     this->robotIds = robotIds;
 }
 
@@ -96,7 +98,7 @@ std::string SuccessCollection::toString() const {
             for (const supplementary::AgentID* r : *(this->robotIds[i])) {
                 ss << *r << " ";
             }
-            ss << endl;
+            ss << std::endl;
         }
     }
     if (ss.str().compare("") != 0) {

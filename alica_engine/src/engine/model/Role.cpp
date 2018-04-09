@@ -25,12 +25,12 @@ Role::Role()
 Role::~Role() {}
 
 double Role::getPriority(int64_t taskId) const {
-    std::unordered_map<std::string, const Characteristic*>::const_iterator it = _roleTaskMapping->getTaskPriorities().find(taskId);
+    std::unordered_map<int64_t, double>::const_iterator it = _roleTaskMapping->getTaskPriorities().find(taskId);
     if (it != _roleTaskMapping->getTaskPriorities().end()) {
         return it->second;
     } else { //TODO move this check to start up
         std::cerr << "ROLE DOES NOT HAVE A PRIORITY FOR TASK: " << taskId << std::endl;
-        throw new exception;
+        throw new std::exception;
     }
 }
 

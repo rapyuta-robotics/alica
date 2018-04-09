@@ -24,11 +24,11 @@ SimplePlanTree::SimplePlanTree()
 
 SimplePlanTree::~SimplePlanTree() {}
 
-bool SimplePlanTree::containsPlan(AbstractPlan* plan) {
+bool SimplePlanTree::containsPlan(const AbstractPlan* plan) const {
     if (this->getEntryPoint()->getPlan() == plan) {
         return true;
     }
-    for (shared_ptr<SimplePlanTree>& spt : this->getChildren()) {
+    for (const std::shared_ptr<SimplePlanTree>& spt : this->getChildren()) {
         if (spt->containsPlan(plan)) {
             return true;
         }
@@ -45,11 +45,11 @@ void SimplePlanTree::setState(const State* state) {
     this->state = state;
 }
 
-unordered_set<shared_ptr<SimplePlanTree>>& SimplePlanTree::getChildren() {
+const std::unordered_set<std::shared_ptr<SimplePlanTree>>& SimplePlanTree::getChildren() const {
     return children;
 }
 
-void SimplePlanTree::setChildren(unordered_set<shared_ptr<SimplePlanTree>> children) {
+void SimplePlanTree::setChildren(const std::unordered_set<std::shared_ptr<SimplePlanTree>>& children) {
     this->children = children;
 }
 

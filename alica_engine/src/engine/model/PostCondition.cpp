@@ -16,7 +16,7 @@ PostCondition::PostCondition(int64_t id)
 
 PostCondition::~PostCondition() {}
 
-std::string PostCondition::toString() {
+std::string PostCondition::toString() const {
     std::stringstream ss;
     ss << "#PostCondition: " + getName() << " " << getId() << std::endl;
     ss << "\t ConditionString: " << getConditionString() <<  std::endl;

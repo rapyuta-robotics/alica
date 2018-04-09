@@ -29,10 +29,10 @@ void EntryPoint::computeReachabilitySet() {
     queue.push_front(_state);
     const State* cs = nullptr;
     while (!queue.empty()) {
-        cs = *queue.front();
+        cs = queue.front();
         queue.pop_front();
-        if(!std::find(_reachableStates.begin(), _reachableStates.end(),cs)) {
-            reachableStates.push_back(cs);
+        if(std::find(_reachableStates.begin(), _reachableStates.end(),cs) == _reachableStates.end()) {
+            _reachableStates.push_back(cs);
             for (const Transition* t : cs->getOutTransitions()) {
                 queue.push_back(t->getOutState());
             }
@@ -46,14 +46,14 @@ std::string EntryPoint::toString() const {
     ss << "\t MinCardinality: " << _minCardinality << std::endl;
     ss << "\t MaxCardinality: " << _maxCardinality << std::endl;
     ss << "\t Task:" << std::endl;
-    if (_task != NULL) {
+    if (_task != nullptr) {
         ss << "\t" << _task->getId() << " " << _task->getName();
     } else {
         ss << "null";
     }
     ss << std::endl;
     ss << "\t Initial State:" << std::endl;
-    if (_state != NULL) {
+    if (_state != nullptr) {
         ss << "\t" << _state->getId() << " " << _state->getName();
     } else {
         ss << "null";

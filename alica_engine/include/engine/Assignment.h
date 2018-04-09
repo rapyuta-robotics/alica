@@ -35,11 +35,12 @@ public:
     const Plan* getPlan() const {return plan;}
     void setPlan(const Plan* plan);
     StateCollection* getRobotStateMapping();
-    std::shared_ptr<AgentSet> getAllRobotsSorted();
+    
     AssignmentCollection* getEpRobotsMapping();
     void getAllRobots(AgentSet& o_robots);
+    void getAllRobotsSorted(AgentSet& o_robots);
     const AgentSet* getRobotsWorking(int64_t epid) const override;
-    const AgentSet* getRobotsWorkingSorted(const EntryPoint* ep); //TODO check if this in-place sorting is really needed
+    void getRobotsWorkingSorted(const EntryPoint* ep, AgentSet& o_robots);
     const AgentSet* getRobotsWorking(const EntryPoint* ep) const override;
     int totalRobotCount();
     

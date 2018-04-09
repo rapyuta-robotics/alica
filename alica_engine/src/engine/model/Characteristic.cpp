@@ -6,49 +6,38 @@
  */
 
 #include "engine/model/Characteristic.h"
+#include <sstream>
 
 namespace alica {
 
-Characteristic::Characteristic() {
-    this->capability = nullptr;
-    this->capValue = nullptr;
-}
+Characteristic::Characteristic()
+    : _capability(nullptr)
+    , _capValue(nullptr)
+    , _weight(0.0)
+{}
 
 Characteristic::~Characteristic() {}
 
-string Characteristic::toString() {
-    stringstream ss;
-    ss << "#Characteristic " << endl;
-    ss << "\t Capability: " << capability->getName() << endl;
-    ss << "\t CapValue: " << capValue->getName() << endl;
-    ss << "\t Weight: " << weight << endl;
+std::string Characteristic::toString() const {
+    std::stringstream ss;
+    ss << "#Characteristic " << std::endl;
+    ss << "\t Capability: " << _capability->getName() << std::endl;
+    ss << "\t CapValue: " << _capValue->getName() << std::endl;
+    ss << "\t Weight: " << _weight << std::endl;
     return ss.str();
 }
 
-//================= Getter and Setter =============================
 
-Capability* Characteristic::getCapability() {
-    return capability;
+void Characteristic::setCapability(const Capability* capability) {
+    _capability = capability;
 }
 
-void Characteristic::setCapability(Capability* capability) {
-    this->capability = capability;
-}
-
-CapValue* Characteristic::getCapValue() {
-    return capValue;
-}
-
-void Characteristic::setCapValue(CapValue* capValue) {
-    this->capValue = capValue;
-}
-
-double Characteristic::getWeight() const {
-    return weight;
+void Characteristic::setCapValue(const CapValue* capValue) {
+    _capValue = capValue;
 }
 
 void Characteristic::setWeight(double weight) {
-    this->weight = weight;
+    _weight = weight;
 }
 
 }  // namespace alica

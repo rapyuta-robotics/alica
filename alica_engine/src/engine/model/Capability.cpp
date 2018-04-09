@@ -8,6 +8,9 @@
 #include "engine/model/Capability.h"
 #include "engine/model/CapValue.h"
 
+#include <iostream>
+#include <exception>
+
 namespace alica {
 Capability::Capability() {}
 
@@ -19,15 +22,15 @@ Capability::~Capability() {}
  * @param robotVal Robot value
  * @return The value, ranges between 0 and 1.
  */
-double Capability::similarityValue(CapValue* roleVal, CapValue* robotVal) {
-    const int nCount = capValues.size();
+double Capability::similarityValue(const CapValue* roleVal, const CapValue* robotVal) const {
+    const int nCount = _capValues.size();
 
     int rlIndex = -1;
     int rbIndex = -1;
     int index = 0;
 
     // determine the index of both given capability values
-    for (auto cap : capValues) {
+    for (const CapValue* cap : _capValues) {
         if (cap == roleVal) {
             rlIndex = index;
         }
@@ -36,14 +39,14 @@ double Capability::similarityValue(CapValue* roleVal, CapValue* robotVal) {
         }
         ++index;
     }
-
+    //TODO: get rid of exceptions
     if (rlIndex == -1) {
-        cout << "Capability::similarityValue: Role not found!" << endl;
-        throw exception();
+        std::cout << "Capability::similarityValue: Role not found!" << std::endl;
+        throw std::exception();
     }
     if (rbIndex == -1) {
-        cout << "Capability::similarityValue: Robot not found!" << endl;
-        throw exception();
+        std::cout << "Capability::similarityValue: Robot not found!" << std::endl;
+        throw std::exception();
     }
 
     if (nCount == 1) {
@@ -55,9 +58,5 @@ double Capability::similarityValue(CapValue* roleVal, CapValue* robotVal) {
     return (nCount - 1 - abs(rlIndex - rbIndex)) / (nCount - 1);
 }
 
-//====================== Getter and Setter ==============================
 
-list<CapValue*>& Capability::getCapValues() {
-    return capValues;
-}
 }  // namespace alica

@@ -1,9 +1,6 @@
 #pragma once
 
-#include <stdio.h>
 #include <string>
-#include <sstream>
-#include <iostream>
 #include <stdint.h>
 
 namespace alica {
@@ -15,6 +12,7 @@ class AlicaElement {
 public:
     AlicaElement();
     AlicaElement(int64_t id);
+    AlicaElement(int64_t id, const std::string& name);
     virtual ~AlicaElement();
 
     const std::string& getName() const {return _name;}
@@ -29,6 +27,7 @@ public:
     AlicaElement& operator=(AlicaElement&&) =  delete;
 
 private:
+    friend ModelFactory;
     void setId(int64_t id);
     void setName(const std::string& name);
 
@@ -40,8 +39,6 @@ private:
      * This element's descriptive name.
      */
     std::string _name;
-
-    friend ModelFactory;
 };
 
 }  // namespace alica

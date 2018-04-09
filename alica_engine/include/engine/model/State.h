@@ -34,7 +34,6 @@ public:
     State(StateType t);
     State(int64_t id);
     virtual ~State();
-    virtual std::string toString() const;
 
     const Plan* getInPlan() const {return _inPlan;}
     const EntryPoint* getEntryPoint() const {return _entryPoint;}

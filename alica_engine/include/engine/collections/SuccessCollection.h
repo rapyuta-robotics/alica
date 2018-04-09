@@ -14,7 +14,7 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include <sstream>
+
 
 namespace alica {
 class EntryPoint;
@@ -38,7 +38,7 @@ public:
 private:
 protected:
     const EntryPoint** entryPoints;
-    std::vector<shared_ptr<list<const supplementary::AgentID*>>> robotIds;
+    std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>> robotIds;
     int count = 0;
 };
 
