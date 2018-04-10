@@ -16,7 +16,6 @@ class EntryPoint;
 class Plan;
 class Variable;
 class RunningPlan;
-class AlicaEngine;
 class SolverTerm;
 class ModelFactory;
 /**
