@@ -20,8 +20,6 @@ struct PlanTreeInfo {
         this->succeededEPs = get<2>(s);
     }
 
-    stdPlanTreeInfo toStandard() {
-        return move(make_tuple(senderID, stateIDs, succeededEPs));
-    }
+    stdPlanTreeInfo toStandard() { return move(make_tuple(senderID, stateIDs, succeededEPs)); }
 };
 } /* namespace alica*/

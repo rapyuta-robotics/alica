@@ -1,5 +1,0 @@
-<launch>
- <param name="rootPath" value ="$(find alica_test)/src/test" />
- <test name="all_tests" test-name="all_tests" pkg="alica_test" type="alica_test-test" />
- <!-- launch-prefix="gdb -ex run - -args" > -->
-</launch>

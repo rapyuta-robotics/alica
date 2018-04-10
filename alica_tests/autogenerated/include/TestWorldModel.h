@@ -1,18 +1,9 @@
-/*
- * TestWorldModel.h
- *
- *  Created on: Oct 14, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef ALICA_ALICA_TEST_SRC_TESTWORLDMODEL_H_
-#define ALICA_ALICA_TEST_SRC_TESTWORLDMODEL_H_
-
-using namespace std;
-
-#include <vector>
 #include <supplementary/ITrigger.h>
 #include <SystemConfig.h>
+
+#include <vector>
 
 namespace alicaTests {
 
@@ -43,7 +34,7 @@ public:
     bool isRuntimeCondition1418042967134();
     void setRuntimeCondition1418042967134(bool runtimeCondition1418042967134);
 
-    vector<double> robotsXPos;
+    std::vector<double> robotsXPos;
     double x;
     supplementary::ITrigger* trigger1;
     supplementary::ITrigger* trigger2;
@@ -66,5 +57,3 @@ private:
 };
 
 }  // namespace alicaTests
-
-#endif /* ALICA_ALICA_TEST_SRC_TESTWORLDMODEL_H_ */
