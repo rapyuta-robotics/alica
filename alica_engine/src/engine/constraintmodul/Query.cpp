@@ -146,7 +146,7 @@ bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* so
     cout << "Query: " << (*this->uniqueVarStore) << endl;
 #endif
     // now we have a vector<ProblemPart> in problemParts ready to be queried together with a store of unifications
-    if (problemParts.size() == 0) {
+    if (problemParts.empty()) {
 #ifdef Q_DEBUG
         cout << "Query: Empty Query!" << endl;
 #endif
