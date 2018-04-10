@@ -76,7 +76,7 @@ public:
     void setCommunicator(IAlicaCommunication* communicator);
     PlanSelector* getPlanSelector();
     AlicaClock* getAlicaClock() const;
-    void setAlicaClock(AlicaClock* clock);
+    void setAlicaClock(const AlicaClock* clock);
     void iterationComplete();
     PartialAssignmentPool* getPartialAssignmentPool() const;
     void stepNotify();

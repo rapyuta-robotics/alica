@@ -33,8 +33,6 @@ namespace msl
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
 		crc = new alica::ConstraintCreator();
-
-		ae->setAlicaClock(new alica::AlicaClock());
 		
 		//ROS Communicator
 		//For ROS use this
@@ -66,7 +64,6 @@ namespace msl
 	{
 		//Shutdown the engine will delete all pointer in the engine terminate it
 		ae->shutdown();
-		delete ae->getAlicaClock();
 		delete ae->getCommunicator();
 		delete ae;
 		delete cc;

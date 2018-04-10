@@ -262,7 +262,7 @@ PlanSelector* AlicaEngine::getPlanSelector() {
 AlicaClock* AlicaEngine::getAlicaClock() const {
     return this->alicaClock;
 }
-void AlicaEngine::setAlicaClock(AlicaClock* clock) {
+void AlicaEngine::setAlicaClock(const AlicaClock* clock) {
     this->alicaClock = clock;
 }
 

@@ -54,8 +54,6 @@ protected:
         ae->shutdown();
         ae2->shutdown();
         sc->shutdown();
-        delete ae->getAlicaClock();
-        delete ae2->getAlicaClock();
         delete cc;
         delete bc;
         delete uc;
@@ -74,7 +72,6 @@ TEST_F(AlicaSyncTransition, syncTransitionTest) {
     sc->setHostname("hairy");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "RealMasterPlanForSyncTest", ".", true);
-    ae->setAlicaClock(new alica::AlicaClock());
     ros = new alicaRosProxy::AlicaRosCommunication(ae);
     ae->setCommunicator(ros);
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
@@ -82,7 +79,6 @@ TEST_F(AlicaSyncTransition, syncTransitionTest) {
     sc->setHostname("nase");
     ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "RealMasterPlanForSyncTest", ".", true);
-    ae2->setAlicaClock(new alica::AlicaClock());
     ros2 = new alicaRosProxy::AlicaRosCommunication(ae2);
     ae2->setCommunicator(ros2);
     EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";

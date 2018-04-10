@@ -41,7 +41,6 @@ protected:
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     }
 
@@ -49,7 +48,6 @@ protected:
         ae->shutdown();
         sc->shutdown();
         delete ae->getCommunicator();
-        delete ae->getAlicaClock();
         delete cc;
         delete bc;
         delete uc;

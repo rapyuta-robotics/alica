@@ -53,7 +53,6 @@ protected:
         sc->setHostname("nase");
         ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
                 "ProblemBuildingMaster", ".", true);
-        ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
         ae->addSolver(SolverType::DUMMYSOLVER, new alica::reasoner::ConstraintTestPlanDummySolver(ae));
         ae->addSolver(SolverType::GRADIENTSOLVER, new alica::reasoner::CGSolver(ae));
@@ -63,7 +62,6 @@ protected:
     virtual void TearDown() {
         ae->shutdown();
         delete ae->getCommunicator();
-        delete ae->getAlicaClock();
         sc->shutdown();
         delete cc;
         delete bc;
