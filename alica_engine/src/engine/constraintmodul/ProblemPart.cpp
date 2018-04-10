@@ -52,8 +52,7 @@ std::shared_ptr<RunningPlan> ProblemPart::getRunningPlan() const {
     return runningplan;
 }
 
-std::shared_ptr<std::vector<std::shared_ptr<AgentSet>>>
-ProblemPart::getAgentsInScope() const {
+std::shared_ptr<std::vector<std::shared_ptr<AgentSet>>> ProblemPart::getAgentsInScope() const {
     return agentsInScope;
 }
 

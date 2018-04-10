@@ -10,8 +10,8 @@
 namespace alica {
 
 RoleSet::RoleSet()
-    : _usableWithPlanID(0)
-    , _isDefault(false) {}
+        : _usableWithPlanID(0)
+        , _isDefault(false) {}
 
 RoleSet::~RoleSet() {}
 

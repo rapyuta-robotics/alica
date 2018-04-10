@@ -15,7 +15,6 @@
 #include <string>
 #include <vector>
 
-
 namespace alica {
 
 class IAssignment;
@@ -34,8 +33,8 @@ class PartialAssignmentPool;
  */
 class TaskAssignment final : public ITaskAssignment {
 public:
-    TaskAssignment(const AlicaEngine* engine, const PlanSet& planList,
-            const AgentSet& paraRobots, bool preassignOtherRobots);
+    TaskAssignment(
+            const AlicaEngine* engine, const PlanSet& planList, const AgentSet& paraRobots, bool preassignOtherRobots);
     virtual ~TaskAssignment();
     std::shared_ptr<Assignment> getNextBestAssignment(IAssignment* oldAss);
     std::string toString();

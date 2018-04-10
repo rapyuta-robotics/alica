@@ -1,7 +1,5 @@
 #include "engine/Assignment.h"
 
-
-
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/model/Plan.h"
 #include "engine/collections/StateCollection.h"
@@ -33,7 +31,7 @@ Assignment::Assignment(const Plan* p) {
     for (const EntryPoint* e : plan->getEntryPoints()) {
         sortedEpList.push_back(e);
     }
-    sortedEpList.sort(EntryPoint::compareTo);//TODO: Entrypoints are supposed to be pre-sorted. Confirm and remove
+    sortedEpList.sort(EntryPoint::compareTo);  // TODO: Entrypoints are supposed to be pre-sorted. Confirm and remove
 
     // add the sorted entrypoints into the assignmentcollection
     short i = 0;
@@ -57,7 +55,6 @@ Assignment::Assignment(PartialAssignment* pa) {
     } else {
         this->epRobotsMapping = new AssignmentCollection(assCol->getSize());
     }
-
 
     for (short i = 0; i < this->epRobotsMapping->getSize(); i++) {
         // set the entrypoint
@@ -85,7 +82,7 @@ Assignment::Assignment(const Plan* p, shared_ptr<AllocationAuthorityInfo> aai) {
         // set the entrypoint
         this->epRobotsMapping->setEp(i, ep);
 
-        //curRobots = make_shared<vector<const supplementary::AgentID*>>();
+        // curRobots = make_shared<vector<const supplementary::AgentID*>>();
         for (auto epRobots : aai->entryPointRobots) {
             // find the right entrypoint
             if (epRobots.entrypoint == ep->getId()) {
@@ -112,7 +109,6 @@ void Assignment::setPlan(const Plan* plan) {
 StateCollection* Assignment::getRobotStateMapping() {
     return robotStateMapping;
 }
-
 
 AssignmentCollection* Assignment::getEpRobotsMapping() {
     return epRobotsMapping;
@@ -253,7 +249,7 @@ std::shared_ptr<SuccessCollection> Assignment::getEpSuccessMapping() {
     return this->epSucMapping;
 }
 
-void Assignment::setAllToInitialState(const AgentSet& robots,const EntryPoint* defep) {
+void Assignment::setAllToInitialState(const AgentSet& robots, const EntryPoint* defep) {
     auto rlist = this->epRobotsMapping->editRobotsByEp(defep);
     for (const supplementary::AgentID* r : robots) {
         rlist->push_back(r);
@@ -281,7 +277,7 @@ void Assignment::addRobot(const supplementary::AgentID* id, const EntryPoint* e,
         return;
     }
     this->robotStateMapping->setState(id, s);
-    this->epRobotsMapping->addRobot(id,e);
+    this->epRobotsMapping->addRobot(id, e);
     return;
 }
 
@@ -366,7 +362,7 @@ bool Assignment::isEntryPointNonEmpty(const EntryPoint* ep) const {
     return (epSuc != nullptr && epSuc->size() > 0);
 }
 
-bool Assignment::updateRobot(const supplementary::AgentID* robot,const EntryPoint* ep,const State* s) {
+bool Assignment::updateRobot(const supplementary::AgentID* robot, const EntryPoint* ep, const State* s) {
     this->robotStateMapping->setState(robot, s);
     bool ret = false;
 
@@ -393,7 +389,7 @@ bool Assignment::updateRobot(const supplementary::AgentID* robot,const EntryPoin
     return ret;
 }
 
-bool Assignment::updateRobot(const supplementary::AgentID* robot,const EntryPoint* ep) {
+bool Assignment::updateRobot(const supplementary::AgentID* robot, const EntryPoint* ep) {
     bool ret = false;
     for (int i = 0; i < this->epRobotsMapping->getSize(); i++) {
         if (this->epRobotsMapping->getEp(i) == ep) {
@@ -422,7 +418,7 @@ bool Assignment::updateRobot(const supplementary::AgentID* robot,const EntryPoin
 }
 
 bool Assignment::removeRobot(const supplementary::AgentID* robot, const EntryPoint* ep) {
-    assert(ep!=nullptr);
+    assert(ep != nullptr);
     if (ep == nullptr) {
         return false;
     }
@@ -438,17 +434,17 @@ std::string Assignment::assignmentCollectionToString() {
 }
 
 void Assignment::addRobot(const supplementary::AgentID* id, const EntryPoint* e) {
-    assert(e!=nullptr);
+    assert(e != nullptr);
     if (e == nullptr) {
         return;
     }
-    this->epRobotsMapping->addRobot(id,e);
+    this->epRobotsMapping->addRobot(id, e);
     return;
 }
 
 void Assignment::moveRobots(const State* from, const State* to) {
-    assert(to!=nullptr);
-    robotStateMapping->moveAllFromTo(from,to);
+    assert(to != nullptr);
+    robotStateMapping->moveAllFromTo(from, to);
 }
 
 /**
@@ -467,7 +463,6 @@ const EntryPoint* Assignment::getEntryPointOfRobot(const supplementary::AgentID*
     }
     return nullptr;
 }
-
 
 void Assignment::clear() {
     this->robotStateMapping->clear();

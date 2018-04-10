@@ -15,16 +15,16 @@ public:
     AlicaElement(int64_t id, const std::string& name);
     virtual ~AlicaElement();
 
-    const std::string& getName() const {return _name;}
+    const std::string& getName() const { return _name; }
 
-    int64_t getId() const {return _id;}
+    int64_t getId() const { return _id; }
 
     virtual std::string toString() const;
 
     AlicaElement(const AlicaElement&) = delete;
     AlicaElement(AlicaElement&&) = delete;
-    AlicaElement& operator=(const AlicaElement&) =  delete;
-    AlicaElement& operator=(AlicaElement&&) =  delete;
+    AlicaElement& operator=(const AlicaElement&) = delete;
+    AlicaElement& operator=(AlicaElement&&) = delete;
 
 private:
     friend ModelFactory;

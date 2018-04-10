@@ -28,8 +28,6 @@ std::string PlanType::toString() const {
     return ss.str();
 }
 
-
-
 void PlanType::setParametrisation(const ParametrisationSet& parametrisation) {
     _parametrisation = parametrisation;
 }

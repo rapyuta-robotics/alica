@@ -8,8 +8,6 @@
 #ifndef BEHAVIOUR_H_
 #define BEHAVIOUR_H_
 
-
-
 #include <list>
 #include <string>
 
@@ -32,9 +30,9 @@ public:
 
     std::string toString() const;
 
-    const BehaviourConfigurationSet& getConfigurations() const {return _configurations;}
-    const std::string& getFileName() const {return _fileName;}
-    BasicBehaviour* getImplementation() const {return _implementation;}
+    const BehaviourConfigurationSet& getConfigurations() const { return _configurations; }
+    const std::string& getFileName() const { return _fileName; }
+    BasicBehaviour* getImplementation() const { return _implementation; }
 
 private:
     friend ModelFactory;

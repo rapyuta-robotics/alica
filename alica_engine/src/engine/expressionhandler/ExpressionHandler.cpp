@@ -66,7 +66,7 @@ void ExpressionHandler::attachAll() {
             attachConstraint(p->_runtimeCondition);
         }
 
-        for (const Transition* t : p->_transitions) {            
+        for (const Transition* t : p->_transitions) {
             if (t->getPreCondition() != nullptr) {
                 if (t->getPreCondition()->isEnabled()) {
                     t->_preCondition->setBasicCondition(

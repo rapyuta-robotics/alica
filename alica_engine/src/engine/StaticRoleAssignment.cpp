@@ -68,8 +68,7 @@ void StaticRoleAssignment::calculateRoles() {
                 this->robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me
-                if (*(agent->getId()) == *(this->ae->getTeamManager()->getLocalAgentID()) &&
-                        this->ownRole != role) {
+                if (*(agent->getId()) == *(this->ae->getTeamManager()->getLocalAgentID()) && this->ownRole != role) {
                     this->ownRole = role;
 
                     // probably nothing is reacting on this message, but anyway we send it

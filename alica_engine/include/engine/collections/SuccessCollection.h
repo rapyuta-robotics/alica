@@ -15,7 +15,6 @@
 #include <memory>
 #include <string>
 
-
 namespace alica {
 class EntryPoint;
 class Plan;

@@ -24,8 +24,8 @@ public:
     RoleTaskMapping();
     virtual ~RoleTaskMapping();
     std::string toString() const;
-    const Role* getRole() const {return _role;}    
-    const std::unordered_map<int64_t, double>& getTaskPriorities() const {return _taskPriorities;}
+    const Role* getRole() const { return _role; }
+    const std::unordered_map<int64_t, double>& getTaskPriorities() const { return _taskPriorities; }
 
 private:
     friend ModelFactory;

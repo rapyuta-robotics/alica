@@ -27,14 +27,12 @@ class Transition : public AlicaElement {
 public:
     Transition();
     virtual ~Transition();
-    
-    
-    
-    const State* getOutState() const { return _outState;}
-    const State* getInState() const {return _inState;}
-    const SyncTransition* getSyncTransition() const {return _syncTransition;}
-    const PreCondition* getPreCondition() const {return _preCondition;}
-    
+
+    const State* getOutState() const { return _outState; }
+    const State* getInState() const { return _inState; }
+    const SyncTransition* getSyncTransition() const { return _syncTransition; }
+    const PreCondition* getPreCondition() const { return _preCondition; }
+
     bool evalCondition(shared_ptr<RunningPlan> r) const;
 
 private:

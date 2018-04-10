@@ -14,11 +14,10 @@
 
 namespace alica {
 Plan::Plan(int64_t id)
-        : AbstractPlan(id) 
+        : AbstractPlan(id)
         , _postCondition(nullptr)
         , _minCardinality(0)
-        , _maxCardinality(0)
-{}
+        , _maxCardinality(0) {}
 
 Plan::~Plan() {}
 
@@ -41,9 +40,6 @@ const EntryPoint* Plan::getEntryPointByID(int64_t epID) const {
     }
     return nullptr;
 }
-
-
-
 
 void Plan::setEntryPoints(const EntryPointSet& entryPoints) {
     _entryPoints = entryPoints;

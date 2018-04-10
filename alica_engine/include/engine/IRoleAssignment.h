@@ -21,7 +21,7 @@ public:
     virtual void tick() = 0;
     virtual void update() = 0;
 
-    const Role* getOwnRole() const {return ownRole;}
+    const Role* getOwnRole() const { return ownRole; }
     const Role* getRole(const supplementary::AgentID* robotId);
     void setCommunication(const IAlicaCommunication* communication);
 

@@ -47,7 +47,7 @@ shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<Runnin
     // CREATE NEW PLAN LIST
     PlanSet newPlans;
     if (rp->getPlanType() == nullptr) {
-        newPlans.push_back(static_cast<const Plan*>(rp->getPlan())); 
+        newPlans.push_back(static_cast<const Plan*>(rp->getPlan()));
     } else {
         newPlans = rp->getPlanType()->getPlans();
     }
@@ -60,8 +60,7 @@ shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<Runnin
 /**
  * Edits data from the old running plan to call the method CreateRunningPlan appropriately.
  */
-shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(
-        shared_ptr<RunningPlan> rp, const AgentSet& robots) {
+shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp, const AgentSet& robots) {
     assert(!rp->isBehaviour());
     // Reset set index of the partial assignment object pool
     PartialAssignment::reset(pap);
@@ -82,15 +81,14 @@ shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(
  * @param robotIDs The set of robots or agents, which are available in a shared_ptr<vector<int> >
  * @return A shared_ptr<list<shared_ptr<RunningPlan>>>, encoding the solution.
  */
-shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForState(shared_ptr<RunningPlan> planningParent,
-        const AbstractPlanSet& plans, const AgentSet& robotIDs) {
+shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForState(
+        shared_ptr<RunningPlan> planningParent, const AbstractPlanSet& plans, const AgentSet& robotIDs) {
     PartialAssignment::reset(pap);
     return getPlansForStateInternal(planningParent, plans, robotIDs);
 }
 
 shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> planningParent, const PlanSet& plans,
-        const AgentSet& robotIDs, shared_ptr<RunningPlan> oldRp,
-        const PlanType* relevantPlanType) {
+        const AgentSet& robotIDs, shared_ptr<RunningPlan> oldRp, const PlanType* relevantPlanType) {
     PlanSet newPlanList;
     // REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
     for (const Plan* plan : plans) {
@@ -180,7 +178,7 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
         if (oldRp == nullptr) {
             // RECURSIVE PLANSELECTING FOR NEW STATE
             const AgentSet* robots = rp->getAssignment()->getRobotsWorking(ep);
-            assert(robots!=nullptr);
+            assert(robots != nullptr);
             rpChildren = this->getPlansForStateInternal(rp, rp->getActiveState()->getPlans(), *robots);
         } else {
 #ifdef PSDEBUG
@@ -208,8 +206,8 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
     return rp;  // If we return here, this robot is normal assigned
 }
 
-shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForStateInternal(shared_ptr<RunningPlan> planningParent,
-        const AbstractPlanSet& plans, const AgentSet& robotIDs) {
+shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForStateInternal(
+        shared_ptr<RunningPlan> planningParent, const AbstractPlanSet& plans, const AgentSet& robotIDs) {
     shared_ptr<list<shared_ptr<RunningPlan>>> rps = make_shared<list<shared_ptr<RunningPlan>>>();
 #ifdef PSDEBUG
     cout << "<######PS: GetPlansForState: Parent:"

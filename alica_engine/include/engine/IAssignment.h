@@ -74,29 +74,17 @@ public:
 
     virtual AssignmentCollection* getEpRobotsMapping() = 0;
 
-    double getMax() const {
-        return max;
-    }
+    double getMax() const { return max; }
 
-    virtual void setMax(double max) {
-        this->max = max;
-    }
+    virtual void setMax(double max) { this->max = max; }
 
-    double getMin() const {
-        return min;
-    }
+    double getMin() const { return min; }
 
-    void setMin(double min) {
-        this->min = min;
-    }
+    void setMin(double min) { this->min = min; }
 
-    int getNumUnAssignedRobotIds() const {
-        return unassignedRobotIds.size();
-    }
+    int getNumUnAssignedRobotIds() const { return unassignedRobotIds.size(); }
 
-    const vector<const supplementary::AgentID*>& getUnassignedRobotIds() const {
-        return unassignedRobotIds;
-    }
+    const vector<const supplementary::AgentID*>& getUnassignedRobotIds() const { return unassignedRobotIds; }
 
 protected:
     /**

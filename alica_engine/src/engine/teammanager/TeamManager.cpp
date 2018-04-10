@@ -8,7 +8,6 @@
 #include <iostream>
 #include <utility>
 
-
 namespace alica {
 
 TeamManager::TeamManager(AlicaEngine* engine, bool useConfigForTeam = true)
@@ -167,7 +166,8 @@ void TeamManager::setAgentIgnored(const supplementary::AgentID* agentId, const b
     }
 }
 
-bool TeamManager::setSuccess(const supplementary::AgentID* agentId, const AbstractPlan* plan, const EntryPoint* entryPoint) {
+bool TeamManager::setSuccess(
+        const supplementary::AgentID* agentId, const AbstractPlan* plan, const EntryPoint* entryPoint) {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end()) {
         agentEntry->second->setSuccess(plan, entryPoint);

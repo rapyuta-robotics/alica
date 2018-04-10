@@ -11,11 +11,10 @@
 namespace alica {
 
 TerminalState::TerminalState(StateType t)
-        : State(t) 
+        : State(t)
         , _postCondition(nullptr) {}
 
-TerminalState::~TerminalState() {
-}
+TerminalState::~TerminalState() {}
 
 void TerminalState::setPostCondition(PostCondition* posCondition) {
     _postCondition = posCondition;

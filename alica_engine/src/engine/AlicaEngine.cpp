@@ -83,7 +83,7 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, string roleSe
     this->roleAssignment->setCommunication(communicator);
     this->syncModul = new SyncModule(this);
 
-    if(!planRepository->verifyPlanBase()) {
+    if (!planRepository->verifyPlanBase()) {
         abort("Error in parsed plans.");
     }
 }

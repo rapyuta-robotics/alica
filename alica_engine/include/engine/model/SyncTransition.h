@@ -26,16 +26,17 @@ public:
     SyncTransition();
     virtual ~SyncTransition();
 
-    bool isFailOnSyncTimeOut() const {return _failOnSyncTimeOut;}
-    
-    unsigned long getSyncTimeOut() const {return _syncTimeOut;}
-    unsigned long getTalkTimeOut() const {return _talkTimeOut;}
+    bool isFailOnSyncTimeOut() const { return _failOnSyncTimeOut; }
 
-    const Plan* getPlan() const {return _plan;}
+    unsigned long getSyncTimeOut() const { return _syncTimeOut; }
+    unsigned long getTalkTimeOut() const { return _talkTimeOut; }
 
-    const TransitionSet& getInSync() const {return _inSync;}
+    const Plan* getPlan() const { return _plan; }
+
+    const TransitionSet& getInSync() const { return _inSync; }
 
     std::string toString() const;
+
 private:
     friend ModelFactory;
     void setFailOnSyncTimeOut(bool failOnSyncTimeOut);

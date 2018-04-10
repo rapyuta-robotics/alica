@@ -14,12 +14,11 @@
 namespace alica {
 
 Quantifier::Quantifier(int64_t id)
-    : AlicaElement(id)
-    , _scope(nullptr)
-    , _scopeType(planScope) {}
+        : AlicaElement(id)
+        , _scope(nullptr)
+        , _scopeType(planScope) {}
 
 Quantifier::~Quantifier() {}
-
 
 /**
  * Set the scope of this quantifier, called by the ModelFactory
@@ -27,7 +26,7 @@ Quantifier::~Quantifier() {}
  */
 void Quantifier::setScope(const AlicaElement* element) {
     _scope = element;
-    if(dynamic_cast<const EntryPoint*>(element) != nullptr) {
+    if (dynamic_cast<const EntryPoint*>(element) != nullptr) {
         _scopeType = entryPointScope;
     } else if (dynamic_cast<const Plan*>(element) != nullptr) {
         _scopeType = planScope;
@@ -37,11 +36,11 @@ void Quantifier::setScope(const AlicaElement* element) {
         assert(false);
     }
 }
- void Quantifier::setScopeType(Scope scope) {
-     _scopeType = scope;
+void Quantifier::setScopeType(Scope scope) {
+    _scopeType = scope;
 }
- void Quantifier::setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers) {
-     _domainIdentifiers = domainIdentifiers;
- }
+void Quantifier::setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers) {
+    _domainIdentifiers = domainIdentifiers;
+}
 
 }  // namespace alica

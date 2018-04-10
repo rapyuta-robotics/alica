@@ -62,7 +62,7 @@ const Variable* RobotEngineData::getDomainVariable(const std::string& sort) cons
 }
 
 int64_t RobotEngineData::makeUniqueId(const std::string& s) const {
-    int64_t ret = (int64_t) (supplementary::AgentIDHash()(this->agentId) + std::hash<string>()(s));
+    int64_t ret = (int64_t)(supplementary::AgentIDHash()(this->agentId) + std::hash<string>()(s));
     if (this->engine->getPlanParser()->getParsedElements()->find(ret) !=
             this->engine->getPlanParser()->getParsedElements()->end()) {
         AlicaEngine::abort("TO: Hash Collision in generating a quantified variable's unique ID: ", ret);

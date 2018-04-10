@@ -8,7 +8,6 @@
 #ifndef ABSTRACTPLAN_H_
 #define ABSTRACTPLAN_H_
 
-
 #include <string>
 #include <memory>
 
@@ -39,25 +38,25 @@ public:
     bool containsVar(const Variable* v) const;
     bool containsVar(const std::string& name) const;
 
-    bool isMasterPlan() const {return _masterPlan;}
-    AlicaTime getAuthorityTimeInterval() const {return _authorityTimeInterval;}
-    const VariableSet& getVariables() const {return _variables;}
-    const RuntimeCondition* getRuntimeCondition() const {return _runtimeCondition;}
-    const PreCondition* getPreCondition() const {return _preCondition;}
-    const std::shared_ptr<UtilityFunction>& getUtilityFunction() const {return _utilityFunction;}
-    double getUtilityThreshold() const {return _utilityThreshold;}
+    bool isMasterPlan() const { return _masterPlan; }
+    AlicaTime getAuthorityTimeInterval() const { return _authorityTimeInterval; }
+    const VariableSet& getVariables() const { return _variables; }
+    const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
+    const PreCondition* getPreCondition() const { return _preCondition; }
+    const std::shared_ptr<UtilityFunction>& getUtilityFunction() const { return _utilityFunction; }
+    double getUtilityThreshold() const { return _utilityThreshold; }
 
     std::string toString() const;
-    const std::string& getFileName() const {return _fileName;}
-    
-    void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const; //not a mistake, this is mutable
+    const std::string& getFileName() const { return _fileName; }
+
+    void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const;  // not a mistake, this is mutable
 
 private:
     friend ModelFactory;
     friend ExpressionHandler;
 
     void setMasterPlan(bool isMasterPlan);
-    
+
     void setFileName(const std::string& fileName);
     void setVariables(const VariableSet& variables);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
@@ -65,7 +64,7 @@ private:
     void setUtilityFunction(std::shared_ptr<UtilityFunction> utilityFunction);
     void setUtilityThreshold(double utilityThreshold);
 
-    //TODO: move this to the authority module
+    // TODO: move this to the authority module
     mutable AlicaTime _authorityTimeInterval;
     /**
      * This plan's runtime condition.
@@ -78,9 +77,9 @@ private:
     /**
      * This plan's Utility function
      */
-    std::shared_ptr<UtilityFunction> _utilityFunction; //TODO why the heck is this a shared ptr, livetime is bout to this object
+    std::shared_ptr<UtilityFunction>
+            _utilityFunction;  // TODO why the heck is this a shared ptr, livetime is bout to this object
 
-    
     VariableSet _variables;
     /**
      * The utility threshold, the higher, the less likely dynamic changes are.
@@ -92,7 +91,6 @@ private:
      */
     bool _masterPlan;
     std::string _fileName;
-
 };
 
 }  // namespace alica

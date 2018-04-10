@@ -13,7 +13,6 @@
 #include <string>
 #include <typeinfo>
 
-
 namespace tinyxml2 {
 class XMLElement;
 class XMLDocument;
@@ -66,14 +65,14 @@ private:
 
     std::string getRelativeFileName(std::string file);
     std::string getRelativeFileName(const AbstractPlan* p);
-    
+
     void setPlansToSave(const AlicaElementSet& plansToSave);
     void addConditionChildren(const Condition* c, tinyxml2::XMLElement* xn, tinyxml2::XMLDocument* doc);
     void addPlanElementAttributes(const AlicaElement* p, tinyxml2::XMLElement* x);
     //		tinyxml2::XMLAttribute* getXsiTypeAttribute(string type, tinyxml2::XMLDocument* doc);
     void createRoleSet(const RoleSet* r, tinyxml2::XMLDocument* doc);
     void createTaskRepository(const TaskRepository* tr, tinyxml2::XMLDocument* doc);
-    
+
     tinyxml2::XMLElement* createStateXMLNode(const State* s, tinyxml2::XMLDocument* doc);
     tinyxml2::XMLElement* createParametrisationXMLNode(const Parametrisation* p, tinyxml2::XMLDocument* doc);
     tinyxml2::XMLElement* createResultXMLNode(const PostCondition* r, tinyxml2::XMLDocument* doc);

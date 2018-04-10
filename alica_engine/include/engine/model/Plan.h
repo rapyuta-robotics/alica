@@ -38,25 +38,25 @@ public:
     const EntryPoint* getEntryPointTaskID(int64_t taskID) const;
     const EntryPoint* getEntryPointByID(int64_t epID) const;
 
-    const EntryPointSet& getEntryPoints() const {return _entryPoints;}
+    const EntryPointSet& getEntryPoints() const { return _entryPoints; }
 
-    const StateSet& getStates() const {return _states;}
-    const FailureStateSet& getFailureStates() const {return _failureStates;}
-    const SuccessStateSet& getSuccessStates() const {return _successStates;}
+    const StateSet& getStates() const { return _states; }
+    const FailureStateSet& getFailureStates() const { return _failureStates; }
+    const SuccessStateSet& getSuccessStates() const { return _successStates; }
 
-    int getMaxCardinality() const {return _maxCardinality;}
-    int getMinCardinality() const {return _minCardinality;}
-    
-    const PostCondition* getPostCondition() const {return _postCondition;}
+    int getMaxCardinality() const { return _maxCardinality; }
+    int getMinCardinality() const { return _minCardinality; }
 
-    const TransitionSet& getTransitions() const {return _transitions;}
-    const SyncTransitionSet& getSyncTransitions() const {return _syncTransitions;}
+    const PostCondition* getPostCondition() const { return _postCondition; }
 
-    const std::string& getDestinationPath() const {return _destinationPath;}
+    const TransitionSet& getTransitions() const { return _transitions; }
+    const SyncTransitionSet& getSyncTransitions() const { return _syncTransitions; }
+
+    const std::string& getDestinationPath() const { return _destinationPath; }
 
 private:
     friend ModelFactory;
-    friend ExpressionHandler; //TODO: get rid of this
+    friend ExpressionHandler;  // TODO: get rid of this
     void setEntryPoints(const EntryPointSet& entryPoints);
     void setFailureStates(const FailureStateSet& failurePoints);
     void setSuccessStates(const SuccessStateSet& succesPoints);
@@ -77,7 +77,7 @@ private:
     SyncTransitionSet _syncTransitions;
     TransitionSet _transitions;
     const PostCondition* _postCondition;
-    
+
     std::string _destinationPath;
 };
 

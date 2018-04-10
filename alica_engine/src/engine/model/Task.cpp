@@ -12,10 +12,9 @@ namespace alica {
 
 Task::~Task() {}
 
-Task::Task(bool defaultTask) 
-    : _defaultTask(defaultTask)
-    , _taskRepository(nullptr)
-{}
+Task::Task(bool defaultTask)
+        : _defaultTask(defaultTask)
+        , _taskRepository(nullptr) {}
 
 std::string Task::toString() const {
     std::stringstream ss;
@@ -28,7 +27,6 @@ std::string Task::toString() const {
 void Task::setDescription(const std::string& description) {
     _description = description;
 }
-
 
 void Task::setTaskRepository(const TaskRepository* taskRepository) {
     _taskRepository = taskRepository;

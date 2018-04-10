@@ -49,40 +49,39 @@ public:
     RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc);
     virtual ~RunningPlan();
     /**
-    * Indicates whether this running plan represents a behaviour.
-    * true if this instance is representing a behaviour; otherwise, false.
-    */
-    bool isBehaviour() const {return _behaviour;};
+     * Indicates whether this running plan represents a behaviour.
+     * true if this instance is representing a behaviour; otherwise, false.
+     */
+    bool isBehaviour() const { return _behaviour; };
 
-    bool isAllocationNeeded() const {return _allocationNeeded;}
+    bool isAllocationNeeded() const { return _allocationNeeded; }
     list<shared_ptr<RunningPlan>>* getChildren();
     void setChildren(list<shared_ptr<RunningPlan>> children);
     /**
-    * The abstract plan associated with this running plan, a model element.
-    */
-    const AbstractPlan* getPlan() const {return _plan;}
+     * The abstract plan associated with this running plan, a model element.
+     */
+    const AbstractPlan* getPlan() const { return _plan; }
     void setPlan(const AbstractPlan* plan);
     shared_ptr<BasicBehaviour> getBasicBehaviour();
     void setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour);
     shared_ptr<Assignment> getAssignment() const;
     void setAssignment(shared_ptr<Assignment> assignment);
     void printRecursive();
-    AlicaTime getPlanStartTime() const {return _planStartTime;}
-    AlicaTime getStateStartTime() const {return _stateStartTime;}
-    bool isActive() const {return _active; }
+    AlicaTime getPlanStartTime() const { return _planStartTime; }
+    AlicaTime getStateStartTime() const { return _stateStartTime; }
+    bool isActive() const { return _active; }
     void setActive(bool active);
 
-    const AgentSet& getRobotsAvail() const {return _robotsAvail;}
-    AgentSet& editRobotsAvail() {return _robotsAvail;}
-    
+    const AgentSet& getRobotsAvail() const { return _robotsAvail; }
+    AgentSet& editRobotsAvail() { return _robotsAvail; }
 
     void setAllocationNeeded(bool allocationNeeded);
     void setFailHandlingNeeded(bool failHandlingNeeded);
     void setOwnEntryPoint(const EntryPoint* value);
     PlanChange tick(RuleBook* rules);
-    
-    const ConditionStore& getConstraintStore() const {return _constraintStore;}
-    ConditionStore& editConstraintStore() {return _constraintStore;}
+
+    const ConditionStore& getConstraintStore() const { return _constraintStore; }
+    ConditionStore& editConstraintStore() { return _constraintStore; }
 
     const EntryPoint* getOwnEntryPoint() const;
     void setParent(weak_ptr<RunningPlan> s);
@@ -90,13 +89,13 @@ public:
     bool getFailHandlingNeeded() const;
     PlanStatus getStatus() const;
     /**
-    * Gets the PlanType of the currently executed plan. nullptr if the AbstractPlan associated does not belong to a
-    * PlanType.
-    */
-    const PlanType* getPlanType() const {return _planType;}
+     * Gets the PlanType of the currently executed plan. nullptr if the AbstractPlan associated does not belong to a
+     * PlanType.
+     */
+    const PlanType* getPlanType() const { return _planType; }
     bool evalPreCondition();
     bool evalRuntimeCondition();
-    const State* getActiveState() const {return _activeState;}
+    const State* getActiveState() const { return _activeState; }
     void setActiveState(const State* activeState);
     void addChildren(shared_ptr<list<shared_ptr<RunningPlan>>>& runningPlans);
     void addChildren(list<shared_ptr<RunningPlan>>& children);
@@ -117,19 +116,18 @@ public:
     bool allChildrenStatus(PlanStatus ps);
     bool anyChildrenTaskSuccess();
     void activate();
-    const EntryPoint* getActiveEntryPoint() const {return _activeEntryPoint;}
+    const EntryPoint* getActiveEntryPoint() const { return _activeEntryPoint; }
     void setActiveEntryPoint(EntryPoint* activeEntryPoint);
     void limitToRobots(const AgentSet& robots);
     std::shared_ptr<CycleManager> getCycleManagement();
     void revokeAllConstraints();
     void attachPlanConstraints();
-    bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts,
-            AgentSet& availableAgents, list<const supplementary::AgentID*> noUpdates,
-            AlicaTime now);
+    bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, AgentSet& availableAgents,
+            list<const supplementary::AgentID*> noUpdates, AlicaTime now);
     void toMessage(list<long>& message, shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const;
     std::string toString() const;
-    const supplementary::AgentID* getOwnID() const {return _ae->getTeamManager()->getLocalAgentID();}
-    AlicaEngine* getAlicaEngine() const { return _ae;}
+    const supplementary::AgentID* getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
+    AlicaEngine* getAlicaEngine() const { return _ae; }
 
     void sendLogMessage(int level, string& message);
 
@@ -147,9 +145,9 @@ protected:
     list<shared_ptr<RunningPlan>> _children;
     std::shared_ptr<Assignment> _assignment;
     std::shared_ptr<CycleManager> _cycleManagement;
-    
+
     shared_ptr<BasicBehaviour> _basicBehaviour;
-    
+
     PlanStatus _status;
     /**
      * The (ROS-)timestamp referring to when the local robot entered the ActiveState.
@@ -159,7 +157,7 @@ protected:
      * The timestamp referring to when this plan was started by the local robot
      */
     AlicaTime _planStartTime;
-    
+
     int _failCount;
     bool _failHandlingNeeded;
     bool _active;

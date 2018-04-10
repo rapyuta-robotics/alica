@@ -9,9 +9,8 @@
 
 namespace alica {
 
-TaskRepository::TaskRepository() 
-    : _defaultTask(0)
-    {}
+TaskRepository::TaskRepository()
+        : _defaultTask(0) {}
 
 TaskRepository::~TaskRepository() {}
 
@@ -29,7 +28,6 @@ std::string TaskRepository::getFileName() const {
 void TaskRepository::setFileName(const std::string& fileName) {
     _fileName = fileName;
 }
-
 
 void TaskRepository::setTasks(const TaskSet& tasks) {
     _tasks = tasks;

@@ -27,7 +27,7 @@ ForallAgents::~ForallAgents() {}
  * @param agentsInScope A shared_ptr<vector<int> >
  * @return shared_ptr<list<VariableSet> >
  */
-shared_ptr<list<VariableSet>> ForallAgents::getDomainVariables (
+shared_ptr<list<VariableSet>> ForallAgents::getDomainVariables(
         shared_ptr<RunningPlan>& p, AgentSet& o_agentsInScope) const {
     o_agentsInScope.clear();
     if (isScopePlan()) {
@@ -52,7 +52,6 @@ shared_ptr<list<VariableSet>> ForallAgents::getDomainVariables (
             terms.push_back(robotEngineData->getDomainVariable(identifier));
         }
         ret->push_back(terms);
-
     }
     return ret;
 }

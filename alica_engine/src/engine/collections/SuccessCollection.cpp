@@ -21,14 +21,14 @@ SuccessCollection::SuccessCollection(const Plan* plan) {
     this->entryPoints = new const EntryPoint*[this->count];
     this->robotIds = std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>(this->count);
     int i = 0;
-    
+
     for (const EntryPoint* ep : plan->getEntryPoints()) {
-        entryPoints[i] =  ep;
+        entryPoints[i] = ep;
         ++i;
     }
-    //TODO: entrypoints should be presorted: add test and remove
-    std::sort(entryPoints,entryPoints+count,EntryPoint::compareTo);
-    for(int j=0; j<count; ++j) {
+    // TODO: entrypoints should be presorted: add test and remove
+    std::sort(entryPoints, entryPoints + count, EntryPoint::compareTo);
+    for (int j = 0; j < count; ++j) {
         this->robotIds[j] = std::make_shared<std::list<const supplementary::AgentID*>>();
     }
 }

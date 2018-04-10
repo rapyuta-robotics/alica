@@ -29,13 +29,12 @@ public:
 
     std::string toString() const;
 
-    int getDeferring() const {return _deferring;}
-    bool isEventDriven() const {return _eventDriven;}    
-    int getFrequency() const {return _frequency;}
-    
-    const BehaviourParameterMap& getParameters() const {return _parameters;}    
-    const Behaviour* getBehaviour() const {return _behaviour;}
-    
+    int getDeferring() const { return _deferring; }
+    bool isEventDriven() const { return _eventDriven; }
+    int getFrequency() const { return _frequency; }
+
+    const BehaviourParameterMap& getParameters() const { return _parameters; }
+    const Behaviour* getBehaviour() const { return _behaviour; }
 
 private:
     friend ModelFactory;

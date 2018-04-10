@@ -17,8 +17,8 @@
 
 namespace alica {
 
-UtilityFunction::UtilityFunction(
-        const std::string& name, std::list<USummand*> utilSummands, double priorityWeight, double similarityWeight, const Plan* plan)
+UtilityFunction::UtilityFunction(const std::string& name, std::list<USummand*> utilSummands, double priorityWeight,
+        double similarityWeight, const Plan* plan)
         : priResult(0.0, 0.0)
         , simUI(0.0, 0.0) {
     this->ra = nullptr;
@@ -49,7 +49,6 @@ std::list<USummand*>& UtilityFunction::getUtilSummands() {
 void UtilityFunction::setUtilSummands(list<USummand*> utilSummands) {
     this->utilSummands = utilSummands;
 }
-
 
 /**
  * Evaluates the utility function according to the priorities of the assigned

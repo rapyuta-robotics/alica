@@ -25,11 +25,11 @@ public:
     PlanType();
     virtual ~PlanType();
 
-
     std::string toString() const;
 
-    const ParametrisationSet& getParametrisation() const {return _parametrisation;}
-    const PlanSet& getPlans() const {return _plans;}
+    const ParametrisationSet& getParametrisation() const { return _parametrisation; }
+    const PlanSet& getPlans() const { return _plans; }
+
 private:
     friend ModelFactory;
     void setParametrisation(const ParametrisationSet& parametrisation);

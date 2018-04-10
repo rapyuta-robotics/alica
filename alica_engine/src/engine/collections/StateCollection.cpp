@@ -10,11 +10,9 @@ StateCollection::StateCollection() {}
 
 StateCollection::~StateCollection() {}
 
-
 StateCollection::StateCollection(const AgentSet& robots, const StateSet& states)
-    : _robotIds(robots)
-    , _states(states)
-{}
+        : _robotIds(robots)
+        , _states(states) {}
 
 StateCollection::StateCollection(int maxSize)
         : _robotIds(maxSize)
@@ -29,7 +27,6 @@ StateCollection::StateCollection(const AssignmentCollection* ac) {
     }
 }
 
-
 const State* StateCollection::getStateOfRobot(const supplementary::AgentID* robotId) const {
     for (int i = 0; i < _robotIds.size(); i++) {
         if (*(_robotIds[i]) == *(robotId)) {
@@ -38,7 +35,6 @@ const State* StateCollection::getStateOfRobot(const supplementary::AgentID* robo
     }
     return nullptr;
 }
-
 
 int StateCollection::getRobotsInState(const State* s, AgentSet& o_robots) const {
     int c = 0;
@@ -67,7 +63,6 @@ void StateCollection::getRobotsInStateSorted(const State* s, AgentSet& o_robots)
     sort(o_robots.begin(), o_robots.end());
 }
 
-
 void StateCollection::removeRobot(const supplementary::AgentID* robotId) {
     for (int i = 0; i < _states.size(); i++) {
         if (*(_robotIds[i]) == *(robotId)) {
@@ -82,7 +77,6 @@ void StateCollection::clear() {
     _robotIds.clear();
     _states.clear();
 }
-
 
 void StateCollection::setState(const supplementary::AgentID* robotId, const State* state) {
     for (int i = 0; i < _robotIds.size(); ++i) {
@@ -112,15 +106,15 @@ void StateCollection::setInitialState(const supplementary::AgentID* robotId, con
     setState(robotId, ep->getState());
 }
 
-void StateCollection::setStates(const AgentSet& robotIds,const State* state) {
+void StateCollection::setStates(const AgentSet& robotIds, const State* state) {
     for (const supplementary::AgentID* r : robotIds) {
         setState(r, state);
     }
 }
 
 void StateCollection::moveAllFromTo(const State* from, const State* to) {
-    for(int i=0; i<_states.size(); ++i) {
-        if(_states[i]==from) {
+    for (int i = 0; i < _states.size(); ++i) {
+        if (_states[i] == from) {
             _states[i] = to;
         }
     }

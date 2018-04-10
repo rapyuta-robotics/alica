@@ -14,10 +14,8 @@
 
 namespace alica {
 
-Behaviour::Behaviour() 
-    : _implementation(nullptr)
-{}
-
+Behaviour::Behaviour()
+        : _implementation(nullptr) {}
 
 Behaviour::~Behaviour() {}
 

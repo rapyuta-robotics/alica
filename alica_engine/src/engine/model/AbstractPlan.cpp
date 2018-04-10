@@ -5,7 +5,6 @@
  *      Author: Stephan Opfer
  */
 
-
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Variable.h"
 #include <SystemConfig.h>
@@ -14,8 +13,8 @@
 namespace alica {
 
 AbstractPlan::AbstractPlan()
-        : AlicaElement() 
-        , _utilityThreshold(1.0) 
+        : AlicaElement()
+        , _utilityThreshold(1.0)
         , _masterPlan(false)
         , _utilityFunction(nullptr)
         , _preCondition(nullptr)
@@ -30,12 +29,11 @@ AbstractPlan::AbstractPlan()
 
 AbstractPlan::AbstractPlan(int64_t id)
         : AlicaElement(id)
-        , _utilityThreshold(1.0) 
+        , _utilityThreshold(1.0)
         , _masterPlan(false)
         , _utilityFunction(nullptr)
         , _preCondition(nullptr)
-        , _runtimeCondition(nullptr)
-{
+        , _runtimeCondition(nullptr) {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     _authorityTimeInterval =
             (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL) *
@@ -62,7 +60,6 @@ bool AbstractPlan::containsVar(const Variable* v) const {
 }
 
 bool AbstractPlan::containsVar(const std::string& name) const {
-    
     for (const Variable* v : _variables) {
         if (v->getName() == name) {
             return true;
@@ -74,7 +71,6 @@ bool AbstractPlan::containsVar(const std::string& name) const {
 void AbstractPlan::setMasterPlan(bool masterPlan) {
     _masterPlan = masterPlan;
 }
-
 
 void AbstractPlan::setAuthorityTimeInterval(AlicaTime authorithyTimeInterval) const {
     _authorityTimeInterval = authorithyTimeInterval;

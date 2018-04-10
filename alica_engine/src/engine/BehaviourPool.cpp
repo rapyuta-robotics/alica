@@ -22,8 +22,7 @@ BehaviourPool::BehaviourPool(AlicaEngine* ae) {
 /**
  * Basic Destructor.
  */
-BehaviourPool::~BehaviourPool() {
-}
+BehaviourPool::~BehaviourPool() {}
 
 /**
  * Creates instances of BasicBehaviours, needed according to the PlanRepository, with the help of the given
@@ -38,7 +37,8 @@ bool BehaviourPool::init(IBehaviourCreator* bc) {
 
     this->behaviourCreator = bc;
 
-    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
+    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs =
+            ae->getPlanRepository()->getBehaviourConfigurations();
     for (const BehaviourConfiguration* beh : behaviourConfs) {
         auto basicBeh = this->behaviourCreator->createBehaviour(beh->getId());
         if (basicBeh != nullptr) {
@@ -61,7 +61,8 @@ bool BehaviourPool::init(IBehaviourCreator* bc) {
  * Calls stop on all BasicBehaviours.
  */
 void BehaviourPool::stopAll() {
-    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
+    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs =
+            ae->getPlanRepository()->getBehaviourConfigurations();
     for (const BehaviourConfiguration* beh : behaviourConfs) {
         auto bbPtr = _availableBehaviours.at(beh);
         if (bbPtr == nullptr) {
@@ -109,7 +110,8 @@ void BehaviourPool::stopBehaviour(std::shared_ptr<RunningPlan> rp) {
     }
 }
 
-const std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>& BehaviourPool::getAvailableBehaviours() const {
+const std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>& BehaviourPool::getAvailableBehaviours()
+        const {
     return _availableBehaviours;
 }
 

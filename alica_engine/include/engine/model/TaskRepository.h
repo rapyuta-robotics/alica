@@ -13,15 +13,14 @@
 #include "AlicaElement.h"
 #include <engine/Types.h>
 
-
 namespace alica {
 
 class TaskRepository : public AlicaElement {
 public:
     TaskRepository();
     virtual ~TaskRepository();
-    int64_t getDefaultTask() const {return _defaultTask;}
-    const TaskSet& getTasks() const {return _tasks;}
+    int64_t getDefaultTask() const { return _defaultTask; }
+    const TaskSet& getTasks() const { return _tasks; }
     std::string getFileName() const;
 
 private:

@@ -12,7 +12,6 @@
 #include <list>
 #include <map>
 
-
 #include "tinyxml2.h"
 
 namespace alica {
@@ -71,7 +70,7 @@ public:
     void attachCharacteristicReferences();
     RoleSet* createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPlan);
     static const EntryPoint* generateIdleEntryPoint();
-    
+
 private:
     static const std::string entryPoints;
     static const std::string states;
@@ -114,7 +113,7 @@ private:
     PlanRepository* rep;
     std::map<int64_t, AlicaElement*> elements;
 
-    using ReferenceList=std::list<std::pair<int64_t, int64_t>>;
+    using ReferenceList = std::list<std::pair<int64_t, int64_t>>;
 
     ReferenceList stateInTransitionReferences;
     ReferenceList stateOutTransitionReferences;

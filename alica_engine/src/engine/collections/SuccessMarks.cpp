@@ -13,16 +13,14 @@ namespace alica {
  * Default Constructor
  */
 SuccessMarks::SuccessMarks(const AlicaEngine* ae)
-    : ae(ae)
-{}
+        : ae(ae) {}
 
 /**
  * Construct from a list of EntryPoint id, as received by a message
  * @param epIds A list<long>
  */
-SuccessMarks::SuccessMarks(const AlicaEngine* ae, const std::list<int64_t>& epIds) 
-    :   ae(ae) {
-
+SuccessMarks::SuccessMarks(const AlicaEngine* ae, const std::list<int64_t>& epIds)
+        : ae(ae) {
     const PlanRepository::Accessor<EntryPoint>& eps = ae->getPlanRepository()->getEntryPoints();
     for (int64_t id : epIds) {
         const EntryPoint* ep = eps.find(id);
@@ -37,7 +35,8 @@ SuccessMarks::SuccessMarks(const AlicaEngine* ae, const std::list<int64_t>& epId
             } else {
                 std::shared_ptr<std::list<const EntryPoint*>> s = std::make_shared<std::list<const EntryPoint*>>();
                 s->push_back(ep);
-                this->successMarks.insert(pair<const AbstractPlan*, std::shared_ptr<std::list<const EntryPoint*>>>(ep->getPlan(), s));
+                this->successMarks.insert(
+                        pair<const AbstractPlan*, std::shared_ptr<std::list<const EntryPoint*>>>(ep->getPlan(), s));
             }
         }
     }
@@ -60,7 +59,6 @@ void SuccessMarks::limitToPlans(const AbstractPlanSet& active) {
         this->successMarks.erase(p);
     }
 }
-
 
 /**
  * Clear all marks

@@ -12,33 +12,28 @@ namespace alica {
  * Basic constructor
  */
 State::State()
-    : AlicaElement(0)
-    , _type(Normal)
-    , _inPlan(nullptr)
-    , _entryPoint(nullptr)
-{}
+        : AlicaElement(0)
+        , _type(Normal)
+        , _inPlan(nullptr)
+        , _entryPoint(nullptr) {}
 
 State::State(StateType t)
-    : AlicaElement(0)
-    , _type(t)
-    , _inPlan(nullptr)
-    , _entryPoint(nullptr)
-{}
-
+        : AlicaElement(0)
+        , _type(t)
+        , _inPlan(nullptr)
+        , _entryPoint(nullptr) {}
 
 /**
  * Constructor which accepts a unique id.
  * @param id A int
  */
-State::State(int64_t id) 
-    : AlicaElement(id)
-    , _type(Normal)
-    , _inPlan(nullptr)
-    , _entryPoint(nullptr)
-{}
+State::State(int64_t id)
+        : AlicaElement(id)
+        , _type(Normal)
+        , _inPlan(nullptr)
+        , _entryPoint(nullptr) {}
 
 State::~State() {}
-
 
 void State::setInPlan(const Plan* inPlan) {
     _inPlan = inPlan;

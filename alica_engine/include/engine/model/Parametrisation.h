@@ -23,13 +23,13 @@ public:
 
     std::string toString() const;
 
-    const AbstractPlan* getSubPlan() const { return _subPlan;}
-    const Variable* getVar() const {return _var;}
-    const Variable* getSubVar() const {_subVar;}
+    const AbstractPlan* getSubPlan() const { return _subPlan; }
+    const Variable* getVar() const { return _var; }
+    const Variable* getSubVar() const { _subVar; }
 
 protected:
     friend ModelFactory;
-    
+
     void setSubPlan(const AbstractPlan* subPlan);
     void setSubVar(const Variable* subVar);
     void setVar(const Variable* var);

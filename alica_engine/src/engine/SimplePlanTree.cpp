@@ -36,7 +36,6 @@ bool SimplePlanTree::containsPlan(const AbstractPlan* plan) const {
     return false;
 }
 
-
 void SimplePlanTree::setEntryPoint(const EntryPoint* entryPoint) {
     this->entryPoint = entryPoint;
 }

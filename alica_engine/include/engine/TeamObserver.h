@@ -51,7 +51,7 @@ public:
     void notifyRobotLeftPlan(const AbstractPlan* plan);
     virtual void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
     void close();
-    
+
 private:
     const EntryPoint* entryPointOfState(const State* state) const;
 
@@ -68,7 +68,8 @@ private:
             simplePlanTrees;
 
     void cleanOwnSuccessMarks(std::shared_ptr<RunningPlan> root);
-    std::shared_ptr<SimplePlanTree> sptFromMessage(const supplementary::AgentID* robotId, const std::list<int64_t>& ids);
+    std::shared_ptr<SimplePlanTree> sptFromMessage(
+            const supplementary::AgentID* robotId, const std::list<int64_t>& ids);
 };
 
 } /* namespace alica */

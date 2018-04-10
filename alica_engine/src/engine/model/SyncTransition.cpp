@@ -11,12 +11,11 @@
 
 namespace alica {
 
-SyncTransition::SyncTransition() 
-    : _failOnSyncTimeOut(false)
-    , _syncTimeOut(3000)
-    , _talkTimeOut(30)
-    , _plan(nullptr)
-{}
+SyncTransition::SyncTransition()
+        : _failOnSyncTimeOut(false)
+        , _syncTimeOut(3000)
+        , _talkTimeOut(30)
+        , _plan(nullptr) {}
 
 SyncTransition::~SyncTransition() {}
 

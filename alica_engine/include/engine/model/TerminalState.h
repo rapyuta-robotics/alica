@@ -20,7 +20,7 @@ class TerminalState : public State {
 public:
     TerminalState(StateType t);
     virtual ~TerminalState();
-    const PostCondition* getPostCondition() const {return _postCondition;}
+    const PostCondition* getPostCondition() const { return _postCondition; }
 
 protected:
     friend ModelFactory;

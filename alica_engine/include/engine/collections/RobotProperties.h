@@ -29,7 +29,7 @@ public:
     void setDefaultRole(const std::string& defaultRole);
     friend std::ostream& operator<<(std::ostream& os, const alica::RobotProperties& obj) {
         os << "RobotProperties: Id=" << obj.getId() << " Default Role: " << obj.getDefaultRole() << endl;
-        for (const std::pair<string,const Characteristic*>& p : obj.getCharacteristics()) {
+        for (const std::pair<string, const Characteristic*>& p : obj.getCharacteristics()) {
             os << "\t" << p.first << " = " << p.second->getCapValue()->getName() << endl;
         }
         return os;
@@ -40,7 +40,6 @@ protected:
 
     std::string defaultRole;
     std::map<std::string, const Characteristic*> characteristics;
-    
 };
 
 } /* namespace alica */
