@@ -48,7 +48,7 @@
 
 #include "Plans/BehaviorSuccessSpamMaster1522377375148.h"
 
-#include  "Plans/ProblemModule/ProblemBuildingMaster1479556022226.h"
+#include "Plans/ProblemModule/ProblemBuildingMaster1479556022226.h"
 
 #include "Plans/MultiAgentTestPlan1413200862180.h"
 
@@ -74,255 +74,252 @@ namespace alica {
 ConditionCreator::ConditionCreator() {}
 ConditionCreator::~ConditionCreator() {}
 
-    shared_ptr<BasicCondition> ConditionCreator::createConditions(long conditionConfId)
-    {
-        switch (conditionConfId)
-        {
+shared_ptr<BasicCondition> ConditionCreator::createConditions(long conditionConfId) {
+    switch (conditionConfId) {
+        case 1402488991641:
 
-            case 1402488991641:
+            return make_shared<TransitionCondition1402488991641>();
 
-                return make_shared<TransitionCondition1402488991641>();
+            break;
 
-                break;
+        case 1402488993122:
 
-            case 1402488993122:
+            return make_shared<TransitionCondition1402488993122>();
 
-                return make_shared<TransitionCondition1402488993122>();
+            break;
 
-                break;
+        case 1402489065962:
 
-            case 1402489065962:
+            return make_shared<TransitionCondition1402489065962>();
 
-                return make_shared<TransitionCondition1402489065962>();
+            break;
 
-                break;
+        case 1402489073613:
 
-            case 1402489073613:
+            return make_shared<TransitionCondition1402489073613>();
 
-                return make_shared<TransitionCondition1402489073613>();
+            break;
 
-                break;
+        case 1417424512343:
 
-            case 1417424512343:
+            return make_shared<RunTimeCondition1417424512343>();
 
-                return make_shared<RunTimeCondition1417424512343>();
+            break;
 
-                break;
+        case 1414403842622:
 
-            case 1414403842622:
+            return make_shared<TransitionCondition1414403842622>();
 
-                return make_shared<TransitionCondition1414403842622>();
+            break;
 
-                break;
+        case 1402489131988:
 
-            case 1402489131988:
+            return make_shared<PreCondition1402489131988>();
 
-                return make_shared<PreCondition1402489131988>();
+            break;
 
-                break;
+        case 1403773741874:
 
-            case 1403773741874:
+            return make_shared<RunTimeCondition1403773741874>();
 
-                return make_shared<RunTimeCondition1403773741874>();
+            break;
 
-                break;
+        case 1402489174338:
 
-            case 1402489174338:
+            return make_shared<TransitionCondition1402489174338>();
 
-                return make_shared<TransitionCondition1402489174338>();
+            break;
 
-                break;
+        case 1402489206278:
 
-            case 1402489206278:
+            return make_shared<TransitionCondition1402489206278>();
 
-                return make_shared<TransitionCondition1402489206278>();
+            break;
 
-                break;
+        case 1402489218027:
 
-            case 1402489218027:
+            return make_shared<TransitionCondition1402489218027>();
 
-                return make_shared<TransitionCondition1402489218027>();
+            break;
 
-                break;
+        case 1402488519140:
 
-            case 1402488519140:
+            return make_shared<TransitionCondition1402488519140>();
 
-                return make_shared<TransitionCondition1402488519140>();
+            break;
 
-                break;
+        case 1402488520968:
 
-            case 1402488520968:
+            return make_shared<TransitionCondition1402488520968>();
 
-                return make_shared<TransitionCondition1402488520968>();
+            break;
 
-                break;
+        case 1402488558741:
 
-            case 1402488558741:
+            return make_shared<TransitionCondition1402488558741>();
 
-                return make_shared<TransitionCondition1402488558741>();
+            break;
 
-                break;
+        case 1409218319990:
 
-            case 1409218319990:
+            return make_shared<TransitionCondition1409218319990>();
 
-                return make_shared<TransitionCondition1409218319990>();
+            break;
 
-                break;
+        case 1479556084493:
 
-            case 1479556084493:
+            return make_shared<RunTimeCondition1479556084493>();
 
-                return make_shared<RunTimeCondition1479556084493>();
+            break;
 
-                break;
+        case 1418042683692:
 
-            case 1418042683692:
+            return make_shared<TransitionCondition1418042683692>();
 
-                return make_shared<TransitionCondition1418042683692>();
+            break;
 
-                break;
+        case 1402489460549:
 
-            case 1402489460549:
+            return make_shared<TransitionCondition1402489460549>();
 
-                return make_shared<TransitionCondition1402489460549>();
+            break;
 
-                break;
+        case 1402489462088:
 
-            case 1402489462088:
+            return make_shared<TransitionCondition1402489462088>();
 
-                return make_shared<TransitionCondition1402489462088>();
+            break;
 
-                break;
+        case 1412781693884:
 
-            case 1412781693884:
+            return make_shared<RunTimeCondition1412781693884>();
 
-                return make_shared<RunTimeCondition1412781693884>();
+            break;
 
-                break;
+        case 1412781707952:
 
-            case 1412781707952:
+            return make_shared<PreCondition1412781707952>();
 
-                return make_shared<PreCondition1412781707952>();
+            break;
 
-                break;
+        case 1412761926856:
 
-            case 1412761926856:
+            return make_shared<TransitionCondition1412761926856>();
 
-                return make_shared<TransitionCondition1412761926856>();
+            break;
 
-                break;
+        case 1418042967134:
 
-            case 1418042967134:
+            return make_shared<RunTimeCondition1418042967134>();
 
-                return make_shared<RunTimeCondition1418042967134>();
+            break;
 
-                break;
+        case 1402489260911:
 
-            case 1402489260911:
+            return make_shared<RunTimeCondition1402489260911>();
 
-                return make_shared<RunTimeCondition1402489260911>();
+            break;
 
-                break;
+        case 1402489258509:
 
-            case 1402489258509:
+            return make_shared<TransitionCondition1402489258509>();
 
-                return make_shared<TransitionCondition1402489258509>();
+            break;
 
-                break;
+        case 1402489278408:
 
-            case 1402489278408:
+            return make_shared<TransitionCondition1402489278408>();
 
-                return make_shared<TransitionCondition1402489278408>();
+            break;
 
-                break;
+        case 1402500844446:
 
-            case 1402500844446:
+            return make_shared<TransitionCondition1402500844446>();
 
-                return make_shared<TransitionCondition1402500844446>();
+            break;
 
-                break;
+        case 1418825427317:
 
-            case 1418825427317:
+            return make_shared<TransitionCondition1418825427317>();
 
-                return make_shared<TransitionCondition1418825427317>();
+            break;
 
-                break;
+        case 1418825428924:
 
-            case 1418825428924:
+            return make_shared<TransitionCondition1418825428924>();
 
-                return make_shared<TransitionCondition1418825428924>();
+            break;
 
-                break;
+        case 1522377944921:
 
-            case 1522377944921:
+            return make_shared<TransitionCondition1522377944921>();
 
-                return make_shared<TransitionCondition1522377944921>();
+            break;
 
-                break;
+        case 1522377946607:
 
-            case 1522377946607:
+            return make_shared<TransitionCondition1522377946607>();
 
-                return make_shared<TransitionCondition1522377946607>();
+            break;
 
-                break;
+        case 1479557592662:
 
-            case 1479557592662:
+            return make_shared<TransitionCondition1479557592662>();
 
-                return make_shared<TransitionCondition1479557592662>();
+            break;
 
-                break;
+        case 1413201052549:
 
-            case 1413201052549:
+            return make_shared<TransitionCondition1413201052549>();
 
-                return make_shared<TransitionCondition1413201052549>();
+            break;
 
-                break;
+        case 1413201367990:
 
-            case 1413201367990:
+            return make_shared<TransitionCondition1413201367990>();
 
-                return make_shared<TransitionCondition1413201367990>();
+            break;
 
-                break;
+        case 1413201370590:
 
-            case 1413201370590:
+            return make_shared<TransitionCondition1413201370590>();
 
-                return make_shared<TransitionCondition1413201370590>();
+            break;
 
-                break;
+        case 1414068566297:
 
-            case 1414068566297:
+            return make_shared<RunTimeCondition1414068566297>();
 
-                return make_shared<RunTimeCondition1414068566297>();
+            break;
 
-                break;
+        case 1418042929966:
 
-            case 1418042929966:
+            return make_shared<PreCondition1418042929966>();
 
-                return make_shared<PreCondition1418042929966>();
+            break;
 
-                break;
+        case 1413201227586:
 
-            case 1413201227586:
+            return make_shared<TransitionCondition1413201227586>();
 
-                return make_shared<TransitionCondition1413201227586>();
+            break;
 
-                break;
+        case 1413201389955:
 
-            case 1413201389955:
+            return make_shared<TransitionCondition1413201389955>();
 
-                return make_shared<TransitionCondition1413201389955>();
+            break;
 
-                break;
+        case 1429017236633:
 
-            case 1429017236633:
+            return make_shared<TransitionCondition1429017236633>();
 
-                return make_shared<TransitionCondition1429017236633>();
+            break;
 
-                break;
-
-            default:
-                cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << endl;
-                throw new exception();
-                break;
-        }
+        default:
+            cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << endl;
+            throw new exception();
+            break;
     }
+}
 }  // namespace alica

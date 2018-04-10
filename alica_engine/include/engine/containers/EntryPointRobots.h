@@ -23,8 +23,6 @@ struct EntryPointRobots {
         robots = get<1>(s);
     }
 
-    stdEntryPointRobot toStandard() {
-        return move(make_tuple(entrypoint, robots));
-    }
+    stdEntryPointRobot toStandard() { return move(make_tuple(entrypoint, robots)); }
 };
 }  // namespace alica

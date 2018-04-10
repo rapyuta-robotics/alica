@@ -16,7 +16,6 @@
 
 namespace alica {
 
-
 ForallAgents::ForallAgents(long id)
         : Quantifier(id) {}
 

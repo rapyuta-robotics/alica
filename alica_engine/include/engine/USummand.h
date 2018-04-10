@@ -70,9 +70,7 @@ public:
         ss << endl;
         return ss.str();
     }
-    double getWeight() const {
-        return weight;
-    }
+    double getWeight() const { return weight; }
     /**
      * Evaluates the utilityfunction summand
      * @return The result of the evaluation
@@ -83,12 +81,8 @@ public:
      * assure consistency over the complete current evaluation.
      */
     virtual void cacheEvalData(){};
-    virtual pair<vector<double>, double>* differentiate(IAssignment* newAss) {
-        return nullptr;
-    }
-    void setWeight(double weight) {
-        this->weight = weight;
-    }
+    virtual pair<vector<double>, double>* differentiate(IAssignment* newAss) { return nullptr; }
+    void setWeight(double weight) { this->weight = weight; }
 
 protected:
     UtilityInterval ui;

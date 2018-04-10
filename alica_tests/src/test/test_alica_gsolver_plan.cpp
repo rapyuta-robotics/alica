@@ -10,8 +10,8 @@
 #include "engine/PlanBase.h"
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
-#include  "engine/DefaultUtilityFunction.h"
-#include  "engine/TeamObserver.h"
+#include "engine/DefaultUtilityFunction.h"
+#include "engine/TeamObserver.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RuntimeCondition.h"
 #include "BehaviourCreator.h"
@@ -29,9 +29,7 @@
 #include <engine/constraintmodul/Query.h>
 #include "ConstraintTestPlanDummySolver.h"
 
-
-class AlicaGSolverPlan : public ::testing::Test
-{
+class AlicaGSolverPlan : public ::testing::Test {
 protected:
     supplementary::SystemConfig* sc;
     alica::AlicaEngine* ae;
@@ -40,12 +38,11 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
-    virtual void SetUp()
-    {
+    virtual void SetUp() {
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
-        nh.param<std::string>("/rootPath",path,".");
+        nh.param<std::string>("/rootPath", path, ".");
 
         // bring up the SystemConfig with the corresponding path
         sc = supplementary::SystemConfig::getInstance();
@@ -54,7 +51,8 @@ protected:
         sc->setHostname("nase");
 
         // setup the engine
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "GSolverMaster", ".", true);
+        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
+                "GSolverMaster", ".", true);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
@@ -65,9 +63,7 @@ protected:
         ae->addSolver(SolverType::GRADIENTSOLVER, new alica::reasoner::CGSolver(ae));
     }
 
-    virtual void TearDown()
-    {
-
+    virtual void TearDown() {
         ae->shutdown();
         sc->shutdown();
         delete ae->getIAlicaClock();
@@ -83,9 +79,7 @@ protected:
 /**
  * Tests if Behaviour with Constraints are called
  */
-TEST_F(AlicaGSolverPlan, solverTest)
-{
-
+TEST_F(AlicaGSolverPlan, solverTest) {
     ae->init(bc, cc, uc, crc);
     cout << "Starting engine..." << endl;
     ae->start();
@@ -93,8 +87,8 @@ TEST_F(AlicaGSolverPlan, solverTest)
     chrono::milliseconds sleepTime(33);
     ae->stepNotify();
     this_thread::sleep_for(sleepTime);
-    while(!ae->getPlanBase()->isWaiting()) {
-            this_thread::sleep_for(sleepTime);
+    while (!ae->getPlanBase()->isWaiting()) {
+        this_thread::sleep_for(sleepTime);
     }
 
     ASSERT_EQ(alica::SolverTestBehaviour::result.size(), 2) << "Wrong result size";
@@ -103,4 +97,3 @@ TEST_F(AlicaGSolverPlan, solverTest)
     EXPECT_GT(alica::SolverTestBehaviour::result[1], 7000);
     EXPECT_LT(alica::SolverTestBehaviour::result[1], 8000);
 }
-

@@ -27,9 +27,7 @@ struct SyncData {
         this->ack = std::get<3>(s);
     }
 
-    stdSyncData toStandard() {
-        return std::move(std::make_tuple(robotID, transitionID, conditionHolds, ack));
-    }
+    stdSyncData toStandard() { return std::move(std::make_tuple(robotID, transitionID, conditionHolds, ack)); }
 
     void toString() {
         std::cout << "SyncData--> ";

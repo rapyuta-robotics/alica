@@ -11,9 +11,7 @@ class SolverVariable;
 
 class ISolver : public std::enable_shared_from_this<ISolver> {
 public:
-    ISolver(AlicaEngine* ae) {
-        this->ae = ae;
-    }
+    ISolver(AlicaEngine* ae) { this->ae = ae; }
     virtual ~ISolver() {}
 
     virtual bool existsSolution(
@@ -27,9 +25,7 @@ public:
         return 0;
     }
 
-    AlicaEngine* getAlicaEngine() const {
-        return ae;
-    }
+    AlicaEngine* getAlicaEngine() const { return ae; }
 
 protected:
     AlicaEngine* ae;
