@@ -18,7 +18,6 @@
 
 namespace alica {
 
-class AlicaTime;
 class Plan;
 class Transition;
 class ModelFactory;

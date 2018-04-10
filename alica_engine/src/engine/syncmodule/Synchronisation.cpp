@@ -29,7 +29,7 @@ Synchronisation::Synchronisation(
     this->ae = ae;
     this->syncTransition = st;
     this->myID = myID;
-    this->syncStartTime = ae->getIAlicaClock()->now();
+    this->syncStartTime = ae->getAlicaClock()->now();
     for (const Transition* t : st->getInSync()) {
         connectedTransitions.push_back(t->getId());
     }
@@ -57,7 +57,7 @@ void Synchronisation::setTick(unsigned long now) {
 void Synchronisation::changeOwnData(long transitionID, bool conditionHolds) {
 #ifdef SM_MISC
     cout << "CHOD: ElapsedTime: "
-         << (ae->getAlicaClock()->now() - this->syncStartTime).toNanoseconds() << endl;
+         << ae->getAlicaClock()->now() - this->syncStartTime << endl;
 #endif
 
     if (!conditionHolds) {
@@ -154,7 +154,7 @@ bool Synchronisation::isValid(unsigned long curTick) {
     }
 
 #ifdef SM_FAILURE
-    cout << "Synchronisation: TestTimeOut(): syncStarTime " << (this->syncStartTime).toNanoseconds() << endl;
+    cout << "Synchronisation: TestTimeOut(): syncStarTime " << this->syncStartTime << endl;
 #endif
 
     if (this->syncTransition->isFailOnSyncTimeOut()) {
@@ -184,7 +184,7 @@ bool Synchronisation::integrateSyncTalk(shared_ptr<SyncTalk> talk, unsigned long
 
 #ifdef SM_MESSAGES
     cout << "Integrate synctalk in synchronisation" << endl;
-    cout << "ST: ElapsedTime: " << (ae->getAlicaClock()->now() - this->syncStartTime).toNanoseconds() << endl;
+    cout << "ST: ElapsedTime: " << ae->getAlicaClock()->now() - this->syncStartTime << endl;
 #endif
     for (SyncData* sd : talk->syncData) {
 #ifdef SM_MESSAGES
@@ -245,7 +245,7 @@ bool Synchronisation::integrateSyncTalk(shared_ptr<SyncTalk> talk, unsigned long
                 if (allSyncReady()) {
 #ifdef SM_SUCCESSS
                     Console.WriteLine("SyncDONE in Synchronisation (IntTalk): elapsed time: " +
-                        ((ae->getAlicaClock()->now()) - this.syncStartTime).toNanoseconds());
+                        (ae->getAlicaClock()->now()) - this.syncStartTime);
 #endif
                     // notify syncmodul
                     this->syncModul->synchronisationDone(this->syncTransition);
@@ -281,7 +281,7 @@ void Synchronisation::integrateSyncReady(shared_ptr<SyncReady> ready) {
         // notify syncModul
 #ifdef SM_SUCCESS
             cout << "SyncDONE in Synchronisation (IntReady): elapsed time: "
-                 << ((ae->getAlicaClock()->now()) - this->syncStartTime).inNanoseconds() << endl;
+                 << (ae->getAlicaClock()->now()) - this->syncStartTime << endl;
 #endif
             this->syncModul->synchronisationDone(this->syncTransition);
         }

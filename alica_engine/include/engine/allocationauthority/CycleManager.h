@@ -3,6 +3,7 @@
 
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "supplementary/AgentID.h"
+#include "engine/AlicaClock.h"
 
 #include <vector>
 #include <thread>

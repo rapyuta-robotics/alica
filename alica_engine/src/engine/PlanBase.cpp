@@ -82,8 +82,8 @@ PlanBase::PlanBase(AlicaEngine* ae, Plan* masterPlan)
     }
 
     //#ifdef PB_DEBUG
-    cout << "PB: Engine loop time is " << to_string(_loopTime / 1000000) << "ms, broadcast interval is "
-         << to_string(_minSendInterval / 1000000) << "ms - " << to_string(_maxSendInterval / 1000000) << "ms" << endl;
+    cout << "PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is "
+         << _minSendInterval.inMilliseconds() << "ms - " << _maxSendInterval.inMilliseconds() << "ms" << endl;
     //#endif
     if (halfLoopTime < _minSendInterval) {
         _minSendInterval -= halfLoopTime;
@@ -207,17 +207,13 @@ void PlanBase::run() {
 
         _ae->iterationComplete();
 
-        AlicaTime availTime;
-
         now = _alicaClock->now();
 
-        // TODO: FIXME: the division by 1000 is brittle and should not be needed
-        // replace AlicaTime with a proper time class.
-        availTime = (AlicaTime)((_loopTime - (now - beginTime)) / 1000L);
+        AlicaTime availTime = AlicaTime(_loopTime - (now - beginTime));
         bool checkFp = false;
-        if (availTime > 1000) {
+        if (availTime.inMilliseconds() > 1000) {
             std::unique_lock<std::mutex> lock(_lomutex);
-            checkFp = std::cv_status::no_timeout == _fpEventWait.wait_for(lock, std::chrono::microseconds(availTime));
+            checkFp = std::cv_status::no_timeout == _fpEventWait.wait_for(lock, std::chrono::nanoseconds(availTime.inNanoseconds()));
         }
 
         if (checkFp && _fpEvents.size() > 0) {

@@ -18,17 +18,15 @@ namespace alica {
 
 Logger::Logger(AlicaEngine* ae) {
     this->ae = ae;
-    this->endTime = 0;
     this->itCount = 0;
     this->sBuild = new stringstream();
-    this->startTime = 0;
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     this->active = (*sc)["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
     if (this->active) {
         char buffer[50];
         struct tm* timeinfo;
         string robotName = ae->getRobotName();
-        const long int time = ae->getAlicaClock()->now() / 1000000000L;
+        const AlicaTime time = ae->getAlicaClock()->now();
         timeinfo = localtime(&time);
         strftime(buffer, 1024, "%FT%T", timeinfo);
         string timeString = buffer;
@@ -45,7 +43,6 @@ Logger::Logger(AlicaEngine* ae) {
         this->inIteration = false;
         this->to = ae->getTeamObserver();
         this->tm = ae->getTeamManager();
-        this->time = 0;
     }
     this->recievedEvent = false;
 }
@@ -90,7 +87,7 @@ void Logger::iterationEnds(shared_ptr<RunningPlan> rp) {
     this->inIteration = false;
     this->endTime = ae->getAlicaClock()->now();
     this->itCount++;
-    this->time += (this->endTime - this->startTime) / 1000UL;  // us
+    this->time += (this->endTime - this->startTime);
 
     if (!this->recievedEvent) {
         return;
@@ -99,7 +96,7 @@ void Logger::iterationEnds(shared_ptr<RunningPlan> rp) {
     shared_ptr<list<string>> ownTree = createTreeLog(rp);
 
     (*this->sBuild) << "START:\t";
-    (*this->sBuild) << to_string((this->startTime / 1000000UL)) << endl;
+    (*this->sBuild) << this->startTime.inMilliseconds() << endl;
     (*this->sBuild) << "AVG-RT:\t";
     (*this->sBuild) << to_string((this->time / (1000.0 * this->itCount))) << endl;
     (*this->sBuild) << "CUR-RT:\t";

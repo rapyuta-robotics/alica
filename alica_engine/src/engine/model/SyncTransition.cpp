@@ -26,8 +26,8 @@ std::string SyncTransition::toString() const {
         ss << "\t Plan: " << _plan->getId() << " " << _plan->getName() << std::endl;
     }
     ss << std::endl;
-    ss << "\t TalkTimeOut: " << _talkTimeOut << std::endl;
-    ss << "\t SyncTimeOut: " << _syncTimeOut << std::endl;
+    ss << "\t TalkTimeOut: " << _talkTimeOut.inMilliseconds() << std::endl;
+    ss << "\t SyncTimeOut: " << _syncTimeOut.inMilliseconds() << std::endl;
     ss << "\t FailOnSyncTimeOut: " << _failOnSyncTimeOut << std::endl;
     ss << "\t InSync: " << _inSync.size() << endl;
     for (const Transition* t : _inSync) {
@@ -42,11 +42,11 @@ void SyncTransition::setFailOnSyncTimeOut(bool failOnSyncTimeOut) {
     _failOnSyncTimeOut = failOnSyncTimeOut;
 }
 
-void SyncTransition::setSyncTimeOut(unsigned long syncTimeOut) {
+void SyncTransition::setSyncTimeOut(AlicaTime syncTimeOut) {
     _syncTimeOut = syncTimeOut;
 }
 
-void SyncTransition::setTalkTimeOut(unsigned long talkTimeOut) {
+void SyncTransition::setTalkTimeOut(AlicaTime talkTimeOut) {
     _talkTimeOut = talkTimeOut;
 }
 

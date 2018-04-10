@@ -3,6 +3,7 @@
 #include <SystemConfig.h>
 #include <Logging.h>
 #include "engine/AlicaEngine.h"
+#include "engine/AlicaClock.h"
 #include "engine/IPlanTreeVisitor.h"
 
 #include <ctime>
@@ -46,10 +47,10 @@ protected:
     bool recievedEvent;
     stringstream* sBuild;
     list<string> eventStrings;
-    unsigned long startTime;
+    AlicaTime startTime;
     int itCount;
-    unsigned long endTime;
-    double time;
+    AlicaTime endTime;
+    AlicaTime time;
     bool inIteration;
     shared_ptr<list<string>> createHumanReadablePlanTree(list<long> list);
     const EntryPoint* entryPointOfState(const State* s) const;

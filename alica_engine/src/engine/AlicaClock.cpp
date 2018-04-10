@@ -4,6 +4,7 @@
 #include <thread>
 
 namespace alica {
+
 AlicaTime AlicaClock::now() {
     return AlicaTime::nanoseconds(std::chrono::system_clock::now().time_since_epoch().count());
 }

@@ -67,11 +67,11 @@ bool SimplePlanTree::isNewSimplePlanTree() const {
 void SimplePlanTree::setNewSimplePlanTree(bool newSimplePlanTree) {
     this->newSimplePlanTree = newSimplePlanTree;
 }
-long SimplePlanTree::getReceiveTime() const {
+AlicaTime SimplePlanTree::getReceiveTime() const {
     return receiveTime;
 }
 
-void SimplePlanTree::setReceiveTime(long receiveTime) {
+void SimplePlanTree::setReceiveTime(AlicaTime receiveTime) {
     this->receiveTime = receiveTime;
 }
 

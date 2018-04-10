@@ -70,6 +70,14 @@ public:
         return AlicaTime(_time - t.inNanoseconds());
     }
 
+    constexpr AlicaTime operator-=(const AlicaTime& t) const {
+        return AlicaTime(_time - t.inNanoseconds());
+    }
+
+    constexpr AlicaTime operator+=(const AlicaTime& t) const {
+        return AlicaTime(_time + t.inNanoseconds());
+    }
+
     template <typename T>
     constexpr AlicaTime operator/(T t) const {
         return AlicaTime(_time / t);
@@ -84,8 +92,16 @@ public:
         return _time < t.inNanoseconds();
     }
 
+    constexpr bool operator<=(const AlicaTime& t) const {
+        return _time <= t.inNanoseconds();
+    }
+
     constexpr bool operator>(const AlicaTime& t) const {
         return _time > t.inNanoseconds();
+    }
+
+    constexpr bool operator>=(const AlicaTime& t) const {
+        return _time >= t.inNanoseconds();
     }
 
     constexpr bool operator==(const AlicaTime& t) const {
