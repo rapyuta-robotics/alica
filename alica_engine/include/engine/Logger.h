@@ -3,7 +3,6 @@
 #include <SystemConfig.h>
 #include <Logging.h>
 #include "engine/AlicaEngine.h"
-#include "engine/IAlicaClock.h"
 #include "engine/IPlanTreeVisitor.h"
 
 #include <ctime>

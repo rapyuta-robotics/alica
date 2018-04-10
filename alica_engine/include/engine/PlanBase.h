@@ -10,7 +10,7 @@
 #include <mutex>
 #include <memory>
 #include <typeinfo>
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/RunningPlan.h"
 #include "engine/RuleBook.h"
 
@@ -27,7 +27,7 @@ class IAlicaCommunication;
 class Task;
 class State;
 class EntryPoint;
-class IAlicaClock;
+class AlicaClock;
 class Assignment;
 class StateCollection;
 class AlicaEngine;
@@ -69,7 +69,7 @@ private:
     SyncModule* _syncModel;
     AuthorityManager* _authModul;
     IAlicaCommunication* _statusPublisher;
-    IAlicaClock* _alicaClock;
+    AlicaClock* _alicaClock;
 
     shared_ptr<RunningPlan> _rootNode;
     shared_ptr<const RunningPlan> _deepestNode;

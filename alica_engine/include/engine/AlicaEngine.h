@@ -11,6 +11,7 @@ class AgentIDFactory;
 }
 
 namespace alica {
+class AlicaClock;
 class PlanRepository;
 class Plan;
 class PlanParser;
@@ -33,7 +34,6 @@ class IConditionCreator;
 class IConstraintCreator;
 
 class IAlicaCommunication;
-class IAlicaClock;
 
 class ISolver;
 class IRoleAssignment;
@@ -75,8 +75,8 @@ public:
     const IAlicaCommunication* getCommunicator() const;
     void setCommunicator(IAlicaCommunication* communicator);
     PlanSelector* getPlanSelector();
-    IAlicaClock* getIAlicaClock() const;
-    void setIAlicaClock(IAlicaClock* clock);
+    AlicaClock* getAlicaClock() const;
+    void setAlicaClock(const AlicaClock* clock);
     void iterationComplete();
     PartialAssignmentPool* getPartialAssignmentPool() const;
     void stepNotify();
@@ -120,7 +120,7 @@ protected:
 
     IRoleAssignment* roleAssignment;
     IAlicaCommunication* communicator;
-    IAlicaClock* alicaClock;
+    AlicaClock* alicaClock;
 
 private:
     /**

@@ -12,7 +12,7 @@
 #include <memory>
 
 #include "AlicaElement.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 
 #include "engine/Types.h"
 

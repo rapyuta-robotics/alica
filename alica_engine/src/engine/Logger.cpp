@@ -5,6 +5,7 @@
 #include "engine/PlanRepository.h"
 #include "engine/model/Task.h"
 #include "engine/RunningPlan.h"
+#include "engine/AlicaClock.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/TeamObserver.h"
@@ -27,7 +28,7 @@ Logger::Logger(AlicaEngine* ae) {
         char buffer[50];
         struct tm* timeinfo;
         string robotName = ae->getRobotName();
-        const long int time = ae->getIAlicaClock()->now() / 1000000000L;
+        const long int time = ae->getAlicaClock()->now() / 1000000000L;
         timeinfo = localtime(&time);
         strftime(buffer, 1024, "%FT%T", timeinfo);
         string timeString = buffer;
@@ -74,7 +75,7 @@ void Logger::eventOccured(string event) {
  */
 void Logger::itertionStarts() {
     this->inIteration = true;
-    this->startTime = ae->getIAlicaClock()->now();
+    this->startTime = ae->getAlicaClock()->now();
 }
 
 /**
@@ -87,7 +88,7 @@ void Logger::iterationEnds(shared_ptr<RunningPlan> rp) {
         return;
     }
     this->inIteration = false;
-    this->endTime = ae->getIAlicaClock()->now();
+    this->endTime = ae->getAlicaClock()->now();
     this->itCount++;
     this->time += (this->endTime - this->startTime) / 1000UL;  // us
 

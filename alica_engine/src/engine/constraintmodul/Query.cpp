@@ -5,7 +5,7 @@
 #include <engine/constraintmodul/Query.h>
 #include "engine/AlicaEngine.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/teammanager/TeamManager.h"
 #include "engine/teammanager/Agent.h"
 #include "engine/RunningPlan.h"
@@ -56,7 +56,7 @@ bool Query::existsSolution(int solverType, std::shared_ptr<RunningPlan> rp) {
 bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* solver,
         std::vector<std::shared_ptr<ProblemDescriptor>>& pds, VariableSet& relevantVariables, int& domOffset) {
 #ifdef Q_DEBUG
-    long time = rp->getAlicaEngine()->getIAlicaClock()->now();
+    long time = rp->getAlicaEngine()->getAlicaClock()->now();
 #endif
     // Clear variable stuff and calls
     uniqueVarStore->clear();
@@ -217,7 +217,7 @@ bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* so
     std::cout << "Query: Number of relevant static variables: " << domOffset << std::endl;
     std::cout << "Query: Number of relevant domain variables: " << relevantDomainVariables.size() << std::endl;
     std::cout << "Query: Total number of relevant variables: " << relevantVariables.size() << std::endl;
-    cout << "Query: PrepTime: " << (rp->getAlicaEngine()->getIAlicaClock()->now() - time) / 10000.0 << endl;
+    cout << "Query: PrepTime: " << (rp->getAlicaEngine()->getAlicaClock()->now() - time) / 10000.0 << endl;
 #endif
     return true;
 }
