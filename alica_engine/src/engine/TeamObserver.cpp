@@ -45,8 +45,8 @@ TeamObserver::getTeamPlanTrees() {
             new map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>);
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
 
-    std::vector<const supplementary::AgentID*>
-            tmp;  // TODO get rid of this once teamManager gets a datastructure overhaul
+    // TODO get rid of this once teamManager gets a datastructure overhaul
+    std::vector<const supplementary::AgentID*> tmp;
     teamManager->fillWithActiveAgentIDs(tmp);
     for (const supplementary::AgentID* agentId : tmp) {
         auto iter = this->simplePlanTrees->find(agentId);
