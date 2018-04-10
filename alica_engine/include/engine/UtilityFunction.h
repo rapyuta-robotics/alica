@@ -29,8 +29,8 @@ struct TaskRoleStruct;
 
 class UtilityFunction {
 public:
-    UtilityFunction(
-            const std::string& name, std::list<USummand*> utilSummands, double priorityWeight, double similarityWeight, const Plan* plan);
+    UtilityFunction(const std::string& name, std::list<USummand*> utilSummands, double priorityWeight,
+            double similarityWeight, const Plan* plan);
     virtual ~UtilityFunction();
     std::list<USummand*>& getUtilSummands();
     void setUtilSummands(std::list<USummand*> utilSummands);
@@ -42,7 +42,7 @@ public:
     virtual std::pair<std::vector<double>, double>* differentiate(IAssignment* newAss);
     static void initDataStructures(AlicaEngine* ae);
     virtual std::string toString() const;
-    const Plan* getPlan() const {return plan;}
+    const Plan* getPlan() const { return plan; }
     const std::map<TaskRoleStruct*, double>& getPriorityMartix() const;
 
     const double DIFFERENCETHRESHOLD = 0.0001;  // Max difference for the same result

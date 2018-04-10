@@ -10,9 +10,8 @@
 
 namespace alica {
 
-RoleTaskMapping::RoleTaskMapping() 
-    : _role(nullptr)
-{}
+RoleTaskMapping::RoleTaskMapping()
+        : _role(nullptr) {}
 
 RoleTaskMapping::~RoleTaskMapping() {}
 

@@ -14,10 +14,10 @@
 
 namespace alica {
 
-Parametrisation::Parametrisation() 
-    : _subPlan(nullptr)
-    , _subVar(nullptr)
-    , _var(nullptr) {}
+Parametrisation::Parametrisation()
+        : _subPlan(nullptr)
+        , _subVar(nullptr)
+        , _var(nullptr) {}
 
 Parametrisation::~Parametrisation() {}
 

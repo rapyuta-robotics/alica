@@ -2,9 +2,9 @@
 
 namespace alica {
 
-Parameter::Parameter() 
-    : _key("")
-    , _value("") {}
+Parameter::Parameter()
+        : _key("")
+        , _value("") {}
 
 Parameter::~Parameter() {}
 

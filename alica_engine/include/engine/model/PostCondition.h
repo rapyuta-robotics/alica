@@ -12,7 +12,6 @@
 
 #include "Condition.h"
 
-
 namespace alica {
 
 class PostCondition : public Condition {

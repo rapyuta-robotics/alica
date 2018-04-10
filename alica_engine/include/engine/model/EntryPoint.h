@@ -8,7 +8,6 @@
 #ifndef ENTRYPOINT_H_
 #define ENTRYPOINT_H_
 
-
 #include <string>
 #include <sstream>
 #include <list>
@@ -34,21 +33,22 @@ public:
      * A value encoding the do-nothing task used in loosely coupled task allocation.
      */
     constexpr static int64_t IDLEID = -1;  // For Idle EntryPoint...
-    
+
     std::string toString() const;
     static bool compareTo(const EntryPoint* ep1, const EntryPoint* ep2);
 
-    const Task* getTask() const {return _task;}
-    
-    const Plan* getPlan() const {return _plan;}
-    const State* getState() const {return _state;}
+    const Task* getTask() const { return _task; }
 
-    int getMaxCardinality() const {return _maxCardinality;}
-    int getMinCardinality() const {return _minCardinality;}
-    bool isSuccessRequired() const {return _successRequired;}
+    const Plan* getPlan() const { return _plan; }
+    const State* getState() const { return _state; }
 
-    const StateSet& getReachableStates() const {return _reachableStates;}
+    int getMaxCardinality() const { return _maxCardinality; }
+    int getMinCardinality() const { return _minCardinality; }
+    bool isSuccessRequired() const { return _successRequired; }
+
+    const StateSet& getReachableStates() const { return _reachableStates; }
     bool isStateReachable(const State* s) const;
+
 private:
     friend ModelFactory;
     void computeReachabilitySet();
@@ -58,7 +58,7 @@ private:
     void setMaxCardinality(int maxCardinality);
     void setMinCardinality(int minCardinality);
     void setSuccessRequired(bool successRequired);
-    
+
     /**
      * The initial state of this entrypoint's task.
      */

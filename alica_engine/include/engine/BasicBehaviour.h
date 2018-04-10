@@ -31,12 +31,12 @@ public:
     virtual ~BasicBehaviour();
     virtual void run(void* msg) = 0;
     const std::string& getName() const;
-    const BehaviourParameterMap& getParameters() const {return _configuration->getParameters();}
+    const BehaviourParameterMap& getParameters() const { return _configuration->getParameters(); }
 
     void setName(const std::string& name);
     void setConfiguration(const BehaviourConfiguration* beh);
 
-    const VariableSet& getVariables() {return _configuration->getVariables();}
+    const VariableSet& getVariables() { return _configuration->getVariables(); }
     const Variable* getVariableByName(const std::string& name) const;
 
     bool stop();
@@ -69,7 +69,7 @@ protected:
     std::string name;
 
     const BehaviourConfiguration* _configuration;
-    
+
     /**
      * The running plan representing this behaviour within the PlanBase.
      */
@@ -105,7 +105,7 @@ protected:
 
     const EntryPoint* getHigherEntryPoint(const std::string& planName, const std::string& taskName);
 
-    //TODO: these methods may have race conditions, check and refactor
+    // TODO: these methods may have race conditions, check and refactor
     const AgentSet* robotsInEntryPointOfHigherPlan(const EntryPoint* ep);
 
     const AgentSet* robotsInEntryPoint(const EntryPoint* ep);
@@ -124,7 +124,5 @@ private:
      * The Failure flag. Raised by a behaviour to indicate it has failed in some way.
      */
     bool failure;
-
-    
 };
 } /* namespace alica */

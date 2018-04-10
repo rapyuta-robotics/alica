@@ -3,23 +3,19 @@
 
 namespace alica {
 
-AlicaElement::AlicaElement() 
-    : _id(0)
-{}
+AlicaElement::AlicaElement()
+        : _id(0) {}
 
-AlicaElement::AlicaElement(int64_t id) 
-    : _id(id)
-{}
+AlicaElement::AlicaElement(int64_t id)
+        : _id(id) {}
 
-AlicaElement::AlicaElement(int64_t id, const std::string& name) 
-    : _id(id)
-    , _name(name)
-{}
+AlicaElement::AlicaElement(int64_t id, const std::string& name)
+        : _id(id)
+        , _name(name) {}
 
 AlicaElement::~AlicaElement() {}
 
-void AlicaElement::setName(const std::string& name)
-{
+void AlicaElement::setName(const std::string& name) {
     _name = name;
 }
 

@@ -12,18 +12,18 @@
 
 namespace alica {
 
-BehaviourConfiguration::BehaviourConfiguration() 
-    : _eventDriven(false)
-    , _frequency(30)
-    , _deferring(0)
-    , _behaviour(nullptr) {}
+BehaviourConfiguration::BehaviourConfiguration()
+        : _eventDriven(false)
+        , _frequency(30)
+        , _deferring(0)
+        , _behaviour(nullptr) {}
 
 BehaviourConfiguration::BehaviourConfiguration(int64_t id)
-    : AbstractPlan(id)
-    , _eventDriven(false)
-    , _frequency(30)
-    , _deferring(0)
-    , _behaviour(nullptr) {}
+        : AbstractPlan(id)
+        , _eventDriven(false)
+        , _frequency(30)
+        , _deferring(0)
+        , _behaviour(nullptr) {}
 
 BehaviourConfiguration::~BehaviourConfiguration() {}
 
@@ -41,8 +41,8 @@ std::string BehaviourConfiguration::toString() const {
     ss << "\t Parameters: " << getParameters().size() << std::endl;
 
     if (!getParameters().empty()) {
-        for (BehaviourParameterMap::const_iterator iter = getParameters().begin();
-                iter != getParameters().end(); ++iter) {
+        for (BehaviourParameterMap::const_iterator iter = getParameters().begin(); iter != getParameters().end();
+                ++iter) {
             const std::string& s = iter->first;
             const std::string& val = iter->second;
             ss << "\t" + s << " : " << val << std::endl;

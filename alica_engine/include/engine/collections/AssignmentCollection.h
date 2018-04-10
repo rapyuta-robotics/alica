@@ -24,7 +24,7 @@ public:
     const AgentSet* getRobotsByEp(const EntryPoint* ep) const;
     AgentSet* editRobotsByEp(const EntryPoint* ep);
     const AgentSet* getRobotsByEpId(int64_t id) const;
-    //bool setRobots(short index, shared_ptr<vector<const supplementary::AgentID*>> robotIds);
+    // bool setRobots(short index, shared_ptr<vector<const supplementary::AgentID*>> robotIds);
     void assignRobot(short index, const supplementary::AgentID* agent);
 
     void clear();
@@ -37,7 +37,6 @@ public:
     static short maxEpsCount;
     static bool allowIdling;
 
-
 private:
     /**
      * The EntryPoints referred to
@@ -46,9 +45,9 @@ private:
     /**
      * The robots mapped to EntryPoints in this AssignmentCollection.
      */
-    //TODO: clean this up
+    // TODO: clean this up
     AgentSet* _robotIds;
-     /**
+    /**
      * The number of EntryPoints in this AssignmentCollection.
      */
     short _numEps;

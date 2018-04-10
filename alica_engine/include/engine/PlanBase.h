@@ -51,12 +51,8 @@ public:
     std::shared_ptr<const RunningPlan> getDeepestNode() const;
     std::shared_ptr<RunningPlan> getRootNode();
 
-    /*const*/ Plan* getMasterPlan() const {
-        return _masterPlan;
-    }
-    bool isWaiting() const {
-        return _isWaiting;
-    }
+    /*const*/ Plan* getMasterPlan() const { return _masterPlan; }
+    bool isWaiting() const { return _isWaiting; }
 
 private:
     void run();

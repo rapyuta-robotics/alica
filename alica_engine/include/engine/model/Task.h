@@ -8,7 +8,6 @@
 #ifndef TASK_H_
 #define TASK_H_
 
-
 #include "AlicaElement.h"
 
 #include <string>
@@ -24,7 +23,7 @@ class Task : public AlicaElement {
 public:
     Task(bool defaultTask);
     virtual ~Task();
-    const std::string& getDescription() const {return _description;}
+    const std::string& getDescription() const { return _description; }
 
     const TaskRepository* getTaskRepository() const;
     std::string toString() const;

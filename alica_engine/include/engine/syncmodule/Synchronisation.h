@@ -26,7 +26,7 @@ class AlicaEngine;
 class Synchronisation {
 public:
     Synchronisation(AlicaEngine* ae);
-    Synchronisation(AlicaEngine* ae, const supplementary::AgentID* myID,const SyncTransition* st, SyncModule* sm);
+    Synchronisation(AlicaEngine* ae, const supplementary::AgentID* myID, const SyncTransition* st, SyncModule* sm);
     virtual ~Synchronisation();
     void setTick(unsigned long now);
     void changeOwnData(long transitionID, bool conditionHolds);

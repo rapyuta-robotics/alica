@@ -88,8 +88,8 @@ const AgentSet& PartialAssignment::getRobotIds() const {
     return robotIds;
 }
 
-PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap,
-        const AgentSet& robotIds, const Plan* plan, shared_ptr<SuccessCollection> sucCol) {
+PartialAssignment* PartialAssignment::getNew(
+        PartialAssignmentPool* pap, const AgentSet& robotIds, const Plan* plan, shared_ptr<SuccessCollection> sucCol) {
     if (pap->curIndex >= pap->maxCount) {
         cerr << "max PA count reached!" << endl;
     }
@@ -233,7 +233,8 @@ shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getRobotsWork
     return ret;
 }
 
-shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) {
+shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getUniqueRobotsWorkingAndFinished(
+        const EntryPoint* ep) {
     auto ret = make_shared<list<const supplementary::AgentID*>>(list<const supplementary::AgentID*>());
     auto robots = this->epRobotsMapping->getRobotsByEp(ep);
 

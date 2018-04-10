@@ -20,8 +20,8 @@ class RoleDefinitionSet : public AlicaElement {
 public:
     RoleDefinitionSet();
     virtual ~RoleDefinitionSet();
-    const std::string& getFileName() const {return _fileName;}    
-    const RoleVector& getRoles() const {return _roles;}
+    const std::string& getFileName() const { return _fileName; }
+    const RoleVector& getRoles() const { return _roles; }
 
 private:
     friend ModelFactory;

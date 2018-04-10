@@ -11,10 +11,9 @@
 namespace alica {
 
 Characteristic::Characteristic()
-    : _capability(nullptr)
-    , _capValue(nullptr)
-    , _weight(0.0)
-{}
+        : _capability(nullptr)
+        , _capValue(nullptr)
+        , _weight(0.0) {}
 
 Characteristic::~Characteristic() {}
 
@@ -26,7 +25,6 @@ std::string Characteristic::toString() const {
     ss << "\t Weight: " << _weight << std::endl;
     return ss.str();
 }
-
 
 void Characteristic::setCapability(const Capability* capability) {
     _capability = capability;

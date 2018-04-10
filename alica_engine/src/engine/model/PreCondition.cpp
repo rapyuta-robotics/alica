@@ -10,9 +10,8 @@
 namespace alica {
 
 PreCondition::PreCondition(int64_t id)
-    : Condition(id)
-    , _enabled(true)
-{}
+        : Condition(id)
+        , _enabled(true) {}
 
 PreCondition::~PreCondition() {}
 
@@ -23,8 +22,6 @@ std::string PreCondition::toString() const {
     ss << "#EndPreCondition" << std::endl;
     return ss.str();
 }
-
-
 
 void PreCondition::setEnabled(bool enabled) {
     _enabled = enabled;

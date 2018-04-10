@@ -13,7 +13,6 @@
 
 #include "AlicaElement.h"
 
-
 namespace alica {
 class RoleTaskMapping;
 class RoleDefinitionSet;
@@ -28,9 +27,11 @@ public:
     double getPriority(int64_t taskId) const;
     std::string toString() const;
 
-    const std::unordered_map<std::string, const Characteristic*>& getCharacteristics() const {return _characteristics;}
-    const RoleDefinitionSet* getRoleDefinitionSet() const {return _roleDefinitionSet;}
-    const RoleTaskMapping* getRoleTaskMapping() const {return _roleTaskMapping;}
+    const std::unordered_map<std::string, const Characteristic*>& getCharacteristics() const {
+        return _characteristics;
+    }
+    const RoleDefinitionSet* getRoleDefinitionSet() const { return _roleDefinitionSet; }
+    const RoleTaskMapping* getRoleTaskMapping() const { return _roleTaskMapping; }
 
 private:
     friend ModelFactory;

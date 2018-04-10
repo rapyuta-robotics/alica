@@ -14,21 +14,19 @@
 namespace alica {
 
 Condition::Condition()
-    : _abstractPlan(nullptr)
-    , _basicCondition(nullptr) {}
+        : _abstractPlan(nullptr)
+        , _basicCondition(nullptr) {}
 
 Condition::Condition(int64_t id)
-    : AlicaElement(id)
-    , _abstractPlan(nullptr)
-    , _basicCondition(nullptr) {}
+        : AlicaElement(id)
+        , _abstractPlan(nullptr)
+        , _basicCondition(nullptr) {}
 
 Condition::~Condition() {}
-
 
 void Condition::getConstraint(shared_ptr<ProblemDescriptor> pd, shared_ptr<RunningPlan> rp) const {
     _basicConstraint->getConstraint(pd, rp);
 }
-
 
 void Condition::setConditionString(const std::string& conditionString) {
     _conditionString = conditionString;

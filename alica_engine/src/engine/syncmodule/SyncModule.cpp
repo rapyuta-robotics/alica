@@ -133,7 +133,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st) {
 
         const Transition* trans = this->pr->getTransitions().find(sd->transitionID);
         const SyncTransition* syncTrans = nullptr;
-        
+
         if (trans != nullptr) {
             if (trans->getSyncTransition() != nullptr) {
                 syncTrans = trans->getSyncTransition();
@@ -178,7 +178,7 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr) {
     if (this->ae->getTeamManager()->isAgentIgnored(sr->senderID))
         return;
     const SyncTransition* syncTrans = this->pr->getSyncTransitions().find(sr->syncTransitionID);
-    
+
     if (syncTrans == nullptr) {
         cout << "SyncModul: Unable to find synchronisation " << sr->syncTransitionID << " send by " << sr->senderID
              << endl;

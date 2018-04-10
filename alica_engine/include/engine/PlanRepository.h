@@ -43,30 +43,36 @@ public:
     PlanRepository();
     virtual ~PlanRepository();
 
-    template<typename T>
-    using MapType=std::unordered_map<int64_t, T*>;
+    template <typename T>
+    using MapType = std::unordered_map<int64_t, T*>;
 
-    template<typename T>
+    template <typename T>
     class Accessor {
         class iterator {
         public:
-            iterator(typename MapType<T>::const_iterator inner) : _innerIter(inner) {}
-            bool operator!=(const iterator& o) const {return _innerIter!=o._innerIter;}
-            bool operator==(const iterator& o) const {return _innerIter==o._innerIter;}
-            const T* operator*() const {return _innerIter->second;}
-            
-            iterator& operator++() {++_innerIter; return *this;}
+            iterator(typename MapType<T>::const_iterator inner)
+                    : _innerIter(inner) {}
+            bool operator!=(const iterator& o) const { return _innerIter != o._innerIter; }
+            bool operator==(const iterator& o) const { return _innerIter == o._innerIter; }
+            const T* operator*() const { return _innerIter->second; }
+
+            iterator& operator++() {
+                ++_innerIter;
+                return *this;
+            }
 
         private:
             typename MapType<T>::const_iterator _innerIter;
         };
-    public:
-        Accessor(const MapType<T>& map) : _ref(map) {}
 
-        const T* operator[](int64_t id) const {return find(id);}
+    public:
+        Accessor(const MapType<T>& map)
+                : _ref(map) {}
+
+        const T* operator[](int64_t id) const { return find(id); }
         const T* find(int64_t id) const {
             typename MapType<T>::const_iterator it = _ref.find(id);
-            return (it==_ref.end()?nullptr:it->second);
+            return (it == _ref.end() ? nullptr : it->second);
         }
         Accessor(const Accessor&) = delete;
         Accessor(Accessor&&) = default;
@@ -74,33 +80,34 @@ public:
         Accessor& operator=(const Accessor&) = delete;
         Accessor& operator=(Accessor&&) = delete;
 
-        iterator begin() const {
-            return iterator(_ref.begin());
-        }
-        iterator end() const {
-            return iterator(_ref.end());
-        }
+        iterator begin() const { return iterator(_ref.begin()); }
+        iterator end() const { return iterator(_ref.end()); }
+
     private:
         const MapType<T>& _ref;
     };
 
-    const Accessor<BehaviourConfiguration> getBehaviourConfigurations() const {return Accessor<BehaviourConfiguration>(_behaviourConfigurations);}
-    const Accessor<Behaviour> getBehaviours() const {return Accessor<Behaviour>(_behaviours);}
-    const Accessor<Capability> getCapabilities() const {return Accessor<Capability>(_capabilities);}
-    const Accessor<Characteristic> getCharacteristics() const {return Accessor<Characteristic>(_characteristics);}
-    const Accessor<EntryPoint> getEntryPoints() const {return Accessor<EntryPoint>(_entryPoints);}
-    const Accessor<Plan> getPlans() const {return Accessor<Plan>(_plans);}
-    const Accessor<PlanType> getPlanTypes() const {return Accessor<PlanType>(_planTypes);}
-    const Accessor<Quantifier> getQuantifiers() const {return Accessor<Quantifier>(_quantifiers);}
-    const Accessor<RoleDefinitionSet> getRoleDefinitionSets() const {return Accessor<RoleDefinitionSet>(_roleDefinitionSets);}
-    const Accessor<Role> getRoles() const {return Accessor<Role>(_roles);}
-    const Accessor<State> getStates() const {return Accessor<State>(_states);}
-    const Accessor<SyncTransition> getSyncTransitions() const {return Accessor<SyncTransition>(_syncTransitions);}
-    const Accessor<TaskRepository> getTaskRepositorys() const {return Accessor<TaskRepository>(_taskRepositories);}
-    const Accessor<Task> getTasks() const {return Accessor<Task>(_tasks);}
-    const Accessor<Transition> getTransitions() const {return Accessor<Transition>(_transitions);}
-    const Accessor<Variable> getVariables() const {return Accessor<Variable>(_variables);}
-    const Accessor<PlanningProblem> getPlanningProblems() const {return Accessor<PlanningProblem>(_planningProblems);}
+    const Accessor<BehaviourConfiguration> getBehaviourConfigurations() const {
+        return Accessor<BehaviourConfiguration>(_behaviourConfigurations);
+    }
+    const Accessor<Behaviour> getBehaviours() const { return Accessor<Behaviour>(_behaviours); }
+    const Accessor<Capability> getCapabilities() const { return Accessor<Capability>(_capabilities); }
+    const Accessor<Characteristic> getCharacteristics() const { return Accessor<Characteristic>(_characteristics); }
+    const Accessor<EntryPoint> getEntryPoints() const { return Accessor<EntryPoint>(_entryPoints); }
+    const Accessor<Plan> getPlans() const { return Accessor<Plan>(_plans); }
+    const Accessor<PlanType> getPlanTypes() const { return Accessor<PlanType>(_planTypes); }
+    const Accessor<Quantifier> getQuantifiers() const { return Accessor<Quantifier>(_quantifiers); }
+    const Accessor<RoleDefinitionSet> getRoleDefinitionSets() const {
+        return Accessor<RoleDefinitionSet>(_roleDefinitionSets);
+    }
+    const Accessor<Role> getRoles() const { return Accessor<Role>(_roles); }
+    const Accessor<State> getStates() const { return Accessor<State>(_states); }
+    const Accessor<SyncTransition> getSyncTransitions() const { return Accessor<SyncTransition>(_syncTransitions); }
+    const Accessor<TaskRepository> getTaskRepositorys() const { return Accessor<TaskRepository>(_taskRepositories); }
+    const Accessor<Task> getTasks() const { return Accessor<Task>(_tasks); }
+    const Accessor<Transition> getTransitions() const { return Accessor<Transition>(_transitions); }
+    const Accessor<Variable> getVariables() const { return Accessor<Variable>(_variables); }
+    const Accessor<PlanningProblem> getPlanningProblems() const { return Accessor<PlanningProblem>(_planningProblems); }
 
     PlanRepository(const PlanRepository&) = delete;
     PlanRepository(PlanRepository&&) = delete;

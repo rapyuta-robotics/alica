@@ -8,7 +8,6 @@
 #ifndef STATECOLLECTION_H_
 #define STATECOLLECTION_H_
 
-
 #include <vector>
 #include <algorithm>
 #include <sstream>
@@ -33,29 +32,27 @@ public:
     StateCollection(const AssignmentCollection* ac);
     ~StateCollection();
 
-    const AgentSet& getRobots() const {return _robotIds;}
-    const StateSet& getStates() const {return _states;}
+    const AgentSet& getRobots() const { return _robotIds; }
+    const StateSet& getStates() const { return _states; }
 
-    
-    int getCount() const {return _robotIds.size();}
+    int getCount() const { return _robotIds.size(); }
 
     const State* getStateOfRobot(const supplementary::AgentID* robotId) const;
-    
 
     int getRobotsInState(const State* s, AgentSet& o_robots) const;
     int getRobotsInState(int64_t sid, AgentSet& o_robots) const;
 
     void getRobotsInStateSorted(const State* s, AgentSet& o_robots) const;
-    
+
     std::string toString() const;
-    
+
     void removeRobot(const supplementary::AgentID* robotId);
     void clear();
-    
+
     void setState(const supplementary::AgentID* robotId, const State* state);
-    void setStates(const AgentSet& robotIds,const State* state);
+    void setStates(const AgentSet& robotIds, const State* state);
     void moveAllFromTo(const State* from, const State* to);
-    
+
     void setInitialState(const supplementary::AgentID* robotId, const EntryPoint* ep);
     void reconsiderOldAssignment(std::shared_ptr<Assignment> oldOne, std::shared_ptr<Assignment> newOne);
 

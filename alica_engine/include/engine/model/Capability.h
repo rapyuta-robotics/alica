@@ -25,7 +25,7 @@ public:
 
     double similarityValue(const CapValue* roleVal, const CapValue* robotVal) const;
 
-    const CapValueSet& getCapValues() const {return _capValues;}
+    const CapValueSet& getCapValues() const { return _capValues; }
 
 private:
     friend ModelFactory;

@@ -39,7 +39,7 @@ double Capability::similarityValue(const CapValue* roleVal, const CapValue* robo
         }
         ++index;
     }
-    //TODO: get rid of exceptions
+    // TODO: get rid of exceptions
     if (rlIndex == -1) {
         std::cout << "Capability::similarityValue: Role not found!" << std::endl;
         throw std::exception();
@@ -57,6 +57,5 @@ double Capability::similarityValue(const CapValue* roleVal, const CapValue* robo
     // this won't work, in case of only one value (nCount=1), therefore extra handling above
     return (nCount - 1 - abs(rlIndex - rbIndex)) / (nCount - 1);
 }
-
 
 }  // namespace alica

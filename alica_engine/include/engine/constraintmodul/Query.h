@@ -83,8 +83,8 @@ public:
     template <class T>
     bool getSolution(int solverType, std::shared_ptr<RunningPlan> rp, vector<T>& result);
 
-    const VariableSet& getRelevantStaticVariables() const {return relevantStaticVariables;}
-    const VariableSet& getRelevantDomainVariables() const {return relevantDomainVariables;}
+    const VariableSet& getRelevantStaticVariables() const { return relevantStaticVariables; }
+    const VariableSet& getRelevantDomainVariables() const { return relevantDomainVariables; }
     void setRelevantStaticVariables(const VariableSet& value);
     void setRelevantDomainVariables(const VariableSet& value);
 

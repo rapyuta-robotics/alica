@@ -14,13 +14,11 @@
 #include <exception>
 #include <iostream>
 
-
 namespace alica {
 
-Role::Role() 
-    : _roleDefinitionSet(nullptr)
-    , _roleTaskMapping(nullptr)
-{}
+Role::Role()
+        : _roleDefinitionSet(nullptr)
+        , _roleTaskMapping(nullptr) {}
 
 Role::~Role() {}
 
@@ -28,7 +26,7 @@ double Role::getPriority(int64_t taskId) const {
     std::unordered_map<int64_t, double>::const_iterator it = _roleTaskMapping->getTaskPriorities().find(taskId);
     if (it != _roleTaskMapping->getTaskPriorities().end()) {
         return it->second;
-    } else { //TODO move this check to start up
+    } else {  // TODO move this check to start up
         std::cerr << "ROLE DOES NOT HAVE A PRIORITY FOR TASK: " << taskId << std::endl;
         throw new std::exception;
     }
@@ -43,8 +41,8 @@ std::string Role::toString() const {
         ss << "t" << iter->second->getName() << " : " << iter->second->getCapValue()->getName() << std::endl;
     }
     ss << std::endl;
-    ss << "\tRTM TaskPriorities (" << _roleTaskMapping->getId()
-       << "): " << _roleTaskMapping->getTaskPriorities().size() << std::endl;
+    ss << "\tRTM TaskPriorities (" << _roleTaskMapping->getId() << "): " << _roleTaskMapping->getTaskPriorities().size()
+       << std::endl;
     for (std::unordered_map<long, double>::const_iterator iterator = _roleTaskMapping->getTaskPriorities().begin();
             iterator != _roleTaskMapping->getTaskPriorities().end(); ++iterator) {
         const long l = iterator->first;
@@ -57,7 +55,6 @@ std::string Role::toString() const {
 }
 
 //====================== Getter and Setter ==================
-
 
 void Role::setRoleDefinitionSet(const RoleDefinitionSet* roleDefinitionSet) {
     _roleDefinitionSet = roleDefinitionSet;

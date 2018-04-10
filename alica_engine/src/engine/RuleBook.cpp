@@ -262,7 +262,7 @@ PlanChange RuleBook::planRedoRule(shared_ptr<RunningPlan> r) {
     r->deactivateChildren();
     r->clearChildren();
     AgentSet robots;
-    r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState(),robots);
+    r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState(), robots);
     r->getAssignment()->getRobotStateMapping()->setStates(robots, r->getOwnEntryPoint()->getState());
 
     r->setActiveState(r->getOwnEntryPoint()->getState());
@@ -341,7 +341,7 @@ PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp) {
     rp->setAllocationNeeded(false);
 
     AgentSet robots;
-    rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState(),robots);
+    rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState(), robots);
 
 #ifdef RULE_debug
     cout << "RB: There are " << rp->getActiveState()->getPlans().size() << " Plans in State "

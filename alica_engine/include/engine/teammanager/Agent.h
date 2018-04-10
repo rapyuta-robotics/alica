@@ -33,12 +33,12 @@ public:
         delete _engineData;
     }
 
-    const supplementary::AgentID* getID() const {return _id;}
-    const std::string& getName() const {return _name;}
-    const RobotProperties* getProperties() const {return _properties;}
-    const RobotEngineData* getEngineData() const {return _engineData;}
-    bool isActive() const {return _active;}
-    bool isIgnored() const {return _ignored;}
+    const supplementary::AgentID* getID() const { return _id; }
+    const std::string& getName() const { return _name; }
+    const RobotProperties* getProperties() const { return _properties; }
+    const RobotEngineData* getEngineData() const { return _engineData; }
+    bool isActive() const { return _active; }
+    bool isIgnored() const { return _ignored; }
 
 protected:
     Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id);
@@ -56,9 +56,9 @@ protected:
     RobotEngineData* _engineData;
 
     void setLocal(bool local);
-    void setIgnored(const bool ignored) {_ignored = ignored;}
-    void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived) {_timeLastMsgReceived = timeLastMsgReceived;}
-    void setSuccess(const AbstractPlan* plan,const EntryPoint* entryPoint);
+    void setIgnored(const bool ignored) { _ignored = ignored; }
+    void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived) { _timeLastMsgReceived = timeLastMsgReceived; }
+    void setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint);
     void setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks);
     const Variable* getDomainVariable(const std::string& sort) const;
     std::shared_ptr<std::list<const EntryPoint*>> getSucceededEntryPoints(const AbstractPlan* plan) const;

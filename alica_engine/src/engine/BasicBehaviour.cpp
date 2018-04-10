@@ -31,8 +31,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , failure(false)
         , success(false)
         , callInit(true)
-        , started(true)
-        {
+        , started(true) {
     this->running = false;
     this->timer = new supplementary::Timer(0, 0);
     this->timer->registerCV(&this->runCV);
@@ -64,8 +63,6 @@ void BasicBehaviour::setConfiguration(const BehaviourConfiguration* beh) {
     _configuration = beh;
 }
 
-
-
 const Variable* BasicBehaviour::getVariableByName(const std::string& name) const {
     for (const Variable* variable : _configuration->getVariables()) {
         if (variable->getName() == name) {
@@ -74,7 +71,6 @@ const Variable* BasicBehaviour::getVariableByName(const std::string& name) const
     }
     return nullptr;
 }
-
 
 int BasicBehaviour::getDelayedStart() const {
     return this->timer->getDelayedStart();
@@ -169,7 +165,7 @@ const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryP
     shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
         const EntryPointSet& eps = static_cast<const Plan*>(cur->getPlan())->getEntryPoints();
-        if(std::find(eps.begin(), eps.end(), ep)!=eps.end()) {
+        if (std::find(eps.begin(), eps.end(), ep) != eps.end()) {
             return cur->getAssignment()->getRobotsWorking(ep);
         }
         cur = cur->getParent().lock();

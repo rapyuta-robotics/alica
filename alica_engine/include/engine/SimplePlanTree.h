@@ -18,12 +18,12 @@ class SimplePlanTree {
 public:
     SimplePlanTree();
     virtual ~SimplePlanTree();
-    const EntryPoint* getEntryPoint() const {return entryPoint;}
+    const EntryPoint* getEntryPoint() const { return entryPoint; }
     void setEntryPoint(const EntryPoint* entryPoint);
-    const State* getState() const {return state;}
+    const State* getState() const { return state; }
     void setState(const State* state);
     const std::unordered_set<std::shared_ptr<SimplePlanTree>>& getChildren() const;
-    std::unordered_set<std::shared_ptr<SimplePlanTree>>& editChildren() {return children;}
+    std::unordered_set<std::shared_ptr<SimplePlanTree>>& editChildren() { return children; }
 
     void setChildren(const std::unordered_set<std::shared_ptr<SimplePlanTree>>& children);
     const supplementary::AgentID* getRobotId();

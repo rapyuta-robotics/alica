@@ -13,20 +13,17 @@
 
 namespace alica {
 
-Transition::Transition() 
-    : _preCondition(nullptr)
-    , _inState(nullptr)
-    , _outState(nullptr)
-    , _syncTransition(nullptr) {
-}
+Transition::Transition()
+        : _preCondition(nullptr)
+        , _inState(nullptr)
+        , _outState(nullptr)
+        , _syncTransition(nullptr) {}
 
 Transition::~Transition() {}
-
 
 bool Transition::evalCondition(shared_ptr<RunningPlan> r) const {
     return _preCondition->evaluate(r);
 }
-
 
 void Transition::setPreCondition(PreCondition* preCondition) {
     _preCondition = preCondition;

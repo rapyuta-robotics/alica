@@ -13,7 +13,6 @@ RoleDefinitionSet::RoleDefinitionSet() {}
 
 RoleDefinitionSet::~RoleDefinitionSet() {}
 
-
 void RoleDefinitionSet::setFileName(const std::string& fileName) {
     _fileName = fileName;
 }

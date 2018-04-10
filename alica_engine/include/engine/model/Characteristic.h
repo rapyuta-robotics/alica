@@ -30,10 +30,9 @@ public:
 
     std::string toString() const;
 
-    const Capability* getCapability() const {return _capability;}
-    const CapValue* getCapValue() const {return _capValue;}
-    double getWeight() const {return _weight;}
-
+    const Capability* getCapability() const { return _capability; }
+    const CapValue* getCapValue() const { return _capValue; }
+    double getWeight() const { return _weight; }
 
     void setCapability(const Capability* capability);
     void setWeight(double weight);
@@ -41,8 +40,6 @@ public:
 
 private:
     friend ModelFactory;
-
-
 
     const Capability* _capability;
     const CapValue* _capValue;

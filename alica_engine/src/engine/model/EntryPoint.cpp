@@ -12,15 +12,13 @@
 #include <deque>
 namespace alica {
 
-EntryPoint::EntryPoint() 
-    : _task(nullptr)
-    , _state(nullptr)
-    , _successRequired(false)
-    , _plan(nullptr)
-    , _minCardinality(0)
-    , _maxCardinality(0)
-{
-}
+EntryPoint::EntryPoint()
+        : _task(nullptr)
+        , _state(nullptr)
+        , _successRequired(false)
+        , _plan(nullptr)
+        , _minCardinality(0)
+        , _maxCardinality(0) {}
 
 EntryPoint::~EntryPoint() {}
 
@@ -31,7 +29,7 @@ void EntryPoint::computeReachabilitySet() {
     while (!queue.empty()) {
         cs = queue.front();
         queue.pop_front();
-        if(std::find(_reachableStates.begin(), _reachableStates.end(),cs) == _reachableStates.end()) {
+        if (std::find(_reachableStates.begin(), _reachableStates.end(), cs) == _reachableStates.end()) {
             _reachableStates.push_back(cs);
             for (const Transition* t : cs->getOutTransitions()) {
                 queue.push_back(t->getOutState());
@@ -66,7 +64,6 @@ std::string EntryPoint::toString() const {
 bool EntryPoint::compareTo(const EntryPoint* ep1, const EntryPoint* ep2) {
     return (ep1->getTask()->getId() > ep2->getTask()->getId());
 }
-
 
 void EntryPoint::setTask(Task* task) {
     _task = task;

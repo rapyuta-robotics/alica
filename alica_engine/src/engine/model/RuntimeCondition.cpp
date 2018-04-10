@@ -11,7 +11,7 @@
 namespace alica {
 
 RuntimeCondition::RuntimeCondition(int64_t id)
-    : Condition(id) {}
+        : Condition(id) {}
 
 RuntimeCondition::~RuntimeCondition() {}
 

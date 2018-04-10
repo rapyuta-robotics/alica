@@ -8,12 +8,10 @@
 #ifndef ROLESET_H_
 #define ROLESET_H_
 
-
 #include <string>
 #include <vector>
 
 #include "AlicaElement.h"
-
 
 namespace alica {
 class RoleTaskMapping;
@@ -23,9 +21,9 @@ public:
     RoleSet();
     virtual ~RoleSet();
     std::string toString() const;
-    bool isDefault() const {return _isDefault;}    
-    const std::vector<RoleTaskMapping*>& getRoleTaskMappings() const {return _roleTaskMappings;}
-    int64_t getUsableWithPlanId() const {return _usableWithPlanID;}    
+    bool isDefault() const { return _isDefault; }
+    const std::vector<RoleTaskMapping*>& getRoleTaskMappings() const { return _roleTaskMappings; }
+    int64_t getUsableWithPlanId() const { return _usableWithPlanID; }
 
 protected:
     friend ModelFactory;

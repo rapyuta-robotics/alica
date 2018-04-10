@@ -45,7 +45,8 @@ TeamObserver::getTeamPlanTrees() {
             new map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>);
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
 
-    std::vector<const supplementary::AgentID*> tmp; //TODO get rid of this once teamManager gets a datastructure overhaul
+    std::vector<const supplementary::AgentID*>
+            tmp;  // TODO get rid of this once teamManager gets a datastructure overhaul
     teamManager->fillWithActiveAgentIDs(tmp);
     for (const supplementary::AgentID* agentId : tmp) {
         auto iter = this->simplePlanTrees->find(agentId);
@@ -80,7 +81,8 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root) {
 
     cleanOwnSuccessMarks(root);
     if (root != nullptr) {
-        std::vector<const supplementary::AgentID*> activeAgents; //TODO get rid of this once teamManager gets a datastructure overhaul
+        std::vector<const supplementary::AgentID*>
+                activeAgents;  // TODO get rid of this once teamManager gets a datastructure overhaul
         teamManager->fillWithActiveAgentIDs(activeAgents);
 
         list<shared_ptr<SimplePlanTree>> updatespts;
@@ -184,7 +186,8 @@ void TeamObserver::cleanOwnSuccessMarks(shared_ptr<RunningPlan> root) {
 
 const EntryPoint* TeamObserver::entryPointOfState(const State* state) const {
     for (const EntryPoint* ep : state->getInPlan()->getEntryPoints()) {
-        if (std::find(ep->getReachableStates().begin(), ep->getReachableStates().end(), state) != ep->getReachableStates().end()) {
+        if (std::find(ep->getReachableStates().begin(), ep->getReachableStates().end(), state) !=
+                ep->getReachableStates().end()) {
             return ep;
         }
     }
@@ -313,7 +316,8 @@ void TeamObserver::handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming) {
  * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
  * @return shared_ptr of a SimplePlanTree
  */
-std::shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(const supplementary::AgentID* robotId, const std::list<int64_t>& ids) {
+std::shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(
+        const supplementary::AgentID* robotId, const std::list<int64_t>& ids) {
 #ifdef TO_DEBUG
     cout << "Spt from robot " << robotId << endl;
     ;
@@ -329,13 +333,13 @@ std::shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(const supplementary
         cerr << "TO: Empty state list for robot " << robotId << endl;
         return nullptr;
     }
-    
+
     AlicaTime time = ae->getIAlicaClock()->now();
     std::shared_ptr<SimplePlanTree> root = make_shared<SimplePlanTree>();
     root->setRobotId(robotId);
     root->setReceiveTime(time);
     root->setStateIds(ids);
-    
+
     auto iter = ids.begin();
     const PlanRepository::Accessor<State>& states = ae->getPlanRepository()->getStates();
     const State* s = states.find(*iter);

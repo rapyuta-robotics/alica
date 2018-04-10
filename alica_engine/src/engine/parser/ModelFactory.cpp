@@ -214,8 +214,9 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node) {
         }
         curChild = curChild->NextSiblingElement();
     }
-    //Sort entrypoints:
-    std::sort(plan->_entryPoints.begin(), plan->_entryPoints.end(),[](const EntryPoint* ep1, const EntryPoint* ep2){return ep1->getId() < ep2->getId();});
+    // Sort entrypoints:
+    std::sort(plan->_entryPoints.begin(), plan->_entryPoints.end(),
+            [](const EntryPoint* ep1, const EntryPoint* ep2) { return ep1->getId() < ep2->getId(); });
     return plan;
 }
 RoleSet* ModelFactory::createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPlan) {
@@ -1121,7 +1122,7 @@ void ModelFactory::setAlicaElementAttributes(AlicaElement* ael, tinyxml2::XMLEle
 void ModelFactory::computeReachabilities() {
 #ifdef MF_DEBUG
     cout << "MF: Computing Reachability sets..." << endl;
-#endif    
+#endif
     for (const std::pair<const int64_t, EntryPoint*>& ep : rep->_entryPoints) {
         ep.second->computeReachabilitySet();
     }
@@ -1314,13 +1315,12 @@ void ModelFactory::attachCharacteristicReferences() {
 }
 
 void ModelFactory::removeRedundancy() {
-    for (PlanRepository::MapType<Plan>::iterator iter = rep->_plans.begin();
-            iter != rep->_plans.end(); ++iter) {
+    for (PlanRepository::MapType<Plan>::iterator iter = rep->_plans.begin(); iter != rep->_plans.end(); ++iter) {
         Plan* plan = iter->second;
-        for(int i=plan->getTransitions().size()-1; i>=0; --i) {
+        for (int i = plan->getTransitions().size() - 1; i >= 0; --i) {
             const Transition* trans = plan->getTransitions()[i];
             if (!trans->getInState()) {
-                plan->_transitions.erase(plan->_transitions.begin()+i);
+                plan->_transitions.erase(plan->_transitions.begin() + i);
             }
         }
     }

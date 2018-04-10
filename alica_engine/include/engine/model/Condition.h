@@ -37,16 +37,16 @@ public:
      */
     void getConstraint(std::shared_ptr<ProblemDescriptor> pd, std::shared_ptr<RunningPlan> rp) const;
 
-    const AbstractPlan* getAbstractPlan() const {return _abstractPlan;}
+    const AbstractPlan* getAbstractPlan() const { return _abstractPlan; }
 
-    const std::string& getConditionString() const {return _conditionString;}
-    const std::string& getPlugInName() const {return _plugInName;}
+    const std::string& getConditionString() const { return _conditionString; }
+    const std::string& getPlugInName() const { return _plugInName; }
 
-    const VariableSet& getVariables() const {return _variables;}
-    const ParameterSet& getParameters() const {return _parameters;}
-    const QuantifierSet& getQuantifiers() const {return _quantifiers;}
+    const VariableSet& getVariables() const { return _variables; }
+    const ParameterSet& getParameters() const { return _parameters; }
+    const QuantifierSet& getQuantifiers() const { return _quantifiers; }
 
-    const std::shared_ptr<BasicCondition>& getBasicCondition() const {return _basicCondition;}
+    const std::shared_ptr<BasicCondition>& getBasicCondition() const { return _basicCondition; }
 
     bool evaluate(std::shared_ptr<RunningPlan> rp) const;
 
@@ -83,7 +83,7 @@ private:
     const AbstractPlan* _abstractPlan;
 
     std::string _conditionString;
-    std::string _plugInName; //TODO: is this needed?!
+    std::string _plugInName;  // TODO: is this needed?!
 };
 }  // namespace alica
 

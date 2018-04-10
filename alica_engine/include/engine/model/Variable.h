@@ -21,19 +21,19 @@ public:
 
     std::string toString() const;
 
-    const std::string& getType() const {return _type;}
-    std::shared_ptr<SolverVariable> getSolverVar() const {return _solverVar;}
+    const std::string& getType() const { return _type; }
+    std::shared_ptr<SolverVariable> getSolverVar() const { return _solverVar; }
 
     friend std::ostream& operator<<(std::ostream& os, const Variable& variable) {
         return os << variable.getName() << "(" << variable.getId() << ")";
     }
     void setSolverVar(const std::shared_ptr<SolverVariable>& solverVar) const;
+
 private:
     friend ModelFactory;
-    void setType(const std::string& type);    
-    mutable std::shared_ptr<SolverVariable> _solverVar;  //TODO: move out of here
+    void setType(const std::string& type);
+    mutable std::shared_ptr<SolverVariable> _solverVar;  // TODO: move out of here
     std::string _type;
-
 };
 
 } /* namespace alica */

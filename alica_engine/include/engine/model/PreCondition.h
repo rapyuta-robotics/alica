@@ -24,8 +24,7 @@ public:
 
     std::string toString() const;
 
-    bool isEnabled() const {return _enabled;}
-    
+    bool isEnabled() const { return _enabled; }
 
 private:
     friend ModelFactory;

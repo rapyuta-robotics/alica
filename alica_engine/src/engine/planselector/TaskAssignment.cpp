@@ -23,11 +23,10 @@ TaskAssignment::~TaskAssignment() {}
  * @param paraRobots robots to build an assignment for
  * @param a bool
  */
-TaskAssignment::TaskAssignment(const AlicaEngine* engine, const PlanSet& planList,
-        const AgentSet& paraRobots, bool preassignOtherRobots) 
+TaskAssignment::TaskAssignment(
+        const AlicaEngine* engine, const PlanSet& planList, const AgentSet& paraRobots, bool preassignOtherRobots)
         : robots(paraRobots)
-        , planList(planList)
-        {
+        , planList(planList) {
 #ifdef EXPANSIONEVAL
     this->expansionCount = 0;
 #endif

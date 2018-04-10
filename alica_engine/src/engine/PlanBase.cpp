@@ -186,9 +186,8 @@ void PlanBase::run() {
                 }
                 if (_deepestNode->getActiveState() != nullptr) {
                     _statusMessage->currentState = _deepestNode->getActiveState()->getName();
-                    _deepestNode->getAssignment()
-                                      ->getRobotStateMapping()
-                                      ->getRobotsInState(_deepestNode->getActiveState(),_statusMessage->robotIDsWithMe);
+                    _deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(
+                            _deepestNode->getActiveState(), _statusMessage->robotIDsWithMe);
 
                 } else {
                     _statusMessage->currentState = "NONE";
