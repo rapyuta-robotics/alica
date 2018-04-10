@@ -1,12 +1,12 @@
 //#define STATIC_RA_DEBUG
 
 #include "engine/StaticRoleAssignment.h"
-#include "engine/collections/RobotProperties.h"
 #include "engine/AlicaEngine.h"
+#include "engine/IAlicaCommunication.h"
 #include "engine/PlanRepository.h"
+#include "engine/collections/RobotProperties.h"
 #include "engine/containers/RoleSwitch.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/IAlicaCommunication.h"
 
 #include <supplementary/AgentID.h>
 
