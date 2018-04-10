@@ -43,7 +43,6 @@ const EntryPoint* Plan::getEntryPointByID(int64_t epID) const {
 }
 
 
-//===================== Getter and Setter ==================
 
 
 void Plan::setEntryPoints(const EntryPointSet& entryPoints) {
