@@ -21,11 +21,12 @@ class ModelFactory;
  */
 class Task : public AlicaElement {
 public:
+    Task(int64_t id, bool defaultTask);
     Task(bool defaultTask);
     virtual ~Task();
     const std::string& getDescription() const { return _description; }
 
-    const TaskRepository* getTaskRepository() const;
+    const TaskRepository* getTaskRepository() const {return _taskRepository;}
     std::string toString() const;
 
     static constexpr int64_t IDLEID = -1;  // For Task Id of an Idle EntryPoint...

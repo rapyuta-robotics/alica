@@ -13,12 +13,21 @@
 namespace alica {
 
 EntryPoint::EntryPoint()
-        : _task(nullptr)
-        , _state(nullptr)
-        , _successRequired(false)
-        , _plan(nullptr)
-        , _minCardinality(0)
-        , _maxCardinality(0) {}
+    : _task(nullptr)
+    , _state(nullptr)
+    , _successRequired(false)
+    , _plan(nullptr)
+    , _minCardinality(0)
+    , _maxCardinality(0) {}
+
+EntryPoint::EntryPoint(int64_t id, const Plan* p, const Task* t, const State* s)
+    : AlicaElement(id)
+    , _task(t)
+    , _state(s)
+    , _successRequired(false)
+    , _plan(p)
+    , _minCardinality(0)
+    , _maxCardinality(0) {}
 
 EntryPoint::~EntryPoint() {}
 
