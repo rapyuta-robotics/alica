@@ -6,7 +6,6 @@
 #include <engine/allocationauthority/EntryPointRobotPair.h>
 #include <engine/model/Task.h>
 
-
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"

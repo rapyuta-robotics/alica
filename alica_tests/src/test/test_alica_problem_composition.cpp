@@ -24,8 +24,7 @@
 #include <thread>
 #include <vector>
 
-class AlicaProblemCompositionTest : public ::testing::Test
-{
+class AlicaProblemCompositionTest : public ::testing::Test {
 protected:
     supplementary::SystemConfig* sc;
     alica::AlicaEngine* ae;
@@ -33,13 +32,12 @@ protected:
     alica::ConditionCreator* cc;
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
-    
-    virtual void SetUp()
-    {
-       // determine the path to the test config
+
+    virtual void SetUp() {
+        // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
-        nh.param<std::string>("/rootPath",path,".");
+        nh.param<std::string>("/rootPath", path, ".");
 
         // bring up the SystemConfig with the corresponding path
         sc = supplementary::SystemConfig::getInstance();
@@ -53,7 +51,8 @@ protected:
         crc = new alica::ConstraintCreator();
 
         sc->setHostname("nase");
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ProblemBuildingMaster", ".", true);
+        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
+                "ProblemBuildingMaster", ".", true);
         ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
         ae->addSolver(SolverType::DUMMYSOLVER, new alica::reasoner::ConstraintTestPlanDummySolver(ae));
@@ -61,8 +60,7 @@ protected:
         ae->init(bc, cc, uc, crc);
     }
 
-    virtual void TearDown()
-    {
+    virtual void TearDown() {
         ae->shutdown();
         delete ae->getCommunicator();
         delete ae->getIAlicaClock();
@@ -77,30 +75,25 @@ protected:
 /**
  * Tests if static variables and binded correctly.
  */
-TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
-{
+TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition) {
     ae->start();
     ae->stepNotify();
-    this_thread::sleep_for(chrono::milliseconds (33));
-    for(int i=0; i<5; ++i) {
-        while(!ae->getPlanBase()->isWaiting()) {
-            this_thread::sleep_for(chrono::milliseconds (33));
+    this_thread::sleep_for(chrono::milliseconds(33));
+    for (int i = 0; i < 5; ++i) {
+        while (!ae->getPlanBase()->isWaiting()) {
+            this_thread::sleep_for(chrono::milliseconds(33));
         }
         ae->stepNotify();
     }
-    std::shared_ptr<RunningPlan> deep =  ae->getPlanBase()->getDeepestNode();
+    std::shared_ptr<RunningPlan> deep = ae->getPlanBase()->getDeepestNode();
     ASSERT_FALSE(deep == nullptr);
-    ASSERT_EQ(deep->getChildren()->size(),1);
+    ASSERT_EQ(deep->getChildren()->size(), 1);
     ASSERT_TRUE((*deep->getChildren()->begin())->isBehaviour());
 
-
-
-    auto queryBehaviour1 = dynamic_pointer_cast<QueryBehaviour1>( (*deep->getChildren()->begin())->getBasicBehaviour());
+    auto queryBehaviour1 = dynamic_pointer_cast<QueryBehaviour1>((*deep->getChildren()->begin())->getBasicBehaviour());
     auto allReps = queryBehaviour1->query->getUniqueVariableStore()->getAllRep();
-    for (auto& rep : allReps)
-    {
+    for (auto& rep : allReps) {
         EXPECT_TRUE(rep->getName() == "PBMX" || rep->getName() == "PBMY");
-        //cout << "Test: '" << rep->getName() << "'" << endl;
+        // cout << "Test: '" << rep->getName() << "'" << endl;
     }
 }
-
