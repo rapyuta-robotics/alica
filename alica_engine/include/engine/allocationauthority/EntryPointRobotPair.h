@@ -19,9 +19,7 @@ public:
     const supplementary::AgentID* getRobot() const;
     void setRobot(const supplementary::AgentID* robot);
     bool operator==(const EntryPointRobotPair& o) const;
-    bool operator!=(const EntryPointRobotPair& o) const {
-        return !(*this == o);
-    }
+    bool operator!=(const EntryPointRobotPair& o) const { return !(*this == o); }
 
 protected:
     EntryPoint* _entryPoint;  // TODO: should be const

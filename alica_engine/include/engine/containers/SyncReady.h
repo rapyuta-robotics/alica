@@ -17,9 +17,7 @@ struct SyncReady {
         this->syncTransitionID = std::get<1>(s);
     }
 
-    stdSyncReady toStandard() {
-        return std::move(std::make_tuple(senderID, syncTransitionID));
-    }
+    stdSyncReady toStandard() { return std::move(std::make_tuple(senderID, syncTransitionID)); }
 };
 
 } /* namespace alica */
