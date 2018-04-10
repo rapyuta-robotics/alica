@@ -47,7 +47,7 @@ std::shared_ptr<RunningPlan> RuleBook::initialisationRule(Plan* masterPlan) {
     cout << "RB: Init-Rule called." << endl;
 #endif
     if (masterPlan->getEntryPoints().size() != 1) {
-        ae->abort("RB: Masterplan does not have exactly one task!");
+        AlicaEngine::abort("RB: Masterplan does not have exactly one task!");
     }
 
     std::shared_ptr<RunningPlan> main = std::make_shared<RunningPlan>(ae, masterPlan);

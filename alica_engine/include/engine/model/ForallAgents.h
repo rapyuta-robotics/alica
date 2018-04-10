@@ -12,7 +12,6 @@ namespace alica {
 
 class RunningPlan;
 class Variable;
-class AlicaEngine;
 class SolverTerm;
 
 /**

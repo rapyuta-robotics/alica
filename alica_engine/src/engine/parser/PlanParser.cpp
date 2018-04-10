@@ -10,13 +10,12 @@ namespace alica {
  * Constructor
  * @param A PlanRepository, in which parsed elements are stored.
  */
-PlanParser::PlanParser(AlicaEngine* ae, PlanRepository* rep) {
+PlanParser::PlanParser(PlanRepository* rep) {
     using namespace supplementary;
 
-    this->ae = ae;
     this->masterPlan = nullptr;
     this->rep = rep;
-    this->mf = shared_ptr<ModelFactory>(new ModelFactory(ae, this, rep));
+    this->mf = shared_ptr<ModelFactory>(new ModelFactory(this, rep));
     this->sc = SystemConfig::getInstance();
     this->domainConfigFolder = this->sc->getConfigPath();
 
@@ -47,10 +46,10 @@ PlanParser::PlanParser(AlicaEngine* ae, PlanRepository* rep) {
     cout << "PP: baseRolePath: " << baseRolePath << endl;
 #endif
     if (!(supplementary::FileSystem::pathExists(basePlanPath))) {
-        ae->abort("PP: BasePlanPath does not exists " + basePlanPath);
+        AlicaEngine::abort("PP: BasePlanPath does not exists " + basePlanPath);
     }
     if (!(supplementary::FileSystem::pathExists(baseRolePath))) {
-        ae->abort("PP: BaseRolePath does not exists " + baseRolePath);
+        AlicaEngine::abort("PP: BaseRolePath does not exists " + baseRolePath);
     }
 }
 
@@ -82,7 +81,7 @@ RoleSet* PlanParser::parseRoleSet(string roleSetName, string roleSetDir) {
         roleSetName = roleSetName + ".rset";
     }
     if (!supplementary::FileSystem::pathExists(roleSetName)) {
-        ae->abort("PP: Cannot find roleset: " + roleSetName);
+        AlicaEngine::abort("PP: Cannot find roleset: " + roleSetName);
     }
 
 #ifdef PP_DEBUG
@@ -109,14 +108,14 @@ RoleSet* PlanParser::parseRoleSet(string roleSetName, string roleSetDir) {
         this->currentFile = fileToParse;
 
         if (!supplementary::FileSystem::pathExists(fileToParse)) {
-            ae->abort("PP: Cannot Find referenced file ", fileToParse);
+            AlicaEngine::abort("PP: Cannot Find referenced file ", fileToParse);
         }
         if (supplementary::FileSystem::endsWith(fileToParse, ".rdefset")) {
             parseRoleDefFile(fileToParse);
         } else if (supplementary::FileSystem::endsWith(fileToParse, ".cdefset")) {
             parseCapabilityDefFile(fileToParse);
         } else {
-            ae->abort("PP: Cannot Parse file " + fileToParse);
+            AlicaEngine::abort("PP: Cannot Parse file " + fileToParse);
         }
         filesParsed.push_back(fileToParse);
     }
@@ -155,7 +154,7 @@ string PlanParser::findDefaultRoleSet(string dir) {
         dir = supplementary::FileSystem::combinePaths(this->baseRolePath, dir);
     }
     if (!supplementary::FileSystem::isDirectory(dir)) {
-        ae->abort("PP: RoleSet directory does not exist: " + dir);
+        AlicaEngine::abort("PP: RoleSet directory does not exist: " + dir);
     }
 
     vector<string> files = supplementary::FileSystem::findAllFiles(dir, ".rset");
@@ -180,7 +179,7 @@ string PlanParser::findDefaultRoleSet(string dir) {
     if (files.size() == 1) {
         return files[0];
     }
-    ae->abort("PP: Cannot find a default roleset in directory: " + dir);
+    AlicaEngine::abort("PP: Cannot find a default roleset in directory: " + dir);
     return "";
 }
 
@@ -196,7 +195,7 @@ Plan* PlanParser::parsePlanTree(string masterplan) {
     cout << "PP: masterPlanPath: " << masterPlanPath << endl;
 #endif
     if (!found) {
-        ae->abort("PP: Cannot find MasterPlan '" + masterplan + "'");
+        AlicaEngine::abort("PP: Cannot find MasterPlan '" + masterplan + "'");
     }
     this->currentFile = masterPlanPath;
     this->currentDirectory = supplementary::FileSystem::getParent(masterPlanPath);
@@ -220,7 +219,7 @@ void PlanParser::parseFileLoop() {
         this->currentFile = fileToParse;
 
         if (!supplementary::FileSystem::pathExists(fileToParse)) {
-            ae->abort("PP: Cannot Find referenced file ", fileToParse);
+            AlicaEngine::abort("PP: Cannot Find referenced file ", fileToParse);
         }
         if (supplementary::FileSystem::endsWith(fileToParse, ".pml")) {
             parsePlanFile(fileToParse);
@@ -233,7 +232,7 @@ void PlanParser::parseFileLoop() {
         } else if (supplementary::FileSystem::endsWith(fileToParse, ".pp")) {
             parsePlanningProblem(fileToParse);
         } else {
-            ae->abort("PP: Cannot Parse file", fileToParse);
+            AlicaEngine::abort("PP: Cannot Parse file", fileToParse);
         }
         filesParsed.push_back(fileToParse);
     }
@@ -355,7 +354,7 @@ long PlanParser::parserId(tinyxml2::XMLElement* node) {
         try {
             id = stol(idString);
         } catch (exception& e) {
-            ae->abort("PP: Cannot convert ID to long: " + idString + " WHAT?? " + e.what());
+            AlicaEngine::abort("PP: Cannot convert ID to long: " + idString + " WHAT?? " + e.what());
         }
         return id;
     } else {
@@ -386,7 +385,7 @@ long PlanParser::parserId(tinyxml2::XMLElement* node) {
         cout << curAttribute->Name() << " : " << curAttribute->Value() << endl;
         curAttribute = curAttribute->Next();
     }
-    ae->abort("PP: Couldn't resolve remote reference: " + string(node->Name()));
+    AlicaEngine::abort("PP: Couldn't resolve remote reference: " + string(node->Name()));
     return -1;
 }
 
@@ -450,7 +449,7 @@ long PlanParser::fetchId(const string& idString, long id) {
     try {
         id = stol(tokenId);
     } catch (exception& e) {
-        ae->abort("PP: Cannot convert ID to long: " + tokenId + " WHAT?? " + e.what());
+        AlicaEngine::abort("PP: Cannot convert ID to long: " + tokenId + " WHAT?? " + e.what());
     }
     return id;
 }
