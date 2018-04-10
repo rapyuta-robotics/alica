@@ -25,11 +25,11 @@ int Variable::accept(shared_ptr<ITermVisitor> visitor) {
     return visitor->visit(thisCasted);
 }
 
-shared_ptr<Term> Variable::aggregateConstants() {
+std::shared_ptr<Term> Variable::aggregateConstants() {
     return shared_from_this();
 }
 
-shared_ptr<Term> Variable::derivative(shared_ptr<Variable> v) {
+std::shared_ptr<Term> Variable::derivative(shared_ptr<Variable> v) {
     if (shared_from_this() == v) {
         return TermBuilder::constant(1);
     } else {
@@ -37,14 +37,14 @@ shared_ptr<Term> Variable::derivative(shared_ptr<Variable> v) {
     }
 }
 
-string Variable::toString() {
-    string str;
+std::string Variable::toString() {
+    std::string str;
     if (ownId < 0) {
         str.append("Var_");
-        str.append(to_string(-ownId));
+        str.append(std::to_string(-ownId));
     } else {
         str.append("Var");
-        str.append(to_string(ownId));
+        str.append(std::to_string(ownId));
     }
     return str;
 }

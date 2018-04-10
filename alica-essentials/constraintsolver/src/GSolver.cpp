@@ -75,7 +75,7 @@ void GSolver::closeLog() {
     sw.close();
 }
 
-shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
+std::shared_ptr<vector<double>> GSolver::solve(std::shared_ptr<Term> equation,
         shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, shared_ptr<vector<shared_ptr<vector<double>>>> limits,
         double* util) {
     return solve(equation, args, limits, make_shared<vector<shared_ptr<vector<double>>>>(),

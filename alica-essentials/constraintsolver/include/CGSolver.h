@@ -2,10 +2,11 @@
 
 #include <AutoDiff.h>
 #include <engine/constraintmodul/ISolver.h>
+#include <engine/Types.h>
 #include <vector>
 #include <memory>
 #include <mutex>
-#include <GSolver.h>
+#include "GSolver.h"
 
 //#define CGSolver_DEBUG
 
@@ -21,10 +22,9 @@ public:
     CGSolver(AlicaEngine* ae);
     virtual ~CGSolver();
 
-    bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls) override;
-    bool getSolution(
-            vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results) override;
-    shared_ptr<SolverVariable> createVariable(long id) override;
+    bool existsSolution(const alica::VariableSet& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) override;
+    bool getSolution(const alica::VariableSet& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<void*>& results) override;
+    std::shared_ptr<SolverVariable> createVariable(long id) override;
 
 protected:
     GSolver _gs;

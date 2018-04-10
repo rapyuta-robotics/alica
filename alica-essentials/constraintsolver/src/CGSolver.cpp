@@ -11,6 +11,7 @@
 
 namespace alica {
 namespace reasoner {
+using alica::VariableSet;
 
 CGSolver::CGSolver(AlicaEngine* ae)
         : ISolver(ae)
@@ -23,7 +24,7 @@ CGSolver::CGSolver(AlicaEngine* ae)
 
 CGSolver::~CGSolver() {}
 
-bool CGSolver::existsSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls) {
+bool CGSolver::existsSolution(const VariableSet& vars, vector<shared_ptr<ProblemDescriptor>>& calls) {
     shared_ptr<Term> constraint = ConstraintBuilder::TRUE;
     int dim = vars.size();
 
@@ -62,7 +63,7 @@ bool CGSolver::existsSolution(vector<Variable*>& vars, vector<shared_ptr<Problem
             }
         }
     }
-    auto serial_seeds = ae->getResultStore()->getSeeds(std::make_shared<std::vector<Variable*>>(vars), ranges);
+    auto serial_seeds = ae->getResultStore()->getSeeds(std::make_shared<std::vector<const Variable*>>(vars), ranges);
     // Deserialize seeds
     shared_ptr<vector<shared_ptr<vector<double>>>> seeds =
             make_shared<vector<shared_ptr<vector<double>>>>(serial_seeds->size());
@@ -93,7 +94,7 @@ bool CGSolver::existsSolution(vector<Variable*>& vars, vector<shared_ptr<Problem
 }
 
 bool CGSolver::getSolution(
-        vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results) {
+        const VariableSet& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results) {
     shared_ptr<Term> constraint = ConstraintBuilder::TRUE;
     shared_ptr<Term> utility = TermBuilder::constant(1);
     int dim = vars.size();
@@ -162,7 +163,7 @@ bool CGSolver::getSolution(
     }
     shared_ptr<Term> all = make_shared<ConstraintUtility>(constraint, utility);
 
-    auto tmp = make_shared<vector<Variable*>>(vars);
+    auto tmp = make_shared<vector<const Variable*>>(vars);
     auto serial_seeds = this->ae->getResultStore()->getSeeds(tmp, ranges);
     // Deserialize seeds
     auto seeds = make_shared<vector<shared_ptr<vector<double>>>>();
