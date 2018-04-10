@@ -508,6 +508,7 @@ tinyxml2::XMLElement* PlanWriter::createEntryPointXMLNode(const EntryPoint* e, t
 void PlanWriter::addPlanElementAttributes(const AlicaElement* p, tinyxml2::XMLElement* x) {
     x->SetAttribute("id", to_string(p->getId()).c_str());
     x->SetAttribute("name", p->getName().c_str());
+    x->SetAttribute("comment", "");
 }
 
 string PlanWriter::getRelativeFileName(string file) {
