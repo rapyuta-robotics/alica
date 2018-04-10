@@ -8,7 +8,11 @@ class AlicaTime {
 public:
     constexpr AlicaTime()
             : _time(0LL) {}
-
+    
+    template <typename T>
+    constexpr AlicaTime(T t)
+            : _time(t) {}
+            
     constexpr int64_t inNanoseconds() const {
         return _time;
     }
@@ -76,6 +80,14 @@ public:
         return AlicaTime(_time * t);
     }
 
+    constexpr bool operator<(const AlicaTime& t) const {
+        return _time < t.inNanoseconds();
+    }
+
+    constexpr bool operator>(const AlicaTime& t) const {
+        return _time > t.inNanoseconds();
+    }
+
     constexpr bool operator==(const AlicaTime& t) const {
         return _time == t.inNanoseconds();
     }
@@ -86,10 +98,6 @@ public:
 
 private:
     int64_t _time;
-    
-    template <typename T>
-    constexpr AlicaTime(T t)
-            : _time(t) {}
 };
 
 class AlicaClock {

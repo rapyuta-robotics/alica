@@ -4,6 +4,7 @@
 //#define SM_FAILURE
 //#define SM_MESSAGES
 
+#include "engine/AlicaClock.h"
 #include "supplementary/AgentID.h"
 #include <list>
 #include <mutex>
@@ -47,9 +48,9 @@ protected:
     SyncModule* syncModul;
     SyncTransition* syncTransition;
     const supplementary::AgentID* myID;
-    unsigned long lastTalkTime;
+    AlicaTime lastTalkTime;
     SyncData* lastTalkData;
-    unsigned long syncStartTime;
+    AlicaTime syncStartTime;
     bool readyForSync;
     unsigned long lastTick;
     list<shared_ptr<SyncReady>> receivedSyncReadys;

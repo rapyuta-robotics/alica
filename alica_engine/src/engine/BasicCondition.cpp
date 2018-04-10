@@ -15,25 +15,15 @@ BasicCondition::BasicCondition() {}
 
 BasicCondition::~BasicCondition() {}
 
-bool BasicCondition::isStateTimedOut(unsigned long timeOut, shared_ptr<RunningPlan> rp) {
-    if (rp->getStateStartTime() == 0)
-        return false;
-    long time = (long) (rp->getAlicaEngine()->getAlicaClock()->now());
-    long timeDiff = time - (long) (rp->getStateStartTime());
-    if (timeDiff > timeOut) {
-        return true;
-    }
-    return false;
+bool BasicCondition::isStateTimedOut(const AlicaTime timeOut, shared_ptr<RunningPlan> rp) {
+    if (rp->getStateStartTime() == 0) return false;
+    AlicaTime timeDiff = rp->getAlicaEngine()->getAlicaClock()->now() - rp->getStateStartTime();
+    return timeDiff > timeOut;
 }
 
-bool BasicCondition::isTimeOut(unsigned long timeOut, unsigned long startTime, shared_ptr<RunningPlan> rp) {
-    if (startTime == 0)
-        return false;
-    long time = (long) (rp->getAlicaEngine()->getAlicaClock()->now());
-    long timeDiff = time - (long) (startTime);
-    if (timeDiff > timeOut) {
-        return true;
-    }
-    return false;
+bool BasicCondition::isTimeOut(const AlicaTime timeOut, const AlicaTime startTime, shared_ptr<RunningPlan> rp) {
+    if (startTime == 0) return false;
+    AlicaTime timeDiff = rp->getAlicaEngine()->getAlicaClock()->now() - startTime;
+    return timeDiff > timeOut;
 }
 } /* namespace alica */

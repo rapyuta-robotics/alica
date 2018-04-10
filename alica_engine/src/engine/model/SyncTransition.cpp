@@ -49,19 +49,19 @@ void SyncTransition::setFailOnSyncTimeOut(bool failOnSyncTimeOut) {
     this->failOnSyncTimeOut = failOnSyncTimeOut;
 }
 
-unsigned long SyncTransition::getSyncTimeOut() const {
+AlicaTime SyncTransition::getSyncTimeOut() const {
     return syncTimeOut;
 }
 
-void SyncTransition::setSyncTimeOut(unsigned long syncTimeOut) {
+void SyncTransition::setSyncTimeOut(AlicaTime syncTimeOut) {
     this->syncTimeOut = syncTimeOut;
 }
 
-unsigned long SyncTransition::getTalkTimeOut() const {
+AlicaTime SyncTransition::getTalkTimeOut() const {
     return talkTimeOut;
 }
 
-void SyncTransition::setTalkTimeOut(unsigned long talkTimeOut) {
+void SyncTransition::setTalkTimeOut(AlicaTime talkTimeOut) {
     this->talkTimeOut = talkTimeOut;
 }
 

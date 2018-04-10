@@ -12,11 +12,13 @@
 #include <string>
 #include <sstream>
 
+#include "engine/AlicaClock.h"
 #include "AlicaElement.h"
 
 using namespace std;
 namespace alica {
 
+class AlicaTime;
 class Plan;
 class Transition;
 
@@ -29,9 +31,9 @@ public:
 
     bool isFailOnSyncTimeOut() const;
     void setFailOnSyncTimeOut(bool failOnSyncTimeOut);
-    unsigned long getSyncTimeOut() const;
+    AlicaTime getSyncTimeOut() const;
     void setSyncTimeOut(unsigned long syncTimeOut);
-    unsigned long getTalkTimeOut() const;
+    AlicaTime getTalkTimeOut() const;
     void setTalkTimeOut(unsigned long talkTimeOut);
     const Plan* getPlan() const;
     void setPlan(Plan* plan);
@@ -39,8 +41,8 @@ public:
     void setInSync(const list<Transition*>& inSync);
 
 private:
-    unsigned long talkTimeOut;
-    unsigned long syncTimeOut;
+    AlicaTime talkTimeOut;
+    AlicaTime syncTimeOut;
     bool failOnSyncTimeOut;
     Plan* plan;
     list<Transition*> inSync;
