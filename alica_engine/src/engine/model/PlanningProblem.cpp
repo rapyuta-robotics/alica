@@ -38,13 +38,6 @@ void PlanningProblem::setDistributeProblem(bool distributeProblem) {
     this->distributeProblem = distributeProblem;
 }
 
-const string& PlanningProblem::getFileName() const {
-    return fileName;
-}
-
-void PlanningProblem::setFileName(const string& fileName) {
-    this->fileName = fileName;
-}
 
 PlanningType PlanningProblem::getPlanningType() const {
     return planningType;

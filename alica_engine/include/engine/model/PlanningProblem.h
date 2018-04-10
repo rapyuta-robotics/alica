@@ -34,8 +34,6 @@ public:
     void setAlternativePlan(Plan* alternativePlan);
     bool isDistributeProblem() const;
     void setDistributeProblem(bool distributeProblem);
-    const string& getFileName() const;
-    void setFileName(const string& fileName);
     PlanningType getPlanningType() const;
     void setPlanningType(PlanningType planningType);
     list<AbstractPlan*>& getPlans();
@@ -60,7 +58,6 @@ public:
     bool distributeProblem;
     PlanningType planningType;
     string requirements;
-    string fileName;
     PostCondition* postCondition;
     PreCondition* preCondition;
     RuntimeCondition* runtimeCondition;

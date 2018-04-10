@@ -36,8 +36,4 @@ void PlanType::setPlans(const PlanSet& plans) {
     _plans = plans;
 }
 
-void PlanType::setFileName(const std::string& filename) {
-    _fileName = filename;
-}
-
 }  // namespace alica
