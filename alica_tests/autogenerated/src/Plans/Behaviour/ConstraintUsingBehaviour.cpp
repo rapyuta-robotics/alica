@@ -28,7 +28,7 @@ void ConstraintUsingBehaviour::run(void* msg) {
 void ConstraintUsingBehaviour::initialiseParameters() {
     /*PROTECTED REGION ID(initialiseParameters1414068597716) ENABLED START*/  // Add additional options here
     this->query = make_shared<alica::Query>();
-    query->addStaticVariable(getVariablesByName("Y"));
+    query->addStaticVariable(getVariableByName("Y"));
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1414068597716) ENABLED START*/  // Add additional methods here

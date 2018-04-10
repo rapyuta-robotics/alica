@@ -29,8 +29,8 @@ void SolverTestBehaviour::run(void* msg) {
 void SolverTestBehaviour::initialiseParameters() {
     /*PROTECTED REGION ID(initialiseParameters1417424455986) ENABLED START*/  // Add additional options here
     _query.clearStaticVariables();
-    _query.addStaticVariable(getVariablesByName("X"));
-    _query.addStaticVariable(getVariablesByName("Y"));
+    _query.addStaticVariable(getVariableByName("X"));
+    _query.addStaticVariable(getVariableByName("Y"));
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1417424455986) ENABLED START*/  // Add additional methods here
