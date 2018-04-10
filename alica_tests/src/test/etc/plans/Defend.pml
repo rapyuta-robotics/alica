@@ -6,7 +6,7 @@
     <inTransitions>#1402488990761</inTransitions>
     <outTransitions>#1402488991762</outTransitions>
   </states>
-  <states xsi:type="alica:FailureState" id="1402488910751" name="GetGoal" comment="GetGoal">
+  <states xsi:type="alica:FailureState" id="1402488910751" name="GetGoal" comment="">
     <inTransitions>#1402489071510</inTransitions>
   </states>
   <states id="1402488959965" name="GetBall" comment="" entryPoint="1402488903550">
@@ -19,22 +19,22 @@
     <inTransitions>#1402489064693</inTransitions>
     <outTransitions>#1402489071510</outTransitions>
   </states>
-  <transitions id="1402488990761" name="TackleToGetBall" comment="GetBallToTackle" msg="">
+  <transitions id="1402488990761" name="TackleToGetBall" comment="" msg="">
     <preCondition id="1402488991641" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1402488959965</inState>
     <outState>#1402488903549</outState>
   </transitions>
-  <transitions id="1402488991762" name="TackleToGetBall" comment="TackleToGetBall" msg="">
+  <transitions id="1402488991762" name="TackleToGetBall" comment="" msg="">
     <preCondition id="1402488993122" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1402488903549</inState>
     <outState>#1402488959965</outState>
   </transitions>
-  <transitions id="1402489064693" name="GetBallToTryToDefendGoal" comment="TESTESTETS" msg="">
+  <transitions id="1402489064693" name="GetBallToTryToDefendGoal" comment="" msg="">
     <preCondition id="1402489065962" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1402488959965</inState>
     <outState>#1402489037735</outState>
   </transitions>
-  <transitions id="1402489071510" name="TryToDefendGoalToGetGoal" comment="TryToDefendGoalToGetGoal" msg="">
+  <transitions id="1402489071510" name="TryToDefendGoalToGetGoal" comment="" msg="">
     <preCondition id="1402489073613" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1402489037735</inState>
     <outState>#1402488910751</outState>

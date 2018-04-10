@@ -34,11 +34,9 @@ private:
     friend ModelFactory;
     void setParametrisation(const ParametrisationSet& parametrisation);
     void setPlans(const PlanSet& plans);
-    void setFileName(const std::string& filename);
 
     PlanSet _plans;
     ParametrisationSet _parametrisation;
-    std::string _fileName;
 };
 
 }  // namespace alica

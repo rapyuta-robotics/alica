@@ -520,7 +520,15 @@ string PlanWriter::getRelativeFileName(string file) {
         if (file.substr(file.size() - 4, 4) == ".beh" || file.substr(file.size() - 4, 4) == ".pty" ||
                 file.substr(file.size() - 4, 4) == ".pml" || file.substr(file.size() - 3, 3) == ".pp") {
             supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-            string tfile = (*sc)["Alica"]->get<string>("Alica.PlanDir");
+            string tfile = (*sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
+            supplementary::FileSystem::combinePaths(tfile, file);
+            if (!supplementary::FileSystem::isPathRooted(tfile)) {
+                tfile = supplementary::FileSystem::combinePaths(this->configPath, tfile);
+            }
+            ufile = tfile;
+        } else if (file.substr(file.size() - 4, 4) == ".tsk") {
+            supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+            string tfile = (*sc)["Alica"]->get<string>("Alica.MiscDir", NULL);
             supplementary::FileSystem::combinePaths(tfile, file);
             if (!supplementary::FileSystem::isPathRooted(tfile)) {
                 tfile = supplementary::FileSystem::combinePaths(this->configPath, tfile);
@@ -534,11 +542,11 @@ string PlanWriter::getRelativeFileName(string file) {
     }
     string ret = "";
     int pos = 0;
-    for (int i = 0; i < curdir.size(); i++) {
-        if (curdir.at(i) != ufile.at(i)) {
+    for (int i = 0; i < curdir.size(); ++i) {
+        if (ufile.size() <= i || curdir.at(i) != ufile.at(i)) {
             break;
         }
-        pos++;
+        ++pos;
     }
     ufile.erase(ufile.begin(), ufile.begin() + pos);
     ret = ufile;
