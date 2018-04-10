@@ -12,6 +12,11 @@ namespace alica {
 
 Task::~Task() {}
 
+Task::Task(int64_t id, bool defaultTask)
+        : AlicaElement(id)
+        , _defaultTask(defaultTask)
+        , _taskRepository(nullptr) {}
+
 Task::Task(bool defaultTask)
         : _defaultTask(defaultTask)
         , _taskRepository(nullptr) {}

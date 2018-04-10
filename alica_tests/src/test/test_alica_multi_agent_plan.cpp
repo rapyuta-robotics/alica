@@ -129,7 +129,7 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan) {
                     string("MultiAgentTestPlan"));
         }
         if (i == 15) {
-            for (auto iter : *ae->getBehaviourPool()->getAvailableBehaviours()) {
+            for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
                 if (iter.second->getName() == "Attack") {
                     ASSERT_GT(((alica::Attack*) &*iter.second)->callCounter, 5);
                     if (((alica::Attack*) &*iter.second)->callCounter > 3) {

@@ -34,7 +34,6 @@ public:
     Plan(int64_t id = 0);
     virtual ~Plan();
 
-    virtual std::string toString() const override;
     const EntryPoint* getEntryPointTaskID(int64_t taskID) const;
     const EntryPoint* getEntryPointByID(int64_t epID) const;
 

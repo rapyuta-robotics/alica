@@ -27,6 +27,7 @@ class Task;
 class EntryPoint : public AlicaElement {
 public:
     EntryPoint();
+    EntryPoint(int64_t id, const Plan* p, const Task* t, const State* s);
     virtual ~EntryPoint();
 
     /**
