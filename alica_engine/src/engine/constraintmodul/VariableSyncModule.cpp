@@ -111,7 +111,7 @@ void VariableSyncModule::postResult(long vid, shared_ptr<vector<uint8_t>>& resul
 }
 
 shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>> VariableSyncModule::getSeeds(
-        shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits) {
+        shared_ptr<vector<const Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits) {
     // Lockguard here!
 
     int dim = query->size();

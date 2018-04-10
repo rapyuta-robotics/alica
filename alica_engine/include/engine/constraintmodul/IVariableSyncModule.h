@@ -29,7 +29,7 @@ public:
 
     virtual void postResult(long vid, shared_ptr<vector<uint8_t>>& result) = 0;
     virtual shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>> getSeeds(
-            shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits) = 0;
+            shared_ptr<vector<const Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits) = 0;
 };
 } /* namespace alica */
 

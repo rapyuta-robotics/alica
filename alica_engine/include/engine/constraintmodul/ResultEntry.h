@@ -24,7 +24,7 @@ public:
     std::shared_ptr<std::vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
     std::shared_ptr<std::vector<uint8_t>> getValue(long vid, long ttl4Usage);
     std::shared_ptr<std::vector<std::shared_ptr<std::vector<uint8_t>>>> getValues(
-            std::shared_ptr<std::vector<Variable*>> query, long ttl4Usage);
+            std::shared_ptr<std::vector<const Variable*>> query, long ttl4Usage);
 
     class VarValue {
     public:

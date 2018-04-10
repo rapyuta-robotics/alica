@@ -26,7 +26,7 @@ public:
     void publishContent();
     virtual void postResult(long vid, shared_ptr<vector<uint8_t>>& result);
     virtual shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>> getSeeds(
-            shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits);
+            shared_ptr<vector<const Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits) override;
 
 protected:
     supplementary::NotifyTimer<VariableSyncModule>* timer;
