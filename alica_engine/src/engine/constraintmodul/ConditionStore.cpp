@@ -59,7 +59,7 @@ void ConditionStore::addCondition(const Condition* con) {
     }
 #ifdef CS_DEBUG
     cout << "CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size()
-         << " variables." << endl;
+         << " variables. CS: " << this << endl;
 #endif
 }
 
@@ -97,10 +97,10 @@ void ConditionStore::removeCondition(const Condition* con) {
  */
 void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const {
 #ifdef CS_DEBUG
-    std::cout << "ConditionStore: Accepting Query - Active conditions in store is " << activeConditions.size()
+    std::cout << "ConditionStore: Accepting Query - Active conditions in store is " << activeConditions.size() <<" CS: "<< this
               << std::endl;
 #endif
-    if (activeConditions.size() == 0) {
+    if (activeConditions.empty()) {
         return;
     }
 
@@ -112,7 +112,7 @@ void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const
 
 #ifdef CS_DEBUG
     std::cout << "ConditionStore: Query contains static variables: ";
-    for (Variable* v : staticVarsToCheck) {
+    for (const Variable* v : staticVarsToCheck) {
         std::cout << v->getName() << "(" << v->getId() << "), ";
     }
     std::cout << std::endl;
