@@ -40,15 +40,16 @@ class IRoleAssignment;
 
 class AlicaEngine {
 public:
+    static void abort(string msg);
+    template <typename T>
+    static void abort(string msg, const T tail);
+
     AlicaEngine(supplementary::AgentIDManager* idManager, string roleSetName, string masterPlanName, string roleSetDir,
             bool stepEngine);
     bool init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc);
     void shutdown();
     void start();
     bool getStepEngine();
-    void abort(string msg) const;
-    template <typename T>
-    void abort(string msg, const T tail) const;
     PlanRepository* getPlanRepository() const;
     BehaviourPool* getBehaviourPool();
     string getRobotName() const;
@@ -159,7 +160,7 @@ const supplementary::AgentID* AlicaEngine::getID(Prototype& idPrototype) {
 }
 
 template <typename T>
-void AlicaEngine::abort(string msg, const T tail) const {
+void AlicaEngine::abort(string msg, const T tail) {
     stringstream ss;
     ss << msg << tail;
     AlicaEngine::abort(ss.str());

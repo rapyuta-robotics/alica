@@ -1,8 +1,6 @@
-
-
 #include "engine/Assignment.h"
 
-#include <assert.h>
+
 
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/model/Plan.h"
@@ -15,7 +13,7 @@
 #include "engine/model/Task.h"
 #include "engine/model/State.h"
 
-
+#include <assert.h>
 
 namespace alica {
 
@@ -60,7 +58,7 @@ Assignment::Assignment(PartialAssignment* pa) {
         this->epRobotsMapping = new AssignmentCollection(assCol->getSize());
     }
 
-    //shared_ptr<vector<const supplementary::AgentID*>> curRobots;
+
     for (short i = 0; i < this->epRobotsMapping->getSize(); i++) {
         // set the entrypoint
         epRobotsMapping->setEp(i, assCol->getEp(i));
@@ -445,7 +443,6 @@ void Assignment::addRobot(const supplementary::AgentID* id, const EntryPoint* e)
         return;
     }
     this->epRobotsMapping->addRobot(id,e);
-    //this->epRobotsMapping->getRobotsByEp(e)->push_back(id);
     return;
 }
 

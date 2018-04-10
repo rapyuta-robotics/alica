@@ -78,8 +78,7 @@ const string ModelFactory::alternativePlan = "alternativePlan";
  * @param p The PlanParser handling the plan and role files.
  * @param rep The <see PlanRepository holding all plan elements. Elements will be added to it.
  */
-ModelFactory::ModelFactory(AlicaEngine* ae, PlanParser* p, PlanRepository* rep) {
-    this->ae = ae;
+ModelFactory::ModelFactory(PlanParser* p, PlanRepository* rep) {
     this->parser = p;
     this->rep = rep;
     this->ignoreMasterPlanId = false;
@@ -141,7 +140,7 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node) {
     tinyxml2::XMLElement* curChild = element->FirstChildElement();
     while (curChild != nullptr) {
         if (isReferenceNode(curChild)) {
-            ae->abort("MF: Plan child is reference", curChild);
+            AlicaEngine::abort("MF: Plan child is reference", curChild);
         }
 
         const char* val = curChild->Value();
@@ -175,7 +174,7 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node) {
                 plan->_failureStates.push_back(fail);
                 plan->_states.push_back(fail);
             } else {
-                ae->abort("MF: Unknown State type:", typePtr);
+                AlicaEngine::abort("MF: Unknown State type:", typePtr);
             }
         } else if (transitions.compare(val) == 0) {
             Transition* tran = createTransition(curChild, plan);
@@ -187,7 +186,7 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node) {
                 typeString = typePtr;
             }
             if (typeString.empty()) {
-                ae->abort("MF: Condition without xsi:type in plan", plan->getName());
+                AlicaEngine::abort("MF: Condition without xsi:type in plan", plan->getName());
             } else if (typeString.compare("alica:RuntimeCondition") == 0) {
                 RuntimeCondition* rc = createRuntimeCondition(curChild);
                 rc->setAbstractPlan(plan);
@@ -200,7 +199,7 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node) {
                 PostCondition* p = createPostCondition(curChild);
                 plan->setPostCondition(p);
             } else {
-                ae->abort("MF: Unknown Condition type", curChild);
+                AlicaEngine::abort("MF: Unknown Condition type", curChild);
             }
         } else if (vars.compare(val) == 0) {
             Variable* var = createVariable(curChild);
@@ -211,7 +210,7 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node) {
             plan->_syncTransitions.push_back(st);
 
         } else {
-            ae->abort("MF: Unhandled Plan Child: ", val);
+            AlicaEngine::abort("MF: Unhandled Plan Child: ", val);
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -246,7 +245,7 @@ RoleSet* ModelFactory::createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPl
     }
 
     if (!isDefault && !isUseable) {
-        ae->abort("MF:Selected RoleSet is not default, nor useable with current masterplan");
+        AlicaEngine::abort("MF:Selected RoleSet is not default, nor useable with current masterplan");
     }
 
     RoleSet* rs = new RoleSet();
@@ -263,7 +262,7 @@ RoleSet* ModelFactory::createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPl
             RoleTaskMapping* rtm = createRoleTaskMapping(curChild);
             rs->_roleTaskMappings.push_back(rtm);
         } else {
-            ae->abort("MF: Unhandled RoleSet Child:", curChild->Value());
+            AlicaEngine::abort("MF: Unhandled RoleSet Child:", curChild->Value());
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -290,7 +289,7 @@ RoleTaskMapping* ModelFactory::createRoleTaskMapping(tinyxml2::XMLElement* eleme
             int64_t cid = this->parser->parserId(curChild);
             this->rtmRoleReferences.push_back(pair<int64_t, int64_t>(rtm->getId(), cid));
         } else {
-            ae->abort("MF: Unhandled RoleTaskMapping Child ", curChild->Value());
+            AlicaEngine::abort("MF: Unhandled RoleTaskMapping Child ", curChild->Value());
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -311,7 +310,7 @@ void ModelFactory::createCapabilityDefinitionSet(tinyxml2::XMLDocument* node) {
             Capability* cap = createCapability(curChild);
             capSet->getCapabilities().push_back(cap);
         } else {
-            ae->abort("MF: Unhandled Behaviour Child:", curChild->Value());
+            AlicaEngine::abort("MF: Unhandled Behaviour Child:", curChild->Value());
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -333,7 +332,7 @@ Capability* ModelFactory::createCapability(tinyxml2::XMLElement* element) {
             addElement(cval);
             cap->_capValues.push_back(cval);
         } else {
-            ae->abort("MF: Unhandled Capability Child:", curChild->Value());
+            AlicaEngine::abort("MF: Unhandled Capability Child:", curChild->Value());
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -356,7 +355,7 @@ void ModelFactory::createRoleDefinitionSet(tinyxml2::XMLDocument* node) {
             r->_roles.push_back(role);
             role->setRoleDefinitionSet(r);
         } else {
-            ae->abort("MF: Unhandled RoleDefinitionSet Child:", curChild->Value());
+            AlicaEngine::abort("MF: Unhandled RoleDefinitionSet Child:", curChild->Value());
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -376,7 +375,7 @@ Role* ModelFactory::createRole(tinyxml2::XMLElement* element) {
             Characteristic* cha = createCharacteristic(curChild);
             r->_characteristics.insert(pair<string, Characteristic*>(cha->getName(), cha));
         } else {
-            ae->abort("MF: Unhandled Role Child:", curChild->Value());
+            AlicaEngine::abort("MF: Unhandled Role Child:", curChild->Value());
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -404,7 +403,7 @@ Characteristic* ModelFactory::createCharacteristic(tinyxml2::XMLElement* element
             int64_t capValid = this->parser->parserId(curChild);
             this->charCapValReferences.push_back(pair<int64_t, int64_t>(cha->getId(), capValid));
         } else {
-            ae->abort("MF: Unhandled Characteristic Child:", curChild->Value());
+            AlicaEngine::abort("MF: Unhandled Characteristic Child:", curChild->Value());
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -429,7 +428,7 @@ void ModelFactory::createBehaviour(tinyxml2::XMLDocument* node) {
             bc->setBehaviour(beh);
             beh->_configurations.push_back(bc);
         } else {
-            ae->abort("MF: Unhandled Behaviour Child:", curChild->Value());
+            AlicaEngine::abort("MF: Unhandled Behaviour Child:", curChild->Value());
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -497,7 +496,7 @@ BehaviourConfiguration* ModelFactory::createBehaviourConfiguration(tinyxml2::XML
                 b->_parameters.emplace(key, value);
             }
         } else {
-            ae->abort("MF: Unhandled BehaviourConfiguration Child:", curChild);
+            AlicaEngine::abort("MF: Unhandled BehaviourConfiguration Child:", curChild);
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -539,7 +538,7 @@ void ModelFactory::createPlanType(tinyxml2::XMLDocument* node) {
             const Parametrisation* para = createParametrisation(curChild);
             pt->_parametrisation.push_back(para);
         } else {
-            ae->abort("MF: Unhandled PlanType Child:", val);
+            AlicaEngine::abort("MF: Unhandled PlanType Child:", val);
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -595,7 +594,7 @@ SyncTransition* ModelFactory::createSyncTransition(tinyxml2::XMLElement* element
     addElement(s);
     this->rep->_syncTransitions.insert(pair<int64_t, SyncTransition*>(s->getId(), s));
     if (element->FirstChild()) {
-        ae->abort("MF: Unhandled Synchtransition Child:", element->FirstChild());
+        AlicaEngine::abort("MF: Unhandled Synchtransition Child:", element->FirstChild());
     }
     return s;
 }
@@ -653,7 +652,7 @@ RuntimeCondition* ModelFactory::createRuntimeCondition(tinyxml2::XMLElement* ele
             Parameter* p = createParameter(curChild);
             r->_parameters.push_back(p);
         } else {
-            ae->abort("MF: Unhandled RuntimeCondition Child", curChild);
+            AlicaEngine::abort("MF: Unhandled RuntimeCondition Child", curChild);
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -734,7 +733,7 @@ void ModelFactory::createPlanningProblem(tinyxml2::XMLDocument* node) {
                     p->setRuntimeCondition(pa);
                 }
             } else {
-                ae->abort("MF: Unknown Condition type:", curChild->Value());
+                AlicaEngine::abort("MF: Unknown Condition type:", curChild->Value());
             }
         } else if (waitPlan.compare(val) == 0) {
             this->planningProblemPlanWaitReferences.push_back(pair<int64_t, int64_t>(p->getId(), cid));
@@ -767,7 +766,7 @@ Transition* ModelFactory::createTransition(tinyxml2::XMLElement* element, Plan* 
         } else if (synchronisation.compare(val) == 0) {
             this->transitionSynchReferences.push_back(pair<int64_t, int64_t>(tran->getId(), cid));
         } else {
-            ae->abort("MF: Unhandled Transition Child:", curChild);
+            AlicaEngine::abort("MF: Unhandled Transition Child:", curChild);
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -823,7 +822,7 @@ PreCondition* ModelFactory::createPreCondition(tinyxml2::XMLElement* element) {
             Parameter* p = createParameter(curChild);
             pre->_parameters.push_back(p);
         } else {
-            ae->abort("MF: Unhandled PreCondition Child:", curChild->Value());
+            AlicaEngine::abort("MF: Unhandled PreCondition Child:", curChild->Value());
         }
         curChild = curChild->NextSiblingElement();
     }
@@ -855,10 +854,10 @@ Quantifier* ModelFactory::createQuantifier(tinyxml2::XMLElement* element) {
             q = new ForallAgents();
             q->setId(id);
         } else {
-            ae->abort("MF: Unsupported quantifier type! !", typeString);
+            AlicaEngine::abort("MF: Unsupported quantifier type! !", typeString);
         }
     } else {
-        ae->abort("MF: Quantifier without type!", id);
+        AlicaEngine::abort("MF: Quantifier without type!", id);
     }
 
     addElement(q);
@@ -877,7 +876,7 @@ Quantifier* ModelFactory::createQuantifier(tinyxml2::XMLElement* element) {
         if (sorts.compare(val) == 0) {
             q->_domainIdentifiers.emplace_back(curChild->GetText());
         } else {
-            ae->abort("MF: Unhandled Quantifier Child:", curChild);
+            AlicaEngine::abort("MF: Unhandled Quantifier Child:", curChild);
         }
 
         curChild = curChild->NextSiblingElement();
@@ -904,7 +903,7 @@ FailureState* ModelFactory::createFailureState(tinyxml2::XMLElement* element) {
             PostCondition* postCon = createPostCondition(curChild);
             fail->setPostCondition(postCon);
         } else {
-            ae->abort("MF: Unhandled FaulireState Child: ", curChild->Value());
+            AlicaEngine::abort("MF: Unhandled FaulireState Child: ", curChild->Value());
         }
 
         curChild = curChild->NextSiblingElement();
@@ -929,7 +928,7 @@ SuccessState* ModelFactory::createSuccessState(tinyxml2::XMLElement* element) {
             PostCondition* postCon = createPostCondition(curChild);
             suc->setPostCondition(postCon);
         } else {
-            ae->abort("MF: Unhandled SuccesState Child:", curChild->Value());
+            AlicaEngine::abort("MF: Unhandled SuccesState Child:", curChild->Value());
         }
 
         curChild = curChild->NextSiblingElement();
@@ -961,7 +960,7 @@ PostCondition* ModelFactory::createPostCondition(tinyxml2::XMLElement* element) 
     }
 
     if (element->FirstChild()) {
-        ae->abort("MF: Unhandled Result child", element->FirstChild());
+        AlicaEngine::abort("MF: Unhandled Result child", element->FirstChild());
     }
 
     return pos;
@@ -1001,13 +1000,13 @@ EntryPoint* ModelFactory::createEntryPoint(tinyxml2::XMLElement* element) {
         } else if (task.compare(val) == 0) {
             this->epTaskReferences.push_back(pair<int64_t, int64_t>(ep->getId(), curChildId));
         } else {
-            ae->abort("MF: Unhandled EntryPoint Child: ", val);
+            AlicaEngine::abort("MF: Unhandled EntryPoint Child: ", val);
         }
         curChild = curChild->NextSiblingElement();
     }
 
     if (!haveState) {
-        ae->abort("MF: No initial state identified for EntryPoint: ", ep->getId());
+        AlicaEngine::abort("MF: No initial state identified for EntryPoint: ", ep->getId());
     }
 
     return ep;
@@ -1039,7 +1038,7 @@ State* ModelFactory::createState(tinyxml2::XMLElement* element) {
             Parametrisation* para = createParametrisation(curChild);
             s->_parametrisation.push_back(para);
         } else {
-            ae->abort("MF: Unhandled State Child: ", val);
+            AlicaEngine::abort("MF: Unhandled State Child: ", val);
         }
 
         curChild = curChild->NextSiblingElement();
@@ -1064,7 +1063,7 @@ Parametrisation* ModelFactory::createParametrisation(tinyxml2::XMLElement* eleme
         } else if (var.compare(val) == 0) {
             this->paramVarReferences.push_back(pair<int64_t, int64_t>(para->getId(), cid));
         } else {
-            ae->abort("MF: Unhandled Parametrisation Child:", curChild);
+            AlicaEngine::abort("MF: Unhandled Parametrisation Child:", curChild);
         }
 
         curChild = curChild->NextSiblingElement();
@@ -1105,14 +1104,14 @@ bool ModelFactory::isReferenceNode(tinyxml2::XMLElement* node) {
     return false;
 }
 
-void ModelFactory::setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele) {
+void ModelFactory::setAlicaElementAttributes(AlicaElement* ael, tinyxml2::XMLElement* ele) {
     string name = ele->Attribute("name");
     string comment = ele->Attribute("comment");
 
     if (!name.empty()) {
-        ae->setName(name);
+        ael->setName(name);
     } else
-        ae->setName("MISSING_NAME");
+        ael->setName("MISSING_NAME");
 }
 
 /**
@@ -1148,7 +1147,7 @@ void ModelFactory::attachPlanReferences() {
         Transition* t = (Transition*) this->elements.find(pairs.first)->second;
         State* st = (State*) this->elements.find(pairs.second)->second;
         if (!st) {
-            ae->abort("MF: Cannot resolve transitionAimReferences target: ", pairs.first);
+            AlicaEngine::abort("MF: Cannot resolve transitionAimReferences target: ", pairs.first);
         }
         t->setOutState(st);
         st->_inTransitions.push_back(t);
@@ -1169,7 +1168,7 @@ void ModelFactory::attachPlanReferences() {
         Transition* t = (Transition*) this->elements.find(pairs.second)->second;
         State* st = (State*) this->elements.find(pairs.first)->second;
         if (st != t->getOutState()) {
-            ae->abort("MF: Unexpected reference in a transition! ", pairs.first);
+            AlicaEngine::abort("MF: Unexpected reference in a transition! ", pairs.first);
         }
     }
     this->stateInTransitionReferences.clear();
@@ -1266,9 +1265,9 @@ void ModelFactory::attachPlanReferences() {
 
     // quantifierScopeReferences
     for (pair<int64_t, int64_t> pairs : this->quantifierScopeReferences) {
-        AlicaElement* ae = (AlicaElement*) this->elements.find(pairs.second)->second;
+        AlicaElement* ael = (AlicaElement*) this->elements.find(pairs.second)->second;
         Quantifier* q = (Quantifier*) this->elements.find(pairs.first)->second;
-        q->setScope(ae);
+        q->setScope(ael);
     }
     this->quantifierScopeReferences.clear();
 
@@ -1341,7 +1340,7 @@ void ModelFactory::addElement(AlicaElement* ael) {
         stringstream ss;
         ss << "MF: ERROR Double IDs: " << ael->getId();
         cout << segfaultdebug::get_stacktrace() << endl;
-        ae->abort(ss.str());
+        AlicaEngine::abort(ss.str());
     }
     elements.insert(pair<int64_t, AlicaElement*>(ael->getId(), ael));
 }

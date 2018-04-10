@@ -3,9 +3,8 @@
 #include "engine/AlicaEngine.h"
 
 namespace alica {
-IRoleAssignment::IRoleAssignment(const AlicaEngine* engine)
+IRoleAssignment::IRoleAssignment()
         : ownRole(nullptr)
-        , engine(engine)
         , communication(nullptr) {}
 
 const Role* IRoleAssignment::getRole(const supplementary::AgentID* robotId) {
@@ -15,7 +14,7 @@ const Role* IRoleAssignment::getRole(const supplementary::AgentID* robotId) {
     } else {
         stringstream ss;
         ss << "RA: There is no role assigned for robot: " << *robotId << std::endl;
-        this->engine->abort(ss.str());
+        AlicaEngine::abort(ss.str());
         return nullptr;
     }
 }

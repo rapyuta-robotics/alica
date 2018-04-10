@@ -4,11 +4,12 @@
  *  Created on: Mar 5, 2014
  *      Author: Stephan Opfer
  */
-#include <sstream>
+
 
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Variable.h"
 #include <SystemConfig.h>
+#include <sstream>
 
 namespace alica {
 
