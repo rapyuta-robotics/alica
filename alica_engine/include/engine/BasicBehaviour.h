@@ -113,6 +113,7 @@ protected:
     std::shared_ptr<std::vector<const supplementary::AgentID*>> robotsInEntryPointOfHigherPlan(EntryPoint* ep);
 
     std::shared_ptr<std::vector<const supplementary::AgentID*>> robotsInEntryPoint(EntryPoint* ep);
+    AlicaEngine* engine;
 
 private:
     void runInternal();
@@ -127,7 +128,5 @@ private:
      * The Failure flag. Raised by a behaviour to indicate it has failed in some way.
      */
     bool failure;
-
-    AlicaEngine* engine;
 };
 } /* namespace alica */
