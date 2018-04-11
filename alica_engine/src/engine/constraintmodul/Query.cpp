@@ -45,7 +45,7 @@ bool Query::existsSolution(int solverType, std::shared_ptr<RunningPlan> rp) {
     ISolver* solver = rp->getAlicaEngine()->getSolver(solverType);
 
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
-    std::vector<const Variable*> relevantVariables;
+    VariableSet relevantVariables;
     int domOffset;
     if (!collectProblemStatement(rp, solver, cds, relevantVariables, domOffset)) {
         return false;
@@ -248,7 +248,7 @@ void UniqueVarStore::clear() {
 void UniqueVarStore::add(const Variable* v) {
     VariableSet l;
     l.push_back(v);
-    store.push_back(l);
+    store.push_back(std::move(l));
 }
 
 /**
@@ -267,7 +267,7 @@ void UniqueVarStore::addVarTo(const Variable* representing, const Variable* toAd
     VariableSet nl;
     nl.insert(nl.begin(), representing);
     nl.insert(nl.begin(), toAdd);
-    store.push_back(nl);
+    store.push_back(std::move(nl));
 }
 
 VariableSet UniqueVarStore::getAllRep() const {

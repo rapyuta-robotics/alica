@@ -60,7 +60,7 @@ int StateCollection::getRobotsInState(int64_t sid, AgentSet& o_robots) const {
 
 void StateCollection::getRobotsInStateSorted(const State* s, AgentSet& o_robots) const {
     getRobotsInState(s, o_robots);
-    sort(o_robots.begin(), o_robots.end());
+    sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
 }
 
 void StateCollection::removeRobot(const supplementary::AgentID* robotId) {

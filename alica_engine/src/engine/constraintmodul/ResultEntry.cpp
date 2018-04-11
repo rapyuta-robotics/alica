@@ -78,7 +78,7 @@ shared_ptr<vector<uint8_t>> ResultEntry::getValue(long vid, AlicaTime ttl4Usage)
 }
 
 shared_ptr<vector<shared_ptr<vector<uint8_t>>>> ResultEntry::getValues(
-        shared_ptr<vector<const Variable*>> query, AlicaTime ttl4Usage) {
+    shared_ptr<VariableSet> query, AlicaTime ttl4Usage) {
     shared_ptr<vector<shared_ptr<vector<uint8_t>>>> ret =
             make_shared<vector<shared_ptr<vector<uint8_t>>>>(query->size());
     int i = 0;

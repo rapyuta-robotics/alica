@@ -44,9 +44,8 @@ TeamObserver::getTeamPlanTrees() {
             map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>>(
             new map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>);
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
-
-    std::vector<const supplementary::AgentID*>
-            tmp;  // TODO get rid of this once teamManager gets a datastructure overhaul
+    // TODO get rid of this once teamManager gets a datastructure overhaul
+    AgentSet tmp;
     teamManager->fillWithActiveAgentIDs(tmp);
     for (const supplementary::AgentID* agentId : tmp) {
         auto iter = this->simplePlanTrees->find(agentId);
@@ -81,8 +80,8 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root) {
 
     cleanOwnSuccessMarks(root);
     if (root != nullptr) {
-        std::vector<const supplementary::AgentID*>
-                activeAgents;  // TODO get rid of this once teamManager gets a datastructure overhaul
+        // TODO get rid of this once teamManager gets a datastructure overhaul
+        AgentSet activeAgents;
         teamManager->fillWithActiveAgentIDs(activeAgents);
 
         list<shared_ptr<SimplePlanTree>> updatespts;
@@ -152,19 +151,18 @@ void TeamObserver::doBroadCast(list<long>& msg) {
 void TeamObserver::cleanOwnSuccessMarks(shared_ptr<RunningPlan> root) {
     AbstractPlanSet presentPlans;
     if (root != nullptr) {
-        list<shared_ptr<RunningPlan>>* q = new list<shared_ptr<RunningPlan>>();
-        q->push_front(root);
-        while (q->size() > 0) {
-            shared_ptr<RunningPlan> p = q->front();
-            q->pop_front();
+        list<shared_ptr<RunningPlan>> q;
+        q.push_front(root);
+        while (q.size() > 0) {
+            shared_ptr<RunningPlan> p = q.front();
+            q.pop_front();
             if (!p->isBehaviour()) {
                 presentPlans.push_back(p->getPlan());
                 for (shared_ptr<RunningPlan> c : *p->getChildren()) {
-                    q->push_back(c);
+                    q.push_back(c);
                 }
             }
         }
-        delete q;
     }
     list<shared_ptr<SimplePlanTree>> queue;
     lock_guard<mutex> lock(this->simplePlanTreeMutex);

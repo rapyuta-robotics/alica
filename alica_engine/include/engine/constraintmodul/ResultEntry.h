@@ -1,7 +1,11 @@
 #pragma once
 
 #include "supplementary/AgentID.h"
+<<<<<<< HEAD
 #include "engine/AlicaClock.h"
+=======
+#include "engine/Types.h"
+>>>>>>> hs_constify_model
 
 #include <list>
 #include <map>
@@ -25,7 +29,7 @@ public:
     std::shared_ptr<std::vector<SolverVar*>> getCommunicatableResults(AlicaTime ttl4Communication);
     std::shared_ptr<std::vector<uint8_t>> getValue(long vid, AlicaTime ttl4Usage);
     std::shared_ptr<std::vector<std::shared_ptr<std::vector<uint8_t>>>> getValues(
-            std::shared_ptr<std::vector<const Variable*>> query, AlicaTime ttl4Usage);
+    std::shared_ptr<VariableSet> query, AlicaTime ttl4Usage);
 
     class VarValue {
     public:

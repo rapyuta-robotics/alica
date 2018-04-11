@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <engine/planselector/PlanSelector.h>
 #include <engine/planselector/PartialAssignmentPool.h>
 #include "engine/AlicaEngine.h"
@@ -22,6 +21,9 @@
 #include "engine/model/AbstractPlan.h"
 
 #include "engine/model/Task.h"
+
+#include <assert.h>
+
 
 using std::list;
 using std::shared_ptr;
