@@ -17,7 +17,6 @@ SimplePlanTree::SimplePlanTree()
         : robotId(nullptr) {
     this->state = nullptr;
     this->newSimplePlanTree = true;
-    this->receiveTime = 0;
     this->entryPoint = nullptr;
     this->parent = nullptr;
 }

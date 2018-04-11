@@ -36,12 +36,10 @@ using std::shared_ptr;
 
 namespace alica {
 
-AlicaTime RunningPlan::assignmentProtectionTime = 0;
+AlicaTime RunningPlan::assignmentProtectionTime = AlicaTime::zero();
 
 void RunningPlan::init() {
-    assignmentProtectionTime = (((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>(
-                                        "Alica.AssignmentProtectionTime", NULL)) *
-                                1000000);
+    assignmentProtectionTime = AlicaTime::milliseconds((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae)
@@ -51,8 +49,6 @@ RunningPlan::RunningPlan(AlicaEngine* ae)
         , _activeState(nullptr)
         , _activeEntryPoint(nullptr)
         , _behaviour(false)
-        , _planStartTime(0)
-        , _stateStartTime(0)
         , _assignment(nullptr)
         , _status(PlanStatus::Running)
         , _failCount(0)
@@ -89,8 +85,6 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc)
         , _activeState(nullptr)
         , _activeEntryPoint(nullptr)
         , _behaviour(true)
-        , _planStartTime(0)
-        , _stateStartTime(0)
         , _assignment(nullptr)
         , _status(PlanStatus::Running)
         , _failCount(0)

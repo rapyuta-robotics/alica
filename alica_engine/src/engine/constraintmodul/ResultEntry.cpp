@@ -50,7 +50,7 @@ void ResultEntry::clear() {
     this->values.clear();
 }
 
-shared_ptr<vector<SolverVar*>> ResultEntry::getCommunicatableResults(long ttl4Communication) {
+shared_ptr<vector<SolverVar*>> ResultEntry::getCommunicatableResults(AlicaTime ttl4Communication) {
     lock_guard<std::mutex> lock(valueLock);
     shared_ptr<vector<SolverVar*>> lv = make_shared<vector<SolverVar*>>();
     AlicaTime now = ae->getAlicaClock()->now();
@@ -65,7 +65,7 @@ shared_ptr<vector<SolverVar*>> ResultEntry::getCommunicatableResults(long ttl4Co
     return lv;
 }
 
-shared_ptr<vector<uint8_t>> ResultEntry::getValue(long vid, long ttl4Usage) {
+shared_ptr<vector<uint8_t>> ResultEntry::getValue(long vid, AlicaTime ttl4Usage) {
     AlicaTime now = ae->getAlicaClock()->now();
     lock_guard<std::mutex> lock(valueLock);
     auto it = this->values.find(vid);
@@ -78,7 +78,7 @@ shared_ptr<vector<uint8_t>> ResultEntry::getValue(long vid, long ttl4Usage) {
 }
 
 shared_ptr<vector<shared_ptr<vector<uint8_t>>>> ResultEntry::getValues(
-        shared_ptr<vector<const Variable*>> query, long ttl4Usage) {
+        shared_ptr<vector<const Variable*>> query, AlicaTime ttl4Usage) {
     shared_ptr<vector<shared_ptr<vector<uint8_t>>>> ret =
             make_shared<vector<shared_ptr<vector<uint8_t>>>>(query->size());
     int i = 0;

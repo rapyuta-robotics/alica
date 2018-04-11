@@ -141,7 +141,7 @@ bool Synchronisation::isValid(unsigned long curTick) {
 
     AlicaTime now = ae->getAlicaClock()->now();
 
-    if (this->lastTalkTime != 0)  // talked already
+    if (this->lastTalkTime != AlicaTime::zero())  // talked already
     {
 #ifdef SM_FAILURE
         cout << "TestTimeOut on Sync: " << this->syncTransition->getId() << endl;

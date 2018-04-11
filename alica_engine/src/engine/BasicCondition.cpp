@@ -16,13 +16,13 @@ BasicCondition::BasicCondition() {}
 BasicCondition::~BasicCondition() {}
 
 bool BasicCondition::isStateTimedOut(const AlicaTime timeOut, shared_ptr<RunningPlan> rp) {
-    if (rp->getStateStartTime() == 0) return false;
+    if (rp->getStateStartTime() == AlicaTime::zero()) return false;
     AlicaTime timeDiff = rp->getAlicaEngine()->getAlicaClock()->now() - rp->getStateStartTime();
     return timeDiff > timeOut;
 }
 
 bool BasicCondition::isTimeOut(const AlicaTime timeOut, const AlicaTime startTime, shared_ptr<RunningPlan> rp) {
-    if (startTime == 0) return false;
+    if (startTime == AlicaTime::zero()) return false;
     AlicaTime timeDiff = rp->getAlicaEngine()->getAlicaClock()->now() - startTime;
     return timeDiff > timeOut;
 }

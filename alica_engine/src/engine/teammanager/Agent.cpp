@@ -13,7 +13,6 @@ namespace alica {
 Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id)
         : _id(id)
         , _name("")
-        , _timeLastMsgReceived(0)
         , _engine(engine)
         , _properties(nullptr)
         , _engineData(nullptr)

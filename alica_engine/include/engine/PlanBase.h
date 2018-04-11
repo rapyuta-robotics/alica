@@ -44,7 +44,7 @@ public:
     const std::shared_ptr<RunningPlan> getRootNode() const;
     void setRootNode(std::shared_ptr<RunningPlan> rootNode);
     const AlicaTime getloopInterval() const;
-    void setLoopInterval(ulong loopInterval);
+    void setLoopInterval(AlicaTime loopInterval);
     void stop();
     void start();
     void addFastPathEvent(shared_ptr<RunningPlan> p);

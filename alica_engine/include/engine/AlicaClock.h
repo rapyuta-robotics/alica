@@ -8,10 +8,6 @@ class AlicaTime {
 public:
     constexpr AlicaTime()
             : _time(0LL) {}
-    
-    template <typename T>
-    constexpr AlicaTime(T t)
-            : _time(t) {}
             
     constexpr int64_t inNanoseconds() const {
         return _time;
@@ -30,6 +26,10 @@ public:
     }
     constexpr int64_t inHours() const {
         return _time / 1000000000LL / 60LL / 60LL;
+    }
+
+    static constexpr AlicaTime zero() {
+        return AlicaTime();
     }
 
     template <typename T>
@@ -113,6 +113,9 @@ public:
     }
 
 private:
+    template <typename T> constexpr explicit AlicaTime(T t)
+            : _time(t) {}
+
     int64_t _time;
 };
 

@@ -152,7 +152,7 @@ void Logger::iterationEnds(shared_ptr<RunningPlan> rp) {
     (*this->fileWriter) << this->sBuild->str();
     this->fileWriter->flush();
     this->sBuild->str("");  // this clears the string stream
-    this->time = 0;
+    this->time = AlicaTime::zero();
     this->itCount = 0;
     this->eventStrings.clear();
 }

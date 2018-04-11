@@ -20,8 +20,6 @@ VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
         , timer(nullptr)
         , distThreshold(0)
         , communicator(nullptr)
-        , ttl4Communication(0)
-        , ttl4Usage(0)
         , communicationEnabled(false)
         , ownId(nullptr) {}
 
@@ -36,16 +34,16 @@ void VariableSyncModule::init() {
     running = true;
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     communicationEnabled = (*sc)["Alica"]->get<bool>("Alica", "CSPSolving", "EnableCommunication", NULL);
-    ttl4Communication = 1000000 * (*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Communication", NULL);
-    ttl4Usage = 1000000 * (*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Usage", NULL);
+    ttl4Communication = AlicaTime::milliseconds((*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Communication", NULL));
+    ttl4Usage = AlicaTime::milliseconds((*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Usage", NULL));
     ownId = ae->getTeamManager()->getLocalAgentID();
     ownResults = make_shared<ResultEntry>(ownId, ae);
     store.push_back(ownResults);
     distThreshold = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "SeedMergingThreshold", NULL);
     if (communicationEnabled) {
         communicator = ae->getCommunicator();
-        int interval = (int) round(
-                1000.0 / (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "CommunicationFrequency", NULL));
+        double communicationFrequency = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "CommunicationFrequency", NULL);
+        AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
         timer = new supplementary::NotifyTimer<VariableSyncModule>(interval, &VariableSyncModule::publishContent, this);
         timer->start();
     }
