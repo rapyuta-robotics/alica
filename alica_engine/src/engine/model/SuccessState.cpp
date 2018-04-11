@@ -15,7 +15,7 @@ namespace alica {
  * Basic constructor
  */
 SuccessState::SuccessState()
-        : TerminalState(Success) {}
+        : TerminalState(SUCCESS) {}
 
 SuccessState::~SuccessState() {}
 
