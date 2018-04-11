@@ -29,7 +29,6 @@ namespace alica {
 class AlicaEngine;
 class ProblemPart;
 class RunningPlan;
-class AlicaClock;
 class BasicBehaviour;
 class ISolver;
 

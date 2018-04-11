@@ -8,7 +8,6 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/BehaviourPool.h"
 #include "engine/PlanBase.h"
-#include <engine/AlicaClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/TeamObserver.h"

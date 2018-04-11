@@ -4,7 +4,6 @@
 #include "engine/IAlicaCommunication.h"
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
-#include <engine/AlicaClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/model/Plan.h"

@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
+#include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include <engine/AlicaClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "TestWorldModel.h"
 #include "engine/PlanRepository.h"

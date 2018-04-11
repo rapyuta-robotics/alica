@@ -57,7 +57,7 @@ void Synchronisation::setTick(unsigned long now) {
 void Synchronisation::changeOwnData(long transitionID, bool conditionHolds) {
 #ifdef SM_MISC
     cout << "CHOD: ElapsedTime: "
-         << ae->getAlicaClock()->now() - this->syncStartTime << endl;
+         << (ae->getAlicaClock()->now() - this->syncStartTime) << endl;
 #endif
 
     if (!conditionHolds) {
@@ -184,7 +184,7 @@ bool Synchronisation::integrateSyncTalk(shared_ptr<SyncTalk> talk, unsigned long
 
 #ifdef SM_MESSAGES
     cout << "Integrate synctalk in synchronisation" << endl;
-    cout << "ST: ElapsedTime: " << ae->getAlicaClock()->now() - this->syncStartTime << endl;
+    cout << "ST: ElapsedTime: " << (ae->getAlicaClock()->now() - this->syncStartTime) << endl;
 #endif
     for (SyncData* sd : talk->syncData) {
 #ifdef SM_MESSAGES
@@ -281,7 +281,7 @@ void Synchronisation::integrateSyncReady(shared_ptr<SyncReady> ready) {
         // notify syncModul
 #ifdef SM_SUCCESS
             cout << "SyncDONE in Synchronisation (IntReady): elapsed time: "
-                 << (ae->getAlicaClock()->now()) - this->syncStartTime << endl;
+                 << (ae->getAlicaClock()->now() - this->syncStartTime) << endl;
 #endif
             this->syncModul->synchronisationDone(this->syncTransition);
         }

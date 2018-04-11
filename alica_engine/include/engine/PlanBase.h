@@ -27,7 +27,6 @@ class IAlicaCommunication;
 class Task;
 class State;
 class EntryPoint;
-class AlicaClock;
 class Assignment;
 class StateCollection;
 class AlicaEngine;

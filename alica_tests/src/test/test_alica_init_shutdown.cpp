@@ -5,12 +5,10 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include <engine/AlicaClock.h>
 #include "engine/PlanRepository.h"
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/model/Plan.h"
 #include <communication/AlicaDummyCommunication.h>
-#include <engine/AlicaClock.h>
 #include <ros/ros.h>
 
 class AlicaEngineTestInit : public ::testing::Test {

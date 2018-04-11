@@ -6,7 +6,6 @@
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
 #include "BehaviourCreator.h"
-#include <engine/AlicaClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include <mutex>
 #include <condition_variable>

@@ -20,7 +20,6 @@
 #include "engine/model/State.h"
 #include "engine/teammanager/Agent.h"
 #include "supplementary/AgentID.h"
-#include "engine/AlicaClock.h"
 #include "engine/IRoleAssignment.h"
 #include <SystemConfig.h>
 

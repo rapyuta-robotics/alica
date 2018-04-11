@@ -110,7 +110,7 @@ protected:
 
     const AgentSet* robotsInEntryPoint(const EntryPoint* ep);
     AlicaEngine* engine;
-    
+
 private:
     void runInternal();
     void initInternal();

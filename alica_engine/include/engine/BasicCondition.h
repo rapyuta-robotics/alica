@@ -1,12 +1,12 @@
 #pragma once
 
+#include "engine/AlicaClock.h"
 #include <memory>
 
 using namespace std;
 
 namespace alica {
 
-class AlicaTime;
 class RunningPlan;
 
 class BasicCondition {
