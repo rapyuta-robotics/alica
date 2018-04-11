@@ -188,8 +188,8 @@ protected:
     static void checkSyncTransition(
             const alica::SyncTransition* transition, long id, string name, string comment, int talkTimeout, int syncTimeout) {
         checkAlicaElement(transition, id, name, comment);
-        EXPECT_EQ(talkTimeout, transition->getTalkTimeOut()) << "Wrong talkTimeout!" << endl;
-        EXPECT_EQ(syncTimeout, transition->getSyncTimeOut()) << "Wrong syncTimeout!" << endl;
+        EXPECT_EQ(AlicaTime::milliseconds(talkTimeout), transition->getTalkTimeOut()) << "Wrong talkTimeout!" << endl;
+        EXPECT_EQ(AlicaTime::milliseconds(syncTimeout), transition->getSyncTimeOut()) << "Wrong syncTimeout!" << endl;
     }
 
     static void checkQuantifier(const alica::Quantifier* quantifier, long id, string name, string comment, long scope,

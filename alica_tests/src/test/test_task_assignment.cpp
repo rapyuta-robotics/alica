@@ -25,8 +25,10 @@
 #include <memory>
 #include <ros/ros.h>
 
+using alica::AlicaTime;
+
 class StillClock : public alica::AlicaClock {
-    virtual alica::AlicaTime now() override { return AlicaTime(555); }
+    virtual alica::AlicaTime now() override { return AlicaTime::milliseconds(555); }
 };
 
 class TaskAssignmentTest : public ::testing::Test {
@@ -77,7 +79,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment) {
     for (int number = 8; number <= 11; number++) {
         const supplementary::AgentID* agentID = ae->getID<int>(number);
         robots.push_back(agentID);
-        ae->getTeamManager()->setTimeLastMsgReceived(agentID, ae->getIAlicaClock()->now());
+        ae->getTeamManager()->setTimeLastMsgReceived(agentID, ae->getAlicaClock()->now());
     }
     ae->getTeamObserver()->tick(nullptr);
     ae->getRoleAssignment()->tick();
