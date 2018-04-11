@@ -151,19 +151,18 @@ void TeamObserver::doBroadCast(list<long>& msg) {
 void TeamObserver::cleanOwnSuccessMarks(shared_ptr<RunningPlan> root) {
     AbstractPlanSet presentPlans;
     if (root != nullptr) {
-        list<shared_ptr<RunningPlan>>* q = new list<shared_ptr<RunningPlan>>();
-        q->push_front(root);
-        while (q->size() > 0) {
-            shared_ptr<RunningPlan> p = q->front();
-            q->pop_front();
+        list<shared_ptr<RunningPlan>> q;
+        q.push_front(root);
+        while (q.size() > 0) {
+            shared_ptr<RunningPlan> p = q.front();
+            q.pop_front();
             if (!p->isBehaviour()) {
                 presentPlans.push_back(p->getPlan());
                 for (shared_ptr<RunningPlan> c : *p->getChildren()) {
-                    q->push_back(c);
+                    q.push_back(c);
                 }
             }
         }
-        delete q;
     }
     list<shared_ptr<SimplePlanTree>> queue;
     lock_guard<mutex> lock(this->simplePlanTreeMutex);

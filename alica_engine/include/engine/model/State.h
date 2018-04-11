@@ -49,7 +49,6 @@ private:
     void setInPlan(const Plan* inPlan);
 
     void setInTransitions(const TransitionSet& inTransitions);
-
     void setOutTransitions(const TransitionSet& outTransition);
 
     void setParametrisation(const ParametrisationSet& parametrisation);
@@ -88,7 +87,7 @@ private:
      */
     const EntryPoint* _entryPoint;
     /**
-     * whethe this is a success state or a normal state etc.
+     * whether this is a success state, failure state or a normal state.
      */
     StateType _type;
 };
