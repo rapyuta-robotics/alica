@@ -26,7 +26,7 @@ Logger::Logger(AlicaEngine* ae) {
         char buffer[50];
         struct tm* timeinfo;
         string robotName = ae->getRobotName();
-        const AlicaTime time = ae->getAlicaClock()->now();
+        const std::time_t time = ae->getAlicaClock()->now().inSeconds();
         timeinfo = localtime(&time);
         strftime(buffer, 1024, "%FT%T", timeinfo);
         string timeString = buffer;
@@ -98,9 +98,9 @@ void Logger::iterationEnds(shared_ptr<RunningPlan> rp) {
     (*this->sBuild) << "START:\t";
     (*this->sBuild) << this->startTime.inMilliseconds() << endl;
     (*this->sBuild) << "AVG-RT:\t";
-    (*this->sBuild) << to_string((this->time / (1000.0 * this->itCount))) << endl;
+    (*this->sBuild) << (this->time / (1000.0 * this->itCount)).inMilliseconds() << endl;
     (*this->sBuild) << "CUR-RT:\t";
-    (*this->sBuild) << to_string(((double) (this->endTime - this->startTime) / 1000000.0)) << endl;
+    (*this->sBuild) << (this->endTime - this->startTime).inMilliseconds() << endl;
     (*this->sBuild) << "REASON:";
     for (string reason : this->eventStrings) {
         (*this->sBuild) << "\t";

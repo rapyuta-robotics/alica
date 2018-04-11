@@ -31,7 +31,7 @@ const supplementary::AgentID* ResultEntry::getId() {
 }
 
 void ResultEntry::addValue(long vid, shared_ptr<vector<uint8_t>> val) {
-    long now = ae->getAlicaClock()->now();
+    AlicaTime now = ae->getAlicaClock()->now();
     shared_ptr<VarValue> vv;
     lock_guard<std::mutex> lock(valueLock);
     auto it = this->values.find(vid);
@@ -53,7 +53,7 @@ void ResultEntry::clear() {
 shared_ptr<vector<SolverVar*>> ResultEntry::getCommunicatableResults(long ttl4Communication) {
     lock_guard<std::mutex> lock(valueLock);
     shared_ptr<vector<SolverVar*>> lv = make_shared<vector<SolverVar*>>();
-    long now = ae->getAlicaClock()->now();
+    AlicaTime now = ae->getAlicaClock()->now();
     for (auto iterator = values.begin(); iterator != values.end(); iterator++) {
         if (iterator->second->lastUpdate + ttl4Communication > now) {
             SolverVar* sv = new SolverVar();
@@ -66,7 +66,7 @@ shared_ptr<vector<SolverVar*>> ResultEntry::getCommunicatableResults(long ttl4Co
 }
 
 shared_ptr<vector<uint8_t>> ResultEntry::getValue(long vid, long ttl4Usage) {
-    long now = ae->getAlicaClock()->now();
+    AlicaTime now = ae->getAlicaClock()->now();
     lock_guard<std::mutex> lock(valueLock);
     auto it = this->values.find(vid);
     if (it != values.end()) {

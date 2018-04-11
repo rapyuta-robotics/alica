@@ -1,6 +1,7 @@
 #pragma once
 
 #include "supplementary/AgentID.h"
+#include "engine/AlicaClock.h"
 
 #include <list>
 #include <map>
@@ -30,9 +31,9 @@ public:
     public:
         long id;
         std::shared_ptr<std::vector<uint8_t>> val;
-        ulong lastUpdate;
+        AlicaTime lastUpdate;
 
-        VarValue(long vid, std::shared_ptr<std::vector<uint8_t>> v, ulong now) {
+        VarValue(long vid, std::shared_ptr<std::vector<uint8_t>> v, AlicaTime now) {
             this->id = vid;
             this->val = v;
             this->lastUpdate = now;
