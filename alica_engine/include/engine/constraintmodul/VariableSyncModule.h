@@ -1,6 +1,7 @@
 #pragma once
 
 #include "supplementary/AgentID.h"
+#include "engine/AlicaClock.h"
 #include "engine/constraintmodul/IVariableSyncModule.h"
 
 #include <supplementary/NotifyTimer.h>

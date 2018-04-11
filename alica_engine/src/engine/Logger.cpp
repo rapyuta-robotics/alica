@@ -98,7 +98,7 @@ void Logger::iterationEnds(shared_ptr<RunningPlan> rp) {
     (*this->sBuild) << "START:\t";
     (*this->sBuild) << this->startTime.inMilliseconds() << endl;
     (*this->sBuild) << "AVG-RT:\t";
-    (*this->sBuild) << (this->time.inMilliseconds() / this->itCount).inMilliseconds() << endl;
+    (*this->sBuild) << (this->time.inMilliseconds() / this->itCount) << endl;
     (*this->sBuild) << "CUR-RT:\t";
     (*this->sBuild) << (this->endTime - this->startTime).inMilliseconds() << endl;
     (*this->sBuild) << "REASON:";
