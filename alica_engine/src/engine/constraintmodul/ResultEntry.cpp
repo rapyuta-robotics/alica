@@ -17,14 +17,10 @@ using namespace std;
 
 namespace alica {
 
-ResultEntry::ResultEntry(const supplementary::AgentID* robotId, const AlicaEngine* ae) {
-    this->ae = ae;
-    this->id = robotId;
-}
+ResultEntry::ResultEntry(const supplementary::AgentID* robotId) 
+    : _id(robotId)
+    {}
 
-ResultEntry::~ResultEntry() {
-    // TODO Auto-generated destructor stub
-}
 
 const supplementary::AgentID* ResultEntry::getId() {
     return id;

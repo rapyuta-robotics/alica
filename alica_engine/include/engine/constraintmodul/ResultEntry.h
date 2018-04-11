@@ -2,9 +2,8 @@
 
 #include "supplementary/AgentID.h"
 #include "engine/Types.h"
-
-#include <list>
-#include <map>
+#include "engine/collections/Variant.h"
+#include <unordered_map>
 #include <vector>
 #include <mutex>
 #include <memory>
@@ -16,35 +15,30 @@ class Variable;
 
 class ResultEntry {
 public:
-    ResultEntry(const supplementary::AgentID* robotId, const AlicaEngine* ae);
-    virtual ~ResultEntry();
+    ResultEntry(const supplementary::AgentID* robotId);
 
-    const supplementary::AgentID* getId();
-    void addValue(long vid, std::shared_ptr<std::vector<uint8_t>> result);
+    const supplementary::AgentID* getId() const {return _id;}
+    void addValue(int64_t vid, Variant result);
     void clear();
     std::shared_ptr<std::vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
-    std::shared_ptr<std::vector<uint8_t>> getValue(long vid, long ttl4Usage);
+    Variant getValue(int64_t vid, AlicaTime ttl4Usage);
     std::shared_ptr<std::vector<std::shared_ptr<std::vector<uint8_t>>>> getValues(
             std::shared_ptr<VariableSet> query, long ttl4Usage);
-
+private:
     class VarValue {
     public:
-        long id;
-        std::shared_ptr<std::vector<uint8_t>> val;
+        Variant val;
         ulong lastUpdate;
 
-        VarValue(long vid, std::shared_ptr<std::vector<uint8_t>> v, ulong now) {
-            this->id = vid;
-            this->val = v;
-            this->lastUpdate = now;
-        }
+        VarValue(Variant v, ulong now) 
+            : _val(v)
+            , _lastUpdate(now)
+        {}
     };
 
-protected:
-    const supplementary::AgentID* id;
-    const AlicaEngine* ae;
-    std::map<long, std::shared_ptr<VarValue>> values;
-    std::mutex valueLock;
+    const supplementary::AgentID* _id;
+    std::unordered_map<int64_t, VarValue> _values;
+    std::mutex _valueLock;
 };
 
 } /* namespace alica */
