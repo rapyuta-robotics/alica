@@ -1,11 +1,8 @@
 #pragma once
 
 #include "supplementary/AgentID.h"
-<<<<<<< HEAD
 #include "engine/AlicaClock.h"
-=======
 #include "engine/Types.h"
->>>>>>> hs_constify_model
 
 #include <list>
 #include <map>
