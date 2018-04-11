@@ -305,7 +305,7 @@ void ModelFactory::createCapabilityDefinitionSet(tinyxml2::XMLDocument* node) {
         const char* val = curChild->Value();
         if (capabilities.compare(val) == 0) {
             Capability* cap = createCapability(curChild);
-            capSet->getCapabilities().push_back(cap);
+            capSet->_capabilities.push_back(cap);
         } else {
             AlicaEngine::abort("MF: Unhandled Behaviour Child:", curChild->Value());
         }
