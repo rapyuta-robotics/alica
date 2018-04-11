@@ -9,98 +9,58 @@
 
 namespace alica {
 
-PlanningProblem::PlanningProblem() {
-    this->runtimeCondition = nullptr;
-    this->preCondition = nullptr;
-    this->alternativePlan = nullptr;
-    this->planningType = PlanningType::None;
-    this->updateRate = 0;
-    this->postCondition = nullptr;
-    this->waitPlan = nullptr;
-    this->distributeProblem = false;
-}
+PlanningProblem::PlanningProblem() 
+    : _runtimeCondition(nullptr)
+    , _preCondition(nullptr)
+    , _alternativePlan(nullptr)
+    , _planningType(PlanningType::None)
+    , _updateRate(0)
+    , _postCondition(nullptr)
+    , _waitPlan(nullptr)
+    , _distributeProblem(false)
+{}
 
 PlanningProblem::~PlanningProblem() {}
 
-const Plan* PlanningProblem::getAlternativePlan() const {
-    return alternativePlan;
-}
-
-void PlanningProblem::setAlternativePlan(Plan* alternativePlan) {
-    this->alternativePlan = alternativePlan;
-}
-
-bool PlanningProblem::isDistributeProblem() const {
-    return distributeProblem;
+void PlanningProblem::setAlternativePlan(const Plan* alternativePlan) {
+    _alternativePlan = alternativePlan;
 }
 
 void PlanningProblem::setDistributeProblem(bool distributeProblem) {
-    this->distributeProblem = distributeProblem;
+    _distributeProblem = distributeProblem;
 }
 
-
-PlanningType PlanningProblem::getPlanningType() const {
-    return planningType;
-}
 
 void PlanningProblem::setPlanningType(PlanningType planningType) {
-    this->planningType = planningType;
+    _planningType = planningType;
 }
 
-list<AbstractPlan*>& PlanningProblem::getPlans() {
-    return plans;
-}
-
-void PlanningProblem::setPlans(list<AbstractPlan*>& plans) {
-    this->plans = plans;
-}
-
-const PostCondition* PlanningProblem::getPostCondition() const {
-    return postCondition;
+void PlanningProblem::setPlans(const AbstractPlanSet& plans) {
+    _plans = plans;
 }
 
 void PlanningProblem::setPostCondition(PostCondition* postCondition) {
-    this->postCondition = postCondition;
-}
-
-const PreCondition* PlanningProblem::getPreCondition() const {
-    return preCondition;
+    _postCondition = postCondition;
 }
 
 void PlanningProblem::setPreCondition(PreCondition* preCondition) {
-    this->preCondition = preCondition;
+    _preCondition = preCondition;
 }
 
-const string& PlanningProblem::getRequirements() const {
-    return requirements;
-}
-
-void PlanningProblem::setRequirements(const string& requirements) {
-    this->requirements = requirements;
-}
-
-const RuntimeCondition* PlanningProblem::getRuntimeCondition() const {
-    return runtimeCondition;
+void PlanningProblem::setRequirements(const std::string& requirements) {
+    _requirements = requirements;
 }
 
 void PlanningProblem::setRuntimeCondition(RuntimeCondition* runtimeCondition) {
-    this->runtimeCondition = runtimeCondition;
-}
-
-int PlanningProblem::getUpdateRate() const {
-    return updateRate;
+    _runtimeCondition = runtimeCondition;
 }
 
 void PlanningProblem::setUpdateRate(int updateRate) {
-    this->updateRate = updateRate;
+    _updateRate = updateRate;
 }
 
-const Plan* PlanningProblem::getWaitPlan() const {
-    return waitPlan;
-}
-
-void PlanningProblem::setWaitPlan(Plan* waitPlan) {
-    this->waitPlan = waitPlan;
+void PlanningProblem::setWaitPlan(const Plan* waitPlan) {
+    _waitPlan = waitPlan;
 }
 
 }  // namespace alica

@@ -77,8 +77,5 @@ void Plan::setTransitions(const TransitionSet& transitions) {
     _transitions = transitions;
 }
 
-void alica::Plan::setDestinationPath(const std::string& destinationPath) {
-    _destinationPath = destinationPath;
-}
 
 }  // namespace alica
