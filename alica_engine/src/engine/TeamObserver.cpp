@@ -44,9 +44,8 @@ TeamObserver::getTeamPlanTrees() {
             map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>>(
             new map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>);
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
-
-    std::vector<const supplementary::AgentID*>
-            tmp;  // TODO get rid of this once teamManager gets a datastructure overhaul
+    // TODO get rid of this once teamManager gets a datastructure overhaul
+    AgentSet tmp;
     teamManager->fillWithActiveAgentIDs(tmp);
     for (const supplementary::AgentID* agentId : tmp) {
         auto iter = this->simplePlanTrees->find(agentId);
@@ -81,8 +80,8 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root) {
 
     cleanOwnSuccessMarks(root);
     if (root != nullptr) {
-        std::vector<const supplementary::AgentID*>
-                activeAgents;  // TODO get rid of this once teamManager gets a datastructure overhaul
+        // TODO get rid of this once teamManager gets a datastructure overhaul
+        AgentSet activeAgents;
         teamManager->fillWithActiveAgentIDs(activeAgents);
 
         list<shared_ptr<SimplePlanTree>> updatespts;
