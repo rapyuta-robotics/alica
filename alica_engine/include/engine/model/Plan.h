@@ -51,7 +51,7 @@ public:
     const TransitionSet& getTransitions() const { return _transitions; }
     const SyncTransitionSet& getSyncTransitions() const { return _syncTransitions; }
 
-    const std::string& getDestinationPath() const { return _destinationPath; }
+
 
 private:
     friend ModelFactory;
@@ -65,7 +65,6 @@ private:
     void setStates(const StateSet& states);
     void setSyncTransitions(const SyncTransitionSet& syncTransitions);
     void setTransitions(const TransitionSet& transitions);
-    void setDestinationPath(const std::string& destinationPath);
 
     int _minCardinality;
     int _maxCardinality;
@@ -76,8 +75,6 @@ private:
     SyncTransitionSet _syncTransitions;
     TransitionSet _transitions;
     const PostCondition* _postCondition;
-
-    std::string _destinationPath;
 };
 
 }  // namespace alica

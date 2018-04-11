@@ -43,21 +43,17 @@ protected:
         sc->setConfigPath(path + "/etc");
         sc->setHostname("nase");
 
-        // setup the engine
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
-                "AuthorityTestMaster", ".", true);
+        // setup the engine parts
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-        ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     }
 
     virtual void TearDown() {
         ae->shutdown();
-        sc->shutdown();
         ae2->shutdown();
+        sc->shutdown();
         delete ae->getCommunicator();
         delete ae2->getCommunicator();
         delete ae->getIAlicaClock();

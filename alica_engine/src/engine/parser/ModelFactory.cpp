@@ -128,10 +128,6 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node) {
     if (!attr.empty()) {
         plan->setUtilityThreshold(stod(attr));
     }
-    attr = element->Attribute("destinationPath");
-    if (!attr.empty()) {
-        plan->setDestinationPath(attr);
-    }
     // insert into elements ma
     addElement(plan);
     // insert into plan repository map
@@ -1244,7 +1240,7 @@ void ModelFactory::attachPlanReferences() {
     for (pair<int64_t, int64_t> pairs : this->planningProblemPlanReferences) {
         PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
         AbstractPlan* p = (AbstractPlan*) this->elements.find(pairs.second)->second;
-        s->getPlans().push_back(p);
+        s->_plans.push_back(p);
     }
     this->planningProblemPlanReferences.clear();
 
