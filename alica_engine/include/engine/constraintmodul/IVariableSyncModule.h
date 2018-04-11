@@ -23,4 +23,3 @@ public:
 };
 } /* namespace alica */
 
-#endif /* RESULTSTORE_H_ */
