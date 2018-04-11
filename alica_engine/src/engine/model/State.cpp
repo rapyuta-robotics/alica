@@ -13,7 +13,7 @@ namespace alica {
  */
 State::State()
         : AlicaElement(0)
-        , _type(Normal)
+        , _type(NORMAL)
         , _inPlan(nullptr)
         , _entryPoint(nullptr) {}
 
@@ -29,7 +29,7 @@ State::State(StateType t)
  */
 State::State(int64_t id)
         : AlicaElement(id)
-        , _type(Normal)
+        , _type(NORMAL)
         , _inPlan(nullptr)
         , _entryPoint(nullptr) {}
 
