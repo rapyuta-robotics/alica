@@ -17,6 +17,7 @@
 #include "engine/PlanRepository.h"
 #include "engine/UtilityInterval.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/Types.h"
 
 namespace alica {
 
@@ -81,11 +82,10 @@ protected:
     UtilityInterval ui;
     double weight;
     int64_t id;
-    std::vector<long> relevantEntryPointIds;
-    std::vector<const EntryPoint*> relevantEntryPoints;
+    std::vector<int64_t> relevantEntryPointIds;
+    EntryPointSet relevantEntryPoints;
 
     std::string name;
-
     std::string info;
 };
 
