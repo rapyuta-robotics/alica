@@ -55,15 +55,15 @@ protected:
 
     std::string name = "DefaultUtilityFunction";
     // For default priority based utility summand (which is integrated in every UF)
-    map<TaskRoleStruct*, double> priorityMartix;
-    map<long, double> roleHighestPriorityMap;
+    std::map<TaskRoleStruct*, double> priorityMartix;
+    std::map<long, double> roleHighestPriorityMap;
     // For default similarity based utility summand (which is integrated in every UF)
     double priorityWeight;
     double similarityWeight;
     AlicaEngine* ae;
     IRoleAssignment* ra;
     // List of normal utility summands
-    list<USummand*> utilSummands;
+    std::list<USummand*> utilSummands;
     TaskRoleStruct* lookupStruct;
     UtilityInterval priResult;
 
