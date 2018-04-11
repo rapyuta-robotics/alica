@@ -1,11 +1,13 @@
 #pragma once
 
+#include "engine/Types.h"
 #include "supplementary/AgentID.h"
+
 
 #include <list>
 #include <memory>
 #include <string>
-#include <vector>
+
 
 namespace alica {
 
@@ -84,13 +86,13 @@ public:
 
     int getNumUnAssignedRobotIds() const { return unassignedRobotIds.size(); }
 
-    const vector<const supplementary::AgentID*>& getUnassignedRobotIds() const { return unassignedRobotIds; }
+    const AgentSet& getUnassignedRobotIds() const { return unassignedRobotIds; }
 
 protected:
     /**
      * The Ids of all robots available but not yet assigned.
      */
-    vector<const supplementary::AgentID*> unassignedRobotIds;
+    AgentSet unassignedRobotIds;
     /**
      * The minimal utility this assignment can achieve.
      */
