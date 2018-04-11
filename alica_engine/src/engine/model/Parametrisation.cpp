@@ -24,7 +24,7 @@ Parametrisation::~Parametrisation() {}
 std::string Parametrisation::toString() const {
     std::stringstream ss;
     ss << "[Parametrisation: Var=" << _var->getId();
-    ss << " SubVar=" << _subVar->getName() << " (" << _subVar->getName() << "), ";
+    ss << " SubVar=" << _subVar->getName() << " (" << _subVar->getId() << "), ";
     ss << "SubPlan=" << _subPlan->getName() << "]" << std::endl;
     return ss.str();
 }

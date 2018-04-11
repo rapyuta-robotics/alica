@@ -128,10 +128,6 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node) {
     if (!attr.empty()) {
         plan->setUtilityThreshold(stod(attr));
     }
-    attr = element->Attribute("destinationPath");
-    if (!attr.empty()) {
-        plan->setDestinationPath(attr);
-    }
     // insert into elements ma
     addElement(plan);
     // insert into plan repository map
@@ -309,7 +305,7 @@ void ModelFactory::createCapabilityDefinitionSet(tinyxml2::XMLDocument* node) {
         const char* val = curChild->Value();
         if (capabilities.compare(val) == 0) {
             Capability* cap = createCapability(curChild);
-            capSet->getCapabilities().push_back(cap);
+            capSet->_capabilities.push_back(cap);
         } else {
             AlicaEngine::abort("MF: Unhandled Behaviour Child:", curChild->Value());
         }
@@ -1244,7 +1240,7 @@ void ModelFactory::attachPlanReferences() {
     for (pair<int64_t, int64_t> pairs : this->planningProblemPlanReferences) {
         PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
         AbstractPlan* p = (AbstractPlan*) this->elements.find(pairs.second)->second;
-        s->getPlans().push_back(p);
+        s->_plans.push_back(p);
     }
     this->planningProblemPlanReferences.clear();
 

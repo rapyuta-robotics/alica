@@ -25,7 +25,7 @@ public:
 
     const AbstractPlan* getSubPlan() const { return _subPlan; }
     const Variable* getVar() const { return _var; }
-    const Variable* getSubVar() const { _subVar; }
+    const Variable* getSubVar() const { return _subVar; }
 
 protected:
     friend ModelFactory;
