@@ -12,6 +12,7 @@ namespace alica {
 class AbstractPlan;
 class AlicaElement;
 class BehaviourConfiguration;
+class Capability;
 class CapValue;
 class EntryPoint;
 class FailureState;
@@ -32,6 +33,7 @@ using AbstractPlanSet = std::vector<const AbstractPlan*>;
 using AgentSet = std::vector<const supplementary::AgentID*>;
 using AlicaElementSet = std::vector<const AlicaElement*>;
 using BehaviourConfigurationSet = std::vector<const BehaviourConfiguration*>;
+using CapabilitySet = std::vector<const Capability*>;
 using CapValueSet = std::vector<const CapValue*>;
 using EntryPointSet = std::vector<const EntryPoint*>;
 using FailureStateSet = std::vector<const FailureState*>;
