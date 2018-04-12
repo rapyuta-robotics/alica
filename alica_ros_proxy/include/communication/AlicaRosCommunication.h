@@ -32,7 +32,7 @@ public:
     virtual void sendPlanTreeInfo(const PlanTreeInfo& pti) const;
     virtual void sendRoleSwitch(const RoleSwitch& rs) const;
     virtual void sendSyncReady(const SyncReady& sr) const;
-    virtual void sendSyncTalk(const yncTalk& st) const;
+    virtual void sendSyncTalk(const SyncTalk& st) const;
     virtual void sendSolverResult(const SolverResult& sr) const;
     virtual void sendLogMessage(int level, const std::string& message) const;
 
