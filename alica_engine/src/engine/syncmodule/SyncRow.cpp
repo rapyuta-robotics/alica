@@ -25,7 +25,7 @@ SyncRow::~SyncRow() {
 }
 
 vector<const supplementary::AgentID*>& SyncRow::getReceivedBy() {
-    sort(this->receivedBy.begin(), this->receivedBy.end());
+    sort(this->receivedBy.begin(), this->receivedBy.end(), supplementary::AgentIDComparator() );
     return receivedBy;
 }
 
