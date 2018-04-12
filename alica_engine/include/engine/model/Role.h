@@ -25,7 +25,7 @@ public:
     virtual ~Role();
 
     double getPriority(int64_t taskId) const;
-    std::string toString() const;
+    std::string toString() const override;
 
     const std::unordered_map<std::string, const Characteristic*>& getCharacteristics() const {
         return _characteristics;

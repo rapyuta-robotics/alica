@@ -22,7 +22,7 @@ class FailureState : public TerminalState {
 public:
     FailureState();
     virtual ~FailureState();
-    std::string toString() const;
+    std::string toString() const override;
 };
 
 }  // namespace alica

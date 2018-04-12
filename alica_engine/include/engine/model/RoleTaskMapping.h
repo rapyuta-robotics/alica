@@ -23,7 +23,7 @@ class RoleTaskMapping : public AlicaElement {
 public:
     RoleTaskMapping();
     virtual ~RoleTaskMapping();
-    std::string toString() const;
+    std::string toString() const override;
     const Role* getRole() const { return _role; }
     const std::unordered_map<int64_t, double>& getTaskPriorities() const { return _taskPriorities; }
 
