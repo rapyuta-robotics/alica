@@ -46,8 +46,8 @@ public:
     static PartialAssignment* getNew(PartialAssignmentPool* pap, PartialAssignment* oldPA);
     short getEntryPointCount() const override;
     int totalRobotCount();
-    const std::vector<const supplementary::AgentID*>* getRobotsWorking(const EntryPoint* ep) const override;
-    const std::vector<const supplementary::AgentID*>* getRobotsWorking(int64_t epid) const override;
+    const AgentSet* getRobotsWorking(const EntryPoint* ep) const override;
+    const AgentSet* getRobotsWorking(int64_t epid) const override;
     std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(
             const EntryPoint* ep) override;
     std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(int64_t epid) override;

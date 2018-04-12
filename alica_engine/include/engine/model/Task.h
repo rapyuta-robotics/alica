@@ -31,8 +31,8 @@ public:
 
     static constexpr int64_t IDLEID = -1;  // For Task Id of an Idle EntryPoint...
 private:
-    void setTaskRepository(const TaskRepository* taskRepository);
     friend ModelFactory;
+    void setTaskRepository(const TaskRepository* taskRepository);
     void setDescription(const std::string& description);
     const TaskRepository* _taskRepository;
     std::string _description;

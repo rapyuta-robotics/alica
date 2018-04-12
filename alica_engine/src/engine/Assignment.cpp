@@ -124,7 +124,7 @@ void Assignment::getAllRobots(AgentSet& o_robots) {
 
 void Assignment::getAllRobotsSorted(AgentSet& o_robots) {
     getAllRobots(o_robots);
-    sort(o_robots.begin(), o_robots.end());
+    sort(o_robots.begin(), o_robots.end(),supplementary::AgentIDComparator());
 }
 
 /**
@@ -138,7 +138,7 @@ const AgentSet* Assignment::getRobotsWorking(int64_t epid) const {
 
 void Assignment::getRobotsWorkingSorted(const EntryPoint* ep, AgentSet& o_robots) {
     o_robots = *getRobotsWorking(ep);
-    sort(o_robots.begin(), o_robots.end());
+    sort(o_robots.begin(), o_robots.end(),supplementary::AgentIDComparator());
 }
 
 /**

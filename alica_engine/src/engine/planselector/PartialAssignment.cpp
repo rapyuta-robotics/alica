@@ -11,7 +11,7 @@
 
 namespace alica {
 namespace {
-constexpr int INFINIT = std::numeric_limits<int>::max();
+constexpr int INFINITE = std::numeric_limits<int>::max();
 }
 
 int PartialAssignment::getHash() {
@@ -307,7 +307,7 @@ bool PartialAssignment::assignRobot(const supplementary::AgentID* robotId, int i
         if (this->dynCardinalities[index]->getMin() > 0) {
             this->dynCardinalities[index]->setMin(this->dynCardinalities[index]->getMin() - 1);
         }
-        if (this->dynCardinalities[index]->getMax() != INFINIT) {
+        if (this->dynCardinalities[index]->getMax() != INFINITE) {
             this->dynCardinalities[index]->setMax(this->dynCardinalities[index]->getMax() - 1);
         }
         return true;
@@ -445,7 +445,7 @@ std::string PartialAssignment::toString() {
         ss << "EPid: " << this->epRobotsMapping->getEp(i)->getId()
            << " Task: " << this->epRobotsMapping->getEp(i)->getTask()->getName()
            << " minCar: " << this->dynCardinalities[i]->getMin() << " maxCar: "
-           << (this->dynCardinalities[i]->getMax() == INFINIT ? "*" : to_string(this->dynCardinalities[i]->getMax()))
+           << (this->dynCardinalities[i]->getMax() == INFINITE ? "*" : to_string(this->dynCardinalities[i]->getMax()))
            << " Assigned Robots: ";
         for (auto& robot : robots) {
             ss << robot << " ";
