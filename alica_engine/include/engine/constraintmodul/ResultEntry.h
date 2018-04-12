@@ -1,7 +1,7 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
 #include "engine/Types.h"
+#include "engine/IAlicaClock.h"
 #include "engine/collections/Variant.h"
 #include <unordered_map>
 #include <vector>
@@ -14,15 +14,24 @@ class Variable;
 
 class ResultEntry {
 public:
+    ResultEntry() = default;
     ResultEntry(const supplementary::AgentID* robotId);
 
     const supplementary::AgentID* getId() const {return _id;}
 
-    void addValue(int64_t vid, Variant result);
+    ResultEntry(const ResultEntry&) = delete;
+    ResultEntry& operator=(const ResultEntry&)  = delete;
+
+    ResultEntry(ResultEntry&&);
+    ResultEntry& operator=(ResultEntry&&);
+
+    void addValue(int64_t vid, Variant result, AlicaTime time);
     void clear();
-    void getCommunicatableResults(AlicaTime earliest, std::vector<SolverVar>& o_result);
-    Variant getValue(int64_t vid, AlicaTime earliest);
-    bool getValues(const VariableSet& query, AlicaTime earliest, std::vector<Variant>& o_values);
+    void getCommunicatableResults(AlicaTime earliest, std::vector<SolverVar>& o_result) const;
+    Variant getValue(int64_t vid, AlicaTime earliest) const;
+    bool getValues(const VariableSet& query, AlicaTime earliest, std::vector<Variant>& o_values) const;
+
+
 private:
     class VarValue {
     public:
@@ -35,8 +44,8 @@ private:
         {}
     };
     std::unordered_map<int64_t, VarValue> _values;
-    std::mutex _valueLock;
-    const supplementary::AgentID* _id;
+    mutable std::mutex _valueLock;
+    AgentIDPtr _id;
     
 };
 
