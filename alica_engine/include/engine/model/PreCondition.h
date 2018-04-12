@@ -22,7 +22,7 @@ public:
     PreCondition(int64_t id = 0);
     virtual ~PreCondition();
 
-    std::string toString() const;
+    std::string toString() const override;
 
     bool isEnabled() const { return _enabled; }
 

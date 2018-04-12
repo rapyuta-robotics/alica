@@ -28,7 +28,7 @@ public:
     Behaviour();
     virtual ~Behaviour();
 
-    std::string toString() const;
+    std::string toString() const override;
 
     const BehaviourConfigurationSet& getConfigurations() const { return _configurations; }
     const std::string& getFileName() const { return _fileName; }

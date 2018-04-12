@@ -25,7 +25,7 @@ public:
     PlanType();
     virtual ~PlanType();
 
-    std::string toString() const;
+    std::string toString() const override;
 
     const ParametrisationSet& getParametrisation() const { return _parametrisation; }
     const PlanSet& getPlans() const { return _plans; }

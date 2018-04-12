@@ -61,7 +61,6 @@ Assignment::Assignment(PartialAssignment* pa) {
         epRobotsMapping->setEp(i, assCol->getEp(i));
         // copy robots
         *(epRobotsMapping->editRobots(i)) = *(assCol->getRobots(i));
-        // set the robots
     }
 
     this->robotStateMapping = new StateCollection(this->epRobotsMapping);
@@ -88,7 +87,7 @@ Assignment::Assignment(const Plan* p, shared_ptr<AllocationAuthorityInfo> aai) {
             if (epRobots.entrypoint == ep->getId()) {
                 // copy robots
                 AgentSet* curRobots = this->epRobotsMapping->editRobots(i);
-                curRobots->clear();
+
                 for (auto& robot : epRobots.robots) {
                     curRobots->push_back(robot);
                 }

@@ -35,7 +35,7 @@ public:
 
     const TransitionSet& getInSync() const { return _inSync; }
 
-    std::string toString() const;
+    std::string toString() const override;
 
 private:
     friend ModelFactory;
