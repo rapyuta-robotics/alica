@@ -6,7 +6,6 @@
 #include <unordered_map>
 #include <vector>
 #include <mutex>
-#include <memory>
 
 namespace alica {
 class AlicaEngine;
@@ -18,27 +17,27 @@ public:
     ResultEntry(const supplementary::AgentID* robotId);
 
     const supplementary::AgentID* getId() const {return _id;}
+
     void addValue(int64_t vid, Variant result);
     void clear();
-    std::shared_ptr<std::vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
-    Variant getValue(int64_t vid, AlicaTime ttl4Usage);
-    std::shared_ptr<std::vector<std::shared_ptr<std::vector<uint8_t>>>> getValues(
-            std::shared_ptr<VariableSet> query, long ttl4Usage);
+    void getCommunicatableResults(AlicaTime earliest, std::vector<SolverVar>& o_result);
+    Variant getValue(int64_t vid, AlicaTime earliest);
+    bool getValues(const VariableSet& query, AlicaTime earliest, std::vector<Variant>& o_values);
 private:
     class VarValue {
     public:
-        Variant val;
-        ulong lastUpdate;
+        Variant _val;
+        AlicaTime _lastUpdate;
 
-        VarValue(Variant v, ulong now) 
+        VarValue(Variant v, AlicaTime now)
             : _val(v)
             , _lastUpdate(now)
         {}
     };
-
-    const supplementary::AgentID* _id;
     std::unordered_map<int64_t, VarValue> _values;
     std::mutex _valueLock;
+    const supplementary::AgentID* _id;
+    
 };
 
 } /* namespace alica */
