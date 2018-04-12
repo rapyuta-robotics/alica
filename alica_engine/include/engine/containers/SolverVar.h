@@ -5,7 +5,7 @@
 namespace alica {
 struct SolverVar {
     int64_t id;
-    std::vector<uint8_t> value;
+    uint8_t[Variant::kVariantSize] value;
 };
 
 } /* namespace alica */
