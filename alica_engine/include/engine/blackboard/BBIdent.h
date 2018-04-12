@@ -7,10 +7,10 @@ namespace alica {
 
 class BBIdent {
     public:
-    BBIdent() : _val(0) {}
+    BBIdent() = default;// : _val(0) {}
     BBIdent(int64_t id) 
         : _val(id) {}
-    int64_t getRaw() const {return val;}
+    int64_t getRaw() const {return _val;}
 
     bool operator>(const BBIdent o) const {
         return _val > o._val;

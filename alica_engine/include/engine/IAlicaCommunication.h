@@ -19,13 +19,13 @@ public:
             : ae(ae){};
     virtual ~IAlicaCommunication() {}
 
-    virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai) const = 0;
-    virtual void sendAlicaEngineInfo(AlicaEngineInfo& bi) const = 0;
-    virtual void sendPlanTreeInfo(PlanTreeInfo& pti) const = 0;
-    virtual void sendRoleSwitch(RoleSwitch& rs) const = 0;
-    virtual void sendSyncReady(SyncReady& sr) const = 0;
-    virtual void sendSyncTalk(SyncTalk& st) const = 0;
-    virtual void sendSolverResult(SolverResult& sr) const = 0;
+    virtual void sendAllocationAuthority(const AllocationAuthorityInfo& aai) const = 0;
+    virtual void sendAlicaEngineInfo(const AlicaEngineInfo& bi) const = 0;
+    virtual void sendPlanTreeInfo(const PlanTreeInfo& pti) const = 0;
+    virtual void sendRoleSwitch(const RoleSwitch& rs) const = 0;
+    virtual void sendSyncReady(const SyncReady& sr) const = 0;
+    virtual void sendSyncTalk(const SyncTalk& st) const = 0;
+    virtual void sendSolverResult(const SolverResult& sr) const = 0;
     virtual void sendLogMessage(int level, std::string& message) const {};
 
     virtual void tick(){};

@@ -27,14 +27,14 @@ public:
 
     virtual void tick();
 
-    virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai) const;
-    virtual void sendAlicaEngineInfo(AlicaEngineInfo& bi) const;
-    virtual void sendPlanTreeInfo(PlanTreeInfo& pti) const;
-    virtual void sendRoleSwitch(RoleSwitch& rs) const;
-    virtual void sendSyncReady(SyncReady& sr) const;
-    virtual void sendSyncTalk(SyncTalk& st) const;
-    virtual void sendSolverResult(SolverResult& sr) const;
-    virtual void sendLogMessage(int level, std::string& message) const;
+    virtual void sendAllocationAuthority(const AllocationAuthorityInfo& aai) const;
+    virtual void sendAlicaEngineInfo(const AlicaEngineInfo& bi) const;
+    virtual void sendPlanTreeInfo(const PlanTreeInfo& pti) const;
+    virtual void sendRoleSwitch(const RoleSwitch& rs) const;
+    virtual void sendSyncReady(const SyncReady& sr) const;
+    virtual void sendSyncTalk(const yncTalk& st) const;
+    virtual void sendSolverResult(const SolverResult& sr) const;
+    virtual void sendLogMessage(int level, const std::string& message) const;
 
     virtual void handleAllocationAuthorityRos(alica_msgs::AllocationAuthorityInfoPtr aai);
     virtual void handlePlanTreeInfoRos(alica_msgs::PlanTreeInfoPtr pti);

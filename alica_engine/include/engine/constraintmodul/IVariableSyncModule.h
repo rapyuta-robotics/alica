@@ -1,8 +1,9 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include "engine/collections/Variant.h"
+#include "engine/Types.h"
 
-using namespace std;
 namespace alica {
 class AlicaEngine;
 class Variable;
@@ -17,9 +18,8 @@ public:
     virtual void clear() = 0;
     virtual void onSolverResult(std::shared_ptr<SolverResult> msg) = 0;
 
-    virtual void postResult(long vid, std::shared_ptr<std::vector<uint8_t>>& result) = 0;
-    virtual shared_ptr<vector<shared_ptr<vector<std::shared_ptr<std::vector<uint8_t>>>>>> getSeeds(
-            shared_ptr<vector<const Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits) = 0;
+    virtual void postResult(int64_t vid, Variant result) = 0;
+    virtual int getSeeds(const VariableSet& query, const std::vector<double>& limits, std::vector<Variant>& o_seeds) const = 0;
 };
 } /* namespace alica */
 

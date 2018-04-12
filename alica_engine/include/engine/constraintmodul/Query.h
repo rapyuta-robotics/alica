@@ -129,35 +129,27 @@ bool Query::getSolution(int solverType, std::shared_ptr<RunningPlan> rp, std::ve
 #endif
 
     // the result of the solver (including all relevant variables)
+    //TODO: FIX this void* by templating getSolution or use of variant
     vector<void*> solverResult;
     // let the solver solve the problem
     bool ret = solver->getSolution(relevantVariables, cds, solverResult);
 
-    if (solverResult.size() > 0) {
-        // TODO: currently only synch variables if the result/their value is a double
-        if (typeid(T) == typeid(double) && ret) {
-            for (int i = 0; i < solverResult.size(); i++) {
-                uint8_t* tmp = ((uint8_t*) solverResult.at(i));
-                shared_ptr<vector<uint8_t>> result = make_shared<vector<uint8_t>>(sizeof(T));
-                // If you have an Segfault/Error here you solver does not return what you are querying! ;)
-                for (int s = 0; s < sizeof(T); s++) {
-                    result->at(s) = *tmp;
-                    tmp++;
-                }
-
-                solver->getAlicaEngine()->getResultStore()->postResult(relevantVariables.at(i)->getId(), result);
-            }
+    if (ret && solverResult.size() > 0) {
+        int i = 0;
+        for (void* pointer : solverResult) {
+            solver->getAlicaEngine()->getResultStore()->postResult(relevantVariables[i]->getId(), Variant(*reinterpret_cast<T*>(pointer)));
+            ++i;
         }
 
         // create a result vector that is filtered by the queried variables
-        for (auto& staticVariable : queriedStaticVariables) {
-            result.push_back(*((T*) solverResult.at(uniqueVarStore->getIndexOf(staticVariable))));
+        for (const Variable* staticVariable : queriedStaticVariables) {
+            result.push_back(*((T*) solverResult[uniqueVarStore->getIndexOf(staticVariable)]));
         }
 
         for (int i = 0; i < queriedDomainVariables.size(); ++i) {
             for (int j = 0; j < relevantDomainVariables.size(); ++j) {
                 if (relevantDomainVariables[j] == queriedDomainVariables[i]) {
-                    result.push_back(*((T*) solverResult.at(domOffset + j)));
+                    result.push_back(*reinterpret_cast<T*>(solverResult[domOffset + j]));
                     break;
                 }
             }
@@ -166,7 +158,7 @@ bool Query::getSolution(int solverType, std::shared_ptr<RunningPlan> rp, std::ve
 
     // deallocate "solverResults" (they where copied into "result")
     for (int i = 0; i < solverResult.size(); i++) {
-        delete (T*) solverResult.at(i);
+        delete reinterpret_cast<T*>(solverResult[i]);
     }
 
     return ret;
