@@ -34,10 +34,7 @@ if (CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
     file(GLOB_RECURSE test_alica_SOURCES "src/test/*.cpp")
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test 
-    src/test/test_main.cpp
-    src/test/test_alica_time.cpp
-    )
-    #${test_alica_SOURCES})
+    ${test_alica_SOURCES})
 
 
     if(TARGET ${PROJECT_NAME}-test)
