@@ -22,8 +22,8 @@ public:
     virtual ~PartialAssignmentPool();
     int curIndex;
     const static int maxCount;
-    EntryPoint* idleEP;
-    Task* idleTask;
+    const EntryPoint* idleEP;
+    const Task* idleTask;
     vector<PartialAssignment*> daPAs;
 };
 

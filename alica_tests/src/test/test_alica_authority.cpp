@@ -43,21 +43,17 @@ protected:
         sc->setConfigPath(path + "/etc");
         sc->setHostname("nase");
 
-        // setup the engine
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
-                "AuthorityTestMaster", ".", true);
+        // setup the engine parts
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
-        ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     }
 
     virtual void TearDown() {
         ae->shutdown();
-        sc->shutdown();
         ae2->shutdown();
+        sc->shutdown();
         delete ae->getCommunicator();
         delete ae2->getCommunicator();
         delete ae->getIAlicaClock();
@@ -75,16 +71,10 @@ TEST(AllocationDifference, MessageCancelsUtil) {
     alica::AllocationDifference result;
     util.setReason(AllocationDifference::Reason::utility);
     msg.setReason(AllocationDifference::Reason::message);
-    Task t1(false);
-    Task t2(false);
-    t1.setId(1);
-    t2.setId(2);
-    EntryPoint e1;
-    EntryPoint e2;
-    e1.setTask(&t1);
-    e1.setId(1);
-    e2.setTask(&t2);
-    e2.setId(2);
+    Task t1(1,false);
+    Task t2(2,false);
+    EntryPoint e1(1, nullptr, &t1, nullptr);
+    EntryPoint e2(2, nullptr, &t2, nullptr);
 
     const char* aname = "aa";
     const char* bname = "bb";
@@ -131,15 +121,15 @@ TEST_F(AlicaEngineAuthorityManager, authority) {
     ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
     EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
-    auto uSummandAe = *((ae->getPlanRepository()->getPlans().find(1414403413451))
-                                ->second->getUtilityFunction()
+    auto uSummandAe = *(ae->getPlanRepository()->getPlans().find(1414403413451)
+                                ->getUtilityFunction()
                                 ->getUtilSummands()
                                 .begin());
     DummyTestSummand* dbr = dynamic_cast<DummyTestSummand*>(uSummandAe);
     dbr->robotId = ae->getTeamManager()->getLocalAgentID();
 
-    auto uSummandAe2 = *((ae2->getPlanRepository()->getPlans().find(1414403413451))
-                                 ->second->getUtilityFunction()
+    auto uSummandAe2 = *(ae2->getPlanRepository()->getPlans().find(1414403413451)
+                                 ->getUtilityFunction()
                                  ->getUtilSummands()
                                  .begin());
     DummyTestSummand* dbr2 = dynamic_cast<DummyTestSummand*>(uSummandAe2);

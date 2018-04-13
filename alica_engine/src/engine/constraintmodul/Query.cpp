@@ -23,13 +23,13 @@
 
 namespace alica {
 Query::Query()
-        : uniqueVarStore(make_shared<UniqueVarStore>()) {}
+        : uniqueVarStore(std::make_shared<UniqueVarStore>()) {}
 
-void Query::addStaticVariable(Variable* v) {
+void Query::addStaticVariable(const Variable* v) {
     queriedStaticVariables.push_back(v);
 }
 
-void Query::addDomainVariable(const supplementary::AgentID* robot, string ident, AlicaEngine* ae) {
+void Query::addDomainVariable(const supplementary::AgentID* robot, const std::string& ident, AlicaEngine* ae) {
     queriedDomainVariables.push_back(ae->getTeamManager()->getDomainVariable(robot, ident));
 }
 
@@ -41,11 +41,11 @@ void Query::clearStaticVariables() {
     queriedStaticVariables.clear();
 }
 
-bool Query::existsSolution(int solverType, shared_ptr<RunningPlan> rp) {
+bool Query::existsSolution(int solverType, std::shared_ptr<RunningPlan> rp) {
     ISolver* solver = rp->getAlicaEngine()->getSolver(solverType);
 
-    vector<shared_ptr<ProblemDescriptor>> cds = vector<shared_ptr<ProblemDescriptor>>();
-    vector<Variable*> relevantVariables;
+    std::vector<std::shared_ptr<ProblemDescriptor>> cds;
+    VariableSet relevantVariables;
     int domOffset;
     if (!collectProblemStatement(rp, solver, cds, relevantVariables, domOffset)) {
         return false;
@@ -53,8 +53,8 @@ bool Query::existsSolution(int solverType, shared_ptr<RunningPlan> rp) {
     return solver->existsSolution(relevantVariables, cds);
 }
 
-bool Query::collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
-        vector<shared_ptr<ProblemDescriptor>>& pds, vector<Variable*>& relevantVariables, int& domOffset) {
+bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* solver,
+        std::vector<std::shared_ptr<ProblemDescriptor>>& pds, VariableSet& relevantVariables, int& domOffset) {
 #ifdef Q_DEBUG
     long time = rp->getAlicaEngine()->getIAlicaClock()->now();
 #endif
@@ -80,7 +80,7 @@ bool Query::collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
 #endif
 
     // add static variables into the clean unique variable store
-    for (auto& v : relevantStaticVariables) {
+    for (const Variable* v : relevantStaticVariables) {
         uniqueVarStore->add(v);
     }
 
@@ -101,8 +101,8 @@ bool Query::collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
 #endif
         // 2. process bindings for plantype
         if (rp->getPlanType() != nullptr) {
-            vector<Variable*> tmpVector = vector<Variable*>();
-            for (Parametrisation* p : rp->getPlanType()->getParametrisation()) {
+            VariableSet tmpVector;
+            for (const Parametrisation* p : rp->getPlanType()->getParametrisation()) {
                 if (p->getSubPlan() == rp->getPlan() &&
                         find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar()) !=
                                 relevantStaticVariables.end()) {
@@ -124,8 +124,8 @@ bool Query::collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
             parent = rp->getParent().lock();
         }
         if (parent && parent->getActiveState() != nullptr) {
-            vector<Variable*> tmpVector;
-            for (Parametrisation* p : parent->getActiveState()->getParametrisation()) {
+            VariableSet tmpVector;
+            for (const Parametrisation* p : parent->getActiveState()->getParametrisation()) {
                 if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType()) &&
                         find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar()) !=
                                 relevantStaticVariables.end()) {
@@ -146,7 +146,7 @@ bool Query::collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
     cout << "Query: " << (*this->uniqueVarStore) << endl;
 #endif
     // now we have a vector<ProblemPart> in problemParts ready to be queried together with a store of unifications
-    if (problemParts.size() == 0) {
+    if (problemParts.empty()) {
 #ifdef Q_DEBUG
         cout << "Query: Empty Query!" << endl;
 #endif
@@ -158,12 +158,12 @@ bool Query::collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
 #endif
 
     for (shared_ptr<ProblemPart> probPart : problemParts) {
-        vector<Variable*> staticCondVariables = vector<Variable*>(probPart->getCondition()->getVariables());
+        const VariableSet& staticCondVariables = probPart->getCondition()->getVariables();
 
         // create a vector of solver variables from the static condition variables
-        auto staticSolverVars = make_shared<vector<shared_ptr<SolverVariable>>>();
+        auto staticSolverVars = std::make_shared<std::vector<std::shared_ptr<SolverVariable>>>();
         staticSolverVars->reserve(staticCondVariables.size());
-        for (auto& variable : staticCondVariables) {
+        for (const Variable* variable : staticCondVariables) {
             auto representingVariable = uniqueVarStore->getRep(variable);
             if (representingVariable->getSolverVar() == nullptr) {
                 representingVariable->setSolverVar(solver->createVariable(representingVariable->getId()));
@@ -175,7 +175,7 @@ bool Query::collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
         // create a vector of solver variables from the domain variables of the currently iterated problem part
         auto domainSolverVars =
                 make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>>();
-        auto agentsInScope = make_shared<vector<shared_ptr<vector<const supplementary::AgentID*>>>>();
+        auto agentsInScope = make_shared<vector<shared_ptr<AgentSet>>>();
         for (int j = 0; j < probPart->getDomainVariables()->size(); ++j) {
             auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>();
             agentsInScope->push_back(probPart->getAgentsInScope()->at(j));
@@ -222,31 +222,21 @@ bool Query::collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
     return true;
 }
 
-vector<Variable*> Query::getRelevantStaticVariables() {
-    return relevantStaticVariables;
-}
-
-void Query::setRelevantStaticVariables(vector<Variable*> value) {
+void Query::setRelevantStaticVariables(const VariableSet& value) {
     relevantStaticVariables = value;
 }
 
-vector<Variable*> Query::getRelevantDomainVariables() {
-    return relevantDomainVariables;
-}
-
-void Query::setRelevantDomainVariables(vector<Variable*> value) {
+void Query::setRelevantDomainVariables(const VariableSet& value) {
     relevantDomainVariables = value;
 }
 
-void Query::addProblemParts(vector<shared_ptr<ProblemPart>>& l) {
+void Query::addProblemParts(std::vector<shared_ptr<ProblemPart>>& l) {
     problemParts.insert(problemParts.end(), l.begin(), l.end());
 }
 
 /// Part for the implementation of the internal class UniqueVarStore
 
-UniqueVarStore::UniqueVarStore() {
-    store = vector<vector<Variable*>>();
-}
+UniqueVarStore::UniqueVarStore() {}
 
 void UniqueVarStore::clear() {
     store.clear();
@@ -255,17 +245,17 @@ void UniqueVarStore::clear() {
 /**
  * Initializes a list with the given variable and put that list into the internal store.
  */
-void UniqueVarStore::add(Variable* v) {
-    vector<Variable*> l = vector<Variable*>();
+void UniqueVarStore::add(const Variable* v) {
+    VariableSet l;
     l.push_back(v);
-    store.push_back(l);
+    store.push_back(std::move(l));
 }
 
 /**
  * Add the variable "toAdd" to the front of the list of variables that contains the variable "representing".
  * If such a list does not exist, a new list will be created.
  */
-void UniqueVarStore::addVarTo(Variable* representing, Variable* toAdd) {
+void UniqueVarStore::addVarTo(const Variable* representing, const Variable* toAdd) {
     for (auto& variables : store) {
         for (auto& variable : variables) {
             if (representing == variable) {
@@ -274,23 +264,23 @@ void UniqueVarStore::addVarTo(Variable* representing, Variable* toAdd) {
             }
         }
     }
-    vector<Variable*> nl;
+    VariableSet nl;
     nl.insert(nl.begin(), representing);
     nl.insert(nl.begin(), toAdd);
-    store.push_back(nl);
+    store.push_back(std::move(nl));
 }
 
-vector<Variable*> UniqueVarStore::getAllRep() {
-    vector<Variable*> ret = vector<Variable*>();
-    for (vector<Variable*> l : store) {
+VariableSet UniqueVarStore::getAllRep() const {
+    VariableSet ret;
+    for (const VariableSet& l : store) {
         ret.push_back(l.front());
     }
     return ret;
 }
 
-Variable* UniqueVarStore::getRep(Variable* v) {
-    for (vector<Variable*> l : store) {
-        for (Variable* s : l) {
+const Variable* UniqueVarStore::getRep(const Variable* v) {
+    for (const VariableSet& l : store) {
+        for (const Variable* s : l) {
             if (s == v) {
                 return l.front();
             }
@@ -304,9 +294,9 @@ Variable* UniqueVarStore::getRep(Variable* v) {
  * Returns the index of the unification-list that contains the given variable.
  * Returns -1, if the variable is not present.
  */
-int UniqueVarStore::getIndexOf(Variable* v) {
+int UniqueVarStore::getIndexOf(const Variable* v) const {
     for (int i = 0; i < store.size(); ++i) {
-        for (Variable* c : store[i]) {
+        for (const Variable* c : store[i]) {
             if (c == v) {
                 return i;
             }

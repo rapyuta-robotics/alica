@@ -8,15 +8,12 @@
 #ifndef CAPABILITY_H_
 #define CAPABILITY_H_
 
-#include <list>
-#include <iostream>
-#include <exception>
-
 #include "AlicaElement.h"
+#include "engine/Types.h"
 
-using namespace std;
 namespace alica {
 class CapValue;
+class ModelFactory;
 
 /**
  * A capability is used to match agents to roles.
@@ -26,15 +23,16 @@ public:
     Capability();
     virtual ~Capability();
 
-    double similarityValue(CapValue* roleVal, CapValue* robotVal);
+    double similarityValue(const CapValue* roleVal, const CapValue* robotVal) const;
 
-    list<CapValue*>& getCapValues();
+    const CapValueSet& getCapValues() const { return _capValues; }
 
-protected:
+private:
+    friend ModelFactory;
     /**
      * List of possible values for this capability
      */
-    list<CapValue*> capValues;
+    CapValueSet _capValues;
 };
 }  // namespace alica
 #endif /* CAPABILITY_H_ */

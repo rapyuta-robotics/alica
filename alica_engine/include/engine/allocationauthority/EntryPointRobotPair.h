@@ -10,19 +10,19 @@ namespace alica {
 /**
  * A simple helper class for conflict detection
  */
-class EntryPointRobotPair {
+class EntryPointRobotPair final {
 public:
-    EntryPointRobotPair(EntryPoint* ep, const supplementary::AgentID* r);
-    virtual ~EntryPointRobotPair();
-    EntryPoint* getEntryPoint() const;
-    void setEntryPoint(EntryPoint* entryPoint);
+    EntryPointRobotPair(const EntryPoint* ep, const supplementary::AgentID* r);
+    ~EntryPointRobotPair();
+    const EntryPoint* getEntryPoint() const;
+    void setEntryPoint(const EntryPoint* entryPoint);
     const supplementary::AgentID* getRobot() const;
     void setRobot(const supplementary::AgentID* robot);
     bool operator==(const EntryPointRobotPair& o) const;
     bool operator!=(const EntryPointRobotPair& o) const { return !(*this == o); }
 
 protected:
-    EntryPoint* _entryPoint;  // TODO: should be const
+    const EntryPoint* _entryPoint;
     const supplementary::AgentID* _robot;
 };
 

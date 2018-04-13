@@ -75,7 +75,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest) {
     ae->start();
     chrono::milliseconds duration(33);
     this_thread::sleep_for(duration);
-    for (auto iter : *ae->getBehaviourPool()->getAvailableBehaviours()) {
+    for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
             iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
             continue;
@@ -91,7 +91,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest) {
         }
     }
 
-    for (auto iter : *ae->getBehaviourPool()->getAvailableBehaviours()) {
+    for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
             EXPECT_EQ(((alica::TriggerA*) (&*iter.second))->callCounter, 0);
             continue;
@@ -121,7 +121,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest) {
     alicaTests::TestWorldModel::getOne()->trigger2->run();
     this_thread::sleep_for(duration);
 
-    for (auto iter : *ae->getBehaviourPool()->getAvailableBehaviours()) {
+    for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
             EXPECT_EQ(((alica::TriggerA*) (&*iter.second))->callCounter, 3);
             continue;

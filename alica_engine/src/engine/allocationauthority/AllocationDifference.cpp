@@ -82,41 +82,41 @@ void AllocationDifference::applyDifference(const AllocationDifference& other) {
     }
 }
 
-string AllocationDifference::toString() const {
-    stringstream ss;
+std::string AllocationDifference::toString() const {
+    std::stringstream ss;
     ss << "Additions: ";
     for (const EntryPointRobotPair& erp : _additions) {
         ss << "+ " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
     }
-    ss << endl << "Substractions: ";
+    ss << std::endl << "Substractions: ";
     for (const EntryPointRobotPair& erp : _subtractions) {
         ss << "- " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
     }
-    ss << endl << "Reason [0=msg, 1=util, 2=empty]:" << _reason;
+    ss << std::endl << "Reason [0=msg, 1=util, 2=empty]:" << _reason;
     return ss.str();
 }
 
-const vector<EntryPointRobotPair>& AllocationDifference::getAdditions() const {
+const std::vector<EntryPointRobotPair>& AllocationDifference::getAdditions() const {
     return _additions;
 }
 
-vector<EntryPointRobotPair>& AllocationDifference::editAdditions() {
+std::vector<EntryPointRobotPair>& AllocationDifference::editAdditions() {
     return _additions;
 }
 
-void AllocationDifference::setAdditions(const vector<EntryPointRobotPair>& additions) {
+void AllocationDifference::setAdditions(const std::vector<EntryPointRobotPair>& additions) {
     _additions = additions;
 }
 
-const vector<EntryPointRobotPair>& AllocationDifference::getSubtractions() const {
+const std::vector<EntryPointRobotPair>& AllocationDifference::getSubtractions() const {
     return _subtractions;
 }
 
-vector<EntryPointRobotPair>& AllocationDifference::editSubtractions() {
+std::vector<EntryPointRobotPair>& AllocationDifference::editSubtractions() {
     return _subtractions;
 }
 
-void AllocationDifference::setSubtractions(const vector<EntryPointRobotPair>& subtractions) {
+void AllocationDifference::setSubtractions(const std::vector<EntryPointRobotPair>& subtractions) {
     _subtractions = subtractions;
 }
 

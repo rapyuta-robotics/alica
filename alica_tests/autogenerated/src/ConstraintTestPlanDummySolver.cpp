@@ -21,7 +21,7 @@ ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(AlicaEngine* ae)
 ConstraintTestPlanDummySolver::~ConstraintTestPlanDummySolver() {}
 
 bool ConstraintTestPlanDummySolver::existsSolution(
-        vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls) {
+        const VariableSet& vars, vector<shared_ptr<ProblemDescriptor>>& calls) {
     existsSolutionCallCounter++;
     // std::cout << "ConstraintTestPlanDummySolver::existsSolution was called " << existsSolutionCallCounter
     //		<< " times!" << std::endl;
@@ -29,7 +29,7 @@ bool ConstraintTestPlanDummySolver::existsSolution(
 }
 
 bool ConstraintTestPlanDummySolver::getSolution(
-        vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results) {
+        const VariableSet& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results) {
     for (int i = 0; i < vars.size(); i++) {
         string* s = new string(vars.at(i)->getName());
         results.push_back(s);

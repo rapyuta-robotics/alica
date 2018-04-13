@@ -33,7 +33,7 @@ void ConditionStore::clear() {
  * Add a condition to the store
  * @param con A Condition
  */
-void ConditionStore::addCondition(Condition* con) {
+void ConditionStore::addCondition(const Condition* con) {
     if (con == nullptr || (con->getVariables().size() == 0 && con->getQuantifiers().size() == 0)) {
         return;
     }
@@ -46,12 +46,12 @@ void ConditionStore::addCondition(Condition* con) {
     }
     mtx.unlock();
     if (modified) {
-        for (Variable* variable : con->getVariables()) {
+        for (const Variable* variable : con->getVariables()) {
             auto it = activeVar2CondMap.find(variable);
             if (it != activeVar2CondMap.end()) {
                 it->second->push_back(con);
             } else {
-                auto condList = make_shared<vector<Condition*>>();
+                auto condList = make_shared<vector<const Condition*>>();
                 condList->push_back(con);
                 activeVar2CondMap.emplace(variable, condList);
             }
@@ -59,7 +59,7 @@ void ConditionStore::addCondition(Condition* con) {
     }
 #ifdef CS_DEBUG
     cout << "CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size()
-         << " variables." << endl;
+         << " variables. CS: " << this << endl;
 #endif
 }
 
@@ -68,7 +68,7 @@ void ConditionStore::addCondition(Condition* con) {
  *
  * @param con The condition to be removed
  */
-void ConditionStore::removeCondition(Condition* con) {
+void ConditionStore::removeCondition(const Condition* con) {
     if (con == nullptr) {
         return;
     }
@@ -80,7 +80,7 @@ void ConditionStore::removeCondition(Condition* con) {
     }
     mtx.unlock();
     if (modified) {
-        for (Variable* v : con->getVariables()) {
+        for (const Variable* v : con->getVariables()) {
             activeVar2CondMap[v]->erase(std::remove(activeVar2CondMap[v]->begin(), activeVar2CondMap[v]->end(), con),
                     activeVar2CondMap[v]->end());
         }
@@ -97,42 +97,42 @@ void ConditionStore::removeCondition(Condition* con) {
  */
 void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const {
 #ifdef CS_DEBUG
-    std::cout << "ConditionStore: Accepting Query - Active conditions in store is " << activeConditions.size()
+    std::cout << "ConditionStore: Accepting Query - Active conditions in store is " << activeConditions.size() <<" CS: "<< this
               << std::endl;
 #endif
-    if (activeConditions.size() == 0) {
+    if (activeConditions.empty()) {
         return;
     }
 
-    vector<Variable*> staticVarsToCheck = query.getRelevantStaticVariables();
-    vector<Variable*> domVarsToCheck = query.getRelevantDomainVariables();
+    std::vector<const Variable*> staticVarsToCheck = query.getRelevantStaticVariables();
+    std::vector<const Variable*> domVarsToCheck = query.getRelevantDomainVariables();
     if (staticVarsToCheck.size() == 0 && domVarsToCheck.size() == 0) {
         return;  // nothing to do
     }
 
 #ifdef CS_DEBUG
     std::cout << "ConditionStore: Query contains static variables: ";
-    for (Variable* v : staticVarsToCheck) {
+    for (const Variable* v : staticVarsToCheck) {
         std::cout << v->getName() << "(" << v->getId() << "), ";
     }
     std::cout << std::endl;
 #endif
 
-    map<Condition*, shared_ptr<ProblemPart>> newCondProbPartMap = map<Condition*, shared_ptr<ProblemPart>>();
-    map<Condition*, shared_ptr<ProblemPart>> allCondProbPartMap = map<Condition*, shared_ptr<ProblemPart>>();
+    std::map<const Condition*, shared_ptr<ProblemPart>> newCondProbPartMap;
+    std::map<const Condition*, shared_ptr<ProblemPart>> allCondProbPartMap;
     {
         std::lock_guard<std::mutex> lock(mtx);
-        for (Condition* cond : activeConditions) {
+        for (const Condition* cond : activeConditions) {
             allCondProbPartMap.emplace(cond, make_shared<ProblemPart>(cond, rp));
         }
     }
 
-    vector<Variable*> staticVarsChecked = vector<Variable*>();
-    vector<Variable*> domVarsChecked = vector<Variable*>();
+    std::vector<const Variable*> staticVarsChecked;
+    std::vector<const Variable*> domVarsChecked;
     while (newCondProbPartMap.size() < allCondProbPartMap.size() &&
             (domVarsToCheck.size() > 0 || staticVarsToCheck.size() > 0)) {
         if (staticVarsToCheck.size() > 0) {
-            Variable* curStaticVariable = staticVarsToCheck[staticVarsToCheck.size() - 1];
+            const Variable* curStaticVariable = staticVarsToCheck[staticVarsToCheck.size() - 1];
             staticVarsToCheck.pop_back();
             staticVarsChecked.push_back(curStaticVariable);
 
@@ -150,7 +150,7 @@ void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const
             std::cout << "ConditionStore: Conditions active under variable " << (*activeVar2CondMapEntry->first) << ": "
                       << activeVar2CondMapEntry->second->size() << std::endl;
 #endif
-            for (Condition* c : *(activeVar2CondMapEntry->second)) {
+            for (const Condition* c : *(activeVar2CondMapEntry->second)) {
                 if (newCondProbPartMap.find(c) != newCondProbPartMap.end()) {
                     // condition was already inserted into the newCondProbPartMap
                     continue;
@@ -167,7 +167,7 @@ void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const
                  */
                 auto domainVariables = problemPart->getDomainVariables();
                 for (auto& listOfRobots : (*domainVariables)) {
-                    for (vector<Variable*> variables : listOfRobots) {
+                    for (const std::vector<const Variable*>& variables : listOfRobots) {
                         for (auto variable : variables) {
                             if (find(domVarsChecked.begin(), domVarsChecked.end(), variable) == domVarsChecked.end() &&
                                     find(domVarsToCheck.begin(), domVarsToCheck.end(), variable) ==
@@ -178,7 +178,7 @@ void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const
                         }
                     }
                 }
-                for (Variable* variable : c->getVariables()) {
+                for (const Variable* variable : c->getVariables()) {
                     if (find(staticVarsChecked.begin(), staticVarsChecked.end(), variable) == staticVarsChecked.end() &&
                             find(staticVarsToCheck.begin(), staticVarsToCheck.end(), variable) ==
                                     staticVarsToCheck.end()) {
@@ -187,7 +187,7 @@ void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const
                 }
             }
         } else if (domVarsToCheck.size() > 0) {
-            Variable* curDomainVariable = domVarsToCheck[domVarsToCheck.size() - 1];
+            const Variable* curDomainVariable = domVarsToCheck[domVarsToCheck.size() - 1];
             domVarsToCheck.pop_back();
             domVarsChecked.push_back(curDomainVariable);
 
@@ -223,7 +223,7 @@ void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const
                     }
                 }
 
-                for (Variable* variable : condProbPartPair.first->getVariables()) {
+                for (const Variable* variable : condProbPartPair.first->getVariables()) {
                     if (find(staticVarsChecked.begin(), staticVarsChecked.end(), variable) == staticVarsChecked.end() &&
                             find(staticVarsToCheck.begin(), staticVarsToCheck.end(), variable) ==
                                     staticVarsToCheck.end()) {

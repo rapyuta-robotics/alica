@@ -2,17 +2,17 @@
 
 namespace alica {
 
-EntryPointRobotPair::EntryPointRobotPair(EntryPoint* ep, const supplementary::AgentID* r)
+EntryPointRobotPair::EntryPointRobotPair(const EntryPoint* ep, const supplementary::AgentID* r)
         : _entryPoint(ep)
         , _robot(r) {}
 
 EntryPointRobotPair::~EntryPointRobotPair() {}
 
-EntryPoint* EntryPointRobotPair::getEntryPoint() const {
+const EntryPoint* EntryPointRobotPair::getEntryPoint() const {
     return _entryPoint;
 }
 
-void EntryPointRobotPair::setEntryPoint(EntryPoint* entryPoint) {
+void EntryPointRobotPair::setEntryPoint(const EntryPoint* entryPoint) {
     _entryPoint = entryPoint;
 }
 

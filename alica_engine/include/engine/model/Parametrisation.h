@@ -9,11 +9,9 @@
 #define PARAMETRISATION_H_
 
 #include <string>
-#include <sstream>
 
 #include "AlicaElement.h"
 
-using namespace std;
 namespace alica {
 class Variable;
 class AbstractPlan;
@@ -23,19 +21,22 @@ public:
     Parametrisation();
     virtual ~Parametrisation();
 
-    string ToString();
+    std::string toString() const override;
 
-    AbstractPlan* getSubPlan();
-    void setSubPlan(AbstractPlan* subPlan);
-    Variable* getSubVar();
-    void setSubVar(Variable* subVar);
-    Variable* getVar();
-    void setVar(Variable* var);
+    const AbstractPlan* getSubPlan() const { return _subPlan; }
+    const Variable* getVar() const { return _var; }
+    const Variable* getSubVar() const { return _subVar; }
 
 protected:
-    Variable* var;
-    Variable* subVar;
-    AbstractPlan* subPlan;
+    friend ModelFactory;
+
+    void setSubPlan(const AbstractPlan* subPlan);
+    void setSubVar(const Variable* subVar);
+    void setVar(const Variable* var);
+
+    const Variable* _var;
+    const Variable* _subVar;
+    const AbstractPlan* _subPlan;
 };
 
 }  // namespace alica

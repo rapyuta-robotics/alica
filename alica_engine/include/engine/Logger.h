@@ -53,7 +53,7 @@ protected:
     double time;
     bool inIteration;
     shared_ptr<list<string>> createHumanReadablePlanTree(list<long> list);
-    EntryPoint* entryPointOfState(State* s);
+    const EntryPoint* entryPointOfState(const State* s) const;
     void evaluationAssignmentsToString(stringstream* ss, shared_ptr<RunningPlan> rp);
     shared_ptr<list<string>> createTreeLog(shared_ptr<RunningPlan> r);
 };

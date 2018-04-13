@@ -45,36 +45,35 @@ ExpressionHandler::~ExpressionHandler() {
  */
 void ExpressionHandler::attachAll() {
     PlanRepository* pr = ae->getPlanRepository();
-    for (auto it : pr->getPlans()) {
-        auto p = it.second;
-
+    for (const std::pair<const int64_t, Plan*>& it : pr->_plans) {
+        Plan* p = it.second;
         auto ufGen = utilityCreator->createUtility(p->getId());
         p->setUtilityFunction(ufGen->getUtilityFunction(p));
 
         if (p->getPreCondition() != nullptr) {
             if (p->getPreCondition()->isEnabled()) {
-                p->getPreCondition()->setBasicCondition(
+                p->_preCondition->setBasicCondition(
                         this->conditionCreator->createConditions(p->getPreCondition()->getId()));
-                attachConstraint(p->getPreCondition());
+                attachConstraint(p->_preCondition);
             } else {
-                p->getPreCondition()->setBasicCondition(make_shared<BasicFalseCondition>());
+                p->_preCondition->setBasicCondition(make_shared<BasicFalseCondition>());
             }
         }
 
         if (p->getRuntimeCondition() != nullptr) {
-            p->getRuntimeCondition()->setBasicCondition(
+            p->_runtimeCondition->setBasicCondition(
                     this->conditionCreator->createConditions(p->getRuntimeCondition()->getId()));
-            attachConstraint(p->getRuntimeCondition());
+            attachConstraint(p->_runtimeCondition);
         }
 
-        for (auto t : p->getTransitions()) {
+        for (const Transition* t : p->_transitions) {
             if (t->getPreCondition() != nullptr) {
                 if (t->getPreCondition()->isEnabled()) {
-                    t->getPreCondition()->setBasicCondition(
+                    t->_preCondition->setBasicCondition(
                             this->conditionCreator->createConditions(t->getPreCondition()->getId()));
-                    attachConstraint(t->getPreCondition());
+                    attachConstraint(t->_preCondition);
                 } else {
-                    t->getPreCondition()->setBasicCondition(make_shared<BasicFalseCondition>());
+                    t->_preCondition->setBasicCondition(make_shared<BasicFalseCondition>());
                 }
             }
         }

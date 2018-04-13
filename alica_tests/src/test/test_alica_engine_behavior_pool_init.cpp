@@ -61,9 +61,9 @@ protected:
  */
 TEST_F(AlicaEngineTestBehPool, behaviourPoolInit) {
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
-    auto behaviours = ae->getPlanRepository()->getBehaviours();
     alica::BehaviourPool* bp = ae->getBehaviourPool();
-    for (auto behaviourPair : behaviours) {
-        cout << "Behaviour: " << behaviourPair.second->getName() << endl;
+    for (const Behaviour* behaviour : ae->getPlanRepository()->getBehaviours()) {
+        ASSERT_NE(behaviour, nullptr);
+        cout << "Behaviour: " << behaviour->getName() << endl;
     }
 }

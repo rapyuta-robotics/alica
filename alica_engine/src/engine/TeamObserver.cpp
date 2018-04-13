@@ -44,9 +44,8 @@ TeamObserver::getTeamPlanTrees() {
             map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>>(
             new map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>);
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
-
     // TODO get rid of this once teamManager gets a datastructure overhaul
-    std::vector<const supplementary::AgentID*> tmp;
+    AgentSet tmp;
     teamManager->fillWithActiveAgentIDs(tmp);
     for (const supplementary::AgentID* agentId : tmp) {
         auto iter = this->simplePlanTrees->find(agentId);
@@ -81,8 +80,8 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root) {
 
     cleanOwnSuccessMarks(root);
     if (root != nullptr) {
-        std::vector<const supplementary::AgentID*>
-                activeAgents;  // TODO get rid of this once teamManager gets a datastructure overhaul
+        // TODO get rid of this once teamManager gets a datastructure overhaul
+        AgentSet activeAgents;
         teamManager->fillWithActiveAgentIDs(activeAgents);
 
         list<shared_ptr<SimplePlanTree>> updatespts;
@@ -150,22 +149,20 @@ void TeamObserver::doBroadCast(list<long>& msg) {
  * @param root a shared_ptr of a RunningPlan
  */
 void TeamObserver::cleanOwnSuccessMarks(shared_ptr<RunningPlan> root) {
-    unique_ptr<unordered_set<AbstractPlan*>> presentPlans =
-            unique_ptr<unordered_set<AbstractPlan*>>(new unordered_set<AbstractPlan*>);
+    AbstractPlanSet presentPlans;
     if (root != nullptr) {
-        list<shared_ptr<RunningPlan>>* q = new list<shared_ptr<RunningPlan>>();
-        q->push_front(root);
-        while (q->size() > 0) {
-            shared_ptr<RunningPlan> p = q->front();
-            q->pop_front();
+        list<shared_ptr<RunningPlan>> q;
+        q.push_front(root);
+        while (q.size() > 0) {
+            shared_ptr<RunningPlan> p = q.front();
+            q.pop_front();
             if (!p->isBehaviour()) {
-                presentPlans->insert(p->getPlan());
+                presentPlans.push_back(p->getPlan());
                 for (shared_ptr<RunningPlan> c : *p->getChildren()) {
-                    q->push_back(c);
+                    q.push_back(c);
                 }
             }
         }
-        delete q;
     }
     list<shared_ptr<SimplePlanTree>> queue;
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
@@ -177,19 +174,19 @@ void TeamObserver::cleanOwnSuccessMarks(shared_ptr<RunningPlan> root) {
     while (queue.size() > 0) {
         shared_ptr<SimplePlanTree> spt = queue.front();
         queue.pop_front();
-        presentPlans->insert(spt->getState()->getInPlan());
-        for (shared_ptr<SimplePlanTree> c : spt->getChildren()) {
+        presentPlans.push_back(spt->getState()->getInPlan());
+        for (const shared_ptr<SimplePlanTree>& c : spt->getChildren()) {
             queue.push_back(c);
         }
     }
-    this->me->getSuccessMarks()->limitToPlans(move(presentPlans));
+    this->me->getSuccessMarks()->limitToPlans(presentPlans);
 }
 
-EntryPoint* TeamObserver::entryPointOfState(State* state) {
-    for (auto iter = state->getInPlan()->getEntryPoints().begin(); iter != state->getInPlan()->getEntryPoints().end();
-            iter++) {
-        if (iter->second->getReachableStates().find(state) != iter->second->getReachableStates().end()) {
-            return iter->second;
+const EntryPoint* TeamObserver::entryPointOfState(const State* state) const {
+    for (const EntryPoint* ep : state->getInPlan()->getEntryPoints()) {
+        if (std::find(ep->getReachableStates().begin(), ep->getReachableStates().end(), state) !=
+                ep->getReachableStates().end()) {
+            return ep;
         }
     }
     return nullptr;
@@ -200,9 +197,9 @@ EntryPoint* TeamObserver::entryPointOfState(State* state) {
  * @param plan a plan
  * @return an int counting successes in plan
  */
-int TeamObserver::successesInPlan(Plan* plan) {
+int TeamObserver::successesInPlan(const Plan* plan) {
     int ret = 0;
-    auto suc = make_shared<list<EntryPoint*>>(list<EntryPoint*>());
+    shared_ptr<list<const EntryPoint*>> suc = make_shared<list<const EntryPoint*>>();
     auto tmp = this->teamManager->getActiveAgents();
     for (auto& agent : *tmp) {
         {
@@ -220,9 +217,9 @@ int TeamObserver::successesInPlan(Plan* plan) {
     return ret;
 }
 
-shared_ptr<SuccessCollection> TeamObserver::getSuccessCollection(Plan* plan) {
+shared_ptr<SuccessCollection> TeamObserver::getSuccessCollection(const Plan* plan) {
     shared_ptr<SuccessCollection> ret = make_shared<SuccessCollection>(plan);
-    shared_ptr<list<EntryPoint*>> suc;
+    shared_ptr<list<const EntryPoint*>> suc;
     auto tmp = this->teamManager->getActiveAgents();
     for (const Agent* agent : *tmp) {
         if (teamManager->getLocalAgent() == agent) {
@@ -233,23 +230,23 @@ shared_ptr<SuccessCollection> TeamObserver::getSuccessCollection(Plan* plan) {
             suc = agent->getSucceededEntryPoints(plan);
         }
         if (suc != nullptr) {
-            for (EntryPoint* ep : *suc) {
+            for (const EntryPoint* ep : *suc) {
                 ret->setSuccess(agent->getID(), ep);
             }
         }
     }
     suc = me->getSuccessMarks()->succeededEntryPoints(plan);
     if (suc != nullptr) {
-        for (EntryPoint* ep : *suc) {
+        for (const EntryPoint* ep : *suc) {
             ret->setSuccess(myId, ep);
         }
     }
     return ret;
 }
 
-void TeamObserver::updateSuccessCollection(Plan* p, shared_ptr<SuccessCollection> sc) {
+void TeamObserver::updateSuccessCollection(const Plan* p, shared_ptr<SuccessCollection> sc) {
     sc->clear();
-    shared_ptr<list<EntryPoint*>> suc;
+    shared_ptr<list<const EntryPoint*>> suc;
     auto tmp = this->teamManager->getActiveAgents();
     for (auto& agent : *tmp) {
         {
@@ -257,14 +254,14 @@ void TeamObserver::updateSuccessCollection(Plan* p, shared_ptr<SuccessCollection
             suc = agent->getSucceededEntryPoints(p);
         }
         if (suc != nullptr) {
-            for (EntryPoint* ep : *suc) {
+            for (const EntryPoint* ep : *suc) {
                 sc->setSuccess(agent->getID(), ep);
             }
         }
     }
     suc = me->getSuccessMarks()->succeededEntryPoints(p);
     if (suc != nullptr) {
-        for (EntryPoint* ep : *suc) {
+        for (const EntryPoint* ep : *suc) {
             sc->setSuccess(myId, ep);
         }
     }
@@ -275,7 +272,7 @@ void TeamObserver::updateSuccessCollection(Plan* p, shared_ptr<SuccessCollection
  * believed to be left in the plan.
  * @param plan The AbstractPlan left by the robot
  */
-void TeamObserver::notifyRobotLeftPlan(AbstractPlan* plan) {
+void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan) {
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
     for (auto iterator : *this->simplePlanTrees) {
         if (iterator.second->containsPlan(plan)) {
@@ -317,12 +314,13 @@ void TeamObserver::handlePlanTreeInfo(shared_ptr<PlanTreeInfo> incoming) {
  * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
  * @return shared_ptr of a SimplePlanTree
  */
-shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(const supplementary::AgentID* robotId, list<long> ids) {
+std::shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(
+        const supplementary::AgentID* robotId, const std::list<int64_t>& ids) {
 #ifdef TO_DEBUG
     cout << "Spt from robot " << robotId << endl;
     ;
     for (int i = 0; i < ids.size(); i++) {
-        list<long>::const_iterator iter = ids.begin();
+        list<int64_t>::const_iterator iter = ids.begin();
         advance(iter, i);
         cout << *iter << "\t";
     }
@@ -333,33 +331,35 @@ shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(const supplementary::Age
         cerr << "TO: Empty state list for robot " << robotId << endl;
         return nullptr;
     }
-    map<long, State*>& states = ae->getPlanRepository()->getStates();
+
     AlicaTime time = ae->getIAlicaClock()->now();
-    shared_ptr<SimplePlanTree> root = make_shared<SimplePlanTree>();
+    std::shared_ptr<SimplePlanTree> root = make_shared<SimplePlanTree>();
     root->setRobotId(robotId);
     root->setReceiveTime(time);
     root->setStateIds(ids);
-    State* s = nullptr;
+
     auto iter = ids.begin();
-    if (states.find(*iter) != states.end()) {
-        root->setState(states.at(*iter));
-        root->setEntryPoint(entryPointOfState(root->getState()));
+    const PlanRepository::Accessor<State>& states = ae->getPlanRepository()->getStates();
+    const State* s = states.find(*iter);
+    if (s) {
+        root->setState(s);
+        root->setEntryPoint(entryPointOfState(s));
         if (root->getEntryPoint() == nullptr) {
             // Warning
-            list<long>::const_iterator iter = ids.begin();
+            std::list<int64_t>::const_iterator iter = ids.begin();
             cout << "TO: Cannot find ep for State (" << *iter << ") received from " << robotId << endl;
             return nullptr;
         }
     } else {
-        list<long>::const_iterator iter = ids.begin();
+        std::list<int64_t>::const_iterator iter = ids.begin();
         // cout << "TO: Unknown State (" << *iter << ") received from " << robotId << endl;
         return nullptr;
     }
 
-    shared_ptr<SimplePlanTree> curParent;
-    shared_ptr<SimplePlanTree> cur = root;
+    std::shared_ptr<SimplePlanTree> curParent;
+    std::shared_ptr<SimplePlanTree> cur = root;
     if (ids.size() > 1) {
-        list<long>::const_iterator iter = ids.begin();
+        std::list<int64_t>::const_iterator iter = ids.begin();
         iter++;
         for (; iter != ids.end(); iter++) {
             if (*iter == -1) {
@@ -376,17 +376,18 @@ shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(const supplementary::Age
                 cur->setRobotId(robotId);
                 cur->setReceiveTime(time);
 
-                curParent->getChildren().insert(cur);
-                if (states.find(*iter) != states.end()) {
-                    cur->setState(states.at(*iter));
-                    cur->setEntryPoint(entryPointOfState(cur->getState()));
+                curParent->editChildren().insert(cur);
+                const State* s2 = states.find(*iter);
+                if (s2) {
+                    cur->setState(s2);
+                    cur->setEntryPoint(entryPointOfState(s2));
                     if (cur->getEntryPoint() == nullptr) {
-                        list<long>::const_iterator iter = ids.begin();
+                        std::list<int64_t>::const_iterator iter = ids.begin();
                         cout << "TO: Cannot find ep for State (" << *iter << ") received from " << robotId << endl;
                         return nullptr;
                     }
                 } else {
-                    list<long>::const_iterator iter = ids.begin();
+                    std::list<int64_t>::const_iterator iter = ids.begin();
                     cout << "Unknown State (" << *iter << ") received from " << robotId << endl;
                     return nullptr;
                 }

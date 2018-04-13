@@ -13,28 +13,30 @@
 #include <list>
 
 #include "AbstractPlan.h"
+#include "engine/Types.h"
 
-using namespace std;
 namespace alica {
 class Plan;
 class Parametrisation;
+class ModelFactory;
 
 class PlanType : public AbstractPlan {
 public:
     PlanType();
     virtual ~PlanType();
 
-    const virtual string& getFileName() const;
-    string toString();
+    std::string toString() const override;
 
-    list<Parametrisation*>& getParametrisation();
-    void setParametrisation(const list<Parametrisation*> parametrisation);
-    list<Plan*>& getPlans();
-    void setPlans(const list<Plan*>& plans);
+    const ParametrisationSet& getParametrisation() const { return _parametrisation; }
+    const PlanSet& getPlans() const { return _plans; }
 
-protected:
-    list<Plan*> plans;
-    list<Parametrisation*> parametrisation;
+private:
+    friend ModelFactory;
+    void setParametrisation(const ParametrisationSet& parametrisation);
+    void setPlans(const PlanSet& plans);
+
+    PlanSet _plans;
+    ParametrisationSet _parametrisation;
 };
 
 }  // namespace alica

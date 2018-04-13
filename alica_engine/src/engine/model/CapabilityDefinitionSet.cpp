@@ -13,14 +13,8 @@ CapabilityDefinitionSet::CapabilityDefinitionSet() {}
 
 CapabilityDefinitionSet::~CapabilityDefinitionSet() {}
 
-//================== Getter and Setter ===================================
-
-list<Capability*>& CapabilityDefinitionSet::getCapabilities() {
-    return capabilities;
-}
-
-void CapabilityDefinitionSet::setCapabilities(const list<Capability*>& capabilities) {
-    this->capabilities = capabilities;
+void CapabilityDefinitionSet::setCapabilities(const CapabilitySet& capabilities) {
+    _capabilities = capabilities;
 }
 
 }  // namespace alica

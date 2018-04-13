@@ -10,144 +10,113 @@ StateCollection::StateCollection() {}
 
 StateCollection::~StateCollection() {}
 
-vector<const supplementary::AgentID*>& StateCollection::getRobots() {
-    return robotIds;
-}
-
-void StateCollection::setRobots(vector<const supplementary::AgentID*> robots) {
-    this->robotIds = robots;
-}
-
-vector<State*>& StateCollection::getStates() {
-    return states;
-}
-
-StateCollection::StateCollection(vector<const supplementary::AgentID*> robots, vector<State*> states) {
-    this->robotIds = robots;
-    this->states = states;
-}
+StateCollection::StateCollection(const AgentSet& robots, const StateSet& states)
+        : _robotIds(robots)
+        , _states(states) {}
 
 StateCollection::StateCollection(int maxSize)
-        : robotIds(maxSize)
-        , states(maxSize) {}
+        : _robotIds(maxSize)
+        , _states(maxSize) {}
 
-StateCollection::StateCollection(AssignmentCollection* ac) {
-    for (int i = 0; i < ac->getSize(); i++) {
-        State* initialState = ac->getEp(i)->getState();
-        for (auto& robotId : *ac->getRobots(i)) {
-            this->setState(robotId, initialState);
+StateCollection::StateCollection(const AssignmentCollection* ac) {
+    for (int i = 0; i < ac->getSize(); ++i) {
+        const State* initialState = ac->getEp(i)->getState();
+        for (const supplementary::AgentID* robotId : *ac->getRobots(i)) {
+            setState(robotId, initialState);
         }
     }
 }
 
-void StateCollection::setStates(vector<State*> states) {
-    this->states = states;
-}
-
-int StateCollection::getCount() {
-    return this->robotIds.size();
-}
-
-State* StateCollection::getState(const supplementary::AgentID* robotId) {
-    for (int i = 0; i < this->robotIds.size(); i++) {
-        if (*(this->robotIds[i]) == *(robotId)) {
-            return this->states[i];
+const State* StateCollection::getStateOfRobot(const supplementary::AgentID* robotId) const {
+    for (int i = 0; i < _robotIds.size(); i++) {
+        if (*(_robotIds[i]) == *(robotId)) {
+            return _states[i];
         }
     }
     return nullptr;
 }
 
-unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>
-StateCollection::getRobotsInState(State* s) {
-    unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>
-            ret;
-    for (int i = 0; i < this->robotIds.size(); i++) {
-        if (this->states[i] == s) {
-            ret.insert(this->robotIds[i]);
+int StateCollection::getRobotsInState(const State* s, AgentSet& o_robots) const {
+    int c = 0;
+    for (int i = 0; i < _robotIds.size(); ++i) {
+        if (_states[i] == s) {
+            o_robots.push_back(_robotIds[i]);
+            ++c;
         }
     }
-    return ret;
+    return c;
 }
 
-shared_ptr<vector<const supplementary::AgentID*>> StateCollection::getRobotsInStateSorted(State* s) {
-    shared_ptr<vector<const supplementary::AgentID*>> ret = make_shared<vector<const supplementary::AgentID*>>();
-    for (int i = 0; i < this->robotIds.size(); i++) {
-        if (this->states[i] == s) {
-            ret->push_back(this->robotIds[i]);
+int StateCollection::getRobotsInState(int64_t sid, AgentSet& o_robots) const {
+    int c = 0;
+    for (int i = 0; i < _robotIds.size(); ++i) {
+        if (_states[i]->getId() == sid) {
+            o_robots.push_back(_robotIds[i]);
+            ++c;
         }
     }
-    sort(ret->begin(), ret->end());
-    return ret;
+    return c;
 }
 
-unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>
-StateCollection::getRobotsInState(long sid) {
-    unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>
-            ret;
-    for (int i = 0; i < this->robotIds.size(); i++) {
-        if (this->states[i]->getId() == sid) {
-            ret.insert(this->robotIds[i]);
-        }
-    }
-
-    return ret;
+void StateCollection::getRobotsInStateSorted(const State* s, AgentSet& o_robots) const {
+    getRobotsInState(s, o_robots);
+    sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
 }
 
 void StateCollection::removeRobot(const supplementary::AgentID* robotId) {
-    for (int i = 0; i < this->states.size(); i++) {
-        if (*(this->robotIds[i]) == *(robotId)) {
-            this->robotIds.erase(robotIds.begin() + i);
-            this->states.erase(states.begin() + i);
+    for (int i = 0; i < _states.size(); i++) {
+        if (*(_robotIds[i]) == *(robotId)) {
+            _robotIds.erase(_robotIds.begin() + i);
+            _states.erase(_states.begin() + i);
             return;
         }
     }
 }
 
 void StateCollection::clear() {
-    this->robotIds.clear();
-    this->states.clear();
+    _robotIds.clear();
+    _states.clear();
 }
 
-State* StateCollection::stateOfRobot(const supplementary::AgentID* robotId) {
-    for (int i = 0; i < this->robotIds.size(); i++) {
-        if (*(this->robotIds[i]) == *robotId) {
-            return this->states[i];
-        }
-    }
-    return nullptr;
-}
-
-void StateCollection::setState(const supplementary::AgentID* robotId, State* state) {
-    for (int i = 0; i < this->robotIds.size(); i++) {
-        if (*(this->robotIds[i]) == *robotId) {
-            this->states[i] = state;
+void StateCollection::setState(const supplementary::AgentID* robotId, const State* state) {
+    for (int i = 0; i < _robotIds.size(); ++i) {
+        if (*(_robotIds[i]) == *robotId) {
+            _states[i] = state;
             return;
         }
     }
-    this->robotIds.push_back(robotId);
-    this->states.push_back(state);
+    _robotIds.push_back(robotId);
+    _states.push_back(state);
 }
 
-string StateCollection::toString() {
-    stringstream ss;
-    for (int i = 0; i < robotIds.size(); i++) {
-        ss << "R: " << *this->robotIds[i] << " in State: ";
-        if (this->states[i] == nullptr) {
-            ss << "NULL" << endl;
+std::string StateCollection::toString() const {
+    std::stringstream ss;
+    for (int i = 0; i < _robotIds.size(); i++) {
+        ss << "R: " << *_robotIds[i] << " in State: ";
+        if (_states[i] == nullptr) {
+            ss << "NULL" << std::endl;
         } else {
-            ss << this->states[i]->getName() << " (" << this->states[i]->getId() << ") " << endl;
+            ss << _states[i]->getName() << " (" << _states[i]->getId() << ") " << std::endl;
         }
     }
     return ss.str();
 }
 
-void StateCollection::setInitialState(const supplementary::AgentID* robotId, EntryPoint* ep) {
+void StateCollection::setInitialState(const supplementary::AgentID* robotId, const EntryPoint* ep) {
     setState(robotId, ep->getState());
 }
 
-void StateCollection::setStates(vector<const supplementary::AgentID*> robotIds, State* state) {
-    for (int i = 0; i < robotIds.size(); i++) {
-        setState(robotIds[i], state);
+void StateCollection::setStates(const AgentSet& robotIds, const State* state) {
+    for (const supplementary::AgentID* r : robotIds) {
+        setState(r, state);
+    }
+}
+
+void StateCollection::moveAllFromTo(const State* from, const State* to) {
+    for (int i = 0; i < _states.size(); ++i) {
+        if (_states[i] == from) {
+            _states[i] = to;
+        }
     }
 }
 
@@ -159,13 +128,13 @@ void StateCollection::reconsiderOldAssignment(shared_ptr<Assignment> oldOne, sha
         return;
     }
     // shared_ptr<vector<EntryPoint*> >eps = oldOne->getEntryPoints();
-    EntryPoint* ep;
+    const EntryPoint* ep;
     for (short i = 0; i < oldOne->getEntryPointCount(); i++) {
         ep = oldOne->getEpRobotsMapping()->getEp(i);
-        for (const supplementary::AgentID*& rid : *(oldOne->getRobotsWorking(ep))) {
+        for (const supplementary::AgentID* rid : *(oldOne->getRobotsWorking(ep))) {
             auto iter = find(newOne->getRobotsWorking(ep)->begin(), newOne->getRobotsWorking(ep)->end(), rid);
             if (iter != newOne->getRobotsWorking(ep)->end()) {
-                this->setState(rid, oldOne->getRobotStateMapping()->getState(rid));
+                setState(rid, oldOne->getRobotStateMapping()->getStateOfRobot(rid));
             }
         }
     }

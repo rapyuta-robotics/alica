@@ -8,38 +8,39 @@
 #ifndef ROLE_H_
 #define ROLE_H_
 
-#include <map>
+#include <unordered_map>
 #include <string>
-#include <sstream>
-#include <exception>
-#include <iostream>
 
 #include "AlicaElement.h"
 
-using namespace std;
 namespace alica {
 class RoleTaskMapping;
 class RoleDefinitionSet;
 class Characteristic;
+class ModelFactory;
 
 class Role : public AlicaElement {
 public:
     Role();
     virtual ~Role();
 
-    double getPriority(long taskId);
-    string toString();
+    double getPriority(int64_t taskId) const;
+    std::string toString() const override;
 
-    map<string, Characteristic*>& getCharacteristics();
-    const RoleDefinitionSet* getRoleDefinitionSet() const;
+    const std::unordered_map<std::string, const Characteristic*>& getCharacteristics() const {
+        return _characteristics;
+    }
+    const RoleDefinitionSet* getRoleDefinitionSet() const { return _roleDefinitionSet; }
+    const RoleTaskMapping* getRoleTaskMapping() const { return _roleTaskMapping; }
+
+private:
+    friend ModelFactory;
     void setRoleDefinitionSet(const RoleDefinitionSet* roleDefinitionSet);
-    const RoleTaskMapping* getRoleTaskMapping() const;
-    void setRoleTaskMapping(RoleTaskMapping* roleTaskMapping);
+    void setRoleTaskMapping(const RoleTaskMapping* roleTaskMapping);
 
-protected:
-    RoleTaskMapping* roleTaskMapping;
-    map<string, Characteristic*> characteristics;
-    const RoleDefinitionSet* roleDefinitionSet;
+    std::unordered_map<std::string, const Characteristic*> _characteristics;
+    const RoleTaskMapping* _roleTaskMapping;
+    const RoleDefinitionSet* _roleDefinitionSet;
 };
 
 }  // namespace alica

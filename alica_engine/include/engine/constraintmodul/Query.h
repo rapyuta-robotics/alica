@@ -41,11 +41,11 @@ public:
     UniqueVarStore();
 
     void clear();
-    void add(Variable* v);
-    Variable* getRep(Variable* v);
-    void addVarTo(Variable* representing, Variable* toAdd);
-    vector<Variable*> getAllRep();
-    int getIndexOf(Variable* v);
+    void add(const Variable* v);
+    const Variable* getRep(const Variable* v);
+    void addVarTo(const Variable* representing, const Variable* toAdd);
+    VariableSet getAllRep() const;
+    int getIndexOf(const Variable* v) const;
     friend std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store) {
         os << "UniqueVarStore: " << std::endl;
         // write obj to stream
@@ -64,7 +64,7 @@ private:
      *  Each inner list of variables is sorted from variables of the top most plan to variables of the deepest plan.
      *  Therefore, the first element is always the variable in the top most plan, where this variable occurs.
      */
-    vector<vector<Variable*>> store;
+    std::vector<VariableSet> store;
 };
 
 /**
@@ -74,43 +74,44 @@ class Query {
 public:
     Query();
 
-    void addStaticVariable(Variable* v);
-    void addDomainVariable(const supplementary::AgentID* robot, string ident, AlicaEngine* ae);
+    void addStaticVariable(const Variable* v);
+    void addDomainVariable(const supplementary::AgentID* robot, const std::string& ident, AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
-    bool existsSolution(int solverType, shared_ptr<RunningPlan> rp);
+    bool existsSolution(int solverType, std::shared_ptr<RunningPlan> rp);
 
     template <class T>
-    bool getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<T>& result);
+    bool getSolution(int solverType, std::shared_ptr<RunningPlan> rp, vector<T>& result);
 
-    vector<Variable*> getRelevantStaticVariables();
-    void setRelevantStaticVariables(vector<Variable*> value);
-    vector<Variable*> getRelevantDomainVariables();
-    void setRelevantDomainVariables(vector<Variable*> value);
-    void addProblemParts(vector<shared_ptr<ProblemPart>>& l);
+    const VariableSet& getRelevantStaticVariables() const { return relevantStaticVariables; }
+    const VariableSet& getRelevantDomainVariables() const { return relevantDomainVariables; }
+    void setRelevantStaticVariables(const VariableSet& value);
+    void setRelevantDomainVariables(const VariableSet& value);
 
-    shared_ptr<UniqueVarStore> getUniqueVariableStore(); /*< for testing only!!! */
+    void addProblemParts(std::vector<std::shared_ptr<ProblemPart>>& l);
+
+    std::shared_ptr<UniqueVarStore> getUniqueVariableStore(); /*< for testing only!!! */
 
 private:
-    bool collectProblemStatement(shared_ptr<RunningPlan> rp, ISolver* solver,
-            vector<shared_ptr<ProblemDescriptor>>& cds, vector<Variable*>& relevantVariables, int& domOffset);
+    bool collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* solver,
+            std::vector<std::shared_ptr<ProblemDescriptor>>& cds, VariableSet& relevantVariables, int& domOffset);
 
-    shared_ptr<UniqueVarStore> uniqueVarStore;
-    vector<Variable*> queriedStaticVariables;
-    vector<Variable*> queriedDomainVariables;
-    vector<shared_ptr<ProblemPart>> problemParts;
+    std::shared_ptr<UniqueVarStore> uniqueVarStore;
+    VariableSet queriedStaticVariables;
+    VariableSet queriedDomainVariables;
+    std::vector<shared_ptr<ProblemPart>> problemParts;
 
-    vector<Variable*> relevantStaticVariables;
-    vector<Variable*> relevantDomainVariables;
+    VariableSet relevantStaticVariables;
+    VariableSet relevantDomainVariables;
 };
 
 template <class T>
-bool Query::getSolution(int solverType, shared_ptr<RunningPlan> rp, vector<T>& result) {
+bool Query::getSolution(int solverType, std::shared_ptr<RunningPlan> rp, std::vector<T>& result) {
     result.clear();
 
     // Collect the complete problem specification
     vector<shared_ptr<ProblemDescriptor>> cds;
-    vector<Variable*> relevantVariables;
+    VariableSet relevantVariables;
     int domOffset;
     ISolver* solver = rp->getAlicaEngine()->getSolver(solverType);
     if (solver == nullptr) {

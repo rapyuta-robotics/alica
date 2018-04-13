@@ -77,7 +77,7 @@ void CycleManager::update() {
         return;
     }
 
-    AbstractPlan* plan = this->rp->getPlan();
+    const AbstractPlan* plan = this->rp->getPlan();
 
     if (this->state == CycleState::observing) {
         if (detectAllocationCycle()) {
@@ -161,10 +161,9 @@ void alica::CycleManager::setNewAllocDiff(
         this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
         this->allocationHistory[this->newestAllocationDifference]->reset();
 
-        EntryPoint* ep;
         // for (EntryPoint* ep : (*oldAss->getEntryPoints()))
         for (short i = 0; i < oldAss->getEntryPointCount(); i++) {
-            ep = oldAss->getEpRobotsMapping()->getEp(i);
+            const EntryPoint* ep = oldAss->getEpRobotsMapping()->getEp(i);
 
             auto newRobots = newAss->getRobotsWorking(ep);
             auto oldRobots = oldAss->getRobotsWorking(ep);
@@ -265,7 +264,7 @@ bool CycleManager::setAssignment() {
         cout << "CM: Changing AuthorityTest " << endl;
     }
 #endif
-    EntryPoint* myEntryPoint = nullptr;
+    const EntryPoint* myEntryPoint = nullptr;
     if (this->fixedAllocation == nullptr) {
         return false;
     }
@@ -275,8 +274,8 @@ bool CycleManager::setAssignment() {
         if (rp->getPlanType()->getId() != this->fixedAllocation->planType) {
             return false;
         }
-        Plan* newPlan = nullptr;
-        for (Plan* p : rp->getPlanType()->getPlans()) {
+        const Plan* newPlan = nullptr;
+        for (const Plan* p : rp->getPlanType()->getPlans()) {
             if (p->getId() == this->fixedAllocation->planId) {
                 newPlan = p;
                 rp->setPlan(p);
@@ -284,11 +283,11 @@ bool CycleManager::setAssignment() {
             }
         }
         rp->setAssignment(make_shared<Assignment>(newPlan, this->fixedAllocation));
-        for (EntryPointRobots epr : this->fixedAllocation->entryPointRobots) {
+        for (const EntryPointRobots& epr : this->fixedAllocation->entryPointRobots) {
             if (find_if(epr.robots.begin(), epr.robots.end(), [this](const supplementary::AgentID* id) {
                     return *(this->myID) == *id;
                 }) != epr.robots.end()) {
-                myEntryPoint = pr->getEntryPoints().at(epr.entrypoint);
+                myEntryPoint = pr->getEntryPoints()[epr.entrypoint];
             }
         }
 
@@ -296,7 +295,7 @@ bool CycleManager::setAssignment() {
     } else {
         for (EntryPointRobots epr : this->fixedAllocation->entryPointRobots) {
             for (auto& robot : epr.robots) {
-                EntryPoint* e = pr->getEntryPoints().at(epr.entrypoint);
+                const EntryPoint* e = pr->getEntryPoints()[epr.entrypoint];
                 bool changed = rp->getAssignment()->updateRobot(robot, e);
                 if (changed) {
                     if (*robot == *myID) {
@@ -317,8 +316,9 @@ bool CycleManager::setAssignment() {
         rp->setAllocationNeeded(true);
     } else {
         if (rp->getActiveState() != nullptr) {
-            auto robotsJoined = rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState());
-            for (shared_ptr<RunningPlan> c : *rp->getChildren()) {
+            AgentSet robotsJoined;
+            rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState(), robotsJoined);
+            for (shared_ptr<RunningPlan>& c : *rp->getChildren()) {
                 c->limitToRobots(robotsJoined);
             }
         }

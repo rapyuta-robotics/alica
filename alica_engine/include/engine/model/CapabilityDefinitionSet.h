@@ -8,15 +8,12 @@
 #ifndef CAPABILITYDEFINITIONSET_H_
 #define CAPABILITYDEFINITIONSET_H_
 
-#include <list>
 
 #include "AlicaElement.h"
+#include "engine/Types.h"
 
-using namespace std;
 namespace alica {
-
-class Capability;
-
+class ModelFactory;
 /**
  * A capability definition set holds all defined capabilities.
  */
@@ -24,11 +21,12 @@ class CapabilityDefinitionSet : public AlicaElement {
 public:
     CapabilityDefinitionSet();
     virtual ~CapabilityDefinitionSet();
-    list<Capability*>& getCapabilities();
+    const CapabilitySet& getCapabilities() const { return _capabilities; }
 
 private:
-    list<Capability*> capabilities;
-    void setCapabilities(const list<Capability*>& capabilities);
+    friend ModelFactory;
+    void setCapabilities(const CapabilitySet& capabilities);
+    CapabilitySet _capabilities;
 };
 
 }  // namespace alica
