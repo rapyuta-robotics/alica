@@ -46,7 +46,7 @@ public:
     const std::shared_ptr<UtilityFunction>& getUtilityFunction() const { return _utilityFunction; }
     double getUtilityThreshold() const { return _utilityThreshold; }
 
-    std::string toString() const;
+    std::string toString() const override;
     const std::string& getFileName() const { return _fileName; }
 
     void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const;  // not a mistake, this is mutable

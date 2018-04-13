@@ -37,7 +37,7 @@ class AlicaEngine;
 class PlanWriter {
 public:
     PlanWriter(AlicaEngine* ae, PlanRepository* rep);
-    virtual ~PlanWriter();
+    ~PlanWriter();
 
     const std::string& getTempPlanDir() const;
     const std::string& getConfigPath() const;

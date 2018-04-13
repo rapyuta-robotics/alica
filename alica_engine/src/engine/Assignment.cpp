@@ -61,7 +61,6 @@ Assignment::Assignment(PartialAssignment* pa) {
         epRobotsMapping->setEp(i, assCol->getEp(i));
         // copy robots
         *(epRobotsMapping->editRobots(i)) = *(assCol->getRobots(i));
-        // set the robots
     }
 
     this->robotStateMapping = new StateCollection(this->epRobotsMapping);
@@ -88,7 +87,7 @@ Assignment::Assignment(const Plan* p, shared_ptr<AllocationAuthorityInfo> aai) {
             if (epRobots.entrypoint == ep->getId()) {
                 // copy robots
                 AgentSet* curRobots = this->epRobotsMapping->editRobots(i);
-                curRobots->clear();
+
                 for (auto& robot : epRobots.robots) {
                     curRobots->push_back(robot);
                 }
@@ -124,7 +123,7 @@ void Assignment::getAllRobots(AgentSet& o_robots) {
 
 void Assignment::getAllRobotsSorted(AgentSet& o_robots) {
     getAllRobots(o_robots);
-    sort(o_robots.begin(), o_robots.end());
+    sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
 }
 
 /**
@@ -138,7 +137,7 @@ const AgentSet* Assignment::getRobotsWorking(int64_t epid) const {
 
 void Assignment::getRobotsWorkingSorted(const EntryPoint* ep, AgentSet& o_robots) {
     o_robots = *getRobotsWorking(ep);
-    sort(o_robots.begin(), o_robots.end());
+    sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
 }
 
 /**

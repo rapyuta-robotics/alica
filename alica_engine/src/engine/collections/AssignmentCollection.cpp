@@ -123,7 +123,7 @@ void AssignmentCollection::sortEps() {
 void AssignmentCollection::sortRobots(const EntryPoint* ep) {  // TODO: make obsolete by maintaining sortedness
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i] == ep) {
-            std::sort(_robotIds[i].begin(), _robotIds[i].end());
+            std::sort(_robotIds[i].begin(), _robotIds[i].end(), supplementary::AgentIDComparator());
         }
     }
 }

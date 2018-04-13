@@ -20,7 +20,7 @@ class SuccessState : public TerminalState {
 public:
     SuccessState();
     virtual ~SuccessState();
-    std::string toString() const;
+    std::string toString() const override;
 };
 
 }  // namespace alica

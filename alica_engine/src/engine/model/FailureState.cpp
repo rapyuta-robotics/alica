@@ -11,7 +11,7 @@
 namespace alica {
 
 FailureState::FailureState()
-        : TerminalState(Failure) {}
+        : TerminalState(FAILURE) {}
 
 FailureState::~FailureState() {}
 

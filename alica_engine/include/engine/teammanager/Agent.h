@@ -28,7 +28,7 @@ class Agent {
     friend ::alica::TeamObserver;
 
 public:
-    virtual ~Agent() {
+    ~Agent() {
         delete _properties;
         delete _engineData;
     }

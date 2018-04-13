@@ -27,7 +27,7 @@ class ModelFactory;
  */
 class State : public AlicaElement {
 public:
-    enum StateType { Normal, Success, Failure };
+    enum StateType { NORMAL, SUCCESS, FAILURE };
     State();
     State(StateType t);
     State(int64_t id);
@@ -40,9 +40,9 @@ public:
     const TransitionSet& getOutTransitions() const { return _outTransitions; }
     const ParametrisationSet& getParametrisation() const { return _parametrisation; }
 
-    bool isTerminal() const { return _type != Normal; }
-    bool isSuccessState() const { return _type == Success; }
-    bool isFailureState() const { return _type == Failure; }
+    bool isTerminal() const { return _type != NORMAL; }
+    bool isSuccessState() const { return _type == SUCCESS; }
+    bool isFailureState() const { return _type == FAILURE; }
 
 private:
     friend ModelFactory;

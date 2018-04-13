@@ -20,7 +20,7 @@ public:
     RuntimeCondition(int64_t id = 0);
     virtual ~RuntimeCondition();
 
-    std::string toString() const;
+    std::string toString() const override;
 };
 
 }  // namespace alica

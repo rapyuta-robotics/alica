@@ -27,12 +27,12 @@ public:
     const std::string& getDescription() const { return _description; }
 
     const TaskRepository* getTaskRepository() const {return _taskRepository;}
-    std::string toString() const;
+    std::string toString() const override;
 
     static constexpr int64_t IDLEID = -1;  // For Task Id of an Idle EntryPoint...
 private:
-    void setTaskRepository(const TaskRepository* taskRepository);
     friend ModelFactory;
+    void setTaskRepository(const TaskRepository* taskRepository);
     void setDescription(const std::string& description);
     const TaskRepository* _taskRepository;
     std::string _description;

@@ -36,7 +36,7 @@ public:
 
     const TransitionSet& getInSync() const { return _inSync; }
 
-    std::string toString() const;
+    std::string toString() const override;
 
 private:
     friend ModelFactory;
@@ -51,6 +51,7 @@ private:
 
     AlicaTime _talkTimeOut;
     AlicaTime _syncTimeOut;
+
     bool _failOnSyncTimeOut;
 };
 
