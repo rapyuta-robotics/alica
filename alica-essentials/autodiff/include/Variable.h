@@ -4,7 +4,7 @@
 
 #include "Term.h"
 
-#include <iostream>
+#include <string>
 #include <memory>
 
 namespace autodiff {
@@ -20,7 +20,7 @@ public:
     std::shared_ptr<Term> aggregateConstants();
     std::shared_ptr<Term> derivative(std::shared_ptr<Variable> v);
 
-    std::string toString();
+    std::string toString() override;
 
 private:
     int ownId;
