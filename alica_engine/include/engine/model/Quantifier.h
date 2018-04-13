@@ -51,7 +51,6 @@ private:
     enum Scope { planScope, entryPointScope, stateScope };
     friend ModelFactory;
     void setScope(const AlicaElement* ae);
-    void setScopeType(Scope scope);
     void setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers);
 
     std::vector<std::string> _domainIdentifiers;
