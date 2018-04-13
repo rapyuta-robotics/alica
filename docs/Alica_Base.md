@@ -38,7 +38,7 @@ namespace msl
 		//For ROS use this
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
 
-		//DummyCommucation has only empty methods so cant communicate with other robots
+		//DummyCommunication has only empty methods so cant communicate with other robots
 		//Without ros use this
 		ae->setCommunicator(new alicaRosProxy::AlicaDummyCommunication(ae));
 		
