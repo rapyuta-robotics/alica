@@ -111,7 +111,7 @@ void AuthorityManager::processPlan(shared_ptr<RunningPlan> rp) {
  * Sends an AllocationAuthorityInfo message containing the assignment of p
  */
 void AuthorityManager::sendAllocation(shared_ptr<RunningPlan> p) {
-    if (!this->engine->isMaySendMessages()) {
+    if (!this->engine->maySendMessages()) {
         return;
     }
     AllocationAuthorityInfo aai = AllocationAuthorityInfo();

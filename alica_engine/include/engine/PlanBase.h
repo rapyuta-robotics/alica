@@ -38,7 +38,7 @@ class AlicaEngine;
  */
 class PlanBase {
 public:
-    PlanBase(AlicaEngine* ae, Plan* masterplan);
+    PlanBase(AlicaEngine* ae, const Plan* masterplan);
     ~PlanBase();
     std::condition_variable* getStepModeCV();
     const std::shared_ptr<RunningPlan> getRootNode() const;
@@ -51,7 +51,7 @@ public:
     std::shared_ptr<const RunningPlan> getDeepestNode() const;
     std::shared_ptr<RunningPlan> getRootNode();
 
-    /*const*/ Plan* getMasterPlan() const { return _masterPlan; }
+    const Plan* getMasterPlan() const { return _masterPlan; }
     bool isWaiting() const { return _isWaiting; }
 
 private:
@@ -62,7 +62,7 @@ private:
      */
 
     AlicaEngine* _ae;
-    Plan* _masterPlan;
+    const Plan* _masterPlan;
 
     TeamObserver* _teamObserver;
     IRoleAssignment* _ra;
@@ -71,10 +71,10 @@ private:
     IAlicaCommunication* _statusPublisher;
     IAlicaClock* _alicaClock;
 
-    shared_ptr<RunningPlan> _rootNode;
-    shared_ptr<const RunningPlan> _deepestNode;
+    std::shared_ptr<RunningPlan> _rootNode;
+    std::shared_ptr<const RunningPlan> _deepestNode;
 
-    thread* _mainThread;
+    std::thread* _mainThread;
     Logger* _log;
     AlicaEngineInfo* _statusMessage;
 
@@ -89,7 +89,7 @@ private:
     std::mutex _lomutex;
     std::mutex _stepMutex;
 
-    queue<shared_ptr<RunningPlan>> _fpEvents;
+    std::queue<shared_ptr<RunningPlan>> _fpEvents;
     std::condition_variable _fpEventWait;
     std::condition_variable _stepModeCV;
     RuleBook _ruleBook;

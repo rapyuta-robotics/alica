@@ -125,7 +125,7 @@ void TeamObserver::close() {
  * as constructed by RunningPlan.ToMessage.
  */
 void TeamObserver::doBroadCast(list<long>& msg) {
-    if (!ae->maySendMessages) {
+    if (!ae->maySendMessages()) {
         return;
     }
     PlanTreeInfo pti = PlanTreeInfo();

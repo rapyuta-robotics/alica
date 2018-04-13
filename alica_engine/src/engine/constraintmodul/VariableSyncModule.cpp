@@ -102,7 +102,7 @@ void VariableSyncModule::publishContent() {
     if (!_running) {
         return;
     }
-    if (!_ae->isMaySendMessages()) {
+    if (!_ae->maySendMessages()) {
         return;
     }
 

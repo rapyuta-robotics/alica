@@ -68,19 +68,19 @@ void SyncModule::setSynchronisation(const Transition* trans, bool holds) {
     }
 }
 void SyncModule::sendSyncTalk(SyncTalk& st) {
-    if (!this->ae->isMaySendMessages())
+    if (!this->ae->maySendMessages())
         return;
     st.senderID = this->myId;
     this->communicator->sendSyncTalk(st);
 }
 void SyncModule::sendSyncReady(SyncReady& sr) {
-    if (!this->ae->isMaySendMessages())
+    if (!this->ae->maySendMessages())
         return;
     sr.senderID = this->myId;
     communicator->sendSyncReady(sr);
 }
 void SyncModule::sendAcks(vector<SyncData*> syncDataList) {
-    if (!this->ae->isMaySendMessages())
+    if (!this->ae->maySendMessages())
         return;
     SyncTalk st;
     st.senderID = this->myId;

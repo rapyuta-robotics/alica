@@ -71,13 +71,15 @@ public:
     void setIDent(BBIdent id) {_type=TypeIdent; _value.asIdent = id;}
 
 
-    void serializeTo(uint8_t* arr) const {
+    int serializeTo(uint8_t* arr) const {
         arr[0] = static_cast<uint8_t>(_type);
         memcpy(arr+1, &_value.asRaw, kUnionSize);
+        return static_cast<int>(kVariantSize);
     }
-    void loadFrom(const uint8_t* arr) {
+    int loadFrom(const uint8_t* arr) {
         _type = static_cast<Type>(arr[0]);
         memcpy(&_value.asRaw, arr+1, kUnionSize);
+        return static_cast<int>(kVariantSize);
     }
 
 

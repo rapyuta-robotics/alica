@@ -41,19 +41,7 @@ void Query::clearStaticVariables() {
     queriedStaticVariables.clear();
 }
 
-bool Query::existsSolution(int solverType, std::shared_ptr<RunningPlan> rp) {
-    ISolver* solver = rp->getAlicaEngine()->getSolver(solverType);
-
-    std::vector<std::shared_ptr<ProblemDescriptor>> cds;
-    VariableSet relevantVariables;
-    int domOffset;
-    if (!collectProblemStatement(rp, solver, cds, relevantVariables, domOffset)) {
-        return false;
-    }
-    return solver->existsSolution(relevantVariables, cds);
-}
-
-bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* solver,
+bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolverBase* solver,
         std::vector<std::shared_ptr<ProblemDescriptor>>& pds, VariableSet& relevantVariables, int& domOffset) {
 #ifdef Q_DEBUG
     long time = rp->getAlicaEngine()->getIAlicaClock()->now();
