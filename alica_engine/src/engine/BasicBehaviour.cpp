@@ -25,15 +25,13 @@ namespace alica {
  * If using eventTrigger set behaviourTrigger and register runCV
  * @param name The name of the behaviour
  */
-BasicBehaviour::BasicBehaviour(string name)
+BasicBehaviour::BasicBehaviour(const std::string& name)
         : name(name)
-        , parameters(nullptr)
         , engine(nullptr)
         , failure(false)
         , success(false)
         , callInit(true)
-        , started(true)
-        , runCV() {
+        , started(true) {
     this->running = false;
     this->timer = new supplementary::Timer(0, 0);
     this->timer->registerCV(&this->runCV);
@@ -53,37 +51,25 @@ BasicBehaviour::~BasicBehaviour() {
     }
 }
 
-const string BasicBehaviour::getName() const {
+const std::string& BasicBehaviour::getName() const {
     return this->name;
 }
 
-void BasicBehaviour::setName(string name) {
+void BasicBehaviour::setName(const std::string& name) {
     this->name = name;
 }
 
-shared_ptr<map<string, string>> BasicBehaviour::getParameters() {
-    return this->parameters;
+void BasicBehaviour::setConfiguration(const BehaviourConfiguration* beh) {
+    _configuration = beh;
 }
 
-void BasicBehaviour::setParameters(shared_ptr<map<string, string>> parameters) {
-    this->parameters = parameters;
-}
-
-shared_ptr<list<Variable*>> BasicBehaviour::getVariables() {
-    return this->variables;
-}
-
-Variable* BasicBehaviour::getVariablesByName(string name) {
-    for (auto variable : (*variables)) {
+const Variable* BasicBehaviour::getVariableByName(const std::string& name) const {
+    for (const Variable* variable : _configuration->getVariables()) {
         if (variable->getName() == name) {
             return variable;
         }
     }
     return nullptr;
-}
-
-void BasicBehaviour::setVariables(shared_ptr<list<Variable*>> variables) {
-    this->variables = variables;
 }
 
 int BasicBehaviour::getDelayedStart() const {
@@ -106,7 +92,7 @@ void BasicBehaviour::setInterval(long msInterval) {
  * Convenience method to obtain the robot's own id.
  * @return the own robot id
  */
-const supplementary::AgentID* BasicBehaviour::getOwnId() {
+const supplementary::AgentID* BasicBehaviour::getOwnId() const {
     return this->engine->getTeamManager()->getLocalAgentID();
 }
 
@@ -137,7 +123,7 @@ bool BasicBehaviour::start() {
     return true;
 }
 
-shared_ptr<RunningPlan> BasicBehaviour::getRunningPlan() {
+shared_ptr<RunningPlan> BasicBehaviour::getRunningPlan() const {
     return runningPlan;
 }
 
@@ -172,14 +158,14 @@ void BasicBehaviour::setTrigger(supplementary::ITrigger* trigger) {
     this->behaviourTrigger->registerCV(&this->runCV);
 }
 
-shared_ptr<vector<const supplementary::AgentID*>> BasicBehaviour::robotsInEntryPointOfHigherPlan(EntryPoint* ep) {
+const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryPointOfHigherPlan(const EntryPoint* ep) {
     if (ep == nullptr) {
         return nullptr;
     }
     shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
-        if (((Plan*) cur->getPlan())->getEntryPoints().find(ep->getId()) !=
-                ((Plan*) cur->getPlan())->getEntryPoints().end()) {
+        const EntryPointSet& eps = static_cast<const Plan*>(cur->getPlan())->getEntryPoints();
+        if (std::find(eps.begin(), eps.end(), ep) != eps.end()) {
             return cur->getAssignment()->getRobotsWorking(ep);
         }
         cur = cur->getParent().lock();
@@ -187,7 +173,7 @@ shared_ptr<vector<const supplementary::AgentID*>> BasicBehaviour::robotsInEntryP
     return nullptr;
 }
 
-shared_ptr<vector<const supplementary::AgentID*>> BasicBehaviour::robotsInEntryPoint(EntryPoint* ep) {
+const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryPoint(const EntryPoint* ep) {
     if (ep == nullptr) {
         return nullptr;
     }
@@ -209,8 +195,8 @@ void BasicBehaviour::initInternal() {
     }
 }
 
-bool BasicBehaviour::getParameter(string key, string& valueOut) {
-    for (auto pair : *parameters) {
+bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const {
+    for (const auto& pair : _configuration->getParameters()) {
         if (pair.first == key) {
             valueOut = pair.second;
             return true;
@@ -251,7 +237,7 @@ void BasicBehaviour::runInternal() {
             sendLogMessage(4, err);
         }
 #ifdef BEH_DEBUG
-        BehaviourConfiguration* conf = dynamic_cast<BehaviourConfiguration*>(this->runningPlan->getPlan());
+        const BehaviourConfiguration* conf = dynamic_cast<const BehaviourConfiguration*>(this->runningPlan->getPlan());
         if (conf->isEventDriven()) {
             double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 -
                           1.0 / conf->getFrequency() * 1000.0;
@@ -272,26 +258,26 @@ void BasicBehaviour::runInternal() {
     }
 }
 
-EntryPoint* BasicBehaviour::getParentEntryPoint(string taskName) {
+const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskName) {
     shared_ptr<RunningPlan> parent = this->runningPlan->getParent().lock();
     if (parent == nullptr) {
         return nullptr;
     }
-    for (pair<long, EntryPoint*> e : ((Plan*) parent->getPlan())->getEntryPoints()) {
-        if (e.second->getTask()->getName() == taskName) {
-            return e.second;
+    for (const EntryPoint* e : static_cast<const Plan*>(parent->getPlan())->getEntryPoints()) {
+        if (e->getTask()->getName() == taskName) {
+            return e;
         }
     }
     return nullptr;
 }
 
-EntryPoint* BasicBehaviour::getHigherEntryPoint(string planName, string taskName) {
+const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planName, const std::string& taskName) {
     shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
         if (cur->getPlan()->getName() == planName) {
-            for (pair<long, EntryPoint*> e : ((Plan*) cur->getPlan())->getEntryPoints()) {
-                if (e.second->getTask()->getName() == taskName) {
-                    return e.second;
+            for (const EntryPoint* e : ((Plan*) cur->getPlan())->getEntryPoints()) {
+                if (e->getTask()->getName() == taskName) {
+                    return e;
                 }
             }
             return nullptr;

@@ -27,12 +27,12 @@ Synchronisation::Synchronisation(AlicaEngine* ae)
 }
 
 Synchronisation::Synchronisation(
-        AlicaEngine* ae, const supplementary::AgentID* myID, SyncTransition* st, SyncModule* sm) {
+        AlicaEngine* ae, const supplementary::AgentID* myID, const SyncTransition* st, SyncModule* sm) {
     this->ae = ae;
     this->syncTransition = st;
     this->myID = myID;
     this->syncStartTime = ae->getIAlicaClock()->now() / 1000000UL;
-    for (Transition* t : st->getInSync()) {
+    for (const Transition* t : st->getInSync()) {
         connectedTransitions.push_back(t->getId());
     }
     this->syncModul = sm;
@@ -50,7 +50,7 @@ Synchronisation::~Synchronisation() {
     }
 }
 
-SyncTransition* Synchronisation::getSyncTransition() {
+const SyncTransition* Synchronisation::getSyncTransition() const {
     return syncTransition;
 }
 
@@ -292,7 +292,7 @@ void Synchronisation::integrateSyncReady(shared_ptr<SyncReady> ready) {
     }
 }
 
-void Synchronisation::setSyncTransition(SyncTransition* syncTransition) {
+void Synchronisation::setSyncTransition(const SyncTransition* syncTransition) {
     this->syncTransition = syncTransition;
 }
 

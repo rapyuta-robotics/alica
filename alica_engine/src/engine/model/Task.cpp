@@ -6,45 +6,35 @@
  */
 
 #include "engine/model/Task.h"
+#include <sstream>
 
 namespace alica {
 
-/**
- * Basic constructor
- */
 Task::~Task() {}
 
-/**
- * constructor
- * @param defaultTask A bool
- */
-Task::Task(bool defaultTask) {
-    this->defaultTask = defaultTask;
-    this->taskRepository = nullptr;
-}
+Task::Task(int64_t id, bool defaultTask)
+        : AlicaElement(id)
+        , _defaultTask(defaultTask)
+        , _taskRepository(nullptr) {}
 
-string Task::toString() {
-    stringstream ss;
-    ss << "#Task: " << this->name << " " << this->id << endl;
-    ss << "\t Description: " << this->description << endl;
-    ss << "#EndTask" << endl;
+Task::Task(bool defaultTask)
+        : _defaultTask(defaultTask)
+        , _taskRepository(nullptr) {}
+
+std::string Task::toString() const {
+    std::stringstream ss;
+    ss << "#Task: " << getName() << " " << getId() << std::endl;
+    ss << "\t Description: " << _description << std::endl;
+    ss << "#EndTask" << std::endl;
     return ss.str();
 }
 
-const string& Task::getDescription() const {
-    return description;
-}
-
-void Task::setDescription(const string& description) {
-    this->description = description;
-}
-
-const TaskRepository* Task::getTaskRepository() const {
-    return taskRepository;
+void Task::setDescription(const std::string& description) {
+    _description = description;
 }
 
 void Task::setTaskRepository(const TaskRepository* taskRepository) {
-    this->taskRepository = taskRepository;
+    _taskRepository = taskRepository;
 }
 
 }  // namespace alica

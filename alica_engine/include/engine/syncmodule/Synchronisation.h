@@ -26,15 +26,15 @@ class AlicaEngine;
 class Synchronisation {
 public:
     Synchronisation(AlicaEngine* ae);
-    Synchronisation(AlicaEngine* ae, const supplementary::AgentID* myID, SyncTransition* st, SyncModule* sm);
+    Synchronisation(AlicaEngine* ae, const supplementary::AgentID* myID, const SyncTransition* st, SyncModule* sm);
     virtual ~Synchronisation();
     void setTick(unsigned long now);
     void changeOwnData(long transitionID, bool conditionHolds);
     bool isValid(unsigned long curTick);
     bool integrateSyncTalk(shared_ptr<SyncTalk> talk, unsigned long curTick);
     void integrateSyncReady(shared_ptr<SyncReady> ready);
-    SyncTransition* getSyncTransition();
-    void setSyncTransition(SyncTransition* syncTransition);
+    const SyncTransition* getSyncTransition() const;
+    void setSyncTransition(const SyncTransition* syncTransition);
 
 private:
     bool allSyncReady();
@@ -45,7 +45,7 @@ protected:
     mutex syncMutex;
     mutex rowOkMutex;
     SyncModule* syncModul;
-    SyncTransition* syncTransition;
+    const SyncTransition* syncTransition;
     const supplementary::AgentID* myID;
     unsigned long lastTalkTime;
     SyncData* lastTalkData;

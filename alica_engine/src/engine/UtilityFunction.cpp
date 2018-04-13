@@ -17,8 +17,8 @@
 
 namespace alica {
 
-UtilityFunction::UtilityFunction(
-        string name, list<USummand*> utilSummands, double priorityWeight, double similarityWeight, Plan* plan)
+UtilityFunction::UtilityFunction(const std::string& name, std::list<USummand*> utilSummands, double priorityWeight,
+        double similarityWeight, const Plan* plan)
         : priResult(0.0, 0.0)
         , simUI(0.0, 0.0) {
     this->ra = nullptr;
@@ -42,16 +42,12 @@ UtilityFunction::~UtilityFunction() {
     delete this->lookupStruct;
 }
 
-list<USummand*>& UtilityFunction::getUtilSummands() {
+std::list<USummand*>& UtilityFunction::getUtilSummands() {
     return utilSummands;
 }
 
 void UtilityFunction::setUtilSummands(list<USummand*> utilSummands) {
     this->utilSummands = utilSummands;
-}
-
-Plan* UtilityFunction::getPlan() {
-    return plan;
 }
 
 /**
@@ -200,20 +196,19 @@ void UtilityFunction::init(AlicaEngine* ae) {
     // init dicts
     this->roleHighestPriorityMap = map<long, double>();
     this->priorityMartix = map<TaskRoleStruct*, double>();
-    RoleSet* roleSet = ae->getRoleSet();
-    long taskId;
-    long roleId;
+    const RoleSet* roleSet = ae->getRoleSet();
+    int64_t taskId;
+    int64_t roleId;
     double curPrio;
 
-    for (RoleTaskMapping* rtm : roleSet->getRoleTaskMappings()) {
+    for (const RoleTaskMapping* rtm : roleSet->getRoleTaskMappings()) {
         roleId = rtm->getRole()->getId();
-        this->roleHighestPriorityMap.insert(pair<long, double>(roleId, 0.0));
-        for (auto epIter = this->plan->getEntryPoints().begin(); epIter != this->plan->getEntryPoints().end();
-                epIter++) {
-            taskId = epIter->second->getTask()->getId();
+        this->roleHighestPriorityMap.insert(std::pair<long, double>(roleId, 0.0));
+        for (const EntryPoint* ep : plan->getEntryPoints()) {
+            taskId = ep->getTask()->getId();
             auto iter = rtm->getTaskPriorities().find(taskId);
             if (iter == rtm->getTaskPriorities().end()) {
-                stringstream ss;
+                std::stringstream ss;
                 ss << "UF: There is no priority for the task " << taskId << " in the roleTaskMapping of the role "
                    << rtm->getRole()->getName() << " with id " << roleId << "!\n We are in the UF for the plan "
                    << this->plan->getName() << "!" << endl;
@@ -250,24 +245,22 @@ void UtilityFunction::init(AlicaEngine* ae) {
  * needs the current roleset (circular dependency otherwise).
  */
 void UtilityFunction::initDataStructures(AlicaEngine* ae) {
-    map<long, Plan*> plans = ae->getPlanRepository()->getPlans();
-
-    for (auto iter = plans.begin(); iter != plans.end(); iter++) {
-        iter->second->getUtilityFunction()->init(ae);
+    for (const Plan* p : ae->getPlanRepository()->getPlans()) {
+        p->getUtilityFunction()->init(ae);
     }
 }
 
-string UtilityFunction::toString() {
-    stringstream ss;
-    ss << this->name << endl;
+std::string UtilityFunction::toString() const {
+    std::stringstream ss;
+    ss << this->name << std::endl;
     ss << "prioW: " << this->priorityWeight << " simW: " << this->similarityWeight << endl;
-    for (USummand* utilSummand : this->utilSummands) {
+    for (const USummand* utilSummand : this->utilSummands) {
         ss << utilSummand->toString();
     }
     return ss.str();
 }
 
-map<TaskRoleStruct*, double>& UtilityFunction::getPriorityMartix() {
+const std::map<TaskRoleStruct*, double>& UtilityFunction::getPriorityMartix() const {
     return priorityMartix;
 }
 
@@ -299,9 +292,8 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass) {
     long roleId;
     //	shared_ptr<vector<EntryPoint*> > eps = ass->getEntryPoints();
     double curPrio = 0;
-    EntryPoint* ep;
     for (short i = 0; i < ass->getEntryPointCount(); ++i) {
-        ep = ass->getEpRobotsMapping()->getEp(i);
+        const EntryPoint* ep = ass->getEpRobotsMapping()->getEp(i);
         taskId = ep->getTask()->getId();
         auto robotList = ass->getUniqueRobotsWorkingAndFinished(ep);
         for (auto robot : *robotList) {
@@ -368,9 +360,8 @@ UtilityInterval UtilityFunction::getSimilarity(IAssignment* newAss, IAssignment*
     // Calculate the similarity to the old Assignment
     int numOldAssignedRobots = 0;
     // shared_ptr<vector<EntryPoint*> > oldAssEps = oldAss->getEntryPoints();
-    EntryPoint* ep;
     for (short i = 0; i < oldAss->getEntryPointCount(); ++i) {
-        ep = oldAss->getEpRobotsMapping()->getEp(i);
+        const EntryPoint* ep = oldAss->getEpRobotsMapping()->getEp(i);
         // for normalisation
         auto oldRobots = oldAss->getRobotsWorkingAndFinished(ep);
         numOldAssignedRobots += oldRobots->size();

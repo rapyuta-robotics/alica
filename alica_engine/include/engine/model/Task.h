@@ -8,37 +8,35 @@
 #ifndef TASK_H_
 #define TASK_H_
 
-#include <string>
-#include <sstream>
-#include <iostream>
-
 #include "AlicaElement.h"
 
-using namespace std;
+#include <string>
+
 namespace alica {
 
 class TaskRepository;
-
+class ModelFactory;
 /**
  * an abstract description of parts of plans to be taken on by a set of robots
  */
 class Task : public AlicaElement {
 public:
+    Task(int64_t id, bool defaultTask);
     Task(bool defaultTask);
     virtual ~Task();
-    const string& getDescription() const;
-    void setDescription(const string& description);
-    const TaskRepository* getTaskRepository() const;
-    void setTaskRepository(const TaskRepository* taskRepository);
-    const static long IDLEID = -1;  // For Task Id of an Idle EntryPoint...
+    const std::string& getDescription() const { return _description; }
 
+    const TaskRepository* getTaskRepository() const {return _taskRepository;}
+    std::string toString() const override;
+
+    static constexpr int64_t IDLEID = -1;  // For Task Id of an Idle EntryPoint...
 private:
-    string description;
-    string toString();
-    const TaskRepository* taskRepository;
-
-protected:
-    bool defaultTask;
+    friend ModelFactory;
+    void setTaskRepository(const TaskRepository* taskRepository);
+    void setDescription(const std::string& description);
+    const TaskRepository* _taskRepository;
+    std::string _description;
+    bool _defaultTask;
 };
 
 }  // namespace alica

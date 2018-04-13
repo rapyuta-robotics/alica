@@ -1,11 +1,13 @@
 #pragma once
 
+#include "engine/Types.h"
 #include "supplementary/AgentID.h"
+
 
 #include <list>
 #include <memory>
 #include <string>
-#include <vector>
+
 
 namespace alica {
 
@@ -24,8 +26,8 @@ class AssignmentCollection;
 class IAssignment {
 public:
     virtual ~IAssignment() {}
-    virtual shared_ptr<vector<const supplementary::AgentID*>> getRobotsWorking(EntryPoint* ep) = 0;
-    virtual shared_ptr<vector<const supplementary::AgentID*>> getRobotsWorking(long epid) = 0;
+    virtual const std::vector<const supplementary::AgentID*>* getRobotsWorking(const EntryPoint* ep) const = 0;
+    virtual const std::vector<const supplementary::AgentID*>* getRobotsWorking(int64_t epid) const = 0;
     virtual int totalRobotCount() = 0;
     /**
      * The shared_ptr of a vector of EntryPoints relevant to this assignment.
@@ -35,28 +37,28 @@ public:
      * The number of distinct entrypoints
      * @param An int
      */
-    virtual short getEntryPointCount() = 0;
+    virtual short getEntryPointCount() const = 0;
     /**
      * Returns all robot Ids working on the Task defined by ep and those which successfully completed it.
      * Behaviour is undefined if ep is not relevant or null.
      * @param ep The EntryPoint queried
      * @return A shared_ptr of a list of int of robot ids
      */
-    virtual shared_ptr<list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(EntryPoint* ep) = 0;
+    virtual shared_ptr<list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(const EntryPoint* ep) = 0;
     /**
      * Similar to GetRobotsWorkingAndFinished, with duplicates removed.
      * Behaviour is undefined if ep is not relevant or null.
      * @param ep The EntryPoint queried
      * @return A shared_ptr of a list of int of robot ids
      */
-    virtual shared_ptr<list<const supplementary::AgentID*>> getUniqueRobotsWorkingAndFinished(EntryPoint* ep) = 0;
+    virtual shared_ptr<list<const supplementary::AgentID*>> getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) = 0;
     /**
      * Returns all robot Ids working on the Task defined by ep
      * Behaviour is undefined if ep is not relevant or null.
      * @param ep The EntryPoint queried
      * @return A shared_ptr of a list of int of robot ids
      */
-    virtual shared_ptr<list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(long epid) = 0;
+    virtual shared_ptr<list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(int64_t epid) = 0;
     /**
      * Information about succeeded tasks.
      */
@@ -64,7 +66,7 @@ public:
     /**
      * Checks whether the current assignment is valid
      */
-    virtual bool isValid() = 0;
+    virtual bool isValid() const = 0;
     /**
      * Print AssignmentCollection
      */
@@ -84,13 +86,13 @@ public:
 
     int getNumUnAssignedRobotIds() const { return unassignedRobotIds.size(); }
 
-    const vector<const supplementary::AgentID*>& getUnassignedRobotIds() const { return unassignedRobotIds; }
+    const AgentSet& getUnassignedRobotIds() const { return unassignedRobotIds; }
 
 protected:
     /**
      * The Ids of all robots available but not yet assigned.
      */
-    vector<const supplementary::AgentID*> unassignedRobotIds;
+    AgentSet unassignedRobotIds;
     /**
      * The minimal utility this assignment can achieve.
      */

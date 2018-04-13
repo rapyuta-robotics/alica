@@ -8,29 +8,28 @@
 #ifndef ROLEDEFINITIONSET_H_
 #define ROLEDEFINITIONSET_H_
 
-#include <list>
 #include <string>
 
 #include "AlicaElement.h"
+#include "engine/Types.h"
 
-using namespace std;
 namespace alica {
-class Role;
+class ModelFactory;
 
 class RoleDefinitionSet : public AlicaElement {
 public:
     RoleDefinitionSet();
     virtual ~RoleDefinitionSet();
-    const string& getFileName() const;
-    void setFileName(const string& fileName);
-    list<Role*>& getRoles();
+    const std::string& getFileName() const { return _fileName; }
+    const RoleVector& getRoles() const { return _roles; }
 
 private:
-    void setRoles(const list<Role*>& roles);
+    friend ModelFactory;
+    void setRoles(const RoleVector& roles);
+    void setFileName(const std::string& fileName);
 
-protected:
-    string fileName;
-    list<Role*> roles;
+    RoleVector _roles;
+    std::string _fileName;
 };
 
 }  // namespace alica

@@ -75,21 +75,21 @@ protected:
 
 TEST_F(TaskAssignmentTest, constructTaskAssignment) {
     // fake a list of existing robots
-    auto robots = make_shared<vector<const supplementary::AgentID*>>();
+    alica::AgentSet robots;
     for (int number = 8; number <= 11; number++) {
         const supplementary::AgentID* agentID = ae->getID<int>(number);
-        robots->push_back(agentID);
+        robots.push_back(agentID);
         ae->getTeamManager()->setTimeLastMsgReceived(agentID, ae->getIAlicaClock()->now());
     }
     ae->getTeamObserver()->tick(nullptr);
     ae->getRoleAssignment()->tick();
     // fake inform the team observer about roles of none existing robots
 
-    auto planMap = ae->getPlanRepository()->getPlans();
-    auto rp = make_shared<alica::RunningPlan>(ae, (*planMap.find(1407152758497)).second);
-    list<alica::AbstractPlan*>* planList = new list<alica::AbstractPlan*>();
-    planList->push_back((*planMap.find(1407152758497)).second);
+    const alica::PlanRepository::Accessor<alica::Plan>& planMap = ae->getPlanRepository()->getPlans();
+    auto rp = make_shared<alica::RunningPlan>(ae, planMap.find(1407152758497));
+    alica::AbstractPlanSet inputPlans;
+    inputPlans.push_back(planMap.find(1407152758497));
     alica::PlanSelector* ps = ae->getPlanSelector();
-    auto plans = ps->getPlansForState(rp, planList, robots);
+    auto plans = ps->getPlansForState(rp, inputPlans, robots);
     EXPECT_EQ(plans->size(), 1);
 }

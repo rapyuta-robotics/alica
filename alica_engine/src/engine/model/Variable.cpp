@@ -1,46 +1,34 @@
 #include "engine/model/Variable.h"
+#include <sstream>
 
 namespace alica {
 
-Variable::Variable() {
-    this->solverVar = nullptr;
-}
+Variable::Variable()
+        : _solverVar(nullptr) {}
 
-Variable::Variable(std::shared_ptr<SolverVariable> v) {
-    this->solverVar = v;
-}
+Variable::Variable(const std::shared_ptr<SolverVariable>& v)
+        : _solverVar(v) {}
 
 Variable::~Variable() {}
 
-Variable::Variable(long id, std::string name, std::string type)
-        : Variable() {
-    this->id = id;
-    this->name = name;
-    this->type = type;
-    this->solverVar = nullptr;
-}
+Variable::Variable(int64_t id, const std::string& name, const std::string& type)
+        : AlicaElement(id, name)
+        , _type(type)
+        , _solverVar(nullptr)
 
-std::string Variable::toString() {
+{}
+
+std::string Variable::toString() const {
     std::stringstream ss;
-    ss << "[Variable: Name=" << name << " Id=" << id << std::endl;
+    ss << "[Variable: Name=" << getName() << " Id=" << getId() << std::endl;
     return ss.str();
 }
 
-//============= Getter and Setter ======================
-
-std::string Variable::getType() {
-    return type;
+void Variable::setType(const std::string& type) {
+    _type = type;
 }
 
-void Variable::setType(std::string type) {
-    this->type = type;
-}
-
-std::shared_ptr<SolverVariable> Variable::getSolverVar() {
-    return this->solverVar;
-}
-
-void alica::Variable::setSolverVar(std::shared_ptr<SolverVariable> solverVar) {
-    this->solverVar = solverVar;
+void alica::Variable::setSolverVar(const std::shared_ptr<SolverVariable>& solverVar) const {
+    _solverVar = solverVar;
 }
 }  // namespace alica

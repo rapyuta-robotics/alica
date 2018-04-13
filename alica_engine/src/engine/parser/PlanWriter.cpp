@@ -47,8 +47,6 @@ PlanWriter::PlanWriter(AlicaEngine* ae, PlanRepository* rep) {
     string path = supplementary::SystemConfig::getInstance()->getConfigPath();
     this->tempPlanDir = supplementary::FileSystem::combinePaths(path, "plans/tmp/");
     this->rep = rep;
-    this->plansToSave = vector<AlicaElement*>();
-    this->plansSaved = vector<AlicaElement*>();
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     this->configPath = sc->getConfigPath();
 }
@@ -58,24 +56,24 @@ PlanWriter::~PlanWriter() {}
 /**
  * Gets or sets the directory to save to.
  */
-string PlanWriter::getTempPlanDir() {
+const std::string& PlanWriter::getTempPlanDir() const {
     return tempPlanDir;
 }
-void PlanWriter::setTempPlanDir(string directory) {
+void PlanWriter::setTempPlanDir(const std::string& directory) {
     this->tempPlanDir = directory;
 }
 
-string PlanWriter::getConfigPath() {
+const std::string& PlanWriter::getConfigPath() const {
     return configPath;
 }
 
 /**
  *  Gets or sets the plans to save.
  */
-vector<AlicaElement*>& PlanWriter::getPlansToSave() {
+const AlicaElementSet& PlanWriter::getPlansToSave() const {
     return plansToSave;
 }
-void PlanWriter::setPlansToSave(vector<AlicaElement*>& plansToSave) {
+void PlanWriter::setPlansToSave(const AlicaElementSet& plansToSave) {
     this->plansToSave = plansToSave;
 }
 
@@ -84,8 +82,8 @@ void PlanWriter::setPlansToSave(vector<AlicaElement*>& plansToSave) {
  */
 void PlanWriter::saveAllPlans() {
     this->plansToSave.clear();
-    for (auto pair : this->rep->getPlans()) {
-        this->plansToSave.push_back(pair.second);
+    for (const Plan* p : this->rep->getPlans()) {
+        this->plansToSave.push_back(p);
     }
     saveFileLoop();
 }
@@ -94,7 +92,7 @@ void PlanWriter::saveAllPlans() {
  * Saves a single plan.
  * @param p The plan to save.
  */
-void PlanWriter::saveSinglePlan(Plan* p) {
+void PlanWriter::saveSinglePlan(const Plan* p) {
     this->currentFile = supplementary::FileSystem::combinePaths(this->tempPlanDir, p->getName() + string(".pml"));
     tinyxml2::XMLDocument* doc = createPlanXMLDocument(p);
 
@@ -104,7 +102,7 @@ void PlanWriter::saveSinglePlan(Plan* p) {
     doc->SaveFile(this->currentFile.c_str(), false);
 }
 
-void PlanWriter::saveSinglePlan(string directory, Plan* p) {
+void PlanWriter::saveSinglePlan(std::string directory, const Plan* p) {
     this->currentFile = supplementary::FileSystem::combinePaths(directory, p->getFileName());
     tinyxml2::XMLDocument* doc = createPlanXMLDocument(p);
 
@@ -116,10 +114,10 @@ void PlanWriter::saveSinglePlan(string directory, Plan* p) {
 
 void PlanWriter::saveFileLoop() {
     while (plansToSave.size() > 0) {
-        AlicaElement* ae = plansToSave[plansToSave.size() - 1];
+        const AlicaElement* ae = plansToSave[plansToSave.size() - 1];
         plansToSave.erase(plansToSave.begin() + (plansToSave.size() - 1));
-        if (dynamic_cast<Plan*>(ae) != nullptr) {
-            saveSinglePlan(dynamic_cast<Plan*>(ae));
+        if (dynamic_cast<const Plan*>(ae) != nullptr) {
+            saveSinglePlan(dynamic_cast<const Plan*>(ae));
         } else {
             cout << "Saving of type " << typeid(ae).name() << " is not implemented." << endl;
             throw new exception();
@@ -130,7 +128,7 @@ void PlanWriter::saveFileLoop() {
     this->plansSaved.clear();
 }
 
-tinyxml2::XMLDocument* PlanWriter::createPlanXMLDocument(Plan* p) {
+tinyxml2::XMLDocument* PlanWriter::createPlanXMLDocument(const Plan* p) {
     tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
 
     tinyxml2::XMLDeclaration* decl = doc->NewDeclaration("xml version=\"1.0\" encoding=\"ASCII\"");
@@ -141,7 +139,7 @@ tinyxml2::XMLDocument* PlanWriter::createPlanXMLDocument(Plan* p) {
     return doc;
 }
 
-void PlanWriter::createPlanXMLNode(Plan* p, tinyxml2::XMLDocument* doc) {
+void PlanWriter::createPlanXMLNode(const Plan* p, tinyxml2::XMLDocument* doc) {
     tinyxml2::XMLElement* xp = doc->NewElement("alica:Plan");
     xp->SetAttribute("xmi:version", "2.0");
     xp->SetAttribute("xmlns:xmi", "http://www.omg.org/XMI");
@@ -161,7 +159,6 @@ void PlanWriter::createPlanXMLNode(Plan* p, tinyxml2::XMLDocument* doc) {
     stringstream ss;
     ss << p->getUtilityThreshold();
     xp->SetAttribute("utilityThreshold", ss.str().c_str());
-    xp->SetAttribute("destinationPath", p->getDestinationPath().c_str());
     stringstream ss2;
     ss2 << "0.0";
     xp->SetAttribute("priority", ss2.str().c_str());
@@ -201,7 +198,7 @@ void PlanWriter::createPlanXMLNode(Plan* p, tinyxml2::XMLDocument* doc) {
         xc->SetAttribute("pluginName", p->getPostCondition()->getPlugInName().c_str());
         addConditionChildren(p->getPostCondition(), xc, doc);
     }
-    for (Variable* v : (*p->getVariables())) {
+    for (const Variable* v : p->getVariables()) {
         tinyxml2::XMLElement* xc = doc->NewElement("vars");
         addPlanElementAttributes(v, xc);
         if (!(v->getType().empty())) {
@@ -211,21 +208,21 @@ void PlanWriter::createPlanXMLNode(Plan* p, tinyxml2::XMLDocument* doc) {
         }
         xp->InsertEndChild(xc);
     }
-    for (State* s : p->getStates()) {
+    for (const State* s : p->getStates()) {
         xp->InsertEndChild(createStateXMLNode(s, doc));
     }
-    for (Transition* t : p->getTransitions()) {
+    for (const Transition* t : p->getTransitions()) {
         xp->InsertEndChild(createTransitionXMLNode(t, doc));
     }
-    for (SyncTransition* s : p->getSyncTransitions()) {
+    for (const SyncTransition* s : p->getSyncTransitions()) {
         xp->InsertEndChild(createSynchronisationXMLNode(s, doc));
     }
-    for (auto e : p->getEntryPoints()) {
-        xp->InsertEndChild(createEntryPointXMLNode(e.second, doc));
+    for (const EntryPoint* e : p->getEntryPoints()) {
+        xp->InsertEndChild(createEntryPointXMLNode(e, doc));
     }
 }
 
-tinyxml2::XMLDocument* PlanWriter::createRoleSetXMLDocument(RoleSet* r) {
+tinyxml2::XMLDocument* PlanWriter::createRoleSetXMLDocument(const RoleSet* r) {
     tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
 
     tinyxml2::XMLDeclaration* decl = doc->NewDeclaration("version=\"1.0\" encoding=\"ASCII\"");
@@ -236,7 +233,7 @@ tinyxml2::XMLDocument* PlanWriter::createRoleSetXMLDocument(RoleSet* r) {
     return doc;
 }
 
-void PlanWriter::saveRoleSet(RoleSet* r, string name) {
+void PlanWriter::saveRoleSet(const RoleSet* r, string name) {
     this->currentFile = supplementary::FileSystem::combinePaths(this->tempPlanDir, name);
     tinyxml2::XMLDocument* doc = createRoleSetXMLDocument(r);
 
@@ -246,7 +243,7 @@ void PlanWriter::saveRoleSet(RoleSet* r, string name) {
     doc->SaveFile(this->currentFile.c_str(), false);
 }
 
-void PlanWriter::saveRoleSet(RoleSet* r, string directory, string name) {
+void PlanWriter::saveRoleSet(const RoleSet* r, string directory, string name) {
     this->currentFile = supplementary::FileSystem::combinePaths(directory, name);
     tinyxml2::XMLDocument* doc = createRoleSetXMLDocument(r);
 
@@ -256,7 +253,7 @@ void PlanWriter::saveRoleSet(RoleSet* r, string directory, string name) {
     doc->SaveFile(this->currentFile.c_str(), false);
 }
 
-tinyxml2::XMLDocument* PlanWriter::createTaskRepositoryXMLDocument(TaskRepository* tr) {
+tinyxml2::XMLDocument* PlanWriter::createTaskRepositoryXMLDocument(const TaskRepository* tr) {
     tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
 
     tinyxml2::XMLDeclaration* decl = doc->NewDeclaration("version=\"1.0\" encoding=\"ASCII\"");
@@ -267,7 +264,7 @@ tinyxml2::XMLDocument* PlanWriter::createTaskRepositoryXMLDocument(TaskRepositor
     return doc;
 }
 
-void PlanWriter::saveTaskRepository(TaskRepository* tr, string name) {
+void PlanWriter::saveTaskRepository(const TaskRepository* tr, string name) {
     this->currentFile = supplementary::FileSystem::combinePaths(this->tempPlanDir, name);
     tinyxml2::XMLDocument* doc = createTaskRepositoryXMLDocument(tr);
 
@@ -277,7 +274,7 @@ void PlanWriter::saveTaskRepository(TaskRepository* tr, string name) {
     doc->SaveFile(this->currentFile.c_str(), false);
 }
 
-void PlanWriter::saveTaskRepository(TaskRepository* tr, string directory, string name) {
+void PlanWriter::saveTaskRepository(const TaskRepository* tr, string directory, string name) {
     this->currentFile = supplementary::FileSystem::combinePaths(directory, name);
     tinyxml2::XMLDocument* doc = createTaskRepositoryXMLDocument(tr);
 
@@ -287,10 +284,10 @@ void PlanWriter::saveTaskRepository(TaskRepository* tr, string directory, string
     doc->SaveFile(this->currentFile.c_str(), false);
 }
 
-void PlanWriter::addConditionChildren(Condition* c, tinyxml2::XMLElement* xn, tinyxml2::XMLDocument* doc) {
-    for (Quantifier* q : c->getQuantifiers()) {
+void PlanWriter::addConditionChildren(const Condition* c, tinyxml2::XMLElement* xn, tinyxml2::XMLDocument* doc) {
+    for (const Quantifier* q : c->getQuantifiers()) {
         tinyxml2::XMLElement* xc = doc->NewElement("quantifiers");
-        if (dynamic_cast<ForallAgents*>(q) != nullptr) {
+        if (dynamic_cast<const ForallAgents*>(q) != nullptr) {
             xc->SetAttribute("xsi:type", "alica:ForallAgents");
         } else {
             cout << "Unknown Quantifier: " << q->toString() << endl;
@@ -298,33 +295,33 @@ void PlanWriter::addConditionChildren(Condition* c, tinyxml2::XMLElement* xn, ti
         }
         addPlanElementAttributes(q, xc);
         xc->SetAttribute("scope", to_string(q->getScope()->getId()).c_str());
-        for (string sort : q->getDomainIdentifiers()) {
+        for (const std::string& sort : q->getDomainIdentifiers()) {
             tinyxml2::XMLElement* xcc = doc->NewElement("sorts");
             xc->InsertEndChild(xcc);
             xcc->InsertEndChild(doc->NewText(sort.c_str()));
         }
         xn->InsertEndChild(xc);
     }
-    for (Parameter* p : c->getParameters()) {
+    for (const Parameter* p : c->getParameters()) {
         tinyxml2::XMLElement* xc = doc->NewElement("parameters");
         addPlanElementAttributes(p, xc);
         xc->SetAttribute("key", p->getKey().c_str());
         xc->SetAttribute("value", p->getValue().c_str());
         xn->InsertEndChild(xc);
     }
-    for (Variable* v : c->getVariables()) {
+    for (const Variable* v : c->getVariables()) {
         tinyxml2::XMLElement* xc = doc->NewElement("vars");
         xc->InsertEndChild(doc->NewText((string("#") + to_string(v->getId())).c_str()));
         xn->InsertEndChild(xc);
     }
 }
 
-tinyxml2::XMLElement* PlanWriter::createStateXMLNode(State* s, tinyxml2::XMLDocument* doc) {
+tinyxml2::XMLElement* PlanWriter::createStateXMLNode(const State* s, tinyxml2::XMLDocument* doc) {
     tinyxml2::XMLElement* xs = doc->NewElement("states");
-    if (dynamic_cast<SuccessState*>(s) != nullptr) {
+    if (s->isSuccessState()) {
         xs->SetAttribute("xsi:type", "alica:SuccessState");
 
-    } else if (dynamic_cast<FailureState*>(s) != nullptr) {
+    } else if (s->isFailureState()) {
         xs->SetAttribute("xsi:type", "alica:FailureState");
     } else {
     }
@@ -333,26 +330,26 @@ tinyxml2::XMLElement* PlanWriter::createStateXMLNode(State* s, tinyxml2::XMLDocu
         xs->SetAttribute("entryPoint", to_string(s->getEntryPoint()->getId()).c_str());
     }
 
-    for (Parametrisation* p : s->getParametrisation()) {
+    for (const Parametrisation* p : s->getParametrisation()) {
         xs->InsertEndChild(createParametrisationXMLNode(p, doc));
     }
 
-    for (AbstractPlan* p : s->getPlans()) {
-        if (dynamic_cast<PlanType*>(p) != nullptr) {
+    for (const AbstractPlan* p : s->getPlans()) {
+        if (dynamic_cast<const PlanType*>(p) != nullptr) {
             tinyxml2::XMLElement* xc = doc->NewElement("plans");
             xs->InsertEndChild(xc);
             xc->SetAttribute("xsi:type", "alica:PlanType");
             xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
             continue;
         }
-        if (dynamic_cast<BehaviourConfiguration*>(p) != nullptr) {
+        if (dynamic_cast<const BehaviourConfiguration*>(p) != nullptr) {
             tinyxml2::XMLElement* xc = doc->NewElement("plans");
             xs->InsertEndChild(xc);
             xc->SetAttribute("xsi:type", "alica:BehaviourConfiguration");
             xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
             continue;
         }
-        if (dynamic_cast<Plan*>(p) != nullptr) {
+        if (dynamic_cast<const Plan*>(p) != nullptr) {
             tinyxml2::XMLElement* xc = doc->NewElement("plans");
             xs->InsertEndChild(xc);
             xc->SetAttribute("xsi:type", "alica:Plan");
@@ -360,7 +357,7 @@ tinyxml2::XMLElement* PlanWriter::createStateXMLNode(State* s, tinyxml2::XMLDocu
             continue;
         }
 
-        if (dynamic_cast<PlanningProblem*>(p) != nullptr) {
+        if (dynamic_cast<const PlanningProblem*>(p) != nullptr) {
             tinyxml2::XMLElement* xc = doc->NewElement("plans");
             xs->InsertEndChild(xc);
             xc->SetAttribute("xsi:type", "alica:PlanningProblem");
@@ -369,25 +366,25 @@ tinyxml2::XMLElement* PlanWriter::createStateXMLNode(State* s, tinyxml2::XMLDocu
         }
     }
 
-    for (Transition* t : s->getInTransitions()) {
+    for (const Transition* t : s->getInTransitions()) {
         tinyxml2::XMLElement* xc = doc->NewElement("inTransitions");
         xs->InsertEndChild(xc);
         xc->InsertEndChild(doc->NewText((string("#") + to_string(t->getId())).c_str()));
     }
 
-    for (Transition* t : s->getOutTransitions()) {
+    for (const Transition* t : s->getOutTransitions()) {
         tinyxml2::XMLElement* xc = doc->NewElement("outTransitions");
         xs->InsertEndChild(xc);
         xc->InsertEndChild(doc->NewText((string("#") + to_string(t->getId())).c_str()));
     }
-    if (dynamic_cast<SuccessState*>(s) != nullptr) {
-        SuccessState* su = dynamic_cast<SuccessState*>(s);
+    if (s->isSuccessState()) {
+        const SuccessState* su = static_cast<const SuccessState*>(s);
         if (su->getPostCondition() != nullptr) {
             xs->InsertEndChild(createResultXMLNode(su->getPostCondition(), doc));
         }
 
-    } else if (dynamic_cast<FailureState*>(s) != nullptr) {
-        FailureState* fu = dynamic_cast<FailureState*>(s);
+    } else if (s->isFailureState()) {
+        const FailureState* fu = static_cast<const FailureState*>(s);
         if (fu->getPostCondition() != nullptr) {
             xs->InsertEndChild(createResultXMLNode(fu->getPostCondition(), doc));
         }
@@ -396,15 +393,15 @@ tinyxml2::XMLElement* PlanWriter::createStateXMLNode(State* s, tinyxml2::XMLDocu
     return xs;
 }
 
-tinyxml2::XMLElement* PlanWriter::createParametrisationXMLNode(Parametrisation* p, tinyxml2::XMLDocument* doc) {
+tinyxml2::XMLElement* PlanWriter::createParametrisationXMLNode(const Parametrisation* p, tinyxml2::XMLDocument* doc) {
     tinyxml2::XMLElement* xr = doc->NewElement("parametrisation");
     addPlanElementAttributes(p, xr);
     tinyxml2::XMLElement* xc = doc->NewElement("subplan");
-    if (dynamic_cast<Plan*>(p->getSubPlan()) != nullptr) {
+    if (dynamic_cast<const Plan*>(p->getSubPlan()) != nullptr) {
         xc->SetAttribute("xsi:type", "alica:Plan");
-    } else if (dynamic_cast<PlanType*>(p->getSubPlan()) != nullptr) {
+    } else if (dynamic_cast<const PlanType*>(p->getSubPlan()) != nullptr) {
         xc->SetAttribute("xsi:type", "alica:PlanType");
-    } else if (dynamic_cast<BehaviourConfiguration*>(p->getSubPlan()) != nullptr) {
+    } else if (dynamic_cast<const BehaviourConfiguration*>(p->getSubPlan()) != nullptr) {
         xc->SetAttribute("xsi:type", "alica:BehaviourConfiguration");
     }
     xc->InsertEndChild(
@@ -422,7 +419,7 @@ tinyxml2::XMLElement* PlanWriter::createParametrisationXMLNode(Parametrisation* 
     return xr;
 }
 
-tinyxml2::XMLElement* PlanWriter::createResultXMLNode(PostCondition* r, tinyxml2::XMLDocument* doc) {
+tinyxml2::XMLElement* PlanWriter::createResultXMLNode(const PostCondition* r, tinyxml2::XMLDocument* doc) {
     tinyxml2::XMLElement* xr = doc->NewElement("postCondition");
     addPlanElementAttributes(r, xr);
     xr->SetAttribute("conditionString", r->getConditionString().c_str());
@@ -431,7 +428,7 @@ tinyxml2::XMLElement* PlanWriter::createResultXMLNode(PostCondition* r, tinyxml2
     return xr;
 }
 
-tinyxml2::XMLElement* PlanWriter::createPreConditionXMLNode(PreCondition* c, tinyxml2::XMLDocument* doc) {
+tinyxml2::XMLElement* PlanWriter::createPreConditionXMLNode(const PreCondition* c, tinyxml2::XMLDocument* doc) {
     tinyxml2::XMLElement* xr = doc->NewElement("preCondition");
     addPlanElementAttributes(c, xr);
     xr->SetAttribute("conditionString", c->getConditionString().c_str());
@@ -446,7 +443,7 @@ tinyxml2::XMLElement* PlanWriter::createPreConditionXMLNode(PreCondition* c, tin
     return xr;
 }
 
-tinyxml2::XMLElement* PlanWriter::createSynchronisationXMLNode(SyncTransition* s, tinyxml2::XMLDocument* doc) {
+tinyxml2::XMLElement* PlanWriter::createSynchronisationXMLNode(const SyncTransition* s, tinyxml2::XMLDocument* doc) {
     tinyxml2::XMLElement* xr = doc->NewElement("synchronisations");
     addPlanElementAttributes(s, xr);
     string synched = "";
@@ -463,7 +460,7 @@ tinyxml2::XMLElement* PlanWriter::createSynchronisationXMLNode(SyncTransition* s
     return xr;
 }
 
-tinyxml2::XMLElement* PlanWriter::createTransitionXMLNode(Transition* t, tinyxml2::XMLDocument* doc) {
+tinyxml2::XMLElement* PlanWriter::createTransitionXMLNode(const Transition* t, tinyxml2::XMLDocument* doc) {
     tinyxml2::XMLElement* xt = doc->NewElement("transitions");
     addPlanElementAttributes(t, xt);
     xt->SetAttribute("msg", "");
@@ -484,7 +481,7 @@ tinyxml2::XMLElement* PlanWriter::createTransitionXMLNode(Transition* t, tinyxml
     return xt;
 }
 
-tinyxml2::XMLElement* PlanWriter::createEntryPointXMLNode(EntryPoint* e, tinyxml2::XMLDocument* doc) {
+tinyxml2::XMLElement* PlanWriter::createEntryPointXMLNode(const EntryPoint* e, tinyxml2::XMLDocument* doc) {
     tinyxml2::XMLElement* xe = doc->NewElement("entryPoints");
     addPlanElementAttributes(e, xe);
     if (e->isSuccessRequired()) {
@@ -507,10 +504,10 @@ tinyxml2::XMLElement* PlanWriter::createEntryPointXMLNode(EntryPoint* e, tinyxml
     return xe;
 }
 
-void PlanWriter::addPlanElementAttributes(AlicaElement* p, tinyxml2::XMLElement* x) {
+void PlanWriter::addPlanElementAttributes(const AlicaElement* p, tinyxml2::XMLElement* x) {
     x->SetAttribute("id", to_string(p->getId()).c_str());
     x->SetAttribute("name", p->getName().c_str());
-    x->SetAttribute("comment", p->getComment().c_str());
+    x->SetAttribute("comment", "");
 }
 
 string PlanWriter::getRelativeFileName(string file) {
@@ -522,7 +519,15 @@ string PlanWriter::getRelativeFileName(string file) {
         if (file.substr(file.size() - 4, 4) == ".beh" || file.substr(file.size() - 4, 4) == ".pty" ||
                 file.substr(file.size() - 4, 4) == ".pml" || file.substr(file.size() - 3, 3) == ".pp") {
             supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-            string tfile = (*sc)["Alica"]->get<string>("Alica.PlanDir");
+            string tfile = (*sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
+            supplementary::FileSystem::combinePaths(tfile, file);
+            if (!supplementary::FileSystem::isPathRooted(tfile)) {
+                tfile = supplementary::FileSystem::combinePaths(this->configPath, tfile);
+            }
+            ufile = tfile;
+        } else if (file.substr(file.size() - 4, 4) == ".tsk") {
+            supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+            string tfile = (*sc)["Alica"]->get<string>("Alica.MiscDir", NULL);
             supplementary::FileSystem::combinePaths(tfile, file);
             if (!supplementary::FileSystem::isPathRooted(tfile)) {
                 tfile = supplementary::FileSystem::combinePaths(this->configPath, tfile);
@@ -536,18 +541,18 @@ string PlanWriter::getRelativeFileName(string file) {
     }
     string ret = "";
     int pos = 0;
-    for (int i = 0; i < curdir.size(); i++) {
-        if (curdir.at(i) != ufile.at(i)) {
+    for (int i = 0; i < curdir.size(); ++i) {
+        if (ufile.size() <= i || curdir.at(i) != ufile.at(i)) {
             break;
         }
-        pos++;
+        ++pos;
     }
     ufile.erase(ufile.begin(), ufile.begin() + pos);
     ret = ufile;
     return ret;
 }
 
-string PlanWriter::getRelativeFileName(AbstractPlan* p) {
+string PlanWriter::getRelativeFileName(const AbstractPlan* p) {
     if (find(this->plansToSave.begin(), this->plansToSave.end(), p) != this->plansToSave.end() ||
             find(this->plansSaved.begin(), this->plansSaved.end(), p) != this->plansSaved.end()) {
         string dirfile = this->tempPlanDir;
@@ -558,7 +563,7 @@ string PlanWriter::getRelativeFileName(AbstractPlan* p) {
     }
 }
 
-void PlanWriter::createRoleSet(RoleSet* r, tinyxml2::XMLDocument* doc) {
+void PlanWriter::createRoleSet(const RoleSet* r, tinyxml2::XMLDocument* doc) {
     tinyxml2::XMLElement* xp = doc->NewElement("alica:RoleSet");
     doc->InsertEndChild(xp);
     xp->SetAttribute("xmi:version", "2.0");
@@ -566,26 +571,23 @@ void PlanWriter::createRoleSet(RoleSet* r, tinyxml2::XMLDocument* doc) {
     xp->SetAttribute("xmlns:alica", "http:///de.uni_kassel.vs.cn");
     xp->SetAttribute("id", to_string(ae->getIAlicaClock()->now() + objectCounter++).c_str());
     xp->SetAttribute("name", r->getName().c_str());
-    xp->SetAttribute("comment", r->getComment().c_str());
     xp->SetAttribute("usableWithPlanID", to_string(r->getUsableWithPlanId()).c_str());
-    if (r->isIsDefault()) {
+    if (r->isDefault()) {
         xp->SetAttribute("default", "true");
     } else {
         xp->SetAttribute("default", "false");
     }
 
-    for (RoleTaskMapping* rtm : r->getRoleTaskMappings()) {
+    for (const RoleTaskMapping* rtm : r->getRoleTaskMappings()) {
         tinyxml2::XMLElement* xc = doc->NewElement("mappings");
         xp->InsertEndChild(xc);
         xc->SetAttribute("id", to_string(ae->getIAlicaClock()->now() + objectCounter++).c_str());
         xc->SetAttribute("name", rtm->getName().c_str());
-        xc->SetAttribute("comment", rtm->getComment().c_str());
         for (auto mapping : rtm->getTaskPriorities()) {
             tinyxml2::XMLElement* xd = doc->NewElement("taskPriorities");
             xc->InsertEndChild(xd);
             xd->SetAttribute("id", to_string(ae->getIAlicaClock()->now() + objectCounter++).c_str());
             xd->SetAttribute("name", "");
-            xd->SetAttribute("comment", "");
             xd->SetAttribute("key", to_string(mapping.first).c_str());
             xd->SetAttribute("value", to_string(mapping.second).c_str());
         }
@@ -597,7 +599,7 @@ void PlanWriter::createRoleSet(RoleSet* r, tinyxml2::XMLDocument* doc) {
     }
 }
 
-void PlanWriter::createTaskRepository(TaskRepository* tr, tinyxml2::XMLDocument* doc) {
+void PlanWriter::createTaskRepository(const TaskRepository* tr, tinyxml2::XMLDocument* doc) {
     tinyxml2::XMLElement* xp = doc->NewElement("alica:TaskRepository");
     doc->InsertEndChild(xp);
     xp->SetAttribute("xmi:version", "2.0");
@@ -605,15 +607,13 @@ void PlanWriter::createTaskRepository(TaskRepository* tr, tinyxml2::XMLDocument*
     xp->SetAttribute("xmlns:alica", "http:///de.uni_kassel.vs.cn");
     xp->SetAttribute("id", to_string(ae->getIAlicaClock()->now() + objectCounter++).c_str());
     xp->SetAttribute("name", tr->getName().c_str());
-    xp->SetAttribute("comment", tr->getComment().c_str());
     xp->SetAttribute("defaultTask", to_string(tr->getDefaultTask()).c_str());
 
-    for (Task* t : tr->getTasks()) {
+    for (const Task* t : tr->getTasks()) {
         tinyxml2::XMLElement* xc = doc->NewElement("tasks");
         xp->InsertEndChild(xc);
         xc->SetAttribute("id", to_string(t->getId()).c_str());
         xc->SetAttribute("name", t->getName().c_str());
-        xc->SetAttribute("comment", t->getComment().c_str());
         xc->SetAttribute("description", t->getDescription().c_str());
     }
 }

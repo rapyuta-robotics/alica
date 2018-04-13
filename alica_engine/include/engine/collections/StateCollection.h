@@ -8,15 +8,15 @@
 #ifndef STATECOLLECTION_H_
 #define STATECOLLECTION_H_
 
-#include "supplementary/AgentID.h"
 #include <vector>
-#include <unordered_set>
 #include <algorithm>
 #include <sstream>
 #include <memory>
 #include <iostream>
 
-using namespace std;
+#include "supplementary/AgentID.h"
+#include "engine/Types.h"
+
 namespace alica {
 
 class State;
@@ -24,36 +24,41 @@ class AssignmentCollection;
 class EntryPoint;
 class Assignment;
 
-class StateCollection {
+class StateCollection final {
 public:
     StateCollection();
-    StateCollection(vector<const supplementary::AgentID*> robotIds, vector<State*> states);
+    StateCollection(const AgentSet& robotIds, const StateSet& states);
     StateCollection(int maxSize);
-    StateCollection(AssignmentCollection* ac);
-    virtual ~StateCollection();
-    vector<const supplementary::AgentID*>& getRobots();
-    void setRobots(vector<const supplementary::AgentID*> robotIds);
-    vector<State*>& getStates();
-    void setStates(vector<State*> states);
-    int getCount();
-    State* getState(const supplementary::AgentID* robotId);
-    unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>
-    getRobotsInState(State* s);
-    shared_ptr<vector<const supplementary::AgentID*>> getRobotsInStateSorted(State* s);
-    unordered_set<const supplementary::AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>
-    getRobotsInState(long sid);
+    StateCollection(const AssignmentCollection* ac);
+    ~StateCollection();
+
+    const AgentSet& getRobots() const { return _robotIds; }
+    const StateSet& getStates() const { return _states; }
+
+    int getCount() const { return _robotIds.size(); }
+
+    const State* getStateOfRobot(const supplementary::AgentID* robotId) const;
+
+    int getRobotsInState(const State* s, AgentSet& o_robots) const;
+    int getRobotsInState(int64_t sid, AgentSet& o_robots) const;
+
+    void getRobotsInStateSorted(const State* s, AgentSet& o_robots) const;
+
+    std::string toString() const;
+
     void removeRobot(const supplementary::AgentID* robotId);
     void clear();
-    State* stateOfRobot(const supplementary::AgentID* robotId);
-    void setState(const supplementary::AgentID* robotId, State* state);
-    void setStates(vector<const supplementary::AgentID*> robotIds, State* state);
-    string toString();
-    void setInitialState(const supplementary::AgentID* robotId, EntryPoint* ep);
-    void reconsiderOldAssignment(shared_ptr<Assignment> oldOne, shared_ptr<Assignment> newOne);
 
-protected:
-    vector<const supplementary::AgentID*> robotIds;
-    vector<State*> states;
+    void setState(const supplementary::AgentID* robotId, const State* state);
+    void setStates(const AgentSet& robotIds, const State* state);
+    void moveAllFromTo(const State* from, const State* to);
+
+    void setInitialState(const supplementary::AgentID* robotId, const EntryPoint* ep);
+    void reconsiderOldAssignment(std::shared_ptr<Assignment> oldOne, std::shared_ptr<Assignment> newOne);
+
+private:
+    AgentSet _robotIds;
+    StateSet _states;
 };
 
 } /* namespace alica */

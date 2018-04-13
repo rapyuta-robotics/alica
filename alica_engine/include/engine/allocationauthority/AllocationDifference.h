@@ -49,10 +49,10 @@ public:
     const std::vector<EntryPointRobotPair>& getAdditions() const;
     std::vector<EntryPointRobotPair>& editAdditions();
 
-    void setAdditions(const vector<EntryPointRobotPair>& additions);
+    void setAdditions(const std::vector<EntryPointRobotPair>& additions);
     const std::vector<EntryPointRobotPair>& getSubtractions() const;
     std::vector<EntryPointRobotPair>& editSubtractions();
-    void setSubtractions(const vector<EntryPointRobotPair>& subtractions);
+    void setSubtractions(const std::vector<EntryPointRobotPair>& subtractions);
 
 private:
     std::vector<EntryPointRobotPair> _additions;

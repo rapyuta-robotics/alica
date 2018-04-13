@@ -14,14 +14,14 @@ public:
     virtual ~ConstraintUsingBehaviour();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1414068597716) ENABLED START*/  // Add additional public methods here
-    int getCallCounter();
-    static vector<string> result;
+    int getCallCounter() const;
+    static std::vector<std::string> result;
     /*PROTECTED REGION END*/
 protected:
     virtual void initialiseParameters();
     /*PROTECTED REGION ID(pro1414068597716) ENABLED START*/  // Add additional protected methods here
-    shared_ptr<alica::Query> query;
-    int callCounter;
+    Query _query;
+    int _callCounter;
     /*PROTECTED REGION END*/
 private:
     /*PROTECTED REGION ID(prv1414068597716) ENABLED START*/  // Add additional private methods here

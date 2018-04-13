@@ -69,21 +69,21 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest) {
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     auto uSummandPreConditionPlan = *((ae->getPlanRepository()->getPlans().find(1418042796751))
-                                              ->second->getUtilityFunction()
+                                              ->getUtilityFunction()
                                               ->getUtilSummands()
                                               .begin());
     TestConstantValueSummand* dbrPre = dynamic_cast<TestConstantValueSummand*>(uSummandPreConditionPlan);
     dbrPre->robotId = ae->getTeamManager()->getLocalAgentID();
 
     auto uSummandOtherPlan = *((ae->getPlanRepository()->getPlans().find(1418042819203))
-                                       ->second->getUtilityFunction()
+                                       ->getUtilityFunction()
                                        ->getUtilSummands()
                                        .begin());
     TestConstantValueSummand* dbrOther = dynamic_cast<TestConstantValueSummand*>(uSummandOtherPlan);
     dbrOther->robotId = ae->getTeamManager()->getLocalAgentID();
 
     auto uSummandRunPlan = *((ae->getPlanRepository()->getPlans().find(1418042806575))
-                                     ->second->getUtilityFunction()
+                                     ->getUtilityFunction()
                                      ->getUtilSummands()
                                      .begin());
     TestConstantValueSummand* dbrRun = dynamic_cast<TestConstantValueSummand*>(uSummandRunPlan);

@@ -21,7 +21,7 @@ public:
     virtual void tick() = 0;
     virtual void update() = 0;
 
-    const Role* getOwnRole();
+    const Role* getOwnRole() const { return ownRole; }
     const Role* getRole(const supplementary::AgentID* robotId);
     void setCommunication(const IAlicaCommunication* communication);
 
@@ -29,8 +29,8 @@ protected:
     /**
      * Current Robot's role.
      */
-    Role* ownRole;
-    std::map<const supplementary::AgentID*, Role*, supplementary::AgentIDComparator> robotRoleMapping;
+    const Role* ownRole;
+    std::map<const supplementary::AgentID*, const Role*, supplementary::AgentIDComparator> robotRoleMapping;
     const IAlicaCommunication* communication;
 };
 }  // namespace alica

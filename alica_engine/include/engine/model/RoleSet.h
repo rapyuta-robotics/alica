@@ -8,13 +8,11 @@
 #ifndef ROLESET_H_
 #define ROLESET_H_
 
-#include <list>
 #include <string>
-#include <sstream>
+#include <vector>
 
 #include "AlicaElement.h"
 
-using namespace std;
 namespace alica {
 class RoleTaskMapping;
 
@@ -22,21 +20,23 @@ class RoleSet : public AlicaElement {
 public:
     RoleSet();
     virtual ~RoleSet();
-    string toString();
-    bool isIsDefault() const;
-    void setIsDefault(bool isDefault);
-    list<RoleTaskMapping*>& getRoleTaskMappings();
-    void setRoleTaskMappings(const list<RoleTaskMapping*> roleTaskMappings);
-    long getUsableWithPlanId() const;
-    void setUsableWithPlanId(long usableWithPlanId);
+    std::string toString() const override;
+    bool isDefault() const { return _isDefault; }
+    const std::vector<RoleTaskMapping*>& getRoleTaskMappings() const { return _roleTaskMappings; }
+    int64_t getUsableWithPlanId() const { return _usableWithPlanID; }
 
-protected:
-    list<RoleTaskMapping*> roleTaskMappings;
-    bool isDefault;
+private:
+    friend ModelFactory;
+    void setRoleTaskMappings(const std::vector<RoleTaskMapping*>& roleTaskMappings);
+    void setIsDefault(bool isDefault);
+    void setUsableWithPlanId(int64_t usableWithPlanId);
+
+    std::vector<RoleTaskMapping*> _roleTaskMappings;
+    bool _isDefault;
     /**
      * the plan ID this roleset is defined for
      */
-    long usableWithPlanID;
+    int64_t _usableWithPlanID;
 };
 
 }  // namespace alica

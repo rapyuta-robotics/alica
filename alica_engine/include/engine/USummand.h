@@ -8,8 +8,6 @@
 #ifndef USUMMAND_H_
 #define USUMMAND_H_
 
-using namespace std;
-
 #include <vector>
 #include <string>
 #include <sstream>
@@ -19,6 +17,7 @@ using namespace std;
 #include "engine/PlanRepository.h"
 #include "engine/UtilityInterval.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/Types.h"
 
 namespace alica {
 
@@ -45,29 +44,24 @@ public:
         // init relevant entrypoint vector
         this->relevantEntryPoints.resize(this->relevantEntryPointIds.size());
         // find the right entrypoint for each id in relevant entrypoint id
-        map<long, EntryPoint*> elements = ae->getPlanRepository()->getEntryPoints();
-        EntryPoint* curEp;
         for (int i = 0; i < this->relevantEntryPoints.size(); ++i) {
-            auto iter = elements.find(this->relevantEntryPointIds[i]);
-            if (iter != elements.end()) {
-                curEp = iter->second;
+            const EntryPoint* curEp = ae->getPlanRepository()->getEntryPoints().find(this->relevantEntryPointIds[i]);
+            if (curEp != nullptr) {
+                this->relevantEntryPoints[i] = curEp;
             } else {
                 cerr << "Could not find Entrypoint " << this->relevantEntryPointIds[i] << " Hint is: " << this->name
                      << endl;
-                throw new exception();
-            }
-            if (curEp != nullptr) {
-                this->relevantEntryPoints[i] = curEp;
+                throw new std::exception();
             }
         }
     }
-    string toString() {
-        stringstream ss;
+    std::string toString() const {
+        std::stringstream ss;
         ss << this->name << ": Weight " << this->weight << "EntryPoints: ";
         for (int i = 0; i < this->relevantEntryPointIds.size(); ++i) {
             ss << this->relevantEntryPointIds[i] << " ";
         }
-        ss << endl;
+        ss << std::endl;
         return ss.str();
     }
     double getWeight() const { return weight; }
@@ -86,15 +80,13 @@ public:
 
 protected:
     UtilityInterval ui;
-    vector<long> relevantEntryPointIds;
-    /**
-     * Weight of this UtilitySummand
-     */
     double weight;
-    string name;
-    long id;
-    string info;
-    vector<EntryPoint*> relevantEntryPoints;
+    int64_t id;
+    std::vector<int64_t> relevantEntryPointIds;
+    EntryPointSet relevantEntryPoints;
+
+    std::string name;
+    std::string info;
 };
 
 } /* namespace alica */

@@ -9,18 +9,16 @@
 #define CHARACTERISTIC_H_
 
 #include <string.h>
-#include <iostream>
 
 #include "AlicaElement.h"
 #include "Capability.h"
 #include "CapValue.h"
 
-using namespace std;
-
 namespace alica {
 
 class Capability;
 class CapValue;
+class ModelFactory;
 
 /**
  * A characteristic encapsulates a Capability and aCapValue.
@@ -30,22 +28,25 @@ public:
     Characteristic();
     virtual ~Characteristic();
 
-    string toString();
+    std::string toString() const override;
 
-    Capability* getCapability();
-    void setCapability(Capability* capability);
-    CapValue* getCapValue();
-    void setCapValue(CapValue* capValue);
-    double getWeight() const;
+    const Capability* getCapability() const { return _capability; }
+    const CapValue* getCapValue() const { return _capValue; }
+    double getWeight() const { return _weight; }
+
+    void setCapability(const Capability* capability);
     void setWeight(double weight);
+    void setCapValue(const CapValue* capValue);
 
-protected:
-    Capability* capability;
-    CapValue* capValue;
+private:
+    friend ModelFactory;
+
+    const Capability* _capability;
+    const CapValue* _capValue;
     /**
      * The weight, used for role allocation.
      */
-    double weight = 0;
+    double _weight;
 };
 
 }  // namespace alica

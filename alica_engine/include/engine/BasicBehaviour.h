@@ -1,12 +1,10 @@
 #pragma once
 
 #include "supplementary/AgentID.h"
-
+#include "engine/model/BehaviourConfiguration.h"
+#include "engine/Types.h"
 #include <string>
-#include <iostream>
-#include <map>
 #include <memory>
-#include <list>
 #include <thread>
 #include <chrono>
 #include <condition_variable>
@@ -20,7 +18,7 @@ class ITrigger;
 namespace alica {
 class Variable;
 class RunningPlan;
-class BehaviourConfiguration;
+
 class EntryPoint;
 class AlicaEngine;
 
@@ -29,23 +27,25 @@ class AlicaEngine;
  */
 class BasicBehaviour {
 public:
-    BasicBehaviour(std::string name);
+    BasicBehaviour(const std::string& name);
     virtual ~BasicBehaviour();
     virtual void run(void* msg) = 0;
-    const std::string getName() const;
-    void setName(std::string name);
-    std::shared_ptr<std::map<std::string, std::string>> getParameters();
-    void setParameters(std::shared_ptr<std::map<std::string, std::string>> parameters);
-    std::shared_ptr<std::list<Variable*>> getVariables();
-    Variable* getVariablesByName(std::string name);
-    void setVariables(std::shared_ptr<std::list<Variable*>> variables);
+    const std::string& getName() const;
+    const BehaviourParameterMap& getParameters() const { return _configuration->getParameters(); }
+
+    void setName(const std::string& name);
+    void setConfiguration(const BehaviourConfiguration* beh);
+
+    const VariableSet& getVariables() { return _configuration->getVariables(); }
+    const Variable* getVariableByName(const std::string& name) const;
+
     bool stop();
     bool start();
     int getDelayedStart() const;
     void setDelayedStart(long msDelayedStart);
     int getInterval() const;
     void setInterval(long msInterval);
-    std::shared_ptr<RunningPlan> getRunningPlan();
+    std::shared_ptr<RunningPlan> getRunningPlan() const;
     void setRunningPlan(std::shared_ptr<RunningPlan> runningPlan);
     bool isSuccess() const;
     void setSuccess(bool success);
@@ -53,7 +53,7 @@ public:
     bool isFailure() const;
     void setFailure(bool failure);
 
-    bool getParameter(std::string key, std::string& valueOut);
+    bool getParameter(const std::string& key, std::string& valueOut) const;
     void setTrigger(supplementary::ITrigger* trigger);
 
     void sendLogMessage(int level, std::string& message);
@@ -67,14 +67,9 @@ protected:
      * The name of this behaviour.
      */
     std::string name;
-    /**
-     * Parameters are behaviour configuration specific fixed values. They are set before the behaviour is activated.
-     */
-    std::shared_ptr<std::map<std::string, std::string>> parameters;
-    /**
-     * The set of Variables attached to this behaviours as defined by the BehaviourConfiguration.
-     */
-    std::shared_ptr<std::list<Variable*>> variables;
+
+    const BehaviourConfiguration* _configuration;
+
     /**
      * The running plan representing this behaviour within the PlanBase.
      */
@@ -98,7 +93,7 @@ protected:
     supplementary::ITrigger* behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
                                                   is event triggered, alternative to timer */
     std::condition_variable runCV;
-    const supplementary::AgentID* getOwnId();
+    const supplementary::AgentID* getOwnId() const;
 
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
@@ -106,13 +101,14 @@ protected:
      */
     virtual void initialiseParameters(){};
 
-    EntryPoint* getParentEntryPoint(std::string taskName);
+    const EntryPoint* getParentEntryPoint(const std::string& taskName);
 
-    EntryPoint* getHigherEntryPoint(std::string planName, std::string taskName);
+    const EntryPoint* getHigherEntryPoint(const std::string& planName, const std::string& taskName);
 
-    std::shared_ptr<std::vector<const supplementary::AgentID*>> robotsInEntryPointOfHigherPlan(EntryPoint* ep);
+    // TODO: these methods may have race conditions, check and refactor
+    const AgentSet* robotsInEntryPointOfHigherPlan(const EntryPoint* ep);
 
-    std::shared_ptr<std::vector<const supplementary::AgentID*>> robotsInEntryPoint(EntryPoint* ep);
+    const AgentSet* robotsInEntryPoint(const EntryPoint* ep);
     AlicaEngine* engine;
 
 private:

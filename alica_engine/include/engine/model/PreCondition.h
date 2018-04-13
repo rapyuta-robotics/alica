@@ -8,31 +8,28 @@
 #ifndef PRECONDITION_H_
 #define PRECONDITION_H_
 
-#include <string>
-#include <sstream>
-
 #include "Condition.h"
 
-using namespace std;
 namespace alica {
 
-class RunningPlan;
+class ModelFactory;
 
 /**
  * A precondition guards a Plan or a Transition.
  */
 class PreCondition : public Condition {
 public:
-    PreCondition(long id = 0);
+    PreCondition(int64_t id = 0);
     virtual ~PreCondition();
 
-    string toString();
+    std::string toString() const override;
 
-    bool isEnabled() const;
-    void setEnabled(bool enabled);
+    bool isEnabled() const { return _enabled; }
 
 private:
-    bool enabled;
+    friend ModelFactory;
+    void setEnabled(bool enabled);
+    bool _enabled;
 };
 
 }  // namespace alica

@@ -10,22 +10,14 @@
 
 namespace alica {
 
-TerminalState::TerminalState()
-        : State() {
-    this->terminal = true;
-    this->postCondition = nullptr;
-}
+TerminalState::TerminalState(StateType t)
+        : State(t)
+        , _postCondition(nullptr) {}
 
-TerminalState::~TerminalState() {
-    // TODO Auto-generated destructor stub
-}
-
-PostCondition* TerminalState::getPostCondition() {
-    return postCondition;
-}
+TerminalState::~TerminalState() {}
 
 void TerminalState::setPostCondition(PostCondition* posCondition) {
-    this->postCondition = posCondition;
+    _postCondition = posCondition;
 }
 
 }  // namespace alica

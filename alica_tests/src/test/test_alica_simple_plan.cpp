@@ -105,7 +105,7 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan) {
             0);
 
     // Check whether we have been in state1 to execute midfield standard
-    for (auto iter : *ae->getBehaviourPool()->getAvailableBehaviours()) {
+    for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.second->getName() == "MidFieldStandard") {
             EXPECT_GT(((alica::MidFieldStandard*) &*iter.second)->callCounter, 10);
         }

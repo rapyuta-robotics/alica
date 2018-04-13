@@ -8,6 +8,8 @@
 #include <memory>
 #include <sstream>
 
+#include "engine/Types.h"
+
 namespace supplementary {
 class AgentID;
 }
@@ -33,21 +35,19 @@ public:
 
     virtual std::shared_ptr<RunningPlan> getBestSimilarAssignment(std::shared_ptr<RunningPlan> rp);
     virtual std::shared_ptr<RunningPlan> getBestSimilarAssignment(
-            std::shared_ptr<RunningPlan> rp, std::shared_ptr<std::vector<const supplementary::AgentID*>> robots);
+            std::shared_ptr<RunningPlan> rp, const AgentSet& robots);
     virtual std::shared_ptr<std::list<std::shared_ptr<RunningPlan>>> getPlansForState(
-            std::shared_ptr<RunningPlan> planningParent, std::list<alica::AbstractPlan*>* plans,
-            std::shared_ptr<std::vector<const supplementary::AgentID*>> robotIDs);
-    std::shared_ptr<RunningPlan> createRunningPlan(std::weak_ptr<RunningPlan> planningParent, std::list<Plan*> plans,
-            std::shared_ptr<std::vector<const supplementary::AgentID*>> robotIDs, std::shared_ptr<RunningPlan> oldRp,
-            PlanType* relevantPlanType);
+            std::shared_ptr<RunningPlan> planningParent, const AbstractPlanSet& plans, const AgentSet& robotIDs);
+
+    std::shared_ptr<RunningPlan> createRunningPlan(std::weak_ptr<RunningPlan> planningParent, const PlanSet& plans,
+            const AgentSet& robotIDs, std::shared_ptr<RunningPlan> oldRp, const PlanType* relevantPlanType);
 
 private:
     PartialAssignmentPool* pap;
     TeamObserver* to;
     AlicaEngine* ae;
     std::shared_ptr<std::list<std::shared_ptr<RunningPlan>>> getPlansForStateInternal(
-            std::shared_ptr<RunningPlan> planningParent, std::list<alica::AbstractPlan*>* plans,
-            std::shared_ptr<std::vector<const supplementary::AgentID*>> robotIDs);
+            std::shared_ptr<RunningPlan> planningParent, const AbstractPlanSet& plans, const AgentSet& robotIDs);
 };
 
 } /* namespace alica */
