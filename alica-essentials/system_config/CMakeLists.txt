@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5.1)
 project(system_config)
 
 ## Use c++ 11x std
@@ -12,10 +12,6 @@ endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 ## Enable exception handling for segfaults using SigFault.h
 set(CMAKE_CXX_FLAGS "-rdynamic -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}")
 
-
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
 find_package(catkin QUIET)
 if(catkin_FOUND)
 	find_package(catkin REQUIRED COMPONENTS fsystem roslib)
@@ -24,21 +20,11 @@ else(catkin_FOUND)
 	set (catkin_LIBRARIES "fsystem")
 endif(catkin_FOUND)
 
-###################################
-## catkin specific configuration ##
-###################################
-## The catkin_package macro generates cmake config files for your package
-## Declare things to be passed to dependent projects
-## INCLUDE_DIRS: uncomment this if you package contains header files
-## LIBRARIES: libraries you create in this project that dependent projects also need
-## CATKIN_DEPENDS: catkin_packages dependent projects also need
-## DEPENDS: system dependencies of this project that dependent projects also need
 if (catkin_FOUND)
   catkin_package(
    INCLUDE_DIRS include
    LIBRARIES system_config
    CATKIN_DEPENDS fsystem roslib
-  # DEPENDS 
   )
 endif(catkin_FOUND)
 
@@ -49,14 +35,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-## Declare a cpp library
 add_library(system_config
   src/SystemConfig.cpp
   src/Configuration.cpp
   #include/Configuration.h
 )
-
-#add_dependencies(system_config ${catkin_LIBRARIES})
 
 target_link_libraries(system_config ${catkin_LIBRARIES})
 
