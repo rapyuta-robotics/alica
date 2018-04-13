@@ -216,7 +216,7 @@ void PlanBase::run() {
 
         AlicaTime availTime = _loopTime - (now - beginTime);
         bool checkFp = false;
-        if (availTime > AlicaTime::milliseconds(1000)) {
+        if (availTime > AlicaTime::milliseconds(1)) {
             std::unique_lock<std::mutex> lock(_lomutex);
             checkFp = std::cv_status::no_timeout == _fpEventWait.wait_for(lock, std::chrono::nanoseconds(availTime.inNanoseconds()));
         }
@@ -225,7 +225,7 @@ void PlanBase::run() {
             // lock for fpEvents
             {
                 lock_guard<mutex> lock(_lomutex);
-                while (_running && availTime > AlicaTime::milliseconds(1000) && _fpEvents.size() > 0) {
+                while (_running && availTime > AlicaTime::milliseconds(1) && _fpEvents.size() > 0) {
                     shared_ptr<RunningPlan> rp = _fpEvents.front();
                     _fpEvents.pop();
 
@@ -254,7 +254,7 @@ void PlanBase::run() {
 #ifdef PB_DEBUG
         cout << "PB: availTime " << availTime << endl;
 #endif
-        if (availTime > AlicaTime::milliseconds(100) && !_ae->getStepEngine()) {
+        if (availTime > AlicaTime::microseconds(100) && !_ae->getStepEngine()) {
             _alicaClock->sleep(availTime);
         }
     }

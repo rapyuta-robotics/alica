@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <iostream>
 
 namespace alica {
 
@@ -22,10 +23,10 @@ public:
         return _time / 1000000000LL;
     }
     constexpr int64_t inMinutes() const {
-        return _time / 1000000000LL / 60LL;
+        return _time / (1000000000LL * 60LL);
     }
     constexpr int64_t inHours() const {
-        return _time / 1000000000LL / 60LL / 60LL;
+        return _time / (1000000000LL * 60LL * 60LL);
     }
 
     static constexpr AlicaTime zero() {
@@ -70,12 +71,14 @@ public:
         return AlicaTime(_time - t.inNanoseconds());
     }
 
-    constexpr AlicaTime operator-=(const AlicaTime& t) const {
-        return AlicaTime(_time - t.inNanoseconds());
+    AlicaTime& operator-=(const AlicaTime& t) {
+        _time -= t.inNanoseconds();
+        return *this;
     }
 
-    constexpr AlicaTime operator+=(const AlicaTime& t) const {
-        return AlicaTime(_time + t.inNanoseconds());
+    AlicaTime& operator+=(const AlicaTime& t) {
+        _time += t.inNanoseconds();
+        return *this;
     }
 
     template <typename T>
@@ -86,6 +89,18 @@ public:
     template <typename T>
     constexpr AlicaTime operator*(T t) const {
         return AlicaTime(_time * t);
+    }
+
+    template <typename T>
+    AlicaTime& operator/=(T t) {
+        _time /= t;
+        return *this;
+    }
+
+    template <typename T>
+    AlicaTime& operator*=(T t) {
+        _time *= t;
+        return *this;
     }
 
     constexpr bool operator<(const AlicaTime& t) const {
@@ -112,6 +127,8 @@ public:
         return _time != t.inNanoseconds();
     }
 
+    friend std::ostream& operator<<(std::ostream& os, const AlicaTime& time);
+
 private:
     template <typename T> constexpr explicit AlicaTime(T t)
             : _time(t) {}
@@ -123,7 +140,7 @@ class AlicaClock {
 public:
     AlicaClock() {}
     virtual ~AlicaClock() {}
-    virtual AlicaTime now();
+    virtual AlicaTime now() const;
     void sleep(const AlicaTime&);
 };
 

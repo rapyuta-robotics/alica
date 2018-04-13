@@ -28,7 +28,7 @@
 using alica::AlicaTime;
 
 class StillClock : public alica::AlicaClock {
-    virtual alica::AlicaTime now() override { return AlicaTime::milliseconds(555); }
+    virtual alica::AlicaTime now() const override { return AlicaTime::milliseconds(555); }
 };
 
 class TaskAssignmentTest : public ::testing::Test {

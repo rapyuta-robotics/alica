@@ -267,6 +267,7 @@ AlicaClock* AlicaEngine::getAlicaClock() const {
     return this->alicaClock;
 }
 void AlicaEngine::setAlicaClock(AlicaClock* clock) {
+    delete this->alicaClock;
     this->alicaClock = clock;
 }
 

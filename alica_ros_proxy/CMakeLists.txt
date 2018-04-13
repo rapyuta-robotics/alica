@@ -33,7 +33,7 @@ include_directories(
 )
 
 add_library(alica_ros_proxy
-	src/communication/AlicaRosCommunication.cpp
+	src/clock/AlicaROSClock.cpp src/communication/AlicaRosCommunication.cpp
 )
 
 add_dependencies(alica_ros_proxy alica_msgs_generate_messages_cpp agent_id_generate_messages_cpp)
