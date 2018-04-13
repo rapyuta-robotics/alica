@@ -34,6 +34,10 @@ namespace msl
 		uc = new alica::UtilityFunctionCreator();
 		crc = new alica::ConstraintCreator();
 		
+		//You can create your own Clock and Communication by inheriting from
+		//AlicaClock and IAlicaCommunication, respectively.
+		//ae.setAlicaClock(new MyOwnClock());
+		
 		//ROS Communicator
 		//For ROS use this
 		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
