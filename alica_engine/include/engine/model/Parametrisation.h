@@ -21,7 +21,7 @@ public:
     Parametrisation();
     virtual ~Parametrisation();
 
-    std::string toString() const;
+    std::string toString() const override;
 
     const AbstractPlan* getSubPlan() const { return _subPlan; }
     const Variable* getVar() const { return _var; }

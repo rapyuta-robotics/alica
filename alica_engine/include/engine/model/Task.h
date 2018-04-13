@@ -27,7 +27,7 @@ public:
     const std::string& getDescription() const { return _description; }
 
     const TaskRepository* getTaskRepository() const {return _taskRepository;}
-    std::string toString() const;
+    std::string toString() const override;
 
     static constexpr int64_t IDLEID = -1;  // For Task Id of an Idle EntryPoint...
 private:

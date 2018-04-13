@@ -28,7 +28,7 @@ public:
     Characteristic();
     virtual ~Characteristic();
 
-    std::string toString() const;
+    std::string toString() const override;
 
     const Capability* getCapability() const { return _capability; }
     const CapValue* getCapValue() const { return _capValue; }

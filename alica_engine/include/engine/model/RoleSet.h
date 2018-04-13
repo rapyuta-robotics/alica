@@ -20,12 +20,12 @@ class RoleSet : public AlicaElement {
 public:
     RoleSet();
     virtual ~RoleSet();
-    std::string toString() const;
+    std::string toString() const override;
     bool isDefault() const { return _isDefault; }
     const std::vector<RoleTaskMapping*>& getRoleTaskMappings() const { return _roleTaskMappings; }
     int64_t getUsableWithPlanId() const { return _usableWithPlanID; }
 
-protected:
+private:
     friend ModelFactory;
     void setRoleTaskMappings(const std::vector<RoleTaskMapping*>& roleTaskMappings);
     void setIsDefault(bool isDefault);
