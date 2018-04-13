@@ -35,7 +35,7 @@ public:
      */
     constexpr static int64_t IDLEID = -1;  // For Idle EntryPoint...
 
-    std::string toString() const;
+    std::string toString() const override;
     static bool compareTo(const EntryPoint* ep1, const EntryPoint* ep2);
 
     const Task* getTask() const { return _task; }

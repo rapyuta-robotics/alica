@@ -19,7 +19,7 @@ public:
     Variable(int64_t id, const std::string& name, const std::string& type);
     virtual ~Variable();
 
-    std::string toString() const;
+    std::string toString() const override;
 
     const std::string& getType() const { return _type; }
     std::shared_ptr<SolverVariable> getSolverVar() const { return _solverVar; }

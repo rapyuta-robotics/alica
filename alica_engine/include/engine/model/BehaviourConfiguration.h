@@ -27,7 +27,7 @@ public:
     BehaviourConfiguration(int64_t id);
     virtual ~BehaviourConfiguration();
 
-    std::string toString() const;
+    std::string toString() const override;
 
     int getDeferring() const { return _deferring; }
     bool isEventDriven() const { return _eventDriven; }
