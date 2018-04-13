@@ -35,7 +35,7 @@ public:
     void setChangeOccured(bool changeOccured);
     PlanChange visit(std::shared_ptr<RunningPlan> r);
     PlanChange updateChange(PlanChange cur, PlanChange update);
-    std::shared_ptr<RunningPlan> initialisationRule(Plan* masterPlan);
+    std::shared_ptr<RunningPlan> initialisationRule(const Plan* masterPlan);
 
 protected:
     AlicaEngine* ae;
