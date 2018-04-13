@@ -17,16 +17,17 @@ class IVariableSyncModule;
 namespace reasoner {
 class GSolver;
 
-class CGSolver : public ISolver {
+class CGSolver : public ISolver<CGSolver, double> {
 public:
     CGSolver(AlicaEngine* ae);
     virtual ~CGSolver();
 
-    bool existsSolution(const alica::VariableSet& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) override;
-    bool getSolution(const alica::VariableSet& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<void*>& results) override;
-    std::shared_ptr<SolverVariable> createVariable(long id) override;
+    bool existsSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
+    bool getSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<double>& results);
 
-protected:
+    virtual std::shared_ptr<SolverVariable> createVariable(int64_t id) override;
+
+private:
     GSolver _gs;
     GSolver _sgs;
 

@@ -10,16 +10,16 @@ namespace alica {
 namespace reasoner {
 
 DummySolver::DummySolver(AlicaEngine* ae)
-        : alica::ISolver(ae) {}
+        : ISolver(ae) {}
 
 DummySolver::~DummySolver() {}
 
-bool DummySolver::existsSolution(std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
+bool DummySolver::existsSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
     return true;
 }
 
-bool DummySolver::getSolution(std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
-        std::vector<void*>& results) {
+bool DummySolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+        std::vector<int64_t>& results) {
     std::vector<std::shared_ptr<DummyVariable>> dummyVariables;
     dummyVariables.reserve(vars.size());
     for (auto variable : vars) {
@@ -54,16 +54,17 @@ bool DummySolver::getSolution(std::vector<Variable*>& vars, std::vector<std::sha
         }
     }
 
-    // TODO: set results
+    // TODO: register strings in blackboard
     results.reserve(dummyVariables.size());
-    for (auto dummyVariable : dummyVariables) {
-        results.push_back(new std::string(dummyVariableValueMap[dummyVariable->getID()]));
+    for (const auto& dummyVariable : dummyVariables) {
+        results.push_back(dummyVariable->getID());
+        //results.push_back(new std::string(dummyVariableValueMap[dummyVariable->getID()]));
     }
 
     return true;
 }
 
-std::shared_ptr<SolverVariable> DummySolver::createVariable(long representingVariableID) {
+std::shared_ptr<SolverVariable> DummySolver::createVariable(int64_t representingVariableID) {
     return std::make_shared<DummyVariable>(representingVariableID);
 }
 
