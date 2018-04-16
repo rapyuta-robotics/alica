@@ -1,12 +1,13 @@
 using namespace std;
 #include "Plans/ProblemModule/QueryBehaviour1.h"
 
+
 /*PROTECTED REGION ID(inccpp1479556104511) ENABLED START*/  // Add additional includes here
-#include "SolverType.h"
+#include <CGSolver.h>
 /*PROTECTED REGION END*/
 namespace alica {
 /*PROTECTED REGION ID(staticVars1479556104511) ENABLED START*/  // initialise static variables here
-vector<double> QueryBehaviour1::result;
+std::vector<double> QueryBehaviour1::result;
 /*PROTECTED REGION END*/
 QueryBehaviour1::QueryBehaviour1()
         : DomainBehaviour("QueryBehaviour1") {
@@ -22,7 +23,7 @@ void QueryBehaviour1::run(void* msg) {
     /*PROTECTED REGION ID(run1479556104511) ENABLED START*/  // Add additional options here
     callCounter++;
     // cout << "QueryBehaviour1 was called " << callCounter << " times!" << endl;
-    query->getSolution(SolverType::GRADIENTSOLVER, runningPlan, result);
+    query->getSolution<reasoner::CGSolver,double>(runningPlan, result);
     /*PROTECTED REGION END*/
 }
 void QueryBehaviour1::initialiseParameters() {

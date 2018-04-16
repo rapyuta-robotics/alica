@@ -196,7 +196,7 @@ void AlicaEngine::addSolver(SolverType* solver) {
 template <class SolverType>
 SolverType* AlicaEngine::getSolver() const {
     std::unordered_map<size_t, ISolverBase*>::const_iterator cit = _solvers.find(typeid(SolverType).hash_code());
-    return (cit == _solvers.end()) ? nullptr : cit->second;
+    return (cit == _solvers.end()) ? nullptr : static_cast<SolverType*>(cit->second);
 }
 
 

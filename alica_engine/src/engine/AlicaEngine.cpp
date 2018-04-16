@@ -51,9 +51,9 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, const std::st
         , expressionHandler(nullptr)
         , log(nullptr)
         , auth(nullptr)
-        , stepEngine(stepEngine)
-        , pap(nullptr)
         , variableSyncModule(nullptr)
+        , pap(nullptr)
+        , stepEngine(stepEngine)
         , agentIDManager(idManager) {
     _maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
     this->useStaticRoles = (*sc)["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);

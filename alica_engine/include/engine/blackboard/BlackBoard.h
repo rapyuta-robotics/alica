@@ -1,12 +1,13 @@
 #pragma once
 
 #include "engine/blackboard/ByteArray.h"
-
-#include <map>
-#include <string.h>
 #include "engine/blackboard/BBIdent.h"
 #include "engine/blackboard/ByteArray.h"
 #include "engine/util/HashFunctions.h"
+
+#include <map>
+#include <stdint.h>
+#include <string.h>
 
 namespace alica {
 
@@ -16,8 +17,10 @@ public:
     using IdType = BBIdent;
     using ObjectType = ByteArray;
     BlackBoard() = default;
-
-    IdType registerValue(const uint8_t* buffer, int len);
+    
+    IdType registerValue(const int8_t* buffer, int len);
+    IdType registerValue(const char* buffer, int len);
+    
     template <class InputIt>
     IdType registerValue(InputIt begin, InputIt end);
 

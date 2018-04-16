@@ -149,8 +149,9 @@ bool Query::getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>
 
     if (ret && solverResult.size() > 0) {
         int i = 0;
+        VariableSyncModule* rs = rp->getAlicaEngine()->getResultStore();
         for (const ResultType& value : solverResult) {
-            solver->getAlicaEngine()->getResultStore()->postResult(relevantVariables[i]->getId(), Variant(value));
+            rs->postResult(relevantVariables[i]->getId(), Variant(value));
             ++i;
         }
 
