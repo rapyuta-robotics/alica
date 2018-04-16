@@ -8,7 +8,7 @@ using namespace std;
 /*PROTECTED REGION END*/
 namespace alica {
 /*PROTECTED REGION ID(staticVars1417424455986) ENABLED START*/  // initialise static variables here
-vector<double> SolverTestBehaviour::result;
+std::vector<double> SolverTestBehaviour::result;
 /*PROTECTED REGION END*/
 SolverTestBehaviour::SolverTestBehaviour()
         : DomainBehaviour("SolverTestBehaviour") {

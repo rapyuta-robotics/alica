@@ -19,13 +19,13 @@ public:
 
     virtual void tick();
 
-    virtual void sendAllocationAuthority(alica::AllocationAuthorityInfo& aai) const;
-    virtual void sendAlicaEngineInfo(alica::AlicaEngineInfo& bi) const;
-    virtual void sendPlanTreeInfo(alica::PlanTreeInfo& pti) const;
-    virtual void sendRoleSwitch(alica::RoleSwitch& rs) const;
-    virtual void sendSyncReady(alica::SyncReady& sr) const;
-    virtual void sendSyncTalk(alica::SyncTalk& st) const;
-    virtual void sendSolverResult(alica::SolverResult& sr) const;
+    virtual void sendAllocationAuthority(const alica::AllocationAuthorityInfo& aai) const;
+    virtual void sendAlicaEngineInfo(const alica::AlicaEngineInfo& bi) const;
+    virtual void sendPlanTreeInfo(const alica::PlanTreeInfo& pti) const;
+    virtual void sendRoleSwitch(const alica::RoleSwitch& rs) const;
+    virtual void sendSyncReady(const alica::SyncReady& sr) const;
+    virtual void sendSyncTalk(const alica::SyncTalk& st) const;
+    virtual void sendSolverResult(const alica::SolverResult& sr) const;
 
     virtual void startCommunication();
     virtual void stopCommunication();
