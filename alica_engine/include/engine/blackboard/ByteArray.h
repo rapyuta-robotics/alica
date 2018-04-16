@@ -4,12 +4,14 @@
 #include <stdlib.h>
 
 namespace alica {
+
 class ByteArray {
     public:
     ByteArray()
         : _begin(nullptr)
         , _size(0) {}
-    ByteArray(uint8_t* src, int32_t size);
+    ByteArray(const uint8_t* src, int32_t size);
+    ByteArray(int32_t size);
     ~ByteArray() {
         free(_begin);
     }

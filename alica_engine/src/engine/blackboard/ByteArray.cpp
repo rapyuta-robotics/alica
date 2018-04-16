@@ -6,13 +6,24 @@
 #include <string.h>
 
 namespace alica {
-ByteArray::ByteArray(uint8_t* src, int32_t count)
+ByteArray::ByteArray(const uint8_t* src, int32_t count)
     : _size(count) {
     assert(src != nullptr);
     if (count > 0) {
         _begin = static_cast<uint8_t*>(malloc(count));
         assert(_begin!=nullptr);
         memcpy(_begin, src, count);
+    } else {
+        _begin = nullptr;
+    }
+}
+
+ByteArray::ByteArray(int32_t size)
+    : _size(size)
+{
+    assert(size > 0);
+    if(size> 0) {
+        _begin = static_cast<uint8_t*>(malloc(size));
     } else {
         _begin = nullptr;
     }

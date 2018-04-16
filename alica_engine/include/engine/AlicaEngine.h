@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/constraintmodul/ISolver.h"
-
+#include "engine/blackboard/BlackBoard.h"
 #include <SystemConfig.h>
 #include <list>
 #include <unordered_map>
@@ -78,6 +78,8 @@ public:
     TeamObserver* getTeamObserver() const {return teamObserver;}
     IAlicaClock* getIAlicaClock() const {return alicaClock;}
 
+    const BlackBoard& getBlackBoard() const {return _blackboard;}
+    BlackBoard& editBlackBoard() {return _blackboard;}
     //Solver Access:
     template <class SolverType>
     void addSolver(SolverType* solver);
@@ -127,6 +129,7 @@ private:
     PartialAssignmentPool* pap;
     SyncModule* syncModul;    
     PlanRepository* planRepository;
+    BlackBoard _blackboard;
     
     supplementary::AgentIDManager* agentIDManager;
     Logger* log;
