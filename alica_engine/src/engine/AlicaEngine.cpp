@@ -48,7 +48,7 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, string roleSe
         , planBase(nullptr)
         , planSelector(nullptr)
         , communicator(nullptr)
-        , alicaClock(new AlicaClock)
+        , alicaClock(nullptr)
         , sc(supplementary::SystemConfig::getInstance())
         , terminating(false)
         , expressionHandler(nullptr)
