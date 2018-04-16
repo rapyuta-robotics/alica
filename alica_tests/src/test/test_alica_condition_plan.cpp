@@ -68,7 +68,6 @@ protected:
     virtual void TearDown() {
         ae->shutdown();
         sc->shutdown();
-        delete ae->getAlicaClock();
         delete ae->getCommunicator();
         delete ae->getSolver(SolverType::DUMMYSOLVER);
         delete ae->getSolver(SolverType::GRADIENTSOLVER);
