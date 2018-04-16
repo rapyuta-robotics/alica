@@ -39,7 +39,8 @@ template <class Prototype>
 const AgentID* AgentIDManager::getID(Prototype& idPrototype) {
     // little-endian encoding
     std::vector<uint8_t> idByteVector;
-    for (int i = 0; i < sizeof(Prototype); i++) {
+    //TODO: replace with memcpy or std copy
+    for (int i = 0; i < static_cast<int>(sizeof(Prototype)); i++) {
         idByteVector.push_back(*(((uint8_t*) &idPrototype) + i));
     }
     return this->getIDFromBytes(idByteVector);

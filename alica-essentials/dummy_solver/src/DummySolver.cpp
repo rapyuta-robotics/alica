@@ -4,6 +4,7 @@
 
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>
+#include <engine/blackboard/Blackboard.h>
 
 namespace alica {
 
@@ -19,7 +20,9 @@ bool DummySolver::existsSolutionImpl(const VariableSet& vars, const std::vector<
 }
 
 bool DummySolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
-        std::vector<int64_t>& results) {
+        std::vector<BBIdent>& results) {
+
+    //TODO: reformulate this without a temporary vector
     std::vector<std::shared_ptr<DummyVariable>> dummyVariables;
     dummyVariables.reserve(vars.size());
     for (auto variable : vars) {
@@ -29,7 +32,7 @@ bool DummySolver::getSolutionImpl(const VariableSet& vars, const std::vector<std
         }
         dummyVariables.push_back(dummyVariable);
     }
-
+    //TODO: reformulate this without a temporary map
     std::map<long, std::string> dummyVariableValueMap;
 
     for (auto& c : calls) {
@@ -54,11 +57,12 @@ bool DummySolver::getSolutionImpl(const VariableSet& vars, const std::vector<std
         }
     }
 
-    // TODO: register strings in blackboard
     results.reserve(dummyVariables.size());
+    BlackBoard& bb =  getAlicaEngine()->editBlackBoard();
     for (const auto& dummyVariable : dummyVariables) {
-        results.push_back(dummyVariable->getID());
-        //results.push_back(new std::string(dummyVariableValueMap[dummyVariable->getID()]));
+        const std::string& val = dummyVariableValueMap[dummyVariable->getID()];
+        BBIDent bid = bb.registerValue(val.c_str(),val.size());
+        results.push_back(bid);
     }
 
     return true;
