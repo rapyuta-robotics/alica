@@ -23,7 +23,6 @@
 #include "engine/collections/StateCollection.h"
 #include <thread>
 #include <iostream>
-#include "SolverType.h"
 #include <CGSolver.h>
 #include <engine/constraintmodul/Query.h>
 #include <Plans/Behaviour/Attack.h>
@@ -62,8 +61,8 @@ protected:
         crc = new alica::ConstraintCreator();
         ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-        ae->addSolver(SolverType::DUMMYSOLVER, new alica::reasoner::ConstraintTestPlanDummySolver(ae));
-        ae->addSolver(SolverType::GRADIENTSOLVER, new alica::reasoner::CGSolver(ae));
+        ae->addSolver(new alica::reasoner::ConstraintTestPlanDummySolver(ae));
+        ae->addSolver(new alica::reasoner::CGSolver(ae));
     }
 
     virtual void TearDown() {
@@ -71,8 +70,8 @@ protected:
         sc->shutdown();
         delete ae->getIAlicaClock();
         delete ae->getCommunicator();
-        delete ae->getSolver(SolverType::DUMMYSOLVER);
-        delete ae->getSolver(SolverType::GRADIENTSOLVER);
+        delete ae->getSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
+        delete ae->getSolver<alica::reasoner::CGSolver>();
         delete cc;
         delete bc;
         delete uc;
@@ -129,5 +128,6 @@ TEST_F(AlicaConditionPlan, solverTest) {
 
     ASSERT_GT(alica::reasoner::ConstraintTestPlanDummySolver::getGetSolutionCallCounter(), 0);
     ASSERT_EQ(alica::ConstraintUsingBehaviour::result.size(), 1) << "Wrong result size";
-    EXPECT_EQ(alica::ConstraintUsingBehaviour::result[0], "Y");
+    std::string resultingString(reinterpret_cast<const char*>(ae->getBlackBoard().getValue(alica::ConstraintUsingBehaviour::result[0]).begin()));
+    EXPECT_EQ("Y",resultingString);
 }
