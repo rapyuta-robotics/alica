@@ -13,7 +13,7 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 ## Enable exception handling for segfaults
-set(CMAKE_CXX_FLAGS "-rdynamic -g -fnon-call-exceptions -ggdb -Werror-implicit-function-declaration -Werror=return-type ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-rdynamic -g -fnon-call-exceptions -ggdb -Werror-implicit-function-declaration -Werror=return-type -Wall -Wno-reorder ${CMAKE_CXX_FLAGS}")
 
 find_package(catkin QUIET)
 if (catkin_FOUND)
