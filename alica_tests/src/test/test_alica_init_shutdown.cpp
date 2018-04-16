@@ -39,6 +39,7 @@ protected:
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
+        ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alica_dummy_proxy::AlicaDummyCommunication(ae));
     }
 
