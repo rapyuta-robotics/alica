@@ -164,11 +164,11 @@ PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, Partial
     ret->robotIds = oldPA->robotIds;
     ret->utilFunc = oldPA->utilFunc;
     ret->epSuccessMapping = oldPA->epSuccessMapping;
-    for (int i = 0; i < oldPA->unassignedRobotIds.size(); i++) {
+    for (int i = 0; i < static_cast<int>(oldPA->unassignedRobotIds.size()); i++) {
         ret->unassignedRobotIds.push_back(oldPA->unassignedRobotIds[i]);
     }
 
-    for (int i = 0; i < oldPA->dynCardinalities.size(); i++) {
+    for (int i = 0; i < static_cast<int>(oldPA->dynCardinalities.size()); i++) {
         ret->dynCardinalities[i] =
                 make_shared<DynCardinality>(oldPA->dynCardinalities[i]->getMin(), oldPA->dynCardinalities[i]->getMax());
     }
@@ -415,7 +415,7 @@ bool PartialAssignment::compareTo(PartialAssignment* thisPa, PartialAssignment* 
         }
     }
     for (int i = 0; thisPa->epRobotsMapping->getSize(); ++i) {
-        for (int j = 0; j < thisPa->epRobotsMapping->getRobots(i)->size(); ++j) {
+        for (int j = 0; j < static_cast<int>(thisPa->epRobotsMapping->getRobots(i)->size()); ++j) {
             if (*(thisPa->epRobotsMapping->getRobots(i)->at(j)) > *(newPa->epRobotsMapping->getRobots(i)->at(j))) {
                 return true;
             } else if (*(thisPa->epRobotsMapping->getRobots(i)->at(j)) >

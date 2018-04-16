@@ -75,7 +75,7 @@ double UtilityFunction::eval(shared_ptr<RunningPlan> newRp, shared_ptr<RunningPl
 
     // Sum up all normal utility summands
     UtilityInterval curUI;
-    for (int i = 0; i < this->utilSummands.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(this->utilSummands.size()); ++i) {
         auto iter = utilSummands.begin();
         advance(iter, i);
         curUI = (*iter)->eval(&*newRp->getAssignment());
@@ -132,7 +132,7 @@ UtilityInterval UtilityFunction::eval(IAssignment* newAss, IAssignment* oldAss) 
     sumOfWeights += this->priorityWeight;
     // Sum up all normal utility summands
     UtilityInterval curUI;
-    for (int i = 0; i < this->utilSummands.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(this->utilSummands.size()); ++i) {
         auto iter = utilSummands.begin();
         advance(iter, i);
         curUI = (*iter)->eval(newAss);
@@ -178,7 +178,7 @@ void UtilityFunction::updateAssignment(IAssignment* newAss, IAssignment* oldAss)
 void UtilityFunction::cacheEvalData() {
     if (this->utilSummands.size() != 0)  // == null for default utility function
     {
-        for (int i = 0; i < this->utilSummands.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(this->utilSummands.size()); ++i) {
             auto iter = this->utilSummands.begin();
             advance(iter, i);
             (*iter)->cacheEvalData();
@@ -374,7 +374,7 @@ UtilityInterval UtilityFunction::getSimilarity(IAssignment* newAss, IAssignment*
                         return *oldRobot == *id;
                     }) != newRobots->end()) {
                     simUI.setMin(simUI.getMin() + 1);
-                } else if (ep->getMaxCardinality() > newRobots->size() &&
+                } else if (ep->getMaxCardinality() > static_cast<int>(newRobots->size()) &&
                            find_if(newAss->getUnassignedRobotIds().begin(), newAss->getUnassignedRobotIds().end(),
                                    [&oldRobot](const supplementary::AgentID* id) { return *oldRobot == *id; }) !=
                                    newAss->getUnassignedRobotIds().end()) {

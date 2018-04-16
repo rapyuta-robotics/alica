@@ -60,7 +60,7 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p) {
 
 CycleManager::~CycleManager() {
     lock_guard<mutex> lock(this->allocationHistoryMutex);
-    for (int i = 0; i < this->allocationHistory.size(); i++) {
+    for (int i = 0; i < static_cast<int>(this->allocationHistory.size()); ++i) {
         delete this->allocationHistory[i];
     }
 }
@@ -344,7 +344,7 @@ bool CycleManager::detectAllocationCycle() {
     AllocationDifference temp;
     lock_guard<mutex> lock(this->allocationHistoryMutex);
 
-    for (int i = this->newestAllocationDifference; count < this->allocationHistory.size(); --i) {
+    for (int i = this->newestAllocationDifference; count < static_cast<int>(this->allocationHistory.size()); --i) {
         ++count;
         if (i < 0) {
             i = this->allocationHistory.size() - 1;
@@ -368,7 +368,7 @@ bool CycleManager::detectAllocationCycle() {
             if (temp.isEmpty()) {
                 ++cyclesFound;
                 if (cyclesFound > maxAllocationCycles) {
-                    for (int k = 0; k < this->allocationHistory.size(); k++) {
+                    for (int k = 0; k < static_cast<int>(this->allocationHistory.size()); ++k) {
                         this->allocationHistory[k]->reset();
                     }
                     return true;

@@ -164,14 +164,14 @@ bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolverBase
         auto domainSolverVars =
                 make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>>();
         auto agentsInScope = make_shared<vector<shared_ptr<AgentSet>>>();
-        for (int j = 0; j < probPart->getDomainVariables()->size(); ++j) {
+        for (int j = 0; j < static_cast<int>(probPart->getDomainVariables()->size()); ++j) {
             auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>();
             agentsInScope->push_back(probPart->getAgentsInScope()->at(j));
             domainSolverVars->push_back(ll);
             for (auto domainVars : probPart->getDomainVariables()->at(j)) {
                 auto domainSolverVars = make_shared<vector<shared_ptr<SolverVariable>>>();
                 domainSolverVars->reserve(domainVars.size());
-                for (int i = 0; i < domainVars.size(); ++i) {
+                for (int i = 0; i < static_cast<int>(domainVars.size()); ++i) {
                     if (domainVars.at(i)->getSolverVar() == nullptr) {
                         domainVars.at(i)->setSolverVar(solver->createVariable(domainVars.at(i)->getId()));
                     }
@@ -283,7 +283,7 @@ const Variable* UniqueVarStore::getRep(const Variable* v) {
  * Returns -1, if the variable is not present.
  */
 int UniqueVarStore::getIndexOf(const Variable* v) const {
-    for (int i = 0; i < store.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(store.size()); ++i) {
         for (const Variable* c : store[i]) {
             if (c == v) {
                 return i;
