@@ -29,6 +29,7 @@ private:
 template <class SolverType, typename ResultType>
 class ISolver : public ISolverBase {
 public:
+    ISolver(AlicaEngine* ae) : ISolverBase(ae) {}
     virtual ~ISolver() {}
 
 

@@ -197,10 +197,10 @@ void AlicaRosCommunication::sendSolverResult(const SolverResult& sr) const {
     alica_msgs::SolverResult srs;
     srs.senderID.id = sr.senderID->toByteVector();
 
-    for (auto sv : sr.vars) {
+    for (const SolverVar& sv : sr.vars) {
         alica_msgs::SolverVar svs;
-        svs.id = sv->id;
-        svs.value = sv->value;
+        svs.id = sv.id;
+        svs.value = std::vector<uint8_t>(sv.value, sv.value + sizeof(sv.value) / sizeof(sv.value[0]));
         srs.vars.push_back(svs);
     }
 
@@ -277,18 +277,19 @@ void AlicaRosCommunication::handleSyncTalkRos(alica_msgs::SyncTalkPtr st) {
 }
 
 void AlicaRosCommunication::handleSolverResult(alica_msgs::SolverResultPtr sr) {
-    auto srPtr = make_shared<SolverResult>();
-    srPtr->senderID = this->ae->getIDFromBytes(sr->senderID.id);
+    SolverResult osr;
+    osr.senderID = this->ae->getIDFromBytes(sr->senderID.id);
+    osr.vars.reserve(sr->vars.size());
 
-    for (auto& sv : sr->vars) {
-        SolverVar* svs = new SolverVar();
-        svs->id = sv.id;
-        svs->value = sv.value;
-        srPtr->vars.push_back(svs);
+    for (const auto& sv : sr->vars) {
+        SolverVar svs;
+        svs.id = sv.id;
+        std::copy(sv.value.begin(),sv.value.end(),svs.value);
+        osr.vars.push_back(std::move(svs));
     }
 
-    if (this->isRunning) {
-        this->onSolverResult(srPtr);
+    if (isRunning) {
+        onSolverResult(osr);
     }
 }
 
