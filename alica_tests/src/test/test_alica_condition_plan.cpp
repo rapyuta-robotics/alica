@@ -128,6 +128,7 @@ TEST_F(AlicaConditionPlan, solverTest) {
 
     ASSERT_GT(alica::reasoner::ConstraintTestPlanDummySolver::getGetSolutionCallCounter(), 0);
     ASSERT_EQ(alica::ConstraintUsingBehaviour::result.size(), 1) << "Wrong result size";
-    std::string resultingString(reinterpret_cast<const char*>(ae->getBlackBoard().getValue(alica::ConstraintUsingBehaviour::result[0]).begin()));
+    const ByteArray& ba = ae->getBlackBoard().getValue(alica::ConstraintUsingBehaviour::result[0]);
+    std::string resultingString(reinterpret_cast<const char*>(ba.begin()),ba.size());
     EXPECT_EQ("Y",resultingString);
 }
