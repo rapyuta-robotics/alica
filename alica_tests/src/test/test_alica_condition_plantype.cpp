@@ -61,6 +61,7 @@ protected:
  * Test for Runtime or PreCondition are false with plantypes
  */
 TEST_F(AlicaConditionPlanType, conditionPlanTypeTest) {
+    ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
