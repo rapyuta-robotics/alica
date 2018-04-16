@@ -41,19 +41,20 @@ protected:
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new alica_dummy_proxy::AlicaSystemClock());
         ae->setCommunicator(new alica_dummy_proxy::AlicaDummyCommunication(ae));
+        ae->setIAlicaClock(new alica_dummy_proxy::AlicaSystemClock());
     }
 
     virtual void TearDown() {
         ae->shutdown();
-        sc->shutdown();
         delete ae->getIAlicaClock();
         delete ae->getCommunicator();
-        delete cc;
-        delete uc;
         delete crc;
+        delete uc;
+        delete cc;
         delete bc;
+        delete ae;
+        sc->shutdown();
     }
 };
 
