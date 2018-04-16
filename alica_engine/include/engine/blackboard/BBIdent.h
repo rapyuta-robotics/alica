@@ -8,7 +8,7 @@ namespace alica {
 class BBIdent {
     public:
     BBIdent() = default;// : _val(0) {}
-    BBIdent(int64_t id) 
+    BBIdent(uint64_t id) 
         : _val(id) {}
     int64_t getRaw() const {return _val;}
 
@@ -32,7 +32,7 @@ class BBIdent {
     }
 
     private:
-    int64_t _val;
+    uint64_t _val;
 };
 
 }

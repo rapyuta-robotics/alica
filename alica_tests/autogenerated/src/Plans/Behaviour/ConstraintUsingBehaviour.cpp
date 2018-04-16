@@ -2,11 +2,14 @@ using namespace std;
 #include "Plans/Behaviour/ConstraintUsingBehaviour.h"
 
 /*PROTECTED REGION ID(inccpp1414068597716) ENABLED START*/  // Add additional includes here
+
+#include "ConstraintTestPlanDummySolver.h"
 #include <iostream>
+
 /*PROTECTED REGION END*/
 namespace alica {
 /*PROTECTED REGION ID(staticVars1414068597716) ENABLED START*/  // initialise static variables here
-std::vector<std::string> ConstraintUsingBehaviour::result;
+std::vector<BBIdent> ConstraintUsingBehaviour::result;
 /*PROTECTED REGION END*/
 ConstraintUsingBehaviour::ConstraintUsingBehaviour()
         : DomainBehaviour("ConstraintUsingBehaviour") {
@@ -22,7 +25,7 @@ void ConstraintUsingBehaviour::run(void* msg) {
     /*PROTECTED REGION ID(run1414068597716) ENABLED START*/  // Add additional options here
     ++_callCounter;
     cout << "ConstraintUsingBehaviour was called " << _callCounter << " times!" << endl;
-    _query.getSolution(SolverType::DUMMYSOLVER, runningPlan, result);
+    _query.getSolution<reasoner::ConstraintTestPlanDummySolver, BBIdent>(runningPlan, result);
     /*PROTECTED REGION END*/
 }
 void ConstraintUsingBehaviour::initialiseParameters() {
