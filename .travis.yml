@@ -23,7 +23,12 @@ env:
 
 # Install system dependencies, namely a very barebones ROS setup.
 before_install:
-  - sudo rm /var/lib/dpkg/lock
+  # Disabling of automatic updates services adapted from here:
+  # https://github.com/travis-ci/travis-ci/issues/9129
+  - sudo systemctl stop apt-daily.service apt-daily.timer apt-daily-upgrade.service apt-daily-upgrade.timer
+  - sudo systemctl kill --kill-who=all apt-daily.service apt-daily-upgrade.service
+  - while !(systemctl list-units --all apt-daily.service | grep -q dead); do sleep 1; done
+  - while !(systemctl list-units --all apt-daily-upgrade.service | grep -q dead); do sleep 1; done
   - sudo sh -c "echo \"deb http://packages.ros.org/ros/ubuntu $ROS_CI_DESKTOP main\" > /etc/apt/sources.list.d/ros-latest.list"
   - sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
   - sudo apt-get update -qq
