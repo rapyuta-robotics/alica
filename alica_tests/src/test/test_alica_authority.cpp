@@ -114,7 +114,7 @@ TEST_F(AlicaEngineAuthorityManager, authority) {
     sc->setHostname("hairy");
     ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "AuthorityTestMaster", ".", true);
-    ae->setAlicaClock(new alica::AlicaClock());
+    ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
     EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
