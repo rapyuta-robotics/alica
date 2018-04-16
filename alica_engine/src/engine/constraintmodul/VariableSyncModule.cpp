@@ -70,28 +70,28 @@ void VariableSyncModule::clear() {
     }
 }
 
-void VariableSyncModule::onSolverResult(shared_ptr<SolverResult> msg) {
-    if (*(msg->senderID) == *_store[0].getId()) {
+void VariableSyncModule::onSolverResult(const SolverResult& msg) {
+    if (*(msg.senderID) == *_store[0].getId()) {
         return;
     }
-    if (_ae->getTeamManager()->isAgentIgnored(msg->senderID)) {
+    if (_ae->getTeamManager()->isAgentIgnored(msg.senderID)) {
         return;
     }
     ResultEntry* re = nullptr;
     
     for (ResultEntry& r : _store) {
-        if (*(r.getId()) == *(msg->senderID)) {
+        if (*(r.getId()) == *(msg.senderID)) {
             re = &r;
             break;
         }
     }
     if (re == nullptr) {
         lock_guard<std::mutex> lock(_mutex);
-        _store.emplace_back(msg->senderID);
+        _store.emplace_back(msg.senderID);
         re = &_store.back();
     }
     AlicaTime now = _ae->getIAlicaClock()->now();
-    for (const SolverVar& sv : msg->vars) {
+    for (const SolverVar& sv : msg.vars) {
         Variant v;
         v.loadFrom(sv.value);
         re->addValue(sv.id, v, now);

@@ -27,6 +27,6 @@ void alica::IAlicaCommunication::onPlanTreeInfoReceived(shared_ptr<PlanTreeInfo>
     ae->getTeamObserver()->handlePlanTreeInfo(pti);
 }
 
-void alica::IAlicaCommunication::onSolverResult(shared_ptr<SolverResult> sr) {
+void alica::IAlicaCommunication::onSolverResult(const SolverResult& sr) {
     ae->getResultStore()->onSolverResult(sr);
 }

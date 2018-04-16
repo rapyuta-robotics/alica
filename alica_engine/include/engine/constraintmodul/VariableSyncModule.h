@@ -8,7 +8,6 @@
 #include <supplementary/NotifyTimer.h>
 
 #include <vector>
-#include <memory>
 
 namespace alica {
 class Variable;
@@ -23,7 +22,7 @@ public:
     virtual void init() override;
     virtual void close() override;
     virtual void clear() override;
-    virtual void onSolverResult(std::shared_ptr<SolverResult> msg) override;
+    virtual void onSolverResult(const SolverResult& msg) override;
 
     void publishContent();
     virtual void postResult(int64_t vid, Variant result) override;

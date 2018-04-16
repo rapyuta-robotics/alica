@@ -34,7 +34,7 @@ public:
     void onSyncReadyReceived(std::shared_ptr<SyncReady> sr);
     void onAuthorityInfoReceived(std::shared_ptr<AllocationAuthorityInfo> aai);
     void onPlanTreeInfoReceived(std::shared_ptr<PlanTreeInfo> pti);
-    void onSolverResult(std::shared_ptr<SolverResult> sr);
+    void onSolverResult(const SolverResult& sr);
 
     virtual void startCommunication() = 0;
     virtual void stopCommunication() = 0;
