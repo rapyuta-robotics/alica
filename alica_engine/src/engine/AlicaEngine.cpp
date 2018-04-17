@@ -212,6 +212,9 @@ void AlicaEngine::shutdown() {
         delete this->roleAssignment;
         this->roleAssignment = nullptr;
     }
+
+    delete alicaClock;
+    alicaClock = nullptr;
 }
 
 /**
@@ -241,7 +244,7 @@ bool AlicaEngine::getStepEngine() const {
     return this->stepEngine;
 }
 
-void AlicaEngine::setIAlicaClock(IAlicaClock* clock) {
+void AlicaEngine::setAlicaClock(AlicaClock* clock) {
     this->alicaClock = clock;
 }
 

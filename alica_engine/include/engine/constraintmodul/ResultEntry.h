@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/Types.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/collections/Variant.h"
 #include <unordered_map>
 #include <vector>

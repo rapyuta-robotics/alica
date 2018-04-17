@@ -21,8 +21,8 @@ VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
         , _timer(nullptr)
         , _distThreshold(0)
         , _communicator(nullptr)
-        , _ttl4Communication(0)
-        , _ttl4Usage(0)
+        , _ttl4Communication(AlicaTime::zero())
+        , _ttl4Usage(AlicaTime::zero())
         {}
 
 VariableSyncModule::~VariableSyncModule() {
@@ -37,8 +37,8 @@ void VariableSyncModule::init() {
     _running = true;
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     bool communicationEnabled = (*sc)["Alica"]->get<bool>("Alica", "CSPSolving", "EnableCommunication", NULL);
-    _ttl4Communication = 1000000 * (*sc)["Alica"]->get<int64_t>("Alica", "CSPSolving", "SeedTTL4Communication", NULL);
-    _ttl4Usage = 1000000 * (*sc)["Alica"]->get<int64_t>("Alica", "CSPSolving", "SeedTTL4Usage", NULL);
+    _ttl4Communication = AlicaTime::milliseconds((*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Communication", NULL));
+    _ttl4Usage = AlicaTime::milliseconds((*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Usage", NULL));
     _distThreshold = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "SeedMergingThreshold", NULL);
 
     AgentIDPtr ownId = _ae->getTeamManager()->getLocalAgentID();
@@ -48,10 +48,10 @@ void VariableSyncModule::init() {
 
     if (communicationEnabled) {
         _communicator = _ae->getCommunicator();
-        int interval = (int) round(
-                1000.0 / (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "CommunicationFrequency", NULL));
+        double communicationFrequency = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "CommunicationFrequency", NULL);
+        AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
         if(_timer == nullptr) {
-            _timer = new supplementary::NotifyTimer<VariableSyncModule>(interval, &VariableSyncModule::publishContent, this);
+            _timer = new supplementary::NotifyTimer<VariableSyncModule>(interval.inMilliseconds(), &VariableSyncModule::publishContent, this);
         }
         _timer->start();
     }
@@ -90,7 +90,7 @@ void VariableSyncModule::onSolverResult(const SolverResult& msg) {
         _store.emplace_back(msg.senderID);
         re = &_store.back();
     }
-    AlicaTime now = _ae->getIAlicaClock()->now();
+    AlicaTime now = _ae->getAlicaClock()->now();
     for (const SolverVar& sv : msg.vars) {
         Variant v;
         v.loadFrom(sv.value);
@@ -107,7 +107,7 @@ void VariableSyncModule::publishContent() {
     }
 
     _publishData.vars.clear();
-    AlicaTime now = _ae->getIAlicaClock()->now();
+    AlicaTime now = _ae->getAlicaClock()->now();
     _ownResults.getCommunicatableResults(now - _ttl4Communication, _publishData.vars);
     if (_publishData.vars.empty()) {
         return;
@@ -116,7 +116,7 @@ void VariableSyncModule::publishContent() {
 }
 
 void VariableSyncModule::postResult(int64_t vid, Variant result) {
-    _ownResults.addValue(vid, result, _ae->getIAlicaClock()->now());
+    _ownResults.addValue(vid, result, _ae->getAlicaClock()->now());
 }
 
 int VariableSyncModule::getSeeds(const VariableSet& query, const std::vector<double>& limits, std::vector<Variant>& o_seeds) const {
@@ -132,7 +132,7 @@ int VariableSyncModule::getSeeds(const VariableSet& query, const std::vector<dou
         scaling[i] = limits[i*2+1] - limits[i*2];
         scaling[i] *= scaling[i];  // Sqr it for dist calculation speed up
     }
-    AlicaTime earliest = _ae->getIAlicaClock()->now() - _ttl4Usage;
+    AlicaTime earliest = _ae->getAlicaClock()->now() - _ttl4Usage;
     //		cout << "VSM: Number of Seeds in Store: " << this->store.size() << endl;
     if(_ownResults.getValues(query,earliest, vec)) {
         seeds.emplace_back(std::move(vec));
