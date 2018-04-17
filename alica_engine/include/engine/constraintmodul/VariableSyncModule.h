@@ -1,6 +1,7 @@
 #pragma once
 
 #include "supplementary/AgentID.h"
+#include "engine/AlicaClock.h"
 #include "engine/constraintmodul/IVariableSyncModule.h"
 
 #include <supplementary/NotifyTimer.h>
@@ -30,8 +31,8 @@ public:
 
 protected:
     supplementary::NotifyTimer<VariableSyncModule>* timer;
-    long ttl4Communication;
-    long ttl4Usage;
+    AlicaTime ttl4Communication;
+    AlicaTime ttl4Usage;
 
     class VotedSeed {
     public:

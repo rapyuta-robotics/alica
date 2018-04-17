@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/AlicaClock.h"
 #include <memory>
 
 using namespace std;
@@ -14,8 +15,8 @@ public:
     virtual ~BasicCondition();
     virtual bool evaluate(shared_ptr<RunningPlan> rp) = 0;
 
-    bool isStateTimedOut(unsigned long timeOut, shared_ptr<RunningPlan> rp);
-    bool isTimeOut(unsigned long timeOut, unsigned long startTime, shared_ptr<RunningPlan> rp);
+    bool isStateTimedOut(const AlicaTime timeOut, shared_ptr<RunningPlan> rp);
+    bool isTimeOut(const AlicaTime timeOut, const AlicaTime startTime, shared_ptr<RunningPlan> rp);
 };
 
 } /* namespace alica */

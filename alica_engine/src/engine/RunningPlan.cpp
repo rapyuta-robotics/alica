@@ -3,7 +3,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/BehaviourPool.h"
 #include "engine/IPlanTreeVisitor.h"
@@ -36,12 +36,10 @@ using std::shared_ptr;
 
 namespace alica {
 
-AlicaTime RunningPlan::assignmentProtectionTime = 0;
+AlicaTime RunningPlan::assignmentProtectionTime = AlicaTime::zero();
 
 void RunningPlan::init() {
-    assignmentProtectionTime = (((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>(
-                                        "Alica.AssignmentProtectionTime", NULL)) *
-                                1000000);
+    assignmentProtectionTime = AlicaTime::milliseconds((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae)
@@ -51,8 +49,6 @@ RunningPlan::RunningPlan(AlicaEngine* ae)
         , _activeState(nullptr)
         , _activeEntryPoint(nullptr)
         , _behaviour(false)
-        , _planStartTime(0)
-        , _stateStartTime(0)
         , _assignment(nullptr)
         , _status(PlanStatus::Running)
         , _failCount(0)
@@ -89,8 +85,6 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc)
         , _activeState(nullptr)
         , _activeEntryPoint(nullptr)
         , _behaviour(true)
-        , _planStartTime(0)
-        , _stateStartTime(0)
         , _assignment(nullptr)
         , _status(PlanStatus::Running)
         , _failCount(0)
@@ -201,7 +195,7 @@ bool RunningPlan::evalRuntimeCondition() {
 void RunningPlan::setActiveState(const State* s) {
     if (_activeState != s) {
         _activeState = s;
-        _stateStartTime = _ae->getIAlicaClock()->now();
+        _stateStartTime = _ae->getAlicaClock()->now();
         if (_activeState != nullptr) {
             if (_activeState->isFailureState()) {
                 _status = PlanStatus::Failed;
@@ -268,7 +262,7 @@ void RunningPlan::setChildren(list<shared_ptr<RunningPlan>> children) {
 
 void RunningPlan::setPlan(const AbstractPlan* plan) {
     if (_plan != plan) {
-        _planStartTime = _ae->getIAlicaClock()->now();
+        _planStartTime = _ae->getAlicaClock()->now();
         revokeAllConstraints();
     }
     _plan = plan;

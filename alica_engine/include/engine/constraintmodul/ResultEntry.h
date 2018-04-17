@@ -1,6 +1,7 @@
 #pragma once
 
 #include "supplementary/AgentID.h"
+#include "engine/AlicaClock.h"
 #include "engine/Types.h"
 
 #include <list>
@@ -22,18 +23,18 @@ public:
     const supplementary::AgentID* getId();
     void addValue(long vid, std::shared_ptr<std::vector<uint8_t>> result);
     void clear();
-    std::shared_ptr<std::vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
-    std::shared_ptr<std::vector<uint8_t>> getValue(long vid, long ttl4Usage);
+    std::shared_ptr<std::vector<SolverVar*>> getCommunicatableResults(AlicaTime ttl4Communication);
+    std::shared_ptr<std::vector<uint8_t>> getValue(long vid, AlicaTime ttl4Usage);
     std::shared_ptr<std::vector<std::shared_ptr<std::vector<uint8_t>>>> getValues(
-            std::shared_ptr<VariableSet> query, long ttl4Usage);
+        std::shared_ptr<VariableSet> query, AlicaTime ttl4Usage);
 
     class VarValue {
     public:
         long id;
         std::shared_ptr<std::vector<uint8_t>> val;
-        ulong lastUpdate;
+        AlicaTime lastUpdate;
 
-        VarValue(long vid, std::shared_ptr<std::vector<uint8_t>> v, ulong now) {
+        VarValue(long vid, std::shared_ptr<std::vector<uint8_t>> v, AlicaTime now) {
             this->id = vid;
             this->val = v;
             this->lastUpdate = now;
