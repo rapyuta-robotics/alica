@@ -8,6 +8,7 @@
 #include <map>
 #include <stdint.h>
 #include <string.h>
+#include <type_traits>
 
 namespace alica {
 
@@ -48,6 +49,7 @@ private:
 
 template <class InputIt>
 BlackBoard::IdType BlackBoard::registerValue(InputIt begin, InputIt end) {
+    static_assert(std::is_pod<typename InputIt::value_type>::value, "Iterators must point to POD type.");
     const int32_t len = std::distance(begin, end) * sizeof(typename InputIt::value_type);
     ObjectType element(len);
     int i = 0;

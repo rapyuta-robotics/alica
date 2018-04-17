@@ -132,13 +132,17 @@ int VariableSyncModule::getSeeds(const VariableSet& query, const std::vector<dou
         scaling[i] = limits[i*2+1] - limits[i*2];
         scaling[i] *= scaling[i];  // Sqr it for dist calculation speed up
     }
-    AlicaTime now = _ae->getIAlicaClock()->now();
+    AlicaTime earliest = _ae->getIAlicaClock()->now() - _ttl4Usage;
     //		cout << "VSM: Number of Seeds in Store: " << this->store.size() << endl;
+    if(_ownResults.getValues(query,earliest, vec)) {
+        seeds.emplace_back(std::move(vec));
+    }
+
     lock_guard<std::mutex> lock(_mutex);
 
     for (const ResultEntry& re : _store) {
         
-        bool any = re.getValues(query, now - _ttl4Usage, vec);
+        bool any = re.getValues(query, earliest, vec);
         if (!any) {
             continue;
         }

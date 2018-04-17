@@ -7,7 +7,7 @@ namespace alica {
 
 class BBIdent {
     public:
-    BBIdent() = default;// : _val(0) {}
+    BBIdent() = default;
     BBIdent(uint64_t id) 
         : _val(id) {}
     int64_t getRaw() const {return _val;}
