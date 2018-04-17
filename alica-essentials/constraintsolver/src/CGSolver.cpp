@@ -72,6 +72,7 @@ bool CGSolver::existsSolutionImpl(const VariableSet& vars, const std::vector<sha
     for (int i=0; i<serial_seeds.size(); i+=dim) {
         shared_ptr<vector<double>> singleseed = make_shared<vector<double>>();
         singleseed->reserve(dim);
+        //Fill a single seed with information from the combined seed vector by resolving the variants to doubles or NaNs.
         std::transform(serial_seeds.begin()+i,serial_seeds.begin()+i+dim, std::back_inserter(*singleseed),
             [](Variant v)->double { return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN();}
         );
