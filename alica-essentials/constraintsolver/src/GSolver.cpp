@@ -110,7 +110,7 @@ shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
     AlicaTime begin = alicaClock->now();
 
     _dim = args->size();
-    //_limits = limits;
+
     _ranges = vector<double>(_dim);
 
     for (int i = 0; i < _dim; ++i) {
