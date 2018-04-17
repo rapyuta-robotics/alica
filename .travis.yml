@@ -50,7 +50,7 @@ before_script:
     if [[ -f dependencies.rosinstall ]] ; then wstool merge dependencies.rosinstall ; fi && 
     wstool up && 
     cd ~/catkin_ws && 
-    rosdep install -y --from-paths src --ignore-src --rosdistro $ROS_DISTRO"
+    rosdep install -y --from-paths src --ignore-src --rosdistro kinetic"
 
 # Compile and test (mark the build as failed if any step fails). If the
 # CATKIN_OPTIONS file exists, use it as an argument to catkin_make, for example
