@@ -16,7 +16,7 @@
 using namespace std;
 
 namespace alica {
-class IAlicaClock;
+class AlicaClock;
 
 namespace reasoner {
 class CNSMTGSolver;
@@ -81,7 +81,7 @@ protected:
     std::shared_ptr<DecisionLevel> decisionLevelNull;
     bool recentBacktrack = false;
 
-    IAlicaClock* alicaClock;
+    AlicaClock* alicaClock;
 };
 } /* namespace cnsat */
 } /* namespace reasoner */

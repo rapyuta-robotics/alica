@@ -17,8 +17,7 @@
 #include "CNSMTGSolver.h"
 #include "Decider.h"
 
-#include <engine/IAlicaClock.h>
-#include <clock/AlicaROSClock.h>
+#include <engine/AlicaClock.h>
 
 #include <algorithm>
 
@@ -82,7 +81,7 @@ CNSat::CNSat() {
     this->decisions = make_shared<vector<shared_ptr<Var>>>();
     this->decisionLevel = make_shared<vector<shared_ptr<DecisionLevel>>>();
 
-    alicaClock = new alicaRosProxy::AlicaROSClock();
+    alicaClock = new alica::AlicaClock();
 }
 
 CNSat::~CNSat() {
