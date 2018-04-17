@@ -52,9 +52,9 @@ public:
     bool isBool() const {return _type == TypeBool;}
     bool isPtr() const {return _type == TypePtr;}
     bool isIdent() const {return _type == TypeIdent;}
-    
+
     //Get:
-    
+
     double getDouble() const {assert(_type == TypeDouble); return _value.asDouble;}
     float getFloat() const {assert(_type == TypeFloat); return _value.asFloat;}
     int getInt() const {assert(_type == TypeInt); return _value.asInt;}
