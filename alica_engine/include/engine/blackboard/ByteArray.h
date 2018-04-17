@@ -18,6 +18,8 @@ class ByteArray {
     int32_t size() const {return _size;}
     const int8_t* begin() const {return _begin;}
     const int8_t* end() const {return _begin+_size;}
+    int8_t* begin() {return _begin;}
+    int8_t* end() {return _begin+_size;}
     bool empty() const {return _size==0;}
     ByteArray(ByteArray&& o);
     ByteArray& operator=(ByteArray&& o);

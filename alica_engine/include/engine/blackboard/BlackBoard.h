@@ -31,6 +31,10 @@ public:
     }
     void removeValue(IdType id) {_body.erase(_body.find(id));}
 
+
+    bool empty() const {return _body.empty();}
+    int size() const {return _body.size();}
+
     BlackBoard(const BlackBoard&) = delete;
     BlackBoard(BlackBoard&&) = delete;
     BlackBoard& operator&=(const BlackBoard& ) = delete;
