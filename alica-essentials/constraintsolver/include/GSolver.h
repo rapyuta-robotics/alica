@@ -99,7 +99,7 @@ protected:
     double _utilitySignificanceThreshold = 1E-22;
     // Random rand;
     int _dim;
-    //shared_ptr<vector<shared_ptr<vector<double>>>> _limits;
+
     vector<double> _ranges;
     vector<double> _rpropStepWidth;
     vector<double> _rpropStepConvergenceThreshold;
