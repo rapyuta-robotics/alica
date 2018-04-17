@@ -49,7 +49,7 @@ before_script:
   - docker exec -t alica-test bash -c "
     cd ~/catkin_ws/src && 
     wstool init && 
-    if [[ -f dependencies.rosinstall ]] ; then wstool merge dependencies.rosinstall ; fi && 
+    if [[ -f /travis/dependencies.rosinstall ]] ; then wstool merge /travis/dependencies.rosinstall ; fi && 
     wstool up && 
     cd ~/catkin_ws && 
     rosdep install -y --from-paths src --ignore-src --rosdistro kinetic"
