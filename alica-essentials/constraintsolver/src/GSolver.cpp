@@ -13,9 +13,8 @@
 #include "Configuration.h"
 #include "SystemConfig.h"
 
-#include <clock/AlicaROSClock.h>
+#include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
 
 #include <cmath>
 #include <limits>
@@ -39,14 +38,14 @@ GSolver::GSolver() {
     _seedWithUtilOptimum = true;
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     _maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
-    _maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1E6;  //* 1000000;
+    _maxSolveTime = AlicaTime::milliseconds((*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
     _rPropConvergenceStepSize = 1E-2;
 
-    alicaClock = new alicaRosProxy::AlicaROSClock();
+    _alicaClock = new alica::AlicaClock();
 }
 
 GSolver::~GSolver() {
-    delete alicaClock;
+    delete _alicaClock;
 }
 
 void GSolver::initLog() {
@@ -107,7 +106,7 @@ shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
 #endif
 
     _rResults.clear();
-    AlicaTime begin = alicaClock->now();
+    AlicaTime begin = _alicaClock->now();
 
     _dim = args->size();
 
@@ -154,7 +153,7 @@ shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
         _rResults.push_back(rpfirst);
         // run with seeds of all other agends
         for (int i = 1; i < seeds->size(); ++i) {
-            if (begin + _maxSolveTime < alicaClock->now() || _fevals > _maxfevals) {
+            if (begin + _maxSolveTime < _alicaClock->now() || _fevals > _maxfevals) {
                 break;  // do not check any further seeds
             }
             _runs++;
@@ -168,7 +167,7 @@ shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
     }
 
     // Here: Ignore all constraints search optimum
-    if (begin + _maxSolveTime > alicaClock->now() && _fevals < _maxfevals) {
+    if (begin + _maxSolveTime > _alicaClock->now() && _fevals < _maxfevals) {
         // if time allows, do an unconstrained run
         if (!constraintIsConstant && !utilIsConstant && _seedWithUtilOptimum) {
             shared_ptr<ICompiledTerm> curProb = _term;
@@ -191,7 +190,7 @@ shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
             return rp->_finalValue;
         }
         _rResults.push_back(rp);
-    } while (begin + _maxSolveTime > alicaClock->now() && _fevals < _maxfevals);
+    } while (begin + _maxSolveTime > _alicaClock->now() && _fevals < _maxfevals);
     //			}
 
     // return best result
@@ -395,12 +394,12 @@ void GSolver::setUtilitySignificanceThreshold(double utilitySignificanceThreshol
     _utilitySignificanceThreshold = utilitySignificanceThreshold;
 }
 
-IAlicaClock* GSolver::getIAlicaClock() {
-    return alicaClock;
+AlicaClock* GSolver::getAlicaClock() {
+    return _alicaClock;
 }
 
-void GSolver::setIAlicaClock(IAlicaClock* clock) {
-    alicaClock = clock;
+void GSolver::setAlicaClock(AlicaClock* clock) {
+    _alicaClock = clock;
 }
 
 shared_ptr<vector<double>> GSolver::initialPointFromSeed(

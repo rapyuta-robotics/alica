@@ -9,6 +9,7 @@
 #define GSOLVER_H_
 
 #include <AutoDiff.h>
+#include <engine/AlicaClock.h>
 
 #include <memory>
 #include <vector>
@@ -18,7 +19,6 @@
 using namespace std;
 
 namespace alica {
-class IAlicaClock;
 
 namespace reasoner {
 class GSolver {
@@ -56,14 +56,14 @@ public:
     void setRPropConvergenceStepSize(double rPropConvergenceStepSize);
     void setUtilitySignificanceThreshold(double utilitySignificanceThreshold);
 
-    IAlicaClock* getIAlicaClock();
-    void setIAlicaClock(IAlicaClock* clock);
+    AlicaClock* getAlicaClock();
+    void setAlicaClock(AlicaClock* clock);
 
 protected:
     static int _fcounter;
     bool _seedWithUtilOptimum;
 
-    IAlicaClock* alicaClock;
+    AlicaClock* _alicaClock;
 
     void initLog();
     void log(double util, shared_ptr<vector<double>>& val);
@@ -104,7 +104,7 @@ protected:
     vector<double> _rpropStepWidth;
     vector<double> _rpropStepConvergenceThreshold;
     double _utilityThreshold;
-    ulong _maxSolveTime;
+    AlicaTime _maxSolveTime;
     // //vector<double>[] seeds;
     shared_ptr<ICompiledTerm> _term;
 
