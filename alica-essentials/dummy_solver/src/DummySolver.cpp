@@ -4,7 +4,8 @@
 
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>
-#include <engine/blackboard/Blackboard.h>
+#include <engine/AlicaEngine.h>
+#include <engine/blackboard/BlackBoard.h>
 
 namespace alica {
 
@@ -61,7 +62,7 @@ bool DummySolver::getSolutionImpl(const VariableSet& vars, const std::vector<std
     BlackBoard& bb =  getAlicaEngine()->editBlackBoard();
     for (const auto& dummyVariable : dummyVariables) {
         const std::string& val = dummyVariableValueMap[dummyVariable->getID()];
-        BBIDent bid = bb.registerValue(val.c_str(),val.size());
+        BBIdent bid = bb.registerValue(val.c_str(),val.size());
         results.push_back(bid);
     }
 
