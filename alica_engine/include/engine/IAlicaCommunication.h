@@ -26,7 +26,7 @@ public:
     virtual void sendSyncReady(const SyncReady& sr) const = 0;
     virtual void sendSyncTalk(const SyncTalk& st) const = 0;
     virtual void sendSolverResult(const SolverResult& sr) const = 0;
-    virtual void sendLogMessage(int level, std::string& message) const {};
+    virtual void sendLogMessage(int level, const std::string& message) const {};
 
     virtual void tick(){};
 
