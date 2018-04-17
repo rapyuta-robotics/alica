@@ -52,10 +52,11 @@ TEST(AlicaTime, AlicaClock) {
     EXPECT_TRUE(i == i);
     EXPECT_TRUE(i != i / 2);
 
-    AlicaClock c;
-    AlicaTime start = c.now();
-    c.sleep(AlicaTime::seconds(1));
-    AlicaTime result = c.now() - start;
-    EXPECT_GE(result, AlicaTime::seconds(1));
-    EXPECT_LE(result, AlicaTime::seconds(1.01));
+    AlicaTime m = AlicaTime::seconds(1.05);
+    EXPECT_EQ(m.inMilliseconds(), AlicaTime::milliseconds(1050));
+
+    AlicaClock e;
+    AlicaTime start = e.now();
+    AlicaTime result = e.now() - start;
+    EXPECT_GE(result, AlicaTime::zero();
 }
