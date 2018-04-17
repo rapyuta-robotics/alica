@@ -3,7 +3,7 @@
 #include <engine/syncmodule/SyncRow.h>
 #include "engine/AlicaEngine.h"
 #include "engine/model/Transition.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/model/SyncTransition.h"
 #include "engine/containers/SyncData.h"
 #include "engine/containers/SyncReady.h"
@@ -17,12 +17,10 @@ Synchronisation::Synchronisation(AlicaEngine* ae)
     this->ae = ae;
     this->syncModul = nullptr;
     this->syncTransition = nullptr;
-    this->syncStartTime = 0;
     this->readyForSync = false;
     this->lastTick = 0;
     this->runningPlan = nullptr;
     this->myRow = nullptr;
-    this->lastTalkTime = 0;
     this->lastTalkData = nullptr;
 }
 
@@ -31,16 +29,14 @@ Synchronisation::Synchronisation(
     this->ae = ae;
     this->syncTransition = st;
     this->myID = myID;
-    this->syncStartTime = ae->getIAlicaClock()->now() / 1000000UL;
+    this->syncStartTime = ae->getAlicaClock()->now();
     for (const Transition* t : st->getInSync()) {
         connectedTransitions.push_back(t->getId());
     }
     this->syncModul = sm;
     this->runningPlan = nullptr;
     this->myRow = nullptr;
-    this->lastTalkTime = 0;
     this->readyForSync = false;
-    this->lastTick = 0;
     this->lastTalkData = nullptr;
 }
 
@@ -61,7 +57,7 @@ void Synchronisation::setTick(unsigned long now) {
 void Synchronisation::changeOwnData(long transitionID, bool conditionHolds) {
 #ifdef SM_MISC
     cout << "CHOD: ElapsedTime: "
-         << (AlicaEngine::getInstance()->getIAlicaClock()->now() / 1000000UL - this->syncStartTime) << endl;
+         << (ae->getAlicaClock()->now() - this->syncStartTime) << endl;
 #endif
 
     if (!conditionHolds) {
@@ -143,9 +139,9 @@ bool Synchronisation::isValid(unsigned long curTick) {
         return false;
     }
 
-    unsigned long now = ae->getIAlicaClock()->now() / 1000000UL;
+    AlicaTime now = ae->getAlicaClock()->now();
 
-    if (this->lastTalkTime != 0)  // talked already
+    if (this->lastTalkTime != AlicaTime::zero())  // talked already
     {
 #ifdef SM_FAILURE
         cout << "TestTimeOut on Sync: " << this->syncTransition->getId() << endl;
@@ -188,7 +184,7 @@ bool Synchronisation::integrateSyncTalk(shared_ptr<SyncTalk> talk, unsigned long
 
 #ifdef SM_MESSAGES
     cout << "Integrate synctalk in synchronisation" << endl;
-    cout << "ST: ElapsedTime: " << (ae->getIAlicaClock()->now() - this->syncStartTime) << endl;
+    cout << "ST: ElapsedTime: " << (ae->getAlicaClock()->now() - this->syncStartTime) << endl;
 #endif
     for (SyncData* sd : talk->syncData) {
 #ifdef SM_MESSAGES
@@ -249,7 +245,7 @@ bool Synchronisation::integrateSyncTalk(shared_ptr<SyncTalk> talk, unsigned long
                 if (allSyncReady()) {
 #ifdef SM_SUCCESSS
                     Console.WriteLine("SyncDONE in Synchronisation (IntTalk): elapsed time: " +
-                                      ((RosCS.RosSharp.Now() / 1000000UL) - this.syncStartTime));
+                        (ae->getAlicaClock()->now()) - this.syncStartTime);
 #endif
                     // notify syncmodul
                     this->syncModul->synchronisationDone(this->syncTransition);
@@ -285,7 +281,7 @@ void Synchronisation::integrateSyncReady(shared_ptr<SyncReady> ready) {
         // notify syncModul
 #ifdef SM_SUCCESS
             cout << "SyncDONE in Synchronisation (IntReady): elapsed time: "
-                 << (ae->getIAlicaClock()->now() / 1000000UL) - this->syncStartTime << endl;
+                 << (ae->getAlicaClock()->now() - this->syncStartTime) << endl;
 #endif
             this->syncModul->synchronisationDone(this->syncTransition);
         }
@@ -345,7 +341,7 @@ void Synchronisation::printMatrix() {
 void Synchronisation::sendTalk(SyncData* sd) {
     SyncTalk talk;
     talk.syncData.push_back(sd);
-    this->lastTalkTime = ae->getIAlicaClock()->now() / 1000000UL;
+    this->lastTalkTime = ae->getAlicaClock()->now();
 
 #ifdef SM_MESSAGES
     cout << "Sending Talk TID: " << sd->transitionID << endl;

@@ -215,6 +215,9 @@ void AlicaEngine::shutdown() {
         delete this->roleAssignment;
         this->roleAssignment = nullptr;
     }
+
+    delete alicaClock;
+    alicaClock = nullptr;
 }
 
 /**
@@ -260,10 +263,10 @@ PlanSelector* AlicaEngine::getPlanSelector() {
 /**
  * Returns the Alica Clock interface
  */
-IAlicaClock* AlicaEngine::getIAlicaClock() const {
+AlicaClock* AlicaEngine::getAlicaClock() const {
     return this->alicaClock;
 }
-void AlicaEngine::setIAlicaClock(IAlicaClock* clock) {
+void AlicaEngine::setAlicaClock(AlicaClock* clock) {
     this->alicaClock = clock;
 }
 
