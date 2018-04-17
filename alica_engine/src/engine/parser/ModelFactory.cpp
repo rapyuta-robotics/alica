@@ -598,7 +598,7 @@ SyncTransition* ModelFactory::createSyncTransition(tinyxml2::XMLElement* element
 Variable* ModelFactory::createVariable(tinyxml2::XMLElement* element) {
     string type = "";
     const char* conditionPtr = element->Attribute("Type");
-    if (conditionPtr) {        
+    if (conditionPtr) {
         type = conditionPtr;
     }
     string name = "";

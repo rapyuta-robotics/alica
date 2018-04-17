@@ -141,7 +141,7 @@ bool Query::getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>
 #ifdef Q_DEBUG
     std::cout << "Query: " << (*this->uniqueVarStore) << std::endl;
 #endif
-    // TODO: get rid of the interrim vecor (see below how) 
+    // TODO: get rid of the interrim vector (see below how) 
     std::vector<ResultType> solverResult;
     // let the solver solve the problem
     bool ret = solver->getSolution(relevantVariables, cds, solverResult);
@@ -155,7 +155,7 @@ bool Query::getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>
             ++i;
         }
 
-        //TODO this can be done in place. The queried static shoudl be at the beginning of the array anyway
+        //TODO this can be done in place. The queried static should be at the beginning of the array anyway
         // create a result vector that is filtered by the queried variables
         for (const Variable* staticVariable : queriedStaticVariables) {
             result.push_back(solverResult[uniqueVarStore->getIndexOf(staticVariable)]);
