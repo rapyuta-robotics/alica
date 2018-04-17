@@ -4,7 +4,7 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/constraintmodul/ConditionStore.h"
@@ -29,7 +29,6 @@ namespace alica {
 class AlicaEngine;
 class ProblemPart;
 class RunningPlan;
-class IAlicaClock;
 class BasicBehaviour;
 class ISolver;
 

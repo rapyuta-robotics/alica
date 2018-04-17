@@ -1,12 +1,11 @@
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "TestWorldModel.h"
 #include "engine/PlanRepository.h"
@@ -55,8 +54,6 @@ protected:
         ae->shutdown();
         ae2->shutdown();
         sc->shutdown();
-        delete ae->getIAlicaClock();
-        delete ae2->getIAlicaClock();
         delete cc;
         delete bc;
         delete uc;
@@ -75,16 +72,16 @@ TEST_F(AlicaSyncTransition, syncTransitionTest) {
     sc->setHostname("hairy");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "RealMasterPlanForSyncTest", ".", true);
-    ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
     ros = new alicaRosProxy::AlicaRosCommunication(ae);
+    ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(ros);
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("nase");
     ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "RealMasterPlanForSyncTest", ".", true);
-    ae2->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
     ros2 = new alicaRosProxy::AlicaRosCommunication(ae2);
+    ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(ros2);
     EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 

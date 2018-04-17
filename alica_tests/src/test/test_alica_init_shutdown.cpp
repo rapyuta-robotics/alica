@@ -1,16 +1,14 @@
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include <clock/AlicaROSClock.h>
 #include "engine/PlanRepository.h"
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/model/Plan.h"
 #include <communication/AlicaDummyCommunication.h>
-#include <clock/AlicaSystemClock.h>
 #include <ros/ros.h>
 
 class AlicaEngineTestInit : public ::testing::Test {
@@ -41,14 +39,13 @@ protected:
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new alica_dummy_proxy::AlicaSystemClock());
+        ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alica_dummy_proxy::AlicaDummyCommunication(ae));
     }
 
     virtual void TearDown() {
         ae->shutdown();
         sc->shutdown();
-        delete ae->getIAlicaClock();
         delete ae->getCommunicator();
         delete cc;
         delete uc;

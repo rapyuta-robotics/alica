@@ -1,4 +1,5 @@
 #include "supplementary/AgentID.h"
+#include "engine/AlicaClock.h"
 
 #include <unordered_set>
 #include <list>
@@ -30,8 +31,8 @@ public:
     void setRobotId(const supplementary::AgentID* robotId);
     bool isNewSimplePlanTree() const;
     void setNewSimplePlanTree(bool newSimplePlanTree);
-    long getReceiveTime() const;
-    void setReceiveTime(long receiveTime);
+    AlicaTime getReceiveTime() const;
+    void setReceiveTime(AlicaTime receiveTime);
     const std::list<int64_t>& getStateIds() const;
     void setStateIds(const std::list<int64_t>& stateIds);
     bool containsPlan(const AbstractPlan* plan) const;
@@ -56,7 +57,7 @@ protected:
     /**
      * The timestamp denoting when this tree was received.
      */
-    long receiveTime;
+    AlicaTime receiveTime;
     std::list<long> stateIds;
 };
 
