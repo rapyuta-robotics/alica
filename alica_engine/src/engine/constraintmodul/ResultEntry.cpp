@@ -7,9 +7,9 @@
 #include "engine/constraintmodul/ResultEntry.h"
 
 #include <engine/model/Variable.h>
-#include <engine/AlicaEngine.h>
 #include <engine/containers/SolverVar.h>
 #include <engine/containers/SolverResult.h>
+#include <engine/AlicaClock.h>
 #include <utility>
 
 namespace alica {
@@ -33,7 +33,7 @@ ResultEntry& ResultEntry::operator=(ResultEntry&& o) {
 
 
 void ResultEntry::addValue(int64_t vid, Variant val, AlicaTime time) {
-    lock_guard<std::mutex> lock(_valueLock);
+    std::lock_guard<std::mutex> lock(_valueLock);
     auto it = _values.find(vid);
     if (it != _values.end()) {
         VarValue& vv = it->second;
@@ -45,12 +45,12 @@ void ResultEntry::addValue(int64_t vid, Variant val, AlicaTime time) {
 }
 
 void ResultEntry::clear() {
-    lock_guard<std::mutex> lock(_valueLock);
+    std::lock_guard<std::mutex> lock(_valueLock);
     _values.clear();
 }
 
 void ResultEntry::getCommunicatableResults(AlicaTime earliest, std::vector<SolverVar>& o_result) const {
-    lock_guard<std::mutex> lock(_valueLock);
+    std::lock_guard<std::mutex> lock(_valueLock);
     for (const std::pair<int64_t, VarValue>& p : _values) {
         if (p.second._lastUpdate > earliest) {
             SolverVar sv;
@@ -62,7 +62,7 @@ void ResultEntry::getCommunicatableResults(AlicaTime earliest, std::vector<Solve
 }
 
 Variant ResultEntry::getValue(int64_t vid, AlicaTime earliest) const {
-    lock_guard<std::mutex> lock(_valueLock);
+    std::lock_guard<std::mutex> lock(_valueLock);
     auto it = _values.find(vid);
     if (it != _values.end()) {
         if (it->second._lastUpdate > earliest) {

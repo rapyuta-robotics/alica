@@ -1,12 +1,10 @@
 #include <gtest/gtest.h>
-
+#include <engine/AlicaClock.h>
 #include <engine/collections/Variant.h>
 #include <engine/constraintmodul/VariableSyncModule.h>
 #include <engine/model/Variable.h>
 
-
 #include <BehaviourCreator.h>
-#include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include <ConditionCreator.h>
 #include <ConstraintCreator.h>
@@ -52,7 +50,7 @@ protected:
         sc->setHostname("nase");
         ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
                 "ProblemBuildingMaster", ".", true);
-        ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+        ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
         ae->init(bc, cc, uc, crc);
     }
@@ -60,7 +58,7 @@ protected:
     virtual void TearDown() {
         ae->shutdown();
         delete ae->getCommunicator();
-        delete ae->getIAlicaClock();
+        delete ae->getAlicaClock();
 
         delete ae;
 

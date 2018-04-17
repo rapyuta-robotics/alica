@@ -10,7 +10,7 @@
 #include <mutex>
 #include <memory>
 #include <typeinfo>
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/RunningPlan.h"
 #include "engine/RuleBook.h"
 
@@ -27,7 +27,6 @@ class IAlicaCommunication;
 class Task;
 class State;
 class EntryPoint;
-class IAlicaClock;
 class Assignment;
 class StateCollection;
 class AlicaEngine;
@@ -44,7 +43,7 @@ public:
     const std::shared_ptr<RunningPlan> getRootNode() const;
     void setRootNode(std::shared_ptr<RunningPlan> rootNode);
     const AlicaTime getloopInterval() const;
-    void setLoopInterval(ulong loopInterval);
+    void setLoopInterval(AlicaTime loopInterval);
     void stop();
     void start();
     void addFastPathEvent(shared_ptr<RunningPlan> p);
@@ -69,7 +68,7 @@ private:
     SyncModule* _syncModel;
     AuthorityManager* _authModul;
     IAlicaCommunication* _statusPublisher;
-    IAlicaClock* _alicaClock;
+    AlicaClock* _alicaClock;
 
     std::shared_ptr<RunningPlan> _rootNode;
     std::shared_ptr<const RunningPlan> _deepestNode;

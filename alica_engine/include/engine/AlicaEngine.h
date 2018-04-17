@@ -13,6 +13,7 @@ class AgentIDFactory;
 }
 
 namespace alica {
+class AlicaClock;
 class PlanRepository;
 class Plan;
 class PlanParser;
@@ -35,7 +36,6 @@ class IConditionCreator;
 class IConstraintCreator;
 
 class IAlicaCommunication;
-class IAlicaClock;
 
 class IRoleAssignment;
 
@@ -76,7 +76,7 @@ public:
     SyncModule* getSyncModul() const {return syncModul;}
     TeamManager* getTeamManager() const {return teamManager;}
     TeamObserver* getTeamObserver() const {return teamObserver;}
-    IAlicaClock* getIAlicaClock() const {return alicaClock;}
+    AlicaClock* getAlicaClock() const {return alicaClock;}
 
     const BlackBoard& getBlackBoard() const {return _blackboard;}
     BlackBoard& editBlackBoard() {return _blackboard;}
@@ -100,7 +100,7 @@ public:
     void setAuth(AuthorityManager* auth);
     void setRoleAssignment(IRoleAssignment* roleAssignment);
     void setCommunicator(IAlicaCommunication* communicator);
-    void setIAlicaClock(IAlicaClock* clock);
+    void setAlicaClock(AlicaClock* clock);
     void setResultStore(VariableSyncModule* resultStore);
 
     //internals
@@ -137,7 +137,7 @@ private:
 
     IRoleAssignment* roleAssignment;
     IAlicaCommunication* communicator;
-    IAlicaClock* alicaClock;
+    AlicaClock* alicaClock;
 
 
     /**

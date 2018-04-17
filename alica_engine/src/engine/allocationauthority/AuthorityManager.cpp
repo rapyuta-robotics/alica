@@ -35,7 +35,7 @@ void AuthorityManager::close() {}
  * param name = aai A AllocationAthorityInfo
  */
 void AuthorityManager::handleIncomingAuthorityMessage(shared_ptr<AllocationAuthorityInfo> aai) {
-    auto now = this->engine->getIAlicaClock()->now();
+    auto now = this->engine->getAlicaClock()->now();
     if (this->engine->getTeamManager()->isAgentIgnored(aai->senderID)) {
         return;
     }

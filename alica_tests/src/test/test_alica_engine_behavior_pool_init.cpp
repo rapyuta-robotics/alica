@@ -1,10 +1,9 @@
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
 #include "engine/model/Behaviour.h"
 #include "engine/PlanRepository.h"
-#include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/model/Plan.h"
@@ -41,7 +40,7 @@ protected:
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+        ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     }
 
@@ -49,7 +48,6 @@ protected:
         ae->shutdown();
         sc->shutdown();
         delete ae->getCommunicator();
-        delete ae->getIAlicaClock();
         delete cc;
         delete bc;
         delete uc;
