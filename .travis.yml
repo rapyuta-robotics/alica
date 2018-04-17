@@ -23,7 +23,7 @@ env:
 ################################################################################
 
 before_install:
-  - docker run -d --name alica-test -v $(pwd):/travis ros:kinetic-ros-core-xenial tail -f /dev/null
+  - docker run -d --name alica-test -v $CI_SOURCE_PATH:/travis ros:kinetic-ros-core-xenial tail -f /dev/null
   - docker ps
 
 install:
@@ -39,7 +39,7 @@ install:
     catkin build && 
     source devel/setup.bash && 
     cd ~/catkin_ws/src && 
-    ln -s $CI_SOURCE_PATH ."
+    ln -s /travis ."
 
 # Install all dependencies, using wstool first and rosdep second.
 # wstool looks for a ROSINSTALL_FILE defined in the environment variables.
@@ -47,7 +47,7 @@ before_script:
   - docker exec -t alica-test bash -c "
     cd ~/catkin_ws/src && 
     wstool init && 
-    if [[ -f $ROSINSTALL_FILE ]] ; then wstool merge $ROSINSTALL_FILE ; fi && 
+    if [[ -f dependencies.rosinstall ]] ; then wstool merge dependencies.rosinstall ; fi && 
     wstool up && 
     cd ~/catkin_ws && 
     rosdep install -y --from-paths src --ignore-src --rosdistro $ROS_DISTRO"
@@ -62,8 +62,8 @@ before_script:
 # non-zero when a test fails (which notifies Travis the build failed).
 script:
   - docker exec -t alica-test bash -c "
-    source /opt/ros/$ROS_DISTRO/setup.bash && 
+    source /opt/ros/kinetic/setup.bash && 
     cd ~/catkin_ws && 
-    catkin build --no-status $( [ -f $CATKIN_OPTIONS ] && cat $CATKIN_OPTIONS ) && 
+    catkin build --no-status && 
     source devel/setup.bash && 
     travis_wait catkin run_tests --no-status && catkin_test_results"
