@@ -581,11 +581,11 @@ SyncTransition* ModelFactory::createSyncTransition(tinyxml2::XMLElement* element
     setAlicaElementAttributes(s, element);
     const char* talkTimeoutPtr = element->Attribute("talkTimeout");
     if (talkTimeoutPtr) {
-        s->setTalkTimeOut(stol(talkTimeoutPtr));
+        s->setTalkTimeOut(AlicaTime::milliseconds(stoll(talkTimeoutPtr)));
     }
     const char* syncTimeoutPtr = element->Attribute("syncTimeout");
     if (syncTimeoutPtr) {
-        s->setSyncTimeOut(stol(syncTimeoutPtr));
+        s->setSyncTimeOut(AlicaTime::milliseconds(stoll(syncTimeoutPtr)));
     }
 
     addElement(s);

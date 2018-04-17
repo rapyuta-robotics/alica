@@ -12,6 +12,7 @@
 #include <string>
 #include <sstream>
 
+#include "engine/AlicaClock.h"
 #include "AlicaElement.h"
 #include "engine/Types.h"
 
@@ -28,8 +29,8 @@ public:
 
     bool isFailOnSyncTimeOut() const { return _failOnSyncTimeOut; }
 
-    unsigned long getSyncTimeOut() const { return _syncTimeOut; }
-    unsigned long getTalkTimeOut() const { return _talkTimeOut; }
+    AlicaTime getSyncTimeOut() const { return _syncTimeOut; }
+    AlicaTime getTalkTimeOut() const { return _talkTimeOut; }
 
     const Plan* getPlan() const { return _plan; }
 
@@ -40,16 +41,17 @@ public:
 private:
     friend ModelFactory;
     void setFailOnSyncTimeOut(bool failOnSyncTimeOut);
-    void setSyncTimeOut(unsigned long syncTimeOut);
+    void setSyncTimeOut(AlicaTime syncTimeOut);
     void setInSync(const TransitionSet& inSync);
-    void setTalkTimeOut(unsigned long talkTimeOut);
+    void setTalkTimeOut(AlicaTime talkTimeOut);
     void setPlan(const Plan* plan);
 
     TransitionSet _inSync;
     const Plan* _plan;
 
-    unsigned long _talkTimeOut;
-    unsigned long _syncTimeOut;
+    AlicaTime _talkTimeOut;
+    AlicaTime _syncTimeOut;
+
     bool _failOnSyncTimeOut;
 };
 

@@ -12,7 +12,6 @@ namespace alica {
 
 TeamManager::TeamManager(AlicaEngine* engine, bool useConfigForTeam = true)
         : localAgent(nullptr)
-        , teamTimeOut(0)
         , useConfigForTeam(useConfigForTeam)
         , engine(engine) {}
 
@@ -24,7 +23,7 @@ TeamManager::~TeamManager() {
 
 void TeamManager::init() {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-    this->teamTimeOut = (*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL) * 1000000;  // ms to ns
+    this->teamTimeOut = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
 
     if (useConfigForTeam) {
         this->readTeamFromConfig(sc);
