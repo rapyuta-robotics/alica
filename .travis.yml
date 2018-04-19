@@ -23,7 +23,7 @@ env:
 ################################################################################
 
 before_install:
-  - docker run -e BRANCH -e PYTHONPATH -d --name alica-test -v $CI_SOURCE_PATH:/travis ros:kinetic-ros-core-xenial tail -f /dev/null
+  - docker run -e BRANCH -e TRAVIS_BUILD_DIR -e PYTHONPATH -d --name alica-test -v $CI_SOURCE_PATH:/travis ros:kinetic-ros-core-xenial tail -f /dev/null
   - docker ps
 
 install:
@@ -34,7 +34,15 @@ install:
     mkdir -p ~/catkin_ws/src && 
     cd ~/catkin_ws/src && 
     apt-get update && 
-    apt-get install -y python-catkin-pkg python-rosdep python-wstool ros-kinetic-catkin python-catkin-tools ros-kinetic-rostest wget curl && 
+    apt-get install -y 
+        python-catkin-pkg 
+        python-rosdep 
+        python-wstool 
+        python-catkin-tools 
+        ros-kinetic-catkin 
+        ros-kinetic-rostest 
+        wget 
+        curl && 
     source /opt/ros/kinetic/setup.bash && 
     catkin_init_workspace && 
     cd ~/catkin_ws && 
@@ -81,7 +89,7 @@ script:
         wget -qO- https://scan.coverity.com/download/cxx/linux64 
             --post-data \"token=o6qYj0vj-t-K1PKQj5ugyg&project=rapyuta-robotics/alica\" | 
         tar xvz && 
-        python ./travis/generate_coverity-analysis_script.py . && 
+        python $TRAVIS_BUILD_DIR/generate_coverity-analysis_script.py . && 
         chmod +x coverity-analysis.sh && 
         ./cov-analysis*/bin/cov-build --dir cov-int ./coverity-analysis.sh && 
         tar czvf cs.tgz cov-int && 
