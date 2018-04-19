@@ -88,14 +88,14 @@ std::string TaskAssignment::toString() {
     ss << "--------------------TA:--------------------" << std::endl;
     ss << "NumRobots: " << this->robots.size() << std::endl;
     ss << "RobotIDs: ";
-    for (int i = 0; i < this->robots.size(); ++i)  // RobotIds
+    for (int i = 0; i < static_cast<int>(this->robots.size()); ++i)  // RobotIds
     {
         ss << this->robots[i] << " ";
     }
     ss << endl;
     ss << "Initial Fringe (Count " << this->fringe.size() << "):" << std::endl;
     ss << "{";
-    for (int i = 0; i < this->fringe.size(); ++i)  // Initial PartialAssignments
+    for (int i = 0; i < static_cast<int>(this->fringe.size()); ++i)  // Initial PartialAssignments
     {
         ss << this->fringe[i]->toString();
     }
@@ -146,7 +146,7 @@ PartialAssignment* TaskAssignment::calcNextBestPartialAssignment(IAssignment* ol
         expansionCount++;
 #endif
         // Every just expanded partial assignment must get an updated utility
-        for (int i = 0; i < newPas->size(); i++) {
+        for (int i = 0; i < static_cast<int>(newPas->size()); i++) {
             // Update the utility values
             auto iter = newPas->begin();
             advance(iter, i);

@@ -37,7 +37,7 @@ void AllocationDifference::reset() {
 void AllocationDifference::applyDifference(const AllocationDifference& other) {
     for (const EntryPointRobotPair& otherAdds : other._additions) {
         bool found = false;
-        for (int j = 0; j < _subtractions.size(); j++) {
+        for (int j = 0; j < static_cast<int>(_subtractions.size()); ++j) {
             if (otherAdds == _subtractions[j]) {
                 _subtractions.erase(_subtractions.begin() + j);
                 found = true;
@@ -46,7 +46,7 @@ void AllocationDifference::applyDifference(const AllocationDifference& other) {
         }
 
         if (!found) {
-            for (int j = 0; j < _additions.size(); j++) {
+            for (int j = 0; j < static_cast<int>(_additions.size()); j++) {
                 if (otherAdds == _additions[j]) {
                     found = true;
                     break;
@@ -60,7 +60,7 @@ void AllocationDifference::applyDifference(const AllocationDifference& other) {
 
     for (const EntryPointRobotPair& otherDels : other._subtractions) {
         bool found = false;
-        for (int j = 0; j < _additions.size(); j++) {
+        for (int j = 0; j < static_cast<int>(_additions.size()); j++) {
             if (otherDels == _additions[j]) {
                 _additions.erase(_additions.begin() + j);
                 found = true;
@@ -69,7 +69,7 @@ void AllocationDifference::applyDifference(const AllocationDifference& other) {
         }
 
         if (!found) {
-            for (int j = 0; j < _subtractions.size(); j++) {
+            for (int j = 0; j < static_cast<int>(_subtractions.size()); j++) {
                 if (otherDels == _subtractions[j]) {
                     found = true;
                     break;

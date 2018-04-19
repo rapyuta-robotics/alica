@@ -25,12 +25,11 @@
 #include <memory>
 #include <vector>
 
+
 namespace alica {
-class AlicaEngine;
 class ProblemPart;
 class RunningPlan;
 class BasicBehaviour;
-class ISolver;
 
 /**
  * Internal class to deal with bindings in states and plantypes
@@ -48,9 +47,9 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store) {
         os << "UniqueVarStore: " << std::endl;
         // write obj to stream
-        for (auto& variableList : store.store) {
+        for (const auto& variableList : store.store) {
             os << "VariableList: ";
-            for (auto& variable : variableList) {
+            for (const auto& variable : variableList) {
                 os << *variable << ", ";
             }
             os << std::endl;
@@ -77,10 +76,12 @@ public:
     void addDomainVariable(const supplementary::AgentID* robot, const std::string& ident, AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
-    bool existsSolution(int solverType, std::shared_ptr<RunningPlan> rp);
 
-    template <class T>
-    bool getSolution(int solverType, std::shared_ptr<RunningPlan> rp, vector<T>& result);
+    template <class SolverType>
+    bool existsSolution(std::shared_ptr<RunningPlan> rp);
+
+    template <class SolverType, typename ResultType>
+    bool getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>& result);
 
     const VariableSet& getRelevantStaticVariables() const { return relevantStaticVariables; }
     const VariableSet& getRelevantDomainVariables() const { return relevantDomainVariables; }
@@ -92,7 +93,7 @@ public:
     std::shared_ptr<UniqueVarStore> getUniqueVariableStore(); /*< for testing only!!! */
 
 private:
-    bool collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* solver,
+    bool collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolverBase* solver,
             std::vector<std::shared_ptr<ProblemDescriptor>>& cds, VariableSet& relevantVariables, int& domOffset);
 
     std::shared_ptr<UniqueVarStore> uniqueVarStore;
@@ -104,15 +105,28 @@ private:
     VariableSet relevantDomainVariables;
 };
 
-template <class T>
-bool Query::getSolution(int solverType, std::shared_ptr<RunningPlan> rp, std::vector<T>& result) {
+template <class SolverType>
+bool Query::existsSolution(std::shared_ptr<RunningPlan> rp) {
+    SolverType* solver = rp->getAlicaEngine()->getSolver<SolverType>();
+
+    std::vector<std::shared_ptr<ProblemDescriptor>> cds;
+    VariableSet relevantVariables;
+    int domOffset;
+    if (!collectProblemStatement(rp, solver, cds, relevantVariables, domOffset)) {
+        return false;
+    }
+    return solver->existsSolution(relevantVariables, cds);
+}
+
+template <class SolverType, typename ResultType>
+bool Query::getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>& result) {
     result.clear();
 
     // Collect the complete problem specification
-    vector<shared_ptr<ProblemDescriptor>> cds;
+    std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     VariableSet relevantVariables;
     int domOffset;
-    ISolver* solver = rp->getAlicaEngine()->getSolver(solverType);
+    SolverType* solver = rp->getAlicaEngine()->getSolver<SolverType>();
     if (solver == nullptr) {
         std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available."
                   << std::endl;
@@ -126,48 +140,36 @@ bool Query::getSolution(int solverType, std::shared_ptr<RunningPlan> rp, std::ve
 #ifdef Q_DEBUG
     std::cout << "Query: " << (*this->uniqueVarStore) << std::endl;
 #endif
-
-    // the result of the solver (including all relevant variables)
-    vector<void*> solverResult;
+    // TODO: get rid of the interrim vector (see below how) 
+    std::vector<ResultType> solverResult;
     // let the solver solve the problem
     bool ret = solver->getSolution(relevantVariables, cds, solverResult);
 
-    if (solverResult.size() > 0) {
-        // TODO: currently only synch variables if the result/their value is a double
-        if (typeid(T) == typeid(double) && ret) {
-            for (int i = 0; i < solverResult.size(); i++) {
-                uint8_t* tmp = ((uint8_t*) solverResult.at(i));
-                shared_ptr<vector<uint8_t>> result = make_shared<vector<uint8_t>>(sizeof(T));
-                // If you have an Segfault/Error here you solver does not return what you are querying! ;)
-                for (int s = 0; s < sizeof(T); s++) {
-                    result->at(s) = *tmp;
-                    tmp++;
-                }
 
-                solver->getAlicaEngine()->getResultStore()->postResult(relevantVariables.at(i)->getId(), result);
-            }
+    if (ret && solverResult.size() > 0) {
+        int i = 0;
+        VariableSyncModule* rs = rp->getAlicaEngine()->getResultStore();
+        for (const ResultType& value : solverResult) {
+            rs->postResult(relevantVariables[i]->getId(), Variant(value));
+            ++i;
         }
 
+        //TODO this can be done in place. The queried static should be at the beginning of the array anyway
         // create a result vector that is filtered by the queried variables
-        for (auto& staticVariable : queriedStaticVariables) {
-            result.push_back(*((T*) solverResult.at(uniqueVarStore->getIndexOf(staticVariable))));
+        for (const Variable* staticVariable : queriedStaticVariables) {
+            result.push_back(solverResult[uniqueVarStore->getIndexOf(staticVariable)]);
         }
-
+        //Again, the queried domain variables should be at the beginning of the domain variable segment
+        //So a simple move and resize should do the trick
         for (int i = 0; i < queriedDomainVariables.size(); ++i) {
             for (int j = 0; j < relevantDomainVariables.size(); ++j) {
                 if (relevantDomainVariables[j] == queriedDomainVariables[i]) {
-                    result.push_back(*((T*) solverResult.at(domOffset + j)));
+                    result.push_back(solverResult[domOffset + j]);
                     break;
                 }
             }
         }
     }
-
-    // deallocate "solverResults" (they where copied into "result")
-    for (int i = 0; i < solverResult.size(); i++) {
-        delete (T*) solverResult.at(i);
-    }
-
     return ret;
 }
 } /* namespace alica */

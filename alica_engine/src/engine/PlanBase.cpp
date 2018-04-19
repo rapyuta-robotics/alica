@@ -27,7 +27,7 @@ namespace alica {
  * Constructs the PlanBase given a top-level plan to execute
  * @param masterplan A Plan
  */
-PlanBase::PlanBase(AlicaEngine* ae, Plan* masterPlan)
+PlanBase::PlanBase(AlicaEngine* ae, const Plan* masterPlan)
         : _ae(ae)
         , _masterPlan(masterPlan)
         , _teamObserver(ae->getTeamObserver())

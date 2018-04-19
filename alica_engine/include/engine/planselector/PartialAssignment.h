@@ -110,7 +110,7 @@ struct hash<alica::PartialAssignment> {
         for (int i = 0; i < pa.getEpRobotsMapping()->getSize(); ++i) {
             robots = pa.getEpRobotsMapping()->getRobots(i);
             for (const supplementary::AgentID* robot : *robots) {
-                for (int idx = 0; idx < pa.getRobotIds().size(); ++idx) {
+                for (int idx = 0; idx < static_cast<int>(pa.getRobotIds().size()); ++idx) {
                     if (pa.getRobotIds().at(idx) == robot) {
                         pa.setHash(pa.hash + (i + 1) * pow(basei, idx));
                     }
