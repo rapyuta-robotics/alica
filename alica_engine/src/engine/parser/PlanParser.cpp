@@ -61,7 +61,7 @@ PlanParser::~PlanParser() {}
  * @param roleSetDir The relative directory in which to search for a roleset.
  * @return The parsed roleSet
  */
-RoleSet* PlanParser::parseRoleSet(string roleSetName, string roleSetDir) {
+const RoleSet* PlanParser::parseRoleSet(std::string roleSetName, std::string roleSetDir) {
     using namespace supplementary;
 
     if (roleSetName.empty()) {
@@ -188,8 +188,8 @@ string PlanParser::findDefaultRoleSet(string dir) {
  * @param masterplan The name of the top-level plan
  * @return The top-level plan
  */
-Plan* PlanParser::parsePlanTree(string masterplan) {
-    string masterPlanPath;
+const Plan* PlanParser::parsePlanTree(const std::string& masterplan) {
+    std::string masterPlanPath;
     bool found = supplementary::FileSystem::findFile(this->basePlanPath, masterplan + ".pml", masterPlanPath);
 #ifdef PP_DEBUG
     cout << "PP: masterPlanPath: " << masterPlanPath << endl;
@@ -298,7 +298,7 @@ void PlanParser::parseTaskFile(string currentFile) {
     this->mf->createTasks(&doc);
 }
 
-Plan* PlanParser::parsePlanFile(string& planFile) {
+Plan* PlanParser::parsePlanFile(const std::string& planFile) {
 #ifdef PP_DEBUG
     cout << "PP: parsing Plan file: " << planFile << endl;
 #endif

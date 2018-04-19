@@ -93,7 +93,7 @@ void AuthorityManager::processPlan(shared_ptr<RunningPlan> rp) {
 #ifdef AM_DEBUG
     cout << "AM: Queue size of AuthorityInfos is " << this->queue.size() << endl;
 #endif
-    for (int i = 0; i < this->queue.size(); i++) {
+    for (int i = 0; i < static_cast<int>(this->queue.size()); ++i) {
         if (authorityMatchesPlan(this->queue[i], rp)) {
 #ifdef AM_DEBUG
             cout << "AM: Found AuthorityInfo, which matches the plan " << rp->getPlan()->getName() << endl;
@@ -111,7 +111,7 @@ void AuthorityManager::processPlan(shared_ptr<RunningPlan> rp) {
  * Sends an AllocationAuthorityInfo message containing the assignment of p
  */
 void AuthorityManager::sendAllocation(shared_ptr<RunningPlan> p) {
-    if (!this->engine->isMaySendMessages()) {
+    if (!this->engine->maySendMessages()) {
         return;
     }
     AllocationAuthorityInfo aai = AllocationAuthorityInfo();

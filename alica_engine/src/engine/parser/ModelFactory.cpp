@@ -418,7 +418,7 @@ void ModelFactory::createBehaviour(tinyxml2::XMLDocument* node) {
     tinyxml2::XMLElement* curChild = element->FirstChildElement();
     while (curChild != nullptr) {
         const char* val = curChild->Value();
-        int64_t cid = this->parser->parserId(curChild);
+        this->parser->parserId(curChild);
         if (configurations.compare(val) == 0) {
             BehaviourConfiguration* bc = createBehaviourConfiguration(curChild);
             this->rep->_behaviourConfigurations.insert(pair<int64_t, BehaviourConfiguration*>(bc->getId(), bc));
@@ -482,7 +482,7 @@ BehaviourConfiguration* ModelFactory::createBehaviourConfiguration(tinyxml2::XML
     tinyxml2::XMLElement* curChild = element->FirstChildElement();
     while (curChild != nullptr) {
         const char* val = curChild->Value();
-        int64_t cid = this->parser->parserId(curChild);
+        this->parser->parserId(curChild);
         if (vars.compare(val) == 0) {
             Variable* v = createVariable(curChild);
             b->_variables.push_back(v);

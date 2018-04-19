@@ -23,7 +23,6 @@
 #include "Plans/GSolver/SolverTestBehaviour.h"
 #include <thread>
 #include <iostream>
-#include "SolverType.h"
 #include <CGSolver.h>
 #include <engine/constraintmodul/Query.h>
 #include "ConstraintTestPlanDummySolver.h"
@@ -58,16 +57,16 @@ protected:
         crc = new alica::ConstraintCreator();
         ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-        ae->addSolver(SolverType::DUMMYSOLVER, new alica::reasoner::ConstraintTestPlanDummySolver(ae));
-        ae->addSolver(SolverType::GRADIENTSOLVER, new alica::reasoner::CGSolver(ae));
+        ae->addSolver(new alica::reasoner::ConstraintTestPlanDummySolver(ae));
+        ae->addSolver(new alica::reasoner::CGSolver(ae));
     }
 
     virtual void TearDown() {
         ae->shutdown();
         sc->shutdown();
         delete ae->getCommunicator();
-        delete ae->getSolver(SolverType::DUMMYSOLVER);
-        delete ae->getSolver(SolverType::GRADIENTSOLVER);
+        delete ae->getSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
+        delete ae->getSolver<alica::reasoner::CGSolver>();
         delete cc;
         delete bc;
         delete uc;
