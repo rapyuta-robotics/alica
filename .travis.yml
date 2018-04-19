@@ -16,13 +16,14 @@ env:
     - ROSINSTALL_FILE=$CI_SOURCE_PATH/dependencies.rosinstall
     - CATKIN_OPTIONS=$CI_SOURCE_PATH/catkin.options
     - ROS_PARALLEL_JOBS='-j8 -l6'
+    - PYTHONPATH=$PYTHONPATH:/usr/lib/python2.7/dist-packages:/usr/local/lib/python2.7/dist-packages
     - BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
 
 
 ################################################################################
 
 before_install:
-  - docker run -e BRANCH -d --name alica-test -v $CI_SOURCE_PATH:/travis ros:kinetic-ros-core-xenial tail -f /dev/null
+  - docker run -e BRANCH -e PYTHONPATH -d --name alica-test -v $CI_SOURCE_PATH:/travis ros:kinetic-ros-core-xenial tail -f /dev/null
   - docker ps
 
 install:
@@ -69,5 +70,5 @@ script:
     cd ~/catkin_ws && 
     catkin build --no-status && 
     source devel/setup.bash && 
-    travis_wait catkin run_tests --no-status && catkin_test_results && 
-    if [ "$BRANCH" = "coverity_scan" ] ; then wget -qO- https://scan.coverity.com/download/cxx/linux64 --post-data "token=o6qYj0vj-t-K1PKQj5ugyg&project=rapyuta-robotics/alica" | tar xvz && python ./travis/generate_coverity-analysis_script.py . && chmod +x coverity-analysis.sh && ./cov-analysis*/bin/cov-build --dir cov-int ./coverity-analysis.sh && tar czvf cs.tgz cov-int && curl --form token=o6qYj0vj-t-K1PKQj5ugyg --form email=alexander.bolinsky@rapyuta-robotics.com --form file=@cs.tgz --form version="1.0" --form description="ALICA" https://scan.coverity.com/builds?project=rapyuta-robotics%2Falica ; fi"
+    catkin run_tests --no-status && catkin_test_results && 
+    if [ \"$BRANCH\" = \"coverity_scan\" ] ; then wget -qO- https://scan.coverity.com/download/cxx/linux64 --post-data \"token=o6qYj0vj-t-K1PKQj5ugyg&project=rapyuta-robotics/alica\" | tar xvz && python ./travis/generate_coverity-analysis_script.py . && chmod +x coverity-analysis.sh && ./cov-analysis*/bin/cov-build --dir cov-int ./coverity-analysis.sh && tar czvf cs.tgz cov-int && curl --form token=o6qYj0vj-t-K1PKQj5ugyg --form email=alexander.bolinsky@rapyuta-robotics.com --form file=@cs.tgz --form version=\"1.0\" --form description=\"ALICA\" https://scan.coverity.com/builds?project=rapyuta-robotics%2Falica ; fi"
