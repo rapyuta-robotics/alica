@@ -131,7 +131,7 @@ PlanChange RunningPlan::tick(RuleBook* rules) {
     PlanChange myChange = rules->visit(shared_from_this());
     PlanChange childChange = PlanChange::NoChange;
     // attention: do not use for each here: children are modified
-    for (int i = 0; i < _children.size(); i++) {
+    for (int i = 0; i < static_cast<int>(_children.size()); i++) {
         auto it = _children.begin();
         advance(it, i);
         shared_ptr<RunningPlan> rp = *it;
@@ -533,7 +533,7 @@ bool RunningPlan::anyChildrenTaskSuccess() {
         for (int i = 0; i < childAssignment->getEpSuccessMapping()->getCount(); i++) {
             // at least one robot must be successful && at least as much as minCard robots must be successful
             if (childAssignment->getEpSuccessMapping()->getRobots()[i]->size() > 0 &&
-                    childAssignment->getEpSuccessMapping()->getRobots()[i]->size() >=
+                    static_cast<int>(childAssignment->getEpSuccessMapping()->getRobots()[i]->size()) >=
                             childAssignment->getEpSuccessMapping()->getEntryPoints()[i]->getMinCardinality()) {
                 return true;
             }

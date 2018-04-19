@@ -49,4 +49,8 @@ using TransitionSet = std::vector<const Transition*>;
 using VariableSet = std::vector<const Variable*>;
 
 using BehaviourParameterMap = std::unordered_map<std::string, std::string>;
+
+
+using AgentIDPtr = const supplementary::AgentID*;
+
 }  // namespace alica
