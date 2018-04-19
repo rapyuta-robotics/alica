@@ -9,6 +9,7 @@ namespace alica {
 ByteArray::ByteArray(const int8_t* src, int32_t count)
     : _size(count) {
     assert(src != nullptr);
+    assert(count >= 0);
     if (count > 0) {
         _begin = static_cast<int8_t*>(malloc(count));
         assert(_begin!=nullptr);
