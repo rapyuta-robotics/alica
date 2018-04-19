@@ -8,7 +8,7 @@
 #include "engine/model/AlicaElement.h"
 #include "engine/model/ForallAgents.h"
 #include "engine/model/Quantifier.h"
-#include "engine/model/Variable.h"
+#include "engine/model/DomainVariable.h"
 
 #include <supplementary/AgentID.h>
 #include <typeinfo>
@@ -18,60 +18,57 @@ namespace alica {
  * Basic constructor
  */
 RobotEngineData::RobotEngineData(const AlicaEngine* engine, const supplementary::AgentID* agentId)
-        : engine(engine)
-        , agentId(agentId) {
-    this->initDomainVariables();
-    this->successMarks = make_shared<SuccessMarks>(engine);
+        : _engine(engine)
+        , _agentId(agentId)
+        , _successMarks(std::make_shared<SuccessMarks>(engine)) {
+    initDomainVariables();
 }
 
 RobotEngineData::~RobotEngineData() {
-    for (auto x : this->domainVariables) {
+    for (auto x : _domainVariables) {
         delete x.second;
     }
 }
 
-shared_ptr<SuccessMarks> RobotEngineData::getSuccessMarks() const {
-    return successMarks;
-}
 
 void RobotEngineData::setSuccessMarks(shared_ptr<SuccessMarks> successMarks) {
-    this->successMarks = successMarks;
+    _successMarks = successMarks;
 }
 
 void RobotEngineData::initDomainVariables() {
-    stringstream ss;
-    ss << this->agentId << ".";
-    string agentIdString = ss.str();
-    for (const Quantifier* quantifier : engine->getPlanRepository()->getQuantifiers()) {
-        if (dynamic_cast<const ForallAgents*>(quantifier) != nullptr) {
-            for (const std::string& s : quantifier->getDomainIdentifiers()) {
-                Variable* v = new Variable(makeUniqueId(s), agentIdString + s, "");
-                this->domainVariables.insert(std::pair<std::string, const Variable*>(s, v));
-            }
+    std::stringstream ss;
+    ss << _agentId << ".";
+    std::string agentIdString = ss.str();
+    for (const Quantifier* quantifier : _engine->getPlanRepository()->getQuantifiers()) {
+        for (const Variable& tv : quantifier->getTemplateVariables()) {
+            DomainVariable* dv = new DomainVariable(makeUniqueId(s), agentIdStr + s, "", tv, agentId);
+            _domainVariables.emplace(tv, dv);
         }
     }
 }
 
-const Variable* RobotEngineData::getDomainVariable(const std::string& sort) const {
-    auto iterator = this->domainVariables.find(sort);
-    if (iterator != this->domainVariables.end()) {
+const DomainVariable* RobotEngineData::getDomainVariable(const Variable* templateVar) const {
+    auto iterator = _domainVariables.find(templateVar);
+    if (iterator != _domainVariables.end()) {
         return iterator->second;
     } else {
         return nullptr;
     }
 }
 
+const DomainVariable* RobotEngineData::getDomainVariable(const std::string& sort) const {
+   const Variabe* tv = _ebgube->getPlanRepository().getVariables()[Hash64(sort.c_str(),sort.len())];
+   return getDomainVariable(tv);
+}
+
 int64_t RobotEngineData::makeUniqueId(const std::string& s) const {
-    int64_t ret = (int64_t)(supplementary::AgentIDHash()(this->agentId) + std::hash<string>()(s));
-    if (this->engine->getPlanParser()->getParsedElements()->find(ret) !=
-            this->engine->getPlanParser()->getParsedElements()->end()) {
-        AlicaEngine::abort("TO: Hash Collision in generating a quantified variable's unique ID: ", ret);
-    }
+    int64_t ret = (int64_t)(supplementary::AgentIDHash()(_agentId) + std::hash<string>()(s));
+    assert(_engine->getPlanParser()->getParsedElements()->find(ret) == _engine->getPlanParser()->getParsedElements()->end());
     return ret;
 }
 
 void RobotEngineData::clearSuccessMarks() {
-    this->successMarks->clear();
+    _successMarks->clear();
 }
 
 } /* namespace alica */

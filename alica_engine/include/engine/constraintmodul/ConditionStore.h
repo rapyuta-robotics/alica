@@ -1,7 +1,8 @@
 #pragma once
 
+#include <engine/Types.h>
+
 #include <map>
-#include <list>
 #include <vector>
 #include <mutex>
 #include <memory>
@@ -24,10 +25,18 @@ public:
     void removeCondition(const Condition* con);
 
     void acceptQuery(Query& query, std::shared_ptr<RunningPlan> rp) const;
-    std::list<const Condition*> activeConditions;
-    std::map<const Variable*, std::shared_ptr<std::vector<const Condition*>>> activeVar2CondMap;
 
-    mutable std::mutex mtx;
+
+    ConditionStore(const ConditionStore&) = delete;
+    ConditionStore(ConditionStore&&) = delete;
+    ConditionStore& operator=(const ConditionStore&) = delete;
+    ConditionStore& operator=(ConditionStore&&) = delete;
+
+private:
+    ConditionSet _activeConditions;
+    std::map<const Variable*, ConditionSet> _activeVar2CondMap;
+
+    mutable std::mutex _mtx;
 };
 
 }  // namespace alica

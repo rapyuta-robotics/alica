@@ -10,6 +10,11 @@ namespace alica {
 using std::make_shared;
 using std::numeric_limits;
 
+
+constexpr double ProblemDescriptor::minExpressible;
+constexpr double ProblemDescriptor::maxExpressible;
+
+
 ProblemDescriptor::ProblemDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars,
         shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>> domVars) {
     dim = vars->size();
