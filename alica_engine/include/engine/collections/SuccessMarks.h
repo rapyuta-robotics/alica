@@ -23,7 +23,6 @@ public:
     SuccessMarks(const AlicaEngine* ae, const std::list<int64_t>& epIds);
     virtual ~SuccessMarks();
 
-    // TODO uses ICollection in C# so far only unordered_set needed
     void limitToPlans(const AbstractPlanSet& active);
     const std::map<const AbstractPlan*, std::shared_ptr<std::list<const EntryPoint*>>>& getSuccessMarks() const {
         return successMarks;
