@@ -27,23 +27,20 @@
 
 #include <supplementary/AgentIDManager.h>
 
-using std::cout;
-using std::endl;
 namespace alica {
 /**
  * Abort execution with a message, called if initialization fails.
  * @param msg A string
  */
-void AlicaEngine::abort(string msg) {
-    cerr << "ABORT: " << msg << endl;
+void AlicaEngine::abort(const std::string& msg) {
+    std::cerr << "ABORT: " << msg << std::endl;
     exit(EXIT_FAILURE);
 }
 
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, string roleSetName, string masterPlanName,
-        string roleSetDir, bool stepEngine)
+AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, const std::string& roleSetDir, bool stepEngine)
         : stepCalled(false)
         , planBase(nullptr)
         , planSelector(nullptr)
@@ -54,14 +51,11 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, string roleSe
         , expressionHandler(nullptr)
         , log(nullptr)
         , auth(nullptr)
-        , stepEngine(stepEngine)
-        , pap(nullptr)
         , variableSyncModule(nullptr)
+        , pap(nullptr)
+        , stepEngine(stepEngine)
         , agentIDManager(idManager) {
-#ifdef AE_DEBUG
-    cout << "AE: Constructor finished!" << endl;
-#endif
-    this->maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
+    _maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
     this->useStaticRoles = (*sc)["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
     AssignmentCollection::maxEpsCount = (*this->sc)["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
     AssignmentCollection::allowIdling = (*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL);
@@ -86,6 +80,9 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, string roleSe
     if (!planRepository->verifyPlanBase()) {
         abort("Error in parsed plans.");
     }
+    #ifdef AE_DEBUG
+    std::cout << "AE: Constructor finished!" << std::endl;
+    #endif
 }
 
 AlicaEngine::~AlicaEngine() {}
@@ -143,7 +140,7 @@ void AlicaEngine::shutdown() {
         this->communicator->stopCommunication();
     }
     this->terminating = true;
-    this->maySendMessages = false;
+    _maySendMessages = false;
 
     if (this->behaviourPool != nullptr) {
         this->behaviourPool->stopAll();
@@ -232,7 +229,7 @@ void AlicaEngine::iterationComplete() {
  */
 void AlicaEngine::start() {
     this->planBase->start();
-    cout << "AE: Engine started" << endl;
+    std::cout << "AE: Engine started" << std::endl;
 }
 
 void AlicaEngine::setStepCalled(bool stepCalled) {
@@ -243,94 +240,28 @@ bool AlicaEngine::getStepCalled() const {
     return this->stepCalled;
 }
 
-bool AlicaEngine::getStepEngine() {
+bool AlicaEngine::getStepEngine() const {
     return this->stepEngine;
 }
 
-/**
- * Returns the plan repository, which holds the static ALICA program.
- */
-PlanRepository* AlicaEngine::getPlanRepository() const {
-    return this->planRepository;
-}
-
-/**
- * Returns the planselector
- */
-PlanSelector* AlicaEngine::getPlanSelector() {
-    return this->planSelector;
-}
-/**
- * Returns the Alica Clock interface
- */
-AlicaClock* AlicaEngine::getAlicaClock() const {
-    return this->alicaClock;
-}
 void AlicaEngine::setAlicaClock(AlicaClock* clock) {
     this->alicaClock = clock;
 }
 
-/**
- * Returns the behaviourpool
- */
-BehaviourPool* AlicaEngine::getBehaviourPool() {
-    return this->behaviourPool;
-}
-
-/**
- * Returns the TeamObserver, which handles most communication tasks.
- */
-TeamObserver* AlicaEngine::getTeamObserver() const {
-    return this->teamObserver;
-}
 void AlicaEngine::setTeamObserver(TeamObserver* teamObserver) {
     this->teamObserver = teamObserver;
-}
-
-/**
- * Gets the SyncModul, which enables synchronized transitions.
- */
-SyncModule* AlicaEngine::getSyncModul() {
-    return syncModul;
 }
 
 void AlicaEngine::setSyncModul(SyncModule* syncModul) {
     this->syncModul = syncModul;
 }
 
-/**
- * Gets AuthorityManager, which detects and resolvs conflicts in task allocation.
- */
-AuthorityManager* AlicaEngine::getAuth() {
-    return auth;
-}
 void AlicaEngine::setAuth(AuthorityManager* auth) {
     this->auth = auth;
 }
 
-/**
- * Gets the RoleAssignment, responsible for allocating roles to robots.
- */
-IRoleAssignment* AlicaEngine::getRoleAssignment() {
-    return roleAssignment;
-}
-
 void AlicaEngine::setRoleAssignment(IRoleAssignment* roleAssignment) {
     this->roleAssignment = roleAssignment;
-}
-
-/**
- * Returns the parser which reads ALICAs XML representation
- */
-PlanParser* AlicaEngine::getPlanParser() const {
-    return planParser;
-}
-
-/**
- * Returns the RoleSet in use.
- */
-RoleSet* AlicaEngine::getRoleSet() {
-    return roleSet;
 }
 
 void AlicaEngine::setStepEngine(bool stepEngine) {
@@ -341,15 +272,8 @@ void AlicaEngine::setStepEngine(bool stepEngine) {
  * Gets the robot name, either by access the environment variable "ROBOT", or if that isn't set, the hostname.
  * @return The robot name under which the engine operates, a string
  */
-string AlicaEngine::getRobotName() const {
+std::string AlicaEngine::getRobotName() const {
     return sc->getHostname();
-}
-
-/**
- * Gets the Logger
- */
-Logger* AlicaEngine::getLog() {
-    return log;
 }
 
 void AlicaEngine::setLog(Logger* log) {
@@ -359,50 +283,18 @@ void AlicaEngine::setLog(Logger* log) {
 bool AlicaEngine::isTerminating() const {
     return terminating;
 }
-bool AlicaEngine::isMaySendMessages() const {
-    return maySendMessages;
-}
+
 void AlicaEngine::setMaySendMessages(bool maySendMessages) {
-    this->maySendMessages = maySendMessages;
-}
-
-void AlicaEngine::setTerminating(bool terminating) {
-    this->terminating = terminating;
-}
-
-const IAlicaCommunication* AlicaEngine::getCommunicator() const {
-    return communicator;
+    _maySendMessages = maySendMessages;
 }
 
 void AlicaEngine::setCommunicator(IAlicaCommunication* communicator) {
     this->communicator = communicator;
 }
 
-/**
- * Returns Alica Main clase that manages the current alica state
- */
-PlanBase* AlicaEngine::getPlanBase() {
-    return planBase;
-}
-
-void AlicaEngine::addSolver(int identifier, ISolver* solver) {
-    this->solver[identifier] = solver;
-}
-
-ISolver* AlicaEngine::getSolver(int identifier) {
-    return this->solver[identifier];
-}
-
-VariableSyncModule* AlicaEngine::getResultStore() {
-    return this->variableSyncModule;
-}
 
 void AlicaEngine::setResultStore(VariableSyncModule* resultStore) {
     this->variableSyncModule = resultStore;
-}
-
-PartialAssignmentPool* AlicaEngine::getPartialAssignmentPool() const {
-    return this->pap;
 }
 
 /**
@@ -414,10 +306,6 @@ PartialAssignmentPool* AlicaEngine::getPartialAssignmentPool() const {
 void AlicaEngine::stepNotify() {
     this->setStepCalled(true);
     this->getPlanBase()->getStepModeCV()->notify_all();
-}
-
-TeamManager* AlicaEngine::getTeamManager() const {
-    return this->teamManager;
 }
 
 /**

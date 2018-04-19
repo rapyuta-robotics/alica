@@ -2,11 +2,13 @@ using namespace std;
 #include "Plans/GSolver/SolverTestBehaviour.h"
 
 /*PROTECTED REGION ID(inccpp1417424455986) ENABLED START*/  // Add additional includes here
-#include "SolverType.h"
+
+#include <CGSolver.h>
+
 /*PROTECTED REGION END*/
 namespace alica {
 /*PROTECTED REGION ID(staticVars1417424455986) ENABLED START*/  // initialise static variables here
-vector<double> SolverTestBehaviour::result;
+std::vector<double> SolverTestBehaviour::result;
 /*PROTECTED REGION END*/
 SolverTestBehaviour::SolverTestBehaviour()
         : DomainBehaviour("SolverTestBehaviour") {
@@ -23,7 +25,7 @@ void SolverTestBehaviour::run(void* msg) {
     callCounter++;
     // std::cout << "SolverTestBehaviour was called " << callCounter << " times!" << std::endl;
 
-    _query.getSolution(SolverType::GRADIENTSOLVER, runningPlan, result);
+    _query.getSolution<reasoner::CGSolver,double>(runningPlan, result);
     /*PROTECTED REGION END*/
 }
 void SolverTestBehaviour::initialiseParameters() {

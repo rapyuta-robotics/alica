@@ -44,13 +44,14 @@ protected:
     }
 
     virtual void TearDown() {
-        ae->shutdown();
-        sc->shutdown();
+        ae->shutdown();  
         delete ae->getCommunicator();
-        delete cc;
-        delete uc;
         delete crc;
+        delete uc;
+        delete cc;
         delete bc;
+        delete ae;
+        sc->shutdown();
     }
 };
 

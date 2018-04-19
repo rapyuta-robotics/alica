@@ -14,7 +14,6 @@
 #include <gtest/gtest.h>
 #include <gtest/internal/gtest-internal.h>
 #include <Plans/ProblemModule/QueryBehaviour1.h>
-#include <SolverType.h>
 #include <SystemConfig.h>
 #include <UtilityFunctionCreator.h>
 #include <chrono>
@@ -55,14 +54,16 @@ protected:
                 "ProblemBuildingMaster", ".", true);
         ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-        ae->addSolver(SolverType::DUMMYSOLVER, new alica::reasoner::ConstraintTestPlanDummySolver(ae));
-        ae->addSolver(SolverType::GRADIENTSOLVER, new alica::reasoner::CGSolver(ae));
+        ae->addSolver(new alica::reasoner::ConstraintTestPlanDummySolver(ae));
+        ae->addSolver(new alica::reasoner::CGSolver(ae));
         ae->init(bc, cc, uc, crc);
     }
 
     virtual void TearDown() {
         ae->shutdown();
         delete ae->getCommunicator();
+        delete ae->getSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
+        delete ae->getSolver<alica::reasoner::CGSolver>();
         sc->shutdown();
         delete cc;
         delete bc;

@@ -4,7 +4,7 @@
 #include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1414068597716) ENABLED START*/  // Add additional includes here
 #include <vector>
-#include "SolverType.h"
+#include <engine/blackboard/BBIdent.h>
 #include <engine/constraintmodul/Query.h>
 /*PROTECTED REGION END*/
 namespace alica {
@@ -15,7 +15,7 @@ public:
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1414068597716) ENABLED START*/  // Add additional public methods here
     int getCallCounter() const;
-    static std::vector<std::string> result;
+    static std::vector<BBIdent> result;
     /*PROTECTED REGION END*/
 protected:
     virtual void initialiseParameters();
