@@ -19,16 +19,16 @@ class BBIdent {
         return _val < o._val;
     }
     bool operator>=(const BBIdent o) const {
-        return !(_val < o._val);
+        return !(*this < o);
     }
     bool operator<=(const BBIdent o) const {
-        return !(_val > o._val);
+        return !(*this > o);
     }
     bool operator==(const BBIdent o) const {
         return (_val == o._val);
     }
     bool operator!=(const BBIdent o) const {
-        return !(_val == o._val);
+        return !(*this == o);
     }
 
     private:
