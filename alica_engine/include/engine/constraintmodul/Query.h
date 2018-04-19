@@ -106,7 +106,6 @@ public:
     void addDomainVariable(const supplementary::AgentID* robot, const std::string& ident, AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
-    
 
     template <class SolverType>
     bool existsSolution(std::shared_ptr<RunningPlan> rp);
@@ -114,11 +113,6 @@ public:
     template <class SolverType, typename ResultType>
     bool getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>& result);
 
-    /*const VariableSet& getRelevantStaticVariables() const { return _relevantStaticVariables; }
-    const VariableSet& getRelevantDomainVariables() const { return _relevantDomainVariables; }
-
-    VariableSet& editRelevantStaticVariables() const { return _relevantStaticVariables; }
-    VariableSet& editRelevantDomainVariables() const { return _relevantDomainVariables; }*/
     BufferedVariableSet& editStaticVariableBuffer() {return _staticVars;}
     BufferedDomainVariableSet& editDomainVariableBuffer() {return _domainVars;}
 

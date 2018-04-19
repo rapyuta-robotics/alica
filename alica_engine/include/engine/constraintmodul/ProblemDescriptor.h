@@ -10,7 +10,7 @@ class SolverTerm;
 class SolverVariable;
 
 
-class ProblemDescriptor : public ProblemDescriptor {
+class ProblemDescriptor {
 public:
 
     std::shared_ptr<SolverTerm> getConstraint() const;
