@@ -23,10 +23,10 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const supplementary::AgentID& obj) {
         if (obj.id.size() <= sizeof(int)) {
             std::vector<uint8_t> tmpLong;
-            for (int i = 0; i < obj.id.size(); i++) {
+            for (int i = 0; i < static_cast<int>(obj.id.size()); i++) {
                 tmpLong.push_back(obj.id[i]);
             }
-            for (int i = 0; i < sizeof(int) - obj.id.size(); i++) {
+            for (int i = 0; i < static_cast<int>(sizeof(int) - obj.id.size()); i++) {
                 tmpLong.push_back(0);
             }
             os << (int) (*tmpLong.data());

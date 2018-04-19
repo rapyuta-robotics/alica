@@ -1,7 +1,7 @@
 #pragma once
 
 #include <engine/constraintmodul/ISolver.h>
-
+#include <engine/blackboard/BBIdent.h>
 #include <memory>
 #include <vector>
 
@@ -14,15 +14,15 @@ class SolverVariable;
 
 namespace reasoner {
 
-class DummySolver : public alica::ISolver {
+class DummySolver : public alica::ISolver<DummySolver, BBIdent> {
 public:
     DummySolver(AlicaEngine* ae);
     virtual ~DummySolver();
 
-    virtual bool existsSolution(std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
-    virtual bool getSolution(std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
-            std::vector<void*>& results);
-    virtual std::shared_ptr<SolverVariable> createVariable(long representingVariableId);
+    bool existsSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
+    bool getSolutionImpl(const VariableSet&, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+            std::vector<BBIdent>& results);
+    virtual std::shared_ptr<SolverVariable> createVariable(int64_t representingVariableId) override;
 };
 } /* namespace reasoner */
 } /* namespace alica */

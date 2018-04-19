@@ -32,7 +32,7 @@ alica::AlicaEngine* WorldModel::getEngine() {
     return this->alicaEngine;
 }
 
-AlicaTime WorldModel::getTime() {
+alica::AlicaTime WorldModel::getTime() {
     if (this->alicaEngine != nullptr) {
         return this->alicaEngine->getAlicaClock()->now();
     } else {
