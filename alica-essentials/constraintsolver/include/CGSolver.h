@@ -23,7 +23,8 @@ public:
     virtual ~CGSolver();
 
     bool existsSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
-    bool getSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<double>& results);
+    bool getSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+            std::vector<double>& results);
 
     virtual std::shared_ptr<SolverVariable> createVariable(int64_t id) override;
 

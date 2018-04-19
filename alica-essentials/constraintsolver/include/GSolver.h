@@ -37,14 +37,12 @@ public:
             const std::vector<double>& limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds,
             double sufficientUtility, double* util);
     bool solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-            const std::vector<double>& limits,
-            shared_ptr<vector<shared_ptr<vector<double>>>> seeds);
+            const std::vector<double>& limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds);
     shared_ptr<vector<double>> solveTest(shared_ptr<Term> equation,
-            shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-            const std::vector<double>& limits);
+            shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, const std::vector<double>& limits);
     shared_ptr<vector<double>> solveTest(shared_ptr<Term> equation,
-            shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-            const std::vector<double>& limits, int maxRuns, bool* found);
+            shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, const std::vector<double>& limits, int maxRuns,
+            bool* found);
 
     long getRuns();
     void setRuns(long runs);
@@ -69,11 +67,12 @@ protected:
     void log(double util, shared_ptr<vector<double>>& val);
     void logStep();
     void closeLog();
-    shared_ptr<vector<double>> initialPointFromSeed(shared_ptr<RpropResult>& res, shared_ptr<vector<double>>& seed, const std::vector<double>& limits);
+    shared_ptr<vector<double>> initialPointFromSeed(
+            shared_ptr<RpropResult>& res, shared_ptr<vector<double>>& seed, const std::vector<double>& limits);
     shared_ptr<vector<double>> initialPoint(shared_ptr<RpropResult>& res, const std::vector<double>& limits);
     shared_ptr<RpropResult> rPropLoop(shared_ptr<vector<double>> seed, const std::vector<double>& limits);
     shared_ptr<RpropResult> rPropLoop(shared_ptr<vector<double>> seed, bool precise, const std::vector<double>& limits);
-    shared_ptr<RpropResult> rPropLoopSimple(shared_ptr<vector<double>> seed,  const std::vector<double>& limits);
+    shared_ptr<RpropResult> rPropLoopSimple(shared_ptr<vector<double>> seed, const std::vector<double>& limits);
     void initialStepSize();
     bool evalResults();
 

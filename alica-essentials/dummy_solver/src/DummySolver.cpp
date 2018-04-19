@@ -16,14 +16,14 @@ DummySolver::DummySolver(AlicaEngine* ae)
 
 DummySolver::~DummySolver() {}
 
-bool DummySolver::existsSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
+bool DummySolver::existsSolutionImpl(
+        const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
     return true;
 }
 
 bool DummySolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
         std::vector<BBIdent>& results) {
-
-    //TODO: reformulate this without a temporary vector
+    // TODO: reformulate this without a temporary vector
     std::vector<std::shared_ptr<DummyVariable>> dummyVariables;
     dummyVariables.reserve(vars.size());
     for (auto variable : vars) {
@@ -33,7 +33,7 @@ bool DummySolver::getSolutionImpl(const VariableSet& vars, const std::vector<std
         }
         dummyVariables.push_back(dummyVariable);
     }
-    //TODO: reformulate this without a temporary map
+    // TODO: reformulate this without a temporary map
     std::map<long, std::string> dummyVariableValueMap;
 
     for (auto& c : calls) {
@@ -59,10 +59,10 @@ bool DummySolver::getSolutionImpl(const VariableSet& vars, const std::vector<std
     }
 
     results.reserve(dummyVariables.size());
-    BlackBoard& bb =  getAlicaEngine()->editBlackBoard();
+    BlackBoard& bb = getAlicaEngine()->editBlackBoard();
     for (const auto& dummyVariable : dummyVariables) {
         const std::string& val = dummyVariableValueMap[dummyVariable->getID()];
-        BBIdent bid = bb.registerValue(val.c_str(),val.size());
+        BBIdent bid = bb.registerValue(val.c_str(), val.size());
         results.push_back(bid);
     }
 

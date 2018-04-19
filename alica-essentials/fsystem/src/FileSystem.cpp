@@ -108,8 +108,8 @@ bool FileSystem::findFile(const std::string& path, const std::string& file, std:
                 break;
             }
         } else {
-            std::cout << "ff: Found a symlink, or something else, which is not a regular file or directory: " << curFullFile
-                 << std::endl;
+            std::cout << "ff: Found a symlink, or something else, which is not a regular file or directory: "
+                      << curFullFile << std::endl;
         }
 
         free(namelist[i]);
@@ -151,8 +151,8 @@ std::vector<std::string> FileSystem::findAllFiles(std::string path, std::string 
                 files.push_back(curFullFile);
             }
         } else {
-            std::cout << "FS: Found a symlink, or something else, which is not a regular file or directory: " << curFullFile
-                 << std::endl;
+            std::cout << "FS: Found a symlink, or something else, which is not a regular file or directory: "
+                      << curFullFile << std::endl;
         }
 
         free(namelist[i]);

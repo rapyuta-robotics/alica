@@ -24,16 +24,14 @@ CGSolver::CGSolver(AlicaEngine* ae)
 
 CGSolver::~CGSolver() {}
 
-
-
 bool CGSolver::existsSolutionImpl(const VariableSet& vars, const std::vector<shared_ptr<ProblemDescriptor>>& calls) {
     std::shared_ptr<Term> constraint = ConstraintBuilder::TRUE;
     const int dim = vars.size();
 
     auto cVars = make_shared<vector<shared_ptr<autodiff::Variable>>>(dim);
-    std::vector<double> ranges(dim*2,std::numeric_limits<double>::max());
+    std::vector<double> ranges(dim * 2, std::numeric_limits<double>::max());
     for (int i = 0; i < dim; ++i) {
-        ranges[2*i] = std::numeric_limits<double>::lowest();
+        ranges[2 * i] = std::numeric_limits<double>::lowest();
         cVars->at(i) = dynamic_pointer_cast<autodiff::Variable>(vars.at(i)->getSolverVar());
     }
 
@@ -53,9 +51,9 @@ bool CGSolver::existsSolutionImpl(const VariableSet& vars, const std::vector<sha
                     return false;
                 }
                 if (cVars->at(j) == dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(j))) {
-                    ranges[j*2] = std::max(ranges[2*j], allRanges->at(i).at(0));
-                    ranges[j*2+1] = std::min(ranges[2*j+1], allRanges->at(i).at(1));
-                    if (ranges[j*2] > ranges[j*2+1]) {
+                    ranges[j * 2] = std::max(ranges[2 * j], allRanges->at(i).at(0));
+                    ranges[j * 2 + 1] = std::min(ranges[2 * j + 1], allRanges->at(i).at(1));
+                    if (ranges[j * 2] > ranges[j * 2 + 1]) {
                         return false;
                     }
                     break;
@@ -66,32 +64,34 @@ bool CGSolver::existsSolutionImpl(const VariableSet& vars, const std::vector<sha
     std::vector<Variant> serial_seeds;
     int seed_num = getAlicaEngine()->getResultStore()->getSeeds(vars, ranges, serial_seeds);
 
-    shared_ptr<vector<shared_ptr<vector<double>>>> seeds =
-            make_shared<vector<shared_ptr<vector<double>>>>();
+    shared_ptr<vector<shared_ptr<vector<double>>>> seeds = make_shared<vector<shared_ptr<vector<double>>>>();
     seeds->reserve(seed_num);
-    for (int i=0; i<serial_seeds.size(); i+=dim) {
+    for (int i = 0; i < serial_seeds.size(); i += dim) {
         shared_ptr<vector<double>> singleseed = make_shared<vector<double>>();
         singleseed->reserve(dim);
-        //Fill a single seed with information from the combined seed vector by resolving the variants to doubles or NaNs.
-        std::transform(serial_seeds.begin()+i,serial_seeds.begin()+i+dim, std::back_inserter(*singleseed),
-            [](Variant v)->double { return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN();}
-        );
+        // Fill a single seed with information from the combined seed vector by resolving the variants to doubles or
+        // NaNs.
+        std::transform(serial_seeds.begin() + i, serial_seeds.begin() + i + dim, std::back_inserter(*singleseed),
+                [](Variant v) -> double {
+                    return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN();
+                });
         seeds->push_back(std::move(singleseed));
     }
 
     return _sgs.solveSimple(constraint, cVars, ranges, seeds);
 }
 
-bool CGSolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<double>& results) {
+bool CGSolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+        std::vector<double>& results) {
     shared_ptr<Term> constraint = ConstraintBuilder::TRUE;
     shared_ptr<Term> utility = TermBuilder::constant(1);
     int dim = vars.size();
 
     // create lists of constraint variables and corresponding ranges
     auto constraintVariables = make_shared<vector<shared_ptr<autodiff::Variable>>>(dim);
-    std::vector<double> ranges(dim*2,std::numeric_limits<double>::max());
+    std::vector<double> ranges(dim * 2, std::numeric_limits<double>::max());
     for (int i = 0; i < dim; ++i) {
-        ranges[2*i] = std::numeric_limits<double>::lowest();
+        ranges[2 * i] = std::numeric_limits<double>::lowest();
         constraintVariables->at(i) = dynamic_pointer_cast<autodiff::Variable>(vars.at(i)->getSolverVar());
     }
 
@@ -136,9 +136,9 @@ bool CGSolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::s
 
             for (int j = 0; j < constraintVariables->size(); ++j) {
                 if (constraintVariables->at(j) == variableTerm) {
-                    ranges[j*2] = std::max(ranges[2*j], allRanges->at(i).at(0));
-                    ranges[j*2+1] = std::min(ranges[2*j+1], allRanges->at(i).at(1));
-                    if (ranges[j*2] > ranges[j*2+1]) {
+                    ranges[j * 2] = std::max(ranges[2 * j], allRanges->at(i).at(0));
+                    ranges[j * 2 + 1] = std::min(ranges[2 * j + 1], allRanges->at(i).at(1));
+                    if (ranges[j * 2] > ranges[j * 2 + 1]) {
                         std::cerr << "CGSolver: Ranges do not allow a solution!" << std::endl;
                         return false;
                     }
@@ -148,19 +148,19 @@ bool CGSolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::s
         }
     }
     shared_ptr<Term> all = make_shared<ConstraintUtility>(constraint, utility);
-    
+
     std::vector<Variant> serial_seeds;
     int seed_num = getAlicaEngine()->getResultStore()->getSeeds(vars, ranges, serial_seeds);
 
-    shared_ptr<vector<shared_ptr<vector<double>>>> seeds =
-            make_shared<vector<shared_ptr<vector<double>>>>();
+    shared_ptr<vector<shared_ptr<vector<double>>>> seeds = make_shared<vector<shared_ptr<vector<double>>>>();
     seeds->reserve(seed_num);
-    for (int i=0; i<serial_seeds.size(); i+=dim) {
+    for (int i = 0; i < serial_seeds.size(); i += dim) {
         shared_ptr<vector<double>> singleseed = make_shared<vector<double>>();
         singleseed->reserve(dim);
-        std::transform(serial_seeds.begin()+i,serial_seeds.begin()+i+dim, std::back_inserter(*singleseed),
-            [](Variant v)->double { return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN();}
-        );
+        std::transform(serial_seeds.begin() + i, serial_seeds.begin() + i + dim, std::back_inserter(*singleseed),
+                [](Variant v) -> double {
+                    return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN();
+                });
         seeds->push_back(std::move(singleseed));
     }
 
