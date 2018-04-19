@@ -19,7 +19,7 @@ class TeamManager;
 class TeamObserver;
 class AbstractPlan;
 class EntryPoint;
-class Variable;
+class DomainVariable;
 class SuccessMarks;
 
 class Agent {
@@ -60,7 +60,7 @@ protected:
     void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived) { _timeLastMsgReceived = timeLastMsgReceived; }
     void setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint);
     void setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks);
-    const Variable* getDomainVariable(const std::string& sort) const;
+    const DomainVariable* getDomainVariable(const std::string& sort) const;
     std::shared_ptr<std::list<const EntryPoint*>> getSucceededEntryPoints(const AbstractPlan* plan) const;
     bool update();
 };

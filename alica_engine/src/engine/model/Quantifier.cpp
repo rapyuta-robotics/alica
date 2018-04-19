@@ -20,6 +20,8 @@ Quantifier::Quantifier(int64_t id)
 
 Quantifier::~Quantifier() {}
 
+
+
 /**
  * Set the scope of this quantifier, called by the ModelFactory
  * @param ae An AlicaElement
@@ -40,5 +42,6 @@ void Quantifier::setScope(const AlicaElement* element) {
 void Quantifier::setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers) {
     _domainIdentifiers = domainIdentifiers;
 }
+
 
 }  // namespace alica

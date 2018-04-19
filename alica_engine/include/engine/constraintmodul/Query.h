@@ -31,6 +31,34 @@ class ProblemPart;
 class RunningPlan;
 class BasicBehaviour;
 
+template<class T>
+class BufferedVariableSet {
+    public:
+    BufferedVariableSet() = default;
+    const VariableSet& getCurrent() const {return _current;}
+    std::vector<T>& editCurrent() {return _current;}
+    std::vector<T>& editNext() {return _next;}
+    void flip() {std::swap(_current,_next);}
+    void mergeAndFlip() {
+        if(!_current.empty()) {
+            _next.insert(_next.end(),_current.begin(),_current.end()):
+        }
+        _current.clear();
+        flip();
+    }
+    void clear() {_current.clear(); _next.clear();}
+    bool hasCurrentlyAny() const {return !_current.empty();}
+    bool hasCurrently(T v) const {return std::find(_current.begin(),_current.end(),v) != _currently.end();}
+    bool has(T v) const {return hasCurrently() || (std::find(_next.begin(),_next.end(),v) != _next.end());}
+
+    private:
+    std::vector<T> _current;
+    std::vector<T> _next;
+}
+
+using BufferedVariableSet=BufferedSet<const Variable*>;
+using BufferedDomainVariableSet=BufferedSet<const DomainVariable*>;
+
 /**
  * Internal class to deal with bindings in states and plantypes
  */
@@ -39,6 +67,7 @@ public:
     UniqueVarStore();
 
     void clear();
+    void initWith(const VariableSet& vs);
     void add(const Variable* v);
     const Variable* getRep(const Variable* v);
     void addVarTo(const Variable* representing, const Variable* toAdd);
@@ -47,9 +76,9 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store) {
         os << "UniqueVarStore: " << std::endl;
         // write obj to stream
-        for (const auto& variableList : store.store) {
-            os << "VariableList: ";
-            for (const auto& variable : variableList) {
+        for (const VariableSet& vs : store._store) {
+            os << "Unifications: ";
+            for (const Variable* variable : variableList) {
                 os << *variable << ", ";
             }
             os << std::endl;
@@ -62,7 +91,7 @@ private:
      *  Each inner list of variables is sorted from variables of the top most plan to variables of the deepest plan.
      *  Therefore, the first element is always the variable in the top most plan, where this variable occurs.
      */
-    std::vector<VariableSet> store;
+    std::vector<VariableSet> _store;
 };
 
 /**
@@ -71,11 +100,13 @@ private:
 class Query {
 public:
     Query();
-
+   
+    
     void addStaticVariable(const Variable* v);
     void addDomainVariable(const supplementary::AgentID* robot, const std::string& ident, AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
+    
 
     template <class SolverType>
     bool existsSolution(std::shared_ptr<RunningPlan> rp);
@@ -83,26 +114,34 @@ public:
     template <class SolverType, typename ResultType>
     bool getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>& result);
 
-    const VariableSet& getRelevantStaticVariables() const { return relevantStaticVariables; }
-    const VariableSet& getRelevantDomainVariables() const { return relevantDomainVariables; }
-    void setRelevantStaticVariables(const VariableSet& value);
-    void setRelevantDomainVariables(const VariableSet& value);
+    /*const VariableSet& getRelevantStaticVariables() const { return _relevantStaticVariables; }
+    const VariableSet& getRelevantDomainVariables() const { return _relevantDomainVariables; }
 
-    void addProblemParts(std::vector<std::shared_ptr<ProblemPart>>& l);
+    VariableSet& editRelevantStaticVariables() const { return _relevantStaticVariables; }
+    VariableSet& editRelevantDomainVariables() const { return _relevantDomainVariables; }*/
+    BufferedVariableSet& editStaticVariableBuffer() {return _staticVars;}
+    BufferedDomainVariableSet& editDomainVariableBuffer() {return _domainVars;}
 
+    void addProblemPart(ProblemPart&& p);
+    int getPartCount() const {return _problemParts.size();}
+    const std::vector<ProblemPart>& getProblemParts() const {return _problemParts;}
     std::shared_ptr<UniqueVarStore> getUniqueVariableStore(); /*< for testing only!!! */
 
 private:
+    void clearTemporaries();
+    void fillBufferFromQuery();
     bool collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolverBase* solver,
             std::vector<std::shared_ptr<ProblemDescriptor>>& cds, VariableSet& relevantVariables, int& domOffset);
 
-    std::shared_ptr<UniqueVarStore> uniqueVarStore;
-    VariableSet queriedStaticVariables;
-    VariableSet queriedDomainVariables;
-    std::vector<shared_ptr<ProblemPart>> problemParts;
+    VariableSet _queriedStaticVariables;
+    DomainVariableSet _queriedDomainVariables;
 
-    VariableSet relevantStaticVariables;
-    VariableSet relevantDomainVariables;
+    UniqueVarStore _uniqueVarStore;
+    std::vector<ProblemPart> _problemParts;
+
+    BufferedVariableSet _staticVars;
+    BufferedDomainVariableSet _domainVars;
+
 };
 
 template <class SolverType>
@@ -121,7 +160,7 @@ bool Query::existsSolution(std::shared_ptr<RunningPlan> rp) {
 template <class SolverType, typename ResultType>
 bool Query::getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>& result) {
     result.clear();
-
+    
     // Collect the complete problem specification
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     VariableSet relevantVariables;
@@ -133,12 +172,12 @@ bool Query::getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>
         return false;
     }
 
-    if (!this->collectProblemStatement(rp, solver, cds, relevantVariables, domOffset)) {
+    if (!collectProblemStatement(rp, solver, cds, relevantVariables, domOffset)) {
         return false;
     }
 
 #ifdef Q_DEBUG
-    std::cout << "Query: " << (*this->uniqueVarStore) << std::endl;
+    std::cout << "Query: " << _uniqueVarStore << std::endl;
 #endif
     // TODO: get rid of the interrim vector (see below how) 
     std::vector<ResultType> solverResult;
@@ -157,7 +196,7 @@ bool Query::getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>
         //TODO this can be done in place. The queried static should be at the beginning of the array anyway
         // create a result vector that is filtered by the queried variables
         for (const Variable* staticVariable : queriedStaticVariables) {
-            result.push_back(solverResult[uniqueVarStore->getIndexOf(staticVariable)]);
+            result.push_back(solverResult[_uniqueVarStore->getIndexOf(staticVariable)]);
         }
         //Again, the queried domain variables should be at the beginning of the domain variable segment
         //So a simple move and resize should do the trick

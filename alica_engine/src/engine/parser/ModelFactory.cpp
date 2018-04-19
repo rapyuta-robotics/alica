@@ -29,6 +29,7 @@
 #include "engine/model/RoleDefinitionSet.h"
 #include "engine/model/PlanningProblem.h"
 #include "engine/model/Parameter.h"
+#include "engine/util/HashFunctions.h"
 
 #include "engine/AlicaEngine.h"
 #include "SigFault.h"
@@ -1073,8 +1074,8 @@ Parametrisation* ModelFactory::createParametrisation(tinyxml2::XMLElement* eleme
  * @param node actual xml element
  * @return the name of the xml element or missing name
  */
-string ModelFactory::getNameOfNode(tinyxml2::XMLElement* node) {
-    string name = "";
+std::string ModelFactory::getNameOfNode(tinyxml2::XMLElement* node) {
+    std::string name = "";
     const char* namePtr = node->Attribute("name");
     if (namePtr) {
         name = namePtr;
@@ -1089,7 +1090,7 @@ string ModelFactory::getNameOfNode(tinyxml2::XMLElement* node) {
  * @param node xmlElement that represent the current xml tag
  * @return true if the child node is a text element otherwise false
  */
-bool ModelFactory::isReferenceNode(tinyxml2::XMLElement* node) {
+bool ModelFactory::isReferenceNode(tinyxml2::XMLElement* node) const {
     tinyxml2::XMLNode* curChild = node->FirstChild();
     while (curChild != nullptr) {
         const tinyxml2::XMLText* textNode = curChild->ToText();
@@ -1268,6 +1269,7 @@ void ModelFactory::attachPlanReferences() {
     }
     this->quantifierScopeReferences.clear();
 
+    createVariableTemplates();
     removeRedundancy();
 #ifdef MF_DEBUG
     cout << "DONE!" << endl;
@@ -1308,6 +1310,24 @@ void ModelFactory::attachCharacteristicReferences() {
 #ifdef MF_DEBUG
     cout << "MF: Attaching Characteristics references... done!" << endl;
 #endif
+}
+
+void ModelFactory::createVariableTemplates() {
+    for(PlanRepository::MapType<Quantifier>::iterator iter = rep->_quantifiers.begin(); iter != rep->_quantifiers.end(); ++iter) {
+        Quantifier* q = iter->second;
+        for(const std::string& s : q->getDomainIdentifier()) {
+            int64_t id =  hash64(s.c_str(),s.size());
+            Variable* v;
+            PlanRepository::MapType<Variable>::iterator vit = rep->_variables.find(id);
+            if(vit != rep->variables.end()) {
+                v = *vit;
+            } else {
+                v = new Variable(id,s,"Template");
+                rep_->variables.emplace(id,v);
+            }
+            q->_templateVars.push_back(v);
+        }
+    }
 }
 
 void ModelFactory::removeRedundancy() {

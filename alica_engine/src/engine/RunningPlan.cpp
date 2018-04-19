@@ -461,9 +461,9 @@ void RunningPlan::setRobotAvail(const supplementary::AgentID* robot) {
     _robotsAvail.push_back(robot);
 }
 
-void RunningPlan::setRobotUnAvail(const supplementary::AgentID* robot) {
-    std::remove_if(_robotsAvail.begin(), _robotsAvail.end(),
-            [&robot](const supplementary::AgentID* id) { return *robot == *id; });
+void RunningPlan::setRobotUnAvail(AgentIDPtr robot) {
+    _robotsAvail.erase(std::remove_if(_robotsAvail.begin(), _robotsAvail.end(),
+            [&robot](AgentIDPtr id) { return *robot == *id; }),_robotsAvail.end());
 }
 
 /**

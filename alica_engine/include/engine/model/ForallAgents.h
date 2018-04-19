@@ -21,8 +21,8 @@ class ForallAgents : public Quantifier {
 public:
     ForallAgents(int64_t id = 0);
     virtual ~ForallAgents();
-    virtual std::shared_ptr<std::list<VariableSet>> getDomainVariables(
-            std::shared_ptr<RunningPlan>& p, AgentSet& o_agentsInScope) const override;
+    virtual bool isAgentUnderScope(AgentIdPtr id, std::shared_ptr<RunningPlan>& rp) const override;
+    virtual bool addDomainVariables(std::shared_ptr<RunningPlan>& p, std::vector<AgentVariables>& io_agentVarsInScope) const override;
 };
 
 }  // namespace alica
