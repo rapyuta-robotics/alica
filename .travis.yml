@@ -58,7 +58,7 @@ before_script:
         sed -i -e \"s/rr-devel/$BRANCH/g\" /travis/dependencies.rosinstall ; 
         echo \"merging from \"$BRANCH ; 
         if wstool merge -k -y /travis/dependencies.rosinstall ; then 
-            echo "merging from rr-devel" ; 
+            echo \"merging from rr-devel\" ; 
             sed -i -e \"s/$BRANCH/rr-devel/g\" /travis/dependencies.rosinstall ; 
             wstool merge -k -y /travis/dependencies.rosinstall ; 
         fi ; 
