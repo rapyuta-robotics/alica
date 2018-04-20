@@ -15,28 +15,26 @@
 using namespace alica;
 
 namespace supplementary {
-	class SystemConfig;
+class SystemConfig;
 }
 
-namespace alicaRosProxy
-{
+namespace alicaRosProxy {
 
-class AlicaRosCommunication : public alica::IAlicaCommunication
-{
-  public:
-    AlicaRosCommunication(AlicaEngine *ae);
+class AlicaRosCommunication : public alica::IAlicaCommunication {
+public:
+    AlicaRosCommunication(AlicaEngine* ae);
     virtual ~AlicaRosCommunication();
 
     virtual void tick();
 
-    virtual void sendAllocationAuthority(AllocationAuthorityInfo &aai) const;
-    virtual void sendAlicaEngineInfo(AlicaEngineInfo &bi) const;
-    virtual void sendPlanTreeInfo(PlanTreeInfo &pti) const;
-    virtual void sendRoleSwitch(RoleSwitch &rs) const;
-    virtual void sendSyncReady(SyncReady &sr) const;
-    virtual void sendSyncTalk(SyncTalk &st) const;
-    virtual void sendSolverResult(SolverResult &sr) const;
-    virtual void sendLogMessage(int level, std::string &message) const;
+    virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai) const;
+    virtual void sendAlicaEngineInfo(AlicaEngineInfo& bi) const;
+    virtual void sendPlanTreeInfo(PlanTreeInfo& pti) const;
+    virtual void sendRoleSwitch(RoleSwitch& rs) const;
+    virtual void sendSyncReady(SyncReady& sr) const;
+    virtual void sendSyncTalk(SyncTalk& st) const;
+    virtual void sendSolverResult(SolverResult& sr) const;
+    virtual void sendLogMessage(int level, std::string& message) const;
 
     virtual void handleAllocationAuthorityRos(alica_msgs::AllocationAuthorityInfoPtr aai);
     virtual void handlePlanTreeInfoRos(alica_msgs::PlanTreeInfoPtr pti);
@@ -47,9 +45,9 @@ class AlicaRosCommunication : public alica::IAlicaCommunication
     virtual void startCommunication();
     virtual void stopCommunication();
 
-  protected:
-    ros::NodeHandle *rosNode;
-    ros::AsyncSpinner *spinner;
+protected:
+    ros::NodeHandle* rosNode;
+    ros::AsyncSpinner* spinner;
 
     ros::Publisher AlicaEngineInfoPublisher;
     ros::Publisher RoleSwitchPublisher;
@@ -79,8 +77,7 @@ class AlicaRosCommunication : public alica::IAlicaCommunication
 
     bool isRunning;
 
-    supplementary::SystemConfig *sc;
-
+    supplementary::SystemConfig* sc;
 };
 
 } /* namespace alicaRosProxy */

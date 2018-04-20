@@ -11,21 +11,21 @@
 #include <engine/USummand.h>
 
 namespace supplementary {
-	class AgentID;
+class AgentID;
 }
 
 namespace alica {
 
-class TestConstantValueSummand: public USummand {
+class TestConstantValueSummand : public USummand {
 public:
-	TestConstantValueSummand(double weight, string name, long id, double val);
-	virtual ~TestConstantValueSummand();
-	void cacheEvalData();
-	UtilityInterval eval(IAssignment* ass);
-	const supplementary::AgentID* robotId;
+    TestConstantValueSummand(double weight, string name, long id, double val);
+    virtual ~TestConstantValueSummand();
+    void cacheEvalData();
+    UtilityInterval eval(IAssignment* ass);
+    const supplementary::AgentID* robotId;
 
 protected:
-	double val;
+    double val;
 };
 
 } /* namespace alica */

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488634525" name="AttackPlan" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" destinationPath="Plans" priority="0.0" minCardinality="0" maxCardinality="2147483647">
-  <vars id="1403772778288" name="TestVar1" comment="This should be a double! :)" Type="double"/>
-  <vars id="1403772797469" name="VarTest2" comment="Another int variable" Type="int"/>
-  <vars id="1403772816953" name="NewVar" comment="Here is no type given !?" Type=""/>
-  <vars id="1403772834750" name="ABC" comment="..." Type="FOL"/>
+<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488634525" name="AttackPlan" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="0" maxCardinality="2147483647">
+  <vars id="1403772778288" name="TestVar1" comment="" Type="double"/>
+  <vars id="1403772797469" name="VarTest2" comment="" Type="int"/>
+  <vars id="1403772816953" name="NewVar" comment="" Type=""/>
+  <vars id="1403772834750" name="ABC" comment="" Type="FOL"/>
   <states id="1402488646220" name="Attack" comment="" entryPoint="1402488646221">
     <plans xsi:type="alica:Plan">Tackle.pml#1402489318663</plans>
     <plans xsi:type="alica:BehaviourConfiguration">Behaviour/AttackOpp.beh#1402489366699</plans>

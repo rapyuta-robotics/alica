@@ -8,110 +8,70 @@
 #include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/Behaviour.h"
 
-namespace alica
-{
+#include <sstream>
 
-	BehaviourConfiguration::BehaviourConfiguration()
-	{
-		this->eventDriven = false;
-		this->frequency = 30;
-		this->deferring = 0;
-		this->behaviour = nullptr;
-		parameters =  make_shared<map<string,string>>();
+namespace alica {
 
-	}
+BehaviourConfiguration::BehaviourConfiguration()
+        : _eventDriven(false)
+        , _frequency(30)
+        , _deferring(0)
+        , _behaviour(nullptr) {}
 
-	BehaviourConfiguration::BehaviourConfiguration(long id) :
-			BehaviourConfiguration()
-	{
-		this->id = id;
-	}
+BehaviourConfiguration::BehaviourConfiguration(int64_t id)
+        : AbstractPlan(id)
+        , _eventDriven(false)
+        , _frequency(30)
+        , _deferring(0)
+        , _behaviour(nullptr) {}
 
-	BehaviourConfiguration::~BehaviourConfiguration()
-	{
+BehaviourConfiguration::~BehaviourConfiguration() {}
 
-	}
+std::string BehaviourConfiguration::toString() const {
+    std::stringstream ss;
+    ss << "#BehaviourConfiguration: " << getName() << " " << getId() << std::endl;
+    ss << "\t Behaviour: ";
+    if (getBehaviour() != nullptr) {
+        ss << getBehaviour()->getName() << " " << getBehaviour()->getId();
+    }
+    ss << std::endl;
+    ss << "\t Deferring: " << getDeferring() << std::endl;
+    ss << "\t Frequency: " << getFrequency() << std::endl;
+    ss << "\t MasterPlan?: " << isMasterPlan() << std::endl;
+    ss << "\t Parameters: " << getParameters().size() << std::endl;
 
-	string BehaviourConfiguration::toString()
-	{
-		stringstream ss;
-		ss << "#BehaviourConfiguration: " << this->getName() << " " << this->getId() << endl;
-		ss << "\t Behaviour: ";
-		if (this->getBehaviour() != NULL)
-		{
-			ss << name << " " << this->getBehaviour()->getId();
-		}
-		ss << endl;
-		ss << "\t Deferring: " + to_string(this->getDeferring()) << endl;
-		ss << "\t Frequency: " + to_string(this->getFrequency()) << endl;
-		ss << "\t MasterPlan?: " + to_string(this->isMasterPlan()) << endl;
-		ss << "\t Parameters: " + to_string(this->getParameters()->size()) << endl;
+    if (!getParameters().empty()) {
+        for (BehaviourParameterMap::const_iterator iter = getParameters().begin(); iter != getParameters().end();
+                ++iter) {
+            const std::string& s = iter->first;
+            const std::string& val = iter->second;
+            ss << "\t" + s << " : " << val << std::endl;
+        }
+    }
+    ss << std::endl;
+    ss << "#EndBehaviourConfiguration" << std::endl;
 
-		if (this->getParameters()->size() != 0)
-		{
-			for (map<string, string>::const_iterator iter = this->getParameters()->begin();
-					iter != this->getParameters()->end(); iter++)
-			{
-				const string s = iter->first;
-				const string val = iter->second;
-				ss << "\t" + s << " : " << val << endl;
-			}
-		}
-		ss << endl;
-		ss << "#EndBehaviourConfiguration" << endl;
+    return ss.str();
+}
 
-		return ss.str();
-	}
+void BehaviourConfiguration::setDeferring(int deferring) {
+    _deferring = deferring;
+}
 
-	int BehaviourConfiguration::getDeferring() const
-	{
-		return deferring;
-	}
+void BehaviourConfiguration::setEventDriven(bool eventDriven) {
+    _eventDriven = eventDriven;
+}
 
-	void BehaviourConfiguration::setDeferring(int deferring)
-	{
-		this->deferring = deferring;
-	}
+void BehaviourConfiguration::setFrequency(int frequency) {
+    _frequency = frequency;
+}
 
-	bool BehaviourConfiguration::isEventDriven() const
-	{
-		return eventDriven;
-	}
+void BehaviourConfiguration::setParameters(const BehaviourParameterMap& parameters) {
+    _parameters = parameters;
+}
 
-	void BehaviourConfiguration::setEventDriven(bool eventDriven)
-	{
-		this->eventDriven = eventDriven;
-	}
+void BehaviourConfiguration::setBehaviour(const Behaviour* behaviour) {
+    _behaviour = behaviour;
+}
 
-	int BehaviourConfiguration::getFrequency() const
-	{
-		return frequency;
-	}
-
-	void BehaviourConfiguration::setFrequency(int frequency)
-	{
-		this->frequency = frequency;
-	}
-
-	shared_ptr<map<string,string>> BehaviourConfiguration::getParameters()
-	{
-		return parameters;
-	}
-
-	void BehaviourConfiguration::setParameters(shared_ptr<map<string,string>> parameters)
-	{
-		this->parameters = parameters;
-	}
-
-	const Behaviour* BehaviourConfiguration::getBehaviour() const
-	{
-		return behaviour;
-	}
-
-	void BehaviourConfiguration::setBehaviour(const Behaviour* behaviour)
-	{
-		this->behaviour = behaviour;
-	}
-
-} /* namespace Alica */
-
+}  // namespace alica

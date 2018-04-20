@@ -7,27 +7,14 @@
 
 #include "engine/model/CapabilityDefinitionSet.h"
 
-namespace alica
-{
+namespace alica {
 
-	CapabilityDefinitionSet::CapabilityDefinitionSet()
-	{
-	}
+CapabilityDefinitionSet::CapabilityDefinitionSet() {}
 
-	CapabilityDefinitionSet::~CapabilityDefinitionSet()
-	{
-	}
+CapabilityDefinitionSet::~CapabilityDefinitionSet() {}
 
-//================== Getter and Setter ===================================
+void CapabilityDefinitionSet::setCapabilities(const CapabilityGrp& capabilities) {
+    _capabilities = capabilities;
+}
 
-	list<Capability*>& CapabilityDefinitionSet::getCapabilities()
-	{
-		return capabilities;
-	}
-
-	void CapabilityDefinitionSet::setCapabilities(const list<Capability*>& capabilities)
-	{
-		this->capabilities = capabilities;
-	}
-
-} /* namespace Alica */
+}  // namespace alica

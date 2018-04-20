@@ -8,15 +8,13 @@
 #ifndef SOLVERTERM_H_
 #define SOLVERTERM_H_
 
-namespace alica
-{
+namespace alica {
 
-	class SolverTerm
-	{
-	public:
-		SolverTerm();
-		virtual ~SolverTerm();
-	};
+class SolverTerm {
+public:
+    SolverTerm();
+    virtual ~SolverTerm();
+};
 
 } /* namespace alica */
 

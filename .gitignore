@@ -43,6 +43,8 @@ local.properties
 # External tool builders
 .externalToolBuilders/ 
 
+# visual studio code
+.vscode/
 
 # system backup files from several editors
 *.swp
@@ -61,7 +63,7 @@ config.status
 *.la
 *.lo
 
-# K-Develop Proejct files
+# K-Develop Project files
 *.kdev4
 *.kdev4/
 

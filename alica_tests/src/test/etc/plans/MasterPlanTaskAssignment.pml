@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1407152758497" name="MasterPlanTaskAssignment" comment="" masterPlan="true" utilityFunction="" utilityThreshold="0.1" destinationPath="Plans" priority="0.0" minCardinality="2" maxCardinality="2147483647">
+<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1407152758497" name="MasterPlanTaskAssignment" comment="" masterPlan="true" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="2" maxCardinality="2147483647">
   <states id="1407152758498" name="AttackFirst" comment="" entryPoint="1407152758499">
     <plans xsi:type="alica:Plan">PlanOne.pml#1407153611768</plans>
     <plans xsi:type="alica:PlanType">Attack.pty#1407153314946</plans>

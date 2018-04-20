@@ -10,16 +10,14 @@
 
 using namespace std;
 
-namespace alica
-{
-	class RunningPlan;
+namespace alica {
+class RunningPlan;
 
-	class IPlanTreeVisitor
-	{
-	public:
-		virtual ~IPlanTreeVisitor() {}
-		virtual void visit(shared_ptr<RunningPlan> r) = 0;
-	};
+class IPlanTreeVisitor {
+public:
+    virtual ~IPlanTreeVisitor() {}
+    virtual void visit(shared_ptr<RunningPlan> r) = 0;
+};
 
 } /* namespace alica */
 

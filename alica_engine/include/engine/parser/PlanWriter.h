@@ -5,95 +5,88 @@
  *      Author: Stefan Jakob
  */
 
-#ifndef PLANWRITER_H_
-#define PLANWRITER_H_
+#pragma once
+
+#include "engine/Types.h"
 
 #include <vector>
 #include <string>
 #include <typeinfo>
 
-using namespace std;
 namespace tinyxml2 {
-	class XMLElement;
-	class XMLDocument;
-	class XMLAttribute;
-}
+class XMLElement;
+class XMLDocument;
+class XMLAttribute;
+}  // namespace tinyxml2
 
+namespace alica {
 
-namespace alica
-{
+class PlanRepository;
+class Condition;
+class Parametrisation;
+class TaskRepository;
+class PostCondition;
+class PreCondition;
+class EntryPoint;
+class RoleSet;
+class AlicaEngine;
 
-	class PlanRepository;
-	class AlicaElement;
-	class Plan;
-	class State;
-	class Condition;
-	class Parametrisation;
-	class TaskRepository;
-	class PostCondition;
-	class PreCondition;
-	class SyncTransition;
-	class Transition;
-	class EntryPoint;
-	class RoleSet;
-	class AbstractPlan;
-	class AlicaEngine;
+/**
+ * The PlanWriter can be used to store generated plans.
+ */
+class PlanWriter {
+public:
+    PlanWriter(AlicaEngine* ae, PlanRepository* rep);
+    ~PlanWriter();
 
-	/**
-	 * The PlanWriter can be used to store generated plans.
-	 */
-	class PlanWriter
-	{
-	public:
-		PlanWriter(AlicaEngine* ae, PlanRepository* rep);
-		virtual ~PlanWriter();
-		void saveAllPlans();
-		void saveSinglePlan(Plan* p);
-		void saveSinglePlan(string directory, Plan* p);
-		void saveFileLoop();
-		tinyxml2::XMLDocument* createPlanXMLDocument(Plan* p);
-		void createPlanXMLNode(Plan* p, tinyxml2::XMLDocument* doc);
-		tinyxml2::XMLDocument* createRoleSetXMLDocument(RoleSet* r);
-		void saveRoleSet(RoleSet* r, string name);
-		void saveRoleSet(RoleSet* r, string directory, string name);
-		tinyxml2::XMLDocument* createTaskRepositoryXMLDocument(TaskRepository* tr);
-		void saveTaskRepository(TaskRepository* tr, string name);
-		void saveTaskRepository(TaskRepository* tr, string directory, string name);
-		string getTempPlanDir() ;
-		void setTempPlanDir(string directory);
-		string getConfigPath();
-		vector<AlicaElement*>& getPlansToSave();
+    const std::string& getTempPlanDir() const;
+    const std::string& getConfigPath() const;
+    const AlicaElementGrp& getPlansToSave() const;
 
+    void saveAllPlans();
+    void saveFileLoop();
+    void saveSinglePlan(const Plan* p);
+    void saveSinglePlan(std::string directory, const Plan* p);
+    void saveRoleSet(const RoleSet* r, std::string name);
+    void saveRoleSet(const RoleSet* r, std::string directory, std::string name);
+    void saveTaskRepository(const TaskRepository* tr, std::string name);
+    void saveTaskRepository(const TaskRepository* tr, std::string directory, std::string name);
+    void setTempPlanDir(const std::string& directory);
+    void createPlanXMLNode(const Plan* p, tinyxml2::XMLDocument* doc);
 
-	private:
-		PlanRepository* rep;
-		void setPlansToSave(vector<AlicaElement*>& plansToSave);
-		string currentFile;
-		void addConditionChildren(Condition* c,tinyxml2::XMLElement* xn, tinyxml2::XMLDocument* doc);
-		tinyxml2::XMLElement* createStateXMLNode(State* s, tinyxml2::XMLDocument* doc);
-		tinyxml2::XMLElement* createParametrisationXMLNode(Parametrisation* p, tinyxml2::XMLDocument* doc);
-		tinyxml2::XMLElement* createResultXMLNode(PostCondition* r, tinyxml2::XMLDocument* doc);
-		tinyxml2::XMLElement* createPreConditionXMLNode(PreCondition* c, tinyxml2::XMLDocument* doc);
-		tinyxml2::XMLElement* createSynchronisationXMLNode(SyncTransition* s, tinyxml2::XMLDocument* doc);
-		tinyxml2::XMLElement* createTransitionXMLNode(Transition* t, tinyxml2::XMLDocument* doc);
-		tinyxml2::XMLElement* createEntryPointXMLNode(EntryPoint* e, tinyxml2::XMLDocument* doc);
-		void addPlanElementAttributes(AlicaElement* p, tinyxml2::XMLElement* x);
-//		tinyxml2::XMLAttribute* getXsiTypeAttribute(string type, tinyxml2::XMLDocument* doc);
-		string getRelativeFileName(string file);
-		string getRelativeFileName(AbstractPlan* p);
-		void createRoleSet(RoleSet* r, tinyxml2::XMLDocument* doc);
-		void createTaskRepository(TaskRepository* tr, tinyxml2::XMLDocument* doc);
-		static int objectCounter;
+    tinyxml2::XMLDocument* createPlanXMLDocument(const Plan* p);
+    tinyxml2::XMLDocument* createRoleSetXMLDocument(const RoleSet* r);
+    tinyxml2::XMLDocument* createTaskRepositoryXMLDocument(const TaskRepository* tr);
 
+private:
+    PlanRepository* rep;
+    std::string currentFile;
+    static int objectCounter;
 
-	protected:
-		AlicaEngine* ae;
-		string tempPlanDir;
-		string configPath;
-		vector<AlicaElement*> plansToSave;
-		vector<AlicaElement*> plansSaved;
-	};
+    std::string getRelativeFileName(std::string file);
+    std::string getRelativeFileName(const AbstractPlan* p);
+
+    void setPlansToSave(const AlicaElementGrp& plansToSave);
+    void addConditionChildren(const Condition* c, tinyxml2::XMLElement* xn, tinyxml2::XMLDocument* doc);
+    void addPlanElementAttributes(const AlicaElement* p, tinyxml2::XMLElement* x);
+    //		tinyxml2::XMLAttribute* getXsiTypeAttribute(string type, tinyxml2::XMLDocument* doc);
+    void createRoleSet(const RoleSet* r, tinyxml2::XMLDocument* doc);
+    void createTaskRepository(const TaskRepository* tr, tinyxml2::XMLDocument* doc);
+
+    tinyxml2::XMLElement* createStateXMLNode(const State* s, tinyxml2::XMLDocument* doc);
+    tinyxml2::XMLElement* createParametrisationXMLNode(const Parametrisation* p, tinyxml2::XMLDocument* doc);
+    tinyxml2::XMLElement* createResultXMLNode(const PostCondition* r, tinyxml2::XMLDocument* doc);
+    tinyxml2::XMLElement* createPreConditionXMLNode(const PreCondition* c, tinyxml2::XMLDocument* doc);
+    tinyxml2::XMLElement* createSynchronisationXMLNode(const SyncTransition* s, tinyxml2::XMLDocument* doc);
+    tinyxml2::XMLElement* createTransitionXMLNode(const Transition* t, tinyxml2::XMLDocument* doc);
+    tinyxml2::XMLElement* createEntryPointXMLNode(const EntryPoint* e, tinyxml2::XMLDocument* doc);
+
+protected:
+    AlicaEngine* ae;
+    std::string tempPlanDir;
+    std::string configPath;
+    AlicaElementGrp plansToSave;
+    AlicaElementGrp plansSaved;
+};
 
 } /* namespace alica */
-
-#endif /* PLANWRITER_H_ */
