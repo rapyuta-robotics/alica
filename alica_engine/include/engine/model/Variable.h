@@ -5,36 +5,35 @@
 
 #include <memory>
 #include <string>
+#include <iostream>
 
-namespace alica
-{
+namespace alica {
+class ModelFactory;
 /**
  * A variable is constraint by conditions, feasible values can be queried using a ConstraintQuery.
  */
-class Variable : public AlicaElement
-{
-  public:
+class Variable : public AlicaElement {
+public:
     Variable();
-    Variable(std::shared_ptr<SolverVariable> v);
-    Variable(long id, std::string name, std::string type);
+    Variable(const std::shared_ptr<SolverVariable>& v);
+    Variable(int64_t id, const std::string& name, const std::string& type);
     virtual ~Variable();
 
-    std::string toString();
+    std::string toString() const override;
 
-    std::string getType();
-    void setType(std::string type);
-    std::shared_ptr<SolverVariable> getSolverVar();
-    void setSolverVar(std::shared_ptr<SolverVariable> solverVar);
-    friend std::ostream &operator<<(std::ostream &os, const Variable &variable)
-    {
-        return os << variable.name << "(" << variable.id << ")";
+    const std::string& getType() const { return _type; }
+    std::shared_ptr<SolverVariable> getSolverVar() const { return _solverVar; }
+
+    friend std::ostream& operator<<(std::ostream& os, const Variable& variable) {
+        return os << variable.getName() << "(" << variable.getId() << ")";
     }
+    void setSolverVar(const std::shared_ptr<SolverVariable>& solverVar) const;
 
-  private:
-    std::string type;
-
-  protected:
-    std::shared_ptr<SolverVariable> solverVar;
+private:
+    friend ModelFactory;
+    void setType(const std::string& type);
+    mutable std::shared_ptr<SolverVariable> _solverVar;  // TODO: move out of here
+    std::string _type;
 };
 
 } /* namespace alica */

@@ -12,19 +12,17 @@
 
 using namespace std;
 
-namespace alica
-{
-	class Plan;
-	class UtilityFunction;
+namespace alica {
+class Plan;
+class UtilityFunction;
 
-	class BasicUtilityFunction
-	{
-	public:
-		BasicUtilityFunction();
-		virtual ~BasicUtilityFunction();
+class BasicUtilityFunction {
+public:
+    BasicUtilityFunction();
+    virtual ~BasicUtilityFunction();
 
-		virtual shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan) = 0;
-	};
+    virtual shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan) = 0;
+};
 
 } /* namespace alica */
 

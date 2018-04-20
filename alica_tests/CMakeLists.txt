@@ -10,15 +10,15 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 find_package(catkin REQUIRED COMPONENTS 
-    roscpp 
-    system_config 
-    fsystem 
-    autodiff 
-    constraintsolver 
-    event_handling 
+    roscpp
+    system_config
+    fsystem
+    autodiff
+    constraintsolver
+    event_handling
     agent_id
-    alica_engine 
-    alica_ros_proxy 
+    alica_engine
+    alica_ros_proxy
     alica_dummy_proxy
 )
 

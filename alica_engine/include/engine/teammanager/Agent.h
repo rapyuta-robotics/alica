@@ -1,5 +1,7 @@
 #pragma once
 
+#include "engine/collections/RobotProperties.h"
+#include "engine/collections/RobotEngineData.h"
 #include "engine/IAlicaClock.h"
 
 #include <string>
@@ -7,15 +9,12 @@
 #include <list>
 
 namespace supplementary {
-	class AgentID;
+class AgentID;
 }
 
-namespace alica
-{
+namespace alica {
 
 class AlicaEngine;
-class RobotProperties;
-class RobotEngineData;
 class TeamManager;
 class TeamObserver;
 class AbstractPlan;
@@ -23,43 +22,47 @@ class EntryPoint;
 class Variable;
 class SuccessMarks;
 
-class Agent
-{
+class Agent {
     // allows the TeamManager to call setTimeLastMsgReceived(..)
     friend ::alica::TeamManager;
     friend ::alica::TeamObserver;
 
-  public:
-    virtual ~Agent();
+public:
+    ~Agent() {
+        delete _properties;
+        delete _engineData;
+    }
 
-    const supplementary::AgentID* getID() const;
-    const std::string& getName() const;
-    const RobotProperties* getProperties() const;
-    const RobotEngineData* getEngineData() const;
-    bool isActive() const;
+    const supplementary::AgentID* getID() const { return _id; }
+    const std::string& getName() const { return _name; }
+    const RobotProperties* getProperties() const { return _properties; }
+    const RobotEngineData* getEngineData() const { return _engineData; }
+    bool isActive() const { return _active; }
+    bool isIgnored() const { return _ignored; }
 
-  protected:
-    Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::AgentID *id);
-    Agent(const AlicaEngine *engine, AlicaTime timeout, const supplementary::AgentID *id, std::string name);
+protected:
+    Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id);
+    Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id, std::string name);
 
-    const supplementary::AgentID *id;
-    std::string name;
-    bool active;
-    bool local;
-    AlicaTime timeout;
-    AlicaTime timeLastMsgReceived;
-    RobotProperties *properties;
-    RobotEngineData *engineData;
+    const AlicaEngine* _engine;
+    const supplementary::AgentID* _id;
+    std::string _name;
+    bool _active;
+    bool _ignored;
+    bool _local;
+    AlicaTime _timeout;
+    AlicaTime _timeLastMsgReceived;
+    RobotProperties* _properties;
+    RobotEngineData* _engineData;
 
     void setLocal(bool local);
-    void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived);
-    void setSuccess(AbstractPlan* plan, EntryPoint* entryPoint);
+    void setIgnored(const bool ignored) { _ignored = ignored; }
+    void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived) { _timeLastMsgReceived = timeLastMsgReceived; }
+    void setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint);
     void setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks);
-    Variable* getDomainVariable(std::string sort);
-    std::shared_ptr<std::list<EntryPoint*>> getSucceededEntryPoints(AbstractPlan* plan) const;
+    const Variable* getDomainVariable(const std::string& sort) const;
+    std::shared_ptr<std::list<const EntryPoint*>> getSucceededEntryPoints(const AbstractPlan* plan) const;
     bool update();
-
-    const AlicaEngine *engine;
 };
 
 } /* namespace alica */

@@ -8,38 +8,37 @@
 #ifndef PLANTYPE_H_
 #define PLANTYPE_H_
 
-
 #include <string>
 #include <sstream>
 #include <list>
 
 #include "AbstractPlan.h"
+#include "engine/Types.h"
 
-using namespace std;
-namespace alica
-{
-	class Plan;
-	class Parametrisation;
+namespace alica {
+class Plan;
+class Parametrisation;
+class ModelFactory;
 
-	class PlanType : public AbstractPlan
-	{
-	public:
-		PlanType();
-		virtual ~PlanType();
+class PlanType : public AbstractPlan {
+public:
+    PlanType();
+    virtual ~PlanType();
 
-		const virtual string& getFileName() const;
-		string toString();
+    std::string toString() const override;
 
-		list<Parametrisation*>& getParametrisation();
-		void setParametrisation(const list<Parametrisation*> parametrisation);
-		list<Plan*>& getPlans() ;
-		void setPlans(const list<Plan*>& plans);
+    const ParametrisationGrp& getParametrisation() const { return _parametrisation; }
+    const PlanGrp& getPlans() const { return _plans; }
 
-	protected:
-		list<Plan*> plans;
-		list<Parametrisation*> parametrisation;
-	};
+private:
+    friend ModelFactory;
+    void setParametrisation(const ParametrisationGrp& parametrisation);
+    void setPlans(const PlanGrp& plans);
 
-} /* namespace Alica */
+    PlanGrp _plans;
+    ParametrisationGrp _parametrisation;
+};
+
+}  // namespace alica
 
 #endif /* PLANTYPE_H_ */

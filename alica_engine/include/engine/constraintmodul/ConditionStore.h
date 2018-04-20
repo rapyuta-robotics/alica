@@ -5,38 +5,29 @@
 #include <vector>
 #include <mutex>
 #include <memory>
-#include <algorithm>
 
-namespace alica
-{
-	class Variable;
-	class Condition;
-	class Query;
-	class RunningPlan;
+namespace alica {
+class Variable;
+class Condition;
+class Query;
+class RunningPlan;
 
-	using std::shared_ptr;
-	using std::list;
-	using std::map;
-	using std::vector;
-	using std::mutex;
+/**
+ * Holds information about active constraints in the corresponding RunningPlan
+ */
+class ConditionStore {
+public:
+    ConditionStore();
+    virtual ~ConditionStore();
+    void clear();
+    void addCondition(const Condition* con);
+    void removeCondition(const Condition* con);
 
-	/**
-	 * Holds information about active constraints in the corresponding RunningPlan
-	 */
-	class ConditionStore
-	{
-	public:
-		ConditionStore();
-		virtual ~ConditionStore();
-		void clear();
-		void addCondition(Condition* con);
-		void removeCondition(Condition* con);
+    void acceptQuery(Query& query, std::shared_ptr<RunningPlan> rp) const;
+    std::list<const Condition*> activeConditions;
+    std::map<const Variable*, std::shared_ptr<std::vector<const Condition*>>> activeVar2CondMap;
 
-		void acceptQuery(Query& query, shared_ptr<RunningPlan> rp);
-		list<Condition*> activeConditions;
-		map<Variable*, shared_ptr<vector<Condition*>> > activeVar2CondMap;
+    mutable std::mutex mtx;
+};
 
-		mutex mtx;
-	};
-
-} /* namespace supplementary */
+}  // namespace alica

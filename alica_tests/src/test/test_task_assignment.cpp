@@ -26,76 +26,70 @@
 #include <ros/ros.h>
 
 class StillClock : public alica::IAlicaClock {
-    virtual alica::AlicaTime now() override { return 555;}
-    virtual void sleep(long us) override { std::this_thread::sleep_for(std::chrono::microseconds(us));}
+    virtual alica::AlicaTime now() override { return 555; }
+    virtual void sleep(long us) override { std::this_thread::sleep_for(std::chrono::microseconds(us)); }
 };
 
-
-class TaskAssignmentTest : public ::testing::Test
-{
+class TaskAssignmentTest : public ::testing::Test {
 protected:
-	alica::AlicaEngine* ae;
-	supplementary::SystemConfig* sc;
-	alica::BehaviourCreator* bc;
-	alica::ConditionCreator* cc;
-	alica::UtilityFunctionCreator* uc;
-	alica::ConstraintCreator* crc;
+    alica::AlicaEngine* ae;
+    supplementary::SystemConfig* sc;
+    alica::BehaviourCreator* bc;
+    alica::ConditionCreator* cc;
+    alica::UtilityFunctionCreator* uc;
+    alica::ConstraintCreator* crc;
 
-	virtual void SetUp()
-	{
-		// determine the path to the test config
+    virtual void SetUp() {
+        // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
-        nh.param<std::string>("/rootPath",path,".");
+        nh.param<std::string>("/rootPath", path, ".");
 
-		// bring up the SystemConfig with the corresponding path
-		sc = supplementary::SystemConfig::getInstance();
-		sc->setRootPath(path);
-		sc->setConfigPath(path + "/etc");
-		cout << sc->getConfigPath() << endl;
+        // bring up the SystemConfig with the corresponding path
+        sc = supplementary::SystemConfig::getInstance();
+        sc->setRootPath(path);
+        sc->setConfigPath(path + "/etc");
+        cout << sc->getConfigPath() << endl;
 
-		sc->setHostname("nase");
-		ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()),"RolesetTA", "MasterPlanTaskAssignment", ".", false);
-		bc = new alica::BehaviourCreator();
-		cc = new alica::ConditionCreator();
-		uc = new alica::UtilityFunctionCreator();
-		crc = new alica::ConstraintCreator();
-		ae->setIAlicaClock(new StillClock());
-		ae->init(bc, cc, uc, crc);
-	}
+        sc->setHostname("nase");
+        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
+                "MasterPlanTaskAssignment", ".", false);
+        bc = new alica::BehaviourCreator();
+        cc = new alica::ConditionCreator();
+        uc = new alica::UtilityFunctionCreator();
+        crc = new alica::ConstraintCreator();
+        ae->setIAlicaClock(new StillClock());
+        ae->init(bc, cc, uc, crc);
+    }
 
-	virtual void TearDown()
-	{
-		ae->shutdown();
-		sc->shutdown();
-		delete bc;
-		delete cc;
-		delete uc;
-		delete crc;
-		delete ae->getIAlicaClock();
-	}
+    virtual void TearDown() {
+        ae->shutdown();
+        sc->shutdown();
+        delete bc;
+        delete cc;
+        delete uc;
+        delete crc;
+        delete ae->getIAlicaClock();
+    }
 };
 
-TEST_F(TaskAssignmentTest, constructTaskAssignment)
-{
-	// fake a list of existing robots
-	auto robots = make_shared<vector<const supplementary::AgentID* > >();
-	for (int number = 8; number <= 11; number++)
-	{
-		const supplementary::AgentID* agentID =  ae->getID<int>(number);
-		robots->push_back(agentID);
+TEST_F(TaskAssignmentTest, constructTaskAssignment) {
+    // fake a list of existing robots
+    alica::AgentGrp robots;
+    for (int number = 8; number <= 11; number++) {
+        const supplementary::AgentID* agentID = ae->getID<int>(number);
+        robots.push_back(agentID);
         ae->getTeamManager()->setTimeLastMsgReceived(agentID, ae->getIAlicaClock()->now());
-	}
+    }
     ae->getTeamObserver()->tick(nullptr);
     ae->getRoleAssignment()->tick();
-	// fake inform the team observer about roles of none existing robots
-	
-	auto planMap = ae->getPlanRepository()->getPlans();
-	auto rp = make_shared<alica::RunningPlan>(ae, (*planMap.find(1407152758497)).second);
-	list<alica::AbstractPlan*>* planList = new list<alica::AbstractPlan*>();
-	planList->push_back((*planMap.find(1407152758497)).second);
-	alica::PlanSelector* ps = ae->getPlanSelector();
-	auto plans = ps->getPlansForState(rp, planList, robots);
-    EXPECT_EQ(plans->size(),1);
-}
+    // fake inform the team observer about roles of none existing robots
 
+    const alica::PlanRepository::Accessor<alica::Plan>& planMap = ae->getPlanRepository()->getPlans();
+    auto rp = make_shared<alica::RunningPlan>(ae, planMap.find(1407152758497));
+    alica::AbstractPlanGrp inputPlans;
+    inputPlans.push_back(planMap.find(1407152758497));
+    alica::PlanSelector* ps = ae->getPlanSelector();
+    auto plans = ps->getPlansForState(rp, inputPlans, robots);
+    EXPECT_EQ(plans->size(), 1);
+}

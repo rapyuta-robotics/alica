@@ -1,41 +1,44 @@
 #pragma once
 
-#include <stdio.h>
 #include <string>
-#include <sstream>
-#include <iostream>
+#include <stdint.h>
 
-namespace alica
-{
+namespace alica {
+class ModelFactory;
+/**
+ * Base class of all model elements
+ */
+class AlicaElement {
+public:
+    AlicaElement();
+    AlicaElement(int64_t id);
+    AlicaElement(int64_t id, const std::string& name);
+    virtual ~AlicaElement();
 
-	/**
-	 * Base class of all model elements
-	 */
-	class AlicaElement
-	{
-	public:
-		AlicaElement();
-		virtual ~AlicaElement();
+    const std::string& getName() const { return _name; }
 
-		void setName(std::string name);
-		std::string getName() const;
-		void setComment(std::string comment);
-		std::string getComment();
-		long getId() const;
-		void setId(long id);
+    int64_t getId() const { return _id; }
 
-		virtual std::string toString() const;
+    virtual std::string toString() const;
 
-	protected:
-		/**
-		 * This element's unique id
-		 */
-		long id;
-		/**
-		 * This element's descriptive name.
-		 */
-		std::string name;
-		std::string comment;
-	};
+    AlicaElement(const AlicaElement&) = delete;
+    AlicaElement(AlicaElement&&) = delete;
+    AlicaElement& operator=(const AlicaElement&) = delete;
+    AlicaElement& operator=(AlicaElement&&) = delete;
 
-} /* namespace Alica */
+private:
+    friend ModelFactory;
+    void setId(int64_t id);
+    void setName(const std::string& name);
+
+    /**
+     * This element's unique id
+     */
+    int64_t _id;
+    /**
+     * This element's descriptive name.
+     */
+    std::string _name;
+};
+
+}  // namespace alica

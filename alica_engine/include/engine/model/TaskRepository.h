@@ -8,37 +8,31 @@
 #ifndef TASKREPOSITORY_H_
 #define TASKREPOSITORY_H_
 
-
 #include <string>
-#include <list>
 
 #include "AlicaElement.h"
+#include <engine/Types.h>
 
-using namespace std;
-namespace alica
-{
-	class Task;
+namespace alica {
 
-	class TaskRepository : public AlicaElement
-	{
-	public:
-		TaskRepository();
-		virtual ~TaskRepository();
-		long getDefaultTask() const;
-		void setDefaultTask(long defaultTask);
-		string getFileName();
-		void setFileName(string fileName);
-		list<Task*>& getTasks();
+class TaskRepository : public AlicaElement {
+public:
+    TaskRepository();
+    virtual ~TaskRepository();
+    int64_t getDefaultTask() const { return _defaultTask; }
+    const TaskGrp& getTasks() const { return _tasks; }
+    std::string getFileName() const;
 
-	private:
-		void setTasks(const list<Task*>& tasks);
+private:
+    friend ModelFactory;
+    void setTasks(const TaskGrp& tasks);
+    void setDefaultTask(int64_t defaultTask);
+    void setFileName(const std::string& fileName);
+    TaskGrp _tasks;
+    int64_t _defaultTask;
+    std::string _fileName;
+};
 
-	protected:
-		string fileName;
-		list<Task*> tasks;
-		long defaultTask;
-	};
-
-} /* namespace Alica */
+}  // namespace alica
 
 #endif /* TASKREPOSITORY_H_ */

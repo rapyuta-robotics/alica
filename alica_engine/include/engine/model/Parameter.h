@@ -4,22 +4,20 @@
 
 #include <engine/model/AlicaElement.h>
 
-namespace alica
-{
+namespace alica {
 
-	class Parameter : public AlicaElement
-	{
-	public:
-		Parameter();
-		virtual ~Parameter();
-		std::string getKey();
-		void setKey(std::string key);
-		std::string getValue();
-		void setValue(std::string value);
+class Parameter : public AlicaElement {
+public:
+    Parameter();
+    virtual ~Parameter();
+    const std::string& getKey() const { return _key; }
+    void setKey(const std::string& key) { _key = key; }
+    const std::string& getValue() const { return _value; }
+    void setValue(const std::string& value) { _value = value; }
 
-	protected:
-		std::string key;
-		std::string value;
-	};
+protected:
+    std::string _key;
+    std::string _value;
+};
 
 } /* namespace alica */

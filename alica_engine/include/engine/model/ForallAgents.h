@@ -2,33 +2,27 @@
 
 #include "Quantifier.h"
 #include "supplementary/AgentID.h"
+#include <engine/Types.h>
 
 #include <list>
 #include <memory>
 #include <vector>
 
-namespace alica
-{
+namespace alica {
 
 class RunningPlan;
 class Variable;
-class AlicaEngine;
 class SolverTerm;
 
 /**
  * A quantifier associated with agents, i.e., the domain identifiers of this quantifier refer to properties of an agent
  */
-class ForallAgents : public Quantifier
-{
-  public:
-    ForallAgents(AlicaEngine *ae, long id = 0);
+class ForallAgents : public Quantifier {
+public:
+    ForallAgents(int64_t id = 0);
     virtual ~ForallAgents();
-    std::shared_ptr<std::list<std::vector<Variable *>>>
-    getDomainVariables(std::shared_ptr<RunningPlan> &p,
-                       std::shared_ptr<std::vector<const supplementary::AgentID *>> &agentsInScope);
-
-  protected:
-    AlicaEngine *ae;
+    virtual std::shared_ptr<std::list<VariableGrp>> getDomainVariables(
+            std::shared_ptr<RunningPlan>& p, AgentGrp& o_agentsInScope) const override;
 };
 
-} /* namespace Alica */
+}  // namespace alica

@@ -4,66 +4,39 @@
  *  Created on: Mar 8, 2014
  *      Author: Stephan Opfer
  */
-
+#include <sstream>
 #include "engine/model/RoleSet.h"
 
-namespace alica
-{
+namespace alica {
 
-	RoleSet::RoleSet()
-	{
-		this->usableWithPlanID = 0;
-		this->isDefault = false;
-	}
+RoleSet::RoleSet()
+        : _usableWithPlanID(0)
+        , _isDefault(false) {}
 
-	RoleSet::~RoleSet()
-	{
-	}
+RoleSet::~RoleSet() {}
 
-	string RoleSet::toString()
-	{
-		stringstream ss;
-		ss << "#RoleSet: " << this->name << " " << this->id << endl;
-		ss << "\t UsableWithPlanID: " << this->usableWithPlanID << endl;
-		ss << "\t Contains Mappings: " << this->roleTaskMappings.size() << endl;
-		for (RoleTaskMapping* rtm : this->roleTaskMappings)
-		{
-			ss << "\tRoleTaskMapping: " << rtm << endl;
-		}
-		ss << "#EndRoleSet" << endl;
-		return ss.str();
+std::string RoleSet::toString() const {
+    std::stringstream ss;
+    ss << "#RoleSet: " << getName() << " " << getId() << std::endl;
+    ss << "\t UsableWithPlanID: " << _usableWithPlanID << std::endl;
+    ss << "\t Contains Mappings: " << _roleTaskMappings.size() << std::endl;
+    for (const RoleTaskMapping* rtm : _roleTaskMappings) {
+        ss << "\tRoleTaskMapping: " << rtm << std::endl;
+    }
+    ss << "#EndRoleSet" << std::endl;
+    return ss.str();
+}
 
-	}
+void RoleSet::setIsDefault(bool isDefault) {
+    _isDefault = isDefault;
+}
 
-	bool RoleSet::isIsDefault() const
-	{
-		return isDefault;
-	}
+void RoleSet::setRoleTaskMappings(const std::vector<RoleTaskMapping*>& roleTaskMappings) {
+    _roleTaskMappings = roleTaskMappings;
+}
 
-	void RoleSet::setIsDefault(bool isDefault)
-	{
-		this->isDefault = isDefault;
-	}
+void RoleSet::setUsableWithPlanId(int64_t usableWithPlanId) {
+    _usableWithPlanID = usableWithPlanId;
+}
 
-	list<RoleTaskMapping*>& RoleSet::getRoleTaskMappings()
-	{
-		return roleTaskMappings;
-	}
-
-	void RoleSet::setRoleTaskMappings(const list<RoleTaskMapping*> roleTaskMappings)
-	{
-		this->roleTaskMappings = roleTaskMappings;
-	}
-
-	long RoleSet::getUsableWithPlanId() const
-	{
-		return usableWithPlanID;
-	}
-
-	void RoleSet::setUsableWithPlanId(long usableWithPlanId)
-	{
-		usableWithPlanID = usableWithPlanId;
-	}
-
-} /* namespace Alica */
-
+}  // namespace alica

@@ -8,75 +8,75 @@
 #ifndef PLAN_H_
 #define PLAN_H_
 
-
 #include <stddef.h>
 #include <string>
 #include <list>
-#include <map>
 
 #include "AbstractPlan.h"
+#include "engine/Types.h"
 
-using namespace std;
-namespace alica
-{
+namespace alica {
 
-	class EntryPoint;
-	class FailureState;
-	class SuccessState;
-	class PostCondition;
-	class State;
-	class SyncTransition;
-	class Transition;
+class EntryPoint;
+class FailureState;
+class SuccessState;
+class PostCondition;
+class State;
+class SyncTransition;
+class Transition;
+class ModelFactory;
+class ExpressionHandler;
+/**
+ * An ALICA plan
+ */
+class Plan : public AbstractPlan {
+public:
+    Plan(int64_t id = 0);
+    virtual ~Plan();
 
-	/**
-	 * An ALICA plan
-	 */
-	class Plan : public AbstractPlan
-	{
-	public:
+    const EntryPoint* getEntryPointTaskID(int64_t taskID) const;
+    const EntryPoint* getEntryPointByID(int64_t epID) const;
 
-		Plan(long id = 0);
-		virtual ~Plan();
+    const EntryPointGrp& getEntryPoints() const { return _entryPoints; }
 
-		virtual string toString() const;
-		EntryPoint* getEntryPointTaskID(long taskID);
+    const StateGrp& getStates() const { return _states; }
+    const FailureStateGrp& getFailureStates() const { return _failureStates; }
+    const SuccessStateGrp& getSuccessStates() const { return _successStates; }
 
-		const virtual string& getFileName() const;
-		map<long, EntryPoint*>& getEntryPoints() ;
-		void setEntryPoints(const map<long, EntryPoint*>& entryPoints);
-		list<FailureState*>& getFailureStates() ;
-		void setFailureStates(const list<FailureState*>& failurePoints);
-		int getMaxCardinality();
-		void setMaxCardinality(int maxCardinality = 0);
-		int getMinCardinality() ;
-		void setMinCardinality(int minCardinality = 0);
-		PostCondition* getPostCondition() ;
-		void setPostCondition(PostCondition* postCondition);
-		list<State*>& getStates();
-		void setStates(const list<State*>& states);
-		list<SuccessState*>& getSuccessStates() ;
-		void setSuccessStates(const list<SuccessState*>& succesPoints);
-		list<SyncTransition*>& getSyncTransitions() ;
-		void setSyncTransitions(const list<SyncTransition*>& syncTransitions);
-		list<Transition*>& getTransitions() ;
-		void setTransitions(const list<Transition*>& transitions);
-		string getDestinationPath();
-		void setDestinationPath(string destinationPath);
+    int getMaxCardinality() const { return _maxCardinality; }
+    int getMinCardinality() const { return _minCardinality; }
 
-	protected:
-		int minCardinality;
-		int maxCardinality;
-		map<long, EntryPoint*> entryPoints;
-		list<State*> states;
-		list<FailureState*> failureStates;
-		list<SuccessState*> successStates;
-		list<SyncTransition*> syncTransitions;
-		list<Transition*> transitions;
-		PostCondition* postCondition;
-		string destinationPath;
+    const PostCondition* getPostCondition() const { return _postCondition; }
 
-	};
+    const TransitionGrp& getTransitions() const { return _transitions; }
+    const SyncTransitionGrp& getSyncTransitions() const { return _syncTransitions; }
 
-} /* namespace Alica */
+
+
+private:
+    friend ModelFactory;
+    friend ExpressionHandler;  // TODO: get rid of this
+    void setEntryPoints(const EntryPointGrp& entryPoints);
+    void setFailureStates(const FailureStateGrp& failurePoints);
+    void setSuccessStates(const SuccessStateGrp& succesPoints);
+    void setMaxCardinality(int maxCardinality);
+    void setMinCardinality(int minCardinality);
+    void setPostCondition(const PostCondition* postCondition);
+    void setStates(const StateGrp& states);
+    void setSyncTransitions(const SyncTransitionGrp& syncTransitions);
+    void setTransitions(const TransitionGrp& transitions);
+
+    int _minCardinality;
+    int _maxCardinality;
+    EntryPointGrp _entryPoints;
+    StateGrp _states;
+    SuccessStateGrp _successStates;
+    FailureStateGrp _failureStates;
+    SyncTransitionGrp _syncTransitions;
+    TransitionGrp _transitions;
+    const PostCondition* _postCondition;
+};
+
+}  // namespace alica
 
 #endif /* PLAN_H_ */

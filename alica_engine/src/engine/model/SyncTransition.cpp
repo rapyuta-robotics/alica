@@ -9,97 +9,53 @@
 #include "engine/model/Plan.h"
 #include "engine/model/Transition.h"
 
-namespace alica
-{
+namespace alica {
 
-	SyncTransition::SyncTransition()
-	{
-		this->failOnSyncTimeOut = false;
-		this->syncTimeOut = 3000;
-		this->talkTimeOut = 30;
-		this->plan = nullptr;
-	}
+SyncTransition::SyncTransition()
+        : _failOnSyncTimeOut(false)
+        , _syncTimeOut(3000)
+        , _talkTimeOut(30)
+        , _plan(nullptr) {}
 
-	SyncTransition::~SyncTransition()
-	{
-	}
+SyncTransition::~SyncTransition() {}
 
-	string SyncTransition::toString()
-	{
-		stringstream ss;
-		ss << "#SyncTransition: " << this->name << " " << this->id << endl;
-		if(this->plan != NULL)
-		{
-			ss << "\t Plan: " << this->plan->getId() << " " << this->plan->getName() << endl;
-		}
-		ss << endl;
-		ss << "\t TalkTimeOut: " << this->talkTimeOut << endl;
-		ss << "\t SyncTimeOut: " << this->syncTimeOut << endl;
-		ss << "\t FailOnSyncTimeOut: " << this->failOnSyncTimeOut << endl;
-		ss << "\t InSync: " << this->inSync.size() << endl;
-		if(this->inSync.size() != 0)
-		{
-			for(Transition* t : this->inSync)
-			{
-				ss << "\t" << t->getId() << " " << t->getName() << endl;
-			}
-		}
-		ss << endl;
-		ss << "#EndSyncTransition" << endl;
-		return ss.str();
+std::string SyncTransition::toString() const {
+    std::stringstream ss;
+    ss << "#SyncTransition: " << getName() << " " << getId() << std::endl;
+    if (_plan != nullptr) {
+        ss << "\t Plan: " << _plan->getId() << " " << _plan->getName() << std::endl;
+    }
+    ss << std::endl;
+    ss << "\t TalkTimeOut: " << _talkTimeOut << std::endl;
+    ss << "\t SyncTimeOut: " << _syncTimeOut << std::endl;
+    ss << "\t FailOnSyncTimeOut: " << _failOnSyncTimeOut << std::endl;
+    ss << "\t InSync: " << _inSync.size() << endl;
+    for (const Transition* t : _inSync) {
+        ss << "\t" << t->getId() << " " << t->getName() << std::endl;
+    }
+    ss << std::endl;
+    ss << "#EndSyncTransition" << std::endl;
+    return ss.str();
+}
 
-	}
+void SyncTransition::setFailOnSyncTimeOut(bool failOnSyncTimeOut) {
+    _failOnSyncTimeOut = failOnSyncTimeOut;
+}
 
-	bool SyncTransition::isFailOnSyncTimeOut() const
-	{
-		return failOnSyncTimeOut;
-	}
+void SyncTransition::setSyncTimeOut(unsigned long syncTimeOut) {
+    _syncTimeOut = syncTimeOut;
+}
 
-	void SyncTransition::setFailOnSyncTimeOut(bool failOnSyncTimeOut)
-	{
-		this->failOnSyncTimeOut = failOnSyncTimeOut;
-	}
+void SyncTransition::setTalkTimeOut(unsigned long talkTimeOut) {
+    _talkTimeOut = talkTimeOut;
+}
 
-	unsigned long SyncTransition::getSyncTimeOut() const
-	{
-		return syncTimeOut;
-	}
+void SyncTransition::setPlan(const Plan* plan) {
+    _plan = plan;
+}
 
-	void SyncTransition::setSyncTimeOut(unsigned long syncTimeOut)
-	{
-		this->syncTimeOut = syncTimeOut;
-	}
+void SyncTransition::setInSync(const TransitionGrp& inSync) {
+    _inSync = inSync;
+}
 
-	unsigned long SyncTransition::getTalkTimeOut() const
-	{
-		return talkTimeOut;
-	}
-
-	void SyncTransition::setTalkTimeOut(unsigned long talkTimeOut)
-	{
-		this->talkTimeOut = talkTimeOut;
-	}
-
-	const Plan* SyncTransition::getPlan() const
-	{
-		return plan;
-	}
-
-	void SyncTransition::setPlan(Plan* plan)
-	{
-		this->plan = plan;
-	}
-
-	list<Transition*>& SyncTransition::getInSync()
-	{
-		return inSync;
-	}
-
-	void SyncTransition::setInSync(const list<Transition*>& inSync)
-	{
-		this->inSync = inSync;
-	}
-
-} /* namespace Alica */
-
-
+}  // namespace alica

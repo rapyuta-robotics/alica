@@ -8,70 +8,54 @@
 #include "engine/model/Capability.h"
 #include "engine/model/CapValue.h"
 
-namespace alica
-{
-	Capability::Capability()
-	{
-	}
+#include <iostream>
+#include <exception>
 
-	Capability::~Capability()
-	{
-	}
+namespace alica {
+Capability::Capability() {}
 
-	/**
-	 * Computes the similarity between two capability values.
-	 * @param roleVal Role value
-	 * @param robotVal Robot value
-	 * @return The value, ranges between 0 and 1.
-	 */
-	double Capability::similarityValue(CapValue* roleVal, CapValue* robotVal)
-	{
-		const int nCount = capValues.size();
+Capability::~Capability() {}
 
-		int rlIndex = -1;
-		int rbIndex = -1;
-		int index = 0;
+/**
+ * Computes the similarity between two capability values.
+ * @param roleVal Role value
+ * @param robotVal Robot value
+ * @return The value, ranges between 0 and 1.
+ */
+double Capability::similarityValue(const CapValue* roleVal, const CapValue* robotVal) const {
+    const int nCount = _capValues.size();
 
-		// determine the index of both given capability values
-		for (auto cap : capValues)
-		{
-			if (cap == roleVal)
-			{
-				rlIndex = index;
-			}
-			if (cap == robotVal)
-			{
-				rbIndex = index;
-			}
-			++index;
-		}
+    int rlIndex = -1;
+    int rbIndex = -1;
+    int index = 0;
 
-		if (rlIndex == -1)
-		{
-			cout << "Capability::similarityValue: Role not found!" << endl;
-			throw exception();
-		}
-		if (rbIndex == -1)
-		{
-			cout << "Capability::similarityValue: Robot not found!" << endl;
-			throw exception();
-		}
+    // determine the index of both given capability values
+    for (const CapValue* cap : _capValues) {
+        if (cap == roleVal) {
+            rlIndex = index;
+        }
+        if (cap == robotVal) {
+            rbIndex = index;
+        }
+        ++index;
+    }
+    // TODO: get rid of exceptions
+    if (rlIndex == -1) {
+        std::cout << "Capability::similarityValue: Role not found!" << std::endl;
+        throw std::exception();
+    }
+    if (rbIndex == -1) {
+        std::cout << "Capability::similarityValue: Robot not found!" << std::endl;
+        throw std::exception();
+    }
 
-		if (nCount == 1)
-		{
-			// we found both values and there is only one value, so both must be the same
-			return 1;
-		}
+    if (nCount == 1) {
+        // we found both values and there is only one value, so both must be the same
+        return 1;
+    }
 
-		// this won't work, in case of only one value (nCount=1), therefore extra handling above
-		return (nCount - 1 - abs(rlIndex - rbIndex)) / (nCount - 1);
-	}
-
-//====================== Getter and Setter ==============================
-
-	list<CapValue*>& Capability::getCapValues()
-	{
-		return capValues;
-	}
+    // this won't work, in case of only one value (nCount=1), therefore extra handling above
+    return (nCount - 1 - abs(rlIndex - rbIndex)) / (nCount - 1);
 }
 
+}  // namespace alica

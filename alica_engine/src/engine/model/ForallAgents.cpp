@@ -14,71 +14,45 @@
 #include "engine/teammanager/Agent.h"
 #include "engine/teammanager/TeamManager.h"
 
-namespace alica
-{
+namespace alica {
 
-ForallAgents::ForallAgents(AlicaEngine *ae, long id)
-    : Quantifier(id)
-{
-    this->ae = ae;
-}
+ForallAgents::ForallAgents(int64_t id)
+        : Quantifier(id) {}
 
-ForallAgents::~ForallAgents()
-{
-}
+ForallAgents::~ForallAgents() {}
 
 /**
  * Returns the <see cref="Variable"/>s currently associated with the agents occupying the scope of this quantifier.
  * @param plan A RunningPlan
  * @param agentsInScope A shared_ptr<vector<int> >
- * @return shared_ptr<list<vector<Variable*> > >
+ * @return shared_ptr<list<VariableGrp> >
  */
-shared_ptr<list<vector<Variable *>>>
-ForallAgents::getDomainVariables(shared_ptr<RunningPlan> &p,
-                                 shared_ptr<vector<const supplementary::AgentID *>> &agentsInScope)
-{
-    if (this->isScopeIsPlan())
-    {
-        if (p->getPlan() == this->getScopedPlan())
-        {
-            agentsInScope = p->getAssignment()->getAllRobotsSorted();
+shared_ptr<list<VariableGrp>> ForallAgents::getDomainVariables(
+        shared_ptr<RunningPlan>& p, AgentGrp& o_agentsInScope) const {
+    o_agentsInScope.clear();
+    if (isScopePlan()) {
+        if (p->getPlan() == getScopedPlan()) {
+            p->getAssignment()->getAllRobotsSorted(o_agentsInScope);
         }
+    } else if (isScopeEntryPoint()) {
+        p->getAssignment()->getRobotsWorkingSorted(getScopedEntryPoint(), o_agentsInScope);
+    } else if (isScopeState()) {
+        p->getAssignment()->getRobotStateMapping()->getRobotsInStateSorted(getScopedState(), o_agentsInScope);
     }
-    else if (this->isScopeIsEntryPoint())
-    {
-        agentsInScope = p->getAssignment()->getRobotsWorkingSorted(this->getScopedEntryPoint());
-    }
-    else if (this->isScopeIsState())
-    {
-        agentsInScope = p->getAssignment()->getRobotStateMapping()->getRobotsInStateSorted(this->getScopedState());
-    }
-    if (agentsInScope == nullptr)
-    {
+    if (o_agentsInScope.empty()) {
         return nullptr;
     }
-    auto ret = make_shared<list<vector<Variable *>>>();
-    auto tm = ae->getTeamManager();
-    for (auto &r : *(agentsInScope))
-    {
+    auto ret = make_shared<list<VariableGrp>>();
+    auto tm = p->getAlicaEngine()->getTeamManager();
+    for (auto& r : o_agentsInScope) {
         auto robotEngineData = tm->getAgentByID(r)->getEngineData();
 
-        vector<Variable *> terms;
-        for (auto identifier : this->getDomainIdentifiers())
-        {
+        VariableGrp terms;
+        for (auto identifier : this->getDomainIdentifiers()) {
             terms.push_back(robotEngineData->getDomainVariable(identifier));
         }
         ret->push_back(terms);
-
-//        vector<Variable *> terms = vector<Variable *>(this->getDomainIdentifiers().size());
-//        auto robotEngineData = tm->getAgentByID(r)->getEngineData();
-//        for (int i = 0; i < terms.size(); i++)
-//        {
-//            auto iter = this->getDomainIdentifiers().begin();
-//            advance(iter, i);
-//            terms[i] = robotEngineData->getDomainVariable(*iter);
-//        }
-//        ret->push_back(terms);
     }
     return ret;
 }
-} /* namespace Alica */
+}  // namespace alica
