@@ -5,21 +5,28 @@
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>
 
-namespace alica {
+namespace alica
+{
 
-namespace reasoner {
+namespace reasoner
+{
 
 DummySolver::DummySolver(AlicaEngine* ae)
-        : alica::ISolver(ae) {}
+    : alica::ISolver(ae)
+{
+}
 
-DummySolver::~DummySolver() {}
+DummySolver::~DummySolver()
+{
+}
 
-bool DummySolver::existsSolution(std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
+bool DummySolver::existsSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls)
+{
     return true;
 }
 
-bool DummySolver::getSolution(std::vector<Variable*>& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
-        std::vector<void*>& results) {
+bool DummySolver::getSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<void*>& results)
+{
     std::vector<std::shared_ptr<DummyVariable>> dummyVariables;
     dummyVariables.reserve(vars.size());
     for (auto variable : vars) {
@@ -63,7 +70,8 @@ bool DummySolver::getSolution(std::vector<Variable*>& vars, std::vector<std::sha
     return true;
 }
 
-std::shared_ptr<SolverVariable> DummySolver::createVariable(long representingVariableID) {
+std::shared_ptr<SolverVariable> DummySolver::createVariable(long representingVariableID)
+{
     return std::make_shared<DummyVariable>(representingVariableID);
 }
 
