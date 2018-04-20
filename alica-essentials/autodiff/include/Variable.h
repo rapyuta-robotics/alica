@@ -4,28 +4,26 @@
 
 #include "Term.h"
 
-#include <iostream>
+#include <string>
 #include <memory>
 
-namespace autodiff
-{
-	class Variable : public Term, public alica::SolverVariable
-	{
-	public:
-		double globalMin;
-		double globalMax;
+namespace autodiff {
+class Variable : public Term, public alica::SolverVariable {
+public:
+    double globalMin;
+    double globalMax;
 
-		Variable();
+    Variable();
 
-		int accept(std::shared_ptr<ITermVisitor> visitor);
+    int accept(std::shared_ptr<ITermVisitor> visitor);
 
-		std::shared_ptr<Term> aggregateConstants();
-		std::shared_ptr<Term> derivative(std::shared_ptr<Variable> v);
+    std::shared_ptr<Term> aggregateConstants();
+    std::shared_ptr<Term> derivative(std::shared_ptr<Variable> v);
 
-		std::string toString();
+    std::string toString() override;
 
-	private:
-		int ownId;
-		static int var_id;
-	};
+private:
+    int ownId;
+    static int var_id;
+};
 } /* namespace autodiff */

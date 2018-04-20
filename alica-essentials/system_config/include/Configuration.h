@@ -19,17 +19,14 @@ using namespace std;
 
 #include "ConfigNode.h"
 
-namespace supplementary
-{
-class Configuration
-{
-
-  protected:
+namespace supplementary {
+class Configuration {
+protected:
     static const char LIST_ELEMENT_SEPERATOR = ',';
     string filename;
-    void collect(ConfigNode *node, vector<string> *params, size_t offset, vector<ConfigNode *> *result);
-    void collectSections(ConfigNode *node, vector<string> *params, size_t offset, vector<ConfigNode *> *result);
-    string pathNotFound(vector<string> *params);
+    void collect(ConfigNode* node, vector<string>* params, size_t offset, vector<ConfigNode*>* result);
+    void collectSections(ConfigNode* node, vector<string>* params, size_t offset, vector<ConfigNode*>* result);
+    string pathNotFound(vector<string>* params);
 
     ConfigNodePtr configRoot;
 

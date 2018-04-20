@@ -14,100 +14,79 @@
 
 #include <iostream>
 
-namespace alica
-{
-	namespace reasoner
-	{
-		namespace cnsat
-		{
+namespace alica {
+namespace reasoner {
+namespace cnsat {
 
-			Var::Var(int index, bool prefSign)
-			{
-				this->index = index;
-				this->assignment = Assignment::UNASSIGNED;
-				this->locked = false;
-				this->preferedSign = prefSign;
-				this->activity = 0;
+Var::Var(int index, bool prefSign) {
+    this->index = index;
+    this->assignment = Assignment::UNASSIGNED;
+    this->locked = false;
+    this->preferedSign = prefSign;
+    this->activity = 0;
 
-				positiveRanges = nullptr;
-				negativeRanges = nullptr;
+    positiveRanges = nullptr;
+    negativeRanges = nullptr;
 
-				watchList = make_shared<vector<Watcher*> >();
-			}
+    watchList = make_shared<vector<Watcher*>>();
+}
 
-			Var::~Var()
-			{
+Var::~Var() {}
 
-			}
+shared_ptr<Clause> Var::getReason() {
+    return reason;
+}
 
-			shared_ptr<Clause> Var::getReason()
-			{
-				return reason;
-			}
+void Var::setReason(shared_ptr<Clause> reason) {
+    if (reason && reason != this->reason) {
+        for (shared_ptr<Lit> l : *reason->literals) {
+            if (l->var->assignment == Assignment::UNASSIGNED) {
+                cout << this->toString() << " " << l->var->toString();
+                reason->print();
+                cerr << "!!!!!";
+                throw "!!!!!";
+            }
+        }
+    }
+    this->reason = reason;
+}
 
-			void Var::setReason(shared_ptr<Clause> reason)
-			{
-				if (reason && reason != this->reason)
-				{
-					for (shared_ptr<Lit> l : *reason->literals)
-					{
-						if (l->var->assignment == Assignment::UNASSIGNED)
-						{
-							cout << this->toString() << " " << l->var->toString();
-							reason->print();
-							cerr << "!!!!!";
-							throw "!!!!!";
-						}
-					}
-				}
-				this->reason = reason;
-			}
+void Var::reset() {
+    if (locked) {
+        return;
+    }
+    this->reason = nullptr;
+    this->seen = false;
 
-			void Var::reset()
-			{
-				if (locked)
-				{
-					return;
-				}
-				this->reason = nullptr;
-				this->seen = false;
+    cout << "Var::reset() unass" << endl;
+    this->assignment = Assignment::UNASSIGNED;
 
-				cout << "Var::reset() unass" << endl;
-				this->assignment = Assignment::UNASSIGNED;
+    this->activity = 0;
+}
 
-				this->activity = 0;
-			}
+void Var::print() {
+    if (this->assignment == Assignment::FALSE) {
+        cout << "-";
+    } else if (this->assignment == Assignment::UNASSIGNED) {
+        cout << "o";
+    } else {
+        cout << "+";
+    }
+    cout << this->index;
+}
 
-			void Var::print()
-			{
-				if (this->assignment == Assignment::FALSE)
-				{
-					cout << "-";
-				}
-				else if (this->assignment == Assignment::UNASSIGNED)
-				{
-					cout << "o";
-				}
-				else
-				{
-					cout << "+";
-				}
-				cout << this->index;
-			}
+string Var::toString() {
+    string str;
+    if (this->assignment == Assignment::FALSE)
+        str.append("-");
+    else if (this->assignment == Assignment::TRUE)
+        str.append("+");
+    else
+        str.append("o");
+    str.append(to_string(this->index));
+    return str;
+}
 
-			string Var::toString()
-			{
-				string str;
-				if (this->assignment == Assignment::FALSE)
-					str.append("-");
-				else if (this->assignment == Assignment::TRUE)
-					str.append("+");
-				else
-					str.append("o");
-				str.append(to_string(this->index));
-				return str;
-			}
-
-		} /* namespace cnsat */
-	} /* namespace reasoner */
+} /* namespace cnsat */
+} /* namespace reasoner */
 } /* namespace alica */

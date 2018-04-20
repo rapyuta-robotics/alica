@@ -13,32 +13,26 @@
 
 using namespace std;
 
-namespace autodiff
-{
-	namespace compiled
-	{
-		struct InputEdge
-		{
-			int index;
-			double weight;
-		};
+namespace autodiff {
+namespace compiled {
+struct InputEdge {
+    int index;
+    double weight;
+};
 
-		class ITapeVisitor;
+class ITapeVisitor;
 
-		class TapeElement : public enable_shared_from_this<TapeElement>
-		{
-		public:
-			virtual ~TapeElement()
-			{
-			}
+class TapeElement : public enable_shared_from_this<TapeElement> {
+public:
+    virtual ~TapeElement() {}
 
-			double value;
-			double adjoint;
-			vector<InputEdge> inputs;
+    double value;
+    double adjoint;
+    vector<InputEdge> inputs;
 
-			virtual void accept(shared_ptr<ITapeVisitor> visitor) = 0;
-		};
-	} // namespace compiled
+    virtual void accept(shared_ptr<ITapeVisitor> visitor) = 0;
+};
+}  // namespace compiled
 } /* namespace autodiff */
 
 #endif /* TAPEELEMENT_H_ */

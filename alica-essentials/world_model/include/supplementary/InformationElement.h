@@ -3,8 +3,7 @@
 #include <memory>
 #include <iostream>
 
-namespace supplementary
-{
+namespace supplementary {
 typedef long long InfoTime;
 
 /**
@@ -12,9 +11,8 @@ typedef long long InfoTime;
  * data. The information should not be changed.
  */
 template <typename T>
-class InformationElement
-{
-  public:
+class InformationElement {
+public:
     /**
      *
      * @param information
@@ -23,19 +21,15 @@ class InformationElement
      * @param certainty
      */
     InformationElement(const T information, InfoTime creationTime, InfoTime validityDuration, double certainty)
-        : information(information)
-        , creationTime(creationTime)
-        , validityTime(creationTime + validityDuration)
-        , certainty(certainty)
-    {
-    }
+            : information(information)
+            , creationTime(creationTime)
+            , validityTime(creationTime + validityDuration)
+            , certainty(certainty) {}
 
     /**
      * Default destructor
      */
-    virtual ~InformationElement()
-    {
-    }
+    virtual ~InformationElement() {}
 
     /**
      * Returns the time when the contained information was created.
@@ -43,8 +37,7 @@ class InformationElement
      * the sensor did record the data.
      * @return InfoTime time when this information was created
      */
-    InfoTime getCreationTime() const
-    {
+    InfoTime getCreationTime() const {
         return this->creationTime;
     }
 
@@ -54,8 +47,7 @@ class InformationElement
      * the objects position probably has changed.
      * @return InfoTime time until this information is considered valid
      */
-    InfoTime getValidityTime() const
-    {
+    InfoTime getValidityTime() const {
         return this->validityTime;
     }
 
@@ -64,8 +56,7 @@ class InformationElement
      * when the information was created.
      * @return double certainty about the trueness of the information.
      */
-    double getCertainty() const
-    {
+    double getCertainty() const {
         return this->certainty;
     }
 
@@ -73,25 +64,23 @@ class InformationElement
      * Returns true if the validitiyTime is not over, false otherwise.
      * @return bool true if the validityTime is not over, false otherwise.
      */
-    bool isValid() const
-    {
-        return this->validityTime > 0; // TODO: replace 0 with currentTime;
+    bool isValid() const {
+        return this->validityTime > 0;  // TODO: replace 0 with currentTime;
     }
 
     /**
      * Returns the information stored in this container.
      * @return std::shared_ptr<T> Shared Pointer to the stored information.
      */
-    const T getInformation() const
-    {
+    const T getInformation() const {
         return this->information;
     }
 
-  private:
-    const T information;            /**< the stored information */
-    InfoTime creationTime;          /**< time this information was created */
-    InfoTime validityTime;          /**< the latest time this information is considered to be valid */
-    double certainty;               /**< how certain the information was at the moment it was created */
+private:
+    const T information;   /**< the stored information */
+    InfoTime creationTime; /**< time this information was created */
+    InfoTime validityTime; /**< the latest time this information is considered to be valid */
+    double certainty;      /**< how certain the information was at the moment it was created */
 };
 
 } /* namespace supplementary */

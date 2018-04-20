@@ -3,15 +3,13 @@
 #include "CNVecEgo.h"
 #include "CNPositionEgo.h"
 
-namespace geometry
-{
+namespace geometry {
 
 class CNPositionAllo;
 class CNRobotAllo;
 
-class CNRobotEgo
-{
-  public:
+class CNRobotEgo {
+public:
     CNRobotEgo();
     virtual ~CNRobotEgo();
 
@@ -35,7 +33,7 @@ class CNRobotEgo
     /**
      * Egocentric velocity of this robot.
      */
-    CNVecEgo velocity; // TODO: allo or ego?
+    CNVecEgo velocity;  // TODO: allo or ego?
 
     /**
      * Egocentric position of this robot.
@@ -62,12 +60,10 @@ class CNRobotEgo
      */
     double certainty;
 
-
     /**
      * Creates the allocentric representation of this robot.
      */
     CNRobotAllo toAllo(CNPositionAllo ownPos);
-
 };
 
 } /* namespace geometry */

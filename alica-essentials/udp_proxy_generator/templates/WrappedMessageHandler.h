@@ -8,40 +8,31 @@
 #include <ros/ros.h>
 
 #include "TTBWorldModel.h"
-<?messageIncludes?>
+< ? messageIncludes ? >
 
-namespace ttb
-{
-
-    class WrappedMessageHandler
-    {
+                              namespace ttb {
+    class WrappedMessageHandler {
     private:
         int robotID;
         ros::NodeHandle n;
         // get incoming wrapped messages and publish them (unwrapped) on the local ros core
 
-
-
-
-
     public:
-        <?rosPublisherDecl?>
+        < ? rosPublisherDecl ? >
 
-        <?rosMessageHandler?>
-        void init(int& id)
-        {
+                                       <
+                ? rosMessageHandler
+                ? > void init(int& id) {
             this->robotID = id;
 
             <?subscriptions?>
 
             <?advertisement?>
 
-            //wrappedMessagesSubscribers.push_back(nh.subscribe("/wrapped", 10, &WrappedMessageHandler::onWrappedMessage, (TTBWorldModel*)those));
+            // wrappedMessagesSubscribers.push_back(nh.subscribe("/wrapped", 10,
+            // &WrappedMessageHandler::onWrappedMessage, (TTBWorldModel*)those));
         }
-
-
     };
-
 }
 
-#endif //SUPPLEMENTARY_WRAPPEDMESSAGEHANDLER_H
+#endif  // SUPPLEMENTARY_WRAPPEDMESSAGEHANDLER_H

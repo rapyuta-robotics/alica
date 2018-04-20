@@ -14,17 +14,14 @@
 
 using namespace std;
 
-namespace autodiff
-{
-	namespace compiled
-	{
-		class CompiledVariable : public TapeElement
-		{
-		public:
-			void accept(shared_ptr<ITapeVisitor> visitor);
-		};
+namespace autodiff {
+namespace compiled {
+class CompiledVariable : public TapeElement {
+public:
+    void accept(shared_ptr<ITapeVisitor> visitor);
+};
 
-	} /* namespace compiled */
+} /* namespace compiled */
 } /* namespace autodiff */
 
 #endif /* COMPILEDVARIABLE_H_ */

@@ -11,27 +11,26 @@
 #include <string>
 #include <vector>
 
-namespace supplementary
-{
-	class ManagedExecutable;
-	class ProcessManager;
+namespace supplementary {
+class ManagedExecutable;
+class ProcessManager;
 
-	class ManagedRobot : public RobotMetaData
-	{
-	public:
-		ManagedRobot(std::string robotName, const AgentID* agentID, ProcessManager* procMan);
-		virtual ~ManagedRobot();
-		void queue4update(int execid, long pid, RobotExecutableRegistry* registry);
-		void update(unsigned long long cpuDelta);
-		void startExecutable(std::string execName, int execid);
-		//void startExecutable(string execName, int execid, vector<char*>& params);
-		void changeDesiredState(int execId, int paramSetId, bool shouldRun, RobotExecutableRegistry* registry);
-		void changeDesiredState(int execId, bool shouldRun, RobotExecutableRegistry* registry);
-		void changeLogPublishing(int execId, bool shouldPublish, RobotExecutableRegistry* registry);
-		void report(process_manager::ProcessStats& psts);
-	private:
-		ProcessManager* procMan;
-		std::map<int, ManagedExecutable*> executableMap;
-	};
+class ManagedRobot : public RobotMetaData {
+public:
+    ManagedRobot(std::string robotName, const AgentID* agentID, ProcessManager* procMan);
+    virtual ~ManagedRobot();
+    void queue4update(int execid, long pid, RobotExecutableRegistry* registry);
+    void update(unsigned long long cpuDelta);
+    void startExecutable(std::string execName, int execid);
+    // void startExecutable(string execName, int execid, vector<char*>& params);
+    void changeDesiredState(int execId, int paramSetId, bool shouldRun, RobotExecutableRegistry* registry);
+    void changeDesiredState(int execId, bool shouldRun, RobotExecutableRegistry* registry);
+    void changeLogPublishing(int execId, bool shouldPublish, RobotExecutableRegistry* registry);
+    void report(process_manager::ProcessStats& psts);
+
+private:
+    ProcessManager* procMan;
+    std::map<int, ManagedExecutable*> executableMap;
+};
 
 } /* namespace supplementary */

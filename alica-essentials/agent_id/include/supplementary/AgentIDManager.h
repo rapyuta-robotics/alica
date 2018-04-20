@@ -7,26 +7,24 @@
 #include <unordered_set>
 #include <vector>
 
-namespace supplementary
-{
+namespace supplementary {
 
-class AgentIDManager
-{
-  public:
+class AgentIDManager {
+public:
     // static AgentIDManager *getInstance();
     AgentIDManager(AgentIDFactory* idFactory);
     virtual ~AgentIDManager();
 
-    const AgentID *getIDFromBytes(const std::vector<uint8_t> &vectorID);
+    const AgentID* getIDFromBytes(const std::vector<uint8_t>& vectorID);
 
     template <class Prototype>
-    const AgentID *getID(Prototype &idPrototype);
+    const AgentID* getID(Prototype& idPrototype);
 
-    const AgentID *generateID(int size = 16);
+    const AgentID* generateID(int size = 16);
 
-  private:
-    std::unordered_set<const AgentID *, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator> agentIDs;
-    AgentIDFactory *idFactory;
+private:
+    std::unordered_set<const AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator> agentIDs;
+    AgentIDFactory* idFactory;
     std::mutex mutex;
 };
 
@@ -38,13 +36,11 @@ class AgentIDManager
  * a pointer to a corresponding AgentID object.
  */
 template <class Prototype>
-const AgentID *AgentIDManager::getID(Prototype &idPrototype)
-{
+const AgentID* AgentIDManager::getID(Prototype& idPrototype) {
     // little-endian encoding
     std::vector<uint8_t> idByteVector;
-    for (int i = 0; i < sizeof(Prototype); i++)
-    {
-        idByteVector.push_back(*(((uint8_t *)&idPrototype) + i));
+    for (int i = 0; i < sizeof(Prototype); i++) {
+        idByteVector.push_back(*(((uint8_t*) &idPrototype) + i));
     }
     return this->getIDFromBytes(idByteVector);
 }

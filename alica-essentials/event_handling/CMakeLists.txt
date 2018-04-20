@@ -33,10 +33,17 @@ if (NOT catkin_FOUND)
 endif(NOT catkin_FOUND)
 
 # TESTS
-enable_testing()
-find_package(GTest REQUIRED)
-include_directories(BEFORE
-  ${GTEST_INCLUDE_DIRS}
-)
-add_executable(${PROJECT_NAME}-tests test/test_event_handling.cpp)
+if(catkin_FOUND)
+    catkin_add_gtest(${PROJECT_NAME}-test test/test_event_handling.cpp)
+    if(TARGET ${PROJECT_NAME}-test)
+        target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
+    endif()
+else(catkin_FOUND)
+    enable_testing()
+    find_package(GTest REQUIRED)
+    include_directories(BEFORE
+    ${GTEST_INCLUDE_DIRS}
+    )
+    add_executable(${PROJECT_NAME}-tests test/test_event_handling.cpp)
 target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} pthread ${GTEST_LIBRARIES})
+endif(catkin_FOUND)

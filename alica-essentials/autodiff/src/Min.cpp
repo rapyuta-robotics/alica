@@ -12,55 +12,45 @@
 
 #include <cmath>
 
-namespace autodiff
-{
-	Min::Min(shared_ptr<Term> left, shared_ptr<Term> right) :
-			Term()
-	{
-		this->left = left;
-		this->right = right;
-	}
+namespace autodiff {
+Min::Min(shared_ptr<Term> left, shared_ptr<Term> right)
+        : Term() {
+    this->left = left;
+    this->right = right;
+}
 
-	int Min::accept(shared_ptr<ITermVisitor> visitor)
-	{
-		shared_ptr<Min> thisCasted = dynamic_pointer_cast<Min>(shared_from_this());
-		return visitor->visit(thisCasted);
-	}
+int Min::accept(shared_ptr<ITermVisitor> visitor) {
+    shared_ptr<Min> thisCasted = dynamic_pointer_cast<Min>(shared_from_this());
+    return visitor->visit(thisCasted);
+}
 
-	shared_ptr<Term> Min::aggregateConstants()
-	{
-		left = left->aggregateConstants();
-		right = right->aggregateConstants();
-		if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0)
-		{
-			shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
-			shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
-			return make_shared<Constant>(std::min(leftConstant->value, rightConstant->value));
-		}
-		else
-		{
-			return shared_from_this();
-		}
-	}
+shared_ptr<Term> Min::aggregateConstants() {
+    left = left->aggregateConstants();
+    right = right->aggregateConstants();
+    if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0) {
+        shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
+        shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
+        return make_shared<Constant>(std::min(leftConstant->value, rightConstant->value));
+    } else {
+        return shared_from_this();
+    }
+}
 
-	shared_ptr<Term> Min::derivative(shared_ptr<Variable> v)
-	{
-		throw "Symbolic Derivation of Min not supported.";
-	}
+shared_ptr<Term> Min::derivative(shared_ptr<Variable> v) {
+    throw "Symbolic Derivation of Min not supported.";
+}
 
-	shared_ptr<Term> Min::negate()
-	{
-		return left->negate() | right->negate();
-	}
+shared_ptr<Term> Min::negate() {
+    return left->negate() | right->negate();
+}
 
-	string Min::toString()
-	{
-		string str;
-		str.append("min( ");
-		str.append(left->toString());
-		str.append(", ");
-		str.append(right->toString());
-		str.append(" )");
-		return str;
-	}
+string Min::toString() {
+    string str;
+    str.append("min( ");
+    str.append(left->toString());
+    str.append(", ");
+    str.append(right->toString());
+    str.append(" )");
+    return str;
+}
 } /* namespace autodiff */

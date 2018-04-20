@@ -3,17 +3,15 @@
 #include "cnc_geometry/CNPositionAllo.h"
 #include "cnc_geometry/CNRobotEgo.h"
 
-using std::make_shared;
-using std::vector;
-using std::string;
 using std::endl;
+using std::make_shared;
+using std::string;
+using std::vector;
 
-namespace geometry
-{
+namespace geometry {
 
 CNRobotAllo::CNRobotAllo()
-    : velocity()
-{
+        : velocity() {
     this->radius = 0;
     this->id = 0;
     this->certainty = 0;
@@ -22,19 +20,15 @@ CNRobotAllo::CNRobotAllo()
     this->supporter = make_shared<vector<int>>();
 }
 
-CNRobotAllo::~CNRobotAllo()
-{
-}
+CNRobotAllo::~CNRobotAllo() {}
 
-string CNRobotAllo::toString() const
-{
+string CNRobotAllo::toString() const {
     std::stringstream ss;
     ss << "CNRobot: ID: " << this->id << " Pos: " << this->position << " Velocity: " << this->velocity << endl;
     return ss.str();
 }
 
-CNRobotEgo CNRobotAllo::toEgo(CNPositionAllo ownPos)
-{
+CNRobotEgo CNRobotAllo::toEgo(CNPositionAllo ownPos) {
     auto robotEgo = CNRobotEgo();
 
     robotEgo.radius = this->radius;
