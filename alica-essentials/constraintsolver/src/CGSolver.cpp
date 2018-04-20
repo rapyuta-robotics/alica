@@ -11,7 +11,7 @@
 
 namespace alica {
 namespace reasoner {
-using alica::VariableSet;
+using alica::VariableGrp;
 
 CGSolver::CGSolver(AlicaEngine* ae)
         : ISolver(ae)
@@ -24,7 +24,7 @@ CGSolver::CGSolver(AlicaEngine* ae)
 
 CGSolver::~CGSolver() {}
 
-bool CGSolver::existsSolution(const VariableSet& vars, vector<shared_ptr<ProblemDescriptor>>& calls) {
+bool CGSolver::existsSolution(const VariableGrp& vars, vector<shared_ptr<ProblemDescriptor>>& calls) {
     shared_ptr<Term> constraint = ConstraintBuilder::TRUE;
     int dim = vars.size();
 
@@ -94,7 +94,7 @@ bool CGSolver::existsSolution(const VariableSet& vars, vector<shared_ptr<Problem
 }
 
 bool CGSolver::getSolution(
-        const VariableSet& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results) {
+        const VariableGrp& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results) {
     shared_ptr<Term> constraint = ConstraintBuilder::TRUE;
     shared_ptr<Term> utility = TermBuilder::constant(1);
     int dim = vars.size();

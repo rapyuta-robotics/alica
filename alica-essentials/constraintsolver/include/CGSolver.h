@@ -22,8 +22,10 @@ public:
     CGSolver(AlicaEngine* ae);
     virtual ~CGSolver();
 
-    bool existsSolution(const alica::VariableSet& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) override;
-    bool getSolution(const alica::VariableSet& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<void*>& results) override;
+    bool existsSolution(
+            const alica::VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) override;
+    bool getSolution(const alica::VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+            std::vector<void*>& results) override;
     std::shared_ptr<SolverVariable> createVariable(long id) override;
 
 protected:
