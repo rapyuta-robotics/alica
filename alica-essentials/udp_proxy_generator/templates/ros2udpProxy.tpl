@@ -19,9 +19,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-< ? messageIncludes ? >
+<?messageIncludes?>
 
-                              using namespace supplementary;
+using namespace supplementary;
 
 using boost::asio::ip::udp;
 
@@ -34,13 +34,11 @@ boost::asio::io_service io_service;
 void handleUdpPacket(const boost::system::error_code& error, std::size_t bytes_transferred);
 void listenForPacket();
 
-< ? rosMessageHandler ? >
+<?rosMessageHandler?>
 
-                                <
-        ? rosPublisherDecl
-        ? >
+<?rosPublisherDecl?>
 
-                  boost::array<char, 64000> inBuffer;
+boost::array<char, 64000> inBuffer;
 void listenForPacket() {
     insocket->async_receive_from(boost::asio::buffer(inBuffer), otherEndPoint,
             boost::bind(
@@ -58,14 +56,11 @@ void handleUdpPacket(const boost::system::error_code& error, std::size_t bytes_t
             ros::serialization::IStream stream(
                     ((uint8_t*) inBuffer.data()) + sizeof(__uint32_t), bytes_transferred - sizeof(__uint32_t));
             switch (id) {
-                < ? udpReception ? >
-
-                                           default
-                                 : std::cerr << "Cannot find Matching topic:" << id << std::endl;
+                <?udpReception?>
+                default: std::cerr << "Cannot find Matching topic:" << id << std::endl;
             }
         } catch (std::exception& e) {
-            ROS_ERROR_STREAM_THROTTLE(
-                    2, "Exception while receiving DDS message:" << e.what() << " Discarding message!");
+            ROS_ERROR_STREAM_THROTTLE(2, "Exception while receiving DDS message:" << e.what() << " Discarding message!");
         }
     }
     listenForPacket();
@@ -79,11 +74,11 @@ int main(int argc, char* argv[]) {
     SystemConfig* sc = SystemConfig::getInstance();
 
     // Configuration *proxyconf = (*sc)["UdpProxy"];
-    < ? configfile ? >
+    <?configfile?>
 
-                             // std::string port = proxyconf->get<std::string>("UdpProxy","Port",NULL);
+    // std::string port = proxyconf->get<std::string>("UdpProxy","Port",NULL);
 
-                             std::string baddress = proxyconf->get<std::string>("UdpProxy", "MulticastAddress", NULL);
+    std::string baddress = proxyconf->get<std::string>("UdpProxy", "MulticastAddress", NULL);
 
     unsigned short port = (unsigned short) proxyconf->get<int>("UdpProxy", "Port", NULL);
 
@@ -105,21 +100,20 @@ int main(int argc, char* argv[]) {
     insocket->set_option(boost::asio::ip::multicast::join_group(multiCastAddress));
     listenForPacket();
 
-    < ? nodename ? >
-                           //   ros::init(argc, argv, "udpProxy");
+    <?nodename?>
 
-                           ros::NodeHandle n;
+    //   ros::init(argc, argv, "udpProxy");
+
+    ros::NodeHandle n;
     ownRosName = ros::this_node::getName();  // n.getNamespace();//n.resolveName("ddsProxy",true);
 
     std::cout << ownRosName << std::endl;
 
-    < ? subscriptions ? >
+    <?subscriptions?>
 
-                                <
-            ? advertisement
-            ? >
+    <?advertisement?>
 
-                      boost::thread iothread(run);
+    boost::thread iothread(run);
 
     // ros::spin();
     ros::AsyncSpinner* spinner;

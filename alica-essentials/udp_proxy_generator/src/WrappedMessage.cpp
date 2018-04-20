@@ -1,10 +1,6 @@
-//
-// Created by marci on 17.04.16.
-//
-
 #include "WrappedMessage.h"
 
-// Alternative hasing function
+// Alternative hashing function
 // http://stackoverflow.com/questions/98153/whats-the-best-hashing-algorithm-to-use-on-a-stl-string-when-using-hash-map
 // These guys says it works well... colpa sua
 uint32_t hash32(const char* s, unsigned int seed = 0) {

@@ -292,7 +292,7 @@ vector<string> getFilesinFolder(string folder) {
 void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& msgList, string& pkgName) {
     vector<string> tmplarr = getFilesinFolder(tmplDir);  // = Directory.GetFiles(tmplDir,"*.*");
     for (string tmpl : tmplarr) {
-        cout << "Template: " << tmpl << endl;
+        std::cout << "Template: " << tmpl << std::endl;
         int idx = tmpl.find_last_of('/');
         string basename = tmpl.substr(idx + 1);
         ifstream ifs(tmpl);
@@ -303,16 +303,19 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
         ifs.close();
 
         string content = ss.str();
-        if (basename.find("cpp") != std::string::npos && outDir.find("proxy_gen") != std::string::npos) {
+        if (basename.find(".tpl") != std::string::npos && outDir.find("proxy_gen") != std::string::npos) {
             string parsedContent = processTemplate(ss, msgList, pkgName);
 
-            ofstream ofs(outDir + "/" + basename);
+            string outputFile = outDir + "/" + basename.substr(0, basename.length()-3) + "cpp";
+            ofstream ofs(outputFile);
             ofs << parsedContent;
             ofs.close();
+
         } else if (outDir.find("src/main/java/util") != std::string::npos) {
             string parsedContent = processTemplateJava(ss, msgList, pkgName);
 
-            ofstream ofs(outDir + "/" + basename);
+            string outputFile = outDir + "/" + basename.substr(0, basename.length()-4) + "java";
+            ofstream ofs(outputFile);
             ofs << parsedContent;
             ofs.close();
         }
@@ -321,6 +324,7 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
+        // TODO update this usage information
         cout << "Usage MakeUDPProxy.exe <packageName> <optional j>" << endl;
         return -1;
     }
@@ -336,11 +340,6 @@ int main(int argc, char* argv[]) {
     }
 
     string pkgName = argv[1];
-    /*string basePackageName=argv[1];
-     if(basePackageName.find('/')!=string::npos) {
-     int idx = basePackageName.find_last_of('/');
-     basePackageName = basePackageName.substr(idx+1);
-     }*/
 
     if (!exists(outputPath)) {
         cout << "Cannot find package name!" << endl;
@@ -357,10 +356,6 @@ int main(int argc, char* argv[]) {
         lang = "cpp";
         outputPath = outputPath + "/proxy_gen";
     }
-    // set namespace to packageName
-    // namespaceS = args[0];
-
-    //	DateTime msgDefTime = File.GetLastWriteTime (msgDefFile);
 
     if (!exists(msgDefFile)) {
         cout << "Cannot find definition file " << msgDefFile << endl;
@@ -375,27 +370,6 @@ int main(int argc, char* argv[]) {
     }
 
     bool reGenerate = true;
-    //	if (exists(outputPath))
-    //	{
-    //		//Console.WriteLine("dir exists: " + outputPath);
-    //		string[] tFiles = Directory.GetFiles(outputPath);
-    //
-    //		reGenerate = false;
-    //		for(string f in tFiles)
-    //		{
-    //			DateTime fTime = File.GetCreationTime(f);
-    //			//Console.WriteLine("fileToTest:" + f);
-    //			//Console.WriteLine("fTime: " + fTime);
-    //			if(fTime.CompareTo(msgDefTime) < 0)
-    //			{
-    //				reGenerate = true;
-    //				break;
-    //			}
-    //		}
-    //
-    //		if(reGenerate)
-    //		Directory.Delete(outputPath,true);
-    //	}
     if (reGenerate) {
         boost::filesystem::path dir(outputPath.c_str());
         if (!exists(outputPath) && !boost::filesystem::create_directories(dir)) {

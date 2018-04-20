@@ -1,7 +1,3 @@
-//
-// Created by marci on 17.04.16.
-//
-
 #include <iostream>
 #include <stdio.h>
 #include <unistd.h>
@@ -205,6 +201,7 @@ void processTemplates(string tmplDir, string outDir, vector<WrappedMessage*>& ms
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
+        // TODO update this usage information
         cout << "Usage MakeUDPProxy.exe <packageName> <optional j>" << endl;
         return -1;
     }
