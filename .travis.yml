@@ -11,6 +11,7 @@ services:
 env:
   global:
     - ROS_DISTRO=kinetic
+    - COVERITY_PROJECT=alica
     - COVERITY_TOKEN=o6qYj0vj-t-K1PKQj5ugyg
     - COVERITY_EMAIL=alexander.bolinsky@rapyuta-robotics.com
     - PYTHONPATH=$PYTHONPATH:/usr/lib/python2.7/dist-packages:/usr/local/lib/python2.7/dist-packages
@@ -20,7 +21,7 @@ env:
 ################################################################################
 
 before_install:
-  - docker run -e BRANCH -e PYTHONPATH -e COVERITY_EMAIL -e COVERITY_TOKEN -e ROS_DISTRO -d --name alica-test -v $TRAVIS_BUILD_DIR:/travis ros:$ROS_DISTRO-ros-core-xenial tail -f /dev/null
+  - docker run -e BRANCH -e PYTHONPATH -e COVERITY_EMAIL -e COVERITY_TOKEN -e COVERITY_PROJECT -e ROS_DISTRO -d --name alica-test -v $TRAVIS_BUILD_DIR:/travis ros:$ROS_DISTRO-ros-core-xenial tail -f /dev/null
 
 install:
   - docker exec -t alica-test bash -c "
@@ -55,7 +56,7 @@ before_script:
     wstool init && 
     if [[ -f /travis/dependencies.rosinstall ]] ; then 
         sed -i -e \"s/rr-devel/$BRANCH/g\" /travis/dependencies.rosinstall ; 
-        echo "merging from "$BRANCH ; 
+        echo \"merging from \"$BRANCH ; 
         if wstool merge -k -y /travis/dependencies.rosinstall ; then 
             echo "merging from rr-devel" ; 
             sed -i -e \"s/$BRANCH/rr-devel/g\" /travis/dependencies.rosinstall ; 
@@ -85,7 +86,7 @@ script:
     catkin run_tests --no-status && catkin_test_results --all --verbose && 
     if [[ \"$BRANCH\" = \"coverity_scan\" ]] ; then 
         wget -qO- https://scan.coverity.com/download/cxx/linux64 
-            --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/alica\" | 
+            --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/$COVERITY_PROJECT\" | 
         tar xvz && 
         python /travis/generate_coverity-analysis_script.py . && 
         chmod +x coverity-analysis.sh && 
@@ -96,6 +97,6 @@ script:
             --form email=\"$COVERITY_EMAIL\" 
             --form file=@cs.tgz 
             --form version=\"1.0\" 
-            --form description=\"ALICA\" 
-            https://scan.coverity.com/builds?project=rapyuta-robotics%2Falica ; 
+            --form description=\"$COVERITY_PROJECT\" 
+            https://scan.coverity.com/builds?project=rapyuta-robotics%2F$COVERITY_PROJECT ; 
     fi"
