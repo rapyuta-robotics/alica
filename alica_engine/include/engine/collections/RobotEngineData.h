@@ -1,29 +1,25 @@
 #pragma once
 
+#include <engine/Types.h>
 #include <map>
 #include <memory>
 #include <string>
 
-namespace supplementary {
-class AgentID;
-}
-
 namespace alica {
-class SuccessMarks;
-class Variable;
 class AlicaEngine;
+class SuccessMarks;
 
 /**
  * Basic plan execution information relating to a robot within the team.
  */
 class RobotEngineData {
 public:
-    RobotEngineData(const AlicaEngine* engine, const supplementary::AgentID* agentId);
+    RobotEngineData(const AlicaEngine* engine, AgentIDPtr agentId);
     virtual ~RobotEngineData();
     virtual void initDomainVariables();
 
-    std::shared_ptr<SuccessMarks> getSuccessMarks() const {return _successMarks;}
-    void setSuccessMarks(shared_ptr<SuccessMarks> successMarks);
+    std::shared_ptr<SuccessMarks> getSuccessMarks() const { return _successMarks; }
+    void setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks);
     void clearSuccessMarks();
 
     const DomainVariable* getDomainVariable(const Variable* templateVar) const;

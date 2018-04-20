@@ -1,89 +1,87 @@
 #include "engine/constraintmodul/ProblemPart.h"
 
 #include "engine/RunningPlan.h"
+#include "engine/constraintmodul/ISolver.h"
 #include "engine/model/Condition.h"
+#include "engine/model/DomainVariable.h"
 #include "engine/model/Quantifier.h"
 
 namespace alica {
 
 ProblemPart::ProblemPart(const Condition* con, shared_ptr<RunningPlan> rp)
-    : _condition(con)
-    , _runningPlan(rp)
- {
+        : _condition(con)
+        , _runningPlan(rp)
+        , _descriptor(std::make_shared<ProblemDescriptor>()) {
     for (const Quantifier* quantifier : con->getQuantifiers()) {
         quantifier->addDomainVariables(rp, _vars);
     }
 }
+
 ProblemPart::ProblemPart(ProblemPart&& o)
-    : _vars(std::move(o._vars))
-    , _condition(o._condition)
-    , _runningPlan(std::move(o._runningPlan))
-    {}
+        : _vars(std::move(o._vars))
+        , _condition(o._condition)
+        , _runningPlan(std::move(o._runningPlan))
+        , _descriptor(std::move(o._descriptor)) {}
 
 ProblemPart& ProblemPart::operator=(ProblemPart&& o) {
     _vars = std::move(o._vars);
     _condition = o._condition;
     _runningPlan = std::move(o._runningPlan);
+    _descriptor = std::move(o._descriptor);
     return *this;
 }
 
 /**
  * Checks whether the given variable is one of the domain variables.
  */
-bool ProblemPart::hasVariable(const Variable* v) const {
-    for (auto& listOfRobots : (*domainVariables)) {
-        for (const VariableSet& variables : listOfRobots) {
-            for (const Variable* variable : variables) {
-                if (variable == v) {
-                    return true;
-                }
+bool ProblemPart::hasVariable(const DomainVariable* v) const {
+    for (const AgentVariables& avars : _vars) {
+        for (const DomainVariable* variable : avars.getVars()) {
+            if (variable == v) {
+                return true;
             }
         }
     }
     return false;
 }
-shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor() {
- const VariableSet& staticCondVariables = probPart->getCondition()->getVariables();
+std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(
+        ISolverBase* solver, UniqueVarStore& uvs) const {
+    _descriptor.clear();
+    const VariableSet& staticCondVariables = getCondition()->getVariables();
 
-        shared_ptr<ProblemDescriptor> pd = std::make_shared<ProblemDescriptor>();
-        // create a vector of solver variables from the static condition variables
-        auto staticSolverVars = std::make_shared<std::vector<std::shared_ptr<SolverVariable>>>();
-        staticSolverVars->reserve(staticCondVariables.size());
-        for (const Variable* variable : staticCondVariables) {
-            auto representingVariable = _uniqueVarStore.getRep(variable);
-            if (representingVariable->getSolverVar() == nullptr) {
-                representingVariable->setSolverVar(solver->createVariable(representingVariable->getId()));
-            }
+    // create a vector of solver variables from the static condition variables
 
-            staticSolverVars->push_back(representingVariable->getSolverVar());
+    int dim = static_cast<int>(staticCondVariables.size());
+    _descriptor->_staticVars.reserve(dim);
+
+    for (const Variable* variable : staticCondVariables) {
+        const Variable* representingVariable = uvs.getRep(variable);
+        if (representingVariable->getSolverVar() == nullptr) {
+            representingVariable->setSolverVar(solver->createVariable(representingVariable->getId()));
         }
+        _descriptor->_staticVars.push_back(representingVariable->getSolverVar());
+    }
 
-        // create a vector of solver variables from the domain variables of the currently iterated problem part
-        auto domainSolverVars =
-                make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>>();
-        auto agentsInScope = make_shared<vector<shared_ptr<AgentSet>>>();
-        for (int j = 0; j < static_cast<int>(probPart->getDomainVariables()->size()); ++j) {
-            auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>();
-            agentsInScope->push_back(probPart->getAgentsInScope()->at(j));
-            domainSolverVars->push_back(ll);
-            for (auto domainVars : probPart->getDomainVariables()->at(j)) {
-                auto domainSolverVars = make_shared<vector<shared_ptr<SolverVariable>>>();
-                domainSolverVars->reserve(domainVars.size());
-                for (int i = 0; i < static_cast<int>(domainVars.size()); ++i) {
-                    if (domainVars.at(i)->getSolverVar() == nullptr) {
-                        domainVars.at(i)->setSolverVar(solver->createVariable(domainVars.at(i)->getId()));
-                    }
-                    domainSolverVars->push_back(domainVars.at(i)->getSolverVar());
-                }
-                ll->push_back(domainSolverVars);
+    // create a vector of solver variables from the domain variables of the currently iterated problem part
+    _descriptor->_domainVars.reserve(_vars.size());
+    for (const AgentVariables& avars : _vars) {
+        AgentSolverVariables asolverVars(avars.getId());
+        int curDim = static_cast<int>(avars.getVars().size());
+        asolverVars.editVars().reserve(curDim);
+        for (const DomainVariable* dv : avars.getVars()) {
+            if (dv->getSolverVar() == nullptr) {
+                dv->setSolver(solver->createVariable(dv->getId()));
             }
+            asolverVars.editVars().emplace_back(dv->getSolverVar());
         }
+        _descriptor->domainVars.push_back(std::move(asolverVars));
+        dim += curDim;
+    }
+    // this insert the actual problem description
+    _descriptor->_dim = dim;
+    _descriptor->prepForUsage();
 
-        // fill a new problem descriptor and put it into the out-parameter "pds"
-        auto pd = make_shared<ProblemDescriptor>(staticSolverVars, domainSolverVars);
-        pd->setAgentsInScope(agentsInScope);
-        probPart->getCondition()->getConstraint(
-                pd, probPart->getRunningPlan());  // this insert the actual problem description
-        return pd;
+    getCondition()->getConstraint(_descriptor, _runningPlan);
+    return _descriptor;
 }
 } /* namespace alica */

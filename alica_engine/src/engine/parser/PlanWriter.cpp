@@ -541,8 +541,8 @@ string PlanWriter::getRelativeFileName(string file) {
     }
     string ret = "";
     int pos = 0;
-    for (int i = 0; i < curdir.size(); ++i) {
-        if (ufile.size() <= i || curdir.at(i) != ufile.at(i)) {
+    for (int i = 0; i < static_cast<int>(curdir.size()); ++i) {
+        if (static_cast<int>(ufile.size()) <= i || curdir.at(i) != ufile.at(i)) {
             break;
         }
         ++pos;

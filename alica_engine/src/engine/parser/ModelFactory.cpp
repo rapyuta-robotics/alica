@@ -1313,17 +1313,18 @@ void ModelFactory::attachCharacteristicReferences() {
 }
 
 void ModelFactory::createVariableTemplates() {
-    for(PlanRepository::MapType<Quantifier>::iterator iter = rep->_quantifiers.begin(); iter != rep->_quantifiers.end(); ++iter) {
+    for (PlanRepository::MapType<Quantifier>::iterator iter = rep->_quantifiers.begin();
+            iter != rep->_quantifiers.end(); ++iter) {
         Quantifier* q = iter->second;
-        for(const std::string& s : q->getDomainIdentifier()) {
-            int64_t id =  hash64(s.c_str(),s.size());
+        for (const std::string& s : q->getDomainIdentifiers()) {
+            int64_t id = Hash64(s.c_str(), s.size());
             Variable* v;
             PlanRepository::MapType<Variable>::iterator vit = rep->_variables.find(id);
-            if(vit != rep->variables.end()) {
-                v = *vit;
+            if (vit != rep->_variables.end()) {
+                v = vit->second;
             } else {
-                v = new Variable(id,s,"Template");
-                rep_->variables.emplace(id,v);
+                v = new Variable(id, s, "Template");
+                rep->_variables.emplace(id, v);
             }
             q->_templateVars.push_back(v);
         }
