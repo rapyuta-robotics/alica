@@ -21,14 +21,14 @@ public:
     RoleDefinitionSet();
     virtual ~RoleDefinitionSet();
     const std::string& getFileName() const { return _fileName; }
-    const RoleGrptor& getRoles() const { return _roles; }
+    const RoleGrp& getRoles() const { return _roles; }
 
 private:
     friend ModelFactory;
-    void setRoles(const RoleGrptor& roles);
+    void setRoles(const RoleGrp& roles);
     void setFileName(const std::string& fileName);
 
-    RoleGrptor _roles;
+    RoleGrp _roles;
     std::string _fileName;
 };
 
