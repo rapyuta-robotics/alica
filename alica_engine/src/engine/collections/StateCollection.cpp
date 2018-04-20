@@ -10,7 +10,7 @@ StateCollection::StateCollection() {}
 
 StateCollection::~StateCollection() {}
 
-StateCollection::StateCollection(const AgentSet& robots, const StateSet& states)
+StateCollection::StateCollection(const AgentGrp& robots, const StateGrp& states)
         : _robotIds(robots)
         , _states(states) {}
 
@@ -36,7 +36,7 @@ const State* StateCollection::getStateOfRobot(const supplementary::AgentID* robo
     return nullptr;
 }
 
-int StateCollection::getRobotsInState(const State* s, AgentSet& o_robots) const {
+int StateCollection::getRobotsInState(const State* s, AgentGrp& o_robots) const {
     int c = 0;
     for (int i = 0; i < _robotIds.size(); ++i) {
         if (_states[i] == s) {
@@ -47,7 +47,7 @@ int StateCollection::getRobotsInState(const State* s, AgentSet& o_robots) const 
     return c;
 }
 
-int StateCollection::getRobotsInState(int64_t sid, AgentSet& o_robots) const {
+int StateCollection::getRobotsInState(int64_t sid, AgentGrp& o_robots) const {
     int c = 0;
     for (int i = 0; i < _robotIds.size(); ++i) {
         if (_states[i]->getId() == sid) {
@@ -58,7 +58,7 @@ int StateCollection::getRobotsInState(int64_t sid, AgentSet& o_robots) const {
     return c;
 }
 
-void StateCollection::getRobotsInStateSorted(const State* s, AgentSet& o_robots) const {
+void StateCollection::getRobotsInStateSorted(const State* s, AgentGrp& o_robots) const {
     getRobotsInState(s, o_robots);
     sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
 }
@@ -106,7 +106,7 @@ void StateCollection::setInitialState(const supplementary::AgentID* robotId, con
     setState(robotId, ep->getState());
 }
 
-void StateCollection::setStates(const AgentSet& robotIds, const State* state) {
+void StateCollection::setStates(const AgentGrp& robotIds, const State* state) {
     for (const supplementary::AgentID* r : robotIds) {
         setState(r, state);
     }

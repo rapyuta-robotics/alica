@@ -44,7 +44,7 @@ TEST(StateCollection, RobotsSorted) {
 
     ASSERT_EQ(col.getCount(),3);
 
-    alica::AgentSet robots;
+    alica::AgentGrp robots;
     col.getRobotsInState(&s2,robots);
     ASSERT_TRUE(robots.empty());
 

@@ -35,11 +35,11 @@ public:
     StateCollection* getRobotStateMapping();
 
     AssignmentCollection* getEpRobotsMapping();
-    void getAllRobots(AgentSet& o_robots);
-    void getAllRobotsSorted(AgentSet& o_robots);
-    const AgentSet* getRobotsWorking(int64_t epid) const override;
-    void getRobotsWorkingSorted(const EntryPoint* ep, AgentSet& o_robots);
-    const AgentSet* getRobotsWorking(const EntryPoint* ep) const override;
+    void getAllRobots(AgentGrp& o_robots);
+    void getAllRobotsSorted(AgentGrp& o_robots);
+    const AgentGrp* getRobotsWorking(int64_t epid) const override;
+    void getRobotsWorkingSorted(const EntryPoint* ep, AgentGrp& o_robots);
+    const AgentGrp* getRobotsWorking(const EntryPoint* ep) const override;
     int totalRobotCount();
 
     short getEntryPointCount() const override;
@@ -49,7 +49,7 @@ public:
             const EntryPoint* ep) override;
     std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(int64_t epid) override;
     std::shared_ptr<SuccessCollection> getEpSuccessMapping() override;
-    void setAllToInitialState(const AgentSet& robotIds, const EntryPoint* defep);
+    void setAllToInitialState(const AgentGrp& robotIds, const EntryPoint* defep);
     bool removeRobot(const supplementary::AgentID* robotId);
     void addRobot(const supplementary::AgentID* robotId, const EntryPoint* e, const State* s);
     bool isValid() const override;

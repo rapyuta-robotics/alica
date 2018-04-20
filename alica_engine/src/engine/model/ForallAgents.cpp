@@ -25,10 +25,10 @@ ForallAgents::~ForallAgents() {}
  * Returns the <see cref="Variable"/>s currently associated with the agents occupying the scope of this quantifier.
  * @param plan A RunningPlan
  * @param agentsInScope A shared_ptr<vector<int> >
- * @return shared_ptr<list<VariableSet> >
+ * @return shared_ptr<list<VariableGrp> >
  */
-shared_ptr<list<VariableSet>> ForallAgents::getDomainVariables(
-        shared_ptr<RunningPlan>& p, AgentSet& o_agentsInScope) const {
+shared_ptr<list<VariableGrp>> ForallAgents::getDomainVariables(
+        shared_ptr<RunningPlan>& p, AgentGrp& o_agentsInScope) const {
     o_agentsInScope.clear();
     if (isScopePlan()) {
         if (p->getPlan() == getScopedPlan()) {
@@ -42,12 +42,12 @@ shared_ptr<list<VariableSet>> ForallAgents::getDomainVariables(
     if (o_agentsInScope.empty()) {
         return nullptr;
     }
-    auto ret = make_shared<list<VariableSet>>();
+    auto ret = make_shared<list<VariableGrp>>();
     auto tm = p->getAlicaEngine()->getTeamManager();
     for (auto& r : o_agentsInScope) {
         auto robotEngineData = tm->getAgentByID(r)->getEngineData();
 
-        VariableSet terms;
+        VariableGrp terms;
         for (auto identifier : this->getDomainIdentifiers()) {
             terms.push_back(robotEngineData->getDomainVariable(identifier));
         }

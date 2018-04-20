@@ -28,11 +28,11 @@ std::string PlanType::toString() const {
     return ss.str();
 }
 
-void PlanType::setParametrisation(const ParametrisationSet& parametrisation) {
+void PlanType::setParametrisation(const ParametrisationGrp& parametrisation) {
     _parametrisation = parametrisation;
 }
 
-void PlanType::setPlans(const PlanSet& plans) {
+void PlanType::setPlans(const PlanGrp& plans) {
     _plans = plans;
 }
 

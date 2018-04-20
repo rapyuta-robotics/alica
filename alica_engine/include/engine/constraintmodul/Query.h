@@ -44,7 +44,7 @@ public:
     void add(const Variable* v);
     const Variable* getRep(const Variable* v);
     void addVarTo(const Variable* representing, const Variable* toAdd);
-    VariableSet getAllRep() const;
+    VariableGrp getAllRep() const;
     int getIndexOf(const Variable* v) const;
     friend std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store) {
         os << "UniqueVarStore: " << std::endl;
@@ -64,7 +64,7 @@ private:
      *  Each inner list of variables is sorted from variables of the top most plan to variables of the deepest plan.
      *  Therefore, the first element is always the variable in the top most plan, where this variable occurs.
      */
-    std::vector<VariableSet> store;
+    std::vector<VariableGrp> store;
 };
 
 /**
@@ -83,10 +83,10 @@ public:
     template <class T>
     bool getSolution(int solverType, std::shared_ptr<RunningPlan> rp, vector<T>& result);
 
-    const VariableSet& getRelevantStaticVariables() const { return relevantStaticVariables; }
-    const VariableSet& getRelevantDomainVariables() const { return relevantDomainVariables; }
-    void setRelevantStaticVariables(const VariableSet& value);
-    void setRelevantDomainVariables(const VariableSet& value);
+    const VariableGrp& getRelevantStaticVariables() const { return relevantStaticVariables; }
+    const VariableGrp& getRelevantDomainVariables() const { return relevantDomainVariables; }
+    void setRelevantStaticVariables(const VariableGrp& value);
+    void setRelevantDomainVariables(const VariableGrp& value);
 
     void addProblemParts(std::vector<std::shared_ptr<ProblemPart>>& l);
 
@@ -94,15 +94,15 @@ public:
 
 private:
     bool collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* solver,
-            std::vector<std::shared_ptr<ProblemDescriptor>>& cds, VariableSet& relevantVariables, int& domOffset);
+            std::vector<std::shared_ptr<ProblemDescriptor>>& cds, VariableGrp& relevantVariables, int& domOffset);
 
     std::shared_ptr<UniqueVarStore> uniqueVarStore;
-    VariableSet queriedStaticVariables;
-    VariableSet queriedDomainVariables;
+    VariableGrp queriedStaticVariables;
+    VariableGrp queriedDomainVariables;
     std::vector<shared_ptr<ProblemPart>> problemParts;
 
-    VariableSet relevantStaticVariables;
-    VariableSet relevantDomainVariables;
+    VariableGrp relevantStaticVariables;
+    VariableGrp relevantDomainVariables;
 };
 
 template <class T>
@@ -111,7 +111,7 @@ bool Query::getSolution(int solverType, std::shared_ptr<RunningPlan> rp, std::ve
 
     // Collect the complete problem specification
     vector<shared_ptr<ProblemDescriptor>> cds;
-    VariableSet relevantVariables;
+    VariableGrp relevantVariables;
     int domOffset;
     ISolver* solver = rp->getAlicaEngine()->getSolver(solverType);
     if (solver == nullptr) {

@@ -411,7 +411,7 @@ void RunningPlan::adaptAssignment(shared_ptr<RunningPlan> r) {
         addChildren(*r->getChildren());
         reactivate = true;
     } else {
-        AgentSet robotsJoined;
+        AgentGrp robotsJoined;
         r->getAssignment()->getRobotStateMapping()->getRobotsInState(newState, robotsJoined);
         for (shared_ptr<RunningPlan>& r : _children) {
             r->limitToRobots(robotsJoined);
@@ -567,7 +567,7 @@ void RunningPlan::activate() {
  * Removes any robot not in robots
  * @param robots The set of robots that can participate in this running plan.
  */
-void RunningPlan::limitToRobots(const AgentSet& robots) {
+void RunningPlan::limitToRobots(const AgentGrp& robots) {
     if (isBehaviour()) {
         return;
     }
@@ -577,7 +577,7 @@ void RunningPlan::limitToRobots(const AgentSet& robots) {
     bool recurse = false;
 
     // TODO: move this code into assignment to avoid the call to getAllRobots.
-    AgentSet curRobots;
+    AgentGrp curRobots;
     _assignment->getAllRobots(curRobots);
     for (const supplementary::AgentID* r : curRobots) {
         if (find_if(robots.begin(), robots.end(), [&r](const supplementary::AgentID* id) { return *r == *id; }) ==
@@ -722,7 +722,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
     if (_stateStartTime + assignmentProtectionTime > now) {
-        AgentSet robotsJoined;
+        AgentGrp robotsJoined;
         getAssignment()->getRobotStateMapping()->getRobotsInState(getActiveState(), robotsJoined);
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
             if (std::find_if(robotsJoined.begin(), robotsJoined.end(),
@@ -733,7 +733,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
             }
         }
     } else if (auth) {  // in case of authority, remove all that are not assigned to same task
-        const AgentSet* robotsJoined = getAssignment()->getRobotsWorking(getOwnEntryPoint());
+        const AgentGrp* robotsJoined = getAssignment()->getRobotsWorking(getOwnEntryPoint());
 
         if (robotsJoined) {
             for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {

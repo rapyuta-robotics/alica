@@ -47,11 +47,11 @@ bool Condition::evaluate(shared_ptr<RunningPlan> rp) const {
     }
 }
 
-void Condition::setQuantifiers(const QuantifierSet& quantifiers) {
+void Condition::setQuantifiers(const QuantifierGrp& quantifiers) {
     _quantifiers = quantifiers;
 }
 
-void Condition::setVariables(const VariableSet& variables) {
+void Condition::setVariables(const VariableGrp& variables) {
     _variables = variables;
 }
 
@@ -67,7 +67,7 @@ void Condition::setBasicCondition(const shared_ptr<BasicCondition>& basicConditi
     _basicCondition = basicCondition;
 }
 
-void Condition::setParameters(const ParameterSet& parameters) {
+void Condition::setParameters(const ParameterGrp& parameters) {
     _parameters = parameters;
 }
 

@@ -30,7 +30,7 @@ public:
 
     std::string toString() const override;
 
-    const BehaviourConfigurationSet& getConfigurations() const { return _configurations; }
+    const BehaviourConfigurationGrp& getConfigurations() const { return _configurations; }
     const std::string& getFileName() const { return _fileName; }
     BasicBehaviour* getImplementation() const { return _implementation; }
 
@@ -39,11 +39,11 @@ private:
 
     void setFileName(const std::string& fileName);
     void setImplementation(BasicBehaviour* implementation);
-    void setConfigurations(const BehaviourConfigurationSet& configurations);
+    void setConfigurations(const BehaviourConfigurationGrp& configurations);
     /**
      * The set of static configurations of this Behaviour
      */
-    BehaviourConfigurationSet _configurations;
+    BehaviourConfigurationGrp _configurations;
     /**
      * The actual implementation of this behaviour, a subclass of BasicBehaviour
      */

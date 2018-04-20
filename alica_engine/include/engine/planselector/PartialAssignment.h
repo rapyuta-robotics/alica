@@ -41,13 +41,13 @@ public:
     virtual ~PartialAssignment();
     void clear();
     static void reset(PartialAssignmentPool* pap);  // has to be called before calculating the task assignment
-    static PartialAssignment* getNew(PartialAssignmentPool* pap, const AgentSet& robotIds, const Plan* plan,
+    static PartialAssignment* getNew(PartialAssignmentPool* pap, const AgentGrp& robotIds, const Plan* plan,
             std::shared_ptr<SuccessCollection> sucCol);
     static PartialAssignment* getNew(PartialAssignmentPool* pap, PartialAssignment* oldPA);
     short getEntryPointCount() const override;
     int totalRobotCount();
-    const AgentSet* getRobotsWorking(const EntryPoint* ep) const override;
-    const AgentSet* getRobotsWorking(int64_t epid) const override;
+    const AgentGrp* getRobotsWorking(const EntryPoint* ep) const override;
+    const AgentGrp* getRobotsWorking(int64_t epid) const override;
     std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(
             const EntryPoint* ep) override;
     std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(int64_t epid) override;
@@ -71,7 +71,7 @@ public:
     bool isHashCalculated();
     void setHashCalculated(bool hashCalculated);
     void setMax(double max);
-    const AgentSet& getRobotIds() const;
+    const AgentGrp& getRobotIds() const;
     int hash = 0;  // TODO: fix me
 
 private:
@@ -82,7 +82,7 @@ private:
     // UtilityFunction
     std::shared_ptr<UtilityFunction> utilFunc;
     AssignmentCollection* epRobotsMapping;
-    AgentSet robotIds;
+    AgentGrp robotIds;
     std::vector<std::shared_ptr<DynCardinality>> dynCardinalities;
     const Plan* plan;
     const long PRECISION = 1073741824;

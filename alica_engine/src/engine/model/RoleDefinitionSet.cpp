@@ -17,7 +17,7 @@ void RoleDefinitionSet::setFileName(const std::string& fileName) {
     _fileName = fileName;
 }
 
-void RoleDefinitionSet::setRoles(const RoleVector& roles) {
+void RoleDefinitionSet::setRoles(const RoleGrptor& roles) {
     _roles = roles;
 }
 }  // namespace alica

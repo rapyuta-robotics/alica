@@ -32,7 +32,7 @@ public:
     const Plan* getWaitPlan() const {return _waitPlan;}
 
     PlanningType getPlanningType() const {return _planningType;}
-    const AbstractPlanSet& getPlans() const {return _plans;}
+    const AbstractPlanGrp& getPlans() const {return _plans;}
 
     const PostCondition* getPostCondition() const {return _postCondition;}
     const PreCondition* getPreCondition() const {return _preCondition;}
@@ -48,7 +48,7 @@ private:
     void setAlternativePlan(const Plan* alternativePlan);
     void setDistributeProblem(bool distributeProblem);
     void setPlanningType(PlanningType planningType);
-    void setPlans(const AbstractPlanSet& plans);
+    void setPlans(const AbstractPlanGrp& plans);
     void setPostCondition(PostCondition* postCondition);
     void setPreCondition(PreCondition* preCondition);
     void setRequirements(const std::string& requirements);
@@ -56,7 +56,7 @@ private:
     void setUpdateRate(int updateRate);
     void setWaitPlan(const Plan* waitPlan);
 
-    AbstractPlanSet _plans;
+    AbstractPlanGrp _plans;
     const Plan* _alternativePlan;
     const Plan* _waitPlan;
     PreCondition* _preCondition;

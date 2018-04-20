@@ -35,7 +35,7 @@ void PlanningProblem::setPlanningType(PlanningType planningType) {
     _planningType = planningType;
 }
 
-void PlanningProblem::setPlans(const AbstractPlanSet& plans) {
+void PlanningProblem::setPlans(const AbstractPlanGrp& plans) {
     _plans = plans;
 }
 

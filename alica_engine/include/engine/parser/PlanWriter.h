@@ -41,7 +41,7 @@ public:
 
     const std::string& getTempPlanDir() const;
     const std::string& getConfigPath() const;
-    const AlicaElementSet& getPlansToSave() const;
+    const AlicaElementGrp& getPlansToSave() const;
 
     void saveAllPlans();
     void saveFileLoop();
@@ -66,7 +66,7 @@ private:
     std::string getRelativeFileName(std::string file);
     std::string getRelativeFileName(const AbstractPlan* p);
 
-    void setPlansToSave(const AlicaElementSet& plansToSave);
+    void setPlansToSave(const AlicaElementGrp& plansToSave);
     void addConditionChildren(const Condition* c, tinyxml2::XMLElement* xn, tinyxml2::XMLDocument* doc);
     void addPlanElementAttributes(const AlicaElement* p, tinyxml2::XMLElement* x);
     //		tinyxml2::XMLAttribute* getXsiTypeAttribute(string type, tinyxml2::XMLDocument* doc);
@@ -85,8 +85,8 @@ protected:
     AlicaEngine* ae;
     std::string tempPlanDir;
     std::string configPath;
-    AlicaElementSet plansToSave;
-    AlicaElementSet plansSaved;
+    AlicaElementGrp plansToSave;
+    AlicaElementGrp plansSaved;
 };
 
 } /* namespace alica */
