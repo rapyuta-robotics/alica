@@ -17,11 +17,11 @@ DummySolver::DummySolver(AlicaEngine* ae)
 DummySolver::~DummySolver() {}
 
 bool DummySolver::existsSolutionImpl(
-        const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
+        const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
     return true;
 }
 
-bool DummySolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+bool DummySolver::getSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
         std::vector<BBIdent>& results) {
     // TODO: reformulate this without a temporary vector
     std::vector<std::shared_ptr<DummyVariable>> dummyVariables;

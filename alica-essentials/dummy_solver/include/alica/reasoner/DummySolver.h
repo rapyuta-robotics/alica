@@ -19,8 +19,8 @@ public:
     DummySolver(AlicaEngine* ae);
     virtual ~DummySolver();
 
-    bool existsSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
-    bool getSolutionImpl(const VariableSet&, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+    bool existsSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
+    bool getSolutionImpl(const VariableGrp&, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
             std::vector<BBIdent>& results);
     virtual std::shared_ptr<SolverVariable> createVariable(int64_t representingVariableId) override;
 };
