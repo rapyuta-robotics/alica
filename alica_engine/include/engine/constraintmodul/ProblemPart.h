@@ -17,9 +17,9 @@ public:
     bool hasVariable(const Variable* v) const;
 
     const Condition* getCondition() const;
-    std::shared_ptr<std::vector<std::list<VariableSet>>> getDomainVariables() const;
+    std::shared_ptr<std::vector<std::list<VariableGrp>>> getDomainVariables() const;
     std::shared_ptr<RunningPlan> getRunningPlan() const;
-    std::shared_ptr<std::vector<std::shared_ptr<AgentSet>>> getAgentsInScope() const;
+    std::shared_ptr<std::vector<std::shared_ptr<AgentGrp>>> getAgentsInScope() const;
 
 private:
     const Condition* condition;
@@ -30,9 +30,9 @@ private:
      * 3. Vector of Variables, e.g., variables X,Y.
      * 4. Variable, e.g., variable X.
      */
-    std::shared_ptr<std::vector<std::list<VariableSet>>> domainVariables;
+    std::shared_ptr<std::vector<std::list<VariableGrp>>> domainVariables;
     std::shared_ptr<RunningPlan> runningplan;
-    std::shared_ptr<std::vector<std::shared_ptr<AgentSet>>> agentsInScope;
+    std::shared_ptr<std::vector<std::shared_ptr<AgentGrp>>> agentsInScope;
 };
 
 } /* namespace alica */

@@ -14,8 +14,8 @@ public:
     ISolver(AlicaEngine* ae) { this->ae = ae; }
     virtual ~ISolver() {}
 
-    virtual bool existsSolution(const VariableSet& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) = 0;
-    virtual bool getSolution(const VariableSet& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+    virtual bool existsSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) = 0;
+    virtual bool getSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
             std::vector<void*>& results) = 0;
     virtual std::shared_ptr<SolverVariable> createVariable(long id) = 0;
 

@@ -23,7 +23,7 @@ public:
     SuccessMarks(const AlicaEngine* ae, const std::list<int64_t>& epIds);
     virtual ~SuccessMarks();
 
-    void limitToPlans(const AbstractPlanSet& active);
+    void limitToPlans(const AbstractPlanGrp& active);
     const std::map<const AbstractPlan*, std::shared_ptr<std::list<const EntryPoint*>>>& getSuccessMarks() const {
         return successMarks;
     }

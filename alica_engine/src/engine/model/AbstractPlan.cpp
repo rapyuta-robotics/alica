@@ -80,7 +80,7 @@ void AbstractPlan::setFileName(const std::string& fileName) {
     _fileName = fileName;
 }
 
-void AbstractPlan::setVariables(const VariableSet& variables) {
+void AbstractPlan::setVariables(const VariableGrp& variables) {
     _variables = variables;
 }
 

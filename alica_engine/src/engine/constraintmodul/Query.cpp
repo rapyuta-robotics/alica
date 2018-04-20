@@ -45,7 +45,7 @@ bool Query::existsSolution(int solverType, std::shared_ptr<RunningPlan> rp) {
     ISolver* solver = rp->getAlicaEngine()->getSolver(solverType);
 
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
-    VariableSet relevantVariables;
+    VariableGrp relevantVariables;
     int domOffset;
     if (!collectProblemStatement(rp, solver, cds, relevantVariables, domOffset)) {
         return false;
@@ -54,7 +54,7 @@ bool Query::existsSolution(int solverType, std::shared_ptr<RunningPlan> rp) {
 }
 
 bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* solver,
-        std::vector<std::shared_ptr<ProblemDescriptor>>& pds, VariableSet& relevantVariables, int& domOffset) {
+        std::vector<std::shared_ptr<ProblemDescriptor>>& pds, VariableGrp& relevantVariables, int& domOffset) {
 #ifdef Q_DEBUG
     long time = rp->getAlicaEngine()->getIAlicaClock()->now();
 #endif
@@ -101,7 +101,7 @@ bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* so
 #endif
         // 2. process bindings for plantype
         if (rp->getPlanType() != nullptr) {
-            VariableSet tmpVector;
+            VariableGrp tmpVector;
             for (const Parametrisation* p : rp->getPlanType()->getParametrisation()) {
                 if (p->getSubPlan() == rp->getPlan() &&
                         find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar()) !=
@@ -124,7 +124,7 @@ bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* so
             parent = rp->getParent().lock();
         }
         if (parent && parent->getActiveState() != nullptr) {
-            VariableSet tmpVector;
+            VariableGrp tmpVector;
             for (const Parametrisation* p : parent->getActiveState()->getParametrisation()) {
                 if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType()) &&
                         find(relevantStaticVariables.begin(), relevantStaticVariables.end(), p->getSubVar()) !=
@@ -158,7 +158,7 @@ bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* so
 #endif
 
     for (shared_ptr<ProblemPart> probPart : problemParts) {
-        const VariableSet& staticCondVariables = probPart->getCondition()->getVariables();
+        const VariableGrp& staticCondVariables = probPart->getCondition()->getVariables();
 
         // create a vector of solver variables from the static condition variables
         auto staticSolverVars = std::make_shared<std::vector<std::shared_ptr<SolverVariable>>>();
@@ -175,7 +175,7 @@ bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* so
         // create a vector of solver variables from the domain variables of the currently iterated problem part
         auto domainSolverVars =
                 make_shared<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>>();
-        auto agentsInScope = make_shared<vector<shared_ptr<AgentSet>>>();
+        auto agentsInScope = make_shared<vector<shared_ptr<AgentGrp>>>();
         for (int j = 0; j < probPart->getDomainVariables()->size(); ++j) {
             auto ll = make_shared<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>();
             agentsInScope->push_back(probPart->getAgentsInScope()->at(j));
@@ -222,11 +222,11 @@ bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* so
     return true;
 }
 
-void Query::setRelevantStaticVariables(const VariableSet& value) {
+void Query::setRelevantStaticVariables(const VariableGrp& value) {
     relevantStaticVariables = value;
 }
 
-void Query::setRelevantDomainVariables(const VariableSet& value) {
+void Query::setRelevantDomainVariables(const VariableGrp& value) {
     relevantDomainVariables = value;
 }
 
@@ -246,7 +246,7 @@ void UniqueVarStore::clear() {
  * Initializes a list with the given variable and put that list into the internal store.
  */
 void UniqueVarStore::add(const Variable* v) {
-    VariableSet l;
+    VariableGrp l;
     l.push_back(v);
     store.push_back(std::move(l));
 }
@@ -264,22 +264,22 @@ void UniqueVarStore::addVarTo(const Variable* representing, const Variable* toAd
             }
         }
     }
-    VariableSet nl;
+    VariableGrp nl;
     nl.insert(nl.begin(), representing);
     nl.insert(nl.begin(), toAdd);
     store.push_back(std::move(nl));
 }
 
-VariableSet UniqueVarStore::getAllRep() const {
-    VariableSet ret;
-    for (const VariableSet& l : store) {
+VariableGrp UniqueVarStore::getAllRep() const {
+    VariableGrp ret;
+    for (const VariableGrp& l : store) {
         ret.push_back(l.front());
     }
     return ret;
 }
 
 const Variable* UniqueVarStore::getRep(const Variable* v) {
-    for (const VariableSet& l : store) {
+    for (const VariableGrp& l : store) {
         for (const Variable* s : l) {
             if (s == v) {
                 return l.front();

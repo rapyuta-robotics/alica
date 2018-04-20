@@ -36,7 +36,7 @@ public:
     void setName(const std::string& name);
     void setConfiguration(const BehaviourConfiguration* beh);
 
-    const VariableSet& getVariables() { return _configuration->getVariables(); }
+    const VariableGrp& getVariables() { return _configuration->getVariables(); }
     const Variable* getVariableByName(const std::string& name) const;
 
     bool stop();
@@ -106,9 +106,9 @@ protected:
     const EntryPoint* getHigherEntryPoint(const std::string& planName, const std::string& taskName);
 
     // TODO: these methods may have race conditions, check and refactor
-    const AgentSet* robotsInEntryPointOfHigherPlan(const EntryPoint* ep);
+    const AgentGrp* robotsInEntryPointOfHigherPlan(const EntryPoint* ep);
 
-    const AgentSet* robotsInEntryPoint(const EntryPoint* ep);
+    const AgentGrp* robotsInEntryPoint(const EntryPoint* ep);
     AlicaEngine* engine;
 
 private:

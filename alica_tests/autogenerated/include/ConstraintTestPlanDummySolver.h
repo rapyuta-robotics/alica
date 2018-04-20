@@ -12,8 +12,8 @@ public:
     ConstraintTestPlanDummySolver(AlicaEngine* ae);
     virtual ~ConstraintTestPlanDummySolver();
 
-    bool existsSolution(const VariableSet& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) override;
-    bool getSolution(const VariableSet& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+    bool existsSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) override;
+    bool getSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
             std::vector<void*>& results) override;
     std::shared_ptr<SolverVariable> createVariable(long id) override;
 

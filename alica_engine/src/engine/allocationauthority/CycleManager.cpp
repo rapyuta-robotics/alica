@@ -316,7 +316,7 @@ bool CycleManager::setAssignment() {
         rp->setAllocationNeeded(true);
     } else {
         if (rp->getActiveState() != nullptr) {
-            AgentSet robotsJoined;
+            AgentGrp robotsJoined;
             rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState(), robotsJoined);
             for (shared_ptr<RunningPlan>& c : *rp->getChildren()) {
                 c->limitToRobots(robotsJoined);

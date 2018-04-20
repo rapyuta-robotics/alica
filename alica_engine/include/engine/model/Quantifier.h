@@ -44,8 +44,8 @@ public:
      * @param o_agentsInScope the set of agents currently under the scope of this quantifier
      * @return A std::shared_ptr<std::list<std::vector<Variable* > > >
      */
-    virtual std::shared_ptr<std::list<VariableSet>> getDomainVariables(
-            std::shared_ptr<RunningPlan>& p, AgentSet& o_agentsInScope) const = 0;
+    virtual std::shared_ptr<std::list<VariableGrp>> getDomainVariables(
+            std::shared_ptr<RunningPlan>& p, AgentGrp& o_agentsInScope) const = 0;
 
 private:
     enum Scope { planScope, entryPointScope, stateScope };

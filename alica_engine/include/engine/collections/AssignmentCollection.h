@@ -19,11 +19,11 @@ public:
     void setSize(short size);
     const EntryPoint* getEp(short index) const;
     void setEp(short index, const EntryPoint* ep);
-    const AgentSet* getRobots(short index) const;
-    AgentSet* editRobots(short index);
-    const AgentSet* getRobotsByEp(const EntryPoint* ep) const;
-    AgentSet* editRobotsByEp(const EntryPoint* ep);
-    const AgentSet* getRobotsByEpId(int64_t id) const;
+    const AgentGrp* getRobots(short index) const;
+    AgentGrp* editRobots(short index);
+    const AgentGrp* getRobotsByEp(const EntryPoint* ep) const;
+    AgentGrp* editRobotsByEp(const EntryPoint* ep);
+    const AgentGrp* getRobotsByEpId(int64_t id) const;
     // bool setRobots(short index, shared_ptr<vector<const supplementary::AgentID*>> robotIds);
     void assignRobot(short index, const supplementary::AgentID* agent);
 
@@ -46,7 +46,7 @@ private:
      * The robots mapped to EntryPoints in this AssignmentCollection.
      */
     // TODO: clean this up
-    AgentSet* _robotIds;
+    AgentGrp* _robotIds;
     /**
      * The number of EntryPoints in this AssignmentCollection.
      */

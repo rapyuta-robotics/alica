@@ -33,7 +33,7 @@ void DummyTestSummand::cacheEvalData() {}
 UtilityInterval DummyTestSummand::eval(IAssignment* ass) {
     ui.setMin(0.0);
     ui.setMax(1.0);
-    const AgentSet* relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
+    const AgentGrp* relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
 
     for (int i = 0; i < relevantRobots->size(); ++i) {
         int pos = 0;

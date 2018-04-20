@@ -29,7 +29,7 @@ void TaskRepository::setFileName(const std::string& fileName) {
     _fileName = fileName;
 }
 
-void TaskRepository::setTasks(const TaskSet& tasks) {
+void TaskRepository::setTasks(const TaskGrp& tasks) {
     _tasks = tasks;
 }
 

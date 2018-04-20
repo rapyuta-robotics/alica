@@ -86,7 +86,7 @@ Assignment::Assignment(const Plan* p, shared_ptr<AllocationAuthorityInfo> aai) {
             // find the right entrypoint
             if (epRobots.entrypoint == ep->getId()) {
                 // copy robots
-                AgentSet* curRobots = this->epRobotsMapping->editRobots(i);
+                AgentGrp* curRobots = this->epRobotsMapping->editRobots(i);
 
                 for (auto& robot : epRobots.robots) {
                     curRobots->push_back(robot);
@@ -113,7 +113,7 @@ AssignmentCollection* Assignment::getEpRobotsMapping() {
     return epRobotsMapping;
 }
 
-void Assignment::getAllRobots(AgentSet& o_robots) {
+void Assignment::getAllRobots(AgentGrp& o_robots) {
     for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
         for (int j = 0; j < this->epRobotsMapping->getRobots(i)->size(); ++j) {
             o_robots.push_back(this->epRobotsMapping->getRobots(i)->at(j));
@@ -121,7 +121,7 @@ void Assignment::getAllRobots(AgentSet& o_robots) {
     }
 }
 
-void Assignment::getAllRobotsSorted(AgentSet& o_robots) {
+void Assignment::getAllRobotsSorted(AgentGrp& o_robots) {
     getAllRobots(o_robots);
     sort(o_robots.begin(), o_robots.end(),supplementary::AgentIDComparator());
 }
@@ -131,11 +131,11 @@ void Assignment::getAllRobotsSorted(AgentSet& o_robots) {
  * @param epid EntryPoint id
  * @return A vector of int
  */
-const AgentSet* Assignment::getRobotsWorking(int64_t epid) const {
+const AgentGrp* Assignment::getRobotsWorking(int64_t epid) const {
     return this->epRobotsMapping->getRobotsByEpId(epid);
 }
 
-void Assignment::getRobotsWorkingSorted(const EntryPoint* ep, AgentSet& o_robots) {
+void Assignment::getRobotsWorkingSorted(const EntryPoint* ep, AgentGrp& o_robots) {
     o_robots = *getRobotsWorking(ep);
     sort(o_robots.begin(), o_robots.end(),supplementary::AgentIDComparator());
 }
@@ -145,7 +145,7 @@ void Assignment::getRobotsWorkingSorted(const EntryPoint* ep, AgentSet& o_robots
  * @param ep An EntryPoint
  * @return A vector of int
  */
-const AgentSet* Assignment::getRobotsWorking(const EntryPoint* ep) const {
+const AgentGrp* Assignment::getRobotsWorking(const EntryPoint* ep) const {
     return this->epRobotsMapping->getRobotsByEp(ep);
 }
 
@@ -248,7 +248,7 @@ std::shared_ptr<SuccessCollection> Assignment::getEpSuccessMapping() {
     return this->epSucMapping;
 }
 
-void Assignment::setAllToInitialState(const AgentSet& robots, const EntryPoint* defep) {
+void Assignment::setAllToInitialState(const AgentGrp& robots, const EntryPoint* defep) {
     auto rlist = this->epRobotsMapping->editRobotsByEp(defep);
     for (const supplementary::AgentID* r : robots) {
         rlist->push_back(r);
@@ -258,7 +258,7 @@ void Assignment::setAllToInitialState(const AgentSet& robots, const EntryPoint* 
 
 bool Assignment::removeRobot(const supplementary::AgentID* robotId) {
     this->robotStateMapping->removeRobot(robotId);
-    AgentSet* curRobots;
+    AgentGrp* curRobots;
     for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
         curRobots = this->epRobotsMapping->editRobots(i);
         auto iter = find_if(curRobots->begin(), curRobots->end(),

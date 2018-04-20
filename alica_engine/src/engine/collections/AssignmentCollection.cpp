@@ -17,9 +17,9 @@ bool AssignmentCollection::allowIdling;
 AssignmentCollection::AssignmentCollection(int size)
         : _numEps(size)
         , _entryPoints(new const EntryPoint*[size])
-        , _robotIds(new AgentSet[size]) {
+        , _robotIds(new AgentGrp[size]) {
     for (int i = 0; i < size; ++i) {
-        _robotIds[i] = AgentSet();
+        _robotIds[i] = AgentGrp();
     }
 }
 
@@ -31,10 +31,10 @@ AssignmentCollection::~AssignmentCollection() {
 AssignmentCollection::AssignmentCollection(const AssignmentCollection& o)
         : _numEps(o._numEps)
         , _entryPoints(new const EntryPoint*[o._numEps])
-        , _robotIds(new AgentSet[o._numEps]) {
+        , _robotIds(new AgentGrp[o._numEps]) {
     memcpy(_entryPoints, o._entryPoints, _numEps * sizeof(const EntryPoint*));
     for (int i = 0; i < _numEps; ++i) {
-        _robotIds[i] = AgentSet(o._robotIds[i]);
+        _robotIds[i] = AgentGrp(o._robotIds[i]);
     }
 }
 
@@ -46,9 +46,9 @@ AssignmentCollection& AssignmentCollection::operator=(const AssignmentCollection
         delete[] _robotIds;
         _numEps = o._numEps;
         _entryPoints = new const EntryPoint*[_numEps];
-        _robotIds = new AgentSet[_numEps];
+        _robotIds = new AgentGrp[_numEps];
         for (int i = 0; i < _numEps; ++i) {
-            _robotIds[i] = AgentSet(o._robotIds[i]);
+            _robotIds[i] = AgentGrp(o._robotIds[i]);
         }
     } else {
         for (int i = 0; i < _numEps; ++i) {
@@ -64,7 +64,7 @@ AssignmentCollection& AssignmentCollection::operator=(const AssignmentCollection
  * @param ep An EntryPoint
  * @return shared_ptr<vector<int>>
  */
-const AgentSet* AssignmentCollection::getRobotsByEp(const EntryPoint* ep) const {
+const AgentGrp* AssignmentCollection::getRobotsByEp(const EntryPoint* ep) const {
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i] == ep) {
             return &_robotIds[i];
@@ -73,7 +73,7 @@ const AgentSet* AssignmentCollection::getRobotsByEp(const EntryPoint* ep) const 
     return nullptr;
 }
 
-AgentSet* AssignmentCollection::editRobotsByEp(const EntryPoint* ep) {
+AgentGrp* AssignmentCollection::editRobotsByEp(const EntryPoint* ep) {
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i] == ep) {
             return &_robotIds[i];
@@ -87,7 +87,7 @@ AgentSet* AssignmentCollection::editRobotsByEp(const EntryPoint* ep) {
  * @param id A long
  * @return vector<int>*
  */
-const AgentSet* AssignmentCollection::getRobotsByEpId(int64_t id) const {
+const AgentGrp* AssignmentCollection::getRobotsByEpId(int64_t id) const {
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i]->getId() == id) {
             return &_robotIds[i];
@@ -96,14 +96,14 @@ const AgentSet* AssignmentCollection::getRobotsByEpId(int64_t id) const {
     return nullptr;
 }
 
-const AgentSet* AssignmentCollection::getRobots(short index) const {
+const AgentGrp* AssignmentCollection::getRobots(short index) const {
     if (index < _numEps) {
         return &_robotIds[index];
     } else {
         return nullptr;
     }
 }
-AgentSet* AssignmentCollection::editRobots(short index) {
+AgentGrp* AssignmentCollection::editRobots(short index) {
     if (index < _numEps) {
         return &_robotIds[index];
     } else {
@@ -182,7 +182,7 @@ void AssignmentCollection::addRobot(const supplementary::AgentID* id, const Entr
 bool AssignmentCollection::removeRobot(const supplementary::AgentID* robot, const EntryPoint* ep) {
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i] == ep) {
-            AgentSet::const_iterator iter = std::find_if(_robotIds[i].begin(), _robotIds[i].end(),
+            AgentGrp::const_iterator iter = std::find_if(_robotIds[i].begin(), _robotIds[i].end(),
                     [&robot](const supplementary::AgentID* id) { return *robot == *id; });
             if (iter != _robotIds[i].end()) {
                 _robotIds[i].erase(iter);

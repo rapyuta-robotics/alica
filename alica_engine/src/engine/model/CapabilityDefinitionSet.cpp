@@ -13,7 +13,7 @@ CapabilityDefinitionSet::CapabilityDefinitionSet() {}
 
 CapabilityDefinitionSet::~CapabilityDefinitionSet() {}
 
-void CapabilityDefinitionSet::setCapabilities(const CapabilitySet& capabilities) {
+void CapabilityDefinitionSet::setCapabilities(const CapabilityGrp& capabilities) {
     _capabilities = capabilities;
 }
 

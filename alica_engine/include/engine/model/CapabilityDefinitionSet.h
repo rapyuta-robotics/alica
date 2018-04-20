@@ -21,12 +21,12 @@ class CapabilityDefinitionSet : public AlicaElement {
 public:
     CapabilityDefinitionSet();
     virtual ~CapabilityDefinitionSet();
-    const CapabilitySet& getCapabilities() const { return _capabilities; }
+    const CapabilityGrp& getCapabilities() const { return _capabilities; }
 
 private:
     friend ModelFactory;
-    void setCapabilities(const CapabilitySet& capabilities);
-    CapabilitySet _capabilities;
+    void setCapabilities(const CapabilityGrp& capabilities);
+    CapabilityGrp _capabilities;
 };
 
 }  // namespace alica

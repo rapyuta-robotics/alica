@@ -40,7 +40,7 @@ public:
 
     bool isMasterPlan() const { return _masterPlan; }
     AlicaTime getAuthorityTimeInterval() const { return _authorityTimeInterval; }
-    const VariableSet& getVariables() const { return _variables; }
+    const VariableGrp& getVariables() const { return _variables; }
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
     const std::shared_ptr<UtilityFunction>& getUtilityFunction() const { return _utilityFunction; }
@@ -58,7 +58,7 @@ private:
     void setMasterPlan(bool isMasterPlan);
 
     void setFileName(const std::string& fileName);
-    void setVariables(const VariableSet& variables);
+    void setVariables(const VariableGrp& variables);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
     void setUtilityFunction(std::shared_ptr<UtilityFunction> utilityFunction);
@@ -80,7 +80,7 @@ private:
     std::shared_ptr<UtilityFunction>
             _utilityFunction;  // TODO why the heck is this a shared ptr, livetime is bout to this object
 
-    VariableSet _variables;
+    VariableGrp _variables;
     /**
      * The utility threshold, the higher, the less likely dynamic changes are.
      */

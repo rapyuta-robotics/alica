@@ -33,7 +33,7 @@ public:
 
     const Plan* getPlan() const { return _plan; }
 
-    const TransitionSet& getInSync() const { return _inSync; }
+    const TransitionGrp& getInSync() const { return _inSync; }
 
     std::string toString() const override;
 
@@ -41,11 +41,11 @@ private:
     friend ModelFactory;
     void setFailOnSyncTimeOut(bool failOnSyncTimeOut);
     void setSyncTimeOut(unsigned long syncTimeOut);
-    void setInSync(const TransitionSet& inSync);
+    void setInSync(const TransitionGrp& inSync);
     void setTalkTimeOut(unsigned long talkTimeOut);
     void setPlan(const Plan* plan);
 
-    TransitionSet _inSync;
+    TransitionGrp _inSync;
     const Plan* _plan;
 
     unsigned long _talkTimeOut;

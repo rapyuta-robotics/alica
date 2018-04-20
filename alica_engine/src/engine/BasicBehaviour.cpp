@@ -164,7 +164,7 @@ const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryP
     }
     shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
-        const EntryPointSet& eps = static_cast<const Plan*>(cur->getPlan())->getEntryPoints();
+        const EntryPointGrp& eps = static_cast<const Plan*>(cur->getPlan())->getEntryPoints();
         if (std::find(eps.begin(), eps.end(), ep) != eps.end()) {
             return cur->getAssignment()->getRobotsWorking(ep);
         }

@@ -27,22 +27,22 @@ class Assignment;
 class StateCollection final {
 public:
     StateCollection();
-    StateCollection(const AgentSet& robotIds, const StateSet& states);
+    StateCollection(const AgentGrp& robotIds, const StateGrp& states);
     StateCollection(int maxSize);
     StateCollection(const AssignmentCollection* ac);
     ~StateCollection();
 
-    const AgentSet& getRobots() const { return _robotIds; }
-    const StateSet& getStates() const { return _states; }
+    const AgentGrp& getRobots() const { return _robotIds; }
+    const StateGrp& getStates() const { return _states; }
 
     int getCount() const { return _robotIds.size(); }
 
     const State* getStateOfRobot(const supplementary::AgentID* robotId) const;
 
-    int getRobotsInState(const State* s, AgentSet& o_robots) const;
-    int getRobotsInState(int64_t sid, AgentSet& o_robots) const;
+    int getRobotsInState(const State* s, AgentGrp& o_robots) const;
+    int getRobotsInState(int64_t sid, AgentGrp& o_robots) const;
 
-    void getRobotsInStateSorted(const State* s, AgentSet& o_robots) const;
+    void getRobotsInStateSorted(const State* s, AgentGrp& o_robots) const;
 
     std::string toString() const;
 
@@ -50,15 +50,15 @@ public:
     void clear();
 
     void setState(const supplementary::AgentID* robotId, const State* state);
-    void setStates(const AgentSet& robotIds, const State* state);
+    void setStates(const AgentGrp& robotIds, const State* state);
     void moveAllFromTo(const State* from, const State* to);
 
     void setInitialState(const supplementary::AgentID* robotId, const EntryPoint* ep);
     void reconsiderOldAssignment(std::shared_ptr<Assignment> oldOne, std::shared_ptr<Assignment> newOne);
 
 private:
-    AgentSet _robotIds;
-    StateSet _states;
+    AgentGrp _robotIds;
+    StateGrp _states;
 };
 
 } /* namespace alica */

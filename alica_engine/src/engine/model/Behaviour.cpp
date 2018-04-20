@@ -30,7 +30,7 @@ std::string Behaviour::toString() const {
     return ss.str();
 }
 
-void Behaviour::setConfigurations(const BehaviourConfigurationSet& configurations) {
+void Behaviour::setConfigurations(const BehaviourConfigurationGrp& configurations) {
     _configurations = configurations;
 }
 

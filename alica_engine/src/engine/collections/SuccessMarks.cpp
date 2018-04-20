@@ -47,7 +47,7 @@ SuccessMarks::~SuccessMarks() {}
 /**
  * Drop every mark not occurring in plans passed as argument.
  */
-void SuccessMarks::limitToPlans(const AbstractPlanSet& active) {
+void SuccessMarks::limitToPlans(const AbstractPlanGrp& active) {
     std::list<const AbstractPlan*> tr;
 
     for (auto successMarkEntry : this->successMarks) {

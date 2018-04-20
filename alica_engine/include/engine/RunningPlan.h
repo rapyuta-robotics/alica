@@ -72,8 +72,8 @@ public:
     bool isActive() const { return _active; }
     void setActive(bool active);
 
-    const AgentSet& getRobotsAvail() const { return _robotsAvail; }
-    AgentSet& editRobotsAvail() { return _robotsAvail; }
+    const AgentGrp& getRobotsAvail() const { return _robotsAvail; }
+    AgentGrp& editRobotsAvail() { return _robotsAvail; }
 
     void setAllocationNeeded(bool allocationNeeded);
     void setFailHandlingNeeded(bool failHandlingNeeded);
@@ -118,11 +118,11 @@ public:
     void activate();
     const EntryPoint* getActiveEntryPoint() const { return _activeEntryPoint; }
     void setActiveEntryPoint(EntryPoint* activeEntryPoint);
-    void limitToRobots(const AgentSet& robots);
+    void limitToRobots(const AgentGrp& robots);
     std::shared_ptr<CycleManager> getCycleManagement();
     void revokeAllConstraints();
     void attachPlanConstraints();
-    bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, AgentSet& availableAgents,
+    bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents,
             list<const supplementary::AgentID*> noUpdates, AlicaTime now);
     void toMessage(list<long>& message, shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const;
     std::string toString() const;
@@ -139,7 +139,7 @@ protected:
 
     const AbstractPlan* _plan;
     const PlanType* _planType;
-    AgentSet _robotsAvail;
+    AgentGrp _robotsAvail;
     std::map<const AbstractPlan*, int> _failedSubPlans;
     weak_ptr<RunningPlan> _parent;
     list<shared_ptr<RunningPlan>> _children;
