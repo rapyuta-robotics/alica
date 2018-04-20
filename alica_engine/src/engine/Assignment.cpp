@@ -229,7 +229,7 @@ std::shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkin
     auto ret = std::make_shared<std::list<const supplementary::AgentID*>>();
     auto robots = this->epRobotsMapping->getRobotsByEpId(epid);
     if (robots != nullptr) {
-        for (int i = 0; i < robots->size(); i++) {
+        for (int i = 0; i < static_cast<int>(robots->size()); i++) {
             ret->push_back(robots->at(i));
         }
     }
@@ -306,7 +306,7 @@ bool Assignment::isSuccessfull() const {
     for (int i = 0; i < this->epSucMapping->getCount(); i++) {
         if (this->epSucMapping->getEntryPoints()[i]->isSuccessRequired()) {
             if (!(this->epSucMapping->getRobots()[i]->size() > 0 &&
-                        this->epSucMapping->getRobots()[i]->size() >=
+                        static_cast<int>(this->epSucMapping->getRobots()[i]->size()) >=
                                 this->epSucMapping->getEntryPoints()[i]->getMinCardinality())) {
                 return false;
             }

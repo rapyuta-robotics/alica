@@ -11,7 +11,10 @@
 #include "engine/model/DomainVariable.h"
 
 #include <supplementary/AgentID.h>
+
 #include <typeinfo>
+#include <assert.h>
+
 namespace alica {
 
 /**
@@ -30,7 +33,6 @@ RobotEngineData::~RobotEngineData() {
     }
 }
 
-
 void RobotEngineData::setSuccessMarks(shared_ptr<SuccessMarks> successMarks) {
     _successMarks = successMarks;
 }
@@ -40,8 +42,9 @@ void RobotEngineData::initDomainVariables() {
     ss << _agentId << ".";
     std::string agentIdString = ss.str();
     for (const Quantifier* quantifier : _engine->getPlanRepository()->getQuantifiers()) {
-        for (const Variable& tv : quantifier->getTemplateVariables()) {
-            DomainVariable* dv = new DomainVariable(makeUniqueId(s), agentIdStr + s, "", tv, agentId);
+        for (const Variable* tv : quantifier->getTemplateVariables()) {
+            DomainVariable* dv =
+                    new DomainVariable(makeUniqueId(tv->getName()), agentIdString + tv->getName(), "", tv, _agentId);
             _domainVariables.emplace(tv, dv);
         }
     }
@@ -57,13 +60,14 @@ const DomainVariable* RobotEngineData::getDomainVariable(const Variable* templat
 }
 
 const DomainVariable* RobotEngineData::getDomainVariable(const std::string& sort) const {
-   const Variabe* tv = _ebgube->getPlanRepository().getVariables()[Hash64(sort.c_str(),sort.len())];
-   return getDomainVariable(tv);
+    const Variable* tv = _engine->getPlanRepository()->getVariables()[Hash64(sort.c_str(), sort.size())];
+    return getDomainVariable(tv);
 }
 
 int64_t RobotEngineData::makeUniqueId(const std::string& s) const {
     int64_t ret = (int64_t)(supplementary::AgentIDHash()(_agentId) + std::hash<string>()(s));
-    assert(_engine->getPlanParser()->getParsedElements()->find(ret) == _engine->getPlanParser()->getParsedElements()->end());
+    assert(_engine->getPlanParser()->getParsedElements()->find(ret) ==
+            _engine->getPlanParser()->getParsedElements()->end());
     return ret;
 }
 

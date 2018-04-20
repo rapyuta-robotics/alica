@@ -43,7 +43,7 @@ void Agent::setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks) {
     _engineData->setSuccessMarks(successMarks);
 }
 
-const Variable* Agent::getDomainVariable(const std::string& sort) const {
+const DomainVariable* Agent::getDomainVariable(const std::string& sort) const {
     return _engineData->getDomainVariable(sort);
 }
 

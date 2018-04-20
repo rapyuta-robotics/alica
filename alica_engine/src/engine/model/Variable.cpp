@@ -5,10 +5,10 @@ namespace alica {
 
 Variable::Variable()
         : _solverVar(nullptr) {}
-
+/*
 Variable::Variable(const std::shared_ptr<SolverVariable>& v)
         : _solverVar(v) {}
-
+*/
 Variable::~Variable() {}
 
 Variable::Variable(int64_t id, const std::string& name, const std::string& type)
