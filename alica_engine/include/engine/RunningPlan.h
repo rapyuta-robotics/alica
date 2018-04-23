@@ -1,26 +1,27 @@
 #pragma once
 
-#include "engine/PlanStatus.h"
-#include "engine/PlanChange.h"
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
+#include "engine/PlanChange.h"
+#include "engine/PlanStatus.h"
 #include "engine/Types.h"
-#include "engine/teammanager/TeamManager.h"
 #include "engine/constraintmodul/ConditionStore.h"
+#include "engine/teammanager/TeamManager.h"
 #include "supplementary/AgentID.h"
 
 #include <SystemConfig.h>
 
-#include <map>
-#include <list>
-#include <memory>
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <unordered_set>
 #include <algorithm>
+#include <iostream>
+#include <list>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <unordered_set>
 
-namespace alica {
+namespace alica
+{
 class BehaviourPool;
 class BasicBehaviour;
 class AbstractPlan;
@@ -40,8 +41,9 @@ class SimplePlanTree;
 /**
  * A RunningPlan represents a plan or a behaviour in execution, holding all information relevant at runtime.
  */
-class RunningPlan : public enable_shared_from_this<RunningPlan> {
-public:
+class RunningPlan : public enable_shared_from_this<RunningPlan>
+{
+  public:
     static void init();
     RunningPlan(AlicaEngine* ae);
     RunningPlan(AlicaEngine* ae, const Plan* plan);
@@ -108,8 +110,6 @@ public:
     void clearChildren();
     void adaptAssignment(shared_ptr<RunningPlan> r);
     void setFailedChild(const AbstractPlan* child);
-    void setRobotAvail(const supplementary::AgentID* robot);
-    void setRobotUnAvail(const supplementary::AgentID* robot);
     void accept(IPlanTreeVisitor* vis);
     void deactivate();
     bool anyChildrenStatus(PlanStatus ps);
@@ -122,8 +122,8 @@ public:
     std::shared_ptr<CycleManager> getCycleManagement();
     void revokeAllConstraints();
     void attachPlanConstraints();
-    bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents,
-            list<const supplementary::AgentID*> noUpdates, AlicaTime now);
+    bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, list<const supplementary::AgentID*> noUpdates,
+                                   AlicaTime now);
     void toMessage(list<long>& message, shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const;
     std::string toString() const;
     const supplementary::AgentID* getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
@@ -131,7 +131,7 @@ public:
 
     void sendLogMessage(int level, string& message);
 
-protected:
+  protected:
     const State* _activeState;
     const EntryPoint* _activeEntryPoint;
 
