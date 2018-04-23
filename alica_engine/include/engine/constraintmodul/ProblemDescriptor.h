@@ -12,6 +12,7 @@ class ProblemPart;
 
 class ProblemDescriptor {
 public:
+    ProblemDescriptor();
     std::shared_ptr<SolverTerm> getConstraint() const { return _constraint; }
     std::shared_ptr<SolverTerm> getUtility() const { return _utility; }
     const std::vector<std::shared_ptr<SolverVariable>>& getStaticVars() const { return _staticVars; }
@@ -39,7 +40,7 @@ public:
 
 private:
     friend ProblemPart;
-    ProblemDescriptor();
+
     void clear();
     void prepForUsage();
 

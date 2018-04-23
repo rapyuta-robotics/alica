@@ -150,7 +150,7 @@ void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const
             for (const Condition* c : activeVar2CondMapEntry->second) {
                 if (std::find_if(query.getProblemParts().begin() + previousPartCount, query.getProblemParts().end(),
                             [c](const ProblemPart& pp) { return pp.getCondition() == c; }) !=
-                        query.getProblemParts.end()) {
+                        query.getProblemParts().end()) {
                     // condition was already inserted
                     continue;
                 }
@@ -169,14 +169,14 @@ void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const
             for (const Condition* c : activeVar2CondMapEntry->second) {
                 if (std::find_if(query.getProblemParts().begin() + previousPartCount, query.getProblemParts().end(),
                             [c](const ProblemPart& pp) { return pp.getCondition() == c; }) !=
-                        query.getProblemParts.end()) {
+                        query.getProblemParts().end()) {
                     // condition was already inserted
                     continue;
                 }
                 // if c has a quantifier that currently covers the agent & has the right tempalte var, add it
                 for (const Quantifier* q : c->getQuantifiers()) {
                     if (q->hasTemplateVariable(curDomainVariable->getTemplateVariable()) &&
-                            q->isAgentInScope(curDomainVariable->getAgent())) {
+                            q->isAgentInScope(curDomainVariable->getAgent(), rp)) {
                         query.addProblemPart(ProblemPart(c, rp));
                         break;
                     }

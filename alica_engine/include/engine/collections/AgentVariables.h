@@ -1,7 +1,10 @@
 #pragma once
 
 #include "engine/Types.h"
+
 #include "engine/constraintmodul/SolverVariable.h"
+
+#include <supplementary/AgentID.h>
 
 #include <memory>
 
@@ -30,11 +33,11 @@ public:
     const std::vector<T>& getVars() const { return _vars; }
     std::vector<T>& editVars() { return _vars; }
 
-    bool operator<(const AgentElements& o) const { return *_id < o._id; }
-    bool operator>(const AgentElements& o) const { return *_id > o._id; }
+    bool operator<(const AgentElements& o) const { return *_id < *o._id; }
+    bool operator>(const AgentElements& o) const { return *_id > *o._id; }
 
-    bool operator<=(const AgentElements& o) const { return *_id <= o._id; }
-    bool operator>=(const AgentElements& o) const { return *_id >= o._id; }
+    bool operator<=(const AgentElements& o) const { return *_id <= *o._id; }
+    bool operator>=(const AgentElements& o) const { return *_id >= *o._id; }
 
 private:
     AgentIDPtr _id;

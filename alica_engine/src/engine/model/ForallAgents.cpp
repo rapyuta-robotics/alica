@@ -11,7 +11,7 @@
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
-#include "engine/model/Variable.h"
+#include "engine/model/DomainVariable.h"
 #include "engine/teammanager/Agent.h"
 #include "engine/teammanager/TeamManager.h"
 
@@ -35,7 +35,8 @@ ForallAgents::Result ForallAgents::TryAddId(
         AgentVariables newAgent(id);
         newAgent.editVars().reserve(getDomainIdentifiers().size());
         std::transform(getDomainIdentifiers().begin(), getDomainIdentifiers().end(),
-                std::back_inserter(newAgent.editVars()), [robotEngineData](const std::string& s) -> const Variable* {
+                std::back_inserter(newAgent.editVars()),
+                [robotEngineData](const std::string& s) -> const DomainVariable* {
                     return robotEngineData->getDomainVariable(s);
                 });
         io_agentVarsInScope.push_back(std::move(newAgent));
@@ -46,7 +47,7 @@ ForallAgents::Result ForallAgents::TryAddId(
         Result r = NONE;
         for (const std::string& s : getDomainIdentifiers()) {
             if (std::find_if(oldAgent.getVars().begin(), oldAgent.getVars().end(),
-                        [&s](const Variable* v) { return v->getName() == s; }) == oldAgent.getVars().end()) {
+                        [&s](const DomainVariable* v) { return v->getName() == s; }) == oldAgent.getVars().end()) {
                 oldAgent.editVars().push_back(robotEngineData->getDomainVariable(s));
                 r = MODIFIED;
             }

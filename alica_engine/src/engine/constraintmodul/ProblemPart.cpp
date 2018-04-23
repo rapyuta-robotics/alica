@@ -46,7 +46,7 @@ bool ProblemPart::hasVariable(const DomainVariable* v) const {
 }
 std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(
         ISolverBase* solver, UniqueVarStore& uvs) const {
-    _descriptor.clear();
+    _descriptor->clear();
     const VariableSet& staticCondVariables = getCondition()->getVariables();
 
     // create a vector of solver variables from the static condition variables
@@ -70,11 +70,11 @@ std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(
         asolverVars.editVars().reserve(curDim);
         for (const DomainVariable* dv : avars.getVars()) {
             if (dv->getSolverVar() == nullptr) {
-                dv->setSolver(solver->createVariable(dv->getId()));
+                dv->setSolverVar(solver->createVariable(dv->getId()));
             }
             asolverVars.editVars().emplace_back(dv->getSolverVar());
         }
-        _descriptor->domainVars.push_back(std::move(asolverVars));
+        _descriptor->_domainVars.push_back(std::move(asolverVars));
         dim += curDim;
     }
     // this insert the actual problem description
