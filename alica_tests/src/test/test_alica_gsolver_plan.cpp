@@ -26,8 +26,6 @@
 #include <CGSolver.h>
 #include <engine/constraintmodul/Query.h>
 #include "ConstraintTestPlanDummySolver.h"
-#include <csignal>
-
 
 class AlicaGSolverPlan : public ::testing::Test {
 protected:
@@ -37,12 +35,8 @@ protected:
     alica::ConditionCreator* cc;
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
-
-    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
     
     virtual void SetUp() {
-        std::signal(SIGSEGV, signal_handler);
-
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;

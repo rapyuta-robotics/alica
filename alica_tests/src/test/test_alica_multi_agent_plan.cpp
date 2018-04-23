@@ -22,8 +22,6 @@
 #include "TestWorldModel.h"
 #include <supplementary/AgentIDManager.h>
 #include <Plans/Behaviour/Attack.h>
-#include <csignal>
-
 
 class AlicaMultiAgent : public ::testing::Test {
 protected:
@@ -34,12 +32,8 @@ protected:
     alica::ConditionCreator* cc;
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
-
-    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
     
     virtual void SetUp() {
-        std::signal(SIGSEGV, signal_handler);
-
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;

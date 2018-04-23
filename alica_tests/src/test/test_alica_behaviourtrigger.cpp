@@ -20,8 +20,6 @@
 #include <Plans/Behaviour/TriggerB.h>
 #include <Plans/Behaviour/TriggerC.h>
 #include <Plans/Behaviour/NotToTrigger.h>
-#include <csignal>
-
 
 using namespace std;
 
@@ -33,12 +31,8 @@ protected:
     alica::ConditionCreator* cc;
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
-
-    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
     
     virtual void SetUp() {
-        std::signal(SIGSEGV, signal_handler);
-
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;

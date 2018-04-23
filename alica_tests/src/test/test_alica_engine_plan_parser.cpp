@@ -43,8 +43,6 @@ using namespace std;
 //#include "engine/IAlicaCommunication.h"
 #include <communication/AlicaRosCommunication.h>
 #include "engine/parser/PlanWriter.h"
-#include <csignal>
-
 
 class AlicaEngineTest : public ::testing::Test {
 protected:
@@ -54,12 +52,8 @@ protected:
     alica::ConditionCreator* cc;
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
-
-    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
     
     virtual void SetUp() {
-        std::signal(SIGSEGV, signal_handler);
-
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;

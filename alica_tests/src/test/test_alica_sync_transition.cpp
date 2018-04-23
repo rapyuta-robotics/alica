@@ -18,8 +18,6 @@
 #include "TestWorldModel.h"
 #include "DummyTestSummand.h"
 #include "engine/teammanager/TeamManager.h"
-#include <csignal>
-
 
 class AlicaSyncTransition : public ::testing::Test { /* namespace alicaTests */
 protected:
@@ -32,12 +30,8 @@ protected:
     alica::ConstraintCreator* crc;
     alicaRosProxy::AlicaRosCommunication* ros;
     alicaRosProxy::AlicaRosCommunication* ros2;
-
-    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
     
     virtual void SetUp() {
-        std::signal(SIGSEGV, signal_handler);
-
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
