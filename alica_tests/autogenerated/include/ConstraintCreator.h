@@ -4,10 +4,12 @@
 #include <engine/IConstraintCreator.h>
 #include <memory>
 
-namespace alica {
+namespace alica
+{
 
-class ConstraintCreator : public IConstraintCreator {
-public:
+class ConstraintCreator : public IConstraintCreator
+{
+  public:
     ConstraintCreator();
     virtual ~ConstraintCreator();
     shared_ptr<BasicConstraint> createConstraint(long constraintConfId);
