@@ -7,30 +7,37 @@
 
 #include "engine/model/TaskRepository.h"
 
-namespace alica {
+namespace alica
+{
 
 TaskRepository::TaskRepository()
-        : _defaultTask(0) {}
+    : _defaultTask(0)
+{
+}
 
 TaskRepository::~TaskRepository() {}
 
-void TaskRepository::setDefaultTask(int64_t defaultTask) {
+void TaskRepository::setDefaultTask(int64_t defaultTask)
+{
     _defaultTask = defaultTask;
 }
 
-std::string TaskRepository::getFileName() const {
+std::string TaskRepository::getFileName() const
+{
     if (_fileName.empty()) {
         return getName() + ".rdefset";
     }
     return _fileName;
 }
 
-void TaskRepository::setFileName(const std::string& fileName) {
+void TaskRepository::setFileName(const std::string& fileName)
+{
     _fileName = fileName;
 }
 
-void TaskRepository::setTasks(const TaskSet& tasks) {
+void TaskRepository::setTasks(const TaskGrp& tasks)
+{
     _tasks = tasks;
 }
 
-}  // namespace alica
+} // namespace alica

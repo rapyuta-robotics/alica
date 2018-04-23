@@ -1,14 +1,16 @@
 #pragma once
 
-#include <vector>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
-namespace supplementary {
+namespace supplementary
+{
 class AgentID;
 }
 
-namespace alica {
+namespace alica
+{
 class AbstractPlan;
 class AlicaElement;
 class BehaviourConfiguration;
@@ -32,7 +34,7 @@ class Parametrisation;
 
 using AbstractPlanGrp = std::vector<const AbstractPlan*>;
 using AgentGrp = std::vector<const supplementary::AgentID*>;
-using AlicaElementSet = std::vector<const AlicaElement*>;
+using AlicaElementGrp = std::vector<const AlicaElement*>;
 using BehaviourConfigurationGrp = std::vector<const BehaviourConfiguration*>;
 using CapabilityGrp = std::vector<const Capability*>;
 using CapValueGrp = std::vector<const CapValue*>;
@@ -43,7 +45,7 @@ using FailureStateGrp = std::vector<const FailureState*>;
 using ParameterGrp = std::vector<const Parameter*>;
 using ParametrisationGrp = std::vector<const Parametrisation*>;
 using PlanGrp = std::vector<const Plan*>;
-using QuantiferGrp = std::vector<const Quantifier*>;
+using QuantifierGrp = std::vector<const Quantifier*>;
 using RoleGrp = std::vector<const Role*>;
 using StateGrp = std::vector<const State*>;
 using SuccessStateGrp = std::vector<const SuccessState*>;
@@ -53,7 +55,4 @@ using TransitionGrp = std::vector<const Transition*>;
 using VariableGrp = std::vector<const Variable*>;
 
 using BehaviourParameterMap = std::unordered_map<std::string, std::string>;
-
-using AgentIDPtr = const supplementary::AgentID*;
-
-}  // namespace alica
+} // namespace alica

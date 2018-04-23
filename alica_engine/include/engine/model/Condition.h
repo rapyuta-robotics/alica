@@ -8,13 +8,14 @@
 #ifndef CONDITION_H_
 #define CONDITION_H_
 
-#include <string>
 #include <memory>
+#include <string>
 
 #include "AlicaElement.h"
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 class AbstractPlan;
 class BasicCondition;
 class BasicConstraint;
@@ -26,8 +27,9 @@ class ExpressionHandler;
 /**
  * A condition encapsulates expressions and constraint specific to a AlicaElement, e.g., a Transition, or a Plan.
  */
-class Condition : public AlicaElement {
-public:
+class Condition : public AlicaElement
+{
+  public:
     Condition();
     Condition(int64_t id);
     virtual ~Condition();
@@ -44,13 +46,13 @@ public:
 
     const VariableGrp& getVariables() const { return _variables; }
     const ParameterGrp& getParameters() const { return _parameters; }
-    const QuantiferGrp& getQuantifiers() const { return _quantifiers; }
+    const QuantifierGrp& getQuantifiers() const { return _quantifiers; }
 
     const std::shared_ptr<BasicCondition>& getBasicCondition() const { return _basicCondition; }
 
     bool evaluate(std::shared_ptr<RunningPlan> rp) const;
 
-private:
+  private:
     friend ModelFactory;
     friend ExpressionHandler;
 
@@ -61,7 +63,7 @@ private:
     void setParameters(const ParameterGrp& parameters);
     void setBasicConstraint(const std::shared_ptr<BasicConstraint>& basicConstraint);
     void setBasicCondition(const std::shared_ptr<BasicCondition>& basicCondition);
-    void setQuantifiers(const QuantiferGrp& quantifiers);
+    void setQuantifiers(const QuantifierGrp& quantifiers);
 
     std::shared_ptr<BasicCondition> _basicCondition;
     std::shared_ptr<BasicConstraint> _basicConstraint;
@@ -75,7 +77,7 @@ private:
     /**
      * The quantifiers used in the constraint of this condition.
      */
-    QuantiferGrp _quantifiers;
+    QuantifierGrp _quantifiers;
 
     /**
      * The Abstract Plan in which this condition occurs.
@@ -83,8 +85,8 @@ private:
     const AbstractPlan* _abstractPlan;
 
     std::string _conditionString;
-    std::string _plugInName;  // TODO: is this needed?!
+    std::string _plugInName; // TODO: is this needed?!
 };
-}  // namespace alica
+} // namespace alica
 
 #endif /* CONDITION_H_ */
