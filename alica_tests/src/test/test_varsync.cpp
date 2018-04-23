@@ -15,11 +15,10 @@
 #include <SystemConfig.h>
 #include <UtilityFunctionCreator.h>
 
-
 #include <string.h>
 
-using alica::VariableSyncModule;
 using alica::Variable;
+using alica::VariableSyncModule;
 using alica::Variant;
 
 class VariableSyncModuleTest : public ::testing::Test {
@@ -71,20 +70,20 @@ protected:
     }
 };
 
-
 TEST_F(VariableSyncModuleTest, GetOwnSeed) {
     VariableSyncModule* vsm = ae->getResultStore();
 
     //    virtual void postResult(int64_t vid, Variant result) override;
-    //virtual int getSeeds(const VariableSet& query, const std::vector<double>& limits, std::vector<Variant>& o_seeds) const override;
+    // virtual int getSeeds(const VariableGrp& query, const std::vector<double>& limits, std::vector<Variant>& o_seeds)
+    // const override;
     Variant v1(1.23);
     Variant v2(-10.0);
-    vsm->postResult(1,v1);
-    vsm->postResult(2,v2);
+    vsm->postResult(1, v1);
+    vsm->postResult(2, v2);
 
     Variable var1(1, "Var1", "");
     Variable var2(2, "Var2", "");
-    VariableSet vs(2);
+    VariableGrp vs(2);
     vs[0] = &var1;
     vs[1] = &var2;
 
@@ -97,12 +96,12 @@ TEST_F(VariableSyncModuleTest, GetOwnSeed) {
 
     std::vector<Variant> seeds;
 
-    int num = vsm->getSeeds(vs,limits,seeds);
-    EXPECT_EQ(num,1);
-    EXPECT_EQ(seeds.size(),2);
+    int num = vsm->getSeeds(vs, limits, seeds);
+    EXPECT_EQ(num, 1);
+    EXPECT_EQ(seeds.size(), 2);
     EXPECT_TRUE(seeds[0].isDouble());
     EXPECT_TRUE(seeds[1].isDouble());
 
-    EXPECT_EQ(1.23,seeds[0].getDouble());
-    EXPECT_EQ(-10.0,seeds[1].getDouble());
+    EXPECT_EQ(1.23, seeds[0].getDouble());
+    EXPECT_EQ(-10.0, seeds[1].getDouble());
 }

@@ -37,43 +37,41 @@ public:
     const EntryPoint* getEntryPointTaskID(int64_t taskID) const;
     const EntryPoint* getEntryPointByID(int64_t epID) const;
 
-    const EntryPointSet& getEntryPoints() const { return _entryPoints; }
+    const EntryPointGrp& getEntryPoints() const { return _entryPoints; }
 
-    const StateSet& getStates() const { return _states; }
-    const FailureStateSet& getFailureStates() const { return _failureStates; }
-    const SuccessStateSet& getSuccessStates() const { return _successStates; }
+    const StateGrp& getStates() const { return _states; }
+    const FailureStateGrp& getFailureStates() const { return _failureStates; }
+    const SuccessStateGrp& getSuccessStates() const { return _successStates; }
 
     int getMaxCardinality() const { return _maxCardinality; }
     int getMinCardinality() const { return _minCardinality; }
 
     const PostCondition* getPostCondition() const { return _postCondition; }
 
-    const TransitionSet& getTransitions() const { return _transitions; }
-    const SyncTransitionSet& getSyncTransitions() const { return _syncTransitions; }
-
-
+    const TransitionGrp& getTransitions() const { return _transitions; }
+    const SyncTransitionGrp& getSyncTransitions() const { return _syncTransitions; }
 
 private:
     friend ModelFactory;
     friend ExpressionHandler;  // TODO: get rid of this
-    void setEntryPoints(const EntryPointSet& entryPoints);
-    void setFailureStates(const FailureStateSet& failurePoints);
-    void setSuccessStates(const SuccessStateSet& succesPoints);
+    void setEntryPoints(const EntryPointGrp& entryPoints);
+    void setFailureStates(const FailureStateGrp& failurePoints);
+    void setSuccessStates(const SuccessStateGrp& succesPoints);
     void setMaxCardinality(int maxCardinality);
     void setMinCardinality(int minCardinality);
     void setPostCondition(const PostCondition* postCondition);
-    void setStates(const StateSet& states);
-    void setSyncTransitions(const SyncTransitionSet& syncTransitions);
-    void setTransitions(const TransitionSet& transitions);
+    void setStates(const StateGrp& states);
+    void setSyncTransitions(const SyncTransitionGrp& syncTransitions);
+    void setTransitions(const TransitionGrp& transitions);
 
     int _minCardinality;
     int _maxCardinality;
-    EntryPointSet _entryPoints;
-    StateSet _states;
-    SuccessStateSet _successStates;
-    FailureStateSet _failureStates;
-    SyncTransitionSet _syncTransitions;
-    TransitionSet _transitions;
+    EntryPointGrp _entryPoints;
+    StateGrp _states;
+    SuccessStateGrp _successStates;
+    FailureStateGrp _failureStates;
+    SyncTransitionGrp _syncTransitions;
+    TransitionGrp _transitions;
     const PostCondition* _postCondition;
 };
 

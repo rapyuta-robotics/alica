@@ -35,10 +35,10 @@ public:
 
     const Plan* getInPlan() const { return _inPlan; }
     const EntryPoint* getEntryPoint() const { return _entryPoint; }
-    const AbstractPlanSet& getPlans() const { return _plans; }
-    const TransitionSet& getInTransitions() const { return _inTransitions; }
-    const TransitionSet& getOutTransitions() const { return _outTransitions; }
-    const ParametrisationSet& getParametrisation() const { return _parametrisation; }
+    const AbstractPlanGrp& getPlans() const { return _plans; }
+    const TransitionGrp& getInTransitions() const { return _inTransitions; }
+    const TransitionGrp& getOutTransitions() const { return _outTransitions; }
+    const ParametrisationGrp& getParametrisation() const { return _parametrisation; }
 
     bool isTerminal() const { return _type != NORMAL; }
     bool isSuccessState() const { return _type == SUCCESS; }
@@ -48,12 +48,12 @@ private:
     friend ModelFactory;
     void setInPlan(const Plan* inPlan);
 
-    void setInTransitions(const TransitionSet& inTransitions);
-    void setOutTransitions(const TransitionSet& outTransition);
+    void setInTransitions(const TransitionGrp& inTransitions);
+    void setOutTransitions(const TransitionGrp& outTransition);
 
-    void setParametrisation(const ParametrisationSet& parametrisation);
+    void setParametrisation(const ParametrisationGrp& parametrisation);
 
-    void setPlans(const AbstractPlanSet& plans);
+    void setPlans(const AbstractPlanGrp& plans);
 
     void setSuccessState(bool successState);
     void setFailureState(bool failureState);
@@ -65,19 +65,19 @@ private:
     /**
      * The list of AbstractPlans meant to be executed in the context of this state.
      */
-    AbstractPlanSet _plans;
+    AbstractPlanGrp _plans;
     /**
      * The list of Transitions leading to this state.
      */
-    TransitionSet _inTransitions;
+    TransitionGrp _inTransitions;
     /**
      * The list ofTransitions going from this state to another one.
      */
-    TransitionSet _outTransitions;
+    TransitionGrp _outTransitions;
     /**
      * The list of Parametrisations, which bind variables of sub-plans to variables in this state's plan.
      */
-    ParametrisationSet _parametrisation;
+    ParametrisationGrp _parametrisation;
     /**
      * The plan containing this state.
      */

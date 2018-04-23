@@ -26,8 +26,8 @@ public:
 
     void publishContent();
     virtual void postResult(int64_t vid, Variant result) override;
-    virtual int getSeeds(const VariableSet& query, const std::vector<double>& limits, std::vector<Variant>& o_seeds) const override;
-
+    virtual int getSeeds(
+            const VariableGrp& query, const std::vector<double>& limits, std::vector<Variant>& o_seeds) const override;
 
     VariableSyncModule(const VariableSyncModule&) = delete;
     VariableSyncModule(VariableSyncModule&&) = delete;
@@ -49,7 +49,7 @@ private:
         VotedSeed& operator=(VotedSeed&&);
 
         std::vector<Variant> _values;
-        std::vector<int> _supporterCount; //WARNING: initializer order dependency! Do not move freely!
+        std::vector<int> _supporterCount;  // WARNING: initializer order dependency! Do not move freely!
         double _hash;
         int _totalSupCount;
     };
@@ -65,6 +65,5 @@ private:
     double _distThreshold;
     supplementary::NotifyTimer<VariableSyncModule>* _timer;
     mutable std::mutex _mutex;
-
 };
 } /* namespace alica */

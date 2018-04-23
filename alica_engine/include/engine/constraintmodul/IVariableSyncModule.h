@@ -19,7 +19,7 @@ public:
     virtual void onSolverResult(const SolverResult& msg) = 0;
 
     virtual void postResult(int64_t vid, Variant result) = 0;
-    virtual int getSeeds(const VariableSet& query, const std::vector<double>& limits, std::vector<Variant>& o_seeds) const = 0;
+    virtual int getSeeds(
+            const VariableGrp& query, const std::vector<double>& limits, std::vector<Variant>& o_seeds) const = 0;
 };
 } /* namespace alica */
-

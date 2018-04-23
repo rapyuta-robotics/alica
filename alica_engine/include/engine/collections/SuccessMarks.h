@@ -24,7 +24,7 @@ public:
     virtual ~SuccessMarks();
 
     // TODO uses ICollection in C# so far only unordered_set needed
-    void limitToPlans(const AbstractPlanSet& active);
+    void limitToPlans(const AbstractPlanGrp& active);
     const std::map<const AbstractPlan*, std::shared_ptr<std::list<const EntryPoint*>>>& getSuccessMarks() const {
         return successMarks;
     }

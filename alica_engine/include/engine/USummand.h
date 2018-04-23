@@ -83,7 +83,7 @@ protected:
     double weight;
     int64_t id;
     std::vector<int64_t> relevantEntryPointIds;
-    EntryPointSet relevantEntryPoints;
+    EntryPointGrp relevantEntryPoints;
 
     std::string name;
     std::string info;

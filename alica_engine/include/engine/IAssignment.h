@@ -3,11 +3,9 @@
 #include "engine/Types.h"
 #include "supplementary/AgentID.h"
 
-
 #include <list>
 #include <memory>
 #include <string>
-
 
 namespace alica {
 
@@ -86,13 +84,13 @@ public:
 
     int getNumUnAssignedRobotIds() const { return unassignedRobotIds.size(); }
 
-    const AgentSet& getUnassignedRobotIds() const { return unassignedRobotIds; }
+    const AgentGrp& getUnassignedRobotIds() const { return unassignedRobotIds; }
 
 protected:
     /**
      * The Ids of all robots available but not yet assigned.
      */
-    AgentSet unassignedRobotIds;
+    AgentGrp unassignedRobotIds;
     /**
      * The minimal utility this assignment can achieve.
      */

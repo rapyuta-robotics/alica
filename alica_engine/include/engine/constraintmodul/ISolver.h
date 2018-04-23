@@ -9,19 +9,21 @@ class ProblemDescriptor;
 class Variable;
 class SolverVariable;
 
-
 class ISolverBase {
 public:
-    ISolverBase(AlicaEngine* ae) : _ae(ae) {}
+    ISolverBase(AlicaEngine* ae)
+            : _ae(ae) {}
     virtual ~ISolverBase() {}
     virtual std::shared_ptr<SolverVariable> createVariable(int64_t id) = 0;
 
     virtual double utilityEstimate(
-            const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
+            const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
         return 0;
     }
+
 protected:
     AlicaEngine* getAlicaEngine() const { return _ae; }
+
 private:
     AlicaEngine* _ae;
 };
@@ -29,17 +31,17 @@ private:
 template <class SolverType, typename ResultType>
 class ISolver : public ISolverBase {
 public:
-    ISolver(AlicaEngine* ae) : ISolverBase(ae) {}
+    ISolver(AlicaEngine* ae)
+            : ISolverBase(ae) {}
     virtual ~ISolver() {}
 
-
-    bool existsSolution(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
+    bool existsSolution(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
         return static_cast<SolverType*>(this)->existsSolutionImpl(vars, calls);
     }
 
-    bool getSolution(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+    bool getSolution(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
             std::vector<ResultType>& results) {
-                return static_cast<SolverType*>(this)->getSolutionImpl(vars, calls, results);
+        return static_cast<SolverType*>(this)->getSolutionImpl(vars, calls, results);
     }
 };
 

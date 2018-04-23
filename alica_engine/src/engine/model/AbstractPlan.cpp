@@ -22,7 +22,8 @@ AbstractPlan::AbstractPlan()
 
 {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-    _authorityTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
+    _authorityTimeInterval = AlicaTime::milliseconds(
+            (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
 }
 
 AbstractPlan::AbstractPlan(int64_t id)
@@ -33,7 +34,8 @@ AbstractPlan::AbstractPlan(int64_t id)
         , _preCondition(nullptr)
         , _runtimeCondition(nullptr) {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-    _authorityTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
+    _authorityTimeInterval = AlicaTime::milliseconds(
+            (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
 }
 
 AbstractPlan::~AbstractPlan() {}
@@ -76,7 +78,7 @@ void AbstractPlan::setFileName(const std::string& fileName) {
     _fileName = fileName;
 }
 
-void AbstractPlan::setVariables(const VariableSet& variables) {
+void AbstractPlan::setVariables(const VariableGrp& variables) {
     _variables = variables;
 }
 
