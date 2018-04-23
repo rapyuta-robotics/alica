@@ -7,7 +7,8 @@
 #include <memory>
 #include <string>
 
-namespace alica {
+namespace alica
+{
 
 using std::list;
 using std::shared_ptr;
@@ -21,12 +22,13 @@ class AssignmentCollection;
 /**
  *  An IAssignment describes a potentially partial assignment of robots to EntryPoints within a plan.
  */
-class IAssignment {
-public:
+class IAssignment
+{
+  public:
     virtual ~IAssignment() {}
     virtual const std::vector<const supplementary::AgentID*>* getRobotsWorking(const EntryPoint* ep) const = 0;
     virtual const std::vector<const supplementary::AgentID*>* getRobotsWorking(int64_t epid) const = 0;
-    virtual int totalRobotCount() = 0;
+    virtual int totalRobotCount() const = 0;
     /**
      * The shared_ptr of a vector of EntryPoints relevant to this assignment.
      */
@@ -86,7 +88,7 @@ public:
 
     const AgentGrp& getUnassignedRobotIds() const { return unassignedRobotIds; }
 
-protected:
+  protected:
     /**
      * The Ids of all robots available but not yet assigned.
      */
