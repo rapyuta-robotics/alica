@@ -30,7 +30,7 @@ protected:
     alica::ConditionCreator* cc;
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
-    
+
     virtual void SetUp() {
         ros::NodeHandle nh;
         std::string path;

@@ -30,7 +30,7 @@ protected:
     alica::ConstraintCreator* crc;
     alicaRosProxy::AlicaRosCommunication* ros;
     alicaRosProxy::AlicaRosCommunication* ros2;
-    
+
     virtual void SetUp() {
         // determine the path to the test config
         ros::NodeHandle nh;

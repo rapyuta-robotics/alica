@@ -35,7 +35,7 @@ protected:
     alica::ConditionCreator* cc;
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
-    
+
     virtual void SetUp() {
         // determine the path to the test config
         ros::NodeHandle nh;
