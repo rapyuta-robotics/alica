@@ -1,17 +1,19 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
 #include "engine/collections/AgentVariables.h"
+#include "supplementary/AgentID.h"
 #include <memory>
-#include <vector>
 #include <utility>
-namespace alica {
+#include <vector>
+namespace alica
+{
 class SolverTerm;
 class SolverVariable;
 class ProblemPart;
 
-class ProblemDescriptor {
-public:
+class ProblemDescriptor
+{
+  public:
     ProblemDescriptor();
     std::shared_ptr<SolverTerm> getConstraint() const { return _constraint; }
     std::shared_ptr<SolverTerm> getUtility() const { return _utility; }
@@ -21,6 +23,7 @@ public:
     std::vector<std::pair<double, double>>& editStaticRanges() { return _staticRanges; }
 
     const std::vector<AgentSolverVariables>& getDomainVars() const { return _domainVars; }
+    std::vector<AgentSolverVariables>& editDomainVars() { return _domainVars; }
 
     const std::vector<std::shared_ptr<SolverVariable>>& getAllVariables() const { return _allVars; }
     const std::vector<std::pair<double, double>>& getAllRanges();
@@ -38,7 +41,7 @@ public:
     ProblemDescriptor(const ProblemDescriptor&) = delete;
     ProblemDescriptor& operator=(const ProblemDescriptor&) = delete;
 
-private:
+  private:
     friend ProblemPart;
 
     void clear();
@@ -60,4 +63,4 @@ private:
     bool _setsUtilitySignificanceThreshold;
 };
 
-}  // namespace alica
+} // namespace alica

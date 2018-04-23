@@ -98,7 +98,6 @@ bool ForallAgents::addDomainVariables(const std::shared_ptr<const RunningPlan>& 
         }
         break;
     case STATESCOPE:
-
         for (AgentIDPtr id : p->getAssignment()->getRobotStateMapping()->getRobotsInState(getScopedState())) {
             Result r = TryAddId(id, io_agentVarsInScope, tm);
             addedAgent = addedAgent || r == ADDED;
