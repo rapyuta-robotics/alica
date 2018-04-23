@@ -31,7 +31,7 @@ TEST(AlicaTime, AlicaClock) {
 
     i += AlicaTime::minutes(30);
     EXPECT_EQ(i, AlicaTime::minutes(120));
-    
+
     i *= 2;
     EXPECT_EQ(i, AlicaTime::minutes(240));
 

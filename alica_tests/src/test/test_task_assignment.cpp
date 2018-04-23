@@ -24,8 +24,6 @@
 #include <vector>
 #include <memory>
 #include <ros/ros.h>
-#include <csignal>
-
 
 using alica::AlicaTime;
 
