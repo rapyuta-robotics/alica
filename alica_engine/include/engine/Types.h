@@ -55,4 +55,7 @@ using TransitionGrp = std::vector<const Transition*>;
 using VariableGrp = std::vector<const Variable*>;
 
 using BehaviourParameterMap = std::unordered_map<std::string, std::string>;
+
+using AgentIDPtr = const supplementary::AgentID*;
+
 } // namespace alica
