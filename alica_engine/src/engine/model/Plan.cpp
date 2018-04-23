@@ -41,11 +41,11 @@ const EntryPoint* Plan::getEntryPointByID(int64_t epID) const {
     return nullptr;
 }
 
-void Plan::setEntryPoints(const EntryPointSet& entryPoints) {
+void Plan::setEntryPoints(const EntryPointGrp& entryPoints) {
     _entryPoints = entryPoints;
 }
 
-void Plan::setFailureStates(const FailureStateSet& failureStates) {
+void Plan::setFailureStates(const FailureStateGrp& failureStates) {
     _failureStates = failureStates;
 }
 
@@ -61,21 +61,20 @@ void Plan::setPostCondition(const PostCondition* postCondition) {
     _postCondition = postCondition;
 }
 
-void Plan::setStates(const StateSet& states) {
+void Plan::setStates(const StateGrp& states) {
     _states = states;
 }
 
-void Plan::setSuccessStates(const SuccessStateSet& successStates) {
+void Plan::setSuccessStates(const SuccessStateGrp& successStates) {
     _successStates = successStates;
 }
 
-void Plan::setSyncTransitions(const SyncTransitionSet& syncTransitions) {
+void Plan::setSyncTransitions(const SyncTransitionGrp& syncTransitions) {
     _syncTransitions = syncTransitions;
 }
 
-void Plan::setTransitions(const TransitionSet& transitions) {
+void Plan::setTransitions(const TransitionGrp& transitions) {
     _transitions = transitions;
 }
-
 
 }  // namespace alica

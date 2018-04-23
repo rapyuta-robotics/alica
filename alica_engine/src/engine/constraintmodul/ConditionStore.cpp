@@ -111,8 +111,8 @@ void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const
         return;
     }
 
-    BufferedVariableSet& staticVarBuffer = query.editStaticVariableBuffer();
-    BufferedDomainVariableSet& domainVarBuffer = query.editDomainVariableBuffer();
+    BufferedVariableGrp& staticVarBuffer = query.editStaticVariableBuffer();
+    BufferedDomainVariableGrp& domainVarBuffer = query.editDomainVariableBuffer();
     if (!staticVarBuffer.hasCurrentlyAny() && !domainVarBuffer.hasCurrentlyAny()) {
         return;  // nothing to do
     }

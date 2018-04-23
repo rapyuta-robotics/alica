@@ -30,30 +30,29 @@ class Transition;
 class Variable;
 class Parametrisation;
 
-using AbstractPlanSet = std::vector<const AbstractPlan*>;
-using AgentSet = std::vector<const supplementary::AgentID*>;
+using AbstractPlanGrp = std::vector<const AbstractPlan*>;
+using AgentGrp = std::vector<const supplementary::AgentID*>;
 using AlicaElementSet = std::vector<const AlicaElement*>;
-using BehaviourConfigurationSet = std::vector<const BehaviourConfiguration*>;
-using CapabilitySet = std::vector<const Capability*>;
-using CapValueSet = std::vector<const CapValue*>;
+using BehaviourConfigurationGrp = std::vector<const BehaviourConfiguration*>;
+using CapabilityGrp = std::vector<const Capability*>;
+using CapValueGrp = std::vector<const CapValue*>;
 using ConditionSet = std::vector<const Condition*>;
-using DomainVariableSet = std::vector<const DomainVariable*>;
-using EntryPointSet = std::vector<const EntryPoint*>;
-using FailureStateSet = std::vector<const FailureState*>;
-using ParameterSet = std::vector<const Parameter*>;
-using ParametrisationSet = std::vector<const Parametrisation*>;
-using PlanSet = std::vector<const Plan*>;
-using QuantifierSet = std::vector<const Quantifier*>;
-using RoleVector = std::vector<const Role*>;
-using StateSet = std::vector<const State*>;
-using SuccessStateSet = std::vector<const SuccessState*>;
-using SyncTransitionSet = std::vector<const SyncTransition*>;
+using DomainVariableGrp = std::vector<const DomainVariable*>;
+using EntryPointGrp = std::vector<const EntryPoint*>;
+using FailureStateGrp = std::vector<const FailureState*>;
+using ParameterGrp = std::vector<const Parameter*>;
+using ParametrisationGrp = std::vector<const Parametrisation*>;
+using PlanGrp = std::vector<const Plan*>;
+using QuantiferGrp = std::vector<const Quantifier*>;
+using RoleGrp = std::vector<const Role*>;
+using StateGrp = std::vector<const State*>;
+using SuccessStateGrp = std::vector<const SuccessState*>;
+using SyncTransitionGrp = std::vector<const SyncTransition*>;
 using TaskSet = std::vector<const Task*>;
-using TransitionSet = std::vector<const Transition*>;
-using VariableSet = std::vector<const Variable*>;
+using TransitionGrp = std::vector<const Transition*>;
+using VariableGrp = std::vector<const Variable*>;
 
 using BehaviourParameterMap = std::unordered_map<std::string, std::string>;
-
 
 using AgentIDPtr = const supplementary::AgentID*;
 

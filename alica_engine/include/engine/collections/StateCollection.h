@@ -63,23 +63,23 @@ public:
     };
 
     StateCollection();
-    StateCollection(const AgentSet& robotIds, const StateSet& states);
+    StateCollection(const AgentGrp& robotIds, const StateGrp& states);
     StateCollection(int maxSize);
     StateCollection(const AssignmentCollection* ac);
     ~StateCollection();
 
-    const AgentSet& getRobots() const { return _robotIds; }
-    const StateSet& getStates() const { return _states; }
+    const AgentGrp& getRobots() const { return _robotIds; }
+    const StateGrp& getStates() const { return _states; }
 
     int getCount() const { return _robotIds.size(); }
 
     const State* getStateOfRobot(AgentIDPtr robotId) const;
 
-    int getRobotsInState(const State* s, AgentSet& o_robots) const;
-    int getRobotsInState(int64_t sid, AgentSet& o_robots) const;
+    int getRobotsInState(const State* s, AgentGrp& o_robots) const;
+    int getRobotsInState(int64_t sid, AgentGrp& o_robots) const;
     StateAccessor getRobotsInState(const State* s) const { return StateAccessor(s, *this); }
 
-    void getRobotsInStateSorted(const State* s, AgentSet& o_robots) const;
+    void getRobotsInStateSorted(const State* s, AgentGrp& o_robots) const;
 
     std::string toString() const;
 
@@ -87,7 +87,7 @@ public:
     void clear();
 
     void setState(AgentIDPtr robotId, const State* state);
-    void setStates(const AgentSet& robotIds, const State* state);
+    void setStates(const AgentGrp& robotIds, const State* state);
     void moveAllFromTo(const State* from, const State* to);
 
     void setInitialState(AgentIDPtr robotId, const EntryPoint* ep);
@@ -95,8 +95,8 @@ public:
 
 private:
     // TODO: merge the two vectors here:
-    AgentSet _robotIds;
-    StateSet _states;
+    AgentGrp _robotIds;
+    StateGrp _states;
 };
 
 } /* namespace alica */

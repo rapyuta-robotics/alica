@@ -54,7 +54,7 @@ void SyncTransition::setPlan(const Plan* plan) {
     _plan = plan;
 }
 
-void SyncTransition::setInSync(const TransitionSet& inSync) {
+void SyncTransition::setInSync(const TransitionGrp& inSync) {
     _inSync = inSync;
 }
 

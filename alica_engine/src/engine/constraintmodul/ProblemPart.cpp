@@ -47,7 +47,7 @@ bool ProblemPart::hasVariable(const DomainVariable* v) const {
 std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(
         ISolverBase* solver, UniqueVarStore& uvs) const {
     _descriptor->clear();
-    const VariableSet& staticCondVariables = getCondition()->getVariables();
+    const VariableGrp& staticCondVariables = getCondition()->getVariables();
 
     // create a vector of solver variables from the static condition variables
 

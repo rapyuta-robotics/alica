@@ -1,4 +1,6 @@
 #include "engine/constraintmodul/UniqueVarStore.h"
+#include "engine/constraintmodul/Query.h"
+#include <assert.h>
 
 namespace alica {
 
@@ -7,7 +9,7 @@ UniqueVarStore::UniqueVarStore() {}
 void UniqueVarStore::clear() {
     _store.clear();
 }
-void UniqueVarStore::initWith(const VariableSet& vs) {
+void UniqueVarStore::initWith(const VariableGrp& vs) {
     _store.resize(vs.size());
     int i = 0;
     for (const Variable* v : vs) {
@@ -20,7 +22,7 @@ void UniqueVarStore::initWith(const VariableSet& vs) {
  * Initializes a list with the given variable and put that list into the internal store.
  */
 void UniqueVarStore::add(const Variable* v) {
-    VariableSet l;
+    VariableGrp l;
     l.push_back(v);
     _store.push_back(std::move(l));
 }
@@ -38,20 +40,20 @@ void UniqueVarStore::addVarTo(const Variable* representing, const Variable* toAd
             }
         }
     }
-    VariableSet nl;
+    VariableGrp nl;
     nl.insert(nl.begin(), representing);
     nl.insert(nl.begin(), toAdd);
     _store.push_back(std::move(nl));
 }
 
-void UniqueVarStore::getAllRep(VariableSet& o_vars) const {
-    for (const VariableSet& l : _store) {
+void UniqueVarStore::getAllRep(VariableGrp& o_vars) const {
+    for (const VariableGrp& l : _store) {
         o_vars.push_back(l.front());
     }
 }
 
 const Variable* UniqueVarStore::getRep(const Variable* v) {
-    for (const VariableSet& l : _store) {
+    for (const VariableGrp& l : _store) {
         for (const Variable* s : l) {
             if (s == v) {
                 return l.front();

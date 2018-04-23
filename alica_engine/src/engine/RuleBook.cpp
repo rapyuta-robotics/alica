@@ -132,7 +132,7 @@ PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r) {
     }
 
     auto temp = r->getParent().lock();
-    AgentSet robots;
+    AgentGrp robots;
     temp->getAssignment()->getRobotStateMapping()->getRobotsInState(temp->getActiveState(), robots);
     shared_ptr<RunningPlan> newr = ps->getBestSimilarAssignment(r, robots);
     if (newr == nullptr) {
@@ -261,7 +261,7 @@ PlanChange RuleBook::planRedoRule(shared_ptr<RunningPlan> r) {
     r->setFailHandlingNeeded(false);
     r->deactivateChildren();
     r->clearChildren();
-    AgentSet robots;
+    AgentGrp robots;
     r->getAssignment()->getRobotStateMapping()->getRobotsInState(r->getActiveState(), robots);
     r->getAssignment()->getRobotStateMapping()->setStates(robots, r->getOwnEntryPoint()->getState());
 
@@ -340,7 +340,7 @@ PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp) {
     }
     rp->setAllocationNeeded(false);
 
-    AgentSet robots;
+    AgentGrp robots;
     rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState(), robots);
 
 #ifdef RULE_debug

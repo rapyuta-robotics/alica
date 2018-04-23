@@ -14,23 +14,19 @@
 
 namespace alica {
 
-ResultEntry::ResultEntry(const supplementary::AgentID* robotId) 
-    : _id(robotId)
-    {}
-
+ResultEntry::ResultEntry(const supplementary::AgentID* robotId)
+        : _id(robotId) {}
 
 ResultEntry::ResultEntry(ResultEntry&& o)
-    : _id(o._id)
-    , _values(std::move(o._values))
-    , _valueLock()
-    {}
+        : _id(o._id)
+        , _values(std::move(o._values))
+        , _valueLock() {}
 
 ResultEntry& ResultEntry::operator=(ResultEntry&& o) {
     std::swap(_id, o._id);
     _values = std::move(o._values);
     return *this;
 }
-
 
 void ResultEntry::addValue(int64_t vid, Variant val, AlicaTime time) {
     std::lock_guard<std::mutex> lock(_valueLock);
@@ -72,7 +68,7 @@ Variant ResultEntry::getValue(int64_t vid, AlicaTime earliest) const {
     return Variant();
 }
 
-bool ResultEntry::getValues(const VariableSet& query, AlicaTime earliest, std::vector<Variant>& o_values) const {
+bool ResultEntry::getValues(const VariableGrp& query, AlicaTime earliest, std::vector<Variant>& o_values) const {
     o_values.resize(query.size());
     int i = 0;
     int nans = 0;

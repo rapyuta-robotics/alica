@@ -13,15 +13,15 @@ public:
     UniqueVarStore();
 
     void clear();
-    void initWith(const VariableSet& vs);
+    void initWith(const VariableGrp& vs);
     void add(const Variable* v);
     const Variable* getRep(const Variable* v);
     void addVarTo(const Variable* representing, const Variable* toAdd);
-    void getAllRep(VariableSet& o_vars) const;
+    void getAllRep(VariableGrp& o_vars) const;
     int getIndexOf(const Variable* v) const;
     friend std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store) {
         os << "UniqueVarStore: " << std::endl;
-        for (const VariableSet& vs : store._store) {
+        for (const VariableGrp& vs : store._store) {
             os << "Unifications: ";
             for (const Variable* variable : vs) {
                 os << *variable << ", ";
@@ -36,7 +36,7 @@ private:
      *  Each inner list of variables is sorted from variables of the top most plan to variables of the deepest plan.
      *  Therefore, the first element is always the variable in the top most plan, where this variable occurs.
      */
-    std::vector<VariableSet> _store;
+    std::vector<VariableGrp> _store;
 };
 
 }  // namespace alica

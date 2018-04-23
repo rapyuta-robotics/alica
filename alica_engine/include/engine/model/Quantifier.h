@@ -35,7 +35,7 @@ public:
     }
     const Plan* getScopedPlan() const { return _scopeType == PLANSCOPE ? static_cast<const Plan*>(_scope) : nullptr; }
     const AlicaElement* getScope() const { return _scope; }
-    const VariableSet& getTemplateVariables() const { return _templateVars; }
+    const VariableGrp& getTemplateVariables() const { return _templateVars; }
     bool hasTemplateVariable(const Variable* v) const {
         return std::find(_templateVars.begin(), _templateVars.end(), v) != _templateVars.end();
     }
@@ -58,7 +58,7 @@ private:
     void setScope(const AlicaElement* ae);
     void setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers);
 
-    VariableSet _templateVars;
+    VariableGrp _templateVars;
     std::vector<std::string> _domainIdentifiers;
 
     const AlicaElement* _scope;

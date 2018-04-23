@@ -62,8 +62,8 @@ private:
     std::vector<T> _next;
 };
 
-using BufferedVariableSet = BufferedSet<const Variable*>;
-using BufferedDomainVariableSet = BufferedSet<const DomainVariable*>;
+using BufferedVariableGrp = BufferedSet<const Variable*>;
+using BufferedDomainVariableGrp = BufferedSet<const DomainVariable*>;
 
 /**
  * Encapsulates queries to variables (which are associated with specific solvers).
@@ -83,8 +83,8 @@ public:
     template <class SolverType, typename ResultType>
     bool getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>& result);
 
-    BufferedVariableSet& editStaticVariableBuffer() { return _staticVars; }
-    BufferedDomainVariableSet& editDomainVariableBuffer() { return _domainVars; }
+    BufferedVariableGrp& editStaticVariableBuffer() { return _staticVars; }
+    BufferedDomainVariableGrp& editDomainVariableBuffer() { return _domainVars; }
 
     void addProblemPart(ProblemPart&& p);
     int getPartCount() const { return _problemParts.size(); }
@@ -97,16 +97,16 @@ private:
     bool collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolverBase* solver,
             std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
 
-    VariableSet _queriedStaticVariables;
-    DomainVariableSet _queriedDomainVariables;
+    VariableGrp _queriedStaticVariables;
+    DomainVariableGrp _queriedDomainVariables;
 
     UniqueVarStore _uniqueVarStore;
     std::vector<ProblemPart> _problemParts;
 
-    BufferedVariableSet _staticVars;
-    BufferedDomainVariableSet _domainVars;
+    BufferedVariableGrp _staticVars;
+    BufferedDomainVariableGrp _domainVars;
 
-    VariableSet _relevantVariables;
+    VariableGrp _relevantVariables;
 };
 
 template <class SolverType>

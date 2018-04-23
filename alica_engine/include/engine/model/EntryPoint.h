@@ -47,7 +47,7 @@ public:
     int getMinCardinality() const { return _minCardinality; }
     bool isSuccessRequired() const { return _successRequired; }
 
-    const StateSet& getReachableStates() const { return _reachableStates; }
+    const StateGrp& getReachableStates() const { return _reachableStates; }
     bool isStateReachable(const State* s) const;
 
 private:
@@ -87,7 +87,7 @@ private:
     /**
      * The set of states reachable from the initial state.
      */
-    StateSet _reachableStates;
+    StateGrp _reachableStates;
 };
 
 }  // namespace alica

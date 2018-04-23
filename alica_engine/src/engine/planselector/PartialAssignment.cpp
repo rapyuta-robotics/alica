@@ -84,12 +84,12 @@ void PartialAssignment::reset(PartialAssignmentPool* pap) {
     pap->curIndex = 0;
 }
 
-const AgentSet& PartialAssignment::getRobotIds() const {
+const AgentGrp& PartialAssignment::getRobotIds() const {
     return robotIds;
 }
 
 PartialAssignment* PartialAssignment::getNew(
-        PartialAssignmentPool* pap, const AgentSet& robotIds, const Plan* plan, shared_ptr<SuccessCollection> sucCol) {
+        PartialAssignmentPool* pap, const AgentGrp& robotIds, const Plan* plan, shared_ptr<SuccessCollection> sucCol) {
     if (pap->curIndex >= pap->maxCount) {
         cerr << "max PA count reached!" << endl;
     }

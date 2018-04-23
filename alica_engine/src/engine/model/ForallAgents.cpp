@@ -64,7 +64,7 @@ bool ForallAgents::isAgentInScope(AgentIDPtr id, std::shared_ptr<RunningPlan>& r
                            rp->getRobotsAvail().end();
             break;
         case ENTRYPOINTSCOPE: {
-            const AgentSet* agents = rp->getAssignment()->getRobotsWorking(getScopedEntryPoint());
+            const AgentGrp* agents = rp->getAssignment()->getRobotsWorking(getScopedEntryPoint());
             return std::find(agents->begin(), agents->end(), id) != agents->end();
         } break;
         case STATESCOPE:
