@@ -8,15 +8,16 @@
 #ifndef ABSTRACTPLAN_H_
 #define ABSTRACTPLAN_H_
 
-#include <string>
 #include <memory>
+#include <string>
 
 #include "AlicaElement.h"
 #include "engine/AlicaClock.h"
 
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 
 class Variable;
 class PreCondition;
@@ -28,8 +29,9 @@ class ExpressionHandler;
 /**
  * Super class of plans, plantypes and behaviourconfigurations.
  */
-class AbstractPlan : public AlicaElement {
-public:
+class AbstractPlan : public AlicaElement
+{
+  public:
     AbstractPlan();
     AbstractPlan(int64_t id);
 
@@ -49,9 +51,10 @@ public:
     std::string toString() const override;
     const std::string& getFileName() const { return _fileName; }
 
-    void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const;  // not a mistake, this is mutable
+    void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const; // not a mistake, this is mutable
+    const Variable* getVariableByName(const std::string& name) const;
 
-private:
+  private:
     friend ModelFactory;
     friend ExpressionHandler;
 
@@ -77,8 +80,7 @@ private:
     /**
      * This plan's Utility function
      */
-    std::shared_ptr<UtilityFunction>
-            _utilityFunction;  // TODO why the heck is this a shared ptr, livetime is bout to this object
+    std::shared_ptr<UtilityFunction> _utilityFunction; // TODO why the heck is this a shared ptr, livetime is bout to this object
 
     VariableGrp _variables;
     /**
@@ -93,6 +95,6 @@ private:
     std::string _fileName;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* ABSTRACTPLAN_H_ */
