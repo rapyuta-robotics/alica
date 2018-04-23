@@ -148,6 +148,7 @@ bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<Resul
 #ifdef Q_DEBUG
     std::cout << "Query: " << _uniqueVarStore << std::endl;
 #endif
+
     // TODO: get rid of the interrim vector (see below how)
     std::vector<ResultType> solverResult;
     // let the solver solve the problem
