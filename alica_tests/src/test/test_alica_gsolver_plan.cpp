@@ -41,7 +41,7 @@ protected:
     static void signal_handler(int signal) { EXPECT_FALSE(signal); }
     
     virtual void SetUp() {
-        std::signal(SIGINT, signal_handler);
+        std::signal(SIGSEGV, signal_handler);
 
         // determine the path to the test config
         ros::NodeHandle nh;
@@ -96,7 +96,7 @@ TEST_F(AlicaGSolverPlan, solverTest) {
 
     step(ae);
 
-    EXPECT_EQ(alica::SolverTestBehaviour::result.size(), 2) << "Wrong result size";
+    ASSERT_EQ(alica::SolverTestBehaviour::result.size(), 2) << "Wrong result size";
     EXPECT_GT(alica::SolverTestBehaviour::result[0], 4000);
     EXPECT_LT(alica::SolverTestBehaviour::result[0], 5000);
     EXPECT_GT(alica::SolverTestBehaviour::result[1], 7000);

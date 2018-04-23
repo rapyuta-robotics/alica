@@ -44,7 +44,7 @@ protected:
     static void signal_handler(int signal) { EXPECT_FALSE(signal); }
     
     virtual void SetUp() {
-        std::signal(SIGINT, signal_handler);
+        std::signal(SIGSEGV, signal_handler);
 
         // determine the path to the test config
         ros::NodeHandle nh;
@@ -91,12 +91,12 @@ TEST_F(AlicaConditionPlan, solverTest) {
     const alica::PlanRepository* rep = ae->getPlanRepository();
 
     const alica::BehaviourConfiguration* beh = rep->getBehaviourConfigurations()[1414068618837];
-    EXPECT_NE(beh, nullptr);
+    ASSERT_NE(beh, nullptr);
     const alica::State* state = rep->getStates()[1414068524246];
-    EXPECT_NE(state, nullptr);
+    ASSERT_NE(state, nullptr);
 
-    EXPECT_EQ(beh->getVariables().size(),2);
-    EXPECT_EQ(state->getParametrisation().size(),2);
+    ASSERT_EQ(beh->getVariables().size(),2);
+    ASSERT_EQ(state->getParametrisation().size(),2);
     const alica::Variable* beh_y = nullptr;
     for(const alica::Variable* v : beh->getVariables()) {
         if(v->getName() == "Y") {
@@ -104,17 +104,17 @@ TEST_F(AlicaConditionPlan, solverTest) {
             break;
         }
     }
-    EXPECT_NE(beh_y, nullptr);
+    ASSERT_NE(beh_y, nullptr);
 
-    EXPECT_EQ(beh_y->getId(),1416488161203);
+    ASSERT_EQ(beh_y->getId(),1416488161203);
     bool found = false;
     for(const alica::Parametrisation* p : state->getParametrisation()) {
-        EXPECT_EQ(p->getSubPlan(), beh);
+        ASSERT_EQ(p->getSubPlan(), beh);
         if(p->getSubVar() == beh_y) {
             found = true;
         }
     }
-    EXPECT_TRUE(found) << "Sub variable not found in parametrisation";
+    ASSERT_TRUE(found) << "Sub variable not found in parametrisation";
 
     ae->start();
     ae->stepNotify();
@@ -128,10 +128,10 @@ TEST_F(AlicaConditionPlan, solverTest) {
     shared_ptr<BasicBehaviour> basicBehaviour =
             (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getBasicBehaviour();
     shared_ptr<alica::ConstraintUsingBehaviour> constraintUsingBehaviour = dynamic_pointer_cast<alica::ConstraintUsingBehaviour>(basicBehaviour);
-    EXPECT_GT(constraintUsingBehaviour->getCallCounter(), 0);
+    ASSERT_GT(constraintUsingBehaviour->getCallCounter(), 0);
 
-    EXPECT_GT(alica::reasoner::ConstraintTestPlanDummySolver::getGetSolutionCallCounter(), 0);
-    EXPECT_EQ(alica::ConstraintUsingBehaviour::result.size(), 1) << "Wrong result size";
+    ASSERT_GT(alica::reasoner::ConstraintTestPlanDummySolver::getGetSolutionCallCounter(), 0);
+    ASSERT_EQ(alica::ConstraintUsingBehaviour::result.size(), 1) << "Wrong result size";
     const ByteArray& ba = ae->getBlackBoard().getValue(alica::ConstraintUsingBehaviour::result[0]);
     std::string resultingString(reinterpret_cast<const char*>(ba.begin()),ba.size());
     EXPECT_EQ("Y",resultingString);

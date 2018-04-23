@@ -32,7 +32,7 @@ protected:
     static void signal_handler(int signal) { EXPECT_FALSE(signal); }
     
     virtual void SetUp() {
-        std::signal(SIGINT, signal_handler);
+        std::signal(SIGSEGV, signal_handler);
 
         // determine the path to the test config
         ros::NodeHandle nh;

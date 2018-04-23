@@ -26,7 +26,7 @@ protected:
     static void signal_handler(int signal) { EXPECT_FALSE(signal); }
     
     virtual void SetUp() {
-        std::signal(SIGINT, signal_handler);
+        std::signal(SIGSEGV, signal_handler);
 
         // determine the path to the test config
         ros::NodeHandle nh;
@@ -67,7 +67,7 @@ TEST_F(AlicaEngineTestBehPool, behaviourPoolInit) {
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
     alica::BehaviourPool* bp = ae->getBehaviourPool();
     for (const Behaviour* behaviour : ae->getPlanRepository()->getBehaviours()) {
-        EXPECT_NE(behaviour, nullptr);
+        ASSERT_NE(behaviour, nullptr);
         cout << "Behaviour: " << behaviour->getName() << endl;
     }
 }

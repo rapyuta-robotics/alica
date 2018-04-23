@@ -36,7 +36,7 @@ protected:
     static void signal_handler(int signal) { EXPECT_FALSE(signal); }
 
     virtual void SetUp() {
-        std::signal(SIGINT, signal_handler);
+        std::signal(SIGSEGV, signal_handler);
 
         // determine the path to the test config
         ros::NodeHandle nh;
@@ -97,12 +97,12 @@ TEST(AllocationDifference, MessageCancelsUtil) {
     EntryPointRobotPair aTot2(&e2, &a1);
     EntryPointRobotPair bTot2(&e2, &a2);
 
-    EXPECT_EQ(a1, a1);
-    EXPECT_NE(a1, a2);
+    ASSERT_EQ(a1, a1);
+    ASSERT_NE(a1, a2);
 
-    EXPECT_EQ(aTot1, aTot1);
-    EXPECT_NE(aTot1, aTot2);
-    EXPECT_NE(aTot1, bTot1);
+    ASSERT_EQ(aTot1, aTot1);
+    ASSERT_NE(aTot1, aTot2);
+    ASSERT_NE(aTot1, bTot1);
 
     util.editAdditions().push_back(aTot1);
     util.editSubtractions().push_back(aTot2);
@@ -147,7 +147,7 @@ TEST_F(AlicaEngineAuthorityManager, authority) {
 
     const supplementary::AgentID* id1 = ae->getTeamManager()->getLocalAgentID();
     const supplementary::AgentID* id2 = ae2->getTeamManager()->getLocalAgentID();
-    EXPECT_NE(*id1, *id2) << "Agents use the same ID.";
+    ASSERT_NE(*id1, *id2) << "Agents use the same ID.";
 
     ae->start();
     ae2->start();
