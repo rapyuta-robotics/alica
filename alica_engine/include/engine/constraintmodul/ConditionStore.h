@@ -26,7 +26,7 @@ class ConditionStore
     void addCondition(const Condition* con);
     void removeCondition(const Condition* con);
 
-    void acceptQuery(Query& query, std::shared_ptr<RunningPlan> rp) const;
+    void acceptQuery(Query& query, std::shared_ptr<const RunningPlan> rp) const;
 
     ConditionStore(const ConditionStore&) = delete;
     ConditionStore(ConditionStore&&) = delete;

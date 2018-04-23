@@ -6,24 +6,29 @@
 #include "engine/model/DomainVariable.h"
 #include "engine/model/Quantifier.h"
 
-namespace alica {
+namespace alica
+{
 
-ProblemPart::ProblemPart(const Condition* con, shared_ptr<RunningPlan> rp)
-        : _condition(con)
-        , _runningPlan(rp)
-        , _descriptor(std::make_shared<ProblemDescriptor>()) {
+ProblemPart::ProblemPart(const Condition* con, shared_ptr<const RunningPlan> rp)
+    : _condition(con)
+    , _runningPlan(rp)
+    , _descriptor(std::make_shared<ProblemDescriptor>())
+{
     for (const Quantifier* quantifier : con->getQuantifiers()) {
         quantifier->addDomainVariables(rp, _vars);
     }
 }
 
 ProblemPart::ProblemPart(ProblemPart&& o)
-        : _vars(std::move(o._vars))
-        , _condition(o._condition)
-        , _runningPlan(std::move(o._runningPlan))
-        , _descriptor(std::move(o._descriptor)) {}
+    : _vars(std::move(o._vars))
+    , _condition(o._condition)
+    , _runningPlan(std::move(o._runningPlan))
+    , _descriptor(std::move(o._descriptor))
+{
+}
 
-ProblemPart& ProblemPart::operator=(ProblemPart&& o) {
+ProblemPart& ProblemPart::operator=(ProblemPart&& o)
+{
     _vars = std::move(o._vars);
     _condition = o._condition;
     _runningPlan = std::move(o._runningPlan);
@@ -34,7 +39,8 @@ ProblemPart& ProblemPart::operator=(ProblemPart&& o) {
 /**
  * Checks whether the given variable is one of the domain variables.
  */
-bool ProblemPart::hasVariable(const DomainVariable* v) const {
+bool ProblemPart::hasVariable(const DomainVariable* v) const
+{
     for (const AgentVariables& avars : _vars) {
         for (const DomainVariable* variable : avars.getVars()) {
             if (variable == v) {
@@ -44,8 +50,8 @@ bool ProblemPart::hasVariable(const DomainVariable* v) const {
     }
     return false;
 }
-std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(
-        ISolverBase* solver, UniqueVarStore& uvs) const {
+std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(ISolverBase* solver, UniqueVarStore& uvs) const
+{
     _descriptor->clear();
     const VariableGrp& staticCondVariables = getCondition()->getVariables();
 
