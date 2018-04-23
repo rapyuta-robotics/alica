@@ -29,9 +29,10 @@ Condition::Condition(int64_t id)
 
 Condition::~Condition() {}
 
-void Condition::getConstraint(shared_ptr<ProblemDescriptor> pd, shared_ptr<RunningPlan> rp) const
+void Condition::getConstraint(std::shared_ptr<ProblemDescriptor> pd, std::shared_ptr<const RunningPlan> rp) const
 {
-    _basicConstraint->getConstraint(pd, rp);
+    // TODO: fix const cast below
+    _basicConstraint->getConstraint(pd, std::const_pointer_cast<RunningPlan>(rp));
 }
 
 void Condition::setConditionString(const std::string& conditionString)
@@ -39,7 +40,7 @@ void Condition::setConditionString(const std::string& conditionString)
     _conditionString = conditionString;
 }
 
-bool Condition::evaluate(shared_ptr<RunningPlan> rp) const
+bool Condition::evaluate(std::shared_ptr<RunningPlan> rp) const
 {
     if (_basicCondition == nullptr) {
         std::cerr << "Condition: Missing implementation of condition: ID " << getId() << std::endl;
@@ -75,7 +76,7 @@ void Condition::setPlugInName(const std::string& plugInName)
     _plugInName = plugInName;
 }
 
-void Condition::setBasicCondition(const shared_ptr<BasicCondition>& basicCondition)
+void Condition::setBasicCondition(const std::shared_ptr<BasicCondition>& basicCondition)
 {
     _basicCondition = basicCondition;
 }
@@ -85,7 +86,7 @@ void Condition::setParameters(const ParameterGrp& parameters)
     _parameters = parameters;
 }
 
-void Condition::setBasicConstraint(const shared_ptr<BasicConstraint>& basicConstraint)
+void Condition::setBasicConstraint(const std::shared_ptr<BasicConstraint>& basicConstraint)
 {
     _basicConstraint = basicConstraint;
 }

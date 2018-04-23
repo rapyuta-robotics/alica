@@ -2,9 +2,9 @@
 
 //#define Q_DEBUG
 
+#include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/AlicaClock.h"
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/constraintmodul/ConditionStore.h"
@@ -17,23 +17,25 @@
 #include "engine/constraintmodul/UniqueVarStore.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Condition.h"
+#include "engine/model/DomainVariable.h"
 #include "engine/model/Parametrisation.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
-#include "engine/model/DomainVariable.h"
 
 #include <map>
 #include <memory>
 #include <vector>
 
-namespace alica {
+namespace alica
+{
 class ProblemPart;
 class RunningPlan;
 class BasicBehaviour;
 
 template <class T>
-class BufferedSet {
-public:
+class BufferedSet
+{
+  public:
     BufferedSet() = default;
     BufferedSet(const BufferedSet&) = delete;
     BufferedSet& operator=(const BufferedSet&) = delete;
@@ -42,14 +44,16 @@ public:
     std::vector<T>& editCurrent() { return _current; }
     std::vector<T>& editNext() { return _next; }
     void flip() { std::swap(_current, _next); }
-    void mergeAndFlip() {
+    void mergeAndFlip()
+    {
         if (!_current.empty()) {
             _next.insert(_next.end(), _current.begin(), _current.end());
         }
         _current.clear();
         flip();
     }
-    void clear() {
+    void clear()
+    {
         _current.clear();
         _next.clear();
     }
@@ -57,7 +61,7 @@ public:
     bool hasCurrently(T v) const { return std::find(_current.begin(), _current.end(), v) != _current.end(); }
     bool has(T v) const { return hasCurrently(v) || (std::find(_next.begin(), _next.end(), v) != _next.end()); }
 
-private:
+  private:
     std::vector<T> _current;
     std::vector<T> _next;
 };
@@ -68,8 +72,9 @@ using BufferedDomainVariableGrp = BufferedSet<const DomainVariable*>;
 /**
  * Encapsulates queries to variables (which are associated with specific solvers).
  */
-class Query {
-public:
+class Query
+{
+  public:
     Query();
 
     void addStaticVariable(const Variable* v);
@@ -78,10 +83,10 @@ public:
     void clearStaticVariables();
 
     template <class SolverType>
-    bool existsSolution(std::shared_ptr<RunningPlan> rp);
+    bool existsSolution(std::shared_ptr<const RunningPlan> rp);
 
     template <class SolverType, typename ResultType>
-    bool getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>& result);
+    bool getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<ResultType>& result);
 
     BufferedVariableGrp& editStaticVariableBuffer() { return _staticVars; }
     BufferedDomainVariableGrp& editDomainVariableBuffer() { return _domainVars; }
@@ -91,11 +96,11 @@ public:
     const std::vector<ProblemPart>& getProblemParts() const { return _problemParts; }
     const UniqueVarStore& getUniqueVariableStore() const; /*< for testing only!!! */
 
-private:
+  private:
     void clearTemporaries();
     void fillBufferFromQuery();
-    bool collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolverBase* solver,
-            std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
+    bool collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds,
+                                 int& domOffset);
 
     VariableGrp _queriedStaticVariables;
     DomainVariableGrp _queriedDomainVariables;
@@ -110,7 +115,8 @@ private:
 };
 
 template <class SolverType>
-bool Query::existsSolution(std::shared_ptr<RunningPlan> rp) {
+bool Query::existsSolution(std::shared_ptr<const RunningPlan> rp)
+{
     SolverType* solver = rp->getAlicaEngine()->getSolver<SolverType>();
 
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
@@ -122,7 +128,8 @@ bool Query::existsSolution(std::shared_ptr<RunningPlan> rp) {
 }
 
 template <class SolverType, typename ResultType>
-bool Query::getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>& result) {
+bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<ResultType>& result)
+{
     result.clear();
 
     // Collect the complete problem specification
@@ -130,8 +137,7 @@ bool Query::getSolution(std::shared_ptr<RunningPlan> rp, std::vector<ResultType>
     int domOffset;
     SolverType* solver = rp->getAlicaEngine()->getSolver<SolverType>();
     if (solver == nullptr) {
-        std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available."
-                  << std::endl;
+        std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available." << std::endl;
         return false;
     }
 

@@ -56,7 +56,7 @@ ForallAgents::Result ForallAgents::TryAddId(AgentIDPtr id, std::vector<AgentVari
     }
 }
 
-bool ForallAgents::isAgentInScope(AgentIDPtr id, std::shared_ptr<RunningPlan>& rp) const
+bool ForallAgents::isAgentInScope(AgentIDPtr id, const std::shared_ptr<const RunningPlan>& rp) const
 {
     switch (getScopeType()) {
     case PLANSCOPE:
@@ -74,7 +74,7 @@ bool ForallAgents::isAgentInScope(AgentIDPtr id, std::shared_ptr<RunningPlan>& r
     return false;
 }
 
-bool ForallAgents::addDomainVariables(std::shared_ptr<RunningPlan>& p, std::vector<AgentVariables>& io_agentVarsInScope) const
+bool ForallAgents::addDomainVariables(const std::shared_ptr<const RunningPlan>& p, std::vector<AgentVariables>& io_agentVarsInScope) const
 {
     bool addedAgent = false;
     bool changedAgent = false;

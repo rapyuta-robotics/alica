@@ -37,7 +37,7 @@ class Condition : public AlicaElement
     /**
      * The delegate type used to attach constraints to plans.
      */
-    void getConstraint(std::shared_ptr<ProblemDescriptor> pd, std::shared_ptr<RunningPlan> rp) const;
+    void getConstraint(std::shared_ptr<ProblemDescriptor> pd, std::shared_ptr<const RunningPlan> rp) const;
 
     const AbstractPlan* getAbstractPlan() const { return _abstractPlan; }
 

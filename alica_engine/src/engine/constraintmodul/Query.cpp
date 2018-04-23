@@ -1,67 +1,73 @@
-#include <engine/constraintmodul/ConditionStore.h>
-#include <engine/constraintmodul/ISolver.h>
-#include <engine/constraintmodul/ProblemDescriptor.h>
-#include <engine/constraintmodul/ProblemPart.h>
-#include <engine/constraintmodul/Query.h>
+#include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/AlicaClock.h"
-#include "engine/teammanager/TeamManager.h"
-#include "engine/teammanager/Agent.h"
 #include "engine/RunningPlan.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/constraintmodul/SolverTerm.h"
 #include "engine/constraintmodul/SolverVariable.h"
 #include "engine/model/Condition.h"
-#include "engine/model/State.h"
 #include "engine/model/Parametrisation.h"
 #include "engine/model/PlanType.h"
+#include "engine/model/State.h"
 #include "engine/model/Variable.h"
+#include "engine/teammanager/Agent.h"
+#include "engine/teammanager/TeamManager.h"
+#include <engine/constraintmodul/ConditionStore.h>
+#include <engine/constraintmodul/ISolver.h>
+#include <engine/constraintmodul/ProblemDescriptor.h>
+#include <engine/constraintmodul/ProblemPart.h>
+#include <engine/constraintmodul/Query.h>
 
 #include <iostream>
 //#define Q_DEBUG
 
-namespace alica {
+namespace alica
+{
 Query::Query() {}
 
-void Query::addStaticVariable(const Variable* v) {
+void Query::addStaticVariable(const Variable* v)
+{
     _queriedStaticVariables.push_back(v);
 }
 
-void Query::addDomainVariable(const supplementary::AgentID* robot, const std::string& ident, AlicaEngine* ae) {
+void Query::addDomainVariable(const supplementary::AgentID* robot, const std::string& ident, AlicaEngine* ae)
+{
     _queriedDomainVariables.push_back(ae->getTeamManager()->getDomainVariable(robot, ident));
 }
 
-void Query::clearDomainVariables() {
+void Query::clearDomainVariables()
+{
     _queriedDomainVariables.clear();
 }
 
-void Query::clearStaticVariables() {
+void Query::clearStaticVariables()
+{
     _queriedStaticVariables.clear();
 }
 
-void Query::clearTemporaries() {
+void Query::clearTemporaries()
+{
     // Clear variable stuff and calls
     _uniqueVarStore.clear();
     _staticVars.clear();
     _domainVars.clear();
     _problemParts.clear();
 }
-void Query::fillBufferFromQuery() {
+void Query::fillBufferFromQuery()
+{
     if (!_queriedStaticVariables.empty()) {
-        _staticVars.editCurrent().insert(
-                _staticVars.editCurrent().end(), _queriedStaticVariables.begin(), _queriedStaticVariables.end());
+        _staticVars.editCurrent().insert(_staticVars.editCurrent().end(), _queriedStaticVariables.begin(), _queriedStaticVariables.end());
     }
     if (!_queriedDomainVariables.empty()) {
-        _domainVars.editCurrent().insert(
-                _domainVars.editCurrent().end(), _queriedDomainVariables.begin(), _queriedDomainVariables.end());
+        _domainVars.editCurrent().insert(_domainVars.editCurrent().end(), _queriedDomainVariables.begin(), _queriedDomainVariables.end());
     }
     // add static variables into clean unique variable store
     _uniqueVarStore.initWith(_queriedStaticVariables);
 }
 
-bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolverBase* solver,
-        std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset) {
+bool Query::collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds,
+                                    int& domOffset)
+{
 #ifdef Q_DEBUG
     AlicaTime time = rp->getAlicaEngine()->getAlicaClock()->now();
 #endif
@@ -111,8 +117,7 @@ bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolverBase
         if (parent && parent->getActiveState() != nullptr) {
             _staticVars.editNext().clear();
             for (const Parametrisation* p : parent->getActiveState()->getParametrisation()) {
-                if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType()) &&
-                        _staticVars.hasCurrently(p->getSubVar())) {
+                if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType()) && _staticVars.hasCurrently(p->getSubVar())) {
                     _staticVars.editNext().push_back(p->getVar());
                     _uniqueVarStore.addVarTo(p->getSubVar(), p->getVar());
                 }
@@ -154,24 +159,22 @@ bool Query::collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolverBase
 
     // write all domain variables into the out-parameter "relevantVariables"
     if (!_domainVars.getCurrent().empty()) {
-        _relevantVariables.insert(
-                _relevantVariables.end(), _domainVars.getCurrent().begin(), _domainVars.getCurrent().end());
+        _relevantVariables.insert(_relevantVariables.end(), _domainVars.getCurrent().begin(), _domainVars.getCurrent().end());
     }
 
 #ifdef Q_DEBUG
     std::cout << "Query: Number of relevant static variables: " << domOffset << std::endl;
     std::cout << "Query: Number of relevant domain variables: " << _domainVarBuffer.getCurrent().size() << std::endl;
     std::cout << "Query: Total number of relevant variables: " << _relevantVariables.size() << std::endl;
-    cout << "Query: PrepTime: " << (rp->getAlicaEngine()->getAlicaClock()->now() - time).inMicroSeconds() << "us"
-         << endl;
+    cout << "Query: PrepTime: " << (rp->getAlicaEngine()->getAlicaClock()->now() - time).inMicroSeconds() << "us" << endl;
 #endif
     return true;
 }
 
-void Query::addProblemPart(ProblemPart&& pp) {
+void Query::addProblemPart(ProblemPart&& pp)
+{
     const Condition* c = pp.getCondition();
-    assert(std::find_if(_problemParts.begin(), _problemParts.end(),
-                   [c](const ProblemPart& opp) { return opp.getCondition() == c; }) == _problemParts.end());
+    assert(std::find_if(_problemParts.begin(), _problemParts.end(), [c](const ProblemPart& opp) { return opp.getCondition() == c; }) == _problemParts.end());
 
     for (const AgentVariables& avars : pp.getAllVariables()) {
         for (const DomainVariable* domainvariable : avars.getVars()) {
