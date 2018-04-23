@@ -43,16 +43,16 @@ bool CGSolver::existsSolutionImpl(const VariableGrp& vars, const std::vector<sha
             return false;
         }
         constraint = constraint & dynamic_pointer_cast<autodiff::Term>(c->getConstraint());
-        shared_ptr<vector<vector<double>>> allRanges = c->allRanges();
-        for (int i = 0; i < c->getAllVars()->size(); ++i) {
+        const std::vector<std::pair<double,double>>& allRanges = c->getAllRanges();
+        for (int i = 0; i < c->getAllVariables().size(); ++i) {
             for (int j = 0; j < dim; ++j) {
-                if (dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(j)).get() == nullptr) {
+                if (dynamic_pointer_cast<autodiff::Term>(c->getAllVariables()[j]).get() == nullptr) {
                     cerr << "CGSolver: Variabletype not compatible with selected solver" << endl;
                     return false;
                 }
-                if (cVars->at(j) == dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(j))) {
-                    ranges[j * 2] = std::max(ranges[2 * j], allRanges->at(i).at(0));
-                    ranges[j * 2 + 1] = std::min(ranges[2 * j + 1], allRanges->at(i).at(1));
+                if (cVars->at(j) == dynamic_pointer_cast<autodiff::Term>(c->getAllVariables()[j])) {
+                    ranges[j * 2] = std::max(ranges[2 * j], allRanges[i].first);
+                    ranges[j * 2 + 1] = std::min(ranges[2 * j + 1], allRanges[i].second);
                     if (ranges[j * 2] > ranges[j * 2 + 1]) {
                         return false;
                     }
@@ -99,7 +99,7 @@ bool CGSolver::getSolutionImpl(const VariableGrp& vars, const std::vector<std::s
     double usigVal = calls[0]->getUtilitySignificanceThreshold();
     for (int i = 0; i < calls.size(); ++i) {
         // TODO: fixed Values
-        if (calls.at(i)->getSetsUtilitySignificanceThreshold()) {
+        if (calls.at(i)->isSettingUtilitySignificanceThreshold()) {
             usigVal = calls[i]->getUtilitySignificanceThreshold();
         }
     }
@@ -126,9 +126,9 @@ bool CGSolver::getSolutionImpl(const VariableGrp& vars, const std::vector<std::s
         sufficientUtility += c->getUtilitySufficiencyThreshold();
 
         // limit ranges according to the ranges of the given calls
-        auto allRanges = c->allRanges();
-        for (int i = 0; i < c->getAllVars()->size(); ++i) {
-            std::shared_ptr<autodiff::Term> variableTerm = dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(i));
+        const std::vector<std::pair<double,double>>& allRanges = c->getAllRanges();
+        for (int i = 0; i < c->getAllVariables().size(); ++i) {
+            std::shared_ptr<autodiff::Term> variableTerm = dynamic_pointer_cast<autodiff::Term>(c->getAllVariables()[i]);
             if (variableTerm.get() == nullptr) {
                 std::cerr << "CGSolver: Variable is not of Type autodiff::Term!" << std::endl;
                 return false;
@@ -136,8 +136,8 @@ bool CGSolver::getSolutionImpl(const VariableGrp& vars, const std::vector<std::s
 
             for (int j = 0; j < constraintVariables->size(); ++j) {
                 if (constraintVariables->at(j) == variableTerm) {
-                    ranges[j * 2] = std::max(ranges[2 * j], allRanges->at(i).at(0));
-                    ranges[j * 2 + 1] = std::min(ranges[2 * j + 1], allRanges->at(i).at(1));
+                    ranges[j * 2] = std::max(ranges[2 * j], allRanges[i].first);
+                    ranges[j * 2 + 1] = std::min(ranges[2 * j + 1], allRanges[i].second);
                     if (ranges[j * 2] > ranges[j * 2 + 1]) {
                         std::cerr << "CGSolver: Ranges do not allow a solution!" << std::endl;
                         return false;
