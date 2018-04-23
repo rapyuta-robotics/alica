@@ -20,47 +20,47 @@ TEST(StateCollection, RobotsSorted) {
     const AgentID* robot2 = idfac.create(b2);
     const AgentID* robot3 = idfac.create(b3);
 
-    ASSERT_EQ(robot2->getRaw()[0],0x1);
-    ASSERT_EQ(robot1->getRaw()[0],0x2);
+    EXPECT_EQ(robot2->getRaw()[0],0x1);
+    EXPECT_EQ(robot1->getRaw()[0],0x2);
 
-    ASSERT_TRUE(*robot1 > *robot2);
-    ASSERT_TRUE(*robot1 < *robot3);
+    EXPECT_TRUE(*robot1 > *robot2);
+    EXPECT_TRUE(*robot1 < *robot3);
     
     StateCollection col;
     State s1(1);
     State s2(2);
     
-    ASSERT_EQ(col.getCount(),0);
+    EXPECT_EQ(col.getCount(),0);
 
     col.setState(robot1,&s1);
 
-    ASSERT_EQ(col.getCount(),1);
+    EXPECT_EQ(col.getCount(),1);
 
     col.setState(robot2,&s1);
 
-    ASSERT_EQ(col.getCount(),2);
+    EXPECT_EQ(col.getCount(),2);
 
     col.setState(robot3,&s1);
 
-    ASSERT_EQ(col.getCount(),3);
+    EXPECT_EQ(col.getCount(),3);
 
     alica::AgentSet robots;
     col.getRobotsInState(&s2,robots);
-    ASSERT_TRUE(robots.empty());
+    EXPECT_TRUE(robots.empty());
 
     col.getRobotsInState(&s1,robots);
-    ASSERT_EQ(robots.size(),3);
+    EXPECT_EQ(robots.size(),3);
 
-    ASSERT_EQ(robots[0],robot1);
-    ASSERT_EQ(robots[1],robot2);
-    ASSERT_EQ(robots[2],robot3);
+    EXPECT_EQ(robots[0],robot1);
+    EXPECT_EQ(robots[1],robot2);
+    EXPECT_EQ(robots[2],robot3);
 
     robots.clear();
     
     col.getRobotsInStateSorted(&s1,robots);
 
-    ASSERT_EQ(robots[0],robot2);
-    ASSERT_EQ(robots[1],robot1);
-    ASSERT_EQ(robots[2],robot3);
+    EXPECT_EQ(robots[0],robot2);
+    EXPECT_EQ(robots[1],robot1);
+    EXPECT_EQ(robots[2],robot3);
 
 }

@@ -17,6 +17,8 @@
 #include "engine/PlanBase.h"
 #include "engine/model/State.h"
 #include "TestWorldModel.h"
+#include <csignal>
+
 
 class AlicaConditionPlanType : public ::testing::Test { /* namespace alicaTests */
 protected:
@@ -26,8 +28,12 @@ protected:
     alica::ConditionCreator* cc;
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
-
+    
+    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
+    
     virtual void SetUp() {
+        std::signal(SIGINT, signal_handler);
+
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -56,6 +62,13 @@ protected:
         delete bc;
         delete uc;
         delete crc;
+    }
+
+    static void step(alica::AlicaEngine* ae) {
+        ae->stepNotify();
+        do {
+            ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+        } while (!ae->getPlanBase()->isWaiting());
     }
 };
 /**
@@ -90,9 +103,7 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest) {
     ae->start();
 
     for (int i = 0; i < 21; i++) {
-        ae->stepNotify();
-        chrono::milliseconds duration(33);
-        this_thread::sleep_for(duration);
+        step(ae);
 
         //		if(i > 1)
         //		{

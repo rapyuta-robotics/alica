@@ -22,6 +22,8 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <csignal>
+
 
 class AlicaProblemCompositionTest : public ::testing::Test {
 protected:
@@ -32,7 +34,11 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
+    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
+    
     virtual void SetUp() {
+        std::signal(SIGINT, signal_handler);
+
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -70,6 +76,13 @@ protected:
         delete uc;
         delete crc;
     }
+
+    static void step(alica::AlicaEngine* ae) {
+        ae->stepNotify();
+        do {
+            ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+        } while (!ae->getPlanBase()->isWaiting());
+    }
 };
 
 /**
@@ -77,19 +90,14 @@ protected:
  */
 TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition) {
     ae->start();
-    ae->stepNotify();
-    this_thread::sleep_for(chrono::milliseconds(33));
-    for (int i = 0; i < 5; ++i) {
-        while (!ae->getPlanBase()->isWaiting()) {
-            this_thread::sleep_for(chrono::milliseconds(33));
-        }
-        ae->stepNotify();
-    }
+
+    for (int i = 0; i < 5; ++i) { step(ae); }
+
     std::shared_ptr<const RunningPlan> deep = ae->getPlanBase()->getDeepestNode();
     RunningPlan* dp = const_cast<RunningPlan*>(deep.get());
-    ASSERT_FALSE(dp == nullptr);
-    ASSERT_EQ(dp->getChildren()->size(), 1);
-    ASSERT_TRUE((*dp->getChildren()->begin())->isBehaviour());
+    EXPECT_FALSE(dp == nullptr);
+    EXPECT_EQ(dp->getChildren()->size(), 1);
+    EXPECT_TRUE((*dp->getChildren()->begin())->isBehaviour());
 
     auto queryBehaviour1 = dynamic_pointer_cast<QueryBehaviour1>((*dp->getChildren()->begin())->getBasicBehaviour());
     auto allReps = queryBehaviour1->query->getUniqueVariableStore()->getAllRep();

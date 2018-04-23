@@ -12,6 +12,8 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
+#include <csignal>
+
 
 class PlanBaseTest : public ::testing::Test {
 protected:
@@ -22,7 +24,11 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
+    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
+    
     virtual void SetUp() {
+        std::signal(SIGINT, signal_handler);
+
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;

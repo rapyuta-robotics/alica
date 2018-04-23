@@ -20,6 +20,8 @@
 #include <Plans/Behaviour/TriggerB.h>
 #include <Plans/Behaviour/TriggerC.h>
 #include <Plans/Behaviour/NotToTrigger.h>
+#include <csignal>
+
 
 using namespace std;
 
@@ -32,7 +34,11 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
+    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
+    
     virtual void SetUp() {
+        std::signal(SIGINT, signal_handler);
+
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -46,7 +52,7 @@ protected:
 
         // setup the engine
         ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
-                "BehaviourTriggerTestPlan", ".", false);
+                "BehaviourTriggerTestPlan", ".", true);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
@@ -64,6 +70,13 @@ protected:
         delete uc;
         delete crc;
     }
+
+    static void step(alica::AlicaEngine* ae) {
+        ae->stepNotify();
+        do {
+            ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+        } while (!ae->getPlanBase()->isWaiting());
+    }
 };
 
 TEST_F(AlicaBehaviourTrigger, triggerTest) {
@@ -71,8 +84,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest) {
     alicaTests::TestWorldModel::getOne()->trigger2 = new supplementary::EventTrigger();
     ae->init(bc, cc, uc, crc);
     ae->start();
-    chrono::milliseconds duration(33);
-    this_thread::sleep_for(duration);
+    step(ae);
     for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
             iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
@@ -109,15 +121,15 @@ TEST_F(AlicaBehaviourTrigger, triggerTest) {
     }
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    this_thread::sleep_for(duration);
+    step(ae);
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    this_thread::sleep_for(duration);
+    step(ae);
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    this_thread::sleep_for(duration);
+    step(ae);
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    this_thread::sleep_for(duration);
+    step(ae);
 
     for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {

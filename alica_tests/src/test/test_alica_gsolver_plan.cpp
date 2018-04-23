@@ -26,6 +26,8 @@
 #include <CGSolver.h>
 #include <engine/constraintmodul/Query.h>
 #include "ConstraintTestPlanDummySolver.h"
+#include <csignal>
+
 
 class AlicaGSolverPlan : public ::testing::Test {
 protected:
@@ -36,7 +38,11 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
+    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
+    
     virtual void SetUp() {
+        std::signal(SIGINT, signal_handler);
+
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -72,6 +78,13 @@ protected:
         delete uc;
         delete crc;
     }
+
+    static void step(alica::AlicaEngine* ae) {
+        ae->stepNotify();
+        do {
+            ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+        } while (!ae->getPlanBase()->isWaiting());
+    }
 };
 /**
  * Tests if Behaviour with Constraints are called
@@ -81,14 +94,9 @@ TEST_F(AlicaGSolverPlan, solverTest) {
     cout << "Starting engine..." << endl;
     ae->start();
 
-    chrono::milliseconds sleepTime(33);
-    ae->stepNotify();
-    this_thread::sleep_for(sleepTime);
-    while (!ae->getPlanBase()->isWaiting()) {
-        this_thread::sleep_for(sleepTime);
-    }
+    step(ae);
 
-    ASSERT_EQ(alica::SolverTestBehaviour::result.size(), 2) << "Wrong result size";
+    EXPECT_EQ(alica::SolverTestBehaviour::result.size(), 2) << "Wrong result size";
     EXPECT_GT(alica::SolverTestBehaviour::result[0], 4000);
     EXPECT_LT(alica::SolverTestBehaviour::result[0], 5000);
     EXPECT_GT(alica::SolverTestBehaviour::result[1], 7000);

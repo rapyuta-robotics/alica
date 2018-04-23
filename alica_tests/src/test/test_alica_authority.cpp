@@ -20,6 +20,8 @@
 #include "engine/teammanager/TeamManager.h"
 #include "engine/PlanBase.h"
 #include "engine/model/State.h"
+#include <csignal>
+
 
 class AlicaEngineAuthorityManager : public ::testing::Test {
 protected:
@@ -31,7 +33,11 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
+    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
+
     virtual void SetUp() {
+        std::signal(SIGINT, signal_handler);
+
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -60,6 +66,13 @@ protected:
         delete uc;
         delete crc;
     }
+
+    static void step(alica::AlicaEngine* ae) {
+        ae->stepNotify();
+        do {
+            ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+        } while (!ae->getPlanBase()->isWaiting());
+    }
 };
 
 TEST(AllocationDifference, MessageCancelsUtil) {
@@ -84,12 +97,12 @@ TEST(AllocationDifference, MessageCancelsUtil) {
     EntryPointRobotPair aTot2(&e2, &a1);
     EntryPointRobotPair bTot2(&e2, &a2);
 
-    ASSERT_EQ(a1, a1);
-    ASSERT_NE(a1, a2);
+    EXPECT_EQ(a1, a1);
+    EXPECT_NE(a1, a2);
 
-    ASSERT_EQ(aTot1, aTot1);
-    ASSERT_NE(aTot1, aTot2);
-    ASSERT_NE(aTot1, bTot1);
+    EXPECT_EQ(aTot1, aTot1);
+    EXPECT_NE(aTot1, aTot2);
+    EXPECT_NE(aTot1, bTot1);
 
     util.editAdditions().push_back(aTot1);
     util.editSubtractions().push_back(aTot2);
@@ -134,7 +147,7 @@ TEST_F(AlicaEngineAuthorityManager, authority) {
 
     const supplementary::AgentID* id1 = ae->getTeamManager()->getLocalAgentID();
     const supplementary::AgentID* id2 = ae2->getTeamManager()->getLocalAgentID();
-    ASSERT_NE(*id1, *id2) << "Agents use the same ID.";
+    EXPECT_NE(*id1, *id2) << "Agents use the same ID.";
 
     ae->start();
     ae2->start();
@@ -146,14 +159,8 @@ TEST_F(AlicaEngineAuthorityManager, authority) {
     alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(0);
 
     for (int i = 0; i < 21; i++) {
-        ae->stepNotify();
-        chrono::milliseconds duration(33);
-        this_thread::sleep_for(duration);
-        ae2->stepNotify();
-        this_thread::sleep_for(duration);
-        while (!ae->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting()) {
-            this_thread::sleep_for(duration);
-        }
+        step(ae);
+        step(ae2);
 
         if (i == 1) {
             EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),

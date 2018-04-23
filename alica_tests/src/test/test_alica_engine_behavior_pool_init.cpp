@@ -11,6 +11,8 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
+#include <csignal>
+
 
 class AlicaEngineTestBehPool : public ::testing::Test {
 protected:
@@ -21,7 +23,11 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
+    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
+    
     virtual void SetUp() {
+        std::signal(SIGINT, signal_handler);
+
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -61,7 +67,7 @@ TEST_F(AlicaEngineTestBehPool, behaviourPoolInit) {
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
     alica::BehaviourPool* bp = ae->getBehaviourPool();
     for (const Behaviour* behaviour : ae->getPlanRepository()->getBehaviours()) {
-        ASSERT_NE(behaviour, nullptr);
+        EXPECT_NE(behaviour, nullptr);
         cout << "Behaviour: " << behaviour->getName() << endl;
     }
 }

@@ -17,6 +17,8 @@
 
 
 #include <string.h>
+#include <csignal>
+
 
 using alica::VariableSyncModule;
 using alica::Variable;
@@ -31,7 +33,11 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
+    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
+    
     virtual void SetUp() {
+        std::signal(SIGINT, signal_handler);
+
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");

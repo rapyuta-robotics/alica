@@ -18,6 +18,8 @@
 #include "TestWorldModel.h"
 #include "DummyTestSummand.h"
 #include "engine/teammanager/TeamManager.h"
+#include <csignal>
+
 
 class AlicaSyncTransition : public ::testing::Test { /* namespace alicaTests */
 protected:
@@ -31,7 +33,11 @@ protected:
     alicaRosProxy::AlicaRosCommunication* ros;
     alicaRosProxy::AlicaRosCommunication* ros2;
 
+    static void signal_handler(int signal) { EXPECT_FALSE(signal); }
+    
     virtual void SetUp() {
+        std::signal(SIGINT, signal_handler);
+
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -63,6 +69,13 @@ protected:
         delete ros;
         delete ros2;
     }
+
+    static void step(alica::AlicaEngine* ae) {
+        ae->stepNotify();
+        do {
+            ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+        } while (!ae->getPlanBase()->isWaiting());
+    }
 };
 
 /**
@@ -87,23 +100,15 @@ TEST_F(AlicaSyncTransition, syncTransitionTest) {
 
     ae->start();
     ae2->start();
-    chrono::milliseconds duration(33);
 
     for (int i = 0; i < 20; i++) {
         std::cout << "AE ----------------------------------------------- " << *ae->getTeamManager()->getLocalAgentID()
                   << std::endl;
-        ae->stepNotify();
-        this_thread::sleep_for(duration);
-        do {
-            this_thread::sleep_for(duration);
-        } while (!ae->getPlanBase()->isWaiting());
+        step(ae);
 
         std::cout << "AE ----------------------------------------------- " << *ae2->getTeamManager()->getLocalAgentID()
                   << std::endl;
-        ae2->stepNotify();
-        do {
-            this_thread::sleep_for(duration);
-        } while (!ae2->getPlanBase()->isWaiting() || !ae->getPlanBase()->isWaiting());
+        step(ae2);
 
         if (i == 2) {
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825427317(true);
