@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5.1)
 project(autodiff)
 
 ## Use c++ 11x std
@@ -19,7 +19,6 @@ catkin_package(
  INCLUDE_DIRS include
  LIBRARIES autodiff alica_engine
  CATKIN_DEPENDS fsystem
-# DEPENDS system filesystem
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS})
@@ -82,7 +81,17 @@ add_library(autodiff
 
 target_link_libraries(autodiff ${catkin_LIBRARIES})
 
-catkin_add_gtest(${PROJECT_NAME}-test test/test_autodiff.cpp)
-if(TARGET ${PROJECT_NAME}-test)
-  target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
-endif()
+if(CATKIN_ENABLE_TESTING)
+    catkin_add_gtest(${PROJECT_NAME}-test test/test_autodiff.cpp)
+    if(TARGET ${PROJECT_NAME}-test)
+    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
+    endif()
+else(CATKIN_ENABLE_TESTING)
+    # AUTODIFF TESTS
+    find_package(GTest REQUIRED)
+    include_directories(BEFORE
+    ${GTEST_INCLUDE_DIRS}
+    )
+    add_executable(${PROJECT_NAME}-tests test/test_autodiff.cpp)
+    target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} pthread ${GTEST_LIBRARIES})
+endif(CATKIN_ENABLE_TESTING)

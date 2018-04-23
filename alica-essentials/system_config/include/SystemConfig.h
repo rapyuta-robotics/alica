@@ -1,36 +1,36 @@
-#ifndef SYSTEMCONFIG_H_
-#define SYSTEMCONFIG_H_
+#pragma once
 
-using namespace std;
-
-#include <map>
-#include <string>
-#include <mutex>
-#include <thread>
-#include <memory>
-#include <atomic>
-#include <fstream>
-#include <iostream>
+#include "Configuration.h"
 
 #include <FileSystem.h>
 
-#include "Configuration.h"
+#include <atomic>
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <thread>
 
 const string DOMAIN_FOLDER = "DOMAIN_FOLDER";
 const string DOMAIN_CONFIG_FOLDER = "DOMAIN_CONFIG_FOLDER";
 
-namespace supplementary {
-class SystemConfig {
-protected:
+namespace supplementary
+{
+class SystemConfig
+{
+
+  protected:
     static string rootPath;
     static string logPath;
     static string configPath;
     static string hostname;
-    static mutex configsMapMutex;
-    static map<string, shared_ptr<Configuration>> configs;
+    static std::mutex configsMapMutex;
+    static std::map<std::string, std::shared_ptr<Configuration>> configs;
     static const char NODE_NAME_SEPERATOR = '_';
 
-public:
+  public:
     static SystemConfig* getInstance();
     static void shutdown();
     static string robotNodeName(const string& nodeName);
@@ -48,9 +48,8 @@ public:
     void setConfigPath(string configPath);
     static string getEnv(const string& var);
 
-private:
+  private:
     SystemConfig();
     ~SystemConfig(){};
 };
-}  // namespace supplementary
-#endif /* SYSTEMCONFIG_H_ */
+}
