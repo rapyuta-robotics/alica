@@ -4,10 +4,12 @@
 #include <engine/IUtilityCreator.h>
 #include <memory>
 
-namespace alica {
+namespace alica
+{
 
-class UtilityFunctionCreator : public IUtilityCreator {
-public:
+class UtilityFunctionCreator : public IUtilityCreator
+{
+  public:
     virtual ~UtilityFunctionCreator();
     UtilityFunctionCreator();
     shared_ptr<BasicUtilityFunction> createUtility(long utilityfunctionConfId);
