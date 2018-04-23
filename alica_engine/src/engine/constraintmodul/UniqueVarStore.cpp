@@ -15,6 +15,7 @@ void UniqueVarStore::initWith(const VariableGrp& vs) {
     for (const Variable* v : vs) {
         _store[i].push_back(v);
         assert(_store[i].size() == 1);
+        ++i;
         // TODO: make sure there is always one element, so we don't need to push back
     }
 }
