@@ -38,7 +38,7 @@ using AlicaElementGrp = std::vector<const AlicaElement*>;
 using BehaviourConfigurationGrp = std::vector<const BehaviourConfiguration*>;
 using CapabilityGrp = std::vector<const Capability*>;
 using CapValueGrp = std::vector<const CapValue*>;
-using ConditionSet = std::vector<const Condition*>;
+using ConditionGrp = std::vector<const Condition*>;
 using DomainVariableGrp = std::vector<const DomainVariable*>;
 using EntryPointGrp = std::vector<const EntryPoint*>;
 using FailureStateGrp = std::vector<const FailureState*>;
@@ -50,7 +50,7 @@ using RoleGrp = std::vector<const Role*>;
 using StateGrp = std::vector<const State*>;
 using SuccessStateGrp = std::vector<const SuccessState*>;
 using SyncTransitionGrp = std::vector<const SyncTransition*>;
-using TaskSet = std::vector<const Task*>;
+using TaskGrp = std::vector<const Task*>;
 using TransitionGrp = std::vector<const Transition*>;
 using VariableGrp = std::vector<const Variable*>;
 
