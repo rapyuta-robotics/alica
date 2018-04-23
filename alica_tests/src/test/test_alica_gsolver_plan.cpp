@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <test_alica.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
@@ -71,13 +72,6 @@ protected:
         delete bc;
         delete uc;
         delete crc;
-    }
-
-    static void step(alica::AlicaEngine* ae) {
-        ae->stepNotify();
-        do {
-            ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
-        } while (!ae->getPlanBase()->isWaiting());
     }
 };
 /**

@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <test_alica.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
 #include "engine/model/State.h"
@@ -111,13 +112,7 @@ TEST_F(AlicaConditionPlan, solverTest) {
     ASSERT_TRUE(found) << "Sub variable not found in parametrisation";
 
     ae->start();
-    ae->stepNotify();
-    //	unsigned int sleepTime = 1;
-    chrono::milliseconds sleepTime(33);
-    this_thread::sleep_for(sleepTime);
-    while (!ae->getPlanBase()->isWaiting()) {
-        this_thread::sleep_for(sleepTime);
-    }
+    step(ae);
 
     shared_ptr<BasicBehaviour> basicBehaviour =
             (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getBasicBehaviour();

@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <test_alica.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
@@ -67,13 +68,6 @@ protected:
         delete uc;
         delete crc;
     }
-
-    static void step(alica::AlicaEngine* ae) {
-        ae->stepNotify();
-        do {
-            ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
-        } while (!ae->getPlanBase()->isWaiting());
-    }
 };
 /**
  * Tests whether it is possible to run a behaviour in a primitive plan.
@@ -82,8 +76,6 @@ TEST_F(AlicaSpamSuccess, runBehaviour) {
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     ae->start();
-    for (int i = 0; i < 30 * 6; ++i) {
-        step(ae);
-    }
+    for (int i = 0; i < 30 * 6; ++i) { step(ae); }
     EXPECT_NE(ae->getPlanBase()->getRootNode(), nullptr);
 }
