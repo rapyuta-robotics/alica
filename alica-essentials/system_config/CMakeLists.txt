@@ -47,10 +47,14 @@ if (NOT catkin_FOUND)
   target_include_directories(system_config PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif(NOT catkin_FOUND)
 
+
+
 ## Add gtest based cpp test target and link libraries
 if (catkin_FOUND)
-  catkin_add_gtest(${PROJECT_NAME}-test test/test_system_config.cpp)
-  if(TARGET ${PROJECT_NAME}-test)
-    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
-  endif()
+  if (CATKIN_ENABLE_TESTING)
+    catkin_add_gtest(${PROJECT_NAME}-test test/test_system_config.cpp)
+    if(TARGET ${PROJECT_NAME}-test)
+        target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
+    endif()
+  endif(CATKIN_ENABLE_TESTING)
 endif(catkin_FOUND)
