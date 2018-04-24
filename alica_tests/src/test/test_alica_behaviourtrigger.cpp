@@ -68,6 +68,8 @@ protected:
 };
 
 TEST_F(AlicaBehaviourTrigger, triggerTest) {
+    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+
     alicaTests::TestWorldModel::getOne()->trigger1 = new supplementary::EventTrigger();
     alicaTests::TestWorldModel::getOne()->trigger2 = new supplementary::EventTrigger();
     ae->init(bc, cc, uc, crc);
@@ -137,4 +139,6 @@ TEST_F(AlicaBehaviourTrigger, triggerTest) {
         }
     }
     cout << "Finished" << endl;
+    
+    }
 }

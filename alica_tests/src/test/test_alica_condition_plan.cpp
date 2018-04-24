@@ -81,6 +81,8 @@ protected:
  * Tests if Behaviour with Constraints are called
  */
 TEST_F(AlicaConditionPlan, solverTest) {
+    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+
     ae->init(bc, cc, uc, crc);
 
     const alica::PlanRepository* rep = ae->getPlanRepository();
@@ -124,4 +126,6 @@ TEST_F(AlicaConditionPlan, solverTest) {
     const ByteArray& ba = ae->getBlackBoard().getValue(alica::ConstraintUsingBehaviour::result[0]);
     std::string resultingString(reinterpret_cast<const char*>(ba.begin()),ba.size());
     EXPECT_EQ("Y",resultingString);
+    
+    }
 }

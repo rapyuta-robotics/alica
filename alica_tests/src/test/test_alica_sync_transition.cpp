@@ -70,6 +70,8 @@ protected:
  * Test for SyncTransition
  */
 TEST_F(AlicaSyncTransition, syncTransitionTest) {
+    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+
     sc->setHostname("hairy");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "RealMasterPlanForSyncTest", ".", true);
@@ -118,5 +120,7 @@ TEST_F(AlicaSyncTransition, syncTransitionTest) {
             EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
                     1418825411686);
         }
+    }
+
     }
 }

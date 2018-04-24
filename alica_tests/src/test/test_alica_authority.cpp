@@ -105,6 +105,8 @@ TEST(AllocationDifference, MessageCancelsUtil) {
 }
 
 TEST_F(AlicaEngineAuthorityManager, authority) {
+    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+
     sc->setHostname("nase");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "AuthorityTestMaster", ".", true);
@@ -163,5 +165,7 @@ TEST_F(AlicaEngineAuthorityManager, authority) {
             EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
                     1414403429950);
         }
+    }
+    
     }
 }

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(alica_tests)
 
 ## Use c++ 11x std
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++11 -g ${CMAKE_CXX_FLAGS}")
 if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++11" CACHE STRING "C++ version for eclipse" FORCE)
 	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
@@ -33,7 +33,7 @@ catkin_package(
 if (CATKIN_ENABLE_TESTING)
 
     find_package(rostest REQUIRED)
-    file(GLOB_RECURSE test_alica_SOURCES "src/test/*.cpp")
+    file(GLOB_RECURSE test_alica_SOURCES "src/test/*.cpp" src/test_alica.cpp)
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test 
     ${test_alica_SOURCES})
 

@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <test_alica.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
@@ -58,10 +59,14 @@ protected:
  * Tests the initialisation of the behaviourPool
  */
 TEST_F(AlicaEngineTestBehPool, behaviourPoolInit) {
+    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
     alica::BehaviourPool* bp = ae->getBehaviourPool();
     for (const Behaviour* behaviour : ae->getPlanRepository()->getBehaviours()) {
         ASSERT_NE(behaviour, nullptr);
         cout << "Behaviour: " << behaviour->getName() << endl;
+    }
+    
     }
 }

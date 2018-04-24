@@ -67,6 +67,8 @@ protected:
  * Tests whether it is possible to use multiple agents.
  */
 TEST_F(AlicaMultiAgent, runMultiAgentPlan) {
+    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+
     sc->setHostname("nase");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "MultiAgentTestMaster", ".", true);
@@ -185,5 +187,7 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan) {
                     << " AE State: " << ae->getPlanBase()->getRootNode()->getActiveState()->getId()
                     << " AE2 State: " << ae2->getPlanBase()->getRootNode()->getActiveState()->getId() << endl;
         }
+    }
+
     }
 }

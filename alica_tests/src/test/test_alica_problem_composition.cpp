@@ -77,6 +77,8 @@ protected:
  * Tests if static variables and binded correctly.
  */
 TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition) {
+    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+
     ae->start();
 
     for (int i = 0; i < 5; ++i) { step(ae); }
@@ -92,5 +94,7 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition) {
     for (auto& rep : allReps) {
         EXPECT_TRUE(rep->getName() == "PBMX" || rep->getName() == "PBMY");
         // cout << "Test: '" << rep->getName() << "'" << endl;
+    }
+
     }
 }

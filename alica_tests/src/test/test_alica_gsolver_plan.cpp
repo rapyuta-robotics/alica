@@ -78,6 +78,8 @@ protected:
  * Tests if Behaviour with Constraints are called
  */
 TEST_F(AlicaGSolverPlan, solverTest) {
+    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+
     ae->init(bc, cc, uc, crc);
     cout << "Starting engine..." << endl;
     ae->start();
@@ -89,4 +91,6 @@ TEST_F(AlicaGSolverPlan, solverTest) {
     EXPECT_LT(alica::SolverTestBehaviour::result[0], 5000);
     EXPECT_GT(alica::SolverTestBehaviour::result[1], 7000);
     EXPECT_LT(alica::SolverTestBehaviour::result[1], 8000);
+
+    }
 }

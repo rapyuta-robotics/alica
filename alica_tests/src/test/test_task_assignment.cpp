@@ -1,3 +1,4 @@
+#include <test_alica.h>
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
@@ -74,6 +75,8 @@ protected:
 };
 
 TEST_F(TaskAssignmentTest, constructTaskAssignment) {
+    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+
     // fake a list of existing robots
     alica::AgentSet robots;
     for (int number = 8; number <= 11; number++) {
@@ -92,4 +95,6 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment) {
     alica::PlanSelector* ps = ae->getPlanSelector();
     auto plans = ps->getPlansForState(rp, inputPlans, robots);
     EXPECT_EQ(plans->size(), 1);
+
+    }
 }

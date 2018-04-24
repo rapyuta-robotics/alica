@@ -2,6 +2,7 @@ using namespace std;
 
 #include "SystemConfig.h"
 #include <gtest/gtest.h>
+#include <test_alica.h>
 #include <map>
 #include <list>
 #include <typeinfo>
@@ -209,6 +210,8 @@ protected:
  * Tests the plan parser with some nice plans
  */
 TEST_F(AlicaEngineTest, planParser) {
+    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+
     const auto& plans = ae->getPlanRepository()->getPlans();
 
     cout << "Printing plans from Repository: " << endl;
@@ -673,9 +676,12 @@ TEST_F(AlicaEngineTest, planParser) {
                 break;
         }
     }
+    }
 }
 
 TEST_F(AlicaEngineTest, planWriter) {
+    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+
     const auto& plans = ae->getPlanRepository()->getPlans();
     PlanWriter pw = PlanWriter(ae, ae->getPlanRepository());
     for (const Plan* plan : plans) {
@@ -688,4 +694,6 @@ TEST_F(AlicaEngineTest, planWriter) {
         std::remove(temp.c_str());  // delete the file after comparing it
     }
     cout << "AlicaEngineTest, planWriter: writing plans done." << endl;
+    
+    }
 }

@@ -63,6 +63,8 @@ protected:
  * Test for Runtime or PreCondition are false with plantypes
  */
 TEST_F(AlicaConditionPlanType, conditionPlanTypeTest) {
+    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
@@ -130,5 +132,7 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest) {
             EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
                     1418042796752);
         }
+    }
+    
     }
 }
