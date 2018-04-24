@@ -103,13 +103,16 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     ae2->start();
 
     chrono::milliseconds sleepTime(33);
-    for (int i = 0; i < 5; ++i) {
-        ae1->stepNotify();
-        ae2->stepNotify();
-        do {
-            this_thread::sleep_for(sleepTime);
-        } while (!ae1->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting());
-    }
+    do {
+        for (int i = 0; i < 3; ++i) {
+            ae1->stepNotify();
+            ae2->stepNotify();
+            do {
+                this_thread::sleep_for(sleepTime);
+            } while (!ae1->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting());
+        }
+    } while (ae1->getTeamManager()->getTeamSize() != 2 || ae1->getTeamManager()->getTeamSize() != 2);
+
     std::shared_ptr<const RunningPlan> rp1 = ae1->getPlanBase()->getDeepestNode();
     std::shared_ptr<const RunningPlan> rp2 = ae1->getPlanBase()->getDeepestNode();
 
