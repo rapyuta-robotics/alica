@@ -73,7 +73,7 @@ protected:
  * Tests whether it is possible to run a behaviour in a primitive plan.
  */
 TEST_F(AlicaSpamSuccess, runBehaviour) {
-    ASSERT_NE(setjmp(restore_point), SIGSEGV);
+    ASSERT_EQ(setjmp(restore_point), 0);
 
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 

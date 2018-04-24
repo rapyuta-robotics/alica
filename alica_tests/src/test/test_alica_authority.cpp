@@ -105,7 +105,7 @@ TEST(AllocationDifference, MessageCancelsUtil) {
 }
 
 TEST_F(AlicaEngineAuthorityManager, authority) {
-    ASSERT_NE(setjmp(restore_point), SIGSEGV);
+    ASSERT_EQ(setjmp(restore_point), 0);
 
     sc->setHostname("nase");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",

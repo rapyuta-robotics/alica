@@ -74,7 +74,7 @@ protected:
 
 
 TEST_F(VariableSyncModuleTest, GetOwnSeed) {
-    ASSERT_NE(setjmp(restore_point), SIGSEGV);
+    ASSERT_EQ(setjmp(restore_point), 0);
 
     VariableSyncModule* vsm = ae->getResultStore();
 

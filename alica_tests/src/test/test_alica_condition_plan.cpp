@@ -81,7 +81,7 @@ protected:
  * Tests if Behaviour with Constraints are called
  */
 TEST_F(AlicaConditionPlan, solverTest) {
-    ASSERT_NE(setjmp(restore_point), SIGSEGV);
+    ASSERT_EQ(setjmp(restore_point), 0);
 
     ae->init(bc, cc, uc, crc);
 

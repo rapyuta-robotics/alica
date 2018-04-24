@@ -70,7 +70,7 @@ protected:
  * Test for SyncTransition
  */
 TEST_F(AlicaSyncTransition, syncTransitionTest) {
-    ASSERT_NE(setjmp(restore_point), SIGSEGV);
+    ASSERT_EQ(setjmp(restore_point), 0);
 
     sc->setHostname("hairy");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
