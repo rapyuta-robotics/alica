@@ -52,20 +52,17 @@ install:
 before_script:
   - docker exec -t alica-test bash -c "
     cd ~/catkin_ws/src && 
-    wstool init && echo \"WSTOOL INIT\" && 
+    wstool init && 
     if [[ -f /travis/dependencies.rosinstall ]] ; then 
-        sed -i -e \"s/rr-devel/$BRANCH/g\" /travis/dependencies.rosinstall && echo \"SED REPLACED rr-devel WITH BRANCH\" ; 
-        if ! wstool merge -k -y /travis/dependencies.rosinstall ; then 
-            echo \"ATTEMPTED WSTOOL MERGE BUT IT THREW AN ERROR\" && 
+        sed -i -e \"s/rr-devel/$BRANCH/g\" /travis/dependencies.rosinstall ; 
+        wstool merge -k -y /travis/dependencies.rosinstall ; 
+        if ! wstool up ; then 
             sed -i -e \"s/$BRANCH/rr-devel/g\" /travis/dependencies.rosinstall && echo \"SED REPLACED BRANCH WITH rr-devel\" ; 
             wstool merge -k -y /travis/dependencies.rosinstall ; 
-            echo \"ATTEMPTED WSTOOL MERGE BUT IT THREW AN ERROR\" ;
+            wstool up ; 
         fi ; 
-        echo \"ABOUT TO PERFORM WSTOOL UP\" ;
     fi && 
-    wstool up && 
     cd ~/catkin_ws && 
-    echo \"ABOUT TO ROSDEP INSTALL\" && 
     rosdep install -y --from-paths src --ignore-src --rosdistro $ROS_DISTRO"
 
 # Compile and test (mark the build as failed if any step fails). If the
