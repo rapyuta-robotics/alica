@@ -210,7 +210,7 @@ void BasicBehaviour::initInternal()
     try {
         this->initialiseParameters();
     } catch (exception& e) {
-        cerr << "BB: Exception in Behaviour-INIT of: " << this->getName() << endl << e.what() << endl;
+        std::cerr << "BB: Exception in Behaviour-INIT of: " << this->getName() << std::endl << e.what() << std::endl;
     }
 }
 
@@ -254,16 +254,18 @@ void BasicBehaviour::runInternal()
                 this->run((void*)behaviourTrigger);
             }
         } catch (exception& e) {
-            string err = string("Exception catched:  ") + this->getName() + string(" - ") + string(e.what());
+            std::string err = string("Exception catched:  ") + this->getName() + std::string(" - ") + std::string(e.what());
             sendLogMessage(4, err);
         }
 #ifdef BEH_DEBUG
         const BehaviourConfiguration* conf = dynamic_cast<const BehaviourConfiguration*>(this->runningPlan->getPlan());
-        if (conf->isEventDriven()) {
+        if (!conf->isEventDriven()) {
             double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / conf->getFrequency() * 1000.0;
             if (dura > 0.1) {
-                string err = string("BB: Behaviour ") + conf->getBehaviour()->getName() + string(" exceeded runtime by \t") + to_string(dura) + string("ms!");
-                sendLogMessage(2, err);
+
+                std::stringstream ss;
+                ss << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura << "ms!";
+                sendLogMessage(2, ss.str());
                 // cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura
                 //	<< "ms!" << endl;
             }
@@ -308,7 +310,7 @@ const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planNam
     return nullptr;
 }
 
-void BasicBehaviour::sendLogMessage(int level, string& message)
+void BasicBehaviour::sendLogMessage(int level, const string& message) const
 {
     runningPlan->sendLogMessage(level, message);
 }

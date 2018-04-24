@@ -129,7 +129,7 @@ class RunningPlan : public enable_shared_from_this<RunningPlan>
     const supplementary::AgentID* getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
-    void sendLogMessage(int level, string& message);
+    void sendLogMessage(int level, const std::string& message) const;
 
   protected:
     const State* _activeState;
