@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include <test_alica.h>
+#include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
@@ -63,7 +63,7 @@ protected:
  * Test for Runtime or PreCondition are false with plantypes
  */
 TEST_F(AlicaConditionPlanType, conditionPlanTypeTest) {
-    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+    ASSERT_NE(setjmp(restore_point), SIGSEGV);
 
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
@@ -132,7 +132,5 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest) {
             EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
                     1418042796752);
         }
-    }
-    
     }
 }

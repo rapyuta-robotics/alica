@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include <test_alica.h>
+#include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
@@ -68,7 +68,7 @@ protected:
 };
 
 TEST_F(AlicaBehaviourTrigger, triggerTest) {
-    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+    ASSERT_NE(setjmp(restore_point), SIGSEGV);
 
     alicaTests::TestWorldModel::getOne()->trigger1 = new supplementary::EventTrigger();
     alicaTests::TestWorldModel::getOne()->trigger2 = new supplementary::EventTrigger();
@@ -139,6 +139,4 @@ TEST_F(AlicaBehaviourTrigger, triggerTest) {
         }
     }
     cout << "Finished" << endl;
-    
-    }
 }

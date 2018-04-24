@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include <test_alica.h>
+#include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
 #include <engine/IAlicaCommunication.h>
@@ -105,7 +105,7 @@ TEST(AllocationDifference, MessageCancelsUtil) {
 }
 
 TEST_F(AlicaEngineAuthorityManager, authority) {
-    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+    ASSERT_NE(setjmp(restore_point), SIGSEGV);
 
     sc->setHostname("nase");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
@@ -165,7 +165,5 @@ TEST_F(AlicaEngineAuthorityManager, authority) {
             EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
                     1414403429950);
         }
-    }
-    
     }
 }

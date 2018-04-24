@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include <test_alica.h>
+#include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
@@ -67,7 +67,7 @@ protected:
  * Tests whether it is possible to use multiple agents.
  */
 TEST_F(AlicaMultiAgent, runMultiAgentPlan) {
-    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+    ASSERT_NE(setjmp(restore_point), SIGSEGV);
 
     sc->setHostname("nase");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
@@ -187,7 +187,5 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan) {
                     << " AE State: " << ae->getPlanBase()->getRootNode()->getActiveState()->getId()
                     << " AE2 State: " << ae2->getPlanBase()->getRootNode()->getActiveState()->getId() << endl;
         }
-    }
-
     }
 }

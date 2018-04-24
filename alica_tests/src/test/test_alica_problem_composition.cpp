@@ -1,5 +1,6 @@
 #include <BehaviourCreator.h>
 #include <test_alica.h>
+#include <gtest/gtest.h>
 #include <engine/AlicaClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include <CGSolver.h>
@@ -12,7 +13,6 @@
 #include <engine/PlanBase.h>
 #include <engine/RunningPlan.h>
 #include <FileSystem.h>
-#include <gtest/gtest.h>
 #include <gtest/internal/gtest-internal.h>
 #include <Plans/ProblemModule/QueryBehaviour1.h>
 #include <SystemConfig.h>
@@ -77,7 +77,7 @@ protected:
  * Tests if static variables and binded correctly.
  */
 TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition) {
-    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+    ASSERT_NE(setjmp(restore_point), SIGSEGV);
 
     ae->start();
 
@@ -94,7 +94,5 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition) {
     for (auto& rep : allReps) {
         EXPECT_TRUE(rep->getName() == "PBMX" || rep->getName() == "PBMY");
         // cout << "Test: '" << rep->getName() << "'" << endl;
-    }
-
     }
 }

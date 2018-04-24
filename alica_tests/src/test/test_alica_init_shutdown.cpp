@@ -1,3 +1,4 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
@@ -59,5 +60,6 @@ protected:
  * Initialises an instance of the AlicaEngine and shuts it down again. This test is nice for basic memory leak testing.
  */
 TEST_F(AlicaEngineTestInit, initAndShutdown) {
+    ASSERT_NE(setjmp(restore_point), SIGSEGV);
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 }

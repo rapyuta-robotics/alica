@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include <test_alica.h>
+#include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
@@ -78,7 +78,7 @@ protected:
  * Tests if Behaviour with Constraints are called
  */
 TEST_F(AlicaGSolverPlan, solverTest) {
-    if (setjmp(restore_point) != 0) { ASSERT_TRUE(false); } else {
+    ASSERT_NE(setjmp(restore_point), SIGSEGV);
 
     ae->init(bc, cc, uc, crc);
     cout << "Starting engine..." << endl;
@@ -91,6 +91,4 @@ TEST_F(AlicaGSolverPlan, solverTest) {
     EXPECT_LT(alica::SolverTestBehaviour::result[0], 5000);
     EXPECT_GT(alica::SolverTestBehaviour::result[1], 7000);
     EXPECT_LT(alica::SolverTestBehaviour::result[1], 8000);
-
-    }
 }

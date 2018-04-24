@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-
 #include <engine/blackboard/BlackBoard.h>
 
 
