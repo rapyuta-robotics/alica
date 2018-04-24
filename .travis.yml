@@ -55,7 +55,7 @@ before_script:
     wstool init && 
     if [[ -f /travis/dependencies.rosinstall ]] ; then 
         sed -i -e \"s/rr-devel/$BRANCH/g\" /travis/dependencies.rosinstall ; 
-        if wstool merge -k -y /travis/dependencies.rosinstall ; then 
+        if ! wstool merge -k -y /travis/dependencies.rosinstall ; then 
             sed -i -e \"s/$BRANCH/rr-devel/g\" /travis/dependencies.rosinstall ; 
             wstool merge -k -y /travis/dependencies.rosinstall ; 
         fi ; 
