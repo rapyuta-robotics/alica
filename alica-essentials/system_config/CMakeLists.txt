@@ -52,7 +52,7 @@ endif(NOT catkin_FOUND)
 ## Add gtest based cpp test target and link libraries
 if (catkin_FOUND)
   if (CATKIN_ENABLE_TESTING)
-    catkin_add_gtest(${PROJECT_NAME}-test test/test_system_config.cpp)
+    catkin_add_gtest(${PROJECT_NAME}-test test/test_system_config.cpp WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test)
     if(TARGET ${PROJECT_NAME}-test)
         target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
     endif()

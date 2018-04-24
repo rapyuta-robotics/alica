@@ -8,16 +8,10 @@
 // Declare a test
 TEST(SystemConfigBasics, readValues)
 {
-    // determine the path to the test config
-    string path = supplementary::FileSystem::getSelfPath();
-
-    int place = path.rfind("devel");
-    path = path.substr(0, place);
-    path = path + "src/supplementary/system_config/test";
     // bring up the SystemConfig with the corresponding path
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-    sc->setRootPath(path);
-    sc->setConfigPath(path + "/etc");
+    sc->setRootPath(".");
+    sc->setConfigPath("./etc");
 
     // read int
     unsigned short uShortTestValue = (*sc)["Test"]->get<unsigned short>("uShortTestValue", NULL);
