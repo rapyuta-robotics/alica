@@ -111,7 +111,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
                 this_thread::sleep_for(sleepTime);
             } while (!ae1->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting());
         }
-    } while (ae1->getTeamManager()->getTeamSize() != 2 || ae1->getTeamManager()->getTeamSize() != 2);
+    } while (ae1->getTeamManager()->getTeamSize() != 2 || ae2->getTeamManager()->getTeamSize() != 2);
 
     std::shared_ptr<const RunningPlan> rp1 = ae1->getPlanBase()->getDeepestNode();
     std::shared_ptr<const RunningPlan> rp2 = ae1->getPlanBase()->getDeepestNode();
