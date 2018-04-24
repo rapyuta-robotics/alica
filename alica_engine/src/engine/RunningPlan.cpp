@@ -874,7 +874,7 @@ bool RunningPlan::anyChildrenStatus(PlanStatus ps)
     return false;
 }
 
-void RunningPlan::sendLogMessage(int level, string& message)
+void RunningPlan::sendLogMessage(int level, const std::string& message) const
 {
     _ae->getCommunicator()->sendLogMessage(level, message);
 }
