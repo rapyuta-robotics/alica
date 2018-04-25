@@ -28,14 +28,12 @@ class AlicaElement;
 class PlanParser {
 public:
     PlanParser(PlanRepository* rep);
-    virtual ~PlanParser();
+    virtual ~PlanParser() = default;
 
-    virtual Plan* parsePlanTree(string masterplan);
-    virtual void ignoreMasterPlanId(bool val);
+    virtual Plan* parsePlanTree(const string& masterplan);
     virtual map<long, AlicaElement*>* getParsedElements();
 
     string getCurrentFile();
-    void setCurrentFile(string currentFile);
     void parseFileLoop();
     RoleSet* parseRoleSet(string roleSetName, string roleSetDir);
     long parserId(tinyxml2::XMLElement* node);
@@ -47,8 +45,10 @@ private:
     Plan* masterPlan;
     string planDir;
     string roleDir;
+    string taskDir;
     string basePlanPath;
     string baseRolePath;
+    string baseTaskPath;
     string currentDirectory;
     string domainConfigFolder;
     string currentFile;
@@ -57,9 +57,8 @@ private:
     void parseCapabilityDefFile(string currentFile);
     void parsePlanTypeFile(string currentFile);
     void parseBehaviourFile(string currentFile);
-    void parsePlanningProblem(string currentFile);
     Plan* parsePlanFile(string& planFile);
-    long fetchId(const string& idString, long id);
+    long fetchId(const string& idString);
     string findDefaultRoleSet(string dir);
 
     list<string> filesToParse;

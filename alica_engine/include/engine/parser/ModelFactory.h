@@ -1,12 +1,4 @@
-/*
- * ModelFactory.h
- *
- *  Created on: Mar 27, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef MODELFACTORY_H_
-#define MODELFACTORY_H_
+#pragma once
 
 #include <memory>
 #include <list>
@@ -51,19 +43,13 @@ public:
     ModelFactory(PlanParser* p, PlanRepository* rep);
     virtual ~ModelFactory();
 
-    bool ignoreMasterPlanId;
-    bool getIgnoreMasterPlanId();
-    void setIgnoreMasterPlanId(bool value);
     Plan* createPlan(tinyxml2::XMLDocument* node);
     std::map<int64_t, AlicaElement*>* getElements();
-    void setElements(const std::map<int64_t, AlicaElement*>& elements);
-    std::string getNameOfNode(tinyxml2::XMLElement* node);
     void createTasks(tinyxml2::XMLDocument* node);
     void createBehaviour(tinyxml2::XMLDocument* node);
     void createCapabilityDefinitionSet(tinyxml2::XMLDocument* node);
     void createRoleDefinitionSet(tinyxml2::XMLDocument* node);
     void createPlanType(tinyxml2::XMLDocument* node);
-    void createPlanningProblem(tinyxml2::XMLDocument* node);
     void computeReachabilities();
     void attachPlanReferences();
     void attachRoleReferences();
@@ -75,10 +61,8 @@ private:
     static const std::string entryPoints;
     static const std::string states;
     static const std::string transitions;
-    static const std::string conditions;
     static const std::string vars;
     static const std::string synchronisations;
-    static const std::string rating;
     static const std::string state;
     static const std::string task;
     static const std::string inTransitions;
@@ -92,10 +76,10 @@ private:
     static const std::string inState;
     static const std::string outState;
     static const std::string preCondition;
+    static const std::string runtimeCondition;
     static const std::string synchronisation;
     static const std::string quantifiers;
     static const std::string sorts;
-    static const std::string configurations;
     static const std::string parameters;
     static const std::string mappings;
     static const std::string taskPriorities;
@@ -106,8 +90,6 @@ private:
     static const std::string characteristics;
     static const std::string capability;
     static const std::string value;
-    static const std::string waitPlan;
-    static const std::string alternativePlan;
 
     PlanParser* parser;
     PlanRepository* rep;
@@ -148,7 +130,6 @@ private:
     PostCondition* createPostCondition(tinyxml2::XMLElement* element);
     RuntimeCondition* createRuntimeCondition(tinyxml2::XMLElement* element);
     Quantifier* createQuantifier(tinyxml2::XMLElement* element);
-    BehaviourConfiguration* createBehaviourConfiguration(tinyxml2::XMLElement* element);
     RoleTaskMapping* createRoleTaskMapping(tinyxml2::XMLElement* element);
     Capability* createCapability(tinyxml2::XMLElement* element);
     Role* createRole(tinyxml2::XMLElement* element);
@@ -160,5 +141,3 @@ private:
     void removeRedundancy();
 };
 }  // namespace alica
-
-#endif /* MODELFACTORY_H_ */

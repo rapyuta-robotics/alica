@@ -33,7 +33,7 @@ class Plan;
 class RuleBook;
 class ConditionStore;
 class CycleManager;
-class BehaviourConfiguration;
+class Behaviour;
 class IPlanTreeVisitor;
 class SimplePlanTree;
 
@@ -46,7 +46,7 @@ public:
     RunningPlan(AlicaEngine* ae);
     RunningPlan(AlicaEngine* ae, const Plan* plan);
     RunningPlan(AlicaEngine* ae, const PlanType* pt);
-    RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc);
+    RunningPlan(AlicaEngine* ae, const Behaviour* b);
     virtual ~RunningPlan();
     /**
      * Indicates whether this running plan represents a behaviour.

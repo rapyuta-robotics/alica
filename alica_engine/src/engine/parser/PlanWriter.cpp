@@ -1,10 +1,3 @@
-/*
- * PlanWriter.cpp
- *
- *  Created on: Sep 5, 2014
- *      Author: Stefan Jakob
- */
-
 #include <engine/parser/PlanWriter.h>
 #include <SystemConfig.h>
 #include <FileSystem.h>
@@ -24,7 +17,7 @@
 #include "engine/model/Transition.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/PlanType.h"
-#include "engine/model/BehaviourConfiguration.h"
+#include "engine/model/Behaviour.h"
 #include "engine/model/PlanningProblem.h"
 #include "engine/model/SyncTransition.h"
 #include "engine/model/EntryPoint.h"
@@ -342,10 +335,10 @@ tinyxml2::XMLElement* PlanWriter::createStateXMLNode(const State* s, tinyxml2::X
             xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
             continue;
         }
-        if (dynamic_cast<const BehaviourConfiguration*>(p) != nullptr) {
+        if (dynamic_cast<const Behaviour*>(p) != nullptr) {
             tinyxml2::XMLElement* xc = doc->NewElement("plans");
             xs->InsertEndChild(xc);
-            xc->SetAttribute("xsi:type", "alica:BehaviourConfiguration");
+            xc->SetAttribute("xsi:type", "alica:Behaviour");
             xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
             continue;
         }
@@ -401,8 +394,8 @@ tinyxml2::XMLElement* PlanWriter::createParametrisationXMLNode(const Parametrisa
         xc->SetAttribute("xsi:type", "alica:Plan");
     } else if (dynamic_cast<const PlanType*>(p->getSubPlan()) != nullptr) {
         xc->SetAttribute("xsi:type", "alica:PlanType");
-    } else if (dynamic_cast<const BehaviourConfiguration*>(p->getSubPlan()) != nullptr) {
-        xc->SetAttribute("xsi:type", "alica:BehaviourConfiguration");
+    } else if (dynamic_cast<const Behaviour*>(p->getSubPlan()) != nullptr) {
+        xc->SetAttribute("xsi:type", "alica:Behaviour");
     }
     xc->InsertEndChild(
             doc->NewText((getRelativeFileName(p->getSubPlan()) + "#" + to_string(p->getSubPlan()->getId())).c_str()));

@@ -82,10 +82,10 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
     _planType = pt;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc)
+RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b)
         : _ae(ae)
         , _planType(nullptr)
-        , _plan(bc)
+        , _plan(b)
         , _activeState(nullptr)
         , _activeEntryPoint(nullptr)
         , _behaviour(true)

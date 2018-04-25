@@ -1,20 +1,13 @@
-/*
- * Behaviour.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef BEHAVIOUR_H_
-#define BEHAVIOUR_H_
+#pragma once
 
 #include <list>
 #include <string>
 
-#include "AlicaElement.h"
+#include "AbstractPlan.h"
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 
 class BehaviourConfiguration;
 class BasicBehaviour;
@@ -23,34 +16,41 @@ class ModelFactory;
 /**
  * Represents a Behaviour within the plan tree
  */
-class Behaviour : public AlicaElement {
+class Behaviour : public AbstractPlan
+{
 public:
     Behaviour();
     virtual ~Behaviour();
 
-    std::string toString() const override;
+    std::string toString() const;
 
-    const BehaviourConfigurationGrp& getConfigurations() const { return _configurations; }
     const std::string& getFileName() const { return _fileName; }
-    BasicBehaviour* getImplementation() const { return _implementation; }
+    int getDeferring() const { return _deferring; }
+    bool isEventDriven() const { return _eventDriven; }
+    int getFrequency() const { return _frequency; }
 
 private:
     friend ModelFactory;
 
     void setFileName(const std::string& fileName);
-    void setImplementation(BasicBehaviour* implementation);
-    void setConfigurations(const BehaviourConfigurationGrp& configurations);
+    void setDeferring(int deferring);
+    void setEventDriven(bool eventDriven);
+    void setFrequency(int frequency);
     /**
-     * The set of static configurations of this Behaviour
+     * Specifies whether this Behaviour is run eventDriven. If it is not event driven, a timer will call it according to
+     * Frequency and Deferring.
      */
-    BehaviourConfigurationGrp _configurations;
+    bool _eventDriven;
     /**
-     * The actual implementation of this behaviour, a subclass of BasicBehaviour
+     * The frequency with which this Behaviour is called in case it is not EventDriven.
      */
-    BasicBehaviour* _implementation;
+    int _frequency;
+    /**
+     * The time in ms to wait before this Behaviour is executed for the first time after entering the corresponding
+     * state. Has only effect for Behaviours not running in EventDriven mode.
+     */
+    int _deferring;
     std::string _fileName;
 };
 
-}  // namespace alica
-
-#endif /* BEHAVIOUR_H_ */
+} // namespace alica

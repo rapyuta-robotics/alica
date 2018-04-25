@@ -1,5 +1,5 @@
-#include <engine/planselector/PlanSelector.h>
-#include <engine/planselector/PartialAssignmentPool.h>
+#include "engine/planselector/PlanSelector.h"
+#include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/AlicaEngine.h"
 #include "engine/TeamObserver.h"
 #include "engine/teammanager/TeamManager.h"
@@ -218,21 +218,21 @@ shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForStateInternal
 #endif
     shared_ptr<RunningPlan> rp;
     PlanGrp plansSet;
-    const BehaviourConfiguration* bc;
+    const Behaviour* b;
     const Plan* p;
     const PlanType* pt;
     const PlanningProblem* pp;
     for (const AbstractPlan* ap : plans) {
-        // BEHAVIOUR CONFIGURATION
-        bc = dynamic_cast<const BehaviourConfiguration*>(ap);
-        if (bc != nullptr) {
-            rp = make_shared<RunningPlan>(ae, bc);
+        // BEHAVIOUR
+        b = dynamic_cast<const Behaviour*>(ap);
+        if (b != nullptr) {
+            rp = make_shared<RunningPlan>(ae, b);
             // A BehaviourConfiguration is a Plan too (in this context)
-            rp->setPlan(bc);
+            rp->setPlan(b);
             rps->push_back(rp);
             rp->setParent(planningParent);
 #ifdef PSDEBUG
-            cout << "PS: Added Behaviour " << bc->getBehaviour()->getName() << endl;
+            cout << "PS: Added Behaviour " << b->getName() << endl;
 #endif
         } else {
             // PLAN
@@ -264,7 +264,7 @@ shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForStateInternal
                     rps->push_back(rp);
                 }
             }  // else Plan
-        }      // else BehaviourConfiguration
+        }      // else Behaviour
     }          // foreach AbstractPlan
     return rps;
 }

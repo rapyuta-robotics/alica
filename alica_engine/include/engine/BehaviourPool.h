@@ -7,7 +7,7 @@
 
 namespace alica {
 
-class BehaviourConfiguration;
+class Behaviour;
 class BasicBehaviour;
 class AlicaEngine;
 class IBehaviourCreator;
@@ -25,7 +25,7 @@ public:
     void startBehaviour(std::shared_ptr<RunningPlan> rp);
     void stopBehaviour(std::shared_ptr<RunningPlan> rp);
     void stopAll();
-    const std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const;
+    const std::map<const Behaviour*, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const;
 
 private:
     /**
@@ -33,7 +33,7 @@ private:
      * The key of the map is the behaviour configuration, which is created through the plan designer.
      * The value is the basic behaviour, which is the implementation of that behaviour.
      */
-    std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>> _availableBehaviours;
+    std::map<const Behaviour*, std::shared_ptr<BasicBehaviour>> _availableBehaviours;
     AlicaEngine* ae;
     IBehaviourCreator* behaviourCreator;
 };
