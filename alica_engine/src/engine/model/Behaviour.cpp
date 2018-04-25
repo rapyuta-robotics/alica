@@ -1,44 +1,45 @@
-/*
- * Behaviour.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
+#include "engine/model/Behaviour.h"
 
 #include <memory>
-
-#include "engine/model/Behaviour.h"
-#include "engine/model/BehaviourConfiguration.h"
-
 #include <sstream>
 
-namespace alica {
+namespace alica
+{
 
 Behaviour::Behaviour()
-        : _implementation(nullptr) {}
+{
+}
 
-Behaviour::~Behaviour() {}
+Behaviour::~Behaviour()
+{
+}
 
-std::string Behaviour::toString() const {
+std::string Behaviour::toString() const
+{
     std::stringstream ss;
     ss << "#Behaviour: " << getName() << std::endl;
-    ss << "\t Configurations: " << getConfigurations().size() << std::endl;
-    for (const BehaviourConfiguration* bc : getConfigurations()) {
-        ss << "\t" << bc->getName() << " " << bc->getId() << std::endl;
-    }
     ss << "#EndBehaviour" << std::endl;
     return ss.str();
 }
 
-void Behaviour::setConfigurations(const BehaviourConfigurationGrp& configurations) {
-    _configurations = configurations;
+void Behaviour::setEventDriven(bool eventDriven)
+{
+    _eventDriven = eventDriven;
 }
 
-void Behaviour::setFileName(const std::string& fileName) {
+void Behaviour::setFrequency(int frequency)
+{
+    _frequency = frequency;
+}
+
+void Behaviour::setDeferring(int deferring)
+{
+    _deferring = deferring;
+}
+
+void Behaviour::setFileName(const std::string& fileName)
+{
     _fileName = fileName;
 }
 
-void Behaviour::setImplementation(BasicBehaviour* implementation) {
-    _implementation = implementation;
-}
-}  // namespace alica
+} // namespace alica

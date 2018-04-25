@@ -1,34 +1,37 @@
-//#define PP_DEBUG
+#define PP_DEBUG
 #include "engine/parser/PlanParser.h"
-#include "engine/parser/ModelFactory.h"
 #include "engine/AlicaEngine.h"
 #include "engine/model/Plan.h"
+#include "engine/parser/ModelFactory.h"
 
-namespace alica {
+namespace alica
+{
 
 /**
  * Constructor
  * @param A PlanRepository, in which parsed elements are stored.
  */
-PlanParser::PlanParser(PlanRepository* rep) {
+PlanParser::PlanParser(PlanRepository* rep)
+{
     using namespace supplementary;
 
     this->masterPlan = nullptr;
     this->rep = rep;
-    this->mf = shared_ptr<ModelFactory>(new ModelFactory(this, rep));
+    this->mf = std::make_shared<ModelFactory>(this, rep);
     this->sc = SystemConfig::getInstance();
     this->domainConfigFolder = this->sc->getConfigPath();
 
     this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
     this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
+    this->taskDir = (*this->sc)["Alica"]->get<string>("Alica.TaskDir", NULL);
 
-    if (domainConfigFolder.find_last_of(FileSystem::PATH_SEPARATOR) != domainConfigFolder.length() - 1) {
+    if (!FileSystem::endsWith(domainConfigFolder, FileSystem::PATH_SEPARATOR)) {
         domainConfigFolder = domainConfigFolder + FileSystem::PATH_SEPARATOR;
     }
-    if (planDir.find_last_of(FileSystem::PATH_SEPARATOR) != planDir.length() - 1) {
+    if (!FileSystem::endsWith(planDir, FileSystem::PATH_SEPARATOR)) {
         planDir = planDir + FileSystem::PATH_SEPARATOR;
     }
-    if (roleDir.find_last_of(FileSystem::PATH_SEPARATOR) != roleDir.length() - 1) {
+    if (!FileSystem::endsWith(roleDir, FileSystem::PATH_SEPARATOR)) {
         roleDir = roleDir + FileSystem::PATH_SEPARATOR;
     }
     if (!(supplementary::FileSystem::isPathRooted(this->planDir))) {
@@ -41,9 +44,16 @@ PlanParser::PlanParser(PlanRepository* rep) {
     } else {
         baseRolePath = roleDir;
     }
+    if (!(supplementary::FileSystem::isPathRooted(this->taskDir))) {
+        baseTaskPath = domainConfigFolder + taskDir;
+    } else {
+        baseTaskPath = taskDir;
+    }
+
 #ifdef PP_DEBUG
-    cout << "PP: basePlanPath: " << basePlanPath << endl;
-    cout << "PP: baseRolePath: " << baseRolePath << endl;
+    std::cout << "PP: basePlanPath: " << basePlanPath << endl;
+    std::cout << "PP: baseRolePath: " << baseRolePath << endl;
+    std::cout << "PP: baseTaskPath: " << baseTaskPath << endl;
 #endif
     if (!(supplementary::FileSystem::pathExists(basePlanPath))) {
         AlicaEngine::abort("PP: BasePlanPath does not exists " + basePlanPath);
@@ -53,27 +63,27 @@ PlanParser::PlanParser(PlanRepository* rep) {
     }
 }
 
-PlanParser::~PlanParser() {}
-
 /**
  * Parse a roleset
  * @param roleSetName The name of the roleset to parse. May be empty, in which case a default roleset is looked for.
  * @param roleSetDir The relative directory in which to search for a roleset.
  * @return The parsed roleSet
  */
-RoleSet* PlanParser::parseRoleSet(string roleSetName, string roleSetDir) {
-    using namespace supplementary;
-
+RoleSet* PlanParser::parseRoleSet(string roleSetName, string roleSetDir)
+{
+#ifdef PP_DEBUG
+    std::cout << "PP: parseRoleSet(): roleSetName: " << roleSetName << " roleSetDir: " << roleSetDir << std::endl;
+#endif
     if (roleSetName.empty()) {
         roleSetName = findDefaultRoleSet(roleSetDir);
     } else {
-        if (roleSetDir.find_last_of(FileSystem::PATH_SEPARATOR) != roleSetDir.length() - 1 && roleSetDir.length() > 0) {
-            roleSetDir = roleSetDir + FileSystem::PATH_SEPARATOR;
+        if (roleSetDir.find_last_of(supplementary::FileSystem::PATH_SEPARATOR) != roleSetDir.length() - 1 && roleSetDir.length() > 0) {
+            roleSetDir = roleSetDir + supplementary::FileSystem::PATH_SEPARATOR;
         }
-        if (!FileSystem::isPathRooted(roleSetDir)) {
-            roleSetName = FileSystem::combinePaths(FileSystem::combinePaths(baseRolePath, roleSetDir), roleSetName);
+        if (!supplementary::FileSystem::isPathRooted(roleSetDir)) {
+            roleSetName = supplementary::FileSystem::combinePaths(supplementary::FileSystem::combinePaths(baseRolePath, roleSetDir), roleSetName);
         } else {
-            roleSetName = FileSystem::combinePaths(roleSetDir, roleSetName);
+            roleSetName = supplementary::FileSystem::combinePaths(roleSetDir, roleSetName);
         }
     }
 
@@ -85,7 +95,7 @@ RoleSet* PlanParser::parseRoleSet(string roleSetName, string roleSetDir) {
     }
 
 #ifdef PP_DEBUG
-    cout << "PP: Parsing RoleSet " << roleSetName << endl;
+    std::cout << "PP: Parsing RoleSet: " << roleSetName << std::endl;
 #endif
 
     this->currentDirectory = supplementary::FileSystem::getParent(roleSetName);
@@ -94,21 +104,21 @@ RoleSet* PlanParser::parseRoleSet(string roleSetName, string roleSetDir) {
     doc.LoadFile(roleSetName.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
         cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
-        throw new exception();
+        throw exception();
     }
 
     RoleSet* r = this->mf->createRoleSet(&doc, this->masterPlan);
 
     filesParsed.push_back(roleSetName);
 
-    while (this->filesToParse.size() > 0) {
+    while (!this->filesToParse.empty()) {
         string fileToParse = this->filesToParse.front();
         this->filesToParse.pop_front();
         this->currentDirectory = supplementary::FileSystem::getParent(fileToParse);
         this->currentFile = fileToParse;
 
         if (!supplementary::FileSystem::pathExists(fileToParse)) {
-            AlicaEngine::abort("PP: Cannot Find referenced file ", fileToParse);
+            AlicaEngine::abort("PP: Cannot Find referenced file: '" + fileToParse + "'");
         }
         if (supplementary::FileSystem::endsWith(fileToParse, ".rdefset")) {
             parseRoleDefFile(fileToParse);
@@ -124,32 +134,35 @@ RoleSet* PlanParser::parseRoleSet(string roleSetName, string roleSetDir) {
     this->mf->attachCharacteristicReferences();
     return r;
 }
-void PlanParser::parseRoleDefFile(string currentFile) {
+void PlanParser::parseRoleDefFile(string currentFile)
+{
 #ifdef PP_DEBUG
-    cout << "PP: parsing RoleDef file: " << currentFile << endl;
+    cout << "PP: Parsing RoleDef file: " << currentFile << endl;
 #endif
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
         cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
-        throw new exception();
+        throw exception();
     }
     this->mf->createRoleDefinitionSet(&doc);
 }
-void PlanParser::parseCapabilityDefFile(string currentFile) {
+void PlanParser::parseCapabilityDefFile(string currentFile)
+{
 #ifdef PP_DEBUG
-    cout << "PP: parsing RoleDef file: " << currentFile << endl;
+    cout << "PP: Parsing RoleDef file: " << currentFile << endl;
 #endif
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
         cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
-        throw new exception();
+        throw exception();
     }
     this->mf->createCapabilityDefinitionSet(&doc);
 }
 
-string PlanParser::findDefaultRoleSet(string dir) {
+string PlanParser::findDefaultRoleSet(string dir)
+{
     if (!supplementary::FileSystem::isPathRooted(dir)) {
         dir = supplementary::FileSystem::combinePaths(this->baseRolePath, dir);
     }
@@ -164,23 +177,24 @@ string PlanParser::findDefaultRoleSet(string dir) {
         doc.LoadFile(s.c_str());
         if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
             cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
-            throw new exception();
+            throw exception();
         }
 
         tinyxml2::XMLElement* element = doc.FirstChildElement();
         const char* attr = element->Attribute("default");
         if (attr) {
             string attrString = attr;
-            if (attrString.compare("true") == 0) {
+            if (attrString == "true") {
                 return s;
             }
         }
     }
-    if (files.size() == 1) {
-        return files[0];
+
+    if (files.size() != 1) {
+        AlicaEngine::abort("PP: Cannot find a default roleset in directory: " + dir);
     }
-    AlicaEngine::abort("PP: Cannot find a default roleset in directory: " + dir);
-    return "";
+
+    return files[0];
 }
 
 /**
@@ -188,11 +202,12 @@ string PlanParser::findDefaultRoleSet(string dir) {
  * @param masterplan The name of the top-level plan
  * @return The top-level plan
  */
-Plan* PlanParser::parsePlanTree(string masterplan) {
+Plan* PlanParser::parsePlanTree(const string& masterplan)
+{
     string masterPlanPath;
     bool found = supplementary::FileSystem::findFile(this->basePlanPath, masterplan + ".pml", masterPlanPath);
 #ifdef PP_DEBUG
-    cout << "PP: masterPlanPath: " << masterPlanPath << endl;
+    std::cout << "PP: masterPlanPath: " << masterPlanPath << std::endl;
 #endif
     if (!found) {
         AlicaEngine::abort("PP: Cannot find MasterPlan '" + masterplan + "'");
@@ -200,19 +215,20 @@ Plan* PlanParser::parsePlanTree(string masterplan) {
     this->currentFile = masterPlanPath;
     this->currentDirectory = supplementary::FileSystem::getParent(masterPlanPath);
 #ifdef PP_DEBUG
-    cout << "PP: CurFile: " << this->currentFile << " CurDir: " << this->currentDirectory << endl;
+    std::cout << "PP: CurFile: " << this->currentFile << std::endl << "    CurDir: " << this->currentDirectory << std::endl;
 #endif
 
-    this->masterPlan = parsePlanFile(masterPlanPath);
     this->filesParsed.push_back(masterPlanPath);
+    this->masterPlan = parsePlanFile(masterPlanPath);
     parseFileLoop();
 
     this->mf->computeReachabilities();
     return this->masterPlan;
 }
 
-void PlanParser::parseFileLoop() {
-    while (this->filesToParse.size() > 0) {
+void PlanParser::parseFileLoop()
+{
+    while (!this->filesToParse.empty()) {
         string fileToParse = this->filesToParse.front();
         this->filesToParse.pop_front();
         this->currentDirectory = supplementary::FileSystem::getParent(fileToParse);
@@ -221,6 +237,7 @@ void PlanParser::parseFileLoop() {
         if (!supplementary::FileSystem::pathExists(fileToParse)) {
             AlicaEngine::abort("PP: Cannot Find referenced file ", fileToParse);
         }
+        filesParsed.push_back(fileToParse);
         if (supplementary::FileSystem::endsWith(fileToParse, ".pml")) {
             parsePlanFile(fileToParse);
         } else if (supplementary::FileSystem::endsWith(fileToParse, ".tsk")) {
@@ -229,85 +246,65 @@ void PlanParser::parseFileLoop() {
             parseBehaviourFile(fileToParse);
         } else if (supplementary::FileSystem::endsWith(fileToParse, ".pty")) {
             parsePlanTypeFile(fileToParse);
-        } else if (supplementary::FileSystem::endsWith(fileToParse, ".pp")) {
-            parsePlanningProblem(fileToParse);
         } else {
             AlicaEngine::abort("PP: Cannot Parse file", fileToParse);
         }
-        filesParsed.push_back(fileToParse);
     }
     this->mf->attachPlanReferences();
 }
 
-/**
- * Parses a planning problem
- * @param planName The name of the planning problem
- * @return The top-level PlanningProblem
- */
-void PlanParser::parsePlanningProblem(string currentFile) {
+void PlanParser::parsePlanTypeFile(string currentFile)
+{
 #ifdef PP_DEBUG
-    cout << "PP: parsing Planning Problem file: " << currentFile << endl;
+    cout << "PP: Parsing PlanType file: " << currentFile << endl;
 #endif
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
         cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
-        throw new exception();
-    }
-    this->mf->createPlanningProblem(&doc);
-}
-
-void PlanParser::parsePlanTypeFile(string currentFile) {
-#ifdef PP_DEBUG
-    cout << "PP: parsing PlanType file: " << currentFile << endl;
-#endif
-    tinyxml2::XMLDocument doc;
-    doc.LoadFile(currentFile.c_str());
-    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
-        throw new exception();
+        throw exception();
     }
     this->mf->createPlanType(&doc);
 }
-void PlanParser::parseBehaviourFile(string currentFile) {
+void PlanParser::parseBehaviourFile(string currentFile)
+{
 #ifdef PP_DEBUG
-    cout << "PP: parsing Behaviour file: " << currentFile << endl;
+    cout << "PP: Parsing Behaviour file: " << currentFile << endl;
 #endif
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
         cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
-        throw new exception();
+        throw exception();
     }
     this->mf->createBehaviour(&doc);
 }
 
-void PlanParser::parseTaskFile(string currentFile) {
+void PlanParser::parseTaskFile(string currentFile)
+{
 #ifdef PP_DEBUG
-    cout << "PP: parsing Task file: " << currentFile << endl;
+    cout << "PP: Parsing Task file: " << currentFile << endl;
 #endif
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
-#ifdef PP_DEBUG
-    cout << "TASKREPO " << currentFile << endl;
-#endif
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
         cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
-        throw new exception();
+        throw exception();
     }
     this->mf->createTasks(&doc);
 }
 
-Plan* PlanParser::parsePlanFile(string& planFile) {
+Plan* PlanParser::parsePlanFile(string& planFile)
+{
 #ifdef PP_DEBUG
-    cout << "PP: parsing Plan file: " << planFile << endl;
+    cout << "PP: Parsing Plan file: " << planFile << endl;
 #endif
 
     tinyxml2::XMLDocument doc;
     doc.LoadFile(planFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
         cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << endl;
-        throw new exception();
+        throw exception();
     }
     Plan* p = this->mf->createPlan(&doc);
     return p;
@@ -317,26 +314,14 @@ Plan* PlanParser::parsePlanFile(string& planFile) {
  * Provides access to all parsed elements, indexed by their id.
  * @return A shared_ptr<map<long, alica::AlicaElement>
  */
-map<long, alica::AlicaElement*>* PlanParser::getParsedElements() {
+map<long, alica::AlicaElement*>* PlanParser::getParsedElements()
+{
     return mf->getElements();
 }
 
-void PlanParser::ignoreMasterPlanId(bool val) {
-    this->mf->setIgnoreMasterPlanId(val);
-}
-
-string PlanParser::getCurrentFile() {
+string PlanParser::getCurrentFile()
+{
     return this->currentFile;
-}
-
-void PlanParser::setCurrentFile(string currentFile) {
-    if (currentFile.compare(0, basePlanPath.size(), basePlanPath)) {
-        this->currentFile = currentFile.substr(basePlanPath.size());
-    } else if (currentFile.compare(0, baseRolePath.size(), baseRolePath)) {
-        this->currentFile = currentFile.substr(baseRolePath.size());
-    } else {
-        this->currentFile = currentFile;
-    }
 }
 
 /**
@@ -344,13 +329,14 @@ void PlanParser::setCurrentFile(string currentFile) {
  * @param node the given xml node
  * @return id: returns the id from the plan
  */
-long PlanParser::parserId(tinyxml2::XMLElement* node) {
+long PlanParser::parserId(tinyxml2::XMLElement* node)
+{
     long id = -1;
-    string idString = "";
+    string idString;
     const char* idChar = node->Attribute("id");
     if (idChar)
         idString = idChar;
-    if (idString.compare("") != 0) {
+    if (!idString.empty()) {
         try {
             id = stol(idString);
         } catch (exception& e) {
@@ -358,19 +344,18 @@ long PlanParser::parserId(tinyxml2::XMLElement* node) {
         }
         return id;
     } else {
-        string idString = "";
-        const char* idChar = node->Attribute("href");
+        idChar = node->Attribute("href");
         if (idChar)
             idString = idChar;
-        if (idString.compare("") != 0) {
-            id = fetchId(idString, id);
+        if (!idString.empty()) {
+            id = fetchId(idString);
             return id;
         } else {
             const tinyxml2::XMLNode* currNode = node->FirstChild();
             while (currNode) {
                 const tinyxml2::XMLText* textNode = currNode->ToText();
                 if (textNode) {
-                    id = fetchId(textNode->Value(), id);
+                    id = fetchId(textNode->Value());
                     return id;
                 }
 
@@ -394,51 +379,27 @@ long PlanParser::parserId(tinyxml2::XMLElement* node) {
  * @param idString is a String that have to be converted in a long
  * @param id the id
  */
-long PlanParser::fetchId(const string& idString, long id) {
-    int hashPos = idString.find_first_of("#");
-    char* temp = nullptr;
-    char* temp2 = nullptr;
+long PlanParser::fetchId(const string& idString)
+{
+    unsigned long hashPos = idString.find_first_of('#');
     string locator = idString.substr(0, hashPos);
     if (!locator.empty()) {
         if (!supplementary::FileSystem::endsWith(this->currentDirectory, "/")) {
             this->currentDirectory = this->currentDirectory + "/";
         }
-        string path = this->currentDirectory + locator;
-        // not working no clue why
-        // char s[2048];
-        // char s2[2048];
-        temp = realpath(path.c_str(), NULL);
-        string pathNew = temp;
-        free(temp);
-        // This is not very efficient but necessary to keep the paths as they are
-        // Here we have to check whether the file has already been parsed / is in the list for toparse files
-        // problem is the normalization /home/etc/plans != /home/etc/Misc/../plans
-        // list<string>::iterator findIterParsed = find(filesParsed.begin(), filesParsed.end(), pathNew);
-        bool found = false;
-        for (auto& it : filesParsed) {
-            temp2 = realpath(it.c_str(), NULL);
-            string pathNew2 = temp2;
-            free(temp2);
-            if (pathNew2 == pathNew) {
-                found = true;
-                break;
-            }
+        string path;
+        if (supplementary::FileSystem::endsWith(locator, ".pml") || supplementary::FileSystem::endsWith(locator, ".beh")) {
+            path = supplementary::FileSystem::combinePaths(this->basePlanPath, locator);
+        } else if (supplementary::FileSystem::endsWith(locator, ".tsk")) {
+            path = supplementary::FileSystem::combinePaths(this->baseTaskPath, locator);
+        } else if (supplementary::FileSystem::endsWith(locator, ".rdefset") || supplementary::FileSystem::endsWith(locator, ".cdefset")) {
+            path = supplementary::FileSystem::combinePaths(this->baseRolePath, locator);
+        } else{
+            std::cout << "PP: Unknown locator ending: " << locator << std::endl;
         }
 
-        // list<string>::iterator findIterToParse = find(filesToParse.begin(), filesToParse.end(), pathNew);
-        if (!found) {
-            for (auto& it : filesToParse) {
-                temp2 = realpath(it.c_str(), NULL);
-                string pathNew2 = temp2;
-                free(temp2);
-                if (pathNew2 == pathNew) {
-                    found = true;
-                    break;
-                }
-            }
-        }
-
-        if (!found) {
+        if (std::find(std::begin(filesParsed), std::end(filesParsed), path) == std::end(filesParsed) &&
+                std::find(std::begin(filesToParse), std::end(filesToParse), path) == std::end(filesToParse)) {
 #ifdef PP_DEBUG
             cout << "PP: Adding " + path + " to parse queue " << endl;
 #endif
@@ -446,6 +407,7 @@ long PlanParser::fetchId(const string& idString, long id) {
         }
     }
     string tokenId = idString.substr(hashPos + 1, idString.length() - hashPos);
+    long id = -1;
     try {
         id = stol(tokenId);
     } catch (exception& e) {
@@ -453,5 +415,5 @@ long PlanParser::fetchId(const string& idString, long id) {
     }
     return id;
 }
-}  // namespace alica
+} // namespace alica
 /* namespace Alica */

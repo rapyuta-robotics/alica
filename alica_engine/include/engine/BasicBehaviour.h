@@ -1,7 +1,7 @@
 #pragma once
 
 #include "supplementary/AgentID.h"
-#include "engine/model/BehaviourConfiguration.h"
+#include "engine/model/Behaviour.h"
 #include "engine/Types.h"
 #include <string>
 #include <memory>
@@ -31,12 +31,11 @@ public:
     virtual ~BasicBehaviour();
     virtual void run(void* msg) = 0;
     const std::string& getName() const;
-    const BehaviourParameterMap& getParameters() const { return _configuration->getParameters(); }
 
     void setName(const std::string& name);
-    void setConfiguration(const BehaviourConfiguration* beh);
+    void setBehaviour(const Behaviour* beh);
 
-    const VariableGrp& getVariables() { return _configuration->getVariables(); }
+    const VariableGrp& getVariables() { return _behaviour->getVariables(); }
     const Variable* getVariableByName(const std::string& name) const;
 
     bool stop();
@@ -53,7 +52,6 @@ public:
     bool isFailure() const;
     void setFailure(bool failure);
 
-    bool getParameter(const std::string& key, std::string& valueOut) const;
     void setTrigger(supplementary::ITrigger* trigger);
 
     void sendLogMessage(int level, std::string& message);
@@ -68,7 +66,7 @@ protected:
      */
     std::string name;
 
-    const BehaviourConfiguration* _configuration;
+    const Behaviour* _behaviour;
 
     /**
      * The running plan representing this behaviour within the PlanBase.
@@ -100,6 +98,7 @@ protected:
      * Override for behaviour specific initialisation.
      */
     virtual void initialiseParameters(){};
+    std::string getParameter(std::string paramName);
 
     const EntryPoint* getParentEntryPoint(const std::string& taskName);
 
