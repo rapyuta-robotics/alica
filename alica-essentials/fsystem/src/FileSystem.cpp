@@ -8,26 +8,32 @@
 #include "FileSystem.h"
 #include <fstream>
 
-namespace supplementary {
+namespace supplementary
+{
 string const FileSystem::CURDIR = ".";
 string const FileSystem::PARENTDIR = "..";
 char const FileSystem::PATH_SEPARATOR = '/';
 
-FileSystem::FileSystem() {}
+FileSystem::FileSystem()
+{
+}
 
-FileSystem::~FileSystem() {}
+FileSystem::~FileSystem()
+{
+}
 
 /**
  * Helpfull method to get the location of the currently executed executable.
  * @return The path to the running executable.
  */
-string FileSystem::getSelfPath() {
+string FileSystem::getSelfPath()
+{
     int size = 100;
     char* buff = NULL;
-    buff = (char*) malloc(size);
+    buff = (char*)malloc(size);
 
     while (1) {
-        buff = (char*) realloc(buff, size);
+        buff = (char*)realloc(buff, size);
         ssize_t len = ::readlink("/proc/self/exe", buff, size);
 
         if (len < 0) {
@@ -51,7 +57,8 @@ string FileSystem::getSelfPath() {
  * Helpfull method to get currently executed executable NOT including its path.
  * @return The path to the running executable.
  */
-string FileSystem::getSelfExeName() {
+string FileSystem::getSelfExeName()
+{
     string ret;
     ifstream ifs("/proc/self/comm");
     ifs >> ret;
@@ -63,11 +70,13 @@ string FileSystem::getSelfExeName() {
  * Helpfull method to get currently executed executable including its path.
  * @return The path to the running executable.
  */
-string FileSystem::getSelf() {
+string FileSystem::getSelf()
+{
     return getSelfPath();
 }
 
-bool FileSystem::findFile(const string& path, const string& file, string& path_found) {
+bool FileSystem::findFile(const string& path, const string& file, string& path_found)
+{
     // cout << "ff: Path: " << path << " file: " << file << endl;
 
     if (!pathExists(path))
@@ -108,8 +117,7 @@ bool FileSystem::findFile(const string& path, const string& file, string& path_f
                 break;
             }
         } else {
-            cout << "ff: Found a symlink, or something else, which is not a regular file or directory: " << curFullFile
-                 << endl;
+            cout << "ff: Found a symlink, or something else, which is not a regular file or directory: " << curFullFile << endl;
         }
 
         free(namelist[i]);
@@ -123,7 +131,8 @@ bool FileSystem::findFile(const string& path, const string& file, string& path_f
     return fileFound;
 }
 
-vector<string> FileSystem::findAllFiles(string path, string ending) {
+vector<string> FileSystem::findAllFiles(string path, string ending)
+{
     if (!pathExists(path)) {
         cerr << "FS: Path '" << path << "' does not exists!" << endl;
         return vector<string>();
@@ -151,8 +160,7 @@ vector<string> FileSystem::findAllFiles(string path, string ending) {
                 files.push_back(curFullFile);
             }
         } else {
-            cout << "FS: Found a symlink, or something else, which is not a regular file or directory: " << curFullFile
-                 << endl;
+            cout << "FS: Found a symlink, or something else, which is not a regular file or directory: " << curFullFile << endl;
         }
 
         free(namelist[i]);
@@ -166,7 +174,8 @@ vector<string> FileSystem::findAllFiles(string path, string ending) {
     return files;
 }
 
-bool FileSystem::hasSuffix(const string& s, const string& suffix) {
+bool FileSystem::hasSuffix(const string& s, const string& suffix)
+{
     return (s.size() >= suffix.size()) && equal(suffix.rbegin(), suffix.rend(), s.rbegin());
 }
 
@@ -175,7 +184,8 @@ bool FileSystem::hasSuffix(const string& s, const string& suffix) {
  * @param filename Absolute path to file.
  * @return true if the file exists, false otherwise.
  */
-bool FileSystem::pathExists(const string& filename) {
+bool FileSystem::pathExists(const string& filename)
+{
     struct stat buf;
     if (stat(filename.c_str(), &buf) != -1) {
         return true;
@@ -188,7 +198,8 @@ bool FileSystem::pathExists(const string& filename) {
  * @param path The path to check, should be rooted.
  * @return true if the given path is a directory, false otherwise.
  */
-bool FileSystem::isDirectory(const string& path) {
+bool FileSystem::isDirectory(const string& path)
+{
     struct stat buf;
     if (stat(path.c_str(), &buf) != -1) {
         if (S_ISDIR(buf.st_mode)) {
@@ -203,7 +214,8 @@ bool FileSystem::isDirectory(const string& path) {
  * @param path The path to check, should be rooted.
  * @return true if the given path is a regular file, false otherwise.
  */
-bool FileSystem::isFile(const string& path) {
+bool FileSystem::isFile(const string& path)
+{
     struct stat buf;
     if (stat(path.c_str(), &buf) != -1) {
         if (S_ISREG(buf.st_mode)) {
@@ -218,7 +230,8 @@ bool FileSystem::isFile(const string& path) {
  * @param path The path, which should be checked.
  * @return true if the path is rooted, false otherwise.
  */
-bool FileSystem::isPathRooted(const string& path) {
+bool FileSystem::isPathRooted(const string& path)
+{
     if (!path.empty() && path.find_first_of(PATH_SEPARATOR) == 0) {
         return true;
     } else {
@@ -226,7 +239,8 @@ bool FileSystem::isPathRooted(const string& path) {
     }
 }
 
-string FileSystem::combinePaths(const string& path1, const string& path2) {
+string FileSystem::combinePaths(const string& path1, const string& path2)
+{
     if (path1.length() == 0) {
         return path2;
     }
@@ -247,8 +261,18 @@ string FileSystem::combinePaths(const string& path1, const string& path2) {
  * @param ending The ending for checking file.
  * @return true if the file is not empty and ends with ending, false, otherwise.
  */
-bool FileSystem::endsWith(const string& file, const string& ending) {
+bool FileSystem::endsWith(const string& file, const string& ending)
+{
     if (!file.empty() && (file.length() - ending.length()) == file.rfind(ending)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool FileSystem::endsWith(const string& file, const char& ending)
+{
+    if (!file.empty() && (file[file.length()] == ending)) {
         return true;
     } else {
         return false;
@@ -260,14 +284,16 @@ bool FileSystem::endsWith(const string& file, const string& ending) {
  * @param path
  * @return "" if the path does not exist, or has no parent folder. Otherwise the parent folder.
  */
-string FileSystem::getParent(const string& path) {
+string FileSystem::getParent(const string& path)
+{
     if (!pathExists(path)) {
         return "";
     }
     return path.substr(0, path.rfind(PATH_SEPARATOR));
 }
 
-bool FileSystem::createDirectory(string path, int rights) {
+bool FileSystem::createDirectory(string path, int rights)
+{
     string result = "";
     int pos;
     if (path[path.length() - 1] != PATH_SEPARATOR) {
@@ -289,4 +315,4 @@ bool FileSystem::createDirectory(string path, int rights) {
     return true;
 }
 
-}  // namespace supplementary
+} // namespace supplementary

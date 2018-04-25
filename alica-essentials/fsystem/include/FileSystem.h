@@ -35,6 +35,7 @@ public:
     static bool isPathRooted(const string& path);
     static string combinePaths(const string& path1, const string& path2);
     static bool endsWith(const string& file, const string& ending);
+    static bool endsWith(const string& file, const char& ending);
     static bool isDirectory(const string& path);
     static bool isFile(const string& path);
     static string getParent(const string& path);
