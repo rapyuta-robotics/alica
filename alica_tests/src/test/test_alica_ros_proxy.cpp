@@ -1,6 +1,5 @@
 #include <iostream>
 #include <typeinfo>
-#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>

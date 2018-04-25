@@ -47,7 +47,7 @@ protected:
 
         // setup the engine
         ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
-                "BehaviourTriggerTestPlan", ".", true);
+                "BehaviourTriggerTestPlan", ".", false);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
@@ -74,7 +74,9 @@ TEST_F(AlicaBehaviourTrigger, triggerTest) {
     alicaTests::TestWorldModel::getOne()->trigger2 = new supplementary::EventTrigger();
     ae->init(bc, cc, uc, crc);
     ae->start();
-    step(ae);
+    
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+
     for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
             iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
@@ -111,15 +113,22 @@ TEST_F(AlicaBehaviourTrigger, triggerTest) {
     }
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    step(ae);
+    
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    step(ae);
+
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    step(ae);
+
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    step(ae);
+
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
 
     for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {

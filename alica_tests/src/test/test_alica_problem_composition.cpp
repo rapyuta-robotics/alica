@@ -81,7 +81,7 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition) {
 
     ae->start();
 
-    for (int i = 0; i < 5; ++i) { step(ae); }
+    for (int i = 0; i < 6; ++i) { step(ae); }
 
     std::shared_ptr<const RunningPlan> deep = ae->getPlanBase()->getDeepestNode();
     RunningPlan* dp = const_cast<RunningPlan*>(deep.get());
