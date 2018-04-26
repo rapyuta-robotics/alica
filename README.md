@@ -1,5 +1,6 @@
 # ALICA (A Language for Interactive Cooperative Agents)
-[![Travis Build Status](https://secure.travis-ci.org/{{username}}/{{project_name}}.svg?branch={{branch}})](http://travis-ci.org/{{username}}/{{project_name}}) [![Coverity Scan Build Status](https://scan.coverity.com/projects/{{username}}-{{project_name}}/badge.svg)](https://scan.coverity.com/projects/{{username}}-{{project_name}})
+[![Travis Build Status](https://secure.travis-ci.org/rapyuta-robotics/alica.svg?branch=rr-devel)](http://travis-ci.org/rapyuta-robotics/alica) [![Coverity Scan Build Status](https://scan.coverity.com/projects/rapyuta-robotics-alica/badge.svg)](https://scan.coverity.com/projects/rapyuta-robotics-alica)
+
 [Reference](https://carpe-noctem-cassel.github.io/alica) | [Documentation](https://carpe-noctem-cassel.github.io)
 
 
