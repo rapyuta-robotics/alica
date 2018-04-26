@@ -3,8 +3,7 @@
 
 [Reference](https://carpe-noctem-cassel.github.io/alica) | [Documentation](https://carpe-noctem-cassel.github.io)
 
-
-Below you will find all installation steps of the framework, please follow them to ensure that everything is working properly. 
+### Installation
 
 **Howto get the framework running**
 * [Framework](docs/Alica_howto_get_the_framework_running.md)
