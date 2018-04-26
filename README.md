@@ -3,7 +3,7 @@
 
 [Reference](https://carpe-noctem-cassel.github.io/alica) | [Documentation](https://carpe-noctem-cassel.github.io)
 
-### Installation
+## Installation
 
 **Howto get the framework running**
 * [Framework](docs/Alica_howto_get_the_framework_running.md)
