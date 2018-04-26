@@ -75,7 +75,7 @@ protected:
 };
 
 TEST_F(TaskAssignmentTest, constructTaskAssignment) {
-    ASSERT_EQ(setjmp(restore_point), 0);
+    ASSERT_NO_SIGNAL
 
     // fake a list of existing robots
     alica::AgentSet robots;

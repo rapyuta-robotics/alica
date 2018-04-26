@@ -63,7 +63,7 @@ protected:
  * Test for Runtime or PreCondition are false with plantypes
  */
 TEST_F(AlicaConditionPlanType, conditionPlanTypeTest) {
-    ASSERT_EQ(setjmp(restore_point), 0);
+    ASSERT_NO_SIGNAL
 
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));

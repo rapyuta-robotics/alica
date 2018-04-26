@@ -59,7 +59,7 @@ protected:
  * Tests the initialisation of the behaviourPool
  */
 TEST_F(AlicaEngineTestBehPool, behaviourPoolInit) {
-    ASSERT_EQ(setjmp(restore_point), 0);
+    ASSERT_NO_SIGNAL
 
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
     alica::BehaviourPool* bp = ae->getBehaviourPool();

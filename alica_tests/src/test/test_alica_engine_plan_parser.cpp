@@ -210,7 +210,7 @@ protected:
  * Tests the plan parser with some nice plans
  */
 TEST_F(AlicaEngineTest, planParser) {
-    ASSERT_EQ(setjmp(restore_point), 0);
+    ASSERT_NO_SIGNAL
 
     const auto& plans = ae->getPlanRepository()->getPlans();
 
@@ -679,7 +679,7 @@ TEST_F(AlicaEngineTest, planParser) {
 }
 
 TEST_F(AlicaEngineTest, planWriter) {
-    ASSERT_EQ(setjmp(restore_point), 0);
+    ASSERT_NO_SIGNAL
 
     const auto& plans = ae->getPlanRepository()->getPlans();
     PlanWriter pw = PlanWriter(ae, ae->getPlanRepository());

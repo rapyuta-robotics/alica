@@ -68,7 +68,7 @@ protected:
 };
 
 TEST_F(AlicaBehaviourTrigger, triggerTest) {
-    ASSERT_EQ(setjmp(restore_point), 0);
+    ASSERT_NO_SIGNAL
 
     alicaTests::TestWorldModel::getOne()->trigger1 = new supplementary::EventTrigger();
     alicaTests::TestWorldModel::getOne()->trigger2 = new supplementary::EventTrigger();
@@ -113,7 +113,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest) {
     }
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    
+
     ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
 
     alicaTests::TestWorldModel::getOne()->trigger1->run();

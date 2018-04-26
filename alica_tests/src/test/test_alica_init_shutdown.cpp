@@ -60,6 +60,6 @@ protected:
  * Initialises an instance of the AlicaEngine and shuts it down again. This test is nice for basic memory leak testing.
  */
 TEST_F(AlicaEngineTestInit, initAndShutdown) {
-    ASSERT_EQ(setjmp(restore_point), 0);
+    ASSERT_NO_SIGNAL
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 }

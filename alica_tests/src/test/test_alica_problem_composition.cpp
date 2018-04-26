@@ -77,7 +77,7 @@ protected:
  * Tests if static variables and binded correctly.
  */
 TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition) {
-    ASSERT_EQ(setjmp(restore_point), 0);
+    ASSERT_NO_SIGNAL
 
     ae->start();
 

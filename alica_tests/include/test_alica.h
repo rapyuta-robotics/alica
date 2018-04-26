@@ -3,6 +3,8 @@
 #include <csignal>
 #include <csetjmp>
 
+#define ASSERT_NO_SIGNAL ASSERT_EQ(setjmp(restore_point), 0);
+
 namespace alica {
 class AlicaEngine;
 }

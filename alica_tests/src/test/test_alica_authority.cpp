@@ -64,6 +64,8 @@ protected:
 };
 
 TEST(AllocationDifference, MessageCancelsUtil) {
+    ASSERT_NO_SIGNAL
+
     alica::AllocationDifference util;
     alica::AllocationDifference msg;
     alica::AllocationDifference result;
@@ -105,7 +107,7 @@ TEST(AllocationDifference, MessageCancelsUtil) {
 }
 
 TEST_F(AlicaEngineAuthorityManager, authority) {
-    ASSERT_EQ(setjmp(restore_point), 0);
+    ASSERT_NO_SIGNAL
 
     sc->setHostname("nase");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
