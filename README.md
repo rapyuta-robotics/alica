@@ -1,5 +1,7 @@
 # ALICA (A Language for Interactive Cooperative Agents)
+[![Travis Build Status](https://secure.travis-ci.org/{{username}}/{{project_name}}.svg?branch={{branch}})](http://travis-ci.org/{{username}}/{{project_name}}) [![Coverity Scan Build Status](https://scan.coverity.com/projects/{{username}}-{{project_name}}/badge.svg)](https://scan.coverity.com/projects/{{username}}-{{project_name}})
 [Reference](https://carpe-noctem-cassel.github.io/alica) | [Documentation](https://carpe-noctem-cassel.github.io)
+
 
 Below you will find all installation steps of the framework, please follow them to ensure that everything is working properly. 
 
