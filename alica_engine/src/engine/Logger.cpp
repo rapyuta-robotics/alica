@@ -23,7 +23,7 @@ Logger::Logger(AlicaEngine* ae) {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     this->active = (*sc)["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
     if (this->active) {
-        char buffer[50];
+        char buffer[1024];
         struct tm* timeinfo;
         string robotName = ae->getRobotName();
         const std::time_t time = ae->getAlicaClock()->now().inSeconds();
