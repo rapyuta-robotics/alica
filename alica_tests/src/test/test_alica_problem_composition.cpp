@@ -1,4 +1,6 @@
 #include <BehaviourCreator.h>
+#include <test_alica.h>
+#include <gtest/gtest.h>
 #include <engine/AlicaClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include <CGSolver.h>
@@ -11,7 +13,6 @@
 #include <engine/PlanBase.h>
 #include <engine/RunningPlan.h>
 #include <FileSystem.h>
-#include <gtest/gtest.h>
 #include <gtest/internal/gtest-internal.h>
 #include <Plans/ProblemModule/QueryBehaviour1.h>
 #include <SystemConfig.h>
@@ -76,15 +77,12 @@ protected:
  * Tests if static variables and binded correctly.
  */
 TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition) {
+    ASSERT_NO_SIGNAL
+
     ae->start();
-    ae->stepNotify();
-    this_thread::sleep_for(chrono::milliseconds(33));
-    for (int i = 0; i < 5; ++i) {
-        while (!ae->getPlanBase()->isWaiting()) {
-            this_thread::sleep_for(chrono::milliseconds(33));
-        }
-        ae->stepNotify();
-    }
+
+    for (int i = 0; i < 6; ++i) { step(ae); }
+
     std::shared_ptr<const RunningPlan> deep = ae->getPlanBase()->getDeepestNode();
     RunningPlan* dp = const_cast<RunningPlan*>(deep.get());
     ASSERT_FALSE(dp == nullptr);

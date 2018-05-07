@@ -1,3 +1,4 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
@@ -63,6 +64,8 @@ protected:
 };
 
 TEST(AllocationDifference, MessageCancelsUtil) {
+    ASSERT_NO_SIGNAL
+
     alica::AllocationDifference util;
     alica::AllocationDifference msg;
     alica::AllocationDifference result;
@@ -104,6 +107,8 @@ TEST(AllocationDifference, MessageCancelsUtil) {
 }
 
 TEST_F(AlicaEngineAuthorityManager, authority) {
+    ASSERT_NO_SIGNAL
+
     sc->setHostname("nase");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "AuthorityTestMaster", ".", true);
@@ -146,14 +151,8 @@ TEST_F(AlicaEngineAuthorityManager, authority) {
     alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(0);
 
     for (int i = 0; i < 21; i++) {
-        ae->stepNotify();
-        chrono::milliseconds duration(33);
-        this_thread::sleep_for(duration);
-        ae2->stepNotify();
-        this_thread::sleep_for(duration);
-        while (!ae->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting()) {
-            this_thread::sleep_for(duration);
-        }
+        step(ae);
+        step(ae2);
 
         if (i == 1) {
             EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
