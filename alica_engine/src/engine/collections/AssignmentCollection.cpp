@@ -121,7 +121,7 @@ AgentGrp* AssignmentCollection::editRobots(short index)
     }
 }
 
-void AssignmentCollection::assignRobot(short index, AgentIDPtr agent)
+void AssignmentCollection::assignRobot(short index, AgentIDConstPtr agent)
 {
     assert(index < _numEps);
     _robotIds[index].push_back(agent);
@@ -191,7 +191,7 @@ void AssignmentCollection::setEp(short index, const EntryPoint* ep)
     _entryPoints[index] = ep;
 }
 
-void AssignmentCollection::addRobot(AgentIDPtr id, const EntryPoint* e)
+void AssignmentCollection::addRobot(AgentIDConstPtr id, const EntryPoint* e)
 {
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i] == e) {
@@ -199,7 +199,7 @@ void AssignmentCollection::addRobot(AgentIDPtr id, const EntryPoint* e)
         }
     }
 }
-bool AssignmentCollection::removeRobot(AgentIDPtr robot, const EntryPoint* ep)
+bool AssignmentCollection::removeRobot(AgentIDConstPtr robot, const EntryPoint* ep)
 {
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i] == ep) {

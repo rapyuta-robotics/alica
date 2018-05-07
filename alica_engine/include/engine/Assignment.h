@@ -43,7 +43,7 @@ class Assignment final : public IAssignment
     void getRobotsWorkingSorted(const EntryPoint* ep, AgentGrp& o_robots);
     const AgentGrp* getRobotsWorking(const EntryPoint* ep) const override;
     int totalRobotCount() const override;
-    bool hasRobot(AgentIDPtr id) const
+    bool hasRobot(AgentIDConstPtr id) const
     {
         return std::find(robotStateMapping->getRobots().begin(), robotStateMapping->getRobots().end(), id) != robotStateMapping->getRobots().end();
     }
