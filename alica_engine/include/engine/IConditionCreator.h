@@ -12,16 +12,14 @@
 
 using namespace std;
 
-namespace alica
-{
-	class BasicCondition;
+namespace alica {
+class BasicCondition;
 
-	class IConditionCreator
-	{
-	public:
-		virtual ~IConditionCreator() {}
-		virtual shared_ptr<BasicCondition> createConditions(long conditionConfId) = 0;
-	};
+class IConditionCreator {
+public:
+    virtual ~IConditionCreator() {}
+    virtual shared_ptr<BasicCondition> createConditions(long conditionConfId) = 0;
+};
 
 } /* namespace alica */
 

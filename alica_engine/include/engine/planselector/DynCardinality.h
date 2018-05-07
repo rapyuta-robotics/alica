@@ -8,24 +8,22 @@
 #ifndef DYNCARDINALITY_H_
 #define DYNCARDINALITY_H_
 
-namespace alica
-{
+namespace alica {
 
-	struct DynCardinality
-	{
-	public:
-		DynCardinality();
-		DynCardinality(int min, int max);
-		virtual ~DynCardinality();
-		int getMax();
-		void setMax(int max);
-		int getMin();
-		void setMin(int min);
+struct DynCardinality {
+public:
+    DynCardinality();
+    DynCardinality(int min, int max);
+    virtual ~DynCardinality();
+    int getMax();
+    void setMax(int max);
+    int getMin();
+    void setMin(int min);
 
-	protected:
-		int min;
-		int max;
-	};
+protected:
+    int min;
+    int max;
+};
 
 } /* namespace alica */
 

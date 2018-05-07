@@ -11,24 +11,22 @@
 
 using namespace std;
 
-namespace alica
-{
-	class PartialAssignment;
-	class EntryPoint;
-	class Task;
+namespace alica {
+class PartialAssignment;
+class EntryPoint;
+class Task;
 
-	class PartialAssignmentPool
-	{
-	public:
-		PartialAssignmentPool();
-		virtual ~PartialAssignmentPool();
-		int curIndex;
-		const static int maxCount;
-		EntryPoint* idleEP;
-		Task* idleTask;
-		vector<PartialAssignment*> daPAs;
-	};
+class PartialAssignmentPool {
+public:
+    PartialAssignmentPool();
+    virtual ~PartialAssignmentPool();
+    int curIndex;
+    const static int maxCount;
+    const EntryPoint* idleEP;
+    const Task* idleTask;
+    vector<PartialAssignment*> daPAs;
+};
 
-} /* namespace cace */
+}  // namespace alica
 
 #endif /* PARTIALASSIGNMENTPOOL_H_ */

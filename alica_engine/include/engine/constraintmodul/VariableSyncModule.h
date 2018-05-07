@@ -1,75 +1,63 @@
-/*
- * ResultStore.h
- *
- *  Created on: Oct 10, 2014
- *      Author: Philipp Sperber
- */
+#pragma once
 
-#ifndef RESULTSTORE_H_
-#define RESULTSTORE_H_
+#include "supplementary/AgentID.h"
+#include "engine/constraintmodul/IVariableSyncModule.h"
+
+#include <supplementary/NotifyTimer.h>
 
 #include <memory>
 #include <vector>
 
-#include <NotifyTimer.h>
+namespace alica {
+class Variable;
+class ResultEntry;
+class IAlicaCommunication;
 
-#include "engine/constraintmodul/IVariableSyncModule.h"
+class VariableSyncModule : public IVariableSyncModule {
+public:
+    VariableSyncModule(AlicaEngine* ae);
+    virtual ~VariableSyncModule();
 
-using namespace std;
+    virtual void init();
+    virtual void close();
+    virtual void clear();
+    virtual void onSolverResult(shared_ptr<SolverResult> msg);
 
-namespace alica
-{
-	class Variable;
-	class ResultEntry;
-	class IAlicaCommunication;
+    void publishContent();
+    virtual void postResult(long vid, shared_ptr<vector<uint8_t>>& result);
+    virtual shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>> getSeeds(
+            shared_ptr<vector<const Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits) override;
 
-	class VariableSyncModule : public IVariableSyncModule
-	{
-	public:
-		VariableSyncModule(AlicaEngine* ae);
-		virtual ~VariableSyncModule();
+protected:
+    supplementary::NotifyTimer<VariableSyncModule>* timer;
+    long ttl4Communication;
+    long ttl4Usage;
 
-		virtual void init();
-		virtual void close();
-		virtual void clear();
-		virtual void onSolverResult(shared_ptr<SolverResult> msg);
+    class VotedSeed {
+    public:
+        VotedSeed(int dim, shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v);
 
-		void publishContent();
-		virtual void postResult(long vid, shared_ptr<vector<uint8_t>>& result);
-		virtual shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>> getSeeds(shared_ptr<vector<Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits);
+        bool takeVector(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v, vector<double>& scaling,
+                double distThreshold, bool isDouble);
+        shared_ptr<vector<double>> deserializeToDoubleVec(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v);
+        shared_ptr<vector<shared_ptr<vector<uint8_t>>>> serializeFromDoubleVec(shared_ptr<vector<double>> d);
 
-	protected:
-		supplementary::NotifyTimer<VariableSyncModule>* timer;
-		long ttl4Communication;
-		long ttl4Usage;
+        shared_ptr<vector<shared_ptr<vector<uint8_t>>>> values;
+        vector<int> supporterCount;
+        double hash;
+        int totalSupCount;
+        int dim;
+    };
 
-		class VotedSeed
-		{
-		public:
-			VotedSeed(int dim, shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v);
+private:
+    const AlicaEngine* ae;
+    const supplementary::AgentID* ownId;
+    const IAlicaCommunication* communicator;
+    bool running;
+    bool communicationEnabled;
 
-			bool takeVector(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v, vector<double>& scaling, double distThreshold, bool isDouble);
-			shared_ptr<vector<double>> deserializeToDoubleVec(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v);
-			shared_ptr<vector<shared_ptr<vector<uint8_t>>>> serializeFromDoubleVec(shared_ptr<vector<double>> d);
-
-			shared_ptr<vector<shared_ptr<vector<uint8_t>>>> values;
-			vector<int> supporterCount;
-			double hash;
-			int totalSupCount;
-			int dim;
-		};
-
-	private:
-		AlicaEngine* ae;
-		int ownId;
-		IAlicaCommunication* communicator;
-		bool running;
-		bool communicationEnabled;
-
-		vector<shared_ptr<ResultEntry>> store;
-		shared_ptr<ResultEntry> ownResults;
-		double distThreshold;
-	};
+    vector<shared_ptr<ResultEntry>> store;
+    shared_ptr<ResultEntry> ownResults;
+    double distThreshold;
+};
 } /* namespace alica */
-
-#endif /* RESULTSTORE_H_ */

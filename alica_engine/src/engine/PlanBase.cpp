@@ -1,22 +1,15 @@
-/*
- * PlanBase.cpp
- *
- *  Created on: Jun 17, 2014
- *      Author: Paul Panin
- */
-
+#include <engine/syncmodule/SyncModule.h>
 #include "engine/PlanBase.h"
 
 #include "engine/RunningPlan.h"
 #include "engine/model/Plan.h"
-#include "engine/rules/RuleBook.h"
+#include "engine/RuleBook.h"
 #include "engine/AlicaEngine.h"
-#include "engine/ITeamObserver.h"
+#include "engine/TeamObserver.h"
+#include "engine/teammanager/TeamManager.h"
 #include "engine/IRoleAssignment.h"
-#include "engine/logging/Logger.h"
+#include "engine/Logger.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/ISyncModul.h"
-#include "math.h"
 #include "engine/model/Task.h"
 #include "engine/model/State.h"
 #include "engine/model/EntryPoint.h"
@@ -25,407 +18,315 @@
 #include "engine/collections/StateCollection.h"
 #include "engine/IAlicaCommunication.h"
 
-namespace alica
+#include <math.h>
+
+//#define PB_DEBUG
+
+namespace alica {
+/**
+ * Constructs the PlanBase given a top-level plan to execute
+ * @param masterplan A Plan
+ */
+PlanBase::PlanBase(AlicaEngine* ae, Plan* masterPlan)
+        : _ae(ae)
+        , _masterPlan(masterPlan)
+        , _teamObserver(ae->getTeamObserver())
+        , _ra(ae->getRoleAssignment())
+        , _syncModel(ae->getSyncModul())
+        , _authModul(ae->getAuth())
+        , _statusPublisher(nullptr)
+        , _alicaClock(ae->getIAlicaClock())
+        , _rootNode(nullptr)
+        , _deepestNode(nullptr)
+        , _mainThread(nullptr)
+        , _log(ae->getLog())
+        , _statusMessage(nullptr)
+        , _lastSendTime(0)
+        , _loopInterval(0)
+        , _lastSentStatusTime(0)
+        , _stepModeCV()
+        , _ruleBook(ae)
+        , _treeDepth(0)
+        , _running(false)
+        , _isWaiting(false)
+
 {
-	/**
-	 * Constructs the PlanBase given a top-level plan to execute
-	 * @param masterplan A Plan
-	 */
-	PlanBase::PlanBase(AlicaEngine* ae, Plan* masterPlan)
-	{
-		this->mainThread = nullptr;
-		this->treeDepth = 0;
-		this->lastSendTime = 0;
-		this->statusPublisher = nullptr;
-		this->lastSentStatusTime = 0;
-		this->loopInterval = 0;
-		this->deepestNode = nullptr;
-		this->log = ae->getLog();
-		this->rootNode = nullptr;
-		this->masterPlan = masterPlan;
-		this->ae = ae;
-		this->teamObserver = ae->getTeamObserver();
-		this->syncModel = ae->getSyncModul();
-		this->authModul = ae->getAuth();
-		this->ra = ae->getRoleAssignment();
-		this->alicaClock = ae->getIAlicaClock();
+    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 
-		this->ruleBook = new RuleBook(ae);
-		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    double freq = (*sc)["Alica"]->get<double>("Alica.EngineFrequency", NULL);
+    double minbcfreq = (*sc)["Alica"]->get<double>("Alica.MinBroadcastFrequency", NULL);
+    double maxbcfreq = (*sc)["Alica"]->get<double>("Alica.MaxBroadcastFrequency", NULL);
 
-		double freq = (*sc)["Alica"]->get<double>("Alica.EngineFrequency", NULL);
-		double minbcfreq = (*sc)["Alica"]->get<double>("Alica.MinBroadcastFrequency", NULL);
-		double maxbcfreq = (*sc)["Alica"]->get<double>("Alica.MaxBroadcastFrequency", NULL);
-		this->loopTime = (AlicaTime)fmax(1000000, lround(1.0 / freq * 1000000000));
-		if (this->loopTime == 1000000)
-		{
-			cerr << "PB: ALICA should not be used with more than 1000Hz -> 1000Hz assumed" << endl;
-		}
+    _loopTime = (AlicaTime) fmax(1000000, lround(1.0 / freq * 1000000000));
+    if (_loopTime <= 1000000) {
+        cerr << "PB: ALICA should not be used with more than 1000Hz -> 1000Hz assumed" << endl;
+    }
 
-		if (minbcfreq > maxbcfreq)
-		{
-			ae->abort(
-					"PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
-		}
+    if (minbcfreq > maxbcfreq) {
+        AlicaEngine::abort(
+                "PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
+    }
 
-		this->minSendInterval = (AlicaTime)fmax(1000000, lround(1.0 / maxbcfreq * 1000000000));
-		this->maxSendInterval = (AlicaTime)fmax(1000000, lround(1.0 / minbcfreq * 1000000000));
+    _minSendInterval = (AlicaTime) fmax(1000000, lround(1.0 / maxbcfreq * 1000000000));
+    _maxSendInterval = (AlicaTime) fmax(1000000, lround(1.0 / minbcfreq * 1000000000));
 
-		AlicaTime halfLoopTime = this->loopTime / 2;
-		this->running = false;
+    AlicaTime halfLoopTime = _loopTime / 2;
 
-		this->sendStatusMessages = (*sc)["Alica"]->get<bool>("Alica.StatusMessages.Enabled", NULL);
-		if (sendStatusMessages)
-		{
-			double stfreq = (*sc)["Alica"]->get<double>("Alica.StatusMessages.Frequency", NULL);
-			this->sendStatusInterval = (AlicaTime)max(1000000.0, round(1.0 / stfreq * 1000000000));
-			this->statusMessage = new AlicaEngineInfo();
-			this->statusMessage->senderID = this->teamObserver->getOwnId();
-			this->statusMessage->masterPlan = masterPlan->getName();
-		}
+    _sendStatusMessages = (*sc)["Alica"]->get<bool>("Alica.StatusMessages.Enabled", NULL);
+    if (_sendStatusMessages) {
+        double stfreq = (*sc)["Alica"]->get<double>("Alica.StatusMessages.Frequency", NULL);
+        _sendStatusInterval = (AlicaTime) max(1000000.0, round(1.0 / stfreq * 1000000000));
+        _statusMessage = new AlicaEngineInfo();
+        _statusMessage->senderID = ae->getTeamManager()->getLocalAgentID();
+        _statusMessage->masterPlan = masterPlan->getName();
+    }
 
-		this->stepModeCV = nullptr;
-		if (this->ae->getStepEngine())
-		{
-			this->stepModeCV = new condition_variable();
-		}
-
-//#ifdef PB_DEBUG
-		cout << "PB: Engine loop time is " << to_string(loopTime / 1000000) << "ms, broadcast interval is "
-				<< to_string(this->minSendInterval / 1000000) << "ms - " << to_string(this->maxSendInterval / 1000000) << "ms" << endl;
-//#endif
-		if (halfLoopTime < this->minSendInterval)
-		{
-			this->minSendInterval -= halfLoopTime;
-			this->maxSendInterval -= halfLoopTime;
-		}
-	}
-
-	/**
-	 * Starts execution of the plan tree, call once all necessary modules are initialised.
-	 */
-	void PlanBase::start()
-	{
-		if (!this->running)
-		{
-			this->running = true;
-			this->mainThread = new thread(&PlanBase::run, this);
-		}
-	}
-	/**
-	 * The Engine's main loop
-	 */
-	void PlanBase::run()
-	{
-#ifdef PB_DEBUG
-		cout << "PB: Run-Method of PlanBase started. " << endl;
-#endif
-		while (this->running)
-		{
-			AlicaTime beginTime = alicaClock->now();
-			this->log->itertionStarts();
-
-			if (ae->getStepEngine())
-			{
-#ifdef PB_DEBUG
-				cout << "PB: ===CUR TREE===" << endl;
-
-				if (this->rootNode == nullptr)
-				{
-					cout << "PB: NULL" << endl;
-				}
-				else
-				{
-					rootNode->printRecursive();
-				}
-				cout << "PB: ===END CUR TREE===" << endl;
-#endif
-				{
-					unique_lock<mutex> lckStep(stepMutex);
-					stepModeCV->wait(lckStep, [&]
-					{
-						return this->ae->getStepCalled();
-					});
-					this->ae->setStepCalled(false);
-					if (!running)
-						return;
-				}
-				beginTime = alicaClock->now();
-
-			}
-
-
-			//Send tick to other modules
-
-			this->ae->getCommunicator()->tick();
-
-
-			this->teamObserver->tick(this->rootNode);
-
-
-			this->ra->tick();
-
-			this->syncModel->tick();
-
-			this->authModul->tick(this->rootNode);
-
-			if (this->rootNode == nullptr)
-			{
-				this->rootNode = ruleBook->initialisationRule(this->masterPlan);
-			}
-			if (this->rootNode->tick(this->ruleBook) == PlanChange::FailChange)
-			{
-				cout << "PB: MasterPlan Failed" << endl;
-			}
-			//lock for fpEvents
-			{
-				lock_guard<mutex> lock(lomutex);
-				this->fpEvents = queue<shared_ptr<RunningPlan>>();
-			}
-
-			AlicaTime now = alicaClock->now();
-
-			if (now < this->lastSendTime)
-			{
-				// Taker fix
-				std::cout << "PB: lastSendTime is in the future of the current system time, did the system time change?" << endl;
-				this->lastSendTime = now;
-			}
-
-			if ((this->ruleBook->isChangeOccured() && this->lastSendTime + this->minSendInterval < now)
-					|| this->lastSendTime + this->maxSendInterval < now)
-			{
-				list<long> msg;
-				this->deepestNode = this->rootNode;
-				this->treeDepth = 0;
-				this->rootNode->toMessage(msg, this->deepestNode, this->treeDepth, 0);
-				this->teamObserver->doBroadCast(msg);
-				this->lastSendTime = now;
-				this->ruleBook->setChangeOccured(false);
-			}
-
-			if (this->sendStatusMessages && this->lastSentStatusTime + this->sendStatusInterval < alicaClock->now())
-			{
-				if (this->deepestNode != nullptr)
-				{
-					this->statusMessage->robotIDsWithMe.clear();
-					this->statusMessage->currentPlan = this->deepestNode->getPlan()->getName();
-					if (this->deepestNode->getOwnEntryPoint() != nullptr)
-					{
-						this->statusMessage->currentTask = this->deepestNode->getOwnEntryPoint()->getTask()->getName();
-					}
-					else
-					{
-						this->statusMessage->currentTask = "IDLE";
-					}
-					if (this->deepestNode->getActiveState() != nullptr)
-					{
-						this->statusMessage->currentState = this->deepestNode->getActiveState()->getName();
-						copy(this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(
-								this->deepestNode->getActiveState()).begin(),
-								this->deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(
-										this->deepestNode->getActiveState()).end(),
-								back_inserter(this->statusMessage->robotIDsWithMe));
-
-					}
-					else
-					{
-						this->statusMessage->currentState = "NONE";
-					}
-					this->statusMessage->currentRole = this->ra->getOwnRole()->getName();
-					ae->getCommunicator()->sendAlicaEngineInfo(*this->statusMessage);
-					this->lastSentStatusTime = alicaClock->now();
-				}
-			}
-
-			this->log->iterationEnds(this->rootNode);
-
-			this->ae->iterationComplete();
-
-			long availTime;
-
-			now = alicaClock->now();
-			if (this->loopTime > (now - beginTime))
-			{
-				availTime = (long)((this->loopTime - (now - beginTime)) / 1000UL);
-			}
-			else
-			{
-				availTime = 0;
-			}
-
-			if (fpEvents.size() > 0)
-			{
-				//lock for fpEvents
-				{
-					lock_guard<mutex> lock(lomutex);
-					while (this->running && availTime > 1000 && fpEvents.size() > 0)
-					{
-						shared_ptr<RunningPlan> rp = fpEvents.front();
-						fpEvents.pop();
-
-						if (rp->isActive())
-						{
-							bool first = true;
-							while (rp != nullptr)
-							{
-								cout << "TICK FPEVENT " << endl;
-								PlanChange change = this->ruleBook->visit(rp);
-								cout << "AFTER TICK FPEVENT " << endl;
-								if (!first && change == PlanChange::NoChange)
-								{
-									break;
-								}
-								rp = rp->getParent().lock();
-								first = false;
-							}
-						}
-						now = alicaClock->now();
-						if (this->loopTime > (now - beginTime))
-						{
-							availTime = (long)((this->loopTime - (now - beginTime)) / 1000UL);
-						}
-						else
-						{
-							availTime = 0;
-						}
-					}
-				}
-
-			}
-
-#ifdef PB_DEBUG
-			cout << "PB: availTime " << availTime << endl;
-#endif
-			if (availTime > 1 && !ae->getStepEngine())
-			{
-				alicaClock->sleep(availTime);
-			}
-		}
-	}
-
-	/**
-	 * Stops the plan base thread.
-	 */
-	void PlanBase::stop()
-	{
-		this->running = false;
-		this->ae->setStepCalled(true);
-
-		if (ae->getStepEngine())
-		{
-			ae->setStepCalled(true);
-			stepModeCV->notify_one();
-		}
-
-		if (this->mainThread != nullptr)
-		{
-			this->mainThread->join();
-			delete this->mainThread;
-		}
-		this->mainThread = nullptr;
-	}
-
-	PlanBase::~PlanBase()
-	{
-		delete this->ruleBook;
-		if (this->stepModeCV != nullptr)
-		{
-			delete this->stepModeCV;
-		}
-		delete this->statusMessage;
-	}
-	void PlanBase::checkPlanBase(shared_ptr<RunningPlan> r)
-	{
-		if (r == nullptr)
-			return;
-		if (r->isBehaviour())
-			return;
-		shared_ptr<vector<int> > robots = r->getAssignment()->getAllRobots();
-		for (shared_ptr<RunningPlan> rp : *r->getChildren())
-		{
-			if (rp->isBehaviour())
-				continue;
-
-			shared_ptr<vector<int> > cr = rp->getAssignment()->getAllRobots();
-
-			for (int i = 0; i < cr->size(); i++)
-			{
-				if (find(robots->begin(), robots->end(), i) != robots->end())
-				{
-					ae->abort("Mismatch Assignment in Plan", rp->getPlan()->getName());
-				}
-			}
-			checkPlanBase(rp);
-		}
-
-	}
-	void PlanBase::addFastPathEvent(shared_ptr<RunningPlan> p)
-	{
-		{
-			lock_guard<mutex> lock(lomutex);
-			fpEvents.push(p);
-		}
-	}
-
-	/**
-	 * Set a custom RuleBook to use.
-	 */
-	void PlanBase::setRuleBook(RuleBook* ruleBook)
-	{
-		this->ruleBook = ruleBook;
-	}
-	const ulong PlanBase::getloopInterval() const
-	{
-		return this->loopInterval;
-	}
-	void PlanBase::setLoopInterval(ulong loopInterval)
-	{
-		this->loopInterval = loopInterval;
-	}
-	condition_variable* PlanBase::getStepModeCV()
-	{
-		if (!ae->getStepEngine())
-		{
-			return nullptr;
-		}
-		return this->stepModeCV;
-	}
-	/**
-	 * Returns the root node of the ALICA plan tree in execution.
-	 */
-	const shared_ptr<RunningPlan> PlanBase::getRootNode() const
-	{
-		return rootNode;
-	}
-	void PlanBase::setRootNode(shared_ptr<RunningPlan> rootNode)
-	{
-		this->rootNode = rootNode;
-	}
-
-	/**
-	 * Returns the deepest ALICA node
-	 */
-	shared_ptr<RunningPlan> PlanBase::getDeepestNode()
-	{
-		return deepestNode;
-	}
-
-	/**
-	 * Returns the deepest ALICA node
-	 */
-	shared_ptr<RunningPlan> PlanBase::getRootNode()
-	{
-		return rootNode;
-	}
-
-	/**
-	 * Returns the Masterplan
-	 */
-	Plan* PlanBase::getMasterPlan()
-	{
-		return masterPlan;
-	}
-
+    //#ifdef PB_DEBUG
+    cout << "PB: Engine loop time is " << to_string(_loopTime / 1000000) << "ms, broadcast interval is "
+         << to_string(_minSendInterval / 1000000) << "ms - " << to_string(_maxSendInterval / 1000000) << "ms" << endl;
+    //#endif
+    if (halfLoopTime < _minSendInterval) {
+        _minSendInterval -= halfLoopTime;
+        _maxSendInterval -= halfLoopTime;
+    }
 }
 
+/**
+ * Starts execution of the plan tree, call once all necessary modules are initialised.
+ */
+void PlanBase::start() {
+    if (!_running) {
+        _running = true;
+        _mainThread = new thread(&PlanBase::run, this);
+    }
+}
+/**
+ * The Engine's main loop
+ */
+void PlanBase::run() {
+#ifdef PB_DEBUG
+    cout << "PB: Run-Method of PlanBase started. " << endl;
+#endif
+    while (_running) {
+        AlicaTime beginTime = _alicaClock->now();
+        _log->itertionStarts();
+
+        if (_ae->getStepEngine()) {
+#ifdef PB_DEBUG
+            cout << "PB: ===CUR TREE===" << endl;
+
+            if (_rootNode == nullptr) {
+                cout << "PB: NULL" << endl;
+            } else {
+                _rootNode->printRecursive();
+            }
+            cout << "PB: ===END CUR TREE===" << endl;
+#endif
+            {
+                unique_lock<mutex> lckStep(_stepMutex);
+                _isWaiting = true;
+                AlicaEngine* ae = _ae;
+                _stepModeCV.wait(lckStep, [ae] { return ae->getStepCalled(); });
+                _ae->setStepCalled(false);
+                if (!_running) {
+                    return;
+                }
+            }
+            _isWaiting = false;
+            beginTime = _alicaClock->now();
+        }
+
+        // Send tick to other modules
+        //_ae->getCommunicator()->tick(); // not implemented as ros does work asynchronous
+        _teamObserver->tick(_rootNode);
+        _ra->tick();
+        _syncModel->tick();
+        _authModul->tick(_rootNode);
+
+        if (_rootNode == nullptr) {
+            _rootNode = _ruleBook.initialisationRule(_masterPlan);
+        }
+        if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
+            cout << "PB: MasterPlan Failed" << endl;
+        }
+        // lock for fpEvents
+        {
+            lock_guard<mutex> lock(_lomutex);
+            _fpEvents = queue<shared_ptr<RunningPlan>>();
+        }
+
+        AlicaTime now = _alicaClock->now();
+
+        if (now < _lastSendTime) {
+            // Taker fix
+            std::cout << "PB: lastSendTime is in the future of the current system time, did the system time change?"
+                      << endl;
+            _lastSendTime = now;
+        }
+
+        if ((_ruleBook.isChangeOccured() && _lastSendTime + _minSendInterval < now) ||
+                _lastSendTime + _maxSendInterval < now) {
+            list<long> msg;
+            _deepestNode = _rootNode;
+            _treeDepth = 0;
+            _rootNode->toMessage(msg, _deepestNode, _treeDepth, 0);
+            _teamObserver->doBroadCast(msg);
+            _lastSendTime = now;
+            _ruleBook.setChangeOccured(false);
+        }
+
+        if (_sendStatusMessages && _lastSentStatusTime + _sendStatusInterval < _alicaClock->now()) {
+            if (_deepestNode != nullptr) {
+                _statusMessage->robotIDsWithMe.clear();
+                _statusMessage->currentPlan = _deepestNode->getPlan()->getName();
+                if (_deepestNode->getOwnEntryPoint() != nullptr) {
+                    _statusMessage->currentTask = _deepestNode->getOwnEntryPoint()->getTask()->getName();
+                } else {
+                    _statusMessage->currentTask = "IDLE";
+                }
+                if (_deepestNode->getActiveState() != nullptr) {
+                    _statusMessage->currentState = _deepestNode->getActiveState()->getName();
+                    _deepestNode->getAssignment()->getRobotStateMapping()->getRobotsInState(
+                            _deepestNode->getActiveState(), _statusMessage->robotIDsWithMe);
+
+                } else {
+                    _statusMessage->currentState = "NONE";
+                }
+                auto tmpRole = _ra->getOwnRole();
+                if (tmpRole) {
+                    _statusMessage->currentRole = _ra->getOwnRole()->getName();
+                } else {
+                    _statusMessage->currentRole = "No Role";
+                }
+                _ae->getCommunicator()->sendAlicaEngineInfo(*_statusMessage);
+                _lastSentStatusTime = _alicaClock->now();
+            }
+        }
+
+        _log->iterationEnds(_rootNode);
+
+        _ae->iterationComplete();
+
+        AlicaTime availTime;
+
+        now = _alicaClock->now();
+
+        // TODO: FIXME: the division by 1000 is brittle and should not be needed
+        // replace AlicaTime with a proper time class.
+        availTime = (AlicaTime)((_loopTime - (now - beginTime)) / 1000L);
+        bool checkFp = false;
+        if (availTime > 1000) {
+            std::unique_lock<std::mutex> lock(_lomutex);
+            checkFp = std::cv_status::no_timeout == _fpEventWait.wait_for(lock, std::chrono::microseconds(availTime));
+        }
+
+        if (checkFp && _fpEvents.size() > 0) {
+            // lock for fpEvents
+            {
+                lock_guard<mutex> lock(_lomutex);
+                while (_running && availTime > 1000 && _fpEvents.size() > 0) {
+                    shared_ptr<RunningPlan> rp = _fpEvents.front();
+                    _fpEvents.pop();
+
+                    if (rp->isActive()) {
+                        bool first = true;
+                        while (rp != nullptr) {
+                            cout << "TICK FPEVENT " << endl;
+                            PlanChange change = _ruleBook.visit(rp);
+                            cout << "AFTER TICK FPEVENT " << endl;
+                            if (!first && change == PlanChange::NoChange) {
+                                break;
+                            }
+                            rp = rp->getParent().lock();
+                            first = false;
+                        }
+                    }
+                    now = _alicaClock->now();
+                    availTime = (AlicaTime)((_loopTime - (now - beginTime)) / 1000L);
+                }
+            }
+        }
+
+        now = _alicaClock->now();
+        availTime = (AlicaTime)((_loopTime - (now - beginTime)) / 1000L);
+
+#ifdef PB_DEBUG
+        cout << "PB: availTime " << availTime << endl;
+#endif
+        if (availTime > 100 && !_ae->getStepEngine()) {
+            _alicaClock->sleep(availTime);
+        }
+    }
+}
+
+/**
+ * Stops the plan base thread.
+ */
+void PlanBase::stop() {
+    _running = false;
+    _ae->setStepCalled(true);
+
+    if (_ae->getStepEngine()) {
+        _ae->setStepCalled(true);
+        _stepModeCV.notify_one();
+    }
+
+    if (_mainThread != nullptr) {
+        _mainThread->join();
+        delete _mainThread;
+    }
+    _mainThread = nullptr;
+}
+
+PlanBase::~PlanBase() {
+    delete _statusMessage;
+}
+
+void PlanBase::addFastPathEvent(shared_ptr<RunningPlan> p) {
+    {
+        lock_guard<mutex> lock(_lomutex);
+        _fpEvents.push(p);
+    }
+    _fpEventWait.notify_all();
+}
+
+const AlicaTime PlanBase::getloopInterval() const {
+    return _loopInterval;
+}
+
+void PlanBase::setLoopInterval(ulong loopInterval) {
+    _loopInterval = loopInterval;
+}
+
+condition_variable* PlanBase::getStepModeCV() {
+    if (!_ae->getStepEngine()) {
+        return nullptr;
+    }
+    return &_stepModeCV;
+}
+/**
+ * Returns the root node of the ALICA plan tree in execution.
+ */
+const shared_ptr<RunningPlan> PlanBase::getRootNode() const {
+    return _rootNode;
+}
+
+void PlanBase::setRootNode(shared_ptr<RunningPlan> rootNode) {
+    _rootNode = rootNode;
+}
+
+/**
+ * Returns the deepest ALICA node
+ */
+shared_ptr<const RunningPlan> PlanBase::getDeepestNode() const {
+    return _deepestNode;
+}
+
+/**
+ * Returns the deepest ALICA node
+ */
+shared_ptr<RunningPlan> PlanBase::getRootNode() {
+    return _rootNode;
+}
+
+}  // namespace alica

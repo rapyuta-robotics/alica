@@ -1,53 +1,34 @@
-/*
- * EntryPointRobotPair.cpp
- *
- *  Created on: Jul 17, 2014
- *      Author: Stefan Jakob
- */
+#include "engine/allocationauthority/EntryPointRobotPair.h"
 
-#include <engine/allocationauthority/EntryPointRobotPair.h>
+namespace alica {
 
-namespace alica
-{
-	EntryPointRobotPair::~EntryPointRobotPair()
-	{
-	}
+EntryPointRobotPair::EntryPointRobotPair(const EntryPoint* ep, const supplementary::AgentID* r)
+        : _entryPoint(ep)
+        , _robot(r) {}
 
-	EntryPoint* EntryPointRobotPair::getEntryPoint()
-	{
-		return entryPoint;
-	}
+EntryPointRobotPair::~EntryPointRobotPair() {}
 
-	void EntryPointRobotPair::setEntryPoint(EntryPoint* entryPoint)
-	{
-		this->entryPoint = entryPoint;
-	}
+const EntryPoint* EntryPointRobotPair::getEntryPoint() const {
+    return _entryPoint;
+}
 
-	int EntryPointRobotPair::getRobot()
-	{
-		return robot;
-	}
+void EntryPointRobotPair::setEntryPoint(const EntryPoint* entryPoint) {
+    _entryPoint = entryPoint;
+}
 
-	EntryPointRobotPair::EntryPointRobotPair(EntryPoint* ep, int r)
-	{
-		this->entryPoint = ep;
-		this->robot = r;
-	}
+const supplementary::AgentID* EntryPointRobotPair::getRobot() const {
+    return _robot;
+}
 
-	void EntryPointRobotPair::setRobot(int robot)
-	{
-		this->robot = robot;
-	}
+void EntryPointRobotPair::setRobot(const supplementary::AgentID* robot) {
+    _robot = robot;
+}
 
-	bool EntryPointRobotPair::equals(std::shared_ptr<EntryPointRobotPair> thisOne, std::shared_ptr<EntryPointRobotPair> other)
-	{
-		if (other == nullptr)
-		{
-			return false;
-		}
-		if (other->entryPoint->getId() != thisOne->entryPoint->getId())
-			return false;
-		return (other->getRobot() == thisOne->robot);
-	}
+bool EntryPointRobotPair::operator==(const EntryPointRobotPair& other) const {
+    if (other._entryPoint != _entryPoint) {  // entrypoints are supposed to be uniquely instantiated.
+        return false;
+    }
+    return (*other._robot == *_robot);
+}
 
 } /* namespace alica */

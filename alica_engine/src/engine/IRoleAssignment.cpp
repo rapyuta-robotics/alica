@@ -1,47 +1,26 @@
-/*
- * IRoleAssignment1.cpp
- *
- *  Created on: 17 Nov 2016
- *      Author: Stephan Opfer
- */
-
 #include "engine/IRoleAssignment.h"
 
-namespace alica
-{
-	IRoleAssignment::IRoleAssignment(AlicaEngine* ae) :
-			ownRole(nullptr), robotRoleMapping(map<int, Role*>()), to(nullptr), communication(nullptr)
-	{
-	}
+#include "engine/AlicaEngine.h"
 
-	Role* IRoleAssignment::getOwnRole()
-	{
-		return ownRole;
-	}
+namespace alica {
+IRoleAssignment::IRoleAssignment()
+        : ownRole(nullptr)
+        , communication(nullptr) {}
 
-	Role* IRoleAssignment::getRole(int robotId)
-	{
-		Role* r = nullptr;
-		auto iter = this->robotRoleMapping.find(robotId);
-		if (iter != this->robotRoleMapping.end())
-		{
-			return iter->second;
-		}
-		else
-		{
-			r = this->to->getRobotById(robotId)->getLastRole();
-			if (r != nullptr)
-			{
-				return r;
-			}
-			cerr << "RA: There is no role assigned for robot: " << robotId << endl;
-			throw new exception();
-		}
-	}
+const Role* IRoleAssignment::getRole(const supplementary::AgentID* robotId) {
+    auto iter = this->robotRoleMapping.find(robotId);
+    if (iter != this->robotRoleMapping.end()) {
+        return iter->second;
+    } else {
+        stringstream ss;
+        ss << "RA: There is no role assigned for robot: " << *robotId << std::endl;
+        AlicaEngine::abort(ss.str());
+        return nullptr;
+    }
+}
 
-	void IRoleAssignment::setCommunication(IAlicaCommunication* communication)
-	{
-		this->communication = communication;
-	}
+void IRoleAssignment::setCommunication(const IAlicaCommunication* communication) {
+    this->communication = communication;
+}
 
 } /* namespace alica */

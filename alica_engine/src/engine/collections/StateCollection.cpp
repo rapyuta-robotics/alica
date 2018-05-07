@@ -1,229 +1,143 @@
-/*
- * StateCollection.cpp
- *
- *  Created on: Jun 26, 2014
- *      Author: Stefan Jakob
- */
-
 #include "engine/collections/StateCollection.h"
 #include "engine/model/State.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/Assignment.h"
 
-namespace alica
-{
+namespace alica {
 
-	StateCollection::StateCollection()
-	{
+StateCollection::StateCollection() {}
 
-	}
+StateCollection::~StateCollection() {}
 
-	StateCollection::~StateCollection()
-	{
-	}
+StateCollection::StateCollection(const AgentGrp& robots, const StateGrp& states)
+        : _robotIds(robots)
+        , _states(states) {}
 
-	vector<int>& StateCollection::getRobots()
-	{
-		return robots;
-	}
+StateCollection::StateCollection(int maxSize)
+        : _robotIds(maxSize)
+        , _states(maxSize) {}
 
-	void StateCollection::setRobots(vector<int> robots)
-	{
-		this->robots = robots;
-	}
+StateCollection::StateCollection(const AssignmentCollection* ac) {
+    for (int i = 0; i < ac->getSize(); ++i) {
+        const State* initialState = ac->getEp(i)->getState();
+        for (const supplementary::AgentID* robotId : *ac->getRobots(i)) {
+            setState(robotId, initialState);
+        }
+    }
+}
 
-	vector<State*>& StateCollection::getStates()
-	{
-		return states;
-	}
+const State* StateCollection::getStateOfRobot(const supplementary::AgentID* robotId) const {
+    for (int i = 0; i < _robotIds.size(); i++) {
+        if (*(_robotIds[i]) == *(robotId)) {
+            return _states[i];
+        }
+    }
+    return nullptr;
+}
 
-	StateCollection::StateCollection(vector<int> robots, vector<State*> states)
-	{
-		this->robots = robots;
-		this->states = states;
-	}
+int StateCollection::getRobotsInState(const State* s, AgentGrp& o_robots) const {
+    int c = 0;
+    for (int i = 0; i < _robotIds.size(); ++i) {
+        if (_states[i] == s) {
+            o_robots.push_back(_robotIds[i]);
+            ++c;
+        }
+    }
+    return c;
+}
 
-	StateCollection::StateCollection(int maxSize) : robots(maxSize), states(maxSize)
-	{
-	}
+int StateCollection::getRobotsInState(int64_t sid, AgentGrp& o_robots) const {
+    int c = 0;
+    for (int i = 0; i < _robotIds.size(); ++i) {
+        if (_states[i]->getId() == sid) {
+            o_robots.push_back(_robotIds[i]);
+            ++c;
+        }
+    }
+    return c;
+}
 
-	StateCollection::StateCollection(AssignmentCollection* ac)
-	{
-		for(int i = 0;i < ac->getSize(); i ++)
-		{
-			State* initialState = ac->getEp(i)->getState();
-			for(auto r : *ac->getRobots(i))
-			{
-				this->setState(r,initialState);
-			}
-		}
-	}
+void StateCollection::getRobotsInStateSorted(const State* s, AgentGrp& o_robots) const {
+    getRobotsInState(s, o_robots);
+    sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
+}
 
-	void StateCollection::setStates(vector<State*> states)
-	{
-		this->states = states;
-	}
+void StateCollection::removeRobot(const supplementary::AgentID* robotId) {
+    for (int i = 0; i < _states.size(); i++) {
+        if (*(_robotIds[i]) == *(robotId)) {
+            _robotIds.erase(_robotIds.begin() + i);
+            _states.erase(_states.begin() + i);
+            return;
+        }
+    }
+}
 
-	int StateCollection::getCount()
-	{
-		return this->robots.size();
-	}
+void StateCollection::clear() {
+    _robotIds.clear();
+    _states.clear();
+}
 
-	State* StateCollection::getState(int r)
-	{
-		for (int i = 0; i < this->robots.size(); i++)
-		{
-			if (this->robots[i] == r)
-			{
-				return this->states[i];
-			}
-		}
-		return nullptr;
-	}
+void StateCollection::setState(const supplementary::AgentID* robotId, const State* state) {
+    for (int i = 0; i < _robotIds.size(); ++i) {
+        if (*(_robotIds[i]) == *robotId) {
+            _states[i] = state;
+            return;
+        }
+    }
+    _robotIds.push_back(robotId);
+    _states.push_back(state);
+}
 
-	unordered_set<int> StateCollection::getRobotsInState(State* s)
-	{
-		unordered_set<int> ret;
-		for (int i = 0; i < this->robots.size(); i++)
-		{
-			if (this->states[i] == s)
-			{
-				ret.insert(this->robots[i]);
-			}
-		}
-		return ret;
-	}
+std::string StateCollection::toString() const {
+    std::stringstream ss;
+    for (int i = 0; i < _robotIds.size(); i++) {
+        ss << "R: " << *_robotIds[i] << " in State: ";
+        if (_states[i] == nullptr) {
+            ss << "NULL" << std::endl;
+        } else {
+            ss << _states[i]->getName() << " (" << _states[i]->getId() << ") " << std::endl;
+        }
+    }
+    return ss.str();
+}
 
-	shared_ptr<vector<int> > StateCollection::getRobotsInStateSorted(State* s)
-	{
-		shared_ptr<vector<int> > ret= make_shared<vector<int> >();
-		for (int i = 0; i < this->robots.size(); i++)
-		{
-			if (this->states[i] == s)
-			{
-				ret->push_back(this->robots[i]);
-			}
-		}
-		sort(ret->begin(), ret->end());
-		return ret;
-	}
+void StateCollection::setInitialState(const supplementary::AgentID* robotId, const EntryPoint* ep) {
+    setState(robotId, ep->getState());
+}
 
-	unordered_set<int> StateCollection::getRobotsInState(long sid)
-	{
-		unordered_set<int> ret;
-		for (int i = 0; i < this->robots.size(); i++)
-		{
-			if (this->states[i]->getId() == sid)
-			{
-				ret.insert(this->robots[i]);
-			}
-		}
+void StateCollection::setStates(const AgentGrp& robotIds, const State* state) {
+    for (const supplementary::AgentID* r : robotIds) {
+        setState(r, state);
+    }
+}
 
-		return ret;
-	}
+void StateCollection::moveAllFromTo(const State* from, const State* to) {
+    for (int i = 0; i < _states.size(); ++i) {
+        if (_states[i] == from) {
+            _states[i] = to;
+        }
+    }
+}
 
-	void StateCollection::removeRobot(int r)
-	{
-		for(int i = 0; i < this->states.size();i++)
-		{
-			if(this->robots[i] == r)
-			{
-				this->robots.erase(robots.begin() + i);
-				this->states.erase(states.begin() + i);
-				return;
-			}
-		}
-	}
-
-	void StateCollection::clear()
-	{
-		this->robots.clear();
-		this->states.clear();
-	}
-
-	State* StateCollection::stateOfRobot(int robot)
-	{
-		for (int i = 0; i < this->robots.size(); i++)
-		{
-			if (this->robots[i] == robot)
-			{
-				return this->states[i];
-			}
-		}
-		return nullptr;
-	}
-
-	void StateCollection::setState(int robot, State* state)
-	{
-		for (int i = 0; i < this->robots.size(); i++)
-		{
-			if (this->robots[i] == robot)
-			{
-				this->states[i] = state;
-				return;
-			}
-		}
-		this->robots.push_back(robot);
-		this->states.push_back(state);
-
-	}
-
-	string StateCollection::toString()
-	{
-		stringstream ss;
-		for(int i = 0; i < robots.size();i++)
-		{
-			ss << "R: " << this->robots[i] << " in State: ";
-			if(this->states[i] == nullptr)
-			{
-				ss << "NULL" << endl;
-			}
-			else
-			{
-				ss << this->states[i]->getName() << " (" << this->states[i]->getId()<< ") " << endl;
-			}
-		}
-		return ss.str();
-	}
-
-	void StateCollection::setInitialState(int robot, EntryPoint* ep)
-	{
-		setState(robot, ep->getState());
-	}
-
-	void StateCollection::setStates(vector<int> robots, State* state)
-	{
-		for(int i = 0; i <  robots.size(); i++)
-		{
-			setState(robots[i], state);
-		}
-	}
-
-	/**
-	 * We are at new assignment, so everything is set to initial states, set them back:
-	 */
-	void StateCollection::reconsiderOldAssignment(shared_ptr<Assignment> oldOne, shared_ptr<Assignment> newOne)
-	{
-		if(oldOne->getPlan() != newOne->getPlan())
-		{
-			return;
-		}
-		//shared_ptr<vector<EntryPoint*> >eps = oldOne->getEntryPoints();
-		EntryPoint* ep;
-		for(short i = 0; i < oldOne->getEntryPointCount(); i++)
-		{
-			ep = oldOne->getEpRobotsMapping()->getEp(i);
-			for(int rid : *(oldOne->getRobotsWorking(ep)))
-			{
-				auto iter = find(newOne->getRobotsWorking(ep)->begin(), newOne->getRobotsWorking(ep)->end(), rid);
-				if(iter != newOne->getRobotsWorking(ep)->end())
-				{
-					this->setState(rid, oldOne->getRobotStateMapping()->getState(rid));
-				}
-			}
-		}
-	}
-
+/**
+ * We are at new assignment, so everything is set to initial states, set them back:
+ */
+void StateCollection::reconsiderOldAssignment(shared_ptr<Assignment> oldOne, shared_ptr<Assignment> newOne) {
+    if (oldOne->getPlan() != newOne->getPlan()) {
+        return;
+    }
+    // shared_ptr<vector<EntryPoint*> >eps = oldOne->getEntryPoints();
+    const EntryPoint* ep;
+    for (short i = 0; i < oldOne->getEntryPointCount(); i++) {
+        ep = oldOne->getEpRobotsMapping()->getEp(i);
+        for (const supplementary::AgentID* rid : *(oldOne->getRobotsWorking(ep))) {
+            auto iter = find(newOne->getRobotsWorking(ep)->begin(), newOne->getRobotsWorking(ep)->end(), rid);
+            if (iter != newOne->getRobotsWorking(ep)->end()) {
+                setState(rid, oldOne->getRobotStateMapping()->getStateOfRobot(rid));
+            }
+        }
+    }
+}
 
 } /* namespace alica */

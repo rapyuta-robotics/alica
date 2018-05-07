@@ -1,156 +1,169 @@
-/*
- * AlicaEngine.h
- *
- *  Created on: Mar 3, 2014
- *      Author: Stephan Opfer
- */
+#pragma once
 
-#ifndef ALICAENGINE_H_
-#define ALICAENGINE_H_
-
-#include <string>
 #include <SystemConfig.h>
 #include <list>
 #include <map>
+#include <string>
+#include <supplementary/AgentIDManager.h>
 
-using namespace std;
-namespace alica
-{
-	class PlanRepository;
-	class Plan;
-	class IPlanParser;
-	class IBehaviourPool;
-	class Logger;
-	class RoleSet;
-	class ITeamObserver;
-	class IBehaviourCreator;
-	class ISyncModul;
-	class AuthorityManager;
-	class IRoleAssignment;
-	class IPlanSelector;
-	class IAlicaCommunication;
-	class IEngineModule;
-	class IPlanner;
-	class IAlicaClock;
-	class PlanBase;
-	class IConditionCreator;
-	class IConstraintCreator;
-	class IUtilityCreator;
-	class ExpressionHandler;
-	class PartialAssignmentPool;
-	class ISolver;
-	class IVariableSyncModule;
+namespace supplementary {
+class AgentIDFactory;
+}
 
-	class AlicaEngine
-	{
-	public:
-		AlicaEngine();
-		bool init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc,
-					string roleSetName, string masterPlanName, string roleSetDir, bool stepEngine);
-		void shutdown();
-		void start();
-		bool getStepEngine();
-		void abort(string msg);
-		template<typename T> void abort(string msg, const T tail);
-		PlanRepository* getPlanRepository();
-		IBehaviourPool* getBehaviourPool();
-		string getRobotName() const;
-		Logger* getLog();
-		void setLog(Logger* log);
-		ITeamObserver* getTeamObserver();
-		void setTeamObserver(ITeamObserver* teamObserver);
+namespace alica {
+class PlanRepository;
+class Plan;
+class PlanParser;
+class BehaviourPool;
+class Logger;
+class RoleSet;
+class TeamObserver;
+class SyncModule;
+class AuthorityManager;
+class PlanSelector;
+class PlanBase;
+class ExpressionHandler;
+class PartialAssignmentPool;
+class VariableSyncModule;
+class TeamManager;
 
-		void setSyncModul(ISyncModul* syncModul);
-		ISyncModul* getSyncModul();
-		AuthorityManager* getAuth();
-		void setAuth(AuthorityManager* auth);
-		IRoleAssignment* getRoleAssignment();
-		void setRoleAssignment(IRoleAssignment* roleAssignment);
-		IPlanParser* getPlanParser();
-		bool isTerminating() const;
-		void setTerminating(bool terminating);
-		void setStepCalled(bool stepCalled);
-		bool getStepCalled() const;
-		bool isMaySendMessages() const;
-		void setMaySendMessages(bool maySendMessages);
-		RoleSet* getRoleSet();
-		IAlicaCommunication* getCommunicator();
-		void setCommunicator(IAlicaCommunication * communicator);
-		IPlanSelector* getPlanSelector();
-		IPlanner* getPlanner();
-		IAlicaClock* getIAlicaClock();
-		void setIAlicaClock(IAlicaClock* clock);
-		void iterationComplete();
-		PartialAssignmentPool* getPartialAssignmentPool();
-		void stepNotify();
-		PlanBase* getPlanBase();
-		void addSolver(int identifier, ISolver* solver);
-		ISolver* getSolver(int identifier);
-		IVariableSyncModule* getResultStore();
-		void setResultStore(IVariableSyncModule* resultStore);
+class IBehaviourCreator;
+class IUtilityCreator;
+class IConditionCreator;
+class IConstraintCreator;
 
-		~AlicaEngine();
+class IAlicaCommunication;
+class IAlicaClock;
 
-		/**
-		 * Switch the engine between normal operation and silent mode, in which no messages other than debugging information are sent out.
-		 * This is useful for a robot on hot standby.
-		 */
-		bool maySendMessages;
+class ISolver;
+class IRoleAssignment;
 
-	protected:
-		supplementary::SystemConfig* sc;
-		Plan* masterPlan;
-		Logger* log;
-		RoleSet* roleSet;
-		ISyncModul* syncModul;
-		AuthorityManager* auth;
-		IRoleAssignment* roleAssignment;
-		ExpressionHandler* expressionHandler;
-		list<IEngineModule*> mods;
-		IPlanSelector* planSelector;
-		IAlicaCommunication* communicator;
-		IPlanner* planner;
-		IAlicaClock* alicaClock;
-		PartialAssignmentPool* pap;
-		PlanBase* planBase;
-		bool stepCalled;
-		map<int, ISolver*> solver;
-		IVariableSyncModule* variableSyncModule;
+class AlicaEngine {
+public:
+    static void abort(string msg);
+    template <typename T>
+    static void abort(string msg, const T tail);
 
-	private:
+    AlicaEngine(supplementary::AgentIDManager* idManager, string roleSetName, string masterPlanName, string roleSetDir,
+            bool stepEngine);
+    bool init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc);
+    void shutdown();
+    void start();
+    bool getStepEngine();
+    PlanRepository* getPlanRepository() const;
+    BehaviourPool* getBehaviourPool();
+    string getRobotName() const;
+    Logger* getLog();
+    void setLog(Logger* log);
+    TeamObserver* getTeamObserver() const;
+    void setTeamObserver(TeamObserver* teamObserver);
 
-		/**
-		 * Set to have the engine's main loop wait on a signal via MayStep
-		 */
-		bool stepEngine;
-		/**
-		 * Indicates whether the engine is shutting down.
-		 */
-		bool terminating;
+    void setSyncModul(SyncModule* syncModul);
+    SyncModule* getSyncModul();
+    AuthorityManager* getAuth();
+    void setAuth(AuthorityManager* auth);
+    IRoleAssignment* getRoleAssignment();
+    void setRoleAssignment(IRoleAssignment* roleAssignment);
+    PlanParser* getPlanParser() const;
+    bool isTerminating() const;
+    void setTerminating(bool terminating);
+    void setStepCalled(bool stepCalled);
+    bool getStepCalled() const;
+    bool isMaySendMessages() const;
+    void setMaySendMessages(bool maySendMessages);
+    RoleSet* getRoleSet();
+    const IAlicaCommunication* getCommunicator() const;
+    void setCommunicator(IAlicaCommunication* communicator);
+    PlanSelector* getPlanSelector();
+    IAlicaClock* getIAlicaClock() const;
+    void setIAlicaClock(IAlicaClock* clock);
+    void iterationComplete();
+    PartialAssignmentPool* getPartialAssignmentPool() const;
+    void stepNotify();
+    PlanBase* getPlanBase();
+    void addSolver(int identifier, ISolver* solver);
+    ISolver* getSolver(int identifier);
+    VariableSyncModule* getResultStore();
+    void setResultStore(VariableSyncModule* resultStore);
+    TeamManager* getTeamManager() const;
 
-		/**
-		 * Indicates whether the engine should run with a static role assignment
-		 * that is based on default roles, or not.
-		 */
-		bool useStaticRoles;
-		void setStepEngine(bool stepEngine);
+    const supplementary::AgentID* getIDFromBytes(const std::vector<uint8_t>& vectorID);
 
-		PlanRepository* planRepository;
-		IPlanParser* planParser;
-		IBehaviourPool* behaviourPool;
-		ITeamObserver* teamObserver;
+    template <class Prototype>
+    const supplementary::AgentID* getID(Prototype& idPrototype);
 
-	};
+    ~AlicaEngine();
 
-	template<typename T>
-	void AlicaEngine::abort(string msg, const T tail)
-	{
-		this->maySendMessages = false;
-		stringstream ss;
-		ss << msg << tail;
-		AlicaEngine::abort(ss.str());
-	}
+    /**
+     * Switch the engine between normal operation and silent mode, in which no messages other than debugging information
+     * are sent out.
+     * This is useful for a robot on hot standby.
+     */
+    bool maySendMessages;
 
-} /* namespace Alica */
+protected:
+    Logger* log;
+    RoleSet* roleSet;
+    SyncModule* syncModul;
+    AuthorityManager* auth;
+    ExpressionHandler* expressionHandler;
+    PlanSelector* planSelector;
+    TeamManager* teamManager;
+    PartialAssignmentPool* pap;
+    PlanBase* planBase;
+    VariableSyncModule* variableSyncModule;
+    PlanRepository* planRepository;
+    PlanParser* planParser;
+    BehaviourPool* behaviourPool;
+    TeamObserver* teamObserver;
+    supplementary::AgentIDManager* agentIDManager;
 
-#endif /* ALICAENGINE_H_ */
+    IRoleAssignment* roleAssignment;
+    IAlicaCommunication* communicator;
+    IAlicaClock* alicaClock;
+
+private:
+    /**
+     * Set to have the engine's main loop wait on a signal via MayStep
+     */
+    bool stepEngine;
+    /**
+     * Indicates whether the engine is shutting down.
+     */
+    bool terminating;
+
+    /**
+     * Indicates whether the engine should run with a static role assignment
+     * that is based on default roles, or not.
+     */
+    bool useStaticRoles;
+
+    supplementary::SystemConfig* sc;
+    bool stepCalled;
+    Plan* masterPlan;
+    map<int, ISolver*> solver;
+
+    void setStepEngine(bool stepEngine);
+};
+
+/**
+ * If present, returns the ID corresponding to the given prototype.
+ * Otherwise, it creates a new one, stores and returns it.
+ *
+ * This method can be used, e.g., for passing an int and receiving
+ * a pointer to a corresponding AgentID object (in that case an
+ * IntRobotID).
+ */
+template <class Prototype>
+const supplementary::AgentID* AlicaEngine::getID(Prototype& idPrototype) {
+    return this->agentIDManager->getID<Prototype>(idPrototype);
+}
+
+template <typename T>
+void AlicaEngine::abort(string msg, const T tail) {
+    stringstream ss;
+    ss << msg << tail;
+    AlicaEngine::abort(ss.str());
+}
+
+}  // namespace alica

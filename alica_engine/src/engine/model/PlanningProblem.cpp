@@ -7,133 +7,60 @@
 
 #include "engine/model/PlanningProblem.h"
 
-namespace alica
-{
+namespace alica {
 
-	PlanningProblem::PlanningProblem()
-	{
-		this->runtimeCondition = nullptr;
-		this->preCondition = nullptr;
-		this->alternativePlan = nullptr;
-		this->planningType = PlanningType::None;
-		this->updateRate = 0;
-		this->postCondition = nullptr;
-		this->waitPlan = nullptr;
-		this->distributeProblem = false;
-	}
+PlanningProblem::PlanningProblem() 
+    : _runtimeCondition(nullptr)
+    , _preCondition(nullptr)
+    , _alternativePlan(nullptr)
+    , _planningType(PlanningType::None)
+    , _updateRate(0)
+    , _postCondition(nullptr)
+    , _waitPlan(nullptr)
+    , _distributeProblem(false)
+{}
 
-	PlanningProblem::~PlanningProblem()
-	{
-	}
+PlanningProblem::~PlanningProblem() {}
 
-	const Plan* PlanningProblem::getAlternativePlan() const
-	{
-		return alternativePlan;
-	}
+void PlanningProblem::setAlternativePlan(const Plan* alternativePlan) {
+    _alternativePlan = alternativePlan;
+}
 
-	void PlanningProblem::setAlternativePlan(Plan* alternativePlan)
-	{
-		this->alternativePlan = alternativePlan;
-	}
+void PlanningProblem::setDistributeProblem(bool distributeProblem) {
+    _distributeProblem = distributeProblem;
+}
 
-	bool PlanningProblem::isDistributeProblem() const
-	{
-		return distributeProblem;
-	}
 
-	void PlanningProblem::setDistributeProblem(bool distributeProblem)
-	{
-		this->distributeProblem = distributeProblem;
-	}
+void PlanningProblem::setPlanningType(PlanningType planningType) {
+    _planningType = planningType;
+}
 
-	const string& PlanningProblem::getFileName() const
-	{
-		return fileName;
-	}
+void PlanningProblem::setPlans(const AbstractPlanGrp& plans) {
+    _plans = plans;
+}
 
-	void PlanningProblem::setFileName(const string& fileName)
-	{
-		this->fileName = fileName;
-	}
+void PlanningProblem::setPostCondition(PostCondition* postCondition) {
+    _postCondition = postCondition;
+}
 
-	PlanningType PlanningProblem::getPlanningType() const
-	{
-		return planningType;
-	}
+void PlanningProblem::setPreCondition(PreCondition* preCondition) {
+    _preCondition = preCondition;
+}
 
-	void PlanningProblem::setPlanningType(PlanningType planningType)
-	{
-		this->planningType = planningType;
-	}
+void PlanningProblem::setRequirements(const std::string& requirements) {
+    _requirements = requirements;
+}
 
-	list<AbstractPlan*>& PlanningProblem::getPlans()
-	{
-		return plans;
-	}
+void PlanningProblem::setRuntimeCondition(RuntimeCondition* runtimeCondition) {
+    _runtimeCondition = runtimeCondition;
+}
 
-	void PlanningProblem::setPlans(list<AbstractPlan*>& plans)
-	{
-		this->plans = plans;
-	}
+void PlanningProblem::setUpdateRate(int updateRate) {
+    _updateRate = updateRate;
+}
 
-	const PostCondition* PlanningProblem::getPostCondition() const
-	{
-		return postCondition;
-	}
+void PlanningProblem::setWaitPlan(const Plan* waitPlan) {
+    _waitPlan = waitPlan;
+}
 
-	void PlanningProblem::setPostCondition(PostCondition* postCondition)
-	{
-		this->postCondition = postCondition;
-	}
-
-	const PreCondition* PlanningProblem::getPreCondition() const
-	{
-		return preCondition;
-	}
-
-	void PlanningProblem::setPreCondition(PreCondition* preCondition)
-	{
-		this->preCondition = preCondition;
-	}
-
-	const string& PlanningProblem::getRequirements() const
-	{
-		return requirements;
-	}
-
-	void PlanningProblem::setRequirements(const string& requirements)
-	{
-		this->requirements = requirements;
-	}
-
-	const RuntimeCondition* PlanningProblem::getRuntimeCondition() const
-	{
-		return runtimeCondition;
-	}
-
-	void PlanningProblem::setRuntimeCondition(RuntimeCondition* runtimeCondition)
-	{
-		this->runtimeCondition = runtimeCondition;
-	}
-
-	int PlanningProblem::getUpdateRate() const
-	{
-		return updateRate;
-	}
-
-	void PlanningProblem::setUpdateRate(int updateRate)
-	{
-		this->updateRate = updateRate;
-	}
-
-	const Plan* PlanningProblem::getWaitPlan() const
-	{
-		return waitPlan;
-	}
-
-	void PlanningProblem::setWaitPlan(Plan* waitPlan)
-	{
-		this->waitPlan = waitPlan;
-	}
-
-} /* namespace supplementary */
+}  // namespace alica

@@ -1,90 +1,83 @@
-/*
- * AlicaRosCommunication.h
- *
- *  Created on: 10.09.2014
- *      Author: endy
- */
-
-#ifndef ALICAROSCOMMUNICATION_H_
-#define ALICAROSCOMMUNICATION_H_
-
+#pragma once
+#include "alica_msgs/AlicaEngineInfo.h"
+#include "alica_msgs/AllocationAuthorityInfo.h"
+#include "alica_msgs/PlanTreeInfo.h"
+#include "alica_msgs/RoleSwitch.h"
+#include "alica_msgs/SolverResult.h"
+#include "alica_msgs/SyncReady.h"
+#include "alica_msgs/SyncTalk.h"
 #include "engine/IAlicaCommunication.h"
-#include "ros/ros.h"
+#include "supplementary/AgentID.h"
 
-#include "alica_ros_proxy/AllocationAuthorityInfo.h"
-#include "alica_ros_proxy/AlicaEngineInfo.h"
-#include "alica_ros_proxy/PlanTreeInfo.h"
-#include "alica_ros_proxy/RoleSwitch.h"
-#include "alica_ros_proxy/SyncReady.h"
-#include "alica_ros_proxy/SyncTalk.h"
-#include "alica_ros_proxy/SolverResult.h"
+#include <ros/ros.h>
+#include <string>
 
 using namespace alica;
 
-namespace alicaRosProxy
-{
+namespace supplementary {
+class SystemConfig;
+}
 
-	class AlicaRosCommunication : public alica::IAlicaCommunication
-	{
-	public:
-		AlicaRosCommunication(AlicaEngine* ae);
-		virtual ~AlicaRosCommunication();
+namespace alicaRosProxy {
 
-		virtual void tick();
+class AlicaRosCommunication : public alica::IAlicaCommunication {
+public:
+    AlicaRosCommunication(AlicaEngine* ae);
+    virtual ~AlicaRosCommunication();
 
-		virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai);
-		virtual void sendAlicaEngineInfo(AlicaEngineInfo& bi);
-		virtual void sendPlanTreeInfo(PlanTreeInfo& pti);
-		virtual void sendRoleSwitch(RoleSwitch& rs);
-		virtual void sendSyncReady(SyncReady& sr);
-		virtual void sendSyncTalk(SyncTalk& st);
-		virtual void sendSolverResult(SolverResult& sr);
-		virtual void sendLogMessage(int level, string& message);
+    virtual void tick();
 
-		virtual void handleAllocationAuthorityRos(alica_ros_proxy::AllocationAuthorityInfoPtr aai);
-		virtual void handlePlanTreeInfoRos(alica_ros_proxy::PlanTreeInfoPtr pti);
-		virtual void handleSyncReadyRos(alica_ros_proxy::SyncReadyPtr sr);
-		virtual void handleSyncTalkRos(alica_ros_proxy::SyncTalkPtr st);
-		virtual void handleSolverResult(alica_ros_proxy::SolverResultPtr sr);
+    virtual void sendAllocationAuthority(AllocationAuthorityInfo& aai) const;
+    virtual void sendAlicaEngineInfo(AlicaEngineInfo& bi) const;
+    virtual void sendPlanTreeInfo(PlanTreeInfo& pti) const;
+    virtual void sendRoleSwitch(RoleSwitch& rs) const;
+    virtual void sendSyncReady(SyncReady& sr) const;
+    virtual void sendSyncTalk(SyncTalk& st) const;
+    virtual void sendSolverResult(SolverResult& sr) const;
+    virtual void sendLogMessage(int level, std::string& message) const;
 
-		virtual void startCommunication();
-		virtual void stopCommunication();
+    virtual void handleAllocationAuthorityRos(alica_msgs::AllocationAuthorityInfoPtr aai);
+    virtual void handlePlanTreeInfoRos(alica_msgs::PlanTreeInfoPtr pti);
+    virtual void handleSyncReadyRos(alica_msgs::SyncReadyPtr sr);
+    virtual void handleSyncTalkRos(alica_msgs::SyncTalkPtr st);
+    virtual void handleSolverResult(alica_msgs::SolverResultPtr sr);
 
-	protected:
-		ros::NodeHandle* rosNode;
-		ros::AsyncSpinner* spinner;
+    virtual void startCommunication();
+    virtual void stopCommunication();
 
-		ros::Publisher AlicaEngineInfoPublisher;
-		ros::Publisher RoleSwitchPublisher;
+protected:
+    ros::NodeHandle* rosNode;
+    ros::AsyncSpinner* spinner;
 
-		ros::Publisher AllocationAuthorityInfoPublisher;
-		ros::Subscriber AllocationAuthorityInfoSubscriber;
+    ros::Publisher AlicaEngineInfoPublisher;
+    ros::Publisher RoleSwitchPublisher;
 
-		ros::Publisher PlanTreeInfoPublisher;
-		ros::Subscriber PlanTreeInfoSubscriber;
+    ros::Publisher AllocationAuthorityInfoPublisher;
+    ros::Subscriber AllocationAuthorityInfoSubscriber;
 
-		ros::Publisher SyncReadyPublisher;
-		ros::Subscriber SyncReadySubscriber;
+    ros::Publisher PlanTreeInfoPublisher;
+    ros::Subscriber PlanTreeInfoSubscriber;
 
-		ros::Publisher SyncTalkPublisher;
-		ros::Subscriber SyncTalkSubscriber;
+    ros::Publisher SyncReadyPublisher;
+    ros::Subscriber SyncReadySubscriber;
 
-		ros::Publisher SolverResultPublisher;
-		ros::Subscriber SolverResultSubscriber;
+    ros::Publisher SyncTalkPublisher;
+    ros::Subscriber SyncTalkSubscriber;
 
-		string allocationAuthorityInfoTopic;
-		string ownRoleTopic;
-		string alicaEngineInfoTopic;
-		string planTreeInfoTopic;
-		string syncReadyTopic;
-		string syncTalkTopic;
-		string solverResultTopic;
+    ros::Publisher SolverResultPublisher;
+    ros::Subscriber SolverResultSubscriber;
 
-		bool isRunning;
+    std::string allocationAuthorityInfoTopic;
+    std::string ownRoleTopic;
+    std::string alicaEngineInfoTopic;
+    std::string planTreeInfoTopic;
+    std::string syncReadyTopic;
+    std::string syncTalkTopic;
+    std::string solverResultTopic;
 
-		supplementary::SystemConfig* sc;
-	};
+    bool isRunning;
+
+    supplementary::SystemConfig* sc;
+};
 
 } /* namespace alicaRosProxy */
-
-#endif /* ALICAROSCOMMUNICATION_H_ */

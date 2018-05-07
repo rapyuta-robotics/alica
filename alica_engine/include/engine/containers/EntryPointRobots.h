@@ -1,41 +1,28 @@
-/*
- * EntryPointRobots.h
- *
- *  Created on: Jul 7, 2014
- *      Author: Paul Panin
- */
+#pragma once
 
-#ifndef ENTRYPOINTROBOTS_H_
-#define ENTRYPOINTROBOTS_H_
+#include "supplementary/AgentID.h"
 
 #include <vector>
 #include <tuple>
 
-using namespace std;
+namespace alica {
+using std::get;
+using std::tuple;
+using std::vector;
 
-namespace alica
-{
-	typedef tuple<long, vector<int>> stdEntryPointRobot;
-	struct EntryPointRobots
-	{
-		EntryPointRobots() : entrypoint(0)
-		{
-		}
+typedef tuple<long, vector<const supplementary::AgentID*>> stdEntryPointRobot;
+struct EntryPointRobots {
+    EntryPointRobots()
+            : entrypoint(0) {}
 
-		long entrypoint;
-		vector<int> robots;
+    long entrypoint;
+    vector<const supplementary::AgentID*> robots;
 
-		EntryPointRobots(stdEntryPointRobot& s)
-		{
-			entrypoint = get<0>(s);
-			robots = get<1>(s);
-		}
+    EntryPointRobots(stdEntryPointRobot& s) {
+        entrypoint = get<0>(s);
+        robots = get<1>(s);
+    }
 
-		stdEntryPointRobot toStandard()
-		{
-			return move(make_tuple(entrypoint, robots));
-		}
-	};
-}
-
-#endif /* ENTRYPOINTROBOTS_H_ */
+    stdEntryPointRobot toStandard() { return move(make_tuple(entrypoint, robots)); }
+};
+}  // namespace alica

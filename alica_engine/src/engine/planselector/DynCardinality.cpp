@@ -7,43 +7,34 @@
 
 #include <engine/planselector/DynCardinality.h>
 
-namespace alica
-{
+namespace alica {
 
-	DynCardinality::DynCardinality(int min, int max)
-	{
-		this->min = min;
-		this->max = max;
-	}
+DynCardinality::DynCardinality(int min, int max) {
+    this->min = min;
+    this->max = max;
+}
 
-	DynCardinality::~DynCardinality()
-	{
-	}
+DynCardinality::~DynCardinality() {}
 
-	int DynCardinality::getMax()
-	{
-		return max;
-	}
+int DynCardinality::getMax() {
+    return max;
+}
 
-	void DynCardinality::setMax(int max)
-	{
-		this->max = max;
-	}
+void DynCardinality::setMax(int max) {
+    this->max = max;
+}
 
-	int DynCardinality::getMin()
-	{
-		return min;
-	}
+int DynCardinality::getMin() {
+    return min;
+}
 
-	DynCardinality::DynCardinality()
-	{
-		this->max = 0;
-		this->min = 0;
-	}
+DynCardinality::DynCardinality() {
+    this->max = 0;
+    this->min = 0;
+}
 
-	void DynCardinality::setMin(int min)
-	{
-		this->min = min;
-	}
+void DynCardinality::setMin(int min) {
+    this->min = min;
+}
 
 } /* namespace alica */

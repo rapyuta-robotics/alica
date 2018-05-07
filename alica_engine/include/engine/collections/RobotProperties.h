@@ -1,53 +1,45 @@
-/*
- * RobotProperties.h
- *
- *  Created on: Jun 13, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef ROBOTPROPERTIES_H_
-#define ROBOTPROPERTIES_H_
+#include "supplementary/AgentID.h"
+#include "engine/model/Characteristic.h"
 
-
-#include <string>
-#include <map>
-#include <sstream>
 #include <SystemConfig.h>
+
 #include <algorithm>
+#include <map>
 #include <memory>
+#include <sstream>
+#include <string>
 
-using namespace std;
-namespace alica
-{
+namespace alica {
 
-	class Characteristic;
-	class Capability;
-	class AlicaEngine;
+class AlicaEngine;
+class Characteristic;
+class Capability;
 
-	class RobotProperties
-	{
-	public:
-		RobotProperties();
-		RobotProperties(AlicaEngine* ae, string name);
-		virtual ~RobotProperties();
-		int getId() const;
-		void setId(int id);
-		const string& getName() const;
-		void setName(const string& name);
-		map<string, Characteristic*>& getCharacteristics();
-		const string& getDefaultRole() const;
-		void setDefaultRole(const string& defaultRole);
-		string toString();
+class RobotProperties {
+public:
+    RobotProperties(const supplementary::AgentID* agentId, const AlicaEngine* ae, string name);
+    virtual ~RobotProperties();
+    void readFromConfig(const AlicaEngine* engine, string name);
+    const supplementary::AgentID* getId() const;
+    void setId(const supplementary::AgentID* agentId);
+    const std::map<std::string, const Characteristic*>& getCharacteristics() const;
+    const std::string& getDefaultRole() const;
+    void setDefaultRole(const std::string& defaultRole);
+    friend std::ostream& operator<<(std::ostream& os, const alica::RobotProperties& obj) {
+        os << "RobotProperties: Id=" << obj.getId() << " Default Role: " << obj.getDefaultRole() << endl;
+        for (const std::pair<string, const Characteristic*>& p : obj.getCharacteristics()) {
+            os << "\t" << p.first << " = " << p.second->getCapValue()->getName() << endl;
+        }
+        return os;
+    }
 
-	protected:
-		int id = -1;
-		string name;
-		string defaultRole;
-		map<string, Characteristic*> characteristics;
-		map<long, Capability*> capabilities;
+protected:
+    const supplementary::AgentID* agentId;
 
-	};
+    std::string defaultRole;
+    std::map<std::string, const Characteristic*> characteristics;
+};
 
 } /* namespace alica */
-
-#endif /* ROBOTPROPERTIES_H_ */

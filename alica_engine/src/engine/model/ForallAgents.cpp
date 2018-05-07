@@ -1,80 +1,58 @@
-/*
- * ForallAgents.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/ForallAgents.h"
+#include "engine/AlicaEngine.h"
+#include "engine/Assignment.h"
 #include "engine/RunningPlan.h"
+#include "engine/TeamObserver.h"
+#include "engine/collections/RobotEngineData.h"
+#include "engine/collections/StateCollection.h"
+#include "engine/constraintmodul/SolverTerm.h"
+#include "engine/constraintmodul/SolverVariable.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
-#include "engine/Assignment.h"
-#include "engine/teamobserver/TeamObserver.h"
-#include "engine/AlicaEngine.h"
-#include "engine/collections/StateCollection.h"
-#include "engine/ITeamObserver.h"
-#include "engine/collections/RobotEngineData.h"
 #include "engine/model/Variable.h"
-#include "engine/constraintmodul/SolverTerm.h"
-#include "engine/constraintmodul/SolverVariable.h"
+#include "engine/teammanager/Agent.h"
+#include "engine/teammanager/TeamManager.h"
 
-namespace alica
-{
+namespace alica {
 
-	ForallAgents::ForallAgents(AlicaEngine* ae, long id) :
-			Quantifier(id)
-	{
-		this->ae = ae;
-	}
+ForallAgents::ForallAgents(int64_t id)
+        : Quantifier(id) {}
 
-	ForallAgents::~ForallAgents()
-	{
-	}
+ForallAgents::~ForallAgents() {}
 
-	/**
-	 * Returns the <see cref="Variable"/>s currently associated with the agents occupying the scope of this quantifier.
-	 * @param plan A RunningPlan
-	 * @param agentsInScope A shared_ptr<vector<int> >
-	 * @return shared_ptr<list<vector<Variable*> > >
-	 */
-	shared_ptr<list<vector<Variable*> > > ForallAgents::getDomainVariables(shared_ptr<RunningPlan>& p,
-																			shared_ptr<vector<int> >& agentsInScope)
-	{
-		if (this->isScopeIsPlan())
-		{
-			if (p->getPlan() == this->getScopedPlan())
-			{
-				agentsInScope = p->getAssignment()->getAllRobotsSorted();
-			}
-		}
-		else if (this->isScopeIsEntryPoint())
-		{
-			agentsInScope = p->getAssignment()->getRobotsWorkingSorted(this->getScopedEntryPoint());
-		}
-		else if (this->isScopeIsState())
-		{
-			agentsInScope = p->getAssignment()->getRobotStateMapping()->getRobotsInStateSorted(this->getScopedState());
-		}
-		if (agentsInScope == nullptr)
-		{
-			return nullptr;
-		}
-		shared_ptr<list<vector<Variable*> > > ret = make_shared<list<vector<Variable*>>>();
-		ITeamObserver* to = ae->getTeamObserver();
-		for (int r : *(agentsInScope))
-		{
-			vector<Variable*> terms = vector<Variable*>(this->getDomainIdentifiers().size());
-			RobotEngineData* re = to->getRobotById(r);
-			for (int i = 0; i < terms.size(); i++)
-			{
-				auto iter = this->getDomainIdentifiers().begin();
-				advance(iter, i);
-				terms[i] = re->getDomainVariable(*iter);
-			}
-			ret->push_back(terms);
-		}
-		return ret;
-	}
-} /* namespace Alica */
+/**
+ * Returns the <see cref="Variable"/>s currently associated with the agents occupying the scope of this quantifier.
+ * @param plan A RunningPlan
+ * @param agentsInScope A shared_ptr<vector<int> >
+ * @return shared_ptr<list<VariableGrp> >
+ */
+shared_ptr<list<VariableGrp>> ForallAgents::getDomainVariables(
+        shared_ptr<RunningPlan>& p, AgentGrp& o_agentsInScope) const {
+    o_agentsInScope.clear();
+    if (isScopePlan()) {
+        if (p->getPlan() == getScopedPlan()) {
+            p->getAssignment()->getAllRobotsSorted(o_agentsInScope);
+        }
+    } else if (isScopeEntryPoint()) {
+        p->getAssignment()->getRobotsWorkingSorted(getScopedEntryPoint(), o_agentsInScope);
+    } else if (isScopeState()) {
+        p->getAssignment()->getRobotStateMapping()->getRobotsInStateSorted(getScopedState(), o_agentsInScope);
+    }
+    if (o_agentsInScope.empty()) {
+        return nullptr;
+    }
+    auto ret = make_shared<list<VariableGrp>>();
+    auto tm = p->getAlicaEngine()->getTeamManager();
+    for (auto& r : o_agentsInScope) {
+        auto robotEngineData = tm->getAgentByID(r)->getEngineData();
+
+        VariableGrp terms;
+        for (auto identifier : this->getDomainIdentifiers()) {
+            terms.push_back(robotEngineData->getDomainVariable(identifier));
+        }
+        ret->push_back(terms);
+    }
+    return ret;
+}
+}  // namespace alica
