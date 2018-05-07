@@ -1,24 +1,30 @@
 #include "engine/collections/StateCollection.h"
-#include "engine/model/State.h"
-#include "engine/model/EntryPoint.h"
-#include "engine/collections/AssignmentCollection.h"
 #include "engine/Assignment.h"
+#include "engine/collections/AssignmentCollection.h"
+#include "engine/model/EntryPoint.h"
+#include "engine/model/State.h"
 
-namespace alica {
+namespace alica
+{
 
 StateCollection::StateCollection() {}
 
 StateCollection::~StateCollection() {}
 
-StateCollection::StateCollection(const AgentSet& robots, const StateSet& states)
-        : _robotIds(robots)
-        , _states(states) {}
+StateCollection::StateCollection(const AgentGrp& robots, const StateGrp& states)
+    : _robotIds(robots)
+    , _states(states)
+{
+}
 
 StateCollection::StateCollection(int maxSize)
-        : _robotIds(maxSize)
-        , _states(maxSize) {}
+    : _robotIds(maxSize)
+    , _states(maxSize)
+{
+}
 
-StateCollection::StateCollection(const AssignmentCollection* ac) {
+StateCollection::StateCollection(const AssignmentCollection* ac)
+{
     for (int i = 0; i < ac->getSize(); ++i) {
         const State* initialState = ac->getEp(i)->getState();
         for (const supplementary::AgentID* robotId : *ac->getRobots(i)) {
@@ -27,8 +33,9 @@ StateCollection::StateCollection(const AssignmentCollection* ac) {
     }
 }
 
-const State* StateCollection::getStateOfRobot(const supplementary::AgentID* robotId) const {
-    for (int i = 0; i < _robotIds.size(); i++) {
+const State* StateCollection::getStateOfRobot(const supplementary::AgentID* robotId) const
+{
+    for (int i = 0; i < static_cast<int>(_robotIds.size()); i++) {
         if (*(_robotIds[i]) == *(robotId)) {
             return _states[i];
         }
@@ -36,9 +43,10 @@ const State* StateCollection::getStateOfRobot(const supplementary::AgentID* robo
     return nullptr;
 }
 
-int StateCollection::getRobotsInState(const State* s, AgentSet& o_robots) const {
+int StateCollection::getRobotsInState(const State* s, AgentGrp& o_robots) const
+{
     int c = 0;
-    for (int i = 0; i < _robotIds.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(_robotIds.size()); ++i) {
         if (_states[i] == s) {
             o_robots.push_back(_robotIds[i]);
             ++c;
@@ -47,9 +55,10 @@ int StateCollection::getRobotsInState(const State* s, AgentSet& o_robots) const 
     return c;
 }
 
-int StateCollection::getRobotsInState(int64_t sid, AgentSet& o_robots) const {
+int StateCollection::getRobotsInState(int64_t sid, AgentGrp& o_robots) const
+{
     int c = 0;
-    for (int i = 0; i < _robotIds.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(_robotIds.size()); ++i) {
         if (_states[i]->getId() == sid) {
             o_robots.push_back(_robotIds[i]);
             ++c;
@@ -58,13 +67,15 @@ int StateCollection::getRobotsInState(int64_t sid, AgentSet& o_robots) const {
     return c;
 }
 
-void StateCollection::getRobotsInStateSorted(const State* s, AgentSet& o_robots) const {
+void StateCollection::getRobotsInStateSorted(const State* s, AgentGrp& o_robots) const
+{
     getRobotsInState(s, o_robots);
     sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
 }
 
-void StateCollection::removeRobot(const supplementary::AgentID* robotId) {
-    for (int i = 0; i < _states.size(); i++) {
+void StateCollection::removeRobot(const supplementary::AgentID* robotId)
+{
+    for (int i = 0; i < static_cast<int>(_states.size()); i++) {
         if (*(_robotIds[i]) == *(robotId)) {
             _robotIds.erase(_robotIds.begin() + i);
             _states.erase(_states.begin() + i);
@@ -73,13 +84,15 @@ void StateCollection::removeRobot(const supplementary::AgentID* robotId) {
     }
 }
 
-void StateCollection::clear() {
+void StateCollection::clear()
+{
     _robotIds.clear();
     _states.clear();
 }
 
-void StateCollection::setState(const supplementary::AgentID* robotId, const State* state) {
-    for (int i = 0; i < _robotIds.size(); ++i) {
+void StateCollection::setState(const supplementary::AgentID* robotId, const State* state)
+{
+    for (int i = 0; i < static_cast<int>(_robotIds.size()); ++i) {
         if (*(_robotIds[i]) == *robotId) {
             _states[i] = state;
             return;
@@ -89,9 +102,10 @@ void StateCollection::setState(const supplementary::AgentID* robotId, const Stat
     _states.push_back(state);
 }
 
-std::string StateCollection::toString() const {
+std::string StateCollection::toString() const
+{
     std::stringstream ss;
-    for (int i = 0; i < _robotIds.size(); i++) {
+    for (int i = 0; i < static_cast<int>(_robotIds.size()); i++) {
         ss << "R: " << *_robotIds[i] << " in State: ";
         if (_states[i] == nullptr) {
             ss << "NULL" << std::endl;
@@ -102,18 +116,21 @@ std::string StateCollection::toString() const {
     return ss.str();
 }
 
-void StateCollection::setInitialState(const supplementary::AgentID* robotId, const EntryPoint* ep) {
+void StateCollection::setInitialState(const supplementary::AgentID* robotId, const EntryPoint* ep)
+{
     setState(robotId, ep->getState());
 }
 
-void StateCollection::setStates(const AgentSet& robotIds, const State* state) {
+void StateCollection::setStates(const AgentGrp& robotIds, const State* state)
+{
     for (const supplementary::AgentID* r : robotIds) {
         setState(r, state);
     }
 }
 
-void StateCollection::moveAllFromTo(const State* from, const State* to) {
-    for (int i = 0; i < _states.size(); ++i) {
+void StateCollection::moveAllFromTo(const State* from, const State* to)
+{
+    for (int i = 0; i < static_cast<int>(_states.size()); ++i) {
         if (_states[i] == from) {
             _states[i] = to;
         }
@@ -123,7 +140,8 @@ void StateCollection::moveAllFromTo(const State* from, const State* to) {
 /**
  * We are at new assignment, so everything is set to initial states, set them back:
  */
-void StateCollection::reconsiderOldAssignment(shared_ptr<Assignment> oldOne, shared_ptr<Assignment> newOne) {
+void StateCollection::reconsiderOldAssignment(shared_ptr<Assignment> oldOne, shared_ptr<Assignment> newOne)
+{
     if (oldOne->getPlan() != newOne->getPlan()) {
         return;
     }

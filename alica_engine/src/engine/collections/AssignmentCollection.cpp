@@ -2,12 +2,13 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Task.h"
 
-#include <supplementary/AgentID.h>
-#include <assert.h>
 #include <algorithm>
+#include <assert.h>
 #include <cstring>
+#include <supplementary/AgentID.h>
 
-namespace alica {
+namespace alica
+{
 short AssignmentCollection::maxEpsCount;
 bool AssignmentCollection::allowIdling;
 
@@ -15,30 +16,34 @@ bool AssignmentCollection::allowIdling;
  * Constructs an empty AssignmentCollection of a given size. (Used by the Assignment-Constructor)
  */
 AssignmentCollection::AssignmentCollection(int size)
-        : _numEps(size)
-        , _entryPoints(new const EntryPoint*[size])
-        , _robotIds(new AgentSet[size]) {
+    : _numEps(size)
+    , _entryPoints(new const EntryPoint*[size])
+    , _robotIds(new AgentGrp[size])
+{
     for (int i = 0; i < size; ++i) {
-        _robotIds[i] = AgentSet();
+        _robotIds[i] = AgentGrp();
     }
 }
 
-AssignmentCollection::~AssignmentCollection() {
+AssignmentCollection::~AssignmentCollection()
+{
     delete[] _entryPoints;
     delete[] _robotIds;
 }
 
 AssignmentCollection::AssignmentCollection(const AssignmentCollection& o)
-        : _numEps(o._numEps)
-        , _entryPoints(new const EntryPoint*[o._numEps])
-        , _robotIds(new AgentSet[o._numEps]) {
+    : _numEps(o._numEps)
+    , _entryPoints(new const EntryPoint*[o._numEps])
+    , _robotIds(new AgentGrp[o._numEps])
+{
     memcpy(_entryPoints, o._entryPoints, _numEps * sizeof(const EntryPoint*));
     for (int i = 0; i < _numEps; ++i) {
-        _robotIds[i] = AgentSet(o._robotIds[i]);
+        _robotIds[i] = AgentGrp(o._robotIds[i]);
     }
 }
 
-AssignmentCollection& AssignmentCollection::operator=(const AssignmentCollection& o) {
+AssignmentCollection& AssignmentCollection::operator=(const AssignmentCollection& o)
+{
     assert(this != &o);
     clear();
     if (_numEps != o._numEps) {
@@ -46,9 +51,9 @@ AssignmentCollection& AssignmentCollection::operator=(const AssignmentCollection
         delete[] _robotIds;
         _numEps = o._numEps;
         _entryPoints = new const EntryPoint*[_numEps];
-        _robotIds = new AgentSet[_numEps];
+        _robotIds = new AgentGrp[_numEps];
         for (int i = 0; i < _numEps; ++i) {
-            _robotIds[i] = AgentSet(o._robotIds[i]);
+            _robotIds[i] = AgentGrp(o._robotIds[i]);
         }
     } else {
         for (int i = 0; i < _numEps; ++i) {
@@ -64,7 +69,8 @@ AssignmentCollection& AssignmentCollection::operator=(const AssignmentCollection
  * @param ep An EntryPoint
  * @return shared_ptr<vector<int>>
  */
-const AgentSet* AssignmentCollection::getRobotsByEp(const EntryPoint* ep) const {
+const AgentGrp* AssignmentCollection::getRobotsByEp(const EntryPoint* ep) const
+{
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i] == ep) {
             return &_robotIds[i];
@@ -73,7 +79,8 @@ const AgentSet* AssignmentCollection::getRobotsByEp(const EntryPoint* ep) const 
     return nullptr;
 }
 
-AgentSet* AssignmentCollection::editRobotsByEp(const EntryPoint* ep) {
+AgentGrp* AssignmentCollection::editRobotsByEp(const EntryPoint* ep)
+{
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i] == ep) {
             return &_robotIds[i];
@@ -87,7 +94,8 @@ AgentSet* AssignmentCollection::editRobotsByEp(const EntryPoint* ep) {
  * @param id A long
  * @return vector<int>*
  */
-const AgentSet* AssignmentCollection::getRobotsByEpId(int64_t id) const {
+const AgentGrp* AssignmentCollection::getRobotsByEpId(int64_t id) const
+{
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i]->getId() == id) {
             return &_robotIds[i];
@@ -96,14 +104,16 @@ const AgentSet* AssignmentCollection::getRobotsByEpId(int64_t id) const {
     return nullptr;
 }
 
-const AgentSet* AssignmentCollection::getRobots(short index) const {
+const AgentGrp* AssignmentCollection::getRobots(short index) const
+{
     if (index < _numEps) {
         return &_robotIds[index];
     } else {
         return nullptr;
     }
 }
-AgentSet* AssignmentCollection::editRobots(short index) {
+AgentGrp* AssignmentCollection::editRobots(short index)
+{
     if (index < _numEps) {
         return &_robotIds[index];
     } else {
@@ -111,16 +121,19 @@ AgentSet* AssignmentCollection::editRobots(short index) {
     }
 }
 
-void AssignmentCollection::assignRobot(short index, const supplementary::AgentID* agent) {
+void AssignmentCollection::assignRobot(short index, AgentIDConstPtr agent)
+{
     assert(index < _numEps);
     _robotIds[index].push_back(agent);
 }
 
-void AssignmentCollection::sortEps() {
+void AssignmentCollection::sortEps()
+{
     std::stable_sort(_entryPoints, _entryPoints + _numEps, EntryPoint::compareTo);
 }
 
-void AssignmentCollection::sortRobots(const EntryPoint* ep) {  // TODO: make obsolete by maintaining sortedness
+void AssignmentCollection::sortRobots(const EntryPoint* ep)
+{ // TODO: make obsolete by maintaining sortedness
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i] == ep) {
             std::sort(_robotIds[i].begin(), _robotIds[i].end(), supplementary::AgentIDComparator());
@@ -131,13 +144,15 @@ void AssignmentCollection::sortRobots(const EntryPoint* ep) {  // TODO: make obs
 /**
  * Removes all robots from the AssignmentCollection
  */
-void AssignmentCollection::clear() {
+void AssignmentCollection::clear()
+{
     for (int i = 0; i < _numEps; ++i) {
         _robotIds[i].clear();
     }
 }
 
-std::string AssignmentCollection::toString() const {
+std::string AssignmentCollection::toString() const
+{
     std::stringstream ss;
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i] != nullptr) {
@@ -151,15 +166,18 @@ std::string AssignmentCollection::toString() const {
     return ss.str();
 }
 
-short AssignmentCollection::getSize() const {
+short AssignmentCollection::getSize() const
+{
     return _numEps;
 }
 
-void AssignmentCollection::setSize(short size) {
+void AssignmentCollection::setSize(short size)
+{
     _numEps = size;
 }
 
-const EntryPoint* AssignmentCollection::getEp(short index) const {
+const EntryPoint* AssignmentCollection::getEp(short index) const
+{
     if (index < _numEps) {
         return _entryPoints[index];
     } else {
@@ -167,23 +185,26 @@ const EntryPoint* AssignmentCollection::getEp(short index) const {
     }
 }
 
-void AssignmentCollection::setEp(short index, const EntryPoint* ep) {
+void AssignmentCollection::setEp(short index, const EntryPoint* ep)
+{
     assert(index < _numEps);
     _entryPoints[index] = ep;
 }
 
-void AssignmentCollection::addRobot(const supplementary::AgentID* id, const EntryPoint* e) {
+void AssignmentCollection::addRobot(AgentIDConstPtr id, const EntryPoint* e)
+{
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i] == e) {
             _robotIds[i].push_back(id);
         }
     }
 }
-bool AssignmentCollection::removeRobot(const supplementary::AgentID* robot, const EntryPoint* ep) {
+bool AssignmentCollection::removeRobot(AgentIDConstPtr robot, const EntryPoint* ep)
+{
     for (int i = 0; i < _numEps; ++i) {
         if (_entryPoints[i] == ep) {
-            AgentSet::const_iterator iter = std::find_if(_robotIds[i].begin(), _robotIds[i].end(),
-                    [&robot](const supplementary::AgentID* id) { return *robot == *id; });
+            AgentGrp::const_iterator iter =
+                std::find_if(_robotIds[i].begin(), _robotIds[i].end(), [robot](const supplementary::AgentID* id) { return *robot == *id; });
             if (iter != _robotIds[i].end()) {
                 _robotIds[i].erase(iter);
                 return true;
@@ -194,4 +215,5 @@ bool AssignmentCollection::removeRobot(const supplementary::AgentID* robot, cons
     }
     return false;
 }
+
 } /* namespace alica */

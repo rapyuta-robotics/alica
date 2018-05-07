@@ -34,7 +34,7 @@ class PartialAssignmentPool;
 class TaskAssignment final : public ITaskAssignment {
 public:
     TaskAssignment(
-            const AlicaEngine* engine, const PlanSet& planList, const AgentSet& paraRobots, bool preassignOtherRobots);
+            const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraRobots, bool preassignOtherRobots);
     virtual ~TaskAssignment();
     std::shared_ptr<Assignment> getNextBestAssignment(IAssignment* oldAss);
     std::string toString();
@@ -48,8 +48,8 @@ private:
     // Plan to build an assignment for
     TeamManager* tm;
     TeamObserver* to;
-    PlanSet planList;
-    AgentSet robots;
+    PlanGrp planList;
+    AgentGrp robots;
     std::vector<EntryPoint*> entryPointVector;
     // Fringe of the search tree
     std::vector<PartialAssignment*> fringe;

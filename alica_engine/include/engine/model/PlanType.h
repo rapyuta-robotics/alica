@@ -27,16 +27,16 @@ public:
 
     std::string toString() const override;
 
-    const ParametrisationSet& getParametrisation() const { return _parametrisation; }
-    const PlanSet& getPlans() const { return _plans; }
+    const ParametrisationGrp& getParametrisation() const { return _parametrisation; }
+    const PlanGrp& getPlans() const { return _plans; }
 
 private:
     friend ModelFactory;
-    void setParametrisation(const ParametrisationSet& parametrisation);
-    void setPlans(const PlanSet& plans);
+    void setParametrisation(const ParametrisationGrp& parametrisation);
+    void setPlans(const PlanGrp& plans);
 
-    PlanSet _plans;
-    ParametrisationSet _parametrisation;
+    PlanGrp _plans;
+    ParametrisationGrp _parametrisation;
 };
 
 }  // namespace alica

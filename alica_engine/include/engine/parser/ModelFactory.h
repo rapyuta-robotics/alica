@@ -154,9 +154,10 @@ private:
     Role* createRole(tinyxml2::XMLElement* element);
     Characteristic* createCharacteristic(tinyxml2::XMLElement* element);
     Variable* createVariable(tinyxml2::XMLElement* element);
-    bool isReferenceNode(tinyxml2::XMLElement* node);
+    bool isReferenceNode(tinyxml2::XMLElement* node) const;
     void addElement(AlicaElement* ael);
 
+    void createVariableTemplates();
     void removeRedundancy();
 };
 }  // namespace alica

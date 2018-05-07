@@ -24,19 +24,19 @@ ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(AlicaEngine* ae)
 ConstraintTestPlanDummySolver::~ConstraintTestPlanDummySolver() {}
 
 bool ConstraintTestPlanDummySolver::existsSolutionImpl(
-        const VariableSet& vars, const std::vector<shared_ptr<ProblemDescriptor>>& calls) {
+        const VariableGrp& vars, const std::vector<shared_ptr<ProblemDescriptor>>& calls) {
     existsSolutionCallCounter++;
     // std::cout << "ConstraintTestPlanDummySolver::existsSolution was called " << existsSolutionCallCounter
     //		<< " times!" << std::endl;
     return false;
 }
 
-bool ConstraintTestPlanDummySolver::getSolutionImpl(
-        const VariableSet& vars, const std::vector<shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results) {
+bool ConstraintTestPlanDummySolver::getSolutionImpl(const VariableGrp& vars,
+        const std::vector<shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results) {
     BlackBoard& bb = getAlicaEngine()->editBlackBoard();
     for (int i = 0; i < static_cast<int>(vars.size()); ++i) {
         const std::string& s = vars.at(i)->getName();
-        results.push_back(bb.registerValue(s.c_str(),static_cast<int>(s.size())));
+        results.push_back(bb.registerValue(s.c_str(), static_cast<int>(s.size())));
     }
     getSolutionCallCounter++;
     // std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << getSolutionCallCounter << " times!"

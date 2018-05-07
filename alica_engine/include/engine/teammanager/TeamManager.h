@@ -16,14 +16,11 @@ class SystemConfig;
 
 namespace alica {
 
-using std::list;
-using std::map;
-using std::unique_ptr;
-using std::unordered_set;
-
 class AlicaEngine;
+class DomainVariable;
 class Variable;
 class SuccessMarks;
+
 
 class TeamManager {
 public:
@@ -46,7 +43,7 @@ public:
     void setAgentIgnored(const supplementary::AgentID*, bool) const;
     bool setSuccess(const supplementary::AgentID* agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
     bool setSuccessMarks(const supplementary::AgentID* agentId, std::shared_ptr<SuccessMarks> successMarks);
-    const Variable* getDomainVariable(const supplementary::AgentID* robot, std::string sort) const;
+    const DomainVariable* getDomainVariable(const supplementary::AgentID* robot, const std::string& sort) const;
 
 private:
     AlicaTime teamTimeOut;

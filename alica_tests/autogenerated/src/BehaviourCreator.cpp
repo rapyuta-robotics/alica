@@ -33,93 +33,96 @@ using namespace std;
 
 #include "Plans/GSolver/SolverTestBehaviour.h"
 
-namespace alica {
+namespace alica
+{
 
 BehaviourCreator::BehaviourCreator() {}
 
 BehaviourCreator::~BehaviourCreator() {}
 
-shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId) {
+shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)
+{
     switch (behaviourConfId) {
-        case 1428508367402:
 
-            return make_shared<TriggerC>();
-            break;
+    case 1428508367402:
 
-        case 1402488763903:
+        return make_shared<TriggerC>();
+        break;
 
-            return make_shared<DefendMid>();
-            break;
+    case 1402488763903:
 
-        case 1479556115746:
+        return make_shared<DefendMid>();
+        break;
 
-            return make_shared<QueryBehaviour1>();
-            break;
+    case 1479556115746:
 
-        case 1429017293301:
+        return make_shared<QueryBehaviour1>();
+        break;
 
-            return make_shared<NotToTrigger>();
-            break;
+    case 1429017293301:
 
-        case 1522377419087:
+        return make_shared<NotToTrigger>();
+        break;
 
-            return make_shared<SuccessSpam>();
-            break;
+    case 1522377419087:
 
-        case 1402489366699:
+        return make_shared<SuccessSpam>();
+        break;
 
-            return make_shared<AttackOpp>();
-            break;
+    case 1402489366699:
 
-        case 1428508312886:
+        return make_shared<AttackOpp>();
+        break;
 
-            return make_shared<TriggerA>();
-            break;
+    case 1428508312886:
 
-        case 1421854707061:
+        return make_shared<TriggerA>();
+        break;
 
-            return make_shared<Joystick>();
-            break;
+    case 1421854707061:
 
-        case 1414068618837:
+        return make_shared<Joystick>();
+        break;
 
-            return make_shared<ConstraintUsingBehaviour>();
-            break;
+    case 1414068618837:
 
-        case 1413810775049:
+        return make_shared<ConstraintUsingBehaviour>();
+        break;
 
-            return make_shared<NewBehaviour>();
-            break;
+    case 1413810775049:
 
-        case 1402488866727:
+        return make_shared<NewBehaviour>();
+        break;
 
-            return make_shared<Attack>();
-            break;
+    case 1402488866727:
 
-        case 1428508331620:
+        return make_shared<Attack>();
+        break;
 
-            return make_shared<TriggerB>();
-            break;
+    case 1428508331620:
 
-        case 1402488956661:
+        return make_shared<TriggerB>();
+        break;
 
-            return make_shared<Tackle>();
-            break;
+    case 1402488956661:
 
-        case 1402488712657:
+        return make_shared<Tackle>();
+        break;
 
-            return make_shared<MidFieldStandard>();
-            break;
+    case 1402488712657:
 
-        case 1417424483320:
+        return make_shared<MidFieldStandard>();
+        break;
 
-            return make_shared<SolverTestBehaviour>();
-            break;
+    case 1417424483320:
 
-        default:
-            cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourConfId << endl;
-            throw new exception();
-            break;
+        return make_shared<SolverTestBehaviour>();
+        break;
+
+    default:
+        cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourConfId << endl;
+        throw new exception();
+        break;
     }
 }
-}  // namespace alica
+}

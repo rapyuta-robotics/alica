@@ -1,59 +1,93 @@
 #include "engine/constraintmodul/ProblemPart.h"
 
 #include "engine/RunningPlan.h"
+#include "engine/constraintmodul/ISolver.h"
 #include "engine/model/Condition.h"
+#include "engine/model/DomainVariable.h"
 #include "engine/model/Quantifier.h"
 
-namespace alica {
+namespace alica
+{
 
-ProblemPart::ProblemPart(const Condition* con, shared_ptr<RunningPlan> rp) {
-    condition = con;
-    domainVariables = std::make_shared<std::vector<std::list<VariableSet>>>();
-    agentsInScope = std::make_shared<std::vector<std::shared_ptr<AgentSet>>>();
-    for (const Quantifier* quantifier : condition->getQuantifiers()) {
-        std::shared_ptr<AgentSet> robots = std::make_shared<AgentSet>();
-        domainVariables->push_back(*quantifier->getDomainVariables(rp, *robots));
+ProblemPart::ProblemPart(const Condition* con, shared_ptr<const RunningPlan> rp)
+    : _condition(con)
+    , _runningPlan(rp)
+    , _descriptor(std::make_shared<ProblemDescriptor>())
+{
+    for (const Quantifier* quantifier : con->getQuantifiers()) {
+        quantifier->addDomainVariables(rp, _vars);
     }
-    runningplan = rp;
+}
+
+ProblemPart::ProblemPart(ProblemPart&& o)
+    : _vars(std::move(o._vars))
+    , _condition(o._condition)
+    , _runningPlan(std::move(o._runningPlan))
+    , _descriptor(std::move(o._descriptor))
+{
+}
+
+ProblemPart& ProblemPart::operator=(ProblemPart&& o)
+{
+    _vars = std::move(o._vars);
+    _condition = o._condition;
+    _runningPlan = std::move(o._runningPlan);
+    _descriptor = std::move(o._descriptor);
+    return *this;
 }
 
 /**
  * Checks whether the given variable is one of the domain variables.
  */
-bool ProblemPart::hasVariable(const Variable* v) const {
-    for (auto& listOfRobots : (*domainVariables)) {
-        for (const VariableSet& variables : listOfRobots) {
-            for (const Variable* variable : variables) {
-                if (variable == v) {
-                    return true;
-                }
+bool ProblemPart::hasVariable(const DomainVariable* v) const
+{
+    for (const AgentVariables& avars : _vars) {
+        for (const DomainVariable* variable : avars.getVars()) {
+            if (variable == v) {
+                return true;
             }
         }
     }
     return false;
 }
+std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(ISolverBase* solver, UniqueVarStore& uvs) const
+{
+    _descriptor->clear();
+    const VariableGrp& staticCondVariables = getCondition()->getVariables();
 
-const Condition* ProblemPart::getCondition() const {
-    return condition;
+    // create a vector of solver variables from the static condition variables
+
+    int dim = static_cast<int>(staticCondVariables.size());
+    _descriptor->_staticVars.reserve(dim);
+
+    for (const Variable* variable : staticCondVariables) {
+        const Variable* representingVariable = uvs.getRep(variable);
+        if (representingVariable->getSolverVar() == nullptr) {
+            representingVariable->setSolverVar(solver->createVariable(representingVariable->getId()));
+        }
+        _descriptor->_staticVars.push_back(representingVariable->getSolverVar());
+    }
+
+    // create a vector of solver variables from the domain variables of the currently iterated problem part
+    _descriptor->_domainVars.reserve(_vars.size());
+    for (const AgentVariables& avars : _vars) {
+        AgentSolverVariables asolverVars(avars.getId());
+        int curDim = static_cast<int>(avars.getVars().size());
+        asolverVars.editVars().reserve(curDim);
+        for (const DomainVariable* dv : avars.getVars()) {
+            if (dv->getSolverVar() == nullptr) {
+                dv->setSolverVar(solver->createVariable(dv->getId()));
+            }
+            asolverVars.editVars().emplace_back(dv->getSolverVar());
+        }
+        _descriptor->_domainVars.push_back(std::move(asolverVars));
+        dim += curDim;
+    }
+    // this insert the actual problem description
+    _descriptor->_dim = dim;
+    _descriptor->prepForUsage();
+
+    getCondition()->getConstraint(_descriptor, _runningPlan);
+    return _descriptor;
 }
-
-/**
- *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
- * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
- * 2. List of Robots, e.g., An agent has variables X,Y.
- * 3. Vector of Variables, e.g., variables X,Y.
- * 4. Variable, e.g., variable X.
- */
-std::shared_ptr<std::vector<std::list<VariableSet>>> ProblemPart::getDomainVariables() const {
-    return domainVariables;
-}
-
-std::shared_ptr<RunningPlan> ProblemPart::getRunningPlan() const {
-    return runningplan;
-}
-
-std::shared_ptr<std::vector<std::shared_ptr<AgentSet>>> ProblemPart::getAgentsInScope() const {
-    return agentsInScope;
-}
-
 } /* namespace alica */

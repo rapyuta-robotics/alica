@@ -1,38 +1,46 @@
 #pragma once
 
-#include <list>
+#include <engine/Types.h>
+#include <engine/collections/AgentVariables.h>
+#include <engine/constraintmodul/ProblemDescriptor.h>
+#include <engine/constraintmodul/UniqueVarStore.h>
+
 #include <memory>
 #include <vector>
-#include <engine/Types.h>
 
-namespace alica {
+namespace alica
+{
 class Condition;
 class RunningPlan;
-class Variable;
+class DomainVariable;
+class ISolverBase;
 
-class ProblemPart {
-public:
-    ProblemPart(const Condition* con, std::shared_ptr<RunningPlan> rp);
+class ProblemPart
+{
+  public:
+    ProblemPart(const Condition* con, std::shared_ptr<const RunningPlan> rp);
 
-    bool hasVariable(const Variable* v) const;
+    bool hasVariable(const DomainVariable* v) const;
 
-    const Condition* getCondition() const;
-    std::shared_ptr<std::vector<std::list<VariableSet>>> getDomainVariables() const;
-    std::shared_ptr<RunningPlan> getRunningPlan() const;
-    std::shared_ptr<std::vector<std::shared_ptr<AgentSet>>> getAgentsInScope() const;
+    const Condition* getCondition() const { return _condition; }
+    std::shared_ptr<const RunningPlan> getRunningPlan() const { return _runningPlan; }
+    const std::vector<AgentVariables>& getAllVariables() const { return _vars; }
+    const AgentVariables& getVarsOfAgent(AgentIDConstPtr id) const;
 
-private:
-    const Condition* condition;
-    /**
-     *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
-     * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
-     * 2. List of Robots, e.g., An agent has variables X,Y.
-     * 3. Vector of Variables, e.g., variables X,Y.
-     * 4. Variable, e.g., variable X.
-     */
-    std::shared_ptr<std::vector<std::list<VariableSet>>> domainVariables;
-    std::shared_ptr<RunningPlan> runningplan;
-    std::shared_ptr<std::vector<std::shared_ptr<AgentSet>>> agentsInScope;
+    // TODO: get rid of the shared ptr
+    std::shared_ptr<ProblemDescriptor> generateProblemDescriptor(ISolverBase* solver, UniqueVarStore& uvs) const;
+
+    ProblemPart(const ProblemPart&) = delete;
+    ProblemPart& operator=(const ProblemPart&) = delete;
+
+    ProblemPart(ProblemPart&& o);
+    ProblemPart& operator=(ProblemPart&& o);
+
+  private:
+    std::vector<AgentVariables> _vars;
+    const Condition* _condition;
+    std::shared_ptr<const RunningPlan> _runningPlan;
+    std::shared_ptr<ProblemDescriptor> _descriptor;
 };
 
 } /* namespace alica */

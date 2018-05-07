@@ -39,19 +39,19 @@ void State::setInPlan(const Plan* inPlan) {
     _inPlan = inPlan;
 }
 
-void State::setInTransitions(const TransitionSet& inTransitions) {
+void State::setInTransitions(const TransitionGrp& inTransitions) {
     _inTransitions = inTransitions;
 }
 
-void State::setOutTransitions(const TransitionSet& outTransition) {
+void State::setOutTransitions(const TransitionGrp& outTransition) {
     _outTransitions = outTransition;
 }
 
-void State::setParametrisation(const ParametrisationSet& parametrisation) {
+void State::setParametrisation(const ParametrisationGrp& parametrisation) {
     _parametrisation = parametrisation;
 }
 
-void State::setPlans(const AbstractPlanSet& plans) {
+void State::setPlans(const AbstractPlanGrp& plans) {
     _plans = plans;
 }
 
