@@ -19,19 +19,21 @@
 
 #include <iostream>
 
-namespace alica {
+namespace alica
+{
 /**
  * Basic constructor. Initialises the timer. Should only be called from the constructor of inheriting classes.
  * If using eventTrigger set behaviourTrigger and register runCV
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(const std::string& name)
-        : name(name)
-        , engine(nullptr)
-        , failure(false)
-        , success(false)
-        , callInit(true)
-        , started(true) {
+    : name(name)
+    , engine(nullptr)
+    , failure(false)
+    , success(false)
+    , callInit(true)
+    , started(true)
+{
     this->running = false;
     this->timer = new supplementary::Timer(0, 0);
     this->timer->registerCV(&this->runCV);
@@ -39,7 +41,8 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
     this->runThread = new thread(&BasicBehaviour::runInternal, this);
 }
 
-BasicBehaviour::~BasicBehaviour() {
+BasicBehaviour::~BasicBehaviour()
+{
     this->started = false;
     this->runCV.notify_all();
     this->timer->start();
@@ -51,40 +54,43 @@ BasicBehaviour::~BasicBehaviour() {
     }
 }
 
-const std::string& BasicBehaviour::getName() const {
+const std::string& BasicBehaviour::getName() const
+{
     return this->name;
 }
 
-void BasicBehaviour::setName(const std::string& name) {
+void BasicBehaviour::setName(const std::string& name)
+{
     this->name = name;
 }
 
-void BasicBehaviour::setConfiguration(const BehaviourConfiguration* beh) {
+void BasicBehaviour::setConfiguration(const BehaviourConfiguration* beh)
+{
     _configuration = beh;
 }
 
-const Variable* BasicBehaviour::getVariableByName(const std::string& name) const {
-    for (const Variable* variable : _configuration->getVariables()) {
-        if (variable->getName() == name) {
-            return variable;
-        }
-    }
-    return nullptr;
+const Variable* BasicBehaviour::getVariableByName(const std::string& name) const
+{
+    return _configuration->getVariableByName(name);
 }
 
-int BasicBehaviour::getDelayedStart() const {
+int BasicBehaviour::getDelayedStart() const
+{
     return this->timer->getDelayedStart();
 }
 
-void BasicBehaviour::setDelayedStart(long msDelayedStart) {
+void BasicBehaviour::setDelayedStart(long msDelayedStart)
+{
     this->timer->setDelayedStart(msDelayedStart);
 }
 
-int BasicBehaviour::getInterval() const {
+int BasicBehaviour::getInterval() const
+{
     return this->timer->getInterval();
 }
 
-void BasicBehaviour::setInterval(long msInterval) {
+void BasicBehaviour::setInterval(long msInterval)
+{
     this->timer->setInterval(msInterval);
 }
 
@@ -92,14 +98,16 @@ void BasicBehaviour::setInterval(long msInterval) {
  * Convenience method to obtain the robot's own id.
  * @return the own robot id
  */
-const supplementary::AgentID* BasicBehaviour::getOwnId() const {
+const supplementary::AgentID* BasicBehaviour::getOwnId() const
+{
     return this->engine->getTeamManager()->getLocalAgentID();
 }
 
 /**
  * Stops the execution of this BasicBehaviour.
  */
-bool BasicBehaviour::stop() {
+bool BasicBehaviour::stop()
+{
     this->success = false;
     this->failure = false;
     if (behaviourTrigger == nullptr) {
@@ -113,7 +121,8 @@ bool BasicBehaviour::stop() {
 /**
  * Starts the execution of this BasicBehaviour.
  */
-bool BasicBehaviour::start() {
+bool BasicBehaviour::start()
+{
     this->callInit = true;
     if (behaviourTrigger == nullptr) {
         return this->timer->start();
@@ -123,48 +132,56 @@ bool BasicBehaviour::start() {
     return true;
 }
 
-shared_ptr<RunningPlan> BasicBehaviour::getRunningPlan() const {
+shared_ptr<RunningPlan> BasicBehaviour::getRunningPlan() const
+{
     return runningPlan;
 }
 
-void BasicBehaviour::setRunningPlan(shared_ptr<RunningPlan> runningPlan) {
+void BasicBehaviour::setRunningPlan(shared_ptr<RunningPlan> runningPlan)
+{
     this->runningPlan = runningPlan;
 }
 
-void BasicBehaviour::setSuccess(bool success) {
+void BasicBehaviour::setSuccess(bool success)
+{
     if (!this->success && success) {
         this->runningPlan->getAlicaEngine()->getPlanBase()->addFastPathEvent(this->runningPlan);
     }
     this->success = success;
 }
 
-bool BasicBehaviour::isSuccess() const {
+bool BasicBehaviour::isSuccess() const
+{
     return success && !this->callInit;
 }
 
-void BasicBehaviour::setFailure(bool failure) {
+void BasicBehaviour::setFailure(bool failure)
+{
     if (!this->failure && failure) {
         this->runningPlan->getAlicaEngine()->getPlanBase()->addFastPathEvent(this->runningPlan);
     }
     this->failure = failure;
 }
 
-bool BasicBehaviour::isFailure() const {
+bool BasicBehaviour::isFailure() const
+{
     return failure && !this->callInit;
 }
 
-void BasicBehaviour::setTrigger(supplementary::ITrigger* trigger) {
+void BasicBehaviour::setTrigger(supplementary::ITrigger* trigger)
+{
     this->behaviourTrigger = trigger;
     this->behaviourTrigger->registerCV(&this->runCV);
 }
 
-const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryPointOfHigherPlan(const EntryPoint* ep) {
+const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryPointOfHigherPlan(const EntryPoint* ep)
+{
     if (ep == nullptr) {
         return nullptr;
     }
     shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
-        const EntryPointSet& eps = static_cast<const Plan*>(cur->getPlan())->getEntryPoints();
+        const EntryPointGrp& eps = static_cast<const Plan*>(cur->getPlan())->getEntryPoints();
         if (std::find(eps.begin(), eps.end(), ep) != eps.end()) {
             return cur->getAssignment()->getRobotsWorking(ep);
         }
@@ -173,7 +190,8 @@ const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryP
     return nullptr;
 }
 
-const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryPoint(const EntryPoint* ep) {
+const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryPoint(const EntryPoint* ep)
+{
     if (ep == nullptr) {
         return nullptr;
     }
@@ -184,18 +202,20 @@ const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryP
     return nullptr;
 }
 
-void BasicBehaviour::initInternal() {
+void BasicBehaviour::initInternal()
+{
     this->success = false;
     this->failure = false;
     this->callInit = false;
     try {
         this->initialiseParameters();
     } catch (exception& e) {
-        cerr << "BB: Exception in Behaviour-INIT of: " << this->getName() << endl << e.what() << endl;
+        std::cerr << "BB: Exception in Behaviour-INIT of: " << this->getName() << std::endl << e.what() << std::endl;
     }
 }
 
-bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const {
+bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
+{
     for (const auto& pair : _configuration->getParameters()) {
         if (pair.first == key) {
             valueOut = pair.second;
@@ -206,7 +226,8 @@ bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut)
     return false;
 }
 
-void BasicBehaviour::runInternal() {
+void BasicBehaviour::runInternal()
+{
     unique_lock<mutex> lck(runCV_mtx);
     while (this->started) {
         this->runCV.wait(lck, [&] {
@@ -215,7 +236,7 @@ void BasicBehaviour::runInternal() {
             } else {
                 return !this->started || (this->behaviourTrigger->isNotifyCalled(&runCV) && this->running);
             }
-        });  // protection against spurious wake-ups
+        }); // protection against spurious wake-ups
         if (!this->started)
             return;
 
@@ -228,23 +249,22 @@ void BasicBehaviour::runInternal() {
         // triggered (to be implemented) behaviour.
         try {
             if (behaviourTrigger == nullptr) {
-                this->run((void*) timer);
+                this->run((void*)timer);
             } else {
-                this->run((void*) behaviourTrigger);
+                this->run((void*)behaviourTrigger);
             }
         } catch (exception& e) {
-            string err = string("Exception catched:  ") + this->getName() + string(" - ") + string(e.what());
+            std::string err = string("Exception catched:  ") + this->getName() + std::string(" - ") + std::string(e.what());
             sendLogMessage(4, err);
         }
 #ifdef BEH_DEBUG
         const BehaviourConfiguration* conf = dynamic_cast<const BehaviourConfiguration*>(this->runningPlan->getPlan());
-        if (conf->isEventDriven()) {
-            double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 -
-                          1.0 / conf->getFrequency() * 1000.0;
+        if (!conf->isEventDriven()) {
+            double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / conf->getFrequency() * 1000.0;
             if (dura > 0.1) {
-                string err = string("BB: Behaviour ") + conf->getBehaviour()->getName() +
-                             string(" exceeded runtime by \t") + to_string(dura) + string("ms!");
-                sendLogMessage(2, err);
+                std::stringstream ss;
+                ss << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura << "ms!";
+                sendLogMessage(2, ss.str());
                 // cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura
                 //	<< "ms!" << endl;
             }
@@ -258,7 +278,8 @@ void BasicBehaviour::runInternal() {
     }
 }
 
-const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskName) {
+const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskName)
+{
     shared_ptr<RunningPlan> parent = this->runningPlan->getParent().lock();
     if (parent == nullptr) {
         return nullptr;
@@ -271,11 +292,12 @@ const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskNam
     return nullptr;
 }
 
-const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planName, const std::string& taskName) {
+const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planName, const std::string& taskName)
+{
     shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
         if (cur->getPlan()->getName() == planName) {
-            for (const EntryPoint* e : ((Plan*) cur->getPlan())->getEntryPoints()) {
+            for (const EntryPoint* e : ((Plan*)cur->getPlan())->getEntryPoints()) {
                 if (e->getTask()->getName() == taskName) {
                     return e;
                 }
@@ -287,11 +309,13 @@ const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planNam
     return nullptr;
 }
 
-void BasicBehaviour::sendLogMessage(int level, string& message) {
+void BasicBehaviour::sendLogMessage(int level, const string& message) const
+{
     runningPlan->sendLogMessage(level, message);
 }
 
-void BasicBehaviour::setEngine(AlicaEngine* engine) {
+void BasicBehaviour::setEngine(AlicaEngine* engine)
+{
     this->engine = engine;
 }
 

@@ -40,7 +40,7 @@ UtilityInterval DistBallRobot::eval(IAssignment* ass) {
             reinterpret_cast<const uint8_t*>(&x9), (reinterpret_cast<const uint8_t*>(&x9) + sizeof(x9)));
     const supplementary::AgentID* agentID9 = this->manager->getIDFromBytes(id9);
 
-    const AgentSet* relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
+    const AgentGrp* relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
 
     double curPosition;
     for (int i = 0; i < relevantRobots->size(); ++i) {

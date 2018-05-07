@@ -9,16 +9,15 @@
 
 namespace alica {
 
-PlanningProblem::PlanningProblem() 
-    : _runtimeCondition(nullptr)
-    , _preCondition(nullptr)
-    , _alternativePlan(nullptr)
-    , _planningType(PlanningType::None)
-    , _updateRate(0)
-    , _postCondition(nullptr)
-    , _waitPlan(nullptr)
-    , _distributeProblem(false)
-{}
+PlanningProblem::PlanningProblem()
+        : _runtimeCondition(nullptr)
+        , _preCondition(nullptr)
+        , _alternativePlan(nullptr)
+        , _planningType(PlanningType::None)
+        , _updateRate(0)
+        , _postCondition(nullptr)
+        , _waitPlan(nullptr)
+        , _distributeProblem(false) {}
 
 PlanningProblem::~PlanningProblem() {}
 
@@ -30,12 +29,11 @@ void PlanningProblem::setDistributeProblem(bool distributeProblem) {
     _distributeProblem = distributeProblem;
 }
 
-
 void PlanningProblem::setPlanningType(PlanningType planningType) {
     _planningType = planningType;
 }
 
-void PlanningProblem::setPlans(const AbstractPlanSet& plans) {
+void PlanningProblem::setPlans(const AbstractPlanGrp& plans) {
     _plans = plans;
 }
 

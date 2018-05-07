@@ -1,26 +1,27 @@
 #pragma once
 
-#include "engine/PlanStatus.h"
-#include "engine/PlanChange.h"
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
+#include "engine/PlanChange.h"
+#include "engine/PlanStatus.h"
 #include "engine/Types.h"
-#include "engine/teammanager/TeamManager.h"
 #include "engine/constraintmodul/ConditionStore.h"
+#include "engine/teammanager/TeamManager.h"
 #include "supplementary/AgentID.h"
 
 #include <SystemConfig.h>
 
-#include <map>
-#include <list>
-#include <memory>
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <unordered_set>
 #include <algorithm>
+#include <iostream>
+#include <list>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <unordered_set>
 
-namespace alica {
+namespace alica
+{
 class BehaviourPool;
 class BasicBehaviour;
 class AbstractPlan;
@@ -40,8 +41,9 @@ class SimplePlanTree;
 /**
  * A RunningPlan represents a plan or a behaviour in execution, holding all information relevant at runtime.
  */
-class RunningPlan : public enable_shared_from_this<RunningPlan> {
-public:
+class RunningPlan : public enable_shared_from_this<RunningPlan>
+{
+  public:
     static void init();
     RunningPlan(AlicaEngine* ae);
     RunningPlan(AlicaEngine* ae, const Plan* plan);
@@ -72,8 +74,8 @@ public:
     bool isActive() const { return _active; }
     void setActive(bool active);
 
-    const AgentSet& getRobotsAvail() const { return _robotsAvail; }
-    AgentSet& editRobotsAvail() { return _robotsAvail; }
+    const AgentGrp& getRobotsAvail() const { return _robotsAvail; }
+    AgentGrp& editRobotsAvail() { return _robotsAvail; }
 
     void setAllocationNeeded(bool allocationNeeded);
     void setFailHandlingNeeded(bool failHandlingNeeded);
@@ -108,8 +110,6 @@ public:
     void clearChildren();
     void adaptAssignment(shared_ptr<RunningPlan> r);
     void setFailedChild(const AbstractPlan* child);
-    void setRobotAvail(const supplementary::AgentID* robot);
-    void setRobotUnAvail(const supplementary::AgentID* robot);
     void accept(IPlanTreeVisitor* vis);
     void deactivate();
     bool anyChildrenStatus(PlanStatus ps);
@@ -118,20 +118,20 @@ public:
     void activate();
     const EntryPoint* getActiveEntryPoint() const { return _activeEntryPoint; }
     void setActiveEntryPoint(EntryPoint* activeEntryPoint);
-    void limitToRobots(const AgentSet& robots);
+    void limitToRobots(const AgentGrp& robots);
     std::shared_ptr<CycleManager> getCycleManagement();
     void revokeAllConstraints();
     void attachPlanConstraints();
-    bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, AgentSet& availableAgents,
-            list<const supplementary::AgentID*> noUpdates, AlicaTime now);
+    bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, list<const supplementary::AgentID*> noUpdates,
+                                   AlicaTime now);
     void toMessage(list<long>& message, shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const;
     std::string toString() const;
     const supplementary::AgentID* getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
-    void sendLogMessage(int level, string& message);
+    void sendLogMessage(int level, const std::string& message) const;
 
-protected:
+  protected:
     const State* _activeState;
     const EntryPoint* _activeEntryPoint;
 
@@ -139,7 +139,7 @@ protected:
 
     const AbstractPlan* _plan;
     const PlanType* _planType;
-    AgentSet _robotsAvail;
+    AgentGrp _robotsAvail;
     std::map<const AbstractPlan*, int> _failedSubPlans;
     weak_ptr<RunningPlan> _parent;
     list<shared_ptr<RunningPlan>> _children;

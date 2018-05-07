@@ -28,14 +28,14 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p) {
     sc = supplementary::SystemConfig::getInstance();
     maxAllocationCycles = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "CycleCount");
     enabled = (*sc)["Alica"]->get<bool>("Alica", "CycleDetection", "Enabled");
-    minimalOverrideTimeInterval =
-            AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
-    maximalOverrideTimeInterval =
-            AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MaximalAuthorityTimeInterval", NULL));
-    overrideShoutInterval =
-            AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageTimeInterval", NULL));
-    overrideWaitInterval =
-            AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageWaitTimeInterval", NULL));
+    minimalOverrideTimeInterval = AlicaTime::milliseconds(
+            (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
+    maximalOverrideTimeInterval = AlicaTime::milliseconds(
+            (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MaximalAuthorityTimeInterval", NULL));
+    overrideShoutInterval = AlicaTime::milliseconds(
+            (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageTimeInterval", NULL));
+    overrideWaitInterval = AlicaTime::milliseconds(
+            (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageWaitTimeInterval", NULL));
     historySize = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize", NULL);
 
     this->ae = ae;
@@ -80,16 +80,16 @@ void CycleManager::update() {
             cout << "CM: Cycle Detected!" << endl;
 
             this->state = CycleState::overriding;
-            plan->setAuthorityTimeInterval(min(
-                    maximalOverrideTimeInterval, plan->getAuthorityTimeInterval() * intervalIncFactor));
+            plan->setAuthorityTimeInterval(
+                    min(maximalOverrideTimeInterval, plan->getAuthorityTimeInterval() * intervalIncFactor));
             this->overrideShoutTime = AlicaTime::zero();
 #ifdef CM_DEBUG
             cout << "Assuming Authority for " << plan->getAuthorityTimeInterval().inSeconds() << "sec!" << endl;
 #endif
             this->overrideTimestamp = ae->getAlicaClock()->now();
         } else {
-            plan->setAuthorityTimeInterval(max(
-                    minimalOverrideTimeInterval, plan->getAuthorityTimeInterval() * intervalDecFactor));
+            plan->setAuthorityTimeInterval(
+                    max(minimalOverrideTimeInterval, plan->getAuthorityTimeInterval() * intervalDecFactor));
         }
     } else {
         if (this->state == CycleState::overriding &&
@@ -312,7 +312,7 @@ bool CycleManager::setAssignment() {
         rp->setAllocationNeeded(true);
     } else {
         if (rp->getActiveState() != nullptr) {
-            AgentSet robotsJoined;
+            AgentGrp robotsJoined;
             rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState(), robotsJoined);
             for (shared_ptr<RunningPlan>& c : *rp->getChildren()) {
                 c->limitToRobots(robotsJoined);

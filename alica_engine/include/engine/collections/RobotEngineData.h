@@ -1,48 +1,43 @@
 #pragma once
 
+#include <engine/Types.h>
 #include <map>
 #include <memory>
 #include <string>
 
-namespace supplementary {
-class AgentID;
-}
-
-namespace alica {
-class SuccessMarks;
-class Variable;
+namespace alica
+{
 class AlicaEngine;
-
-using std::map;
-using std::shared_ptr;
-using std::string;
+class SuccessMarks;
 
 /**
  * Basic plan execution information relating to a robot within the team.
  */
-class RobotEngineData {
-public:
-    RobotEngineData(const AlicaEngine* engine, const supplementary::AgentID* agentId);
+class RobotEngineData
+{
+  public:
+    RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId);
     virtual ~RobotEngineData();
     virtual void initDomainVariables();
 
-    shared_ptr<SuccessMarks> getSuccessMarks() const;
-    void setSuccessMarks(shared_ptr<SuccessMarks> successMarks);
+    std::shared_ptr<SuccessMarks> getSuccessMarks() const { return _successMarks; }
+    void setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks);
     void clearSuccessMarks();
 
-    const Variable* getDomainVariable(const std::string& sort) const;
+    const DomainVariable* getDomainVariable(const Variable* templateVar) const;
+    const DomainVariable* getDomainVariable(const std::string& name) const;
 
-protected:
-    const AlicaEngine* engine;
-    const supplementary::AgentID* agentId;
+  protected:
+    const AlicaEngine* _engine;
+    const supplementary::AgentID* _agentId;
     /**
      * The SuccessMarks of the robot, indicating which EntryPoints are completed.
      */
-    std::shared_ptr<SuccessMarks> successMarks;
+    std::shared_ptr<SuccessMarks> _successMarks;
     /**
-     * The domain variables (a.k.a. quantified variables) are hold in a map: "X" -> Variable
+     * The domain variables (a.k.a. quantified variables) are held in a map: TemplateVariable -> DomainVariable
      */
-    std::map<std::string, const Variable*> domainVariables;
+    std::map<const Variable*, const DomainVariable*> _domainVariables;
     /**
      * Creates a hopefully unique id, in order to make the variable
      * string "X" (specified in the Plan Designer) unique in the team.

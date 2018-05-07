@@ -90,8 +90,10 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition) {
     ASSERT_TRUE((*dp->getChildren()->begin())->isBehaviour());
 
     auto queryBehaviour1 = dynamic_pointer_cast<QueryBehaviour1>((*dp->getChildren()->begin())->getBasicBehaviour());
-    auto allReps = queryBehaviour1->query->getUniqueVariableStore()->getAllRep();
-    for (auto& rep : allReps) {
+    VariableGrp allReps;
+    queryBehaviour1->query->getUniqueVariableStore().getAllRep(allReps);
+
+    for (const alica::Variable* rep : allReps) {
         EXPECT_TRUE(rep->getName() == "PBMX" || rep->getName() == "PBMY");
         // cout << "Test: '" << rep->getName() << "'" << endl;
     }

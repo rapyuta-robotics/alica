@@ -17,8 +17,7 @@ PlanRepository::PlanRepository() {}
 PlanRepository::~PlanRepository() {}
 
 bool PlanRepository::verifyPlanBase() const {
-
-    //Every entrypoint has a task:
+    // Every entrypoint has a task:
     for (const EntryPoint* ep : getEntryPoints()) {
         if (ep->getTask() == nullptr) {
             std::cerr << "EntryPoint " << ep->toString() << " does not have a task." << std::endl;
@@ -26,9 +25,9 @@ bool PlanRepository::verifyPlanBase() const {
             return false;
         }
     }
-    //Every plans entryPoints are sorted:
+    // Every plans entryPoints are sorted:
     for (const Plan* p : getPlans()) {
-        for (int i = 0; i < p->getEntryPoints().size() - 1; ++i) {
+        for (int i = 0; i < static_cast<int>(p->getEntryPoints().size()) - 1; ++i) {
             if (p->getEntryPoints()[i]->getId() >= p->getEntryPoints()[i + 1]->getId()) {
                 std::cerr << "Wrong sorting of entrypoints in plan " << p->toString() << std::endl;
                 assert(false);

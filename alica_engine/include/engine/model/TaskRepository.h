@@ -13,26 +13,28 @@
 #include "AlicaElement.h"
 #include <engine/Types.h>
 
-namespace alica {
+namespace alica
+{
 
-class TaskRepository : public AlicaElement {
-public:
+class TaskRepository : public AlicaElement
+{
+  public:
     TaskRepository();
     virtual ~TaskRepository();
     int64_t getDefaultTask() const { return _defaultTask; }
-    const TaskSet& getTasks() const { return _tasks; }
+    const TaskGrp& getTasks() const { return _tasks; }
     std::string getFileName() const;
 
-private:
+  private:
     friend ModelFactory;
-    void setTasks(const TaskSet& tasks);
+    void setTasks(const TaskGrp& tasks);
     void setDefaultTask(int64_t defaultTask);
     void setFileName(const std::string& fileName);
-    TaskSet _tasks;
+    TaskGrp _tasks;
     int64_t _defaultTask;
     std::string _fileName;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* TASKREPOSITORY_H_ */

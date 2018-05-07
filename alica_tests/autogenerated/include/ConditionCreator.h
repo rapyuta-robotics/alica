@@ -4,14 +4,16 @@
 using namespace std;
 
 #include "engine/IConditionCreator.h"
-#include <memory>
 #include "iostream"
+#include <memory>
 
-namespace alica {
+namespace alica
+{
 class BasicCondition;
 
-class ConditionCreator : public IConditionCreator {
-public:
+class ConditionCreator : public IConditionCreator
+{
+  public:
     ConditionCreator();
     virtual ~ConditionCreator();
     shared_ptr<BasicCondition> createConditions(long conditionConfId);
