@@ -15,7 +15,8 @@
   <run_depend>fsystem</run_depend>
   
   <test_depend>gtest</test_depend>
-
+  <build_depend>roslib</build_depend>
+  <run_depend>roslib</run_depend>
   <export>
   </export>
 </package>

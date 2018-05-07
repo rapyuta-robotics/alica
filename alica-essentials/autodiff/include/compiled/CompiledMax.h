@@ -10,21 +10,18 @@
 
 #include "TapeElement.h"
 
-namespace autodiff
-{
-	namespace compiled
-	{
+namespace autodiff {
+namespace compiled {
 
-		class CompiledMax : public TapeElement
-		{
-		public:
-			int _left;
-			int _right;
+class CompiledMax : public TapeElement {
+public:
+    int _left;
+    int _right;
 
-			void accept(shared_ptr<ITapeVisitor> visitor);
-		};
+    void accept(shared_ptr<ITapeVisitor> visitor);
+};
 
-	} /* namespace compiled */
+} /* namespace compiled */
 } /* namespace autodiff */
 
 #endif /* COMPILEDMAX_H_ */

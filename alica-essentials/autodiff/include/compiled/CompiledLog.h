@@ -10,20 +10,17 @@
 
 #include "TapeElement.h"
 
-namespace autodiff
-{
-	namespace compiled
-	{
+namespace autodiff {
+namespace compiled {
 
-		class CompiledLog : public TapeElement
-		{
-		public:
-			int _arg;
+class CompiledLog : public TapeElement {
+public:
+    int _arg;
 
-			void accept(shared_ptr<ITapeVisitor> visitor);
-		};
+    void accept(shared_ptr<ITapeVisitor> visitor);
+};
 
-	} /* namespace compiled */
+} /* namespace compiled */
 } /* namespace autodiff */
 
 #endif /* COMPILEDLOG_H_ */

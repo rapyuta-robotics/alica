@@ -5,66 +5,59 @@
 
 #include "cnc_geometry/CNPositionAllo.h"
 
-namespace geometry
-{
+namespace geometry {
 
-    using std::string;
-    using std::shared_ptr;
+using std::shared_ptr;
+using std::string;
 
-    CNPointAllo::CNPointAllo(double x, double y, double z)
-    {
-        this->x = x;
-        this->y = y;
-        this->z = z;
-    }
+CNPointAllo::CNPointAllo(double x, double y, double z) {
+    this->x = x;
+    this->y = y;
+    this->z = z;
+}
 
-    CNPointAllo::CNPointAllo(const CNPointAllo &obj)
-    {
-        this->x = obj.x;
-        this->y = obj.y;
-        this->z = obj.z;
-    }
+CNPointAllo::CNPointAllo(const CNPointAllo& obj) {
+    this->x = obj.x;
+    this->y = obj.y;
+    this->z = obj.z;
+}
 
-    CNPointAllo::~CNPointAllo()
-    {
-    }
+CNPointAllo::~CNPointAllo() {}
 
-    string CNPointAllo::toString() const
-    {
-        std::stringstream ss;
-        ss << "CNPointAllo: x: " << x << " y: " << y << " z: " << z << std::endl;
-        return ss.str();
-    }
+string CNPointAllo::toString() const {
+    std::stringstream ss;
+    ss << "CNPointAllo: x: " << x << " y: " << y << " z: " << z << std::endl;
+    return ss.str();
+}
 
-    /**
-     * Converts this allocentric 2d point into an egocentric 2d point with respect to
-     * the given allocentric position.
-     * @param alloPos the allocentric reference position
-     * @return an egocentric 2d point with alloPos as origin of ordinates
-     */
-    CNPointEgo CNPointAllo::toEgo(CNPositionAllo &me) const
-    {
-        CNPointEgo ego = CNPointEgo();
+/**
+ * Converts this allocentric 2d point into an egocentric 2d point with respect to
+ * the given allocentric position.
+ * @param alloPos the allocentric reference position
+ * @return an egocentric 2d point with alloPos as origin of ordinates
+ */
+CNPointEgo CNPointAllo::toEgo(CNPositionAllo& me) const {
+    CNPointEgo ego = CNPointEgo();
 
-        double x = this->x - me.x;
-        double y = this->y - me.y;
+    double x = this->x - me.x;
+    double y = this->y - me.y;
 
-        double angle = atan2(y, x) - me.theta;
-        double dist = sqrt(x * x + y * y);
+    double angle = atan2(y, x) - me.theta;
+    double dist = sqrt(x * x + y * y);
 
-        ego.x = cos(angle) * dist;
-        ego.y = sin(angle) * dist;
-        ego.z = this->z;
+    ego.x = cos(angle) * dist;
+    ego.y = sin(angle) * dist;
+    ego.z = this->z;
 
-        return ego;
-    }
+    return ego;
+}
 ///**
 // * Converts this allocentric 2d point into an egocentric 2d point with respect to
 // * the given allocentric position.
 // * @param alloPos the allocentric reference position
 // * @return an egocentric 2d point with alloPos as origin of ordinates
 // */
-//CNPointEgo CNPointAllo::toEgo(CNPositionAllo &me) const
+// CNPointEgo CNPointAllo::toEgo(CNPositionAllo &me) const
 //{
 //    CNPointEgo ego = CNPointEgo();
 //
@@ -83,24 +76,20 @@ namespace geometry
 //    return ego;
 //}
 
-    double CNPointAllo::distanceTo(const CNPointAllo &other) const
-    {
-        return (*this - other).length();
-    }
+double CNPointAllo::distanceTo(const CNPointAllo& other) const {
+    return (*this - other).length();
+}
 
-    CNPointAllo CNPointAllo::operator+(const CNVecAllo &right) const
-    {
-        return CNPointAllo(this->x + right.x, this->y + right.y, this->z + right.z);
-    }
+CNPointAllo CNPointAllo::operator+(const CNVecAllo& right) const {
+    return CNPointAllo(this->x + right.x, this->y + right.y, this->z + right.z);
+}
 
-    CNPointAllo CNPointAllo::operator-(const CNVecAllo &right) const
-    {
-        return CNPointAllo(this->x - right.x, this->y - right.y, this->z - right.z);
-    }
+CNPointAllo CNPointAllo::operator-(const CNVecAllo& right) const {
+    return CNPointAllo(this->x - right.x, this->y - right.y, this->z - right.z);
+}
 
-    CNVecAllo CNPointAllo::operator-(const CNPointAllo &right) const
-    {
-        return CNVecAllo(this->x - right.x, this->y - right.y, this->z - right.z);
-    }
+CNVecAllo CNPointAllo::operator-(const CNPointAllo& right) const {
+    return CNVecAllo(this->x - right.x, this->y - right.y, this->z - right.z);
+}
 
 } /* namespace geometry */

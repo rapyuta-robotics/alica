@@ -15,30 +15,26 @@
 using namespace std;
 using namespace autodiff;
 
-namespace alica
-{
-	namespace reasoner
-	{
-		namespace intervalpropagation
-		{
+namespace alica {
+namespace reasoner {
+namespace intervalpropagation {
 
-			class TermList
-			{
-			public:
-				TermList();
-				virtual ~TermList();
+class TermList {
+public:
+    TermList();
+    virtual ~TermList();
 
-				shared_ptr<Term> first;
-				shared_ptr<Term> last;
+    shared_ptr<Term> first;
+    shared_ptr<Term> last;
 
-				bool contains(shared_ptr<Term> t);
-				shared_ptr<Term> dequeue();
-				void enqueue(shared_ptr<Term> t);
-				void clear();
-			};
+    bool contains(shared_ptr<Term> t);
+    shared_ptr<Term> dequeue();
+    void enqueue(shared_ptr<Term> t);
+    void clear();
+};
 
-		} /* namespace intervalpropagation */
-	} /* namespace reasoner */
+} /* namespace intervalpropagation */
+} /* namespace reasoner */
 } /* namespace alica */
 
 #endif /* TERMLIST_H_ */

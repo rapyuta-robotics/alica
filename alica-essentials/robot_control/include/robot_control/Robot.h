@@ -8,57 +8,49 @@
 #include <QFrame>
 #include <chrono>
 
-namespace Ui
-{
+namespace Ui {
 class RobotProcessesWidget;
 class ControlledRobotWidget;
-}
+}  // namespace Ui
 
-namespace supplementary
-{
+namespace supplementary {
 class RobotExecutableRegistry;
 class AgentID;
-}
+}  // namespace supplementary
 
-namespace ros
-{
+namespace ros {
 class Publisher;
 }
 
-namespace alica
-{
+namespace alica {
 class AlicaWidget;
 }
 
-namespace pm_widget
-{
+namespace pm_widget {
 class ControlledRobot;
 }
 
-namespace robot_control
-{
+namespace robot_control {
 class RobotsControl;
 
-class Robot : public QFrame, public supplementary::RobotMetaData
-{
-
+class Robot : public QFrame, public supplementary::RobotMetaData {
     Q_OBJECT
 
-  public:
-    Robot(std::string robotName, const supplementary::AgentID *robotId, RobotsControl *parentRobotsControl);
+public:
+    Robot(std::string robotName, const supplementary::AgentID* robotId, RobotsControl* parentRobotsControl);
 
     virtual ~Robot();
 
     // Message processing
     std::chrono::time_point<std::chrono::system_clock>
-        timeLastMsgReceived; /**< the last time a message was received for this robot */
+            timeLastMsgReceived; /**< the last time a message was received for this robot */
     void handleAlicaInfo(
-        std::pair<std::chrono::system_clock::time_point, alica_msgs::AlicaEngineInfoConstPtr> timeAEIpair);
+            std::pair<std::chrono::system_clock::time_point, alica_msgs::AlicaEngineInfoConstPtr> timeAEIpair);
     void handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps,
-                           const supplementary::AgentID *parentPMid);
+            const supplementary::AgentID* parentPMid);
 
     // GUI Methods and Members
-    RobotsControl *parentRobotsControl;
+    RobotsControl* parentRobotsControl;
     void updateGUI(std::chrono::system_clock::time_point now);
     void toggle();
     void show();
@@ -68,20 +60,20 @@ class Robot : public QFrame, public supplementary::RobotMetaData
     bool showAlicaClient;
     bool showProcessManager;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void sendRobotCommand(bool start);
     void toggleAlicaClient(bool start);
     void toggleProcessManager(bool start);
 
-  private:
-    QFrame *widget;
-    Ui::ControlledRobotWidget *uiControlledRobot;
+private:
+    QFrame* widget;
+    Ui::ControlledRobotWidget* uiControlledRobot;
 
-    QFrame *frameForAW;
-    alica::AlicaWidget *alicaWidget;
-    QFrame *frameForPM;
-    pm_widget::ControlledRobot *controlledRobotWidget;
-    const supplementary::AgentID *broadcastId;
+    QFrame* frameForAW;
+    alica::AlicaWidget* alicaWidget;
+    QFrame* frameForPM;
+    pm_widget::ControlledRobot* controlledRobotWidget;
+    const supplementary::AgentID* broadcastId;
 
     ros::Publisher robotCommandPub;
 };

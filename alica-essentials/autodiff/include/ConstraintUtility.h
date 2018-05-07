@@ -14,25 +14,23 @@
 
 using namespace std;
 
-namespace autodiff
-{
+namespace autodiff {
 
-	class ConstraintUtility : public Term
-	{
-	public:
-		ConstraintUtility(shared_ptr<Term> constraint, shared_ptr<Term> utility);
+class ConstraintUtility : public Term {
+public:
+    ConstraintUtility(shared_ptr<Term> constraint, shared_ptr<Term> utility);
 
-		shared_ptr<Term> constraint;
-		shared_ptr<Term> utility;
+    shared_ptr<Term> constraint;
+    shared_ptr<Term> utility;
 
-		int accept(shared_ptr<ITermVisitor> visitor);
+    int accept(shared_ptr<ITermVisitor> visitor);
 
-		shared_ptr<Term> aggregateConstants();
-		shared_ptr<Term> derivative(shared_ptr<Variable> v);
-		shared_ptr<Term> negate();
+    shared_ptr<Term> aggregateConstants();
+    shared_ptr<Term> derivative(shared_ptr<Variable> v);
+    shared_ptr<Term> negate();
 
-		string toString();
-	};
+    string toString();
+};
 
 } /* namespace autodiff */
 

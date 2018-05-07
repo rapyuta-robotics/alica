@@ -10,23 +10,20 @@
 
 #include "TapeElement.h"
 
-namespace autodiff
-{
-	namespace compiled
-	{
+namespace autodiff {
+namespace compiled {
 
-		class CompiledReification : public TapeElement
-		{
-		public:
-			double _min;
-			double _max;
-			int _condition;
-			int _negatedCondition;
+class CompiledReification : public TapeElement {
+public:
+    double _min;
+    double _max;
+    int _condition;
+    int _negatedCondition;
 
-			void accept(shared_ptr<ITapeVisitor> visitor);
-		};
+    void accept(shared_ptr<ITapeVisitor> visitor);
+};
 
-	} /* namespace compiled */
+} /* namespace compiled */
 } /* namespace autodiff */
 
 #endif /* COMPILEDREIFICATION_H_ */

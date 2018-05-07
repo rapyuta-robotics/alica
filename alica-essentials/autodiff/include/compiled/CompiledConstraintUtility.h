@@ -10,21 +10,18 @@
 
 #include "TapeElement.h"
 
-namespace autodiff
-{
-	namespace compiled
-	{
+namespace autodiff {
+namespace compiled {
 
-		class CompiledConstraintUtility : public TapeElement
-		{
-		public:
-			int _constraint;
-			int _utility;
+class CompiledConstraintUtility : public TapeElement {
+public:
+    int _constraint;
+    int _utility;
 
-			void accept(shared_ptr<ITapeVisitor> visitor);
-		};
+    void accept(shared_ptr<ITapeVisitor> visitor);
+};
 
-	} /* namespace compiled */
+} /* namespace compiled */
 } /* namespace autodiff */
 
 #endif /* COMPILEDCONSTRAINTUTILITY_H_ */

@@ -21,68 +21,62 @@ using namespace autodiff;
 
 const int minCount = 2, maxCount = 20;
 const int minform = 2, maxform = 2;
-const long maxTime = 15000;//000000; //nanos
+const long maxTime = 15000;  // 000000; //nanos
 const int solverCount = 3;
-const int count = 1000; //solving count
+const int count = 1000;  // solving count
 const double delta = 0.01;
 
-class SolverStats
-{
+class SolverStats {
 public:
-	int solved = 0;
-	double n = 0;
-	double mean = 0;
-	double m2 = 0;
-	int toSlow = 0;
+    int solved = 0;
+    double n = 0;
+    double mean = 0;
+    double m2 = 0;
+    int toSlow = 0;
 
-	SolverStats()
-	{
-		solved = 0;
-		n = 0;
-		mean = 0;
-		m2 = 0;
-		toSlow = 0;
-	}
+    SolverStats() {
+        solved = 0;
+        n = 0;
+        mean = 0;
+        m2 = 0;
+        toSlow = 0;
+    }
 
-	void updateStats(double time, bool solved)
-	{
-		if (solved)
-			this->solved++;
+    void updateStats(double time, bool solved) {
+        if (solved)
+            this->solved++;
 
-		if (time > maxTime)
-			toSlow++;
-		else
-			toSlow = 0;
+        if (time > maxTime)
+            toSlow++;
+        else
+            toSlow = 0;
 
-		//sw.WriteLine(diff+"\t"+diffSMT+"\t"+util+"\t"+smtutil);
-		n += 1.0;
-		double delta = time - mean;
-		mean += delta / n;
-		m2 += delta * (time - mean);
-	}
+        // sw.WriteLine(diff+"\t"+diffSMT+"\t"+util+"\t"+smtutil);
+        n += 1.0;
+        double delta = time - mean;
+        mean += delta / n;
+        m2 += delta * (time - mean);
+    }
 
-	void reset()
-	{
-		solved = 0;
-		n = 0;
-		mean = 0;
-		m2 = 0;
-	}
+    void reset() {
+        solved = 0;
+        n = 0;
+        mean = 0;
+        m2 = 0;
+    }
 
-	double curVariance()
-	{
-		return (m2 / (n - 1));
-	}
+    double curVariance() {
+        return (m2 / (n - 1));
+    }
 
-	string toOutputString()
-	{
-		stringstream ss;
-		ss << mean << "\t" << curVariance() << "\t" << solved;
-		return ss.str();
-	}
+    string toOutputString() {
+        stringstream ss;
+        ss << mean << "\t" << curVariance() << "\t" << solved;
+        return ss.str();
+    }
 };
 
-//TEST(CNSMTGSolver, SOLVER)
+// TEST(CNSMTGSolver, SOLVER)
 //{
 //	vector<shared_ptr<SolverStats>> solverstat = vector<shared_ptr<SolverStats>>(solverCount);
 //
@@ -129,10 +123,13 @@ public:
 //
 //						for (int n = 0; n < i; n++)
 //						{
-//							//if(Math.Abs(ballPoses->at(n) - ballPoses->at(i)) + Math.Abs(ballPosesY->at(n) - ballPosesY->at(i)) < 2*delta) {
-//							if ((ballPoses->at(n) - ballPoses->at(i)) * (ballPoses->at(n) - ballPoses->at(i))
-//									+ (ballPosesY->at(n) - ballPosesY->at(i)) * (ballPosesY->at(n) - ballPosesY->at(i))
-//									< 4 * delta * delta)
+//							//if(Math.Abs(ballPoses->at(n) - ballPoses->at(i)) +
+// Math.Abs(ballPosesY->at(n) - ballPosesY->at(i)) < 2*delta) {
+//							if ((ballPoses->at(n) - ballPoses->at(i)) * (ballPoses->at(n) -
+// ballPoses->at(i))
+//									+ (ballPosesY->at(n) - ballPosesY->at(i)) *
+//(ballPosesY->at(n)
+//-  ballPosesY->at(i)) 									< 4 * delta * delta)
 //							{
 //								isNew = true;
 //								break;
@@ -142,17 +139,21 @@ public:
 //				}
 //
 //				int varCount = taskCount;
-//				shared_ptr<vector<shared_ptr<Variable>>> variables = make_shared<vector<shared_ptr<Variable>>>(varCount*2);
-//				shared_ptr<vector<shared_ptr<vector<double>>> > limits = make_shared<vector<shared_ptr<vector<double>>>>(varCount*2);
-//				shared_ptr<vector<shared_ptr<vector<shared_ptr<Term>>> >> lits = make_shared<vector<shared_ptr<vector<shared_ptr<Term>>>>>(varCount*2);
+//				shared_ptr<vector<shared_ptr<Variable>>> variables =
+// make_shared<vector<shared_ptr<Variable>>>(varCount*2);
+//				shared_ptr<vector<shared_ptr<vector<double>>> > limits =
+// make_shared<vector<shared_ptr<vector<double>>>>(varCount*2);
+//				shared_ptr<vector<shared_ptr<vector<shared_ptr<Term>>> >> lits =
+// make_shared<vector<shared_ptr<vector<shared_ptr<Term>>>>>(varCount*2);
 //				for (int i = 0; i < varCount * 2; ++i)
 //				{
 //					limits->at(i) = make_shared<vector<double>>(2);
 //					lits->at(i) = make_shared<vector<shared_ptr<Term>>>(ballPoses->size());
 //				}
-//				shared_ptr<vector<shared_ptr<Term>>> target = make_shared<vector<shared_ptr<Term>>>(varCount);
-//				shared_ptr<vector<shared_ptr<Term>>> targetY = make_shared<vector<shared_ptr<Term>>>(varCount);
-//				int agents = 0;
+//				shared_ptr<vector<shared_ptr<Term>>> target =
+// make_shared<vector<shared_ptr<Term>>>(varCount);
+//				shared_ptr<vector<shared_ptr<Term>>> targetY =
+// make_shared<vector<shared_ptr<Term>>>(varCount); 				int agents = 0;
 //
 //				for (int i = 0; i < varCount * 2; i += 2)
 //				{
@@ -170,12 +171,15 @@ public:
 //
 //					for (int j = 0; j < ballPoses->size(); j++)
 //					{
-//						//lits[agents,j] = new AD.Abs(target->at(agents) - ballPoses->at(j)) + new AD.Abs(targetY->at(agents) - ballPosesY->at(j)) < delta;
+//						//lits[agents,j] = new AD.Abs(target->at(agents) - ballPoses->at(j)) +
+// new  AD.Abs(targetY->at(agents) - ballPosesY->at(j)) < delta;
 //						shared_ptr<Term> t1 = target->at(agents) - ballPoses->at(j);
 //						shared_ptr<Term> t2 = target->at(agents) - ballPoses->at(j);
 //						shared_ptr<Term> t3 = targetY->at(agents) - ballPosesY->at(j);
 //						shared_ptr<Term> t4 = targetY->at(agents) - ballPosesY->at(j);
-//						lits->at(agents)->at(j) = t1 * t2 + t3 * t4 < TermBuilder::constant(delta * delta);
+//						lits->at(agents)->at(j) = t1 * t2 + t3 * t4 <
+// TermBuilder::constant(delta
+//*  delta);
 //					}
 //					agents++;
 //				}
@@ -185,7 +189,8 @@ public:
 //				// (p1=X1 o p1=X2) u (p2=X2 o p2=X1) u
 //				// (p1=X1 o p2=X1) u (p2=X2 o p1=X2)
 //				//
-//				// (p1 = X1 u p2 = X2 u p3 = X3) o (p1 = X2 u p2 = X1 u p3 = X3) o (p1 = X3 u p2 = X2 u p3 = X2) o (p1 = X3 u p2 = X1 u p3 = X2) o (p1 = X1 u p2 = X3 u p3 = X1) o (p1 = X2 u p2 = X3 u p3 = X1)
+//				// (p1 = X1 u p2 = X2 u p3 = X3) o (p1 = X2 u p2 = X1 u p3 = X3) o (p1 = X3 u p2 = X2 u
+// p3 =  X2) o (p1 = X3 u p2 = X1 u p3 = X2) o (p1 = X1 u p2 = X3 u p3 = X1) o (p1 = X2 u p2 = X3 u p3 = X1)
 //				//
 //				// (p1 = X1 o p1 = X2 o p1 = X3) u ...
 //				// (p1 = X1 o p2 = X1 o p3 = X1) u ...
@@ -235,7 +240,8 @@ public:
 //							for (int k = 0; k < i; k++)
 //							{
 //								constraint = constraint
-//										& ConstraintBuilder::or_(ConstraintBuilder::not_(lits->at(i)->at(j)),
+//										&
+// ConstraintBuilder::or_(ConstraintBuilder::not_(lits->at(i)->at(j)),
 //																	ConstraintBuilder::not_(lits->at(k)->at(j)));
 //							}
 //						}
@@ -249,11 +255,20 @@ public:
 //					{
 //						for (int k = 0; k < i; k++)
 //						{
-//							//constraint =  constraint &new AD.Abs(target->at(i) - target->at(k)) + new AD.Abs(targetY->at(i) - targetY->at(k)) > 2*delta;
-//							constraint = constraint
-//									& (target->at(i) - target->at(k)) * (target->at(i) - target->at(k))
-//											+ (targetY->at(i) - targetY->at(k)) * (targetY->at(i) - targetY->at(k))
-//											> TermBuilder::constant(4 * delta * delta);
+//							//constraint =  constraint &new AD.Abs(target->at(i) -
+//target->at(k))
+//+  new
+// AD.Abs(targetY->at(i) - targetY->at(k)) > 2*delta; 							constraint =
+// constraint
+//									& (target->at(i) - target->at(k)) *
+//(target->at(i)
+//-  target->at(k))
+//											+ (targetY->at(i) -
+// targetY->at(k))
+//* (targetY->at(i) - targetY->at(k))
+//											> TermBuilder::constant(4 *
+// delta
+//*  delta);
 //						}
 //					}
 //				}

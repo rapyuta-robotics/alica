@@ -4,21 +4,19 @@
 
 #include <engine/constraintmodul/SolverVariable.h>
 
-namespace alica
-{
-namespace reasoner
-{
+namespace alica {
+namespace reasoner {
 
-class DummyVariable : public DummyTerm, public alica::SolverVariable
-{
-  public:
+class DummyVariable : public DummyTerm, public alica::SolverVariable {
+public:
     DummyVariable(long representingVariableID);
     virtual ~DummyVariable();
     long getID() const;
 
     static long ID_COUNTER;
     static std::string NO_VALUE;
-  private:
+
+private:
     long representingVariableID;
     long id;
 };

@@ -14,23 +14,21 @@
 
 using namespace std;
 
-namespace autodiff
-{
+namespace autodiff {
 
-	class Cos : public Term
-	{
-	public:
-		Cos(shared_ptr<Term> arg);
+class Cos : public Term {
+public:
+    Cos(shared_ptr<Term> arg);
 
-		shared_ptr<Term> arg;
+    shared_ptr<Term> arg;
 
-		int accept(shared_ptr<ITermVisitor> visitor);
+    int accept(shared_ptr<ITermVisitor> visitor);
 
-		shared_ptr<Term> aggregateConstants();
-		shared_ptr<Term> derivative(shared_ptr<Variable> v);
+    shared_ptr<Term> aggregateConstants();
+    shared_ptr<Term> derivative(shared_ptr<Variable> v);
 
-		string toString();
-	};
+    string toString();
+};
 
 } /* namespace autodiff */
 

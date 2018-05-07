@@ -5,26 +5,23 @@
 #include <memory>
 #include <vector>
 
-namespace alica
-{
+namespace alica {
 
 class AlicaEngine;
 class ProblemDescriptor;
 class Variable;
 class SolverVariable;
 
-namespace reasoner
-{
+namespace reasoner {
 
-class DummySolver : public alica::ISolver
-{
-  public:
-    DummySolver(AlicaEngine *ae);
+class DummySolver : public alica::ISolver {
+public:
+    DummySolver(AlicaEngine* ae);
     virtual ~DummySolver();
 
-    virtual bool existsSolution(std::vector<Variable *> &vars, std::vector<std::shared_ptr<ProblemDescriptor>> &calls);
-    virtual bool getSolution(std::vector<Variable *> &vars, std::vector<std::shared_ptr<ProblemDescriptor>> &calls,
-                             std::vector<void *> &results);
+    bool existsSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
+    bool getSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+                             std::vector<void*>& results);
     virtual std::shared_ptr<SolverVariable> createVariable(long representingVariableId);
 };
 } /* namespace reasoner */

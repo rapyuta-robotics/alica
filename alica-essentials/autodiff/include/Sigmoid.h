@@ -10,26 +10,24 @@
 
 #include "Term.h"
 
-namespace autodiff
-{
+namespace autodiff {
 
-	class Sigmoid : public Term
-	{
-	public:
-		Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid);
-		Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid, double steppness);
+class Sigmoid : public Term {
+public:
+    Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid);
+    Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid, double steppness);
 
-		shared_ptr<Term> arg;
-		shared_ptr<Term> mid;
-		double steepness;
+    shared_ptr<Term> arg;
+    shared_ptr<Term> mid;
+    double steepness;
 
-		int accept(shared_ptr<ITermVisitor> visitor);
+    int accept(shared_ptr<ITermVisitor> visitor);
 
-		shared_ptr<Term> aggregateConstants();
-		shared_ptr<Term> derivative(shared_ptr<Variable> v);
+    shared_ptr<Term> aggregateConstants();
+    shared_ptr<Term> derivative(shared_ptr<Variable> v);
 
-		string toString();
-	};
+    string toString();
+};
 
 } /* namespace autodiff */
 
