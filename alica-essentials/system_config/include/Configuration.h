@@ -3,25 +3,25 @@
 
 using namespace std;
 
-#include <vector>
-#include <string>
-#include <iostream>
+#include <algorithm>
+#include <cstdarg>
 #include <fstream>
-#include <cstdarg>
-#include <sstream>
+#include <iostream>
 #include <memory>
-#include <string>
-#include <cstdarg>
+#include <sstream>
 #include <stdint.h>
 #include <stdlib.h>
-#include <algorithm>
+#include <string>
+#include <vector>
 //#include "boost/lexical_cast.hpp"
 
 #include "ConfigNode.h"
 
-namespace supplementary {
-class Configuration {
-protected:
+namespace supplementary
+{
+class Configuration
+{
+  protected:
     static const char LIST_ELEMENT_SEPERATOR = ',';
     string filename;
     void collect(ConfigNode* node, vector<string>* params, size_t offset, vector<ConfigNode*>* result);
@@ -34,27 +34,27 @@ protected:
     void serialize_without_root(ostringstream* ss, ConfigNode* node);
 
     template <typename Target>
-    Target convert(string value) {
+    Target convert(string value)
+    {
         string errMsg = "Configuration: Type not handled! Value to be converted was: " + value;
         cerr << errMsg << endl;
         throw new runtime_error(errMsg);
     }
 
     template <typename Target>
-    vector<Target> convertList(string value) {
+    vector<Target> convertList(string value)
+    {
         string errMsg = "Configuration: List Type not handled! Value to be converted was: " + value;
         cerr << errMsg << endl;
         throw new runtime_error(errMsg);
     }
 
-public:
+  public:
     Configuration();
     Configuration(string filename);
     Configuration(string filename, const string content);
 
-    inline void load(string filename) {
-        load(filename, shared_ptr<ifstream>(new ifstream(filename.c_str(), ifstream::in)), false, false);
-    }
+    inline void load(string filename) { load(filename, shared_ptr<ifstream>(new ifstream(filename.c_str(), ifstream::in)), false, false); }
 
     void load(string filename, shared_ptr<istream> content, bool create, bool replace);
 
@@ -73,7 +73,8 @@ public:
     shared_ptr<vector<string>> tryGetNames(string d, const char* path, ...);
 
     template <typename T>
-    T get(const char* path, ...) {
+    T get(const char* path, ...)
+    {
         va_list ap;
         va_start(ap, path);
         shared_ptr<vector<string>> params = getParams('.', path, ap);
@@ -92,7 +93,8 @@ public:
     }
 
     template <typename T>
-    vector<T> getList(const char* path, ...) {
+    vector<T> getList(const char* path, ...)
+    {
         va_list ap;
         va_start(ap, path);
         shared_ptr<vector<string>> params = getParams('.', path, ap);
@@ -111,8 +113,8 @@ public:
     }
 
     template <typename T>
-    shared_ptr<vector<T>> getAll(const char* path, ...) {
-        ;
+    shared_ptr<vector<T>> getAll(const char* path, ...)
+    {
         va_list ap;
         va_start(ap, path);
         shared_ptr<vector<string>> params = getParams('.', path, ap);
@@ -137,7 +139,8 @@ public:
     }
 
     template <typename T>
-    T tryGet(T d, const char* path, ...) {
+    T tryGet(T d, const char* path, ...)
+    {
         va_list ap;
         va_start(ap, path);
         shared_ptr<vector<string>> params = getParams('.', path, ap);
@@ -155,7 +158,8 @@ public:
     }
 
     template <typename T>
-    shared_ptr<vector<T>> tryGetAll(T d, const char* path, ...) {
+    shared_ptr<vector<T>> tryGetAll(T d, const char* path, ...)
+    {
         va_list ap;
         va_start(ap, path);
         shared_ptr<vector<string>> params = getParams('.', path, ap);
@@ -168,6 +172,7 @@ public:
         shared_ptr<vector<T>> result(new vector<T>());
 
         if (nodes.size() == 0) {
+
             result->push_back(d);
 
             return result;
@@ -181,7 +186,8 @@ public:
     }
 
     template <typename T>
-    void set(T value, const char* path, ...) {
+    void set(T value, const char* path, ...)
+    {
         va_list ap;
         va_start(ap, path);
         shared_ptr<vector<string>> params = getParams('.', path, ap);
@@ -202,7 +208,8 @@ public:
      * This method creates the configuration parameter if it not already exists
      */
     template <typename T>
-    void setCreateIfNotExistent(T value, const char* path, ...) {
+    void setCreateIfNotExistent(T value, const char* path, ...)
+    {
         va_list ap;
         va_start(ap, path);
         shared_ptr<vector<string>> params = getParams('.', path, ap);
@@ -262,67 +269,80 @@ public:
 };
 
 template <>
-inline short Configuration::convert<short>(string value) {
+inline short Configuration::convert<short>(string value)
+{
     return stoi(value);
 }
 
 template <>
-inline unsigned short Configuration::convert<unsigned short>(string value) {
+inline unsigned short Configuration::convert<unsigned short>(string value)
+{
     return stoul(value);
 }
 
 template <>
-inline int Configuration::convert<int>(string value) {
+inline int Configuration::convert<int>(string value)
+{
     return stoi(value);
 }
 
 template <>
-inline unsigned int Configuration::convert<unsigned int>(string value) {
+inline unsigned int Configuration::convert<unsigned int>(string value)
+{
     return stoul(value);
 }
 
 template <>
-inline long Configuration::convert<long>(string value) {
+inline long Configuration::convert<long>(string value)
+{
     return stol(value);
 }
 
 template <>
-inline long double Configuration::convert<long double>(string value) {
+inline long double Configuration::convert<long double>(string value)
+{
     return stold(value);
 }
 
 template <>
-inline long long Configuration::convert<long long>(string value) {
+inline long long Configuration::convert<long long>(string value)
+{
     return stoll(value);
 }
 
 template <>
-inline unsigned long Configuration::convert<unsigned long>(string value) {
+inline unsigned long Configuration::convert<unsigned long>(string value)
+{
     return stoul(value);
 }
 
 template <>
-inline unsigned long long Configuration::convert<unsigned long long>(string value) {
+inline unsigned long long Configuration::convert<unsigned long long>(string value)
+{
     return stoull(value);
 }
 
 template <>
-inline float Configuration::convert<float>(string value) {
+inline float Configuration::convert<float>(string value)
+{
     return stof(value);
 }
 
 template <>
-inline double Configuration::convert<double>(string value) {
+inline double Configuration::convert<double>(string value)
+{
     return stod(value);
 }
 
 template <>
-inline string Configuration::convert<string>(string value) {
+inline string Configuration::convert<string>(string value)
+{
     return value;
 }
 
 template <>
-inline bool Configuration::convert<bool>(string value) {
+inline bool Configuration::convert<bool>(string value)
+{
     if ("false" == value || value == "False" || value == "0" || value == "FALSE") {
         return false;
     } else if ("true" == value || value == "True" || value == "1" || value == "TRUE") {
@@ -334,7 +354,8 @@ inline bool Configuration::convert<bool>(string value) {
 }
 
 template <>
-inline vector<int> Configuration::convertList<int>(string value) {
+inline vector<int> Configuration::convertList<int>(string value)
+{
     std::istringstream ss(value);
     std::string listItem;
     vector<int> itemVector;
@@ -345,7 +366,8 @@ inline vector<int> Configuration::convertList<int>(string value) {
 }
 
 template <>
-inline vector<string> Configuration::convertList<string>(string value) {
+inline vector<string> Configuration::convertList<string>(string value)
+{
     std::istringstream ss(value);
     std::string listItem;
     vector<string> itemVector;
@@ -354,5 +376,5 @@ inline vector<string> Configuration::convertList<string>(string value) {
     }
     return itemVector;
 }
-}  // namespace supplementary
+}
 #endif /* CONFIGURATION_H_ */

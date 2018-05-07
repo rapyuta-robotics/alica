@@ -1,21 +1,23 @@
-using namespace std;
-
 #include "SystemConfig.h"
 
-namespace supplementary {
+#include "Configuration.h"
+
+namespace supplementary
+{
 // Initialize static variables
-string SystemConfig::rootPath;
-string SystemConfig::logPath;
-string SystemConfig::configPath;
-string SystemConfig::hostname;
-mutex SystemConfig::configsMapMutex;
-map<string, shared_ptr<Configuration>> SystemConfig::configs;
+std::string SystemConfig::rootPath;
+std::string SystemConfig::logPath;
+std::string SystemConfig::configPath;
+std::string SystemConfig::hostname;
+std::mutex SystemConfig::configsMapMutex;
+std::map<std::string, std::shared_ptr<Configuration>> SystemConfig::configs;
 
 /**
  * The method for getting the singleton instance.
  * @return A pointer to the SystemConfig object, you must not delete.
  */
-SystemConfig* SystemConfig::getInstance() {
+SystemConfig* SystemConfig::getInstance()
+{
     static SystemConfig instance;
     return &instance;
 }
@@ -23,7 +25,8 @@ SystemConfig* SystemConfig::getInstance() {
 /**
  * The private constructor of the SystemConfig singleton.
  */
-SystemConfig::SystemConfig() {
+SystemConfig::SystemConfig()
+{
     // set the domain folder (1. by env-variable 2. by cwd)
     char* x = ::getenv(DOMAIN_FOLDER.c_str());
     if (x == NULL) {
@@ -80,7 +83,8 @@ void SystemConfig::shutdown() {}
  * @param s The string which determines the used configuration.
  * @return The demanded configuration.
  */
-Configuration* SystemConfig::operator[](const string s) {
+Configuration* SystemConfig::operator[](const string s)
+{
     {
         lock_guard<mutex> lock(configsMapMutex);
 
@@ -130,7 +134,8 @@ Configuration* SystemConfig::operator[](const string s) {
  * @return The own robot's ID
  * <deprecated>
  */
-int SystemConfig::getOwnRobotID() {
+int SystemConfig::getOwnRobotID()
+{
     return SystemConfig::getRobotID(SystemConfig::getHostname());
 }
 
@@ -139,46 +144,55 @@ int SystemConfig::getOwnRobotID() {
  * @return The robot's ID
  * <deprecated>
  */
-int SystemConfig::getRobotID(const string& name) {
+int SystemConfig::getRobotID(const string& name)
+{
     // TODO this should be optional for dynamic teams (is it ok to return ints?)
     Configuration* tmp = (*SystemConfig::getInstance())["Globals"];
     int ownRobotID = tmp->get<int>("Globals", "Team", name.c_str(), "ID", NULL);
     return ownRobotID;
 }
 
-string SystemConfig::getRootPath() {
+string SystemConfig::getRootPath()
+{
     return rootPath;
 }
 
-string SystemConfig::getConfigPath() {
+string SystemConfig::getConfigPath()
+{
     return configPath;
 }
 
-string SystemConfig::getLogPath() {
+string SystemConfig::getLogPath()
+{
     return logPath;
 }
 
-string SystemConfig::getHostname() {
+string SystemConfig::getHostname()
+{
     return hostname;
 }
 
-void SystemConfig::setHostname(string newHostname) {
+void SystemConfig::setHostname(string newHostname)
+{
     hostname = newHostname;
     configs.clear();
     cout << "SC: Update Hostname:       \"" << hostname << "\"" << endl;
 }
 
-void SystemConfig::setRootPath(string rootPath) {
+void SystemConfig::setRootPath(string rootPath)
+{
     this->rootPath = rootPath;
     cout << "SC: Update Root:           \"" << rootPath << "\"" << endl;
 }
 
-void SystemConfig::setConfigPath(string configPath) {
+void SystemConfig::setConfigPath(string configPath)
+{
     this->configPath = configPath;
     cout << "SC: Update ConfigRoot:     \"" << configPath << "\"" << endl;
 }
 
-void SystemConfig::resetHostname() {
+void SystemConfig::resetHostname()
+{
     char* envname = ::getenv("ROBOT");
     if ((envname == NULL) || ((*envname) == 0x0)) {
         char hn[1024];
@@ -191,11 +205,13 @@ void SystemConfig::resetHostname() {
     configs.clear();
 }
 
-string SystemConfig::robotNodeName(const string& nodeName) {
+string SystemConfig::robotNodeName(const string& nodeName)
+{
     return SystemConfig::getHostname() + NODE_NAME_SEPERATOR + nodeName;
 }
 
-string SystemConfig::getEnv(const string& var) {
+string SystemConfig::getEnv(const string& var)
+{
     const char* val = ::getenv(var.c_str());
     if (val == 0) {
         cerr << "SC: Environment Variable " << var << " is null" << endl;
@@ -205,4 +221,4 @@ string SystemConfig::getEnv(const string& var) {
         return val;
     }
 }
-}  // namespace supplementary
+}

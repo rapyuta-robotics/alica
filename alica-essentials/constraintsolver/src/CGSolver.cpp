@@ -9,29 +9,33 @@
 
 #include <iostream>
 
-namespace alica {
-namespace reasoner {
-using alica::VariableSet;
+namespace alica
+{
+namespace reasoner
+{
+using alica::VariableGrp;
 
 CGSolver::CGSolver(AlicaEngine* ae)
-        : ISolver(ae)
-        , _lastUtil(0.0)
-        , _lastFEvals(0.0)
-        , _lastRuns(0.0) {
+    : ISolver(ae)
+    , _lastUtil(0.0)
+    , _lastFEvals(0.0)
+    , _lastRuns(0.0)
+{
     Term::setAnd(AndType::AND);
     Term::setOr(OrType::MAX);
 }
 
 CGSolver::~CGSolver() {}
 
-bool CGSolver::existsSolutionImpl(const VariableSet& vars, const std::vector<shared_ptr<ProblemDescriptor>>& calls) {
+bool CGSolver::existsSolutionImpl(const VariableGrp& vars, const std::vector<shared_ptr<ProblemDescriptor>>& calls)
+{
     std::shared_ptr<Term> constraint = ConstraintBuilder::TRUE;
     const int dim = vars.size();
 
     auto cVars = make_shared<vector<shared_ptr<autodiff::Variable>>>(dim);
-    std::vector<double> ranges(dim * 2, std::numeric_limits<double>::max());
+    std::vector<double> ranges(dim * 2, std::numeric_limits<double>::max() / 2);
     for (int i = 0; i < dim; ++i) {
-        ranges[2 * i] = std::numeric_limits<double>::lowest();
+        ranges[2 * i] = std::numeric_limits<double>::lowest() / 2;
         cVars->at(i) = dynamic_pointer_cast<autodiff::Variable>(vars.at(i)->getSolverVar());
     }
 
@@ -43,16 +47,16 @@ bool CGSolver::existsSolutionImpl(const VariableSet& vars, const std::vector<sha
             return false;
         }
         constraint = constraint & dynamic_pointer_cast<autodiff::Term>(c->getConstraint());
-        shared_ptr<vector<vector<double>>> allRanges = c->allRanges();
-        for (int i = 0; i < c->getAllVars()->size(); ++i) {
+        const std::vector<std::pair<double, double>>& allRanges = c->getAllRanges();
+        for (int i = 0; i < c->getAllVariables().size(); ++i) {
             for (int j = 0; j < dim; ++j) {
-                if (dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(j)).get() == nullptr) {
+                if (dynamic_pointer_cast<autodiff::Term>(c->getAllVariables()[j]).get() == nullptr) {
                     cerr << "CGSolver: Variabletype not compatible with selected solver" << endl;
                     return false;
                 }
-                if (cVars->at(j) == dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(j))) {
-                    ranges[j * 2] = std::max(ranges[2 * j], allRanges->at(i).at(0));
-                    ranges[j * 2 + 1] = std::min(ranges[2 * j + 1], allRanges->at(i).at(1));
+                if (cVars->at(j) == dynamic_pointer_cast<autodiff::Term>(c->getAllVariables()[j])) {
+                    ranges[j * 2] = std::max(ranges[2 * j], allRanges[i].first);
+                    ranges[j * 2 + 1] = std::min(ranges[2 * j + 1], allRanges[i].second);
                     if (ranges[j * 2] > ranges[j * 2 + 1]) {
                         return false;
                     }
@@ -72,26 +76,24 @@ bool CGSolver::existsSolutionImpl(const VariableSet& vars, const std::vector<sha
         // Fill a single seed with information from the combined seed vector by resolving the variants to doubles or
         // NaNs.
         std::transform(serial_seeds.begin() + i, serial_seeds.begin() + i + dim, std::back_inserter(*singleseed),
-                [](Variant v) -> double {
-                    return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN();
-                });
+                       [](Variant v) -> double { return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN(); });
         seeds->push_back(std::move(singleseed));
     }
 
     return _sgs.solveSimple(constraint, cVars, ranges, seeds);
 }
 
-bool CGSolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
-        std::vector<double>& results) {
+bool CGSolver::getSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<double>& results)
+{
     shared_ptr<Term> constraint = ConstraintBuilder::TRUE;
     shared_ptr<Term> utility = TermBuilder::constant(1);
     int dim = vars.size();
 
     // create lists of constraint variables and corresponding ranges
     auto constraintVariables = make_shared<vector<shared_ptr<autodiff::Variable>>>(dim);
-    std::vector<double> ranges(dim * 2, std::numeric_limits<double>::max());
+    std::vector<double> ranges(dim * 2, std::numeric_limits<double>::max() / 2);
     for (int i = 0; i < dim; ++i) {
-        ranges[2 * i] = std::numeric_limits<double>::lowest();
+        ranges[2 * i] = std::numeric_limits<double>::lowest() / 2;
         constraintVariables->at(i) = dynamic_pointer_cast<autodiff::Variable>(vars.at(i)->getSolverVar());
     }
 
@@ -99,7 +101,7 @@ bool CGSolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::s
     double usigVal = calls[0]->getUtilitySignificanceThreshold();
     for (int i = 0; i < calls.size(); ++i) {
         // TODO: fixed Values
-        if (calls.at(i)->getSetsUtilitySignificanceThreshold()) {
+        if (calls.at(i)->isSettingUtilitySignificanceThreshold()) {
             usigVal = calls[i]->getUtilitySignificanceThreshold();
         }
     }
@@ -126,9 +128,9 @@ bool CGSolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::s
         sufficientUtility += c->getUtilitySufficiencyThreshold();
 
         // limit ranges according to the ranges of the given calls
-        auto allRanges = c->allRanges();
-        for (int i = 0; i < c->getAllVars()->size(); ++i) {
-            std::shared_ptr<autodiff::Term> variableTerm = dynamic_pointer_cast<autodiff::Term>(c->getAllVars()->at(i));
+        const std::vector<std::pair<double, double>>& allRanges = c->getAllRanges();
+        for (int i = 0; i < c->getAllVariables().size(); ++i) {
+            std::shared_ptr<autodiff::Term> variableTerm = dynamic_pointer_cast<autodiff::Term>(c->getAllVariables()[i]);
             if (variableTerm.get() == nullptr) {
                 std::cerr << "CGSolver: Variable is not of Type autodiff::Term!" << std::endl;
                 return false;
@@ -136,8 +138,8 @@ bool CGSolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::s
 
             for (int j = 0; j < constraintVariables->size(); ++j) {
                 if (constraintVariables->at(j) == variableTerm) {
-                    ranges[j * 2] = std::max(ranges[2 * j], allRanges->at(i).at(0));
-                    ranges[j * 2 + 1] = std::min(ranges[2 * j + 1], allRanges->at(i).at(1));
+                    ranges[j * 2] = std::max(ranges[2 * j], allRanges[i].first);
+                    ranges[j * 2 + 1] = std::min(ranges[2 * j + 1], allRanges[i].second);
                     if (ranges[j * 2] > ranges[j * 2 + 1]) {
                         std::cerr << "CGSolver: Ranges do not allow a solution!" << std::endl;
                         return false;
@@ -158,9 +160,7 @@ bool CGSolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::s
         shared_ptr<vector<double>> singleseed = make_shared<vector<double>>();
         singleseed->reserve(dim);
         std::transform(serial_seeds.begin() + i, serial_seeds.begin() + i + dim, std::back_inserter(*singleseed),
-                [](Variant v) -> double {
-                    return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN();
-                });
+                       [](Variant v) -> double { return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN(); });
         seeds->push_back(std::move(singleseed));
     }
 
@@ -176,7 +176,7 @@ bool CGSolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::s
 
     shared_ptr<vector<double>> gresults;
     double util = 0;
-    {  // for lock_guard
+    { // for lock_guard
         lock_guard<std::mutex> lock(_mtx);
         _gs.setUtilitySignificanceThreshold(usigVal);
         gresults = _gs.solve(all, constraintVariables, ranges, seeds, sufficientUtility, &util);
@@ -199,9 +199,10 @@ bool CGSolver::getSolutionImpl(const VariableSet& vars, const std::vector<std::s
     return util > 0.75;
 }
 
-shared_ptr<SolverVariable> CGSolver::createVariable(int64_t id) {
+shared_ptr<SolverVariable> CGSolver::createVariable(int64_t id)
+{
     return make_shared<autodiff::Variable>();
 }
 
-}  // namespace reasoner
-}  // namespace alica
+} // namespace reasoner
+} // namespace alica
