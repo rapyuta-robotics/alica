@@ -5,141 +5,119 @@
  *      Author: Stefan Jakob
  */
 
-#include <engine/allocationauthority/AllocationDifference.h>
-#include "engine/model/EntryPoint.h"
 #include "engine/allocationauthority/EntryPointRobotPair.h"
+#include "engine/model/EntryPoint.h"
+#include <engine/allocationauthority/AllocationDifference.h>
 
-namespace alica
-{
+namespace alica {
 
-	AllocationDifference::AllocationDifference()
-	{
-		this->reason = Reason::empty;
-	}
+AllocationDifference::AllocationDifference()
+        : _reason(Reason::empty) {}
 
-	AllocationDifference::~AllocationDifference()
-	{
-		// both are now shared pointers
-//		for(auto i : this->additions)
-//		{
-//			delete i;
-//		}
-//		for(auto i : this->subtractions)
-//		{
-//			delete i;
-//		}
-	}
+AllocationDifference::~AllocationDifference() {}
 
-	AllocationDifference::Reason AllocationDifference::getReason()
-	{
-		return reason;
-	}
+AllocationDifference::Reason AllocationDifference::getReason() const {
+    return _reason;
+}
 
-	void AllocationDifference::setReason(AllocationDifference::Reason reason)
-	{
-		this->reason = reason;
-	}
+void AllocationDifference::setReason(AllocationDifference::Reason reason) {
+    _reason = reason;
+}
 
-	/**
-	 * Returns whether the difference is empty, i.e., the corresponding allocations are the same
-	 * @return A bool
-	 */
-	bool AllocationDifference::isEmpty()
-	{
-		return this->additions.size() == 0 && this->subtractions.size() == 0;
-	}
+bool AllocationDifference::isEmpty() const {
+    return _additions.empty() && _subtractions.empty();
+}
 
-	/**
-	 * Reset this difference to the empty difference
-	 */
-	void AllocationDifference::reset()
-	{
-		// both are now shared pointers
-//		for(auto i : this->additions)
-//		{
-//			delete i;
-//		}
-//		for(auto i : this->subtractions)
-//		{
-//			delete i;
-//		}
-		this->additions.clear();
-		this->subtractions.clear();
-		this->reason = Reason::empty;
-	}
+void AllocationDifference::reset() {
+    _additions.clear();
+    _subtractions.clear();
+    _reason = Reason::empty;
+}
 
-	/**
-	 * Apply another difference to this one resulting in the composition of both
-	 * @param other A AllocationDifference*
-	 */
-	void AllocationDifference::applyDifference(AllocationDifference* other)
-	{
-		for (int i = 0; i < other->additions.size(); i++)
-		{
-			auto iter = other->additions.begin();
-			advance(iter, i);
-			vector<shared_ptr<EntryPointRobotPair>>::iterator subIter = search(this->subtractions.begin(), this->subtractions.end(),iter , iter+1, EntryPointRobotPair::equals);
-			if (subIter != this->subtractions.end())
-			{
-				this->subtractions.erase(subIter);
-			}
-			else if (search(this->additions.begin(), this->additions.end(),iter, iter+1, EntryPointRobotPair::equals) == this->additions.end())
-			{
-				this->additions.push_back(other->additions[i]);
-			}
-		}
-		for (int i = 0; i < other->subtractions.size(); i++)
-		{
-			auto iter = other->subtractions.begin();
-			advance(iter, i);
-			vector<shared_ptr<EntryPointRobotPair>>::iterator addIter = search(this->additions.begin(), this->additions.end(),iter, iter+1, EntryPointRobotPair::equals);
-			if (addIter != this->additions.end())
-			{
-				this->additions.erase(addIter);
-			}
-			else if (search(this->subtractions.begin(), this->subtractions.end(),iter,iter+1, EntryPointRobotPair::equals) == this->subtractions.end())
-			{
-				this->subtractions.push_back(other->subtractions[i]);
-			}
-		}
-	}
+void AllocationDifference::applyDifference(const AllocationDifference& other) {
+    for (const EntryPointRobotPair& otherAdds : other._additions) {
+        bool found = false;
+        for (int j = 0; j < _subtractions.size(); j++) {
+            if (otherAdds == _subtractions[j]) {
+                _subtractions.erase(_subtractions.begin() + j);
+                found = true;
+                break;
+            }
+        }
 
-	string AllocationDifference::toString()
-	{
-		stringstream ss;
-		ss << "Additions: ";
-		for (int i = 0; i < this->additions.size(); i++)
-		{
-			ss << "+ " << this->additions[i]->getRobot() << " (" << this->additions[i]->getEntryPoint()->getId() << ")";
-		}
-		ss << endl << "Substractions: ";
-		for (int i = 0; i < this->subtractions.size(); i++)
-		{
-			ss << "- " << this->subtractions[i]->getRobot() << " ("
-					<< this->subtractions[i]->getEntryPoint()->getId() << ")";
-		}
-		ss << endl << "Reason [0=msg, 1=util, 2=empty]:" << this->reason;
-		return ss.str();
-	}
+        if (!found) {
+            for (int j = 0; j < _additions.size(); j++) {
+                if (otherAdds == _additions[j]) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                _additions.push_back(otherAdds);
+            }
+        }
+    }
 
-	vector<shared_ptr<EntryPointRobotPair>>& AllocationDifference::getAdditions()
-	{
-		return additions;
-	}
+    for (const EntryPointRobotPair& otherDels : other._subtractions) {
+        bool found = false;
+        for (int j = 0; j < _additions.size(); j++) {
+            if (otherDels == _additions[j]) {
+                _additions.erase(_additions.begin() + j);
+                found = true;
+                break;
+            }
+        }
 
-	void AllocationDifference::setAdditions(vector<shared_ptr<EntryPointRobotPair>> additions)
-	{
-		this->additions = additions;
-	}
+        if (!found) {
+            for (int j = 0; j < _subtractions.size(); j++) {
+                if (otherDels == _subtractions[j]) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                _subtractions.push_back(otherDels);
+            }
+        }
+    }
+}
 
-	vector<shared_ptr<EntryPointRobotPair>>& AllocationDifference::getSubtractions()
-	{
-		return subtractions;
-	}
+std::string AllocationDifference::toString() const {
+    std::stringstream ss;
+    ss << "Additions: ";
+    for (const EntryPointRobotPair& erp : _additions) {
+        ss << "+ " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
+    }
+    ss << std::endl << "Substractions: ";
+    for (const EntryPointRobotPair& erp : _subtractions) {
+        ss << "- " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
+    }
+    ss << std::endl << "Reason [0=msg, 1=util, 2=empty]:" << _reason;
+    return ss.str();
+}
 
-	void AllocationDifference::setSubtractions(vector<shared_ptr<EntryPointRobotPair>> subtractions)
-	{
-		this->subtractions = subtractions;
-	}
+const std::vector<EntryPointRobotPair>& AllocationDifference::getAdditions() const {
+    return _additions;
+}
+
+std::vector<EntryPointRobotPair>& AllocationDifference::editAdditions() {
+    return _additions;
+}
+
+void AllocationDifference::setAdditions(const std::vector<EntryPointRobotPair>& additions) {
+    _additions = additions;
+}
+
+const std::vector<EntryPointRobotPair>& AllocationDifference::getSubtractions() const {
+    return _subtractions;
+}
+
+std::vector<EntryPointRobotPair>& AllocationDifference::editSubtractions() {
+    return _subtractions;
+}
+
+void AllocationDifference::setSubtractions(const std::vector<EntryPointRobotPair>& subtractions) {
+    _subtractions = subtractions;
+}
 
 } /* namespace alica */

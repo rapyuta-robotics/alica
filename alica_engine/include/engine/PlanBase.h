@@ -1,14 +1,4 @@
-/*
- * PlanBase.h
- *
- *  Created on: Jun 17, 2014
- *      Author: Paul Panin
- */
-
-#ifndef PLANBASE_H_
-#define PLANBASE_H_
-//#define PB_DEBUG
-
+#pragma once
 
 #include <engine/containers/AlicaEngineInfo.h>
 #include <queue>
@@ -22,92 +12,92 @@
 #include <typeinfo>
 #include "engine/IAlicaClock.h"
 #include "engine/RunningPlan.h"
+#include "engine/RuleBook.h"
 
-using namespace std;
-namespace alica
-{
-	class Plan;
-	class RuleBook;
-	class AlicaEngine;
-	class ITeamObserver;
-	class IRoleAssignment;
-	class Logger;
-	class AuthorityManager;
-	class ISyncModul;
-	class IAlicaCommunication;
-	class Task;
-	class State;
-	class EntryPoint;
-	class IAlicaClock;
-	class Assignment;
-	class StateCollection;
-	class AlicaEngine;
+namespace alica {
+class Plan;
 
-	/**
-	 * A PlanBase holds the internal representation of the plan graph and issues all operations on it.
-	 * It is the most central object within the ALICA Engine.
-	 */
-	class PlanBase
-	{
-	public:
-		PlanBase(AlicaEngine* ae, Plan* masterplan);
-		~PlanBase();
-		condition_variable* getStepModeCV();
-		const shared_ptr<RunningPlan> getRootNode() const;
-		void setRootNode(shared_ptr<RunningPlan> rootNode);
-		void setRuleBook(RuleBook* ruleBook);
-		const ulong getloopInterval() const;
-		void setLoopInterval(ulong loopInterval);
-		void stop();
-		void start();
-		void addFastPathEvent(shared_ptr<RunningPlan> p);
-		shared_ptr<RunningPlan> getDeepestNode();
-		shared_ptr<RunningPlan> getRootNode();
-		Plan* getMasterPlan();
+class AlicaEngine;
+class TeamObserver;
+class IRoleAssignment;
+class Logger;
+class AuthorityManager;
+class SyncModule;
+class IAlicaCommunication;
+class Task;
+class State;
+class EntryPoint;
+class IAlicaClock;
+class Assignment;
+class StateCollection;
+class AlicaEngine;
 
-	private:
-		/**
-		 * List of RunningPlans scheduled for out-of-loop evaluation.
-		 */
-		queue<shared_ptr<RunningPlan>> fpEvents;
-		condition_variable* stepModeCV;
-		void checkPlanBase(shared_ptr<RunningPlan> r);
+/**
+ * A PlanBase holds the internal representation of the plan graph and issues all operations on it.
+ * It is the most central object within the ALICA Engine.
+ */
+class PlanBase {
+public:
+    PlanBase(AlicaEngine* ae, Plan* masterplan);
+    ~PlanBase();
+    std::condition_variable* getStepModeCV();
+    const std::shared_ptr<RunningPlan> getRootNode() const;
+    void setRootNode(std::shared_ptr<RunningPlan> rootNode);
+    const AlicaTime getloopInterval() const;
+    void setLoopInterval(ulong loopInterval);
+    void stop();
+    void start();
+    void addFastPathEvent(shared_ptr<RunningPlan> p);
+    std::shared_ptr<const RunningPlan> getDeepestNode() const;
+    std::shared_ptr<RunningPlan> getRootNode();
 
-	protected:
-		Plan* masterPlan;
-		shared_ptr<RunningPlan> rootNode;
-		shared_ptr<RunningPlan> deepestNode;
-		AlicaEngine* ae;
-		int treeDepth;
-		RuleBook* ruleBook;
-		ITeamObserver* teamObserver;
-		IRoleAssignment* ra;
-		ISyncModul* syncModel;
-		AuthorityManager* authModul;
-		IAlicaCommunication* statusPublisher;
-		IAlicaClock* alicaClock;
+    /*const*/ Plan* getMasterPlan() const { return _masterPlan; }
+    bool isWaiting() const { return _isWaiting; }
 
-		AlicaTime loopTime;
-		AlicaTime lastSendTime;
-		AlicaTime minSendInterval;
-		AlicaTime maxSendInterval;
-		AlicaTime loopInterval;
-		AlicaTime lastSentStatusTime;
-		AlicaTime sendStatusInterval;
+private:
+    void run();
 
-		bool running;
-		bool sendStatusMessages;
+    /**
+     * List of RunningPlans scheduled for out-of-loop evaluation.
+     */
 
-		thread* mainThread;
-		Logger* log;
+    AlicaEngine* _ae;
+    Plan* _masterPlan;
 
-		AlicaEngineInfo* statusMessage;
-		mutex lomutex;
-		mutex stepMutex;
-		void run();
+    TeamObserver* _teamObserver;
+    IRoleAssignment* _ra;
+    SyncModule* _syncModel;
+    AuthorityManager* _authModul;
+    IAlicaCommunication* _statusPublisher;
+    IAlicaClock* _alicaClock;
 
+    shared_ptr<RunningPlan> _rootNode;
+    shared_ptr<const RunningPlan> _deepestNode;
 
-	};
+    thread* _mainThread;
+    Logger* _log;
+    AlicaEngineInfo* _statusMessage;
 
-} /* namespace Alica */
-#endif /* PLANBASE_H_ */
+    AlicaTime _loopTime;
+    AlicaTime _lastSendTime;
+    AlicaTime _minSendInterval;
+    AlicaTime _maxSendInterval;
+    AlicaTime _loopInterval;
+    AlicaTime _lastSentStatusTime;
+    AlicaTime _sendStatusInterval;
+
+    std::mutex _lomutex;
+    std::mutex _stepMutex;
+
+    queue<shared_ptr<RunningPlan>> _fpEvents;
+    std::condition_variable _fpEventWait;
+    std::condition_variable _stepModeCV;
+    RuleBook _ruleBook;
+
+    int _treeDepth;
+    bool _running;
+    bool _sendStatusMessages;
+    bool _isWaiting;
+};
+
+}  // namespace alica

@@ -1,56 +1,41 @@
-/*
- * SyncData.h
- *
- *  Created on: Aug 27, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef SYNCDATA_H_
-#define SYNCDATA_H_
-
+#pragma once
 #include <tuple>
 
-using namespace std;
+namespace supplementary {
+class AgentID;
+}
 
-namespace alica
-{
-	typedef tuple<long, long, bool, bool> stdSyncData;
+namespace alica {
+typedef std::tuple<const supplementary::AgentID*, long, bool, bool> stdSyncData;
 
-	struct SyncData
-	{
-		SyncData()
-		{
-		}
+struct SyncData {
+    SyncData()
+            : robotID(nullptr)
+            , ack(false)
+            , conditionHolds(false)
+            , transitionID(0) {}
 
-		long robotID;
-		long transitionID;
-		bool conditionHolds;
-		bool ack;
+    const supplementary::AgentID* robotID;
+    long transitionID;
+    bool conditionHolds;
+    bool ack;
 
-		SyncData(stdSyncData &s)
-		{
-			this->robotID = get<0>(s);
-			this->transitionID = get<1>(s);
-			this->conditionHolds = get<2>(s);
-			this->ack = get<3>(s);
-		}
+    SyncData(stdSyncData& s) {
+        this->robotID = std::get<0>(s);
+        this->transitionID = std::get<1>(s);
+        this->conditionHolds = std::get<2>(s);
+        this->ack = std::get<3>(s);
+    }
 
-		stdSyncData toStandard()
-		{
-			return move(make_tuple(robotID, transitionID, conditionHolds, ack));
-		}
+    stdSyncData toStandard() { return std::move(std::make_tuple(robotID, transitionID, conditionHolds, ack)); }
 
-		void toString()
-		{
-			cout << "SyncData--> ";
-			cout << "RobotId: " << this->robotID;
-			cout << " TransitionID: " << this->transitionID;
-			cout << " ConditionHolds: " << this->conditionHolds;
-			cout << " Acknowledge: " << this->ack << endl;
-		}
-
-	};
+    void toString() {
+        std::cout << "SyncData--> ";
+        std::cout << " RobotId: " << this->robotID;
+        std::cout << " TransitionID: " << this->transitionID;
+        std::cout << " ConditionHolds: " << this->conditionHolds;
+        std::cout << " Acknowledge: " << this->ack << std::endl;
+    }
+};
 
 } /* namespace alica */
-
-#endif /* SYNCDATA_H_ */

@@ -1,59 +1,51 @@
-/*
- * AllocationAuthorityInfo.h
- *
- *  Created on: Jul 7, 2014
- *      Author: Paul Panin
- */
+#pragma once
 
-#ifndef ALLOCATIONAUTHORITYINFO_H_
-#define ALLOCATIONAUTHORITYINFO_H_
-
-#include <vector>
-#include <tuple>
 #include "EntryPointRobots.h"
+#include "supplementary/AgentID.h"
 
-using namespace std;
+#include <tuple>
+#include <vector>
 
-namespace alica
-{
-	typedef tuple<int, long, long, long, int, vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
-	struct AllocationAuthorityInfo
-	{
-		AllocationAuthorityInfo()
-		{
-		}
+namespace alica {
+using std::tuple;
+using std::vector;
 
-		int senderID;
-		long planId;
-		long parentState;
-		long planType;
-		int authority;
-		vector<EntryPointRobots> entryPointRobots;
+typedef tuple<const supplementary::AgentID*, long, long, long, const supplementary::AgentID*,
+        vector<stdEntryPointRobot>>
+        stdAllocationAuthorityInfo;
+struct AllocationAuthorityInfo {
+    AllocationAuthorityInfo()
+            : senderID(nullptr)
+            , planId(0)
+            , parentState(0)
+            , planType(0)
+            , authority(nullptr) {}
 
-		AllocationAuthorityInfo(stdAllocationAuthorityInfo &s)
-		{
-			this->senderID = get<0>(s);
-			this->planId = get<1>(s);
-			this->parentState = get<2>(s);
-			this->planType = get<3>(s);
-			this->authority = get<4>(s);
-			vector<stdEntryPointRobot>& tmp = get<5>(s);
-			for (stdEntryPointRobot& e : tmp)
-			{
-				this->entryPointRobots.push_back(EntryPointRobots(e));
-			}
-		}
+    const supplementary::AgentID* senderID;
+    long planId;
+    long parentState;
+    long planType;
+    const supplementary::AgentID* authority;
+    vector<EntryPointRobots> entryPointRobots;
 
-		stdAllocationAuthorityInfo toStandard()
-		{
-			vector<stdEntryPointRobot> r;
-			for (EntryPointRobots& e : entryPointRobots)
-			{
-				r.push_back(move(e.toStandard()));
-			}
-			return move(make_tuple(senderID, planId, parentState, planType, authority, move(r)));
-		}
-	};
-}
+    AllocationAuthorityInfo(stdAllocationAuthorityInfo& s) {
+        this->senderID = get<0>(s);
+        this->planId = get<1>(s);
+        this->parentState = get<2>(s);
+        this->planType = get<3>(s);
+        this->authority = get<4>(s);
+        vector<stdEntryPointRobot>& tmp = get<5>(s);
+        for (stdEntryPointRobot& e : tmp) {
+            this->entryPointRobots.push_back(EntryPointRobots(e));
+        }
+    }
 
-#endif /* ALLOCATIONAUTHORITYINFO_H_ */
+    stdAllocationAuthorityInfo toStandard() {
+        vector<stdEntryPointRobot> r;
+        for (EntryPointRobots& e : entryPointRobots) {
+            r.push_back(move(e.toStandard()));
+        }
+        return move(make_tuple(senderID, planId, parentState, planType, authority, move(r)));
+    }
+};
+} /* namespace alica */

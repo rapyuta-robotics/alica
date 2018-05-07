@@ -1,74 +1,65 @@
-/*
- * TaskAssignment.h
- *
- *  Created on: Jul 4, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef TASKASSIGNMENT_H_
-#define TASKASSIGNMENT_H_
+#pragma once
 
 //#define EXPANSIONEVAL
 //#define TA_DEBUG
 
-
+#include "supplementary/AgentID.h"
 #include "engine/ITaskAssignment.h"
-
-#include <list>
-#include <vector>
-#include <memory>
-#include <map>
-#include <string>
-#include <sstream>
+#include "engine/Types.h"
 #include <algorithm>
+#include <list>
+#include <map>
 #include <memory>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <vector>
 
-using namespace std;
-namespace alica
-{
+namespace alica {
 
-	class IAssignment;
-	class Assignment;
-	class Plan;
-	class EntryPoint;
-	class PartialAssignment;
-	class SimplePlanTree;
-	class ITeamObserver;
-	class PartialAssignmentPool;
+class IAssignment;
+class Assignment;
+class Plan;
+class EntryPoint;
+class PartialAssignment;
+class SimplePlanTree;
+class TeamManager;
+class TeamObserver;
+class PartialAssignmentPool;
 
-	/**
-	 * Represents an instance of an assignment problem for one plan or a plantype.
-	 * All parameters, which are static for this problem, are stored here.
-	 */
-	class TaskAssignment : virtual public ITaskAssignment
-	{
-	public:
-		TaskAssignment(PartialAssignmentPool* pap, ITeamObserver* to, list<Plan*> planList, shared_ptr<vector<int> > paraRobots, bool preasingOtherRobots);
-		virtual ~TaskAssignment();
-		shared_ptr<Assignment> getNextBestAssignment(IAssignment* oldAss);
-		string toString();
+/**
+ * Represents an instance of an assignment problem for one plan or a plantype.
+ * All parameters, which are static for this problem, are stored here.
+ */
+class TaskAssignment final : public ITaskAssignment {
+public:
+    TaskAssignment(
+            const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraRobots, bool preassignOtherRobots);
+    virtual ~TaskAssignment();
+    std::shared_ptr<Assignment> getNextBestAssignment(IAssignment* oldAss);
+    std::string toString();
 #ifdef EXPANSIONEVAL
-		int getExpansionCount();
-		void setExpansionCount(int expansionCount);
+    int getExpansionCount();
+    void setExpansionCount(int expansionCount);
 #endif
-	private:
-		PartialAssignment* calcNextBestPartialAssignment(IAssignment* oldAss);
+private:
+    PartialAssignment* calcNextBestPartialAssignment(IAssignment* oldAss);
 
-	protected:
-		// Plan to build an assignment for
-		ITeamObserver* to;
-		list<Plan*> planList;
-		shared_ptr<vector<int> > robots;
-		vector<EntryPoint*> entryPointVector;
-		// Fringe of the search tree
-		vector<PartialAssignment*> fringe;
-		bool addAlreadyAssignedRobots(PartialAssignment* pa, map<int, shared_ptr<SimplePlanTree> >* simplePlanTreeMap);
+    // Plan to build an assignment for
+    TeamManager* tm;
+    TeamObserver* to;
+    PlanGrp planList;
+    AgentGrp robots;
+    std::vector<EntryPoint*> entryPointVector;
+    // Fringe of the search tree
+    std::vector<PartialAssignment*> fringe;
+    bool addAlreadyAssignedRobots(PartialAssignment* pa,
+            std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>*
+                    simplePlanTreeMap);
 
 #ifdef EXPANSIONEVAL
-		int expansionCount;
+    int expansionCount;
 #endif
-	};
+};
 
 } /* namespace alica */
-
-#endif /* TASKASSIGNMENT_H_ */

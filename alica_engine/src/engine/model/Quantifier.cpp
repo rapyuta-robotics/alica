@@ -10,135 +10,36 @@
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/model/EntryPoint.h"
+#include <assert.h>
+namespace alica {
 
-namespace alica
-{
+Quantifier::Quantifier(int64_t id)
+        : AlicaElement(id)
+        , _scope(nullptr)
+        , _scopeType(planScope) {}
 
-	Quantifier::Quantifier(long id)
-	{
-		this->id = id;
-		this->plan = nullptr;
-		this->entryPoint = nullptr;
-		this->scopeIsEntryPoint = false;
-		this->scopeIsPlan = false;
-		this->scopeIsState = false;
-		this->state = nullptr;
+Quantifier::~Quantifier() {}
 
-	}
-
-	Quantifier::~Quantifier()
-	{
-	}
-
-	bool Quantifier::isScopeIsEntryPoint() const
-	{
-		return scopeIsEntryPoint;
-	}
-
-	void Quantifier::setScopeIsEntryPoint(bool scopeIsEntryPoint)
-	{
-		this->scopeIsEntryPoint = scopeIsEntryPoint;
-	}
-
-	bool Quantifier::isScopeIsPlan() const
-	{
-		return scopeIsPlan;
-	}
-
-	void Quantifier::setScopeIsPlan(bool scopeIsPlan)
-	{
-		this->scopeIsPlan = scopeIsPlan;
-	}
-
-	bool Quantifier::isScopeIsState() const
-	{
-		return scopeIsState;
-	}
-
-	list<string>& Quantifier::getDomainIdentifiers()
-	{
-		return domainIdentifiers;
-	}
-
-	void Quantifier::setDomainIdentifiers(const list<string>& domainIdentifiers)
-	{
-		this->domainIdentifiers = domainIdentifiers;
-	}
-
-	/**
-	 * Returns the scope of this quantifier, returns null, if the scope is not a state.
-	 */
-	State* Quantifier::getScopedState()
-	{
-		return this->state;
-	}
-
-	/**
-	 * Returns the scope of this quantifier, returns null, if the scope is not an EntryPoint.
-	 */
-	EntryPoint* Quantifier::getScopedEntryPoint()
-	{
-		return this->entryPoint;
-	}
-
-	/**
-	 * Returns the scope of this quantifier, returns null, if the scope is not a Plan.
-	 */
-	Plan* Quantifier::getScopedPlan()
-	{
-		return this->plan;
-	}
-
-	/**
-	 * Set the scope of this quantifier, called by the ModelFactory
-	 * @param ae An AlicaElement
-	 */
-	void Quantifier::setScope(AlicaEngine* a, AlicaElement* ae)
-	{
-		scopeIsEntryPoint = (dynamic_cast<EntryPoint*>(ae) !=0);
-		scopeIsPlan = (dynamic_cast<Plan*>(ae) !=0 );
-		scopeIsState = (dynamic_cast<State*>(ae) !=0);
-
-		if (scopeIsPlan)
-		{
-			this->plan = (Plan*)ae;
-		}
-		else if (scopeIsEntryPoint)
-		{
-			this->entryPoint = (EntryPoint*)ae;
-		}
-		else if (scopeIsState)
-		{
-			this->state = (State*)ae;
-		}
-		else
-		{
-			a->abort("Scope of Quantifier is not an entrypoint, plan, or state: ", ae);
-		}
-	}
-
-	AlicaElement* Quantifier::getScope()
-	{
-		if (scopeIsPlan)
-		{
-			return this->plan;
-		}
-		if (scopeIsState)
-		{
-			return this->state;
-		}
-		if (scopeIsEntryPoint)
-		{
-			return this->entryPoint;
-		}
-		return NULL;
-	}
-
-	void Quantifier::setScopeIsState(bool scopeIsState)
-	{
-		this->scopeIsState = scopeIsState;
-	}
-
-} /* namespace Alica */
+/**
+ * Set the scope of this quantifier, called by the ModelFactory
+ * @param ae An AlicaElement
+ */
+void Quantifier::setScope(const AlicaElement* element) {
+    _scope = element;
+    if (dynamic_cast<const EntryPoint*>(element) != nullptr) {
+        _scopeType = entryPointScope;
+    } else if (dynamic_cast<const Plan*>(element) != nullptr) {
+        _scopeType = planScope;
+    } else if (dynamic_cast<const State*>(element) != nullptr) {
+        _scopeType = stateScope;
+    } else {
+        assert(false);
+    }
+}
 
 
+void Quantifier::setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers) {
+    _domainIdentifiers = domainIdentifiers;
+}
+
+}  // namespace alica

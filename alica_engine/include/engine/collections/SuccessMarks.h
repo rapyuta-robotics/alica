@@ -1,13 +1,4 @@
-/*
- * SuccessMarks.h
- *
- *  Created on: Jun 16, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef SUCCESSMARKS_H_
-#define SUCCESSMARKS_H_
-
+#pragma once
 
 #include <map>
 #include <memory>
@@ -15,43 +6,40 @@
 #include <list>
 #include <algorithm>
 
-using namespace std;
-namespace alica
-{
+#include "engine/Types.h"
 
-	class AbstractPlan;
-	class EntryPoint;
-	class AlicaEngine;
+namespace alica {
 
-	/**
-	 * Globally holds information about succeeded entrypoints for a specific robot
-	 */
-	class SuccessMarks
-	{
-	public:
-		SuccessMarks(AlicaEngine* ae);
-		SuccessMarks(AlicaEngine* ae, list<long> epIds);
-		virtual ~SuccessMarks();
+class AbstractPlan;
+class EntryPoint;
+class AlicaEngine;
 
+/**
+ * Globally holds information about succeeded entrypoints for a specific robot
+ */
+class SuccessMarks {
+public:
+    SuccessMarks(const AlicaEngine* ae);
+    SuccessMarks(const AlicaEngine* ae, const std::list<int64_t>& epIds);
+    virtual ~SuccessMarks();
 
-		//TODO uses ICollection in C# so far only unordered_set needed
-		void limitToPlans(unique_ptr<unordered_set<AbstractPlan*> > active);
-		map<AbstractPlan*,shared_ptr<list<EntryPoint*> > >& getSuccessMarks();
-		void setSuccesMarks(map<AbstractPlan*,shared_ptr<list<EntryPoint*> > > succesMarks);
-		void clear();
-		shared_ptr<list<EntryPoint*> >succeededEntryPoints(AbstractPlan* p);
-		void removePlan(AbstractPlan* plan);
-		void markSuccessfull(AbstractPlan* p, EntryPoint* e);
-		bool succeeded(AbstractPlan* p, EntryPoint* e);
-		bool succeeded(long planId, long entryPointId);
-		bool anyTaskSucceeded(AbstractPlan* p);
-		list<long> toList();
+    void limitToPlans(const AbstractPlanGrp& active);
+    const std::map<const AbstractPlan*, std::shared_ptr<std::list<const EntryPoint*>>>& getSuccessMarks() const {
+        return successMarks;
+    }
 
-	protected:
-		map<AbstractPlan*,shared_ptr<list<EntryPoint*> > > succesMarks;
-		AlicaEngine* ae;
-	};
+    void clear();
+    std::shared_ptr<std::list<const EntryPoint*>> succeededEntryPoints(const AbstractPlan* p) const;
+    void removePlan(const AbstractPlan* plan);
+    void markSuccessfull(const AbstractPlan* p, const EntryPoint* e);
+    bool succeeded(const AbstractPlan* p, const EntryPoint* e) const;
+    bool succeeded(int64_t planId, int64_t entryPointId) const;
+    bool anyTaskSucceeded(const AbstractPlan* p) const;
+    std::list<int64_t> toList() const;
+
+protected:
+    std::map<const AbstractPlan*, std::shared_ptr<std::list<const EntryPoint*>>> successMarks;
+    const AlicaEngine* ae;
+};
 
 } /* namespace alica */
-
-#endif /* SUCCESSMARKS_H_ */

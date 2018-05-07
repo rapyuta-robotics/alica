@@ -1,89 +1,62 @@
-/*
- * Quantifier.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef QUANTIFIER_H_
-#define QUANTIFIER_H_
-
-
-#include <list>
-#include <string>
-#include <typeinfo>
-#include <vector>
-#include <memory>
-
+#pragma once
 #include "AlicaElement.h"
 
-using namespace std;
-namespace alica
-{
-	class State;
-	class EntryPoint;
-	class Plan;
-	class Variable;
-	class RunningPlan;
-	class AlicaEngine;
-	class SolverTerm;
+#include "supplementary/AgentID.h"
+#include "engine/Types.h"
+#include "Plan.h"
+#include "EntryPoint.h"
+#include "State.h"
 
-	/**
-	 * A quantifier encapsulates a set of Variables, belonging to a domain artifact, scoped under a AlicaElement
-	 */
-	class Quantifier : public AlicaElement
-	{
-	public:
-		Quantifier(long id = 0);
-		virtual ~Quantifier();
-		list<string>& getDomainIdentifiers() ;
-		void setDomainIdentifiers(const list<string>& domainIdentifiers);
-		bool isScopeIsEntryPoint() const;
-		bool isScopeIsPlan() const;
-		bool isScopeIsState() const;
-		State* getScopedState();
-		EntryPoint* getScopedEntryPoint();
-		Plan* getScopedPlan();
-		void setScope(AlicaEngine* a,AlicaElement* ae);
-		AlicaElement* getScope();
-		/**
-		 * Access the list of sorted Variables under the scope of this quantifier given a runningplan.
-		 * @param p A RunningPlan
-		 * @param agentsInScope A shared_ptr<vector<int> >
-		 * @return A shared_ptr<list<vector<Variable* > > >
-		 */
-		virtual shared_ptr<list<vector<Variable* > > >getDomainVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<int> >& agentsInScope) = 0;
-//		/**
-//		 * Access the list of sorted AD.Terms under the scope of this quantifier given a RunningPlan.
-//		 * @param agentsInScope A shared_ptr<vector<int> >
-//		 * @return A shared_ptr<list<vector<shared_ptr<SolverTerm> > > >
-//		 */
-//		virtual shared_ptr<list<vector<shared_ptr<SolverTerm>> > > getSortedTerms(RunningPlan* p, shared_ptr<vector<int> > agentsInScope) = 0;
+#include <string>
+#include <vector>
 
-	private:
-		list<string> domainIdentifiers;
-		void setScopeIsEntryPoint(bool scopeIsEntryPoint);
-		void setScopeIsPlan(bool scopeIsPlan);
-		void setScopeIsState(bool scopeIsState);
+namespace alica {
+class State;
+class EntryPoint;
+class Plan;
+class Variable;
+class RunningPlan;
+class SolverTerm;
+class ModelFactory;
+/**
+ * A quantifier encapsulates a set of Variables, belonging to a domain artifact, scoped under a AlicaElement
+ */
+class Quantifier : public AlicaElement {
+public:
+    Quantifier(int64_t id = 0);
+    virtual ~Quantifier();
+    const std::vector<std::string>& getDomainIdentifiers() const { return _domainIdentifiers; }
+    bool isScopeEntryPoint() const { return _scopeType == entryPointScope; }
+    bool isScopePlan() const { return _scopeType == planScope; }
+    bool isScopeState() const { return _scopeType == stateScope; }
+    const State* getScopedState() const {
+        return _scopeType == stateScope ? static_cast<const State*>(_scope) : nullptr;
+    }
+    const EntryPoint* getScopedEntryPoint() const {
+        return _scopeType == entryPointScope ? static_cast<const EntryPoint*>(_scope) : nullptr;
+    }
+    const Plan* getScopedPlan() const { return _scopeType == planScope ? static_cast<const Plan*>(_scope) : nullptr; }
+    const AlicaElement* getScope() const { return _scope; }
 
-	protected:
-		/**
-		 * Indicates that the scope of this quantifier is an EntryPoint
-		 */
-		bool scopeIsEntryPoint;
-		/**
-		 * Indicates that the scope of this quantifier is a Plan
-		 */
-		bool scopeIsPlan;
-		/**
-		 * Indicates that the scope of this quantifier is an State
-		 */
-		bool scopeIsState;
-		EntryPoint* entryPoint;
-		State* state;
-		Plan* plan;
-	};
+    /**
+     * Access the std::list of sorted Variables under the scope of this quantifier given a runningplan.
+     * @param p A RunningPlan
+     * @param o_agentsInScope the set of agents currently under the scope of this quantifier
+     * @return A std::shared_ptr<std::list<std::vector<Variable* > > >
+     */
+    virtual std::shared_ptr<std::list<VariableGrp>> getDomainVariables(
+            std::shared_ptr<RunningPlan>& p, AgentGrp& o_agentsInScope) const = 0;
 
-} /* namespace Alica */
+private:
+    enum Scope { planScope, entryPointScope, stateScope };
+    friend ModelFactory;
+    void setScope(const AlicaElement* ae);
+    void setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers);
 
-#endif /* QUANTIFIER_H_ */
+    std::vector<std::string> _domainIdentifiers;
+
+    const AlicaElement* _scope;
+    Scope _scopeType;
+};
+
+}  // namespace alica

@@ -8,42 +8,38 @@
 #ifndef SUCCESSCOLLECTION_H_
 #define SUCCESSCOLLECTION_H_
 
+#include "supplementary/AgentID.h"
 
 #include <list>
 #include <vector>
 #include <memory>
 #include <string>
-#include <sstream>
 
-using namespace std;
-namespace alica
-{
-	class EntryPoint;
-	class Plan;
+namespace alica {
+class EntryPoint;
+class Plan;
 
-	class SuccessCollection
-	{
-	public:
-		SuccessCollection(Plan* plan);
-		virtual ~SuccessCollection();
-		int getCount() const;
-		void setCount(int count);
-		EntryPoint** getEntryPoints();
-		void setSuccess(int robot, EntryPoint* ep);
-		void clear();
-		vector<shared_ptr<list<int> > >& getRobots();
-		void setRobots(vector<shared_ptr<list<int> > >& robots);
-		shared_ptr<list<int> > getRobots(EntryPoint* ep);
-		shared_ptr<list<int> > getRobotsById(long id);
-		string toString();
+class SuccessCollection {
+public:
+    SuccessCollection(const Plan* plan);
+    virtual ~SuccessCollection();
+    int getCount() const;
+    void setCount(int count);
+    const EntryPoint** getEntryPoints() const;
+    void setSuccess(const supplementary::AgentID* robot, const EntryPoint* ep);
+    void clear();
+    std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>& getRobots();
+    void setRobots(std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>& robots);
+    std::shared_ptr<std::list<const supplementary::AgentID*>> getRobots(const EntryPoint* ep);
+    std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsById(int64_t id);
+    std::string toString() const;
 
-	private:
-
-	protected:
-		EntryPoint** entryPoints;
-		vector<shared_ptr<list<int> > > robots;
-		int count = 0;
-	};
+private:
+protected:
+    const EntryPoint** entryPoints;
+    std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>> robotIds;
+    int count = 0;
+};
 
 } /* namespace alica */
 

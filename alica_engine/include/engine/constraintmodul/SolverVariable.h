@@ -1,25 +1,11 @@
-/*
- * SolverVariable.h
- *
- *  Created on: Oct 20, 2014
- *      Author: Philipp Sperber
- */
+#pragma once
 
-#ifndef SOLVERVARIABLE_H_
-#define SOLVERVARIABLE_H_
+namespace alica {
 
-//#include "engine/constraintmodul/SolverTerm.h"
-
-namespace alica
-{
-
-	class SolverVariable
-	{
-	public:
-		SolverVariable();
-		virtual ~SolverVariable();
-	};
+class SolverVariable {
+public:
+    SolverVariable();
+    virtual ~SolverVariable();
+};
 
 } /* namespace alica */
-
-#endif /* SOLVERVARIABLE_H_ */

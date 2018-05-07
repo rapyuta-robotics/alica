@@ -1,53 +1,39 @@
-/*
- * AlicaEngineInfo.h
- *
- *  Created on: Jun 30, 2014
- *      Author: Paul Panin
- */
+#pragma once
 
-#ifndef ALICAENGINEINFO_H_
-#define ALICAENGINEINFO_H_
+#include "supplementary/AgentID.h"
 
-#include <vector>
 #include <string>
 #include <tuple>
+#include <vector>
 
-using namespace std;
+namespace alica {
+typedef std::tuple<const supplementary::AgentID*, std::string, std::string, std::string, std::string, std::string,
+        std::vector<const supplementary::AgentID*>>
+        stdAlicaEngineInfo;
+struct AlicaEngineInfo {
+    AlicaEngineInfo()
+            : senderID(nullptr) {}
+    const supplementary::AgentID* senderID;
+    std::string masterPlan;
+    std::string currentPlan;
+    std::string currentState;
+    std::string currentRole;
+    std::string currentTask;
+    std::vector<const supplementary::AgentID*> robotIDsWithMe;
 
-namespace alica
-{
-	typedef tuple<int, string, string, string, string, string, vector<int>> stdAlicaEngineInfo;
-	struct AlicaEngineInfo
-	{
-		AlicaEngineInfo()
-		{
-		}
-		int senderID;
-		string masterPlan;
-		string currentPlan;
-		string currentState;
-		string currentRole;
-		string currentTask;
-		vector<int> robotIDsWithMe;
+    AlicaEngineInfo(stdAlicaEngineInfo& s) {
+        senderID = std::get<0>(s);
+        masterPlan = std::move(std::get<1>(s));
+        currentPlan = std::move(std::get<2>(s));
+        currentState = std::move(std::get<3>(s));
+        currentRole = std::move(std::get<4>(s));
+        currentTask = std::move(std::get<5>(s));
+        robotIDsWithMe = std::move(std::get<6>(s));
+    }
 
-		AlicaEngineInfo(stdAlicaEngineInfo &s)
-		{
-			senderID = get<0>(s);
-			masterPlan = move(get<1>(s));
-			currentPlan = move(get<2>(s));
-			currentState = move(get<3>(s));
-			currentRole = move(get<4>(s));
-			currentTask = move(get<5>(s));
-			robotIDsWithMe = move(get<6>(s));
-		}
-
-		stdAlicaEngineInfo toStandard()
-		{
-			return move(
-					make_tuple(senderID, masterPlan, currentPlan, currentState, currentRole, currentTask,
-								robotIDsWithMe));
-		}
-	};
-}
-
-#endif /* ALICAENGINEINFO_H_ */
+    stdAlicaEngineInfo toStandard() {
+        return std::move(
+                make_tuple(senderID, masterPlan, currentPlan, currentState, currentRole, currentTask, robotIDsWithMe));
+    }
+};
+}  // namespace alica

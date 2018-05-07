@@ -1,51 +1,44 @@
-/*
- * PlanElement.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
+#pragma once
 
-#ifndef ALICAELEMENT_H_
-#define ALICAELEMENT_H_
-
-#include <stdio.h>
 #include <string>
-#include <sstream>
-#include <iostream>
-using namespace std;
-namespace alica
-{
+#include <stdint.h>
 
-	/**
-	 * Base class of all model elements
-	 */
-	class AlicaElement
-	{
-	public:
-		AlicaElement();
-		virtual ~AlicaElement();
+namespace alica {
+class ModelFactory;
+/**
+ * Base class of all model elements
+ */
+class AlicaElement {
+public:
+    AlicaElement();
+    AlicaElement(int64_t id);
+    AlicaElement(int64_t id, const std::string& name);
+    virtual ~AlicaElement();
 
-		void setName(string name);
-		string getName() const;
-		void setComment(string comment);
-		string getComment();
-		long getId() const;
-		void setId(long id);
+    const std::string& getName() const { return _name; }
 
-		virtual string toString() const;
+    int64_t getId() const { return _id; }
 
-	protected:
-		/**
-		 * This element's unique id
-		 */
-		long id;
-		/**
-		 * This element's descriptive name.
-		 */
-		string name;
-		string comment;
-	};
+    virtual std::string toString() const;
 
-} /* namespace Alica */
+    AlicaElement(const AlicaElement&) = delete;
+    AlicaElement(AlicaElement&&) = delete;
+    AlicaElement& operator=(const AlicaElement&) = delete;
+    AlicaElement& operator=(AlicaElement&&) = delete;
 
-#endif /* ALICAELEMENT_H_ */
+private:
+    friend ModelFactory;
+    void setId(int64_t id);
+    void setName(const std::string& name);
+
+    /**
+     * This element's unique id
+     */
+    int64_t _id;
+    /**
+     * This element's descriptive name.
+     */
+    std::string _name;
+};
+
+}  // namespace alica

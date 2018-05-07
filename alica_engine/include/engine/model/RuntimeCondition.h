@@ -8,27 +8,21 @@
 #ifndef RUNTIMECONDITION_H_
 #define RUNTIMECONDITION_H_
 
-
 #include <string>
-#include <sstream>
 
 #include "Condition.h"
 
-using namespace std;
-namespace alica
-{
-	class RunningPlan;
+namespace alica {
+class RunningPlan;
 
-	class RuntimeCondition : public Condition
-	{
-	public:
-		RuntimeCondition(long id = 0);
-		virtual ~RuntimeCondition();
+class RuntimeCondition : public Condition {
+public:
+    RuntimeCondition(int64_t id = 0);
+    virtual ~RuntimeCondition();
 
-		string toString();
+    std::string toString() const override;
+};
 
-	};
-
-} /* namespace Alica */
+}  // namespace alica
 
 #endif /* RUNTIMECONDITION_H_ */

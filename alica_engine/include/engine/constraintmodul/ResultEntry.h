@@ -1,12 +1,7 @@
-/*
- * ResultEntry.h
- *
- *  Created on: Nov 24, 2014
- *      Author: Philipp Sperber
- */
+#pragma once
 
-#ifndef RESULTENTRY_H_
-#define RESULTENTRY_H_
+#include "supplementary/AgentID.h"
+#include "engine/Types.h"
 
 #include <list>
 #include <map>
@@ -14,51 +9,42 @@
 #include <mutex>
 #include <memory>
 
-using namespace std;
+namespace alica {
+class AlicaEngine;
+struct SolverVar;
+class Variable;
 
+class ResultEntry {
+public:
+    ResultEntry(const supplementary::AgentID* robotId, const AlicaEngine* ae);
+    virtual ~ResultEntry();
 
-namespace alica
-{
-	class AlicaEngine;
-	struct SolverVar;
-	class Variable;
+    const supplementary::AgentID* getId();
+    void addValue(long vid, std::shared_ptr<std::vector<uint8_t>> result);
+    void clear();
+    std::shared_ptr<std::vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
+    std::shared_ptr<std::vector<uint8_t>> getValue(long vid, long ttl4Usage);
+    std::shared_ptr<std::vector<std::shared_ptr<std::vector<uint8_t>>>> getValues(
+            std::shared_ptr<VariableGrp> query, long ttl4Usage);
 
+    class VarValue {
+    public:
+        long id;
+        std::shared_ptr<std::vector<uint8_t>> val;
+        ulong lastUpdate;
 
-	class ResultEntry
-	{
-	public:
-		ResultEntry(int robotId, AlicaEngine* ae);
-		virtual ~ResultEntry();
+        VarValue(long vid, std::shared_ptr<std::vector<uint8_t>> v, ulong now) {
+            this->id = vid;
+            this->val = v;
+            this->lastUpdate = now;
+        }
+    };
 
-		int getId();
-		void addValue(long vid, shared_ptr<vector<uint8_t>> result);
-		void clear();
-		shared_ptr<vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
-		shared_ptr<vector<uint8_t>> getValue(long vid, long ttl4Usage);
-		shared_ptr<vector<shared_ptr<vector<uint8_t>>>> getValues(shared_ptr<vector<Variable*>> query, long ttl4Usage);
-
-		class VarValue
-		{
-		public:
-			long id;
-			shared_ptr<vector<uint8_t>> val;
-			ulong lastUpdate;
-
-			VarValue(long vid, shared_ptr<vector<uint8_t>> v, ulong now)
-			{
-				this->id = vid;
-				this->val = v;
-				this->lastUpdate = now;
-			}
-		};
-
-	protected:
-		int id;
-		AlicaEngine* ae;
-		map<long, shared_ptr<VarValue>> values;
-		mutex valueLock;
-	};
+protected:
+    const supplementary::AgentID* id;
+    const AlicaEngine* ae;
+    std::map<long, std::shared_ptr<VarValue>> values;
+    std::mutex valueLock;
+};
 
 } /* namespace alica */
-
-#endif /* RESULTENTRY_H_ */

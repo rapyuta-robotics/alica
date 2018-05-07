@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<package>
+  <name>alica_tests</name>
+  <version>0.0.1</version>
+  <description>The alica_tests package</description>
+
+  <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
+  <maintainer email="witsch@vs.uni-kassel.de">Andreas Witsch</maintainer>
+
+  <license>GPLv2</license>
+
+  <build_depend>alica_engine</build_depend>
+  <build_depend>system_config</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>alica_ros_proxy</build_depend>
+  <build_depend>alica_dummy_proxy</build_depend>
+  <build_depend>autodiff</build_depend>
+  <build_depend>constraintsolver</build_depend>
+  <build_depend>agent_id</build_depend> 
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <run_depend>alica_engine</run_depend>
+  <run_depend>system_config</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>alica_dummy_proxy</run_depend>
+  <run_depend>alica_ros_proxy</run_depend>
+  <run_depend>autodiff</run_depend>
+  <run_depend>constraintsolver</run_depend>
+  <run_depend>agent_id</run_depend>
+  
+  <test_depend>rostest</test_depend>
+  <test_depend>gtest</test_depend>
+  <export>
+  </export>
+</package>

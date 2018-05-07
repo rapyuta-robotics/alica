@@ -1,36 +1,23 @@
-/*
- * SyncReady.h
- *
- *  Created on: Aug 27, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef SYNCREADY_H_
-#define SYNCREADY_H_
-
+#include "supplementary/AgentID.h"
 #include <tuple>
 
-using namespace std;
+namespace alica {
+typedef std::tuple<const supplementary::AgentID*, long> stdSyncReady;
+struct SyncReady {
+    SyncReady()
+            : senderID(nullptr)
+            , syncTransitionID(0) {}
+    const supplementary::AgentID* senderID;
+    long syncTransitionID;
 
-namespace alica
-{
-	typedef tuple<long, long> stdSyncReady;
-	struct SyncReady
-	{
-		SyncReady() {}
-		long senderID;
-		long syncTransitionID;
+    SyncReady(stdSyncReady& s) {
+        this->senderID = std::get<0>(s);
+        this->syncTransitionID = std::get<1>(s);
+    }
 
-		SyncReady(stdSyncReady &s) {
-			this->senderID = get<0>(s);
-			this->syncTransitionID = get<1>(s);
-		}
-
-		stdSyncReady toStandard() {
-			return move(make_tuple(senderID, syncTransitionID));
-		}
-	};
+    stdSyncReady toStandard() { return std::move(std::make_tuple(senderID, syncTransitionID)); }
+};
 
 } /* namespace alica */
-
-#endif /* SYNCREADY_H_ */
