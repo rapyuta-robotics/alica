@@ -413,17 +413,17 @@ bool Assignment::updateRobot(const supplementary::AgentID* robot, const EntryPoi
     bool ret = false;
     for (int i = 0; i < this->epRobotsMapping->getSize(); i++) {
         if (this->epRobotsMapping->getEp(i) == ep) {
-            if (find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-                        [&robot](const supplementary::AgentID* id) { return *robot == *id; }) != this->epRobotsMapping->getRobots(i)->end()) {
+            if (find_if(this->epRobotsMapping->editRobots(i)->begin(), this->epRobotsMapping->editRobots(i)->end(),
+                        [&robot](const supplementary::AgentID* id) { return *robot == *id; }) != this->epRobotsMapping->editRobots(i)->end()) {
                 return false;
             } else {
                 this->epRobotsMapping->editRobots(i)->push_back(robot);
                 ret = true;
             }
         } else {
-            auto iter = find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
+            auto iter = find_if(this->epRobotsMapping->editRobots(i)->begin(), this->epRobotsMapping->editRobots(i)->end(),
                                 [&robot](const supplementary::AgentID* id) { return *robot == *id; });
-            if (iter != this->epRobotsMapping->getRobots(i)->end()) {
+            if (iter != this->epRobotsMapping->editRobots(i)->end()) {
                 this->epRobotsMapping->editRobots(i)->erase(iter);
                 ret = true;
             }
