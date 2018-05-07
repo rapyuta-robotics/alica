@@ -44,7 +44,7 @@ void VariableSyncModule::init()
     _ttl4Usage = AlicaTime::milliseconds((*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Usage", NULL));
     _distThreshold = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "SeedMergingThreshold", NULL);
 
-    AgentIDPtr ownId = _ae->getTeamManager()->getLocalAgentID();
+    AgentIDConstPtr ownId = _ae->getTeamManager()->getLocalAgentID();
     _ownResults = ResultEntry(ownId);
     _publishData.senderID = ownId;
 

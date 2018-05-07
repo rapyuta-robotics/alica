@@ -1,3 +1,4 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
@@ -62,6 +63,8 @@ protected:
  * Test for Runtime or PreCondition are false with plantypes
  */
 TEST_F(AlicaConditionPlanType, conditionPlanTypeTest) {
+    ASSERT_NO_SIGNAL
+
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
@@ -90,9 +93,7 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest) {
     ae->start();
 
     for (int i = 0; i < 21; i++) {
-        ae->stepNotify();
-        chrono::milliseconds duration(33);
-        this_thread::sleep_for(duration);
+        step(ae);
 
         //		if(i > 1)
         //		{

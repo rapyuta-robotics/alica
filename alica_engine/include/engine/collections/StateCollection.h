@@ -46,7 +46,7 @@ class StateCollection final
             }
             bool operator!=(const Iterator& o) const { return _pos != o._pos; }
             bool operator==(const Iterator& o) const { return _pos == o._pos; }
-            AgentIDPtr operator*() const { return _col.getRobots()[_pos]; }
+            AgentIDConstPtr operator*() const { return _col.getRobots()[_pos]; }
 
             Iterator& operator++()
             {
@@ -87,7 +87,7 @@ class StateCollection final
 
     int getCount() const { return _robotIds.size(); }
 
-    const State* getStateOfRobot(AgentIDPtr robotId) const;
+    const State* getStateOfRobot(AgentIDConstPtr robotId) const;
 
     int getRobotsInState(const State* s, AgentGrp& o_robots) const;
     int getRobotsInState(int64_t sid, AgentGrp& o_robots) const;
@@ -97,14 +97,14 @@ class StateCollection final
 
     std::string toString() const;
 
-    void removeRobot(AgentIDPtr robotId);
+    void removeRobot(AgentIDConstPtr robotId);
     void clear();
 
-    void setState(AgentIDPtr robotId, const State* state);
+    void setState(AgentIDConstPtr robotId, const State* state);
     void setStates(const AgentGrp& robotIds, const State* state);
     void moveAllFromTo(const State* from, const State* to);
 
-    void setInitialState(AgentIDPtr robotId, const EntryPoint* ep);
+    void setInitialState(AgentIDConstPtr robotId, const EntryPoint* ep);
     void reconsiderOldAssignment(std::shared_ptr<Assignment> oldOne, std::shared_ptr<Assignment> newOne);
 
   private:

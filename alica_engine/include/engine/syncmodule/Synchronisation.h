@@ -47,7 +47,7 @@ class Synchronisation
     std::mutex rowOkMutex;
     SyncModule* syncModul;
     const SyncTransition* syncTransition;
-    AgentIDPtr myID;
+    AgentIDConstPtr myID;
     AlicaTime lastTalkTime;
     SyncData* lastTalkData;
     AlicaTime syncStartTime;

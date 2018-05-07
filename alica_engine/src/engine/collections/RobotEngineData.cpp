@@ -64,15 +64,15 @@ const DomainVariable* RobotEngineData::getDomainVariable(const Variable* templat
     }
 }
 
-const DomainVariable* RobotEngineData::getDomainVariable(const std::string& sort) const
+const DomainVariable* RobotEngineData::getDomainVariable(const std::string& name) const
 {
-    const Variable* tv = _engine->getPlanRepository()->getVariables()[Hash64(sort.c_str(), sort.size())];
+    const Variable* tv = _engine->getPlanRepository()->getVariables()[Hash64(name.c_str(), name.size())];
     return getDomainVariable(tv);
 }
 
 int64_t RobotEngineData::makeUniqueId(const std::string& s) const
 {
-    int64_t ret = (int64_t)(supplementary::AgentIDHash()(_agentId) + std::hash<string>()(s));
+    int64_t ret = static_cast<int64_t>(supplementary::AgentIDHash{}(_agentId) + std::hash<string>()(s));
     assert(_engine->getPlanParser()->getParsedElements()->find(ret) == _engine->getPlanParser()->getParsedElements()->end());
     return ret;
 }
