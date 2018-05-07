@@ -1,3 +1,4 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
@@ -69,6 +70,8 @@ protected:
  * Test for SyncTransition
  */
 TEST_F(AlicaSyncTransition, syncTransitionTest) {
+    ASSERT_NO_SIGNAL
+
     sc->setHostname("hairy");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "RealMasterPlanForSyncTest", ".", true);
@@ -87,23 +90,15 @@ TEST_F(AlicaSyncTransition, syncTransitionTest) {
 
     ae->start();
     ae2->start();
-    chrono::milliseconds duration(33);
 
     for (int i = 0; i < 20; i++) {
         std::cout << "AE ----------------------------------------------- " << *ae->getTeamManager()->getLocalAgentID()
                   << std::endl;
-        ae->stepNotify();
-        this_thread::sleep_for(duration);
-        do {
-            this_thread::sleep_for(duration);
-        } while (!ae->getPlanBase()->isWaiting());
+        step(ae);
 
         std::cout << "AE ----------------------------------------------- " << *ae2->getTeamManager()->getLocalAgentID()
                   << std::endl;
-        ae2->stepNotify();
-        do {
-            this_thread::sleep_for(duration);
-        } while (!ae2->getPlanBase()->isWaiting() || !ae->getPlanBase()->isWaiting());
+        step(ae2);
 
         if (i == 2) {
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825427317(true);

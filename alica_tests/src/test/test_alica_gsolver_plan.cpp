@@ -1,3 +1,4 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
@@ -77,16 +78,13 @@ protected:
  * Tests if Behaviour with Constraints are called
  */
 TEST_F(AlicaGSolverPlan, solverTest) {
+    ASSERT_NO_SIGNAL
+
     ae->init(bc, cc, uc, crc);
     cout << "Starting engine..." << endl;
     ae->start();
 
-    chrono::milliseconds sleepTime(33);
-    ae->stepNotify();
-    this_thread::sleep_for(sleepTime);
-    while (!ae->getPlanBase()->isWaiting()) {
-        this_thread::sleep_for(sleepTime);
-    }
+    step(ae);
 
     ASSERT_EQ(alica::SolverTestBehaviour::result.size(), 2) << "Wrong result size";
     EXPECT_GT(alica::SolverTestBehaviour::result[0], 4000);
