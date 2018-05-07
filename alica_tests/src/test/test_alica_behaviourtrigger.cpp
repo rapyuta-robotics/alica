@@ -1,3 +1,4 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
@@ -67,12 +68,15 @@ protected:
 };
 
 TEST_F(AlicaBehaviourTrigger, triggerTest) {
+    ASSERT_NO_SIGNAL
+
     alicaTests::TestWorldModel::getOne()->trigger1 = new supplementary::EventTrigger();
     alicaTests::TestWorldModel::getOne()->trigger2 = new supplementary::EventTrigger();
     ae->init(bc, cc, uc, crc);
     ae->start();
-    chrono::milliseconds duration(33);
-    this_thread::sleep_for(duration);
+    
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+
     for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
             iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
@@ -109,15 +113,22 @@ TEST_F(AlicaBehaviourTrigger, triggerTest) {
     }
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    this_thread::sleep_for(duration);
+
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    this_thread::sleep_for(duration);
+
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    this_thread::sleep_for(duration);
+
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    this_thread::sleep_for(duration);
+
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
 
     for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
