@@ -27,14 +27,14 @@ class AssignmentCollection final
     AgentGrp* editRobotsByEp(const EntryPoint* ep);
     const AgentGrp* getRobotsByEpId(int64_t id) const;
 
-    void assignRobot(short index, AgentIDPtr agent);
+    void assignRobot(short index, AgentIDConstPtr agent);
 
     void clear();
     std::string toString() const;
     void sortEps();
     void sortRobots(const EntryPoint* ep);
-    void addRobot(AgentIDPtr id, const EntryPoint* e);
-    bool removeRobot(AgentIDPtr robot, const EntryPoint* ep);
+    void addRobot(AgentIDConstPtr id, const EntryPoint* e);
+    bool removeRobot(AgentIDConstPtr robot, const EntryPoint* ep);
 
     // initialized in alica engine init
     static short maxEpsCount;

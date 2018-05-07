@@ -299,7 +299,7 @@ void Synchronisation::setSyncTransition(const SyncTransition* syncTransition)
 bool Synchronisation::allSyncReady()
 {
     // test if all robots who acknowledged myRow have sent a SyncReady
-    for (AgentIDPtr robotID : this->myRow->getReceivedBy()) {
+    for (AgentIDConstPtr robotID : this->myRow->getReceivedBy()) {
         if (*robotID != *myID) // we do not necessarily need an ack from ourselves
         {
             bool foundRobot = false;
@@ -330,7 +330,7 @@ void Synchronisation::printMatrix()
             std::cout << "Row: " << row->getSyncData()->robotID << " "
                       << to_string(row->getSyncData()->transitionID) + " " + std::to_string(row->getSyncData()->conditionHolds) << " "
                       << row->getSyncData()->ack << " RecvBy: ";
-            for (AgentIDPtr robotID : row->getReceivedBy()) {
+            for (AgentIDConstPtr robotID : row->getReceivedBy()) {
                 std::cout << *robotID << ", ";
             }
             cout << endl;

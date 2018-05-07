@@ -262,7 +262,6 @@ void BasicBehaviour::runInternal()
         if (!conf->isEventDriven()) {
             double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / conf->getFrequency() * 1000.0;
             if (dura > 0.1) {
-
                 std::stringstream ss;
                 ss << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura << "ms!";
                 sendLogMessage(2, ss.str());

@@ -636,8 +636,8 @@ void RunningPlan::attachPlanConstraints()
     _constraintStore.addCondition(_plan->getRuntimeCondition());
 }
 
-bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, std::vector<const supplementary::AgentID*>& availableAgents,
-                                            list<const supplementary::AgentID*> noUpdates, AlicaTime now)
+bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, list<const supplementary::AgentID*> noUpdates,
+                                            AlicaTime now)
 {
     if (isBehaviour()) {
         return false;

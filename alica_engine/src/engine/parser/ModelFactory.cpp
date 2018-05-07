@@ -1,42 +1,43 @@
 //#define MF_DEBUG
 #include "engine/parser/ModelFactory.h"
 #include "engine/PlanRepository.h"
-#include "engine/parser/PlanParser.h"
-#include "engine/model/SuccessState.h"
-#include "engine/model/Transition.h"
+#include "engine/model/Behaviour.h"
+#include "engine/model/BehaviourConfiguration.h"
+#include "engine/model/Capability.h"
+#include "engine/model/CapabilityDefinitionSet.h"
+#include "engine/model/Characteristic.h"
+#include "engine/model/EntryPoint.h"
+#include "engine/model/FailureState.h"
+#include "engine/model/ForallAgents.h"
+#include "engine/model/Parameter.h"
+#include "engine/model/Parametrisation.h"
+#include "engine/model/Plan.h"
+#include "engine/model/PlanType.h"
+#include "engine/model/PlanningProblem.h"
+#include "engine/model/PostCondition.h"
 #include "engine/model/PreCondition.h"
+#include "engine/model/Quantifier.h"
+#include "engine/model/Role.h"
+#include "engine/model/RoleDefinitionSet.h"
+#include "engine/model/RoleSet.h"
+#include "engine/model/RoleTaskMapping.h"
+#include "engine/model/RuntimeCondition.h"
+#include "engine/model/SuccessState.h"
 #include "engine/model/SyncTransition.h"
 #include "engine/model/Task.h"
 #include "engine/model/TaskRepository.h"
-#include "engine/model/BehaviourConfiguration.h"
-#include "engine/model/Plan.h"
-#include "engine/model/RuntimeCondition.h"
-#include "engine/model/EntryPoint.h"
-#include "engine/model/FailureState.h"
-#include "engine/model/Behaviour.h"
-#include "engine/model/PostCondition.h"
-#include "engine/model/Parametrisation.h"
-#include "engine/model/Quantifier.h"
-#include "engine/model/ForallAgents.h"
-#include "engine/model/PlanType.h"
+#include "engine/model/Transition.h"
 #include "engine/model/Variable.h"
-#include "engine/model/Role.h"
-#include "engine/model/RoleSet.h"
-#include "engine/model/RoleTaskMapping.h"
-#include "engine/model/Capability.h"
-#include "engine/model/Characteristic.h"
-#include "engine/model/CapabilityDefinitionSet.h"
-#include "engine/model/RoleDefinitionSet.h"
-#include "engine/model/PlanningProblem.h"
-#include "engine/model/Parameter.h"
+#include "engine/parser/PlanParser.h"
 #include "engine/util/HashFunctions.h"
 
-#include "engine/AlicaEngine.h"
 #include "SigFault.h"
+#include "engine/AlicaEngine.h"
 
 #include <iostream>
 
-namespace alica {
+namespace alica
+{
 const string ModelFactory::conditions = "conditions";
 const string ModelFactory::entryPoints = "entryPoints";
 const string ModelFactory::rating = "rating";
@@ -79,27 +80,32 @@ const string ModelFactory::alternativePlan = "alternativePlan";
  * @param p The PlanParser handling the plan and role files.
  * @param rep The <see PlanRepository holding all plan elements. Elements will be added to it.
  */
-ModelFactory::ModelFactory(PlanParser* p, PlanRepository* rep) {
+ModelFactory::ModelFactory(PlanParser* p, PlanRepository* rep)
+{
     this->parser = p;
     this->rep = rep;
     this->ignoreMasterPlanId = false;
 }
 
-ModelFactory::~ModelFactory() {
+ModelFactory::~ModelFactory()
+{
     for (auto iter : this->elements) {
         delete iter.second;
     }
 }
 
-void ModelFactory::setIgnoreMasterPlanId(bool value) {
+void ModelFactory::setIgnoreMasterPlanId(bool value)
+{
     this->ignoreMasterPlanId = value;
 }
 
-bool ModelFactory::getIgnoreMasterPlanId() {
+bool ModelFactory::getIgnoreMasterPlanId()
+{
     return this->ignoreMasterPlanId;
 }
 
-Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node) {
+Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node)
+{
     tinyxml2::XMLElement* element = node->FirstChildElement();
 
     int64_t id = this->parser->parserId(element);
@@ -212,11 +218,11 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node) {
         curChild = curChild->NextSiblingElement();
     }
     // Sort entrypoints:
-    std::sort(plan->_entryPoints.begin(), plan->_entryPoints.end(),
-            [](const EntryPoint* ep1, const EntryPoint* ep2) { return ep1->getId() < ep2->getId(); });
+    std::sort(plan->_entryPoints.begin(), plan->_entryPoints.end(), [](const EntryPoint* ep1, const EntryPoint* ep2) { return ep1->getId() < ep2->getId(); });
     return plan;
 }
-RoleSet* ModelFactory::createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPlan) {
+RoleSet* ModelFactory::createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPlan)
+{
     tinyxml2::XMLElement* element = node->FirstChildElement();
 
     const char* def = element->Attribute("default");
@@ -267,7 +273,8 @@ RoleSet* ModelFactory::createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPl
 
     return rs;
 }
-RoleTaskMapping* ModelFactory::createRoleTaskMapping(tinyxml2::XMLElement* element) {
+RoleTaskMapping* ModelFactory::createRoleTaskMapping(tinyxml2::XMLElement* element)
+{
     RoleTaskMapping* rtm = new RoleTaskMapping();
     rtm->setId(this->parser->parserId(element));
     setAlicaElementAttributes(rtm, element);
@@ -294,7 +301,8 @@ RoleTaskMapping* ModelFactory::createRoleTaskMapping(tinyxml2::XMLElement* eleme
 
     return rtm;
 }
-void ModelFactory::createCapabilityDefinitionSet(tinyxml2::XMLDocument* node) {
+void ModelFactory::createCapabilityDefinitionSet(tinyxml2::XMLDocument* node)
+{
     tinyxml2::XMLElement* element = node->FirstChildElement();
     CapabilityDefinitionSet* capSet = new CapabilityDefinitionSet();
     capSet->setId(this->parser->parserId(element));
@@ -313,7 +321,8 @@ void ModelFactory::createCapabilityDefinitionSet(tinyxml2::XMLDocument* node) {
         curChild = curChild->NextSiblingElement();
     }
 }
-Capability* ModelFactory::createCapability(tinyxml2::XMLElement* element) {
+Capability* ModelFactory::createCapability(tinyxml2::XMLElement* element)
+{
     Capability* cap = new Capability();
     cap->setId(this->parser->parserId(element));
     setAlicaElementAttributes(cap, element);
@@ -336,7 +345,8 @@ Capability* ModelFactory::createCapability(tinyxml2::XMLElement* element) {
     }
     return cap;
 }
-void ModelFactory::createRoleDefinitionSet(tinyxml2::XMLDocument* node) {
+void ModelFactory::createRoleDefinitionSet(tinyxml2::XMLDocument* node)
+{
     tinyxml2::XMLElement* element = node->FirstChildElement();
     RoleDefinitionSet* r = new RoleDefinitionSet();
     r->setId(this->parser->parserId(element));
@@ -359,7 +369,8 @@ void ModelFactory::createRoleDefinitionSet(tinyxml2::XMLDocument* node) {
     }
 }
 
-Role* ModelFactory::createRole(tinyxml2::XMLElement* element) {
+Role* ModelFactory::createRole(tinyxml2::XMLElement* element)
+{
     Role* r = new Role();
     r->setId(this->parser->parserId(element));
     setAlicaElementAttributes(r, element);
@@ -379,7 +390,8 @@ Role* ModelFactory::createRole(tinyxml2::XMLElement* element) {
     }
     return r;
 }
-Characteristic* ModelFactory::createCharacteristic(tinyxml2::XMLElement* element) {
+Characteristic* ModelFactory::createCharacteristic(tinyxml2::XMLElement* element)
+{
     Characteristic* cha = new Characteristic();
     cha->setId(this->parser->parserId(element));
     setAlicaElementAttributes(cha, element);
@@ -407,7 +419,8 @@ Characteristic* ModelFactory::createCharacteristic(tinyxml2::XMLElement* element
     }
     return cha;
 }
-void ModelFactory::createBehaviour(tinyxml2::XMLDocument* node) {
+void ModelFactory::createBehaviour(tinyxml2::XMLDocument* node)
+{
     tinyxml2::XMLElement* element = node->FirstChildElement();
     int64_t id = this->parser->parserId(element);
     Behaviour* beh = new Behaviour();
@@ -431,7 +444,8 @@ void ModelFactory::createBehaviour(tinyxml2::XMLDocument* node) {
         curChild = curChild->NextSiblingElement();
     }
 }
-BehaviourConfiguration* ModelFactory::createBehaviourConfiguration(tinyxml2::XMLElement* element) {
+BehaviourConfiguration* ModelFactory::createBehaviourConfiguration(tinyxml2::XMLElement* element)
+{
     BehaviourConfiguration* b = new BehaviourConfiguration();
     b->setId(this->parser->parserId(element));
     b->setFileName(this->parser->getCurrentFile());
@@ -501,7 +515,8 @@ BehaviourConfiguration* ModelFactory::createBehaviourConfiguration(tinyxml2::XML
 
     return b;
 }
-void ModelFactory::createPlanType(tinyxml2::XMLDocument* node) {
+void ModelFactory::createPlanType(tinyxml2::XMLDocument* node)
+{
     tinyxml2::XMLElement* element = node->FirstChildElement();
     PlanType* pt = new PlanType();
     pt->setId(this->parser->parserId(element));
@@ -541,7 +556,8 @@ void ModelFactory::createPlanType(tinyxml2::XMLDocument* node) {
         curChild = curChild->NextSiblingElement();
     }
 }
-void ModelFactory::createTasks(tinyxml2::XMLDocument* node) {
+void ModelFactory::createTasks(tinyxml2::XMLDocument* node)
+{
     tinyxml2::XMLElement* element = node->FirstChildElement();
     TaskRepository* tr = new TaskRepository();
     tr->setId(this->parser->parserId(element));
@@ -576,7 +592,8 @@ void ModelFactory::createTasks(tinyxml2::XMLDocument* node) {
     }
 }
 
-SyncTransition* ModelFactory::createSyncTransition(tinyxml2::XMLElement* element) {
+SyncTransition* ModelFactory::createSyncTransition(tinyxml2::XMLElement* element)
+{
     SyncTransition* s = new SyncTransition();
     s->setId(this->parser->parserId(element));
     setAlicaElementAttributes(s, element);
@@ -596,7 +613,8 @@ SyncTransition* ModelFactory::createSyncTransition(tinyxml2::XMLElement* element
     }
     return s;
 }
-Variable* ModelFactory::createVariable(tinyxml2::XMLElement* element) {
+Variable* ModelFactory::createVariable(tinyxml2::XMLElement* element)
+{
     string type = "";
     const char* conditionPtr = element->Attribute("Type");
     if (conditionPtr) {
@@ -613,7 +631,8 @@ Variable* ModelFactory::createVariable(tinyxml2::XMLElement* element) {
     this->rep->_variables.insert(pair<int64_t, Variable*>(v->getId(), v));
     return v;
 }
-RuntimeCondition* ModelFactory::createRuntimeCondition(tinyxml2::XMLElement* element) {
+RuntimeCondition* ModelFactory::createRuntimeCondition(tinyxml2::XMLElement* element)
+{
     RuntimeCondition* r = new RuntimeCondition();
     r->setId(this->parser->parserId(element));
     setAlicaElementAttributes(r, element);
@@ -657,7 +676,8 @@ RuntimeCondition* ModelFactory::createRuntimeCondition(tinyxml2::XMLElement* ele
     return r;
 }
 
-void ModelFactory::createPlanningProblem(tinyxml2::XMLDocument* node) {
+void ModelFactory::createPlanningProblem(tinyxml2::XMLDocument* node)
+{
     tinyxml2::XMLElement* element = node->FirstChildElement();
     PlanningProblem* p = new PlanningProblem();
     p->setId(this->parser->parserId(element));
@@ -743,7 +763,8 @@ void ModelFactory::createPlanningProblem(tinyxml2::XMLDocument* node) {
     }
     //	return p;
 }
-Transition* ModelFactory::createTransition(tinyxml2::XMLElement* element, Plan* plan) {
+Transition* ModelFactory::createTransition(tinyxml2::XMLElement* element, Plan* plan)
+{
     Transition* tran = new Transition();
     tran->setId(this->parser->parserId(element));
     setAlicaElementAttributes(tran, element);
@@ -771,7 +792,8 @@ Transition* ModelFactory::createTransition(tinyxml2::XMLElement* element, Plan* 
     return tran;
 }
 
-PreCondition* ModelFactory::createPreCondition(tinyxml2::XMLElement* element) {
+PreCondition* ModelFactory::createPreCondition(tinyxml2::XMLElement* element)
+{
     PreCondition* pre = new PreCondition();
     pre->setId(this->parser->parserId(element));
     setAlicaElementAttributes(pre, element);
@@ -827,7 +849,8 @@ PreCondition* ModelFactory::createPreCondition(tinyxml2::XMLElement* element) {
     return pre;
 }
 
-Parameter* ModelFactory::createParameter(tinyxml2::XMLElement* element) {
+Parameter* ModelFactory::createParameter(tinyxml2::XMLElement* element)
+{
     Parameter* p = new Parameter();
     int64_t id = this->parser->parserId(element);
     p->setId(id);
@@ -840,7 +863,8 @@ Parameter* ModelFactory::createParameter(tinyxml2::XMLElement* element) {
     return p;
 }
 
-Quantifier* ModelFactory::createQuantifier(tinyxml2::XMLElement* element) {
+Quantifier* ModelFactory::createQuantifier(tinyxml2::XMLElement* element)
+{
     Quantifier* q;
     int64_t id = this->parser->parserId(element);
 
@@ -883,7 +907,8 @@ Quantifier* ModelFactory::createQuantifier(tinyxml2::XMLElement* element) {
     return q;
 }
 
-FailureState* ModelFactory::createFailureState(tinyxml2::XMLElement* element) {
+FailureState* ModelFactory::createFailureState(tinyxml2::XMLElement* element)
+{
     FailureState* fail = new FailureState();
     fail->setId(this->parser->parserId(element));
     setAlicaElementAttributes(fail, element);
@@ -908,7 +933,8 @@ FailureState* ModelFactory::createFailureState(tinyxml2::XMLElement* element) {
     }
     return fail;
 }
-SuccessState* ModelFactory::createSuccessState(tinyxml2::XMLElement* element) {
+SuccessState* ModelFactory::createSuccessState(tinyxml2::XMLElement* element)
+{
     SuccessState* suc = new SuccessState();
     suc->setId(this->parser->parserId(element));
     setAlicaElementAttributes(suc, element);
@@ -933,7 +959,8 @@ SuccessState* ModelFactory::createSuccessState(tinyxml2::XMLElement* element) {
     }
     return suc;
 }
-PostCondition* ModelFactory::createPostCondition(tinyxml2::XMLElement* element) {
+PostCondition* ModelFactory::createPostCondition(tinyxml2::XMLElement* element)
+{
     PostCondition* pos = new PostCondition();
     pos->setId(this->parser->parserId(element));
     setAlicaElementAttributes(pos, element);
@@ -964,7 +991,8 @@ PostCondition* ModelFactory::createPostCondition(tinyxml2::XMLElement* element) 
     return pos;
 }
 
-EntryPoint* ModelFactory::createEntryPoint(tinyxml2::XMLElement* element) {
+EntryPoint* ModelFactory::createEntryPoint(tinyxml2::XMLElement* element)
+{
     EntryPoint* ep = new EntryPoint();
     ep->setId(this->parser->parserId(element));
     setAlicaElementAttributes(ep, element);
@@ -1014,7 +1042,8 @@ EntryPoint* ModelFactory::createEntryPoint(tinyxml2::XMLElement* element) {
  * @param element the xml state tag
  * @return state pointer
  */
-State* ModelFactory::createState(tinyxml2::XMLElement* element) {
+State* ModelFactory::createState(tinyxml2::XMLElement* element)
+{
     State* s = new State();
     s->setId(this->parser->parserId(element));
     setAlicaElementAttributes(s, element);
@@ -1044,7 +1073,8 @@ State* ModelFactory::createState(tinyxml2::XMLElement* element) {
     return s;
 }
 
-Parametrisation* ModelFactory::createParametrisation(tinyxml2::XMLElement* element) {
+Parametrisation* ModelFactory::createParametrisation(tinyxml2::XMLElement* element)
+{
     Parametrisation* para = new Parametrisation();
     para->setId(this->parser->parserId(element));
     setAlicaElementAttributes(para, element);
@@ -1074,7 +1104,8 @@ Parametrisation* ModelFactory::createParametrisation(tinyxml2::XMLElement* eleme
  * @param node actual xml element
  * @return the name of the xml element or missing name
  */
-std::string ModelFactory::getNameOfNode(tinyxml2::XMLElement* node) {
+std::string ModelFactory::getNameOfNode(tinyxml2::XMLElement* node)
+{
     std::string name = "";
     const char* namePtr = node->Attribute("name");
     if (namePtr) {
@@ -1090,7 +1121,8 @@ std::string ModelFactory::getNameOfNode(tinyxml2::XMLElement* node) {
  * @param node xmlElement that represent the current xml tag
  * @return true if the child node is a text element otherwise false
  */
-bool ModelFactory::isReferenceNode(tinyxml2::XMLElement* node) const {
+bool ModelFactory::isReferenceNode(tinyxml2::XMLElement* node) const
+{
     tinyxml2::XMLNode* curChild = node->FirstChild();
     while (curChild != nullptr) {
         const tinyxml2::XMLText* textNode = curChild->ToText();
@@ -1102,7 +1134,8 @@ bool ModelFactory::isReferenceNode(tinyxml2::XMLElement* node) const {
     return false;
 }
 
-void ModelFactory::setAlicaElementAttributes(AlicaElement* ael, tinyxml2::XMLElement* ele) {
+void ModelFactory::setAlicaElementAttributes(AlicaElement* ael, tinyxml2::XMLElement* ele)
+{
     string name = ele->Attribute("name");
     string comment = ele->Attribute("comment");
 
@@ -1116,7 +1149,8 @@ void ModelFactory::setAlicaElementAttributes(AlicaElement* ael, tinyxml2::XMLEle
  * Computes the sets of reachable states for all entrypoints created.
  * This speeds up some calculations during run-time.
  */
-void ModelFactory::computeReachabilities() {
+void ModelFactory::computeReachabilities()
+{
 #ifdef MF_DEBUG
     cout << "MF: Computing Reachability sets..." << endl;
 #endif
@@ -1128,22 +1162,23 @@ void ModelFactory::computeReachabilities() {
     cout << "MF: Computing Reachability sets...done!" << endl;
 #endif
 }
-void ModelFactory::attachPlanReferences() {
+void ModelFactory::attachPlanReferences()
+{
 #ifdef MF_DEBUG
     cout << "MF: Attaching Plan references.." << endl;
 #endif
     // epTaskReferences
     for (pair<int64_t, int64_t> pairs : this->epTaskReferences) {
-        Task* t = (Task*) this->elements.find(pairs.second)->second;
-        EntryPoint* ep = (EntryPoint*) this->elements.find(pairs.first)->second;
+        Task* t = (Task*)this->elements.find(pairs.second)->second;
+        EntryPoint* ep = (EntryPoint*)this->elements.find(pairs.first)->second;
         ep->setTask(t);
     }
     this->epTaskReferences.clear();
 
     // transitionAimReferences
     for (pair<int64_t, int64_t> pairs : this->transitionAimReferences) {
-        Transition* t = (Transition*) this->elements.find(pairs.first)->second;
-        State* st = (State*) this->elements.find(pairs.second)->second;
+        Transition* t = (Transition*)this->elements.find(pairs.first)->second;
+        State* st = (State*)this->elements.find(pairs.second)->second;
         if (!st) {
             AlicaEngine::abort("MF: Cannot resolve transitionAimReferences target: ", pairs.first);
         }
@@ -1154,8 +1189,8 @@ void ModelFactory::attachPlanReferences() {
 
     // epStateReferences
     for (pair<int64_t, int64_t> pairs : this->epStateReferences) {
-        State* st = (State*) this->elements.find(pairs.second)->second;
-        EntryPoint* ep = (EntryPoint*) this->elements.find(pairs.first)->second;
+        State* st = (State*)this->elements.find(pairs.second)->second;
+        EntryPoint* ep = (EntryPoint*)this->elements.find(pairs.first)->second;
         ep->setState(st);
         st->setEntryPoint(ep);
     }
@@ -1163,8 +1198,8 @@ void ModelFactory::attachPlanReferences() {
 
     // stateInTransitionReferences
     for (pair<int64_t, int64_t> pairs : this->stateInTransitionReferences) {
-        Transition* t = (Transition*) this->elements.find(pairs.second)->second;
-        State* st = (State*) this->elements.find(pairs.first)->second;
+        Transition* t = (Transition*)this->elements.find(pairs.second)->second;
+        State* st = (State*)this->elements.find(pairs.first)->second;
         if (st != t->getOutState()) {
             AlicaEngine::abort("MF: Unexpected reference in a transition! ", pairs.first);
         }
@@ -1173,8 +1208,8 @@ void ModelFactory::attachPlanReferences() {
 
     // stateOutTransitionReferences
     for (pair<int64_t, int64_t> pairs : this->stateOutTransitionReferences) {
-        State* st = (State*) this->elements.find(pairs.first)->second;
-        Transition* t = (Transition*) this->elements.find(pairs.second)->second;
+        State* st = (State*)this->elements.find(pairs.first)->second;
+        Transition* t = (Transition*)this->elements.find(pairs.second)->second;
         st->_outTransitions.push_back(t);
         t->setInState(st);
     }
@@ -1182,56 +1217,56 @@ void ModelFactory::attachPlanReferences() {
 
     // statePlanReferences
     for (pair<int64_t, int64_t> pairs : this->statePlanReferences) {
-        State* st = (State*) this->elements.find(pairs.first)->second;
-        AbstractPlan* p = (AbstractPlan*) this->elements.find(pairs.second)->second;
+        State* st = (State*)this->elements.find(pairs.first)->second;
+        AbstractPlan* p = (AbstractPlan*)this->elements.find(pairs.second)->second;
         st->_plans.push_back(p);
     }
     this->statePlanReferences.clear();
 
     // planTypePlanReferences
     for (pair<int64_t, int64_t> pairs : this->planTypePlanReferences) {
-        PlanType* pt = (PlanType*) this->elements.find(pairs.first)->second;
-        Plan* p = (Plan*) this->elements.find(pairs.second)->second;
+        PlanType* pt = (PlanType*)this->elements.find(pairs.first)->second;
+        Plan* p = (Plan*)this->elements.find(pairs.second)->second;
         pt->_plans.push_back(p);
     }
     this->planTypePlanReferences.clear();
 
     // conditionVarReferences
     for (pair<int64_t, int64_t> pairs : this->conditionVarReferences) {
-        Condition* c = (Condition*) this->elements.find(pairs.first)->second;
-        Variable* v = (Variable*) this->elements.find(pairs.second)->second;
+        Condition* c = (Condition*)this->elements.find(pairs.first)->second;
+        Variable* v = (Variable*)this->elements.find(pairs.second)->second;
         c->_variables.push_back(v);
     }
     this->conditionVarReferences.clear();
 
     // paramSubPlanReferences
     for (pair<int64_t, int64_t> pairs : this->paramSubPlanReferences) {
-        Parametrisation* p = (Parametrisation*) this->elements.find(pairs.first)->second;
-        AbstractPlan* ap = (AbstractPlan*) this->elements.find(pairs.second)->second;
+        Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
+        AbstractPlan* ap = (AbstractPlan*)this->elements.find(pairs.second)->second;
         p->setSubPlan(ap);
     }
     this->paramSubPlanReferences.clear();
 
     // paramSubVarReferences
     for (pair<int64_t, int64_t> pairs : this->paramSubVarReferences) {
-        Parametrisation* p = (Parametrisation*) this->elements.find(pairs.first)->second;
-        Variable* ap = (Variable*) this->elements.find(pairs.second)->second;
+        Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
+        Variable* ap = (Variable*)this->elements.find(pairs.second)->second;
         p->setSubVar(ap);
     }
     this->paramSubVarReferences.clear();
 
     // paramVarReferences
     for (pair<int64_t, int64_t> pairs : this->paramVarReferences) {
-        Parametrisation* p = (Parametrisation*) this->elements.find(pairs.first)->second;
-        Variable* v = (Variable*) this->elements.find(pairs.second)->second;
+        Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
+        Variable* v = (Variable*)this->elements.find(pairs.second)->second;
         p->setVar(v);
     }
     this->paramVarReferences.clear();
 
     // transitionSynchReferences
     for (pair<int64_t, int64_t> pairs : this->transitionSynchReferences) {
-        Transition* t = (Transition*) this->elements.find(pairs.first)->second;
-        SyncTransition* sync = (SyncTransition*) this->elements.find(pairs.second)->second;
+        Transition* t = (Transition*)this->elements.find(pairs.first)->second;
+        SyncTransition* sync = (SyncTransition*)this->elements.find(pairs.second)->second;
         t->setSyncTransition(sync);
         sync->_inSync.push_back(t);
     }
@@ -1239,32 +1274,32 @@ void ModelFactory::attachPlanReferences() {
 
     // planningProblemPlanReferences
     for (pair<int64_t, int64_t> pairs : this->planningProblemPlanReferences) {
-        PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
-        AbstractPlan* p = (AbstractPlan*) this->elements.find(pairs.second)->second;
+        PlanningProblem* s = (PlanningProblem*)this->elements.find(pairs.first)->second;
+        AbstractPlan* p = (AbstractPlan*)this->elements.find(pairs.second)->second;
         s->_plans.push_back(p);
     }
     this->planningProblemPlanReferences.clear();
 
     // planningProblemPlanWaitReferences
     for (pair<int64_t, int64_t> pairs : this->planningProblemPlanWaitReferences) {
-        PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
-        Plan* p = (Plan*) this->elements.find(pairs.second)->second;
+        PlanningProblem* s = (PlanningProblem*)this->elements.find(pairs.first)->second;
+        Plan* p = (Plan*)this->elements.find(pairs.second)->second;
         s->setWaitPlan(p);
     }
     this->planningProblemPlanWaitReferences.clear();
 
     // planningProblemPlanAlternativeReferences
     for (pair<int64_t, int64_t> pairs : this->planningProblemPlanAlternativeReferences) {
-        PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
-        Plan* p = (Plan*) this->elements.find(pairs.second)->second;
+        PlanningProblem* s = (PlanningProblem*)this->elements.find(pairs.first)->second;
+        Plan* p = (Plan*)this->elements.find(pairs.second)->second;
         s->setAlternativePlan(p);
     }
     this->planningProblemPlanAlternativeReferences.clear();
 
     // quantifierScopeReferences
     for (pair<int64_t, int64_t> pairs : this->quantifierScopeReferences) {
-        AlicaElement* ael = (AlicaElement*) this->elements.find(pairs.second)->second;
-        Quantifier* q = (Quantifier*) this->elements.find(pairs.first)->second;
+        AlicaElement* ael = (AlicaElement*)this->elements.find(pairs.second)->second;
+        Quantifier* q = (Quantifier*)this->elements.find(pairs.first)->second;
         q->setScope(ael);
     }
     this->quantifierScopeReferences.clear();
@@ -1275,7 +1310,8 @@ void ModelFactory::attachPlanReferences() {
     cout << "DONE!" << endl;
 #endif
 }
-void ModelFactory::attachRoleReferences() {
+void ModelFactory::attachRoleReferences()
+{
 #ifdef MF_DEBUG
     cout << "MF: Attaching Role references..." << endl;
 #endif
@@ -1290,7 +1326,8 @@ void ModelFactory::attachRoleReferences() {
     cout << "MF: Attaching Role references... done!" << endl;
 #endif
 }
-void ModelFactory::attachCharacteristicReferences() {
+void ModelFactory::attachCharacteristicReferences()
+{
 #ifdef MF_DEBUG
     cout << "MF: Attaching Characteristics references..." << endl;
 #endif
@@ -1312,10 +1349,10 @@ void ModelFactory::attachCharacteristicReferences() {
 #endif
 }
 
-void ModelFactory::createVariableTemplates() {
-    for (PlanRepository::MapType<Quantifier>::iterator iter = rep->_quantifiers.begin();
-            iter != rep->_quantifiers.end(); ++iter) {
-        Quantifier* q = iter->second;
+void ModelFactory::createVariableTemplates()
+{
+    for (std::pair<const int64_t, Quantifier*> p : rep->_quantifiers) {
+        Quantifier* q = p.second;
         for (const std::string& s : q->getDomainIdentifiers()) {
             int64_t id = Hash64(s.c_str(), s.size());
             Variable* v;
@@ -1331,7 +1368,8 @@ void ModelFactory::createVariableTemplates() {
     }
 }
 
-void ModelFactory::removeRedundancy() {
+void ModelFactory::removeRedundancy()
+{
     for (PlanRepository::MapType<Plan>::iterator iter = rep->_plans.begin(); iter != rep->_plans.end(); ++iter) {
         Plan* plan = iter->second;
         for (int i = plan->getTransitions().size() - 1; i >= 0; --i) {
@@ -1343,15 +1381,18 @@ void ModelFactory::removeRedundancy() {
     }
 }
 
-map<int64_t, AlicaElement*>* ModelFactory::getElements() {
+map<int64_t, AlicaElement*>* ModelFactory::getElements()
+{
     return &this->elements;
 }
 
-void ModelFactory::setElements(const map<int64_t, AlicaElement*>& elements) {
+void ModelFactory::setElements(const map<int64_t, AlicaElement*>& elements)
+{
     this->elements = elements;
 }
 
-void ModelFactory::addElement(AlicaElement* ael) {
+void ModelFactory::addElement(AlicaElement* ael)
+{
     if (this->elements.find(ael->getId()) != this->elements.end()) {
         cout << "ELEMENT >" << ael->getName() << "< >" << this->elements[ael->getId()]->getName() << "<" << endl;
         stringstream ss;
@@ -1362,7 +1403,8 @@ void ModelFactory::addElement(AlicaElement* ael) {
     elements.insert(pair<int64_t, AlicaElement*>(ael->getId(), ael));
 }
 
-const EntryPoint* ModelFactory::generateIdleEntryPoint() {
+const EntryPoint* ModelFactory::generateIdleEntryPoint()
+{
     // IDLE-EntryPoint
     EntryPoint* idleEP = new EntryPoint();
     idleEP->setName("IDLE-ep");
@@ -1378,4 +1420,4 @@ const EntryPoint* ModelFactory::generateIdleEntryPoint() {
     return idleEP;
 }
 
-}  // namespace alica
+} // namespace alica

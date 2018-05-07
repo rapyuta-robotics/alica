@@ -61,7 +61,8 @@ void ConditionStore::addCondition(const Condition* con)
         }
     }
 #ifdef CS_DEBUG
-    cout << "CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables. CS: " << this << endl;
+    std::cout << "CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables. CS: " << this
+              << std::endl;
 #endif
 }
 
