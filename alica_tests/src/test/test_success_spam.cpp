@@ -1,3 +1,4 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
@@ -49,7 +50,7 @@ protected:
 
         // setup the engine
         ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
-                "BehaviorSuccessSpamMaster", ".", false);
+                "BehaviorSuccessSpamMaster", ".", true);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
@@ -72,12 +73,11 @@ protected:
  * Tests whether it is possible to run a behaviour in a primitive plan.
  */
 TEST_F(AlicaSpamSuccess, runBehaviour) {
+    ASSERT_NO_SIGNAL
+
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     ae->start();
-    for (int i = 0; i < 30 * 6; ++i) {
-        chrono::milliseconds duration(33);
-        this_thread::sleep_for(duration);
-    }
+    for (int i = 0; i < 30 * 6; ++i) { step(ae); }
     EXPECT_NE(ae->getPlanBase()->getRootNode(), nullptr);
 }

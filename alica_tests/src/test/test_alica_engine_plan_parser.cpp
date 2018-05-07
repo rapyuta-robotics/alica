@@ -1,6 +1,7 @@
 using namespace std;
 
 #include "SystemConfig.h"
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <map>
 #include <list>
@@ -209,6 +210,8 @@ protected:
  * Tests the plan parser with some nice plans
  */
 TEST_F(AlicaEngineTest, planParser) {
+    ASSERT_NO_SIGNAL
+
     const auto& plans = ae->getPlanRepository()->getPlans();
 
     cout << "Printing plans from Repository: " << endl;
@@ -676,6 +679,8 @@ TEST_F(AlicaEngineTest, planParser) {
 }
 
 TEST_F(AlicaEngineTest, planWriter) {
+    ASSERT_NO_SIGNAL
+
     const auto& plans = ae->getPlanRepository()->getPlans();
     PlanWriter pw = PlanWriter(ae, ae->getPlanRepository());
     for (const Plan* plan : plans) {

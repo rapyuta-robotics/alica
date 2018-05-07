@@ -1,4 +1,9 @@
+#include <test_alica.h>
+#include <gtest/gtest.h>
+#include <engine/AlicaEngine.h>
+#include <engine/AlicaClock.h>
 #include "BehaviourCreator.h"
+#include "engine/IAlicaCommunication.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
@@ -68,14 +73,16 @@ class AlicaBehaviourTrigger : public ::testing::Test
     }
 };
 
-TEST_F(AlicaBehaviourTrigger, triggerTest)
-{
+TEST_F(AlicaBehaviourTrigger, triggerTest) {
+    ASSERT_NO_SIGNAL
     alicaTests::TestWorldModel::getOne()->trigger1 = new supplementary::EventTrigger();
     alicaTests::TestWorldModel::getOne()->trigger2 = new supplementary::EventTrigger();
     ae->init(bc, cc, uc, crc);
     ae->start();
-    chrono::milliseconds duration(100);
-    this_thread::sleep_for(duration);
+
+    AlicaTime duration = AlicaTime::milliseconds(100);
+    ae->getAlicaClock()->sleep(duration);
+
     for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
             iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
@@ -112,15 +119,22 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
     }
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    this_thread::sleep_for(duration);
+
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    this_thread::sleep_for(duration);
+
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    this_thread::sleep_for(duration);
+
+    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+
     alicaTests::TestWorldModel::getOne()->trigger2->run();
-    this_thread::sleep_for(2 * duration);
+
+    ae->getAlicaClock()->sleep(2 * duration);
 
     for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {

@@ -116,8 +116,8 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     std::shared_ptr<const RunningPlan> rp1 = ae1->getPlanBase()->getDeepestNode();
     std::shared_ptr<const RunningPlan> rp2 = ae1->getPlanBase()->getDeepestNode();
 
-    alica::AgentIDPtr id1 = ae1->getTeamManager()->getLocalAgentID();
-    alica::AgentIDPtr id2 = ae2->getTeamManager()->getLocalAgentID();
+    alica::AgentIDConstPtr id1 = ae1->getTeamManager()->getLocalAgentID();
+    alica::AgentIDConstPtr id2 = ae2->getTeamManager()->getLocalAgentID();
     EXPECT_NE(*id1, *id2) << "Agents use the same ID.";
 
     EXPECT_EQ(rp1->getPlan()->getId(), rp2->getPlan()->getId());

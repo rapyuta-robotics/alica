@@ -25,7 +25,7 @@ class ProblemPart
     const Condition* getCondition() const { return _condition; }
     std::shared_ptr<const RunningPlan> getRunningPlan() const { return _runningPlan; }
     const std::vector<AgentVariables>& getAllVariables() const { return _vars; }
-    const AgentVariables& getVarsOfAgent(AgentIDPtr id) const;
+    const AgentVariables& getVarsOfAgent(AgentIDConstPtr id) const;
 
     // TODO: get rid of the shared ptr
     std::shared_ptr<ProblemDescriptor> generateProblemDescriptor(ISolverBase* solver, UniqueVarStore& uvs) const;

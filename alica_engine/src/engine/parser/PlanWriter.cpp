@@ -534,26 +534,26 @@ void PlanWriter::addPlanElementAttributes(const AlicaElement* p, tinyxml2::XMLEl
     x->SetAttribute("comment", "");
 }
 
-string PlanWriter::getRelativeFileName(string file)
+std::string PlanWriter::getRelativeFileName(const std::string& file)
 {
-    string curdir = this->currentFile;
-    string ufile = "";
+    std::string curdir = this->currentFile;
+    std::string ufile = "";
     if (supplementary::FileSystem::isPathRooted(file)) {
         ufile = file;
     } else {
         if (file.substr(file.size() - 4, 4) == ".beh" || file.substr(file.size() - 4, 4) == ".pty" || file.substr(file.size() - 4, 4) == ".pml" ||
             file.substr(file.size() - 3, 3) == ".pp") {
             supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-            string tfile = (*sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
-            supplementary::FileSystem::combinePaths(tfile, file);
+            std::string tfile = (*sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
+            // tfile = supplementary::FileSystem::combinePaths(tfile, file);
             if (!supplementary::FileSystem::isPathRooted(tfile)) {
                 tfile = supplementary::FileSystem::combinePaths(this->configPath, tfile);
             }
             ufile = tfile;
         } else if (file.substr(file.size() - 4, 4) == ".tsk") {
             supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-            string tfile = (*sc)["Alica"]->get<string>("Alica.MiscDir", NULL);
-            supplementary::FileSystem::combinePaths(tfile, file);
+            std::string tfile = (*sc)["Alica"]->get<string>("Alica.MiscDir", NULL);
+            // tfile = supplementary::FileSystem::combinePaths(tfile, file);
             if (!supplementary::FileSystem::isPathRooted(tfile)) {
                 tfile = supplementary::FileSystem::combinePaths(this->configPath, tfile);
             }
@@ -572,15 +572,14 @@ string PlanWriter::getRelativeFileName(string file)
         ++pos;
     }
     ufile.erase(ufile.begin(), ufile.begin() + pos);
-    ret = ufile;
-    return ret;
+    return ufile;
 }
 
 string PlanWriter::getRelativeFileName(const AbstractPlan* p)
 {
     if (find(this->plansToSave.begin(), this->plansToSave.end(), p) != this->plansToSave.end() ||
         find(this->plansSaved.begin(), this->plansSaved.end(), p) != this->plansSaved.end()) {
-        string dirfile = this->tempPlanDir;
+        std::string dirfile = this->tempPlanDir;
         dirfile += p->getFileName();
         return getRelativeFileName(dirfile);
     } else {

@@ -66,7 +66,7 @@ class PlanWriter
     std::string currentFile;
     static int objectCounter;
 
-    std::string getRelativeFileName(std::string file);
+    std::string getRelativeFileName(const std::string& file);
     std::string getRelativeFileName(const AbstractPlan* p);
 
     void setPlansToSave(const AlicaElementGrp& plansToSave);

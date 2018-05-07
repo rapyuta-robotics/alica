@@ -1,3 +1,4 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
@@ -66,6 +67,8 @@ protected:
  * Tests whether it is possible to use multiple agents.
  */
 TEST_F(AlicaMultiAgent, runMultiAgentPlan) {
+    ASSERT_NO_SIGNAL
+
     sc->setHostname("nase");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "MultiAgentTestMaster", ".", true);
@@ -82,23 +85,15 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan) {
 
     ae->start();
     ae2->start();
-    chrono::milliseconds duration(33);
-    while (!ae->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting()) {
-        this_thread::sleep_for(duration);
-    }
+    step(ae);
+    step(ae2);
 
     for (int i = 0; i < 20; i++) {
         ASSERT_TRUE(ae->getPlanBase()->isWaiting());
         ASSERT_TRUE(ae2->getPlanBase()->isWaiting());
-        ae->stepNotify();
 
-        this_thread::sleep_for(duration);
-
-        ae2->stepNotify();
-        this_thread::sleep_for(duration);
-        while (!ae->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting()) {
-            this_thread::sleep_for(duration);
-        }
+        step(ae);
+        step(ae2);
         //        if (i > 24)
         //        {
         //            if (ae->getPlanBase()->getDeepestNode() != nullptr)

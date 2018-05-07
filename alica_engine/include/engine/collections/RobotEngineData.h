@@ -5,16 +5,18 @@
 #include <memory>
 #include <string>
 
-namespace alica {
+namespace alica
+{
 class AlicaEngine;
 class SuccessMarks;
 
 /**
  * Basic plan execution information relating to a robot within the team.
  */
-class RobotEngineData {
-public:
-    RobotEngineData(const AlicaEngine* engine, AgentIDPtr agentId);
+class RobotEngineData
+{
+  public:
+    RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId);
     virtual ~RobotEngineData();
     virtual void initDomainVariables();
 
@@ -23,9 +25,9 @@ public:
     void clearSuccessMarks();
 
     const DomainVariable* getDomainVariable(const Variable* templateVar) const;
-    const DomainVariable* getDomainVariable(const std::string& sort) const;
+    const DomainVariable* getDomainVariable(const std::string& name) const;
 
-protected:
+  protected:
     const AlicaEngine* _engine;
     const supplementary::AgentID* _agentId;
     /**

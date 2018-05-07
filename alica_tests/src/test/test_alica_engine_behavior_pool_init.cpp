@@ -1,3 +1,4 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
@@ -58,6 +59,8 @@ protected:
  * Tests the initialisation of the behaviourPool
  */
 TEST_F(AlicaEngineTestBehPool, behaviourPoolInit) {
+    ASSERT_NO_SIGNAL
+
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
     alica::BehaviourPool* bp = ae->getBehaviourPool();
     for (const Behaviour* behaviour : ae->getPlanRepository()->getBehaviours()) {

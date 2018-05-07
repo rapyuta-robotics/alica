@@ -4,12 +4,14 @@
 #include "engine/model/Variable.h"
 #include <iostream>
 
-namespace alica {
+namespace alica
+{
 /**
  * Internal class to deal with bindings in states and plantypes
  */
-class UniqueVarStore {
-public:
+class UniqueVarStore
+{
+  public:
     UniqueVarStore();
 
     void clear();
@@ -19,19 +21,9 @@ public:
     void addVarTo(const Variable* representing, const Variable* toAdd);
     void getAllRep(VariableGrp& o_vars) const;
     int getIndexOf(const Variable* v) const;
-    friend std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store) {
-        os << "UniqueVarStore: " << std::endl;
-        for (const VariableGrp& vs : store._store) {
-            os << "Unifications: ";
-            for (const Variable* variable : vs) {
-                os << *variable << ", ";
-            }
-            os << std::endl;
-        }
-        return os;
-    }
+    friend std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store);
 
-private:
+  private:
     /**
      *  Each inner list of variables is sorted from variables of the top most plan to variables of the deepest plan.
      *  Therefore, the first element is always the variable in the top most plan, where this variable occurs.
@@ -39,4 +31,4 @@ private:
     std::vector<VariableGrp> _store;
 };
 
-}  // namespace alica
+} // namespace alica

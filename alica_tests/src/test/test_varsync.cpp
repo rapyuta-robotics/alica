@@ -1,3 +1,4 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaClock.h>
 #include <engine/collections/Variant.h>
@@ -71,6 +72,8 @@ protected:
 };
 
 TEST_F(VariableSyncModuleTest, GetOwnSeed) {
+    ASSERT_NO_SIGNAL
+
     VariableSyncModule* vsm = ae->getResultStore();
 
     //    virtual void postResult(int64_t vid, Variant result) override;

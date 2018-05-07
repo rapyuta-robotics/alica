@@ -27,7 +27,7 @@ ForallAgents::ForallAgents(int64_t id)
 
 ForallAgents::~ForallAgents() {}
 
-ForallAgents::Result ForallAgents::TryAddId(AgentIDPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager* tm) const
+ForallAgents::Result ForallAgents::TryAddId(AgentIDConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager* tm) const
 {
     std::vector<AgentVariables>::iterator it =
         std::find_if(io_agentVarsInScope.begin(), io_agentVarsInScope.end(), [id](const AgentVariables& av) { return av.getId() == id; });
@@ -56,7 +56,7 @@ ForallAgents::Result ForallAgents::TryAddId(AgentIDPtr id, std::vector<AgentVari
     }
 }
 
-bool ForallAgents::isAgentInScope(AgentIDPtr id, const std::shared_ptr<const RunningPlan>& rp) const
+bool ForallAgents::isAgentInScope(AgentIDConstPtr id, const std::shared_ptr<const RunningPlan>& rp) const
 {
     switch (getScopeType()) {
     case PLANSCOPE:
@@ -83,7 +83,7 @@ bool ForallAgents::addDomainVariables(const std::shared_ptr<const RunningPlan>& 
     switch (getScopeType()) {
     case PLANSCOPE:
         if (p->getPlan() == getScopedPlan()) {
-            for (AgentIDPtr id : p->getAssignment()->getAllRobots()) {
+            for (AgentIDConstPtr id : p->getAssignment()->getAllRobots()) {
                 Result r = TryAddId(id, io_agentVarsInScope, tm);
                 addedAgent = addedAgent || r == ADDED;
                 changedAgent = changedAgent || r == MODIFIED;
@@ -91,14 +91,14 @@ bool ForallAgents::addDomainVariables(const std::shared_ptr<const RunningPlan>& 
         }
         break;
     case ENTRYPOINTSCOPE:
-        for (AgentIDPtr id : *p->getAssignment()->getRobotsWorking(getScopedEntryPoint())) {
+        for (AgentIDConstPtr id : *p->getAssignment()->getRobotsWorking(getScopedEntryPoint())) {
             Result r = TryAddId(id, io_agentVarsInScope, tm);
             addedAgent = addedAgent || r == ADDED;
             changedAgent = changedAgent || r == MODIFIED;
         }
         break;
     case STATESCOPE:
-        for (AgentIDPtr id : p->getAssignment()->getRobotStateMapping()->getRobotsInState(getScopedState())) {
+        for (AgentIDConstPtr id : p->getAssignment()->getRobotStateMapping()->getRobotsInState(getScopedState())) {
             Result r = TryAddId(id, io_agentVarsInScope, tm);
             addedAgent = addedAgent || r == ADDED;
             changedAgent = changedAgent || r == MODIFIED;
