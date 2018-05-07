@@ -15,7 +15,7 @@ namespace geometry
 		this->radius = 0;
 		this->velocityX = 0;
 		this->velocityY = 0;
-		this->id = 0;
+		this->id = nullptr;
 		this->certainty = 0;
 		this->rotation = 0;
 	}

@@ -1,26 +1,23 @@
-#ifndef pm_control__PMControl_H
-#define pm_control__PMControl_H
+#pragma once
 
-#include <rqt_gui_cpp/plugin.h>
-
-#include "ros/ros.h"
-#include <ros/macros.h>
-#include "process_manager/ProcessStats.h"
-#include "process_manager/ProcessStat.h"
+#include "pm_widget/ControlledRobot.h"
 
 #include <ui_PMControl.h>
+#include <process_manager/ProcessStats.h>
+#include <process_manager/ProcessStat.h>
+#include <supplementary/AgentID.h>
+
 #include <QtGui>
 #include <QWidget>
 #include <QDialog>
-
-#include <pm_widget/ControlledRobot.h>
+#include <rqt_gui_cpp/plugin.h>
+#include <ros/ros.h>
+#include <ros/macros.h>
 
 #include <queue>
 #include <mutex>
 #include <utility>
 #include <chrono>
-
-using namespace std;
 
 namespace supplementary
 {
@@ -47,11 +44,9 @@ namespace pm_control
 		virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
 		virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
-		void sendProcessCommand(int receiverId, vector<int> robotIds, vector<int> execIds, vector<int> paramSets, int cmd);
-//		void addRobot(QFrame* robot);
-//		void removeRobot(QFrame* robot);
+		void sendProcessCommand(const supplementary::AgentID* receiverId, std::vector<const supplementary::AgentID*> robotIds, std::vector<int> execIds, std::vector<int> paramSets, int cmd);
 
-		chrono::duration<double> msgTimeOut;
+		std::chrono::duration<double> msgTimeOut;
 
 		Ui::PMControlWidget ui_;
 		QWidget* widget_;
@@ -62,20 +57,17 @@ namespace pm_control
 		ros::NodeHandle* rosNode;
 		ros::Subscriber processStateSub;
 		ros::Publisher processCommandPub;
-		queue<pair<chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
-		mutex msgQueueMutex;
+		std::queue<std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
+		std::mutex msgQueueMutex;
 
 		supplementary::SystemConfig* sc;
 
-		map<int, pm_widget::ControlledProcessManager*> processManagersMap;
-
+		std::map<const supplementary::AgentID*, pm_widget::ControlledProcessManager*, supplementary::AgentIDComparator> processManagersMap;
 
 		void handleProcessStats();
 
 		void receiveProcessStats(process_manager::ProcessStatsConstPtr psts);
-		pm_widget::ControlledProcessManager* getControlledProcessManager(int processManagerId);
-
-
+		pm_widget::ControlledProcessManager* getControlledProcessManager(const std::vector<uint8_t>& processManagerId);
 
 		QTimer* guiUpdateTimer;
 
@@ -84,6 +76,4 @@ namespace pm_control
 		void updateGUI();
 	};
 
-}
-
-#endif 
+} /* pm_control */

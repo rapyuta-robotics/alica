@@ -1,12 +1,10 @@
-/*
- * ExecutableMetaData.cpp
- *
- *  Created on: Feb 12, 2015
- *      Author: Stephan Opfer
- */
-
 #include "process_manager/ExecutableMetaData.h"
 #include "iostream"
+
+
+using std::string;
+using std::map;
+using std::vector;
 
 namespace supplementary
 {

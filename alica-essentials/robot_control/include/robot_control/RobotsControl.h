@@ -2,12 +2,13 @@
 
 #include <rqt_gui_cpp/plugin.h>
 
-#include "ros/ros.h"
+#include <supplementary/AgentID.h>
+#include <ros/ros.h>
 #include <ros/macros.h>
 #include <robot_control/Robot.h>
 
 #include <process_manager/ProcessStats.h>
-#include <alica_ros_proxy/AlicaEngineInfo.h>
+#include <alica_msgs/AlicaEngineInfo.h>
 
 #include <ui_RobotsControl.h>
 #include <QtGui>
@@ -23,6 +24,7 @@ namespace supplementary
 {
 	class SystemConfig;
 	class RobotExecutableRegistry;
+	class AgentIDFactory;
 }
 
 namespace robot_control
@@ -59,16 +61,16 @@ namespace robot_control
 
 		supplementary::SystemConfig* sc;
 
-		std::map<int, Robot*> controlledRobotsMap;
+		std::map<const supplementary::AgentID*, Robot*, supplementary::AgentIDComparator> controlledRobotsMap;
 		std::queue<std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
 		std::mutex processStatsMsgQueueMutex;
-		std::queue<std::pair<std::chrono::system_clock::time_point, alica_ros_proxy::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
+		std::queue<std::pair<std::chrono::system_clock::time_point, alica_msgs::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
 		std::mutex alicaInfoMsgQueueMutex;
 
 		void receiveProcessStats(process_manager::ProcessStatsConstPtr processStats);
-		void receiveAlicaInfo(alica_ros_proxy::AlicaEngineInfoConstPtr alicaInfo);
+		void receiveAlicaInfo(alica_msgs::AlicaEngineInfoConstPtr alicaInfo);
 		void processMessages();
-		void checkAndInit(int robotId);
+		void checkAndInit(const supplementary::AgentID* robotId);
 
 		QTimer* guiUpdateTimer;
 

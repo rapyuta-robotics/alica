@@ -1,13 +1,10 @@
-/*
- * ManagedExecutable.cpp
- *
- *  Created on: Nov 4, 2014
- *      Author: Stephan Opfer
- */
-
 #include "process_manager/ManagedExecutable.h"
 #include "process_manager/ProcessManager.h"
 #include <process_manager/RobotExecutableRegistry.h>
+
+#include <SystemConfig.h>
+#include <Logging.h>
+
 #include <cassert>
 #include <map>
 #include <iostream>
@@ -21,8 +18,6 @@
 #include <iomanip>
 #include <chrono>
 #include <stdlib.h>
-#include <SystemConfig.h>
-#include <Logging.h>
 
 namespace supplementary
 {
@@ -204,12 +199,12 @@ namespace supplementary
 		}
 	}
 
-	void ManagedExecutable::report(process_manager::ProcessStats& psts, int robotId)
+	void ManagedExecutable::report(process_manager::ProcessStats& psts, const AgentID* agentID)
 	{
 		if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED)
 		{
 			process_manager::ProcessStat ps;
-			ps.robotId = robotId;
+			ps.robotId.id = agentID->toByteVector();
 			ps.cpu = this->cpu;
 			ps.mem = this->memory * ManagedExecutable::kernelPageSize / 1024.0 / 1024.0; // MB
 			ps.processKey = this->metaExec->id;

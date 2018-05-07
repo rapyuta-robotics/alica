@@ -1,70 +1,64 @@
-/*
- * ProcessManagerRegistry.h
- *
- *  Created on: Feb 13, 2015
- *      Author: Stephan Opfer
- */
+#pragma once
 
-#ifndef SUPPLEMENTARY_PROCESS_MANAGER_SRC_ROBOTEXECUTABLEREGISTRY_H_
-#define SUPPLEMENTARY_PROCESS_MANAGER_SRC_ROBOTEXECUTABLEREGISTRY_H_
+#include <supplementary/AgentID.h>
 
 #include <vector>
 #include <string>
 #include <map>
-
-using namespace std;
+#include <stdint.h>
 
 namespace supplementary
 {
 
+	class AgentIDFactory;
+	class AgentID;
+	class AgentIDManager;
 	class RobotMetaData;
 	class ExecutableMetaData;
 	class SystemConfig;
 
 	/**
 	 * The RobotExecutableRegistry help the process manager and its
-	 * control GUI to remember/manage the names and ids of robots and executables.
+	 * control GUI to remember/manage the names and IDs of robots and executables.
 	 */
 	class RobotExecutableRegistry
 	{
 	public:
 		static RobotExecutableRegistry* get();
-		const vector<RobotMetaData*>& getRobots() const;
-		void addRobot(string robotName, int robotId);
-		int addRobot(string robotName);
-		bool getRobotId(string robotName, int& robotId);
-		bool getRobotName(int robotId, string& robotName);
-		bool robotExists(int robotId);
-		bool robotExists(string robotName);
-		void setInterpreters(vector<string> interpreter);
-		bool isKnownInterpreter(string const & cmdLinePart);
+		const std::map<const AgentID *, RobotMetaData *, supplementary::AgentIDComparator>& getRobots() const;
+		void addRobot(std::string agentName, const AgentID* agentID);
+		const AgentID * addRobot(std::string agentName);
+		std::string addRobot(const AgentID *agentID);
+		const AgentID* getRobotId(std::string agentName);
+		const AgentID* getRobotId(const std::vector<uint8_t>& idVector);
+		const AgentID* getRobotId(std::vector<uint8_t>& idVector, std::string& robotName);
+		bool getRobotName(const AgentID* agentID, std::string& robotName);
+		bool robotExists(const AgentID* agentID);
+		bool robotExists(std::string agentName);
+		void setInterpreters(std::vector<std::string> interpreter);
+		bool isKnownInterpreter(std::string const & cmdLinePart);
 
-		map<string, vector<pair<int, int>>> const * const getBundlesMap();
-		ExecutableMetaData const * const getExecutable(string execName) const;
+		std::map<std::string, std::vector<std::pair<int, int>>> const * const getBundlesMap();
+		ExecutableMetaData const * const getExecutable(std::string execName) const;
 		ExecutableMetaData const * const getExecutable(int execId) const;
-		const vector<ExecutableMetaData*>& getExecutables() const;
-		int addExecutable(string execName);
-		bool getExecutableId(vector<string> &splittedCmdLine, int& execId);
-		bool getExecutableIdByExecName(string execName, int& execId);
-		bool getExecutableName(int execId, string& execName);
+		const std::vector<ExecutableMetaData*>& getExecutables() const;
+		int addExecutable(std::string execName);
+		bool getExecutableId(std::vector<std::string> &splittedCmdLine, int& execId);
+		bool getExecutableIdByExecName(std::string execName, int& execId);
+		bool getExecutableName(int execId, std::string& execName);
 		bool executableExists(int execId);
-		bool executableExists(string execName);
-//		static size_t getCmdLinePartWithoutPath(string cmdline, int argStartIdx, string& arg);
-//		static size_t getCmdLinePartWithPath(string cmdline, int argStartIdx, string& arg);
+		bool executableExists(std::string execName);
 
 	private:
 		RobotExecutableRegistry();
 		virtual ~RobotExecutableRegistry();
 
-		// this is just for faster lookup in case of lazy initialisation
-		vector<RobotMetaData*> robotList;
-		vector<ExecutableMetaData*> executableList;
-		vector<string> interpreter;
-		map<string, vector<pair<int, int>>> bundlesMap;
+		std::map<const AgentID*, RobotMetaData*, supplementary::AgentIDComparator> robotMap;
+		std::vector<ExecutableMetaData*> executableList;
+		std::vector<std::string> interpreter;
+		std::map<std::string, std::vector<std::pair<int, int>>> bundlesMap;
 		SystemConfig* sc;
-
+		supplementary::AgentIDManager* agentIDManager;
 	};
 
 } /* namespace supplementary */
-
-#endif /* SUPPLEMENTARY_PROCESS_MANAGER_SRC_ROBOTEXECUTABLEREGISTRY_H_ */

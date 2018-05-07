@@ -1,33 +1,28 @@
-/*
- * ControlledRobot.cpp
- *
- *  Created on: Feb 27, 2015
- *      Author: Stephan Opfer
- */
-#include <ros/ros.h>
-#include <limits.h>
-
-#include <process_manager/RobotExecutableRegistry.h>
-#include <process_manager/ExecutableMetaData.h>
-#include <process_manager/ProcessCommand.h>
-#include <SystemConfig.h>
-
 #include "pm_widget/ControlledRobot.h"
 #include "pm_widget/ControlledExecutable.h"
 #include "pm_widget/ControlledProcessManager.h"
 #include "ui_RobotProcessesWidget.h"
 #include "ui_ProcessWidget.h"
 
+#include <supplementary/AgentID.h>
+#include <supplementary/BroadcastID.h>
+#include <process_manager/RobotExecutableRegistry.h>
+#include <process_manager/ExecutableMetaData.h>
+#include <process_manager/ProcessCommand.h>
+#include <SystemConfig.h>
+
+#include <ros/ros.h>
+#include <limits.h>
 namespace pm_widget
 {
 	// Second Constructor is for robot_control
-	ControlledRobot::ControlledRobot(string robotName, int robotId, int parentPMid) :
+	ControlledRobot::ControlledRobot(string robotName, const supplementary::AgentID* robotId, const supplementary::AgentID* parentPMid) :
 			RobotMetaData(robotName, robotId), robotProcessesQFrame(new QFrame()), _robotProcessesWidget(new Ui::RobotProcessesWidget()), parentPMid(parentPMid)
 	{
 		// setup gui stuff
 		this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
 		auto pmRegistry = supplementary::RobotExecutableRegistry::get();
-		if (parentPMid == -1)
+		if (dynamic_cast<const supplementary::BroadcastID*>(parentPMid))
 		{
 			// don't show in robot_control
 			this->_robotProcessesWidget->robotHostLabel->hide();
@@ -85,7 +80,7 @@ namespace pm_widget
 	}
 
 	void ControlledRobot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived,
-											process_manager::ProcessStat ps, int parentPMid)
+											process_manager::ProcessStat ps, const supplementary::AgentID* parentPMid)
 	{
 		this->parentPMid = parentPMid;
 
@@ -141,15 +136,11 @@ namespace pm_widget
 
 	void ControlledRobot::sendProcessCommand(vector<int> execIds, vector<int> paramSets, int cmd)
 	{
-//		if (this->parentPMid == -1)
-//		{
-//			cerr << "ControlledRobot: Don't know the responsible process manager for " << this->name << " (" << this->id << ")" << endl;
-//			return;
-//		}
-
 		process_manager::ProcessCommand pc;
-		pc.receiverId = (this->parentPMid == -1? 0 : this->parentPMid);
-		pc.robotIds = vector<int> {this->id};
+		pc.receiverId.type = this->parentPMid->getType();
+		pc.receiverId.id = this->parentPMid->toByteVector();
+		pc.robotIds.push_back(process_manager::ProcessCommand::_robotIds_type::value_type());
+		pc.robotIds[0].id = this->agentID->toByteVector();
 		pc.processKeys = execIds;
 		pc.paramSets = paramSets;
 		pc.cmd = cmd;

@@ -1,11 +1,4 @@
-/*
- * EventTrigger.cpp
- *
- *  Created on: Apr 1, 2015
- *      Author: Stefan Jakob
- */
-
-#include "EventTrigger.h"
+#include "supplementary/EventTrigger.h"
 
 namespace supplementary
 {
@@ -19,7 +12,7 @@ namespace supplementary
 
 	void EventTrigger::run(bool notifyAll)
 	{
-		lock_guard<mutex> lock(cv_mtx);
+		std::lock_guard<std::mutex> lock(cv_mtx);
 		this->notifyAll(notifyAll);
 	}
 }
