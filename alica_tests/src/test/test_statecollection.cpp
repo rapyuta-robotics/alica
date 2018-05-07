@@ -1,4 +1,3 @@
-
 #include <gtest/gtest.h>
 #include <engine/collections/StateCollection.h>
 #include <engine/model/State.h>

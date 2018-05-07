@@ -1,3 +1,5 @@
+#include <test_alica.h>
+#include <gtest/gtest.h>
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
@@ -19,7 +21,6 @@
 #include "engine/IRoleAssignment.h"
 #include "supplementary/AgentID.h"
 
-#include <gtest/gtest.h>
 #include <list>
 #include <vector>
 #include <memory>
@@ -74,6 +75,8 @@ protected:
 };
 
 TEST_F(TaskAssignmentTest, constructTaskAssignment) {
+    ASSERT_NO_SIGNAL
+
     // fake a list of existing robots
     alica::AgentGrp robots;
     for (int number = 8; number <= 11; number++) {

@@ -1,3 +1,4 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
 #include <engine/AlicaClock.h>
@@ -80,6 +81,8 @@ protected:
  * Tests if Behaviour with Constraints are called
  */
 TEST_F(AlicaConditionPlan, solverTest) {
+    ASSERT_NO_SIGNAL
+
     ae->init(bc, cc, uc, crc);
 
     const alica::PlanRepository* rep = ae->getPlanRepository();
@@ -111,13 +114,7 @@ TEST_F(AlicaConditionPlan, solverTest) {
     ASSERT_TRUE(found) << "Sub variable not found in parametrisation";
 
     ae->start();
-    ae->stepNotify();
-    //	unsigned int sleepTime = 1;
-    chrono::milliseconds sleepTime(33);
-    this_thread::sleep_for(sleepTime);
-    while (!ae->getPlanBase()->isWaiting()) {
-        this_thread::sleep_for(sleepTime);
-    }
+    step(ae);
 
     shared_ptr<BasicBehaviour> basicBehaviour =
             (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getBasicBehaviour();
