@@ -1,9 +1,4 @@
-#include <test_alica.h>
-#include <gtest/gtest.h>
-#include <engine/AlicaEngine.h>
-#include <engine/AlicaClock.h>
 #include "BehaviourCreator.h"
-#include "engine/IAlicaCommunication.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
@@ -25,6 +20,7 @@
 #include <gtest/gtest.h>
 #include <mutex>
 #include <supplementary/EventTrigger.h>
+#include <test_alica.h>
 
 using namespace std;
 
@@ -73,8 +69,10 @@ class AlicaBehaviourTrigger : public ::testing::Test
     }
 };
 
-TEST_F(AlicaBehaviourTrigger, triggerTest) {
+TEST_F(AlicaBehaviourTrigger, triggerTest)
+{
     ASSERT_NO_SIGNAL
+
     alicaTests::TestWorldModel::getOne()->trigger1 = new supplementary::EventTrigger();
     alicaTests::TestWorldModel::getOne()->trigger2 = new supplementary::EventTrigger();
     ae->init(bc, cc, uc, crc);
@@ -134,7 +132,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest) {
 
     alicaTests::TestWorldModel::getOne()->trigger2->run();
 
-    ae->getAlicaClock()->sleep(2 * duration);
+    ae->getAlicaClock()->sleep(duration * 2);
 
     for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
