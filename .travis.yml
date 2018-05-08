@@ -18,6 +18,7 @@ env:
     - BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
     - BASE_BRANCH=rr-devel
 
+
 ################################################################################
 
 before_install:
@@ -86,6 +87,7 @@ script:
     if [[ \"$BRANCH\" = \"coverity_scan\" ]] ; then 
         wget -qO- https://scan.coverity.com/download/cxx/linux64 
             --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/$COVERITY_PROJECT\" | 
+
         tar xvz && 
         python /travis/generate_coverity-analysis_script.py . && 
         chmod +x coverity-analysis.sh && 
