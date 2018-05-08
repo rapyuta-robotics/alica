@@ -2,27 +2,31 @@
 #include "alica/reasoner/DummyTerm.h"
 #include "alica/reasoner/DummyVariable.h"
 
-#include <engine/constraintmodul/ProblemDescriptor.h>
-#include <engine/model/Variable.h>
 #include <engine/AlicaEngine.h>
 #include <engine/blackboard/BlackBoard.h>
+#include <engine/constraintmodul/ProblemDescriptor.h>
+#include <engine/model/Variable.h>
 
-namespace alica {
+namespace alica
+{
 
-namespace reasoner {
+namespace reasoner
+{
 
 DummySolver::DummySolver(AlicaEngine* ae)
-        : ISolver(ae) {}
+    : ISolver(ae)
+{
+}
 
 DummySolver::~DummySolver() {}
 
-bool DummySolver::existsSolutionImpl(
-        const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
+bool DummySolver::existsSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls)
+{
     return true;
 }
 
-bool DummySolver::getSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
-        std::vector<BBIdent>& results) {
+bool DummySolver::getSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results)
+{
     // TODO: reformulate this without a temporary vector
     std::vector<std::shared_ptr<DummyVariable>> dummyVariables;
     dummyVariables.reserve(vars.size());
@@ -69,7 +73,8 @@ bool DummySolver::getSolutionImpl(const VariableGrp& vars, const std::vector<std
     return true;
 }
 
-std::shared_ptr<SolverVariable> DummySolver::createVariable(int64_t representingVariableID) {
+std::shared_ptr<SolverVariable> DummySolver::createVariable(int64_t representingVariableID)
+{
     return std::make_shared<DummyVariable>(representingVariableID);
 }
 

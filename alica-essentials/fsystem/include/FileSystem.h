@@ -8,21 +8,22 @@
 #ifndef FILESYSTEM_H_
 #define FILESYSTEM_H_
 
-#include <string>
-#include <string.h>
-#include <vector>
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <unistd.h>
-#include <sys/stat.h>
 #include <dirent.h>
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <string>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <vector>
 
-namespace supplementary {
+namespace supplementary
+{
 
-class FileSystem {
-public:
+class FileSystem
+{
+  public:
     virtual ~FileSystem();
     static std::string getSelfPath();
     static std::string getSelf();
@@ -33,6 +34,7 @@ public:
     static bool isPathRooted(const std::string& path);
     static std::string combinePaths(const std::string& path1, const std::string& path2);
     static bool endsWith(const std::string& file, const std::string& ending);
+    static bool endsWith(const std::string& file, const char ending);
     static bool isDirectory(const std::string& path);
     static bool isFile(const std::string& path);
     static std::string getParent(const std::string& path);
@@ -43,10 +45,10 @@ public:
     static const std::string PARENTDIR;
     static const char PATH_SEPARATOR;
 
-private:
+  private:
     FileSystem();
 };
 
-}  // namespace supplementary
+} // namespace supplementary
 
 #endif /* FILESYSTEM_H_ */
