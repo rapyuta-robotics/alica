@@ -127,8 +127,9 @@ void PlanWriter::saveFileLoop()
     while (plansToSave.size() > 0) {
         const AlicaElement* ae = plansToSave[plansToSave.size() - 1];
         plansToSave.erase(plansToSave.begin() + (plansToSave.size() - 1));
-        if (dynamic_cast<const Plan*>(ae) != nullptr) {
-            saveSinglePlan(dynamic_cast<const Plan*>(ae));
+        const Plan* ap = dynamic_cast<const Plan*>(ae);
+        if (ap != nullptr) {
+            saveSinglePlan(ap);
         } else {
             cout << "Saving of type " << typeid(ae).name() << " is not implemented." << endl;
             throw new exception();
