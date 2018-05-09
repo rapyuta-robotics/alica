@@ -17,11 +17,12 @@ env:
     - PYTHONPATH=$PYTHONPATH:/usr/lib/python2.7/dist-packages:/usr/local/lib/python2.7/dist-packages
     - BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
     - BASE_BRANCH=rr-devel
+    - TRAVIS_BRANCH=$TRAVIS_BRANCH
 
 ################################################################################
 
 before_install:
-  - docker run -e BASE_BRANCH -e BRANCH -e PYTHONPATH -e COVERITY_EMAIL -e COVERITY_TOKEN -e COVERITY_PROJECT -e ROS_DISTRO -d --name alica-test -v $TRAVIS_BUILD_DIR:/travis ros:$ROS_DISTRO-ros-core-xenial tail -f /dev/null
+  - docker run -e BASE_BRANCH -e BRANCH -e PYTHONPATH -e COVERITY_EMAIL -e COVERITY_TOKEN -e COVERITY_PROJECT -e TRAVIS_BRANCH -e ROS_DISTRO -d --name alica-test -v $TRAVIS_BUILD_DIR:/travis ros:$ROS_DISTRO-ros-core-xenial tail -f /dev/null
 
 install:
   - docker exec -t alica-test bash -c "
@@ -83,7 +84,7 @@ script:
     catkin build --no-status && 
     source devel/setup.bash && 
     catkin run_tests --no-status && catkin_test_results --verbose && 
-    if [[ \"$BRANCH\" = \"coverity_scan\" ]] ; then 
+    if [[ \"$TRAVIS_BRANCH\" = \"coverity_scan\" ]] ; then 
         wget -qO- https://scan.coverity.com/download/cxx/linux64 
             --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/$COVERITY_PROJECT\" | 
         tar xvz && 
