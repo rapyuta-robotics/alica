@@ -72,6 +72,7 @@ class AlicaBehaviourTrigger : public ::testing::Test
 TEST_F(AlicaBehaviourTrigger, triggerTest)
 {
     ASSERT_NO_SIGNAL
+
     alicaTests::TestWorldModel::getOne()->trigger1 = new supplementary::EventTrigger();
     alicaTests::TestWorldModel::getOne()->trigger2 = new supplementary::EventTrigger();
     ae->init(bc, cc, uc, crc);

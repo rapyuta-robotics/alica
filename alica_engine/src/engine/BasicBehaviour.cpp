@@ -258,7 +258,7 @@ void BasicBehaviour::runInternal()
             sendLogMessage(4, err);
         }
 #ifdef BEH_DEBUG
-        const BehaviourConfiguration* conf = dynamic_cast<const BehaviourConfiguration*>(this->runningPlan->getPlan());
+        const BehaviourConfiguration* conf = static_cast<const BehaviourConfiguration*>(this->runningPlan->getPlan());
         if (!conf->isEventDriven()) {
             double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / conf->getFrequency() * 1000.0;
             if (dura > 0.1) {
