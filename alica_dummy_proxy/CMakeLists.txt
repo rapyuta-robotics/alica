@@ -7,16 +7,17 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
-set(CMAKE_CXX_FLAGS "-rdynamic -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-rdynamic ${CMAKE_CXX_FLAGS}")
 
 find_package(catkin QUIET)
 if (catkin_FOUND)
 	find_package(catkin REQUIRED COMPONENTS
 	  alica_engine
 	  system_config
+      alica_common_config
 	)
 else (catkin_FOUND)
-   	set(catkin_LIBRARIES "system_config" "alica_engine")
+   	set(catkin_LIBRARIES "system_config" "alica_engine" alica_common_config)
 endif(catkin_FOUND)
 
 if(catkin_FOUND)

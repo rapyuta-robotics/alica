@@ -12,15 +12,17 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
-## Enable exception handling for segfaults
-set(CMAKE_CXX_FLAGS "-rdynamic -g -fnon-call-exceptions -ggdb -Werror-implicit-function-declaration -Werror=return-type -Wall -Wno-reorder ${CMAKE_CXX_FLAGS}")
+## Set support for rtti
+set(CMAKE_CXX_FLAGS "-rdynamic ${CMAKE_CXX_FLAGS}")
 
 find_package(catkin QUIET)
 if (catkin_FOUND)
-  find_package(catkin REQUIRED COMPONENTS agent_id system_config fsystem event_handling system_util)
+  find_package(catkin REQUIRED COMPONENTS agent_id system_config fsystem event_handling system_util alica_common_config)
 else (catkin_FOUND)
-  set(catkin_LIBRARIES "agent_id" "system_config" "fsystem" "event_handling" "system_util")
+  set(catkin_LIBRARIES "agent_id" "system_config" "fsystem" "event_handling" "system_util" "alica_common_config")
 endif(catkin_FOUND)
+
+
 
 if(catkin_FOUND)
   catkin_package(
