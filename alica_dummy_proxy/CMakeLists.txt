@@ -11,11 +11,11 @@ set(CMAKE_CXX_FLAGS "-rdynamic ${CMAKE_CXX_FLAGS}")
 
 find_package(catkin QUIET)
 if (catkin_FOUND)
-	find_package(catkin REQUIRED COMPONENTS
-	  alica_engine
-	  system_config
+    find_package(catkin REQUIRED COMPONENTS
+      alica_engine
+      system_config
       alica_common_config
-	)
+    )
 else (catkin_FOUND)
    	set(catkin_LIBRARIES "system_config" "alica_engine" alica_common_config)
 endif(catkin_FOUND)

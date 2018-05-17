@@ -22,8 +22,6 @@ else (catkin_FOUND)
   set(catkin_LIBRARIES "agent_id" "system_config" "fsystem" "event_handling" "system_util" "alica_common_config")
 endif(catkin_FOUND)
 
-
-
 if(catkin_FOUND)
   catkin_package(
     INCLUDE_DIRS include
