@@ -1,5 +1,8 @@
 #include "engine/constraintmodul/UniqueVarStore.h"
 #include "engine/constraintmodul/Query.h"
+
+#include "engine/constraintmodul/ISolver.h"
+
 #include <assert.h>
 
 namespace alica
@@ -71,7 +74,38 @@ const Variable* UniqueVarStore::getRep(const Variable* v)
     add(v);
     return v;
 }
+SolverVariable* UniqueVarStore::getSolverVariable(const Variable* v) const
+{
+    assert(_store.size() == _solverVars.size());
+    for (int i = 0; i < static_cast<int>(_store.size()); ++i) {
+        for (const Variable* s : _store[i]) {
+            if (s == v) {
+                return _solverVars[i];
+            }
+        }
+    }
+    assert(false);
+    return nullptr;
+}
 
+SolverVariable* UniqueVarStore::getSolverVariable(const DomainVariable* dv, ISolverBase* solver, SolverContext* ctx)
+{
+    auto it = _agentSolverVars.find(dv);
+    if (it != _agentSolverVars.end()) {
+        return it->second;
+    }
+    SolverVariable* ret = solver->createVariable(dv->getId(), ctx);
+    _agentSolverVars[dv];
+    return ret;
+}
+
+void UniqueVarStore::setupSolverVars(ISolverBase* solver, SolverContext* ctx)
+{
+    _solverVars.resize(_store.size());
+    for (int i = 0; i < _solverVars.size(); ++i) {
+        _solverVars[i] = solver->createVariable(_store[i][0]->getId(), ctx);
+    }
+}
 /**
  * Returns the index of the unification-list that contains the given variable.
  * Returns -1, if the variable is not present.
@@ -86,14 +120,6 @@ int UniqueVarStore::getIndexOf(const Variable* v) const
         }
     }
     return -1;
-}
-
-/**
- * ONLY FOR TESTING!
- */
-const UniqueVarStore& Query::getUniqueVariableStore() const
-{
-    return _uniqueVarStore;
 }
 
 std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store)

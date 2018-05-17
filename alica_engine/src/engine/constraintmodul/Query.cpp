@@ -1,10 +1,7 @@
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
-#include "engine/BasicBehaviour.h"
 #include "engine/RunningPlan.h"
 #include "engine/collections/RobotEngineData.h"
-#include "engine/constraintmodul/SolverTerm.h"
-#include "engine/constraintmodul/SolverVariable.h"
 #include "engine/model/Condition.h"
 #include "engine/model/Parametrisation.h"
 #include "engine/model/PlanType.h"
@@ -18,11 +15,16 @@
 #include <engine/constraintmodul/ProblemPart.h>
 #include <engine/constraintmodul/Query.h>
 
+#include <alica_solver_interface/SolverContext.h>
+#include <alica_solver_interface/SolverTerm.h>
+#include <alica_solver_interface/SolverVariable.h>
+
 #include <iostream>
 //#define Q_DEBUG
 
 namespace alica
 {
+
 Query::Query() {}
 
 void Query::addStaticVariable(const Variable* v)
@@ -53,6 +55,15 @@ void Query::clearTemporaries()
     _domainVars.clear();
     _problemParts.clear();
 }
+
+/**
+ * ONLY FOR TESTING!
+ */
+const UniqueVarStore& Query::getUniqueVariableStore() const
+{
+    return _uniqueVarStore;
+}
+
 void Query::fillBufferFromQuery()
 {
     if (!_queriedStaticVariables.empty()) {
@@ -146,8 +157,8 @@ bool Query::collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolv
     std::cout << "Query: Size of problemParts is " << _problemParts.size() << std::endl;
 #endif
 
-    for (const ProblemPart& probPart : _problemParts) {
-        pds.push_back(probPart.generateProblemDescriptor(solver, _uniqueVarStore));
+    for (ProblemPart& probPart : _problemParts) {
+        pds.push_back(probPart.generateProblemDescriptor(solver, _uniqueVarStore, _context.get()));
     }
 
     _relevantVariables.clear();
@@ -161,12 +172,12 @@ bool Query::collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolv
     if (!_domainVars.getCurrent().empty()) {
         _relevantVariables.insert(_relevantVariables.end(), _domainVars.getCurrent().begin(), _domainVars.getCurrent().end());
     }
-    // fill any missing solver variables:
-    for (const Variable* v : _relevantVariables) {
-        if (v->getSolverVar().get() == nullptr) {
-            v->setSolverVar(solver->createVariable(v->getId()));
-        }
-    }
+        // fill any missing solver variables:
+        /*for (const Variable* v : _relevantVariables) {
+            if (v->getSolverVar().get() == nullptr) {
+                v->setSolverVar(solver->createVariable(v->getId()));
+            }
+        }*/
 
 #ifdef Q_DEBUG
     std::cout << "Query: Number of relevant static variables: " << domOffset << std::endl;

@@ -1,35 +1,36 @@
 #include "engine/constraintmodul/ProblemDescriptor.h"
 
-#include "engine/constraintmodul/SolverTerm.h"
-#include "engine/constraintmodul/SolverVariable.h"
+#include <alica_solver_interface/SolverContext.h>
+#include <alica_solver_interface/SolverTerm.h>
+#include <alica_solver_interface/SolverVariable.h>
 
 #include <iostream>
 #include <limits>
 
-namespace alica {
+namespace alica
+{
 
-ProblemDescriptor::ProblemDescriptor() {
+ProblemDescriptor::ProblemDescriptor(SolverContext* ctx)
+    : _context(ctx)
+    , _constraint(nullptr)
+    , _utility(nullptr)
+{
     clear();
 }
 
-void ProblemDescriptor::setUtilitySignificanceThreshold(double value) {
+void ProblemDescriptor::setUtilitySignificanceThreshold(double value)
+{
     _utilitySignificanceThreshold = value;
     _setsUtilitySignificanceThreshold = true;
 }
 
-void ProblemDescriptor::setConstraint(std::shared_ptr<SolverTerm> value) {
-    _constraint = value;
-}
-
-void ProblemDescriptor::setUtility(std::shared_ptr<SolverTerm> value) {
-    _utility = value;
-}
-
-void ProblemDescriptor::setUtilitySufficiencyThreshold(double value) {
+void ProblemDescriptor::setUtilitySufficiencyThreshold(double value)
+{
     _utilitySufficiencyThreshold = value;
 }
 
-const std::vector<std::pair<double, double>>& ProblemDescriptor::getAllRanges() {
+const std::vector<std::pair<double, double>>& ProblemDescriptor::getAllRanges()
+{
     if (_allRanges.empty()) {
         _allRanges.insert(_allRanges.end(), _staticRanges.begin(), _staticRanges.end());
         for (const AgentSolverVariables& avars : _domainVars) {
@@ -41,7 +42,8 @@ const std::vector<std::pair<double, double>>& ProblemDescriptor::getAllRanges() 
     return _allRanges;
 }
 
-void ProblemDescriptor::clear() {
+void ProblemDescriptor::clear()
+{
     _utilitySignificanceThreshold = 1E-22;
     _utilitySufficiencyThreshold = std::numeric_limits<double>::max();
     _dim = 0;
@@ -56,11 +58,12 @@ void ProblemDescriptor::clear() {
 
     _staticRanges.clear();
     _allRanges.clear();
+    _context->clear();
 }
 
-void ProblemDescriptor::prepForUsage() {
-    _staticRanges.resize(_staticVars.size(),
-            std::pair<double, double>(SolverVariable::minExpressibleValue, SolverVariable::maxExpressibleValue));
+void ProblemDescriptor::prepForUsage()
+{
+    _staticRanges.resize(_staticVars.size(), std::pair<double, double>(SolverVariable::minExpressibleValue, SolverVariable::maxExpressibleValue));
     _allVars.reserve(_dim);
     _allRanges.reserve(_dim);
     _allVars.insert(_allVars.end(), _staticVars.begin(), _staticVars.end());
@@ -72,4 +75,4 @@ void ProblemDescriptor::prepForUsage() {
     }
 }
 
-}  // namespace alica
+} // namespace alica

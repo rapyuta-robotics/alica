@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/Types.h"
-#include "engine/constraintmodul/SolverVariable.h"
+#include <alica_solver_interface/SolverVariable.h>
 
 #include <supplementary/AgentID.h>
 
@@ -54,13 +54,13 @@ using AgentVariables = AgentElements<const DomainVariable*>;
 
 struct RangedVariable
 {
-    RangedVariable(const std::shared_ptr<SolverVariable>& sv)
+    RangedVariable(SolverVariable* sv)
         : var(sv)
         , min(SolverVariable::minExpressibleValue)
         , max(SolverVariable::maxExpressibleValue)
     {
     }
-    std::shared_ptr<SolverVariable> var;
+    SolverVariable* var;
     double min;
     double max;
 };

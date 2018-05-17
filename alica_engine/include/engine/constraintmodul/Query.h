@@ -12,8 +12,6 @@
 #include "engine/constraintmodul/IVariableSyncModule.h"
 #include "engine/constraintmodul/ProblemDescriptor.h"
 #include "engine/constraintmodul/ProblemPart.h"
-#include "engine/constraintmodul/SolverTerm.h"
-#include "engine/constraintmodul/SolverVariable.h"
 #include "engine/constraintmodul/UniqueVarStore.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Condition.h"
@@ -31,6 +29,7 @@ namespace alica
 class ProblemPart;
 class RunningPlan;
 class BasicBehaviour;
+class SolverContext;
 
 template <class T>
 class BufferedSet
@@ -112,6 +111,7 @@ class Query
     BufferedDomainVariableGrp _domainVars;
 
     VariableGrp _relevantVariables;
+    std::unique_ptr<SolverContext> _context;
 };
 
 template <class SolverType>

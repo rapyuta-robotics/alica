@@ -14,6 +14,7 @@ class Condition;
 class RunningPlan;
 class DomainVariable;
 class ISolverBase;
+class SolverContext;
 
 class ProblemPart
 {
@@ -28,7 +29,7 @@ class ProblemPart
     const AgentVariables& getVarsOfAgent(AgentIDConstPtr id) const;
 
     // TODO: get rid of the shared ptr
-    std::shared_ptr<ProblemDescriptor> generateProblemDescriptor(ISolverBase* solver, UniqueVarStore& uvs) const;
+    std::shared_ptr<ProblemDescriptor> generateProblemDescriptor(ISolverBase* solver, UniqueVarStore& uvs, SolverContext* ctx);
 
     ProblemPart(const ProblemPart&) = delete;
     ProblemPart& operator=(const ProblemPart&) = delete;
