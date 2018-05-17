@@ -10,6 +10,7 @@
   <license>GPLv2</license>
 
   <build_depend>alica_engine</build_depend>
+  <build_depend>alica_common_config</build_depend>
   <build_depend>system_config</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>alica_ros_proxy</build_depend>
