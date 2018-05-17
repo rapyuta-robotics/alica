@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   message_generation
   alica_msgs
+  alica_common_config
 )
 
 ## System dependencies are found with CMake's conventions

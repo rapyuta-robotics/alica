@@ -20,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
     alica_engine
     alica_ros_proxy
     alica_dummy_proxy
+    alica_common_config
 )
 
 include_directories(include)
