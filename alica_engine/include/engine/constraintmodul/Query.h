@@ -169,8 +169,8 @@ bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<Resul
         }
         // Again, the queried domain variables should be at the beginning of the domain variable segment
         // So a simple move and resize should do the trick
-        for (int i = 0; i < _queriedDomainVariables.size(); ++i) {
-            for (int j = domOffset; j < _relevantVariables.size(); ++j) {
+        for (int i = 0; i < static_cast<int>(_queriedDomainVariables.size()); ++i) {
+            for (int j = domOffset; j < static_cast<int>(_relevantVariables.size()); ++j) {
                 if (_relevantVariables[j] == _queriedDomainVariables[i]) {
                     result.push_back(solverResult[j]);
                     break;
