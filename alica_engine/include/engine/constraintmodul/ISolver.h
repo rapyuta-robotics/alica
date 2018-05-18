@@ -22,7 +22,7 @@ class ISolverBase
     virtual SolverVariable* createVariable(int64_t id, SolverContext* ctx) = 0;
     virtual std::unique_ptr<SolverContext> createSolverContext() = 0;
 
-    virtual double utilityEstimate(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) { return 0; }
+    // virtual double utilityEstimate(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) { return 0; }
 
   protected:
     AlicaEngine* getAlicaEngine() const { return _ae; }
@@ -41,14 +41,14 @@ class ISolver : public ISolverBase
     }
     virtual ~ISolver() {}
 
-    bool existsSolution(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls)
+    bool existsSolution(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls)
     {
-        return static_cast<SolverType*>(this)->existsSolutionImpl(vars, calls);
+        return static_cast<SolverType*>(this)->existsSolutionImpl(ctx, calls);
     }
 
-    bool getSolution(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<ResultType>& results)
+    bool getSolution(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<ResultType>& results)
     {
-        return static_cast<SolverType*>(this)->getSolutionImpl(vars, calls, results);
+        return static_cast<SolverType*>(this)->getSolutionImpl(ctx, calls, results);
     }
 };
 

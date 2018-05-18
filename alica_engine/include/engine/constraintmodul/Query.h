@@ -4,12 +4,10 @@
 
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
-#include "engine/BasicBehaviour.h"
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/constraintmodul/ISolver.h"
-#include "engine/constraintmodul/IVariableSyncModule.h"
 #include "engine/constraintmodul/ProblemDescriptor.h"
 #include "engine/constraintmodul/ProblemPart.h"
 #include "engine/constraintmodul/UniqueVarStore.h"
@@ -28,7 +26,6 @@ namespace alica
 {
 class ProblemPart;
 class RunningPlan;
-class BasicBehaviour;
 class SolverContext;
 
 template <class T>

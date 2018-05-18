@@ -19,6 +19,7 @@
 #include <alica_solver_interface/SolverTerm.h>
 #include <alica_solver_interface/SolverVariable.h>
 
+#include <assert.h>
 #include <iostream>
 //#define Q_DEBUG
 

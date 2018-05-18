@@ -1,4 +1,3 @@
-//#define RS_DEBUG
 #include "engine/constraintmodul/VariableSyncModule.h"
 
 #include "SystemConfig.h"
@@ -124,74 +123,6 @@ void VariableSyncModule::publishContent()
 void VariableSyncModule::postResult(int64_t vid, Variant result)
 {
     _ownResults.addValue(vid, result, _ae->getAlicaClock()->now());
-}
-
-int VariableSyncModule::getSeeds(const VariableGrp& query, const std::vector<Interval<double>>& limits, std::vector<Variant>& o_seeds) const
-{
-    const int dim = query.size();
-    // TODO: use only stack memory for low dimensionality
-    std::vector<Variant> vec(dim);
-
-    std::vector<VotedSeed> seeds;
-
-    AlicaTime earliest = _ae->getAlicaClock()->now() - _ttl4Usage;
-    //		cout << "VSM: Number of Seeds in Store: " << this->store.size() << endl;
-    if (_ownResults.getValues(query, earliest, vec)) {
-        seeds.emplace_back(std::move(vec));
-    }
-
-    lock_guard<std::mutex> lock(_mutex);
-
-    for (const ResultEntry& re : _store) {
-        bool any = re.getValues(query, earliest, vec);
-        if (!any) {
-            continue;
-        }
-        bool found = false;
-        for (VotedSeed& s : seeds) {
-            if (s.takeVector(vec, limits, _distThreshold)) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            seeds.emplace_back(std::move(vec));
-        }
-    }
-#ifdef RS_DEBUG
-    std::cout << "RS: Generated " << seeds.size() << "seeds" << std::endl;
-    for (int i = 0; i < seeds.size(); ++i) {
-        cout << "Seed " << i << ": "; // (sup:{1}): ",i);
-        for (auto j = 0; j < dim; ++j) {
-            cout << seeds[i].values[j] << "\t";
-        }
-        cout << endl;
-    }
-#endif
-
-    int maxNum = std::min(static_cast<int>(seeds.size()), dim);
-
-    std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {
-        if (a._totalSupCount != b._totalSupCount) {
-            return a._totalSupCount > b._totalSupCount;
-        } else {
-            /*
-            if (a.values == nullptr || a.values.size() == 0)
-                return true;
-            if (b.values == nullptr || b.values.size() == 0)
-                return false;
-            */
-            return a._hash > b._hash;
-        }
-    });
-    int i = 0;
-    o_seeds.resize(dim * maxNum);
-    for (const VotedSeed& vs : seeds) {
-        memcpy(&*(o_seeds.begin() + i), &*vs._values.begin(), sizeof(Variant) * dim);
-        i += dim;
-    }
-
-    return maxNum;
 }
 
 VariableSyncModule::VotedSeed::VotedSeed(std::vector<Variant>&& vs)

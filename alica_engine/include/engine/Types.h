@@ -21,16 +21,17 @@ class DomainVariable;
 class EntryPoint;
 class FailureState;
 class Parameter;
+class Parametrisation;
 class Plan;
 class Quantifier;
 class Role;
+class SolverVariable;
 class State;
 class SuccessState;
 class SyncTransition;
 class Task;
 class Transition;
 class Variable;
-class Parametrisation;
 
 using AbstractPlanGrp = std::vector<const AbstractPlan*>;
 using AgentGrp = std::vector<const supplementary::AgentID*>;
@@ -53,6 +54,8 @@ using SyncTransitionGrp = std::vector<const SyncTransition*>;
 using TaskGrp = std::vector<const Task*>;
 using TransitionGrp = std::vector<const Transition*>;
 using VariableGrp = std::vector<const Variable*>;
+
+using SolverVariableGrp = std::vector<SolverVariable*>;
 
 using BehaviourParameterMap = std::unordered_map<std::string, std::string>;
 
