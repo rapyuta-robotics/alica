@@ -1,13 +1,15 @@
 #include "DistBallRobot.h"
 #include "engine/IAssignment.h"
 #include "engine/model/EntryPoint.h"
+#include <TestWorldModel.h>
 #include <supplementary/AgentID.h>
 #include <supplementary/AgentIDManager.h>
-#include <TestWorldModel.h>
 
-namespace alica {
+namespace alica
+{
 
-DistBallRobot::DistBallRobot(double weight, string name, long id, vector<long>& relevantEntryPointIds) {
+DistBallRobot::DistBallRobot(double weight, string name, long id, vector<long>& relevantEntryPointIds)
+{
     this->weight = weight;
     this->name = name;
     this->id = id;
@@ -19,31 +21,31 @@ DistBallRobot::DistBallRobot(double weight, string name, long id, vector<long>& 
     this->manager = new supplementary::AgentIDManager(new supplementary::AgentIDFactory());
 }
 
-DistBallRobot::~DistBallRobot() {
+DistBallRobot::~DistBallRobot()
+{
     delete manager;
 }
 
 void DistBallRobot::cacheEvalData() {}
 
-UtilityInterval DistBallRobot::eval(IAssignment* ass) {
+UtilityInterval DistBallRobot::eval(IAssignment* ass)
+{
     ui.setMin(0.0);
     ui.setMax(1.0);
     int numAssignedRobots = 0;
 
     long x8 = 8;
-    std::vector<uint8_t> id8(
-            reinterpret_cast<const uint8_t*>(&x8), (reinterpret_cast<const uint8_t*>(&x8) + sizeof(x8)));
+    std::vector<uint8_t> id8(reinterpret_cast<const uint8_t*>(&x8), (reinterpret_cast<const uint8_t*>(&x8) + sizeof(x8)));
     const supplementary::AgentID* agentID8 = this->manager->getIDFromBytes(id8);
 
     long x9 = 9;
-    std::vector<uint8_t> id9(
-            reinterpret_cast<const uint8_t*>(&x9), (reinterpret_cast<const uint8_t*>(&x9) + sizeof(x9)));
+    std::vector<uint8_t> id9(reinterpret_cast<const uint8_t*>(&x9), (reinterpret_cast<const uint8_t*>(&x9) + sizeof(x9)));
     const supplementary::AgentID* agentID9 = this->manager->getIDFromBytes(id9);
 
     const AgentGrp* relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
 
     double curPosition;
-    for (int i = 0; i < relevantRobots->size(); ++i) {
+    for (int i = 0; i < static_cast<int>(relevantRobots->size()); ++i) {
         int pos = 0;
         if (*(relevantRobots->at(i)) == *agentID9) {
             pos = 1;

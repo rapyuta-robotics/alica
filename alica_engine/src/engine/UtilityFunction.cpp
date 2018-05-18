@@ -24,7 +24,6 @@ UtilityFunction::UtilityFunction(const std::string& name, std::list<USummand*> u
 {
     this->ra = nullptr;
     this->ae = nullptr;
-    this->lookupStruct = new TaskRoleStruct(0, 0);
     this->name = name;
     this->utilSummands = utilSummands;
     this->priorityWeight = priorityWeight;
@@ -37,11 +36,6 @@ UtilityFunction::~UtilityFunction()
     for (auto summand : utilSummands) {
         delete summand;
     }
-
-    for (auto pair : this->priorityMartix) {
-        delete pair.first;
-    }
-    delete this->lookupStruct;
 }
 
 std::list<USummand*>& UtilityFunction::getUtilSummands()
@@ -202,8 +196,8 @@ void UtilityFunction::init(AlicaEngine* ae)
 {
     // CREATE MATRIX && HIGHEST PRIORITY ARRAY
     // init dicts
-    this->roleHighestPriorityMap = map<long, double>();
-    this->priorityMartix = map<TaskRoleStruct*, double>();
+    this->roleHighestPriorityMap.clear();
+    this->priorityMatrix.clear();
     const RoleSet* roleSet = ae->getRoleSet();
     int64_t taskId;
     int64_t roleId;
@@ -211,7 +205,7 @@ void UtilityFunction::init(AlicaEngine* ae)
 
     for (const RoleTaskMapping* rtm : roleSet->getRoleTaskMappings()) {
         roleId = rtm->getRole()->getId();
-        this->roleHighestPriorityMap.insert(std::pair<long, double>(roleId, 0.0));
+        this->roleHighestPriorityMap.insert(std::pair<int64_t, double>(roleId, 0.0));
         for (const EntryPoint* ep : plan->getEntryPoints()) {
             taskId = ep->getTask()->getId();
             auto iter = rtm->getTaskPriorities().find(taskId);
@@ -224,16 +218,13 @@ void UtilityFunction::init(AlicaEngine* ae)
             } else {
                 curPrio = iter->second;
             }
-            TaskRoleStruct* trs = new TaskRoleStruct(taskId, roleId);
-            if (this->priorityMartix.find(trs) == this->priorityMartix.end()) {
-                this->priorityMartix.insert(pair<TaskRoleStruct*, double>(trs, curPrio));
-            }
+            priorityMatrix[TaskRoleStruct(taskId, roleId)] = curPrio;
             if (this->roleHighestPriorityMap.at(roleId) < curPrio) {
                 this->roleHighestPriorityMap.at(roleId) = curPrio;
             }
         }
         // Add Priority for Idle-EntryPoint
-        this->priorityMartix.insert(pair<TaskRoleStruct*, double>(new TaskRoleStruct(Task::IDLEID, roleId), 0.0));
+        this->priorityMatrix.insert(std::pair<TaskRoleStruct, double>(TaskRoleStruct(Task::IDLEID, roleId), 0.0));
     }
     // c# != null
     // INIT UTILITYSUMMANDS
@@ -270,11 +261,6 @@ std::string UtilityFunction::toString() const
     return ss.str();
 }
 
-const std::map<TaskRoleStruct*, double>& UtilityFunction::getPriorityMartix() const
-{
-    return priorityMartix;
-}
-
 /**
  * Calculates the priority result for the specified Assignment
  * @return the priority result
@@ -309,13 +295,10 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass)
         auto robotList = ass->getUniqueRobotsWorkingAndFinished(ep);
         for (auto robot : *robotList) {
             roleId = this->ra->getRole(robot)->getId();
-            this->lookupStruct->taskId = taskId;
-            this->lookupStruct->roleId = roleId;
-            for (auto pair : this->priorityMartix) {
-                if (pair.first->roleId == this->lookupStruct->roleId && pair.first->taskId == this->lookupStruct->taskId) {
-                    curPrio = pair.second;
-                    break;
-                }
+            TaskRoleStruct lookup(taskId, roleId);
+            auto mit = priorityMatrix.find(lookup);
+            if (mit != priorityMatrix.end()) {
+                curPrio = mit->second;
             }
             if (curPrio < 0.0) // because one Robot has a negative priority for his task
             {
@@ -325,14 +308,7 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass)
             }
             this->priResult.setMin(this->priResult.getMin() + curPrio);
 #ifdef UFDEBUG
-            double prio = 0;
-            for (auto pair : this->priorityMartix) {
-                if (pair.first->roleId == this->lookupStruct->roleId && pair.first->taskId == this->lookupStruct->taskId) {
-                    prio = pair.second;
-                    break;
-                }
-            }
-            cout << "UF: taskId:" << taskId << " roleId:" << roleId << " prio: " << prio << endl;
+            cout << "UF: taskId:" << taskId << " roleId:" << roleId << " prio: " << curPrio << endl;
 #endif
         }
     }
