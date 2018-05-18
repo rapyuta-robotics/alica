@@ -149,7 +149,7 @@ bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<Resul
     // TODO: get rid of the interrim vector (see below how)
     std::vector<ResultType> solverResult;
     // let the solver solve the problem
-    bool ret = solver->getSolution(_relevantVariables, cds, solverResult);
+    bool ret = solver->getSolution(_context.get(), cds, solverResult);
 
     if (ret && solverResult.size() > 0) {
         int i = 0;

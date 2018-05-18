@@ -157,7 +157,9 @@ bool Query::collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolv
 #ifdef Q_DEBUG
     std::cout << "Query: Size of problemParts is " << _problemParts.size() << std::endl;
 #endif
-
+    if (_context.get() != nullptr) {
+        _context->clear();
+    }
     for (ProblemPart& probPart : _problemParts) {
         pds.push_back(probPart.generateProblemDescriptor(solver, _uniqueVarStore, _context.get()));
     }

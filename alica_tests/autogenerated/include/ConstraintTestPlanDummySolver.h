@@ -1,27 +1,44 @@
 #pragma once
 
-#include <engine/constraintmodul/ISolver.h>
+#include <alica_solver_interface/SolverContext.h>
 #include <engine/blackboard/BBIdent.h>
-#include <vector>
+#include <engine/constraintmodul/ISolver.h>
 #include <memory>
+#include <vector>
 
-namespace alica {
-namespace reasoner {
+namespace alica
+{
 
-class ConstraintTestPlanDummySolver : public ISolver<ConstraintTestPlanDummySolver, BBIdent> {
-public:
+namespace reasoner
+{
+
+class TestDummyContext : public SolverContext
+{
+  public:
+    SolverVariable* createVariable(int64_t id);
+    virtual void clear() override;
+    const std::vector<std::unique_ptr<SolverVariable>>& getVariables() const { return _vars; }
+
+  private:
+    std::vector<std::unique_ptr<SolverVariable>> _vars;
+};
+
+class ConstraintTestPlanDummySolver : public ISolver<ConstraintTestPlanDummySolver, BBIdent>
+{
+  public:
     ConstraintTestPlanDummySolver(AlicaEngine* ae);
     virtual ~ConstraintTestPlanDummySolver();
 
-    bool existsSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
-    bool getSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
-            std::vector<BBIdent>& results);
-    std::shared_ptr<SolverVariable> createVariable(int64_t id) override;
+    bool existsSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
+    bool getSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results);
+
+    virtual SolverVariable* createVariable(int64_t id, SolverContext* ctx) override;
+    virtual std::unique_ptr<SolverContext> createSolverContext() override;
 
     static int getExistsSolutionCallCounter();
     static int getGetSolutionCallCounter();
 
-private:
+  private:
     static int existsSolutionCallCounter;
     static int getSolutionCallCounter;
 };
