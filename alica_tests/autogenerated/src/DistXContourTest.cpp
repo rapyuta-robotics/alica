@@ -5,13 +5,15 @@
  *      Author: Stefan Jakob
  */
 
-#include <DistXContourTest.h>
 #include "TestWorldModel.h"
+#include <DistXContourTest.h>
 
-namespace alica {
+namespace alica
+{
 
-DistXContourTest::DistXContourTest(double weight, string name, long id, vector<long>& relevantEntryPointIds,
-        vector<pair<double, double>>& ContourPoints, double xMaxVal, double xMinVal, int ownId) {
+DistXContourTest::DistXContourTest(double weight, string name, long id, vector<long>& relevantEntryPointIds, vector<pair<double, double>>& ContourPoints,
+                                   double xMaxVal, double xMinVal, int ownId)
+{
     this->ownId = ownId;
     this->weight = weight;
     this->name = name;
@@ -26,16 +28,19 @@ DistXContourTest::DistXContourTest(double weight, string name, long id, vector<l
 
 DistXContourTest::~DistXContourTest() {}
 
-void DistXContourTest::cacheEvalData() {
+void DistXContourTest::cacheEvalData()
+{
     xAlloBall = alicaTests::TestWorldModel::getOne()->x;
     xAlloBall = alicaTests::TestWorldModel::getTwo()->x;
 }
 
-double DistXContourTest::interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint) {
+double DistXContourTest::interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint)
+{
     return ((Y2 - Y1) / (X2 - X1) * (xPoint - X1) + Y1);
 }
 
-UtilityInterval DistXContourTest::eval(IAssignment* ass) {
+UtilityInterval DistXContourTest::eval(IAssignment* ass)
+{
     ui.setMin(0.0);
     ui.setMax(0.0);
 
@@ -48,11 +53,11 @@ UtilityInterval DistXContourTest::eval(IAssignment* ass) {
     nextpoint.second = xMaxVal;
 
     double val = 0;
-    if (this->contourPoints.size() == 0) {
+    if (contourPoints.empty()) {
         ui.setMax(0.0);
         return ui;
     }
-    for (int i = 0; i < this->contourPoints.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(contourPoints.size()); ++i) {
         if (contourPoints[i].first < xAlloBall && contourPoints[i].first > lastpoint.first) {
             lastpoint = contourPoints[i];
         }

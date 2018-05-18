@@ -9,17 +9,18 @@
 #define UTILITYFUNCTION_H_
 //#define UFDEBUG
 
-#include <string>
-#include <map>
-#include <list>
-#include <algorithm>
-#include <vector>
-#include <sstream>
-#include <memory>
 #include "UtilityInterval.h"
 #include "engine/RunningPlan.h"
+#include <algorithm>
+#include <list>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <vector>
 
-namespace alica {
+namespace alica
+{
 class Plan;
 class AlicaEngine;
 class IRoleAssignment;
@@ -27,10 +28,10 @@ class USummand;
 class IAssignment;
 struct TaskRoleStruct;
 
-class UtilityFunction {
-public:
-    UtilityFunction(const std::string& name, std::list<USummand*> utilSummands, double priorityWeight,
-            double similarityWeight, const Plan* plan);
+class UtilityFunction
+{
+  public:
+    UtilityFunction(const std::string& name, std::list<USummand*> utilSummands, double priorityWeight, double similarityWeight, const Plan* plan);
     virtual ~UtilityFunction();
     std::list<USummand*>& getUtilSummands();
     void setUtilSummands(std::list<USummand*> utilSummands);
@@ -43,11 +44,11 @@ public:
     static void initDataStructures(AlicaEngine* ae);
     virtual std::string toString() const;
     const Plan* getPlan() const { return plan; }
-    const std::map<TaskRoleStruct*, double>& getPriorityMartix() const;
+    const std::map<TaskRoleStruct, double>& getPriorityMartix() const { return priorityMatrix; }
 
-    const double DIFFERENCETHRESHOLD = 0.0001;  // Max difference for the same result
+    const double DIFFERENCETHRESHOLD = 0.0001; // Max difference for the same result
 
-protected:
+  protected:
     UtilityInterval getPriorityResult(IAssignment* ass);
     UtilityInterval getSimilarity(IAssignment* newAss, IAssignment* oldAss);
 
@@ -55,8 +56,8 @@ protected:
 
     std::string name = "DefaultUtilityFunction";
     // For default priority based utility summand (which is integrated in every UF)
-    std::map<TaskRoleStruct*, double> priorityMartix;
-    std::map<long, double> roleHighestPriorityMap;
+    std::map<TaskRoleStruct, double> priorityMatrix;
+    std::map<int64_t, double> roleHighestPriorityMap;
     // For default similarity based utility summand (which is integrated in every UF)
     double priorityWeight;
     double similarityWeight;
@@ -64,7 +65,6 @@ protected:
     IRoleAssignment* ra;
     // List of normal utility summands
     std::list<USummand*> utilSummands;
-    TaskRoleStruct* lookupStruct;
     UtilityInterval priResult;
 
     UtilityInterval simUI;
