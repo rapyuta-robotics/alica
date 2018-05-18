@@ -29,13 +29,13 @@ void ProblemDescriptor::setUtilitySufficiencyThreshold(double value)
     _utilitySufficiencyThreshold = value;
 }
 
-const std::vector<std::pair<double, double>>& ProblemDescriptor::getAllRanges()
+const std::vector<Interval<double>>& ProblemDescriptor::getAllRanges()
 {
     if (_allRanges.empty()) {
         _allRanges.insert(_allRanges.end(), _staticRanges.begin(), _staticRanges.end());
         for (const AgentSolverVariables& avars : _domainVars) {
             for (const RangedVariable& rav : avars.getVars()) {
-                _allRanges.push_back(std::pair<double, double>(rav.min, rav.max));
+                _allRanges.push_back(rav.range);
             }
         }
     }
@@ -63,7 +63,7 @@ void ProblemDescriptor::clear()
 
 void ProblemDescriptor::prepForUsage()
 {
-    _staticRanges.resize(_staticVars.size(), std::pair<double, double>(SolverVariable::minExpressibleValue, SolverVariable::maxExpressibleValue));
+    _staticRanges.resize(_staticVars.size(), Interval<double>(SolverVariable::minExpressibleValue, SolverVariable::maxExpressibleValue));
     _allVars.reserve(_dim);
     _allRanges.reserve(_dim);
     _allVars.insert(_allVars.end(), _staticVars.begin(), _staticVars.end());

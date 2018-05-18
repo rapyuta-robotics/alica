@@ -102,7 +102,7 @@ SolverVariable* UniqueVarStore::getSolverVariable(const DomainVariable* dv, ISol
 void UniqueVarStore::setupSolverVars(ISolverBase* solver, SolverContext* ctx)
 {
     _solverVars.resize(_store.size());
-    for (int i = 0; i < _solverVars.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(_solverVars.size()); ++i) {
         _solverVars[i] = solver->createVariable(_store[i][0]->getId(), ctx);
     }
 }

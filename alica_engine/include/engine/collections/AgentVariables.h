@@ -1,11 +1,10 @@
 #pragma once
 
 #include "engine/Types.h"
+#include "engine/collections/Interval.h"
 #include <alica_solver_interface/SolverVariable.h>
 
 #include <supplementary/AgentID.h>
-
-#include <memory>
 
 namespace alica
 {
@@ -56,13 +55,11 @@ struct RangedVariable
 {
     RangedVariable(SolverVariable* sv)
         : var(sv)
-        , min(SolverVariable::minExpressibleValue)
-        , max(SolverVariable::maxExpressibleValue)
+        , range(SolverVariable::minExpressibleValue, SolverVariable::maxExpressibleValue)
     {
     }
     SolverVariable* var;
-    double min;
-    double max;
+    Interval<double> range;
 };
 using AgentSolverVariables = AgentElements<RangedVariable>;
 

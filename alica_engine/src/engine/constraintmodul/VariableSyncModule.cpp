@@ -126,19 +126,14 @@ void VariableSyncModule::postResult(int64_t vid, Variant result)
     _ownResults.addValue(vid, result, _ae->getAlicaClock()->now());
 }
 
-int VariableSyncModule::getSeeds(const VariableGrp& query, const std::vector<double>& limits, std::vector<Variant>& o_seeds) const
+int VariableSyncModule::getSeeds(const VariableGrp& query, const std::vector<Interval<double>>& limits, std::vector<Variant>& o_seeds) const
 {
     const int dim = query.size();
     // TODO: use only stack memory for low dimensionality
-    std::vector<double> scaling(dim);
     std::vector<Variant> vec(dim);
 
     std::vector<VotedSeed> seeds;
 
-    for (int i = 0; i < dim; ++i) {
-        scaling[i] = limits[i * 2 + 1] - limits[i * 2];
-        scaling[i] *= scaling[i]; // Sqr it for dist calculation speed up
-    }
     AlicaTime earliest = _ae->getAlicaClock()->now() - _ttl4Usage;
     //		cout << "VSM: Number of Seeds in Store: " << this->store.size() << endl;
     if (_ownResults.getValues(query, earliest, vec)) {
@@ -154,7 +149,7 @@ int VariableSyncModule::getSeeds(const VariableGrp& query, const std::vector<dou
         }
         bool found = false;
         for (VotedSeed& s : seeds) {
-            if (s.takeVector(vec, scaling, _distThreshold)) {
+            if (s.takeVector(vec, limits, _distThreshold)) {
                 found = true;
                 break;
             }
@@ -230,7 +225,7 @@ VariableSyncModule::VotedSeed& VariableSyncModule::VotedSeed::operator=(VotedSee
     return *this;
 }
 
-bool VariableSyncModule::VotedSeed::takeVector(const std::vector<Variant>& v, const std::vector<double>& scaling, double distThreshold)
+bool VariableSyncModule::VotedSeed::takeVector(const std::vector<Variant>& v, const std::vector<Interval<double>>& limits, double distThreshold)
 {
     int nans = 0;
     const int dim = static_cast<int>(v.size());
@@ -243,8 +238,9 @@ bool VariableSyncModule::VotedSeed::takeVector(const std::vector<Variant>& v, co
                 if (!std::isnan(d)) {
                     double cur = _values[i].getDouble();
                     double dist = (d - cur) * (d - cur);
-                    if (scaling[i] > 0.0) {
-                        dist /= scaling[i];
+                    double size = limits[i].size();
+                    if (size > 0.0) {
+                        dist /= size * size;
                     }
                     distSqr += dist;
                 } else {
