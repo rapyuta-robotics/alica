@@ -1,16 +1,6 @@
-/*
- * TaskRoleStruct.h
- *
- *  Created on: Jul 9, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef TASKROLESTRUCT_H_
-#define TASKROLESTRUCT_H_
-
+#pragma once
 #include <functional>
 
-using namespace std;
 namespace alica
 {
 
@@ -47,5 +37,3 @@ struct hash<alica::TaskRoleStruct>
     }
 };
 } // namespace std
-
-#endif /* TASKROLESTRUCT_H_ */
