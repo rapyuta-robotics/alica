@@ -224,9 +224,8 @@ void UtilityFunction::init(AlicaEngine* ae)
             } else {
                 curPrio = iter->second;
             }
-            TaskRoleStruct* trs = new TaskRoleStruct(taskId, roleId);
             if (this->priorityMartix.find(trs) == this->priorityMartix.end()) {
-                this->priorityMartix.insert(pair<TaskRoleStruct*, double>(trs, curPrio));
+                this->priorityMartix.insert(pair<TaskRoleStruct*, double>(new TaskRoleStruct(taskId, roleId), curPrio));
             }
             if (this->roleHighestPriorityMap.at(roleId) < curPrio) {
                 this->roleHighestPriorityMap.at(roleId) = curPrio;
