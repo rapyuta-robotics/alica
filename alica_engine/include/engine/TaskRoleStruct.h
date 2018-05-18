@@ -20,20 +20,3 @@ struct TaskRoleStruct
 };
 
 } /* namespace alica */
-
-namespace std
-{
-template <>
-struct hash<alica::TaskRoleStruct>
-{
-    typedef alica::TaskRoleStruct argument_type;
-    typedef std::size_t value_type;
-
-    value_type operator()(argument_type const& trs) const
-    {
-        value_type const h1(std::hash<int64_t>()(trs.taskId));
-        value_type const h2(std::hash<int64_t>()(trs.roleId));
-        return h1 ^ h2;
-    }
-};
-} // namespace std
