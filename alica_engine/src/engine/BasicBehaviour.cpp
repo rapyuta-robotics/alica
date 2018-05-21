@@ -33,6 +33,9 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
     , success(false)
     , callInit(true)
     , started(true)
+    , _configuration(nullptr)
+    , msInterval(100)
+    , msDelayedStart(0)
 {
     this->running = false;
     this->timer = new supplementary::Timer(0, 0);
