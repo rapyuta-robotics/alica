@@ -58,7 +58,9 @@ void ProblemDescriptor::clear()
 
     _staticRanges.clear();
     _allRanges.clear();
-    _context->clear();
+    if (_context) {
+        _context->clear();
+    }
 }
 
 void ProblemDescriptor::prepForUsage()
