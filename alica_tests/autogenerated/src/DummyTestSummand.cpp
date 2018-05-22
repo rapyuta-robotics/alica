@@ -40,7 +40,6 @@ UtilityInterval DummyTestSummand::eval(IAssignment* ass)
     const AgentGrp* relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
 
     for (int i = 0; i < static_cast<int>(relevantRobots->size()); ++i) {
-        int pos = 0;
         if (relevantRobots->at(i) == this->robotId) {
             ui.setMin(0.5);
         } else {
@@ -51,7 +50,6 @@ UtilityInterval DummyTestSummand::eval(IAssignment* ass)
         relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[1]);
 
         for (int i = 0; i < static_cast<int>(relevantRobots->size()); ++i) {
-            int pos = 0;
             if (relevantRobots->at(i) == this->robotId) {
                 ui.setMin(ui.getMin());
             } else {
