@@ -6,17 +6,49 @@
  */
 
 #include "engine/PlanRepository.h"
+#include "engine/Types.h"
 #include "engine/model/EntryPoint.h"
-#include "engine/model/Quantifier.h"
 #include "engine/model/Plan.h"
+#include "engine/model/PreCondition.h"
+#include "engine/model/Quantifier.h"
+#include "engine/model/RuntimeCondition.h"
+#include "engine/model/Variable.h"
 
 #include <cassert>
+namespace alica
+{
 
-namespace alica {
+namespace
+{
+bool checkVarsInCondition(const Condition* c, const Plan* p)
+{
+    if (c == nullptr) {
+        return true;
+    }
+    const VariableGrp& pvars = p->getVariables();
+    for (const Variable* v : c->getVariables()) {
+        if (std::find(pvars.begin(), pvars.end(), v) == pvars.end()) {
+            std::cerr << "Variable " << v->toString() << " used in Condition " << c->toString() << " in Plan " << p->toString()
+                      << " is not properly contained in the plan" << std::endl;
+            assert(false);
+            return false;
+        }
+    }
+    return true;
+}
+bool checkVarsInPlan(const Plan* p)
+{
+    bool ret = checkVarsInCondition(p->getPreCondition(), p);
+    ret = ret && checkVarsInCondition(p->getRuntimeCondition(), p);
+    return ret;
+}
+}
+
 PlanRepository::PlanRepository() {}
 PlanRepository::~PlanRepository() {}
 
-bool PlanRepository::verifyPlanBase() const {
+bool PlanRepository::verifyPlanBase() const
+{
     // Every entrypoint has a task:
     for (const EntryPoint* ep : getEntryPoints()) {
         if (ep->getTask() == nullptr) {
@@ -34,9 +66,10 @@ bool PlanRepository::verifyPlanBase() const {
                 return false;
             }
         }
+        checkVarsInPlan(p);
     }
 
     return true;
 }
 
-}  // namespace alica
+} // namespace alica
