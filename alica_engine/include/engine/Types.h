@@ -55,8 +55,6 @@ using TaskGrp = std::vector<const Task*>;
 using TransitionGrp = std::vector<const Transition*>;
 using VariableGrp = std::vector<const Variable*>;
 
-using SolverVariableGrp = std::vector<SolverVariable*>;
-
 using BehaviourParameterMap = std::unordered_map<std::string, std::string>;
 
 using AgentIDConstPtr = const supplementary::AgentID*;

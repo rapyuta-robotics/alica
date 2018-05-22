@@ -75,7 +75,7 @@ SolverVariable* ConstraintTestPlanDummySolver::createVariable(int64_t id, Solver
 {
     return static_cast<TestDummyContext*>(ctx)->createVariable(id);
 }
-std::unique_ptr<SolverContext> createSolverContext()
+std::unique_ptr<SolverContext> ConstraintTestPlanDummySolver::createSolverContext()
 {
     return std::unique_ptr<SolverContext>(new TestDummyContext());
 }
