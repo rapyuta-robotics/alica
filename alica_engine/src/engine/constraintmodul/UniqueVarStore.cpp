@@ -13,6 +13,8 @@ UniqueVarStore::UniqueVarStore() {}
 void UniqueVarStore::clear()
 {
     _store.clear();
+    _solverVars.clear();
+    _agentSolverVars.clear();
 }
 void UniqueVarStore::initWith(const VariableGrp& vs)
 {
@@ -104,16 +106,20 @@ SolverVariable* UniqueVarStore::getSolverVariable(const DomainVariable* dv, ISol
     if (it != _agentSolverVars.end()) {
         return it->second;
     }
+    assert(false); // creating these on the fly will affect ordering
     SolverVariable* ret = solver->createVariable(dv->getId(), ctx);
-    _agentSolverVars[dv];
+    _agentSolverVars[dv] = ret;
     return ret;
 }
 
-void UniqueVarStore::setupSolverVars(ISolverBase* solver, SolverContext* ctx)
+void UniqueVarStore::setupSolverVars(ISolverBase* solver, SolverContext* ctx, const std::vector<const DomainVariable*>& domainVars)
 {
     _solverVars.resize(_store.size());
-    for (int i = 0; i < static_cast<int>(_solverVars.size()); ++i) {
+    for (int i = 0; i < static_cast<int>(_store.size()); ++i) {
         _solverVars[i] = solver->createVariable(_store[i][0]->getId(), ctx);
+    }
+    for (const DomainVariable* dv : domainVars) {
+        _agentSolverVars[dv] = solver->createVariable(dv->getId(), ctx);
     }
 }
 /**

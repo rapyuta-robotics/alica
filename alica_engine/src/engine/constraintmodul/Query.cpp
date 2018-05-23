@@ -162,7 +162,8 @@ bool Query::collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolv
     } else {
         _context->clear();
     }
-    _uniqueVarStore.setupSolverVars(solver, _context.get());
+    // all solver variables will be created here:
+    _uniqueVarStore.setupSolverVars(solver, _context.get(), _domainVars.getCurrent());
     for (ProblemPart& probPart : _problemParts) {
         pds.push_back(probPart.generateProblemDescriptor(solver, _uniqueVarStore, _context.get()));
     }

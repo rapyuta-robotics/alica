@@ -30,7 +30,7 @@ class UniqueVarStore
     void getAllRep(VariableGrp& o_vars) const;
     int getIndexOf(const Variable* v) const;
 
-    void setupSolverVars(ISolverBase* solver, SolverContext* ctx);
+    void setupSolverVars(ISolverBase* solver, SolverContext* ctx, const std::vector<const DomainVariable*>& domainVars);
 
     friend std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store);
 
