@@ -40,7 +40,7 @@ class ProblemDescriptor
     ProblemDescriptor(const ProblemDescriptor&) = delete;
     ProblemDescriptor& operator=(const ProblemDescriptor&) = delete;
 
-    SolverContext* getContext() { return _context; }
+    SolverContext* getContext() const { return _context; }
 
   private:
     friend ProblemPart;
