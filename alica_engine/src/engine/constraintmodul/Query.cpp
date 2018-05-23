@@ -213,6 +213,7 @@ void Query::addProblemPart(ProblemPart&& pp)
     for (const Variable* variable : c->getVariables()) {
         if (!_staticVars.has(variable)) {
             _staticVars.editCurrent().push_back(variable);
+            _uniqueVarStore.addChecked(variable);
         }
     }
 

@@ -20,8 +20,6 @@ else (catkin_FOUND)
   set(catkin_LIBRARIES "alica_common_config")
 endif(catkin_FOUND)
 
-
-
 if(catkin_FOUND)
   catkin_package(
     INCLUDE_DIRS include

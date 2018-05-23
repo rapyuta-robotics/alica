@@ -35,6 +35,18 @@ void UniqueVarStore::add(const Variable* v)
     _store.push_back(std::move(l));
 }
 
+void UniqueVarStore::addChecked(const Variable* v)
+{
+    for (const auto& variables : _store) {
+        for (const Variable* variable : variables) {
+            if (variable == v) {
+                return;
+            }
+        }
+    }
+    add(v);
+}
+
 /**
  * Add the variable "toAdd" to the front of the list of variables that contains the variable "representing".
  * If such a list does not exist, a new list will be created.
@@ -49,9 +61,7 @@ void UniqueVarStore::addVarTo(const Variable* representing, const Variable* toAd
             }
         }
     }
-    VariableGrp nl;
-    nl.insert(nl.begin(), representing);
-    nl.insert(nl.begin(), toAdd);
+    VariableGrp nl{toAdd, representing};
     _store.push_back(std::move(nl));
 }
 
@@ -102,6 +112,7 @@ SolverVariable* UniqueVarStore::getSolverVariable(const DomainVariable* dv, ISol
 void UniqueVarStore::setupSolverVars(ISolverBase* solver, SolverContext* ctx)
 {
     _solverVars.resize(_store.size());
+    std::cerr << "SIZE: " << _store.size() << std::endl;
     for (int i = 0; i < static_cast<int>(_solverVars.size()); ++i) {
         _solverVars[i] = solver->createVariable(_store[i][0]->getId(), ctx);
     }

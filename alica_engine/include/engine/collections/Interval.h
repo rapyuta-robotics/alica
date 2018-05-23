@@ -28,7 +28,7 @@ class Interval
     T size() const { return _max - _min; }
 
     void setMin(T m) { _min = m; }
-    void setMax(T m) { _min = m; }
+    void setMax(T m) { _max = m; }
 
   private:
     T _min;
