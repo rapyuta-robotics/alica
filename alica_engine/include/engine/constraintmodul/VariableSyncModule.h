@@ -1,8 +1,8 @@
 #pragma once
 //#define RS_DEBUG
-#include "engine/collections/Interval.h"
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/containers/SolverResult.h"
+#include <alica_solver_interface/Interval.h>
 
 #include "engine/AlicaEngine.h"
 

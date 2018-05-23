@@ -1,8 +1,8 @@
 #pragma once
 
 #include "engine/collections/AgentVariables.h"
-#include "engine/collections/Interval.h"
 #include "supplementary/AgentID.h"
+#include <alica_solver_interface/Interval.h>
 #include <memory>
 #include <utility>
 #include <vector>

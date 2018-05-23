@@ -1,9 +1,8 @@
 #pragma once
 
 #include "engine/Types.h"
-#include "engine/collections/Interval.h"
+#include <alica_solver_interface/Interval.h>
 #include <alica_solver_interface/SolverVariable.h>
-
 #include <supplementary/AgentID.h>
 
 namespace alica
