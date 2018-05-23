@@ -54,7 +54,7 @@ bool ProblemPart::hasVariable(const DomainVariable* v) const
     }
     return false;
 }
-std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(ISolverBase* solver, UniqueVarStore& uvs, SolverContext* ctx)
+std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(ISolverBase* solver, const UniqueVarStore& uvs, SolverContext* ctx)
 {
     if (_descriptor == nullptr) {
         _descriptor = std::make_shared<ProblemDescriptor>(ctx);

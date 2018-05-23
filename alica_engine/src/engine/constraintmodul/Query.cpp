@@ -179,12 +179,6 @@ bool Query::collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolv
     if (!_domainVars.getCurrent().empty()) {
         _relevantVariables.insert(_relevantVariables.end(), _domainVars.getCurrent().begin(), _domainVars.getCurrent().end());
     }
-        // fill any missing solver variables:
-        /*for (const Variable* v : _relevantVariables) {
-            if (v->getSolverVar().get() == nullptr) {
-                v->setSolverVar(solver->createVariable(v->getId()));
-            }
-        }*/
 
 #ifdef Q_DEBUG
     std::cout << "Query: Number of relevant static variables: " << domOffset << std::endl;

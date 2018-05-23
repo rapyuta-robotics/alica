@@ -2,6 +2,9 @@
 #include <engine/collections/Variant.h>
 #include <engine/constraintmodul/VariableSyncModule.h>
 #include <engine/model/Variable.h>
+
+#include <alica_solver_interface/SolverVariable.h>
+
 #include <gtest/gtest.h>
 #include <test_alica.h>
 

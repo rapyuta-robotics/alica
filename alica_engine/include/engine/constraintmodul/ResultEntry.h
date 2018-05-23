@@ -57,15 +57,15 @@ bool ResultEntry::getValues(const std::vector<VarType*>& query, AlicaTime earlie
 {
     o_values.resize(query.size());
     int i = 0;
-    int nans = 0;
+    int invalids = 0;
     for (const VarType* v : query) {
         o_values[i] = getValue(v->getId(), earliest);
         if (!o_values[i].isSet()) {
-            ++nans;
+            ++invalids;
         }
         ++i;
     }
-    return nans != i;
+    return invalids != i;
 }
 
 } /* namespace alica */

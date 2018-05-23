@@ -22,8 +22,6 @@ class ISolverBase
     virtual SolverVariable* createVariable(int64_t id, SolverContext* ctx) = 0;
     virtual std::unique_ptr<SolverContext> createSolverContext() = 0;
 
-    // virtual double utilityEstimate(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) { return 0; }
-
   protected:
     AlicaEngine* getAlicaEngine() const { return _ae; }
 

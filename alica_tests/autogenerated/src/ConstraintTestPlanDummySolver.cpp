@@ -1,5 +1,6 @@
 #include "ConstraintTestPlanDummySolver.h"
 
+#include <alica_solver_interface/SimpleContext.h>
 #include <alica_solver_interface/SolverVariable.h>
 #include <engine/AlicaEngine.h>
 #include <engine/blackboard/BlackBoard.h>
@@ -17,17 +18,6 @@ namespace alica
 {
 namespace reasoner
 {
-
-SolverVariable* TestDummyContext::createVariable(int64_t id)
-{
-    SolverVariable* ret = new SolverVariable(id);
-    _vars.emplace_back(ret);
-    return ret;
-}
-void TestDummyContext::clear()
-{
-    _vars.clear();
-}
 
 int ConstraintTestPlanDummySolver::existsSolutionCallCounter = 0;
 int ConstraintTestPlanDummySolver::getSolutionCallCounter = 0;
@@ -50,7 +40,7 @@ bool ConstraintTestPlanDummySolver::existsSolutionImpl(SolverContext*, const std
 bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results)
 {
     BlackBoard& bb = getAlicaEngine()->editBlackBoard();
-    TestDummyContext* tdc = static_cast<TestDummyContext*>(ctx);
+    SimpleContext<SolverVariable>* tdc = static_cast<SimpleContext<SolverVariable>*>(ctx);
     for (const auto& var : tdc->getVariables()) {
         std::string s = std::to_string(var->getId());
         results.push_back(bb.registerValue(s.c_str(), static_cast<int>(s.size())));
@@ -73,11 +63,11 @@ int ConstraintTestPlanDummySolver::getGetSolutionCallCounter()
 
 SolverVariable* ConstraintTestPlanDummySolver::createVariable(int64_t id, SolverContext* ctx)
 {
-    return static_cast<TestDummyContext*>(ctx)->createVariable(id);
+    return static_cast<SimpleContext<SolverVariable>*>(ctx)->createVariable(id);
 }
 std::unique_ptr<SolverContext> ConstraintTestPlanDummySolver::createSolverContext()
 {
-    return std::unique_ptr<SolverContext>(new TestDummyContext());
+    return std::unique_ptr<SolverContext>(new SimpleContext<SolverVariable>());
 }
 
 } // namespace reasoner

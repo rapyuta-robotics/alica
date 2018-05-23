@@ -1,6 +1,5 @@
 #pragma once
 
-#include <alica_solver_interface/SolverContext.h>
 #include <engine/blackboard/BBIdent.h>
 #include <engine/constraintmodul/ISolver.h>
 #include <memory>
@@ -8,20 +7,10 @@
 
 namespace alica
 {
+class SolverContext;
 
 namespace reasoner
 {
-
-class TestDummyContext : public SolverContext
-{
-  public:
-    SolverVariable* createVariable(int64_t id);
-    virtual void clear() override;
-    const std::vector<std::unique_ptr<SolverVariable>>& getVariables() const { return _vars; }
-
-  private:
-    std::vector<std::unique_ptr<SolverVariable>> _vars;
-};
 
 class ConstraintTestPlanDummySolver : public ISolver<ConstraintTestPlanDummySolver, BBIdent>
 {

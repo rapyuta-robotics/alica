@@ -17,7 +17,7 @@ class ProblemPart;
 class ProblemDescriptor
 {
   public:
-    ProblemDescriptor(SolverContext* ctx);
+    explicit ProblemDescriptor(SolverContext* ctx);
     SolverTerm* getConstraint() const { return _constraint; }
     SolverTerm* getUtility() const { return _utility; }
     const std::vector<SolverVariable*>& getStaticVars() const { return _staticVars; }

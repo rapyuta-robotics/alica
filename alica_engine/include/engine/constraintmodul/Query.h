@@ -18,6 +18,8 @@
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 
+#include <alica_solver_interface/SolverContext.h>
+
 #include <map>
 #include <memory>
 #include <vector>

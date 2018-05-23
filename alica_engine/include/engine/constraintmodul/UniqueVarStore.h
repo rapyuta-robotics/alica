@@ -24,7 +24,7 @@ class UniqueVarStore
     void addChecked(const Variable* v);
     const Variable* getRep(const Variable* v);
     SolverVariable* getSolverVariable(const Variable* v) const;
-    SolverVariable* getSolverVariable(const DomainVariable* dv, ISolverBase* solver, SolverContext* ctx);
+    SolverVariable* getSolverVariable(const DomainVariable* dv, ISolverBase* solver, SolverContext* ctx) const;
 
     void addVarTo(const Variable* representing, const Variable* toAdd);
     void getAllRep(VariableGrp& o_vars) const;

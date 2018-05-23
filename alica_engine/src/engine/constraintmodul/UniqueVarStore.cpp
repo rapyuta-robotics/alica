@@ -100,16 +100,14 @@ SolverVariable* UniqueVarStore::getSolverVariable(const Variable* v) const
     return nullptr;
 }
 
-SolverVariable* UniqueVarStore::getSolverVariable(const DomainVariable* dv, ISolverBase* solver, SolverContext* ctx)
+SolverVariable* UniqueVarStore::getSolverVariable(const DomainVariable* dv, ISolverBase* solver, SolverContext* ctx) const
 {
     auto it = _agentSolverVars.find(dv);
     if (it != _agentSolverVars.end()) {
         return it->second;
     }
-    assert(false); // creating these on the fly will affect ordering
-    SolverVariable* ret = solver->createVariable(dv->getId(), ctx);
-    _agentSolverVars[dv] = ret;
-    return ret;
+    assert(false); // creating these on the fly would break ordering
+    return nullptr;
 }
 
 void UniqueVarStore::setupSolverVars(ISolverBase* solver, SolverContext* ctx, const std::vector<const DomainVariable*>& domainVars)

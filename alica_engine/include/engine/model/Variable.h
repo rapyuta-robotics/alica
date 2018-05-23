@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AlicaElement.h"
-#include "alica_solver_interface/SolverVariable.h"
 
 #include <iostream>
 #include <memory>

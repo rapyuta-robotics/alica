@@ -25,9 +25,5 @@ void Variable::setType(const std::string& type)
 {
     _type = type;
 }
-/*
-void alica::Variable::setSolverVar(const std::shared_ptr<SolverVariable>& solverVar) const
-{
-    _solverVar = solverVar;
-}*/
+
 } // namespace alica
