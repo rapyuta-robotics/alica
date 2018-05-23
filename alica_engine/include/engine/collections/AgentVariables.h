@@ -49,17 +49,6 @@ class AgentElements
 };
 
 using AgentVariables = AgentElements<const DomainVariable*>;
-
-struct RangedVariable
-{
-    RangedVariable(SolverVariable* sv)
-        : var(sv)
-        , range(SolverVariable::minExpressibleValue, SolverVariable::maxExpressibleValue)
-    {
-    }
-    SolverVariable* var;
-    Interval<double> range;
-};
-using AgentSolverVariables = AgentElements<RangedVariable>;
+using AgentSolverVariables = AgentElements<SolverVariable*>;
 
 } // namespace alica

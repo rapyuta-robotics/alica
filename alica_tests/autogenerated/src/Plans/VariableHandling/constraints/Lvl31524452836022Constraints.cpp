@@ -39,19 +39,18 @@ void Constraint1524452937477::getConstraint(shared_ptr<ProblemDescriptor> c, sha
 {
     /*PROTECTED REGION ID(cc1524452937477) ENABLED START*/
     assert(c->getStaticVars().size() == 2);
-    assert(c->getStaticRanges().size() == 2);
     assert(c->getDomainVars().size() == 1);
     assert(c->getDomainVars()[0].getVars().size() == 2);
     TermPtr l1a = static_cast<autodiff::Variable*>(c->getStaticVars()[0]);
     TermPtr l1b = static_cast<autodiff::Variable*>(c->getStaticVars()[1]);
 
-    TermPtr x = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[0].var);
-    TermPtr y = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[1].var);
+    autodiff::Variable* xv = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[0]);
+    autodiff::Variable* yv = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[1]);
 
-    c->editDomainVars()[0].editVars()[0].range.setMin(-5.0);
-    c->editDomainVars()[0].editVars()[1].range.setMin(-5.0);
-    c->editDomainVars()[0].editVars()[0].range.setMax(5.0);
-    c->editDomainVars()[0].editVars()[1].range.setMax(5.0);
+    TermPtr x = xv;
+    TermPtr y = yv;
+    xv->editRange().limitTo(-5, 5);
+    yv->editRange().limitTo(-5, 5);
 
     TermPtr constraint = x * l1a < x->getOwner()->constant(0.0);
     constraint = constraint & (y * l1b > x->getOwner()->constant(0.0));

@@ -21,6 +21,11 @@ class Interval
     T getMin() const { return _min; }
     T getMidPoint() const { return (_max + _min) / 2; }
     T getMax() const { return _max; }
+    void limitTo(T min, T max)
+    {
+        _min = std::max<T>(min, _min);
+        _max = std::min<T>(max, _max);
+    }
     Interval intersect(const Interval<T> o) const { return Interval(std::max<T>(_min, o._min), std::min<T>(_max, o._max)); }
     T clamp(T val) const { return std::max<T>(_min, std::min<T>(val, _max)); }
 

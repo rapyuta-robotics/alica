@@ -36,21 +36,22 @@ void Constraint1417424512343::getConstraint(shared_ptr<ProblemDescriptor> c, sha
 {
     /*PROTECTED REGION ID(cc1417424512343) ENABLED START*/
     // Proteced
-    TermPtr x = dynamic_cast<autodiff::Variable*>(c->getStaticVars()[0]);
-    if (x.get() == nullptr) {
+    autodiff::Variable* xv = dynamic_cast<autodiff::Variable*>(c->getStaticVars()[0]);
+    if (xv == nullptr) {
         cout << "Constraint1417424512343::getConstraint !!!!!!!!!!!!!!!!!!!!! error" << endl;
         return;
     }
-    c->editStaticRanges()[0].setMin(0);
-    c->editStaticRanges()[0].setMax(10000);
+    xv->editRange().limitTo(0.0, 10000.0);
 
-    TermPtr y = dynamic_cast<autodiff::Variable*>(c->getStaticVars()[1]);
-    if (y.get() == nullptr) {
+    autodiff::Variable* yv = dynamic_cast<autodiff::Variable*>(c->getStaticVars()[1]);
+    if (yv == nullptr) {
         cout << "Constraint1417424512343::getConstraint !!!!!!!!!!!!!!!!!!!!! error" << endl;
         return;
     }
-    c->editStaticRanges()[1].setMin(0);
-    c->editStaticRanges()[1].setMax(10000);
+    yv->editRange().limitTo(0.0, 10000.0);
+
+    TermPtr x = xv;
+    TermPtr y = yv;
 
     TermPtr constraint = x->getOwner()->trueConstant();
     constraint = constraint & (x->getOwner()->constant(5000) > x);

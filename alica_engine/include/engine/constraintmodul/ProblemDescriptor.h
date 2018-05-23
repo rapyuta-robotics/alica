@@ -21,15 +21,11 @@ class ProblemDescriptor
     SolverTerm* getConstraint() const { return _constraint; }
     SolverTerm* getUtility() const { return _utility; }
     const std::vector<SolverVariable*>& getStaticVars() const { return _staticVars; }
-    const std::vector<Interval<double>>& getStaticRanges() const { return _staticRanges; }
-
-    std::vector<Interval<double>>& editStaticRanges() { return _staticRanges; }
 
     const std::vector<AgentSolverVariables>& getDomainVars() const { return _domainVars; }
     std::vector<AgentSolverVariables>& editDomainVars() { return _domainVars; }
 
     const std::vector<SolverVariable*>& getAllVariables() const { return _allVars; }
-    const std::vector<Interval<double>>& getAllRanges();
 
     bool isSettingUtilitySignificanceThreshold() const { return _setsUtilitySignificanceThreshold; }
     double getUtilitySignificanceThreshold() const { return _utilitySignificanceThreshold; }
@@ -58,9 +54,6 @@ class ProblemDescriptor
     std::vector<SolverVariable*> _staticVars;
     std::vector<AgentSolverVariables> _domainVars;
     std::vector<SolverVariable*> _allVars;
-
-    std::vector<Interval<double>> _staticRanges;
-    std::vector<Interval<double>> _allRanges;
 
     SolverContext* _context;
 
