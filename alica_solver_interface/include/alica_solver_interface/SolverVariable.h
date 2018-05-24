@@ -8,9 +8,6 @@ namespace alica
 class SolverVariable
 {
   public:
-    static constexpr double minExpressibleValue = std::numeric_limits<double>::max() / 2;
-    static constexpr double maxExpressibleValue = std::numeric_limits<double>::lowest() / 2;
-
     SolverVariable(int64_t id)
         : _id(id)
     {
