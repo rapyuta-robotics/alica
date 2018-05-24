@@ -39,6 +39,7 @@ Synchronisation::Synchronisation(AlicaEngine* ae, const supplementary::AgentID* 
     this->runningPlan = nullptr;
     this->myRow = nullptr;
     this->readyForSync = false;
+    this->lastTick = 0;
     this->lastTalkData = nullptr;
 }
 
@@ -378,7 +379,7 @@ bool Synchronisation::isSyncComplete()
     lock_guard<mutex> lock(rowOkMutex);
     this->rowsOK.clear();
     // collect participants
-    for (long transID : this->connectedTransitions) {
+    for (int64_t transID : this->connectedTransitions) {
         SyncRow* foundRow = nullptr;
 
         //			Is not needed here

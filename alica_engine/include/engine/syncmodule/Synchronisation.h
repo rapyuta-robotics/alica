@@ -48,8 +48,8 @@ class Synchronisation
     SyncModule* syncModul;
     const SyncTransition* syncTransition;
     AgentIDConstPtr myID;
-    AlicaTime lastTalkTime;
     SyncData* lastTalkData;
+    AlicaTime lastTalkTime;
     AlicaTime syncStartTime;
     bool readyForSync;
     uint64_t lastTick;

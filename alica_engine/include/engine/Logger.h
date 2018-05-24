@@ -1,21 +1,22 @@
 #pragma once
 
-#include <SystemConfig.h>
-#include <Logging.h>
-#include "engine/AlicaEngine.h"
 #include "engine/AlicaClock.h"
+#include "engine/AlicaEngine.h"
 #include "engine/IPlanTreeVisitor.h"
+#include <Logging.h>
+#include <SystemConfig.h>
 
 #include <ctime>
-#include <sys/stat.h>
-#include <iomanip>
-#include <time.h>
-#include <string>
-#include <sstream>
 #include <fstream>
+#include <iomanip>
 #include <list>
+#include <sstream>
+#include <string>
+#include <sys/stat.h>
+#include <time.h>
 
-namespace alica {
+namespace alica
+{
 class RunningPlan;
 class TeamObserver;
 class EntryPoint;
@@ -26,36 +27,39 @@ class TeamManager;
 /**
  * The Plan Logger will write a log file according to the settings in the Alica.conf file.
  */
-class Logger : public IPlanTreeVisitor {
-public:
+class Logger : public IPlanTreeVisitor
+{
+  public:
     Logger(AlicaEngine* ae);
     virtual ~Logger();
 
-    void eventOccured(string event);
+    void eventOccured(const std::string& event);
     void itertionStarts();
-    void iterationEnds(shared_ptr<RunningPlan> p);
+    void iterationEnds(std::shared_ptr<RunningPlan> p);
     void close();
-    void visit(shared_ptr<RunningPlan> r);
-    void logToConsole(string logString);
+    void visit(std::shared_ptr<RunningPlan> r);
+    void logToConsole(const std::string& logString);
 
-protected:
+  private:
+    std::shared_ptr<std::list<std::string>> createHumanReadablePlanTree(const std::list<int64_t>& list);
+    const EntryPoint* entryPointOfState(const State* s) const;
+    void evaluationAssignmentsToString(std::stringstream& ss, std::shared_ptr<RunningPlan> rp);
+    std::shared_ptr<std::list<std::string>> createTreeLog(std::shared_ptr<RunningPlan> r);
+
     AlicaEngine* ae;
     TeamObserver* to;
     TeamManager* tm;
-    bool active = false;
-    ofstream* fileWriter;
-    bool recievedEvent;
-    stringstream* sBuild;
-    list<string> eventStrings;
+    std::ofstream* fileWriter;
     AlicaTime startTime;
-    int itCount;
     AlicaTime endTime;
     AlicaTime time;
+    std::stringstream _sBuild;
+    std::list<std::string> eventStrings;
+    int itCount;
+
+    bool active;
+    bool receivedEvent;
     bool inIteration;
-    shared_ptr<list<string>> createHumanReadablePlanTree(list<long> list);
-    const EntryPoint* entryPointOfState(const State* s) const;
-    void evaluationAssignmentsToString(stringstream* ss, shared_ptr<RunningPlan> rp);
-    shared_ptr<list<string>> createTreeLog(shared_ptr<RunningPlan> r);
 };
 
 } /* namespace alica */
