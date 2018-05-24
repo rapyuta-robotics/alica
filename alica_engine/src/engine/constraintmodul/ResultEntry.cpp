@@ -14,6 +14,10 @@
 
 namespace alica
 {
+ResultEntry::ResultEntry()
+    : _id(nullptr)
+{
+}
 
 ResultEntry::ResultEntry(const supplementary::AgentID* robotId)
     : _id(robotId)

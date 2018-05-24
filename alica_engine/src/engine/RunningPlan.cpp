@@ -608,7 +608,7 @@ void RunningPlan::limitToRobots(const AgentGrp& robots)
     AgentGrp curRobots;
     _assignment->getAllRobots(curRobots);
     for (const supplementary::AgentID* r : curRobots) {
-        if (find_if(robots.begin(), robots.end(), [&r](const supplementary::AgentID* id) { return *r == *id; }) == curRobots.end()) {
+        if (find_if(robots.begin(), robots.end(), [&r](const supplementary::AgentID* id) { return *r == *id; }) == robots.end()) {
             if (_activeState != nullptr && _assignment->getRobotStateMapping()->getStateOfRobot(r) == _activeState) {
                 recurse = true;
             }

@@ -424,18 +424,25 @@ long PlanParser::fetchId(const string& idString, long id)
         // not working no clue why
         // char s[2048];
         // char s2[2048];
-        temp = realpath(path.c_str(), NULL);
-        string pathNew = temp;
-        free(temp);
+        temp = realpath(path.c_str(), nullptr);
+        std::string pathNew;
+        if (temp) {
+            pathNew = temp;
+            free(temp);
+        }
         // This is not very efficient but necessary to keep the paths as they are
         // Here we have to check whether the file has already been parsed / is in the list for toparse files
         // problem is the normalization /home/etc/plans != /home/etc/Misc/../plans
         // list<string>::iterator findIterParsed = find(filesParsed.begin(), filesParsed.end(), pathNew);
         bool found = false;
         for (auto& it : filesParsed) {
-            temp2 = realpath(it.c_str(), NULL);
-            string pathNew2 = temp2;
-            free(temp2);
+            temp2 = realpath(it.c_str(), nullptr);
+            std::string pathNew2;
+            if (temp2) {
+                pathNew2 = temp2;
+                free(temp2);
+            }
+
             if (pathNew2 == pathNew) {
                 found = true;
                 break;

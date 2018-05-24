@@ -158,7 +158,7 @@ void PlanBase::run()
         }
         // lock for fpEvents
         {
-            lock_guard<mutex> lock(_lomutex);
+            std::lock_guard<std::mutex> lock(_lomutex);
             _fpEvents = queue<shared_ptr<RunningPlan>>();
         }
 
@@ -222,26 +222,24 @@ void PlanBase::run()
 
         if (checkFp && _fpEvents.size() > 0) {
             // lock for fpEvents
-            {
-                lock_guard<mutex> lock(_lomutex);
-                while (_running && availTime > AlicaTime::milliseconds(1) && _fpEvents.size() > 0) {
-                    std::shared_ptr<RunningPlan> rp = _fpEvents.front();
-                    _fpEvents.pop();
+            std::lock_guard<std::mutex> lock(_lomutex);
+            while (_running && availTime > AlicaTime::milliseconds(1) && _fpEvents.size() > 0) {
+                std::shared_ptr<RunningPlan> rp = _fpEvents.front();
+                _fpEvents.pop();
 
-                    if (rp->isActive()) {
-                        bool first = true;
-                        while (rp != nullptr) {
-                            PlanChange change = _ruleBook.visit(rp);
-                            if (!first && change == PlanChange::NoChange) {
-                                break;
-                            }
-                            rp = rp->getParent().lock();
-                            first = false;
+                if (rp->isActive()) {
+                    bool first = true;
+                    while (rp != nullptr) {
+                        PlanChange change = _ruleBook.visit(rp);
+                        if (!first && change == PlanChange::NoChange) {
+                            break;
                         }
+                        rp = rp->getParent().lock();
+                        first = false;
                     }
-                    now = _alicaClock->now();
-                    availTime = _loopTime - (now - beginTime);
                 }
+                now = _alicaClock->now();
+                availTime = _loopTime - (now - beginTime);
             }
         }
 
