@@ -13,7 +13,7 @@
 namespace alica
 {
 
-ProblemPart::ProblemPart(const Condition* con, shared_ptr<const RunningPlan> rp)
+ProblemPart::ProblemPart(const Condition* con, std::shared_ptr<const RunningPlan> rp)
     : _condition(con)
     , _runningPlan(rp)
     , _descriptor()

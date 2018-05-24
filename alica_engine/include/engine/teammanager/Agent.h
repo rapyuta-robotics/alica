@@ -1,18 +1,20 @@
 #pragma once
 
-#include "engine/collections/RobotProperties.h"
-#include "engine/collections/RobotEngineData.h"
 #include "engine/AlicaClock.h"
+#include "engine/collections/RobotEngineData.h"
+#include "engine/collections/RobotProperties.h"
 
-#include <string>
-#include <memory>
 #include <list>
+#include <memory>
+#include <string>
 
-namespace supplementary {
+namespace supplementary
+{
 class AgentID;
 }
 
-namespace alica {
+namespace alica
+{
 
 class AlicaEngine;
 class TeamManager;
@@ -22,13 +24,15 @@ class EntryPoint;
 class DomainVariable;
 class SuccessMarks;
 
-class Agent {
+class Agent
+{
     // allows the TeamManager to call setTimeLastMsgReceived(..)
     friend ::alica::TeamManager;
     friend ::alica::TeamObserver;
 
-public:
-    ~Agent() {
+  public:
+    ~Agent()
+    {
         delete _properties;
         delete _engineData;
     }
@@ -40,9 +44,9 @@ public:
     bool isActive() const { return _active; }
     bool isIgnored() const { return _ignored; }
 
-protected:
+  protected:
     Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id);
-    Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id, std::string name);
+    Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id, const std::string& name);
 
     const AlicaEngine* _engine;
     const supplementary::AgentID* _id;

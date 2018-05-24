@@ -1,20 +1,21 @@
 #pragma once
 
+#include "engine/AlicaClock.h"
+#include "engine/RuleBook.h"
+#include "engine/RunningPlan.h"
+#include <algorithm>
+#include <condition_variable>
 #include <engine/containers/AlicaEngineInfo.h>
+#include <math.h>
+#include <memory>
+#include <mutex>
 #include <queue>
 #include <stdio.h>
 #include <thread>
-#include <condition_variable>
-#include <algorithm>
-#include <math.h>
-#include <mutex>
-#include <memory>
 #include <typeinfo>
-#include "engine/AlicaClock.h"
-#include "engine/RunningPlan.h"
-#include "engine/RuleBook.h"
 
-namespace alica {
+namespace alica
+{
 class Plan;
 
 class AlicaEngine;
@@ -35,8 +36,9 @@ class AlicaEngine;
  * A PlanBase holds the internal representation of the plan graph and issues all operations on it.
  * It is the most central object within the ALICA Engine.
  */
-class PlanBase {
-public:
+class PlanBase
+{
+  public:
     PlanBase(AlicaEngine* ae, const Plan* masterplan);
     ~PlanBase();
     std::condition_variable* getStepModeCV();
@@ -46,14 +48,14 @@ public:
     void setLoopInterval(AlicaTime loopInterval);
     void stop();
     void start();
-    void addFastPathEvent(shared_ptr<RunningPlan> p);
+    void addFastPathEvent(std::shared_ptr<RunningPlan> p);
     std::shared_ptr<const RunningPlan> getDeepestNode() const;
     std::shared_ptr<RunningPlan> getRootNode();
 
     const Plan* getMasterPlan() const { return _masterPlan; }
     bool isWaiting() const { return _isWaiting; }
 
-private:
+  private:
     void run();
 
     /**
@@ -88,7 +90,7 @@ private:
     std::mutex _lomutex;
     std::mutex _stepMutex;
 
-    std::queue<shared_ptr<RunningPlan>> _fpEvents;
+    std::queue<std::shared_ptr<RunningPlan>> _fpEvents;
     std::condition_variable _fpEventWait;
     std::condition_variable _stepModeCV;
     RuleBook _ruleBook;
@@ -99,4 +101,4 @@ private:
     bool _isWaiting;
 };
 
-}  // namespace alica
+} // namespace alica

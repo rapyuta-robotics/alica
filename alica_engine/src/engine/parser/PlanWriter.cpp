@@ -470,11 +470,10 @@ tinyxml2::XMLElement* PlanWriter::createSynchronisationXMLNode(const SyncTransit
 {
     tinyxml2::XMLElement* xr = doc->NewElement("synchronisations");
     addPlanElementAttributes(s, xr);
-    string synched = "";
-    auto iter = s->getInSync().end();
-    while (s->getInSync().size() > 0 && iter != s->getInSync().begin()) {
-        iter = prev(iter);
-        synched += to_string((*iter)->getId()) + " ";
+    std::string synched = "";
+    for (int i = s->getInSync().size() - 1; i >= 0; --i) {
+        synched.append(to_string(s->getInSync()[i]->getId()));
+        synched.append(" ");
     }
     xr->SetAttribute("synchedTransitions", supplementary::Configuration::trim(synched).c_str());
     xr->SetAttribute("talkTimeout", to_string(s->getTalkTimeOut().inMilliseconds()).c_str());
