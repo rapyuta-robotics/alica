@@ -99,7 +99,7 @@ void SyncModule::sendSyncReady(SyncReady& sr)
     sr.senderID = this->myId;
     communicator->sendSyncReady(sr);
 }
-void SyncModule::sendAcks(vector<SyncData*> syncDataList)
+void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
 {
     if (!this->ae->maySendMessages())
         return;
@@ -145,16 +145,16 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
     cout << "SyncModul:Handle Synctalk" << endl;
 #endif
 
-    vector<SyncData*> toAck;
-    for (SyncData* sd : st->syncData) {
+    std::vector<SyncData> toAck;
+    for (const SyncData& sd : st->syncData) {
 #ifdef SM_SUCCES
-        cout << "SyncModul: TransID" << sd->transitionID << endl;
-        cout << "SyncModul: RobotID" << sd->robotID << endl;
-        cout << "SyncModul: Condition" << sd->conditionHolds << endl;
-        cout << "SyncModul: ACK" << sd->ack << endl;
+        cout << "SyncModul: TransID" << sd.transitionID << endl;
+        cout << "SyncModul: RobotID" << sd.robotID << endl;
+        cout << "SyncModul: Condition" << sd.conditionHolds << endl;
+        cout << "SyncModul: ACK" << sd.ack << endl;
 #endif
 
-        const Transition* trans = this->pr->getTransitions().find(sd->transitionID);
+        const Transition* trans = this->pr->getTransitions().find(sd.transitionID);
         const SyncTransition* syncTrans = nullptr;
 
         if (trans != nullptr) {
@@ -165,7 +165,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
                 return;
             }
         } else {
-            cerr << "SyncModul: Could not find Element for Transition with ID: " << sd->transitionID << endl;
+            cerr << "SyncModul: Could not find Element for Transition with ID: " << sd.transitionID << endl;
             return;
         }
 
@@ -184,12 +184,12 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
                 doAck = sync->integrateSyncTalk(st, this->ticks);
             }
         }
-        if (!sd->ack && *(st->senderID) == *(sd->robotID) && doAck) {
+        if (!sd.ack && *(st->senderID) == *(sd.robotID) && doAck) {
             toAck.push_back(sd);
         }
     }
-    for (SyncData* sd : toAck) {
-        sd->ack = true;
+    for (SyncData& sd : toAck) {
+        sd.ack = true;
     }
     if (toAck.size() > 0) {
         sendAcks(toAck);

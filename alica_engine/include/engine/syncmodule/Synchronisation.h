@@ -60,7 +60,7 @@ class Synchronisation
     std::vector<SyncRow*> syncMatrix;
     SyncRow* myRow;
 
-    void sendTalk(SyncData* sd);
+    void sendTalk(const SyncData& sd);
     void sendSyncReady();
     bool isSyncComplete();
 };

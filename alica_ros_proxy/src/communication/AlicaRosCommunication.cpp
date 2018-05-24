@@ -188,10 +188,10 @@ void AlicaRosCommunication::sendSyncTalk(const SyncTalk& st) const
 
     for (auto sd : st.syncData) {
         alica_msgs::SyncData sds;
-        sds.ack = sd->ack;
-        sds.conditionHolds = sd->conditionHolds;
-        sds.robotID.id = sd->robotID->toByteVector();
-        sds.transitionID = sd->transitionID;
+        sds.ack = sd.ack;
+        sds.conditionHolds = sd.conditionHolds;
+        sds.robotID.id = sd.robotID->toByteVector();
+        sds.transitionID = sd.transitionID;
         sts.syncData.push_back(sds);
     }
 
@@ -274,13 +274,13 @@ void AlicaRosCommunication::handleSyncTalkRos(alica_msgs::SyncTalkPtr st)
     auto stPtr = make_shared<SyncTalk>();
     stPtr->senderID = this->ae->getIDFromBytes(st->senderID.id);
 
-    for (auto& sd : st->syncData) {
-        SyncData* sds = new SyncData();
-        sds->ack = sd.ack;
-        sds->conditionHolds = sd.conditionHolds;
-        sds->robotID = this->ae->getIDFromBytes(sd.robotID.id);
-        sds->transitionID = sd.transitionID;
-        stPtr->syncData.push_back(sds);
+    for (const auto& sd : st->syncData) {
+        SyncData sds = SyncData();
+        sds.ack = sd.ack;
+        sds.conditionHolds = sd.conditionHolds;
+        sds.robotID = this->ae->getIDFromBytes(sd.robotID.id);
+        sds.transitionID = sd.transitionID;
+        stPtr->syncData.push_back(std::move(sds));
     }
 
     if (this->isRunning) {

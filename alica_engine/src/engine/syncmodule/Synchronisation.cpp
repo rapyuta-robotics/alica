@@ -73,11 +73,11 @@ void Synchronisation::changeOwnData(int64_t transitionID, bool conditionHolds)
         // my condition does not hold => not ready for syncing
         this->readyForSync = false;
     }
-    SyncData* sd = new SyncData();
-    sd->robotID = this->myID;
-    sd->transitionID = transitionID;
-    sd->conditionHolds = conditionHolds;
-    sd->ack = false;
+    SyncData sd;
+    sd.robotID = this->myID;
+    sd.transitionID = transitionID;
+    sd.conditionHolds = conditionHolds;
+    sd.ack = false;
 
     bool maySendTalk = true;
 
@@ -85,8 +85,8 @@ void Synchronisation::changeOwnData(int64_t transitionID, bool conditionHolds)
         std::lock_guard<mutex> lock(syncMutex);
         if (myRow != nullptr) {
             if (/*sd->ack != myRow->getSyncData()->ack
-						||*/ sd->conditionHolds != myRow->getSyncData()->conditionHolds ||
-                *(sd->robotID) != *(myRow->getSyncData()->robotID) || sd->transitionID != myRow->getSyncData()->transitionID) {
+						||*/ sd.conditionHolds != myRow->getSyncData().conditionHolds ||
+                *(sd.robotID) != *(myRow->getSyncData().robotID) || sd.transitionID != myRow->getSyncData().transitionID) {
                 // my sync row has changed
                 myRow->setSyncData(sd);
                 myRow->getReceivedBy().clear();
@@ -97,7 +97,6 @@ void Synchronisation::changeOwnData(int64_t transitionID, bool conditionHolds)
                 cout << "ChangeOwnData: SendTalk==false" << endl;
 #endif
                 maySendTalk = false;
-                delete sd;
             }
         } else // init my row
         {
@@ -138,8 +137,8 @@ bool Synchronisation::isValid(uint64_t curTick)
     if (!stillActive) {
         // notify others if i am part of the synchronisation already (i.e. have an own row)
         if (myRow != nullptr) {
-            if (myRow->getSyncData() != nullptr) {
-                myRow->getSyncData()->conditionHolds = false;
+            if (myRow->hasData()) {
+                myRow->editSyncData().conditionHolds = false;
 
                 sendTalk(myRow->getSyncData());
             }
@@ -196,23 +195,23 @@ bool Synchronisation::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t
     cout << "Integrate synctalk in synchronisation" << endl;
     cout << "ST: ElapsedTime: " << (ae->getAlicaClock()->now() - this->syncStartTime) << endl;
 #endif
-    for (SyncData* sd : talk->syncData) {
+    for (const SyncData& sd : talk->syncData) {
 #ifdef SM_MESSAGES
-        cout << "syncdata for transID: " << sd->transitionID << endl;
+        cout << "syncdata for transID: " << sd.transitionID << endl;
 #endif
         std::lock_guard<mutex> lock(syncMutex);
         {
             SyncRow* rowInMatrix = nullptr;
             for (SyncRow* row : this->syncMatrix) {
 #ifdef SM_MESSAGES
-                cout << "ROW SD: " << row->getSyncData()->robotID << " " << row->getSyncData()->transitionID << " " << row->getSyncData()->conditionHolds << " "
+                cout << "ROW SD: " << row->getSyncData().robotID << " " << row->getSyncData().transitionID << " " << row->getSyncData().conditionHolds << " "
                      << row->getSyncData()->ack << endl;
-                cout << "CUR SD: " << sd->robotID << " " << sd->transitionID << " " << sd->conditionHolds << " " << sd->ack << endl;
+                cout << "CUR SD: " << sd.robotID << " " << sd.transitionID << " " << sd.conditionHolds << " " << sd.ack << endl;
 #endif
 
-                if (/*sd->ack == row->getSyncData()->ack
-							&&*/ sd->conditionHolds == row->getSyncData()->conditionHolds &&
-                    *(sd->robotID) == *(row->getSyncData()->robotID) && sd->transitionID == row->getSyncData()->transitionID) {
+                if (/*sd.ack == row->getSyncData()->ack
+							&&*/ sd.conditionHolds == row->getSyncData().conditionHolds &&
+                    *(sd.robotID) == *(row->getSyncData().robotID) && sd.transitionID == row->getSyncData().transitionID) {
                     rowInMatrix = row;
                     break;
                 }
@@ -331,9 +330,9 @@ void Synchronisation::printMatrix()
     std::lock_guard<std::mutex> lock(syncMutex);
     {
         for (SyncRow* row : this->syncMatrix) {
-            std::cout << "Row: " << row->getSyncData()->robotID << " "
-                      << std::to_string(row->getSyncData()->transitionID) + " " + std::to_string(row->getSyncData()->conditionHolds) << " "
-                      << row->getSyncData()->ack << " RecvBy: ";
+            std::cout << "Row: " << row->getSyncData().robotID << " "
+                      << std::to_string(row->getSyncData().transitionID) + " " + std::to_string(row->getSyncData().conditionHolds) << " "
+                      << row->getSyncData().ack << " RecvBy: ";
             for (AgentIDConstPtr robotID : row->getReceivedBy()) {
                 std::cout << *robotID << ", ";
             }
@@ -348,14 +347,14 @@ void Synchronisation::printMatrix()
     std::cout << std::endl;
 }
 
-void Synchronisation::sendTalk(SyncData* sd)
+void Synchronisation::sendTalk(const SyncData& sd)
 {
     SyncTalk talk;
     talk.syncData.push_back(sd);
     this->lastTalkTime = ae->getAlicaClock()->now();
 
 #ifdef SM_MESSAGES
-    cout << "Sending Talk TID: " << sd->transitionID << endl;
+    cout << "Sending Talk TID: " << sd.transitionID << endl;
 #endif
 
     this->syncModul->sendSyncTalk(talk);
@@ -388,7 +387,7 @@ bool Synchronisation::isSyncComplete()
         //			Is not needed here
         //			lock_guard<mutex> lock(syncMutex);
         for (SyncRow* row : this->syncMatrix) {
-            if (row->getSyncData()->transitionID == transID && row->getSyncData()->conditionHolds) {
+            if (row->getSyncData().transitionID == transID && row->getSyncData().conditionHolds) {
                 foundRow = row;
                 break;
             }
@@ -407,9 +406,9 @@ bool Synchronisation::isSyncComplete()
         return false;
     }
     for (SyncRow* row : this->rowsOK) {
-        auto tmp = row->getSyncData()->robotID;
+        AgentIDConstPtr tmp = row->getSyncData().robotID;
         if (find_if(this->myRow->getReceivedBy().begin(), this->myRow->getReceivedBy().end(),
-                    [&tmp](const supplementary::AgentID* id) { return *tmp == *id; }) == this->myRow->getReceivedBy().end()) {
+                    [tmp](const supplementary::AgentID* id) { return *tmp == *id; }) == this->myRow->getReceivedBy().end()) {
             return false;
         }
     }

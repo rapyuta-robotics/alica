@@ -13,18 +13,22 @@ class SyncRow
 {
   public:
     SyncRow();
-    SyncRow(SyncData* sd);
+    SyncRow(const SyncData& sd);
     virtual ~SyncRow();
     std::vector<const supplementary::AgentID*>& getReceivedBy();
     void setReceivedBy(std::vector<const supplementary::AgentID*> recievedBy);
-    SyncData* getSyncData();
-    void setSyncData(SyncData* syncData);
+    const SyncData& getSyncData() const { return _syncData; }
+    SyncData& editSyncData() { return _syncData; }
+    void setSyncData(const SyncData& syncData);
     void toString();
+    bool hasData() const { return _haveData; }
+    void invalidate() { _haveData = false; }
 
-  protected:
-    SyncData* syncData;
+  private:
+    SyncData _syncData;
+    bool _haveData;
     // this vector always has to be sorted
-    std::vector<const supplementary::AgentID*> receivedBy;
+    std::vector<const supplementary::AgentID*> _receivedBy;
 };
 
 } /* namespace alica */
