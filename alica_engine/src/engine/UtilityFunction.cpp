@@ -18,6 +18,8 @@
 namespace alica
 {
 
+using std::pair;
+
 UtilityFunction::UtilityFunction(const std::string& name, std::list<USummand*> utilSummands, double priorityWeight, double similarityWeight, const Plan* plan)
     : priResult(0.0, 0.0)
     , simUI(0.0, 0.0)
@@ -101,7 +103,7 @@ double UtilityFunction::eval(shared_ptr<RunningPlan> newRp, shared_ptr<RunningPl
         sumOfUI.setMin(sumOfUI.getMin() / sumOfWeights);
         // Min == Max because RP.Assignment must be an complete Assignment!
         if ((sumOfUI.getMax() - sumOfUI.getMin()) > DIFFERENCETHRESHOLD) {
-            cerr << "UF: The utility min and max value differs more than " << DIFFERENCETHRESHOLD << " for an Assignment!" << endl;
+            std::cerr << "UF: The utility min and max value differs more than " << DIFFERENCETHRESHOLD << " for an Assignment!" << std::endl;
         }
         return sumOfUI.getMax();
     }
@@ -212,7 +214,7 @@ void UtilityFunction::init(AlicaEngine* ae)
             if (iter == rtm->getTaskPriorities().end()) {
                 std::stringstream ss;
                 ss << "UF: There is no priority for the task " << taskId << " in the roleTaskMapping of the role " << rtm->getRole()->getName() << " with id "
-                   << roleId << "!\n We are in the UF for the plan " << this->plan->getName() << "!" << endl;
+                   << roleId << "!\n We are in the UF for the plan " << this->plan->getName() << "!" << std::endl;
                 AlicaEngine::abort(ss.str());
                 return;
             } else {
@@ -254,7 +256,7 @@ std::string UtilityFunction::toString() const
 {
     std::stringstream ss;
     ss << this->name << std::endl;
-    ss << "prioW: " << this->priorityWeight << " simW: " << this->similarityWeight << endl;
+    ss << "prioW: " << this->priorityWeight << " simW: " << this->similarityWeight << std::endl;
     for (const USummand* utilSummand : this->utilSummands) {
         ss << utilSummand->toString();
     }
@@ -284,9 +286,9 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass)
     // SUM UP DEFINED PART OF PRIORITY UTILITY
 
     // for better comparability of different utility functions
-    int denum = min(this->plan->getMaxCardinality(), this->ae->getTeamManager()->getTeamSize());
-    long taskId;
-    long roleId;
+    int denum = std::min(this->plan->getMaxCardinality(), this->ae->getTeamManager()->getTeamSize());
+    int64_t taskId;
+    int64_t roleId;
     //	shared_ptr<vector<EntryPoint*> > eps = ass->getEntryPoints();
     double curPrio = 0;
     for (short i = 0; i < ass->getEntryPointCount(); ++i) {
@@ -308,15 +310,15 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass)
             }
             this->priResult.setMin(this->priResult.getMin() + curPrio);
 #ifdef UFDEBUG
-            cout << "UF: taskId:" << taskId << " roleId:" << roleId << " prio: " << curPrio << endl;
+            std::cout << "UF: taskId:" << taskId << " roleId:" << roleId << " prio: " << curPrio << std::endl;
 #endif
         }
     }
 #ifdef UFDEBUG
-    cout << "##" << endl;
-    cout << "UF: prioUI.Min = " << priResult.getMin() << endl;
-    cout << "UF: prioUI.Max = " << priResult.getMax() << endl;
-    cout << "UF: denum = " << denum << endl;
+    std::cout << "##" << std::endl;
+    std::cout << "UF: prioUI.Min = " << priResult.getMin() << std::endl;
+    std::cout << "UF: prioUI.Max = " << priResult.getMax() << std::endl;
+    std::cout << "UF: denum = " << denum << std::endl;
 #endif
     priResult.setMax(priResult.getMax() + priResult.getMin());
     if (denum != 0) {
@@ -324,9 +326,9 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass)
         priResult.setMax(priResult.getMax() / denum);
     }
 #ifdef UFDEBUG
-    cout << "UF: prioUI.Min = " << priResult.getMin() << endl;
-    cout << "UF: prioUI.Max = " << priResult.getMax() << endl;
-    cout << "##" << endl;
+    std::cout << "UF: prioUI.Min = " << priResult.getMin() << std::endl;
+    std::cout << "UF: prioUI.Max = " << priResult.getMax() << std::endl;
+    std::cout << "##" << std::endl;
 #endif
     return priResult;
 }

@@ -3,6 +3,7 @@
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/IPlanTreeVisitor.h"
+#include "engine/Types.h"
 #include <Logging.h>
 #include <SystemConfig.h>
 
@@ -20,7 +21,6 @@ namespace alica
 class RunningPlan;
 class TeamObserver;
 class EntryPoint;
-class State;
 class AlicaEngine;
 class TeamManager;
 
@@ -41,7 +41,7 @@ class Logger : public IPlanTreeVisitor
     void logToConsole(const std::string& logString);
 
   private:
-    std::shared_ptr<std::list<std::string>> createHumanReadablePlanTree(const std::list<int64_t>& list);
+    std::shared_ptr<std::list<std::string>> createHumanReadablePlanTree(const IdGrp& list) const;
     const EntryPoint* entryPointOfState(const State* s) const;
     void evaluationAssignmentsToString(std::stringstream& ss, std::shared_ptr<RunningPlan> rp);
     std::shared_ptr<std::list<std::string>> createTreeLog(std::shared_ptr<RunningPlan> r);

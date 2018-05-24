@@ -8,18 +8,19 @@
 #ifndef USUMMAND_H_
 #define USUMMAND_H_
 
-#include <vector>
-#include <string>
-#include <sstream>
 #include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
+#include "engine/Types.h"
 #include "engine/UtilityInterval.h"
 #include "engine/model/EntryPoint.h"
-#include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 
 class EntryPoint;
 class IAssignment;
@@ -27,10 +28,12 @@ class IAssignment;
 /**
  * Abstract super class for domain dependent utility summands.
  */
-class USummand {
-public:
+class USummand
+{
+  public:
     USummand()
-            : ui(0.0, 0.0) {
+        : ui(0.0, 0.0)
+    {
         this->id = 0;
         this->weight = 0;
     }
@@ -40,7 +43,8 @@ public:
      * and stores it in the relevant entrypoint vector. This will increase the
      * performance of the evaluation of this utility summand.
      */
-    virtual void init(AlicaEngine* ae) {
+    virtual void init(AlicaEngine* ae)
+    {
         // init relevant entrypoint vector
         this->relevantEntryPoints.resize(this->relevantEntryPointIds.size());
         // find the right entrypoint for each id in relevant entrypoint id
@@ -49,13 +53,13 @@ public:
             if (curEp != nullptr) {
                 this->relevantEntryPoints[i] = curEp;
             } else {
-                cerr << "Could not find Entrypoint " << this->relevantEntryPointIds[i] << " Hint is: " << this->name
-                     << endl;
-                throw new std::exception();
+                std::cerr << "Could not find Entrypoint " << this->relevantEntryPointIds[i] << " Hint is: " << this->name << std::endl;
+                throw std::exception();
             }
         }
     }
-    std::string toString() const {
+    std::string toString() const
+    {
         std::stringstream ss;
         ss << this->name << ": Weight " << this->weight << "EntryPoints: ";
         for (int i = 0; i < static_cast<int>(this->relevantEntryPointIds.size()); ++i) {
@@ -75,10 +79,10 @@ public:
      * assure consistency over the complete current evaluation.
      */
     virtual void cacheEvalData(){};
-    virtual pair<vector<double>, double>* differentiate(IAssignment* newAss) { return nullptr; }
+    virtual std::pair<std::vector<double>, double>* differentiate(IAssignment* newAss) { return nullptr; }
     void setWeight(double weight) { this->weight = weight; }
 
-protected:
+  protected:
     UtilityInterval ui;
     double weight;
     int64_t id;

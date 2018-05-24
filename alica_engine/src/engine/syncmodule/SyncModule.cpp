@@ -13,6 +13,16 @@
 
 namespace alica
 {
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::list;
+using std::lock_guard;
+using std::map;
+using std::mutex;
+using std::pair;
+using std::shared_ptr;
+using std::vector;
 
 SyncModule::SyncModule(AlicaEngine* ae)
     : myId(nullptr)

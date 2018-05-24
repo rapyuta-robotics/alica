@@ -13,6 +13,9 @@
 namespace alica
 {
 
+using std::mutex;
+using std::shared_ptr;
+
 Synchronisation::Synchronisation(AlicaEngine* ae)
     : myID(nullptr)
 {
@@ -63,7 +66,7 @@ void Synchronisation::setTick(uint64_t now)
 void Synchronisation::changeOwnData(int64_t transitionID, bool conditionHolds)
 {
 #ifdef SM_MISC
-    cout << "CHOD: ElapsedTime: " << (ae->getAlicaClock()->now() - this->syncStartTime) << endl;
+    std::cout << "CHOD: ElapsedTime: " << (ae->getAlicaClock()->now() - this->syncStartTime) << std::endl;
 #endif
 
     if (!conditionHolds) {
@@ -322,19 +325,19 @@ bool Synchronisation::allSyncReady()
 
 void Synchronisation::printMatrix()
 {
-    cout << endl;
-    cout << "Matrix:" << endl;
+    std::cout << std::endl;
+    std::cout << "Matrix:" << std::endl;
 
     std::lock_guard<std::mutex> lock(syncMutex);
     {
         for (SyncRow* row : this->syncMatrix) {
             std::cout << "Row: " << row->getSyncData()->robotID << " "
-                      << to_string(row->getSyncData()->transitionID) + " " + std::to_string(row->getSyncData()->conditionHolds) << " "
+                      << std::to_string(row->getSyncData()->transitionID) + " " + std::to_string(row->getSyncData()->conditionHolds) << " "
                       << row->getSyncData()->ack << " RecvBy: ";
             for (AgentIDConstPtr robotID : row->getReceivedBy()) {
                 std::cout << *robotID << ", ";
             }
-            cout << endl;
+            std::cout << std::endl;
         }
         std::cout << "ReceivedSyncreadys: ";
         for (shared_ptr<SyncReady> sr : this->receivedSyncReadys) {
@@ -376,7 +379,7 @@ bool Synchronisation::isSyncComplete()
     // myRow needs to be acknowledged by all participants
     // every participant needs to believe in its condition
     // there must be at least one participant for every condition
-    lock_guard<mutex> lock(rowOkMutex);
+    std::lock_guard<std::mutex> lock(rowOkMutex);
     this->rowsOK.clear();
     // collect participants
     for (int64_t transID : this->connectedTransitions) {

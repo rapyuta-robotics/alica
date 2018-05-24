@@ -124,7 +124,7 @@ class RunningPlan : public std::enable_shared_from_this<RunningPlan>
     void attachPlanConstraints();
     bool recursiveUpdateAssignment(std::list<std::shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents,
                                    std::list<const supplementary::AgentID*> noUpdates, AlicaTime now);
-    void toMessage(std::list<long>& message, std::shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const;
+    void toMessage(IdGrp& message, std::shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const;
     std::string toString() const;
     const supplementary::AgentID* getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
     AlicaEngine* getAlicaEngine() const { return _ae; }

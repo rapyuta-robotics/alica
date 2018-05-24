@@ -1,20 +1,22 @@
 #define BP_DEBUG
 
 #include "engine/BehaviourPool.h"
-#include "engine/RunningPlan.h"
-#include "engine/IBehaviourCreator.h"
 #include "engine/AlicaEngine.h"
+#include "engine/BasicBehaviour.h"
+#include "engine/IBehaviourCreator.h"
 #include "engine/PlanRepository.h"
+#include "engine/RunningPlan.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
-#include "engine/BasicBehaviour.h"
 
-namespace alica {
+namespace alica
+{
 
 /**
  * Basic Constructor.
  */
-BehaviourPool::BehaviourPool(AlicaEngine* ae) {
+BehaviourPool::BehaviourPool(AlicaEngine* ae)
+{
     this->ae = ae;
     this->behaviourCreator = nullptr;
 }
@@ -30,15 +32,15 @@ BehaviourPool::~BehaviourPool() {}
  * @param bc A BehaviourCreator.
  * @return True, if all necessary BasicBehaviours could be constructed. False, if the Initialisation was cancelled.
  */
-bool BehaviourPool::init(IBehaviourCreator* bc) {
+bool BehaviourPool::init(IBehaviourCreator* bc)
+{
     if (this->behaviourCreator != nullptr) {
         delete this->behaviourCreator;
     }
 
     this->behaviourCreator = bc;
 
-    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs =
-            ae->getPlanRepository()->getBehaviourConfigurations();
+    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
     for (const BehaviourConfiguration* beh : behaviourConfs) {
         auto basicBeh = this->behaviourCreator->createBehaviour(beh->getId());
         if (basicBeh != nullptr) {
@@ -60,13 +62,13 @@ bool BehaviourPool::init(IBehaviourCreator* bc) {
 /**
  * Calls stop on all BasicBehaviours.
  */
-void BehaviourPool::stopAll() {
-    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs =
-            ae->getPlanRepository()->getBehaviourConfigurations();
+void BehaviourPool::stopAll()
+{
+    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
     for (const BehaviourConfiguration* beh : behaviourConfs) {
         auto bbPtr = _availableBehaviours.at(beh);
         if (bbPtr == nullptr) {
-            cerr << "BP::stop(): Found Behaviour without an BasicBehaviour attached!" << endl;
+            std::cerr << "BP::stop(): Found Behaviour without an BasicBehaviour attached!" << std::endl;
             continue;
         }
 
@@ -78,7 +80,8 @@ void BehaviourPool::stopAll() {
  * Enables the thread of the BasicBehaviour in the given RunningPlan.
  * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
  */
-void BehaviourPool::startBehaviour(std::shared_ptr<RunningPlan> rp) {
+void BehaviourPool::startBehaviour(std::shared_ptr<RunningPlan> rp)
+{
     if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp->getPlan())) {
         auto bb = _availableBehaviours.at(bc);
         if (bb != nullptr) {
@@ -89,8 +92,8 @@ void BehaviourPool::startBehaviour(std::shared_ptr<RunningPlan> rp) {
             bb->start();
         }
     } else {
-        cerr << "BP::startBehaviour(): Cannot start Behaviour of given RunningPlan! Plan Name: "
-             << rp->getPlan()->getName() << " Plan Id: " << rp->getPlan()->getId() << endl;
+        std::cerr << "BP::startBehaviour(): Cannot start Behaviour of given RunningPlan! Plan Name: " << rp->getPlan()->getName()
+                  << " Plan Id: " << rp->getPlan()->getId() << std::endl;
     }
 }
 
@@ -98,20 +101,21 @@ void BehaviourPool::startBehaviour(std::shared_ptr<RunningPlan> rp) {
  * Disables the thread of the BasicBehaviour in the given RunningPlan.
  * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
  */
-void BehaviourPool::stopBehaviour(std::shared_ptr<RunningPlan> rp) {
+void BehaviourPool::stopBehaviour(std::shared_ptr<RunningPlan> rp)
+{
     if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp->getPlan())) {
         auto bb = _availableBehaviours.at(bc);
         if (bb != nullptr) {
             bb->stop();
         }
     } else {
-        cerr << "BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: "
-             << rp->getPlan()->getName() << " Plan Id: " << rp->getPlan()->getId() << endl;
+        std::cerr << "BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp->getPlan()->getName()
+                  << " Plan Id: " << rp->getPlan()->getId() << std::endl;
     }
 }
 
-const std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>& BehaviourPool::getAvailableBehaviours()
-        const {
+const std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>& BehaviourPool::getAvailableBehaviours() const
+{
     return _availableBehaviours;
 }
 

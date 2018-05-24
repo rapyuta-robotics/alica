@@ -65,7 +65,7 @@ class Agent
     void setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint);
     void setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks);
     const DomainVariable* getDomainVariable(const std::string& sort) const;
-    std::shared_ptr<std::list<const EntryPoint*>> getSucceededEntryPoints(const AbstractPlan* plan) const;
+    const EntryPointGrp* getSucceededEntryPoints(const AbstractPlan* plan) const;
     bool update();
 };
 

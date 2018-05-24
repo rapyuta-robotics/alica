@@ -70,11 +70,11 @@ class IAssignment
     /**
      * Print AssignmentCollection
      */
-    virtual string assignmentCollectionToString() = 0;
+    virtual std::string assignmentCollectionToString() const = 0;
 
-    virtual string toString() = 0;
+    virtual std::string toString() const = 0;
 
-    virtual AssignmentCollection* getEpRobotsMapping() = 0;
+    virtual AssignmentCollection* getEpRobotsMapping() const = 0;
 
     double getMax() const { return max; }
 

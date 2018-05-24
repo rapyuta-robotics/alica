@@ -16,6 +16,7 @@ using std::endl;
 
 namespace alica
 {
+using std::to_string;
 
 Logger::Logger(AlicaEngine* ae)
     : ae(ae)
@@ -176,7 +177,7 @@ void Logger::visit(std::shared_ptr<RunningPlan> r) {}
  * @param l A list<long>
  * @return shared_ptr<list<string> >
  */
-std::shared_ptr<std::list<std::string>> Logger::createHumanReadablePlanTree(const std::list<int64_t>& l)
+std::shared_ptr<std::list<std::string>> Logger::createHumanReadablePlanTree(const IdGrp& l) const
 {
     std::shared_ptr<std::list<std::string>> result = std::make_shared<std::list<std::string>>(list<string>());
 

@@ -6,50 +6,59 @@
  */
 
 #include <algorithm>
-#include <iostream>
 #include <engine/containers/SyncData.h>
 #include <engine/syncmodule/SyncRow.h>
+#include <iostream>
 
-namespace alica {
+namespace alica
+{
 
-SyncRow::SyncRow() {
+SyncRow::SyncRow()
+{
     this->syncData = nullptr;
 }
 
-SyncRow::SyncRow(SyncData* sd) {
+SyncRow::SyncRow(SyncData* sd)
+{
     this->syncData = sd;
 }
 
-SyncRow::~SyncRow() {
+SyncRow::~SyncRow()
+{
     delete syncData;
 }
 
-vector<const supplementary::AgentID*>& SyncRow::getReceivedBy() {
-    sort(this->receivedBy.begin(), this->receivedBy.end(), supplementary::AgentIDComparator() );
+std::vector<const supplementary::AgentID*>& SyncRow::getReceivedBy()
+{
+    sort(this->receivedBy.begin(), this->receivedBy.end(), supplementary::AgentIDComparator());
     return receivedBy;
 }
 
-void SyncRow::setReceivedBy(vector<const supplementary::AgentID*> receivedBy) {
+void SyncRow::setReceivedBy(std::vector<const supplementary::AgentID*> receivedBy)
+{
     this->receivedBy = receivedBy;
 }
 
-SyncData* SyncRow::getSyncData() {
+SyncData* SyncRow::getSyncData()
+{
     return syncData;
 }
 
-void SyncRow::setSyncData(SyncData* syncData) {
+void SyncRow::setSyncData(SyncData* syncData)
+{
     if (this->syncData != nullptr) {
         delete this->syncData;
     }
     this->syncData = syncData;
 }
-void SyncRow::toString() {
-    cout << "SyncRow" << endl;
-    cout << "ReceivedBy: ";
+void SyncRow::toString()
+{ // TODO: fix this method (doesnt produce a string, but write to cout)
+    std::cout << "SyncRow" << std::endl;
+    std::cout << "ReceivedBy: ";
     for (auto& i : receivedBy) {
-        cout << i << " ";
+        std::cout << i << " ";
     }
-    cout << endl;
+    std::cout << std::endl;
     this->syncData->toString();
 }
 

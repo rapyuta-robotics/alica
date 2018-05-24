@@ -87,8 +87,8 @@ PlanBase::PlanBase(AlicaEngine* ae, const Plan* masterPlan)
     }
 
     //#ifdef PB_DEBUG
-    cout << "PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds() << "ms - "
-         << _maxSendInterval.inMilliseconds() << "ms" << endl;
+    std::cout << "PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds() << "ms - "
+              << _maxSendInterval.inMilliseconds() << "ms" << std::endl;
     //#endif
     if (halfLoopTime < _minSendInterval) {
         _minSendInterval -= halfLoopTime;
@@ -120,10 +120,10 @@ void PlanBase::run()
 
         if (_ae->getStepEngine()) {
 #ifdef PB_DEBUG
-            cout << "PB: ===CUR TREE===" << std::endl;
+            std::cout << "PB: ===CUR TREE===" << std::endl;
 
             if (_rootNode == nullptr) {
-                cout << "PB: NULL" << endl;
+                std::cout << "PB: NULL" << std::endl;
             } else {
                 _rootNode->printRecursive();
             }
@@ -159,7 +159,7 @@ void PlanBase::run()
         // lock for fpEvents
         {
             std::lock_guard<std::mutex> lock(_lomutex);
-            _fpEvents = queue<shared_ptr<RunningPlan>>();
+            _fpEvents = std::queue<std::shared_ptr<RunningPlan>>();
         }
 
         AlicaTime now = _alicaClock->now();
@@ -171,7 +171,7 @@ void PlanBase::run()
         }
 
         if ((_ruleBook.isChangeOccured() && _lastSendTime + _minSendInterval < now) || _lastSendTime + _maxSendInterval < now) {
-            std::list<int64_t> msg;
+            IdGrp msg;
             _deepestNode = _rootNode;
             _treeDepth = 0;
             _rootNode->toMessage(msg, _deepestNode, _treeDepth, 0);
@@ -247,7 +247,7 @@ void PlanBase::run()
         availTime = _loopTime - (now - beginTime);
 
 #ifdef PB_DEBUG
-        cout << "PB: availTime " << availTime << endl;
+        std::cout << "PB: availTime " << availTime << std::endl;
 #endif
         if (availTime > AlicaTime::microseconds(100) && !_ae->getStepEngine()) {
             _alicaClock->sleep(availTime);
@@ -299,7 +299,7 @@ void PlanBase::setLoopInterval(AlicaTime loopInterval)
     _loopInterval = loopInterval;
 }
 
-condition_variable* PlanBase::getStepModeCV()
+std::condition_variable* PlanBase::getStepModeCV()
 {
     if (!_ae->getStepEngine()) {
         return nullptr;

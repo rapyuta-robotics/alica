@@ -55,7 +55,7 @@ const DomainVariable* Agent::getDomainVariable(const std::string& sort) const
     return _engineData->getDomainVariable(sort);
 }
 
-std::shared_ptr<std::list<const EntryPoint*>> Agent::getSucceededEntryPoints(const AbstractPlan* plan) const
+const EntryPointGrp* Agent::getSucceededEntryPoints(const AbstractPlan* plan) const
 {
     return _engineData->getSuccessMarks()->succeededEntryPoints(plan);
 }
