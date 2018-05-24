@@ -12,6 +12,7 @@
 
 namespace alica
 {
+using std::shared_ptr; // TODO: remove once autogeneration templates can be reworked
 class AlicaEngine;
 class BasicBehaviour;
 
