@@ -43,6 +43,9 @@ class Interval
     void setMin(T m) { _min = m; }
     void setMax(T m) { _max = m; }
 
+    bool operator==(const Interval<T> o) const { return _min == o._min && _max == o._max; }
+    bool operator!=(const Interval<T> o) const { return !(*this == o); }
+
   private:
     T _min;
     T _max;
