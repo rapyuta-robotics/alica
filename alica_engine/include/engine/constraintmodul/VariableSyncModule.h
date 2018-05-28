@@ -34,8 +34,6 @@ class VariableSyncModule
     template <typename VarType>
     int getSeeds(const std::vector<VarType*>& query, const std::vector<Interval<double>>& limits, std::vector<Variant>& o_seeds) const;
 
-    // virtual int getSeeds(const SolverVariableGrp& query, const std::vector<Interval<double>>& limits, std::vector<Variant>& o_seeds) const override;
-
     VariableSyncModule(const VariableSyncModule&) = delete;
     VariableSyncModule(VariableSyncModule&&) = delete;
 
@@ -88,23 +86,23 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
     if (_ownResults.getValues(query, earliest, vec)) {
         seeds.emplace_back(std::move(vec));
     }
-
-    std::lock_guard<std::mutex> lock(_mutex);
-
-    for (const ResultEntry& re : _store) {
-        bool any = re.getValues(query, earliest, vec);
-        if (!any) {
-            continue;
-        }
-        bool found = false;
-        for (VotedSeed& s : seeds) {
-            if (s.takeVector(vec, limits, _distThreshold)) {
-                found = true;
-                break;
+    { // for lock
+        std::lock_guard<std::mutex> lock(_mutex);
+        for (const ResultEntry& re : _store) {
+            bool any = re.getValues(query, earliest, vec);
+            if (!any) {
+                continue;
             }
-        }
-        if (!found) {
-            seeds.emplace_back(std::move(vec));
+            bool found = false;
+            for (VotedSeed& s : seeds) {
+                if (s.takeVector(vec, limits, _distThreshold)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                seeds.emplace_back(std::move(vec));
+            }
         }
     }
 #ifdef RS_DEBUG

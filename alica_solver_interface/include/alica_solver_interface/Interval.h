@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <assert.h>
 #include <ostream>
 namespace alica
 {
@@ -26,15 +27,15 @@ class Interval
         _min = std::max<T>(min, _min);
         _max = std::min<T>(max, _max);
     }
-    void limitTo(const Interval<T> o)
-    {
-        _min = std::max<T>(o._min, _min);
-        _max = std::min<T>(o._max, _max);
-    }
+    void limitTo(const Interval<T> o) { limitTo(o._min, o._max); }
 
     Interval intersect(const Interval<T> o) const { return Interval(std::max<T>(_min, o._min), std::min<T>(_max, o._max)); }
     bool contains(const Interval<T> o) const { return _min <= o._min && _max >= o._max; }
-    T clamp(T val) const { return std::max<T>(_min, std::min<T>(val, _max)); }
+    T clamp(T val) const
+    {
+        assert(isValid());
+        return std::max<T>(_min, std::min<T>(val, _max));
+    }
 
     bool isValid() const { return _min <= _max; }
     T size() const { return _max - _min; }
