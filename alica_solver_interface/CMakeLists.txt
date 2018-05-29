@@ -44,3 +44,24 @@ target_link_libraries(alica_solver_interface ${catkin_LIBRARIES})
 if (NOT catkin_FOUND)
  target_include_directories(alica_solver_interface PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include") 
 endif (NOT catkin_FOUND)
+
+
+if(CATKIN_ENABLE_TESTING)
+    catkin_add_gtest(${PROJECT_NAME}-test
+    test/test_intervals.cpp
+    test/test_main.cpp
+    )
+    if(TARGET ${PROJECT_NAME}-test)
+    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
+    endif()
+else(CATKIN_ENABLE_TESTING)
+    find_package(GTest REQUIRED)
+    include_directories(BEFORE
+    ${GTEST_INCLUDE_DIRS}
+    )
+    add_executable(${PROJECT_NAME}-test
+    test/test_intervals.cpp
+    test/test_main.cpp
+    )
+    target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} pthread ${GTEST_LIBRARIES})
+endif(CATKIN_ENABLE_TESTING)

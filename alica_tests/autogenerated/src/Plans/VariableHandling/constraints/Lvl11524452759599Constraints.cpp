@@ -47,8 +47,8 @@ void Constraint1524453470580::getConstraint(shared_ptr<ProblemDescriptor> c, sha
     assert(c->getStaticVars().size() == 2);
     assert(c->getDomainVars().empty());
 
-    l1av->editRange().limitTo(-200.0, -100.0);
-    l1bv->editRange().limitTo(100.0, 200.0);
+    l1av->editRange().intersect(-200.0, -100.0);
+    l1bv->editRange().intersect(100.0, 200.0);
 
     TermPtr constraint = l1a + l1b < l1b->getOwner()->constant(10.0);
     constraint &= l1a + l1b > l1b->getOwner()->constant(-10.0);
