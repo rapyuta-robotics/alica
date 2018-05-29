@@ -15,7 +15,7 @@ class ModelFactory;
 class Variable : public AlicaElement {
 public:
     Variable();
-    Variable(const std::shared_ptr<SolverVariable>& v);
+    // Variable(const std::shared_ptr<SolverVariable>& v);
     Variable(int64_t id, const std::string& name, const std::string& type);
     virtual ~Variable();
 

@@ -1,12 +1,12 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "TestWorldModel.h"
 #include "engine/PlanRepository.h"
@@ -55,8 +55,6 @@ protected:
         ae->shutdown();
         ae2->shutdown();
         sc->shutdown();
-        delete ae->getIAlicaClock();
-        delete ae2->getIAlicaClock();
         delete cc;
         delete bc;
         delete uc;
@@ -72,41 +70,35 @@ protected:
  * Test for SyncTransition
  */
 TEST_F(AlicaSyncTransition, syncTransitionTest) {
+    ASSERT_NO_SIGNAL
+
     sc->setHostname("hairy");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "RealMasterPlanForSyncTest", ".", true);
-    ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
     ros = new alicaRosProxy::AlicaRosCommunication(ae);
+    ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(ros);
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("nase");
     ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "RealMasterPlanForSyncTest", ".", true);
-    ae2->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
     ros2 = new alicaRosProxy::AlicaRosCommunication(ae2);
+    ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(ros2);
     EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     ae->start();
     ae2->start();
-    chrono::milliseconds duration(33);
 
     for (int i = 0; i < 20; i++) {
         std::cout << "AE ----------------------------------------------- " << *ae->getTeamManager()->getLocalAgentID()
                   << std::endl;
-        ae->stepNotify();
-        this_thread::sleep_for(duration);
-        do {
-            this_thread::sleep_for(duration);
-        } while (!ae->getPlanBase()->isWaiting());
+        step(ae);
 
         std::cout << "AE ----------------------------------------------- " << *ae2->getTeamManager()->getLocalAgentID()
                   << std::endl;
-        ae2->stepNotify();
-        do {
-            this_thread::sleep_for(duration);
-        } while (!ae2->getPlanBase()->isWaiting() || !ae->getPlanBase()->isWaiting());
+        step(ae2);
 
         if (i == 2) {
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825427317(true);

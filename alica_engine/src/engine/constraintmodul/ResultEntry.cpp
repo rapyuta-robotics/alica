@@ -7,90 +7,79 @@
 #include "engine/constraintmodul/ResultEntry.h"
 
 #include <engine/model/Variable.h>
-#include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
 #include <engine/containers/SolverVar.h>
 #include <engine/containers/SolverResult.h>
-#include <limits>
-
-using namespace std;
+#include <engine/AlicaClock.h>
+#include <utility>
 
 namespace alica {
 
-ResultEntry::ResultEntry(const supplementary::AgentID* robotId, const AlicaEngine* ae) {
-    this->ae = ae;
-    this->id = robotId;
+ResultEntry::ResultEntry(const supplementary::AgentID* robotId)
+        : _id(robotId) {}
+
+ResultEntry::ResultEntry(ResultEntry&& o)
+        : _id(o._id)
+        , _values(std::move(o._values))
+        , _valueLock() {}
+
+ResultEntry& ResultEntry::operator=(ResultEntry&& o) {
+    std::swap(_id, o._id);
+    _values = std::move(o._values);
+    return *this;
 }
 
-ResultEntry::~ResultEntry() {
-    // TODO Auto-generated destructor stub
-}
-
-const supplementary::AgentID* ResultEntry::getId() {
-    return id;
-}
-
-void ResultEntry::addValue(long vid, shared_ptr<vector<uint8_t>> val) {
-    long now = ae->getIAlicaClock()->now();
-    shared_ptr<VarValue> vv;
-    lock_guard<std::mutex> lock(valueLock);
-    auto it = this->values.find(vid);
-    if (it != values.end()) {
-        vv = it->second;
-        vv->val = val;
-        vv->lastUpdate = now;
+void ResultEntry::addValue(int64_t vid, Variant val, AlicaTime time) {
+    std::lock_guard<std::mutex> lock(_valueLock);
+    auto it = _values.find(vid);
+    if (it != _values.end()) {
+        VarValue& vv = it->second;
+        vv._val = val;
+        vv._lastUpdate = time;
     } else {
-        vv = make_shared<VarValue>(vid, val, now);
-        this->values[vid] = vv;
+        _values.emplace(vid, VarValue(val, time));
     }
 }
 
 void ResultEntry::clear() {
-    lock_guard<std::mutex> lock(valueLock);
-    this->values.clear();
+    std::lock_guard<std::mutex> lock(_valueLock);
+    _values.clear();
 }
 
-shared_ptr<vector<SolverVar*>> ResultEntry::getCommunicatableResults(long ttl4Communication) {
-    lock_guard<std::mutex> lock(valueLock);
-    shared_ptr<vector<SolverVar*>> lv = make_shared<vector<SolverVar*>>();
-    long now = ae->getIAlicaClock()->now();
-    for (auto iterator = values.begin(); iterator != values.end(); iterator++) {
-        if (iterator->second->lastUpdate + ttl4Communication > now) {
-            SolverVar* sv = new SolverVar();
-            sv->id = iterator->second->id;
-            sv->value = *iterator->second->val;
-            lv->push_back(sv);
+void ResultEntry::getCommunicatableResults(AlicaTime earliest, std::vector<SolverVar>& o_result) const {
+    std::lock_guard<std::mutex> lock(_valueLock);
+    for (const std::pair<int64_t, VarValue>& p : _values) {
+        if (p.second._lastUpdate > earliest) {
+            SolverVar sv;
+            sv.id = p.first;
+            p.second._val.serializeTo(sv.value);
+            o_result.push_back(std::move(sv));
         }
     }
-    return lv;
 }
 
-shared_ptr<vector<uint8_t>> ResultEntry::getValue(long vid, long ttl4Usage) {
-    long now = ae->getIAlicaClock()->now();
-    lock_guard<std::mutex> lock(valueLock);
-    auto it = this->values.find(vid);
-    if (it != values.end()) {
-        if (it->second->lastUpdate + ttl4Usage > now) {
-            return it->second->val;
+Variant ResultEntry::getValue(int64_t vid, AlicaTime earliest) const {
+    std::lock_guard<std::mutex> lock(_valueLock);
+    auto it = _values.find(vid);
+    if (it != _values.end()) {
+        if (it->second._lastUpdate > earliest) {
+            return it->second._val;
         }
     }
-    return nullptr;
+    return Variant();
 }
 
-shared_ptr<vector<shared_ptr<vector<uint8_t>>>> ResultEntry::getValues(
-        shared_ptr<VariableGrp> query, long ttl4Usage) {
-    shared_ptr<vector<shared_ptr<vector<uint8_t>>>> ret =
-            make_shared<vector<shared_ptr<vector<uint8_t>>>>(query->size());
+bool ResultEntry::getValues(const VariableGrp& query, AlicaTime earliest, std::vector<Variant>& o_values) const {
+    o_values.resize(query.size());
     int i = 0;
     int nans = 0;
-    for (auto it = query->begin(); it != query->end(); it++, i++) {
-        ret->at(i) = getValue((*it)->getId(), ttl4Usage);
-        if (ret->at(i) == nullptr)
-            nans++;
+    for (const Variable* v : query) {
+        o_values[i] = getValue(v->getId(), earliest);
+        if (!o_values[i].isSet()) {
+            ++nans;
+        }
+        ++i;
     }
-    if (nans == i)
-        return nullptr;
-    return ret;
+    return nans != i;
 }
 
 } /* namespace alica */

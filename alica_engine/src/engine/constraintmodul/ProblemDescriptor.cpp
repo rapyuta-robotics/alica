@@ -7,151 +7,69 @@
 #include <limits>
 
 namespace alica {
-using std::make_shared;
-using std::numeric_limits;
 
-ProblemDescriptor::ProblemDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars,
-        shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>> domVars) {
-    dim = vars->size();
-    utilitySufficiencyThreshold = numeric_limits<double>::max();
-    staticRanges = make_shared<vector<vector<double>>>();
-    for (int i = 0; i < dim; ++i) {
-        staticRanges->push_back(vector<double>(2));
-    }
-    allVars = make_shared<vector<shared_ptr<SolverVariable>>>();
-    for (int i = 0; i < dim; ++i) {
-        staticRanges->at(i)[0] = min;
-        staticRanges->at(i)[1] = max;
-        allVars->push_back(vars->at(i));
-    }
-    staticVars = make_shared<vector<shared_ptr<SolverVariable>>>(vars->size());
-    for (int i = 0; i < vars->size(); ++i) {
-        staticVars->at(i) = vars->at(i);
-    }
-    domainVars = domVars;
-    domainRanges = make_shared<vector<vector<vector<vector<double>>>>>();
-    for (auto iter = domVars->begin(); iter != domVars->end(); iter++) {
-        auto lat = *iter;
-
-        vector<vector<vector<double>>> l = vector<vector<vector<double>>>();
-        for (auto tarr : *lat) {
-            vector<vector<double>> r = vector<vector<double>>();
-            for (int i = 0; i < tarr->size(); ++i) {
-                r.push_back(vector<double>(2));
-            }
-            for (int i = 0; i < tarr->size(); ++i) {
-                dim++;
-                r[i][0] = min;
-                r[i][1] = max;
-                allVars->push_back(tarr->at(i));
-            }
-            l.push_back(r);
-        }
-        domainRanges->push_back(l);
-    }
-    setSetsUtilitySignificanceThreshold(false);
-}
-
-bool ProblemDescriptor::getSetsUtilitySignificanceThreshold() {
-    return setsUtilitySignificanceThreshold;
-}
-
-void ProblemDescriptor::setSetsUtilitySignificanceThreshold(bool value) {
-    setsUtilitySignificanceThreshold = value;
-}
-
-double ProblemDescriptor::getUtilitySignificanceThreshold() {
-    return utilitySignificanceThreshold;
+ProblemDescriptor::ProblemDescriptor() {
+    clear();
 }
 
 void ProblemDescriptor::setUtilitySignificanceThreshold(double value) {
-    utilitySignificanceThreshold = value;
-    setSetsUtilitySignificanceThreshold(true);
+    _utilitySignificanceThreshold = value;
+    _setsUtilitySignificanceThreshold = true;
 }
 
-shared_ptr<SolverTerm> ProblemDescriptor::getConstraint() {
-    return constraint;
+void ProblemDescriptor::setConstraint(std::shared_ptr<SolverTerm> value) {
+    _constraint = value;
 }
 
-void ProblemDescriptor::setConstraint(shared_ptr<SolverTerm> value) {
-    constraint = value;
-}
-
-shared_ptr<SolverTerm> ProblemDescriptor::getUtility() {
-    return utility;
-}
-
-void ProblemDescriptor::setUtility(shared_ptr<SolverTerm> value) {
-    utility = value;
-}
-
-double ProblemDescriptor::getUtilitySufficiencyThreshold() {
-    return utilitySufficiencyThreshold;
+void ProblemDescriptor::setUtility(std::shared_ptr<SolverTerm> value) {
+    _utility = value;
 }
 
 void ProblemDescriptor::setUtilitySufficiencyThreshold(double value) {
-    utilitySufficiencyThreshold = value;
+    _utilitySufficiencyThreshold = value;
 }
 
-shared_ptr<vector<shared_ptr<SolverVariable>>> ProblemDescriptor::getStaticVars() {
-    return staticVars;
-}
-
-void ProblemDescriptor::setStaticVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value) {
-    staticVars = value;
-}
-
-shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>>
-ProblemDescriptor::getDomainVars() {
-    return domainVars;
-}
-
-void ProblemDescriptor::setDomainVars(
-        shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>> value) {
-    domainVars = value;
-}
-
-shared_ptr<vector<shared_ptr<vector<const supplementary::AgentID*>>>> ProblemDescriptor::getAgentsInScope() {
-    return agentsInScope;
-}
-
-void ProblemDescriptor::setAgentsInScope(shared_ptr<vector<shared_ptr<vector<const supplementary::AgentID*>>>> value) {
-    agentsInScope = value;
-}
-
-shared_ptr<vector<shared_ptr<SolverVariable>>> ProblemDescriptor::getAllVars() {
-    return allVars;
-}
-
-void ProblemDescriptor::setAllVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value) {
-    allVars = value;
-}
-
-shared_ptr<vector<vector<double>>> ProblemDescriptor::allRanges() {
-    auto allRanges = make_shared<vector<vector<double>>>(*staticRanges);
-    for (auto iter = domainRanges->begin(); iter != domainRanges->end(); iter++) {
-        vector<vector<vector<double>>> ld = *iter;
-        for (vector<vector<double>> darr : ld) {
-            allRanges->insert(allRanges->end(), darr.begin(), darr.end());
+const std::vector<std::pair<double, double>>& ProblemDescriptor::getAllRanges() {
+    if (_allRanges.empty()) {
+        _allRanges.insert(_allRanges.end(), _staticRanges.begin(), _staticRanges.end());
+        for (const AgentSolverVariables& avars : _domainVars) {
+            for (const RangedVariable& rav : avars.getVars()) {
+                _allRanges.push_back(std::pair<double, double>(rav.min, rav.max));
+            }
         }
     }
-    return allRanges;
+    return _allRanges;
 }
 
-shared_ptr<vector<vector<vector<vector<double>>>>> ProblemDescriptor::getDomainRanges() {
-    return domainRanges;
+void ProblemDescriptor::clear() {
+    _utilitySignificanceThreshold = 1E-22;
+    _utilitySufficiencyThreshold = std::numeric_limits<double>::max();
+    _dim = 0;
+    _setsUtilitySignificanceThreshold = false;
+
+    _constraint = nullptr;
+    _utility = nullptr;
+
+    _staticVars.clear();
+    _domainVars.clear();
+    _allVars.clear();
+
+    _staticRanges.clear();
+    _allRanges.clear();
 }
 
-void ProblemDescriptor::setDomainRanges(shared_ptr<vector<vector<vector<vector<double>>>>> value) {
-    domainRanges = value;
-}
+void ProblemDescriptor::prepForUsage() {
+    _staticRanges.resize(_staticVars.size(),
+            std::pair<double, double>(SolverVariable::minExpressibleValue, SolverVariable::maxExpressibleValue));
+    _allVars.reserve(_dim);
+    _allRanges.reserve(_dim);
+    _allVars.insert(_allVars.end(), _staticVars.begin(), _staticVars.end());
 
-shared_ptr<vector<vector<double>>> ProblemDescriptor::getStaticRanges() {
-    return staticRanges;
-}
-
-void ProblemDescriptor::setStaticRanges(shared_ptr<vector<vector<double>>> value) {
-    staticRanges = value;
+    for (const AgentSolverVariables& avars : _domainVars) {
+        for (const RangedVariable& rav : avars.getVars()) {
+            _allVars.push_back(rav.var);
+        }
+    }
 }
 
 }  // namespace alica

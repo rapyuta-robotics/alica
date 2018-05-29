@@ -2,15 +2,17 @@
 
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 
 class EntryPoint;
 
 /**
  * Holds the mapping from EntryPoints to robots.
  */
-class AssignmentCollection final {
-public:
+class AssignmentCollection final
+{
+  public:
     AssignmentCollection(int size);
     ~AssignmentCollection();
     AssignmentCollection(const AssignmentCollection& o);
@@ -24,20 +26,21 @@ public:
     const AgentGrp* getRobotsByEp(const EntryPoint* ep) const;
     AgentGrp* editRobotsByEp(const EntryPoint* ep);
     const AgentGrp* getRobotsByEpId(int64_t id) const;
-    // bool setRobots(short index, shared_ptr<vector<const supplementary::AgentID*>> robotIds);
-    void assignRobot(short index, const supplementary::AgentID* agent);
+
+    void assignRobot(short index, AgentIDConstPtr agent);
 
     void clear();
     std::string toString() const;
     void sortEps();
     void sortRobots(const EntryPoint* ep);
-    void addRobot(const supplementary::AgentID* id, const EntryPoint* e);
-    bool removeRobot(const supplementary::AgentID* robot, const EntryPoint* ep);
+    void addRobot(AgentIDConstPtr id, const EntryPoint* e);
+    bool removeRobot(AgentIDConstPtr robot, const EntryPoint* ep);
+
     // initialized in alica engine init
     static short maxEpsCount;
     static bool allowIdling;
 
-private:
+  private:
     /**
      * The EntryPoints referred to
      */

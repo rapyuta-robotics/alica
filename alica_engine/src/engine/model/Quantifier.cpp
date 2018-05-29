@@ -16,7 +16,7 @@ namespace alica {
 Quantifier::Quantifier(int64_t id)
         : AlicaElement(id)
         , _scope(nullptr)
-        , _scopeType(planScope) {}
+        , _scopeType(PLANSCOPE) {}
 
 Quantifier::~Quantifier() {}
 
@@ -27,16 +27,15 @@ Quantifier::~Quantifier() {}
 void Quantifier::setScope(const AlicaElement* element) {
     _scope = element;
     if (dynamic_cast<const EntryPoint*>(element) != nullptr) {
-        _scopeType = entryPointScope;
+        _scopeType = ENTRYPOINTSCOPE;
     } else if (dynamic_cast<const Plan*>(element) != nullptr) {
-        _scopeType = planScope;
+        _scopeType = PLANSCOPE;
     } else if (dynamic_cast<const State*>(element) != nullptr) {
-        _scopeType = stateScope;
+        _scopeType = STATESCOPE;
     } else {
         assert(false);
     }
 }
-
 
 void Quantifier::setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers) {
     _domainIdentifiers = domainIdentifiers;

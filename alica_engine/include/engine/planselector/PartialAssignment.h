@@ -12,8 +12,8 @@
 
 #include "engine/IAssignment.h"
 #include "engine/Types.h"
-#include "supplementary/AgentID.h"
 #include "engine/collections/AssignmentCollection.h"
+#include "supplementary/AgentID.h"
 
 #include <algorithm>
 #include <limits>
@@ -24,7 +24,8 @@
 #include <string>
 #include <vector>
 
-namespace alica {
+namespace alica
+{
 
 class EpByTaskComparer;
 class EntryPoint;
@@ -35,24 +36,22 @@ class DynCardinality;
 class SimplePlanTree;
 class PartialAssignmentPool;
 
-class PartialAssignment final : public IAssignment {
-public:
+class PartialAssignment final : public IAssignment
+{
+  public:
     PartialAssignment(PartialAssignmentPool* pap);
     virtual ~PartialAssignment();
     void clear();
-    static void reset(PartialAssignmentPool* pap);  // has to be called before calculating the task assignment
-    static PartialAssignment* getNew(PartialAssignmentPool* pap, const AgentGrp& robotIds, const Plan* plan,
-            std::shared_ptr<SuccessCollection> sucCol);
+    static void reset(PartialAssignmentPool* pap); // has to be called before calculating the task assignment
+    static PartialAssignment* getNew(PartialAssignmentPool* pap, const AgentGrp& robotIds, const Plan* plan, std::shared_ptr<SuccessCollection> sucCol);
     static PartialAssignment* getNew(PartialAssignmentPool* pap, PartialAssignment* oldPA);
     short getEntryPointCount() const override;
-    int totalRobotCount();
+    int totalRobotCount() const override;
     const AgentGrp* getRobotsWorking(const EntryPoint* ep) const override;
     const AgentGrp* getRobotsWorking(int64_t epid) const override;
-    std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(
-            const EntryPoint* ep) override;
+    std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(const EntryPoint* ep) override;
     std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(int64_t epid) override;
-    std::shared_ptr<std::list<const supplementary::AgentID*>> getUniqueRobotsWorkingAndFinished(
-            const EntryPoint* ep) override;
+    std::shared_ptr<std::list<const supplementary::AgentID*>> getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) override;
     bool addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, const supplementary::AgentID* robot);
     bool assignRobot(const supplementary::AgentID* robotId, int index);
     shared_ptr<list<PartialAssignment*>> expand();
@@ -72,9 +71,9 @@ public:
     void setHashCalculated(bool hashCalculated);
     void setMax(double max);
     const AgentGrp& getRobotIds() const;
-    int hash = 0;  // TODO: fix me
+    int hash = 0; // TODO: fix me
 
-private:
+  private:
     static int pow(int x, int y);
 
     PartialAssignmentPool* pap;
@@ -95,13 +94,16 @@ private:
 
 } /* namespace alica */
 
-namespace std {
+namespace std
+{
 template <>
-struct hash<alica::PartialAssignment> {
+struct hash<alica::PartialAssignment>
+{
     typedef alica::PartialAssignment argument_type;
     typedef std::size_t result_type;
 
-    result_type operator()(argument_type& pa) const {
+    result_type operator()(argument_type& pa) const
+    {
         if (pa.isHashCalculated()) {
             return pa.hash;
         }
@@ -110,7 +112,7 @@ struct hash<alica::PartialAssignment> {
         for (int i = 0; i < pa.getEpRobotsMapping()->getSize(); ++i) {
             robots = pa.getEpRobotsMapping()->getRobots(i);
             for (const supplementary::AgentID* robot : *robots) {
-                for (int idx = 0; idx < pa.getRobotIds().size(); ++idx) {
+                for (int idx = 0; idx < static_cast<int>(pa.getRobotIds().size()); ++idx) {
                     if (pa.getRobotIds().at(idx) == robot) {
                         pa.setHash(pa.hash + (i + 1) * pow(basei, idx));
                     }
@@ -121,6 +123,6 @@ struct hash<alica::PartialAssignment> {
         return pa.hash;
     }
 };
-}  // namespace std
+} // namespace std
 
 #endif /* PARTIALASSIGNMENT_H_ */

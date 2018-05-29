@@ -1,21 +1,22 @@
 #pragma once
 
 #include <engine/constraintmodul/ISolver.h>
+#include <engine/blackboard/BBIdent.h>
 #include <vector>
 #include <memory>
 
 namespace alica {
 namespace reasoner {
 
-class ConstraintTestPlanDummySolver : public ISolver {
+class ConstraintTestPlanDummySolver : public ISolver<ConstraintTestPlanDummySolver, BBIdent> {
 public:
     ConstraintTestPlanDummySolver(AlicaEngine* ae);
     virtual ~ConstraintTestPlanDummySolver();
 
-    bool existsSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) override;
-    bool getSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
-            std::vector<void*>& results) override;
-    std::shared_ptr<SolverVariable> createVariable(long id) override;
+    bool existsSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
+    bool getSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
+            std::vector<BBIdent>& results);
+    std::shared_ptr<SolverVariable> createVariable(int64_t id) override;
 
     static int getExistsSolutionCallCounter();
     static int getGetSolutionCallCounter();

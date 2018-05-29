@@ -87,7 +87,7 @@ void AlicaRosCommunication::tick() {
     }
 }
 
-void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo& aai) const {
+void AlicaRosCommunication::sendAllocationAuthority(const AllocationAuthorityInfo& aai) const {
     alica_msgs::AllocationAuthorityInfo aais;
 
     aais.planID = aai.planId;
@@ -116,7 +116,7 @@ void AlicaRosCommunication::sendAllocationAuthority(AllocationAuthorityInfo& aai
     }
 }
 
-void AlicaRosCommunication::sendAlicaEngineInfo(AlicaEngineInfo& bi) const {
+void AlicaRosCommunication::sendAlicaEngineInfo(const AlicaEngineInfo& bi) const {
     alica_msgs::AlicaEngineInfo bis;
     bis.currentPlan = bi.currentPlan;
     bis.currentRole = bi.currentRole;
@@ -137,7 +137,7 @@ void AlicaRosCommunication::sendAlicaEngineInfo(AlicaEngineInfo& bi) const {
     }
 }
 
-void AlicaRosCommunication::sendPlanTreeInfo(PlanTreeInfo& pti) const {
+void AlicaRosCommunication::sendPlanTreeInfo(const PlanTreeInfo& pti) const {
     alica_msgs::PlanTreeInfo ptis;
     ptis.senderID.id = pti.senderID->toByteVector();
 
@@ -152,7 +152,7 @@ void AlicaRosCommunication::sendPlanTreeInfo(PlanTreeInfo& pti) const {
     }
 }
 
-void AlicaRosCommunication::sendRoleSwitch(RoleSwitch& rs) const {
+void AlicaRosCommunication::sendRoleSwitch(const RoleSwitch& rs) const {
     alica_msgs::RoleSwitch rss;
 
     rss.roleID = rs.roleID;
@@ -164,7 +164,7 @@ void AlicaRosCommunication::sendRoleSwitch(RoleSwitch& rs) const {
     }
 }
 
-void AlicaRosCommunication::sendSyncReady(SyncReady& sr) const {
+void AlicaRosCommunication::sendSyncReady(const SyncReady& sr) const {
     alica_msgs::SyncReady srs;
 
     srs.senderID.id = sr.senderID->toByteVector();
@@ -175,7 +175,7 @@ void AlicaRosCommunication::sendSyncReady(SyncReady& sr) const {
     }
 }
 
-void AlicaRosCommunication::sendSyncTalk(SyncTalk& st) const {
+void AlicaRosCommunication::sendSyncTalk(const SyncTalk& st) const {
     alica_msgs::SyncTalk sts;
     sts.senderID.id = st.senderID->toByteVector();
 
@@ -193,15 +193,15 @@ void AlicaRosCommunication::sendSyncTalk(SyncTalk& st) const {
     }
 }
 
-void AlicaRosCommunication::sendSolverResult(SolverResult& sr) const {
+void AlicaRosCommunication::sendSolverResult(const SolverResult& sr) const {
     alica_msgs::SolverResult srs;
     srs.senderID.id = sr.senderID->toByteVector();
 
-    for (auto sv : sr.vars) {
+    for (const SolverVar& sv : sr.vars) {
         alica_msgs::SolverVar svs;
-        svs.id = sv->id;
-        svs.value = sv->value;
-        srs.vars.push_back(svs);
+        svs.id = sv.id;
+        svs.value = std::vector<uint8_t>(sv.value, sv.value + sizeof(sv.value) / sizeof(sv.value[0]));
+        srs.vars.push_back(std::move(svs));
     }
 
     if (this->isRunning) {
@@ -277,22 +277,23 @@ void AlicaRosCommunication::handleSyncTalkRos(alica_msgs::SyncTalkPtr st) {
 }
 
 void AlicaRosCommunication::handleSolverResult(alica_msgs::SolverResultPtr sr) {
-    auto srPtr = make_shared<SolverResult>();
-    srPtr->senderID = this->ae->getIDFromBytes(sr->senderID.id);
+    SolverResult osr;
+    osr.senderID = this->ae->getIDFromBytes(sr->senderID.id);
+    osr.vars.reserve(sr->vars.size());
 
-    for (auto& sv : sr->vars) {
-        SolverVar* svs = new SolverVar();
-        svs->id = sv.id;
-        svs->value = sv.value;
-        srPtr->vars.push_back(svs);
+    for (const auto& sv : sr->vars) {
+        SolverVar svs;
+        svs.id = sv.id;
+        std::copy(sv.value.begin(),sv.value.end(),svs.value);
+        osr.vars.push_back(std::move(svs));
     }
 
-    if (this->isRunning) {
-        this->onSolverResult(srPtr);
+    if (isRunning) {
+        onSolverResult(osr);
     }
 }
 
-void AlicaRosCommunication::sendLogMessage(int level, string& message) const {
+void AlicaRosCommunication::sendLogMessage(int level, const string& message) const {
     switch (level) {
         case ::ros::console::levels::Debug:
             ROS_DEBUG("AlicaMessage: %s", message.c_str());

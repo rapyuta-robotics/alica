@@ -8,7 +8,6 @@
 #ifndef CAPABILITYDEFINITIONSET_H_
 #define CAPABILITYDEFINITIONSET_H_
 
-
 #include "AlicaElement.h"
 #include "engine/Types.h"
 

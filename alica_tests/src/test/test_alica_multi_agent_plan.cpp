@@ -1,6 +1,7 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
 #include "engine/model/State.h"
 #include "engine/model/Behaviour.h"
@@ -8,7 +9,6 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/BehaviourPool.h"
 #include "engine/PlanBase.h"
-#include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/TeamObserver.h"
@@ -56,8 +56,6 @@ protected:
         ae2->shutdown();
         delete ae->getCommunicator();
         delete ae2->getCommunicator();
-        delete ae->getIAlicaClock();
-        delete ae2->getIAlicaClock();
         sc->shutdown();
         delete cc;
         delete bc;
@@ -69,39 +67,33 @@ protected:
  * Tests whether it is possible to use multiple agents.
  */
 TEST_F(AlicaMultiAgent, runMultiAgentPlan) {
+    ASSERT_NO_SIGNAL
+
     sc->setHostname("nase");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "MultiAgentTestMaster", ".", true);
-    ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+    ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     ASSERT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("hairy");
     ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "MultiAgentTestMaster", ".", true);
-    ae2->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+    ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
     ASSERT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     ae->start();
     ae2->start();
-    chrono::milliseconds duration(33);
-    while (!ae->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting()) {
-        this_thread::sleep_for(duration);
-    }
+    step(ae);
+    step(ae2);
 
     for (int i = 0; i < 20; i++) {
         ASSERT_TRUE(ae->getPlanBase()->isWaiting());
         ASSERT_TRUE(ae2->getPlanBase()->isWaiting());
-        ae->stepNotify();
 
-        this_thread::sleep_for(duration);
-
-        ae2->stepNotify();
-        this_thread::sleep_for(duration);
-        while (!ae->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting()) {
-            this_thread::sleep_for(duration);
-        }
+        step(ae);
+        step(ae2);
         //        if (i > 24)
         //        {
         //            if (ae->getPlanBase()->getDeepestNode() != nullptr)

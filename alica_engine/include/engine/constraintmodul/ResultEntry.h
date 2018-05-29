@@ -1,50 +1,54 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
+#include "engine/AlicaClock.h"
 #include "engine/Types.h"
-
-#include <list>
-#include <map>
-#include <vector>
+#include "engine/collections/Variant.h"
 #include <mutex>
-#include <memory>
+#include <unordered_map>
+#include <vector>
 
-namespace alica {
+namespace alica
+{
 class AlicaEngine;
 struct SolverVar;
 class Variable;
 
-class ResultEntry {
-public:
-    ResultEntry(const supplementary::AgentID* robotId, const AlicaEngine* ae);
-    virtual ~ResultEntry();
+class ResultEntry
+{
+  public:
+    ResultEntry() = default;
+    ResultEntry(const supplementary::AgentID* robotId);
 
-    const supplementary::AgentID* getId();
-    void addValue(long vid, std::shared_ptr<std::vector<uint8_t>> result);
+    const supplementary::AgentID* getId() const { return _id; }
+
+    ResultEntry(const ResultEntry&) = delete;
+    ResultEntry& operator=(const ResultEntry&) = delete;
+
+    ResultEntry(ResultEntry&&);
+    ResultEntry& operator=(ResultEntry&&);
+
+    void addValue(int64_t vid, Variant result, AlicaTime time);
     void clear();
-    std::shared_ptr<std::vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
-    std::shared_ptr<std::vector<uint8_t>> getValue(long vid, long ttl4Usage);
-    std::shared_ptr<std::vector<std::shared_ptr<std::vector<uint8_t>>>> getValues(
-            std::shared_ptr<VariableGrp> query, long ttl4Usage);
+    void getCommunicatableResults(AlicaTime earliest, std::vector<SolverVar>& o_result) const;
+    Variant getValue(int64_t vid, AlicaTime earliest) const;
+    bool getValues(const VariableGrp& query, AlicaTime earliest, std::vector<Variant>& o_values) const;
 
-    class VarValue {
-    public:
-        long id;
-        std::shared_ptr<std::vector<uint8_t>> val;
-        ulong lastUpdate;
+  private:
+    class VarValue
+    {
+      public:
+        Variant _val;
+        AlicaTime _lastUpdate;
 
-        VarValue(long vid, std::shared_ptr<std::vector<uint8_t>> v, ulong now) {
-            this->id = vid;
-            this->val = v;
-            this->lastUpdate = now;
+        VarValue(Variant v, AlicaTime now)
+            : _val(v)
+            , _lastUpdate(now)
+        {
         }
     };
-
-protected:
-    const supplementary::AgentID* id;
-    const AlicaEngine* ae;
-    std::map<long, std::shared_ptr<VarValue>> values;
-    std::mutex valueLock;
+    std::unordered_map<int64_t, VarValue> _values;
+    mutable std::mutex _valueLock;
+    AgentIDConstPtr _id;
 };
 
 } /* namespace alica */

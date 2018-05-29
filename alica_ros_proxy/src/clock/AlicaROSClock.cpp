@@ -1,4 +1,5 @@
-#include "clock/AlicaROSClock.h"
+#include <clock/AlicaROSClock.h>
+
 #include "ros/time.h"
 
 namespace alicaRosProxy {
@@ -9,15 +10,8 @@ AlicaROSClock::AlicaROSClock() {
 
 AlicaROSClock::~AlicaROSClock() {}
 
-alica::AlicaTime AlicaROSClock::now() {
-    ros::Time t = ros::Time::now();
-    alica::AlicaTime ret = (alica::AlicaTime)(t.sec * 1000000000UL + t.nsec);
-    return ret;
-}
-void AlicaROSClock::sleep(long us) {
-    int sec = us / 1000000;
-    int nsec = (us % 1000000) * 1000;
-    ros::Duration(sec, nsec).sleep();
+alica::AlicaTime AlicaROSClock::now() const {
+    return alica::AlicaTime::nanoseconds(ros::Time::now().toNSec());
 }
 
 }  // namespace alicaRosProxy

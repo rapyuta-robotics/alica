@@ -1,6 +1,7 @@
 using namespace std;
 
 #include "SystemConfig.h"
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <map>
 #include <list>
@@ -37,7 +38,7 @@ using namespace std;
 #include "engine/model/SyncTransition.h"
 #include "engine/model/Quantifier.h"
 #include "engine/model/ForallAgents.h"
-#include "../../alica_ros_proxy/include/clock/AlicaROSClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/PlanRepository.h"
 #include "engine/DefaultUtilityFunction.h"
 //#include "engine/IAlicaCommunication.h"
@@ -72,7 +73,7 @@ protected:
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+        ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
         ae->init(bc, cc, uc, crc);
     }
@@ -80,7 +81,6 @@ protected:
     virtual void TearDown() {
         ae->shutdown();
         sc->shutdown();
-        delete ae->getIAlicaClock();
         delete ae->getCommunicator();
         delete cc;
         delete uc;
@@ -190,8 +190,8 @@ protected:
     static void checkSyncTransition(
             const alica::SyncTransition* transition, long id, string name, string comment, int talkTimeout, int syncTimeout) {
         checkAlicaElement(transition, id, name, comment);
-        EXPECT_EQ(talkTimeout, transition->getTalkTimeOut()) << "Wrong talkTimeout!" << endl;
-        EXPECT_EQ(syncTimeout, transition->getSyncTimeOut()) << "Wrong syncTimeout!" << endl;
+        EXPECT_EQ(AlicaTime::milliseconds(talkTimeout), transition->getTalkTimeOut()) << "Wrong talkTimeout!" << endl;
+        EXPECT_EQ(AlicaTime::milliseconds(syncTimeout), transition->getSyncTimeOut()) << "Wrong syncTimeout!" << endl;
     }
 
     static void checkQuantifier(const alica::Quantifier* quantifier, long id, string name, string comment, long scope,
@@ -210,6 +210,8 @@ protected:
  * Tests the plan parser with some nice plans
  */
 TEST_F(AlicaEngineTest, planParser) {
+    ASSERT_NO_SIGNAL
+
     const auto& plans = ae->getPlanRepository()->getPlans();
 
     cout << "Printing plans from Repository: " << endl;
@@ -677,6 +679,8 @@ TEST_F(AlicaEngineTest, planParser) {
 }
 
 TEST_F(AlicaEngineTest, planWriter) {
+    ASSERT_NO_SIGNAL
+
     const auto& plans = ae->getPlanRepository()->getPlans();
     PlanWriter pw = PlanWriter(ae, ae->getPlanRepository());
     for (const Plan* plan : plans) {

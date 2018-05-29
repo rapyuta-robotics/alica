@@ -12,7 +12,6 @@ namespace alica {
 
 TeamManager::TeamManager(AlicaEngine* engine, bool useConfigForTeam = true)
         : localAgent(nullptr)
-        , teamTimeOut(0)
         , useConfigForTeam(useConfigForTeam)
         , engine(engine) {}
 
@@ -24,7 +23,7 @@ TeamManager::~TeamManager() {
 
 void TeamManager::init() {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-    this->teamTimeOut = (*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL) * 1000000;  // ms to ns
+    this->teamTimeOut = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
 
     if (useConfigForTeam) {
         this->readTeamFromConfig(sc);
@@ -185,7 +184,7 @@ bool TeamManager::setSuccessMarks(const supplementary::AgentID* agentId, std::sh
     return false;
 }
 
-const Variable* TeamManager::getDomainVariable(const supplementary::AgentID* agentId, std::string sort) const {
+const DomainVariable* TeamManager::getDomainVariable(const supplementary::AgentID* agentId, const std::string& sort) const {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end()) {
         return agentEntry->second->getDomainVariable(sort);

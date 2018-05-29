@@ -44,7 +44,7 @@ public:
         // init relevant entrypoint vector
         this->relevantEntryPoints.resize(this->relevantEntryPointIds.size());
         // find the right entrypoint for each id in relevant entrypoint id
-        for (int i = 0; i < this->relevantEntryPoints.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(this->relevantEntryPoints.size()); ++i) {
             const EntryPoint* curEp = ae->getPlanRepository()->getEntryPoints().find(this->relevantEntryPointIds[i]);
             if (curEp != nullptr) {
                 this->relevantEntryPoints[i] = curEp;
@@ -58,7 +58,7 @@ public:
     std::string toString() const {
         std::stringstream ss;
         ss << this->name << ": Weight " << this->weight << "EntryPoints: ";
-        for (int i = 0; i < this->relevantEntryPointIds.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(this->relevantEntryPointIds.size()); ++i) {
             ss << this->relevantEntryPointIds[i] << " ";
         }
         ss << std::endl;
