@@ -20,10 +20,10 @@ TEST(IntervalTest, Double)
     ASSERT_EQ(a, c);
     ASSERT_NE(b, c);
 
-    c.limitTo(-2.0, 5.0);
+    c.intersect(-2.0, 5.0);
     ASSERT_EQ(a, c);
 
-    c.limitTo(Interval<double>(0.3, 0.6));
+    c.intersect(Interval<double>(0.3, 0.6));
     ASSERT_NE(a, c);
     ASSERT_DOUBLE_EQ(c.getMidPoint(), 0.45);
     ASSERT_DOUBLE_EQ(c.getMin(), 0.3);
@@ -32,6 +32,6 @@ TEST(IntervalTest, Double)
     ASSERT_DOUBLE_EQ(a.clamp(5), 1);
     ASSERT_DOUBLE_EQ(a.clamp(-5), 0);
 
-    c.limitTo(9, 10);
+    c.intersect(9, 10);
     ASSERT_FALSE(c.isValid());
 }
