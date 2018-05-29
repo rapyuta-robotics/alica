@@ -62,7 +62,7 @@ class IAssignment
     /**
      * Information about succeeded tasks.
      */
-    virtual shared_ptr<SuccessCollection> getEpSuccessMapping() = 0;
+    virtual shared_ptr<SuccessCollection> getEpSuccessMapping() const = 0;
     /**
      * Checks whether the current assignment is valid
      */

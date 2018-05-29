@@ -143,7 +143,7 @@ bool SuccessMarks::anyTaskSucceeded(const AbstractPlan* p) const
 {
     auto iter = _successMarks.find(p);
     if (iter != _successMarks.end()) {
-        return (!iter->second.empty() > 0);
+        return (!iter->second.empty());
     }
     const PlanType* pt = dynamic_cast<const PlanType*>(p);
     if (pt != nullptr) {

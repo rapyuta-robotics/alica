@@ -256,7 +256,7 @@ std::shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkin
     return ret;
 }
 
-std::shared_ptr<SuccessCollection> Assignment::getEpSuccessMapping()
+std::shared_ptr<SuccessCollection> Assignment::getEpSuccessMapping() const
 {
     return this->epSucMapping;
 }

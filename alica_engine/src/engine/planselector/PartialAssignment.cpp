@@ -46,16 +46,6 @@ PartialAssignment::~PartialAssignment()
     delete epRobotsMapping;
 }
 
-shared_ptr<UtilityFunction> PartialAssignment::getUtilFunc()
-{
-    return utilFunc;
-}
-
-shared_ptr<SuccessCollection> PartialAssignment::getEpSuccessMapping()
-{
-    return epSuccessMapping;
-}
-
 //	vector<int>& PartialAssignment::getunassignedRobots()
 //	{
 //		return unassignedRobots;

@@ -14,7 +14,6 @@
 #include <sstream>
 #include <string>
 #include <sys/stat.h>
-#include <time.h>
 
 namespace alica
 {

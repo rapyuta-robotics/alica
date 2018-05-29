@@ -61,10 +61,9 @@ class PartialAssignment final : public IAssignment
     std::string toString() const override;
     virtual AssignmentCollection* getEpRobotsMapping() const override { return epRobotsMapping; }
     const Plan* getPlan() const { return plan; }
-    std::shared_ptr<UtilityFunction> getUtilFunc();
-    std::shared_ptr<SuccessCollection> getEpSuccessMapping();
+    std::shared_ptr<UtilityFunction> getUtilFunc() const { return utilFunc; }
+    virtual std::shared_ptr<SuccessCollection> getEpSuccessMapping() const override { return epSuccessMapping; }
     std::string assignmentCollectionToString() const override;
-    std::shared_ptr<std::vector<EntryPoint*>> getEntryPoints();
     int getHash() const;
     int getHashCached() const { return _hash; }
     void setHash(int hash) const { _hash = hash; }

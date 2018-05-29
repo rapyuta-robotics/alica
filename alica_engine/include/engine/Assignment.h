@@ -53,7 +53,7 @@ class Assignment final : public IAssignment
     std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(const EntryPoint* ep) override;
     std::shared_ptr<std::list<const supplementary::AgentID*>> getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) override;
     std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(int64_t epid) override;
-    std::shared_ptr<SuccessCollection> getEpSuccessMapping() override;
+    virtual std::shared_ptr<SuccessCollection> getEpSuccessMapping() const override;
     void setAllToInitialState(const AgentGrp& robotIds, const EntryPoint* defep);
     bool removeRobot(const supplementary::AgentID* robotId);
     void addRobot(const supplementary::AgentID* robotId, const EntryPoint* e, const State* s);
