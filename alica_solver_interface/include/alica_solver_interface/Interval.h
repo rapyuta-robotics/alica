@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <alica_common_config/common_defines.h>
 #include <assert.h>
 #include <ostream>
 
