@@ -49,8 +49,8 @@ void Constraint1524452937477::getConstraint(shared_ptr<ProblemDescriptor> c, sha
 
     TermPtr x = xv;
     TermPtr y = yv;
-    xv->editRange().limitTo(-5, 5);
-    yv->editRange().limitTo(-5, 5);
+    xv->editRange().intersect(-5, 5);
+    yv->editRange().intersect(-5, 5);
 
     TermPtr constraint = x * l1a < x->getOwner()->constant(0.0);
     constraint = constraint & (y * l1b > x->getOwner()->constant(0.0));

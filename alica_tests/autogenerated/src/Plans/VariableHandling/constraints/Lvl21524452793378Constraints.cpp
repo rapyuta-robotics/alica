@@ -47,8 +47,8 @@ void Constraint1524453266123::getConstraint(shared_ptr<ProblemDescriptor> c, sha
     autodiff::Variable* xv = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[0]);
     autodiff::Variable* yv = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[1]);
 
-    xv->editRange().limitTo(50.0, 150.0);
-    yv->editRange().limitTo(50.0, 150.0);
+    xv->editRange().intersect(50.0, 150.0);
+    yv->editRange().intersect(50.0, 150.0);
     TermPtr x = xv;
     TermPtr y = yv;
 

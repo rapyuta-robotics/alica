@@ -41,14 +41,14 @@ void Constraint1417424512343::getConstraint(shared_ptr<ProblemDescriptor> c, sha
         cout << "Constraint1417424512343::getConstraint !!!!!!!!!!!!!!!!!!!!! error" << endl;
         return;
     }
-    xv->editRange().limitTo(0.0, 10000.0);
+    xv->editRange().intersect(0.0, 10000.0);
 
     autodiff::Variable* yv = dynamic_cast<autodiff::Variable*>(c->getStaticVars()[1]);
     if (yv == nullptr) {
         cout << "Constraint1417424512343::getConstraint !!!!!!!!!!!!!!!!!!!!! error" << endl;
         return;
     }
-    yv->editRange().limitTo(0.0, 10000.0);
+    yv->editRange().intersect(0.0, 10000.0);
 
     TermPtr x = xv;
     TermPtr y = yv;
