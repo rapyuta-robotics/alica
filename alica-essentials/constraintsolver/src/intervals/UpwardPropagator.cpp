@@ -29,7 +29,11 @@ namespace intervalpropagation
 
 using std::numeric_limits;
 
-UpwardPropagator::UpwardPropagator() {}
+UpwardPropagator::UpwardPropagator()
+    : _changed(nullptr)
+    , _dp(nullptr)
+{
+}
 
 int UpwardPropagator::visit(autodiff::Abs* abs)
 {

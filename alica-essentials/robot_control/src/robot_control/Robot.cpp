@@ -20,23 +20,24 @@ using std::pair;
 using std::string;
 using std::stringstream;
 
-namespace robot_control {
+namespace robot_control
+{
 
 Robot::Robot(string robotName, const supplementary::AgentID* robotId, RobotsControl* parentRobotsControl)
-        : RobotMetaData(robotName, robotId)
-        , parentRobotsControl(parentRobotsControl)
-        , widget(new QFrame())
-        , uiControlledRobot(new Ui::ControlledRobotWidget())
-        , shown(true)
-        , showAlicaClient(true)
-        , showProcessManager(true) {
+    : RobotMetaData(robotName, robotId)
+    , parentRobotsControl(parentRobotsControl)
+    , widget(new QFrame())
+    , uiControlledRobot(new Ui::ControlledRobotWidget())
+    , shown(true)
+    , showAlicaClient(true)
+    , showProcessManager(true)
+{
     this->uiControlledRobot->setupUi(this);
 
     // manual configuration of widgets
     stringstream ss;
     ss << *robotId;
-    this->uiControlledRobot->robotStartStopBtn->setText(
-            QString(std::string(this->name + " (" + ss.str() + ")").c_str()));
+    this->uiControlledRobot->robotStartStopBtn->setText(QString(std::string(this->name + " (" + ss.str() + ")").c_str()));
 
     frameForAW = new QFrame(this);
     frameForAW->setFrameStyle(1);
@@ -62,29 +63,28 @@ Robot::Robot(string robotName, const supplementary::AgentID* robotId, RobotsCont
     this->uiControlledRobot->horizontalLayout_2->addWidget(frameForPM);
 
     // signals and slots
-    QObject::connect(
-            this->uiControlledRobot->robotStartStopBtn, SIGNAL(toggled(bool)), this, SLOT(sendRobotCommand(bool)));
-    QObject::connect(
-            this->uiControlledRobot->alicaShowHideBtn, SIGNAL(toggled(bool)), this, SLOT(toggleAlicaClient(bool)));
-    QObject::connect(
-            this->uiControlledRobot->pmShowHideBtn, SIGNAL(toggled(bool)), this, SLOT(toggleProcessManager(bool)));
+    QObject::connect(this->uiControlledRobot->robotStartStopBtn, SIGNAL(toggled(bool)), this, SLOT(sendRobotCommand(bool)));
+    QObject::connect(this->uiControlledRobot->alicaShowHideBtn, SIGNAL(toggled(bool)), this, SLOT(toggleAlicaClient(bool)));
+    QObject::connect(this->uiControlledRobot->pmShowHideBtn, SIGNAL(toggled(bool)), this, SLOT(toggleProcessManager(bool)));
 
     // vBox->addWidget(new QSpacerItem(0,0,QSizePolicy::Expanding, QSizePolicy::Line));
     this->parentRobotsControl->robotControlWidget_.robotControlLayout->addWidget(this);
 
-    this->robotCommandPub =
-            this->parentRobotsControl->rosNode->advertise<robot_control::RobotCommand>("RobotCommand", 5);
+    this->robotCommandPub = this->parentRobotsControl->rosNode->advertise<robot_control::RobotCommand>("RobotCommand", 5);
 }
 
-Robot::~Robot() {
+Robot::~Robot()
+{
     delete this->broadcastId;
 }
 
-QSize Robot::sizeHint() {
+QSize Robot::sizeHint() const
+{
     return QSize(500, 500);
 }
 
-void Robot::toggleAlicaClient(bool show) {
+void Robot::toggleAlicaClient(bool show)
+{
     this->showAlicaClient = show;
 
     if (showAlicaClient) {
@@ -98,7 +98,8 @@ void Robot::toggleAlicaClient(bool show) {
     }
 }
 
-void Robot::toggleProcessManager(bool show) {
+void Robot::toggleProcessManager(bool show)
+{
     this->showProcessManager = show;
 
     if (showProcessManager) {
@@ -112,14 +113,16 @@ void Robot::toggleProcessManager(bool show) {
     }
 }
 
-void Robot::updateGUI(std::chrono::system_clock::time_point now) {
+void Robot::updateGUI(std::chrono::system_clock::time_point now)
+{
     if ((now - this->timeLastMsgReceived) > std::chrono::milliseconds(1000)) {
         this->alicaWidget->clearGUI();
     }
     this->controlledRobotWidget->updateGUI(now);
 }
 
-void Robot::sendRobotCommand(bool start) {
+void Robot::sendRobotCommand(bool start)
+{
     RobotCommand rc;
     rc.receiverId.id = this->agentID->toByteVector();
     if (start) {
@@ -130,7 +133,8 @@ void Robot::sendRobotCommand(bool start) {
     this->robotCommandPub.publish(rc);
 }
 
-void Robot::toggle() {
+void Robot::toggle()
+{
     if (shown) {
         this->hide();
     } else {
@@ -138,26 +142,28 @@ void Robot::toggle() {
     }
 }
 
-void Robot::show() {
+void Robot::show()
+{
     this->shown = true;
     this->uiControlledRobot->scrollArea->adjustSize();
     QFrame::show();
 }
 
-void Robot::hide() {
+void Robot::hide()
+{
     this->shown = false;
     this->uiControlledRobot->scrollArea->adjustSize();
     QFrame::hide();
 }
 
-void Robot::handleAlicaInfo(
-        pair<std::chrono::system_clock::time_point, alica_msgs::AlicaEngineInfoConstPtr> timeAEIpair) {
+void Robot::handleAlicaInfo(pair<std::chrono::system_clock::time_point, alica_msgs::AlicaEngineInfoConstPtr> timeAEIpair)
+{
     this->timeLastMsgReceived = timeAEIpair.first;
     this->alicaWidget->handleAlicaEngineInfo(timeAEIpair.second);
 }
 
-void Robot::handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps,
-        const supplementary::AgentID* parentPMid) {
+void Robot::handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, const supplementary::AgentID* parentPMid)
+{
     this->timeLastMsgReceived = timeMsgReceived;
     this->controlledRobotWidget->handleProcessStat(timeMsgReceived, ps, parentPMid);
 }

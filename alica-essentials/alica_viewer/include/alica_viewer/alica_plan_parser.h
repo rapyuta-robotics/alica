@@ -288,9 +288,9 @@ class AlicaPlan
      * @param ids The list of long encoding of a robot's plantree as received in a PlanTreeInfo message.
      * @return PlanTree*
      */
-    PlanTree* planTreeFromMessage(const supplementary::AgentID* robotId, const std::list<int64_t>& ids)
+    PlanTree* planTreeFromMessage(const supplementary::AgentID* robotId, const IdGrp& ids)
     {
-        if (ids.size() == 0) {
+        if (ids.empty()) {
             std::cerr << "Empty state list for robot " << robotId << std::endl;
             return nullptr;
         }
@@ -298,11 +298,11 @@ class AlicaPlan
         PlanTree* root = new PlanTree();
         root->addRobot(robotId);
 
-        std::list<int64_t>::const_iterator iter = ids.begin();
+        IdGrp::const_iterator iter = ids.begin();
         const PlanRepository::Accessor<State>& validStates = _planRepository.getStates();
 
         if (!root->setState(validStates.find(*iter))) {
-            std::cout << "Unable to add State (" << *iter << ") received from " << robotId << std::endl;
+            std::cout << "Unable to add State (" << *iter << ") received from " << *robotId << std::endl;
             return nullptr;
         }
 
@@ -320,14 +320,14 @@ class AlicaPlan
             } else if (*iter == -2) {
                 cur = curParent;
                 if (cur == nullptr) {
-                    std::cout << "Malformed SptMessage from " << robotId << std::endl;
+                    std::cout << "Malformed SptMessage from " << *robotId << std::endl;
                     return nullptr;
                 }
             } else {
                 cur = new PlanTree();
                 cur->addRobot(robotId);
                 if (!cur->setState(validStates.find(*iter))) {
-                    std::cout << "Unable to add State (" << *iter << ") received from " << robotId << std::endl;
+                    std::cout << "Unable to add State (" << *iter << ") received from " << *robotId << std::endl;
                     return nullptr;
                 }
                 cur->setParent(curParent);

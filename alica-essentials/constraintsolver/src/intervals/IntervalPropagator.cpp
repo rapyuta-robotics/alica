@@ -34,7 +34,10 @@ using std::vector;
 int IntervalPropagator::updates = 0;
 int IntervalPropagator::visits = 0;
 
-IntervalPropagator::IntervalPropagator() {}
+IntervalPropagator::IntervalPropagator()
+    : dim(0)
+{
+}
 
 void IntervalPropagator::setGlobalRanges(autodiff::TermHolder& holder, std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>> ranges,
                                          std::shared_ptr<cnsat::CNSat> solver)

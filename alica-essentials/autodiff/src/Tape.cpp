@@ -18,6 +18,8 @@ Tape::Tape()
     , _params(nullptr)
     , _functions(nullptr)
     , _base(nullptr)
+    , _tapeWidth(0)
+    , _tapeLength(0)
 {
 }
 
@@ -26,6 +28,8 @@ Tape::Tape(Tape&& o)
     , _params(o._params)
     , _functions(o._functions)
     , _base(o._base)
+    , _tapeWidth(o._tapeWidth)
+    , _tapeLength(o._tapeLength)
 {
     o._base = nullptr;
 }
@@ -36,6 +40,9 @@ Tape& Tape::operator=(Tape&& o)
     std::swap(_params, o._params);
     std::swap(_functions, o._functions);
     std::swap(_base, o._base);
+    std::swap(_tapeWidth, o._tapeWidth);
+    std::swap(_tapeLength, o._tapeLength);
+
     return *this;
 }
 

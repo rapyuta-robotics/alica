@@ -16,11 +16,11 @@
 #include <autodiff/TermPtr.h>
 
 #include <cmath>
+#include <cstring>
 #include <limits>
 #include <sstream>
 #include <stdlib.h> /* srand, rand */
 #include <string>
-#include <time.h> /* time */
 
 #include <iostream>
 
@@ -40,6 +40,9 @@ GSolver::GSolver()
     , _rPropConvergenceStepSize(1E-2)
     , _utilitySignificanceThreshold(1E-22)
     , _initialStepSize(0.005)
+    , _utilityThreshold(1.0)
+    , _runs(0)
+    , _fevals(0)
 {
     autodiff::Term::setAnd(autodiff::AndType::AND);
     autodiff::Term::setOr(autodiff::OrType::MAX);
@@ -443,6 +446,9 @@ bool GSolver::evalResults(int numResults, int dim, const std::vector<Interval<do
 
     double* midValue = static_cast<double*>(alloca(sizeof(double) * dim));
     double* valueDev = static_cast<double*>(alloca(sizeof(double) * dim));
+
+    memset(midValue, 0, sizeof(double) * dim);
+    memset(valueDev, 0, sizeof(double) * dim);
 
     for (int i = 0; i < numResults; ++i) {
         ResultView r = getResultView(i, dim);

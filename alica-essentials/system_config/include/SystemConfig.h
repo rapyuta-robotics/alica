@@ -13,8 +13,8 @@
 #include <string>
 #include <thread>
 
-const string DOMAIN_FOLDER = "DOMAIN_FOLDER";
-const string DOMAIN_CONFIG_FOLDER = "DOMAIN_CONFIG_FOLDER";
+const std::string DOMAIN_FOLDER = "DOMAIN_FOLDER";
+const std::string DOMAIN_CONFIG_FOLDER = "DOMAIN_CONFIG_FOLDER";
 
 namespace supplementary
 {
@@ -22,10 +22,10 @@ class SystemConfig
 {
 
   protected:
-    static string rootPath;
-    static string logPath;
-    static string configPath;
-    static string hostname;
+    static std::string rootPath;
+    static std::string logPath;
+    static std::string configPath;
+    static std::string hostname;
     static std::mutex configsMapMutex;
     static std::map<std::string, std::shared_ptr<Configuration>> configs;
     static const char NODE_NAME_SEPERATOR = '_';
@@ -33,20 +33,20 @@ class SystemConfig
   public:
     static SystemConfig* getInstance();
     static void shutdown();
-    static string robotNodeName(const string& nodeName);
+    static std::string robotNodeName(const std::string& nodeName);
     static int getOwnRobotID();
-    static int getRobotID(const string& name);
-    static string getHostname();
-    static void setHostname(string newHostname);
+    static int getRobotID(const std::string& name);
+    static std::string getHostname();
+    static void setHostname(const std::string& newHostname);
     static void resetHostname();
 
-    Configuration* operator[](const string s);
-    string getRootPath();
-    string getConfigPath();
-    string getLogPath();
-    void setRootPath(string rootPath);
-    void setConfigPath(string configPath);
-    static string getEnv(const string& var);
+    Configuration* operator[](const std::string& s);
+    std::string getRootPath();
+    std::string getConfigPath();
+    std::string getLogPath();
+    void setRootPath(std::string rootPath);
+    void setConfigPath(std::string configPath);
+    static std::string getEnv(const std::string& var);
 
   private:
     SystemConfig();

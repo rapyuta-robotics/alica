@@ -141,7 +141,7 @@ bool CGSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::shared
     double util = 0;
     bool solved;
     { // for lock_guard
-        lock_guard<std::mutex> lock(_mtx);
+        std::lock_guard<std::mutex> lock(_mtx);
         _gs.setUtilitySignificanceThreshold(usigVal);
         solved = _gs.solve(all, *holder, ranges, seeds, sufficientUtility, util, results);
     }

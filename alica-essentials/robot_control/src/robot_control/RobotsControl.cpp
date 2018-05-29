@@ -8,20 +8,28 @@
 
 #include <QMenu>
 
-namespace robot_control {
+namespace robot_control
+{
+using std::cerr;
+using std::cout;
+using std::lock_guard;
+using std::mutex;
+using std::pair;
+using std::string;
+using std::vector;
 
-chrono::duration<double> RobotsControl::msgTimeOut = chrono::duration<double>(0);
+std::chrono::duration<double> RobotsControl::msgTimeOut = std::chrono::duration<double>(0);
 
 RobotsControl::RobotsControl()
-        : rqt_gui_cpp::Plugin()
-        , widget_(0)
-        , guiUpdateTimer(nullptr) {
+    : rqt_gui_cpp::Plugin()
+    , widget_(0)
+    , guiUpdateTimer(nullptr)
+{
     setObjectName("RobotsControl");
     rosNode = new ros::NodeHandle();
     this->sc = supplementary::SystemConfig::getInstance();
 
-    RobotsControl::msgTimeOut = chrono::duration<double>(
-            (*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
+    RobotsControl::msgTimeOut = std::chrono::duration<double>((*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
     this->pmRegistry = supplementary::RobotExecutableRegistry::get();
 
     /* Initialise the registry data structure for better performance
@@ -42,32 +50,29 @@ RobotsControl::RobotsControl()
     // Read bundles from ProcessManaging.conf
     auto bundlesSections = (*this->sc)["ProcessManaging"]->getSections("Processes.Bundles", NULL);
     for (auto bundleName : (*bundlesSections)) {
-        vector<int> processList = (*this->sc)["ProcessManaging"]->getList<int>(
-                "Processes.Bundles", bundleName.c_str(), "processList", NULL);
-        vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>(
-                "Processes.Bundles", bundleName.c_str(), "processParamsList", NULL);
+        vector<int> processList = (*this->sc)["ProcessManaging"]->getList<int>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
+        vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList", NULL);
         if (processList.size() != processParamsList.size()) {
-            cerr << "PMControl: Number of processes does not match the number of parameter sets for the bundle '"
-                 << bundleName << "' in the Processes.conf!" << endl;
+            cerr << "PMControl: Number of processes does not match the number of parameter sets for the bundle '" << bundleName << "' in the Processes.conf!"
+                 << endl;
             continue;
         }
 
         for (int i = 0; i < processList.size(); i++) {
-            this->bundlesMap[bundleName].push_back(pair<int, int>(processList[i], stoi(processParamsList[i])));
+            this->bundlesMap[bundleName].push_back(pair<int, int>(processList[i], std::stoi(processParamsList[i])));
         }
-        cout << "PMControl: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size() << " processes."
-             << endl;
+        cout << "PMControl: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size() << " processes." << endl;
     }
 }
 
-void RobotsControl::initPlugin(qt_gui_cpp::PluginContext& context) {
+void RobotsControl::initPlugin(qt_gui_cpp::PluginContext& context)
+{
     widget_ = new QWidget();
     widget_->setAttribute(Qt::WA_AlwaysShowToolTips, true);
     robotControlWidget_.setupUi(widget_);
 
     this->widget_->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
-    QObject::connect(this->widget_, SIGNAL(customContextMenuRequested(const QPoint&)), this,
-            SLOT(showContextMenu(const QPoint&)));
+    QObject::connect(this->widget_, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
     if (context.serialNumber() > 1) {
         widget_->setWindowTitle(widget_->windowTitle() + " (" + QString::number(context.serialNumber()) + ")");
@@ -79,10 +84,8 @@ void RobotsControl::initPlugin(qt_gui_cpp::PluginContext& context) {
     }
 
     // Initialise the ROS Communication
-    processStateSub = rosNode->subscribe(
-            "/process_manager/ProcessStats", 10, &RobotsControl::receiveProcessStats, (RobotsControl*) this);
-    alicaInfoSub = rosNode->subscribe(
-            "/AlicaEngine/AlicaEngineInfo", 10, &RobotsControl::receiveAlicaInfo, (RobotsControl*) this);
+    processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &RobotsControl::receiveProcessStats, (RobotsControl*)this);
+    alicaInfoSub = rosNode->subscribe("/AlicaEngine/AlicaEngineInfo", 10, &RobotsControl::receiveAlicaInfo, (RobotsControl*)this);
 
     // Initialise the GUI refresh timer
     this->guiUpdateTimer = new QTimer();
@@ -90,7 +93,8 @@ void RobotsControl::initPlugin(qt_gui_cpp::PluginContext& context) {
     this->guiUpdateTimer->start(200);
 }
 
-void RobotsControl::showContextMenu(const QPoint& pos) {
+void RobotsControl::showContextMenu(const QPoint& pos)
+{
     /* HINT: remember, if there are some problems that way:
      * For QAbstractScrollArea and derived classes you would use:
      * QPoint globalPos = myWidget->viewport()->mapToGlobal(pos); */
@@ -99,7 +103,7 @@ void RobotsControl::showContextMenu(const QPoint& pos) {
 
     QMenu myMenu;
     for (auto& robot : this->pmRegistry->getRobots()) {
-        stringstream ss;
+        std::stringstream ss;
         ss << *(robot.second->agentID);
         QIcon icon;
         if (this->controlledRobotsMap[robot.first]->isHidden()) {
@@ -131,7 +135,8 @@ void RobotsControl::showContextMenu(const QPoint& pos) {
 /**
  * The worker method of RobotsControl. It processes the received ROS messages and afterwards updates the GUI.
  */
-void RobotsControl::run() {
+void RobotsControl::run()
+{
     processMessages();
 
     updateGUI();
@@ -140,27 +145,31 @@ void RobotsControl::run() {
 /**
  * Updates the GUI, after ROS process stat message have been processed.
  */
-void RobotsControl::updateGUI() {
-    chrono::system_clock::time_point now = chrono::system_clock::now();
+void RobotsControl::updateGUI()
+{
+    std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
     for (auto controlledRobotEntry : this->controlledRobotsMap) {
         controlledRobotEntry.second->updateGUI(now);
     }
 }
 
-void RobotsControl::receiveProcessStats(process_manager::ProcessStatsConstPtr processStats) {
-    lock_guard<mutex> lck(processStatsMsgQueueMutex);
-    this->processStatMsgQueue.emplace(chrono::system_clock::now(), processStats);
+void RobotsControl::receiveProcessStats(process_manager::ProcessStatsConstPtr processStats)
+{
+    std::lock_guard<mutex> lck(processStatsMsgQueueMutex);
+    this->processStatMsgQueue.emplace(std::chrono::system_clock::now(), processStats);
 }
 
-void RobotsControl::receiveAlicaInfo(alica_msgs::AlicaEngineInfoConstPtr alicaInfo) {
+void RobotsControl::receiveAlicaInfo(alica_msgs::AlicaEngineInfoConstPtr alicaInfo)
+{
     lock_guard<mutex> lck(alicaInfoMsgQueueMutex);
-    this->alicaInfoMsgQueue.emplace(chrono::system_clock::now(), alicaInfo);
+    this->alicaInfoMsgQueue.emplace(std::chrono::system_clock::now(), alicaInfo);
 }
 
 /**
  * Processes all queued messages from the processStatMsgsQueue and the alicaInfoMsgQueue.
  */
-void RobotsControl::processMessages() {
+void RobotsControl::processMessages()
+{
     {
         lock_guard<mutex> lck(processStatsMsgQueueMutex);
         while (!this->processStatMsgQueue.empty()) {
@@ -196,13 +205,13 @@ void RobotsControl::processMessages() {
  * If the given robot ID is already known, nothing is done.
  * Otherwise a new entry in the controlled robot map is created.
  */
-void RobotsControl::checkAndInit(const supplementary::AgentID* robotId) {
+void RobotsControl::checkAndInit(const supplementary::AgentID* robotId)
+{
     auto pmEntry = this->controlledRobotsMap.find(robotId);
-    if (pmEntry == this->controlledRobotsMap.end()) {  // robot is not known, so create a corresponding instance
+    if (pmEntry == this->controlledRobotsMap.end()) { // robot is not known, so create a corresponding instance
         string robotName;
         if (this->pmRegistry->getRobotName(robotId, robotName)) {
-            cout << "RC: Create new ControlledRobot with ID " << *robotId << " and host name " << robotName << "!"
-                 << endl;
+            cout << "RC: Create new ControlledRobot with ID " << *robotId << " and host name " << robotName << "!" << endl;
             Robot* controlledRobot = new Robot(robotName, robotId, this);
             this->controlledRobotsMap.emplace(robotId, controlledRobot);
         } else {
@@ -211,16 +220,15 @@ void RobotsControl::checkAndInit(const supplementary::AgentID* robotId) {
     }
 }
 
-void RobotsControl::shutdownPlugin() {
+void RobotsControl::shutdownPlugin()
+{
     this->processStateSub.shutdown();
     this->alicaInfoSub.shutdown();
 }
 
-void RobotsControl::saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const {
-}
+void RobotsControl::saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const {}
 
-void RobotsControl::restoreSettings(
-        const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings) {}
-}  // namespace robot_control
+void RobotsControl::restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings) {}
+} // namespace robot_control
 
 PLUGINLIB_EXPORT_CLASS(robot_control::RobotsControl, rqt_gui_cpp::Plugin)

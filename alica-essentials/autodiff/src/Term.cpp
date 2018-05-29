@@ -44,6 +44,7 @@ Term::Term(TermHolder* owner)
     : _owner(owner)
     , _next(nullptr)
     , _localRange(Variable::minExpressibleValue, Variable::maxExpressibleValue)
+    , _tapeIdx(-1)
 {
 }
 

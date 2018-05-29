@@ -118,22 +118,22 @@ static inline std::string get_stacktrace(int startindex = 1)
                 // e.g.: This worked addr2line 0x34f3e7 -e /home/endy/cnws/devel/lib/libalica_engine.so
                 // Here 0x34f3e7 is computed by: addrlist[i] - libalicaStartAddr (got it from pmap)
 
-                string execname(symbollist[i]);
-                if (execname.find(".so") != string::npos) {
-                    ifstream ifs("/proc/self/smaps");
+                std::string execname(symbollist[i]);
+                if (execname.find(".so") != std::string::npos) {
+                    std::ifstream ifs("/proc/self/smaps");
                     char blub[1024];
-                    string startaddr;
+                    std::string startaddr;
                     while (!ifs.eof()) {
                         ifs.getline(blub, 1024);
                         if (strstr(blub, symbollist[i]) != NULL) {
                             if (strstr(blub, "r-xp")) {
-                                startaddr = string(blub);
+                                startaddr = std::string(blub);
                             }
                         }
                     }
 
                     startaddr = startaddr.substr(0, startaddr.find("-"));
-                    void* startadd = 0;
+                    void* startadd = nullptr;
 
                     sscanf(startaddr.c_str(), "%p", (void**)&startadd);
                     sprintf(syscom, "addr2line -e %s %p", symbollist[i], (void*)((char*)addrlist[i] - (char*)startadd));
@@ -165,7 +165,7 @@ typedef void (*handler)();
 
 void segfault_sigaction()
 {
-    segfaultdebug::SegFaultException s(string("SegFaultException ") + segfaultdebug::get_stacktrace(4));
+    segfaultdebug::SegFaultException s(std::string("SegFaultException ") + segfaultdebug::get_stacktrace(4));
     // s.stacktrace = get_stacktrace();
     throw s;
 }

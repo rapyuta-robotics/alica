@@ -2,45 +2,56 @@
 #include "process_manager/ProcessManager.h"
 #include <process_manager/RobotExecutableRegistry.h>
 
-#include <SystemConfig.h>
 #include <Logging.h>
+#include <SystemConfig.h>
 
 #include <cassert>
-#include <map>
+#include <chrono>
+#include <ctime>
+#include <fstream>
+#include <iomanip>
 #include <iostream>
-#include <unistd.h>
+#include <map>
 #include <signal.h>
 #include <sstream>
-#include <vector>
-#include <fstream>
-#include <string>
-#include <ctime>
-#include <iomanip>
-#include <chrono>
 #include <stdlib.h>
+#include <string>
+#include <unistd.h>
+#include <vector>
 
-namespace supplementary {
+namespace supplementary
+{
+
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::string;
+using std::stringstream;
+using std::thread;
+using std::to_string;
+using std::vector;
+
 long ManagedExecutable::kernelPageSize = 0;
 
-ManagedExecutable::ManagedExecutable(
-        ExecutableMetaData const* const metaExec, long pid, string robotName, ProcessManager* procMan)
-        : metaExec(metaExec)
-        , managedPid(pid)
-        , state('X')
-        , lastUTime(0)
-        , lastSTime(0)
-        , currentUTime(0)
-        , currentSTime(0)
-        , memory(0)
-        , starttime(0)
-        , desiredRunState(RunState::SHOULDNT_RUN)
-        , cpu(0)
-        , runningParamSet(ExecutableMetaData::UNKNOWN_PARAMS)
-        , desiredParamSet(ExecutableMetaData::UNKNOWN_PARAMS)
-        , procMan(procMan)
-        , need2ReadParams(true)
-        , publishing(false)
-        , shouldPublish(false) {
+ManagedExecutable::ManagedExecutable(ExecutableMetaData const* const metaExec, long pid, string robotName, ProcessManager* procMan)
+    : metaExec(metaExec)
+    , managedPid(pid)
+    , state('X')
+    , lastUTime(0)
+    , lastSTime(0)
+    , currentUTime(0)
+    , currentSTime(0)
+    , memory(0)
+    , starttime(0)
+    , desiredRunState(RunState::SHOULDNT_RUN)
+    , cpu(0)
+    , runningParamSet(ExecutableMetaData::UNKNOWN_PARAMS)
+    , desiredParamSet(ExecutableMetaData::UNKNOWN_PARAMS)
+    , procMan(procMan)
+    , need2ReadParams(true)
+    , publishing(false)
+    , shouldPublish(false)
+{
 #ifdef MNGD_EXEC_DEBUG
     cout << "ME: Constructor of executable " << metaExec->name << endl;
 #endif
@@ -48,33 +59,35 @@ ManagedExecutable::ManagedExecutable(
     this->robotEnvVariable = robotName;
 }
 
-ManagedExecutable::~ManagedExecutable() {
+ManagedExecutable::~ManagedExecutable()
+{
     // TODO: check whether the cleanup is right -> valgrind
     for (auto param : this->runningParams) {
-        free((char*) param);
+        free((char*)param);
     }
 }
 
-void ManagedExecutable::queue4Update(long pid) {
+void ManagedExecutable::queue4Update(long pid)
+{
     this->queuedPids4Update.push_back(pid);
 }
 
 /**
  * This method processes the queued PIDs and kills, starts, and updates the processes accordingly.
  */
-void ManagedExecutable::update(unsigned long long cpuDelta) {
+void ManagedExecutable::update(unsigned long long cpuDelta)
+{
     if (this->queuedPids4Update.size() == 0) {
         if (this->desiredRunState == RunState::SHOULD_RUN) {
-            if (chrono::steady_clock::now() - this->lastTimeTried >
-                    std::chrono::milliseconds(1000))  // TODO: make the wait time a parameter
+            if (std::chrono::steady_clock::now() - this->lastTimeTried > std::chrono::milliseconds(1000)) // TODO: make the wait time a parameter
             {
 #ifdef MNGD_EXEC_DEBUG
                 cout << "ME: Starting " << this->metaExec->name << "!" << endl;
 #endif
-                if (this->desiredParamSet != ExecutableMetaData::UNKNOWN_PARAMS) {  // this guarantees, that manually
-                                                                                    // started executables are not
-                                                                                    // started again (except we did know
-                                                                                    // the manually used parameters)
+                if (this->desiredParamSet != ExecutableMetaData::UNKNOWN_PARAMS) { // this guarantees, that manually
+                                                                                   // started executables are not
+                                                                                   // started again (except we did know
+                                                                                   // the manually used parameters)
                     this->startProcess();
                 }
             }
@@ -87,10 +100,10 @@ void ManagedExecutable::update(unsigned long long cpuDelta) {
 #ifdef MNGD_EXEC_DEBUG
             cout << "ME: No " << this->metaExec->name << " running and none should run!" << endl;
 #endif
-            this->desiredRunState == RunState::SHOULDNT_RUN;  // reset from manual started
+            this->desiredRunState = RunState::SHOULDNT_RUN; // reset from manual started
             this->clear();
         }
-    } else if (this->queuedPids4Update.size() > 0)  // there are processes which run
+    } else if (this->queuedPids4Update.size() > 0) // there are processes which run
     {
 #ifdef MNGD_EXEC_DEBUG
         cout << "ME: The queued PIDs for " << this->metaExec->name << " are: ";
@@ -100,10 +113,9 @@ void ManagedExecutable::update(unsigned long long cpuDelta) {
         cout << endl;
 #endif
 
-        if (this->desiredRunState == RunState::SHOULD_RUN ||
-                this->desiredRunState == RunState::MANUAL_STARTED) {  // some process should run
+        if (this->desiredRunState == RunState::SHOULD_RUN || this->desiredRunState == RunState::MANUAL_STARTED) { // some process should run
 
-            if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED)  // we know a PID, which we manage
+            if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED) // we know a PID, which we manage
             {
                 for (int i = 0; i < this->queuedPids4Update.size(); i++) {
                     long pid = this->queuedPids4Update.at(i);
@@ -114,18 +126,17 @@ void ManagedExecutable::update(unsigned long long cpuDelta) {
                          */
                         this->updateStats(cpuDelta, false);
 
-                        if (!this->shouldPublish && this->publishing) {  // stop the log publishing threads if necessary
+                        if (!this->shouldPublish && this->publishing) { // stop the log publishing threads if necessary
                             publishing = false;
                         }
 
                         if (this->desiredParamSet == this->runningParamSet ||
-                                this->desiredRunState == RunState::MANUAL_STARTED) {  // our process is running with the
-                                                                                      // right parameters, or is started
-                                                                                      // manually
-                                                                                      // -> so kill all others
+                            this->desiredRunState == RunState::MANUAL_STARTED) { // our process is running with the
+                                                                                 // right parameters, or is started
+                                                                                 // manually
+                                                                                 // -> so kill all others
 
-                            if (this->shouldPublish &&
-                                    !this->publishing) {  // start the log publishing threads if necessary
+                            if (this->shouldPublish && !this->publishing) { // start the log publishing threads if necessary
                                 startPublishingLogs();
                             }
 
@@ -133,8 +144,8 @@ void ManagedExecutable::update(unsigned long long cpuDelta) {
                             this->queuedPids4Update.erase(this->queuedPids4Update.begin() + i);
                             this->killQueuedProcesses();
                             break;
-                        } else {  // our process is not running with the right parameters, or is not manually started
-                                  // -> so kill it and all others
+                        } else { // our process is not running with the right parameters, or is not manually started
+                                 // -> so kill it and all others
 #ifdef MNGD_EXEC_DEBUG
                             cout << "ME: " << this->metaExec->name << " is NOT running the right params!" << endl;
 #endif
@@ -147,8 +158,7 @@ void ManagedExecutable::update(unsigned long long cpuDelta) {
                 }
             }
 
-            if (this->queuedPids4Update.size() !=
-                    0) {  // We did not find our own process, or we don't have one to manage, so ...
+            if (this->queuedPids4Update.size() != 0) { // We did not find our own process, or we don't have one to manage, so ...
 
                 // ... adapt to the first and kill the other processes
                 this->managedPid = this->queuedPids4Update.at(0);
@@ -160,9 +170,9 @@ void ManagedExecutable::update(unsigned long long cpuDelta) {
                 this->updateStats(cpuDelta, true);
             }
 
-        } else if (this->desiredRunState == RunState::SHOULDNT_RUN)  // there shouldn't run a process
+        } else if (this->desiredRunState == RunState::SHOULDNT_RUN) // there shouldn't run a process
         {
-            if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED)  // we know a PID, which we managed
+            if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED) // we know a PID, which we managed
             {
 #ifdef MNGD_EXEC_DEBUG
                 cout << "ME: Kill all " << this->metaExec->name << endl;
@@ -181,8 +191,7 @@ void ManagedExecutable::update(unsigned long long cpuDelta) {
                 this->queuedPids4Update.erase(this->queuedPids4Update.begin());
                 this->killQueuedProcesses();
 #ifdef MNGD_EXEC_DEBUG
-                cout << "ME: We adapt to the manually started PID " << this->managedPid << " for "
-                     << this->metaExec->name << endl;
+                cout << "ME: We adapt to the manually started PID " << this->managedPid << " for " << this->metaExec->name << endl;
 #endif
                 // update own
                 this->updateStats(cpuDelta, true);
@@ -193,12 +202,13 @@ void ManagedExecutable::update(unsigned long long cpuDelta) {
     }
 }
 
-void ManagedExecutable::report(process_manager::ProcessStats& psts, const AgentID* agentID) {
+void ManagedExecutable::report(process_manager::ProcessStats& psts, const AgentID* agentID)
+{
     if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED) {
         process_manager::ProcessStat ps;
         ps.robotId.id = agentID->toByteVector();
         ps.cpu = this->cpu;
-        ps.mem = this->memory * ManagedExecutable::kernelPageSize / 1024.0 / 1024.0;  // MB
+        ps.mem = this->memory * ManagedExecutable::kernelPageSize / 1024.0 / 1024.0; // MB
         ps.processKey = this->metaExec->id;
         ps.paramSet = this->runningParamSet;
         ps.state = this->state;
@@ -210,7 +220,8 @@ void ManagedExecutable::report(process_manager::ProcessStats& psts, const AgentI
 /**
  * Kills all processes with SIGKILL, which are still in the queuedPIids4Update list.
  */
-void ManagedExecutable::killQueuedProcesses() {
+void ManagedExecutable::killQueuedProcesses()
+{
     /* TODO: more comprehensive process stopping
      * - try several times
      * - try harder signals, if necessary
@@ -227,7 +238,8 @@ void ManagedExecutable::killQueuedProcesses() {
 /**
  * Updates the stats of the managed process (CPU, Memory, State, etc.)
  */
-void ManagedExecutable::updateStats(unsigned long long cpuDelta, bool isNew) {
+void ManagedExecutable::updateStats(unsigned long long cpuDelta, bool isNew)
+{
 #ifdef MNGD_EXEC_DEBUG
     cout << "ME: Updating " << this->metaExec->name << " (" << this->managedPid << ")" << endl;
 #endif
@@ -242,10 +254,10 @@ void ManagedExecutable::updateStats(unsigned long long cpuDelta, bool isNew) {
     stringstream statStream(statLine);
     int i = 0;
     while (statStream.good() && i < 52) {
-        if (i == 2) {  // state
+        if (i == 2) { // state
             statStream >> this->state;
             i++;
-        } else if (i == 13) {  // cpu time stuff (includes index 13-16)
+        } else if (i == 13) { // cpu time stuff (includes index 13-16)
             this->lastUTime = this->currentUTime;
             this->lastSTime = this->currentSTime;
             statStream >> this->currentUTime;
@@ -286,7 +298,8 @@ void ManagedExecutable::updateStats(unsigned long long cpuDelta, bool isNew) {
  * Reads the command line parameters of a given process.
  * @param procPidString The process ID as string
  */
-void ManagedExecutable::readProcParams(string pidString) {
+void ManagedExecutable::readProcParams(string pidString)
+{
     this->need2ReadParams = false;
     this->runningParams.clear();
 
@@ -299,11 +312,9 @@ void ManagedExecutable::readProcParams(string pidString) {
         checkIdx++;
     }
 
-    if (this->metaExec->prefixCmd !=
-            "NOT-FOUND") {  // Ignore things like 'roslaunch', as this was checked in searchProcFS.
+    if (this->metaExec->prefixCmd != "NOT-FOUND") { // Ignore things like 'roslaunch', as this was checked in searchProcFS.
         checkIdx++;
-        if (this->metaExec->rosPackage !=
-                "NOT-FOUND") {  // Ignore the ROS package, as this was checked in search ProcFS, too.
+        if (this->metaExec->rosPackage != "NOT-FOUND") { // Ignore the ROS package, as this was checked in search ProcFS, too.
             checkIdx++;
         }
     }
@@ -328,10 +339,9 @@ void ManagedExecutable::readProcParams(string pidString) {
     this->runningParams.push_back(nullptr);
 
 #ifdef MNGD_EXEC_DEBUG
-    cout << "ME: PROC-FS Command-Line Parameters of " << this->metaExec->name << ": " << this->runningParams.size()
-         << endl;
+    cout << "ME: PROC-FS Command-Line Parameters of " << this->metaExec->name << ": " << this->runningParams.size() << endl;
     for (auto param : this->runningParams) {
-        if (param != nullptr) {  // ignore nullptr, which is always the last argument in command line
+        if (param != nullptr) { // ignore nullptr, which is always the last argument in command line
             cout << "'" << param << "'" << endl;
         } else {
             cout << "'nullptr'" << endl;
@@ -343,7 +353,7 @@ void ManagedExecutable::readProcParams(string pidString) {
 #ifdef MNGD_EXEC_DEBUG
         cout << "ME: Parameter Set " << paramEntry.first << ": " << paramEntry.second.size() << endl;
         for (auto param : paramEntry.second) {
-            if (param != nullptr) {  // ignore nullptr, which is always the last argument in command line
+            if (param != nullptr) { // ignore nullptr, which is always the last argument in command line
                 cout << "'" << param << "'" << endl;
             } else {
                 cout << "'nullptr'" << endl;
@@ -360,29 +370,26 @@ void ManagedExecutable::readProcParams(string pidString) {
 
         int i = 0;
 
-        if (strstr(paramEntry.second[i], this->runningParams[i]) !=
-                nullptr) {  // this compares the name of the executable (path-independent)
+        if (strstr(paramEntry.second[i], this->runningParams[i]) != nullptr) { // this compares the name of the executable (path-independent)
             i++;
             for (; i < this->runningParams.size(); i++) {
                 if (paramEntry.second[i] == nullptr &&
-                        this->runningParams[i] ==
-                                nullptr) {  // this case is for the ending null pointer in the command line parameters
+                    this->runningParams[i] == nullptr) { // this case is for the ending null pointer in the command line parameters
                     continue;
-                } else if (strcmp(paramEntry.second[i], this->runningParams[i]) !=
-                           0) {  // we have miss matching parameters
+                } else if (strcmp(paramEntry.second[i], this->runningParams[i]) != 0) { // we have miss matching parameters
                     break;
                 }
             }
         }
 
-        if (i == this->runningParams.size()) {  // all parameters matched
+        if (i == this->runningParams.size()) { // all parameters matched
 #ifdef MNGD_EXEC_DEBUG
             cout << "ME: Parameters matched for paramSetid " << paramEntry.first << endl;
 #endif
             this->runningParamSet = paramEntry.first;
-            if (this->desiredParamSet == ExecutableMetaData::UNKNOWN_PARAMS) {  // we did not receive a command with a
-                                                                                // specific param set, so adapt the
-                                                                                // running one
+            if (this->desiredParamSet == ExecutableMetaData::UNKNOWN_PARAMS) { // we did not receive a command with a
+                                                                               // specific param set, so adapt the
+                                                                               // running one
                 this->desiredParamSet = this->runningParamSet;
             }
             return;
@@ -391,21 +398,22 @@ void ManagedExecutable::readProcParams(string pidString) {
 #ifdef MNGD_EXEC_DEBUG
     cout << "ME: Parameters are unknown for " << this->metaExec->name << endl;
 #endif
-    this->runningParamSet == ExecutableMetaData::UNKNOWN_PARAMS;
+    this->runningParamSet = ExecutableMetaData::UNKNOWN_PARAMS;
     return;
 }
 
-void ManagedExecutable::printStats() {
+void ManagedExecutable::printStats()
+{
     stringstream ss;
     ss << "ME: Stats of " << this->metaExec->name << " (" << this->managedPid << ")" << endl;
     ss << "ME: State: '" << this->state << "' StartTime: " << this->starttime << endl;
-    ss << "ME: Times: last u '" << this->lastUTime << "' last s '" << this->lastSTime << "' current u '"
-       << this->currentUTime << "' current s '" << this->currentSTime << endl;
+    ss << "ME: Times: last u '" << this->lastUTime << "' last s '" << this->lastSTime << "' current u '" << this->currentUTime << "' current s '"
+       << this->currentSTime << endl;
     ss << "ME: CPU: " << this->cpu << "%" << endl;
     ss << "ME: Memory: " << this->memory * kernelPageSize / 1024.0 / 1024.0 << "MB" << endl;
     ss << "ME: Parameters " << this->runningParams.size() << ": ";
     for (auto param : this->runningParams) {
-        if (param != nullptr) {  // ignore nullptr, which is always the last argument in command line
+        if (param != nullptr) { // ignore nullptr, which is always the last argument in command line
             ss << "'" << param << "'";
         }
     }
@@ -418,7 +426,8 @@ void ManagedExecutable::printStats() {
 /**
  * Clears runtime information (not the control values, like "desiredRunState") about the former managed process.
  */
-void ManagedExecutable::clear() {
+void ManagedExecutable::clear()
+{
 #ifdef MNGD_EXEC_DEBUG
     cout << "ME: CLEARED " << this->metaExec->name << endl;
 #endif
@@ -433,14 +442,16 @@ void ManagedExecutable::clear() {
     this->lastUTime = 0;
 }
 
-void ManagedExecutable::changeDesiredLogPublishingState(bool shouldPublish) {
+void ManagedExecutable::changeDesiredLogPublishingState(bool shouldPublish)
+{
     cout << "ME: Changed shouldPublish to " << shouldPublish << endl;
-    if (this->shouldPublish != shouldPublish) {  // change if necessary
+    if (this->shouldPublish != shouldPublish) { // change if necessary
         this->shouldPublish = shouldPublish;
     }
 }
 
-void ManagedExecutable::changeDesiredState(bool shouldRun, int paramSetId) {
+void ManagedExecutable::changeDesiredState(bool shouldRun, int paramSetId)
+{
     cout << "ME: changeDesiredState for " << this->metaExec->name << endl;
 
     if (this->managedPid == ExecutableMetaData::NOTHING_MANAGED && !shouldRun) {
@@ -448,8 +459,7 @@ void ManagedExecutable::changeDesiredState(bool shouldRun, int paramSetId) {
     }
 
     if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED && this->runningParamSet == paramSetId && shouldRun) {
-        cout << "ME: Won't (re)start executable, as it is already running with the right parameters! PID: "
-             << this->managedPid << endl;
+        cout << "ME: Won't (re)start executable, as it is already running with the right parameters! PID: " << this->managedPid << endl;
     }
 
     // remember desired executable state
@@ -466,9 +476,9 @@ void ManagedExecutable::changeDesiredState(bool shouldRun, int paramSetId) {
  * But it does that only, if there is a managed PID known to
  * this executable and the publishing flag is true.
  */
-void ManagedExecutable::startPublishingLogs() {
-    if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED &&
-            this->shouldPublish) {  // join with old threads and create new threads for log publishing
+void ManagedExecutable::startPublishingLogs()
+{
+    if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED && this->shouldPublish) { // join with old threads and create new threads for log publishing
         this->publishing = true;
         if (stdLogPublisher.joinable()) {
             cout << "ME: Try to join stdLogPublisher" << endl;
@@ -488,7 +498,8 @@ void ManagedExecutable::startPublishingLogs() {
  * The started process replaces already running processes.
  * @param params The parameters given to the started process.
  */
-void ManagedExecutable::startProcess(vector<char*>& params) {
+void ManagedExecutable::startProcess(vector<char*>& params)
+{
     this->stdLogFileName = logging::getLogFilename(this->robotEnvVariable + '_' + metaExec->name);
     this->errLogFileName = logging::getErrLogFilename(this->robotEnvVariable + '_' + this->metaExec->name);
 
@@ -514,15 +525,15 @@ void ManagedExecutable::startProcess(vector<char*>& params) {
         execStartString = this->metaExec->execName.c_str();
     }
 
-    for (int i = 0; i < params.size() - 1; i++) {  // add params to startParams
+    for (int i = 0; i < params.size() - 1; i++) { // add params to startParams
         startParams.push_back(strdup(params[i]));
     }
     startParams.push_back(nullptr);
 
     pid_t pid = fork();
-    if (pid == 0)  // child process
+    if (pid == 0) // child process
     {
-        setsid();  // necessary to let the child process live longer than its parent
+        setsid(); // necessary to let the child process live longer than its parent
 
         setenv("ROBOT", this->robotEnvVariable.c_str(), 1);
 
@@ -551,14 +562,14 @@ void ManagedExecutable::startProcess(vector<char*>& params) {
             cout << "ME: Failure! execve error code = " << errno << " - " << strerror(errno) << endl;
             abort();
         }
-    } else if (pid > 0)  // parent process
+    } else if (pid > 0) // parent process
     {
-        this->lastTimeTried = chrono::steady_clock::now();
+        this->lastTimeTried = std::chrono::steady_clock::now();
         this->managedPid = pid;
         for (auto param : startParams) {
             free(param);
         }
-        if (this->shouldPublish) {  // if we got the command to start publishing, then do it right from the start
+        if (this->shouldPublish) { // if we got the command to start publishing, then do it right from the start
             this->startPublishingLogs();
         }
     } else if (pid < 0) {
@@ -572,22 +583,22 @@ void ManagedExecutable::startProcess(vector<char*>& params) {
  * threads created in the startPublishingLogs() method.
  * The threads terminate if the publishing flag is set to false.
  */
-void ManagedExecutable::publishLogFile(string logFileName, ros::console::levels::Level logLevel) {
+void ManagedExecutable::publishLogFile(string logFileName, ros::console::levels::Level logLevel)
+{
     std::ifstream ifs;
     int startCounter = 0;
     while (!FileSystem::isFile(logFileName)) {
         usleep(1000);
         startCounter++;
         if (startCounter > 2) {
-            cout << "ME: Could not attach to log file, maybe the managed process wasn't started by the process manager!"
-                 << endl;
+            cout << "ME: Could not attach to log file, maybe the managed process wasn't started by the process manager!" << endl;
             return;
         }
     }
     ifs.open(logFileName.c_str());
 
     if (ifs.is_open()) {
-        ifs.seekg(0, ios_base::end);
+        ifs.seekg(0, std::ios_base::end);
         std::string line;
         long int bufSize = 2048;
         int idx = 0;
@@ -600,13 +611,12 @@ void ManagedExecutable::publishLogFile(string logFileName, ros::console::levels:
             int charsRead = ifs.readsome(buf + idx, bufSize - idx);
             if (charsRead > 0) {
                 int charsToBeConsumed = charsRead;
-                while (char* newLine = (char*) memchr(buf + idx, '\n', charsToBeConsumed)) {
+                while (char* newLine = (char*)memchr(buf + idx, '\n', charsToBeConsumed)) {
                     idx = newLine - buf + 1;
                     charsToBeConsumed = idxLast + charsRead - idx;
                 }
 
-                if (charsToBeConsumed !=
-                        charsRead) {  // we found at least one new line character in the loop above, so send it
+                if (charsToBeConsumed != charsRead) { // we found at least one new line character in the loop above, so send it
 
                     string msg = string(buf, idx - 1);
                     ROS_LOG_STREAM(logLevel, ROSCONSOLE_DEFAULT_NAME, msg);
@@ -619,7 +629,7 @@ void ManagedExecutable::publishLogFile(string logFileName, ros::console::levels:
                     ROS_LOG_STREAM(logLevel, ROSCONSOLE_DEFAULT_NAME, msg);
 
                     idx = 0;
-                } else {  // we did not find a new line character in the loop above, so look for for further chars
+                } else { // we did not find a new line character in the loop above, so look for for further chars
                     idx += charsRead;
                 }
             } else {
@@ -635,7 +645,8 @@ void ManagedExecutable::publishLogFile(string logFileName, ros::console::levels:
  * Starts a process with the default parameters.
  * The started process replaces already running processes.
  */
-void ManagedExecutable::startProcess() {
+void ManagedExecutable::startProcess()
+{
 #ifdef MNGD_EXEC_DEBUG
     cout << "ME: Desired Parameter Set ID: " << this->desiredParamSet << endl;
 #endif

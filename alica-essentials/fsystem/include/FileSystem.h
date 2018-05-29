@@ -5,24 +5,17 @@
  *      Author: Stephan Opfer
  */
 
-#ifndef FILESYSTEM_H_
-#define FILESYSTEM_H_
+#pragma once
 
 #include <string>
-#include <string.h>
 #include <vector>
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <iostream>
 
-namespace supplementary {
+namespace supplementary
+{
 
-class FileSystem {
-public:
+class FileSystem
+{
+  public:
     virtual ~FileSystem();
     static std::string getSelfPath();
     static std::string getSelf();
@@ -43,10 +36,8 @@ public:
     static const std::string PARENTDIR;
     static const char PATH_SEPARATOR;
 
-private:
+  private:
     FileSystem();
 };
 
-}  // namespace supplementary
-
-#endif /* FILESYSTEM_H_ */
+} // namespace supplementary

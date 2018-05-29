@@ -24,7 +24,11 @@ namespace intervalpropagation
 
 using namespace autodiff;
 
-DownwardPropagator::DownwardPropagator() {}
+DownwardPropagator::DownwardPropagator()
+    : _changed(nullptr)
+    , _up(nullptr)
+{
+}
 
 int DownwardPropagator::visit(Abs* abs)
 {

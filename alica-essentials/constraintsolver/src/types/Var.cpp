@@ -17,17 +17,20 @@ namespace cnsat
 
 Var::Var(int index, bool prefSign)
     : _curTerm(nullptr)
+    , seen(false)
+    , negativeAppearance(0)
+    , positiveAppearance(0)
+    , negativeRangeSize(0.0)
+    , positiveRangeSize(0.0)
+    , index(index)
+    , assignment(Assignment::UNASSIGNED)
+    , locked(false)
+    , preferedSign(prefSign)
+    , activity(0)
+    , positiveRanges(nullptr)
+    , negativeRanges(nullptr)
+    , watchList(make_shared<vector<Watcher*>>())
 {
-    this->index = index;
-    this->assignment = Assignment::UNASSIGNED;
-    this->locked = false;
-    this->preferedSign = prefSign;
-    this->activity = 0;
-
-    positiveRanges = nullptr;
-    negativeRanges = nullptr;
-
-    watchList = make_shared<vector<Watcher*>>();
 }
 
 Var::~Var() {}

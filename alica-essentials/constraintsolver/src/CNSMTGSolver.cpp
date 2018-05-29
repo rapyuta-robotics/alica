@@ -44,11 +44,15 @@ using std::vector;
 int CNSMTGSolver::fcounter = 0;
 
 CNSMTGSolver::CNSMTGSolver()
+    : dim(0)
+    , utilityThreshold(1.0)
+    , begin()
+    , runs(0)
+    , fevals(0)
+    , seedWithUtilOptimum(true)
 {
     autodiff::Term::setAnd(autodiff::AndType::AND);
     autodiff::Term::setOr(autodiff::OrType::MAX);
-
-    rResults = vector<shared_ptr<RpropResult>>();
 
     ft = make_shared<cnsat::FormulaTransform>();
 
@@ -144,7 +148,7 @@ shared_ptr<vector<double>> CNSMTGSolver::solve(autodiff::TermPtr equation, autod
 
     equation = equation->aggregateConstants();
 
-    autodiff::ConstraintUtility* cu = dynamic_cast<autodiff::ConstraintUtility*>(equation.get());
+    autodiff::ConstraintUtility* cu = static_cast<autodiff::ConstraintUtility*>(equation.get());
 
     bool constraintIsConstant = cu->getConstraint()->isConstant();
     if (constraintIsConstant) {
@@ -171,11 +175,11 @@ shared_ptr<vector<double>> CNSMTGSolver::solve(autodiff::TermPtr equation, autod
         ip->setGlobalRanges(*equation->getOwner(), limits, ss);
     }
 
-    for (shared_ptr<cnsat::Clause> c : *cnf) {
+    for (std::shared_ptr<cnsat::Clause> c : *cnf) {
         if (!c->isTautologic) {
             if (c->literals->size() == 0) {
-                util = numeric_limits<double>::lowest();
-                shared_ptr<vector<double>> ret = make_shared<vector<double>>(dim);
+                util = std::numeric_limits<double>::lowest();
+                std::shared_ptr<std::vector<double>> ret = std::make_shared<std::vector<double>>(dim);
                 for (int i = 0; i < dim; ++i) {
                     ret->at(i) = (limits->at(i)->at(1) + limits->at(i)->at(0)) / 2.0;
                 }
@@ -392,7 +396,7 @@ shared_ptr<CNSMTGSolver::RpropResult> CNSMTGSolver::rPropFindFeasible(shared_ptr
             } else if (curGradient->at(i) * formerGradient->at(i) < 0) {
                 rpropStepWidth.at(i) *= 0.5;
             }
-            rpropStepWidth.at(i) = max(minStep, rpropStepWidth.at(i));
+            rpropStepWidth.at(i) = std::max(minStep, rpropStepWidth.at(i));
             if (curGradient->at(i) > 0) {
                 curValue->at(i) += rpropStepWidth.at(i);
             } else if (curGradient->at(i) < 0) {
@@ -515,7 +519,7 @@ shared_ptr<CNSMTGSolver::RpropResult> CNSMTGSolver::rPropOptimizeFeasible(shared
             } else if (curGradient->at(i) * formerGradient->at(i) < 0) {
                 rpropStepWidth.at(i) *= 0.5;
             }
-            rpropStepWidth.at(i) = max(minStep, rpropStepWidth.at(i));
+            rpropStepWidth.at(i) = std::max(minStep, rpropStepWidth.at(i));
             if (curGradient->at(i) > 0) {
                 curValue->at(i) += rpropStepWidth.at(i);
             } else if (curGradient->at(i) < 0) {
@@ -581,7 +585,6 @@ shared_ptr<CNSMTGSolver::RpropResult> CNSMTGSolver::rPropOptimizeFeasible(shared
         logStep();
 #endif
         ret->aborted = false;
-        return ret;
     }
     return ret;
 }

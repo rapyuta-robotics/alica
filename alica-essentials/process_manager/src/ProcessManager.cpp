@@ -16,12 +16,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <thread>
 #include <unistd.h>
 
-namespace supplementary {
+namespace supplementary
+{
+
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::string;
+using std::stringstream;
+using std::thread;
+using std::vector;
 
 bool ProcessManager::running = false;
 int ProcessManager::numCPUs = 0;
@@ -32,14 +42,15 @@ int ProcessManager::numCPUs = 0;
  * @param argv
  */
 ProcessManager::ProcessManager(int argc, char** argv)
-        : iterationTime(1000000)
-        , mainThread(NULL)
-        , spinner(NULL)
-        , rosNode(NULL)
-        , lastTotalCPUTime(0)
-        , currentTotalCPUTime(0)
-        , simMode(false)
-        , ownId(nullptr) {
+    : iterationTime(1000000)
+    , mainThread(NULL)
+    , spinner(NULL)
+    , rosNode(NULL)
+    , lastTotalCPUTime(0)
+    , currentTotalCPUTime(0)
+    , simMode(false)
+    , ownId(nullptr)
+{
     this->sc = SystemConfig::getInstance();
     this->ownHostname = this->sc->getHostname();
     this->pmRegistry = supplementary::RobotExecutableRegistry::get();
@@ -96,7 +107,8 @@ ProcessManager::ProcessManager(int argc, char** argv)
     cout << "PM: OwnId is " << *ownId << endl;
 }
 
-ProcessManager::~ProcessManager() {
+ProcessManager::~ProcessManager()
+{
     ProcessManager::running = false;
     if (this->mainThread != nullptr) {
         mainThread->join();
@@ -113,7 +125,8 @@ ProcessManager::~ProcessManager() {
  * The callback of the ROS subscriber - it inits the message processing.
  * @param pc
  */
-void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc) {
+void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
+{
     // check whether this message is for me, 0 is a wild card for all ProcessManagers
     const AgentID* receiverId;
     if (pc->receiverId.type == supplementary::AgentID::BC_TYPE) {
@@ -126,22 +139,23 @@ void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
     }
 
     switch (pc->cmd) {
-        case process_manager::ProcessCommand::START:
-            this->changeDesiredProcessStates(pc, true);
-            break;
-        case process_manager::ProcessCommand::STOP:
-            this->changeDesiredProcessStates(pc, false);
-            break;
-        case process_manager::ProcessCommand::START_LOG_PUBLISHING:
-            this->changeLogPublishing(pc, true);
-            break;
-        case process_manager::ProcessCommand::STOP_LOG_PUBLISHING:
-            this->changeLogPublishing(pc, false);
-            break;
+    case process_manager::ProcessCommand::START:
+        this->changeDesiredProcessStates(pc, true);
+        break;
+    case process_manager::ProcessCommand::STOP:
+        this->changeDesiredProcessStates(pc, false);
+        break;
+    case process_manager::ProcessCommand::START_LOG_PUBLISHING:
+        this->changeLogPublishing(pc, true);
+        break;
+    case process_manager::ProcessCommand::STOP_LOG_PUBLISHING:
+        this->changeLogPublishing(pc, false);
+        break;
     }
 }
 
-void ProcessManager::changeLogPublishing(process_manager::ProcessCommandPtr pc, bool shouldPublish) {
+void ProcessManager::changeLogPublishing(process_manager::ProcessCommandPtr pc, bool shouldPublish)
+{
     for (auto& agentIDros : pc->robotIds) {
         // Check whether the robot with the given id is known
         string robotName;
@@ -171,7 +185,8 @@ void ProcessManager::changeLogPublishing(process_manager::ProcessCommandPtr pc, 
  * @param pc
  * @param shouldRun
  */
-void ProcessManager::changeDesiredProcessStates(process_manager::ProcessCommandPtr pc, bool shouldRun) {
+void ProcessManager::changeDesiredProcessStates(process_manager::ProcessCommandPtr pc, bool shouldRun)
+{
     if (pc->processKeys.size() != pc->paramSets.size()) {
         cerr << "PM: Received malformed process command! #ProcessKeys != #ParamSets" << endl;
         return;
@@ -208,7 +223,8 @@ void ProcessManager::changeDesiredProcessStates(process_manager::ProcessCommandP
  * @param argc
  * @param argv
  */
-void ProcessManager::initCommunication(int argc, char** argv) {
+void ProcessManager::initCommunication(int argc, char** argv)
+{
     // initialise ROS stuff
     ros::init(argc, argv, "ProcessManager");
     rosNode = new ros::NodeHandle();
@@ -217,8 +233,7 @@ void ProcessManager::initCommunication(int argc, char** argv) {
     this->processCmdTopic = (*sc)["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
     this->processStatsTopic = (*sc)["ProcessManaging"]->get<string>("Topics.processStatsTopic", NULL);
 
-    processCommandSub = rosNode->subscribe(
-            this->processCmdTopic, 10, &ProcessManager::handleProcessCommand, (ProcessManager*) this);
+    processCommandSub = rosNode->subscribe(this->processCmdTopic, 10, &ProcessManager::handleProcessCommand, (ProcessManager*)this);
     processStatePub = rosNode->advertise<process_manager::ProcessStats>(this->processStatsTopic, 10);
     spinner->start();
 }
@@ -226,7 +241,8 @@ void ProcessManager::initCommunication(int argc, char** argv) {
 /**
  * Starts the worker thread of the ProcessManager, if not already running.
  */
-void ProcessManager::start() {
+void ProcessManager::start()
+{
     if (!ProcessManager::running) {
         ProcessManager::running = true;
         this->mainThread = new thread(&ProcessManager::run, this);
@@ -236,25 +252,26 @@ void ProcessManager::start() {
 /**
  * The run-method of the worker thread of the ProcessManager object.
  */
-void ProcessManager::run() {
+void ProcessManager::run()
+{
     while (ProcessManager::running) {
-        auto start = chrono::system_clock::now();
+        auto start = std::chrono::system_clock::now();
 
         this->searchProcFS();
         this->updateTotalCPUTimes();
         this->update((this->currentTotalCPUTime - this->lastTotalCPUTime) / ProcessManager::numCPUs);
         this->report();
 
-        auto timePassed = chrono::system_clock::now() - start;
-        chrono::microseconds microsecondsPassed = chrono::duration_cast<chrono::microseconds>(timePassed);
+        auto timePassed = std::chrono::system_clock::now() - start;
+        std::chrono::microseconds microsecondsPassed = std::chrono::duration_cast<std::chrono::microseconds>(timePassed);
 
 #ifdef PM_DEBUG
         cout << "PM: " << microsecondsPassed.count() << " microseconds passed!" << endl << endl;
 #endif
-        chrono::microseconds availTime = this->iterationTime - microsecondsPassed;
+        std::chrono::microseconds availTime = this->iterationTime - microsecondsPassed;
 
         if (availTime.count() > 10) {
-            this_thread::sleep_for(availTime);
+            std::this_thread::sleep_for(availTime);
         }
     }
 }
@@ -263,7 +280,8 @@ void ProcessManager::run() {
  * Updates lastTotalCPUTime and currentTotalCPUTime by
  * summing up the first line of /proc/stat.
  */
-void ProcessManager::updateTotalCPUTimes() {
+void ProcessManager::updateTotalCPUTimes()
+{
     this->lastTotalCPUTime = currentTotalCPUTime;
 
     string statLine;
@@ -291,7 +309,8 @@ void ProcessManager::updateTotalCPUTimes() {
 /**
  * Publishes a ProcessStats-Message.
  */
-void ProcessManager::report() {
+void ProcessManager::report()
+{
     process_manager::ProcessStats psts;
     psts.senderId.id = this->ownId->toByteVector();
     for (auto const& mngdRobot : this->robotMap) {
@@ -305,7 +324,8 @@ void ProcessManager::report() {
 /**
  * Calls update on all ManagedRobot instances.
  */
-void ProcessManager::update(unsigned long long cpuDelta) {
+void ProcessManager::update(unsigned long long cpuDelta)
+{
     for (auto const& mngdRobot : this->robotMap) {
         mngdRobot.second->update(cpuDelta);
     }
@@ -314,7 +334,8 @@ void ProcessManager::update(unsigned long long cpuDelta) {
 /**
  * Searches the proc filesystem for instances of processes, the ProcessManager has to manage.
  */
-void ProcessManager::searchProcFS() {
+void ProcessManager::searchProcFS()
+{
     DIR* proc;
     struct dirent* dirEntry;
 
@@ -354,8 +375,7 @@ void ProcessManager::searchProcFS() {
             string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
             const AgentID* agentID = this->pmRegistry->getRobotId(robotName);
             if (!agentID) {
-                cout << "PM: Warning! Unknown robot '" << robotName << "' is running executable with ID '" << execId
-                     << "'" << endl;
+                cout << "PM: Warning! Unknown robot '" << robotName << "' is running executable with ID '" << execId << "'" << endl;
                 agentID = this->pmRegistry->addRobot(robotName);
             }
 
@@ -363,13 +383,11 @@ void ProcessManager::searchProcFS() {
             if (robotEntry != robotMap.end()) {
                 robotEntry->second->queue4update(execId, curPID, this->pmRegistry);
             } else {
-                this->robotMap.emplace(agentID, new ManagedRobot(robotName, agentID, this))
-                        .first->second->queue4update(execId, curPID, this->pmRegistry);
+                this->robotMap.emplace(agentID, new ManagedRobot(robotName, agentID, this)).first->second->queue4update(execId, curPID, this->pmRegistry);
             }
 
 #ifdef PM_DEBUG
-            cout << "PM: Robot '" << robotName << "' (ID:" << *agentID << ") executes executable with ID '" << execId
-                 << "' with PID " << curPID << endl;
+            cout << "PM: Robot '" << robotName << "' (ID:" << *agentID << ") executes executable with ID '" << execId << "' with PID " << curPID << endl;
 #endif
         }
         // else: continue, as this executable is unknown and not to be managed by the process manager
@@ -383,7 +401,8 @@ void ProcessManager::searchProcFS() {
  * @param pid
  * @return The executable name as string.
  */
-string ProcessManager::getCmdLine(const char* pid) {
+string ProcessManager::getCmdLine(const char* pid)
+{
     string cmdline;
     std::ifstream cmdlineStream("/proc/" + string(pid) + "/cmdline", std::ifstream::in);
     getline(cmdlineStream, cmdline);
@@ -403,7 +422,8 @@ string ProcessManager::getCmdLine(const char* pid) {
  * @param processId
  * @return The value of the ROBOT environment variable, if present. Local hostname, otherwise.
  */
-string ProcessManager::getRobotEnvironmentVariable(string processId) {
+string ProcessManager::getRobotEnvironmentVariable(string processId)
+{
     string curFile = "/proc/" + processId + "/environ";
     std::ifstream ifs(curFile, std::ifstream::in);
     string robotEnvironment;
@@ -422,7 +442,8 @@ string ProcessManager::getRobotEnvironmentVariable(string processId) {
  * Method for checking, whether the ProcessManager's main thread is still running.
  * @return running
  */
-bool ProcessManager::isRunning() {
+bool ProcessManager::isRunning()
+{
     return running;
 }
 
@@ -432,7 +453,8 @@ bool ProcessManager::isRunning() {
  * this methods starts a roscore if necessary.
  * @return False, if something didn't work out. True, otherwise.
  */
-bool ProcessManager::selfCheck() {
+bool ProcessManager::selfCheck()
+{
     string roscoreExecName = "roscore";
     std::ifstream ifs("/proc/self/stat", std::ifstream::in);
     string pid;
@@ -471,11 +493,9 @@ bool ProcessManager::selfCheck() {
             for (string cmdLinePart : splittedCmdLine) {
                 // cout << cmdLinePart << " " << cmdLinePart.find_last_of("process_manager") << " " <<
                 // cmdLinePart.length()-1 << endl;
-                if (cmdLinePart.length() >= 15 &&
-                        cmdLinePart.compare(cmdLinePart.length() - 15, 15, "process_manager") == 0) {
+                if (cmdLinePart.length() >= 15 && cmdLinePart.compare(cmdLinePart.length() - 15, 15, "process_manager") == 0) {
                     cerr << "PM: My own PID is " << ownPID << endl;
-                    cerr << "PM: There is already another process_manager running on this system! PID: " << curPID
-                         << endl;
+                    cerr << "PM: There is already another process_manager running on this system! PID: " << curPID << endl;
                     cerr << "PM: Terminating myself..." << endl;
                     closedir(proc);
                     return false;
@@ -490,7 +510,7 @@ bool ProcessManager::selfCheck() {
             // remember started roscore in process managing data structures
             int roscoreExecId;
 
-            splittedCmdLine.erase(splittedCmdLine.begin());  // ignore python interpreter of roscore
+            splittedCmdLine.erase(splittedCmdLine.begin()); // ignore python interpreter of roscore
 
             if (this->pmRegistry->getExecutableId(splittedCmdLine, roscoreExecId)) {
                 // get the ROBOT environment variable of the robot running the roscore
@@ -521,7 +541,7 @@ bool ProcessManager::selfCheck() {
     if (roscoreRunning == false) {
         cerr << "PM: Starting roscore at startup!" << endl;
         pid_t pid = fork();
-        if (pid == 0)  // child process
+        if (pid == 0) // child process
         {
             setsid();
             // redirect stdout
@@ -545,7 +565,7 @@ bool ProcessManager::selfCheck() {
                 closedir(proc);
                 return false;
             }
-        } else if (pid > 0)  // parent process
+        } else if (pid > 0) // parent process
         {
             // remember started roscore in process managing data structures
             int roscoreExecId;
@@ -557,8 +577,7 @@ bool ProcessManager::selfCheck() {
                     if (mngdRobot != this->robotMap.end()) {
                         mngdRobot->second->changeDesiredState(roscoreExecId, true, this->pmRegistry);
                     } else {
-                        auto emplaceResult =
-                                this->robotMap.emplace(agentID, new ManagedRobot(this->ownHostname, agentID, this));
+                        auto emplaceResult = this->robotMap.emplace(agentID, new ManagedRobot(this->ownHostname, agentID, this));
                         emplaceResult.first->second->changeDesiredState(roscoreExecId, true, this->pmRegistry);
                     }
                 } else {
@@ -583,21 +602,22 @@ bool ProcessManager::selfCheck() {
  * @param execName
  * @return True, if it is a known interpreter. False, otherwise.
  */
-bool ProcessManager::isKnownInterpreter(string const& cmdLinePart) {
+bool ProcessManager::isKnownInterpreter(string const& cmdLinePart)
+{
     int lastSlashIdx = cmdLinePart.find_last_of('/');
-    return find(this->interpreters.begin(), this->interpreters.end(),
-                   cmdLinePart.substr(lastSlashIdx + 1, cmdLinePart.length())) != this->interpreters.end();
+    return find(this->interpreters.begin(), this->interpreters.end(), cmdLinePart.substr(lastSlashIdx + 1, cmdLinePart.length())) != this->interpreters.end();
 }
 
 /**
  * Splits the given command line at '\0' characters.
  */
-vector<string> ProcessManager::splitCmdLine(string cmdLine) {
+vector<string> ProcessManager::splitCmdLine(string cmdLine)
+{
     vector<string> splittedCmdLine;
     int argIdx = 0;
     int argEndPos = cmdLine.find('\0', argIdx);
 
-    if (argEndPos == string::npos)  // catch the case for only one argument
+    if (argEndPos == string::npos) // catch the case for only one argument
     {
         splittedCmdLine.push_back(cmdLine);
         return splittedCmdLine;
@@ -615,7 +635,8 @@ vector<string> ProcessManager::splitCmdLine(string cmdLine) {
  * This is for handling Strg + C, although no ROS communication was running.
  * @param sig
  */
-void ProcessManager::pmSigintHandler(int sig) {
+void ProcessManager::pmSigintHandler(int sig)
+{
     cout << endl << "PM: Caught SIGINT! Terminating ..." << endl;
     running = false;
 
@@ -627,7 +648,8 @@ void ProcessManager::pmSigintHandler(int sig) {
  *
  * @param sig
  */
-void ProcessManager::pmSigchildHandler(int sig) {
+void ProcessManager::pmSigchildHandler(int sig)
+{
     /* Wait for all dead processes.
      * We use a non-blocking call to be sure this signal handler will not
      * block if a child was cleaned up in another part of the program. */
@@ -652,19 +674,23 @@ void ProcessManager::pmSigchildHandler(int sig) {
 
 } /* namespace supplementary */
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
     // Set kernel page size for human readable memory consumption
     supplementary::ManagedExecutable::kernelPageSize = sysconf(_SC_PAGESIZE);
     // Determine number of cores
-    while (supplementary::FileSystem::pathExists(
-            "/sys/devices/system/cpu/cpu" + to_string(supplementary::ProcessManager::numCPUs))) {
+    while (supplementary::FileSystem::pathExists("/sys/devices/system/cpu/cpu" + std::to_string(supplementary::ProcessManager::numCPUs))) {
         supplementary::ProcessManager::numCPUs++;
     }
 
     supplementary::ProcessManager* pm = new supplementary::ProcessManager(argc, argv);
     if (pm->selfCheck()) {
-        pm->initCommunication(argc, argv);
-
+        try {
+            pm->initCommunication(argc, argv);
+        } catch (const std::runtime_error& re) {
+            std::cerr << re.what() << std::endl;
+            return -1;
+        }
         // has to be set after ProcessManager::initCommunication() , in order to override the ROS signal handler
         signal(SIGINT, supplementary::ProcessManager::pmSigintHandler);
 
@@ -673,8 +699,8 @@ int main(int argc, char** argv) {
         pm->start();
 
         while (pm->isRunning()) {
-            chrono::milliseconds dura(500);
-            this_thread::sleep_for(dura);
+            std::chrono::milliseconds dura(500);
+            std::this_thread::sleep_for(dura);
         }
 
         delete pm;

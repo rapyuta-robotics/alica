@@ -114,8 +114,8 @@ int main(int argc, char** argv)
     if (argc > 5) {
         seed = std::stoi(argv[5]);
     }
+    std::ios_base::fmtflags fmtFlags(std::cout.flags());
     std::cout << std::fixed;
-    std::cout << std::setprecision(2) << std::endl;
     std::cout << std::setprecision(2) << std::endl;
     std::cout << "Performing " << numRuns << " runs with " << numDims << " dimensions " << numLits << " literals " << numClauses << " clauses." << std::endl;
     std::cout << "Seed is: " << seed << std::endl;
@@ -148,5 +148,6 @@ int main(int argc, char** argv)
     std::cout << "Done in " << toMs(t1, t2) << "ms" << std::endl;
     std::cout << numRuns / toMs(t1, t2) * 1000.0 << " evaluations per second" << std::endl;
     std::cout << "Last value: " << result[0] << std::endl;
+    std::cout.flags(fmtFlags);
     return 0;
 }
