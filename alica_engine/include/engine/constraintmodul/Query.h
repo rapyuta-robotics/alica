@@ -2,9 +2,9 @@
 
 //#define Q_DEBUG
 
+#include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/IAlicaClock.h"
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/constraintmodul/ConditionStore.h"
@@ -14,161 +14,170 @@
 #include "engine/constraintmodul/ProblemPart.h"
 #include "engine/constraintmodul/SolverTerm.h"
 #include "engine/constraintmodul/SolverVariable.h"
+#include "engine/constraintmodul/UniqueVarStore.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Condition.h"
+#include "engine/model/DomainVariable.h"
 #include "engine/model/Parametrisation.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
-#include "engine/model/Variable.h"
 
 #include <map>
 #include <memory>
 #include <vector>
 
-namespace alica {
-class AlicaEngine;
+namespace alica
+{
 class ProblemPart;
 class RunningPlan;
-class IAlicaClock;
 class BasicBehaviour;
-class ISolver;
 
-/**
- * Internal class to deal with bindings in states and plantypes
- */
-class UniqueVarStore {
-public:
-    UniqueVarStore();
+template <class T>
+class BufferedSet
+{
+  public:
+    BufferedSet() = default;
+    BufferedSet(const BufferedSet&) = delete;
+    BufferedSet& operator=(const BufferedSet&) = delete;
 
-    void clear();
-    void add(const Variable* v);
-    const Variable* getRep(const Variable* v);
-    void addVarTo(const Variable* representing, const Variable* toAdd);
-    VariableGrp getAllRep() const;
-    int getIndexOf(const Variable* v) const;
-    friend std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store) {
-        os << "UniqueVarStore: " << std::endl;
-        // write obj to stream
-        for (auto& variableList : store.store) {
-            os << "VariableList: ";
-            for (auto& variable : variableList) {
-                os << *variable << ", ";
-            }
-            os << std::endl;
+    const std::vector<T>& getCurrent() const { return _current; }
+    std::vector<T>& editCurrent() { return _current; }
+    std::vector<T>& editNext() { return _next; }
+    void flip() { std::swap(_current, _next); }
+    void mergeAndFlip()
+    {
+        if (!_current.empty()) {
+            _next.insert(_next.end(), _current.begin(), _current.end());
         }
-        return os;
+        _current.clear();
+        flip();
     }
+    void clear()
+    {
+        _current.clear();
+        _next.clear();
+    }
+    bool hasCurrentlyAny() const { return !_current.empty(); }
+    bool hasCurrently(T v) const { return std::find(_current.begin(), _current.end(), v) != _current.end(); }
+    bool has(T v) const { return hasCurrently(v) || (std::find(_next.begin(), _next.end(), v) != _next.end()); }
 
-private:
-    /**
-     *  Each inner list of variables is sorted from variables of the top most plan to variables of the deepest plan.
-     *  Therefore, the first element is always the variable in the top most plan, where this variable occurs.
-     */
-    std::vector<VariableGrp> store;
+  private:
+    std::vector<T> _current;
+    std::vector<T> _next;
 };
+
+using BufferedVariableGrp = BufferedSet<const Variable*>;
+using BufferedDomainVariableGrp = BufferedSet<const DomainVariable*>;
 
 /**
  * Encapsulates queries to variables (which are associated with specific solvers).
  */
-class Query {
-public:
+class Query
+{
+  public:
     Query();
 
     void addStaticVariable(const Variable* v);
     void addDomainVariable(const supplementary::AgentID* robot, const std::string& ident, AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
-    bool existsSolution(int solverType, std::shared_ptr<RunningPlan> rp);
 
-    template <class T>
-    bool getSolution(int solverType, std::shared_ptr<RunningPlan> rp, vector<T>& result);
+    template <class SolverType>
+    bool existsSolution(std::shared_ptr<const RunningPlan> rp);
 
-    const VariableGrp& getRelevantStaticVariables() const { return relevantStaticVariables; }
-    const VariableGrp& getRelevantDomainVariables() const { return relevantDomainVariables; }
-    void setRelevantStaticVariables(const VariableGrp& value);
-    void setRelevantDomainVariables(const VariableGrp& value);
+    template <class SolverType, typename ResultType>
+    bool getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<ResultType>& result);
 
-    void addProblemParts(std::vector<std::shared_ptr<ProblemPart>>& l);
+    BufferedVariableGrp& editStaticVariableBuffer() { return _staticVars; }
+    BufferedDomainVariableGrp& editDomainVariableBuffer() { return _domainVars; }
 
-    std::shared_ptr<UniqueVarStore> getUniqueVariableStore(); /*< for testing only!!! */
+    void addProblemPart(ProblemPart&& p);
+    int getPartCount() const { return _problemParts.size(); }
+    const std::vector<ProblemPart>& getProblemParts() const { return _problemParts; }
+    const UniqueVarStore& getUniqueVariableStore() const; /*< for testing only!!! */
 
-private:
-    bool collectProblemStatement(std::shared_ptr<RunningPlan> rp, ISolver* solver,
-            std::vector<std::shared_ptr<ProblemDescriptor>>& cds, VariableGrp& relevantVariables, int& domOffset);
+  private:
+    void clearTemporaries();
+    void fillBufferFromQuery();
+    bool collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds,
+                                 int& domOffset);
 
-    std::shared_ptr<UniqueVarStore> uniqueVarStore;
-    VariableGrp queriedStaticVariables;
-    VariableGrp queriedDomainVariables;
-    std::vector<shared_ptr<ProblemPart>> problemParts;
+    VariableGrp _queriedStaticVariables;
+    DomainVariableGrp _queriedDomainVariables;
 
-    VariableGrp relevantStaticVariables;
-    VariableGrp relevantDomainVariables;
+    UniqueVarStore _uniqueVarStore;
+    std::vector<ProblemPart> _problemParts;
+
+    BufferedVariableGrp _staticVars;
+    BufferedDomainVariableGrp _domainVars;
+
+    VariableGrp _relevantVariables;
 };
 
-template <class T>
-bool Query::getSolution(int solverType, std::shared_ptr<RunningPlan> rp, std::vector<T>& result) {
+template <class SolverType>
+bool Query::existsSolution(std::shared_ptr<const RunningPlan> rp)
+{
+    SolverType* solver = rp->getAlicaEngine()->getSolver<SolverType>();
+
+    std::vector<std::shared_ptr<ProblemDescriptor>> cds;
+    int domOffset;
+    if (!collectProblemStatement(rp, solver, cds, domOffset)) {
+        return false;
+    }
+    return solver->existsSolution(_relevantVariables, cds);
+}
+
+template <class SolverType, typename ResultType>
+bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<ResultType>& result)
+{
     result.clear();
 
     // Collect the complete problem specification
-    vector<shared_ptr<ProblemDescriptor>> cds;
-    VariableGrp relevantVariables;
+    std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
-    ISolver* solver = rp->getAlicaEngine()->getSolver(solverType);
+    SolverType* solver = rp->getAlicaEngine()->getSolver<SolverType>();
     if (solver == nullptr) {
-        std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available."
-                  << std::endl;
+        std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available." << std::endl;
         return false;
     }
 
-    if (!this->collectProblemStatement(rp, solver, cds, relevantVariables, domOffset)) {
+    if (!collectProblemStatement(rp, solver, cds, domOffset)) {
         return false;
     }
 
 #ifdef Q_DEBUG
-    std::cout << "Query: " << (*this->uniqueVarStore) << std::endl;
+    std::cout << "Query: " << _uniqueVarStore << std::endl;
 #endif
 
-    // the result of the solver (including all relevant variables)
-    vector<void*> solverResult;
+    // TODO: get rid of the interrim vector (see below how)
+    std::vector<ResultType> solverResult;
     // let the solver solve the problem
-    bool ret = solver->getSolution(relevantVariables, cds, solverResult);
+    bool ret = solver->getSolution(_relevantVariables, cds, solverResult);
 
-    if (solverResult.size() > 0) {
-        // TODO: currently only synch variables if the result/their value is a double
-        if (typeid(T) == typeid(double) && ret) {
-            for (int i = 0; i < solverResult.size(); i++) {
-                uint8_t* tmp = ((uint8_t*) solverResult.at(i));
-                shared_ptr<vector<uint8_t>> result = make_shared<vector<uint8_t>>(sizeof(T));
-                // If you have an Segfault/Error here you solver does not return what you are querying! ;)
-                for (int s = 0; s < sizeof(T); s++) {
-                    result->at(s) = *tmp;
-                    tmp++;
-                }
-
-                solver->getAlicaEngine()->getResultStore()->postResult(relevantVariables.at(i)->getId(), result);
-            }
+    if (ret && solverResult.size() > 0) {
+        int i = 0;
+        VariableSyncModule* rs = rp->getAlicaEngine()->getResultStore();
+        for (const ResultType& value : solverResult) {
+            rs->postResult(_relevantVariables[i]->getId(), Variant(value));
+            ++i;
         }
 
+        // TODO this can be done in place. The queried static should be at the beginning of the array anyway
         // create a result vector that is filtered by the queried variables
-        for (auto& staticVariable : queriedStaticVariables) {
-            result.push_back(*((T*) solverResult.at(uniqueVarStore->getIndexOf(staticVariable))));
+        for (const Variable* staticVariable : _queriedStaticVariables) {
+            result.push_back(solverResult[_uniqueVarStore.getIndexOf(staticVariable)]);
         }
-
-        for (int i = 0; i < queriedDomainVariables.size(); ++i) {
-            for (int j = 0; j < relevantDomainVariables.size(); ++j) {
-                if (relevantDomainVariables[j] == queriedDomainVariables[i]) {
-                    result.push_back(*((T*) solverResult.at(domOffset + j)));
+        // Again, the queried domain variables should be at the beginning of the domain variable segment
+        // So a simple move and resize should do the trick
+        for (int i = 0; i < _queriedDomainVariables.size(); ++i) {
+            for (int j = domOffset; j < _relevantVariables.size(); ++j) {
+                if (_relevantVariables[j] == _queriedDomainVariables[i]) {
+                    result.push_back(solverResult[j]);
                     break;
                 }
             }
         }
     }
-
-    // deallocate "solverResults" (they where copied into "result")
-    for (int i = 0; i < solverResult.size(); i++) {
-        delete (T*) solverResult.at(i);
-    }
-
     return ret;
 }
 } /* namespace alica */

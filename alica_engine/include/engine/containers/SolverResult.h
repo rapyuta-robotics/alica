@@ -2,15 +2,11 @@
 #include "SolverVar.h"
 #include "supplementary/AgentID.h"
 
+#include <vector>
+
 namespace alica {
 struct SolverResult {
     const supplementary::AgentID* senderID;
-    vector<SolverVar*> vars;
-
-    ~SolverResult() {
-        for (auto sv : vars) {
-            delete sv;
-        }
-    }
+    std::vector<SolverVar> vars;
 };
 } /* namespace alica */

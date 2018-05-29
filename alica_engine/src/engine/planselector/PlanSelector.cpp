@@ -24,7 +24,6 @@
 
 #include <assert.h>
 
-
 using std::list;
 using std::shared_ptr;
 using std::vector;
@@ -95,7 +94,7 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
     // REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
     for (const Plan* plan : plans) {
         // CHECK: number of robots < minimum cardinality of this plan
-        if (plan->getMinCardinality() > (robotIDs.size() + to->successesInPlan(plan))) {
+        if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + to->successesInPlan(plan))) {
 #ifdef PSDEBUG
             std::stringstream ss;
             ss << "PS: RobotIds: ";
@@ -221,7 +220,8 @@ shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForStateInternal
     const BehaviourConfiguration* bc;
     const Plan* p;
     const PlanType* pt;
-    const PlanningProblem* pp;
+    // TODO: reintegrate PlanningProblems:
+    /*const PlanningProblem* pp;*/
     for (const AbstractPlan* ap : plans) {
         // BEHAVIOUR CONFIGURATION
         bc = dynamic_cast<const BehaviourConfiguration*>(ap);

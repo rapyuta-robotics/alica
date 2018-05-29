@@ -8,13 +8,11 @@
 #include "engine/constraintmodul/SolverVariable.h"
 
 namespace alica {
+constexpr double SolverVariable::minExpressibleValue;
+constexpr double SolverVariable::maxExpressibleValue;
 
-SolverVariable::SolverVariable() {
-    // TODO Auto-generated constructor stub
-}
+SolverVariable::SolverVariable() {}
 
-SolverVariable::~SolverVariable() {
-    // TODO Auto-generated destructor stub
-}
+SolverVariable::~SolverVariable() {}
 
 } /* namespace alica */

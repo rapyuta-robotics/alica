@@ -8,24 +8,74 @@
 #ifndef STATECOLLECTION_H_
 #define STATECOLLECTION_H_
 
-#include <vector>
 #include <algorithm>
-#include <sstream>
-#include <memory>
 #include <iostream>
+#include <memory>
+#include <sstream>
+#include <vector>
 
-#include "supplementary/AgentID.h"
 #include "engine/Types.h"
+#include "supplementary/AgentID.h"
 
-namespace alica {
+namespace alica
+{
 
 class State;
 class AssignmentCollection;
 class EntryPoint;
 class Assignment;
 
-class StateCollection final {
-public:
+class StateCollection final
+{
+  public:
+    class StateAccessor
+    {
+        class Iterator
+        {
+          public:
+            Iterator(int pos, const State* s, const StateCollection& col)
+                : _pos(pos)
+                , _s(s)
+                , _col(col)
+            {
+                if (pos < _col.getCount()) {
+                    if (_s != _col.getStates()[pos]) {
+                        ++(*this);
+                    }
+                }
+            }
+            bool operator!=(const Iterator& o) const { return _pos != o._pos; }
+            bool operator==(const Iterator& o) const { return _pos == o._pos; }
+            AgentIDConstPtr operator*() const { return _col.getRobots()[_pos]; }
+
+            Iterator& operator++()
+            {
+                do {
+                    ++_pos;
+                } while (_pos < _col.getCount() && _col.getStates()[_pos] != _s);
+                return *this;
+            }
+
+          private:
+            int _pos;
+            const State* _s;
+            const StateCollection& _col;
+        };
+
+      public:
+        StateAccessor(const State* s, const StateCollection& col)
+            : _s(s)
+            , _col(col)
+        {
+        }
+        Iterator begin() const { return Iterator(0, _s, _col); }
+        Iterator end() const { return Iterator(_col.getCount(), _s, _col); }
+
+      private:
+        const State* _s;
+        const StateCollection& _col;
+    };
+
     StateCollection();
     StateCollection(const AgentGrp& robotIds, const StateGrp& states);
     StateCollection(int maxSize);
@@ -37,26 +87,28 @@ public:
 
     int getCount() const { return _robotIds.size(); }
 
-    const State* getStateOfRobot(const supplementary::AgentID* robotId) const;
+    const State* getStateOfRobot(AgentIDConstPtr robotId) const;
 
     int getRobotsInState(const State* s, AgentGrp& o_robots) const;
     int getRobotsInState(int64_t sid, AgentGrp& o_robots) const;
+    StateAccessor getRobotsInState(const State* s) const { return StateAccessor(s, *this); }
 
     void getRobotsInStateSorted(const State* s, AgentGrp& o_robots) const;
 
     std::string toString() const;
 
-    void removeRobot(const supplementary::AgentID* robotId);
+    void removeRobot(AgentIDConstPtr robotId);
     void clear();
 
-    void setState(const supplementary::AgentID* robotId, const State* state);
+    void setState(AgentIDConstPtr robotId, const State* state);
     void setStates(const AgentGrp& robotIds, const State* state);
     void moveAllFromTo(const State* from, const State* to);
 
-    void setInitialState(const supplementary::AgentID* robotId, const EntryPoint* ep);
+    void setInitialState(AgentIDConstPtr robotId, const EntryPoint* ep);
     void reconsiderOldAssignment(std::shared_ptr<Assignment> oldOne, std::shared_ptr<Assignment> newOne);
 
-private:
+  private:
+    // TODO: merge the two vectors here:
     AgentGrp _robotIds;
     StateGrp _states;
 };

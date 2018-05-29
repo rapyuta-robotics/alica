@@ -1,8 +1,10 @@
 #pragma once
 
+#include "engine/constraintmodul/ISolver.h"
+#include "engine/blackboard/BlackBoard.h"
 #include <SystemConfig.h>
 #include <list>
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <supplementary/AgentIDManager.h>
 
@@ -11,6 +13,7 @@ class AgentIDFactory;
 }
 
 namespace alica {
+class AlicaClock;
 class PlanRepository;
 class Plan;
 class PlanParser;
@@ -33,96 +36,116 @@ class IConditionCreator;
 class IConstraintCreator;
 
 class IAlicaCommunication;
-class IAlicaClock;
 
-class ISolver;
 class IRoleAssignment;
 
 class AlicaEngine {
 public:
-    static void abort(string msg);
+    static void abort(const std::string& msg);
     template <typename T>
-    static void abort(string msg, const T tail);
+    static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(supplementary::AgentIDManager* idManager, string roleSetName, string masterPlanName, string roleSetDir,
+    AlicaEngine(supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, const std::string& roleSetDir,
             bool stepEngine);
+    ~AlicaEngine();
+
+    //State modifiers:
     bool init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc);
     void shutdown();
     void start();
-    bool getStepEngine();
-    PlanRepository* getPlanRepository() const;
-    BehaviourPool* getBehaviourPool();
-    string getRobotName() const;
-    Logger* getLog();
-    void setLog(Logger* log);
-    TeamObserver* getTeamObserver() const;
-    void setTeamObserver(TeamObserver* teamObserver);
+    void stepNotify();
 
-    void setSyncModul(SyncModule* syncModul);
-    SyncModule* getSyncModul();
-    AuthorityManager* getAuth();
-    void setAuth(AuthorityManager* auth);
-    IRoleAssignment* getRoleAssignment();
-    void setRoleAssignment(IRoleAssignment* roleAssignment);
-    PlanParser* getPlanParser() const;
+    //Parameter Access:
     bool isTerminating() const;
-    void setTerminating(bool terminating);
+    bool getStepEngine() const;
+    bool maySendMessages() const {return _maySendMessages;}
+    std::string getRobotName() const;
+
+    //Module Access:
+    AuthorityManager* getAuth() const {return auth;}
+    BehaviourPool* getBehaviourPool() const {return behaviourPool;}
+    const IAlicaCommunication* getCommunicator() const {return communicator;}
+    Logger* getLog() const {return log;}
+    PartialAssignmentPool* getPartialAssignmentPool() const {return pap;}
+    PlanBase* getPlanBase() const {return planBase;}
+    PlanParser* getPlanParser() const {return planParser;}
+    PlanRepository* getPlanRepository() const {return planRepository;}
+    PlanSelector* getPlanSelector() const {return planSelector;}
+    VariableSyncModule* getResultStore() const {return variableSyncModule;}
+    IRoleAssignment* getRoleAssignment() const {return roleAssignment;}
+    SyncModule* getSyncModul() const {return syncModul;}
+    TeamManager* getTeamManager() const {return teamManager;}
+    TeamObserver* getTeamObserver() const {return teamObserver;}
+    AlicaClock* getAlicaClock() const {return alicaClock;}
+
+    const BlackBoard& getBlackBoard() const {return _blackboard;}
+    BlackBoard& editBlackBoard() {return _blackboard;}
+    //Solver Access:
+    template <class SolverType>
+    void addSolver(SolverType* solver);
+    template <class SolverType>
+    SolverType* getSolver() const;
+
+    //Data Access:
+
+    const RoleSet* getRoleSet() const {return roleSet;}
+
+    //Setters:
+    void setMaySendMessages(bool maySendMessages);
+
+    //Module Setters TODO: remove and replace with a better configuration system
+    void setLog(Logger* log);
+    void setTeamObserver(TeamObserver* teamObserver);
+    void setSyncModul(SyncModule* syncModul);
+    void setAuth(AuthorityManager* auth);
+    void setRoleAssignment(IRoleAssignment* roleAssignment);
+    void setCommunicator(IAlicaCommunication* communicator);
+    void setAlicaClock(AlicaClock* clock);
+    void setResultStore(VariableSyncModule* resultStore);
+
+    //internals
     void setStepCalled(bool stepCalled);
     bool getStepCalled() const;
-    bool isMaySendMessages() const;
-    void setMaySendMessages(bool maySendMessages);
-    RoleSet* getRoleSet();
-    const IAlicaCommunication* getCommunicator() const;
-    void setCommunicator(IAlicaCommunication* communicator);
-    PlanSelector* getPlanSelector();
-    IAlicaClock* getIAlicaClock() const;
-    void setIAlicaClock(IAlicaClock* clock);
     void iterationComplete();
-    PartialAssignmentPool* getPartialAssignmentPool() const;
-    void stepNotify();
-    PlanBase* getPlanBase();
-    void addSolver(int identifier, ISolver* solver);
-    ISolver* getSolver(int identifier);
-    VariableSyncModule* getResultStore();
-    void setResultStore(VariableSyncModule* resultStore);
-    TeamManager* getTeamManager() const;
+
+    //AgentIDManager forwarded interface:
 
     const supplementary::AgentID* getIDFromBytes(const std::vector<uint8_t>& vectorID);
-
     template <class Prototype>
     const supplementary::AgentID* getID(Prototype& idPrototype);
 
-    ~AlicaEngine();
+private:
+    void setStepEngine(bool stepEngine);
+
+    PlanBase* planBase;
+    TeamObserver* teamObserver;
+    ExpressionHandler* expressionHandler;
+    BehaviourPool* behaviourPool;
+    const RoleSet* roleSet;
+    VariableSyncModule* variableSyncModule;
+    AuthorityManager* auth;
+    PlanSelector* planSelector;
+    TeamManager* teamManager;
+    PartialAssignmentPool* pap;
+    SyncModule* syncModul;    
+    PlanRepository* planRepository;
+    BlackBoard _blackboard;
+    
+    supplementary::AgentIDManager* agentIDManager;
+    Logger* log;
+    PlanParser* planParser;
+
+    IRoleAssignment* roleAssignment;
+    IAlicaCommunication* communicator;
+    AlicaClock* alicaClock;
+
 
     /**
      * Switch the engine between normal operation and silent mode, in which no messages other than debugging information
      * are sent out.
      * This is useful for a robot on hot standby.
      */
-    bool maySendMessages;
-
-protected:
-    Logger* log;
-    RoleSet* roleSet;
-    SyncModule* syncModul;
-    AuthorityManager* auth;
-    ExpressionHandler* expressionHandler;
-    PlanSelector* planSelector;
-    TeamManager* teamManager;
-    PartialAssignmentPool* pap;
-    PlanBase* planBase;
-    VariableSyncModule* variableSyncModule;
-    PlanRepository* planRepository;
-    PlanParser* planParser;
-    BehaviourPool* behaviourPool;
-    TeamObserver* teamObserver;
-    supplementary::AgentIDManager* agentIDManager;
-
-    IRoleAssignment* roleAssignment;
-    IAlicaCommunication* communicator;
-    IAlicaClock* alicaClock;
-
-private:
+    bool _maySendMessages;
     /**
      * Set to have the engine's main loop wait on a signal via MayStep
      */
@@ -138,12 +161,11 @@ private:
      */
     bool useStaticRoles;
 
-    supplementary::SystemConfig* sc;
     bool stepCalled;
-    Plan* masterPlan;
-    map<int, ISolver*> solver;
 
-    void setStepEngine(bool stepEngine);
+    const Plan* masterPlan;
+    std::unordered_map<size_t, ISolverBase*> _solvers;
+    supplementary::SystemConfig* sc;
 };
 
 /**
@@ -160,10 +182,22 @@ const supplementary::AgentID* AlicaEngine::getID(Prototype& idPrototype) {
 }
 
 template <typename T>
-void AlicaEngine::abort(string msg, const T tail) {
-    stringstream ss;
+void AlicaEngine::abort(const std::string& msg, const T& tail) {
+    std::stringstream ss;
     ss << msg << tail;
     AlicaEngine::abort(ss.str());
 }
+
+template <class SolverType>
+void AlicaEngine::addSolver(SolverType* solver) {
+    _solvers.emplace(typeid(SolverType).hash_code(), solver);
+}
+
+template <class SolverType>
+SolverType* AlicaEngine::getSolver() const {
+    std::unordered_map<size_t, ISolverBase*>::const_iterator cit = _solvers.find(typeid(SolverType).hash_code());
+    return (cit == _solvers.end()) ? nullptr : static_cast<SolverType*>(cit->second);
+}
+
 
 }  // namespace alica

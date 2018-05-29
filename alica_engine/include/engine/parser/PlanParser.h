@@ -30,39 +30,39 @@ public:
     PlanParser(PlanRepository* rep);
     virtual ~PlanParser();
 
-    virtual Plan* parsePlanTree(string masterplan);
+    virtual const Plan* parsePlanTree(const std::string& masterplan);
     virtual void ignoreMasterPlanId(bool val);
-    virtual map<long, AlicaElement*>* getParsedElements();
+    virtual map<int64_t, AlicaElement*>* getParsedElements();
 
-    string getCurrentFile();
+    std::string getCurrentFile();
     void setCurrentFile(string currentFile);
     void parseFileLoop();
-    RoleSet* parseRoleSet(string roleSetName, string roleSetDir);
-    long parserId(tinyxml2::XMLElement* node);
+    const RoleSet* parseRoleSet(string roleSetName, string roleSetDir);
+    int64_t parserId(tinyxml2::XMLElement* node);
 
 private:
     supplementary::SystemConfig* sc;
     shared_ptr<ModelFactory> mf;
     PlanRepository* rep;
     Plan* masterPlan;
-    string planDir;
-    string roleDir;
-    string basePlanPath;
-    string baseRolePath;
-    string currentDirectory;
-    string domainConfigFolder;
-    string currentFile;
+    std::string planDir;
+    std::string roleDir;
+    std::string basePlanPath;
+    std::string baseRolePath;
+    std::string currentDirectory;
+    std::string domainConfigFolder;
+    std::string currentFile;
     void parseTaskFile(string currentFile);
     void parseRoleDefFile(string currentFile);
     void parseCapabilityDefFile(string currentFile);
     void parsePlanTypeFile(string currentFile);
     void parseBehaviourFile(string currentFile);
     void parsePlanningProblem(string currentFile);
-    Plan* parsePlanFile(string& planFile);
-    long fetchId(const string& idString, long id);
-    string findDefaultRoleSet(string dir);
+    Plan* parsePlanFile(const std::string& planFile);
+    int64_t fetchId(const std::string& idString, int64_t id);
+    std::string findDefaultRoleSet(string dir);
 
-    list<string> filesToParse;
-    list<string> filesParsed;
+    std::list<std::string> filesToParse;
+    std::list<std::string> filesParsed;
 };
 }  // namespace alica

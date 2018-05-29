@@ -10,7 +10,7 @@
 #include <mutex>
 #include <memory>
 #include <typeinfo>
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/RunningPlan.h"
 #include "engine/RuleBook.h"
 
@@ -27,7 +27,6 @@ class IAlicaCommunication;
 class Task;
 class State;
 class EntryPoint;
-class IAlicaClock;
 class Assignment;
 class StateCollection;
 class AlicaEngine;
@@ -38,20 +37,20 @@ class AlicaEngine;
  */
 class PlanBase {
 public:
-    PlanBase(AlicaEngine* ae, Plan* masterplan);
+    PlanBase(AlicaEngine* ae, const Plan* masterplan);
     ~PlanBase();
     std::condition_variable* getStepModeCV();
     const std::shared_ptr<RunningPlan> getRootNode() const;
     void setRootNode(std::shared_ptr<RunningPlan> rootNode);
     const AlicaTime getloopInterval() const;
-    void setLoopInterval(ulong loopInterval);
+    void setLoopInterval(AlicaTime loopInterval);
     void stop();
     void start();
     void addFastPathEvent(shared_ptr<RunningPlan> p);
     std::shared_ptr<const RunningPlan> getDeepestNode() const;
     std::shared_ptr<RunningPlan> getRootNode();
 
-    /*const*/ Plan* getMasterPlan() const { return _masterPlan; }
+    const Plan* getMasterPlan() const { return _masterPlan; }
     bool isWaiting() const { return _isWaiting; }
 
 private:
@@ -62,19 +61,19 @@ private:
      */
 
     AlicaEngine* _ae;
-    Plan* _masterPlan;
+    const Plan* _masterPlan;
 
     TeamObserver* _teamObserver;
     IRoleAssignment* _ra;
     SyncModule* _syncModel;
     AuthorityManager* _authModul;
     IAlicaCommunication* _statusPublisher;
-    IAlicaClock* _alicaClock;
+    AlicaClock* _alicaClock;
 
-    shared_ptr<RunningPlan> _rootNode;
-    shared_ptr<const RunningPlan> _deepestNode;
+    std::shared_ptr<RunningPlan> _rootNode;
+    std::shared_ptr<const RunningPlan> _deepestNode;
 
-    thread* _mainThread;
+    std::thread* _mainThread;
     Logger* _log;
     AlicaEngineInfo* _statusMessage;
 
@@ -89,7 +88,7 @@ private:
     std::mutex _lomutex;
     std::mutex _stepMutex;
 
-    queue<shared_ptr<RunningPlan>> _fpEvents;
+    std::queue<shared_ptr<RunningPlan>> _fpEvents;
     std::condition_variable _fpEventWait;
     std::condition_variable _stepModeCV;
     RuleBook _ruleBook;

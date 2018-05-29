@@ -1,15 +1,14 @@
-#pragma
+#pragma once
 
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 
 namespace alicaRosProxy {
 
-class AlicaROSClock : public virtual alica::IAlicaClock {
+class AlicaROSClock : public virtual alica::AlicaClock {
 public:
     AlicaROSClock();
     virtual ~AlicaROSClock();
-    virtual alica::AlicaTime now();
-    virtual void sleep(long us);
+    virtual alica::AlicaTime now() const override;
 };
 
 } /* namespace alicaRosProxy */

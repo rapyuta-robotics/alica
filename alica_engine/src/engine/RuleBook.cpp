@@ -42,7 +42,7 @@ RuleBook::~RuleBook() {}
  * @param masterPlan A Plan
  * @return the shared_ptr of a Runningplan constructed from the given plan
  */
-std::shared_ptr<RunningPlan> RuleBook::initialisationRule(Plan* masterPlan) {
+std::shared_ptr<RunningPlan> RuleBook::initialisationRule(const Plan* masterPlan) {
 #ifdef RULE_debug
     cout << "RB: Init-Rule called." << endl;
 #endif

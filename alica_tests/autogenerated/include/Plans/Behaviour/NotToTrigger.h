@@ -2,28 +2,30 @@
 #define NotToTrigger_H_
 
 #include "DomainBehaviour.h"
-/*PROTECTED REGION ID(inc1429017274116) ENABLED START*/  // Add additional includes here
+/*PROTECTED REGION ID(inc1429017274116) ENABLED START*/ // Add additional includes here
 #include "TestWorldModel.h"
 
-#include <supplementary/ITrigger.h>
 #include <SystemConfig.h>
+#include <supplementary/ITrigger.h>
 /*PROTECTED REGION END*/
-namespace alica {
-class NotToTrigger : public DomainBehaviour {
-public:
+namespace alica
+{
+class NotToTrigger : public DomainBehaviour
+{
+  public:
     NotToTrigger();
     virtual ~NotToTrigger();
     virtual void run(void* msg);
-    /*PROTECTED REGION ID(pub1429017274116) ENABLED START*/  // Add additional public methods here
+    /*PROTECTED REGION ID(pub1429017274116) ENABLED START*/ // Add additional public methods here
     int callCounter;
     int initCounter;
     /*PROTECTED REGION END*/
-protected:
+  protected:
     virtual void initialiseParameters();
-    /*PROTECTED REGION ID(pro1429017274116) ENABLED START*/  // Add additional protected methods here
+    /*PROTECTED REGION ID(pro1429017274116) ENABLED START*/ // Add additional protected methods here
     /*PROTECTED REGION END*/
-private:
-    /*PROTECTED REGION ID(prv1429017274116) ENABLED START*/  // Add additional private methods here
+  private:
+/*PROTECTED REGION ID(prv1429017274116) ENABLED START*/ // Add additional private methods here
         /*PROTECTED REGION END*/};
         } /* namespace alica */
 

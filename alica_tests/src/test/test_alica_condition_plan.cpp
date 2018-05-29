@@ -1,6 +1,7 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 #include "engine/model/State.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
@@ -8,7 +9,6 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/BehaviourPool.h"
 #include "engine/PlanBase.h"
-#include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/TeamObserver.h"
@@ -23,7 +23,6 @@
 #include "engine/collections/StateCollection.h"
 #include <thread>
 #include <iostream>
-#include "SolverType.h"
 #include <CGSolver.h>
 #include <engine/constraintmodul/Query.h>
 #include <Plans/Behaviour/Attack.h>
@@ -60,19 +59,18 @@ protected:
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+        ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-        ae->addSolver(SolverType::DUMMYSOLVER, new alica::reasoner::ConstraintTestPlanDummySolver(ae));
-        ae->addSolver(SolverType::GRADIENTSOLVER, new alica::reasoner::CGSolver(ae));
+        ae->addSolver(new alica::reasoner::ConstraintTestPlanDummySolver(ae));
+        ae->addSolver(new alica::reasoner::CGSolver(ae));
     }
 
     virtual void TearDown() {
         ae->shutdown();
         sc->shutdown();
-        delete ae->getIAlicaClock();
         delete ae->getCommunicator();
-        delete ae->getSolver(SolverType::DUMMYSOLVER);
-        delete ae->getSolver(SolverType::GRADIENTSOLVER);
+        delete ae->getSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
+        delete ae->getSolver<alica::reasoner::CGSolver>();
         delete cc;
         delete bc;
         delete uc;
@@ -83,6 +81,8 @@ protected:
  * Tests if Behaviour with Constraints are called
  */
 TEST_F(AlicaConditionPlan, solverTest) {
+    ASSERT_NO_SIGNAL
+
     ae->init(bc, cc, uc, crc);
 
     const alica::PlanRepository* rep = ae->getPlanRepository();
@@ -114,13 +114,7 @@ TEST_F(AlicaConditionPlan, solverTest) {
     ASSERT_TRUE(found) << "Sub variable not found in parametrisation";
 
     ae->start();
-    ae->stepNotify();
-    //	unsigned int sleepTime = 1;
-    chrono::milliseconds sleepTime(33);
-    this_thread::sleep_for(sleepTime);
-    while (!ae->getPlanBase()->isWaiting()) {
-        this_thread::sleep_for(sleepTime);
-    }
+    step(ae);
 
     shared_ptr<BasicBehaviour> basicBehaviour =
             (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getBasicBehaviour();
@@ -129,5 +123,7 @@ TEST_F(AlicaConditionPlan, solverTest) {
 
     ASSERT_GT(alica::reasoner::ConstraintTestPlanDummySolver::getGetSolutionCallCounter(), 0);
     ASSERT_EQ(alica::ConstraintUsingBehaviour::result.size(), 1) << "Wrong result size";
-    EXPECT_EQ(alica::ConstraintUsingBehaviour::result[0], "Y");
+    const ByteArray& ba = ae->getBlackBoard().getValue(alica::ConstraintUsingBehaviour::result[0]);
+    std::string resultingString(reinterpret_cast<const char*>(ba.begin()),ba.size());
+    EXPECT_EQ("Y",resultingString);
 }

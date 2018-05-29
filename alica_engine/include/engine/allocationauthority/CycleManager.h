@@ -2,7 +2,7 @@
 //#define CM_DEBUG
 
 #include "engine/allocationauthority/AllocationDifference.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "supplementary/AgentID.h"
 
 #include <vector>

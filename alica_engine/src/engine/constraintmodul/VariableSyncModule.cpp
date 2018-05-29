@@ -4,405 +4,288 @@
 #include "SystemConfig.h"
 #include "engine/AlicaEngine.h"
 #include "engine/IAlicaCommunication.h"
-#include "engine/teammanager/TeamManager.h"
 #include "engine/TeamObserver.h"
 #include "engine/constraintmodul/ResultEntry.h"
-#include "engine/containers/SolverResult.h"
 #include "engine/model/Variable.h"
+#include "engine/teammanager/TeamManager.h"
 #include <algorithm>
 #include <cmath>
-#include <math.h>
 
-namespace alica {
+#include <assert.h>
+
+namespace alica
+{
 VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
-        : ae(ae)
-        , running(false)
-        , timer(nullptr)
-        , distThreshold(0)
-        , communicator(nullptr)
-        , ttl4Communication(0)
-        , ttl4Usage(0)
-        , communicationEnabled(false)
-        , ownId(nullptr) {}
-
-VariableSyncModule::~VariableSyncModule() {
-    delete timer;
+    : _ae(ae)
+    , _running(false)
+    , _timer(nullptr)
+    , _distThreshold(0)
+    , _communicator(nullptr)
+    , _ttl4Communication(AlicaTime::zero())
+    , _ttl4Usage(AlicaTime::zero())
+{
 }
 
-void VariableSyncModule::init() {
-    if (running) {
+VariableSyncModule::~VariableSyncModule()
+{
+    delete _timer;
+}
+
+void VariableSyncModule::init()
+{
+    assert(!_running);
+    if (_running) {
         return;
     }
-    running = true;
+    _running = true;
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-    communicationEnabled = (*sc)["Alica"]->get<bool>("Alica", "CSPSolving", "EnableCommunication", NULL);
-    ttl4Communication = 1000000 * (*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Communication", NULL);
-    ttl4Usage = 1000000 * (*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Usage", NULL);
-    ownId = ae->getTeamManager()->getLocalAgentID();
-    ownResults = make_shared<ResultEntry>(ownId, ae);
-    store.push_back(ownResults);
-    distThreshold = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "SeedMergingThreshold", NULL);
+    bool communicationEnabled = (*sc)["Alica"]->get<bool>("Alica", "CSPSolving", "EnableCommunication", NULL);
+    _ttl4Communication = AlicaTime::milliseconds((*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Communication", NULL));
+    _ttl4Usage = AlicaTime::milliseconds((*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Usage", NULL));
+    _distThreshold = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "SeedMergingThreshold", NULL);
+
+    AgentIDConstPtr ownId = _ae->getTeamManager()->getLocalAgentID();
+    _ownResults = ResultEntry(ownId);
+    _publishData.senderID = ownId;
+
     if (communicationEnabled) {
-        communicator = ae->getCommunicator();
-        int interval = (int) round(
-                1000.0 / (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "CommunicationFrequency", NULL));
-        timer = new supplementary::NotifyTimer<VariableSyncModule>(interval, &VariableSyncModule::publishContent, this);
-        timer->start();
+        _communicator = _ae->getCommunicator();
+        double communicationFrequency = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "CommunicationFrequency", NULL);
+        AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
+        if (_timer == nullptr) {
+            _timer = new supplementary::NotifyTimer<VariableSyncModule>(interval.inMilliseconds(), &VariableSyncModule::publishContent, this);
+        }
+        _timer->start();
     }
 }
 
-void VariableSyncModule::close() {
-    this->running = false;
-    if (timer) {
-        timer->stop();
-    }
-    timer = nullptr;
-}
-
-void VariableSyncModule::clear() {
-    for (auto r : store) {
-        r->clear();
+void VariableSyncModule::close()
+{
+    _running = false;
+    if (_timer) {
+        _timer->stop();
     }
 }
 
-void VariableSyncModule::onSolverResult(shared_ptr<SolverResult> msg) {
-    if (*(msg->senderID) == *(ownId)) {
+void VariableSyncModule::clear()
+{
+    for (ResultEntry& r : _store) {
+        r.clear();
+    }
+}
+
+void VariableSyncModule::onSolverResult(const SolverResult& msg)
+{
+    if (*(msg.senderID) == *_ownResults.getId()) {
         return;
     }
-    if (ae->getTeamManager()->isAgentIgnored(msg->senderID)) {
+    if (_ae->getTeamManager()->isAgentIgnored(msg.senderID)) {
         return;
     }
-    bool found = false;
-    shared_ptr<ResultEntry> re = nullptr;
-    for (int i = 0; i < this->store.size(); ++i) {
-        re = store[i];
-        if (*(re->getId()) == *(msg->senderID)) {
-            found = true;
+    ResultEntry* re = nullptr;
+
+    for (ResultEntry& r : _store) {
+        if (*(r.getId()) == *(msg.senderID)) {
+            re = &r;
             break;
         }
     }
-    // Lockguard here!
-    if (!found) {
-        re = make_shared<ResultEntry>(msg->senderID, ae);
-        this->store.push_back(re);
+    if (re == nullptr) {
+        lock_guard<std::mutex> lock(_mutex);
+        _store.emplace_back(msg.senderID);
+        re = &_store.back();
     }
-    for (auto sv : msg->vars) {
-        shared_ptr<vector<uint8_t>> tmp = make_shared<vector<uint8_t>>(sv->value);
-        re->addValue(sv->id, tmp);
+    AlicaTime now = _ae->getAlicaClock()->now();
+    for (const SolverVar& sv : msg.vars) {
+        Variant v;
+        v.loadFrom(sv.value);
+        re->addValue(sv.id, v, now);
     }
 }
 
-void VariableSyncModule::publishContent() {
-    if (!this->running)
+void VariableSyncModule::publishContent()
+{
+    if (!_running) {
         return;
-    if (!ae->isMaySendMessages())
+    }
+    if (!_ae->maySendMessages()) {
         return;
-    shared_ptr<vector<SolverVar*>> lv = ownResults->getCommunicatableResults(ttl4Communication);
-    if (lv->size() == 0)
+    }
+
+    _publishData.vars.clear();
+    AlicaTime now = _ae->getAlicaClock()->now();
+    _ownResults.getCommunicatableResults(now - _ttl4Communication, _publishData.vars);
+    if (_publishData.vars.empty()) {
         return;
-    SolverResult sr;
-    sr.senderID = ownId;
-    sr.vars = *lv;
-    communicator->sendSolverResult(sr);
+    }
+    _communicator->sendSolverResult(_publishData);
 }
 
-void VariableSyncModule::postResult(long vid, shared_ptr<vector<uint8_t>>& result) {
-    this->ownResults->addValue(vid, result);
+void VariableSyncModule::postResult(int64_t vid, Variant result)
+{
+    _ownResults.addValue(vid, result, _ae->getAlicaClock()->now());
 }
 
-shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>> VariableSyncModule::getSeeds(
-        shared_ptr<vector<const Variable*>> query, shared_ptr<vector<shared_ptr<vector<double>>>> limits) {
-    // Lockguard here!
+int VariableSyncModule::getSeeds(const VariableGrp& query, const std::vector<double>& limits, std::vector<Variant>& o_seeds) const
+{
+    const int dim = query.size();
+    // TODO: use only stack memory for low dimensionality
+    std::vector<double> scaling(dim);
+    std::vector<Variant> vec(dim);
 
-    int dim = query->size();
+    std::vector<VotedSeed> seeds;
 
-    /*cout << "VSyncMod:";
-    for(auto& avar : *query) {
-            cout << " " << avar->getId();
+    for (int i = 0; i < dim; ++i) {
+        scaling[i] = limits[i * 2 + 1] - limits[i * 2];
+        scaling[i] *= scaling[i]; // Sqr it for dist calculation speed up
     }
-    cout << endl;*/
-
-    list<shared_ptr<VotedSeed>> seeds;
-    vector<double> scaling(dim);
-    for (int i = 0; i < dim; i++) {
-        scaling[i] = (limits->at(i)->at(1) - limits->at(i)->at(0));
-        scaling[i] *= scaling[i];  // Sqr it for dist calculation speed up
-    }
+    AlicaTime earliest = _ae->getAlicaClock()->now() - _ttl4Usage;
     //		cout << "VSM: Number of Seeds in Store: " << this->store.size() << endl;
-    for (int i = 0; i < this->store.size(); i++) {
-        shared_ptr<ResultEntry> re = this->store.at(i);  // allow for lock free iteration (no value is deleted from
-                                                         // store)
-        shared_ptr<vector<shared_ptr<vector<uint8_t>>>> vec = re->getValues(query, this->ttl4Usage);
-        if (vec == nullptr) {
+    if (_ownResults.getValues(query, earliest, vec)) {
+        seeds.emplace_back(std::move(vec));
+    }
+
+    lock_guard<std::mutex> lock(_mutex);
+
+    for (const ResultEntry& re : _store) {
+        bool any = re.getValues(query, earliest, vec);
+        if (!any) {
             continue;
         }
         bool found = false;
-        for (auto s : seeds) {
-            if (s->takeVector(vec, scaling, distThreshold, true)) {
+        for (VotedSeed& s : seeds) {
+            if (s.takeVector(vec, scaling, _distThreshold)) {
                 found = true;
                 break;
             }
         }
         if (!found) {
-            seeds.push_back(make_shared<VotedSeed>(dim, vec));
+            seeds.emplace_back(std::move(vec));
         }
     }
 #ifdef RS_DEBUG
-    cout << "RS: Generated " << seeds.size() << "seeds" << endl;
-    for (int i = 0; i < seeds.size(); i++) {
-        cout << "Seed " << i;  // (sup:{1}): ",i);
-        int i = 0;
-        for (auto j = seeds.begin(); j != seeds.end(); j++, i++) {
-            cout << (*j)->values.at(i) << "\t";
+    std::cout << "RS: Generated " << seeds.size() << "seeds" << std::endl;
+    for (int i = 0; i < seeds.size(); ++i) {
+        cout << "Seed " << i << ": "; // (sup:{1}): ",i);
+        for (auto j = 0; j < dim; ++j) {
+            cout << seeds[i].values[j] << "\t";
         }
         cout << endl;
     }
-
 #endif
 
-    int maxNum = min((int) seeds.size(), dim);
-    auto ret = make_shared<vector<shared_ptr<vector<shared_ptr<vector<uint8_t>>>>>>(maxNum);
+    int maxNum = std::min(static_cast<int>(seeds.size()), dim);
 
-    seeds.sort([](shared_ptr<VotedSeed>& a, shared_ptr<VotedSeed>& b) {
-        if (a->totalSupCount != b->totalSupCount) {
-            return a->totalSupCount > b->totalSupCount;
+    std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {
+        if (a._totalSupCount != b._totalSupCount) {
+            return a._totalSupCount > b._totalSupCount;
         } else {
-            if (a->values == nullptr || a->values->size() == 0)
+            /*
+            if (a.values == nullptr || a.values.size() == 0)
                 return true;
-            if (b->values == nullptr || b->values->size() == 0)
+            if (b.values == nullptr || b.values.size() == 0)
                 return false;
-
-            return a->hash > b->hash;
-            // return &*a > &*b;
+            */
+            return a._hash > b._hash;
         }
     });
-
-    auto iter = seeds.begin();
-    for (int i = 0; i < maxNum; i++) {
-        ret->at(i) = (*iter)->values;
-        iter++;
+    int i = 0;
+    o_seeds.resize(dim * maxNum);
+    for (const VotedSeed& vs : seeds) {
+        memcpy(&*(o_seeds.begin() + i), &*vs._values.begin(), sizeof(Variant) * dim);
+        i += dim;
     }
-    //		cout << "VSM: Number of present seeds: " << ret->size() << " dim: "<< dim << " seedcount: "<<
-    // seeds.size()
-    //<<  endl;
 
-    return ret;
+    return maxNum;
 }
 
-VariableSyncModule::VotedSeed::VotedSeed(int dim, shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v) {
-    this->values = v;
-    this->supporterCount = vector<int>(dim);
-    this->dim = dim;
-    hash = 0;
-    if (v != nullptr) {
-        for (int i = 0; i < dim; ++i) {
-            if (v->at(i) == nullptr) {
-                continue;
-            }
-            if (v->at(i)->size() > 0) {
-                this->totalSupCount++;
-            }
+VariableSyncModule::VotedSeed::VotedSeed(std::vector<Variant>&& vs)
+    : _values(std::move(vs))
+    , _supporterCount(_values.size())
+    , _hash(0)
+    , _totalSupCount(0)
+{
+    assert(_values.size() == _supporterCount.size());
+    for (const Variant& v : _values) {
+        if (v.isSet()) {
+            ++_totalSupCount;
         }
     }
 }
 
-shared_ptr<vector<double>> VariableSyncModule::VotedSeed::deserializeToDoubleVec(
-        shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v) {
-    shared_ptr<vector<double>> singleseed = make_shared<vector<double>>();
-    singleseed->reserve(v->size());
-    for (auto& serialvalue : *v) {
-        if (serialvalue != nullptr) {
-            double v;
-            uint8_t* pointer = (uint8_t*) &v;
-            if (serialvalue->size() == sizeof(double)) {
-                for (int k = 0; k < sizeof(double); k++) {
-                    *pointer = serialvalue->at(k);
-                    pointer++;
-                }
-                singleseed->push_back(v);
-            } else {
-                cerr << "VSM: Received Seed that is not size of double" << endl;
-                cout << "VSM: Received Seed that is not size of double" << endl;
-                break;
-            }
-        } else {
-            singleseed->push_back(std::numeric_limits<double>::max());
-        }
-    }
-
-    return singleseed;
+VariableSyncModule::VotedSeed::VotedSeed(VotedSeed&& o)
+    : _values(std::move(o._values))
+    , _supporterCount(std::move(o._supporterCount))
+    , _hash(o._hash)
+    , _totalSupCount(o._totalSupCount)
+{
 }
-shared_ptr<vector<shared_ptr<vector<uint8_t>>>> VariableSyncModule::VotedSeed::serializeFromDoubleVec(
-        shared_ptr<vector<double>> d) {
-    shared_ptr<vector<shared_ptr<vector<uint8_t>>>> res = make_shared<vector<shared_ptr<vector<uint8_t>>>>();
 
-    for (int i = 0; i < d->size(); i++) {
-        uint8_t* tmp = ((uint8_t*) &d->at(i));
-        shared_ptr<vector<uint8_t>> result = make_shared<vector<uint8_t>>(sizeof(double));
-        for (int s = 0; s < sizeof(double); s++) {
-            result->at(s) = *tmp;
-            tmp++;
-        }
-        res->push_back(result);
-    }
-
-    return res;
+VariableSyncModule::VotedSeed& VariableSyncModule::VotedSeed::operator=(VotedSeed&& o)
+{
+    _values = std::move(o._values);
+    _supporterCount = std::move(o._supporterCount);
+    _hash = o._hash;
+    _totalSupCount = o._totalSupCount;
+    return *this;
 }
-bool VariableSyncModule::VotedSeed::takeVector(shared_ptr<vector<shared_ptr<vector<uint8_t>>>> v,
-        vector<double>& scaling, double distThreshold, bool isDouble) {
-    //		if(!isDouble) {
-    //
-    //			int nans = 0;
-    //			double distSqr = 0;
-    //
-    //			bool nan = true;
-    //			bool sameRes = true;
-    //			bool nptrs = true;
-    //
-    //			if(v == nullptr || values == nullptr) {
-    //				return true;
-    //			}
-    //			if(values->size() != v->size()) {
-    //				return false;
-    //			}
-    //
-    //			for(int i = 0; i  < dim; ++i) {
-    //				if(v->at(i) != nullptr) {
-    //					nptrs = false;
-    //				}
-    //				else {
-    //					continue;
-    //				}
-    //				if(values->at(i) == nullptr) continue;
-    //
-    //				if(values->at(i)->size() == v->at(i)->size()) {
-    //					for(int j = 0; j < v->at(i)->size(); j++) {
-    //						nan = false;
-    //						if(values->at(i)->at(j) != v->at(i)->at(j)) {
-    //							sameRes = false;
-    //						}
-    //					}
-    //				} else {
-    //					return true;
-    //				}
-    //			}
-    //
-    //			if(nan || sameRes || nptrs) {
-    //	//			cout << "VSM: takeVector true."  << nan << sameRes << nptrs << endl;
-    //				if(sameRes) this->totalSupCount++;
-    //				return true;
-    //			} else {
-    //	//			cout << "VSM: takeVector false." << endl;
-    //				return false;
-    //			}
-    //		} else {
-    shared_ptr<vector<double>> v1 = deserializeToDoubleVec(v);
-    shared_ptr<vector<double>> values1 = deserializeToDoubleVec(values);
+
+bool VariableSyncModule::VotedSeed::takeVector(const std::vector<Variant>& v, const std::vector<double>& scaling, double distThreshold)
+{
     int nans = 0;
+    const int dim = static_cast<int>(v.size());
     double distSqr = 0;
+
     for (int i = 0; i < dim; ++i) {
-        if (!std::isnan(v1->at(i)) && v1->at(i) != std::numeric_limits<double>::max()) {
-            if (!std::isnan(values1->at(i))) {
-                if (scaling[i] != 0) {
-                    distSqr += ((values1->at(i) - v1->at(i)) * (values1->at(i) - v1->at(i))) / scaling[i];
+        if (v[i].isDouble()) {
+            if (_values[i].isDouble()) {
+                double d = v[i].getDouble();
+                if (!std::isnan(d)) {
+                    double cur = _values[i].getDouble();
+                    double dist = (d - cur) * (d - cur);
+                    if (scaling[i] > 0.0) {
+                        dist /= scaling[i];
+                    }
+                    distSqr += dist;
                 } else {
-                    distSqr += (values1->at(i) - v1->at(i)) * (values1->at(i) - v1->at(i));
+                    ++nans;
                 }
             }
         } else {
-            nans++;
+            ++nans;
         }
     }
-    if (dim == nans) {
-        hash = -1;
-        return true;  // silently absorb a complete NaN vector
-    }
-    if (distSqr / (dim - nans) < distThreshold) {
-        for (int i = 0; i < dim; ++i) {
-            if (!std::isnan(v1->at(i))) {
-                if (std::isnan(values1->at(i))) {
-                    this->supporterCount[i] = 1;
-                    this->totalSupCount++;
 
-                    values1->at(i) = v1->at(i);
-                } else {
-                    values1->at(i) = values1->at(i) * this->supporterCount[i] + v1->at(i);
-                    this->supporterCount[i]++;
-                    this->totalSupCount++;
-                    values1->at(i) /= this->supporterCount[i];
+    if (dim == nans) {
+        return true; // silently absorb a complete NaN vector
+    }
+    if (distSqr / (dim - nans) < distThreshold) { // merge
+        for (int i = 0; i < dim; ++i) {
+            if (v[i].isDouble()) {
+                double d = v[i].getDouble();
+                if (!std::isnan(d)) {
+                    if (_values[i].isDouble()) {
+                        double nv = _values[i].getDouble() * _supporterCount[i] + d;
+                        ++_supporterCount[i];
+                        nv /= _supporterCount[i];
+                        _values[i].setDouble(nv);
+                    } else {
+                        _supporterCount[i] = 1;
+                        _values[i].setDouble(d);
+                    }
+                    ++_totalSupCount;
                 }
             }
         }
-
-        this->values = serializeFromDoubleVec(values1);
-
-        hash = 0;
-        for (double d : *values1) {
-            if (!std::isnan(d) && d != std::numeric_limits<double>::max())
-                hash += d;
+        // recalc hash:
+        _hash = 0;
+        for (const Variant v : _values) {
+            if (v.isDouble()) {
+                _hash += v.getDouble();
+            }
         }
         return true;
     }
-    hash = 0;
-    for (double d : *values1) {
-        if (!std::isnan(d) && d != std::numeric_limits<double>::max())
-            hash += d;
-    }
     return false;
-
-    //		}
-
-    //		for (int i = 0; i < dim; ++i)
-    //		{
-    //
-    //			if (!std::isnan(v->at(i)))
-    //			{
-    //				if (!std::isnan(values->at(i)))
-    //				{
-    //					if (scaling[i] != 0)
-    //					{
-    //						distSqr += ((values->at(i) - v->at(i)) * (values->at(i) - v->at(i))) /
-    // scaling[i];
-    //					}
-    //					else
-    //					{
-    //						distSqr += (values->at(i) - v->at(i)) * (values->at(i) - v->at(i));
-    //					}
-    //				}
-    //			}
-    //			else
-    //			{
-    //				nans++;
-    //			}
-    //		}
-    //		if (dim == nans)
-    //		{
-    //			return true; //silently absorb a complete NaN vector
-    //		}
-    //		if (distSqr / (dim - nans) < distThreshold)
-    //		{
-    //			for (int i = 0; i < dim; ++i)
-    //			{
-    //				if (!std::isnan(v->at(i)))
-    //				{
-    //					if (std::isnan(values->at(i)))
-    //					{
-    //						this->supporterCount[i] = 1;
-    //						this->totalSupCount++;
-    //						this->values->at(i) = v->at(i);
-    //					}
-    //					else
-    //					{
-    //						this->values->at(i) = values->at(i) * this->supporterCount[i] +
-    // v->at(i);
-    //						this->supporterCount[i]++;
-    //						this->totalSupCount++;
-    //						this->values->at(i) /= this->supporterCount[i];
-    //					}
-    //				}
-    //			}
-    //			return true;
-    //		}
-    //		return false;
 }
 } /* namespace alica */
