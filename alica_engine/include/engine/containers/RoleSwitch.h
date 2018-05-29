@@ -1,10 +1,10 @@
 #pragma once
 
-using namespace std;
-
-namespace alica {
-struct RoleSwitch {
-    long roleID;
+namespace alica
+{
+struct RoleSwitch
+{
+    int64_t roleID;
 };
 
 } /* namespace alica */

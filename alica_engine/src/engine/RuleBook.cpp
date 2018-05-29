@@ -1,29 +1,32 @@
 #include "engine/RuleBook.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
-#include "engine/RunningPlan.h"
+#include "engine/Logger.h"
 #include "engine/RunningPlan.h"
 #include "engine/UtilityFunction.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/collections/StateCollection.h"
-#include "engine/Logger.h"
-#include "engine/model/EntryPoint.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
+#include "engine/model/PreCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Transition.h"
-#include "engine/model/PreCondition.h"
-#include "engine/teammanager/TeamManager.h"
 #include "engine/planselector/PlanSelector.h"
+#include "engine/teammanager/TeamManager.h"
+#include <SystemConfig.h>
 #include <engine/constraintmodul/ConditionStore.h>
 #include <engine/syncmodule/SyncModule.h>
-#include <SystemConfig.h>
 
-namespace alica {
+namespace alica
+{
+
+using std::cout;
+using std::endl;
 /**
  * Basic constructor
  */
-RuleBook::RuleBook(AlicaEngine* ae) {
+RuleBook::RuleBook(AlicaEngine* ae)
+{
     this->ae = ae;
     this->to = ae->getTeamObserver();
     this->tm = ae->getTeamManager();
@@ -42,7 +45,8 @@ RuleBook::~RuleBook() {}
  * @param masterPlan A Plan
  * @return the shared_ptr of a Runningplan constructed from the given plan
  */
-std::shared_ptr<RunningPlan> RuleBook::initialisationRule(const Plan* masterPlan) {
+std::shared_ptr<RunningPlan> RuleBook::initialisationRule(const Plan* masterPlan)
+{
 #ifdef RULE_debug
     cout << "RB: Init-Rule called." << endl;
 #endif
@@ -51,7 +55,7 @@ std::shared_ptr<RunningPlan> RuleBook::initialisationRule(const Plan* masterPlan
     }
 
     std::shared_ptr<RunningPlan> main = std::make_shared<RunningPlan>(ae, masterPlan);
-    main->setAssignment(make_shared<Assignment>(masterPlan));
+    main->setAssignment(std::make_shared<Assignment>(masterPlan));
 
     main->setAllocationNeeded(true);
     tm->fillWithActiveAgentIDs(main->editRobotsAvail());
@@ -71,7 +75,8 @@ std::shared_ptr<RunningPlan> RuleBook::initialisationRule(const Plan* masterPlan
  * @param r A shared_ptr of a RunningPlan
  * @return A PlanChange
  */
-PlanChange RuleBook::visit(shared_ptr<RunningPlan> r) {
+PlanChange RuleBook::visit(shared_ptr<RunningPlan> r)
+{
     int changes = 0;
     bool doDynAlloc = true;
     PlanChange changeRecord = PlanChange::NoChange;
@@ -103,7 +108,7 @@ PlanChange RuleBook::visit(shared_ptr<RunningPlan> r) {
         changeRecord = updateChange(changeRecord, propChange);
 
         if (propChange != PlanChange::NoChange) {
-            break;  // abort applying rules to this plan as propagation has occurred
+            break; // abort applying rules to this plan as propagation has occurred
         }
 
     } while (changeRecord != PlanChange::NoChange && ++changes < this->maxConsecutiveChanges);
@@ -116,7 +121,8 @@ PlanChange RuleBook::visit(shared_ptr<RunningPlan> r) {
  * @param r A shared_ptr of a RunningPlan
  * @return PlanChange
  */
-PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r) {
+PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r)
+{
 #ifdef RULE_debug
     cout << "RB: dynAlloc-Rule called." << endl;
     cout << "RB: dynAlloc RP \n" << r->toString() << endl;
@@ -125,7 +131,7 @@ PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r) {
         return PlanChange::NoChange;
     }
     if (r->getParent().expired()) {
-        return PlanChange::NoChange;  // masterplan excluded
+        return PlanChange::NoChange; // masterplan excluded
     }
     if (!r->getCycleManagement()->mayDoUtilityCheck()) {
         return PlanChange::NoChange;
@@ -159,8 +165,7 @@ PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r) {
 
     if (possibleUtil - curUtil > r->getPlan()->getUtilityThreshold()) {
         // cout << "RB: AllocationDifference::Reason::utility " << endl;
-        r->getCycleManagement()->setNewAllocDiff(
-                r->getAssignment(), newr->getAssignment(), AllocationDifference::Reason::utility);
+        r->getCycleManagement()->setNewAllocDiff(r->getAssignment(), newr->getAssignment(), AllocationDifference::Reason::utility);
         const State* before = r->getActiveState();
         r->adaptAssignment(newr);
         if (r->getActiveState() != nullptr && r->getActiveState() != before)
@@ -182,7 +187,8 @@ PlanChange RuleBook::dynamicAllocationRule(shared_ptr<RunningPlan> r) {
  * @param r A shared_ptr of a RunningPlan
  * @return PlanChange
  */
-PlanChange RuleBook::authorityOverrideRule(shared_ptr<RunningPlan> r) {
+PlanChange RuleBook::authorityOverrideRule(shared_ptr<RunningPlan> r)
+{
 #ifdef RULE_debug
     cout << "RB: AuthorityOverride-Rule called." << endl;
 #endif
@@ -196,8 +202,7 @@ PlanChange RuleBook::authorityOverrideRule(shared_ptr<RunningPlan> r) {
         if (r->getCycleManagement()->setAssignment()) {
             log->eventOccured("AuthorityOverride(" + r->getPlan()->getName() + ")");
 #ifdef RULE_debug
-            cout << "RB: Authorative set assignment of " << r->getPlan()->getName()
-                 << " is:" << r->getAssignment()->toString() << endl;
+            cout << "RB: Authorative set assignment of " << r->getPlan()->getName() << " is:" << r->getAssignment()->toString() << endl;
 #endif
             return PlanChange::InternalChange;
         }
@@ -210,7 +215,8 @@ PlanChange RuleBook::authorityOverrideRule(shared_ptr<RunningPlan> r) {
  * @param r A shared_ptr of a RunningPlan
  * @return PlanChange
  */
-PlanChange RuleBook::planAbortRule(shared_ptr<RunningPlan> r) {
+PlanChange RuleBook::planAbortRule(shared_ptr<RunningPlan> r)
+{
     if (r->getFailHandlingNeeded())
         return PlanChange::NoChange;
     if (r->isBehaviour())
@@ -220,8 +226,7 @@ PlanChange RuleBook::planAbortRule(shared_ptr<RunningPlan> r) {
     if (!r->getCycleManagement()->mayDoUtilityCheck())
         return PlanChange::NoChange;
 
-    if ((r->getActiveState() != nullptr && r->getActiveState()->isFailureState()) || !r->getAssignment()->isValid() ||
-            !r->evalRuntimeCondition()) {
+    if ((r->getActiveState() != nullptr && r->getActiveState()->isFailureState()) || !r->getAssignment()->isValid() || !r->evalRuntimeCondition()) {
 #ifdef RULE_debug
         cout << "RB: PlanAbort-Rule called." << endl;
         cout << "RB: PlanAbort RP \n" << r->toString() << endl;
@@ -239,7 +244,8 @@ PlanChange RuleBook::planAbortRule(shared_ptr<RunningPlan> r) {
  * @param r A shared_ptr of a RunningPlan
  * @return PlanChange
  */
-PlanChange RuleBook::planRedoRule(shared_ptr<RunningPlan> r) {
+PlanChange RuleBook::planRedoRule(shared_ptr<RunningPlan> r)
+{
 #ifdef RULE_debug
     cout << "RB: PlanRedoRule-Rule called." << endl;
     cout << "RB: PlanRedoRule RP \n" << r->toString() << endl;
@@ -253,8 +259,8 @@ PlanChange RuleBook::planRedoRule(shared_ptr<RunningPlan> r) {
     if (r->getActiveState() == r->getOwnEntryPoint()->getState()) {
         r->addFailure();
 #ifdef RULE_debug
-        cout << "RB: PlanRedoRule not executed for " << r->getPlan()->getName()
-             << "- Unable to repair, as the current state is already the initial state." << endl;
+        cout << "RB: PlanRedoRule not executed for " << r->getPlan()->getName() << "- Unable to repair, as the current state is already the initial state."
+             << endl;
 #endif
         return PlanChange::FailChange;
     }
@@ -279,7 +285,8 @@ PlanChange RuleBook::planRedoRule(shared_ptr<RunningPlan> r) {
  * @param r A shared_ptr of a RunningPlan
  * @return PlanChange
  */
-PlanChange RuleBook::planReplaceRule(shared_ptr<RunningPlan> r) {
+PlanChange RuleBook::planReplaceRule(shared_ptr<RunningPlan> r)
+{
 #ifdef RULE_debug
     cout << "RB: PlanReplace-Rule called." << endl;
     cout << "RB: PlanReplace RP \n" << r->toString() << endl;
@@ -306,7 +313,8 @@ PlanChange RuleBook::planReplaceRule(shared_ptr<RunningPlan> r) {
  * @param r A shared_ptr of a RunningPlan
  * @return A PlanChange
  */
-PlanChange RuleBook::planPropagationRule(shared_ptr<RunningPlan> r) {
+PlanChange RuleBook::planPropagationRule(shared_ptr<RunningPlan> r)
+{
 #ifdef RULE_debug
     cout << "RB: PlanPropagation-Rule called." << endl;
     cout << "RB: PlanPropagation RP \n" << r->toString() << endl;
@@ -330,7 +338,8 @@ PlanChange RuleBook::planPropagationRule(shared_ptr<RunningPlan> r) {
  * @param r A shared_ptr of a RunningPlan
  * @return PlanChange
  */
-PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp) {
+PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp)
+{
 #ifdef RULE_debug
     cout << "RB: Allocation-Rule called." << endl;
     cout << "RB: Allocation RP \n" << rp->toString() << endl;
@@ -344,11 +353,9 @@ PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp) {
     rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState(), robots);
 
 #ifdef RULE_debug
-    cout << "RB: There are " << rp->getActiveState()->getPlans().size() << " Plans in State "
-         << rp->getActiveState()->getName() << endl;
+    cout << "RB: There are " << rp->getActiveState()->getPlans().size() << " Plans in State " << rp->getActiveState()->getName() << endl;
 #endif
-    shared_ptr<list<shared_ptr<RunningPlan>>> children =
-            this->ps->getPlansForState(rp, rp->getActiveState()->getPlans(), robots);
+    shared_ptr<list<shared_ptr<RunningPlan>>> children = this->ps->getPlansForState(rp, rp->getActiveState()->getPlans(), robots);
     if (children == nullptr || children->size() < rp->getActiveState()->getPlans().size()) {
         rp->addFailure();
 #ifdef RULE_debug
@@ -374,7 +381,8 @@ PlanChange RuleBook::allocationRule(shared_ptr<RunningPlan> rp) {
  * @param r A shared_ptr of a RunningPlan
  * @return PlanChange
  */
-PlanChange RuleBook::topFailRule(std::shared_ptr<RunningPlan> r) {
+PlanChange RuleBook::topFailRule(std::shared_ptr<RunningPlan> r)
+{
 #ifdef RULE_debug
     cout << "RB: TopFail-Rule called." << endl;
     cout << "RB: TopFail RP \n" << r->toString() << endl;
@@ -410,7 +418,8 @@ PlanChange RuleBook::topFailRule(std::shared_ptr<RunningPlan> r) {
  * @param r A shared_ptr of a RunningPlan
  * @return PlanChange
  */
-PlanChange RuleBook::transitionRule(shared_ptr<RunningPlan> r) {
+PlanChange RuleBook::transitionRule(shared_ptr<RunningPlan> r)
+{
 #ifdef RULE_debug
     cout << "RB: Transition-Rule called." << endl;
     cout << "RB: Transition RP \n" << r->toString() << endl;
@@ -424,7 +433,7 @@ PlanChange RuleBook::transitionRule(shared_ptr<RunningPlan> r) {
             continue;
         if (t->evalCondition(r)) {
             nextState = t->getOutState();
-            r->editConstraintStore().addCondition(((Condition*) t->getPreCondition()));
+            r->editConstraintStore().addCondition(((Condition*)t->getPreCondition()));
             break;
         }
     }
@@ -451,7 +460,8 @@ PlanChange RuleBook::transitionRule(shared_ptr<RunningPlan> r) {
  * @param r A shared_ptr of a RunningPlan
  * @return PlanChange
  */
-PlanChange RuleBook::synchTransitionRule(std::shared_ptr<RunningPlan> r) {
+PlanChange RuleBook::synchTransitionRule(std::shared_ptr<RunningPlan> r)
+{
 #ifdef RULE_debug
     std::cout << "RB: Sync-Rule called." << std::endl;
     std::cout << "RB: Sync RP \n" << r->toString() << std::endl;
@@ -501,7 +511,8 @@ PlanChange RuleBook::synchTransitionRule(std::shared_ptr<RunningPlan> r) {
  * @param update A PlanChange
  * @return PlanChange
  */
-PlanChange RuleBook::updateChange(PlanChange cur, PlanChange update) {
+PlanChange RuleBook::updateChange(PlanChange cur, PlanChange update)
+{
     if (update != PlanChange::NoChange) {
         this->changeOccured = true;
     }
@@ -523,11 +534,13 @@ PlanChange RuleBook::updateChange(PlanChange cur, PlanChange update) {
 }
 
 /** Getter and Setter **/
-bool RuleBook::isChangeOccured() const {
+bool RuleBook::isChangeOccured() const
+{
     return changeOccured;
 }
 
-void RuleBook::setChangeOccured(bool changeOccured) {
+void RuleBook::setChangeOccured(bool changeOccured)
+{
     this->changeOccured = changeOccured;
 }
-}  // namespace alica
+} // namespace alica

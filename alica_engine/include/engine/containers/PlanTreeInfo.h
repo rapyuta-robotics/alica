@@ -1,25 +1,29 @@
 #pragma once
 
-#include <vector>
 #include <tuple>
+#include <vector>
 
-using namespace std;
-
-namespace alica {
-typedef tuple<const supplementary::AgentID*, list<long>, list<long>> stdPlanTreeInfo;
-struct PlanTreeInfo {
+namespace alica
+{
+typedef std::tuple<const supplementary::AgentID*, std::vector<int64_t>, std::vector<int64_t>> stdPlanTreeInfo;
+struct PlanTreeInfo
+{
     PlanTreeInfo()
-            : senderID(nullptr) {}
-    const supplementary::AgentID* senderID;
-    list<long> stateIDs;
-    list<long> succeededEPs;
-
-    PlanTreeInfo(stdPlanTreeInfo& s) {
-        this->senderID = get<0>(s);
-        this->stateIDs = get<1>(s);
-        this->succeededEPs = get<2>(s);
+        : senderID(nullptr)
+    {
     }
 
-    stdPlanTreeInfo toStandard() { return move(make_tuple(senderID, stateIDs, succeededEPs)); }
+    PlanTreeInfo(const stdPlanTreeInfo& s)
+        : senderID(std::get<0>(s))
+        , stateIDs(std::get<1>(s))
+        , succeededEPs(std::get<2>(s))
+    {
+    }
+
+    const supplementary::AgentID* senderID;
+    std::vector<int64_t> stateIDs;
+    std::vector<int64_t> succeededEPs;
+
+    stdPlanTreeInfo toStandard() const { return std::make_tuple(senderID, stateIDs, succeededEPs); }
 };
 } /* namespace alica*/

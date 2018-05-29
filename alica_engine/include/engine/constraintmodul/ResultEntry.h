@@ -16,7 +16,7 @@ class Variable;
 class ResultEntry
 {
   public:
-    ResultEntry() = default;
+    ResultEntry();
     ResultEntry(const supplementary::AgentID* robotId);
 
     const supplementary::AgentID* getId() const { return _id; }

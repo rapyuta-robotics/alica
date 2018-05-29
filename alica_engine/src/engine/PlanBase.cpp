@@ -87,8 +87,8 @@ PlanBase::PlanBase(AlicaEngine* ae, const Plan* masterPlan)
     }
 
     //#ifdef PB_DEBUG
-    cout << "PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds() << "ms - "
-         << _maxSendInterval.inMilliseconds() << "ms" << endl;
+    std::cout << "PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds() << "ms - "
+              << _maxSendInterval.inMilliseconds() << "ms" << std::endl;
     //#endif
     if (halfLoopTime < _minSendInterval) {
         _minSendInterval -= halfLoopTime;
@@ -103,7 +103,7 @@ void PlanBase::start()
 {
     if (!_running) {
         _running = true;
-        _mainThread = new thread(&PlanBase::run, this);
+        _mainThread = new std::thread(&PlanBase::run, this);
     }
 }
 /**
@@ -112,7 +112,7 @@ void PlanBase::start()
 void PlanBase::run()
 {
 #ifdef PB_DEBUG
-    cout << "PB: Run-Method of PlanBase started. " << endl;
+    std::cout << "PB: Run-Method of PlanBase started. " << std::endl;
 #endif
     while (_running) {
         AlicaTime beginTime = _alicaClock->now();
@@ -120,17 +120,17 @@ void PlanBase::run()
 
         if (_ae->getStepEngine()) {
 #ifdef PB_DEBUG
-            cout << "PB: ===CUR TREE===" << endl;
+            std::cout << "PB: ===CUR TREE===" << std::endl;
 
             if (_rootNode == nullptr) {
-                cout << "PB: NULL" << endl;
+                std::cout << "PB: NULL" << std::endl;
             } else {
                 _rootNode->printRecursive();
             }
-            cout << "PB: ===END CUR TREE===" << endl;
+            std::cout << "PB: ===END CUR TREE===" << std::endl;
 #endif
             {
-                unique_lock<mutex> lckStep(_stepMutex);
+                std::unique_lock<std::mutex> lckStep(_stepMutex);
                 _isWaiting = true;
                 AlicaEngine* ae = _ae;
                 _stepModeCV.wait(lckStep, [ae] { return ae->getStepCalled(); });
@@ -154,24 +154,24 @@ void PlanBase::run()
             _rootNode = _ruleBook.initialisationRule(_masterPlan);
         }
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
-            cout << "PB: MasterPlan Failed" << endl;
+            std::cout << "PB: MasterPlan Failed" << std::endl;
         }
         // lock for fpEvents
         {
-            lock_guard<mutex> lock(_lomutex);
-            _fpEvents = queue<shared_ptr<RunningPlan>>();
+            std::lock_guard<std::mutex> lock(_lomutex);
+            _fpEvents = std::queue<std::shared_ptr<RunningPlan>>();
         }
 
         AlicaTime now = _alicaClock->now();
 
         if (now < _lastSendTime) {
             // Taker fix
-            std::cout << "PB: lastSendTime is in the future of the current system time, did the system time change?" << endl;
+            std::cout << "PB: lastSendTime is in the future of the current system time, did the system time change?" << std::endl;
             _lastSendTime = now;
         }
 
         if ((_ruleBook.isChangeOccured() && _lastSendTime + _minSendInterval < now) || _lastSendTime + _maxSendInterval < now) {
-            list<long> msg;
+            IdGrp msg;
             _deepestNode = _rootNode;
             _treeDepth = 0;
             _rootNode->toMessage(msg, _deepestNode, _treeDepth, 0);
@@ -222,28 +222,24 @@ void PlanBase::run()
 
         if (checkFp && _fpEvents.size() > 0) {
             // lock for fpEvents
-            {
-                lock_guard<mutex> lock(_lomutex);
-                while (_running && availTime > AlicaTime::milliseconds(1) && _fpEvents.size() > 0) {
-                    shared_ptr<RunningPlan> rp = _fpEvents.front();
-                    _fpEvents.pop();
+            std::lock_guard<std::mutex> lock(_lomutex);
+            while (_running && availTime > AlicaTime::milliseconds(1) && _fpEvents.size() > 0) {
+                std::shared_ptr<RunningPlan> rp = _fpEvents.front();
+                _fpEvents.pop();
 
-                    if (rp->isActive()) {
-                        bool first = true;
-                        while (rp != nullptr) {
-                            cout << "TICK FPEVENT " << endl;
-                            PlanChange change = _ruleBook.visit(rp);
-                            cout << "AFTER TICK FPEVENT " << endl;
-                            if (!first && change == PlanChange::NoChange) {
-                                break;
-                            }
-                            rp = rp->getParent().lock();
-                            first = false;
+                if (rp->isActive()) {
+                    bool first = true;
+                    while (rp != nullptr) {
+                        PlanChange change = _ruleBook.visit(rp);
+                        if (!first && change == PlanChange::NoChange) {
+                            break;
                         }
+                        rp = rp->getParent().lock();
+                        first = false;
                     }
-                    now = _alicaClock->now();
-                    availTime = _loopTime - (now - beginTime);
                 }
+                now = _alicaClock->now();
+                availTime = _loopTime - (now - beginTime);
             }
         }
 
@@ -251,7 +247,7 @@ void PlanBase::run()
         availTime = _loopTime - (now - beginTime);
 
 #ifdef PB_DEBUG
-        cout << "PB: availTime " << availTime << endl;
+        std::cout << "PB: availTime " << availTime << std::endl;
 #endif
         if (availTime > AlicaTime::microseconds(100) && !_ae->getStepEngine()) {
             _alicaClock->sleep(availTime);
@@ -284,10 +280,10 @@ PlanBase::~PlanBase()
     delete _statusMessage;
 }
 
-void PlanBase::addFastPathEvent(shared_ptr<RunningPlan> p)
+void PlanBase::addFastPathEvent(std::shared_ptr<RunningPlan> p)
 {
     {
-        lock_guard<mutex> lock(_lomutex);
+        std::lock_guard<std::mutex> lock(_lomutex);
         _fpEvents.push(p);
     }
     _fpEventWait.notify_all();
@@ -303,7 +299,7 @@ void PlanBase::setLoopInterval(AlicaTime loopInterval)
     _loopInterval = loopInterval;
 }
 
-condition_variable* PlanBase::getStepModeCV()
+std::condition_variable* PlanBase::getStepModeCV()
 {
     if (!_ae->getStepEngine()) {
         return nullptr;
@@ -313,12 +309,12 @@ condition_variable* PlanBase::getStepModeCV()
 /**
  * Returns the root node of the ALICA plan tree in execution.
  */
-const shared_ptr<RunningPlan> PlanBase::getRootNode() const
+const std::shared_ptr<RunningPlan> PlanBase::getRootNode() const
 {
     return _rootNode;
 }
 
-void PlanBase::setRootNode(shared_ptr<RunningPlan> rootNode)
+void PlanBase::setRootNode(std::shared_ptr<RunningPlan> rootNode)
 {
     _rootNode = rootNode;
 }
@@ -326,7 +322,7 @@ void PlanBase::setRootNode(shared_ptr<RunningPlan> rootNode)
 /**
  * Returns the deepest ALICA node
  */
-shared_ptr<const RunningPlan> PlanBase::getDeepestNode() const
+std::shared_ptr<const RunningPlan> PlanBase::getDeepestNode() const
 {
     return _deepestNode;
 }
@@ -334,7 +330,7 @@ shared_ptr<const RunningPlan> PlanBase::getDeepestNode() const
 /**
  * Returns the deepest ALICA node
  */
-shared_ptr<RunningPlan> PlanBase::getRootNode()
+std::shared_ptr<RunningPlan> PlanBase::getRootNode()
 {
     return _rootNode;
 }

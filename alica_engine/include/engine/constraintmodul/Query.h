@@ -164,7 +164,9 @@ bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<Resul
         // TODO this can be done in place. The queried static should be at the beginning of the array anyway
         // create a result vector that is filtered by the queried variables
         for (const Variable* staticVariable : _queriedStaticVariables) {
-            result.push_back(solverResult[_uniqueVarStore.getIndexOf(staticVariable)]);
+            int idx = _uniqueVarStore.getIndexOf(staticVariable);
+            assert(idx >= 0);
+            result.push_back(solverResult[idx]);
         }
         // Again, the queried domain variables should be at the beginning of the domain variable segment
         // So a simple move and resize should do the trick

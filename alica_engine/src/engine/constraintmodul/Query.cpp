@@ -122,7 +122,7 @@ bool Query::collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolv
         }
 
         // 3. process bindings for state
-        shared_ptr<RunningPlan> parent;
+        std::shared_ptr<RunningPlan> parent;
         if (!rp->getParent().expired()) {
             parent = rp->getParent().lock();
         }

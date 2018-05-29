@@ -40,6 +40,11 @@
 
 namespace alica
 {
+using std::cout;
+using std::endl;
+using std::string;
+using std::stringstream;
+using std::to_string;
 
 int PlanWriter::objectCounter = 0;
 
@@ -132,7 +137,7 @@ void PlanWriter::saveFileLoop()
             saveSinglePlan(ap);
         } else {
             cout << "Saving of type " << typeid(ae).name() << " is not implemented." << endl;
-            throw new exception();
+            throw std::exception();
         }
         plansSaved.push_back(ae);
     }
@@ -312,7 +317,7 @@ void PlanWriter::addConditionChildren(const Condition* c, tinyxml2::XMLElement* 
             xc->SetAttribute("xsi:type", "alica:ForallAgents");
         } else {
             cout << "Unknown Quantifier: " << q->toString() << endl;
-            throw new exception();
+            throw std::exception();
         }
         addPlanElementAttributes(q, xc);
         xc->SetAttribute("scope", to_string(q->getScope()->getId()).c_str());
@@ -470,11 +475,10 @@ tinyxml2::XMLElement* PlanWriter::createSynchronisationXMLNode(const SyncTransit
 {
     tinyxml2::XMLElement* xr = doc->NewElement("synchronisations");
     addPlanElementAttributes(s, xr);
-    string synched = "";
-    auto iter = s->getInSync().end();
-    while (s->getInSync().size() > 0 && iter != s->getInSync().begin()) {
-        iter = prev(iter);
-        synched += to_string((*iter)->getId()) + " ";
+    std::string synched = "";
+    for (int i = s->getInSync().size() - 1; i >= 0; --i) {
+        synched.append(to_string(s->getInSync()[i]->getId()));
+        synched.append(" ");
     }
     xr->SetAttribute("synchedTransitions", supplementary::Configuration::trim(synched).c_str());
     xr->SetAttribute("talkTimeout", to_string(s->getTalkTimeOut().inMilliseconds()).c_str());
@@ -561,7 +565,7 @@ std::string PlanWriter::getRelativeFileName(const std::string& file)
             ufile = tfile;
         } else {
             cout << "File reference not implemented: " << file << "(occurred in file " << this->currentFile << ")" << endl;
-            throw new exception();
+            throw std::exception();
         }
     }
     string ret = "";
