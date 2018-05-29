@@ -6,8 +6,6 @@
 #include "engine/collections/AgentVariables.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/StateCollection.h"
-#include "engine/constraintmodul/SolverTerm.h"
-#include "engine/constraintmodul/SolverVariable.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/DomainVariable.h"
 #include "engine/model/Plan.h"

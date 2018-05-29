@@ -31,7 +31,8 @@ class ResultEntry
     void clear();
     void getCommunicatableResults(AlicaTime earliest, std::vector<SolverVar>& o_result) const;
     Variant getValue(int64_t vid, AlicaTime earliest) const;
-    bool getValues(const VariableGrp& query, AlicaTime earliest, std::vector<Variant>& o_values) const;
+    template <typename VarType>
+    bool getValues(const std::vector<VarType*>& query, AlicaTime earliest, std::vector<Variant>& o_values) const;
 
   private:
     class VarValue
@@ -50,5 +51,21 @@ class ResultEntry
     mutable std::mutex _valueLock;
     AgentIDConstPtr _id;
 };
+
+template <typename VarType>
+bool ResultEntry::getValues(const std::vector<VarType*>& query, AlicaTime earliest, std::vector<Variant>& o_values) const
+{
+    o_values.resize(query.size());
+    int i = 0;
+    int invalids = 0;
+    for (const VarType* v : query) {
+        o_values[i] = getValue(v->getId(), earliest);
+        if (!o_values[i].isSet()) {
+            ++invalids;
+        }
+        ++i;
+    }
+    return invalids != i;
+}
 
 } /* namespace alica */

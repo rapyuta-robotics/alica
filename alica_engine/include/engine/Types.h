@@ -21,16 +21,17 @@ class DomainVariable;
 class EntryPoint;
 class FailureState;
 class Parameter;
+class Parametrisation;
 class Plan;
 class Quantifier;
 class Role;
+class SolverVariable;
 class State;
 class SuccessState;
 class SyncTransition;
 class Task;
 class Transition;
 class Variable;
-class Parametrisation;
 
 using AbstractPlanGrp = std::vector<const AbstractPlan*>;
 using AgentGrp = std::vector<const supplementary::AgentID*>;
