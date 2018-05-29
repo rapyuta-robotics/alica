@@ -13,31 +13,37 @@
 
 #include <iostream>
 
-namespace alica {
-namespace reasoner {
-namespace cnsat {
+namespace alica
+{
+namespace reasoner
+{
+namespace cnsat
+{
 
-Clause::Clause() {
+Clause::Clause()
+{
     activity = 0;
     satisfied = false;
     isFinished = false;
     isTautologic = false;
-    watcher = make_shared<vector<Watcher*>>(2);
-    literals = make_shared<vector<shared_ptr<Lit>>>();
+    watcher = std::make_shared<std::vector<Watcher*>>(2);
+    literals = std::make_shared<std::vector<shared_ptr<Lit>>>();
 }
 
-Clause::~Clause() {
+Clause::~Clause()
+{
     for (Watcher* w : *watcher) {
         //					w->lit->var->watchList // TODO
         delete w;
     }
 }
 
-void Clause::addChecked(shared_ptr<Lit> l) {
+void Clause::addChecked(std::shared_ptr<Lit> l)
+{
     bool found = false;
     if (l->isTemporary) {
-        for (int i = 0; i < literals->size(); ++i) {
-            if (literals->at(i)->isTemporary && l->atom == literals->at(i)->atom) {
+        for (int i = 0; i < static_cast<int>(literals->size()); ++i) {
+            if (literals->at(i)->isTemporary && l->_atom == literals->at(i)->_atom) {
                 found = true;
                 break;
             }
@@ -47,8 +53,8 @@ void Clause::addChecked(shared_ptr<Lit> l) {
         }
         return;
     }
-    for (int i = 0; i < literals->size(); ++i) {
-        if (l->atom == literals->at(i)->atom) {
+    for (int i = 0; i < static_cast<int>(literals->size()); ++i) {
+        if (l->_atom == literals->at(i)->_atom) {
             found = true;
             if (l->sign != literals->at(i)->sign) {
                 isTautologic = true;
@@ -63,8 +69,9 @@ void Clause::addChecked(shared_ptr<Lit> l) {
     return;
 }
 
-shared_ptr<Clause> Clause::clone() {
-    shared_ptr<Clause> clone = make_shared<Clause>();
+std::shared_ptr<Clause> Clause::clone()
+{
+    std::shared_ptr<Clause> clone = std::make_shared<Clause>();
     // clone->literals->insert(clone->literals->end(), literals->begin(), literals->end());
     *clone->literals = *literals;
     //				clone->literals = make_shared<vector<shared_ptr<Lit>>>();
@@ -76,20 +83,23 @@ shared_ptr<Clause> Clause::clone() {
     return clone;
 }
 
-void Clause::add(shared_ptr<Lit> l) {
+void Clause::add(std::shared_ptr<Lit> l)
+{
     literals->push_back(l);
 }
 
-int Clause::avgActivity() {
+int Clause::avgActivity()
+{
     int ret = 0;
-    for (shared_ptr<Lit> l : *literals) {
+    for (std::shared_ptr<Lit> l : *literals) {
         ret += l->var->activity;
     }
     return ret / literals->size();
 }
 
-bool Clause::checkSatisfied() {
-    for (shared_ptr<Lit> l : *literals) {
+bool Clause::checkSatisfied()
+{
+    for (std::shared_ptr<Lit> l : *literals) {
         if (l->var->assignment == l->sign) {
             return true;
         }
@@ -97,12 +107,14 @@ bool Clause::checkSatisfied() {
     return false;
 }
 
-bool Clause::compareTo(shared_ptr<Clause> ep1, shared_ptr<Clause> ep2) {
+bool Clause::compareTo(std::shared_ptr<Clause> ep1, std::shared_ptr<Clause> ep2)
+{
     return ep1->activity > ep2->activity;
 }
 
-void Clause::print() {
-    for (shared_ptr<Lit> l : *literals) {
+void Clause::print()
+{
+    for (std::shared_ptr<Lit> l : *literals) {
         if (l->sign == Assignment::FALSE) {
             cout << "-";
         }

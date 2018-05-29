@@ -7,36 +7,41 @@
 
 #include "intervals/IntervalPropagator.h"
 
+#include "CNSat.h"
 #include "intervals/RecursivePropagate.h"
 #include "intervals/ResetIntervals.h"
 #include "intervals/UnsolveableException.h"
 #include "types/Var.h"
-#include "CNSat.h"
+
+#include <autodiff/TermPtr.h>
+#include <autodiff/Variable.h>
 
 #include <math.h>
 
 #include <iostream>
 
-namespace alica {
-namespace reasoner {
-namespace intervalpropagation {
+//#define DEBUG_INTERVALPROP
+
+namespace alica
+{
+namespace reasoner
+{
+namespace intervalpropagation
+{
+using std::make_shared;
+using std::shared_ptr;
+using std::vector;
 int IntervalPropagator::updates = 0;
 int IntervalPropagator::visits = 0;
 
-IntervalPropagator::IntervalPropagator() {
-    this->ri = make_shared<ResetIntervals>();
-    this->rp = make_shared<RecursivePropagate>();
-}
+IntervalPropagator::IntervalPropagator() {}
 
-IntervalPropagator::~IntervalPropagator() {
-    // TODO Auto-generated destructor stub
-}
-
-void IntervalPropagator::setGlobalRanges(shared_ptr<vector<shared_ptr<Variable>>> vars,
-        shared_ptr<vector<shared_ptr<vector<double>>>> ranges, shared_ptr<cnsat::CNSat> solver) {
-    for (int i = 0; i < vars->size(); ++i) {
-        vars->at(i)->globalMin = ranges->at(i)->at(0);
-        vars->at(i)->globalMax = ranges->at(i)->at(1);
+void IntervalPropagator::setGlobalRanges(autodiff::TermHolder& holder, std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>> ranges,
+                                         std::shared_ptr<cnsat::CNSat> solver)
+{
+    for (int i = 0; i < static_cast<int>(holder.getVariables().size()); ++i) {
+        holder.getVariables()[i]->editRange().setMin(ranges->at(i)->at(0));
+        holder.getVariables()[i]->editRange().setMax(ranges->at(i)->at(1));
     }
     this->globalRanges = ranges;
     this->vars = vars;
@@ -46,13 +51,16 @@ void IntervalPropagator::setGlobalRanges(shared_ptr<vector<shared_ptr<Variable>>
     this->visits = 0;
 }
 
-bool IntervalPropagator::propagate(shared_ptr<vector<shared_ptr<cnsat::Var>>> decisions,
-        shared_ptr<vector<shared_ptr<vector<double>>>>& completeRanges,
-        shared_ptr<vector<shared_ptr<cnsat::Var>>>& offenders) {
-    cout << "IntervalPropagator::propagate" << endl;
+bool IntervalPropagator::propagate(std::shared_ptr<std::vector<std::shared_ptr<cnsat::Var>>> decisions,
+                                   shared_ptr<std::vector<shared_ptr<vector<double>>>>& completeRanges,
+                                   shared_ptr<std::vector<shared_ptr<cnsat::Var>>>& offenders)
+{
+#ifdef DEBUG_INTERVALPROP
+    std::cout << "IntervalPropagator::propagate" << std::endl;
     for (auto& it : *decisions) {
-        cout << "\t" << it->toString() << endl;
+        std::cout << "\t" << it->toString() << std::endl;
     }
+#endif
     offenders = nullptr;
     completeRanges = make_shared<vector<shared_ptr<vector<double>>>>(dim);
     completeRanges->insert(completeRanges->begin(), globalRanges->begin(), globalRanges->end());
@@ -78,9 +86,9 @@ bool IntervalPropagator::propagate(shared_ptr<vector<shared_ptr<cnsat::Var>>> de
             curRanges = decisions->at(i)->negativeRanges;
         }
         for (int j = dim - 1; j >= 0; j--) {
-            completeRanges->at(j)->at(0) = max(completeRanges->at(j)->at(0), curRanges->at(j)->at(0));
-            completeRanges->at(j)->at(1) = min(completeRanges->at(j)->at(1), curRanges->at(j)->at(1));
-            if (completeRanges->at(j)->at(0) > completeRanges->at(j)->at(1)) {  // ranges collapsed, build offenders
+            completeRanges->at(j)->at(0) = std::max(completeRanges->at(j)->at(0), curRanges->at(j)->at(0));
+            completeRanges->at(j)->at(1) = std::min(completeRanges->at(j)->at(1), curRanges->at(j)->at(1));
+            if (completeRanges->at(j)->at(0) > completeRanges->at(j)->at(1)) { // ranges collapsed, build offenders
                 offenders = make_shared<vector<shared_ptr<cnsat::Var>>>();
                 for (int k = decisions->size() - 1; k >= i; k--) {
                     offenders->push_back(decisions->at(k));
@@ -92,7 +100,8 @@ bool IntervalPropagator::propagate(shared_ptr<vector<shared_ptr<cnsat::Var>>> de
     return true;
 }
 
-bool IntervalPropagator::prePropagate(shared_ptr<vector<shared_ptr<cnsat::Var>>> vars) {
+bool IntervalPropagator::prePropagate(shared_ptr<vector<shared_ptr<cnsat::Var>>> vars)
+{
     for (int i = vars->size() - 1; i >= 0; --i) {
         if (vars->at(i)->assignment != cnsat::Assignment::FALSE && !propagateSingle(vars->at(i), true)) {
             if (!solver->preAddIUnitClause(vars->at(i), cnsat::Assignment::FALSE)) {
@@ -108,38 +117,40 @@ bool IntervalPropagator::prePropagate(shared_ptr<vector<shared_ptr<cnsat::Var>>>
     return true;
 }
 
-bool IntervalPropagator::propagate(shared_ptr<Term> term) {
-    term->accept(this->ri);
+bool IntervalPropagator::propagate(autodiff::TermPtr term)
+{
+    term->acceptRecursive(&_ri); // TODO: fold this into rp's visitation
     // term->accept(this->sp);
-    term->min = 1;
-    term->max = 1;
+    term->setMin(1.0);
+    term->setMax(1.0);
     updates = 0;
     try {
-        this->rp->propagate(term);
-    } catch (int& i) {
+        _rp.propagate(term);
+    } catch (const int& i) {
 #ifdef RecPropDEBUG
         //				cout << "Unsolvable: " << ue << endl;
-        cout << updates << " update steps" << endl;
+        std::cout << updates << " update steps" << std::endl;
 #endif
         return false;
     }
 #ifdef RecPropDEBUG
-    cout << updates << " update steps" << endl;
+    std::cout << updates << " update steps" << std::endl;
 #endif
     return true;
 }
 
-bool IntervalPropagator::propagateSingle(shared_ptr<cnsat::Var> v, bool sign) {
-    for (int i = dim - 1; i >= 0; i--) {
-        vars->at(i)->max = vars->at(i)->globalMax;
-        vars->at(i)->min = vars->at(i)->globalMin;
+bool IntervalPropagator::propagateSingle(std::shared_ptr<cnsat::Var> v, bool sign)
+{
+    for (int i = dim - 1; i >= 0; --i) {
+        vars->at(i)->setMax(vars->at(i)->getRange().getMax());
+        vars->at(i)->setMin(vars->at(i)->getRange().getMin());
     }
 
     if (sign) {
-        if (!propagate(v->term))
+        if (!propagate(v->_term))
             return false;
     } else {
-        if (!propagate(v->term->negate()))
+        if (!propagate(v->_term->negate()))
             return false;
     }
 
@@ -147,9 +158,9 @@ bool IntervalPropagator::propagateSingle(shared_ptr<cnsat::Var> v, bool sign) {
     shared_ptr<vector<shared_ptr<vector<double>>>> range = make_shared<vector<shared_ptr<vector<double>>>>(dim);
     for (int i = dim - 1; i >= 0; --i) {
         range->at(i) = make_shared<vector<double>>(2);
-        range->at(i)->at(0) = vars->at(i)->min;
-        range->at(i)->at(1) = vars->at(i)->max;
-        double d = vars->at(i)->max - vars->at(i)->min;
+        range->at(i)->at(0) = vars->at(i)->getMin();
+        range->at(i)->at(1) = vars->at(i)->getMax();
+        double d = vars->at(i)->getMax() - vars->at(i)->getMin();
         rangeSize += d * d;
     }
     if (sign) {

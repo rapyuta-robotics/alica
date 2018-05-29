@@ -1,28 +1,37 @@
 #include "alica/reasoner/DummyTerm.h"
 #include "alica/reasoner/DummyVariable.h"
 
-namespace alica {
-namespace reasoner {
+namespace alica
+{
+namespace reasoner
+{
 
 DummyTerm::DummyTerm() {}
 
 DummyTerm::~DummyTerm() {}
 
-void DummyTerm::setVariable(std::shared_ptr<DummyVariable> variable, std::string value) {
-    auto mapEntry = this->variableValueMap.find(variable->getID());
-    if (mapEntry != this->variableValueMap.end()) {
-        mapEntry->second = value;
-    } else {
-        this->variableValueMap.emplace(variable->getID(), value);
-    }
+void DummyTerm::setVariable(DummyVariable* variable, const std::string& value)
+{
+    _variableValueMap[variable->getId()] = value;
 }
 
-std::string DummyTerm::getValue(std::shared_ptr<DummyVariable> variable) {
-    auto mapEntry = this->variableValueMap.find(variable->getID());
-    if (mapEntry != this->variableValueMap.end()) {
+const std::string& DummyTerm::getValue(DummyVariable* variable) const
+{
+    const auto mapEntry = _variableValueMap.find(variable->getId());
+    if (mapEntry != _variableValueMap.end()) {
         return mapEntry->second;
     } else {
         return DummyVariable::NO_VALUE;
+    }
+}
+
+const std::string* DummyTerm::tryGetValue(int64_t id) const
+{
+    const auto mapEntry = _variableValueMap.find(id);
+    if (mapEntry != _variableValueMap.end()) {
+        return &mapEntry->second;
+    } else {
+        return nullptr;
     }
 }
 

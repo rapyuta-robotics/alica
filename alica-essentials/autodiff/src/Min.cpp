@@ -1,56 +1,75 @@
-/*
- * Min.cpp
- *
- *  Created on: Jul 17, 2014
- *      Author: psp
- */
+
 
 #include "Min.h"
 
-#include "TermBuilder.h"
 #include "Constant.h"
+#include "TermHolder.h"
 
 #include <cmath>
+#include <sstream>
 
-namespace autodiff {
-Min::Min(shared_ptr<Term> left, shared_ptr<Term> right)
-        : Term() {
-    this->left = left;
-    this->right = right;
+namespace autodiff
+{
+Min::Min(TermPtr left, TermPtr right, TermHolder* owner)
+    : BinaryFunction(left, right, owner)
+{
 }
 
-int Min::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<Min> thisCasted = dynamic_pointer_cast<Min>(shared_from_this());
-    return visitor->visit(thisCasted);
+int Min::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-shared_ptr<Term> Min::aggregateConstants() {
-    left = left->aggregateConstants();
-    right = right->aggregateConstants();
-    if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0) {
-        shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
-        shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
-        return make_shared<Constant>(std::min(leftConstant->value, rightConstant->value));
+void Min::acceptRecursive(ITermVisitor* visitor)
+{
+    _left->acceptRecursive(visitor);
+    _right->acceptRecursive(visitor);
+    visitor->visit(this);
+}
+
+TermPtr Min::aggregateConstants()
+{
+    _left = _left->aggregateConstants();
+    _right = _right->aggregateConstants();
+    if (_left->isConstant() && _right->isConstant()) {
+        return _owner->constant(std::min(static_cast<Constant*>(_left)->getValue(), static_cast<Constant*>(_right)->getValue()));
     } else {
-        return shared_from_this();
+        return this;
     }
 }
 
-shared_ptr<Term> Min::derivative(shared_ptr<Variable> v) {
+TermPtr Min::derivative(VarPtr v) const
+{
     throw "Symbolic Derivation of Min not supported.";
+    return nullptr;
 }
 
-shared_ptr<Term> Min::negate() {
-    return left->negate() | right->negate();
+TermPtr Min::negate() const
+{
+    return _left->negate() | _right->negate();
 }
 
-string Min::toString() {
-    string str;
-    str.append("min( ");
-    str.append(left->toString());
-    str.append(", ");
-    str.append(right->toString());
-    str.append(" )");
-    return str;
+std::string Min::toString() const
+{
+    std::stringstream str;
+    str << "min( " << _left->toString() << ", " << _right->toString() << " )";
+    return str.str();
 }
+
+void Min::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* l = tape.getValues(params[0].asIdx);
+    const double* r = tape.getValues(params[1].asIdx);
+
+    if (l[0] < r[0]) {
+        for (int i = 0; i <= dim; ++i) {
+            result[i] = l[i];
+        }
+    } else {
+        for (int i = 0; i <= dim; ++i) {
+            result[i] = r[i];
+        }
+    }
+}
+
 } /* namespace autodiff */

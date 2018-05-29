@@ -9,12 +9,12 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
-find_package(catkin REQUIRED alica_engine)
+find_package(catkin REQUIRED COMPONENTS alica_engine alica_common_config alica_solver_interface)
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES dummy_solver
-  CATKIN_DEPENDS alica_engine
+  CATKIN_DEPENDS alica_engine alica_common_config alica_solver_interface
 )
 
 include_directories(
@@ -26,6 +26,7 @@ add_library(${PROJECT_NAME}
    src/DummySolver.cpp
    src/DummyTerm.cpp
    src/DummyVariable.cpp
+   src/DummyContext.cpp
 )
 
  target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})

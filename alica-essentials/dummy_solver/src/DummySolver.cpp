@@ -1,67 +1,41 @@
 #include "alica/reasoner/DummySolver.h"
+#include "alica/reasoner/DummyContext.h"
 #include "alica/reasoner/DummyTerm.h"
 #include "alica/reasoner/DummyVariable.h"
 
-#include <engine/constraintmodul/ProblemDescriptor.h>
-#include <engine/model/Variable.h>
 #include <engine/AlicaEngine.h>
 #include <engine/blackboard/BlackBoard.h>
+#include <engine/constraintmodul/ProblemDescriptor.h>
+#include <engine/model/Variable.h>
 
-namespace alica {
+namespace alica
+{
 
-namespace reasoner {
+namespace reasoner
+{
 
 DummySolver::DummySolver(AlicaEngine* ae)
-        : ISolver(ae) {}
+    : ISolver(ae)
+{
+}
 
 DummySolver::~DummySolver() {}
 
-bool DummySolver::existsSolutionImpl(
-        const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) {
+bool DummySolver::existsSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls)
+{
     return true;
 }
 
-bool DummySolver::getSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
-        std::vector<BBIdent>& results) {
-    // TODO: reformulate this without a temporary vector
-    std::vector<std::shared_ptr<DummyVariable>> dummyVariables;
-    dummyVariables.reserve(vars.size());
-    for (auto variable : vars) {
-        auto dummyVariable = std::dynamic_pointer_cast<alica::reasoner::DummyVariable>(variable->getSolverVar());
-        if (!dummyVariable) {
-            std::cerr << "DummySolver: Variable type does not match Solver type!" << std::endl;
-        }
-        dummyVariables.push_back(dummyVariable);
-    }
-    // TODO: reformulate this without a temporary map
-    std::map<long, std::string> dummyVariableValueMap;
+bool DummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results)
+{
 
-    for (auto& c : calls) {
-        auto constraintTerm = std::dynamic_pointer_cast<DummyTerm>(c->getConstraint());
-        if (!constraintTerm) {
-            std::cerr << "DummySolver: Constraint type not compatible with selected solver!" << std::endl;
-            return false;
-        }
-        for (auto dummyVariable : dummyVariables) {
-            std::string value = constraintTerm->getValue(dummyVariable);
-            auto mapEntry = dummyVariableValueMap.find(dummyVariable->getID());
-            if (mapEntry == dummyVariableValueMap.end()) {
-                // insert new value
-                dummyVariableValueMap.emplace(dummyVariable->getID(), value);
-                continue;
-            }
+    DummyContext* dc = static_cast<DummyContext*>(ctx);
 
-            // check consistence of values
-            if (mapEntry->second != value) {
-                return false;
-            }
-        }
-    }
+    results.reserve(dc->getVariables().size());
 
-    results.reserve(dummyVariables.size());
     BlackBoard& bb = getAlicaEngine()->editBlackBoard();
-    for (const auto& dummyVariable : dummyVariables) {
-        const std::string& val = dummyVariableValueMap[dummyVariable->getID()];
+    for (const std::unique_ptr<DummyVariable>& dummyVariable : dc->getVariables()) {
+        const std::string& val = getValue(dummyVariable->getId(), calls);
         BBIdent bid = bb.registerValue(val.c_str(), val.size());
         results.push_back(bid);
     }
@@ -69,10 +43,30 @@ bool DummySolver::getSolutionImpl(const VariableGrp& vars, const std::vector<std
     return true;
 }
 
-std::shared_ptr<SolverVariable> DummySolver::createVariable(int64_t representingVariableID) {
-    return std::make_shared<DummyVariable>(representingVariableID);
+SolverVariable* DummySolver::createVariable(int64_t representingVariableID, SolverContext* ctx)
+{
+    return static_cast<DummyContext*>(ctx)->createVariable(representingVariableID);
+}
+std::unique_ptr<SolverContext> DummySolver::createSolverContext()
+{
+    return std::unique_ptr<SolverContext>(new DummyContext());
+}
+
+const std::string& DummySolver::getValue(int64_t id, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) const
+{
+    for (const auto& c : calls) {
+        DummyTerm* constraintTerm = dynamic_cast<DummyTerm*>(c->getConstraint());
+        if (!constraintTerm) {
+            std::cerr << "DummySolver: Constraint type not compatible with selected solver!" << std::endl;
+            continue;
+        }
+        const std::string* value = constraintTerm->tryGetValue(id);
+        if (value) {
+            return *value;
+        }
+    }
+    return DummyVariable::NO_VALUE;
 }
 
 } /* namespace reasoner */
-
 } /* namespace alica */

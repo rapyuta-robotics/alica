@@ -1,48 +1,60 @@
-/*
- * Log.cpp
- *
- *  Created on: Jul 17, 2014
- *      Author: psp
- */
-
 #include "Log.h"
 
-#include "TermBuilder.h"
 #include "Constant.h"
+#include "TermHolder.h"
 
 #include <cmath>
 #include <limits>
+#include <sstream>
 
-namespace autodiff {
-Log::Log(shared_ptr<Term> arg)
-        : Term() {
-    this->arg = arg;
+namespace autodiff
+{
+Log::Log(TermPtr arg, TermHolder* owner)
+    : UnaryFunction(arg, owner)
+{
 }
 
-int Log::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<Log> thisCasted = dynamic_pointer_cast<Log>(shared_from_this());
-    return visitor->visit(thisCasted);
+int Log::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-shared_ptr<Term> Log::aggregateConstants() {
-    arg = arg->aggregateConstants();
-    if (dynamic_pointer_cast<Constant>(arg) != 0) {
-        shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(arg);
-        return TermBuilder::constant(log(arg->value));
+void Log::acceptRecursive(ITermVisitor* visitor)
+{
+    _arg->acceptRecursive(visitor);
+    visitor->visit(this);
+}
+
+TermPtr Log::aggregateConstants()
+{
+    _arg = _arg->aggregateConstants();
+    if (_arg->isConstant()) {
+        return _owner->constant(log(static_cast<Constant*>(_arg)->getValue()));
     } else {
-        return shared_from_this();
+        return this;
     }
 }
 
-shared_ptr<Term> Log::derivative(shared_ptr<Variable> v) {
-    return arg->derivative(v) / arg;
+TermPtr Log::derivative(VarPtr v) const
+{
+    return _arg->derivative(v) / _arg;
 }
 
-string Log::toString() {
-    string str;
-    str.append("log( ");
-    str.append(arg->toString());
-    str.append(" )");
-    return str;
+std::string Log::toString() const
+{
+    std::stringstream str;
+    str << "log( " << _arg->toString() << " )";
+    return str.str();
 }
+
+void Log::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* arg = tape.getValues(params[0].asIdx);
+    result[0] = log(arg[0]);
+    const double s = 1.0 / arg[0];
+    for (int i = 1; i <= dim; ++i) {
+        result[i] = arg[i] * s;
+    }
+}
+
 } /* namespace autodiff */

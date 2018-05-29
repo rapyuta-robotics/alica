@@ -7,23 +7,27 @@
 
 #include "Decider.h"
 
+#include "CNSat.h"
 #include "types/Clause.h"
 #include "types/DecisionLevel.h"
 #include "types/Lit.h"
 #include "types/Var.h"
 #include "types/Watcher.h"
-#include "CNSat.h"
 
-#include <limits>
 #include <algorithm>
+#include <limits>
 
 #include <iostream>
 
-namespace alica {
-namespace reasoner {
-namespace cnsat {
+namespace alica
+{
+namespace reasoner
+{
+namespace cnsat
+{
 
-shared_ptr<Var> Decider::decideRangeBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver) {
+shared_ptr<Var> Decider::decideRangeBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver)
+{
     vector<shared_ptr<Lit>> choices;
     int vars = variables->size();
     for (int i = 0; i < vars; i++) {
@@ -31,7 +35,7 @@ shared_ptr<Var> Decider::decideRangeBased(shared_ptr<vector<shared_ptr<Var>>> va
             continue;
         bool hT = false;
         bool hF = false;
-        for (int j = 0; j < variables->at(i)->watchList->size(); j++) {
+        for (int j = 0; j < static_cast<int>(variables->at(i)->watchList->size()); ++j) {
             if (!variables->at(i)->watchList->at(j)->clause->satisfied) {
                 if (variables->at(i)->watchList->at(j)->lit->sign == Assignment::TRUE) {
                     if (!hT)
@@ -104,15 +108,13 @@ shared_ptr<Var> Decider::decideRangeBased(shared_ptr<vector<shared_ptr<Var>>> va
     return v;
 }
 
-shared_ptr<Var> Decider::decideActivityBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver) {
+shared_ptr<Var> Decider::decideActivityBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver)
+{
     // cout << "Decider::decideActivityBased()" << endl;
-    shared_ptr<CNSMTGSolver> cnsmtGSolver = nullptr;
-    if (solver.cnsmtGSolver.use_count() > 0) {
-        cnsmtGSolver = solver.cnsmtGSolver.lock();
-    }
 
+    CNSMTGSolver* cnsmtGSolver = solver.cnsmtGSolver;
     int vars = variables->size();
-    int init = ((double) rand() / RAND_MAX) * vars;
+    int init = ((double)rand() / RAND_MAX) * vars;
     shared_ptr<Var> v = nullptr, next = nullptr;
     int maxActivity = 0;
     // Search Lit with highest Activity
@@ -138,19 +140,19 @@ shared_ptr<Var> Decider::decideActivityBased(shared_ptr<vector<shared_ptr<Var>>>
 
             double rel = next->positiveAppearance + next->negativeAppearance;
             if (rel != 0)
-                rel = ((double) next->positiveAppearance) / rel;
+                rel = ((double)next->positiveAppearance) / rel;
             else
                 rel = 0.5;
 
-            next->assignment = ((double) rand() / RAND_MAX < rel) ? Assignment::TRUE : Assignment::FALSE;
+            next->assignment = ((double)rand() / RAND_MAX < rel) ? Assignment::TRUE : Assignment::FALSE;
             solver.decisions->push_back(next);
             next->setReason(nullptr);
             next->decisionLevel = d;
             return next;
         }
     } else {
-        init = ((double) rand() / RAND_MAX) * solver.clauses->size();
-        for (int i = 0; i < solver.clauses->size(); i++) {
+        init = ((double)rand() / RAND_MAX) * solver.clauses->size();
+        for (int i = 0; i < static_cast<int>(solver.clauses->size()); i++) {
             shared_ptr<Clause> c = solver.clauses->at((i + init) % solver.clauses->size());
             if (!c->satisfied && c->literals->size() > 1) {
                 if (!c->watcher->at(0)->lit->satisfied()) {
@@ -182,16 +184,17 @@ shared_ptr<Var> Decider::decideActivityBased(shared_ptr<vector<shared_ptr<Var>>>
     return nullptr;
 }
 
-shared_ptr<Var> Decider::decideVariableCountBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver) {
+shared_ptr<Var> Decider::decideVariableCountBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver)
+{
     int vars = variables->size();
     shared_ptr<Lit> l = nullptr;
-    int maxCount = numeric_limits<int>::max();
+    // int maxCount = numeric_limits<int>::max();
     int minCount = -1;
 
     for (int i = 0; i < vars; i++) {
         if (variables->at(i)->assignment != Assignment::UNASSIGNED)
             continue;
-        for (int j = 0; j < variables->at(i)->watchList->size(); j++) {
+        for (int j = 0; j < static_cast<int>(variables->at(i)->watchList->size()); j++) {
             if (!variables->at(i)->watchList->at(j)->clause->satisfied) {
                 /*if(maxCount>variables->at(i)->watchList->at(j)->lit->variableCount) {
                  l = variables->at(i)->watchList->at(j)->lit;
@@ -221,7 +224,8 @@ shared_ptr<Var> Decider::decideVariableCountBased(shared_ptr<vector<shared_ptr<V
     return v;
 }
 
-bool Decider::litRangeCompare(shared_ptr<Lit> a, shared_ptr<Lit> b) {
+bool Decider::litRangeCompare(shared_ptr<Lit> a, shared_ptr<Lit> b)
+{
     double sa;
     double sb;
     if (a->sign == Assignment::TRUE)

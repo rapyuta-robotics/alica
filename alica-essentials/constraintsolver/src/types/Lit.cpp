@@ -6,16 +6,21 @@
  */
 
 #include "types/Lit.h"
-
 #include "types/Var.h"
+
+#include <autodiff/AutoDiff.h>
 
 #include <iostream>
 
-namespace alica {
-namespace reasoner {
-namespace cnsat {
+namespace alica
+{
+namespace reasoner
+{
+namespace cnsat
+{
 
-Lit::Lit(shared_ptr<Var> v, Assignment ass) {
+Lit::Lit(const std::shared_ptr<Var>& v, Assignment ass)
+{
     this->var = v;
     this->sign = ass;
     if (ass == Assignment::TRUE) {
@@ -27,135 +32,142 @@ Lit::Lit(shared_ptr<Var> v, Assignment ass) {
     variableCount = -1;
 }
 
-Lit::Lit(shared_ptr<Term> t, Assignment ass, bool temp) {
-    this->isTemporary = temp;
-    this->sign = ass;
-    this->atom = t;
-    variableCount = -1;
+Lit::Lit(autodiff::TermPtr t, Assignment ass, bool temp)
+    : _atom(t)
+    , isTemporary(temp)
+    , sign(ass)
+    , variableCount(-1)
+{
 }
 
-Lit::~Lit() {
-    // TODO Auto-generated destructor stub
-}
+Lit::~Lit() {}
 
-bool Lit::satisfied() {
+bool Lit::satisfied() const
+{
     return sign == var->assignment;
 }
 
-bool Lit::conflicted() {
+bool Lit::conflicted() const
+{
     return var->assignment != sign && var->assignment != Assignment::UNASSIGNED;
 }
 
-void Lit::computeVariableCount() {
+void Lit::computeVariableCount()
+{
     variableCount = 0;
-    atom->accept(shared_from_this());
+    _atom->acceptRecursive(this);
 }
 
-int Lit::visit(shared_ptr<Abs> abs) {
-    abs->arg->accept(shared_from_this());
+int Lit::visit(autodiff::Abs* abs)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<And> and_) {
-    and_->left->accept(shared_from_this());
-    and_->right->accept(shared_from_this());
+int Lit::visit(autodiff::And* and_)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Atan2> atan2) {
-    atan2->left->accept(shared_from_this());
-    atan2->right->accept(shared_from_this());
+int Lit::visit(autodiff::Atan2* atan2)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Constant> constant) {}
-
-int Lit::visit(shared_ptr<ConstPower> intPower) {
-    intPower->base->accept(shared_from_this());
+int Lit::visit(autodiff::Constant* constant)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<ConstraintUtility> cu) {
-    cu->constraint->accept(shared_from_this());
-    cu->utility->accept(shared_from_this());
+int Lit::visit(autodiff::ConstPower* intPower)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Cos> cos) {
-    cos->arg->accept(shared_from_this());
+int Lit::visit(autodiff::ConstraintUtility* cu)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Exp> exp) {
-    exp->arg->accept(shared_from_this());
+int Lit::visit(autodiff::Cos* cos)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Gp> gp) {
-    cerr << "Not Implemented Yet!" << endl;
-    throw "Not Implemented Yet!";
+int Lit::visit(autodiff::Exp* exp)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<LinSigmoid> sigmoid) {
-    sigmoid->arg->accept(shared_from_this());
+int Lit::visit(autodiff::LinSigmoid* sigmoid)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Log> log) {
-    log->arg->accept(shared_from_this());
+int Lit::visit(autodiff::Log* log)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<LTConstraint> constraint) {
-    constraint->left->accept(shared_from_this());
-    constraint->right->accept(shared_from_this());
+int Lit::visit(autodiff::LTConstraint* constraint)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<LTEConstraint> constraint) {
-    constraint->left->accept(shared_from_this());
-    constraint->right->accept(shared_from_this());
+int Lit::visit(autodiff::LTEConstraint* constraint)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Max> max) {
-    max->left->accept(shared_from_this());
-    max->right->accept(shared_from_this());
+int Lit::visit(autodiff::Max* max)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Min> min) {
-    min->left->accept(shared_from_this());
-    min->right->accept(shared_from_this());
+int Lit::visit(autodiff::Min* min)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Or> or_) {
-    or_->left->accept(shared_from_this());
-    or_->right->accept(shared_from_this());
+int Lit::visit(autodiff::Or* or_)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Product> product) {
-    product->left->accept(shared_from_this());
-    product->right->accept(shared_from_this());
+int Lit::visit(autodiff::Product* product)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Reification> dis) {
-    dis->condition->accept(shared_from_this());
+int Lit::visit(autodiff::Reification* dis)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Sigmoid> sigmoid) {
-    sigmoid->arg->accept(shared_from_this());
-    sigmoid->mid->accept(shared_from_this());
+int Lit::visit(autodiff::Sigmoid* sigmoid)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Sin> sin) {
-    sin->arg->accept(shared_from_this());
+int Lit::visit(autodiff::Sin* sin)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Sum> sum) {
-    for (shared_ptr<Term> t : sum->terms) {
-        t->accept(shared_from_this());
-    }
+int Lit::visit(autodiff::Sum* sum)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<TermPower> power) {
-    power->base->accept(shared_from_this());
-    power->exponent->accept(shared_from_this());
+int Lit::visit(autodiff::TermPower* power)
+{
+    return 0;
 }
 
-int Lit::visit(shared_ptr<Variable> var) {
-    variableCount++;
+int Lit::visit(autodiff::Variable* var)
+{
+    ++variableCount;
+    return 0;
 }
-
-int Lit::visit(shared_ptr<Zero> zero) {}
 
 } /* namespace cnsat */
 } /* namespace reasoner */

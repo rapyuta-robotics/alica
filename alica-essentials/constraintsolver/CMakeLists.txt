@@ -15,13 +15,15 @@ find_package(catkin REQUIRED COMPONENTS
   system_config
   alica_engine
   alica_ros_proxy
+  alica_solver_interface
+  alica_common_config
   roslib
 )
 
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES constraintsolver
- CATKIN_DEPENDS fsystem autodiff roslib
+ CATKIN_DEPENDS fsystem autodiff roslib alica_solver_interface alica_common_config
 )
 
 include_directories(
@@ -35,7 +37,6 @@ add_library(constraintsolver
   src/intervals/RecursivePropagate.cpp
   src/intervals/ResetIntervals.cpp
   src/intervals/SetParents.cpp
-  src/intervals/TermList.cpp
   src/intervals/UnsolveableException.cpp
   src/intervals/UpwardPropagator.cpp
   src/types/Clause.cpp
@@ -53,7 +54,11 @@ add_library(constraintsolver
 
 target_link_libraries(constraintsolver ${catkin_LIBRARIES})
 
-catkin_add_gtest(${PROJECT_NAME}-test test/test_constraintsolver.cpp test/test_cnsat.cpp test/test_cnsmtgsolver.cpp)
+catkin_add_gtest(${PROJECT_NAME}-test 
+ test/test_constraintsolver.cpp
+ test/test_cnsat.cpp
+ test/test_cnsmtgsolver.cpp
+)
 if(TARGET ${PROJECT_NAME}-test)
   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
 endif()
