@@ -5,16 +5,18 @@
  *      Author: Stefan Jakob
  */
 
-#include <engine/SimplePlanTree.h>
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
-#include "engine/model/Task.h"
 #include "engine/model/State.h"
+#include "engine/model/Task.h"
+#include <engine/SimplePlanTree.h>
 
-namespace alica {
+namespace alica
+{
 
 SimplePlanTree::SimplePlanTree()
-        : robotId(nullptr) {
+    : robotId(nullptr)
+{
     this->state = nullptr;
     this->newSimplePlanTree = true;
     this->entryPoint = nullptr;
@@ -23,7 +25,8 @@ SimplePlanTree::SimplePlanTree()
 
 SimplePlanTree::~SimplePlanTree() {}
 
-bool SimplePlanTree::containsPlan(const AbstractPlan* plan) const {
+bool SimplePlanTree::containsPlan(const AbstractPlan* plan) const
+{
     if (this->getEntryPoint()->getPlan() == plan) {
         return true;
     }
@@ -35,54 +38,62 @@ bool SimplePlanTree::containsPlan(const AbstractPlan* plan) const {
     return false;
 }
 
-void SimplePlanTree::setEntryPoint(const EntryPoint* entryPoint) {
+void SimplePlanTree::setEntryPoint(const EntryPoint* entryPoint)
+{
     this->entryPoint = entryPoint;
 }
 
-void SimplePlanTree::setState(const State* state) {
+void SimplePlanTree::setState(const State* state)
+{
     this->state = state;
 }
 
-const std::unordered_set<std::shared_ptr<SimplePlanTree>>& SimplePlanTree::getChildren() const {
+const std::unordered_set<std::shared_ptr<SimplePlanTree>>& SimplePlanTree::getChildren() const
+{
     return children;
 }
 
-void SimplePlanTree::setChildren(const std::unordered_set<std::shared_ptr<SimplePlanTree>>& children) {
+void SimplePlanTree::setChildren(const std::unordered_set<std::shared_ptr<SimplePlanTree>>& children)
+{
     this->children = children;
 }
 
-const supplementary::AgentID* SimplePlanTree::getRobotId() {
+const supplementary::AgentID* SimplePlanTree::getRobotId()
+{
     return robotId;
 }
 
-void SimplePlanTree::setRobotId(const supplementary::AgentID* robotId) {
+void SimplePlanTree::setRobotId(const supplementary::AgentID* robotId)
+{
     this->robotId = robotId;
 }
 
-bool SimplePlanTree::isNewSimplePlanTree() const {
+bool SimplePlanTree::isNewSimplePlanTree() const
+{
     return newSimplePlanTree;
 }
 
-void SimplePlanTree::setNewSimplePlanTree(bool newSimplePlanTree) {
+void SimplePlanTree::setNewSimplePlanTree(bool newSimplePlanTree)
+{
     this->newSimplePlanTree = newSimplePlanTree;
 }
-AlicaTime SimplePlanTree::getReceiveTime() const {
+AlicaTime SimplePlanTree::getReceiveTime() const
+{
     return receiveTime;
 }
 
-void SimplePlanTree::setReceiveTime(AlicaTime receiveTime) {
+void SimplePlanTree::setReceiveTime(AlicaTime receiveTime)
+{
     this->receiveTime = receiveTime;
 }
 
-const std::list<int64_t>& SimplePlanTree::getStateIds() const {
-    return stateIds;
-}
-
-void SimplePlanTree::setStateIds(const std::list<int64_t>& stateIds) {
+void SimplePlanTree::setStateIds(const IdGrp& stateIds)
+{
     this->stateIds = stateIds;
 }
 
-std::string SimplePlanTree::toString() const {
+std::string SimplePlanTree::toString() const
+{
     std::stringstream result;
 
     result << "RobotID: " << this->robotId << "\n";

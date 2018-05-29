@@ -90,7 +90,7 @@ void VariableSyncModule::onSolverResult(const SolverResult& msg)
         }
     }
     if (re == nullptr) {
-        lock_guard<std::mutex> lock(_mutex);
+        std::lock_guard<std::mutex> lock(_mutex);
         _store.emplace_back(msg.senderID);
         re = &_store.back();
     }

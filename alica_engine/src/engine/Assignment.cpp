@@ -116,11 +116,6 @@ StateCollection* Assignment::getRobotStateMapping()
     return robotStateMapping;
 }
 
-AssignmentCollection* Assignment::getEpRobotsMapping()
-{
-    return epRobotsMapping;
-}
-
 void Assignment::getAllRobots(AgentGrp& o_robots)
 {
     for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
@@ -261,7 +256,7 @@ std::shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkin
     return ret;
 }
 
-std::shared_ptr<SuccessCollection> Assignment::getEpSuccessMapping()
+std::shared_ptr<SuccessCollection> Assignment::getEpSuccessMapping() const
 {
     return this->epSucMapping;
 }
@@ -445,7 +440,7 @@ bool Assignment::removeRobot(const supplementary::AgentID* robot, const EntryPoi
     return epRobotsMapping->removeRobot(robot, ep);
 }
 
-std::string Assignment::assignmentCollectionToString()
+std::string Assignment::assignmentCollectionToString() const
 {
     std::stringstream ss;
     ss << "ASS" << std::endl;
@@ -494,7 +489,7 @@ void Assignment::clear()
     this->epSucMapping->clear();
 }
 
-std::string Assignment::toString()
+std::string Assignment::toString() const
 {
     std::stringstream ss;
     ss << std::endl;

@@ -1,20 +1,23 @@
-#include <engine/collections/RobotProperties.h>
 #include "supplementary/AgentIDFactory.h"
 #include <engine/AlicaEngine.h>
 #include <engine/PlanRepository.h>
+#include <engine/collections/RobotProperties.h>
 #include <engine/model/CapValue.h>
 
-namespace alica {
+namespace alica
+{
 
-RobotProperties::RobotProperties(const supplementary::AgentID* agentId, const AlicaEngine* engine, string name)
-        : agentId(agentId) {
+RobotProperties::RobotProperties(const supplementary::AgentID* agentId, const AlicaEngine* engine, const std::string& name)
+    : agentId(agentId)
+{
     this->readFromConfig(engine, name);
 }
 
 /**
  * Reads the default role as well as the capabilities and characteristics from the Globals.conf.
  */
-void RobotProperties::readFromConfig(const AlicaEngine* engine, string name) {
+void RobotProperties::readFromConfig(const AlicaEngine* engine, const std::string& name)
+{
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     std::string key = "";
     std::string kvalue = "";
@@ -39,29 +42,33 @@ void RobotProperties::readFromConfig(const AlicaEngine* engine, string name) {
             }
         }
     }
-    this->defaultRole =
-            (*sc)["Globals"]->tryGet<string>("NOROLESPECIFIED", "Globals", "Team", name.c_str(), "DefaultRole", NULL);
+    this->defaultRole = (*sc)["Globals"]->tryGet<std::string>("NOROLESPECIFIED", "Globals", "Team", name.c_str(), "DefaultRole", NULL);
 }
 
-RobotProperties::~RobotProperties() {
+RobotProperties::~RobotProperties()
+{
     for (auto x : this->characteristics) {
         delete x.second;
     }
 }
 
-const supplementary::AgentID* RobotProperties::getId() const {
+const supplementary::AgentID* RobotProperties::getId() const
+{
     return agentId;
 }
 
-const std::map<std::string, const Characteristic*>& RobotProperties::getCharacteristics() const {
+const std::map<std::string, const Characteristic*>& RobotProperties::getCharacteristics() const
+{
     return this->characteristics;
 }
 
-const std::string& RobotProperties::getDefaultRole() const {
+const std::string& RobotProperties::getDefaultRole() const
+{
     return defaultRole;
 }
 
-void RobotProperties::setDefaultRole(const std::string& defaultRole) {
+void RobotProperties::setDefaultRole(const std::string& defaultRole)
+{
     this->defaultRole = defaultRole;
 }
 

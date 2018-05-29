@@ -38,6 +38,17 @@
 
 namespace alica
 {
+using std::cout;
+using std::endl;
+using std::map;
+using std::pair;
+using std::stod;
+using std::stoi;
+using std::stol;
+using std::stoll;
+using std::string;
+using std::stringstream;
+
 const string ModelFactory::conditions = "conditions";
 const string ModelFactory::entryPoints = "entryPoints";
 const string ModelFactory::rating = "rating";
@@ -1409,7 +1420,7 @@ const EntryPoint* ModelFactory::generateIdleEntryPoint()
     idleEP->setName("IDLE-ep");
     idleEP->setId(EntryPoint::IDLEID);
     idleEP->setMinCardinality(0);
-    idleEP->setMaxCardinality(numeric_limits<int>::max());
+    idleEP->setMaxCardinality(std::numeric_limits<int>::max());
     Task* idleTask = new Task(true);
     idleTask->setName("IDLE-TASK");
     idleTask->setId(Task::IDLEID);

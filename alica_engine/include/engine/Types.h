@@ -43,6 +43,7 @@ using ConditionGrp = std::vector<const Condition*>;
 using DomainVariableGrp = std::vector<const DomainVariable*>;
 using EntryPointGrp = std::vector<const EntryPoint*>;
 using FailureStateGrp = std::vector<const FailureState*>;
+using IdGrp = std::vector<int64_t>;
 using ParameterGrp = std::vector<const Parameter*>;
 using ParametrisationGrp = std::vector<const Parametrisation*>;
 using PlanGrp = std::vector<const Plan*>;

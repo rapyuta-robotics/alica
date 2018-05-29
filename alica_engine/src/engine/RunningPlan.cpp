@@ -124,11 +124,11 @@ void RunningPlan::setFailHandlingNeeded(bool failHandlingNeeded)
 /**
  * Gets/Sets the parent RunningPlan of this RunningPlan. Null in case this is the top-level element.
  */
-void RunningPlan::setParent(weak_ptr<RunningPlan> s)
+void RunningPlan::setParent(std::weak_ptr<RunningPlan> s)
 {
     _parent = s;
 }
-weak_ptr<RunningPlan> RunningPlan::getParent() const
+std::weak_ptr<RunningPlan> RunningPlan::getParent() const
 {
     return _parent;
 }
@@ -173,16 +173,16 @@ void RunningPlan::setAllocationNeeded(bool need)
 bool RunningPlan::evalPreCondition()
 {
     if (_plan == nullptr) {
-        cerr << "Cannot Eval Condition, Plan is null" << endl;
-        throw new exception();
+        std::cerr << "Cannot Eval Condition, Plan is null" << std::endl;
+        throw std::exception();
     }
     if (_plan->getPreCondition() == nullptr) {
         return true;
     }
     try {
         return _plan->getPreCondition()->evaluate(shared_from_this());
-    } catch (exception& e) {
-        cerr << "Exception in precondition: " << e.what() << endl;
+    } catch (std::exception& e) {
+        std::cerr << "Exception in precondition: " << e.what() << std::endl;
         return false;
     }
 }
@@ -194,16 +194,16 @@ bool RunningPlan::evalPreCondition()
 bool RunningPlan::evalRuntimeCondition()
 {
     if (_plan == nullptr) {
-        cerr << "Cannot Eval Condition, Plan is null" << endl;
-        throw new exception();
+        std::cerr << "Cannot Eval Condition, Plan is null" << std::endl;
+        throw std::exception();
     }
     if (_plan->getRuntimeCondition() == nullptr) {
         return true;
     }
     try {
         return _plan->getRuntimeCondition()->evaluate(shared_from_this());
-    } catch (exception& e) {
-        cerr << "Exception in runtimecondition: " << _plan->getName() << e.what() << endl;
+    } catch (std::exception& e) {
+        std::cerr << "Exception in runtimecondition: " << _plan->getName() << e.what() << std::endl;
         return false;
     }
 }
@@ -312,7 +312,7 @@ void RunningPlan::printRecursive()
         c->printRecursive();
     }
     if (_children.size() > 0) {
-        cout << "END CHILDREN of " << (_plan == nullptr ? "NULL" : _plan->getName()) << endl;
+        std::cout << "END CHILDREN of " << (_plan == nullptr ? "NULL" : _plan->getName()) << std::endl;
     }
 }
 
@@ -490,7 +490,7 @@ void RunningPlan::setFailedChild(const AbstractPlan* child)
     if (_failedSubPlans.find(child) != _failedSubPlans.end()) {
         _failedSubPlans.at(child)++;
     } else {
-        _failedSubPlans.insert(pair<const AbstractPlan*, int>(child, 1));
+        _failedSubPlans.insert(std::pair<const AbstractPlan*, int>(child, 1));
     }
 }
 
@@ -608,7 +608,7 @@ void RunningPlan::limitToRobots(const AgentGrp& robots)
     AgentGrp curRobots;
     _assignment->getAllRobots(curRobots);
     for (const supplementary::AgentID* r : curRobots) {
-        if (find_if(robots.begin(), robots.end(), [&r](const supplementary::AgentID* id) { return *r == *id; }) == curRobots.end()) {
+        if (find_if(robots.begin(), robots.end(), [&r](const supplementary::AgentID* id) { return *r == *id; }) == robots.end()) {
             if (_activeState != nullptr && _assignment->getRobotStateMapping()->getStateOfRobot(r) == _activeState) {
                 recurse = true;
             }
@@ -794,7 +794,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
     return ret;
 }
 
-void RunningPlan::toMessage(list<long>& message, shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const
+void RunningPlan::toMessage(IdGrp& message, shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const
 {
     if (isBehaviour()) {
         return;
@@ -820,10 +820,10 @@ void RunningPlan::toMessage(list<long>& message, shared_ptr<const RunningPlan>& 
 std::string RunningPlan::toString() const
 {
     std::stringstream ss;
-    ss << "######## RP ##########" << endl;
-    ss << "Plan: " + (_plan != nullptr ? _plan->getName() : "NULL") << endl;
-    ss << "PlanType: " << (_planType != nullptr ? _planType->getName() : "NULL") << endl;
-    ss << "ActState: " << (_activeState != nullptr ? _activeState->getName() : "NULL") << endl;
+    ss << "######## RP ##########" << std::endl;
+    ss << "Plan: " + (_plan != nullptr ? _plan->getName() : "NULL") << std::endl;
+    ss << "PlanType: " << (_planType != nullptr ? _planType->getName() : "NULL") << std::endl;
+    ss << "ActState: " << (_activeState != nullptr ? _activeState->getName() : "NULL") << std::endl;
     ss << "Task: " << (getOwnEntryPoint() != nullptr ? getOwnEntryPoint()->getTask()->getName() : "NULL") << std::endl;
     ss << "IsBehaviour: " << isBehaviour() << "\t";
     if (isBehaviour()) {
@@ -854,8 +854,8 @@ std::string RunningPlan::toString() const
         }
         ss << ")";
     }
-    ss << endl << "CycleManagement - Assignment Overridden: " << (_cycleManagement->isOverridden() ? "true" : "false") << endl;
-    ss << "\n########## ENDRP ###########" << endl;
+    ss << std::endl << "CycleManagement - Assignment Overridden: " << (_cycleManagement->isOverridden() ? "true" : "false") << std::endl;
+    ss << "\n########## ENDRP ###########" << std::endl;
     return ss.str();
 }
 

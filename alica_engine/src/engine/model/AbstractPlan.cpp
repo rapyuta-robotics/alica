@@ -108,7 +108,7 @@ void AbstractPlan::setPreCondition(PreCondition* preCondition)
     _preCondition = preCondition;
 }
 
-void AbstractPlan::setUtilityFunction(shared_ptr<UtilityFunction> utilityFunction)
+void AbstractPlan::setUtilityFunction(std::shared_ptr<UtilityFunction> utilityFunction)
 {
     _utilityFunction = utilityFunction;
 }

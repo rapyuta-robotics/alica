@@ -2,27 +2,29 @@
 
 #include "supplementary/AgentID.h"
 
-#include <vector>
 #include <tuple>
+#include <vector>
 
-namespace alica {
-using std::get;
-using std::tuple;
-using std::vector;
+namespace alica
+{
 
-typedef tuple<long, vector<const supplementary::AgentID*>> stdEntryPointRobot;
-struct EntryPointRobots {
+typedef std::tuple<int64_t, std::vector<const supplementary::AgentID*>> stdEntryPointRobot;
+struct EntryPointRobots
+{
     EntryPointRobots()
-            : entrypoint(0) {}
-
-    long entrypoint;
-    vector<const supplementary::AgentID*> robots;
-
-    EntryPointRobots(stdEntryPointRobot& s) {
-        entrypoint = get<0>(s);
-        robots = get<1>(s);
+        : entrypoint(0)
+    {
     }
 
-    stdEntryPointRobot toStandard() { return move(make_tuple(entrypoint, robots)); }
+    int64_t entrypoint;
+    std::vector<const supplementary::AgentID*> robots;
+
+    EntryPointRobots(const stdEntryPointRobot& s)
+    {
+        entrypoint = std::get<0>(s);
+        robots = std::get<1>(s);
+    }
+
+    stdEntryPointRobot toStandard() const { return std::make_tuple(entrypoint, robots); }
 };
-}  // namespace alica
+} // namespace alica

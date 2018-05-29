@@ -1,21 +1,21 @@
-#include <engine/planselector/PlanSelector.h>
-#include <engine/planselector/PartialAssignmentPool.h>
 #include "engine/AlicaEngine.h"
-#include "engine/TeamObserver.h"
-#include "engine/teammanager/TeamManager.h"
-#include "engine/planselector/PartialAssignment.h"
-#include "engine/model/Plan.h"
-#include "engine/RunningPlan.h"
 #include "engine/Assignment.h"
-#include "engine/model/PlanType.h"
-#include "engine/model/AbstractPlan.h"
-#include "engine/model/BehaviourConfiguration.h"
-#include "engine/model/PlanningProblem.h"
-#include "engine/model/Behaviour.h"
-#include "engine/planselector/TaskAssignment.h"
-#include "engine/model/EntryPoint.h"
+#include "engine/RunningPlan.h"
+#include "engine/TeamObserver.h"
 #include "engine/collections/RobotProperties.h"
+#include "engine/model/AbstractPlan.h"
+#include "engine/model/Behaviour.h"
+#include "engine/model/BehaviourConfiguration.h"
+#include "engine/model/EntryPoint.h"
+#include "engine/model/Plan.h"
+#include "engine/model/PlanType.h"
+#include "engine/model/PlanningProblem.h"
 #include "engine/model/State.h"
+#include "engine/planselector/PartialAssignment.h"
+#include "engine/planselector/TaskAssignment.h"
+#include "engine/teammanager/TeamManager.h"
+#include <engine/planselector/PartialAssignmentPool.h>
+#include <engine/planselector/PlanSelector.h>
 
 #include "engine/RunningPlan.h"
 #include "engine/model/AbstractPlan.h"
@@ -27,10 +27,13 @@
 using std::list;
 using std::shared_ptr;
 using std::vector;
+using std::weak_ptr;
 
-namespace alica {
+namespace alica
+{
 
-PlanSelector::PlanSelector(AlicaEngine* ae, PartialAssignmentPool* pap) {
+PlanSelector::PlanSelector(AlicaEngine* ae, PartialAssignmentPool* pap)
+{
     this->ae = ae;
     this->to = ae->getTeamObserver();
     this->pap = pap;
@@ -41,7 +44,8 @@ PlanSelector::~PlanSelector() {}
 /**
  * Edits data from the old running plan to call the method CreateRunningPlan appropriatly.
  */
-shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp) {
+shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp)
+{
     assert(!rp->isBehaviour());
     // Reset set index of the partial assignment multiton
     PartialAssignment::reset(pap);
@@ -61,7 +65,8 @@ shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<Runnin
 /**
  * Edits data from the old running plan to call the method CreateRunningPlan appropriately.
  */
-shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp, const AgentGrp& robots) {
+shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<RunningPlan> rp, const AgentGrp& robots)
+{
     assert(!rp->isBehaviour());
     // Reset set index of the partial assignment object pool
     PartialAssignment::reset(pap);
@@ -82,14 +87,16 @@ shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<Runnin
  * @param robotIDs The set of robots or agents, which are available in a shared_ptr<vector<int> >
  * @return A shared_ptr<list<shared_ptr<RunningPlan>>>, encoding the solution.
  */
-shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForState(
-        shared_ptr<RunningPlan> planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs) {
+shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForState(shared_ptr<RunningPlan> planningParent, const AbstractPlanGrp& plans,
+                                                                         const AgentGrp& robotIDs)
+{
     PartialAssignment::reset(pap);
     return getPlansForStateInternal(planningParent, plans, robotIDs);
 }
 
-shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> planningParent, const PlanGrp& plans,
-        const AgentGrp& robotIDs, shared_ptr<RunningPlan> oldRp, const PlanType* relevantPlanType) {
+shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> planningParent, const PlanGrp& plans, const AgentGrp& robotIDs,
+                                                        shared_ptr<RunningPlan> oldRp, const PlanType* relevantPlanType)
+{
     PlanGrp newPlanList;
     // REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
     for (const Plan* plan : plans) {
@@ -101,10 +108,10 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
             for (const supplementary::AgentID* robot : robotIDs) {
                 ss << *robot << ", ";
             }
-            ss << "= " << robotIDs.size() << " IDs are not enough for the plan " << plan->getName() << "!" << endl;
+            ss << "= " << robotIDs.size() << " IDs are not enough for the plan " << plan->getName() << "!" << std::endl;
             // this.baseModule.Mon.Error(1000, msg);
 
-            cout << ss.str();
+            std::cout << ss.str();
 #endif
         } else {
             // this plan was ok according to its cardinalities, so we can add it
@@ -121,11 +128,11 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
     shared_ptr<RunningPlan> rp;
     if (oldRp == nullptr) {
         // preassign other robots, because we dont need a similar assignment
-        rp = make_shared<RunningPlan>(ae, relevantPlanType);
+        rp = std::make_shared<RunningPlan>(ae, relevantPlanType);
         ta = new TaskAssignment(this->ae, newPlanList, robotIDs, true);
     } else {
         // dont preassign other robots, because we need a similar assignment (not the same)
-        rp = make_shared<RunningPlan>(ae, oldRp->getPlanType());
+        rp = std::make_shared<RunningPlan>(ae, oldRp->getPlanType());
         ta = new TaskAssignment(this->ae, newPlanList, robotIDs, false);
         oldAss = oldRp->getAssignment();
     }
@@ -141,7 +148,7 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
         rp->setAssignment(ta->getNextBestAssignment(&*oldAss));
         if (rp->getAssignment() == nullptr) {
 #ifdef PSDEBUG
-            cout << "PS: rp.Assignment is NULL" << endl;
+            std::cout << "PS: rp.Assignment is NULL" << std::endl;
 #endif
             return nullptr;
         }
@@ -149,8 +156,7 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
         // PLAN (needed for Conditionchecks)
         rp->setPlan(rp->getAssignment()->getPlan());
 #ifdef PSDEBUG
-        cout << "PS: rp.Assignment of Plan " << rp->getPlan()->getName() << " from " << ownRobProb->getId()
-             << " is: " << rp->getAssignment()->toString();
+        cout << "PS: rp.Assignment of Plan " << rp->getPlan()->getName() << " from " << ownRobProb->getId() << " is: " << rp->getAssignment()->toString();
 #endif
         // CONDITIONCHECK
         if (!rp->evalPreCondition()) {
@@ -165,12 +171,12 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
 
         if (ep == nullptr) {
 #ifdef PSDEBUG
-            cout << "PS: The robot " << ownRobProb->getName() << "(Id: " << localAgentID
-                 << ") is not assigned to enter the plan " << rp->getPlan()->getName() << " and will IDLE!" << endl;
+            std::cout << "PS: The robot " << ownRobProb->getName() << "(Id: " << localAgentID << ") is not assigned to enter the plan "
+                      << rp->getPlan()->getName() << " and will IDLE!" << std::endl;
 #endif
             rp->setActiveState(nullptr);
             rp->setOwnEntryPoint(nullptr);
-            return rp;  // If we return here, this robot will idle (no ep at rp)
+            return rp; // If we return here, this robot will idle (no ep at rp)
         } else {
             // assign found EntryPoint (this robot dont idle)
             rp->setOwnEntryPoint(ep);
@@ -183,7 +189,7 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
             rpChildren = this->getPlansForStateInternal(rp, rp->getActiveState()->getPlans(), *robots);
         } else {
 #ifdef PSDEBUG
-            cout << "PS: no recursion due to utilitycheck" << endl;
+            std::cout << "PS: no recursion due to utilitycheck" << std::endl;
 #endif
             // Don't calculate children, because we have an
             // oldRp -> we just replace the oldRp
@@ -193,27 +199,27 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
     } while (rpChildren == nullptr);
     // WHEN WE GOT HERE, THIS ROBOT WONT IDLE AND WE HAVE A
     // VALID ASSIGNMENT, WHICH PASSED ALL RUNTIME CONDITIONS
-    if (rpChildren != nullptr && rpChildren->size() != 0)  // c# rpChildren != null
+    if (rpChildren != nullptr && rpChildren->size() != 0) // c# rpChildren != null
     {
 #ifdef PSDEBUG
-        cout << "PS: Set child -> father reference" << endl;
+        std::cout << "PS: Set child -> father reference" << std::endl;
 #endif
         rp->addChildren(rpChildren);
     }
 #ifdef PSDEBUG
-    cout << "PS: Created RunningPlan: \n" << rp->toString() << endl;
+    std::cout << "PS: Created RunningPlan: \n" << rp->toString() << std::endl;
 #endif
     delete ta;
-    return rp;  // If we return here, this robot is normal assigned
+    return rp; // If we return here, this robot is normal assigned
 }
 
-shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForStateInternal(
-        shared_ptr<RunningPlan> planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs) {
-    shared_ptr<list<shared_ptr<RunningPlan>>> rps = make_shared<list<shared_ptr<RunningPlan>>>();
+shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForStateInternal(shared_ptr<RunningPlan> planningParent, const AbstractPlanGrp& plans,
+                                                                                 const AgentGrp& robotIDs)
+{
+    shared_ptr<list<shared_ptr<RunningPlan>>> rps = std::make_shared<list<shared_ptr<RunningPlan>>>();
 #ifdef PSDEBUG
-    cout << "<######PS: GetPlansForState: Parent:"
-         << (planningParent != nullptr ? planningParent->getPlan()->getName() : "null")
-         << " plan count: " << plans.size() << " robot count: " << robotIDs.size() << " ######>" << endl;
+    std::cout << "<######PS: GetPlansForState: Parent:" << (planningParent != nullptr ? planningParent->getPlan()->getName() : "null")
+              << " plan count: " << plans.size() << " robot count: " << robotIDs.size() << " ######>" << std::endl;
 #endif
     shared_ptr<RunningPlan> rp;
     PlanGrp plansSet;
@@ -226,13 +232,13 @@ shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForStateInternal
         // BEHAVIOUR CONFIGURATION
         bc = dynamic_cast<const BehaviourConfiguration*>(ap);
         if (bc != nullptr) {
-            rp = make_shared<RunningPlan>(ae, bc);
+            rp = std::make_shared<RunningPlan>(ae, bc);
             // A BehaviourConfiguration is a Plan too (in this context)
             rp->setPlan(bc);
             rps->push_back(rp);
             rp->setParent(planningParent);
 #ifdef PSDEBUG
-            cout << "PS: Added Behaviour " << bc->getBehaviour()->getName() << endl;
+            std::cout << "PS: Added Behaviour " << bc->getBehaviour()->getName() << std::endl;
 #endif
         } else {
             // PLAN
@@ -243,8 +249,7 @@ shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForStateInternal
                 rp = this->createRunningPlan(planningParent, plansSet, robotIDs, nullptr, nullptr);
                 if (rp == nullptr) {
 #ifdef PSDEBUG
-                    cout << "PS: It was not possible to create a RunningPlan for the Plan " << p->getName() << "!"
-                         << endl;
+                    std::cout << "PS: It was not possible to create a RunningPlan for the Plan " << p->getName() << "!" << std::endl;
 #endif
                     return nullptr;
                 }
@@ -256,16 +261,15 @@ shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForStateInternal
                     rp = this->createRunningPlan(planningParent, pt->getPlans(), robotIDs, nullptr, pt);
                     if (rp == nullptr) {
                         //#ifdef PSDEBUG
-                        cout << "PS: It was not possible to create a RunningPlan for the Plan " << pt->getName() << "!"
-                             << endl;
+                        std::cout << "PS: It was not possible to create a RunningPlan for the Plan " << pt->getName() << "!" << std::endl;
                         //#endif
                         return nullptr;
                     }
                     rps->push_back(rp);
                 }
-            }  // else Plan
-        }      // else BehaviourConfiguration
-    }          // foreach AbstractPlan
+            } // else Plan
+        }     // else BehaviourConfiguration
+    }         // foreach AbstractPlan
     return rps;
 }
 
