@@ -633,8 +633,7 @@ Variable* ModelFactory::createVariable(tinyxml2::XMLElement* element)
 }
 RuntimeCondition* ModelFactory::createRuntimeCondition(tinyxml2::XMLElement* element)
 {
-    RuntimeCondition* r = new RuntimeCondition();
-    r->setId(this->parser->parserId(element));
+    RuntimeCondition* r = new RuntimeCondition(this->parser->parserId(element));
     setAlicaElementAttributes(r, element);
     addElement(r);
 

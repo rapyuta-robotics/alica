@@ -3,9 +3,10 @@ using namespace std;
 using namespace alica;
 /*PROTECTED REGION ID(ch1524452836022) ENABLED START*/
 
-#include <AutoDiff.h>
 #include <assert.h>
+#include <autodiff/AutoDiff.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
+using autodiff::TermPtr;
 
 /*PROTECTED REGION END*/
 
@@ -38,25 +39,24 @@ void Constraint1524452937477::getConstraint(shared_ptr<ProblemDescriptor> c, sha
 {
     /*PROTECTED REGION ID(cc1524452937477) ENABLED START*/
     assert(c->getStaticVars().size() == 2);
-    assert(c->getStaticRanges().size() == 2);
     assert(c->getDomainVars().size() == 1);
     assert(c->getDomainVars()[0].getVars().size() == 2);
-    std::shared_ptr<autodiff::Term> l1a = std::static_pointer_cast<autodiff::Variable>(c->getStaticVars()[0]);
-    std::shared_ptr<autodiff::Term> l1b = std::static_pointer_cast<autodiff::Variable>(c->getStaticVars()[1]);
+    TermPtr l1a = static_cast<autodiff::Variable*>(c->getStaticVars()[0]);
+    TermPtr l1b = static_cast<autodiff::Variable*>(c->getStaticVars()[1]);
 
-    std::shared_ptr<autodiff::Term> x = std::static_pointer_cast<autodiff::Variable>(c->getDomainVars()[0].getVars()[0].var);
-    std::shared_ptr<autodiff::Term> y = std::static_pointer_cast<autodiff::Variable>(c->getDomainVars()[0].getVars()[1].var);
+    autodiff::Variable* xv = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[0]);
+    autodiff::Variable* yv = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[1]);
 
-    c->editDomainVars()[0].editVars()[0].min = -5.0;
-    c->editDomainVars()[0].editVars()[1].min = -5.0;
-    c->editDomainVars()[0].editVars()[0].max = 5.0;
-    c->editDomainVars()[0].editVars()[1].max = 5.0;
+    TermPtr x = xv;
+    TermPtr y = yv;
+    xv->editRange().intersect(-5, 5);
+    yv->editRange().intersect(-5, 5);
 
-    shared_ptr<autodiff::Term> constraint = x * l1a < TermBuilder::constant(0.0);
-    constraint &= y * l1b > TermBuilder::constant(0.0);
+    TermPtr constraint = x * l1a < x->getOwner()->constant(0.0);
+    constraint = constraint & (y * l1b > x->getOwner()->constant(0.0));
 
     c->setConstraint(constraint);
-    std::shared_ptr<autodiff::Term> utility = l1a * l1a + l1b * l1b;
+    TermPtr utility = l1a * l1a + l1b * l1b;
 
     c->setUtility(utility);
     c->setUtilitySufficiencyThreshold(10.0);

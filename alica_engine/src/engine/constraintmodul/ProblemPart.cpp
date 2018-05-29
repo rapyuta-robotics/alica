@@ -6,13 +6,17 @@
 #include "engine/model/DomainVariable.h"
 #include "engine/model/Quantifier.h"
 
+#include <alica_solver_interface/SolverContext.h>
+
+#include <assert.h>
+
 namespace alica
 {
 
 ProblemPart::ProblemPart(const Condition* con, shared_ptr<const RunningPlan> rp)
     : _condition(con)
     , _runningPlan(rp)
-    , _descriptor(std::make_shared<ProblemDescriptor>())
+    , _descriptor()
 {
     for (const Quantifier* quantifier : con->getQuantifiers()) {
         quantifier->addDomainVariables(rp, _vars);
@@ -50,8 +54,12 @@ bool ProblemPart::hasVariable(const DomainVariable* v) const
     }
     return false;
 }
-std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(ISolverBase* solver, UniqueVarStore& uvs) const
+std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(ISolverBase* solver, const UniqueVarStore& uvs, SolverContext* ctx)
 {
+    if (_descriptor == nullptr) {
+        _descriptor = std::make_shared<ProblemDescriptor>(ctx);
+    }
+    assert(_descriptor->getContext() == ctx);
     _descriptor->clear();
     const VariableGrp& staticCondVariables = getCondition()->getVariables();
 
@@ -61,11 +69,7 @@ std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(ISolve
     _descriptor->_staticVars.reserve(dim);
 
     for (const Variable* variable : staticCondVariables) {
-        const Variable* representingVariable = uvs.getRep(variable);
-        if (representingVariable->getSolverVar() == nullptr) {
-            representingVariable->setSolverVar(solver->createVariable(representingVariable->getId()));
-        }
-        _descriptor->_staticVars.push_back(representingVariable->getSolverVar());
+        _descriptor->_staticVars.push_back(uvs.getSolverVariable(variable));
     }
 
     // create a vector of solver variables from the domain variables of the currently iterated problem part
@@ -75,10 +79,7 @@ std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(ISolve
         int curDim = static_cast<int>(avars.getVars().size());
         asolverVars.editVars().reserve(curDim);
         for (const DomainVariable* dv : avars.getVars()) {
-            if (dv->getSolverVar() == nullptr) {
-                dv->setSolverVar(solver->createVariable(dv->getId()));
-            }
-            asolverVars.editVars().emplace_back(dv->getSolverVar());
+            asolverVars.editVars().emplace_back(uvs.getSolverVariable(dv, solver, ctx));
         }
         _descriptor->_domainVars.push_back(std::move(asolverVars));
         dim += curDim;

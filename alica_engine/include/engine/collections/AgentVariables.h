@@ -1,11 +1,9 @@
 #pragma once
 
 #include "engine/Types.h"
-#include "engine/constraintmodul/SolverVariable.h"
-
+#include <alica_solver_interface/Interval.h>
+#include <alica_solver_interface/SolverVariable.h>
 #include <supplementary/AgentID.h>
-
-#include <memory>
 
 namespace alica
 {
@@ -51,19 +49,6 @@ class AgentElements
 };
 
 using AgentVariables = AgentElements<const DomainVariable*>;
-
-struct RangedVariable
-{
-    RangedVariable(const std::shared_ptr<SolverVariable>& sv)
-        : var(sv)
-        , min(SolverVariable::minExpressibleValue)
-        , max(SolverVariable::maxExpressibleValue)
-    {
-    }
-    std::shared_ptr<SolverVariable> var;
-    double min;
-    double max;
-};
-using AgentSolverVariables = AgentElements<RangedVariable>;
+using AgentSolverVariables = AgentElements<SolverVariable*>;
 
 } // namespace alica
