@@ -1,21 +1,6 @@
-/*
- * FileSystem.h
- *
- *  Created on: Jun 2, 2014
- *      Author: Stephan Opfer
- */
+#pragma once
 
-#ifndef FILESYSTEM_H_
-#define FILESYSTEM_H_
-
-#include <dirent.h>
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <string>
-#include <sys/stat.h>
-#include <unistd.h>
 #include <vector>
 
 namespace supplementary
@@ -50,5 +35,3 @@ class FileSystem
 };
 
 } // namespace supplementary
-
-#endif /* FILESYSTEM_H_ */

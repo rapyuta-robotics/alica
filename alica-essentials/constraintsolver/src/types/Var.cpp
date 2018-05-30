@@ -1,9 +1,3 @@
-/*
- * Var.cpp
- *
- *  Created on: Dec 4, 2014
- *      Author: Philipp
- */
 
 #include "types/Var.h"
 
@@ -14,32 +8,43 @@
 
 #include <iostream>
 
-namespace alica {
-namespace reasoner {
-namespace cnsat {
+namespace alica
+{
+namespace reasoner
+{
+namespace cnsat
+{
 
-Var::Var(int index, bool prefSign) {
-    this->index = index;
-    this->assignment = Assignment::UNASSIGNED;
-    this->locked = false;
-    this->preferedSign = prefSign;
-    this->activity = 0;
-
-    positiveRanges = nullptr;
-    negativeRanges = nullptr;
-
-    watchList = make_shared<vector<Watcher*>>();
+Var::Var(int index, bool prefSign)
+    : _curTerm(nullptr)
+    , seen(false)
+    , negativeAppearance(0)
+    , positiveAppearance(0)
+    , negativeRangeSize(0.0)
+    , positiveRangeSize(0.0)
+    , index(index)
+    , assignment(Assignment::UNASSIGNED)
+    , locked(false)
+    , preferedSign(prefSign)
+    , activity(0)
+    , negActivity(0)
+    , positiveRanges(nullptr)
+    , negativeRanges(nullptr)
+    , watchList(make_shared<vector<Watcher*>>())
+{
 }
 
 Var::~Var() {}
 
-shared_ptr<Clause> Var::getReason() {
+std::shared_ptr<Clause> Var::getReason() const
+{
     return reason;
 }
 
-void Var::setReason(shared_ptr<Clause> reason) {
+void Var::setReason(std::shared_ptr<Clause> reason)
+{
     if (reason && reason != this->reason) {
-        for (shared_ptr<Lit> l : *reason->literals) {
+        for (const std::shared_ptr<Lit>& l : *reason->literals) {
             if (l->var->assignment == Assignment::UNASSIGNED) {
                 cout << this->toString() << " " << l->var->toString();
                 reason->print();
@@ -51,32 +56,35 @@ void Var::setReason(shared_ptr<Clause> reason) {
     this->reason = reason;
 }
 
-void Var::reset() {
+void Var::reset()
+{
     if (locked) {
         return;
     }
     this->reason = nullptr;
     this->seen = false;
 
-    cout << "Var::reset() unass" << endl;
+    std::cout << "Var::reset() unass" << std::endl;
     this->assignment = Assignment::UNASSIGNED;
 
     this->activity = 0;
 }
 
-void Var::print() {
+void Var::print() const
+{
     if (this->assignment == Assignment::FALSE) {
-        cout << "-";
+        std::cout << "-";
     } else if (this->assignment == Assignment::UNASSIGNED) {
-        cout << "o";
+        std::cout << "o";
     } else {
-        cout << "+";
+        std::cout << "+";
     }
-    cout << this->index;
+    std::cout << this->index;
 }
 
-string Var::toString() {
-    string str;
+std::string Var::toString() const
+{
+    std::string str;
     if (this->assignment == Assignment::FALSE)
         str.append("-");
     else if (this->assignment == Assignment::TRUE)

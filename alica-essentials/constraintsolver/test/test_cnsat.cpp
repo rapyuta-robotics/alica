@@ -1,24 +1,26 @@
 #include <gtest/gtest.h>
 
-#include <AutoDiff.h>
+#include "CNSat.h"
+#include "FileSystem.h"
 #include "types/Clause.h"
 #include "types/Lit.h"
 #include "types/Var.h"
-#include "CNSat.h"
-#include "FileSystem.h"
+#include <engine/AlicaClock.h>
 
-#include <iostream>
 #include <fstream>
-#include <string>
+#include <iostream>
 #include <memory>
-#include <ros/ros.h>
 #include <ros/package.h>
+#include <ros/ros.h>
+#include <string>
 
 using namespace std;
 using namespace alica::reasoner;
 using namespace alica::reasoner::cnsat;
+using alica::AlicaTime;
 
-TEST(CNSatTest, CNSAT0) {
+TEST(CNSatTest, CNSAT0)
+{
     shared_ptr<CNSat> cns = make_shared<CNSat>();
 
     std::string path = ros::package::getPath("constraintsolver");
@@ -34,8 +36,9 @@ TEST(CNSatTest, CNSAT0) {
     /*foreach(Alica.Reasoner.CNSAT.Clause c in cns->clauses) {
      c->print();
      }*/
+    alica::AlicaClock clock;
     cns->init();
-    bool sf = cns->solve();
+    bool sf = cns->solve(clock.now() + AlicaTime::minutes(1));
     EXPECT_TRUE(sf);
 
     // cout << endl;
@@ -77,7 +80,8 @@ TEST(CNSatTest, CNSAT0) {
     //    cout << endl;
 }
 
-TEST(CNSatTest, CNSATaim_50_1_6_yes1_4) {
+TEST(CNSatTest, CNSATaim_50_1_6_yes1_4)
+{
     shared_ptr<CNSat> cns = make_shared<CNSat>();
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test/cnf/aim-50-1_6-yes1-4.cnf";
@@ -89,8 +93,10 @@ TEST(CNSatTest, CNSATaim_50_1_6_yes1_4) {
     }
     cns->readFromCNFFile(path);
 
+    alica::AlicaClock clock;
     cns->init();
-    bool sf = cns->solve();
+    bool sf = cns->solve(clock.now() + AlicaTime::minutes(1));
+
     EXPECT_TRUE(sf);
 
     bool isSolution = true;
@@ -102,7 +108,8 @@ TEST(CNSatTest, CNSATaim_50_1_6_yes1_4) {
     EXPECT_TRUE(isSolution);
 }
 
-TEST(CNSatTest, CNSATpar8_1_c_cnf) {
+TEST(CNSatTest, CNSATpar8_1_c_cnf)
+{
     shared_ptr<CNSat> cns = make_shared<CNSat>();
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test/cnf/par8-1-c.cnf";
@@ -115,8 +122,10 @@ TEST(CNSatTest, CNSATpar8_1_c_cnf) {
 
     cns->readFromCNFFile(path);
 
+    alica::AlicaClock clock;
     cns->init();
-    bool sf = cns->solve();
+    bool sf = cns->solve(clock.now() + AlicaTime::minutes(1));
+
     EXPECT_TRUE(sf);
 
     bool isSolution = true;
@@ -128,7 +137,8 @@ TEST(CNSatTest, CNSATpar8_1_c_cnf) {
     EXPECT_TRUE(isSolution);
 }
 
-TEST(CNSatTest, CNSAT1_aim_100_1_6_no_1cnf) {
+TEST(CNSatTest, CNSAT1_aim_100_1_6_no_1cnf)
+{
     shared_ptr<CNSat> cns = make_shared<CNSat>();
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test/cnf/aim-100-1_6-no-1.cnf";
@@ -141,12 +151,15 @@ TEST(CNSatTest, CNSAT1_aim_100_1_6_no_1cnf) {
 
     cns->readFromCNFFile(path);
 
+    alica::AlicaClock clock;
     cns->init();
-    bool sf = cns->solve();
+    bool sf = cns->solve(clock.now() + AlicaTime::minutes(1));
+
     EXPECT_FALSE(sf);
 }
 
-TEST(CNSatTest, CNSAT1dubois22) {
+TEST(CNSatTest, CNSAT1dubois22)
+{
     shared_ptr<CNSat> cns = make_shared<CNSat>();
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test/cnf/dubois22.cnf";
@@ -159,12 +172,15 @@ TEST(CNSatTest, CNSAT1dubois22) {
 
     cns->readFromCNFFile(path);
 
+    alica::AlicaClock clock;
     cns->init();
-    bool sf = cns->solve();
+    bool sf = cns->solve(clock.now() + AlicaTime::minutes(1));
+
     EXPECT_FALSE(sf);
 }
 
-TEST(CNSatTest, CNSAThole6) {
+TEST(CNSatTest, CNSAThole6)
+{
     shared_ptr<CNSat> cns = make_shared<CNSat>();
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test/cnf/hole6.cnf";
@@ -177,12 +193,15 @@ TEST(CNSatTest, CNSAThole6) {
 
     cns->readFromCNFFile(path);
 
+    alica::AlicaClock clock;
     cns->init();
-    bool sf = cns->solve();
+    bool sf = cns->solve(clock.now() + AlicaTime::minutes(1));
+
     EXPECT_FALSE(sf);
 }
 
-TEST(CNSatTest, CNSAT1_dubois20) {
+TEST(CNSatTest, CNSAT1_dubois20)
+{
     shared_ptr<CNSat> cns = make_shared<CNSat>();
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test/cnf/dubois20.cnf";
@@ -195,7 +214,9 @@ TEST(CNSatTest, CNSAT1_dubois20) {
 
     cns->readFromCNFFile(path);
 
+    alica::AlicaClock clock;
     cns->init();
-    bool sf = cns->solve();
+    bool sf = cns->solve(clock.now() + AlicaTime::minutes(1));
+
     EXPECT_FALSE(sf);
 }

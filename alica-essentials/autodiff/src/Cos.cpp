@@ -7,45 +7,60 @@
 
 #include "Cos.h"
 
-#include "TermBuilder.h"
 #include "Constant.h"
 #include "Sin.h"
+#include "TermHolder.h"
 
 #include <cmath>
+#include <sstream>
 
-namespace autodiff {
-Cos::Cos(shared_ptr<Term> arg)
-        : Term() {
-    this->arg = arg;
+namespace autodiff
+{
+Cos::Cos(TermPtr arg, TermHolder* owner)
+    : UnaryFunction(arg, owner)
+{
 }
 
-int Cos::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<Cos> thisCasted = dynamic_pointer_cast<Cos>(shared_from_this());
-    return visitor->visit(thisCasted);
+int Cos::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-shared_ptr<Term> Cos::aggregateConstants() {
-    arg = arg->aggregateConstants();
-    if (dynamic_pointer_cast<Constant>(arg) != 0) {
-        shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(arg);
-        return TermBuilder::constant(cos(arg->value));
-    } else {
-        if (dynamic_pointer_cast<Constant>(arg) != 0) {
-            return TermBuilder::constant(1);
-        }
-        return shared_from_this();
+void Cos::acceptRecursive(ITermVisitor* visitor)
+{
+    _arg->acceptRecursive(visitor);
+    visitor->visit(this);
+}
+
+TermPtr Cos::aggregateConstants()
+{
+    _arg = _arg->aggregateConstants();
+    if (_arg->isConstant()) {
+        return _owner->constant(cos(static_cast<Constant*>(_arg)->getValue()));
+    }
+    return this;
+}
+
+TermPtr Cos::derivative(VarPtr v) const
+{
+    return _owner->sin(_arg) * -_arg->derivative(v);
+}
+
+std::string Cos::toString() const
+{
+    std::stringstream str;
+    str << "cos( " << _arg->toString() << " )";
+    return str.str();
+}
+
+void Cos::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* arg = tape.getValues(params[0].asIdx);
+    result[0] = cos(arg[0]);
+    const double s = -sin(arg[0]);
+    for (int i = 1; i <= dim; ++i) {
+        result[i] = arg[i] * s;
     }
 }
 
-shared_ptr<Term> Cos::derivative(shared_ptr<Variable> v) {
-    return make_shared<Sin>(arg) * -arg->derivative(v);
-}
-
-string Cos::toString() {
-    string str;
-    str.append("cos( ");
-    str.append(arg->toString());
-    str.append(" )");
-    return str;
-}
 } /* namespace autodiff */

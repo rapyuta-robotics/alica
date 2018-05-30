@@ -7,44 +7,72 @@
 
 #include "ConstraintUtility.h"
 
-#include "TermBuilder.h"
 #include "Constant.h"
+#include "TermHolder.h"
 
 #include <cmath>
+#include <sstream>
 
-namespace autodiff {
-ConstraintUtility::ConstraintUtility(shared_ptr<Term> constraint, shared_ptr<Term> utility)
-        : Term() {
-    this->constraint = constraint;
-    this->utility = utility;
+namespace autodiff
+{
+ConstraintUtility::ConstraintUtility(TermPtr constraint, TermPtr utility, TermHolder* owner)
+    : BinaryFunction(constraint, utility, owner)
+
+{
 }
 
-int ConstraintUtility::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<ConstraintUtility> thisCasted = dynamic_pointer_cast<ConstraintUtility>(shared_from_this());
-    return visitor->visit(thisCasted);
+int ConstraintUtility::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-shared_ptr<Term> ConstraintUtility::aggregateConstants() {
-    constraint = constraint->aggregateConstants();
-    utility = utility->aggregateConstants();
-    return shared_from_this();
+void ConstraintUtility::acceptRecursive(ITermVisitor* visitor)
+{
+    _left->acceptRecursive(visitor);
+    _right->acceptRecursive(visitor);
+    visitor->visit(this);
 }
 
-shared_ptr<Term> ConstraintUtility::derivative(shared_ptr<Variable> v) {
-    throw "Symbolic Derivation of ConstraintUtility not supported.";
+TermPtr ConstraintUtility::aggregateConstants()
+{
+    _left = _left->aggregateConstants();
+    _right = _right->aggregateConstants();
+    return this;
 }
 
-shared_ptr<Term> ConstraintUtility::negate() {
-    throw "Do not negate a Constraint Utility";
+TermPtr ConstraintUtility::derivative(VarPtr v) const
+{
+    throw "Symbolic derivation of ConstraintUtility not supported.";
+    return nullptr;
 }
 
-string ConstraintUtility::toString() {
-    string str;
-    str.append("[ConstraintUtility: Constraint=");
-    str.append(constraint->toString());
-    str.append(", Utility=");
-    str.append(utility->toString());
-    str.append("]");
-    return str;
+TermPtr ConstraintUtility::negate() const
+{
+    throw "Cannot negate a Constraint Utility";
+    return nullptr;
 }
+
+std::string ConstraintUtility::toString() const
+{
+    std::stringstream str;
+    str << "[ConstraintUtility: Constraint=" << _left->toString();
+    str << ", Utility=" << _right->toString() << "]";
+    return str.str();
+}
+
+void ConstraintUtility::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* l = tape.getValues(params[0].asIdx);
+    const double* r = tape.getValues(params[1].asIdx);
+    if (l[0] > 0.75) {
+        for (int i = 0; i <= dim; ++i) {
+            result[i] = r[i];
+        }
+    } else {
+        for (int i = 0; i <= dim; ++i) {
+            result[i] = l[i];
+        }
+    }
+}
+
 } /* namespace autodiff */

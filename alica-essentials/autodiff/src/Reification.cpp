@@ -1,43 +1,60 @@
-/*
- * Reification.cpp
- *
- *  Created on: Jul 17, 2014
- *      Author: psp
- */
 
 #include "Reification.h"
+#include "Tape.h"
+#include <sstream>
 
-namespace autodiff {
-Reification::Reification(shared_ptr<Term> condition, double min, double max)
-        : Term() {
-    this->condition = condition;
-    this->negatedCondition = condition->negate();
-    this->min = min;
-    this->max = max;
+namespace autodiff
+{
+Reification::Reification(TermPtr condition, TermHolder* owner)
+    : BinaryFunction(condition, condition->negate(), owner)
+{
 }
 
-int Reification::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<Reification> thisCasted = dynamic_pointer_cast<Reification>(shared_from_this());
-    return visitor->visit(thisCasted);
+int Reification::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-shared_ptr<Term> Reification::aggregateConstants() {
-    return shared_from_this();
+void Reification::acceptRecursive(ITermVisitor* visitor)
+{
+    _left->acceptRecursive(visitor);
+    _right->acceptRecursive(visitor);
+    visitor->visit(this);
 }
 
-shared_ptr<Term> Reification::derivative(shared_ptr<Variable> v) {
+TermPtr Reification::aggregateConstants()
+{
+    return this;
+}
+
+TermPtr Reification::derivative(VarPtr v) const
+{
     throw "Symbolic Derivation of Discretizer not supported.";
+    return nullptr;
 }
 
-string Reification::toString() {
-    string str;
-    str.append("Discretizer( ");
-    str.append(condition->toString());
-    str.append(", ");
-    str.append("", min);
-    str.append(", ");
-    str.append("", max);
-    str.append(" )");
-    return str;
+std::string Reification::toString() const
+{
+    std::stringstream str;
+    str << "Discretizer( " << _left->toString() << " )";
+    return str.str();
 }
+
+void Reification::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* l = tape.getValues(params[0].asIdx);
+    const double* r = tape.getValues(params[1].asIdx);
+    if (l[0] > 0.75) {
+        result[0] = 1.0;
+        for (int i = 1; i <= dim; ++i) {
+            result[i] = -r[i];
+        }
+    } else {
+        result[0] = 0.0;
+        for (int i = 1; i <= dim; ++i) {
+            result[i] = l[i];
+        }
+    }
+}
+
 } /* namespace autodiff */

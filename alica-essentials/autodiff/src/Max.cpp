@@ -1,68 +1,86 @@
-/*
- * Max.cpp
- *
- *  Created on: Jul 17, 2014
- *      Author: psp
- */
 
 #include "Max.h"
 
-#include "TermBuilder.h"
 #include "Constant.h"
+#include "TermHolder.h"
 
 #include <cmath>
+#include <sstream>
 
-namespace autodiff {
-Max::Max(shared_ptr<Term> left, shared_ptr<Term> right)
-        : Term() {
-    this->left = left;
-    this->right = right;
+namespace autodiff
+{
+Max::Max(TermPtr left, TermPtr right, TermHolder* owner)
+    : BinaryFunction(left, right, owner)
+{
 }
 
-int Max::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<Max> thisCasted = dynamic_pointer_cast<Max>(shared_from_this());
-    return visitor->visit(thisCasted);
+int Max::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-shared_ptr<Term> Max::aggregateConstants() {
-    left = left->aggregateConstants();
-    if (left == Term::TRUE) {
-        return left;
+void Max::acceptRecursive(ITermVisitor* visitor)
+{
+    _left->acceptRecursive(visitor);
+    _right->acceptRecursive(visitor);
+    visitor->visit(this);
+}
+
+TermPtr Max::aggregateConstants()
+{
+    _left = _left->aggregateConstants();
+    if (_left == _owner->trueConstant()) {
+        return _left;
     }
-    right = right->aggregateConstants();
-    if (left == Term::FALSE) {
-        return right;
+    _right = _right->aggregateConstants();
+    if (_left == _owner->falseConstant()) {
+        return _right;
     }
-    if (right == Term::TRUE) {
-        return right;
+    if (_right == _owner->trueConstant()) {
+        return _right;
     }
-    if (right == Term::FALSE) {
-        return left;
+    if (_right == _owner->falseConstant()) {
+        return _left;
     }
-    if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0) {
-        shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
-        shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
-        return make_shared<Constant>(std::max(leftConstant->value, rightConstant->value));
+    if (_left->isConstant() && _right->isConstant()) {
+        return _owner->constant(std::max(static_cast<Constant*>(_left)->getValue(), static_cast<Constant*>(_right)->getValue()));
     } else {
-        return shared_from_this();
+        return this;
     }
 }
 
-shared_ptr<Term> Max::derivative(shared_ptr<Variable> v) {
+TermPtr Max::derivative(VarPtr v) const
+{
     throw "Symbolic Derivation of Max not supported.";
+    return nullptr;
 }
 
-shared_ptr<Term> Max::negate() {
-    return left->negate() & right->negate();
+TermPtr Max::negate() const
+{
+    return _left->negate() & _right->negate();
 }
 
-string Max::toString() {
-    string str;
-    str.append("max( ");
-    str.append(left->toString());
-    str.append(", ");
-    str.append(right->toString());
-    str.append(" )");
-    return str;
+std::string Max::toString() const
+{
+    std::stringstream str;
+    str << "max( " << _left->toString() << ", " << _right->toString() << " )";
+    return str.str();
 }
+
+void Max::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* l = tape.getValues(params[0].asIdx);
+    const double* r = tape.getValues(params[1].asIdx);
+
+    if (l[0] > r[0]) {
+        for (int i = 0; i <= dim; ++i) {
+            result[i] = l[i];
+        }
+    } else {
+        for (int i = 0; i <= dim; ++i) {
+            result[i] = r[i];
+        }
+    }
+}
+
 } /* namespace autodiff */

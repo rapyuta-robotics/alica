@@ -6,241 +6,208 @@
  */
 
 #include "intervals/RecursivePropagate.h"
-#define USEQUEUE
 
 #include "intervals/DownwardPropagator.h"
 #include "intervals/SetParents.h"
-#include "intervals/TermList.h"
 #include "intervals/UpwardPropagator.h"
 
+#include "autodiff/AutoDiff.h"
+
 //#define RecPropDEBUG
+using namespace autodiff;
 
-namespace alica {
-namespace reasoner {
-namespace intervalpropagation {
+namespace alica
+{
+namespace reasoner
+{
+namespace intervalpropagation
+{
 
-RecursivePropagate::RecursivePropagate() {
-    changed = make_shared<TermList>();
-
-    dp = make_shared<DownwardPropagator>();
-    dp->changed = this->changed;
-    up = make_shared<UpwardPropagator>();
-    up->changed = this->changed;
-    sp = make_shared<SetParents>();
+RecursivePropagate::RecursivePropagate()
+{
+    _dp.setTermQueue(&_changed);
+    _up.setTermQueue(&_changed);
 }
 
-RecursivePropagate::~RecursivePropagate() {
-    // TODO Auto-generated destructor stub
-}
+RecursivePropagate::~RecursivePropagate() {}
 
-bool RecursivePropagate::propagate(shared_ptr<Term> term) {
-    // for(int i=0; i<2; i++) {
-    this->changed->clear();
-    term->accept(shared_from_this());
+bool RecursivePropagate::propagate(TermPtr term)
+{
+    _changed.clear();
+    term->acceptRecursive(this);
 #ifdef RecPropDEBUG
-    cout << "Queued Terms: " << endl;
-    shared_ptr<Term> asd = this->changed->first;
-    while (asd != nullptr) {
-        cout << asd->toString() << endl;
-        asd = asd->next;
+    std::cout << "Queued Terms: " << std::endl;
+    for (TermPtr asd : _changed) {
+        std::cout << asd->toString() << std::endl;
     }
-    cout << "------------------------------------" << endl;
+    std::cout << "------------------------------------" << std::endl;
 #endif
-    /*
-     foreach(Term q in this->changed) {
-     q->accept(this->sp);
-     }
-     while(this->changed.Count > 0) {
-     Term cur = this->changed->dequeue();
-     cur->accept(this->dp);
-     cur->accept(this->up);
-     }*/
 
-    shared_ptr<Term> cur = this->changed->first;
+    TermPtr cur = _changed.dequeue();
     while (cur != nullptr) {
-        cur->accept(this->sp);
-        cur = cur->next;
+        cur->accept(&_dp);
+        cur->accept(&_up);
+        cur = _changed.dequeue();
     }
-
-    cur = this->changed->dequeue();
-    while (cur != nullptr) {
-        cur->accept(this->dp);
-        cur->accept(this->up);
-        cur = this->changed->dequeue();
-    }
-
-    //}
-    /*cur = this->changed->first;
-     while(cur!=null) {
-     cur->accept(this->dp);
-     //Term next = cur->next;
-
-     if(cur->accept(this->up)) {
-     /*Term prev = cur.Prev;
-     this->changed.MoveToEnd(cur);
-     if (prev == nullptr) cur = this->changed->first;
-     else cur = prev->next;*/
-    // cur = cur->next;
-    //	}
-    //	cur = cur->next;
-    //}
-    //*/
+    return true;
 }
 
-void RecursivePropagate::addToQueue(shared_ptr<Term> t) {
-    if (!this->changed->contains(t))
-        this->changed->enqueue(t);
+void RecursivePropagate::addToQueue(TermPtr t)
+{
+    _changed.enqueueUnique(t);
 }
 
-int RecursivePropagate::visit(shared_ptr<Abs> abs) {
+int RecursivePropagate::visit(Abs* abs)
+{
     addToQueue(abs);
-    abs->arg->accept(shared_from_this());
-    // return true;
+    abs->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<And> and_) {
+int RecursivePropagate::visit(And* and_)
+{
     addToQueue(and_);
-    and_->left->accept(shared_from_this());
-    and_->right->accept(shared_from_this());
-    // return true;
+    and_->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Atan2> atan2) {
+int RecursivePropagate::visit(Atan2* atan2)
+{
     addToQueue(atan2);
-    atan2->left->accept(shared_from_this());
-    atan2->right->accept(shared_from_this());
-    // return true;
+    atan2->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Constant> constant) {
-    //	return false;
+int RecursivePropagate::visit(Constant* constant)
+{
+    constant->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<ConstPower> intPower) {
+int RecursivePropagate::visit(ConstPower* intPower)
+{
     addToQueue(intPower);
-    intPower->base->accept(shared_from_this());
-    // return true;
+    intPower->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<ConstraintUtility> cu) {
+int RecursivePropagate::visit(ConstraintUtility* cu)
+{
     addToQueue(cu);
-    cu->constraint->accept(shared_from_this());
-    cu->utility->accept(shared_from_this());
-    // return true;
+    cu->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Cos> cos) {
+int RecursivePropagate::visit(Cos* cos)
+{
     addToQueue(cos);
-    cos->arg->accept(shared_from_this());
-    // return true;
+    cos->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Exp> exp) {
+int RecursivePropagate::visit(Exp* exp)
+{
     addToQueue(exp);
-    exp->arg->accept(shared_from_this());
-    // return true;
+    exp->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Gp> gp) {
-    throw "Not implemented yet";
-    // return true;
-}
-
-int RecursivePropagate::visit(shared_ptr<LinSigmoid> sigmoid) {
+int RecursivePropagate::visit(LinSigmoid* sigmoid)
+{
     addToQueue(sigmoid);
-    sigmoid->arg->accept(shared_from_this());
-    // return true;
+    sigmoid->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Log> log) {
+int RecursivePropagate::visit(Log* log)
+{
     addToQueue(log);
-    log->arg->accept(shared_from_this());
-    // return true;
+    log->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<LTConstraint> constraint) {
+int RecursivePropagate::visit(LTConstraint* constraint)
+{
     addToQueue(constraint);
-    constraint->left->accept(shared_from_this());
-    constraint->right->accept(shared_from_this());
-    // return true;
+    constraint->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<LTEConstraint> constraint) {
+int RecursivePropagate::visit(LTEConstraint* constraint)
+{
     addToQueue(constraint);
-    constraint->left->accept(shared_from_this());
-    constraint->right->accept(shared_from_this());
-    // return true;
+    constraint->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Max> max) {
+int RecursivePropagate::visit(Max* max)
+{
     addToQueue(max);
-    max->left->accept(shared_from_this());
-    max->right->accept(shared_from_this());
-    // return true;
+    max->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Min> min) {
+int RecursivePropagate::visit(Min* min)
+{
     addToQueue(min);
-    min->left->accept(shared_from_this());
-    min->right->accept(shared_from_this());
-    // return true;
+    min->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Or> or_) {
+int RecursivePropagate::visit(Or* or_)
+{
     addToQueue(or_);
-    or_->left->accept(shared_from_this());
-    or_->right->accept(shared_from_this());
-    // return true;
+    or_->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Product> product) {
+int RecursivePropagate::visit(Product* product)
+{
     addToQueue(product);
-    product->left->accept(shared_from_this());
-    product->right->accept(shared_from_this());
-    // return true;
+    product->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Reification> reif) {
+int RecursivePropagate::visit(Reification* reif)
+{
     addToQueue(reif);
-    reif->condition->accept(shared_from_this());
-    // return true;
+    reif->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Sigmoid> sigmoid) {
+int RecursivePropagate::visit(Sigmoid* sigmoid)
+{
     addToQueue(sigmoid);
-    sigmoid->arg->accept(shared_from_this());
-    sigmoid->mid->accept(shared_from_this());
-    // return true;
+    sigmoid->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Sin> sin) {
+int RecursivePropagate::visit(Sin* sin)
+{
     addToQueue(sin);
-    sin->arg->accept(shared_from_this());
-    // return true;
+    sin->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Sum> sum) {
+int RecursivePropagate::visit(Sum* sum)
+{
     addToQueue(sum);
-    for (shared_ptr<Term> t : sum->terms) {
-        t->accept(shared_from_this());
-    }
-    // return true;
+    sum->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<TermPower> power) {
+int RecursivePropagate::visit(TermPower* power)
+{
     addToQueue(power);
-    power->base->accept(shared_from_this());
-    power->exponent->accept(shared_from_this());
-    // return true;
+    power->accept(&_sp);
+    return 0;
 }
 
-int RecursivePropagate::visit(shared_ptr<Variable> var) {
+int RecursivePropagate::visit(Variable* var)
+{
     addToQueue(var);
-    // return true;
-}
-
-int RecursivePropagate::visit(shared_ptr<Zero> zero) {
-    //	return false;
+    var->accept(&_sp);
+    return 0;
 }
 
 } /* namespace intervalpropagation */

@@ -1,12 +1,12 @@
-/*
- * FileSystem.cpp
- *
- *  Created on: Jun 2, 2014
- *      Author: Stephan Opfer
- */
-
 #include "FileSystem.h"
+#include <cstring>
+#include <dirent.h>
 #include <fstream>
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 namespace supplementary
 {
@@ -268,7 +268,7 @@ bool FileSystem::endsWith(const std::string& file, const std::string& ending)
 
 bool FileSystem::endsWith(const std::string& file, const char ending)
 {
-    if (!file.empty() && (file[file.length()] == ending)) {
+    if (!file.empty() && (file[file.length() - 1] == ending)) {
         return true;
     } else {
         return false;

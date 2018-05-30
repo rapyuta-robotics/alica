@@ -1,51 +1,59 @@
-/*
- * Variable.cpp
- *
- *  Created on: Jun 5, 2014
- *      Author: psp
- */
-
 #include "Variable.h"
 
-#include "TermBuilder.h"
+#include "TermHolder.h"
 
 #include <limits>
+#include <sstream>
 
-namespace autodiff {
-int Variable::var_id = 0;
+namespace autodiff
+{
+constexpr double Variable::minExpressibleValue;
+constexpr double Variable::maxExpressibleValue;
 
-Variable::Variable() {
-    globalMin = -numeric_limits<double>::infinity();
-    globalMax = numeric_limits<double>::infinity();
-    ownId = var_id++;
+Variable::Variable(TermHolder* owner, int64_t id)
+    : Term(owner)
+    , alica::SolverVariable(id)
+    , _globalRange(minExpressibleValue, maxExpressibleValue)
+    , _varIdx(-1)
+{
 }
 
-int Variable::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<Variable> thisCasted = dynamic_pointer_cast<Variable>(shared_from_this());
-    return visitor->visit(thisCasted);
+int Variable::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-std::shared_ptr<Term> Variable::aggregateConstants() {
-    return shared_from_this();
+void Variable::acceptRecursive(ITermVisitor* visitor)
+{
+    visitor->visit(this);
 }
 
-std::shared_ptr<Term> Variable::derivative(shared_ptr<Variable> v) {
-    if (shared_from_this() == v) {
-        return TermBuilder::constant(1);
+TermPtr Variable::aggregateConstants()
+{
+    return this;
+}
+
+TermPtr Variable::derivative(VarPtr v) const
+{
+    if (this == v) {
+        return _owner->constant(1);
     } else {
-        return TermBuilder::constant(0);
+        return _owner->zeroConstant();
     }
 }
 
-std::string Variable::toString() {
-    std::string str;
-    if (ownId < 0) {
-        str.append("Var_");
-        str.append(std::to_string(-ownId));
-    } else {
-        str.append("Var");
-        str.append(std::to_string(ownId));
-    }
-    return str;
+std::string Variable::toString() const
+{
+    std::stringstream str;
+    str << "Var";
+    str << std::to_string(getId());
+    return str.str();
 }
+
+void Variable::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    result[0] = vars[params[0].asIdx];
+    result[params[0].asIdx + 1] = 1.0;
+}
+
 } /* namespace autodiff */

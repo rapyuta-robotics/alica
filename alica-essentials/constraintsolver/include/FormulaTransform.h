@@ -1,59 +1,48 @@
-/*
- * FormulaTransform.h
- *
- *  Created on: Dec 4, 2014
- *      Author: Philipp
- */
+#pragma once
 
-#ifndef FORMULATRANSFORM_H_
-#define FORMULATRANSFORM_H_
+#include <autodiff/Types.h>
 
-#include <AutoDiff.h>
-
+#include <list>
+#include <map>
 #include <memory>
 #include <vector>
-#include <map>
-#include <list>
 
-using namespace std;
-using namespace autodiff;
-
-namespace alica {
-namespace reasoner {
-namespace cnsat {
+namespace alica
+{
+namespace reasoner
+{
+namespace cnsat
+{
 class Clause;
 class CNSat;
 class Lit;
 class TermEquality;
 class Var;
 
-class FormulaTransform {
-public:
+class FormulaTransform
+{
+  public:
     FormulaTransform();
-    virtual ~FormulaTransform();
+    ~FormulaTransform();
 
     void reset();
-    shared_ptr<list<shared_ptr<Clause>>> transformToCNF(shared_ptr<Term> formula, shared_ptr<CNSat> solver);
-    shared_ptr<Var> getAtoms(int term_id);
-    int getAtomOccurrence();
+    std::shared_ptr<std::list<std::shared_ptr<Clause>>> transformToCNF(autodiff::TermPtr formula, std::shared_ptr<CNSat> solver);
+    int getAtomOccurrence() const;
 
-protected:
-    map<int, shared_ptr<Var>> atoms;
+  protected:
+    std::map<autodiff::Term*, std::shared_ptr<Var>> atoms;
     int atomOccurrence;
 
-    shared_ptr<CNSat> solver;
+    std::shared_ptr<CNSat> solver;
 
-    shared_ptr<TermEquality> te;
+    std::shared_ptr<TermEquality> te;
 
-    void doTransform(shared_ptr<list<shared_ptr<Clause>>>& clauses);
-    void performStep(shared_ptr<Clause>& c, shared_ptr<Lit>& lit, shared_ptr<Clause>& newClause1,
-            shared_ptr<Clause>& newClause2);
-    bool tryGetVar(shared_ptr<Term> t, shared_ptr<Var> v);
+    void doTransform(std::shared_ptr<std::list<std::shared_ptr<Clause>>>& clauses);
+    void performStep(std::shared_ptr<Clause>& c, std::shared_ptr<Lit>& lit, std::shared_ptr<Clause>& newClause1, std::shared_ptr<Clause>& newClause2);
+    bool tryGetVar(autodiff::TermPtr t, std::shared_ptr<Var> v);
 };
 
-}  // namespace cnsat
+} // namespace cnsat
 /* namespace cnsat */
 } /* namespace reasoner */
 } /* namespace alica */
-
-#endif /* FORMULATRANSFORM_H_ */

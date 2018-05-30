@@ -9,45 +9,47 @@
 #define CNSAT_H_
 
 #include "types/Assignment.h"
-
-#include <vector>
+#include <engine/AlicaClock.h>
 #include <memory>
+#include <vector>
 
-using namespace std;
-
-namespace alica {
+namespace alica
+{
 class AlicaClock;
 
-namespace reasoner {
+namespace reasoner
+{
 class CNSMTGSolver;
 
-namespace cnsat {
+namespace cnsat
+{
 class Clause;
 class DecisionLevel;
 class Var;
 
-class CNSat {
-public:
+class CNSat
+{
+  public:
     CNSat();
     virtual ~CNSat();
 
-    void readFromCNFFile(string path);
+    void readFromCNFFile(std::string path);
 
-    shared_ptr<Var> newVar();
-    bool addBasicClause(shared_ptr<Clause> c);
+    std::shared_ptr<Var> newVar();
+    bool addBasicClause(std::shared_ptr<Clause> c);
     void emptySATClause();
     void emptyTClause();
     void resetVariables();
-    bool addSATClause(shared_ptr<Clause> c);
-    bool addTClause(shared_ptr<Clause> c);
-    bool preAddIUnitClause(shared_ptr<Var> v, Assignment ass);
-    bool addIClause(shared_ptr<Clause> c);
+    bool addSATClause(std::shared_ptr<Clause> c);
+    bool addTClause(std::shared_ptr<Clause> c);
+    bool preAddIUnitClause(std::shared_ptr<Var> v, Assignment ass);
+    bool addIClause(std::shared_ptr<Clause> c);
     void init();
-    bool solve();
+    bool solve(AlicaTime until, CNSMTGSolver* callbackSolver = nullptr);
     void reduceDB(int num);
-    shared_ptr<Clause> propagate();
-    bool resolveConflict(shared_ptr<Clause> c);
-    void backTrack(shared_ptr<DecisionLevel> db);
+    std::shared_ptr<Clause> propagate();
+    bool resolveConflict(std::shared_ptr<Clause> c);
+    void backTrack(std::shared_ptr<DecisionLevel> db);
     void backTrack(int decission);
     void printStatistics();
     void printAssignments();
@@ -55,23 +57,22 @@ public:
     void removeRangeOfDecisions(int index, int count);
 
     bool useIntervalProp;
-    weak_ptr<CNSMTGSolver> cnsmtGSolver;
 
-    shared_ptr<vector<shared_ptr<Clause>>> clauses;
-    shared_ptr<vector<shared_ptr<Clause>>> satClauses;
-    shared_ptr<vector<shared_ptr<Clause>>> tClauses;
-    shared_ptr<vector<shared_ptr<Clause>>> iClauses;
-    shared_ptr<vector<shared_ptr<Var>>> variables;
-    shared_ptr<vector<shared_ptr<Var>>> decisions;
-    shared_ptr<vector<shared_ptr<DecisionLevel>>> decisionLevel;
-
+    std::shared_ptr<std::vector<std::shared_ptr<Clause>>> clauses;
+    std::shared_ptr<std::vector<std::shared_ptr<Clause>>> satClauses;
+    std::shared_ptr<std::vector<std::shared_ptr<Clause>>> tClauses;
+    std::shared_ptr<std::vector<std::shared_ptr<Clause>>> iClauses;
+    std::shared_ptr<std::vector<std::shared_ptr<Var>>> variables;
+    std::shared_ptr<std::vector<std::shared_ptr<Var>>> decisions;
+    std::shared_ptr<std::vector<std::shared_ptr<DecisionLevel>>> decisionLevel;
+    CNSMTGSolver* cnsmtGSolver;
     int unitDecissions;
 
-protected:
-    void emptyClauseList(shared_ptr<vector<shared_ptr<Clause>>> list);
-    bool solutionInsideRange(shared_ptr<vector<double>> solution, shared_ptr<vector<shared_ptr<vector<double>>>> range);
-    bool varAssignmentInsideRange(shared_ptr<Var> v, shared_ptr<vector<shared_ptr<vector<double>>>> range);
-    bool assignmentInsideRange(shared_ptr<DecisionLevel> dl, shared_ptr<vector<shared_ptr<vector<double>>>> range);
+  protected:
+    void emptyClauseList(std::shared_ptr<std::vector<std::shared_ptr<Clause>>> list);
+    bool solutionInsideRange(std::shared_ptr<std::vector<double>> solution, std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>> range);
+    bool varAssignmentInsideRange(std::shared_ptr<Var> v, std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>> range);
+    bool assignmentInsideRange(std::shared_ptr<DecisionLevel> dl, std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>> range);
 
     int conflictCount = 0;
     int decisionCount = 0;
@@ -81,7 +82,7 @@ protected:
     std::shared_ptr<DecisionLevel> decisionLevelNull;
     bool recentBacktrack = false;
 
-    AlicaClock* alicaClock;
+    AlicaClock alicaClock;
 };
 } /* namespace cnsat */
 } /* namespace reasoner */

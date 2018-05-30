@@ -2,8 +2,18 @@
 
 #include "Configuration.h"
 
+#include <unistd.h>
+
 namespace supplementary
 {
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::mutex;
+using std::shared_ptr;
+using std::string;
+using std::vector;
+
 // Initialize static variables
 std::string SystemConfig::rootPath;
 std::string SystemConfig::logPath;
@@ -83,12 +93,12 @@ void SystemConfig::shutdown() {}
  * @param s The string which determines the used configuration.
  * @return The demanded configuration.
  */
-Configuration* SystemConfig::operator[](const string s)
+Configuration* SystemConfig::operator[](const std::string& s)
 {
     {
-        lock_guard<mutex> lock(configsMapMutex);
+        std::lock_guard<mutex> lock(configsMapMutex);
 
-        map<string, shared_ptr<Configuration>>::iterator itr = configs.find(s);
+        std::map<std::string, std::shared_ptr<Configuration>>::iterator itr = configs.find(s);
 
         if (itr != configs.end()) {
             return itr->second.get();
@@ -112,9 +122,9 @@ Configuration* SystemConfig::operator[](const string s)
 
     for (size_t i = 0; i < files.size(); i++) {
         if (FileSystem::pathExists(files[i])) {
-            lock_guard<mutex> lock(configsMapMutex);
+            std::lock_guard<mutex> lock(configsMapMutex);
 
-            shared_ptr<Configuration> result = make_shared<Configuration>(files[i]);
+            std::shared_ptr<Configuration> result = std::make_shared<Configuration>(files[i]);
             configs[s] = result;
 
             return result.get();
@@ -172,7 +182,7 @@ string SystemConfig::getHostname()
     return hostname;
 }
 
-void SystemConfig::setHostname(string newHostname)
+void SystemConfig::setHostname(const std::string& newHostname)
 {
     hostname = newHostname;
     configs.clear();

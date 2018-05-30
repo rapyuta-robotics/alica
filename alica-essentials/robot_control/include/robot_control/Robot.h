@@ -8,46 +8,50 @@
 #include <QFrame>
 #include <chrono>
 
-namespace Ui {
+namespace Ui
+{
 class RobotProcessesWidget;
 class ControlledRobotWidget;
-}  // namespace Ui
+} // namespace Ui
 
-namespace supplementary {
+namespace supplementary
+{
 class RobotExecutableRegistry;
 class AgentID;
-}  // namespace supplementary
+} // namespace supplementary
 
-namespace ros {
+namespace ros
+{
 class Publisher;
 }
 
-namespace alica {
+namespace alica
+{
 class AlicaWidget;
 }
 
-namespace pm_widget {
+namespace pm_widget
+{
 class ControlledRobot;
 }
 
-namespace robot_control {
+namespace robot_control
+{
 class RobotsControl;
 
-class Robot : public QFrame, public supplementary::RobotMetaData {
+class Robot : public QFrame, public supplementary::RobotMetaData
+{
     Q_OBJECT
 
-public:
+  public:
     Robot(std::string robotName, const supplementary::AgentID* robotId, RobotsControl* parentRobotsControl);
 
     virtual ~Robot();
 
     // Message processing
-    std::chrono::time_point<std::chrono::system_clock>
-            timeLastMsgReceived; /**< the last time a message was received for this robot */
-    void handleAlicaInfo(
-            std::pair<std::chrono::system_clock::time_point, alica_msgs::AlicaEngineInfoConstPtr> timeAEIpair);
-    void handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps,
-            const supplementary::AgentID* parentPMid);
+    std::chrono::time_point<std::chrono::system_clock> timeLastMsgReceived; /**< the last time a message was received for this robot */
+    void handleAlicaInfo(std::pair<std::chrono::system_clock::time_point, alica_msgs::AlicaEngineInfoConstPtr> timeAEIpair);
+    void handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, const supplementary::AgentID* parentPMid);
 
     // GUI Methods and Members
     RobotsControl* parentRobotsControl;
@@ -55,17 +59,17 @@ public:
     void toggle();
     void show();
     void hide();
-    virtual QSize sizeHint();
+    virtual QSize sizeHint() const override;
     bool shown;
     bool showAlicaClient;
     bool showProcessManager;
 
-public Q_SLOTS:
+  public Q_SLOTS:
     void sendRobotCommand(bool start);
     void toggleAlicaClient(bool start);
     void toggleProcessManager(bool start);
 
-private:
+  private:
     QFrame* widget;
     Ui::ControlledRobotWidget* uiControlledRobot;
 

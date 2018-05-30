@@ -1,12 +1,6 @@
-/*
- * GSolver.cpp
- *
- *  Created on: Aug 12, 2014
- *      Author: psp
- */
 
 #include "GSolver.h"
-#define GSOLVER_LOG
+//#define GSOLVER_LOG
 //#define ALWAYS_CHECK_THRESHOLD
 #define AGGREGATE_CONSTANTS
 
@@ -14,476 +8,356 @@
 #include "SystemConfig.h"
 
 #include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
+
+#include <autodiff/Constant.h>
+#include <autodiff/ConstraintUtility.h>
+#include <autodiff/Tape.h>
+#include <autodiff/Term.h>
+#include <autodiff/TermPtr.h>
 
 #include <cmath>
+#include <cstring>
 #include <limits>
 #include <sstream>
 #include <stdlib.h> /* srand, rand */
 #include <string>
-#include <time.h> /* time */
 
 #include <iostream>
 
-namespace alica {
-namespace reasoner {
+namespace alica
+{
+namespace reasoner
+{
+using autodiff::Constant;
+using autodiff::ConstraintUtility;
+using autodiff::Tape;
+#ifdef GSOLVER_LOG
 int GSolver::_fcounter = 0;
+#endif
 
-GSolver::GSolver() {
-    Term::setAnd(AndType::AND);
-    Term::setOr(OrType::MAX);
+GSolver::GSolver()
+    : _seedWithUtilOptimum(true)
+    , _rPropConvergenceStepSize(1E-2)
+    , _utilitySignificanceThreshold(1E-22)
+    , _initialStepSize(0.005)
+    , _utilityThreshold(1.0)
+    , _runs(0)
+    , _fevals(0)
+{
+    autodiff::Term::setAnd(autodiff::AndType::AND);
+    autodiff::Term::setOr(autodiff::OrType::MAX);
 
-    _rResults = vector<shared_ptr<RpropResult>>();
-
-    _seedWithUtilOptimum = true;
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     _maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
     _maxSolveTime = AlicaTime::milliseconds((*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
-    _rPropConvergenceStepSize = 1E-2;
-
-    _alicaClock = new alica::AlicaClock();
 }
 
-GSolver::~GSolver() {
-    delete _alicaClock;
-}
-
-void GSolver::initLog() {
+GSolver::~GSolver() {}
+#ifdef GSOLVER_LOG
+void GSolver::initLog()
+{
     std::stringstream ss;
     ss << "/tmp/test" << (_fcounter++) << ".dbg";
-    string logFile = ss.str();
+    std::string logFile = ss.str();
     sw.open(logFile);
 }
 
-void GSolver::log(double util, shared_ptr<vector<double>>& val) {
+void GSolver::log(double util, const double* val)
+{
     sw << util;
     sw << "\t";
-    for (int i = 0; i < _dim; ++i) {
-        sw << val->at(i);
+    for (int i = 0; i < val.dim(); ++i) {
+        sw << val[i];
         sw << "\t";
     }
-    sw << endl;
+    sw << std::endl;
 }
 
-void GSolver::logStep() {
-    sw << endl;
-    sw << endl;
+void GSolver::logStep()
+{
+    sw << std::endl;
+    sw << std::endl;
 }
 
-void GSolver::closeLog() {
+void GSolver::closeLog()
+{
     sw.close();
 }
+#endif
 
-std::shared_ptr<vector<double>> GSolver::solve(std::shared_ptr<Term> equation,
-        shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, const std::vector<double>& limits, double* util) {
-    return solve(equation, args, limits, make_shared<vector<shared_ptr<vector<double>>>>(),
-            numeric_limits<double>::max(), util);
+bool GSolver::solve(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits, double& out_util,
+                    std::vector<double>& o_solution)
+{
+    return solve(equation, holder, limits, std::vector<double>(), std::numeric_limits<double>::max(), out_util, o_solution);
 }
 
-bool GSolver::solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-        const std::vector<double>& limits) {
-    return solveSimple(equation, args, limits, make_shared<vector<shared_ptr<vector<double>>>>());
-}
-
-shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
-        shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, const std::vector<double>& limits,
-        shared_ptr<vector<shared_ptr<vector<double>>>> seeds, double sufficientUtility, double* util) {
-    //			cout << "GSolver" << endl;
-    //			cout << equation->toString() << endl;
-    //			cout << args->size() << endl;
-    //			for(auto& a : *limits) {
-    //				cout << a->at(0) << " " << a->at(1) << endl;
-    //			}
-
+bool GSolver::solve(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits, const std::vector<double>& seeds,
+                    double sufficientUtility, double& out_util, std::vector<double>& o_solution)
+{
     _fevals = 0;
     _runs = 0;
-    *util = 0;
+    out_util = 0;
     _utilityThreshold = sufficientUtility;
 
 #ifdef GSOLVER_LOG
     initLog();
 #endif
 
-    _rResults.clear();
-    AlicaTime begin = _alicaClock->now();
+    _results.clear();
+    AlicaTime begin = _alicaClock.now();
 
-    _dim = args->size();
+    const int dim = holder.getDim();
 
-    _ranges = vector<double>(_dim);
-
-    for (int i = 0; i < _dim; ++i) {
-        _ranges[i] = (limits[2 * i + 1] - limits[2 * i]);
-    }
 #ifdef AGGREGATE_CONSTANTS
     equation = equation->aggregateConstants();
 #endif
-    _term = TermUtils::compile(equation, args);
-    shared_ptr<ConstraintUtility> cu = dynamic_pointer_cast<ConstraintUtility>(equation);
-    bool utilIsConstant = dynamic_pointer_cast<Constant>(cu->utility) != 0;
+    holder.compile(equation);
+
+    assert(dynamic_cast<ConstraintUtility*>(equation.get()) != nullptr);
+
+    ConstraintUtility* cu = static_cast<ConstraintUtility*>(equation.get());
+
+    const bool utilIsConstant = cu->getRight()->isConstant();
     if (utilIsConstant) {
         _utilityThreshold = 0.75;
     }
-    bool constraintIsConstant = dynamic_pointer_cast<Constant>(cu->constraint) != 0;
+    const bool constraintIsConstant = cu->getLeft()->isConstant();
     if (constraintIsConstant) {
-        shared_ptr<Constant> constraint = dynamic_pointer_cast<Constant>(cu->constraint);
-        if (constraint->value < 0.25) {
-            *util = constraint->value;
-            auto ret = make_shared<vector<double>>(_dim);
-            for (int i = 0; i < _dim; ++i) {
-                ret->at(i) = _ranges[i] / 2.0 + limits[2 * i];
+        Constant* constraint = static_cast<Constant*>(cu->getLeft().get());
+        if (constraint->getValue() < 0.25) {
+            out_util = constraint->getValue();
+            o_solution.resize(dim);
+            for (int i = 0; i < dim; ++i) {
+                o_solution[i] = limits[i].getMidPoint();
             }
-            cout << "GSolver ConstraintConstant" << endl;
-            return ret;
+            // std::cout << "GSolver ConstraintConstant" << std::endl;
+            return false;
         }
     }
 
     // Optimize given seeds
-    _rpropStepWidth = vector<double>(_dim);
-    _rpropStepConvergenceThreshold = vector<double>(_dim);
-    if (seeds->size() > 0) {
-        _runs++;
+    _rpropStepWidth.resize(dim);
+    _rpropStepConvergenceThreshold.resize(dim);
+    if (!seeds.empty()) {
+        const int seedCount = seeds.size() / dim;
+        ensureResultSpace(seedCount, dim);
+        ++_runs;
         // Run with prefered cached seed
-        shared_ptr<RpropResult> rpfirst = rPropLoop(seeds->at(0), true, limits);
-        if (rpfirst->_finalUtil > _utilityThreshold) {
-            *util = rpfirst->_finalUtil;
-            //					cout << "GSolver: Using Solution from Seed!" << endl;
-            return rpfirst->_finalValue;
+        ResultView rpfirst = getResultView(0, dim);
+        rPropLoop(holder.getTape(), &seeds[0], limits, rpfirst, true);
+        if (rpfirst.getUtil() > _utilityThreshold) {
+            out_util = rpfirst.getUtil();
+            writeSolution(rpfirst, o_solution);
+            return true;
         }
-        _rResults.push_back(rpfirst);
+
         // run with seeds of all other agends
-        for (int i = 1; i < seeds->size(); ++i) {
-            if (begin + _maxSolveTime < _alicaClock->now() || _fevals > _maxfevals) {
-                break;  // do not check any further seeds
+
+        for (int i = 1; i < seedCount; ++i) {
+            if (begin + _maxSolveTime < _alicaClock.now() || _fevals > _maxfevals) {
+                break; // do not check any further seeds
             }
-            _runs++;
-            shared_ptr<RpropResult> rp = rPropLoop(seeds->at(i), false, limits);
-            if (rp->_finalUtil > _utilityThreshold) {
-                *util = rp->_finalUtil;
-                return rp->_finalValue;
+            ResultView res = getResultView(i, dim);
+            ++_runs;
+            rPropLoop(holder.getTape(), &seeds[i * dim], limits, res, false);
+            if (res.getUtil() > _utilityThreshold) {
+                out_util = res.getUtil();
+                writeSolution(res, o_solution);
+                return true;
             }
-            _rResults.push_back(rp);
         }
     }
 
     // Here: Ignore all constraints search optimum
-    if (begin + _maxSolveTime > _alicaClock->now() && _fevals < _maxfevals) {
+    if (begin + _maxSolveTime > _alicaClock.now() && _fevals < _maxfevals) {
+        ensureResultSpace(_runs + 2, dim); // for the next two runs
         // if time allows, do an unconstrained run
         if (!constraintIsConstant && !utilIsConstant && _seedWithUtilOptimum) {
-            shared_ptr<ICompiledTerm> curProb = _term;
-            _term = TermUtils::compile(cu->utility, args);
-            _runs++;
-            shared_ptr<vector<double>> utilitySeed = rPropLoop(make_shared<vector<double>>(), limits)->_finalValue;
-            _term = curProb;
+            Tape curProb = holder.compileSeparately(cu->getRight());
+            ResultView res = getResultView(_runs, dim);
+            ++_runs;
+            rPropLoop(curProb, nullptr, limits, res);
             // Take result and search with constraints
-            shared_ptr<RpropResult> ru = rPropLoop(utilitySeed, false, limits);
-            _rResults.push_back(ru);
+            rPropLoop(holder.getTape(), res.getPoint(), limits, res, false);
         }
     }
 
-    //			if(seeds->size() == 0) {
-    do {  // Do runs until termination criteria, running out of time, or too many function evaluations
-        _runs++;
-        shared_ptr<RpropResult> rp = rPropLoop(make_shared<vector<double>>(), false, limits);
-        if (rp->_finalUtil > _utilityThreshold) {
-            *util = rp->_finalUtil;
-            return rp->_finalValue;
-        }
-        _rResults.push_back(rp);
-    } while (begin + _maxSolveTime > _alicaClock->now() && _fevals < _maxfevals);
-    //			}
+    do { // Do runs until termination criteria, running out of time, or too many function evaluations
+        ensureResultSpace(_runs + 1, dim);
+        ResultView res = getResultView(_runs, dim);
+        ++_runs;
 
-    // return best result
+        rPropLoop(holder.getTape(), nullptr, limits, res, false);
+        if (res.getUtil() > _utilityThreshold) {
+            out_util = res.getUtil();
+            writeSolution(res, o_solution);
+            return true;
+        }
+    } while (begin + _maxSolveTime > _alicaClock.now() && _fevals < _maxfevals);
+
+    // find the best result
     int resIdx = 0;
-    shared_ptr<RpropResult> res = _rResults[0];
-    for (int i = 1; i < _rResults.size(); ++i) {
-        if (std::isnan(res->_finalUtil) || _rResults[i]->_finalUtil > res->_finalUtil) {
-            if (resIdx == 0 && seeds->size() > 0 && !std::isnan(res->_finalUtil)) {
-                if (_rResults[i]->_finalUtil - res->_finalUtil > _utilitySignificanceThreshold &&
-                        _rResults[i]->_finalUtil > 0.75) {
-                    res = _rResults[i];
+    ResultView res = getResultView(0, dim); // take the first result
+    for (int i = 1; i < _runs; ++i) {
+        ResultView next = getResultView(i, dim);
+        if (std::isnan(res.getUtil()) || next.getUtil() > res.getUtil()) {     // better one is found
+            if (resIdx == 0 && !seeds.empty() && !std::isnan(res.getUtil())) { // hysteresis towards first result
+                if (next.getUtil() - res.getUtil() > _utilitySignificanceThreshold && next.getUtil() > 0.75) {
+                    res = next;
                     resIdx = i;
                 }
             } else {
-                res = _rResults[i];
+                res = next;
                 resIdx = i;
             }
         }
     }
 
-//			cout << "GSolver: Using Result Nr. " << resIdx << endl;
-//			for(int i=0; i < seeds->size(); i++) {
-//				cout << "Seed: ";
-//				for (double v : *seeds->at(i)) {
-//					cout << "\t" << v;
-//				}
-//				cout << endl;
-//			}
 #ifdef GSOLVER_LOG
     closeLog();
 #endif
 
-    *util = res->_finalUtil;
-    //			cout << "GSolver Afterall " << res->_finalUtil << " runs " << _runs << endl;
-    return res->_finalValue;
+    out_util = res.getUtil();
+    writeSolution(res, o_solution);
+    return res.getUtil() > 0.75;
+}
+bool GSolver::solveSimple(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits)
+{
+    return solveSimple(equation, holder, limits, std::vector<double>());
 }
 
-bool GSolver::solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-        const std::vector<double>& limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds) {
-    _rResults.clear();
+bool GSolver::solveSimple(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits,
+                          const std::vector<double>& seeds)
+{
+    _results.clear();
 
-    _dim = args->size();
+    const int dim = holder.getDim();
 
-    _ranges = vector<double>(_dim);
-    for (int i = 0; i < _dim; ++i) {
-        _ranges[i] = limits[2 * i + 1] - limits[2 * i];
-    }
+#ifdef AGGREGATE_CONSTANTS
     equation = equation->aggregateConstants();
+#endif
 
-    _term = TermUtils::compile(equation, args);
+    holder.compile(equation);
 
-    _rpropStepWidth = vector<double>(_dim);
-    _rpropStepConvergenceThreshold = vector<double>(_dim);
-    if (seeds->size() > 0) {
-        for (int i = 0; i < seeds->size(); ++i) {
-            shared_ptr<RpropResult> r = rPropLoop(seeds->at(i), limits);
-            _rResults.push_back(r);
-            if (r->_finalUtil > 0.75) {
+    _rpropStepWidth.resize(dim);
+    _rpropStepConvergenceThreshold.resize(dim);
+    const int seedCount = seeds.size() / dim;
+    if (!seeds.empty()) {
+
+        ensureResultSpace(seedCount, dim);
+        for (int i = 0; i < seedCount; ++i) {
+            ResultView res = getResultView(i, dim);
+            rPropLoop(holder.getTape(), &seeds[i * dim], limits, res);
+            if (res.getUtil() > 0.75) {
                 return true;
             }
         }
     }
-    int runs = 2 * _dim - seeds->size();
-    for (int i = 0; i < runs; ++i) {
-        shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>(), limits);
-        _rResults.push_back(r);
-        if (r->_finalUtil > 0.75) {
+    int runs = 2 * dim;
+    ensureResultSpace(runs, dim);
+    for (int i = seedCount; i < runs; ++i) {
+        ResultView res = getResultView(i, dim);
+        rPropLoop(holder.getTape(), nullptr, limits, res);
+        if (res.getUtil() > 0.75) {
             return true;
         }
     }
     int adit = 0;
-    while (!evalResults() && adit++ < 20) {
-        shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>(), limits);
-        _rResults.push_back(r);
-        if (r->_finalUtil > 0.75) {
+
+    while (!evalResults(runs, dim, limits) && ++adit < 21) {
+        ++runs;
+        ensureResultSpace(runs, dim);
+        ResultView res = getResultView(runs - 1, dim);
+        rPropLoop(holder.getTape(), nullptr, limits, res);
+        if (res.getUtil() > 0.75) {
             return true;
         }
     }
     if (adit > 20) {
-        cerr << "Failed to satisfy heuristic!" << endl;
+        std::cerr << "Failed to satisfy heuristic!" << std::endl;
     }
 
     return false;
 }
-
-shared_ptr<vector<double>> GSolver::solveTest(shared_ptr<Term> equation,
-        shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, const std::vector<double>& limits) {
-#ifdef GSOLVER_LOG
-    initLog();
-#endif
-
-    _rResults.clear();
-    shared_ptr<vector<double>> res;
-
-    _dim = args->size();
-    _ranges = vector<double>(_dim);
-    for (int i = 0; i < _dim; ++i) {
-        _ranges[i] = limits[2 * i + 1] - limits[2 * i];
+inline void GSolver::ensureResultSpace(int count, int dim)
+{
+    int required = ResultView::getRequiredSize(dim) * count;
+    if (static_cast<int>(_results.size()) < required) {
+        _results.resize(required);
     }
-
-    _term = TermUtils::compile(equation, args);
-
-    _rpropStepWidth = vector<double>(_dim);
-    _rpropStepConvergenceThreshold = vector<double>(_dim);
-    _runs = 0;
-    _fevals = 0;
-    // int runs = 1000000;
-    while (true) {
-        _runs++;
-        // shared_ptr<RpropResult> r = rPropLoopSimple(vector<double>());
-        shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>(), false, limits);
-        if (r->_finalUtil > 0.75) {
-            res = r->_finalValue;
-            break;
-        }
-    }
-
-#ifdef GSOLVER_LOG
-    closeLog();
-#endif
-
-    return res;
+}
+void GSolver::writeSolution(ResultView result, std::vector<double>& o_solution) const
+{
+    o_solution.resize(result.dim());
+    std::copy(result.getPoint(), result.getPoint() + result.dim(), o_solution.begin());
 }
 
-shared_ptr<vector<double>> GSolver::solveTest(shared_ptr<Term> equation,
-        shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, const std::vector<double>& limits, int maxRuns,
-        bool* found) {
-#ifdef GSOLVER_LOG
-    initLog();
-#endif
-    *found = false;
-    _rResults.clear();
-    shared_ptr<vector<double>> res;
-
-    _dim = args->size();
-
-    _ranges = vector<double>(_dim);
-    for (int i = 0; i < _dim; ++i) {
-        _ranges[i] = limits[2 * i + 1] - limits[2 * i];
-    }
-
-    _term = TermUtils::compile(equation, args);
-
-    _rpropStepWidth = vector<double>(_dim);
-    _rpropStepConvergenceThreshold = vector<double>(_dim);
-    _runs = 0;
-    _fevals = 0;
-
-    while (_runs < maxRuns) {
-        _runs++;
-        // shared_ptr<RpropResult> r = rPropLoopSimple(vector<double>());
-        shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>(), false, limits);
-        if (r->_finalUtil > 0.75) {
-            res = r->_finalValue;
-            *found = true;
-            break;
-        }
-    }
-
-#ifdef GSOLVER_LOG
-    closeLog();
-#endif
-
-    return res;
+inline GSolver::ResultView GSolver::getResultView(int num, int dim)
+{
+    int idx = ResultView::getRequiredSize(dim) * num;
+    assert(static_cast<int>(_results.size()) >= idx + ResultView::getRequiredSize(dim));
+    return ResultView(&_results[idx], dim);
 }
 
-long GSolver::getRuns() {
-    return _runs;
-}
-
-void GSolver::setRuns(long runs) {
-    _runs = runs;
-}
-
-long GSolver::getFEvals() {
-    return _fevals;
-}
-
-void GSolver::setFEvals(long fevals) {
-    _fevals = fevals;
-}
-
-long GSolver::getMaxFEvals() {
-    return _maxfevals;
-}
-
-void GSolver::setMaxFEvals(long maxfevals) {
-    _maxfevals = maxfevals;
-}
-
-double GSolver::getRPropConvergenceStepSize() {
-    return _rPropConvergenceStepSize;
-}
-
-void GSolver::setRPropConvergenceStepSize(double rPropConvergenceStepSize) {
-    _rPropConvergenceStepSize = rPropConvergenceStepSize;
-}
-
-void GSolver::setUtilitySignificanceThreshold(double utilitySignificanceThreshold) {
-    _utilitySignificanceThreshold = utilitySignificanceThreshold;
-}
-
-AlicaClock* GSolver::getAlicaClock() {
-    return _alicaClock;
-}
-
-void GSolver::setAlicaClock(AlicaClock* clock) {
-    _alicaClock = clock;
-}
-
-shared_ptr<vector<double>> GSolver::initialPointFromSeed(
-        shared_ptr<RpropResult>& res, shared_ptr<vector<double>>& seed, const std::vector<double>& limits) {
-    std::pair<shared_ptr<vector<double>>, double> tup;
-
-    res->_initialValue = make_shared<vector<double>>(_dim);
-    res->_finalValue = make_shared<vector<double>>(_dim);
-    for (int i = 0; i < _dim; ++i) {
-        if (std::isnan(seed->at(i))) {
-            res->_initialValue->at(i) = ((double) rand() / RAND_MAX) * _ranges[i] + limits[2 * i];
+void GSolver::initialPointFromSeed(const autodiff::Tape& tape, const double* seed, ResultView o_res, const std::vector<Interval<double>>& limits,
+                                   double* o_value) const
+{
+    for (int i = 0; i < o_res.dim(); ++i) {
+        if (std::isnan(seed[i])) {
+            o_res.editPoint()[i] = ((double)rand() / RAND_MAX) * limits[i].size() + limits[i].getMin();
         } else {
-            res->_initialValue->at(i) = min(max(seed->at(i), limits[2 * i]), limits[2 * i + 1]);
+            o_res.editPoint()[i] = limits[i].clamp(seed[i]);
         }
     }
-    tup = _term->differentiate(res->_initialValue);
-    res->_initialUtil = tup.second;
-    res->_finalUtil = tup.second;
-
-    res->_finalValue = res->_initialValue;
-
-    return tup.first;
+    tape.evaluate(o_res.getPoint(), o_value);
+    o_res.setUtil(o_value[0]);
 }
 
-shared_ptr<vector<double>> GSolver::initialPoint(shared_ptr<RpropResult>& res, const std::vector<double>& limits) {
-    pair<shared_ptr<vector<double>>, double> tup;
-    bool found = true;
-    res->_initialValue = make_shared<vector<double>>(_dim);
-    res->_finalValue = make_shared<vector<double>>(_dim);
+void GSolver::initialPoint(const autodiff::Tape& tape, ResultView o_res, const std::vector<Interval<double>>& limits, double* o_value)
+{
+    const int dim = o_res.dim();
+    bool found;
     do {
-        for (int i = 0; i < _dim; ++i) {
-            res->_initialValue->at(i) = ((double) rand() / RAND_MAX) * _ranges[i] + limits[2 * i];
-            //					cout << " << i << "\t" << _ranges[i] << "\t" << _limits->at(i)->at(0) <<
-            //"\t"
-            //<<  res->_initialValue->at(i) << endl;
-            //					cout << "if (TMPVAR == " << TMPVAR++ << ") { res.initialValue[i] = " <<
-            // res->_initialValue->at(i) << "; }" << endl;
+        for (int i = 0; i < dim; ++i) {
+            o_res.editPoint()[i] = ((double)rand() / RAND_MAX) * limits[i].size() + limits[i].getMin();
         }
-        _fevals++;
-        tup = _term->differentiate(res->_initialValue);
-        for (int i = 0; i < _dim; ++i) {
-            if (std::isnan(tup.first->at(i))) {
+        ++_fevals;
+        tape.evaluate(o_res.getPoint(), o_value);
+        found = true;
+        for (int i = 0; i < dim + 1; ++i) {
+            if (std::isnan(o_value[i])) {
                 found = false;
                 break;
-            } else {
-                found = true;
             }
         }
     } while (!found);
-    res->_initialUtil = tup.second;
-    res->_finalUtil = tup.second;
-
-    res->_finalValue = res->_initialValue;
-
-    return tup.first;
+    o_res.setUtil(o_value[0]);
 }
 
-shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(
-        shared_ptr<vector<double>> seed, const std::vector<double>& limits) {
-    return rPropLoop(seed, false, limits);
+void GSolver::rPropLoop(const autodiff::Tape& tape, const double* seed, const std::vector<Interval<double>>& limits, ResultView o_result)
+{
+    return rPropLoop(tape, seed, limits, o_result, false);
 }
 
-shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(
-        shared_ptr<vector<double>> seed, bool precise, const std::vector<double>& limits) {
-    initialStepSize();
+void GSolver::rPropLoop(const autodiff::Tape& tape, const double* seed, const std::vector<Interval<double>>& limits, ResultView o_result, bool precise)
+{
+    const int dim = o_result.dim();
+    initialStepSize(dim, limits);
 
-    shared_ptr<vector<double>> curGradient;
+    double* curGradient = static_cast<double*>(alloca(sizeof(double) * dim + 1));
+    double* formerGradient = static_cast<double*>(alloca(sizeof(double) * dim + 1));
 
-    shared_ptr<RpropResult> ret = make_shared<RpropResult>();
+    double* pointBuffer = static_cast<double*>(alloca(sizeof(double) * dim));
 
-    if (seed->size() > 0) {
-        curGradient = initialPointFromSeed(ret, seed, limits);
+    if (seed != nullptr) {
+        initialPointFromSeed(tape, seed, o_result, limits, curGradient);
     } else {
-        curGradient = initialPoint(ret, limits);
+        initialPoint(tape, o_result, limits, curGradient);
     }
-    double curUtil = ret->_initialUtil;
 
-    auto formerGradient = make_shared<vector<double>>(_dim);
-    auto curValue = make_shared<vector<double>>(_dim);
-
-    pair<shared_ptr<vector<double>>, double> tup;
-
-    curValue = ret->_initialValue;
-
-    formerGradient = curGradient;
-
+    memcpy(formerGradient, curGradient, sizeof(double) * dim + 1);
+    memcpy(pointBuffer, o_result.getPoint(), sizeof(double) * dim);
+    double curUtil = o_result.getUtil();
     int itcounter = 0;
     int badcounter = 0;
 
@@ -495,231 +369,117 @@ shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(
     int maxBad = 30;
     double minStep = 1E-11;
     if (precise) {
-        maxIter = 120;    // 110
-        maxBad = 60;      // 60
-        minStep = 1E-15;  // 15
+        maxIter = 120;   // 110
+        maxBad = 60;     // 60
+        minStep = 1E-15; // 15
     }
-    int convergendDims = 0;
 
     while (itcounter++ < maxIter && badcounter < maxBad) {
-        convergendDims = 0;
-        for (int i = 0; i < _dim; ++i) {
-            if (curGradient->at(i) * formerGradient->at(i) > 0)
-                _rpropStepWidth[i] *= 1.3;
-            else if (curGradient->at(i) * formerGradient->at(i) < 0)
-                _rpropStepWidth[i] *= 0.5;
-            _rpropStepWidth[i] = max(minStep, _rpropStepWidth[i]);
-            if (curGradient->at(i) > 0)
-                curValue->at(i) += _rpropStepWidth[i];
-            else if (curGradient->at(i) < 0)
-                curValue->at(i) -= _rpropStepWidth[i];
+        int convergedDims = movePoint(dim, minStep, pointBuffer, curGradient, formerGradient, limits);
 
-            if (curValue->at(i) > limits[2 * i + 1])
-                curValue->at(i) = limits[2 * i + 1];
-            else if (curValue->at(i) < limits[2 * i])
-                curValue->at(i) = limits[2 * i];
-            if (_rpropStepWidth[i] < _rpropStepConvergenceThreshold[i])
-                ++convergendDims;
-        }
-
-        if (!precise && convergendDims >= _dim) {
-            if (curUtil > ret->_finalUtil) {
-                ret->_finalUtil = curUtil;
-                ret->_finalValue = curValue;
+        if (!precise && convergedDims >= dim) {
+            if (curUtil > o_result.getUtil()) {
+                o_result.setUtil(curUtil);
+                memcpy(o_result.editPoint(), pointBuffer, sizeof(double) * dim);
             }
-
-            return ret;
+            return;
         }
 
-        _fevals++;
-        tup = _term->differentiate(curValue);
+        ++_fevals;
+        std::swap(curGradient, formerGradient);
+        tape.evaluate(pointBuffer, curGradient);
         bool allZero = true;
-        for (int i = 0; i < _dim; ++i) {
-            if (std::isnan(tup.first->at(i))) {
-                ret->_aborted = true;
+        for (int i = 1; i <= dim; ++i) {
+            if (std::isnan(curGradient[i])) {
+                o_result.setAborted();
 #ifdef GSOLVER_LOG
                 logStep();
 #endif
-                return ret;
+                return;
             }
-            allZero &= (tup.first->at(i) == 0);
+            allZero = allZero && (curGradient[i] == 0);
         }
+        curUtil = curGradient[0];
 
-        curUtil = tup.second;
-        formerGradient = curGradient;
-        curGradient = tup.first;
 #ifdef GSOLVER_LOG
-        log(curUtil, curValue);
+        log(curUtil, pointBuffer);
 #endif
-
-        if (curUtil > ret->_finalUtil) {
+        if (curUtil > o_result.getUtil()) {
             badcounter = 0;
-
-            ret->_finalUtil = curUtil;
-            ret->_finalValue = curValue;
+            o_result.setUtil(curUtil);
+            memcpy(o_result.editPoint(), pointBuffer, sizeof(double) * dim);
 
 #ifdef ALWAYS_CHECK_THRESHOLD
             if (curUtil > _utilityThreshold) {
-                return ret;
+                return;
             }
 #endif
         } else {
-            badcounter++;
+            ++badcounter;
         }
         if (allZero) {
-            ret->_aborted = false;
+            o_result.setAborted();
 #ifdef GSOLVER_LOG
             logStep();
 #endif
-            return ret;
+            return;
         }
     }
 #ifdef GSOLVER_LOG
     logStep();
 #endif
-    ret->_aborted = false;
-    return ret;
+    o_result.setOk();
 }
 
-shared_ptr<GSolver::RpropResult> GSolver::rPropLoopSimple(
-        shared_ptr<vector<double>> seed, const std::vector<double>& limits) {
-    initialStepSize();
-    shared_ptr<vector<double>> curGradient;
-
-    shared_ptr<RpropResult> ret = make_shared<RpropResult>();
-
-    if (seed->size() > 0) {
-        curGradient = initialPointFromSeed(ret, seed, limits);
-    } else {
-        curGradient = initialPoint(ret, limits);
-    }
-    double curUtil = ret->_initialUtil;
-
-    if (ret->_initialUtil > 0.75) {
-        return ret;
-    }
-
-    auto formerGradient = make_shared<vector<double>>(_dim);
-    auto curValue = make_shared<vector<double>>(_dim);
-
-    pair<shared_ptr<vector<double>>, double> tup;
-
-    curValue = ret->_initialValue;
-
-    formerGradient = curGradient;
-
-    int itcounter = 0;
-    int badcounter = 0;
-
-    while (itcounter++ < 40 && badcounter < 6) {
-        for (int i = 0; i < _dim; ++i) {
-            if (curGradient->at(i) * formerGradient->at(i) > 0)
-                _rpropStepWidth[i] *= 1.3;
-            else if (curGradient->at(i) * formerGradient->at(i) < 0)
-                _rpropStepWidth[i] *= 0.5;
-            _rpropStepWidth[i] = max(0.0001, _rpropStepWidth[i]);
-            if (curGradient->at(i) > 0)
-                curValue->at(i) += _rpropStepWidth[i];
-            else if (curGradient->at(i) < 0)
-                curValue->at(i) -= _rpropStepWidth[i];
-
-            if (curValue->at(i) > limits[2 * i + 1])
-                curValue->at(i) = limits[2 * i + 1];
-            else if (curValue->at(i) < limits[2 * i])
-                curValue->at(i) = limits[2 * i];
-        }
-
-        tup = _term->differentiate(curValue);
-        bool allZero = true;
-
-        for (int i = 0; i < _dim; ++i) {
-            if (std::isnan(tup.first->at(i))) {
-                ret->_aborted = false;
-                return ret;
-            }
-            allZero &= (tup.first->at(i) == 0);
-        }
-
-        curUtil = tup.second;
-        formerGradient = curGradient;
-        curGradient = tup.first;
-
-        if (curUtil > ret->_finalUtil) {
-            badcounter = 0;
-
-            ret->_finalUtil = curUtil;
-            ret->_finalValue = curValue;
-
-            if (curUtil > 0.75) {
-                return ret;
-            }
-        } else {
-            badcounter++;
-        }
-        if (allZero) {
-            ret->_aborted = false;
-            return ret;
-        }
-    }
-
-    ret->_aborted = false;
-    return ret;
-}
-
-void GSolver::initialStepSize() {
-    for (int i = 0; i < _dim; ++i) {
-        _rpropStepWidth[i] = _initialStepSize * _ranges[i];
+void GSolver::initialStepSize(int dim, const std::vector<Interval<double>>& limits)
+{
+    for (int i = 0; i < dim; ++i) {
+        _rpropStepWidth[i] = _initialStepSize * limits[i].size();
         _rpropStepConvergenceThreshold[i] = _rpropStepWidth[i] * _rPropConvergenceStepSize;
     }
 }
 
-bool GSolver::evalResults() {
-    /*
-     * TODO: Compare Average Distance between start and end point to
-     * Average distance between any two arbitrary points.
-     *
-     * Latter one can be found in http://www.math.uni-muenster.de/reine/u/burgstal/d18.pdf :
-     * maxDist = sqrt(dim)
-     * avgDist <= 1 / sqrt(6) * sqrt((1+2*sqrt(1-3/(5*dim)))/3) * maxDist
-     *
-     * aprox: (http://www.jstor.org/pss/1427094)
-     *
-     * avgDist = sqrt(dim/3) * (1 - 1/(10*k) - 13/(280*k^2) - 101/ (2800*k^3) - 37533 / (1232000 k^4) * O(sqrt(k)) (?)
-     * */
-    int count = _rResults.size();
+bool GSolver::evalResults(int numResults, int dim, const std::vector<Interval<double>>& limits)
+{
 
-    int abortedCount = 0;
+    int nonaborted = numResults;
 
-    vector<double> midInitValue = vector<double>(_dim);
+    double* midValue = static_cast<double*>(alloca(sizeof(double) * dim));
+    double* valueDev = static_cast<double*>(alloca(sizeof(double) * dim));
 
-    vector<double> valueInitDev = vector<double>(_dim);
+    memset(midValue, 0, sizeof(double) * dim);
+    memset(valueDev, 0, sizeof(double) * dim);
 
-    for (int i = 0; i < count; ++i) {
-        if (_rResults[i]->_aborted) {
-            abortedCount++;
+    for (int i = 0; i < numResults; ++i) {
+        ResultView r = getResultView(i, dim);
+        if (r.isAborted()) {
+            --nonaborted;
         } else {
-            for (int j = 0; j < _dim; ++j) {
-                midInitValue[j] += _rResults[i]->_initialValue->at(j);
+            for (int j = 0; j < dim; ++j) {
+                midValue[j] += r.getPoint()[j];
             }
         }
     }
-    if (count - abortedCount < _dim) {
+
+    if (nonaborted < dim) {
         return false;
     }
-    for (int j = 0; j < _dim; ++j) {
-        midInitValue[j] /= count - abortedCount;
+
+    for (int j = 0; j < dim; ++j) {
+        midValue[j] /= nonaborted;
     }
-    for (int i = 0; i < count; ++i) {
-        if (_rResults[i]->_aborted) {
+    for (int i = 0; i < numResults; ++i) {
+        ResultView r = getResultView(i, dim);
+        if (r.isAborted()) {
             continue;
         }
-        for (int j = 0; j < _dim; ++j) {
-            valueInitDev[j] += pow((_rResults[i]->_initialValue->at(j) - midInitValue[j]) / _ranges[j], 2);
+        for (int j = 0; j < dim; ++j) {
+            valueDev[j] += pow((r.getPoint()[j] - midValue[j]) / limits.size(), 2);
         }
     }
-    for (int j = 0; j < _dim; ++j) {
-        valueInitDev[j] /= count - abortedCount;
-        if (valueInitDev[j] < 0.0441) {
+    for (int j = 0; j < dim; ++j) {
+        valueDev[j] /= nonaborted;
+        if (valueDev[j] < 0.0441) {
             return false;
         }
     }
@@ -727,37 +487,29 @@ bool GSolver::evalResults() {
     return true;
 }
 
-int GSolver::RpropResult::compareTo(shared_ptr<RpropResult> other) {
-    return _finalUtil > other->_finalUtil ? -1 : 1;
-}
-
-double GSolver::RpropResult::distanceTraveled() {
-    double ret = 0;
-    for (int i = 0; i < _initialValue->size(); ++i) {
-        ret += (_initialValue->at(i) - _finalValue->at(i)) * (_initialValue->at(i) - _finalValue->at(i));
+int GSolver::movePoint(int dim, double minStep, double* pointBuffer, const double* curGradient, const double* oldGradient,
+                       const std::vector<Interval<double>>& limits)
+{
+    int converged = 0;
+    for (int i = 0; i < dim; ++i) {
+        if (curGradient[i + 1] * oldGradient[i + 1] > 0) {
+            _rpropStepWidth[i] *= 1.3;
+        } else if (curGradient[i + 1] * oldGradient[i + 1] < 0) {
+            _rpropStepWidth[i] *= 0.5;
+            _rpropStepWidth[i] = std::max(minStep, _rpropStepWidth[i]);
+        }
+        if (curGradient[i + 1] > 0) {
+            pointBuffer[i] += _rpropStepWidth[i];
+        } else if (curGradient[i + 1] < 0) {
+            pointBuffer[i] -= _rpropStepWidth[i];
+        }
+        pointBuffer[i] = limits[i].clamp(pointBuffer[i]);
+        if (_rpropStepWidth[i] < _rpropStepConvergenceThreshold[i]) {
+            ++converged;
+        }
     }
-    return sqrt(ret);
+    return converged;
 }
 
-double GSolver::RpropResult::distanceTraveledNormed(vector<double> ranges) {
-    double ret = 0;
-    for (int i = 0; i < _initialValue->size(); ++i) {
-        ret += (_initialValue->at(i) - _finalValue->at(i)) * (_initialValue->at(i) - _finalValue->at(i)) /
-               (ranges[i] * ranges[i]);
-    }
-    return sqrt(ret);
-}
-
-//		bool GSolver::RpropResult::operator<(const shared_ptr<GSolver::RpropResult>& left, const
-// shared_ptr<GSolver::RpropResult>& right)
-//		{
-//			return left->_finalUtil < right->_finalUtil;
-//		}
-//
-//		bool GSolver::RpropResult::operator>(const shared_ptr<GSolver::RpropResult>& left, const
-// shared_ptr<GSolver::RpropResult>& right)
-//		{
-//			return left->_finalUtil > right->_finalUtil;
-//		}
 } /* namespace reasoner */
 } /* namespace alica */

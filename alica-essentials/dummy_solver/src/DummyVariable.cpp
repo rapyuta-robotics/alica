@@ -1,19 +1,15 @@
 #include "alica/reasoner/DummyVariable.h"
 
-namespace alica {
-namespace reasoner {
+namespace alica
+{
+namespace reasoner
+{
 
-long DummyVariable::ID_COUNTER = 0;
 std::string DummyVariable::NO_VALUE = "<NO-VALUE>";
 
-DummyVariable::DummyVariable(long representingVariableID)
-        : representingVariableID(representingVariableID)
-        , id(ID_COUNTER++) {}
-
-DummyVariable::~DummyVariable() {}
-
-long DummyVariable::getID() const {
-    return this->id;
+DummyVariable::DummyVariable(int64_t representingVariableID)
+    : alica::SolverVariable(representingVariableID)
+{
 }
 
 } /* namespace reasoner */

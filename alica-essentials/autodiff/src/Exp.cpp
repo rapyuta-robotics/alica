@@ -7,46 +7,59 @@
 
 #include "Exp.h"
 
-#include "TermBuilder.h"
 #include "Constant.h"
+#include "TermHolder.h"
 
 #include <cmath>
+#include <sstream>
 
-namespace autodiff {
+namespace autodiff
+{
 
-Exp::Exp(shared_ptr<Term> arg)
-        : Term() {
-    this->arg = arg;
+Exp::Exp(TermPtr arg, TermHolder* owner)
+    : UnaryFunction(arg, owner)
+{
 }
 
-int Exp::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<Exp> thisCasted = dynamic_pointer_cast<Exp>(shared_from_this());
-    return visitor->visit(thisCasted);
+int Exp::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-shared_ptr<Term> Exp::aggregateConstants() {
-    arg = arg->aggregateConstants();
-    if (dynamic_pointer_cast<Constant>(arg) != 0) {
-        shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(arg);
-        return TermBuilder::constant(exp(arg->value));
-    } else {
-        if (dynamic_pointer_cast<Constant>(arg) != 0) {
-            return TermBuilder::constant(1);
-        }
-        return shared_from_this();
+void Exp::acceptRecursive(ITermVisitor* visitor)
+{
+    _arg->acceptRecursive(visitor);
+    visitor->visit(this);
+}
+
+TermPtr Exp::aggregateConstants()
+{
+    _arg = _arg->aggregateConstants();
+    if (_arg->isConstant()) {
+        return _owner->constant(exp(static_cast<Constant*>(_arg)->getValue()));
     }
+    return this;
 }
 
-shared_ptr<Term> Exp::derivative(shared_ptr<Variable> v) {
-    return shared_from_this() * arg->derivative(v);
+TermPtr Exp::derivative(VarPtr v) const
+{
+    return this * _arg->derivative(v);
 }
 
-string Exp::toString() {
-    string str;
-    str.append("exp( ");
-    str.append(arg->toString());
-    str.append(" )");
-    return str;
+std::string Exp::toString() const
+{
+    std::stringstream str;
+    str << "exp( " << _arg->toString() << " )";
+    return str.str();
+}
+
+void Exp::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* arg = tape.getValues(params[0].asIdx);
+    result[0] = exp(arg[0]);
+    for (int i = 1; i <= dim; ++i) {
+        result[i] = arg[i] * result[0];
+    }
 }
 
 } /* namespace autodiff */

@@ -8,49 +8,47 @@
 #ifndef RESETINTERVALS_H_
 #define RESETINTERVALS_H_
 
-#include <AutoDiff.h>
+#include <autodiff/ITermVisitor.h>
+#include <autodiff/TermPtr.h>
+#include <autodiff/Types.h>
 
-#include <memory>
+namespace alica
+{
+namespace reasoner
+{
+namespace intervalpropagation
+{
 
-using namespace std;
-using namespace autodiff;
-
-namespace alica {
-namespace reasoner {
-namespace intervalpropagation {
-
-class ResetIntervals : public ITermVisitor {
-public:
+class ResetIntervals : public autodiff::ITermVisitor
+{
+  public:
     ResetIntervals();
-    virtual ~ResetIntervals();
 
-    int visit(shared_ptr<Abs> abs);
-    int visit(shared_ptr<And> and_);
-    int visit(shared_ptr<Atan2> atan2);
-    int visit(shared_ptr<Constant> constant);
-    int visit(shared_ptr<ConstPower> intPower);
-    int visit(shared_ptr<ConstraintUtility> cu);
-    int visit(shared_ptr<Cos> cos);
-    int visit(shared_ptr<Exp> exp);
-    int visit(shared_ptr<Gp> gp);
-    int visit(shared_ptr<LinSigmoid> sigmoid);
-    int visit(shared_ptr<Log> log);
-    int visit(shared_ptr<LTConstraint> constraint);
-    int visit(shared_ptr<LTEConstraint> constraint);
-    int visit(shared_ptr<Max> max);
-    int visit(shared_ptr<Min> min);
-    int visit(shared_ptr<Or> or_);
-    int visit(shared_ptr<Product> product);
-    int visit(shared_ptr<Reification> dis);
-    int visit(shared_ptr<Sigmoid> sigmoid);
-    int visit(shared_ptr<Sin> sin);
-    int visit(shared_ptr<Sum> sum);
-    int visit(shared_ptr<TermPower> power);
-    int visit(shared_ptr<Variable> var);
-    int visit(shared_ptr<Zero> zero);
+    int visit(autodiff::Abs* abs);
+    int visit(autodiff::And* and_);
+    int visit(autodiff::Atan2* atan2);
+    int visit(autodiff::Constant* constant);
+    int visit(autodiff::ConstPower* intPower);
+    int visit(autodiff::ConstraintUtility* cu);
+    int visit(autodiff::Cos* cos);
+    int visit(autodiff::Exp* exp);
+    int visit(autodiff::LinSigmoid* sigmoid);
+    int visit(autodiff::Log* log);
+    int visit(autodiff::LTConstraint* constraint);
+    int visit(autodiff::LTEConstraint* constraint);
+    int visit(autodiff::Max* max);
+    int visit(autodiff::Min* min);
+    int visit(autodiff::Or* or_);
+    int visit(autodiff::Product* product);
+    int visit(autodiff::Reification* dis);
+    int visit(autodiff::Sigmoid* sigmoid);
+    int visit(autodiff::Sin* sin);
+    int visit(autodiff::Sum* sum);
+    int visit(autodiff::TermPower* power);
+    int visit(autodiff::Variable* var);
 
-protected:
-    void updateInterval(shared_ptr<Term> t, double min, double max);
+  private:
+    void updateInterval(autodiff::TermPtr t, double min, double max);
 };
 
 } /* namespace intervalpropagation */

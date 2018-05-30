@@ -1,78 +1,86 @@
-/*
- * Sigmoid.cpp
- *
- *  Created on: Jul 17, 2014
- *      Author: psp
- */
-
 #include "Sigmoid.h"
 
-#include "TermBuilder.h"
-#include "Constant.h"
 #include "ConstPower.h"
+#include "Constant.h"
 #include "Exp.h"
+#include "TermHolder.h"
 
 #include <cmath>
 #include <limits>
+#include <sstream>
 
-namespace autodiff {
+namespace autodiff
+{
 
-Sigmoid::Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid)
-        : Term() {
-    this->arg = arg;
-    this->mid = mid;
-    this->steepness = 1;
+Sigmoid::Sigmoid(TermPtr arg, TermHolder* owner)
+    : Term(owner)
+    , _arg(arg)
+    , _steepness(1.0)
+{
 }
 
-Sigmoid::Sigmoid(shared_ptr<Term> arg, shared_ptr<Term> mid, double steppness)
-        : Term() {
-    this->arg = arg;
-    this->mid = mid;
-    this->steepness = steppness;
+Sigmoid::Sigmoid(TermPtr arg, double steepness, TermHolder* owner)
+    : Term(owner)
+    , _arg(arg)
+    , _steepness(steepness)
+{
 }
 
-int Sigmoid::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<Sigmoid> thisCasted = dynamic_pointer_cast<Sigmoid>(shared_from_this());
-    return visitor->visit(thisCasted);
+int Sigmoid::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-shared_ptr<Term> Sigmoid::aggregateConstants() {
-    arg = arg->aggregateConstants();
-    mid = mid->aggregateConstants();
-    if (dynamic_pointer_cast<Constant>(arg) != 0 && dynamic_pointer_cast<Constant>(mid) != 0) {
-        shared_ptr<Constant> arg = dynamic_pointer_cast<Constant>(arg);
-        shared_ptr<Constant> mid = dynamic_pointer_cast<Constant>(mid);
-        double e = exp(steepness * (-arg->value + mid->value));
-        if (e == numeric_limits<double>::infinity()) {
-            return TermBuilder::constant(Term::EPSILON);
+void Sigmoid::acceptRecursive(ITermVisitor* visitor)
+{
+    _arg->acceptRecursive(visitor);
+    visitor->visit(this);
+}
+
+TermPtr Sigmoid::aggregateConstants()
+{
+    _arg = _arg->aggregateConstants();
+    if (_arg->isConstant()) {
+        double e = exp(-_steepness * static_cast<Constant*>(_arg)->getValue());
+        if (e == std::numeric_limits<double>::infinity()) {
+            return _owner->constant(Term::EPSILON);
         } else {
             e = 1.0 / (1.0 + e);
         }
         if (e < Term::EPSILON) {
-            return TermBuilder::constant(Term::EPSILON);
+            return _owner->constant(Term::EPSILON);
         } else {
-            return TermBuilder::constant(e);
+            return _owner->constant(e);
         }
     } else {
-        return shared_from_this();
+        return this;
     }
 }
 
-shared_ptr<Term> Sigmoid::derivative(shared_ptr<Variable> v) {
-    shared_ptr<Term> t =
-            steepness * (arg->derivative(v) - mid->derivative(v)) * make_shared<Exp>(steepness * (-1 * arg + mid));
-    return t / make_shared<ConstPower>(make_shared<Exp>(steepness * arg) + make_shared<Exp>(steepness * mid), 2);
+TermPtr Sigmoid::derivative(VarPtr v) const
+{
+    TermPtr epos = _owner->exp(_steepness * _arg);
+    TermPtr t = _steepness * _arg->derivative(v) * epos;
+    return t / _owner->constPower(epos + _owner->constant(1.0), 2);
 }
 
-string Sigmoid::toString() {
-    string str;
-    str.append("sigmoid( ");
-    str.append(arg->toString());
-    str.append(", ");
-    str.append(mid->toString());
-    str.append(", ");
-    str.append("", steepness);
-    str.append(" )");
-    return str;
+std::string Sigmoid::toString() const
+{
+    std::stringstream str;
+    str << "sigmoid( " << _arg->toString() << ", " << _steepness << " )";
+    return str.str();
 }
+
+void Sigmoid::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* l = tape.getValues(params[0].asIdx);
+    const double steep = params[1].asDouble;
+    const double e = exp(steep * -l[0]);
+    result[0] = 1.0 / (1.0 + e);
+    const double val = steep * e * result[0] * result[0];
+    for (int i = 1; i <= dim; ++i) {
+        result[i] = l[i] * val;
+    }
+}
+
 } /* namespace autodiff */

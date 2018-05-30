@@ -6,44 +6,51 @@
  */
 
 #include "FormulaTransform.h"
-//#define FORMULATRANS_DEBUG
-//#define USE_EXTENDED_EQUALITY
 
+#include "CNSat.h"
 #include "types/Clause.h"
 #include "types/Lit.h"
 #include "types/Var.h"
-#include "CNSat.h"
+
+#include <autodiff/AutoDiff.h>
 
 #include <algorithm>
+
+#include <iostream>
+
+//#define FORMULATRANS_DEBUG
+//#define USE_EXTENDED_EQUALITY
 
 #ifdef USE_EXTENDED_EQUALITY
 #include "TermEquality.h"
 #endif
 
-#include <iostream>
+namespace alica
+{
+namespace reasoner
+{
+namespace cnsat
+{
 
-namespace alica {
-namespace reasoner {
-namespace cnsat {
+using autodiff::TermPtr;
 
-FormulaTransform::FormulaTransform() {
+FormulaTransform::FormulaTransform()
+{
 #ifdef USE_EXTENDED_EQUALITY
-    this->te = make_shared<TermEquality>();
+    this->te = std::make_shared<TermEquality>();
 #endif
     this->atomOccurrence = 0;
 }
 
-FormulaTransform::~FormulaTransform() {
-    // TODO Auto-generated destructor stub
-}
+FormulaTransform::~FormulaTransform() {}
 
-shared_ptr<list<shared_ptr<Clause>>> FormulaTransform::transformToCNF(
-        shared_ptr<Term> formula, shared_ptr<CNSat> solver) {
+std::shared_ptr<std::list<std::shared_ptr<Clause>>> FormulaTransform::transformToCNF(TermPtr formula, std::shared_ptr<CNSat> solver)
+{
     this->solver = solver;
     reset();
-    shared_ptr<list<shared_ptr<Clause>>> clauses = make_shared<list<shared_ptr<Clause>>>();
-    shared_ptr<Clause> initial = make_shared<Clause>();
-    shared_ptr<Lit> lit = make_shared<Lit>(formula, Assignment::UNASSIGNED, true);
+    std::shared_ptr<std::list<std::shared_ptr<Clause>>> clauses = std::make_shared<std::list<std::shared_ptr<Clause>>>();
+    std::shared_ptr<Clause> initial = std::make_shared<Clause>();
+    std::shared_ptr<Lit> lit = std::make_shared<Lit>(formula, Assignment::UNASSIGNED, true);
     initial->literals->push_back(lit);
 
     clauses->push_back(initial);
@@ -51,36 +58,34 @@ shared_ptr<list<shared_ptr<Clause>>> FormulaTransform::transformToCNF(
     doTransform(clauses);
 
 #ifdef FORMULATRANS_DEBUG
-    cout << "Clauses: " << clauses->size() << " Lits: " << atomOccurrence << " Vars: " << solver->variables->size()
-         << "" << endl;
+    std::cout << "Clauses: " << clauses->size() << " Lits: " << atomOccurrence << " Vars: " << solver->variables->size() << "" << std::endl;
 #endif
 
     return clauses;
 }
 
-void FormulaTransform::reset() {
+void FormulaTransform::reset()
+{
     this->atoms.clear();
     this->atomOccurrence = 0;
 }
 
-shared_ptr<Var> FormulaTransform::getAtoms(int term_id) {
-    return this->atoms[term_id];
-}
-
-int FormulaTransform::getAtomOccurrence() {
+int FormulaTransform::getAtomOccurrence() const
+{
     return atomOccurrence;
 }
 
-void FormulaTransform::doTransform(shared_ptr<list<shared_ptr<Clause>>>& clauses) {
-    shared_ptr<Clause> curClause = nullptr;
-    shared_ptr<Lit> curLit = nullptr;
+void FormulaTransform::doTransform(std::shared_ptr<std::list<std::shared_ptr<Clause>>>& clauses)
+{
+    std::shared_ptr<Clause> curClause = nullptr;
+    std::shared_ptr<Lit> curLit = nullptr;
     int j = 0;
     auto clauseIter = clauses->begin();
     while (clauseIter != clauses->end()) {
-        shared_ptr<Clause> tmpClause = *clauseIter;
+        std::shared_ptr<Clause> tmpClause = *clauseIter;
         if (!tmpClause->isFinished) {
             bool finished = true;
-            for (j = 0; j < tmpClause->literals->size(); ++j) {
+            for (j = 0; j < static_cast<int>(tmpClause->literals->size()); ++j) {
                 if (tmpClause->literals->at(j)->isTemporary) {
                     finished = false;
                     curClause = tmpClause;
@@ -96,7 +101,7 @@ void FormulaTransform::doTransform(shared_ptr<list<shared_ptr<Clause>>>& clauses
                 //							}
 
                 curClause->literals->erase(curClause->literals->begin() + j);
-                shared_ptr<Clause> nc1 = nullptr, nc2 = nullptr;
+                std::shared_ptr<Clause> nc1 = nullptr, nc2 = nullptr;
                 performStep(curClause, curLit, nc1, nc2);
                 if (nc1 != nullptr) {
                     clauses->push_back(nc1);
@@ -124,111 +129,116 @@ void FormulaTransform::doTransform(shared_ptr<list<shared_ptr<Clause>>>& clauses
     }
 }
 
-void FormulaTransform::performStep(
-        shared_ptr<Clause>& c, shared_ptr<Lit>& lit, shared_ptr<Clause>& newClause1, shared_ptr<Clause>& newClause2) {
-    shared_ptr<Term> formula = lit->atom;
-    if (dynamic_pointer_cast<Max>(formula) != 0) {
-        shared_ptr<Max> m = dynamic_pointer_cast<Max>(formula);
-        shared_ptr<Lit> l = make_shared<Lit>(m->left, Assignment::UNASSIGNED, true);
-        shared_ptr<Lit> r = make_shared<Lit>(m->right, Assignment::UNASSIGNED, true);
+void FormulaTransform::performStep(std::shared_ptr<Clause>& c, std::shared_ptr<Lit>& lit, std::shared_ptr<Clause>& newClause1,
+                                   std::shared_ptr<Clause>& newClause2)
+{
+    TermPtr formula = lit->_atom;
+    autodiff::Max* asMax = dynamic_cast<autodiff::Max*>(formula.get());
+    if (asMax != nullptr) {
+        std::shared_ptr<Lit> l = std::make_shared<Lit>(asMax->getLeft(), Assignment::UNASSIGNED, true);
+        std::shared_ptr<Lit> r = std::make_shared<Lit>(asMax->getRight(), Assignment::UNASSIGNED, true);
         c->addChecked(l);
         c->addChecked(r);
         newClause1 = c;
         newClause2 = nullptr;
         return;
     }
-    if (dynamic_pointer_cast<And>(formula) != 0) {
-        shared_ptr<And> a = dynamic_pointer_cast<And>(formula);
-        shared_ptr<Lit> l = make_shared<Lit>(a->left, Assignment::UNASSIGNED, true);
-        shared_ptr<Lit> r = make_shared<Lit>(a->right, Assignment::UNASSIGNED, true);
-        shared_ptr<Clause> c2 = c->clone();
+    autodiff::And* asAnd = dynamic_cast<autodiff::And*>(formula.get());
+    if (asAnd != nullptr) {
+        std::shared_ptr<Lit> l = std::make_shared<Lit>(asAnd->getLeft(), Assignment::UNASSIGNED, true);
+        std::shared_ptr<Lit> r = std::make_shared<Lit>(asAnd->getRight(), Assignment::UNASSIGNED, true);
+        std::shared_ptr<Clause> c2 = c->clone();
         c->addChecked(l);
         c2->addChecked(r);
         newClause1 = c;
         newClause2 = c2;
         return;
     }
-    if (dynamic_pointer_cast<Or>(formula) != 0) {
-        shared_ptr<Or> o = dynamic_pointer_cast<Or>(formula);
-        shared_ptr<Lit> l = make_shared<Lit>(o->left, Assignment::UNASSIGNED, true);
-        shared_ptr<Lit> r = make_shared<Lit>(o->right, Assignment::UNASSIGNED, true);
+    autodiff::Or* asOr = dynamic_cast<autodiff::Or*>(formula.get());
+    if (asOr != nullptr) {
+        std::shared_ptr<Lit> l = std::make_shared<Lit>(asOr->getLeft(), Assignment::UNASSIGNED, true);
+        std::shared_ptr<Lit> r = std::make_shared<Lit>(asOr->getRight(), Assignment::UNASSIGNED, true);
         c->addChecked(l);
         c->addChecked(r);
         newClause1 = c;
         newClause2 = nullptr;
         return;
     }
-    if (dynamic_pointer_cast<Min>(formula) != 0) {
-        shared_ptr<Min> m = dynamic_pointer_cast<Min>(formula);
-        shared_ptr<Lit> l = make_shared<Lit>(m->left, Assignment::UNASSIGNED, true);
-        shared_ptr<Lit> r = make_shared<Lit>(m->right, Assignment::UNASSIGNED, true);
-        shared_ptr<Clause> c2 = c->clone();
+    autodiff::Min* asMin = dynamic_cast<autodiff::Min*>(formula.get());
+    if (asMin != nullptr) {
+        std::shared_ptr<Lit> l = std::make_shared<Lit>(asMin->getLeft(), Assignment::UNASSIGNED, true);
+        std::shared_ptr<Lit> r = std::make_shared<Lit>(asMin->getRight(), Assignment::UNASSIGNED, true);
+        std::shared_ptr<Clause> c2 = c->clone();
         c->addChecked(l);
         c2->addChecked(r);
         newClause1 = c;
         newClause2 = c2;
         return;
     }
-    if (dynamic_pointer_cast<LTConstraint>(formula) != 0) {
+    if (dynamic_cast<autodiff::LTConstraint*>(formula.get()) != nullptr) {
         lit->isTemporary = false;
         lit->computeVariableCount();
         lit->sign = Assignment::TRUE;
         this->atomOccurrence++;
-        shared_ptr<Var> v = nullptr;
+        std::shared_ptr<Var> v = nullptr;
 #ifdef USE_EXTENDED_EQUALITY
-        if (this->tryGetVar(lit->atom, &v)) {
+        if (this->tryGetVar(lit->_atom, &v)) {
 #else
-        if (this->atoms.find(lit->atom->getId()) != atoms.end()) {
+        if (this->atoms.find(lit->_atom) != atoms.end()) {
 #endif
-            lit->var = atoms[lit->atom->getId()];
+            lit->var = atoms[lit->_atom];
         } else {
             lit->var = solver->newVar();
-            lit->var->term = lit->atom;
-            this->atoms[lit->atom->getId()] = lit->var;
+            lit->var->_term = lit->_atom;
+            this->atoms[lit->_atom] = lit->var;
         }
         c->addChecked(lit);
         newClause1 = c;
         newClause2 = nullptr;
         return;
     }
-    if (dynamic_pointer_cast<LTEConstraint>(formula) != 0) {
+
+    if (dynamic_cast<autodiff::LTEConstraint*>(formula.get()) != nullptr) {
         lit->isTemporary = false;
         lit->computeVariableCount();
         lit->sign = Assignment::FALSE;
         this->atomOccurrence++;
-        shared_ptr<Term> p = dynamic_pointer_cast<LTEConstraint>(formula)->negate();
-        lit->atom = p;
-        shared_ptr<Var> v = nullptr;
+        autodiff::TermPtr p = dynamic_cast<autodiff::LTEConstraint*>(formula.get())->negate();
+        lit->_atom = p;
+        std::shared_ptr<Var> v = nullptr;
 #ifdef USE_EXTENDED_EQUALITY
         if (this->tryGetVar(p, &v)) {
 #else
-        if (this->atoms.find(p->getId()) != atoms.end()) {
+        if (this->atoms.find(p) != atoms.end()) {
 #endif
-            lit->var = atoms[p->getId()];
+            lit->var = atoms[p];
         } else {
             lit->var = solver->newVar();
-            lit->var->term = p;
-            this->atoms[p->getId()] = lit->var;
+            lit->var->_term = p;
+            this->atoms[p] = lit->var;
         }
         c->addChecked(lit);
         newClause1 = c;
         newClause2 = nullptr;
         return;
     }
-    if (dynamic_pointer_cast<Constant>(formula) != 0) {
-        if (dynamic_pointer_cast<Constant>(formula)->value <= 0.0) {
+    autodiff::Constant* asConst = dynamic_cast<autodiff::Constant*>(formula.get());
+    if (asConst != nullptr) {
+        if (asConst->getValue() <= 0.0) {
             newClause1 = c;
-        } else
+        } else {
             newClause1 = nullptr;
+        }
         newClause2 = nullptr;
         return;
     }
-    cerr << "Unknown constraint in transformation:  " << typeid(formula).name() << endl;
+    std::cerr << "Unknown constraint in transformation:  " << typeid(formula.get()).name() << std::endl;
     throw "Unknown constraint in transformation!";
 }
 
-bool FormulaTransform::tryGetVar(shared_ptr<Term> t, shared_ptr<Var> v) {
-    cout << "FormulaTransform::tryGetVar not implemented yet!" << endl;
+bool FormulaTransform::tryGetVar(autodiff::TermPtr t, std::shared_ptr<Var> v)
+{
+    std::cout << "FormulaTransform::tryGetVar not implemented yet!" << std::endl;
     throw "FormulaTransform::tryGetVar not implemented yet!";
 }
 
