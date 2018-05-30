@@ -273,6 +273,15 @@ bool FileSystem::endsWith(const std::string& file, const std::string& ending)
     }
 }
 
+bool FileSystem::endsWith(const string& file, const char& ending)
+{
+    if (!file.empty() && (file[file.length()] == ending)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 /**
  * Determines the parent folder of the given path.
  * @param path

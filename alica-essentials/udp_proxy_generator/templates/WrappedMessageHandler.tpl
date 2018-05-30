@@ -1,16 +1,11 @@
-//
-// Created by marci on 17.04.16.
-//
-
-#ifndef SUPPLEMENTARY_WRAPPEDMESSAGEHANDLER_H
-#define SUPPLEMENTARY_WRAPPEDMESSAGEHANDLER_H
+#pragma once
 
 #include <ros/ros.h>
 
 #include "TTBWorldModel.h"
-< ? messageIncludes ? >
+<?messageIncludes?>
 
-                              namespace ttb {
+namespace ttb {
     class WrappedMessageHandler {
     private:
         int robotID;
@@ -18,11 +13,10 @@
         // get incoming wrapped messages and publish them (unwrapped) on the local ros core
 
     public:
-        < ? rosPublisherDecl ? >
+        <?rosPublisherDecl?>
+        <?rosMessageHandler?>
 
-                                       <
-                ? rosMessageHandler
-                ? > void init(int& id) {
+        void init(int& id) {
             this->robotID = id;
 
             <?subscriptions?>
@@ -34,5 +28,3 @@
         }
     };
 }
-
-#endif  // SUPPLEMENTARY_WRAPPEDMESSAGEHANDLER_H

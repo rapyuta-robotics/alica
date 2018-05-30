@@ -26,6 +26,7 @@ class FileSystem
     static bool isPathRooted(const std::string& path);
     static std::string combinePaths(const std::string& path1, const std::string& path2);
     static bool endsWith(const std::string& file, const std::string& ending);
+    static bool endsWith(const std::string& file, const char& ending);
     static bool isDirectory(const std::string& path);
     static bool isFile(const std::string& path);
     static std::string getParent(const std::string& path);
