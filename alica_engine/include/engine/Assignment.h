@@ -36,7 +36,7 @@ class Assignment final : public IAssignment
     void setPlan(const Plan* plan);
     StateCollection* getRobotStateMapping();
 
-    AssignmentCollection* getEpRobotsMapping();
+    virtual AssignmentCollection* getEpRobotsMapping() const override { return epRobotsMapping; }
     void getAllRobots(AgentGrp& o_robots);
     void getAllRobotsSorted(AgentGrp& o_robots);
     const AgentGrp* getRobotsWorking(int64_t epid) const override;
@@ -53,7 +53,7 @@ class Assignment final : public IAssignment
     std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(const EntryPoint* ep) override;
     std::shared_ptr<std::list<const supplementary::AgentID*>> getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) override;
     std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(int64_t epid) override;
-    std::shared_ptr<SuccessCollection> getEpSuccessMapping() override;
+    virtual std::shared_ptr<SuccessCollection> getEpSuccessMapping() const override;
     void setAllToInitialState(const AgentGrp& robotIds, const EntryPoint* defep);
     bool removeRobot(const supplementary::AgentID* robotId);
     void addRobot(const supplementary::AgentID* robotId, const EntryPoint* e, const State* s);
@@ -64,13 +64,13 @@ class Assignment final : public IAssignment
     bool updateRobot(const supplementary::AgentID* robotId, const EntryPoint* ep, const State* s);
     bool updateRobot(const supplementary::AgentID* robotId, const EntryPoint* ep);
     bool removeRobot(const supplementary::AgentID* robotId, const EntryPoint* ep);
-    std::string assignmentCollectionToString();
+    virtual std::string assignmentCollectionToString() const override;
     void addRobot(const supplementary::AgentID* robotId, const EntryPoint* e);
     void moveRobots(const State* from, const State* to);
     const EntryPoint* getEntryPointOfRobot(const supplementary::AgentID* robotId);
 
     void clear();
-    std::string toString();
+    virtual std::string toString() const override;
     std::string toHackString();
 
   protected:

@@ -4,16 +4,12 @@
 
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
-#include "engine/BasicBehaviour.h"
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/constraintmodul/ISolver.h"
-#include "engine/constraintmodul/IVariableSyncModule.h"
 #include "engine/constraintmodul/ProblemDescriptor.h"
 #include "engine/constraintmodul/ProblemPart.h"
-#include "engine/constraintmodul/SolverTerm.h"
-#include "engine/constraintmodul/SolverVariable.h"
 #include "engine/constraintmodul/UniqueVarStore.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Condition.h"
@@ -21,6 +17,8 @@
 #include "engine/model/Parametrisation.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
+
+#include <alica_solver_interface/SolverContext.h>
 
 #include <map>
 #include <memory>
@@ -30,7 +28,7 @@ namespace alica
 {
 class ProblemPart;
 class RunningPlan;
-class BasicBehaviour;
+class SolverContext;
 
 template <class T>
 class BufferedSet
@@ -112,6 +110,7 @@ class Query
     BufferedDomainVariableGrp _domainVars;
 
     VariableGrp _relevantVariables;
+    std::unique_ptr<SolverContext> _context;
 };
 
 template <class SolverType>
@@ -152,7 +151,7 @@ bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<Resul
     // TODO: get rid of the interrim vector (see below how)
     std::vector<ResultType> solverResult;
     // let the solver solve the problem
-    bool ret = solver->getSolution(_relevantVariables, cds, solverResult);
+    bool ret = solver->getSolution(_context.get(), cds, solverResult);
 
     if (ret && solverResult.size() > 0) {
         int i = 0;
@@ -165,12 +164,14 @@ bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<Resul
         // TODO this can be done in place. The queried static should be at the beginning of the array anyway
         // create a result vector that is filtered by the queried variables
         for (const Variable* staticVariable : _queriedStaticVariables) {
-            result.push_back(solverResult[_uniqueVarStore.getIndexOf(staticVariable)]);
+            int idx = _uniqueVarStore.getIndexOf(staticVariable);
+            assert(idx >= 0);
+            result.push_back(solverResult[idx]);
         }
         // Again, the queried domain variables should be at the beginning of the domain variable segment
         // So a simple move and resize should do the trick
-        for (int i = 0; i < _queriedDomainVariables.size(); ++i) {
-            for (int j = domOffset; j < _relevantVariables.size(); ++j) {
+        for (int i = 0; i < static_cast<int>(_queriedDomainVariables.size()); ++i) {
+            for (int j = domOffset; j < static_cast<int>(_relevantVariables.size()); ++j) {
                 if (_relevantVariables[j] == _queriedDomainVariables[i]) {
                     result.push_back(solverResult[j]);
                     break;

@@ -10,15 +10,15 @@
 
 #include "engine/BasicCondition.h"
 
-using namespace std;
-
-namespace alica {
+namespace alica
+{
 class BasicCondition;
 
-class IConditionCreator {
-public:
+class IConditionCreator
+{
+  public:
     virtual ~IConditionCreator() {}
-    virtual shared_ptr<BasicCondition> createConditions(long conditionConfId) = 0;
+    virtual std::shared_ptr<BasicCondition> createConditions(long conditionConfId) = 0;
 };
 
 } /* namespace alica */

@@ -27,10 +27,9 @@ ConditionStore::~ConditionStore() {}
  */
 void ConditionStore::clear()
 {
+    std::lock_guard<std::mutex> lock(_mtx);
     _activeVar2CondMap.clear();
-    _mtx.lock();
     _activeConditions.clear();
-    _mtx.unlock();
 }
 
 /**
@@ -44,12 +43,11 @@ void ConditionStore::addCondition(const Condition* con)
     }
 
     bool modified = false;
-    _mtx.lock();
+    std::lock_guard<std::mutex> lock(_mtx);
     if (std::find(_activeConditions.begin(), _activeConditions.end(), con) == _activeConditions.end()) {
         modified = true;
         _activeConditions.push_back(con);
     }
-    _mtx.unlock();
     if (modified) {
         for (const Variable* variable : con->getVariables()) {
             _activeVar2CondMap[variable].push_back(con);
@@ -60,6 +58,7 @@ void ConditionStore::addCondition(const Condition* con)
             }
         }
     }
+
 #ifdef CS_DEBUG
     std::cout << "CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables. CS: " << this
               << std::endl;
@@ -74,16 +73,16 @@ void ConditionStore::addCondition(const Condition* con)
 void ConditionStore::removeCondition(const Condition* con)
 {
     if (con == nullptr) {
+        assert(false);
         return;
     }
     bool modified = false;
-    _mtx.lock();
+    std::lock_guard<std::mutex> lock(_mtx);
     ConditionGrp::iterator cit = find(_activeConditions.begin(), _activeConditions.end(), con);
     if (cit != _activeConditions.end()) {
         modified = true;
         _activeConditions.erase(cit);
     }
-    _mtx.unlock();
     if (modified) {
         for (const Variable* v : con->getVariables()) {
             auto it = _activeVar2CondMap.find(v);
@@ -105,7 +104,7 @@ void ConditionStore::removeCondition(const Condition* con)
 /**
  * Writes static and domain variables, as well as, problem parts into the query.
  */
-void ConditionStore::acceptQuery(Query& query, shared_ptr<const RunningPlan> rp) const
+void ConditionStore::acceptQuery(Query& query, std::shared_ptr<const RunningPlan> rp) const
 {
 #ifdef CS_DEBUG
     std::cout << "ConditionStore: Accepting Query - Active conditions in store is " << _activeConditions.size() << " CS: " << this << std::endl;
@@ -129,6 +128,7 @@ void ConditionStore::acceptQuery(Query& query, shared_ptr<const RunningPlan> rp)
 #endif
     const int previousPartCount = query.getPartCount();
 
+    std::lock_guard<std::mutex> lock(_mtx);
     while (query.getPartCount() - previousPartCount < static_cast<int>(_activeConditions.size()) &&
            (domainVarBuffer.hasCurrentlyAny() || staticVarBuffer.hasCurrentlyAny())) {
         if (staticVarBuffer.hasCurrentlyAny()) {

@@ -1,22 +1,22 @@
-#include "supplementary/AgentID.h"
-#include "engine/AlicaClock.h"
+#include <engine/AlicaClock.h>
+#include <engine/Types.h>
 
-#include <unordered_set>
+#include <supplementary/AgentID.h>
+
 #include <list>
 #include <memory>
+#include <unordered_set>
 
-namespace alica {
-
-class State;
-class EntryPoint;
-class AbstractPlan;
+namespace alica
+{
 
 /**
  * A SimplePlanTree is a simplified version of the RunningPlan, usually created from an incoming message. It thus
  * represents the plan graph of another robot.
  */
-class SimplePlanTree {
-public:
+class SimplePlanTree
+{
+  public:
     SimplePlanTree();
     virtual ~SimplePlanTree();
     const EntryPoint* getEntryPoint() const { return entryPoint; }
@@ -33,12 +33,12 @@ public:
     void setNewSimplePlanTree(bool newSimplePlanTree);
     AlicaTime getReceiveTime() const;
     void setReceiveTime(AlicaTime receiveTime);
-    const std::list<int64_t>& getStateIds() const;
-    void setStateIds(const std::list<int64_t>& stateIds);
+    const IdGrp& getStateIds() const { return stateIds; }
+    void setStateIds(const IdGrp& stateIds);
     bool containsPlan(const AbstractPlan* plan) const;
     std::string toString() const;
 
-protected:
+  protected:
     /**
      * The parent SimplePlanTree
      */
@@ -58,7 +58,7 @@ protected:
      * The timestamp denoting when this tree was received.
      */
     AlicaTime receiveTime;
-    std::list<long> stateIds;
+    IdGrp stateIds;
 };
 
 } /* namespace alica */

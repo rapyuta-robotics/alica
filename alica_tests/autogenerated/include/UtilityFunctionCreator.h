@@ -12,7 +12,7 @@ class UtilityFunctionCreator : public IUtilityCreator
   public:
     virtual ~UtilityFunctionCreator();
     UtilityFunctionCreator();
-    shared_ptr<BasicUtilityFunction> createUtility(long utilityfunctionConfId);
+    std::shared_ptr<BasicUtilityFunction> createUtility(long utilityfunctionConfId);
 };
 
 } /* namespace alica */

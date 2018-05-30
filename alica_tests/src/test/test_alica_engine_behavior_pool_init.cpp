@@ -1,20 +1,21 @@
-#include <test_alica.h>
-#include <gtest/gtest.h>
-#include <engine/AlicaEngine.h>
-#include <engine/AlicaClock.h>
-#include "engine/IAlicaCommunication.h"
-#include "engine/model/Behaviour.h"
-#include "engine/PlanRepository.h"
-#include <communication/AlicaRosCommunication.h>
-#include "engine/DefaultUtilityFunction.h"
-#include "engine/model/Plan.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
+#include "engine/DefaultUtilityFunction.h"
+#include "engine/IAlicaCommunication.h"
+#include "engine/PlanRepository.h"
+#include "engine/model/Behaviour.h"
+#include "engine/model/Plan.h"
+#include <communication/AlicaRosCommunication.h>
+#include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
+#include <gtest/gtest.h>
+#include <test_alica.h>
 
-class AlicaEngineTestBehPool : public ::testing::Test {
-protected:
+class AlicaEngineTestBehPool : public ::testing::Test
+{
+  protected:
     supplementary::SystemConfig* sc;
     alica::AlicaEngine* ae;
     alica::BehaviourCreator* bc;
@@ -22,7 +23,8 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
-    virtual void SetUp() {
+    virtual void SetUp()
+    {
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -35,8 +37,7 @@ protected:
         sc->setHostname("nase");
 
         // setup the engine
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
-                "MasterPlan", ".", false);
+        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "MasterPlan", ".", false);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
@@ -45,7 +46,8 @@ protected:
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     }
 
-    virtual void TearDown() {
+    virtual void TearDown()
+    {
         ae->shutdown();
         sc->shutdown();
         delete ae->getCommunicator();
@@ -58,11 +60,12 @@ protected:
 /**
  * Tests the initialisation of the behaviourPool
  */
-TEST_F(AlicaEngineTestBehPool, behaviourPoolInit) {
+TEST_F(AlicaEngineTestBehPool, behaviourPoolInit)
+{
     ASSERT_NO_SIGNAL
 
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
-    alica::BehaviourPool* bp = ae->getBehaviourPool();
+
     for (const Behaviour* behaviour : ae->getPlanRepository()->getBehaviours()) {
         ASSERT_NE(behaviour, nullptr);
         cout << "Behaviour: " << behaviour->getName() << endl;

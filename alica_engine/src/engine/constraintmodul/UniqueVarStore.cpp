@@ -1,5 +1,8 @@
 #include "engine/constraintmodul/UniqueVarStore.h"
 #include "engine/constraintmodul/Query.h"
+
+#include "engine/constraintmodul/ISolver.h"
+
 #include <assert.h>
 
 namespace alica
@@ -10,6 +13,8 @@ UniqueVarStore::UniqueVarStore() {}
 void UniqueVarStore::clear()
 {
     _store.clear();
+    _solverVars.clear();
+    _agentSolverVars.clear();
 }
 void UniqueVarStore::initWith(const VariableGrp& vs)
 {
@@ -32,6 +37,18 @@ void UniqueVarStore::add(const Variable* v)
     _store.push_back(std::move(l));
 }
 
+void UniqueVarStore::addChecked(const Variable* v)
+{
+    for (const auto& variables : _store) {
+        for (const Variable* variable : variables) {
+            if (variable == v) {
+                return;
+            }
+        }
+    }
+    add(v);
+}
+
 /**
  * Add the variable "toAdd" to the front of the list of variables that contains the variable "representing".
  * If such a list does not exist, a new list will be created.
@@ -46,9 +63,7 @@ void UniqueVarStore::addVarTo(const Variable* representing, const Variable* toAd
             }
         }
     }
-    VariableGrp nl;
-    nl.insert(nl.begin(), representing);
-    nl.insert(nl.begin(), toAdd);
+    VariableGrp nl{toAdd, representing};
     _store.push_back(std::move(nl));
 }
 
@@ -71,7 +86,40 @@ const Variable* UniqueVarStore::getRep(const Variable* v)
     add(v);
     return v;
 }
+SolverVariable* UniqueVarStore::getSolverVariable(const Variable* v) const
+{
+    assert(_store.size() == _solverVars.size());
+    for (int i = 0; i < static_cast<int>(_store.size()); ++i) {
+        for (const Variable* s : _store[i]) {
+            if (s == v) {
+                return _solverVars[i];
+            }
+        }
+    }
+    assert(false);
+    return nullptr;
+}
 
+SolverVariable* UniqueVarStore::getSolverVariable(const DomainVariable* dv, ISolverBase* solver, SolverContext* ctx) const
+{
+    auto it = _agentSolverVars.find(dv);
+    if (it != _agentSolverVars.end()) {
+        return it->second;
+    }
+    assert(false); // creating these on the fly would break ordering
+    return nullptr;
+}
+
+void UniqueVarStore::setupSolverVars(ISolverBase* solver, SolverContext* ctx, const std::vector<const DomainVariable*>& domainVars)
+{
+    _solverVars.resize(_store.size());
+    for (int i = 0; i < static_cast<int>(_store.size()); ++i) {
+        _solverVars[i] = solver->createVariable(_store[i][0]->getId(), ctx);
+    }
+    for (const DomainVariable* dv : domainVars) {
+        _agentSolverVars[dv] = solver->createVariable(dv->getId(), ctx);
+    }
+}
 /**
  * Returns the index of the unification-list that contains the given variable.
  * Returns -1, if the variable is not present.
@@ -86,14 +134,6 @@ int UniqueVarStore::getIndexOf(const Variable* v) const
         }
     }
     return -1;
-}
-
-/**
- * ONLY FOR TESTING!
- */
-const UniqueVarStore& Query::getUniqueVariableStore() const
-{
-    return _uniqueVarStore;
 }
 
 std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store)

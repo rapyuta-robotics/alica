@@ -12,21 +12,21 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
-## Enable exception handling for segfaults
-set(CMAKE_CXX_FLAGS "-rdynamic -g -fnon-call-exceptions -ggdb -Werror-implicit-function-declaration -Werror=return-type -Wall -Wno-reorder ${CMAKE_CXX_FLAGS}")
+## Enable backtraces
+set(CMAKE_CXX_FLAGS "-rdynamic ${CMAKE_CXX_FLAGS}")
 
 find_package(catkin QUIET)
 if (catkin_FOUND)
-  find_package(catkin REQUIRED COMPONENTS agent_id system_config fsystem event_handling system_util)
+  find_package(catkin REQUIRED COMPONENTS agent_id system_config fsystem event_handling system_util alica_common_config alica_solver_interface)
 else (catkin_FOUND)
-  set(catkin_LIBRARIES "agent_id" "system_config" "fsystem" "event_handling" "system_util")
+  set(catkin_LIBRARIES "agent_id" "system_config" "fsystem" "event_handling" "system_util" "alica_common_config" "alica_solver_interface")
 endif(catkin_FOUND)
 
 if(catkin_FOUND)
   catkin_package(
     INCLUDE_DIRS include
     LIBRARIES alica_engine
-    CATKIN_DEPENDS agent_id system_config fsystem event_handling system_util
+    CATKIN_DEPENDS agent_id system_config fsystem event_handling system_util alica_solver_interface
   #  DEPENDS tinyxml
   )
 endif(catkin_FOUND)
