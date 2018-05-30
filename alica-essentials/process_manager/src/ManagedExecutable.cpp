@@ -510,13 +510,13 @@ void ManagedExecutable::startProcess(vector<char*>& params)
         // add prefixCmd to startParams
         char* tmp = new char[this->metaExec->prefixCmd.size() + 1];
         strcpy(tmp, this->metaExec->prefixCmd.c_str());
-        tmp[this->metaExec->prefixCmd.size() + 1] = '\0';
+        tmp[this->metaExec->prefixCmd.size()] = '\0';
         startParams.push_back(tmp);
         if (this->metaExec->rosPackage != "NOT-FOUND") {
             // add rospackage to startParams
             tmp = new char[this->metaExec->rosPackage.size() + 1];
             strcpy(tmp, this->metaExec->rosPackage.c_str());
-            tmp[this->metaExec->rosPackage.size() + 1] = '\0';
+            tmp[this->metaExec->rosPackage.size()] = '\0';
             startParams.push_back(tmp);
         }
     } else if (this->metaExec->absExecName.size() > 1) {

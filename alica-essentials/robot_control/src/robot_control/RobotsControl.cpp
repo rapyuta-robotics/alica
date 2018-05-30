@@ -53,15 +53,15 @@ RobotsControl::RobotsControl()
         vector<int> processList = (*this->sc)["ProcessManaging"]->getList<int>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
         vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList", NULL);
         if (processList.size() != processParamsList.size()) {
-            cerr << "PMControl: Number of processes does not match the number of parameter sets for the bundle '" << bundleName << "' in the Processes.conf!"
-                 << endl;
+            std::cerr << "PMControl: Number of processes does not match the number of parameter sets for the bundle '" << bundleName
+                      << "' in the Processes.conf!" << std::endl;
             continue;
         }
 
         for (int i = 0; i < processList.size(); i++) {
             this->bundlesMap[bundleName].push_back(pair<int, int>(processList[i], std::stoi(processParamsList[i])));
         }
-        cout << "PMControl: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size() << " processes." << endl;
+        std::cout << "PMControl: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size() << " processes." << std::endl;
     }
 }
 
@@ -119,16 +119,16 @@ void RobotsControl::showContextMenu(const QPoint& pos)
         std::string name = selectedItem->iconText().toStdString().substr();
         name = name.substr(0, name.find('(') - 1);
 
-        cout << "RC: '" << name << "'" << endl;
+        std::cout << "RC: '" << name << "'" << std::endl;
 
         const supplementary::AgentID* robotId = this->pmRegistry->getRobotId(name);
         if (robotId != nullptr) {
             this->controlledRobotsMap[robotId]->toggle();
         } else {
-            cerr << "RC: Chosen robot is not known in the robot registry!" << endl;
+            std::cerr << "RC: Chosen robot is not known in the robot registry!" << std::endl;
         }
     } else {
-        cout << "RC: Nothing chosen!" << endl;
+        std::cout << "RC: Nothing chosen!" << std::endl;
     }
 }
 
@@ -211,11 +211,11 @@ void RobotsControl::checkAndInit(const supplementary::AgentID* robotId)
     if (pmEntry == this->controlledRobotsMap.end()) { // robot is not known, so create a corresponding instance
         string robotName;
         if (this->pmRegistry->getRobotName(robotId, robotName)) {
-            cout << "RC: Create new ControlledRobot with ID " << *robotId << " and host name " << robotName << "!" << endl;
+            std::cout << "RC: Create new ControlledRobot with ID " << *robotId << " and host name " << robotName << "!" << std::endl;
             Robot* controlledRobot = new Robot(robotName, robotId, this);
             this->controlledRobotsMap.emplace(robotId, controlledRobot);
         } else {
-            cerr << "RC: Received message from unknown robot with sender id " << *robotId << endl;
+            std::cerr << "RC: Received message from unknown robot with sender id " << *robotId << std::endl;
         }
     }
 }

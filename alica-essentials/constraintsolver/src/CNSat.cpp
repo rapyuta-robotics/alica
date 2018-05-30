@@ -49,15 +49,13 @@ void CNSat::readFromCNFFile(string path)
         shared_ptr<Clause> c = make_shared<Clause>();
 
         stringstream ss(line);
-        string s;
         while (!ss.eof()) {
-            ss >> s;
-            istringstream is(s);
             int val;
-            is >> val;
+            ss >> val;
 
-            if (val == 0)
+            if (val == 0) {
                 continue;
+            }
             size_t valn = abs(val);
             while (this->variables->size() < valn)
                 this->newVar();
@@ -76,6 +74,7 @@ void CNSat::readFromCNFFile(string path)
 
 CNSat::CNSat()
     : cnsmtGSolver(nullptr)
+    , learntNum(0)
 {
     this->useIntervalProp = true;
     this->decisionLevelNull = make_shared<DecisionLevel>(0);
