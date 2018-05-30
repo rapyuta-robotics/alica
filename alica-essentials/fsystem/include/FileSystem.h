@@ -1,10 +1,3 @@
-/*
- * FileSystem.h
- *
- *  Created on: Jun 2, 2014
- *      Author: Stephan Opfer
- */
-
 #pragma once
 
 #include <string>

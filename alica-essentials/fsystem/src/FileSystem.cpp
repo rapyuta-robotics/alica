@@ -1,10 +1,3 @@
-/*
- * FileSystem.cpp
- *
- *  Created on: Jun 2, 2014
- *      Author: Stephan Opfer
- */
-
 #include "FileSystem.h"
 #include <cstring>
 #include <dirent.h>
