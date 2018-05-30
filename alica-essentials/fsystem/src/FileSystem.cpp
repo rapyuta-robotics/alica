@@ -273,9 +273,9 @@ bool FileSystem::endsWith(const std::string& file, const std::string& ending)
     }
 }
 
-bool FileSystem::endsWith(const string& file, const char& ending)
+bool FileSystem::endsWith(const std::string& file, const char ending)
 {
-    if (!file.empty() && (file[file.length()] == ending)) {
+    if (!file.empty() && (file[file.length() - 1] == ending)) {
         return true;
     } else {
         return false;
