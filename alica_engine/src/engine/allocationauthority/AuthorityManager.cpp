@@ -1,27 +1,31 @@
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/allocationauthority/CycleManager.h"
-#include "engine/model/State.h"
-#include "engine/model/AbstractPlan.h"
-#include "engine/model/PlanType.h"
 #include "engine/Assignment.h"
+#include "engine/allocationauthority/CycleManager.h"
 #include "engine/collections/AssignmentCollection.h"
+#include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/model/PlanType.h"
+#include "engine/model/State.h"
 #include "engine/teammanager/TeamManager.h"
 
-namespace alica {
+namespace alica
+{
 /**
  * Constructor
  */
 AuthorityManager::AuthorityManager(AlicaEngine* engine)
-        : engine(engine)
-        , localAgentID(nullptr) {}
+    : engine(engine)
+    , localAgentID(nullptr)
+{
+}
 
 AuthorityManager::~AuthorityManager() {}
 
 /**
  * Initialises this engine module
  */
-void AuthorityManager::init() {
+void AuthorityManager::init()
+{
     this->localAgentID = engine->getTeamManager()->getLocalAgentID();
 }
 
@@ -34,7 +38,8 @@ void AuthorityManager::close() {}
  * Message Handler
  * param name = aai A AllocationAthorityInfo
  */
-void AuthorityManager::handleIncomingAuthorityMessage(shared_ptr<AllocationAuthorityInfo> aai) {
+void AuthorityManager::handleIncomingAuthorityMessage(shared_ptr<AllocationAuthorityInfo> aai)
+{
     auto now = this->engine->getAlicaClock()->now();
     if (this->engine->getTeamManager()->isAgentIgnored(aai->senderID)) {
         return;
@@ -53,19 +58,19 @@ void AuthorityManager::handleIncomingAuthorityMessage(shared_ptr<AllocationAutho
         }
     }
 #ifdef AM_DEBUG
-    stringstream ss;
-    ss << "AM: Received AAI Assignment from " << aai->senderID << " is: " << endl;
+    std::stringstream ss;
+    ss << "AM: Received AAI Assignment from " << aai->senderID << " is: " << std::endl;
     for (EntryPointRobots epRobots : aai->entryPointRobots) {
         ss << "EP: " << epRobots.entrypoint << " Robots: ";
         for (int robot : epRobots.robots) {
             ss << robot << ", ";
         }
-        ss << endl;
+        ss << std::endl;
     }
     cout << ss.str();
 #endif
     {
-        lock_guard<mutex> lock(mu);
+        std::lock_guard<std::mutex> lock(mu);
         this->queue.push_back(aai);
     }
 }
@@ -73,16 +78,18 @@ void AuthorityManager::handleIncomingAuthorityMessage(shared_ptr<AllocationAutho
 /**
  * Cyclic tick function, called by the plan base every iteration
  */
-void AuthorityManager::tick(shared_ptr<RunningPlan> rp) {
+void AuthorityManager::tick(std::shared_ptr<RunningPlan> rp)
+{
 #ifdef AM_DEBUG
-    cout << "AM: Tick called! <<<<<<" << endl;
+    std::cout << "AM: Tick called! <<<<<<" << std::endl;
 #endif
-    lock_guard<mutex> lock(mu);
+    std::lock_guard<std::mutex> lock(mu);
     processPlan(rp);
     this->queue.clear();
 }
 
-void AuthorityManager::processPlan(shared_ptr<RunningPlan> rp) {
+void AuthorityManager::processPlan(shared_ptr<RunningPlan> rp)
+{
     if (rp == nullptr || rp->isBehaviour()) {
         return;
     }
@@ -91,32 +98,33 @@ void AuthorityManager::processPlan(shared_ptr<RunningPlan> rp) {
         rp->getCycleManagement()->sent();
     }
 #ifdef AM_DEBUG
-    cout << "AM: Queue size of AuthorityInfos is " << this->queue.size() << endl;
+    std::cout << "AM: Queue size of AuthorityInfos is " << this->queue.size() << std::endl;
 #endif
     for (int i = 0; i < static_cast<int>(this->queue.size()); ++i) {
         if (authorityMatchesPlan(this->queue[i], rp)) {
 #ifdef AM_DEBUG
-            cout << "AM: Found AuthorityInfo, which matches the plan " << rp->getPlan()->getName() << endl;
+            std::cout << "AM: Found AuthorityInfo, which matches the plan " << rp->getPlan()->getName() << std::endl;
 #endif
             rp->getCycleManagement()->handleAuthorityInfo(this->queue[i]);
             this->queue.erase(this->queue.begin() + i);
             i--;
         }
     }
-    for (shared_ptr<RunningPlan> c : *rp->getChildren()) {
+    for (std::shared_ptr<RunningPlan>& c : *rp->getChildren()) {
         processPlan(c);
     }
 }
 /**
  * Sends an AllocationAuthorityInfo message containing the assignment of p
  */
-void AuthorityManager::sendAllocation(shared_ptr<RunningPlan> p) {
+void AuthorityManager::sendAllocation(std::shared_ptr<RunningPlan> p)
+{
     if (!this->engine->maySendMessages()) {
         return;
     }
     AllocationAuthorityInfo aai = AllocationAuthorityInfo();
 
-    shared_ptr<Assignment> ass = p->getAssignment();
+    std::shared_ptr<Assignment> ass = p->getAssignment();
     for (int i = 0; i < ass->getEntryPointCount(); i++) {
         EntryPointRobots epRobots;
         epRobots.entrypoint = ass->getEpRobotsMapping()->getEp(i)->getId();
@@ -127,24 +135,22 @@ void AuthorityManager::sendAllocation(shared_ptr<RunningPlan> p) {
     }
 
     auto shared = p->getParent().lock();
-    aai.parentState =
-            ((p->getParent().expired() || shared->getActiveState() == nullptr) ? -1
-                                                                               : shared->getActiveState()->getId());
+    aai.parentState = ((p->getParent().expired() || shared->getActiveState() == nullptr) ? -1 : shared->getActiveState()->getId());
     aai.planId = p->getPlan()->getId();
     aai.authority = this->localAgentID;
     aai.senderID = this->localAgentID;
     aai.planType = (p->getPlanType() == nullptr ? -1 : p->getPlanType()->getId());
 #ifdef AM_DEBUG
-    stringstream ss;
-    ss << "AM: Sending AAI Assignment from " << aai.senderID << " is: " << endl;
+    std::stringstream ss;
+    ss << "AM: Sending AAI Assignment from " << aai.senderID << " is: " << std::endl;
     for (EntryPointRobots epRobots : aai.entryPointRobots) {
         ss << "EP: " << epRobots.entrypoint << " Robots: ";
         for (int robot : epRobots.robots) {
             ss << robot << ", ";
         }
-        ss << endl;
+        ss << std::endl;
     }
-    cout << ss.str();
+    std::cout << ss.str();
 #endif
     this->engine->getCommunicator()->sendAllocationAuthority(aai);
 }
@@ -157,7 +163,8 @@ void AuthorityManager::sendAllocation(shared_ptr<RunningPlan> p) {
  * @param p
  * @return
  */
-bool AuthorityManager::authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p) {
+bool AuthorityManager::authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p)
+{
     auto shared = p->getParent().lock();
     /*#ifdef AM_DEBUG
                     if (!p->getParent().expired())
@@ -175,8 +182,7 @@ bool AuthorityManager::authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> 
     #endif*/
 
     if ((p->getParent().expired() && aai->parentState == -1) ||
-            (!p->getParent().expired() && shared->getActiveState() != nullptr &&
-                    shared->getActiveState()->getId() == aai->parentState)) {
+        (!p->getParent().expired() && shared->getActiveState() != nullptr && shared->getActiveState()->getId() == aai->parentState)) {
         if (p->getPlan()->getId() == aai->planId) {
             return true;
         } else if (aai->planType != -1 && p->getPlanType() != nullptr && p->getPlanType()->getId() == aai->planType) {
@@ -186,4 +192,4 @@ bool AuthorityManager::authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> 
     return false;
 }
 
-}  // namespace alica
+} // namespace alica

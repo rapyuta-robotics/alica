@@ -33,12 +33,15 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
     , success(false)
     , callInit(true)
     , started(true)
+    , _configuration(nullptr)
+    , msInterval(100)
+    , msDelayedStart(0)
 {
     this->running = false;
     this->timer = new supplementary::Timer(0, 0);
     this->timer->registerCV(&this->runCV);
     this->behaviourTrigger = nullptr;
-    this->runThread = new thread(&BasicBehaviour::runInternal, this);
+    this->runThread = new std::thread(&BasicBehaviour::runInternal, this);
 }
 
 BasicBehaviour::~BasicBehaviour()
@@ -179,7 +182,7 @@ const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryP
     if (ep == nullptr) {
         return nullptr;
     }
-    shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
+    std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
         const EntryPointGrp& eps = static_cast<const Plan*>(cur->getPlan())->getEntryPoints();
         if (std::find(eps.begin(), eps.end(), ep) != eps.end()) {
@@ -195,7 +198,7 @@ const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryP
     if (ep == nullptr) {
         return nullptr;
     }
-    shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
+    std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     if (cur != nullptr) {
         return cur->getAssignment()->getRobotsWorking(ep);
     }
@@ -209,7 +212,7 @@ void BasicBehaviour::initInternal()
     this->callInit = false;
     try {
         this->initialiseParameters();
-    } catch (exception& e) {
+    } catch (std::exception& e) {
         std::cerr << "BB: Exception in Behaviour-INIT of: " << this->getName() << std::endl << e.what() << std::endl;
     }
 }
@@ -228,7 +231,7 @@ bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut)
 
 void BasicBehaviour::runInternal()
 {
-    unique_lock<mutex> lck(runCV_mtx);
+    std::unique_lock<std::mutex> lck(runCV_mtx);
     while (this->started) {
         this->runCV.wait(lck, [&] {
             if (behaviourTrigger == nullptr) {
@@ -243,7 +246,7 @@ void BasicBehaviour::runInternal()
         if (this->callInit)
             this->initInternal();
 #ifdef BEH_DEBUG
-        chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
+        std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
 #endif
         // TODO: pass something like an eventarg (to be implemented) class-member, which could be set for an event
         // triggered (to be implemented) behaviour.
@@ -253,7 +256,7 @@ void BasicBehaviour::runInternal()
             } else {
                 this->run((void*)behaviourTrigger);
             }
-        } catch (exception& e) {
+        } catch (std::exception& e) {
             std::string err = string("Exception catched:  ") + this->getName() + std::string(" - ") + std::string(e.what());
             sendLogMessage(4, err);
         }
@@ -280,7 +283,7 @@ void BasicBehaviour::runInternal()
 
 const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskName)
 {
-    shared_ptr<RunningPlan> parent = this->runningPlan->getParent().lock();
+    std::shared_ptr<RunningPlan> parent = this->runningPlan->getParent().lock();
     if (parent == nullptr) {
         return nullptr;
     }
@@ -294,7 +297,7 @@ const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskNam
 
 const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planName, const std::string& taskName)
 {
-    shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
+    std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
         if (cur->getPlan()->getName() == planName) {
             for (const EntryPoint* e : ((Plan*)cur->getPlan())->getEntryPoints()) {

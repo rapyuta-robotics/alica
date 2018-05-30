@@ -2,15 +2,16 @@
 
 #include "supplementary/AgentID.h"
 
-#include <list>
-#include <mutex>
 #include <iostream>
+#include <list>
 #include <map>
-#include <vector>
 #include <memory>
+#include <mutex>
+#include <vector>
 //#define SM_SUCCES
 
-namespace alica {
+namespace alica
+{
 class Transition;
 class SyncTransition;
 class AlicaEngine;
@@ -21,8 +22,9 @@ struct SyncReady;
 struct SyncTalk;
 class IAlicaCommunication;
 
-class SyncModule {
-public:
+class SyncModule
+{
+  public:
     SyncModule(AlicaEngine* ae);
     virtual ~SyncModule();
     virtual void init();
@@ -35,10 +37,10 @@ public:
 
     void sendSyncTalk(SyncTalk& st);
     void sendSyncReady(SyncReady& sr);
-    void sendAcks(std::vector<SyncData*> syncDataList);
+    void sendAcks(const std::vector<SyncData>& syncDataList) const;
     void synchronisationDone(const SyncTransition* st);
 
-protected:
+  protected:
     bool running;
     AlicaEngine* ae;
     const supplementary::AgentID* myId;
@@ -50,4 +52,4 @@ protected:
     const IAlicaCommunication* communicator;
 };
 
-}  // namespace alica
+} // namespace alica

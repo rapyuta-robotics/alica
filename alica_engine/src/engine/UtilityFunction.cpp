@@ -15,15 +15,17 @@
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
 
-namespace alica {
+namespace alica
+{
 
-UtilityFunction::UtilityFunction(const std::string& name, std::list<USummand*> utilSummands, double priorityWeight,
-        double similarityWeight, const Plan* plan)
-        : priResult(0.0, 0.0)
-        , simUI(0.0, 0.0) {
+using std::pair;
+
+UtilityFunction::UtilityFunction(const std::string& name, std::list<USummand*> utilSummands, double priorityWeight, double similarityWeight, const Plan* plan)
+    : priResult(0.0, 0.0)
+    , simUI(0.0, 0.0)
+{
     this->ra = nullptr;
     this->ae = nullptr;
-    this->lookupStruct = new TaskRoleStruct(0, 0);
     this->name = name;
     this->utilSummands = utilSummands;
     this->priorityWeight = priorityWeight;
@@ -31,22 +33,20 @@ UtilityFunction::UtilityFunction(const std::string& name, std::list<USummand*> u
     this->plan = plan;
 }
 
-UtilityFunction::~UtilityFunction() {
+UtilityFunction::~UtilityFunction()
+{
     for (auto summand : utilSummands) {
         delete summand;
     }
-
-    for (auto pair : this->priorityMartix) {
-        delete pair.first;
-    }
-    delete this->lookupStruct;
 }
 
-std::list<USummand*>& UtilityFunction::getUtilSummands() {
+std::list<USummand*>& UtilityFunction::getUtilSummands()
+{
     return utilSummands;
 }
 
-void UtilityFunction::setUtilSummands(list<USummand*> utilSummands) {
+void UtilityFunction::setUtilSummands(list<USummand*> utilSummands)
+{
     this->utilSummands = utilSummands;
 }
 
@@ -55,7 +55,8 @@ void UtilityFunction::setUtilSummands(list<USummand*> utilSummands) {
  * roles and according to the similarity, if an oldRP is given and according to all
  * other utility summands of this utility function.
  */
-double UtilityFunction::eval(shared_ptr<RunningPlan> newRp, shared_ptr<RunningPlan> oldRp) {
+double UtilityFunction::eval(shared_ptr<RunningPlan> newRp, shared_ptr<RunningPlan> oldRp)
+{
     // Invalid Assignments have an Utility of -1 changed from 0 according to specs
     if (!newRp->getAssignment()->isValid()) {
         return -1.0;
@@ -102,8 +103,7 @@ double UtilityFunction::eval(shared_ptr<RunningPlan> newRp, shared_ptr<RunningPl
         sumOfUI.setMin(sumOfUI.getMin() / sumOfWeights);
         // Min == Max because RP.Assignment must be an complete Assignment!
         if ((sumOfUI.getMax() - sumOfUI.getMin()) > DIFFERENCETHRESHOLD) {
-            cerr << "UF: The utility min and max value differs more than " << DIFFERENCETHRESHOLD
-                 << " for an Assignment!" << endl;
+            std::cerr << "UF: The utility min and max value differs more than " << DIFFERENCETHRESHOLD << " for an Assignment!" << std::endl;
         }
         return sumOfUI.getMax();
     }
@@ -117,7 +117,8 @@ double UtilityFunction::eval(shared_ptr<RunningPlan> newRp, shared_ptr<RunningPl
  * ATTENTION PLZ: Return value is only significant with respect to current Utility of oldAss! (SimilarityMeasure)
  * @return The utility interval
  */
-UtilityInterval UtilityFunction::eval(IAssignment* newAss, IAssignment* oldAss) {
+UtilityInterval UtilityFunction::eval(IAssignment* newAss, IAssignment* oldAss)
+{
     UtilityInterval sumOfUI(0.0, 0.0);
     double sumOfWeights = 0.0;
 
@@ -169,14 +170,16 @@ UtilityInterval UtilityFunction::eval(IAssignment* newAss, IAssignment* oldAss) 
  * roles and according to the similarity, if an oldAss is given.
  * @return void
  */
-void UtilityFunction::updateAssignment(IAssignment* newAss, IAssignment* oldAss) {
+void UtilityFunction::updateAssignment(IAssignment* newAss, IAssignment* oldAss)
+{
     UtilityInterval utilityInterval = this->eval(newAss, oldAss);
     newAss->setMin(utilityInterval.getMin());
     newAss->setMax(utilityInterval.getMax());
 }
 
-void UtilityFunction::cacheEvalData() {
-    if (this->utilSummands.size() != 0)  // == null for default utility function
+void UtilityFunction::cacheEvalData()
+{
+    if (this->utilSummands.size() != 0) // == null for default utility function
     {
         for (int i = 0; i < static_cast<int>(this->utilSummands.size()); ++i) {
             auto iter = this->utilSummands.begin();
@@ -191,11 +194,12 @@ void UtilityFunction::cacheEvalData() {
  * 'Role -> Highest Priority'-Dictionary for each role of the current roleset.
  * @return void
  */
-void UtilityFunction::init(AlicaEngine* ae) {
+void UtilityFunction::init(AlicaEngine* ae)
+{
     // CREATE MATRIX && HIGHEST PRIORITY ARRAY
     // init dicts
-    this->roleHighestPriorityMap = map<long, double>();
-    this->priorityMartix = map<TaskRoleStruct*, double>();
+    this->roleHighestPriorityMap.clear();
+    this->priorityMatrix.clear();
     const RoleSet* roleSet = ae->getRoleSet();
     int64_t taskId;
     int64_t roleId;
@@ -203,33 +207,30 @@ void UtilityFunction::init(AlicaEngine* ae) {
 
     for (const RoleTaskMapping* rtm : roleSet->getRoleTaskMappings()) {
         roleId = rtm->getRole()->getId();
-        this->roleHighestPriorityMap.insert(std::pair<long, double>(roleId, 0.0));
+        this->roleHighestPriorityMap.insert(std::pair<int64_t, double>(roleId, 0.0));
         for (const EntryPoint* ep : plan->getEntryPoints()) {
             taskId = ep->getTask()->getId();
             auto iter = rtm->getTaskPriorities().find(taskId);
             if (iter == rtm->getTaskPriorities().end()) {
                 std::stringstream ss;
-                ss << "UF: There is no priority for the task " << taskId << " in the roleTaskMapping of the role "
-                   << rtm->getRole()->getName() << " with id " << roleId << "!\n We are in the UF for the plan "
-                   << this->plan->getName() << "!" << endl;
+                ss << "UF: There is no priority for the task " << taskId << " in the roleTaskMapping of the role " << rtm->getRole()->getName() << " with id "
+                   << roleId << "!\n We are in the UF for the plan " << this->plan->getName() << "!" << std::endl;
                 AlicaEngine::abort(ss.str());
+                return;
             } else {
                 curPrio = iter->second;
             }
-            TaskRoleStruct* trs = new TaskRoleStruct(taskId, roleId);
-            if (this->priorityMartix.find(trs) == this->priorityMartix.end()) {
-                this->priorityMartix.insert(pair<TaskRoleStruct*, double>(trs, curPrio));
-            }
+            priorityMatrix[TaskRoleStruct(taskId, roleId)] = curPrio;
             if (this->roleHighestPriorityMap.at(roleId) < curPrio) {
                 this->roleHighestPriorityMap.at(roleId) = curPrio;
             }
         }
         // Add Priority for Idle-EntryPoint
-        this->priorityMartix.insert(pair<TaskRoleStruct*, double>(new TaskRoleStruct(Task::IDLEID, roleId), 0.0));
+        this->priorityMatrix.insert(std::pair<TaskRoleStruct, double>(TaskRoleStruct(Task::IDLEID, roleId), 0.0));
     }
     // c# != null
     // INIT UTILITYSUMMANDS
-    if (this->utilSummands.size() != 0)  // it is null for default utility function
+    if (this->utilSummands.size() != 0) // it is null for default utility function
     {
         for (USummand* utilSum : this->utilSummands) {
             utilSum->init(ae);
@@ -244,31 +245,30 @@ void UtilityFunction::init(AlicaEngine* ae) {
  * Is called and the end of AlicaEngine.Init(..), because it
  * needs the current roleset (circular dependency otherwise).
  */
-void UtilityFunction::initDataStructures(AlicaEngine* ae) {
+void UtilityFunction::initDataStructures(AlicaEngine* ae)
+{
     for (const Plan* p : ae->getPlanRepository()->getPlans()) {
         p->getUtilityFunction()->init(ae);
     }
 }
 
-std::string UtilityFunction::toString() const {
+std::string UtilityFunction::toString() const
+{
     std::stringstream ss;
     ss << this->name << std::endl;
-    ss << "prioW: " << this->priorityWeight << " simW: " << this->similarityWeight << endl;
+    ss << "prioW: " << this->priorityWeight << " simW: " << this->similarityWeight << std::endl;
     for (const USummand* utilSummand : this->utilSummands) {
         ss << utilSummand->toString();
     }
     return ss.str();
 }
 
-const std::map<TaskRoleStruct*, double>& UtilityFunction::getPriorityMartix() const {
-    return priorityMartix;
-}
-
 /**
  * Calculates the priority result for the specified Assignment
  * @return the priority result
  */
-UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass) {
+UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass)
+{
     this->priResult.setMax(0.0);
     this->priResult.setMin(0.0);
     if (this->priorityWeight == 0) {
@@ -277,19 +277,18 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass) {
     // c# != null
     // SUM UP HEURISTIC PART OF PRIORITY UTILITY
 
-    if (ass->getUnassignedRobotIds().size() != 0)  // == null, when it is a normal assignment
+    if (ass->getUnassignedRobotIds().size() != 0) // == null, when it is a normal assignment
     {
         for (auto robotID : ass->getUnassignedRobotIds()) {
-            this->priResult.setMax(
-                    this->priResult.getMax() + this->roleHighestPriorityMap.at(this->ra->getRole(robotID)->getId()));
+            this->priResult.setMax(this->priResult.getMax() + this->roleHighestPriorityMap.at(this->ra->getRole(robotID)->getId()));
         }
     }
     // SUM UP DEFINED PART OF PRIORITY UTILITY
 
     // for better comparability of different utility functions
-    int denum = min(this->plan->getMaxCardinality(), this->ae->getTeamManager()->getTeamSize());
-    long taskId;
-    long roleId;
+    int denum = std::min(this->plan->getMaxCardinality(), this->ae->getTeamManager()->getTeamSize());
+    int64_t taskId;
+    int64_t roleId;
     //	shared_ptr<vector<EntryPoint*> > eps = ass->getEntryPoints();
     double curPrio = 0;
     for (short i = 0; i < ass->getEntryPointCount(); ++i) {
@@ -298,16 +297,12 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass) {
         auto robotList = ass->getUniqueRobotsWorkingAndFinished(ep);
         for (auto robot : *robotList) {
             roleId = this->ra->getRole(robot)->getId();
-            this->lookupStruct->taskId = taskId;
-            this->lookupStruct->roleId = roleId;
-            for (auto pair : this->priorityMartix) {
-                if (pair.first->roleId == this->lookupStruct->roleId &&
-                        pair.first->taskId == this->lookupStruct->taskId) {
-                    curPrio = pair.second;
-                    break;
-                }
+            TaskRoleStruct lookup(taskId, roleId);
+            auto mit = priorityMatrix.find(lookup);
+            if (mit != priorityMatrix.end()) {
+                curPrio = mit->second;
             }
-            if (curPrio < 0.0)  // because one Robot has a negative priority for his task
+            if (curPrio < 0.0) // because one Robot has a negative priority for his task
             {
                 this->priResult.setMin(-1.0);
                 this->priResult.setMax(-1.0);
@@ -315,23 +310,15 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass) {
             }
             this->priResult.setMin(this->priResult.getMin() + curPrio);
 #ifdef UFDEBUG
-            double prio = 0;
-            for (auto pair : this->priorityMartix) {
-                if (pair.first->roleId == this->lookupStruct->roleId &&
-                        pair.first->taskId == this->lookupStruct->taskId) {
-                    prio = pair.second;
-                    break;
-                }
-            }
-            cout << "UF: taskId:" << taskId << " roleId:" << roleId << " prio: " << prio << endl;
+            std::cout << "UF: taskId:" << taskId << " roleId:" << roleId << " prio: " << curPrio << std::endl;
 #endif
         }
     }
 #ifdef UFDEBUG
-    cout << "##" << endl;
-    cout << "UF: prioUI.Min = " << priResult.getMin() << endl;
-    cout << "UF: prioUI.Max = " << priResult.getMax() << endl;
-    cout << "UF: denum = " << denum << endl;
+    std::cout << "##" << std::endl;
+    std::cout << "UF: prioUI.Min = " << priResult.getMin() << std::endl;
+    std::cout << "UF: prioUI.Max = " << priResult.getMax() << std::endl;
+    std::cout << "UF: denum = " << denum << std::endl;
 #endif
     priResult.setMax(priResult.getMax() + priResult.getMin());
     if (denum != 0) {
@@ -339,14 +326,15 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment* ass) {
         priResult.setMax(priResult.getMax() / denum);
     }
 #ifdef UFDEBUG
-    cout << "UF: prioUI.Min = " << priResult.getMin() << endl;
-    cout << "UF: prioUI.Max = " << priResult.getMax() << endl;
-    cout << "##" << endl;
+    std::cout << "UF: prioUI.Min = " << priResult.getMin() << std::endl;
+    std::cout << "UF: prioUI.Max = " << priResult.getMax() << std::endl;
+    std::cout << "##" << std::endl;
 #endif
     return priResult;
 }
 
-pair<vector<double>, double>* UtilityFunction::differentiate(IAssignment* newAss) {
+pair<vector<double>, double>* UtilityFunction::differentiate(IAssignment* newAss)
+{
     return nullptr;
 }
 
@@ -354,7 +342,8 @@ pair<vector<double>, double>* UtilityFunction::differentiate(IAssignment* newAss
  * Evaluates the similarity of the new Assignment to the old Assignment
  * @return The result of the evaluation
  */
-UtilityInterval UtilityFunction::getSimilarity(IAssignment* newAss, IAssignment* oldAss) {
+UtilityInterval UtilityFunction::getSimilarity(IAssignment* newAss, IAssignment* oldAss)
+{
     simUI.setMax(0.0);
     simUI.setMin(0.0);
     // Calculate the similarity to the old Assignment
@@ -370,14 +359,12 @@ UtilityInterval UtilityFunction::getSimilarity(IAssignment* newAss, IAssignment*
         // C# newRobots != null
         if (newRobots->size() != 0) {
             for (auto& oldRobot : (*oldRobots)) {
-                if (find_if(newRobots->begin(), newRobots->end(), [&oldRobot](const supplementary::AgentID* id) {
-                        return *oldRobot == *id;
-                    }) != newRobots->end()) {
+                if (find_if(newRobots->begin(), newRobots->end(), [&oldRobot](const supplementary::AgentID* id) { return *oldRobot == *id; }) !=
+                    newRobots->end()) {
                     simUI.setMin(simUI.getMin() + 1);
                 } else if (ep->getMaxCardinality() > static_cast<int>(newRobots->size()) &&
                            find_if(newAss->getUnassignedRobotIds().begin(), newAss->getUnassignedRobotIds().end(),
-                                   [&oldRobot](const supplementary::AgentID* id) { return *oldRobot == *id; }) !=
-                                   newAss->getUnassignedRobotIds().end()) {
+                                   [&oldRobot](const supplementary::AgentID* id) { return *oldRobot == *id; }) != newAss->getUnassignedRobotIds().end()) {
                     simUI.setMax(simUI.getMax() + 1);
                 }
             }

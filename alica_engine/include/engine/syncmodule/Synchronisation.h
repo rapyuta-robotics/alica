@@ -48,8 +48,8 @@ class Synchronisation
     SyncModule* syncModul;
     const SyncTransition* syncTransition;
     AgentIDConstPtr myID;
-    AlicaTime lastTalkTime;
     SyncData* lastTalkData;
+    AlicaTime lastTalkTime;
     AlicaTime syncStartTime;
     bool readyForSync;
     uint64_t lastTick;
@@ -60,7 +60,7 @@ class Synchronisation
     std::vector<SyncRow*> syncMatrix;
     SyncRow* myRow;
 
-    void sendTalk(SyncData* sd);
+    void sendTalk(const SyncData& sd);
     void sendSyncReady();
     bool isSyncComplete();
 };

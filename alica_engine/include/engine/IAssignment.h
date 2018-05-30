@@ -62,7 +62,7 @@ class IAssignment
     /**
      * Information about succeeded tasks.
      */
-    virtual shared_ptr<SuccessCollection> getEpSuccessMapping() = 0;
+    virtual shared_ptr<SuccessCollection> getEpSuccessMapping() const = 0;
     /**
      * Checks whether the current assignment is valid
      */
@@ -70,11 +70,11 @@ class IAssignment
     /**
      * Print AssignmentCollection
      */
-    virtual string assignmentCollectionToString() = 0;
+    virtual std::string assignmentCollectionToString() const = 0;
 
-    virtual string toString() = 0;
+    virtual std::string toString() const = 0;
 
-    virtual AssignmentCollection* getEpRobotsMapping() = 0;
+    virtual AssignmentCollection* getEpRobotsMapping() const = 0;
 
     double getMax() const { return max; }
 

@@ -7,9 +7,12 @@
 
 #include "TestConstantValueSummand.h"
 
-namespace alica {
+namespace alica
+{
 
-TestConstantValueSummand::TestConstantValueSummand(double weight, string name, long id, double val) {
+TestConstantValueSummand::TestConstantValueSummand(double weight, std::string name, long id, double val)
+    : robotId(nullptr)
+{
     this->weight = weight;
     this->name = name;
     this->id = id;
@@ -18,7 +21,8 @@ TestConstantValueSummand::TestConstantValueSummand(double weight, string name, l
 
 TestConstantValueSummand::~TestConstantValueSummand() {}
 void TestConstantValueSummand::cacheEvalData() {}
-UtilityInterval TestConstantValueSummand::eval(IAssignment* ass) {
+UtilityInterval TestConstantValueSummand::eval(IAssignment* ass)
+{
     ui.setMin(val);
     ui.setMax(val);
 

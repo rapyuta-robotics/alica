@@ -1,44 +1,61 @@
-#include <engine/syncmodule/Synchronisation.h>
-#include <engine/syncmodule/SyncModule.h>
 #include "engine/AlicaEngine.h"
-#include "engine/TeamObserver.h"
+#include "engine/IAlicaCommunication.h"
 #include "engine/PlanRepository.h"
-#include "engine/model/Transition.h"
+#include "engine/TeamObserver.h"
 #include "engine/containers/SyncData.h"
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
-#include "engine/IAlicaCommunication.h"
 #include "engine/model/SyncTransition.h"
+#include "engine/model/Transition.h"
 #include "engine/teammanager/TeamManager.h"
+#include <engine/syncmodule/SyncModule.h>
+#include <engine/syncmodule/Synchronisation.h>
 
-namespace alica {
+namespace alica
+{
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::list;
+using std::lock_guard;
+using std::map;
+using std::mutex;
+using std::pair;
+using std::shared_ptr;
+using std::vector;
 
 SyncModule::SyncModule(AlicaEngine* ae)
-        : myId(nullptr) {
-    this->ae = ae;
-    this->pr = nullptr;
-    this->running = false;
-    this->ticks = 0;
-    this->communicator = nullptr;
+    : myId(nullptr)
+    , ae(ae)
+    , pr(nullptr)
+    , running(false)
+    , ticks(0)
+    , communicator(nullptr)
+{
 }
 
-SyncModule::~SyncModule() {
+SyncModule::~SyncModule()
+{
     for (auto iter : this->synchSet) {
         delete iter.second;
     }
 }
-void SyncModule::init() {
+void SyncModule::init()
+{
+    lock_guard<mutex> lock(lomutex);
     this->ticks = 0;
     this->running = true;
     this->myId = ae->getTeamManager()->getLocalAgentID();
     this->pr = this->ae->getPlanRepository();
     this->communicator = this->ae->getCommunicator();
 }
-void SyncModule::close() {
+void SyncModule::close()
+{
     this->running = false;
     cout << "SynchModul: Closed SynchModul" << endl;
 }
-void SyncModule::tick() {
+void SyncModule::tick()
+{
     list<Synchronisation*> failedSyncs;
     lock_guard<mutex> lock(lomutex);
     for (auto iter : this->synchSet) {
@@ -53,7 +70,8 @@ void SyncModule::tick() {
         }
     }
 }
-void SyncModule::setSynchronisation(const Transition* trans, bool holds) {
+void SyncModule::setSynchronisation(const Transition* trans, bool holds)
+{
     Synchronisation* s;
     map<const SyncTransition*, Synchronisation*>::iterator i = this->synchSet.find(trans->getSyncTransition());
     if (i != this->synchSet.end()) {
@@ -67,19 +85,22 @@ void SyncModule::setSynchronisation(const Transition* trans, bool holds) {
         synchSet.insert(pair<const SyncTransition*, Synchronisation*>(trans->getSyncTransition(), s));
     }
 }
-void SyncModule::sendSyncTalk(SyncTalk& st) {
+void SyncModule::sendSyncTalk(SyncTalk& st)
+{
     if (!this->ae->maySendMessages())
         return;
     st.senderID = this->myId;
     this->communicator->sendSyncTalk(st);
 }
-void SyncModule::sendSyncReady(SyncReady& sr) {
+void SyncModule::sendSyncReady(SyncReady& sr)
+{
     if (!this->ae->maySendMessages())
         return;
     sr.senderID = this->myId;
     communicator->sendSyncReady(sr);
 }
-void SyncModule::sendAcks(vector<SyncData*> syncDataList) {
+void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
+{
     if (!this->ae->maySendMessages())
         return;
     SyncTalk st;
@@ -87,7 +108,8 @@ void SyncModule::sendAcks(vector<SyncData*> syncDataList) {
     st.syncData = syncDataList;
     this->communicator->sendSyncTalk(st);
 }
-void SyncModule::synchronisationDone(const SyncTransition* st) {
+void SyncModule::synchronisationDone(const SyncTransition* st)
+{
 #ifdef SM_SUCCES
     cout << "SyncDONE in SYNCMODUL for synctransID: " << st->getId() << endl;
 #endif
@@ -103,16 +125,17 @@ void SyncModule::synchronisationDone(const SyncTransition* st) {
 #endif
 }
 
-bool SyncModule::followSyncTransition(const Transition* trans) {
-    list<const SyncTransition*>::iterator it =
-            find(this->synchedTransitions.begin(), this->synchedTransitions.end(), trans->getSyncTransition());
+bool SyncModule::followSyncTransition(const Transition* trans)
+{
+    list<const SyncTransition*>::iterator it = find(this->synchedTransitions.begin(), this->synchedTransitions.end(), trans->getSyncTransition());
     if (it != this->synchedTransitions.end()) {
         this->synchedTransitions.remove(trans->getSyncTransition());
         return true;
     }
     return false;
 }
-void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st) {
+void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
+{
     if (!this->running || *(st->senderID) == *(this->myId))
         return;
     if (this->ae->getTeamManager()->isAgentIgnored(st->senderID))
@@ -122,16 +145,16 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st) {
     cout << "SyncModul:Handle Synctalk" << endl;
 #endif
 
-    vector<SyncData*> toAck;
-    for (SyncData* sd : st->syncData) {
+    std::vector<SyncData> toAck;
+    for (const SyncData& sd : st->syncData) {
 #ifdef SM_SUCCES
-        cout << "SyncModul: TransID" << sd->transitionID << endl;
-        cout << "SyncModul: RobotID" << sd->robotID << endl;
-        cout << "SyncModul: Condition" << sd->conditionHolds << endl;
-        cout << "SyncModul: ACK" << sd->ack << endl;
+        cout << "SyncModul: TransID" << sd.transitionID << endl;
+        cout << "SyncModul: RobotID" << sd.robotID << endl;
+        cout << "SyncModul: Condition" << sd.conditionHolds << endl;
+        cout << "SyncModul: ACK" << sd.ack << endl;
 #endif
 
-        const Transition* trans = this->pr->getTransitions().find(sd->transitionID);
+        const Transition* trans = this->pr->getTransitions().find(sd.transitionID);
         const SyncTransition* syncTrans = nullptr;
 
         if (trans != nullptr) {
@@ -142,7 +165,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st) {
                 return;
             }
         } else {
-            cerr << "SyncModul: Could not find Element for Transition with ID: " << sd->transitionID << endl;
+            cerr << "SyncModul: Could not find Element for Transition with ID: " << sd.transitionID << endl;
             return;
         }
 
@@ -161,18 +184,19 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st) {
                 doAck = sync->integrateSyncTalk(st, this->ticks);
             }
         }
-        if (!sd->ack && *(st->senderID) == *(sd->robotID) && doAck) {
+        if (!sd.ack && *(st->senderID) == *(sd.robotID) && doAck) {
             toAck.push_back(sd);
         }
     }
-    for (SyncData* sd : toAck) {
-        sd->ack = true;
+    for (SyncData& sd : toAck) {
+        sd.ack = true;
     }
     if (toAck.size() > 0) {
         sendAcks(toAck);
     }
 }
-void SyncModule::onSyncReady(shared_ptr<SyncReady> sr) {
+void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
+{
     if (!this->running || *(sr->senderID) == *(this->myId))
         return;
     if (this->ae->getTeamManager()->isAgentIgnored(sr->senderID))
@@ -180,8 +204,7 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr) {
     const SyncTransition* syncTrans = this->pr->getSyncTransitions().find(sr->syncTransitionID);
 
     if (syncTrans == nullptr) {
-        cout << "SyncModul: Unable to find synchronisation " << sr->syncTransitionID << " send by " << sr->senderID
-             << endl;
+        cout << "SyncModul: Unable to find synchronisation " << sr->syncTransitionID << " send by " << sr->senderID << endl;
         return;
     }
     {
@@ -193,4 +216,4 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr) {
     }
 }
 
-}  // namespace alica
+} // namespace alica

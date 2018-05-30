@@ -11,6 +11,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   
   <build_depend>alica_engine</build_depend>
+  <build_depend>alica_common_config</build_depend>
   <build_depend>alica_msgs</build_depend>
   <build_depend>system_config</build_depend>
   <build_depend>roscpp</build_depend>
