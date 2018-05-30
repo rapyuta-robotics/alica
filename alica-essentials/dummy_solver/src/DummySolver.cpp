@@ -2,6 +2,8 @@
 #include "alica/reasoner/DummyTerm.h"
 #include "alica/reasoner/DummyVariable.h"
 
+#include <engine/AlicaEngine.h>
+#include <engine/blackboard/BlackBoard.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>
 
@@ -12,21 +14,20 @@ namespace reasoner
 {
 
 DummySolver::DummySolver(AlicaEngine* ae)
-    : alica::ISolver(ae)
+    : ISolver(ae)
 {
 }
 
-DummySolver::~DummySolver()
-{
-}
+DummySolver::~DummySolver() {}
 
-bool DummySolver::existsSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls)
+bool DummySolver::existsSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls)
 {
     return true;
 }
 
-bool DummySolver::getSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<void*>& results)
+bool DummySolver::getSolutionImpl(const VariableGrp& vars, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results)
 {
+    // TODO: reformulate this without a temporary vector
     std::vector<std::shared_ptr<DummyVariable>> dummyVariables;
     dummyVariables.reserve(vars.size());
     for (auto variable : vars) {
@@ -36,7 +37,7 @@ bool DummySolver::getSolution(const VariableGrp& vars, std::vector<std::shared_p
         }
         dummyVariables.push_back(dummyVariable);
     }
-
+    // TODO: reformulate this without a temporary map
     std::map<long, std::string> dummyVariableValueMap;
 
     for (auto& c : calls) {
@@ -61,16 +62,18 @@ bool DummySolver::getSolution(const VariableGrp& vars, std::vector<std::shared_p
         }
     }
 
-    // TODO: set results
     results.reserve(dummyVariables.size());
-    for (auto dummyVariable : dummyVariables) {
-        results.push_back(new std::string(dummyVariableValueMap[dummyVariable->getID()]));
+    BlackBoard& bb = getAlicaEngine()->editBlackBoard();
+    for (const auto& dummyVariable : dummyVariables) {
+        const std::string& val = dummyVariableValueMap[dummyVariable->getID()];
+        BBIdent bid = bb.registerValue(val.c_str(), val.size());
+        results.push_back(bid);
     }
 
     return true;
 }
 
-std::shared_ptr<SolverVariable> DummySolver::createVariable(long representingVariableID)
+std::shared_ptr<SolverVariable> DummySolver::createVariable(int64_t representingVariableID)
 {
     return std::make_shared<DummyVariable>(representingVariableID);
 }

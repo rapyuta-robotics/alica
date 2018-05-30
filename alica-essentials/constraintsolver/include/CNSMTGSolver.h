@@ -9,7 +9,7 @@
 #define CNSMTGSOLVER_H_
 
 #include <AutoDiff.h>
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 
 #include <memory>
 #include <vector>
@@ -26,7 +26,6 @@ class Variable;
 }  // namespace autodiff
 
 namespace alica {
-class IAlicaClock;
 
 namespace reasoner {
 namespace intervalpropagation {

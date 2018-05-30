@@ -45,5 +45,5 @@ else(catkin_FOUND)
     ${GTEST_INCLUDE_DIRS}
     )
     add_executable(${PROJECT_NAME}-tests test/test_event_handling.cpp)
-target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} pthread ${GTEST_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} pthread ${GTEST_LIBRARIES})
 endif(catkin_FOUND)

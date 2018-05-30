@@ -9,6 +9,7 @@
 #define GSOLVER_H_
 
 #include <AutoDiff.h>
+#include <engine/AlicaClock.h>
 
 #include <memory>
 #include <vector>
@@ -18,7 +19,6 @@
 using namespace std;
 
 namespace alica {
-class IAlicaClock;
 
 namespace reasoner {
 class GSolver {
@@ -30,21 +30,19 @@ public:
     ~GSolver();
 
     shared_ptr<vector<double>> solve(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-            shared_ptr<vector<shared_ptr<vector<double>>>> limits, double* util);
+            const std::vector<double>& limits, double* util);
     bool solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-            shared_ptr<vector<shared_ptr<vector<double>>>> limits);
+            const std::vector<double>& limits);
     shared_ptr<vector<double>> solve(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-            shared_ptr<vector<shared_ptr<vector<double>>>> limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds,
+            const std::vector<double>& limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds,
             double sufficientUtility, double* util);
     bool solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-            shared_ptr<vector<shared_ptr<vector<double>>>> limits,
-            shared_ptr<vector<shared_ptr<vector<double>>>> seeds);
+            const std::vector<double>& limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds);
     shared_ptr<vector<double>> solveTest(shared_ptr<Term> equation,
-            shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-            shared_ptr<vector<shared_ptr<vector<double>>>> limits);
+            shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, const std::vector<double>& limits);
     shared_ptr<vector<double>> solveTest(shared_ptr<Term> equation,
-            shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-            shared_ptr<vector<shared_ptr<vector<double>>>> limits, int maxRuns, bool* found);
+            shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, const std::vector<double>& limits, int maxRuns,
+            bool* found);
 
     long getRuns();
     void setRuns(long runs);
@@ -56,24 +54,25 @@ public:
     void setRPropConvergenceStepSize(double rPropConvergenceStepSize);
     void setUtilitySignificanceThreshold(double utilitySignificanceThreshold);
 
-    IAlicaClock* getIAlicaClock();
-    void setIAlicaClock(IAlicaClock* clock);
+    AlicaClock* getAlicaClock();
+    void setAlicaClock(AlicaClock* clock);
 
 protected:
     static int _fcounter;
     bool _seedWithUtilOptimum;
 
-    IAlicaClock* alicaClock;
+    AlicaClock* _alicaClock;
 
     void initLog();
     void log(double util, shared_ptr<vector<double>>& val);
     void logStep();
     void closeLog();
-    shared_ptr<vector<double>> initialPointFromSeed(shared_ptr<RpropResult>& res, shared_ptr<vector<double>>& seed);
-    shared_ptr<vector<double>> initialPoint(shared_ptr<RpropResult>& res);
-    shared_ptr<RpropResult> rPropLoop(shared_ptr<vector<double>> seed);
-    shared_ptr<RpropResult> rPropLoop(shared_ptr<vector<double>> seed, bool precise);
-    shared_ptr<RpropResult> rPropLoopSimple(shared_ptr<vector<double>> seed);
+    shared_ptr<vector<double>> initialPointFromSeed(
+            shared_ptr<RpropResult>& res, shared_ptr<vector<double>>& seed, const std::vector<double>& limits);
+    shared_ptr<vector<double>> initialPoint(shared_ptr<RpropResult>& res, const std::vector<double>& limits);
+    shared_ptr<RpropResult> rPropLoop(shared_ptr<vector<double>> seed, const std::vector<double>& limits);
+    shared_ptr<RpropResult> rPropLoop(shared_ptr<vector<double>> seed, bool precise, const std::vector<double>& limits);
+    shared_ptr<RpropResult> rPropLoopSimple(shared_ptr<vector<double>> seed, const std::vector<double>& limits);
     void initialStepSize();
     bool evalResults();
 
@@ -99,12 +98,12 @@ protected:
     double _utilitySignificanceThreshold = 1E-22;
     // Random rand;
     int _dim;
-    shared_ptr<vector<shared_ptr<vector<double>>>> _limits;
+
     vector<double> _ranges;
     vector<double> _rpropStepWidth;
     vector<double> _rpropStepConvergenceThreshold;
     double _utilityThreshold;
-    ulong _maxSolveTime;
+    AlicaTime _maxSolveTime;
     // //vector<double>[] seeds;
     shared_ptr<ICompiledTerm> _term;
 

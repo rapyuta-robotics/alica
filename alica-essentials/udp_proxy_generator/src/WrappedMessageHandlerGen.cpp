@@ -1,37 +1,41 @@
+#include <algorithm>
+#include <boost/algorithm/string.hpp>
+#include <boost/regex.hpp>
+#include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdio.h>
 #include <unistd.h>
 #include <vector>
-#include <boost/regex.hpp>
-#include <boost/algorithm/string.hpp>
-#include <fstream>
-#include <algorithm>
-#include <sstream>
 
-#include "boost/filesystem.hpp"
 #include "../include/WrappedMessage.h"
+#include "boost/filesystem.hpp"
 using namespace boost::filesystem;
 
 using namespace std;
 
 // trim from start
-inline std::string& ltrim(std::string& s) {
+inline std::string& ltrim(std::string& s)
+{
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
     return s;
 }
 
 // trim from end
-inline std::string& rtrim(std::string& s) {
+inline std::string& rtrim(std::string& s)
+{
     s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
     return s;
 }
 
 // trim from both ends
-inline std::string& trim(std::string& s) {
+inline std::string& trim(std::string& s)
+{
     return ltrim(rtrim(s));
 }
 
-std::string exec(const char* cmd) {
+std::string exec(const char* cmd)
+{
     FILE* pipe = popen(cmd, "r");
     if (!pipe)
         return "ERROR";
@@ -45,13 +49,15 @@ std::string exec(const char* cmd) {
     return result;
 }
 
-string getTemplateDir() {
+string getTemplateDir()
+{
     string pwd = exec((string("rospack find udp_proxy_generator")).c_str());
     pwd.pop_back();
     return pwd + "/templates";
 }
 
-bool parseDefinitionFile(string msgDefFile, vector<WrappedMessage*>& msgList) {
+bool parseDefinitionFile(string msgDefFile, vector<WrappedMessage*>& msgList)
+{
     string regstr = "(send|receive)Topic:\\s*(\\S+)\\s*WrappedMsg:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
     boost::regex line(regstr);
     ifstream ifs(msgDefFile);
@@ -95,7 +101,8 @@ bool parseDefinitionFile(string msgDefFile, vector<WrappedMessage*>& msgList) {
     return true;
 }
 
-string processTemplate(stringstream& t, vector<WrappedMessage*>& msgList) {
+string processTemplate(stringstream& t, vector<WrappedMessage*>& msgList)
+{
     string reg_string = "<\\?(.*)\\?>";
     boost::regex markers(reg_string.c_str());
     boost::smatch m;
@@ -138,10 +145,10 @@ string processTemplate(stringstream& t, vector<WrappedMessage*>& msgList) {
             }
         } else if (s == "advertisement") {
             for (WrappedMessage* m : msgList) {
-                ret << m->getWrappedPublisherName() << " = n.advertise<" << m->getWrappedRosClassName()
-                    << ">(\"/wrapped" << m->topic << "\"," << m->Udp2RosQueueLength << ",false);\n";
-                ret << m->getPublisherName() << " = n.advertise<" << m->getRosClassName() << ">(\"" << m->topic << "\","
+                ret << m->getWrappedPublisherName() << " = n.advertise<" << m->getWrappedRosClassName() << ">(\"/wrapped" << m->topic << "\","
                     << m->Udp2RosQueueLength << ",false);\n";
+                ret << m->getPublisherName() << " = n.advertise<" << m->getRosClassName() << ">(\"" << m->topic << "\"," << m->Udp2RosQueueLength
+                    << ",false);\n";
             }
         } else if (s == "rosPublisherDecl") {
             int i = 0;
@@ -160,7 +167,8 @@ string processTemplate(stringstream& t, vector<WrappedMessage*>& msgList) {
     return ret.str();
 }
 
-vector<string> getFilesinFolder(string folder) {
+vector<string> getFilesinFolder(string folder)
+{
     namespace fs = boost::filesystem;
     fs::path someDir(folder.c_str());
     fs::directory_iterator end_iter;
@@ -177,8 +185,9 @@ vector<string> getFilesinFolder(string folder) {
     return result_set;
 }
 
-void processTemplates(string tmplDir, string outDir, vector<WrappedMessage*>& msgList) {
-    vector<string> tmplarr = getFilesinFolder(tmplDir);  // = Directory.GetFiles(tmplDir,"*.*");
+void processTemplates(string tmplDir, string outDir, vector<WrappedMessage*>& msgList)
+{
+    vector<string> tmplarr = getFilesinFolder(tmplDir); // = Directory.GetFiles(tmplDir,"*.*");
     for (string tmpl : tmplarr) {
         cout << "Template: " << tmpl << endl;
         int idx = tmpl.find_last_of('/');
@@ -199,7 +208,8 @@ void processTemplates(string tmplDir, string outDir, vector<WrappedMessage*>& ms
     }
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
     if (argc < 2) {
         // TODO update this usage information
         cout << "Usage MakeUDPProxy.exe <packageName> <optional j>" << endl;

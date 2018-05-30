@@ -13,9 +13,8 @@
 #include "Configuration.h"
 #include "SystemConfig.h"
 
-#include <clock/AlicaROSClock.h>
+#include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
 
 #include <cmath>
 #include <limits>
@@ -39,14 +38,14 @@ GSolver::GSolver() {
     _seedWithUtilOptimum = true;
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     _maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
-    _maxSolveTime = ((ulong)(*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL)) * 1E6;  //* 1000000;
+    _maxSolveTime = AlicaTime::milliseconds((*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
     _rPropConvergenceStepSize = 1E-2;
 
-    alicaClock = new alicaRosProxy::AlicaROSClock();
+    _alicaClock = new alica::AlicaClock();
 }
 
 GSolver::~GSolver() {
-    delete alicaClock;
+    delete _alicaClock;
 }
 
 void GSolver::initLog() {
@@ -76,19 +75,18 @@ void GSolver::closeLog() {
 }
 
 std::shared_ptr<vector<double>> GSolver::solve(std::shared_ptr<Term> equation,
-        shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, shared_ptr<vector<shared_ptr<vector<double>>>> limits,
-        double* util) {
+        shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, const std::vector<double>& limits, double* util) {
     return solve(equation, args, limits, make_shared<vector<shared_ptr<vector<double>>>>(),
             numeric_limits<double>::max(), util);
 }
 
 bool GSolver::solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-        shared_ptr<vector<shared_ptr<vector<double>>>> limits) {
+        const std::vector<double>& limits) {
     return solveSimple(equation, args, limits, make_shared<vector<shared_ptr<vector<double>>>>());
 }
 
 shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
-        shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, shared_ptr<vector<shared_ptr<vector<double>>>> limits,
+        shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, const std::vector<double>& limits,
         shared_ptr<vector<shared_ptr<vector<double>>>> seeds, double sufficientUtility, double* util) {
     //			cout << "GSolver" << endl;
     //			cout << equation->toString() << endl;
@@ -107,14 +105,14 @@ shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
 #endif
 
     _rResults.clear();
-    AlicaTime begin = alicaClock->now();
+    AlicaTime begin = _alicaClock->now();
 
     _dim = args->size();
-    _limits = limits;
+
     _ranges = vector<double>(_dim);
 
     for (int i = 0; i < _dim; ++i) {
-        _ranges[i] = (_limits->at(i)->at(1) - _limits->at(i)->at(0));
+        _ranges[i] = (limits[2 * i + 1] - limits[2 * i]);
     }
 #ifdef AGGREGATE_CONSTANTS
     equation = equation->aggregateConstants();
@@ -132,7 +130,7 @@ shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
             *util = constraint->value;
             auto ret = make_shared<vector<double>>(_dim);
             for (int i = 0; i < _dim; ++i) {
-                ret->at(i) = _ranges[i] / 2.0 + _limits->at(i)->at(0);
+                ret->at(i) = _ranges[i] / 2.0 + limits[2 * i];
             }
             cout << "GSolver ConstraintConstant" << endl;
             return ret;
@@ -145,7 +143,7 @@ shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
     if (seeds->size() > 0) {
         _runs++;
         // Run with prefered cached seed
-        shared_ptr<RpropResult> rpfirst = rPropLoop(seeds->at(0), true);
+        shared_ptr<RpropResult> rpfirst = rPropLoop(seeds->at(0), true, limits);
         if (rpfirst->_finalUtil > _utilityThreshold) {
             *util = rpfirst->_finalUtil;
             //					cout << "GSolver: Using Solution from Seed!" << endl;
@@ -154,11 +152,11 @@ shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
         _rResults.push_back(rpfirst);
         // run with seeds of all other agends
         for (int i = 1; i < seeds->size(); ++i) {
-            if (begin + _maxSolveTime < alicaClock->now() || _fevals > _maxfevals) {
+            if (begin + _maxSolveTime < _alicaClock->now() || _fevals > _maxfevals) {
                 break;  // do not check any further seeds
             }
             _runs++;
-            shared_ptr<RpropResult> rp = rPropLoop(seeds->at(i), false);
+            shared_ptr<RpropResult> rp = rPropLoop(seeds->at(i), false, limits);
             if (rp->_finalUtil > _utilityThreshold) {
                 *util = rp->_finalUtil;
                 return rp->_finalValue;
@@ -168,16 +166,16 @@ shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
     }
 
     // Here: Ignore all constraints search optimum
-    if (begin + _maxSolveTime > alicaClock->now() && _fevals < _maxfevals) {
+    if (begin + _maxSolveTime > _alicaClock->now() && _fevals < _maxfevals) {
         // if time allows, do an unconstrained run
         if (!constraintIsConstant && !utilIsConstant && _seedWithUtilOptimum) {
             shared_ptr<ICompiledTerm> curProb = _term;
             _term = TermUtils::compile(cu->utility, args);
             _runs++;
-            shared_ptr<vector<double>> utilitySeed = rPropLoop(make_shared<vector<double>>())->_finalValue;
+            shared_ptr<vector<double>> utilitySeed = rPropLoop(make_shared<vector<double>>(), limits)->_finalValue;
             _term = curProb;
             // Take result and search with constraints
-            shared_ptr<RpropResult> ru = rPropLoop(utilitySeed, false);
+            shared_ptr<RpropResult> ru = rPropLoop(utilitySeed, false, limits);
             _rResults.push_back(ru);
         }
     }
@@ -185,13 +183,13 @@ shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
     //			if(seeds->size() == 0) {
     do {  // Do runs until termination criteria, running out of time, or too many function evaluations
         _runs++;
-        shared_ptr<RpropResult> rp = rPropLoop(make_shared<vector<double>>(), false);
+        shared_ptr<RpropResult> rp = rPropLoop(make_shared<vector<double>>(), false, limits);
         if (rp->_finalUtil > _utilityThreshold) {
             *util = rp->_finalUtil;
             return rp->_finalValue;
         }
         _rResults.push_back(rp);
-    } while (begin + _maxSolveTime > alicaClock->now() && _fevals < _maxfevals);
+    } while (begin + _maxSolveTime > _alicaClock->now() && _fevals < _maxfevals);
     //			}
 
     // return best result
@@ -230,14 +228,14 @@ shared_ptr<vector<double>> GSolver::solve(shared_ptr<Term> equation,
 }
 
 bool GSolver::solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-        shared_ptr<vector<shared_ptr<vector<double>>>> limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds) {
+        const std::vector<double>& limits, shared_ptr<vector<shared_ptr<vector<double>>>> seeds) {
     _rResults.clear();
 
     _dim = args->size();
-    _limits = limits;
+
     _ranges = vector<double>(_dim);
     for (int i = 0; i < _dim; ++i) {
-        _ranges[i] = _limits->at(i)->at(1) - _limits->at(i)->at(0);
+        _ranges[i] = limits[2 * i + 1] - limits[2 * i];
     }
     equation = equation->aggregateConstants();
 
@@ -247,7 +245,7 @@ bool GSolver::solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_pt
     _rpropStepConvergenceThreshold = vector<double>(_dim);
     if (seeds->size() > 0) {
         for (int i = 0; i < seeds->size(); ++i) {
-            shared_ptr<RpropResult> r = rPropLoop(seeds->at(i));
+            shared_ptr<RpropResult> r = rPropLoop(seeds->at(i), limits);
             _rResults.push_back(r);
             if (r->_finalUtil > 0.75) {
                 return true;
@@ -256,7 +254,7 @@ bool GSolver::solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_pt
     }
     int runs = 2 * _dim - seeds->size();
     for (int i = 0; i < runs; ++i) {
-        shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>());
+        shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>(), limits);
         _rResults.push_back(r);
         if (r->_finalUtil > 0.75) {
             return true;
@@ -264,7 +262,7 @@ bool GSolver::solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_pt
     }
     int adit = 0;
     while (!evalResults() && adit++ < 20) {
-        shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>());
+        shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>(), limits);
         _rResults.push_back(r);
         if (r->_finalUtil > 0.75) {
             return true;
@@ -278,8 +276,7 @@ bool GSolver::solveSimple(shared_ptr<Term> equation, shared_ptr<vector<shared_pt
 }
 
 shared_ptr<vector<double>> GSolver::solveTest(shared_ptr<Term> equation,
-        shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-        shared_ptr<vector<shared_ptr<vector<double>>>> limits) {
+        shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, const std::vector<double>& limits) {
 #ifdef GSOLVER_LOG
     initLog();
 #endif
@@ -288,10 +285,9 @@ shared_ptr<vector<double>> GSolver::solveTest(shared_ptr<Term> equation,
     shared_ptr<vector<double>> res;
 
     _dim = args->size();
-    _limits = limits;
     _ranges = vector<double>(_dim);
     for (int i = 0; i < _dim; ++i) {
-        _ranges[i] = _limits->at(i)->at(1) - _limits->at(i)->at(0);
+        _ranges[i] = limits[2 * i + 1] - limits[2 * i];
     }
 
     _term = TermUtils::compile(equation, args);
@@ -304,7 +300,7 @@ shared_ptr<vector<double>> GSolver::solveTest(shared_ptr<Term> equation,
     while (true) {
         _runs++;
         // shared_ptr<RpropResult> r = rPropLoopSimple(vector<double>());
-        shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>(), false);
+        shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>(), false, limits);
         if (r->_finalUtil > 0.75) {
             res = r->_finalValue;
             break;
@@ -319,8 +315,8 @@ shared_ptr<vector<double>> GSolver::solveTest(shared_ptr<Term> equation,
 }
 
 shared_ptr<vector<double>> GSolver::solveTest(shared_ptr<Term> equation,
-        shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, shared_ptr<vector<shared_ptr<vector<double>>>> limits,
-        int maxRuns, bool* found) {
+        shared_ptr<vector<shared_ptr<autodiff::Variable>>> args, const std::vector<double>& limits, int maxRuns,
+        bool* found) {
 #ifdef GSOLVER_LOG
     initLog();
 #endif
@@ -329,10 +325,10 @@ shared_ptr<vector<double>> GSolver::solveTest(shared_ptr<Term> equation,
     shared_ptr<vector<double>> res;
 
     _dim = args->size();
-    _limits = limits;
+
     _ranges = vector<double>(_dim);
     for (int i = 0; i < _dim; ++i) {
-        _ranges[i] = _limits->at(i)->at(1) - _limits->at(i)->at(0);
+        _ranges[i] = limits[2 * i + 1] - limits[2 * i];
     }
 
     _term = TermUtils::compile(equation, args);
@@ -345,7 +341,7 @@ shared_ptr<vector<double>> GSolver::solveTest(shared_ptr<Term> equation,
     while (_runs < maxRuns) {
         _runs++;
         // shared_ptr<RpropResult> r = rPropLoopSimple(vector<double>());
-        shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>(), false);
+        shared_ptr<RpropResult> r = rPropLoop(make_shared<vector<double>>(), false, limits);
         if (r->_finalUtil > 0.75) {
             res = r->_finalValue;
             *found = true;
@@ -396,25 +392,25 @@ void GSolver::setUtilitySignificanceThreshold(double utilitySignificanceThreshol
     _utilitySignificanceThreshold = utilitySignificanceThreshold;
 }
 
-IAlicaClock* GSolver::getIAlicaClock() {
-    return alicaClock;
+AlicaClock* GSolver::getAlicaClock() {
+    return _alicaClock;
 }
 
-void GSolver::setIAlicaClock(IAlicaClock* clock) {
-    alicaClock = clock;
+void GSolver::setAlicaClock(AlicaClock* clock) {
+    _alicaClock = clock;
 }
 
 shared_ptr<vector<double>> GSolver::initialPointFromSeed(
-        shared_ptr<RpropResult>& res, shared_ptr<vector<double>>& seed) {
-    pair<shared_ptr<vector<double>>, double> tup;
+        shared_ptr<RpropResult>& res, shared_ptr<vector<double>>& seed, const std::vector<double>& limits) {
+    std::pair<shared_ptr<vector<double>>, double> tup;
 
     res->_initialValue = make_shared<vector<double>>(_dim);
     res->_finalValue = make_shared<vector<double>>(_dim);
     for (int i = 0; i < _dim; ++i) {
         if (std::isnan(seed->at(i))) {
-            res->_initialValue->at(i) = ((double) rand() / RAND_MAX) * _ranges[i] + _limits->at(i)->at(0);
+            res->_initialValue->at(i) = ((double) rand() / RAND_MAX) * _ranges[i] + limits[2 * i];
         } else {
-            res->_initialValue->at(i) = min(max(seed->at(i), _limits->at(i)->at(0)), _limits->at(i)->at(1));
+            res->_initialValue->at(i) = min(max(seed->at(i), limits[2 * i]), limits[2 * i + 1]);
         }
     }
     tup = _term->differentiate(res->_initialValue);
@@ -426,14 +422,14 @@ shared_ptr<vector<double>> GSolver::initialPointFromSeed(
     return tup.first;
 }
 
-shared_ptr<vector<double>> GSolver::initialPoint(shared_ptr<RpropResult>& res) {
+shared_ptr<vector<double>> GSolver::initialPoint(shared_ptr<RpropResult>& res, const std::vector<double>& limits) {
     pair<shared_ptr<vector<double>>, double> tup;
     bool found = true;
     res->_initialValue = make_shared<vector<double>>(_dim);
     res->_finalValue = make_shared<vector<double>>(_dim);
     do {
         for (int i = 0; i < _dim; ++i) {
-            res->_initialValue->at(i) = ((double) rand() / RAND_MAX) * _ranges[i] + _limits->at(i)->at(0);
+            res->_initialValue->at(i) = ((double) rand() / RAND_MAX) * _ranges[i] + limits[2 * i];
             //					cout << " << i << "\t" << _ranges[i] << "\t" << _limits->at(i)->at(0) <<
             //"\t"
             //<<  res->_initialValue->at(i) << endl;
@@ -459,11 +455,13 @@ shared_ptr<vector<double>> GSolver::initialPoint(shared_ptr<RpropResult>& res) {
     return tup.first;
 }
 
-shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(shared_ptr<vector<double>> seed) {
-    return rPropLoop(seed, false);
+shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(
+        shared_ptr<vector<double>> seed, const std::vector<double>& limits) {
+    return rPropLoop(seed, false, limits);
 }
 
-shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(shared_ptr<vector<double>> seed, bool precise) {
+shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(
+        shared_ptr<vector<double>> seed, bool precise, const std::vector<double>& limits) {
     initialStepSize();
 
     shared_ptr<vector<double>> curGradient;
@@ -471,9 +469,9 @@ shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(shared_ptr<vector<double>> s
     shared_ptr<RpropResult> ret = make_shared<RpropResult>();
 
     if (seed->size() > 0) {
-        curGradient = initialPointFromSeed(ret, seed);
+        curGradient = initialPointFromSeed(ret, seed, limits);
     } else {
-        curGradient = initialPoint(ret);
+        curGradient = initialPoint(ret, limits);
     }
     double curUtil = ret->_initialUtil;
 
@@ -516,10 +514,10 @@ shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(shared_ptr<vector<double>> s
             else if (curGradient->at(i) < 0)
                 curValue->at(i) -= _rpropStepWidth[i];
 
-            if (curValue->at(i) > _limits->at(i)->at(1))
-                curValue->at(i) = _limits->at(i)->at(1);
-            else if (curValue->at(i) < _limits->at(i)->at(0))
-                curValue->at(i) = _limits->at(i)->at(0);
+            if (curValue->at(i) > limits[2 * i + 1])
+                curValue->at(i) = limits[2 * i + 1];
+            else if (curValue->at(i) < limits[2 * i])
+                curValue->at(i) = limits[2 * i];
             if (_rpropStepWidth[i] < _rpropStepConvergenceThreshold[i])
                 ++convergendDims;
         }
@@ -583,16 +581,17 @@ shared_ptr<GSolver::RpropResult> GSolver::rPropLoop(shared_ptr<vector<double>> s
     return ret;
 }
 
-shared_ptr<GSolver::RpropResult> GSolver::rPropLoopSimple(shared_ptr<vector<double>> seed) {
+shared_ptr<GSolver::RpropResult> GSolver::rPropLoopSimple(
+        shared_ptr<vector<double>> seed, const std::vector<double>& limits) {
     initialStepSize();
     shared_ptr<vector<double>> curGradient;
 
     shared_ptr<RpropResult> ret = make_shared<RpropResult>();
 
     if (seed->size() > 0) {
-        curGradient = initialPointFromSeed(ret, seed);
+        curGradient = initialPointFromSeed(ret, seed, limits);
     } else {
-        curGradient = initialPoint(ret);
+        curGradient = initialPoint(ret, limits);
     }
     double curUtil = ret->_initialUtil;
 
@@ -624,10 +623,10 @@ shared_ptr<GSolver::RpropResult> GSolver::rPropLoopSimple(shared_ptr<vector<doub
             else if (curGradient->at(i) < 0)
                 curValue->at(i) -= _rpropStepWidth[i];
 
-            if (curValue->at(i) > _limits->at(i)->at(1))
-                curValue->at(i) = _limits->at(i)->at(1);
-            else if (curValue->at(i) < _limits->at(i)->at(0))
-                curValue->at(i) = _limits->at(i)->at(0);
+            if (curValue->at(i) > limits[2 * i + 1])
+                curValue->at(i) = limits[2 * i + 1];
+            else if (curValue->at(i) < limits[2 * i])
+                curValue->at(i) = limits[2 * i];
         }
 
         tup = _term->differentiate(curValue);

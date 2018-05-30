@@ -16,7 +16,7 @@ std::map<std::string, std::shared_ptr<Configuration>> SystemConfig::configs;
  * The method for getting the singleton instance.
  * @return A pointer to the SystemConfig object, you must not delete.
  */
-SystemConfig *SystemConfig::getInstance()
+SystemConfig* SystemConfig::getInstance()
 {
     static SystemConfig instance;
     return &instance;
@@ -28,57 +28,44 @@ SystemConfig *SystemConfig::getInstance()
 SystemConfig::SystemConfig()
 {
     // set the domain folder (1. by env-variable 2. by cwd)
-    char *x = ::getenv(DOMAIN_FOLDER.c_str());
-    if (x == NULL)
-    {
+    char* x = ::getenv(DOMAIN_FOLDER.c_str());
+    if (x == NULL) {
         char cwd[4096];
-        if (::getcwd(cwd, 4096) == NULL)
-        {
+        if (::getcwd(cwd, 4096) == NULL) {
             cerr << "SystemConfig: Error while calling getcwd!" << endl;
         }
         rootPath = cwd;
-    }
-    else
-    {
+    } else {
         rootPath = x;
     }
 
     // set the domain config folger (1. by env-variable 2. by <domain folder>/etc
     x = ::getenv(DOMAIN_CONFIG_FOLDER.c_str());
 
-    if (x == NULL)
-    {
+    if (x == NULL) {
         configPath = FileSystem::combinePaths(rootPath, "/etc");
-    }
-    else
-    {
+    } else {
         configPath = x;
     }
-    if (!FileSystem::pathExists(configPath))
-    {
+    if (!FileSystem::pathExists(configPath)) {
         cerr << "SC: Could not find config directory: \"" << configPath << "\"" << endl;
     }
 
     logPath = FileSystem::combinePaths(rootPath, "/log/temp");
-    if (!FileSystem::pathExists(logPath))
-    {
-        if (!FileSystem::createDirectory(logPath))
-        {
+    if (!FileSystem::pathExists(logPath)) {
+        if (!FileSystem::createDirectory(logPath)) {
             cerr << "SC: Could not create log directory: \"" << logPath << "\"" << endl;
         }
     }
 
     // set the hostname (1. by env-variable 2. by gethostname)
-    char *envname = ::getenv("ROBOT");
-    if ((envname == NULL) || ((*envname) == 0x0))
-    {
+    char* envname = ::getenv("ROBOT");
+    if ((envname == NULL) || ((*envname) == 0x0)) {
         char hn[1024];
         hn[1023] = '\0';
         gethostname(hn, 1023);
         SystemConfig::hostname = hn;
-    }
-    else
-    {
+    } else {
         hostname = envname;
     }
 
@@ -88,9 +75,7 @@ SystemConfig::SystemConfig()
     cout << "SC: Logging Folder: \"" << logPath << "\"" << endl;
 }
 
-void SystemConfig::shutdown()
-{
-}
+void SystemConfig::shutdown() {}
 
 /**
  * The access operator for choosing the configuration according to the given string
@@ -98,15 +83,14 @@ void SystemConfig::shutdown()
  * @param s The string which determines the used configuration.
  * @return The demanded configuration.
  */
-Configuration *SystemConfig::operator[](const string s)
+Configuration* SystemConfig::operator[](const string s)
 {
     {
         lock_guard<mutex> lock(configsMapMutex);
 
         map<string, shared_ptr<Configuration>>::iterator itr = configs.find(s);
 
-        if (itr != configs.end())
-        {
+        if (itr != configs.end()) {
             return itr->second.get();
         }
     }
@@ -126,10 +110,8 @@ Configuration *SystemConfig::operator[](const string s)
     tempConfigPath = FileSystem::combinePaths(tempConfigPath, file);
     files.push_back(tempConfigPath);
 
-    for (size_t i = 0; i < files.size(); i++)
-    {
-        if (FileSystem::pathExists(files[i]))
-        {
+    for (size_t i = 0; i < files.size(); i++) {
+        if (FileSystem::pathExists(files[i])) {
             lock_guard<mutex> lock(configsMapMutex);
 
             shared_ptr<Configuration> result = make_shared<Configuration>(files[i]);
@@ -141,8 +123,7 @@ Configuration *SystemConfig::operator[](const string s)
 
     // config-file not found, print error message
     cerr << "Configuration file " << file << " not found in either location:" << endl;
-    for (size_t i = 0; i < files.size(); i++)
-    {
+    for (size_t i = 0; i < files.size(); i++) {
         cerr << "- " << files[i] << endl;
     }
     return nullptr;
@@ -163,10 +144,10 @@ int SystemConfig::getOwnRobotID()
  * @return The robot's ID
  * <deprecated>
  */
-int SystemConfig::getRobotID(const string &name)
+int SystemConfig::getRobotID(const string& name)
 {
-	 // TODO this should be optional for dynamic teams (is it ok to return ints?)
-    Configuration *tmp = (*SystemConfig::getInstance())["Globals"];
+    // TODO this should be optional for dynamic teams (is it ok to return ints?)
+    Configuration* tmp = (*SystemConfig::getInstance())["Globals"];
     int ownRobotID = tmp->get<int>("Globals", "Team", name.c_str(), "ID", NULL);
     return ownRobotID;
 }
@@ -212,36 +193,30 @@ void SystemConfig::setConfigPath(string configPath)
 
 void SystemConfig::resetHostname()
 {
-    char *envname = ::getenv("ROBOT");
-    if ((envname == NULL) || ((*envname) == 0x0))
-    {
+    char* envname = ::getenv("ROBOT");
+    if ((envname == NULL) || ((*envname) == 0x0)) {
         char hn[1024];
         hn[1023] = '\0';
         gethostname(hn, 1023);
         SystemConfig::hostname = hn;
-    }
-    else
-    {
+    } else {
         hostname = envname;
     }
     configs.clear();
 }
 
-string SystemConfig::robotNodeName(const string &nodeName)
+string SystemConfig::robotNodeName(const string& nodeName)
 {
     return SystemConfig::getHostname() + NODE_NAME_SEPERATOR + nodeName;
 }
 
-string SystemConfig::getEnv(const string &var)
+string SystemConfig::getEnv(const string& var)
 {
-    const char *val = ::getenv(var.c_str());
-    if (val == 0)
-    {
+    const char* val = ::getenv(var.c_str());
+    if (val == 0) {
         cerr << "SC: Environment Variable " << var << " is null" << endl;
         return "";
-    }
-    else
-    {
+    } else {
         cout << "SC: Environment Variable " << var << " is " << val << endl;
         return val;
     }
