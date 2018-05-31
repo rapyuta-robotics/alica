@@ -71,7 +71,7 @@ class Assignment final : public IAssignment
 
     void clear();
     virtual std::string toString() const override;
-    std::string toHackString();
+    std::string toHackString() const;
 
   protected:
     /**

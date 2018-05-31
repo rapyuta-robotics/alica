@@ -306,33 +306,13 @@ std::condition_variable* PlanBase::getStepModeCV()
     }
     return &_stepModeCV;
 }
-/**
- * Returns the root node of the ALICA plan tree in execution.
- */
-const std::shared_ptr<RunningPlan> PlanBase::getRootNode() const
-{
-    return _rootNode;
-}
-
-void PlanBase::setRootNode(std::shared_ptr<RunningPlan> rootNode)
-{
-    _rootNode = rootNode;
-}
 
 /**
  * Returns the deepest ALICA node
  */
-std::shared_ptr<const RunningPlan> PlanBase::getDeepestNode() const
+const RunningPlan* PlanBase::getDeepestNode() const
 {
     return _deepestNode;
-}
-
-/**
- * Returns the deepest ALICA node
- */
-std::shared_ptr<RunningPlan> PlanBase::getRootNode()
-{
-    return _rootNode;
 }
 
 } // namespace alica

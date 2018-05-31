@@ -26,15 +26,15 @@ class AuthorityManager
     void init();
     void close();
     void handleIncomingAuthorityMessage(std::shared_ptr<AllocationAuthorityInfo> aai);
-    void tick(std::shared_ptr<RunningPlan> p);
-    void sendAllocation(std::shared_ptr<RunningPlan> p);
+    void tick(RunningPlan& p);
+    void sendAllocation(RunningPlan& p);
 
-  protected:
+  private:
     std::vector<std::shared_ptr<AllocationAuthorityInfo>> queue;
     const AlicaEngine* engine;
     const supplementary::AgentID* localAgentID;
     std::mutex mu;
-    void processPlan(std::shared_ptr<RunningPlan> p);
-    bool authorityMatchesPlan(std::shared_ptr<AllocationAuthorityInfo> aai, std::shared_ptr<RunningPlan> p);
+    void processPlan(RunningPlan& p);
+    bool authorityMatchesPlan(const AllocationAuthorityInfo& aai, const RunningPlan& p) const;
 };
 } /* namespace alica */

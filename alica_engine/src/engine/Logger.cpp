@@ -53,11 +53,9 @@ Logger::~Logger()
  * Notify the logger that an event occurred which changed the plan tree.
  * @param event A string denoting the event
  */
-void Logger::eventOccured(const std::string& event)
+void Logger::processString(const std::string& event)
 {
-    if (!this->active) {
-        return;
-    }
+
     if (this->inIteration) {
         this->eventStrings.push_back(event);
     } else {
@@ -81,7 +79,7 @@ void Logger::itertionStarts()
  * current iteration. Called by the PlanBase.
  * @param p The root RunningPlan of the plan base.
  */
-void Logger::iterationEnds(std::shared_ptr<RunningPlan> rp)
+void Logger::iterationEnds(const RunningPlan& rp)
 {
     if (!this->active) {
         return;
@@ -170,8 +168,6 @@ void Logger::close()
     }
 }
 
-void Logger::visit(std::shared_ptr<RunningPlan> r) {}
-
 /**
  * Internal method to create the log string from a serialised plan.
  * @param l A list<long>
@@ -210,34 +206,34 @@ const EntryPoint* Logger::entryPointOfState(const State* s) const
     return nullptr;
 }
 
-void Logger::evaluationAssignmentsToString(std::stringstream& ss, std::shared_ptr<RunningPlan> rp)
+void Logger::evaluationAssignmentsToString(std::stringstream& ss, const RunningPlan& rp)
 {
-    if (rp->isBehaviour()) {
+    if (rp.isBehaviour()) {
         return;
     }
 
-    ss << rp->getAssignment()->toHackString();
-    for (shared_ptr<RunningPlan> child : *rp->getChildren()) {
-        evaluationAssignmentsToString(ss, child);
+    ss << rp.getAssignment().toHackString();
+    for (const RunningPlan* child : rp.getChildren()) {
+        evaluationAssignmentsToString(ss, *child);
     }
 }
 
-std::shared_ptr<std::list<std::string>> Logger::createTreeLog(std::shared_ptr<RunningPlan> r)
+std::shared_ptr<std::list<std::string>> Logger::createTreeLog(const RunningPlan& r)
 {
     std::shared_ptr<std::list<std::string>> result = std::make_shared<std::list<std::string>>(std::list<std::string>());
-
-    if (r->getActiveState() != nullptr) {
-        if (r->getOwnEntryPoint() != nullptr) {
-            result->push_back(r->getOwnEntryPoint()->getTask()->getName());
+    PlanStateTriple ptz = r.getActiveTriple();
+    if (ptz.state != nullptr) {
+        if (ptz.entryPoint != nullptr) {
+            result->push_back(ptz.entryPoint->getTask()->getName());
         } else {
             result->push_back("-3"); // indicates no task
         }
 
-        result->push_back(r->getActiveState()->getName());
+        result->push_back(ptz.state->getName());
     } else {
-        if (r->getBasicBehaviour() != nullptr) {
+        if (r.getBasicBehaviour() != nullptr) {
             result->push_back("BasicBehaviour");
-            result->push_back(r->getBasicBehaviour()->getName());
+            result->push_back(r.getBasicBehaviour()->getName());
         } else // will idle
         {
             result->push_back("IDLE");
@@ -245,11 +241,11 @@ std::shared_ptr<std::list<std::string>> Logger::createTreeLog(std::shared_ptr<Ru
         }
     }
 
-    if (r->getChildren()->size() != 0) {
+    if (!r.getChildren().empty()) {
         result->push_back("-1"); // start children marker
 
-        for (shared_ptr<RunningPlan>& rp : *r->getChildren()) {
-            shared_ptr<list<string>> tmp = createTreeLog(rp);
+        for (const RunningPlan* rp : r.getChildren()) {
+            shared_ptr<list<string>> tmp = createTreeLog(*rp);
             for (const std::string& s : *tmp) {
                 result->push_back(s);
             }

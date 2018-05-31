@@ -29,6 +29,8 @@
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
 
+#include <alica_common_config/common_defines.h>
+
 #include <iostream>
 
 using std::shared_ptr;
@@ -47,64 +49,48 @@ void RunningPlan::init()
 RunningPlan::RunningPlan(AlicaEngine* ae)
     : _ae(ae)
     , _planType(nullptr)
-    , _plan(nullptr)
-    , _activeState(nullptr)
-    , _activeEntryPoint(nullptr)
     , _behaviour(false)
-    , _assignment(nullptr)
-    , _status(PlanStatus::Running)
-    , _failCount(0)
+    , _assignment()
+    , _cycleManagement(ae, this)
     , _basicBehaviour(nullptr)
-    , _active(false)
-    , _allocationNeeded(false)
-    , _failHandlingNeeded(false)
-    , _cycleManagement(std::make_shared<CycleManager>(ae, this))
 {
 }
 
 RunningPlan::~RunningPlan() {}
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
-    : RunningPlan(ae)
+    : _ae(ae)
+    , _planType(nullptr)
+    , _behaviour(false)
+    , _assignment(plan)
+    , _cycleManagement(ae, this)
+    , _basicBehaviour(nullptr)
 {
-    _plan = plan;
-    /*
-    Code does not have any effect
-    vector<EntryPoint*> epCol;
-    transform(plan->getEntryPoints().begin(), plan->getEntryPoints().end(), back_inserter(epCol),
-            [](map<long, EntryPoint*>::value_type& val) { return val.second; });
-
-    sort(epCol.begin(), epCol.end(), EntryPoint::compareTo);
-    */
+    _activeTriple._plan = plan;
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
-    : RunningPlan(ae)
+    : _ae(ae)
+    , _planType(pt)
+    , _behaviour(false)
+    , _assignment()
+    , _cycleManagement(ae, this)
+    , _basicBehaviour(nullptr)
 {
-    _planType = pt;
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc)
     : _ae(ae)
     , _planType(nullptr)
-    , _plan(bc)
-    , _activeState(nullptr)
-    , _activeEntryPoint(nullptr)
+    , _activeTriple(bc, nullptr, nullptr)
     , _behaviour(true)
-    , _assignment(nullptr)
-    , _status(PlanStatus::Running)
-    , _failCount(0)
+    , _assignment()
     , _basicBehaviour(nullptr)
-    , _active(false)
-    , _allocationNeeded(false)
-    , _failHandlingNeeded(false)
-    , _cycleManagement(std::make_shared<CycleManager>(ae, this))
+    , _cycleManagement(ae, this)
 {
 }
 
-/**
- * Indicates whether this plan needs failure handling
- */
+/*
 bool RunningPlan::getFailHandlingNeeded() const
 {
     return _failHandlingNeeded;
@@ -120,18 +106,14 @@ void RunningPlan::setFailHandlingNeeded(bool failHandlingNeeded)
     }
     _failHandlingNeeded = failHandlingNeeded;
 }
+*/
 
-/**
- * Gets/Sets the parent RunningPlan of this RunningPlan. Null in case this is the top-level element.
- */
+/*
 void RunningPlan::setParent(std::weak_ptr<RunningPlan> s)
 {
     _parent = s;
 }
-std::weak_ptr<RunningPlan> RunningPlan::getParent() const
-{
-    return _parent;
-}
+*/
 
 /**
  * Called once per Engine iteration, performs all neccessary checks and executes rules from the rulebook.
@@ -208,23 +190,6 @@ bool RunningPlan::evalRuntimeCondition()
     }
 }
 
-void RunningPlan::setActiveState(const State* s)
-{
-    if (_activeState != s) {
-        _activeState = s;
-        _stateStartTime = _ae->getAlicaClock()->now();
-        if (_activeState != nullptr) {
-            if (_activeState->isFailureState()) {
-                _status = PlanStatus::Failed;
-            } else if (_activeState->isSuccessState()) {
-                const supplementary::AgentID* mid = getOwnID();
-                _assignment->getEpSuccessMapping()->getRobots(_activeEntryPoint)->push_back(mid);
-                _ae->getTeamManager()->setSuccess(mid, _plan, _activeEntryPoint);
-            }
-        }
-    }
-}
-
 void RunningPlan::addChildren(shared_ptr<list<shared_ptr<RunningPlan>>>& runningPlans)
 {
     for (shared_ptr<RunningPlan> r : (*runningPlans)) {
@@ -269,14 +234,7 @@ void RunningPlan::moveState(const State* nextState)
     _failedSubPlans.clear();
 }
 
-/**
- * The children of this RunningPlan.
- */
-list<shared_ptr<RunningPlan>>* RunningPlan::getChildren()
-{
-    return &_children; // TODO irgendwie ist das doch eher uncool
-}
-
+/*
 void RunningPlan::setChildren(list<shared_ptr<RunningPlan>> children)
 {
     _children = children;
@@ -290,40 +248,31 @@ void RunningPlan::setPlan(const AbstractPlan* plan)
     }
     _plan = plan;
 }
+*/
 
-/**
- * The behaviour represented by this running plan, in case there is any, otherwise null.
- */
-shared_ptr<BasicBehaviour> RunningPlan::getBasicBehaviour()
-{
-    return _basicBehaviour;
-}
-void RunningPlan::setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour)
+/*void RunningPlan::setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour)
 {
     _basicBehaviour = basicBehaviour;
 }
-
+*/
 /**
  * Simple method to recursively print the plan-tree.
  */
-void RunningPlan::printRecursive()
+void RunningPlan::printRecursive() const
 {
-    for (shared_ptr<RunningPlan>& c : _children) {
+    for (const RunningPlan* c : _children) {
         c->printRecursive();
     }
-    if (_children.size() > 0) {
-        std::cout << "END CHILDREN of " << (_plan == nullptr ? "NULL" : _plan->getName()) << std::endl;
+    if (_children.empty()) {
+        std::cout << "END CHILDREN of " << (_activeTriple.plan == nullptr ? "NULL" : _activeTriple.plan->getName()) << std::endl;
     }
 }
 
 /**
  * The current assignment of robots to EntryPoints.
  */
-shared_ptr<Assignment> RunningPlan::getAssignment() const
-{
-    return _assignment;
-}
 
+/*
 void RunningPlan::setAssignment(shared_ptr<Assignment> assignment)
 {
     _assignment = assignment;
@@ -333,27 +282,35 @@ void RunningPlan::setActive(bool active)
 {
     _active = active;
 }
+*/
 
-/**
- * The robot's current EntryPoint. Null if it is idling
- */
-const EntryPoint* RunningPlan::getOwnEntryPoint() const
+void RunningPlan::setOwnActiveEntryPoint(const EntryPoint* value)
 {
-    return _activeEntryPoint;
+    if (_activeTriple.entryPoint != value) {
+        AgentIdConstPtr mid = getOwnID();
+        _assignment.removeRobot(mid);
+        _activeTriple.entryPoint = value;
+        if (value != nullptr) {
+            setOwnActiveState(value->getState());
+            _assignment.addRobot(mid, _activeTriple.entryPoint, _activeTriple.state);
+        }
+    }
 }
 
-/**
- * The robot's current EntryPoint. Null if it is idling
- */
-void RunningPlan::setOwnEntryPoint(const EntryPoint* value)
+void RunningPlan::setActiveState(const State* s)
 {
-    if (_activeEntryPoint != value) {
-        const supplementary::AgentID* mid = getOwnID();
-        _assignment->removeRobot(mid);
-        _activeEntryPoint = value;
-        if (_activeEntryPoint != nullptr) {
-            setActiveState(_activeEntryPoint->getState());
-            _assignment->addRobot(mid, _activeEntryPoint, _activeState);
+    if (_activeTriple.state != s) {
+        ALICA_ASSERT(s == null || (_activeTriple.entryPoint && _activeTriple.entryPoint->isStateReachable(s)));
+        _activeTriple.state = s;
+        _status.stateStartTime = _ae->getAlicaClock()->now();
+        if (s != nullptr) {
+            if (s->isFailureState()) {
+                _status.status = PlanStatus::Failed;
+            } else if (s->isSuccessState()) {
+                AgentIdConstPtr mid = getOwnID();
+                _assignment.getEpSuccessMapping().getRobots(_activeTriple.entryPoint)->push_back(mid);
+                _ae->getTeamManager()->setSuccess(mid, _activeTriple.plan, _activeTriple.entryPoint);
+            }
         }
     }
 }
@@ -365,23 +322,17 @@ PlanStatus RunningPlan::getStatus() const
 {
     if (_basicBehaviour != nullptr) {
         if (_basicBehaviour->isSuccess()) {
-            // cout << "RP: " << _plan->getName() << " BEH Success" << endl;
             return PlanStatus::Success;
         } else if (_basicBehaviour->isFailure()) {
-            // cout << "RP: " << _plan->getName() << " BEH Failed" << endl;
             return PlanStatus::Failed;
         } else {
-            // cout << "RP: " << _plan->getName() << " BEH Running" << endl;
             return PlanStatus::Running;
         }
     }
-    if (_assignment != nullptr && _assignment->isSuccessfull()) {
-        // cout << "RP: " << _plan->getName() << " ASS Success" << endl;
+    if (_assignment.isSuccessfull()) {
         return PlanStatus::Success;
     }
-    // cout << "RP: " << _plan->getName() << " STATUS " << (_status == PlanStatus::Running ? "RUNNING" :
-    // (_status == PlanStatus::Success ? "SUCCESS" : "FAILED")) << endl;
-    return _status;
+    return _status.status;
 }
 
 void RunningPlan::clearFailures()
@@ -460,26 +411,13 @@ void RunningPlan::adaptAssignment(shared_ptr<RunningPlan> r)
     }
 }
 
-void RunningPlan::setActiveEntryPoint(EntryPoint* activeEntryPoint)
-{
-    if (_activeEntryPoint != activeEntryPoint) {
-        const supplementary::AgentID* mid = getOwnID();
-        _assignment->removeRobot(mid);
-        _activeEntryPoint = activeEntryPoint;
-        if (_activeEntryPoint != nullptr) {
-            setActiveState(_activeEntryPoint->getState());
-            _assignment->addRobot(mid, _activeEntryPoint, _activeState);
-        }
-    }
-}
-
 /**
  * Indicates whether this running plan represents a behaviour.
  */
-std::shared_ptr<CycleManager> RunningPlan::getCycleManagement()
+/*std::shared_ptr<CycleManager> RunningPlan::getCycleManagement()
 {
     return _cycleManagement;
-}
+}*/
 
 /**
  * Indicate that an AbstractPlan has failed while being a child of this plan.
@@ -500,14 +438,9 @@ void RunningPlan::setFailedChild(const AbstractPlan* child)
  */
 void RunningPlan::accept(IPlanTreeVisitor* vis)
 {
-    vis->visit(shared_from_this());
-    //		for (int i = 0; i < _children.size(); i++)
-    //		{
-    //			auto iter = _children.begin();
-    //			advance(iter, i);
-    //			(*iter)->accept(vis);
-    //		}
-    for (std::shared_ptr<RunningPlan>& child : _children) {
+    vis->visit(*this);
+
+    for (RunningPlan* child : _children) {
         child->accept(vis);
     }
 }
@@ -817,48 +750,6 @@ void RunningPlan::toMessage(IdGrp& message, shared_ptr<const RunningPlan>& deepe
     }
 }
 
-std::string RunningPlan::toString() const
-{
-    std::stringstream ss;
-    ss << "######## RP ##########" << std::endl;
-    ss << "Plan: " + (_plan != nullptr ? _plan->getName() : "NULL") << std::endl;
-    ss << "PlanType: " << (_planType != nullptr ? _planType->getName() : "NULL") << std::endl;
-    ss << "ActState: " << (_activeState != nullptr ? _activeState->getName() : "NULL") << std::endl;
-    ss << "Task: " << (getOwnEntryPoint() != nullptr ? getOwnEntryPoint()->getTask()->getName() : "NULL") << std::endl;
-    ss << "IsBehaviour: " << isBehaviour() << "\t";
-    if (isBehaviour()) {
-        ss << "Behaviour: " << (_basicBehaviour == nullptr ? "NULL" : _basicBehaviour->getName()) << std::endl;
-    }
-    ss << "AllocNeeded: " << _allocationNeeded << std::endl;
-    ss << "FailHandlingNeeded: " << _failHandlingNeeded << "\t";
-    ss << "FailCount: " << _failCount << std::endl;
-    ss << "IsActive: " << _active << std::endl;
-    ss << "Status: " << (_status == PlanStatus::Running ? "RUNNING" : (_status == PlanStatus::Success ? "SUCCESS" : "FAILED")) << std::endl;
-    ss << "AvailRobots: ";
-    for (const supplementary::AgentID* r : _robotsAvail) {
-        ss << " " << *r;
-    }
-    ss << "\n";
-    if (_assignment != nullptr) {
-        ss << "Assignment:" << _assignment->toString();
-    } else
-        ss << "Assignment is null." << std::endl;
-    ss << "Children: " << _children.size();
-    if (_children.size() > 0) {
-        ss << " ( ";
-        for (const shared_ptr<RunningPlan>& r : _children) {
-            if (r->_plan == nullptr) {
-                ss << "NULL PLAN, ";
-            } else
-                ss << r->_plan->getName() + ", ";
-        }
-        ss << ")";
-    }
-    ss << std::endl << "CycleManagement - Assignment Overridden: " << (_cycleManagement->isOverridden() ? "true" : "false") << std::endl;
-    ss << "\n########## ENDRP ###########" << std::endl;
-    return ss.str();
-}
-
 /**
  * Tests whether any child has a specific status.
  * @param A PlanStatus
@@ -877,6 +768,55 @@ bool RunningPlan::anyChildrenStatus(PlanStatus ps)
 void RunningPlan::sendLogMessage(int level, const std::string& message) const
 {
     _ae->getCommunicator()->sendLogMessage(level, message);
+}
+
+std::string RunningPlan::toString() const
+{
+    std::stringstream ss;
+    ss << *this;
+    return ss.str();
+}
+
+std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
+{
+    out << "######## RP ##########" << std::endl;
+    PlanStateTriple ptz = r.getActiveTriple();
+    out << "Plan: " + (ptz.plan != nullptr ? ptz.plan->getName() : "NULL") << std::endl;
+    out << "PlanType: " << (r.getPlanType() != nullptr ? r.getPlanType()->getName() : "NULL") << std::endl;
+    out << "ActState: " << (ptz.state != nullptr ? ptz.state->getName() : "NULL") << std::endl;
+    out << "Task: " << (ptz.entryPoint != nullptr ? ptz.entryPoint->getTask()->getName() : "NULL") << std::endl;
+    out << "IsBehaviour: " << r.isBehaviour() << "\t";
+    if (r.isBehaviour()) {
+        out << "Behaviour: " << (getBasicBehaviour() == nullptr ? "NULL" : r.getBasicBehaviour()->getName()) << std::endl;
+    }
+    const RunningPlan::PlanStatusInfo& psi = r.getStatusInfo();
+    out << "AllocNeeded: " << psi.allocationNeeded << std::endl;
+    out << "FailHandlingNeeded: " << psi.failHandlingNeeded << "\t";
+    out << "FailCount: " << psi.failCount << std::endl;
+    out << "IsActive: " << psi.active << std::endl;
+    out << "Status: " << getPlanStatusName(psi.status) << std::endl;
+    out << "AvailRobots: ";
+    for (AgentIdConstPtr r : _robotsAvail) {
+        out << " " << *r;
+    }
+    out << std::endl;
+    if (!isBehaviour()) {
+        out << "Assignment:" << _assignment;
+    }
+    out << "Children: " << _children.size();
+    if (!_children.empty()) {
+        out << " ( ";
+        for (const RunningPlan* r : _children) {
+            if (r->_activeTriple.plan == nullptr) {
+                out << "NULL PLAN, ";
+            } else
+                out << r->_activeTriple.plan->getName() + ", ";
+        }
+        out << ")";
+    }
+    out << std::endl << "CycleManagement - Assignment Overridden: " << (_cycleManagement.isOverridden() ? "true" : "false") << std::endl;
+    out << std::endl << "########## ENDRP ###########" << std::endl;
+    return out;
 }
 
 } /* namespace alica */

@@ -156,36 +156,21 @@ void AuthorityManager::sendAllocation(std::shared_ptr<RunningPlan> p)
 }
 
 /**
- * FIXME: Bug in authority manager
- * QUESTION: If you use the same plan two times, each in a different part of the plan tree.
- * How is it guarenteed, that this method does not match the wrong instance?!
- * @param aai
- * @param p
- * @return
+ Matches a plan based on the context: a plan, together with the containing plantype and state is matched.
  */
-bool AuthorityManager::authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p)
+bool AuthorityManager::authorityMatchesPlan(const AllocationAuthorityInfo& aai, const RunningPlan& p) const
 {
-    auto shared = p->getParent().lock();
-    /*#ifdef AM_DEBUG
-                    if (!p->getParent().expired())
-                    {
-                            cout << "AM: Parent-WeakPtr is NOT expired!" << endl;
-                            cout << "AM: Parent-ActiveState is: " << (shared->getActiveState() != nullptr ?
-    shared->getActiveState()->getId() : NULL) << endl; cout << "AM: AAI-ParentState is: " << aai->parentState << endl;
-                    }
-                    else
-                    {
-                            cout << "AM: Parent-WeakPtr is expired!" << endl;
-                            cout << "AM: Current-ActiveState is: " << p->getActiveState()->getId() << endl;
-                            cout << "AM: AAI-ParentState is: " << aai->parentState << endl;
-                    }
-    #endif*/
-
-    if ((p->getParent().expired() && aai->parentState == -1) ||
-        (!p->getParent().expired() && shared->getActiveState() != nullptr && shared->getActiveState()->getId() == aai->parentState)) {
-        if (p->getPlan()->getId() == aai->planId) {
+    assert(!p.isRetired());
+    // If a plan is not retired and does not have a parent, it must be masterplan
+    if (p.isRetired()) {
+        return false;
+    }
+    const RunningPlan* parent = p.getParent();
+    if ((parent == nullptr && aai.parentState == -1) ||
+        (parent != nullptr && parent->getActiveState() != nullptr && parent->getActiveState()->getId() == aai->parentState)) {
+        if (p.getActivePlan()->getId() == aai->planId) {
             return true;
-        } else if (aai->planType != -1 && p->getPlanType() != nullptr && p->getPlanType()->getId() == aai->planType) {
+        } else if (aai->planType != -1 && p.getPlanType() != nullptr && p.getPlanType()->getId() == aai->planType) {
             return true;
         }
     }

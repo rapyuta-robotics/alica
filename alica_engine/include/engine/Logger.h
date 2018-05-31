@@ -26,24 +26,46 @@ class TeamManager;
 /**
  * The Plan Logger will write a log file according to the settings in the Alica.conf file.
  */
-class Logger : public IPlanTreeVisitor
+class Logger
 {
   public:
     Logger(AlicaEngine* ae);
-    virtual ~Logger();
+    ~Logger();
+    template <typename... Args>
+    void eventOccured(Args... args)
+    {
+        if (_active) {
+            std::stringstream s;
+            assembleString(s, args);
+            processString(s.str());
+        }
+    }
 
-    void eventOccured(const std::string& event);
     void itertionStarts();
-    void iterationEnds(std::shared_ptr<RunningPlan> p);
+    void iterationEnds(const RunningPlan& p);
     void close();
-    void visit(std::shared_ptr<RunningPlan> r);
     void logToConsole(const std::string& logString);
 
   private:
+    template <>
+    constexpr void assembleString(std::stringstream&) const
+    {
+        return;
+    }
+
+    template <typename First, typename... Args>
+    constexpr void assembleString(std::stringstream& ss, const First& f, Args... args)
+    {
+        ss << f;
+        assembleString(ss, args);
+        return;
+    }
+    void processString(const std::string& str);
+
     std::shared_ptr<std::list<std::string>> createHumanReadablePlanTree(const IdGrp& list) const;
     const EntryPoint* entryPointOfState(const State* s) const;
-    void evaluationAssignmentsToString(std::stringstream& ss, std::shared_ptr<RunningPlan> rp);
-    std::shared_ptr<std::list<std::string>> createTreeLog(std::shared_ptr<RunningPlan> r);
+    void evaluationAssignmentsToString(std::stringstream& ss, const RunningPlan& rp);
+    std::shared_ptr<std::list<std::string>> createTreeLog(const RunningPlan& r);
 
     AlicaEngine* ae;
     TeamObserver* to;
@@ -56,7 +78,7 @@ class Logger : public IPlanTreeVisitor
     std::list<std::string> eventStrings;
     int itCount;
 
-    bool active;
+    bool _active;
     bool receivedEvent;
     bool inIteration;
 };

@@ -492,22 +492,28 @@ void Assignment::clear()
 std::string Assignment::toString() const
 {
     std::stringstream ss;
-    ss << std::endl;
-    ss << "Rating: " << this->max << std::endl;
-    for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
-        ss << "EP: " << this->epRobotsMapping->getEp(i)->getId() << " Task: " << this->epRobotsMapping->getEp(i)->getTask()->getName() << " RobotIDs: ";
-        for (const supplementary::AgentID* robot : *(this->epRobotsMapping->getRobots(i))) {
-            ss << *robot << " ";
-        }
-        ss << std::endl;
-    }
-    ss << "Robot-State Mapping:\n";
-    ss << this->robotStateMapping->toString();
-    ss << this->epSucMapping->toString() << std::endl;
+    ss << *this;
     return ss.str();
 }
 
-std::string Assignment::toHackString()
+std::ostream& operator<<(std::ostream& out, const Assignment& a)
+{
+    out << std::endl;
+    out << "Rating: " << a.getMax() << std::endl;
+    for (int i = 0; i < a.getEpRobotsMapping()->getSize(); ++i) {
+        out << "EP: " << a.getEpRobotsMapping()->getEp(i)->getId() << " Task: " << a.getEpRobotsMapping()->getEp(i)->getTask()->getName() << " RobotIDs: ";
+        for (AgentIdConstPtr robot : *(a.getEpRobotsMapping()->getRobots(i))) {
+            out << *robot << " ";
+        }
+        out << std::endl;
+    }
+    out << "Robot-State Mapping:" << std::endl;
+    out << a.getRobotStateMapping()->toString();
+    out << a.getEpSuccessMapping()->toString() << std::endl;
+    return out;
+}
+
+std::string Assignment::toHackString() const
 {
     std::stringstream ss;
     ss << "ASS " << this->plan->getId() << " " << this->plan->getName() << ":\t";

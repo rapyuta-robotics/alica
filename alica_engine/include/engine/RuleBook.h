@@ -6,7 +6,8 @@
 
 #include <memory>
 
-namespace alica {
+namespace alica
+{
 class SyncModule;
 class PlanSelector;
 class Logger;
@@ -27,34 +28,35 @@ class TeamManager;
 /**
  * Defines the operational semantics of the used ALICA dialect.
  */
-class RuleBook {
-public:
+class RuleBook
+{
+  public:
     RuleBook(AlicaEngine* ae);
-    virtual ~RuleBook();
-    bool isChangeOccured() const;
-    void setChangeOccured(bool changeOccured);
-    PlanChange visit(std::shared_ptr<RunningPlan> r);
+    ~RuleBook();
+    bool hasChangeOccured() const { return _changeOccured; }
+    PlanChange visit(RunningPlan& r);
     PlanChange updateChange(PlanChange cur, PlanChange update);
-    std::shared_ptr<RunningPlan> initialisationRule(const Plan* masterPlan);
+    RunningPlan* initialisationRule(const Plan* masterPlan);
 
-protected:
-    AlicaEngine* ae;
-    TeamObserver* to;
-    TeamManager* tm;
-    SyncModule* sm;
-    int maxConsecutiveChanges;
-    PlanSelector* ps;
-    Logger* log;
-    bool changeOccured;
-    PlanChange synchTransitionRule(std::shared_ptr<RunningPlan> r);
-    PlanChange transitionRule(std::shared_ptr<RunningPlan> r);
-    PlanChange topFailRule(std::shared_ptr<RunningPlan> r);
-    PlanChange allocationRule(std::shared_ptr<RunningPlan> r);
-    PlanChange authorityOverrideRule(std::shared_ptr<RunningPlan> r);
-    PlanChange planAbortRule(std::shared_ptr<RunningPlan> r);
-    PlanChange planRedoRule(std::shared_ptr<RunningPlan> r);
-    PlanChange planReplaceRule(std::shared_ptr<RunningPlan> r);
-    PlanChange planPropagationRule(std::shared_ptr<RunningPlan> r);
-    PlanChange dynamicAllocationRule(std::shared_ptr<RunningPlan> r);
+  private:
+    TeamObserver* _to;
+    TeamManager* _tm;
+    SyncModule* _sm;
+    PlanSelector* _ps;
+    PlanBase* _pb;
+    Logger* _log;
+    int _maxConsecutiveChanges;
+    bool _changeOccured;
+
+    PlanChange synchTransitionRule(RunningPlan& r);
+    PlanChange transitionRule(RunningPlan& r);
+    PlanChange topFailRule(RunningPlan& r);
+    PlanChange allocationRule(RunningPlan& r);
+    PlanChange authorityOverrideRule(RunningPlan& r);
+    PlanChange planAbortRule(RunningPlan& r);
+    PlanChange planRedoRule(RunningPlan& r);
+    PlanChange planReplaceRule(RunningPlan& r);
+    PlanChange planPropagationRule(RunningPlan& r);
+    PlanChange dynamicAllocationRule(RunningPlan& r);
 };
-}  // namespace alica
+} // namespace alica
