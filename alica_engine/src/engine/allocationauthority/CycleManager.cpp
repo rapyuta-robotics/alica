@@ -19,6 +19,8 @@
 #include "engine/teammanager/TeamManager.h"
 #include <SystemConfig.h>
 
+#include <alica_common_config/debug_output.h>
+
 namespace alica
 {
 using std::lock_guard;
@@ -81,29 +83,24 @@ void CycleManager::update()
 
     if (this->state == CycleState::observing) {
         if (detectAllocationCycle()) {
-            std::cout << "CM: Cycle Detected!" << std::endl;
+            ALICA_INFO_MSG("CM: Cycle Detected!");
 
             this->state = CycleState::overriding;
             plan->setAuthorityTimeInterval(std::min(maximalOverrideTimeInterval, plan->getAuthorityTimeInterval() * intervalIncFactor));
             this->overrideShoutTime = AlicaTime::zero();
-#ifdef CM_DEBUG
-            std::cout << "Assuming Authority for " << plan->getAuthorityTimeInterval().inSeconds() << "sec!" << std::endl;
-#endif
+
+            ALICA_DEBUG_MSG("CM: Assuming Authority for " << plan->getAuthorityTimeInterval().inSeconds() << "sec!");
             this->overrideTimestamp = ae->getAlicaClock()->now();
         } else {
             plan->setAuthorityTimeInterval(std::max(minimalOverrideTimeInterval, plan->getAuthorityTimeInterval() * intervalDecFactor));
         }
     } else {
         if (this->state == CycleState::overriding && this->overrideTimestamp + plan->getAuthorityTimeInterval() < ae->getAlicaClock()->now()) {
-#ifdef CM_DEBUG
-            std::cout << "Resume Observing!" << std::endl;
-#endif
+            ALICA_DEBUG_MSG("CM: Resume Observing!");
             this->state = CycleState::observing;
             this->fixedAllocation = nullptr;
         } else if (this->state == CycleState::overridden && this->overrideShoutTime + plan->getAuthorityTimeInterval() < ae->getAlicaClock()->now()) {
-#ifdef CM_DEBUG
-            std::cout << "Resume Observing!" << std::endl;
-#endif
+            ALICA_DEBUG_MSG("CM: Resume Observing!");
             this->state = CycleState::observing;
             this->fixedAllocation = nullptr;
         }
@@ -135,9 +132,8 @@ void alica::CycleManager::setNewAllocDiff(AllocationDifference* aldif)
     AllocationDifference* old = this->allocationHistory[this->newestAllocationDifference];
     this->allocationHistory[this->newestAllocationDifference] = aldif;
     delete old;
-#ifdef CM_DEBUG
-    std::cout << "CM: SetNewAllDiff(a): " << aldif->toString() << " OWN ROBOT ID " << *(this->rp->getOwnID()) << std::endl;
-#endif
+
+    ALICA_DEBUG_MSG("CM: SetNewAllDiff(a): " << aldif->toString() << " OWN ROBOT ID " << *(this->rp->getOwnID()));
 }
 
 /**
@@ -166,27 +162,24 @@ void alica::CycleManager::setNewAllocDiff(shared_ptr<Assignment> oldAss, shared_
             auto newRobots = newAss->getRobotsWorking(ep);
             auto oldRobots = oldAss->getRobotsWorking(ep);
             for (auto& oldId : (*oldRobots)) {
-                if (newRobots == nullptr ||
-                    find_if(newRobots->begin(), newRobots->end(), [&oldId](const supplementary::AgentID* id) { return *oldId == *id; }) == newRobots->end()) {
+                if (newRobots == nullptr || find_if(newRobots->begin(), newRobots->end(),
+                                                    [&oldId](const supplementary::AgentID* id) { return *oldId == *id; }) == newRobots->end()) {
                     this->allocationHistory[this->newestAllocationDifference]->editSubtractions().emplace_back(ep, oldId);
                 }
             }
             if (newRobots != nullptr) {
                 for (auto& newId : (*newRobots)) {
                     if (find_if(oldRobots->begin(), oldRobots->end(), [&newId](const supplementary::AgentID* id) { return *newId == *id; }) ==
-                        oldRobots->end()) {
+                            oldRobots->end()) {
                         this->allocationHistory[this->newestAllocationDifference]->editAdditions().emplace_back(ep, newId);
                     }
                 }
             }
         }
         this->allocationHistory[this->newestAllocationDifference]->setReason(reas);
-#ifdef CM_DEBUG
-        std::cout << "CM: SetNewAllDiff(b): " << this->allocationHistory[this->newestAllocationDifference]->toString() << std::endl;
-#endif
+        ALICA_DEBUG_MSG("CM: SetNewAllDiff(b): " << this->allocationHistory[this->newestAllocationDifference]->toString());
     } catch (std::exception& e) {
-        std::cerr << "Exception in Alloc Difference Calculation:" << std::endl;
-        std::cerr << e.what();
+        ALICA_ERROR_MSG("Exception in Alloc Difference Calculation: " << e.what());
     }
 }
 
@@ -204,21 +197,18 @@ void alica::CycleManager::handleAuthorityInfo(shared_ptr<AllocationAuthorityInfo
         return;
     }
     if (*rid > *myID) {
-#ifdef CM_DEBUG
-        std::cout << "CM: Assignment overridden in " << this->rp->getPlan()->getName() << " " << std::endl;
-#endif
+        ALICA_DEBUG_MSG("CM: Assignment overridden in " << this->rp->getPlan()->getName());
         this->state = CycleState::overridden;
         this->overrideShoutTime = ae->getAlicaClock()->now();
         this->fixedAllocation = aai;
     } else {
         std::cout << "CM: Rcv: Rejecting Authority!" << std::endl;
         if (this->state != CycleState::overriding) {
-#ifdef CM_DEBUG
-            std::cout << "CM: Overriding assignment of " << this->rp->getPlan()->getName() << " " << std::endl;
-#endif
+            ALICA_DEBUG_MSG("CM: Overriding assignment of " << this->rp->getPlan()->getName());
+
             this->state = CycleState::overriding;
             this->rp->getPlan()->setAuthorityTimeInterval(
-                std::min(maximalOverrideTimeInterval, (this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
+                    std::min(maximalOverrideTimeInterval, (this->rp->getPlan()->getAuthorityTimeInterval() * intervalIncFactor)));
             this->overrideTimestamp = ae->getAlicaClock()->now();
             this->overrideShoutTime = AlicaTime::zero();
         }
@@ -254,12 +244,9 @@ bool alica::CycleManager::haveAuthority()
  */
 bool CycleManager::setAssignment()
 {
-#ifdef CM_DEBUG
-    std::cout << "CM: Setting authorative assignment for plan " << rp->getPlan()->getName() << std::endl;
-    if (rp->getPlan()->getName() == "AuthorityTest") {
-        std::cout << "CM: Changing AuthorityTest " << std::endl;
-    }
-#endif
+
+    ALICA_DEBUG_MSG("CM: Setting authorative assignment for plan " << rp->getActivePlan()->getName());
+
     const EntryPoint* myEntryPoint = nullptr;
     if (this->fixedAllocation == nullptr) {
         return false;
@@ -274,7 +261,7 @@ bool CycleManager::setAssignment()
         for (const Plan* p : rp->getPlanType()->getPlans()) {
             if (p->getId() == this->fixedAllocation->planId) {
                 newPlan = p;
-                rp->setPlan(p);
+                rp->usePlan(p);
                 break;
             }
         }
@@ -290,7 +277,7 @@ bool CycleManager::setAssignment()
         for (EntryPointRobots epr : this->fixedAllocation->entryPointRobots) {
             for (auto& robot : epr.robots) {
                 const EntryPoint* e = pr->getEntryPoints()[epr.entrypoint];
-                bool changed = rp->getAssignment()->updateRobot(robot, e);
+                bool changed = rp->editAssignment().updateAgent(robot, e);
                 if (changed) {
                     if (*robot == *myID) {
                         modifiedSelf = true;
@@ -303,7 +290,7 @@ bool CycleManager::setAssignment()
         }
     }
     if (modifiedSelf) {
-        rp->setOwnEntryPoint(myEntryPoint);
+        rp->useEntryPoint(myEntryPoint);
         rp->deactivateChildren();
         rp->clearChildren();
         rp->clearFailedChildren();
@@ -311,8 +298,8 @@ bool CycleManager::setAssignment()
     } else {
         if (rp->getActiveState() != nullptr) {
             AgentGrp robotsJoined;
-            rp->getAssignment()->getRobotStateMapping()->getRobotsInState(rp->getActiveState(), robotsJoined);
-            for (shared_ptr<RunningPlan>& c : *rp->getChildren()) {
+            rp->getAssignment().getAgentsInState(rp->getActiveState(), robotsJoined);
+            for (RunningPlan* c : rp->getChildren()) {
                 c->limitToRobots(robotsJoined);
             }
         }

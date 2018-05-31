@@ -19,17 +19,17 @@ namespace alica
 using std::to_string;
 
 Logger::Logger(AlicaEngine* ae)
-    : ae(ae)
-    , itCount(0)
-    , to(nullptr)
-    , tm(nullptr)
-    , fileWriter(nullptr)
-    , inIteration(false)
-    , receivedEvent(false)
+        : ae(ae)
+        , itCount(0)
+        , to(nullptr)
+        , tm(nullptr)
+        , fileWriter(nullptr)
+        , inIteration(false)
+        , receivedEvent(false)
 {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-    this->active = (*sc)["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
-    if (this->active) {
+    _active = (*sc)["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
+    if (_active) {
         std::string robotName = ae->getRobotName();
         std::string logPath = sc->getLogPath();
         if (!supplementary::FileSystem::isDirectory(logPath)) {
@@ -81,7 +81,7 @@ void Logger::itertionStarts()
  */
 void Logger::iterationEnds(const RunningPlan& rp)
 {
-    if (!this->active) {
+    if (!_active) {
         return;
     }
     this->inIteration = false;
@@ -162,8 +162,8 @@ void Logger::iterationEnds(const RunningPlan& rp)
  */
 void Logger::close()
 {
-    if (this->active) {
-        this->active = false;
+    if (_active) {
+        _active = false;
         this->fileWriter->close();
     }
 }
@@ -212,7 +212,7 @@ void Logger::evaluationAssignmentsToString(std::stringstream& ss, const RunningP
         return;
     }
 
-    ss << rp.getAssignment().toHackString();
+    ss << rp.getAssignment();
     for (const RunningPlan* child : rp.getChildren()) {
         evaluationAssignmentsToString(ss, *child);
     }

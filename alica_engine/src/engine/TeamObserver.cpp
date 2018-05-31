@@ -36,11 +36,11 @@ using std::pair;
 using std::to_string;
 
 TeamObserver::TeamObserver(AlicaEngine* ae)
-    : ae(ae)
-    , teamManager(ae->getTeamManager())
+        : ae(ae)
+        , teamManager(ae->getTeamManager())
 {
     this->simplePlanTrees = make_shared<map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>>(
-        map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>());
+            map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>());
     this->myId = this->teamManager->getLocalAgentID();
     this->me = this->teamManager->getAgentByID(this->myId)->getEngineData();
 }
@@ -50,7 +50,7 @@ TeamObserver::~TeamObserver() {}
 std::unique_ptr<map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>> TeamObserver::getTeamPlanTrees()
 {
     auto ret = std::unique_ptr<map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>>(
-        new map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>);
+            new map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>);
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
     // TODO get rid of this once teamManager gets a datastructure overhaul
     AgentGrp tmp;
@@ -170,7 +170,7 @@ void TeamObserver::cleanOwnSuccessMarks(shared_ptr<RunningPlan> root)
             q.pop_front();
             if (!p->isBehaviour()) {
                 presentPlans.push_back(p->getPlan());
-                for (shared_ptr<RunningPlan> c : *p->getChildren()) {
+                for (RunningPlan* c : p->getChildren()) {
                     q.push_back(c);
                 }
             }

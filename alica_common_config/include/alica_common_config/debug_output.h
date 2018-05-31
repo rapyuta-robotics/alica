@@ -22,10 +22,12 @@ enum AlicaDebugLevel
 #define ALICA_DEBUG_LEVEL AlicaDebugLevel::Warning
 #elif defined ALICA_DEBUG_LEVEL_ERROR
 #define ALICA_DEBUG_LEVEL AlicaDebugLevel::Error
+#elif defined ALICA_DEBUG_LEVEL_NONE
+#define ALICA_DEBUG_LEVEL AlicaDebugLevel::None
 #endif
 
 #ifndef ALICA_DEBUG_LEVEL
-#define ALICA_DEBUG_LEVEL AlicaDebugLevel::None
+#define ALICA_DEBUG_LEVEL AlicaDebugLevel::Warning
 #else
 #include <iostream>
 #endif

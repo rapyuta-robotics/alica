@@ -29,7 +29,7 @@ class ExpressionHandler;
  */
 class Condition : public AlicaElement
 {
-  public:
+public:
     Condition();
     Condition(int64_t id);
     virtual ~Condition();
@@ -37,7 +37,7 @@ class Condition : public AlicaElement
     /**
      * The delegate type used to attach constraints to plans.
      */
-    void getConstraint(std::shared_ptr<ProblemDescriptor> pd, std::shared_ptr<const RunningPlan> rp) const;
+    void getConstraint(std::shared_ptr<ProblemDescriptor> pd.const RunningPlan& rp) const;
 
     const AbstractPlan* getAbstractPlan() const { return _abstractPlan; }
 
@@ -50,9 +50,9 @@ class Condition : public AlicaElement
 
     const std::shared_ptr<BasicCondition>& getBasicCondition() const { return _basicCondition; }
 
-    bool evaluate(std::shared_ptr<RunningPlan> rp) const;
+    bool evaluate(const RunningPlan& rp) const;
 
-  private:
+private:
     friend ModelFactory;
     friend ExpressionHandler;
 

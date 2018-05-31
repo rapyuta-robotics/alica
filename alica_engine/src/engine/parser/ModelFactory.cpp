@@ -1008,11 +1008,11 @@ EntryPoint* ModelFactory::createEntryPoint(tinyxml2::XMLElement* element)
     setAlicaElementAttributes(ep, element);
     string attr = element->Attribute("minCardinality");
     if (!attr.empty()) {
-        ep->setMinCardinality(stoi(attr));
+        ep->_cardinality.setMin(stoi(attr));
     }
     attr = element->Attribute("maxCardinality");
     if (!attr.empty()) {
-        ep->setMaxCardinality(stoi(attr));
+        ep->_cardinality.setMax(stoi(attr));
     }
     attr = element->Attribute("successRequired");
     if (!attr.empty()) {
@@ -1179,16 +1179,16 @@ void ModelFactory::attachPlanReferences()
 #endif
     // epTaskReferences
     for (pair<int64_t, int64_t> pairs : this->epTaskReferences) {
-        Task* t = (Task*)this->elements.find(pairs.second)->second;
-        EntryPoint* ep = (EntryPoint*)this->elements.find(pairs.first)->second;
+        Task* t = (Task*) this->elements.find(pairs.second)->second;
+        EntryPoint* ep = (EntryPoint*) this->elements.find(pairs.first)->second;
         ep->setTask(t);
     }
     this->epTaskReferences.clear();
 
     // transitionAimReferences
     for (pair<int64_t, int64_t> pairs : this->transitionAimReferences) {
-        Transition* t = (Transition*)this->elements.find(pairs.first)->second;
-        State* st = (State*)this->elements.find(pairs.second)->second;
+        Transition* t = (Transition*) this->elements.find(pairs.first)->second;
+        State* st = (State*) this->elements.find(pairs.second)->second;
         if (!st) {
             AlicaEngine::abort("MF: Cannot resolve transitionAimReferences target: ", pairs.first);
         }
@@ -1199,8 +1199,8 @@ void ModelFactory::attachPlanReferences()
 
     // epStateReferences
     for (pair<int64_t, int64_t> pairs : this->epStateReferences) {
-        State* st = (State*)this->elements.find(pairs.second)->second;
-        EntryPoint* ep = (EntryPoint*)this->elements.find(pairs.first)->second;
+        State* st = (State*) this->elements.find(pairs.second)->second;
+        EntryPoint* ep = (EntryPoint*) this->elements.find(pairs.first)->second;
         ep->setState(st);
         st->setEntryPoint(ep);
     }
@@ -1208,8 +1208,8 @@ void ModelFactory::attachPlanReferences()
 
     // stateInTransitionReferences
     for (pair<int64_t, int64_t> pairs : this->stateInTransitionReferences) {
-        Transition* t = (Transition*)this->elements.find(pairs.second)->second;
-        State* st = (State*)this->elements.find(pairs.first)->second;
+        Transition* t = (Transition*) this->elements.find(pairs.second)->second;
+        State* st = (State*) this->elements.find(pairs.first)->second;
         if (st != t->getOutState()) {
             AlicaEngine::abort("MF: Unexpected reference in a transition! ", pairs.first);
         }
@@ -1218,8 +1218,8 @@ void ModelFactory::attachPlanReferences()
 
     // stateOutTransitionReferences
     for (pair<int64_t, int64_t> pairs : this->stateOutTransitionReferences) {
-        State* st = (State*)this->elements.find(pairs.first)->second;
-        Transition* t = (Transition*)this->elements.find(pairs.second)->second;
+        State* st = (State*) this->elements.find(pairs.first)->second;
+        Transition* t = (Transition*) this->elements.find(pairs.second)->second;
         st->_outTransitions.push_back(t);
         t->setInState(st);
     }
@@ -1227,56 +1227,56 @@ void ModelFactory::attachPlanReferences()
 
     // statePlanReferences
     for (pair<int64_t, int64_t> pairs : this->statePlanReferences) {
-        State* st = (State*)this->elements.find(pairs.first)->second;
-        AbstractPlan* p = (AbstractPlan*)this->elements.find(pairs.second)->second;
+        State* st = (State*) this->elements.find(pairs.first)->second;
+        AbstractPlan* p = (AbstractPlan*) this->elements.find(pairs.second)->second;
         st->_plans.push_back(p);
     }
     this->statePlanReferences.clear();
 
     // planTypePlanReferences
     for (pair<int64_t, int64_t> pairs : this->planTypePlanReferences) {
-        PlanType* pt = (PlanType*)this->elements.find(pairs.first)->second;
-        Plan* p = (Plan*)this->elements.find(pairs.second)->second;
+        PlanType* pt = (PlanType*) this->elements.find(pairs.first)->second;
+        Plan* p = (Plan*) this->elements.find(pairs.second)->second;
         pt->_plans.push_back(p);
     }
     this->planTypePlanReferences.clear();
 
     // conditionVarReferences
     for (pair<int64_t, int64_t> pairs : this->conditionVarReferences) {
-        Condition* c = (Condition*)this->elements.find(pairs.first)->second;
-        Variable* v = (Variable*)this->elements.find(pairs.second)->second;
+        Condition* c = (Condition*) this->elements.find(pairs.first)->second;
+        Variable* v = (Variable*) this->elements.find(pairs.second)->second;
         c->_variables.push_back(v);
     }
     this->conditionVarReferences.clear();
 
     // paramSubPlanReferences
     for (pair<int64_t, int64_t> pairs : this->paramSubPlanReferences) {
-        Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
-        AbstractPlan* ap = (AbstractPlan*)this->elements.find(pairs.second)->second;
+        Parametrisation* p = (Parametrisation*) this->elements.find(pairs.first)->second;
+        AbstractPlan* ap = (AbstractPlan*) this->elements.find(pairs.second)->second;
         p->setSubPlan(ap);
     }
     this->paramSubPlanReferences.clear();
 
     // paramSubVarReferences
     for (pair<int64_t, int64_t> pairs : this->paramSubVarReferences) {
-        Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
-        Variable* ap = (Variable*)this->elements.find(pairs.second)->second;
+        Parametrisation* p = (Parametrisation*) this->elements.find(pairs.first)->second;
+        Variable* ap = (Variable*) this->elements.find(pairs.second)->second;
         p->setSubVar(ap);
     }
     this->paramSubVarReferences.clear();
 
     // paramVarReferences
     for (pair<int64_t, int64_t> pairs : this->paramVarReferences) {
-        Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
-        Variable* v = (Variable*)this->elements.find(pairs.second)->second;
+        Parametrisation* p = (Parametrisation*) this->elements.find(pairs.first)->second;
+        Variable* v = (Variable*) this->elements.find(pairs.second)->second;
         p->setVar(v);
     }
     this->paramVarReferences.clear();
 
     // transitionSynchReferences
     for (pair<int64_t, int64_t> pairs : this->transitionSynchReferences) {
-        Transition* t = (Transition*)this->elements.find(pairs.first)->second;
-        SyncTransition* sync = (SyncTransition*)this->elements.find(pairs.second)->second;
+        Transition* t = (Transition*) this->elements.find(pairs.first)->second;
+        SyncTransition* sync = (SyncTransition*) this->elements.find(pairs.second)->second;
         t->setSyncTransition(sync);
         sync->_inSync.push_back(t);
     }
@@ -1284,32 +1284,32 @@ void ModelFactory::attachPlanReferences()
 
     // planningProblemPlanReferences
     for (pair<int64_t, int64_t> pairs : this->planningProblemPlanReferences) {
-        PlanningProblem* s = (PlanningProblem*)this->elements.find(pairs.first)->second;
-        AbstractPlan* p = (AbstractPlan*)this->elements.find(pairs.second)->second;
+        PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
+        AbstractPlan* p = (AbstractPlan*) this->elements.find(pairs.second)->second;
         s->_plans.push_back(p);
     }
     this->planningProblemPlanReferences.clear();
 
     // planningProblemPlanWaitReferences
     for (pair<int64_t, int64_t> pairs : this->planningProblemPlanWaitReferences) {
-        PlanningProblem* s = (PlanningProblem*)this->elements.find(pairs.first)->second;
-        Plan* p = (Plan*)this->elements.find(pairs.second)->second;
+        PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
+        Plan* p = (Plan*) this->elements.find(pairs.second)->second;
         s->setWaitPlan(p);
     }
     this->planningProblemPlanWaitReferences.clear();
 
     // planningProblemPlanAlternativeReferences
     for (pair<int64_t, int64_t> pairs : this->planningProblemPlanAlternativeReferences) {
-        PlanningProblem* s = (PlanningProblem*)this->elements.find(pairs.first)->second;
-        Plan* p = (Plan*)this->elements.find(pairs.second)->second;
+        PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
+        Plan* p = (Plan*) this->elements.find(pairs.second)->second;
         s->setAlternativePlan(p);
     }
     this->planningProblemPlanAlternativeReferences.clear();
 
     // quantifierScopeReferences
     for (pair<int64_t, int64_t> pairs : this->quantifierScopeReferences) {
-        AlicaElement* ael = (AlicaElement*)this->elements.find(pairs.second)->second;
-        Quantifier* q = (Quantifier*)this->elements.find(pairs.first)->second;
+        AlicaElement* ael = (AlicaElement*) this->elements.find(pairs.second)->second;
+        Quantifier* q = (Quantifier*) this->elements.find(pairs.first)->second;
         q->setScope(ael);
     }
     this->quantifierScopeReferences.clear();

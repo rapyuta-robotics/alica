@@ -20,21 +20,22 @@ class IAlicaCommunication;
  */
 class AuthorityManager
 {
-  public:
+public:
     AuthorityManager(AlicaEngine* ae);
     virtual ~AuthorityManager();
     void init();
     void close();
-    void handleIncomingAuthorityMessage(std::shared_ptr<AllocationAuthorityInfo> aai);
+    void handleIncomingAuthorityMessage(const AllocationAuthorityInfo& aai);
     void tick(RunningPlan& p);
-    void sendAllocation(RunningPlan& p);
+    void sendAllocation(const RunningPlan& p);
 
-  private:
-    std::vector<std::shared_ptr<AllocationAuthorityInfo>> queue;
-    const AlicaEngine* engine;
-    const supplementary::AgentID* localAgentID;
-    std::mutex mu;
+private:
     void processPlan(RunningPlan& p);
     bool authorityMatchesPlan(const AllocationAuthorityInfo& aai, const RunningPlan& p) const;
+
+    std::vector<std::shared_ptr<AllocationAuthorityInfo>> _queue;
+    const AlicaEngine* _engine;
+    AGentIdConstPtr _localAgentID;
+    std::mutex _mutex;
 };
 } /* namespace alica */

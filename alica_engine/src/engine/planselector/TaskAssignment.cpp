@@ -13,6 +13,8 @@
 
 #include <supplementary/AgentID.h>
 
+#Include < alica_common_config / debug_output.h >
+
 namespace alica
 {
 
@@ -25,8 +27,8 @@ TaskAssignment::~TaskAssignment() {}
  * @param a bool
  */
 TaskAssignment::TaskAssignment(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraRobots, bool preassignOtherRobots)
-    : robots(paraRobots)
-    , planList(planList)
+        : robots(paraRobots)
+        , planList(planList)
 {
 #ifdef EXPANSIONEVAL
     this->expansionCount = 0;
@@ -63,22 +65,18 @@ TaskAssignment::TaskAssignment(const AlicaEngine* engine, const PlanGrp& planLis
  */
 std::shared_ptr<Assignment> TaskAssignment::getNextBestAssignment(IAssignment* oldAss)
 {
-#ifdef TA_DEBUG
-    std::cout << "TA: Calculating next best PartialAssignment..." << std::endl;
-#endif
+    ALICA_DEBUG_MSG("TA: Calculating next best PartialAssignment...");
     PartialAssignment* calculatedPa = this->calcNextBestPartialAssignment(oldAss);
 
     if (calculatedPa == nullptr) {
         return nullptr;
     }
-#ifdef TA_DEBUG
-    std::cout << "TA: ... calculated this PartialAssignment:\n" << calculatedPa->toString();
-#endif
+
+    ALICA_DEBUG_MSG("TA: ... calculated this PartialAssignment:\n" << calculatedPa->toString());
 
     std::shared_ptr<Assignment> newAss = std::make_shared<Assignment>(calculatedPa);
-#ifdef TA_DEBUG
-    std::cout << "TA: Return this Assignment to PS:" << newAss->toString() << std::endl;
-#endif
+
+    ALICA_DEBUG_MSG("TA: Return this Assignment to PS:" << newAss->toString());
 
     return newAss;
 }
@@ -183,7 +181,7 @@ PartialAssignment* TaskAssignment::calcNextBestPartialAssignment(IAssignment* ol
  * @return True if any robot has already assigned itself, false otherwise
  */
 bool TaskAssignment::addAlreadyAssignedRobots(
-    PartialAssignment* pa, std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>* simplePlanTreeMap)
+        PartialAssignment* pa, std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>* simplePlanTreeMap)
 {
     const supplementary::AgentID* ownRobotId = this->tm->getLocalAgentID();
     bool haveToRevalute = false;

@@ -38,7 +38,7 @@ class AlicaEngine;
  */
 class PlanBase
 {
-  public:
+public:
     PlanBase(AlicaEngine* ae, const Plan* masterplan);
     ~PlanBase();
     RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0]; }
@@ -55,17 +55,28 @@ class PlanBase
     const Plan* getMasterPlan() const { return _masterPlan; }
     bool isWaiting() const { return _isWaiting; }
 
-    // factory function
+    // factory functions
     RunningPlan* makeRunningPlan(const Plan* plan)
     {
         _runningPlans.emplace_back(new RunningPlan(_ae, plan));
         return _runningPlans.back();
     }
+    RunningPlan* makeRunningPlan(const BehaviourConfiguration* bc)
+    {
+        _runningPlans.emplace_back(new RunningPlan(_ae, bc));
+        return _runningPlans.back();
+    }
+    RunningPlan* makeRunningPlan(const PlanType* pt)
+    {
+        _runningPlans.emplace_back(new RunningPlan(_ae, pt));
+        return _runningPlans.back();
+    }
 
-  private:
+private:
     void run();
 
     // Owning container of running plans (replace with uniqueptrs once possibe)
+    // TODO: manage lifetime
     std::vector<std::shared_ptr<RunningPlan>> _runningPlans;
 
     /**

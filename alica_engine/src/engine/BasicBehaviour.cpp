@@ -17,6 +17,7 @@
 #include <supplementary/ITrigger.h>
 #include <supplementary/Timer.h>
 
+#include <assert>
 #include <iostream>
 
 namespace alica
@@ -27,15 +28,15 @@ namespace alica
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(const std::string& name)
-    : name(name)
-    , engine(nullptr)
-    , failure(false)
-    , success(false)
-    , callInit(true)
-    , started(true)
-    , _configuration(nullptr)
-    , msInterval(100)
-    , msDelayedStart(0)
+        : name(name)
+        , engine(nullptr)
+        , failure(false)
+        , success(false)
+        , callInit(true)
+        , started(true)
+        , _configuration(nullptr)
+        , msInterval(100)
+        , msDelayedStart(0)
 {
     this->running = false;
     this->timer = new supplementary::Timer(0, 0);
@@ -55,11 +56,6 @@ BasicBehaviour::~BasicBehaviour()
     if (behaviourTrigger != nullptr) {
         delete this->behaviourTrigger;
     }
-}
-
-const std::string& BasicBehaviour::getName() const
-{
-    return this->name;
 }
 
 void BasicBehaviour::setName(const std::string& name)
@@ -135,20 +131,10 @@ bool BasicBehaviour::start()
     return true;
 }
 
-shared_ptr<RunningPlan> BasicBehaviour::getRunningPlan() const
-{
-    return runningPlan;
-}
-
-void BasicBehaviour::setRunningPlan(shared_ptr<RunningPlan> runningPlan)
-{
-    this->runningPlan = runningPlan;
-}
-
 void BasicBehaviour::setSuccess(bool success)
 {
     if (!this->success && success) {
-        this->runningPlan->getAlicaEngine()->getPlanBase()->addFastPathEvent(this->runningPlan);
+        _runningPlan->getAlicaEngine()->getPlanBase()->addFastPathEvent(_runningPlan);
     }
     this->success = success;
 }
@@ -161,7 +147,7 @@ bool BasicBehaviour::isSuccess() const
 void BasicBehaviour::setFailure(bool failure)
 {
     if (!this->failure && failure) {
-        this->runningPlan->getAlicaEngine()->getPlanBase()->addFastPathEvent(this->runningPlan);
+        _runningPlan->getAlicaEngine()->getPlanBase()->addFastPathEvent(_runningPlan);
     }
     this->failure = failure;
 }
@@ -182,13 +168,14 @@ const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryP
     if (ep == nullptr) {
         return nullptr;
     }
-    std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
+    RunningPlan* cur = _runningPlan->getParent();
     while (cur != nullptr) {
-        const EntryPointGrp& eps = static_cast<const Plan*>(cur->getPlan())->getEntryPoints();
+        assert(cur->getActivePlan());
+        const EntryPointGrp& eps = static_cast<const Plan*>(cur->getActivePlan())->getEntryPoints();
         if (std::find(eps.begin(), eps.end(), ep) != eps.end()) {
             return cur->getAssignment()->getRobotsWorking(ep);
         }
-        cur = cur->getParent().lock();
+        cur = cur->getParent();
     }
     return nullptr;
 }
@@ -198,9 +185,9 @@ const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryP
     if (ep == nullptr) {
         return nullptr;
     }
-    std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
+    RunningPlan* cur = _runningPlan->getParent();
     if (cur != nullptr) {
-        return cur->getAssignment()->getRobotsWorking(ep);
+        return cur->getAssignment().getRobotsWorking(ep);
     }
     return nullptr;
 }
@@ -213,7 +200,7 @@ void BasicBehaviour::initInternal()
     try {
         this->initialiseParameters();
     } catch (std::exception& e) {
-        std::cerr << "BB: Exception in Behaviour-INIT of: " << this->getName() << std::endl << e.what() << std::endl;
+        std::cerr << "BB: Exception in Behaviour-INIT of: " << getName() << std::endl << e.what() << std::endl;
     }
 }
 
@@ -252,19 +239,20 @@ void BasicBehaviour::runInternal()
         // triggered (to be implemented) behaviour.
         try {
             if (behaviourTrigger == nullptr) {
-                this->run((void*)timer);
+                this->run((void*) timer);
             } else {
-                this->run((void*)behaviourTrigger);
+                this->run((void*) behaviourTrigger);
             }
         } catch (std::exception& e) {
-            std::string err = string("Exception catched:  ") + this->getName() + std::string(" - ") + std::string(e.what());
+            std::string err = string("Exception catched:  ") + getName() + std::string(" - ") + std::string(e.what());
             sendLogMessage(4, err);
         }
 #ifdef BEH_DEBUG
-        const BehaviourConfiguration* conf = static_cast<const BehaviourConfiguration*>(this->runningPlan->getPlan());
+        const BehaviourConfiguration* conf = static_cast<const BehaviourConfiguration*>(_runningPlan->getActivePlan());
         if (!conf->isEventDriven()) {
             double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / conf->getFrequency() * 1000.0;
             if (dura > 0.1) {
+
                 std::stringstream ss;
                 ss << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura << "ms!";
                 sendLogMessage(2, ss.str());
@@ -283,11 +271,11 @@ void BasicBehaviour::runInternal()
 
 const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskName)
 {
-    std::shared_ptr<RunningPlan> parent = this->runningPlan->getParent().lock();
+    RunningPlan* parent = _runningPlan->getParent();
     if (parent == nullptr) {
         return nullptr;
     }
-    for (const EntryPoint* e : static_cast<const Plan*>(parent->getPlan())->getEntryPoints()) {
+    for (const EntryPoint* e : static_cast<const Plan*>(parent->getActivePlan())->getEntryPoints()) {
         if (e->getTask()->getName() == taskName) {
             return e;
         }
@@ -299,8 +287,8 @@ const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planNam
 {
     std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
-        if (cur->getPlan()->getName() == planName) {
-            for (const EntryPoint* e : ((Plan*)cur->getPlan())->getEntryPoints()) {
+        if (cur->getActivePlan()->getName() == planName) {
+            for (const EntryPoint* e : ((Plan*) cur->getActivePlan())->getEntryPoints()) {
                 if (e->getTask()->getName() == taskName) {
                     return e;
                 }
@@ -314,7 +302,7 @@ const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planNam
 
 void BasicBehaviour::sendLogMessage(int level, const string& message) const
 {
-    runningPlan->sendLogMessage(level, message);
+    _runningPlan->sendLogMessage(level, message);
 }
 
 void BasicBehaviour::setEngine(AlicaEngine* engine)

@@ -29,27 +29,30 @@ class AlicaEngine;
  */
 class BasicBehaviour
 {
-  public:
+public:
     BasicBehaviour(const std::string& name);
     virtual ~BasicBehaviour();
     virtual void run(void* msg) = 0;
-    const std::string& getName() const;
+    const std::string& getName() const { return name; }
     const BehaviourParameterMap& getParameters() const { return _configuration->getParameters(); }
 
     void setName(const std::string& name);
     void setConfiguration(const BehaviourConfiguration* beh);
 
-    const VariableGrp& getVariables() { return _configuration->getVariables(); }
+    const VariableGrp& getVariables() const { return _configuration->getVariables(); }
     const Variable* getVariableByName(const std::string& name) const;
 
     bool stop();
     bool start();
+
     int getDelayedStart() const;
     void setDelayedStart(long msDelayedStart);
     int getInterval() const;
     void setInterval(long msInterval);
-    std::shared_ptr<RunningPlan> getRunningPlan() const;
-    void setRunningPlan(std::shared_ptr<RunningPlan> runningPlan);
+
+    RunningPlan* getRunningPlan() const { return _runningPlan; }
+    void setRunningPlan(RunningPlan* runningPlan) { _runningPlan = runningPlan; }
+
     bool isSuccess() const;
     void setSuccess(bool success);
     void setEngine(AlicaEngine* engine);
@@ -61,11 +64,9 @@ class BasicBehaviour
 
     void sendLogMessage(int level, const std::string& message) const;
 
-    virtual void init(){
+    virtual void init(){};
 
-    };
-
-  protected:
+protected:
     /**
      * The name of this behaviour.
      */
@@ -76,7 +77,7 @@ class BasicBehaviour
     /**
      * The running plan representing this behaviour within the PlanBase.
      */
-    std::shared_ptr<RunningPlan> runningPlan;
+    RunningPlan* _runningPlan;
     std::chrono::milliseconds msInterval;
     std::chrono::milliseconds msDelayedStart;
     /**
@@ -114,7 +115,7 @@ class BasicBehaviour
     const AgentGrp* robotsInEntryPoint(const EntryPoint* ep);
     AlicaEngine* engine;
 
-  private:
+private:
     void runInternal();
     void initInternal();
 

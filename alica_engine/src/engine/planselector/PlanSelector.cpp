@@ -1,5 +1,7 @@
+#include "engine/planselector/PlanSelector.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/PlanBase.h"
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/collections/RobotProperties.h"
@@ -12,16 +14,15 @@
 #include "engine/model/PlanningProblem.h"
 #include "engine/model/State.h"
 #include "engine/planselector/PartialAssignment.h"
+#include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/planselector/TaskAssignment.h"
 #include "engine/teammanager/TeamManager.h"
-#include <engine/planselector/PartialAssignmentPool.h>
-#include <engine/planselector/PlanSelector.h>
 
 #include "engine/RunningPlan.h"
 #include "engine/model/AbstractPlan.h"
 
+#include "engine/Output.h"
 #include "engine/model/Task.h"
-
 #include <assert.h>
 
 using std::list;
@@ -33,11 +34,8 @@ namespace alica
 {
 
 PlanSelector::PlanSelector(AlicaEngine* ae, PartialAssignmentPool* pap)
-{
-    this->ae = ae;
-    this->to = ae->getTeamObserver();
-    this->pap = pap;
-}
+        : _ae(ae);
+, _to(ae->getTeamObserver()), _pb(ae->getPlanBase()), _pap(pap) {}
 
 PlanSelector::~PlanSelector() {}
 
@@ -87,77 +85,62 @@ shared_ptr<RunningPlan> PlanSelector::getBestSimilarAssignment(shared_ptr<Runnin
  * @param robotIDs The set of robots or agents, which are available in a shared_ptr<vector<int> >
  * @return A shared_ptr<list<shared_ptr<RunningPlan>>>, encoding the solution.
  */
-shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForState(shared_ptr<RunningPlan> planningParent, const AbstractPlanGrp& plans,
-                                                                         const AgentGrp& robotIDs)
+shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForState(
+        shared_ptr<RunningPlan> planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs)
 {
     PartialAssignment::reset(pap);
     return getPlansForStateInternal(planningParent, plans, robotIDs);
 }
 
-shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> planningParent, const PlanGrp& plans, const AgentGrp& robotIDs,
-                                                        shared_ptr<RunningPlan> oldRp, const PlanType* relevantPlanType)
+RunningPlan* PlanSelector::createRunningPlan(
+        const RunningPlan* planningParent, const PlanGrp& plans, const AgentGrp& robotIDs, const RunningPlan* oldRp, const PlanType* relevantPlanType)
 {
     PlanGrp newPlanList;
     // REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
     for (const Plan* plan : plans) {
         // CHECK: number of robots < minimum cardinality of this plan
         if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + to->successesInPlan(plan))) {
-#ifdef PSDEBUG
-            std::stringstream ss;
-            ss << "PS: RobotIds: ";
-            for (const supplementary::AgentID* robot : robotIDs) {
-                ss << *robot << ", ";
-            }
-            ss << "= " << robotIDs.size() << " IDs are not enough for the plan " << plan->getName() << "!" << std::endl;
-            // this.baseModule.Mon.Error(1000, msg);
-
-            std::cout << ss.str();
-#endif
+            ALICA_DEBUG_MSG("PS: RobotIds: " << robotIds << std::endl
+                                             << "= " << robotIDs.size() << " IDs are not enough for the plan " << plan->getName() << "!");
         } else {
             // this plan was ok according to its cardinalities, so we can add it
             newPlanList.push_back(plan);
         }
     }
     // WE HAVE NOT ENOUGH ROBOTS TO EXECUTE ANY PLAN
-    if (newPlanList.size() == 0) {
+    if (newPlanList.empty()) {
         return nullptr;
     }
     // TASKASSIGNMENT
     TaskAssignment* ta = nullptr;
-    shared_ptr<Assignment> oldAss = nullptr;
-    shared_ptr<RunningPlan> rp;
+    const Assignment* oldAss = nullptr;
+    RunningPlan* rp;
     if (oldRp == nullptr) {
         // preassign other robots, because we dont need a similar assignment
-        rp = std::make_shared<RunningPlan>(ae, relevantPlanType);
-        ta = new TaskAssignment(this->ae, newPlanList, robotIDs, true);
+        rp = _pb->makeRunningPlan(relevantPlanType);
+        ta = new TaskAssignment(_ae, newPlanList, robotIDs, true);
     } else {
         // dont preassign other robots, because we need a similar assignment (not the same)
-        rp = std::make_shared<RunningPlan>(ae, oldRp->getPlanType());
-        ta = new TaskAssignment(this->ae, newPlanList, robotIDs, false);
-        oldAss = oldRp->getAssignment();
+        rp = _pb->makeRunningPlan(oldRp->getPlanType());
+        ta = new TaskAssignment(_ae, newPlanList, robotIDs, false);
+        oldAss = &oldRp->getAssignment();
     }
 
     // some variables for the do while loop
     const EntryPoint* ep = nullptr;
-    auto localAgentID = this->ae->getTeamManager()->getLocalAgentID();
+    auto localAgentID = _ae->getTeamManager()->getLocalAgentID();
     // PLANNINGPARENT
     rp->setParent(planningParent);
     shared_ptr<list<shared_ptr<RunningPlan>>> rpChildren = nullptr;
     do {
         // ASSIGNMENT
-        rp->setAssignment(ta->getNextBestAssignment(&*oldAss));
-        if (rp->getAssignment() == nullptr) {
-#ifdef PSDEBUG
-            std::cout << "PS: rp.Assignment is NULL" << std::endl;
-#endif
-            return nullptr;
-        }
+        rp->setAssignment(ta->getNextBestAssignment(oldAss));
 
         // PLAN (needed for Conditionchecks)
-        rp->setPlan(rp->getAssignment()->getPlan());
-#ifdef PSDEBUG
-        cout << "PS: rp.Assignment of Plan " << rp->getPlan()->getName() << " from " << ownRobProb->getId() << " is: " << rp->getAssignment()->toString();
-#endif
+        rp->usePlan(rp->getAssignment()->getPlan());
+
+        ALICA_DEBUG_MSG("PS: rp.Assignment of Plan " << rp->getActivePlan()->getName() << " from " << ownRobProb->getId() << " is: " << rp->getAssignment());
+
         // CONDITIONCHECK
         if (!rp->evalPreCondition()) {
             continue;
@@ -170,10 +153,9 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
         ep = rp->getAssignment()->getEntryPointOfRobot(localAgentID);
 
         if (ep == nullptr) {
-#ifdef PSDEBUG
-            std::cout << "PS: The robot " << ownRobProb->getName() << "(Id: " << localAgentID << ") is not assigned to enter the plan "
-                      << rp->getPlan()->getName() << " and will IDLE!" << std::endl;
-#endif
+            ALICA_DEBUG_MSG("PS: The robot " << ownRobProb->getName() << "(Id: " << localAgentID << ") is not assigned to enter the plan "
+                                             << rp->getPlan()->getName() << " and will IDLE!");
+
             rp->setActiveState(nullptr);
             rp->setOwnEntryPoint(nullptr);
             return rp; // If we return here, this robot will idle (no ep at rp)
@@ -186,11 +168,9 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
             // RECURSIVE PLANSELECTING FOR NEW STATE
             const AgentGrp* robots = rp->getAssignment()->getRobotsWorking(ep);
             assert(robots != nullptr);
-            rpChildren = this->getPlansForStateInternal(rp, rp->getActiveState()->getPlans(), *robots);
+            rpChildren = getPlansForStateInternal(rp, rp->getActiveState()->getPlans(), *robots);
         } else {
-#ifdef PSDEBUG
-            std::cout << "PS: no recursion due to utilitycheck" << std::endl;
-#endif
+            ALICA_DEBUG_MSG("PS: no recursion due to utilitycheck");
             // Don't calculate children, because we have an
             // oldRp -> we just replace the oldRp
             // (not its children -> this will happen in an extra call)
@@ -199,77 +179,54 @@ shared_ptr<RunningPlan> PlanSelector::createRunningPlan(weak_ptr<RunningPlan> pl
     } while (rpChildren == nullptr);
     // WHEN WE GOT HERE, THIS ROBOT WONT IDLE AND WE HAVE A
     // VALID ASSIGNMENT, WHICH PASSED ALL RUNTIME CONDITIONS
-    if (rpChildren != nullptr && rpChildren->size() != 0) // c# rpChildren != null
+    if (rpChildren != nullptr && !rpChildren.empty()) // c# rpChildren != null
     {
-#ifdef PSDEBUG
-        std::cout << "PS: Set child -> father reference" << std::endl;
-#endif
+        ALICA_DEBUG_MSG("PS: Set child -> parent reference");
         rp->addChildren(rpChildren);
     }
-#ifdef PSDEBUG
-    std::cout << "PS: Created RunningPlan: \n" << rp->toString() << std::endl;
-#endif
+
+    ALICA_DEBUG_MSG("PS: Created RunningPlan: \n" << rp);
+
     delete ta;
     return rp; // If we return here, this robot is normal assigned
 }
 
-shared_ptr<list<shared_ptr<RunningPlan>>> PlanSelector::getPlansForStateInternal(shared_ptr<RunningPlan> planningParent, const AbstractPlanGrp& plans,
-                                                                                 const AgentGrp& robotIDs)
+std::vector<RunningPlan*> PlanSelector::getPlansForStateInternal(RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs)
 {
-    shared_ptr<list<shared_ptr<RunningPlan>>> rps = std::make_shared<list<shared_ptr<RunningPlan>>>();
-#ifdef PSDEBUG
-    std::cout << "<######PS: GetPlansForState: Parent:" << (planningParent != nullptr ? planningParent->getPlan()->getName() : "null")
-              << " plan count: " << plans.size() << " robot count: " << robotIDs.size() << " ######>" << std::endl;
-#endif
-    shared_ptr<RunningPlan> rp;
-    PlanGrp plansSet;
-    const BehaviourConfiguration* bc;
-    const Plan* p;
-    const PlanType* pt;
+    std::vector<RunningPlan*> rps;
+
+    ALICA_DEBUG_MSG("<######PS: GetPlansForState: Parent:" << (planningParent != nullptr ? planningParent->getPlan()->getName() : "null")
+                                                           << " plan count: " << plans.size() << " robot count: " << robotIDs.size() << " ######>");
+    RunningPlan* rp = nullptr;
+
     // TODO: reintegrate PlanningProblems:
-    /*const PlanningProblem* pp;*/
     for (const AbstractPlan* ap : plans) {
         // BEHAVIOUR CONFIGURATION
-        bc = dynamic_cast<const BehaviourConfiguration*>(ap);
-        if (bc != nullptr) {
-            rp = std::make_shared<RunningPlan>(ae, bc);
+        if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(ap)) {
+            rp = _pb->makeRunningPlan(bc);
             // A BehaviourConfiguration is a Plan too (in this context)
-            rp->setPlan(bc);
+            rp->usePlan(bc);
             rps->push_back(rp);
-            rp->setParent(planningParent);
-#ifdef PSDEBUG
-            std::cout << "PS: Added Behaviour " << bc->getBehaviour()->getName() << std::endl;
-#endif
-        } else {
-            // PLAN
-            p = dynamic_cast<const Plan*>(ap);
-            if (p != nullptr) {
-                plansSet = PlanGrp();
-                plansSet.push_back(p);
-                rp = this->createRunningPlan(planningParent, plansSet, robotIDs, nullptr, nullptr);
-                if (rp == nullptr) {
-#ifdef PSDEBUG
-                    std::cout << "PS: It was not possible to create a RunningPlan for the Plan " << p->getName() << "!" << std::endl;
-#endif
-                    return nullptr;
-                }
-                rps->push_back(rp);
-            } else {
-                // PLANTYPE
-                pt = dynamic_cast<const PlanType*>(ap);
-                if (pt != nullptr) {
-                    rp = this->createRunningPlan(planningParent, pt->getPlans(), robotIDs, nullptr, pt);
-                    if (rp == nullptr) {
-                        //#ifdef PSDEBUG
-                        std::cout << "PS: It was not possible to create a RunningPlan for the Plan " << pt->getName() << "!" << std::endl;
-                        //#endif
-                        return nullptr;
-                    }
-                    rps->push_back(rp);
-                }
-            } // else Plan
-        }     // else BehaviourConfiguration
-    }         // foreach AbstractPlan
+            rp->setParent(&planningParent);
+
+            ALICA_DEBUG_MSG("PS: Added Behaviour " << bc->getBehaviour()->getName());
+
+        } else if (const Plan* p = dynamic_cast<const Plan*>(ap)) { // PLAN
+            rp = createRunningPlan(planningParent, {p}, robotIDs, nullptr, nullptr);
+            if (!rp) {
+                ALICA_DEBUG_MSG("PS: It was not possible to create a RunningPlan for the Plan " << p->getName() << "!");
+                return nullptr;
+            }
+            ps->push_back(rp);
+        } else if (const PlanType* pt = dynamic_cast<const PlanType*>(ap)) { // PLANTYPE
+            rp = createRunningPlan(planningParent, pt->getPlans(), robotIDs, nullptr, pt);
+            if (!rp) {
+                ALICA_INFO_MSG("PS: It was not possible to create a RunningPlan for the Plan " << pt->getName() << "!");
+                return nullptr;
+            }
+            rps->push_back(rp);
+        }
+    }
     return rps;
 }
 

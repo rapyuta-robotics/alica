@@ -15,15 +15,16 @@ enum class PlanStatus
 const char* getPlanStatusName(PlanStatus ps)
 {
     switch (ps) {
-    case Running:
+    case PlanStatus::Running:
         return "Running";
-    case Success:
+    case PlanStatus::Success:
         return "Success";
-    case Failed:
+    case PlanStatus::Failed:
         return "Failed";
-    case Retired:
+    case PlanStatus::Retired:
         return "Retired";
     }
+    return "Undefined";
 }
 
 } /* namespace alica */

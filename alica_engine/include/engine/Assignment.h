@@ -25,6 +25,38 @@ struct AllocationAuthorityInfo;
  * Contains all allocation information for a single plan. This includes the robot-task mapping, robot-state mapping and
  * success information.
  */
+class Assignment
+{
+public:
+    Assignment(const PartialAssignment& pa);
+    Assignment(const Plan* p, const AllocationAuthorityInfo& aai);
+    Assignment(const Plan* p);
+
+    Assignment(const Assignment& o);
+    Assignment& operator=(const Assignment& o);
+
+    const Plan* getPlan() const { return _plan; }
+
+    bool isValid() const;
+    bool isSuccessfull() const;
+
+    bool hasAgent(AgentIDConstPtr id) const;
+    bool updateAgent(AgentIDConstPtr agent, const EntryPoint* e);
+
+    void getAgentsInState(const State* s, AgentGrp& o_agents);
+
+    void clear();
+
+private:
+    friend std::ostream& operator<<(std::ostream& out, const Assignment& a);
+    const Plan* _plan;
+    using AgentStatePair = std::pair<AgentIDConstPtr, const State*>;
+    std::vector<std::vector<AgentStatePair>> _assignmentData;
+    std::vector<std::vector<AgentIDConstPtr>> _successData;
+};
+
+std::ostream& operator<<(std::ostream& out, const Assignment& a);
+/*
 class Assignment final : public IAssignment
 {
   public:
@@ -74,18 +106,9 @@ class Assignment final : public IAssignment
     std::string toHackString() const;
 
   protected:
-    /**
-     * The Plan this Assignment refers to
-     */
     const Plan* plan;
-    /**
-     * The robot-to-state mapping of this assignment.
-     */
     StateCollection* robotStateMapping;
-    /**
-     * Information about succeeded tasks.
-     */
     shared_ptr<SuccessCollection> epSucMapping;
     AssignmentCollection* epRobotsMapping;
-};
+};*/
 } /* namespace alica */

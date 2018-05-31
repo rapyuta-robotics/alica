@@ -41,15 +41,15 @@ class SimplePlanTree;
 struct PlanStateTriple
 {
     PlanStateTriple()
-        : state(nullptr)
-        , entryPoint(nullptr)
-        , plan(nullptr)
+            : state(nullptr)
+            , entryPoint(nullptr)
+            , plan(nullptr)
     {
     }
     PlanStateTriple(const AbstractPlan* p, const EntryPoint* e, const State* s)
-        : state(s)
-        , entryPoint(e)
-        , plan(p)
+            : state(s)
+            , entryPoint(e)
+            , plan(p)
     {
     }
     const State* state;
@@ -63,17 +63,19 @@ struct PlanStateTriple
 
 class RunningPlan : public std::enable_shared_from_this<RunningPlan>
 {
-  public:
+
+    // TODO: read write locks to this class
+public:
     struct PlanStatusInfo
     {
         PlanStatusInfo()
-            : status(PlanStatus::Running)
-            , failCount(0)
-            , stateStartTime()
-            , planStartTime()
-            , active(false)
-            , allocationNeeded(false)
-            , failHandlingNeeded(false)
+                : status(PlanStatus::Running)
+                , failCount(0)
+                , stateStartTime()
+                , planStartTime()
+                , active(false)
+                , allocationNeeded(false)
+                , failHandlingNeeded(false)
         {
         }
         PlanStatus status;
@@ -91,6 +93,7 @@ class RunningPlan : public std::enable_shared_from_this<RunningPlan>
 
     bool isBehaviour() const { return _behaviour; };
     bool isAllocationNeeded() const { return _status.allocationNeeded; }
+    bool isFailureHandlingNeeded() const { return _status.failHandlingNeeded; }
     PlanStatus getStatus() const { return _status.status; }
     AlicaTime getPlanStartTime() const { return _status.planStartTime; }
     AlicaTime getStateStartTime() const { return _status.stateStartTime; }
@@ -109,28 +112,31 @@ class RunningPlan : public std::enable_shared_from_this<RunningPlan>
     const AbstractPlan* getActivePlan() const { return _activeTriple.plan; }
     const Assignment& getAssignment() const { return _assignment; }
     Assignment& editAssignment() { return _assignment; }
-    BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour.get(); }
+    BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour; }
 
-    // void setAssignment(std::shared_ptr<Assignment> assignment);
     void printRecursive() const;
 
     const AgentGrp& getRobotsAvail() const { return _robotsAvail; }
     AgentGrp& editRobotsAvail() { return _robotsAvail; }
 
     void setAllocationNeeded(bool allocationNeeded);
-    void setOwnActiveEntryPoint(const EntryPoint* value);
-    void setOwnActiveState(const State* activeState);
+    void useEntryPoint(const EntryPoint* value);
+    void useState(const State* activeState);
 
     // void setBasicBehaviour(std::shared_ptr<BasicBehaviour> basicBehaviour);
-    // void setPlan(const AbstractPlan* plan);
+    void usePlan(const AbstractPlan* plan);
+    void setParent(RunningPlan* parent) { _parent = parent; }
+    void setFailHandlingNeeded(bool failHandlingNeeded) { _status.failHandlingNeeded = true; }
+    void setAssignment(const Assignment& assignment) { _assignment = assignment; }
     // void setActive(bool active);
-
-    // void setFailHandlingNeeded(bool failHandlingNeeded);
 
     PlanChange tick(RuleBook* rules);
 
     const ConditionStore& getConstraintStore() const { return _constraintStore; }
     ConditionStore& editConstraintStore() { return _constraintStore; }
+
+    // Temporary helper:
+    std::shared_ptr<RunningPlan> getSharedPointer() { return shared_from_this(); }
 
     // const EntryPoint* getOwnEntryPoint() const;
     // void setParent(std::weak_ptr<RunningPlan> s);
@@ -140,7 +146,7 @@ class RunningPlan : public std::enable_shared_from_this<RunningPlan>
     bool evalPreCondition();
     bool evalRuntimeCondition();
 
-    // void addChildren(std::shared_ptr<std::list<std::shared_ptr<RunningPlan>>>& runningPlans);
+    void addChildren(const std::vector<RunningPlan*>& runningPlans);
     // void addChildren(std::list<std::shared_ptr<RunningPlan>>& children);
     void moveState(const State* nextState);
     void clearFailures();
@@ -163,8 +169,8 @@ class RunningPlan : public std::enable_shared_from_this<RunningPlan>
     std::shared_ptr<CycleManager> getCycleManagement();
     void revokeAllConstraints();
     void attachPlanConstraints();
-    bool recursiveUpdateAssignment(std::list<std::shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents,
-                                   std::list<const supplementary::AgentID*> noUpdates, AlicaTime now);
+    bool recursiveUpdateAssignment(
+            std::list<std::shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, std::list<const supplementary::AgentID*> noUpdates, AlicaTime now);
     void toMessage(IdGrp& message, std::shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const;
     std::string toString() const;
     const supplementary::AgentID* getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
@@ -172,7 +178,7 @@ class RunningPlan : public std::enable_shared_from_this<RunningPlan>
 
     void sendLogMessage(int level, const std::string& message) const;
 
-  private:
+private:
     friend PlanBase; // temporary while refactoring
     RunningPlan(AlicaEngine* ae);
     RunningPlan(AlicaEngine* ae, const Plan* plan);

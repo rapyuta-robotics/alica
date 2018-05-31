@@ -1,10 +1,6 @@
 #include "engine/Assignment.h"
 
-#include "engine/collections/AssignmentCollection.h"
-#include "engine/collections/StateCollection.h"
-#include "engine/collections/SuccessCollection.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
-#include "engine/containers/EntryPointRobots.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
@@ -16,101 +12,181 @@
 namespace alica
 {
 
-Assignment::~Assignment()
-{
-    delete this->epRobotsMapping;
-    delete this->robotStateMapping;
-}
 Assignment::Assignment(const Plan* p)
+        : _plan(p)
+        , _assignmentData(p->getEntryPoints().size())
+        , _successData(p->getEntryPoints().size())
+
 {
-    this->plan = p;
-    this->max = 0.0;
-    this->min = 0.0;
-
-    this->epRobotsMapping = new AssignmentCollection(this->plan->getEntryPoints().size());
-
-    // sort the entrypoints of the given plan
-    list<const EntryPoint*> sortedEpList;
-    for (const EntryPoint* e : plan->getEntryPoints()) {
-        sortedEpList.push_back(e);
-    }
-    sortedEpList.sort(EntryPoint::compareTo); // TODO: Entrypoints are supposed to be pre-sorted. Confirm and remove
-
-    // add the sorted entrypoints into the assignmentcollection
-    short i = 0;
-    for (const EntryPoint* ep : sortedEpList) {
-        this->epRobotsMapping->setEp(i++, ep);
-    }
-    this->epRobotsMapping->sortEps();
-
-    this->robotStateMapping = new StateCollection(this->epRobotsMapping);
-    this->epSucMapping = std::make_shared<SuccessCollection>(p);
 }
 
-Assignment::Assignment(PartialAssignment* pa)
+Assignment::Assignment(const PartialAssignment& pa)
+        : _plan(pa->getPlan())
+        , _assignmentData(pa->getPlan()->getEntryPoints().size())
+        , _successData(pa->getPlan()->getEntryPoints().size())
 {
-    this->max = pa->getMax();
-    this->min = max;
-    this->plan = pa->getPlan();
+    const int numEps = _plan->getEntryPoints().size();
 
     AssignmentCollection* assCol = pa->getEpRobotsMapping();
-    if (AssignmentCollection::allowIdling) {
-        this->epRobotsMapping = new AssignmentCollection(assCol->getSize() - 1);
-    } else {
-        this->epRobotsMapping = new AssignmentCollection(assCol->getSize());
-    }
 
-    for (short i = 0; i < this->epRobotsMapping->getSize(); i++) {
-        // set the entrypoint
-        epRobotsMapping->setEp(i, assCol->getEp(i));
-        // copy robots
-        *(epRobotsMapping->editRobots(i)) = *(assCol->getRobots(i));
+    for (int i = 0; i < numEps; ++i) {
+        _assignmentData[i].reserve(assCol->getRobots(i)->size());
+        for (AgentIdConstPtr agent : *assCol->getRobots()) {
+            _assignmentData[i].emplace_back(agent, _plan->getEntryPoints()[i]->getState());
+        }
     }
-
-    this->robotStateMapping = new StateCollection(this->epRobotsMapping);
-    this->epSucMapping = pa->getEpSuccessMapping();
 }
 
-Assignment::Assignment(const Plan* p, shared_ptr<AllocationAuthorityInfo> aai)
+Assignment::Assignment(const Plan* p, const AllocationAuthorityInfo& aai)
+        : _plan(p)
+        , _assignmentData(p->getEntryPoints().size())
+        , _successData(p->getEntryPoints().size())
 {
-    this->plan = p;
-    this->max = 1;
-    this->min = 1;
+    const int numEps = _plan->getEntryPoints().size();
+    for (int i = 0; i < numEps; ++i) {
+        assert(p->getEntryPoints()[i]->getId() == aai.entryPointRobots[i].entrypoint;
+         _assignmentData[i].reserve(aai.entryPointRobots[i].robots.size());
+        for (AgentIdConstPtr robot : aai.entryPointRobots[i].robots) {
+            _assignmentData[i].emplace_back(agent, _plan->getEntryPoints()[i]->getState());
+        }
+    }
+}
 
-    this->epRobotsMapping = new AssignmentCollection(p->getEntryPoints().size());
+Assignment(const Assignment& o)
+        : _plan(o._plan)
+        , _assignmentData(o._assignmentData)
+        , _successData(o._successData)
+{
+}
 
-    shared_ptr<vector<const supplementary::AgentID*>> curRobots;
-    short i = 0;
-    assert(static_cast<int>(p->getEntryPoints().size()) == this->epRobotsMapping->getSize());
-    for (const EntryPoint* ep : p->getEntryPoints()) {
-        // set the entrypoint
-        this->epRobotsMapping->setEp(i, ep);
+Assignment& operator=(const Assignment& o)
+{
+    _plan = o._plan;
+    _assignmentData = o._assignmentData;
+    _successData = o._successData;
 
-        // curRobots = make_shared<vector<const supplementary::AgentID*>>();
-        for (auto epRobots : aai->entryPointRobots) {
-            // find the right entrypoint
-            if (epRobots.entrypoint == ep->getId()) {
-                // copy robots
-                AgentGrp* curRobots = this->epRobotsMapping->editRobots(i);
+    return *this;
+}
 
-                for (auto& robot : epRobots.robots) {
-                    curRobots->push_back(robot);
-                }
-                break;
+Assignment::~Assignment() {}
+
+bool Assignment::isValid() const
+{
+    const EntryPointGrp& eps = _plan->getEntryPoints();
+    const int numEps = eps.size();
+    for (int i = 0; i < numEps; ++i) {
+        int c = _assignmentData[i].size() + _successData[i].size();
+        if (!eps[i].contains(c)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Assignment::isSuccessfull() const
+{
+    const EntryPointGrp& eps = _plan->getEntryPoints();
+    const int numEps = eps.size();
+    for (int i = 0; i < numEps; ++i) {
+        if (eps[i]->isSuccessRequired()) {
+            if (!(_successData[i].empty() && static_cast<int>(_successData[i]->size()) >= eps[i]->getMinCardinality())) {
+                return false;
             }
         }
+    }
+    return true;
+}
 
-        i++;
+bool Assignment::hasAgent(AgentIDConstPtr id) const
+{
+    for (const std::vector<AgentStatePair>& asps : _assignmentData) {
+        if (std::find_if(asps.begin(), asps.end(), [id](const RobotStatePair asp) { return *asp.first == *id; }) != asps.end()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Assignment::clear()
+{
+    _successData.clear();
+    _assignmentData.clear();
+}
+
+void Assignment::getAgentsInState(const State* s, AgentGrp& o_agents)
+{
+    int i = 0;
+    for (const std::vector<AgentStatePair>& asps : _assignmentData) {
+        if (s->getEntryPoint() == _plan->getEntryPoint()[i]) {
+            for (AgentStatePair asp : asps) {
+                if (asp.second == s) {
+                    o_agents.push_back(asp.first);
+                }
+            }
+            break;
+        }
+        ++i;
+    }
+}
+bool updateAgent(AgentIDConstPtr agent, const EntryPoint* e)
+{
+    bool found = false;
+    bool ret = false;
+    int i = 0;
+
+    for (const std::vector<AgentStatePair>& asps : _assignmentData) {
+        bool isTargetEp = e == _plan->getEntryPoint()[i];
+        if (!found) {
+            for (int j = 0; j < static_cast<int>(asps.size()); ++j) {
+                if (asps[j].first == agent) {
+                    if (isTargetEp) {
+                        return false;
+                    } else {
+                        found = true;
+                        asps.erase(asps.begin() + j);
+                        break;
+                    }
+                }
+            }
+        }
+        if (isTargetEp) {
+            asps.emplace_back(agent, e->getState());
+            if (found) {
+                return true;
+            }
+            ret = true;
+        }
+        ++i;
+    }
+    return ret;
+}
+
+std::ostream& operator<<(std::ostream& out, const Assignment& a)
+{
+    out << std::endl;
+    const EntryPointGrp& eps = a._plan->getEntryPoints();
+    const int numEps = eps.size();
+    out << "Assignment:" << std::endl;
+    for (int i = 0; i < numEps; ++i) {
+        out << "EP: " << eps[i]->getId() << " Task: " << eps[i]->getTask()->getName() << " AgentIDs: ";
+        for (RobotStatePair rsp : _assignmentData[i])) {
+            out << *rsp.first << "("<< *rsp.second->getName()<<") ";
+        }
+        out << std::endl;
+    }
+    out << "Success" << std::endl;
+    for (int i = 0; i < numEps; ++i) {
+        out << "EP: " << eps[i]->getId() << " Task: " << eps[i]->getTask()->getName() << " AgentIDs: ";
+        for (AgentIdConstPtr a : _successData[i])) {
+            out << *a << " ";
+        }
+        out << std::endl;
     }
 
-    this->epSucMapping = std::make_shared<SuccessCollection>(p);
-    this->robotStateMapping = new StateCollection(this->epRobotsMapping);
+    return out;
 }
 
-void Assignment::setPlan(const Plan* plan)
-{
-    this->plan = plan;
-}
+/*
 StateCollection* Assignment::getRobotStateMapping()
 {
     return robotStateMapping;
@@ -131,11 +207,6 @@ void Assignment::getAllRobotsSorted(AgentGrp& o_robots)
     sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
 }
 
-/**
- * The robots that are currently working on a specific task, referred to by an EntryPoint Id.
- * @param epid EntryPoint id
- * @return A vector of int
- */
 const AgentGrp* Assignment::getRobotsWorking(int64_t epid) const
 {
     return this->epRobotsMapping->getRobotsByEpId(epid);
@@ -147,11 +218,6 @@ void Assignment::getRobotsWorkingSorted(const EntryPoint* ep, AgentGrp& o_robots
     sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
 }
 
-/**
- * The robots that are currently working on a specific task, referred to by an EntryPoint.
- * @param ep An EntryPoint
- * @return A vector of int
- */
 const AgentGrp* Assignment::getRobotsWorking(const EntryPoint* ep) const
 {
     return this->epRobotsMapping->getRobotsByEp(ep);
@@ -166,27 +232,11 @@ int Assignment::totalRobotCount() const
     return this->getNumUnAssignedRobotIds() + c;
 }
 
-//	/**
-//	 * The shared_ptr of a vector of EntryPoints this assignment considers relevant.
-//	 */
-//	shared_ptr<vector<EntryPoint*> > Assignment::getEntryPoints()
-//	{
-//		return this->epRobotsMapping->getEntryPoints();
-//	}
-
-/**
- * Number of Entrypoints in this assignment's plan.
- */
 short Assignment::getEntryPointCount() const
 {
     return this->epRobotsMapping->getSize();
 }
 
-/**
- * The robots that are currently working on or already succeeded in a specific task, referred to by an EntryPoint.
- * @param ep An EntryPoint
- * @return a shared_ptr of a list of int
- */
 shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkingAndFinished(const EntryPoint* ep)
 {
     auto ret = std::make_shared<list<const supplementary::AgentID*>>(list<const supplementary::AgentID*>());
@@ -207,12 +257,7 @@ shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkingAndF
     return ret;
 }
 
-/**
- * The robots that are currently working on or already succeeded in a specific task, referred to by an EntryPoint.
- * Each robot only occurs once.
- * @param ep An entrypoint
- * @return a shared_ptr of a list of int
- */
+
 shared_ptr<list<const supplementary::AgentID*>> Assignment::getUniqueRobotsWorkingAndFinished(const EntryPoint* ep)
 {
     auto ret = std::make_shared<list<const supplementary::AgentID*>>(list<const supplementary::AgentID*>());
@@ -231,11 +276,6 @@ shared_ptr<list<const supplementary::AgentID*>> Assignment::getUniqueRobotsWorki
     return ret;
 }
 
-/**
- * The robots that are currently working on or already succeeded in a specific task, referred to by an EntryPoint Id.
- * @param epid EntryPoint id
- * @return a shared_ptr of a list of int
- */
 std::shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkingAndFinished(int64_t epid)
 {
     auto ret = std::make_shared<std::list<const supplementary::AgentID*>>();
@@ -295,40 +335,6 @@ void Assignment::addRobot(const supplementary::AgentID* id, const EntryPoint* e,
     return;
 }
 
-/**
- * Tests whether this assignment is valid with respect to the plan's cardinalities.
- * @return A bool
- */
-bool Assignment::isValid() const
-{
-    const vector<shared_ptr<std::list<const supplementary::AgentID*>>>& success = this->epSucMapping->getRobots();
-
-    for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
-        int c = this->epRobotsMapping->getRobots(i)->size() + success[i]->size();
-        if (c > this->epRobotsMapping->getEp(i)->getMaxCardinality() || c < this->epRobotsMapping->getEp(i)->getMinCardinality()) {
-            return false;
-        }
-    }
-    return true;
-}
-
-/**
- * Tests weather all required tasks have been successfully completed and
- * thus the plan can be considered as successful.
- * @return A bool
- */
-bool Assignment::isSuccessfull() const
-{
-    for (int i = 0; i < this->epSucMapping->getCount(); i++) {
-        if (this->epSucMapping->getEntryPoints()[i]->isSuccessRequired()) {
-            if (!(this->epSucMapping->getRobots()[i]->size() > 0 &&
-                  static_cast<int>(this->epSucMapping->getRobots()[i]->size()) >= this->epSucMapping->getEntryPoints()[i]->getMinCardinality())) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
 
 bool Assignment::isEqual(Assignment* otherAssignment)
 {
@@ -362,11 +368,7 @@ bool Assignment::isEqual(Assignment* otherAssignment)
     return true;
 }
 
-/**
- * Test whether at least one robot is working on a task or succeeded with a task.
- * @param ep An EntryPoint identifying the task in question.
- * @return bool
- */
+
 bool Assignment::isEntryPointNonEmpty(const EntryPoint* ep) const
 {
     auto r = this->epRobotsMapping->getRobotsByEp(ep);
@@ -464,12 +466,7 @@ void Assignment::moveRobots(const State* from, const State* to)
     robotStateMapping->moveAllFromTo(from, to);
 }
 
-/**
- * Returns the EntryPoint a robot is currently working on. Returns null, if the robot is currently not working on the
- * respective plan.
- * @param robot an int
- * @return An entrypoint
- */
+
 const EntryPoint* Assignment::getEntryPointOfRobot(const supplementary::AgentID* robot)
 {
     for (int i = 0; i < this->epRobotsMapping->getSize(); i++) {
@@ -481,58 +478,6 @@ const EntryPoint* Assignment::getEntryPointOfRobot(const supplementary::AgentID*
     }
     return nullptr;
 }
-
-void Assignment::clear()
-{
-    this->robotStateMapping->clear();
-    this->epRobotsMapping->clear();
-    this->epSucMapping->clear();
-}
-
-std::string Assignment::toString() const
-{
-    std::stringstream ss;
-    ss << *this;
-    return ss.str();
-}
-
-std::ostream& operator<<(std::ostream& out, const Assignment& a)
-{
-    out << std::endl;
-    out << "Rating: " << a.getMax() << std::endl;
-    for (int i = 0; i < a.getEpRobotsMapping()->getSize(); ++i) {
-        out << "EP: " << a.getEpRobotsMapping()->getEp(i)->getId() << " Task: " << a.getEpRobotsMapping()->getEp(i)->getTask()->getName() << " RobotIDs: ";
-        for (AgentIdConstPtr robot : *(a.getEpRobotsMapping()->getRobots(i))) {
-            out << *robot << " ";
-        }
-        out << std::endl;
-    }
-    out << "Robot-State Mapping:" << std::endl;
-    out << a.getRobotStateMapping()->toString();
-    out << a.getEpSuccessMapping()->toString() << std::endl;
-    return out;
-}
-
-std::string Assignment::toHackString() const
-{
-    std::stringstream ss;
-    ss << "ASS " << this->plan->getId() << " " << this->plan->getName() << ":\t";
-    auto suc = this->epSucMapping->getRobots();
-    for (int i = 0; i < this->epRobotsMapping->getSize(); i++) {
-        ss << this->epRobotsMapping->getEp(i)->getTask()->getName() << " ";
-        for (auto& robotID : *(this->epRobotsMapping->getRobots(i))) {
-            ss << *robotID << string(" ");
-        }
-
-        if (suc[i]->size() > 0) {
-            ss << "\t Success: ";
-            for (auto& robotID : (*suc[i])) {
-                ss << *robotID << string(" ");
-            }
-        }
-    }
-    ss << std::endl;
-    return ss.str();
-}
+*/
 
 } /* namespace alica */

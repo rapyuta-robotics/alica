@@ -43,50 +43,50 @@ AlicaTime RunningPlan::assignmentProtectionTime = AlicaTime::zero();
 void RunningPlan::init()
 {
     assignmentProtectionTime =
-        AlicaTime::milliseconds((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
+            AlicaTime::milliseconds((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae)
-    : _ae(ae)
-    , _planType(nullptr)
-    , _behaviour(false)
-    , _assignment()
-    , _cycleManagement(ae, this)
-    , _basicBehaviour(nullptr)
+        : _ae(ae)
+        , _planType(nullptr)
+        , _behaviour(false)
+        , _assignment()
+        , _cycleManagement(ae, this)
+        , _basicBehaviour(nullptr)
 {
 }
 
 RunningPlan::~RunningPlan() {}
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
-    : _ae(ae)
-    , _planType(nullptr)
-    , _behaviour(false)
-    , _assignment(plan)
-    , _cycleManagement(ae, this)
-    , _basicBehaviour(nullptr)
+        : _ae(ae)
+        , _planType(nullptr)
+        , _behaviour(false)
+        , _assignment(plan)
+        , _cycleManagement(ae, this)
+        , _basicBehaviour(nullptr)
 {
     _activeTriple._plan = plan;
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
-    : _ae(ae)
-    , _planType(pt)
-    , _behaviour(false)
-    , _assignment()
-    , _cycleManagement(ae, this)
-    , _basicBehaviour(nullptr)
+        : _ae(ae)
+        , _planType(pt)
+        , _behaviour(false)
+        , _assignment()
+        , _cycleManagement(ae, this)
+        , _basicBehaviour(nullptr)
 {
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc)
-    : _ae(ae)
-    , _planType(nullptr)
-    , _activeTriple(bc, nullptr, nullptr)
-    , _behaviour(true)
-    , _assignment()
-    , _basicBehaviour(nullptr)
-    , _cycleManagement(ae, this)
+        : _ae(ae)
+        , _planType(nullptr)
+        , _activeTriple(bc, nullptr, nullptr)
+        , _behaviour(true)
+        , _assignment()
+        , _basicBehaviour(nullptr)
+        , _cycleManagement(ae, this)
 {
 }
 
@@ -105,13 +105,6 @@ void RunningPlan::setFailHandlingNeeded(bool failHandlingNeeded)
         }
     }
     _failHandlingNeeded = failHandlingNeeded;
-}
-*/
-
-/*
-void RunningPlan::setParent(std::weak_ptr<RunningPlan> s)
-{
-    _parent = s;
 }
 */
 
@@ -190,27 +183,12 @@ bool RunningPlan::evalRuntimeCondition()
     }
 }
 
-void RunningPlan::addChildren(shared_ptr<list<shared_ptr<RunningPlan>>>& runningPlans)
+void RunningPlan::addChildren(const std::vector<RunningPlan*>& runningPlans)
 {
-    for (shared_ptr<RunningPlan> r : (*runningPlans)) {
-        r->setParent(shared_from_this());
+    _children.reserve(_children.size() + runningPlans.size());
+    for (RunningPlan* r : runningPlans) {
+        r->setParent(this);
         _children.push_back(r);
-        auto iter = _failedSubPlans.find(r->getPlan());
-        if (iter != _failedSubPlans.end()) {
-            r->_failCount = iter->second;
-        }
-        if (_active) {
-            r->activate();
-        }
-    }
-}
-
-void RunningPlan::addChildren(list<shared_ptr<RunningPlan>>& children)
-{
-    for (shared_ptr<RunningPlan> r : children) {
-        r->setParent(shared_from_this());
-        _children.push_back(r);
-
         auto iter = _failedSubPlans.find(r->getPlan());
         if (iter != _failedSubPlans.end()) {
             r->_failCount = iter->second;
@@ -239,15 +217,6 @@ void RunningPlan::setChildren(list<shared_ptr<RunningPlan>> children)
 {
     _children = children;
 }
-
-void RunningPlan::setPlan(const AbstractPlan* plan)
-{
-    if (_plan != plan) {
-        _planStartTime = _ae->getAlicaClock()->now();
-        revokeAllConstraints();
-    }
-    _plan = plan;
-}
 */
 
 /*void RunningPlan::setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour)
@@ -268,23 +237,22 @@ void RunningPlan::printRecursive() const
     }
 }
 
-/**
- * The current assignment of robots to EntryPoints.
- */
-
 /*
-void RunningPlan::setAssignment(shared_ptr<Assignment> assignment)
-{
-    _assignment = assignment;
-}
-
 void RunningPlan::setActive(bool active)
 {
     _active = active;
 }
 */
+void RunningPlan::usePlan(const AbstractPlan* plan)
+{
+    if (_planStateTriple.plan != plan) {
+        _planStartTime = _ae->getAlicaClock()->now();
+        revokeAllConstraints();
+        _planStateTriple.plan = plan;
+    }
+}
 
-void RunningPlan::setOwnActiveEntryPoint(const EntryPoint* value)
+void RunningPlan::useEntryPoint(const EntryPoint* value)
 {
     if (_activeTriple.entryPoint != value) {
         AgentIdConstPtr mid = getOwnID();
@@ -297,7 +265,7 @@ void RunningPlan::setOwnActiveEntryPoint(const EntryPoint* value)
     }
 }
 
-void RunningPlan::setActiveState(const State* s)
+void RunningPlan::useState(const State* s)
 {
     if (_activeTriple.state != s) {
         ALICA_ASSERT(s == null || (_activeTriple.entryPoint && _activeTriple.entryPoint->isStateReachable(s)));
@@ -498,8 +466,8 @@ bool RunningPlan::anyChildrenTaskSuccess()
         for (int i = 0; i < childAssignment->getEpSuccessMapping()->getCount(); i++) {
             // at least one robot must be successful && at least as much as minCard robots must be successful
             if (childAssignment->getEpSuccessMapping()->getRobots()[i]->size() > 0 &&
-                static_cast<int>(childAssignment->getEpSuccessMapping()->getRobots()[i]->size()) >=
-                    childAssignment->getEpSuccessMapping()->getEntryPoints()[i]->getMinCardinality()) {
+                    static_cast<int>(childAssignment->getEpSuccessMapping()->getRobots()[i]->size()) >=
+                            childAssignment->getEpSuccessMapping()->getEntryPoints()[i]->getMinCardinality()) {
                 return true;
             }
         }
@@ -569,8 +537,8 @@ void RunningPlan::attachPlanConstraints()
     _constraintStore.addCondition(_plan->getRuntimeCondition());
 }
 
-bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, list<const supplementary::AgentID*> noUpdates,
-                                            AlicaTime now)
+bool RunningPlan::recursiveUpdateAssignment(
+        list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, list<const supplementary::AgentID*> noUpdates, AlicaTime now)
 {
     if (isBehaviour()) {
         return false;
@@ -661,7 +629,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
             auto robs = getAssignment()->getRobotsWorking(ep);
             for (auto& rob : (*robs)) {
                 if (find_if(availableAgents.begin(), availableAgents.end(), [&rob](const supplementary::AgentID* id) { return *rob == *id; }) ==
-                    availableAgents.end()) {
+                        availableAgents.end()) {
                     rem.push_back(rob);
                     aldif->editSubtractions().emplace_back(ep, rob);
                     ret = true;
@@ -677,7 +645,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
     aldif->setReason(AllocationDifference::Reason::message);
     _cycleManagement->setNewAllocDiff(aldif);
     // Update Success Collection:
-    _ae->getTeamObserver()->updateSuccessCollection((Plan*)getPlan(), getAssignment()->getEpSuccessMapping());
+    _ae->getTeamObserver()->updateSuccessCollection((Plan*) getPlan(), getAssignment()->getEpSuccessMapping());
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
@@ -686,7 +654,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
         getAssignment()->getRobotStateMapping()->getRobotsInState(getActiveState(), robotsJoined);
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
             if (std::find_if(robotsJoined.begin(), robotsJoined.end(), [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) ==
-                robotsJoined.end()) {
+                    robotsJoined.end()) {
                 iter = availableAgents.erase(iter);
             } else {
                 ++iter;
@@ -698,7 +666,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
         if (robotsJoined) {
             for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
                 if (find_if(robotsJoined->begin(), robotsJoined->end(), [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) ==
-                    robotsJoined->end()) {
+                        robotsJoined->end()) {
                     iter = availableAgents.erase(iter);
                 } else {
                     ++iter;
