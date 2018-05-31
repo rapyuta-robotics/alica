@@ -28,7 +28,6 @@ bool DummySolver::existsSolutionImpl(SolverContext* ctx, const std::vector<std::
 
 bool DummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results)
 {
-
     DummyContext* dc = static_cast<DummyContext*>(ctx);
 
     results.reserve(dc->getVariables().size());
