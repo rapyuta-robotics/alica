@@ -259,7 +259,7 @@ void RunningPlan::useEntryPoint(const EntryPoint* value)
         _assignment.removeRobot(mid);
         _activeTriple.entryPoint = value;
         if (value != nullptr) {
-            setOwnActiveState(value->getState());
+            useState(value->getState());
             _assignment.addRobot(mid, _activeTriple.entryPoint, _activeTriple.state);
         }
     }
@@ -318,7 +318,7 @@ void RunningPlan::clearFailedChildren()
 
 void RunningPlan::addFailure()
 {
-    _failCount++;
+    ++_failCount;
     _failHandlingNeeded = true;
 }
 
@@ -349,10 +349,11 @@ void RunningPlan::clearChildren()
  * Adapt the assignment of this plan to the one supplied. This can also change plan
  * @param r A RunningPlan
  */
-void RunningPlan::adaptAssignment(shared_ptr<RunningPlan> r)
+void RunningPlan::adaptAssignment(const RunningPlan& replacement)
 {
-    const State* newState = r->getAssignment()->getRobotStateMapping()->getStateOfRobot(getOwnID());
-    r->getAssignment()->getRobotStateMapping()->reconsiderOldAssignment(_assignment, r->getAssignment());
+    _assignment.adaptTaskChangesFrom(replacement.getAssignment());
+    const State* newState = _assignment->getStateOfAgent(getOwnID());
+
     bool reactivate = false;
 
     if (_activeState != newState) {
@@ -360,32 +361,23 @@ void RunningPlan::adaptAssignment(shared_ptr<RunningPlan> r)
         deactivateChildren();
         revokeAllConstraints();
         clearChildren();
-        addChildren(*r->getChildren());
+        addChildren(replacement.getChildren());
         reactivate = true;
     } else {
         AgentGrp robotsJoined;
-        r->getAssignment()->getRobotStateMapping()->getRobotsInState(newState, robotsJoined);
-        for (shared_ptr<RunningPlan>& r : _children) {
-            r->limitToRobots(robotsJoined);
+        _assignment.getAgentsInState(newState, robotsJoined);
+        for (RunningPlan* c : _children) {
+            c->limitToRobots(robotsJoined);
         }
     }
 
-    _plan = r->getPlan();
+    usePlan(r->getPlan());
     _activeEntryPoint = r->getOwnEntryPoint();
-    _assignment = r->_assignment;
-    setActiveState(newState);
+    useState(newState);
     if (reactivate) {
         activate();
     }
 }
-
-/**
- * Indicates whether this running plan represents a behaviour.
- */
-/*std::shared_ptr<CycleManager> RunningPlan::getCycleManagement()
-{
-    return _cycleManagement;
-}*/
 
 /**
  * Indicate that an AbstractPlan has failed while being a child of this plan.

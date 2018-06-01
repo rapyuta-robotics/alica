@@ -6,6 +6,7 @@
 #include "engine/RunningPlan.h"
 #include "engine/SimplePlanTree.h"
 #include "engine/TeamObserver.h"
+#include "engine/Types.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
@@ -79,7 +80,7 @@ void Logger::itertionStarts()
  * current iteration. Called by the PlanBase.
  * @param p The root RunningPlan of the plan base.
  */
-void Logger::iterationEnds(const RunningPlan& rp)
+void Logger::iterationEnds(const RunningPlan* rp)
 {
     if (!_active) {
         return;
@@ -93,7 +94,6 @@ void Logger::iterationEnds(const RunningPlan& rp)
         return;
     }
     this->receivedEvent = false;
-    std::shared_ptr<std::list<std::string>> ownTree = createTreeLog(rp);
 
     _sBuild << "START:\t";
     _sBuild << this->startTime.inMilliseconds() << endl;
@@ -102,33 +102,29 @@ void Logger::iterationEnds(const RunningPlan& rp)
     _sBuild << "CUR-RT:\t";
     _sBuild << (this->endTime - this->startTime).inMilliseconds() << endl;
     _sBuild << "REASON:";
-    for (string reason : this->eventStrings) {
+    for (const std::string& reason : this->eventStrings) {
         _sBuild << "\t";
         _sBuild << reason;
     }
     _sBuild << endl;
-    std::vector<const supplementary::AgentID*> robots;
+    AgentGrp robots;
     this->tm->fillWithActiveAgentIDs(robots);
 
     _sBuild << "TeamSize:\t";
     _sBuild << to_string(robots.size());
 
     _sBuild << " TeamMember:";
-    for (const supplementary::AgentID* id : robots) {
+    for (AgentIDConstPtr id : robots) {
         _sBuild << "\t";
         _sBuild << *id;
     }
     _sBuild << endl;
-
-    _sBuild << "LocalTree:";
-
-    for (const std::string& treeString : *ownTree) {
-        _sBuild << "\t";
-        _sBuild << treeString;
+    if (rp) {
+        _sBuild << "LocalTree:";
+        createTreeLog(_sBuild, *rp);
+        _sBuild << endl;
+        evaluationAssignmentsToString(_sBuild, *rp);
     }
-    _sBuild << endl;
-
-    evaluationAssignmentsToString(_sBuild, rp);
 
     auto teamPlanTrees = this->to->getTeamPlanTrees();
     if (teamPlanTrees != nullptr) {
@@ -138,7 +134,7 @@ void Logger::iterationEnds(const RunningPlan& rp)
             _sBuild << *kvp.first;
             _sBuild << "\t";
 
-            auto ids = this->createHumanReadablePlanTree(kvp.second->getStateIds());
+            auto ids = createHumanReadablePlanTree(kvp.second->getStateIds());
 
             for (const std::string& name : (*ids)) {
                 _sBuild << name << "\t";
@@ -218,43 +214,38 @@ void Logger::evaluationAssignmentsToString(std::stringstream& ss, const RunningP
     }
 }
 
-std::shared_ptr<std::list<std::string>> Logger::createTreeLog(const RunningPlan& r)
+std::stringstream& Logger::createTreeLog(std::stringstream& ss, const RunningPlan& r)
 {
-    std::shared_ptr<std::list<std::string>> result = std::make_shared<std::list<std::string>>(std::list<std::string>());
     PlanStateTriple ptz = r.getActiveTriple();
     if (ptz.state != nullptr) {
         if (ptz.entryPoint != nullptr) {
-            result->push_back(ptz.entryPoint->getTask()->getName());
+            ss << ptz.entryPoint->getTask()->getName() << "\t";
         } else {
-            result->push_back("-3"); // indicates no task
+            ss << "-3\t"; // indicates no task
         }
 
-        result->push_back(ptz.state->getName());
+        ss << ptz.state->getName();
     } else {
         if (r.getBasicBehaviour() != nullptr) {
-            result->push_back("BasicBehaviour");
-            result->push_back(r.getBasicBehaviour()->getName());
+            ss << "BasicBehaviour\t";
+            ss << r.getBasicBehaviour()->getName() << "\t";
         } else // will idle
         {
-            result->push_back("IDLE");
-            result->push_back("NOSTATE");
+            ss << "IDLE\t";
+            ss << "NOSTATE\t";
         }
     }
 
     if (!r.getChildren().empty()) {
-        result->push_back("-1"); // start children marker
+        ss << "-1\t"; // start children marker
 
         for (const RunningPlan* rp : r.getChildren()) {
-            shared_ptr<list<string>> tmp = createTreeLog(*rp);
-            for (const std::string& s : *tmp) {
-                result->push_back(s);
-            }
+            createTreeLog(ss, *rp);
         }
 
-        result->push_back("-2"); // end children marker
+        ss << "-2\t"; // end children marker
     }
-
-    return result;
+    return ss;
 }
 
 void Logger::logToConsole(const std::string& logString)

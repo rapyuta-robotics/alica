@@ -13,7 +13,7 @@
 
 #include <supplementary/AgentID.h>
 
-#Include < alica_common_config / debug_output.h >
+#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -63,25 +63,25 @@ TaskAssignment::TaskAssignment(const AlicaEngine* engine, const PlanGrp& planLis
  * @param oldAss old Assignment
  * @return An Assignment for the plan
  */
-std::shared_ptr<Assignment> TaskAssignment::getNextBestAssignment(IAssignment* oldAss)
+Assignment TaskAssignment::getNextBestAssignment(const Assignment* oldAss)
 {
     ALICA_DEBUG_MSG("TA: Calculating next best PartialAssignment...");
-    PartialAssignment* calculatedPa = this->calcNextBestPartialAssignment(oldAss);
+    PartialAssignment* calculatedPa = calcNextBestPartialAssignment(oldAss);
 
     if (calculatedPa == nullptr) {
-        return nullptr;
+        return Assignment();
     }
 
     ALICA_DEBUG_MSG("TA: ... calculated this PartialAssignment:\n" << calculatedPa->toString());
 
-    std::shared_ptr<Assignment> newAss = std::make_shared<Assignment>(calculatedPa);
+    Assignment newAss = Assignment(*calculatedPa);
 
-    ALICA_DEBUG_MSG("TA: Return this Assignment to PS:" << newAss->toString());
+    ALICA_DEBUG_MSG("TA: Return this Assignment to PS:" << newAss);
 
     return newAss;
 }
 
-std::string TaskAssignment::toString()
+std::string TaskAssignment::toString() const
 {
     std::stringstream ss;
     ss << std::endl;
@@ -117,7 +117,7 @@ void TaskAssignment::setExpansionCount(int expansionCount)
 }
 #endif
 
-PartialAssignment* TaskAssignment::calcNextBestPartialAssignment(IAssignment* oldAss)
+PartialAssignment* TaskAssignment::calcNextBestPartialAssignment(const Assignment* oldAss)
 {
     PartialAssignment* curPa = nullptr;
     PartialAssignment* goal = nullptr;

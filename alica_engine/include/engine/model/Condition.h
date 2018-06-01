@@ -37,7 +37,7 @@ public:
     /**
      * The delegate type used to attach constraints to plans.
      */
-    void getConstraint(std::shared_ptr<ProblemDescriptor> pd.const RunningPlan& rp) const;
+    void getConstraint(std::shared_ptr<ProblemDescriptor> pd, const RunningPlan& rp) const;
 
     const AbstractPlan* getAbstractPlan() const { return _abstractPlan; }
 

@@ -26,16 +26,16 @@ public:
     void init();
     void close();
     void handleIncomingAuthorityMessage(const AllocationAuthorityInfo& aai);
-    void tick(RunningPlan& p);
+    void tick(RunningPlan* p);
     void sendAllocation(const RunningPlan& p);
 
 private:
     void processPlan(RunningPlan& p);
     bool authorityMatchesPlan(const AllocationAuthorityInfo& aai, const RunningPlan& p) const;
 
-    std::vector<std::shared_ptr<AllocationAuthorityInfo>> _queue;
+    std::vector<AllocationAuthorityInfo> _queue;
     const AlicaEngine* _engine;
-    AGentIdConstPtr _localAgentID;
+    AgentIDConstPtr _localAgentID;
     std::mutex _mutex;
 };
 } /* namespace alica */

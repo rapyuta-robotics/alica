@@ -60,4 +60,6 @@ using BehaviourParameterMap = std::unordered_map<std::string, std::string>;
 
 using AgentIDConstPtr = const supplementary::AgentID*;
 
+using AgentStatePair = std::pair<AgentIDConstPtr, const State*>;
+
 } // namespace alica

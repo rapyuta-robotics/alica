@@ -13,6 +13,7 @@ class PlanSelector;
 class Logger;
 class RunningPlan;
 class Plan;
+class PlanBase;
 class EntryPoint;
 class Transition;
 class State;
@@ -30,15 +31,16 @@ class TeamManager;
  */
 class RuleBook
 {
-  public:
+public:
     RuleBook(AlicaEngine* ae);
     ~RuleBook();
-    bool hasChangeOccured() const { return _changeOccured; }
+    bool hasChangeOccurred() const { return _changeOccurred; }
     PlanChange visit(RunningPlan& r);
     PlanChange updateChange(PlanChange cur, PlanChange update);
     RunningPlan* initialisationRule(const Plan* masterPlan);
+    void resetChangeOccurred() { _changeOccurred = false; }
 
-  private:
+private:
     TeamObserver* _to;
     TeamManager* _tm;
     SyncModule* _sm;
@@ -46,7 +48,7 @@ class RuleBook
     PlanBase* _pb;
     Logger* _log;
     int _maxConsecutiveChanges;
-    bool _changeOccured;
+    bool _changeOccurred;
 
     PlanChange synchTransitionRule(RunningPlan& r);
     PlanChange transitionRule(RunningPlan& r);

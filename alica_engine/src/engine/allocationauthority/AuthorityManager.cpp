@@ -8,7 +8,7 @@
 #include "engine/model/State.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <alica_common_config/deboug_output.h>
+#include <alica_common_config/debug_output.h>
 
 #include <assert.h>
 
@@ -53,7 +53,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
         if (*(aai.senderID) > *_localAgentID) {
             // notify TO that evidence about other robots is available
             for (EntryPointRobots epr : aai.entryPointRobots) {
-                for (AgentIdConstPtr rid : epr.robots) {
+                for (AgentIDConstPtr rid : epr.robots) {
                     if (*rid != *_localAgentID) {
                         _engine->getTeamManager()->setTimeLastMsgReceived(rid, now);
                     }
@@ -74,7 +74,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
     cout << ss.str();
 #endif
     {
-        std::lock_guard<std::mutex> lock(mu);
+        std::lock_guard<std::mutex> lock(_mutex);
         _queue.push_back(aai);
     }
 }
@@ -82,31 +82,33 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
 /**
  * Cyclic tick function, called by the plan base every iteration
  */
-void AuthorityManager::tick(RunningPlan& rp)
+void AuthorityManager::tick(RunningPlan* rp)
 {
     ALICA_DEBUG_MSG("AM: Tick called! <<<<<<");
 
     std::lock_guard<std::mutex> lock(_mutex);
-    processPlan(rp);
+    if (rp) {
+        processPlan(*rp);
+    }
     _queue.clear();
 }
 
 void AuthorityManager::processPlan(RunningPlan& rp)
 {
-    if (rp == nullptr || rp->isBehaviour()) {
+    if (rp.isBehaviour()) {
         return;
     }
-    if (rp->getCycleManagement()->needsSending()) {
+    if (rp.getCycleManagement().needsSending()) {
         sendAllocation(rp);
-        rp->getCycleManagement()->sent();
+        rp.editCycleManagement().sent();
     }
 
     ALICA_DEBUG_MSG("AM: Queue size of AuthorityInfos is " << _queue.size());
 
     for (int i = 0; i < static_cast<int>(_queue.size()); ++i) {
         if (authorityMatchesPlan(_queue[i], rp)) {
-            ALICA_DEBUG_MSG("AM: Found AuthorityInfo, which matches the plan " << rp->getPlan()->getName());
-            rp->getCycleManagement()->handleAuthorityInfo(_queue[i]);
+            ALICA_DEBUG_MSG("AM: Found AuthorityInfo, which matches the plan " << rp.getActivePlan()->getName());
+            rp.editCycleManagement().handleAuthorityInfo(_queue[i]);
             _queue.erase(_queue.begin() + i);
             --i;
         }
@@ -128,20 +130,18 @@ void AuthorityManager::sendAllocation(const RunningPlan& p)
     const Assignment& ass = p.getAssignment();
     for (int i = 0; i < ass.getEntryPointCount(); ++i) {
         EntryPointRobots epRobots;
-        epRobots.entrypoint = ass.getEpRobotsMapping()->getEp(i)->getId();
-        for (AgentIdConstPtr robot : *ass.getRobotsWorking(epRobots.entrypoint)) {
-            epRobots.robots.push_back(robot);
-        }
+        epRobots.entrypoint = ass.getEntryPoint(i)->getId();
+        ass.getAgentsWorking(i, epRobots.robots);
+
         aai.entryPointRobots.push_back(std::move(epRobots));
     }
 
-    const RunningPlan* parent;
-    = p.getParent();
+    const RunningPlan* parent = p.getParent();
     aai.parentState = ((parent && parent->getActiveState()) ? parent->getActiveState()->getId() : -1);
     aai.planId = p.getActivePlan()->getId();
     aai.authority = _localAgentID;
     aai.senderID = _localAgentID;
-    aai.planType = (p.getPlanType() ? p->getPlanType()->getId() : -1);
+    aai.planType = (p.getPlanType() ? p.getPlanType()->getId() : -1);
 #ifdef AM_DEBUG
     std::stringstream ss;
     ss << "AM: Sending AAI Assignment from " << aai.senderID << " is: " << std::endl;

@@ -126,14 +126,19 @@ public:
     // void setBasicBehaviour(std::shared_ptr<BasicBehaviour> basicBehaviour);
     void usePlan(const AbstractPlan* plan);
     void setParent(RunningPlan* parent) { _parent = parent; }
-    void setFailHandlingNeeded(bool failHandlingNeeded) { _status.failHandlingNeeded = true; }
+    void setFailureHandlingNeeded(bool failHandlingNeeded) { _status.failHandlingNeeded = true; }
     void setAssignment(const Assignment& assignment) { _assignment = assignment; }
+    void adaptAssignment(const RunningPlan& replacement);
+    void clearFailures();
     // void setActive(bool active);
 
     PlanChange tick(RuleBook* rules);
 
     const ConditionStore& getConstraintStore() const { return _constraintStore; }
     ConditionStore& editConstraintStore() { return _constraintStore; }
+
+    const CycleManager& getCycleManagement() const { return _cycleManagement; }
+    CycleManager& editCycleManagement() { return _cycleManagement; }
 
     // Temporary helper:
     std::shared_ptr<RunningPlan> getSharedPointer() { return shared_from_this(); }
@@ -149,13 +154,13 @@ public:
     void addChildren(const std::vector<RunningPlan*>& runningPlans);
     // void addChildren(std::list<std::shared_ptr<RunningPlan>>& children);
     void moveState(const State* nextState);
-    void clearFailures();
+
     void clearFailedChildren();
     void addFailure();
     int getFailure();
     void deactivateChildren();
     void clearChildren();
-    void adaptAssignment(std::shared_ptr<RunningPlan> r);
+
     void setFailedChild(const AbstractPlan* child);
     void accept(IPlanTreeVisitor* vis);
     void deactivate();
@@ -166,12 +171,12 @@ public:
 
     void setActiveEntryPoint(EntryPoint* activeEntryPoint);
     void limitToRobots(const AgentGrp& robots);
-    std::shared_ptr<CycleManager> getCycleManagement();
+
     void revokeAllConstraints();
     void attachPlanConstraints();
     bool recursiveUpdateAssignment(
             std::list<std::shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, std::list<const supplementary::AgentID*> noUpdates, AlicaTime now);
-    void toMessage(IdGrp& message, std::shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const;
+    void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& depth, int curDepth) const;
     std::string toString() const;
     const supplementary::AgentID* getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
     AlicaEngine* getAlicaEngine() const { return _ae; }

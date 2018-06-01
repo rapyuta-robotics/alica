@@ -64,7 +64,7 @@ std::unique_ptr<map<const supplementary::AgentID*, shared_ptr<SimplePlanTree>, s
     return ret;
 }
 
-void TeamObserver::tick(shared_ptr<RunningPlan> root)
+void TeamObserver::tick(RunningPlan* root)
 {
     AlicaTime time = ae->getAlicaClock()->now();
 
@@ -84,7 +84,7 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root)
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
     if (changedSomeAgent) {
         ae->getRoleAssignment()->update();
-        this->ae->getLog()->eventOccured("TeamChanged");
+        this->ae->getLog()->eventOccurred("TeamChanged");
     }
 
     cleanOwnSuccessMarks(root);
@@ -119,7 +119,7 @@ void TeamObserver::tick(shared_ptr<RunningPlan> root)
 #endif
 
         if (root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time)) {
-            this->ae->getLog()->eventOccured("MsgUpdate");
+            this->ae->getLog()->eventOccurred("MsgUpdate");
         }
     }
 }
@@ -159,17 +159,17 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
  * Removes any successmarks left by this robot in plans no longer inhabited by any agent.
  * @param root a shared_ptr of a RunningPlan
  */
-void TeamObserver::cleanOwnSuccessMarks(shared_ptr<RunningPlan> root)
+void TeamObserver::cleanOwnSuccessMarks(RunningPlan* root)
 {
     AbstractPlanGrp presentPlans;
     if (root != nullptr) {
-        list<shared_ptr<RunningPlan>> q;
+        std::list<RunningPlan*> q;
         q.push_front(root);
         while (q.size() > 0) {
-            shared_ptr<RunningPlan> p = q.front();
+            RunningPlan* p = q.front();
             q.pop_front();
             if (!p->isBehaviour()) {
-                presentPlans.push_back(p->getPlan());
+                presentPlans.push_back(p->getActivePlan());
                 for (RunningPlan* c : p->getChildren()) {
                     q.push_back(c);
                 }

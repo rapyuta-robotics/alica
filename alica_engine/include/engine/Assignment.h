@@ -2,7 +2,7 @@
 
 #include "IAssignment.h"
 #include "engine/Types.h"
-#include "engine/collections/StateCollection.h"
+#include <engine/model/Plan.h>
 #include <supplementary/AgentID.h>
 
 #include <algorithm>
@@ -21,6 +21,33 @@ class PartialAssignment;
 class State;
 struct AllocationAuthorityInfo;
 
+class AgentStatePairs
+{
+public:
+    AgentStatePairs() {}
+    bool hasAgent(const AgentIDConstPtr id) const;
+    const State* getStateOf(const AgentIDConstPtr id) const;
+
+    const std::vector<AgentStatePair>& getRaw() const { return _data; }
+    std::vector<AgentStatePair>& editRaw() { return _data; }
+
+    int size() const { return static_cast<int>(_data.size()); }
+
+    void clear() { _data.clear(); }
+    void emplace_back(AgentIDConstPtr id, const State* s) { _data.emplace_back(id, s); }
+
+    void removeAt(int idx) { _data.erase(_data.begin() + idx); }
+    void removeAllIn(const AgentGrp& agents);
+
+    std::vector<AgentStatePair>::iterator begin() { return _data.begin(); }
+    std::vector<AgentStatePair>::iterator end() { return _data.end(); }
+    std::vector<AgentStatePair>::const_iterator begin() const { return _data.begin(); }
+    std::vector<AgentStatePair>::const_iterator end() const { return _data.end(); }
+
+private:
+    std::vector<AgentStatePair> _data;
+};
+
 /**
  * Contains all allocation information for a single plan. This includes the robot-task mapping, robot-state mapping and
  * success information.
@@ -28,6 +55,7 @@ struct AllocationAuthorityInfo;
 class Assignment
 {
 public:
+    Assignment();
     Assignment(const PartialAssignment& pa);
     Assignment(const Plan* p, const AllocationAuthorityInfo& aai);
     Assignment(const Plan* p);
@@ -41,18 +69,32 @@ public:
     bool isSuccessfull() const;
 
     bool hasAgent(AgentIDConstPtr id) const;
+    int getEntryPointCount() const { return static_cast<int>(_assignmentData.size()); }
+    const EntryPoint* getEntryPoint(int idx) const { return _plan->getEntryPoints()[idx]; }
+    const EntryPoint* getEntryPointOfAgent(AgentIDConstPtr id) const;
+
+    void getAllAgents(AgentGrp& o_agents) const;
+    const AgentStatePairs& getAgentsWorking(int idx) const { return _assignmentData[idx]; }
+    const AgentStatePairs* getAgentsWorking(const EntryPoint* ep) const;
+    void getAgentsWorking(const EntryPoint* ep, AgentGrp& o_agents) const;
+    void getAgentsWorking(int idx, AgentGrp& o_agents) const;
+    void getAgentsWorkingAndFinished(const EntryPoint* ep, AgentGrp& o_agents) const;
+    double getLastUtilityValue() const { return _lastUtility; }
+
+    void getAgentsInState(const State* s, AgentGrp& o_agents) const;
+
     bool updateAgent(AgentIDConstPtr agent, const EntryPoint* e);
-
-    void getAgentsInState(const State* s, AgentGrp& o_agents);
-
+    void setAllToInitialState(const AgentGrp& agents, const EntryPoint* e);
     void clear();
+    void moveAllFromTo(const EntryPoint* scope, const State* from, const State* to);
+    void adaptTaskChangesFrom(const Assignment& as);
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const Assignment& a);
     const Plan* _plan;
-    using AgentStatePair = std::pair<AgentIDConstPtr, const State*>;
-    std::vector<std::vector<AgentStatePair>> _assignmentData;
-    std::vector<std::vector<AgentIDConstPtr>> _successData;
+    std::vector<AgentStatePairs> _assignmentData;
+    std::vector<AgentGrp> _successData;
+    double _lastUtility;
 };
 
 std::ostream& operator<<(std::ostream& out, const Assignment& a);

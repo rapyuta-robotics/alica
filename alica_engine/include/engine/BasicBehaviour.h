@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/Assignment.h"
 #include "engine/Types.h"
 #include "engine/model/BehaviourConfiguration.h"
 #include "supplementary/AgentID.h"
@@ -110,9 +111,9 @@ protected:
     const EntryPoint* getHigherEntryPoint(const std::string& planName, const std::string& taskName);
 
     // TODO: these methods may have race conditions, check and refactor
-    const AgentGrp* robotsInEntryPointOfHigherPlan(const EntryPoint* ep);
+    const AgentStatePairs* agentsInEntryPointOfHigherPlan(const EntryPoint* ep);
 
-    const AgentGrp* robotsInEntryPoint(const EntryPoint* ep);
+    const AgentStatePairs* agentsInEntryPoint(const EntryPoint* ep);
     AlicaEngine* engine;
 
 private:

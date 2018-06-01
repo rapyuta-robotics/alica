@@ -30,14 +30,14 @@ struct TaskRoleStruct;
 
 class UtilityFunction
 {
-  public:
+public:
     UtilityFunction(const std::string& name, std::list<USummand*> utilSummands, double priorityWeight, double similarityWeight, const Plan* plan);
     virtual ~UtilityFunction();
     std::list<USummand*>& getUtilSummands();
     void setUtilSummands(std::list<USummand*> utilSummands);
-    virtual double eval(std::shared_ptr<RunningPlan> newRp, std::shared_ptr<RunningPlan> oldRp);
+    virtual double eval(const RunningPlan* newRp, const RunningPlan* oldRp);
     virtual UtilityInterval eval(IAssignment* newAss, IAssignment* oldAss);
-    void updateAssignment(IAssignment* newAss, IAssignment* oldAss);
+    void updateAssignment(IAssignment* newAss, const Assignment* oldAss);
     void cacheEvalData();
     void init(AlicaEngine* ae);
     virtual std::pair<std::vector<double>, double>* differentiate(IAssignment* newAss);
@@ -48,9 +48,9 @@ class UtilityFunction
 
     const double DIFFERENCETHRESHOLD = 0.0001; // Max difference for the same result
 
-  protected:
+protected:
     UtilityInterval getPriorityResult(IAssignment* ass);
-    UtilityInterval getSimilarity(IAssignment* newAss, IAssignment* oldAss);
+    UtilityInterval getSimilarity(const IAssignment* newAss, const Assignment* oldAss);
 
     const Plan* plan;
 

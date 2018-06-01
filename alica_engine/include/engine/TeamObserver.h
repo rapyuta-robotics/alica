@@ -26,11 +26,11 @@ class SimplePlanTree;
  */
 class TeamObserver
 {
-  public:
+public:
     TeamObserver(AlicaEngine* ae);
     virtual ~TeamObserver();
 
-    void tick(std::shared_ptr<RunningPlan> root);
+    void tick(RunningPlan* root);
     void doBroadCast(const IdGrp& msg) const;
 
     std::unique_ptr<std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>> getTeamPlanTrees();
@@ -43,7 +43,7 @@ class TeamObserver
     virtual void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
     void close();
 
-  private:
+private:
     const EntryPoint* entryPointOfState(const State* state) const;
 
     AlicaEngine* ae;
@@ -56,7 +56,7 @@ class TeamObserver
 
     std::shared_ptr<std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>> simplePlanTrees;
 
-    void cleanOwnSuccessMarks(std::shared_ptr<RunningPlan> root);
+    void cleanOwnSuccessMarks(RunningPlan* root);
     std::shared_ptr<SimplePlanTree> sptFromMessage(const supplementary::AgentID* robotId, const IdGrp& ids) const;
 };
 

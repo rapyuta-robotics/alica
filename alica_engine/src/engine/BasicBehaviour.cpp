@@ -17,7 +17,7 @@
 #include <supplementary/ITrigger.h>
 #include <supplementary/Timer.h>
 
-#include <assert>
+#include <assert.h>
 #include <iostream>
 
 namespace alica
@@ -163,7 +163,7 @@ void BasicBehaviour::setTrigger(supplementary::ITrigger* trigger)
     this->behaviourTrigger->registerCV(&this->runCV);
 }
 
-const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryPointOfHigherPlan(const EntryPoint* ep)
+const AgentStatePairs* BasicBehaviour::agentsInEntryPointOfHigherPlan(const EntryPoint* ep)
 {
     if (ep == nullptr) {
         return nullptr;
@@ -173,21 +173,21 @@ const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryP
         assert(cur->getActivePlan());
         const EntryPointGrp& eps = static_cast<const Plan*>(cur->getActivePlan())->getEntryPoints();
         if (std::find(eps.begin(), eps.end(), ep) != eps.end()) {
-            return cur->getAssignment()->getRobotsWorking(ep);
+            return cur->getAssignment().getAgentsWorking(ep);
         }
         cur = cur->getParent();
     }
     return nullptr;
 }
 
-const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryPoint(const EntryPoint* ep)
+const AgentStatePairs* BasicBehaviour::agentsInEntryPoint(const EntryPoint* ep)
 {
     if (ep == nullptr) {
         return nullptr;
     }
     RunningPlan* cur = _runningPlan->getParent();
     if (cur != nullptr) {
-        return cur->getAssignment().getRobotsWorking(ep);
+        return cur->getAssignment().getAgentsWorking(ep);
     }
     return nullptr;
 }
@@ -285,17 +285,17 @@ const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskNam
 
 const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planName, const std::string& taskName)
 {
-    std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
+    RunningPlan* cur = _runningPlan->getParent();
     while (cur != nullptr) {
         if (cur->getActivePlan()->getName() == planName) {
-            for (const EntryPoint* e : ((Plan*) cur->getActivePlan())->getEntryPoints()) {
+            for (const EntryPoint* e : static_cast<const Plan*>(cur->getActivePlan())->getEntryPoints()) {
                 if (e->getTask()->getName() == taskName) {
                     return e;
                 }
             }
             return nullptr;
         }
-        cur = cur->getParent().lock();
+        cur = cur->getParent();
     }
     return nullptr;
 }

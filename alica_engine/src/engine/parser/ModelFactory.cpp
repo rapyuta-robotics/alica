@@ -720,14 +720,14 @@ void ModelFactory::createPlanningProblem(tinyxml2::XMLDocument* node)
     if (attrPtr) {
         attr = attrPtr;
         if (attr.compare("Interactive") == 0) {
-            p->setPlanningType(Interactive);
+            p->setPlanningType(PlanningType::Interactive);
         } else if (attr.compare("Online") == 0) {
-            p->setPlanningType(Online);
+            p->setPlanningType(PlanningType::Online);
         } else {
-            p->setPlanningType(Offline);
+            p->setPlanningType(PlanningType::Offline);
         }
     } else {
-        p->setPlanningType(Online);
+        p->setPlanningType(PlanningType::Online);
     }
 
     attrPtr = element->Attribute("requirements");
@@ -1419,8 +1419,7 @@ const EntryPoint* ModelFactory::generateIdleEntryPoint()
     EntryPoint* idleEP = new EntryPoint();
     idleEP->setName("IDLE-ep");
     idleEP->setId(EntryPoint::IDLEID);
-    idleEP->setMinCardinality(0);
-    idleEP->setMaxCardinality(std::numeric_limits<int>::max());
+    idleEP->_cardinality = Interval<int>(0, std::numeric_limits<int>::max());
     Task* idleTask = new Task(true);
     idleTask->setName("IDLE-TASK");
     idleTask->setId(Task::IDLEID);
