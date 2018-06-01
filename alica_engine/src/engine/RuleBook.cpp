@@ -6,7 +6,6 @@
 #include "engine/RunningPlan.h"
 #include "engine/UtilityFunction.h"
 #include "engine/allocationauthority/CycleManager.h"
-#include "engine/collections/StateCollection.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PreCondition.h"
