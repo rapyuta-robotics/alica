@@ -9,7 +9,6 @@
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/allocationauthority/EntryPointRobotPair.h"
 #include "engine/collections/AssignmentCollection.h"
-#include "engine/collections/StateCollection.h"
 #include "engine/containers/EntryPointRobots.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"

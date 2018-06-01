@@ -9,6 +9,8 @@
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
 
+#include <alica_common_config/debug_output.h>
+
 namespace alica
 {
 
@@ -68,7 +70,7 @@ void BehaviourPool::stopAll()
     for (const BehaviourConfiguration* beh : behaviourConfs) {
         auto bbPtr = _availableBehaviours.at(beh);
         if (bbPtr == nullptr) {
-            std::cerr << "BP::stop(): Found Behaviour without an BasicBehaviour attached!" << std::endl;
+            ALICA_ERROR_MSG("BP::stop(): Found Behaviour without an BasicBehaviour attached!");
             continue;
         }
 
@@ -82,7 +84,7 @@ void BehaviourPool::stopAll()
  */
 void BehaviourPool::startBehaviour(std::shared_ptr<RunningPlan> rp)
 {
-    if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp->getPlan())) {
+    if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp->getActivePlan())) {
         auto bb = _availableBehaviours.at(bc);
         if (bb != nullptr) {
             // set both directions rp <-> bb
@@ -92,8 +94,8 @@ void BehaviourPool::startBehaviour(std::shared_ptr<RunningPlan> rp)
             bb->start();
         }
     } else {
-        std::cerr << "BP::startBehaviour(): Cannot start Behaviour of given RunningPlan! Plan Name: " << rp->getPlan()->getName()
-                  << " Plan Id: " << rp->getPlan()->getId() << std::endl;
+        ALICA_ERROR_MSG("BP::startBehaviour(): Cannot start Behaviour of given RunningPlan! Plan Name: " << rp->getActivePlan()->getName()
+                                                                                                         << " Plan Id: " << rp->getActivePlan()->getId());
     }
 }
 
@@ -109,8 +111,8 @@ void BehaviourPool::stopBehaviour(std::shared_ptr<RunningPlan> rp)
             bb->stop();
         }
     } else {
-        std::cerr << "BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp->getPlan()->getName()
-                  << " Plan Id: " << rp->getPlan()->getId() << std::endl;
+        ALICA_ERROR_MSG("BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp->getActivePlan()->getName()
+                                                                                                       << " Plan Id: " << rp->getActivePlan()->getId());
     }
 }
 

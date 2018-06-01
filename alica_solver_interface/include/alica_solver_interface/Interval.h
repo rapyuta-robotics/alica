@@ -10,11 +10,11 @@ namespace alica
 template <typename T>
 class Interval
 {
-  public:
+public:
     constexpr Interval() {}
     constexpr Interval(T min, T max)
-        : _min(min)
-        , _max(max)
+            : _min(min)
+            , _max(max)
     {
     }
 
@@ -44,7 +44,23 @@ class Interval
     constexpr bool operator==(const Interval<T> o) const { return _min == o._min && _max == o._max; }
     constexpr bool operator!=(const Interval<T> o) const { return !(*this == o); }
 
-  private:
+    Interval<T>& operator/=(const T v)
+    {
+        *this = *this / v;
+        return *this;
+    }
+    Interval<T>& operator*=(const T v)
+    {
+        *this = *this * v;
+        return *this;
+    }
+    Interval<T>& operator+=(const Interval<T> v)
+    {
+        *this = *this + v;
+        return *this;
+    }
+
+private:
     T _min;
     T _max;
 };
@@ -54,5 +70,26 @@ std::ostream& operator<<(std::ostream& out, const Interval<T> c)
 {
     out << "[" << c.getMin() << ", " << c.getMax() << "]";
     return out;
+}
+
+template <typename T>
+constexpr Interval<T> operator+(const Interval<T> a, const Interval<T> b)
+{
+    return Interval<T>(a._min + b._min, a._max + b._max);
+}
+template <typename T>
+constexpr Interval<T> operator*(const Interval<T> a, T b)
+{
+    return Interval<T>(a._min * b, a._max * b);
+}
+template <typename T>
+constexpr Interval<T> operator*(T b, const Interval<T> a)
+{
+    return a * b;
+}
+template <typename T>
+constexpr Interval<T> operator/(const Interval<T> a, T b)
+{
+    return Interval<T>(a._min / b, a._max / b);
 }
 }

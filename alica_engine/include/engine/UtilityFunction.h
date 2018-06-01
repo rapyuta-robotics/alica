@@ -1,20 +1,8 @@
-/*
- * UtilityFunction.h
- *
- *  Created on: Jun 4, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef UTILITYFUNCTION_H_
-#define UTILITYFUNCTION_H_
-//#define UFDEBUG
+#pragma once
 
 #include "UtilityInterval.h"
 #include "engine/RunningPlan.h"
-#include <algorithm>
-#include <list>
 #include <map>
-#include <memory>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -31,45 +19,43 @@ struct TaskRoleStruct;
 class UtilityFunction
 {
 public:
-    UtilityFunction(const std::string& name, std::list<USummand*> utilSummands, double priorityWeight, double similarityWeight, const Plan* plan);
-    virtual ~UtilityFunction();
-    std::list<USummand*>& getUtilSummands();
-    void setUtilSummands(std::list<USummand*> utilSummands);
-    virtual double eval(const RunningPlan* newRp, const RunningPlan* oldRp);
-    virtual UtilityInterval eval(IAssignment* newAss, IAssignment* oldAss);
+    UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan);
+    ~UtilityFunction();
+    const std::vector<USummand*>& getUtilSummands() const { return _utilSummands; };
+    std::vector<USummand*>& editUtilSummands() { return _utilSummands; };
+
+    double eval(const RunningPlan* newRp, const RunningPlan* oldRp);
+    UtilityInterval eval(IAssignment* newAss, IAssignment* oldAss);
     void updateAssignment(IAssignment* newAss, const Assignment* oldAss);
     void cacheEvalData();
     void init(AlicaEngine* ae);
-    virtual std::pair<std::vector<double>, double>* differentiate(IAssignment* newAss);
+
     static void initDataStructures(AlicaEngine* ae);
-    virtual std::string toString() const;
-    const Plan* getPlan() const { return plan; }
-    const std::map<TaskRoleStruct, double>& getPriorityMartix() const { return priorityMatrix; }
+
+    const Plan* getPlan() const { return _plan; }
+    // const std::map<TaskRoleStruct, double>& getPriorityMartix() const { return priorityMatrix; }
 
     const double DIFFERENCETHRESHOLD = 0.0001; // Max difference for the same result
 
-protected:
-    UtilityInterval getPriorityResult(IAssignment* ass);
-    UtilityInterval getSimilarity(const IAssignment* newAss, const Assignment* oldAss);
+private:
+    friend std::stringstream& operator<<(std::stringstream& ss, const UtilityFunction& uf);
+    UtilityInterval getPriorityResult(IAssignment* ass) const;
+    UtilityInterval getSimilarity(const IAssignment* newAss, const Assignment* oldAss) const;
 
-    const Plan* plan;
+    const Plan* _plan;
+    std::vector<USummand*> _utilSummands;
 
-    std::string name = "DefaultUtilityFunction";
     // For default priority based utility summand (which is integrated in every UF)
-    std::map<TaskRoleStruct, double> priorityMatrix;
-    std::map<int64_t, double> roleHighestPriorityMap;
+    std::map<TaskRoleStruct, double> _priorityMatrix;
+    std::map<int64_t, double> _roleHighestPriorityMap;
     // For default similarity based utility summand (which is integrated in every UF)
-    double priorityWeight;
-    double similarityWeight;
-    AlicaEngine* ae;
-    IRoleAssignment* ra;
-    // List of normal utility summands
-    std::list<USummand*> utilSummands;
-    UtilityInterval priResult;
+    double _priorityWeight;
+    double _similarityWeight;
 
-    UtilityInterval simUI;
+    AlicaEngine* _ae;
+    IRoleAssignment* _ra;
 };
 
-} /* namespace alica */
+std::stringstream& operator<<(std::stringstream& ss, const UtilityFunction& uf);
 
-#endif /* UTILITYFUNCTION_H_ */
+} /* namespace alica */
