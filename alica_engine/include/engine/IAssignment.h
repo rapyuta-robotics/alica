@@ -24,12 +24,12 @@ class Iterator
     AgentIdCOnstPtr operator*();
     Iterator& operator++();
     bool operator==(const Iterator& o);
-}
+};
 
 class View
 {
-    Iterator begin()
-            : Iterator end();
+    Iterator begin();
+    Iterator end();
 };
 
 /**

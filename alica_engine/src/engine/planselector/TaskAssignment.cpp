@@ -138,15 +138,11 @@ PartialAssignment* TaskAssignment::calcNextBestPartialAssignment(const Assignmen
         PartialAssignment* curPa = _fringe.back();
         _fringe.pop_back();
         ALICA_DEBUG_MSG("<--- TA: NEXT PA from fringe:");
-        << std::endl;
         ALICA_DEBUG_MSG(*curPa << "--->");
 
-        // Check if it is a goal
         if (curPa->isGoal()) {
-            // Save the goal in result
             goal = curPa;
         } else {
-
             ALICA_DEBUG_MSG("<--- TA: BEFORE fringe exp:");
             ALICA_DEBUG_MSG(_fringe << "--->");
             curPa->expand(_fringe, _pool, oldAss);
