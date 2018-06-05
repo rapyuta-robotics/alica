@@ -15,7 +15,7 @@ namespace alica
 {
 
 SimplePlanTree::SimplePlanTree()
-    : robotId(nullptr)
+        : robotId(nullptr)
 {
     this->state = nullptr;
     this->newSimplePlanTree = true;
@@ -30,7 +30,7 @@ bool SimplePlanTree::containsPlan(const AbstractPlan* plan) const
     if (this->getEntryPoint()->getPlan() == plan) {
         return true;
     }
-    for (const std::shared_ptr<SimplePlanTree>& spt : this->getChildren()) {
+    for (const std::shared_ptr<SimplePlanTree>& spt : getChildren()) {
         if (spt->containsPlan(plan)) {
             return true;
         }

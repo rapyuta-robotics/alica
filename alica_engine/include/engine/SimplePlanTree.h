@@ -16,9 +16,9 @@ namespace alica
  */
 class SimplePlanTree
 {
-  public:
+public:
     SimplePlanTree();
-    virtual ~SimplePlanTree();
+    ~SimplePlanTree();
     const EntryPoint* getEntryPoint() const { return entryPoint; }
     void setEntryPoint(const EntryPoint* entryPoint);
     const State* getState() const { return state; }
@@ -38,7 +38,7 @@ class SimplePlanTree
     bool containsPlan(const AbstractPlan* plan) const;
     std::string toString() const;
 
-  protected:
+protected:
     /**
      * The parent SimplePlanTree
      */

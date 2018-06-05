@@ -1,95 +1,97 @@
-/*
- * PartialAssignment.h
- *
- *  Created on: Jul 4, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef PARTIALASSIGNMENT_H_
-#define PARTIALASSIGNMENT_H_
-
-//#define SUCDEBUG
-
+#pragma once
 #include "engine/IAssignment.h"
 #include "engine/Types.h"
-#include "engine/collections/AssignmentCollection.h"
+#include "engine/UtilityInterval.h"
 #include "supplementary/AgentID.h"
 
-#include <algorithm>
-#include <limits>
-#include <list>
-#include <math.h>
-#include <memory>
-#include <sstream>
-#include <string>
 #include <vector>
 
 namespace alica
 {
-
-class EpByTaskComparer;
-class EntryPoint;
-class Plan;
-class SuccessCollection;
-class UtilityFunction;
-class DynCardinality;
-class SimplePlanTree;
 class PartialAssignmentPool;
+class TaskAssignment;
+
+/*
+class AssignmentProblem {
+    public:
+    AssignmentProblem(const AgentGrp& agents, std::vector<AgentGrp>& successData)
+        : _availableAgents(agents)
+        , _successData(successData)
+        {}
+    int getTotalRobotCount() const {return _availableAgents;}
+    const AgentGrp& getAvailableAgents() const {return _availableAgents;}
+    private:
+    AgentGrp _availableAgents;
+    std::vector<AgentGrp> _successData;
+};*/
 
 class PartialAssignment final : public IAssignment
 {
-  public:
-    PartialAssignment(PartialAssignmentPool* pap);
-    virtual ~PartialAssignment();
+public:
+    PartialAssignment();
+    ~PartialAssignment();
     void clear();
-    static void reset(PartialAssignmentPool* pap); // has to be called before calculating the task assignment
-    static PartialAssignment* getNew(PartialAssignmentPool* pap, const AgentGrp& robotIds, const Plan* plan, std::shared_ptr<SuccessCollection> sucCol);
-    static PartialAssignment* getNew(PartialAssignmentPool* pap, PartialAssignment* oldPA);
-    short getEntryPointCount() const override;
-    int totalRobotCount() const override;
-    const AgentGrp* getRobotsWorking(const EntryPoint* ep) const override;
-    const AgentGrp* getRobotsWorking(int64_t epid) const override;
-    std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(const EntryPoint* ep) override;
-    std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(int64_t epid) override;
-    std::shared_ptr<std::list<const supplementary::AgentID*>> getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) override;
-    bool addIfAlreadyAssigned(std::shared_ptr<SimplePlanTree> spt, const supplementary::AgentID* robot);
-    bool assignRobot(const supplementary::AgentID* robotId, int index);
-    std::shared_ptr<std::list<PartialAssignment*>> expand();
-    bool isValid() const override;
-    bool isGoal();
-    static bool compareTo(PartialAssignment* thisPa, PartialAssignment* newPa);
-    std::string toString() const override;
-    virtual AssignmentCollection* getEpRobotsMapping() const override { return epRobotsMapping; }
-    const Plan* getPlan() const { return plan; }
-    std::shared_ptr<UtilityFunction> getUtilFunc() const { return utilFunc; }
-    virtual std::shared_ptr<SuccessCollection> getEpSuccessMapping() const override { return epSuccessMapping; }
-    std::string assignmentCollectionToString() const override;
-    int getHash() const;
-    int getHashCached() const { return _hash; }
-    void setHash(int hash) const { _hash = hash; }
-    bool isHashCalculated() const { return _hash != 0; }
-    void setMax(double max);
-    const AgentGrp& getRobotIds() const;
+    void prepare(const Plan* p, const TaskAssignment* problem);
+    bool isValid() const;
+    bool isGoal() const;
+    const Plan* getPlan() const { return _plan; }
+    bool addIfAlreadyAssigned(SimplePlanTree* spt, AgentIDConstPtr agent, int idx);
+    bool assignUnassignedAgent(int agentIdx, int epIdx);
+    UtilityInterval getUtility() const { return _utility; }
+    const TaskAssignment* getProblem() const { return _problem; }
+    int getAssignedAgentCount() const { return _numAssignedAgents; }
 
-  private:
-    PartialAssignmentPool* pap;
+    bool expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool* pool, const Assignment* old) const;
 
-    // UtilityFunction
-    std::shared_ptr<UtilityFunction> utilFunc;
-    AssignmentCollection* epRobotsMapping;
-    AgentGrp robotIds;
-    std::vector<std::shared_ptr<DynCardinality>> dynCardinalities;
-    const Plan* plan;
-    const long PRECISION = 1073741824;
-    long compareVal = 0;
+    static bool compare(const PartialAssignment* a, const PartialAssignment* b);
 
-    std::shared_ptr<SuccessCollection> epSuccessMapping;
-    mutable int _hash;
-    static EpByTaskComparer epByTaskComparer;
+    /* short getEntryPointCount() const override;
+     int totalRobotCount() const override;
+     const AgentGrp* getRobotsWorking(const EntryPoint* ep) const override;
+     const AgentGrp* getRobotsWorking(int64_t epid) const override;
+     std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(const EntryPoint* ep) override;
+     std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsWorkingAndFinished(int64_t epid) override;
+     std::shared_ptr<std::list<const supplementary::AgentID*>> getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) override;
+     bool addIfAlreadyAssigned(std::shared_ptr<SimplePlanTree> spt, const supplementary::AgentID* robot);
+
+
+
+     std::string toString() const override;
+     virtual AssignmentCollection* getEpRobotsMapping() const override { return epRobotsMapping; }
+
+     std::shared_ptr<UtilityFunction> getUtilFunc() const { return utilFunc; }
+     virtual std::shared_ptr<SuccessCollection> getEpSuccessMapping() const override { return epSuccessMapping; }
+     std::string assignmentCollectionToString() const override;
+     int getHash() const;
+     int getHashCached() const { return _hash; }
+     void setHash(int hash) const { _hash = hash; }
+     bool isHashCalculated() const { return _hash != 0; }
+     void setMax(double max);
+     const AgentGrp& getRobotIds() const;*/
+
+private:
+    friend std::ostream& operator<<(std::ostream& out, const PartialAssignment& a);
+    const Plan* _plan;
+    const TaskAssignment* _problem;
+    std::vector<DynCardinality> _cardinalities;
+    std::vector<int> _assignment;
+    UtilityInterval _utility;
+    int _numAssignedAgents;
+    int _nextAgentIdx;
+
+    // long compareVal = 0;
+
+    // std::shared_ptr<SuccessCollection> epSuccessMapping;
+    // mutable int _hash;
+    // static EpByTaskComparer epByTaskComparer;
+
+    static bool s_allowIdling;
 };
 
-} /* namespace alica */
+std::ostream& operator<<(std::ostream& out, const PartialAssignment& a);
 
+} /* namespace alica */
+/*
 namespace std
 {
 template <>
@@ -120,6 +122,5 @@ struct hash<const alica::PartialAssignment>
         return hash;
     }
 };
+*/
 } // namespace std
-
-#endif /* PARTIALASSIGNMENT_H_ */

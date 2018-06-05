@@ -8,14 +8,15 @@
 #ifndef PLAN_H_
 #define PLAN_H_
 
+#include <list>
 #include <stddef.h>
 #include <string>
-#include <list>
 
 #include "AbstractPlan.h"
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 
 class EntryPoint;
 class FailureState;
@@ -29,7 +30,8 @@ class ExpressionHandler;
 /**
  * An ALICA plan
  */
-class Plan : public AbstractPlan {
+class Plan : public AbstractPlan
+{
 public:
     Plan(int64_t id = 0);
     virtual ~Plan();
@@ -46,6 +48,9 @@ public:
     int getMaxCardinality() const { return _maxCardinality; }
     int getMinCardinality() const { return _minCardinality; }
 
+    const UtilityFunction* getUtilityFunction() const { return _utilityFunction.get(); }
+    double getUtilityThreshold() const { return _utilityThreshold; }
+
     const PostCondition* getPostCondition() const { return _postCondition; }
 
     const TransitionGrp& getTransitions() const { return _transitions; }
@@ -53,7 +58,7 @@ public:
 
 private:
     friend ModelFactory;
-    friend ExpressionHandler;  // TODO: get rid of this
+    friend ExpressionHandler; // TODO: get rid of this
     void setEntryPoints(const EntryPointGrp& entryPoints);
     void setFailureStates(const FailureStateGrp& failurePoints);
     void setSuccessStates(const SuccessStateGrp& succesPoints);
@@ -73,8 +78,16 @@ private:
     SyncTransitionGrp _syncTransitions;
     TransitionGrp _transitions;
     const PostCondition* _postCondition;
+    /**
+     * This plan's Utility function
+     */
+    std::unique_ptr<UtilityFunction> _utilityFunction;
+    /**
+     * The utility threshold, the higher, the less likely dynamic changes are.
+     */
+    double _utilityThreshold;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* PLAN_H_ */

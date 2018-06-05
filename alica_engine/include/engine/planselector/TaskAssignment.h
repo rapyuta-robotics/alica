@@ -1,6 +1,6 @@
 #pragma once
 
-//#define EXPANSIONEVAL
+#define EXPANSIONEVAL
 //#define TA_DEBUG
 
 #include "engine/ITaskAssignment.h"
@@ -16,15 +16,11 @@
 namespace alica
 {
 
-class IAssignment;
 class Assignment;
-class Plan;
-class EntryPoint;
 class PartialAssignment;
 class SimplePlanTree;
 class TeamManager;
 class TeamObserver;
-class PartialAssignmentPool;
 
 /**
  * Represents an instance of an assignment problem for one plan or a plantype.
@@ -33,30 +29,39 @@ class PartialAssignmentPool;
 class TaskAssignment final : public ITaskAssignment
 {
 public:
-    TaskAssignment(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraRobots, bool preassignOtherRobots);
+    TaskAssignment(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool);
     virtual ~TaskAssignment();
+    void preassignOtherAgents();
+
     virtual Assignment getNextBestAssignment(const Assignment* oldAss) override;
-    std::string toString() const;
+
 #ifdef EXPANSIONEVAL
-    int getExpansionCount();
-    void setExpansionCount(int expansionCount);
+    int getExpansionCount() const { return _expantionCount; }
+    void setExpansionCount(int expansionCount) { _expansionCount = expansionCount; }
 #endif
+
+    int getAgentCount() const { return _agents.size(); }
+    const AgentGrp& getAgents() const { return _agents; }
+
+    std::string toString() const;
+
 private:
     PartialAssignment* calcNextBestPartialAssignment(const Assignment* oldAss);
 
-    // Plan to build an assignment for
-    TeamManager* tm;
-    TeamObserver* to;
-    PlanGrp planList;
-    AgentGrp robots;
-    std::vector<EntryPoint*> entryPointVector;
+    TeamManager* _tm;
+    TeamObserver* _to;
+    PartialAssignmentPool* _pool;
+    PlanGrp _plans;
+    AgentGrp _agents;
+    std::vector<SuccessCollection> _successData;
+
     // Fringe of the search tree
-    std::vector<PartialAssignment*> fringe;
+    std::vector<PartialAssignment*> _fringe;
     bool addAlreadyAssignedRobots(PartialAssignment* pa,
             std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>* simplePlanTreeMap);
 
 #ifdef EXPANSIONEVAL
-    int expansionCount;
+    int _expansionCount;
 #endif
 };
 

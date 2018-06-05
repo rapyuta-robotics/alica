@@ -8,6 +8,7 @@
 
 namespace alica
 {
+
 std::ostream& operator<<(std::ostream& out, const AgentGrp& ag)
 {
     for (const AgentIDConstPtr id : ag) {

@@ -14,12 +14,10 @@ namespace alica
 {
 
 AbstractPlan::AbstractPlan()
-    : AlicaElement()
-    , _utilityThreshold(1.0)
-    , _masterPlan(false)
-    , _utilityFunction(nullptr)
-    , _preCondition(nullptr)
-    , _runtimeCondition(nullptr)
+        : AlicaElement()
+        , _masterPlan(false)
+        , _preCondition(nullptr)
+        , _runtimeCondition(nullptr)
 
 {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
@@ -27,12 +25,10 @@ AbstractPlan::AbstractPlan()
 }
 
 AbstractPlan::AbstractPlan(int64_t id)
-    : AlicaElement(id)
-    , _utilityThreshold(1.0)
-    , _masterPlan(false)
-    , _utilityFunction(nullptr)
-    , _preCondition(nullptr)
-    , _runtimeCondition(nullptr)
+        : AlicaElement(id)
+        , _masterPlan(false)
+        , _preCondition(nullptr)
+        , _runtimeCondition(nullptr)
 {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     _authorityTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
@@ -106,16 +102,6 @@ void AbstractPlan::setRuntimeCondition(RuntimeCondition* runtimeCondition)
 void AbstractPlan::setPreCondition(PreCondition* preCondition)
 {
     _preCondition = preCondition;
-}
-
-void AbstractPlan::setUtilityFunction(std::shared_ptr<UtilityFunction> utilityFunction)
-{
-    _utilityFunction = utilityFunction;
-}
-
-void AbstractPlan::setUtilityThreshold(double utilityThreshold)
-{
-    _utilityThreshold = utilityThreshold;
 }
 
 } // namespace alica

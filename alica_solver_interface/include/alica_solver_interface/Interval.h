@@ -60,6 +60,19 @@ public:
         return *this;
     }
 
+    Interval<T>& operator++()
+    {
+        ++_min;
+        ++_max;
+        return *this;
+    }
+    Interval<T>& operator--()
+    {
+        --_min;
+        --_max;
+        return *this;
+    }
+
 private:
     T _min;
     T _max;
@@ -77,6 +90,7 @@ constexpr Interval<T> operator+(const Interval<T> a, const Interval<T> b)
 {
     return Interval<T>(a._min + b._min, a._max + b._max);
 }
+
 template <typename T>
 constexpr Interval<T> operator*(const Interval<T> a, T b)
 {

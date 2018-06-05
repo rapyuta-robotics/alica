@@ -1,30 +1,10 @@
-/*
- * DynCardinality.h
- *
- *  Created on: Jul 4, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef DYNCARDINALITY_H_
-#define DYNCARDINALITY_H_
+#include <alica_solver_interface/Interval.h>
 
-namespace alica {
+namespace alica
+{
 
-struct DynCardinality {
-public:
-    DynCardinality();
-    DynCardinality(int min, int max);
-    virtual ~DynCardinality();
-    int getMax();
-    void setMax(int max);
-    int getMin();
-    void setMin(int min);
-
-protected:
-    int min;
-    int max;
-};
+using DynCardinality = Interval<int>;
 
 } /* namespace alica */
-
-#endif /* DYNCARDINALITY_H_ */

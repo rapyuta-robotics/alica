@@ -28,7 +28,6 @@ class AuthorityManager;
 class PlanSelector;
 class PlanBase;
 class ExpressionHandler;
-class PartialAssignmentPool;
 class VariableSyncModule;
 class TeamManager;
 
@@ -43,13 +42,13 @@ class IRoleAssignment;
 
 class AlicaEngine
 {
-  public:
+public:
     static void abort(const std::string& msg);
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
     AlicaEngine(supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, const std::string& roleSetDir,
-                bool stepEngine);
+            bool stepEngine);
     ~AlicaEngine();
 
     // State modifiers:
@@ -69,7 +68,6 @@ class AlicaEngine
     BehaviourPool* getBehaviourPool() const { return behaviourPool; }
     const IAlicaCommunication* getCommunicator() const { return communicator; }
     Logger* getLog() const { return log; }
-    PartialAssignmentPool* getPartialAssignmentPool() const { return pap; }
     PlanBase* getPlanBase() const { return planBase; }
     PlanParser* getPlanParser() const { return planParser; }
     PlanRepository* getPlanRepository() const { return planRepository; }
@@ -117,7 +115,7 @@ class AlicaEngine
     template <class Prototype>
     const supplementary::AgentID* getID(Prototype& idPrototype) const;
 
-  private:
+private:
     void setStepEngine(bool stepEngine);
 
     PlanBase* planBase;
@@ -129,7 +127,6 @@ class AlicaEngine
     AuthorityManager* auth;
     PlanSelector* planSelector;
     TeamManager* teamManager;
-    PartialAssignmentPool* pap;
     SyncModule* syncModul;
     PlanRepository* planRepository;
     BlackBoard _blackboard;

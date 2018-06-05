@@ -43,7 +43,7 @@ UtilityFunction::~UtilityFunction()
  * roles and according to the similarity, if an oldRP is given and according to all
  * other utility summands of this utility function.
  */
-double UtilityFunction::eval(const RunningPlan* newRp, const RunningPlan* oldRp)
+double UtilityFunction::eval(const RunningPlan* newRp, const RunningPlan* oldRp) const
 {
     // Invalid Assignments have an Utility of -1 changed from 0 according to specs
     if (!newRp->getAssignment()->isValid()) {
@@ -58,7 +58,7 @@ double UtilityFunction::eval(const RunningPlan* newRp, const RunningPlan* oldRp)
  * ATTENTION PLZ: Return value is only significant with respect to current Utility of oldAss! (SimilarityMeasure)
  * @return The utility interval
  */
-UtilityInterval UtilityFunction::eval(IAssignment* newAss, const Assignment* oldAss)
+UtilityInterval UtilityFunction::eval(IAssignment* newAss, const Assignment* oldAss) const
 {
     UtilityInterval sumOfUI(0.0, 0.0);
     double sumOfWeights = 0.0;
@@ -103,12 +103,14 @@ UtilityInterval UtilityFunction::eval(IAssignment* newAss, const Assignment* old
  * roles and according to the similarity, if an oldAss is given.
  * @return void
  */
+/*
 void UtilityFunction::updateAssignment(IAssignment* newAss, IAssignment* oldAss)
 {
     UtilityInterval utilityInterval = eval(newAss, oldAss);
     newAss->setMin(utilityInterval.getMin());
     newAss->setMax(utilityInterval.getMax());
 }
+*/
 
 void UtilityFunction::cacheEvalData()
 {

@@ -19,7 +19,6 @@
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
 #include "engine/parser/PlanParser.h"
-#include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/TeamManager.h"
 #include <engine/syncmodule/SyncModule.h>
@@ -42,21 +41,20 @@ void AlicaEngine::abort(const std::string& msg)
  * The main class.
  */
 AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName,
-                         const std::string& roleSetDir, bool stepEngine)
-    : stepCalled(false)
-    , planBase(nullptr)
-    , planSelector(nullptr)
-    , communicator(nullptr)
-    , alicaClock(nullptr)
-    , sc(supplementary::SystemConfig::getInstance())
-    , terminating(false)
-    , expressionHandler(nullptr)
-    , log(nullptr)
-    , auth(nullptr)
-    , variableSyncModule(nullptr)
-    , pap(nullptr)
-    , stepEngine(stepEngine)
-    , agentIDManager(idManager)
+        const std::string& roleSetDir, bool stepEngine)
+        : stepCalled(false)
+        , planBase(nullptr)
+        , planSelector(nullptr)
+        , communicator(nullptr)
+        , alicaClock(nullptr)
+        , sc(supplementary::SystemConfig::getInstance())
+        , terminating(false)
+        , expressionHandler(nullptr)
+        , log(nullptr)
+        , auth(nullptr)
+        , variableSyncModule(nullptr)
+        , stepEngine(stepEngine)
+        , agentIDManager(idManager)
 {
     _maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
     this->useStaticRoles = (*sc)["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
@@ -116,11 +114,9 @@ bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCre
     this->auth = new AuthorityManager(this);
     this->log = new Logger(this);
     this->roleAssignment->init();
-    if (!this->pap) {
-        pap = new PartialAssignmentPool();
-    }
+
     if (!planSelector) {
-        this->planSelector = new PlanSelector(this, pap);
+        this->planSelector = new PlanSelector(this);
     }
 
     this->auth->init();
@@ -200,11 +196,6 @@ void AlicaEngine::shutdown()
 
     delete planSelector;
     planSelector = nullptr;
-
-    if (this->pap != nullptr) {
-        delete this->pap;
-        this->pap = nullptr;
-    }
 
     this->roleSet = nullptr;
     this->masterPlan = nullptr;

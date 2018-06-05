@@ -17,6 +17,14 @@
 
 namespace alica
 {
+std::ostream& operator<<(std::ostream& out, const std::vector<PartialAssignment*>& pas)
+{
+    for (const PartialAssignment* pa : pas) {
+        out << *pa << " ";
+    }
+
+    return out;
+}
 
 TaskAssignment::~TaskAssignment() {}
 
@@ -26,35 +34,54 @@ TaskAssignment::~TaskAssignment() {}
  * @param paraRobots robots to build an assignment for
  * @param a bool
  */
-TaskAssignment::TaskAssignment(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraRobots, bool preassignOtherRobots)
-        : robots(paraRobots)
-        , planList(planList)
-{
+TaskAssignment::TaskAssignment(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool)
+        : _agents(paraRobots)
+        , _plans(planList)
 #ifdef EXPANSIONEVAL
-    this->expansionCount = 0;
+        , _expansionCount(0)
 #endif
-    this->to = engine->getTeamObserver();
-    this->tm = engine->getTeamManager();
-    // sort robot ids ascending
-    std::sort(robots.begin(), robots.end(), supplementary::AgentIDComparator());
-    this->fringe = vector<PartialAssignment*>();
-    auto simplePlanTreeMap = to->getTeamPlanTrees();
-    PartialAssignment* curPa;
-    for (const Plan* curPlan : this->planList) {
-        // CACHE EVALUATION DATA IN EACH USUMMAND
+                  _to(engine->getTeamObserver()) _tm(engine->getTeamManager()) _ pool(&pool)
+{
+    // sort agent ids ascending
+    std::sort(_agents.begin(), _agents.end(), supplementary::AgentIDComparator());
+
+    _successData.reserve(_planList.size());
+    _fringe.reserve(_planList.size());
+
+    for (const Plan* curPlan : _planList) {
+        // prep successinfo for this plan
+        _successData.push_back(_to->getSuccessCollection(curPlan));
+        // allow caching of eval data
         curPlan->getUtilityFunction()->cacheEvalData();
+        // seed the fringe with a partial assignment
+        PartialAssignment* curPa = _pool->getNext();
 
-        // CREATE INITIAL PARTIAL ASSIGNMENTS
-        curPa = PartialAssignment::getNew(engine->getPartialAssignmentPool(), this->robots, curPlan, to->getSuccessCollection(curPlan));
+        curPa->prepare(curPlan, this);
 
-        // ASSIGN PREASSIGNED OTHER ROBOTS
-        if (preassignOtherRobots) {
-            if (this->addAlreadyAssignedRobots(curPa, &(*simplePlanTreeMap))) {
-                // revaluate this pa
-                curPlan->getUtilityFunction()->updateAssignment(curPa, nullptr);
-            }
+        _fringe.push_back(curPa);
+    }
+    stable_sort(_fringe.begin(), _fringe.end(), PartialAssignment::compare);
+}
+
+void TaskAssignment::preassignOtherAgents()
+{
+    // TODO: fix this call
+    auto simplePlanTreeMap = _to->getTeamPlanTrees();
+    // this call should only be made before the search starts
+    assert(_fringe.size() == __plans.size());
+    // ASSIGN PREASSIGNED OTHER ROBOTS
+    int i = 0;
+    bool changed = false;
+    for (PartialAssignment* curPa : _fringe) {
+        if (addAlreadyAssignedRobots(curPa, &(*simplePlanTreeMap))) {
+            // revaluate this pa
+            curPlan->getUtilityFunction()->updateAssignment(curPa, nullptr);
+            changed = true;
         }
-        this->fringe.push_back(curPa);
+        ++i;
+    }
+    if (changed) {
+        stable_sort(_fringe.begin(), _fringe.end(), PartialAssignment::compare);
     }
 }
 
@@ -86,18 +113,17 @@ std::string TaskAssignment::toString() const
     std::stringstream ss;
     ss << std::endl;
     ss << "--------------------TA:--------------------" << std::endl;
-    ss << "NumRobots: " << this->robots.size() << std::endl;
+    ss << "NumRobots: " << _agents.size() << std::endl;
     ss << "RobotIDs: ";
-    for (int i = 0; i < static_cast<int>(this->robots.size()); ++i) // RobotIds
-    {
-        ss << this->robots[i] << " ";
+    for (AgentIdConstPtr id : _agents) {
+        ss << *id << " ";
     }
     ss << std::endl;
-    ss << "Initial Fringe (Count " << this->fringe.size() << "):" << std::endl;
+    ss << "Initial Fringe (Count " << _fringe.size() << "):" << std::endl;
     ss << "{";
-    for (int i = 0; i < static_cast<int>(this->fringe.size()); ++i) // Initial PartialAssignments
+    for (PartialAssignment* pa : _fringe) // Initial PartialAssignments
     {
-        ss << this->fringe[i]->toString();
+        ss << *pa << std::endl;
     }
     ss << "}" << std::endl;
     ss << "-------------------------------------------" << std::endl;
@@ -105,71 +131,30 @@ std::string TaskAssignment::toString() const
     return ss.str();
 }
 
-#ifdef EXPANSIONEVAL
-int TaskAssignment::getExpansionCount()
-{
-    return expansionCount;
-}
-
-void TaskAssignment::setExpansionCount(int expansionCount)
-{
-    this->expansionCount = expansionCount;
-}
-#endif
-
 PartialAssignment* TaskAssignment::calcNextBestPartialAssignment(const Assignment* oldAss)
 {
-    PartialAssignment* curPa = nullptr;
     PartialAssignment* goal = nullptr;
-    while (this->fringe.size() > 0 && goal == nullptr) {
-        curPa = this->fringe.at(0);
-        this->fringe.erase(this->fringe.begin());
-#ifdef TA_DEBUG
-        std::cout << "<---" << std::endl;
-        std::cout << "TA: NEXT PA from fringe:" << std::endl;
-        std::cout << curPa->toString() << "--->" << std::endl;
-#endif
+    while (!_fringe.empty() && goal == nullptr) {
+        PartialAssignment* curPa = _fringe.back();
+        _fringe.pop_back();
+        ALICA_DEBUG_MSG("<--- TA: NEXT PA from fringe:");
+        << std::endl;
+        ALICA_DEBUG_MSG(*curPa << "--->");
+
         // Check if it is a goal
         if (curPa->isGoal()) {
             // Save the goal in result
             goal = curPa;
+        } else {
+
+            ALICA_DEBUG_MSG("<--- TA: BEFORE fringe exp:");
+            ALICA_DEBUG_MSG(_fringe << "--->");
+            curPa->expand(_fringe, _pool, oldAss);
+            ALICA_DEBUG_MSG("<--- TA: AFTER fringe exp:" << std::endl << "TA: fringe size " << _fringe.size());
+            ALICA_DEBUG_MSG(_fringe << "--->");
         }
-#ifdef TA_DEBUG
-        std::cout << "<---" << endl;
-        std::cout << "TA: BEFORE fringe exp:" << std::endl;
-        std::cout << "TA: robotID " << this->to->getOwnId() << std::endl;
-        for (int i = 0; i < this->fringe.size(); i++) {
-            cout << this->fringe[i]->toString();
-        }
-        std::cout << "--->" << std::endl;
-#endif
-        // Expand for the next search (maybe necessary later)
-        auto newPas = curPa->expand();
 #ifdef EXPANSIONEVAL
-        expansionCount++;
-#endif
-        // Every just expanded partial assignment must get an updated utility
-        for (int i = 0; i < static_cast<int>(newPas->size()); i++) {
-            // Update the utility values
-            auto iter = newPas->begin();
-            advance(iter, i);
-            (*iter)->getUtilFunc()->updateAssignment((*iter), oldAss);
-            if ((*iter)->getMax() != -1) // add this partial assignment only, if all assigned robots does not have a
-                                         // priority of -1 for any task
-            {
-                // Add to search fringe
-                this->fringe.push_back((*iter));
-            }
-        }
-        stable_sort(fringe.begin(), fringe.end(), PartialAssignment::compareTo);
-#ifdef TA_DEBUG
-        std::cout << "<---" << std::endl;
-        std::cout << "TA: AFTER fringe exp:" << std::endl;
-        std::cout << "TA: fringe size " << this->fringe.size() << std::endl;
-        for (int i = 0; i < this->fringe.size(); i++) {
-            cout << this->fringe[i]->toString();
-        }
-        std::cout << "--->" << std::endl;
+        ++expansionCount;
 #endif
     }
     return goal;
@@ -183,20 +168,20 @@ PartialAssignment* TaskAssignment::calcNextBestPartialAssignment(const Assignmen
 bool TaskAssignment::addAlreadyAssignedRobots(
         PartialAssignment* pa, std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>* simplePlanTreeMap)
 {
-    const supplementary::AgentID* ownRobotId = this->tm->getLocalAgentID();
+    AgentIDConstPtr ownAgentId = _tm->getLocalAgentID();
     bool haveToRevalute = false;
-    std::shared_ptr<SimplePlanTree> spt = nullptr;
-    for (const supplementary::AgentID* robot : robots) {
-        if (*ownRobotId == *robot) {
+    int i = 0;
+    for (const supplementary::AgentID* agent : _agents) {
+        if (*ownAgentId == *agent) {
             continue;
         }
-        auto iter = simplePlanTreeMap->find(robot);
+        auto iter = simplePlanTreeMap->find(agent);
         if (iter != simplePlanTreeMap->end()) {
-            spt = iter->second;
-            if (pa->addIfAlreadyAssigned(spt, robot)) {
+            if (pa->addIfAlreadyAssigned(iter->second.get(), agent, i)) {
                 haveToRevalute = true;
             }
         }
+        ++i;
     }
     return haveToRevalute;
 }

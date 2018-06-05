@@ -144,7 +144,7 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node)
     }
     attr = element->Attribute("utilityThreshold");
     if (!attr.empty()) {
-        plan->setUtilityThreshold(stod(attr));
+        plan->_utilityThreshold = stod(attr);
     }
     // insert into elements ma
     addElement(plan);

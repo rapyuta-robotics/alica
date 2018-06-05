@@ -16,17 +16,18 @@ class USummand;
 class IAssignment;
 struct TaskRoleStruct;
 
-class UtilityFunction
+class UtilityFunction final // currently, due to a shortcoming in autogeneated code, this class must not inherited from
 {
 public:
+    UtilityFunction();
     UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan);
     ~UtilityFunction();
     const std::vector<USummand*>& getUtilSummands() const { return _utilSummands; };
     std::vector<USummand*>& editUtilSummands() { return _utilSummands; };
 
-    double eval(const RunningPlan* newRp, const RunningPlan* oldRp);
-    UtilityInterval eval(IAssignment* newAss, IAssignment* oldAss);
-    void updateAssignment(IAssignment* newAss, const Assignment* oldAss);
+    double eval(const RunningPlan* newRp, const RunningPlan* oldRp) const;
+    UtilityInterval eval(const PartialAssignment* newAss, const Assignment* oldAss) const;
+    // void updateAssignment(IAssignment* newAss, const Assignment* oldAss);
     void cacheEvalData();
     void init(AlicaEngine* ae);
 

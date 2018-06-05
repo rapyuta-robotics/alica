@@ -1,12 +1,7 @@
 #pragma once
-
-#include "IAssignment.h"
+#include "engine/IAssignment.h"
 #include "engine/Types.h"
-#include <engine/model/Plan.h>
-#include <supplementary/AgentID.h>
-
 #include <algorithm>
-#include <memory>
 #include <sstream>
 #include <vector>
 
@@ -52,7 +47,7 @@ private:
  * Contains all allocation information for a single plan. This includes the robot-task mapping, robot-state mapping and
  * success information.
  */
-class Assignment
+class Assignment : public IAssignment
 {
 public:
     Assignment();

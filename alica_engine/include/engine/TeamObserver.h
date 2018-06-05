@@ -36,7 +36,7 @@ public:
     std::unique_ptr<std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>> getTeamPlanTrees();
 
     int successesInPlan(const Plan* plan);
-    std::shared_ptr<SuccessCollection> getSuccessCollection(const Plan* plan);
+    SuccessCollection createSuccessCollection(const Plan* plan) const;
     void updateSuccessCollection(const Plan* p, std::shared_ptr<SuccessCollection> sc);
 
     void notifyRobotLeftPlan(const AbstractPlan* plan);

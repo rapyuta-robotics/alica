@@ -230,9 +230,9 @@ int TeamObserver::successesInPlan(const Plan* plan)
     return ret;
 }
 
-shared_ptr<SuccessCollection> TeamObserver::getSuccessCollection(const Plan* plan)
+SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
 {
-    shared_ptr<SuccessCollection> ret = std::make_shared<SuccessCollection>(plan);
+    SuccessCollection ret;
     const EntryPointGrp* suc = nullptr;
     auto tmp = this->teamManager->getActiveAgents();
     for (const Agent* agent : *tmp) {
@@ -245,14 +245,14 @@ shared_ptr<SuccessCollection> TeamObserver::getSuccessCollection(const Plan* pla
         }
         if (suc != nullptr) {
             for (const EntryPoint* ep : *suc) {
-                ret->setSuccess(agent->getID(), ep);
+                ret.setSuccess(agent->getID(), ep);
             }
         }
     }
     suc = me->getSuccessMarks()->succeededEntryPoints(plan);
     if (suc != nullptr) {
         for (const EntryPoint* ep : *suc) {
-            ret->setSuccess(myId, ep);
+            ret.setSuccess(myId, ep);
         }
     }
     return ret;
