@@ -108,8 +108,7 @@ const RoleSet* PlanParser::parseRoleSet(std::string roleSetName, std::string rol
     tinyxml2::XMLDocument doc;
     doc.LoadFile(roleSetName.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
 
     RoleSet* r = this->mf->createRoleSet(&doc, this->masterPlan);
@@ -147,8 +146,7 @@ void PlanParser::parseRoleDefFile(const std::string& currentFile)
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
     this->mf->createRoleDefinitionSet(&doc);
 }
@@ -160,8 +158,7 @@ void PlanParser::parseCapabilityDefFile(const std::string& currentFile)
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
     this->mf->createCapabilityDefinitionSet(&doc);
 }
@@ -181,8 +178,7 @@ std::string PlanParser::findDefaultRoleSet(std::string dir)
         tinyxml2::XMLDocument doc;
         doc.LoadFile(s.c_str());
         if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-            std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-            throw std::exception();
+            AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
         }
 
         tinyxml2::XMLElement* element = doc.FirstChildElement();
@@ -272,8 +268,7 @@ void PlanParser::parsePlanningProblem(const std::string& currentFile)
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
     this->mf->createPlanningProblem(&doc);
 }
@@ -286,8 +281,7 @@ void PlanParser::parsePlanTypeFile(const std::string& currentFile)
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
     this->mf->createPlanType(&doc);
 }
@@ -299,8 +293,7 @@ void PlanParser::parseBehaviourFile(const std::string& currentFile)
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
     this->mf->createBehaviour(&doc);
 }
@@ -316,8 +309,7 @@ void PlanParser::parseTaskFile(const std::string& currentFile)
     std::cout << "TASKREPO " << currentFile << std::endl;
 #endif
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
     this->mf->createTasks(&doc);
 }
@@ -331,10 +323,14 @@ Plan* PlanParser::parsePlanFile(const std::string& planFile)
     tinyxml2::XMLDocument doc;
     doc.LoadFile(planFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
-    Plan* p = this->mf->createPlan(&doc);
+    Plan* p = nullptr;
+    try {
+        p = this->mf->createPlan(&doc);
+    } catch (std::exception& e) {
+        AlicaEngine::abort("PP: cannot create plan for " + planFile + "\nException: " + e.what());
+    }
     return p;
 }
 
@@ -379,7 +375,7 @@ int64_t PlanParser::parserId(tinyxml2::XMLElement* node)
         try {
             id = stol(idString);
         } catch (std::exception& e) {
-            AlicaEngine::abort("PP: Cannot convert ID to long: " + idString + " WHAT?? " + e.what());
+            AlicaEngine::abort("PP: Cannot convert ID to long: " + idString + "\nException: " + e.what());
         }
         return id;
     } else {
@@ -484,7 +480,7 @@ long PlanParser::fetchId(const string& idString, long id)
     try {
         id = stol(tokenId);
     } catch (std::exception& e) {
-        AlicaEngine::abort("PP: Cannot convert ID to long: " + tokenId + " WHAT?? " + e.what());
+        AlicaEngine::abort("PP: Cannot convert ID to long: " + tokenId + "\nException: " + e.what());
     }
     return id;
 }
