@@ -52,8 +52,7 @@ void ExpressionHandler::attachAll()
         Plan* p = it.second;
 
         auto ufGen = utilityCreator->createUtility(p->getId());
-        // TODO: remove this indirections
-        p->_utilityFunction = new UtilityFunction(*ufGen->getUtilityFunction(p).get());
+        p->_utilityFunction = ufGen->getUtilityFunction(p);
 
         if (p->getPreCondition() != nullptr) {
             if (p->getPreCondition()->isEnabled()) {

@@ -1,10 +1,12 @@
 #include "engine/planselector/PlanSelector.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/Output.h"
 #include "engine/PlanBase.h"
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/collections/RobotProperties.h"
+#include "engine/collections/SuccessCollection.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
@@ -13,23 +15,22 @@
 #include "engine/model/PlanType.h"
 #include "engine/model/PlanningProblem.h"
 #include "engine/model/State.h"
+#include "engine/model/Task.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/planselector/TaskAssignment.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include "engine/RunningPlan.h"
-#include "engine/model/AbstractPlan.h"
-
-#include "engine/Output.h"
-#include "engine/model/Task.h"
 #include <assert.h>
 
 using std::vector;
 
 namespace alica
 {
+namespace
+{
 constexpr int POOL_SIZE = 10100;
+}
 
 PlanSelector::PlanSelector(AlicaEngine* ae)
         : _pap(POOL_SIZE)
@@ -60,33 +61,43 @@ RunningPlan* PlanSelector::getBestSimilarAssignment(const RunningPlan& rp, const
     assert(!rp.isBehaviour());
     // Reset set index of the partial assignment object pool
     _pap.reset();
-
-    if (rp.getPlanType() == nullptr) {
-        return createRunningPlan(rp.getParent(), {static_cast<const Plan*>(rp.getActivePlan())}, robots, &rp, nullptr);
-    } else {
-        return createRunningPlan(rp.getParent(), rp.getPlanType()->getPlans(), robots, &rp, rp.getPlanType());
+    try {
+        if (rp.getPlanType() == nullptr) {
+            return createRunningPlan(rp.getParent(), {static_cast<const Plan*>(rp.getActivePlan())}, robots, &rp, nullptr);
+        } else {
+            return createRunningPlan(rp.getParent(), rp.getPlanType()->getPlans(), robots, &rp, rp.getPlanType());
+        }
+    } catch (const PoolExhaustedException& pee) {
+        ALICA_ERROR_MSG(pee.what());
+        _pap.increaseSize();
+        return nullptr;
     }
 }
 
 /**
  * Solves the task allocation problem for a given state.
  */
-bool PlanSelector::getPlansForState(
-        RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans) const
+bool PlanSelector::getPlansForState(RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
 {
     _pap.reset();
-    return getPlansForStateInternal(planningParent, plans, robotIDs, o_plans);
+    try {
+        return getPlansForStateInternal(planningParent, plans, robotIDs, o_plans);
+    } catch (const PoolExhaustedException& pee) {
+        ALICA_ERROR_MSG(pee.what());
+        _pap.increaseSize();
+        return false;
+    }
 }
 
 RunningPlan* PlanSelector::createRunningPlan(
-        RunningPlan* planningParent, const PlanGrp& plans, const AgentGrp& robotIDs, const RunningPlan* oldRp, const PlanType* relevantPlanType) const
+        RunningPlan* planningParent, const PlanGrp& plans, const AgentGrp& robotIDs, const RunningPlan* oldRp, const PlanType* relevantPlanType)
 {
     PlanGrp newPlanList;
     // REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
     for (const Plan* plan : plans) {
         // CHECK: number of robots < minimum cardinality of this plan
         if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + _to->successesInPlan(plan))) {
-            ALICA_DEBUG_MSG("PS: RobotIds: " << robotIDs << std::endl
+            ALICA_DEBUG_MSG("PS: AgentIds: " << robotIDs << std::endl
                                              << "= " << robotIDs.size() << " IDs are not enough for the plan " << plan->getName() << "!");
         } else {
             // this plan was ok according to its cardinalities, so we can add it
@@ -98,7 +109,7 @@ RunningPlan* PlanSelector::createRunningPlan(
         return nullptr;
     }
 
-    TaskAssignment ta(_ae, newPlanList, robotIDs);
+    TaskAssignment ta(_ae, newPlanList, robotIDs, _pap);
     const Assignment* oldAss = nullptr;
     RunningPlan* rp;
     if (oldRp == nullptr) {
@@ -121,7 +132,7 @@ RunningPlan* PlanSelector::createRunningPlan(
     do {
         rpChildren.clear();
         // ASSIGNMENT
-        rp->setAssignment(ta->getNextBestAssignment(oldAss));
+        rp->setAssignment(ta.getNextBestAssignment(oldAss));
 
         // PLAN (needed for Conditionchecks)
         rp->usePlan(rp->getAssignment().getPlan());
@@ -179,7 +190,7 @@ RunningPlan* PlanSelector::createRunningPlan(
 }
 
 bool PlanSelector::getPlansForStateInternal(
-        RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans) const
+        RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
 {
 
     ALICA_DEBUG_MSG("<######PS: GetPlansForState: Parent:" << (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null")

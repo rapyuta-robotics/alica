@@ -1,17 +1,19 @@
 #include "engine/planselector/PartialAssignment.h"
 
-#include "engine/collections/SuccessCollection.h"
-#include "engine/model/EntryPoint.h"
-#include "engine/model/Plan.h"
-#include "engine/model/Task.h"
-#include "engine/planselector/DynCardinality.h"
-
+#include <engine/SimplePlanTree.h>
+#include <engine/collections/SuccessCollection.h>
+#include <engine/model/EntryPoint.h>
+#include <engine/model/Plan.h>
+#include <engine/model/Task.h>
+#include <engine/planselector/DynCardinality.h>
+#include <engine/planselector/PartialAssignmentPool.h>
+#include <engine/planselector/TaskAssignment.h>
 namespace alica
 {
 namespace
 {
 // constexpr int INFINITE = std::numeric_limits<int>::max();
-constexpr int64_t PRECISION = 1073741824; // 0x40000000
+constexpr int64_t PRECISION = 0x40000000;
 }
 
 bool PartialAssignment::s_allowIdling = true;
@@ -34,9 +36,9 @@ bool PartialAssignment::isValid() const
 {
     int min = 0;
     for (const DynCardinality& dc : _cardinalities) {
-        min += _cardinalities[i].getMin();
+        min += dc.getMin();
     }
-    return min <= _problem->getTotalAgentCount() - _numAssignedAgents;
+    return min <= _problem->getAgentCount() - _numAssignedAgents;
 }
 
 /**
@@ -46,7 +48,7 @@ bool PartialAssignment::isValid() const
 bool PartialAssignment::isGoal() const
 {
     // There should be no unassigned agents anymore
-    if (_problem->getTotalRobotCount() != _numAssignedAgents) {
+    if (_problem->getAgentCount() != _numAssignedAgents) {
         return false;
     }
     // Every EntryPoint should be satisfied according to his minCar
@@ -57,6 +59,11 @@ bool PartialAssignment::isGoal() const
     }
     return true;
 }
+const SuccessCollection* PartialAssignment::getSuccessData() const
+{
+    return _problem->getSuccessData(_plan);
+}
+
 void PartialAssignment::clear()
 {
     _plan = nullptr;
@@ -67,14 +74,15 @@ void PartialAssignment::clear()
     _assignment.clear();
     _utility = UtilityInterval(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
 }
-void prepare(const Plan* p, const TaskAssignment* problem)
+
+void PartialAssignment::prepare(const Plan* p, const TaskAssignment* problem)
 {
     _plan = p;
-    _problem = nullptr;
+    _problem = problem;
     _numAssignedAgents = 0;
     _assignment.clear();
-    _assignment.resize(_totalRobotCount, -1);
-    _cardinalities.reserve(p->getEntryPoints());
+    _assignment.resize(problem->getAgentCount(), -1);
+    _cardinalities.reserve(p->getEntryPoints().size());
     for (const EntryPoint* ep : p->getEntryPoints()) {
         _cardinalities.push_back(ep->getCardinality());
     }
@@ -96,12 +104,12 @@ bool PartialAssignment::assignUnassignedAgent(int agentIdx, int epIdx)
 /**
  * If the robot has already assigned itself, this method updates the partial assignment accordingly
  */
-bool PartialAssignment::addIfAlreadyAssigned(SimplePlanTree* spt, AgentIDConstPtr robotId, int idx)
+bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, AgentIDConstPtr agent, int idx)
 {
     if (spt->getEntryPoint()->getPlan() == _plan) {
 
         for (int i = 0; i < static_cast<int>(_cardinalities.size()); ++i) {
-            const EntryPoint* curEp = _plan->getEntryPoint()[i];
+            const EntryPoint* curEp = _plan->getEntryPoints()[i];
             if (spt->getEntryPoint()->getId() == curEp->getId()) {
                 return assignUnassignedAgent(idx, i);
             }
@@ -111,7 +119,7 @@ bool PartialAssignment::addIfAlreadyAssigned(SimplePlanTree* spt, AgentIDConstPt
     // If there are children and we didnt find the robot until now, then go on recursive
     else {
         for (const std::shared_ptr<SimplePlanTree>& sptChild : spt->getChildren()) {
-            if (addIfAlreadyAssigned(sptChild.get(), robotId)) {
+            if (addIfAlreadyAssigned(sptChild.get(), agent, idx)) {
                 return true;
             }
         }
@@ -122,10 +130,11 @@ bool PartialAssignment::addIfAlreadyAssigned(SimplePlanTree* spt, AgentIDConstPt
 
 std::ostream& operator<<(std::ostream& out, const PartialAssignment& pa)
 {
-    const Plan* p = pa._plan : out << "Plan: " << (p != nullptr ? p->getName() : "NULL") << std::endl;
+    const Plan* p = pa._plan;
+    out << "Plan: " << (p != nullptr ? p->getName() : "NULL") << std::endl;
     out << "Utility: " << pa._utility << std::endl;
     out << "Agents: ";
-    for (AgentIDConstPtr agent : pa._problem.getAgents()) {
+    for (AgentIDConstPtr agent : pa._problem->getAgents()) {
         out << *agent << " ";
     }
     out << std::endl;
@@ -139,19 +148,19 @@ std::ostream& operator<<(std::ostream& out, const PartialAssignment& pa)
     out << " Assigned Robots: " << std::endl;
     int i = 0;
     for (int idx : pa._assignment) {
-        out << "Agent: " * pa._problem.getAgents()[i] << " Ep: " << idx;
+        out << "Agent: " << pa._problem->getAgents()[i] << " Ep: " << idx;
     }
     out << std::endl;
     //    out << "HashCode: " << this->getHash() << std::endl;
     return out;
 }
-bool PartialAssignment::expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool* pap, Assignment* old) const
+bool PartialAssignment::expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old)
 {
     // iterate next idx for cases of pre-assigned agents:
-    while (_nextAgentIdx < _cardinalities.size() && _assignment[_nextAgentIdx] >= 0) {
+    while (_nextAgentIdx < static_cast<int>(_cardinalities.size()) && _assignment[_nextAgentIdx] >= 0) {
         ++_nextAgentIdx;
     }
-    if (_nextAgentIdx >= _cardinalities.size()) {
+    if (_nextAgentIdx >= static_cast<int>(_cardinalities.size())) {
         // No robot left to expand
         return false;
     }
@@ -159,23 +168,23 @@ bool PartialAssignment::expand(std::vector<PartialAssignment*>& o_container, Par
     const int numChildren = static_cast<int>(_cardinalities.size());
     for (int i = 0; i < numChildren; ++i) {
         if (_cardinalities[i].getMax() > 0) {
-            PartialAssignment* newPa = pap->getNext();
+            PartialAssignment* newPa = pool.getNext();
             *newPa = *this;
             newPa->assignUnassignedAgent(_nextAgentIdx, i);
-            newPa->_utility = p->getUtilityFunction()->eval(newPa, old);
+            newPa->evaluate(old);
             if (newPa->_utility.getMax() > -1.0) {
-                o_container.insert(std::upper_bound(o_container.begin(), o_container.end(), newPa, compare););
+                o_container.insert(std::upper_bound(o_container.begin(), o_container.end(), newPa, compare), newPa);
                 change = true;
             }
         }
     }
     if (s_allowIdling) {
-        PartialAssignment* newPa = pap->getNext();
+        PartialAssignment* newPa = pool.getNext();
         *newPa = *this;
         newPa->assignUnassignedAgent(_nextAgentIdx, _cardinalities.size());
-        newPa->_utility = p->getUtilityFunction()->eval(newPa, old);
+        newPa->evaluate(old);
         if (newPa->_utility.getMax() > -1.0) {
-            o_container.insert(std::upper_bound(o_container.begin(), o_container.end(), newPa, compare););
+            o_container.insert(std::upper_bound(o_container.begin(), o_container.end(), newPa, compare), newPa);
             change = true;
         }
     }
@@ -191,8 +200,8 @@ bool PartialAssignment::compare(const PartialAssignment* a, const PartialAssignm
         return false;
     }
     assert(a->getProblem() == b->getProblem());
-    const int64_t aval = static_cast<int64_t>(std::round(a->getUtility() * PRECISION));
-    const int64_t bval = static_cast<int64_t>(std::round(b->getUtility() * PRECISION));
+    const int64_t aval = static_cast<int64_t>(std::round(a->getUtility().getMax() * PRECISION));
+    const int64_t bval = static_cast<int64_t>(std::round(b->getUtility().getMax() * PRECISION));
     if (aval > bval) {
         // a has higher possible utility
         return true;
@@ -229,38 +238,8 @@ bool PartialAssignment::compare(const PartialAssignment* a, const PartialAssignm
     return false;
 }
 
+} /* namespace alica */
 /*
-int PartialAssignment::getHash() const
-{
-    std::hash<const PartialAssignment> paHash;
-    return paHash(*this);
-}
-
-PartialAssignment::PartialAssignment(PartialAssignmentPool* pap)
-    : _hash(0)
-{
-    this->pap = pap;
-    this->utilFunc = nullptr;
-    this->epSuccessMapping = nullptr;
-    this->plan = nullptr;
-    this->epRobotsMapping = new AssignmentCollection(AssignmentCollection::maxEpsCount);
-    this->unassignedRobotIds = vector<const supplementary::AgentID*>();
-    this->dynCardinalities = vector<shared_ptr<DynCardinality>>(AssignmentCollection::maxEpsCount);
-    this->compareVal = PRECISION;
-    for (int i = 0; i < AssignmentCollection::maxEpsCount; i++) {
-        this->dynCardinalities[i] = std::make_shared<DynCardinality>();
-    }
-}
-
-PartialAssignment::~PartialAssignment()
-{
-    delete epRobotsMapping;
-}
-
-//	vector<int>& PartialAssignment::getunassignedRobots()
-//	{
-//		return unassignedRobots;
-//	}
 
 void PartialAssignment::clear()
 {
@@ -543,4 +522,3 @@ void PartialAssignment::setMax(double max)
     this->compareVal = (long)round(max * PRECISION);
 }
 */
-} /* namespace alica */

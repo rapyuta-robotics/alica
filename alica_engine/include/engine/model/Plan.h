@@ -48,7 +48,7 @@ public:
     int getMaxCardinality() const { return _maxCardinality; }
     int getMinCardinality() const { return _minCardinality; }
 
-    const UtilityFunction* getUtilityFunction() const { return _utilityFunction.get(); }
+    UtilityFunction* getUtilityFunction() const { return _utilityFunction.get(); }
     double getUtilityThreshold() const { return _utilityThreshold; }
 
     const PostCondition* getPostCondition() const { return _postCondition; }
@@ -81,7 +81,8 @@ private:
     /**
      * This plan's Utility function
      */
-    std::unique_ptr<UtilityFunction> _utilityFunction;
+    // TOD: change shared to unique ptr (this requires a change to autogeneration templates)
+    std::shared_ptr<UtilityFunction> _utilityFunction;
     /**
      * The utility threshold, the higher, the less likely dynamic changes are.
      */

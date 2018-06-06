@@ -19,6 +19,7 @@ EntryPoint::EntryPoint()
         , _successRequired(false)
         , _plan(nullptr)
         , _cardinality(0, 0)
+        , _index(-1)
 {
 }
 
@@ -29,6 +30,7 @@ EntryPoint::EntryPoint(int64_t id, const Plan* p, const Task* t, const State* s)
         , _successRequired(false)
         , _plan(p)
         , _cardinality(0, 0)
+        , _index(-1)
 {
 }
 

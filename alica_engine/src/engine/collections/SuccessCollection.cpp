@@ -1,110 +1,89 @@
-/*
- * SuccessCollection.cpp
- *
- *  Created on: Jun 17, 2014
- *      Author: Stefan Jakob
- */
 
 #include <engine/collections/SuccessCollection.h>
 
-#include "engine/model/Plan.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/model/Plan.h"
 #include "engine/model/Task.h"
 
-#include <sstream>
 #include <algorithm>
+#include <sstream>
 
-namespace alica {
+namespace alica
+{
 
-SuccessCollection::SuccessCollection(const Plan* plan) {
-    this->count = plan->getEntryPoints().size();
-    this->entryPoints = new const EntryPoint*[this->count];
-    this->robotIds = std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>(this->count);
-    int i = 0;
-
-    for (const EntryPoint* ep : plan->getEntryPoints()) {
-        entryPoints[i] = ep;
-        ++i;
-    }
-    // TODO: entrypoints should be presorted: add test and remove
-    std::sort(entryPoints, entryPoints + count, EntryPoint::compareTo);
-    for (int j = 0; j < count; ++j) {
-        this->robotIds[j] = std::make_shared<std::list<const supplementary::AgentID*>>();
-    }
+SuccessCollection::SuccessCollection(const Plan* plan)
+        : _plan(plan)
+        , _successData(plan->getEntryPoints().size())
+{
 }
 
-SuccessCollection::~SuccessCollection() {
-    delete[] this->entryPoints;
-}
+SuccessCollection::~SuccessCollection() {}
 
-int SuccessCollection::getCount() const {
-    return count;
-}
-
-void SuccessCollection::setCount(int count) {
-    this->count = count;
-}
-
-const EntryPoint** SuccessCollection::getEntryPoints() const {
-    return entryPoints;
-}
-
-void SuccessCollection::setSuccess(const supplementary::AgentID* robotId, const EntryPoint* ep) {
-    for (int i = 0; i < this->count; i++) {
-        if (this->entryPoints[i] == ep) {
-            this->robotIds[i]->push_back(robotId);
-            return;
-        }
+void SuccessCollection::setSuccess(AgentIDConstPtr robotId, const EntryPoint* ep)
+{
+    for (int i = 0; i < static_cast<int>(_plan->getEntryPoints().size()); ++i) {
+        if _plan->getEntryPoints()[i] == ep)
+            {
+                _successData[i].push_back(robotId);
+                return;
+            }
     }
 }
-void SuccessCollection::clear() {
-    for (int i = 0; i < this->count; i++) {
-        this->robotIds[i]->clear();
+void SuccessCollection::clear()
+{
+    for (AgentGrp& ag : _successData) {
+        ag.clear();
     }
 }
 
-std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>& SuccessCollection::getRobots() {
-    return robotIds;
-}
-
-void SuccessCollection::setRobots(std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>& robotIds) {
+void SuccessCollection::setRobots(std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>& robotIds)
+{
     this->robotIds = robotIds;
 }
 
-std::shared_ptr<std::list<const supplementary::AgentID*>> SuccessCollection::getRobots(const EntryPoint* ep) {
-    for (int i = 0; i < this->count; i++) {
-        if (this->getEntryPoints()[i] == ep) {
-            return this->robotIds[i];
+const AgentGrp* SuccessCollection::getAgents(const EntryPoint* ep) const
+{
+    const EntryPointGrp& eps = _plan->getEntryPoints();
+    for (int i = 0; i < static_cast<int>(eps.size()); ++i) {
+        if (eps[i] == ep) {
+            return &_successData[i];
         }
     }
     return nullptr;
 }
 
-std::shared_ptr<std::list<const supplementary::AgentID*>> SuccessCollection::getRobotsById(int64_t id) {
-    for (int i = 0; i < this->count; i++) {
-        if (this->getEntryPoints()[i]->getId() == id) {
-            return this->robotIds[i];
+const AgentGrp* SuccessCollection::getAgentsById(int64_t id) const
+{
+    const EntryPointGrp& eps = _plan->getEntryPoints();
+    for (int i = 0; i < static_cast<int>(eps.size()); ++i) {
+        if (eps[i]->getId() == id) {
+            return &_successData[i];
         }
     }
     return nullptr;
 }
 
-std::string SuccessCollection::toString() const {
-    std::stringstream ss;
-    ss << "";
-    for (int i = 0; i < this->count; i++) {
-        if (this->robotIds[i]->size() > 0) {
-            ss << this->entryPoints[i]->getTask()->getId() << ": ";
-            for (const supplementary::AgentID* r : *(this->robotIds[i])) {
-                ss << *r << " ";
+std::ostream& operator<<(std::ostream& out, const SuccessCollection& c)
+{
+    bool haveAny = false;
+    const EntryPointGrp& eps = _plan->getEntryPoints();
+    for (int i = 0; i < static_cast<int>(eps.size()); ++i) {
+        if (!_successData[i].empty()) {
+            if (!haveAny) {
+                out << "Success:" << std::endl;
             }
-            ss << std::endl;
+            haveAny = true;
+            out << eops[i]->getTask()->getId() << ": ";
+            for (AgentIDConstPtr r : _successData[i]) {
+                out << *r << " ";
+            }
+            out << std::endl;
         }
     }
-    if (ss.str().compare("") != 0) {
-        return "Successes: \n" + ss.str();
+    if (!haveAny) {
+        out << "No EntryPoint successful!";
     }
-    return "No EntryPoint successful!";
+    return out;
 }
 
 } /* namespace alica */

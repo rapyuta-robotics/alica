@@ -9,10 +9,10 @@ namespace alica
 
 class UtilityFunctionCreator : public IUtilityCreator
 {
-  public:
+public:
     virtual ~UtilityFunctionCreator();
     UtilityFunctionCreator();
-    std::shared_ptr<BasicUtilityFunction> createUtility(long utilityfunctionConfId);
+    std::shared_ptr<BasicUtilityFunction> createUtility(int64_t utilityfunctionConfId);
 };
 
 } /* namespace alica */

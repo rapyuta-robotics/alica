@@ -15,7 +15,7 @@ public:
             : std::runtime_error(msg)
     {
     }
-}
+};
 
 class PartialAssignmentPool
 {
@@ -24,14 +24,13 @@ public:
     ~PartialAssignmentPool();
     PartialAssignment* getNext()
     {
+        PartialAssignment* pa = &_pool[_curIndex];
 
-        PartialAssignment* pa = _pool[_curIndex];
-
-        if(++_curIndex >= _pool.size() {
-            throw PoolExhaustedException(std::string("Partial Assignment Pool too small at ") + _pool.size());
+        if (++_curIndex >= _pool.size()) {
+            throw PoolExhaustedException(std::string("Partial Assignment Pool too small at ") + std::to_string(_pool.size()));
         }
+        return pa;
     }
-    void release(PartialAssignment* pa) const { pa.clear(); }
     void increaseSize();
     void reset() { _curIndex = 0; }
 
@@ -39,7 +38,7 @@ private:
     std::vector<PartialAssignment> _pool;
     unsigned int _curIndex;
     const EntryPoint* _idleEP;
-    const Task* _idleTask;
+    const Task* _idleTask; // Do not move above idleEp
 };
 
 } // namespace alica

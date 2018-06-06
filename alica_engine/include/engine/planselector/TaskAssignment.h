@@ -15,7 +15,7 @@
 
 namespace alica
 {
-
+class AlicaEngine;
 class Assignment;
 class PartialAssignment;
 class SimplePlanTree;
@@ -36,7 +36,7 @@ public:
     virtual Assignment getNextBestAssignment(const Assignment* oldAss) override;
 
 #ifdef EXPANSIONEVAL
-    int getExpansionCount() const { return _expantionCount; }
+    int getExpansionCount() const { return _expansionCount; }
     void setExpansionCount(int expansionCount) { _expansionCount = expansionCount; }
 #endif
 
@@ -44,13 +44,22 @@ public:
     const AgentGrp& getAgents() const { return _agents; }
 
     std::string toString() const;
+    const SuccessCollection* getSuccessData(const Plan* p) const
+    {
+        for (int i = 0; i < static_cast<int>(_plans.size()); ++i) {
+            if (_plans[i] == p) {
+                return &_successData[i];
+            }
+        }
+        return nullptr;
+    }
 
 private:
     PartialAssignment* calcNextBestPartialAssignment(const Assignment* oldAss);
 
     TeamManager* _tm;
     TeamObserver* _to;
-    PartialAssignmentPool* _pool;
+    PartialAssignmentPool& _pool;
     PlanGrp _plans;
     AgentGrp _agents;
     std::vector<SuccessCollection> _successData;

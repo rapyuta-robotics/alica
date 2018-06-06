@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Quantifier.h"
-#include "supplementary/AgentID.h"
+
 #include <engine/Types.h>
 #include <engine/collections/AgentVariables.h>
 
-#include <list>
-#include <memory>
+#include <supplementary/AgentID.h>
+
 #include <vector>
 
 namespace alica
@@ -22,13 +22,13 @@ class TeamManager;
  */
 class ForallAgents : public Quantifier
 {
-  public:
+public:
     ForallAgents(int64_t id = 0);
     virtual ~ForallAgents();
-    virtual bool isAgentInScope(AgentIDConstPtr id, const std::shared_ptr<const RunningPlan>& rp) const override;
-    virtual bool addDomainVariables(const std::shared_ptr<const RunningPlan>& p, std::vector<AgentVariables>& io_agentVarsInScope) const override;
+    virtual bool isAgentInScope(AgentIDConstPtr id, const RunningPlan& rp) const override;
+    virtual bool addDomainVariables(const RunningPlan& p, std::vector<AgentVariables>& io_agentVarsInScope) const override;
 
-  private:
+private:
     enum Result
     {
         ADDED,

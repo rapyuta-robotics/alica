@@ -171,7 +171,7 @@ void Logger::close()
  */
 std::shared_ptr<std::list<std::string>> Logger::createHumanReadablePlanTree(const IdGrp& l) const
 {
-    std::shared_ptr<std::list<std::string>> result = std::make_shared<std::list<std::string>>(list<string>());
+    std::shared_ptr<std::list<std::string>> result = std::make_shared<std::list<std::string>>(std::list<std::string>());
 
     const PlanRepository::Accessor<State>& states = ae->getPlanRepository()->getStates();
 

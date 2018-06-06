@@ -5,7 +5,8 @@
 #include <memory>
 #include <typeindex>
 
-namespace alica {
+namespace alica
+{
 
 class BehaviourConfiguration;
 class BasicBehaviour;
@@ -17,13 +18,14 @@ class RunningPlan;
  * Manages the connection between the domain specific implementation (BasicBehaviours) of Behaviours.
  * It creates used BasicBehaviours with its given BehaviourCreator and starts and stops the Behaviours.
  */
-class BehaviourPool {
+class BehaviourPool
+{
 public:
     BehaviourPool(AlicaEngine* ae);
-    virtual ~BehaviourPool();
+    ~BehaviourPool();
     bool init(IBehaviourCreator* bc);
-    void startBehaviour(std::shared_ptr<RunningPlan> rp);
-    void stopBehaviour(std::shared_ptr<RunningPlan> rp);
+    void startBehaviour(RunningPlan& rp);
+    void stopBehaviour(RunningPlan& rp);
     void stopAll();
     const std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const;
 

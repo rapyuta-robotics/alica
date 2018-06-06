@@ -12,14 +12,14 @@ PartialAssignmentPool::PartialAssignmentPool(int initialSize)
         : _pool(initialSize)
         , _curIndex(0)
         , _idleEP(ModelFactory::generateIdleEntryPoint())
-        , _idleTask(idleEP->getTask())
+        , _idleTask(_idleEP->getTask())
 {
 }
 
 PartialAssignmentPool::~PartialAssignmentPool()
 {
-    delete idleEP;
-    delete idleTask;
+    delete _idleEP;
+    delete _idleTask;
 }
 
 void PartialAssignmentPool::increaseSize()

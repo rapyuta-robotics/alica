@@ -16,7 +16,7 @@ class USummand;
 class IAssignment;
 struct TaskRoleStruct;
 
-class UtilityFunction final // currently, due to a shortcoming in autogeneated code, this class must not inherited from
+class UtilityFunction
 {
 public:
     UtilityFunction();

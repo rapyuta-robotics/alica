@@ -243,8 +243,8 @@ void BasicBehaviour::runInternal()
             } else {
                 this->run((void*) behaviourTrigger);
             }
-        } catch (std::exception& e) {
-            std::string err = string("Exception catched:  ") + getName() + std::string(" - ") + std::string(e.what());
+        } catch (const std::exception& e) {
+            std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
             sendLogMessage(4, err);
         }
 #ifdef BEH_DEBUG
@@ -300,7 +300,7 @@ const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planNam
     return nullptr;
 }
 
-void BasicBehaviour::sendLogMessage(int level, const string& message) const
+void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 {
     _runningPlan->sendLogMessage(level, message);
 }

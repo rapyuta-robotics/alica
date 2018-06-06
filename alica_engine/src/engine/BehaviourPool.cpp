@@ -82,20 +82,20 @@ void BehaviourPool::stopAll()
  * Enables the thread of the BasicBehaviour in the given RunningPlan.
  * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
  */
-void BehaviourPool::startBehaviour(std::shared_ptr<RunningPlan> rp)
+void BehaviourPool::startBehaviour(RunningPlan& rp)
 {
-    if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp->getActivePlan())) {
-        auto bb = _availableBehaviours.at(bc);
+    if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp.getActivePlan())) {
+        const std::shared_ptr<BasicBehaviour>& bb = _availableBehaviours.at(bc);
         if (bb != nullptr) {
             // set both directions rp <-> bb
-            rp->setBasicBehaviour(bb);
-            bb->setRunningPlan(rp);
+            rp.setBasicBehaviour(bb.get());
+            bb->setRunningPlan(&rp);
 
             bb->start();
         }
     } else {
-        ALICA_ERROR_MSG("BP::startBehaviour(): Cannot start Behaviour of given RunningPlan! Plan Name: " << rp->getActivePlan()->getName()
-                                                                                                         << " Plan Id: " << rp->getActivePlan()->getId());
+        ALICA_ERROR_MSG("BP::startBehaviour(): Cannot start Behaviour of given RunningPlan! Plan Name: " << rp.getActivePlan()->getName()
+                                                                                                         << " Plan Id: " << rp.getActivePlan()->getId());
     }
 }
 
@@ -103,16 +103,16 @@ void BehaviourPool::startBehaviour(std::shared_ptr<RunningPlan> rp)
  * Disables the thread of the BasicBehaviour in the given RunningPlan.
  * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
  */
-void BehaviourPool::stopBehaviour(std::shared_ptr<RunningPlan> rp)
+void BehaviourPool::stopBehaviour(RunningPlan& rp)
 {
-    if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp->getPlan())) {
+    if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp.getActivePlan())) {
         auto bb = _availableBehaviours.at(bc);
         if (bb != nullptr) {
             bb->stop();
         }
     } else {
-        ALICA_ERROR_MSG("BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp->getActivePlan()->getName()
-                                                                                                       << " Plan Id: " << rp->getActivePlan()->getId());
+        ALICA_ERROR_MSG("BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp.getActivePlan()->getName()
+                                                                                                       << " Plan Id: " << rp.getActivePlan()->getId());
     }
 }
 

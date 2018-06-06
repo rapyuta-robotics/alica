@@ -59,6 +59,11 @@ public:
         *this = *this + v;
         return *this;
     }
+    Interval<T>& operator-=(const Interval<T> v)
+    {
+        *this = *this - v;
+        return *this;
+    }
 
     Interval<T>& operator++()
     {
@@ -89,6 +94,11 @@ template <typename T>
 constexpr Interval<T> operator+(const Interval<T> a, const Interval<T> b)
 {
     return Interval<T>(a._min + b._min, a._max + b._max);
+}
+template <typename T>
+constexpr Interval<T> operator-(const Interval<T> a, const Interval<T> b)
+{
+    return Interval<T>(a._min - b._max, a._max - b._min);
 }
 
 template <typename T>

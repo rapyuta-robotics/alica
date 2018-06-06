@@ -1,7 +1,7 @@
 #pragma once
-#include "engine/IAssignment.h"
-#include "engine/Types.h"
 #include <algorithm>
+#include <engine/Types.h>
+#include <engine/model/Plan.h>
 #include <sstream>
 #include <vector>
 
@@ -21,7 +21,7 @@ class AgentStatePairs
 public:
     AgentStatePairs() {}
     bool hasAgent(const AgentIDConstPtr id) const;
-    const State* getStateOf(const AgentIDConstPtr id) const;
+    const State* getStateOfAgent(const AgentIDConstPtr id) const;
 
     const std::vector<AgentStatePair>& getRaw() const { return _data; }
     std::vector<AgentStatePair>& editRaw() { return _data; }
@@ -47,7 +47,7 @@ private:
  * Contains all allocation information for a single plan. This includes the robot-task mapping, robot-state mapping and
  * success information.
  */
-class Assignment : public IAssignment
+class Assignment
 {
 public:
     Assignment();
@@ -64,13 +64,15 @@ public:
     bool isSuccessfull() const;
 
     bool hasAgent(AgentIDConstPtr id) const;
+
     int getEntryPointCount() const { return static_cast<int>(_assignmentData.size()); }
     const EntryPoint* getEntryPoint(int idx) const { return _plan->getEntryPoints()[idx]; }
     const EntryPoint* getEntryPointOfAgent(AgentIDConstPtr id) const;
+    const State* getStateOfAgent(AgentIDConstPtr id) const;
 
     void getAllAgents(AgentGrp& o_agents) const;
     const AgentStatePairs& getAgentsWorking(int idx) const { return _assignmentData[idx]; }
-    const AgentStatePairs* getAgentsWorking(const EntryPoint* ep) const;
+    const AgentStatePairs& getAgentsWorking(const EntryPoint* ep) const;
     void getAgentsWorking(const EntryPoint* ep, AgentGrp& o_agents) const;
     void getAgentsWorking(int idx, AgentGrp& o_agents) const;
     void getAgentsWorkingAndFinished(const EntryPoint* ep, AgentGrp& o_agents) const;

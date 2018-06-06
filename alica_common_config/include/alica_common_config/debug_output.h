@@ -95,4 +95,5 @@ enum AlicaDebugLevel
             }                                                                                                                                                  \
         }                                                                                                                                                      \
     } while (0)
-}
+
+} // namespace alica

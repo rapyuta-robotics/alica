@@ -25,15 +25,13 @@ public:
 
     virtual RunningPlan* getBestSimilarAssignment(const RunningPlan& rp);
     virtual RunningPlan* getBestSimilarAssignment(const RunningPlan& rp, const AgentGrp& robots);
-    virtual bool getPlansForState(
-            RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans) const;
+    virtual bool getPlansForState(RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans);
 
     RunningPlan* createRunningPlan(
-            RunningPlan* planningParent, const PlanGrp& plans, const AgentGrp& robotIDs, const RunningPlan* oldRp, const PlanType* relevantPlanType) const;
+            RunningPlan* planningParent, const PlanGrp& plans, const AgentGrp& robotIDs, const RunningPlan* oldRp, const PlanType* relevantPlanType);
 
 private:
-    bool getPlansForStateInternal(
-            RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans) const;
+    bool getPlansForStateInternal(RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans);
 
     PartialAssignmentPool _pap;
     TeamObserver* _to;

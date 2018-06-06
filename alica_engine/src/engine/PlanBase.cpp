@@ -11,7 +11,6 @@
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/collections/StateCollection.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"

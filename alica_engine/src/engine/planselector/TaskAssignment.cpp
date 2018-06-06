@@ -6,6 +6,7 @@
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/teammanager/TeamManager.h"
+#include <engine/collections/SuccessCollection.h>
 #include <engine/planselector/TaskAssignment.h>
 
 #include "engine/model/EntryPoint.h"
@@ -31,30 +32,32 @@ TaskAssignment::~TaskAssignment() {}
 /**
  * Constructor of a new TaskAssignment
  * @param planList Plans to build an assignment for
- * @param paraRobots robots to build an assignment for
+ * @param paraAgents agents to build an assignment for
  * @param a bool
  */
 TaskAssignment::TaskAssignment(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool)
-        : _agents(paraRobots)
+        : _agents(paraAgents)
         , _plans(planList)
 #ifdef EXPANSIONEVAL
         , _expansionCount(0)
 #endif
-                  _to(engine->getTeamObserver()) _tm(engine->getTeamManager()) _ pool(&pool)
+        , _to(engine->getTeamObserver())
+        , _tm(engine->getTeamManager())
+        , _pool(pool)
 {
     // sort agent ids ascending
     std::sort(_agents.begin(), _agents.end(), supplementary::AgentIDComparator());
 
-    _successData.reserve(_planList.size());
-    _fringe.reserve(_planList.size());
+    _successData.reserve(_plans.size());
+    _fringe.reserve(_plans.size());
 
-    for (const Plan* curPlan : _planList) {
+    for (const Plan* curPlan : _plans) {
         // prep successinfo for this plan
-        _successData.push_back(_to->getSuccessCollection(curPlan));
+        _successData.push_back(_to->createSuccessCollection(curPlan));
         // allow caching of eval data
         curPlan->getUtilityFunction()->cacheEvalData();
         // seed the fringe with a partial assignment
-        PartialAssignment* curPa = _pool->getNext();
+        PartialAssignment* curPa = _pool.getNext();
 
         curPa->prepare(curPlan, this);
 
@@ -68,14 +71,14 @@ void TaskAssignment::preassignOtherAgents()
     // TODO: fix this call
     auto simplePlanTreeMap = _to->getTeamPlanTrees();
     // this call should only be made before the search starts
-    assert(_fringe.size() == __plans.size());
+    assert(_fringe.size() == _plans.size());
     // ASSIGN PREASSIGNED OTHER ROBOTS
     int i = 0;
     bool changed = false;
     for (PartialAssignment* curPa : _fringe) {
         if (addAlreadyAssignedRobots(curPa, &(*simplePlanTreeMap))) {
             // revaluate this pa
-            curPlan->getUtilityFunction()->updateAssignment(curPa, nullptr);
+            curPa->evaluate(nullptr);
             changed = true;
         }
         ++i;
@@ -99,7 +102,7 @@ Assignment TaskAssignment::getNextBestAssignment(const Assignment* oldAss)
         return Assignment();
     }
 
-    ALICA_DEBUG_MSG("TA: ... calculated this PartialAssignment:\n" << calculatedPa->toString());
+    ALICA_DEBUG_MSG("TA: ... calculated this PartialAssignment:\n" << *calculatedPa);
 
     Assignment newAss = Assignment(*calculatedPa);
 
@@ -115,7 +118,7 @@ std::string TaskAssignment::toString() const
     ss << "--------------------TA:--------------------" << std::endl;
     ss << "NumRobots: " << _agents.size() << std::endl;
     ss << "RobotIDs: ";
-    for (AgentIdConstPtr id : _agents) {
+    for (AgentIDConstPtr id : _agents) {
         ss << *id << " ";
     }
     ss << std::endl;
@@ -150,7 +153,7 @@ PartialAssignment* TaskAssignment::calcNextBestPartialAssignment(const Assignmen
             ALICA_DEBUG_MSG(_fringe << "--->");
         }
 #ifdef EXPANSIONEVAL
-        ++expansionCount;
+        ++_expansionCount;
 #endif
     }
     return goal;

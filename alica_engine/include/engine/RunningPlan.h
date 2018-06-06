@@ -123,11 +123,11 @@ public:
     void useEntryPoint(const EntryPoint* value);
     void useState(const State* activeState);
 
-    // void setBasicBehaviour(std::shared_ptr<BasicBehaviour> basicBehaviour);
     void usePlan(const AbstractPlan* plan);
     void setParent(RunningPlan* parent) { _parent = parent; }
     void setFailureHandlingNeeded(bool failHandlingNeeded) { _status.failHandlingNeeded = true; }
     void setAssignment(const Assignment& assignment) { _assignment = assignment; }
+    void setBasicBehaviour(BasicBehaviour* basicBehaviour) { _basicBehaviour = basicBehaviour; }
     void adaptAssignment(const RunningPlan& replacement);
     void clearFailures();
     // void setActive(bool active);

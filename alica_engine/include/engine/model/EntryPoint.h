@@ -56,6 +56,7 @@ public:
 
     const StateGrp& getReachableStates() const { return _reachableStates; }
     bool isStateReachable(const State* s) const;
+    int getIndex() const { return _index; }
 
 private:
     friend ModelFactory;
@@ -82,6 +83,10 @@ private:
      * whether or not a success of this task is required for Plan to be successful. Otherwise, this task is optional.
      */
     bool _successRequired;
+    /**
+     * The unique index of this entrypoint in a plan's EntryPointGrp
+     */
+    int _index;
     /**
      * The set of states reachable from the initial state.
      */

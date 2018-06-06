@@ -141,14 +141,17 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
     AgentGrp robots;
     parent->getAssignment().getAgentsInState(parent->getActiveState(), robots);
     RunningPlan* newr = _ps->getBestSimilarAssignment(r, robots);
+
     if (newr == nullptr) {
         return PlanChange::NoChange;
     }
+    const Plan* p = static_cast<const Plan*>(r.getActivePlan());
+
     double curUtil = 0;
     if (!r.evalRuntimeCondition()) {
         curUtil = -1.0;
     } else {
-        curUtil = r.getActivePlan()->getUtilityFunction()->eval(r, r);
+        curUtil = p->getUtilityFunction()->eval(r, r);
     }
     double possibleUtil = newr->getAssignment().getLastUtilityValue();
     ALICA_DEBUG_MSG("RB: Old U " << curUtil << " | "
@@ -156,7 +159,7 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
     ALICA_DEBUG_MSG_IF(curUtil < -0.99, "#############Assignment is valid?: " << r.getAssignment().isValid() << endl << r);
     ALICA_DEBUG_MSG("RB: New Assignment" << newr->getAssignment() << endl << "RB: Old Assignment" << r.getAssignment());
 
-    if (possibleUtil - curUtil > r.getActivePlan()->getUtilityThreshold()) {
+    if (possibleUtil - curUtil > p->getUtilityThreshold()) {
         // cout << "RB: AllocationDifference::Reason::utility " << endl;
         r.editCycleManagement().setNewAllocDiff(r.getAssignment(), newr->getAssignment(), AllocationDifference::Reason::utility);
         const State* before = r.getActiveState();
@@ -167,10 +170,10 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
 
         ALICA_INFO_MSG("RB: B4 dynChange: Util is " << curUtil << " | "
                                                     << " suggested is " << possibleUtil << " | "
-                                                    << " threshold " << r.getActivePlan()->getUtilityThreshold() << std::endl
-                                                    << "RB: DynAlloc in " << r.getActivePlan()->getName());
+                                                    << " threshold " << p->getUtilityThreshold() << std::endl
+                                                    << "RB: DynAlloc in " << p->getName());
 
-        _log->eventOccurred("DynAlloc(", r.getActivePlan()->getName(), ")");
+        _log->eventOccurred("DynAlloc(", p->getName(), ")");
         return PlanChange::InternalChange;
     }
     return PlanChange::NoChange;

@@ -52,7 +52,7 @@ private:
     TeamManager* teamManager;
 
     std::mutex simplePlanTreeMutex;
-    std::mutex successMarkMutex;
+    mutable std::mutex successMarkMutex;
 
     std::shared_ptr<std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>> simplePlanTrees;
 
