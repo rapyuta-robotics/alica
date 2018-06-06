@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <arg name="master_plan" default="CircleLeader_MainPlan" />
+    <arg name="master_plan" default="MainPlan" />
     <arg name="roleset_dir" default="." />
     <arg name="roleset"     default="Roleset" />
     

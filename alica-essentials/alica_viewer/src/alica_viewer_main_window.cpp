@@ -75,7 +75,7 @@ elastic_nodes::Node* AlicaViewerMainWindow::addStateToScene(const PlanTree* plan
         int y = planTreeNode->getY() * 300;
         parentNode->setPos(x, y);
 
-        if (planTreeNode->getParent() == nullptr) {
+        if (!planTreeNode->parentExists()) {
             // Draw a bounding rectangle for every plan
             elastic_nodes::Block* block = new elastic_nodes::Block(parentNode, parentNode);
             _scene->addItem(block);
@@ -87,7 +87,7 @@ elastic_nodes::Node* AlicaViewerMainWindow::addStateToScene(const PlanTree* plan
         elastic_nodes::Node* startBlockNode = nullptr;
         elastic_nodes::Node* childNode = nullptr;
         for (int i = 0; i < static_cast<int>(ptvMapPair.second.size()); ++i) {
-            childNode = addStateToScene(ptvMapPair.second[i]);
+            childNode = addStateToScene(ptvMapPair.second[i].get());
             _scene->addItem(new elastic_nodes::Edge(parentNode, childNode)); // addItem() takes ownership of the arguement
             if (i == 0) {
                 startBlockNode = childNode;
@@ -114,13 +114,13 @@ void AlicaViewerMainWindow::updateNodes()
     } else if (indexSelected == 1) { // All
         for (const auto& ptMapPair : ptMap) {
             elastic_nodes::Block::reset();
-            addStateToScene(ptMapPair.second);
+            addStateToScene(ptMapPair.second.get());
             _offset += 1; // To display each graph separately
         }
     } else { // individual agents
         PlanTreeMap::const_iterator planTreeEntry = ptMap.find(_agentIdVector[indexSelected - 2]);
         if (planTreeEntry != ptMap.end()) {
-            addStateToScene(planTreeEntry->second);
+            addStateToScene(planTreeEntry->second.get());
         }
     }
 }

@@ -10,6 +10,7 @@
 #include <engine/model/State.h>
 #include <engine/model/Task.h>
 #include <engine/parser/PlanParser.h>
+#include <memory>
 #include <supplementary/AgentID.h>
 #include <supplementary/AgentIDManager.h>
 
@@ -20,8 +21,9 @@ class PlanTree;
 class AgentInfo;
 
 using AgentInfoMap = std::unordered_map<const supplementary::AgentID*, AgentInfo, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>;
-using PlanTreeMap = std::unordered_map<const supplementary::AgentID*, PlanTree*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>;
-using PlanTreeVectorMap = std::unordered_map<int64_t, std::vector<PlanTree*>>;
+using PlanTreeMap =
+    std::unordered_map<const supplementary::AgentID*, std::unique_ptr<PlanTree>, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>;
+using PlanTreeVectorMap = std::unordered_map<int64_t, std::vector<std::unique_ptr<PlanTree>>>;
 
 class AgentInfo
 {
@@ -59,59 +61,48 @@ class PlanTree
     {
     }
 
-    explicit PlanTree(const PlanTree* other, PlanTree* parent)
-        : _state(other->_state)
-        , _entryPoint(other->_entryPoint)
-        , _robotIds(other->_robotIds)
+    explicit PlanTree(const PlanTree& other, const PlanTree& parent)
+        : _state(other._state)
+        , _entryPoint(other._entryPoint)
+        , _robotIds(other._robotIds)
         , _numOfChildren(0)
-        , _x(other->_x)
-        , _y(other->_y)
+        , _x(other._x)
+        , _y(other._y)
     {
         setParent(parent);
-        for (const auto& ptvMapPair : other->_children) {
-            for (const PlanTree* child : ptvMapPair.second) {
-                addChildren(new PlanTree(child, this));
+        for (const auto& ptvMapPair : other._children) {
+            for (const auto& child : ptvMapPair.second) {
+                addChildren(std::unique_ptr<PlanTree>(new PlanTree(*child, *this)));
             }
         }
     }
 
-    ~PlanTree()
+    void setParent(const PlanTree& parent)
     {
-        if (!_children.empty()) {
-            for (const auto& ptvMapPair : _children) {
-                for (PlanTree* child : ptvMapPair.second) {
-                    delete child;
-                }
-            }
-        }
-    }
-
-    void setParent(PlanTree* parent)
-    {
-        _parent = parent;
-        if (parent != nullptr) {
-            _x = parent->_x + parent->_numOfChildren;
-            _y = parent->_y + 1;
-        }
+        _parent = &parent;
+        _x = parent._x + parent._numOfChildren;
+        _y = parent._y + 1;
     }
 
     const PlanTreeVectorMap& getChildren() const { return _children; }
 
     bool isValid() const { return _state != nullptr && _entryPoint != nullptr; }
 
-    void addChildren(PlanTree* child)
+    void addChildren(std::unique_ptr<PlanTree> child)
     {
-        if (child == nullptr || !child->isValid()) {
-            std::cout << "Child not added \n";
+        if (!child || !child->isValid()) {
+            std::cerr << "Child not added. \n";
             return;
         }
 
         int64_t planId = child->getEntryPoint()->getPlan()->getId();
         PlanTreeVectorMap::iterator ptvEntry = _children.find(planId);
         if (ptvEntry != _children.end()) {
-            ptvEntry->second.push_back(child);
+            ptvEntry->second.push_back(std::move(child));
         } else {
-            _children.emplace(planId, std::initializer_list<PlanTree*>{child});
+            std::vector<std::unique_ptr<PlanTree>> childVector;
+            childVector.push_back(std::move(child));
+            _children.emplace(planId, std::move(childVector));
         }
         ++_numOfChildren;
     }
@@ -139,7 +130,7 @@ class PlanTree
         }
     }
 
-    const PlanTree* getParent() const { return _parent; }
+    bool parentExists() const { return _parent != nullptr; }
 
     const EntryPoint* getEntryPoint() const { return _entryPoint; }
 
@@ -167,37 +158,37 @@ class PlanTree
     }
 
     // merge the src plan tree as a branch of current tree
-    void mergePlanTree(const PlanTree* src)
+    void mergePlanTree(const PlanTree& src)
     {
-        if (src == nullptr || !src->isValid()) {
+        if (!src.isValid()) {
             return;
         }
 
         if (!_children.empty()) {
-            int64_t planId = src->getEntryPoint()->getPlan()->getId();
+            int64_t planId = src.getEntryPoint()->getPlan()->getId();
             PlanTreeVectorMap::iterator ptvEntry = _children.find(planId);
             if (ptvEntry != _children.end()) {
-                std::vector<PlanTree*>::iterator iter =
-                    std::find_if(ptvEntry->second.begin(), ptvEntry->second.end(), [&](PlanTree* pt) { return *pt == *src; });
+                std::vector<std::unique_ptr<PlanTree>>::iterator iter =
+                    std::find_if(ptvEntry->second.begin(), ptvEntry->second.end(), [&](const std::unique_ptr<PlanTree>& pt) { return *pt == src; });
                 if (iter != ptvEntry->second.end()) {
-                    (*iter)->mergeRobots(src->getRobots());
-                    for (const auto& ptvMapPair : src->_children) {
-                        for (PlanTree* child : ptvMapPair.second) {
-                            (*iter)->mergePlanTree(child);
+                    (*iter)->mergeRobots(src.getRobots());
+                    for (const auto& ptvMapPair : src._children) {
+                        for (const auto& child : ptvMapPair.second) {
+                            (*iter)->mergePlanTree(*child);
                         }
                     }
                     return;
                 }
             }
         }
-        addChildren(new PlanTree(src, this));
+        addChildren(std::unique_ptr<PlanTree>(new PlanTree(src, *this)));
     }
 
     int getX() const { return _x; }
     int getY() const { return _y; }
 
   private:
-    PlanTree* _parent;
+    const PlanTree* _parent;
     int _numOfChildren;
     int _x;
     int _y;
@@ -254,30 +245,22 @@ class AlicaPlan
         }
     }
 
-    ~AlicaPlan()
-    {
-        for (const auto& ptMapPair : _planTrees) {
-            delete ptMapPair.second;
-        }
-    }
-
     void getCombinedPlanTree(PlanTree& planTree) const
     {
         for (const auto& ptMapPair : _planTrees) {
-            planTree.mergePlanTree(ptMapPair.second);
+            planTree.mergePlanTree(*ptMapPair.second);
         }
     }
 
     void handlePlanTreeInfo(const PlanTreeInfo& incoming)
     {
-        PlanTreeMap::iterator ptEntry = _planTrees.find(incoming.senderID);
-        PlanTree* pt = planTreeFromMessage(incoming.senderID, incoming.stateIDs);
-        if (pt != nullptr) {
+        std::unique_ptr<PlanTree> pt = planTreeFromMessage(incoming.senderID, incoming.stateIDs);
+        if (pt) {
             PlanTreeMap::iterator ptEntry = _planTrees.find(incoming.senderID);
             if (ptEntry != _planTrees.end()) {
-                ptEntry->second = pt;
+                ptEntry->second = std::move(pt);
             } else {
-                _planTrees.emplace(incoming.senderID, pt);
+                _planTrees.emplace(incoming.senderID, std::move(pt));
             }
         }
     }
@@ -286,16 +269,16 @@ class AlicaPlan
      * Constructs a PlanTree from a received message
      * @param robotId The id of the robot.
      * @param ids The list of long encoding of a robot's plantree as received in a PlanTreeInfo message.
-     * @return PlanTree*
+     * @return std::unique_ptr<PlanTree>
      */
-    PlanTree* planTreeFromMessage(const supplementary::AgentID* robotId, const IdGrp& ids)
+    std::unique_ptr<PlanTree> planTreeFromMessage(const supplementary::AgentID* robotId, const IdGrp& ids)
     {
         if (ids.empty()) {
             std::cerr << "Empty state list for robot " << robotId << std::endl;
-            return nullptr;
+            return std::unique_ptr<PlanTree>{};
         }
 
-        PlanTree* root = new PlanTree();
+        std::unique_ptr<PlanTree> root(new PlanTree());
         root->addRobot(robotId);
 
         IdGrp::const_iterator iter = ids.begin();
@@ -303,7 +286,7 @@ class AlicaPlan
 
         if (!root->setState(validStates.find(*iter))) {
             std::cout << "Unable to add State (" << *iter << ") received from " << *robotId << std::endl;
-            return nullptr;
+            return std::unique_ptr<PlanTree>{};
         }
 
         if (ids.size() <= 1) {
@@ -311,8 +294,8 @@ class AlicaPlan
         }
 
         ++iter;
-        PlanTree* curParent;
-        PlanTree* cur = root;
+        PlanTree* curParent = nullptr;
+        PlanTree* cur = root.get();
         for (; iter != ids.end(); ++iter) {
             if (*iter == -1) {
                 curParent = cur;
@@ -321,17 +304,18 @@ class AlicaPlan
                 cur = curParent;
                 if (cur == nullptr) {
                     std::cout << "Malformed SptMessage from " << *robotId << std::endl;
-                    return nullptr;
+                    return std::unique_ptr<PlanTree>{};
                 }
             } else {
-                cur = new PlanTree();
-                cur->addRobot(robotId);
-                if (!cur->setState(validStates.find(*iter))) {
+                std::unique_ptr<PlanTree> node(new PlanTree());
+                node->addRobot(robotId);
+                if (!node->setState(validStates.find(*iter))) {
                     std::cout << "Unable to add State (" << *iter << ") received from " << *robotId << std::endl;
-                    return nullptr;
+                    return std::unique_ptr<PlanTree>{};
                 }
-                cur->setParent(curParent);
-                curParent->addChildren(cur);
+                cur = node.get();
+                node->setParent(*curParent);
+                curParent->addChildren(std::move(node));
             }
         }
         return root;
