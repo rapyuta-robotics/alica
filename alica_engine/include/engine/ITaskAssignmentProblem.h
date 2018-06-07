@@ -1,17 +1,15 @@
 #pragma once
 
-#include <memory>
-
 namespace alica
 {
 
 class IAssignment;
 class Assignment;
 
-class ITaskAssignment
+class ITaskAssignmentProblem
 {
 public:
-    virtual ~ITaskAssignment() {}
+    virtual ~ITaskAssignmentProblem() {}
     /**
      * Returns the best possible assignment for a plan, taking similarities to the old assignment into account.
      * @param oldAss The old IAssignment,  possibly null in case of a completely new assignment problem.
