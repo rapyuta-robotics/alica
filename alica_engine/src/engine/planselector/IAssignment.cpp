@@ -5,19 +5,19 @@
 namespace alica
 {
 
-AssignmentSuccessIterator AssignmentSuccessView::end() const
+PartialAssignmentSuccessIterator PartialAssignmentSuccessView::end() const
 {
     const AgentGrp* agents = _pas->getProblem()->getSuccess(pas->getPlan())->getAgentsByIndex(_epidx);
-    return AssignmentSuccessIterator(agents ? agents->size() : 0, true, _epidx, _pas);
+    return PartialAssignmentSuccessIterator(agents ? agents->size() : 0, true, _epidx, _pas);
 }
 
-UniqueAssignmentSuccessIterator UniqueAssignmentSuccessView::end() const
+UniquePartialAssignmentSuccessIterator UniquePartialAssignmentSuccessView::end() const
 {
     const AgentGrp* agents = _pas->getProblem()->getSuccess(pas->getPlan())->getAgentsByIndex(_epidx);
-    return UniqueAssignmentSuccessIteraotr(agents ? agents->size() : 0, true, _epidx, _pas);
+    return UniquePartialAssignmentSuccessIteraotr(agents ? agents->size() : 0, true, _epidx, _pas);
 }
 
-void UniqueAssignmentSuccessIterator::toNextValid()
+void UniquePartialAssignmentSuccessIterator::toNextValid()
 {
     if (!_inSuccessRange) {
         while (_agentIdx < _pas->getTotalAgentCount() && _pas->getEntryPointIndexOf(_agentIdx) != _epIdx) {
@@ -32,8 +32,8 @@ void UniqueAssignmentSuccessIterator::toNextValid()
         if(successes) {
             while (_agentIdx < static_cast<int>(successes->size())) {
                 AgentIDConstPtr id = *successes[_agentIdx];
-                AssignmentIterator assignEnd{0, _pas->getTotalAgentCount(), _pas};
-                auto it1 = std::find_if(AssignmentIterator(0, _epIdx, _pas), assignEnd, [id](AgentIDConstPtr a) { return *a == *id; });
+                PartialAssignmentIterator assignEnd{0, _pas->getTotalAgentCount(), _pas};
+                auto it1 = std::find_if(PartialAssignmentIterator(0, _epIdx, _pas), assignEnd, [id](AgentIDConstPtr a) { return *a == *id; });
                 if (it1 == assignEnd) {
                     break;
                 }
@@ -47,30 +47,30 @@ void UniqueAssignmentSuccessIterator::toNextValid()
     }
 }
 
-AssignmentView IAssignment::getRobotsWorking(const EntryPoint* ep) const
+PartialAssignmentView IAssignment::getRobotsWorking(const EntryPoint* ep) const
 {
-    return AssignmentView(ep->getIndex(), _impl);
+    return PartialAssignmentView(ep->getIndex(), _impl);
 }
 
-AssignmentView IAssignment::getRobotsWorking(int64_t epid) const
+PartialAssignmentView IAssignment::getRobotsWorking(int64_t epid) const
 {
     const EntryPointGrp& eps = _impl->getPlan()->getEntryPoints();
     for (int i = 0; i < static_cast<int>(eps.size()); ++i) {
         if (eps[i]->getId() == epid) {
-            return AssignmentView(i, _impl);
+            return PartialAssignmentView(i, _impl);
         }
     }
     // return safe value that does not exist. Magic number is used for debuggers.
-    return AssignmentView(-42, _impl);
+    return PartialAssignmentView(-42, _impl);
 }
 
-AssignmentView IAssignment::getUnassignedAgents() const
+PartialAssignmentView IAssignment::getUnassignedAgents() const
 {
-    return AssignmentView(-1, _impl);
+    return PartialAssignmentView(-1, _impl);
 }
 AssignmentSuccessView IAssignment::getRobotsWorkingAndFinished(const EntryPoint* ep) const
 {
-    return AssignmentSuccessView(ep->getIndex(), _impl);
+    return PartialAssignmentSuccessView(ep->getIndex(), _impl);
 }
 
 AssignmentSuccessView IAssignment::getRobotsWorkingAndFinished(int64_t epid) const
@@ -78,14 +78,14 @@ AssignmentSuccessView IAssignment::getRobotsWorkingAndFinished(int64_t epid) con
     const EntryPointGrp& eps = _impl->getPlan()->getEntryPoints();
     for (int i = 0; i < static_cast<int>(eps.size()); ++i) {
         if (eps[i]->getId() == epid) {
-            return AssignmentSuccessView(i, _impl);
+            return PartialAssignmentSuccessView(i, _impl);
         }
     }
-    return AssignmentSuccessView(-42, _impl);
+    return PartialAssignmentSuccessView(-42, _impl);
 }
 
-UniqueAssignmentSuccessView IAssignment::getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) const
+UniquePartialAssignmentSuccessView IAssignment::getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) const
 {
-    return UniqueAssignmentSuccessView(ep->getIndex(), _impl);
+    return UniquePartialAssignmentSuccessView(ep->getIndex(), _impl);
 }
 }

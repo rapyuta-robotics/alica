@@ -1,14 +1,15 @@
 #pragma once
 
 #define EXPANSIONEVAL
-//#define TA_DEBUG
 
-#include "engine/ITaskAssignment.h"
+#include "engine/ITaskAssignmentProblem.h"
 #include "engine/Types.h"
-#include "supplementary/AgentID.h"
-#include <algorithm>
+#include "engine/collections/SuccessCollection.h"
+#include "engine/planselector/PartialAssignmentPool.h"
+
+#include <supplementary/AgentID.h>
+
 #include <map>
-#include <memory>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -18,6 +19,7 @@ namespace alica
 class AlicaEngine;
 class Assignment;
 class PartialAssignment;
+
 class SimplePlanTree;
 class TeamManager;
 class TeamObserver;
@@ -26,11 +28,11 @@ class TeamObserver;
  * Represents an instance of an assignment problem for one plan or a plantype.
  * All parameters, which are static for this problem, are stored here.
  */
-class TaskAssignment final : public ITaskAssignment
+class TaskAssignmentProblem final : public ITaskAssignmentProblem
 {
 public:
-    TaskAssignment(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool);
-    virtual ~TaskAssignment();
+    TaskAssignmentProblem(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool);
+    virtual ~TaskAssignmentProblem();
     void preassignOtherAgents();
 
     virtual Assignment getNextBestAssignment(const Assignment* oldAss) override;

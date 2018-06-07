@@ -11,7 +11,7 @@
 namespace alica
 {
 class PartialAssignmentPool;
-class TaskAssignment;
+class TaskAssignmentProblem;
 class Assignment;
 class SimplePlanTree;
 
@@ -21,14 +21,14 @@ public:
     PartialAssignment();
     ~PartialAssignment();
     void clear();
-    void prepare(const Plan* p, const TaskAssignment* problem);
+    void prepare(const Plan* p, const TaskAssignmentProblem* problem);
     bool isValid() const;
     bool isGoal() const;
     const Plan* getPlan() const { return _plan; }
     bool addIfAlreadyAssigned(const SimplePlanTree* spt, AgentIDConstPtr agent, int idx);
     bool assignUnassignedAgent(int agentIdx, int epIdx);
     UtilityInterval getUtility() const { return _utility; }
-    const TaskAssignment* getProblem() const { return _problem; }
+    const TaskAssignmentProblem* getProblem() const { return _problem; }
     int getAssignedAgentCount() const { return _numAssignedAgents; }
     int getTotalAgentCount() const { return _assignment.size(); }
     int getEntryPointIndexOf(int agentIdx) const { return _assignment[agentIdx]; }
@@ -57,7 +57,7 @@ public:
 private:
     friend std::ostream& operator<<(std::ostream& out, const PartialAssignment& a);
     const Plan* _plan;
-    const TaskAssignment* _problem;
+    const TaskAssignmentProblem* _problem;
     std::vector<DynCardinality> _cardinalities;
     std::vector<int> _assignment;
     UtilityInterval _utility;

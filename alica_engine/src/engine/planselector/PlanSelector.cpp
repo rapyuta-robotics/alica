@@ -18,7 +18,7 @@
 #include "engine/model/Task.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/planselector/PartialAssignmentPool.h"
-#include "engine/planselector/TaskAssignment.h"
+#include "engine/planselector/TaskAssignmentProblem.h"
 #include "engine/teammanager/TeamManager.h"
 
 #include <assert.h>
@@ -109,7 +109,7 @@ RunningPlan* PlanSelector::createRunningPlan(
         return nullptr;
     }
 
-    TaskAssignment ta(_ae, newPlanList, robotIDs, _pap);
+    TaskAssignmentProblem ta(_ae, newPlanList, robotIDs, _pap);
     const Assignment* oldAss = nullptr;
     RunningPlan* rp;
     if (oldRp == nullptr) {

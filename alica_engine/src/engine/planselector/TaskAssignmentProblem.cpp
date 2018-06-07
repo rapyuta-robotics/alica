@@ -1,16 +1,16 @@
+#include "engine/planselector/TaskAssignmentProblem.h"
+
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
-#include "engine/model/Plan.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/planselector/PartialAssignmentPool.h"
-#include "engine/teammanager/TeamManager.h"
 #include <engine/collections/SuccessCollection.h>
-#include <engine/planselector/TaskAssignment.h>
-
-#include "engine/model/EntryPoint.h"
-#include "engine/model/Task.h"
+#include <engine/model/EntryPoint.h>
+#include <engine/model/Plan.h>
+#include <engine/model/Task.h>
+#include <engine/teammanager/TeamManager.h>
 
 #include <supplementary/AgentID.h>
 
@@ -27,7 +27,7 @@ std::ostream& operator<<(std::ostream& out, const std::vector<PartialAssignment*
     return out;
 }
 
-TaskAssignment::~TaskAssignment() {}
+TaskAssignmentProblem::~TaskAssignmentProblem() {}
 
 /**
  * Constructor of a new TaskAssignment
@@ -35,7 +35,7 @@ TaskAssignment::~TaskAssignment() {}
  * @param paraAgents agents to build an assignment for
  * @param a bool
  */
-TaskAssignment::TaskAssignment(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool)
+TaskAssignmentProblem::TaskAssignmentProblem(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool)
         : _agents(paraAgents)
         , _plans(planList)
 #ifdef EXPANSIONEVAL
@@ -66,7 +66,7 @@ TaskAssignment::TaskAssignment(const AlicaEngine* engine, const PlanGrp& planLis
     stable_sort(_fringe.begin(), _fringe.end(), PartialAssignment::compare);
 }
 
-void TaskAssignment::preassignOtherAgents()
+void TaskAssignmentProblem::preassignOtherAgents()
 {
     // TODO: fix this call
     auto simplePlanTreeMap = _to->getTeamPlanTrees();
@@ -93,7 +93,7 @@ void TaskAssignment::preassignOtherAgents()
  * @param oldAss old Assignment
  * @return An Assignment for the plan
  */
-Assignment TaskAssignment::getNextBestAssignment(const Assignment* oldAss)
+Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss)
 {
     ALICA_DEBUG_MSG("TA: Calculating next best PartialAssignment...");
     PartialAssignment* calculatedPa = calcNextBestPartialAssignment(oldAss);
@@ -111,7 +111,7 @@ Assignment TaskAssignment::getNextBestAssignment(const Assignment* oldAss)
     return newAss;
 }
 
-std::string TaskAssignment::toString() const
+std::string TaskAssignmentProblem::toString() const
 {
     std::stringstream ss;
     ss << std::endl;
@@ -134,7 +134,7 @@ std::string TaskAssignment::toString() const
     return ss.str();
 }
 
-PartialAssignment* TaskAssignment::calcNextBestPartialAssignment(const Assignment* oldAss)
+PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const Assignment* oldAss)
 {
     PartialAssignment* goal = nullptr;
     while (!_fringe.empty() && goal == nullptr) {
@@ -164,7 +164,7 @@ PartialAssignment* TaskAssignment::calcNextBestPartialAssignment(const Assignmen
  * @param simplePlanTreeMap never try to delete this
  * @return True if any robot has already assigned itself, false otherwise
  */
-bool TaskAssignment::addAlreadyAssignedRobots(
+bool TaskAssignmentProblem::addAlreadyAssignedRobots(
         PartialAssignment* pa, std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>* simplePlanTreeMap)
 {
     AgentIDConstPtr ownAgentId = _tm->getLocalAgentID();

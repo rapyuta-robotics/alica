@@ -7,7 +7,7 @@
 #include <engine/model/Task.h>
 #include <engine/planselector/DynCardinality.h>
 #include <engine/planselector/PartialAssignmentPool.h>
-#include <engine/planselector/TaskAssignment.h>
+#include <engine/planselector/TaskAssignmentProblem.h>
 namespace alica
 {
 namespace
@@ -75,7 +75,7 @@ void PartialAssignment::clear()
     _utility = UtilityInterval(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
 }
 
-void PartialAssignment::prepare(const Plan* p, const TaskAssignment* problem)
+void PartialAssignment::prepare(const Plan* p, const TaskAssignmentProblem* problem)
 {
     _plan = p;
     _problem = problem;

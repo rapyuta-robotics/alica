@@ -1,10 +1,11 @@
 #pragma once
 
+#include <engine/Assignment.h>
+
 namespace alica
 {
 
 class IAssignment;
-class Assignment;
 
 class ITaskAssignmentProblem
 {
