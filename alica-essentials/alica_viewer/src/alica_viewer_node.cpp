@@ -1,5 +1,5 @@
+#include "alica_viewer/alica_viewer_main_window.h"
 #include <QApplication>
-#include <alica_viewer/alica_viewer_main_window.h>
 
 int main(int argc, char* argv[])
 {

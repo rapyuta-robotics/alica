@@ -1,5 +1,4 @@
-#ifndef ALICA_VIEWER_ALICA_VIEWER_MAIN_WINDOW_H
-#define ALICA_VIEWER_ALICA_VIEWER_MAIN_WINDOW_H
+#pragma once
 
 #include <QMainWindow>
 
@@ -46,5 +45,3 @@ class AlicaViewerMainWindow : public QMainWindow
 };
 
 } // namespace alica
-
-#endif // ALICA_VIEWER_ALICA_VIEWER_MAIN_WINDOW_H

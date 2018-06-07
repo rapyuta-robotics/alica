@@ -109,7 +109,7 @@ void AlicaViewerMainWindow::updateNodes()
     _offset = 0;
     if (indexSelected == 0) { // Combined
         PlanTree combinedPlanTree;
-        _alicaPlan.getCombinedPlanTree(combinedPlanTree);
+        _alicaPlan.combinePlanTree(combinedPlanTree);
         addStateToScene(&combinedPlanTree);
     } else if (indexSelected == 1) { // All
         for (const auto& ptMapPair : ptMap) {

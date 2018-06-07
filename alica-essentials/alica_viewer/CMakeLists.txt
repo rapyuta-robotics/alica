@@ -55,6 +55,7 @@ set(QT_CPP_SOURCES
         src/elastic_nodes/node.cpp
         src/alica_viewer_main_window.cpp
         src/alica_viewer_node.cpp
+        src/alica_viewer_plan_parser.cpp
         src/alica_viewer_ros_interface.cpp
         src/graphics_view_zoom.cpp
 )
