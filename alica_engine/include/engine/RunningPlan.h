@@ -148,8 +148,8 @@ public:
 
     // bool getFailHandlingNeeded() const;
 
-    bool evalPreCondition();
-    bool evalRuntimeCondition();
+    bool evalPreCondition() const;
+    bool evalRuntimeCondition() const;
 
     void addChildren(const std::vector<RunningPlan*>& runningPlans);
     // void addChildren(std::list<std::shared_ptr<RunningPlan>>& children);
@@ -163,11 +163,13 @@ public:
 
     void setFailedChild(const AbstractPlan* child);
     void accept(IPlanTreeVisitor* vis);
+
     void deactivate();
-    bool anyChildrenStatus(PlanStatus ps);
-    bool allChildrenStatus(PlanStatus ps);
-    bool anyChildrenTaskSuccess();
     void activate();
+
+    bool isAnyChildStatus(PlanStatus ps) const;
+    bool areAllChildrenStatus(PlanStatus ps) const;
+    bool isAnyChildTaskSuccessful() const;
 
     void setActiveEntryPoint(EntryPoint* activeEntryPoint);
     void limitToRobots(const AgentGrp& robots);

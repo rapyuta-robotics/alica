@@ -14,15 +14,18 @@
 
 namespace alica
 {
+
 bool AgentStatePairs::hasAgent(const AgentIDConstPtr id) const
 {
     return std::find_if(_data.begin(), _data.end(), [id](const AgentStatePair asp) { return *asp.first == *id; }) != _data.end();
 }
+
 const State* AgentStatePairs::getStateOfAgent(const AgentIDConstPtr id) const
 {
     auto it = std::find_if(_data.begin(), _data.end(), [id](const AgentStatePair asp) { return *asp.first == *id; });
     return it == _data.end() ? nullptr : it->second;
 }
+
 void AgentStatePairs::removeAllIn(const AgentGrp& agents)
 {
     _data.erase(std::remove_if(_data.begin(), _data.end(),
@@ -31,6 +34,16 @@ void AgentStatePairs::removeAllIn(const AgentGrp& agents)
                         }),
             _data.end());
 }
+
+void AgentStatePairs::setStateOfAgent(const AgentIDConstPtr id, const State* s)
+{
+    auto it = std::find_if(_data.begin(), _data.end(), [id](const AgentStatePair asp) { return *asp.first == *id; });
+    if (it != _data.end()) {
+        it->second = s;
+    }
+}
+
+///------------------------------------------------------------------------------
 
 Assignment::Assignment()
         : _plan(nullptr)
@@ -118,7 +131,7 @@ bool Assignment::isValid() const
     return true;
 }
 
-bool Assignment::isSuccessfull() const
+bool Assignment::isSuccessful() const
 {
     if (!_plan) {
         return false;
@@ -133,6 +146,21 @@ bool Assignment::isSuccessfull() const
         }
     }
     return true;
+}
+
+bool Assignment::isAnyTaskSuccessful() const
+{
+    if (!_plan) {
+        return false;
+    }
+    const EntryPointGrp& eps = _plan->getEntryPoints();
+    const int numEps = eps.size();
+    for (int i = 0; i < numEps; ++i) {
+        if (_successData[i].empty() && static_cast<int>(_successData[i].size()) >= eps[i]->getMinCardinality()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool Assignment::hasAgent(AgentIDConstPtr id) const
@@ -235,6 +263,11 @@ AssignmentView Assignment::getAgentsWorking(int idx) const
     return AssignmentView(this, idx);
 }
 
+AssignmentSuccessView Assignment::getAgentsWorkingAndFinished(const EntryPoint* ep) const
+{
+    return AssignmentSuccessView(this, ep->getIndex());
+}
+
 AllAgentsView Assignment::getAllAgents() const
 {
     return AllAgentsView(this);
@@ -332,6 +365,36 @@ void Assignment::adaptTaskChangesFrom(const Assignment& as)
             }
         }
         _assignmentData[i] = std::move(n);
+    }
+}
+bool Assignment::removeAllIn(const AgentGrp& limit, const State* watchState)
+{
+    bool ret = false;
+    const int epCount = _assignmentData.size();
+    for (int i = 0; i < epCount; ++i) {
+        for (int j = _assignmentData[i].size() - 1; j >= 0; --j) {
+            AgentIDConstPtr id = _assignmentData[i].getRaw()[j].first;
+            if (std::find_if(limit.begin(), limit.end(), [id](AgentIDConstPtr lid) { return *id == *lid; }) != limit.end()) {
+                ret = ret || _assignmentData[i].getRaw()[j].second == watchState;
+                _assignmentData[i].removeAt(j);
+            }
+        }
+    }
+    return ret;
+}
+
+void Assignment::fillPartial(PartialAssignment& pa) const
+{
+    const int epCount = _assignmentData.size();
+    const AgentGrp& allAgents = pa.getProblem()->getAgents();
+    for (int i = 0; i < epCount; ++i) {
+        for (const AgentStatePair& asp : _assignmentData[i]) {
+            auto it = std::find_if(allAgents.begin(), allAgents.end(), [asp](AgentIDConstPtr id) { return *id == *asp.first; });
+            if (it != allAgents.end()) {
+                int agentIdx = it - allAgents.begin();
+                pa.assignUnassignedAgent(agentIdx, i);
+            }
+        }
     }
 }
 

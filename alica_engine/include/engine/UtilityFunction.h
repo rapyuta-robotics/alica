@@ -27,7 +27,7 @@ public:
     const std::vector<USummand*>& getUtilSummands() const { return _utilSummands; };
     std::vector<USummand*>& editUtilSummands() { return _utilSummands; };
 
-    double eval(const RunningPlan* newRp, const RunningPlan* oldRp) const;
+    // double eval(const RunningPlan* newRp, const RunningPlan* oldRp) const;
     UtilityInterval eval(const PartialAssignment* newAss, const Assignment* oldAss) const;
     // void updateAssignment(IAssignment* newAss, const Assignment* oldAss);
     void cacheEvalData();
@@ -42,8 +42,8 @@ public:
 
 private:
     friend std::stringstream& operator<<(std::stringstream& ss, const UtilityFunction& uf);
-    UtilityInterval getPriorityResult(IAssignment* ass) const;
-    UtilityInterval getSimilarity(const IAssignment* newAss, const Assignment* oldAss) const;
+    UtilityInterval getPriorityResult(IAssignment ass) const;
+    UtilityInterval getSimilarity(IAssignment newAss, const Assignment* oldAss) const;
 
     const Plan* _plan;
     std::vector<USummand*> _utilSummands;

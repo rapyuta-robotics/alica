@@ -29,6 +29,7 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/common_defines.h>
+#include <alica_common_config/debug_output.h>
 
 #include <iostream>
 
@@ -65,7 +66,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
 {
-    _activeTriple._plan = plan;
+    _activeTriple.plan = plan;
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
@@ -144,19 +145,19 @@ void RunningPlan::setAllocationNeeded(bool need)
  * Evaluates the precondition of the associated plan.
  * @return Whether the precondition currently holds or not.
  */
-bool RunningPlan::evalPreCondition()
+bool RunningPlan::evalPreCondition() const
 {
-    if (_plan == nullptr) {
-        std::cerr << "Cannot Eval Condition, Plan is null" << std::endl;
+    if (_activeTriple.plan == nullptr) {
+        ALICA_ERROR_MSG("Cannot Eval Condition, Plan is null");
         throw std::exception();
     }
-    if (_plan->getPreCondition() == nullptr) {
+    if (_activeTriple.plan->getPreCondition() == nullptr) {
         return true;
     }
     try {
-        return _plan->getPreCondition()->evaluate(shared_from_this());
-    } catch (std::exception& e) {
-        std::cerr << "Exception in precondition: " << e.what() << std::endl;
+        return _activeTriple.plan->getPreCondition()->evaluate(shared_from_this());
+    } catch (const std::exception& e) {
+        ALICA_ERROR_MSG("Exception in precondition: " << e.what());
         return false;
     }
 }
@@ -165,19 +166,19 @@ bool RunningPlan::evalPreCondition()
  * Evals the runtime condition of the associated plan.
  * @return Whether the runtime currently holds or not.
  */
-bool RunningPlan::evalRuntimeCondition()
+bool RunningPlan::evalRuntimeCondition() const
 {
-    if (_plan == nullptr) {
-        std::cerr << "Cannot Eval Condition, Plan is null" << std::endl;
+    if (_activeTriple.plan == nullptr) {
+        ALICA_ERROR_MSG("Cannot Eval Condition, Plan is null");
         throw std::exception();
     }
-    if (_plan->getRuntimeCondition() == nullptr) {
+    if (_activeTriple.plan->getRuntimeCondition() == nullptr) {
         return true;
     }
     try {
-        return _plan->getRuntimeCondition()->evaluate(shared_from_this());
-    } catch (std::exception& e) {
-        std::cerr << "Exception in runtimecondition: " << _plan->getName() << e.what() << std::endl;
+        return _activeTriple.planan->getRuntimeCondition()->evaluate(shared_from_this());
+    } catch (const std::exception& e) {
+        ALICA_ERROR_MSG("Exception in runtimecondition: " << _activeTriple.plan->getName() << " " << e.what());
         return false;
     }
 }
@@ -188,9 +189,9 @@ void RunningPlan::addChildren(const std::vector<RunningPlan*>& runningPlans)
     for (RunningPlan* r : runningPlans) {
         r->setParent(this);
         _children.push_back(r);
-        auto iter = _failedSubPlans.find(r->getPlan());
+        auto iter = _failedSubPlans.find(r->getActivePlan());
         if (iter != _failedSubPlans.end()) {
-            r->_failCount = iter->second;
+            r->_status.failCount = iter->second;
         }
         if (_active) {
             r->activate();
@@ -206,7 +207,7 @@ void RunningPlan::moveState(const State* nextState)
 {
     deactivateChildren();
     clearChildren();
-    _assignment->moveRobots(_activeState, nextState);
+    _assignment->moveRobots(_activeTriple.state, nextState);
     setActiveState(nextState);
     _failedSubPlans.clear();
 }
@@ -244,17 +245,17 @@ void RunningPlan::setActive(bool active)
 */
 void RunningPlan::usePlan(const AbstractPlan* plan)
 {
-    if (_planStateTriple.plan != plan) {
-        _planStartTime = _ae->getAlicaClock()->now();
+    if (_activeTriple.plan != plan) {
+        _status.planStartTime = _ae->getAlicaClock()->now();
         revokeAllConstraints();
-        _planStateTriple.plan = plan;
+        _activeTriple.plan = plan;
     }
 }
 
 void RunningPlan::useEntryPoint(const EntryPoint* value)
 {
     if (_activeTriple.entryPoint != value) {
-        AgentIdConstPtr mid = getOwnID();
+        AgentIDConstPtr mid = getOwnID();
         _assignment.removeRobot(mid);
         _activeTriple.entryPoint = value;
         if (value != nullptr) {
@@ -421,13 +422,28 @@ void RunningPlan::deactivate()
 }
 
 /**
+ * Tests whether any child has a specific status.
+ * @param A PlanStatus
+ * @return bool
+ */
+bool RunningPlan::isAnyChildStatus(PlanStatus ps) const
+{
+    for (RunningPlan* child : _children) {
+        if (ps == child->getStatus()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * Tests whether all children have the specific status.
  * @param A PlanStatus
  * @returns bool
  */
-bool RunningPlan::allChildrenStatus(PlanStatus ps)
+bool RunningPlan::areAllChildrenStatus(PlanStatus ps) const
 {
-    for (const std::shared_ptr<RunningPlan>& child : _children) {
+    for (const RunningPlan* child : _children) {
         if (ps != child->getStatus()) {
             return false;
         }
@@ -440,27 +456,15 @@ bool RunningPlan::allChildrenStatus(PlanStatus ps)
  * @param A TaskStatus
  * @return bool
  */
-bool RunningPlan::anyChildrenTaskSuccess()
+bool RunningPlan::isAnyChildTaskSuccessful() const
 {
-    for (auto child : _children) {
+    for (const RunningPlan* child : _children) {
         if (child->isBehaviour()) {
             // Behaviours have no task status!
             continue;
         }
-
-        auto childAssignment = child->getAssignment();
-        if (!childAssignment) {
-            // no assignment, so no successful task
-            continue;
-        }
-
-        for (int i = 0; i < childAssignment->getEpSuccessMapping()->getCount(); i++) {
-            // at least one robot must be successful && at least as much as minCard robots must be successful
-            if (childAssignment->getEpSuccessMapping()->getRobots()[i]->size() > 0 &&
-                    static_cast<int>(childAssignment->getEpSuccessMapping()->getRobots()[i]->size()) >=
-                            childAssignment->getEpSuccessMapping()->getEntryPoints()[i]->getMinCardinality()) {
-                return true;
-            }
+        if (child->getAssignment().isAnyTaskSuccessful()) {
+            return true;
         }
     }
 
@@ -472,12 +476,12 @@ bool RunningPlan::anyChildrenTaskSuccess()
  */
 void RunningPlan::activate()
 {
-    _active = true;
+    _status.active = true;
     if (isBehaviour()) {
-        _ae->getBehaviourPool()->startBehaviour(shared_from_this());
+        _ae->getBehaviourPool()->startBehaviour(*this);
     }
     attachPlanConstraints();
-    for (shared_ptr<RunningPlan>& r : _children) {
+    for (RunningPlan* r : _children) {
         r->activate();
     }
 }
@@ -491,24 +495,14 @@ void RunningPlan::limitToRobots(const AgentGrp& robots)
     if (isBehaviour()) {
         return;
     }
-    if (!_cycleManagement->mayDoUtilityCheck()) {
+    if (!_cycleManagement.mayDoUtilityCheck()) {
         return;
     }
-    bool recurse = false;
 
-    // TODO: move this code into assignment to avoid the call to getAllRobots.
-    AgentGrp curRobots;
-    _assignment->getAllRobots(curRobots);
-    for (const supplementary::AgentID* r : curRobots) {
-        if (find_if(robots.begin(), robots.end(), [&r](const supplementary::AgentID* id) { return *r == *id; }) == robots.end()) {
-            if (_activeState != nullptr && _assignment->getRobotStateMapping()->getStateOfRobot(r) == _activeState) {
-                recurse = true;
-            }
-            _assignment->removeRobot(r);
-        }
-    }
-    if (recurse) {
-        for (shared_ptr<RunningPlan>& c : _children) {
+    const bool ownStateWasTouched = _assignment.removeAllNotIn(robots, _activeTriple.state);
+
+    if (ownStateWasTouched) {
+        for (RunningPlan* c : _children) {
             c->limitToRobots(robots);
         }
     }
@@ -524,12 +518,12 @@ void RunningPlan::revokeAllConstraints()
 
 void RunningPlan::attachPlanConstraints()
 {
-    _constraintStore.addCondition(_plan->getPreCondition());
-    _constraintStore.addCondition(_plan->getRuntimeCondition());
+    _constraintStore.addCondition(_activeTriple.plan->getPreCondition());
+    _constraintStore.addCondition(_activeTriple.plan->getRuntimeCondition());
 }
 
 bool RunningPlan::recursiveUpdateAssignment(
-        list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, list<const supplementary::AgentID*> noUpdates, AlicaTime now)
+        std::list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, std::list<const supplementary::AgentID*> noUpdates, AlicaTime now)
 {
     if (isBehaviour()) {
         return false;
@@ -540,12 +534,12 @@ bool RunningPlan::recursiveUpdateAssignment(
     // if keepTask, the task Assignment should not be changed!
     bool ret = false;
     AllocationDifference* aldif = new AllocationDifference();
-    for (shared_ptr<SimplePlanTree> spt : spts) {
+    for (const shared_ptr<SimplePlanTree>& spt : spts) {
         if (spt->getState()->getInPlan() != _plan) { // the robot is no longer participating in this plan
             if (!keepTask & !auth) {
-                const EntryPoint* ep = getAssignment()->getEntryPointOfRobot(spt->getRobotId());
+                const EntryPoint* ep = _assignment.getEntryPointOfAgent(spt->getRobotId());
                 if (ep != nullptr) {
-                    getAssignment()->removeRobot(spt->getRobotId());
+                    _assignment.removeAgentFrom(spt->getRobotId(), ep);
                     ret = true;
                     aldif->editSubtractions().emplace_back(ep, spt->getRobotId());
                 }
@@ -554,17 +548,17 @@ bool RunningPlan::recursiveUpdateAssignment(
             if (keepTask || auth) { // Update only state, and that only if it is in the reachability graph of its
                                     // current entrypoint, else
                 // ignore
-                const EntryPoint* cep = getAssignment()->getEntryPointOfRobot(spt->getRobotId());
+                const EntryPoint* cep = assignment.getEntryPointOfAgent(spt->getRobotId());
                 if (cep != nullptr) {
                     if (cep->isStateReachable(spt->getState())) {
-                        getAssignment()->getRobotStateMapping()->setState(spt->getRobotId(), spt->getState());
+                        _assignment.setState(spt->getRobotId(), spt->getState(), cep);
                     }
                 } else { // robot was not expected to be here during protected assignment time, add it.
-                    getAssignment()->addRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
+                    _assignment.addAgent(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
                     aldif->editAdditions().emplace_back(spt->getEntryPoint(), spt->getRobotId());
                 }
             } else { // Normal Update
-                const EntryPoint* ep = getAssignment()->getEntryPointOfRobot(spt->getRobotId());
+                const EntryPoint* ep = _assignment.getEntryPointOfAgent(spt->getRobotId());
                 ret |= getAssignment()->updateRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
                 if (spt->getEntryPoint() != ep) {
                     aldif->editAdditions().emplace_back(spt->getEntryPoint(), spt->getRobotId());
@@ -576,16 +570,16 @@ bool RunningPlan::recursiveUpdateAssignment(
         }
     }
 
-    list<const supplementary::AgentID*> rem;
+    AgentGrp rem;
     if (!keepTask) { // remove any robot no longer available in the spts (auth flag obey here, as robot might be
                      // unavailable)
         // EntryPoint[] eps = this.Assignment.GetEntryPoints();
-        const supplementary::AgentID* ownId = getOwnID();
-        for (int i = 0; i < getAssignment()->getEntryPointCount(); i++) {
-            const EntryPoint* ep = getAssignment()->getEpRobotsMapping()->getEp(i);
+        AgentIDConstPtr ownId = getOwnID();
+        for (int i = 0; i < _assignment.getEntryPointCount(); ++i) {
+            const EntryPoint* ep = _assignment.getEntryPoint(i);
             rem.clear();
-            auto robs = getAssignment()->getRobotsWorking(ep);
-            for (auto& rob : (*robs)) {
+            AssignmentView robs = _assignment.getRobotsWorking(i);
+            for (AgentIDConstPtr rob : robs) {
                 if (*rob == *ownId)
                     continue;
                 bool found = false;
@@ -593,7 +587,7 @@ bool RunningPlan::recursiveUpdateAssignment(
                     // found = true;
                     continue;
                 }
-                for (shared_ptr<SimplePlanTree> spt : spts) {
+                for (const shared_ptr<SimplePlanTree>& spt : spts) {
                     if (*(spt->getRobotId()) == *rob) {
                         found = true;
                         break;
@@ -601,48 +595,40 @@ bool RunningPlan::recursiveUpdateAssignment(
                 }
                 if (!found) {
                     rem.push_back(rob);
-                    // this.Assignment.RemoveRobot(rob);
                     aldif->editSubtractions().emplace_back(ep, rob);
                     ret = true;
                 }
             }
-            for (auto& rob : rem) {
-                getAssignment()->removeRobot(rob, ep);
-            }
+            _assignment.removeAllFrom(rob, ep);
         }
     }
 
     // enforce consistency between RA and PlanTree by removing robots deemed inactive:
     if (!auth) { // under authority do not remove robots from assignment
-        for (int i = 0; i < getAssignment()->getEntryPointCount(); i++) {
-            const EntryPoint* ep = getAssignment()->getEpRobotsMapping()->getEp(i);
+        for (int i = 0; i < _assignment.getEntryPointCount(); ++i) {
+            const EntryPoint* ep = _assignment.getEntryPoint(i);
             rem.clear();
-            auto robs = getAssignment()->getRobotsWorking(ep);
-            for (auto& rob : (*robs)) {
-                if (find_if(availableAgents.begin(), availableAgents.end(), [&rob](const supplementary::AgentID* id) { return *rob == *id; }) ==
-                        availableAgents.end()) {
+            AssignmentView robs = _assignment.getRobotsWorking(i);
+            for (AgentIDConstPtr rob : robs) {
+                if (find_if(availableAgents.begin(), availableAgents.end(), [&rob](AgentIDConstPtr id) { return *rob == *id; }) == availableAgents.end()) {
                     rem.push_back(rob);
                     aldif->editSubtractions().emplace_back(ep, rob);
                     ret = true;
                 }
             }
-
-            for (auto& rob : rem) {
-                getAssignment()->removeRobot(rob, ep);
-            }
+            _assignment.removeAllFrom(rem, ep);
         }
     }
 
     aldif->setReason(AllocationDifference::Reason::message);
     _cycleManagement->setNewAllocDiff(aldif);
     // Update Success Collection:
-    _ae->getTeamObserver()->updateSuccessCollection((Plan*) getPlan(), getAssignment()->getEpSuccessMapping());
+    _ae->getTeamObserver()->updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), getAssignment()->getEpSuccessMapping());
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
     if (_stateStartTime + assignmentProtectionTime > now) {
-        AgentGrp robotsJoined;
-        getAssignment()->getRobotStateMapping()->getRobotsInState(getActiveState(), robotsJoined);
+        AgentsInStateView robotsJoined = _assignment.getRobotsInState(getActiveState());
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
             if (std::find_if(robotsJoined.begin(), robotsJoined.end(), [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) ==
                     robotsJoined.end()) {
@@ -652,29 +638,26 @@ bool RunningPlan::recursiveUpdateAssignment(
             }
         }
     } else if (auth) { // in case of authority, remove all that are not assigned to same task
-        const AgentGrp* robotsJoined = getAssignment()->getRobotsWorking(getOwnEntryPoint());
-
-        if (robotsJoined) {
-            for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
-                if (find_if(robotsJoined->begin(), robotsJoined->end(), [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) ==
-                        robotsJoined->end()) {
-                    iter = availableAgents.erase(iter);
-                } else {
-                    ++iter;
-                }
+        AssignmentView robotsJoined = _assignment.getRobotsWorking(getActiveEntryPoint());
+        for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
+            if (find_if(robotsJoined.begin(), robotsJoined.end(), [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) ==
+                    robotsJoined.end()) {
+                iter = availableAgents.erase(iter);
+            } else {
+                ++iter;
             }
         }
     }
     // Give Plans to children
-    for (shared_ptr<RunningPlan>& r : _children) {
+    for (RunningPlan* r : _children) {
         if (r->isBehaviour()) {
             continue;
         }
-        list<shared_ptr<SimplePlanTree>> newcspts;
+        std::list<shared_ptr<SimplePlanTree>> newcspts;
         for (shared_ptr<SimplePlanTree> spt : spts) {
-            if (spt->getState() == _activeState) {
+            if (spt->getState() == _activeTriple.state) {
                 for (shared_ptr<SimplePlanTree> cspt : spt->getChildren()) {
-                    if (cspt->getState()->getInPlan() == r->getPlan()) {
+                    if (cspt->getState()->getInPlan() == r->getActivePlan()) {
                         newcspts.push_back(cspt);
                         break;
                     }
@@ -709,21 +692,6 @@ void RunningPlan::toMessage(IdGrp& message, shared_ptr<const RunningPlan>& deepe
     }
 }
 
-/**
- * Tests whether any child has a specific status.
- * @param A PlanStatus
- * @return bool
- */
-bool RunningPlan::anyChildrenStatus(PlanStatus ps)
-{
-    for (std::shared_ptr<RunningPlan>& child : _children) {
-        if (ps == child->getStatus()) {
-            return true;
-        }
-    }
-    return false;
-}
-
 void RunningPlan::sendLogMessage(int level, const std::string& message) const
 {
     _ae->getCommunicator()->sendLogMessage(level, message);
@@ -746,7 +714,7 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     out << "Task: " << (ptz.entryPoint != nullptr ? ptz.entryPoint->getTask()->getName() : "NULL") << std::endl;
     out << "IsBehaviour: " << r.isBehaviour() << "\t";
     if (r.isBehaviour()) {
-        out << "Behaviour: " << (getBasicBehaviour() == nullptr ? "NULL" : r.getBasicBehaviour()->getName()) << std::endl;
+        out << "Behaviour: " << (r.getBasicBehaviour() == nullptr ? "NULL" : r.getBasicBehaviour()->getName()) << std::endl;
     }
     const RunningPlan::PlanStatusInfo& psi = r.getStatusInfo();
     out << "AllocNeeded: " << psi.allocationNeeded << std::endl;
@@ -755,17 +723,17 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     out << "IsActive: " << psi.active << std::endl;
     out << "Status: " << getPlanStatusName(psi.status) << std::endl;
     out << "AvailRobots: ";
-    for (AgentIdConstPtr r : _robotsAvail) {
+    for (AgentIDConstPtr r : _robotsAvail) {
         out << " " << *r;
     }
     out << std::endl;
-    if (!isBehaviour()) {
-        out << "Assignment:" << _assignment;
+    if (!r.isBehaviour()) {
+        out << "Assignment:" << r._assignment;
     }
-    out << "Children: " << _children.size();
+    out << "Children: " << r._children.size();
     if (!_children.empty()) {
         out << " ( ";
-        for (const RunningPlan* r : _children) {
+        for (const RunningPlan* r : r._children) {
             if (r->_activeTriple.plan == nullptr) {
                 out << "NULL PLAN, ";
             } else
@@ -773,7 +741,7 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
         }
         out << ")";
     }
-    out << std::endl << "CycleManagement - Assignment Overridden: " << (_cycleManagement.isOverridden() ? "true" : "false") << std::endl;
+    out << std::endl << "CycleManagement - Assignment Overridden: " << (r._cycleManagement.isOverridden() ? "true" : "false") << std::endl;
     out << std::endl << "########## ENDRP ###########" << std::endl;
     return out;
 }

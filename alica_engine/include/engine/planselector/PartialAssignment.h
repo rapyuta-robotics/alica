@@ -33,7 +33,7 @@ public:
     int getAssignedAgentCount(int idx) const;
     int getTotalAgentCount() const { return _assignment.size(); }
     int getEntryPointIndexOf(int agentIdx) const { return _assignment[agentIdx]; }
-
+    int getEntryPointCount() const { return _cardinalities.size(); }
     const SuccessCollection* getSuccessData() const;
 
     bool expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old);

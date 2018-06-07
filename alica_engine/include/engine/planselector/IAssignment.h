@@ -34,6 +34,8 @@ public:
     {
     }
     int getTotalAgentCount() const { return _impl->getTotalAgentCount(); }
+    int getEntryPointCount() const { return _impl->getEntryPointCount(); }
+    const EntryPoint* getEntryPoint(int idx) const { return _impl->getPlan()->getEntryPoints()[idx]; }
 
     PartialAssignmentView getRobotsWorking(const EntryPoint* ep) const;
     PartialAssignmentView getRobotsWorking(int64_t epid) const;
@@ -193,6 +195,7 @@ public:
     }
     PartialAssignmentSuccessIterator begin() const { return PartialAssignmentSuccessIterator(0, false, _epIdx, _pas); }
     PartialAssignmentSuccessIterator end() const;
+    bool empty() const { return begin() == end(); }
 
 private:
     int _epIdx;

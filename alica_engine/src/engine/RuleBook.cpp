@@ -140,19 +140,14 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
 
     AgentGrp robots;
     parent->getAssignment().getAgentsInState(parent->getActiveState(), robots);
-    RunningPlan* newr = _ps->getBestSimilarAssignment(r, robots);
+    double curUtil = 0.0;
+    RunningPlan* newr = _ps->getBestSimilarAssignment(r, robots, curUtil);
 
     if (newr == nullptr) {
         return PlanChange::NoChange;
     }
     const Plan* p = static_cast<const Plan*>(r.getActivePlan());
 
-    double curUtil = 0;
-    if (!r.evalRuntimeCondition()) {
-        curUtil = -1.0;
-    } else {
-        curUtil = p->getUtilityFunction()->eval(r, r);
-    }
     double possibleUtil = newr->getAssignment().getLastUtilityValue();
     ALICA_DEBUG_MSG("RB: Old U " << curUtil << " | "
                                  << " New U:" << possibleUtil);

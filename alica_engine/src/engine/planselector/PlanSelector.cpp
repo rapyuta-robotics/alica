@@ -50,22 +50,23 @@ RunningPlan* PlanSelector::getBestSimilarAssignment(const RunningPlan& rp)
     // GET ROBOTS TO ASSIGN
     AgentGrp robots;
     rp.getAssignment().getAllAgents(robots);
-    return getBestSimilarAssignment(rp, robots);
+    double oldUtil;
+    return getBestSimilarAssignment(rp, robots, oldUtil);
 }
 
 /**
  * Edits data from the old running plan to call the method CreateRunningPlan appropriately.
  */
-RunningPlan* PlanSelector::getBestSimilarAssignment(const RunningPlan& rp, const AgentGrp& robots)
+RunningPlan* PlanSelector::getBestSimilarAssignment(const RunningPlan& rp, const AgentGrp& robots, double& o_currentUtility)
 {
     assert(!rp.isBehaviour());
     // Reset set index of the partial assignment object pool
     _pap.reset();
     try {
         if (rp.getPlanType() == nullptr) {
-            return createRunningPlan(rp.getParent(), {static_cast<const Plan*>(rp.getActivePlan())}, robots, &rp, nullptr);
+            return createRunningPlan(rp.getParent(), {static_cast<const Plan*>(rp.getActivePlan())}, robots, &rp, nullptr, o_currentUtility);
         } else {
-            return createRunningPlan(rp.getParent(), rp.getPlanType()->getPlans(), robots, &rp, rp.getPlanType());
+            return createRunningPlan(rp.getParent(), rp.getPlanType()->getPlans(), robots, &rp, rp.getPlanType(), o_currentUtility);
         }
     } catch (const PoolExhaustedException& pee) {
         ALICA_ERROR_MSG(pee.what());
@@ -89,8 +90,8 @@ bool PlanSelector::getPlansForState(RunningPlan* planningParent, const AbstractP
     }
 }
 
-RunningPlan* PlanSelector::createRunningPlan(
-        RunningPlan* planningParent, const PlanGrp& plans, const AgentGrp& robotIDs, const RunningPlan* oldRp, const PlanType* relevantPlanType)
+RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const AgentGrp& robotIDs, const RunningPlan* oldRp,
+        const PlanType* relevantPlanType, double& o_oldUtility)
 {
     PlanGrp newPlanList;
     // REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
@@ -117,6 +118,16 @@ RunningPlan* PlanSelector::createRunningPlan(
         rp = _pb->makeRunningPlan(relevantPlanType);
         ta.preassignOtherAgents();
     } else {
+        if (!oldRp->evalRuntimeCondition()) {
+            o_oldUtility = -1.0;
+        } else {
+            assert(!oldRp->isBehaviour());
+            PartialAssignment* ptemp = _pap.getNext();
+            const Plan* oldPlan = static_cast<const Plan*>(oldRp->getActivePlan());
+            ptemp->prepare(oldPlan, &ta);
+            oldRp->getAssignment().fillPartial(*ptemp);
+            o_oldUtility = oldPlan->getUtilityFunction()->eval(ptemp, &oldRp->getAssignment()).getMax();
+        }
         // dont preassign other robots, because we need a similar assignment (not the same)
         rp = _pb->makeRunningPlan(oldRp->getPlanType());
         oldAss = &oldRp->getAssignment();
@@ -208,14 +219,16 @@ bool PlanSelector::getPlansForStateInternal(
             ALICA_DEBUG_MSG("PS: Added Behaviour " << bc->getBehaviour()->getName());
 
         } else if (const Plan* p = dynamic_cast<const Plan*>(ap)) {
-            RunningPlan* rp = createRunningPlan(planningParent, {p}, robotIDs, nullptr, nullptr);
+            double zeroValue;
+            RunningPlan* rp = createRunningPlan(planningParent, {p}, robotIDs, nullptr, nullptr, zeroValue);
             if (!rp) {
                 ALICA_DEBUG_MSG("PS: It was not possible to create a RunningPlan for the Plan " << p->getName() << "!");
                 return false;
             }
             o_plans.push_back(rp);
         } else if (const PlanType* pt = dynamic_cast<const PlanType*>(ap)) {
-            RunningPlan* rp = createRunningPlan(planningParent, pt->getPlans(), robotIDs, nullptr, pt);
+            double zeroVal;
+            RunningPlan* rp = createRunningPlan(planningParent, pt->getPlans(), robotIDs, nullptr, pt, zeroVal);
             if (!rp) {
                 ALICA_INFO_MSG("PS: It was not possible to create a RunningPlan for the Plan " << pt->getName() << "!");
                 return false;

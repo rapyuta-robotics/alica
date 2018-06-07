@@ -26,22 +26,31 @@ class AllAgentsIterator;
 class AgentsInStateIterator;
 class AgentsInStateView;
 
+class AssignmentSuccessIterator;
+class AssignmentSuccessView;
+
 class AgentStatePairs
 {
 public:
     AgentStatePairs() {}
     bool hasAgent(const AgentIDConstPtr id) const;
     const State* getStateOfAgent(const AgentIDConstPtr id) const;
+    void setStateOfAgent(const AgentIDConstPtr id, const State* s);
 
     const std::vector<AgentStatePair>& getRaw() const { return _data; }
     std::vector<AgentStatePair>& editRaw() { return _data; }
 
     int size() const { return static_cast<int>(_data.size()); }
+    bool empty() const { return _data.size() == 0; }
 
     void clear() { _data.clear(); }
     void emplace_back(AgentIDConstPtr id, const State* s) { _data.emplace_back(id, s); }
 
     void removeAt(int idx) { _data.erase(_data.begin() + idx); }
+    void remove(AgentIDConstPtr agent)
+    {
+        _data.erase(std::find_if(data.begin(), data.end(), [agent](AgentIDConstPtr id) { return id == agent; }));
+    }
     void removeAllIn(const AgentGrp& agents);
 
     std::vector<AgentStatePair>::iterator begin() { return _data.begin(); }
@@ -71,7 +80,8 @@ public:
     const Plan* getPlan() const { return _plan; }
 
     bool isValid() const;
-    bool isSuccessfull() const;
+    bool isSuccessful() const;
+    bool isAnyTaskSuccessful() const;
 
     bool hasAgent(AgentIDConstPtr id) const;
 
@@ -84,8 +94,11 @@ public:
     const AgentStatePairs& getAgentStates(int idx) const { return _assignmentData[idx]; }
     const AgentStatePairs& getAgentStates(const EntryPoint* ep) const;
 
+    const AgentGrp& getSuccessData(int idx) const { return _successData[idx]; }
+
     AssignmentView getAgentsWorking(const EntryPoint* ep) const;
     AssignmentView getAgentsWorking(int idx) const;
+    AssignmentSuccessView getAgentsWorkingAndFinished(const EntryPoint* ep) const;
     AllAgentsView getAllAgents() const;
     AgentsInStateView getAgentsInState(const State* s) const;
 
@@ -97,10 +110,16 @@ public:
     void getAgentsInState(const State* s, AgentGrp& o_agents) const;
 
     bool updateAgent(AgentIDConstPtr agent, const EntryPoint* e);
+    void addAgent(const AgentIDConstPtr agent, const EntryPoint* e, const State* s) { _assignmentData[e->getIndex()].emplace_back(agent, s); }
     void setAllToInitialState(const AgentGrp& agents, const EntryPoint* e);
+    void setState(AgentIDConstPtr agent, const State* s, const EntryPoint* hint) { _assignmentData[hint->getIndex()].setStateOfAgent(agent, s); }
+    bool removeAllIn(const AgentGrp& limit, const State* watchState);
+    void removeAgentFrom(AgentIDConstPtr agent, const EntryPoint* ep) { _assignmentData[ep->getIndex()].remove(agents); }
+    void removeAllFrom(const AgentGrp& agents, const EntryPoint* ep) { _assignmentData[ep->getIndex()].removeAllIn(agents); }
     void clear();
     void moveAllFromTo(const EntryPoint* scope, const State* from, const State* to);
     void adaptTaskChangesFrom(const Assignment& as);
+    void fillPartial(PartialAssignment& pa) const;
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const Assignment& a);
@@ -286,6 +305,83 @@ public:
 private:
     const Assignment* _assignment;
     const State* _state;
+};
+
+class AssignmentSuccessIterator : public std::iterator<std::forward_iterator_tag, AgentIDConstPtr>
+{
+public:
+    AssignmentSuccessIterator(int idx, bool inSuccess, const AgentStatePairs* aps, const AgentGrp* successes)
+            : _agents(aps)
+            , _successData(successes)
+            , _idx(idx)
+            , _inSuccess(inSuccess)
+    {
+        if (!inSuccess && aps && _idx >= aps->size()) {
+            _inSuccess = true;
+            _idx = 0;
+        }
+    }
+    AgentIDConstPtr operator*() const
+    {
+        if (_inSuccess) {
+            return (*_successData)[_idx];
+        } else {
+            return _agents->getRaw()[_idx].first;
+        }
+    }
+    AssignmentSuccessIterator& operator++()
+    {
+        ++_idx;
+        if (!_inSuccess && _agents && _idx >= _agents->size()) {
+            _idx = 0;
+            _inSuccess = true;
+        }
+
+        return *this;
+    }
+    bool operator==(const AssignmentSuccessIterator& o) const { return _idx == o._idx && _inSuccess == o._inSuccess; }
+    bool operator!=(const AssignmentSuccessIterator& o) const { return !(*this == o); }
+
+private:
+    const AgentStatePairs* _agents;
+    const AgentGrp* _successData;
+    int _idx;
+    bool _inSuccess;
+};
+
+class AssignmentSuccessView
+{
+public:
+    AssignmentSuccessView()
+            : _assignment(nullptr)
+            , _epIdx(0)
+    {
+    }
+    AssignmentSuccessView(const Assignment* a, int epIdx)
+            : _assignment(a)
+            , _epIdx(epIdx)
+    {
+    }
+    AssignmentSuccessIterator begin() const
+    {
+        if (!_assignment) {
+            return AssignmentSuccessIterator(0, false, nullptr, nullptr);
+        }
+        return AssignmentSuccessIterator(0, false, &_assignment->getAgentStates(_epIdx), &_assignment->getSuccessData(_epIdx));
+    }
+    AssignmentSuccessIterator end() const
+    {
+        if (!_assignment) {
+            return AssignmentSuccessIterator(0, false, nullptr, nullptr);
+        }
+        return AssignmentSuccessIterator(
+                _assignment->getSuccessData(_epIdx).size(), true, &_assignment->getAgentStates(_epIdx), &_assignment->getSuccessData(_epIdx));
+    }
+    int size() const { return _assignment ? (_assignment->getAgentStates(_epIdx).size() + _assignment->getSuccessData(_epIdx).size()) : 0; }
+
+private:
+    const Assignment* _assignment;
+    const int _epIdx;
 };
 
 /*

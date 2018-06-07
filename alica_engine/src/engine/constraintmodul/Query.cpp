@@ -77,8 +77,8 @@ void Query::fillBufferFromQuery()
     _uniqueVarStore.initWith(_queriedStaticVariables);
 }
 
-bool Query::collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds,
-                                    int& domOffset)
+bool Query::collectProblemStatement(
+        std::shared_ptr<const RunningPlan> rp, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset)
 {
 #ifdef Q_DEBUG
     AlicaTime time = rp->getAlicaEngine()->getAlicaClock()->now();
@@ -108,7 +108,7 @@ bool Query::collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolv
         // 2. process bindings for plantype
         if (rp->getPlanType() != nullptr) {
             for (const Parametrisation* p : rp->getPlanType()->getParametrisation()) {
-                if (p->getSubPlan() == rp->getPlan() && _staticVars.hasCurrently(p->getSubVar())) {
+                if (p->getSubPlan() == rp->getActivePlan() && _staticVars.hasCurrently(p->getSubVar())) {
                     _staticVars.editNext().push_back(p->getVar());
                     _uniqueVarStore.addVarTo(p->getSubVar(), p->getVar());
                 }
@@ -129,7 +129,7 @@ bool Query::collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolv
         if (parent && parent->getActiveState() != nullptr) {
             _staticVars.editNext().clear();
             for (const Parametrisation* p : parent->getActiveState()->getParametrisation()) {
-                if ((p->getSubPlan() == rp->getPlan() || p->getSubPlan() == rp->getPlanType()) && _staticVars.hasCurrently(p->getSubVar())) {
+                if ((p->getSubPlan() == rp->getActivePlan() || p->getSubPlan() == rp->getPlanType()) && _staticVars.hasCurrently(p->getSubVar())) {
                     _staticVars.editNext().push_back(p->getVar());
                     _uniqueVarStore.addVarTo(p->getSubVar(), p->getVar());
                 }
