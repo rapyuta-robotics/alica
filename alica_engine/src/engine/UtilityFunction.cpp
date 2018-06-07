@@ -65,7 +65,7 @@ UtilityInterval UtilityFunction::eval(IAssignment* newAss, const Assignment* old
 
     // Sum up priority summand
     UtilityInterval prioUI = getPriorityResult(newAss);
-    if (prioUI.getMax() <= >= -1.0) {
+    if (prioUI.getMax() <= -1.0) {
         // one robot have a negativ priority for his task -> (-1.0, -1.0) for the complete assignment
         return prioUI;
     }

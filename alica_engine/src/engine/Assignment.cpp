@@ -1,12 +1,13 @@
 #include "engine/Assignment.h"
 
+#include "engine/collections/SuccessCollection.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/planselector/PartialAssignment.h"
-
+#include "engine/planselector/TaskAssignmentProblem.h"
 #include <supplementary/AgentID.h>
 
 #include <assert.h>
@@ -26,7 +27,7 @@ void AgentStatePairs::removeAllIn(const AgentGrp& agents)
 {
     _data.erase(std::remove_if(_data.begin(), _data.end(),
                         [&agents](const AgentStatePair asp) {
-                            return agents.end() != std::find_if(agents.begin(), agents.end(), [asp](AgentIDConstPtr id) { return *(asp.first) == *id; })
+                            return agents.end() != std::find_if(agents.begin(), agents.end(), [asp](AgentIDConstPtr id) { return *(asp.first) == *id; });
                         }),
             _data.end());
 }
@@ -52,17 +53,17 @@ Assignment::Assignment(const PartialAssignment& pa)
         : _plan(pa.getPlan())
         , _assignmentData(pa.getPlan()->getEntryPoints().size())
         , _successData(pa.getPlan()->getEntryPoints().size())
-        , _lastUtility(pa.getMax())
+        , _lastUtility(pa.getUtility().getMax())
 {
     const int numEps = _plan->getEntryPoints().size();
 
     for (int i = 0; i < numEps; ++i) {
-        _assignmentData[i].editRaw().reserve(pa.getAgentsByIndex(i)->size());
+        _assignmentData[i].editRaw().reserve(pa.getAssignedAgentCount(i));
     }
-    for (int i = 0; i < pa.getAgentCount(); ++i) {
+    for (int i = 0; i < pa.getTotalAgentCount(); ++i) {
         const int idx = pa.getEntryPointIndexOf(i);
         if (idx >= 0 && idx < numEps) {
-            _assignmentData[idx].emplace_back(pa->getProblem()->getAgents()[i], _plan->getEntryPoints()[i]->getState());
+            _assignmentData[idx].emplace_back(pa.getProblem()->getAgents()[i], _plan->getEntryPoints()[i]->getState());
         }
     }
     _successData = pa.getSuccessData()->getRaw();
@@ -72,27 +73,27 @@ Assignment::Assignment(const Plan* p, const AllocationAuthorityInfo& aai)
         : _plan(p)
         , _assignmentData(p->getEntryPoints().size())
         , _successData(p->getEntryPoints().size())
-        , _lastUtilityValue(0.0)
+        , _lastUtility(0.0)
 {
     const int numEps = _plan->getEntryPoints().size();
     for (int i = 0; i < numEps; ++i) {
         assert(p->getEntryPoints()[i]->getId() == aai.entryPointRobots[i].entrypoint);
         _assignmentData[i].editRaw().reserve(aai.entryPointRobots[i].robots.size());
-        for (AgentIdConstPtr agent : aai.entryPointRobots[i].robots) {
+        for (AgentIDConstPtr agent : aai.entryPointRobots[i].robots) {
             _assignmentData[i].emplace_back(agent, _plan->getEntryPoints()[i]->getState());
         }
     }
 }
 
-Assignment(const Assignment& o)
+Assignment::Assignment(const Assignment& o)
         : _plan(o._plan)
         , _assignmentData(o._assignmentData)
         , _successData(o._successData)
-        , _lastUtilityValue(o._lastUtilityValue)
+        , _lastUtility(o._lastUtility)
 {
 }
 
-Assignment& operator=(const Assignment& o)
+Assignment& Assignment::operator=(const Assignment& o)
 {
     _plan = o._plan;
     _assignmentData = o._assignmentData;
@@ -100,8 +101,6 @@ Assignment& operator=(const Assignment& o)
 
     return *this;
 }
-
-Assignment::~Assignment() {}
 
 bool Assignment::isValid() const
 {
@@ -112,7 +111,7 @@ bool Assignment::isValid() const
     const int numEps = eps.size();
     for (int i = 0; i < numEps; ++i) {
         int c = _assignmentData[i].size() + _successData[i].size();
-        if (!eps[i].contains(c)) {
+        if (!eps[i]->getCardinality().contains(c)) {
             return false;
         }
     }
@@ -128,7 +127,7 @@ bool Assignment::isSuccessfull() const
     const int numEps = eps.size();
     for (int i = 0; i < numEps; ++i) {
         if (eps[i]->isSuccessRequired()) {
-            if (!(_successData[i].empty() && static_cast<int>(_successData[i]->size()) >= eps[i]->getMinCardinality())) {
+            if (!(_successData[i].empty() && static_cast<int>(_successData[i].size()) >= eps[i]->getMinCardinality())) {
                 return false;
             }
         }
@@ -139,26 +138,26 @@ bool Assignment::isSuccessfull() const
 bool Assignment::hasAgent(AgentIDConstPtr id) const
 {
     for (const AgentStatePairs& asps : _assignmentData) {
-        if (asps.hasAgent(id))) {
+        if (asps.hasAgent(id)) {
             return true;
         }
     }
     return false;
 }
 
-const EntryPoint* getEntryPointOfAgent(AgentIDConstPtr id) const
+const EntryPoint* Assignment::getEntryPointOfAgent(AgentIDConstPtr id) const
 {
     int i = 0;
     for (const AgentStatePairs& asps : _assignmentData) {
-        if (asps.hasAgent(id))) {
-            return _plan.getEntryPoints()[i];
+        if (asps.hasAgent(id)) {
+            return _plan->getEntryPoints()[i];
         }
         ++i;
     }
     return nullptr;
 }
 
-const State* getStateOfAgent(AgentIDConstPtr id) const
+const State* Assignment::getStateOfAgent(AgentIDConstPtr id) const
 {
     for (const AgentStatePairs& asps : _assignmentData) {
         const State* s = asps.getStateOfAgent(id);
@@ -172,27 +171,27 @@ const State* getStateOfAgent(AgentIDConstPtr id) const
 void Assignment::getAllAgents(AgentGrp& o_agents) const
 {
     for (const AgentStatePairs& asps : _assignmentData) {
-        std::transform(asps.begin(), asps.end(), std::back_inserter(o_agents), [](const AgentStatePair asp) -> AgentIdConstPtr { return asp.first; })
+        std::transform(asps.begin(), asps.end(), std::back_inserter(o_agents), [](const AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
     }
 }
 
-const AgentStatePairs& Assignment::getAgentsWorking(const EntryPoint* ep) const
+const AgentStatePairs& Assignment::getAgentStates(const EntryPoint* ep) const
 {
     return _assignmentData[ep->getIndex()];
 }
 
 void Assignment::getAgentsWorking(const EntryPoint* ep, AgentGrp& o_agents) const
 {
-    const AgentStatePairs& asp = getAgentsWorking(ep);
+    const AgentStatePairs& asp = getAgentStates(ep);
     o_agents.reserve(asp.size());
-    std::transform(asp.begin(), asp.end(), std::back_inserter(o_agents), [](AgentStatePair asp) -> AgentIdConstPtr { return asp.first; });
+    std::transform(asp.begin(), asp.end(), std::back_inserter(o_agents), [](AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
 }
 
 void Assignment::getAgentsWorking(int idx, AgentGrp& o_agents) const
 {
-    const AgentStatePairs& asp = getAgentsWorking(idx);
+    const AgentStatePairs& asp = getAgentStates(idx);
     o_agents.reserve(asp.size());
-    std::transform(asp.begin(), asp.end(), std::back_inserter(o_agents), [](AgentStatePair asp) -> AgentIdConstPtr { return asp.first; });
+    std::transform(asp.begin(), asp.end(), std::back_inserter(o_agents), [](AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
 }
 
 void Assignment::getAgentsWorkingAndFinished(const EntryPoint* ep, AgentGrp& o_agents) const
@@ -203,24 +202,18 @@ void Assignment::getAgentsWorkingAndFinished(const EntryPoint* ep, AgentGrp& o_a
         if (ep == eps[i]) {
             o_agents.reserve(_assignmentData[i].size() + _successData[i].size());
             std::transform(_assignmentData[i].begin(), _assignmentData[i].end(), std::back_inserter(o_agents),
-                    [](AgentStatePair asp) -> AgentIdConstPtr { return asp.first; });
-            std::copy(_successData[i].begin(),_successData[i.end(),std::back_inserter(o_agents));
+                    [](AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
+            std::copy(_successData[i].begin(), _successData[i].end(), std::back_inserter(o_agents));
             return;
         }
     }
 }
 
-void Assignment::clear()
-{
-    _successData.clear();
-    _assignmentData.clear();
-}
-
 void Assignment::getAgentsInState(const State* s, AgentGrp& o_agents) const
 {
     int i = 0;
-    for (const std::vector<AgentStatePair>& asps : _assignmentData) {
-        if (s->getEntryPoint() == _plan->getEntryPoint()[i]) {
+    for (const AgentStatePairs& asps : _assignmentData) {
+        if (s->getEntryPoint() == _plan->getEntryPoints()[i]) {
             for (AgentStatePair asp : asps) {
                 if (asp.second == s) {
                     o_agents.push_back(asp.first);
@@ -231,16 +224,42 @@ void Assignment::getAgentsInState(const State* s, AgentGrp& o_agents) const
         ++i;
     }
 }
+
+AssignmentView Assignment::getAgentsWorking(const EntryPoint* ep) const
+{
+    return AssignmentView(this, ep->getIndex());
+}
+
+AssignmentView Assignment::getAgentsWorking(int idx) const
+{
+    return AssignmentView(this, idx);
+}
+
+AllAgentsView Assignment::getAllAgents() const
+{
+    return AllAgentsView(this);
+}
+AgentsInStateView Assignment::getAgentsInState(const State* s) const
+{
+    return AgentsInStateView(this, s);
+}
+
+void Assignment::clear()
+{
+    _successData.clear();
+    _assignmentData.clear();
+}
+
 bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e)
 {
     bool found = false;
     bool inserted = false;
     int i = 0;
 
-    for (const std::vector<AgentStatePair>& asps : _assignmentData) {
-        const bool isTargetEp = e == _plan->getEntryPoint()[i];
+    for (AgentStatePairs& asps : _assignmentData) {
+        const bool isTargetEp = e == _plan->getEntryPoints()[i];
         if (isTargetEp) {
-            for (AgentSatePair asp : asps) {
+            for (AgentStatePair asp : asps) {
                 if (asp.first == agent) {
                     return false;
                 }
@@ -249,19 +268,19 @@ bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e)
             inserted = true;
         } else if (!found) {
             for (int j = 0; j < static_cast<int>(asps.size()); ++j) {
-                if (asps[j].first == agent) {
+                if (asps.getRaw()[j].first == agent) {
                     found = true;
                     asps.removeAt(j);
                     break;
                 }
             }
         }
+        if (found && inserted) {
+            return true;
+        }
+        ++i;
     }
-    if (found && inserted)
-        return true;
-    ++i;
-}
-return inserted;
+    return inserted;
 }
 
 void Assignment::moveAllFromTo(const EntryPoint* scope, const State* from, const State* to)
@@ -283,7 +302,7 @@ void Assignment::setAllToInitialState(const AgentGrp& agents, const EntryPoint* 
         const bool isTargetEp = ep == _plan->getEntryPoints()[i];
         if (isTargetEp) {
             const State* s = ep->getState();
-            for (AgentIdConstPtr id : agents) {
+            for (AgentIDConstPtr id : agents) {
                 auto it = std::find_if(_assignmentData[i].begin(), _assignmentData[i].end(), [id](const AgentStatePair asp) { return *asp.first == *id; });
                 if (it == _assignmentData[i].end()) {
                     _assignmentData[i].emplace_back(id, s);
@@ -307,7 +326,7 @@ void Assignment::adaptTaskChangesFrom(const Assignment& as)
     for (int i = 0; i < epCount; ++i) {
         AgentStatePairs n = as._assignmentData[i];
         for (AgentStatePair& asp : n) {
-            const State* s = _assignmentData[i].getStateOf(asp.first);
+            const State* s = _assignmentData[i].getStateOfAgent(asp.first);
             if (s) {
                 asp.second = s;
             }
@@ -324,16 +343,16 @@ std::ostream& operator<<(std::ostream& out, const Assignment& a)
     out << "Assignment:" << std::endl;
     for (int i = 0; i < numEps; ++i) {
         out << "EP: " << eps[i]->getId() << " Task: " << eps[i]->getTask()->getName() << " AgentIDs: ";
-        for (AgentStatePair rsp : _assignmentData[i])) {
-            out << *rsp.first << "("<< *rsp.second->getName()<<") ";
+        for (AgentStatePair rsp : a._assignmentData[i]) {
+            out << rsp.first << "(" << rsp.second->getName() << ") ";
         }
         out << std::endl;
     }
     out << "Success" << std::endl;
     for (int i = 0; i < numEps; ++i) {
         out << "EP: " << eps[i]->getId() << " Task: " << eps[i]->getTask()->getName() << " AgentIDs: ";
-        for (AgentIDConstPtr a : _successData[i])) {
-            out << *a << " ";
+        for (AgentIDConstPtr id : a._successData[i]) {
+            out << *id << " ";
         }
         out << std::endl;
     }

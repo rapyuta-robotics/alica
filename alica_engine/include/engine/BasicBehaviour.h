@@ -68,6 +68,22 @@ public:
     virtual void init(){};
 
 protected:
+    const supplementary::AgentID* getOwnId() const;
+
+    /**
+     * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
+     * Override for behaviour specific initialisation.
+     */
+    virtual void initialiseParameters(){};
+
+    const EntryPoint* getParentEntryPoint(const std::string& taskName);
+
+    const EntryPoint* getHigherEntryPoint(const std::string& planName, const std::string& taskName);
+
+    // TODO: these methods may have race conditions, check and refactor
+    AssignmentView agentsInEntryPointOfHigherPlan(const EntryPoint* ep) const;
+
+    AssignmentView agentsInEntryPoint(const EntryPoint* ep) const;
     /**
      * The name of this behaviour.
      */
@@ -98,22 +114,7 @@ protected:
     supplementary::ITrigger* behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
                                                   is event triggered, alternative to timer */
     std::condition_variable runCV;
-    const supplementary::AgentID* getOwnId() const;
 
-    /**
-     * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
-     * Override for behaviour specific initialisation.
-     */
-    virtual void initialiseParameters(){};
-
-    const EntryPoint* getParentEntryPoint(const std::string& taskName);
-
-    const EntryPoint* getHigherEntryPoint(const std::string& planName, const std::string& taskName);
-
-    // TODO: these methods may have race conditions, check and refactor
-    const AgentStatePairs* agentsInEntryPointOfHigherPlan(const EntryPoint* ep);
-
-    const AgentStatePairs* agentsInEntryPoint(const EntryPoint* ep);
     AlicaEngine* engine;
 
 private:

@@ -156,8 +156,8 @@ void alica::CycleManager::setNewAllocDiff(const Assignment& oldAss, const Assign
     const int epCount = oldAss.getEntryPointCount();
 
     for (int i = 0; i < epCount; ++i) {
-        const AgentStatePairs& newAgents = newAss.getAgentsWorking(i);
-        const AgentStatePairs& oldAgents = oldAss.getAgentsWorking(i);
+        const AgentStatePairs& newAgents = newAss.getAgentStates(i);
+        const AgentStatePairs& oldAgents = oldAss.getAgentStates(i);
 
         for (AgentStatePair oldp : oldAgents) {
             if (!newAgents.hasAgent(oldp.first)) {

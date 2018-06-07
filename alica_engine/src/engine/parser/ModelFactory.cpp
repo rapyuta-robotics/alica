@@ -152,6 +152,9 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node)
     this->rep->_plans.emplace(plan->getId(), plan);
 
     tinyxml2::XMLElement* curChild = element->FirstChildElement();
+
+    std::vector<EntryPoint*> constructedEntryPoints;
+
     while (curChild != nullptr) {
         if (isReferenceNode(curChild)) {
             AlicaEngine::abort("MF: Plan child is reference", curChild);
@@ -161,7 +164,8 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node)
 
         if (entryPoints.compare(val) == 0) {
             EntryPoint* ep = createEntryPoint(curChild);
-            plan->_entryPoints.push_back(ep);
+            constructedEntryPoints.push_back(ep);
+            // plan->_entryPoints.push_back(ep);
             ep->setPlan(plan);
         } else if (states.compare(val) == 0) {
             string name = "";
@@ -229,12 +233,15 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node)
         curChild = curChild->NextSiblingElement();
     }
     // Sort entrypoints:
-    std::sort(plan->_entryPoints.begin(), plan->_entryPoints.end(), [](const EntryPoint* ep1, const EntryPoint* ep2) { return ep1->getId() < ep2->getId(); });
-    // set indices:
-    for (int i = 0; i < static_cast<int>(plan->_entryPoints); ++i) {
-        // Not an ideal solution, but ok for now
-        const_cast<EntryPoint*>(plan->_entryPoints[i])->_index = i;
+    std::sort(constructedEntryPoints.begin(), constructedEntryPoints.end(),
+            [](const EntryPoint* ep1, const EntryPoint* ep2) { return ep1->getId() < ep2->getId(); });
+    plan->_entryPoints.reserve(constructedEntryPoints.size());
+    // set indices and add to plan:
+    for (int i = 0; i < static_cast<int>(constructedEntryPoints.size()); ++i) {
+        constructedEntryPoints[i]->_index = i;
+        plan->_entryPoints.push_back(constructedEntryPoints[i]);
     }
+
     return plan;
 }
 RoleSet* ModelFactory::createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPlan)
@@ -1424,7 +1431,7 @@ const EntryPoint* ModelFactory::generateIdleEntryPoint()
     EntryPoint* idleEP = new EntryPoint();
     idleEP->setName("IDLE-ep");
     idleEP->setId(EntryPoint::IDLEID);
-    idleEp->_index = -42;
+    idleEP->_index = -42;
     idleEP->_cardinality = Interval<int>(0, std::numeric_limits<int>::max());
     Task* idleTask = new Task(true);
     idleTask->setName("IDLE-TASK");

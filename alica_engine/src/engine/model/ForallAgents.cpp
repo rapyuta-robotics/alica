@@ -59,57 +59,57 @@ bool ForallAgents::isAgentInScope(AgentIDConstPtr id, const RunningPlan& rp) con
     case PLANSCOPE:
         return rp.getActivePlan() == getScopedPlan() && rp.getAssignment().hasAgent(id);
         break;
-    case ENTRYPOINTSCOPE: {
+    case ENTRYPOINTSCOPE:
         return rp.getAssignment().getEntryPointOfAgent(id) == getScopedEntryPoint();
         break;
     case STATESCOPE:
         return rp.getAssignment().getStateOfAgent(id) == getScopedState();
         break;
     }
-        assert(false);
-        return false;
+    assert(false);
+    return false;
+}
+
+bool ForallAgents::addDomainVariables(const RunningPlan& p, std::vector<AgentVariables>& io_agentVarsInScope) const
+{
+    bool addedAgent = false;
+    bool changedAgent = false;
+
+    const TeamManager* tm = p.getAlicaEngine()->getTeamManager();
+    switch (getScopeType()) {
+    case PLANSCOPE:
+        if (p.getActivePlan() == getScopedPlan()) {
+            for (AgentIDConstPtr id : p.getAssignment().getAllAgents()) {
+                Result r = TryAddId(id, io_agentVarsInScope, tm);
+                addedAgent = addedAgent || r == ADDED;
+                changedAgent = changedAgent || r == MODIFIED;
+            }
+        }
+        break;
+    case ENTRYPOINTSCOPE:
+        if (p.getActivePlan() == getScopedEntryPoint()->getPlan()) {
+            for (AgentIDConstPtr id : p.getAssignment().getAgentsWorking(getScopedEntryPoint())) {
+                Result r = TryAddId(id, io_agentVarsInScope, tm);
+                addedAgent = addedAgent || r == ADDED;
+                changedAgent = changedAgent || r == MODIFIED;
+            }
+        }
+        break;
+
+    case STATESCOPE:
+        if (p.getActivePlan() == getScopedState()->getInPlan()) {
+            for (AgentIDConstPtr id : p.getAssignment().getAgentsInState(getScopedState())) {
+                Result r = TryAddId(id, io_agentVarsInScope, tm);
+                addedAgent = addedAgent || r == ADDED;
+                changedAgent = changedAgent || r == MODIFIED;
+            }
+        }
+        break;
     }
 
-    bool ForallAgents::addDomainVariables(const RunningPlan& p, std::vector<AgentVariables>& io_agentVarsInScope) const
-    {
-        bool addedAgent = false;
-        bool changedAgent = false;
-
-        const TeamManager* tm = p.getAlicaEngine()->getTeamManager();
-        switch (getScopeType()) {
-        case PLANSCOPE:
-            if (p->getActivePlan() == getScopedPlan()) {
-                for (AgentIDConstPtr id : p.getAssignment().getAllAgents()) {
-                    Result r = TryAddId(id, io_agentVarsInScope, tm);
-                    addedAgent = addedAgent || r == ADDED;
-                    changedAgent = changedAgent || r == MODIFIED;
-                }
-            }
-            break;
-        case ENTRYPOINTSCOPE:
-            if (p->getActivePlan() == getScopedEntryPoint()->getPlan()) {
-                for (AgentIDConstPtr id : *p.getAssignment().getAgentsWorking(getScopedEntryPoint())) {
-                    Result r = TryAddId(id, io_agentVarsInScope, tm);
-                    addedAgent = addedAgent || r == ADDED;
-                    changedAgent = changedAgent || r == MODIFIED;
-                }
-            }
-            break;
-
-        case STATESCOPE:
-            if (p->getActivePlan() == getScopedState()->getInPlan()) {
-                for (AgentIDConstPtr id : p.getAssignment()->getAgentsInState(getScopedState())) {
-                    Result r = TryAddId(id, io_agentVarsInScope, tm);
-                    addedAgent = addedAgent || r == ADDED;
-                    changedAgent = changedAgent || r == MODIFIED;
-                }
-            }
-            break;
-        }
-
-        if (addedAgent) {
-            std::sort(io_agentVarsInScope.begin(), io_agentVarsInScope.end());
-        }
-        return addedAgent || changedAgent;
+    if (addedAgent) {
+        std::sort(io_agentVarsInScope.begin(), io_agentVarsInScope.end());
     }
+    return addedAgent || changedAgent;
+}
 } // namespace alica

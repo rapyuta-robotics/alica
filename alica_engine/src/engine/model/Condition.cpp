@@ -9,6 +9,7 @@
 
 #include "engine/BasicCondition.h"
 #include "engine/BasicConstraint.h"
+#include "engine/RunningPlan.h"
 #include "engine/model/Quantifier.h"
 
 #include <alica_common_config/debug_output.h>

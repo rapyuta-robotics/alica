@@ -18,13 +18,13 @@ class SolverContext;
 
 class ProblemPart
 {
-  public:
-    ProblemPart(const Condition* con, std::shared_ptr<const RunningPlan> rp);
+public:
+    ProblemPart(const Condition* con, const RunningPlan* rp);
 
     bool hasVariable(const DomainVariable* v) const;
 
     const Condition* getCondition() const { return _condition; }
-    std::shared_ptr<const RunningPlan> getRunningPlan() const { return _runningPlan; }
+    const RunningPlan* getRunningPlan() const { return _runningPlan; }
     const std::vector<AgentVariables>& getAllVariables() const { return _vars; }
     const AgentVariables& getVarsOfAgent(AgentIDConstPtr id) const;
 
@@ -37,10 +37,10 @@ class ProblemPart
     ProblemPart(ProblemPart&& o);
     ProblemPart& operator=(ProblemPart&& o);
 
-  private:
+private:
     std::vector<AgentVariables> _vars;
     const Condition* _condition;
-    std::shared_ptr<const RunningPlan> _runningPlan;
+    const RunningPlan* _runningPlan;
     std::shared_ptr<ProblemDescriptor> _descriptor;
 };
 

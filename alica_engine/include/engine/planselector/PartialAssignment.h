@@ -30,8 +30,10 @@ public:
     UtilityInterval getUtility() const { return _utility; }
     const TaskAssignmentProblem* getProblem() const { return _problem; }
     int getAssignedAgentCount() const { return _numAssignedAgents; }
+    int getAssignedAgentCount(int idx) const;
     int getTotalAgentCount() const { return _assignment.size(); }
     int getEntryPointIndexOf(int agentIdx) const { return _assignment[agentIdx]; }
+
     const SuccessCollection* getSuccessData() const;
 
     bool expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old);

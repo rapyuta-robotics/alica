@@ -33,6 +33,7 @@ public:
 
     constexpr Interval intersection(const Interval<T> o) const { return Interval(std::max<T>(_min, o._min), std::min<T>(_max, o._max)); }
     constexpr bool contains(const Interval<T> o) const { return _min <= o._min && _max >= o._max; }
+    constexpr bool contains(const T p) const { return _min <= p && _max >= p; }
     constexpr T clamp(T val) const { return ALICA_ASSERT(isValid()), std::max<T>(_min, std::min<T>(val, _max)); }
 
     constexpr bool isValid() const { return _min <= _max; }

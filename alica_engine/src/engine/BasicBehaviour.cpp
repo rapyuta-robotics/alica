@@ -14,6 +14,8 @@
 #include "engine/model/Variable.h"
 #include "engine/teammanager/TeamManager.h"
 
+#include <alica_common_config/debug_output.h>
+
 #include <supplementary/ITrigger.h>
 #include <supplementary/Timer.h>
 
@@ -163,33 +165,34 @@ void BasicBehaviour::setTrigger(supplementary::ITrigger* trigger)
     this->behaviourTrigger->registerCV(&this->runCV);
 }
 
-const AgentStatePairs* BasicBehaviour::agentsInEntryPointOfHigherPlan(const EntryPoint* ep)
+AssignmentView BasicBehaviour::agentsInEntryPointOfHigherPlan(const EntryPoint* ep) const
 {
+    assert(ep);
     if (ep == nullptr) {
-        return nullptr;
+        AssignmentView();
     }
     RunningPlan* cur = _runningPlan->getParent();
     while (cur != nullptr) {
         assert(cur->getActivePlan());
-        const EntryPointGrp& eps = static_cast<const Plan*>(cur->getActivePlan())->getEntryPoints();
-        if (std::find(eps.begin(), eps.end(), ep) != eps.end()) {
+        if (cur->getActivePlan() == ep->getPlan()) {
             return cur->getAssignment().getAgentsWorking(ep);
         }
         cur = cur->getParent();
     }
-    return nullptr;
+    return AssignmentView();
 }
 
-const AgentStatePairs* BasicBehaviour::agentsInEntryPoint(const EntryPoint* ep)
+AssignmentView BasicBehaviour::agentsInEntryPoint(const EntryPoint* ep) const
 {
+    assert(ep);
     if (ep == nullptr) {
-        return nullptr;
+        return AssignmentView();
     }
     RunningPlan* cur = _runningPlan->getParent();
     if (cur != nullptr) {
         return cur->getAssignment().getAgentsWorking(ep);
     }
-    return nullptr;
+    return AssignmentView();
 }
 
 void BasicBehaviour::initInternal()
@@ -198,9 +201,9 @@ void BasicBehaviour::initInternal()
     this->failure = false;
     this->callInit = false;
     try {
-        this->initialiseParameters();
-    } catch (std::exception& e) {
-        std::cerr << "BB: Exception in Behaviour-INIT of: " << getName() << std::endl << e.what() << std::endl;
+        initialiseParameters();
+    } catch (const std::exception& e) {
+        ALICA_ERROR_MSG("BB: Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
     }
 }
 

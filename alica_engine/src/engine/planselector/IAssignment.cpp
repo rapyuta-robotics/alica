@@ -1,4 +1,5 @@
 #include "engine/planselector/IAssignment.h"
+#include "engine/planselector/TaskAssignmentProblem.h"
 
 #include <engine/model/Plan.h>
 
@@ -7,14 +8,14 @@ namespace alica
 
 PartialAssignmentSuccessIterator PartialAssignmentSuccessView::end() const
 {
-    const AgentGrp* agents = _pas->getProblem()->getSuccess(pas->getPlan())->getAgentsByIndex(_epidx);
-    return PartialAssignmentSuccessIterator(agents ? agents->size() : 0, true, _epidx, _pas);
+    const AgentGrp* agents = _pas->getSuccessData()->getAgentsByIndex(_epIdx);
+    return PartialAssignmentSuccessIterator(agents ? agents->size() : 0, true, _epIdx, _pas);
 }
 
 UniquePartialAssignmentSuccessIterator UniquePartialAssignmentSuccessView::end() const
 {
-    const AgentGrp* agents = _pas->getProblem()->getSuccess(pas->getPlan())->getAgentsByIndex(_epidx);
-    return UniquePartialAssignmentSuccessIteraotr(agents ? agents->size() : 0, true, _epidx, _pas);
+    const AgentGrp* agents = _pas->getSuccessData()->getAgentsByIndex(_epIdx);
+    return UniquePartialAssignmentSuccessIterator(agents ? agents->size() : 0, true, _epIdx, _pas);
 }
 
 void UniquePartialAssignmentSuccessIterator::toNextValid()
@@ -28,10 +29,10 @@ void UniquePartialAssignmentSuccessIterator::toNextValid()
             _inSuccessRange = true;
         }
     } else {
-        const AgentGrp* successes = (_pas->getProblem()->getSuccess()->getAgentsByIndex(epIdx);
-        if(successes) {
+        const AgentGrp* successes = _pas->getSuccessData()->getAgentsByIndex(_epIdx);
+        if (successes) {
             while (_agentIdx < static_cast<int>(successes->size())) {
-                AgentIDConstPtr id = *successes[_agentIdx];
+                AgentIDConstPtr id = (*successes)[_agentIdx];
                 PartialAssignmentIterator assignEnd{0, _pas->getTotalAgentCount(), _pas};
                 auto it1 = std::find_if(PartialAssignmentIterator(0, _epIdx, _pas), assignEnd, [id](AgentIDConstPtr a) { return *a == *id; });
                 if (it1 == assignEnd) {
@@ -68,12 +69,12 @@ PartialAssignmentView IAssignment::getUnassignedAgents() const
 {
     return PartialAssignmentView(-1, _impl);
 }
-AssignmentSuccessView IAssignment::getRobotsWorkingAndFinished(const EntryPoint* ep) const
+PartialAssignmentSuccessView IAssignment::getRobotsWorkingAndFinished(const EntryPoint* ep) const
 {
     return PartialAssignmentSuccessView(ep->getIndex(), _impl);
 }
 
-AssignmentSuccessView IAssignment::getRobotsWorkingAndFinished(int64_t epid) const
+PartialAssignmentSuccessView IAssignment::getRobotsWorkingAndFinished(int64_t epid) const
 {
     const EntryPointGrp& eps = _impl->getPlan()->getEntryPoints();
     for (int i = 0; i < static_cast<int>(eps.size()); ++i) {

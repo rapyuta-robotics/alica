@@ -2,6 +2,8 @@
 
 #include "UtilityInterval.h"
 #include "engine/RunningPlan.h"
+#include "engine/TaskRoleStruct.h"
+
 #include <map>
 #include <sstream>
 #include <string>

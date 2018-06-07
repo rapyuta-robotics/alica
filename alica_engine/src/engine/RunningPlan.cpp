@@ -14,7 +14,6 @@
 #include "engine/allocationauthority/EntryPointRobotPair.h"
 #include "engine/collections/AssignmentCollection.h"
 #include "engine/collections/RobotEngineData.h"
-#include "engine/collections/StateCollection.h"
 #include "engine/collections/SuccessCollection.h"
 #include "engine/collections/SuccessMarks.h"
 #include "engine/constraintmodul/ConditionStore.h"

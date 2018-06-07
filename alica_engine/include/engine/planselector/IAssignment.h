@@ -4,12 +4,11 @@
 
 #include "engine/collections/SuccessCollection.h"
 #include "engine/planselector/PartialAssignment.h"
-#include "engine/planselector/TaskAssignment.h"
+#include "engine/planselector/TaskAssignmentProblem.h"
 
-#include <list>
-#include <memory>
-#include <string>
 #include <supplementary/AgentID.h>
+
+#include <iterator>
 
 namespace alica
 {
@@ -30,7 +29,7 @@ class UniquePartialAssignmentSuccessView;
 class IAssignment
 {
 public:
-    IAssignment(const PartialAssignment* pa)
+    explicit IAssignment(const PartialAssignment* pa)
             : _impl(pa)
     {
     }
@@ -52,7 +51,7 @@ private:
 
 //-----------------------------View & Iterator classes below
 // All iterators are const, as this is a const interface.
-class PartialAssignmentIterator
+class PartialAssignmentIterator : public std::iterator<std::forward_iterator_tag, AgentIDConstPtr>
 {
 public:
     PartialAssignmentIterator(int agentIdx, int epIdx, const PartialAssignment* pas)
@@ -70,6 +69,7 @@ public:
         return *this;
     }
     bool operator==(const PartialAssignmentIterator& o) const { return _epIdx == o._epIdx; }
+    bool operator!=(const PartialAssignmentIterator& o) const { return !(*this == o); }
 
 private:
     void toNextValid()
@@ -100,7 +100,7 @@ private:
     int _epIdx;
 };
 
-class PartialAssignmentSuccessIterator
+class PartialAssignmentSuccessIterator : public std::iterator<std::forward_iterator_tag, AgentIDConstPtr>
 {
 public:
     PartialAssignmentSuccessIterator(int idx, bool successRange, int epIdx, const PartialAssignment* pas)
@@ -114,7 +114,7 @@ public:
     AgentIDConstPtr operator*() const
     {
         if (_inSuccessRange) {
-            return *(_pas->getSuccessData()->getAgentsByIndex(_epIdx))[_agentIdx];
+            return (*_pas->getSuccessData()->getAgentsByIndex(_epIdx))[_agentIdx];
         } else {
             return _pas->getProblem()->getAgents()[_agentIdx];
         }
@@ -126,6 +126,7 @@ public:
         return *this;
     }
     bool operator==(const PartialAssignmentSuccessIterator& o) const { return _agentIdx == o._agentIdx && _inSuccessRange == o._inSuccessRange; }
+    bool operator!=(const PartialAssignmentSuccessIterator& o) const { return !(*this == o); }
 
 private:
     void toNextValid()
@@ -146,7 +147,7 @@ private:
     bool _inSuccessRange;
 };
 
-class UniquePartialAssignmentSuccessIterator
+class UniquePartialAssignmentSuccessIterator : public std::iterator<std::forward_iterator_tag, AgentIDConstPtr>
 {
 public:
     UniquePartialAssignmentSuccessIterator(int idx, bool successRange, int epIdx, const PartialAssignment* pas)
@@ -160,7 +161,7 @@ public:
     AgentIDConstPtr operator*() const
     {
         if (_inSuccessRange) {
-            return *(_pas->getSuccessData()->getAgentsByIndex(_epIdx))[_agentIdx];
+            return (*_pas->getSuccessData()->getAgentsByIndex(_epIdx))[_agentIdx];
         } else {
             return _pas->getProblem()->getAgents()[_agentIdx];
         }
@@ -172,6 +173,7 @@ public:
         return *this;
     }
     bool operator==(const UniquePartialAssignmentSuccessIterator& o) const { return _agentIdx == o._agentIdx && _inSuccessRange == o._inSuccessRange; }
+    bool operator!=(const UniquePartialAssignmentSuccessIterator& o) const { return !(*this == o); }
 
 private:
     void toNextValid();
@@ -185,15 +187,15 @@ class PartialAssignmentSuccessView
 {
 public:
     PartialAssignmentSuccessView(int epIdx, const PartialAssignment* pas)
-            : : _epIdx(epIdx)
-                , _pas(pas)
+            : _epIdx(epIdx)
+            , _pas(pas)
     {
     }
-    PartialAssignmentSuccessIterator begin() const { return PartialAssignmentSuccessIterator(0, false, _epidx, _pas); }
+    PartialAssignmentSuccessIterator begin() const { return PartialAssignmentSuccessIterator(0, false, _epIdx, _pas); }
     PartialAssignmentSuccessIterator end() const;
 
 private:
-    int _epidx;
+    int _epIdx;
     const PartialAssignment* _pas;
 };
 
@@ -201,15 +203,15 @@ class UniquePartialAssignmentSuccessView
 {
 public:
     UniquePartialAssignmentSuccessView(int epIdx, const PartialAssignment* pas)
-            : : _epIdx(epIdx)
-                , _pas(pas)
+            : _epIdx(epIdx)
+            , _pas(pas)
     {
     }
-    UniquePartialAssignmentSuccessIterator begin() const { return UniquePartialAssignmentSuccessIterator(0, false, _epidx, _pas); }
+    UniquePartialAssignmentSuccessIterator begin() const { return UniquePartialAssignmentSuccessIterator(0, false, _epIdx, _pas); }
     UniquePartialAssignmentSuccessIterator end() const;
 
 private:
-    int _epidx;
+    int _epIdx;
     const PartialAssignment* _pas;
 };
 

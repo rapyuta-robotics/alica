@@ -64,6 +64,11 @@ const SuccessCollection* PartialAssignment::getSuccessData() const
     return _problem->getSuccessData(_plan);
 }
 
+int PartialAssignment::getAssignedAgentCount(int idx) const
+{
+    return _plan->getEntryPoints()[idx]->getCardinality().getMax() - _cardinalities[idx].getMax();
+}
+
 void PartialAssignment::clear()
 {
     _plan = nullptr;

@@ -5,24 +5,27 @@
 
 #include <supplementary/AgentID.h>
 
-#include <map>
 #include <list>
+#include <map>
 #include <memory>
+#include <string>
 #include <unordered_set>
 
-namespace supplementary {
+namespace supplementary
+{
 class SystemConfig;
 }
 
-namespace alica {
+namespace alica
+{
 
 class AlicaEngine;
 class DomainVariable;
 class Variable;
 class SuccessMarks;
 
-
-class TeamManager {
+class TeamManager
+{
 public:
     TeamManager(AlicaEngine* engine, bool useConfigForTeam);
     virtual ~TeamManager();
