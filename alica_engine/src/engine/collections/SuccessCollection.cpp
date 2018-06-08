@@ -36,11 +36,6 @@ void SuccessCollection::clear()
     }
 }
 
-void SuccessCollection::setRobots(std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>& robotIds)
-{
-    this->robotIds = robotIds;
-}
-
 const AgentGrp* SuccessCollection::getAgents(const EntryPoint* ep) const
 {
     const EntryPointGrp& eps = _plan->getEntryPoints();

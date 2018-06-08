@@ -33,7 +33,7 @@ class SolverContext;
 template <class T>
 class BufferedSet
 {
-  public:
+public:
     BufferedSet() = default;
     BufferedSet(const BufferedSet&) = delete;
     BufferedSet& operator=(const BufferedSet&) = delete;
@@ -59,7 +59,7 @@ class BufferedSet
     bool hasCurrently(T v) const { return std::find(_current.begin(), _current.end(), v) != _current.end(); }
     bool has(T v) const { return hasCurrently(v) || (std::find(_next.begin(), _next.end(), v) != _next.end()); }
 
-  private:
+private:
     std::vector<T> _current;
     std::vector<T> _next;
 };
@@ -72,11 +72,11 @@ using BufferedDomainVariableGrp = BufferedSet<const DomainVariable*>;
  */
 class Query
 {
-  public:
+public:
     Query();
 
     void addStaticVariable(const Variable* v);
-    void addDomainVariable(const supplementary::AgentID* robot, const std::string& ident, AlicaEngine* ae);
+    void addDomainVariable(AgentIDConstPtr robot, const std::string& ident, AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
 
@@ -94,11 +94,11 @@ class Query
     const std::vector<ProblemPart>& getProblemParts() const { return _problemParts; }
     const UniqueVarStore& getUniqueVariableStore() const; /*< for testing only!!! */
 
-  private:
+private:
     void clearTemporaries();
     void fillBufferFromQuery();
-    bool collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds,
-                                 int& domOffset);
+    bool collectProblemStatement(
+            std::shared_ptr<const RunningPlan> rp, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
 
     VariableGrp _queriedStaticVariables;
     DomainVariableGrp _queriedDomainVariables;

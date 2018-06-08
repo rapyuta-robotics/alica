@@ -8,7 +8,7 @@ namespace alica
 /*PROTECTED REGION ID(staticVars1402488696205) ENABLED START*/ // initialise static variables here
 /*PROTECTED REGION END*/
 MidFieldStandard::MidFieldStandard()
-    : DomainBehaviour("MidFieldStandard")
+        : DomainBehaviour("MidFieldStandard")
 {
     /*PROTECTED REGION ID(con1402488696205) ENABLED START*/ // Add additional options here
     this->callCounter = 0;

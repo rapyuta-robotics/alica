@@ -10,7 +10,7 @@ namespace alica
 std::vector<double> QueryBehaviour1::result;
 /*PROTECTED REGION END*/
 QueryBehaviour1::QueryBehaviour1()
-    : DomainBehaviour("QueryBehaviour1")
+        : DomainBehaviour("QueryBehaviour1")
 {
     /*PROTECTED REGION ID(con1479556104511) ENABLED START*/ // Add additional options here
     this->callCounter = 0;

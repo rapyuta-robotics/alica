@@ -1,11 +1,14 @@
 #pragma once
 
+#include "engine/AgentIDConstPtr.h"
 #include "engine/blackboard/BlackBoard.h"
 #include "engine/constraintmodul/ISolver.h"
+
 #include <SystemConfig.h>
 #include <list>
 #include <string>
 #include <supplementary/AgentIDManager.h>
+
 #include <unordered_map>
 
 namespace supplementary
@@ -111,9 +114,9 @@ public:
 
     // AgentIDManager forwarded interface:
 
-    const supplementary::AgentID* getIDFromBytes(const std::vector<uint8_t>& vectorID) const;
+    AgentIDConstPtr getIDFromBytes(const std::vector<uint8_t>& vectorID) const;
     template <class Prototype>
-    const supplementary::AgentID* getID(Prototype& idPrototype) const;
+    AgentIDConstPtr getID(Prototype& idPrototype) const;
 
 private:
     void setStepEngine(bool stepEngine);
@@ -176,9 +179,9 @@ private:
  * IntRobotID).
  */
 template <class Prototype>
-const supplementary::AgentID* AlicaEngine::getID(Prototype& idPrototype) const
+AgentIDConstPtr AlicaEngine::getID(Prototype& idPrototype) const
 {
-    return this->agentIDManager->getID<Prototype>(idPrototype);
+    return AgentIDConstPtr(this->agentIDManager->getID<Prototype>(idPrototype));
 }
 
 template <typename T>

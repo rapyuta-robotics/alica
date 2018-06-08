@@ -177,15 +177,16 @@ public:
     void revokeAllConstraints();
     void attachPlanConstraints();
     bool recursiveUpdateAssignment(
-            std::list<std::shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, std::list<const supplementary::AgentID*> noUpdates, AlicaTime now);
+            std::list<std::shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, std::list<AgentIDConstPtr> noUpdates, AlicaTime now);
     void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& depth, int curDepth) const;
     std::string toString() const;
-    const supplementary::AgentID* getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
+    AgentIDConstPtr getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
     void sendLogMessage(int level, const std::string& message) const;
 
 private:
+    friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
     friend PlanBase; // temporary while refactoring
     RunningPlan(AlicaEngine* ae);
     RunningPlan(AlicaEngine* ae, const Plan* plan);

@@ -1,30 +1,29 @@
-#include <test_alica.h>
-#include <gtest/gtest.h>
-#include <engine/AlicaEngine.h>
-#include <engine/AlicaClock.h>
-#include "engine/IAlicaCommunication.h"
-#include "engine/model/State.h"
-#include "engine/model/Behaviour.h"
-#include "engine/PlanRepository.h"
-#include "engine/BasicBehaviour.h"
-#include "engine/BehaviourPool.h"
-#include "engine/PlanBase.h"
-#include <communication/AlicaRosCommunication.h>
-#include "engine/DefaultUtilityFunction.h"
-#include "engine/TeamObserver.h"
-#include "engine/model/Plan.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
+#include "TestWorldModel.h"
 #include "UtilityFunctionCreator.h"
 #include "engine/Assignment.h"
-#include "engine/collections/AssignmentCollection.h"
-#include "engine/collections/StateCollection.h"
-#include "TestWorldModel.h"
-#include <supplementary/AgentIDManager.h>
+#include "engine/BasicBehaviour.h"
+#include "engine/BehaviourPool.h"
+#include "engine/DefaultUtilityFunction.h"
+#include "engine/IAlicaCommunication.h"
+#include "engine/PlanBase.h"
+#include "engine/PlanRepository.h"
+#include "engine/TeamObserver.h"
+#include "engine/model/Behaviour.h"
+#include "engine/model/Plan.h"
+#include "engine/model/State.h"
 #include <Plans/Behaviour/Attack.h>
+#include <communication/AlicaRosCommunication.h>
+#include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
+#include <gtest/gtest.h>
+#include <supplementary/AgentIDManager.h>
+#include <test_alica.h>
 
-class AlicaMultiAgent : public ::testing::Test {
+class AlicaMultiAgent : public ::testing::Test
+{
 protected:
     supplementary::SystemConfig* sc;
     alica::AlicaEngine* ae;
@@ -34,7 +33,8 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
-    virtual void SetUp() {
+    virtual void SetUp()
+    {
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -51,7 +51,8 @@ protected:
         crc = new alica::ConstraintCreator();
     }
 
-    virtual void TearDown() {
+    virtual void TearDown()
+    {
         ae->shutdown();
         ae2->shutdown();
         delete ae->getCommunicator();
@@ -66,19 +67,18 @@ protected:
 /**
  * Tests whether it is possible to use multiple agents.
  */
-TEST_F(AlicaMultiAgent, runMultiAgentPlan) {
+TEST_F(AlicaMultiAgent, runMultiAgentPlan)
+{
     ASSERT_NO_SIGNAL
 
     sc->setHostname("nase");
-    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
-            "MultiAgentTestMaster", ".", true);
+    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "MultiAgentTestMaster", ".", true);
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     ASSERT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("hairy");
-    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
-            "MultiAgentTestMaster", ".", true);
+    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "MultiAgentTestMaster", ".", true);
     ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
     ASSERT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
@@ -115,10 +115,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan) {
         if (i > 11 && i < 15) {
             ASSERT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
             ASSERT_EQ(ae2->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
-            ASSERT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getPlan()->getName(),
-                    string("MultiAgentTestPlan"));
-            ASSERT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getPlan()->getName(),
-                    string("MultiAgentTestPlan"));
+            ASSERT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getPlan()->getName(), string("MultiAgentTestPlan"));
+            ASSERT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getPlan()->getName(), string("MultiAgentTestPlan"));
         }
         if (i == 15) {
             for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
@@ -135,18 +133,14 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan) {
             cout << "2--------- Engagement to cooperative plan passed ---------" << endl;
         }
         if (i == 16) {
-            ASSERT_TRUE((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() ==
-                                1413201030936 ||
-                        (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() ==
-                                1413201030936)
+            ASSERT_TRUE((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936 ||
+                        (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936)
                     << endl
                     << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
                     << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << endl;
 
-            ASSERT_TRUE((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() ==
-                                1413807264574 ||
-                        (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() ==
-                                1413807264574)
+            ASSERT_TRUE((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807264574 ||
+                        (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807264574)
                     << endl
                     << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
                     << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << endl;
@@ -155,28 +149,18 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan) {
             cout << "3--------- Passed transitions in subplan passed ---------" << endl;
         }
         if (i >= 17 && i <= 18) {
-            ASSERT_TRUE((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() ==
-                                1413201030936 ||
-                        (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() ==
-                                1413201030936)
-                    << "AE State: "
-                    << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
-                    << " AE2 State: "
-                    << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << endl;
-            ASSERT_TRUE((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() ==
-                                1413807264574 ||
-                        (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() ==
-                                1413807264574)
-                    << "AE State: "
-                    << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
+            ASSERT_TRUE((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936 ||
+                        (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936)
+                    << "AE State: " << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
+                    << " AE2 State: " << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << endl;
+            ASSERT_TRUE((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807264574 ||
+                        (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807264574)
+                    << "AE State: " << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
                     << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->toString() << endl
-                    << " AE2 State: "
-                    << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
-                    << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->toString()
-                    << endl;
+                    << " AE2 State: " << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
+                    << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->toString() << endl;
             if (i == 18) {
-                cout << "4--------- Stayed in these state although previous transitions are not true anymore ---------"
-                     << endl;
+                cout << "4--------- Stayed in these state although previous transitions are not true anymore ---------" << endl;
                 alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201389955(true);
                 alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201389955(true);
             }

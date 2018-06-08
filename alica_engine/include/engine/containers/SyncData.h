@@ -1,4 +1,7 @@
 #pragma once
+
+#include <engine/AgentIDConstPtr.h>
+
 #include <iostream>
 #include <tuple>
 
@@ -9,23 +12,23 @@ class AgentID;
 
 namespace alica
 {
-typedef std::tuple<const supplementary::AgentID*, int64_t, bool, bool> stdSyncData;
+typedef std::tuple<AgentIDConstPtr, int64_t, bool, bool> stdSyncData;
 
 struct SyncData
 {
     SyncData()
-        : robotID(nullptr)
-        , ack(false)
-        , conditionHolds(false)
-        , transitionID(0)
+            : robotID(nullptr)
+            , ack(false)
+            , conditionHolds(false)
+            , transitionID(0)
     {
     }
 
     SyncData(const stdSyncData& s)
-        : robotID(std::get<0>(s))
-        , transitionID(std::get<1>(s))
-        , conditionHolds(std::get<2>(s))
-        , ack(std::get<3>(s))
+            : robotID(std::get<0>(s))
+            , transitionID(std::get<1>(s))
+            , conditionHolds(std::get<2>(s))
+            , ack(std::get<3>(s))
     {
     }
 
@@ -40,7 +43,7 @@ struct SyncData
         std::cout << " Acknowledge: " << this->ack << std::endl;
     }
 
-    const supplementary::AgentID* robotID;
+    AgentIDConstPtr robotID;
     int64_t transitionID;
     bool conditionHolds;
     bool ack;

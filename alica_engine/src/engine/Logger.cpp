@@ -1,4 +1,5 @@
 #include "engine/Logger.h"
+#include "engine/AgentIDConstPtr.h"
 #include "engine/AlicaClock.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
@@ -116,7 +117,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
     _sBuild << " TeamMember:";
     for (AgentIDConstPtr id : robots) {
         _sBuild << "\t";
-        _sBuild << *id;
+        _sBuild << id;
     }
     _sBuild << endl;
     if (rp) {

@@ -1,34 +1,33 @@
-#include <test_alica.h>
-#include <gtest/gtest.h>
-#include <engine/AlicaEngine.h>
-#include <engine/AlicaClock.h>
-#include "engine/IAlicaCommunication.h"
-#include "engine/model/State.h"
-#include "engine/model/Behaviour.h"
-#include "engine/PlanRepository.h"
-#include "engine/BasicBehaviour.h"
-#include "engine/BehaviourPool.h"
-#include "engine/PlanBase.h"
-#include <communication/AlicaRosCommunication.h>
-#include "engine/DefaultUtilityFunction.h"
-#include "engine/TeamObserver.h"
-#include "engine/model/Plan.h"
-#include "engine/model/RuntimeCondition.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
+#include "ConstraintTestPlanDummySolver.h"
+#include "Plans/GSolver/SolverTestBehaviour.h"
 #include "UtilityFunctionCreator.h"
 #include "engine/Assignment.h"
-#include "engine/collections/AssignmentCollection.h"
-#include "engine/collections/StateCollection.h"
-#include "Plans/GSolver/SolverTestBehaviour.h"
-#include <thread>
-#include <iostream>
+#include "engine/BasicBehaviour.h"
+#include "engine/BehaviourPool.h"
+#include "engine/DefaultUtilityFunction.h"
+#include "engine/IAlicaCommunication.h"
+#include "engine/PlanBase.h"
+#include "engine/PlanRepository.h"
+#include "engine/TeamObserver.h"
+#include "engine/model/Behaviour.h"
+#include "engine/model/Plan.h"
+#include "engine/model/RuntimeCondition.h"
+#include "engine/model/State.h"
 #include <CGSolver.h>
+#include <communication/AlicaRosCommunication.h>
+#include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
 #include <engine/constraintmodul/Query.h>
-#include "ConstraintTestPlanDummySolver.h"
+#include <gtest/gtest.h>
+#include <iostream>
+#include <test_alica.h>
+#include <thread>
 
-class AlicaGSolverPlan : public ::testing::Test {
+class AlicaGSolverPlan : public ::testing::Test
+{
 protected:
     supplementary::SystemConfig* sc;
     alica::AlicaEngine* ae;
@@ -37,7 +36,8 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
-    virtual void SetUp() {
+    virtual void SetUp()
+    {
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -50,8 +50,7 @@ protected:
         sc->setHostname("nase");
 
         // setup the engine
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
-                "GSolverMaster", ".", true);
+        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "GSolverMaster", ".", true);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
@@ -62,7 +61,8 @@ protected:
         ae->addSolver(new alica::reasoner::CGSolver(ae));
     }
 
-    virtual void TearDown() {
+    virtual void TearDown()
+    {
         ae->shutdown();
         sc->shutdown();
         delete ae->getCommunicator();
@@ -77,7 +77,8 @@ protected:
 /**
  * Tests if Behaviour with Constraints are called
  */
-TEST_F(AlicaGSolverPlan, solverTest) {
+TEST_F(AlicaGSolverPlan, solverTest)
+{
     ASSERT_NO_SIGNAL
 
     ae->init(bc, cc, uc, crc);

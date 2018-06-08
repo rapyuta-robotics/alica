@@ -1,7 +1,7 @@
 #pragma once
 
 #include "EntryPointRobots.h"
-#include "supplementary/AgentID.h"
+#include "engine/AgentIDConstPtr.h"
 
 #include <tuple>
 #include <vector>
@@ -9,24 +9,23 @@
 namespace alica
 {
 
-typedef std::tuple<const supplementary::AgentID*, int64_t, int64_t, int64_t, const supplementary::AgentID*, std::vector<stdEntryPointRobot>>
-    stdAllocationAuthorityInfo;
+typedef std::tuple<AgentIDConstPtr, int64_t, int64_t, int64_t, AgentIDConstPtr, std::vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
 struct AllocationAuthorityInfo
 {
     AllocationAuthorityInfo()
-        : senderID(nullptr)
-        , planId(0)
-        , parentState(0)
-        , planType(0)
-        , authority(nullptr)
+            : senderID(nullptr)
+            , planId(0)
+            , parentState(0)
+            , planType(0)
+            , authority(nullptr)
     {
     }
 
-    const supplementary::AgentID* senderID;
+    AgentIDConstPtr senderID;
     int64_t planId;
     int64_t parentState;
     int64_t planType;
-    const supplementary::AgentID* authority;
+    AgentIDConstPtr authority;
     std::vector<EntryPointRobots> entryPointRobots;
 
     AllocationAuthorityInfo(const stdAllocationAuthorityInfo& s)

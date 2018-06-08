@@ -27,8 +27,8 @@ public:
     std::unordered_set<std::shared_ptr<SimplePlanTree>>& editChildren() { return children; }
 
     void setChildren(const std::unordered_set<std::shared_ptr<SimplePlanTree>>& children);
-    const supplementary::AgentID* getRobotId();
-    void setRobotId(const supplementary::AgentID* robotId);
+    AgentIDConstPtr getRobotId() { return robotId; }
+    void setRobotId(AgentIDConstPtr robotId);
     bool isNewSimplePlanTree() const;
     void setNewSimplePlanTree(bool newSimplePlanTree);
     AlicaTime getReceiveTime() const;
@@ -52,7 +52,7 @@ protected:
     /**
      * The id of the robot to which this tree refers to
      */
-    const supplementary::AgentID* robotId;
+    AgentIDConstPtr robotId;
     bool newSimplePlanTree;
     /**
      * The timestamp denoting when this tree was received.

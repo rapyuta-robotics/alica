@@ -2,12 +2,12 @@
 
 #include <engine/Types.h>
 
-#include <supplementary/AgentID.h>
+#include <engine/AgentIDConstPtr.h>
 
 #include <map>
 #include <memory>
 #include <mutex>
-//#define TO_DEBUG
+
 namespace alica
 {
 
@@ -33,7 +33,7 @@ public:
     void tick(RunningPlan* root);
     void doBroadCast(const IdGrp& msg) const;
 
-    std::unique_ptr<std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>> getTeamPlanTrees();
+    std::unique_ptr<std::map<AgentIDConstPtr, std::shared_ptr<SimplePlanTree>>> getTeamPlanTrees();
 
     int successesInPlan(const Plan* plan);
     SuccessCollection createSuccessCollection(const Plan* plan) const;
@@ -47,17 +47,17 @@ private:
     const EntryPoint* entryPointOfState(const State* state) const;
 
     AlicaEngine* ae;
-    const supplementary::AgentID* myId;
+    AgentIDConstPtr myId;
     const RobotEngineData* me;
     TeamManager* teamManager;
 
     std::mutex simplePlanTreeMutex;
     mutable std::mutex successMarkMutex;
 
-    std::shared_ptr<std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>> simplePlanTrees;
+    std::shared_ptr<std::map<AgentIDConstPtr, std::shared_ptr<SimplePlanTree>>> simplePlanTrees;
 
     void cleanOwnSuccessMarks(RunningPlan* root);
-    std::shared_ptr<SimplePlanTree> sptFromMessage(const supplementary::AgentID* robotId, const IdGrp& ids) const;
+    std::shared_ptr<SimplePlanTree> sptFromMessage(AgentIDConstPtr robotId, const IdGrp& ids) const;
 };
 
 } /* namespace alica */

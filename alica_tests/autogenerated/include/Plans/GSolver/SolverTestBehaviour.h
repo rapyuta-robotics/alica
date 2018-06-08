@@ -10,7 +10,7 @@ namespace alica
 {
 class SolverTestBehaviour : public DomainBehaviour
 {
-  public:
+public:
     SolverTestBehaviour();
     virtual ~SolverTestBehaviour();
     virtual void run(void* msg);
@@ -18,14 +18,14 @@ class SolverTestBehaviour : public DomainBehaviour
     int getCallCounter();
     static vector<double> result;
     /*PROTECTED REGION END*/
-  protected:
+protected:
     virtual void initialiseParameters();
     /*PROTECTED REGION ID(pro1417424455986) ENABLED START*/ // Add additional protected methods here
     alica::Query _query;
     int callCounter;
 
     /*PROTECTED REGION END*/
-  private:
+private:
 /*PROTECTED REGION ID(prv1417424455986) ENABLED START*/ // Add additional private methods here
         /*PROTECTED REGION END*/};
         } /* namespace alica */

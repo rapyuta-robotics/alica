@@ -8,7 +8,6 @@
 #include "engine/Types.h"
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/allocationauthority/EntryPointRobotPair.h"
-#include "engine/collections/AssignmentCollection.h"
 #include "engine/containers/EntryPointRobots.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
@@ -249,7 +248,7 @@ bool CycleManager::applyAssignment()
         }
         rp->setAssignment(Assignment(newPlan, _fixedAllocation));
         for (const EntryPointRobots& epr : _fixedAllocation.entryPointRobots) {
-            if (find_if(epr.robots.begin(), epr.robots.end(), [this](const supplementary::AgentID* id) { return *(this->myID) == *id; }) != epr.robots.end()) {
+            if (std::find(epr.robots.begin(), epr.robots.end(), this->myID) != epr.robots.end()) {
                 myEntryPoint = pr->getEntryPoints()[epr.entrypoint];
             }
         }

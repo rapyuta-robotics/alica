@@ -17,27 +17,25 @@ namespace alica
 
 bool AgentStatePairs::hasAgent(const AgentIDConstPtr id) const
 {
-    return std::find_if(_data.begin(), _data.end(), [id](const AgentStatePair asp) { return *asp.first == *id; }) != _data.end();
+    return std::find_if(_data.begin(), _data.end(), [id](AgentStatePair asp) { return asp.first == id; }) != _data.end();
 }
 
 const State* AgentStatePairs::getStateOfAgent(const AgentIDConstPtr id) const
 {
-    auto it = std::find_if(_data.begin(), _data.end(), [id](const AgentStatePair asp) { return *asp.first == *id; });
+    auto it = std::find_if(_data.begin(), _data.end(), [id](AgentStatePair asp) { return asp.first == id; });
     return it == _data.end() ? nullptr : it->second;
 }
 
 void AgentStatePairs::removeAllIn(const AgentGrp& agents)
 {
     _data.erase(std::remove_if(_data.begin(), _data.end(),
-                        [&agents](const AgentStatePair asp) {
-                            return agents.end() != std::find_if(agents.begin(), agents.end(), [asp](AgentIDConstPtr id) { return *(asp.first) == *id; });
-                        }),
+                        [&agents](const AgentStatePair asp) { return agents.end() != std::find(agents.begin(), agents.end(), asp.first); }),
             _data.end());
 }
 
 void AgentStatePairs::setStateOfAgent(const AgentIDConstPtr id, const State* s)
 {
-    auto it = std::find_if(_data.begin(), _data.end(), [id](const AgentStatePair asp) { return *asp.first == *id; });
+    auto it = std::find_if(_data.begin(), _data.end(), [id](AgentStatePair asp) { return asp.first == id; });
     if (it != _data.end()) {
         it->second = s;
     }
@@ -336,7 +334,7 @@ void Assignment::setAllToInitialState(const AgentGrp& agents, const EntryPoint* 
         if (isTargetEp) {
             const State* s = ep->getState();
             for (AgentIDConstPtr id : agents) {
-                auto it = std::find_if(_assignmentData[i].begin(), _assignmentData[i].end(), [id](const AgentStatePair asp) { return *asp.first == *id; });
+                auto it = std::find_if(_assignmentData[i].begin(), _assignmentData[i].end(), [id](AgentStatePair asp) { return asp.first == id; });
                 if (it == _assignmentData[i].end()) {
                     _assignmentData[i].emplace_back(id, s);
                 } else {
@@ -374,7 +372,7 @@ bool Assignment::removeAllIn(const AgentGrp& limit, const State* watchState)
     for (int i = 0; i < epCount; ++i) {
         for (int j = _assignmentData[i].size() - 1; j >= 0; --j) {
             AgentIDConstPtr id = _assignmentData[i].getRaw()[j].first;
-            if (std::find_if(limit.begin(), limit.end(), [id](AgentIDConstPtr lid) { return *id == *lid; }) != limit.end()) {
+            if (std::find(limit.begin(), limit.end(), id) != limit.end()) {
                 ret = ret || _assignmentData[i].getRaw()[j].second == watchState;
                 _assignmentData[i].removeAt(j);
             }
@@ -389,7 +387,7 @@ void Assignment::fillPartial(PartialAssignment& pa) const
     const AgentGrp& allAgents = pa.getProblem()->getAgents();
     for (int i = 0; i < epCount; ++i) {
         for (const AgentStatePair& asp : _assignmentData[i]) {
-            auto it = std::find_if(allAgents.begin(), allAgents.end(), [asp](AgentIDConstPtr id) { return *id == *asp.first; });
+            auto it = std::find(allAgents.begin(), allAgents.end(), asp.first);
             if (it != allAgents.end()) {
                 int agentIdx = it - allAgents.begin();
                 pa.assignUnassignedAgent(agentIdx, i);
@@ -423,144 +421,11 @@ std::ostream& operator<<(std::ostream& out, const Assignment& a)
 }
 
 /*
-StateCollection* Assignment::getRobotStateMapping()
-{
-    return robotStateMapping;
-}
-
-void Assignment::getAllRobots(AgentGrp& o_robots)
-{
-    for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
-        for (int j = 0; j < static_cast<int>(this->epRobotsMapping->getRobots(i)->size()); ++j) {
-            o_robots.push_back(this->epRobotsMapping->getRobots(i)->at(j));
-        }
-    }
-}
 
 void Assignment::getAllRobotsSorted(AgentGrp& o_robots)
 {
     getAllRobots(o_robots);
     sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
-}
-
-const AgentGrp* Assignment::getRobotsWorking(int64_t epid) const
-{
-    return this->epRobotsMapping->getRobotsByEpId(epid);
-}
-
-void Assignment::getRobotsWorkingSorted(const EntryPoint* ep, AgentGrp& o_robots)
-{
-    o_robots = *getRobotsWorking(ep);
-    sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
-}
-
-const AgentGrp* Assignment::getRobotsWorking(const EntryPoint* ep) const
-{
-    return this->epRobotsMapping->getRobotsByEp(ep);
-}
-
-int Assignment::totalRobotCount() const
-{
-    int c = 0;
-    for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
-        c += this->epRobotsMapping->getRobots(i)->size();
-    }
-    return this->getNumUnAssignedRobotIds() + c;
-}
-
-short Assignment::getEntryPointCount() const
-{
-    return this->epRobotsMapping->getSize();
-}
-
-shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkingAndFinished(const EntryPoint* ep)
-{
-    auto ret = std::make_shared<list<const supplementary::AgentID*>>(list<const supplementary::AgentID*>());
-    auto robots = this->epRobotsMapping->getRobotsByEp(ep);
-    if (robots != nullptr) {
-        for (int i = 0; i < static_cast<int>(robots->size()); ++i) {
-            ret->push_back(robots->at(i));
-        }
-    }
-
-    auto robotsSucc = this->epSucMapping->getRobots(ep);
-    if (robotsSucc != nullptr) {
-        for (auto& robot : *robotsSucc) {
-            ret->push_back(robot);
-        }
-    }
-
-    return ret;
-}
-
-
-shared_ptr<list<const supplementary::AgentID*>> Assignment::getUniqueRobotsWorkingAndFinished(const EntryPoint* ep)
-{
-    auto ret = std::make_shared<list<const supplementary::AgentID*>>(list<const supplementary::AgentID*>());
-    // if (this->plan->getEntryPoints().find(ep->getId()) != this->plan->getEntryPoints().end())
-    {
-        auto robots = this->epRobotsMapping->getRobotsByEp(ep);
-        for (int i = 0; i < static_cast<int>(robots->size()); ++i) {
-            ret->push_back(robots->at(i));
-        }
-        for (auto r : (*this->epSucMapping->getRobots(ep))) {
-            if (std::find_if(ret->begin(), ret->end(), [&r](const supplementary::AgentID* id) { return *r == *id; }) == ret->end()) {
-                ret->push_back(r);
-            }
-        }
-    }
-    return ret;
-}
-
-std::shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkingAndFinished(int64_t epid)
-{
-    auto ret = std::make_shared<std::list<const supplementary::AgentID*>>();
-    auto robots = this->epRobotsMapping->getRobotsByEpId(epid);
-    if (robots != nullptr) {
-        for (int i = 0; i < static_cast<int>(robots->size()); i++) {
-            ret->push_back(robots->at(i));
-        }
-    }
-
-    auto robotsSucc = this->epSucMapping->getRobotsById(epid);
-    if (robotsSucc != nullptr) {
-        for (auto& robot : *robotsSucc) {
-            ret->push_back(robot);
-        }
-    }
-
-    return ret;
-}
-
-std::shared_ptr<SuccessCollection> Assignment::getEpSuccessMapping() const
-{
-    return this->epSucMapping;
-}
-
-
-bool Assignment::removeRobot(const supplementary::AgentID* robotId)
-{
-    this->robotStateMapping->removeRobot(robotId);
-    AgentGrp* curRobots;
-    for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
-        curRobots = this->epRobotsMapping->editRobots(i);
-        auto iter = find_if(curRobots->begin(), curRobots->end(), [&robotId](const supplementary::AgentID* id) { return *robotId == *id; });
-        if (iter != curRobots->end()) {
-            curRobots->erase(iter);
-            return true;
-        }
-    }
-    return false;
-}
-
-void Assignment::addRobot(const supplementary::AgentID* id, const EntryPoint* e, const State* s)
-{
-    if (e == nullptr) {
-        return;
-    }
-    this->robotStateMapping->setState(id, s);
-    this->epRobotsMapping->addRobot(id, e);
-    return;
 }
 
 
@@ -660,52 +525,6 @@ bool Assignment::updateRobot(const supplementary::AgentID* robot, const EntryPoi
     return ret;
 }
 
-bool Assignment::removeRobot(const supplementary::AgentID* robot, const EntryPoint* ep)
-{
-    assert(ep != nullptr);
-    if (ep == nullptr) {
-        return false;
-    }
-    this->robotStateMapping->removeRobot(robot);
-    return epRobotsMapping->removeRobot(robot, ep);
-}
-
-std::string Assignment::assignmentCollectionToString() const
-{
-    std::stringstream ss;
-    ss << "ASS" << std::endl;
-    ss << this->epRobotsMapping->toString();
-    return ss.str();
-}
-
-void Assignment::addRobot(const supplementary::AgentID* id, const EntryPoint* e)
-{
-    assert(e != nullptr);
-    if (e == nullptr) {
-        return;
-    }
-    this->epRobotsMapping->addRobot(id, e);
-    return;
-}
-
-void Assignment::moveRobots(const State* from, const State* to)
-{
-    assert(to != nullptr);
-    robotStateMapping->moveAllFromTo(from, to);
-}
-
-
-const EntryPoint* Assignment::getEntryPointOfRobot(const supplementary::AgentID* robot)
-{
-    for (int i = 0; i < this->epRobotsMapping->getSize(); i++) {
-        auto iter = find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-                            [&robot](const supplementary::AgentID* id) { return *robot == *id; });
-        if (iter != this->epRobotsMapping->getRobots(i)->end()) {
-            return this->epRobotsMapping->getEp(i);
-        }
-    }
-    return nullptr;
-}
 */
 
 } /* namespace alica */

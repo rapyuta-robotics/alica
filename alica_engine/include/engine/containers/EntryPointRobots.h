@@ -1,6 +1,6 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
+#include "engine/AgentIDConstPtr.h"
 
 #include <tuple>
 #include <vector>
@@ -8,16 +8,16 @@
 namespace alica
 {
 
-typedef std::tuple<int64_t, std::vector<const supplementary::AgentID*>> stdEntryPointRobot;
+typedef std::tuple<int64_t, std::vector<AgentIDConstPtr>> stdEntryPointRobot;
 struct EntryPointRobots
 {
     EntryPointRobots()
-        : entrypoint(0)
+            : entrypoint(0)
     {
     }
 
     int64_t entrypoint;
-    std::vector<const supplementary::AgentID*> robots;
+    std::vector<AgentIDConstPtr> robots;
 
     EntryPointRobots(const stdEntryPointRobot& s)
     {

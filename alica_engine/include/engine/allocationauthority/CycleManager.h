@@ -58,7 +58,7 @@ private:
     std::vector<AllocationDifference*> allocationHistory;
     PlanRepository* pr;
     int newestAllocationDifference;
-    const supplementary::AgentID* myID;
+    AgentIDConstPtr myID;
 
     AlicaTime overrideTimestamp;
     double intervalIncFactor;

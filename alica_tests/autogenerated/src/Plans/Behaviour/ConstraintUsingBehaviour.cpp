@@ -12,7 +12,7 @@ namespace alica
 std::vector<BBIdent> ConstraintUsingBehaviour::result;
 /*PROTECTED REGION END*/
 ConstraintUsingBehaviour::ConstraintUsingBehaviour()
-    : DomainBehaviour("ConstraintUsingBehaviour")
+        : DomainBehaviour("ConstraintUsingBehaviour")
 {
     /*PROTECTED REGION ID(con1414068597716) ENABLED START*/ // Add additional options here
     _callCounter = 0;

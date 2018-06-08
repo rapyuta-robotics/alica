@@ -6,7 +6,6 @@
 #include "engine/TaskRoleStruct.h"
 #include "engine/USummand.h"
 #include "engine/UtilityInterval.h"
-#include "engine/collections/AssignmentCollection.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Role.h"
@@ -235,11 +234,10 @@ UtilityInterval UtilityFunction::getSimilarity(IAssignment newAss, const Assignm
 
         if (!newRobots.empty()) {
             for (AgentIdConstPtr oldRobot : oldRobots) {
-                if (find_if(newRobots.begin(), newRobots.end(), [oldRobot](AgentIdConstPtr id) { return *oldRobot == *id; }) != newRobots->end()) {
+                if (std::find(newRobots.begin(), newRobots.end(), oldRobot) {
                     simUI.setMin(simUI.getMin() + 1);
                 } else if (ep->getMaxCardinality() > static_cast<int>(newRobots.size()) &&
-                           find_if(newAss->getUnassignedAgents().begin(), newAss->getUnassignedAgents().end(),
-                                   [oldRobot](AgentIdConstPtr id) { return *oldRobot == *id; }) != newAss->getUnassignedRobotIds().end()) {
+                           std::find(newAss->getUnassignedAgents().begin(), newAss->getUnassignedAgents().end(),oldRobot) != newAss->getUnassignedRobotIds().end()) {
                     simUI.setMax(simUI.getMax() + 1);
                 }
             }

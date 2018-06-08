@@ -1,8 +1,8 @@
 #pragma once
 
+#include "engine/AgentIDConstPtr.h"
 #include "engine/Types.h"
 #include "engine/model/Characteristic.h"
-#include <supplementary/AgentID.h>
 
 #include <SystemConfig.h>
 
@@ -32,7 +32,7 @@ public:
     void setDefaultRole(const std::string& defaultRole);
     friend std::ostream& operator<<(std::ostream& os, const alica::RobotProperties& obj)
     {
-        os << "RobotProperties: Id=" << *obj.getId() << " Default Role: " << obj.getDefaultRole() << std::endl;
+        os << "RobotProperties: Id=" << obj.getId() << " Default Role: " << obj.getDefaultRole() << std::endl;
         for (const std::pair<std::string, const Characteristic*>& p : obj.getCharacteristics()) {
             os << "\t" << p.first << " = " << p.second->getCapValue()->getName() << std::endl;
         }

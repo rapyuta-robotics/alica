@@ -58,12 +58,7 @@ void SimplePlanTree::setChildren(const std::unordered_set<std::shared_ptr<Simple
     this->children = children;
 }
 
-const supplementary::AgentID* SimplePlanTree::getRobotId()
-{
-    return robotId;
-}
-
-void SimplePlanTree::setRobotId(const supplementary::AgentID* robotId)
+void SimplePlanTree::setRobotId(AgentIDConstPtr robotId)
 {
     this->robotId = robotId;
 }

@@ -12,7 +12,6 @@
 #include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/collections/AssignmentCollection.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
@@ -58,8 +57,8 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, const std::st
 {
     _maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
     this->useStaticRoles = (*sc)["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
-    AssignmentCollection::maxEpsCount = (*this->sc)["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
-    AssignmentCollection::allowIdling = (*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL);
+    // AssignmentCollection::maxEpsCount = (*this->sc)["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
+    PartialAssignment::allowIdling((*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL));
 
     this->planRepository = new PlanRepository();
     this->planParser = new PlanParser(this->planRepository);
@@ -333,9 +332,9 @@ void AlicaEngine::stepNotify()
  * This method can be used, e.g., for passing a part of a ROS
  * message and receiving a pointer to a corresponding AgentID object.
  */
-const supplementary::AgentID* AlicaEngine::getIDFromBytes(const std::vector<uint8_t>& idByteVector) const
+AgentIDConstPtr AlicaEngine::getIDFromBytes(const std::vector<uint8_t>& idByteVector) const
 {
-    return this->agentIDManager->getIDFromBytes(idByteVector);
+    return AgentIDConstPtr(this->agentIDManager->getIDFromBytes(idByteVector));
 }
 
 } // namespace alica

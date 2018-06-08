@@ -40,21 +40,8 @@ public:
     void evaluate(const Assignment* old) { _utility = _plan->getUtilityFunction()->eval(this, old); }
     static bool compare(const PartialAssignment* a, const PartialAssignment* b);
 
-    /* short getEntryPointCount() const override;
-     const AgentGrp* getRobotsWorking(const EntryPoint* ep) const override;
-     const AgentGrp* getRobotsWorking(int64_t epid) const override;
-     std::shared_ptr<std::list<const supplementary::AgentID*>> getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) override;
-
-
-
-     std::string toString() const override;
-     virtual AssignmentCollection* getEpRobotsMapping() const override { return epRobotsMapping; }
-
-     std::shared_ptr<UtilityFunction> getUtilFunc() const { return utilFunc; }
-     virtual std::shared_ptr<SuccessCollection> getEpSuccessMapping() const override { return epSuccessMapping; }
-     std::string assignmentCollectionToString() const override;
-     void setMax(double max);
-     const AgentGrp& getRobotIds() const;*/
+    static void allowIdling(bool allowed) { s_allowIdling = allowed; }
+    static bool isIdlingAllowed() { return s_allowIdling; }
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const PartialAssignment& a);

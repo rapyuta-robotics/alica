@@ -15,19 +15,19 @@
 namespace alica
 {
 ResultEntry::ResultEntry()
-    : _id(nullptr)
+        : _id(nullptr)
 {
 }
 
-ResultEntry::ResultEntry(const supplementary::AgentID* robotId)
-    : _id(robotId)
+ResultEntry::ResultEntry(AgentIDConstPtr robotId)
+        : _id(robotId)
 {
 }
 
 ResultEntry::ResultEntry(ResultEntry&& o)
-    : _id(o._id)
-    , _values(std::move(o._values))
-    , _valueLock()
+        : _id(o._id)
+        , _values(std::move(o._values))
+        , _valueLock()
 {
 }
 

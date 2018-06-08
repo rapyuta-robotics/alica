@@ -10,8 +10,6 @@
 #include "engine/model/Quantifier.h"
 #include "engine/parser/PlanParser.h"
 
-#include <supplementary/AgentID.h>
-
 #include <assert.h>
 #include <typeinfo>
 
@@ -21,10 +19,10 @@ namespace alica
 /**
  * Basic constructor
  */
-RobotEngineData::RobotEngineData(const AlicaEngine* engine, const supplementary::AgentID* agentId)
-    : _engine(engine)
-    , _agentId(agentId)
-    , _successMarks(std::make_shared<SuccessMarks>(engine))
+RobotEngineData::RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId)
+        : _engine(engine)
+        , _agentId(agentId)
+        , _successMarks(std::make_shared<SuccessMarks>(engine))
 {
     initDomainVariables();
 }

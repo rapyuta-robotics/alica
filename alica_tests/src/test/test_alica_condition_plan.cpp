@@ -12,8 +12,6 @@
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
 #include "engine/TeamObserver.h"
-#include "engine/collections/AssignmentCollection.h"
-#include "engine/collections/StateCollection.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/Plan.h"
@@ -32,7 +30,7 @@
 
 class AlicaConditionPlan : public ::testing::Test
 {
-  protected:
+protected:
     supplementary::SystemConfig* sc;
     alica::AlicaEngine* ae;
     alica::BehaviourCreator* bc;

@@ -46,7 +46,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(const AlicaEngine* engine, const Pl
         , _pool(pool)
 {
     // sort agent ids ascending
-    std::sort(_agents.begin(), _agents.end(), supplementary::AgentIDComparator());
+    std::sort(_agents.begin(), _agents.end());
 
     _successData.reserve(_plans.size());
     _fringe.reserve(_plans.size());
@@ -164,14 +164,13 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
  * @param simplePlanTreeMap never try to delete this
  * @return True if any robot has already assigned itself, false otherwise
  */
-bool TaskAssignmentProblem::addAlreadyAssignedRobots(
-        PartialAssignment* pa, std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>* simplePlanTreeMap)
+bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, std::map<AgentIDConstPtr, std::shared_ptr<SimplePlanTree>>* simplePlanTreeMap)
 {
     AgentIDConstPtr ownAgentId = _tm->getLocalAgentID();
     bool haveToRevalute = false;
     int i = 0;
-    for (const supplementary::AgentID* agent : _agents) {
-        if (*ownAgentId == *agent) {
+    for (AgentIDConstPtr agent : _agents) {
+        if (ownAgentId == agent) {
             continue;
         }
         auto iter = simplePlanTreeMap->find(agent);

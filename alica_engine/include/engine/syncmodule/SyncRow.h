@@ -1,6 +1,7 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
+#include "engine/AgentIDConstPtr.h"
+#include "engine/Types.h"
 
 #include <vector>
 
@@ -11,12 +12,12 @@ struct SyncData;
 
 class SyncRow
 {
-  public:
+public:
     SyncRow();
     SyncRow(const SyncData& sd);
     virtual ~SyncRow();
-    std::vector<const supplementary::AgentID*>& getReceivedBy();
-    void setReceivedBy(std::vector<const supplementary::AgentID*> recievedBy);
+    AgentGrp& getReceivedBy();
+    void setReceivedBy(const AgentGrp& recievedBy);
     const SyncData& getSyncData() const { return _syncData; }
     SyncData& editSyncData() { return _syncData; }
     void setSyncData(const SyncData& syncData);
@@ -24,11 +25,11 @@ class SyncRow
     bool hasData() const { return _haveData; }
     void invalidate() { _haveData = false; }
 
-  private:
+private:
     SyncData _syncData;
     bool _haveData;
     // this vector always has to be sorted
-    std::vector<const supplementary::AgentID*> _receivedBy;
+    AgentGrp _receivedBy;
 };
 
 } /* namespace alica */

@@ -20,14 +20,14 @@ namespace alica
 
 class TestConstantValueSummand : public USummand
 {
-  public:
+public:
     TestConstantValueSummand(double weight, std::string name, long id, double val);
     virtual ~TestConstantValueSummand();
     void cacheEvalData();
     UtilityInterval eval(IAssignment* ass);
-    const supplementary::AgentID* robotId;
+    AgentIDConstPtr robotId;
 
-  protected:
+protected:
     double val;
 };
 

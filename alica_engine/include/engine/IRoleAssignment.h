@@ -1,18 +1,20 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
+#include "engine/AgentIDConstPtr.h"
 
-#include "model/Role.h"
 #include "engine/collections/RobotEngineData.h"
+#include "model/Role.h"
 
 #include <map>
 
-namespace alica {
+namespace alica
+{
 
 class AlicaEngine;
 class IAlicaCommunication;
 
-class IRoleAssignment {
+class IRoleAssignment
+{
 public:
     IRoleAssignment();
     virtual ~IRoleAssignment() {}
@@ -22,7 +24,7 @@ public:
     virtual void update() = 0;
 
     const Role* getOwnRole() const { return ownRole; }
-    const Role* getRole(const supplementary::AgentID* robotId);
+    const Role* getRole(AgentIDConstPtr robotId);
     void setCommunication(const IAlicaCommunication* communication);
 
 protected:
@@ -30,7 +32,7 @@ protected:
      * Current Robot's role.
      */
     const Role* ownRole;
-    std::map<const supplementary::AgentID*, const Role*, supplementary::AgentIDComparator> robotRoleMapping;
+    std::map<AgentIDConstPtr, const Role*> robotRoleMapping;
     const IAlicaCommunication* communication;
 };
-}  // namespace alica
+} // namespace alica

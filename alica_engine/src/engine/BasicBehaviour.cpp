@@ -99,7 +99,7 @@ void BasicBehaviour::setInterval(long msInterval)
  * Convenience method to obtain the robot's own id.
  * @return the own robot id
  */
-const supplementary::AgentID* BasicBehaviour::getOwnId() const
+AgentIDConstPtr BasicBehaviour::getOwnId() const
 {
     return this->engine->getTeamManager()->getLocalAgentID();
 }

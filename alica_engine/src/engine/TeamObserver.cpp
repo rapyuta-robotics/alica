@@ -42,26 +42,24 @@ TeamObserver::TeamObserver(AlicaEngine* ae)
         : ae(ae)
         , teamManager(ae->getTeamManager())
 {
-    this->simplePlanTrees = make_shared<map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>>(
-            map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>());
+    this->simplePlanTrees = make_shared<map<AgentIDConstPtr, std::shared_ptr<SimplePlanTree>>>();
     this->myId = this->teamManager->getLocalAgentID();
     this->me = this->teamManager->getAgentByID(this->myId)->getEngineData();
 }
 
 TeamObserver::~TeamObserver() {}
 
-std::unique_ptr<map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>> TeamObserver::getTeamPlanTrees()
+std::unique_ptr<map<AgentIDConstPtr, std::shared_ptr<SimplePlanTree>>> TeamObserver::getTeamPlanTrees()
 {
-    auto ret = std::unique_ptr<map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>>(
-            new map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>);
+    auto ret = std::unique_ptr<map<AgentIDConstPtr, std::shared_ptr<SimplePlanTree>>>(new map<AgentIDConstPtr, std::shared_ptr<SimplePlanTree>>());
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
     // TODO get rid of this once teamManager gets a datastructure overhaul
     AgentGrp tmp;
     teamManager->fillWithActiveAgentIDs(tmp);
-    for (const supplementary::AgentID* agentId : tmp) {
+    for (AgentIDConstPtr agentId : tmp) {
         auto iter = this->simplePlanTrees->find(agentId);
         if (iter != simplePlanTrees->end() && iter->second != nullptr) {
-            ret->insert(pair<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>>(agentId, iter->second));
+            ret->insert(pair<AgentIDConstPtr, std::shared_ptr<SimplePlanTree>>(agentId, iter->second));
         }
     }
     return ret;
@@ -97,7 +95,7 @@ void TeamObserver::tick(RunningPlan* root)
         teamManager->fillWithActiveAgentIDs(activeAgents);
 
         list<std::shared_ptr<SimplePlanTree>> updatespts;
-        list<const supplementary::AgentID*> noUpdates;
+        list<AgentIDConstPtr> noUpdates;
         lock_guard<mutex> lock(this->simplePlanTreeMutex);
         for (auto iterator = this->simplePlanTrees->begin(); iterator != this->simplePlanTrees->end(); iterator++) {
             if (!this->teamManager->isAgentActive(iterator->second->getRobotId())) {
@@ -315,7 +313,7 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
             if (sptEntry != this->simplePlanTrees->end()) {
                 sptEntry->second = spt;
             } else {
-                this->simplePlanTrees->insert(pair<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>>(incoming->senderID, spt));
+                this->simplePlanTrees->insert(pair<AgentIDConstPtr, std::shared_ptr<SimplePlanTree>>(incoming->senderID, spt));
             }
         }
     }
@@ -327,7 +325,7 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
  * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
  * @return shared_ptr of a SimplePlanTree
  */
-std::shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(const supplementary::AgentID* robotId, const IdGrp& ids) const
+std::shared_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentIDConstPtr robotId, const IdGrp& ids) const
 {
 #ifdef TO_DEBUG
     std::cout << "Spt from robot " << robotId << std::endl;

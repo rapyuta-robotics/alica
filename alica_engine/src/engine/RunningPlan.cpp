@@ -12,7 +12,6 @@
 #include "engine/TeamObserver.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/allocationauthority/EntryPointRobotPair.h"
-#include "engine/collections/AssignmentCollection.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/SuccessCollection.h"
 #include "engine/collections/SuccessMarks.h"
@@ -523,7 +522,7 @@ void RunningPlan::attachPlanConstraints()
 }
 
 bool RunningPlan::recursiveUpdateAssignment(
-        std::list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, std::list<const supplementary::AgentID*> noUpdates, AlicaTime now)
+        std::list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, std::list<AgentIDConstPtr> noUpdates, AlicaTime now)
 {
     if (isBehaviour()) {
         return false;
@@ -583,7 +582,7 @@ bool RunningPlan::recursiveUpdateAssignment(
                 if (*rob == *ownId)
                     continue;
                 bool found = false;
-                if (find_if(noUpdates.begin(), noUpdates.end(), [&rob](const supplementary::AgentID* id) { return *rob == *id; }) != noUpdates.end()) {
+                if (std::find(noUpdates.begin(), noUpdates.end(), rob) {
                     // found = true;
                     continue;
                 }
@@ -610,7 +609,7 @@ bool RunningPlan::recursiveUpdateAssignment(
             rem.clear();
             AssignmentView robs = _assignment.getRobotsWorking(i);
             for (AgentIDConstPtr rob : robs) {
-                if (find_if(availableAgents.begin(), availableAgents.end(), [&rob](AgentIDConstPtr id) { return *rob == *id; }) == availableAgents.end()) {
+                if (std::find(availableAgents.begin(), availableAgents.end(), rob) {
                     rem.push_back(rob);
                     aldif->editSubtractions().emplace_back(ep, rob);
                     ret = true;
@@ -630,8 +629,7 @@ bool RunningPlan::recursiveUpdateAssignment(
     if (_stateStartTime + assignmentProtectionTime > now) {
         AgentsInStateView robotsJoined = _assignment.getRobotsInState(getActiveState());
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
-            if (std::find_if(robotsJoined.begin(), robotsJoined.end(), [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) ==
-                    robotsJoined.end()) {
+            if (std::find(robotsJoined.begin(), robotsJoined.end(), *iter) == robotsJoined.end()) {
                 iter = availableAgents.erase(iter);
             } else {
                 ++iter;
@@ -640,8 +638,7 @@ bool RunningPlan::recursiveUpdateAssignment(
     } else if (auth) { // in case of authority, remove all that are not assigned to same task
         AssignmentView robotsJoined = _assignment.getRobotsWorking(getActiveEntryPoint());
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
-            if (find_if(robotsJoined.begin(), robotsJoined.end(), [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) ==
-                    robotsJoined.end()) {
+            if (std::find(robotsJoined.begin(), robotsJoined.end(), *iter) == robotsJoined.end()) {
                 iter = availableAgents.erase(iter);
             } else {
                 ++iter;
@@ -723,8 +720,8 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     out << "IsActive: " << psi.active << std::endl;
     out << "Status: " << getPlanStatusName(psi.status) << std::endl;
     out << "AvailRobots: ";
-    for (AgentIDConstPtr r : _robotsAvail) {
-        out << " " << *r;
+    for (AgentIDConstPtr r : r._robotsAvail) {
+        out << " " << r;
     }
     out << std::endl;
     if (!r.isBehaviour()) {
@@ -733,11 +730,11 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     out << "Children: " << r._children.size();
     if (!_children.empty()) {
         out << " ( ";
-        for (const RunningPlan* r : r._children) {
-            if (r->_activeTriple.plan == nullptr) {
+        for (const RunningPlan* c : r._children) {
+            if (c->_activeTriple.plan == nullptr) {
                 out << "NULL PLAN, ";
             } else
-                out << r->_activeTriple.plan->getName() + ", ";
+                out << c->_activeTriple.plan->getName() + ", ";
         }
         out << ")";
     }

@@ -1,7 +1,7 @@
 #include "engine/allocationauthority/AuthorityManager.h"
+
 #include "engine/Assignment.h"
 #include "engine/allocationauthority/CycleManager.h"
-#include "engine/collections/AssignmentCollection.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/PlanType.h"

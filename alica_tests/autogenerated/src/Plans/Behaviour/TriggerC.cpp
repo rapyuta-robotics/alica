@@ -8,7 +8,7 @@ namespace alica
 /*PROTECTED REGION ID(staticVars1428508355209) ENABLED START*/ // initialise static variables here
 /*PROTECTED REGION END*/
 TriggerC::TriggerC()
-    : DomainBehaviour("TriggerC")
+        : DomainBehaviour("TriggerC")
 {
     /*PROTECTED REGION ID(con1428508355209) ENABLED START*/ // Add additional options here
     this->callCounter = 0;

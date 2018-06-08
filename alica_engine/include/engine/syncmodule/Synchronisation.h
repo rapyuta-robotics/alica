@@ -4,9 +4,9 @@
 //#define SM_FAILURE
 //#define SM_MESSAGES
 
+#include "engine/AgentIDConstPtr.h"
 #include "engine/AlicaClock.h"
 #include "engine/Types.h"
-#include "supplementary/AgentID.h"
 
 #include <memory>
 #include <mutex>
@@ -25,9 +25,9 @@ class AlicaEngine;
 
 class Synchronisation
 {
-  public:
+public:
     Synchronisation(AlicaEngine* ae);
-    Synchronisation(AlicaEngine* ae, const supplementary::AgentID* myID, const SyncTransition* st, SyncModule* sm);
+    Synchronisation(AlicaEngine* ae, AgentIDConstPtr id, const SyncTransition* st, SyncModule* sm);
     virtual ~Synchronisation();
     void setTick(uint64_t now);
     void changeOwnData(int64_t transitionID, bool conditionHolds);
@@ -37,11 +37,11 @@ class Synchronisation
     const SyncTransition* getSyncTransition() const;
     void setSyncTransition(const SyncTransition* syncTransition);
 
-  private:
+private:
     bool allSyncReady();
     void printMatrix();
 
-  protected:
+protected:
     AlicaEngine* ae;
     std::mutex syncMutex;
     std::mutex rowOkMutex;
