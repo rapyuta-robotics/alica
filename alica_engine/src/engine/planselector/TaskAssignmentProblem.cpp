@@ -69,14 +69,14 @@ TaskAssignmentProblem::TaskAssignmentProblem(const AlicaEngine* engine, const Pl
 void TaskAssignmentProblem::preassignOtherAgents()
 {
     // TODO: fix this call
-    auto simplePlanTreeMap = _to->getTeamPlanTrees();
+    const auto& simplePlanTreeMap = _to->getTeamPlanTrees();
     // this call should only be made before the search starts
     assert(_fringe.size() == _plans.size());
     // ASSIGN PREASSIGNED OTHER ROBOTS
     int i = 0;
     bool changed = false;
     for (PartialAssignment* curPa : _fringe) {
-        if (addAlreadyAssignedRobots(curPa, &(*simplePlanTreeMap))) {
+        if (addAlreadyAssignedRobots(curPa, simplePlanTreeMap)) {
             // revaluate this pa
             curPa->evaluate(nullptr);
             changed = true;
@@ -164,7 +164,7 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
  * @param simplePlanTreeMap never try to delete this
  * @return True if any robot has already assigned itself, false otherwise
  */
-bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, std::map<AgentIDConstPtr, std::shared_ptr<SimplePlanTree>>* simplePlanTreeMap)
+bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<AgentIDConstPtr, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap)
 {
     AgentIDConstPtr ownAgentId = _tm->getLocalAgentID();
     bool haveToRevalute = false;
@@ -173,8 +173,8 @@ bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, std:
         if (ownAgentId == agent) {
             continue;
         }
-        auto iter = simplePlanTreeMap->find(agent);
-        if (iter != simplePlanTreeMap->end()) {
+        auto iter = simplePlanTreeMap.find(agent);
+        if (iter != simplePlanTreeMap.end()) {
             if (pa->addIfAlreadyAssigned(iter->second.get(), agent, i)) {
                 haveToRevalute = true;
             }

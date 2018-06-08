@@ -123,7 +123,7 @@ bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, AgentIDC
     }
     // If there are children and we didnt find the robot until now, then go on recursive
     else {
-        for (const std::shared_ptr<SimplePlanTree>& sptChild : spt->getChildren()) {
+        for (const std::unique_ptr<SimplePlanTree>& sptChild : spt->getChildren()) {
             if (addIfAlreadyAssigned(sptChild.get(), agent, idx)) {
                 return true;
             }
@@ -345,7 +345,7 @@ PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, Partial
 
     return ret;
 }
-
+*/
 /**
  * Assigns the robot into the data structures according to the given index.
  * @return True, when it was possible to assign the robot. False, otherwise.

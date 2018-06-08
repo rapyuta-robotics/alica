@@ -3,6 +3,7 @@
 #include <engine/Types.h>
 
 #include <engine/AgentIDConstPtr.h>
+#include <engine/AlicaClock.h>
 
 #include <map>
 #include <memory>
@@ -33,7 +34,7 @@ public:
     void tick(RunningPlan* root);
     void doBroadCast(const IdGrp& msg) const;
 
-    std::unique_ptr<std::map<AgentIDConstPtr, std::shared_ptr<SimplePlanTree>>> getTeamPlanTrees();
+    const std::map<AgentIDConstPtr, std::unique_ptr<SimplePlanTree>>& getTeamPlanTrees() const { return _simplePlanTrees; }
 
     int successesInPlan(const Plan* plan);
     SuccessCollection createSuccessCollection(const Plan* plan) const;
@@ -44,20 +45,21 @@ public:
     void close();
 
 private:
-    const EntryPoint* entryPointOfState(const State* state) const;
+    void updateTeamPlanTrees();
+    void cleanOwnSuccessMarks(RunningPlan* root);
+    std::unique_ptr<SimplePlanTree> sptFromMessage(AgentIDConstPtr agent, const IdGrp& ids, AlicaTime time) const;
 
-    AlicaEngine* ae;
-    AgentIDConstPtr myId;
+    AlicaEngine* _ae;
+    AgentIDConstPtr _myId;
     const RobotEngineData* me;
-    TeamManager* teamManager;
+    TeamManager* _tm;
 
-    std::mutex simplePlanTreeMutex;
+    std::mutex simplePlanTreeMutex; // TODO: remove this mutex
+    std::mutex _msgQueueMutex;
     mutable std::mutex successMarkMutex;
 
-    std::shared_ptr<std::map<AgentIDConstPtr, std::shared_ptr<SimplePlanTree>>> simplePlanTrees;
-
-    void cleanOwnSuccessMarks(RunningPlan* root);
-    std::shared_ptr<SimplePlanTree> sptFromMessage(AgentIDConstPtr robotId, const IdGrp& ids) const;
+    std::map<AgentIDConstPtr, std::unique_ptr<SimplePlanTree>> _simplePlanTrees;
+    std::vector<std::pair<std::shared_ptr<PlanTreeInfo>, AlicaTime>> _msgQueue;
 };
 
 } /* namespace alica */

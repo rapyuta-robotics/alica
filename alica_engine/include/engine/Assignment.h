@@ -113,6 +113,7 @@ public:
     void setAllToInitialState(const AgentGrp& agents, const EntryPoint* e);
     void setState(AgentIDConstPtr agent, const State* s, const EntryPoint* hint) { _assignmentData[hint->getIndex()].setStateOfAgent(agent, s); }
     bool removeAllIn(const AgentGrp& limit, const State* watchState);
+    bool removeAllNotIn(const AgentGrp& limit, const State* watchState);
     void removeAgentFrom(AgentIDConstPtr agent, const EntryPoint* ep) { _assignmentData[ep->getIndex()].remove(agent); }
     void removeAllFrom(const AgentGrp& agents, const EntryPoint* ep) { _assignmentData[ep->getIndex()].removeAllIn(agents); }
     void clear();

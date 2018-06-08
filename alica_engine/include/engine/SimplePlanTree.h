@@ -1,11 +1,9 @@
 #include <engine/AlicaClock.h>
 #include <engine/Types.h>
 
-#include <supplementary/AgentID.h>
+#include <engine/AgentIDConstPtr.h>
 
-#include <list>
-#include <memory>
-#include <unordered_set>
+#include <vector>
 
 namespace alica
 {
@@ -23,12 +21,11 @@ public:
     void setEntryPoint(const EntryPoint* entryPoint);
     const State* getState() const { return state; }
     void setState(const State* state);
-    const std::unordered_set<std::shared_ptr<SimplePlanTree>>& getChildren() const;
-    std::unordered_set<std::shared_ptr<SimplePlanTree>>& editChildren() { return children; }
+    const std::vector<std::unique_ptr<SimplePlanTree>>& getChildren() const { return _children; }
+    std::vector<std::unique_ptr<SimplePlanTree>>& editChildren() { return _children; }
 
-    void setChildren(const std::unordered_set<std::shared_ptr<SimplePlanTree>>& children);
-    AgentIDConstPtr getRobotId() { return robotId; }
-    void setRobotId(AgentIDConstPtr robotId);
+    AgentIDConstPtr getAgentId() const { return _agentId; }
+    void setAgentId(AgentIDConstPtr agentId) { _agentId = agentId; }
     bool isNewSimplePlanTree() const;
     void setNewSimplePlanTree(bool newSimplePlanTree);
     AlicaTime getReceiveTime() const;
@@ -42,8 +39,8 @@ protected:
     /**
      * The parent SimplePlanTree
      */
-    SimplePlanTree* parent;
-    std::unordered_set<std::shared_ptr<SimplePlanTree>> children;
+    SimplePlanTree* _parent;
+    std::vector<std::unique_ptr<SimplePlanTree>> _children;
     /**
      * The state occupied by the respective robot.
      */
@@ -52,7 +49,7 @@ protected:
     /**
      * The id of the robot to which this tree refers to
      */
-    AgentIDConstPtr robotId;
+    AgentIDConstPtr _agentId;
     bool newSimplePlanTree;
     /**
      * The timestamp denoting when this tree was received.

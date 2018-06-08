@@ -127,12 +127,12 @@ void Logger::iterationEnds(const RunningPlan* rp)
         evaluationAssignmentsToString(_sBuild, *rp);
     }
 
-    auto teamPlanTrees = this->to->getTeamPlanTrees();
-    if (teamPlanTrees != nullptr) {
+    const auto& teamPlanTrees = this->to->getTeamPlanTrees();
+    if (!teamPlanTrees.empty()) {
         _sBuild << "OtherTrees:" << endl;
-        for (auto kvp : (*teamPlanTrees)) {
+        for (const auto& kvp : teamPlanTrees) {
             _sBuild << "OPT:\t";
-            _sBuild << *kvp.first;
+            _sBuild << kvp.first;
             _sBuild << "\t";
 
             auto ids = createHumanReadablePlanTree(kvp.second->getStateIds());

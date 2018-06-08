@@ -238,7 +238,7 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
 
     if (!r.getParent() || !r.isFailureHandlingNeeded() || r.isBehaviour())
         return PlanChange::NoChange;
-    if (r.getFailure() != 1)
+    if (r.getFailureCount() != 1)
         return PlanChange::NoChange;
     if (r.getActiveEntryPoint() == nullptr)
         return PlanChange::NoChange;
@@ -276,7 +276,7 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
 
     if (!r.getParent() || !r.isFailureHandlingNeeded() || r.isBehaviour())
         return PlanChange::NoChange;
-    if (r.getFailure() != 2)
+    if (r.getFailureCount() != 2)
         return PlanChange::NoChange;
     RunningPlan* parent = r.getParent();
     parent->deactivateChildren();
@@ -303,7 +303,7 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
 
     if (!r.getParent() || !r.isFailureHandlingNeeded() || r.isBehaviour())
         return PlanChange::NoChange;
-    if (r.getFailure() < 3)
+    if (r.getFailureCount() < 3)
         return PlanChange::NoChange;
     r.getParent()->addFailure();
     r.setFailureHandlingNeeded(false);

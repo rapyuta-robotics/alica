@@ -381,6 +381,22 @@ bool Assignment::removeAllIn(const AgentGrp& limit, const State* watchState)
     return ret;
 }
 
+bool Assignment::removeAllNotIn(const AgentGrp& limit, const State* watchState)
+{
+    bool ret = false;
+    const int epCount = _assignmentData.size();
+    for (int i = 0; i < epCount; ++i) {
+        for (int j = _assignmentData[i].size() - 1; j >= 0; --j) {
+            AgentIDConstPtr id = _assignmentData[i].getRaw()[j].first;
+            if (std::find(limit.begin(), limit.end(), id) == limit.end()) {
+                ret = ret || _assignmentData[i].getRaw()[j].second == watchState;
+                _assignmentData[i].removeAt(j);
+            }
+        }
+    }
+    return ret;
+}
+
 void Assignment::fillPartial(PartialAssignment& pa) const
 {
     const int epCount = _assignmentData.size();

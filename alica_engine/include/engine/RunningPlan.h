@@ -157,7 +157,7 @@ public:
 
     void clearFailedChildren();
     void addFailure();
-    int getFailure();
+    int getFailureCount() const;
     void deactivateChildren();
     void clearChildren();
 
@@ -176,9 +176,8 @@ public:
 
     void revokeAllConstraints();
     void attachPlanConstraints();
-    bool recursiveUpdateAssignment(
-            std::list<std::shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, std::list<AgentIDConstPtr> noUpdates, AlicaTime now);
-    void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& depth, int curDepth) const;
+    bool recursiveUpdateAssignment(const std::vector<SimplePlanTree*> spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
+    void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const;
     std::string toString() const;
     AgentIDConstPtr getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
     AlicaEngine* getAlicaEngine() const { return _ae; }

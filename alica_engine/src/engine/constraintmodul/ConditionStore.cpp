@@ -8,7 +8,7 @@
 #include <engine/constraintmodul/ProblemPart.h>
 #include <engine/constraintmodul/Query.h>
 
-#include <alica_common_config/output.h>
+#include <alica_common_config/debug_output.h>
 
 #include <iostream>
 
@@ -143,7 +143,7 @@ void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
             }
 
             ALICA_DEBUG_MSG(
-                    "ConditionStore: Conditions active under variable " << (*activeVar2CondMapEntry->first) << ": " << activeVar2CondMapEntry->second->size());
+                    "ConditionStore: Conditions active under variable " << *activeVar2CondMapEntry->first << ": " << activeVar2CondMapEntry->second.size());
 
             for (const Condition* c : activeVar2CondMapEntry->second) {
                 if (std::find_if(query.getProblemParts().begin() + previousPartCount, query.getProblemParts().end(),
@@ -171,7 +171,7 @@ void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
                 }
                 // if c has a quantifier that currently covers the agent & has the right tempalte var, add it
                 for (const Quantifier* q : c->getQuantifiers()) {
-                    if (q->hasTemplateVariable(curDomainVariable->getTemplateVariable()) && q->isAgentInScope(curDomainVariable->getAgent(), rp)) {
+                    if (q->hasTemplateVariable(curDomainVariable->getTemplateVariable()) && q->isAgentInScope(curDomainVariable->getAgent(), *rp)) {
                         query.addProblemPart(ProblemPart(c, rp));
                         break;
                     }

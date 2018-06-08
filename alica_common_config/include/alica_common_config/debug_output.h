@@ -32,6 +32,11 @@ enum AlicaDebugLevel
 #include <iostream>
 #endif
 
+#define ALICA_DEBUG_ENABLED ALICA_DEBUG_LEVEL >= AlicaDebugLevel::Debug
+#define ALICA_INFO_ENABLED ALICA_DEBUG_LEVEL >= AlicaDebugLevel::Info
+#define ALICA_WARNING_ENABLED ALICA_DEBUG_LEVEL >= AlicaDebugLevel::Warning
+#define ALICA_ERROR_ENABLED ALICA_DEBUG_LEVEL >= AlicaDebugLevel::Error
+
 #define ALICA_ERROR_MSG(message)                                                                                                                               \
     do {                                                                                                                                                       \
         if (ALICA_DEBUG_LEVEL >= AlicaDebugLevel::Error) {                                                                                                     \

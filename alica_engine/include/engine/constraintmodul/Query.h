@@ -18,6 +18,7 @@
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 
+#include <alica_common_config/debug_output.h>
 #include <alica_solver_interface/SolverContext.h>
 
 #include <map>
@@ -81,10 +82,10 @@ public:
     void clearStaticVariables();
 
     template <class SolverType>
-    bool existsSolution(std::shared_ptr<const RunningPlan> rp);
+    bool existsSolution(const RunningPlan* rp);
 
     template <class SolverType, typename ResultType>
-    bool getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<ResultType>& result);
+    bool getSolution(const RunningPlan* rp, std::vector<ResultType>& result);
 
     BufferedVariableGrp& editStaticVariableBuffer() { return _staticVars; }
     BufferedDomainVariableGrp& editDomainVariableBuffer() { return _domainVars; }
@@ -97,8 +98,7 @@ public:
 private:
     void clearTemporaries();
     void fillBufferFromQuery();
-    bool collectProblemStatement(
-            std::shared_ptr<const RunningPlan> rp, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
+    bool collectProblemStatement(const RunningPlan* rp, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
 
     VariableGrp _queriedStaticVariables;
     DomainVariableGrp _queriedDomainVariables;
@@ -114,7 +114,7 @@ private:
 };
 
 template <class SolverType>
-bool Query::existsSolution(std::shared_ptr<const RunningPlan> rp)
+bool Query::existsSolution(const RunningPlan* rp)
 {
     SolverType* solver = rp->getAlicaEngine()->getSolver<SolverType>();
 
@@ -127,7 +127,7 @@ bool Query::existsSolution(std::shared_ptr<const RunningPlan> rp)
 }
 
 template <class SolverType, typename ResultType>
-bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<ResultType>& result)
+bool Query::getSolution(const RunningPlan* rp, std::vector<ResultType>& result)
 {
     result.clear();
 
@@ -136,7 +136,7 @@ bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<Resul
     int domOffset;
     SolverType* solver = rp->getAlicaEngine()->getSolver<SolverType>();
     if (solver == nullptr) {
-        std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available." << std::endl;
+        ALICA_ERROR_MSG("Query::getSolution: The engine does not have a suitable solver for the given type available.");
         return false;
     }
 
@@ -144,9 +144,7 @@ bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<Resul
         return false;
     }
 
-#ifdef Q_DEBUG
-    std::cout << "Query: " << _uniqueVarStore << std::endl;
-#endif
+    ALICA_DEBUG_MSG("Query: " << _uniqueVarStore);
 
     // TODO: get rid of the interrim vector (see below how)
     std::vector<ResultType> solverResult;

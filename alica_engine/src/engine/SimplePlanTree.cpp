@@ -16,11 +16,11 @@ namespace alica
 
 SimplePlanTree::SimplePlanTree()
         : robotId(nullptr)
+        , _parent(nullptr)
 {
     this->state = nullptr;
     this->newSimplePlanTree = true;
     this->entryPoint = nullptr;
-    this->parent = nullptr;
 }
 
 SimplePlanTree::~SimplePlanTree() {}
@@ -46,21 +46,6 @@ void SimplePlanTree::setEntryPoint(const EntryPoint* entryPoint)
 void SimplePlanTree::setState(const State* state)
 {
     this->state = state;
-}
-
-const std::unordered_set<std::shared_ptr<SimplePlanTree>>& SimplePlanTree::getChildren() const
-{
-    return children;
-}
-
-void SimplePlanTree::setChildren(const std::unordered_set<std::shared_ptr<SimplePlanTree>>& children)
-{
-    this->children = children;
-}
-
-void SimplePlanTree::setRobotId(AgentIDConstPtr robotId)
-{
-    this->robotId = robotId;
 }
 
 bool SimplePlanTree::isNewSimplePlanTree() const
