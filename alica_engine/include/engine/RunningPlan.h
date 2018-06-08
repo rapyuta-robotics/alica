@@ -176,7 +176,7 @@ public:
 
     void revokeAllConstraints();
     void attachPlanConstraints();
-    bool recursiveUpdateAssignment(const std::vector<SimplePlanTree*> spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
+    bool recursiveUpdateAssignment(const std::vector<const SimplePlanTree*> spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
     void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const;
     std::string toString() const;
     AgentIDConstPtr getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }

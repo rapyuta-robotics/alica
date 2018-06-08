@@ -45,7 +45,7 @@ public:
     void close();
 
 private:
-    void updateTeamPlanTrees();
+    bool updateTeamPlanTrees();
     void cleanOwnSuccessMarks(RunningPlan* root);
     std::unique_ptr<SimplePlanTree> sptFromMessage(AgentIDConstPtr agent, const IdGrp& ids, AlicaTime time) const;
 

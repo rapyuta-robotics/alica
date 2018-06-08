@@ -27,26 +27,22 @@
 namespace alica
 {
 
-using std::cout;
-using std::endl;
-using std::list;
 using std::lock_guard;
 using std::map;
 using std::mutex;
 using std::pair;
-using std::to_string;
 
 TeamObserver::TeamObserver(AlicaEngine* ae)
         : _ae(ae)
         , _tm(ae->getTeamManager())
-        , _myId(ae->getTeamManager()->getLocalAgentID());
+        , _myId(ae->getTeamManager()->getLocalAgentID())
 {
-    this->me = this->teamManager->getAgentByID(this->myId)->getEngineData();
+    this->me = _tm->getAgentByID(_myId)->getEngineData();
 }
 
 TeamObserver::~TeamObserver() {}
 
-void TeamObserver::updateTeamPlanTrees()
+bool TeamObserver::updateTeamPlanTrees()
 {
     lock_guard<mutex> lock(this->simplePlanTreeMutex);
 
@@ -75,7 +71,7 @@ void TeamObserver::updateTeamPlanTrees()
     for (auto agent : *agents) {
         bool changedCurrentAgent = agent->update();
         if (changedCurrentAgent && !agent->isActive()) {
-            _simplePlanTrees->erase(agent->getID());
+            _simplePlanTrees.erase(agent->getID());
         }
         changedSomeAgent |= changedCurrentAgent;
     }
@@ -84,28 +80,28 @@ void TeamObserver::updateTeamPlanTrees()
 
 void TeamObserver::tick(RunningPlan* root)
 {
-    AlicaTime time = ae->getAlicaClock()->now();
+    AlicaTime time = _ae->getAlicaClock()->now();
 
     bool someChanges = updateTeamPlanTrees();
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
     if (someChanges) {
-        ae->getRoleAssignment()->update();
-        this->ae->getLog()->eventOccurred("TeamChanged");
+        _ae->getRoleAssignment()->update();
+        _ae->getLog()->eventOccurred("TeamChanged");
     }
 
     cleanOwnSuccessMarks(root);
     if (root != nullptr) {
         // TODO get rid of this once teamManager gets a datastructure overhaul
         AgentGrp activeAgents;
-        teamManager->fillWithActiveAgentIDs(activeAgents);
+        _tm->fillWithActiveAgentIDs(activeAgents);
 
-        std::vector<SimplePlanTree*> updatespts;
+        std::vector<const SimplePlanTree*> updatespts;
         AgentGrp noUpdates;
         lock_guard<mutex> lock(this->simplePlanTreeMutex);
         for (auto& ele : _simplePlanTrees) {
-            assert(_tm->isAgentActive(ele->second->getAgentId()));
+            assert(_tm->isAgentActive(ele.second->getAgentId()));
 
-            if (ele->second->isNewSimplePlanTree()) {
+            if (ele.second->isNewSimplePlanTree()) {
                 updatespts.push_back(ele.second.get());
                 ALICA_DEBUG_MSG("TO: added to update");
                 ele.second->setNewSimplePlanTree(false);
@@ -219,7 +215,7 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
     auto tmp = _tm->getActiveAgents();
     for (const Agent* agent : *tmp) {
         const EntryPointGrp* suc = nullptr;
-        if (_myId == agent) {
+        if (_myId == agent->getID()) {
             continue;
         }
         {
@@ -235,7 +231,7 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
     const EntryPointGrp* suc = me->getSuccessMarks()->succeededEntryPoints(plan);
     if (suc != nullptr) {
         for (const EntryPoint* ep : *suc) {
-            ret.setSuccess(myId, ep);
+            ret.setSuccess(_myId, ep);
         }
     }
     return ret;
@@ -309,13 +305,13 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentIDConstPtr age
         return nullptr;
     }
 
-    std::unique_ptr<SimplePlanTree> root = new SimplePlanTree();
-    root->setRobotId(robotId);
+    std::unique_ptr<SimplePlanTree> root{new SimplePlanTree()};
+    root->setAgentId(agentId);
     root->setReceiveTime(time);
     root->setStateIds(ids);
 
     int64_t root_id = ids[0];
-    const PlanRepository::Accessor<State>& states = ae->getPlanRepository()->getStates();
+    const PlanRepository::Accessor<State>& states = _ae->getPlanRepository()->getStates();
     const State* s = states.find(root_id);
     if (s) {
         root->setState(s);
@@ -325,9 +321,9 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentIDConstPtr age
     }
 
     SimplePlanTree* curParent = nullptr;
-    SimplePlanTree* cur = root;
+    SimplePlanTree* cur = root.get();
 
-    if (int i = 1; i < static_cast<int>(ids.size); ++i) {
+    for (int i = 1; i < static_cast<int>(ids.size()); ++i) {
         const int64_t id = ids[i];
         if (id == -1) {
             curParent = cur;

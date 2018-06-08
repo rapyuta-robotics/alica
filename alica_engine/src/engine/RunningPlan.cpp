@@ -318,7 +318,7 @@ void RunningPlan::clearFailedChildren()
 void RunningPlan::addFailure()
 {
     ++_status.failCount;
-    _staurs.failHandlingNeeded = true;
+    _status.failHandlingNeeded = true;
 }
 
 /**
@@ -370,8 +370,8 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
         }
     }
 
-    usePlan(r->getPlan());
-    _activeTriple.entryPoint = r->getActiveEntryPoint();
+    usePlan(replacement->getActivePlan());
+    _activeTriple.entryPoint = replacement->getActiveEntryPoint();
     useState(newState);
     if (reactivate) {
         activate();
@@ -521,7 +521,7 @@ void RunningPlan::attachPlanConstraints()
     _constraintStore.addCondition(_activeTriple.plan->getRuntimeCondition());
 }
 
-bool RunningPlan::recursiveUpdateAssignment(const std::vector<SimplePlanTree*> spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now)
+bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTree*> spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now)
 {
     if (isBehaviour()) {
         return false;
@@ -532,36 +532,37 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<SimplePlanTree*> s
     // if keepTask, the task Assignment should not be changed!
     bool ret = false;
     AllocationDifference* aldif = new AllocationDifference(); // TODO: check this and make either unique or stack allocated
-    for (const shared_ptr<SimplePlanTree>& spt : spts) {
+    for (const SimplePlanTree* spt : spts) {
+        AgentIDConstPtr id = spt->getAgentId();
         if (spt->getState()->getInPlan() != _activeTriple.plan) { // the robot is no longer participating in this plan
             if (!keepTask & !auth) {
-                const EntryPoint* ep = _assignment.getEntryPointOfAgent(spt->getRobotId());
+                const EntryPoint* ep = _assignment.getEntryPointOfAgent(id);
                 if (ep != nullptr) {
-                    _assignment.removeAgentFrom(spt->getRobotId(), ep);
+                    _assignment.removeAgentFrom(id, ep);
                     ret = true;
-                    aldif->editSubtractions().emplace_back(ep, spt->getRobotId());
+                    aldif->editSubtractions().emplace_back(ep, id);
                 }
             }
         } else {
             if (keepTask || auth) { // Update only state, and that only if it is in the reachability graph of its
                                     // current entrypoint, else
                 // ignore
-                const EntryPoint* cep = _assignment.getEntryPointOfAgent(spt->getRobotId());
+                const EntryPoint* cep = _assignment.getEntryPointOfAgent(id);
                 if (cep != nullptr) {
                     if (cep->isStateReachable(spt->getState())) {
-                        _assignment.setState(spt->getRobotId(), spt->getState(), cep);
+                        _assignment.setState(id, spt->getState(), cep);
                     }
                 } else { // robot was not expected to be here during protected assignment time, add it.
-                    _assignment.addAgent(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
-                    aldif->editAdditions().emplace_back(spt->getEntryPoint(), spt->getRobotId());
+                    _assignment.addAgent(id, spt->getEntryPoint(), spt->getState());
+                    aldif->editAdditions().emplace_back(spt->getEntryPoint(), id);
                 }
             } else { // Normal Update
-                const EntryPoint* ep = _assignment.getEntryPointOfAgent(spt->getRobotId());
-                ret |= getAssignment().updateAgent(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
+                const EntryPoint* ep = _assignment.getEntryPointOfAgent(id);
+                ret |= getAssignment().updateAgent(id, spt->getEntryPoint(), spt->getState());
                 if (spt->getEntryPoint() != ep) {
-                    aldif->editAdditions().emplace_back(spt->getEntryPoint(), spt->getRobotId());
+                    aldif->editAdditions().emplace_back(spt->getEntryPoint(), id);
                     if (ep != nullptr) {
-                        aldif->editSubtractions().emplace_back(ep, spt->getRobotId());
+                        aldif->editSubtractions().emplace_back(ep, id);
                     }
                 }
             }
