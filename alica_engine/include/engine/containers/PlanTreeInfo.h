@@ -3,20 +3,25 @@
 #include <tuple>
 #include <vector>
 
+namespace supplementary
+{
+class AgentID;
+}
+
 namespace alica
 {
 typedef std::tuple<const supplementary::AgentID*, std::vector<int64_t>, std::vector<int64_t>> stdPlanTreeInfo;
 struct PlanTreeInfo
 {
     PlanTreeInfo()
-        : senderID(nullptr)
+            : senderID(nullptr)
     {
     }
 
     PlanTreeInfo(const stdPlanTreeInfo& s)
-        : senderID(std::get<0>(s))
-        , stateIDs(std::get<1>(s))
-        , succeededEPs(std::get<2>(s))
+            : senderID(std::get<0>(s))
+            , stateIDs(std::get<1>(s))
+            , succeededEPs(std::get<2>(s))
     {
     }
 
