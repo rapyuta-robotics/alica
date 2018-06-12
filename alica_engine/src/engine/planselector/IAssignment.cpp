@@ -48,12 +48,12 @@ void UniquePartialAssignmentSuccessIterator::toNextValid()
     }
 }
 
-PartialAssignmentView IAssignment::getRobotsWorking(const EntryPoint* ep) const
+PartialAssignmentView IAssignment::getAgentsWorking(const EntryPoint* ep) const
 {
     return PartialAssignmentView(ep->getIndex(), _impl);
 }
 
-PartialAssignmentView IAssignment::getRobotsWorking(int64_t epid) const
+PartialAssignmentView IAssignment::getAgentsWorking(int64_t epid) const
 {
     const EntryPointGrp& eps = _impl->getPlan()->getEntryPoints();
     for (int i = 0; i < static_cast<int>(eps.size()); ++i) {
@@ -69,12 +69,12 @@ PartialAssignmentView IAssignment::getUnassignedAgents() const
 {
     return PartialAssignmentView(-1, _impl);
 }
-PartialAssignmentSuccessView IAssignment::getRobotsWorkingAndFinished(const EntryPoint* ep) const
+PartialAssignmentSuccessView IAssignment::getAgentsWorkingAndFinished(const EntryPoint* ep) const
 {
     return PartialAssignmentSuccessView(ep->getIndex(), _impl);
 }
 
-PartialAssignmentSuccessView IAssignment::getRobotsWorkingAndFinished(int64_t epid) const
+PartialAssignmentSuccessView IAssignment::getAgentsWorkingAndFinished(int64_t epid) const
 {
     const EntryPointGrp& eps = _impl->getPlan()->getEntryPoints();
     for (int i = 0; i < static_cast<int>(eps.size()); ++i) {
@@ -85,7 +85,7 @@ PartialAssignmentSuccessView IAssignment::getRobotsWorkingAndFinished(int64_t ep
     return PartialAssignmentSuccessView(-42, _impl);
 }
 
-UniquePartialAssignmentSuccessView IAssignment::getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) const
+UniquePartialAssignmentSuccessView IAssignment::getUniqueAgentsWorkingAndFinished(const EntryPoint* ep) const
 {
     return UniquePartialAssignmentSuccessView(ep->getIndex(), _impl);
 }

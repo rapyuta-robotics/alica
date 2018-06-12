@@ -94,18 +94,18 @@ std::ostream& operator<<(std::ostream& out, const Interval<T> c)
 template <typename T>
 constexpr Interval<T> operator+(const Interval<T> a, const Interval<T> b)
 {
-    return Interval<T>(a._min + b._min, a._max + b._max);
+    return Interval<T>(a.getMin() + b.getMin(), a.getMax() + b.getMax());
 }
 template <typename T>
 constexpr Interval<T> operator-(const Interval<T> a, const Interval<T> b)
 {
-    return Interval<T>(a._min - b._max, a._max - b._min);
+    return Interval<T>(a.getMin() - b.getMax(), a.getMax() - b.getMin());
 }
 
 template <typename T>
 constexpr Interval<T> operator*(const Interval<T> a, T b)
 {
-    return Interval<T>(a._min * b, a._max * b);
+    return Interval<T>(a.getMin() * b, a.getMax() * b);
 }
 template <typename T>
 constexpr Interval<T> operator*(T b, const Interval<T> a)
@@ -115,6 +115,6 @@ constexpr Interval<T> operator*(T b, const Interval<T> a)
 template <typename T>
 constexpr Interval<T> operator/(const Interval<T> a, T b)
 {
-    return Interval<T>(a._min / b, a._max / b);
+    return Interval<T>(a.getMin() / b, a.getMax() / b);
 }
 }

@@ -17,7 +17,6 @@
 #include <engine/constraintmodul/ConditionStore.h>
 #include <engine/syncmodule/SyncModule.h>
 
-#define ALICA_DEBUG_LEVEL_INFO
 #include <alica_common_config/debug_output.h>
 
 namespace alica

@@ -283,6 +283,11 @@ void Assignment::clear()
 
 bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e)
 {
+    return updateAgent(agent, e, nullptr);
+}
+
+bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e, const State* s)
+{
     bool found = false;
     bool inserted = false;
     int i = 0;
@@ -292,10 +297,16 @@ bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e)
         if (isTargetEp) {
             for (AgentStatePair asp : asps) {
                 if (asp.first == agent) {
-                    return false;
+                    // assume a null state signals no change
+                    if (s == nullptr || asp.second == s) {
+                        return false;
+                    } else {
+                        asp.second = s;
+                        return true;
+                    }
                 }
             }
-            asps.emplace_back(agent, e->getState());
+            asps.emplace_back(agent, s ? s : e->getState());
             inserted = true;
         } else if (!found) {
             for (int j = 0; j < static_cast<int>(asps.size()); ++j) {
@@ -395,6 +406,18 @@ bool Assignment::removeAllNotIn(const AgentGrp& limit, const State* watchState)
         }
     }
     return ret;
+}
+void Assignment::removeAgent(AgentIDConstPtr agent)
+{
+    const int epCount = _assignmentData.size();
+    for (int i = 0; i < epCount; ++i) {
+        auto it = std::find_if(_assignmentData[i].begin(), _assignmentData[i].end(), [agent](AgentStatePair asp) { return agent == asp.first; });
+        if (it != _assignmentData[i].end()) {
+            _assignmentData[i].editRaw().erase(it);
+            return;
+        }
+    }
+    return;
 }
 
 void Assignment::fillPartial(PartialAssignment& pa) const

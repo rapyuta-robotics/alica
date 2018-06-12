@@ -94,7 +94,7 @@ public:
     bool isBehaviour() const { return _behaviour; };
     bool isAllocationNeeded() const { return _status.allocationNeeded; }
     bool isFailureHandlingNeeded() const { return _status.failHandlingNeeded; }
-    PlanStatus getStatus() const { return _status.status; }
+    PlanStatus getStatus() const;
     AlicaTime getPlanStartTime() const { return _status.planStartTime; }
     AlicaTime getStateStartTime() const { return _status.stateStartTime; }
     bool isActive() const { return _status.active; }

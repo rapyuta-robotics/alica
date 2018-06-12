@@ -104,7 +104,7 @@ void TeamObserver::tick(RunningPlan* root)
             if (ele.second->isNewSimplePlanTree()) {
                 updatespts.push_back(ele.second.get());
                 ALICA_DEBUG_MSG("TO: added to update");
-                ele.second->setNewSimplePlanTree(false);
+                ele.second->setProcessed();
             } else {
                 ALICA_DEBUG_MSG("TO: added to noupdate");
                 noUpdates.push_back(ele.second->getAgentId());

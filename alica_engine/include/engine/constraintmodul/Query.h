@@ -1,7 +1,5 @@
 #pragma once
 
-//#define Q_DEBUG
-
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/RunningPlan.h"

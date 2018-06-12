@@ -1,9 +1,3 @@
-/*
- * SimplePlanTree.cpp
- *
- *  Created on: Jun 16, 2014
- *      Author: Stefan Jakob
- */
 
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
@@ -15,22 +9,22 @@ namespace alica
 {
 
 SimplePlanTree::SimplePlanTree()
-        : robotId(nullptr)
+        : _agentId(nullptr)
         , _parent(nullptr)
+        , _state(nullptr)
+        , _entryPoint(nullptr)
+        , _isNew(true)
 {
-    this->state = nullptr;
-    this->newSimplePlanTree = true;
-    this->entryPoint = nullptr;
 }
 
 SimplePlanTree::~SimplePlanTree() {}
 
 bool SimplePlanTree::containsPlan(const AbstractPlan* plan) const
 {
-    if (this->getEntryPoint()->getPlan() == plan) {
+    if (_entryPoint->getPlan() == plan) {
         return true;
     }
-    for (const std::shared_ptr<SimplePlanTree>& spt : getChildren()) {
+    for (const std::unique_ptr<SimplePlanTree>& spt : getChildren()) {
         if (spt->containsPlan(plan)) {
             return true;
         }
@@ -40,77 +34,61 @@ bool SimplePlanTree::containsPlan(const AbstractPlan* plan) const
 
 void SimplePlanTree::setEntryPoint(const EntryPoint* entryPoint)
 {
-    this->entryPoint = entryPoint;
+    _entryPoint = entryPoint;
 }
 
 void SimplePlanTree::setState(const State* state)
 {
-    this->state = state;
-}
-
-bool SimplePlanTree::isNewSimplePlanTree() const
-{
-    return newSimplePlanTree;
-}
-
-void SimplePlanTree::setNewSimplePlanTree(bool newSimplePlanTree)
-{
-    this->newSimplePlanTree = newSimplePlanTree;
-}
-AlicaTime SimplePlanTree::getReceiveTime() const
-{
-    return receiveTime;
+    _state = state;
 }
 
 void SimplePlanTree::setReceiveTime(AlicaTime receiveTime)
 {
-    this->receiveTime = receiveTime;
+    _receiveTime = receiveTime;
 }
 
 void SimplePlanTree::setStateIds(const IdGrp& stateIds)
 {
-    this->stateIds = stateIds;
+    _stateIds = stateIds;
 }
 
-std::string SimplePlanTree::toString() const
+std::ostream& operator<<(std::ostream& out, const SimplePlanTree& spt)
 {
-    std::stringstream result;
+    out << "RobotID: " << spt._agentId << "\n";
+    out << "Parent: ";
 
-    result << "RobotID: " << this->robotId << "\n";
-    result << "Parent: ";
-
-    if (this->parent != nullptr) {
-        result << parent->getState()->getId();
+    if (spt._parent != nullptr) {
+        out << spt._parent->getState()->getId();
     }
-    result << "\n";
+    out << std::endl;
 
-    result << "State: ";
-    if (state != nullptr) {
-        result << state->getId();
-        result << " " + state->getName();
+    out << "State: ";
+    if (spt._state != nullptr) {
+        out << spt._state->getId();
+        out << " " + spt._state->getName();
     } else {
-        result << "ERROR !!!NO STATE !!!";
+        out << "ERROR !!!NO STATE !!!";
     }
 
-    result << "\n";
+    out << std::endl;
 
-    result << "EntryPoint: ";
+    out << "EntryPoint: ";
 
-    if (this->entryPoint != nullptr) {
-        result << entryPoint->getId() << " " << this->entryPoint->getTask()->getName();
+    if (spt._entryPoint != nullptr) {
+        out << spt._entryPoint->getId() << " " << spt._entryPoint->getTask()->getName();
     } else {
-        result << "NoEntryPoint";
+        out << "NoEntryPoint";
     }
-    result << "\n";
+    out << std::endl;
 
-    result << "Children: " << this->children.size() << "\n";
-    for (auto spt : this->children) {
-        result << spt->toString();
+    out << "Children: " << spt._children.size() << "\n";
+    for (const std::unique_ptr<SimplePlanTree>& c : spt._children) {
+        out << *c;
     }
 
-    result << "\n\n";
+    out << std::endl << std::endl;
 
-    return result.str();
+    return out;
 }
 
 } /* namespace alica */

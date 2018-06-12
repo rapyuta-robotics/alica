@@ -14,28 +14,42 @@ enum AlicaDebugLevel
 
 #ifdef ALICA_DEBUG_LEVEL_ALL
 #define ALICA_DEBUG_LEVEL AlicaDebugLevel::All
+#define ALICA_DEBUG_ENABLED
+#define ALICA_INFO_ENABLED
+#define ALICA_WARNING_ENABLED
+#define ALICA_ERROR_ENABLED
 #elif defined ALICA_DEBUG_LEVEL_DEBUG
 #define ALICA_DEBUG_LEVEL AlicaDebugLevel::Debug
+#define ALICA_DEBUG_ENABLED
+#define ALICA_INFO_ENABLED
+#define ALICA_WARNING_ENABLED
+#define ALICA_ERROR_ENABLED
 #elif defined ALICA_DEBUG_LEVEL_INFO
 #define ALICA_DEBUG_LEVEL AlicaDebugLevel::Info
+#define ALICA_INFO_ENABLED
+#define ALICA_WARNING_ENABLED
+#define ALICA_ERROR_ENABLED
 #elif defined ALICA_DEBUG_LEVEL_WARNING
 #define ALICA_DEBUG_LEVEL AlicaDebugLevel::Warning
+#define ALICA_WARNING_ENABLED
+#define ALICA_ERROR_ENABLED
 #elif defined ALICA_DEBUG_LEVEL_ERROR
 #define ALICA_DEBUG_LEVEL AlicaDebugLevel::Error
+#define ALICA_ERROR_ENABLED
 #elif defined ALICA_DEBUG_LEVEL_NONE
 #define ALICA_DEBUG_LEVEL AlicaDebugLevel::None
 #endif
 
 #ifndef ALICA_DEBUG_LEVEL
-#define ALICA_DEBUG_LEVEL AlicaDebugLevel::Warning
-#else
-#include <iostream>
+#define ALICA_DEBUG_LEVEL AlicaDebugLevel::Info
+#define ALICA_INFO_ENABLED
+#define ALICA_WARNING_ENABLED
+#define ALICA_ERROR_ENABLED
 #endif
 
-#define ALICA_DEBUG_ENABLED ALICA_DEBUG_LEVEL >= AlicaDebugLevel::Debug
-#define ALICA_INFO_ENABLED ALICA_DEBUG_LEVEL >= AlicaDebugLevel::Info
-#define ALICA_WARNING_ENABLED ALICA_DEBUG_LEVEL >= AlicaDebugLevel::Warning
-#define ALICA_ERROR_ENABLED ALICA_DEBUG_LEVEL >= AlicaDebugLevel::Error
+#ifdef ALICA_ERROR_ENABLED
+#include <iostream>
+#endif
 
 #define ALICA_ERROR_MSG(message)                                                                                                                               \
     do {                                                                                                                                                       \

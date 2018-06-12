@@ -21,7 +21,6 @@
 
 #include <assert.h>
 #include <iostream>
-//#define Q_DEBUG
 
 namespace alica
 {
@@ -81,7 +80,7 @@ bool Query::collectProblemStatement(const RunningPlan* rp, ISolverBase* solver, 
 {
 
     AlicaTime time;
-#if ALICA_DEBUG_ENABLED
+#ifdef ALICA_DEBUG_ENABLED
     time = rp->getAlicaEngine()->getAlicaClock()->now();
 #endif
 
@@ -174,7 +173,7 @@ bool Query::collectProblemStatement(const RunningPlan* rp, ISolverBase* solver, 
     ALICA_DEBUG_MSG("Query: Number of relevant static variables: " << domOffset);
     ALICA_DEBUG_MSG("Query: Number of relevant domain variables: " << _domainVars.getCurrent().size());
     ALICA_DEBUG_MSG("Query: Total number of relevant variables: " << _relevantVariables.size());
-    ALICA_DEBUG_MSG("Query: PrepTime: " << (rp->getAlicaEngine()->getAlicaClock()->now() - time).inMicroSeconds() << "us");
+    ALICA_DEBUG_MSG("Query: PrepTime: " << (rp->getAlicaEngine()->getAlicaClock()->now() - time).inMicroseconds() << "us");
 
     return true;
 }

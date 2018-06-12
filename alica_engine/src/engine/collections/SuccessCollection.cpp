@@ -1,6 +1,7 @@
 
 #include <engine/collections/SuccessCollection.h>
 
+#include "engine/AgentIDConstPtr.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Task.h"
@@ -19,14 +20,13 @@ SuccessCollection::SuccessCollection(const Plan* plan)
 
 SuccessCollection::~SuccessCollection() {}
 
-void SuccessCollection::setSuccess(AgentIDConstPtr robotId, const EntryPoint* ep)
+void SuccessCollection::setSuccess(AgentIDConstPtr agentId, const EntryPoint* ep)
 {
     for (int i = 0; i < static_cast<int>(_plan->getEntryPoints().size()); ++i) {
-        if _plan->getEntryPoints()[i] == ep)
-            {
-                _successData[i].push_back(robotId);
-                return;
-            }
+        if (_plan->getEntryPoints()[i] == ep) {
+            _successData[i].push_back(agentId);
+            return;
+        }
     }
 }
 void SuccessCollection::clear()
@@ -61,15 +61,15 @@ const AgentGrp* SuccessCollection::getAgentsById(int64_t id) const
 std::ostream& operator<<(std::ostream& out, const SuccessCollection& c)
 {
     bool haveAny = false;
-    const EntryPointGrp& eps = _plan->getEntryPoints();
+    const EntryPointGrp& eps = c._plan->getEntryPoints();
     for (int i = 0; i < static_cast<int>(eps.size()); ++i) {
-        if (!_successData[i].empty()) {
+        if (!c._successData[i].empty()) {
             if (!haveAny) {
                 out << "Success:" << std::endl;
             }
             haveAny = true;
-            out << eops[i]->getTask()->getId() << ": ";
-            for (AgentIDConstPtr r : _successData[i]) {
+            out << eps[i]->getTask()->getId() << ": ";
+            for (AgentIDConstPtr r : c._successData[i]) {
                 out << *r << " ";
             }
             out << std::endl;

@@ -114,18 +114,16 @@ void RunningPlan::setFailHandlingNeeded(bool failHandlingNeeded)
  */
 PlanChange RunningPlan::tick(RuleBook* rules)
 {
-    _cycleManagement->update();
-    PlanChange myChange = rules->visit(shared_from_this());
+    _cycleManagement.update();
+    PlanChange myChange = rules->visit(*this);
     PlanChange childChange = PlanChange::NoChange;
     // attention: do not use for each here: children are modified
-    for (int i = 0; i < static_cast<int>(_children.size()); i++) {
-        auto it = _children.begin();
-        advance(it, i);
-        shared_ptr<RunningPlan> rp = *it;
+    for (int i = 0; i < static_cast<int>(_children.size()); ++i) {
+        RunningPlan* rp = _children[i];
         childChange = rules->updateChange(childChange, rp->tick(rules));
     }
     if (childChange != PlanChange::NoChange && childChange != PlanChange::InternalChange) {
-        myChange = rules->updateChange(myChange, rules->visit(shared_from_this()));
+        myChange = rules->updateChange(myChange, rules->visit(*this));
     }
     return myChange;
 }
@@ -137,7 +135,7 @@ PlanChange RunningPlan::tick(RuleBook* rules)
  */
 void RunningPlan::setAllocationNeeded(bool need)
 {
-    _allocationNeeded = need;
+    _status.allocationNeeded = need;
 }
 
 /**
@@ -154,7 +152,7 @@ bool RunningPlan::evalPreCondition() const
         return true;
     }
     try {
-        return _activeTriple.plan->getPreCondition()->evaluate(shared_from_this());
+        return _activeTriple.plan->getPreCondition()->evaluate(*this);
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("Exception in precondition: " << e.what());
         return false;
@@ -175,7 +173,7 @@ bool RunningPlan::evalRuntimeCondition() const
         return true;
     }
     try {
-        return _activeTriple.planan->getRuntimeCondition()->evaluate(shared_from_this());
+        return _activeTriple.plan->getRuntimeCondition()->evaluate(*this);
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("Exception in runtimecondition: " << _activeTriple.plan->getName() << " " << e.what());
         return false;
@@ -192,7 +190,7 @@ void RunningPlan::addChildren(const std::vector<RunningPlan*>& runningPlans)
         if (iter != _failedSubPlans.end()) {
             r->_status.failCount = iter->second;
         }
-        if (_active) {
+        if (_status.active) {
             r->activate();
         }
     }
@@ -206,8 +204,8 @@ void RunningPlan::moveState(const State* nextState)
 {
     deactivateChildren();
     clearChildren();
-    _assignment->moveRobots(_activeTriple.state, nextState);
-    setActiveState(nextState);
+    _assignment.moveAllFromTo(_activeTriple.entryPoint, _activeTriple.state, nextState);
+    useState(nextState);
     _failedSubPlans.clear();
 }
 
@@ -255,11 +253,11 @@ void RunningPlan::useEntryPoint(const EntryPoint* value)
 {
     if (_activeTriple.entryPoint != value) {
         AgentIDConstPtr mid = getOwnID();
-        _assignment.removeRobot(mid);
+        _assignment.removeAgent(mid);
         _activeTriple.entryPoint = value;
         if (value != nullptr) {
             useState(value->getState());
-            _assignment.addRobot(mid, _activeTriple.entryPoint, _activeTriple.state);
+            _assignment.addAgent(mid, _activeTriple.entryPoint, _activeTriple.state);
         }
     }
 }
@@ -267,15 +265,15 @@ void RunningPlan::useEntryPoint(const EntryPoint* value)
 void RunningPlan::useState(const State* s)
 {
     if (_activeTriple.state != s) {
-        ALICA_ASSERT(s == null || (_activeTriple.entryPoint && _activeTriple.entryPoint->isStateReachable(s)));
+        ALICA_ASSERT(s == nullptr || (_activeTriple.entryPoint && _activeTriple.entryPoint->isStateReachable(s)));
         _activeTriple.state = s;
         _status.stateStartTime = _ae->getAlicaClock()->now();
         if (s != nullptr) {
             if (s->isFailureState()) {
                 _status.status = PlanStatus::Failed;
             } else if (s->isSuccessState()) {
-                AgentIdConstPtr mid = getOwnID();
-                _assignment.getEpSuccessMapping().getRobots(_activeTriple.entryPoint)->push_back(mid);
+                AgentIDConstPtr mid = getOwnID();
+                _assignment.editSuccessData(_activeTriple.entryPoint).push_back(mid);
                 _ae->getTeamManager()->setSuccess(mid, _activeTriple.plan, _activeTriple.entryPoint);
             }
         }
@@ -296,7 +294,7 @@ PlanStatus RunningPlan::getStatus() const
             return PlanStatus::Running;
         }
     }
-    if (_assignment.isSuccessfull()) {
+    if (_assignment.isSuccessful()) {
         return PlanStatus::Success;
     }
     return _status.status;
@@ -370,8 +368,8 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
         }
     }
 
-    usePlan(replacement->getActivePlan());
-    _activeTriple.entryPoint = replacement->getActiveEntryPoint();
+    usePlan(replacement.getActivePlan());
+    _activeTriple.entryPoint = replacement.getActiveEntryPoint();
     useState(newState);
     if (reactivate) {
         activate();
@@ -410,7 +408,7 @@ void RunningPlan::accept(IPlanTreeVisitor* vis)
  */
 void RunningPlan::deactivate()
 {
-    _active = false;
+    _status.active = false;
     if (isBehaviour()) {
         _ae->getBehaviourPool()->stopBehaviour(*this);
     } else {
@@ -558,7 +556,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
                 }
             } else { // Normal Update
                 const EntryPoint* ep = _assignment.getEntryPointOfAgent(id);
-                ret |= getAssignment().updateAgent(id, spt->getEntryPoint(), spt->getState());
+                ret |= _assignment.updateAgent(id, spt->getEntryPoint(), spt->getState());
                 if (spt->getEntryPoint() != ep) {
                     aldif->editAdditions().emplace_back(spt->getEntryPoint(), id);
                     if (ep != nullptr) {
@@ -586,8 +584,8 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
                     // found = true;
                     continue;
                 }
-                for (const shared_ptr<SimplePlanTree>& spt : spts) {
-                    if (*(spt->getRobotId()) == *rob) {
+                for (const SimplePlanTree* spt : spts) {
+                    if (spt->getAgentId() == rob) {
                         found = true;
                         break;
                     }
@@ -650,12 +648,12 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
         if (r->isBehaviour()) {
             continue;
         }
-        std::list<shared_ptr<SimplePlanTree>> newcspts;
-        for (shared_ptr<SimplePlanTree> spt : spts) {
+        std::vector<const SimplePlanTree*> newcspts;
+        for (const SimplePlanTree* spt : spts) {
             if (spt->getState() == _activeTriple.state) {
-                for (shared_ptr<SimplePlanTree> cspt : spt->getChildren()) {
+                for (const std::unique_ptr<SimplePlanTree>& cspt : spt->getChildren()) {
                     if (cspt->getState()->getInPlan() == r->getActivePlan()) {
-                        newcspts.push_back(cspt);
+                        newcspts.push_back(cspt.get());
                         break;
                     }
                 }

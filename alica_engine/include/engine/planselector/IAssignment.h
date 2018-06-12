@@ -24,7 +24,7 @@ class PartialAssignmentSuccessView;
 class UniquePartialAssignmentSuccessIterator;
 class UniquePartialAssignmentSuccessView;
 /**
- *  An IAssignment describes a potentially partial assignment of robots to EntryPoints within a plan.
+ *  An IAssignment describes a potentially partial assignment of agents to EntryPoints within a plan.
  */
 class IAssignment
 {
@@ -37,15 +37,15 @@ public:
     int getEntryPointCount() const { return _impl->getEntryPointCount(); }
     const EntryPoint* getEntryPoint(int idx) const { return _impl->getPlan()->getEntryPoints()[idx]; }
 
-    PartialAssignmentView getRobotsWorking(const EntryPoint* ep) const;
-    PartialAssignmentView getRobotsWorking(int64_t epid) const;
+    PartialAssignmentView getAgentsWorking(const EntryPoint* ep) const;
+    PartialAssignmentView getAgentsWorking(int64_t epid) const;
 
     PartialAssignmentView getUnassignedAgents() const;
 
-    PartialAssignmentSuccessView getRobotsWorkingAndFinished(const EntryPoint* ep) const;
-    PartialAssignmentSuccessView getRobotsWorkingAndFinished(int64_t epid) const;
+    PartialAssignmentSuccessView getAgentsWorkingAndFinished(const EntryPoint* ep) const;
+    PartialAssignmentSuccessView getAgentsWorkingAndFinished(int64_t epid) const;
 
-    UniquePartialAssignmentSuccessView getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) const;
+    UniquePartialAssignmentSuccessView getUniqueAgentsWorkingAndFinished(const EntryPoint* ep) const;
 
 private:
     const PartialAssignment* _impl;
@@ -96,6 +96,7 @@ public:
 
     PartialAssignmentIterator begin() const { return PartialAssignmentIterator(0, _epIdx, _pas); }
     PartialAssignmentIterator end() const { return PartialAssignmentIterator(_pas->getTotalAgentCount(), _epIdx, _pas); }
+    int size() const { return std::distance(begin(), end()); }
 
 private:
     const PartialAssignment* _pas;
@@ -196,6 +197,7 @@ public:
     PartialAssignmentSuccessIterator begin() const { return PartialAssignmentSuccessIterator(0, false, _epIdx, _pas); }
     PartialAssignmentSuccessIterator end() const;
     bool empty() const { return begin() == end(); }
+    int size() const { return PartialAssignmentView(_epIdx, _pas).size() + (_pas ? _pas->getSuccessData()->getAgentsByIndex(_epIdx)->size() : 0); }
 
 private:
     int _epIdx;

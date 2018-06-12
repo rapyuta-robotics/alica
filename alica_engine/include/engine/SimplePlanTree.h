@@ -3,7 +3,7 @@
 
 #include <engine/AgentIDConstPtr.h>
 
-#include <vector>
+#include <ostream>
 
 namespace alica
 {
@@ -17,25 +17,26 @@ class SimplePlanTree
 public:
     SimplePlanTree();
     ~SimplePlanTree();
-    const EntryPoint* getEntryPoint() const { return entryPoint; }
+    const EntryPoint* getEntryPoint() const { return _entryPoint; }
     void setEntryPoint(const EntryPoint* entryPoint);
-    const State* getState() const { return state; }
+    const State* getState() const { return _state; }
     void setState(const State* state);
     const std::vector<std::unique_ptr<SimplePlanTree>>& getChildren() const { return _children; }
     std::vector<std::unique_ptr<SimplePlanTree>>& editChildren() { return _children; }
+    SimplePlanTree* getParent() const { return _parent; }
 
     AgentIDConstPtr getAgentId() const { return _agentId; }
     void setAgentId(AgentIDConstPtr agentId) { _agentId = agentId; }
-    bool isNewSimplePlanTree() const;
-    void setNewSimplePlanTree(bool newSimplePlanTree);
-    AlicaTime getReceiveTime() const;
+    bool isNewSimplePlanTree() const { return _isNew; }
+    void setProcessed() { _isNew = false; }
+    AlicaTime getReceiveTime() const { return _receiveTime; }
     void setReceiveTime(AlicaTime receiveTime);
-    const IdGrp& getStateIds() const { return stateIds; }
+    const IdGrp& getStateIds() const { return _stateIds; }
     void setStateIds(const IdGrp& stateIds);
     bool containsPlan(const AbstractPlan* plan) const;
-    std::string toString() const;
 
-protected:
+private:
+    friend std::ostream& operator<<(std::ostream& out, const SimplePlanTree& spt);
     /**
      * The parent SimplePlanTree
      */
@@ -44,18 +45,18 @@ protected:
     /**
      * The state occupied by the respective robot.
      */
-    const State* state;
-    const EntryPoint* entryPoint;
+    const State* _state;
+    const EntryPoint* _entryPoint;
     /**
      * The id of the robot to which this tree refers to
      */
     AgentIDConstPtr _agentId;
-    bool newSimplePlanTree;
+    bool _isNew;
     /**
      * The timestamp denoting when this tree was received.
      */
-    AlicaTime receiveTime;
-    IdGrp stateIds;
+    AlicaTime _receiveTime;
+    IdGrp _stateIds;
 };
-
+std::ostream& operator<<(std::ostream& out, const SimplePlanTree& spt);
 } /* namespace alica */

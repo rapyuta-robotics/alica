@@ -109,17 +109,21 @@ public:
     void getAgentsInState(const State* s, AgentGrp& o_agents) const;
 
     bool updateAgent(AgentIDConstPtr agent, const EntryPoint* e);
+    bool updateAgent(AgentIDConstPtr agent, const EntryPoint* e, const State* s);
     void addAgent(const AgentIDConstPtr agent, const EntryPoint* e, const State* s) { _assignmentData[e->getIndex()].emplace_back(agent, s); }
     void setAllToInitialState(const AgentGrp& agents, const EntryPoint* e);
     void setState(AgentIDConstPtr agent, const State* s, const EntryPoint* hint) { _assignmentData[hint->getIndex()].setStateOfAgent(agent, s); }
     bool removeAllIn(const AgentGrp& limit, const State* watchState);
     bool removeAllNotIn(const AgentGrp& limit, const State* watchState);
     void removeAgentFrom(AgentIDConstPtr agent, const EntryPoint* ep) { _assignmentData[ep->getIndex()].remove(agent); }
+    void removeAgent(AgentIDConstPtr agent);
     void removeAllFrom(const AgentGrp& agents, const EntryPoint* ep) { _assignmentData[ep->getIndex()].removeAllIn(agents); }
     void clear();
     void moveAllFromTo(const EntryPoint* scope, const State* from, const State* to);
     void adaptTaskChangesFrom(const Assignment& as);
     void fillPartial(PartialAssignment& pa) const;
+
+    AgentGrp& editSuccessData(const EntryPoint* ep) { return _successData[ep->getIndex()]; }
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const Assignment& a);
