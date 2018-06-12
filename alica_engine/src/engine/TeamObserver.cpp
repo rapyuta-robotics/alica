@@ -237,9 +237,9 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
     return ret;
 }
 
-void TeamObserver::updateSuccessCollection(const Plan* p, std::shared_ptr<SuccessCollection> sc)
+void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
 {
-    sc->clear();
+    sc.clear();
     const EntryPointGrp* suc = nullptr;
     auto tmp = _tm->getActiveAgents();
     for (auto& agent : *tmp) {
@@ -249,14 +249,14 @@ void TeamObserver::updateSuccessCollection(const Plan* p, std::shared_ptr<Succes
         }
         if (suc != nullptr) {
             for (const EntryPoint* ep : *suc) {
-                sc->setSuccess(agent->getID(), ep);
+                sc.setSuccess(agent->getID(), ep);
             }
         }
     }
     suc = me->getSuccessMarks()->succeededEntryPoints(p);
     if (suc != nullptr) {
         for (const EntryPoint* ep : *suc) {
-            sc->setSuccess(_myId, ep);
+            sc.setSuccess(_myId, ep);
         }
     }
 }

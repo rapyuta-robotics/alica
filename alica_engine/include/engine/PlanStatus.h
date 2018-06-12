@@ -12,7 +12,7 @@ enum class PlanStatus
     Failed,
     Retired
 };
-const char* getPlanStatusName(PlanStatus ps)
+inline const char* getPlanStatusName(PlanStatus ps)
 {
     switch (ps) {
     case PlanStatus::Running:

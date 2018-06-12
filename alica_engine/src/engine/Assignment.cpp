@@ -54,7 +54,7 @@ Assignment::Assignment()
 Assignment::Assignment(const Plan* p)
         : _plan(p)
         , _assignmentData(p->getEntryPoints().size())
-        , _successData(p->getEntryPoints().size())
+        , _successData(p)
         , _lastUtility(0.0)
 
 {
@@ -63,7 +63,7 @@ Assignment::Assignment(const Plan* p)
 Assignment::Assignment(const PartialAssignment& pa)
         : _plan(pa.getPlan())
         , _assignmentData(pa.getPlan()->getEntryPoints().size())
-        , _successData(pa.getPlan()->getEntryPoints().size())
+        , _successData(*pa.getSuccessData())
         , _lastUtility(pa.getUtility().getMax())
 {
     const int numEps = _plan->getEntryPoints().size();
@@ -77,13 +77,12 @@ Assignment::Assignment(const PartialAssignment& pa)
             _assignmentData[idx].emplace_back(pa.getProblem()->getAgents()[i], _plan->getEntryPoints()[i]->getState());
         }
     }
-    _successData = pa.getSuccessData()->getRaw();
 }
 
 Assignment::Assignment(const Plan* p, const AllocationAuthorityInfo& aai)
         : _plan(p)
         , _assignmentData(p->getEntryPoints().size())
-        , _successData(p->getEntryPoints().size())
+        , _successData(p)
         , _lastUtility(0.0)
 {
     const int numEps = _plan->getEntryPoints().size();
@@ -121,7 +120,7 @@ bool Assignment::isValid() const
     const EntryPointGrp& eps = _plan->getEntryPoints();
     const int numEps = eps.size();
     for (int i = 0; i < numEps; ++i) {
-        int c = _assignmentData[i].size() + _successData[i].size();
+        int c = _assignmentData[i].size() + _successData.getRaw()[i].size();
         if (!eps[i]->getCardinality().contains(c)) {
             return false;
         }
@@ -138,7 +137,7 @@ bool Assignment::isSuccessful() const
     const int numEps = eps.size();
     for (int i = 0; i < numEps; ++i) {
         if (eps[i]->isSuccessRequired()) {
-            if (!(_successData[i].empty() && static_cast<int>(_successData[i].size()) >= eps[i]->getMinCardinality())) {
+            if (!(_successData.getRaw()[i].empty() && static_cast<int>(_successData.getRaw()[i].size()) >= eps[i]->getMinCardinality())) {
                 return false;
             }
         }
@@ -154,7 +153,7 @@ bool Assignment::isAnyTaskSuccessful() const
     const EntryPointGrp& eps = _plan->getEntryPoints();
     const int numEps = eps.size();
     for (int i = 0; i < numEps; ++i) {
-        if (_successData[i].empty() && static_cast<int>(_successData[i].size()) >= eps[i]->getMinCardinality()) {
+        if (_successData.getRaw()[i].empty() && static_cast<int>(_successData.getRaw()[i].size()) >= eps[i]->getMinCardinality()) {
             return true;
         }
     }
@@ -226,10 +225,10 @@ void Assignment::getAgentsWorkingAndFinished(const EntryPoint* ep, AgentGrp& o_a
     const int numEps = eps.size();
     for (int i = 0; i < numEps; ++i) {
         if (ep == eps[i]) {
-            o_agents.reserve(_assignmentData[i].size() + _successData[i].size());
+            o_agents.reserve(_assignmentData[i].size() + _successData.getRaw()[i].size());
             std::transform(_assignmentData[i].begin(), _assignmentData[i].end(), std::back_inserter(o_agents),
                     [](AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
-            std::copy(_successData[i].begin(), _successData[i].end(), std::back_inserter(o_agents));
+            std::copy(_successData.getRaw()[i].begin(), _successData.getRaw()[i].end(), std::back_inserter(o_agents));
             return;
         }
     }
@@ -448,14 +447,7 @@ std::ostream& operator<<(std::ostream& out, const Assignment& a)
         }
         out << std::endl;
     }
-    out << "Success" << std::endl;
-    for (int i = 0; i < numEps; ++i) {
-        out << "EP: " << eps[i]->getId() << " Task: " << eps[i]->getTask()->getName() << " AgentIDs: ";
-        for (AgentIDConstPtr id : a._successData[i]) {
-            out << *id << " ";
-        }
-        out << std::endl;
-    }
+    out << a._successData << std::endl;
     return out;
 }
 

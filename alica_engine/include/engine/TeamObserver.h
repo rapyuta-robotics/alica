@@ -38,7 +38,7 @@ public:
 
     int successesInPlan(const Plan* plan);
     SuccessCollection createSuccessCollection(const Plan* plan) const;
-    void updateSuccessCollection(const Plan* p, std::shared_ptr<SuccessCollection> sc);
+    void updateSuccessCollection(const Plan* p, SuccessCollection& sc);
 
     void notifyRobotLeftPlan(const AbstractPlan* plan);
     virtual void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);

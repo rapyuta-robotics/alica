@@ -30,7 +30,7 @@ private:
     const supplementary::AgentID* _ptr;
 };
 
-std::ostream& operator<<(std::ostream& out, const AgentIDConstPtr a)
+inline std::ostream& operator<<(std::ostream& out, const AgentIDConstPtr a)
 {
     if (a) {
         out << *a;

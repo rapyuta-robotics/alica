@@ -11,6 +11,11 @@
 
 namespace alica
 {
+SuccessCollection::SuccessCollection()
+        : _plan(nullptr)
+        , _successData()
+{
+}
 
 SuccessCollection::SuccessCollection(const Plan* plan)
         : _plan(plan)

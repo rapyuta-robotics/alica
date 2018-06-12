@@ -14,6 +14,7 @@ class Plan;
 class SuccessCollection
 {
 public:
+    SuccessCollection();
     SuccessCollection(const Plan* plan);
     ~SuccessCollection();
     int getCount() const { return _successData.size(); }
@@ -30,6 +31,7 @@ public:
         }
         return nullptr;
     }
+    AgentGrp& editAgentsByIndex(int idx) { return _successData[idx]; }
     const std::vector<AgentGrp>& getRaw() const { return _successData; }
 
 private:

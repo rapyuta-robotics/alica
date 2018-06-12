@@ -1,10 +1,11 @@
 #pragma once
 #include <engine/AgentIDConstPtr.h>
 #include <engine/Types.h>
+#include <engine/collections/SuccessCollection.h>
 #include <engine/model/EntryPoint.h>
 #include <engine/model/Plan.h>
 #include <engine/model/State.h>
-//#include <algorithm>
+
 #include <assert.h>
 #include <sstream>
 #include <vector>
@@ -93,7 +94,9 @@ public:
     const AgentStatePairs& getAgentStates(int idx) const { return _assignmentData[idx]; }
     const AgentStatePairs& getAgentStates(const EntryPoint* ep) const;
 
-    const AgentGrp& getSuccessData(int idx) const { return _successData[idx]; }
+    const AgentGrp& getSuccessData(int idx) const { return *_successData.getAgentsByIndex(idx); }
+    AgentGrp& editSuccessData(const EntryPoint* ep) { return _successData.editAgentsByIndex(ep->getIndex()); }
+    SuccessCollection& editSuccessData() { return _successData; }
 
     AssignmentView getAgentsWorking(const EntryPoint* ep) const;
     AssignmentView getAgentsWorking(int idx) const;
@@ -123,13 +126,11 @@ public:
     void adaptTaskChangesFrom(const Assignment& as);
     void fillPartial(PartialAssignment& pa) const;
 
-    AgentGrp& editSuccessData(const EntryPoint* ep) { return _successData[ep->getIndex()]; }
-
 private:
     friend std::ostream& operator<<(std::ostream& out, const Assignment& a);
     const Plan* _plan;
     std::vector<AgentStatePairs> _assignmentData;
-    std::vector<AgentGrp> _successData;
+    SuccessCollection _successData;
     double _lastUtility;
 };
 

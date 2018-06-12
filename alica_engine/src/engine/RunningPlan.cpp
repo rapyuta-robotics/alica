@@ -620,7 +620,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     aldif->setReason(AllocationDifference::Reason::message);
     _cycleManagement.setNewAllocDiff(aldif);
     // Update Success Collection:
-    _ae->getTeamObserver()->updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), _assignment);
+    _ae->getTeamObserver()->updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), _assignment.editSuccessData());
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.

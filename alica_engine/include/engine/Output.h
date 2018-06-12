@@ -10,13 +10,13 @@
 namespace alica
 {
 
-std::ostream& operator<<(std::ostream& out, const AgentGrp& ag)
+inline std::ostream& operator<<(std::ostream& out, const AgentGrp& ag)
 {
     std::copy(ag.begin(), ag.end(), std::ostream_iterator<AgentIDConstPtr>(out, " "));
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const IdGrp& ig)
+inline std::ostream& operator<<(std::ostream& out, const IdGrp& ig)
 {
     std::copy(ig.begin(), ig.end(), std::ostream_iterator<int64_t>(out, " "));
     return out;
