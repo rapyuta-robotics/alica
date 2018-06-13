@@ -150,8 +150,6 @@ public:
     // Temporary helper:
     std::shared_ptr<RunningPlan> getSharedPointer() { return shared_from_this(); }
 
-    // bool getFailHandlingNeeded() const;
-
     bool evalPreCondition() const;
     bool evalRuntimeCondition() const;
 

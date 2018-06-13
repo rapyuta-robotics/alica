@@ -80,6 +80,8 @@ PlanChange RuleBook::visit(RunningPlan& r)
     bool doDynAlloc = true;
     PlanChange changeRecord = PlanChange::NoChange;
     PlanChange msChange = PlanChange::NoChange;
+    // obtain modification lock for visited plan
+    RunningPlan::ScopedWriteLock lck = r.getWriteLock();
 
     do {
         msChange = updateChange(msChange, changeRecord);
@@ -278,10 +280,13 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
     if (r.getFailureCount() != 2)
         return PlanChange::NoChange;
     RunningPlan* parent = r.getParent();
-    parent->deactivateChildren();
-    parent->setFailedChild(r.getActivePlan());
-    parent->setAllocationNeeded(true);
-    parent->clearChildren();
+    {
+        RunningPlan::ScopedWriteLock lck = parent->getWriteLock();
+        parent->deactivateChildren();
+        parent->setFailedChild(r.getActivePlan());
+        parent->setAllocationNeeded(true);
+        parent->clearChildren();
+    }
     r.setFailureHandlingNeeded(false);
 
     ALICA_DEBUG_MSG("RB: PlanReplace" << r.getActivePlan()->getName());

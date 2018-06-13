@@ -109,7 +109,6 @@ PlanChange RunningPlan::tick(RuleBook* rules)
 {
     PlanChange myChange = PlanChange::NoChange;
     {
-        ScopedWriteLock lck = getWriteLock();
         _cycleManagement.update();
         myChange = rules->visit(*this);
     }
@@ -120,7 +119,6 @@ PlanChange RunningPlan::tick(RuleBook* rules)
         childChange = rules->updateChange(childChange, rp->tick(rules));
     }
     if (childChange != PlanChange::NoChange && childChange != PlanChange::InternalChange) {
-        ScopedWriteLock lck = getWriteLock();
         myChange = rules->updateChange(myChange, rules->visit(*this));
     }
     return myChange;
