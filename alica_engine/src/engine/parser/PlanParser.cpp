@@ -24,8 +24,17 @@ PlanParser::PlanParser(PlanRepository* rep)
     this->sc = SystemConfig::getInstance();
     this->domainConfigFolder = this->sc->getConfigPath();
 
-    this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
-    this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
+    try {
+        this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
+    } catch (const std::runtime_error& error) {
+        AlicaEngine::abort("PP: Plan Directory does not exist.\n", error.what());
+    }
+
+    try {
+        this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
+    } catch (const std::runtime_error& error) {
+        AlicaEngine::abort("PP: Role Directory does not exist.\n", error.what());
+    }
 
     if (domainConfigFolder.find_last_of(FileSystem::PATH_SEPARATOR) != domainConfigFolder.length() - 1) {
         domainConfigFolder = domainConfigFolder + FileSystem::PATH_SEPARATOR;
@@ -51,10 +60,10 @@ PlanParser::PlanParser(PlanRepository* rep)
     std::cout << "PP: baseRolePath: " << baseRolePath << std::endl;
 #endif
     if (!(supplementary::FileSystem::pathExists(basePlanPath))) {
-        AlicaEngine::abort("PP: BasePlanPath does not exists " + basePlanPath);
+        AlicaEngine::abort("PP: BasePlanPath does not exist " + basePlanPath);
     }
     if (!(supplementary::FileSystem::pathExists(baseRolePath))) {
-        AlicaEngine::abort("PP: BaseRolePath does not exists " + baseRolePath);
+        AlicaEngine::abort("PP: BaseRolePath does not exist " + baseRolePath);
     }
 }
 
