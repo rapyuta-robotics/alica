@@ -39,7 +39,7 @@ public:
     virtual void run(void* msg) = 0;
     bool isProperlyStopped() const;
     void setEngine(AlicaEngine* engine) { _engine = engine; }
-    const std::string& getName() const { return name; }
+    const std::string& getName() const { return _name; }
     const BehaviourParameterMap& getParameters() const { return _configuration->getParameters(); }
 
     void setName(const std::string& name);
@@ -51,18 +51,17 @@ public:
     bool stop();
     bool start();
 
-    int getDelayedStart() const;
-    void setDelayedStart(long msDelayedStart);
-    int getInterval() const;
-    void setInterval(long msInterval);
+    void setDelayedStart(int32_t msDelayedStart) { _msDelayedStart = std::chrono::milliseconds(msDelayedStart); }
 
-    PlanInterface getPlanContext() const { return PlanInterface(_context); }
+    void setInterval(int32_t msInterval) { _msInterval = std::chrono::milliseconds(msInterval); }
+
+    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(_context); }
     void setRunningPlan(RunningPlan* rp) { _context = rp; }
 
     bool isSuccess() const;
-    void setSuccess(bool success);
+    void setSuccess();
     bool isFailure() const;
-    void setFailure(bool failure);
+    void setFailure();
 
     bool getParameter(const std::string& key, std::string& valueOut) const;
     void setTrigger(supplementary::ITrigger* trigger);
@@ -80,53 +79,46 @@ protected:
      */
     virtual void initialiseParameters(){};
 
+private:
+    void runInternalTimed();
+    void runInternalTriggered();
+    void initInternal();
+
     /**
      * The name of this behaviour.
      */
-    std::string name;
+    std::string _name;
 
     const BehaviourConfiguration* _configuration;
+    AlicaEngine* _engine;
+    RunningPlan* _context;
 
-    /**
-     * The running plan representing this behaviour within the PlanBase.
-     */
-
-    std::chrono::milliseconds msInterval;
-    std::chrono::milliseconds msDelayedStart;
     /**
      * is always true except when the behaviour is shutting down
      */
-    bool started;
-    bool callInit;
-
-    /**
-     * Tells us whether the behaviour is currently running (or active)
-     */
-    bool running;
-    std::atomic<bool> _inRun;
-
-    std::thread* runThread;                    /** < executes the runInternal and thereby the abstract run method */
-    supplementary::Timer* timer;               /** < triggers the condition_variable of the runThread, if this behaviour is timer
-                                                  triggered, alternative to behaviourTrigger*/
-    supplementary::ITrigger* behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
-                                                  is event triggered, alternative to timer */
-    std::condition_variable runCV;
-
-    AlicaEngine* _engine;
-
-private:
-    RunningPlan* _context;
-    void runInternal();
-    void initInternal();
-
-    std::mutex runCV_mtx;
+    bool _started;
+    bool _callInit;
     /**
      * The Success flag. Raised by a behaviour to indicate it reached whatever it meant to reach.
      */
-    bool success;
+    bool _success;
     /**
      * The Failure flag. Raised by a behaviour to indicate it has failed in some way.
      */
-    bool failure;
+    bool _failure;
+    /**
+     * Tells us whether the behaviour is currently running (or active)
+     */
+    bool _running;
+    std::atomic<bool> _inRun;
+
+    std::thread* _runThread; /** < executes the runInternal and thereby the abstract run method */
+
+    supplementary::ITrigger* _behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
+                                                  is event triggered, alternative to timer */
+    std::condition_variable _runCV;
+    mutable std::mutex _runLoopMutex;
+    std::chrono::milliseconds _msInterval;
+    std::chrono::milliseconds _msDelayedStart;
 };
 } /* namespace alica */

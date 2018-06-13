@@ -49,14 +49,14 @@ private:
     RunningPlan::ScopedReadLock _lck;
 };
 
-class PlanInterface
+class ThreadSafePlanInterface
 {
 public:
-    PlanInterface()
+    ThreadSafePlanInterface()
             : _rp(nullptr)
     {
     }
-    explicit PlanInterface(const RunningPlan* rp)
+    explicit ThreadSafePlanInterface(const RunningPlan* rp)
             : _rp(rp)
     {
     }

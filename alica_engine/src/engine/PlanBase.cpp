@@ -159,6 +159,7 @@ void PlanBase::run()
         // this should be done just before clearing fpEvents, to make sure no spurious pointers remain
         for (int i = static_cast<int>(_runningPlans.size()) - 1; i >= 0; --i) {
             if (_runningPlans[i]->isDeleteable()) {
+                assert(_runningPlans[i].use_count() == 1);
                 _runningPlans.erase(_runningPlans.begin() + i);
             }
         }
