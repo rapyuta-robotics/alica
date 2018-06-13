@@ -95,7 +95,6 @@ void TeamObserver::tick(RunningPlan* root)
 
         std::vector<const SimplePlanTree*> updatespts;
         AgentGrp noUpdates;
-        lock_guard<mutex> lock(this->simplePlanTreeMutex);
         for (auto& ele : _simplePlanTrees) {
             assert(_tm->isAgentActive(ele.second->getAgentId()));
 
@@ -163,7 +162,6 @@ void TeamObserver::cleanOwnSuccessMarks(RunningPlan* root)
         }
     }
     std::vector<const SimplePlanTree*> queue;
-    lock_guard<mutex> lock(this->simplePlanTreeMutex);
     for (const auto& pair : _simplePlanTrees) {
         if (pair.second.operator bool()) {
             queue.push_back(pair.second.get());
