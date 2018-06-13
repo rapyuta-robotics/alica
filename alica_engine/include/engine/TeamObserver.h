@@ -54,7 +54,6 @@ private:
     const RobotEngineData* me;
     TeamManager* _tm;
 
-    std::mutex simplePlanTreeMutex; // TODO: remove this mutex
     std::mutex _msgQueueMutex;
     mutable std::mutex successMarkMutex;
 

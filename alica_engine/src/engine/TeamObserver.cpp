@@ -44,8 +44,6 @@ TeamObserver::~TeamObserver() {}
 
 bool TeamObserver::updateTeamPlanTrees()
 {
-    lock_guard<mutex> lock(this->simplePlanTreeMutex);
-
     { // Get stuff out of the queue
         lock_guard<mutex> queueLock(_msgQueueMutex);
 
@@ -268,7 +266,6 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
  */
 void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan)
 {
-    lock_guard<mutex> lock(this->simplePlanTreeMutex);
     for (const auto& ele : _simplePlanTrees) {
         if (ele.second->containsPlan(plan)) {
             return;
