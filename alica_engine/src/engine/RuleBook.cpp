@@ -135,7 +135,7 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
     if (!r.getCycleManagement().mayDoUtilityCheck()) {
         return PlanChange::NoChange;
     }
-    RunningPlan* parent = r.getParent();
+    const RunningPlan* parent = r.getParent();
 
     AgentGrp robots;
     parent->getAssignment().getAgentsInState(parent->getActiveState(), robots);
@@ -411,7 +411,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
             continue;
         if (t->evalCondition(r)) {
             nextState = t->getOutState();
-            r.editConstraintStore().addCondition(((Condition*) t->getPreCondition()));
+            r.editConstraintStore().addCondition(t->getPreCondition());
             break;
         }
     }

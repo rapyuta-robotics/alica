@@ -60,12 +60,14 @@ struct PlanStateTriple
 /**
  * A RunningPlan represents a plan or a behaviour in execution, holding all information relevant at runtime.
  */
-
+// TODO remove enable_share_from_this
 class RunningPlan : public std::enable_shared_from_this<RunningPlan>
 {
 
     // TODO: read write locks to this class
 public:
+    using ScopedReadLock = std::unique_lock<std::mutex>;
+    using ScopedWriteLock = std::unique_lock<std::mutex>;
     struct PlanStatusInfo
     {
         PlanStatusInfo()
@@ -73,18 +75,18 @@ public:
                 , failCount(0)
                 , stateStartTime()
                 , planStartTime()
-                , active(false)
+                , active(PlanActivity::InActive)
                 , allocationNeeded(false)
                 , failHandlingNeeded(false)
         {
         }
         PlanStatus status;
+        PlanActivity active;
         AlicaTime stateStartTime;
         AlicaTime planStartTime;
 
         int failCount;
         bool failHandlingNeeded;
-        bool active;
         bool allocationNeeded;
     };
     static void init();
@@ -97,8 +99,14 @@ public:
     PlanStatus getStatus() const;
     AlicaTime getPlanStartTime() const { return _status.planStartTime; }
     AlicaTime getStateStartTime() const { return _status.stateStartTime; }
-    bool isActive() const { return _status.active; }
-    bool isRetired() const { return _status.status == PlanStatus::Retired; }
+    bool isActive() const { return _status.active == PlanActivity::Active; }
+    bool isRetired() const { return _status.active == PlanActivity::Retired; }
+    bool isDeleteable() const;
+
+    // Read/Write lock access, currently map to a single mutex
+    // for future use already defined apart
+    ScopedReadLock getReadLock() const { return ScopedReadLock(_accessMutex); }
+    ScopedWriteLock getWriteLock() { return ScopedWriteLock(_accessMutex); }
 
     const std::vector<RunningPlan*>& getChildren() const { return _children; }
     RunningPlan* getParent() const { return _parent; }
@@ -130,7 +138,6 @@ public:
     void setBasicBehaviour(BasicBehaviour* basicBehaviour) { _basicBehaviour = basicBehaviour; }
     void adaptAssignment(const RunningPlan& replacement);
     void clearFailures();
-    // void setActive(bool active);
 
     PlanChange tick(RuleBook* rules);
 
@@ -143,16 +150,14 @@ public:
     // Temporary helper:
     std::shared_ptr<RunningPlan> getSharedPointer() { return shared_from_this(); }
 
-    // const EntryPoint* getOwnEntryPoint() const;
-    // void setParent(std::weak_ptr<RunningPlan> s);
-
     // bool getFailHandlingNeeded() const;
 
     bool evalPreCondition() const;
     bool evalRuntimeCondition() const;
 
     void addChildren(const std::vector<RunningPlan*>& runningPlans);
-    // void addChildren(std::list<std::shared_ptr<RunningPlan>>& children);
+    void removeChild(RunningPlan* rp);
+
     void moveState(const State* nextState);
 
     void clearFailedChildren();
@@ -178,11 +183,8 @@ public:
     void attachPlanConstraints();
     bool recursiveUpdateAssignment(const std::vector<const SimplePlanTree*> spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
     void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const;
-    std::string toString() const;
     AgentIDConstPtr getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
     AlicaEngine* getAlicaEngine() const { return _ae; }
-
-    void sendLogMessage(int level, const std::string& message) const;
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
@@ -216,6 +218,8 @@ private:
     // iffy stuff
     AgentGrp _robotsAvail;
     std::map<const AbstractPlan*, int> _failedSubPlans;
+
+    mutable std::mutex _accessMutex;
 
     static AlicaTime assignmentProtectionTime;
 };

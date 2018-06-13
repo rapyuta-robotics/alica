@@ -155,6 +155,13 @@ void PlanBase::run()
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
             std::cout << "PB: MasterPlan Failed" << std::endl;
         }
+        // remove deletable plans:
+        // this should be done just before clearing fpEvents, to make sure no spurious pointers remain
+        for (int i = static_cast<int>(_runningPlans.size()) - 1; i >= 0; --i) {
+            if (_runningPlans[i]->isDeleteable()) {
+                _runningPlans.erase(_runningPlans.begin() + i);
+            }
+        }
         // lock for fpEvents
         {
             std::lock_guard<std::mutex> lock(_lomutex);

@@ -3,8 +3,8 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/IAlicaCommunication.h"
 #include "engine/PlanBase.h"
-#include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
@@ -31,7 +31,7 @@ namespace alica
  */
 BasicBehaviour::BasicBehaviour(const std::string& name)
         : name(name)
-        , engine(nullptr)
+        , _engine(nullptr)
         , failure(false)
         , success(false)
         , callInit(true)
@@ -39,11 +39,12 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _configuration(nullptr)
         , msInterval(100)
         , msDelayedStart(0)
+        , running(false)
+        , _inRun(false)
+        , behaviourTrigger(nullptr)
 {
-    this->running = false;
     this->timer = new supplementary::Timer(0, 0);
     this->timer->registerCV(&this->runCV);
-    this->behaviourTrigger = nullptr;
     this->runThread = new std::thread(&BasicBehaviour::runInternal, this);
 }
 
@@ -58,6 +59,11 @@ BasicBehaviour::~BasicBehaviour()
     if (behaviourTrigger != nullptr) {
         delete this->behaviourTrigger;
     }
+}
+
+bool BasicBehaviour::isProperlyStopped() const
+{
+    return !running && !timer->isRunning() && !_inRun;
 }
 
 void BasicBehaviour::setName(const std::string& name)
@@ -101,7 +107,7 @@ void BasicBehaviour::setInterval(long msInterval)
  */
 AgentIDConstPtr BasicBehaviour::getOwnId() const
 {
-    return this->engine->getTeamManager()->getLocalAgentID();
+    return _engine->getTeamManager()->getLocalAgentID();
 }
 
 /**
@@ -136,7 +142,7 @@ bool BasicBehaviour::start()
 void BasicBehaviour::setSuccess(bool success)
 {
     if (!this->success && success) {
-        _runningPlan->getAlicaEngine()->getPlanBase()->addFastPathEvent(_runningPlan);
+        _engine->getPlanBase()->addFastPathEvent(_context);
     }
     this->success = success;
 }
@@ -149,7 +155,7 @@ bool BasicBehaviour::isSuccess() const
 void BasicBehaviour::setFailure(bool failure)
 {
     if (!this->failure && failure) {
-        _runningPlan->getAlicaEngine()->getPlanBase()->addFastPathEvent(_runningPlan);
+        _engine->getPlanBase()->addFastPathEvent(_context);
     }
     this->failure = failure;
 }
@@ -163,36 +169,6 @@ void BasicBehaviour::setTrigger(supplementary::ITrigger* trigger)
 {
     this->behaviourTrigger = trigger;
     this->behaviourTrigger->registerCV(&this->runCV);
-}
-
-AssignmentView BasicBehaviour::agentsInEntryPointOfHigherPlan(const EntryPoint* ep) const
-{
-    assert(ep);
-    if (ep == nullptr) {
-        AssignmentView();
-    }
-    RunningPlan* cur = _runningPlan->getParent();
-    while (cur != nullptr) {
-        assert(cur->getActivePlan());
-        if (cur->getActivePlan() == ep->getPlan()) {
-            return cur->getAssignment().getAgentsWorking(ep);
-        }
-        cur = cur->getParent();
-    }
-    return AssignmentView();
-}
-
-AssignmentView BasicBehaviour::agentsInEntryPoint(const EntryPoint* ep) const
-{
-    assert(ep);
-    if (ep == nullptr) {
-        return AssignmentView();
-    }
-    RunningPlan* cur = _runningPlan->getParent();
-    if (cur != nullptr) {
-        return cur->getAssignment().getAgentsWorking(ep);
-    }
-    return AssignmentView();
 }
 
 void BasicBehaviour::initInternal()
@@ -223,6 +199,7 @@ void BasicBehaviour::runInternal()
 {
     std::unique_lock<std::mutex> lck(runCV_mtx);
     while (this->started) {
+        _inRun = false;
         this->runCV.wait(lck, [&] {
             if (behaviourTrigger == nullptr) {
                 return !this->started || this->timer->isNotifyCalled(&runCV);
@@ -230,11 +207,14 @@ void BasicBehaviour::runInternal()
                 return !this->started || (this->behaviourTrigger->isNotifyCalled(&runCV) && this->running);
             }
         }); // protection against spurious wake-ups
-        if (!this->started)
+        _inRun = true;
+        if (!this->started) {
             return;
+        }
 
-        if (this->callInit)
+        if (this->callInit) {
             this->initInternal();
+        }
 #ifdef BEH_DEBUG
         std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
 #endif
@@ -251,16 +231,13 @@ void BasicBehaviour::runInternal()
             sendLogMessage(4, err);
         }
 #ifdef BEH_DEBUG
-        const BehaviourConfiguration* conf = static_cast<const BehaviourConfiguration*>(_runningPlan->getActivePlan());
+        const BehaviourConfiguration* conf = static_cast<const BehaviourConfiguration*>(PlanInterface(_context).getActivePlan());
         if (!conf->isEventDriven()) {
             double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / conf->getFrequency() * 1000.0;
             if (dura > 0.1) {
-
                 std::stringstream ss;
                 ss << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura << "ms!";
                 sendLogMessage(2, ss.str());
-                // cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura
-                //	<< "ms!" << endl;
             }
         }
 #endif
@@ -272,45 +249,9 @@ void BasicBehaviour::runInternal()
     }
 }
 
-const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskName)
-{
-    RunningPlan* parent = _runningPlan->getParent();
-    if (parent == nullptr) {
-        return nullptr;
-    }
-    for (const EntryPoint* e : static_cast<const Plan*>(parent->getActivePlan())->getEntryPoints()) {
-        if (e->getTask()->getName() == taskName) {
-            return e;
-        }
-    }
-    return nullptr;
-}
-
-const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planName, const std::string& taskName)
-{
-    RunningPlan* cur = _runningPlan->getParent();
-    while (cur != nullptr) {
-        if (cur->getActivePlan()->getName() == planName) {
-            for (const EntryPoint* e : static_cast<const Plan*>(cur->getActivePlan())->getEntryPoints()) {
-                if (e->getTask()->getName() == taskName) {
-                    return e;
-                }
-            }
-            return nullptr;
-        }
-        cur = cur->getParent();
-    }
-    return nullptr;
-}
-
 void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 {
-    _runningPlan->sendLogMessage(level, message);
-}
-
-void BasicBehaviour::setEngine(AlicaEngine* engine)
-{
-    this->engine = engine;
+    _engine->getCommunicator()->sendLogMessage(level, message);
 }
 
 } /* namespace alica */

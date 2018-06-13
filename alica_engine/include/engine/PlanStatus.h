@@ -9,9 +9,15 @@ enum class PlanStatus
 {
     Running,
     Success,
-    Failed,
+    Failed
+};
+enum class PlanActivity
+{
+    InActive,
+    Active,
     Retired
 };
+
 inline const char* getPlanStatusName(PlanStatus ps)
 {
     switch (ps) {
@@ -21,7 +27,18 @@ inline const char* getPlanStatusName(PlanStatus ps)
         return "Success";
     case PlanStatus::Failed:
         return "Failed";
-    case PlanStatus::Retired:
+    }
+    return "Undefined";
+}
+
+inline const char* getPlanActivityName(PlanActivity pa)
+{
+    switch (pa) {
+    case PlanActivity::InActive:
+        return "InActive";
+    case PlanActivity::Active:
+        return "Active";
+    case PlanActivity::Retired:
         return "Retired";
     }
     return "Undefined";

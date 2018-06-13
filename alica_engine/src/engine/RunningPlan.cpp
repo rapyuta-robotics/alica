@@ -32,8 +32,6 @@
 
 #include <iostream>
 
-using std::shared_ptr;
-
 namespace alica
 {
 
@@ -55,7 +53,12 @@ RunningPlan::RunningPlan(AlicaEngine* ae)
 {
 }
 
-RunningPlan::~RunningPlan() {}
+RunningPlan::~RunningPlan()
+{
+    if (_parent) {
+        _parent->removeChild(this);
+    }
+}
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
         : _ae(ae)
@@ -89,24 +92,14 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc)
 {
 }
 
-/*
-bool RunningPlan::getFailHandlingNeeded() const
+bool RunningPlan::isDeleteable() const
 {
-    return _failHandlingNeeded;
+    if (!_children.empty())
+        return false; // children deregister from their parents
+    if (_status.active == PlanActivity::InActive)
+        return true; // shortcut for plans from planselector
+    return isRetired() && (!isBehaviour() || !_ae->getBehaviourPool()->isBehaviourRunningInContext(*this));
 }
-void RunningPlan::setFailHandlingNeeded(bool failHandlingNeeded)
-{
-    if (failHandlingNeeded) {
-        _status = PlanStatus::Failed;
-    } else {
-        if (_status == PlanStatus::Failed) {
-            _status = PlanStatus::Running;
-        }
-    }
-    _failHandlingNeeded = failHandlingNeeded;
-}
-*/
-
 /**
  * Called once per Engine iteration, performs all neccessary checks and executes rules from the rulebook.
  * @param rules a RuleBook
@@ -114,8 +107,12 @@ void RunningPlan::setFailHandlingNeeded(bool failHandlingNeeded)
  */
 PlanChange RunningPlan::tick(RuleBook* rules)
 {
-    _cycleManagement.update();
-    PlanChange myChange = rules->visit(*this);
+    PlanChange myChange = PlanChange::NoChange;
+    {
+        ScopedWriteLock lck = getWriteLock();
+        _cycleManagement.update();
+        myChange = rules->visit(*this);
+    }
     PlanChange childChange = PlanChange::NoChange;
     // attention: do not use for each here: children are modified
     for (int i = 0; i < static_cast<int>(_children.size()); ++i) {
@@ -123,6 +120,7 @@ PlanChange RunningPlan::tick(RuleBook* rules)
         childChange = rules->updateChange(childChange, rp->tick(rules));
     }
     if (childChange != PlanChange::NoChange && childChange != PlanChange::InternalChange) {
+        ScopedWriteLock lck = getWriteLock();
         myChange = rules->updateChange(myChange, rules->visit(*this));
     }
     return myChange;
@@ -190,12 +188,15 @@ void RunningPlan::addChildren(const std::vector<RunningPlan*>& runningPlans)
         if (iter != _failedSubPlans.end()) {
             r->_status.failCount = iter->second;
         }
-        if (_status.active) {
+        if (isActive()) {
             r->activate();
         }
     }
 }
-
+void RunningPlan::removeChild(RunningPlan* rp)
+{
+    _children.erase(std::find(_children.begin(), _children.end(), rp));
+}
 /**
  * Move this very robot to another state. Performs all neccessary operations, such as updating the assignment.
  * @param nextState A State
@@ -209,18 +210,6 @@ void RunningPlan::moveState(const State* nextState)
     _failedSubPlans.clear();
 }
 
-/*
-void RunningPlan::setChildren(list<shared_ptr<RunningPlan>> children)
-{
-    _children = children;
-}
-*/
-
-/*void RunningPlan::setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour)
-{
-    _basicBehaviour = basicBehaviour;
-}
-*/
 /**
  * Simple method to recursively print the plan-tree.
  */
@@ -234,12 +223,6 @@ void RunningPlan::printRecursive() const
     }
 }
 
-/*
-void RunningPlan::setActive(bool active)
-{
-    _active = active;
-}
-*/
 void RunningPlan::usePlan(const AbstractPlan* plan)
 {
     if (_activeTriple.plan != plan) {
@@ -354,7 +337,7 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
     bool reactivate = false;
 
     if (_activeTriple.state != newState) {
-        _status.active = false;
+        _status.active = PlanActivity::InActive;
         deactivateChildren();
         revokeAllConstraints();
         clearChildren();
@@ -408,7 +391,7 @@ void RunningPlan::accept(IPlanTreeVisitor* vis)
  */
 void RunningPlan::deactivate()
 {
-    _status.active = false;
+    _status.active = PlanActivity::Retired;
     if (isBehaviour()) {
         _ae->getBehaviourPool()->stopBehaviour(*this);
     } else {
@@ -473,7 +456,8 @@ bool RunningPlan::isAnyChildTaskSuccessful() const
  */
 void RunningPlan::activate()
 {
-    _status.active = true;
+    assert(_status.active != PlanActivity::Retired);
+    _status.active = PlanActivity::Active;
     if (isBehaviour()) {
         _ae->getBehaviourPool()->startBehaviour(*this);
     }
@@ -687,18 +671,6 @@ void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, i
     }
 }
 
-void RunningPlan::sendLogMessage(int level, const std::string& message) const
-{
-    _ae->getCommunicator()->sendLogMessage(level, message);
-}
-
-std::string RunningPlan::toString() const
-{
-    std::stringstream ss;
-    ss << *this;
-    return ss.str();
-}
-
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
 {
     out << "######## RP ##########" << std::endl;
@@ -715,7 +687,7 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     out << "AllocNeeded: " << psi.allocationNeeded << std::endl;
     out << "FailHandlingNeeded: " << psi.failHandlingNeeded << "\t";
     out << "FailCount: " << psi.failCount << std::endl;
-    out << "IsActive: " << psi.active << std::endl;
+    out << "Activity: " << getPlanActivityName(psi.active) << std::endl;
     out << "Status: " << getPlanStatusName(psi.status) << std::endl;
     out << "AvailRobots: ";
     for (AgentIDConstPtr id : r._robotsAvail) {

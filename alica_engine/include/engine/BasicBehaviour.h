@@ -1,9 +1,12 @@
 #pragma once
 
 #include "engine/Assignment.h"
+#include "engine/PlanInterface.h"
 #include "engine/Types.h"
 #include "engine/model/BehaviourConfiguration.h"
-#include "supplementary/AgentID.h"
+#include <supplementary/AgentID.h>
+
+#include <atomic>
 #include <chrono>
 #include <condition_variable>
 #include <memory>
@@ -34,6 +37,8 @@ public:
     BasicBehaviour(const std::string& name);
     virtual ~BasicBehaviour();
     virtual void run(void* msg) = 0;
+    bool isProperlyStopped() const;
+    void setEngine(AlicaEngine* engine) { _engine = engine; }
     const std::string& getName() const { return name; }
     const BehaviourParameterMap& getParameters() const { return _configuration->getParameters(); }
 
@@ -51,12 +56,11 @@ public:
     int getInterval() const;
     void setInterval(long msInterval);
 
-    RunningPlan* getRunningPlan() const { return _runningPlan; }
-    void setRunningPlan(RunningPlan* runningPlan) { _runningPlan = runningPlan; }
+    PlanInterface getPlanContext() const { return PlanInterface(_context); }
+    void setRunningPlan(RunningPlan* rp) { _context = rp; }
 
     bool isSuccess() const;
     void setSuccess(bool success);
-    void setEngine(AlicaEngine* engine);
     bool isFailure() const;
     void setFailure(bool failure);
 
@@ -76,14 +80,6 @@ protected:
      */
     virtual void initialiseParameters(){};
 
-    const EntryPoint* getParentEntryPoint(const std::string& taskName);
-
-    const EntryPoint* getHigherEntryPoint(const std::string& planName, const std::string& taskName);
-
-    // TODO: these methods may have race conditions, check and refactor
-    AssignmentView agentsInEntryPointOfHigherPlan(const EntryPoint* ep) const;
-
-    AssignmentView agentsInEntryPoint(const EntryPoint* ep) const;
     /**
      * The name of this behaviour.
      */
@@ -94,7 +90,7 @@ protected:
     /**
      * The running plan representing this behaviour within the PlanBase.
      */
-    RunningPlan* _runningPlan;
+
     std::chrono::milliseconds msInterval;
     std::chrono::milliseconds msDelayedStart;
     /**
@@ -107,6 +103,7 @@ protected:
      * Tells us whether the behaviour is currently running (or active)
      */
     bool running;
+    std::atomic<bool> _inRun;
 
     std::thread* runThread;                    /** < executes the runInternal and thereby the abstract run method */
     supplementary::Timer* timer;               /** < triggers the condition_variable of the runThread, if this behaviour is timer
@@ -115,9 +112,10 @@ protected:
                                                   is event triggered, alternative to timer */
     std::condition_variable runCV;
 
-    AlicaEngine* engine;
+    AlicaEngine* _engine;
 
 private:
+    RunningPlan* _context;
     void runInternal();
     void initInternal();
 

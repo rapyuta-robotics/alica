@@ -18,9 +18,10 @@ namespace alica
  * Basic Constructor.
  */
 BehaviourPool::BehaviourPool(AlicaEngine* ae)
+        : _ae(ae)
+        , _behaviourCreator(nullptr)
+
 {
-    this->ae = ae;
-    this->behaviourCreator = nullptr;
 }
 
 /**
@@ -36,21 +37,21 @@ BehaviourPool::~BehaviourPool() {}
  */
 bool BehaviourPool::init(IBehaviourCreator* bc)
 {
-    if (this->behaviourCreator != nullptr) {
-        delete this->behaviourCreator;
+    if (_behaviourCreator != nullptr) {
+        delete _behaviourCreator;
     }
 
-    this->behaviourCreator = bc;
+    _behaviourCreator = bc;
 
-    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
+    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = _ae->getPlanRepository()->getBehaviourConfigurations();
     for (const BehaviourConfiguration* beh : behaviourConfs) {
-        auto basicBeh = this->behaviourCreator->createBehaviour(beh->getId());
+        auto basicBeh = _behaviourCreator->createBehaviour(beh->getId());
         if (basicBeh != nullptr) {
             // set stuff from behaviour configuration in basic behaviour object
             basicBeh->setConfiguration(beh);
             basicBeh->setDelayedStart(beh->getDeferring());
             basicBeh->setInterval(1000 / beh->getFrequency());
-            basicBeh->setEngine(this->ae);
+            basicBeh->setEngine(_ae);
             basicBeh->init();
 
             _availableBehaviours.insert(make_pair(beh, basicBeh));
@@ -66,7 +67,7 @@ bool BehaviourPool::init(IBehaviourCreator* bc)
  */
 void BehaviourPool::stopAll()
 {
-    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = ae->getPlanRepository()->getBehaviourConfigurations();
+    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = _ae->getPlanRepository()->getBehaviourConfigurations();
     for (const BehaviourConfiguration* beh : behaviourConfs) {
         auto bbPtr = _availableBehaviours.at(beh);
         if (bbPtr == nullptr) {
@@ -115,10 +116,17 @@ void BehaviourPool::stopBehaviour(RunningPlan& rp)
                                                                                                        << " Plan Id: " << rp.getActivePlan()->getId());
     }
 }
-
-const std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>& BehaviourPool::getAvailableBehaviours() const
+bool BehaviourPool::isBehaviourRunningInContext(const RunningPlan& rp) const
 {
-    return _availableBehaviours;
+    if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp.getActivePlan())) {
+        const std::shared_ptr<BasicBehaviour>& bb = _availableBehaviours.at(bc);
+        if (bb != nullptr) {
+            if (bb->getPlanContext().mapsTo(&rp)) {
+                return !bb->isProperlyStopped();
+            }
+        }
+    }
+    return false;
 }
 
 } /* namespace alica */
