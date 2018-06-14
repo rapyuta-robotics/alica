@@ -108,7 +108,7 @@ Assignment& Assignment::operator=(const Assignment& o)
     _plan = o._plan;
     _assignmentData = o._assignmentData;
     _successData = o._successData;
-
+    _lastUtility = o._lastUtility;
     return *this;
 }
 

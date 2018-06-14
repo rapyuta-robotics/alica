@@ -72,7 +72,7 @@ public:
         toNextValid();
         return *this;
     }
-    bool operator==(const PartialAssignmentIterator& o) const { return _epIdx == o._epIdx; }
+    bool operator==(const PartialAssignmentIterator& o) const { return _agentIdx == o._agentIdx; }
     bool operator!=(const PartialAssignmentIterator& o) const { return !(*this == o); }
 
 private:
