@@ -253,7 +253,7 @@ std::stringstream& operator<<(std::stringstream& ss, const UtilityFunction& uf)
 {
 
     ss << "UtilityFunction: prioW: " << uf._priorityWeight << " simW: " << uf._similarityWeight << std::endl;
-    for (const USummand* utilSummand : uf._utilSummands) {
+    for (const std::unique_ptr<USummand>& utilSummand : uf._utilSummands) {
         ss << utilSummand->toString();
     }
     return ss;
