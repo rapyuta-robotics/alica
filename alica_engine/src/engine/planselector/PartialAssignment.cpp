@@ -85,12 +85,15 @@ void PartialAssignment::prepare(const Plan* p, const TaskAssignmentProblem* prob
     _plan = p;
     _problem = problem;
     _numAssignedAgents = 0;
+    _nextAgentIdx = 0;
     _assignment.clear();
     _assignment.resize(problem->getAgentCount(), -1);
+    _cardinalities.clear();
     _cardinalities.reserve(p->getEntryPoints().size());
     for (const EntryPoint* ep : p->getEntryPoints()) {
         _cardinalities.push_back(ep->getCardinality());
     }
+    _utility = UtilityInterval(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
 }
 
 bool PartialAssignment::assignUnassignedAgent(int agentIdx, int epIdx)

@@ -14,6 +14,9 @@
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
 
+#define ALICA_DEBUG_LEVEL_ALL
+#include <alica_common_config/debug_output.h>
+
 using std::endl;
 
 namespace alica
@@ -65,6 +68,7 @@ void Logger::processString(const std::string& event)
         this->eventStrings.push_back(event + "(FP)");
     }
     this->receivedEvent = true;
+    ALICA_DEBUG_MSG("Logger: " << this->eventStrings.back());
 }
 
 /**

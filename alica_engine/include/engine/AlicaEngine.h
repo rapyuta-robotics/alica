@@ -28,7 +28,6 @@ class RoleSet;
 class TeamObserver;
 class SyncModule;
 class AuthorityManager;
-class PlanSelector;
 class PlanBase;
 class ExpressionHandler;
 class VariableSyncModule;
@@ -74,7 +73,6 @@ public:
     PlanBase* getPlanBase() const { return planBase; }
     PlanParser* getPlanParser() const { return planParser; }
     PlanRepository* getPlanRepository() const { return planRepository; }
-    PlanSelector* getPlanSelector() const { return planSelector; }
     VariableSyncModule* getResultStore() const { return variableSyncModule; }
     IRoleAssignment* getRoleAssignment() const { return roleAssignment; }
     SyncModule* getSyncModul() const { return syncModul; }
@@ -128,7 +126,6 @@ private:
     const RoleSet* roleSet;
     VariableSyncModule* variableSyncModule;
     AuthorityManager* auth;
-    PlanSelector* planSelector;
     TeamManager* teamManager;
     SyncModule* syncModul;
     PlanRepository* planRepository;

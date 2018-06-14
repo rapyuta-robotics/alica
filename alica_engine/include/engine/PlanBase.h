@@ -42,6 +42,7 @@ public:
     PlanBase(AlicaEngine* ae, const Plan* masterplan);
     ~PlanBase();
     RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0].get(); }
+    PlanSelector* getPlanSelector() const { return _ruleBook.getPlanSelector(); }
     const RunningPlan* getDeepestNode() const;
 
     std::condition_variable* getStepModeCV();

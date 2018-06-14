@@ -17,9 +17,8 @@
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
 
+#include <alica_common_config/debug_output.h>
 #include <math.h>
-
-//#define PB_DEBUG
 
 namespace alica
 {
@@ -42,7 +41,7 @@ PlanBase::PlanBase(AlicaEngine* ae, const Plan* masterPlan)
         , _log(ae->getLog())
         , _statusMessage(nullptr)
         , _stepModeCV()
-        , _ruleBook(ae)
+        , _ruleBook(ae, this)
         , _treeDepth(0)
         , _running(false)
         , _isWaiting(false)
@@ -110,9 +109,8 @@ void PlanBase::start()
  */
 void PlanBase::run()
 {
-#ifdef PB_DEBUG
-    std::cout << "PB: Run-Method of PlanBase started. " << std::endl;
-#endif
+
+    ALICA_DEBUG_MSG("PB: Run-Method of PlanBase started. ");
     while (_running) {
         AlicaTime beginTime = _alicaClock->now();
         _log->itertionStarts();
@@ -153,7 +151,7 @@ void PlanBase::run()
             _rootNode = _ruleBook.initialisationRule(_masterPlan);
         }
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
-            std::cout << "PB: MasterPlan Failed" << std::endl;
+            ALICA_INFO_MSG("PB: MasterPlan Failed");
         }
         // remove deletable plans:
         // this should be done just before clearing fpEvents, to make sure no spurious pointers remain

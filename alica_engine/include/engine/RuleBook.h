@@ -32,19 +32,20 @@ class TeamManager;
 class RuleBook
 {
 public:
-    RuleBook(AlicaEngine* ae);
+    RuleBook(AlicaEngine* ae, PlanBase* pb);
     ~RuleBook();
     bool hasChangeOccurred() const { return _changeOccurred; }
     PlanChange visit(RunningPlan& r);
     PlanChange updateChange(PlanChange cur, PlanChange update);
     RunningPlan* initialisationRule(const Plan* masterPlan);
     void resetChangeOccurred() { _changeOccurred = false; }
+    PlanSelector* getPlanSelector() const { return _ps.get(); }
 
 private:
     TeamObserver* _to;
     TeamManager* _tm;
     SyncModule* _sm;
-    PlanSelector* _ps;
+    std::unique_ptr<PlanSelector> _ps;
     PlanBase* _pb;
     Logger* _log;
     int _maxConsecutiveChanges;

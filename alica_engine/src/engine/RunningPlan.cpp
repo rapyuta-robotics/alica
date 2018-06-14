@@ -193,7 +193,10 @@ void RunningPlan::addChildren(const std::vector<RunningPlan*>& runningPlans)
 }
 void RunningPlan::removeChild(RunningPlan* rp)
 {
-    _children.erase(std::find(_children.begin(), _children.end(), rp));
+    auto it = std::find(_children.begin(), _children.end(), rp);
+    if (it != _children.end()) {
+        _children.erase(it);
+    }
 }
 /**
  * Move this very robot to another state. Performs all neccessary operations, such as updating the assignment.

@@ -236,17 +236,11 @@ void Assignment::getAgentsWorkingAndFinished(const EntryPoint* ep, AgentGrp& o_a
 
 void Assignment::getAgentsInState(const State* s, AgentGrp& o_agents) const
 {
-    int i = 0;
-    for (const AgentStatePairs& asps : _assignmentData) {
-        if (s->getEntryPoint() == _plan->getEntryPoints()[i]) {
-            for (AgentStatePair asp : asps) {
-                if (asp.second == s) {
-                    o_agents.push_back(asp.first);
-                }
-            }
-            break;
+    const EntryPoint* ep = s->getEntryPoint();
+    for (AgentStatePair asp : _assignmentData[ep->getIndex()]) {
+        if (asp.second == s) {
+            o_agents.push_back(asp.first);
         }
-        ++i;
     }
 }
 
@@ -277,7 +271,9 @@ AgentsInStateView Assignment::getAgentsInState(const State* s) const
 void Assignment::clear()
 {
     _successData.clear();
-    _assignmentData.clear();
+    for (AgentStatePairs& asp : _assignmentData) {
+        asp.clear();
+    }
 }
 
 bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e)
@@ -439,7 +435,7 @@ std::ostream& operator<<(std::ostream& out, const Assignment& a)
     out << std::endl;
     const EntryPointGrp& eps = a._plan->getEntryPoints();
     const int numEps = eps.size();
-    out << "Assignment:" << std::endl;
+    assert(numEps == static_cast<int>(a._assignmentData.size()));
     for (int i = 0; i < numEps; ++i) {
         out << "EP: " << eps[i]->getId() << " Task: " << eps[i]->getTask()->getName() << " AgentIDs: ";
         for (AgentStatePair rsp : a._assignmentData[i]) {

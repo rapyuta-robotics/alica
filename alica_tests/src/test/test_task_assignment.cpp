@@ -97,7 +97,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     auto rp = make_shared<alica::RunningPlan>(ae, planMap.find(1407152758497));
     alica::AbstractPlanGrp inputPlans;
     inputPlans.push_back(planMap.find(1407152758497));
-    alica::PlanSelector* ps = ae->getPlanSelector();
+    alica::PlanSelector* ps = ae->getPlanBase()->getPlanSelector();
     auto plans = ps->getPlansForState(rp, inputPlans, robots);
     EXPECT_EQ(plans->size(), 1);
 }

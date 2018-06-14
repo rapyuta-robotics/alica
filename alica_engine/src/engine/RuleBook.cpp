@@ -17,6 +17,7 @@
 #include <engine/constraintmodul/ConditionStore.h>
 #include <engine/syncmodule/SyncModule.h>
 
+#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>
 
 namespace alica
@@ -27,17 +28,18 @@ using std::endl;
 /**
  * Basic constructor
  */
-RuleBook::RuleBook(AlicaEngine* ae)
+RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
         : _to(ae->getTeamObserver())
         , _tm(ae->getTeamManager())
-        , _ps(ae->getPlanSelector())
-        , _pb(ae->getPlanBase())
+        , _ps(new PlanSelector(ae, pb))
+        , _pb(pb)
         , _sm(ae->getSyncModul())
         , _log(ae->getLog())
         , _changeOccurred(true)
 {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     _maxConsecutiveChanges = (*sc)["Alica"]->get<int>("Alica.MaxRuleApplications", NULL);
+    assert(_to && _tm && _ps && _pb && _sm && _log);
 }
 
 RuleBook::~RuleBook() {}
@@ -386,7 +388,7 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
         r.useState(ep->getState());
         r.clearFailedChildren();
 
-        ALICA_DEBUG_MSG("RB: PlanTopFail" << r.getActivePlan()->getName());
+        ALICA_DEBUG_MSG("RB: PlanTopFail " << r.getActivePlan()->getName());
 
         _log->eventOccurred("TopFail");
         return PlanChange::InternalChange;

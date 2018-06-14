@@ -165,7 +165,6 @@ Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node)
         if (entryPoints.compare(val) == 0) {
             EntryPoint* ep = createEntryPoint(curChild);
             constructedEntryPoints.push_back(ep);
-            // plan->_entryPoints.push_back(ep);
             ep->setPlan(plan);
         } else if (states.compare(val) == 0) {
             string name = "";
@@ -1178,6 +1177,10 @@ void ModelFactory::computeReachabilities()
 #endif
     for (const std::pair<const int64_t, EntryPoint*>& ep : rep->_entryPoints) {
         ep.second->computeReachabilitySet();
+        // set backpointers:
+        for (const State* s : ep.second->_reachableStates) {
+            rep->_states[s->getId()]->_entryPoint = ep.second;
+        }
     }
 
 #ifdef MF_DEBUG
@@ -1210,11 +1213,10 @@ void ModelFactory::attachPlanReferences()
     this->transitionAimReferences.clear();
 
     // epStateReferences
-    for (pair<int64_t, int64_t> pairs : this->epStateReferences) {
+    for (std::pair<int64_t, int64_t> pairs : this->epStateReferences) {
         State* st = (State*) this->elements.find(pairs.second)->second;
         EntryPoint* ep = (EntryPoint*) this->elements.find(pairs.first)->second;
-        ep->setState(st);
-        st->setEntryPoint(ep);
+        ep->setState(st); // back reference will be set later
     }
     this->epStateReferences.clear();
 

@@ -1,6 +1,4 @@
 
-#define AE_DEBUG
-
 #include "engine/AlicaEngine.h"
 #include "engine/BehaviourPool.h"
 #include "engine/IConditionCreator.h"
@@ -18,10 +16,11 @@
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
 #include "engine/parser/PlanParser.h"
-#include "engine/planselector/PlanSelector.h"
+#include "engine/planselector/PartialAssignment.h"
 #include "engine/teammanager/TeamManager.h"
 #include <engine/syncmodule/SyncModule.h>
 
+#include <alica_common_config/debug_output.h>
 #include <supplementary/AgentIDManager.h>
 
 namespace alica
@@ -43,7 +42,6 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, const std::st
         const std::string& roleSetDir, bool stepEngine)
         : stepCalled(false)
         , planBase(nullptr)
-        , planSelector(nullptr)
         , communicator(nullptr)
         , alicaClock(nullptr)
         , sc(supplementary::SystemConfig::getInstance())
@@ -80,9 +78,7 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, const std::st
     if (!planRepository->verifyPlanBase()) {
         abort("Error in parsed plans.");
     }
-#ifdef AE_DEBUG
-    std::cout << "AE: Constructor finished!" << std::endl;
-#endif
+    ALICA_DEBUG_MSG("AE: Constructor finished!");
 }
 
 AlicaEngine::~AlicaEngine()
@@ -113,13 +109,9 @@ bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCre
     this->auth = new AuthorityManager(this);
     this->log = new Logger(this);
     this->roleAssignment->init();
-
-    if (!planSelector) {
-        this->planSelector = new PlanSelector(this);
-    }
-
     this->auth->init();
     this->planBase = new PlanBase(this, this->masterPlan);
+
     this->expressionHandler->attachAll();
     UtilityFunction::initDataStructures(this);
     this->syncModul->init();
@@ -192,9 +184,6 @@ void AlicaEngine::shutdown()
         delete this->planParser;
         this->planParser = nullptr;
     }
-
-    delete planSelector;
-    planSelector = nullptr;
 
     this->roleSet = nullptr;
     this->masterPlan = nullptr;

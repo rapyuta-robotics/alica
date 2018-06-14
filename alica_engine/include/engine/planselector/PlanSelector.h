@@ -20,7 +20,7 @@ class AlicaEngine;
 class PlanSelector
 {
 public:
-    PlanSelector(AlicaEngine* ae);
+    PlanSelector(AlicaEngine* ae, PlanBase* pb);
     virtual ~PlanSelector();
 
     virtual RunningPlan* getBestSimilarAssignment(const RunningPlan& rp);

@@ -32,12 +32,13 @@ namespace
 constexpr int POOL_SIZE = 10100;
 }
 
-PlanSelector::PlanSelector(AlicaEngine* ae)
+PlanSelector::PlanSelector(AlicaEngine* ae, PlanBase* pb)
         : _pap(POOL_SIZE)
         , _ae(ae)
         , _to(ae->getTeamObserver())
-        , _pb(ae->getPlanBase())
+        , _pb(pb)
 {
+    assert(_ae && _to && _pb);
 }
 
 PlanSelector::~PlanSelector() {}
@@ -145,6 +146,10 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         // ASSIGNMENT
         rp->setAssignment(ta.getNextBestAssignment(oldAss));
 
+        if (rp->getAssignment().getPlan() == nullptr) {
+            ALICA_DEBUG_MSG("PS: no good assignment found.");
+            return nullptr;
+        }
         // PLAN (needed for Conditionchecks)
         rp->usePlan(rp->getAssignment().getPlan());
 
