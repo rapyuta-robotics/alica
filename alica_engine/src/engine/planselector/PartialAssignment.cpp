@@ -53,7 +53,7 @@ bool PartialAssignment::isGoal() const
     }
     // Every EntryPoint should be satisfied according to his minCar
     for (const DynCardinality& dc : _cardinalities) {
-        if (dc.getMin() >= 0) {
+        if (dc.getMin() > 0) {
             return false;
         }
     }
@@ -105,6 +105,7 @@ bool PartialAssignment::assignUnassignedAgent(int agentIdx, int epIdx)
         if (_nextAgentIdx == agentIdx) {
             ++_nextAgentIdx;
         }
+        ++_numAssignedAgents;
         return true;
     }
     return false;
@@ -210,11 +211,11 @@ bool PartialAssignment::compare(const PartialAssignment* a, const PartialAssignm
     assert(a->getProblem() == b->getProblem());
     const int64_t aval = static_cast<int64_t>(std::round(a->getUtility().getMax() * PRECISION));
     const int64_t bval = static_cast<int64_t>(std::round(b->getUtility().getMax() * PRECISION));
-    if (aval > bval) {
-        // a has higher possible utility
-        return true;
-    } else if (aval < bval) {
+    if (aval < bval) {
         // b has higher possible utility
+        return true;
+    } else if (aval > bval) {
+        // a has higher possible utility
         return false;
     }
     // Now we are sure that both partial assignments have the same utility
@@ -224,22 +225,22 @@ bool PartialAssignment::compare(const PartialAssignment* a, const PartialAssignm
         return true;
     }
     // Now we are sure that both partial assignments have the same utility and the same plan id
-    if (a->getAssignedAgentCount() > b->getAssignedAgentCount()) {
+    if (a->getAssignedAgentCount() < b->getAssignedAgentCount()) {
         return true;
-    } else if (a->getAssignedAgentCount() < b->getAssignedAgentCount()) {
+    } else if (a->getAssignedAgentCount() > b->getAssignedAgentCount()) {
         return false;
     }
-    if (a->getUtility().getMin() > b->getUtility().getMin()) {
+    if (a->getUtility().getMin() < b->getUtility().getMin()) {
         // other has higher actual utility
         return true;
-    } else if (a->getUtility().getMin() < b->getUtility().getMin()) {
+    } else if (a->getUtility().getMin() > b->getUtility().getMin()) {
         // this has higher actual utility
         return false;
     }
     for (int i = 0; i < static_cast<int>(a->_assignment.size()); ++i) {
-        if (a->_assignment[i] > b->_assignment[i]) {
+        if (a->_assignment[i] < b->_assignment[i]) {
             return true;
-        } else if (a->_assignment[i] < b->_assignment[i]) {
+        } else if (a->_assignment[i] > b->_assignment[i]) {
             return false;
         }
     }
