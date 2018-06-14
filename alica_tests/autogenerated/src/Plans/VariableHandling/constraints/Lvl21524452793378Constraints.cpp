@@ -41,11 +41,11 @@ void Constraint1524453266123::getConstraint(shared_ptr<ProblemDescriptor> c, sha
     /*PROTECTED REGION ID(cc1524453266123) ENABLED START*/
     /*PROTECTED REGION ID(cc1524452937477) ENABLED START*/
     assert(c->getStaticVars().size() == 3);
-    assert(c->getDomainVars().size() == 1);
-    assert(c->getDomainVars()[0].getVars().size() == 2);
+    assert(c->getAgentVars().size() == 1);
+    assert(c->getAgentVars()[0].getVars().size() == 2);
 
-    autodiff::Variable* xv = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[0]);
-    autodiff::Variable* yv = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[1]);
+    autodiff::Variable* xv = static_cast<autodiff::Variable*>(c->getAgentVars()[0].getVars()[0]);
+    autodiff::Variable* yv = static_cast<autodiff::Variable*>(c->getAgentVars()[0].getVars()[1]);
 
     xv->editRange().intersect(50.0, 150.0);
     yv->editRange().intersect(50.0, 150.0);

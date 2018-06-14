@@ -24,6 +24,10 @@ public:
     }
     RunningPlan::ScopedReadLock& getLock() { return _lck; }
     const RunningPlan* get() const { return _rp; }
+    const RunningPlan* operator->() const { return get(); }
+    const RunningPlan& operator*() const { return *_rp; }
+
+    operator bool() const { return _rp != nullptr; }
 
 private:
     const RunningPlan* _rp;
@@ -61,6 +65,16 @@ public:
     {
     }
     bool mapsTo(const RunningPlan* rp) const { return _rp == rp; }
+
+    // Non locked thread safe reads:
+    // Reads of const members are thread safe (rp's lifetime is deemed long enough):
+
+    AlicaEngine* getAlicaEngine() const { return _rp->getAlicaEngine(); }
+
+    // Obtain scoped lock:
+    ReadLockedPlanPointer getRunningPlan() const { return ReadLockedPlanPointer(_rp); }
+
+    // Locked reads
 
     SafeAssignmentView agentsInEntryPointOfHigherPlan(const EntryPoint* ep) const;
 

@@ -13,7 +13,7 @@ TriggerA::TriggerA()
     /*PROTECTED REGION ID(con1428508297492) ENABLED START*/ // Add additional options here
     this->callCounter = 0;
     this->initCounter = 0;
-    this->behaviourTrigger = alicaTests::TestWorldModel::getOne()->trigger1;
+    setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
     /*PROTECTED REGION END*/
 }
 TriggerA::~TriggerA()

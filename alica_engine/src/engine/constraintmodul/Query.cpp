@@ -76,12 +76,12 @@ void Query::fillBufferFromQuery()
     _uniqueVarStore.initWith(_queriedStaticVariables);
 }
 
-bool Query::collectProblemStatement(const RunningPlan* rp, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset)
+bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset)
 {
 
     AlicaTime time;
 #ifdef ALICA_DEBUG_ENABLED
-    time = rp->getAlicaEngine()->getAlicaClock()->now();
+    time = pi.getAlicaEngine()->getAlicaClock()->now();
 #endif
 
     clearTemporaries();
@@ -91,52 +91,54 @@ bool Query::collectProblemStatement(const RunningPlan* rp, ISolverBase* solver, 
     ALICA_DEBUG_MSG("Query: Initial static buffer Size: " << _staticVars.getCurrent().size());
     ALICA_DEBUG_MSG("Query: Initial domain buffer Size: " << _domainVars.getCurrent().size());
     ALICA_DEBUG_MSG("Query: Starting Query with static Vars:" << std::endl << _uniqueVarStore);
+    {
+        ReadLockedPlanPointer rp = pi.getRunningPlan();
+        // Goes recursive upwards in the plan tree and does three steps on each level.
+        while (rp && (_staticVars.hasCurrentlyAny() || _domainVars.hasCurrentlyAny())) {
 
-    // Goes recursive upwards in the plan tree and does three steps on each level.
-    while (rp != nullptr && (_staticVars.hasCurrentlyAny() || _domainVars.hasCurrentlyAny())) {
+            ALICA_DEBUG_MSG("Query: Plantree-LVL of " << rp->getActivePlan()->getName() << std::endl << _uniqueVarStore);
 
-        ALICA_DEBUG_MSG("Query: Plantree-LVL of " << rp->getActivePlan()->getName() << std::endl << _uniqueVarStore);
+            // 1. fill the query's static and domain variables, as well as its problem parts
+            rp->getConstraintStore().acceptQuery(*this, rp.get());
+            // next should be empty, current full
 
-        // 1. fill the query's static and domain variables, as well as its problem parts
-        rp->getConstraintStore().acceptQuery(*this, rp);
-        // next should be empty, current full
+            ALICA_DEBUG_MSG("Query: Size of problemParts is " << _problemParts.size());
 
-        ALICA_DEBUG_MSG("Query: Size of problemParts is " << _problemParts.size());
-
-        // 2. process bindings for plantype
-        if (rp->getPlanType() != nullptr) {
-            for (const Parametrisation* p : rp->getPlanType()->getParametrisation()) {
-                if (p->getSubPlan() == rp->getActivePlan() && _staticVars.hasCurrently(p->getSubVar())) {
-                    _staticVars.editNext().push_back(p->getVar());
-                    _uniqueVarStore.addVarTo(p->getSubVar(), p->getVar());
+            // 2. process bindings for plantype
+            if (rp->getPlanType() != nullptr) {
+                for (const Parametrisation* p : rp->getPlanType()->getParametrisation()) {
+                    if (p->getSubPlan() == rp->getActivePlan() && _staticVars.hasCurrently(p->getSubVar())) {
+                        _staticVars.editNext().push_back(p->getVar());
+                        _uniqueVarStore.addVarTo(p->getSubVar(), p->getVar());
+                    }
                 }
+                /**
+                 * Overwrite relevantStaticVariables for having only the
+                 * static variables of the current plan tree level for
+                 * the next iteration. Each while-iteration goes one level up.
+                 */
+                _staticVars.flip();
             }
-            /**
-             * Overwrite relevantStaticVariables for having only the
-             * static variables of the current plan tree level for
-             * the next iteration. Each while-iteration goes one level up.
-             */
-            _staticVars.flip();
-        }
 
-        // 3. process bindings for state
-        RunningPlan* parent = rp->getParent();
-        if (parent && parent->getActiveState() != nullptr) {
-            _staticVars.editNext().clear();
-            for (const Parametrisation* p : parent->getActiveState()->getParametrisation()) {
-                if ((p->getSubPlan() == rp->getActivePlan() || p->getSubPlan() == rp->getPlanType()) && _staticVars.hasCurrently(p->getSubVar())) {
-                    _staticVars.editNext().push_back(p->getVar());
-                    _uniqueVarStore.addVarTo(p->getSubVar(), p->getVar());
+            // 3. process bindings for state
+            RunningPlan* parent = rp->getParent();
+            if (parent && parent->getActiveState() != nullptr) {
+                _staticVars.editNext().clear();
+                for (const Parametrisation* p : parent->getActiveState()->getParametrisation()) {
+                    if ((p->getSubPlan() == rp->getActivePlan() || p->getSubPlan() == rp->getPlanType()) && _staticVars.hasCurrently(p->getSubVar())) {
+                        _staticVars.editNext().push_back(p->getVar());
+                        _uniqueVarStore.addVarTo(p->getSubVar(), p->getVar());
+                    }
                 }
+                /**
+                 * Overwrite relevantStaticVariables for having only the
+                 * static variables of the current plan tree level for
+                 * the next iteration. Each while-iteration goes one level up.
+                 */
+                _staticVars.flip();
             }
-            /**
-             * Overwrite relevantStaticVariables for having only the
-             * static variables of the current plan tree level for
-             * the next iteration. Each while-iteration goes one level up.
-             */
-            _staticVars.flip();
+            rp.moveUp();
         }
-        rp = parent;
     }
 
     ALICA_DEBUG_MSG("Query: " << _uniqueVarStore);
@@ -173,7 +175,7 @@ bool Query::collectProblemStatement(const RunningPlan* rp, ISolverBase* solver, 
     ALICA_DEBUG_MSG("Query: Number of relevant static variables: " << domOffset);
     ALICA_DEBUG_MSG("Query: Number of relevant domain variables: " << _domainVars.getCurrent().size());
     ALICA_DEBUG_MSG("Query: Total number of relevant variables: " << _relevantVariables.size());
-    ALICA_DEBUG_MSG("Query: PrepTime: " << (rp->getAlicaEngine()->getAlicaClock()->now() - time).inMicroseconds() << "us");
+    ALICA_DEBUG_MSG("Query: PrepTime: " << (pi.getAlicaEngine()->getAlicaClock()->now() - time).inMicroseconds() << "us");
 
     return true;
 }

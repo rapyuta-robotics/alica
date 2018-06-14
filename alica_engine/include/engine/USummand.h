@@ -35,6 +35,11 @@ public:
             : _weight(0.0)
     {
     }
+    USummand(double weight)
+            : _weight(weight)
+    {
+    }
+
     virtual ~USummand() {}
 
     void addEntryPoint(const EntryPoint* ep) { _relevantEntryPoints.push_back(ep); }

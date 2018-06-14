@@ -6,53 +6,39 @@
  */
 
 #include "DummyTestSummand.h"
-#include "engine/IAssignment.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/planselector/IAssignment.h"
 #include "supplementary/AgentID.h"
 #include <TestWorldModel.h>
 
 namespace alica
 {
 
-DummyTestSummand::DummyTestSummand(double weight, string name, long id, vector<long>& relevantEntryPointIds)
+DummyTestSummand::DummyTestSummand(double weight)
+        : USummand(weight)
 {
-    this->weight = weight;
-    this->name = name;
-    this->id = id;
-    this->relevantEntryPointIds = relevantEntryPointIds;
     this->angleBallOpp = 0;
     this->velAngle = 0;
     this->robotId = nullptr;
     this->sb = 0;
 }
 
-DummyTestSummand::~DummyTestSummand()
+DummyTestSummand::~DummyTestSummand() {}
+
+UtilityInterval DummyTestSummand::eval(IAssignment ass) const
 {
-    // TODO Auto-generated destructor stub
-}
+    UtilityInterval ui(0.0, 1.0);
 
-void DummyTestSummand::cacheEvalData() {}
-
-UtilityInterval DummyTestSummand::eval(IAssignment* ass)
-{
-    ui.setMin(0.0);
-    ui.setMax(1.0);
-    const AgentGrp* relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
-
-    for (int i = 0; i < static_cast<int>(relevantRobots->size()); ++i) {
-        if (relevantRobots->at(i) == this->robotId) {
+    for (AgentIDConstPtr agent : ass.getAgentsWorking(_relevantEntryPoints[0])) {
+        if (agent == this->robotId) {
             ui.setMin(0.5);
         } else {
             ui.setMin(0.0);
         }
     }
-    if (this->relevantEntryPoints.size() > 1) {
-        relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[1]);
-
-        for (int i = 0; i < static_cast<int>(relevantRobots->size()); ++i) {
-            if (relevantRobots->at(i) == this->robotId) {
-                ui.setMin(ui.getMin());
-            } else {
+    if (_relevantEntryPoints.size() > 1) {
+        for (AgentIDConstPtr agent : ass.getAgentsWorking(_relevantEntryPoints[1])) {
+            if (agent != this->robotId) {
                 ui.setMin(ui.getMin() + 0.5);
             }
         }

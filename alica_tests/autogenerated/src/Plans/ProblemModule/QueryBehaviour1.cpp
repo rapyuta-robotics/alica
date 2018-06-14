@@ -26,7 +26,7 @@ void QueryBehaviour1::run(void* msg)
     /*PROTECTED REGION ID(run1479556104511) ENABLED START*/ // Add additional options here
     callCounter++;
     // cout << "QueryBehaviour1 was called " << callCounter << " times!" << endl;
-    query->getSolution<reasoner::CGSolver, double>(runningPlan, result);
+    query->getSolution<reasoner::CGSolver, double>(getPlanContext(), result);
     /*PROTECTED REGION END*/
 }
 void QueryBehaviour1::initialiseParameters()

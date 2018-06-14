@@ -24,7 +24,7 @@ void MidFieldStandard::run(void* msg)
     /*PROTECTED REGION ID(run1402488696205) ENABLED START*/ // Add additional options here
     callCounter++;
     if (callCounter > 10) {
-        this->setSuccess(true);
+        this->setSuccess();
     }
     /*PROTECTED REGION END*/
 }

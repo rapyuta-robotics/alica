@@ -31,12 +31,7 @@ UtilityFunction::UtilityFunction(double priorityWeight, double similarityWeight,
 {
 }
 
-UtilityFunction::~UtilityFunction()
-{
-    for (USummand* summand : _utilSummands) {
-        delete summand;
-    }
-}
+UtilityFunction::~UtilityFunction() {}
 
 /**
  * Evaluates the utility function according to the priorities of the assigned
@@ -76,7 +71,7 @@ UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Ass
     // Sum up all normal utility summands
     UtilityInterval curUI;
 
-    for (USummand* us : _utilSummands) {
+    for (const std::unique_ptr<USummand>& us : _utilSummands) {
 
         curUI = us->eval(wrapper);
         // if a summand deny assignment, return -1 for forbidden assignments
@@ -102,7 +97,7 @@ UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Ass
 
 void UtilityFunction::cacheEvalData()
 {
-    for (USummand* us : _utilSummands) {
+    for (const std::unique_ptr<USummand>& us : _utilSummands) {
         us->cacheEvalData();
     }
 }

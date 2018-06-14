@@ -15,10 +15,10 @@ SafeAssignmentView PlanInterface::agentsInEntryPointOfHigherPlan(const EntryPoin
     }
     ReadLockedPlanPointer cur(_runningPlan);
     cur.moveUp();
-    while (cur.get() != nullptr) {
-        assert(cur.get()->getActivePlan());
-        if (cur.get()->getActivePlan() == ep->getPlan()) {
-            return SafeAssignmentView(cur.get()->getAssignment(), ep->getIndex(), std::move(cur));
+    while (cur) {
+        assert(cur->getActivePlan());
+        if (cur->getActivePlan() == ep->getPlan()) {
+            return SafeAssignmentView(cur->getAssignment(), ep->getIndex(), std::move(cur));
         }
         cur.moveUp();
     }
@@ -33,7 +33,7 @@ SafeAssignmentView PlanInterface::agentsInEntryPoint(const EntryPoint* ep) const
     }
     ReadLockedPlanPointer cur(_runningPlan);
     cur.moveUp();
-    if (cur.get() != nullptr) {
+    if (cur) {
         return SafeAssignmentView(cur->getAssignment(), ep->getIndex(), std::move(cur));
     }
     return SafeAssignmentView();
@@ -45,10 +45,10 @@ const EntryPoint* PlanInterface::getParentEntryPoint(const std::string& taskName
     {
         ReadLockedPlanPointer cur(_runningPlan);
         cur.moveUp();
-        if (cur.get() == nullptr) {
+        if (!cur) {
             return nullptr;
         }
-        parentPlan = static_cast<const Plan*>(cur.get()->getActivePlan());
+        parentPlan = static_cast<const Plan*>(cur->getActivePlan());
     }
     for (const EntryPoint* e : parentPlan->getEntryPoints()) {
         if (e->getTask()->getName() == taskName) {
@@ -64,9 +64,9 @@ const EntryPoint* PlanInterface::getHigherEntryPoint(const std::string& planName
     {
         ReadLockedPlanPointer cur(_runningPlan);
         cur.moveUp();
-        while (cur.get() != nullptr) {
-            if (cur.get()->getActivePlan()->getName() == planName) {
-                parentPlan = static_cast<const Plan*>(cur.get()->getActivePlan());
+        while (cur) {
+            if (cur->getActivePlan()->getName() == planName) {
+                parentPlan = static_cast<const Plan*>(cur->getActivePlan());
                 break;
             }
             cur.moveUp();

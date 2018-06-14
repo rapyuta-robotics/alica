@@ -21,7 +21,7 @@ SuccessSpam::~SuccessSpam()
 void SuccessSpam::run(void* msg)
 {
     /*PROTECTED REGION ID(run1522377401286) ENABLED START*/ // Add additional options here
-    setSuccess(true);
+    setSuccess();
     /*PROTECTED REGION END*/
 }
 void SuccessSpam::initialiseParameters()

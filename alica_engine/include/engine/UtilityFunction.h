@@ -24,8 +24,8 @@ public:
     UtilityFunction();
     UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan);
     ~UtilityFunction();
-    const std::vector<USummand*>& getUtilSummands() const { return _utilSummands; };
-    std::vector<USummand*>& editUtilSummands() { return _utilSummands; };
+    const std::vector<std::unique_ptr<USummand>>& getUtilSummands() const { return _utilSummands; };
+    std::vector<std::unique_ptr<USummand>>& editUtilSummands() { return _utilSummands; };
 
     // double eval(const RunningPlan* newRp, const RunningPlan* oldRp) const;
     UtilityInterval eval(const PartialAssignment* newAss, const Assignment* oldAss) const;
@@ -46,7 +46,7 @@ private:
     UtilityInterval getSimilarity(IAssignment newAss, const Assignment* oldAss) const;
 
     const Plan* _plan;
-    std::vector<USummand*> _utilSummands;
+    std::vector<std::unique_ptr<USummand>> _utilSummands;
 
     // For default priority based utility summand (which is integrated in every UF)
     std::map<TaskRoleStruct, double> _priorityMatrix;

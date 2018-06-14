@@ -34,6 +34,8 @@ public:
     {
     }
     int getTotalAgentCount() const { return _impl->getTotalAgentCount(); }
+    int getAssignedAgentCount() const { return _impl->getAssignedAgentCount(); }
+    int getUnAssignedAgentCount() const { return getTotalAgentCount() - getAssignedAgentCount(); }
     int getEntryPointCount() const { return _impl->getEntryPointCount(); }
     const EntryPoint* getEntryPoint(int idx) const { return _impl->getPlan()->getEntryPoints()[idx]; }
 

@@ -3,9 +3,9 @@
 namespace alica
 {
 
-UtilityFunction DefaultUtilityFunction(const Plan* plan)
+DefaultUtilityFunction::DefaultUtilityFunction(const Plan* plan)
+        : UtilityFunction(1.0, 0.0, plan)
 {
-    return UtilityFunction(1.0, 0.0, plan);
 }
 
 } /* namespace alica */

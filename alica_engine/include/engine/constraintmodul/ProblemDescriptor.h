@@ -20,6 +20,9 @@ public:
     explicit ProblemDescriptor(SolverContext* ctx);
     SolverTerm* getConstraint() const { return _constraint; }
     SolverTerm* getUtility() const { return _utility; }
+
+    SolverContext* getContext() const { return _context; }
+
     const std::vector<SolverVariable*>& getStaticVars() const { return _staticVars; }
 
     const std::vector<AgentSolverVariables>& getAgentVars() const { return _domainVars; }
@@ -39,8 +42,6 @@ public:
 
     ProblemDescriptor(const ProblemDescriptor&) = delete;
     ProblemDescriptor& operator=(const ProblemDescriptor&) = delete;
-
-    SolverContext* getContext() const { return _context; }
 
 private:
     friend ProblemPart;

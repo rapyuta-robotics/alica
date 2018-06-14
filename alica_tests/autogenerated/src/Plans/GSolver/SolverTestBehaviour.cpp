@@ -28,7 +28,7 @@ void SolverTestBehaviour::run(void* msg)
     callCounter++;
     // std::cout << "SolverTestBehaviour was called " << callCounter << " times!" << std::endl;
 
-    _query.getSolution<reasoner::CGSolver, double>(runningPlan, result);
+    _query.getSolution<reasoner::CGSolver, double>(getPlanContext(), result);
     /*PROTECTED REGION END*/
 }
 void SolverTestBehaviour::initialiseParameters()
