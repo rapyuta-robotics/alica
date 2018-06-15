@@ -146,25 +146,36 @@ void alica::CycleManager::setNewAllocDiff(const Assignment& oldAss, const Assign
     if (!enabled) {
         return;
     }
-    assert(newAss.getPlan() == oldAss.getPlan());
 
     std::lock_guard<mutex> lock(this->allocationHistoryMutex);
 
     this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
     this->allocationHistory[this->newestAllocationDifference]->reset();
-    const int epCount = oldAss.getEntryPointCount();
+    const int oldEpCount = oldAss.getEntryPointCount();
+    if (newAss.getPlan() == oldAss.getPlan()) {
+        for (int i = 0; i < oldEpCount; ++i) {
+            const AgentStatePairs& newAgents = newAss.getAgentStates(i);
+            const AgentStatePairs& oldAgents = oldAss.getAgentStates(i);
 
-    for (int i = 0; i < epCount; ++i) {
-        const AgentStatePairs& newAgents = newAss.getAgentStates(i);
-        const AgentStatePairs& oldAgents = oldAss.getAgentStates(i);
-
-        for (AgentStatePair oldp : oldAgents) {
-            if (!newAgents.hasAgent(oldp.first)) {
-                this->allocationHistory[this->newestAllocationDifference]->editSubtractions().emplace_back(newAss.getEntryPoint(i), oldp.first);
+            for (AgentStatePair oldp : oldAgents) {
+                if (!newAgents.hasAgent(oldp.first)) {
+                    this->allocationHistory[this->newestAllocationDifference]->editSubtractions().emplace_back(newAss.getEntryPoint(i), oldp.first);
+                }
+            }
+            for (AgentStatePair newp : newAgents) {
+                if (!oldAgents.hasAgent(newp.first)) {
+                    this->allocationHistory[this->newestAllocationDifference]->editAdditions().emplace_back(newAss.getEntryPoint(i), newp.first);
+                }
             }
         }
-        for (AgentStatePair newp : newAgents) {
-            if (!oldAgents.hasAgent(newp.first)) {
+    } else {
+        for (int i = 0; i < oldEpCount; ++i) {
+            for (AgentStatePair oldp : oldAss.getAgentStates(i)) {
+                this->allocationHistory[this->newestAllocationDifference]->editSubtractions().emplace_back(oldAss.getEntryPoint(i), oldp.first);
+            }
+        }
+        for (int i = 0; i < newAss.getEntryPointCount(); ++i) {
+            for (AgentStatePair newp : newAss.getAgentStates(i)) {
                 this->allocationHistory[this->newestAllocationDifference]->editAdditions().emplace_back(newAss.getEntryPoint(i), newp.first);
             }
         }
