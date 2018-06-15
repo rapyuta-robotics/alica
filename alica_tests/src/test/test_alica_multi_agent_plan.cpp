@@ -115,8 +115,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
         if (i > 11 && i < 15) {
             ASSERT_EQ(ae->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
             ASSERT_EQ(ae2->getPlanBase()->getRootNode()->getActiveState()->getId(), 1413201213955);
-            ASSERT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getPlan()->getName(), string("MultiAgentTestPlan"));
-            ASSERT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getPlan()->getName(), string("MultiAgentTestPlan"));
+            ASSERT_EQ(ae->getPlanBase()->getRootNode()->getChildren()[0]->getActivePlan()->getName(), string("MultiAgentTestPlan"));
+            ASSERT_EQ(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActivePlan()->getName(), string("MultiAgentTestPlan"));
         }
         if (i == 15) {
             for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
@@ -133,32 +133,32 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             cout << "2--------- Engagement to cooperative plan passed ---------" << endl;
         }
         if (i == 16) {
-            ASSERT_TRUE((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936 ||
-                        (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936)
+            ASSERT_TRUE(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936 ||
+                        ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936)
                     << endl
-                    << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
-                    << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << endl;
+                    << ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
+                    << ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() << endl;
 
-            ASSERT_TRUE((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807264574 ||
-                        (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807264574)
+            ASSERT_TRUE(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574 ||
+                        ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574)
                     << endl
-                    << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
-                    << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << endl;
+                    << ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
+                    << ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() << endl;
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(false);
             alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(false);
             cout << "3--------- Passed transitions in subplan passed ---------" << endl;
         }
         if (i >= 17 && i <= 18) {
-            ASSERT_TRUE((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936 ||
-                        (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413201030936)
-                    << "AE State: " << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId()
-                    << " AE2 State: " << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << endl;
-            ASSERT_TRUE((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807264574 ||
-                        (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() == 1413807264574)
-                    << "AE State: " << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
-                    << (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->toString() << endl
-                    << " AE2 State: " << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId() << " "
-                    << (*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->toString() << endl;
+            ASSERT_TRUE(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936 ||
+                        ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936)
+                    << "AE State: " << ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId()
+                    << " AE2 State: " << ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() << endl;
+            ASSERT_TRUE(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574 ||
+                        ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574)
+                    << "AE State: " << ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
+                    << ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->toString() << endl
+                    << " AE2 State: " << ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
+                    << ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->toString() << endl;
             if (i == 18) {
                 cout << "4--------- Stayed in these state although previous transitions are not true anymore ---------" << endl;
                 alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201389955(true);

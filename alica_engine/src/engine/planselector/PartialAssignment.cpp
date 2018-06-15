@@ -166,10 +166,10 @@ std::ostream& operator<<(std::ostream& out, const PartialAssignment& pa)
 bool PartialAssignment::expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old)
 {
     // iterate next idx for cases of pre-assigned agents:
-    while (_nextAgentIdx < static_cast<int>(_cardinalities.size()) && _assignment[_nextAgentIdx] >= 0) {
+    while (_nextAgentIdx < static_cast<int>(_assignment.size()) && _assignment[_nextAgentIdx] >= 0) {
         ++_nextAgentIdx;
     }
-    if (_nextAgentIdx >= static_cast<int>(_cardinalities.size())) {
+    if (_nextAgentIdx >= static_cast<int>(_assignment.size())) {
         // No robot left to expand
         return false;
     }

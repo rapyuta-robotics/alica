@@ -334,7 +334,7 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentIDConstPtr age
             cur = new SimplePlanTree();
             cur->setAgentId(agentId);
             cur->setReceiveTime(time);
-
+            cur->setParent(curParent);
             curParent->editChildren().emplace_back(cur);
             const State* s2 = states.find(id);
             if (s2) {

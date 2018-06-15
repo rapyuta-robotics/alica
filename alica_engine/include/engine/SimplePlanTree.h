@@ -24,7 +24,7 @@ public:
     const std::vector<std::unique_ptr<SimplePlanTree>>& getChildren() const { return _children; }
     std::vector<std::unique_ptr<SimplePlanTree>>& editChildren() { return _children; }
     SimplePlanTree* getParent() const { return _parent; }
-
+    void setParent(SimplePlanTree* p) { _parent = p; }
     AgentIDConstPtr getAgentId() const { return _agentId; }
     void setAgentId(AgentIDConstPtr agentId) { _agentId = agentId; }
     bool isNewSimplePlanTree() const { return _isNew; }
