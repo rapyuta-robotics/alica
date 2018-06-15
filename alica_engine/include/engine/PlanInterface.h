@@ -19,7 +19,9 @@ public:
     {
         if (_rp) {
             _rp = _rp->getParent();
-            _lck = _rp->getReadLock();
+            if (_rp) {
+                _lck = _rp->getReadLock();
+            }
         }
     }
     RunningPlan::ScopedReadLock& getLock() { return _lck; }

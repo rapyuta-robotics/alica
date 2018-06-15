@@ -180,7 +180,7 @@ void BasicBehaviour::runInternalTimed()
         if (!_running) {
             std::unique_lock<std::mutex> lck(_runLoopMutex);
             _inRun = false;
-            _runCV.wait(lck, [this] { return !_running || !_started; }); // wait for signal to run
+            _runCV.wait(lck, [this] { return _running || !_started; }); // wait for signal to run
             _inRun = _started;
         }
         if (!_started) {

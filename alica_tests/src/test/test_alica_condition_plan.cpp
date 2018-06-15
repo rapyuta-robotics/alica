@@ -116,8 +116,9 @@ TEST_F(AlicaConditionPlan, solverTest)
     ae->start();
     step(ae);
 
-    shared_ptr<BasicBehaviour> basicBehaviour = (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getBasicBehaviour();
-    shared_ptr<alica::ConstraintUsingBehaviour> constraintUsingBehaviour = dynamic_pointer_cast<alica::ConstraintUsingBehaviour>(basicBehaviour);
+    BasicBehaviour* basicBehaviour = ae->getPlanBase()->getRootNode()->getChildren()[0]->getBasicBehaviour();
+    alica::ConstraintUsingBehaviour* constraintUsingBehaviour = dynamic_cast<alica::ConstraintUsingBehaviour*>(basicBehaviour);
+    ASSERT_NE(constraintUsingBehaviour, nullptr);
     ASSERT_GT(constraintUsingBehaviour->getCallCounter(), 0);
 
     ASSERT_GT(alica::reasoner::ConstraintTestPlanDummySolver::getGetSolutionCallCounter(), 0);
