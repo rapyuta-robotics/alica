@@ -27,13 +27,11 @@ SuccessCollection::~SuccessCollection() {}
 
 void SuccessCollection::setSuccess(AgentIDConstPtr agentId, const EntryPoint* ep)
 {
-    for (int i = 0; i < static_cast<int>(_plan->getEntryPoints().size()); ++i) {
-        if (_plan->getEntryPoints()[i] == ep) {
-            _successData[i].push_back(agentId);
-            return;
-        }
+    if (ep->getPlan() == _plan) {
+        _successData[ep->getIndex()].push_back(agentId);
     }
 }
+
 void SuccessCollection::clear()
 {
     for (AgentGrp& ag : _successData) {
@@ -43,11 +41,8 @@ void SuccessCollection::clear()
 
 const AgentGrp* SuccessCollection::getAgents(const EntryPoint* ep) const
 {
-    const EntryPointGrp& eps = _plan->getEntryPoints();
-    for (int i = 0; i < static_cast<int>(eps.size()); ++i) {
-        if (eps[i] == ep) {
-            return &_successData[i];
-        }
+    if (ep->getPlan() == _plan) {
+        return &_successData[ep->getIndex()];
     }
     return nullptr;
 }
@@ -73,7 +68,7 @@ std::ostream& operator<<(std::ostream& out, const SuccessCollection& c)
                 out << "Success:" << std::endl;
             }
             haveAny = true;
-            out << eps[i]->getTask()->getId() << ": ";
+            out << eps[i]->getId() << " (" << eps[i]->getTask()->getName() << "): ";
             for (AgentIDConstPtr r : c._successData[i]) {
                 out << *r << " ";
             }

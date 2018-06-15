@@ -37,6 +37,9 @@ bool PartialAssignment::isValid() const
     int min = 0;
     for (const DynCardinality& dc : _cardinalities) {
         min += dc.getMin();
+        if (dc.getMax() < 0) {
+            return false;
+        }
     }
     return min <= _problem->getAgentCount() - _numAssignedAgents;
 }
@@ -91,7 +94,7 @@ void PartialAssignment::prepare(const Plan* p, const TaskAssignmentProblem* prob
     _cardinalities.clear();
     _cardinalities.reserve(p->getEntryPoints().size());
     for (const EntryPoint* ep : p->getEntryPoints()) {
-        _cardinalities.push_back(ep->getCardinality());
+        _cardinalities.push_back(ep->getCardinality() - static_cast<int>(problem->getSuccessData(p)->getAgents(ep)->size()));
     }
     _utility = UtilityInterval(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
 }
@@ -113,6 +116,7 @@ bool PartialAssignment::assignUnassignedAgent(int agentIdx, int epIdx)
 /**
  * If the robot has already assigned itself, this method updates the partial assignment accordingly
  */
+// TODO: this is pretty inefficient
 bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, AgentIDConstPtr agent, int idx)
 {
     if (spt->getEntryPoint()->getPlan() == _plan) {
@@ -137,32 +141,6 @@ bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, AgentIDC
     return false;
 }
 
-std::ostream& operator<<(std::ostream& out, const PartialAssignment& pa)
-{
-    const Plan* p = pa._plan;
-    out << "Plan: " << (p != nullptr ? p->getName() : "NULL") << std::endl;
-    out << "Utility: " << pa._utility << std::endl;
-    out << "Agents: ";
-    for (AgentIDConstPtr agent : pa._problem->getAgents()) {
-        out << *agent << " ";
-    }
-    out << std::endl;
-    if (p) {
-        for (int i = 0; i < static_cast<int>(pa._cardinalities.size()); ++i) {
-            out << "EPid: " << p->getEntryPoints()[i]->getId() << " Task: " << p->getEntryPoints()[i]->getTask()->getName()
-                << " cardinality: " << pa._cardinalities[i];
-        }
-    }
-    out << std::endl;
-    out << " Assigned Robots: " << std::endl;
-    int i = 0;
-    for (int idx : pa._assignment) {
-        out << "Agent: " << pa._problem->getAgents()[i] << " Ep: " << idx;
-    }
-    out << std::endl;
-    //    out << "HashCode: " << this->getHash() << std::endl;
-    return out;
-}
 bool PartialAssignment::expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old)
 {
     // iterate next idx for cases of pre-assigned agents:
@@ -202,9 +180,6 @@ bool PartialAssignment::expand(std::vector<PartialAssignment*>& o_container, Par
 
 bool PartialAssignment::compare(const PartialAssignment* a, const PartialAssignment* b)
 {
-    // TODO has perhaps to be changed
-    // 0 , -1 = false
-    // 1 true
     if (a == b) {
         return false;
     }
@@ -245,6 +220,34 @@ bool PartialAssignment::compare(const PartialAssignment* a, const PartialAssignm
         }
     }
     return false;
+}
+
+std::ostream& operator<<(std::ostream& out, const PartialAssignment& pa)
+{
+    const Plan* p = pa._plan;
+    out << "Plan: " << (p != nullptr ? p->getName() : "NULL") << std::endl;
+    out << "Utility: " << pa._utility << std::endl;
+    out << "Agents: ";
+    for (AgentIDConstPtr agent : pa._problem->getAgents()) {
+        out << *agent << " ";
+    }
+    out << std::endl;
+    if (p) {
+        for (int i = 0; i < static_cast<int>(pa._cardinalities.size()); ++i) {
+            out << "EPid: " << p->getEntryPoints()[i]->getId() << " Task: " << p->getEntryPoints()[i]->getTask()->getName()
+                << " cardinality: " << pa._cardinalities[i];
+        }
+    }
+    out << std::endl;
+    out << " Assigned Agents: " << std::endl;
+    int i = 0;
+    for (int idx : pa._assignment) {
+        out << "Agent: " << pa._problem->getAgents()[i] << " Ep: " << idx << std::endl;
+        ;
+        ++i;
+    }
+    out << std::endl;
+    return out;
 }
 
 } /* namespace alica */

@@ -238,7 +238,11 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
     sc.clear();
     const EntryPointGrp* suc = nullptr;
     auto tmp = _tm->getActiveAgents();
-    for (auto& agent : *tmp) {
+
+    for (const Agent* agent : *tmp) {
+        if (agent->getID() == _myId) {
+            continue;
+        }
         {
             lock_guard<mutex> lock(this->successMarkMutex);
             suc = agent->getSucceededEntryPoints(p);

@@ -35,26 +35,15 @@ UtilityFunction::~UtilityFunction() {}
 
 /**
  * Evaluates the utility function according to the priorities of the assigned
- * roles and according to the similarity, if an oldRP is given and according to all
- * other utility summands of this utility function.
- */
-/*double UtilityFunction::eval(const RunningPlan* newRp, const RunningPlan* oldRp) const
-{
-    // Invalid Assignments have an Utility of -1 changed from 0 according to specs
-    if (!newRp->getAssignment()->isValid()) {
-        return -1.0;
-    }
-    return eval(&newRp->getAssignment(), &oldRp->getAssignment()).getMax();
-}*/
-
-/**
- * Evaluates the utility function according to the priorities of the assigned
  * roles and according to the similarity, if an oldAss is given.
  * ATTENTION PLZ: Return value is only significant with respect to current Utility of oldAss! (SimilarityMeasure)
  * @return The utility interval
  */
 UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Assignment* oldAss) const
 {
+    if (!newAss->isValid()) {
+        return UtilityInterval(-1.0, -1.0);
+    }
     UtilityInterval sumOfUI(0.0, 0.0);
     double sumOfWeights = 0.0;
 

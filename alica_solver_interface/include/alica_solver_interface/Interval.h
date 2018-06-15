@@ -103,6 +103,17 @@ constexpr Interval<T> operator-(const Interval<T> a, const Interval<T> b)
 }
 
 template <typename T>
+constexpr Interval<T> operator+(const Interval<T> a, T b)
+{
+    return Interval<T>(a.getMin() + b, a.getMax() + b);
+}
+template <typename T>
+constexpr Interval<T> operator-(const Interval<T> a, T b)
+{
+    return Interval<T>(a.getMin() - b, a.getMax() - b);
+}
+
+template <typename T>
 constexpr Interval<T> operator*(const Interval<T> a, T b)
 {
     return Interval<T>(a.getMin() * b, a.getMax() * b);

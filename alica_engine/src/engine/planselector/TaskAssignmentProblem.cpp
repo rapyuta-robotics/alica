@@ -13,7 +13,7 @@
 #include <engine/teammanager/TeamManager.h>
 
 #include <supplementary/AgentID.h>
-
+//#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>
 
 namespace alica
@@ -168,18 +168,17 @@ bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, cons
 {
     AgentIDConstPtr ownAgentId = _tm->getLocalAgentID();
     bool haveToRevalute = false;
-    int i = 0;
-    for (AgentIDConstPtr agent : _agents) {
-        if (ownAgentId == agent) {
+
+    for (int i = 0; i < static_cast<int>(_agents.size()); ++i) {
+        if (ownAgentId == _agents[i]) {
             continue;
         }
-        auto iter = simplePlanTreeMap.find(agent);
+        auto iter = simplePlanTreeMap.find(_agents[i]);
         if (iter != simplePlanTreeMap.end()) {
-            if (pa->addIfAlreadyAssigned(iter->second.get(), agent, i)) {
+            if (pa->addIfAlreadyAssigned(iter->second.get(), _agents[i], i)) {
                 haveToRevalute = true;
             }
         }
-        ++i;
     }
     return haveToRevalute;
 }
