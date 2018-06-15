@@ -26,7 +26,7 @@ using namespace std;
 
 class AlicaBehaviourTrigger : public ::testing::Test
 {
-  protected:
+protected:
     supplementary::SystemConfig* sc;
     alica::AlicaEngine* ae;
     alica::BehaviourCreator* bc;
@@ -99,16 +99,16 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
 
     for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
-            EXPECT_EQ(((alica::TriggerA*)(&*iter.second))->callCounter, 0);
+            EXPECT_EQ(((alica::TriggerA*) (&*iter.second))->callCounter, 0);
             continue;
         } else if (iter.first->getName() == "TriggerB") {
-            EXPECT_EQ(((alica::TriggerB*)(&*iter.second))->callCounter, 0);
+            EXPECT_EQ(((alica::TriggerB*) (&*iter.second))->callCounter, 0);
             continue;
         } else if (iter.first->getName() == "TriggerC") {
-            EXPECT_EQ(((alica::TriggerC*)(&*iter.second))->callCounter, 0);
+            EXPECT_EQ(((alica::TriggerC*) (&*iter.second))->callCounter, 0);
             continue;
         } else if (iter.first->getName() == "NotToTriggerDefault") {
-            EXPECT_EQ(((alica::NotToTrigger*)(&*iter.second))->callCounter, 0);
+            EXPECT_EQ(((alica::NotToTrigger*) (&*iter.second))->callCounter, 0);
             continue;
         } else {
             cout << iter.first->getName() << endl;
@@ -136,20 +136,22 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
 
     for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
-            EXPECT_EQ(((alica::TriggerA*)(&*iter.second))->callCounter, 3);
+            EXPECT_EQ(((alica::TriggerA*) (&*iter.second))->callCounter, 3);
             continue;
         } else if (iter.first->getName() == "TriggerB") {
-            EXPECT_EQ(((alica::TriggerB*)(&*iter.second))->callCounter, 3);
+            EXPECT_EQ(((alica::TriggerB*) (&*iter.second))->callCounter, 3);
             continue;
         } else if (iter.first->getName() == "TriggerC") {
-            EXPECT_EQ(((alica::TriggerC*)(&*iter.second))->callCounter, 4);
+            EXPECT_EQ(((alica::TriggerC*) (&*iter.second))->callCounter, 4);
             continue;
         } else if (iter.first->getName() == "NotToTriggerDefault") {
-            EXPECT_EQ(((alica::NotToTrigger*)(&*iter.second))->callCounter, 0);
+            EXPECT_EQ(((alica::NotToTrigger*) (&*iter.second))->callCounter, 0);
             continue;
         } else {
             EXPECT_TRUE(false);
         }
     }
     cout << "Finished" << endl;
+    delete alicaTests::TestWorldModel::getOne()->trigger1;
+    delete alicaTests::TestWorldModel::getOne()->trigger2;
 }

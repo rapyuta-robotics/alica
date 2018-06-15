@@ -52,9 +52,6 @@ BasicBehaviour::~BasicBehaviour()
         _runThread->join();
         delete _runThread;
     }
-    if (_behaviourTrigger != nullptr) {
-        delete _behaviourTrigger;
-    }
 }
 
 bool BasicBehaviour::isProperlyStopped() const
@@ -115,7 +112,7 @@ bool BasicBehaviour::start()
 {
     _callInit = true;
     _running = true;
-    if (!_behaviourTrigger) {
+    if (!_configuration->isEventDriven()) {
         _runCV.notify_all();
     }
     return true;
