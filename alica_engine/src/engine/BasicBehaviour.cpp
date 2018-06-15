@@ -10,7 +10,6 @@
 #include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
-#include "engine/model/Task.h"
 #include "engine/model/Variable.h"
 #include "engine/teammanager/TeamManager.h"
 

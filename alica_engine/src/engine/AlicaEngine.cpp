@@ -62,8 +62,8 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, const std::st
     this->planParser = new PlanParser(this->planRepository);
     this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
     this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
-    this->teamManager = new TeamManager(this, true);
-    this->teamManager->init();
+    _teamManager = new TeamManager(this, true);
+    _teamManager->init();
     this->behaviourPool = new BehaviourPool(this);
     this->teamObserver = new TeamObserver(this);
     if (this->useStaticRoles) {

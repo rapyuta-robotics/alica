@@ -1,5 +1,5 @@
 #include "engine/PlanInterface.h"
-
+#include "engine/model/Task.h"
 #include <assert.h>
 
 namespace alica
@@ -7,43 +7,43 @@ namespace alica
 
 using SafeRPPointer = std::pair<const RunningPlan, RunningPlan::ScopedReadLock>;
 
-SafeAssignmentView PlanInterface::agentsInEntryPointOfHigherPlan(const EntryPoint* ep) const
+SafeAssignmentView ThreadSafePlanInterface::agentsInEntryPointOfHigherPlan(const EntryPoint* ep) const
 {
     assert(ep);
     if (ep == nullptr) {
         SafeAssignmentView();
     }
-    ReadLockedPlanPointer cur(_runningPlan);
+    ReadLockedPlanPointer cur(_rp);
     cur.moveUp();
     while (cur) {
         assert(cur->getActivePlan());
         if (cur->getActivePlan() == ep->getPlan()) {
-            return SafeAssignmentView(cur->getAssignment(), ep->getIndex(), std::move(cur));
+            return SafeAssignmentView(&cur->getAssignment(), ep->getIndex(), std::move(cur));
         }
         cur.moveUp();
     }
     return SafeAssignmentView();
 }
 
-SafeAssignmentView PlanInterface::agentsInEntryPoint(const EntryPoint* ep) const
+SafeAssignmentView ThreadSafePlanInterface::agentsInEntryPoint(const EntryPoint* ep) const
 {
     assert(ep);
     if (ep == nullptr) {
         return SafeAssignmentView();
     }
-    ReadLockedPlanPointer cur(_runningPlan);
+    ReadLockedPlanPointer cur(_rp);
     cur.moveUp();
     if (cur) {
-        return SafeAssignmentView(cur->getAssignment(), ep->getIndex(), std::move(cur));
+        return SafeAssignmentView(&cur->getAssignment(), ep->getIndex(), std::move(cur));
     }
     return SafeAssignmentView();
 }
 
-const EntryPoint* PlanInterface::getParentEntryPoint(const std::string& taskName)
+const EntryPoint* ThreadSafePlanInterface::getParentEntryPoint(const std::string& taskName) const
 {
     const Plan* parentPlan = nullptr;
     {
-        ReadLockedPlanPointer cur(_runningPlan);
+        ReadLockedPlanPointer cur(_rp);
         cur.moveUp();
         if (!cur) {
             return nullptr;
@@ -58,11 +58,11 @@ const EntryPoint* PlanInterface::getParentEntryPoint(const std::string& taskName
     return nullptr;
 }
 
-const EntryPoint* PlanInterface::getHigherEntryPoint(const std::string& planName, const std::string& taskName)
+const EntryPoint* ThreadSafePlanInterface::getHigherEntryPoint(const std::string& planName, const std::string& taskName) const
 {
     const Plan* parentPlan = nullptr;
     {
-        ReadLockedPlanPointer cur(_runningPlan);
+        ReadLockedPlanPointer cur(_rp);
         cur.moveUp();
         while (cur) {
             if (cur->getActivePlan()->getName() == planName) {
@@ -80,9 +80,9 @@ const EntryPoint* PlanInterface::getHigherEntryPoint(const std::string& planName
     return nullptr;
 }
 
-const AbstractPlan* PlanInterface::getActivePlan() const
+const AbstractPlan* ThreadSafePlanInterface::getActivePlan() const
 {
-    RunningPlan::ScopedReadLock lck(_runningPlan->getReadLock());
-    return _runningPlan->getActivePlan();
+    RunningPlan::ScopedReadLock lck(_rp->getReadLock());
+    return _rp->getActivePlan();
 }
 }

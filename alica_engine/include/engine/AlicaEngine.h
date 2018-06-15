@@ -76,7 +76,7 @@ public:
     VariableSyncModule* getResultStore() const { return variableSyncModule; }
     IRoleAssignment* getRoleAssignment() const { return roleAssignment; }
     SyncModule* getSyncModul() const { return syncModul; }
-    TeamManager* getTeamManager() const { return teamManager; }
+    TeamManager* getTeamManager() const { return _teamManager; }
     TeamObserver* getTeamObserver() const { return teamObserver; }
     AlicaClock* getAlicaClock() const { return alicaClock; }
 
@@ -126,7 +126,7 @@ private:
     const RoleSet* roleSet;
     VariableSyncModule* variableSyncModule;
     AuthorityManager* auth;
-    TeamManager* teamManager;
+    TeamManager* _teamManager;
     SyncModule* syncModul;
     PlanRepository* planRepository;
     BlackBoard _blackboard;

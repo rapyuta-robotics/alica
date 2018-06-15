@@ -149,9 +149,8 @@ TEST_F(AlicaEngineAuthorityManager, authority)
 
     for (int i = 0; i < 21; i++) {
         step(ae);
-        std::cout << "END OF ae1 " << i << std::endl;
         step(ae2);
-        std::cout << "END OF ae2 " << i << std::endl;
+
         if (i == 1) {
             EXPECT_EQ(ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
             EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
