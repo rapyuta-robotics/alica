@@ -234,7 +234,7 @@ bool Synchronisation::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t
             }
 
             ALICA_DEBUG_MSG("Matrix: IntSyncTalk");
-            printMatrix();
+            ALICA_DEBUG_MSG(*this);
 
             // late acks...
             if (this->readyForSync) {
@@ -265,18 +265,14 @@ void Synchronisation::integrateSyncReady(shared_ptr<SyncReady> ready)
     if (!found) {
         this->receivedSyncReadys.push_back(ready);
     }
-#ifdef SM_MESSAGES
-    cout << "Matrix: IntSyncReady" << endl;
-    printMatrix();
-#endif
+    ALICA_DEBUG_MSG("Matrix: IntSyncReady");
+    ALICA_DEBUG_MSG(*this);
 
     // check if all robots are ready
     if (this->readyForSync) {
         if (allSyncReady()) {
-        // notify syncModul
-#ifdef SM_SUCCESS
-            cout << "SyncDONE in Synchronisation (IntReady): elapsed time: " << (ae->getAlicaClock()->now() - this->syncStartTime) << endl;
-#endif
+            // notify syncModul
+            ALICA_DEBUG_MSG("SyncDONE in Synchronisation (IntReady): elapsed time: " << (ae->getAlicaClock()->now() - this->syncStartTime));
             this->syncModul->synchronisationDone(this->syncTransition);
         }
     }
@@ -287,15 +283,15 @@ void Synchronisation::setSyncTransition(const SyncTransition* syncTransition)
     this->syncTransition = syncTransition;
 }
 
-bool Synchronisation::allSyncReady()
+bool Synchronisation::allSyncReady() const
 {
     // test if all robots who acknowledged myRow have sent a SyncReady
     for (AgentIDConstPtr robotID : this->myRow->getReceivedBy()) {
-        if (*robotID != *myID) // we do not necessarily need an ack from ourselves
+        if (robotID != myID) // we do not necessarily need an ack from ourselves
         {
             bool foundRobot = false;
-            for (std::shared_ptr<SyncReady>& sr : this->receivedSyncReadys) {
-                if (*(sr->senderID) == *(robotID)) {
+            for (const std::shared_ptr<SyncReady>& sr : this->receivedSyncReadys) {
+                if (sr->senderID == robotID) {
                     foundRobot = true;
                     break;
                 }
@@ -308,31 +304,6 @@ bool Synchronisation::allSyncReady()
         }
     }
     return true;
-}
-
-void Synchronisation::printMatrix()
-{
-    std::cout << std::endl;
-    std::cout << "Matrix:" << std::endl;
-
-    std::lock_guard<std::mutex> lock(syncMutex);
-    {
-        for (SyncRow* row : this->syncMatrix) {
-            std::cout << "Row: " << row->getSyncData().robotID << " "
-                      << std::to_string(row->getSyncData().transitionID) + " " + std::to_string(row->getSyncData().conditionHolds) << " "
-                      << row->getSyncData().ack << " RecvBy: ";
-            for (AgentIDConstPtr robotID : row->getReceivedBy()) {
-                std::cout << *robotID << ", ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << "ReceivedSyncreadys: ";
-        for (shared_ptr<SyncReady> sr : this->receivedSyncReadys) {
-            std::cout << sr->senderID << ", " << std::endl;
-            ;
-        }
-    }
-    std::cout << std::endl;
 }
 
 void Synchronisation::sendTalk(const SyncData& sd)
@@ -398,6 +369,29 @@ bool Synchronisation::isSyncComplete()
         }
     }
     return true;
+}
+
+std::ostream& operator<<(std::ostream& s, const Synchronisation& sync)
+{
+    s << std::endl;
+    s << "Matrix:" << std::endl;
+
+    for (SyncRow* row : sync.syncMatrix) {
+        s << "Row: " << row->getSyncData().robotID << " "
+          << std::to_string(row->getSyncData().transitionID) + " " + std::to_string(row->getSyncData().conditionHolds) << " " << row->getSyncData().ack
+          << " RecvBy: ";
+        for (AgentIDConstPtr robotID : row->getReceivedBy()) {
+            s << robotID << ", ";
+        }
+        s << std::endl;
+    }
+    s << "ReceivedSyncreadys: ";
+    for (const shared_ptr<SyncReady>& sr : sync.receivedSyncReadys) {
+        s << sr->senderID << ", " << std::endl;
+        ;
+    }
+    s << std::endl;
+    return s;
 }
 
 } // namespace alica

@@ -74,8 +74,10 @@ public:
     Assignment(const Plan* p, const AllocationAuthorityInfo& aai);
     Assignment(const Plan* p);
 
-    Assignment(const Assignment& o);
-    Assignment& operator=(const Assignment& o);
+    Assignment(const Assignment& o) = default;
+    Assignment& operator=(const Assignment& o) = default;
+    Assignment(Assignment&& o) = default;
+    Assignment& operator=(Assignment&& o) = default;
 
     const Plan* getPlan() const { return _plan; }
 

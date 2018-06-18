@@ -95,23 +95,6 @@ Assignment::Assignment(const Plan* p, const AllocationAuthorityInfo& aai)
     }
 }
 
-Assignment::Assignment(const Assignment& o)
-        : _plan(o._plan)
-        , _assignmentData(o._assignmentData)
-        , _successData(o._successData)
-        , _lastUtility(o._lastUtility)
-{
-}
-
-Assignment& Assignment::operator=(const Assignment& o)
-{
-    _plan = o._plan;
-    _assignmentData = o._assignmentData;
-    _successData = o._successData;
-    _lastUtility = o._lastUtility;
-    return *this;
-}
-
 bool Assignment::isValid() const
 {
     if (!_plan) {

@@ -91,9 +91,12 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
     for (int i = 0; i < 20; i++) {
         ASSERT_TRUE(ae->getPlanBase()->isWaiting());
         ASSERT_TRUE(ae2->getPlanBase()->isWaiting());
-
+        std::cout << "AE1 step " << i << "(" << ae->getTeamManager()->getLocalAgentID() << ")" << std::endl;
         step(ae);
+
+        std::cout << "AE2 step " << i << "(" << ae2->getTeamManager()->getLocalAgentID() << ")" << std::endl;
         step(ae2);
+
         //        if (i > 24)
         //        {
         //            if (ae->getPlanBase()->getDeepestNode() != nullptr)
@@ -119,9 +122,9 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             ASSERT_EQ(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActivePlan()->getName(), string("MultiAgentTestPlan"));
         }
         if (i == 15) {
-            for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
+            for (const auto& iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
                 if (iter.second->getName() == "Attack") {
-                    ASSERT_GT(((alica::Attack*) &*iter.second)->callCounter, 5);
+                    ASSERT_GT(static_cast<alica::Attack*>(&*iter.second)->callCounter, 5);
                     if (((alica::Attack*) &*iter.second)->callCounter > 3) {
                         alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201052549(true);
                         alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201052549(true);

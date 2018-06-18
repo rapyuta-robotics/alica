@@ -39,7 +39,19 @@ if (CATKIN_ENABLE_TESTING)
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test 
     src/test_alica.cpp
     src/test/test_main.cpp
-    src/test/test_alica_authority.cpp
+    #src/test/test_alica_authority.cpp
+    #src/test/test_alica_behaviourtrigger.cpp
+    #src/test/test_alica_condition_plan.cpp
+    #src/test/test_alica_condition_plantype.cpp
+    #src/test/test_alica_engine_behavior_pool_init.cpp
+    #src/test/test_alica_engine_plan_parser.cpp
+    #src/test/test_alica_gsolver_plan.cpp
+    #src/test/test_alica_init_shutdown.cpp
+    #src/test/test_alica_multi_agent_plan.cpp
+    #src/test/test_alica_problem_composition.cpp
+    #src/test/test_alica_ros_proxy.cpp
+    #src/test/test_alica_simple_plan.cpp
+    src/test/test_alica_sync_transition.cpp
     #${test_alica_SOURCES}
     )
 

@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <mutex>
+#include <ostream>
 
 namespace alica
 {
@@ -38,8 +39,8 @@ public:
     void setSyncTransition(const SyncTransition* syncTransition);
 
 private:
-    bool allSyncReady();
-    void printMatrix();
+    bool allSyncReady() const;
+    friend std::ostream& operator<<(std::ostream& s, const Synchronisation& sync);
 
 protected:
     AlicaEngine* ae;
@@ -64,5 +65,5 @@ protected:
     void sendSyncReady();
     bool isSyncComplete();
 };
-
+std::ostream& operator<<(std::ostream& s, const Synchronisation& sync);
 } /* namespace alica */
