@@ -50,6 +50,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae)
         , _assignment()
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
+        , _parent(nullptr)
 {
 }
 
@@ -67,6 +68,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
         , _assignment(plan)
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
+        , _parent(nullptr)
 {
     _activeTriple.plan = plan;
 }
@@ -78,6 +80,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
         , _assignment()
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
+        , _parent(nullptr)
 {
 }
 
@@ -89,6 +92,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc)
         , _assignment()
         , _basicBehaviour(nullptr)
         , _cycleManagement(ae, this)
+        , _parent(nullptr)
 {
 }
 

@@ -268,7 +268,7 @@ bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e, const S
     bool found = false;
     bool inserted = false;
     int i = 0;
-    assert(s->getEntryPoint() == e);
+    assert(s == nullptr || s->getEntryPoint() == e);
 
     for (AgentStatePairs& asps : _assignmentData) {
         const bool isTargetEp = e == _plan->getEntryPoints()[i];
