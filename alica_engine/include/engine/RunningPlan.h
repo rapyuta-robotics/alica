@@ -64,7 +64,6 @@ struct PlanStateTriple
 class RunningPlan : public std::enable_shared_from_this<RunningPlan>
 {
 
-    // TODO: read write locks to this class
 public:
     using ScopedReadLock = std::unique_lock<std::mutex>;
     using ScopedWriteLock = std::unique_lock<std::mutex>;
@@ -89,6 +88,11 @@ public:
         bool failHandlingNeeded;
         bool allocationNeeded;
     };
+    explicit RunningPlan(AlicaEngine* ae);
+    RunningPlan(AlicaEngine* ae, const Plan* plan);
+    RunningPlan(AlicaEngine* ae, const PlanType* pt);
+    RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc);
+
     static void init();
 
     virtual ~RunningPlan();
@@ -179,18 +183,13 @@ public:
 
     void revokeAllConstraints();
     void attachPlanConstraints();
-    bool recursiveUpdateAssignment(const std::vector<const SimplePlanTree*> spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
+    bool recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
     void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const;
     AgentIDConstPtr getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
-    friend PlanBase; // temporary while refactoring
-    RunningPlan(AlicaEngine* ae);
-    RunningPlan(AlicaEngine* ae, const Plan* plan);
-    RunningPlan(AlicaEngine* ae, const PlanType* pt);
-    RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc);
 
     // Status Information
     PlanStateTriple _activeTriple;

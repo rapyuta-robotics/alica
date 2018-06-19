@@ -77,7 +77,6 @@ private:
     void run();
 
     // Owning container of running plans (replace with uniqueptrs once possibe)
-    // TODO: manage lifetime
     std::vector<std::shared_ptr<RunningPlan>> _runningPlans;
 
     /**

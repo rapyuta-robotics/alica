@@ -508,7 +508,7 @@ void RunningPlan::attachPlanConstraints()
     _constraintStore.addCondition(_activeTriple.plan->getRuntimeCondition());
 }
 
-bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTree*> spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now)
+bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now)
 {
     if (isBehaviour()) {
         return false;

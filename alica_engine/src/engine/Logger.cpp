@@ -14,7 +14,7 @@
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
 
-#define ALICA_DEBUG_LEVEL_ALL
+//#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>
 
 using std::endl;

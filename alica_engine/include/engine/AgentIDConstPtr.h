@@ -8,7 +8,7 @@ namespace alica
 // but this only works as long as there is only one AgentIDManager.
 // Note that the difference in performance is significant, because for the fast check, agent ids do not need to be in cache,
 // whereas for the slow version, any find-in-datastructues operation will likely be stalled several times due to cache misses.
-#define FAST_EQUALITY_CHECK
+#define AGENT_ID_FAST_EQUALITY_CHECK
 
 class AgentIDConstPtr
 {
@@ -25,7 +25,7 @@ public:
     const supplementary::AgentID* operator->() const { return _ptr; }
 
     operator bool() const { return _ptr != nullptr; }
-#ifdef FAST_EQUALITY_CHECK
+#ifdef AGENT_ID_FAST_EQUALITY_CHECK
     bool operator==(const AgentIDConstPtr o) const { return _ptr == o._ptr; }
 #else
     bool operator==(const AgentIDConstPtr o) const { return _ptr == o._ptr || (_ptr != nullptr && o._ptr != nullptr && *_ptr == *o._ptr); }

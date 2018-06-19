@@ -22,7 +22,7 @@ class ModelFactory;
 class Quantifier : public AlicaElement
 {
 public:
-    Quantifier(int64_t id = 0);
+    Quantifier(int64_t id);
     virtual ~Quantifier();
     const std::vector<std::string>& getDomainIdentifiers() const { return _domainIdentifiers; }
     bool isScopeEntryPoint() const { return _scopeType == ENTRYPOINTSCOPE; }

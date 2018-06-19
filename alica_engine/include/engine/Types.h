@@ -1,5 +1,5 @@
 #pragma once
-//#include <engine/AgentIDConstPtr.h>
+
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -59,8 +59,6 @@ using TransitionGrp = std::vector<const Transition*>;
 using VariableGrp = std::vector<const Variable*>;
 
 using BehaviourParameterMap = std::unordered_map<std::string, std::string>;
-
-// using AgentIDConstPtr = const supplementary::AgentID*;
 
 using AgentStatePair = std::pair<AgentIDConstPtr, const State*>;
 

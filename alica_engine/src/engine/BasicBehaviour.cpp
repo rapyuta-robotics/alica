@@ -38,7 +38,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _msInterval(100)
         , _msDelayedStart(0)
         , _running(false)
-        , _inRun(false)
+        , _contextInRun(nullptr)
         , _behaviourTrigger(nullptr)
         , _runThread(nullptr)
 {
@@ -54,14 +54,15 @@ BasicBehaviour::~BasicBehaviour()
     }
 }
 
-bool BasicBehaviour::isProperlyStopped() const
+bool BasicBehaviour::isRunningInContext(const RunningPlan* rp) const
 {
-    bool isRunning;
+    // we run in the context of rp if rp is the context in run or the context in run is null and context is rp
+    RunningPlan* curInRun;
     {
         std::lock_guard<std::mutex> lck(_runLoopMutex);
-        isRunning = _inRun;
+        curInRun = _contextInRun;
     }
-    return (!_started || !_running) && !isRunning;
+    return curInRun == rp || (curInRun == nullptr && _context == rp && _started && _running);
 }
 
 void BasicBehaviour::setName(const std::string& name)
@@ -179,9 +180,9 @@ void BasicBehaviour::runInternalTimed()
     while (_started) {
         if (!_running) {
             std::unique_lock<std::mutex> lck(_runLoopMutex);
-            _inRun = false;
+            _contextInRun = nullptr;
             _runCV.wait(lck, [this] { return _running || !_started; }); // wait for signal to run
-            _inRun = _started;
+            _contextInRun = _started ? _context : nullptr;
         }
         if (!_started) {
             return;
@@ -213,9 +214,9 @@ void BasicBehaviour::runInternalTriggered()
     while (_started) {
         {
             std::unique_lock<std::mutex> lck(_runLoopMutex);
-            _inRun = false;
+            _contextInRun = nullptr;
             _runCV.wait(lck, [this] { return !_started || (_behaviourTrigger->isNotifyCalled(&_runCV) && _running); });
-            _inRun = true;
+            _contextInRun = _started ? _context : nullptr;
         }
         if (!_started) {
             return;

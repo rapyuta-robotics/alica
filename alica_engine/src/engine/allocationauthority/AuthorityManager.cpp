@@ -61,18 +61,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
             }
         }
     }
-#ifdef AM_DEBUG
-    std::stringstream ss;
-    ALICA_DEBUG_MSG("AM: Received AAI Assignment from " << *(aai.senderID) << " is: ");
-    for (EntryPointRobots epRobots : aai.entryPointRobots) {
-        ss << "EP: " << epRobots.entrypoint << " Robots: ";
-        for (int robot : epRobots.robots) {
-            ss << robot << ", ";
-        }
-        ss << std::endl;
-    }
-    cout << ss.str();
-#endif
+    ALICA_DEBUG_MSG("AM: Received AAI Assignment: " << aai);
     {
         std::lock_guard<std::mutex> lock(_mutex);
         _queue.push_back(aai);
@@ -142,18 +131,8 @@ void AuthorityManager::sendAllocation(const RunningPlan& p)
     aai.authority = _localAgentID;
     aai.senderID = _localAgentID;
     aai.planType = (p.getPlanType() ? p.getPlanType()->getId() : -1);
-#ifdef AM_DEBUG
-    std::stringstream ss;
-    ss << "AM: Sending AAI Assignment from " << aai.senderID << " is: " << std::endl;
-    for (EntryPointRobots epRobots : aai.entryPointRobots) {
-        ss << "EP: " << epRobots.entrypoint << " Robots: ";
-        for (int robot : epRobots.robots) {
-            ss << robot << ", ";
-        }
-        ss << std::endl;
-    }
-    std::cout << ss.str();
-#endif
+
+    ALICA_DEBUG_MSG("AM: Sending AAI Assignment: " << aai);
     _engine->getCommunicator()->sendAllocationAuthority(aai);
 }
 

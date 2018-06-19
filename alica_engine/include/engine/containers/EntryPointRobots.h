@@ -2,6 +2,8 @@
 
 #include "engine/AgentIDConstPtr.h"
 
+#include <iterator>
+#include <ostream>
 #include <tuple>
 #include <vector>
 
@@ -27,4 +29,12 @@ struct EntryPointRobots
 
     stdEntryPointRobot toStandard() const { return std::make_tuple(entrypoint, robots); }
 };
+
+inline std::ostream& operator<<(std::ostream& o, const EntryPointRobots& epr)
+{
+    o << "EP: " << epr.entrypoint << " Robots: ";
+    std::copy(epr.robots.begin(), epr.robots.end(), std::ostream_iterator<AgentIDConstPtr>(o, ", "));
+    o << std::endl;
+    return o;
+}
 } // namespace alica

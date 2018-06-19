@@ -1,12 +1,4 @@
-/*
- * EntryPoint.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef ENTRYPOINT_H_
-#define ENTRYPOINT_H_
+#pragma once
 
 #include <list>
 #include <sstream>
@@ -94,5 +86,3 @@ private:
 };
 
 } // namespace alica
-
-#endif /* ENTRYPOINT_H_ */

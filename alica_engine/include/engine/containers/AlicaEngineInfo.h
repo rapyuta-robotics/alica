@@ -23,7 +23,7 @@ struct AlicaEngineInfo
     std::string currentTask;
     std::vector<AgentIDConstPtr> robotIDsWithMe;
 
-    AlicaEngineInfo(stdAlicaEngineInfo& s)
+    AlicaEngineInfo(stdAlicaEngineInfo&& s)
     {
         senderID = std::get<0>(s);
         masterPlan = std::move(std::get<1>(s));
@@ -34,6 +34,6 @@ struct AlicaEngineInfo
         robotIDsWithMe = std::move(std::get<6>(s));
     }
 
-    stdAlicaEngineInfo toStandard() { return std::move(make_tuple(senderID, masterPlan, currentPlan, currentState, currentRole, currentTask, robotIDsWithMe)); }
+    stdAlicaEngineInfo toStandard() const { return std::make_tuple(senderID, masterPlan, currentPlan, currentState, currentRole, currentTask, robotIDsWithMe); }
 };
 } // namespace alica

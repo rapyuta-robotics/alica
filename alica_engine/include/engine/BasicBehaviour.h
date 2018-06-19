@@ -37,7 +37,7 @@ public:
     BasicBehaviour(const std::string& name);
     virtual ~BasicBehaviour();
     virtual void run(void* msg) = 0;
-    bool isProperlyStopped() const;
+    bool isRunningInContext(const RunningPlan* rp) const;
     void setEngine(AlicaEngine* engine) { _engine = engine; }
     const std::string& getName() const { return _name; }
     const BehaviourParameterMap& getParameters() const { return _configuration->getParameters(); }
@@ -55,7 +55,7 @@ public:
 
     void setInterval(int32_t msInterval) { _msInterval = std::chrono::milliseconds(msInterval); }
 
-    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(_context); }
+    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(_contextInRun); }
     void setRunningPlan(RunningPlan* rp) { _context = rp; }
 
     bool isSuccess() const;
@@ -110,7 +110,7 @@ private:
      * Tells us whether the behaviour is currently running (or active)
      */
     bool _running;
-    std::atomic<bool> _inRun;
+    std::atomic<RunningPlan*> _contextInRun;
 
     std::thread* _runThread; /** < executes the runInternal and thereby the abstract run method */
 

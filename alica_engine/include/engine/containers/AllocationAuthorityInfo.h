@@ -3,6 +3,8 @@
 #include "EntryPointRobots.h"
 #include "engine/AgentIDConstPtr.h"
 
+#include <iterator>
+#include <ostream>
 #include <tuple>
 #include <vector>
 
@@ -50,4 +52,12 @@ struct AllocationAuthorityInfo
         return std::make_tuple(senderID, planId, parentState, planType, authority, std::move(r));
     }
 };
+
+inline std::ostream& operator<<(std::ostream& o, const AllocationAuthorityInfo& aai)
+{
+    o << "AAI sender: " << aai.senderID << " plan: " << aai.planId << std::endl;
+    std::copy(aai.entryPointRobots.begin(), aai.entryPointRobots.end(), std::ostream_iterator<EntryPointRobots>(o, "\n"));
+    return o;
+}
+
 } /* namespace alica */

@@ -5,13 +5,11 @@
 #include <engine/Types.h>
 #include <engine/collections/AgentVariables.h>
 
-#include <supplementary/AgentID.h>
-
 #include <vector>
 
 namespace alica
 {
-
+class AgentIDConstPtr;
 class RunningPlan;
 class Variable;
 class SolverTerm;

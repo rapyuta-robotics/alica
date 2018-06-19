@@ -23,7 +23,7 @@ class RobotProperties
 {
 public:
     RobotProperties(AgentIDConstPtr agentId, const AlicaEngine* ae, const std::string& name);
-    virtual ~RobotProperties();
+    ~RobotProperties();
     void readFromConfig(const AlicaEngine* engine, const std::string& name);
     AgentIDConstPtr getId() const;
     void setId(AgentIDConstPtr agentId);

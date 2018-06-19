@@ -121,9 +121,7 @@ bool BehaviourPool::isBehaviourRunningInContext(const RunningPlan& rp) const
     if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp.getActivePlan())) {
         const std::shared_ptr<BasicBehaviour>& bb = _availableBehaviours.at(bc);
         if (bb != nullptr) {
-            if (bb->getPlanContext().mapsTo(&rp)) {
-                return !bb->isProperlyStopped();
-            }
+            return bb->isRunningInContext(&rp);
         }
     }
     return false;

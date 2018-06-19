@@ -1,15 +1,4 @@
-/*
- * State.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef STATE_H_
-#define STATE_H_
-
-#include <list>
-#include <stdio.h>
+#pragma once
 
 #include "AlicaElement.h"
 #include "engine/Types.h"
@@ -98,5 +87,3 @@ private:
 };
 
 } // namespace alica
-
-#endif /* STATE_H_ */
