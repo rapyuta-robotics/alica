@@ -42,6 +42,14 @@ void AgentStatePairs::setStateOfAgent(const AgentIDConstPtr id, const State* s)
 }
 
 ///------------------------------------------------------------------------------
+void checkAssignment(const Assignment* a)
+{
+    for (int i = 0; i < a->getEntryPointCount(); ++i) {
+        for (const AgentStatePair asp : a->getAgentStates(i)) {
+            assert(asp.second->getEntryPoint() == a->getEntryPoint(i));
+        }
+    }
+}
 
 Assignment::Assignment()
         : _plan(nullptr)
@@ -74,9 +82,10 @@ Assignment::Assignment(const PartialAssignment& pa)
     for (int i = 0; i < pa.getTotalAgentCount(); ++i) {
         const int idx = pa.getEntryPointIndexOf(i);
         if (idx >= 0 && idx < numEps) {
-            _assignmentData[idx].emplace_back(pa.getProblem()->getAgents()[i], _plan->getEntryPoints()[i]->getState());
+            _assignmentData[idx].emplace_back(pa.getProblem()->getAgents()[i], _plan->getEntryPoints()[idx]->getState());
         }
     }
+    checkAssignment(this);
 }
 
 Assignment::Assignment(const Plan* p, const AllocationAuthorityInfo& aai)
@@ -93,10 +102,12 @@ Assignment::Assignment(const Plan* p, const AllocationAuthorityInfo& aai)
             _assignmentData[i].emplace_back(agent, _plan->getEntryPoints()[i]->getState());
         }
     }
+    checkAssignment(this);
 }
 
 bool Assignment::isValid() const
 {
+    checkAssignment(this);
     if (!_plan) {
         return false;
     }
@@ -113,6 +124,7 @@ bool Assignment::isValid() const
 
 bool Assignment::isSuccessful() const
 {
+    checkAssignment(this);
     if (!_plan) {
         return false;
     }
@@ -130,6 +142,7 @@ bool Assignment::isSuccessful() const
 
 bool Assignment::isAnyTaskSuccessful() const
 {
+    checkAssignment(this);
     if (!_plan) {
         return false;
     }
@@ -155,6 +168,7 @@ bool Assignment::hasAgent(AgentIDConstPtr id) const
 
 const EntryPoint* Assignment::getEntryPointOfAgent(AgentIDConstPtr id) const
 {
+    checkAssignment(this);
     int i = 0;
     for (const AgentStatePairs& asps : _assignmentData) {
         if (asps.hasAgent(id)) {
@@ -167,6 +181,7 @@ const EntryPoint* Assignment::getEntryPointOfAgent(AgentIDConstPtr id) const
 
 const State* Assignment::getStateOfAgent(AgentIDConstPtr id) const
 {
+    checkAssignment(this);
     for (const AgentStatePairs& asps : _assignmentData) {
         const State* s = asps.getStateOfAgent(id);
         if (s) {
@@ -261,6 +276,7 @@ void Assignment::clear()
 
 bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e)
 {
+    checkAssignment(this);
     return updateAgent(agent, e, nullptr);
 }
 
@@ -269,6 +285,7 @@ bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e, const S
     bool found = false;
     bool inserted = false;
     int i = 0;
+    assert(s->getEntryPoint() == e);
 
     for (AgentStatePairs& asps : _assignmentData) {
         const bool isTargetEp = e == _plan->getEntryPoints()[i];
@@ -300,11 +317,14 @@ bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e, const S
         }
         ++i;
     }
+    checkAssignment(this);
     return inserted;
 }
 
 void Assignment::moveAllFromTo(const EntryPoint* scope, const State* from, const State* to)
 {
+    assert(from->getEntryPoint() == scope);
+    assert(to->getEntryPoint() == scope);
     for (int i = 0; i < static_cast<int>(_assignmentData.size()); ++i) {
         if (scope == _plan->getEntryPoints()[i]) {
             for (AgentStatePair& asp : _assignmentData[i]) {
@@ -319,7 +339,7 @@ void Assignment::moveAllFromTo(const EntryPoint* scope, const State* from, const
 void Assignment::setAllToInitialState(const AgentGrp& agents, const EntryPoint* ep)
 {
     for (int i = 0; i < static_cast<int>(_assignmentData.size()); ++i) {
-        const bool isTargetEp = ep == _plan->getEntryPoints()[i];
+        const bool isTargetEp = ep->getIndex() == i;
         if (isTargetEp) {
             const State* s = ep->getState();
             for (AgentIDConstPtr id : agents) {
@@ -334,6 +354,7 @@ void Assignment::setAllToInitialState(const AgentGrp& agents, const EntryPoint* 
             _assignmentData[i].removeAllIn(agents);
         }
     }
+    checkAssignment(this);
 }
 
 void Assignment::adaptTaskChangesFrom(const Assignment& as)
