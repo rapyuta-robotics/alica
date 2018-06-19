@@ -92,9 +92,12 @@ void PartialAssignment::prepare(const Plan* p, const TaskAssignmentProblem* prob
     _assignment.clear();
     _assignment.resize(problem->getAgentCount(), -1);
     _cardinalities.clear();
-    _cardinalities.reserve(p->getEntryPoints().size());
+    _cardinalities.reserve(p->getEntryPoints().size() + s_allowIdling ? 1 : 0);
     for (const EntryPoint* ep : p->getEntryPoints()) {
         _cardinalities.push_back(ep->getCardinality() - static_cast<int>(problem->getSuccessData(p)->getAgents(ep)->size()));
+    }
+    if (s_allowIdling) {
+        _cardinalities.emplace_back(0, std::numeric_limits<int>::max());
     }
     _utility = UtilityInterval(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
 }
@@ -120,8 +123,8 @@ bool PartialAssignment::assignUnassignedAgent(int agentIdx, int epIdx)
 bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, AgentIDConstPtr agent, int idx)
 {
     if (spt->getEntryPoint()->getPlan() == _plan) {
-
-        for (int i = 0; i < static_cast<int>(_cardinalities.size()); ++i) {
+        const int numEps = static_cast<int>(_plan->getEntryPoints().size());
+        for (int i = 0; i < numEps; ++i) {
             const EntryPoint* curEp = _plan->getEntryPoints()[i];
             if (spt->getEntryPoint()->getId() == curEp->getId()) {
                 return assignUnassignedAgent(idx, i);
@@ -163,16 +166,6 @@ bool PartialAssignment::expand(std::vector<PartialAssignment*>& o_container, Par
                 o_container.insert(std::upper_bound(o_container.begin(), o_container.end(), newPa, compare), newPa);
                 change = true;
             }
-        }
-    }
-    if (s_allowIdling) {
-        PartialAssignment* newPa = pool.getNext();
-        *newPa = *this;
-        newPa->assignUnassignedAgent(_nextAgentIdx, _cardinalities.size());
-        newPa->evaluate(old);
-        if (newPa->_utility.getMax() > -1.0) {
-            o_container.insert(std::upper_bound(o_container.begin(), o_container.end(), newPa, compare), newPa);
-            change = true;
         }
     }
     return change;
@@ -233,7 +226,7 @@ std::ostream& operator<<(std::ostream& out, const PartialAssignment& pa)
     }
     out << std::endl;
     if (p) {
-        for (int i = 0; i < static_cast<int>(pa._cardinalities.size()); ++i) {
+        for (int i = 0; i < static_cast<int>(pa._cardinalities.size()) - PartialAssignment::s_allowIdling ? 1 : 0; ++i) {
             out << "EPid: " << p->getEntryPoints()[i]->getId() << " Task: " << p->getEntryPoints()[i]->getTask()->getName()
                 << " cardinality: " << pa._cardinalities[i];
         }
