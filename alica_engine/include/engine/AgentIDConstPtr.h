@@ -48,4 +48,9 @@ inline std::ostream& operator<<(std::ostream& out, const AgentIDConstPtr a)
     }
     return out;
 }
+
+struct AgentIDHash
+{
+    std::size_t operator()(AgentIDConstPtr id) const { return id->hash(); }
+};
 }

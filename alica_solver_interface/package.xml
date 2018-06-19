@@ -9,6 +9,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>alica_common_config</build_depend>
+  <build_export_depend>alica_common_config</build_export_depend>
 
   <test_depend>gtest</test_depend>
 </package>

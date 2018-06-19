@@ -1,5 +1,7 @@
 #pragma once
 
+#include <engine/AgentIDConstPtr.h>
+
 #include <tuple>
 #include <vector>
 
