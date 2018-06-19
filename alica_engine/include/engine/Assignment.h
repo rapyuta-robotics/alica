@@ -86,7 +86,10 @@ public:
     bool isAnyTaskSuccessful() const;
 
     bool hasAgent(AgentIDConstPtr id) const;
-
+    int size() const
+    {
+        return std::accumulate(_assignmentData.begin(), _assignmentData.end(), 0, [](int val, const AgentStatePairs& asp) { return val + asp.size(); });
+    }
     int getEntryPointCount() const { return static_cast<int>(_assignmentData.size()); }
     const EntryPoint* getEntryPoint(int idx) const { return _plan->getEntryPoints()[idx]; }
     const EntryPoint* getEntryPointOfAgent(AgentIDConstPtr id) const;
@@ -228,9 +231,7 @@ public:
     AllAgentsIterator begin() const { return AllAgentsIterator(0, 0, _assignment); }
     AllAgentsIterator end() const
     {
-        return _assignment ? AllAgentsIterator(_assignment->getEntryPointCount() - 1, _assignment->getAgentStates(_assignment->getEntryPointCount() - 1).size(),
-                                     _assignment)
-                           : AllAgentsIterator(0, 0, nullptr);
+        return _assignment ? AllAgentsIterator(_assignment->getEntryPointCount(), 0, _assignment) : AllAgentsIterator(0, 0, nullptr);
     }
     int size() const
     {

@@ -109,11 +109,11 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
         }
         if (i > 1 && i < 4) {
             EXPECT_EQ(ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825395940);
-            EXPECT_EQ(ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825404963);
+            EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825404963);
         }
         if (i == 5) {
             EXPECT_EQ(ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825409988);
-            EXPECT_EQ(ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825411686);
+            EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825411686);
         }
     }
 }

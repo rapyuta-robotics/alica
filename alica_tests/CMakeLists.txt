@@ -51,7 +51,13 @@ if (CATKIN_ENABLE_TESTING)
     #src/test/test_alica_problem_composition.cpp
     #src/test/test_alica_ros_proxy.cpp
     #src/test/test_alica_simple_plan.cpp
-    src/test/test_alica_sync_transition.cpp
+    #src/test/test_alica_sync_transition.cpp
+    #src/test/test_alica_time.cpp
+    #src/test/test_blackboard.cpp
+    #src/test/test_assignment.cpp
+    #src/test/test_success_spam.cpp
+    #src/test/test_task_assignment.cpp
+    src/test/test_variable_handling.cpp
     #${test_alica_SOURCES}
     )
 

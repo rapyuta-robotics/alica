@@ -273,7 +273,7 @@ bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e, const S
     for (AgentStatePairs& asps : _assignmentData) {
         const bool isTargetEp = e == _plan->getEntryPoints()[i];
         if (isTargetEp) {
-            for (AgentStatePair asp : asps) {
+            for (AgentStatePair& asp : asps) {
                 if (asp.first == agent) {
                     // assume a null state signals no change
                     if (s == nullptr || asp.second == s) {

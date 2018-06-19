@@ -1,13 +1,4 @@
-/*
- * Plan.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef PLAN_H_
-#define PLAN_H_
-
+#pragma once
 #include <list>
 #include <stddef.h>
 #include <string>
@@ -33,7 +24,7 @@ class ExpressionHandler;
 class Plan : public AbstractPlan
 {
 public:
-    Plan(int64_t id = 0);
+    Plan(int64_t id);
     virtual ~Plan();
 
     const EntryPoint* getEntryPointTaskID(int64_t taskID) const;
@@ -90,5 +81,3 @@ private:
 };
 
 } // namespace alica
-
-#endif /* PLAN_H_ */
