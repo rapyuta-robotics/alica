@@ -236,7 +236,6 @@ std::ostream& operator<<(std::ostream& out, const PartialAssignment& pa)
     int i = 0;
     for (int idx : pa._assignment) {
         out << "Agent: " << pa._problem->getAgents()[i] << " Ep: " << idx << std::endl;
-        ;
         ++i;
     }
     out << std::endl;
