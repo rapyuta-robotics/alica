@@ -11,7 +11,11 @@ template <typename T>
 class Interval
 {
 public:
-    constexpr Interval() {}
+    constexpr Interval()
+            : _min{}
+            , _max{}
+    {
+    }
     constexpr Interval(T min, T max)
             : _min(min)
             , _max(max)

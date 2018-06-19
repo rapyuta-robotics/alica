@@ -41,6 +41,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _contextInRun(nullptr)
         , _behaviourTrigger(nullptr)
         , _runThread(nullptr)
+        , _context(nullptr)
 {
 }
 
