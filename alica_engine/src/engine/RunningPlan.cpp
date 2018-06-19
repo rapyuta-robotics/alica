@@ -1,15 +1,15 @@
 #include "engine/RunningPlan.h"
 
+#include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/AlicaClock.h"
-#include "engine/IAlicaCommunication.h"
 #include "engine/BehaviourPool.h"
+#include "engine/IAlicaCommunication.h"
 #include "engine/IPlanTreeVisitor.h"
-#include "engine/teammanager/TeamManager.h"
-#include "engine/TeamObserver.h"
+#include "engine/RuleBook.h"
 #include "engine/SimplePlanTree.h"
+#include "engine/TeamObserver.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/allocationauthority/EntryPointRobotPair.h"
 #include "engine/collections/AssignmentCollection.h"
@@ -26,42 +26,47 @@
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
-#include "engine/model/State.h"
 #include "engine/model/Task.h"
-#include "engine/RuleBook.h"
+#include "engine/teammanager/TeamManager.h"
 
 #include <iostream>
 
 using std::shared_ptr;
 
-namespace alica {
+namespace alica
+{
 
 AlicaTime RunningPlan::assignmentProtectionTime = AlicaTime::zero();
 
-void RunningPlan::init() {
-    assignmentProtectionTime = AlicaTime::milliseconds((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
+void RunningPlan::init()
+{
+    assignmentProtectionTime =
+        AlicaTime::milliseconds((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae)
-        : _ae(ae)
-        , _planType(nullptr)
-        , _plan(nullptr)
-        , _activeState(nullptr)
-        , _activeEntryPoint(nullptr)
-        , _behaviour(false)
-        , _assignment(nullptr)
-        , _status(PlanStatus::Running)
-        , _failCount(0)
-        , _basicBehaviour(nullptr)
-        , _active(false)
-        , _allocationNeeded(false)
-        , _failHandlingNeeded(false)
-        , _cycleManagement(std::make_shared<CycleManager>(ae, this)) {}
+    : _ae(ae)
+    , _planType(nullptr)
+    , _plan(nullptr)
+    , _activeState(nullptr)
+    , _activeEntryPoint(nullptr)
+    , _behaviour(false)
+    , _assignment(nullptr)
+    , _status(PlanStatus::Running)
+    , _failCount(0)
+    , _basicBehaviour(nullptr)
+    , _active(false)
+    , _allocationNeeded(false)
+    , _failHandlingNeeded(false)
+    , _cycleManagement(std::make_shared<CycleManager>(ae, this))
+{
+}
 
 RunningPlan::~RunningPlan() {}
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
-        : RunningPlan(ae) {
+    : RunningPlan(ae)
+{
     _plan = plan;
     /*
     Code does not have any effect
@@ -74,33 +79,38 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
-        : RunningPlan(ae) {
+    : RunningPlan(ae)
+{
     _planType = pt;
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc)
-        : _ae(ae)
-        , _planType(nullptr)
-        , _plan(bc)
-        , _activeState(nullptr)
-        , _activeEntryPoint(nullptr)
-        , _behaviour(true)
-        , _assignment(nullptr)
-        , _status(PlanStatus::Running)
-        , _failCount(0)
-        , _basicBehaviour(nullptr)
-        , _active(false)
-        , _allocationNeeded(false)
-        , _failHandlingNeeded(false)
-        , _cycleManagement(std::make_shared<CycleManager>(ae, this)) {}
+    : _ae(ae)
+    , _planType(nullptr)
+    , _plan(bc)
+    , _activeState(nullptr)
+    , _activeEntryPoint(nullptr)
+    , _behaviour(true)
+    , _assignment(nullptr)
+    , _status(PlanStatus::Running)
+    , _failCount(0)
+    , _basicBehaviour(nullptr)
+    , _active(false)
+    , _allocationNeeded(false)
+    , _failHandlingNeeded(false)
+    , _cycleManagement(std::make_shared<CycleManager>(ae, this))
+{
+}
 
 /**
  * Indicates whether this plan needs failure handling
  */
-bool RunningPlan::getFailHandlingNeeded() const {
+bool RunningPlan::getFailHandlingNeeded() const
+{
     return _failHandlingNeeded;
 }
-void RunningPlan::setFailHandlingNeeded(bool failHandlingNeeded) {
+void RunningPlan::setFailHandlingNeeded(bool failHandlingNeeded)
+{
     if (failHandlingNeeded) {
         _status = PlanStatus::Failed;
     } else {
@@ -114,10 +124,12 @@ void RunningPlan::setFailHandlingNeeded(bool failHandlingNeeded) {
 /**
  * Gets/Sets the parent RunningPlan of this RunningPlan. Null in case this is the top-level element.
  */
-void RunningPlan::setParent(weak_ptr<RunningPlan> s) {
+void RunningPlan::setParent(std::weak_ptr<RunningPlan> s)
+{
     _parent = s;
 }
-weak_ptr<RunningPlan> RunningPlan::getParent() const {
+std::weak_ptr<RunningPlan> RunningPlan::getParent() const
+{
     return _parent;
 }
 
@@ -126,7 +138,8 @@ weak_ptr<RunningPlan> RunningPlan::getParent() const {
  * @param rules a RuleBook
  * @return PlanChange a PlanChange
  */
-PlanChange RunningPlan::tick(RuleBook* rules) {
+PlanChange RunningPlan::tick(RuleBook* rules)
+{
     _cycleManagement->update();
     PlanChange myChange = rules->visit(shared_from_this());
     PlanChange childChange = PlanChange::NoChange;
@@ -148,7 +161,8 @@ PlanChange RunningPlan::tick(RuleBook* rules) {
  * If set to true, the next engine iteration will perform a task allocation and set it to false.
  * true if allocation is needed, otherwise false
  */
-void RunningPlan::setAllocationNeeded(bool need) {
+void RunningPlan::setAllocationNeeded(bool need)
+{
     _allocationNeeded = need;
 }
 
@@ -156,18 +170,19 @@ void RunningPlan::setAllocationNeeded(bool need) {
  * Evaluates the precondition of the associated plan.
  * @return Whether the precondition currently holds or not.
  */
-bool RunningPlan::evalPreCondition() {
+bool RunningPlan::evalPreCondition()
+{
     if (_plan == nullptr) {
-        cerr << "Cannot Eval Condition, Plan is null" << endl;
-        throw new exception();
+        std::cerr << "Cannot Eval Condition, Plan is null" << std::endl;
+        throw std::exception();
     }
     if (_plan->getPreCondition() == nullptr) {
         return true;
     }
     try {
         return _plan->getPreCondition()->evaluate(shared_from_this());
-    } catch (exception& e) {
-        cerr << "Exception in precondition: " << e.what() << endl;
+    } catch (std::exception& e) {
+        std::cerr << "Exception in precondition: " << e.what() << std::endl;
         return false;
     }
 }
@@ -176,23 +191,25 @@ bool RunningPlan::evalPreCondition() {
  * Evals the runtime condition of the associated plan.
  * @return Whether the runtime currently holds or not.
  */
-bool RunningPlan::evalRuntimeCondition() {
+bool RunningPlan::evalRuntimeCondition()
+{
     if (_plan == nullptr) {
-        cerr << "Cannot Eval Condition, Plan is null" << endl;
-        throw new exception();
+        std::cerr << "Cannot Eval Condition, Plan is null" << std::endl;
+        throw std::exception();
     }
     if (_plan->getRuntimeCondition() == nullptr) {
         return true;
     }
     try {
         return _plan->getRuntimeCondition()->evaluate(shared_from_this());
-    } catch (exception& e) {
-        cerr << "Exception in runtimecondition: " << _plan->getName() << e.what() << endl;
+    } catch (std::exception& e) {
+        std::cerr << "Exception in runtimecondition: " << _plan->getName() << e.what() << std::endl;
         return false;
     }
 }
 
-void RunningPlan::setActiveState(const State* s) {
+void RunningPlan::setActiveState(const State* s)
+{
     if (_activeState != s) {
         _activeState = s;
         _stateStartTime = _ae->getAlicaClock()->now();
@@ -208,7 +225,8 @@ void RunningPlan::setActiveState(const State* s) {
     }
 }
 
-void RunningPlan::addChildren(shared_ptr<list<shared_ptr<RunningPlan>>>& runningPlans) {
+void RunningPlan::addChildren(shared_ptr<list<shared_ptr<RunningPlan>>>& runningPlans)
+{
     for (shared_ptr<RunningPlan> r : (*runningPlans)) {
         r->setParent(shared_from_this());
         _children.push_back(r);
@@ -222,7 +240,8 @@ void RunningPlan::addChildren(shared_ptr<list<shared_ptr<RunningPlan>>>& running
     }
 }
 
-void RunningPlan::addChildren(list<shared_ptr<RunningPlan>>& children) {
+void RunningPlan::addChildren(list<shared_ptr<RunningPlan>>& children)
+{
     for (shared_ptr<RunningPlan> r : children) {
         r->setParent(shared_from_this());
         _children.push_back(r);
@@ -241,7 +260,8 @@ void RunningPlan::addChildren(list<shared_ptr<RunningPlan>>& children) {
  * Move this very robot to another state. Performs all neccessary operations, such as updating the assignment.
  * @param nextState A State
  */
-void RunningPlan::moveState(const State* nextState) {
+void RunningPlan::moveState(const State* nextState)
+{
     deactivateChildren();
     clearChildren();
     _assignment->moveRobots(_activeState, nextState);
@@ -252,15 +272,18 @@ void RunningPlan::moveState(const State* nextState) {
 /**
  * The children of this RunningPlan.
  */
-list<shared_ptr<RunningPlan>>* RunningPlan::getChildren() {
-    return &_children;  // TODO irgendwie ist das doch eher uncool
+list<shared_ptr<RunningPlan>>* RunningPlan::getChildren()
+{
+    return &_children; // TODO irgendwie ist das doch eher uncool
 }
 
-void RunningPlan::setChildren(list<shared_ptr<RunningPlan>> children) {
+void RunningPlan::setChildren(list<shared_ptr<RunningPlan>> children)
+{
     _children = children;
 }
 
-void RunningPlan::setPlan(const AbstractPlan* plan) {
+void RunningPlan::setPlan(const AbstractPlan* plan)
+{
     if (_plan != plan) {
         _planStartTime = _ae->getAlicaClock()->now();
         revokeAllConstraints();
@@ -271,51 +294,59 @@ void RunningPlan::setPlan(const AbstractPlan* plan) {
 /**
  * The behaviour represented by this running plan, in case there is any, otherwise null.
  */
-shared_ptr<BasicBehaviour> RunningPlan::getBasicBehaviour() {
+shared_ptr<BasicBehaviour> RunningPlan::getBasicBehaviour()
+{
     return _basicBehaviour;
 }
-void RunningPlan::setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour) {
+void RunningPlan::setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour)
+{
     _basicBehaviour = basicBehaviour;
 }
 
 /**
  * Simple method to recursively print the plan-tree.
  */
-void RunningPlan::printRecursive() {
+void RunningPlan::printRecursive()
+{
     for (shared_ptr<RunningPlan>& c : _children) {
         c->printRecursive();
     }
     if (_children.size() > 0) {
-        cout << "END CHILDREN of " << (_plan == nullptr ? "NULL" : _plan->getName()) << endl;
+        std::cout << "END CHILDREN of " << (_plan == nullptr ? "NULL" : _plan->getName()) << std::endl;
     }
 }
 
 /**
  * The current assignment of robots to EntryPoints.
  */
-shared_ptr<Assignment> RunningPlan::getAssignment() const {
+shared_ptr<Assignment> RunningPlan::getAssignment() const
+{
     return _assignment;
 }
 
-void RunningPlan::setAssignment(shared_ptr<Assignment> assignment) {
+void RunningPlan::setAssignment(shared_ptr<Assignment> assignment)
+{
     _assignment = assignment;
 }
 
-void RunningPlan::setActive(bool active) {
+void RunningPlan::setActive(bool active)
+{
     _active = active;
 }
 
 /**
  * The robot's current EntryPoint. Null if it is idling
  */
-const EntryPoint* RunningPlan::getOwnEntryPoint() const {
+const EntryPoint* RunningPlan::getOwnEntryPoint() const
+{
     return _activeEntryPoint;
 }
 
 /**
  * The robot's current EntryPoint. Null if it is idling
  */
-void RunningPlan::setOwnEntryPoint(const EntryPoint* value) {
+void RunningPlan::setOwnEntryPoint(const EntryPoint* value)
+{
     if (_activeEntryPoint != value) {
         const supplementary::AgentID* mid = getOwnID();
         _assignment->removeRobot(mid);
@@ -330,7 +361,8 @@ void RunningPlan::setOwnEntryPoint(const EntryPoint* value) {
 /**
  * Gets the PlanStatus of the currently executed plan.
  */
-PlanStatus RunningPlan::getStatus() const {
+PlanStatus RunningPlan::getStatus() const
+{
     if (_basicBehaviour != nullptr) {
         if (_basicBehaviour->isSuccess()) {
             // cout << "RP: " << _plan->getName() << " BEH Success" << endl;
@@ -352,18 +384,21 @@ PlanStatus RunningPlan::getStatus() const {
     return _status;
 }
 
-void RunningPlan::clearFailures() {
+void RunningPlan::clearFailures()
+{
     _failCount = 0;
 }
 
 /**
  * Clears the failure history of failed plans.
  */
-void RunningPlan::clearFailedChildren() {
+void RunningPlan::clearFailedChildren()
+{
     _failedSubPlans.clear();
 }
 
-void RunningPlan::addFailure() {
+void RunningPlan::addFailure()
+{
     _failCount++;
     _failHandlingNeeded = true;
 }
@@ -371,11 +406,13 @@ void RunningPlan::addFailure() {
 /**
  * Returns the number of failures detected while this RunningPlan was executed.
  */
-int RunningPlan::getFailure() {
+int RunningPlan::getFailure()
+{
     return _failCount;
 }
 
-void RunningPlan::deactivateChildren() {
+void RunningPlan::deactivateChildren()
+{
     for (shared_ptr<RunningPlan>& r : _children) {
         r->deactivate();
     }
@@ -384,7 +421,8 @@ void RunningPlan::deactivateChildren() {
 /**
  * Remove all children without passing any command to them.
  */
-void RunningPlan::clearChildren() {
+void RunningPlan::clearChildren()
+{
     _children.clear();
 }
 
@@ -392,7 +430,8 @@ void RunningPlan::clearChildren() {
  * Adapt the assignment of this plan to the one supplied. This can also change plan
  * @param r A RunningPlan
  */
-void RunningPlan::adaptAssignment(shared_ptr<RunningPlan> r) {
+void RunningPlan::adaptAssignment(shared_ptr<RunningPlan> r)
+{
     const State* newState = r->getAssignment()->getRobotStateMapping()->getStateOfRobot(getOwnID());
     r->getAssignment()->getRobotStateMapping()->reconsiderOldAssignment(_assignment, r->getAssignment());
     bool reactivate = false;
@@ -405,7 +444,7 @@ void RunningPlan::adaptAssignment(shared_ptr<RunningPlan> r) {
         addChildren(*r->getChildren());
         reactivate = true;
     } else {
-        AgentSet robotsJoined;
+        AgentGrp robotsJoined;
         r->getAssignment()->getRobotStateMapping()->getRobotsInState(newState, robotsJoined);
         for (shared_ptr<RunningPlan>& r : _children) {
             r->limitToRobots(robotsJoined);
@@ -421,7 +460,8 @@ void RunningPlan::adaptAssignment(shared_ptr<RunningPlan> r) {
     }
 }
 
-void RunningPlan::setActiveEntryPoint(EntryPoint* activeEntryPoint) {
+void RunningPlan::setActiveEntryPoint(EntryPoint* activeEntryPoint)
+{
     if (_activeEntryPoint != activeEntryPoint) {
         const supplementary::AgentID* mid = getOwnID();
         _assignment->removeRobot(mid);
@@ -436,7 +476,8 @@ void RunningPlan::setActiveEntryPoint(EntryPoint* activeEntryPoint) {
 /**
  * Indicates whether this running plan represents a behaviour.
  */
-std::shared_ptr<CycleManager> RunningPlan::getCycleManagement() {
+std::shared_ptr<CycleManager> RunningPlan::getCycleManagement()
+{
     return _cycleManagement;
 }
 
@@ -444,33 +485,21 @@ std::shared_ptr<CycleManager> RunningPlan::getCycleManagement() {
  * Indicate that an AbstractPlan has failed while being a child of this plan.
  * @param child a AbstractPlan
  */
-void RunningPlan::setFailedChild(const AbstractPlan* child) {
+void RunningPlan::setFailedChild(const AbstractPlan* child)
+{
     if (_failedSubPlans.find(child) != _failedSubPlans.end()) {
         _failedSubPlans.at(child)++;
     } else {
-        _failedSubPlans.insert(pair<const AbstractPlan*, int>(child, 1));
+        _failedSubPlans.insert(std::pair<const AbstractPlan*, int>(child, 1));
     }
-}
-
-void RunningPlan::setRobotAvail(const supplementary::AgentID* robot) {
-    auto iter = std::find_if(_robotsAvail.begin(), _robotsAvail.end(),
-            [&robot](const supplementary::AgentID* id) { return *robot == *id; });
-    if (iter != _robotsAvail.end()) {
-        return;
-    }
-    _robotsAvail.push_back(robot);
-}
-
-void RunningPlan::setRobotUnAvail(const supplementary::AgentID* robot) {
-    std::remove_if(_robotsAvail.begin(), _robotsAvail.end(),
-            [&robot](const supplementary::AgentID* id) { return *robot == *id; });
 }
 
 /**
  *  General Visitor pattern for the plan graph.
  *  @param vis A IPlanTreeVisitor
  */
-void RunningPlan::accept(IPlanTreeVisitor* vis) {
+void RunningPlan::accept(IPlanTreeVisitor* vis)
+{
     vis->visit(shared_from_this());
     //		for (int i = 0; i < _children.size(); i++)
     //		{
@@ -487,7 +516,8 @@ void RunningPlan::accept(IPlanTreeVisitor* vis) {
  *  Deactivate this plan, to be called before the plan is removed from the graph.
  * Ensures that all sub-behaviours are stopped and all constraints are revoked.
  */
-void RunningPlan::deactivate() {
+void RunningPlan::deactivate()
+{
     _active = false;
     if (isBehaviour()) {
         _ae->getBehaviourPool()->stopBehaviour(shared_from_this());
@@ -503,7 +533,8 @@ void RunningPlan::deactivate() {
  * @param A PlanStatus
  * @returns bool
  */
-bool RunningPlan::allChildrenStatus(PlanStatus ps) {
+bool RunningPlan::allChildrenStatus(PlanStatus ps)
+{
     for (const std::shared_ptr<RunningPlan>& child : _children) {
         if (ps != child->getStatus()) {
             return false;
@@ -517,7 +548,8 @@ bool RunningPlan::allChildrenStatus(PlanStatus ps) {
  * @param A TaskStatus
  * @return bool
  */
-bool RunningPlan::anyChildrenTaskSuccess() {
+bool RunningPlan::anyChildrenTaskSuccess()
+{
     for (auto child : _children) {
         if (child->isBehaviour()) {
             // Behaviours have no task status!
@@ -533,8 +565,8 @@ bool RunningPlan::anyChildrenTaskSuccess() {
         for (int i = 0; i < childAssignment->getEpSuccessMapping()->getCount(); i++) {
             // at least one robot must be successful && at least as much as minCard robots must be successful
             if (childAssignment->getEpSuccessMapping()->getRobots()[i]->size() > 0 &&
-                    static_cast<int>(childAssignment->getEpSuccessMapping()->getRobots()[i]->size()) >=
-                            childAssignment->getEpSuccessMapping()->getEntryPoints()[i]->getMinCardinality()) {
+                static_cast<int>(childAssignment->getEpSuccessMapping()->getRobots()[i]->size()) >=
+                    childAssignment->getEpSuccessMapping()->getEntryPoints()[i]->getMinCardinality()) {
                 return true;
             }
         }
@@ -546,7 +578,8 @@ bool RunningPlan::anyChildrenTaskSuccess() {
 /**
  * Activate this plan, called when it is inserted into the plan graph.
  */
-void RunningPlan::activate() {
+void RunningPlan::activate()
+{
     _active = true;
     if (isBehaviour()) {
         _ae->getBehaviourPool()->startBehaviour(shared_from_this());
@@ -561,7 +594,8 @@ void RunningPlan::activate() {
  * Removes any robot not in robots
  * @param robots The set of robots that can participate in this running plan.
  */
-void RunningPlan::limitToRobots(const AgentSet& robots) {
+void RunningPlan::limitToRobots(const AgentGrp& robots)
+{
     if (isBehaviour()) {
         return;
     }
@@ -571,11 +605,10 @@ void RunningPlan::limitToRobots(const AgentSet& robots) {
     bool recurse = false;
 
     // TODO: move this code into assignment to avoid the call to getAllRobots.
-    AgentSet curRobots;
+    AgentGrp curRobots;
     _assignment->getAllRobots(curRobots);
     for (const supplementary::AgentID* r : curRobots) {
-        if (find_if(robots.begin(), robots.end(), [&r](const supplementary::AgentID* id) { return *r == *id; }) ==
-                curRobots.end()) {
+        if (find_if(robots.begin(), robots.end(), [&r](const supplementary::AgentID* id) { return *r == *id; }) == robots.end()) {
             if (_activeState != nullptr && _assignment->getRobotStateMapping()->getStateOfRobot(r) == _activeState) {
                 recurse = true;
             }
@@ -592,18 +625,20 @@ void RunningPlan::limitToRobots(const AgentSet& robots) {
 /**
  * //convenience method as recursive case might have been called for the children already
  */
-void RunningPlan::revokeAllConstraints() {
+void RunningPlan::revokeAllConstraints()
+{
     _constraintStore.clear();
 }
 
-void RunningPlan::attachPlanConstraints() {
+void RunningPlan::attachPlanConstraints()
+{
     _constraintStore.addCondition(_plan->getPreCondition());
     _constraintStore.addCondition(_plan->getRuntimeCondition());
 }
 
-bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts,
-        std::vector<const supplementary::AgentID*>& availableAgents, list<const supplementary::AgentID*> noUpdates,
-        AlicaTime now) {
+bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, list<const supplementary::AgentID*> noUpdates,
+                                            AlicaTime now)
+{
     if (isBehaviour()) {
         return false;
     }
@@ -614,7 +649,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
     bool ret = false;
     AllocationDifference* aldif = new AllocationDifference();
     for (shared_ptr<SimplePlanTree> spt : spts) {
-        if (spt->getState()->getInPlan() != _plan) {  // the robot is no longer participating in this plan
+        if (spt->getState()->getInPlan() != _plan) { // the robot is no longer participating in this plan
             if (!keepTask & !auth) {
                 const EntryPoint* ep = getAssignment()->getEntryPointOfRobot(spt->getRobotId());
                 if (ep != nullptr) {
@@ -624,19 +659,19 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
                 }
             }
         } else {
-            if (keepTask || auth) {  // Update only state, and that only if it is in the reachability graph of its
-                                     // current entrypoint, else
+            if (keepTask || auth) { // Update only state, and that only if it is in the reachability graph of its
+                                    // current entrypoint, else
                 // ignore
                 const EntryPoint* cep = getAssignment()->getEntryPointOfRobot(spt->getRobotId());
                 if (cep != nullptr) {
                     if (cep->isStateReachable(spt->getState())) {
                         getAssignment()->getRobotStateMapping()->setState(spt->getRobotId(), spt->getState());
                     }
-                } else {  // robot was not expected to be here during protected assignment time, add it.
+                } else { // robot was not expected to be here during protected assignment time, add it.
                     getAssignment()->addRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
                     aldif->editAdditions().emplace_back(spt->getEntryPoint(), spt->getRobotId());
                 }
-            } else {  // Normal Update
+            } else { // Normal Update
                 const EntryPoint* ep = getAssignment()->getEntryPointOfRobot(spt->getRobotId());
                 ret |= getAssignment()->updateRobot(spt->getRobotId(), spt->getEntryPoint(), spt->getState());
                 if (spt->getEntryPoint() != ep) {
@@ -650,8 +685,8 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
     }
 
     list<const supplementary::AgentID*> rem;
-    if (!keepTask) {  // remove any robot no longer available in the spts (auth flag obey here, as robot might be
-                      // unavailable)
+    if (!keepTask) { // remove any robot no longer available in the spts (auth flag obey here, as robot might be
+                     // unavailable)
         // EntryPoint[] eps = this.Assignment.GetEntryPoints();
         const supplementary::AgentID* ownId = getOwnID();
         for (int i = 0; i < getAssignment()->getEntryPointCount(); i++) {
@@ -662,8 +697,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
                 if (*rob == *ownId)
                     continue;
                 bool found = false;
-                if (find_if(noUpdates.begin(), noUpdates.end(),
-                            [&rob](const supplementary::AgentID* id) { return *rob == *id; }) != noUpdates.end()) {
+                if (find_if(noUpdates.begin(), noUpdates.end(), [&rob](const supplementary::AgentID* id) { return *rob == *id; }) != noUpdates.end()) {
                     // found = true;
                     continue;
                 }
@@ -687,15 +721,14 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
     }
 
     // enforce consistency between RA and PlanTree by removing robots deemed inactive:
-    if (!auth) {  // under authority do not remove robots from assignment
+    if (!auth) { // under authority do not remove robots from assignment
         for (int i = 0; i < getAssignment()->getEntryPointCount(); i++) {
             const EntryPoint* ep = getAssignment()->getEpRobotsMapping()->getEp(i);
             rem.clear();
             auto robs = getAssignment()->getRobotsWorking(ep);
             for (auto& rob : (*robs)) {
-                if (find_if(availableAgents.begin(), availableAgents.end(), [&rob](const supplementary::AgentID* id) {
-                        return *rob == *id;
-                    }) == availableAgents.end()) {
+                if (find_if(availableAgents.begin(), availableAgents.end(), [&rob](const supplementary::AgentID* id) { return *rob == *id; }) ==
+                    availableAgents.end()) {
                     rem.push_back(rob);
                     aldif->editSubtractions().emplace_back(ep, rob);
                     ret = true;
@@ -711,29 +744,28 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
     aldif->setReason(AllocationDifference::Reason::message);
     _cycleManagement->setNewAllocDiff(aldif);
     // Update Success Collection:
-    _ae->getTeamObserver()->updateSuccessCollection((Plan*) getPlan(), getAssignment()->getEpSuccessMapping());
+    _ae->getTeamObserver()->updateSuccessCollection((Plan*)getPlan(), getAssignment()->getEpSuccessMapping());
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
     if (_stateStartTime + assignmentProtectionTime > now) {
-        AgentSet robotsJoined;
+        AgentGrp robotsJoined;
         getAssignment()->getRobotStateMapping()->getRobotsInState(getActiveState(), robotsJoined);
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
-            if (std::find_if(robotsJoined.begin(), robotsJoined.end(),
-                        [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) == robotsJoined.end()) {
+            if (std::find_if(robotsJoined.begin(), robotsJoined.end(), [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) ==
+                robotsJoined.end()) {
                 iter = availableAgents.erase(iter);
             } else {
                 ++iter;
             }
         }
-    } else if (auth) {  // in case of authority, remove all that are not assigned to same task
-        const AgentSet* robotsJoined = getAssignment()->getRobotsWorking(getOwnEntryPoint());
+    } else if (auth) { // in case of authority, remove all that are not assigned to same task
+        const AgentGrp* robotsJoined = getAssignment()->getRobotsWorking(getOwnEntryPoint());
 
         if (robotsJoined) {
             for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
-                if (find_if(robotsJoined->begin(), robotsJoined->end(), [&iter](const supplementary::AgentID* id) {
-                        return *(*iter) == *id;
-                    }) == robotsJoined->end()) {
+                if (find_if(robotsJoined->begin(), robotsJoined->end(), [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) ==
+                    robotsJoined->end()) {
                     iter = availableAgents.erase(iter);
                 } else {
                     ++iter;
@@ -762,8 +794,8 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
     return ret;
 }
 
-void RunningPlan::toMessage(
-        list<long>& message, shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const {
+void RunningPlan::toMessage(IdGrp& message, shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const
+{
     if (isBehaviour()) {
         return;
     }
@@ -785,12 +817,13 @@ void RunningPlan::toMessage(
     }
 }
 
-std::string RunningPlan::toString() const {
+std::string RunningPlan::toString() const
+{
     std::stringstream ss;
-    ss << "######## RP ##########" << endl;
-    ss << "Plan: " + (_plan != nullptr ? _plan->getName() : "NULL") << endl;
-    ss << "PlanType: " << (_planType != nullptr ? _planType->getName() : "NULL") << endl;
-    ss << "ActState: " << (_activeState != nullptr ? _activeState->getName() : "NULL") << endl;
+    ss << "######## RP ##########" << std::endl;
+    ss << "Plan: " + (_plan != nullptr ? _plan->getName() : "NULL") << std::endl;
+    ss << "PlanType: " << (_planType != nullptr ? _planType->getName() : "NULL") << std::endl;
+    ss << "ActState: " << (_activeState != nullptr ? _activeState->getName() : "NULL") << std::endl;
     ss << "Task: " << (getOwnEntryPoint() != nullptr ? getOwnEntryPoint()->getTask()->getName() : "NULL") << std::endl;
     ss << "IsBehaviour: " << isBehaviour() << "\t";
     if (isBehaviour()) {
@@ -800,9 +833,7 @@ std::string RunningPlan::toString() const {
     ss << "FailHandlingNeeded: " << _failHandlingNeeded << "\t";
     ss << "FailCount: " << _failCount << std::endl;
     ss << "IsActive: " << _active << std::endl;
-    ss << "Status: "
-       << (_status == PlanStatus::Running ? "RUNNING" : (_status == PlanStatus::Success ? "SUCCESS" : "FAILED"))
-       << std::endl;
+    ss << "Status: " << (_status == PlanStatus::Running ? "RUNNING" : (_status == PlanStatus::Success ? "SUCCESS" : "FAILED")) << std::endl;
     ss << "AvailRobots: ";
     for (const supplementary::AgentID* r : _robotsAvail) {
         ss << " " << *r;
@@ -823,9 +854,8 @@ std::string RunningPlan::toString() const {
         }
         ss << ")";
     }
-    ss << endl
-       << "CycleManagement - Assignment Overridden: " << (_cycleManagement->isOverridden() ? "true" : "false") << endl;
-    ss << "\n########## ENDRP ###########" << endl;
+    ss << std::endl << "CycleManagement - Assignment Overridden: " << (_cycleManagement->isOverridden() ? "true" : "false") << std::endl;
+    ss << "\n########## ENDRP ###########" << std::endl;
     return ss.str();
 }
 
@@ -834,7 +864,8 @@ std::string RunningPlan::toString() const {
  * @param A PlanStatus
  * @return bool
  */
-bool RunningPlan::anyChildrenStatus(PlanStatus ps) {
+bool RunningPlan::anyChildrenStatus(PlanStatus ps)
+{
     for (std::shared_ptr<RunningPlan>& child : _children) {
         if (ps == child->getStatus()) {
             return true;
@@ -843,7 +874,8 @@ bool RunningPlan::anyChildrenStatus(PlanStatus ps) {
     return false;
 }
 
-void RunningPlan::sendLogMessage(int level, string& message) {
+void RunningPlan::sendLogMessage(int level, const std::string& message) const
+{
     _ae->getCommunicator()->sendLogMessage(level, message);
 }
 

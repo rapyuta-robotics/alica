@@ -8,15 +8,16 @@
 #ifndef ABSTRACTPLAN_H_
 #define ABSTRACTPLAN_H_
 
-#include <string>
 #include <memory>
+#include <string>
 
 #include "AlicaElement.h"
 #include "engine/AlicaClock.h"
 
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 
 class Variable;
 class PreCondition;
@@ -28,8 +29,9 @@ class ExpressionHandler;
 /**
  * Super class of plans, plantypes and behaviourconfigurations.
  */
-class AbstractPlan : public AlicaElement {
-public:
+class AbstractPlan : public AlicaElement
+{
+  public:
     AbstractPlan();
     AbstractPlan(int64_t id);
 
@@ -40,7 +42,7 @@ public:
 
     bool isMasterPlan() const { return _masterPlan; }
     AlicaTime getAuthorityTimeInterval() const { return _authorityTimeInterval; }
-    const VariableSet& getVariables() const { return _variables; }
+    const VariableGrp& getVariables() const { return _variables; }
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
     const std::shared_ptr<UtilityFunction>& getUtilityFunction() const { return _utilityFunction; }
@@ -49,16 +51,17 @@ public:
     std::string toString() const override;
     const std::string& getFileName() const { return _fileName; }
 
-    void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const;  // not a mistake, this is mutable
+    void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const; // not a mistake, this is mutable
+    const Variable* getVariableByName(const std::string& name) const;
 
-private:
+  private:
     friend ModelFactory;
     friend ExpressionHandler;
 
     void setMasterPlan(bool isMasterPlan);
 
     void setFileName(const std::string& fileName);
-    void setVariables(const VariableSet& variables);
+    void setVariables(const VariableGrp& variables);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
     void setUtilityFunction(std::shared_ptr<UtilityFunction> utilityFunction);
@@ -77,10 +80,9 @@ private:
     /**
      * This plan's Utility function
      */
-    std::shared_ptr<UtilityFunction>
-            _utilityFunction;  // TODO why the heck is this a shared ptr, livetime is bout to this object
+    std::shared_ptr<UtilityFunction> _utilityFunction; // TODO why the heck is this a shared ptr, livetime is bout to this object
 
-    VariableSet _variables;
+    VariableGrp _variables;
     /**
      * The utility threshold, the higher, the less likely dynamic changes are.
      */
@@ -93,6 +95,6 @@ private:
     std::string _fileName;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* ABSTRACTPLAN_H_ */

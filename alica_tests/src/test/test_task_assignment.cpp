@@ -1,3 +1,5 @@
+#include <test_alica.h>
+#include <gtest/gtest.h>
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
@@ -19,7 +21,6 @@
 #include "engine/IRoleAssignment.h"
 #include "supplementary/AgentID.h"
 
-#include <gtest/gtest.h>
 #include <list>
 #include <vector>
 #include <memory>
@@ -74,8 +75,10 @@ protected:
 };
 
 TEST_F(TaskAssignmentTest, constructTaskAssignment) {
+    ASSERT_NO_SIGNAL
+
     // fake a list of existing robots
-    alica::AgentSet robots;
+    alica::AgentGrp robots;
     for (int number = 8; number <= 11; number++) {
         const supplementary::AgentID* agentID = ae->getID<int>(number);
         robots.push_back(agentID);
@@ -87,7 +90,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment) {
 
     const alica::PlanRepository::Accessor<alica::Plan>& planMap = ae->getPlanRepository()->getPlans();
     auto rp = make_shared<alica::RunningPlan>(ae, planMap.find(1407152758497));
-    alica::AbstractPlanSet inputPlans;
+    alica::AbstractPlanGrp inputPlans;
     inputPlans.push_back(planMap.find(1407152758497));
     alica::PlanSelector* ps = ae->getPlanSelector();
     auto plans = ps->getPlansForState(rp, inputPlans, robots);

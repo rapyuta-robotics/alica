@@ -3,26 +3,39 @@
 #include "Quantifier.h"
 #include "supplementary/AgentID.h"
 #include <engine/Types.h>
+#include <engine/collections/AgentVariables.h>
 
 #include <list>
 #include <memory>
 #include <vector>
 
-namespace alica {
+namespace alica
+{
 
 class RunningPlan;
 class Variable;
 class SolverTerm;
+class TeamManager;
 
 /**
  * A quantifier associated with agents, i.e., the domain identifiers of this quantifier refer to properties of an agent
  */
-class ForallAgents : public Quantifier {
-public:
+class ForallAgents : public Quantifier
+{
+  public:
     ForallAgents(int64_t id = 0);
     virtual ~ForallAgents();
-    virtual std::shared_ptr<std::list<VariableSet>> getDomainVariables(
-            std::shared_ptr<RunningPlan>& p, AgentSet& o_agentsInScope) const override;
+    virtual bool isAgentInScope(AgentIDConstPtr id, const std::shared_ptr<const RunningPlan>& rp) const override;
+    virtual bool addDomainVariables(const std::shared_ptr<const RunningPlan>& p, std::vector<AgentVariables>& io_agentVarsInScope) const override;
+
+  private:
+    enum Result
+    {
+        ADDED,
+        MODIFIED,
+        NONE
+    };
+    Result TryAddId(AgentIDConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager* tm) const;
 };
 
-}  // namespace alica
+} // namespace alica

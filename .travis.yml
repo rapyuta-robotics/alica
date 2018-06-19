@@ -11,17 +11,19 @@ services:
 env:
   global:
     - ROS_DISTRO=kinetic
-    - ROS_CI_DESKTOP="`lsb_release -cs`"  # e.g. [precise|trusty|...]
-    - ROS_PARALLEL_JOBS='-j8 -l6'
+    - COVERITY_PROJECT=alica
+    - COVERITY_TOKEN=o6qYj0vj-t-K1PKQj5ugyg
+    - COVERITY_EMAIL=alexander.bolinsky@rapyuta-robotics.com
     - PYTHONPATH=$PYTHONPATH:/usr/lib/python2.7/dist-packages:/usr/local/lib/python2.7/dist-packages
     - BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+    - BASE_BRANCH=rr-devel
+    - TRAVIS_BRANCH=$TRAVIS_BRANCH
 
 
 ################################################################################
 
 before_install:
-  - docker run -e BRANCH -e PYTHONPATH -d --name alica-test -v $TRAVIS_BUILD_DIR:/travis ros:kinetic-ros-core-xenial tail -f /dev/null
-  - docker ps
+  - docker run -e BASE_BRANCH -e BRANCH -e PYTHONPATH -e COVERITY_EMAIL -e COVERITY_TOKEN -e COVERITY_PROJECT -e TRAVIS_BRANCH -e ROS_DISTRO -d --name alica-test -v $TRAVIS_BUILD_DIR:/travis ros:$ROS_DISTRO-ros-core-xenial tail -f /dev/null
 
 install:
   - docker exec -t alica-test bash -c "
@@ -36,11 +38,11 @@ install:
         python-rosdep 
         python-wstool 
         python-catkin-tools 
-        ros-kinetic-catkin 
-        ros-kinetic-rostest 
+        ros-$ROS_DISTRO-catkin 
+        ros-$ROS_DISTRO-rostest 
         wget 
         curl && 
-    source /opt/ros/kinetic/setup.bash && 
+    source /opt/ros/$ROS_DISTRO/setup.bash && 
     catkin_init_workspace && 
     cd ~/catkin_ws && 
     catkin build && 
@@ -55,15 +57,16 @@ before_script:
     cd ~/catkin_ws/src && 
     wstool init && 
     if [[ -f /travis/dependencies.rosinstall ]] ; then 
-        sed -i -e \"s/rr-devel/$BRANCH/g\" /travis/dependencies.rosinstall; 
-        if wstool merge -y /travis/dependencies.rosinstall ; then 
-            sed -i -e \"s/$BRANCH/rr-devel/g\" /travis/dependencies.rosinstall; 
-            wstool merge -y /travis/dependencies.rosinstall; 
-        fi; 
+        sed -i -e \"s/$BASE_BRANCH/$BRANCH/g\" /travis/dependencies.rosinstall ; 
+        wstool merge -a -y /travis/dependencies.rosinstall ; 
+        if ! wstool up ; then 
+            sed -i -e \"s/$BRANCH/$BASE_BRANCH/g\" /travis/dependencies.rosinstall ; 
+            wstool merge -a -y /travis/dependencies.rosinstall ; 
+            wstool up ; 
+        fi ; 
     fi && 
-    wstool up && 
     cd ~/catkin_ws && 
-    rosdep install -y --from-paths src --ignore-src --rosdistro kinetic"
+    rosdep install -y --from-paths src --ignore-src --rosdistro $ROS_DISTRO"
 
 # Compile and test (mark the build as failed if any step fails). If the
 # CATKIN_OPTIONS file exists, use it as an argument to catkin_make, for example
@@ -77,24 +80,26 @@ before_script:
 # non-zero when a test fails (which notifies Travis the build failed).
 script:
   - docker exec -t alica-test bash -c "
-    source /opt/ros/kinetic/setup.bash && 
+    source /opt/ros/$ROS_DISTRO/setup.bash && 
     cd ~/catkin_ws && 
+    catkin config --cmake-args -DCMAKE_CXX_FLAGS=-Werror &&
     catkin build --no-status && 
     source devel/setup.bash && 
-    catkin run_tests --no-status && catkin_test_results && 
-    if [[ \"$BRANCH\" = \"coverity_scan\" ]] ; then 
+    catkin run_tests --no-status && catkin_test_results --verbose && 
+    if [[ \"$TRAVIS_BRANCH\" = \"coverity_scan\" ]] ; then 
         wget -qO- https://scan.coverity.com/download/cxx/linux64 
-            --post-data \"token=o6qYj0vj-t-K1PKQj5ugyg&project=rapyuta-robotics/alica\" | 
+            --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/$COVERITY_PROJECT\" | 
+
         tar xvz && 
         python /travis/generate_coverity-analysis_script.py . && 
         chmod +x coverity-analysis.sh && 
         ./cov-analysis*/bin/cov-build --dir cov-int ./coverity-analysis.sh && 
         tar czvf cs.tgz cov-int && 
         curl 
-            --form token=o6qYj0vj-t-K1PKQj5ugyg 
-            --form email=alexander.bolinsky@rapyuta-robotics.com 
+            --form token=\"$COVERITY_TOKEN\" 
+            --form email=\"$COVERITY_EMAIL\" 
             --form file=@cs.tgz 
             --form version=\"1.0\" 
-            --form description=\"ALICA\" 
-            https://scan.coverity.com/builds?project=rapyuta-robotics%2Falica ; 
+            --form description=\"$COVERITY_PROJECT\" 
+            https://scan.coverity.com/builds?project=rapyuta-robotics%2F$COVERITY_PROJECT ; 
     fi"

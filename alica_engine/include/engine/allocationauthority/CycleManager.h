@@ -1,18 +1,20 @@
 #pragma once
 //#define CM_DEBUG
 
-#include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/AlicaClock.h"
+#include "engine/allocationauthority/AllocationDifference.h"
 #include "supplementary/AgentID.h"
 
-#include <vector>
-#include <thread>
 #include <mutex>
-using namespace std;
-namespace supplementary {
+#include <thread>
+#include <vector>
+
+namespace supplementary
+{
 class SystemConfig;
 }
-namespace alica {
+namespace alica
+{
 class RunningPlan;
 class PlanRepository;
 struct AllocationAuthorityInfo;
@@ -22,8 +24,9 @@ class AlicaEngine;
 /**
  * Responsibile for detecting cycles in assignment updates and reactions to these
  */
-class CycleManager {
-public:
+class CycleManager
+{
+  public:
     CycleManager(AlicaEngine* ae, RunningPlan* p);
     virtual ~CycleManager();
     void update();
@@ -31,24 +34,31 @@ public:
     bool setAssignment();
     bool mayDoUtilityCheck();
     void setNewAllocDiff(AllocationDifference* aldif);
-    void setNewAllocDiff(
-            shared_ptr<Assignment> oldAss, shared_ptr<Assignment> newAss, AllocationDifference::Reason reas);
-    void handleAuthorityInfo(shared_ptr<AllocationAuthorityInfo> aai);
+    void setNewAllocDiff(std::shared_ptr<Assignment> oldAss, std::shared_ptr<Assignment> newAss, AllocationDifference::Reason reas);
+    void handleAuthorityInfo(std::shared_ptr<AllocationAuthorityInfo> aai);
     bool needsSending();
     void sent();
     bool haveAuthority();
 
-protected:
+  private:
+    enum CycleState
+    {
+        observing,
+        overridden,
+        overriding
+    };
+    bool detectAllocationCycle();
+
     AlicaEngine* ae;
-    mutex allocationHistoryMutex;
+    std::mutex allocationHistoryMutex;
     supplementary::SystemConfig* sc;
     int maxAllocationCycles;
     bool enabled;
-    vector<AllocationDifference*> allocationHistory;
+    std::vector<AllocationDifference*> allocationHistory;
     PlanRepository* pr;
     int newestAllocationDifference;
     const supplementary::AgentID* myID;
-    enum CycleState { observing, overridden, overriding };
+
     AlicaTime overrideTimestamp;
     double intervalIncFactor;
     double intervalDecFactor;
@@ -60,8 +70,7 @@ protected:
     int historySize;
     CycleState state;
     RunningPlan* rp;
-    shared_ptr<AllocationAuthorityInfo> fixedAllocation;
-    bool detectAllocationCycle();
+    std::shared_ptr<AllocationAuthorityInfo> fixedAllocation;
 };
 
-}  // namespace alica
+} // namespace alica

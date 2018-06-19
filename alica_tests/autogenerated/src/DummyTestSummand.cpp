@@ -11,9 +11,11 @@
 #include "supplementary/AgentID.h"
 #include <TestWorldModel.h>
 
-namespace alica {
+namespace alica
+{
 
-DummyTestSummand::DummyTestSummand(double weight, string name, long id, vector<long>& relevantEntryPointIds) {
+DummyTestSummand::DummyTestSummand(double weight, string name, long id, vector<long>& relevantEntryPointIds)
+{
     this->weight = weight;
     this->name = name;
     this->id = id;
@@ -24,19 +26,20 @@ DummyTestSummand::DummyTestSummand(double weight, string name, long id, vector<l
     this->sb = 0;
 }
 
-DummyTestSummand::~DummyTestSummand() {
+DummyTestSummand::~DummyTestSummand()
+{
     // TODO Auto-generated destructor stub
 }
 
 void DummyTestSummand::cacheEvalData() {}
 
-UtilityInterval DummyTestSummand::eval(IAssignment* ass) {
+UtilityInterval DummyTestSummand::eval(IAssignment* ass)
+{
     ui.setMin(0.0);
     ui.setMax(1.0);
-    const AgentSet* relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
+    const AgentGrp* relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[0]);
 
-    for (int i = 0; i < relevantRobots->size(); ++i) {
-        int pos = 0;
+    for (int i = 0; i < static_cast<int>(relevantRobots->size()); ++i) {
         if (relevantRobots->at(i) == this->robotId) {
             ui.setMin(0.5);
         } else {
@@ -46,8 +49,7 @@ UtilityInterval DummyTestSummand::eval(IAssignment* ass) {
     if (this->relevantEntryPoints.size() > 1) {
         relevantRobots = ass->getRobotsWorking(this->relevantEntryPoints[1]);
 
-        for (int i = 0; i < relevantRobots->size(); ++i) {
-            int pos = 0;
+        for (int i = 0; i < static_cast<int>(relevantRobots->size()); ++i) {
             if (relevantRobots->at(i) == this->robotId) {
                 ui.setMin(ui.getMin());
             } else {

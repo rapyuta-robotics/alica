@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>alica_solver_interface</name>
+  <version>0.0.0</version>
+  <description>The alica_solver_interface package</description>
+  <maintainer email="hendrik@rapyuta-robotics.com">hendrik</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>alica_common_config</build_depend>
+
+  <test_depend>gtest</test_depend>
+</package>
