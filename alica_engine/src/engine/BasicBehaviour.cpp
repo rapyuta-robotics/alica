@@ -174,7 +174,7 @@ bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut)
 void BasicBehaviour::runInternalTimed()
 {
     while (_started) {
-        if (!_running) {
+        {
             std::unique_lock<std::mutex> lck(_runLoopMutex);
             _contextInRun = nullptr;
             _runCV.wait(lck, [this] { return _running || !_started; }); // wait for signal to run
