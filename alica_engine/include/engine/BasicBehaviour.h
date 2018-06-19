@@ -42,7 +42,6 @@ public:
     const std::string& getName() const { return _name; }
     const BehaviourParameterMap& getParameters() const { return _configuration->getParameters(); }
 
-    void setName(const std::string& name);
     void setConfiguration(const BehaviourConfiguration* beh);
 
     const VariableGrp& getVariables() const { return _configuration->getVariables(); }

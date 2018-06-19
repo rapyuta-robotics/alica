@@ -65,11 +65,6 @@ bool BasicBehaviour::isRunningInContext(const RunningPlan* rp) const
     return curInRun == rp || (curInRun == nullptr && _context == rp && _started && _running);
 }
 
-void BasicBehaviour::setName(const std::string& name)
-{
-    _name = name;
-}
-
 void BasicBehaviour::setConfiguration(const BehaviourConfiguration* beh)
 {
     assert(_configuration == nullptr);
