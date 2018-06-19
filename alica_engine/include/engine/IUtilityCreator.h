@@ -5,6 +5,7 @@
 namespace alica
 {
 using std::shared_ptr; // TODO: remove when templates can be changed
+
 class BasicUtilityFunction;
 
 class IUtilityCreator

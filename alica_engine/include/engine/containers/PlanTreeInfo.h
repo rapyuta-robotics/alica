@@ -3,6 +3,11 @@
 #include <tuple>
 #include <vector>
 
+namespace supplementary
+{
+class AgentID;
+}
+
 namespace alica
 {
 typedef std::tuple<AgentIDConstPtr, std::vector<int64_t>, std::vector<int64_t>> stdPlanTreeInfo;

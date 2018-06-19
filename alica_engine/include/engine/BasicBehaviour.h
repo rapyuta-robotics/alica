@@ -22,6 +22,9 @@ class ITrigger;
 
 namespace alica
 {
+// TODO: get rid of this line once generator templates get an overhaul
+using std::string;
+
 class Variable;
 class RunningPlan;
 
