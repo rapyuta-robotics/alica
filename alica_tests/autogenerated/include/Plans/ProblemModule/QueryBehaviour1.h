@@ -15,8 +15,8 @@ public:
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1479556104511) ENABLED START*/ // Add additional public methods here
     int getCallCounter();
-    static vector<double> result;
-    shared_ptr<alica::Query> query;
+    static std::vector<double> result;
+    std::shared_ptr<alica::Query> query;
     /*PROTECTED REGION END*/
 protected:
     virtual void initialiseParameters();
