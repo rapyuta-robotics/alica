@@ -1,9 +1,5 @@
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
 #include "TestConstantValueSummand.h"
 #include "TestWorldModel.h"
-#include "UtilityFunctionCreator.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
@@ -18,58 +14,19 @@
 #include <gtest/gtest.h>
 #include <test_alica.h>
 
-class AlicaConditionPlanType : public ::testing::Test
-{ /* namespace alicaTests */
+class AlicaConditionPlanType : public AlicaTestFixture
+{
 protected:
-    supplementary::SystemConfig* sc;
-    alica::AlicaEngine* ae;
-    alica::BehaviourCreator* bc;
-    alica::ConditionCreator* cc;
-    alica::UtilityFunctionCreator* uc;
-    alica::ConstraintCreator* crc;
-
-    virtual void SetUp()
-    {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-
-        // bring up the SystemConfig with the corresponding path
-        sc = supplementary::SystemConfig::getInstance();
-        sc->setRootPath(path);
-        sc->setConfigPath(path + "/etc");
-        sc->setHostname("nase");
-
-        // setup the engine
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "MasterPlanTestConditionPlanType", true);
-        bc = new alica::BehaviourCreator();
-        cc = new alica::ConditionCreator();
-        uc = new alica::UtilityFunctionCreator();
-        crc = new alica::ConstraintCreator();
-        ae->setAlicaClock(new alica::AlicaClock());
-    }
-
-    virtual void TearDown()
-    {
-        ae->shutdown();
-        sc->shutdown();
-        delete cc;
-        delete bc;
-        delete uc;
-        delete crc;
-    }
+    const char* getRoleSetName() const override { return "Roleset"; }
+    const char* getMasterPlanName() const override { return "MasterPlanTestConditionPlanType"; }
 };
+
 /**
  * Test for Runtime or PreCondition are false with plantypes
  */
 TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
 {
     ASSERT_NO_SIGNAL
-
-    ae->setAlicaClock(new alica::AlicaClock());
-    ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-    EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     USummand* uSummandPreConditionPlan = ae->getPlanRepository()->getPlans().find(1418042796751)->getUtilityFunction()->getUtilSummands()[0].get();
     TestConstantValueSummand* dbrPre = dynamic_cast<TestConstantValueSummand*>(uSummandPreConditionPlan);

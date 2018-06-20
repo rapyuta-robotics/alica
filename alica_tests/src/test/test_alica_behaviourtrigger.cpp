@@ -1,81 +1,32 @@
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
-#include "UtilityFunctionCreator.h"
+#include "test_alica.h"
+
 #include "engine/IAlicaCommunication.h"
 #include <Plans/Behaviour/NotToTrigger.h>
 #include <Plans/Behaviour/TriggerA.h>
 #include <Plans/Behaviour/TriggerB.h>
 #include <Plans/Behaviour/TriggerC.h>
-#include <SystemConfig.h>
 #include <TestWorldModel.h>
-#include <communication/AlicaRosCommunication.h>
-#include <condition_variable>
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
 #include <engine/BasicBehaviour.h>
 #include <engine/BehaviourPool.h>
 #include <engine/PlanBase.h>
 #include <engine/model/BehaviourConfiguration.h>
-#include <gtest/gtest.h>
-#include <mutex>
 #include <supplementary/EventTrigger.h>
-#include <test_alica.h>
 
-using namespace std;
+#include <condition_variable>
+#include <mutex>
 
-class AlicaBehaviourTrigger : public ::testing::Test
+class AlicaBehaviourTrigger : public AlicaTestFixture
 {
 protected:
-    supplementary::SystemConfig* sc;
-    alica::AlicaEngine* ae;
-    alica::BehaviourCreator* bc;
-    alica::ConditionCreator* cc;
-    alica::UtilityFunctionCreator* uc;
-    alica::ConstraintCreator* crc;
-
-    virtual void SetUp()
-    {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-
-        // bring up the SystemConfig with the corresponding path
-        sc = supplementary::SystemConfig::getInstance();
-        sc->setRootPath(path);
-        sc->setConfigPath(path + "/etc");
-        sc->setHostname("nase");
-
-        // setup the engine
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "BehaviourTriggerTestPlan", false);
-        bc = new alica::BehaviourCreator();
-        cc = new alica::ConditionCreator();
-        uc = new alica::UtilityFunctionCreator();
-        crc = new alica::ConstraintCreator();
-        ae->setAlicaClock(new alica::AlicaClock());
-        ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-    }
-
-    virtual void TearDown()
-    {
-        ae->shutdown();
-        sc->shutdown();
-        delete ae->getCommunicator();
-        delete cc;
-        delete bc;
-        delete uc;
-        delete crc;
-    }
+    const char* getRoleSetName() const override { return "Roleset"; }
+    const char* getMasterPlanName() const override { return "BehaviourTriggerTestPlan"; }
+    bool stepEngine() const override { return false; }
 };
 
 TEST_F(AlicaBehaviourTrigger, triggerTest)
 {
     ASSERT_NO_SIGNAL
 
-    alicaTests::TestWorldModel::getOne()->trigger1 = new supplementary::EventTrigger();
-    alicaTests::TestWorldModel::getOne()->trigger2 = new supplementary::EventTrigger();
-    ae->init(bc, cc, uc, crc);
     ae->start();
 
     AlicaTime duration = AlicaTime::milliseconds(100);
@@ -151,7 +102,5 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
             EXPECT_TRUE(false);
         }
     }
-    cout << "Finished" << endl;
-    delete alicaTests::TestWorldModel::getOne()->trigger1;
-    delete alicaTests::TestWorldModel::getOne()->trigger2;
+    std::cout << "Finished" << std::endl;
 }

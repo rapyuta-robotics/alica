@@ -49,7 +49,6 @@ if (CATKIN_ENABLE_TESTING)
         src/test_alica.cpp
         src/test/test_main.cpp
         src/test/test_alica_authority.cpp
-        src/test/test_back_forth.cpp
         src/test/test_alica_behaviourtrigger.cpp
         src/test/test_alica_condition_plan.cpp
         src/test/test_alica_condition_plantype.cpp
@@ -64,6 +63,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_alica_sync_transition.cpp
         src/test/test_alica_time.cpp
         src/test/test_assignment.cpp
+        src/test/test_back_forth.cpp
         src/test/test_blackboard.cpp
         src/test/test_success_spam.cpp
         src/test/test_task_assignment.cpp

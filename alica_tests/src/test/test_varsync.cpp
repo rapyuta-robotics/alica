@@ -5,75 +5,26 @@
 
 #include <alica_solver_interface/SolverVariable.h>
 
-#include <gtest/gtest.h>
 #include <test_alica.h>
 
-#include <BehaviourCreator.h>
-#include <ConditionCreator.h>
-#include <ConstraintCreator.h>
-#include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaEngine.h>
 #include <engine/PlanBase.h>
 #include <engine/RunningPlan.h>
 
 #include <SystemConfig.h>
-#include <UtilityFunctionCreator.h>
 
+#include <gtest/gtest.h>
 #include <string.h>
 
 using alica::Variable;
 using alica::VariableSyncModule;
 using alica::Variant;
 
-class VariableSyncModuleTest : public ::testing::Test
+class VariableSyncModuleTest : public AlicaTestFixture
 {
 protected:
-    supplementary::SystemConfig* sc;
-    alica::AlicaEngine* ae;
-    alica::BehaviourCreator* bc;
-    alica::ConditionCreator* cc;
-    alica::UtilityFunctionCreator* uc;
-    alica::ConstraintCreator* crc;
-
-    virtual void SetUp()
-    {
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-
-        // bring up the SystemConfig with the corresponding path
-        sc = supplementary::SystemConfig::getInstance();
-        sc->setRootPath(path);
-        sc->setConfigPath(path + "/etc");
-
-        // setup the engine
-        bc = new alica::BehaviourCreator();
-        cc = new alica::ConditionCreator();
-        uc = new alica::UtilityFunctionCreator();
-        crc = new alica::ConstraintCreator();
-
-        sc->setHostname("nase");
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ProblemBuildingMaster", true);
-        ae->setAlicaClock(new alica::AlicaClock());
-        ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-        ae->init(bc, cc, uc, crc);
-    }
-
-    virtual void TearDown()
-    {
-        ae->shutdown();
-        delete ae->getCommunicator();
-        delete ae->getAlicaClock();
-
-        delete ae;
-
-        delete crc;
-        delete uc;
-        delete cc;
-        delete bc;
-
-        sc->shutdown();
-    }
+    const char* getRoleSetName() const override { return "Roleset"; }
+    const char* getMasterPlanName() const override { return "ProblemBuildingMaster"; }
 };
 
 TEST_F(VariableSyncModuleTest, GetOwnSeed)

@@ -24,54 +24,24 @@
 #include <thread>
 #include <vector>
 
-class AlicaProblemCompositionTest : public ::testing::Test
+class AlicaProblemCompositionTest : public AlicaTestFixture
 {
 protected:
-    supplementary::SystemConfig* sc;
-    alica::AlicaEngine* ae;
-    alica::BehaviourCreator* bc;
-    alica::ConditionCreator* cc;
-    alica::UtilityFunctionCreator* uc;
-    alica::ConstraintCreator* crc;
-
-    virtual void SetUp()
+    const char* getRoleSetName() const override { return "Roleset"; }
+    const char* getMasterPlanName() const override { return "ProblemBuildingMaster"; }
+    void SetUp() override
     {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-
-        // bring up the SystemConfig with the corresponding path
-        sc = supplementary::SystemConfig::getInstance();
-        sc->setRootPath(path);
-        sc->setConfigPath(path + "/etc");
-
-        // setup the engine
-        bc = new alica::BehaviourCreator();
-        cc = new alica::ConditionCreator();
-        uc = new alica::UtilityFunctionCreator();
-        crc = new alica::ConstraintCreator();
-
-        sc->setHostname("nase");
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ProblemBuildingMaster", true);
-        ae->setAlicaClock(new alica::AlicaClock());
-        ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+        AlicaTestFixture::SetUp();
         ae->addSolver(new alica::reasoner::ConstraintTestPlanDummySolver(ae));
         ae->addSolver(new alica::reasoner::CGSolver(ae));
-        ae->init(bc, cc, uc, crc);
     }
-
-    virtual void TearDown()
+    void TearDown() override
     {
-        ae->shutdown();
-        delete ae->getCommunicator();
-        delete ae->getSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
-        delete ae->getSolver<alica::reasoner::CGSolver>();
-        sc->shutdown();
-        delete cc;
-        delete bc;
-        delete uc;
-        delete crc;
+        alica::ISolverBase* s1 = ae->getSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
+        alica::ISolverBase* s2 = ae->getSolver<alica::reasoner::CGSolver>();
+        AlicaTestFixture::TearDown();
+        delete s1;
+        delete s2;
     }
 };
 
