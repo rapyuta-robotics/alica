@@ -176,11 +176,14 @@ void BasicBehaviour::runInternalTimed()
     while (_started) {
         {
             std::unique_lock<std::mutex> lck(_runLoopMutex);
-            _contextInRun = nullptr;
-            _runCV.wait(lck, [this] { return _running || !_started; }); // wait for signal to run
-            _contextInRun = _started ? _context : nullptr;
+            if (!_running) {
+                _contextInRun = nullptr;
+                _runCV.wait(lck, [this] { return _running || !_started; }); // wait for signal to run
+            }
+            _contextInRun = _context;
         }
         if (!_started) {
+            _contextInRun = nullptr;
             return;
         }
         if (_callInit) {
