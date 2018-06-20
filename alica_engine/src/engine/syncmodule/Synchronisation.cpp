@@ -145,7 +145,6 @@ bool Synchronisation::isValid(uint64_t curTick)
                 sendTalk(myRow->getSyncData());
             }
         }
-
         return false;
     }
 
@@ -192,7 +191,6 @@ bool Synchronisation::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t
     ALICA_DEBUG_MSG("ST: ElapsedTime: " << (ae->getAlicaClock()->now() - this->syncStartTime));
 
     for (const SyncData& sd : talk->syncData) {
-
         ALICA_DEBUG_MSG("syncdata for transID: " << sd.transitionID);
 
         std::lock_guard<mutex> lock(syncMutex);
@@ -216,10 +214,8 @@ bool Synchronisation::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t
                 ALICA_DEBUG_MSG("NEW MATRIX row");
                 SyncRow* newRow = new SyncRow(sd);
                 newRow->getReceivedBy().push_back(talk->senderID);
-
                 syncMatrix.push_back(newRow);
             } else {
-
                 ALICA_DEBUG_MSG("Received by: " << talk->senderID);
                 rowInMatrix->getReceivedBy().push_back(talk->senderID);
             }
@@ -239,7 +235,6 @@ bool Synchronisation::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t
             // late acks...
             if (this->readyForSync) {
                 if (allSyncReady()) {
-
                     ALICA_DEBUG_MSG("SyncDONE in Synchronisation (IntTalk): elapsed time: " << (ae->getAlicaClock()->now() - syncStartTime));
                     // notify syncmodul
                     this->syncModul->synchronisationDone(this->syncTransition);

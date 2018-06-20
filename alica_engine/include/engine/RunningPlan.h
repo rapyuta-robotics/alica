@@ -63,7 +63,6 @@ struct PlanStateTriple
 // TODO remove enable_share_from_this
 class RunningPlan : public std::enable_shared_from_this<RunningPlan>
 {
-
 public:
     using ScopedReadLock = std::unique_lock<std::mutex>;
     using ScopedWriteLock = std::unique_lock<std::mutex>;

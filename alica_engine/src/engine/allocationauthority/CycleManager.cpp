@@ -236,7 +236,6 @@ void alica::CycleManager::sent()
  */
 bool CycleManager::applyAssignment()
 {
-
     ALICA_DEBUG_MSG("CM: Setting authorative assignment for plan " << rp->getActivePlan()->getName());
 
     const EntryPoint* myEntryPoint = nullptr;
@@ -263,15 +262,14 @@ bool CycleManager::applyAssignment()
                 myEntryPoint = pr->getEntryPoints()[epr.entrypoint];
             }
         }
-
         modifiedSelf = true;
     } else {
         for (EntryPointRobots epr : _fixedAllocation.entryPointRobots) {
-            for (auto& robot : epr.robots) {
+            for (AgentIDConstPtr robot : epr.robots) {
                 const EntryPoint* e = pr->getEntryPoints()[epr.entrypoint];
                 bool changed = rp->editAssignment().updateAgent(robot, e);
                 if (changed) {
-                    if (*robot == *myID) {
+                    if (robot == myID) {
                         modifiedSelf = true;
                         myEntryPoint = e;
                     } else {

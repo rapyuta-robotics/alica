@@ -78,7 +78,6 @@ void Query::fillBufferFromQuery()
 
 bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset)
 {
-
     AlicaTime time;
 #ifdef ALICA_DEBUG_ENABLED
     time = pi.getAlicaEngine()->getAlicaClock()->now();
@@ -95,7 +94,6 @@ bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase* sol
         ReadLockedPlanPointer rp = pi.getRunningPlan();
         // Goes recursive upwards in the plan tree and does three steps on each level.
         while (rp && (_staticVars.hasCurrentlyAny() || _domainVars.hasCurrentlyAny())) {
-
             ALICA_DEBUG_MSG("Query: Plantree-LVL of " << rp->getActivePlan()->getName() << std::endl << _uniqueVarStore);
 
             // 1. fill the query's static and domain variables, as well as its problem parts

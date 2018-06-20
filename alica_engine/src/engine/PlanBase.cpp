@@ -109,7 +109,6 @@ void PlanBase::start()
  */
 void PlanBase::run()
 {
-
     ALICA_DEBUG_MSG("PB: Run-Method of PlanBase started. ");
     while (_running) {
         AlicaTime beginTime = _alicaClock->now();
