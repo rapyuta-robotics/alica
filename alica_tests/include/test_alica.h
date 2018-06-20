@@ -3,8 +3,10 @@
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
+#include "ConstraintTestPlanDummySolver.h"
 #include "UtilityFunctionCreator.h"
 
+#include <CGSolver.h>
 #include <SystemConfig.h>
 #include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaClock.h>
@@ -28,7 +30,7 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
-    virtual const char* getRoleSetName() const = 0;
+    virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
     void SetUp() override
@@ -66,6 +68,25 @@ protected:
         delete bc;
         delete uc;
         delete crc;
+    }
+};
+
+class AlicaTestFixtureWithSolvers : public AlicaTestFixture
+{
+protected:
+    void SetUp() override
+    {
+        AlicaTestFixture::SetUp();
+        ae->addSolver(new alica::reasoner::ConstraintTestPlanDummySolver(ae));
+        ae->addSolver(new alica::reasoner::CGSolver(ae));
+    }
+    void TearDown() override
+    {
+        alica::ISolverBase* s1 = ae->getSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
+        alica::ISolverBase* s2 = ae->getSolver<alica::reasoner::CGSolver>();
+        AlicaTestFixture::TearDown();
+        delete s1;
+        delete s2;
     }
 };
 

@@ -1,12 +1,6 @@
-#include <BehaviourCreator.h>
-#include <CGSolver.h>
-#include <ConditionCreator.h>
-#include <ConstraintCreator.h>
-#include <ConstraintTestPlanDummySolver.h>
 #include <FileSystem.h>
 #include <Plans/ProblemModule/QueryBehaviour1.h>
 #include <SystemConfig.h>
-#include <UtilityFunctionCreator.h>
 #include <chrono>
 #include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaClock.h>
@@ -24,25 +18,10 @@
 #include <thread>
 #include <vector>
 
-class AlicaProblemCompositionTest : public AlicaTestFixture
+class AlicaProblemCompositionTest : public AlicaTestFixtureWithSolvers
 {
 protected:
-    const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "ProblemBuildingMaster"; }
-    void SetUp() override
-    {
-        AlicaTestFixture::SetUp();
-        ae->addSolver(new alica::reasoner::ConstraintTestPlanDummySolver(ae));
-        ae->addSolver(new alica::reasoner::CGSolver(ae));
-    }
-    void TearDown() override
-    {
-        alica::ISolverBase* s1 = ae->getSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
-        alica::ISolverBase* s2 = ae->getSolver<alica::reasoner::CGSolver>();
-        AlicaTestFixture::TearDown();
-        delete s1;
-        delete s2;
-    }
 };
 
 /**
