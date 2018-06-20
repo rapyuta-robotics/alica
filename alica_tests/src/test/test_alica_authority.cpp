@@ -65,7 +65,7 @@ protected:
         delete crc;
     }
 };
-/*
+
 TEST(AllocationDifference, MessageCancelsUtil)
 {
     ASSERT_NO_SIGNAL
@@ -108,20 +108,20 @@ TEST(AllocationDifference, MessageCancelsUtil)
     EXPECT_FALSE(result.isEmpty());
     result.applyDifference(msg);
     EXPECT_TRUE(result.isEmpty());
-}*/
+}
 
 TEST_F(AlicaEngineAuthorityManager, authority)
 {
     // ASSERT_NO_SIGNAL
 
     sc->setHostname("nase");
-    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", ".", true);
+    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", true);
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("hairy");
-    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", ".", true);
+    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", true);
     ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
     EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";

@@ -76,14 +76,14 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
     ASSERT_NO_SIGNAL
 
     sc->setHostname("hairy");
-    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", ".", true);
+    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
     ros = new alicaRosProxy::AlicaRosCommunication(ae);
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(ros);
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("nase");
-    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", ".", true);
+    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
     ros2 = new alicaRosProxy::AlicaRosCommunication(ae2);
     ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(ros2);

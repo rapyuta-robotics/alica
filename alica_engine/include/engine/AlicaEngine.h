@@ -49,8 +49,7 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, const std::string& roleSetDir,
-            bool stepEngine);
+    AlicaEngine(supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine);
     ~AlicaEngine();
 
     // State modifiers:

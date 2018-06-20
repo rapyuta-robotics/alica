@@ -1,19 +1,20 @@
-#include <iostream>
-#include <typeinfo>
-#include <gtest/gtest.h>
-#include <engine/AlicaEngine.h>
-#include <engine/AlicaClock.h>
-#include <communication/AlicaRosCommunication.h>
-#include "engine/IAlicaCommunication.h"
-#include "engine/PlanRepository.h"
-#include "engine/model/Plan.h"
-#include "engine/DefaultUtilityFunction.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
+#include "engine/DefaultUtilityFunction.h"
+#include "engine/IAlicaCommunication.h"
+#include "engine/PlanRepository.h"
+#include "engine/model/Plan.h"
+#include <communication/AlicaRosCommunication.h>
+#include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
+#include <gtest/gtest.h>
+#include <iostream>
+#include <typeinfo>
 
-class PlanBaseTest : public ::testing::Test {
+class PlanBaseTest : public ::testing::Test
+{
 protected:
     supplementary::SystemConfig* sc;
     alica::AlicaEngine* ae;
@@ -22,7 +23,8 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
-    virtual void SetUp() {
+    virtual void SetUp()
+    {
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -36,8 +38,7 @@ protected:
         sc->setHostname("nase");
 
         // setup the engine
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
-                "MasterPlan", ".", false);
+        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "MasterPlan", false);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
@@ -47,7 +48,8 @@ protected:
         ae->init(bc, cc, uc, crc);
     }
 
-    virtual void TearDown() {
+    virtual void TearDown()
+    {
         ae->shutdown();
         sc->shutdown();
         delete ae->getCommunicator();
@@ -58,7 +60,8 @@ protected:
     }
 };
 // Declare a test
-TEST_F(PlanBaseTest, planBaseTest) {
+TEST_F(PlanBaseTest, planBaseTest)
+{
     // TODO test something
     ae->start();
     sleep(1);

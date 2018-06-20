@@ -1,18 +1,19 @@
-#include <test_alica.h>
-#include <gtest/gtest.h>
-#include <engine/AlicaEngine.h>
-#include <engine/AlicaClock.h>
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include "engine/PlanRepository.h"
 #include "engine/DefaultUtilityFunction.h"
+#include "engine/PlanRepository.h"
 #include "engine/model/Plan.h"
 #include <communication/AlicaDummyCommunication.h>
+#include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
+#include <gtest/gtest.h>
 #include <ros/ros.h>
+#include <test_alica.h>
 
-class AlicaEngineTestInit : public ::testing::Test {
+class AlicaEngineTestInit : public ::testing::Test
+{
 protected:
     supplementary::SystemConfig* sc;
     alica::AlicaEngine* ae;
@@ -21,7 +22,8 @@ protected:
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
 
-    virtual void SetUp() {
+    virtual void SetUp()
+    {
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -34,8 +36,7 @@ protected:
         sc->setHostname("nase");
 
         // setup the engine
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
-                "MasterPlan", ".", false);
+        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "MasterPlan", false);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
@@ -44,8 +45,9 @@ protected:
         ae->setCommunicator(new alica_dummy_proxy::AlicaDummyCommunication(ae));
     }
 
-    virtual void TearDown() {
-        ae->shutdown();  
+    virtual void TearDown()
+    {
+        ae->shutdown();
         delete ae->getCommunicator();
         delete crc;
         delete uc;
@@ -59,7 +61,8 @@ protected:
 /**
  * Initialises an instance of the AlicaEngine and shuts it down again. This test is nice for basic memory leak testing.
  */
-TEST_F(AlicaEngineTestInit, initAndShutdown) {
+TEST_F(AlicaEngineTestInit, initAndShutdown)
+{
     ASSERT_NO_SIGNAL
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 }

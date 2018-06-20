@@ -27,7 +27,7 @@ using alica::Variant;
 
 class VariableSyncModuleTest : public ::testing::Test
 {
-  protected:
+protected:
     supplementary::SystemConfig* sc;
     alica::AlicaEngine* ae;
     alica::BehaviourCreator* bc;
@@ -53,7 +53,7 @@ class VariableSyncModuleTest : public ::testing::Test
         crc = new alica::ConstraintCreator();
 
         sc->setHostname("nase");
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ProblemBuildingMaster", ".", true);
+        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ProblemBuildingMaster", true);
         ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
         ae->init(bc, cc, uc, crc);

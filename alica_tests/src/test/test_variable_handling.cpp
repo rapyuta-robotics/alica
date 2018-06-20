@@ -51,7 +51,7 @@ protected:
         sc->setHostname("nase");
 
         // setup the engine
-        ae1 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "VHMaster", ".", true);
+        ae1 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "VHMaster", true);
         bc1 = new alica::BehaviourCreator();
         cc1 = new alica::ConditionCreator();
         uc1 = new alica::UtilityFunctionCreator();
@@ -62,7 +62,7 @@ protected:
 
         sc->setHostname("hairy");
 
-        ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "VHMaster", ".", true);
+        ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "VHMaster", true);
         bc2 = new alica::BehaviourCreator();
         cc2 = new alica::ConditionCreator();
         uc2 = new alica::UtilityFunctionCreator();

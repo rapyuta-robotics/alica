@@ -53,7 +53,7 @@ protected:
         crc = new alica::ConstraintCreator();
 
         sc->setHostname("nase");
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ProblemBuildingMaster", ".", true);
+        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ProblemBuildingMaster", true);
         ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
         ae->addSolver(new alica::reasoner::ConstraintTestPlanDummySolver(ae));

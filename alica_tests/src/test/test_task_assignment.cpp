@@ -57,8 +57,7 @@ protected:
         cout << sc->getConfigPath() << endl;
 
         sc->setHostname("nase");
-        ae = new alica::AlicaEngine(
-                new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "MasterPlanTaskAssignment", ".", false);
+        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "MasterPlanTaskAssignment", false);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
