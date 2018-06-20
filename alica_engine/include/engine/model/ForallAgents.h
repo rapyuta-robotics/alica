@@ -23,8 +23,8 @@ class ForallAgents : public Quantifier
 public:
     ForallAgents(int64_t id = 0);
     virtual ~ForallAgents();
-    virtual bool isAgentInScope(AgentIDConstPtr id, const RunningPlan& rp) const override;
-    virtual bool addDomainVariables(const RunningPlan& p, std::vector<AgentVariables>& io_agentVarsInScope) const override;
+    bool isAgentInScope(AgentIDConstPtr id, const RunningPlan& rp) const override;
+    bool addDomainVariables(const RunningPlan& p, std::vector<AgentVariables>& io_agentVarsInScope) const override;
 
 private:
     enum Result

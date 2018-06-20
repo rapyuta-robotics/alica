@@ -35,7 +35,7 @@ public:
     virtual ~TaskAssignmentProblem();
     void preassignOtherAgents();
 
-    virtual Assignment getNextBestAssignment(const Assignment* oldAss) override;
+    Assignment getNextBestAssignment(const Assignment* oldAss) override;
 
 #ifdef EXPANSIONEVAL
     int getExpansionCount() const { return _expansionCount; }

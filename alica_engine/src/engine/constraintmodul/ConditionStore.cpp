@@ -110,7 +110,6 @@ void ConditionStore::removeCondition(const Condition* con)
  */
 void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
 {
-
     ALICA_DEBUG_MSG("ConditionStore: Accepting Query - Active conditions in store is " << _activeConditions.size() << " CS: " << this);
     if (_activeConditions.empty()) {
         return;

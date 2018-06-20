@@ -19,7 +19,7 @@ public:
     TestConstantValueSummand(double weight, double val);
     virtual ~TestConstantValueSummand();
 
-    virtual UtilityInterval eval(IAssignment ass) const override;
+    UtilityInterval eval(IAssignment ass) const override;
     AgentIDConstPtr robotId;
 
 protected:

@@ -22,7 +22,7 @@ class DistBallRobot : public USummand
 public:
     DistBallRobot(double weight);
     virtual ~DistBallRobot();
-    virtual UtilityInterval eval(IAssignment ass) const override;
+    UtilityInterval eval(IAssignment ass) const override;
     AgentIDConstPtr robotId;
 
 protected:

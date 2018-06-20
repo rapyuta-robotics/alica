@@ -60,7 +60,6 @@ Logger::~Logger()
  */
 void Logger::processString(const std::string& event)
 {
-
     if (this->inIteration) {
         this->eventStrings.push_back(event);
     } else {

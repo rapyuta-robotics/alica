@@ -61,7 +61,6 @@ UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Ass
     UtilityInterval curUI;
 
     for (const std::unique_ptr<USummand>& us : _utilSummands) {
-
         curUI = us->eval(wrapper);
         // if a summand deny assignment, return -1 for forbidden assignments
         if (curUI.getMax() <= -1.0) {
