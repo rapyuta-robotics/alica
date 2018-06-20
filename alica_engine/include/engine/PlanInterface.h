@@ -19,6 +19,8 @@ public:
     {
         if (_rp) {
             _rp = _rp->getParent();
+            // make sure the lock is released before acquiring the parent's to avoid a potential deadlock
+            _lck.unlock();
             if (_rp) {
                 _lck = _rp->getReadLock();
             }

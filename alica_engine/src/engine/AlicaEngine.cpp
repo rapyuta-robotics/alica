@@ -55,7 +55,6 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, const std::st
 {
     _maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
     this->useStaticRoles = (*sc)["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
-    // AssignmentCollection::maxEpsCount = (*this->sc)["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
     PartialAssignment::allowIdling((*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL));
 
     this->planRepository = new PlanRepository();
