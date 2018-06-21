@@ -248,14 +248,9 @@ bool CycleManager::applyAssignment()
         if (rp->getPlanType()->getId() != _fixedAllocation.planType) {
             return false;
         }
-        const Plan* newPlan = nullptr;
-        for (const Plan* p : rp->getPlanType()->getPlans()) {
-            if (p->getId() == _fixedAllocation.planId) {
-                newPlan = p;
-                rp->usePlan(p);
-                break;
-            }
-        }
+        const Plan* newPlan = rp->getPlanType()->getPlanById(_fixedAllocation.planId);
+        assert(newPlan != nullptr);
+        rp->usePlan(newPlan);
         rp->setAssignment(Assignment(newPlan, _fixedAllocation));
         myEntryPoint = rp->getAssignment().getEntryPointOfAgent(myID);
         modifiedSelf = true;
