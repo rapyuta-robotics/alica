@@ -105,16 +105,15 @@ private:
     int _epIdx;
 };
 
-class PartialAssignmentSuccessIterator : public std::iterator<std::forward_iterator_tag, AgentIDConstPtr>
+class PartialAssignmentSuccessIteratorBase : public std::iterator<std::forward_iterator_tag, AgentIDConstPtr>
 {
 public:
-    PartialAssignmentSuccessIterator(int idx, bool successRange, int epIdx, const PartialAssignment* pas)
+    PartialAssignmentSuccessIteratorBase(int idx, bool successRange, int epIdx, const PartialAssignment* pas)
             : _pas(pas)
             , _epIdx(epIdx)
             , _agentIdx(idx)
             , _inSuccessRange(successRange)
     {
-        toNextValid();
     }
     AgentIDConstPtr operator*() const
     {
@@ -124,14 +123,31 @@ public:
             return _pas->getProblem()->getAgents()[_agentIdx];
         }
     }
+    bool operator==(const PartialAssignmentSuccessIteratorBase& o) const { return _agentIdx == o._agentIdx && _inSuccessRange == o._inSuccessRange; }
+    bool operator!=(const PartialAssignmentSuccessIteratorBase& o) const { return !(*this == o); }
+
+protected:
+    const PartialAssignment* _pas;
+    int _epIdx;
+    int _agentIdx;
+    bool _inSuccessRange;
+};
+
+class PartialAssignmentSuccessIterator : public PartialAssignmentSuccessIteratorBase
+{
+public:
+    PartialAssignmentSuccessIterator(int idx, bool successRange, int epIdx, const PartialAssignment* pas)
+            : PartialAssignmentSuccessIteratorBase(idx, successRange, epIdx, pas)
+    {
+        toNextValid();
+    }
+
     PartialAssignmentSuccessIterator& operator++()
     {
         ++_agentIdx;
         toNextValid();
         return *this;
     }
-    bool operator==(const PartialAssignmentSuccessIterator& o) const { return _agentIdx == o._agentIdx && _inSuccessRange == o._inSuccessRange; }
-    bool operator!=(const PartialAssignmentSuccessIterator& o) const { return !(*this == o); }
 
 private:
     void toNextValid()
@@ -146,30 +162,15 @@ private:
             }
         }
     }
-    const PartialAssignment* _pas;
-    int _epIdx;
-    int _agentIdx;
-    bool _inSuccessRange;
 };
 
-class UniquePartialAssignmentSuccessIterator : public std::iterator<std::forward_iterator_tag, AgentIDConstPtr>
+class UniquePartialAssignmentSuccessIterator : public PartialAssignmentSuccessIteratorBase
 {
 public:
     UniquePartialAssignmentSuccessIterator(int idx, bool successRange, int epIdx, const PartialAssignment* pas)
-            : _pas(pas)
-            , _epIdx(epIdx)
-            , _agentIdx(idx)
-            , _inSuccessRange(successRange)
+            : PartialAssignmentSuccessIteratorBase(idx, successRange, epIdx, pas)
     {
         toNextValid();
-    }
-    AgentIDConstPtr operator*() const
-    {
-        if (_inSuccessRange) {
-            return (*_pas->getSuccessData()->getAgentsByIndex(_epIdx))[_agentIdx];
-        } else {
-            return _pas->getProblem()->getAgents()[_agentIdx];
-        }
     }
     UniquePartialAssignmentSuccessIterator& operator++()
     {
@@ -177,15 +178,9 @@ public:
         toNextValid();
         return *this;
     }
-    bool operator==(const UniquePartialAssignmentSuccessIterator& o) const { return _agentIdx == o._agentIdx && _inSuccessRange == o._inSuccessRange; }
-    bool operator!=(const UniquePartialAssignmentSuccessIterator& o) const { return !(*this == o); }
 
 private:
     void toNextValid();
-    const PartialAssignment* _pas;
-    int _epIdx;
-    int _agentIdx;
-    bool _inSuccessRange;
 };
 
 class PartialAssignmentSuccessView
