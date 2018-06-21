@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AbstractPlan.h"
-#include "Plan.h"
 #include "engine/Types.h"
 
 #include <list>
