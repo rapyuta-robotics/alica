@@ -250,6 +250,12 @@ AgentsInStateView Assignment::getAgentsInState(const State* s) const
     return AgentsInStateView(this, s);
 }
 
+AgentsInStateView getAgentsInState(int64_t sid) const
+{
+    const State* s = _plan->getStateByID(sid);
+    return s ? AgentsInStateView(this, s) : AgentsInStateView();
+}
+
 void Assignment::clear()
 {
     _successData.clear();
@@ -356,6 +362,7 @@ void Assignment::adaptTaskChangesFrom(const Assignment& as)
         _assignmentData[i] = std::move(n);
     }
 }
+
 bool Assignment::removeAllIn(const AgentGrp& limit, const State* watchState)
 {
     bool ret = false;

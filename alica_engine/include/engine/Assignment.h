@@ -108,6 +108,7 @@ public:
     AssignmentSuccessView getAgentsWorkingAndFinished(const EntryPoint* ep) const;
     AllAgentsView getAllAgents() const;
     AgentsInStateView getAgentsInState(const State* s) const;
+    AgentsInStateView getAgentsInState(int64_t sid) const;
 
     void getAgentsWorking(const EntryPoint* ep, AgentGrp& o_agents) const;
     void getAgentsWorking(int idx, AgentGrp& o_agents) const;
@@ -183,6 +184,7 @@ public:
                            : AssignmentIterator(0, nullptr);
     }
     int size() const { return _assignment ? _assignment->getAgentStates(_epIdx).size() : 0; }
+    bool empty() const { return size() == 0; }
 
 private:
     const Assignment* _assignment;
@@ -244,6 +246,7 @@ public:
         }
         return ret;
     }
+    bool empty() const { return size() == 0; }
 
 private:
     const Assignment* _assignment;
@@ -309,6 +312,8 @@ public:
         const AgentStatePairs* asp = &_assignment->getAgentStates(_state->getEntryPoint()->getIndex());
         return AgentsInStateIterator(asp->size(), _state, asp);
     }
+
+    bool empty() const { return begin() == end(); }
 
 private:
     const Assignment* _assignment;
@@ -386,6 +391,7 @@ public:
                 _assignment->getSuccessData(_epIdx).size(), true, &_assignment->getAgentStates(_epIdx), &_assignment->getSuccessData(_epIdx));
     }
     int size() const { return _assignment ? (_assignment->getAgentStates(_epIdx).size() + _assignment->getSuccessData(_epIdx).size()) : 0; }
+    bool empty() const { return size() == 0; }
 
 private:
     const Assignment* _assignment;
