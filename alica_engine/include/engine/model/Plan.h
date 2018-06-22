@@ -26,6 +26,7 @@ public:
 
     const EntryPoint* getEntryPointTaskID(int64_t taskID) const;
     const EntryPoint* getEntryPointByID(int64_t epID) const;
+    const State* getStateByID(int64_t stateID) const;
 
     const EntryPointGrp& getEntryPoints() const { return _entryPoints; }
 

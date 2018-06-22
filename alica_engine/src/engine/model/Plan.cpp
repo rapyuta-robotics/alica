@@ -47,6 +47,16 @@ const EntryPoint* Plan::getEntryPointByID(int64_t epID) const
     return nullptr;
 }
 
+const State* Plan::getStateByID(int64_t id) const
+{
+    for (const State* s : _states) {
+        if (s->getId() == id) {
+            return s;
+        }
+    }
+    return nullptr;
+}
+
 void Plan::setEntryPoints(const EntryPointGrp& entryPoints)
 {
     _entryPoints = entryPoints;
