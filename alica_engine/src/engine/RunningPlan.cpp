@@ -694,10 +694,6 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     out << "FailCount: " << psi.failCount << std::endl;
     out << "Activity: " << getPlanActivityName(psi.active) << std::endl;
     out << "Status: " << getPlanStatusName(psi.status) << std::endl;
-    out << "AvailRobots: ";
-    for (AgentIDConstPtr id : r._robotsAvail) {
-        out << " " << id;
-    }
     out << std::endl;
     if (!r.isBehaviour()) {
         out << "Assignment:" << r._assignment;

@@ -64,12 +64,11 @@ bool TeamObserver::updateTeamPlanTrees()
         _msgQueue.clear();
     }
 
-    std::unique_ptr<std::list<Agent*>> agents = _tm->getAllAgents();
     bool changedSomeAgent = false;
-    for (auto agent : *agents) {
-        bool changedCurrentAgent = agent->update();
-        if (changedCurrentAgent && !agent->isActive()) {
-            _simplePlanTrees.erase(agent->getID());
+    for (const auto& agent : _tm->getAllAgents()) {
+        bool changedCurrentAgent = agent.second->update();
+        if (changedCurrentAgent && !agent.second->isActive()) {
+            _simplePlanTrees.erase(agent.second->getID());
         }
         changedSomeAgent |= changedCurrentAgent;
     }
@@ -91,7 +90,7 @@ void TeamObserver::tick(RunningPlan* root)
     if (root != nullptr) {
         // TODO get rid of this once teamManager gets a datastructure overhaul
         AgentGrp activeAgents;
-        _tm->fillWithActiveAgentIDs(activeAgents);
+        std::copy(_tm->getActiveAgentIds().begin(), _tm->getActiveAgentIds().end(), std::back_inserter(activeAgents));
 
         std::vector<const SimplePlanTree*> updatespts;
         AgentGrp noUpdates;
@@ -187,8 +186,7 @@ int TeamObserver::successesInPlan(const Plan* plan)
 {
     int ret = 0;
     const EntryPointGrp* suc = nullptr;
-    auto tmp = _tm->getActiveAgents();
-    for (auto& agent : *tmp) {
+    for (const Agent* agent : _tm->getActiveAgents()) {
         {
             lock_guard<mutex> lock(this->successMarkMutex);
             suc = agent->getSucceededEntryPoints(plan);
@@ -208,8 +206,7 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
 {
     SuccessCollection ret(plan);
 
-    auto tmp = _tm->getActiveAgents();
-    for (const Agent* agent : *tmp) {
+    for (const Agent* agent : _tm->getActiveAgents()) {
         const EntryPointGrp* suc = nullptr;
         if (_myId == agent->getID()) {
             continue;
@@ -237,9 +234,8 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
 {
     sc.clear();
     const EntryPointGrp* suc = nullptr;
-    auto tmp = _tm->getActiveAgents();
 
-    for (const Agent* agent : *tmp) {
+    for (const Agent* agent : _tm->getActiveAgents()) {
         if (agent->getID() == _myId) {
             continue;
         }

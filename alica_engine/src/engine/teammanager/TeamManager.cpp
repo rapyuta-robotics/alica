@@ -20,7 +20,7 @@ TeamManager::TeamManager(AlicaEngine* engine, bool useConfigForTeam = true)
 
 TeamManager::~TeamManager()
 {
-    for (auto& agentEntry : this->agents) {
+    for (auto& agentEntry : _agents) {
         delete agentEntry.second;
     }
 }
@@ -51,59 +51,39 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig* sc)
             this->localAgent = agent;
             this->localAgent->setLocal(true);
         } else {
-            for (auto& agentEntry : this->agents) {
+            for (auto& agentEntry : _agents) {
                 if (*(agentEntry.first) == *(agent->getID())) {
                     AlicaEngine::abort("TM: Two robots with the same ID in Globals.conf. ID: ", agent->getID());
                 }
             }
         }
-        this->agents.emplace(agent->getID(), agent);
+        _agents.emplace(agent->getID(), agent);
     }
     if (!foundSelf) {
         AlicaEngine::abort("TM: Could not find own agent name in Globals Id = " + localAgentName);
     }
 
     if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull", NULL)) {
-        for (auto& agentEntry : this->agents) {
+        for (auto& agentEntry : _agents) {
             agentEntry.second->setIgnored(true);
         }
     }
 }
 
-void TeamManager::fillWithActiveAgentIDs(std::vector<AgentIDConstPtr>& oIds) const
+ActiveAgentIdView TeamManager::getActiveAgentIds() const
 {
-    oIds.clear();
-    for (const std::pair<AgentIDConstPtr, Agent*>& agentEntry : agents) {
-        if (agentEntry.second->isActive()) {
-            oIds.push_back(agentEntry.first);
-        }
-    }
+    return ActiveAgentIdView(_agents);
 }
 
-std::unique_ptr<std::list<Agent*>> TeamManager::getAllAgents()
+ActiveAgentView TeamManager::getActiveAgents() const
 {
-    auto agentList = std::unique_ptr<std::list<Agent*>>(new std::list<Agent*>());
-    for (auto& agentEntry : this->agents) {
-        agentList->push_back(agentEntry.second);
-    }
-    return std::move(agentList);
-}
-
-std::unique_ptr<std::list<Agent*>> TeamManager::getActiveAgents()
-{
-    auto agentList = std::unique_ptr<std::list<Agent*>>(new std::list<Agent*>());
-    for (auto& agentEntry : this->agents) {
-        if (agentEntry.second->isActive()) {
-            agentList->push_back(agentEntry.second);
-        }
-    }
-    return std::move(agentList);
+    return ActiveAgentView(_agents);
 }
 
 std::unique_ptr<std::list<const RobotProperties*>> TeamManager::getActiveAgentProperties() const
 {
     auto agentProperties = std::unique_ptr<std::list<const RobotProperties*>>(new std::list<const RobotProperties*>());
-    for (auto& agentEntry : this->agents) {
+    for (auto& agentEntry : _agents) {
         if (agentEntry.second->isActive()) {
             agentProperties->push_back(agentEntry.second->getProperties());
         }
@@ -114,7 +94,7 @@ std::unique_ptr<std::list<const RobotProperties*>> TeamManager::getActiveAgentPr
 int TeamManager::getTeamSize() const
 {
     int teamSize = 0;
-    for (auto& agentEntry : this->agents) {
+    for (auto& agentEntry : _agents) {
         if (agentEntry.second->isActive()) {
             teamSize++;
         }
@@ -124,8 +104,8 @@ int TeamManager::getTeamSize() const
 
 const Agent* TeamManager::getAgentByID(AgentIDConstPtr agentId) const
 {
-    auto agentEntry = this->agents.find(agentId);
-    if (agentEntry != this->agents.end()) {
+    auto agentEntry = _agents.find(agentId);
+    if (agentEntry != _agents.end()) {
         return agentEntry->second;
     } else {
         return nullptr;
@@ -139,21 +119,21 @@ AgentIDConstPtr TeamManager::getLocalAgentID() const
 
 void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr robotID, AlicaTime timeLastMsgReceived)
 {
-    auto mapIter = this->agents.find(robotID);
-    if (mapIter != this->agents.end()) {
+    auto mapIter = _agents.find(robotID);
+    if (mapIter != _agents.end()) {
         mapIter->second->setTimeLastMsgReceived(timeLastMsgReceived);
     } else {
         // TODO alex robot properties protokoll anstoßen
         Agent* agent = new Agent(this->engine, this->teamTimeOut, robotID);
         agent->setTimeLastMsgReceived(timeLastMsgReceived);
-        this->agents.emplace(robotID, agent);
+        _agents.emplace(robotID, agent);
     }
 }
 
 bool TeamManager::isAgentActive(AgentIDConstPtr agentId) const
 {
-    auto agentEntry = this->agents.find(agentId);
-    if (agentEntry != this->agents.end()) {
+    auto agentEntry = _agents.find(agentId);
+    if (agentEntry != _agents.end()) {
         return agentEntry->second->isActive();
     } else {
         return false;
@@ -166,8 +146,8 @@ bool TeamManager::isAgentActive(AgentIDConstPtr agentId) const
  */
 bool TeamManager::isAgentIgnored(AgentIDConstPtr agentId) const
 {
-    auto agentEntry = this->agents.find(agentId);
-    if (agentEntry != this->agents.end()) {
+    auto agentEntry = _agents.find(agentId);
+    if (agentEntry != _agents.end()) {
         return agentEntry->second->isIgnored();
     } else {
         return false;
@@ -176,16 +156,16 @@ bool TeamManager::isAgentIgnored(AgentIDConstPtr agentId) const
 
 void TeamManager::setAgentIgnored(AgentIDConstPtr agentId, const bool ignored) const
 {
-    auto agentEntry = this->agents.find(agentId);
-    if (agentEntry != this->agents.end()) {
+    auto agentEntry = _agents.find(agentId);
+    if (agentEntry != _agents.end()) {
         agentEntry->second->setIgnored(ignored);
     }
 }
 
 bool TeamManager::setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint)
 {
-    auto agentEntry = this->agents.find(agentId);
-    if (agentEntry != this->agents.end()) {
+    auto agentEntry = _agents.find(agentId);
+    if (agentEntry != _agents.end()) {
         agentEntry->second->setSuccess(plan, entryPoint);
         return true;
     }
@@ -194,8 +174,8 @@ bool TeamManager::setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, 
 
 bool TeamManager::setSuccessMarks(AgentIDConstPtr agentId, std::shared_ptr<SuccessMarks> successMarks)
 {
-    auto agentEntry = this->agents.find(agentId);
-    if (agentEntry != this->agents.end()) {
+    auto agentEntry = _agents.find(agentId);
+    if (agentEntry != _agents.end()) {
         agentEntry->second->setSuccessMarks(successMarks);
         return true;
     }
@@ -204,8 +184,8 @@ bool TeamManager::setSuccessMarks(AgentIDConstPtr agentId, std::shared_ptr<Succe
 
 const DomainVariable* TeamManager::getDomainVariable(AgentIDConstPtr agentId, const std::string& sort) const
 {
-    auto agentEntry = this->agents.find(agentId);
-    if (agentEntry != this->agents.end()) {
+    auto agentEntry = _agents.find(agentId);
+    if (agentEntry != _agents.end()) {
         return agentEntry->second->getDomainVariable(sort);
     }
     return nullptr;

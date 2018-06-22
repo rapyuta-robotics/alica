@@ -128,9 +128,6 @@ public:
 
     void printRecursive() const;
 
-    const AgentGrp& getRobotsAvail() const { return _robotsAvail; }
-    AgentGrp& editRobotsAvail() { return _robotsAvail; }
-
     void setAllocationNeeded(bool allocationNeeded);
     void useEntryPoint(const EntryPoint* value);
     void useState(const State* activeState);
@@ -213,7 +210,6 @@ private:
     const PlanType* const _planType;
 
     // iffy stuff
-    AgentGrp _robotsAvail;
     std::map<const AbstractPlan*, int> _failedSubPlans;
 
     mutable std::mutex _accessMutex;

@@ -111,14 +111,13 @@ void Logger::iterationEnds(const RunningPlan* rp)
         _sBuild << reason;
     }
     _sBuild << endl;
-    AgentGrp robots;
-    this->tm->fillWithActiveAgentIDs(robots);
+    ActiveAgentIdView agents = tm->getActiveAgentIds();
 
     _sBuild << "TeamSize:\t";
-    _sBuild << to_string(robots.size());
+    _sBuild << agents.size();
 
     _sBuild << " TeamMember:";
-    for (AgentIDConstPtr id : robots) {
+    for (AgentIDConstPtr id : agents) {
         _sBuild << "\t";
         _sBuild << id;
     }
