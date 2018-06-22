@@ -121,6 +121,7 @@ public:
     const State* getActiveState() const { return _activeTriple.state; }
     const EntryPoint* getActiveEntryPoint() const { return _activeTriple.entryPoint; }
     const AbstractPlan* getActivePlan() const { return _activeTriple.plan; }
+    const Plan* getActivePlanAsPlan() const { return isBehaviour() ? nullptr : static_cast<const Plan*>(_activeTriple.plan); }
     const Assignment& getAssignment() const { return _assignment; }
     Assignment& editAssignment() { return _assignment; }
     BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour; }
