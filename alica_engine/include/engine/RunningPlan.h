@@ -202,12 +202,11 @@ private:
     ConditionStore _constraintStore;
 
     // Type info
-
+    const PlanType* const _planType;
     const bool _behaviour; // TODO: get rid of this, the behaviour pointer should not be null for behaviors (currently it can be)
 
     // engine Pointer
     AlicaEngine* const _ae;
-    const PlanType* const _planType;
 
     // iffy stuff
     std::map<const AbstractPlan*, int> _failedSubPlans;

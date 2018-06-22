@@ -62,12 +62,12 @@ void StaticRoleAssignment::calculateRoles()
 
     // assign a role for each robot if you have match
     for (const Agent* agent : ae->getTeamManager()->getActiveAgents()) {
-        const RobotProperties* prop = agent->getProperties();
+        const RobotProperties& prop = agent->getProperties();
         bool roleIsAssigned = false;
 
         for (const Role* role : roles) {
             // make entry in the map if the roles match
-            if (role->getName() == prop->getDefaultRole()) {
+            if (role->getName() == prop.getDefaultRole()) {
 
                 ALICA_DEBUG_MSG("Static RA: Setting Role " << role->getName() << " for robot ID " << agent->getId());
 
@@ -90,7 +90,7 @@ void StaticRoleAssignment::calculateRoles()
         }
 
         if (!roleIsAssigned) {
-            AlicaEngine::abort("RA: Could not set a role (Default: " + prop->getDefaultRole() + ") for robot: ", agent->getId());
+            AlicaEngine::abort("RA: Could not set a role (Default: " + prop.getDefaultRole() + ") for robot: ", agent->getId());
         }
     }
 }

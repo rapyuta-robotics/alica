@@ -16,7 +16,7 @@ class Logger;
 class AlicaEngine;
 class SuccessCollection;
 class TeamManager;
-class RobotEngineData;
+class Agent;
 class PlanTreeInfo;
 class RunningPlan;
 class SimplePlanTree;
@@ -29,7 +29,7 @@ class TeamObserver
 {
 public:
     TeamObserver(AlicaEngine* ae);
-    virtual ~TeamObserver();
+    ~TeamObserver();
 
     void tick(RunningPlan* root);
     void doBroadCast(const IdGrp& msg) const;
@@ -41,7 +41,7 @@ public:
     void updateSuccessCollection(const Plan* p, SuccessCollection& sc);
 
     void notifyRobotLeftPlan(const AbstractPlan* plan);
-    virtual void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
+    void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
     void close();
 
 private:
@@ -51,7 +51,7 @@ private:
 
     AlicaEngine* _ae;
     AgentIDConstPtr _myId;
-    const RobotEngineData* me;
+    const Agent* _me;
     TeamManager* _tm;
 
     std::mutex _msgQueueMutex;

@@ -31,16 +31,12 @@ class Agent
     friend ::alica::TeamObserver;
 
 public:
-    ~Agent()
-    {
-        delete _properties;
-        delete _engineData;
-    }
+    ~Agent();
 
     AgentIDConstPtr getId() const { return _id; }
     const std::string& getName() const { return _name; }
-    const RobotProperties* getProperties() const { return _properties; }
-    const RobotEngineData* getEngineData() const { return _engineData; }
+    const RobotProperties& getProperties() const { return _properties; }
+    const RobotEngineData& getEngineData() const { return _engineData; }
     bool isActive() const { return _active; }
     bool isIgnored() const { return _ignored; }
 
@@ -56,8 +52,8 @@ protected:
     bool _local;
     AlicaTime _timeout;
     AlicaTime _timeLastMsgReceived;
-    RobotProperties* _properties;
-    RobotEngineData* _engineData;
+    RobotProperties _properties;
+    RobotEngineData _engineData;
 
     void setLocal(bool local);
     void setIgnored(const bool ignored) { _ignored = ignored; }

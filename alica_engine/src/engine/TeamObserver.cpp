@@ -7,8 +7,6 @@
 #include "engine/PlanRepository.h"
 #include "engine/RunningPlan.h"
 #include "engine/SimplePlanTree.h"
-#include "engine/collections/RobotEngineData.h"
-#include "engine/collections/RobotProperties.h"
 #include "engine/collections/SuccessCollection.h"
 #include "engine/collections/SuccessMarks.h"
 #include "engine/containers/PlanTreeInfo.h"
@@ -37,7 +35,7 @@ TeamObserver::TeamObserver(AlicaEngine* ae)
         , _tm(ae->getTeamManager())
         , _myId(ae->getTeamManager()->getLocalAgentID())
 {
-    this->me = _tm->getAgentByID(_myId)->getEngineData();
+    _me = _tm->getAgentByID(_myId);
 }
 
 TeamObserver::~TeamObserver() {}
@@ -132,7 +130,7 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
     PlanTreeInfo pti = PlanTreeInfo();
     pti.senderID = _myId;
     pti.stateIDs = msg;
-    pti.succeededEPs = this->me->getSuccessMarks()->toIdGrp();
+    pti.succeededEPs = _me->getEngineData().getSuccessMarks()->toIdGrp();
     _ae->getCommunicator()->sendPlanTreeInfo(pti);
 
     ALICA_DEBUG_MSG("TO: Sending Plan Message: " << msg);
@@ -174,7 +172,7 @@ void TeamObserver::cleanOwnSuccessMarks(RunningPlan* root)
             queue.push_back(c.get());
         }
     }
-    this->me->getSuccessMarks()->limitToPlans(presentPlans);
+    _me->getEngineData().getSuccessMarks()->limitToPlans(presentPlans);
 }
 
 /**
@@ -195,7 +193,7 @@ int TeamObserver::successesInPlan(const Plan* plan)
             ret += suc->size();
         }
     }
-    suc = me->getSuccessMarks()->succeededEntryPoints(plan);
+    suc = _me->getEngineData().getSuccessMarks()->succeededEntryPoints(plan);
     if (suc != nullptr) {
         ret += suc->size();
     }
@@ -221,7 +219,7 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
             }
         }
     }
-    const EntryPointGrp* suc = me->getSuccessMarks()->succeededEntryPoints(plan);
+    const EntryPointGrp* suc = _me->getEngineData().getSuccessMarks()->succeededEntryPoints(plan);
     if (suc != nullptr) {
         for (const EntryPoint* ep : *suc) {
             ret.setSuccess(_myId, ep);
@@ -249,7 +247,7 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
             }
         }
     }
-    suc = me->getSuccessMarks()->succeededEntryPoints(p);
+    suc = _me->getEngineData().getSuccessMarks()->succeededEntryPoints(p);
     if (suc != nullptr) {
         for (const EntryPoint* ep : *suc) {
             sc.setSuccess(_myId, ep);
@@ -269,7 +267,7 @@ void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan)
             return;
         }
     }
-    this->me->getSuccessMarks()->removePlan(plan);
+    _me->getEngineData().getSuccessMarks()->removePlan(plan);
 }
 
 void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)

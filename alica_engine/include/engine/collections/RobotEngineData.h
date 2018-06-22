@@ -19,7 +19,7 @@ class RobotEngineData
 {
 public:
     RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId);
-    virtual ~RobotEngineData();
+    ~RobotEngineData();
     virtual void initDomainVariables();
 
     std::shared_ptr<SuccessMarks> getSuccessMarks() const { return _successMarks; }

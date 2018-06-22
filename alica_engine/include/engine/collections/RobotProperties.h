@@ -22,28 +22,27 @@ class Capability;
 class RobotProperties
 {
 public:
-    RobotProperties(AgentIDConstPtr agentId, const AlicaEngine* ae, const std::string& name);
+    RobotProperties();
+    RobotProperties(const AlicaEngine* ae, const std::string& name);
     ~RobotProperties();
-    void readFromConfig(const AlicaEngine* engine, const std::string& name);
-    AgentIDConstPtr getId() const;
-    void setId(AgentIDConstPtr agentId);
-    const std::map<std::string, const Characteristic*>& getCharacteristics() const;
-    const std::string& getDefaultRole() const;
-    void setDefaultRole(const std::string& defaultRole);
+
+    const std::map<std::string, std::unique_ptr<const Characteristic>>& getCharacteristics() const { return _characteristics; }
+    const std::string& getDefaultRole() const { return _defaultRole; }
+
     friend std::ostream& operator<<(std::ostream& os, const alica::RobotProperties& obj)
     {
-        os << "RobotProperties: Id=" << obj.getId() << " Default Role: " << obj.getDefaultRole() << std::endl;
-        for (const std::pair<std::string, const Characteristic*>& p : obj.getCharacteristics()) {
+        os << "RobotProperties: Default Role: " << obj.getDefaultRole() << std::endl;
+        for (const std::pair<const std::string, std::unique_ptr<const Characteristic>>& p : obj.getCharacteristics()) {
             os << "\t" << p.first << " = " << p.second->getCapValue()->getName() << std::endl;
         }
         return os;
     }
 
-protected:
-    AgentIDConstPtr agentId;
+private:
+    void readFromConfig(const AlicaEngine* engine, const std::string& name);
 
-    std::string defaultRole;
-    std::map<std::string, const Characteristic*> characteristics;
+    std::map<std::string, std::unique_ptr<const Characteristic>> _characteristics;
+    std::string _defaultRole;
 };
 
 } /* namespace alica */
