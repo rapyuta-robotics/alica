@@ -33,6 +33,7 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
         : _state(CycleState::observing)
         , _ae(ae)
         , _fixedAllocation()
+        , _newestAllocationDifference(0)
 {
     sc = supplementary::SystemConfig::getInstance();
     maxAllocationCycles = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "CycleCount");
@@ -41,29 +42,19 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
     maximalOverrideTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MaximalAuthorityTimeInterval", NULL));
     overrideShoutInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageTimeInterval", NULL));
     overrideWaitInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageWaitTimeInterval", NULL));
-    historySize = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize", NULL);
+    int historySize = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize", NULL);
 
     this->intervalIncFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalIncreaseFactor", NULL);
     this->intervalDecFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalDecreaseFactor", NULL);
 
-    this->allocationHistory.resize(this->historySize);
-    for (int i = 0; i < this->historySize; i++) {
-        this->allocationHistory[i] = new AllocationDifference();
-    }
-    this->newestAllocationDifference = 0;
+    _allocationHistory.resize(historySize);
 
     this->rp = p;
     this->myID = ae->getTeamManager()->getLocalAgentID();
     this->pr = ae->getPlanRepository();
 }
 
-CycleManager::~CycleManager()
-{
-    lock_guard<mutex> lock(this->allocationHistoryMutex);
-    for (int i = 0; i < static_cast<int>(this->allocationHistory.size()); ++i) {
-        delete this->allocationHistory[i];
-    }
-}
+CycleManager::~CycleManager() {}
 
 /**
  * Called once per engine iteration by the corresponding RunningPlan.
@@ -120,19 +111,17 @@ bool CycleManager::isOverridden() const
  * @param curP The RunningPlan of this CycleManager, in case it has changed.
  * @param aldif The new AllocationDifference
  */
-void alica::CycleManager::setNewAllocDiff(AllocationDifference* aldif)
+void alica::CycleManager::setNewAllocDiff(AllocationDifference&& aldif)
 {
     if (!enabled) {
         return;
     }
-    lock_guard<mutex> lock(this->allocationHistoryMutex);
+    lock_guard<mutex> lock(_allocationHistoryMutex);
 
-    this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
-    AllocationDifference* old = this->allocationHistory[this->newestAllocationDifference];
-    this->allocationHistory[this->newestAllocationDifference] = aldif;
-    delete old;
+    _newestAllocationDifference = (_newestAllocationDifference + 1) % _allocationHistory.size();
+    _allocationHistory[_newestAllocationDifference] = std::move(aldif);
 
-    ALICA_DEBUG_MSG("CM: SetNewAllDiff(a): " << aldif->toString() << " OWN ROBOT ID " << *(this->rp->getOwnID()));
+    ALICA_DEBUG_MSG("CM: SetNewAllDiff(a): " << _allocationHistory[_newestAllocationDifference].toString() << " OWN ROBOT ID " << this->rp->getOwnID());
 }
 
 /**
@@ -147,10 +136,12 @@ void alica::CycleManager::setNewAllocDiff(const Assignment& oldAss, const Assign
         return;
     }
 
-    std::lock_guard<mutex> lock(this->allocationHistoryMutex);
+    std::lock_guard<mutex> lock(_allocationHistoryMutex);
 
-    this->newestAllocationDifference = (this->newestAllocationDifference + 1) % this->allocationHistory.size();
-    this->allocationHistory[this->newestAllocationDifference]->reset();
+    _newestAllocationDifference = (_newestAllocationDifference + 1) % _allocationHistory.size();
+
+    AllocationDifference& aldif = _allocationHistory[_newestAllocationDifference];
+    aldif.reset();
     const int oldEpCount = oldAss.getEntryPointCount();
     if (newAss.getPlan() == oldAss.getPlan()) {
         for (int i = 0; i < oldEpCount; ++i) {
@@ -159,29 +150,29 @@ void alica::CycleManager::setNewAllocDiff(const Assignment& oldAss, const Assign
 
             for (AgentStatePair oldp : oldAgents) {
                 if (!newAgents.hasAgent(oldp.first)) {
-                    this->allocationHistory[this->newestAllocationDifference]->editSubtractions().emplace_back(newAss.getEntryPoint(i), oldp.first);
+                    aldif.editSubtractions().emplace_back(newAss.getEntryPoint(i), oldp.first);
                 }
             }
             for (AgentStatePair newp : newAgents) {
                 if (!oldAgents.hasAgent(newp.first)) {
-                    this->allocationHistory[this->newestAllocationDifference]->editAdditions().emplace_back(newAss.getEntryPoint(i), newp.first);
+                    aldif.editAdditions().emplace_back(newAss.getEntryPoint(i), newp.first);
                 }
             }
         }
     } else {
         for (int i = 0; i < oldEpCount; ++i) {
             for (AgentStatePair oldp : oldAss.getAgentStates(i)) {
-                this->allocationHistory[this->newestAllocationDifference]->editSubtractions().emplace_back(oldAss.getEntryPoint(i), oldp.first);
+                aldif.editSubtractions().emplace_back(oldAss.getEntryPoint(i), oldp.first);
             }
         }
         for (int i = 0; i < newAss.getEntryPointCount(); ++i) {
             for (AgentStatePair newp : newAss.getAgentStates(i)) {
-                this->allocationHistory[this->newestAllocationDifference]->editAdditions().emplace_back(newAss.getEntryPoint(i), newp.first);
+                aldif.editAdditions().emplace_back(newAss.getEntryPoint(i), newp.first);
             }
         }
     }
-    this->allocationHistory[this->newestAllocationDifference]->setReason(reas);
-    ALICA_DEBUG_MSG("CM: SetNewAllDiff(b): " << this->allocationHistory[this->newestAllocationDifference]->toString());
+    aldif.setReason(reas);
+    ALICA_DEBUG_MSG("CM: SetNewAllDiff(b): " << aldif.toString());
 }
 
 /**
@@ -297,34 +288,34 @@ bool CycleManager::detectAllocationCycle()
     int count = 0;
     AllocationDifference* utChange = nullptr;
     AllocationDifference temp;
-    lock_guard<mutex> lock(this->allocationHistoryMutex);
+    lock_guard<mutex> lock(_allocationHistoryMutex);
 
-    for (int i = this->newestAllocationDifference; count < static_cast<int>(this->allocationHistory.size()); --i) {
+    for (int i = _newestAllocationDifference; count < static_cast<int>(_allocationHistory.size()); --i) {
         ++count;
         if (i < 0) {
-            i = this->allocationHistory.size() - 1;
+            i = _allocationHistory.size() - 1;
         }
 
-        if (this->allocationHistory[i]->getReason() == AllocationDifference::Reason::utility) {
+        if (_allocationHistory[i].getReason() == AllocationDifference::Reason::utility) {
             if (utChange != nullptr) {
                 return false;
             }
-            utChange = this->allocationHistory[i];
+            utChange = &_allocationHistory[i];
             temp.reset();
             temp.applyDifference(*utChange);
         } else {
-            if (this->allocationHistory[i]->getReason() == AllocationDifference::Reason::empty) {
+            if (_allocationHistory[i].getReason() == AllocationDifference::Reason::empty) {
                 return false;
             }
             if (utChange == nullptr) {
                 continue;
             }
-            temp.applyDifference(*this->allocationHistory[i]);
+            temp.applyDifference(_allocationHistory[i]);
             if (temp.isEmpty()) {
                 ++cyclesFound;
                 if (cyclesFound > maxAllocationCycles) {
-                    for (int k = 0; k < static_cast<int>(this->allocationHistory.size()); ++k) {
-                        this->allocationHistory[k]->reset();
+                    for (int k = 0; k < static_cast<int>(_allocationHistory.size()); ++k) {
+                        _allocationHistory[k].reset();
                     }
                     return true;
                 }

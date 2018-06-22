@@ -34,7 +34,7 @@ public:
     bool isOverridden() const;
     bool applyAssignment();
     bool mayDoUtilityCheck() const { return _state != CycleState::overridden; }
-    void setNewAllocDiff(AllocationDifference* aldif);
+    void setNewAllocDiff(AllocationDifference&& aldif);
     void setNewAllocDiff(const Assignment& oldAssignment, const Assignment& newAssignment, AllocationDifference::Reason reason);
     void handleAuthorityInfo(const AllocationAuthorityInfo& aai);
     bool needsSending() const;
@@ -51,13 +51,13 @@ private:
     bool detectAllocationCycle();
 
     AlicaEngine* _ae;
-    std::mutex allocationHistoryMutex;
+    std::vector<AllocationDifference> _allocationHistory;
+    std::mutex _allocationHistoryMutex;
     supplementary::SystemConfig* sc;
     int maxAllocationCycles;
     bool enabled;
-    std::vector<AllocationDifference*> allocationHistory;
     PlanRepository* pr;
-    int newestAllocationDifference;
+    int _newestAllocationDifference;
     AgentIDConstPtr myID;
 
     AlicaTime overrideTimestamp;
@@ -68,7 +68,6 @@ private:
     AlicaTime overrideShoutInterval;
     AlicaTime overrideWaitInterval;
     AlicaTime overrideShoutTime;
-    int historySize;
     CycleState _state;
     RunningPlan* rp;
     AllocationAuthorityInfo _fixedAllocation;

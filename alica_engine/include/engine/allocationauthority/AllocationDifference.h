@@ -1,32 +1,35 @@
-/*
- * AllocationDifference.h
- *
- *  Created on: Jul 17, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef ALLOCATIONDIFFERENCE_H_
-#define ALLOCATIONDIFFERENCE_H_
-
-#include <vector>
-#include <string>
-#include <sstream>
-#include <memory>
+#pragma once
 #include <algorithm>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #include "EntryPointRobotPair.h"
 
-namespace alica {
+namespace alica
+{
 
 /**
  * A representation of the difference between two allocations
  */
-class AllocationDifference final {
+class AllocationDifference final
+{
 public:
     AllocationDifference();
     ~AllocationDifference();
-    enum Reason { message, utility, empty };
-    AllocationDifference::Reason getReason() const;
+    AllocationDifference(const AllocationDifference&) = delete;
+    AllocationDifference(AllocationDifference&&) = default;
+    AllocationDifference& operator=(const AllocationDifference&) = delete;
+    AllocationDifference& operator=(AllocationDifference&&) = default;
+
+    enum Reason
+    {
+        message,
+        utility,
+        empty
+    };
+    AllocationDifference::Reason getReason() const { return _reason; }
     void setReason(AllocationDifference::Reason reason);
 
     /**
@@ -64,19 +67,3 @@ private:
 };
 
 } /* namespace alica */
-
-// TODO Get rid of this, toString was meant to be a debug facility.
-namespace std {
-template <>
-struct hash<alica::AllocationDifference> {
-    typedef alica::AllocationDifference argument_type;
-    typedef std::size_t value_type;
-
-    value_type operator()(argument_type& ad) const {
-        value_type const h1(std::hash<std::string>()(ad.toString()));
-        return h1;
-    }
-};
-}  // namespace std
-
-#endif /* ALLOCATIONDIFFERENCE_H_ */

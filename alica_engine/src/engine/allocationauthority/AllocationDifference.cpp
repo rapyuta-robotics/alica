@@ -13,16 +13,11 @@ namespace alica
 {
 
 AllocationDifference::AllocationDifference()
-    : _reason(Reason::empty)
+        : _reason(Reason::empty)
 {
 }
 
 AllocationDifference::~AllocationDifference() {}
-
-AllocationDifference::Reason AllocationDifference::getReason() const
-{
-    return _reason;
-}
 
 void AllocationDifference::setReason(AllocationDifference::Reason reason)
 {
