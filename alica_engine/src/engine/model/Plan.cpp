@@ -10,6 +10,7 @@
 #include <assert.h>
 
 #include "engine/model/EntryPoint.h"
+#include "engine/model/State.h"
 #include "engine/model/Task.h"
 
 namespace alica
