@@ -121,7 +121,7 @@ public:
 
     bool updateAgent(AgentIDConstPtr agent, const EntryPoint* e);
     bool updateAgent(AgentIDConstPtr agent, const EntryPoint* e, const State* s);
-    void addAgent(const AgentIDConstPtr agent, const EntryPoint* e, const State* s) { _assignmentData[e->getIndex()].emplace_back(agent, s); }
+    void addAgent(AgentIDConstPtr agent, const EntryPoint* e, const State* s) { _assignmentData[e->getIndex()].emplace_back(agent, s); }
     void setAllToInitialState(const AgentGrp& agents, const EntryPoint* e);
     void setState(AgentIDConstPtr agent, const State* s, const EntryPoint* hint) { _assignmentData[hint->getIndex()].setStateOfAgent(agent, s); }
     bool removeAllIn(const AgentGrp& limit, const State* watchState);
