@@ -47,7 +47,7 @@ bool TransitionCondition1413201227586::evaluate(shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1413201226246) ENABLED START*/
     int id8 = 8;
-    AgentIDConstPtr agentID8 = rp->getAlicaEngine()->getID<int>(id8);
+    AgentIDConstPtr agentID8 = rp->getAlicaEngine()->getId<int>(id8);
 
     if (*(rp->getOwnID()) == *agentID8) {
         return alicaTests::TestWorldModel::getOne()->isTransitionCondition1413201227586();
@@ -81,7 +81,7 @@ bool TransitionCondition1413201389955::evaluate(shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1413201388722) ENABLED START*/
     int id8 = 8;
-    AgentIDConstPtr agentID8 = rp->getAlicaEngine()->getID<int>(id8);
+    AgentIDConstPtr agentID8 = rp->getAlicaEngine()->getId<int>(id8);
     if (*(rp->getOwnID()) == *agentID8) {
         return alicaTests::TestWorldModel::getOne()->isTransitionCondition1413201389955() /*&& rp->allChildrenStatus(PlanStatus::Success)*/;
     } else {

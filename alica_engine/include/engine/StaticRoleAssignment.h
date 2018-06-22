@@ -1,15 +1,17 @@
 #pragma once
 
 #include <engine/IRoleAssignment.h>
-#include <memory>
 #include <list>
+#include <memory>
 
-namespace alica {
+namespace alica
+{
 class AlicaEngine;
 class TeamObserver;
 class RobotProperties;
 
-class StaticRoleAssignment : public IRoleAssignment {
+class StaticRoleAssignment : public IRoleAssignment
+{
 public:
     StaticRoleAssignment(AlicaEngine* ae);
     ~StaticRoleAssignment() = default;
@@ -29,7 +31,6 @@ private:
     bool updateRoles;
 
     AlicaEngine* ae;
-    std::unique_ptr<std::list<const RobotProperties*>> agentProperties;
 };
 
 } /* namespace alica */

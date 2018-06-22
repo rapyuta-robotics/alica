@@ -45,19 +45,19 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig* sc)
     for (const std::string& agentName : *agentNames) {
         int id = (*sc)["Globals"]->tryGet<int>(-1, "Globals", "Team", agentName.c_str(), "ID", NULL);
 
-        agent = new Agent(this->engine, this->teamTimeOut, this->engine->getID(id), agentName);
+        agent = new Agent(this->engine, this->teamTimeOut, this->engine->getId(id), agentName);
         if (!foundSelf && agentName.compare(localAgentName) == 0) {
             foundSelf = true;
             this->localAgent = agent;
             this->localAgent->setLocal(true);
         } else {
             for (auto& agentEntry : _agents) {
-                if (*(agentEntry.first) == *(agent->getID())) {
-                    AlicaEngine::abort("TM: Two robots with the same ID in Globals.conf. ID: ", agent->getID());
+                if (*(agentEntry.first) == *(agent->getId())) {
+                    AlicaEngine::abort("TM: Two robots with the same ID in Globals.conf. ID: ", agent->getId());
                 }
             }
         }
-        _agents.emplace(agent->getID(), agent);
+        _agents.emplace(agent->getId(), agent);
     }
     if (!foundSelf) {
         AlicaEngine::abort("TM: Could not find own agent name in Globals Id = " + localAgentName);
@@ -78,17 +78,6 @@ ActiveAgentIdView TeamManager::getActiveAgentIds() const
 ActiveAgentView TeamManager::getActiveAgents() const
 {
     return ActiveAgentView(_agents);
-}
-
-std::unique_ptr<std::list<const RobotProperties*>> TeamManager::getActiveAgentProperties() const
-{
-    auto agentProperties = std::unique_ptr<std::list<const RobotProperties*>>(new std::list<const RobotProperties*>());
-    for (auto& agentEntry : _agents) {
-        if (agentEntry.second->isActive()) {
-            agentProperties->push_back(agentEntry.second->getProperties());
-        }
-    }
-    return std::move(agentProperties);
 }
 
 int TeamManager::getTeamSize() const
@@ -114,7 +103,7 @@ const Agent* TeamManager::getAgentByID(AgentIDConstPtr agentId) const
 
 AgentIDConstPtr TeamManager::getLocalAgentID() const
 {
-    return this->localAgent->getID();
+    return this->localAgent->getId();
 }
 
 void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr robotID, AlicaTime timeLastMsgReceived)

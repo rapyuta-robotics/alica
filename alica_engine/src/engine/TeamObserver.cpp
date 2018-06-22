@@ -68,7 +68,7 @@ bool TeamObserver::updateTeamPlanTrees()
     for (const auto& agent : _tm->getAllAgents()) {
         bool changedCurrentAgent = agent.second->update();
         if (changedCurrentAgent && !agent.second->isActive()) {
-            _simplePlanTrees.erase(agent.second->getID());
+            _simplePlanTrees.erase(agent.second->getId());
         }
         changedSomeAgent |= changedCurrentAgent;
     }
@@ -208,7 +208,7 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
 
     for (const Agent* agent : _tm->getActiveAgents()) {
         const EntryPointGrp* suc = nullptr;
-        if (_myId == agent->getID()) {
+        if (_myId == agent->getId()) {
             continue;
         }
         {
@@ -217,7 +217,7 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
         }
         if (suc != nullptr) {
             for (const EntryPoint* ep : *suc) {
-                ret.setSuccess(agent->getID(), ep);
+                ret.setSuccess(agent->getId(), ep);
             }
         }
     }
@@ -236,7 +236,7 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
     const EntryPointGrp* suc = nullptr;
 
     for (const Agent* agent : _tm->getActiveAgents()) {
-        if (agent->getID() == _myId) {
+        if (agent->getId() == _myId) {
             continue;
         }
         {
@@ -245,7 +245,7 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
         }
         if (suc != nullptr) {
             for (const EntryPoint* ep : *suc) {
-                sc.setSuccess(agent->getID(), ep);
+                sc.setSuccess(agent->getId(), ep);
             }
         }
     }

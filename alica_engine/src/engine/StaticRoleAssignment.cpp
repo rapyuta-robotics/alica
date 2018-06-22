@@ -8,31 +8,35 @@
 #include "engine/containers/RoleSwitch.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <supplementary/AgentID.h>
+#include <engine/AgentIDConstPtr.h>
 
-namespace alica {
+#include <alica_common_config/debug_output.h>
+
+namespace alica
+{
 
 StaticRoleAssignment::StaticRoleAssignment(AlicaEngine* ae)
         : IRoleAssignment()
         , ae(ae)
-        , updateRoles(false) {
-    this->agentProperties = this->ae->getTeamManager()->getActiveAgentProperties();
+        , updateRoles(false)
+{
 }
 
 /**
  * Initially calculates the robot-role mapping once.
  */
-void StaticRoleAssignment::init() {
+void StaticRoleAssignment::init()
+{
     this->calculateRoles();
 }
 
 /**
  * Triggers the recalculation of the robot-role mapping, if the updateRoles flag is set to true.
  */
-void StaticRoleAssignment::tick() {
+void StaticRoleAssignment::tick()
+{
     if (this->updateRoles) {
         this->updateRoles = false;
-        this->agentProperties = this->ae->getTeamManager()->getActiveAgentProperties();
         this->calculateRoles();
     }
 }
@@ -40,14 +44,16 @@ void StaticRoleAssignment::tick() {
 /**
  * Sets the updateRoles flag to true, in order to recalculate the robot-role mapping on the next tick.
  */
-void StaticRoleAssignment::update() {
+void StaticRoleAssignment::update()
+{
     this->updateRoles = true;
 }
 
 /**
  * Recalculates the complete mapping from robot to role.
  */
-void StaticRoleAssignment::calculateRoles() {
+void StaticRoleAssignment::calculateRoles()
+{
     // clear current map
     this->robotRoleMapping.clear();
 
@@ -55,20 +61,20 @@ void StaticRoleAssignment::calculateRoles() {
     const PlanRepository::Accessor<Role>& roles = ae->getPlanRepository()->getRoles();
 
     // assign a role for each robot if you have match
-    for (auto& agent : *this->agentProperties) {
+    for (const Agent* agent : ae->getTeamManager()->getActiveAgents()) {
+        const RobotProperties* prop = agent->getProperties();
         bool roleIsAssigned = false;
 
         for (const Role* role : roles) {
             // make entry in the map if the roles match
-            if (role->getName() == agent->getDefaultRole()) {
-#ifdef STATIC_RA_DEBUG
-                std::cout << "Static RA: Setting Role " << role.second->getName() << " for robot ID " << agent->getId()
-                          << std::endl;
-#endif
+            if (role->getName() == prop->getDefaultRole()) {
+
+                ALICA_DEBUG_MSG("Static RA: Setting Role " << role->getName() << " for robot ID " << agent->getId());
+
                 this->robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me
-                if (*(agent->getId()) == *(this->ae->getTeamManager()->getLocalAgentID()) && this->ownRole != role) {
+                if (agent->getId() == this->ae->getTeamManager()->getLocalAgentID() && this->ownRole != role) {
                     this->ownRole = role;
 
                     // probably nothing is reacting on this message, but anyway we send it
@@ -84,10 +90,7 @@ void StaticRoleAssignment::calculateRoles() {
         }
 
         if (!roleIsAssigned) {
-            std::stringstream ss;
-            ss << *(agent->getId());
-            AlicaEngine::abort(
-                    "RA: Could not set a role (Default: " + agent->getDefaultRole() + ") for robot: ", ss.str());
+            AlicaEngine::abort("RA: Could not set a role (Default: " + prop->getDefaultRole() + ") for robot: ", agent->getId());
         }
     }
 }

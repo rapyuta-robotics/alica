@@ -45,7 +45,7 @@ public:
 
     ActiveAgentIdView getActiveAgentIds() const;
     ActiveAgentView getActiveAgents() const;
-    std::unique_ptr<std::list<const RobotProperties*>> getActiveAgentProperties() const;
+
     int getTeamSize() const;
     const Agent* getAgentByID(AgentIDConstPtr agentId) const;
     void setTimeLastMsgReceived(AgentIDConstPtr agendId, AlicaTime timeLastMsgReceived);

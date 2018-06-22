@@ -84,7 +84,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     // fake a list of existing robots
     alica::AgentGrp robots;
     for (int number = 8; number <= 11; number++) {
-        alica::AgentIDConstPtr agentID = ae->getID<int>(number);
+        alica::AgentIDConstPtr agentID = ae->getId<int>(number);
         robots.push_back(agentID);
         ae->getTeamManager()->setTimeLastMsgReceived(agentID, ae->getAlicaClock()->now());
     }
