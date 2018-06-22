@@ -250,7 +250,7 @@ AgentsInStateView Assignment::getAgentsInState(const State* s) const
     return AgentsInStateView(this, s);
 }
 
-AgentsInStateView getAgentsInState(int64_t sid) const
+AgentsInStateView Assignment::getAgentsInState(int64_t sid) const
 {
     const State* s = _plan->getStateByID(sid);
     return s ? AgentsInStateView(this, s) : AgentsInStateView();
