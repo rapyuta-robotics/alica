@@ -566,8 +566,9 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
             rem.clear();
             AssignmentView robs = _assignment.getAgentsWorking(i);
             for (AgentIDConstPtr rob : robs) {
-                if (*rob == *ownId)
+                if (rob == ownId) {
                     continue;
+                }
                 bool found = false;
                 if (std::find(noUpdates.begin(), noUpdates.end(), rob) != noUpdates.end()) {
                     // found = true;
