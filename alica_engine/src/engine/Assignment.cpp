@@ -236,6 +236,12 @@ AssignmentView Assignment::getAgentsWorking(int idx) const
     return AssignmentView(this, idx);
 }
 
+AssignmentView Assignment::getAgentsWorking(int64_t epId) const
+{
+    const EntryPoint* ep = _plan->getEntryPointByID(epId);
+    return ep ? AssignmentView(this, ep->getIndex()) : AssignmentView();
+}
+
 AssignmentSuccessView Assignment::getAgentsWorkingAndFinished(const EntryPoint* ep) const
 {
     return AssignmentSuccessView(this, ep->getIndex());

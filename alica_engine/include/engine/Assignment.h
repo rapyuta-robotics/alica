@@ -105,6 +105,8 @@ public:
 
     AssignmentView getAgentsWorking(const EntryPoint* ep) const;
     AssignmentView getAgentsWorking(int idx) const;
+    AssignmentView getAgentsWorking(int64_t epId) const;
+
     AssignmentSuccessView getAgentsWorkingAndFinished(const EntryPoint* ep) const;
     AllAgentsView getAllAgents() const;
     AgentsInStateView getAgentsInState(const State* s) const;
