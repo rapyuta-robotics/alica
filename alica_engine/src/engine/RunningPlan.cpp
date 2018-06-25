@@ -111,11 +111,8 @@ bool RunningPlan::isDeleteable() const
  */
 PlanChange RunningPlan::tick(RuleBook* rules)
 {
-    PlanChange myChange = PlanChange::NoChange;
-    {
-        _cycleManagement.update();
-        myChange = rules->visit(*this);
-    }
+    _cycleManagement.update();
+    PlanChange myChange = rules->visit(*this);
     PlanChange childChange = PlanChange::NoChange;
     // attention: do not use for each here: children are modified
     for (int i = 0; i < static_cast<int>(_children.size()); ++i) {
@@ -518,7 +515,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
 
     // if keepTask, the task Assignment should not be changed!
     bool ret = false;
-    AllocationDifference aldif;
+    AllocationDifference& aldif = _cycleManagement.editNextDifference();
     for (const SimplePlanTree* spt : spts) {
         AgentIDConstPtr id = spt->getAgentId();
         if (spt->getState()->getInPlan() != _activeTriple.plan) { // the robot is no longer participating in this plan
@@ -608,7 +605,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     }
 
     aldif.setReason(AllocationDifference::Reason::message);
-    _cycleManagement.setNewAllocDiff(std::move(aldif));
+
     // Update Success Collection:
     _ae->getTeamObserver()->updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), _assignment.editSuccessData());
 

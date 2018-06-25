@@ -35,7 +35,7 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
         , _fixedAllocation()
         , _newestAllocationDifference(0)
 {
-    sc = supplementary::SystemConfig::getInstance();
+    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     maxAllocationCycles = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "CycleCount");
     enabled = (*sc)["Alica"]->get<bool>("Alica", "CycleDetection", "Enabled");
     minimalOverrideTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
@@ -51,7 +51,6 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
 
     this->rp = p;
     this->myID = ae->getTeamManager()->getLocalAgentID();
-    this->pr = ae->getPlanRepository();
 }
 
 CycleManager::~CycleManager() {}
@@ -106,37 +105,23 @@ bool CycleManager::isOverridden() const
     return _state == CycleState::overridden && _fixedAllocation.authority != nullptr;
 }
 
-/**
- * Notify the CycleManager of a new AllocationDifference
- * @param curP The RunningPlan of this CycleManager, in case it has changed.
- * @param aldif The new AllocationDifference
- */
-void alica::CycleManager::setNewAllocDiff(AllocationDifference&& aldif)
+AllocationDifference& CycleManager::editNextDifference()
 {
-    if (!enabled) {
-        return;
-    }
-    lock_guard<mutex> lock(_allocationHistoryMutex);
-
     _newestAllocationDifference = (_newestAllocationDifference + 1) % _allocationHistory.size();
-    _allocationHistory[_newestAllocationDifference] = std::move(aldif);
-
-    ALICA_DEBUG_MSG("CM: SetNewAllDiff(a): " << _allocationHistory[_newestAllocationDifference].toString() << " OWN ROBOT ID " << this->rp->getOwnID());
+    _allocationHistory[_newestAllocationDifference].reset();
+    return _allocationHistory[_newestAllocationDifference];
 }
-
 /**
  * Notify the CycleManager of a change in the assignment
  * @param oldAss The former Assignment
  * @param newAss The new Assignment
  * @param reas The AllocationDifference.Reason for this change.
  */
-void alica::CycleManager::setNewAllocDiff(const Assignment& oldAss, const Assignment& newAss, AllocationDifference::Reason reas)
+void CycleManager::setNewAllocDiff(const Assignment& oldAss, const Assignment& newAss, AllocationDifference::Reason reas)
 {
     if (!enabled) {
         return;
     }
-
-    std::lock_guard<mutex> lock(_allocationHistoryMutex);
 
     _newestAllocationDifference = (_newestAllocationDifference + 1) % _allocationHistory.size();
 
@@ -179,7 +164,7 @@ void alica::CycleManager::setNewAllocDiff(const Assignment& oldAss, const Assign
  * Message Handler
  * @param aai A shared_ptr<AllocationAuthorityInfo>
  */
-void alica::CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
+void CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
 {
     if (!enabled) {
         return;
@@ -207,7 +192,7 @@ void alica::CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai
     }
 }
 
-bool alica::CycleManager::needsSending() const
+bool CycleManager::needsSending() const
 {
     return _state == CycleState::overriding && (this->overrideShoutTime + overrideShoutInterval < _ae->getAlicaClock()->now());
 }
@@ -215,7 +200,7 @@ bool alica::CycleManager::needsSending() const
 /**
  * Indicate to the manager that a corresponding message has been sent.
  */
-void alica::CycleManager::sent()
+void CycleManager::sent()
 {
     this->overrideShoutTime = _ae->getAlicaClock()->now();
 }
@@ -248,7 +233,7 @@ bool CycleManager::applyAssignment()
     } else {
         for (EntryPointRobots epr : _fixedAllocation.entryPointRobots) {
             for (AgentIDConstPtr robot : epr.robots) {
-                const EntryPoint* e = pr->getEntryPoints()[epr.entrypoint];
+                const EntryPoint* e = _ae->getPlanRepository()->getEntryPoints()[epr.entrypoint];
                 bool changed = rp->editAssignment().updateAgent(robot, e);
                 if (changed) {
                     if (robot == myID) {
@@ -288,7 +273,6 @@ bool CycleManager::detectAllocationCycle()
     int count = 0;
     AllocationDifference* utChange = nullptr;
     AllocationDifference temp;
-    lock_guard<mutex> lock(_allocationHistoryMutex);
 
     for (int i = _newestAllocationDifference; count < static_cast<int>(_allocationHistory.size()); --i) {
         ++count;

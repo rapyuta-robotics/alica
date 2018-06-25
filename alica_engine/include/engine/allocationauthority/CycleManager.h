@@ -18,7 +18,6 @@ namespace alica
 {
 class RunningPlan;
 class PlanRepository;
-struct AllocationAuthorityInfo;
 class Assignment;
 class AlicaEngine;
 
@@ -29,12 +28,13 @@ class CycleManager
 {
 public:
     CycleManager(AlicaEngine* ae, RunningPlan* p);
-    virtual ~CycleManager();
+    ~CycleManager();
     void update();
     bool isOverridden() const;
     bool applyAssignment();
     bool mayDoUtilityCheck() const { return _state != CycleState::overridden; }
-    void setNewAllocDiff(AllocationDifference&& aldif);
+
+    AllocationDifference& editNextDifference();
     void setNewAllocDiff(const Assignment& oldAssignment, const Assignment& newAssignment, AllocationDifference::Reason reason);
     void handleAuthorityInfo(const AllocationAuthorityInfo& aai);
     bool needsSending() const;
@@ -52,12 +52,10 @@ private:
 
     AlicaEngine* _ae;
     std::vector<AllocationDifference> _allocationHistory;
-    std::mutex _allocationHistoryMutex;
-    supplementary::SystemConfig* sc;
+    int _newestAllocationDifference;
     int maxAllocationCycles;
     bool enabled;
-    PlanRepository* pr;
-    int _newestAllocationDifference;
+
     AgentIDConstPtr myID;
 
     AlicaTime overrideTimestamp;
