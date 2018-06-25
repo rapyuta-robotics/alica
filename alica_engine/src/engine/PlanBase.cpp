@@ -155,24 +155,28 @@ void PlanBase::run()
 #ifdef ALICA_DEBUG_ENABLED
         int retiredCount = 0;
         int inActiveCount = 0;
+        int deleteCount = 0;
+        int totalCount = static_cast<int>(_runningPlans.size());
 #endif
         for (int i = static_cast<int>(_runningPlans.size()) - 1; i >= 0; --i) {
+#ifdef ALICA_DEBUG_ENABLED
+            if (_runningPlans[i]->isRetired()) {
+                ++retiredCount;
+            } else if (!_runningPlans[i]->isActive()) {
+                ++inActiveCount;
+            }
+#endif
             if (_runningPlans[i]->isDeleteable()) {
                 assert(_runningPlans[i].use_count() == 1);
                 _runningPlans.erase(_runningPlans.begin() + i);
-            } else {
 #ifdef ALICA_DEBUG_ENABLED
-                if (_runningPlans[i]->isRetired()) {
-                    ++retiredCount;
-                } else if (!_runningPlans[i]->isActive()) {
-                    ++inActiveCount;
-                }
+                ++deleteCount;
 #endif
             }
         }
 #ifdef ALICA_DEBUG_ENABLED
-        ALICA_DEBUG_MSG("PlanBase: " << (_runningPlans.size() - pendingCount - retiredCount) << " active" << retiredCount << " retired " << inActiveCount
-                                     << " inactive.");
+        ALICA_DEBUG_MSG("PlanBase: " << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " << inActiveCount
+                                     << " inactive deleted: " << deleteCount);
 #endif
         // lock for fpEvents
         {
