@@ -23,12 +23,26 @@ public:
     AllocationDifference& operator=(const AllocationDifference&) = delete;
     AllocationDifference& operator=(AllocationDifference&&) = default;
 
-    enum Reason
+    enum class Reason
     {
         message,
         utility,
         empty
     };
+    static const char* getReasonString(Reason r)
+    {
+        switch (r) {
+        case Reason::message:
+            return "Message";
+        case Reason::utility:
+            return "Utility";
+        case Reason::empty:
+            return "empty";
+        default:
+            assert(false);
+            return "unknown";
+        }
+    }
     AllocationDifference::Reason getReason() const { return _reason; }
     void setReason(AllocationDifference::Reason reason);
 
@@ -47,7 +61,6 @@ public:
      * @param other the AllocationDifference to apply.
      */
     void applyDifference(const AllocationDifference& other);
-    std::string toString() const;
 
     const std::vector<EntryPointRobotPair>& getAdditions() const { return _additions; }
     std::vector<EntryPointRobotPair>& editAdditions() { return _additions; }
@@ -63,5 +76,7 @@ private:
      */
     AllocationDifference::Reason _reason;
 };
+
+std::ostream& operator<<(std::ostream& o, const AllocationDifference& dif);
 
 } /* namespace alica */

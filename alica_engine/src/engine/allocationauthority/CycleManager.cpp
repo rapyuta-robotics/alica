@@ -157,7 +157,7 @@ void CycleManager::setNewAllocDiff(const Assignment& oldAss, const Assignment& n
         }
     }
     aldif.setReason(reas);
-    ALICA_DEBUG_MSG("CM: SetNewAllDiff(b): " << aldif.toString());
+    ALICA_DEBUG_MSG("CM: SetNewAllDiff(b): " << aldif);
 }
 
 /**

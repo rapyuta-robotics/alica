@@ -85,19 +85,18 @@ void AllocationDifference::applyDifference(const AllocationDifference& other)
     }
 }
 
-std::string AllocationDifference::toString() const
+std::ostream& operator<<(std::ostream& o, const AllocationDifference& dif)
 {
-    std::stringstream ss;
-    ss << "Additions: ";
-    for (const EntryPointRobotPair& erp : _additions) {
-        ss << "+ " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
+    o << "Additions: ";
+    for (const EntryPointRobotPair& erp : dif.getAdditions()) {
+        o << "+ " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
     }
-    ss << std::endl << "Substractions: ";
-    for (const EntryPointRobotPair& erp : _subtractions) {
-        ss << "- " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
+    o << "\nSubstractions: ";
+    for (const EntryPointRobotPair& erp : dif.getSubtractions()) {
+        o << "- " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
     }
-    ss << std::endl << "Reason [0=msg, 1=util, 2=empty]:" << _reason;
-    return ss.str();
+    o << "\nReason:" << AllocationDifference::getReasonString(dif.getReason()) << std::endl;
+    return o;
 }
 
 } /* namespace alica */
