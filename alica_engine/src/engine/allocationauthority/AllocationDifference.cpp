@@ -100,34 +100,4 @@ std::string AllocationDifference::toString() const
     return ss.str();
 }
 
-const std::vector<EntryPointRobotPair>& AllocationDifference::getAdditions() const
-{
-    return _additions;
-}
-
-std::vector<EntryPointRobotPair>& AllocationDifference::editAdditions()
-{
-    return _additions;
-}
-
-void AllocationDifference::setAdditions(const std::vector<EntryPointRobotPair>& additions)
-{
-    _additions = additions;
-}
-
-const std::vector<EntryPointRobotPair>& AllocationDifference::getSubtractions() const
-{
-    return _subtractions;
-}
-
-std::vector<EntryPointRobotPair>& AllocationDifference::editSubtractions()
-{
-    return _subtractions;
-}
-
-void AllocationDifference::setSubtractions(const std::vector<EntryPointRobotPair>& subtractions)
-{
-    _subtractions = subtractions;
-}
-
 } /* namespace alica */

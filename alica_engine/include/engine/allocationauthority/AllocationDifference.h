@@ -49,13 +49,11 @@ public:
     void applyDifference(const AllocationDifference& other);
     std::string toString() const;
 
-    const std::vector<EntryPointRobotPair>& getAdditions() const;
-    std::vector<EntryPointRobotPair>& editAdditions();
+    const std::vector<EntryPointRobotPair>& getAdditions() const { return _additions; }
+    std::vector<EntryPointRobotPair>& editAdditions() { return _additions; }
 
-    void setAdditions(const std::vector<EntryPointRobotPair>& additions);
-    const std::vector<EntryPointRobotPair>& getSubtractions() const;
-    std::vector<EntryPointRobotPair>& editSubtractions();
-    void setSubtractions(const std::vector<EntryPointRobotPair>& subtractions);
+    const std::vector<EntryPointRobotPair>& getSubtractions() const { return _subtractions; }
+    std::vector<EntryPointRobotPair>& editSubtractions() { return _subtractions; }
 
 private:
     std::vector<EntryPointRobotPair> _additions;
