@@ -22,7 +22,7 @@ class AuthorityManager
 {
 public:
     AuthorityManager(AlicaEngine* ae);
-    virtual ~AuthorityManager();
+    ~AuthorityManager();
     void init();
     void close();
     void handleIncomingAuthorityMessage(const AllocationAuthorityInfo& aai);
