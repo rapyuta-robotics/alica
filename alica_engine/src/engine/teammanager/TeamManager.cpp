@@ -106,16 +106,16 @@ AgentIDConstPtr TeamManager::getLocalAgentID() const
     return this->localAgent->getId();
 }
 
-void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr robotID, AlicaTime timeLastMsgReceived)
+void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr agentId, AlicaTime timeLastMsgReceived)
 {
-    auto mapIter = _agents.find(robotID);
+    auto mapIter = _agents.find(agentId);
     if (mapIter != _agents.end()) {
         mapIter->second->setTimeLastMsgReceived(timeLastMsgReceived);
     } else {
         // TODO alex robot properties protokoll anstoßen
-        Agent* agent = new Agent(this->engine, this->teamTimeOut, robotID);
+        Agent* agent = new Agent(this->engine, this->teamTimeOut, agentId);
         agent->setTimeLastMsgReceived(timeLastMsgReceived);
-        _agents.emplace(robotID, agent);
+        _agents.emplace(agentId, agent);
     }
 }
 

@@ -56,7 +56,7 @@ public:
     void setAgentIgnored(AgentIDConstPtr, bool) const;
     bool setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
     bool setSuccessMarks(AgentIDConstPtr agentId, const IdGrp& suceededEps);
-    const DomainVariable* getDomainVariable(AgentIDConstPtr robot, const std::string& sort) const;
+    const DomainVariable* getDomainVariable(AgentIDConstPtr agentId, const std::string& sort) const;
 
 private:
     AlicaTime teamTimeOut;
