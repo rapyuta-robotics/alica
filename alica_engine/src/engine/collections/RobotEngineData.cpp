@@ -22,7 +22,7 @@ namespace alica
 RobotEngineData::RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId)
         : _engine(engine)
         , _agentId(agentId)
-        , _successMarks(std::make_shared<SuccessMarks>(engine))
+        , _successMarks(std::make_shared<SuccessMarks>())
 {
     initDomainVariables();
 }
