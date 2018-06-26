@@ -48,12 +48,13 @@ public:
 
     int getTeamSize() const;
     const Agent* getAgentByID(AgentIDConstPtr agentId) const;
+    Agent* editAgentByID(AgentIDConstPtr agentId);
     void setTimeLastMsgReceived(AgentIDConstPtr agendId, AlicaTime timeLastMsgReceived);
     bool isAgentIgnored(AgentIDConstPtr agentId) const;
     bool isAgentActive(AgentIDConstPtr agentId) const;
     void setAgentIgnored(AgentIDConstPtr, bool) const;
     bool setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
-    bool setSuccessMarks(AgentIDConstPtr agentId, std::shared_ptr<SuccessMarks> successMarks);
+    bool setSuccessMarks(AgentIDConstPtr agentId, const IdGrp& suceededEps);
     const DomainVariable* getDomainVariable(AgentIDConstPtr robot, const std::string& sort) const;
 
 private:

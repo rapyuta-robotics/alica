@@ -16,12 +16,13 @@ namespace alica
 SuccessMarks::SuccessMarks() {}
 
 /**
- * Construct from an IdGrp of EntryPoint id, as received by a message
+ * Update with an IdGrp of EntryPoint ids, as received by a message
  */
-SuccessMarks::SuccessMarks(const AlicaEngine* ae, const IdGrp& epIds)
+void SuccessMarks::update(const AlicaEngine* ae, const IdGrp& succeededEps)
 {
+    clear();
     const PlanRepository::Accessor<EntryPoint>& eps = ae->getPlanRepository()->getEntryPoints();
-    for (int64_t id : epIds) {
+    for (int64_t id : succeededEps) {
         const EntryPoint* ep = eps.find(id);
         if (ep != nullptr) {
             auto i = _successMarks.find(ep->getPlan());

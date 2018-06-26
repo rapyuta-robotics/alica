@@ -101,6 +101,16 @@ const Agent* TeamManager::getAgentByID(AgentIDConstPtr agentId) const
     }
 }
 
+Agent* TeamManager::editAgentByID(AgentIDConstPtr agentId)
+{
+    auto agentEntry = _agents.find(agentId);
+    if (agentEntry != _agents.end()) {
+        return agentEntry->second;
+    } else {
+        return nullptr;
+    }
+}
+
 AgentIDConstPtr TeamManager::getLocalAgentID() const
 {
     return this->localAgent->getId();
@@ -161,11 +171,11 @@ bool TeamManager::setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, 
     return false;
 }
 
-bool TeamManager::setSuccessMarks(AgentIDConstPtr agentId, std::shared_ptr<SuccessMarks> successMarks)
+bool TeamManager::setSuccessMarks(AgentIDConstPtr agentId, const IdGrp& suceededEps)
 {
     auto agentEntry = _agents.find(agentId);
     if (agentEntry != _agents.end()) {
-        agentEntry->second->setSuccessMarks(successMarks);
+        agentEntry->second->setSuccessMarks(suceededEps);
         return true;
     }
     return false;

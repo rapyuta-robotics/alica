@@ -51,7 +51,7 @@ private:
 
     AlicaEngine* _ae;
     AgentIDConstPtr _myId;
-    const Agent* _me;
+    Agent* _me;
     TeamManager* _tm;
 
     std::mutex _msgQueueMutex;

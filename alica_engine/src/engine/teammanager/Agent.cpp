@@ -49,12 +49,12 @@ void Agent::setLocal(bool local)
 
 void Agent::setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint)
 {
-    _engineData.getSuccessMarks()->markSuccessfull(plan, entryPoint);
+    _engineData.editSuccessMarks().markSuccessfull(plan, entryPoint);
 }
 
-void Agent::setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks)
+void Agent::setSuccessMarks(const IdGrp& suceededEps)
 {
-    _engineData.setSuccessMarks(successMarks);
+    _engineData.updateSuccessMarks(suceededEps);
 }
 
 const DomainVariable* Agent::getDomainVariable(const std::string& sort) const
@@ -64,7 +64,7 @@ const DomainVariable* Agent::getDomainVariable(const std::string& sort) const
 
 const EntryPointGrp* Agent::getSucceededEntryPoints(const AbstractPlan* plan) const
 {
-    return _engineData.getSuccessMarks()->succeededEntryPoints(plan);
+    return _engineData.getSuccessMarks().succeededEntryPoints(plan);
 }
 
 bool Agent::update()

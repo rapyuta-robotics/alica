@@ -2,15 +2,14 @@
 
 #include <engine/AgentIDConstPtr.h>
 #include <engine/Types.h>
+#include <engine/collections/SuccessMarks.h>
 
 #include <map>
-#include <memory>
 #include <string>
 
 namespace alica
 {
 class AlicaEngine;
-class SuccessMarks;
 
 /**
  * Basic plan execution information relating to a robot within the team.
@@ -20,10 +19,11 @@ class RobotEngineData
 public:
     RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId);
     ~RobotEngineData();
-    virtual void initDomainVariables();
+    void initDomainVariables();
 
-    std::shared_ptr<SuccessMarks> getSuccessMarks() const { return _successMarks; }
-    void setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks);
+    const SuccessMarks& getSuccessMarks() const { return _successMarks; }
+    SuccessMarks& editSuccessMarks() { return _successMarks; }
+    void updateSuccessMarks(const IdGrp& succeededEps);
     void clearSuccessMarks();
 
     const DomainVariable* getDomainVariable(const Variable* templateVar) const;
@@ -35,7 +35,7 @@ protected:
     /**
      * The SuccessMarks of the robot, indicating which EntryPoints are completed.
      */
-    std::shared_ptr<SuccessMarks> _successMarks;
+    SuccessMarks _successMarks;
     /**
      * The domain variables (a.k.a. quantified variables) are held in a map: TemplateVariable -> DomainVariable
      */

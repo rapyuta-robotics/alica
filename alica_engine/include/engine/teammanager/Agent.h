@@ -37,6 +37,7 @@ public:
     const std::string& getName() const { return _name; }
     const RobotProperties& getProperties() const { return _properties; }
     const RobotEngineData& getEngineData() const { return _engineData; }
+    RobotEngineData& editEngineData() { return _engineData; }
     bool isActive() const { return _active; }
     bool isIgnored() const { return _ignored; }
 
@@ -59,7 +60,7 @@ protected:
     void setIgnored(const bool ignored) { _ignored = ignored; }
     void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived) { _timeLastMsgReceived = timeLastMsgReceived; }
     void setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint);
-    void setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks);
+    void setSuccessMarks(const IdGrp& suceededEps);
     const DomainVariable* getDomainVariable(const std::string& sort) const;
     const EntryPointGrp* getSucceededEntryPoints(const AbstractPlan* plan) const;
     bool update();

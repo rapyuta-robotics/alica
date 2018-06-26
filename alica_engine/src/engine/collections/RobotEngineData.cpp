@@ -3,7 +3,6 @@
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
 #include "engine/collections/RobotProperties.h"
-#include "engine/collections/SuccessMarks.h"
 #include "engine/model/AlicaElement.h"
 #include "engine/model/DomainVariable.h"
 #include "engine/model/ForallAgents.h"
@@ -22,7 +21,7 @@ namespace alica
 RobotEngineData::RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId)
         : _engine(engine)
         , _agentId(agentId)
-        , _successMarks(std::make_shared<SuccessMarks>())
+        , _successMarks()
 {
     initDomainVariables();
 }
@@ -34,9 +33,9 @@ RobotEngineData::~RobotEngineData()
     }
 }
 
-void RobotEngineData::setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks)
+void RobotEngineData::updateSuccessMarks(const IdGrp& succeededEps)
 {
-    _successMarks = successMarks;
+    _successMarks.update(_engine, succeededEps);
 }
 
 void RobotEngineData::initDomainVariables()
@@ -77,7 +76,7 @@ int64_t RobotEngineData::makeUniqueId(const std::string& s) const
 
 void RobotEngineData::clearSuccessMarks()
 {
-    _successMarks->clear();
+    _successMarks.clear();
 }
 
 } /* namespace alica */
