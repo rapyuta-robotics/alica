@@ -60,7 +60,7 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig* sc)
         _agents.emplace(agent->getId(), agent);
     }
     if (!foundSelf) {
-        AlicaEngine::abort("TM: Could not find own agent name in Globals Id = " + localAgentName);
+        AlicaEngine::abort("TM: Could not find own agent name in Globals Id = ", localAgentName);
     }
 
     if ((*sc)["Alica"]->get<bool>("Alica.TeamBlackList.InitiallyFull", NULL)) {
@@ -85,7 +85,7 @@ int TeamManager::getTeamSize() const
     int teamSize = 0;
     for (auto& agentEntry : _agents) {
         if (agentEntry.second->isActive()) {
-            teamSize++;
+            ++teamSize;
         }
     }
     return teamSize;
