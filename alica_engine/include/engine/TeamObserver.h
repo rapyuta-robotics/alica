@@ -50,7 +50,6 @@ private:
     std::unique_ptr<SimplePlanTree> sptFromMessage(AgentIDConstPtr agent, const IdGrp& ids, AlicaTime time) const;
 
     AlicaEngine* _ae;
-    AgentIDConstPtr _myId;
     Agent* _me;
     TeamManager* _tm;
 

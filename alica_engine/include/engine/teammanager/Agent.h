@@ -41,13 +41,12 @@ public:
     bool isActive() const { return _active; }
     bool isIgnored() const { return _ignored; }
 
-protected:
+private:
     Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id);
     Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id, const std::string& name);
 
     const AlicaEngine* _engine;
     AgentIDConstPtr _id;
-    std::string _name;
     bool _active;
     bool _ignored;
     bool _local;
@@ -55,6 +54,7 @@ protected:
     AlicaTime _timeLastMsgReceived;
     RobotProperties _properties;
     RobotEngineData _engineData;
+    std::string _name;
 
     void setLocal(bool local);
     void setIgnored(const bool ignored) { _ignored = ignored; }

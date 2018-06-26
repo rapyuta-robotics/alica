@@ -33,9 +33,8 @@ using std::pair;
 TeamObserver::TeamObserver(AlicaEngine* ae)
         : _ae(ae)
         , _tm(ae->getTeamManager())
-        , _myId(ae->getTeamManager()->getLocalAgentID())
 {
-    _me = _tm->editAgentByID(_myId);
+    _me = _tm->editLocalAgent();
 }
 
 TeamObserver::~TeamObserver() {}
@@ -128,7 +127,7 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
         return;
     }
     PlanTreeInfo pti = PlanTreeInfo();
-    pti.senderID = _myId;
+    pti.senderID = _me->getId();
     pti.stateIDs = msg;
     pti.succeededEPs = _me->getEngineData().getSuccessMarks().toIdGrp();
     _ae->getCommunicator()->sendPlanTreeInfo(pti);
@@ -206,7 +205,7 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
 
     for (const Agent* agent : _tm->getActiveAgents()) {
         const EntryPointGrp* suc = nullptr;
-        if (_myId == agent->getId()) {
+        if (_me == agent) {
             continue;
         }
         {
@@ -222,7 +221,7 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
     const EntryPointGrp* suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(plan);
     if (suc != nullptr) {
         for (const EntryPoint* ep : *suc) {
-            ret.setSuccess(_myId, ep);
+            ret.setSuccess(_me->getId(), ep);
         }
     }
     return ret;
@@ -234,7 +233,7 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
     const EntryPointGrp* suc = nullptr;
 
     for (const Agent* agent : _tm->getActiveAgents()) {
-        if (agent->getId() == _myId) {
+        if (agent == _me) {
             continue;
         }
         {
@@ -250,7 +249,7 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
     suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(p);
     if (suc != nullptr) {
         for (const EntryPoint* ep : *suc) {
-            sc.setSuccess(_myId, ep);
+            sc.setSuccess(_me->getId(), ep);
         }
     }
 }
@@ -272,7 +271,7 @@ void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan)
 
 void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
 {
-    if (incoming->senderID != _myId) {
+    if (incoming->senderID != _me->getId()) {
         if (_tm->isAgentIgnored(incoming->senderID)) {
             return;
         }

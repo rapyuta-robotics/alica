@@ -30,7 +30,13 @@ public:
     const DomainVariable* getDomainVariable(const Variable* templateVar) const;
     const DomainVariable* getDomainVariable(const std::string& name) const;
 
-protected:
+private:
+    /**
+     * Creates a hopefully unique id, in order to make the variable
+     * string "X" (specified in the Plan Designer) unique in the team.
+     */
+    int64_t makeUniqueId(const std::string& s) const;
+
     const AlicaEngine* _engine;
     AgentIDConstPtr _agentId;
     /**
@@ -41,11 +47,6 @@ protected:
      * The domain variables (a.k.a. quantified variables) are held in a map: TemplateVariable -> DomainVariable
      */
     std::map<const Variable*, std::unique_ptr<const DomainVariable>> _domainVariables;
-    /**
-     * Creates a hopefully unique id, in order to make the variable
-     * string "X" (specified in the Plan Designer) unique in the team.
-     */
-    int64_t makeUniqueId(const std::string& s) const;
 };
 
 } /* namespace alica */

@@ -42,13 +42,14 @@ public:
 
     AgentIDConstPtr getLocalAgentID() const;
     const Agent* getLocalAgent() const { return localAgent; }
+    Agent* editLocalAgent() { return localAgent; }
 
     ActiveAgentIdView getActiveAgentIds() const;
     ActiveAgentView getActiveAgents() const;
 
     int getTeamSize() const;
     const Agent* getAgentByID(AgentIDConstPtr agentId) const;
-    Agent* editAgentByID(AgentIDConstPtr agentId);
+
     void setTimeLastMsgReceived(AgentIDConstPtr agendId, AlicaTime timeLastMsgReceived);
     bool isAgentIgnored(AgentIDConstPtr agentId) const;
     bool isAgentActive(AgentIDConstPtr agentId) const;

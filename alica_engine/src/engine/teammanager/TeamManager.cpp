@@ -101,16 +101,6 @@ const Agent* TeamManager::getAgentByID(AgentIDConstPtr agentId) const
     }
 }
 
-Agent* TeamManager::editAgentByID(AgentIDConstPtr agentId)
-{
-    auto agentEntry = _agents.find(agentId);
-    if (agentEntry != _agents.end()) {
-        return agentEntry->second;
-    } else {
-        return nullptr;
-    }
-}
-
 AgentIDConstPtr TeamManager::getLocalAgentID() const
 {
     return this->localAgent->getId();
