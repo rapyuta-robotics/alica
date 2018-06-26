@@ -26,12 +26,7 @@ RobotEngineData::RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agen
     initDomainVariables();
 }
 
-RobotEngineData::~RobotEngineData()
-{
-    for (auto x : _domainVariables) {
-        delete x.second;
-    }
-}
+RobotEngineData::~RobotEngineData() {}
 
 void RobotEngineData::updateSuccessMarks(const IdGrp& succeededEps)
 {
@@ -45,8 +40,8 @@ void RobotEngineData::initDomainVariables()
     std::string agentIdString = ss.str();
     for (const Quantifier* quantifier : _engine->getPlanRepository()->getQuantifiers()) {
         for (const Variable* tv : quantifier->getTemplateVariables()) {
-            DomainVariable* dv = new DomainVariable(makeUniqueId(tv->getName()), agentIdString + tv->getName(), "", tv, _agentId);
-            _domainVariables.emplace(tv, dv);
+            _domainVariables.emplace(tv,
+                    std::unique_ptr<const DomainVariable>(new DomainVariable(makeUniqueId(tv->getName()), agentIdString + tv->getName(), "", tv, _agentId)));
         }
     }
 }
@@ -55,7 +50,7 @@ const DomainVariable* RobotEngineData::getDomainVariable(const Variable* templat
 {
     auto iterator = _domainVariables.find(templateVar);
     if (iterator != _domainVariables.end()) {
-        return iterator->second;
+        return iterator->second.get();
     } else {
         return nullptr;
     }

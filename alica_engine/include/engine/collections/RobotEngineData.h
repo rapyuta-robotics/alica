@@ -5,6 +5,7 @@
 #include <engine/collections/SuccessMarks.h>
 
 #include <map>
+#include <memory>
 #include <string>
 
 namespace alica
@@ -39,7 +40,7 @@ protected:
     /**
      * The domain variables (a.k.a. quantified variables) are held in a map: TemplateVariable -> DomainVariable
      */
-    std::map<const Variable*, const DomainVariable*> _domainVariables;
+    std::map<const Variable*, std::unique_ptr<const DomainVariable>> _domainVariables;
     /**
      * Creates a hopefully unique id, in order to make the variable
      * string "X" (specified in the Plan Designer) unique in the team.
