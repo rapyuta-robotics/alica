@@ -137,7 +137,7 @@ public:
 
     void usePlan(const AbstractPlan* plan);
     void setParent(RunningPlan* parent) { _parent = parent; }
-    void setFailureHandlingNeeded(bool failHandlingNeeded) { _status.failHandlingNeeded = failHandlingNeeded; }
+    void setFailureHandlingNeeded(bool failHandlingNeeded);
     void setAssignment(const Assignment& assignment) { _assignment = assignment; }
     void setBasicBehaviour(BasicBehaviour* basicBehaviour) { _basicBehaviour = basicBehaviour; }
     void adaptAssignment(const RunningPlan& replacement);
