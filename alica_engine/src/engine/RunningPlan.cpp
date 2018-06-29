@@ -111,7 +111,6 @@ bool RunningPlan::isDeleteable() const
  */
 PlanChange RunningPlan::tick(RuleBook* rules)
 {
-    _cycleManagement.update();
     PlanChange myChange = rules->visit(*this);
     PlanChange childChange = PlanChange::NoChange;
     // attention: do not use for each here: children are modified
@@ -123,6 +122,16 @@ PlanChange RunningPlan::tick(RuleBook* rules)
         myChange = rules->updateChange(myChange, rules->visit(*this));
     }
     return myChange;
+}
+
+void RunningPlan::preTick()
+{
+    _status.isRuntimeConditionOk = evalRuntimeCondition();
+    _cycleManagement.update();
+    if (getStauts() != (getActiveState()->isFailureState()) || !r.getAssignment().isValid() || !r.evalRuntimeCondition()
+    for(RunningPlan* rp : _children) {
+        rp->preTick();
+    }
 }
 
 /**
@@ -301,7 +310,7 @@ void RunningPlan::clearFailedChildren()
 void RunningPlan::addFailure()
 {
     ++_status.failCount;
-    _status.failHandlingNeeded = true;
+    setFailureHandlingNeeded(true);
 }
 
 /**
@@ -372,6 +381,18 @@ void RunningPlan::setFailedChild(const AbstractPlan* child)
     } else {
         _failedSubPlans.insert(std::pair<const AbstractPlan*, int>(child, 1));
     }
+}
+
+void RunningPlan::setFailureHandlingNeeded(bool failHandlingNeeded)
+{
+    if (failHandlingNeeded) {
+        _status.status = PlanStatus::Failed;
+    } else {
+        if (_status.status == PlanStatus::Failed) {
+            _status.status = PlanStatus::Running;
+        }
+    }
+    _status.failHandlingNeeded = failHandlingNeeded;
 }
 
 /**

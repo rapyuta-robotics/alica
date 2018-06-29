@@ -1,0 +1,35 @@
+#include "SimpleSwitches.h"
+#include "engine/IAlicaCommunication.h"
+#include "test_alica.h"
+
+#include <engine/PlanBase.h>
+
+class FailureHandling : public AlicaTestFixture
+{
+protected:
+    const char* getRoleSetName() const override { return "Roleset"; }
+    const char* getMasterPlanName() const override { return "HandleFailExplicitMaster"; }
+    bool stepEngine() const override { return true; }
+};
+
+TEST_F(FailureHandling, continueOnFailure)
+{
+    ASSERT_NO_SIGNAL
+    SimpleSwitches::reset();
+
+    ae->start();
+
+    step(ae);
+
+    ASSERT_EQ(ae->getPlanBase()->getDeepestNode()->getActiveState()->getId(), 1530004915641);
+
+    SimpleSwitches::set(0, true);
+    step(ae);
+
+    ASSERT_EQ(ae->getPlanBase()->getDeepestNode()->getActiveState()->getId(), 1530069246104);
+
+    SimpleSwitches::set(1, true);
+    step(ae);
+
+    ASSERT_EQ(ae->getPlanBase()->getDeepestNode()->getActiveState()->getId(), 1530004975275);
+}

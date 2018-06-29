@@ -147,6 +147,7 @@ void PlanBase::run()
         if (_rootNode == nullptr) {
             _rootNode = _ruleBook.initialisationRule(_masterPlan);
         }
+        _rootNode->preTick();
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
             ALICA_INFO_MSG("PB: MasterPlan Failed");
         }

@@ -76,6 +76,7 @@ public:
                 , active(PlanActivity::InActive)
                 , allocationNeeded(false)
                 , failHandlingNeeded(false)
+                , runTimeConditionStatus(true)
         {
         }
         PlanStatus status;
@@ -86,6 +87,7 @@ public:
         int failCount;
         bool failHandlingNeeded;
         bool allocationNeeded;
+        bool runTimeConditionStatus
     };
     explicit RunningPlan(AlicaEngine* ae);
     RunningPlan(AlicaEngine* ae, const Plan* plan);
@@ -134,12 +136,13 @@ public:
 
     void usePlan(const AbstractPlan* plan);
     void setParent(RunningPlan* parent) { _parent = parent; }
-    void setFailureHandlingNeeded(bool failHandlingNeeded) { _status.failHandlingNeeded = failHandlingNeeded; }
+    void setFailureHandlingNeeded(bool failHandlingNeeded);
     void setAssignment(const Assignment& assignment) { _assignment = assignment; }
     void setBasicBehaviour(BasicBehaviour* basicBehaviour) { _basicBehaviour = basicBehaviour; }
     void adaptAssignment(const RunningPlan& replacement);
     void clearFailures();
 
+    void preTick();
     PlanChange tick(RuleBook* rules);
 
     const ConditionStore& getConstraintStore() const { return _constraintStore; }
@@ -152,7 +155,7 @@ public:
     std::shared_ptr<RunningPlan> getSharedPointer() { return shared_from_this(); }
 
     bool evalPreCondition() const;
-    bool evalRuntimeCondition() const;
+    bool isRuntimeConditionOk() const { return runTimeConditionStatus; }
 
     void addChildren(const std::vector<RunningPlan*>& runningPlans);
     void removeChild(RunningPlan* rp);
@@ -187,7 +190,7 @@ public:
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
-
+    bool evalRuntimeCondition() const;
     // Status Information
     PlanStateTriple _activeTriple;
     PlanStatusInfo _status;

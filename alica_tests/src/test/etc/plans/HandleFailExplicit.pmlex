@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="HandleFailExplicit.pml#1530004915641"/>
+    <value xPos="73" yPos="178" width="80" height="70"/>
+  </extensions>
+  <extensions>
+    <key href="HandleFailExplicit.pml#1530004915640"/>
+    <value width="665" height="475"/>
+  </extensions>
+  <extensions>
+    <key href="HandleFailExplicit.pml#1530004915642"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="HandleFailExplicit.pml#1530004973591"/>
+    <value xPos="296" yPos="177" width="65" height="70" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="HandleFailExplicit.pml#1530004975275"/>
+    <value xPos="461" yPos="167" width="65" height="70"/>
+  </extensions>
+  <extensions>
+    <key href="HandleFailExplicit.pml#1530004992551"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="HandleFailExplicit.pml#1530004993680"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="RequiresTwo.pml#1530005027592"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="FailsOnOne.pml#1530069246103"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>
