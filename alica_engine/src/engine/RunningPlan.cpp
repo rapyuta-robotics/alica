@@ -720,8 +720,6 @@ bool RunningPlan::recursiveUpdateAssignment(
                 getAssignment()->removeRobot(rob, ep);
             }
         }
-    } else {
-        ALICA_INFO_MSG("TASK GUARDED " << toString());
     }
 
     // enforce consistency between RA and PlanTree by removing robots deemed inactive:
