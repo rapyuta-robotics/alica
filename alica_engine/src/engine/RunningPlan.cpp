@@ -30,7 +30,8 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <iostream>
-
+#define ALICA_DEBUG_LEVEL_ALL
+#include <alica_common_config/debug_output.h>
 using std::shared_ptr;
 
 namespace alica
@@ -41,31 +42,31 @@ AlicaTime RunningPlan::assignmentProtectionTime = AlicaTime::zero();
 void RunningPlan::init()
 {
     assignmentProtectionTime =
-        AlicaTime::milliseconds((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
+            AlicaTime::milliseconds((*supplementary::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae)
-    : _ae(ae)
-    , _planType(nullptr)
-    , _plan(nullptr)
-    , _activeState(nullptr)
-    , _activeEntryPoint(nullptr)
-    , _behaviour(false)
-    , _assignment(nullptr)
-    , _status(PlanStatus::Running)
-    , _failCount(0)
-    , _basicBehaviour(nullptr)
-    , _active(false)
-    , _allocationNeeded(false)
-    , _failHandlingNeeded(false)
-    , _cycleManagement(std::make_shared<CycleManager>(ae, this))
+        : _ae(ae)
+        , _planType(nullptr)
+        , _plan(nullptr)
+        , _activeState(nullptr)
+        , _activeEntryPoint(nullptr)
+        , _behaviour(false)
+        , _assignment(nullptr)
+        , _status(PlanStatus::Running)
+        , _failCount(0)
+        , _basicBehaviour(nullptr)
+        , _active(false)
+        , _allocationNeeded(false)
+        , _failHandlingNeeded(false)
+        , _cycleManagement(std::make_shared<CycleManager>(ae, this))
 {
 }
 
 RunningPlan::~RunningPlan() {}
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
-    : RunningPlan(ae)
+        : RunningPlan(ae)
 {
     _plan = plan;
     /*
@@ -79,26 +80,26 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
-    : RunningPlan(ae)
+        : RunningPlan(ae)
 {
     _planType = pt;
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc)
-    : _ae(ae)
-    , _planType(nullptr)
-    , _plan(bc)
-    , _activeState(nullptr)
-    , _activeEntryPoint(nullptr)
-    , _behaviour(true)
-    , _assignment(nullptr)
-    , _status(PlanStatus::Running)
-    , _failCount(0)
-    , _basicBehaviour(nullptr)
-    , _active(false)
-    , _allocationNeeded(false)
-    , _failHandlingNeeded(false)
-    , _cycleManagement(std::make_shared<CycleManager>(ae, this))
+        : _ae(ae)
+        , _planType(nullptr)
+        , _plan(bc)
+        , _activeState(nullptr)
+        , _activeEntryPoint(nullptr)
+        , _behaviour(true)
+        , _assignment(nullptr)
+        , _status(PlanStatus::Running)
+        , _failCount(0)
+        , _basicBehaviour(nullptr)
+        , _active(false)
+        , _allocationNeeded(false)
+        , _failHandlingNeeded(false)
+        , _cycleManagement(std::make_shared<CycleManager>(ae, this))
 {
 }
 
@@ -565,8 +566,8 @@ bool RunningPlan::anyChildrenTaskSuccess()
         for (int i = 0; i < childAssignment->getEpSuccessMapping()->getCount(); i++) {
             // at least one robot must be successful && at least as much as minCard robots must be successful
             if (childAssignment->getEpSuccessMapping()->getRobots()[i]->size() > 0 &&
-                static_cast<int>(childAssignment->getEpSuccessMapping()->getRobots()[i]->size()) >=
-                    childAssignment->getEpSuccessMapping()->getEntryPoints()[i]->getMinCardinality()) {
+                    static_cast<int>(childAssignment->getEpSuccessMapping()->getRobots()[i]->size()) >=
+                            childAssignment->getEpSuccessMapping()->getEntryPoints()[i]->getMinCardinality()) {
                 return true;
             }
         }
@@ -636,8 +637,8 @@ void RunningPlan::attachPlanConstraints()
     _constraintStore.addCondition(_plan->getRuntimeCondition());
 }
 
-bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, list<const supplementary::AgentID*> noUpdates,
-                                            AlicaTime now)
+bool RunningPlan::recursiveUpdateAssignment(
+        list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents, list<const supplementary::AgentID*> noUpdates, AlicaTime now)
 {
     if (isBehaviour()) {
         return false;
@@ -688,6 +689,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
     if (!keepTask) { // remove any robot no longer available in the spts (auth flag obey here, as robot might be
                      // unavailable)
         // EntryPoint[] eps = this.Assignment.GetEntryPoints();
+
         const supplementary::AgentID* ownId = getOwnID();
         for (int i = 0; i < getAssignment()->getEntryPointCount(); i++) {
             const EntryPoint* ep = getAssignment()->getEpRobotsMapping()->getEp(i);
@@ -718,6 +720,8 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
                 getAssignment()->removeRobot(rob, ep);
             }
         }
+    } else {
+        ALICA_INFO_MSG("TASK GUARDED " << toString());
     }
 
     // enforce consistency between RA and PlanTree by removing robots deemed inactive:
@@ -728,7 +732,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
             auto robs = getAssignment()->getRobotsWorking(ep);
             for (auto& rob : (*robs)) {
                 if (find_if(availableAgents.begin(), availableAgents.end(), [&rob](const supplementary::AgentID* id) { return *rob == *id; }) ==
-                    availableAgents.end()) {
+                        availableAgents.end()) {
                     rem.push_back(rob);
                     aldif->editSubtractions().emplace_back(ep, rob);
                     ret = true;
@@ -744,16 +748,17 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
     aldif->setReason(AllocationDifference::Reason::message);
     _cycleManagement->setNewAllocDiff(aldif);
     // Update Success Collection:
-    _ae->getTeamObserver()->updateSuccessCollection((Plan*)getPlan(), getAssignment()->getEpSuccessMapping());
+    _ae->getTeamObserver()->updateSuccessCollection((Plan*) getPlan(), getAssignment()->getEpSuccessMapping());
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
-    if (_stateStartTime + assignmentProtectionTime > now) {
+    if (_stateStartTime + assignmentProtectionTime < now) {
         AgentGrp robotsJoined;
+        // ALICA_INFO_MSG("STATE NOT GUARDED");
         getAssignment()->getRobotStateMapping()->getRobotsInState(getActiveState(), robotsJoined);
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
             if (std::find_if(robotsJoined.begin(), robotsJoined.end(), [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) ==
-                robotsJoined.end()) {
+                    robotsJoined.end()) {
                 iter = availableAgents.erase(iter);
             } else {
                 ++iter;
@@ -765,7 +770,7 @@ bool RunningPlan::recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spt
         if (robotsJoined) {
             for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
                 if (find_if(robotsJoined->begin(), robotsJoined->end(), [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) ==
-                    robotsJoined->end()) {
+                        robotsJoined->end()) {
                     iter = availableAgents.erase(iter);
                 } else {
                     ++iter;
