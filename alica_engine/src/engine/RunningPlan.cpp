@@ -30,8 +30,7 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <iostream>
-#define ALICA_DEBUG_LEVEL_ALL
-#include <alica_common_config/debug_output.h>
+
 using std::shared_ptr;
 
 namespace alica
@@ -689,7 +688,6 @@ bool RunningPlan::recursiveUpdateAssignment(
     if (!keepTask) { // remove any robot no longer available in the spts (auth flag obey here, as robot might be
                      // unavailable)
         // EntryPoint[] eps = this.Assignment.GetEntryPoints();
-
         const supplementary::AgentID* ownId = getOwnID();
         for (int i = 0; i < getAssignment()->getEntryPointCount(); i++) {
             const EntryPoint* ep = getAssignment()->getEpRobotsMapping()->getEp(i);
@@ -752,7 +750,6 @@ bool RunningPlan::recursiveUpdateAssignment(
     // state.
     if (_stateStartTime + assignmentProtectionTime < now) {
         AgentGrp robotsJoined;
-        // ALICA_INFO_MSG("STATE NOT GUARDED");
         getAssignment()->getRobotStateMapping()->getRobotsInState(getActiveState(), robotsJoined);
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
             if (std::find_if(robotsJoined.begin(), robotsJoined.end(), [&iter](const supplementary::AgentID* id) { return *(*iter) == *id; }) ==
