@@ -5,7 +5,6 @@
 #include <engine/model/EntryPoint.h>
 #include <engine/model/Plan.h>
 #include <engine/model/Task.h>
-#include <engine/planselector/DynCardinality.h>
 #include <engine/planselector/PartialAssignmentPool.h>
 #include <engine/planselector/TaskAssignmentProblem.h>
 namespace alica

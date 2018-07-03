@@ -51,7 +51,8 @@ struct StringBuilder<First>
         return;
     }
 };
-}
+} // namespace detail
+
 class Logger
 {
 public:
