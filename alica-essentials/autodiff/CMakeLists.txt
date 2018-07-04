@@ -51,6 +51,7 @@ add_library(autodiff
   src/TermList.cpp
   src/TermHolder.cpp
   src/TermPower.cpp
+  src/TermPtr.cpp
   src/Variable.cpp
 )
 

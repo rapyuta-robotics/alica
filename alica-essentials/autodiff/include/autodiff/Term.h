@@ -93,32 +93,4 @@ class Term : public alica::SolverTerm
     static AndType _andop;
 };
 
-TermPtr operator+(const TermPtr left, const TermPtr right);
-TermPtr operator*(const TermPtr left, const TermPtr right);
-TermPtr operator/(const TermPtr numerator, const TermPtr denominator);
-TermPtr operator-(const TermPtr left, const TermPtr right);
-
-TermPtr operator+(const double left, const TermPtr right);
-TermPtr operator*(const double left, const TermPtr right);
-TermPtr operator/(const double numerator, const TermPtr denominator);
-TermPtr operator-(const double left, const TermPtr right);
-
-TermPtr operator+(const TermPtr left, const double right);
-TermPtr operator*(const TermPtr left, const double right);
-TermPtr operator/(const TermPtr numerator, const double denominator);
-TermPtr operator-(const TermPtr left, const double right);
-
-TermPtr operator-(const TermPtr term);
-
-TermPtr operator!(const TermPtr term);
-TermPtr operator&(const TermPtr left, const TermPtr right);
-TermPtr operator|(const TermPtr left, const TermPtr right);
-
-TermPtr operator>(const TermPtr left, const TermPtr right);
-TermPtr operator<(const TermPtr left, const TermPtr right);
-TermPtr operator<=(const TermPtr left, const TermPtr right);
-TermPtr operator>=(const TermPtr left, const TermPtr right);
-
-TermPtr operator&=(const TermPtr left, const TermPtr right);
-
 } /* namespace autodiff */
