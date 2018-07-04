@@ -29,7 +29,7 @@ class AlicaElement;
  */
 class PlanParser
 {
-  public:
+public:
     PlanParser(PlanRepository* rep);
     ~PlanParser();
 
@@ -40,10 +40,10 @@ class PlanParser
     const std::string& getCurrentFile() const { return currentFile; }
     void setCurrentFile(const std::string& currentFile);
     void parseFileLoop();
-    const RoleSet* parseRoleSet(std::string roleSetName, std::string roleSetDir);
+    const RoleSet* parseRoleSet(std::string roleSetName);
     int64_t parserId(tinyxml2::XMLElement* node);
 
-  private:
+private:
     supplementary::SystemConfig* sc;
     std::shared_ptr<ModelFactory> mf;
     PlanRepository* rep;

@@ -12,7 +12,7 @@ namespace alica
 std::vector<BBIdent> ConstraintUsingBehaviour::result;
 /*PROTECTED REGION END*/
 ConstraintUsingBehaviour::ConstraintUsingBehaviour()
-    : DomainBehaviour("ConstraintUsingBehaviour")
+        : DomainBehaviour("ConstraintUsingBehaviour")
 {
     /*PROTECTED REGION ID(con1414068597716) ENABLED START*/ // Add additional options here
     _callCounter = 0;
@@ -28,7 +28,7 @@ void ConstraintUsingBehaviour::run(void* msg)
     /*PROTECTED REGION ID(run1414068597716) ENABLED START*/ // Add additional options here
     ++_callCounter;
     cout << "ConstraintUsingBehaviour was called " << _callCounter << " times!" << endl;
-    _query.getSolution<reasoner::ConstraintTestPlanDummySolver, BBIdent>(runningPlan, result);
+    _query.getSolution<reasoner::ConstraintTestPlanDummySolver, BBIdent>(getPlanContext(), result);
     /*PROTECTED REGION END*/
 }
 void ConstraintUsingBehaviour::initialiseParameters()

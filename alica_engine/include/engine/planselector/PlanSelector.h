@@ -1,20 +1,9 @@
 #pragma once
 
-//#define PSDEBUG
-
-#include <vector>
-#include <list>
-#include <unordered_set>
-#include <memory>
-#include <sstream>
-
 #include "engine/Types.h"
-
-namespace supplementary {
-class AgentID;
-}
-
-namespace alica {
+#include <engine/planselector/PartialAssignmentPool.h>
+namespace alica
+{
 class RunningPlan;
 class AbstractPlan;
 class TeamObserver;
@@ -22,32 +11,32 @@ class RunningPlan;
 class AbstractPlan;
 class PlanType;
 class Plan;
+class PlanBase;
 class AlicaEngine;
-class PartialAssignmentPool;
 
 /**
  * Implements the task allocation algorithm
  */
-class PlanSelector {
+class PlanSelector
+{
 public:
-    PlanSelector(AlicaEngine* ae, PartialAssignmentPool* pap);
+    PlanSelector(AlicaEngine* ae, PlanBase* pb);
     virtual ~PlanSelector();
 
-    virtual std::shared_ptr<RunningPlan> getBestSimilarAssignment(std::shared_ptr<RunningPlan> rp);
-    virtual std::shared_ptr<RunningPlan> getBestSimilarAssignment(
-            std::shared_ptr<RunningPlan> rp, const AgentGrp& robots);
-    virtual std::shared_ptr<std::list<std::shared_ptr<RunningPlan>>> getPlansForState(
-            std::shared_ptr<RunningPlan> planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs);
+    virtual RunningPlan* getBestSimilarAssignment(const RunningPlan& rp);
+    virtual RunningPlan* getBestSimilarAssignment(const RunningPlan& rp, const AgentGrp& robots, double& o_currentUtility);
+    virtual bool getPlansForState(RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans);
 
-    std::shared_ptr<RunningPlan> createRunningPlan(std::weak_ptr<RunningPlan> planningParent, const PlanGrp& plans,
-            const AgentGrp& robotIDs, std::shared_ptr<RunningPlan> oldRp, const PlanType* relevantPlanType);
+    RunningPlan* createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const AgentGrp& robotIDs, const RunningPlan* oldRp,
+            const PlanType* relevantPlanType, double& o_oldUtility);
 
 private:
-    PartialAssignmentPool* pap;
-    TeamObserver* to;
-    AlicaEngine* ae;
-    std::shared_ptr<std::list<std::shared_ptr<RunningPlan>>> getPlansForStateInternal(
-            std::shared_ptr<RunningPlan> planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs);
+    bool getPlansForStateInternal(RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans);
+
+    PartialAssignmentPool _pap;
+    TeamObserver* _to;
+    AlicaEngine* _ae;
+    PlanBase* _pb;
 };
 
 } /* namespace alica */

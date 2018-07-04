@@ -1,10 +1,5 @@
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
-#include "ConstraintTestPlanDummySolver.h"
 #include "CounterClass.h"
 #include "Plans/Behaviour/ConstraintUsingBehaviour.h"
-#include "UtilityFunctionCreator.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/BehaviourPool.h"
@@ -12,14 +7,11 @@
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
 #include "engine/TeamObserver.h"
-#include "engine/collections/AssignmentCollection.h"
-#include "engine/collections/StateCollection.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
-#include <CGSolver.h>
 #include <Plans/Behaviour/Attack.h>
 #include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaClock.h>
@@ -30,53 +22,10 @@
 #include <test_alica.h>
 #include <thread>
 
-class AlicaConditionPlan : public ::testing::Test
+class AlicaConditionPlan : public AlicaTestFixtureWithSolvers
 {
-  protected:
-    supplementary::SystemConfig* sc;
-    alica::AlicaEngine* ae;
-    alica::BehaviourCreator* bc;
-    alica::ConditionCreator* cc;
-    alica::UtilityFunctionCreator* uc;
-    alica::ConstraintCreator* crc;
-
-    virtual void SetUp()
-    {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-
-        // bring up the SystemConfig with the corresponding path
-        sc = supplementary::SystemConfig::getInstance();
-        sc->setRootPath(path);
-        sc->setConfigPath(path + "/etc");
-        sc->setHostname("nase");
-
-        // setup the engine
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset", "ConstraintTestPlan", ".", true);
-        bc = new alica::BehaviourCreator();
-        cc = new alica::ConditionCreator();
-        uc = new alica::UtilityFunctionCreator();
-        crc = new alica::ConstraintCreator();
-        ae->setAlicaClock(new alica::AlicaClock());
-        ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-        ae->addSolver(new alica::reasoner::ConstraintTestPlanDummySolver(ae));
-        ae->addSolver(new alica::reasoner::CGSolver(ae));
-    }
-
-    virtual void TearDown()
-    {
-        ae->shutdown();
-        sc->shutdown();
-        delete ae->getCommunicator();
-        delete ae->getSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
-        delete ae->getSolver<alica::reasoner::CGSolver>();
-        delete cc;
-        delete bc;
-        delete uc;
-        delete crc;
-    }
+protected:
+    const char* getMasterPlanName() const override { return "ConstraintTestPlan"; }
 };
 /**
  * Tests if Behaviour with Constraints are called
@@ -84,8 +33,6 @@ class AlicaConditionPlan : public ::testing::Test
 TEST_F(AlicaConditionPlan, solverTest)
 {
     ASSERT_NO_SIGNAL
-
-    ae->init(bc, cc, uc, crc);
 
     const alica::PlanRepository* rep = ae->getPlanRepository();
 
@@ -118,8 +65,9 @@ TEST_F(AlicaConditionPlan, solverTest)
     ae->start();
     step(ae);
 
-    shared_ptr<BasicBehaviour> basicBehaviour = (*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getBasicBehaviour();
-    shared_ptr<alica::ConstraintUsingBehaviour> constraintUsingBehaviour = dynamic_pointer_cast<alica::ConstraintUsingBehaviour>(basicBehaviour);
+    BasicBehaviour* basicBehaviour = ae->getPlanBase()->getRootNode()->getChildren()[0]->getBasicBehaviour();
+    alica::ConstraintUsingBehaviour* constraintUsingBehaviour = dynamic_cast<alica::ConstraintUsingBehaviour*>(basicBehaviour);
+    ASSERT_NE(constraintUsingBehaviour, nullptr);
     ASSERT_GT(constraintUsingBehaviour->getCallCounter(), 0);
 
     ASSERT_GT(alica::reasoner::ConstraintTestPlanDummySolver::getGetSolutionCallCounter(), 0);

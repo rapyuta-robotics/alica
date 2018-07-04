@@ -8,7 +8,7 @@ namespace alica
 /*PROTECTED REGION ID(staticVars1402489351885) ENABLED START*/ // initialise static variables here
 /*PROTECTED REGION END*/
 AttackOpp::AttackOpp()
-    : DomainBehaviour("AttackOpp")
+        : DomainBehaviour("AttackOpp")
 {
     /*PROTECTED REGION ID(con1402489351885) ENABLED START*/ // Add additional options here
     /*PROTECTED REGION END*/

@@ -8,7 +8,7 @@ namespace alica
 /*PROTECTED REGION ID(staticVars1402488848841) ENABLED START*/ // initialise static variables here
 /*PROTECTED REGION END*/
 Attack::Attack()
-    : DomainBehaviour("Attack")
+        : DomainBehaviour("Attack")
 {
     /*PROTECTED REGION ID(con1402488848841) ENABLED START*/ // Add additional options here
     this->callCounter = 0;

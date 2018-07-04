@@ -8,7 +8,7 @@ namespace alica
 /*PROTECTED REGION ID(staticVars1522377401286) ENABLED START*/ // initialise static variables here
 /*PROTECTED REGION END*/
 SuccessSpam::SuccessSpam()
-    : DomainBehaviour("SuccessSpam")
+        : DomainBehaviour("SuccessSpam")
 {
     /*PROTECTED REGION ID(con1522377401286) ENABLED START*/ // Add additional options here
     /*PROTECTED REGION END*/
@@ -21,7 +21,7 @@ SuccessSpam::~SuccessSpam()
 void SuccessSpam::run(void* msg)
 {
     /*PROTECTED REGION ID(run1522377401286) ENABLED START*/ // Add additional options here
-    setSuccess(true);
+    setSuccess();
     /*PROTECTED REGION END*/
 }
 void SuccessSpam::initialiseParameters()

@@ -11,6 +11,8 @@
 
 #include "Plans/constraints/Defend1402488893641Constraints.h"
 
+#include "Plans/constraints/BackForth1529456584982Constraints.h"
+
 #include "Plans/VariableHandling/constraints/Lvl21524452793378Constraints.h"
 
 #include "Plans/GSolver/constraints/GSolverTestPlan1417423757243Constraints.h"

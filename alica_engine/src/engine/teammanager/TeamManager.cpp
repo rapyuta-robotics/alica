@@ -12,9 +12,9 @@ namespace alica
 {
 
 TeamManager::TeamManager(AlicaEngine* engine, bool useConfigForTeam = true)
-    : localAgent(nullptr)
-    , useConfigForTeam(useConfigForTeam)
-    , engine(engine)
+        : localAgent(nullptr)
+        , useConfigForTeam(useConfigForTeam)
+        , engine(engine)
 {
 }
 
@@ -70,10 +70,10 @@ void TeamManager::readTeamFromConfig(supplementary::SystemConfig* sc)
     }
 }
 
-void TeamManager::fillWithActiveAgentIDs(std::vector<const supplementary::AgentID*>& oIds) const
+void TeamManager::fillWithActiveAgentIDs(std::vector<AgentIDConstPtr>& oIds) const
 {
     oIds.clear();
-    for (const std::pair<const supplementary::AgentID*, Agent*>& agentEntry : agents) {
+    for (const std::pair<AgentIDConstPtr, Agent*>& agentEntry : agents) {
         if (agentEntry.second->isActive()) {
             oIds.push_back(agentEntry.first);
         }
@@ -122,7 +122,7 @@ int TeamManager::getTeamSize() const
     return teamSize;
 }
 
-const Agent* TeamManager::getAgentByID(const supplementary::AgentID* agentId) const
+const Agent* TeamManager::getAgentByID(AgentIDConstPtr agentId) const
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end()) {
@@ -132,12 +132,12 @@ const Agent* TeamManager::getAgentByID(const supplementary::AgentID* agentId) co
     }
 }
 
-const supplementary::AgentID* TeamManager::getLocalAgentID() const
+AgentIDConstPtr TeamManager::getLocalAgentID() const
 {
     return this->localAgent->getID();
 }
 
-void TeamManager::setTimeLastMsgReceived(const supplementary::AgentID* robotID, AlicaTime timeLastMsgReceived)
+void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr robotID, AlicaTime timeLastMsgReceived)
 {
     auto mapIter = this->agents.find(robotID);
     if (mapIter != this->agents.end()) {
@@ -150,7 +150,7 @@ void TeamManager::setTimeLastMsgReceived(const supplementary::AgentID* robotID, 
     }
 }
 
-bool TeamManager::isAgentActive(const supplementary::AgentID* agentId) const
+bool TeamManager::isAgentActive(AgentIDConstPtr agentId) const
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end()) {
@@ -164,7 +164,7 @@ bool TeamManager::isAgentActive(const supplementary::AgentID* agentId) const
  * Checks if an agent is ignored
  * @param agentId an supplementary::AgentID identifying the agent
  */
-bool TeamManager::isAgentIgnored(const supplementary::AgentID* agentId) const
+bool TeamManager::isAgentIgnored(AgentIDConstPtr agentId) const
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end()) {
@@ -174,7 +174,7 @@ bool TeamManager::isAgentIgnored(const supplementary::AgentID* agentId) const
     }
 }
 
-void TeamManager::setAgentIgnored(const supplementary::AgentID* agentId, const bool ignored) const
+void TeamManager::setAgentIgnored(AgentIDConstPtr agentId, const bool ignored) const
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end()) {
@@ -182,7 +182,7 @@ void TeamManager::setAgentIgnored(const supplementary::AgentID* agentId, const b
     }
 }
 
-bool TeamManager::setSuccess(const supplementary::AgentID* agentId, const AbstractPlan* plan, const EntryPoint* entryPoint)
+bool TeamManager::setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint)
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end()) {
@@ -192,7 +192,7 @@ bool TeamManager::setSuccess(const supplementary::AgentID* agentId, const Abstra
     return false;
 }
 
-bool TeamManager::setSuccessMarks(const supplementary::AgentID* agentId, std::shared_ptr<SuccessMarks> successMarks)
+bool TeamManager::setSuccessMarks(AgentIDConstPtr agentId, std::shared_ptr<SuccessMarks> successMarks)
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end()) {
@@ -202,7 +202,7 @@ bool TeamManager::setSuccessMarks(const supplementary::AgentID* agentId, std::sh
     return false;
 }
 
-const DomainVariable* TeamManager::getDomainVariable(const supplementary::AgentID* agentId, const std::string& sort) const
+const DomainVariable* TeamManager::getDomainVariable(AgentIDConstPtr agentId, const std::string& sort) const
 {
     auto agentEntry = this->agents.find(agentId);
     if (agentEntry != this->agents.end()) {
