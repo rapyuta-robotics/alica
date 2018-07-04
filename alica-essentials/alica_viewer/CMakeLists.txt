@@ -11,6 +11,7 @@ set(PKG_DEPS
         roscpp
         alica_msgs
         alica_engine
+        alica_common_config
         agent_id
 )
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})

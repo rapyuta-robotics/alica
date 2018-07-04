@@ -18,9 +18,8 @@ namespace alica
 class PlanTree;
 class AgentInfo;
 
-using AgentInfoMap = std::unordered_map<const supplementary::AgentID*, AgentInfo, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>;
-using PlanTreeMap =
-    std::unordered_map<const supplementary::AgentID*, std::unique_ptr<PlanTree>, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator>;
+using AgentInfoMap = std::unordered_map<AgentIDConstPtr, AgentInfo, alica::AgentIDHash>;
+using PlanTreeMap = std::unordered_map<AgentIDConstPtr, std::unique_ptr<PlanTree>, alica::AgentIDHash>;
 using PlanTreeVectorMap = std::unordered_map<int64_t, std::vector<std::unique_ptr<PlanTree>>>;
 
 class AgentInfo
@@ -47,7 +46,7 @@ class PlanTree
     void setParent(const PlanTree& parent);
     bool setState(const State* state);
     void addChildren(std::unique_ptr<PlanTree> child);
-    void addRobot(const supplementary::AgentID* robotId);
+    void addRobot(AgentIDConstPtr robotId);
     void mergeRobots(const AgentGrp& robotIds);
     /** Merge the src plan tree as a branch of current tree */
     void mergePlanTree(const PlanTree& src);
@@ -85,11 +84,11 @@ class AlicaPlan
      * @param ids The list of long encoding of a robot's plantree as received in a PlanTreeInfo message.
      * @return std::unique_ptr<PlanTree>
      */
-    std::unique_ptr<PlanTree> planTreeFromMessage(const supplementary::AgentID* robotId, const IdGrp& ids);
+    std::unique_ptr<PlanTree> planTreeFromMessage(AgentIDConstPtr robotId, const IdGrp& ids);
 
     const PlanTreeMap& getPlanTrees() const { return _planTrees; }
     const AgentInfoMap& getAgentInfoMap() const { return _agentInfos; }
-    const AgentInfo* getAgentInfo(const supplementary::AgentID* agentID) const;
+    const AgentInfo* getAgentInfo(AgentIDConstPtr agentID) const;
 
   private:
     PlanRepository _planRepository;

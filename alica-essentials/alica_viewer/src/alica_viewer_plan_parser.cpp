@@ -87,9 +87,9 @@ void PlanTree::addChildren(std::unique_ptr<PlanTree> child)
     ++_numOfChildren;
 }
 
-void PlanTree::addRobot(const supplementary::AgentID* robotId)
+void PlanTree::addRobot(AgentIDConstPtr robotId)
 {
-    if (robotId != nullptr) {
+    if (robotId) {
         _robotIds.push_back(robotId);
     }
 }
@@ -97,7 +97,7 @@ void PlanTree::addRobot(const supplementary::AgentID* robotId)
 void PlanTree::mergeRobots(const AgentGrp& robotIds)
 {
     // Here we assume that no duplicate robotID are present
-    for (const supplementary::AgentID* robotId : robotIds) {
+    for (AgentIDConstPtr robotId : robotIds) {
         addRobot(robotId);
     }
 }
@@ -131,7 +131,7 @@ void PlanTree::mergePlanTree(const PlanTree& src)
 void PlanTree::getRobotsSorted(AgentGrp& robotIds) const
 {
     robotIds = _robotIds;
-    std::sort(robotIds.begin(), robotIds.end(), supplementary::AgentIDComparator());
+    std::sort(robotIds.begin(), robotIds.end());
 }
 
 AlicaPlan::AlicaPlan(int argc, char* argv[])
@@ -198,7 +198,7 @@ void AlicaPlan::handlePlanTreeInfo(const PlanTreeInfo& incoming)
     }
 }
 
-std::unique_ptr<PlanTree> AlicaPlan::planTreeFromMessage(const supplementary::AgentID* robotId, const IdGrp& ids)
+std::unique_ptr<PlanTree> AlicaPlan::planTreeFromMessage(AgentIDConstPtr robotId, const IdGrp& ids)
 {
     if (ids.empty()) {
         std::cerr << "Empty state list for robot " << robotId << std::endl;
@@ -249,7 +249,7 @@ std::unique_ptr<PlanTree> AlicaPlan::planTreeFromMessage(const supplementary::Ag
     return root;
 }
 
-const AgentInfo* AlicaPlan::getAgentInfo(const supplementary::AgentID* agentID) const
+const AgentInfo* AlicaPlan::getAgentInfo(AgentIDConstPtr agentID) const
 {
     AgentInfoMap::const_iterator agentInfoEntry = _agentInfos.find(agentID);
     if (agentInfoEntry != _agentInfos.end()) {
