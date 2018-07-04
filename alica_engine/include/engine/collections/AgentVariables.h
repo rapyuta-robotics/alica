@@ -40,8 +40,8 @@ public:
     bool operator<(const AgentElements& o) const { return *_id < *o._id; }
     bool operator>(const AgentElements& o) const { return *_id > *o._id; }
 
-    bool operator<=(const AgentElements& o) const { return *_id <= *o._id; }
-    bool operator>=(const AgentElements& o) const { return *_id >= *o._id; }
+    bool operator<=(const AgentElements& o) const { return !(*_id > *o._id); }
+    bool operator>=(const AgentElements& o) const { return !(*_id < *o._id); }
 
 private:
     AgentIDConstPtr _id;
