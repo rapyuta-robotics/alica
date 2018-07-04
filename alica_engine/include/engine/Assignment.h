@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <sstream>
 #include <vector>
+#include <numeric>
 
 namespace alica
 {
