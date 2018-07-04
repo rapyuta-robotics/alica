@@ -293,6 +293,7 @@ class AgentsInStateView
 public:
     AgentsInStateView()
             : _assignment(nullptr)
+            , _state(nullptr)
     {
     }
     AgentsInStateView(const Assignment* a, const State* s)
