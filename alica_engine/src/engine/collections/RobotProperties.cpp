@@ -7,8 +7,8 @@
 namespace alica
 {
 
-RobotProperties::RobotProperties(const supplementary::AgentID* agentId, const AlicaEngine* engine, const std::string& name)
-    : agentId(agentId)
+RobotProperties::RobotProperties(AgentIDConstPtr agentId, const AlicaEngine* engine, const std::string& name)
+        : agentId(agentId)
 {
     this->readFromConfig(engine, name);
 }
@@ -52,7 +52,7 @@ RobotProperties::~RobotProperties()
     }
 }
 
-const supplementary::AgentID* RobotProperties::getId() const
+AgentIDConstPtr RobotProperties::getId() const
 {
     return agentId;
 }

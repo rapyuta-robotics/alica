@@ -1,20 +1,10 @@
-/*
- * State.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef STATE_H_
-#define STATE_H_
-
-#include <stdio.h>
-#include <list>
+#pragma once
 
 #include "AlicaElement.h"
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 class Plan;
 class Transition;
 class AbstractPlan;
@@ -25,9 +15,15 @@ class ModelFactory;
 /**
  * A State is a plan element inhabitable by agents, which contains sub-plans, sub-plantypes, and behaviours.
  */
-class State : public AlicaElement {
+class State : public AlicaElement
+{
 public:
-    enum StateType { NORMAL, SUCCESS, FAILURE };
+    enum StateType
+    {
+        NORMAL,
+        SUCCESS,
+        FAILURE
+    };
     State();
     State(StateType t);
     State(int64_t id);
@@ -60,8 +56,6 @@ private:
 
     void setTerminal(bool terminal);
 
-    void setEntryPoint(const EntryPoint* entryPoint);
-
     /**
      * The list of AbstractPlans meant to be executed in the context of this state.
      */
@@ -92,6 +86,4 @@ private:
     StateType _type;
 };
 
-}  // namespace alica
-
-#endif /* STATE_H_ */
+} // namespace alica

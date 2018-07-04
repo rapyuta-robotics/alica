@@ -8,17 +8,17 @@ namespace alica
 {
 class Joystick : public DomainBehaviour
 {
-  public:
+public:
     Joystick();
     virtual ~Joystick();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1421854685673) ENABLED START*/ // Add additional public methods here
     /*PROTECTED REGION END*/
-  protected:
+protected:
     virtual void initialiseParameters();
     /*PROTECTED REGION ID(pro1421854685673) ENABLED START*/ // Add additional protected methods here
     /*PROTECTED REGION END*/
-  private:
+private:
 /*PROTECTED REGION ID(prv1421854685673) ENABLED START*/ // Add additional private methods here
         /*PROTECTED REGION END*/};
         } /* namespace alica */

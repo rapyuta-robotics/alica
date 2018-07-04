@@ -2,12 +2,13 @@
 
 #include <engine/Types.h>
 
-#include <supplementary/AgentID.h>
+#include <engine/AgentIDConstPtr.h>
+#include <engine/AlicaClock.h>
 
 #include <map>
 #include <memory>
 #include <mutex>
-//#define TO_DEBUG
+
 namespace alica
 {
 
@@ -26,38 +27,38 @@ class SimplePlanTree;
  */
 class TeamObserver
 {
-  public:
+public:
     TeamObserver(AlicaEngine* ae);
     virtual ~TeamObserver();
 
-    void tick(std::shared_ptr<RunningPlan> root);
+    void tick(RunningPlan* root);
     void doBroadCast(const IdGrp& msg) const;
 
-    std::unique_ptr<std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>> getTeamPlanTrees();
+    const std::map<AgentIDConstPtr, std::unique_ptr<SimplePlanTree>>& getTeamPlanTrees() const { return _simplePlanTrees; }
 
     int successesInPlan(const Plan* plan);
-    std::shared_ptr<SuccessCollection> getSuccessCollection(const Plan* plan);
-    void updateSuccessCollection(const Plan* p, std::shared_ptr<SuccessCollection> sc);
+    SuccessCollection createSuccessCollection(const Plan* plan) const;
+    void updateSuccessCollection(const Plan* p, SuccessCollection& sc);
 
     void notifyRobotLeftPlan(const AbstractPlan* plan);
     virtual void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
     void close();
 
-  private:
-    const EntryPoint* entryPointOfState(const State* state) const;
+private:
+    bool updateTeamPlanTrees();
+    void cleanOwnSuccessMarks(RunningPlan* root);
+    std::unique_ptr<SimplePlanTree> sptFromMessage(AgentIDConstPtr agent, const IdGrp& ids, AlicaTime time) const;
 
-    AlicaEngine* ae;
-    const supplementary::AgentID* myId;
+    AlicaEngine* _ae;
+    AgentIDConstPtr _myId;
     const RobotEngineData* me;
-    TeamManager* teamManager;
+    TeamManager* _tm;
 
-    std::mutex simplePlanTreeMutex;
-    std::mutex successMarkMutex;
+    std::mutex _msgQueueMutex;
+    mutable std::mutex successMarkMutex;
 
-    std::shared_ptr<std::map<const supplementary::AgentID*, std::shared_ptr<SimplePlanTree>, supplementary::AgentIDComparator>> simplePlanTrees;
-
-    void cleanOwnSuccessMarks(std::shared_ptr<RunningPlan> root);
-    std::shared_ptr<SimplePlanTree> sptFromMessage(const supplementary::AgentID* robotId, const IdGrp& ids) const;
+    std::map<AgentIDConstPtr, std::unique_ptr<SimplePlanTree>> _simplePlanTrees;
+    std::vector<std::pair<std::shared_ptr<PlanTreeInfo>, AlicaTime>> _msgQueue;
 };
 
 } /* namespace alica */

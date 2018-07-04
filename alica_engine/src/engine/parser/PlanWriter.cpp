@@ -353,7 +353,7 @@ tinyxml2::XMLElement* PlanWriter::createStateXMLNode(const State* s, tinyxml2::X
     } else {
     }
     addPlanElementAttributes(s, xs);
-    if (s->getEntryPoint() != nullptr) {
+    if (s->getEntryPoint() != nullptr && s->getEntryPoint()->getState() == s) {
         xs->SetAttribute("entryPoint", to_string(s->getEntryPoint()->getId()).c_str());
     }
 
@@ -524,7 +524,7 @@ tinyxml2::XMLElement* PlanWriter::createEntryPointXMLNode(const EntryPoint* e, t
     tinyxml2::XMLElement* xc = doc->NewElement("task");
     xc->InsertEndChild(doc->NewText((getRelativeFileName(this->rep->getTaskRepositorys()[e->getTask()->getTaskRepository()->getId()]->getFileName()) + "#" +
                                      to_string(e->getTask()->getId()))
-                                        .c_str()));
+                                            .c_str()));
     xe->InsertEndChild(xc);
     xc = doc->NewElement("state");
     xc->InsertEndChild(doc->NewText((string("#") + to_string(e->getState()->getId())).c_str()));
@@ -547,7 +547,7 @@ std::string PlanWriter::getRelativeFileName(const std::string& file)
         ufile = file;
     } else {
         if (file.substr(file.size() - 4, 4) == ".beh" || file.substr(file.size() - 4, 4) == ".pty" || file.substr(file.size() - 4, 4) == ".pml" ||
-            file.substr(file.size() - 3, 3) == ".pp") {
+                file.substr(file.size() - 3, 3) == ".pp") {
             supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
             std::string tfile = (*sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
             // tfile = supplementary::FileSystem::combinePaths(tfile, file);
@@ -583,7 +583,7 @@ std::string PlanWriter::getRelativeFileName(const std::string& file)
 string PlanWriter::getRelativeFileName(const AbstractPlan* p)
 {
     if (find(this->plansToSave.begin(), this->plansToSave.end(), p) != this->plansToSave.end() ||
-        find(this->plansSaved.begin(), this->plansSaved.end(), p) != this->plansSaved.end()) {
+            find(this->plansSaved.begin(), this->plansSaved.end(), p) != this->plansSaved.end()) {
         std::string dirfile = this->tempPlanDir;
         dirfile += p->getFileName();
         return getRelativeFileName(dirfile);

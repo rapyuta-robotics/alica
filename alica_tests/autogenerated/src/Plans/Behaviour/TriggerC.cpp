@@ -8,20 +8,17 @@ namespace alica
 /*PROTECTED REGION ID(staticVars1428508355209) ENABLED START*/ // initialise static variables here
 /*PROTECTED REGION END*/
 TriggerC::TriggerC()
-    : DomainBehaviour("TriggerC")
+        : DomainBehaviour("TriggerC")
 {
     /*PROTECTED REGION ID(con1428508355209) ENABLED START*/ // Add additional options here
     this->callCounter = 0;
     this->initCounter = 0;
-    this->behaviourTrigger = alicaTests::TestWorldModel::getOne()->trigger2;
+    setTrigger(alicaTests::TestWorldModel::getOne()->trigger2);
     /*PROTECTED REGION END*/
 }
 TriggerC::~TriggerC()
 {
     /*PROTECTED REGION ID(dcon1428508355209) ENABLED START*/ // Add additional options here
-    this->callCounter = 0;
-    this->initCounter = 0;
-    this->behaviourTrigger = alicaTests::TestWorldModel::getOne()->trigger1;
     /*PROTECTED REGION END*/
 }
 void TriggerC::run(void* msg)

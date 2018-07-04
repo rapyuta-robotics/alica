@@ -1,23 +1,22 @@
 #pragma once
 
-#include <memory>
+#include <engine/Assignment.h>
 
 namespace alica
 {
 
 class IAssignment;
-class Assignment;
 
-class ITaskAssignment
+class ITaskAssignmentProblem
 {
-  public:
-    virtual ~ITaskAssignment() {}
+public:
+    virtual ~ITaskAssignmentProblem() {}
     /**
      * Returns the best possible assignment for a plan, taking similarities to the old assignment into account.
      * @param oldAss The old IAssignment,  possibly null in case of a completely new assignment problem.
      * @return The new Assignment
      */
-    virtual std::shared_ptr<Assignment> getNextBestAssignment(IAssignment* oldAss) = 0;
+    virtual Assignment getNextBestAssignment(const Assignment* oldAss) = 0;
 };
 
 } /* namespace alica */

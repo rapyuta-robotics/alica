@@ -30,26 +30,26 @@ class Agent
     friend ::alica::TeamManager;
     friend ::alica::TeamObserver;
 
-  public:
+public:
     ~Agent()
     {
         delete _properties;
         delete _engineData;
     }
 
-    const supplementary::AgentID* getID() const { return _id; }
+    AgentIDConstPtr getID() const { return _id; }
     const std::string& getName() const { return _name; }
     const RobotProperties* getProperties() const { return _properties; }
     const RobotEngineData* getEngineData() const { return _engineData; }
     bool isActive() const { return _active; }
     bool isIgnored() const { return _ignored; }
 
-  protected:
-    Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id);
-    Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id, const std::string& name);
+protected:
+    Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id);
+    Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id, const std::string& name);
 
     const AlicaEngine* _engine;
-    const supplementary::AgentID* _id;
+    AgentIDConstPtr _id;
     std::string _name;
     bool _active;
     bool _ignored;

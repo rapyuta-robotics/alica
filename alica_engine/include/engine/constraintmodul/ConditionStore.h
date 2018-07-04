@@ -3,7 +3,6 @@
 #include <engine/Types.h>
 
 #include <map>
-#include <memory>
 #include <mutex>
 #include <vector>
 
@@ -19,21 +18,21 @@ class RunningPlan;
  */
 class ConditionStore
 {
-  public:
+public:
     ConditionStore();
-    virtual ~ConditionStore();
+    ~ConditionStore();
     void clear();
     void addCondition(const Condition* con);
     void removeCondition(const Condition* con);
 
-    void acceptQuery(Query& query, std::shared_ptr<const RunningPlan> rp) const;
+    void acceptQuery(Query& query, const RunningPlan* rp) const;
 
     ConditionStore(const ConditionStore&) = delete;
     ConditionStore(ConditionStore&&) = delete;
     ConditionStore& operator=(const ConditionStore&) = delete;
     ConditionStore& operator=(ConditionStore&&) = delete;
 
-  private:
+private:
     ConditionGrp _activeConditions;
     std::map<const Variable*, ConditionGrp> _activeVar2CondMap;
 

@@ -1,6 +1,8 @@
 #pragma once
 
+#include <engine/AgentIDConstPtr.h>
 #include <engine/Types.h>
+
 #include <map>
 #include <memory>
 #include <string>
@@ -15,7 +17,7 @@ class SuccessMarks;
  */
 class RobotEngineData
 {
-  public:
+public:
     RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId);
     virtual ~RobotEngineData();
     virtual void initDomainVariables();
@@ -27,9 +29,9 @@ class RobotEngineData
     const DomainVariable* getDomainVariable(const Variable* templateVar) const;
     const DomainVariable* getDomainVariable(const std::string& name) const;
 
-  protected:
+protected:
     const AlicaEngine* _engine;
-    const supplementary::AgentID* _agentId;
+    AgentIDConstPtr _agentId;
     /**
      * The SuccessMarks of the robot, indicating which EntryPoints are completed.
      */

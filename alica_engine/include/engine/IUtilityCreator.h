@@ -4,8 +4,7 @@
 
 namespace alica
 {
-// DO NOT REMOVE UNTIL templates can be reworked
-using std::shared_ptr;
+using std::shared_ptr; // TODO: remove when templates can be changed
 
 class BasicUtilityFunction;
 

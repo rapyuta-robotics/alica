@@ -1,31 +1,31 @@
 #include "engine/teammanager/Agent.h"
 
+#include "engine/AgentIDConstPtr.h"
 #include "engine/AlicaEngine.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/collections/SuccessMarks.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
-#include "supplementary/AgentID.h"
 
 namespace alica
 {
 
-Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id)
-    : _id(id)
-    , _name("")
-    , _engine(engine)
-    , _properties(nullptr)
-    , _engineData(nullptr)
-    , _timeout(timeout)
-    , _active(false)
-    , _ignored(false)
-    , _local(false)
+Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id)
+        : _id(id)
+        , _name("")
+        , _engine(engine)
+        , _properties(nullptr)
+        , _engineData(nullptr)
+        , _timeout(timeout)
+        , _active(false)
+        , _ignored(false)
+        , _local(false)
 {
 }
 
-Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id, const std::string& name)
-    : Agent(engine, timeout, id)
+Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id, const std::string& name)
+        : Agent(engine, timeout, id)
 {
     _name = name;
     _properties = new RobotProperties(id, engine, name);

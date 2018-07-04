@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/AgentIDConstPtr.h"
 #include "engine/AlicaClock.h"
 #include "engine/Types.h"
 #include "engine/collections/Variant.h"
@@ -15,11 +16,11 @@ class Variable;
 
 class ResultEntry
 {
-  public:
+public:
     ResultEntry();
-    ResultEntry(const supplementary::AgentID* robotId);
+    ResultEntry(AgentIDConstPtr robotId);
 
-    const supplementary::AgentID* getId() const { return _id; }
+    AgentIDConstPtr getId() const { return _id; }
 
     ResultEntry(const ResultEntry&) = delete;
     ResultEntry& operator=(const ResultEntry&) = delete;
@@ -34,16 +35,16 @@ class ResultEntry
     template <typename VarType>
     bool getValues(const std::vector<VarType*>& query, AlicaTime earliest, std::vector<Variant>& o_values) const;
 
-  private:
+private:
     class VarValue
     {
-      public:
+    public:
         Variant _val;
         AlicaTime _lastUpdate;
 
         VarValue(Variant v, AlicaTime now)
-            : _val(v)
-            , _lastUpdate(now)
+                : _val(v)
+                , _lastUpdate(now)
         {
         }
     };

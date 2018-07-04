@@ -13,7 +13,7 @@ class BasicCondition;
 
 class ConditionCreator : public IConditionCreator
 {
-  public:
+public:
     ConditionCreator();
     virtual ~ConditionCreator();
     shared_ptr<BasicCondition> createConditions(long conditionConfId);

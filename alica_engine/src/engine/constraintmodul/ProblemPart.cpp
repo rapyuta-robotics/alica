@@ -13,21 +13,21 @@
 namespace alica
 {
 
-ProblemPart::ProblemPart(const Condition* con, std::shared_ptr<const RunningPlan> rp)
-    : _condition(con)
-    , _runningPlan(rp)
-    , _descriptor()
+ProblemPart::ProblemPart(const Condition* con, const RunningPlan* rp)
+        : _condition(con)
+        , _runningPlan(rp)
+        , _descriptor()
 {
     for (const Quantifier* quantifier : con->getQuantifiers()) {
-        quantifier->addDomainVariables(rp, _vars);
+        quantifier->addDomainVariables(*rp, _vars);
     }
 }
 
 ProblemPart::ProblemPart(ProblemPart&& o)
-    : _vars(std::move(o._vars))
-    , _condition(o._condition)
-    , _runningPlan(std::move(o._runningPlan))
-    , _descriptor(std::move(o._descriptor))
+        : _vars(std::move(o._vars))
+        , _condition(o._condition)
+        , _runningPlan(std::move(o._runningPlan))
+        , _descriptor(std::move(o._descriptor))
 {
 }
 
@@ -88,7 +88,7 @@ std::shared_ptr<ProblemDescriptor> ProblemPart::generateProblemDescriptor(ISolve
     _descriptor->_dim = dim;
     _descriptor->prepForUsage();
 
-    getCondition()->getConstraint(_descriptor, _runningPlan);
+    getCondition()->getConstraint(_descriptor, *_runningPlan);
     return _descriptor;
 }
 } /* namespace alica */

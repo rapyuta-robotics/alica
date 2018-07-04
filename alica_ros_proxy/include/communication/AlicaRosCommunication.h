@@ -14,13 +14,16 @@
 
 using namespace alica;
 
-namespace supplementary {
+namespace supplementary
+{
 class SystemConfig;
 }
 
-namespace alicaRosProxy {
+namespace alicaRosProxy
+{
 
-class AlicaRosCommunication : public alica::IAlicaCommunication {
+class AlicaRosCommunication : public alica::IAlicaCommunication
+{
 public:
     AlicaRosCommunication(AlicaEngine* ae);
     virtual ~AlicaRosCommunication();
@@ -36,11 +39,11 @@ public:
     virtual void sendSolverResult(const SolverResult& sr) const override;
     virtual void sendLogMessage(int level, const std::string& message) const override;
 
-    virtual void handleAllocationAuthorityRos(alica_msgs::AllocationAuthorityInfoPtr aai);
+    virtual void handleAllocationAuthorityRos(const alica_msgs::AllocationAuthorityInfo& aai);
     virtual void handlePlanTreeInfoRos(alica_msgs::PlanTreeInfoPtr pti);
     virtual void handleSyncReadyRos(alica_msgs::SyncReadyPtr sr);
     virtual void handleSyncTalkRos(alica_msgs::SyncTalkPtr st);
-    virtual void handleSolverResult(alica_msgs::SolverResultPtr sr);
+    virtual void handleSolverResult(const alica_msgs::SolverResult& sr);
 
     virtual void startCommunication();
     virtual void stopCommunication();

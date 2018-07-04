@@ -11,6 +11,8 @@
 
 #include "Plans/Defend1402488893641.h"
 
+#include "Plans/BackForth1529456584982.h"
+
 #include "Plans/VariableHandling/Lvl21524452793378.h"
 
 #include "Plans/GSolver/GSolverTestPlan1417423757243.h"
@@ -108,6 +110,10 @@ shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(long util
 
     case 1402488893641:
         return make_shared<UtilityFunction1402488893641>();
+        break;
+
+    case 1529456584982:
+        return make_shared<UtilityFunction1529456584982>();
         break;
 
     case 1524452793378:
