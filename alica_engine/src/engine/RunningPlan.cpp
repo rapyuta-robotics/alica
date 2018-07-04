@@ -430,6 +430,10 @@ bool RunningPlan::areAllChildrenStatus(PlanStatus ps) const
             return false;
         }
     }
+    // In case of a state, make sure that all children are actually running
+    if (_activeTriple.state) {
+        return _children.size() >= _activeTriple.state->getPlans().size();
+    }
     return true;
 }
 
