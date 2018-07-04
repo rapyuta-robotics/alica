@@ -625,7 +625,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
-    if (_status.stateStartTime + assignmentProtectionTime > now) {
+    if (_status.stateStartTime + assignmentProtectionTime < now) {
         AgentsInStateView agentsJoined = _assignment.getAgentsInState(getActiveState());
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
             if (std::find(agentsJoined.begin(), agentsJoined.end(), *iter) == agentsJoined.end()) {
