@@ -33,6 +33,8 @@ using namespace std;
 
 #include "Plans/GSolver/SolverTestBehaviour.h"
 
+#include "Plans/Behaviour/CountIndefinitely.h"
+
 namespace alica
 {
 
@@ -117,6 +119,11 @@ shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfI
     case 1417424483320:
 
         return make_shared<SolverTestBehaviour>();
+        break;
+
+    case 1529456686038:
+
+        return make_shared<CountIndefinitely>();
         break;
 
     default:

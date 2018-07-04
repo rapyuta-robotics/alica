@@ -1,5 +1,7 @@
 #pragma once
 
+#include <engine/AgentIDConstPtr.h>
+
 #include <tuple>
 #include <vector>
 
@@ -10,7 +12,7 @@ class AgentID;
 
 namespace alica
 {
-typedef std::tuple<const supplementary::AgentID*, std::vector<int64_t>, std::vector<int64_t>> stdPlanTreeInfo;
+typedef std::tuple<AgentIDConstPtr, std::vector<int64_t>, std::vector<int64_t>> stdPlanTreeInfo;
 struct PlanTreeInfo
 {
     PlanTreeInfo()
@@ -25,7 +27,7 @@ struct PlanTreeInfo
     {
     }
 
-    const supplementary::AgentID* senderID;
+    AgentIDConstPtr senderID;
     std::vector<int64_t> stateIDs;
     std::vector<int64_t> succeededEPs;
 

@@ -8,13 +8,22 @@
 #include <engine/constraintmodul/ProblemPart.h>
 #include <engine/constraintmodul/Query.h>
 
-#include <iostream>
+#include <alica_common_config/debug_output.h>
 
-//#define CS_DEBUG
+#include <iostream>
 
 namespace alica
 {
-
+namespace
+{
+std::ostream& operator<<(std::ostream& out, const VariableGrp& vg)
+{
+    for (const Variable* v : vg) {
+        out << v->getName() << "(" << v->getId() << "), ";
+    }
+    return out;
+}
+}
 /**
  * Default constructor
  */
@@ -59,10 +68,7 @@ void ConditionStore::addCondition(const Condition* con)
         }
     }
 
-#ifdef CS_DEBUG
-    std::cout << "CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables. CS: " << this
-              << std::endl;
-#endif
+    ALICA_DEBUG_MSG("CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables. CS: " << this);
 }
 
 /**
@@ -96,19 +102,15 @@ void ConditionStore::removeCondition(const Condition* con)
         }
     }
 
-#ifdef CS_DEBUG
-    std::cout << "CS: Removed condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables." << std::endl;
-#endif
+    ALICA_DEBUG_MSG("CS: Removed condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables.");
 }
 
 /**
  * Writes static and domain variables, as well as, problem parts into the query.
  */
-void ConditionStore::acceptQuery(Query& query, std::shared_ptr<const RunningPlan> rp) const
+void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
 {
-#ifdef CS_DEBUG
-    std::cout << "ConditionStore: Accepting Query - Active conditions in store is " << _activeConditions.size() << " CS: " << this << std::endl;
-#endif
+    ALICA_DEBUG_MSG("ConditionStore: Accepting Query - Active conditions in store is " << _activeConditions.size() << " CS: " << this);
     if (_activeConditions.empty()) {
         return;
     }
@@ -119,26 +121,19 @@ void ConditionStore::acceptQuery(Query& query, std::shared_ptr<const RunningPlan
         return; // nothing to do
     }
 
-#ifdef CS_DEBUG
-    std::cout << "ConditionStore: Query contains static variables: ";
-    for (const Variable* v : staticVarBuffer.getCurrent()) {
-        std::cout << v->getName() << "(" << v->getId() << "), ";
-    }
-    std::cout << std::endl;
-#endif
+    ALICA_DEBUG_MSG("ConditionStore: Query contains static variables: " << staticVarBuffer.getCurrent());
+
     const int previousPartCount = query.getPartCount();
 
     std::lock_guard<std::mutex> lock(_mtx);
     while (query.getPartCount() - previousPartCount < static_cast<int>(_activeConditions.size()) &&
-           (domainVarBuffer.hasCurrentlyAny() || staticVarBuffer.hasCurrentlyAny())) {
+            (domainVarBuffer.hasCurrentlyAny() || staticVarBuffer.hasCurrentlyAny())) {
         if (staticVarBuffer.hasCurrentlyAny()) {
             const Variable* curStaticVariable = staticVarBuffer.getCurrent().back();
             staticVarBuffer.editCurrent().pop_back();
             staticVarBuffer.editNext().push_back(curStaticVariable);
 
-#ifdef CS_DEBUG
-            std::cout << "ConditionStore: Checking static variable: " << *curStaticVariable << std::endl;
-#endif
+            ALICA_DEBUG_MSG("ConditionStore: Checking static variable: " << *curStaticVariable);
 
             auto activeVar2CondMapEntry = _activeVar2CondMap.find(curStaticVariable);
             if (activeVar2CondMapEntry == _activeVar2CondMap.end()) {
@@ -146,13 +141,12 @@ void ConditionStore::acceptQuery(Query& query, std::shared_ptr<const RunningPlan
                 continue;
             }
 
-#ifdef CS_DEBUG
-            std::cout << "ConditionStore: Conditions active under variable " << (*activeVar2CondMapEntry->first) << ": "
-                      << activeVar2CondMapEntry->second->size() << std::endl;
-#endif
+            ALICA_DEBUG_MSG(
+                    "ConditionStore: Conditions active under variable " << *activeVar2CondMapEntry->first << ": " << activeVar2CondMapEntry->second.size());
+
             for (const Condition* c : activeVar2CondMapEntry->second) {
                 if (std::find_if(query.getProblemParts().begin() + previousPartCount, query.getProblemParts().end(),
-                                 [c](const ProblemPart& pp) { return pp.getCondition() == c; }) != query.getProblemParts().end()) {
+                            [c](const ProblemPart& pp) { return pp.getCondition() == c; }) != query.getProblemParts().end()) {
                     // condition was already inserted
                     continue;
                 }
@@ -170,13 +164,13 @@ void ConditionStore::acceptQuery(Query& query, std::shared_ptr<const RunningPlan
             }
             for (const Condition* c : activeVar2CondMapEntry->second) {
                 if (std::find_if(query.getProblemParts().begin() + previousPartCount, query.getProblemParts().end(),
-                                 [c](const ProblemPart& pp) { return pp.getCondition() == c; }) != query.getProblemParts().end()) {
+                            [c](const ProblemPart& pp) { return pp.getCondition() == c; }) != query.getProblemParts().end()) {
                     // condition was already inserted
                     continue;
                 }
                 // if c has a quantifier that currently covers the agent & has the right tempalte var, add it
                 for (const Quantifier* q : c->getQuantifiers()) {
-                    if (q->hasTemplateVariable(curDomainVariable->getTemplateVariable()) && q->isAgentInScope(curDomainVariable->getAgent(), rp)) {
+                    if (q->hasTemplateVariable(curDomainVariable->getTemplateVariable()) && q->isAgentInScope(curDomainVariable->getAgent(), *rp)) {
                         query.addProblemPart(ProblemPart(c, rp));
                         break;
                     }

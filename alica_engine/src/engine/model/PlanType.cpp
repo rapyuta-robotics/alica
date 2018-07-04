@@ -9,13 +9,25 @@
 #include "engine/model/Plan.h"
 #include <sstream>
 
-namespace alica {
+namespace alica
+{
 
 PlanType::PlanType() {}
 
 PlanType::~PlanType() {}
 
-std::string PlanType::toString() const {
+const Plan* PlanType::getPlanById(int64_t id) const
+{
+    for (const Plan* p : _plans) {
+        if (p->getId() == id) {
+            return p;
+        }
+    }
+    return nullptr;
+}
+
+std::string PlanType::toString() const
+{
     std::stringstream ss;
     ss << "#PlanType: " << getName() << " " << getId() << std::endl;
     ss << "\t Plans: " << _plans.size() << std::endl;
@@ -28,12 +40,14 @@ std::string PlanType::toString() const {
     return ss.str();
 }
 
-void PlanType::setParametrisation(const ParametrisationGrp& parametrisation) {
+void PlanType::setParametrisation(const ParametrisationGrp& parametrisation)
+{
     _parametrisation = parametrisation;
 }
 
-void PlanType::setPlans(const PlanGrp& plans) {
+void PlanType::setPlans(const PlanGrp& plans)
+{
     _plans = plans;
 }
 
-}  // namespace alica
+} // namespace alica

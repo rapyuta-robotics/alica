@@ -39,13 +39,13 @@ void Constraint1524452937477::getConstraint(shared_ptr<ProblemDescriptor> c, sha
 {
     /*PROTECTED REGION ID(cc1524452937477) ENABLED START*/
     assert(c->getStaticVars().size() == 2);
-    assert(c->getDomainVars().size() == 1);
-    assert(c->getDomainVars()[0].getVars().size() == 2);
+    assert(c->getAgentVars().size() == 1);
+    assert(c->getAgentVars()[0].getVars().size() == 2);
     TermPtr l1a = static_cast<autodiff::Variable*>(c->getStaticVars()[0]);
     TermPtr l1b = static_cast<autodiff::Variable*>(c->getStaticVars()[1]);
 
-    autodiff::Variable* xv = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[0]);
-    autodiff::Variable* yv = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[1]);
+    autodiff::Variable* xv = static_cast<autodiff::Variable*>(c->getAgentVars()[0].getVars()[0]);
+    autodiff::Variable* yv = static_cast<autodiff::Variable*>(c->getAgentVars()[0].getVars()[1]);
 
     TermPtr x = xv;
     TermPtr y = yv;

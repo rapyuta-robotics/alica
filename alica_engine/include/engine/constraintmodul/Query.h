@@ -1,10 +1,8 @@
 #pragma once
 
-//#define Q_DEBUG
-
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
-#include "engine/RunningPlan.h"
+#include "engine/PlanInterface.h"
 #include "engine/TeamObserver.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/constraintmodul/ISolver.h"
@@ -18,6 +16,7 @@
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 
+#include <alica_common_config/debug_output.h>
 #include <alica_solver_interface/SolverContext.h>
 
 #include <map>
@@ -33,7 +32,7 @@ class SolverContext;
 template <class T>
 class BufferedSet
 {
-  public:
+public:
     BufferedSet() = default;
     BufferedSet(const BufferedSet&) = delete;
     BufferedSet& operator=(const BufferedSet&) = delete;
@@ -59,7 +58,7 @@ class BufferedSet
     bool hasCurrently(T v) const { return std::find(_current.begin(), _current.end(), v) != _current.end(); }
     bool has(T v) const { return hasCurrently(v) || (std::find(_next.begin(), _next.end(), v) != _next.end()); }
 
-  private:
+private:
     std::vector<T> _current;
     std::vector<T> _next;
 };
@@ -72,19 +71,19 @@ using BufferedDomainVariableGrp = BufferedSet<const DomainVariable*>;
  */
 class Query
 {
-  public:
+public:
     Query();
 
     void addStaticVariable(const Variable* v);
-    void addDomainVariable(const supplementary::AgentID* robot, const std::string& ident, AlicaEngine* ae);
+    void addDomainVariable(AgentIDConstPtr robot, const std::string& ident, AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
 
     template <class SolverType>
-    bool existsSolution(std::shared_ptr<const RunningPlan> rp);
+    bool existsSolution(ThreadSafePlanInterface pi);
 
     template <class SolverType, typename ResultType>
-    bool getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<ResultType>& result);
+    bool getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& result);
 
     BufferedVariableGrp& editStaticVariableBuffer() { return _staticVars; }
     BufferedDomainVariableGrp& editDomainVariableBuffer() { return _domainVars; }
@@ -94,11 +93,10 @@ class Query
     const std::vector<ProblemPart>& getProblemParts() const { return _problemParts; }
     const UniqueVarStore& getUniqueVariableStore() const; /*< for testing only!!! */
 
-  private:
+private:
     void clearTemporaries();
     void fillBufferFromQuery();
-    bool collectProblemStatement(std::shared_ptr<const RunningPlan> rp, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds,
-                                 int& domOffset);
+    bool collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
 
     VariableGrp _queriedStaticVariables;
     DomainVariableGrp _queriedDomainVariables;
@@ -114,39 +112,37 @@ class Query
 };
 
 template <class SolverType>
-bool Query::existsSolution(std::shared_ptr<const RunningPlan> rp)
+bool Query::existsSolution(ThreadSafePlanInterface pi)
 {
-    SolverType* solver = rp->getAlicaEngine()->getSolver<SolverType>();
+    SolverType* solver = pi.getAlicaEngine()->getSolver<SolverType>();
 
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
-    if (!collectProblemStatement(rp, solver, cds, domOffset)) {
+    if (!collectProblemStatement(pi, solver, cds, domOffset)) {
         return false;
     }
     return solver->existsSolution(_relevantVariables, cds);
 }
 
 template <class SolverType, typename ResultType>
-bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<ResultType>& result)
+bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& result)
 {
     result.clear();
 
     // Collect the complete problem specification
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
-    SolverType* solver = rp->getAlicaEngine()->getSolver<SolverType>();
+    SolverType* solver = pi.getAlicaEngine()->getSolver<SolverType>();
     if (solver == nullptr) {
-        std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available." << std::endl;
+        ALICA_ERROR_MSG("Query::getSolution: The engine does not have a suitable solver for the given type available.");
         return false;
     }
 
-    if (!collectProblemStatement(rp, solver, cds, domOffset)) {
+    if (!collectProblemStatement(pi, solver, cds, domOffset)) {
         return false;
     }
 
-#ifdef Q_DEBUG
-    std::cout << "Query: " << _uniqueVarStore << std::endl;
-#endif
+    ALICA_DEBUG_MSG("Query: " << _uniqueVarStore);
 
     // TODO: get rid of the interrim vector (see below how)
     std::vector<ResultType> solverResult;
@@ -155,7 +151,7 @@ bool Query::getSolution(std::shared_ptr<const RunningPlan> rp, std::vector<Resul
 
     if (ret && solverResult.size() > 0) {
         int i = 0;
-        VariableSyncModule* rs = rp->getAlicaEngine()->getResultStore();
+        VariableSyncModule* rs = pi.getAlicaEngine()->getResultStore();
         for (const ResultType& value : solverResult) {
             rs->postResult(_relevantVariables[i]->getId(), Variant(value));
             ++i;

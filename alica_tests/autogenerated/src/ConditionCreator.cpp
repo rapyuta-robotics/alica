@@ -10,6 +10,8 @@
 
 #include "Plans/Defend1402488893641.h"
 
+#include "Plans/BackForth1529456584982.h"
+
 #include "Plans/VariableHandling/Lvl21524452793378.h"
 
 #include "Plans/GSolver/GSolverTestPlan1417423757243.h"
@@ -108,6 +110,18 @@ shared_ptr<BasicCondition> ConditionCreator::createConditions(long conditionConf
     case 1402489073613:
 
         return make_shared<TransitionCondition1402489073613>();
+
+        break;
+
+    case 1529456610697:
+
+        return make_shared<TransitionCondition1529456610697>();
+
+        break;
+
+    case 1529456611916:
+
+        return make_shared<TransitionCondition1529456611916>();
 
         break;
 

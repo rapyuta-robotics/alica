@@ -8,7 +8,7 @@ namespace alica
 {
 class Attack : public DomainBehaviour
 {
-  public:
+public:
     Attack();
     virtual ~Attack();
     virtual void run(void* msg);
@@ -17,11 +17,11 @@ class Attack : public DomainBehaviour
     int initCounter;
 
     /*PROTECTED REGION END*/
-  protected:
+protected:
     virtual void initialiseParameters();
     /*PROTECTED REGION ID(pro1402488848841) ENABLED START*/ // Add additional protected methods here
     /*PROTECTED REGION END*/
-  private:
+private:
 /*PROTECTED REGION ID(prv1402488848841) ENABLED START*/ // Add additional private methods here
         /*PROTECTED REGION END*/};
         } /* namespace alica */

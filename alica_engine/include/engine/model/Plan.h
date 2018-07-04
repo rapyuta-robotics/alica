@@ -1,21 +1,10 @@
-/*
- * Plan.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef PLAN_H_
-#define PLAN_H_
-
-#include <stddef.h>
-#include <string>
-#include <list>
+#pragma once
 
 #include "AbstractPlan.h"
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 
 class EntryPoint;
 class FailureState;
@@ -29,13 +18,15 @@ class ExpressionHandler;
 /**
  * An ALICA plan
  */
-class Plan : public AbstractPlan {
+class Plan : public AbstractPlan
+{
 public:
-    Plan(int64_t id = 0);
+    Plan(int64_t id);
     virtual ~Plan();
 
     const EntryPoint* getEntryPointTaskID(int64_t taskID) const;
     const EntryPoint* getEntryPointByID(int64_t epID) const;
+    const State* getStateByID(int64_t stateID) const;
 
     const EntryPointGrp& getEntryPoints() const { return _entryPoints; }
 
@@ -46,6 +37,9 @@ public:
     int getMaxCardinality() const { return _maxCardinality; }
     int getMinCardinality() const { return _minCardinality; }
 
+    UtilityFunction* getUtilityFunction() const { return _utilityFunction.get(); }
+    double getUtilityThreshold() const { return _utilityThreshold; }
+
     const PostCondition* getPostCondition() const { return _postCondition; }
 
     const TransitionGrp& getTransitions() const { return _transitions; }
@@ -53,7 +47,7 @@ public:
 
 private:
     friend ModelFactory;
-    friend ExpressionHandler;  // TODO: get rid of this
+    friend ExpressionHandler; // TODO: get rid of this
     void setEntryPoints(const EntryPointGrp& entryPoints);
     void setFailureStates(const FailureStateGrp& failurePoints);
     void setSuccessStates(const SuccessStateGrp& succesPoints);
@@ -73,8 +67,15 @@ private:
     SyncTransitionGrp _syncTransitions;
     TransitionGrp _transitions;
     const PostCondition* _postCondition;
+    /**
+     * This plan's Utility function
+     */
+    // TOD: change shared to unique ptr (this requires a change to autogeneration templates)
+    std::shared_ptr<UtilityFunction> _utilityFunction;
+    /**
+     * The utility threshold, the higher, the less likely dynamic changes are.
+     */
+    double _utilityThreshold;
 };
 
-}  // namespace alica
-
-#endif /* PLAN_H_ */
+} // namespace alica

@@ -1,12 +1,16 @@
 #include "engine/allocationauthority/AuthorityManager.h"
+
 #include "engine/Assignment.h"
 #include "engine/allocationauthority/CycleManager.h"
-#include "engine/collections/AssignmentCollection.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 #include "engine/teammanager/TeamManager.h"
+
+#include <alica_common_config/debug_output.h>
+
+#include <assert.h>
 
 namespace alica
 {
@@ -14,8 +18,8 @@ namespace alica
  * Constructor
  */
 AuthorityManager::AuthorityManager(AlicaEngine* engine)
-    : engine(engine)
-    , localAgentID(nullptr)
+        : _engine(engine)
+        , _localAgentID(nullptr)
 {
 }
 
@@ -26,7 +30,7 @@ AuthorityManager::~AuthorityManager() {}
  */
 void AuthorityManager::init()
 {
-    this->localAgentID = engine->getTeamManager()->getLocalAgentID();
+    _localAgentID = _engine->getTeamManager()->getLocalAgentID();
 }
 
 /**
@@ -38,154 +42,116 @@ void AuthorityManager::close() {}
  * Message Handler
  * param name = aai A AllocationAthorityInfo
  */
-void AuthorityManager::handleIncomingAuthorityMessage(shared_ptr<AllocationAuthorityInfo> aai)
+void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityInfo& aai)
 {
-    auto now = this->engine->getAlicaClock()->now();
-    if (this->engine->getTeamManager()->isAgentIgnored(aai->senderID)) {
+    AlicaTime now = _engine->getAlicaClock()->now();
+    if (_engine->getTeamManager()->isAgentIgnored(aai.senderID)) {
         return;
     }
-    if (*(aai->senderID) != *(this->localAgentID)) {
-        this->engine->getTeamManager()->setTimeLastMsgReceived(aai->senderID, now);
-        if (*(aai->senderID) > *(this->localAgentID)) {
+    if (*(aai.senderID) != *_localAgentID) {
+        _engine->getTeamManager()->setTimeLastMsgReceived(aai.senderID, now);
+        if (*(aai.senderID) > *_localAgentID) {
             // notify TO that evidence about other robots is available
-            for (EntryPointRobots epr : aai->entryPointRobots) {
-                for (auto& rid : epr.robots) {
-                    if (*rid != *(this->localAgentID)) {
-                        this->engine->getTeamManager()->setTimeLastMsgReceived(rid, now);
+            for (EntryPointRobots epr : aai.entryPointRobots) {
+                for (AgentIDConstPtr rid : epr.robots) {
+                    if (*rid != *_localAgentID) {
+                        _engine->getTeamManager()->setTimeLastMsgReceived(rid, now);
                     }
                 }
             }
         }
     }
-#ifdef AM_DEBUG
-    std::stringstream ss;
-    ss << "AM: Received AAI Assignment from " << aai->senderID << " is: " << std::endl;
-    for (EntryPointRobots epRobots : aai->entryPointRobots) {
-        ss << "EP: " << epRobots.entrypoint << " Robots: ";
-        for (int robot : epRobots.robots) {
-            ss << robot << ", ";
-        }
-        ss << std::endl;
-    }
-    cout << ss.str();
-#endif
+    ALICA_DEBUG_MSG("AM: Received AAI Assignment: " << aai);
     {
-        std::lock_guard<std::mutex> lock(mu);
-        this->queue.push_back(aai);
+        std::lock_guard<std::mutex> lock(_mutex);
+        _queue.push_back(aai);
     }
 }
 
 /**
  * Cyclic tick function, called by the plan base every iteration
  */
-void AuthorityManager::tick(std::shared_ptr<RunningPlan> rp)
+void AuthorityManager::tick(RunningPlan* rp)
 {
-#ifdef AM_DEBUG
-    std::cout << "AM: Tick called! <<<<<<" << std::endl;
-#endif
-    std::lock_guard<std::mutex> lock(mu);
-    processPlan(rp);
-    this->queue.clear();
+    ALICA_DEBUG_MSG("AM: Tick called! <<<<<<");
+
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (rp) {
+        processPlan(*rp);
+    }
+    _queue.clear();
 }
 
-void AuthorityManager::processPlan(shared_ptr<RunningPlan> rp)
+void AuthorityManager::processPlan(RunningPlan& rp)
 {
-    if (rp == nullptr || rp->isBehaviour()) {
+    if (rp.isBehaviour()) {
         return;
     }
-    if (rp->getCycleManagement()->needsSending()) {
+    if (rp.getCycleManagement().needsSending()) {
         sendAllocation(rp);
-        rp->getCycleManagement()->sent();
+        rp.editCycleManagement().sent();
     }
-#ifdef AM_DEBUG
-    std::cout << "AM: Queue size of AuthorityInfos is " << this->queue.size() << std::endl;
-#endif
-    for (int i = 0; i < static_cast<int>(this->queue.size()); ++i) {
-        if (authorityMatchesPlan(this->queue[i], rp)) {
-#ifdef AM_DEBUG
-            std::cout << "AM: Found AuthorityInfo, which matches the plan " << rp->getPlan()->getName() << std::endl;
-#endif
-            rp->getCycleManagement()->handleAuthorityInfo(this->queue[i]);
-            this->queue.erase(this->queue.begin() + i);
-            i--;
+
+    ALICA_DEBUG_MSG("AM: Queue size of AuthorityInfos is " << _queue.size());
+
+    for (int i = 0; i < static_cast<int>(_queue.size()); ++i) {
+        if (authorityMatchesPlan(_queue[i], rp)) {
+            ALICA_DEBUG_MSG("AM: Found AuthorityInfo, which matches the plan " << rp.getActivePlan()->getName());
+            rp.editCycleManagement().handleAuthorityInfo(_queue[i]);
+            _queue.erase(_queue.begin() + i);
+            --i;
         }
     }
-    for (std::shared_ptr<RunningPlan>& c : *rp->getChildren()) {
-        processPlan(c);
+    for (RunningPlan* c : rp.getChildren()) {
+        processPlan(*c);
     }
 }
 /**
  * Sends an AllocationAuthorityInfo message containing the assignment of p
  */
-void AuthorityManager::sendAllocation(std::shared_ptr<RunningPlan> p)
+void AuthorityManager::sendAllocation(const RunningPlan& p)
 {
-    if (!this->engine->maySendMessages()) {
+    if (!_engine->maySendMessages()) {
         return;
     }
-    AllocationAuthorityInfo aai = AllocationAuthorityInfo();
+    AllocationAuthorityInfo aai{};
 
-    std::shared_ptr<Assignment> ass = p->getAssignment();
-    for (int i = 0; i < ass->getEntryPointCount(); i++) {
+    const Assignment& ass = p.getAssignment();
+    for (int i = 0; i < ass.getEntryPointCount(); ++i) {
         EntryPointRobots epRobots;
-        epRobots.entrypoint = ass->getEpRobotsMapping()->getEp(i)->getId();
-        for (auto robot : *ass->getRobotsWorking(epRobots.entrypoint)) {
-            epRobots.robots.push_back(robot);
-        }
-        aai.entryPointRobots.push_back(epRobots);
+        epRobots.entrypoint = ass.getEntryPoint(i)->getId();
+        ass.getAgentsWorking(i, epRobots.robots);
+
+        aai.entryPointRobots.push_back(std::move(epRobots));
     }
 
-    auto shared = p->getParent().lock();
-    aai.parentState = ((p->getParent().expired() || shared->getActiveState() == nullptr) ? -1 : shared->getActiveState()->getId());
-    aai.planId = p->getPlan()->getId();
-    aai.authority = this->localAgentID;
-    aai.senderID = this->localAgentID;
-    aai.planType = (p->getPlanType() == nullptr ? -1 : p->getPlanType()->getId());
-#ifdef AM_DEBUG
-    std::stringstream ss;
-    ss << "AM: Sending AAI Assignment from " << aai.senderID << " is: " << std::endl;
-    for (EntryPointRobots epRobots : aai.entryPointRobots) {
-        ss << "EP: " << epRobots.entrypoint << " Robots: ";
-        for (int robot : epRobots.robots) {
-            ss << robot << ", ";
-        }
-        ss << std::endl;
-    }
-    std::cout << ss.str();
-#endif
-    this->engine->getCommunicator()->sendAllocationAuthority(aai);
+    const RunningPlan* parent = p.getParent();
+    aai.parentState = ((parent && parent->getActiveState()) ? parent->getActiveState()->getId() : -1);
+    aai.planId = p.getActivePlan()->getId();
+    aai.authority = _localAgentID;
+    aai.senderID = _localAgentID;
+    aai.planType = (p.getPlanType() ? p.getPlanType()->getId() : -1);
+
+    ALICA_DEBUG_MSG("AM: Sending AAI Assignment: " << aai);
+    _engine->getCommunicator()->sendAllocationAuthority(aai);
 }
 
 /**
- * FIXME: Bug in authority manager
- * QUESTION: If you use the same plan two times, each in a different part of the plan tree.
- * How is it guarenteed, that this method does not match the wrong instance?!
- * @param aai
- * @param p
- * @return
+ Matches a plan based on the context: a plan, together with the containing plantype and state is matched.
  */
-bool AuthorityManager::authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p)
+bool AuthorityManager::authorityMatchesPlan(const AllocationAuthorityInfo& aai, const RunningPlan& p) const
 {
-    auto shared = p->getParent().lock();
-    /*#ifdef AM_DEBUG
-                    if (!p->getParent().expired())
-                    {
-                            cout << "AM: Parent-WeakPtr is NOT expired!" << endl;
-                            cout << "AM: Parent-ActiveState is: " << (shared->getActiveState() != nullptr ?
-    shared->getActiveState()->getId() : NULL) << endl; cout << "AM: AAI-ParentState is: " << aai->parentState << endl;
-                    }
-                    else
-                    {
-                            cout << "AM: Parent-WeakPtr is expired!" << endl;
-                            cout << "AM: Current-ActiveState is: " << p->getActiveState()->getId() << endl;
-                            cout << "AM: AAI-ParentState is: " << aai->parentState << endl;
-                    }
-    #endif*/
-
-    if ((p->getParent().expired() && aai->parentState == -1) ||
-        (!p->getParent().expired() && shared->getActiveState() != nullptr && shared->getActiveState()->getId() == aai->parentState)) {
-        if (p->getPlan()->getId() == aai->planId) {
+    assert(!p.isRetired());
+    // If a plan is not retired and does not have a parent, it must be masterplan
+    if (p.isRetired()) {
+        return false;
+    }
+    const RunningPlan* parent = p.getParent();
+    if ((parent == nullptr && aai.parentState == -1) ||
+            (parent != nullptr && parent->getActiveState() != nullptr && parent->getActiveState()->getId() == aai.parentState)) {
+        if (p.getActivePlan()->getId() == aai.planId) {
             return true;
-        } else if (aai->planType != -1 && p->getPlanType() != nullptr && p->getPlanType()->getId() == aai->planType) {
+        } else if (aai.planType != -1 && p.getPlanType() != nullptr && p.getPlanType()->getId() == aai.planType) {
             return true;
         }
     }

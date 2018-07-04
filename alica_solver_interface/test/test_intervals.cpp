@@ -35,3 +35,22 @@ TEST(IntervalTest, Double)
     c.intersect(9, 10);
     ASSERT_FALSE(c.isValid());
 }
+
+TEST(IntervalTest, Operations)
+{
+    Interval<int> a(0, 1);
+    Interval<int> b(6, 9);
+    Interval<int> c = a + b;
+    ASSERT_EQ(c.size(), a.size() + b.size());
+    ASSERT_EQ(c.getMin(), 6);
+    ASSERT_EQ(c.getMax(), 10);
+
+    b *= 2;
+    ASSERT_EQ(b.getMin(), 12);
+    ASSERT_EQ(b.getMax(), 18);
+    b /= 3;
+    ASSERT_EQ(b.getMin(), 4);
+    ASSERT_EQ(b.getMax(), 6);
+    ASSERT_EQ(a * 3, 3 * a);
+    ASSERT_EQ(b + c, c + b);
+}

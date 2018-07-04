@@ -10,8 +10,6 @@
 #include "engine/model/Quantifier.h"
 #include "engine/parser/PlanParser.h"
 
-#include <supplementary/AgentID.h>
-
 #include <assert.h>
 #include <typeinfo>
 
@@ -21,10 +19,10 @@ namespace alica
 /**
  * Basic constructor
  */
-RobotEngineData::RobotEngineData(const AlicaEngine* engine, const supplementary::AgentID* agentId)
-    : _engine(engine)
-    , _agentId(agentId)
-    , _successMarks(std::make_shared<SuccessMarks>(engine))
+RobotEngineData::RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId)
+        : _engine(engine)
+        , _agentId(agentId)
+        , _successMarks(std::make_shared<SuccessMarks>(engine))
 {
     initDomainVariables();
 }
@@ -72,7 +70,7 @@ const DomainVariable* RobotEngineData::getDomainVariable(const std::string& name
 
 int64_t RobotEngineData::makeUniqueId(const std::string& s) const
 {
-    int64_t ret = static_cast<int64_t>(supplementary::AgentIDHash{}(_agentId) + std::hash<std::string>()(s));
+    int64_t ret = static_cast<int64_t>(supplementary::AgentIDHash{}(_agentId.get()) + std::hash<std::string>()(s));
     assert(_engine->getPlanParser()->getParsedElements()->find(ret) == _engine->getPlanParser()->getParsedElements()->end());
     return ret;
 }

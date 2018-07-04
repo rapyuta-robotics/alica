@@ -9,21 +9,21 @@ namespace alica
 {
 class QueryBehaviour1 : public DomainBehaviour
 {
-  public:
+public:
     QueryBehaviour1();
     virtual ~QueryBehaviour1();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1479556104511) ENABLED START*/ // Add additional public methods here
     int getCallCounter();
-    static vector<double> result;
-    shared_ptr<alica::Query> query;
+    static std::vector<double> result;
+    std::shared_ptr<alica::Query> query;
     /*PROTECTED REGION END*/
-  protected:
+protected:
     virtual void initialiseParameters();
     /*PROTECTED REGION ID(pro1479556104511) ENABLED START*/ // Add additional protected methods here
     int callCounter;
     /*PROTECTED REGION END*/
-  private:
+private:
 /*PROTECTED REGION ID(prv1479556104511) ENABLED START*/ // Add additional private methods here
         /*PROTECTED REGION END*/};
         } /* namespace alica */
