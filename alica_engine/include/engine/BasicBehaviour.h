@@ -74,6 +74,7 @@ public:
 
 protected:
     AgentIDConstPtr getOwnId() const;
+    AlicaEngine* getEngine() const { return _engine; }
 
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
