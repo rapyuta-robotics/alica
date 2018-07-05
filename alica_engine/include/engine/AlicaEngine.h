@@ -111,9 +111,9 @@ public:
 
     // AgentIDManager forwarded interface:
 
-    AgentIDConstPtr getIDFromBytes(const std::vector<uint8_t>& vectorID) const;
+    AgentIDConstPtr getIdFromBytes(const std::vector<uint8_t>& vectorID) const;
     template <class Prototype>
-    AgentIDConstPtr getID(Prototype& idPrototype) const;
+    AgentIDConstPtr getId(Prototype& idPrototype) const;
 
 private:
     void setStepEngine(bool stepEngine);
@@ -175,7 +175,7 @@ private:
  * IntRobotID).
  */
 template <class Prototype>
-AgentIDConstPtr AlicaEngine::getID(Prototype& idPrototype) const
+AgentIDConstPtr AlicaEngine::getId(Prototype& idPrototype) const
 {
     return AgentIDConstPtr(this->agentIDManager->getID<Prototype>(idPrototype));
 }

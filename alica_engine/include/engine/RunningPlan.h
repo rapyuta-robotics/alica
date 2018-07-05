@@ -128,9 +128,6 @@ public:
 
     void printRecursive() const;
 
-    const AgentGrp& getRobotsAvail() const { return _robotsAvail; }
-    AgentGrp& editRobotsAvail() { return _robotsAvail; }
-
     void setAllocationNeeded(bool allocationNeeded);
     void useEntryPoint(const EntryPoint* value);
     void useState(const State* activeState);
@@ -205,15 +202,13 @@ private:
     ConditionStore _constraintStore;
 
     // Type info
-
+    const PlanType* const _planType;
     const bool _behaviour; // TODO: get rid of this, the behaviour pointer should not be null for behaviors (currently it can be)
 
     // engine Pointer
     AlicaEngine* const _ae;
-    const PlanType* const _planType;
 
     // iffy stuff
-    AgentGrp _robotsAvail;
     std::map<const AbstractPlan*, int> _failedSubPlans;
 
     mutable std::mutex _accessMutex;

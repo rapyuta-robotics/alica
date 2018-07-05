@@ -111,11 +111,8 @@ bool RunningPlan::isDeleteable() const
  */
 PlanChange RunningPlan::tick(RuleBook* rules)
 {
-    PlanChange myChange = PlanChange::NoChange;
-    {
-        _cycleManagement.update();
-        myChange = rules->visit(*this);
-    }
+    _cycleManagement.update();
+    PlanChange myChange = rules->visit(*this);
     PlanChange childChange = PlanChange::NoChange;
     // attention: do not use for each here: children are modified
     for (int i = 0; i < static_cast<int>(_children.size()); ++i) {
@@ -445,6 +442,10 @@ bool RunningPlan::areAllChildrenStatus(PlanStatus ps) const
             return false;
         }
     }
+    // In case of a state, make sure that all children are actually running
+    if (_activeTriple.state) {
+        return _children.size() >= _activeTriple.state->getPlans().size();
+    }
     return true;
 }
 
@@ -530,7 +531,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
 
     // if keepTask, the task Assignment should not be changed!
     bool ret = false;
-    AllocationDifference* aldif = new AllocationDifference(); // TODO: check this and make either unique or stack allocated
+    AllocationDifference& aldif = _cycleManagement.editNextDifference();
     for (const SimplePlanTree* spt : spts) {
         AgentIDConstPtr id = spt->getAgentId();
         if (spt->getState()->getInPlan() != _activeTriple.plan) { // the robot is no longer participating in this plan
@@ -539,7 +540,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
                 if (ep != nullptr) {
                     _assignment.removeAgentFrom(id, ep);
                     ret = true;
-                    aldif->editSubtractions().emplace_back(ep, id);
+                    aldif.editSubtractions().emplace_back(ep, id);
                 }
             }
         } else {
@@ -553,15 +554,15 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
                     }
                 } else { // robot was not expected to be here during protected assignment time, add it.
                     _assignment.addAgent(id, spt->getEntryPoint(), spt->getState());
-                    aldif->editAdditions().emplace_back(spt->getEntryPoint(), id);
+                    aldif.editAdditions().emplace_back(spt->getEntryPoint(), id);
                 }
             } else { // Normal Update
                 const EntryPoint* ep = _assignment.getEntryPointOfAgent(id);
                 ret |= _assignment.updateAgent(id, spt->getEntryPoint(), spt->getState());
                 if (spt->getEntryPoint() != ep) {
-                    aldif->editAdditions().emplace_back(spt->getEntryPoint(), id);
+                    aldif.editAdditions().emplace_back(spt->getEntryPoint(), id);
                     if (ep != nullptr) {
-                        aldif->editSubtractions().emplace_back(ep, id);
+                        aldif.editSubtractions().emplace_back(ep, id);
                     }
                 }
             }
@@ -578,8 +579,9 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
             rem.clear();
             AssignmentView robs = _assignment.getAgentsWorking(i);
             for (AgentIDConstPtr rob : robs) {
-                if (*rob == *ownId)
+                if (rob == ownId) {
                     continue;
+                }
                 bool found = false;
                 if (std::find(noUpdates.begin(), noUpdates.end(), rob) != noUpdates.end()) {
                     // found = true;
@@ -593,7 +595,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
                 }
                 if (!found) {
                     rem.push_back(rob);
-                    aldif->editSubtractions().emplace_back(ep, rob);
+                    aldif.editSubtractions().emplace_back(ep, rob);
                     ret = true;
                 }
             }
@@ -610,7 +612,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
             for (AgentIDConstPtr rob : robs) {
                 if (std::find(availableAgents.begin(), availableAgents.end(), rob) == availableAgents.end()) {
                     rem.push_back(rob);
-                    aldif->editSubtractions().emplace_back(ep, rob);
+                    aldif.editSubtractions().emplace_back(ep, rob);
                     ret = true;
                 }
             }
@@ -618,14 +620,14 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
         }
     }
 
-    aldif->setReason(AllocationDifference::Reason::message);
-    _cycleManagement.setNewAllocDiff(aldif);
+    aldif.setReason(AllocationDifference::Reason::message);
+
     // Update Success Collection:
     _ae->getTeamObserver()->updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), _assignment.editSuccessData());
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
-    if (_status.stateStartTime + assignmentProtectionTime < now) {
+    if (_status.stateStartTime + assignmentProtectionTime > now) {
         AgentsInStateView agentsJoined = _assignment.getAgentsInState(getActiveState());
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
             if (std::find(agentsJoined.begin(), agentsJoined.end(), *iter) == agentsJoined.end()) {
@@ -706,10 +708,6 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     out << "FailCount: " << psi.failCount << std::endl;
     out << "Activity: " << getPlanActivityName(psi.active) << std::endl;
     out << "Status: " << getPlanStatusName(psi.status) << std::endl;
-    out << "AvailRobots: ";
-    for (AgentIDConstPtr id : r._robotsAvail) {
-        out << " " << id;
-    }
     out << std::endl;
     if (!r.isBehaviour()) {
         out << "Assignment:" << r._assignment;

@@ -1,32 +1,49 @@
-/*
- * AllocationDifference.h
- *
- *  Created on: Jul 17, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef ALLOCATIONDIFFERENCE_H_
-#define ALLOCATIONDIFFERENCE_H_
-
-#include <vector>
-#include <string>
-#include <sstream>
-#include <memory>
+#pragma once
 #include <algorithm>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #include "EntryPointRobotPair.h"
 
-namespace alica {
+namespace alica
+{
 
 /**
  * A representation of the difference between two allocations
  */
-class AllocationDifference final {
+class AllocationDifference final
+{
 public:
     AllocationDifference();
     ~AllocationDifference();
-    enum Reason { message, utility, empty };
-    AllocationDifference::Reason getReason() const;
+    AllocationDifference(const AllocationDifference&) = delete;
+    AllocationDifference(AllocationDifference&&) = default;
+    AllocationDifference& operator=(const AllocationDifference&) = delete;
+    AllocationDifference& operator=(AllocationDifference&&) = default;
+
+    enum class Reason
+    {
+        message,
+        utility,
+        empty
+    };
+    static const char* getReasonString(Reason r)
+    {
+        switch (r) {
+        case Reason::message:
+            return "Message";
+        case Reason::utility:
+            return "Utility";
+        case Reason::empty:
+            return "Empty";
+        default:
+            assert(false);
+            return "Unknown";
+        }
+    }
+    AllocationDifference::Reason getReason() const { return _reason; }
     void setReason(AllocationDifference::Reason reason);
 
     /**
@@ -44,15 +61,12 @@ public:
      * @param other the AllocationDifference to apply.
      */
     void applyDifference(const AllocationDifference& other);
-    std::string toString() const;
 
-    const std::vector<EntryPointRobotPair>& getAdditions() const;
-    std::vector<EntryPointRobotPair>& editAdditions();
+    const std::vector<EntryPointRobotPair>& getAdditions() const { return _additions; }
+    std::vector<EntryPointRobotPair>& editAdditions() { return _additions; }
 
-    void setAdditions(const std::vector<EntryPointRobotPair>& additions);
-    const std::vector<EntryPointRobotPair>& getSubtractions() const;
-    std::vector<EntryPointRobotPair>& editSubtractions();
-    void setSubtractions(const std::vector<EntryPointRobotPair>& subtractions);
+    const std::vector<EntryPointRobotPair>& getSubtractions() const { return _subtractions; }
+    std::vector<EntryPointRobotPair>& editSubtractions() { return _subtractions; }
 
 private:
     std::vector<EntryPointRobotPair> _additions;
@@ -63,20 +77,6 @@ private:
     AllocationDifference::Reason _reason;
 };
 
+std::ostream& operator<<(std::ostream& o, const AllocationDifference& dif);
+
 } /* namespace alica */
-
-// TODO Get rid of this, toString was meant to be a debug facility.
-namespace std {
-template <>
-struct hash<alica::AllocationDifference> {
-    typedef alica::AllocationDifference argument_type;
-    typedef std::size_t value_type;
-
-    value_type operator()(argument_type& ad) const {
-        value_type const h1(std::hash<std::string>()(ad.toString()));
-        return h1;
-    }
-};
-}  // namespace std
-
-#endif /* ALLOCATIONDIFFERENCE_H_ */

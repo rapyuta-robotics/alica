@@ -319,7 +319,7 @@ void AlicaEngine::stepNotify()
  * This method can be used, e.g., for passing a part of a ROS
  * message and receiving a pointer to a corresponding AgentID object.
  */
-AgentIDConstPtr AlicaEngine::getIDFromBytes(const std::vector<uint8_t>& idByteVector) const
+AgentIDConstPtr AlicaEngine::getIdFromBytes(const std::vector<uint8_t>& idByteVector) const
 {
     return AgentIDConstPtr(this->agentIDManager->getIDFromBytes(idByteVector));
 }

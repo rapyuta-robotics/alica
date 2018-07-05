@@ -20,7 +20,7 @@
 
 #define ASSERT_NO_SIGNAL ASSERT_EQ(setjmp(restore_point), 0);
 
-class AlicaTestFixture : public ::testing::Test
+class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
     supplementary::SystemConfig* sc;
@@ -29,7 +29,11 @@ protected:
     alica::ConditionCreator* cc;
     alica::UtilityFunctionCreator* uc;
     alica::ConstraintCreator* crc;
+};
 
+class AlicaTestFixture : public AlicaTestFixtureBase
+{
+protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }

@@ -3,7 +3,6 @@
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
 #include "engine/collections/RobotProperties.h"
-#include "engine/collections/SuccessMarks.h"
 #include "engine/model/AlicaElement.h"
 #include "engine/model/DomainVariable.h"
 #include "engine/model/ForallAgents.h"
@@ -22,21 +21,16 @@ namespace alica
 RobotEngineData::RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId)
         : _engine(engine)
         , _agentId(agentId)
-        , _successMarks(std::make_shared<SuccessMarks>(engine))
+        , _successMarks()
 {
     initDomainVariables();
 }
 
-RobotEngineData::~RobotEngineData()
-{
-    for (auto x : _domainVariables) {
-        delete x.second;
-    }
-}
+RobotEngineData::~RobotEngineData() {}
 
-void RobotEngineData::setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks)
+void RobotEngineData::updateSuccessMarks(const IdGrp& succeededEps)
 {
-    _successMarks = successMarks;
+    _successMarks.update(_engine, succeededEps);
 }
 
 void RobotEngineData::initDomainVariables()
@@ -46,8 +40,8 @@ void RobotEngineData::initDomainVariables()
     std::string agentIdString = ss.str();
     for (const Quantifier* quantifier : _engine->getPlanRepository()->getQuantifiers()) {
         for (const Variable* tv : quantifier->getTemplateVariables()) {
-            DomainVariable* dv = new DomainVariable(makeUniqueId(tv->getName()), agentIdString + tv->getName(), "", tv, _agentId);
-            _domainVariables.emplace(tv, dv);
+            _domainVariables.emplace(tv,
+                    std::unique_ptr<const DomainVariable>(new DomainVariable(makeUniqueId(tv->getName()), agentIdString + tv->getName(), "", tv, _agentId)));
         }
     }
 }
@@ -56,7 +50,7 @@ const DomainVariable* RobotEngineData::getDomainVariable(const Variable* templat
 {
     auto iterator = _domainVariables.find(templateVar);
     if (iterator != _domainVariables.end()) {
-        return iterator->second;
+        return iterator->second.get();
     } else {
         return nullptr;
     }
@@ -77,7 +71,7 @@ int64_t RobotEngineData::makeUniqueId(const std::string& s) const
 
 void RobotEngineData::clearSuccessMarks()
 {
-    _successMarks->clear();
+    _successMarks.clear();
 }
 
 } /* namespace alica */

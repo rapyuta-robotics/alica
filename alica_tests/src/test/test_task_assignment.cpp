@@ -33,16 +33,9 @@ class StillClock : public alica::AlicaClock
     virtual alica::AlicaTime now() const override { return AlicaTime::milliseconds(555); }
 };
 
-class TaskAssignmentTest : public ::testing::Test
+class TaskAssignmentTest : public AlicaTestFixtureBase
 {
 protected:
-    alica::AlicaEngine* ae;
-    supplementary::SystemConfig* sc;
-    alica::BehaviourCreator* bc;
-    alica::ConditionCreator* cc;
-    alica::UtilityFunctionCreator* uc;
-    alica::ConstraintCreator* crc;
-
     virtual void SetUp()
     {
         // determine the path to the test config
@@ -84,7 +77,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     // fake a list of existing robots
     alica::AgentGrp robots;
     for (int number = 8; number <= 11; number++) {
-        alica::AgentIDConstPtr agentID = ae->getID<int>(number);
+        alica::AgentIDConstPtr agentID = ae->getId<int>(number);
         robots.push_back(agentID);
         ae->getTeamManager()->setTimeLastMsgReceived(agentID, ae->getAlicaClock()->now());
     }
