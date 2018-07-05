@@ -91,7 +91,7 @@ public:
     bool hasAgent(AgentIDConstPtr id) const;
     int size() const
     {
-        return std::accumulate(_assignmentData.begin(), _assignmentData.end(), 0, [](int val, const AgentStatePairs& asp) { return val + asp.size(); });
+        return std::accumulate(_assignmentData.begin(), _assignmentData.end(), 0, [](int val, const AgentStatePairs& asps) { return val + asps.size(); });
     }
     int getEntryPointCount() const { return static_cast<int>(_assignmentData.size()); }
     const EntryPoint* getEntryPoint(int idx) const { return _plan->getEntryPoints()[idx]; }
