@@ -25,13 +25,15 @@ class AlicaViewerRosInterface : public QThread
     void shutdown();
     void alicaEngineInfoUpdate(const alica::AlicaEngineInfo& msg);
     void alicaPlanInfoUpdate(const alica::PlanTreeInfo& msg);
+    void updateTicks();
 
   private:
     void alicaEngineInfoCallback(const alica_msgs::AlicaEngineInfo& msg);
     void alicaPlanInfoCallback(const alica_msgs::PlanTreeInfo& msg);
-
+    void timerCallback(const ros::TimerEvent& event);
     ros::Subscriber _alicaEngineInfoSub;
     ros::Subscriber _alicaPlanInfoSub;
+    ros::Timer _timer;
     supplementary::AgentIDManager* _agent_id_manager;
 };
 

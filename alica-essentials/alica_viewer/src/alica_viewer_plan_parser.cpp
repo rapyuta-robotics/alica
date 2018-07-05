@@ -1,16 +1,30 @@
 #include "alica_viewer/alica_plan_parser.h"
-
 #include <SystemConfig.h>
 #include <assert.h>
+#include <engine/AlicaClock.h>
 
 namespace alica
 {
+namespace
+{
+void sortPlanTrees(std::vector<std::unique_ptr<PlanTree>>& planTrees)
+{
+    std::sort(planTrees.begin(), planTrees.end(), [](const std::unique_ptr<PlanTree>& a, const std::unique_ptr<PlanTree>& b) {
+        if (a->getEntryPoint() == b->getEntryPoint()) {
+            return a->getState()->getId() < b->getState()->getId();
+        } else {
+            return a->getEntryPoint()->getId() < b->getEntryPoint()->getId();
+        }
+    });
+}
+}
 
-PlanTree::PlanTree()
+PlanTree::PlanTree(AlicaTime creationTime)
     : _parent(nullptr)
     , _state(nullptr)
     , _entryPoint(nullptr)
     , _numOfChildren(0)
+    , _time(creationTime)
     , _x(0)
     , _y(0)
 {
@@ -20,6 +34,7 @@ PlanTree::PlanTree(const PlanTree& other, const PlanTree& parent)
     : _state(other._state)
     , _entryPoint(other._entryPoint)
     , _robotIds(other._robotIds)
+    , _time(other._time)
     , _numOfChildren(0)
     , _x(other._x)
     , _y(other._y)
@@ -79,6 +94,7 @@ void PlanTree::addChildren(std::unique_ptr<PlanTree> child)
     PlanTreeVectorMap::iterator ptvEntry = _children.find(planId);
     if (ptvEntry != _children.end()) {
         ptvEntry->second.push_back(std::move(child));
+        sortPlanTrees(ptvEntry->second);
     } else {
         std::vector<std::unique_ptr<PlanTree>> childVector;
         childVector.push_back(std::move(child));
@@ -107,7 +123,6 @@ void PlanTree::mergePlanTree(const PlanTree& src)
     if (!src.isValid()) {
         return;
     }
-
     if (!_children.empty()) {
         int64_t planId = src.getEntryPoint()->getPlan()->getId();
         PlanTreeVectorMap::iterator ptvEntry = _children.find(planId);
@@ -121,6 +136,7 @@ void PlanTree::mergePlanTree(const PlanTree& src)
                         (*iter)->mergePlanTree(*child);
                     }
                 }
+                sortPlanTrees(ptvEntry->second);
                 return;
             }
         }
@@ -140,48 +156,41 @@ AlicaPlan::AlicaPlan(int argc, char* argv[])
     , _agentIDManager(new supplementary::AgentIDFactory())
 {
     if (argc < 2) {
-        std::cout << "Usage: Base -m [Masterplan] -rd [rolesetdir] -r [roleset]" << std::endl;
+        std::cout << "Usage: Base -m [Masterplan] -r [roleset]" << std::endl;
         exit(1);
     }
 
     std::string masterPlanName = "";
     std::string roleSetName = "";
-    std::string roleSetDir = "";
 
     for (int i = 1; i < argc; ++i) {
         if (std::string(argv[i]) == "-m" || std::string(argv[i]) == "-masterplan") {
             masterPlanName = argv[++i];
-        }
-        if (std::string(argv[i]) == "-rd" || std::string(argv[i]) == "-rolesetdir") {
-            roleSetDir = argv[++i];
         }
         if (std::string(argv[i]) == "-r" || std::string(argv[i]) == "-roleset") {
             roleSetName = argv[++i];
         }
     }
 
-    if (masterPlanName.size() == 0 || roleSetDir.size() == 0) {
-        std::cout << "Usage: Base -m [Masterplan] -rd [rolesetdir] -r [roleset]" << std::endl;
+    if (masterPlanName.size() == 0) {
+        std::cout << "Usage: Base -m [Masterplan] -r [roleset]" << std::endl;
         exit(1);
     }
     std::cout << "Masterplan is: " << masterPlanName << std::endl;
-    std::cout << "Rolset Directory is: " << roleSetDir << std::endl;
     std::cout << "Rolset is: " << roleSetName << std::endl;
 
     _planParser.parsePlanTree(masterPlanName);
 
-    ///@todo remove this once AgentID becomes independent of Globals.conf
-    std::shared_ptr<std::vector<std::string>> agentNames = (*supplementary::SystemConfig::getInstance())["Globals"]->getSections("Globals.Team", NULL);
-    for (const std::string& agentName : *agentNames) {
-        int id = (*supplementary::SystemConfig::getInstance())["Globals"]->tryGet<int>(-1, "Globals", "Team", agentName.c_str(), "ID", NULL);
-        _agentInfos.emplace(_agentIDManager.getID(id), AgentInfo(id, agentName));
-    }
+    _teamTimeOut = AlicaTime::milliseconds((*supplementary::SystemConfig::getInstance())["Alica"]->get<uint64_t>("Alica.TeamTimeOut", NULL));
 }
 
 void AlicaPlan::combinePlanTree(PlanTree& planTree) const
 {
+    AlicaTime oldestTime = _clock.now() - _teamTimeOut;
     for (const auto& ptMapPair : _planTrees) {
-        planTree.mergePlanTree(*ptMapPair.second);
+        if (ptMapPair.second->getCreationTime() > oldestTime) {
+            planTree.mergePlanTree(*ptMapPair.second);
+        }
     }
 }
 
@@ -194,6 +203,11 @@ void AlicaPlan::handlePlanTreeInfo(const PlanTreeInfo& incoming)
             ptEntry->second = std::move(pt);
         } else {
             _planTrees.emplace(incoming.senderID, std::move(pt));
+            if (_agentInfos.find(incoming.senderID) == _agentInfos.end()) {
+                std::stringstream s;
+                s << incoming.senderID;
+                _agentInfos.emplace(incoming.senderID, AgentInfo(incoming.senderID, s.str()));
+            }
         }
     }
 }
@@ -204,8 +218,8 @@ std::unique_ptr<PlanTree> AlicaPlan::planTreeFromMessage(AgentIDConstPtr robotId
         std::cerr << "Empty state list for robot " << robotId << std::endl;
         return std::unique_ptr<PlanTree>{};
     }
-
-    std::unique_ptr<PlanTree> root(new PlanTree());
+    AlicaTime now = _clock.now();
+    std::unique_ptr<PlanTree> root(new PlanTree(now));
     root->addRobot(robotId);
 
     IdGrp::const_iterator iter = ids.begin();
@@ -234,7 +248,7 @@ std::unique_ptr<PlanTree> AlicaPlan::planTreeFromMessage(AgentIDConstPtr robotId
                 return std::unique_ptr<PlanTree>{};
             }
         } else {
-            std::unique_ptr<PlanTree> node(new PlanTree());
+            std::unique_ptr<PlanTree> node(new PlanTree(now));
             node->addRobot(robotId);
             if (!node->setState(validStates.find(*iter))) {
                 std::cout << "Unable to add State (" << *iter << ") received from " << *robotId << std::endl;

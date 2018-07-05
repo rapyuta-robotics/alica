@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <arg name="master_plan" default="MainPlan" />
-    <arg name="roleset_dir" default="." />
-    <arg name="roleset"     default="Roleset" />
+    <arg name="master_plan" default="" />
+    <arg name="roleset"     default="" />
     
-    <node name="alica_viewer" pkg="alica_viewer" type="alica_viewer" args="-m $(arg master_plan) -rd $(arg roleset_dir) -r $(arg roleset)" output="screen"/>
+    <node name="alica_viewer" pkg="alica_viewer" type="alica_viewer" args="-m $(arg master_plan) -r $(arg roleset)" output="screen"/>
 </launch>

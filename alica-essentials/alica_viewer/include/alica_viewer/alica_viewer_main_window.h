@@ -30,6 +30,7 @@ class AlicaViewerMainWindow : public QMainWindow
   public Q_SLOTS:
     void alicaEngineInfoUpdate(const alica::AlicaEngineInfo& msg);
     void alicaPlanInfoUpdate(const alica::PlanTreeInfo& msg);
+    void updateTicks();
 
   private:
     elastic_nodes::Node* addStateToScene(const PlanTree* planTreeNode);
@@ -42,6 +43,7 @@ class AlicaViewerMainWindow : public QMainWindow
     AlicaPlan _alicaPlan;
     AgentGrp _agentIdVector;
     int _offset;
+    ros::Timer _timer;
 };
 
 } // namespace alica

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <engine/AgentIDConstPtr.h>
 #include <engine/PlanRepository.h>
 #include <engine/Types.h>
 #include <engine/containers/PlanTreeInfo.h>
@@ -8,7 +9,6 @@
 #include <engine/model/State.h>
 #include <engine/model/Task.h>
 #include <engine/parser/PlanParser.h>
-#include <supplementary/AgentID.h>
 #include <supplementary/AgentIDManager.h>
 #include <unordered_map>
 
@@ -18,8 +18,8 @@ namespace alica
 class PlanTree;
 class AgentInfo;
 
-using AgentInfoMap = std::unordered_map<AgentIDConstPtr, AgentInfo, alica::AgentIDHash>;
-using PlanTreeMap = std::unordered_map<AgentIDConstPtr, std::unique_ptr<PlanTree>, alica::AgentIDHash>;
+using AgentInfoMap = std::unordered_map<AgentIDConstPtr, AgentInfo, AgentIDHash>;
+using PlanTreeMap = std::unordered_map<AgentIDConstPtr, std::unique_ptr<PlanTree>, AgentIDHash>;
 using PlanTreeVectorMap = std::unordered_map<int64_t, std::vector<std::unique_ptr<PlanTree>>>;
 
 class AgentInfo
@@ -27,20 +27,19 @@ class AgentInfo
   public:
     AgentInfo() {}
 
-    AgentInfo(int tmp_id, const std::string& tmp_name)
-        : id(tmp_id)
+    AgentInfo(AgentIDConstPtr idarg, const std::string& tmp_name)
+        : id(idarg)
         , name(tmp_name)
     {
     }
-
-    int id;
+    AgentIDConstPtr id;
     std::string name;
 };
 
 class PlanTree
 {
   public:
-    PlanTree();
+    PlanTree(AlicaTime creationTime);
     PlanTree(const PlanTree& other, const PlanTree& parent);
     bool operator==(const PlanTree& other) const;
     void setParent(const PlanTree& parent);
@@ -60,6 +59,7 @@ class PlanTree
     const PlanTreeVectorMap& getChildren() const { return _children; }
     int getX() const { return _x; }
     int getY() const { return _y; }
+    AlicaTime getCreationTime() const { return _time; }
 
   private:
     const PlanTree* _parent;
@@ -67,6 +67,7 @@ class PlanTree
     const EntryPoint* _entryPoint;
     AgentGrp _robotIds;
     PlanTreeVectorMap _children;
+    AlicaTime _time;
     int _numOfChildren;
     int _x;
     int _y;
@@ -96,7 +97,9 @@ class AlicaPlan
     PlanTreeMap _planTrees;
     PlanTree* _combinedPlanTree;
     AgentInfoMap _agentInfos;
+    AlicaClock _clock;
     supplementary::AgentIDManager _agentIDManager;
+    AlicaTime _teamTimeOut;
 };
 
 } // namespace alica
