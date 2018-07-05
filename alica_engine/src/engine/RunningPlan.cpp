@@ -116,6 +116,9 @@ PlanChange RunningPlan::tick(RuleBook* rules)
     }
     _cycleManagement.update();
     PlanChange myChange = rules->visit(*this);
+    if (isRetired()) {
+        return myChange;
+    }
     PlanChange childChange = PlanChange::NoChange;
     // attention: do not use for each here: children are modified
     for (int i = 0; i < static_cast<int>(_children.size()); ++i) {

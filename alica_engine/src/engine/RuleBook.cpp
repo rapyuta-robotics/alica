@@ -105,6 +105,10 @@ PlanChange RuleBook::visit(RunningPlan& r)
         changeRecord = updateChange(changeRecord, planAbortRule(r));
         changeRecord = updateChange(changeRecord, planRedoRule(r));
         changeRecord = updateChange(changeRecord, planReplaceRule(r));
+        // planReplace may retire the current plan.
+        if (r.isRetired()) {
+            return changeRecord;
+        }
 
         PlanChange propChange = planPropagationRule(r);
         changeRecord = updateChange(changeRecord, propChange);
@@ -125,7 +129,7 @@ PlanChange RuleBook::visit(RunningPlan& r)
  */
 PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
 {
-
+    assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: dynAlloc-Rule called.");
     ALICA_DEBUG_MSG("RB: dynAlloc RP \n" << r);
 
@@ -182,7 +186,7 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
  */
 PlanChange RuleBook::authorityOverrideRule(RunningPlan& r)
 {
-
+    assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: AuthorityOverride-Rule called.");
 
     if (r.isBehaviour()) {
@@ -207,6 +211,7 @@ PlanChange RuleBook::authorityOverrideRule(RunningPlan& r)
  */
 PlanChange RuleBook::planAbortRule(RunningPlan& r)
 {
+    assert(!r.isRetired());
     if (r.isFailureHandlingNeeded())
         return PlanChange::NoChange;
     if (r.isBehaviour())
@@ -235,6 +240,7 @@ PlanChange RuleBook::planAbortRule(RunningPlan& r)
  */
 PlanChange RuleBook::planRedoRule(RunningPlan& r)
 {
+    assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: PlanRedoRule-Rule called.");
     ALICA_DEBUG_MSG("RB: PlanRedoRule RP \n" << r);
 
@@ -272,7 +278,7 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
  */
 PlanChange RuleBook::planReplaceRule(RunningPlan& r)
 {
-
+    assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: PlanReplace-Rule called.");
     ALICA_DEBUG_MSG("RB: PlanReplace RP \n" << r);
 
@@ -302,7 +308,7 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
  */
 PlanChange RuleBook::planPropagationRule(RunningPlan& r)
 {
-
+    assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: PlanPropagation-Rule called.");
     ALICA_DEBUG_MSG("RB: PlanPropagation RP \n" << r);
 
@@ -326,7 +332,7 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
  */
 PlanChange RuleBook::allocationRule(RunningPlan& rp)
 {
-
+    assert(!rp.isRetired());
     ALICA_DEBUG_MSG("RB: Allocation-Rule called.");
     ALICA_DEBUG_MSG("RB: Allocation RP \n" << rp);
 
@@ -366,7 +372,7 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp)
  */
 PlanChange RuleBook::topFailRule(RunningPlan& r)
 {
-
+    assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: TopFail-Rule called.");
     ALICA_DEBUG_MSG("RB: TopFail RP \n" << r);
 
@@ -403,7 +409,7 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
  */
 PlanChange RuleBook::transitionRule(RunningPlan& r)
 {
-
+    assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: Transition-Rule called.");
     ALICA_DEBUG_MSG("RB: Transition RP \n" << r);
 
@@ -445,7 +451,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
  */
 PlanChange RuleBook::synchTransitionRule(RunningPlan& r)
 {
-
+    assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: Sync-Rule called.");
     ALICA_DEBUG_MSG("RB: Sync RP \n" << r);
 
