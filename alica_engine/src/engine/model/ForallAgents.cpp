@@ -29,13 +29,13 @@ ForallAgents::Result ForallAgents::TryAddId(AgentIDConstPtr id, std::vector<Agen
     std::vector<AgentVariables>::iterator it =
             std::find_if(io_agentVarsInScope.begin(), io_agentVarsInScope.end(), [id](const AgentVariables& av) { return av.getId() == id; });
 
-    const RobotEngineData* robotEngineData = tm->getAgentByID(id)->getEngineData();
+    const RobotEngineData& robotEngineData = tm->getAgentByID(id)->getEngineData();
     if (it == io_agentVarsInScope.end()) {
         // add new agent
         AgentVariables newAgent(id);
         newAgent.editVars().reserve(getDomainIdentifiers().size());
         std::transform(getDomainIdentifiers().begin(), getDomainIdentifiers().end(), std::back_inserter(newAgent.editVars()),
-                [robotEngineData](const std::string& s) -> const DomainVariable* { return robotEngineData->getDomainVariable(s); });
+                [&robotEngineData](const std::string& s) -> const DomainVariable* { return robotEngineData.getDomainVariable(s); });
         io_agentVarsInScope.push_back(std::move(newAgent));
         return ADDED;
     } else {
@@ -45,7 +45,7 @@ ForallAgents::Result ForallAgents::TryAddId(AgentIDConstPtr id, std::vector<Agen
         for (const std::string& s : getDomainIdentifiers()) {
             if (std::find_if(oldAgent.getVars().begin(), oldAgent.getVars().end(), [&s](const DomainVariable* v) { return v->getName() == s; }) ==
                     oldAgent.getVars().end()) {
-                oldAgent.editVars().push_back(robotEngineData->getDomainVariable(s));
+                oldAgent.editVars().push_back(robotEngineData.getDomainVariable(s));
                 r = MODIFIED;
             }
         }

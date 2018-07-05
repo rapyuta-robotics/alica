@@ -7,8 +7,6 @@
 #include "engine/PlanRepository.h"
 #include "engine/RunningPlan.h"
 #include "engine/SimplePlanTree.h"
-#include "engine/collections/RobotEngineData.h"
-#include "engine/collections/RobotProperties.h"
 #include "engine/collections/SuccessCollection.h"
 #include "engine/collections/SuccessMarks.h"
 #include "engine/containers/PlanTreeInfo.h"
@@ -35,9 +33,8 @@ using std::pair;
 TeamObserver::TeamObserver(AlicaEngine* ae)
         : _ae(ae)
         , _tm(ae->getTeamManager())
-        , _myId(ae->getTeamManager()->getLocalAgentID())
 {
-    this->me = _tm->getAgentByID(_myId)->getEngineData();
+    _me = _tm->editLocalAgent();
 }
 
 TeamObserver::~TeamObserver() {}
@@ -51,7 +48,7 @@ bool TeamObserver::updateTeamPlanTrees()
             std::unique_ptr<SimplePlanTree> spt = sptFromMessage(msg.first->senderID, msg.first->stateIDs, msg.second);
             if (spt != nullptr) {
                 _tm->setTimeLastMsgReceived(msg.first->senderID, msg.second);
-                _tm->setSuccessMarks(msg.first->senderID, std::make_shared<SuccessMarks>(_ae, msg.first->succeededEPs));
+                _tm->setSuccessMarks(msg.first->senderID, msg.first->succeededEPs);
 
                 auto sptEntry = _simplePlanTrees.find(spt->getAgentId());
                 if (sptEntry != _simplePlanTrees.end()) {
@@ -64,12 +61,11 @@ bool TeamObserver::updateTeamPlanTrees()
         _msgQueue.clear();
     }
 
-    std::unique_ptr<std::list<Agent*>> agents = _tm->getAllAgents();
     bool changedSomeAgent = false;
-    for (auto agent : *agents) {
-        bool changedCurrentAgent = agent->update();
-        if (changedCurrentAgent && !agent->isActive()) {
-            _simplePlanTrees.erase(agent->getID());
+    for (const auto& agent : _tm->getAllAgents()) {
+        bool changedCurrentAgent = agent.second->update();
+        if (changedCurrentAgent && !agent.second->isActive()) {
+            _simplePlanTrees.erase(agent.second->getId());
         }
         changedSomeAgent |= changedCurrentAgent;
     }
@@ -91,7 +87,7 @@ void TeamObserver::tick(RunningPlan* root)
     if (root != nullptr) {
         // TODO get rid of this once teamManager gets a datastructure overhaul
         AgentGrp activeAgents;
-        _tm->fillWithActiveAgentIDs(activeAgents);
+        std::copy(_tm->getActiveAgentIds().begin(), _tm->getActiveAgentIds().end(), std::back_inserter(activeAgents));
 
         std::vector<const SimplePlanTree*> updatespts;
         AgentGrp noUpdates;
@@ -131,11 +127,10 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
         return;
     }
     PlanTreeInfo pti = PlanTreeInfo();
-    pti.senderID = _myId;
+    pti.senderID = _me->getId();
     pti.stateIDs = msg;
-    pti.succeededEPs = this->me->getSuccessMarks()->toIdGrp();
+    pti.succeededEPs = _me->getEngineData().getSuccessMarks().toIdGrp();
     _ae->getCommunicator()->sendPlanTreeInfo(pti);
-
     ALICA_DEBUG_MSG("TO: Sending Plan Message: " << msg);
 }
 
@@ -175,7 +170,7 @@ void TeamObserver::cleanOwnSuccessMarks(RunningPlan* root)
             queue.push_back(c.get());
         }
     }
-    this->me->getSuccessMarks()->limitToPlans(presentPlans);
+    _me->editEngineData().editSuccessMarks().limitToPlans(presentPlans);
 }
 
 /**
@@ -187,8 +182,7 @@ int TeamObserver::successesInPlan(const Plan* plan)
 {
     int ret = 0;
     const EntryPointGrp* suc = nullptr;
-    auto tmp = _tm->getActiveAgents();
-    for (auto& agent : *tmp) {
+    for (const Agent* agent : _tm->getActiveAgents()) {
         {
             lock_guard<mutex> lock(this->successMarkMutex);
             suc = agent->getSucceededEntryPoints(plan);
@@ -197,7 +191,7 @@ int TeamObserver::successesInPlan(const Plan* plan)
             ret += suc->size();
         }
     }
-    suc = me->getSuccessMarks()->succeededEntryPoints(plan);
+    suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(plan);
     if (suc != nullptr) {
         ret += suc->size();
     }
@@ -208,10 +202,9 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
 {
     SuccessCollection ret(plan);
 
-    auto tmp = _tm->getActiveAgents();
-    for (const Agent* agent : *tmp) {
+    for (const Agent* agent : _tm->getActiveAgents()) {
         const EntryPointGrp* suc = nullptr;
-        if (_myId == agent->getID()) {
+        if (_me == agent) {
             continue;
         }
         {
@@ -220,14 +213,14 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
         }
         if (suc != nullptr) {
             for (const EntryPoint* ep : *suc) {
-                ret.setSuccess(agent->getID(), ep);
+                ret.setSuccess(agent->getId(), ep);
             }
         }
     }
-    const EntryPointGrp* suc = me->getSuccessMarks()->succeededEntryPoints(plan);
+    const EntryPointGrp* suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(plan);
     if (suc != nullptr) {
         for (const EntryPoint* ep : *suc) {
-            ret.setSuccess(_myId, ep);
+            ret.setSuccess(_me->getId(), ep);
         }
     }
     return ret;
@@ -237,10 +230,9 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
 {
     sc.clear();
     const EntryPointGrp* suc = nullptr;
-    auto tmp = _tm->getActiveAgents();
 
-    for (const Agent* agent : *tmp) {
-        if (agent->getID() == _myId) {
+    for (const Agent* agent : _tm->getActiveAgents()) {
+        if (agent == _me) {
             continue;
         }
         {
@@ -249,14 +241,14 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
         }
         if (suc != nullptr) {
             for (const EntryPoint* ep : *suc) {
-                sc.setSuccess(agent->getID(), ep);
+                sc.setSuccess(agent->getId(), ep);
             }
         }
     }
-    suc = me->getSuccessMarks()->succeededEntryPoints(p);
+    suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(p);
     if (suc != nullptr) {
         for (const EntryPoint* ep : *suc) {
-            sc.setSuccess(_myId, ep);
+            sc.setSuccess(_me->getId(), ep);
         }
     }
 }
@@ -273,12 +265,12 @@ void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan)
             return;
         }
     }
-    this->me->getSuccessMarks()->removePlan(plan);
+    _me->editEngineData().editSuccessMarks().removePlan(plan);
 }
 
 void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
 {
-    if (incoming->senderID != _myId) {
+    if (incoming->senderID != _me->getId()) {
         if (_tm->isAgentIgnored(incoming->senderID)) {
             return;
         }
@@ -291,7 +283,7 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
  * Constructs a SimplePlanTree from a received message
  * @param robotId The id of the other robot.
  * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
- * @return shared_ptr of a SimplePlanTree
+ * @return a SimplePlanTree
  */
 std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentIDConstPtr agentId, const IdGrp& ids, AlicaTime time) const
 {

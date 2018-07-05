@@ -84,10 +84,9 @@ PlanBase::PlanBase(AlicaEngine* ae, const Plan* masterPlan)
         _statusMessage->masterPlan = masterPlan->getName();
     }
 
-    //#ifdef PB_DEBUG
-    std::cout << "PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds() << "ms - "
-              << _maxSendInterval.inMilliseconds() << "ms" << std::endl;
-    //#endif
+    ALICA_INFO_MSG("PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds() << "ms - "
+                                              << _maxSendInterval.inMilliseconds() << "ms");
+
     if (halfLoopTime < _minSendInterval) {
         _minSendInterval -= halfLoopTime;
         _maxSendInterval -= halfLoopTime;
@@ -115,15 +114,14 @@ void PlanBase::run()
         _log->itertionStarts();
 
         if (_ae->getStepEngine()) {
-#ifdef PB_DEBUG
-            std::cout << "PB: ===CUR TREE===" << std::endl;
-
+#ifdef ALICA_DEBUG_ENABLED
+            ALICA_DEBUG_MSG("PB: ===CUR TREE===");
             if (_rootNode == nullptr) {
-                std::cout << "PB: NULL" << std::endl;
+                ALICA_DEBUG_MSG("PB: NULL");
             } else {
                 _rootNode->printRecursive();
             }
-            std::cout << "PB: ===END CUR TREE===" << std::endl;
+            ALICA_DEBUG_MSG("PB: ===END CUR TREE===");
 #endif
             {
                 std::unique_lock<std::mutex> lckStep(_stepMutex);
@@ -140,7 +138,7 @@ void PlanBase::run()
         }
 
         // Send tick to other modules
-        //_ae->getCommunicator()->tick(); // not implemented as ros does work asynchronous
+        //_ae->getCommunicator()->tick(); // not implemented as ros works asynchronous
         _teamObserver->tick(_rootNode);
         _ra->tick();
         _syncModel->tick();
@@ -152,14 +150,34 @@ void PlanBase::run()
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
             ALICA_INFO_MSG("PB: MasterPlan Failed");
         }
-        // remove deletable plans:
-        // this should be done just before clearing fpEvents, to make sure no spurious pointers remain
+            // remove deletable plans:
+            // this should be done just before clearing fpEvents, to make sure no spurious pointers remain
+#ifdef ALICA_DEBUG_ENABLED
+        int retiredCount = 0;
+        int inActiveCount = 0;
+        int deleteCount = 0;
+        int totalCount = static_cast<int>(_runningPlans.size());
+#endif
         for (int i = static_cast<int>(_runningPlans.size()) - 1; i >= 0; --i) {
+#ifdef ALICA_DEBUG_ENABLED
+            if (_runningPlans[i]->isRetired()) {
+                ++retiredCount;
+            } else if (!_runningPlans[i]->isActive()) {
+                ++inActiveCount;
+            }
+#endif
             if (_runningPlans[i]->isDeleteable()) {
                 assert(_runningPlans[i].use_count() == 1);
                 _runningPlans.erase(_runningPlans.begin() + i);
+#ifdef ALICA_DEBUG_ENABLED
+                ++deleteCount;
+#endif
             }
         }
+#ifdef ALICA_DEBUG_ENABLED
+        ALICA_DEBUG_MSG("PlanBase: " << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " << inActiveCount
+                                     << " inactive deleted: " << deleteCount);
+#endif
         // lock for fpEvents
         {
             std::lock_guard<std::mutex> lock(_lomutex);
@@ -169,8 +187,7 @@ void PlanBase::run()
         AlicaTime now = _alicaClock->now();
 
         if (now < _lastSendTime) {
-            // Taker fix
-            std::cout << "PB: lastSendTime is in the future of the current system time, did the system time change?" << std::endl;
+            ALICA_WARNING_MSG("PB: lastSendTime is in the future of the current system time, did the system time change?");
             _lastSendTime = now;
         }
 
@@ -250,9 +267,8 @@ void PlanBase::run()
         now = _alicaClock->now();
         availTime = _loopTime - (now - beginTime);
 
-#ifdef PB_DEBUG
-        std::cout << "PB: availTime " << availTime << std::endl;
-#endif
+        ALICA_DEBUG_MSG("PB: availTime " << availTime);
+
         if (availTime > AlicaTime::microseconds(100) && !_ae->getStepEngine()) {
             _alicaClock->sleep(availTime);
         }
