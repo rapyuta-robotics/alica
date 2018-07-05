@@ -7,6 +7,7 @@
 #include <engine/model/State.h>
 
 #include <assert.h>
+#include <numeric>
 #include <sstream>
 #include <vector>
 
@@ -327,6 +328,7 @@ class AgentsInStateView
 public:
     AgentsInStateView()
             : _assignment(nullptr)
+            , _state(nullptr)
     {
     }
     AgentsInStateView(const Assignment* a, const State* s)

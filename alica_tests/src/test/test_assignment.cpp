@@ -90,7 +90,7 @@ TEST(Assignment, RobotsInserted)
     int i = 0;
 
     for (alica::AgentIDConstPtr id : as1.getAgentsInState(s1)) {
-        EXPECT_TRUE(id);
+        EXPECT_TRUE(bool(id));
         ++i;
     }
     ASSERT_EQ(i, 2);

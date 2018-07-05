@@ -11,7 +11,7 @@ SafeAssignmentView ThreadSafePlanInterface::agentsInEntryPointOfHigherPlan(const
 {
     assert(ep);
     if (ep == nullptr) {
-        SafeAssignmentView();
+        return SafeAssignmentView();
     }
     ReadLockedPlanPointer cur(_rp);
     cur.moveUp();

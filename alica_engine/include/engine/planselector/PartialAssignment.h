@@ -3,7 +3,8 @@
 #include <engine/UtilityFunction.h>
 #include <engine/UtilityInterval.h>
 #include <engine/model/Plan.h>
-#include <engine/planselector/DynCardinality.h>
+
+#include <alica_solver_interface/Interval.h>
 #include <supplementary/AgentID.h>
 
 #include <vector>
@@ -14,6 +15,8 @@ class PartialAssignmentPool;
 class TaskAssignmentProblem;
 class Assignment;
 class SimplePlanTree;
+
+using DynCardinality = Interval<int>;
 
 class PartialAssignment final
 {

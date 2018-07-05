@@ -301,7 +301,7 @@ void RunningPlan::clearFailedChildren()
 void RunningPlan::addFailure()
 {
     ++_status.failCount;
-    _status.failHandlingNeeded = true;
+    setFailureHandlingNeeded(true);
 }
 
 /**
@@ -372,6 +372,18 @@ void RunningPlan::setFailedChild(const AbstractPlan* child)
     } else {
         _failedSubPlans.insert(std::pair<const AbstractPlan*, int>(child, 1));
     }
+}
+
+void RunningPlan::setFailureHandlingNeeded(bool failHandlingNeeded)
+{
+    if (failHandlingNeeded) {
+        _status.status = PlanStatus::Failed;
+    } else {
+        if (_status.status == PlanStatus::Failed) {
+            _status.status = PlanStatus::Running;
+        }
+    }
+    _status.failHandlingNeeded = failHandlingNeeded;
 }
 
 /**
