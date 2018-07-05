@@ -37,10 +37,10 @@ public:
         case Reason::utility:
             return "Utility";
         case Reason::empty:
-            return "empty";
+            return "Empty";
         default:
             assert(false);
-            return "unknown";
+            return "Unknown";
         }
     }
     AllocationDifference::Reason getReason() const { return _reason; }
