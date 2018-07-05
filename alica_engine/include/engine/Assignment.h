@@ -236,21 +236,28 @@ public:
             , _epIdx(epIdx)
             , _agentIdx(agentIdx)
     {
+        toNextValid();
     }
+
     AgentIDConstPtr operator*() const { return _assignment->getAgentStates(_epIdx).getRaw()[_agentIdx].first; }
     AllAgentsIterator& operator++()
     {
         ++_agentIdx;
-        if (_agentIdx >= _assignment->getAgentStates(_epIdx).size()) {
-            _agentIdx = 0;
-            ++_epIdx;
-        }
+        toNextValid();
         return *this;
     }
+
     bool operator==(const AllAgentsIterator& o) const { return _agentIdx == o._agentIdx && _epIdx == o._epIdx; }
     bool operator!=(const AllAgentsIterator& o) const { return !(*this == o); }
 
 private:
+    void toNextValid()
+    {
+        while (_epIdx < _assignment->getEntryPointCount() && _agentIdx >= _assignment->getAgentStates(_epIdx).size()) {
+            _agentIdx = 0;
+            ++_epIdx;
+        }
+    }
     const Assignment* _assignment;
     int _epIdx;
     int _agentIdx;
