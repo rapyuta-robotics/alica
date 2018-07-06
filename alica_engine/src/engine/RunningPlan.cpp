@@ -111,8 +111,14 @@ bool RunningPlan::isDeleteable() const
  */
 PlanChange RunningPlan::tick(RuleBook* rules)
 {
+    if (isRetired()) {
+        return PlanChange::NoChange;
+    }
     _cycleManagement.update();
     PlanChange myChange = rules->visit(*this);
+    if (isRetired()) {
+        return myChange;
+    }
     PlanChange childChange = PlanChange::NoChange;
     // attention: do not use for each here: children are modified
     for (int i = 0; i < static_cast<int>(_children.size()); ++i) {
@@ -196,6 +202,7 @@ void RunningPlan::removeChild(RunningPlan* rp)
 {
     auto it = std::find(_children.begin(), _children.end(), rp);
     if (it != _children.end()) {
+        (*it)->_parent = nullptr;
         _children.erase(it);
     }
 }
@@ -324,6 +331,9 @@ void RunningPlan::deactivateChildren()
  */
 void RunningPlan::clearChildren()
 {
+    for (RunningPlan* r : _children) {
+        r->_parent = nullptr;
+    }
     _children.clear();
 }
 
@@ -395,7 +405,10 @@ void RunningPlan::accept(IPlanTreeVisitor* vis)
     vis->visit(*this);
 
     for (RunningPlan* child : _children) {
-        child->accept(vis);
+        assert(!child->isRetired());
+        if (!child->isRetired()) {
+            child->accept(vis);
+        }
     }
 }
 
@@ -423,6 +436,7 @@ void RunningPlan::deactivate()
 bool RunningPlan::isAnyChildStatus(PlanStatus ps) const
 {
     for (const RunningPlan* child : _children) {
+        assert(!child->isRetired());
         if (ps == child->getStatus()) {
             return true;
         }
@@ -438,6 +452,7 @@ bool RunningPlan::isAnyChildStatus(PlanStatus ps) const
 bool RunningPlan::areAllChildrenStatus(PlanStatus ps) const
 {
     for (const RunningPlan* child : _children) {
+        assert(!child->isRetired());
         if (ps != child->getStatus()) {
             return false;
         }
@@ -669,7 +684,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
 
 void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const
 {
-    if (isBehaviour()) {
+    if (isBehaviour() || isRetired()) {
         return;
     }
     if (_activeTriple.state != nullptr) {
