@@ -541,7 +541,8 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     if (isBehaviour()) {
         return false;
     }
-    const bool keepTask = ((_status.planStartTime + assignmentProtectionTime) > now);
+    const bool keepTask = _status.planStartTime + assignmentProtectionTime > now;
+    const bool keepState = _status.stateStartTime + assignmentProtectionTime > now;
     const bool auth = _cycleManagement.haveAuthority();
 
     // if keepTask, the task Assignment should not be changed!
@@ -549,8 +550,12 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     AllocationDifference& aldif = _cycleManagement.editNextDifference();
     for (const SimplePlanTree* spt : spts) {
         AgentIDConstPtr id = spt->getAgentId();
+        const bool freezeAgent = keepState && _assignment.getStateOfAgent(id) == getActiveState();
+        if (freezeAgent) {
+            continue;
+        }
         if (spt->getState()->getInPlan() != _activeTriple.plan) { // the robot is no longer participating in this plan
-            if (!keepTask & !auth) {
+            if (!keepTask && !auth) {
                 const EntryPoint* ep = _assignment.getEntryPointOfAgent(id);
                 if (ep != nullptr) {
                     _assignment.removeAgentFrom(id, ep);
@@ -597,6 +602,10 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
                 if (rob == ownId) {
                     continue;
                 }
+                const bool freezeAgent = keepState && _assignment.getStateOfAgent(rob) == getActiveState();
+                if (freezeAgent) {
+                    continue;
+                }
                 bool found = false;
                 if (std::find(noUpdates.begin(), noUpdates.end(), rob) != noUpdates.end()) {
                     // found = true;
@@ -625,6 +634,10 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
             rem.clear();
             AssignmentView robs = _assignment.getAgentsWorking(i);
             for (AgentIDConstPtr rob : robs) {
+                const bool freezeAgent = keepState && _assignment.getStateOfAgent(rob) == getActiveState();
+                if (freezeAgent) {
+                    continue;
+                }
                 if (std::find(availableAgents.begin(), availableAgents.end(), rob) == availableAgents.end()) {
                     rem.push_back(rob);
                     aldif.editSubtractions().emplace_back(ep, rob);
@@ -642,7 +655,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
-    if (_status.stateStartTime + assignmentProtectionTime > now) {
+    if (!auth) {
         AgentsInStateView agentsJoined = _assignment.getAgentsInState(getActiveState());
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
             if (std::find(agentsJoined.begin(), agentsJoined.end(), *iter) == agentsJoined.end()) {
@@ -651,7 +664,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
                 ++iter;
             }
         }
-    } else if (auth) { // in case of authority, remove all that are not assigned to same task
+    } else { // in case of authority, remove all that are not assigned to same task
         AssignmentView agentsJoined = _assignment.getAgentsWorking(getActiveEntryPoint());
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
             if (std::find(agentsJoined.begin(), agentsJoined.end(), *iter) == agentsJoined.end()) {

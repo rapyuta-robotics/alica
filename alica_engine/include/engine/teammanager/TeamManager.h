@@ -127,8 +127,8 @@ public:
             : _map(map)
     {
     }
-    int size() const { return static_cast<int>(_map.size()); }
-    bool empty() const { return _map.empty(); }
+    // int size() const { return static_cast<int>(_map.size()); }
+    // bool empty() const { return _map.empty(); }
 
 protected:
     const TeamManager::AgentMap& _map;
