@@ -550,7 +550,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     for (const SimplePlanTree* spt : spts) {
         AgentIDConstPtr id = spt->getAgentId();
         if (spt->getState()->getInPlan() != _activeTriple.plan) { // the robot is no longer participating in this plan
-            if (!keepTask & !auth) {
+            if (!keepTask && !auth) {
                 const EntryPoint* ep = _assignment.getEntryPointOfAgent(id);
                 if (ep != nullptr) {
                     _assignment.removeAgentFrom(id, ep);
