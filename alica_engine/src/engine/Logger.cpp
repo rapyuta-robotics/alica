@@ -114,7 +114,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
     ActiveAgentIdView agents = tm->getActiveAgentIds();
 
     _sBuild << "TeamSize:\t";
-    _sBuild << agents.size();
+    _sBuild << tm->getTeamSize();
 
     _sBuild << " TeamMember:";
     for (AgentIDConstPtr id : agents) {
