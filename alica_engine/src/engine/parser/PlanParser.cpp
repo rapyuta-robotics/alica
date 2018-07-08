@@ -404,10 +404,10 @@ int64_t PlanParser::parserId(tinyxml2::XMLElement* node)
 
 /**
  * Helper
- * @param idString is a String that have to be converted in a long
+ * @param idString is a String that have to be converted in a int64_t
  * @param id the id
  */
-long PlanParser::fetchId(const string& idString, long id)
+int64_t PlanParser::fetchId(const string& idString, int64_t id)
 {
     int hashPos = idString.find_first_of("#");
     char* temp = nullptr;
@@ -470,9 +470,9 @@ long PlanParser::fetchId(const string& idString, long id)
     }
     std::string tokenId = idString.substr(hashPos + 1, idString.length() - hashPos);
     try {
-        id = stol(tokenId);
+        id = stoll(tokenId);
     } catch (std::exception& e) {
-        AlicaEngine::abort("PP: Cannot convert ID to long: " + tokenId + "\nException: " + e.what());
+        AlicaEngine::abort("PP: Cannot convert ID to int64_t: " + tokenId + "\nException: " + e.what());
     }
     return id;
 }
