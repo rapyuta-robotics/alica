@@ -365,9 +365,9 @@ int64_t PlanParser::parserId(tinyxml2::XMLElement* node)
         idString = idChar;
     if (idString.compare("") != 0) {
         try {
-            id = stol(idString);
+            id = stoll(idString);
         } catch (std::exception& e) {
-            AlicaEngine::abort("PP: Cannot convert ID to long: " + idString + "\nException: " + e.what());
+            AlicaEngine::abort("PP: Cannot convert ID to int64_t: " + idString + "\nException: " + e.what());
         }
         return id;
     } else {
