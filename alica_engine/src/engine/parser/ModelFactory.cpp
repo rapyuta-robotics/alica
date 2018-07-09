@@ -44,7 +44,6 @@ using std::map;
 using std::pair;
 using std::stod;
 using std::stoi;
-using std::stol;
 using std::stoll;
 using std::string;
 using std::stringstream;
@@ -260,7 +259,7 @@ RoleSet* ModelFactory::createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPl
     int64_t pid = 0;
 
     if (pidPtr) {
-        pid = stol(pidPtr);
+        pid = stoll(pidPtr);
     }
 
     bool isUseable = false;
@@ -310,7 +309,7 @@ RoleTaskMapping* ModelFactory::createRoleTaskMapping(tinyxml2::XMLElement* eleme
             const char* keyPtr = curChild->Attribute("key");
             const char* valuePtr = curChild->Attribute("value");
             if (keyPtr && valuePtr) {
-                rtm->_taskPriorities.insert(pair<int64_t, double>(stol(keyPtr), stod(valuePtr)));
+                rtm->_taskPriorities.insert(pair<int64_t, double>(stoll(keyPtr), stod(valuePtr)));
             }
         } else if (role.compare(val) == 0) {
             int64_t cid = this->parser->parserId(curChild);
@@ -590,7 +589,7 @@ void ModelFactory::createTasks(tinyxml2::XMLDocument* node)
     int64_t id = 0;
     const char* defaultTaskPtr = element->Attribute("defaultTask");
     if (defaultTaskPtr) {
-        id = stol(defaultTaskPtr);
+        id = stoll(defaultTaskPtr);
         tr->setDefaultTask(id);
     }
 
@@ -910,7 +909,7 @@ Quantifier* ModelFactory::createQuantifier(tinyxml2::XMLElement* element)
     const char* scopePtr = element->Attribute("scope");
     int64_t cid;
     if (scopePtr) {
-        cid = stol(scopePtr);
+        cid = stoll(scopePtr);
         this->quantifierScopeReferences.push_back(pair<int64_t, int64_t>(q->getId(), cid));
     }
     tinyxml2::XMLElement* curChild = element->FirstChildElement();
