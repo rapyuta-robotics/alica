@@ -145,10 +145,10 @@ void AlicaRosCommunication::sendPlanTreeInfo(const PlanTreeInfo& pti) const
     alica_msgs::PlanTreeInfo ptis;
     ptis.senderID.id = pti.senderID->toByteVector();
 
-    for (long i : pti.stateIDs) {
+    for (int64_t i : pti.stateIDs) {
         ptis.stateIDs.push_back(i);
     }
-    for (long i : pti.succeededEPs) {
+    for (int64_t i : pti.succeededEPs) {
         ptis.succeededEps.push_back(i);
     }
     if (this->isRunning) {
@@ -247,10 +247,10 @@ void AlicaRosCommunication::handlePlanTreeInfoRos(alica_msgs::PlanTreeInfoPtr pt
 {
     auto ptiPtr = make_shared<PlanTreeInfo>();
     ptiPtr->senderID = this->ae->getIdFromBytes(pti->senderID.id);
-    for (long i : pti->stateIDs) {
+    for (int64_t i : pti->stateIDs) {
         ptiPtr->stateIDs.push_back(i);
     }
-    for (long i : pti->succeededEps) {
+    for (int64_t i : pti->succeededEps) {
         ptiPtr->succeededEPs.push_back(i);
     }
 
