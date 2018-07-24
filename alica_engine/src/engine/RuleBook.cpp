@@ -221,7 +221,7 @@ PlanChange RuleBook::planAbortRule(RunningPlan& r)
     if (!r.getCycleManagement().mayDoUtilityCheck())
         return PlanChange::NoChange;
 
-    if ((r.getActiveState() != nullptr && r.getActiveState()->isFailureState()) || !r.getAssignment().isValid() || !r.evalRuntimeCondition()) {
+    if ((r.getActiveState() != nullptr && r.getActiveState()->isFailureState()) || !r.getAssignment().isValid() || !r.isRuntimeConditionValid()) {
 
         ALICA_DEBUG_MSG("RB: PlanAbort-Rule called.");
         ALICA_DEBUG_MSG("RB: PlanAbort RP \n" << r);

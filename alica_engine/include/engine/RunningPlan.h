@@ -66,6 +66,12 @@ class RunningPlan : public std::enable_shared_from_this<RunningPlan>
 public:
     using ScopedReadLock = std::unique_lock<std::mutex>;
     using ScopedWriteLock = std::unique_lock<std::mutex>;
+    enum class EvalStatus
+    {
+        True,
+        False,
+        Unknown
+    };
     struct PlanStatusInfo
     {
         PlanStatusInfo()
@@ -76,7 +82,7 @@ public:
                 , active(PlanActivity::InActive)
                 , allocationNeeded(false)
                 , failHandlingNeeded(false)
-                , runTimeConditionStatus(true)
+                , runTimeConditionStatus(EvalStatus::Unknown)
         {
         }
         PlanStatus status;
@@ -87,7 +93,7 @@ public:
         int failCount;
         bool failHandlingNeeded;
         bool allocationNeeded;
-        bool runTimeConditionStatus
+        mutable EvalStatus runTimeConditionStatus;
     };
     explicit RunningPlan(AlicaEngine* ae);
     RunningPlan(AlicaEngine* ae, const Plan* plan);
@@ -155,7 +161,18 @@ public:
     std::shared_ptr<RunningPlan> getSharedPointer() { return shared_from_this(); }
 
     bool evalPreCondition() const;
-    bool isRuntimeConditionOk() const { return runTimeConditionStatus; }
+    bool isRuntimeConditionValid() const
+    {
+        switch (_status.runTimeConditionStatus) {
+        case EvalStatus::True:
+            return true;
+        case EvalStatus::False:
+            return false;
+        case EvalStatus::Unknown:
+        default:
+            return evalRuntimeCondition();
+        }
+    }
 
     void addChildren(const std::vector<RunningPlan*>& runningPlans);
     void removeChild(RunningPlan* rp);

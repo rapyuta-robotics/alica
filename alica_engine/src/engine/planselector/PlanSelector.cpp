@@ -119,7 +119,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         rp = _pb->makeRunningPlan(relevantPlanType);
         ta.preassignOtherAgents();
     } else {
-        if (!oldRp->getAssignment().isValid() || !oldRp->evalRuntimeCondition()) {
+        if (!oldRp->getAssignment().isValid() || !oldRp->isRuntimeConditionValid()) {
             o_oldUtility = -1.0;
         } else {
             assert(!oldRp->isBehaviour());
@@ -159,7 +159,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         if (!rp->evalPreCondition()) {
             continue;
         }
-        if (!rp->evalRuntimeCondition()) {
+        if (!rp->isRuntimeConditionValid()) {
             continue;
         }
 
