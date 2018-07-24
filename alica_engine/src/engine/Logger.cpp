@@ -28,31 +28,30 @@ Logger::Logger(AlicaEngine* ae)
         , itCount(0)
         , to(nullptr)
         , tm(nullptr)
-        , fileWriter(nullptr)
         , inIteration(false)
         , receivedEvent(false)
+        , _fileWriter()
 {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     _active = (*sc)["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
     if (_active) {
         std::string robotName = ae->getRobotName();
-        std::string logPath = sc->getLogPath();
+        std::string logPath = (*sc)["Alica"]->get<std::string>("Alica.EventLogging.LogFolder", NULL);
         if (!supplementary::FileSystem::isDirectory(logPath)) {
-            if (!supplementary::FileSystem::createDirectory(logPath, 777)) {
+            if (!supplementary::FileSystem::createDirectory(logPath, 0777)) {
                 AlicaEngine::abort("Cannot create log folder: ", logPath);
             }
         }
-        std::string logFile = supplementary::logging::getLogFilename("alica-run--" + robotName);
-        this->fileWriter = new std::ofstream(logFile.c_str());
+        std::stringstream sb;
+        auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        sb << logPath << "/" << std::put_time(localtime(&time), "%Y-%Om-%Od_%OH-%OM-%OS") << "_alica-run--" << robotName << ".txt";
+        _fileWriter.open(sb.str().c_str());
         this->to = ae->getTeamObserver();
         this->tm = ae->getTeamManager();
     }
 }
 
-Logger::~Logger()
-{
-    delete this->fileWriter;
-}
+Logger::~Logger() {}
 
 /**
  * Notify the logger that an event occurred which changed the plan tree.
@@ -148,8 +147,8 @@ void Logger::iterationEnds(const RunningPlan* rp)
         _sBuild << "NO OtherPlanTrees" << endl;
     }
     _sBuild << "END" << endl;
-    (*this->fileWriter) << _sBuild.str();
-    this->fileWriter->flush();
+    _fileWriter << _sBuild.str();
+    _fileWriter.flush();
     _sBuild.str(""); // this clears the string stream
     this->time = AlicaTime::zero();
     this->itCount = 0;
@@ -163,7 +162,7 @@ void Logger::close()
 {
     if (_active) {
         _active = false;
-        this->fileWriter->close();
+        _fileWriter.close();
     }
 }
 
