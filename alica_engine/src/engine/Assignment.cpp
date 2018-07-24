@@ -137,7 +137,7 @@ bool Assignment::isAnyTaskSuccessful() const
     const EntryPointGrp& eps = _plan->getEntryPoints();
     const int numEps = eps.size();
     for (int i = 0; i < numEps; ++i) {
-        if (_successData.getRaw()[i].empty() && static_cast<int>(_successData.getRaw()[i].size()) >= eps[i]->getMinCardinality()) {
+        if (!_successData.getRaw()[i].empty() && static_cast<int>(_successData.getRaw()[i].size()) >= eps[i]->getMinCardinality()) {
             return true;
         }
     }

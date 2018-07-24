@@ -131,7 +131,6 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
     pti.stateIDs = msg;
     pti.succeededEPs = _me->getEngineData().getSuccessMarks().toIdGrp();
     _ae->getCommunicator()->sendPlanTreeInfo(pti);
-
     ALICA_DEBUG_MSG("TO: Sending Plan Message: " << msg);
 }
 
@@ -284,7 +283,7 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
  * Constructs a SimplePlanTree from a received message
  * @param robotId The id of the other robot.
  * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
- * @return shared_ptr of a SimplePlanTree
+ * @return a SimplePlanTree
  */
 std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentIDConstPtr agentId, const IdGrp& ids, AlicaTime time) const
 {

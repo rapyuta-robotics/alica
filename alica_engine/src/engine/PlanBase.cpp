@@ -191,7 +191,7 @@ void PlanBase::run()
             ALICA_WARNING_MSG("PB: lastSendTime is in the future of the current system time, did the system time change?");
             _lastSendTime = now;
         }
-
+        _deepestNode = nullptr;
         if ((_ruleBook.hasChangeOccurred() && _lastSendTime + _minSendInterval < now) || _lastSendTime + _maxSendInterval < now) {
             IdGrp msg;
             _deepestNode = _rootNode;

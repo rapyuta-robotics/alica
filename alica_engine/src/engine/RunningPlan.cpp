@@ -111,7 +111,14 @@ bool RunningPlan::isDeleteable() const
  */
 PlanChange RunningPlan::tick(RuleBook* rules)
 {
+    if (isRetired()) {
+        return PlanChange::NoChange;
+    }
+    _cycleManagement.update();
     PlanChange myChange = rules->visit(*this);
+    if (isRetired()) {
+        return myChange;
+    }
     PlanChange childChange = PlanChange::NoChange;
     // attention: do not use for each here: children are modified
     for (int i = 0; i < static_cast<int>(_children.size()); ++i) {
@@ -122,16 +129,6 @@ PlanChange RunningPlan::tick(RuleBook* rules)
         myChange = rules->updateChange(myChange, rules->visit(*this));
     }
     return myChange;
-}
-
-void RunningPlan::preTick()
-{
-    _status.isRuntimeConditionOk = evalRuntimeCondition();
-    _cycleManagement.update();
-    if (getStauts() != (getActiveState()->isFailureState()) || !r.getAssignment().isValid() || !r.evalRuntimeCondition()
-    for(RunningPlan* rp : _children) {
-        rp->preTick();
-    }
 }
 
 /**
@@ -205,6 +202,7 @@ void RunningPlan::removeChild(RunningPlan* rp)
 {
     auto it = std::find(_children.begin(), _children.end(), rp);
     if (it != _children.end()) {
+        (*it)->_parent = nullptr;
         _children.erase(it);
     }
 }
@@ -333,6 +331,9 @@ void RunningPlan::deactivateChildren()
  */
 void RunningPlan::clearChildren()
 {
+    for (RunningPlan* r : _children) {
+        r->_parent = nullptr;
+    }
     _children.clear();
 }
 
@@ -404,7 +405,10 @@ void RunningPlan::accept(IPlanTreeVisitor* vis)
     vis->visit(*this);
 
     for (RunningPlan* child : _children) {
-        child->accept(vis);
+        assert(!child->isRetired());
+        if (!child->isRetired()) {
+            child->accept(vis);
+        }
     }
 }
 
@@ -432,6 +436,7 @@ void RunningPlan::deactivate()
 bool RunningPlan::isAnyChildStatus(PlanStatus ps) const
 {
     for (const RunningPlan* child : _children) {
+        assert(!child->isRetired());
         if (ps == child->getStatus()) {
             return true;
         }
@@ -447,9 +452,14 @@ bool RunningPlan::isAnyChildStatus(PlanStatus ps) const
 bool RunningPlan::areAllChildrenStatus(PlanStatus ps) const
 {
     for (const RunningPlan* child : _children) {
+        assert(!child->isRetired());
         if (ps != child->getStatus()) {
             return false;
         }
+    }
+    // In case of a state, make sure that all children are actually running
+    if (_activeTriple.state) {
+        return _children.size() >= _activeTriple.state->getPlans().size();
     }
     return true;
 }
@@ -531,7 +541,8 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     if (isBehaviour()) {
         return false;
     }
-    const bool keepTask = ((_status.planStartTime + assignmentProtectionTime) > now);
+    const bool keepTask = _status.planStartTime + assignmentProtectionTime > now;
+    const bool keepState = _status.stateStartTime + assignmentProtectionTime > now;
     const bool auth = _cycleManagement.haveAuthority();
 
     // if keepTask, the task Assignment should not be changed!
@@ -539,8 +550,12 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     AllocationDifference& aldif = _cycleManagement.editNextDifference();
     for (const SimplePlanTree* spt : spts) {
         AgentIDConstPtr id = spt->getAgentId();
+        const bool freezeAgent = keepState && _assignment.getStateOfAgent(id) == getActiveState();
+        if (freezeAgent) {
+            continue;
+        }
         if (spt->getState()->getInPlan() != _activeTriple.plan) { // the robot is no longer participating in this plan
-            if (!keepTask & !auth) {
+            if (!keepTask && !auth) {
                 const EntryPoint* ep = _assignment.getEntryPointOfAgent(id);
                 if (ep != nullptr) {
                     _assignment.removeAgentFrom(id, ep);
@@ -587,6 +602,10 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
                 if (rob == ownId) {
                     continue;
                 }
+                const bool freezeAgent = keepState && _assignment.getStateOfAgent(rob) == getActiveState();
+                if (freezeAgent) {
+                    continue;
+                }
                 bool found = false;
                 if (std::find(noUpdates.begin(), noUpdates.end(), rob) != noUpdates.end()) {
                     // found = true;
@@ -615,6 +634,10 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
             rem.clear();
             AssignmentView robs = _assignment.getAgentsWorking(i);
             for (AgentIDConstPtr rob : robs) {
+                const bool freezeAgent = keepState && _assignment.getStateOfAgent(rob) == getActiveState();
+                if (freezeAgent) {
+                    continue;
+                }
                 if (std::find(availableAgents.begin(), availableAgents.end(), rob) == availableAgents.end()) {
                     rem.push_back(rob);
                     aldif.editSubtractions().emplace_back(ep, rob);
@@ -632,7 +655,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
-    if (_status.stateStartTime + assignmentProtectionTime > now) {
+    if (!auth) {
         AgentsInStateView agentsJoined = _assignment.getAgentsInState(getActiveState());
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
             if (std::find(agentsJoined.begin(), agentsJoined.end(), *iter) == agentsJoined.end()) {
@@ -641,7 +664,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
                 ++iter;
             }
         }
-    } else if (auth) { // in case of authority, remove all that are not assigned to same task
+    } else { // in case of authority, remove all that are not assigned to same task
         AssignmentView agentsJoined = _assignment.getAgentsWorking(getActiveEntryPoint());
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
             if (std::find(agentsJoined.begin(), agentsJoined.end(), *iter) == agentsJoined.end()) {
@@ -674,7 +697,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
 
 void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const
 {
-    if (isBehaviour()) {
+    if (isBehaviour() || isRetired()) {
         return;
     }
     if (_activeTriple.state != nullptr) {

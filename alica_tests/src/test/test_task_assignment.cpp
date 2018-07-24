@@ -33,16 +33,9 @@ class StillClock : public alica::AlicaClock
     virtual alica::AlicaTime now() const override { return AlicaTime::milliseconds(555); }
 };
 
-class TaskAssignmentTest : public ::testing::Test
+class TaskAssignmentTest : public AlicaTestFixtureBase
 {
 protected:
-    alica::AlicaEngine* ae;
-    supplementary::SystemConfig* sc;
-    alica::BehaviourCreator* bc;
-    alica::ConditionCreator* cc;
-    alica::UtilityFunctionCreator* uc;
-    alica::ConstraintCreator* crc;
-
     virtual void SetUp()
     {
         // determine the path to the test config

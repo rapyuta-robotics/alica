@@ -68,7 +68,6 @@ void StaticRoleAssignment::calculateRoles()
         for (const Role* role : roles) {
             // make entry in the map if the roles match
             if (role->getName() == prop.getDefaultRole()) {
-
                 ALICA_DEBUG_MSG("Static RA: Setting Role " << role->getName() << " for robot ID " << agent->getId());
 
                 this->robotRoleMapping.emplace(agent->getId(), role);

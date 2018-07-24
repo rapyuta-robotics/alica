@@ -16,9 +16,9 @@ class BasicCondition;
 
 class IConditionCreator
 {
-  public:
+public:
     virtual ~IConditionCreator() {}
-    virtual std::shared_ptr<BasicCondition> createConditions(long conditionConfId) = 0;
+    virtual std::shared_ptr<BasicCondition> createConditions(int64_t conditionConfId) = 0;
 };
 
 } /* namespace alica */

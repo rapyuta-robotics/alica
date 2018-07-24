@@ -59,10 +59,7 @@ bool BasicBehaviour::isRunningInContext(const RunningPlan* rp) const
 {
     // we run in the context of rp if rp is the context in run or the context in run is null and context is rp
     RunningPlan* curInRun;
-    {
-        std::lock_guard<std::mutex> lck(_runLoopMutex);
-        curInRun = _contextInRun;
-    }
+    curInRun = _contextInRun;
     return curInRun == rp || (curInRun == nullptr && _context == rp && _started && _running);
 }
 
@@ -199,7 +196,7 @@ void BasicBehaviour::runInternalTimed()
             std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
             sendLogMessage(4, err);
         }
-        auto duration = std::chrono::high_resolution_clock::now() - start;
+        std::chrono::duration<float, std::milli> duration = std::chrono::high_resolution_clock::now() - start;
         ALICA_WARNING_MSG_IF(
                 duration > _msInterval + std::chrono::microseconds(100), "BB: Behaviour " << _name << "exceeded runtime:  " << duration.count() << "ms!");
         if (duration < _msInterval) {

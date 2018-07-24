@@ -14,7 +14,7 @@
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
 
-#define ALICA_DEBUG_LEVEL_ALL
+//#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>
 
 using std::endl;
@@ -114,7 +114,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
     ActiveAgentIdView agents = tm->getActiveAgentIds();
 
     _sBuild << "TeamSize:\t";
-    _sBuild << agents.size();
+    _sBuild << tm->getTeamSize();
 
     _sBuild << " TeamMember:";
     for (AgentIDConstPtr id : agents) {
