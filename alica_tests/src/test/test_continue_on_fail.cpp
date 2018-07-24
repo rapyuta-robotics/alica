@@ -32,4 +32,9 @@ TEST_F(FailureHandling, continueOnFailure)
     step(ae);
 
     ASSERT_EQ(ae->getPlanBase()->getDeepestNode()->getActiveState()->getId(), 1530004975275);
+
+    SimpleSwitches::set(2, true);
+    step(ae); // Behavior should be triggered and fail immediately, causing a fast path event before the next line.
+    ae->getAlicaClock()->sleep(alica::AlicaTime::milliseconds(33));
+    ASSERT_EQ(ae->getPlanBase()->getDeepestNode()->getActiveState()->getId(), 1532424097662);
 }

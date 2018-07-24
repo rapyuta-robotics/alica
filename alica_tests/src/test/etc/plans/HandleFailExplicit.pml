@@ -10,8 +10,17 @@
   </states>
   <states id="1530004975275" name="C" comment="">
     <inTransitions>#1530004993680</inTransitions>
+    <outTransitions>#1532424092280</outTransitions>
   </states>
-  <transitions id="1530004992551" name="MISSING_NAME" comment="From A to B" msg="">
+  <states id="1532424087894" name="D" comment="">
+    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/AlwaysFail.beh#1532424207423</plans>
+    <inTransitions>#1532424092280</inTransitions>
+    <outTransitions>#1532424112331</outTransitions>
+  </states>
+  <states id="1532424097662" name="E" comment="">
+    <inTransitions>#1532424112331</inTransitions>
+  </states>
+  <transitions id="1530004992551" name="MISSING_NAME" comment="From A to B, isset(0)" msg="">
     <preCondition id="1530004993493" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1530004915641</inState>
     <outState>#1530004973591</outState>
@@ -20,6 +29,16 @@
     <preCondition id="1530004994611" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
     <inState>#1530004973591</inState>
     <outState>#1530004975275</outState>
+  </transitions>
+  <transitions id="1532424092280" name="MISSING_NAME" comment="C to D, isset(2)" msg="">
+    <preCondition id="1532424093178" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
+    <inState>#1530004975275</inState>
+    <outState>#1532424087894</outState>
+  </transitions>
+  <transitions id="1532424112331" name="MISSING_NAME" comment="AnyChildFail" msg="">
+    <preCondition id="1532424113475" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
+    <inState>#1532424087894</inState>
+    <outState>#1532424097662</outState>
   </transitions>
   <entryPoints id="1530004915642" name="MISSING_NAME" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
     <task>../Misc/taskrepository.tsk#1225112227903</task>

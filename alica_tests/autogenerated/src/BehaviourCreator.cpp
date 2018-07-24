@@ -13,6 +13,8 @@ using namespace std;
 
 #include "Plans/Behaviour/SuccessSpam.h"
 
+#include "Plans/Behaviour/AlwaysFail.h"
+
 #include "Plans/Behaviour/AttackOpp.h"
 
 #include "Plans/Behaviour/TriggerA.h"
@@ -69,6 +71,11 @@ shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfI
     case 1522377419087:
 
         return make_shared<SuccessSpam>();
+        break;
+
+    case 1532424207423:
+
+        return make_shared<AlwaysFail>();
         break;
 
     case 1402489366699:

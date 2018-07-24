@@ -18,7 +18,7 @@
   </extensions>
   <extensions>
     <key href="HandleFailExplicit.pml#1530004975275"/>
-    <value xPos="461" yPos="167" width="65" height="70"/>
+    <value xPos="442" yPos="240" width="65" height="70"/>
   </extensions>
   <extensions>
     <key href="HandleFailExplicit.pml#1530004992551"/>
@@ -29,11 +29,27 @@
     <value/>
   </extensions>
   <extensions>
-    <key href="RequiresTwo.pml#1530005027592"/>
+    <key href="FailsOnOne.pml#1530069246103"/>
     <value/>
   </extensions>
   <extensions>
-    <key href="FailsOnOne.pml#1530069246103"/>
+    <key href="HandleFailExplicit.pml#1532424087894"/>
+    <value xPos="371" yPos="334" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="HandleFailExplicit.pml#1532424092280"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="HandleFailExplicit.pml#1532424097662"/>
+    <value xPos="183" yPos="337" width="65" height="70"/>
+  </extensions>
+  <extensions>
+    <key href="HandleFailExplicit.pml#1532424112331"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/AlwaysFail.beh#1532424207423"/>
     <value/>
   </extensions>
 </uiextensionmodel:PmlUiExtensionMap>

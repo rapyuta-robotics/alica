@@ -27,7 +27,7 @@ shared_ptr<UtilityFunction> UtilityFunction1530004915640::getUtilityFunction(Pla
 /*
  *
  * Transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment : From A to B
+ *   - Name: MISSING_NAME, ConditionString: , Comment : From A to B, isset(0)
  *
  * Plans in State:
  *
@@ -38,6 +38,8 @@ shared_ptr<UtilityFunction> UtilityFunction1530004915640::getUtilityFunction(Pla
  *   - A (1530004915641)
  *   - B (1530004973591)
  *   - C (1530004975275)
+ *   - D (1532424087894)
+ *   - E (1532424097662)
  *
  * Vars:
  */
@@ -65,6 +67,8 @@ bool TransitionCondition1530004993493::evaluate(shared_ptr<RunningPlan> rp)
  *   - A (1530004915641)
  *   - B (1530004973591)
  *   - C (1530004975275)
+ *   - D (1532424087894)
+ *   - E (1532424097662)
  *
  * Vars:
  */
@@ -76,4 +80,61 @@ bool TransitionCondition1530004994611::evaluate(shared_ptr<RunningPlan> rp)
 }
 
 // State: C in Plan: HandleFailExplicit
+
+/*
+ *
+ * Transition:
+ *   - Name: MISSING_NAME, ConditionString: , Comment : C to D, isset(2)
+ *
+ * Plans in State:
+ *
+ * Tasks:
+ *   - DefaultTask (1225112227903) (Entrypoint: 1530004915642)
+ *
+ * States:
+ *   - A (1530004915641)
+ *   - B (1530004973591)
+ *   - C (1530004975275)
+ *   - D (1532424087894)
+ *   - E (1532424097662)
+ *
+ * Vars:
+ */
+bool TransitionCondition1532424093178::evaluate(shared_ptr<RunningPlan> rp)
+{
+    /*PROTECTED REGION ID(1532424092280) ENABLED START*/
+    return SimpleSwitches::isSet(2);
+    /*PROTECTED REGION END*/
+}
+
+// State: D in Plan: HandleFailExplicit
+
+/*
+ *
+ * Transition:
+ *   - Name: MISSING_NAME, ConditionString: , Comment : AnyChildFail
+ *
+ * Plans in State:
+ *   - Plan - (Name): AlwaysFailDefault, (PlanID): 1532424207423
+ *
+ * Tasks:
+ *   - DefaultTask (1225112227903) (Entrypoint: 1530004915642)
+ *
+ * States:
+ *   - A (1530004915641)
+ *   - B (1530004973591)
+ *   - C (1530004975275)
+ *   - D (1532424087894)
+ *   - E (1532424097662)
+ *
+ * Vars:
+ */
+bool TransitionCondition1532424113475::evaluate(shared_ptr<RunningPlan> rp)
+{
+    /*PROTECTED REGION ID(1532424112331) ENABLED START*/
+    return rp->isAnyChildStatus(PlanStatus::Failed);
+    /*PROTECTED REGION END*/
+}
+
+// State: E in Plan: HandleFailExplicit
 }
