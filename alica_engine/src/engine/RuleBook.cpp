@@ -103,6 +103,9 @@ PlanChange RuleBook::visit(RunningPlan& r)
             doDynAlloc = false;
         }
         changeRecord = updateChange(changeRecord, planAbortRule(r));
+        if (changeRecord == PlanChange::FailChange) {
+            return PlanChange::FailChange; // allow higher level to react
+        }
         changeRecord = updateChange(changeRecord, planRedoRule(r));
         changeRecord = updateChange(changeRecord, planReplaceRule(r));
         // planReplace may retire the current plan.

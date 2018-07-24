@@ -105,6 +105,17 @@ bool RunningPlan::isDeleteable() const
         return true; // shortcut for plans from planselector
     return isRetired() && (!isBehaviour() || !_ae->getBehaviourPool()->isBehaviourRunningInContext(*this));
 }
+
+void RunningPlan::preTick()
+{
+    if (isRetired()) {
+        return;
+    }
+    evalRuntimeCondition();
+    for (RunningPlan* c : _children) {
+        c->preTick();
+    }
+}
 /**
  * Called once per Engine iteration, performs all neccessary checks and executes rules from the rulebook.
  * @param rules a RuleBook
