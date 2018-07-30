@@ -43,8 +43,10 @@ Logger::Logger(AlicaEngine* ae)
             }
         }
         std::stringstream sb;
+        struct tm timestruct;
         auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        sb << logPath << "/" << std::put_time(localtime(&time), "%Y-%Om-%Od_%OH-%OM-%OS") << "_alica-run--" << robotName << ".txt";
+
+        sb << logPath << "/" << std::put_time(localtime_r(&time, &timestruct), "%Y-%Om-%Od_%OH-%OM-%OS") << "_alica-run--" << robotName << ".txt";
         _fileWriter.open(sb.str().c_str());
         this->to = ae->getTeamObserver();
         this->tm = ae->getTeamManager();
