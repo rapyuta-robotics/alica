@@ -19,16 +19,10 @@
 #include <gtest/gtest.h>
 #include <test_alica.h>
 
-class AlicaSyncTransition : public ::testing::Test
+class AlicaSyncTransition : public AlicaTestFixtureBase
 { /* namespace alicaTests */
 protected:
-    supplementary::SystemConfig* sc;
-    alica::AlicaEngine* ae;
     alica::AlicaEngine* ae2;
-    alica::BehaviourCreator* bc;
-    alica::ConditionCreator* cc;
-    alica::UtilityFunctionCreator* uc;
-    alica::ConstraintCreator* crc;
     alicaRosProxy::AlicaRosCommunication* ros;
     alicaRosProxy::AlicaRosCommunication* ros2;
 
