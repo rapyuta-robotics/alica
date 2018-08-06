@@ -120,7 +120,7 @@ bool Assignment::isSuccessful() const
     bool ret = false;
     for (int i = 0; i < numEps; ++i) {
         if (eps[i]->isSuccessRequired()) {
-            if (!(_successData.getRaw()[i].empty() && static_cast<int>(_successData.getRaw()[i].size()) >= eps[i]->getMinCardinality())) {
+            if (_successData.getRaw()[i].empty() || static_cast<int>(_successData.getRaw()[i].size()) < eps[i]->getMinCardinality()) {
                 return false;
             }
             ret = true; // Only a plan with successRequired can succeed.
