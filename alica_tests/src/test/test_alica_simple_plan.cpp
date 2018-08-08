@@ -43,7 +43,7 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
     } while (ae->getPlanBase()->getRootNode() == nullptr);
 
     // Check whether RC can be called
-    EXPECT_TRUE(ae->getPlanBase()->getRootNode()->evalRuntimeCondition());
+    EXPECT_TRUE(ae->getPlanBase()->getRootNode()->isRuntimeConditionValid());
     // Check wheter RC has been called
 
     //	BEFORE

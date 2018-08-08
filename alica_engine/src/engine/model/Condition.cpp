@@ -54,7 +54,7 @@ bool Condition::evaluate(const RunningPlan& rp) const
             // TODO: fix this:
 
             ret = _basicCondition->evaluate(const_cast<RunningPlan&>(rp).getSharedPointer());
-        } catch (std::exception& e) {
+        } catch (const std::exception& e) {
             ALICA_ERROR_MSG("Condition: Exception during evaluation catched: " << std::endl << e.what());
         }
         return ret;

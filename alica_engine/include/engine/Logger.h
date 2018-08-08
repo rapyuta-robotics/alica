@@ -4,7 +4,6 @@
 #include "engine/AlicaEngine.h"
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/Types.h"
-#include <Logging.h>
 #include <SystemConfig.h>
 
 #include <ctime>
@@ -84,10 +83,10 @@ private:
     AlicaEngine* ae;
     TeamObserver* to;
     TeamManager* tm;
-    std::ofstream* fileWriter;
     AlicaTime startTime;
     AlicaTime endTime;
     AlicaTime time;
+    std::ofstream _fileWriter;
     std::stringstream _sBuild;
     std::list<std::string> eventStrings;
     int itCount;

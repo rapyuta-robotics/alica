@@ -69,13 +69,11 @@ void StaticRoleAssignment::calculateRoles()
             // make entry in the map if the roles match
             if (role->getName() == prop.getDefaultRole()) {
                 ALICA_DEBUG_MSG("Static RA: Setting Role " << role->getName() << " for robot ID " << agent->getId());
-
                 this->robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me
                 if (agent->getId() == this->ae->getTeamManager()->getLocalAgentID() && this->ownRole != role) {
                     this->ownRole = role;
-
                     // probably nothing is reacting on this message, but anyway we send it
                     if (this->communication != nullptr) {
                         RoleSwitch rs;

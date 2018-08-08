@@ -22,16 +22,10 @@
 #include <supplementary/AgentIDManager.h>
 #include <test_alica.h>
 
-class AlicaMultiAgent : public ::testing::Test
+class AlicaMultiAgent : public AlicaTestFixtureBase
 {
 protected:
-    supplementary::SystemConfig* sc;
-    alica::AlicaEngine* ae;
     alica::AlicaEngine* ae2;
-    alica::BehaviourCreator* bc;
-    alica::ConditionCreator* cc;
-    alica::UtilityFunctionCreator* uc;
-    alica::ConstraintCreator* crc;
 
     virtual void SetUp()
     {
