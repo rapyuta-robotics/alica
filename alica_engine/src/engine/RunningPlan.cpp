@@ -30,6 +30,7 @@
 #include <alica_common_config/common_defines.h>
 #include <alica_common_config/debug_output.h>
 
+#include <cstddef>
 #include <iostream>
 
 namespace alica
@@ -104,6 +105,17 @@ bool RunningPlan::isDeleteable() const
         return true; // shortcut for plans from planselector
     return isRetired() && (!isBehaviour() || !_ae->getBehaviourPool()->isBehaviourRunningInContext(*this));
 }
+
+void RunningPlan::preTick()
+{
+    if (isRetired()) {
+        return;
+    }
+    evalRuntimeCondition();
+    for (RunningPlan* c : _children) {
+        c->preTick();
+    }
+}
 /**
  * Called once per Engine iteration, performs all neccessary checks and executes rules from the rulebook.
  * @param rules a RuleBook
@@ -149,7 +161,7 @@ bool RunningPlan::evalPreCondition() const
 {
     if (_activeTriple.plan == nullptr) {
         ALICA_ERROR_MSG("Cannot Eval Condition, Plan is null");
-        throw std::exception();
+        assert(false);
     }
     if (_activeTriple.plan->getPreCondition() == nullptr) {
         return true;
@@ -173,12 +185,16 @@ bool RunningPlan::evalRuntimeCondition() const
         throw std::exception();
     }
     if (_activeTriple.plan->getRuntimeCondition() == nullptr) {
+        _status.runTimeConditionStatus = EvalStatus::True;
         return true;
     }
     try {
-        return _activeTriple.plan->getRuntimeCondition()->evaluate(*this);
+        bool ret = _activeTriple.plan->getRuntimeCondition()->evaluate(*this);
+        _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
+        return ret;
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("Exception in runtimecondition: " << _activeTriple.plan->getName() << " " << e.what());
+        _status.runTimeConditionStatus = EvalStatus::False;
         return false;
     }
 }
@@ -238,6 +254,7 @@ void RunningPlan::usePlan(const AbstractPlan* plan)
         _status.planStartTime = _ae->getAlicaClock()->now();
         revokeAllConstraints();
         _activeTriple.plan = plan;
+        _status.runTimeConditionStatus = EvalStatus::Unknown;
     }
 }
 

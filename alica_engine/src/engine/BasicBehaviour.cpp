@@ -196,7 +196,7 @@ void BasicBehaviour::runInternalTimed()
             std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
             sendLogMessage(4, err);
         }
-        std::chrono::duration<float, std::milli>  duration = std::chrono::high_resolution_clock::now() - start;
+        std::chrono::duration<float, std::milli> duration = std::chrono::high_resolution_clock::now() - start;
         ALICA_WARNING_MSG_IF(
                 duration > _msInterval + std::chrono::microseconds(100), "BB: Behaviour " << _name << "exceeded runtime:  " << duration.count() << "ms!");
         if (duration < _msInterval) {
