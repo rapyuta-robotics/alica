@@ -161,7 +161,7 @@ bool RunningPlan::evalPreCondition() const
 {
     if (_activeTriple.plan == nullptr) {
         ALICA_ERROR_MSG("Cannot Eval Condition, Plan is null");
-        throw std::exception();
+        assert(false);
     }
     if (_activeTriple.plan->getPreCondition() == nullptr) {
         return true;
