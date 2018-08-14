@@ -1,34 +1,22 @@
-/*
- * BasicCondition.h
- *
- *  Created on: Oct 8, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef ALICA_ALICA_ENGINE_INCLUDE_ENGINE_BASICCONDITION_H_
-#define ALICA_ALICA_ENGINE_INCLUDE_ENGINE_BASICCONDITION_H_
-
+#include "engine/AlicaClock.h"
 #include <memory>
-
-using namespace std;
 
 namespace alica
 {
 
-	class RunningPlan;
+class RunningPlan;
 
-	class BasicCondition
-	{
-	public:
-		BasicCondition();
-		virtual ~BasicCondition();
-		virtual bool evaluate(shared_ptr<RunningPlan> rp) = 0;
+class BasicCondition
+{
+  public:
+    BasicCondition();
+    virtual ~BasicCondition();
+    virtual bool evaluate(std::shared_ptr<RunningPlan> rp) = 0;
 
-		bool isStateTimedOut(unsigned long timeOut, shared_ptr<RunningPlan> rp);
-		bool isTimeOut(unsigned long timeOut, unsigned long startTime, shared_ptr<RunningPlan> rp);
-
-	};
+    bool isStateTimedOut(const AlicaTime timeOut, std::shared_ptr<RunningPlan> rp) const;
+    bool isTimeOut(const AlicaTime timeOut, const AlicaTime startTime, std::shared_ptr<RunningPlan> rp) const;
+};
 
 } /* namespace alica */
-
-#endif /* ALICA_ALICA_ENGINE_INCLUDE_ENGINE_BASICCONDITION_H_ */

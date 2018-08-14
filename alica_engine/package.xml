@@ -1,60 +1,23 @@
 <?xml version="1.0"?>
-<package>
+
+<package format="2">
   <name>alica_engine</name>
   <version>0.0.1</version>
   <description>The alica_engine package</description>
-
-  <!-- One maintainer tag required, multiple allowed, one person per tag --> 
-  <!-- Example:  -->
-  <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
   <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
-  <maintainer email="witsch@vs.uni-kassel.de">Andreas Witsch</maintainer>
+  <maintainer email="hendrik@rapyuta-robotics.com">hendrik</maintainer>
 
+  <license>MIT</license>
 
-  <!-- One license tag required, multiple allowed, one license per tag -->
-  <!-- Commonly used license strings: -->
-  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>GPLv2</license>
-
-  <!-- Url tags are optional, but multiple are allowed, one per tag -->
-  <!-- Optional attribute type can be: website, bugtracker, or repository -->
-  <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/alica_engine</url> -->
-
-
-  <!-- Author tags are optional, multiple are allowed, one per tag -->
-  <!-- Authors do not have to be maintianers, but could be -->
-  <!-- Example: -->
-  <!-- <author email="opfer@vs.uni-kassel.de">Stephan Opfer</author> -->
-
-
-  <!-- The *_depend tags are used to specify dependencies -->
-  <!-- Dependencies can be catkin packages or system dependencies -->
-  <!-- Examples: -->
-  <!-- Use build_depend for packages you need at compile time: -->
-  <build_depend>system_config</build_depend>
-  <build_depend>fsystem</build_depend>
-  <build_depend>event_handling</build_depend>
-  <build_depend>system_util</build_depend>
- 
-  <!-- Use buildtool_depend for build tool packages: -->
   <buildtool_depend>catkin</buildtool_depend>
-  
-  <!-- Use run_depend for packages you need at runtime: -->
-  <run_depend>system_config</run_depend>
-  <run_depend>fsystem</run_depend>
-  <run_depend>event_handling</run_depend>
-  <run_depend>system_util</run_depend>
-  
-  <!-- Use test_depend for packages you need only for testing: -->
+  <depend>alica_common_config</depend>
+  <depend>alica_solver_interface</depend>
+
+  <depend>system_config</depend>
+  <depend>fsystem</depend>
+  <depend>event_handling</depend>
+  <depend>system_util</depend>
+  <depend>agent_id</depend>
+
   <test_depend>gtest</test_depend>
-  
-  <!-- The export tag contains other, unspecified, tags -->
-  <export>
-    <!-- You can specify that this package is a metapackage here: -->
-    <!-- <metapackage/> -->
-
-    <!-- Other tools can request additional information be placed here -->
-
-  </export>
 </package>

@@ -7,72 +7,47 @@
 
 #include "engine/model/PlanType.h"
 #include "engine/model/Plan.h"
+#include <sstream>
 
 namespace alica
 {
 
-	PlanType::PlanType()
-	{
-		plans = list<Plan*>();
-		parametrisation = list<Parametrisation*>();
-	}
+PlanType::PlanType() {}
 
-	PlanType::~PlanType()
-	{
-	}
+PlanType::~PlanType() {}
 
-	string PlanType::toString()
-	{
-		stringstream ss;
-		ss << "#PlanType: " << this->name << " " << this->id << endl;
-		ss << "\t Plans: " << this->plans.size() << endl;
-		if(this->plans.size() != 0)
-		{
-			for(Plan* p : this->plans)
-			{
-				ss << "\t" << p->getId()  << " " << p->getName() << endl;
-			}
+const Plan* PlanType::getPlanById(int64_t id) const
+{
+    for (const Plan* p : _plans) {
+        if (p->getId() == id) {
+            return p;
+        }
+    }
+    return nullptr;
+}
 
-		}
-		ss << "#EndPlanType" << endl;
-		return ss.str();
-	}
+std::string PlanType::toString() const
+{
+    std::stringstream ss;
+    ss << "#PlanType: " << getName() << " " << getId() << std::endl;
+    ss << "\t Plans: " << _plans.size() << std::endl;
+    if (_plans.size() != 0) {
+        for (const Plan* p : _plans) {
+            ss << "\t" << p->getId() << " " << p->getName() << std::endl;
+        }
+    }
+    ss << "#EndPlanType" << std::endl;
+    return ss.str();
+}
 
-//====================== Getter and Setter =========================
+void PlanType::setParametrisation(const ParametrisationGrp& parametrisation)
+{
+    _parametrisation = parametrisation;
+}
 
-	const string& PlanType::getFileName() const
-	{
-		if(this->fileName.empty())
-		{
-			static string result = this->name+".pty";
-			return result;
-		}
-		else
-		{
-			return this->fileName;
-		}
-	}
+void PlanType::setPlans(const PlanGrp& plans)
+{
+    _plans = plans;
+}
 
-	list<Parametrisation*>& PlanType::getParametrisation()
-	{
-		return parametrisation;
-	}
-
-	void PlanType::setParametrisation(const list<Parametrisation*> parametrisation)
-	{
-		this->parametrisation = parametrisation;
-	}
-
-	list<Plan*>& PlanType::getPlans()
-	{
-		return plans;
-	}
-
-	void PlanType::setPlans(const list<Plan*>& plans)
-	{
-		this->plans = plans;
-	}
-
-} /* namespace Alica */
-
-
+} // namespace alica

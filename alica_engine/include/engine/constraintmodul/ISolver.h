@@ -1,51 +1,53 @@
-/*
- * IConstraintSolver.h
- *
- *  Created on: Sep 30, 2014
- *      Author: Philipp Sperber
- */
+#pragma once
 
-#ifndef ICONSTRAINTSOLVER_H_
-#define ICONSTRAINTSOLVER_H_
-
+#include "engine/Types.h"
 #include <memory>
-#include <vector>
-
-using namespace std;
 
 namespace alica
 {
-	class AlicaEngine;
-	class ProblemDescriptor;
-	class Variable;
-	class SolverVariable;
+class AlicaEngine;
+class ProblemDescriptor;
+class Variable;
+class SolverVariable;
+class SolverContext;
 
-	class ISolver : public enable_shared_from_this<ISolver>
-	{
-	public:
-		ISolver(AlicaEngine* ae) {
-			this->ae = ae;
-		}
-		virtual ~ISolver()
-		{
-		}
+class ISolverBase
+{
+  public:
+    ISolverBase(AlicaEngine* ae)
+        : _ae(ae)
+    {
+    }
+    virtual ~ISolverBase() {}
+    virtual SolverVariable* createVariable(int64_t id, SolverContext* ctx) = 0;
+    virtual std::unique_ptr<SolverContext> createSolverContext() = 0;
 
-		virtual bool existsSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls) = 0;
-		virtual bool getSolution(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results) = 0;
-		virtual shared_ptr<SolverVariable> createVariable(long id) = 0;
+  protected:
+    AlicaEngine* getAlicaEngine() const { return _ae; }
 
-		virtual double utilityEstimate(vector<Variable*>& vars, vector<shared_ptr<ProblemDescriptor>>& calls) {
-			return 0;
-		}
+  private:
+    AlicaEngine* _ae;
+};
 
-		AlicaEngine* getAlicaEngine() {
-			return ae;
-		}
+template <class SolverType, typename ResultType>
+class ISolver : public ISolverBase
+{
+  public:
+    ISolver(AlicaEngine* ae)
+        : ISolverBase(ae)
+    {
+    }
+    virtual ~ISolver() {}
 
-	protected:
-		AlicaEngine* ae;
-	};
+    bool existsSolution(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls)
+    {
+        return static_cast<SolverType*>(this)->existsSolutionImpl(ctx, calls);
+    }
+
+    bool getSolution(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<ResultType>& results)
+    {
+        return static_cast<SolverType*>(this)->getSolutionImpl(ctx, calls, results);
+    }
+};
 
 } /* namespace alica */
-
-#endif /* ICONSTRAINTSOLVER_H_ */

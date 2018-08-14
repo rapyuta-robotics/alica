@@ -6,69 +6,47 @@
  */
 
 #include "engine/model/Transition.h"
-#include "engine/model/PreCondition.h"
-#include "engine/model/PostCondition.h"
-#include "engine/model/Plan.h"
 #include "engine/RunningPlan.h"
+#include "engine/model/Plan.h"
+#include "engine/model/PostCondition.h"
+#include "engine/model/PreCondition.h"
 
 namespace alica
 {
 
-	Transition::Transition()
-	{
-		this->preCondition = nullptr;
-		this->inState = nullptr;
-		this->outState = nullptr;
-		this->syncTransition = nullptr;
-	}
+Transition::Transition()
+        : _preCondition(nullptr)
+        , _inState(nullptr)
+        , _outState(nullptr)
+        , _syncTransition(nullptr)
+{
+}
 
-	Transition::~Transition()
-	{
-	}
+Transition::~Transition() {}
 
-	PreCondition* Transition::getPreCondition()
-	{
-		return preCondition;
-	}
+bool Transition::evalCondition(const RunningPlan& r) const
+{
+    return _preCondition->evaluate(r);
+}
 
-	void Transition::setPreCondition(PreCondition* preCondition)
-	{
-		this->preCondition = preCondition;
-	}
-	State* Transition::getInState()
-	{
-		return inState;
-	}
+void Transition::setPreCondition(PreCondition* preCondition)
+{
+    _preCondition = preCondition;
+}
 
-	void Transition::setInState(State* inState)
-	{
-		this->inState = inState;
-	}
+void Transition::setInState(State* inState)
+{
+    _inState = inState;
+}
 
-	State* Transition::getOutState()
-	{
-		return outState;
-	}
+void Transition::setOutState(State* outState)
+{
+    _outState = outState;
+}
 
-	void Transition::setOutState( State* outState)
-	{
-		this->outState = outState;
-	}
+void Transition::setSyncTransition(SyncTransition* syncTransition)
+{
+    _syncTransition = syncTransition;
+}
 
-	SyncTransition* Transition::getSyncTransition()
-	{
-		return syncTransition;
-	}
-	bool Transition::evalCondition(shared_ptr<RunningPlan> r)
-	{
-		return this->preCondition->evaluate(r);
-	}
-
-	void Transition::setSyncTransition(SyncTransition* syncTransition)
-	{
-		this->syncTransition = syncTransition;
-	}
-
-} /* namespace Alica */
-
-
+} // namespace alica

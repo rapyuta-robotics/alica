@@ -1,35 +1,36 @@
-#ifndef PLANTREEINFO_H_
-#define PLANTREEINFO_H_
+#pragma once
 
-#include <vector>
+#include <engine/AgentIDConstPtr.h>
+
 #include <tuple>
+#include <vector>
 
-using namespace std;
+namespace supplementary
+{
+class AgentID;
+}
 
 namespace alica
 {
-	typedef tuple<int, list<long>, list<long>> stdPlanTreeInfo;
-	struct PlanTreeInfo
-	{
-		PlanTreeInfo()
-		{
-		}
-		int senderID;
-		list<long> stateIDs;
-		list<long> succeededEPs;
+typedef std::tuple<AgentIDConstPtr, std::vector<int64_t>, std::vector<int64_t>> stdPlanTreeInfo;
+struct PlanTreeInfo
+{
+    PlanTreeInfo()
+            : senderID(nullptr)
+    {
+    }
 
-		PlanTreeInfo(stdPlanTreeInfo &s)
-		{
-			this->senderID = get<0>(s);
-			this->stateIDs = get<1>(s);
-			this->succeededEPs = get<2>(s);
-		}
+    PlanTreeInfo(const stdPlanTreeInfo& s)
+            : senderID(std::get<0>(s))
+            , stateIDs(std::get<1>(s))
+            , succeededEPs(std::get<2>(s))
+    {
+    }
 
-		stdPlanTreeInfo toStandard()
-		{
-			return move(make_tuple(senderID, stateIDs, succeededEPs));
-		}
-	};
-}
+    AgentIDConstPtr senderID;
+    std::vector<int64_t> stateIDs;
+    std::vector<int64_t> succeededEPs;
 
-#endif /* BEHAVIOURENGINEINFO_H_ */
+    stdPlanTreeInfo toStandard() const { return std::make_tuple(senderID, stateIDs, succeededEPs); }
+};
+} /* namespace alica*/

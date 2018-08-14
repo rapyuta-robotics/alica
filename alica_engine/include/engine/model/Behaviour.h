@@ -8,50 +8,49 @@
 #ifndef BEHAVIOUR_H_
 #define BEHAVIOUR_H_
 
-using namespace std;
-
 #include <list>
 #include <string>
 
 #include "AlicaElement.h"
+#include "engine/Types.h"
 
-namespace alica
-{
+namespace alica {
 
-	class BehaviourConfiguration;
-	class BasicBehaviour;
+class BehaviourConfiguration;
+class BasicBehaviour;
+class ModelFactory;
 
-	/**
-	 * Represents a Behaviour within the plan tree
-	 */
-	class Behaviour : public AlicaElement
-	{
-	public:
-		Behaviour();
-		Behaviour(string name);
-		virtual ~Behaviour();
+/**
+ * Represents a Behaviour within the plan tree
+ */
+class Behaviour : public AlicaElement {
+public:
+    Behaviour();
+    virtual ~Behaviour();
 
-		string toString();
+    std::string toString() const override;
 
-		list<BehaviourConfiguration*>& getConfigurations();
-		void setConfigurations(const list<BehaviourConfiguration*>& configurations);
-		const string& getFileName() const;
-		void setFileName(const string& fileName);
-		BasicBehaviour* getImplementation();
-		void setImplementation(BasicBehaviour* implementation);
+    const BehaviourConfigurationGrp& getConfigurations() const { return _configurations; }
+    const std::string& getFileName() const { return _fileName; }
+    BasicBehaviour* getImplementation() const { return _implementation; }
 
-	private:
-		/**
-		 * The set of static configurations of this Behaviour
-		 */
-		list<BehaviourConfiguration*> configurations;
-		/**
-		 * The actual implementation of this behaviour, a subclass of BasicBehaviour
-		 */
-		BasicBehaviour* implementation;
-		string fileName;
-	};
+private:
+    friend ModelFactory;
 
-} /* namespace Alica */
+    void setFileName(const std::string& fileName);
+    void setImplementation(BasicBehaviour* implementation);
+    void setConfigurations(const BehaviourConfigurationGrp& configurations);
+    /**
+     * The set of static configurations of this Behaviour
+     */
+    BehaviourConfigurationGrp _configurations;
+    /**
+     * The actual implementation of this behaviour, a subclass of BasicBehaviour
+     */
+    BasicBehaviour* _implementation;
+    std::string _fileName;
+};
+
+}  // namespace alica
 
 #endif /* BEHAVIOUR_H_ */

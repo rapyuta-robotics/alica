@@ -1,63 +1,43 @@
-/*
- * SyncTalk.h
- *
- *  Created on: Aug 27, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef SYNCTALK_H_
-#define SYNCTALK_H_
+#include "engine/AgentIDConstPtr.h"
+#include "engine/containers/SyncData.h"
 
-#include <engine/containers/SyncData.h>
-
-#include <vector>
 #include <tuple>
-
-
-using namespace std;
-
+#include <vector>
 
 namespace alica
 {
 
-	typedef tuple<long, vector<stdSyncData>> stdSyncTalk;
-	struct SyncTalk
-	{
-		SyncTalk()
-		{
-		}
-		~SyncTalk()
-		{
-			/*for (auto s : syncData)
-			{
-				delete s;
-			}*/
-		}
+typedef std::tuple<AgentIDConstPtr, std::vector<stdSyncData>> stdSyncTalk;
+struct SyncTalk
+{
+    SyncTalk()
+            : senderID(nullptr)
+    {
+    }
+    ~SyncTalk() {}
 
-		long senderID;
-		vector<SyncData*> syncData;
+    AgentIDConstPtr senderID;
+    std::vector<SyncData> syncData;
 
-		SyncTalk(stdSyncTalk &s)
-		{
-			this->senderID = get<0>(s);
-			vector<stdSyncData>& tmp = get<1>(s);
-			for (auto d : tmp)
-			{
-				syncData.push_back(new SyncData(d));
-			}
-		}
+    SyncTalk(const stdSyncTalk& s)
+            : senderID(std::get<0>(s))
+    {
+        const std::vector<stdSyncData>& tmp = std::get<1>(s);
+        for (const stdSyncData& d : tmp) {
+            syncData.emplace_back(d);
+        }
+    }
 
-		stdSyncTalk toStandard()
-		{
-			vector<stdSyncData> r;
-			for (auto s : syncData)
-			{
-				r.push_back(move(s->toStandard()));
-			}
-			return move(make_tuple(senderID, move(r)));
-		}
-	};
+    stdSyncTalk toStandard() const
+    {
+        std::vector<stdSyncData> r;
+        for (const SyncData& s : syncData) {
+            r.push_back(s.toStandard());
+        }
+        return std::make_tuple(senderID, std::move(r));
+    }
+};
 
 } /* namespace alica */
-
-#endif /* SYNCTALK_H_ */

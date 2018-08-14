@@ -1,50 +1,30 @@
-/*
- * PartialAssignmentPool.cpp
- *
- *  Created on: 13.10.2014
- *      Author: Andreas Witsch
- */
 
 #include "engine/planselector/PartialAssignmentPool.h"
-#include "engine/planselector/PartialAssignment.h"
+
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Task.h"
+#include "engine/parser/ModelFactory.h"
 
 namespace alica
 {
-	const int PartialAssignmentPool::maxCount = 10100;
 
-	PartialAssignmentPool::PartialAssignmentPool() :
-			daPAs(maxCount), curIndex(0)
-	{
+PartialAssignmentPool::PartialAssignmentPool(int initialSize)
+        : _pool(initialSize)
+        , _curIndex(0)
+        , _idleEP(ModelFactory::generateIdleEntryPoint())
+        , _idleTask(_idleEP->getTask())
+{
+}
 
-		// IDLE-EntryPoint
-		idleEP = new EntryPoint();
-		idleEP->setName("IDLE-ep");
-		idleEP->setId(EntryPoint::IDLEID);
-		idleEP->setMinCardinality(0);
-		idleEP->setMaxCardinality(numeric_limits<int>::max());
-		// Add IDLE-Task
-		idleTask = new Task(true);
-		idleTask->setName("IDLE-TASK");
-		idleTask->setId(Task::IDLEID);
+PartialAssignmentPool::~PartialAssignmentPool()
+{
+    delete _idleEP;
+    delete _idleTask;
+}
 
-		idleEP->setTask(idleTask);
+void PartialAssignmentPool::increaseSize()
+{
+    _pool.resize(_pool.size() * 2 + 5);
+}
 
-		for (int i = 0; i < maxCount; i++)
-		{
-			daPAs[i] = new PartialAssignment(this);
-		}
-	}
-
-	PartialAssignmentPool::~PartialAssignmentPool()
-	{
-		for (int i = 0; i < maxCount; i++)
-		{
-			delete daPAs[i];
-		}
-		delete idleEP;
-		delete idleTask;
-	}
-
-} /* namespace cace */
+} // namespace alica

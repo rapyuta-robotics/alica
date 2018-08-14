@@ -1,137 +1,64 @@
-/*
- * PartialAssignment.h
- *
- *  Created on: Jul 4, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
+#include <engine/Types.h>
+#include <engine/UtilityFunction.h>
+#include <engine/UtilityInterval.h>
+#include <engine/model/Plan.h>
 
-#ifndef PARTIALASSIGNMENT_H_
-#define PARTIALASSIGNMENT_H_
-
-//#define SUCDEBUG
-
+#include <alica_solver_interface/Interval.h>
+#include <supplementary/AgentID.h>
 
 #include <vector>
-#include <list>
-#include <limits>
-#include <sstream>
-#include <string>
-#include <algorithm>
-#include <memory>
-#include <math.h>
 
-#include "engine/IAssignment.h"
-#include "engine/collections/AssignmentCollection.h"
-
-using namespace std;
 namespace alica
 {
+class PartialAssignmentPool;
+class TaskAssignmentProblem;
+class Assignment;
+class SimplePlanTree;
 
-	class EpByTaskComparer;
-	class EntryPoint;
-	class Plan;
-	class SuccessCollection;
-	class UtilityFunction;
-	class DynCardinality;
-	class SimplePlanTree;
-	class PartialAssignmentPool;
+using DynCardinality = Interval<int>;
 
-	class PartialAssignment : virtual public IAssignment
-	{
-	public:
-		PartialAssignment(PartialAssignmentPool* pap);
-		virtual ~PartialAssignment();
-		void clear();
-		static void reset(PartialAssignmentPool* pap); // has to be called before calculating the task assignment
-		static PartialAssignment* getNew(PartialAssignmentPool* pap, shared_ptr<vector<int> > robots, Plan* plan, shared_ptr<SuccessCollection> sucCol);
-		static PartialAssignment* getNew(PartialAssignmentPool* pap, PartialAssignment* oldPA);
-		short getEntryPointCount();
-		int totalRobotCount();
-		shared_ptr<vector<int> > getRobotsWorking(EntryPoint* ep);
-		shared_ptr<vector<int> > getRobotsWorking(long epid);
-		shared_ptr<list<int> > getRobotsWorkingAndFinished(EntryPoint* ep);
-		shared_ptr<list<int> > getRobotsWorkingAndFinished(long epid);
-		shared_ptr<list<int> > getUniqueRobotsWorkingAndFinished(EntryPoint* ep);
-		bool addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, int robot);
-		bool assignRobot(int robot, int index);
-		shared_ptr<list<PartialAssignment*> > expand();
-		bool isValid();
-		bool isGoal();
-		static bool compareTo(PartialAssignment* thisPa, PartialAssignment* newPa);
-		string toString();
-		AssignmentCollection* getEpRobotsMapping();
-		Plan* getPlan();
-		shared_ptr<UtilityFunction> getUtilFunc();
-		shared_ptr<SuccessCollection> getEpSuccessMapping();
-		string assignmentCollectionToString();
-		shared_ptr<vector<EntryPoint*> > getEntryPoints();
-		int getHash();
-		void setHash(int hash);
-		bool isHashCalculated();
-		void setHashCalculated(bool hashCalculated);
-		void setMax(double max);
-		shared_ptr<vector<int>> getRobots();
-		int hash = 0;
+class PartialAssignment final
+{
+public:
+    PartialAssignment();
+    ~PartialAssignment();
+    void clear();
+    void prepare(const Plan* p, const TaskAssignmentProblem* problem);
+    bool isValid() const;
+    bool isGoal() const;
+    const Plan* getPlan() const { return _plan; }
+    bool addIfAlreadyAssigned(const SimplePlanTree* spt, AgentIDConstPtr agent, int idx);
+    bool assignUnassignedAgent(int agentIdx, int epIdx);
+    UtilityInterval getUtility() const { return _utility; }
+    const TaskAssignmentProblem* getProblem() const { return _problem; }
+    int getAssignedAgentCount() const { return _numAssignedAgents; }
+    int getAssignedAgentCount(int idx) const;
+    int getTotalAgentCount() const { return _assignment.size(); }
+    int getEntryPointIndexOf(int agentIdx) const { return _assignment[agentIdx]; }
+    int getEntryPointCount() const { return _cardinalities.size(); }
+    const SuccessCollection* getSuccessData() const;
 
+    bool expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old);
+    void evaluate(const Assignment* old) { _utility = _plan->getUtilityFunction()->eval(this, old); }
+    static bool compare(const PartialAssignment* a, const PartialAssignment* b);
 
-	private:
-		const int INFINIT = numeric_limits<int>::max();
-		static int pow(int x, int y);
+    static void allowIdling(bool allowed) { s_allowIdling = allowed; }
+    static bool isIdlingAllowed() { return s_allowIdling; }
 
-	protected:
-		PartialAssignmentPool* pap;
-		static EpByTaskComparer epByTaskComparer;
-		// UtilityFunction
-		shared_ptr<UtilityFunction> utilFunc;
-		AssignmentCollection* epRobotsMapping;
-		shared_ptr<vector<int>> robots;
-		vector<shared_ptr<DynCardinality>> dynCardinalities;
-		Plan* plan;
-		const long PRECISION = 1073741824;
-		long compareVal = 0;
-		bool hashCalculated;
+private:
+    friend std::ostream& operator<<(std::ostream& out, const PartialAssignment& a);
+    const Plan* _plan;
+    const TaskAssignmentProblem* _problem;
+    std::vector<DynCardinality> _cardinalities;
+    std::vector<int> _assignment;
+    UtilityInterval _utility;
+    int _numAssignedAgents;
+    int _nextAgentIdx;
 
-		shared_ptr<SuccessCollection> epSuccessMapping;
+    static bool s_allowIdling;
+};
 
-
-	};
+std::ostream& operator<<(std::ostream& out, const PartialAssignment& a);
 
 } /* namespace alica */
-
-namespace std
-{
-    template<>
-    struct hash<alica::PartialAssignment>
-    {
-        typedef alica::PartialAssignment argument_type;
-        typedef std::size_t result_type;
-
-        result_type operator()(argument_type & pa) const
-        {
-        	if(pa.isHashCalculated())
-        	{
-        		return pa.hash;
-        	}
-        	int basei = pa.getEpRobotsMapping()->getSize() + 1;
-        	shared_ptr<vector<int>> robots;
-        	for(int i = 0; i < pa.getEpRobotsMapping()->getSize(); ++i)
-        	{
-        		robots = pa.getEpRobotsMapping()->getRobots(i);
-        		for(int robot : *robots)
-        		{
-        			for (int idx = 0; idx < pa.getRobots()->size(); idx++) {
-        				if (pa.getRobots()->at(idx) == robot)
-        				{
-        					pa.setHash(pa.hash + (i + 1) * pow(basei, idx));
-        				}
-        			}
-
-        		}
-        	}
-            pa.setHashCalculated(true);
-            return pa.hash;
-        }
-    };
-}
-
-#endif /* PARTIALASSIGNMENT_H_ */

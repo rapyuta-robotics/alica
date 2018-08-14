@@ -7,140 +7,101 @@
 
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Variable.h"
+#include <SystemConfig.h>
+#include <sstream>
 
 namespace alica
 {
 
-	AbstractPlan::AbstractPlan() :
-			AlicaElement()
-	{
-		this->masterPlan = false;
-		this->variables = make_shared<list<Variable*> >();
-		supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-		this->authorityTimeInterval = (*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection",
-																			"MinimalAuthorityTimeInterval", NULL) * 1000000;
-		this->utilityFunction = nullptr;
-		this->preCondition = nullptr;
-		this->runtimeCondition = nullptr;
-	}
+AbstractPlan::AbstractPlan()
+        : AlicaElement()
+        , _masterPlan(false)
+        , _preCondition(nullptr)
+        , _runtimeCondition(nullptr)
 
-	AbstractPlan::~AbstractPlan()
-	{
-	}
+{
+    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    _authorityTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
+}
 
-	string AbstractPlan::toString() const
-	{
-		stringstream ss;
-		ss << AlicaElement::toString();
-		ss << "IsMasterPlan: " << (isMasterPlan() ? "true" : "false") << endl;
-		return ss.str();
-	}
+AbstractPlan::AbstractPlan(int64_t id)
+        : AlicaElement(id)
+        , _masterPlan(false)
+        , _preCondition(nullptr)
+        , _runtimeCondition(nullptr)
+{
+    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    _authorityTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
+}
 
-	/**
-	 * Tests whether a given variable belongs to this plan.
-	 * @param v A Variable*
-	 * @return A bool
-	 */
-	bool AbstractPlan::containsVar(const Variable* v)
-	{
-		auto vars = this->getVariables();
-		return find(vars->begin(), vars->end(), v) != vars->end();
-	}
+AbstractPlan::~AbstractPlan() {}
 
-	bool AbstractPlan::containsVar(string name)
-	{
-		auto vars = this->getVariables();
-		for (Variable* v : *vars)
-		{
-			if (v->getName() == name)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+std::string AbstractPlan::toString() const
+{
+    std::stringstream ss;
+    ss << AlicaElement::toString();
+    ss << "IsMasterPlan: " << (isMasterPlan() ? "true" : "false") << std::endl;
+    ss << "Filename: " << _fileName << std::endl;
+    return ss.str();
+}
 
-//============= Getter & Setter =================
+const Variable* AbstractPlan::getVariableByName(const std::string& name) const
+{
+    for (const Variable* variable : _variables) {
+        if (variable->getName() == name) {
+            return variable;
+        }
+    }
+    return nullptr;
+}
+/**
+ * Tests whether a given variable belongs to this plan.
+ * @param v A Variable*
+ * @return A bool
+ */
+bool AbstractPlan::containsVar(const Variable* v) const
+{
+    return find(_variables.begin(), _variables.end(), v) != _variables.end();
+}
 
-	bool AbstractPlan::isMasterPlan() const
-	{
-		return masterPlan;
-	}
+bool AbstractPlan::containsVar(const std::string& name) const
+{
+    for (const Variable* v : _variables) {
+        if (v->getName() == name) {
+            return true;
+        }
+    }
+    return false;
+}
 
-	void AbstractPlan::setMasterPlan(bool masterPlan)
-	{
-		this->masterPlan = masterPlan;
-	}
+void AbstractPlan::setMasterPlan(bool masterPlan)
+{
+    _masterPlan = masterPlan;
+}
 
-	AlicaTime AbstractPlan::getAuthorityTimeInterval() const
-	{
-		return authorityTimeInterval;
-	}
+void AbstractPlan::setAuthorityTimeInterval(AlicaTime authorithyTimeInterval) const
+{
+    _authorityTimeInterval = authorithyTimeInterval;
+}
 
-	void AbstractPlan::setAuthorityTimeInterval(AlicaTime authorithyTimeInterval)
-	{
-		this->authorityTimeInterval = authorithyTimeInterval;
-	}
+void AbstractPlan::setFileName(const std::string& fileName)
+{
+    _fileName = fileName;
+}
 
-	const string& AbstractPlan::getFileName() const
-	{
-		return fileName;
-	}
+void AbstractPlan::setVariables(const VariableGrp& variables)
+{
+    _variables = variables;
+}
 
-	void AbstractPlan::setFileName(const string& fileName)
-	{
-		this->fileName = fileName;
-	}
+void AbstractPlan::setRuntimeCondition(RuntimeCondition* runtimeCondition)
+{
+    _runtimeCondition = runtimeCondition;
+}
 
-	shared_ptr<list<Variable*>> AbstractPlan::getVariables()
-	{
-		return variables;
-	}
+void AbstractPlan::setPreCondition(PreCondition* preCondition)
+{
+    _preCondition = preCondition;
+}
 
-	void AbstractPlan::setVariables(shared_ptr<list<Variable*>> variables)
-	{
-		this->variables = variables;
-	}
-
-	RuntimeCondition* AbstractPlan::getRuntimeCondition()
-	{
-		return runtimeCondition;
-	}
-
-	void AbstractPlan::setRuntimeCondition(RuntimeCondition* runtimeCondition)
-	{
-		this->runtimeCondition = runtimeCondition;
-	}
-
-	PreCondition* AbstractPlan::getPreCondition()
-	{
-		return preCondition;
-	}
-
-	void AbstractPlan::setPreCondition(PreCondition* preCondition)
-	{
-		this->preCondition = preCondition;
-	}
-
-	shared_ptr<UtilityFunction> AbstractPlan::getUtilityFunction()
-	{
-		return utilityFunction;
-	}
-
-	void AbstractPlan::setUtilityFunction(shared_ptr<UtilityFunction> utilityFunction)
-	{
-		this->utilityFunction = utilityFunction;
-	}
-
-	double AbstractPlan::getUtilityThreshold() const
-	{
-		return utilityThreshold;
-	}
-
-	void AbstractPlan::setUtilityThreshold(double utilityThreshold)
-	{
-		this->utilityThreshold = utilityThreshold;
-	}
-
-} /* namespace Alica */
-
+} // namespace alica

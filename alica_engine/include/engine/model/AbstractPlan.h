@@ -8,82 +8,81 @@
 #ifndef ABSTRACTPLAN_H_
 #define ABSTRACTPLAN_H_
 
-
-#include <list>
-#include <SystemConfig.h>
+#include <memory>
 #include <string>
-#include <algorithm>
 
 #include "AlicaElement.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 
-using namespace std;
+#include "engine/Types.h"
+
 namespace alica
 {
 
-	class Variable;
-	class PreCondition;
-	class RuntimeCondition;
-	class UtilityFunction;
+class Variable;
+class PreCondition;
+class RuntimeCondition;
+class UtilityFunction;
+class ModelFactory;
+class ExpressionHandler;
 
-	/**
-	 * Super class of plans, plantypes and behaviourconfigurations.
-	 */
-	class AbstractPlan : public AlicaElement
-	{
-	public:
-		AbstractPlan();
-		virtual ~AbstractPlan();
+/**
+ * Super class of plans, plantypes and behaviourconfigurations.
+ */
+class AbstractPlan : public AlicaElement
+{
+public:
+    AbstractPlan();
+    AbstractPlan(int64_t id);
 
-		bool containsVar(const Variable* v);
-		bool containsVar(string name);
+    virtual ~AbstractPlan();
 
-		bool isMasterPlan() const;
-		void setMasterPlan(bool isMasterPlan);
-		virtual string toString() const;
-		AlicaTime getAuthorityTimeInterval() const;
-		void setAuthorityTimeInterval(AlicaTime authorityTimeInterval);
-		const virtual string& getFileName() const;
-		virtual void setFileName(const string& fileName);
-		shared_ptr<list<Variable*>> getVariables();
-		void setVariables(shared_ptr<list<Variable*>> variables);
-		RuntimeCondition* getRuntimeCondition();
-		void setRuntimeCondition(RuntimeCondition* runtimeCondition);
-		PreCondition* getPreCondition();
-		void setPreCondition(PreCondition* preCondition);
-		shared_ptr<UtilityFunction> getUtilityFunction();
-		void setUtilityFunction(shared_ptr<UtilityFunction> utilityFunction);
-		double getUtilityThreshold() const;
-		void setUtilityThreshold(double utilityThreshold = 1.0);
+    bool containsVar(const Variable* v) const;
+    bool containsVar(const std::string& name) const;
 
-	private:
-		AlicaTime authorityTimeInterval;
-		/**
-		 * This plan's runtime condition.
-		 */
-		RuntimeCondition* runtimeCondition;
-		/**
-		 * This plan's precondition
-		 */
-		PreCondition* preCondition;
-		/**
-		 * This plan's Utility function
-		 */
-		shared_ptr<UtilityFunction> utilityFunction;
+    bool isMasterPlan() const { return _masterPlan; }
+    AlicaTime getAuthorityTimeInterval() const { return _authorityTimeInterval; }
+    const VariableGrp& getVariables() const { return _variables; }
+    const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
+    const PreCondition* getPreCondition() const { return _preCondition; }
 
-	protected:
-		string fileName;
-		/**
-		 *  Whether this plan is marked as a MasterPlan.
-		 */
-		bool masterPlan;
-		shared_ptr<list<Variable*>> variables;
-		/**
-		 * The utility threshold, the higher, the less likely dynamic changes are.
-		 */
-		double utilityThreshold = 1.0;
-	};
+    std::string toString() const override;
+    const std::string& getFileName() const { return _fileName; }
 
-} /* namespace Alica */
+    void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const; // not a mistake, this is mutable
+    const Variable* getVariableByName(const std::string& name) const;
+
+private:
+    friend ModelFactory;
+    friend ExpressionHandler;
+
+    void setMasterPlan(bool isMasterPlan);
+
+    void setFileName(const std::string& fileName);
+    void setVariables(const VariableGrp& variables);
+    void setRuntimeCondition(RuntimeCondition* runtimeCondition);
+    void setPreCondition(PreCondition* preCondition);
+
+    // TODO: move this to the authority module
+    mutable AlicaTime _authorityTimeInterval;
+    /**
+     * This plan's runtime condition.
+     */
+    RuntimeCondition* _runtimeCondition;
+    /**
+     * This plan's precondition
+     */
+    PreCondition* _preCondition;
+
+    VariableGrp _variables;
+
+    /**
+     *  Whether this plan is marked as a MasterPlan.
+     */
+    bool _masterPlan;
+    std::string _fileName;
+};
+
+} // namespace alica
 
 #endif /* ABSTRACTPLAN_H_ */

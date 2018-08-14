@@ -1,55 +1,42 @@
-/*
- * EntryPointRobotPair.h
- *
- *  Created on: Jul 17, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef ENTRYPOINTROBOTPAIR_H_
-#define ENTRYPOINTROBOTPAIR_H_
-
-
-#include "engine/model/EntryPoint.h"
 #include <memory>
 
-using namespace std;
+#include "engine/AgentIDConstPtr.h"
+#include "engine/model/EntryPoint.h"
+
 namespace alica
 {
 
+/**
+ * A simple helper class for conflict detection
+ */
+class EntryPointRobotPair final
+{
+public:
+    EntryPointRobotPair(const EntryPoint* ep, AgentIDConstPtr r);
+    const EntryPoint* getEntryPoint() const;
+    void setEntryPoint(const EntryPoint* entryPoint);
+    AgentIDConstPtr getRobot() const { return _robot; }
+    void setRobot(AgentIDConstPtr robot);
+    bool operator==(const EntryPointRobotPair& o) const;
+    bool operator!=(const EntryPointRobotPair& o) const { return !(*this == o); }
 
-	/**
-	 * A simple helper class for conflict detection
-	 */
-	class EntryPointRobotPair
-	{
-	public:
-		EntryPointRobotPair(EntryPoint* ep, int r);
-		virtual ~EntryPointRobotPair();
-		EntryPoint* getEntryPoint();
-		void setEntryPoint(EntryPoint* entryPoint);
-		int getRobot();
-		void setRobot(int robot);
-		static bool equals(std::shared_ptr<EntryPointRobotPair> thisOne, std::shared_ptr<EntryPointRobotPair> other);
-
-	protected:
-		EntryPoint* entryPoint;
-		int robot;
-	};
+protected:
+    const EntryPoint* _entryPoint;
+    AgentIDConstPtr _robot;
+};
 
 } /* namespace alica */
 
 namespace std
 {
-    template<>
-    struct hash<alica::EntryPointRobotPair>
-    {
-        typedef alica::EntryPointRobotPair argument_type;
-        typedef std::size_t value_type;
+template <>
+struct hash<alica::EntryPointRobotPair>
+{
+    typedef alica::EntryPointRobotPair argument_type;
+    typedef std::size_t value_type;
 
-        value_type operator()(argument_type & eprp) const
-        {
-            return eprp.getEntryPoint()->getId() + 10000 * eprp.getRobot();
-        }
-    };
-}
-#endif /* ENTRYPOINTROBOTPAIR_H_ */
+    value_type operator()(argument_type& eprp) const { return std::hash<long int>()(eprp.getEntryPoint()->getId()) + eprp.getRobot()->hash(); }
+};
+} // namespace std

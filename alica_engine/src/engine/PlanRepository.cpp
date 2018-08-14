@@ -5,182 +5,91 @@
  *      Author: Paul Panin
  */
 
-
 #include "engine/PlanRepository.h"
-#include "engine/model/Quantifier.h"
+#include "engine/Types.h"
+#include "engine/model/EntryPoint.h"
+#include "engine/model/Parametrisation.h"
 #include "engine/model/Plan.h"
+#include "engine/model/PreCondition.h"
+#include "engine/model/Quantifier.h"
+#include "engine/model/RuntimeCondition.h"
+#include "engine/model/Variable.h"
 
-using namespace std;
+#include <cassert>
 namespace alica
 {
-	PlanRepository::PlanRepository()
-	{
-	}
-	PlanRepository::~PlanRepository()
-	{
-	}
-	map<long, BehaviourConfiguration*>& PlanRepository::getBehaviourConfigurations()
-	{
-		return behaviourConfigurations;
-	}
 
-	void PlanRepository::setBehaviourConfigurations(const map<long, BehaviourConfiguration*>& behaviourConfigurations)
-	{
-		this->behaviourConfigurations = behaviourConfigurations;
-	}
+namespace
+{
+bool checkVarsInCondition(const Condition* c, const Plan* p)
+{
+    if (c == nullptr) {
+        return true;
+    }
+    const VariableGrp& pvars = p->getVariables();
+    for (const Variable* v : c->getVariables()) {
+        if (std::find(pvars.begin(), pvars.end(), v) == pvars.end()) {
+            std::cerr << "Variable " << v->toString() << " used in Condition " << c->toString() << " in Plan " << p->toString()
+                      << " is not properly contained in the plan." << std::endl;
+            assert(false);
+            return false;
+        }
+    }
 
-	map<long, Behaviour*>& PlanRepository::getBehaviours()
-	{
-		return behaviours;
-	}
-	map<long, PlanningProblem*>& PlanRepository::getPlanningProblems()
-	{
-		return planningProblems;
-	}
-
-	void PlanRepository::setBehaviours(const map<long, Behaviour*>& behaviours)
-	{
-		this->behaviours = behaviours;
-	}
-
-	map<long, Capability*>& PlanRepository::getCapabilities()
-	{
-		return capabilities;
-	}
-
-	void PlanRepository::setCapabilities(const map<long, Capability*>& capabilities)
-	{
-		this->capabilities = capabilities;
-	}
-
-	map<long, Characteristic*>& PlanRepository::getCharacteristics()
-	{
-		return characteristics;
-	}
-
-	void PlanRepository::setCharacteristics(const map<long, Characteristic*>& characteristics)
-	{
-		this->characteristics = characteristics;
-	}
-
-	map<long, EntryPoint*>& PlanRepository::getEntryPoints()
-	{
-		return entryPoints;
-	}
-
-	void PlanRepository::setEntryPoints(const map<long, EntryPoint*>& entryPoints)
-	{
-		this->entryPoints = entryPoints;
-	}
-
-	map<long, Plan*>& PlanRepository::getPlans()
-	{
-		return plans;
-	}
-
-	void PlanRepository::setPlans(const map<long, Plan*>& plans)
-	{
-		this->plans = plans;
-	}
-
-	map<long, PlanType*>& PlanRepository::getPlanTypes()
-	{
-		return planTypes;
-	}
-
-	void PlanRepository::setPlanTypes(const map<long, PlanType*>& planTypes)
-	{
-		this->planTypes = planTypes;
-	}
-
-	map<long, Quantifier*>& PlanRepository::getQuantifiers()
-	{
-		return quantifiers;
-	}
-
-	void PlanRepository::setQuantifiers(const map<long, Quantifier*>& quantifiers)
-	{
-		this->quantifiers = quantifiers;
-	}
-
-	map<long, RoleDefinitionSet*>& PlanRepository::getRoleDefinitionSets()
-	{
-		return roleDefinitionSets;
-	}
-
-	void PlanRepository::setRoleDefinitionSets(const map<long, RoleDefinitionSet*>& roleDefinitionSets)
-	{
-		this->roleDefinitionSets = roleDefinitionSets;
-	}
-
-	map<long, Role*>& PlanRepository::getRoles()
-	{
-		return roles;
-	}
-
-	void PlanRepository::setRoles(const map<long, Role*>& roles)
-	{
-		this->roles = roles;
-	}
-
-	map<long, State*>& PlanRepository::getStates()
-	{
-		return states;
-	}
-
-	void PlanRepository::setStates(const map<long, State*>& states)
-	{
-		this->states = states;
-	}
-
-	map<long, SyncTransition*>& PlanRepository::getSyncTransitions()
-	{
-		return syncTransitions;
-	}
-
-	void PlanRepository::setSyncTransitions(const map<long, SyncTransition*>& syncTransitions)
-	{
-		this->syncTransitions = syncTransitions;
-	}
-
-	map<long, TaskRepository*>& PlanRepository::getTaskRepositorys()
-	{
-		return taskRepositorys;
-	}
-
-	void PlanRepository::setTaskRepositorys(const map<long, TaskRepository*>& taskRepositorys)
-	{
-		this->taskRepositorys = taskRepositorys;
-	}
-
-	map<long, Task*>& PlanRepository::getTasks()
-	{
-		return tasks;
-	}
-
-	void PlanRepository::setTasks(const map<long, Task*>& tasks)
-	{
-		this->tasks = tasks;
-	}
-
-	map<long, Transition*>& PlanRepository::getTransitions()
-	{
-		return transitions;
-	}
-
-	void PlanRepository::setTransitions(const map<long, Transition*>& transitions)
-	{
-		this->transitions = transitions;
-	}
-
-	map<long, Variable*>& PlanRepository::getVariables()
-	{
-		return variables;
-	}
-
-	void PlanRepository::setVariables(const map<long, Variable*>& variables)
-	{
-		this->variables = variables;
-	}
+    return true;
+}
+bool checkVarsInParametrisations(const Plan* p)
+{
+    const VariableGrp& pvars = p->getVariables();
+    for (const State* s : p->getStates()) {
+        for (const Parametrisation* pr : s->getParametrisation()) {
+            if (std::find(pvars.begin(), pvars.end(), pr->getVar()) == pvars.end()) {
+                std::cerr << "Variable " << pr->getVar()->toString() << " used in Parametrisation of state " << s->toString() << " in Plan " << p->toString()
+                          << " is not properly contained in the plan." << std::endl;
+                assert(false);
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
+bool checkVarsInPlan(const Plan* p)
+{
+    bool ret = checkVarsInCondition(p->getPreCondition(), p);
+    ret = ret && checkVarsInCondition(p->getRuntimeCondition(), p);
+    ret = ret && checkVarsInParametrisations(p);
+
+    return ret;
+}
+}
+
+PlanRepository::PlanRepository() {}
+PlanRepository::~PlanRepository() {}
+
+bool PlanRepository::verifyPlanBase() const
+{
+    // Every entrypoint has a task:
+    for (const EntryPoint* ep : getEntryPoints()) {
+        if (ep->getTask() == nullptr) {
+            std::cerr << "EntryPoint " << ep->toString() << " does not have a task." << std::endl;
+            assert(false);
+            return false;
+        }
+    }
+    // Every plans entryPoints are sorted:
+    for (const Plan* p : getPlans()) {
+        for (int i = 0; i < static_cast<int>(p->getEntryPoints().size()) - 1; ++i) {
+            if (p->getEntryPoints()[i]->getId() >= p->getEntryPoints()[i + 1]->getId()) {
+                std::cerr << "Wrong sorting of entrypoints in plan " << p->toString() << std::endl;
+                assert(false);
+                return false;
+            }
+        }
+        checkVarsInPlan(p);
+    }
+
+    return true;
+}
+
+} // namespace alica

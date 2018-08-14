@@ -1,34 +1,44 @@
-/*
- * PartialAssignmentPool.h
- *
- *  Created on: 13.10.2014
- *      Author: Andreas Witsch
- */
+#pragma once
+
+#include "PartialAssignment.h"
+#include <stdexcept>
 #include <vector>
-
-#ifndef PARTIALASSIGNMENTPOOL_H_
-#define PARTIALASSIGNMENTPOOL_H_
-
-using namespace std;
-
 namespace alica
 {
-	class PartialAssignment;
-	class EntryPoint;
-	class Task;
+class EntryPoint;
+class Task;
 
-	class PartialAssignmentPool
-	{
-	public:
-		PartialAssignmentPool();
-		virtual ~PartialAssignmentPool();
-		int curIndex;
-		const static int maxCount;
-		EntryPoint* idleEP;
-		Task* idleTask;
-		vector<PartialAssignment*> daPAs;
-	};
+class PoolExhaustedException : public std::runtime_error
+{
+public:
+    PoolExhaustedException(const std::string& msg)
+            : std::runtime_error(msg)
+    {
+    }
+};
 
-} /* namespace cace */
+class PartialAssignmentPool
+{
+public:
+    PartialAssignmentPool(int initialSize);
+    ~PartialAssignmentPool();
+    PartialAssignment* getNext()
+    {
+        PartialAssignment* pa = &_pool[_curIndex];
 
-#endif /* PARTIALASSIGNMENTPOOL_H_ */
+        if (++_curIndex >= _pool.size()) {
+            throw PoolExhaustedException(std::string("Partial Assignment Pool too small at ") + std::to_string(_pool.size()));
+        }
+        return pa;
+    }
+    void increaseSize();
+    void reset() { _curIndex = 0; }
+
+private:
+    std::vector<PartialAssignment> _pool;
+    unsigned int _curIndex;
+    const EntryPoint* _idleEP;
+    const Task* _idleTask; // Do not move above idleEp
+};
+
+} // namespace alica

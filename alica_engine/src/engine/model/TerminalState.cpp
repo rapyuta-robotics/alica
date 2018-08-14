@@ -8,30 +8,16 @@
 #include "engine/model/TerminalState.h"
 #include "engine/model/PostCondition.h"
 
-namespace alica
-{
+namespace alica {
 
-	TerminalState::TerminalState() :
-			State()
-	{
-		this->terminal = true;
-		this->postCondition = nullptr;
+TerminalState::TerminalState(StateType t)
+        : State(t)
+        , _postCondition(nullptr) {}
 
-	}
+TerminalState::~TerminalState() {}
 
-	TerminalState::~TerminalState()
-	{
-		// TODO Auto-generated destructor stub
-	}
+void TerminalState::setPostCondition(PostCondition* posCondition) {
+    _postCondition = posCondition;
+}
 
-	PostCondition* TerminalState::getPostCondition()
-	{
-		return postCondition;
-	}
-
-	void TerminalState::setPostCondition(PostCondition* posCondition)
-	{
-		this->postCondition = posCondition;
-	}
-
-} /* namespace Alica */
+}  // namespace alica

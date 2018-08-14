@@ -1,74 +1,82 @@
-/*
- * AllocationDifference.h
- *
- *  Created on: Jul 17, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef ALLOCATIONDIFFERENCE_H_
-#define ALLOCATIONDIFFERENCE_H_
-
-
-#include <vector>
-#include <string>
-#include <sstream>
-#include <memory>
+#pragma once
 #include <algorithm>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <vector>
 
-using namespace std;
+#include "EntryPointRobotPair.h"
+
 namespace alica
 {
 
-	class EntryPointRobotPair;
+/**
+ * A representation of the difference between two allocations
+ */
+class AllocationDifference final
+{
+public:
+    AllocationDifference();
+    ~AllocationDifference();
+    AllocationDifference(const AllocationDifference&) = delete;
+    AllocationDifference(AllocationDifference&&) = default;
+    AllocationDifference& operator=(const AllocationDifference&) = delete;
+    AllocationDifference& operator=(AllocationDifference&&) = default;
 
-	/**
-	 * A representation of the difference between two allocations
-	 */
-	class AllocationDifference
-	{
-	public:
-		AllocationDifference();
-		virtual ~AllocationDifference();
-		enum Reason {message, utility, empty};
-		AllocationDifference::Reason getReason();
-		void setReason(AllocationDifference::Reason reason);
-		bool isEmpty();
-		void reset();
-		void applyDifference(AllocationDifference* other);
-		string toString();
-		vector<shared_ptr<EntryPointRobotPair>>& getAdditions();
-		void setAdditions(vector<shared_ptr<EntryPointRobotPair>> additions);
-		vector<shared_ptr<EntryPointRobotPair>>& getSubtractions();
-		void setSubtractions(vector<shared_ptr<EntryPointRobotPair>> subtractions);
+    enum class Reason
+    {
+        message,
+        utility,
+        empty
+    };
+    static const char* getReasonString(Reason r)
+    {
+        switch (r) {
+        case Reason::message:
+            return "Message";
+        case Reason::utility:
+            return "Utility";
+        case Reason::empty:
+            return "Empty";
+        default:
+            assert(false);
+            return "Unknown";
+        }
+    }
+    AllocationDifference::Reason getReason() const { return _reason; }
+    void setReason(AllocationDifference::Reason reason);
 
-	protected:
-		/**
-		 * Denoting the reason for an allocation switch
-		 */
-		AllocationDifference::Reason reason;
-		vector<shared_ptr<EntryPointRobotPair>> additions;
-		vector<shared_ptr<EntryPointRobotPair>> subtractions;
+    /**
+     * Returns whether the difference is empty, i.e., the corresponding allocations are the same
+     */
+    bool isEmpty() const;
 
-	};
+    /**
+     * Reset this difference to the empty difference
+     */
+    void reset();
+
+    /**
+     * Apply another difference to this one resulting in the composition of both
+     * @param other the AllocationDifference to apply.
+     */
+    void applyDifference(const AllocationDifference& other);
+
+    const std::vector<EntryPointRobotPair>& getAdditions() const { return _additions; }
+    std::vector<EntryPointRobotPair>& editAdditions() { return _additions; }
+
+    const std::vector<EntryPointRobotPair>& getSubtractions() const { return _subtractions; }
+    std::vector<EntryPointRobotPair>& editSubtractions() { return _subtractions; }
+
+private:
+    std::vector<EntryPointRobotPair> _additions;
+    std::vector<EntryPointRobotPair> _subtractions;
+    /**
+     * Denoting the reason for an allocation switch
+     */
+    AllocationDifference::Reason _reason;
+};
+
+std::ostream& operator<<(std::ostream& o, const AllocationDifference& dif);
 
 } /* namespace alica */
-
-
-//TODO this about other hash calculation
-namespace std
-{
-    template<>
-    struct hash<alica::AllocationDifference>
-    {
-        typedef alica::AllocationDifference argument_type;
-        typedef std::size_t value_type;
-
-        value_type operator()(argument_type & ad) const
-        {
-            value_type const h1 ( std::hash<std::string>()(ad.toString()) );
-            return h1;
-        }
-    };
-}
-
-#endif /* ALLOCATIONDIFFERENCE_H_ */

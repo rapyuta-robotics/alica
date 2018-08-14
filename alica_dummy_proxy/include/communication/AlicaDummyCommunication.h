@@ -12,27 +12,25 @@
 
 namespace alica_dummy_proxy {
 
-	class AlicaDummyCommunication : public alica::IAlicaCommunication
-	{
-		public:
-			AlicaDummyCommunication(alica::AlicaEngine* ae);
-			virtual ~AlicaDummyCommunication();
+class AlicaDummyCommunication : public alica::IAlicaCommunication {
+public:
+    AlicaDummyCommunication(alica::AlicaEngine* ae);
+    virtual ~AlicaDummyCommunication();
 
-			virtual void tick();
+    virtual void tick();
 
-			virtual void sendAllocationAuthority(alica::AllocationAuthorityInfo& aai);
-			virtual void sendAlicaEngineInfo(alica::AlicaEngineInfo& bi);
-			virtual void sendPlanTreeInfo(alica::PlanTreeInfo& pti);
-			virtual void sendRoleSwitch(alica::RoleSwitch& rs);
-			virtual void sendSyncReady(alica::SyncReady& sr);
-			virtual void sendSyncTalk(alica::SyncTalk& st);
-			virtual void sendSolverResult(alica::SolverResult& sr);
+    virtual void sendAllocationAuthority(const alica::AllocationAuthorityInfo& aai) const;
+    virtual void sendAlicaEngineInfo(const alica::AlicaEngineInfo& bi) const;
+    virtual void sendPlanTreeInfo(const alica::PlanTreeInfo& pti) const;
+    virtual void sendRoleSwitch(const alica::RoleSwitch& rs) const;
+    virtual void sendSyncReady(const alica::SyncReady& sr) const;
+    virtual void sendSyncTalk(const alica::SyncTalk& st) const;
+    virtual void sendSolverResult(const alica::SolverResult& sr) const;
 
+    virtual void startCommunication();
+    virtual void stopCommunication();
+};
 
-			virtual void startCommunication();
-			virtual void stopCommunication();
-		};
-
-} /* namespace alica */
+}  // namespace alica_dummy_proxy
 
 #endif /* ALICA_ALICA_DUMMY_PROXY_INCLUDE_COMMUNICATION_ALICADUMMYCOMMUNICATION_H_ */

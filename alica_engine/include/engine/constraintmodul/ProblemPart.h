@@ -1,51 +1,47 @@
-/*
- * ConstraintCall.h
- *
- *  Created on: Oct 17, 2014
- *      Author: Philipp Sperber
- */
+#pragma once
 
-#ifndef CONSTRAINTCALL_H_
-#define CONSTRAINTCALL_H_
+#include <engine/Types.h>
+#include <engine/collections/AgentVariables.h>
+#include <engine/constraintmodul/ProblemDescriptor.h>
+#include <engine/constraintmodul/UniqueVarStore.h>
 
 #include <memory>
 #include <vector>
-#include <list>
-
-using namespace std;
 
 namespace alica
 {
-	class Condition;
-	class RunningPlan;
-	class Variable;
+class Condition;
+class RunningPlan;
+class DomainVariable;
+class ISolverBase;
+class SolverContext;
 
-	class ProblemPart
-	{
-	public:
-		ProblemPart(Condition* con, shared_ptr<RunningPlan> rp);
+class ProblemPart
+{
+public:
+    ProblemPart(const Condition* con, const RunningPlan* rp);
 
-		bool hasVariable(Variable* v);
+    bool hasVariable(const DomainVariable* v) const;
 
-		Condition* getCondition();
-		shared_ptr<vector<list<vector<Variable* > > >> getDomainVariables();
-		shared_ptr<RunningPlan> getRunningPlan();
-		shared_ptr<vector<shared_ptr<vector<int>>>> getAgentsInScope();
-	private:
-		Condition* condition;
-		/**
-		 *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
-		 * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
-		 * 2. List of Robots, e.g., An agent has variables X,Y.
-		 * 3. Vector of Variables, e.g., variables X,Y.
-		 * 4. Variable, e.g., variable X.
-		 */
-		shared_ptr<vector<list<vector<Variable* > > >> domainVariables;
-		shared_ptr<RunningPlan> runningplan;
-		shared_ptr<vector<shared_ptr<vector<int>>>> agentsInScope;
-	};
+    const Condition* getCondition() const { return _condition; }
+    const RunningPlan* getRunningPlan() const { return _runningPlan; }
+    const std::vector<AgentVariables>& getAllVariables() const { return _vars; }
+    const AgentVariables& getVarsOfAgent(AgentIDConstPtr id) const;
 
-}
-/* namespace alica */
+    // TODO: get rid of the shared ptr
+    std::shared_ptr<ProblemDescriptor> generateProblemDescriptor(ISolverBase* solver, const UniqueVarStore& uvs, SolverContext* ctx);
 
-#endif /* CONSTRAINTCALL_H_ */
+    ProblemPart(const ProblemPart&) = delete;
+    ProblemPart& operator=(const ProblemPart&) = delete;
+
+    ProblemPart(ProblemPart&& o);
+    ProblemPart& operator=(ProblemPart&& o);
+
+private:
+    std::vector<AgentVariables> _vars;
+    const Condition* _condition;
+    const RunningPlan* _runningPlan;
+    std::shared_ptr<ProblemDescriptor> _descriptor;
+};
+
+} /* namespace alica */

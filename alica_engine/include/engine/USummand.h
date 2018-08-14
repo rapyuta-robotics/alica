@@ -8,112 +8,71 @@
 #ifndef USUMMAND_H_
 #define USUMMAND_H_
 
-using namespace std;
-
-#include <vector>
-#include <string>
-#include <sstream>
 #include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
+#include "engine/Types.h"
 #include "engine/UtilityInterval.h"
 #include "engine/model/EntryPoint.h"
 
 namespace alica
 {
 
-	class EntryPoint;
-	class IAssignment;
+class EntryPoint;
+class IAssignment;
 
-	/**
-	 * Abstract super class for domain dependent utility summands.
-	 */
-	class USummand
-	{
-	public:
+/**
+ * Abstract super class for domain dependent utility summands.
+ */
+class USummand
+{
+public:
+    USummand()
+            : _weight(0.0)
+    {
+    }
+    USummand(double weight)
+            : _weight(weight)
+    {
+    }
 
-		USummand():ui(0.0,0.0) { this->id = 0; this->weight = 0;}
-		virtual ~USummand()	{}
-		/**
-		 * Searches every needed entrypoint in the hashtable of the xmlparser
-		 * and stores it in the relevant entrypoint vector. This will increase the
-		 * performance of the evaluation of this utility summand.
-		 */
-		virtual void init(AlicaEngine* ae)
-		{
-			// init relevant entrypoint vector
-			this->relevantEntryPoints.resize(this->relevantEntryPointIds.size());
-			// find the right entrypoint for each id in relevant entrypoint id
-			map<long, EntryPoint*> elements = ae->getPlanRepository()->getEntryPoints();
-			EntryPoint* curEp;
-			for(int i = 0; i < this->relevantEntryPoints.size(); ++i)
-			{
-				auto iter = elements.find(this->relevantEntryPointIds[i]);
-				if(iter != elements.end())
-				{
-					curEp = iter->second;
-				}
-				else
-				{
-					cerr << "Could not find Entrypoint " << this->relevantEntryPointIds[i] << " Hint is: " << this->name << endl;
-					throw new exception();
-				}
-				if(curEp != nullptr)
-				{
-					this->relevantEntryPoints[i] = curEp;
-				}
-			}
-		}
-		string toString()
-		{
-			stringstream ss;
-			ss << this->name << ": Weight " << this->weight << "EntryPoints: ";
-			for(int i = 0; i < this->relevantEntryPointIds.size(); ++i)
-			{
-				ss << this->relevantEntryPointIds[i] << " ";
-			}
-			ss << endl;
-			return ss.str();
-		}
-		double getWeight() const
-		{
-			return weight;
-		}
-		/**
-		 * Evaluates the utilityfunction summand
-		 * @return The result of the evaluation
-		 */
-		virtual UtilityInterval eval(IAssignment* ass)=0;
-		/**
-		 * Cache every data for the current evaluation, to
-		 * assure consistency over the complete current evaluation.
-		 */
-		virtual void cacheEvalData(){};
-		virtual pair<vector<double>, double>* differentiate(IAssignment* newAss)
-		{
-			return nullptr;
-		}
-		void setWeight(double weight)
-		{
-			this->weight = weight;
-		}
+    virtual ~USummand() {}
 
-	protected:
-		UtilityInterval ui;
-		vector<long> relevantEntryPointIds;
-		/**
-		 * Weight of this UtilitySummand
-		 */
-		double weight;
-		string name;
-		long id;
-		string info;
-		vector<EntryPoint*> relevantEntryPoints;
+    void addEntryPoint(const EntryPoint* ep) { _relevantEntryPoints.push_back(ep); }
 
-	};
+    std::string toString() const
+    {
+        std::stringstream ss;
+        ss << "UF: Weight " << _weight << "EntryPoints: ";
+        for (const EntryPoint* ep : _relevantEntryPoints) {
+            ss << ep->getId() << " ";
+        }
+        ss << std::endl;
+        return ss.str();
+    }
+    double getWeight() const { return _weight; }
+    /**
+     * Evaluates the utilityfunction summand
+     * @return The result of the evaluation
+     */
+    virtual UtilityInterval eval(IAssignment ass) const = 0;
+    /**
+     * Cache every data for the current evaluation, to
+     * assure consistency over the complete current evaluation.
+     */
+    virtual void cacheEvalData(){};
+    // virtual std::pair<std::vector<double>, double>* differentiate(IAssignment* newAss) { return nullptr; }
+    void setWeight(double weight) { _weight = weight; }
+
+protected:
+    EntryPointGrp _relevantEntryPoints;
+    double _weight;
+};
 
 } /* namespace alica */
-
 
 #endif /* USUMMAND_H_ */

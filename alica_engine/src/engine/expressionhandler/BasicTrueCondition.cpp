@@ -10,17 +10,13 @@
 namespace alica
 {
 
-	BasicTrueCondition::BasicTrueCondition()
-	{
-	}
+BasicTrueCondition::BasicTrueCondition() {}
 
-	BasicTrueCondition::~BasicTrueCondition()
-	{
-	}
+BasicTrueCondition::~BasicTrueCondition() {}
 
-	bool BasicTrueCondition::evaluate(shared_ptr<RunningPlan> rp)
-	{
-		return true;
-	}
+bool BasicTrueCondition::evaluate(std::shared_ptr<RunningPlan> rp)
+{
+    return true;
+}
 
 } /* namespace alica */

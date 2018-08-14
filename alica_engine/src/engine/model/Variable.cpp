@@ -1,69 +1,29 @@
-/*
- * Variable.cpp
- *
- *  Created on: Mar 8, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/Variable.h"
-
+#include <sstream>
 
 namespace alica
 {
 
-	Variable::Variable()
-	{
-		this->solverVar = nullptr;
-	}
+Variable::Variable() {}
 
-	Variable::Variable(shared_ptr<SolverVariable> v)
-	{
-		this->solverVar = v;
-	}
+Variable::~Variable() {}
 
-	Variable::~Variable()
-	{
+Variable::Variable(int64_t id, const std::string& name, const std::string& type)
+    : AlicaElement(id, name)
+    , _type(type)
+{
+}
 
-	}
+std::string Variable::toString() const
+{
+    std::stringstream ss;
+    ss << "[Variable: Name=" << getName() << " Id=" << getId() << std::endl;
+    return ss.str();
+}
 
-	Variable::Variable(long id, string name, string type) :
-			Variable()
-	{
-		this->id = id;
-		this->name = name;
-		this->type = type;
-// TODO:		this->solverVar = new autodiff::Variable();
-		this->solverVar = nullptr;
-	}
+void Variable::setType(const std::string& type)
+{
+    _type = type;
+}
 
-	string Variable::toString()
-	{
-		stringstream ss;
-		ss << "[Variable: Name=" << name << " Id=" << id << endl;
-		return ss.str();
-	}
-
-//============= Getter and Setter ======================
-
-	string Variable::getType()
-	{
-		return type;
-	}
-
-	void Variable::setType(string type)
-	{
-		this->type = type;
-	}
-
-	shared_ptr<SolverVariable> Variable::getSolverVar()
-	{
-		return this->solverVar;
-	}
-
-	void alica::Variable::setSolverVar(shared_ptr<SolverVariable> solverVar)
-	{
-		this->solverVar = solverVar;
-	}
-} /* namespace Alica */
-
-
+} // namespace alica

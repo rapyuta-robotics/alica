@@ -1,23 +1,47 @@
-/*
- * PlanStatus.h
- *
- *  Created on: Jul 1, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef PLANSTATUS_H_
-#define PLANSTATUS_H_
+#pragma once
 
 namespace alica
 {
-	/**
-	 * Reflects the status of a RunningPlan
-	 */
-	enum PlanStatus
-	{
-		Success, Failed, Running
-	};
+/**
+ * Reflects the status of a RunningPlan
+ */
+enum class PlanStatus
+{
+    Running,
+    Success,
+    Failed
+};
+enum class PlanActivity
+{
+    InActive,
+    Active,
+    Retired
+};
+
+inline const char* getPlanStatusName(PlanStatus ps)
+{
+    switch (ps) {
+    case PlanStatus::Running:
+        return "Running";
+    case PlanStatus::Success:
+        return "Success";
+    case PlanStatus::Failed:
+        return "Failed";
+    }
+    return "Undefined";
+}
+
+inline const char* getPlanActivityName(PlanActivity pa)
+{
+    switch (pa) {
+    case PlanActivity::InActive:
+        return "InActive";
+    case PlanActivity::Active:
+        return "Active";
+    case PlanActivity::Retired:
+        return "Retired";
+    }
+    return "Undefined";
+}
 
 } /* namespace alica */
-
-#endif /* PLANSTATUS_H_ */

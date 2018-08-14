@@ -1,310 +1,187 @@
-/*
- * ConstraintStore.cpp
- *
- *  Created on: Jul 15, 2014
- *      Author: Paul Panin
- */
-
+#include "engine/RunningPlan.h"
+#include "engine/model/AbstractPlan.h"
+#include "engine/model/Condition.h"
+#include "engine/model/DomainVariable.h"
+#include "engine/model/Quantifier.h"
+#include "engine/model/Variable.h"
 #include <engine/constraintmodul/ConditionStore.h>
 #include <engine/constraintmodul/ProblemPart.h>
 #include <engine/constraintmodul/Query.h>
-#include "engine/RunningPlan.h"
-#include "engine/model/Condition.h"
-#include "engine/model/Variable.h"
-#include "engine/model/AbstractPlan.h"
+
+#include <alica_common_config/debug_output.h>
 
 #include <iostream>
 
-//#define CS_DEBUG
-
 namespace alica
 {
+namespace
+{
+std::ostream& operator<<(std::ostream& out, const VariableGrp& vg)
+{
+    for (const Variable* v : vg) {
+        out << v->getName() << "(" << v->getId() << "), ";
+    }
+    return out;
+}
+}
+/**
+ * Default constructor
+ */
+ConditionStore::ConditionStore() {}
 
-	/**
-	 * Default constructor
-	 */
-	ConditionStore::ConditionStore()
-	{
+ConditionStore::~ConditionStore() {}
 
-	}
+/**
+ * Clear store, revoking all constraints
+ */
+void ConditionStore::clear()
+{
+    std::lock_guard<std::mutex> lock(_mtx);
+    _activeVar2CondMap.clear();
+    _activeConditions.clear();
+}
 
-	ConditionStore::~ConditionStore()
-	{
+/**
+ * Add a condition to the store
+ * @param con A Condition
+ */
+void ConditionStore::addCondition(const Condition* con)
+{
+    if (con == nullptr || (con->getVariables().empty() && con->getQuantifiers().empty())) {
+        return;
+    }
 
-	}
+    bool modified = false;
+    std::lock_guard<std::mutex> lock(_mtx);
+    if (std::find(_activeConditions.begin(), _activeConditions.end(), con) == _activeConditions.end()) {
+        modified = true;
+        _activeConditions.push_back(con);
+    }
+    if (modified) {
+        for (const Variable* variable : con->getVariables()) {
+            _activeVar2CondMap[variable].push_back(con);
+        }
+        for (const Quantifier* qv : con->getQuantifiers()) {
+            for (const Variable* variable : qv->getTemplateVariables()) {
+                _activeVar2CondMap[variable].push_back(con);
+            }
+        }
+    }
 
-	/**
-	 * Clear store, revoking all constraints
-	 */
-	void ConditionStore::clear()
-	{
-		activeVar2CondMap.clear();
-		mtx.lock();
-		activeConditions.clear();
-		mtx.unlock();
-	}
+    ALICA_DEBUG_MSG("CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables. CS: " << this);
+}
 
-	/**
-	 * Add a condition to the store
-	 * @param con A Condition
-	 */
-	void ConditionStore::addCondition(Condition* con)
-	{
-		if (con == nullptr || (con->getVariables().size() == 0 && con->getQuantifiers().size() == 0))
-		{
-			return;
-		}
+/**
+ * Revoke a specific condition from the constraint store
+ *
+ * @param con The condition to be removed
+ */
+void ConditionStore::removeCondition(const Condition* con)
+{
+    if (con == nullptr) {
+        assert(false);
+        return;
+    }
+    bool modified = false;
+    std::lock_guard<std::mutex> lock(_mtx);
+    ConditionGrp::iterator cit = find(_activeConditions.begin(), _activeConditions.end(), con);
+    if (cit != _activeConditions.end()) {
+        modified = true;
+        _activeConditions.erase(cit);
+    }
+    if (modified) {
+        for (const Variable* v : con->getVariables()) {
+            auto it = _activeVar2CondMap.find(v);
+            it->second.erase(std::remove(it->second.begin(), it->second.end(), con), it->second.end());
+        }
+        for (const Quantifier* qv : con->getQuantifiers()) {
+            for (const Variable* v : qv->getTemplateVariables()) {
+                auto it = _activeVar2CondMap.find(v);
+                it->second.erase(std::remove(it->second.begin(), it->second.end(), con), it->second.end());
+            }
+        }
+    }
 
-		bool modified = false;
-		mtx.lock();
-		if (find(activeConditions.begin(), activeConditions.end(), con) == activeConditions.end())
-		{
-			modified = true;
-			activeConditions.push_back(con);
-		}
-		mtx.unlock();
-		if (modified)
-		{
-			for (Variable* variable : con->getVariables())
-			{
-				auto it = activeVar2CondMap.find(variable);
-				if (it != activeVar2CondMap.end())
-				{
-					it->second->push_back(con);
-				}
-				else
-				{
-					shared_ptr<vector<Condition*>> condList = make_shared<vector<Condition*>>();
-					condList->push_back(con);
-					activeVar2CondMap.insert(pair<Variable*, shared_ptr<vector<Condition*>> >(variable, condList));
-				}
-			}
-		}
-#ifdef CS_DEBUG
-		cout << "CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " vars" << endl;
-#endif
-	}
+    ALICA_DEBUG_MSG("CS: Removed condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables.");
+}
 
-	/**
-	 * Revoke a specific condition from the constraint store
-	 *
-	 * @param con The condition to be removed
-	 */
-	void ConditionStore::removeCondition(Condition* con)
-	{
-		if (con == nullptr)
-		{
-			return;
-		}
-		bool modified = false;
-		mtx.lock();
-		if (find(activeConditions.begin(), activeConditions.end(), con) != activeConditions.end())
-		{
-			modified = true;
-			activeConditions.remove(con);
-		}
-		mtx.unlock();
-		if (modified)
-		{
-			for (Variable* v : con->getVariables())
-			{
-				remove(activeVar2CondMap[v]->begin(), activeVar2CondMap[v]->end(), con);
-			}
-		}
+/**
+ * Writes static and domain variables, as well as, problem parts into the query.
+ */
+void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
+{
+    ALICA_DEBUG_MSG("ConditionStore: Accepting Query - Active conditions in store is " << _activeConditions.size() << " CS: " << this);
+    if (_activeConditions.empty()) {
+        return;
+    }
 
-#ifdef CS_DEBUG
-		cout << "CS: Removed condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " vars" << endl;
-#endif
-	}
+    BufferedVariableGrp& staticVarBuffer = query.editStaticVariableBuffer();
+    BufferedDomainVariableGrp& domainVarBuffer = query.editDomainVariableBuffer();
+    if (!staticVarBuffer.hasCurrentlyAny() && !domainVarBuffer.hasCurrentlyAny()) {
+        return; // nothing to do
+    }
 
-	/**
-	 * Writes static and domain variables, as well as, problem parts into the query.
-	 */
-	void ConditionStore::acceptQuery(shared_ptr<Query> query, shared_ptr<RunningPlan> rp)
-	{
-#ifdef CS_DEBUG
-		cout << "CS: Accepting Query - Store size is " << activeConditions.size() << endl;
-#endif
-		if (activeConditions.size() == 0)
-		{
-			return;
-		}
+    ALICA_DEBUG_MSG("ConditionStore: Query contains static variables: " << staticVarBuffer.getCurrent());
 
-		vector<Variable*> relStaticVars = query->getRelevantStaticVariables();
-		vector<Variable*> relDomainVars = query->getRelevantDomainVariables();
-		if (relStaticVars.size() == 0 && relDomainVars.size() == 0)
-		{
-			return; //nothing to do
-		}
+    const int previousPartCount = query.getPartCount();
 
-		map<Condition*, shared_ptr<ProblemPart>> newCondProbPartMap = map<Condition*, shared_ptr<ProblemPart>>();
-		map<Condition*, shared_ptr<ProblemPart>> allCondProbPartMap = map<Condition*, shared_ptr<ProblemPart>>();
-		mtx.lock();
-		for (Condition* cond : activeConditions)
-		{
-			//allCondProbPartMap.insert(pair<Condition*, shared_ptr<ProblemPart>>(cond, make_shared<ProblemPart>(cond, rp)));
-			allCondProbPartMap.emplace(cond, make_shared<ProblemPart>(cond, rp));
-		}
-		mtx.unlock();
+    std::lock_guard<std::mutex> lock(_mtx);
+    while (query.getPartCount() - previousPartCount < static_cast<int>(_activeConditions.size()) &&
+            (domainVarBuffer.hasCurrentlyAny() || staticVarBuffer.hasCurrentlyAny())) {
+        if (staticVarBuffer.hasCurrentlyAny()) {
+            const Variable* curStaticVariable = staticVarBuffer.getCurrent().back();
+            staticVarBuffer.editCurrent().pop_back();
+            staticVarBuffer.editNext().push_back(curStaticVariable);
 
-#ifdef CS_DEBUG
-		std::cout << "CS: Relevant Static Vars: ";
-		for (Variable* v : relStaticVars)
-		{
-			 std::cout << v->getName() << ", ";
-		}
-		std::cout << std::endl;
-#endif
+            ALICA_DEBUG_MSG("ConditionStore: Checking static variable: " << *curStaticVariable);
 
-		vector<Variable*> staticVarsToCheck = relStaticVars;
-		vector<Variable*> domVarsToCheck = relDomainVars;
-		vector<Variable*> staticVarsChecked = vector<Variable*>();
-		vector<Variable*> domVarsChecked = vector<Variable*>();
-		while (newCondProbPartMap.size() < allCondProbPartMap.size() && (domVarsToCheck.size() > 0 || staticVarsToCheck.size() > 0))
-		{
-			if (staticVarsToCheck.size() > 0)
-			{
-				Variable* curStaticVariable = staticVarsToCheck[staticVarsToCheck.size() - 1];
-				staticVarsToCheck.pop_back();
-				staticVarsChecked.push_back(curStaticVariable);
+            auto activeVar2CondMapEntry = _activeVar2CondMap.find(curStaticVariable);
+            if (activeVar2CondMapEntry == _activeVar2CondMap.end()) {
+                // the current variable wasn't active
+                continue;
+            }
 
-#ifdef CS_DEBUG
-				std::cout << "CS: Checking static variable " << curStaticVariable->getName() << "(" << curStaticVariable->getId() << ")" << std::endl;
-#endif
+            ALICA_DEBUG_MSG(
+                    "ConditionStore: Conditions active under variable " << *activeVar2CondMapEntry->first << ": " << activeVar2CondMapEntry->second.size());
 
-				auto it = activeVar2CondMap.find(curStaticVariable);
-				if (it == activeVar2CondMap.end())
-				{
-					// the current variable wasn't active
-					continue;
-				}
+            for (const Condition* c : activeVar2CondMapEntry->second) {
+                if (std::find_if(query.getProblemParts().begin() + previousPartCount, query.getProblemParts().end(),
+                            [c](const ProblemPart& pp) { return pp.getCondition() == c; }) != query.getProblemParts().end()) {
+                    // condition was already inserted
+                    continue;
+                }
+                query.addProblemPart(ProblemPart(c, rp));
+            }
+        } else if (domainVarBuffer.hasCurrentlyAny()) {
+            const DomainVariable* curDomainVariable = domainVarBuffer.getCurrent().back();
+            domainVarBuffer.editCurrent().pop_back();
+            domainVarBuffer.editNext().push_back(curDomainVariable);
 
-#ifdef CS_DEBUG
-				std::cout << "CS: Conditions active under variable " << it->first->getName() << ": " << it->second->size() << std::endl;
-#endif
-				for (Condition* c : *(it->second))
-				{
-					if (newCondProbPartMap.find(c) != newCondProbPartMap.end())
-					{
-						// condition was already inserted into the newCondProbPartMap
-						continue;
-					}
+            auto activeVar2CondMapEntry = _activeVar2CondMap.find(curDomainVariable->getTemplateVariable());
+            if (activeVar2CondMapEntry == _activeVar2CondMap.end()) {
+                // the current variable wasn't active
+                continue;
+            }
+            for (const Condition* c : activeVar2CondMapEntry->second) {
+                if (std::find_if(query.getProblemParts().begin() + previousPartCount, query.getProblemParts().end(),
+                            [c](const ProblemPart& pp) { return pp.getCondition() == c; }) != query.getProblemParts().end()) {
+                    // condition was already inserted
+                    continue;
+                }
+                // if c has a quantifier that currently covers the agent & has the right tempalte var, add it
+                for (const Quantifier* q : c->getQuantifiers()) {
+                    if (q->hasTemplateVariable(curDomainVariable->getTemplateVariable()) && q->isAgentInScope(curDomainVariable->getAgent(), *rp)) {
+                        query.addProblemPart(ProblemPart(c, rp));
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
-					shared_ptr<ProblemPart> problemPart = allCondProbPartMap[c];
-					newCondProbPartMap.emplace(c, problemPart);
-					/**
-					 *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
-					 * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
-					 * 2. List of Robots, e.g., An agent has variables X,Y.
-					 * 3. Vector of Variables, e.g., variables X,Y.
-					 * 4. Variable, e.g., variable X.
-					 */
-					auto domainVariables = problemPart->getDomainVariables();
-					for (auto& listOfRobots : (*domainVariables))
-					{
-						for (vector<Variable*> variables : listOfRobots)
-						{
-							for(auto variable : variables)
-							{
-								if (find(domVarsChecked.begin(), domVarsChecked.end(), variable) == domVarsChecked.end()
-										&& find(domVarsToCheck.begin(), domVarsToCheck.end(), variable) == domVarsToCheck.end())
-								{
-									cout << "CS: Adding DomVar : " << variable->getName() << endl;
-									domVarsToCheck.push_back(variable);
-								}
-							}
-						}
-					}
-					for (Variable* variable : c->getVariables())
-					{
-						if (find(staticVarsChecked.begin(), staticVarsChecked.end(), variable) == staticVarsChecked.end()
-								&& find(staticVarsToCheck.begin(), staticVarsToCheck.end(), variable) == staticVarsToCheck.end())
-						{
-							staticVarsToCheck.push_back(variable);
-						}
-					}
-				}
-			}
-			else if (domVarsToCheck.size() > 0)
-			{
-				Variable* curDomainVariable = domVarsToCheck[domVarsToCheck.size() - 1];
-				domVarsToCheck.pop_back();
-				domVarsChecked.push_back(curDomainVariable);
+    // write back relevant variables, this contains variables obtained earlier
+    staticVarBuffer.mergeAndFlip();
+    domainVarBuffer.mergeAndFlip();
+}
 
-				for (auto& condProbPartPair : allCondProbPartMap)
-				{
-					if (newCondProbPartMap.find(condProbPartPair.first) != newCondProbPartMap.end())
-					{
-						// condition was already in the newCondProbPartMap
-						continue;
-					}
-
-					if (!condProbPartPair.second->hasVariable(curDomainVariable))
-					{
-						// curDomainVariable does not exist in the problem part
-						continue;
-					}
-
-					newCondProbPartMap.emplace(condProbPartPair.first, condProbPartPair.second);
-
-					/**
-					 *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
-					 * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
-					 * 2. List of Robots, e.g., An agent has variables X,Y.
-					 * 3. Vector of Variables, e.g., variables X,Y.
-					 * 4. Variable, e.g., variable X.
-					 */
-					for (auto& listOfRobots : (*condProbPartPair.second->getDomainVariables()))
-					{
-						for (auto& variables : listOfRobots)
-						{
-							for (auto& variable : variables)
-							{
-								if (find(domVarsChecked.begin(), domVarsChecked.end(), variable) == domVarsChecked.end()
-										&& find(domVarsToCheck.begin(), domVarsToCheck.end(), variable) == domVarsToCheck.end())
-								{
-									domVarsToCheck.push_back(variable);
-								}
-							}
-						}
-					}
-
-					for (Variable* variable : condProbPartPair.first->getVariables())
-					{
-						if (find(staticVarsChecked.begin(), staticVarsChecked.end(), variable) == staticVarsChecked.end()
-								&& find(staticVarsToCheck.begin(), staticVarsToCheck.end(), variable) == staticVarsToCheck.end())
-						{
-							staticVarsToCheck.push_back(variable);
-						}
-					}
-				}
-			}
-		}
-		if (!staticVarsChecked.empty())
-		{
-			staticVarsChecked.insert(staticVarsChecked.end(), staticVarsToCheck.begin(), staticVarsToCheck.end());
-		}
-
-		if (!domVarsToCheck.empty())
-		{
-			domVarsChecked.insert(domVarsChecked.end(), domVarsToCheck.begin(), domVarsToCheck.end());
-		}
-
-		//write back relevant variables, this contains variables obtained earlier
-		query->setRelevantStaticVariables(staticVarsChecked);
-		query->setRelevantDomainVariables(domVarsChecked);
-
-		// write back problem parts
-		vector<shared_ptr<ProblemPart>> problemParts = vector<shared_ptr<ProblemPart>>();
-		for (auto& pair : newCondProbPartMap)
-		{
-			auto problemPart = pair.second;
-			if (find(problemParts.begin(), problemParts.end(), problemPart) == problemParts.end())
-			{
-				problemParts.push_back(problemPart);
-			}
-		}
-		query->addProblemParts(problemParts);
-	}
-
-} /* namespace supplementary */
+} // namespace alica

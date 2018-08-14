@@ -1,75 +1,64 @@
-/*
- * UtilityFunction.h
- *
- *  Created on: Jun 4, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef UTILITYFUNCTION_H_
-#define UTILITYFUNCTION_H_
-//#define UFDEBUG
-
-
-#include <string>
-#include <map>
-#include <list>
-#include <algorithm>
-#include <vector>
-#include <sstream>
-#include <memory>
 #include "UtilityInterval.h"
 #include "engine/RunningPlan.h"
+#include "engine/TaskRoleStruct.h"
 
-using namespace std;
+#include <map>
+#include <sstream>
+#include <string>
+#include <vector>
+
 namespace alica
 {
-	class Plan;
-	class AlicaEngine;
-	class IRoleAssignment;
-	class USummand;
-	class IAssignment;
-	struct TaskRoleStruct;
+class Plan;
+class AlicaEngine;
+class IRoleAssignment;
+class USummand;
+class IAssignment;
+struct TaskRoleStruct;
 
-	class UtilityFunction
-	{
-	public:
-		UtilityFunction(string name, list<USummand*> utilSummands, double priorityWeight, double similarityWeight, Plan* plan);
-		virtual ~UtilityFunction();
-		list<USummand*>& getUtilSummands();
-		void setUtilSummands(list<USummand*> utilSummands);
-		virtual double eval(shared_ptr<RunningPlan> newRp, shared_ptr<RunningPlan> oldRp);
-		virtual UtilityInterval eval(IAssignment* newAss, IAssignment* oldAss);
-		void updateAssignment(IAssignment* newAss, IAssignment* oldAss);
-		void cacheEvalData();
-		void init(AlicaEngine* ae);
-		virtual pair<vector<double>, double>* differentiate(IAssignment* newAss);
-		static void initDataStructures(AlicaEngine* ae);
-		virtual string toString();
-		Plan* getPlan();
-		map<TaskRoleStruct*, double>& getPriorityMartix();
+class UtilityFunction
+{
+public:
+    UtilityFunction();
+    UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan);
+    ~UtilityFunction();
+    const std::vector<std::unique_ptr<USummand>>& getUtilSummands() const { return _utilSummands; };
+    std::vector<std::unique_ptr<USummand>>& editUtilSummands() { return _utilSummands; };
 
-		const double DIFFERENCETHRESHOLD = 0.0001; // Max difference for the same result
-	protected:
-		Plan* plan;
-		string name = "DefaultUtilityFunction";
-		// For default priority based utility summand (which is integrated in every UF)
-		map<TaskRoleStruct*, double > priorityMartix;
-		map<long, double> roleHighestPriorityMap;
-		// For default similarity based utility summand (which is integrated in every UF)
-		double priorityWeight;
-		double similarityWeight;
-		AlicaEngine* ae;
-		IRoleAssignment* ra;
-		// List of normal utility summands
-		list<USummand*> utilSummands;
-		TaskRoleStruct* lookupStruct;
-		UtilityInterval priResult;
-		UtilityInterval getPriorityResult(IAssignment* ass);
-		UtilityInterval simUI;
-		UtilityInterval getSimilarity(IAssignment* newAss, IAssignment* oldAss);
+    // double eval(const RunningPlan* newRp, const RunningPlan* oldRp) const;
+    UtilityInterval eval(const PartialAssignment* newAss, const Assignment* oldAss) const;
+    // void updateAssignment(IAssignment* newAss, const Assignment* oldAss);
+    void cacheEvalData();
+    void init(AlicaEngine* ae);
 
-	};
+    static void initDataStructures(AlicaEngine* ae);
+
+    const Plan* getPlan() const { return _plan; }
+    // const std::map<TaskRoleStruct, double>& getPriorityMartix() const { return priorityMatrix; }
+
+    const double DIFFERENCETHRESHOLD = 0.0001; // Max difference for the same result
+
+private:
+    friend std::stringstream& operator<<(std::stringstream& ss, const UtilityFunction& uf);
+    UtilityInterval getPriorityResult(IAssignment ass) const;
+    UtilityInterval getSimilarity(IAssignment newAss, const Assignment* oldAss) const;
+
+    const Plan* _plan;
+    std::vector<std::unique_ptr<USummand>> _utilSummands;
+
+    // For default priority based utility summand (which is integrated in every UF)
+    std::map<TaskRoleStruct, double> _priorityMatrix;
+    std::map<int64_t, double> _roleHighestPriorityMap;
+    // For default similarity based utility summand (which is integrated in every UF)
+    double _priorityWeight;
+    double _similarityWeight;
+
+    AlicaEngine* _ae;
+    IRoleAssignment* _ra;
+};
+
+std::stringstream& operator<<(std::stringstream& ss, const UtilityFunction& uf);
 
 } /* namespace alica */
-
-#endif /* UTILITYFUNCTION_H_ */

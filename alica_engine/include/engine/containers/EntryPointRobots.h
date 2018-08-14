@@ -1,41 +1,40 @@
-/*
- * EntryPointRobots.h
- *
- *  Created on: Jul 7, 2014
- *      Author: Paul Panin
- */
+#pragma once
 
-#ifndef ENTRYPOINTROBOTS_H_
-#define ENTRYPOINTROBOTS_H_
+#include "engine/AgentIDConstPtr.h"
 
-#include <vector>
+#include <iterator>
+#include <ostream>
 #include <tuple>
-
-using namespace std;
+#include <vector>
 
 namespace alica
 {
-	typedef tuple<long, vector<int>> stdEntryPointRobot;
-	struct EntryPointRobots
-	{
-		EntryPointRobots() : entrypoint(0)
-		{
-		}
 
-		long entrypoint;
-		vector<int> robots;
+typedef std::tuple<int64_t, std::vector<AgentIDConstPtr>> stdEntryPointRobot;
+struct EntryPointRobots
+{
+    EntryPointRobots()
+            : entrypoint(0)
+    {
+    }
 
-		EntryPointRobots(stdEntryPointRobot& s)
-		{
-			entrypoint = get<0>(s);
-			robots = get<1>(s);
-		}
+    int64_t entrypoint;
+    std::vector<AgentIDConstPtr> robots;
 
-		stdEntryPointRobot toStandard()
-		{
-			return move(make_tuple(entrypoint, robots));
-		}
-	};
+    EntryPointRobots(const stdEntryPointRobot& s)
+    {
+        entrypoint = std::get<0>(s);
+        robots = std::get<1>(s);
+    }
+
+    stdEntryPointRobot toStandard() const { return std::make_tuple(entrypoint, robots); }
+};
+
+inline std::ostream& operator<<(std::ostream& o, const EntryPointRobots& epr)
+{
+    o << "EP: " << epr.entrypoint << " Robots: ";
+    std::copy(epr.robots.begin(), epr.robots.end(), std::ostream_iterator<AgentIDConstPtr>(o, ", "));
+    o << std::endl;
+    return o;
 }
-
-#endif /* ENTRYPOINTROBOTS_H_ */
+} // namespace alica

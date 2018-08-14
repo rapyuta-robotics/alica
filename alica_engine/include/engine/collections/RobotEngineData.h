@@ -1,71 +1,52 @@
-/*
- * RobotEngineData.h
- *
- *  Created on: Jun 13, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef ROBOTENGINEDATA_H_
-#define ROBOTENGINEDATA_H_
-
+#include <engine/AgentIDConstPtr.h>
+#include <engine/Types.h>
+#include <engine/collections/SuccessMarks.h>
 
 #include <map>
-#include <typeinfo>
 #include <memory>
+#include <string>
 
-using namespace std;
 namespace alica
 {
-	class RobotProperties;
-	class SuccessMarks;
-	class Variable;
-	class Role;
-	class AlicaEngine;
+class AlicaEngine;
 
-	/**
-	 * Basic Runtime information relating to a robot within the team
-	 */
-	class RobotEngineData
-	{
-	public:
-		RobotEngineData(AlicaEngine* ae, shared_ptr<RobotProperties> properties);
-		virtual ~RobotEngineData();
-		bool isActive();
-		void setActive(bool active);
-		shared_ptr<RobotProperties> getProperties() ;
-		void setProperties(shared_ptr<RobotProperties> properties);
-		shared_ptr<SuccessMarks> getSuccessMarks();
-		void setSuccessMarks(shared_ptr<SuccessMarks> successMarks);
-		unsigned long getLastMessageTime();
-		void setLastMessageTime(unsigned long lastMessageTime);
-		virtual void initDomainVariables();
-		virtual Variable* getDomainVariable(string sort);
-		Role* getLastRole();
-		void setLastRole(Role* lastRole);
+/**
+ * Basic plan execution information relating to a robot within the team.
+ */
+class RobotEngineData
+{
+public:
+    RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId);
+    ~RobotEngineData();
+    void initDomainVariables();
 
-	protected:
-		AlicaEngine* ae;
-		/**
-		 * The robot's RobotProperties
-		 */
-		shared_ptr<RobotProperties> properties;
-		/**
-		 * Whether or not the robot is considered active
-		 */
-		bool active;
-		/**
-		 * The SuccessMarks of the robot, indicating which EntryPoints it completed.
-		 */
-		shared_ptr<SuccessMarks> successMarks;
-		/**
-		 * The timestamp of the last message event from this robot
-		 */
-		unsigned long lastMessageTime;
-		map<string, Variable*> domainVariables;
-		long makeUniqueId(string s);
-		Role* lastRole;
-	};
+    const SuccessMarks& getSuccessMarks() const { return _successMarks; }
+    SuccessMarks& editSuccessMarks() { return _successMarks; }
+    void updateSuccessMarks(const IdGrp& succeededEps);
+    void clearSuccessMarks();
+
+    const DomainVariable* getDomainVariable(const Variable* templateVar) const;
+    const DomainVariable* getDomainVariable(const std::string& name) const;
+
+private:
+    /**
+     * Creates a hopefully unique id, in order to make the variable
+     * string "X" (specified in the Plan Designer) unique in the team.
+     */
+    int64_t makeUniqueId(const std::string& s) const;
+
+    const AlicaEngine* _engine;
+    AgentIDConstPtr _agentId;
+    /**
+     * The SuccessMarks of the robot, indicating which EntryPoints are completed.
+     */
+    SuccessMarks _successMarks;
+    /**
+     * The domain variables (a.k.a. quantified variables) are held in a map: TemplateVariable -> DomainVariable
+     */
+    std::map<const Variable*, std::unique_ptr<const DomainVariable>> _domainVariables;
+};
 
 } /* namespace alica */
-
-#endif /* ROBOTENGINEDATA_H_ */
