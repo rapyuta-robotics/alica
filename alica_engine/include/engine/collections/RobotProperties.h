@@ -1,53 +1,48 @@
-/*
- * RobotProperties.h
- *
- *  Created on: Jun 13, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef ROBOTPROPERTIES_H_
-#define ROBOTPROPERTIES_H_
+#include "engine/AgentIDConstPtr.h"
+#include "engine/Types.h"
+#include "engine/model/Characteristic.h"
 
-
-#include <string>
-#include <map>
-#include <sstream>
 #include <SystemConfig.h>
-#include <algorithm>
-#include <memory>
 
-using namespace std;
+#include <algorithm>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <string>
+
 namespace alica
 {
 
-	class Characteristic;
-	class Capability;
-	class AlicaEngine;
+class AlicaEngine;
+class Characteristic;
+class Capability;
 
-	class RobotProperties
-	{
-	public:
-		RobotProperties();
-		RobotProperties(AlicaEngine* ae, string name);
-		virtual ~RobotProperties();
-		int getId() const;
-		void setId(int id);
-		const string& getName() const;
-		void setName(const string& name);
-		map<string, Characteristic*>& getCharacteristics();
-		const string& getDefaultRole() const;
-		void setDefaultRole(const string& defaultRole);
-		string toString();
+class RobotProperties
+{
+public:
+    RobotProperties();
+    RobotProperties(const AlicaEngine* ae, const std::string& name);
+    ~RobotProperties();
 
-	protected:
-		int id = -1;
-		string name;
-		string defaultRole;
-		map<string, Characteristic*> characteristics;
-		map<long, Capability*> capabilities;
+    const std::map<std::string, std::unique_ptr<const Characteristic>>& getCharacteristics() const { return _characteristics; }
+    const std::string& getDefaultRole() const { return _defaultRole; }
 
-	};
+    friend std::ostream& operator<<(std::ostream& os, const alica::RobotProperties& obj)
+    {
+        os << "RobotProperties: Default Role: " << obj.getDefaultRole() << std::endl;
+        for (const std::pair<const std::string, std::unique_ptr<const Characteristic>>& p : obj.getCharacteristics()) {
+            os << "\t" << p.first << " = " << p.second->getCapValue()->getName() << std::endl;
+        }
+        return os;
+    }
+
+private:
+    void readFromConfig(const AlicaEngine* engine, const std::string& name);
+
+    std::map<std::string, std::unique_ptr<const Characteristic>> _characteristics;
+    std::string _defaultRole;
+};
 
 } /* namespace alica */
-
-#endif /* ROBOTPROPERTIES_H_ */

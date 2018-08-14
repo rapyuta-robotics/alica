@@ -10,70 +10,35 @@
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
 
-namespace alica
-{
+#include <sstream>
 
-	Behaviour::Behaviour()
-	{
-		this->implementation = nullptr;
-	}
+namespace alica {
 
-	Behaviour::Behaviour(string name) :	Behaviour()
-	{
-		this->name = name;
-	}
+Behaviour::Behaviour()
+        : _implementation(nullptr) {}
 
-	Behaviour::~Behaviour()
-	{
+Behaviour::~Behaviour() {}
 
-	}
+std::string Behaviour::toString() const {
+    std::stringstream ss;
+    ss << "#Behaviour: " << getName() << std::endl;
+    ss << "\t Configurations: " << getConfigurations().size() << std::endl;
+    for (const BehaviourConfiguration* bc : getConfigurations()) {
+        ss << "\t" << bc->getName() << " " << bc->getId() << std::endl;
+    }
+    ss << "#EndBehaviour" << std::endl;
+    return ss.str();
+}
 
-	string Behaviour::toString()
-	{
-		stringstream ss;
-		ss << "#Behaviour: " << this->getName() << endl;
-		ss << "\t Configurations: " << this->getConfigurations().size() << endl;
-		for(BehaviourConfiguration* bc : this->getConfigurations()) {
-			ss << "\t" << bc->getName() << " " << bc->getId() << endl;
-		}
-		ss << "#EndBehaviour" << endl;
-		return ss.str();
-	}
+void Behaviour::setConfigurations(const BehaviourConfigurationGrp& configurations) {
+    _configurations = configurations;
+}
 
-	list<BehaviourConfiguration*>& Behaviour::getConfigurations()
-	{
-		return configurations;
-	}
+void Behaviour::setFileName(const std::string& fileName) {
+    _fileName = fileName;
+}
 
-	void Behaviour::setConfigurations(const list<BehaviourConfiguration*>& configurations)
-	{
-		this->configurations = configurations;
-	}
-
-	const string& Behaviour::getFileName() const
-	{
-		if (this->getFileName().empty())
-		{
-			static string result = name + ".beh";
-			return result;
-		}
-		return fileName;
-	}
-
-	void Behaviour::setFileName(const string& fileName)
-	{
-		this->fileName = fileName;
-	}
-
-	BasicBehaviour* alica::Behaviour::getImplementation()
-	{
-		return implementation;
-	}
-
-	void alica::Behaviour::setImplementation(BasicBehaviour* implementation)
-	{
-		this->implementation = implementation;
-	}
-} /* namespace Alica */
-
-
+void Behaviour::setImplementation(BasicBehaviour* implementation) {
+    _implementation = implementation;
+}
+}  // namespace alica

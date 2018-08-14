@@ -11,17 +11,15 @@
 #include "engine/BasicConstraint.h"
 #include <memory>
 
-using namespace std;
-
 namespace alica
 {
-	class ProblemDescriptor;
-	class RunningPlan;
+class ProblemDescriptor;
+class RunningPlan;
 
-	class DummyConstraint : public BasicConstraint
-	{
-		void getConstraint(shared_ptr<ProblemDescriptor> c, shared_ptr<RunningPlan> rp);
-	};
+class DummyConstraint : public BasicConstraint
+{
+    void getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp);
+};
 
 } /* namespace alica */
 

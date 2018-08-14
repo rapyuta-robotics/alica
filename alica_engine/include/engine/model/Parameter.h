@@ -1,35 +1,23 @@
-/*
- * Parameters.h
- *
- *  Created on: Oct 24, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef ALICA_ALICA_ENGINE_SRC_ENGINE_MODEL_PARAMETERS_H_
-#define ALICA_ALICA_ENGINE_SRC_ENGINE_MODEL_PARAMETERS_H_
+#pragma once
 
 #include <string>
 
 #include <engine/model/AlicaElement.h>
 
-namespace alica
-{
+namespace alica {
 
-	class Parameter : public AlicaElement
-	{
-	public:
-		Parameter();
-		virtual ~Parameter();
-		string getKey();
-		void setKey(string key);
-		string getValue();
-		void setValue(string value);
+class Parameter : public AlicaElement {
+public:
+    Parameter();
+    virtual ~Parameter();
+    const std::string& getKey() const { return _key; }
+    void setKey(const std::string& key) { _key = key; }
+    const std::string& getValue() const { return _value; }
+    void setValue(const std::string& value) { _value = value; }
 
-	protected:
-		string key;
-		string value;
-	};
+protected:
+    std::string _key;
+    std::string _value;
+};
 
 } /* namespace alica */
-
-#endif /* ALICA_ALICA_ENGINE_SRC_ENGINE_MODEL_PARAMETERS_H_ */

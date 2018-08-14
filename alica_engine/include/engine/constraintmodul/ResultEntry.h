@@ -1,64 +1,72 @@
-/*
- * ResultEntry.h
- *
- *  Created on: Nov 24, 2014
- *      Author: Philipp Sperber
- */
+#pragma once
 
-#ifndef RESULTENTRY_H_
-#define RESULTENTRY_H_
-
-#include <list>
-#include <map>
-#include <vector>
+#include "engine/AgentIDConstPtr.h"
+#include "engine/AlicaClock.h"
+#include "engine/Types.h"
+#include "engine/collections/Variant.h"
 #include <mutex>
-#include <memory>
-
-using namespace std;
-
+#include <unordered_map>
+#include <vector>
 
 namespace alica
 {
-	class AlicaEngine;
-	struct SolverVar;
-	class Variable;
+class AlicaEngine;
+struct SolverVar;
+class Variable;
 
+class ResultEntry
+{
+public:
+    ResultEntry();
+    ResultEntry(AgentIDConstPtr robotId);
 
-	class ResultEntry
-	{
-	public:
-		ResultEntry(int robotId, AlicaEngine* ae);
-		virtual ~ResultEntry();
+    AgentIDConstPtr getId() const { return _id; }
 
-		int getId();
-		void addValue(long vid, shared_ptr<vector<uint8_t>> result);
-		void clear();
-		shared_ptr<vector<SolverVar*>> getCommunicatableResults(long ttl4Communication);
-		shared_ptr<vector<uint8_t>> getValue(long vid, long ttl4Usage);
-		shared_ptr<vector<shared_ptr<vector<uint8_t>>>> getValues(shared_ptr<vector<Variable*>> query, long ttl4Usage);
+    ResultEntry(const ResultEntry&) = delete;
+    ResultEntry& operator=(const ResultEntry&) = delete;
 
-		class VarValue
-		{
-		public:
-			long id;
-			shared_ptr<vector<uint8_t>> val;
-			ulong lastUpdate;
+    ResultEntry(ResultEntry&&);
+    ResultEntry& operator=(ResultEntry&&);
 
-			VarValue(long vid, shared_ptr<vector<uint8_t>> v, ulong now)
-			{
-				this->id = vid;
-				this->val = v;
-				this->lastUpdate = now;
-			}
-		};
+    void addValue(int64_t vid, Variant result, AlicaTime time);
+    void clear();
+    void getCommunicatableResults(AlicaTime earliest, std::vector<SolverVar>& o_result) const;
+    Variant getValue(int64_t vid, AlicaTime earliest) const;
+    template <typename VarType>
+    bool getValues(const std::vector<VarType*>& query, AlicaTime earliest, std::vector<Variant>& o_values) const;
 
-	protected:
-		int id;
-		AlicaEngine* ae;
-		map<long, shared_ptr<VarValue>> values;
-		mutex valueLock;
-	};
+private:
+    class VarValue
+    {
+    public:
+        Variant _val;
+        AlicaTime _lastUpdate;
+
+        VarValue(Variant v, AlicaTime now)
+                : _val(v)
+                , _lastUpdate(now)
+        {
+        }
+    };
+    std::unordered_map<int64_t, VarValue> _values;
+    mutable std::mutex _valueLock;
+    AgentIDConstPtr _id;
+};
+
+template <typename VarType>
+bool ResultEntry::getValues(const std::vector<VarType*>& query, AlicaTime earliest, std::vector<Variant>& o_values) const
+{
+    o_values.resize(query.size());
+    int i = 0;
+    int invalids = 0;
+    for (const VarType* v : query) {
+        o_values[i] = getValue(v->getId(), earliest);
+        if (!o_values[i].isSet()) {
+            ++invalids;
+        }
+        ++i;
+    }
+    return invalids != i;
+}
 
 } /* namespace alica */
-
-#endif /* RESULTENTRY_H_ */

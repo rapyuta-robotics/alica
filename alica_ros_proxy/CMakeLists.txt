@@ -14,35 +14,17 @@ find_package(catkin REQUIRED COMPONENTS
   system_config
   roscpp
   message_generation
+  alica_msgs
+  alica_common_config
 )
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
 
-add_message_files(
-  DIRECTORY msg FILES
-  AllocationAuthorityInfo.msg
-  EntryPointRobots.msg
-  RoleSwitch.msg
-  SolverVar.msg
-  SyncReady.msg
-  AlicaEngineInfo.msg 
-  PlanTreeInfo.msg
-  SolverResult.msg
-  SyncData.msg
-  SyncTalk.msg   
-)
-
-## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs  # Or other packages containing msgs
-)
-
 catkin_package(
   INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
   LIBRARIES alica_ros_proxy
-  CATKIN_DEPENDS alica_engine roscpp message_runtime
+  CATKIN_DEPENDS alica_engine roscpp
   #DEPENDS system_lib
 )
 
@@ -55,7 +37,7 @@ add_library(alica_ros_proxy
 	src/clock/AlicaROSClock.cpp src/communication/AlicaRosCommunication.cpp
 )
 
-add_dependencies(alica_ros_proxy alica_ros_proxy_generate_messages_cpp)
+add_dependencies(alica_ros_proxy alica_msgs_generate_messages_cpp agent_id_generate_messages_cpp)
 
 target_link_libraries(alica_ros_proxy
   ${catkin_LIBRARIES}

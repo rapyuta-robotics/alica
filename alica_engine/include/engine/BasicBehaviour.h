@@ -1,141 +1,127 @@
-/*
- * BasicBehaviour.h
- *
- *  Created on: Jun 4, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef BASICBEHAVIOUR_H_
-#define BASICBEHAVIOUR_H_
+#include "engine/Assignment.h"
+#include "engine/PlanInterface.h"
+#include "engine/Types.h"
+#include "engine/model/BehaviourConfiguration.h"
+#include <supplementary/AgentID.h>
 
-using namespace std;
-
-#include <string>
-#include <iostream>
-#include <map>
-#include <memory>
-#include <list>
-#include <thread>
+#include <atomic>
 #include <chrono>
 #include <condition_variable>
+#include <memory>
+#include <string>
+#include <thread>
 #include <vector>
 
 namespace supplementary
 {
-	class Timer;
-	class ITrigger;
-}
+class Timer;
+class ITrigger;
+} // namespace supplementary
 
 namespace alica
 {
-	class Variable;
-	class RunningPlan;
-	class BehaviourConfiguration;
-	class EntryPoint;
+// TODO: get rid of this line once generator templates get an overhaul
+using std::string;
 
-	/**
-	 * The base class for all behaviours. All Behaviours must inherit from this class.
-	 */
-	class BasicBehaviour
-	{
-	public:
-		BasicBehaviour(string name);
-		virtual ~BasicBehaviour();
-		virtual void run(void* msg) = 0;
-		const string getName() const;
-		void setName(string name);
-		shared_ptr<map<string, string>> getParameters();
-		void setParameters(shared_ptr<map<string, string>> parameters);
-		shared_ptr<list<Variable*>> getVariables();
-		Variable* getVariablesByName(string name);
-		void setVariables(shared_ptr<list<Variable*>> variables);
-		bool stop();
-		bool start();
-		int getDelayedStart() const;
-		void setDelayedStart(long msDelayedStart);
-		int getInterval() const;
-		void setInterval(long msInterval);
-		shared_ptr<RunningPlan> getRunningPlan();
-		void setRunningPlan(shared_ptr<RunningPlan> runningPlan);
-		bool isSuccess() const;
-		void setSuccess(bool success);
-		bool isFailure() const;
-		void setFailure(bool failure);
+class Variable;
+class RunningPlan;
 
-		bool getParameter(string key, string& valueOut);
-		void setTrigger(supplementary::ITrigger* trigger);
+class EntryPoint;
+class AlicaEngine;
 
-		void sendLogMessage(int level, string& message);
-	protected:
-		/**
-		 * The name of this behaviour.
-		 */
-		string name;
-		/**
-		 * Parameters are behaviour configuration specific fixed values. They are set before the behaviour is activated.
-		 */
-		shared_ptr<map<string, string>> parameters;
-		/**
-		 * The set of Variables attached to this behaviours as defined by the BehaviourConfiguration.
-		 */
-		shared_ptr<list<Variable*>> variables;
-		/**
-		 * The running plan representing this behaviour within the PlanBase.
-		 */
-		shared_ptr<RunningPlan> runningPlan;
-		chrono::milliseconds msInterval;
-		chrono::milliseconds msDelayedStart;
-		/**
-		 * is always true except when the behaviour is shutting down
-		 */
-		bool started;
-		bool callInit;
+/**
+ * The base class for all behaviours. All Behaviours must inherit from this class.
+ */
+class BasicBehaviour
+{
+public:
+    BasicBehaviour(const std::string& name);
+    virtual ~BasicBehaviour();
+    virtual void run(void* msg) = 0;
+    bool isRunningInContext(const RunningPlan* rp) const;
+    void setEngine(AlicaEngine* engine) { _engine = engine; }
+    const std::string& getName() const { return _name; }
+    const BehaviourParameterMap& getParameters() const { return _configuration->getParameters(); }
 
+    void setConfiguration(const BehaviourConfiguration* beh);
 
-		/**
-		 * Tells us whether the behaviour is currently running (or active)
-		 */
-		bool running;
+    const VariableGrp& getVariables() const { return _configuration->getVariables(); }
+    const Variable* getVariableByName(const std::string& name) const;
 
-		thread* runThread; /** < executes the runInternal and thereby the abstract run method */
-		supplementary::Timer* timer; /** < triggers the condition_variable of the runThread, if this behaviour is timer triggered, alternative to behaviourTrigger*/
-		supplementary::ITrigger* behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour is event triggered, alternative to timer */
-		int getOwnId();
+    bool stop();
+    bool start();
 
-		/**
-		 * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
-		 * Override for behaviour specific initialisation.
-		 */
-		virtual void initialiseParameters()
-		{
-		};
+    void setDelayedStart(int32_t msDelayedStart) { _msDelayedStart = std::chrono::milliseconds(msDelayedStart); }
 
-		EntryPoint* getParentEntryPoint(string taskName);
+    void setInterval(int32_t msInterval) { _msInterval = std::chrono::milliseconds(msInterval); }
 
-		EntryPoint* getHigherEntryPoint(string planName, string taskName);
+    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(_contextInRun); }
+    void setRunningPlan(RunningPlan* rp) { _context = rp; }
 
-		shared_ptr<vector<int>> robotsInEntryPointOfHigherPlan(EntryPoint* ep);
+    bool isSuccess() const;
+    void setSuccess();
+    bool isFailure() const;
+    void setFailure();
 
-		shared_ptr<vector<int>> robotsInEntryPoint(EntryPoint* ep);
+    bool getParameter(const std::string& key, std::string& valueOut) const;
+    void setTrigger(supplementary::ITrigger* trigger);
 
-	private:
-		void runInternal();
-		void initInternal();
+    void sendLogMessage(int level, const std::string& message) const;
 
-		mutex runCV_mtx;
-		/**
-		 * The Success flag. Raised by a behaviour to indicate it reached whatever it meant to reach.
-		 */
-		bool success;
-		/**
-		 * The Failure flag. Raised by a behaviour to indicate it has failed in some way.
-		 */
-		bool failure;
+    virtual void init(){};
 
-	protected:
-		condition_variable runCV;
+protected:
+    AgentIDConstPtr getOwnId() const;
+    AlicaEngine* getEngine() const { return _engine; }
 
-	};
+    /**
+     * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
+     * Override for behaviour specific initialisation.
+     */
+    virtual void initialiseParameters(){};
+
+private:
+    void runInternalTimed();
+    void runInternalTriggered();
+    void initInternal();
+
+    /**
+     * The name of this behaviour.
+     */
+    std::string _name;
+
+    const BehaviourConfiguration* _configuration;
+    AlicaEngine* _engine;
+    RunningPlan* _context;
+
+    /**
+     * is always true except when the behaviour is shutting down
+     */
+    bool _started;
+    bool _callInit;
+    /**
+     * The Success flag. Raised by a behaviour to indicate it reached whatever it meant to reach.
+     */
+    bool _success;
+    /**
+     * The Failure flag. Raised by a behaviour to indicate it has failed in some way.
+     */
+    bool _failure;
+    /**
+     * Tells us whether the behaviour is currently running (or active)
+     */
+    bool _running;
+    std::atomic<RunningPlan*> _contextInRun;
+
+    std::thread* _runThread; /** < executes the runInternal and thereby the abstract run method */
+
+    supplementary::ITrigger* _behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
+                                                  is event triggered, alternative to timer */
+    std::condition_variable _runCV;
+    mutable std::mutex _runLoopMutex;
+    std::chrono::milliseconds _msInterval;
+    std::chrono::milliseconds _msDelayedStart;
+};
 } /* namespace alica */
-
-#endif /* BASICBEHAVIOUR_H_ */

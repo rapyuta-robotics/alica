@@ -5,38 +5,30 @@
  *      Author: Stefan Jakob
  */
 
-#include <engine/BasicCondition.h>
 #include <engine/AlicaEngine.h>
+#include <engine/BasicCondition.h>
 #include <engine/RunningPlan.h>
 
-namespace alica {
+namespace alica
+{
 
-BasicCondition::BasicCondition() {
+BasicCondition::BasicCondition() {}
+
+BasicCondition::~BasicCondition() {}
+
+bool BasicCondition::isStateTimedOut(const AlicaTime timeOut, std::shared_ptr<RunningPlan> rp) const
+{
+    if (rp->getStateStartTime() == AlicaTime::zero())
+        return false;
+    AlicaTime timeDiff = rp->getAlicaEngine()->getAlicaClock()->now() - rp->getStateStartTime();
+    return timeDiff > timeOut;
 }
 
-BasicCondition::~BasicCondition() {
-}
-
-bool BasicCondition::isStateTimedOut(unsigned long timeOut, shared_ptr<RunningPlan> rp) {
-	if (rp->getStateStartTime() == 0)
-		return false;
-	long time = (long) (rp->getAlicaEngine()->getIAlicaClock()->now());
-	long timeDiff = time - (long) (rp->getStateStartTime());
-	if (timeDiff > timeOut) {
-		return true;
-	}
-	return false;
-}
-
-bool BasicCondition::isTimeOut(unsigned long timeOut, unsigned long startTime, shared_ptr<RunningPlan> rp) {
-
-	if (startTime == 0)
-		return false;
-	long time = (long) (rp->getAlicaEngine()->getIAlicaClock()->now());
-	long timeDiff = time - (long) (startTime);
-	if (timeDiff > timeOut) {
-		return true;
-	}
-	return false;
+bool BasicCondition::isTimeOut(const AlicaTime timeOut, const AlicaTime startTime, std::shared_ptr<RunningPlan> rp) const
+{
+    if (startTime == AlicaTime::zero())
+        return false;
+    AlicaTime timeDiff = rp->getAlicaEngine()->getAlicaClock()->now() - startTime;
+    return timeDiff > timeOut;
 }
 } /* namespace alica */

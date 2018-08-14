@@ -1,44 +1,39 @@
-/*
- * ForallAgents.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef FORALLAGENTS_H_
-#define FORALLAGENTS_H_
-
-#include <list>
-#include <vector>
-#include <memory>
-
+#pragma once
 
 #include "Quantifier.h"
 
+#include <engine/Types.h>
+#include <engine/collections/AgentVariables.h>
+
+#include <vector>
+
 namespace alica
 {
+class AgentIDConstPtr;
+class RunningPlan;
+class Variable;
+class SolverTerm;
+class TeamManager;
 
-	class RunningPlan;
-	class Variable;
-	class AlicaEngine;
-	class SolverTerm;
+/**
+ * A quantifier associated with agents, i.e., the domain identifiers of this quantifier refer to properties of an agent
+ */
+class ForallAgents : public Quantifier
+{
+public:
+    ForallAgents(int64_t id = 0);
+    virtual ~ForallAgents();
+    bool isAgentInScope(AgentIDConstPtr id, const RunningPlan& rp) const override;
+    bool addDomainVariables(const RunningPlan& p, std::vector<AgentVariables>& io_agentVarsInScope) const override;
 
-	/**
-	 * A quantifier associated with agents, i.e., the domain identifiers of this quantifier refer to properties of an agent
-	 */
-	class ForallAgents : public Quantifier
-	{
-	public:
-		ForallAgents(AlicaEngine* ae, long id = 0);
-		virtual ~ForallAgents();
-		shared_ptr<list<vector<Variable* > > > getDomainVariables(shared_ptr<RunningPlan>& p, shared_ptr<vector<int> >& agentsInScope);
+private:
+    enum Result
+    {
+        ADDED,
+        MODIFIED,
+        NONE
+    };
+    Result TryAddId(AgentIDConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager* tm) const;
+};
 
-	protected:
-		AlicaEngine* ae;
-
-
-	};
-
-} /* namespace Alica */
-
-#endif /* FORALLAGENTS_H_ */
+} // namespace alica

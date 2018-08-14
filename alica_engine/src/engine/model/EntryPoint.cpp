@@ -6,158 +6,103 @@
  */
 
 #include "engine/model/EntryPoint.h"
-#include "engine/model/Transition.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
-
+#include "engine/model/Transition.h"
+#include <deque>
 namespace alica
 {
 
-	EntryPoint::EntryPoint()
-	{
-		this->task = nullptr;
-		this->state = nullptr;
-		this->successRequired = false;
-		this->plan = nullptr;
-	}
+EntryPoint::EntryPoint()
+        : _task(nullptr)
+        , _state(nullptr)
+        , _successRequired(false)
+        , _plan(nullptr)
+        , _cardinality(0, 0)
+        , _index(-1)
+{
+}
 
-	EntryPoint::~EntryPoint()
-	{
+EntryPoint::EntryPoint(int64_t id, const Plan* p, const Task* t, const State* s)
+        : AlicaElement(id)
+        , _task(t)
+        , _state(s)
+        , _successRequired(false)
+        , _plan(p)
+        , _cardinality(0, 0)
+        , _index(-1)
+{
+}
 
-	}
+EntryPoint::~EntryPoint() {}
 
-	void EntryPoint::computeReachabilitySet()
-	{
-		list<State*> queue;
-		queue.push_front(this->state);
-		State* cs = nullptr;
-		while (queue.size() > 0)
-		{
-			cs = *queue.begin();
-			queue.pop_front();
-			if (this->reachableStates.insert(cs).second)
-			{
-				for (Transition* t : cs->getOutTransitions())
-				{
-					queue.push_back(t->getOutState());
-				}
-			}
+void EntryPoint::computeReachabilitySet()
+{
+    std::deque<const State*> queue;
+    queue.push_front(_state);
+    const State* cs = nullptr;
+    while (!queue.empty()) {
+        cs = queue.front();
+        queue.pop_front();
+        if (std::find(_reachableStates.begin(), _reachableStates.end(), cs) == _reachableStates.end()) {
+            _reachableStates.push_back(cs);
+            for (const Transition* t : cs->getOutTransitions()) {
+                queue.push_back(t->getOutState());
+            }
+        }
+    }
+}
 
-		}
-	}
+std::string EntryPoint::toString() const
+{
+    std::stringstream ss;
+    ss << "#EntryPoint: " << getName() << " " << getId() << std::endl;
+    ss << "\t Cardinality: " << _cardinality << std::endl;
+    ss << "\t Task:" << std::endl;
+    if (_task != nullptr) {
+        ss << "\t" << _task->getId() << " " << _task->getName();
+    } else {
+        ss << "null";
+    }
+    ss << std::endl;
+    ss << "\t Initial State:" << std::endl;
+    if (_state != nullptr) {
+        ss << "\t" << _state->getId() << " " << _state->getName();
+    } else {
+        ss << "null";
+    }
+    ss << std::endl;
+    ss << "#EndEntryPoint" << std::endl;
+    return ss.str();
+}
 
-	string EntryPoint::toString()
-	{
-		stringstream ss;
-		ss << "#EntryPoint: " << this->name << " " << this->id << endl;
-		ss << "\t MinCardinality: " << this->minCardinality << endl;
-		ss << "\t MaxCardinality: " << this->maxCardinality << endl;
-		ss << "\t Task:" << endl;
-		if (this->task != NULL)
-		{
-			ss << "\t" << this->task->getId() << " " << this->task->getName();
-		}
-		else
-		{
-			ss << "null";
-		}
-		ss << endl;
-		ss << "\t Initial State:" << endl;
-		if (this->state != NULL)
-		{
-			ss << "\t" << this->state->getId() << " " << this->state->getName();
-		}
-		else
-		{
-			ss << "null";
-		}
-		ss << endl;
-		ss << "#EndEntryPoint" << endl;
-		return ss.str();
+bool EntryPoint::compareTo(const EntryPoint* ep1, const EntryPoint* ep2)
+{
+    return (ep1->getTask()->getId() > ep2->getTask()->getId());
+}
 
-	}
+void EntryPoint::setTask(Task* task)
+{
+    _task = task;
+}
 
-	bool EntryPoint::compareTo(EntryPoint* ep1, EntryPoint* ep2)
-	{
-		return (ep1->getTask()->getId() > ep2->getTask()->getId());
-	}
+void EntryPoint::setPlan(Plan* plan)
+{
+    _plan = plan;
+}
 
-//================== Getter and Setter =============
+void EntryPoint::setSuccessRequired(bool successRequired)
+{
+    _successRequired = successRequired;
+}
 
-	Task* EntryPoint::getTask()
-	{
-		return task;
-	}
+void EntryPoint::setState(State* state)
+{
+    _state = state;
+}
+bool EntryPoint::isStateReachable(const State* s) const
+{
+    return std::find(_reachableStates.begin(), _reachableStates.end(), s) != _reachableStates.end();
+}
 
-	void EntryPoint::setTask(Task* task)
-	{
-		this->task = task;
-	}
-
-	void EntryPoint::setPlan(Plan* plan)
-	{
-		this->plan = plan;
-	}
-
-	Plan* EntryPoint::getPlan() const
-	{
-		return plan;
-	}
-
-	const int EntryPoint::getMaxCardinality() const
-	{
-		return this->maxCardinality;
-	}
-
-	void EntryPoint::setMaxCardinality(int maxCardinality)
-	{
-		this->maxCardinality = maxCardinality;
-	}
-
-	const int EntryPoint::getMinCardinality() const
-	{
-		return this->minCardinality;
-	}
-
-	void EntryPoint::setMinCardinality(int minCardinality)
-	{
-		this->minCardinality = minCardinality;
-	}
-
-	void EntryPoint::setSuccessRequired(bool successRequired)
-	{
-		this->successRequired = successRequired;
-	}
-
-	const bool EntryPoint::getSuccessRequired() const
-	{
-		return this->successRequired;
-	}
-	const unordered_set<State*>& EntryPoint::getReachableStates() const
-	{
-		return reachableStates;
-	}
-
-	State* EntryPoint::getState()
-	{
-		return state;
-	}
-
-	void EntryPoint::setState(State* state)
-	{
-		this->state = state;
-	}
-
-	void EntryPoint::setReachableStates(const unordered_set<State*>& reachableStates)
-	{
-		this->reachableStates = reachableStates;
-	}
-
-	bool EntryPoint::isSuccessRequired() const
-	{
-		return successRequired;
-	}
-
-} /* namespace Alica */
-
-
+} // namespace alica

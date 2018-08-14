@@ -1,50 +1,38 @@
-/*
- * IRoleAssignment.h
- *
- *  Created on: Jun 17, 2014
- *      Author: Paul Panin
- */
+#pragma once
 
-#ifndef IROLEASSIGNMENT_H_
-#define IROLEASSIGNMENT_H_
+#include "engine/AgentIDConstPtr.h"
 
-using namespace std;
-
-#include "model/Role.h"
-#include "ITeamObserver.h"
 #include "engine/collections/RobotEngineData.h"
+#include "model/Role.h"
+
 #include <map>
 
 namespace alica
 {
-	class IAlicaCommunication;
 
-	class IRoleAssignment
-	{
-	public:
+class AlicaEngine;
+class IAlicaCommunication;
 
-		IRoleAssignment(AlicaEngine* ae);
-		virtual ~IRoleAssignment()
-		{
-		}
+class IRoleAssignment
+{
+public:
+    IRoleAssignment();
+    virtual ~IRoleAssignment() {}
 
-		virtual void init() = 0;
-		virtual void tick() = 0;
-		virtual void update() = 0;
+    virtual void init() = 0;
+    virtual void tick() = 0;
+    virtual void update() = 0;
 
-		Role* getOwnRole();
-		Role* getRole(int robotId);
-		void setCommunication(IAlicaCommunication* communication);
+    const Role* getOwnRole() const { return ownRole; }
+    const Role* getRole(AgentIDConstPtr robotId);
+    void setCommunication(const IAlicaCommunication* communication);
 
-	protected:
-		/**
-		 * Current Robot's role.
-		 */
-		Role* ownRole;
-		map<int, Role*> robotRoleMapping;
-		IAlicaCommunication* communication;
-		ITeamObserver* to;
-
-	};
-}
-#endif /* IROLEASSIGNMENT_H_ */
+protected:
+    /**
+     * Current Robot's role.
+     */
+    const Role* ownRole;
+    std::map<AgentIDConstPtr, const Role*> robotRoleMapping;
+    const IAlicaCommunication* communication;
+};
+} // namespace alica

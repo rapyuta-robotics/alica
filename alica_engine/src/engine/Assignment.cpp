@@ -1,685 +1,450 @@
-/*
- * Assignment.cpp
- *
- *  Created on: Jun 27, 2014
- *      Author: Stefan Jakob
- */
-
 #include "engine/Assignment.h"
-#include "engine/collections/AssignmentCollection.h"
-#include "engine/model/Plan.h"
-#include "engine/collections/StateCollection.h"
+
 #include "engine/collections/SuccessCollection.h"
-#include "engine/model/EntryPoint.h"
-#include "engine/planselector/PartialAssignment.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
-#include "engine/containers/EntryPointRobots.h"
-#include "engine/model/Task.h"
+#include "engine/model/EntryPoint.h"
+#include "engine/model/Plan.h"
 #include "engine/model/State.h"
+#include "engine/model/Task.h"
+#include "engine/planselector/PartialAssignment.h"
+#include "engine/planselector/TaskAssignmentProblem.h"
+#include <supplementary/AgentID.h>
+
+#include <assert.h>
 
 namespace alica
 {
 
-	Assignment::~Assignment()
-	{
-		delete this->epRobotsMapping;
-		delete this->robotStateMapping;
-	}
-	Assignment::Assignment(Plan* p)
-	{
-		this->plan = p;
-		this->max = 0.0;
-		this->min = 0.0;
+bool AgentStatePairs::hasAgent(const AgentIDConstPtr id) const
+{
+    return std::find_if(_data.begin(), _data.end(), [id](AgentStatePair asp) { return asp.first == id; }) != _data.end();
+}
 
-		this->epRobotsMapping = new AssignmentCollection(this->plan->getEntryPoints().size());
+const State* AgentStatePairs::getStateOfAgent(const AgentIDConstPtr id) const
+{
+    auto it = std::find_if(_data.begin(), _data.end(), [id](AgentStatePair asp) { return asp.first == id; });
+    return it == _data.end() ? nullptr : it->second;
+}
 
-		// sort the entrypoints of the given plan
-		list<EntryPoint*> sortedEpList;
-		for (auto pair : plan->getEntryPoints())
-		{
-			sortedEpList.push_back(pair.second);
-		}
-		sortedEpList.sort(EntryPoint::compareTo);
+void AgentStatePairs::removeAllIn(const AgentGrp& agents)
+{
+    _data.erase(std::remove_if(_data.begin(), _data.end(),
+                        [&agents](const AgentStatePair asp) { return agents.end() != std::find(agents.begin(), agents.end(), asp.first); }),
+            _data.end());
+}
 
-		// add the sorted entrypoints into the assignmentcollection
-		short i = 0;
-		for (EntryPoint* ep : sortedEpList)
-		{
-			this->epRobotsMapping->setEp(i++, ep);
-		}
-		this->epRobotsMapping->sortEps();
+void AgentStatePairs::setStateOfAgent(const AgentIDConstPtr id, const State* s)
+{
+    auto it = std::find_if(_data.begin(), _data.end(), [id](AgentStatePair asp) { return asp.first == id; });
+    if (it != _data.end()) {
+        it->second = s;
+    }
+}
 
-		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
-		this->epSucMapping = make_shared<SuccessCollection>(p);
-	}
+///------------------------------------------------------------------------------
+Assignment::Assignment()
+        : _plan(nullptr)
+        , _assignmentData()
+        , _successData()
+        , _lastUtility(0.0)
+{
+}
 
-	Assignment::Assignment(PartialAssignment* pa)
-	{
-		this->max = pa->getMax();
-		this->min = max;
-		this->plan = pa->getPlan();
+Assignment::Assignment(const Plan* p)
+        : _plan(p)
+        , _assignmentData(p->getEntryPoints().size())
+        , _successData(p)
+        , _lastUtility(0.0)
 
-		AssignmentCollection* assCol = pa->getEpRobotsMapping();
-		if (AssignmentCollection::allowIdling)
-		{
-			this->epRobotsMapping = new AssignmentCollection(assCol->getSize() - 1);
-		}
-		else
-		{
-			this->epRobotsMapping = new AssignmentCollection(assCol->getSize());
-		}
+{
+}
 
-		shared_ptr<vector<int>> curRobots;
-		for (short i = 0; i < this->epRobotsMapping->getSize(); i++)
-		{
-			// set the entrypoint
-			if (!this->epRobotsMapping->setEp(i, assCol->getEp(i)))
-			{
-				cerr << "Ass: AssignmentCollection Index out of entrypoints bounds!" << endl;
-				throw new exception();
-			}
+Assignment::Assignment(const PartialAssignment& pa)
+        : _plan(pa.getPlan())
+        , _assignmentData(pa.getPlan()->getEntryPoints().size())
+        , _successData(*pa.getSuccessData())
+        , _lastUtility(pa.getUtility().getMax())
+{
+    const int numEps = _plan->getEntryPoints().size();
 
-			// copy robots
-			shared_ptr<vector<int>> robots = assCol->getRobots(i);
-			curRobots = make_shared<vector<int>>();
-			for (int rob : *robots)
-			{
-				curRobots->push_back(rob);
-			}
+    for (int i = 0; i < numEps; ++i) {
+        _assignmentData[i].editRaw().reserve(pa.getAssignedAgentCount(i));
+    }
+    for (int i = 0; i < pa.getTotalAgentCount(); ++i) {
+        const int idx = pa.getEntryPointIndexOf(i);
+        if (idx >= 0 && idx < numEps) {
+            _assignmentData[idx].emplace_back(pa.getProblem()->getAgents()[i], _plan->getEntryPoints()[idx]->getState());
+        }
+    }
+}
 
-			// set the robots
-			if (!this->epRobotsMapping->setRobots(i, curRobots))
-			{
-				cerr << "Ass: AssignmentCollection Index out of robots bounds!" << endl;
-				throw new exception();
-			}
-		}
+Assignment::Assignment(const Plan* p, const AllocationAuthorityInfo& aai)
+        : _plan(p)
+        , _assignmentData(p->getEntryPoints().size())
+        , _successData(p)
+        , _lastUtility(0.0)
+{
+    const int numEps = _plan->getEntryPoints().size();
+    for (int i = 0; i < numEps; ++i) {
+        assert(p->getEntryPoints()[i]->getId() == aai.entryPointRobots[i].entrypoint);
+        _assignmentData[i].editRaw().reserve(aai.entryPointRobots[i].robots.size());
+        for (AgentIDConstPtr agent : aai.entryPointRobots[i].robots) {
+            _assignmentData[i].emplace_back(agent, _plan->getEntryPoints()[i]->getState());
+        }
+    }
+}
 
-		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
-		this->epSucMapping = pa->getEpSuccessMapping();
-	}
+bool Assignment::isValid() const
+{
+    if (!_plan) {
+        return false;
+    }
+    const EntryPointGrp& eps = _plan->getEntryPoints();
+    const int numEps = eps.size();
+    for (int i = 0; i < numEps; ++i) {
+        int c = _assignmentData[i].size() + _successData.getRaw()[i].size();
+        if (!eps[i]->getCardinality().contains(c)) {
+            return false;
+        }
+    }
+    return true;
+}
 
-	Assignment::Assignment(Plan* p, shared_ptr<AllocationAuthorityInfo> aai)
-	{
-		this->plan = p;
-		this->max = 1;
-		this->min = 1;
+bool Assignment::isSuccessful() const
+{
+    if (!_plan) {
+        return false;
+    }
+    const EntryPointGrp& eps = _plan->getEntryPoints();
+    const int numEps = eps.size();
+    bool ret = false;
+    for (int i = 0; i < numEps; ++i) {
+        if (eps[i]->isSuccessRequired()) {
+            if (_successData.getRaw()[i].empty() || static_cast<int>(_successData.getRaw()[i].size()) < eps[i]->getMinCardinality()) {
+                return false;
+            }
+            ret = true; // Only a plan with successRequired can succeed.
+        }
+    }
+    return ret;
+}
 
-		this->epRobotsMapping = new AssignmentCollection(p->getEntryPoints().size());
+bool Assignment::isAnyTaskSuccessful() const
+{
+    if (!_plan) {
+        return false;
+    }
+    const EntryPointGrp& eps = _plan->getEntryPoints();
+    const int numEps = eps.size();
+    for (int i = 0; i < numEps; ++i) {
+        if (!_successData.getRaw()[i].empty() && static_cast<int>(_successData.getRaw()[i].size()) >= eps[i]->getMinCardinality()) {
+            return true;
+        }
+    }
+    return false;
+}
 
-		shared_ptr<vector<int>> curRobots;
-		short i = 0;
-		for (auto epPair : p->getEntryPoints())
-		{
-			// set the entrypoint
-			if (!this->epRobotsMapping->setEp(i, epPair.second))
-			{
-				cerr << "Ass: AssignmentCollection Index out of entrypoints bounds!" << endl;
-				throw new exception();
-			}
+bool Assignment::hasAgent(AgentIDConstPtr id) const
+{
+    for (const AgentStatePairs& asps : _assignmentData) {
+        if (asps.hasAgent(id)) {
+            return true;
+        }
+    }
+    return false;
+}
 
-			curRobots = make_shared<vector<int>>();
-			for (auto epRobots : aai->entryPointRobots)
-			{
-				// find the right entrypoint
-				if (epRobots.entrypoint == epPair.second->getId())
-				{
-					// copy robots
-					for (int robot : epRobots.robots)
-					{
-						curRobots->push_back(robot);
-					}
+const EntryPoint* Assignment::getEntryPointOfAgent(AgentIDConstPtr id) const
+{
+    int i = 0;
+    for (const AgentStatePairs& asps : _assignmentData) {
+        if (asps.hasAgent(id)) {
+            return _plan->getEntryPoints()[i];
+        }
+        ++i;
+    }
+    return nullptr;
+}
 
-					// set the robots
-					if (!this->epRobotsMapping->setRobots(i, curRobots))
-					{
-						cerr << "Ass: AssignmentCollection Index out of robots bounds!" << endl;
-						throw new exception();
-					}
+const State* Assignment::getStateOfAgent(AgentIDConstPtr id) const
+{
+    for (const AgentStatePairs& asps : _assignmentData) {
+        const State* s = asps.getStateOfAgent(id);
+        if (s) {
+            return s;
+        }
+    }
+    return nullptr;
+}
 
-					break;
-				}
-			}
+void Assignment::getAllAgents(AgentGrp& o_agents) const
+{
+    for (const AgentStatePairs& asps : _assignmentData) {
+        std::transform(asps.begin(), asps.end(), std::back_inserter(o_agents), [](const AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
+    }
+}
 
-			i++;
-		}
+const AgentStatePairs& Assignment::getAgentStates(const EntryPoint* ep) const
+{
+    return _assignmentData[ep->getIndex()];
+}
 
-		this->epSucMapping = make_shared<SuccessCollection>(p);
-		this->robotStateMapping = new StateCollection(this->epRobotsMapping);
-	}
+void Assignment::getAgentsWorking(const EntryPoint* ep, AgentGrp& o_agents) const
+{
+    const AgentStatePairs& asp = getAgentStates(ep);
+    o_agents.reserve(asp.size());
+    std::transform(asp.begin(), asp.end(), std::back_inserter(o_agents), [](AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
+}
 
-	Plan* Assignment::getPlan()
-	{
-		return plan;
-	}
+void Assignment::getAgentsWorking(int idx, AgentGrp& o_agents) const
+{
+    const AgentStatePairs& asp = getAgentStates(idx);
+    o_agents.reserve(asp.size());
+    std::transform(asp.begin(), asp.end(), std::back_inserter(o_agents), [](AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
+}
 
-	void Assignment::setPlan(Plan* plan)
-	{
-		this->plan = plan;
-	}
-	StateCollection* Assignment::getRobotStateMapping()
-	{
-		return robotStateMapping;
-	}
+void Assignment::getAgentsWorkingAndFinished(const EntryPoint* ep, AgentGrp& o_agents) const
+{
+    const EntryPointGrp& eps = _plan->getEntryPoints();
+    const int numEps = eps.size();
+    for (int i = 0; i < numEps; ++i) {
+        if (ep == eps[i]) {
+            o_agents.reserve(_assignmentData[i].size() + _successData.getRaw()[i].size());
+            std::transform(_assignmentData[i].begin(), _assignmentData[i].end(), std::back_inserter(o_agents),
+                    [](AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
+            std::copy(_successData.getRaw()[i].begin(), _successData.getRaw()[i].end(), std::back_inserter(o_agents));
+            return;
+        }
+    }
+}
 
-	shared_ptr<vector<int> > Assignment::getAllRobotsSorted()
-	{
-		shared_ptr<vector<int> > ret = shared_ptr<vector<int> >();
-		for (int i = 0; i < this->getEpRobotsMapping()->getSize(); i++)
-		{
-			for (int j = 0; j < this->getEpRobotsMapping()->getRobots(i)->size(); j++)
-			{
-				ret->push_back(this->getEpRobotsMapping()->getRobots(i)->at(j));
-			}
-		}
-		sort(ret->begin(), ret->end());
-		return ret;
-	}
+void Assignment::getAgentsInState(const State* s, AgentGrp& o_agents) const
+{
+    const EntryPoint* ep = s->getEntryPoint();
+    for (AgentStatePair asp : _assignmentData[ep->getIndex()]) {
+        if (asp.second == s) {
+            o_agents.push_back(asp.first);
+        }
+    }
+}
 
-	AssignmentCollection* Assignment::getEpRobotsMapping()
-	{
-		return epRobotsMapping;
-	}
+AssignmentView Assignment::getAgentsWorking(const EntryPoint* ep) const
+{
+    return AssignmentView(this, ep->getIndex());
+}
 
-	/**
-	 * The robots that are currently working on a specific task, referred to by an EntryPoint Id.
-	 * @param epid EntryPoint id
-	 * @return A vector of int
-	 */
-	shared_ptr<vector<int> > Assignment::getRobotsWorking(long epid)
-	{
-		return this->getEpRobotsMapping()->getRobotsById(epid);
-	}
+AssignmentView Assignment::getAgentsWorking(int idx) const
+{
+    return AssignmentView(this, idx);
+}
 
-	shared_ptr<vector<int> > Assignment::getRobotsWorkingSorted(EntryPoint* ep)
-	{
-		shared_ptr<vector<int> > ret = getRobotsWorking(ep);
-		sort(ret->begin(), ret->end());
-		return ret;
-	}
+AssignmentView Assignment::getAgentsWorking(int64_t epId) const
+{
+    const EntryPoint* ep = _plan->getEntryPointByID(epId);
+    return ep ? AssignmentView(this, ep->getIndex()) : AssignmentView();
+}
 
-	/**
-	 * The robots that are currently working on a specific task, referred to by an EntryPoint.
-	 * @param ep An EntryPoint
-	 * @return A vector of int
-	 */
-	shared_ptr<vector<int> > Assignment::getRobotsWorking(EntryPoint* ep)
-	{
-		return this->getEpRobotsMapping()->getRobotsByEp(ep);
-	}
+AssignmentSuccessView Assignment::getAgentsWorkingAndFinished(const EntryPoint* ep) const
+{
+    return AssignmentSuccessView(this, ep->getIndex());
+}
 
-	int Assignment::totalRobotCount()
-	{
-		int c = 0;
-		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
-		{
-			c += this->epRobotsMapping->getRobots(i)->size();
-		}
-		return this->getNumUnAssignedRobots() + c;
-	}
+AllAgentsView Assignment::getAllAgents() const
+{
+    return AllAgentsView(this);
+}
+AgentsInStateView Assignment::getAgentsInState(const State* s) const
+{
+    return AgentsInStateView(this, s);
+}
 
-//	/**
-//	 * The shared_ptr of a vector of EntryPoints this assignment considers relevant.
-//	 */
-//	shared_ptr<vector<EntryPoint*> > Assignment::getEntryPoints()
-//	{
-//		return this->epRobotsMapping->getEntryPoints();
-//	}
+AgentsInStateView Assignment::getAgentsInState(int64_t sid) const
+{
+    const State* s = _plan->getStateByID(sid);
+    return s ? AgentsInStateView(this, s) : AgentsInStateView();
+}
 
-	/**
-	 * Number of Entrypoints in this assignment's plan.
-	 */
-	short Assignment::getEntryPointCount()
-	{
-		return this->epRobotsMapping->getSize();
-	}
+void Assignment::clear()
+{
+    _successData.clear();
+    for (AgentStatePairs& asp : _assignmentData) {
+        asp.clear();
+    }
+}
 
-	/**
-	 * The robots that are currently working on or already succeeded in a specific task, referred to by an EntryPoint.
-	 * @param ep An EntryPoint
-	 * @return a shared_ptr of a list of int
-	 */
-	shared_ptr<list<int> > Assignment::getRobotsWorkingAndFinished(EntryPoint* ep)
-	{
-		shared_ptr<list<int> > ret = make_shared<list<int> >(list<int>());
-		auto robots = this->epRobotsMapping->getRobotsByEp(ep);
-		if (robots != nullptr)
-		{
-			for (int i = 0; i < robots->size(); i++)
-			{
-				ret->push_back(robots->at(i));
-			}
-		}
+bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e)
+{
+    return updateAgent(agent, e, nullptr);
+}
 
-		auto robotsSucc = this->epSucMapping->getRobots(ep);
-		if (robotsSucc != nullptr)
-		{
-			for (int i = 0; i < robotsSucc->size(); i++)
-			{
-				auto iter = robotsSucc->begin();
-				advance(iter, i);
-				ret->push_back((*iter));
-			}
-		}
+bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e, const State* s)
+{
+    bool found = false;
+    bool inserted = false;
+    int i = 0;
+    assert(s == nullptr || s->getEntryPoint() == e);
 
-		return ret;
-	}
+    for (AgentStatePairs& asps : _assignmentData) {
+        const bool isTargetEp = e == _plan->getEntryPoints()[i];
+        if (isTargetEp) {
+            for (AgentStatePair& asp : asps) {
+                if (asp.first == agent) {
+                    // assume a null state signals no change
+                    if (s == nullptr || asp.second == s) {
+                        return false;
+                    } else {
+                        asp.second = s;
+                        return true;
+                    }
+                }
+            }
+            asps.emplace_back(agent, s ? s : e->getState());
+            inserted = true;
+        } else if (!found) {
+            for (int j = 0; j < static_cast<int>(asps.size()); ++j) {
+                if (asps.getRaw()[j].first == agent) {
+                    found = true;
+                    asps.removeAt(j);
+                    break;
+                }
+            }
+        }
+        if (found && inserted) {
+            return true;
+        }
+        ++i;
+    }
+    return inserted;
+}
 
-	/**
-	 * The robots that are currently working on or already succeeded in a specific task, referred to by an EntryPoint.
-	 * Each robot only occurs once.
-	 * @param ep An entrypoint
-	 * @return a shared_ptr of a list of int
-	 */
-	shared_ptr<list<int> > Assignment::getUniqueRobotsWorkingAndFinished(EntryPoint* ep)
-	{
-		shared_ptr<list<int> > ret = make_shared<list<int> >(list<int>());
-		//if (this->plan->getEntryPoints().find(ep->getId()) != this->plan->getEntryPoints().end())
-		{
-			auto robots = this->epRobotsMapping->getRobotsByEp(ep);
-			for (int i = 0; i < robots->size(); i++)
-			{
-				ret->push_back(robots->at(i));
-			}
-			for (auto r : (*this->epSucMapping->getRobots(ep)))
-			{
-				if (find(ret->begin(), ret->end(), r) == ret->end())
-				{
-					ret->push_back(r);
-				}
-			}
-		}
-		return ret;
-	}
+void Assignment::moveAllFromTo(const EntryPoint* scope, const State* from, const State* to)
+{
+    assert(from->getEntryPoint() == scope);
+    assert(to->getEntryPoint() == scope);
+    for (int i = 0; i < static_cast<int>(_assignmentData.size()); ++i) {
+        if (scope == _plan->getEntryPoints()[i]) {
+            for (AgentStatePair& asp : _assignmentData[i]) {
+                if (asp.second == from) {
+                    asp.second = to;
+                }
+            }
+        }
+    }
+}
 
-	/**
-	 * The robots that are currently working on or already succeeded in a specific task, referred to by an EntryPoint Id.
-	 * @param epid EntryPoint id
-	 * @return a shared_ptr of a list of int
-	 */
-	shared_ptr<list<int> > Assignment::getRobotsWorkingAndFinished(long epid)
-	{
-		shared_ptr<list<int> > ret = make_shared<list<int> >(list<int>());
-		auto robots = this->epRobotsMapping->getRobotsById(epid);
-		if (robots != nullptr)
-		{
-			for (int i = 0; i < robots->size(); i++)
-			{
-				ret->push_back(robots->at(i));
-			}
-		}
+void Assignment::setAllToInitialState(const AgentGrp& agents, const EntryPoint* ep)
+{
+    for (int i = 0; i < static_cast<int>(_assignmentData.size()); ++i) {
+        const bool isTargetEp = ep->getIndex() == i;
+        if (isTargetEp) {
+            const State* s = ep->getState();
+            for (AgentIDConstPtr id : agents) {
+                auto it = std::find_if(_assignmentData[i].begin(), _assignmentData[i].end(), [id](AgentStatePair asp) { return asp.first == id; });
+                if (it == _assignmentData[i].end()) {
+                    _assignmentData[i].emplace_back(id, s);
+                } else {
+                    it->second = s;
+                }
+            }
+        } else {
+            _assignmentData[i].removeAllIn(agents);
+        }
+    }
+}
 
-		auto robotsSucc = this->epSucMapping->getRobotsById(epid);
-		if (robotsSucc != nullptr)
-		{
-			for (int i = 0; i < robotsSucc->size(); i++)
-			{
-				auto iter = robotsSucc->begin();
-				advance(iter, i);
-				ret->push_back((*iter));
-			}
-		}
+void Assignment::adaptTaskChangesFrom(const Assignment& as)
+{
+    if (as.getPlan() != getPlan()) {
+        *this = as;
+        return;
+    }
+    const int epCount = _assignmentData.size();
+    for (int i = 0; i < epCount; ++i) {
+        AgentStatePairs n = as._assignmentData[i];
+        for (AgentStatePair& asp : n) {
+            const State* s = _assignmentData[i].getStateOfAgent(asp.first);
+            if (s) {
+                asp.second = s;
+            }
+        }
+        _assignmentData[i] = std::move(n);
+    }
+}
 
-		return ret;
-	}
+bool Assignment::removeAllIn(const AgentGrp& limit, const State* watchState)
+{
+    bool ret = false;
+    const int epCount = _assignmentData.size();
+    for (int i = 0; i < epCount; ++i) {
+        for (int j = _assignmentData[i].size() - 1; j >= 0; --j) {
+            AgentIDConstPtr id = _assignmentData[i].getRaw()[j].first;
+            if (std::find(limit.begin(), limit.end(), id) != limit.end()) {
+                ret = ret || _assignmentData[i].getRaw()[j].second == watchState;
+                _assignmentData[i].removeAt(j);
+            }
+        }
+    }
+    return ret;
+}
 
-	shared_ptr<SuccessCollection> Assignment::getEpSuccessMapping()
-	{
-		return this->epSucMapping;
-	}
+bool Assignment::removeAllNotIn(const AgentGrp& limit, const State* watchState)
+{
+    bool ret = false;
+    const int epCount = _assignmentData.size();
+    for (int i = 0; i < epCount; ++i) {
+        for (int j = _assignmentData[i].size() - 1; j >= 0; --j) {
+            AgentIDConstPtr id = _assignmentData[i].getRaw()[j].first;
+            if (std::find(limit.begin(), limit.end(), id) == limit.end()) {
+                ret = ret || _assignmentData[i].getRaw()[j].second == watchState;
+                _assignmentData[i].removeAt(j);
+            }
+        }
+    }
+    return ret;
+}
+void Assignment::removeAgent(AgentIDConstPtr agent)
+{
+    const int epCount = _assignmentData.size();
+    for (int i = 0; i < epCount; ++i) {
+        auto it = std::find_if(_assignmentData[i].begin(), _assignmentData[i].end(), [agent](AgentStatePair asp) { return agent == asp.first; });
+        if (it != _assignmentData[i].end()) {
+            _assignmentData[i].editRaw().erase(it);
+            return;
+        }
+    }
+    return;
+}
 
-	void Assignment::setAllToInitialState(unique_ptr<list<int> > robots, EntryPoint* defep)
-	{
-		auto rlist = this->epRobotsMapping->getRobotsByEp(defep);
-		for (int r : (*robots))
-		{
-			rlist->push_back(r);
-		}
-		for (int r : (*robots))
-		{
-			this->robotStateMapping->setState(r, defep->getState());
-		}
-	}
+void Assignment::fillPartial(PartialAssignment& pa) const
+{
+    const int epCount = _assignmentData.size();
+    const AgentGrp& allAgents = pa.getProblem()->getAgents();
+    for (int i = 0; i < epCount; ++i) {
+        for (const AgentStatePair& asp : _assignmentData[i]) {
+            auto it = std::find(allAgents.begin(), allAgents.end(), asp.first);
+            if (it != allAgents.end()) {
+                int agentIdx = it - allAgents.begin();
+                pa.assignUnassignedAgent(agentIdx, i);
+            }
+        }
+    }
+}
 
-	bool Assignment::removeRobot(int robotId)
-	{
-		this->robotStateMapping->removeRobot(robotId);
-		shared_ptr<vector<int>> curRobots;
-		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
-		{
-			curRobots = this->epRobotsMapping->getRobots(i);
-			auto iter = find(curRobots->begin(), curRobots->end(), robotId);
-			if (iter != curRobots->end())
-			{
-				curRobots->erase(iter);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	void Assignment::addRobot(int id, EntryPoint* e, State* s)
-	{
-		if (e == nullptr)
-		{
-			return;
-		}
-		this->robotStateMapping->setState(id, s);
-		this->epRobotsMapping->getRobotsByEp(e)->push_back(id);
-		return;
-	}
-
-	/**
-	 * Tests whether this assignment is valid with respect to the plan's cardinalities.
-	 * @return A bool
-	 */
-	bool Assignment::isValid()
-	{
-		auto success = this->epSucMapping->getRobots();
-
-		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
-		{
-			int c = this->epRobotsMapping->getRobots(i)->size() + success[i]->size();
-			if (c > this->epRobotsMapping->getEp(i)->getMaxCardinality()
-					|| c < this->epRobotsMapping->getEp(i)->getMinCardinality())
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Tests weather all required tasks have been successfully completed and
-	 * thus the plan can be considered as successful.
-	 * @return A bool
-	 */
-	bool Assignment::isSuccessfull()
-	{
-		for (int i = 0; i < this->epSucMapping->getCount(); i++)
-		{
-			if (this->epSucMapping->getEntryPoints()[i]->getSuccessRequired())
-			{
-				if (!(this->epSucMapping->getRobots()[i]->size() > 0
-						&& this->epSucMapping->getRobots()[i]->size()
-								>= this->epSucMapping->getEntryPoints()[i]->getMinCardinality()))
-				{
-					return false;
-				}
-			}
-
-		}
-		return true;
-	}
-
-	bool Assignment::isEqual(Assignment* otherAssignment)
-	{
-		if (otherAssignment == nullptr)
-		{
-			return false;
-		}
-		//check for same length
-		if (this->epRobotsMapping->getSize() != otherAssignment->epRobotsMapping->getSize())
-		{
-			return false;
-		}
-		//check for same entrypoints
-		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
-		{
-			if (this->epRobotsMapping->getEp(i)->getId() != otherAssignment->epRobotsMapping->getEp(i)->getId())
-			{
-				return false;
-			}
-		}
-		//check for same robots in entrypoints
-		for (short i = 0; i < this->epRobotsMapping->getSize(); ++i)
-		{
-			if (this->epRobotsMapping->getRobots(i)->size() != otherAssignment->epRobotsMapping->getRobots(i)->size())
-			{
-				return false;
-			}
-
-			for (int robot : *(this->epRobotsMapping->getRobots(i)))
-			{
-				auto iter = find(otherAssignment->epRobotsMapping->getRobots(i)->begin(),
-									otherAssignment->epRobotsMapping->getRobots(i)->end(), robot);
-				if (iter == otherAssignment->epRobotsMapping->getRobots(i)->end())
-				{
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Test whether at least one robot is working on a task or succeeded with a task.
-	 * @param ep An EntryPoint identifying the task in question.
-	 * @return bool
-	 */
-	bool Assignment::isEntryPointNonEmpty(EntryPoint* ep)
-	{
-		auto r = this->epRobotsMapping->getRobotsByEp(ep);
-		if (r != nullptr && r->size() > 0)
-		{
-			return true;
-		}
-		auto epSuc = this->epSucMapping->getRobots(ep);
-		return (epSuc != nullptr && epSuc->size() > 0);
-	}
-
-	bool Assignment::updateRobot(int robot, EntryPoint* ep, State* s)
-	{
-		this->robotStateMapping->setState(robot, s);
-		bool ret = false;
-
-		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
-		{
-			if (this->epRobotsMapping->getEp(i) == ep)
-			{
-				if (find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-							robot) != this->epRobotsMapping->getRobots(i)->end())
-				{
-					return false;
-				}
-				else
-				{
-					this->epRobotsMapping->getRobots(i)->push_back(robot);
-					ret = true;
-				}
-			}
-			else
-			{
-				auto iter = find(this->epRobotsMapping->getRobots(i)->begin(),
-									this->epRobotsMapping->getRobots(i)->end(), robot);
-				if (iter != this->epRobotsMapping->getRobots(i)->end())
-				{
-					this->epRobotsMapping->getRobots(i)->erase(iter);
-					ret = true;
-				}
-			}
-		}
-		return ret;
-	}
-
-	bool Assignment::updateRobot(int robot, EntryPoint* ep)
-	{
-		bool ret = false;
-		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
-		{
-			if (this->epRobotsMapping->getEp(i) == ep)
-			{
-				if (find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-							robot) != this->epRobotsMapping->getRobots(i)->end())
-				{
-					return false;
-				}
-				else
-				{
-					this->epRobotsMapping->getRobots(i)->push_back(robot);
-					ret = true;
-				}
-			}
-			else
-			{
-				auto iter = find(this->epRobotsMapping->getRobots(i)->begin(),
-									this->epRobotsMapping->getRobots(i)->end(), robot);
-				if (iter != this->epRobotsMapping->getRobots(i)->end())
-				{
-					this->epRobotsMapping->getRobots(i)->erase(iter);
-					ret = true;
-				}
-			}
-		}
-		if (ret)
-		{
-			this->robotStateMapping->setState(robot, ep->getState());
-		}
-		return ret;
-	}
-
-	bool Assignment::removeRobot(int robot, EntryPoint* ep)
-	{
-		if (ep == nullptr)
-		{
-			return false;
-		}
-		this->robotStateMapping->removeRobot(robot);
-		auto iter = find(this->epRobotsMapping->getRobotsByEp(ep)->begin(),
-							this->epRobotsMapping->getRobotsByEp(ep)->end(), robot);
-		if (iter != this->epRobotsMapping->getRobotsByEp(ep)->end())
-		{
-			this->epRobotsMapping->getRobotsByEp(ep)->erase(iter);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	string Assignment::assignmentCollectionToString()
-	{
-		stringstream ss;
-		ss << "ASS" << endl;
-		ss << this->epRobotsMapping->toString();
-		return ss.str();
-	}
-
-	void Assignment::addRobot(int id, EntryPoint* e)
-	{
-
-		if (e == nullptr)
-		{
-			return;
-		}
-		this->epRobotsMapping->getRobotsByEp(e)->push_back(id);
-		return;
-	}
-
-	void Assignment::moveRobots(State* from, State* to)
-	{
-		auto movingRobots = this->robotStateMapping->getRobotsInState(from);
-		if (to == nullptr)
-		{
-			cout << "Ass: MoveRobots is given a State which is NULL!" << endl;
-		}
-		for (int r : movingRobots)
-		{
-			this->robotStateMapping->setState(r, to);
-		}
-	}
-
-	/**
-	 * Returns the EntryPoint a robot is currently working on. Returns null, if the robot is currently not working on the respective plan.
-	 * @param robot an int
-	 * @return An entrypoint
-	 */
-	EntryPoint* Assignment::getEntryPointOfRobot(int robot)
-	{
-		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
-		{
-			auto iter = find(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-								robot);
-			if (iter != this->epRobotsMapping->getRobots(i)->end())
-			{
-				return this->epRobotsMapping->getEp(i);
-			}
-		}
-		return nullptr;
-	}
-
-	/**
-	 * The list of all robots currently allocated by this assignment to work on any task within the plan.
-	 * @return A shared_ptr of a vector of int
-	 */
-	shared_ptr<vector<int> > Assignment::getAllRobots()
-	{
-		auto ret = make_shared<vector<int> >(vector<int>());
-		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
-		{
-			for (int j = 0; j < this->epRobotsMapping->getRobots(i)->size(); j++)
-			{
-				ret->push_back(this->epRobotsMapping->getRobots(i)->at(j));
-			}
-		}
-		return ret;
-	}
-
-	void Assignment::clear()
-	{
-		this->robotStateMapping->clear();
-		this->epRobotsMapping->clear();
-		this->epSucMapping->clear();
-	}
-
-	string Assignment::toString()
-	{
-		stringstream ss;
-		ss << endl;
-		ss << "Rating: " << this->max << endl;
-		for (int i = 0; i < this->epRobotsMapping->getSize(); ++i)
-		{
-			ss << "EP: " << this->epRobotsMapping->getEp(i)->getId() << " Task: "
-					<< this->epRobotsMapping->getEp(i)->getTask()->getName() << " RobotIDs: ";
-			for (short robot : *(this->epRobotsMapping->getRobots(i)))
-			{
-				ss << robot << " ";
-			}
-			ss << endl;
-		}
-		ss << "Robot-State Mapping:\n";
-		ss << this->robotStateMapping->toString();
-		ss << this->epSucMapping->toString() << endl;
-		return ss.str();
-	}
-
-	string Assignment::toHackString()
-	{
-		stringstream ss;
-		ss << "ASS " << this->plan->getId() << " " << this->plan->getName() << ":\t";
-		auto suc = this->epSucMapping->getRobots();
-		for (int i = 0; i < this->epRobotsMapping->getSize(); i++)
-		{
-			ss << this->epRobotsMapping->getEp(i)->getTask()->getName() << " ";
-			for (short robotID : *(this->epRobotsMapping->getRobots(i)))
-			{
-				ss << to_string(robotID) + string(" ");
-			}
-
-			if (suc[i]->size() > 0)
-			{
-				ss << "\t Success: ";
-				for (int robotID : (*suc[i]))
-				{
-					ss << to_string(robotID) + string(" ");
-				}
-			}
-
-		}
-		ss << endl;
-		return ss.str();
-	}
+std::ostream& operator<<(std::ostream& out, const Assignment& a)
+{
+    out << std::endl;
+    const EntryPointGrp& eps = a._plan->getEntryPoints();
+    const int numEps = eps.size();
+    assert(numEps == static_cast<int>(a._assignmentData.size()));
+    for (int i = 0; i < numEps; ++i) {
+        out << "EP: " << eps[i]->getId() << " Task: " << eps[i]->getTask()->getName() << " AgentIDs: ";
+        for (AgentStatePair rsp : a._assignmentData[i]) {
+            out << rsp.first << "(" << rsp.second->getName() << ") ";
+        }
+        out << std::endl;
+    }
+    out << a._successData << std::endl;
+    return out;
+}
 
 } /* namespace alica */
-

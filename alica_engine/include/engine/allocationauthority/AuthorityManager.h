@@ -1,53 +1,41 @@
-/*
- * AuthorityManager.h
- *
- *  Created on: Jun 17, 2014
- *      Author: Paul Panin
- */
-
-#ifndef AUTHORITYMANAGER_H_
-#define AUTHORITYMANAGER_H_
+#pragma once
 
 //#define AM_DEBUG
 
-#include "../containers/AllocationAuthorityInfo.h"
-#include "../IAlicaCommunication.h"
 #include "../AlicaEngine.h"
-#include "../ITeamObserver.h"
+#include "../IAlicaCommunication.h"
 #include "../RunningPlan.h"
+#include "../containers/AllocationAuthorityInfo.h"
 
 #include <memory>
+#include <mutex>
 #include <vector>
-
-using namespace std;
 
 namespace alica
 {
-	class IAlicaCommunication;
+class IAlicaCommunication;
 
-	/**
-	 * Manages communication wrt. conflict resolution.
-	 */
-	class AuthorityManager
-	{
-	public:
-		AuthorityManager(AlicaEngine* ae);
-		virtual ~AuthorityManager();
-		void init();
-		void close();
-		void handleIncomingAuthorityMessage(shared_ptr<AllocationAuthorityInfo> aai);
-		void tick(shared_ptr<RunningPlan> p);
-		void sendAllocation(shared_ptr<RunningPlan> p);
+/**
+ * Manages communication wrt. conflict resolution.
+ */
+class AuthorityManager
+{
+public:
+    AuthorityManager(AlicaEngine* ae);
+    ~AuthorityManager();
+    void init();
+    void close();
+    void handleIncomingAuthorityMessage(const AllocationAuthorityInfo& aai);
+    void tick(RunningPlan* p);
+    void sendAllocation(const RunningPlan& p);
 
-	protected:
-		vector<shared_ptr<AllocationAuthorityInfo>> queue;
-		AlicaEngine* ae;
-		int ownID;
-		mutex mu;
-		void processPlan(shared_ptr<RunningPlan> p);
-		bool authorityMatchesPlan(shared_ptr<AllocationAuthorityInfo> aai, shared_ptr<RunningPlan> p);
+private:
+    void processPlan(RunningPlan& p);
+    bool authorityMatchesPlan(const AllocationAuthorityInfo& aai, const RunningPlan& p) const;
 
-
-	};
-}
-#endif /* AUTHORITYMANAGER_H_ */
+    std::vector<AllocationAuthorityInfo> _queue;
+    const AlicaEngine* _engine;
+    AgentIDConstPtr _localAgentID;
+    std::mutex _mutex;
+};
+} /* namespace alica */

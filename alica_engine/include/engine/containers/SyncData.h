@@ -1,56 +1,52 @@
-/*
- * SyncData.h
- *
- *  Created on: Aug 27, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef SYNCDATA_H_
-#define SYNCDATA_H_
+#include <engine/AgentIDConstPtr.h>
 
+#include <iostream>
 #include <tuple>
 
-using namespace std;
+namespace supplementary
+{
+class AgentID;
+}
 
 namespace alica
 {
-	typedef tuple<long, long, bool, bool> stdSyncData;
+typedef std::tuple<AgentIDConstPtr, int64_t, bool, bool> stdSyncData;
 
-	struct SyncData
-	{
-		SyncData()
-		{
-		}
+struct SyncData
+{
+    SyncData()
+            : robotID(nullptr)
+            , ack(false)
+            , conditionHolds(false)
+            , transitionID(0)
+    {
+    }
 
-		long robotID;
-		long transitionID;
-		bool conditionHolds;
-		bool ack;
+    SyncData(const stdSyncData& s)
+            : robotID(std::get<0>(s))
+            , transitionID(std::get<1>(s))
+            , conditionHolds(std::get<2>(s))
+            , ack(std::get<3>(s))
+    {
+    }
 
-		SyncData(stdSyncData &s)
-		{
-			this->robotID = get<0>(s);
-			this->transitionID = get<1>(s);
-			this->conditionHolds = get<2>(s);
-			this->ack = get<3>(s);
-		}
+    stdSyncData toStandard() const { return std::make_tuple(robotID, transitionID, conditionHolds, ack); }
 
-		stdSyncData toStandard()
-		{
-			return move(make_tuple(robotID, transitionID, conditionHolds, ack));
-		}
+    void toString() const
+    {
+        std::cout << "SyncData--> ";
+        std::cout << " RobotId: " << this->robotID;
+        std::cout << " TransitionID: " << this->transitionID;
+        std::cout << " ConditionHolds: " << this->conditionHolds;
+        std::cout << " Acknowledge: " << this->ack << std::endl;
+    }
 
-		void toString()
-		{
-			cout << "SyncData--> ";
-			cout << "RobotId: " << this->robotID;
-			cout << " TransitionID: " << this->transitionID;
-			cout << " ConditionHolds: " << this->conditionHolds;
-			cout << " Acknowledge: " << this->ack << endl;
-		}
-
-	};
+    AgentIDConstPtr robotID;
+    int64_t transitionID;
+    bool conditionHolds;
+    bool ack;
+};
 
 } /* namespace alica */
-
-#endif /* SYNCDATA_H_ */

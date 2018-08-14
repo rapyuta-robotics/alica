@@ -22,19 +22,19 @@
 //#include "engine/AlicaEngine.h"
 //#include "engine/parser/tinyxml2.h"
 //
-//namespace alica
+// namespace alica
 //{
 //
-//class TestBase
+// class TestBase
 //{
-//public:
+// public:
 //	TestBase(int argc, char** argv);
 //	virtual ~TestBase();
 //	void ConsumeCmdLineArguments(int argc, char** argv);
 //	void Run();
 //	void PrintUsage();
 //
-//protected:
+// protected:
 //	// cmd-line params
 //	string masterPlan;
 //	string teamColour;

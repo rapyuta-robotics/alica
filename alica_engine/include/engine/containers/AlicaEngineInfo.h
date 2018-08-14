@@ -1,53 +1,39 @@
-/*
- * AlicaEngineInfo.h
- *
- *  Created on: Jun 30, 2014
- *      Author: Paul Panin
- */
+#pragma once
 
-#ifndef ALICAENGINEINFO_H_
-#define ALICAENGINEINFO_H_
+#include "engine/AgentIDConstPtr.h"
 
-#include <vector>
 #include <string>
 #include <tuple>
-
-using namespace std;
+#include <vector>
 
 namespace alica
 {
-	typedef tuple<int, string, string, string, string, string, vector<int>> stdAlicaEngineInfo;
-	struct AlicaEngineInfo
-	{
-		AlicaEngineInfo()
-		{
-		}
-		int senderID;
-		string masterPlan;
-		string currentPlan;
-		string currentState;
-		string currentRole;
-		string currentTask;
-		vector<int> robotIDsWithMe;
+typedef std::tuple<AgentIDConstPtr, std::string, std::string, std::string, std::string, std::string, std::vector<AgentIDConstPtr>> stdAlicaEngineInfo;
+struct AlicaEngineInfo
+{
+    AlicaEngineInfo()
+            : senderID(nullptr)
+    {
+    }
+    AgentIDConstPtr senderID;
+    std::string masterPlan;
+    std::string currentPlan;
+    std::string currentState;
+    std::string currentRole;
+    std::string currentTask;
+    std::vector<AgentIDConstPtr> robotIDsWithMe;
 
-		AlicaEngineInfo(stdAlicaEngineInfo &s)
-		{
-			senderID = get<0>(s);
-			masterPlan = move(get<1>(s));
-			currentPlan = move(get<2>(s));
-			currentState = move(get<3>(s));
-			currentRole = move(get<4>(s));
-			currentTask = move(get<5>(s));
-			robotIDsWithMe = move(get<6>(s));
-		}
+    AlicaEngineInfo(stdAlicaEngineInfo&& s)
+    {
+        senderID = std::get<0>(s);
+        masterPlan = std::move(std::get<1>(s));
+        currentPlan = std::move(std::get<2>(s));
+        currentState = std::move(std::get<3>(s));
+        currentRole = std::move(std::get<4>(s));
+        currentTask = std::move(std::get<5>(s));
+        robotIDsWithMe = std::move(std::get<6>(s));
+    }
 
-		stdAlicaEngineInfo toStandard()
-		{
-			return move(
-					make_tuple(senderID, masterPlan, currentPlan, currentState, currentRole, currentTask,
-								robotIDsWithMe));
-		}
-	};
-}
-
-#endif /* ALICAENGINEINFO_H_ */
+    stdAlicaEngineInfo toStandard() const { return std::make_tuple(senderID, masterPlan, currentPlan, currentState, currentRole, currentTask, robotIDsWithMe); }
+};
+} // namespace alica

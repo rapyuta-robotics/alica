@@ -1,53 +1,35 @@
-/*
- * EntryPointRobotPair.cpp
- *
- *  Created on: Jul 17, 2014
- *      Author: Stefan Jakob
- */
-
-#include <engine/allocationauthority/EntryPointRobotPair.h>
+#include "engine/allocationauthority/EntryPointRobotPair.h"
 
 namespace alica
 {
-	EntryPointRobotPair::~EntryPointRobotPair()
-	{
-	}
 
-	EntryPoint* EntryPointRobotPair::getEntryPoint()
-	{
-		return entryPoint;
-	}
+EntryPointRobotPair::EntryPointRobotPair(const EntryPoint* ep, AgentIDConstPtr r)
+        : _entryPoint(ep)
+        , _robot(r)
+{
+}
 
-	void EntryPointRobotPair::setEntryPoint(EntryPoint* entryPoint)
-	{
-		this->entryPoint = entryPoint;
-	}
+const EntryPoint* EntryPointRobotPair::getEntryPoint() const
+{
+    return _entryPoint;
+}
 
-	int EntryPointRobotPair::getRobot()
-	{
-		return robot;
-	}
+void EntryPointRobotPair::setEntryPoint(const EntryPoint* entryPoint)
+{
+    _entryPoint = entryPoint;
+}
 
-	EntryPointRobotPair::EntryPointRobotPair(EntryPoint* ep, int r)
-	{
-		this->entryPoint = ep;
-		this->robot = r;
-	}
+void EntryPointRobotPair::setRobot(AgentIDConstPtr robot)
+{
+    _robot = robot;
+}
 
-	void EntryPointRobotPair::setRobot(int robot)
-	{
-		this->robot = robot;
-	}
-
-	bool EntryPointRobotPair::equals(std::shared_ptr<EntryPointRobotPair> thisOne, std::shared_ptr<EntryPointRobotPair> other)
-	{
-		if (other == nullptr)
-		{
-			return false;
-		}
-		if (other->entryPoint->getId() != thisOne->entryPoint->getId())
-			return false;
-		return (other->getRobot() == thisOne->robot);
-	}
+bool EntryPointRobotPair::operator==(const EntryPointRobotPair& other) const
+{
+    if (other._entryPoint != _entryPoint) { // entrypoints are supposed to be uniquely instantiated.
+        return false;
+    }
+    return (*other._robot == *_robot);
+}
 
 } /* namespace alica */

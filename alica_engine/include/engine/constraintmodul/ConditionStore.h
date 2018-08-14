@@ -1,48 +1,42 @@
-/*
- * ConstraintStore.h
- *
- *  Created on: Jul 15, 2014
- *      Author: Paul Panin
- */
+#pragma once
 
-#ifndef CONSTRAINTSTORE_H_
-#define CONSTRAINTSTORE_H_
+#include <engine/Types.h>
 
 #include <map>
-#include <list>
-#include <vector>
 #include <mutex>
-#include <memory>
-#include <algorithm>
-
-using namespace std;
+#include <vector>
 
 namespace alica
 {
-	class Variable;
-	class Condition;
-	class Query;
-	class RunningPlan;
+class Variable;
+class Condition;
+class Query;
+class RunningPlan;
 
-	/**
-	 * Holds information about active constraints in the corresponding RunningPlan
-	 */
-	class ConditionStore
-	{
-	public:
-		ConditionStore();
-		virtual ~ConditionStore();
-		void clear();
-		void addCondition(Condition* con);
-		void removeCondition(Condition* con);
+/**
+ * Holds information about active constraints in the corresponding RunningPlan
+ */
+class ConditionStore
+{
+public:
+    ConditionStore();
+    ~ConditionStore();
+    void clear();
+    void addCondition(const Condition* con);
+    void removeCondition(const Condition* con);
 
-		void acceptQuery(shared_ptr<Query> query, shared_ptr<RunningPlan> rp);
-		list<Condition*> activeConditions;
-		map<Variable*, shared_ptr<vector<Condition*>> > activeVar2CondMap;
+    void acceptQuery(Query& query, const RunningPlan* rp) const;
 
-		mutex mtx;
-	};
+    ConditionStore(const ConditionStore&) = delete;
+    ConditionStore(ConditionStore&&) = delete;
+    ConditionStore& operator=(const ConditionStore&) = delete;
+    ConditionStore& operator=(ConditionStore&&) = delete;
 
-} /* namespace supplementary */
+private:
+    ConditionGrp _activeConditions;
+    std::map<const Variable*, ConditionGrp> _activeVar2CondMap;
 
-#endif /* CONSTRAINTSTORE_H_ */
+    mutable std::mutex _mtx;
+};
+
+} // namespace alica

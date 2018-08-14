@@ -8,47 +8,53 @@
 #ifndef SYNCTRANSITION_H_
 #define SYNCTRANSITION_H_
 
-
 #include <list>
 #include <string>
 #include <sstream>
 
+#include "engine/AlicaClock.h"
 #include "AlicaElement.h"
+#include "engine/Types.h"
 
-using namespace std;
-namespace alica
-{
+namespace alica {
 
-	class Plan;
-	class Transition;
+class Plan;
+class Transition;
+class ModelFactory;
 
-	class SyncTransition : public AlicaElement
-	{
-	public:
-		SyncTransition();
-		virtual ~SyncTransition();
+class SyncTransition : public AlicaElement {
+public:
+    SyncTransition();
+    virtual ~SyncTransition();
 
-		string toString();
+    bool isFailOnSyncTimeOut() const { return _failOnSyncTimeOut; }
 
-		bool isFailOnSyncTimeOut() const;
-		void setFailOnSyncTimeOut(bool failOnSyncTimeOut);
-		unsigned long getSyncTimeOut() const;
-		void setSyncTimeOut(unsigned long syncTimeOut);
-		unsigned long getTalkTimeOut() const;
-		void setTalkTimeOut(unsigned long talkTimeOut);
-		const Plan* getPlan() const;
-		void setPlan(Plan* plan);
-		list<Transition*>& getInSync();
-		void setInSync(const list<Transition*>& inSync);
+    AlicaTime getSyncTimeOut() const { return _syncTimeOut; }
+    AlicaTime getTalkTimeOut() const { return _talkTimeOut; }
 
-	private:
-		unsigned long talkTimeOut ;
-		unsigned long syncTimeOut;
-		bool failOnSyncTimeOut;
-		Plan* plan;
-		list<Transition*> inSync;
-	};
+    const Plan* getPlan() const { return _plan; }
 
-} /* namespace Alica */
+    const TransitionGrp& getInSync() const { return _inSync; }
+
+    std::string toString() const override;
+
+private:
+    friend ModelFactory;
+    void setFailOnSyncTimeOut(bool failOnSyncTimeOut);
+    void setSyncTimeOut(AlicaTime syncTimeOut);
+    void setInSync(const TransitionGrp& inSync);
+    void setTalkTimeOut(AlicaTime talkTimeOut);
+    void setPlan(const Plan* plan);
+
+    TransitionGrp _inSync;
+    const Plan* _plan;
+
+    AlicaTime _talkTimeOut;
+    AlicaTime _syncTimeOut;
+
+    bool _failOnSyncTimeOut;
+};
+
+}  // namespace alica
 
 #endif /* SYNCTRANSITION_H_ */
