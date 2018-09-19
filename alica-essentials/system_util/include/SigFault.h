@@ -193,6 +193,7 @@ void handle_fpe()
 
 #include <signal.h>
 #include <sys/syscall.h>
+#include <ucontext.h>
 
 #define HANDLE_SEGV 1
 #define HANDLE_FPE 1
@@ -207,7 +208,7 @@ void handle_fpe()
 
 #define HANDLE_DIVIDE_OVERFLOW                                                                                                                                 \
     do {                                                                                                                                                       \
-        struct ucontext* _uc = (struct ucontext*)_p;                                                                                                           \
+        ucontext_t* _uc = (ucontext_t*)_p;                                                                                                           \
         volatile struct sigcontext* _sc = (struct sigcontext*)&_uc->uc_mcontext;                                                                               \
                                                                                                                                                                \
         register unsigned char* _rip = (unsigned char*)_sc->rip;                                                                                               \
