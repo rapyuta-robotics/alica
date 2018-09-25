@@ -75,7 +75,7 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList, st
     }
     boost::regex line(regstr);
     // regex line("Topic:\s*(^ )\s*Msg:\s*(^ )\s*Opt:\s*\[(.*)\]");
-    ifstream ifs(msgDefFile);
+    std::ifstream ifs(msgDefFile);
 
     int i = 1;
     while (!ifs.eof()) {
@@ -295,7 +295,7 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
         std::cout << "Template: " << tmpl << std::endl;
         int idx = tmpl.find_last_of('/');
         string basename = tmpl.substr(idx + 1);
-        ifstream ifs(tmpl);
+        std::ifstream ifs(tmpl);
         stringstream ss;
         if (ifs) {
             ss << ifs.rdbuf();
@@ -307,7 +307,7 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
             string parsedContent = processTemplate(ss, msgList, pkgName);
 
             string outputFile = outDir + "/" + basename.substr(0, basename.length()-3) + "cpp";
-            ofstream ofs(outputFile);
+            std::ofstream ofs(outputFile);
             ofs << parsedContent;
             ofs.close();
 
@@ -315,7 +315,7 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
             string parsedContent = processTemplateJava(ss, msgList, pkgName);
 
             string outputFile = outDir + "/" + basename.substr(0, basename.length()-4) + "java";
-            ofstream ofs(outputFile);
+            std::ofstream ofs(outputFile);
             ofs << parsedContent;
             ofs.close();
         }
