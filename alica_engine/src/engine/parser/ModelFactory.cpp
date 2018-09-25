@@ -30,7 +30,6 @@
 #include "engine/model/Variable.h"
 #include "engine/parser/PlanParser.h"
 
-#include "SigFault.h"
 #include "engine/AlicaEngine.h"
 
 #include <iostream>
@@ -1214,7 +1213,7 @@ void ModelFactory::addElement(AlicaElement* ael)
         stringstream ss;
         ss << "MF: ERROR: ID utilised twice: " << ael->getId() << std::endl;
         ss << "ELEMENT >" << ael->getName() << "< >" << this->elements[ael->getId()]->getName() << "<" << std::endl;
-        std::cout << segfaultdebug::get_stacktrace() << std::endl;
+//        std::cout << segfaultdebug::get_stacktrace() << std::endl;
         AlicaEngine::abort(ss.str());
     }
 
