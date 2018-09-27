@@ -1,46 +1,45 @@
-/*
- * SuccessCollection.h
- *
- *  Created on: Jun 17, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef SUCCESSCOLLECTION_H_
-#define SUCCESSCOLLECTION_H_
+#include <engine/Types.h>
+#include <engine/model/Plan.h>
 
-#include "supplementary/AgentID.h"
-
-#include <list>
+#include <ostream>
 #include <vector>
-#include <memory>
-#include <string>
 
-namespace alica {
+namespace alica
+{
 class EntryPoint;
 class Plan;
 
-class SuccessCollection {
+class SuccessCollection
+{
 public:
+    SuccessCollection();
     SuccessCollection(const Plan* plan);
-    virtual ~SuccessCollection();
-    int getCount() const;
-    void setCount(int count);
-    const EntryPoint** getEntryPoints() const;
-    void setSuccess(const supplementary::AgentID* robot, const EntryPoint* ep);
+    ~SuccessCollection();
+    int getCount() const { return _successData.size(); }
+    const EntryPointGrp& getEntryPoints() const { return _plan->getEntryPoints(); }
+
+    void setSuccess(AgentIDConstPtr robot, const EntryPoint* ep);
     void clear();
-    std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>& getRobots();
-    void setRobots(std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>>& robots);
-    std::shared_ptr<std::list<const supplementary::AgentID*>> getRobots(const EntryPoint* ep);
-    std::shared_ptr<std::list<const supplementary::AgentID*>> getRobotsById(int64_t id);
-    std::string toString() const;
+    const AgentGrp* getAgents(const EntryPoint* ep) const;
+    const AgentGrp* getAgentsById(int64_t id) const;
+    const AgentGrp* getAgentsByIndex(int idx) const
+    {
+        if (idx >= 0 && idx < static_cast<int>(_successData.size())) {
+            return &_successData[idx];
+        }
+        return nullptr;
+    }
+    AgentGrp& editAgentsByIndex(int idx) { return _successData[idx]; }
+    const std::vector<AgentGrp>& getRaw() const { return _successData; }
 
 private:
-protected:
-    const EntryPoint** entryPoints;
-    std::vector<std::shared_ptr<std::list<const supplementary::AgentID*>>> robotIds;
-    int count = 0;
+    friend std::ostream& operator<<(std::ostream& out, const SuccessCollection& c);
+    const Plan* _plan;
+    std::vector<AgentGrp> _successData;
 };
 
-} /* namespace alica */
+std::ostream& operator<<(std::ostream& out, const SuccessCollection& c);
 
-#endif /* SUCCESSCOLLECTION_H_ */
+} /* namespace alica */

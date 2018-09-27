@@ -10,24 +10,19 @@
 
 #include <engine/USummand.h>
 
-namespace supplementary
-{
-class AgentID;
-}
-
 namespace alica
 {
 
 class TestConstantValueSummand : public USummand
 {
-  public:
-    TestConstantValueSummand(double weight, std::string name, long id, double val);
+public:
+    TestConstantValueSummand(double weight, double val);
     virtual ~TestConstantValueSummand();
-    void cacheEvalData();
-    UtilityInterval eval(IAssignment* ass);
-    const supplementary::AgentID* robotId;
 
-  protected:
+    UtilityInterval eval(IAssignment ass) const override;
+    AgentIDConstPtr robotId;
+
+protected:
     double val;
 };
 

@@ -2,11 +2,10 @@
 #include "AlicaElement.h"
 
 #include "engine/Types.h"
-
-#include "EntryPoint.h"
-#include "Plan.h"
-#include "State.h"
 #include "engine/collections/AgentVariables.h"
+#include "engine/model/EntryPoint.h"
+#include "engine/model/Plan.h"
+#include "engine/model/State.h"
 
 #include <algorithm>
 #include <string>
@@ -22,8 +21,8 @@ class ModelFactory;
  */
 class Quantifier : public AlicaElement
 {
-  public:
-    Quantifier(int64_t id = 0);
+public:
+    Quantifier(int64_t id);
     virtual ~Quantifier();
     const std::vector<std::string>& getDomainIdentifiers() const { return _domainIdentifiers; }
     bool isScopeEntryPoint() const { return _scopeType == ENTRYPOINTSCOPE; }
@@ -35,16 +34,17 @@ class Quantifier : public AlicaElement
     const AlicaElement* getScope() const { return _scope; }
     const VariableGrp& getTemplateVariables() const { return _templateVars; }
     bool hasTemplateVariable(const Variable* v) const { return std::find(_templateVars.begin(), _templateVars.end(), v) != _templateVars.end(); }
-    virtual bool isAgentInScope(AgentIDConstPtr id, const std::shared_ptr<const RunningPlan>& rp) const = 0;
+
+    virtual bool isAgentInScope(AgentIDConstPtr id, const RunningPlan& rp) const = 0;
     /**
      * Access the list of sorted Variables under the scope of this quantifier given a runningplan.
      * @param p A RunningPlan
      * @param io_agentsInScope the list of Agents with their variables that this quantifier will add to.
      * @return true if io_agentVarsInScop was modified, false otherwise
      */
-    virtual bool addDomainVariables(const std::shared_ptr<const RunningPlan>& p, std::vector<AgentVariables>& io_agentVarsInScope) const = 0;
+    virtual bool addDomainVariables(const RunningPlan& p, std::vector<AgentVariables>& io_agentVarsInScope) const = 0;
 
-  protected:
+protected:
     enum Scope
     {
         PLANSCOPE,
@@ -53,7 +53,7 @@ class Quantifier : public AlicaElement
     };
     Scope getScopeType() const { return _scopeType; }
 
-  private:
+private:
     friend ModelFactory;
     void setScope(const AlicaElement* ae);
     void setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers);

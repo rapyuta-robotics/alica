@@ -30,67 +30,47 @@ class IAssignment;
  */
 class USummand
 {
-  public:
+public:
     USummand()
-        : ui(0.0, 0.0)
+            : _weight(0.0)
     {
-        this->id = 0;
-        this->weight = 0;
     }
+    USummand(double weight)
+            : _weight(weight)
+    {
+    }
+
     virtual ~USummand() {}
-    /**
-     * Searches every needed entrypoint in the hashtable of the xmlparser
-     * and stores it in the relevant entrypoint vector. This will increase the
-     * performance of the evaluation of this utility summand.
-     */
-    virtual void init(AlicaEngine* ae)
-    {
-        // init relevant entrypoint vector
-        this->relevantEntryPoints.resize(this->relevantEntryPointIds.size());
-        // find the right entrypoint for each id in relevant entrypoint id
-        for (int i = 0; i < static_cast<int>(this->relevantEntryPoints.size()); ++i) {
-            const EntryPoint* curEp = ae->getPlanRepository()->getEntryPoints().find(this->relevantEntryPointIds[i]);
-            if (curEp != nullptr) {
-                this->relevantEntryPoints[i] = curEp;
-            } else {
-                std::cerr << "Could not find Entrypoint " << this->relevantEntryPointIds[i] << " Hint is: " << this->name << std::endl;
-                throw std::exception();
-            }
-        }
-    }
+
+    void addEntryPoint(const EntryPoint* ep) { _relevantEntryPoints.push_back(ep); }
+
     std::string toString() const
     {
         std::stringstream ss;
-        ss << this->name << ": Weight " << this->weight << "EntryPoints: ";
-        for (int i = 0; i < static_cast<int>(this->relevantEntryPointIds.size()); ++i) {
-            ss << this->relevantEntryPointIds[i] << " ";
+        ss << "UF: Weight " << _weight << "EntryPoints: ";
+        for (const EntryPoint* ep : _relevantEntryPoints) {
+            ss << ep->getId() << " ";
         }
         ss << std::endl;
         return ss.str();
     }
-    double getWeight() const { return weight; }
+    double getWeight() const { return _weight; }
     /**
      * Evaluates the utilityfunction summand
      * @return The result of the evaluation
      */
-    virtual UtilityInterval eval(IAssignment* ass) = 0;
+    virtual UtilityInterval eval(IAssignment ass) const = 0;
     /**
      * Cache every data for the current evaluation, to
      * assure consistency over the complete current evaluation.
      */
     virtual void cacheEvalData(){};
-    virtual std::pair<std::vector<double>, double>* differentiate(IAssignment* newAss) { return nullptr; }
-    void setWeight(double weight) { this->weight = weight; }
+    // virtual std::pair<std::vector<double>, double>* differentiate(IAssignment* newAss) { return nullptr; }
+    void setWeight(double weight) { _weight = weight; }
 
-  protected:
-    UtilityInterval ui;
-    double weight;
-    int64_t id;
-    std::vector<int64_t> relevantEntryPointIds;
-    EntryPointGrp relevantEntryPoints;
-
-    std::string name;
-    std::string info;
+protected:
+    EntryPointGrp _relevantEntryPoints;
+    double _weight;
 };
 
 } /* namespace alica */

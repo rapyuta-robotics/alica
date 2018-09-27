@@ -13,6 +13,8 @@ using namespace std;
 
 #include "Plans/Behaviour/SuccessSpam.h"
 
+#include "Plans/Behaviour/AlwaysFail.h"
+
 #include "Plans/Behaviour/AttackOpp.h"
 
 #include "Plans/Behaviour/TriggerA.h"
@@ -32,6 +34,8 @@ using namespace std;
 #include "Plans/Behaviour/MidFieldStandard.h"
 
 #include "Plans/GSolver/SolverTestBehaviour.h"
+
+#include "Plans/Behaviour/CountIndefinitely.h"
 
 namespace alica
 {
@@ -67,6 +71,11 @@ shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfI
     case 1522377419087:
 
         return make_shared<SuccessSpam>();
+        break;
+
+    case 1532424207423:
+
+        return make_shared<AlwaysFail>();
         break;
 
     case 1402489366699:
@@ -117,6 +126,11 @@ shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfI
     case 1417424483320:
 
         return make_shared<SolverTestBehaviour>();
+        break;
+
+    case 1529456686038:
+
+        return make_shared<CountIndefinitely>();
         break;
 
     default:

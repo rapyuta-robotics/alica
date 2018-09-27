@@ -1,6 +1,6 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
+#include "engine/AgentIDConstPtr.h"
 
 #include <iostream>
 #include <list>
@@ -24,7 +24,7 @@ class IAlicaCommunication;
 
 class SyncModule
 {
-  public:
+public:
     SyncModule(AlicaEngine* ae);
     virtual ~SyncModule();
     virtual void init();
@@ -40,10 +40,10 @@ class SyncModule
     void sendAcks(const std::vector<SyncData>& syncDataList) const;
     void synchronisationDone(const SyncTransition* st);
 
-  protected:
+protected:
     bool running;
     AlicaEngine* ae;
-    const supplementary::AgentID* myId;
+    AgentIDConstPtr myId;
     unsigned long ticks;
     PlanRepository* pr;
     std::map<const SyncTransition*, Synchronisation*> synchSet;

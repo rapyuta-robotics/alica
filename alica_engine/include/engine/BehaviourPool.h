@@ -5,7 +5,8 @@
 #include <memory>
 #include <typeindex>
 
-namespace alica {
+namespace alica
+{
 
 class Behaviour;
 class BasicBehaviour;
@@ -17,15 +18,18 @@ class RunningPlan;
  * Manages the connection between the domain specific implementation (BasicBehaviours) of Behaviours.
  * It creates used BasicBehaviours with its given BehaviourCreator and starts and stops the Behaviours.
  */
-class BehaviourPool {
+class BehaviourPool
+{
 public:
     BehaviourPool(AlicaEngine* ae);
-    virtual ~BehaviourPool();
+    ~BehaviourPool();
     bool init(IBehaviourCreator* bc);
-    void startBehaviour(std::shared_ptr<RunningPlan> rp);
-    void stopBehaviour(std::shared_ptr<RunningPlan> rp);
+    void startBehaviour(RunningPlan& rp);
+    void stopBehaviour(RunningPlan& rp);
     void stopAll();
-    const std::map<const Behaviour*, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const;
+    bool isBehaviourRunningInContext(const RunningPlan& rp) const;
+    const std::map<const Behaviour*, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const { return _availableBehaviours; }
+
 
 private:
     /**
@@ -33,9 +37,10 @@ private:
      * The key of the map is the behaviour configuration, which is created through the plan designer.
      * The value is the basic behaviour, which is the implementation of that behaviour.
      */
+    // TODO: switch to unique ptr
     std::map<const Behaviour*, std::shared_ptr<BasicBehaviour>> _availableBehaviours;
-    AlicaEngine* ae;
-    IBehaviourCreator* behaviourCreator;
+    AlicaEngine* _ae;
+    IBehaviourCreator* _behaviourCreator;
 };
 
 } /* namespace alica */

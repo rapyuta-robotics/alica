@@ -4,22 +4,17 @@
  *  Created on: Oct 27, 2014
  *      Author: Stefan Jakob
  */
-
+#include "DistXContourTest.h"
 #include "TestWorldModel.h"
-#include <DistXContourTest.h>
+
+#include <engine/planselector/IAssignment.h>
 
 namespace alica
 {
 
-DistXContourTest::DistXContourTest(double weight, string name, long id, vector<long>& relevantEntryPointIds, vector<pair<double, double>>& ContourPoints,
-                                   double xMaxVal, double xMinVal, int ownId)
+DistXContourTest::DistXContourTest(double weight, const std::vector<std::pair<double, double>>& ContourPoints, double xMaxVal, double xMinVal)
+        : USummand(weight)
 {
-    this->ownId = ownId;
-    this->weight = weight;
-    this->name = name;
-    this->id = id;
-    this->relevantEntryPointIds = relevantEntryPointIds;
-
     this->xMaxVal = xMaxVal;
     this->xMinVal = xMinVal;
     this->contourPoints = ContourPoints;
@@ -34,27 +29,25 @@ void DistXContourTest::cacheEvalData()
     xAlloBall = alicaTests::TestWorldModel::getTwo()->x;
 }
 
-double DistXContourTest::interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint)
+double DistXContourTest::interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint) const
 {
     return ((Y2 - Y1) / (X2 - X1) * (xPoint - X1) + Y1);
 }
 
-UtilityInterval DistXContourTest::eval(IAssignment* ass)
+UtilityInterval DistXContourTest::eval(IAssignment ass) const
 {
-    ui.setMin(0.0);
-    ui.setMax(0.0);
+    UtilityInterval ui(0.0, 0.0);
 
-    pair<double, double> lastpoint;
+    std::pair<double, double> lastpoint;
     lastpoint.first = -18000 / 2;
     lastpoint.second = xMinVal;
 
-    pair<double, double> nextpoint;
+    std::pair<double, double> nextpoint;
     nextpoint.first = 18000 / 2;
     nextpoint.second = xMaxVal;
 
     double val = 0;
     if (contourPoints.empty()) {
-        ui.setMax(0.0);
         return ui;
     }
     for (int i = 0; i < static_cast<int>(contourPoints.size()); ++i) {

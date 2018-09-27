@@ -45,7 +45,7 @@ void Constraint1524453470580::getConstraint(shared_ptr<ProblemDescriptor> c, sha
     TermPtr l1b = l1bv;
 
     assert(c->getStaticVars().size() == 2);
-    assert(c->getDomainVars().empty());
+    assert(c->getAgentVars().empty());
 
     l1av->editRange().intersect(-200.0, -100.0);
     l1bv->editRange().intersect(100.0, 200.0);
@@ -86,13 +86,13 @@ void Constraint1524453491764::getConstraint(shared_ptr<ProblemDescriptor> c, sha
 {
     /*PROTECTED REGION ID(cc1524453491764) ENABLED START*/
     assert(c->getStaticVars().empty());
-    assert(c->getDomainVars().size() == 2);
+    assert(c->getAgentVars().size() == 2);
 
-    autodiff::Variable* x1v = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[0]);
-    autodiff::Variable* y1v = static_cast<autodiff::Variable*>(c->getDomainVars()[0].getVars()[1]);
+    autodiff::Variable* x1v = static_cast<autodiff::Variable*>(c->getAgentVars()[0].getVars()[0]);
+    autodiff::Variable* y1v = static_cast<autodiff::Variable*>(c->getAgentVars()[0].getVars()[1]);
 
-    autodiff::Variable* x2v = static_cast<autodiff::Variable*>(c->getDomainVars()[1].getVars()[0]);
-    autodiff::Variable* y2v = static_cast<autodiff::Variable*>(c->getDomainVars()[1].getVars()[1]);
+    autodiff::Variable* x2v = static_cast<autodiff::Variable*>(c->getAgentVars()[1].getVars()[0]);
+    autodiff::Variable* y2v = static_cast<autodiff::Variable*>(c->getAgentVars()[1].getVars()[1]);
 
     TermPtr x1 = x1v;
     TermPtr y1 = y1v;

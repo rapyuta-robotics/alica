@@ -3,7 +3,7 @@
 #include "engine/Types.h"
 #include <alica_solver_interface/Interval.h>
 #include <alica_solver_interface/SolverVariable.h>
-#include <supplementary/AgentID.h>
+#include <engine/AgentIDConstPtr.h>
 
 namespace alica
 {
@@ -11,9 +11,9 @@ namespace alica
 template <class T>
 class AgentElements
 {
-  public:
+public:
     AgentElements(AgentIDConstPtr id)
-        : _id(id)
+            : _id(id)
     {
     }
 
@@ -21,8 +21,8 @@ class AgentElements
     AgentElements& operator=(const AgentElements&) = delete;
 
     AgentElements(const AgentElements&& o)
-        : _id(o._id)
-        , _vars(std::move(o._vars))
+            : _id(o._id)
+            , _vars(std::move(o._vars))
     {
     }
 
@@ -40,7 +40,10 @@ class AgentElements
     bool operator<(const AgentElements& o) const { return *_id < *o._id; }
     bool operator>(const AgentElements& o) const { return *_id > *o._id; }
 
-  private:
+    bool operator<=(const AgentElements& o) const { return !(*_id > *o._id); }
+    bool operator>=(const AgentElements& o) const { return !(*_id < *o._id); }
+
+private:
     AgentIDConstPtr _id;
     std::vector<T> _vars;
 };

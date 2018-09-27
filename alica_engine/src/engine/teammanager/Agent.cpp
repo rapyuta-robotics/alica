@@ -1,36 +1,43 @@
 #include "engine/teammanager/Agent.h"
 
+#include "engine/AgentIDConstPtr.h"
 #include "engine/AlicaEngine.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/collections/SuccessMarks.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
-#include "supplementary/AgentID.h"
 
 namespace alica
 {
 
-Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id)
-    : _id(id)
-    , _name("")
-    , _engine(engine)
-    , _properties(nullptr)
-    , _engineData(nullptr)
-    , _timeout(timeout)
-    , _active(false)
-    , _ignored(false)
-    , _local(false)
+Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id)
+        : _id(id)
+        , _name()
+        , _engine(engine)
+        , _properties()
+        , _engineData(engine, id)
+        , _timeout(timeout)
+        , _active(false)
+        , _ignored(false)
+        , _local(false)
 {
 }
 
-Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id, const std::string& name)
-    : Agent(engine, timeout, id)
+Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id, const std::string& name)
+        : _id(id)
+        , _name(name)
+        , _engine(engine)
+        , _properties(engine, name)
+        , _engineData(engine, id)
+        , _timeout(timeout)
+        , _active(false)
+        , _ignored(false)
+        , _local(false)
 {
-    _name = name;
-    _properties = new RobotProperties(id, engine, name);
-    _engineData = new RobotEngineData(engine, id);
 }
+
+Agent::~Agent() {}
 
 void Agent::setLocal(bool local)
 {
@@ -42,22 +49,22 @@ void Agent::setLocal(bool local)
 
 void Agent::setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint)
 {
-    _engineData->getSuccessMarks()->markSuccessfull(plan, entryPoint);
+    _engineData.editSuccessMarks().markSuccessfull(plan, entryPoint);
 }
 
-void Agent::setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks)
+void Agent::setSuccessMarks(const IdGrp& suceededEps)
 {
-    _engineData->setSuccessMarks(successMarks);
+    _engineData.updateSuccessMarks(suceededEps);
 }
 
 const DomainVariable* Agent::getDomainVariable(const std::string& sort) const
 {
-    return _engineData->getDomainVariable(sort);
+    return _engineData.getDomainVariable(sort);
 }
 
 const EntryPointGrp* Agent::getSucceededEntryPoints(const AbstractPlan* plan) const
 {
-    return _engineData->getSuccessMarks()->succeededEntryPoints(plan);
+    return _engineData.getSuccessMarks().succeededEntryPoints(plan);
 }
 
 bool Agent::update()
@@ -67,7 +74,7 @@ bool Agent::update()
     }
     if (_active && _timeLastMsgReceived + _timeout < _engine->getAlicaClock()->now()) {
         // timeout triggered
-        _engineData->clearSuccessMarks();
+        _engineData.clearSuccessMarks();
         _active = false;
         return true;
     }

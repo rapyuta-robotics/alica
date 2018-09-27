@@ -31,7 +31,7 @@ class ExpressionHandler;
  */
 class AbstractPlan : public AlicaElement
 {
-  public:
+public:
     AbstractPlan();
     AbstractPlan(int64_t id);
 
@@ -45,8 +45,6 @@ class AbstractPlan : public AlicaElement
     const VariableGrp& getVariables() const { return _variables; }
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
-    const std::shared_ptr<UtilityFunction>& getUtilityFunction() const { return _utilityFunction; }
-    double getUtilityThreshold() const { return _utilityThreshold; }
 
     std::string toString() const override;
     const std::string& getFileName() const { return _fileName; }
@@ -54,7 +52,7 @@ class AbstractPlan : public AlicaElement
     void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const; // not a mistake, this is mutable
     const Variable* getVariableByName(const std::string& name) const;
 
-  private:
+private:
     friend ModelFactory;
     friend ExpressionHandler;
 
@@ -64,8 +62,6 @@ class AbstractPlan : public AlicaElement
     void setVariables(const VariableGrp& variables);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
-    void setUtilityFunction(std::shared_ptr<UtilityFunction> utilityFunction);
-    void setUtilityThreshold(double utilityThreshold);
 
     // TODO: move this to the authority module
     mutable AlicaTime _authorityTimeInterval;
@@ -77,16 +73,8 @@ class AbstractPlan : public AlicaElement
      * This plan's precondition
      */
     PreCondition* _preCondition;
-    /**
-     * This plan's Utility function
-     */
-    std::shared_ptr<UtilityFunction> _utilityFunction; // TODO why the heck is this a shared ptr, livetime is bout to this object
 
     VariableGrp _variables;
-    /**
-     * The utility threshold, the higher, the less likely dynamic changes are.
-     */
-    double _utilityThreshold;
 
     /**
      *  Whether this plan is marked as a MasterPlan.

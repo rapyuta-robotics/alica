@@ -3,7 +3,8 @@
 #include <memory>
 #include <string>
 
-namespace alica {
+namespace alica
+{
 struct AlicaEngineInfo;
 struct AllocationAuthorityInfo;
 struct PlanTreeInfo;
@@ -13,7 +14,8 @@ struct SyncReady;
 class AlicaEngine;
 class RoleSwitch;
 
-class IAlicaCommunication {
+class IAlicaCommunication
+{
 public:
     IAlicaCommunication(AlicaEngine* ae)
             : ae(ae){};
@@ -32,7 +34,7 @@ public:
 
     void onSyncTalkReceived(std::shared_ptr<SyncTalk> st);
     void onSyncReadyReceived(std::shared_ptr<SyncReady> sr);
-    void onAuthorityInfoReceived(std::shared_ptr<AllocationAuthorityInfo> aai);
+    void onAuthorityInfoReceived(const AllocationAuthorityInfo& aai);
     void onPlanTreeInfoReceived(std::shared_ptr<PlanTreeInfo> pti);
     void onSolverResult(const SolverResult& sr);
 

@@ -11,10 +11,11 @@
 #include <string.h>
 
 #include "AlicaElement.h"
-#include "Capability.h"
 #include "CapValue.h"
+#include "Capability.h"
 
-namespace alica {
+namespace alica
+{
 
 class Capability;
 class CapValue;
@@ -23,9 +24,11 @@ class ModelFactory;
 /**
  * A characteristic encapsulates a Capability and aCapValue.
  */
-class Characteristic : public AlicaElement {
+class Characteristic : public AlicaElement
+{
 public:
     Characteristic();
+    Characteristic(const Capability* cap, const CapValue* value);
     virtual ~Characteristic();
 
     std::string toString() const override;
@@ -49,6 +52,6 @@ private:
     double _weight;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* CHARACTERISTIC_H_ */

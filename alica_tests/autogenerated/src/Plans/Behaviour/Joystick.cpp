@@ -8,7 +8,7 @@ namespace alica
 /*PROTECTED REGION ID(staticVars1421854685673) ENABLED START*/ // initialise static variables here
 /*PROTECTED REGION END*/
 Joystick::Joystick()
-    : DomainBehaviour("Joystick")
+        : DomainBehaviour("Joystick")
 {
     /*PROTECTED REGION ID(con1421854685673) ENABLED START*/ // Add additional options here
     /*PROTECTED REGION END*/

@@ -8,12 +8,12 @@ namespace alica
 /*PROTECTED REGION ID(staticVars1429017274116) ENABLED START*/ // initialise static variables here
 /*PROTECTED REGION END*/
 NotToTrigger::NotToTrigger()
-    : DomainBehaviour("NotToTrigger")
+        : DomainBehaviour("NotToTrigger")
 {
     /*PROTECTED REGION ID(con1429017274116) ENABLED START*/ // Add additional options here
     this->callCounter = 0;
     this->initCounter = 0;
-    this->behaviourTrigger = alicaTests::TestWorldModel::getOne()->trigger1;
+    setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
     /*PROTECTED REGION END*/
 }
 NotToTrigger::~NotToTrigger()
