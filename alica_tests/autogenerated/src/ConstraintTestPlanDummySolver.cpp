@@ -1,56 +1,75 @@
 #include "ConstraintTestPlanDummySolver.h"
-#include <engine/model/Variable.h>
-#include <engine/constraintmodul/SolverVariable.h>
 
-#include <string>
+#include <alica_solver_interface/SimpleContext.h>
+#include <alica_solver_interface/SolverVariable.h>
+#include <engine/AlicaEngine.h>
+#include <engine/blackboard/BlackBoard.h>
+#include <engine/model/Variable.h>
+
 #include <iostream>
+#include <string>
 
 using std::make_shared;
 using std::shared_ptr;
 using std::string;
 using std::vector;
 
-namespace alica {
-namespace reasoner {
+namespace alica
+{
+namespace reasoner
+{
+
 int ConstraintTestPlanDummySolver::existsSolutionCallCounter = 0;
 int ConstraintTestPlanDummySolver::getSolutionCallCounter = 0;
 
 ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(AlicaEngine* ae)
-        : ISolver(ae) {}
+    : ISolver(ae)
+{
+}
 
 ConstraintTestPlanDummySolver::~ConstraintTestPlanDummySolver() {}
 
-bool ConstraintTestPlanDummySolver::existsSolution(
-        const VariableGrp& vars, vector<shared_ptr<ProblemDescriptor>>& calls) {
-    existsSolutionCallCounter++;
+bool ConstraintTestPlanDummySolver::existsSolutionImpl(SolverContext*, const std::vector<shared_ptr<ProblemDescriptor>>&)
+{
+    ++existsSolutionCallCounter;
     // std::cout << "ConstraintTestPlanDummySolver::existsSolution was called " << existsSolutionCallCounter
     //		<< " times!" << std::endl;
     return false;
 }
 
-bool ConstraintTestPlanDummySolver::getSolution(
-        const VariableGrp& vars, vector<shared_ptr<ProblemDescriptor>>& calls, vector<void*>& results) {
-    for (int i = 0; i < vars.size(); i++) {
-        string* s = new string(vars.at(i)->getName());
-        results.push_back(s);
+bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results)
+{
+    BlackBoard& bb = getAlicaEngine()->editBlackBoard();
+    SimpleContext<SolverVariable>* tdc = static_cast<SimpleContext<SolverVariable>*>(ctx);
+    for (const auto& var : tdc->getVariables()) {
+        std::string s = std::to_string(var->getId());
+        results.push_back(bb.registerValue(s.c_str(), static_cast<int>(s.size())));
     }
-    getSolutionCallCounter++;
+    ++getSolutionCallCounter;
     // std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << getSolutionCallCounter << " times!"
     //		<< std::endl;
     return true;
 }
 
-int ConstraintTestPlanDummySolver::getExistsSolutionCallCounter() {
+int ConstraintTestPlanDummySolver::getExistsSolutionCallCounter()
+{
     return existsSolutionCallCounter;
 }
 
-int ConstraintTestPlanDummySolver::getGetSolutionCallCounter() {
+int ConstraintTestPlanDummySolver::getGetSolutionCallCounter()
+{
     return getSolutionCallCounter;
 }
 
-shared_ptr<SolverVariable> ConstraintTestPlanDummySolver::createVariable(long id) {
-    return make_shared<SolverVariable>();
+SolverVariable* ConstraintTestPlanDummySolver::createVariable(int64_t id, SolverContext* ctx)
+{
+    return static_cast<SimpleContext<SolverVariable>*>(ctx)->createVariable(id);
 }
-}  // namespace reasoner
+std::unique_ptr<SolverContext> ConstraintTestPlanDummySolver::createSolverContext()
+{
+    return std::unique_ptr<SolverContext>(new SimpleContext<SolverVariable>());
+}
+
+} // namespace reasoner
 
 } /* namespace alica */

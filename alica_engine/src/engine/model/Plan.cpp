@@ -77,5 +77,4 @@ void Plan::setTransitions(const TransitionGrp& transitions) {
     _transitions = transitions;
 }
 
-
 }  // namespace alica

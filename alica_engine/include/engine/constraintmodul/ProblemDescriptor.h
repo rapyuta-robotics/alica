@@ -1,66 +1,66 @@
 #pragma once
 
+#include "engine/collections/AgentVariables.h"
 #include "supplementary/AgentID.h"
-
+#include <alica_solver_interface/Interval.h>
 #include <memory>
+#include <utility>
 #include <vector>
-
-namespace alica {
+namespace alica
+{
+class SolverContext;
 class SolverTerm;
 class SolverVariable;
 
-using std::shared_ptr;
-using std::vector;
+class ProblemPart;
 
-class ProblemDescriptor : public std::enable_shared_from_this<ProblemDescriptor> {
-public:
-    ProblemDescriptor(shared_ptr<vector<shared_ptr<SolverVariable>>> vars,
-            shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>> domVars);
+class ProblemDescriptor
+{
+  public:
+    explicit ProblemDescriptor(SolverContext* ctx);
+    SolverTerm* getConstraint() const { return _constraint; }
+    SolverTerm* getUtility() const { return _utility; }
+    const std::vector<SolverVariable*>& getStaticVars() const { return _staticVars; }
 
-    bool getSetsUtilitySignificanceThreshold();
-    void setSetsUtilitySignificanceThreshold(bool value);
-    double getUtilitySignificanceThreshold();
+    const std::vector<AgentSolverVariables>& getDomainVars() const { return _domainVars; }
+    std::vector<AgentSolverVariables>& editDomainVars() { return _domainVars; }
+
+    const std::vector<SolverVariable*>& getAllVariables() const { return _allVars; }
+
+    bool isSettingUtilitySignificanceThreshold() const { return _setsUtilitySignificanceThreshold; }
+    double getUtilitySignificanceThreshold() const { return _utilitySignificanceThreshold; }
+    double getUtilitySufficiencyThreshold() const { return _utilitySufficiencyThreshold; }
+
+    void setConstraint(SolverTerm* value) { _constraint = value; }
+    void setUtility(SolverTerm* value) { _utility = value; }
+
     void setUtilitySignificanceThreshold(double value);
-    shared_ptr<SolverTerm> getConstraint();
-    void setConstraint(shared_ptr<SolverTerm> value);
-    shared_ptr<SolverTerm> getUtility();
-    void setUtility(shared_ptr<SolverTerm> value);
-    double getUtilitySufficiencyThreshold();
     void setUtilitySufficiencyThreshold(double value);
-    shared_ptr<vector<shared_ptr<SolverVariable>>> getStaticVars();
-    void setStaticVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value);
-    shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>> getDomainVars();
-    void setDomainVars(shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>> value);
-    shared_ptr<vector<shared_ptr<vector<const supplementary::AgentID*>>>> getAgentsInScope();
-    void setAgentsInScope(shared_ptr<vector<shared_ptr<vector<const supplementary::AgentID*>>>> value);
-    shared_ptr<vector<shared_ptr<SolverVariable>>> getAllVars();
-    void setAllVars(shared_ptr<vector<shared_ptr<SolverVariable>>> value);
 
-    shared_ptr<vector<vector<double>>> allRanges();
+    ProblemDescriptor(const ProblemDescriptor&) = delete;
+    ProblemDescriptor& operator=(const ProblemDescriptor&) = delete;
 
-    shared_ptr<vector<vector<vector<vector<double>>>>> getDomainRanges();
-    void setDomainRanges(shared_ptr<vector<vector<vector<vector<double>>>>> value);
-    shared_ptr<vector<vector<double>>> getStaticRanges();
-    void setStaticRanges(shared_ptr<vector<vector<double>>> value);
+    SolverContext* getContext() const { return _context; }
 
-private:
-    int dim;
-    const double min = -10E29;
-    const double max = 10E29;
+  private:
+    friend ProblemPart;
 
-    double utilitySignificanceThreshold = 1E-22; /*<< minimum delta for adapting a better utility */
-    bool setsUtilitySignificanceThreshold;
+    void clear();
+    void prepForUsage();
 
-    shared_ptr<SolverTerm> constraint;
-    shared_ptr<SolverTerm> utility;
-    double utilitySufficiencyThreshold;
-    shared_ptr<vector<shared_ptr<SolverVariable>>> staticVars;
-    shared_ptr<vector<shared_ptr<vector<shared_ptr<vector<shared_ptr<SolverVariable>>>>>>> domainVars;
-    shared_ptr<vector<shared_ptr<vector<const supplementary::AgentID*>>>> agentsInScope;
-    shared_ptr<vector<shared_ptr<SolverVariable>>> allVars;
+    SolverTerm* _constraint;
+    SolverTerm* _utility;
 
-    shared_ptr<vector<vector<vector<vector<double>>>>> domainRanges;
-    shared_ptr<vector<vector<double>>> staticRanges;
+    std::vector<SolverVariable*> _staticVars;
+    std::vector<AgentSolverVariables> _domainVars;
+    std::vector<SolverVariable*> _allVars;
+
+    SolverContext* _context;
+
+    double _utilitySignificanceThreshold; /*<< minimum delta for adapting a better utility */
+    double _utilitySufficiencyThreshold;
+    int _dim;
+    bool _setsUtilitySignificanceThreshold;
 };
 
-}  // namespace alica
+} // namespace alica

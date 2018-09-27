@@ -5,19 +5,24 @@
  *      Author: Stefan Jakob
  */
 
-#include <engine/DefaultUtilityFunction.h>
 #include "engine/Assignment.h"
 #include "engine/RunningPlan.h"
 #include "engine/UtilityInterval.h"
+#include <engine/DefaultUtilityFunction.h>
 
-namespace alica {
+#include <sstream>
+
+namespace alica
+{
 
 /**
  * Basic constructor
  * @param plan The plan, this utility function belongs to
  */
 DefaultUtilityFunction::DefaultUtilityFunction(Plan* plan)
-        : UtilityFunction("DefaultUtility", list<USummand*>(), 1.0, 0.0, plan) {}
+    : UtilityFunction("DefaultUtility", list<USummand*>(), 1.0, 0.0, plan)
+{
+}
 
 DefaultUtilityFunction::~DefaultUtilityFunction() {}
 
@@ -26,10 +31,11 @@ DefaultUtilityFunction::~DefaultUtilityFunction() {}
  * roles and according to the similarity, if an oldRP is given.
  * @return The utility
  */
-double DefaultUtilityFunction::eval(RunningPlan* newRP, RunningPlan* oldRP) {
+double DefaultUtilityFunction::eval(RunningPlan* newRP, RunningPlan* oldRP)
+{
     if (newRP->getAssignment() == nullptr) {
-        cerr << "DefUF: The Assignment of the RunningPlan is null!" << endl;
-        throw new exception();
+        std::cerr << "DefUF: The Assignment of the RunningPlan is null!" << std::endl;
+        throw std::exception();
     }
     // Invalid Assignments have an Utility of -1 changed from 0 according to specs
     if (!newRP->getAssignment()->isValid()) {
@@ -58,8 +64,7 @@ double DefaultUtilityFunction::eval(RunningPlan* newRP, RunningPlan* oldRP) {
         sumOfUI.setMin(sumOfUI.getMin() / sumOfWeights);
 
         if ((sumOfUI.getMax() - sumOfUI.getMin()) > DIFFERENCETHRESHOLD) {
-            cerr << "DefUF: The Min and Max utility differs more than " << DIFFERENCETHRESHOLD
-                 << " for a complete Assignment!" << endl;
+            std::cerr << "DefUF: The Min and Max utility differs more than " << DIFFERENCETHRESHOLD << " for a complete Assignment!" << std::endl;
         }
         return sumOfUI.getMax();
     }
@@ -72,7 +77,8 @@ double DefaultUtilityFunction::eval(RunningPlan* newRP, RunningPlan* oldRP) {
  * roles and according to the similarity, if an oldRP is given.
  * @return The utility interval
  */
-UtilityInterval DefaultUtilityFunction::eval(IAssignment* newAss, IAssignment* oldAss) {
+UtilityInterval DefaultUtilityFunction::eval(IAssignment* newAss, IAssignment* oldAss)
+{
     UtilityInterval sumOfUI(0.0, 0.0);
     double sumOfWeights = 0.0;
 
@@ -106,9 +112,10 @@ UtilityInterval DefaultUtilityFunction::eval(IAssignment* newAss, IAssignment* o
     return sumOfUI;
 }
 
-string DefaultUtilityFunction::toString() {
-    stringstream ss;
-    ss << this->name << ": prioW: " << this->priorityWeight << " simW: " << this->similarityWeight << endl;
+std::string DefaultUtilityFunction::toString() const
+{
+    std::stringstream ss;
+    ss << this->name << ": prioW: " << this->priorityWeight << " simW: " << this->similarityWeight << std::endl;
     return ss.str();
 }
 

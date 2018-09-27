@@ -1,41 +1,42 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
 #include "engine/containers/SyncData.h"
+#include "supplementary/AgentID.h"
 
-#include <vector>
 #include <tuple>
+#include <vector>
 
-namespace alica {
+namespace alica
+{
 
 typedef std::tuple<const supplementary::AgentID*, std::vector<stdSyncData>> stdSyncTalk;
-struct SyncTalk {
+struct SyncTalk
+{
     SyncTalk()
-            : senderID(nullptr) {}
-    ~SyncTalk() {
-        /*for (auto s : syncData)
-        {
-                delete s;
-        }*/
+        : senderID(nullptr)
+    {
     }
+    ~SyncTalk() {}
 
     const supplementary::AgentID* senderID;
-    std::vector<SyncData*> syncData;
+    std::vector<SyncData> syncData;
 
-    SyncTalk(stdSyncTalk& s) {
-        this->senderID = std::get<0>(s);
-        std::vector<stdSyncData>& tmp = std::get<1>(s);
-        for (auto d : tmp) {
-            syncData.push_back(new SyncData(d));
+    SyncTalk(const stdSyncTalk& s)
+        : senderID(std::get<0>(s))
+    {
+        const std::vector<stdSyncData>& tmp = std::get<1>(s);
+        for (const stdSyncData& d : tmp) {
+            syncData.emplace_back(d);
         }
     }
 
-    stdSyncTalk toStandard() {
+    stdSyncTalk toStandard() const
+    {
         std::vector<stdSyncData> r;
-        for (auto s : syncData) {
-            r.push_back(std::move(s->toStandard()));
+        for (const SyncData& s : syncData) {
+            r.push_back(s.toStandard());
         }
-        return std::move(std::make_tuple(senderID, std::move(r)));
+        return std::make_tuple(senderID, std::move(r));
     }
 };
 

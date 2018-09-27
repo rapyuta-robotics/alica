@@ -1,20 +1,22 @@
 #pragma once
 
+#include <algorithm>
+#include <exception>
 #include <iostream>
 #include <list>
 #include <stdio.h>
-#include <exception>
-#include <algorithm>
 #include <string>
 
-#include <SystemConfig.h>
 #include <FileSystem.h>
+#include <SystemConfig.h>
 
-namespace tinyxml2 {
+namespace tinyxml2
+{
 class XMLElement;
 }
 
-namespace alica {
+namespace alica
+{
 
 class ModelFactory;
 class PlanRepository;
@@ -25,43 +27,47 @@ class AlicaElement;
 /**
  * The default parser, parsing the XML encoding of an ALICA plan-tree
  */
-class PlanParser {
-public:
+class PlanParser
+{
+  public:
     PlanParser(PlanRepository* rep);
-    virtual ~PlanParser() = default;
+    ~PlanParser();
 
-    virtual Plan* parsePlanTree(const string& masterplan);
-    virtual map<long, AlicaElement*>* getParsedElements();
+    const Plan* parsePlanTree(const std::string& masterplan);
+    void ignoreMasterPlanId(bool val);
+    std::map<int64_t, AlicaElement*>* getParsedElements();
 
-    string getCurrentFile();
+    const std::string& getCurrentFile() const { return currentFile; }
+    void setCurrentFile(const std::string& currentFile);
     void parseFileLoop();
-    RoleSet* parseRoleSet(string roleSetName, string roleSetDir);
-    long parserId(tinyxml2::XMLElement* node);
+    const RoleSet* parseRoleSet(std::string roleSetName, std::string roleSetDir);
+    int64_t parserId(tinyxml2::XMLElement* node);
 
-private:
+  private:
     supplementary::SystemConfig* sc;
-    shared_ptr<ModelFactory> mf;
+    std::shared_ptr<ModelFactory> mf;
     PlanRepository* rep;
     Plan* masterPlan;
-    string planDir;
-    string roleDir;
-    string taskDir;
-    string basePlanPath;
-    string baseRolePath;
-    string baseTaskPath;
-    string currentDirectory;
-    string domainConfigFolder;
-    string currentFile;
-    void parseTaskFile(string currentFile);
-    void parseRoleDefFile(string currentFile);
-    void parseCapabilityDefFile(string currentFile);
-    void parsePlanTypeFile(string currentFile);
-    void parseBehaviourFile(string currentFile);
-    Plan* parsePlanFile(string& planFile);
-    long fetchId(const string& idString);
-    string findDefaultRoleSet(string dir);
 
-    list<string> filesToParse;
-    list<string> filesParsed;
+    std::string planDir;
+    std::string roleDir;
+    std::string taskDir;
+    std::string basePlanPath;
+    std::string baseRolePath;
+    std::string baseTaskPath;
+    std::string currentDirectory;
+    std::string domainConfigFolder;
+    std::string currentFile;
+    void parseTaskFile(const std::string& currentFile);
+    void parseRoleDefFile(const std::string& currentFile);
+    void parseCapabilityDefFile(const std::string& currentFile);
+    void parsePlanTypeFile(const std::string& currentFile);
+    void parseBehaviourFile(const std::string& currentFile);
+    Plan* parsePlanFile(const std::string& planFile);
+    int64_t fetchId(const std::string& idString, int64_t id);
+    std::string findDefaultRoleSet(std::string dir);
+
+    std::list<std::string> filesToParse;
+    std::list<std::string> filesParsed;
 };
-}  // namespace alica
+} // namespace alica

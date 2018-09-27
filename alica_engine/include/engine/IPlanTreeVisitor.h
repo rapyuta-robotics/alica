@@ -1,24 +1,16 @@
-/*
- * IPlanTreeVisitor.h
- *
- *  Created on: Jul 16, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef IPLANTREEVISITOR_H_
-#define IPLANTREEVISITOR_H_
+#include <memory>
 
-using namespace std;
-
-namespace alica {
+namespace alica
+{
 class RunningPlan;
 
-class IPlanTreeVisitor {
-public:
+class IPlanTreeVisitor
+{
+  public:
     virtual ~IPlanTreeVisitor() {}
-    virtual void visit(shared_ptr<RunningPlan> r) = 0;
+    virtual void visit(std::shared_ptr<RunningPlan> r) = 0;
 };
 
 } /* namespace alica */
-
-#endif /* IPLANTREEVISITOR_H_ */

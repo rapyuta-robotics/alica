@@ -28,18 +28,20 @@ namespace alica
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(const std::string& name)
-        : name(name)
-        , engine(nullptr)
-        , failure(false)
-        , success(false)
-        , callInit(true)
-        , started(true)
+    : name(name)
+    , engine(nullptr)
+    , failure(false)
+    , success(false)
+    , callInit(true)
+    , started(true)
+    , msInterval(100)
+    , msDelayedStart(0)
 {
     this->running = false;
     this->timer = new supplementary::Timer(0, 0);
     this->timer->registerCV(&this->runCV);
     this->behaviourTrigger = nullptr;
-    this->runThread = new thread(&BasicBehaviour::runInternal, this);
+    this->runThread = new std::thread(&BasicBehaviour::runInternal, this);
 }
 
 BasicBehaviour::~BasicBehaviour()
@@ -185,7 +187,7 @@ const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryP
     if (ep == nullptr) {
         return nullptr;
     }
-    shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
+    std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
         const EntryPointGrp& eps = static_cast<const Plan*>(cur->getPlan())->getEntryPoints();
         if (std::find(eps.begin(), eps.end(), ep) != eps.end()) {
@@ -201,7 +203,7 @@ const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryP
     if (ep == nullptr) {
         return nullptr;
     }
-    shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
+    std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     if (cur != nullptr) {
         return cur->getAssignment()->getRobotsWorking(ep);
     }
@@ -215,14 +217,14 @@ void BasicBehaviour::initInternal()
     this->callInit = false;
     try {
         this->initialiseParameters();
-    } catch (exception& e) {
-        cerr << "BB: Exception in Behaviour-INIT of: " << this->getName() << endl << e.what() << endl;
+    } catch (std::exception& e) {
+        std::cerr << "BB: Exception in Behaviour-INIT of: " << this->getName() << std::endl << e.what() << std::endl;
     }
 }
 
 void BasicBehaviour::runInternal()
 {
-    unique_lock<mutex> lck(runCV_mtx);
+    std::unique_lock<std::mutex> lck(runCV_mtx);
     while (this->started) {
         this->runCV.wait(lck, [&] {
             if (behaviourTrigger == nullptr) {
@@ -237,18 +239,18 @@ void BasicBehaviour::runInternal()
         if (this->callInit)
             this->initInternal();
 #ifdef BEH_DEBUG
-        chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
+        std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
 #endif
         // TODO: pass something like an eventarg (to be implemented) class-member, which could be set for an event
         // triggered (to be implemented) behaviour.
         try {
             if (behaviourTrigger == nullptr) {
-                this->run((void*) timer);
+                this->run((void*)timer);
             } else {
-                this->run((void*) behaviourTrigger);
+                this->run((void*)behaviourTrigger);
             }
-        } catch (exception& e) {
-            string err = string("Exception catched:  ") + this->getName() + string(" - ") + string(e.what());
+        } catch (std::exception& e) {
+            std::string err = string("Exception catched:  ") + this->getName() + std::string(" - ") + std::string(e.what());
             sendLogMessage(4, err);
         }
 #ifdef BEH_DEBUG
@@ -256,8 +258,9 @@ void BasicBehaviour::runInternal()
         if (beh->isEventDriven()) {
             double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / beh->getFrequency() * 1000.0;
             if (dura > 0.1) {
-                string err = string("BB: Behaviour ") + beh->getName() + string(" exceeded runtime by \t") + to_string(dura) + string("ms!");
-                sendLogMessage(2, err);
+                std::stringstream ss;
+                ss << "BB: Behaviour " << beh->getName() << " exceeded runtime by \t" << dura << "ms!";
+                sendLogMessage(2, ss.str());
                 // cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura
                 //	<< "ms!" << endl;
             }
@@ -273,7 +276,7 @@ void BasicBehaviour::runInternal()
 
 const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskName)
 {
-    shared_ptr<RunningPlan> parent = this->runningPlan->getParent().lock();
+    std::shared_ptr<RunningPlan> parent = this->runningPlan->getParent().lock();
     if (parent == nullptr) {
         return nullptr;
     }
@@ -287,10 +290,10 @@ const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskNam
 
 const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planName, const std::string& taskName)
 {
-    shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
+    std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
     while (cur != nullptr) {
         if (cur->getPlan()->getName() == planName) {
-            for (const EntryPoint* e : ((Plan*) cur->getPlan())->getEntryPoints()) {
+            for (const EntryPoint* e : ((Plan*)cur->getPlan())->getEntryPoints()) {
                 if (e->getTask()->getName() == taskName) {
                     return e;
                 }
@@ -302,7 +305,8 @@ const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planNam
     return nullptr;
 }
 
-void BasicBehaviour::sendLogMessage(int level, string& message)
+
+void BasicBehaviour::sendLogMessage(int level, const string& message) const
 {
     runningPlan->sendLogMessage(level, message);
 }
@@ -316,7 +320,7 @@ std::string BasicBehaviour::getParameter(std::string paramName)
 {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     string configSectionName = (*sc)["BehaviourConfigurations"]->get<std::string>(this->getName().c_str(), this->runningPlan->getActiveState()->getId(), NULL);
-    return (*sc)["BehaviourConfigurations"]->get<std::string>(this->getName().c_str(), configSectionName, "doorConfig", NULL);
+    return (*sc)["BehaviourConfigurations"]->get<std::string>(this->getName().c_str(), configSectionName.c_str(), "doorConfig", NULL);
 }
 
 } /* namespace alica */

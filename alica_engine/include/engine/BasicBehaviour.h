@@ -1,21 +1,25 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
+
 #include "engine/model/Behaviour.h"
 #include "engine/Types.h"
-#include <string>
-#include <memory>
-#include <thread>
+#include "engine/model/BehaviourConfiguration.h"
+#include "supplementary/AgentID.h"
 #include <chrono>
 #include <condition_variable>
+#include <memory>
+#include <string>
+#include <thread>
 #include <vector>
 
-namespace supplementary {
+namespace supplementary
+{
 class Timer;
 class ITrigger;
-}  // namespace supplementary
+} // namespace supplementary
 
-namespace alica {
+namespace alica
+{
 class Variable;
 class RunningPlan;
 
@@ -25,8 +29,9 @@ class AlicaEngine;
 /**
  * The base class for all behaviours. All Behaviours must inherit from this class.
  */
-class BasicBehaviour {
-public:
+class BasicBehaviour
+{
+  public:
     BasicBehaviour(const std::string& name);
     virtual ~BasicBehaviour();
     virtual void run(void* msg) = 0;
@@ -54,13 +59,13 @@ public:
 
     void setTrigger(supplementary::ITrigger* trigger);
 
-    void sendLogMessage(int level, std::string& message);
+    void sendLogMessage(int level, const std::string& message) const;
 
     virtual void init(){
 
     };
 
-protected:
+  protected:
     /**
      * The name of this behaviour.
      */
@@ -85,9 +90,9 @@ protected:
      */
     bool running;
 
-    std::thread* runThread;      /** < executes the runInternal and thereby the abstract run method */
-    supplementary::Timer* timer; /** < triggers the condition_variable of the runThread, if this behaviour is timer
-                                    triggered, alternative to behaviourTrigger*/
+    std::thread* runThread;                    /** < executes the runInternal and thereby the abstract run method */
+    supplementary::Timer* timer;               /** < triggers the condition_variable of the runThread, if this behaviour is timer
+                                                  triggered, alternative to behaviourTrigger*/
     supplementary::ITrigger* behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
                                                   is event triggered, alternative to timer */
     std::condition_variable runCV;
@@ -110,7 +115,7 @@ protected:
     const AgentGrp* robotsInEntryPoint(const EntryPoint* ep);
     AlicaEngine* engine;
 
-private:
+  private:
     void runInternal();
     void initInternal();
 

@@ -11,8 +11,8 @@
 #include <iostream>
 #include <unordered_map>
 
-using namespace std;
-namespace alica {
+namespace alica
+{
 class BehaviourConfiguration;
 class Behaviour;
 class Capability;
@@ -38,8 +38,9 @@ class ExpressionHandler;
  * It is especially useful to map element Ids back to their object, e.g., when receiving messages referring to plan
  * elements.
  */
-class PlanRepository {
-public:
+class PlanRepository
+{
+  public:
     PlanRepository();
     virtual ~PlanRepository();
 
@@ -47,30 +48,38 @@ public:
     using MapType = std::unordered_map<int64_t, T*>;
 
     template <typename T>
-    class Accessor {
-        class iterator {
-        public:
+    class Accessor
+    {
+        class iterator
+        {
+          public:
             iterator(typename MapType<T>::const_iterator inner)
-                    : _innerIter(inner) {}
+                : _innerIter(inner)
+            {
+            }
             bool operator!=(const iterator& o) const { return _innerIter != o._innerIter; }
             bool operator==(const iterator& o) const { return _innerIter == o._innerIter; }
             const T* operator*() const { return _innerIter->second; }
 
-            iterator& operator++() {
+            iterator& operator++()
+            {
                 ++_innerIter;
                 return *this;
             }
 
-        private:
+          private:
             typename MapType<T>::const_iterator _innerIter;
         };
 
-    public:
+      public:
         Accessor(const MapType<T>& map)
-                : _ref(map) {}
+            : _ref(map)
+        {
+        }
 
         const T* operator[](int64_t id) const { return find(id); }
-        const T* find(int64_t id) const {
+        const T* find(int64_t id) const
+        {
             typename MapType<T>::const_iterator it = _ref.find(id);
             return (it == _ref.end() ? nullptr : it->second);
         }
@@ -83,13 +92,11 @@ public:
         iterator begin() const { return iterator(_ref.begin()); }
         iterator end() const { return iterator(_ref.end()); }
 
-    private:
+      private:
         const MapType<T>& _ref;
     };
 
-    const Accessor<BehaviourConfiguration> getBehaviourConfigurations() const {
-        return Accessor<BehaviourConfiguration>(_behaviourConfigurations);
-    }
+    const Accessor<BehaviourConfiguration> getBehaviourConfigurations() const { return Accessor<BehaviourConfiguration>(_behaviourConfigurations); }
     const Accessor<Behaviour> getBehaviours() const { return Accessor<Behaviour>(_behaviours); }
     const Accessor<Capability> getCapabilities() const { return Accessor<Capability>(_capabilities); }
     const Accessor<Characteristic> getCharacteristics() const { return Accessor<Characteristic>(_characteristics); }
@@ -97,9 +104,7 @@ public:
     const Accessor<Plan> getPlans() const { return Accessor<Plan>(_plans); }
     const Accessor<PlanType> getPlanTypes() const { return Accessor<PlanType>(_planTypes); }
     const Accessor<Quantifier> getQuantifiers() const { return Accessor<Quantifier>(_quantifiers); }
-    const Accessor<RoleDefinitionSet> getRoleDefinitionSets() const {
-        return Accessor<RoleDefinitionSet>(_roleDefinitionSets);
-    }
+    const Accessor<RoleDefinitionSet> getRoleDefinitionSets() const { return Accessor<RoleDefinitionSet>(_roleDefinitionSets); }
     const Accessor<Role> getRoles() const { return Accessor<Role>(_roles); }
     const Accessor<State> getStates() const { return Accessor<State>(_states); }
     const Accessor<SyncTransition> getSyncTransitions() const { return Accessor<SyncTransition>(_syncTransitions); }
@@ -117,7 +122,7 @@ public:
 
     bool verifyPlanBase() const;
 
-private:
+  private:
     friend ModelFactory;
     friend ExpressionHandler;
     MapType<Plan> _plans;
@@ -138,5 +143,5 @@ private:
     MapType<TaskRepository> _taskRepositories;
     MapType<PlanningProblem> _planningProblems;
 };
-}  // namespace alica
+} // namespace alica
 #endif /* PLANREPOSITORY_H_ */

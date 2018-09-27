@@ -1,34 +1,38 @@
 #pragma once
 
-#include "engine/collections/RobotProperties.h"
+#include "engine/AlicaClock.h"
 #include "engine/collections/RobotEngineData.h"
-#include "engine/IAlicaClock.h"
+#include "engine/collections/RobotProperties.h"
 
-#include <string>
-#include <memory>
 #include <list>
+#include <memory>
+#include <string>
 
-namespace supplementary {
+namespace supplementary
+{
 class AgentID;
 }
 
-namespace alica {
+namespace alica
+{
 
 class AlicaEngine;
 class TeamManager;
 class TeamObserver;
 class AbstractPlan;
 class EntryPoint;
-class Variable;
+class DomainVariable;
 class SuccessMarks;
 
-class Agent {
+class Agent
+{
     // allows the TeamManager to call setTimeLastMsgReceived(..)
     friend ::alica::TeamManager;
     friend ::alica::TeamObserver;
 
-public:
-    ~Agent() {
+  public:
+    ~Agent()
+    {
         delete _properties;
         delete _engineData;
     }
@@ -40,9 +44,9 @@ public:
     bool isActive() const { return _active; }
     bool isIgnored() const { return _ignored; }
 
-protected:
+  protected:
     Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id);
-    Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id, std::string name);
+    Agent(const AlicaEngine* engine, AlicaTime timeout, const supplementary::AgentID* id, const std::string& name);
 
     const AlicaEngine* _engine;
     const supplementary::AgentID* _id;
@@ -60,8 +64,8 @@ protected:
     void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived) { _timeLastMsgReceived = timeLastMsgReceived; }
     void setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint);
     void setSuccessMarks(std::shared_ptr<SuccessMarks> successMarks);
-    const Variable* getDomainVariable(const std::string& sort) const;
-    std::shared_ptr<std::list<const EntryPoint*>> getSucceededEntryPoints(const AbstractPlan* plan) const;
+    const DomainVariable* getDomainVariable(const std::string& sort) const;
+    const EntryPointGrp* getSucceededEntryPoints(const AbstractPlan* plan) const;
     bool update();
 };
 

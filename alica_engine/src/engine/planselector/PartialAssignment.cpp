@@ -9,61 +9,41 @@
 #include "engine/model/Task.h"
 #include "engine/planselector/DynCardinality.h"
 
-namespace alica {
-namespace {
+namespace alica
+{
+namespace
+{
 constexpr int INFINITE = std::numeric_limits<int>::max();
 }
 
-int PartialAssignment::getHash() {
-    if (hashCalculated) {
-        return hash;
-    } else {
-        std::hash<alica::PartialAssignment> paHash;
-        return paHash(*this);
-    }
+using std::list;
+using std::shared_ptr;
+
+int PartialAssignment::getHash() const
+{
+    std::hash<const PartialAssignment> paHash;
+    return paHash(*this);
 }
 
-void PartialAssignment::setHash(int hash = 0) {
-    this->hash = hash;
-}
-
-bool PartialAssignment::isHashCalculated() {
-    return hashCalculated;
-}
-
-void PartialAssignment::setHashCalculated(bool hashCalculated) {
-    this->hashCalculated = hashCalculated;
-}
-
-PartialAssignment::PartialAssignment(PartialAssignmentPool* pap) {
+PartialAssignment::PartialAssignment(PartialAssignmentPool* pap)
+    : _hash(0)
+{
     this->pap = pap;
     this->utilFunc = nullptr;
     this->epSuccessMapping = nullptr;
-    this->hashCalculated = false;
     this->plan = nullptr;
     this->epRobotsMapping = new AssignmentCollection(AssignmentCollection::maxEpsCount);
     this->unassignedRobotIds = vector<const supplementary::AgentID*>();
     this->dynCardinalities = vector<shared_ptr<DynCardinality>>(AssignmentCollection::maxEpsCount);
     this->compareVal = PRECISION;
     for (int i = 0; i < AssignmentCollection::maxEpsCount; i++) {
-        this->dynCardinalities[i] = make_shared<DynCardinality>();
+        this->dynCardinalities[i] = std::make_shared<DynCardinality>();
     }
 }
 
-PartialAssignment::~PartialAssignment() {
+PartialAssignment::~PartialAssignment()
+{
     delete epRobotsMapping;
-}
-
-AssignmentCollection* PartialAssignment::getEpRobotsMapping() {
-    return epRobotsMapping;
-}
-
-shared_ptr<UtilityFunction> PartialAssignment::getUtilFunc() {
-    return utilFunc;
-}
-
-shared_ptr<SuccessCollection> PartialAssignment::getEpSuccessMapping() {
-    return epSuccessMapping;
 }
 
 //	vector<int>& PartialAssignment::getunassignedRobots()
@@ -71,31 +51,34 @@ shared_ptr<SuccessCollection> PartialAssignment::getEpSuccessMapping() {
 //		return unassignedRobots;
 //	}
 
-void PartialAssignment::clear() {
+void PartialAssignment::clear()
+{
     this->min = 0.0;
     this->max = 0.0;
     this->compareVal = PRECISION;
     this->unassignedRobotIds.clear();
     this->epRobotsMapping->clear();
-    this->hashCalculated = false;
+    _hash = 0;
 }
 
-void PartialAssignment::reset(PartialAssignmentPool* pap) {
+void PartialAssignment::reset(PartialAssignmentPool* pap)
+{
     pap->curIndex = 0;
 }
 
-const AgentGrp& PartialAssignment::getRobotIds() const {
+const AgentGrp& PartialAssignment::getRobotIds() const
+{
     return robotIds;
 }
 
-PartialAssignment* PartialAssignment::getNew(
-        PartialAssignmentPool* pap, const AgentGrp& robotIds, const Plan* plan, shared_ptr<SuccessCollection> sucCol) {
+PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, const AgentGrp& robotIds, const Plan* plan, shared_ptr<SuccessCollection> sucCol)
+{
     if (pap->curIndex >= pap->maxCount) {
-        cerr << "max PA count reached!" << endl;
+        std::cerr << "max PA count reached!" << std::endl;
     }
     PartialAssignment* ret = pap->daPAs[pap->curIndex++];
     ret->clear();
-    ret->robotIds = robotIds;  // Should already be sorted! (look at TaskAssignment, or PlanSelector)
+    ret->robotIds = robotIds; // Should already be sorted! (look at TaskAssignment, or PlanSelector)
     ret->plan = plan;
     ret->utilFunc = plan->getUtilityFunction();
     ret->epSuccessMapping = sucCol;
@@ -132,15 +115,15 @@ PartialAssignment* PartialAssignment::getNew(
             }
 
 #ifdef SUCDEBUG
-            cout << "SuccessCollection" << endl;
-            cout << "EntryPoint: " << ret->epRobotsMapping->getEntryPoints()->at(i)->toString() << endl;
-            cout << "DynMax: " << ret->dynCardinalities[i]->getMax() << endl;
-            cout << "DynMin: " << ret->dynCardinalities[i]->getMin() << endl;
-            cout << "SucCol: ";
+            std::cout << "SuccessCollection" << std::endl;
+            std::cout << "EntryPoint: " << ret->epRobotsMapping->getEntryPoints()->at(i)->toString() << std::endl;
+            std::cout << "DynMax: " << ret->dynCardinalities[i]->getMax() << std::endl;
+            std::cout << "DynMin: " << ret->dynCardinalities[i]->getMin() << std::endl;
+            std::cout << "SucCol: ";
             for (int j : (*suc)) {
-                cout << j << ", ";
+                std::cout << j << ", ";
             }
-            cout << "-----------" << endl;
+            std::cout << "-----------" << std::endl;
 #endif
         }
     }
@@ -152,9 +135,10 @@ PartialAssignment* PartialAssignment::getNew(
     return ret;
 }
 
-PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, PartialAssignment* oldPA) {
+PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, PartialAssignment* oldPA)
+{
     if (pap->curIndex >= pap->maxCount) {
-        cerr << "max PA count reached!" << endl;
+        std::cerr << "max PA count reached!" << std::endl;
     }
     PartialAssignment* ret = pap->daPAs[pap->curIndex++];
     ret->clear();
@@ -164,24 +148,25 @@ PartialAssignment* PartialAssignment::getNew(PartialAssignmentPool* pap, Partial
     ret->robotIds = oldPA->robotIds;
     ret->utilFunc = oldPA->utilFunc;
     ret->epSuccessMapping = oldPA->epSuccessMapping;
-    for (int i = 0; i < oldPA->unassignedRobotIds.size(); i++) {
+    for (int i = 0; i < static_cast<int>(oldPA->unassignedRobotIds.size()); i++) {
         ret->unassignedRobotIds.push_back(oldPA->unassignedRobotIds[i]);
     }
 
-    for (int i = 0; i < oldPA->dynCardinalities.size(); i++) {
-        ret->dynCardinalities[i] =
-                make_shared<DynCardinality>(oldPA->dynCardinalities[i]->getMin(), oldPA->dynCardinalities[i]->getMax());
+    for (int i = 0; i < static_cast<int>(oldPA->dynCardinalities.size()); i++) {
+        ret->dynCardinalities[i] = std::make_shared<DynCardinality>(oldPA->dynCardinalities[i]->getMin(), oldPA->dynCardinalities[i]->getMax());
     }
     *ret->epRobotsMapping = *oldPA->epRobotsMapping;
 
     return ret;
 }
 
-short PartialAssignment::getEntryPointCount() const {
+short PartialAssignment::getEntryPointCount() const
+{
     return this->epRobotsMapping->getSize();
 }
 
-int PartialAssignment::totalRobotCount() {
+int PartialAssignment::totalRobotCount() const
+{
     int c = 0;
     for (int i = 0; i < this->epRobotsMapping->getSize(); i++) {
         c += this->epRobotsMapping->getRobots(i)->size();
@@ -189,17 +174,19 @@ int PartialAssignment::totalRobotCount() {
     return this->getNumUnAssignedRobotIds() + c;
 }
 
-const std::vector<const supplementary::AgentID*>* PartialAssignment::getRobotsWorking(const EntryPoint* ep) const {
+const std::vector<const supplementary::AgentID*>* PartialAssignment::getRobotsWorking(const EntryPoint* ep) const
+{
     return this->epRobotsMapping->getRobotsByEp(ep);
 }
 
-const std::vector<const supplementary::AgentID*>* PartialAssignment::getRobotsWorking(int64_t epid) const {
+const std::vector<const supplementary::AgentID*>* PartialAssignment::getRobotsWorking(int64_t epid) const
+{
     return this->epRobotsMapping->getRobotsByEpId(epid);
 }
 
-shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getRobotsWorkingAndFinished(const EntryPoint* ep) {
-    shared_ptr<list<const supplementary::AgentID*>> ret =
-            make_shared<list<const supplementary::AgentID*>>(list<const supplementary::AgentID*>());
+shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getRobotsWorkingAndFinished(const EntryPoint* ep)
+{
+    shared_ptr<list<const supplementary::AgentID*>> ret = std::make_shared<list<const supplementary::AgentID*>>(list<const supplementary::AgentID*>());
     auto robotIds = this->epRobotsMapping->getRobotsByEp(ep);
     if (robotIds != nullptr) {
         for (auto iter : (*robotIds)) {
@@ -215,9 +202,9 @@ shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getRobotsWork
     return ret;
 }
 
-shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getRobotsWorkingAndFinished(int64_t epid) {
-    shared_ptr<list<const supplementary::AgentID*>> ret =
-            make_shared<list<const supplementary::AgentID*>>(list<const supplementary::AgentID*>());
+shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getRobotsWorkingAndFinished(int64_t epid)
+{
+    shared_ptr<list<const supplementary::AgentID*>> ret = std::make_shared<list<const supplementary::AgentID*>>();
     auto robots = this->epRobotsMapping->getRobotsByEpId(epid);
     if (robots != nullptr) {
         for (auto iter : (*robots)) {
@@ -233,9 +220,9 @@ shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getRobotsWork
     return ret;
 }
 
-shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getUniqueRobotsWorkingAndFinished(
-        const EntryPoint* ep) {
-    auto ret = make_shared<list<const supplementary::AgentID*>>(list<const supplementary::AgentID*>());
+shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getUniqueRobotsWorkingAndFinished(const EntryPoint* ep)
+{
+    auto ret = std::make_shared<std::list<const supplementary::AgentID*>>();
     auto robots = this->epRobotsMapping->getRobotsByEp(ep);
 
     for (auto iter : (*robots)) {
@@ -245,8 +232,7 @@ shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getUniqueRobo
     auto successes = this->epSuccessMapping->getRobots(ep);
     if (successes != nullptr) {
         for (auto iter : (*successes)) {
-            if (find_if(ret->begin(), ret->end(), [&iter](const supplementary::AgentID* id) { return *iter == *id; }) ==
-                    ret->end()) {
+            if (std::find_if(ret->begin(), ret->end(), [&iter](const supplementary::AgentID* id) { return *iter == *id; }) == ret->end()) {
                 ret->push_back(iter);
             }
         }
@@ -260,7 +246,8 @@ shared_ptr<list<const supplementary::AgentID*>> PartialAssignment::getUniqueRobo
  * @param An int
  * @return A bool
  */
-bool PartialAssignment::addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, const supplementary::AgentID* robotId) {
+bool PartialAssignment::addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, const supplementary::AgentID* robotId)
+{
     if (spt->getEntryPoint()->getPlan() == this->plan) {
         int max = this->epRobotsMapping->getSize();
         if (AssignmentCollection::allowIdling) {
@@ -274,10 +261,10 @@ bool PartialAssignment::addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, con
                 }
                 // remove robot from "To-Add-List"
                 auto iter = find_if(this->unassignedRobotIds.begin(), this->unassignedRobotIds.end(),
-                        [&robotId](const supplementary::AgentID* id) { return *robotId == *id; });
+                                    [&robotId](const supplementary::AgentID* id) { return *robotId == *id; });
                 if (this->unassignedRobotIds.erase(iter) == this->unassignedRobotIds.end()) {
-                    cerr << "PA: Tried to assign robot " << robotId << ", but it was NOT UNassigned!" << endl;
-                    throw new exception;
+                    std::cerr << "PA: Tried to assign robot " << robotId << ", but it was NOT UNassigned!" << std::endl;
+                    throw std::exception();
                 }
                 // return true, because we are ready, when we found the robot here
                 return true;
@@ -301,7 +288,8 @@ bool PartialAssignment::addIfAlreadyAssigned(shared_ptr<SimplePlanTree> spt, con
  * Assigns the robot into the data structures according to the given index.
  * @return True, when it was possible to assign the robot. False, otherwise.
  */
-bool PartialAssignment::assignRobot(const supplementary::AgentID* robotId, int index) {
+bool PartialAssignment::assignRobot(const supplementary::AgentID* robotId, int index)
+{
     if (this->dynCardinalities[index]->getMax() > 0) {
         this->epRobotsMapping->assignRobot(index, robotId);
         if (this->dynCardinalities[index]->getMin() > 0) {
@@ -315,8 +303,9 @@ bool PartialAssignment::assignRobot(const supplementary::AgentID* robotId, int i
     return false;
 }
 
-shared_ptr<list<PartialAssignment*>> PartialAssignment::expand() {
-    shared_ptr<list<PartialAssignment*>> newPas = make_shared<list<PartialAssignment*>>();
+shared_ptr<list<PartialAssignment*>> PartialAssignment::expand()
+{
+    shared_ptr<list<PartialAssignment*>> newPas = std::make_shared<list<PartialAssignment*>>();
     if (this->unassignedRobotIds.size() == 0) {
         // No robot left to expand
         return newPas;
@@ -339,7 +328,8 @@ shared_ptr<list<PartialAssignment*>> PartialAssignment::expand() {
 /**
  * Checks whether the current assignment is valid
  */
-bool PartialAssignment::isValid() const {
+bool PartialAssignment::isValid() const
+{
     int min = 0;
     for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
         min += dynCardinalities[i]->getMin();
@@ -351,7 +341,8 @@ bool PartialAssignment::isValid() const {
  * Checks if this PartialAssignment is a complete Assignment.
  * @return True, if it is, false otherwise.
  */
-bool PartialAssignment::isGoal() {
+bool PartialAssignment::isGoal()
+{
     // There should be no unassigned robots anymore
     if (this->unassignedRobotIds.size() > 0) {
         return false;
@@ -372,11 +363,12 @@ bool PartialAssignment::isGoal() {
  * Difference between Hashcodes, if they have the same utility and plan id
  * true if the other PartialAssignment has a higher utility, or plan id
  */
-bool PartialAssignment::compareTo(PartialAssignment* thisPa, PartialAssignment* newPa) {
+bool PartialAssignment::compareTo(PartialAssignment* thisPa, PartialAssignment* newPa)
+{
     // TODO has perhaps to be changed
     // 0 , -1 = false
     // 1 true
-    if (&thisPa == &newPa)  // Same reference -> same object
+    if (&thisPa == &newPa) // Same reference -> same object
     {
         return false;
     }
@@ -415,11 +407,10 @@ bool PartialAssignment::compareTo(PartialAssignment* thisPa, PartialAssignment* 
         }
     }
     for (int i = 0; thisPa->epRobotsMapping->getSize(); ++i) {
-        for (int j = 0; j < thisPa->epRobotsMapping->getRobots(i)->size(); ++j) {
+        for (int j = 0; j < static_cast<int>(thisPa->epRobotsMapping->getRobots(i)->size()); ++j) {
             if (*(thisPa->epRobotsMapping->getRobots(i)->at(j)) > *(newPa->epRobotsMapping->getRobots(i)->at(j))) {
                 return true;
-            } else if (*(thisPa->epRobotsMapping->getRobots(i)->at(j)) >
-                       *(newPa->epRobotsMapping->getRobots(i)->at(j))) {
+            } else if (*(thisPa->epRobotsMapping->getRobots(i)->at(j)) > *(newPa->epRobotsMapping->getRobots(i)->at(j))) {
                 return false;
             }
         }
@@ -427,55 +418,43 @@ bool PartialAssignment::compareTo(PartialAssignment* thisPa, PartialAssignment* 
     return false;
 }
 
-std::string PartialAssignment::toString() {
+std::string PartialAssignment::toString() const
+{
     std::stringstream ss;
 
-    ss << "Plan: " << this->plan->getName() << endl;
-    ss << "Utility: " << this->min << ".." << this->max << endl;
+    ss << "Plan: " << this->plan->getName() << std::endl;
+    ss << "Utility: " << this->min << ".." << this->max << std::endl;
     ss << "unassignedRobots: ";
     for (auto& robot : this->unassignedRobotIds) {
         ss << robot << " ";
     }
-    ss << endl;
-    // shared_ptr<vector<EntryPoint*> > ownEps = this->epRobotsMapping->getEntryPoints();
-    vector<const supplementary::AgentID*> robots;
+    ss << std::endl;
 
     for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
-        robots = (*this->epRobotsMapping->getRobots(i));
-        ss << "EPid: " << this->epRobotsMapping->getEp(i)->getId()
-           << " Task: " << this->epRobotsMapping->getEp(i)->getTask()->getName()
-           << " minCar: " << this->dynCardinalities[i]->getMin() << " maxCar: "
-           << (this->dynCardinalities[i]->getMax() == INFINITE ? "*" : to_string(this->dynCardinalities[i]->getMax()))
+        ss << "EPid: " << this->epRobotsMapping->getEp(i)->getId() << " Task: " << this->epRobotsMapping->getEp(i)->getTask()->getName()
+           << " minCar: " << this->dynCardinalities[i]->getMin()
+           << " maxCar: " << (this->dynCardinalities[i]->getMax() == INFINITE ? "*" : std::to_string(this->dynCardinalities[i]->getMax()))
            << " Assigned Robots: ";
-        for (auto& robot : robots) {
+        for (auto& robot : *this->epRobotsMapping->getRobots(i)) {
             ss << robot << " ";
         }
-        ss << endl;
+        ss << std::endl;
     }
 
     ss << this->epRobotsMapping->toString();
-    ss << "HashCode: " << this->getHash() << endl;
+    ss << "HashCode: " << this->getHash() << std::endl;
     return ss.str();
 }
 
-string PartialAssignment::assignmentCollectionToString() {
+std::string PartialAssignment::assignmentCollectionToString() const
+{
     return "PA: \n" + toString();
 }
 
-/**
- * little helper to calculate the y-th power of x with integers
- */
-int PartialAssignment::pow(int x, int y) {
-    int ret = 1;
-    for (int i = 0; i < y; i++) {
-        ret *= x;
-    }
-    return ret;
-}
-
-void PartialAssignment::setMax(double max) {
+void PartialAssignment::setMax(double max)
+{
     this->max = max;
-    this->compareVal = (long) round(max * PRECISION);
+    this->compareVal = (long)round(max * PRECISION);
 }
 
 } /* namespace alica */

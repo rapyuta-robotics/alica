@@ -8,19 +8,19 @@
 #ifndef IBEHAVIOURCREATOR_H_
 #define IBEHAVIOURCREATOR_H_
 
-using namespace std;
-
-#include <string>
 #include <memory>
 
-namespace alica {
+namespace alica
+{
+using std::shared_ptr; // TODO: remove once autogeneration templates can be reworked
 class AlicaEngine;
 class BasicBehaviour;
 
-class IBehaviourCreator {
-public:
+class IBehaviourCreator
+{
+  public:
     virtual ~IBehaviourCreator() {}
-    virtual shared_ptr<BasicBehaviour> createBehaviour(long behaviourConfId) = 0;
+    virtual std::shared_ptr<BasicBehaviour> createBehaviour(int64_t behaviourConfId) = 0;
 };
 
 } /* namespace alica */

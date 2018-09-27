@@ -28,20 +28,20 @@ class PlanningProblem : public AbstractPlan {
 public:
     PlanningProblem();
     virtual ~PlanningProblem();
-    const Plan* getAlternativePlan() const {return _alternativePlan;}
-    const Plan* getWaitPlan() const {return _waitPlan;}
+    const Plan* getAlternativePlan() const { return _alternativePlan; }
+    const Plan* getWaitPlan() const { return _waitPlan; }
 
-    PlanningType getPlanningType() const {return _planningType;}
-    const AbstractPlanGrp& getPlans() const {return _plans;}
+    PlanningType getPlanningType() const { return _planningType; }
+    const AbstractPlanGrp& getPlans() const { return _plans; }
 
-    const PostCondition* getPostCondition() const {return _postCondition;}
-    const PreCondition* getPreCondition() const {return _preCondition;}
-    const RuntimeCondition* getRuntimeCondition() const {return _runtimeCondition;}
+    const PostCondition* getPostCondition() const { return _postCondition; }
+    const PreCondition* getPreCondition() const { return _preCondition; }
+    const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
 
-    const std::string& getRequirements() const {return _requirements;}
+    const std::string& getRequirements() const { return _requirements; }
 
-    bool isDistributeProblem() const { return _distributeProblem;}
-    int getUpdateRate() const {return _updateRate;}
+    bool isDistributeProblem() const { return _distributeProblem; }
+    int getUpdateRate() const { return _updateRate; }
 
 private:
     friend ModelFactory;

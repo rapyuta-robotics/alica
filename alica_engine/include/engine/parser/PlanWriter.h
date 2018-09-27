@@ -9,17 +9,19 @@
 
 #include "engine/Types.h"
 
-#include <vector>
 #include <string>
 #include <typeinfo>
+#include <vector>
 
-namespace tinyxml2 {
+namespace tinyxml2
+{
 class XMLElement;
 class XMLDocument;
 class XMLAttribute;
-}  // namespace tinyxml2
+} // namespace tinyxml2
 
-namespace alica {
+namespace alica
+{
 
 class PlanRepository;
 class Condition;
@@ -34,8 +36,9 @@ class AlicaEngine;
 /**
  * The PlanWriter can be used to store generated plans.
  */
-class PlanWriter {
-public:
+class PlanWriter
+{
+  public:
     PlanWriter(AlicaEngine* ae, PlanRepository* rep);
     ~PlanWriter();
 
@@ -58,12 +61,12 @@ public:
     tinyxml2::XMLDocument* createRoleSetXMLDocument(const RoleSet* r);
     tinyxml2::XMLDocument* createTaskRepositoryXMLDocument(const TaskRepository* tr);
 
-private:
+  private:
     PlanRepository* rep;
     std::string currentFile;
     static int objectCounter;
 
-    std::string getRelativeFileName(std::string file);
+    std::string getRelativeFileName(const std::string& file);
     std::string getRelativeFileName(const AbstractPlan* p);
 
     void setPlansToSave(const AlicaElementGrp& plansToSave);
@@ -81,7 +84,7 @@ private:
     tinyxml2::XMLElement* createTransitionXMLNode(const Transition* t, tinyxml2::XMLDocument* doc);
     tinyxml2::XMLElement* createEntryPointXMLNode(const EntryPoint* e, tinyxml2::XMLDocument* doc);
 
-protected:
+  protected:
     AlicaEngine* ae;
     std::string tempPlanDir;
     std::string configPath;

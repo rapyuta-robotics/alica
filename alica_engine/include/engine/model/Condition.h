@@ -8,13 +8,14 @@
 #ifndef CONDITION_H_
 #define CONDITION_H_
 
-#include <string>
 #include <memory>
+#include <string>
 
 #include "AlicaElement.h"
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 class AbstractPlan;
 class BasicCondition;
 class BasicConstraint;
@@ -26,8 +27,9 @@ class ExpressionHandler;
 /**
  * A condition encapsulates expressions and constraint specific to a AlicaElement, e.g., a Transition, or a Plan.
  */
-class Condition : public AlicaElement {
-public:
+class Condition : public AlicaElement
+{
+  public:
     Condition();
     Condition(int64_t id);
     virtual ~Condition();
@@ -35,7 +37,7 @@ public:
     /**
      * The delegate type used to attach constraints to plans.
      */
-    void getConstraint(std::shared_ptr<ProblemDescriptor> pd, std::shared_ptr<RunningPlan> rp) const;
+    void getConstraint(std::shared_ptr<ProblemDescriptor> pd, std::shared_ptr<const RunningPlan> rp) const;
 
     const AbstractPlan* getAbstractPlan() const { return _abstractPlan; }
 
@@ -50,7 +52,7 @@ public:
 
     bool evaluate(std::shared_ptr<RunningPlan> rp) const;
 
-private:
+  private:
     friend ModelFactory;
     friend ExpressionHandler;
 
@@ -83,8 +85,8 @@ private:
     const AbstractPlan* _abstractPlan;
 
     std::string _conditionString;
-    std::string _plugInName;  // TODO: is this needed?!
+    std::string _plugInName; // TODO: is this needed?!
 };
-}  // namespace alica
+} // namespace alica
 
 #endif /* CONDITION_H_ */

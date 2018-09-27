@@ -1,21 +1,22 @@
 #pragma once
 
+#include "engine/AlicaClock.h"
 #include <memory>
 
-using namespace std;
-
-namespace alica {
+namespace alica
+{
 
 class RunningPlan;
 
-class BasicCondition {
-public:
+class BasicCondition
+{
+  public:
     BasicCondition();
     virtual ~BasicCondition();
-    virtual bool evaluate(shared_ptr<RunningPlan> rp) = 0;
+    virtual bool evaluate(std::shared_ptr<RunningPlan> rp) = 0;
 
-    bool isStateTimedOut(unsigned long timeOut, shared_ptr<RunningPlan> rp);
-    bool isTimeOut(unsigned long timeOut, unsigned long startTime, shared_ptr<RunningPlan> rp);
+    bool isStateTimedOut(const AlicaTime timeOut, std::shared_ptr<RunningPlan> rp) const;
+    bool isTimeOut(const AlicaTime timeOut, const AlicaTime startTime, std::shared_ptr<RunningPlan> rp) const;
 };
 
 } /* namespace alica */
