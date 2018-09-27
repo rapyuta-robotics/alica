@@ -1,6 +1,8 @@
-#include "engine/model/Condition.h"
 #include "engine/RunningPlan.h"
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/Condition.h"
+#include "engine/model/DomainVariable.h"
+#include "engine/model/Quantifier.h"
 #include "engine/model/Variable.h"
 #include <engine/constraintmodul/ConditionStore.h>
 #include <engine/constraintmodul/ProblemPart.h>
@@ -10,7 +12,8 @@
 
 //#define CS_DEBUG
 
-namespace alica {
+namespace alica
+{
 
 /**
  * Default constructor
@@ -22,44 +25,43 @@ ConditionStore::~ConditionStore() {}
 /**
  * Clear store, revoking all constraints
  */
-void ConditionStore::clear() {
-    activeVar2CondMap.clear();
-    mtx.lock();
-    activeConditions.clear();
-    mtx.unlock();
+void ConditionStore::clear()
+{
+    std::lock_guard<std::mutex> lock(_mtx);
+    _activeVar2CondMap.clear();
+    _activeConditions.clear();
 }
 
 /**
  * Add a condition to the store
  * @param con A Condition
  */
-void ConditionStore::addCondition(const Condition* con) {
-    if (con == nullptr || (con->getVariables().size() == 0 && con->getQuantifiers().size() == 0)) {
+void ConditionStore::addCondition(const Condition* con)
+{
+    if (con == nullptr || (con->getVariables().empty() && con->getQuantifiers().empty())) {
         return;
     }
 
     bool modified = false;
-    mtx.lock();
-    if (find(activeConditions.begin(), activeConditions.end(), con) == activeConditions.end()) {
+    std::lock_guard<std::mutex> lock(_mtx);
+    if (std::find(_activeConditions.begin(), _activeConditions.end(), con) == _activeConditions.end()) {
         modified = true;
-        activeConditions.push_back(con);
+        _activeConditions.push_back(con);
     }
-    mtx.unlock();
     if (modified) {
         for (const Variable* variable : con->getVariables()) {
-            auto it = activeVar2CondMap.find(variable);
-            if (it != activeVar2CondMap.end()) {
-                it->second->push_back(con);
-            } else {
-                auto condList = make_shared<vector<const Condition*>>();
-                condList->push_back(con);
-                activeVar2CondMap.emplace(variable, condList);
+            _activeVar2CondMap[variable].push_back(con);
+        }
+        for (const Quantifier* qv : con->getQuantifiers()) {
+            for (const Variable* variable : qv->getTemplateVariables()) {
+                _activeVar2CondMap[variable].push_back(con);
             }
         }
     }
+
 #ifdef CS_DEBUG
-    cout << "CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size()
-         << " variables. CS: " << this << endl;
+    std::cout << "CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables. CS: " << this
+              << std::endl;
 #endif
 }
 
@@ -68,80 +70,78 @@ void ConditionStore::addCondition(const Condition* con) {
  *
  * @param con The condition to be removed
  */
-void ConditionStore::removeCondition(const Condition* con) {
+void ConditionStore::removeCondition(const Condition* con)
+{
     if (con == nullptr) {
+        assert(false);
         return;
     }
     bool modified = false;
-    mtx.lock();
-    if (find(activeConditions.begin(), activeConditions.end(), con) != activeConditions.end()) {
+    std::lock_guard<std::mutex> lock(_mtx);
+    ConditionGrp::iterator cit = find(_activeConditions.begin(), _activeConditions.end(), con);
+    if (cit != _activeConditions.end()) {
         modified = true;
-        activeConditions.remove(con);
+        _activeConditions.erase(cit);
     }
-    mtx.unlock();
     if (modified) {
         for (const Variable* v : con->getVariables()) {
-            activeVar2CondMap[v]->erase(std::remove(activeVar2CondMap[v]->begin(), activeVar2CondMap[v]->end(), con),
-                    activeVar2CondMap[v]->end());
+            auto it = _activeVar2CondMap.find(v);
+            it->second.erase(std::remove(it->second.begin(), it->second.end(), con), it->second.end());
+        }
+        for (const Quantifier* qv : con->getQuantifiers()) {
+            for (const Variable* v : qv->getTemplateVariables()) {
+                auto it = _activeVar2CondMap.find(v);
+                it->second.erase(std::remove(it->second.begin(), it->second.end(), con), it->second.end());
+            }
         }
     }
 
 #ifdef CS_DEBUG
-    std::cout << "CS: Removed condition in " << con->getAbstractPlan()->getName() << " with "
-              << con->getVariables().size() << " variables." << std::endl;
+    std::cout << "CS: Removed condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables." << std::endl;
 #endif
 }
 
 /**
  * Writes static and domain variables, as well as, problem parts into the query.
  */
-void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const {
+void ConditionStore::acceptQuery(Query& query, std::shared_ptr<const RunningPlan> rp) const
+{
 #ifdef CS_DEBUG
-    std::cout << "ConditionStore: Accepting Query - Active conditions in store is " << activeConditions.size() <<" CS: "<< this
-              << std::endl;
+    std::cout << "ConditionStore: Accepting Query - Active conditions in store is " << _activeConditions.size() << " CS: " << this << std::endl;
 #endif
-    if (activeConditions.empty()) {
+    if (_activeConditions.empty()) {
         return;
     }
 
-    std::vector<const Variable*> staticVarsToCheck = query.getRelevantStaticVariables();
-    std::vector<const Variable*> domVarsToCheck = query.getRelevantDomainVariables();
-    if (staticVarsToCheck.size() == 0 && domVarsToCheck.size() == 0) {
-        return;  // nothing to do
+    BufferedVariableGrp& staticVarBuffer = query.editStaticVariableBuffer();
+    BufferedDomainVariableGrp& domainVarBuffer = query.editDomainVariableBuffer();
+    if (!staticVarBuffer.hasCurrentlyAny() && !domainVarBuffer.hasCurrentlyAny()) {
+        return; // nothing to do
     }
 
 #ifdef CS_DEBUG
     std::cout << "ConditionStore: Query contains static variables: ";
-    for (const Variable* v : staticVarsToCheck) {
+    for (const Variable* v : staticVarBuffer.getCurrent()) {
         std::cout << v->getName() << "(" << v->getId() << "), ";
     }
     std::cout << std::endl;
 #endif
+    const int previousPartCount = query.getPartCount();
 
-    std::map<const Condition*, shared_ptr<ProblemPart>> newCondProbPartMap;
-    std::map<const Condition*, shared_ptr<ProblemPart>> allCondProbPartMap;
-    {
-        std::lock_guard<std::mutex> lock(mtx);
-        for (const Condition* cond : activeConditions) {
-            allCondProbPartMap.emplace(cond, make_shared<ProblemPart>(cond, rp));
-        }
-    }
-
-    std::vector<const Variable*> staticVarsChecked;
-    std::vector<const Variable*> domVarsChecked;
-    while (newCondProbPartMap.size() < allCondProbPartMap.size() &&
-            (domVarsToCheck.size() > 0 || staticVarsToCheck.size() > 0)) {
-        if (staticVarsToCheck.size() > 0) {
-            const Variable* curStaticVariable = staticVarsToCheck[staticVarsToCheck.size() - 1];
-            staticVarsToCheck.pop_back();
-            staticVarsChecked.push_back(curStaticVariable);
+    std::lock_guard<std::mutex> lock(_mtx);
+    while (query.getPartCount() - previousPartCount < static_cast<int>(_activeConditions.size()) &&
+           (domainVarBuffer.hasCurrentlyAny() || staticVarBuffer.hasCurrentlyAny())) {
+        if (staticVarBuffer.hasCurrentlyAny()) {
+            const Variable* curStaticVariable = staticVarBuffer.getCurrent().back();
+            staticVarBuffer.editCurrent().pop_back();
+            staticVarBuffer.editNext().push_back(curStaticVariable);
 
 #ifdef CS_DEBUG
             std::cout << "ConditionStore: Checking static variable: " << *curStaticVariable << std::endl;
 #endif
 
-            auto activeVar2CondMapEntry = activeVar2CondMap.find(curStaticVariable);
-            if (activeVar2CondMapEntry == activeVar2CondMap.end()) {
+            auto activeVar2CondMapEntry = _activeVar2CondMap.find(curStaticVariable);
+            if (activeVar2CondMapEntry == _activeVar2CondMap.end()) {
                 // the current variable wasn't active
                 continue;
             }
@@ -150,110 +150,44 @@ void ConditionStore::acceptQuery(Query& query, shared_ptr<RunningPlan> rp) const
             std::cout << "ConditionStore: Conditions active under variable " << (*activeVar2CondMapEntry->first) << ": "
                       << activeVar2CondMapEntry->second->size() << std::endl;
 #endif
-            for (const Condition* c : *(activeVar2CondMapEntry->second)) {
-                if (newCondProbPartMap.find(c) != newCondProbPartMap.end()) {
-                    // condition was already inserted into the newCondProbPartMap
+            for (const Condition* c : activeVar2CondMapEntry->second) {
+                if (std::find_if(query.getProblemParts().begin() + previousPartCount, query.getProblemParts().end(),
+                                 [c](const ProblemPart& pp) { return pp.getCondition() == c; }) != query.getProblemParts().end()) {
+                    // condition was already inserted
                     continue;
                 }
-
-                shared_ptr<ProblemPart> problemPart = allCondProbPartMap[c];
-                newCondProbPartMap.emplace(c, problemPart);
-                /**
-                 *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
-                 * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
-                 * 2. List of Robots, e.g., An agent has variables X,Y.
-                 * 3. Vector of Variables, e.g., variables X,Y.
-                 * 4. Variable, e.g., variable X.
-                 */
-                auto domainVariables = problemPart->getDomainVariables();
-                for (auto& listOfRobots : (*domainVariables)) {
-                    for (const std::vector<const Variable*>& variables : listOfRobots) {
-                        for (auto variable : variables) {
-                            if (find(domVarsChecked.begin(), domVarsChecked.end(), variable) == domVarsChecked.end() &&
-                                    find(domVarsToCheck.begin(), domVarsToCheck.end(), variable) ==
-                                            domVarsToCheck.end()) {
-                                std::cout << "CS: Adding DomVar : " << *variable << std::endl;
-                                domVarsToCheck.push_back(variable);
-                            }
-                        }
-                    }
-                }
-                for (const Variable* variable : c->getVariables()) {
-                    if (find(staticVarsChecked.begin(), staticVarsChecked.end(), variable) == staticVarsChecked.end() &&
-                            find(staticVarsToCheck.begin(), staticVarsToCheck.end(), variable) ==
-                                    staticVarsToCheck.end()) {
-                        staticVarsToCheck.push_back(variable);
-                    }
-                }
+                query.addProblemPart(ProblemPart(c, rp));
             }
-        } else if (domVarsToCheck.size() > 0) {
-            const Variable* curDomainVariable = domVarsToCheck[domVarsToCheck.size() - 1];
-            domVarsToCheck.pop_back();
-            domVarsChecked.push_back(curDomainVariable);
+        } else if (domainVarBuffer.hasCurrentlyAny()) {
+            const DomainVariable* curDomainVariable = domainVarBuffer.getCurrent().back();
+            domainVarBuffer.editCurrent().pop_back();
+            domainVarBuffer.editNext().push_back(curDomainVariable);
 
-            for (auto& condProbPartPair : allCondProbPartMap) {
-                if (newCondProbPartMap.find(condProbPartPair.first) != newCondProbPartMap.end()) {
-                    // condition was already in the newCondProbPartMap
+            auto activeVar2CondMapEntry = _activeVar2CondMap.find(curDomainVariable->getTemplateVariable());
+            if (activeVar2CondMapEntry == _activeVar2CondMap.end()) {
+                // the current variable wasn't active
+                continue;
+            }
+            for (const Condition* c : activeVar2CondMapEntry->second) {
+                if (std::find_if(query.getProblemParts().begin() + previousPartCount, query.getProblemParts().end(),
+                                 [c](const ProblemPart& pp) { return pp.getCondition() == c; }) != query.getProblemParts().end()) {
+                    // condition was already inserted
                     continue;
                 }
-
-                if (!condProbPartPair.second->hasVariable(curDomainVariable)) {
-                    // curDomainVariable does not exist in the problem part
-                    continue;
-                }
-
-                newCondProbPartMap.emplace(condProbPartPair.first, condProbPartPair.second);
-
-                /**
-                 *  Hierarchie: 1.vector< 2.list< 3.vector< 4.Variable* > > >
-                 * 1. Vector of Quantors, e.g., For all agents in state S variables X,Y exist.
-                 * 2. List of Robots, e.g., An agent has variables X,Y.
-                 * 3. Vector of Variables, e.g., variables X,Y.
-                 * 4. Variable, e.g., variable X.
-                 */
-                for (auto& listOfRobots : (*condProbPartPair.second->getDomainVariables())) {
-                    for (auto& variables : listOfRobots) {
-                        for (auto& variable : variables) {
-                            if (find(domVarsChecked.begin(), domVarsChecked.end(), variable) == domVarsChecked.end() &&
-                                    find(domVarsToCheck.begin(), domVarsToCheck.end(), variable) ==
-                                            domVarsToCheck.end()) {
-                                domVarsToCheck.push_back(variable);
-                            }
-                        }
-                    }
-                }
-
-                for (const Variable* variable : condProbPartPair.first->getVariables()) {
-                    if (find(staticVarsChecked.begin(), staticVarsChecked.end(), variable) == staticVarsChecked.end() &&
-                            find(staticVarsToCheck.begin(), staticVarsToCheck.end(), variable) ==
-                                    staticVarsToCheck.end()) {
-                        staticVarsToCheck.push_back(variable);
+                // if c has a quantifier that currently covers the agent & has the right tempalte var, add it
+                for (const Quantifier* q : c->getQuantifiers()) {
+                    if (q->hasTemplateVariable(curDomainVariable->getTemplateVariable()) && q->isAgentInScope(curDomainVariable->getAgent(), rp)) {
+                        query.addProblemPart(ProblemPart(c, rp));
+                        break;
                     }
                 }
             }
         }
-    }
-    if (!staticVarsChecked.empty()) {
-        staticVarsChecked.insert(staticVarsChecked.end(), staticVarsToCheck.begin(), staticVarsToCheck.end());
-    }
-
-    if (!domVarsToCheck.empty()) {
-        domVarsChecked.insert(domVarsChecked.end(), domVarsToCheck.begin(), domVarsToCheck.end());
     }
 
     // write back relevant variables, this contains variables obtained earlier
-    query.setRelevantStaticVariables(staticVarsChecked);
-    query.setRelevantDomainVariables(domVarsChecked);
-
-    // write back problem parts
-    vector<shared_ptr<ProblemPart>> problemParts;
-    for (auto& pair : newCondProbPartMap) {
-        auto problemPart = pair.second;
-        if (find(problemParts.begin(), problemParts.end(), problemPart) == problemParts.end()) {
-            problemParts.push_back(problemPart);
-        }
-    }
-    query.addProblemParts(problemParts);
+    staticVarBuffer.mergeAndFlip();
+    domainVarBuffer.mergeAndFlip();
 }
 
-}  // namespace alica
+} // namespace alica

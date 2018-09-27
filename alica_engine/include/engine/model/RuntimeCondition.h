@@ -12,17 +12,19 @@
 
 #include "Condition.h"
 
-namespace alica {
+namespace alica
+{
 class RunningPlan;
 
-class RuntimeCondition : public Condition {
-public:
-    RuntimeCondition(int64_t id = 0);
+class RuntimeCondition : public Condition
+{
+  public:
+    RuntimeCondition(int64_t id);
     virtual ~RuntimeCondition();
 
     std::string toString() const override;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* RUNTIMECONDITION_H_ */

@@ -1,25 +1,28 @@
 #include "engine/Assignment.h"
 
 #include "engine/collections/AssignmentCollection.h"
-#include "engine/model/Plan.h"
 #include "engine/collections/StateCollection.h"
 #include "engine/collections/SuccessCollection.h"
-#include "engine/model/EntryPoint.h"
-#include "engine/planselector/PartialAssignment.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
 #include "engine/containers/EntryPointRobots.h"
-#include "engine/model/Task.h"
+#include "engine/model/EntryPoint.h"
+#include "engine/model/Plan.h"
 #include "engine/model/State.h"
+#include "engine/model/Task.h"
+#include "engine/planselector/PartialAssignment.h"
 
 #include <assert.h>
 
-namespace alica {
+namespace alica
+{
 
-Assignment::~Assignment() {
+Assignment::~Assignment()
+{
     delete this->epRobotsMapping;
     delete this->robotStateMapping;
 }
-Assignment::Assignment(const Plan* p) {
+Assignment::Assignment(const Plan* p)
+{
     this->plan = p;
     this->max = 0.0;
     this->min = 0.0;
@@ -31,7 +34,7 @@ Assignment::Assignment(const Plan* p) {
     for (const EntryPoint* e : plan->getEntryPoints()) {
         sortedEpList.push_back(e);
     }
-    sortedEpList.sort(EntryPoint::compareTo);  // TODO: Entrypoints are supposed to be pre-sorted. Confirm and remove
+    sortedEpList.sort(EntryPoint::compareTo); // TODO: Entrypoints are supposed to be pre-sorted. Confirm and remove
 
     // add the sorted entrypoints into the assignmentcollection
     short i = 0;
@@ -44,7 +47,8 @@ Assignment::Assignment(const Plan* p) {
     this->epSucMapping = std::make_shared<SuccessCollection>(p);
 }
 
-Assignment::Assignment(PartialAssignment* pa) {
+Assignment::Assignment(PartialAssignment* pa)
+{
     this->max = pa->getMax();
     this->min = max;
     this->plan = pa->getPlan();
@@ -67,7 +71,8 @@ Assignment::Assignment(PartialAssignment* pa) {
     this->epSucMapping = pa->getEpSuccessMapping();
 }
 
-Assignment::Assignment(const Plan* p, shared_ptr<AllocationAuthorityInfo> aai) {
+Assignment::Assignment(const Plan* p, shared_ptr<AllocationAuthorityInfo> aai)
+{
     this->plan = p;
     this->max = 1;
     this->min = 1;
@@ -76,7 +81,7 @@ Assignment::Assignment(const Plan* p, shared_ptr<AllocationAuthorityInfo> aai) {
 
     shared_ptr<vector<const supplementary::AgentID*>> curRobots;
     short i = 0;
-    assert(p->getEntryPoints().size() == this->epRobotsMapping->getSize());
+    assert(static_cast<int>(p->getEntryPoints().size()) == this->epRobotsMapping->getSize());
     for (const EntryPoint* ep : p->getEntryPoints()) {
         // set the entrypoint
         this->epRobotsMapping->setEp(i, ep);
@@ -102,28 +107,28 @@ Assignment::Assignment(const Plan* p, shared_ptr<AllocationAuthorityInfo> aai) {
     this->robotStateMapping = new StateCollection(this->epRobotsMapping);
 }
 
-void Assignment::setPlan(const Plan* plan) {
+void Assignment::setPlan(const Plan* plan)
+{
     this->plan = plan;
 }
-StateCollection* Assignment::getRobotStateMapping() {
+StateCollection* Assignment::getRobotStateMapping()
+{
     return robotStateMapping;
 }
 
-AssignmentCollection* Assignment::getEpRobotsMapping() {
-    return epRobotsMapping;
-}
-
-void Assignment::getAllRobots(AgentGrp& o_robots) {
+void Assignment::getAllRobots(AgentGrp& o_robots)
+{
     for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
-        for (int j = 0; j < this->epRobotsMapping->getRobots(i)->size(); ++j) {
+        for (int j = 0; j < static_cast<int>(this->epRobotsMapping->getRobots(i)->size()); ++j) {
             o_robots.push_back(this->epRobotsMapping->getRobots(i)->at(j));
         }
     }
 }
 
-void Assignment::getAllRobotsSorted(AgentGrp& o_robots) {
+void Assignment::getAllRobotsSorted(AgentGrp& o_robots)
+{
     getAllRobots(o_robots);
-    sort(o_robots.begin(), o_robots.end(),supplementary::AgentIDComparator());
+    sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
 }
 
 /**
@@ -131,13 +136,15 @@ void Assignment::getAllRobotsSorted(AgentGrp& o_robots) {
  * @param epid EntryPoint id
  * @return A vector of int
  */
-const AgentGrp* Assignment::getRobotsWorking(int64_t epid) const {
+const AgentGrp* Assignment::getRobotsWorking(int64_t epid) const
+{
     return this->epRobotsMapping->getRobotsByEpId(epid);
 }
 
-void Assignment::getRobotsWorkingSorted(const EntryPoint* ep, AgentGrp& o_robots) {
+void Assignment::getRobotsWorkingSorted(const EntryPoint* ep, AgentGrp& o_robots)
+{
     o_robots = *getRobotsWorking(ep);
-    sort(o_robots.begin(), o_robots.end(),supplementary::AgentIDComparator());
+    sort(o_robots.begin(), o_robots.end(), supplementary::AgentIDComparator());
 }
 
 /**
@@ -145,13 +152,15 @@ void Assignment::getRobotsWorkingSorted(const EntryPoint* ep, AgentGrp& o_robots
  * @param ep An EntryPoint
  * @return A vector of int
  */
-const AgentGrp* Assignment::getRobotsWorking(const EntryPoint* ep) const {
+const AgentGrp* Assignment::getRobotsWorking(const EntryPoint* ep) const
+{
     return this->epRobotsMapping->getRobotsByEp(ep);
 }
 
-int Assignment::totalRobotCount() {
+int Assignment::totalRobotCount() const
+{
     int c = 0;
-    for (int i = 0; i < this->epRobotsMapping->getSize(); i++) {
+    for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
         c += this->epRobotsMapping->getRobots(i)->size();
     }
     return this->getNumUnAssignedRobotIds() + c;
@@ -168,7 +177,8 @@ int Assignment::totalRobotCount() {
 /**
  * Number of Entrypoints in this assignment's plan.
  */
-short Assignment::getEntryPointCount() const {
+short Assignment::getEntryPointCount() const
+{
     return this->epRobotsMapping->getSize();
 }
 
@@ -177,11 +187,12 @@ short Assignment::getEntryPointCount() const {
  * @param ep An EntryPoint
  * @return a shared_ptr of a list of int
  */
-shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkingAndFinished(const EntryPoint* ep) {
+shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkingAndFinished(const EntryPoint* ep)
+{
     auto ret = std::make_shared<list<const supplementary::AgentID*>>(list<const supplementary::AgentID*>());
     auto robots = this->epRobotsMapping->getRobotsByEp(ep);
     if (robots != nullptr) {
-        for (int i = 0; i < robots->size(); i++) {
+        for (int i = 0; i < static_cast<int>(robots->size()); ++i) {
             ret->push_back(robots->at(i));
         }
     }
@@ -202,17 +213,17 @@ shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkingAndF
  * @param ep An entrypoint
  * @return a shared_ptr of a list of int
  */
-shared_ptr<list<const supplementary::AgentID*>> Assignment::getUniqueRobotsWorkingAndFinished(const EntryPoint* ep) {
+shared_ptr<list<const supplementary::AgentID*>> Assignment::getUniqueRobotsWorkingAndFinished(const EntryPoint* ep)
+{
     auto ret = std::make_shared<list<const supplementary::AgentID*>>(list<const supplementary::AgentID*>());
     // if (this->plan->getEntryPoints().find(ep->getId()) != this->plan->getEntryPoints().end())
     {
         auto robots = this->epRobotsMapping->getRobotsByEp(ep);
-        for (int i = 0; i < robots->size(); i++) {
+        for (int i = 0; i < static_cast<int>(robots->size()); ++i) {
             ret->push_back(robots->at(i));
         }
         for (auto r : (*this->epSucMapping->getRobots(ep))) {
-            if (std::find_if(ret->begin(), ret->end(), [&r](const supplementary::AgentID* id) { return *r == *id; }) ==
-                    ret->end()) {
+            if (std::find_if(ret->begin(), ret->end(), [&r](const supplementary::AgentID* id) { return *r == *id; }) == ret->end()) {
                 ret->push_back(r);
             }
         }
@@ -225,11 +236,12 @@ shared_ptr<list<const supplementary::AgentID*>> Assignment::getUniqueRobotsWorki
  * @param epid EntryPoint id
  * @return a shared_ptr of a list of int
  */
-std::shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkingAndFinished(int64_t epid) {
+std::shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkingAndFinished(int64_t epid)
+{
     auto ret = std::make_shared<std::list<const supplementary::AgentID*>>();
     auto robots = this->epRobotsMapping->getRobotsByEpId(epid);
     if (robots != nullptr) {
-        for (int i = 0; i < robots->size(); i++) {
+        for (int i = 0; i < static_cast<int>(robots->size()); i++) {
             ret->push_back(robots->at(i));
         }
     }
@@ -244,11 +256,13 @@ std::shared_ptr<list<const supplementary::AgentID*>> Assignment::getRobotsWorkin
     return ret;
 }
 
-std::shared_ptr<SuccessCollection> Assignment::getEpSuccessMapping() {
+std::shared_ptr<SuccessCollection> Assignment::getEpSuccessMapping() const
+{
     return this->epSucMapping;
 }
 
-void Assignment::setAllToInitialState(const AgentGrp& robots, const EntryPoint* defep) {
+void Assignment::setAllToInitialState(const AgentGrp& robots, const EntryPoint* defep)
+{
     auto rlist = this->epRobotsMapping->editRobotsByEp(defep);
     for (const supplementary::AgentID* r : robots) {
         rlist->push_back(r);
@@ -256,13 +270,13 @@ void Assignment::setAllToInitialState(const AgentGrp& robots, const EntryPoint* 
     }
 }
 
-bool Assignment::removeRobot(const supplementary::AgentID* robotId) {
+bool Assignment::removeRobot(const supplementary::AgentID* robotId)
+{
     this->robotStateMapping->removeRobot(robotId);
     AgentGrp* curRobots;
     for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
         curRobots = this->epRobotsMapping->editRobots(i);
-        auto iter = find_if(curRobots->begin(), curRobots->end(),
-                [&robotId](const supplementary::AgentID* id) { return *robotId == *id; });
+        auto iter = find_if(curRobots->begin(), curRobots->end(), [&robotId](const supplementary::AgentID* id) { return *robotId == *id; });
         if (iter != curRobots->end()) {
             curRobots->erase(iter);
             return true;
@@ -271,7 +285,8 @@ bool Assignment::removeRobot(const supplementary::AgentID* robotId) {
     return false;
 }
 
-void Assignment::addRobot(const supplementary::AgentID* id, const EntryPoint* e, const State* s) {
+void Assignment::addRobot(const supplementary::AgentID* id, const EntryPoint* e, const State* s)
+{
     if (e == nullptr) {
         return;
     }
@@ -284,13 +299,13 @@ void Assignment::addRobot(const supplementary::AgentID* id, const EntryPoint* e,
  * Tests whether this assignment is valid with respect to the plan's cardinalities.
  * @return A bool
  */
-bool Assignment::isValid() const {
+bool Assignment::isValid() const
+{
     const vector<shared_ptr<std::list<const supplementary::AgentID*>>>& success = this->epSucMapping->getRobots();
 
     for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
         int c = this->epRobotsMapping->getRobots(i)->size() + success[i]->size();
-        if (c > this->epRobotsMapping->getEp(i)->getMaxCardinality() ||
-                c < this->epRobotsMapping->getEp(i)->getMinCardinality()) {
+        if (c > this->epRobotsMapping->getEp(i)->getMaxCardinality() || c < this->epRobotsMapping->getEp(i)->getMinCardinality()) {
             return false;
         }
     }
@@ -302,12 +317,12 @@ bool Assignment::isValid() const {
  * thus the plan can be considered as successful.
  * @return A bool
  */
-bool Assignment::isSuccessfull() const {
+bool Assignment::isSuccessfull() const
+{
     for (int i = 0; i < this->epSucMapping->getCount(); i++) {
         if (this->epSucMapping->getEntryPoints()[i]->isSuccessRequired()) {
             if (!(this->epSucMapping->getRobots()[i]->size() > 0 &&
-                        this->epSucMapping->getRobots()[i]->size() >=
-                                this->epSucMapping->getEntryPoints()[i]->getMinCardinality())) {
+                  static_cast<int>(this->epSucMapping->getRobots()[i]->size()) >= this->epSucMapping->getEntryPoints()[i]->getMinCardinality())) {
                 return false;
             }
         }
@@ -315,7 +330,8 @@ bool Assignment::isSuccessfull() const {
     return true;
 }
 
-bool Assignment::isEqual(Assignment* otherAssignment) {
+bool Assignment::isEqual(Assignment* otherAssignment)
+{
     if (otherAssignment == nullptr) {
         return false;
     }
@@ -336,9 +352,8 @@ bool Assignment::isEqual(Assignment* otherAssignment) {
         }
 
         for (auto& robot : *(this->epRobotsMapping->getRobots(i))) {
-            auto iter = find_if(otherAssignment->epRobotsMapping->getRobots(i)->begin(),
-                    otherAssignment->epRobotsMapping->getRobots(i)->end(),
-                    [&robot](const supplementary::AgentID* id) { return *robot == *id; });
+            auto iter = find_if(otherAssignment->epRobotsMapping->getRobots(i)->begin(), otherAssignment->epRobotsMapping->getRobots(i)->end(),
+                                [&robot](const supplementary::AgentID* id) { return *robot == *id; });
             if (iter == otherAssignment->epRobotsMapping->getRobots(i)->end()) {
                 return false;
             }
@@ -352,7 +367,8 @@ bool Assignment::isEqual(Assignment* otherAssignment) {
  * @param ep An EntryPoint identifying the task in question.
  * @return bool
  */
-bool Assignment::isEntryPointNonEmpty(const EntryPoint* ep) const {
+bool Assignment::isEntryPointNonEmpty(const EntryPoint* ep) const
+{
     auto r = this->epRobotsMapping->getRobotsByEp(ep);
     if (r != nullptr && r->size() > 0) {
         return true;
@@ -361,25 +377,24 @@ bool Assignment::isEntryPointNonEmpty(const EntryPoint* ep) const {
     return (epSuc != nullptr && epSuc->size() > 0);
 }
 
-bool Assignment::updateRobot(const supplementary::AgentID* robot, const EntryPoint* ep, const State* s) {
+bool Assignment::updateRobot(const supplementary::AgentID* robot, const EntryPoint* ep, const State* s)
+{
     this->robotStateMapping->setState(robot, s);
     bool ret = false;
 
     for (int i = 0; i < this->epRobotsMapping->getSize(); i++) {
         if (this->epRobotsMapping->getEp(i) == ep) {
-            if (find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-                        [&robot](const supplementary::AgentID* id) { return *robot == *id; }) !=
-                    this->epRobotsMapping->getRobots(i)->end()) {
+            if (find_if(this->epRobotsMapping->editRobots(i)->begin(), this->epRobotsMapping->editRobots(i)->end(),
+                        [&robot](const supplementary::AgentID* id) { return *robot == *id; }) != this->epRobotsMapping->editRobots(i)->end()) {
                 return false;
             } else {
                 this->epRobotsMapping->editRobots(i)->push_back(robot);
                 ret = true;
             }
         } else {
-            auto iter =
-                    find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-                            [&robot](const supplementary::AgentID* id) { return *robot == *id; });
-            if (iter != this->epRobotsMapping->getRobots(i)->end()) {
+            auto iter = find_if(this->epRobotsMapping->editRobots(i)->begin(), this->epRobotsMapping->editRobots(i)->end(),
+                                [&robot](const supplementary::AgentID* id) { return *robot == *id; });
+            if (iter != this->epRobotsMapping->editRobots(i)->end()) {
                 this->epRobotsMapping->editRobots(i)->erase(iter);
                 ret = true;
             }
@@ -388,23 +403,22 @@ bool Assignment::updateRobot(const supplementary::AgentID* robot, const EntryPoi
     return ret;
 }
 
-bool Assignment::updateRobot(const supplementary::AgentID* robot, const EntryPoint* ep) {
+bool Assignment::updateRobot(const supplementary::AgentID* robot, const EntryPoint* ep)
+{
     bool ret = false;
     for (int i = 0; i < this->epRobotsMapping->getSize(); i++) {
         if (this->epRobotsMapping->getEp(i) == ep) {
-            if (find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-                        [&robot](const supplementary::AgentID* id) { return *robot == *id; }) !=
-                    this->epRobotsMapping->getRobots(i)->end()) {
+            if (find_if(this->epRobotsMapping->editRobots(i)->begin(), this->epRobotsMapping->editRobots(i)->end(),
+                        [&robot](const supplementary::AgentID* id) { return *robot == *id; }) != this->epRobotsMapping->editRobots(i)->end()) {
                 return false;
             } else {
                 this->epRobotsMapping->editRobots(i)->push_back(robot);
                 ret = true;
             }
         } else {
-            auto iter =
-                    find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-                            [&robot](const supplementary::AgentID* id) { return *robot == *id; });
-            if (iter != this->epRobotsMapping->getRobots(i)->end()) {
+            auto iter = find_if(this->epRobotsMapping->editRobots(i)->begin(), this->epRobotsMapping->editRobots(i)->end(),
+                                [&robot](const supplementary::AgentID* id) { return *robot == *id; });
+            if (iter != this->epRobotsMapping->editRobots(i)->end()) {
                 this->epRobotsMapping->editRobots(i)->erase(iter);
                 ret = true;
             }
@@ -416,7 +430,8 @@ bool Assignment::updateRobot(const supplementary::AgentID* robot, const EntryPoi
     return ret;
 }
 
-bool Assignment::removeRobot(const supplementary::AgentID* robot, const EntryPoint* ep) {
+bool Assignment::removeRobot(const supplementary::AgentID* robot, const EntryPoint* ep)
+{
     assert(ep != nullptr);
     if (ep == nullptr) {
         return false;
@@ -425,14 +440,16 @@ bool Assignment::removeRobot(const supplementary::AgentID* robot, const EntryPoi
     return epRobotsMapping->removeRobot(robot, ep);
 }
 
-std::string Assignment::assignmentCollectionToString() {
+std::string Assignment::assignmentCollectionToString() const
+{
     std::stringstream ss;
     ss << "ASS" << std::endl;
     ss << this->epRobotsMapping->toString();
     return ss.str();
 }
 
-void Assignment::addRobot(const supplementary::AgentID* id, const EntryPoint* e) {
+void Assignment::addRobot(const supplementary::AgentID* id, const EntryPoint* e)
+{
     assert(e != nullptr);
     if (e == nullptr) {
         return;
@@ -441,7 +458,8 @@ void Assignment::addRobot(const supplementary::AgentID* id, const EntryPoint* e)
     return;
 }
 
-void Assignment::moveRobots(const State* from, const State* to) {
+void Assignment::moveRobots(const State* from, const State* to)
+{
     assert(to != nullptr);
     robotStateMapping->moveAllFromTo(from, to);
 }
@@ -452,10 +470,11 @@ void Assignment::moveRobots(const State* from, const State* to) {
  * @param robot an int
  * @return An entrypoint
  */
-const EntryPoint* Assignment::getEntryPointOfRobot(const supplementary::AgentID* robot) {
+const EntryPoint* Assignment::getEntryPointOfRobot(const supplementary::AgentID* robot)
+{
     for (int i = 0; i < this->epRobotsMapping->getSize(); i++) {
         auto iter = find_if(this->epRobotsMapping->getRobots(i)->begin(), this->epRobotsMapping->getRobots(i)->end(),
-                [&robot](const supplementary::AgentID* id) { return *robot == *id; });
+                            [&robot](const supplementary::AgentID* id) { return *robot == *id; });
         if (iter != this->epRobotsMapping->getRobots(i)->end()) {
             return this->epRobotsMapping->getEp(i);
         }
@@ -463,19 +482,20 @@ const EntryPoint* Assignment::getEntryPointOfRobot(const supplementary::AgentID*
     return nullptr;
 }
 
-void Assignment::clear() {
+void Assignment::clear()
+{
     this->robotStateMapping->clear();
     this->epRobotsMapping->clear();
     this->epSucMapping->clear();
 }
 
-std::string Assignment::toString() {
+std::string Assignment::toString() const
+{
     std::stringstream ss;
     ss << std::endl;
     ss << "Rating: " << this->max << std::endl;
     for (int i = 0; i < this->epRobotsMapping->getSize(); ++i) {
-        ss << "EP: " << this->epRobotsMapping->getEp(i)->getId()
-           << " Task: " << this->epRobotsMapping->getEp(i)->getTask()->getName() << " RobotIDs: ";
+        ss << "EP: " << this->epRobotsMapping->getEp(i)->getId() << " Task: " << this->epRobotsMapping->getEp(i)->getTask()->getName() << " RobotIDs: ";
         for (const supplementary::AgentID* robot : *(this->epRobotsMapping->getRobots(i))) {
             ss << *robot << " ";
         }
@@ -487,7 +507,8 @@ std::string Assignment::toString() {
     return ss.str();
 }
 
-std::string Assignment::toHackString() {
+std::string Assignment::toHackString()
+{
     std::stringstream ss;
     ss << "ASS " << this->plan->getId() << " " << this->plan->getName() << ":\t";
     auto suc = this->epSucMapping->getRobots();

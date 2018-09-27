@@ -1,6 +1,7 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
 #include "engine/model/State.h"
 #include "engine/model/Behaviour.h"
@@ -8,7 +9,6 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/BehaviourPool.h"
 #include "engine/PlanBase.h"
-#include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/TeamObserver.h"
@@ -50,19 +50,18 @@ protected:
 
         // setup the engine
         ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "Roleset",
-                "BehaviorSuccessSpamMaster", ".", false);
+                "BehaviorSuccessSpamMaster", ".", true);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+        ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     }
 
     virtual void TearDown() {
         ae->shutdown();
         sc->shutdown();
-        delete ae->getIAlicaClock();
         delete ae->getCommunicator();
         delete cc;
         delete bc;
@@ -74,12 +73,11 @@ protected:
  * Tests whether it is possible to run a behaviour in a primitive plan.
  */
 TEST_F(AlicaSpamSuccess, runBehaviour) {
+    ASSERT_NO_SIGNAL
+
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     ae->start();
-    for (int i = 0; i < 30 * 6; ++i) {
-        chrono::milliseconds duration(33);
-        this_thread::sleep_for(duration);
-    }
+    for (int i = 0; i < 30 * 6; ++i) { step(ae); }
     EXPECT_NE(ae->getPlanBase()->getRootNode(), nullptr);
 }

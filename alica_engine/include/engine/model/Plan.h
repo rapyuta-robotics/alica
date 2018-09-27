@@ -51,8 +51,6 @@ public:
     const TransitionGrp& getTransitions() const { return _transitions; }
     const SyncTransitionGrp& getSyncTransitions() const { return _syncTransitions; }
 
-
-
 private:
     friend ModelFactory;
     friend ExpressionHandler;  // TODO: get rid of this

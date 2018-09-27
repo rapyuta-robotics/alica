@@ -2,22 +2,25 @@
 
 //#define AM_DEBUG
 
-#include "../containers/AllocationAuthorityInfo.h"
-#include "../IAlicaCommunication.h"
 #include "../AlicaEngine.h"
+#include "../IAlicaCommunication.h"
 #include "../RunningPlan.h"
+#include "../containers/AllocationAuthorityInfo.h"
 
 #include <memory>
+#include <mutex>
 #include <vector>
 
-namespace alica {
+namespace alica
+{
 class IAlicaCommunication;
 
 /**
  * Manages communication wrt. conflict resolution.
  */
-class AuthorityManager {
-public:
+class AuthorityManager
+{
+  public:
     AuthorityManager(AlicaEngine* ae);
     virtual ~AuthorityManager();
     void init();
@@ -26,11 +29,11 @@ public:
     void tick(std::shared_ptr<RunningPlan> p);
     void sendAllocation(std::shared_ptr<RunningPlan> p);
 
-protected:
-    vector<std::shared_ptr<AllocationAuthorityInfo>> queue;
+  protected:
+    std::vector<std::shared_ptr<AllocationAuthorityInfo>> queue;
     const AlicaEngine* engine;
     const supplementary::AgentID* localAgentID;
-    mutex mu;
+    std::mutex mu;
     void processPlan(std::shared_ptr<RunningPlan> p);
     bool authorityMatchesPlan(std::shared_ptr<AllocationAuthorityInfo> aai, std::shared_ptr<RunningPlan> p);
 };

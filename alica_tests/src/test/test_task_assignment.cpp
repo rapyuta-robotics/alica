@@ -1,8 +1,10 @@
+#include <test_alica.h>
+#include <gtest/gtest.h>
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include "clock/AlicaROSClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/TeamManager.h"
@@ -19,15 +21,15 @@
 #include "engine/IRoleAssignment.h"
 #include "supplementary/AgentID.h"
 
-#include <gtest/gtest.h>
 #include <list>
 #include <vector>
 #include <memory>
 #include <ros/ros.h>
 
-class StillClock : public alica::IAlicaClock {
-    virtual alica::AlicaTime now() override { return 555; }
-    virtual void sleep(long us) override { std::this_thread::sleep_for(std::chrono::microseconds(us)); }
+using alica::AlicaTime;
+
+class StillClock : public alica::AlicaClock {
+    virtual alica::AlicaTime now() const override { return AlicaTime::milliseconds(555); }
 };
 
 class TaskAssignmentTest : public ::testing::Test {
@@ -58,7 +60,7 @@ protected:
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new StillClock());
+        ae->setAlicaClock(new StillClock());
         ae->init(bc, cc, uc, crc);
     }
 
@@ -69,17 +71,18 @@ protected:
         delete cc;
         delete uc;
         delete crc;
-        delete ae->getIAlicaClock();
     }
 };
 
 TEST_F(TaskAssignmentTest, constructTaskAssignment) {
+    ASSERT_NO_SIGNAL
+
     // fake a list of existing robots
     alica::AgentGrp robots;
     for (int number = 8; number <= 11; number++) {
         const supplementary::AgentID* agentID = ae->getID<int>(number);
         robots.push_back(agentID);
-        ae->getTeamManager()->setTimeLastMsgReceived(agentID, ae->getIAlicaClock()->now());
+        ae->getTeamManager()->setTimeLastMsgReceived(agentID, ae->getAlicaClock()->now());
     }
     ae->getTeamObserver()->tick(nullptr);
     ae->getRoleAssignment()->tick();

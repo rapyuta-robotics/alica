@@ -1,6 +1,7 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 #include <engine/IAlicaCommunication.h>
 #include <engine/allocationauthority/AllocationDifference.h>
 #include <engine/allocationauthority/EntryPointRobotPair.h>
@@ -10,7 +11,6 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "TestWorldModel.h"
 #include "engine/PlanRepository.h"
@@ -56,8 +56,6 @@ protected:
         sc->shutdown();
         delete ae->getCommunicator();
         delete ae2->getCommunicator();
-        delete ae->getIAlicaClock();
-        delete ae2->getIAlicaClock();
         delete cc;
         delete bc;
         delete uc;
@@ -66,6 +64,8 @@ protected:
 };
 
 TEST(AllocationDifference, MessageCancelsUtil) {
+    ASSERT_NO_SIGNAL
+
     alica::AllocationDifference util;
     alica::AllocationDifference msg;
     alica::AllocationDifference result;
@@ -107,17 +107,19 @@ TEST(AllocationDifference, MessageCancelsUtil) {
 }
 
 TEST_F(AlicaEngineAuthorityManager, authority) {
+    ASSERT_NO_SIGNAL
+
     sc->setHostname("nase");
     ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "AuthorityTestMaster", ".", true);
-    ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+    ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("hairy");
     ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
             "AuthorityTestMaster", ".", true);
-    ae2->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+    ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
     EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
@@ -149,14 +151,8 @@ TEST_F(AlicaEngineAuthorityManager, authority) {
     alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(0);
 
     for (int i = 0; i < 21; i++) {
-        ae->stepNotify();
-        chrono::milliseconds duration(33);
-        this_thread::sleep_for(duration);
-        ae2->stepNotify();
-        this_thread::sleep_for(duration);
-        while (!ae->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting()) {
-            this_thread::sleep_for(duration);
-        }
+        step(ae);
+        step(ae2);
 
         if (i == 1) {
             EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),

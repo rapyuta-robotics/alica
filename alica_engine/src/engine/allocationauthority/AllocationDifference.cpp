@@ -9,35 +9,43 @@
 #include "engine/model/EntryPoint.h"
 #include <engine/allocationauthority/AllocationDifference.h>
 
-namespace alica {
+namespace alica
+{
 
 AllocationDifference::AllocationDifference()
-        : _reason(Reason::empty) {}
+    : _reason(Reason::empty)
+{
+}
 
 AllocationDifference::~AllocationDifference() {}
 
-AllocationDifference::Reason AllocationDifference::getReason() const {
+AllocationDifference::Reason AllocationDifference::getReason() const
+{
     return _reason;
 }
 
-void AllocationDifference::setReason(AllocationDifference::Reason reason) {
+void AllocationDifference::setReason(AllocationDifference::Reason reason)
+{
     _reason = reason;
 }
 
-bool AllocationDifference::isEmpty() const {
+bool AllocationDifference::isEmpty() const
+{
     return _additions.empty() && _subtractions.empty();
 }
 
-void AllocationDifference::reset() {
+void AllocationDifference::reset()
+{
     _additions.clear();
     _subtractions.clear();
     _reason = Reason::empty;
 }
 
-void AllocationDifference::applyDifference(const AllocationDifference& other) {
+void AllocationDifference::applyDifference(const AllocationDifference& other)
+{
     for (const EntryPointRobotPair& otherAdds : other._additions) {
         bool found = false;
-        for (int j = 0; j < _subtractions.size(); j++) {
+        for (int j = 0; j < static_cast<int>(_subtractions.size()); ++j) {
             if (otherAdds == _subtractions[j]) {
                 _subtractions.erase(_subtractions.begin() + j);
                 found = true;
@@ -46,7 +54,7 @@ void AllocationDifference::applyDifference(const AllocationDifference& other) {
         }
 
         if (!found) {
-            for (int j = 0; j < _additions.size(); j++) {
+            for (int j = 0; j < static_cast<int>(_additions.size()); ++j) {
                 if (otherAdds == _additions[j]) {
                     found = true;
                     break;
@@ -60,7 +68,7 @@ void AllocationDifference::applyDifference(const AllocationDifference& other) {
 
     for (const EntryPointRobotPair& otherDels : other._subtractions) {
         bool found = false;
-        for (int j = 0; j < _additions.size(); j++) {
+        for (int j = 0; j < static_cast<int>(_additions.size()); ++j) {
             if (otherDels == _additions[j]) {
                 _additions.erase(_additions.begin() + j);
                 found = true;
@@ -69,7 +77,7 @@ void AllocationDifference::applyDifference(const AllocationDifference& other) {
         }
 
         if (!found) {
-            for (int j = 0; j < _subtractions.size(); j++) {
+            for (int j = 0; j < static_cast<int>(_subtractions.size()); ++j) {
                 if (otherDels == _subtractions[j]) {
                     found = true;
                     break;
@@ -82,7 +90,8 @@ void AllocationDifference::applyDifference(const AllocationDifference& other) {
     }
 }
 
-std::string AllocationDifference::toString() const {
+std::string AllocationDifference::toString() const
+{
     std::stringstream ss;
     ss << "Additions: ";
     for (const EntryPointRobotPair& erp : _additions) {
@@ -96,27 +105,33 @@ std::string AllocationDifference::toString() const {
     return ss.str();
 }
 
-const std::vector<EntryPointRobotPair>& AllocationDifference::getAdditions() const {
+const std::vector<EntryPointRobotPair>& AllocationDifference::getAdditions() const
+{
     return _additions;
 }
 
-std::vector<EntryPointRobotPair>& AllocationDifference::editAdditions() {
+std::vector<EntryPointRobotPair>& AllocationDifference::editAdditions()
+{
     return _additions;
 }
 
-void AllocationDifference::setAdditions(const std::vector<EntryPointRobotPair>& additions) {
+void AllocationDifference::setAdditions(const std::vector<EntryPointRobotPair>& additions)
+{
     _additions = additions;
 }
 
-const std::vector<EntryPointRobotPair>& AllocationDifference::getSubtractions() const {
+const std::vector<EntryPointRobotPair>& AllocationDifference::getSubtractions() const
+{
     return _subtractions;
 }
 
-std::vector<EntryPointRobotPair>& AllocationDifference::editSubtractions() {
+std::vector<EntryPointRobotPair>& AllocationDifference::editSubtractions()
+{
     return _subtractions;
 }
 
-void AllocationDifference::setSubtractions(const std::vector<EntryPointRobotPair>& subtractions) {
+void AllocationDifference::setSubtractions(const std::vector<EntryPointRobotPair>& subtractions)
+{
     _subtractions = subtractions;
 }
 

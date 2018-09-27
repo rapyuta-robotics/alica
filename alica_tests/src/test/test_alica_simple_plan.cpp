@@ -1,6 +1,7 @@
+#include <test_alica.h>
 #include <gtest/gtest.h>
 #include <engine/AlicaEngine.h>
-#include <engine/IAlicaClock.h>
+#include <engine/AlicaClock.h>
 #include "engine/IAlicaCommunication.h"
 #include "engine/model/State.h"
 #include "engine/model/Behaviour.h"
@@ -8,7 +9,6 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/BehaviourPool.h"
 #include "engine/PlanBase.h"
-#include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/TeamObserver.h"
@@ -55,14 +55,13 @@ protected:
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
-        ae->setIAlicaClock(new alicaRosProxy::AlicaROSClock());
+        ae->setAlicaClock(new alica::AlicaClock());
         ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     }
 
     virtual void TearDown() {
         ae->shutdown();
         sc->shutdown();
-        delete ae->getIAlicaClock();
         delete ae->getCommunicator();
         delete cc;
         delete bc;
@@ -74,12 +73,16 @@ protected:
  * Tests whether it is possible to run a behaviour in a primitive plan.
  */
 TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan) {
+    ASSERT_NO_SIGNAL
+
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     ae->start();
 
-    unsigned int sleepTime = 1;
-    sleep(sleepTime);
+    AlicaTime sleepTime = AlicaTime::seconds(1);
+    do {
+        ae->getAlicaClock()->sleep(sleepTime);
+    } while (ae->getPlanBase()->getRootNode() == nullptr);
 
     // Check whether RC can be called
     EXPECT_TRUE(ae->getPlanBase()->getRootNode()->evalRuntimeCondition());
@@ -99,7 +102,7 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan) {
     // Attack
     EXPECT_GT(((alica::Attack*) &*(*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getBasicBehaviour())
                       ->callCounter,
-            (sleepTime) *29 - 15);
+            (sleepTime.inSeconds()) *29 - 15);
     EXPECT_GT(((alica::Attack*) &*(*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getBasicBehaviour())
                       ->initCounter,
             0);

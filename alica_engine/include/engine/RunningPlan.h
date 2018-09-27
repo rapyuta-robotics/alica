@@ -1,26 +1,27 @@
 #pragma once
 
-#include "engine/PlanStatus.h"
-#include "engine/PlanChange.h"
-#include "engine/IAlicaClock.h"
+#include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
+#include "engine/PlanChange.h"
+#include "engine/PlanStatus.h"
 #include "engine/Types.h"
-#include "engine/teammanager/TeamManager.h"
 #include "engine/constraintmodul/ConditionStore.h"
+#include "engine/teammanager/TeamManager.h"
 #include "supplementary/AgentID.h"
 
 #include <SystemConfig.h>
 
-#include <map>
-#include <list>
-#include <memory>
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <unordered_set>
 #include <algorithm>
+#include <iostream>
+#include <list>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <unordered_set>
 
-namespace alica {
+namespace alica
+{
 class BehaviourPool;
 class BasicBehaviour;
 class AbstractPlan;
@@ -40,8 +41,9 @@ class SimplePlanTree;
 /**
  * A RunningPlan represents a plan or a behaviour in execution, holding all information relevant at runtime.
  */
-class RunningPlan : public enable_shared_from_this<RunningPlan> {
-public:
+class RunningPlan : public std::enable_shared_from_this<RunningPlan>
+{
+  public:
     static void init();
     RunningPlan(AlicaEngine* ae);
     RunningPlan(AlicaEngine* ae, const Plan* plan);
@@ -55,17 +57,17 @@ public:
     bool isBehaviour() const { return _behaviour; };
 
     bool isAllocationNeeded() const { return _allocationNeeded; }
-    list<shared_ptr<RunningPlan>>* getChildren();
-    void setChildren(list<shared_ptr<RunningPlan>> children);
+    std::list<std::shared_ptr<RunningPlan>>* getChildren();
+    void setChildren(std::list<std::shared_ptr<RunningPlan>> children);
     /**
      * The abstract plan associated with this running plan, a model element.
      */
     const AbstractPlan* getPlan() const { return _plan; }
     void setPlan(const AbstractPlan* plan);
-    shared_ptr<BasicBehaviour> getBasicBehaviour();
-    void setBasicBehaviour(shared_ptr<BasicBehaviour> basicBehaviour);
-    shared_ptr<Assignment> getAssignment() const;
-    void setAssignment(shared_ptr<Assignment> assignment);
+    std::shared_ptr<BasicBehaviour> getBasicBehaviour();
+    void setBasicBehaviour(std::shared_ptr<BasicBehaviour> basicBehaviour);
+    std::shared_ptr<Assignment> getAssignment() const;
+    void setAssignment(std::shared_ptr<Assignment> assignment);
     void printRecursive();
     AlicaTime getPlanStartTime() const { return _planStartTime; }
     AlicaTime getStateStartTime() const { return _stateStartTime; }
@@ -84,8 +86,8 @@ public:
     ConditionStore& editConstraintStore() { return _constraintStore; }
 
     const EntryPoint* getOwnEntryPoint() const;
-    void setParent(weak_ptr<RunningPlan> s);
-    weak_ptr<RunningPlan> getParent() const;
+    void setParent(std::weak_ptr<RunningPlan> s);
+    std::weak_ptr<RunningPlan> getParent() const;
     bool getFailHandlingNeeded() const;
     PlanStatus getStatus() const;
     /**
@@ -97,8 +99,8 @@ public:
     bool evalRuntimeCondition();
     const State* getActiveState() const { return _activeState; }
     void setActiveState(const State* activeState);
-    void addChildren(shared_ptr<list<shared_ptr<RunningPlan>>>& runningPlans);
-    void addChildren(list<shared_ptr<RunningPlan>>& children);
+    void addChildren(std::shared_ptr<std::list<std::shared_ptr<RunningPlan>>>& runningPlans);
+    void addChildren(std::list<std::shared_ptr<RunningPlan>>& children);
     void moveState(const State* nextState);
     void clearFailures();
     void clearFailedChildren();
@@ -106,10 +108,8 @@ public:
     int getFailure();
     void deactivateChildren();
     void clearChildren();
-    void adaptAssignment(shared_ptr<RunningPlan> r);
+    void adaptAssignment(std::shared_ptr<RunningPlan> r);
     void setFailedChild(const AbstractPlan* child);
-    void setRobotAvail(const supplementary::AgentID* robot);
-    void setRobotUnAvail(const supplementary::AgentID* robot);
     void accept(IPlanTreeVisitor* vis);
     void deactivate();
     bool anyChildrenStatus(PlanStatus ps);
@@ -122,16 +122,16 @@ public:
     std::shared_ptr<CycleManager> getCycleManagement();
     void revokeAllConstraints();
     void attachPlanConstraints();
-    bool recursiveUpdateAssignment(list<shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents,
-            list<const supplementary::AgentID*> noUpdates, AlicaTime now);
-    void toMessage(list<long>& message, shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const;
+    bool recursiveUpdateAssignment(std::list<std::shared_ptr<SimplePlanTree>> spts, AgentGrp& availableAgents,
+                                   std::list<const supplementary::AgentID*> noUpdates, AlicaTime now);
+    void toMessage(IdGrp& message, std::shared_ptr<const RunningPlan>& deepestNode, int& depth, int curDepth) const;
     std::string toString() const;
     const supplementary::AgentID* getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
-    void sendLogMessage(int level, string& message);
+    void sendLogMessage(int level, const std::string& message) const;
 
-protected:
+  protected:
     const State* _activeState;
     const EntryPoint* _activeEntryPoint;
 
@@ -141,12 +141,12 @@ protected:
     const PlanType* _planType;
     AgentGrp _robotsAvail;
     std::map<const AbstractPlan*, int> _failedSubPlans;
-    weak_ptr<RunningPlan> _parent;
-    list<shared_ptr<RunningPlan>> _children;
+    std::weak_ptr<RunningPlan> _parent;
+    std::list<std::shared_ptr<RunningPlan>> _children;
     std::shared_ptr<Assignment> _assignment;
     std::shared_ptr<CycleManager> _cycleManagement;
 
-    shared_ptr<BasicBehaviour> _basicBehaviour;
+    std::shared_ptr<BasicBehaviour> _basicBehaviour;
 
     PlanStatus _status;
     /**

@@ -43,8 +43,13 @@ public:
     ModelFactory(PlanParser* p, PlanRepository* rep);
     virtual ~ModelFactory();
 
+    bool ignoreMasterPlanId;
+    bool getIgnoreMasterPlanId();
+    void setIgnoreMasterPlanId(bool value);
     Plan* createPlan(tinyxml2::XMLDocument* node);
     std::map<int64_t, AlicaElement*>* getElements();
+    void setElements(const std::map<int64_t, AlicaElement*>& elements);
+    std::string getNameOfNode(tinyxml2::XMLElement* node);
     void createTasks(tinyxml2::XMLDocument* node);
     void createBehaviour(tinyxml2::XMLDocument* node);
     void createCapabilityDefinitionSet(tinyxml2::XMLDocument* node);
@@ -135,9 +140,10 @@ private:
     Role* createRole(tinyxml2::XMLElement* element);
     Characteristic* createCharacteristic(tinyxml2::XMLElement* element);
     Variable* createVariable(tinyxml2::XMLElement* element);
-    bool isReferenceNode(tinyxml2::XMLElement* node);
+    bool isReferenceNode(tinyxml2::XMLElement* node) const;
     void addElement(AlicaElement* ael);
 
+    void createVariableTemplates();
     void removeRedundancy();
 };
 }  // namespace alica

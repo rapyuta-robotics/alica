@@ -29,6 +29,7 @@
 #include "engine/model/Transition.h"
 #include "engine/model/Variable.h"
 #include "engine/parser/PlanParser.h"
+#include "engine/util/HashFunctions.h"
 
 #include "engine/AlicaEngine.h"
 
@@ -36,6 +37,17 @@
 
 namespace alica
 {
+using std::cout;
+using std::endl;
+using std::map;
+using std::pair;
+using std::stod;
+using std::stoi;
+using std::stol;
+using std::stoll;
+using std::string;
+using std::stringstream;
+
 const string ModelFactory::preCondition = "preCondition";
 const string ModelFactory::runtimeCondition = "runtimeCondition";
 const string ModelFactory::postCondition = "postCondition";
@@ -85,6 +97,16 @@ ModelFactory::~ModelFactory()
     for (auto iter : this->elements) {
         delete iter.second;
     }
+}
+
+void ModelFactory::setIgnoreMasterPlanId(bool value)
+{
+    this->ignoreMasterPlanId = value;
+}
+
+bool ModelFactory::getIgnoreMasterPlanId()
+{
+    return this->ignoreMasterPlanId;
 }
 
 Plan* ModelFactory::createPlan(tinyxml2::XMLDocument* node)
@@ -389,9 +411,8 @@ Characteristic* ModelFactory::createCharacteristic(tinyxml2::XMLElement* element
 void ModelFactory::createBehaviour(tinyxml2::XMLDocument* node)
 {
     tinyxml2::XMLElement* element = node->FirstChildElement();
-    int64_t id = this->parser->parserId(element);
     Behaviour* beh = new Behaviour();
-    beh->setId(id);
+    beh->setId(this->parser->parserId(element));
     beh->setFileName(this->parser->getCurrentFile());
 
     const char* attr = element->Attribute("masterPlan");
@@ -443,16 +464,10 @@ void ModelFactory::createBehaviour(tinyxml2::XMLDocument* node)
     tinyxml2::XMLElement* curChild = element->FirstChildElement();
     while (curChild != nullptr) {
         const char* val = curChild->Value();
-        int64_t cid = this->parser->parserId(curChild);
+        this->parser->parserId(curChild);
         if (vars.compare(val) == 0) {
             Variable* v = createVariable(curChild);
             beh->_variables.push_back(v);
-//        }
-//        if (configurations.compare(val) == 0) {
-//            BehaviourConfiguration* bc = createBehaviourConfiguration(curChild);
-//            this->rep->_behaviourConfigurations.insert(std::pair<int64_t, BehaviourConfiguration*>(bc->getId(), bc));
-//            bc->setBehaviour(beh);
-//            beh->_configurations.push_back(bc);
         } else {
             AlicaEngine::abort("MF: Unhandled Behaviour Child:", curChild->Value());
         }
@@ -544,11 +559,11 @@ SyncTransition* ModelFactory::createSyncTransition(tinyxml2::XMLElement* element
     setAlicaElementAttributes(s, element);
     const char* talkTimeoutPtr = element->Attribute("talkTimeout");
     if (talkTimeoutPtr) {
-        s->setTalkTimeOut(stol(talkTimeoutPtr));
+        s->setTalkTimeOut(AlicaTime::milliseconds(stoll(talkTimeoutPtr)));
     }
     const char* syncTimeoutPtr = element->Attribute("syncTimeout");
     if (syncTimeoutPtr) {
-        s->setSyncTimeOut(stol(syncTimeoutPtr));
+        s->setSyncTimeOut(AlicaTime::milliseconds(stoll(syncTimeoutPtr)));
     }
 
     addElement(s);
@@ -576,10 +591,10 @@ Variable* ModelFactory::createVariable(tinyxml2::XMLElement* element)
     this->rep->_variables.insert(pair<int64_t, Variable*>(v->getId(), v));
     return v;
 }
+
 RuntimeCondition* ModelFactory::createRuntimeCondition(tinyxml2::XMLElement* element)
 {
-    RuntimeCondition* r = new RuntimeCondition();
-    r->setId(this->parser->parserId(element));
+    RuntimeCondition* r = new RuntimeCondition(this->parser->parserId(element));
     setAlicaElementAttributes(r, element);
     addElement(r);
 
@@ -958,11 +973,28 @@ Parametrisation* ModelFactory::createParametrisation(tinyxml2::XMLElement* eleme
 }
 
 /**
+ * check if the element has a name
+ * @param node actual xml element
+ * @return the name of the xml element or missing name
+ */
+std::string ModelFactory::getNameOfNode(tinyxml2::XMLElement* node)
+{
+    std::string name = "";
+    const char* namePtr = node->Attribute("name");
+    if (namePtr) {
+        name = namePtr;
+        return name;
+    } else {
+        return "MISSING-NAME";
+    }
+}
+
+/**
  *
  * @param node xmlElement that represent the current xml tag
  * @return true if the child node is a text element otherwise false
  */
-bool ModelFactory::isReferenceNode(tinyxml2::XMLElement* node)
+bool ModelFactory::isReferenceNode(tinyxml2::XMLElement* node) const
 {
     tinyxml2::XMLNode* curChild = node->FirstChild();
     while (curChild != nullptr) {
@@ -1010,16 +1042,16 @@ void ModelFactory::attachPlanReferences()
 #endif
     // epTaskReferences
     for (pair<int64_t, int64_t> pairs : this->epTaskReferences) {
-        Task* t = (Task*) this->elements.find(pairs.second)->second;
-        EntryPoint* ep = (EntryPoint*) this->elements.find(pairs.first)->second;
+        Task* t = (Task*)this->elements.find(pairs.second)->second;
+        EntryPoint* ep = (EntryPoint*)this->elements.find(pairs.first)->second;
         ep->setTask(t);
     }
     this->epTaskReferences.clear();
 
     // transitionAimReferences
     for (pair<int64_t, int64_t> pairs : this->transitionAimReferences) {
-        Transition* t = (Transition*) this->elements.find(pairs.first)->second;
-        State* st = (State*) this->elements.find(pairs.second)->second;
+        Transition* t = (Transition*)this->elements.find(pairs.first)->second;
+        State* st = (State*)this->elements.find(pairs.second)->second;
         if (!st) {
             AlicaEngine::abort("MF: Cannot resolve transitionAimReferences target: ", pairs.first);
         }
@@ -1030,8 +1062,8 @@ void ModelFactory::attachPlanReferences()
 
     // epStateReferences
     for (pair<int64_t, int64_t> pairs : this->epStateReferences) {
-        State* st = (State*) this->elements.find(pairs.second)->second;
-        EntryPoint* ep = (EntryPoint*) this->elements.find(pairs.first)->second;
+        State* st = (State*)this->elements.find(pairs.second)->second;
+        EntryPoint* ep = (EntryPoint*)this->elements.find(pairs.first)->second;
         ep->setState(st);
         st->setEntryPoint(ep);
     }
@@ -1039,8 +1071,8 @@ void ModelFactory::attachPlanReferences()
 
     // stateInTransitionReferences
     for (pair<int64_t, int64_t> pairs : this->stateInTransitionReferences) {
-        Transition* t = (Transition*) this->elements.find(pairs.second)->second;
-        State* st = (State*) this->elements.find(pairs.first)->second;
+        Transition* t = (Transition*)this->elements.find(pairs.second)->second;
+        State* st = (State*)this->elements.find(pairs.first)->second;
         if (st != t->getOutState()) {
             AlicaEngine::abort("MF: Unexpected reference in a transition! ", pairs.first);
         }
@@ -1049,8 +1081,8 @@ void ModelFactory::attachPlanReferences()
 
     // stateOutTransitionReferences
     for (pair<int64_t, int64_t> pairs : this->stateOutTransitionReferences) {
-        State* st = (State*) this->elements.find(pairs.first)->second;
-        Transition* t = (Transition*) this->elements.find(pairs.second)->second;
+        State* st = (State*)this->elements.find(pairs.first)->second;
+        Transition* t = (Transition*)this->elements.find(pairs.second)->second;
         st->_outTransitions.push_back(t);
         t->setInState(st);
     }
@@ -1058,56 +1090,56 @@ void ModelFactory::attachPlanReferences()
 
     // statePlanReferences
     for (pair<int64_t, int64_t> pairs : this->statePlanReferences) {
-        State* st = (State*) this->elements.find(pairs.first)->second;
-        AbstractPlan* p = (AbstractPlan*) this->elements.find(pairs.second)->second;
+        State* st = (State*)this->elements.find(pairs.first)->second;
+        AbstractPlan* p = (AbstractPlan*)this->elements.find(pairs.second)->second;
         st->_plans.push_back(p);
     }
     this->statePlanReferences.clear();
 
     // planTypePlanReferences
     for (pair<int64_t, int64_t> pairs : this->planTypePlanReferences) {
-        PlanType* pt = (PlanType*) this->elements.find(pairs.first)->second;
-        Plan* p = (Plan*) this->elements.find(pairs.second)->second;
+        PlanType* pt = (PlanType*)this->elements.find(pairs.first)->second;
+        Plan* p = (Plan*)this->elements.find(pairs.second)->second;
         pt->_plans.push_back(p);
     }
     this->planTypePlanReferences.clear();
 
     // conditionVarReferences
     for (pair<int64_t, int64_t> pairs : this->conditionVarReferences) {
-        Condition* c = (Condition*) this->elements.find(pairs.first)->second;
-        Variable* v = (Variable*) this->elements.find(pairs.second)->second;
+        Condition* c = (Condition*)this->elements.find(pairs.first)->second;
+        Variable* v = (Variable*)this->elements.find(pairs.second)->second;
         c->_variables.push_back(v);
     }
     this->conditionVarReferences.clear();
 
     // paramSubPlanReferences
     for (pair<int64_t, int64_t> pairs : this->paramSubPlanReferences) {
-        Parametrisation* p = (Parametrisation*) this->elements.find(pairs.first)->second;
-        AbstractPlan* ap = (AbstractPlan*) this->elements.find(pairs.second)->second;
+        Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
+        AbstractPlan* ap = (AbstractPlan*)this->elements.find(pairs.second)->second;
         p->setSubPlan(ap);
     }
     this->paramSubPlanReferences.clear();
 
     // paramSubVarReferences
     for (pair<int64_t, int64_t> pairs : this->paramSubVarReferences) {
-        Parametrisation* p = (Parametrisation*) this->elements.find(pairs.first)->second;
-        Variable* ap = (Variable*) this->elements.find(pairs.second)->second;
+        Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
+        Variable* ap = (Variable*)this->elements.find(pairs.second)->second;
         p->setSubVar(ap);
     }
     this->paramSubVarReferences.clear();
 
     // paramVarReferences
     for (pair<int64_t, int64_t> pairs : this->paramVarReferences) {
-        Parametrisation* p = (Parametrisation*) this->elements.find(pairs.first)->second;
-        Variable* v = (Variable*) this->elements.find(pairs.second)->second;
+        Parametrisation* p = (Parametrisation*)this->elements.find(pairs.first)->second;
+        Variable* v = (Variable*)this->elements.find(pairs.second)->second;
         p->setVar(v);
     }
     this->paramVarReferences.clear();
 
     // transitionSynchReferences
     for (pair<int64_t, int64_t> pairs : this->transitionSynchReferences) {
-        Transition* t = (Transition*) this->elements.find(pairs.first)->second;
-        SyncTransition* sync = (SyncTransition*) this->elements.find(pairs.second)->second;
+        Transition* t = (Transition*)this->elements.find(pairs.first)->second;
+        SyncTransition* sync = (SyncTransition*)this->elements.find(pairs.second)->second;
         t->setSyncTransition(sync);
         sync->_inSync.push_back(t);
     }
@@ -1115,36 +1147,37 @@ void ModelFactory::attachPlanReferences()
 
     // planningProblemPlanReferences
     for (pair<int64_t, int64_t> pairs : this->planningProblemPlanReferences) {
-        PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
-        AbstractPlan* p = (AbstractPlan*) this->elements.find(pairs.second)->second;
+        PlanningProblem* s = (PlanningProblem*)this->elements.find(pairs.first)->second;
+        AbstractPlan* p = (AbstractPlan*)this->elements.find(pairs.second)->second;
         s->_plans.push_back(p);
     }
     this->planningProblemPlanReferences.clear();
 
     // planningProblemPlanWaitReferences
     for (pair<int64_t, int64_t> pairs : this->planningProblemPlanWaitReferences) {
-        PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
-        Plan* p = (Plan*) this->elements.find(pairs.second)->second;
+        PlanningProblem* s = (PlanningProblem*)this->elements.find(pairs.first)->second;
+        Plan* p = (Plan*)this->elements.find(pairs.second)->second;
         s->setWaitPlan(p);
     }
     this->planningProblemPlanWaitReferences.clear();
 
     // planningProblemPlanAlternativeReferences
     for (pair<int64_t, int64_t> pairs : this->planningProblemPlanAlternativeReferences) {
-        PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
-        Plan* p = (Plan*) this->elements.find(pairs.second)->second;
+        PlanningProblem* s = (PlanningProblem*)this->elements.find(pairs.first)->second;
+        Plan* p = (Plan*)this->elements.find(pairs.second)->second;
         s->setAlternativePlan(p);
     }
     this->planningProblemPlanAlternativeReferences.clear();
 
     // quantifierScopeReferences
     for (pair<int64_t, int64_t> pairs : this->quantifierScopeReferences) {
-        AlicaElement* ael = (AlicaElement*) this->elements.find(pairs.second)->second;
-        Quantifier* q = (Quantifier*) this->elements.find(pairs.first)->second;
+        AlicaElement* ael = (AlicaElement*)this->elements.find(pairs.second)->second;
+        Quantifier* q = (Quantifier*)this->elements.find(pairs.first)->second;
         q->setScope(ael);
     }
     this->quantifierScopeReferences.clear();
 
+    createVariableTemplates();
     removeRedundancy();
 #ifdef MF_DEBUG
     cout << "DONE!" << endl;
@@ -1189,6 +1222,25 @@ void ModelFactory::attachCharacteristicReferences()
 #endif
 }
 
+void ModelFactory::createVariableTemplates()
+{
+    for (std::pair<const int64_t, Quantifier*> p : rep->_quantifiers) {
+        Quantifier* q = p.second;
+        for (const std::string& s : q->getDomainIdentifiers()) {
+            int64_t id = Hash64(s.c_str(), s.size());
+            Variable* v;
+            PlanRepository::MapType<Variable>::iterator vit = rep->_variables.find(id);
+            if (vit != rep->_variables.end()) {
+                v = vit->second;
+            } else {
+                v = new Variable(id, s, "Template");
+                rep->_variables.emplace(id, v);
+            }
+            q->_templateVars.push_back(v);
+        }
+    }
+}
+
 void ModelFactory::removeRedundancy()
 {
     for (PlanRepository::MapType<Plan>::iterator iter = rep->_plans.begin(); iter != rep->_plans.end(); ++iter) {
@@ -1207,17 +1259,20 @@ map<int64_t, AlicaElement*>* ModelFactory::getElements()
     return &this->elements;
 }
 
+void ModelFactory::setElements(const map<int64_t, AlicaElement*>& elements)
+{
+    this->elements = elements;
+}
+
 void ModelFactory::addElement(AlicaElement* ael)
 {
     if (this->elements.find(ael->getId()) != this->elements.end()) {
         stringstream ss;
         ss << "MF: ERROR: ID utilised twice: " << ael->getId() << std::endl;
         ss << "ELEMENT >" << ael->getName() << "< >" << this->elements[ael->getId()]->getName() << "<" << std::endl;
-//        std::cout << segfaultdebug::get_stacktrace() << std::endl;
         AlicaEngine::abort(ss.str());
     }
 
-    // std::cout << "+++++" << std::endl << segfaultdebug::get_stacktrace() << std::endl << "++++++" << std::endl;
     elements.insert(pair<int64_t, AlicaElement*>(ael->getId(), ael));
 }
 
@@ -1228,7 +1283,7 @@ const EntryPoint* ModelFactory::generateIdleEntryPoint()
     idleEP->setName("IDLE-ep");
     idleEP->setId(EntryPoint::IDLEID);
     idleEP->setMinCardinality(0);
-    idleEP->setMaxCardinality(numeric_limits<int>::max());
+    idleEP->setMaxCardinality(std::numeric_limits<int>::max());
     Task* idleTask = new Task(true);
     idleTask->setName("IDLE-TASK");
     idleTask->setId(Task::IDLEID);

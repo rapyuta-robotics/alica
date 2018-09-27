@@ -9,10 +9,11 @@
 #define TRANSITION_H_
 
 #include "AlicaElement.h"
-#include <memory>
-#include "engine/RunningPlan.h"
+#include <engine/RunningPlan.h>
 
-namespace alica {
+#include <memory>
+namespace alica
+{
 
 class State;
 class SyncTransition;
@@ -23,8 +24,9 @@ class ExpressionHandler;
 /**
  * Connects two States in a Plan
  */
-class Transition : public AlicaElement {
-public:
+class Transition : public AlicaElement
+{
+  public:
     Transition();
     virtual ~Transition();
 
@@ -33,9 +35,9 @@ public:
     const SyncTransition* getSyncTransition() const { return _syncTransition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
 
-    bool evalCondition(shared_ptr<RunningPlan> r) const;
+    bool evalCondition(std::shared_ptr<RunningPlan> r) const;
 
-private:
+  private:
     friend ModelFactory;
     friend ExpressionHandler;
     void setPreCondition(PreCondition* preCondition);
@@ -61,6 +63,6 @@ private:
     const SyncTransition* _syncTransition;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* TRANSITION_H_ */

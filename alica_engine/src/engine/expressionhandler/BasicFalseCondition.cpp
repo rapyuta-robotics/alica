@@ -7,13 +7,15 @@
 
 #include "engine/expressionhandler/BasicFalseCondition.h"
 
-namespace alica {
+namespace alica
+{
 
 BasicFalseCondition::BasicFalseCondition() {}
 
 BasicFalseCondition::~BasicFalseCondition() {}
 
-bool BasicFalseCondition::evaluate(shared_ptr<RunningPlan> rp) {
+bool BasicFalseCondition::evaluate(std::shared_ptr<RunningPlan> rp)
+{
     return false;
 }
 
