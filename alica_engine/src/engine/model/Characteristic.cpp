@@ -8,16 +8,27 @@
 #include "engine/model/Characteristic.h"
 #include <sstream>
 
-namespace alica {
+namespace alica
+{
 
 Characteristic::Characteristic()
         : _capability(nullptr)
         , _capValue(nullptr)
-        , _weight(0.0) {}
+        , _weight(0.0)
+{
+}
+
+Characteristic::Characteristic(const Capability* cap, const CapValue* value)
+        : _capability(cap)
+        , _capValue(value)
+        , _weight(0.0)
+{
+}
 
 Characteristic::~Characteristic() {}
 
-std::string Characteristic::toString() const {
+std::string Characteristic::toString() const
+{
     std::stringstream ss;
     ss << "#Characteristic " << std::endl;
     ss << "\t Capability: " << _capability->getName() << std::endl;
@@ -26,16 +37,19 @@ std::string Characteristic::toString() const {
     return ss.str();
 }
 
-void Characteristic::setCapability(const Capability* capability) {
+void Characteristic::setCapability(const Capability* capability)
+{
     _capability = capability;
 }
 
-void Characteristic::setCapValue(const CapValue* capValue) {
+void Characteristic::setCapValue(const CapValue* capValue)
+{
     _capValue = capValue;
 }
 
-void Characteristic::setWeight(double weight) {
+void Characteristic::setWeight(double weight)
+{
     _weight = weight;
 }
 
-}  // namespace alica
+} // namespace alica

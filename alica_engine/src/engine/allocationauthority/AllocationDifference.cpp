@@ -13,16 +13,11 @@ namespace alica
 {
 
 AllocationDifference::AllocationDifference()
-    : _reason(Reason::empty)
+        : _reason(Reason::empty)
 {
 }
 
 AllocationDifference::~AllocationDifference() {}
-
-AllocationDifference::Reason AllocationDifference::getReason() const
-{
-    return _reason;
-}
 
 void AllocationDifference::setReason(AllocationDifference::Reason reason)
 {
@@ -90,49 +85,18 @@ void AllocationDifference::applyDifference(const AllocationDifference& other)
     }
 }
 
-std::string AllocationDifference::toString() const
+std::ostream& operator<<(std::ostream& o, const AllocationDifference& dif)
 {
-    std::stringstream ss;
-    ss << "Additions: ";
-    for (const EntryPointRobotPair& erp : _additions) {
-        ss << "+ " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
+    o << "Additions: ";
+    for (const EntryPointRobotPair& erp : dif.getAdditions()) {
+        o << "+ " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
     }
-    ss << std::endl << "Substractions: ";
-    for (const EntryPointRobotPair& erp : _subtractions) {
-        ss << "- " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
+    o << "\nSubstractions: ";
+    for (const EntryPointRobotPair& erp : dif.getSubtractions()) {
+        o << "- " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
     }
-    ss << std::endl << "Reason [0=msg, 1=util, 2=empty]:" << _reason;
-    return ss.str();
-}
-
-const std::vector<EntryPointRobotPair>& AllocationDifference::getAdditions() const
-{
-    return _additions;
-}
-
-std::vector<EntryPointRobotPair>& AllocationDifference::editAdditions()
-{
-    return _additions;
-}
-
-void AllocationDifference::setAdditions(const std::vector<EntryPointRobotPair>& additions)
-{
-    _additions = additions;
-}
-
-const std::vector<EntryPointRobotPair>& AllocationDifference::getSubtractions() const
-{
-    return _subtractions;
-}
-
-std::vector<EntryPointRobotPair>& AllocationDifference::editSubtractions()
-{
-    return _subtractions;
-}
-
-void AllocationDifference::setSubtractions(const std::vector<EntryPointRobotPair>& subtractions)
-{
-    _subtractions = subtractions;
+    o << "\nReason:" << AllocationDifference::getReasonString(dif.getReason()) << std::endl;
+    return o;
 }
 
 } /* namespace alica */

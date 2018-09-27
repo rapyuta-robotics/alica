@@ -7,6 +7,8 @@
 
 #include "TestWorldModel.h"
 
+#include <supplementary/EventTrigger.h>
+
 namespace alicaTests
 {
 
@@ -23,8 +25,8 @@ TestWorldModel* TestWorldModel::getTwo()
 }
 
 TestWorldModel::TestWorldModel()
-    : trigger1(nullptr)
-    , trigger2(nullptr)
+        : trigger1(new supplementary::EventTrigger())
+        , trigger2(new supplementary::EventTrigger())
 {
     this->transitionCondition1413201227586 = false;
     this->transitionCondition1413201389955 = false;
@@ -42,7 +44,8 @@ TestWorldModel::TestWorldModel()
 
 TestWorldModel::~TestWorldModel()
 {
-    // TODO Auto-generated destructor stub
+    delete trigger1;
+    delete trigger2;
 }
 
 bool TestWorldModel::isTransitionCondition1413201227586()

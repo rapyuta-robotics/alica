@@ -1,11 +1,7 @@
 #pragma once
 #include "engine/Types.h"
 
-#include <algorithm>
-#include <list>
 #include <map>
-#include <memory>
-#include <unordered_set>
 
 namespace alica
 {
@@ -17,12 +13,12 @@ class AlicaEngine;
  */
 class SuccessMarks
 {
-  public:
-    SuccessMarks(const AlicaEngine* ae);
-    SuccessMarks(const AlicaEngine* ae, const IdGrp& epIds);
-    virtual ~SuccessMarks();
+public:
+    SuccessMarks();
+    ~SuccessMarks();
 
     void limitToPlans(const AbstractPlanGrp& active);
+    void update(const AlicaEngine* ae, const IdGrp& succeededEps);
     const std::map<const AbstractPlan*, EntryPointGrp>& getSuccessMarks() const { return _successMarks; }
 
     void clear();
@@ -31,13 +27,11 @@ class SuccessMarks
     void markSuccessfull(const AbstractPlan* p, const EntryPoint* e);
 
     bool succeeded(const AbstractPlan* p, const EntryPoint* e) const;
-    bool succeeded(int64_t planId, int64_t entryPointId) const;
     bool anyTaskSucceeded(const AbstractPlan* p) const;
     IdGrp toIdGrp() const;
 
-  private:
+private:
     std::map<const AbstractPlan*, EntryPointGrp> _successMarks;
-    const AlicaEngine* _ae;
 };
 
 } /* namespace alica */

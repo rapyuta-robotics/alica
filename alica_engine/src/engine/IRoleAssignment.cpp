@@ -5,12 +5,12 @@
 namespace alica
 {
 IRoleAssignment::IRoleAssignment()
-    : ownRole(nullptr)
-    , communication(nullptr)
+        : ownRole(nullptr)
+        , communication(nullptr)
 {
 }
 
-const Role* IRoleAssignment::getRole(const supplementary::AgentID* robotId)
+const Role* IRoleAssignment::getRole(AgentIDConstPtr robotId)
 {
     auto iter = this->robotRoleMapping.find(robotId);
     if (iter != this->robotRoleMapping.end()) {

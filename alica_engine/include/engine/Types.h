@@ -2,6 +2,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 namespace supplementary
@@ -12,6 +13,7 @@ class AgentID;
 namespace alica
 {
 class AbstractPlan;
+class AgentIDConstPtr;
 class AlicaElement;
 class BehaviourConfiguration;
 class Capability;
@@ -34,7 +36,7 @@ class Transition;
 class Variable;
 
 using AbstractPlanGrp = std::vector<const AbstractPlan*>;
-using AgentGrp = std::vector<const supplementary::AgentID*>;
+using AgentGrp = std::vector<AgentIDConstPtr>;
 using AlicaElementGrp = std::vector<const AlicaElement*>;
 using BehaviourConfigurationGrp = std::vector<const BehaviourConfiguration*>;
 using CapabilityGrp = std::vector<const Capability*>;
@@ -58,6 +60,6 @@ using VariableGrp = std::vector<const Variable*>;
 
 using BehaviourParameterMap = std::unordered_map<std::string, std::string>;
 
-using AgentIDConstPtr = const supplementary::AgentID*;
+using AgentStatePair = std::pair<AgentIDConstPtr, const State*>;
 
 } // namespace alica

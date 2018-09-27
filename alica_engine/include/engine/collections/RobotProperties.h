@@ -1,7 +1,8 @@
 #pragma once
 
+#include "engine/AgentIDConstPtr.h"
+#include "engine/Types.h"
 #include "engine/model/Characteristic.h"
-#include "supplementary/AgentID.h"
 
 #include <SystemConfig.h>
 
@@ -20,29 +21,28 @@ class Capability;
 
 class RobotProperties
 {
-  public:
-    RobotProperties(const supplementary::AgentID* agentId, const AlicaEngine* ae, const std::string& name);
-    virtual ~RobotProperties();
-    void readFromConfig(const AlicaEngine* engine, const std::string& name);
-    const supplementary::AgentID* getId() const;
-    void setId(const supplementary::AgentID* agentId);
-    const std::map<std::string, const Characteristic*>& getCharacteristics() const;
-    const std::string& getDefaultRole() const;
-    void setDefaultRole(const std::string& defaultRole);
+public:
+    RobotProperties();
+    RobotProperties(const AlicaEngine* ae, const std::string& name);
+    ~RobotProperties();
+
+    const std::map<std::string, std::unique_ptr<const Characteristic>>& getCharacteristics() const { return _characteristics; }
+    const std::string& getDefaultRole() const { return _defaultRole; }
+
     friend std::ostream& operator<<(std::ostream& os, const alica::RobotProperties& obj)
     {
-        os << "RobotProperties: Id=" << obj.getId() << " Default Role: " << obj.getDefaultRole() << std::endl;
-        for (const std::pair<std::string, const Characteristic*>& p : obj.getCharacteristics()) {
+        os << "RobotProperties: Default Role: " << obj.getDefaultRole() << std::endl;
+        for (const std::pair<const std::string, std::unique_ptr<const Characteristic>>& p : obj.getCharacteristics()) {
             os << "\t" << p.first << " = " << p.second->getCapValue()->getName() << std::endl;
         }
         return os;
     }
 
-  protected:
-    const supplementary::AgentID* agentId;
+private:
+    void readFromConfig(const AlicaEngine* engine, const std::string& name);
 
-    std::string defaultRole;
-    std::map<std::string, const Characteristic*> characteristics;
+    std::map<std::string, std::unique_ptr<const Characteristic>> _characteristics;
+    std::string _defaultRole;
 };
 
 } /* namespace alica */

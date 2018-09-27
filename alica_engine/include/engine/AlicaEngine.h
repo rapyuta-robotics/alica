@@ -1,11 +1,14 @@
 #pragma once
 
+#include "engine/AgentIDConstPtr.h"
 #include "engine/blackboard/BlackBoard.h"
 #include "engine/constraintmodul/ISolver.h"
+
 #include <SystemConfig.h>
 #include <list>
 #include <string>
 #include <supplementary/AgentIDManager.h>
+
 #include <unordered_map>
 
 namespace supplementary
@@ -25,10 +28,8 @@ class RoleSet;
 class TeamObserver;
 class SyncModule;
 class AuthorityManager;
-class PlanSelector;
 class PlanBase;
 class ExpressionHandler;
-class PartialAssignmentPool;
 class VariableSyncModule;
 class TeamManager;
 
@@ -43,13 +44,12 @@ class IRoleAssignment;
 
 class AlicaEngine
 {
-  public:
+public:
     static void abort(const std::string& msg);
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, const std::string& roleSetDir,
-                bool stepEngine);
+    AlicaEngine(supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine);
     ~AlicaEngine();
 
     // State modifiers:
@@ -69,15 +69,13 @@ class AlicaEngine
     BehaviourPool* getBehaviourPool() const { return behaviourPool; }
     const IAlicaCommunication* getCommunicator() const { return communicator; }
     Logger* getLog() const { return log; }
-    PartialAssignmentPool* getPartialAssignmentPool() const { return pap; }
     PlanBase* getPlanBase() const { return planBase; }
     PlanParser* getPlanParser() const { return planParser; }
     PlanRepository* getPlanRepository() const { return planRepository; }
-    PlanSelector* getPlanSelector() const { return planSelector; }
     VariableSyncModule* getResultStore() const { return variableSyncModule; }
     IRoleAssignment* getRoleAssignment() const { return roleAssignment; }
     SyncModule* getSyncModul() const { return syncModul; }
-    TeamManager* getTeamManager() const { return teamManager; }
+    TeamManager* getTeamManager() const { return _teamManager; }
     TeamObserver* getTeamObserver() const { return teamObserver; }
     AlicaClock* getAlicaClock() const { return alicaClock; }
 
@@ -113,11 +111,11 @@ class AlicaEngine
 
     // AgentIDManager forwarded interface:
 
-    const supplementary::AgentID* getIDFromBytes(const std::vector<uint8_t>& vectorID) const;
+    AgentIDConstPtr getIdFromBytes(const std::vector<uint8_t>& vectorID) const;
     template <class Prototype>
-    const supplementary::AgentID* getID(Prototype& idPrototype) const;
+    AgentIDConstPtr getId(Prototype& idPrototype) const;
 
-  private:
+private:
     void setStepEngine(bool stepEngine);
 
     PlanBase* planBase;
@@ -127,9 +125,7 @@ class AlicaEngine
     const RoleSet* roleSet;
     VariableSyncModule* variableSyncModule;
     AuthorityManager* auth;
-    PlanSelector* planSelector;
-    TeamManager* teamManager;
-    PartialAssignmentPool* pap;
+    TeamManager* _teamManager;
     SyncModule* syncModul;
     PlanRepository* planRepository;
     BlackBoard _blackboard;
@@ -179,9 +175,9 @@ class AlicaEngine
  * IntRobotID).
  */
 template <class Prototype>
-const supplementary::AgentID* AlicaEngine::getID(Prototype& idPrototype) const
+AgentIDConstPtr AlicaEngine::getId(Prototype& idPrototype) const
 {
-    return this->agentIDManager->getID<Prototype>(idPrototype);
+    return AgentIDConstPtr(this->agentIDManager->getID<Prototype>(idPrototype));
 }
 
 template <typename T>

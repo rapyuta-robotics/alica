@@ -3,6 +3,7 @@
 
 #include "engine/AlicaClock.h"
 #include "engine/allocationauthority/AllocationDifference.h"
+#include "engine/containers/AllocationAuthorityInfo.h"
 #include "supplementary/AgentID.h"
 
 #include <mutex>
@@ -17,7 +18,6 @@ namespace alica
 {
 class RunningPlan;
 class PlanRepository;
-struct AllocationAuthorityInfo;
 class Assignment;
 class AlicaEngine;
 
@@ -26,21 +26,22 @@ class AlicaEngine;
  */
 class CycleManager
 {
-  public:
+public:
     CycleManager(AlicaEngine* ae, RunningPlan* p);
-    virtual ~CycleManager();
+    ~CycleManager();
     void update();
     bool isOverridden() const;
-    bool setAssignment();
-    bool mayDoUtilityCheck();
-    void setNewAllocDiff(AllocationDifference* aldif);
-    void setNewAllocDiff(std::shared_ptr<Assignment> oldAss, std::shared_ptr<Assignment> newAss, AllocationDifference::Reason reas);
-    void handleAuthorityInfo(std::shared_ptr<AllocationAuthorityInfo> aai);
-    bool needsSending();
-    void sent();
-    bool haveAuthority();
+    bool applyAssignment();
+    bool mayDoUtilityCheck() const { return _state != CycleState::overridden; }
 
-  private:
+    AllocationDifference& editNextDifference();
+    void setNewAllocDiff(const Assignment& oldAssignment, const Assignment& newAssignment, AllocationDifference::Reason reason);
+    void handleAuthorityInfo(const AllocationAuthorityInfo& aai);
+    bool needsSending() const;
+    void sent();
+    bool haveAuthority() const { return _state == CycleState::overriding; }
+
+private:
     enum CycleState
     {
         observing,
@@ -49,15 +50,13 @@ class CycleManager
     };
     bool detectAllocationCycle();
 
-    AlicaEngine* ae;
-    std::mutex allocationHistoryMutex;
-    supplementary::SystemConfig* sc;
+    AlicaEngine* _ae;
+    std::vector<AllocationDifference> _allocationHistory;
+    int _newestAllocationDifference;
     int maxAllocationCycles;
     bool enabled;
-    std::vector<AllocationDifference*> allocationHistory;
-    PlanRepository* pr;
-    int newestAllocationDifference;
-    const supplementary::AgentID* myID;
+
+    AgentIDConstPtr myID;
 
     AlicaTime overrideTimestamp;
     double intervalIncFactor;
@@ -67,10 +66,9 @@ class CycleManager
     AlicaTime overrideShoutInterval;
     AlicaTime overrideWaitInterval;
     AlicaTime overrideShoutTime;
-    int historySize;
-    CycleState state;
+    CycleState _state;
     RunningPlan* rp;
-    std::shared_ptr<AllocationAuthorityInfo> fixedAllocation;
+    AllocationAuthorityInfo _fixedAllocation;
 };
 
 } // namespace alica

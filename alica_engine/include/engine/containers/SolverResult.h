@@ -1,12 +1,14 @@
 #pragma once
 #include "SolverVar.h"
-#include "supplementary/AgentID.h"
+#include "engine/AgentIDConstPtr.h"
 
 #include <vector>
 
-namespace alica {
-struct SolverResult {
-    const supplementary::AgentID* senderID;
+namespace alica
+{
+struct SolverResult
+{
+    AgentIDConstPtr senderID;
     std::vector<SolverVar> vars;
 };
 } /* namespace alica */

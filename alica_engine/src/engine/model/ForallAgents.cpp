@@ -5,7 +5,6 @@
 #include "engine/TeamObserver.h"
 #include "engine/collections/AgentVariables.h"
 #include "engine/collections/RobotEngineData.h"
-#include "engine/collections/StateCollection.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/DomainVariable.h"
 #include "engine/model/Plan.h"
@@ -19,7 +18,7 @@ namespace alica
 {
 
 ForallAgents::ForallAgents(int64_t id)
-    : Quantifier(id)
+        : Quantifier(id)
 {
 }
 
@@ -28,15 +27,15 @@ ForallAgents::~ForallAgents() {}
 ForallAgents::Result ForallAgents::TryAddId(AgentIDConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager* tm) const
 {
     std::vector<AgentVariables>::iterator it =
-        std::find_if(io_agentVarsInScope.begin(), io_agentVarsInScope.end(), [id](const AgentVariables& av) { return av.getId() == id; });
+            std::find_if(io_agentVarsInScope.begin(), io_agentVarsInScope.end(), [id](const AgentVariables& av) { return av.getId() == id; });
 
-    const RobotEngineData* robotEngineData = tm->getAgentByID(id)->getEngineData();
+    const RobotEngineData& robotEngineData = tm->getAgentByID(id)->getEngineData();
     if (it == io_agentVarsInScope.end()) {
         // add new agent
         AgentVariables newAgent(id);
         newAgent.editVars().reserve(getDomainIdentifiers().size());
         std::transform(getDomainIdentifiers().begin(), getDomainIdentifiers().end(), std::back_inserter(newAgent.editVars()),
-                       [robotEngineData](const std::string& s) -> const DomainVariable* { return robotEngineData->getDomainVariable(s); });
+                [&robotEngineData](const std::string& s) -> const DomainVariable* { return robotEngineData.getDomainVariable(s); });
         io_agentVarsInScope.push_back(std::move(newAgent));
         return ADDED;
     } else {
@@ -45,8 +44,8 @@ ForallAgents::Result ForallAgents::TryAddId(AgentIDConstPtr id, std::vector<Agen
         Result r = NONE;
         for (const std::string& s : getDomainIdentifiers()) {
             if (std::find_if(oldAgent.getVars().begin(), oldAgent.getVars().end(), [&s](const DomainVariable* v) { return v->getName() == s; }) ==
-                oldAgent.getVars().end()) {
-                oldAgent.editVars().push_back(robotEngineData->getDomainVariable(s));
+                    oldAgent.getVars().end()) {
+                oldAgent.editVars().push_back(robotEngineData.getDomainVariable(s));
                 r = MODIFIED;
             }
         }
@@ -54,34 +53,33 @@ ForallAgents::Result ForallAgents::TryAddId(AgentIDConstPtr id, std::vector<Agen
     }
 }
 
-bool ForallAgents::isAgentInScope(AgentIDConstPtr id, const std::shared_ptr<const RunningPlan>& rp) const
+bool ForallAgents::isAgentInScope(AgentIDConstPtr id, const RunningPlan& rp) const
 {
     switch (getScopeType()) {
     case PLANSCOPE:
-        return rp->getPlan() == getScopedPlan() && rp->getAssignment()->hasRobot(id);
+        return rp.getActivePlan() == getScopedPlan() && rp.getAssignment().hasAgent(id);
         break;
-    case ENTRYPOINTSCOPE: {
-        const AgentGrp* agents = rp->getAssignment()->getRobotsWorking(getScopedEntryPoint());
-        return std::find(agents->begin(), agents->end(), id) != agents->end();
-    } break;
+    case ENTRYPOINTSCOPE:
+        return rp.getAssignment().getEntryPointOfAgent(id) == getScopedEntryPoint();
+        break;
     case STATESCOPE:
-        return rp->getAssignment()->getRobotStateMapping()->getStateOfRobot(id) == getScopedState();
+        return rp.getAssignment().getStateOfAgent(id) == getScopedState();
         break;
     }
     assert(false);
     return false;
 }
 
-bool ForallAgents::addDomainVariables(const std::shared_ptr<const RunningPlan>& p, std::vector<AgentVariables>& io_agentVarsInScope) const
+bool ForallAgents::addDomainVariables(const RunningPlan& p, std::vector<AgentVariables>& io_agentVarsInScope) const
 {
     bool addedAgent = false;
     bool changedAgent = false;
 
-    const TeamManager* tm = p->getAlicaEngine()->getTeamManager();
+    const TeamManager* tm = p.getAlicaEngine()->getTeamManager();
     switch (getScopeType()) {
     case PLANSCOPE:
-        if (p->getPlan() == getScopedPlan()) {
-            for (AgentIDConstPtr id : p->getAssignment()->getAllRobots()) {
+        if (p.getActivePlan() == getScopedPlan()) {
+            for (AgentIDConstPtr id : p.getAssignment().getAllAgents()) {
                 Result r = TryAddId(id, io_agentVarsInScope, tm);
                 addedAgent = addedAgent || r == ADDED;
                 changedAgent = changedAgent || r == MODIFIED;
@@ -89,17 +87,22 @@ bool ForallAgents::addDomainVariables(const std::shared_ptr<const RunningPlan>& 
         }
         break;
     case ENTRYPOINTSCOPE:
-        for (AgentIDConstPtr id : *p->getAssignment()->getRobotsWorking(getScopedEntryPoint())) {
-            Result r = TryAddId(id, io_agentVarsInScope, tm);
-            addedAgent = addedAgent || r == ADDED;
-            changedAgent = changedAgent || r == MODIFIED;
+        if (p.getActivePlan() == getScopedEntryPoint()->getPlan()) {
+            for (AgentIDConstPtr id : p.getAssignment().getAgentsWorking(getScopedEntryPoint())) {
+                Result r = TryAddId(id, io_agentVarsInScope, tm);
+                addedAgent = addedAgent || r == ADDED;
+                changedAgent = changedAgent || r == MODIFIED;
+            }
         }
         break;
+
     case STATESCOPE:
-        for (AgentIDConstPtr id : p->getAssignment()->getRobotStateMapping()->getRobotsInState(getScopedState())) {
-            Result r = TryAddId(id, io_agentVarsInScope, tm);
-            addedAgent = addedAgent || r == ADDED;
-            changedAgent = changedAgent || r == MODIFIED;
+        if (p.getActivePlan() == getScopedState()->getInPlan()) {
+            for (AgentIDConstPtr id : p.getAssignment().getAgentsInState(getScopedState())) {
+                Result r = TryAddId(id, io_agentVarsInScope, tm);
+                addedAgent = addedAgent || r == ADDED;
+                changedAgent = changedAgent || r == MODIFIED;
+            }
         }
         break;
     }

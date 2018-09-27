@@ -9,30 +9,33 @@
 
 #include "engine/BasicCondition.h"
 #include "engine/BasicConstraint.h"
+#include "engine/RunningPlan.h"
 #include "engine/model/Quantifier.h"
+
+#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
 
 Condition::Condition()
-    : _abstractPlan(nullptr)
-    , _basicCondition(nullptr)
+        : _abstractPlan(nullptr)
+        , _basicCondition(nullptr)
 {
 }
 
 Condition::Condition(int64_t id)
-    : AlicaElement(id)
-    , _abstractPlan(nullptr)
-    , _basicCondition(nullptr)
+        : AlicaElement(id)
+        , _abstractPlan(nullptr)
+        , _basicCondition(nullptr)
 {
 }
 
 Condition::~Condition() {}
 
-void Condition::getConstraint(std::shared_ptr<ProblemDescriptor> pd, std::shared_ptr<const RunningPlan> rp) const
+void Condition::getConstraint(std::shared_ptr<ProblemDescriptor> pd, const RunningPlan& rp) const
 {
     // TODO: fix const cast below
-    _basicConstraint->getConstraint(pd, std::const_pointer_cast<RunningPlan>(rp));
+    _basicConstraint->getConstraint(pd, const_cast<RunningPlan&>(rp).getSharedPointer());
 }
 
 void Condition::setConditionString(const std::string& conditionString)
@@ -40,17 +43,19 @@ void Condition::setConditionString(const std::string& conditionString)
     _conditionString = conditionString;
 }
 
-bool Condition::evaluate(std::shared_ptr<RunningPlan> rp) const
+bool Condition::evaluate(const RunningPlan& rp) const
 {
     if (_basicCondition == nullptr) {
-        std::cerr << "Condition: Missing implementation of condition: ID " << getId() << std::endl;
+        ALICA_ERROR_MSG("Condition: Missing implementation of condition: ID " << getId());
         return false;
     } else {
         bool ret = false;
         try {
-            ret = _basicCondition->evaluate(rp);
-        } catch (std::exception& e) {
-            std::cerr << "Condition: Exception during evaluation catched: " << std::endl << e.what() << std::endl;
+            // TODO: fix this:
+
+            ret = _basicCondition->evaluate(const_cast<RunningPlan&>(rp).getSharedPointer());
+        } catch (const std::exception& e) {
+            ALICA_ERROR_MSG("Condition: Exception during evaluation catched: " << std::endl << e.what());
         }
         return ret;
     }

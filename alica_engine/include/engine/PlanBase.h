@@ -38,25 +38,46 @@ class AlicaEngine;
  */
 class PlanBase
 {
-  public:
+public:
     PlanBase(AlicaEngine* ae, const Plan* masterplan);
     ~PlanBase();
+    RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0].get(); }
+    PlanSelector* getPlanSelector() const { return _ruleBook.getPlanSelector(); }
+    const RunningPlan* getDeepestNode() const;
+
     std::condition_variable* getStepModeCV();
-    const std::shared_ptr<RunningPlan> getRootNode() const;
-    void setRootNode(std::shared_ptr<RunningPlan> rootNode);
+
     const AlicaTime getloopInterval() const;
     void setLoopInterval(AlicaTime loopInterval);
     void stop();
     void start();
-    void addFastPathEvent(std::shared_ptr<RunningPlan> p);
-    std::shared_ptr<const RunningPlan> getDeepestNode() const;
-    std::shared_ptr<RunningPlan> getRootNode();
+    void addFastPathEvent(RunningPlan* p);
 
     const Plan* getMasterPlan() const { return _masterPlan; }
     bool isWaiting() const { return _isWaiting; }
 
-  private:
+    // factory functions
+    RunningPlan* makeRunningPlan(const Plan* plan)
+    {
+        _runningPlans.emplace_back(new RunningPlan(_ae, plan));
+        return _runningPlans.back().get();
+    }
+    RunningPlan* makeRunningPlan(const BehaviourConfiguration* bc)
+    {
+        _runningPlans.emplace_back(new RunningPlan(_ae, bc));
+        return _runningPlans.back().get();
+    }
+    RunningPlan* makeRunningPlan(const PlanType* pt)
+    {
+        _runningPlans.emplace_back(new RunningPlan(_ae, pt));
+        return _runningPlans.back().get();
+    }
+
+private:
     void run();
+
+    // Owning container of running plans (replace with uniqueptrs once possibe)
+    std::vector<std::shared_ptr<RunningPlan>> _runningPlans;
 
     /**
      * List of RunningPlans scheduled for out-of-loop evaluation.
@@ -72,8 +93,9 @@ class PlanBase
     IAlicaCommunication* _statusPublisher;
     AlicaClock* _alicaClock;
 
-    std::shared_ptr<RunningPlan> _rootNode;
-    std::shared_ptr<const RunningPlan> _deepestNode;
+    RunningPlan* _rootNode;
+
+    const RunningPlan* _deepestNode;
 
     std::thread* _mainThread;
     Logger* _log;
@@ -90,7 +112,7 @@ class PlanBase
     std::mutex _lomutex;
     std::mutex _stepMutex;
 
-    std::queue<std::shared_ptr<RunningPlan>> _fpEvents;
+    std::queue<RunningPlan*> _fpEvents;
     std::condition_variable _fpEventWait;
     std::condition_variable _stepModeCV;
     RuleBook _ruleBook;

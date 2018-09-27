@@ -1,8 +1,9 @@
-//#define PP_DEBUG
 #include "engine/parser/PlanParser.h"
 #include "engine/AlicaEngine.h"
 #include "engine/model/Plan.h"
 #include "engine/parser/ModelFactory.h"
+
+#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -24,8 +25,17 @@ PlanParser::PlanParser(PlanRepository* rep)
     this->sc = SystemConfig::getInstance();
     this->domainConfigFolder = this->sc->getConfigPath();
 
-    this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
-    this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
+    try {
+        this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
+    } catch (const std::runtime_error& error) {
+        AlicaEngine::abort("PP: Plan Directory does not exist.\n", error.what());
+    }
+
+    try {
+        this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
+    } catch (const std::runtime_error& error) {
+        AlicaEngine::abort("PP: Role Directory does not exist.\n", error.what());
+    }
 
     if (domainConfigFolder.find_last_of(FileSystem::PATH_SEPARATOR) != domainConfigFolder.length() - 1) {
         domainConfigFolder = domainConfigFolder + FileSystem::PATH_SEPARATOR;
@@ -46,15 +56,16 @@ PlanParser::PlanParser(PlanRepository* rep)
     } else {
         baseRolePath = roleDir;
     }
-#ifdef PP_DEBUG
-    std::cout << "PP: basePlanPath: " << basePlanPath << std::endl;
-    std::cout << "PP: baseRolePath: " << baseRolePath << std::endl;
-#endif
+
+    ALICA_DEBUG_MSG("PP: basePlanPath: " << basePlanPath);
+    ALICA_DEBUG_MSG("PP: baseRolePath: " << baseRolePath);
+    ;
+
     if (!(supplementary::FileSystem::pathExists(basePlanPath))) {
-        AlicaEngine::abort("PP: BasePlanPath does not exists " + basePlanPath);
+        AlicaEngine::abort("PP: BasePlanPath does not exist " + basePlanPath);
     }
     if (!(supplementary::FileSystem::pathExists(baseRolePath))) {
-        AlicaEngine::abort("PP: BaseRolePath does not exists " + baseRolePath);
+        AlicaEngine::abort("PP: BaseRolePath does not exist " + baseRolePath);
     }
 }
 
@@ -66,46 +77,37 @@ PlanParser::~PlanParser() {}
  * @param roleSetDir The relative directory in which to search for a roleset.
  * @return The parsed roleSet
  */
-const RoleSet* PlanParser::parseRoleSet(std::string roleSetName, std::string roleSetDir)
+const RoleSet* PlanParser::parseRoleSet(std::string roleSetName)
 {
     using namespace supplementary;
-
+    std::string roleSetLocation;
     if (roleSetName.empty()) {
-        roleSetName = findDefaultRoleSet(roleSetDir);
+        roleSetLocation = findDefaultRoleSet(baseRolePath);
     } else {
-        if (roleSetDir.find_last_of(FileSystem::PATH_SEPARATOR) != roleSetDir.length() - 1 && roleSetDir.length() > 0) {
-            roleSetDir = roleSetDir + FileSystem::PATH_SEPARATOR;
+        if (!supplementary::FileSystem::endsWith(roleSetName, ".rset")) {
+            roleSetName = roleSetName + ".rset";
         }
-        if (!FileSystem::isPathRooted(roleSetDir)) {
-            roleSetName = FileSystem::combinePaths(FileSystem::combinePaths(baseRolePath, roleSetDir), roleSetName);
-        } else {
-            roleSetName = FileSystem::combinePaths(roleSetDir, roleSetName);
-        }
+
+        supplementary::FileSystem::findFile(this->baseRolePath, roleSetName, roleSetLocation);
     }
 
-    if (!supplementary::FileSystem::endsWith(roleSetName, ".rset")) {
-        roleSetName = roleSetName + ".rset";
-    }
-    if (!supplementary::FileSystem::pathExists(roleSetName)) {
-        AlicaEngine::abort("PP: Cannot find roleset: " + roleSetName);
+    if (!supplementary::FileSystem::pathExists(roleSetLocation)) {
+        AlicaEngine::abort("PP: Cannot find roleset: " + roleSetLocation);
     }
 
-#ifdef PP_DEBUG
-    std::cout << "PP: Parsing RoleSet " << roleSetName << std::endl;
-#endif
+    ALICA_DEBUG_MSG("PP: Parsing RoleSet " << roleSetLocation);
 
-    this->currentDirectory = supplementary::FileSystem::getParent(roleSetName);
+    this->currentDirectory = supplementary::FileSystem::getParent(roleSetLocation);
 
     tinyxml2::XMLDocument doc;
-    doc.LoadFile(roleSetName.c_str());
+    doc.LoadFile(roleSetLocation.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
 
     RoleSet* r = this->mf->createRoleSet(&doc, this->masterPlan);
 
-    filesParsed.push_back(roleSetName);
+    filesParsed.push_back(roleSetLocation);
 
     while (this->filesToParse.size() > 0) {
         string fileToParse = this->filesToParse.front();
@@ -132,27 +134,23 @@ const RoleSet* PlanParser::parseRoleSet(std::string roleSetName, std::string rol
 }
 void PlanParser::parseRoleDefFile(const std::string& currentFile)
 {
-#ifdef PP_DEBUG
-    cout << "PP: parsing RoleDef file: " << currentFile << endl;
-#endif
+    ALICA_DEBUG_MSG("PP: parsing RoleDef file: " << currentFile);
+
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
     this->mf->createRoleDefinitionSet(&doc);
 }
 void PlanParser::parseCapabilityDefFile(const std::string& currentFile)
 {
-#ifdef PP_DEBUG
-    cout << "PP: parsing RoleDef file: " << currentFile << endl;
-#endif
+    ALICA_DEBUG_MSG("PP: parsing RoleDef file: " << currentFile);
+
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
     this->mf->createCapabilityDefinitionSet(&doc);
 }
@@ -172,8 +170,7 @@ std::string PlanParser::findDefaultRoleSet(std::string dir)
         tinyxml2::XMLDocument doc;
         doc.LoadFile(s.c_str());
         if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-            std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-            throw std::exception();
+            AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
         }
 
         tinyxml2::XMLElement* element = doc.FirstChildElement();
@@ -263,8 +260,7 @@ void PlanParser::parsePlanningProblem(const std::string& currentFile)
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
     this->mf->createPlanningProblem(&doc);
 }
@@ -277,8 +273,7 @@ void PlanParser::parsePlanTypeFile(const std::string& currentFile)
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
     this->mf->createPlanType(&doc);
 }
@@ -290,8 +285,7 @@ void PlanParser::parseBehaviourFile(const std::string& currentFile)
     tinyxml2::XMLDocument doc;
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
     this->mf->createBehaviour(&doc);
 }
@@ -307,8 +301,7 @@ void PlanParser::parseTaskFile(const std::string& currentFile)
     std::cout << "TASKREPO " << currentFile << std::endl;
 #endif
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
     this->mf->createTasks(&doc);
 }
@@ -322,10 +315,14 @@ Plan* PlanParser::parsePlanFile(const std::string& planFile)
     tinyxml2::XMLDocument doc;
     doc.LoadFile(planFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        std::cout << "PP: doc.ErrorCode: " << tinyxml2::XMLErrorStr[doc.ErrorID()] << std::endl;
-        throw std::exception();
+        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
-    Plan* p = this->mf->createPlan(&doc);
+    Plan* p = nullptr;
+    try {
+        p = this->mf->createPlan(&doc);
+    } catch (std::exception& e) {
+        AlicaEngine::abort("PP: cannot create plan for " + planFile + "\nException: " + e.what());
+    }
     return p;
 }
 
@@ -368,9 +365,9 @@ int64_t PlanParser::parserId(tinyxml2::XMLElement* node)
         idString = idChar;
     if (idString.compare("") != 0) {
         try {
-            id = stol(idString);
+            id = stoll(idString);
         } catch (std::exception& e) {
-            AlicaEngine::abort("PP: Cannot convert ID to long: " + idString + " WHAT?? " + e.what());
+            AlicaEngine::abort("PP: Cannot convert ID to int64_t: " + idString + "\nException: " + e.what());
         }
         return id;
     } else {
@@ -407,10 +404,10 @@ int64_t PlanParser::parserId(tinyxml2::XMLElement* node)
 
 /**
  * Helper
- * @param idString is a String that have to be converted in a long
+ * @param idString is a String that have to be converted in a int64_t
  * @param id the id
  */
-long PlanParser::fetchId(const string& idString, long id)
+int64_t PlanParser::fetchId(const string& idString, int64_t id)
 {
     int hashPos = idString.find_first_of("#");
     char* temp = nullptr;
@@ -473,9 +470,9 @@ long PlanParser::fetchId(const string& idString, long id)
     }
     std::string tokenId = idString.substr(hashPos + 1, idString.length() - hashPos);
     try {
-        id = stol(tokenId);
+        id = stoll(tokenId);
     } catch (std::exception& e) {
-        AlicaEngine::abort("PP: Cannot convert ID to long: " + tokenId + " WHAT?? " + e.what());
+        AlicaEngine::abort("PP: Cannot convert ID to int64_t: " + tokenId + "\nException: " + e.what());
     }
     return id;
 }

@@ -11,7 +11,7 @@ namespace alica
 std::vector<double> SolverTestBehaviour::result;
 /*PROTECTED REGION END*/
 SolverTestBehaviour::SolverTestBehaviour()
-    : DomainBehaviour("SolverTestBehaviour")
+        : DomainBehaviour("SolverTestBehaviour")
 {
     /*PROTECTED REGION ID(con1417424455986) ENABLED START*/ // Add additional options here
     callCounter = 0;
@@ -28,7 +28,7 @@ void SolverTestBehaviour::run(void* msg)
     callCounter++;
     // std::cout << "SolverTestBehaviour was called " << callCounter << " times!" << std::endl;
 
-    _query.getSolution<reasoner::CGSolver, double>(runningPlan, result);
+    _query.getSolution<reasoner::CGSolver, double>(getPlanContext(), result);
     /*PROTECTED REGION END*/
 }
 void SolverTestBehaviour::initialiseParameters()

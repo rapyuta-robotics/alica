@@ -9,7 +9,7 @@ namespace alica
 
 class ConstraintCreator : public IConstraintCreator
 {
-  public:
+public:
     ConstraintCreator();
     virtual ~ConstraintCreator();
     shared_ptr<BasicConstraint> createConstraint(long constraintConfId);

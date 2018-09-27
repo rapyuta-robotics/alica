@@ -5,11 +5,15 @@
 
 #include "Plans/ProblemModule/constraints/ProbBuildingLevel1_11479557664989Constraints.h"
 
+#include "Plans/constraints/FailsOnOne1530069246103Constraints.h"
+
 #include "Plans/constraints/PlanFour1407153683051Constraints.h"
 
 #include "Plans/constraints/RealMasterPlanForSyncTest1418902217839Constraints.h"
 
 #include "Plans/constraints/Defend1402488893641Constraints.h"
+
+#include "Plans/constraints/BackForth1529456584982Constraints.h"
 
 #include "Plans/VariableHandling/constraints/Lvl21524452793378Constraints.h"
 
@@ -31,6 +35,8 @@
 
 #include "Plans/constraints/PlanFive1407153703092Constraints.h"
 
+#include "Plans/constraints/HandleFailExplicit1530004915640Constraints.h"
+
 #include "Plans/Authority/constraints/AuthorityTest1414403413451Constraints.h"
 
 #include "Plans/constraints/SimpleTestPlan1412252439925Constraints.h"
@@ -44,6 +50,8 @@
 #include "Plans/constraints/PlanThree1407153663917Constraints.h"
 
 #include "Plans/constraints/MidFieldPlayPlan1402488770050Constraints.h"
+
+#include "Plans/constraints/HandleFailExplicitMaster1530004940652Constraints.h"
 
 #include "Plans/constraints/Tackle1402489318663Constraints.h"
 

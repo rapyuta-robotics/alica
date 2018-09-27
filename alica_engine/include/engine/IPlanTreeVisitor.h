@@ -10,7 +10,7 @@ class IPlanTreeVisitor
 {
   public:
     virtual ~IPlanTreeVisitor() {}
-    virtual void visit(std::shared_ptr<RunningPlan> r) = 0;
+    virtual void visit(RunningPlan& r) = 0;
 };
 
 } /* namespace alica */
