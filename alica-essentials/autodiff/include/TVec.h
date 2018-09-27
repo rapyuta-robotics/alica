@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <vector>
+#include <functional>
 #include <initializer_list>
 
 #include <iostream>
@@ -26,7 +27,7 @@ public:
     TVec(initializer_list<double> values);
     TVec(shared_ptr<TVec> first, vector<shared_ptr<Term>> rest);
     TVec(vector<shared_ptr<Term>> left, vector<shared_ptr<Term>> right,
-            function<shared_ptr<Term>(shared_ptr<Term>, shared_ptr<Term>)> elemOp);
+            std::function<std::shared_ptr<Term>(shared_ptr<Term>, shared_ptr<Term>)> elemOp);
     TVec(vector<shared_ptr<Term>> input, function<shared_ptr<Term>(shared_ptr<Term>)> elemOp);
 
     vector<shared_ptr<Term>> terms;
