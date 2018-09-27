@@ -7,3 +7,5 @@ cling_wrap/libgringo/src/input/nongroundgrammar/stack.hh
 # coala
 *.orig
 *.user
+**/.idea
+**/cmake-build-debug
