@@ -30,21 +30,21 @@ AlicaViewerMainWindow::AlicaViewerMainWindow(int argc, char* argv[], QWidget* pa
     for (const auto& agentInfo : aiMap) {
         _agentIdVector.push_back(agentInfo.first);
     }
-    std::sort(_agentIdVector.begin(), _agentIdVector.end(), supplementary::AgentIDComparator());
+    std::sort(_agentIdVector.begin(), _agentIdVector.end());
 
     _ui.agentIdComboBox->addItem("Combined");
     _ui.agentIdComboBox->addItem("All");
-    for (const supplementary::AgentID* agentId : _agentIdVector) {
+    for (AgentIDConstPtr agentId : _agentIdVector) {
         const AgentInfo* ai = _alicaPlan.getAgentInfo(agentId);
         if (ai) {
             _ui.agentIdComboBox->addItem(QString::fromStdString(ai->name));
         }
     }
-
     // Connect the signals and slots between interface to main window
     QObject::connect(&_interfaceNode, &AlicaViewerInterface::shutdown, this, &AlicaViewerMainWindow::close);
     QObject::connect(&_interfaceNode, &AlicaViewerInterface::alicaEngineInfoUpdate, this, &AlicaViewerMainWindow::alicaEngineInfoUpdate);
     QObject::connect(&_interfaceNode, &AlicaViewerInterface::alicaPlanInfoUpdate, this, &AlicaViewerMainWindow::alicaPlanInfoUpdate);
+    QObject::connect(&_interfaceNode, &AlicaViewerInterface::updateTicks, this, &AlicaViewerMainWindow::updateTicks);
 }
 
 elastic_nodes::Node* AlicaViewerMainWindow::addStateToScene(const PlanTree* planTreeNode)
@@ -59,7 +59,7 @@ elastic_nodes::Node* AlicaViewerMainWindow::addStateToScene(const PlanTree* plan
         AgentGrp robotIds;
         planTreeNode->getRobotsSorted(robotIds);
         std::string robotIdList = "[ ";
-        for (const supplementary::AgentID* robotId : robotIds) {
+        for (AgentIDConstPtr robotId : robotIds) {
             robotIdList += _alicaPlan.getAgentInfo(robotId)->name + std::string(", ");
         }
         robotIdList.erase(robotIdList.end() - 2, robotIdList.end());
@@ -75,7 +75,7 @@ elastic_nodes::Node* AlicaViewerMainWindow::addStateToScene(const PlanTree* plan
         int y = planTreeNode->getY() * 300;
         parentNode->setPos(x, y);
 
-        if (planTreeNode->getParent() == nullptr) {
+        if (!planTreeNode->parentExists()) {
             // Draw a bounding rectangle for every plan
             elastic_nodes::Block* block = new elastic_nodes::Block(parentNode, parentNode);
             _scene->addItem(block);
@@ -87,7 +87,7 @@ elastic_nodes::Node* AlicaViewerMainWindow::addStateToScene(const PlanTree* plan
         elastic_nodes::Node* startBlockNode = nullptr;
         elastic_nodes::Node* childNode = nullptr;
         for (int i = 0; i < static_cast<int>(ptvMapPair.second.size()); ++i) {
-            childNode = addStateToScene(ptvMapPair.second[i]);
+            childNode = addStateToScene(ptvMapPair.second[i].get());
             _scene->addItem(new elastic_nodes::Edge(parentNode, childNode)); // addItem() takes ownership of the arguement
             if (i == 0) {
                 startBlockNode = childNode;
@@ -108,19 +108,19 @@ void AlicaViewerMainWindow::updateNodes()
     elastic_nodes::Block::reset();
     _offset = 0;
     if (indexSelected == 0) { // Combined
-        PlanTree combinedPlanTree;
-        _alicaPlan.getCombinedPlanTree(combinedPlanTree);
+        PlanTree combinedPlanTree(AlicaClock{}.now());
+        _alicaPlan.combinePlanTree(combinedPlanTree);
         addStateToScene(&combinedPlanTree);
     } else if (indexSelected == 1) { // All
         for (const auto& ptMapPair : ptMap) {
             elastic_nodes::Block::reset();
-            addStateToScene(ptMapPair.second);
+            addStateToScene(ptMapPair.second.get());
             _offset += 1; // To display each graph separately
         }
     } else { // individual agents
         PlanTreeMap::const_iterator planTreeEntry = ptMap.find(_agentIdVector[indexSelected - 2]);
         if (planTreeEntry != ptMap.end()) {
-            addStateToScene(planTreeEntry->second);
+            addStateToScene(planTreeEntry->second.get());
         }
     }
 }
@@ -135,6 +135,10 @@ void AlicaViewerMainWindow::alicaEngineInfoUpdate(const AlicaEngineInfo& msg) {}
 void AlicaViewerMainWindow::alicaPlanInfoUpdate(const PlanTreeInfo& msg)
 {
     _alicaPlan.handlePlanTreeInfo(msg);
+}
+
+void AlicaViewerMainWindow::updateTicks()
+{
     updateNodes();
 }
 

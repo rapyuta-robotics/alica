@@ -20,6 +20,7 @@ AlicaViewerRosInterface::AlicaViewerRosInterface(int argc, char* argv[])
 
     // start the QThread, defined in base class
     start();
+    _timer = nh.createTimer(ros::Duration(0.05f), &AlicaViewerRosInterface::timerCallback, this);
 }
 
 AlicaViewerRosInterface::~AlicaViewerRosInterface()
@@ -64,6 +65,11 @@ void AlicaViewerRosInterface::alicaPlanInfoCallback(const alica_msgs::PlanTreeIn
         pti.succeededEPs.push_back(i);
     }
     Q_EMIT alicaPlanInfoUpdate(pti);
+}
+
+void AlicaViewerRosInterface::timerCallback(const ros::TimerEvent& event)
+{
+    Q_EMIT updateTicks();
 }
 
 } // namespace alica

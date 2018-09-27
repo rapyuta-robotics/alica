@@ -1,5 +1,4 @@
-#ifndef ALICA_VIEWER_ALICA_VIEWER_ROS_INTERFACE_H
-#define ALICA_VIEWER_ALICA_VIEWER_ROS_INTERFACE_H
+#pragma once
 
 #include <QThread>
 #include <ros/ros.h>
@@ -26,13 +25,15 @@ class AlicaViewerRosInterface : public QThread
     void shutdown();
     void alicaEngineInfoUpdate(const alica::AlicaEngineInfo& msg);
     void alicaPlanInfoUpdate(const alica::PlanTreeInfo& msg);
+    void updateTicks();
 
   private:
     void alicaEngineInfoCallback(const alica_msgs::AlicaEngineInfo& msg);
     void alicaPlanInfoCallback(const alica_msgs::PlanTreeInfo& msg);
-
+    void timerCallback(const ros::TimerEvent& event);
     ros::Subscriber _alicaEngineInfoSub;
     ros::Subscriber _alicaPlanInfoSub;
+    ros::Timer _timer;
     supplementary::AgentIDManager* _agent_id_manager;
 };
 
@@ -41,5 +42,3 @@ class AlicaViewerRosInterface : public QThread
 // Declare templates that can be accepted by QVariant
 Q_DECLARE_METATYPE(alica::AlicaEngineInfo);
 Q_DECLARE_METATYPE(alica::PlanTreeInfo);
-
-#endif // ALICA_VIEWER_ALICA_VIEWER_ROS_INTERFACE_H

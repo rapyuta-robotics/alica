@@ -259,11 +259,12 @@ std::string FileSystem::combinePaths(const std::string& path1, const std::string
  */
 bool FileSystem::endsWith(const std::string& file, const std::string& ending)
 {
-    if (!file.empty() && (file.length() - ending.length()) == file.rfind(ending)) {
-        return true;
-    } else {
-        return false;
-    }
+    return !file.empty() && (file.length() - ending.length()) == file.rfind(ending);
+}
+
+bool FileSystem::endsWith(const std::string& file, const char ending)
+{
+    return !file.empty() && (file[file.length() - 1] == ending);
 }
 
 bool FileSystem::endsWith(const std::string& file, const char ending)

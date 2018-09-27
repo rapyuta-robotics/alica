@@ -11,6 +11,7 @@ set(PKG_DEPS
         roscpp
         alica_msgs
         alica_engine
+        alica_common_config
         agent_id
 )
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
@@ -55,6 +56,7 @@ set(QT_CPP_SOURCES
         src/elastic_nodes/node.cpp
         src/alica_viewer_main_window.cpp
         src/alica_viewer_node.cpp
+        src/alica_viewer_plan_parser.cpp
         src/alica_viewer_ros_interface.cpp
         src/graphics_view_zoom.cpp
 )

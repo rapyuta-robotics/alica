@@ -1,21 +1,26 @@
 #include "supplementary/AgentIDManager.h"
 #include "supplementary/AgentIDFactory.h"
-namespace supplementary {
+namespace supplementary
+{
 
 /**
  * Attention: The idFactory will be deleted by the AgentIDManager's destructor.
  */
 AgentIDManager::AgentIDManager(AgentIDFactory* idFactory)
-        : idFactory(idFactory) {}
+    : idFactory(idFactory)
+{
+}
 
-AgentIDManager::~AgentIDManager() {
+AgentIDManager::~AgentIDManager()
+{
     delete this->idFactory;
     for (auto& id : this->agentIDs) {
         delete id;
     }
 }
 
-const AgentID* AgentIDManager::generateID(int size) {
+const AgentID* AgentIDManager::generateID(int size)
+{
     return this->idFactory->generateID(size);
 }
 
@@ -26,7 +31,11 @@ const AgentID* AgentIDManager::generateID(int size) {
  * This method can be used, e.g., for passing a part of a ROS
  * message and receiving a pointer to a corresponding IAgentID object.
  */
-const AgentID* AgentIDManager::getIDFromBytes(const std::vector<uint8_t>& idByteVector) {
+const AgentID* AgentIDManager::getIDFromBytes(const std::vector<uint8_t>& idByteVector)
+{
+    if (idByteVector.empty()) { // empty values result in none-id
+        return nullptr;
+    }
     // create tmpID for lookup the ID
     const AgentID* tmpID = this->idFactory->create(idByteVector);
 
@@ -35,9 +44,9 @@ const AgentID* AgentIDManager::getIDFromBytes(const std::vector<uint8_t>& idByte
 
     // lookup the ID and insert it, if not available, yet
     auto entry = this->agentIDs.insert(tmpID);
-    if (!entry.second) {  // delete tmpID if already present in agentIDs
+    if (!entry.second) { // delete tmpID if already present in agentIDs
         delete tmpID;
     }
     return *(entry.first);
 }
-}  // namespace supplementary
+} // namespace supplementary
