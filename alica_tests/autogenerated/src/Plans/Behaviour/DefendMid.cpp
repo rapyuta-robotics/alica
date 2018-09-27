@@ -8,7 +8,7 @@ namespace alica
 /*PROTECTED REGION ID(staticVars1402488730695) ENABLED START*/ // initialise static variables here
 /*PROTECTED REGION END*/
 DefendMid::DefendMid()
-    : DomainBehaviour("DefendMid")
+        : DomainBehaviour("DefendMid")
 {
     /*PROTECTED REGION ID(con1402488730695) ENABLED START*/ // Add additional options here
     /*PROTECTED REGION END*/

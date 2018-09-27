@@ -1,20 +1,15 @@
-/*
- * EntryPoint.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
+#pragma once
 
-#ifndef ENTRYPOINT_H_
-#define ENTRYPOINT_H_
-
-#include <string>
-#include <sstream>
 #include <list>
+#include <sstream>
+#include <string>
 
 #include "AlicaElement.h"
 #include "engine/Types.h"
-namespace alica {
+
+#include <alica_solver_interface/Interval.h>
+namespace alica
+{
 
 class Plan;
 class State;
@@ -24,7 +19,8 @@ class Task;
  * An EntryPoint is used to identify the initial state of a task within a plan.
  * It also holds cardinalities and any information specific to this (task,plan) tuple.
  */
-class EntryPoint : public AlicaElement {
+class EntryPoint : public AlicaElement
+{
 public:
     EntryPoint();
     EntryPoint(int64_t id, const Plan* p, const Task* t, const State* s);
@@ -33,7 +29,7 @@ public:
     /**
      * A value encoding the do-nothing task used in loosely coupled task allocation.
      */
-    constexpr static int64_t IDLEID = -1;  // For Idle EntryPoint...
+    constexpr static int64_t IDLEID = -1; // For Idle EntryPoint...
 
     std::string toString() const override;
     static bool compareTo(const EntryPoint* ep1, const EntryPoint* ep2);
@@ -43,12 +39,16 @@ public:
     const Plan* getPlan() const { return _plan; }
     const State* getState() const { return _state; }
 
-    int getMaxCardinality() const { return _maxCardinality; }
-    int getMinCardinality() const { return _minCardinality; }
+    int getMaxCardinality() const { return _cardinality.getMax(); }
+    int getMinCardinality() const { return _cardinality.getMin(); }
+
+    Interval<int> getCardinality() const { return _cardinality; }
+
     bool isSuccessRequired() const { return _successRequired; }
 
     const StateGrp& getReachableStates() const { return _reachableStates; }
     bool isStateReachable(const State* s) const;
+    int getIndex() const { return _index; }
 
 private:
     friend ModelFactory;
@@ -56,8 +56,6 @@ private:
     void setTask(Task* task);
     void setPlan(Plan* plan);
     void setState(State* state);
-    void setMaxCardinality(int maxCardinality);
-    void setMinCardinality(int minCardinality);
     void setSuccessRequired(bool successRequired);
 
     /**
@@ -72,24 +70,19 @@ private:
      * The plan to which this entrypoint belongs.
      */
     const Plan* _plan;
-    /**
-     * The minimum amount of agents required to execute this entrypoint's task within Plan.
-     */
-    int _minCardinality;
-    /**
-     * The maximum amount of agents allowed to execute this entrypoint's task within Plan.
-     */
-    int _maxCardinality;
+    Interval<int> _cardinality;
     /**
      * whether or not a success of this task is required for Plan to be successful. Otherwise, this task is optional.
      */
     bool _successRequired;
+    /**
+     * The unique index of this entrypoint in a plan's EntryPointGrp
+     */
+    int _index;
     /**
      * The set of states reachable from the initial state.
      */
     StateGrp _reachableStates;
 };
 
-}  // namespace alica
-
-#endif /* ENTRYPOINT_H_ */
+} // namespace alica

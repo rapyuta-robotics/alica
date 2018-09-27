@@ -1,31 +1,32 @@
 #include "engine/allocationauthority/EntryPointRobotPair.h"
 
-namespace alica {
+namespace alica
+{
 
-EntryPointRobotPair::EntryPointRobotPair(const EntryPoint* ep, const supplementary::AgentID* r)
+EntryPointRobotPair::EntryPointRobotPair(const EntryPoint* ep, AgentIDConstPtr r)
         : _entryPoint(ep)
-        , _robot(r) {}
+        , _robot(r)
+{
+}
 
-EntryPointRobotPair::~EntryPointRobotPair() {}
-
-const EntryPoint* EntryPointRobotPair::getEntryPoint() const {
+const EntryPoint* EntryPointRobotPair::getEntryPoint() const
+{
     return _entryPoint;
 }
 
-void EntryPointRobotPair::setEntryPoint(const EntryPoint* entryPoint) {
+void EntryPointRobotPair::setEntryPoint(const EntryPoint* entryPoint)
+{
     _entryPoint = entryPoint;
 }
 
-const supplementary::AgentID* EntryPointRobotPair::getRobot() const {
-    return _robot;
-}
-
-void EntryPointRobotPair::setRobot(const supplementary::AgentID* robot) {
+void EntryPointRobotPair::setRobot(AgentIDConstPtr robot)
+{
     _robot = robot;
 }
 
-bool EntryPointRobotPair::operator==(const EntryPointRobotPair& other) const {
-    if (other._entryPoint != _entryPoint) {  // entrypoints are supposed to be uniquely instantiated.
+bool EntryPointRobotPair::operator==(const EntryPointRobotPair& other) const
+{
+    if (other._entryPoint != _entryPoint) { // entrypoints are supposed to be uniquely instantiated.
         return false;
     }
     return (*other._robot == *_robot);

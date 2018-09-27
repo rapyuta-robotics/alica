@@ -1,58 +1,161 @@
 #pragma once
 
-#include "engine/AlicaClock.h"
-#include "engine/teammanager/Agent.h"
+#include <engine/AgentIDConstPtr.h>
+#include <engine/AlicaClock.h>
+#include <engine/teammanager/Agent.h>
 
-#include <supplementary/AgentID.h>
-
-#include <map>
 #include <list>
+#include <map>
 #include <memory>
+#include <string>
 #include <unordered_set>
 
-namespace supplementary {
+namespace supplementary
+{
 class SystemConfig;
 }
 
-namespace alica {
+namespace alica
+{
 
 class AlicaEngine;
 class DomainVariable;
 class Variable;
 class SuccessMarks;
 
+class ActiveAgentIdView;
+class ActiveAgentIdIterator;
+class ActiveAgentView;
+class ActiveAgentIterator;
 
-class TeamManager {
+class TeamManager
+{
 public:
+    using AgentMap = std::map<AgentIDConstPtr, Agent*>;
+
     TeamManager(AlicaEngine* engine, bool useConfigForTeam);
     virtual ~TeamManager();
 
     void init();
 
-    std::unique_ptr<std::list<Agent*>> getAllAgents();
-    std::unique_ptr<std::list<Agent*>> getActiveAgents();
-    const supplementary::AgentID* getLocalAgentID() const;
+    const AgentMap& getAllAgents() const { return _agents; }
+
+    AgentIDConstPtr getLocalAgentID() const;
     const Agent* getLocalAgent() const { return localAgent; }
-    void fillWithActiveAgentIDs(std::vector<const supplementary::AgentID*>& oIds) const;
-    std::unique_ptr<std::list<const RobotProperties*>> getActiveAgentProperties() const;
+    Agent* editLocalAgent() { return localAgent; }
+
+    ActiveAgentIdView getActiveAgentIds() const;
+    ActiveAgentView getActiveAgents() const;
+
     int getTeamSize() const;
-    const Agent* getAgentByID(const supplementary::AgentID* agentId) const;
-    void setTimeLastMsgReceived(const supplementary::AgentID* agendId, AlicaTime timeLastMsgReceived);
-    bool isAgentIgnored(const supplementary::AgentID* agentId) const;
-    bool isAgentActive(const supplementary::AgentID* agentId) const;
-    void setAgentIgnored(const supplementary::AgentID*, bool) const;
-    bool setSuccess(const supplementary::AgentID* agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
-    bool setSuccessMarks(const supplementary::AgentID* agentId, std::shared_ptr<SuccessMarks> successMarks);
-    const DomainVariable* getDomainVariable(const supplementary::AgentID* robot, const std::string& sort) const;
+    const Agent* getAgentByID(AgentIDConstPtr agentId) const;
+
+    void setTimeLastMsgReceived(AgentIDConstPtr agendId, AlicaTime timeLastMsgReceived);
+    bool isAgentIgnored(AgentIDConstPtr agentId) const;
+    bool isAgentActive(AgentIDConstPtr agentId) const;
+    void setAgentIgnored(AgentIDConstPtr, bool) const;
+    bool setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
+    bool setSuccessMarks(AgentIDConstPtr agentId, const IdGrp& suceededEps);
+    const DomainVariable* getDomainVariable(AgentIDConstPtr agentId, const std::string& sort) const;
 
 private:
     AlicaTime teamTimeOut;
     Agent* localAgent;
     AlicaEngine* engine;
-    std::map<const supplementary::AgentID*, Agent*, supplementary::AgentIDComparator> agents;
+    AgentMap _agents;
     bool useConfigForTeam;
 
     void readTeamFromConfig(supplementary::SystemConfig* sc);
+};
+
+class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, AgentIDConstPtr>
+{
+public:
+    ActiveAgentBaseIterator(TeamManager::AgentMap::const_iterator it, const TeamManager::AgentMap& map)
+            : _it(it)
+            , _map(map)
+    {
+        toNextValid();
+    }
+    ActiveAgentBaseIterator& operator++()
+    {
+        ++_it;
+        toNextValid();
+        return *this;
+    }
+    bool operator==(const ActiveAgentBaseIterator& o) const { return _it == o._it; }
+    bool operator!=(const ActiveAgentBaseIterator& o) const { return !(*this == o); }
+
+protected:
+    void toNextValid()
+    {
+        while (_it != _map.end()) {
+            if (_it->second->isActive()) {
+                return;
+            }
+            ++_it;
+        }
+    }
+    TeamManager::AgentMap::const_iterator _it;
+    const TeamManager::AgentMap& _map;
+};
+
+class ActiveAgentIdIterator : public ActiveAgentBaseIterator
+{
+public:
+    ActiveAgentIdIterator(TeamManager::AgentMap::const_iterator it, const TeamManager::AgentMap& map)
+            : ActiveAgentBaseIterator(it, map)
+    {
+    }
+    AgentIDConstPtr operator*() const { return _it->first; }
+};
+
+class ActiveAgentIterator : public ActiveAgentBaseIterator
+{
+public:
+    ActiveAgentIterator(TeamManager::AgentMap::const_iterator it, const TeamManager::AgentMap& map)
+            : ActiveAgentBaseIterator(it, map)
+    {
+    }
+    const Agent* operator*() const { return _it->second; }
+};
+
+class ActiveAgentBaseView
+{
+public:
+    ActiveAgentBaseView(const TeamManager::AgentMap& map)
+            : _map(map)
+    {
+    }
+
+protected:
+    const TeamManager::AgentMap& _map;
+};
+
+class ActiveAgentIdView : public ActiveAgentBaseView
+{
+public:
+    ActiveAgentIdView(const TeamManager::AgentMap& map)
+            : ActiveAgentBaseView(map)
+    {
+    }
+    ActiveAgentIdIterator begin() const { return ActiveAgentIdIterator(_map.begin(), _map); }
+    ActiveAgentIdIterator end() const { return ActiveAgentIdIterator(_map.end(), _map); }
+    int size() const { return std::distance(begin(), end()); }
+    bool empty() const { return begin() == end(); }
+};
+
+class ActiveAgentView : public ActiveAgentBaseView
+{
+public:
+    ActiveAgentView(const TeamManager::AgentMap& map)
+            : ActiveAgentBaseView(map)
+    {
+    }
+    ActiveAgentIterator begin() const { return ActiveAgentIterator(_map.begin(), _map); }
+    ActiveAgentIterator end() const { return ActiveAgentIterator(_map.end(), _map); }
+    int size() const { return std::distance(begin(), end()); }
+    bool empty() const { return begin() == end(); }
 };
 
 } /* namespace alica */

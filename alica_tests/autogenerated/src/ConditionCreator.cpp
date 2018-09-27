@@ -4,11 +4,15 @@
 
 #include "Plans/ProblemModule/ProbBuildingLevel1_11479557664989.h"
 
+#include "Plans/FailsOnOne1530069246103.h"
+
 #include "Plans/PlanFour1407153683051.h"
 
 #include "Plans/RealMasterPlanForSyncTest1418902217839.h"
 
 #include "Plans/Defend1402488893641.h"
+
+#include "Plans/BackForth1529456584982.h"
 
 #include "Plans/VariableHandling/Lvl21524452793378.h"
 
@@ -30,6 +34,8 @@
 
 #include "Plans/PlanFive1407153703092.h"
 
+#include "Plans/HandleFailExplicit1530004915640.h"
+
 #include "Plans/Authority/AuthorityTest1414403413451.h"
 
 #include "Plans/SimpleTestPlan1412252439925.h"
@@ -43,6 +49,8 @@
 #include "Plans/PlanThree1407153663917.h"
 
 #include "Plans/MidFieldPlayPlan1402488770050.h"
+
+#include "Plans/HandleFailExplicitMaster1530004940652.h"
 
 #include "Plans/Tackle1402489318663.h"
 
@@ -87,6 +95,12 @@ shared_ptr<BasicCondition> ConditionCreator::createConditions(long conditionConf
 {
     switch (conditionConfId) {
 
+    case 1530069251117:
+
+        return make_shared<RunTimeCondition1530069251117>();
+
+        break;
+
     case 1402488991641:
 
         return make_shared<TransitionCondition1402488991641>();
@@ -108,6 +122,18 @@ shared_ptr<BasicCondition> ConditionCreator::createConditions(long conditionConf
     case 1402489073613:
 
         return make_shared<TransitionCondition1402489073613>();
+
+        break;
+
+    case 1529456610697:
+
+        return make_shared<TransitionCondition1529456610697>();
+
+        break;
+
+    case 1529456611916:
+
+        return make_shared<TransitionCondition1529456611916>();
 
         break;
 
@@ -216,6 +242,30 @@ shared_ptr<BasicCondition> ConditionCreator::createConditions(long conditionConf
     case 1402489462088:
 
         return make_shared<TransitionCondition1402489462088>();
+
+        break;
+
+    case 1530004993493:
+
+        return make_shared<TransitionCondition1530004993493>();
+
+        break;
+
+    case 1530004994611:
+
+        return make_shared<TransitionCondition1530004994611>();
+
+        break;
+
+    case 1532424093178:
+
+        return make_shared<TransitionCondition1532424093178>();
+
+        break;
+
+    case 1532424113475:
+
+        return make_shared<TransitionCondition1532424113475>();
 
         break;
 

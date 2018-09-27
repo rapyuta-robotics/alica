@@ -23,6 +23,7 @@
   
   <run_depend>alica_engine</run_depend>
   <run_depend>alica_solver_interface</run_depend>
+  <run_depend>alica_common_config</run_depend>
   <run_depend>system_config</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>alica_dummy_proxy</run_depend>

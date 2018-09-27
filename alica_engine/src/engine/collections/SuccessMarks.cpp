@@ -13,19 +13,16 @@ namespace alica
 /**
  * Default Constructor
  */
-SuccessMarks::SuccessMarks(const AlicaEngine* ae)
-    : _ae(ae)
-{
-}
+SuccessMarks::SuccessMarks() {}
 
 /**
- * Construct from an IdGrp of EntryPoint id, as received by a message
+ * Update with an IdGrp of EntryPoint ids, as received by a message
  */
-SuccessMarks::SuccessMarks(const AlicaEngine* ae, const IdGrp& epIds)
-    : _ae(ae)
+void SuccessMarks::update(const AlicaEngine* ae, const IdGrp& succeededEps)
 {
+    clear();
     const PlanRepository::Accessor<EntryPoint>& eps = ae->getPlanRepository()->getEntryPoints();
-    for (int64_t id : epIds) {
+    for (int64_t id : succeededEps) {
         const EntryPoint* ep = eps.find(id);
         if (ep != nullptr) {
             auto i = _successMarks.find(ep->getPlan());
@@ -119,19 +116,6 @@ bool SuccessMarks::succeeded(const AbstractPlan* p, const EntryPoint* e) const
         return (i != iter->second.end());
     }
     return false;
-}
-
-/**
- * Check whether an EntryPoint in a plan was completed.
- * @param planId An int
- * @param entryPointId An int
- * @return A bool
- */
-bool SuccessMarks::succeeded(int64_t planId, int64_t entryPointId) const
-{
-    const Plan* p = _ae->getPlanRepository()->getPlans()[planId];
-    const EntryPoint* e = _ae->getPlanRepository()->getEntryPoints()[entryPointId];
-    return succeeded(p, e);
 }
 
 /**

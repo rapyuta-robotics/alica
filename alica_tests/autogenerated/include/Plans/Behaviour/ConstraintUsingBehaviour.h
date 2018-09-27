@@ -11,7 +11,7 @@ namespace alica
 {
 class ConstraintUsingBehaviour : public DomainBehaviour
 {
-  public:
+public:
     ConstraintUsingBehaviour();
     virtual ~ConstraintUsingBehaviour();
     virtual void run(void* msg);
@@ -19,13 +19,13 @@ class ConstraintUsingBehaviour : public DomainBehaviour
     int getCallCounter() const;
     static std::vector<BBIdent> result;
     /*PROTECTED REGION END*/
-  protected:
+protected:
     virtual void initialiseParameters();
     /*PROTECTED REGION ID(pro1414068597716) ENABLED START*/ // Add additional protected methods here
     Query _query;
     int _callCounter;
     /*PROTECTED REGION END*/
-  private:
+private:
 /*PROTECTED REGION ID(prv1414068597716) ENABLED START*/ // Add additional private methods here
         /*PROTECTED REGION END*/};
         } /* namespace alica */

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="HandleFailExplicitMaster.pml#1530004940653"/>
+    <value xPos="114" yPos="94" width="174" height="92"/>
+  </extensions>
+  <extensions>
+    <key href="HandleFailExplicitMaster.pml#1530004940652"/>
+    <value width="551" height="364"/>
+  </extensions>
+  <extensions>
+    <key href="HandleFailExplicitMaster.pml#1530004940654"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="HandleFailExplicit.pml#1530004915640"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>

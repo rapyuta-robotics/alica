@@ -26,7 +26,7 @@ class ExpressionHandler;
  */
 class Transition : public AlicaElement
 {
-  public:
+public:
     Transition();
     virtual ~Transition();
 
@@ -35,9 +35,9 @@ class Transition : public AlicaElement
     const SyncTransition* getSyncTransition() const { return _syncTransition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
 
-    bool evalCondition(std::shared_ptr<RunningPlan> r) const;
+    bool evalCondition(const RunningPlan& r) const;
 
-  private:
+private:
     friend ModelFactory;
     friend ExpressionHandler;
     void setPreCondition(PreCondition* preCondition);

@@ -1,6 +1,4 @@
 
-#define AE_DEBUG
-
 #include "engine/AlicaEngine.h"
 #include "engine/BehaviourPool.h"
 #include "engine/IConditionCreator.h"
@@ -12,18 +10,17 @@
 #include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/collections/AssignmentCollection.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
 #include "engine/parser/PlanParser.h"
-#include "engine/planselector/PartialAssignmentPool.h"
-#include "engine/planselector/PlanSelector.h"
+#include "engine/planselector/PartialAssignment.h"
 #include "engine/teammanager/TeamManager.h"
 #include <engine/syncmodule/SyncModule.h>
 
+#include <alica_common_config/debug_output.h>
 #include <supplementary/AgentIDManager.h>
 
 namespace alica
@@ -41,34 +38,30 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName,
-                         const std::string& roleSetDir, bool stepEngine)
-    : stepCalled(false)
-    , planBase(nullptr)
-    , planSelector(nullptr)
-    , communicator(nullptr)
-    , alicaClock(nullptr)
-    , sc(supplementary::SystemConfig::getInstance())
-    , terminating(false)
-    , expressionHandler(nullptr)
-    , log(nullptr)
-    , auth(nullptr)
-    , variableSyncModule(nullptr)
-    , pap(nullptr)
-    , stepEngine(stepEngine)
-    , agentIDManager(idManager)
+AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
+        : stepCalled(false)
+        , planBase(nullptr)
+        , communicator(nullptr)
+        , alicaClock(nullptr)
+        , sc(supplementary::SystemConfig::getInstance())
+        , terminating(false)
+        , expressionHandler(nullptr)
+        , log(nullptr)
+        , auth(nullptr)
+        , variableSyncModule(nullptr)
+        , stepEngine(stepEngine)
+        , agentIDManager(idManager)
 {
     _maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
     this->useStaticRoles = (*sc)["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
-    AssignmentCollection::maxEpsCount = (*this->sc)["Alica"]->get<short>("Alica.MaxEpsPerPlan", NULL);
-    AssignmentCollection::allowIdling = (*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL);
+    PartialAssignment::allowIdling((*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL));
 
     this->planRepository = new PlanRepository();
     this->planParser = new PlanParser(this->planRepository);
     this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
-    this->roleSet = this->planParser->parseRoleSet(roleSetName, roleSetDir);
-    this->teamManager = new TeamManager(this, true);
-    this->teamManager->init();
+    this->roleSet = this->planParser->parseRoleSet(roleSetName);
+    _teamManager = new TeamManager(this, true);
+    _teamManager->init();
     this->behaviourPool = new BehaviourPool(this);
     this->teamObserver = new TeamObserver(this);
     if (this->useStaticRoles) {
@@ -83,9 +76,7 @@ AlicaEngine::AlicaEngine(supplementary::AgentIDManager* idManager, const std::st
     if (!planRepository->verifyPlanBase()) {
         abort("Error in parsed plans.");
     }
-#ifdef AE_DEBUG
-    std::cout << "AE: Constructor finished!" << std::endl;
-#endif
+    ALICA_DEBUG_MSG("AE: Constructor finished!");
 }
 
 AlicaEngine::~AlicaEngine()
@@ -116,15 +107,9 @@ bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCre
     this->auth = new AuthorityManager(this);
     this->log = new Logger(this);
     this->roleAssignment->init();
-    if (!this->pap) {
-        pap = new PartialAssignmentPool();
-    }
-    if (!planSelector) {
-        this->planSelector = new PlanSelector(this, pap);
-    }
-
     this->auth->init();
     this->planBase = new PlanBase(this, this->masterPlan);
+
     this->expressionHandler->attachAll();
     UtilityFunction::initDataStructures(this);
     this->syncModul->init();
@@ -196,14 +181,6 @@ void AlicaEngine::shutdown()
     if (this->planParser != nullptr) {
         delete this->planParser;
         this->planParser = nullptr;
-    }
-
-    delete planSelector;
-    planSelector = nullptr;
-
-    if (this->pap != nullptr) {
-        delete this->pap;
-        this->pap = nullptr;
     }
 
     this->roleSet = nullptr;
@@ -342,9 +319,9 @@ void AlicaEngine::stepNotify()
  * This method can be used, e.g., for passing a part of a ROS
  * message and receiving a pointer to a corresponding AgentID object.
  */
-const supplementary::AgentID* AlicaEngine::getIDFromBytes(const std::vector<uint8_t>& idByteVector) const
+AgentIDConstPtr AlicaEngine::getIdFromBytes(const std::vector<uint8_t>& idByteVector) const
 {
-    return this->agentIDManager->getIDFromBytes(idByteVector);
+    return AgentIDConstPtr(this->agentIDManager->getIDFromBytes(idByteVector));
 }
 
 } // namespace alica
