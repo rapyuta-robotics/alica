@@ -1,9 +1,8 @@
 #pragma once
 
-#include <supplementary/InfoBuffer.h>
-
 namespace alica {
 class AlicaEngine;
+class AlicaTime;
 }
 
 namespace supplementary {
@@ -15,7 +14,7 @@ public:
     WorldModel(); /* <-- Attention: Derived World Models should implement the singleton pattern */
     virtual ~WorldModel();
     virtual void init();
-    supplementary::InfoTime getTime();
+    alica::AlicaTime getTime();
     bool isMaySendMessages() const;
     void setMaySendMessages(bool maySendMessages);
     const supplementary::AgentID* getOwnId();

@@ -5,123 +5,120 @@
  *      Author: Stephan Opfer
  */
 
-#ifndef CONFIGNODE_H_
-#define CONFIGNODE_H_
-
-using namespace std;
+#pragma once
 
 #include <cstddef>
+#include <memory>
 
-namespace supplementary {
+namespace supplementary
+{
 class ConfigNode;
 
-typedef shared_ptr<ConfigNode> ConfigNodePtr;
+typedef std::shared_ptr<ConfigNode> ConfigNodePtr;
 
-class ConfigNode {
-public:
+class ConfigNode
+{
+  public:
     typedef enum {
         Node = 0,
         Leaf = 1,
         Comment = 2,
     } Type;
 
-protected:
-    string name;
-    string value;
+  protected:
+    std::string name;
+    std::string value;
     ConfigNode* parent;
-    vector<ConfigNodePtr> children;
+    std::vector<ConfigNodePtr> children;
     int depth;
     Type type;
 
-public:
-    ConfigNode(string name)
-            : name(name)
-            , value()
-            , parent(NULL)
-            , children()
-            , depth(0)
-            , type(Node) {}
-
-    ConfigNode(Type type, string name)
-            : name(name)
-            , value()
-            , parent(NULL)
-            , children()
-            , depth(0)
-            , type(type) {}
-
-    ConfigNode(string name, string& value)
-            : name(name)
-            , value(value)
-            , parent(NULL)
-            , children()
-            , depth(0)
-            , type(Leaf) {}
-
-    ConfigNode(const ConfigNode& other)
-            : name(other.name)
-            , value(other.value)
-            , parent(other.parent)
-            , children(other.children)
-            , depth(other.depth)
-            , type(other.type) {}
-
-    ~ConfigNode() {
-        //				cout << "deleting " << this->name << endl;
+  public:
+    ConfigNode(const std::string& name)
+        : name(name)
+        , value()
+        , parent(nullptr)
+        , children()
+        , depth(0)
+        , type(Node)
+    {
     }
 
-    ConfigNode* create(string name) {
+    ConfigNode(Type type, const std::string& name)
+        : name(name)
+        , value()
+        , parent(nullptr)
+        , children()
+        , depth(0)
+        , type(type)
+    {
+    }
+
+    ConfigNode(const std::string& name, const std::string& value)
+        : name(name)
+        , value(value)
+        , parent(nullptr)
+        , children()
+        , depth(0)
+        , type(Leaf)
+    {
+    }
+
+    ConfigNode(const ConfigNode& other)
+        : name(other.name)
+        , value(other.value)
+        , parent(other.parent)
+        , children(other.children)
+        , depth(other.depth)
+        , type(other.type)
+    {
+    }
+
+    ~ConfigNode() {}
+
+    ConfigNode* create(const std::string& name)
+    {
         this->children.push_back(ConfigNodePtr(new ConfigNode(name)));
         this->children.back()->setParent(this);
         return this->children.back().get();
     }
 
-    ConfigNode* create(Type type, string name) {
+    ConfigNode* create(Type type, const std::string& name)
+    {
         this->children.push_back(ConfigNodePtr(new ConfigNode(type, name)));
         this->children.back()->setParent(this);
         return this->children.back().get();
     }
 
-    ConfigNode* create(string name, string& value) {
+    ConfigNode* create(const std::string& name, const std::string& value)
+    {
         this->children.push_back(ConfigNodePtr(new ConfigNode(name, value)));
         this->children.back()->setParent(this);
         return this->children.back().get();
     }
 
-    vector<ConfigNodePtr>* getChildren() {
-        return &this->children;
-    }
+    std::vector<ConfigNodePtr>* getChildren() { return &this->children; }
 
-    ConfigNode* getParent() {
-        return this->parent;
-    }
+    ConfigNode* getParent() const { return this->parent; }
 
-    void setParent(ConfigNode* parent) {
+    void setParent(ConfigNode* parent)
+    {
         this->parent = parent;
         this->depth = parent->depth + 1;
     }
 
-    const string& getValue() const {
-        return this->value;
-    }
+    const std::string& getValue() const { return this->value; }
 
-    void setValue(string& value) {
-        this->value = value;
-    }
+    void setValue(const std::string& value) { this->value = value; }
 
-    const string& getName() const {
-        return this->name;
-    }
+    const std::string& getName() const { return this->name; }
 
-    int getDepth() const {
-        return this->depth;
-    }
+    int getDepth() const { return this->depth; }
 
-    Type getType() const {
-        return this->type;
-    }
+    Type getType() const { return this->type; }
 
-    ConfigNode& operator=(const ConfigNode& other) {
+    ConfigNode& operator=(const ConfigNode& other)
+    {
         this->name = other.name;
         this->value = other.value;
         this->parent = other.parent;
@@ -132,5 +129,4 @@ public:
         return *this;
     }
 };
-}  // namespace supplementary
-#endif /* CONFIGNODE_H_ */
+} // namespace supplementary

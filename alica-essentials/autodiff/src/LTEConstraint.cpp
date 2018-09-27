@@ -1,72 +1,88 @@
-/*
- * LTEConstraint.cpp
- *
- *  Created on: Jul 17, 2014
- *      Author: psp
- */
 
 #include "LTEConstraint.h"
 
-#include "TermBuilder.h"
 #include "Constant.h"
 #include "LTConstraint.h"
+#include "TermHolder.h"
 
 #include <cmath>
+#include <sstream>
 
-namespace autodiff {
-LTEConstraint::LTEConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness)
-        : Term() {
-    this->left = x;
-    this->right = y;
-    this->steppness = steppness;
-    this->negatedform = nullptr;
+namespace autodiff
+{
+LTEConstraint::LTEConstraint(TermPtr x, TermPtr y, TermHolder* owner)
+    : BinaryFunction(x, y, owner)
+    , _negatedForm(nullptr)
+{
 }
 
-LTEConstraint::LTEConstraint(shared_ptr<Term> x, shared_ptr<Term> y, double steppness, shared_ptr<Term> negatedForm)
-        : Term() {
-    this->left = x;
-    this->right = y;
-    this->steppness = steppness;
-    this->negatedform = negatedForm;
+int LTEConstraint::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-int LTEConstraint::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<LTEConstraint> thisCasted = dynamic_pointer_cast<LTEConstraint>(shared_from_this());
-    return visitor->visit(thisCasted);
+void LTEConstraint::acceptRecursive(ITermVisitor* visitor)
+{
+    _left->acceptRecursive(visitor);
+    _right->acceptRecursive(visitor);
+    visitor->visit(this);
 }
 
-shared_ptr<Term> LTEConstraint::aggregateConstants() {
-    left = left->aggregateConstants();
-    right = right->aggregateConstants();
-    if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0) {
-        shared_ptr<Constant> x = dynamic_pointer_cast<Constant>(left);
-        shared_ptr<Constant> y = dynamic_pointer_cast<Constant>(right);
-        if (x->value <= y->value) {
-            return Term::TRUE;
+TermPtr LTEConstraint::aggregateConstants()
+{
+    _left = _left->aggregateConstants();
+    _right = _right->aggregateConstants();
+    if (_left->isConstant() && _right->isConstant()) {
+        if (static_cast<Constant*>(_left)->getValue() <= static_cast<Constant*>(_right)->getValue()) {
+            return _owner->trueConstant();
         } else {
-            return Term::FALSE;
+            return _owner->falseConstant();
         }
     } else {
-        return shared_from_this();
+        return this;
     }
 }
 
-shared_ptr<Term> LTEConstraint::derivative(shared_ptr<Variable> v) {
+TermPtr LTEConstraint::derivative(VarPtr v) const
+{
     throw "Symbolic Derivation of Less-Than-Or-Equal not supported.";
+    return nullptr;
 }
 
-shared_ptr<Term> LTEConstraint::negate() {
-    if (!(negatedform != nullptr)) {
-        negatedform = make_shared<LTConstraint>(right, left, steppness, shared_from_this());
+TermPtr LTEConstraint::negate() const
+{
+    if (_negatedForm == nullptr) {
+        _negatedForm = _owner->lessThan(_right, _left);
+        _negatedForm->setNegation(this);
     }
-    return negatedform;
+    return _negatedForm;
 }
 
-string LTEConstraint::toString() {
-    string str;
-    str.append(left->toString());
-    str.append(" <= ");
-    str.append(right->toString());
-    return str;
+std::string LTEConstraint::toString() const
+{
+    std::stringstream str;
+    str << _left->toString() << " <= " << _right->toString();
+    return str.str();
 }
+
+void LTEConstraint::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* l = tape.getValues(params[0].asIdx);
+    const double* r = tape.getValues(params[1].asIdx);
+
+    double val = r[0] - l[0];
+    if (val >= 0.0) {
+        result[0] = 1.0;
+        for (int i = 1; i <= dim; ++i) {
+            result[i] = 0.0;
+        }
+    } else {
+        const double steep = Term::getConstraintSteepness();
+        result[0] = val * steep;
+        for (int i = 1; i <= dim; ++i) {
+            result[i] = (r[i] - l[i]) * steep;
+        }
+    }
+}
+
 } /* namespace autodiff */

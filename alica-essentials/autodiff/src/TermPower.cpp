@@ -7,59 +7,75 @@
 
 #include "TermPower.h"
 
-#include "TermBuilder.h"
+#include "ConstPower.h"
 #include "Constant.h"
 #include "Log.h"
-#include "Zero.h"
+#include "TermHolder.h"
 
 #include <cmath>
+#include <sstream>
 
-namespace autodiff {
-TermPower::TermPower(shared_ptr<Term> baseTerm, shared_ptr<Term> exponent)
-        : Term() {
-    this->base = baseTerm;
-    this->exponent = exponent;
+namespace autodiff
+{
+TermPower::TermPower(TermPtr baseTerm, TermPtr exponent, TermHolder* owner)
+    : BinaryFunction(baseTerm, exponent, owner)
+{
 }
 
-int TermPower::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<TermPower> thisCasted = dynamic_pointer_cast<TermPower>(shared_from_this());
-    return visitor->visit(thisCasted);
+int TermPower::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-shared_ptr<Term> TermPower::aggregateConstants() {
-    base = base->aggregateConstants();
-    exponent = exponent->aggregateConstants();
-    if (dynamic_pointer_cast<Zero>(exponent) != 0) {
-        return TermBuilder::constant(1);
+void TermPower::acceptRecursive(ITermVisitor* visitor)
+{
+    _left->acceptRecursive(visitor);
+    _right->acceptRecursive(visitor);
+    visitor->visit(this);
+}
+
+TermPtr TermPower::aggregateConstants()
+{
+    _left = _left->aggregateConstants();
+    _right = _right->aggregateConstants();
+    TermPower* basetp = dynamic_cast<TermPower*>(_left.get());
+
+    if (_left->isConstant() && _right->isConstant()) {
+        return _owner->constant(pow(static_cast<Constant*>(_left)->getValue(), static_cast<Constant*>(_right)->getValue()));
+    } else if (_right->isConstant()) {
+        return _owner->constPower(_left, static_cast<Constant*>(_right)->getValue());
+    } else if (basetp != nullptr) {
+        _right = _right * basetp->_right;
+        _left = basetp->_left;
     }
-    if (dynamic_pointer_cast<Constant>(base) != 0 && dynamic_pointer_cast<Constant>(exponent) != 0) {
-        shared_ptr<Constant> base = dynamic_pointer_cast<Constant>(base);
-        shared_ptr<Constant> exponent = dynamic_pointer_cast<Constant>(exponent);
-        return TermBuilder::constant(pow(base->value, exponent->value));
-    } else if (dynamic_pointer_cast<Zero>(base) != 0) {
-        return base;
-    } else if (dynamic_pointer_cast<TermPower>(base) != 0) {
-        shared_ptr<TermPower> base = dynamic_pointer_cast<TermPower>(base);
-        this->exponent = exponent * base->exponent;
-        this->base = base->base;
-        return shared_from_this();
-    } else {
-        return shared_from_this();
+    return this;
+}
+
+TermPtr TermPower::derivative(VarPtr v) const
+{
+    return _owner->termPower(_left, _right - 1) * (_right * _left->derivative(v) + _left * _owner->log(_left) * _right->derivative(v));
+}
+
+std::string TermPower::toString() const
+{
+    std::stringstream str;
+    str << "termPower( " << _left->toString() << ", " << _right->toString() << " )";
+    return str.str();
+}
+
+void TermPower::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* l = tape.getValues(params[0].asIdx);
+    const double* r = tape.getValues(params[1].asIdx);
+    const double outer = pow(l[0], r[0] - 1.0);
+    result[0] = outer * l[0];
+
+    const double lval = outer * r[0];
+    const double rval = result[0] * log(l[0]);
+
+    for (int i = 1; i <= dim; ++i) {
+        result[i] = lval * l[i] + rval * r[i];
     }
 }
 
-shared_ptr<Term> TermPower::derivative(shared_ptr<Variable> v) {
-    return make_shared<TermPower>(base, exponent - 1) *
-           (exponent * base->derivative(v) + base * make_shared<Log>(base) * exponent->derivative(v));
-}
-
-string TermPower::toString() {
-    string str;
-    str.append("termPower( ");
-    str.append(base->toString());
-    str.append(", ");
-    str.append(exponent->toString());
-    str.append(" )");
-    return str;
-}
 } /* namespace autodiff */

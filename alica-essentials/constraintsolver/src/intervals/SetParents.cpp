@@ -1,255 +1,229 @@
-/*
- * SetParents.cpp
- *
- *  Created on: Dec 12, 2014
- *      Author: Philipp
- */
 
 #include "intervals/SetParents.h"
 
+#include <autodiff/AutoDiff.h>
+
 //#define SetParentsDEBUG
 
-#include <vector>
+namespace alica
+{
+namespace reasoner
+{
+namespace intervalpropagation
+{
 
-namespace alica {
-namespace reasoner {
-namespace intervalpropagation {
+using namespace autodiff;
 
 SetParents::SetParents() {}
 
 SetParents::~SetParents() {}
 
-int SetParents::visit(shared_ptr<Abs> abs) {
+int SetParents::visit(Abs* abs)
+{
 #ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Abs> abs)" << endl;
+    std::cout << "SetParents::visit(Abs* abs)" << std::endl;
 #endif
-    abs->arg->parents.push_back(abs);
-    // abs->arg->accept(this);
+    abs->getArg()->editParents().push_back(abs);
     return false;
 }
 
-int SetParents::visit(shared_ptr<And> and_) {
+int SetParents::visit(And* and_)
+{
 #ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<And> and_)" << endl;
+    std::cout << "SetParents::visit(And* and_)" << std::endl;
 #endif
-    and_->left->parents.push_back(and_);
-    and_->right->parents.push_back(and_);
-    // and_->left->accept(this);
-    // and_->right->accept(this);
+    and_->getLeft()->editParents().push_back(and_);
+    and_->getRight()->editParents().push_back(and_);
     return false;
 }
 
-int SetParents::visit(shared_ptr<Atan2> atan2) {
+int SetParents::visit(Atan2* atan2)
+{
 #ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Atan2> atan2)" << endl;
+    std::cout << "SetParents::visit(Atan2* atan2)" << std::endl;
 #endif
-    atan2->left->parents.push_back(atan2);
-    atan2->right->parents.push_back(atan2);
-    // atan2->left->accept(this);
-    // atan2->right->accept(this);
+    atan2->getLeft()->editParents().push_back(atan2);
+    atan2->getRight()->editParents().push_back(atan2);
     return false;
 }
 
-int SetParents::visit(shared_ptr<Constant> constant) {
+int SetParents::visit(Constant* constant)
+{
 #ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Constant> constant)" << endl;
-#endif
-    return false;
-    // return UpdateInterval(constant,constant.Value,constant.Value);
-}
-
-int SetParents::visit(shared_ptr<ConstPower> intPower) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<ConstPower> intPower)" << endl;
-#endif
-    intPower->base->parents.push_back(intPower);
-    // intPower->base->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<ConstraintUtility> cu) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<ConstraintUtility> cu)" << endl;
-#endif
-    cu->constraint->parents.push_back(cu);
-    cu->utility->parents.push_back(cu);
-    // cu->constraint->accept(this);
-    // cu->utility->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Cos> cos) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Cos> cos)" << endl;
-#endif
-    cos->arg->parents.push_back(cos);
-    // cos->arg->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Exp> exp) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Exp> exp)" << endl;
-#endif
-    exp->arg->parents.push_back(exp);
-    // exp->arg->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Gp> gp) {
-    throw "Not implemented yet";
-    return false;
-}
-
-int SetParents::visit(shared_ptr<LinSigmoid> sigmoid) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<LinSigmoid> sigmoid)" << endl;
-#endif
-    sigmoid->arg->parents.push_back(sigmoid);
-    // sigmoid->arg->accept(this);
-    // sigmoid->mid->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Log> log) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Log> log)" << endl;
-#endif
-    log->arg->parents.push_back(log);
-    // log->arg->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<LTConstraint> constraint) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<LTConstraint> constraint)" << endl;
-#endif
-    constraint->left->parents.push_back(constraint);
-    constraint->right->parents.push_back(constraint);
-    // constraint->left->accept(this);
-    // constraint->right->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<LTEConstraint> constraint) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<LTEConstraint> constraint)" << endl;
-#endif
-    constraint->left->parents.push_back(constraint);
-    constraint->right->parents.push_back(constraint);
-    // constraint->left->accept(this);
-    // constraint->right->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Max> max) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Max> max)" << endl;
-#endif
-    max->left->parents.push_back(max);
-    max->right->parents.push_back(max);
-    // max->left->accept(this);
-    // max->right->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Min> min) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Min> min)" << endl;
-#endif
-    min->left->parents.push_back(min);
-    min->right->parents.push_back(min);
-
-    // min->left->accept(this);
-    // min->right->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Or> or_) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Or> or_)" << endl;
-#endif
-    or_->left->parents.push_back(or_);
-    or_->right->parents.push_back(or_);
-    // or_->left->accept(this);
-    // or_->right->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Product> product) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Product> product)" << endl;
-#endif
-    product->left->parents.push_back(product);
-    product->right->parents.push_back(product);
-
-    // product->left->accept(this);
-    // product->right->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Reification> reif) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Reification> reif)" << endl;
-#endif
-    reif->condition->parents.push_back(reif);
-    // reif->condition->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Sigmoid> sigmoid) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Sigmoid> sigmoid)" << endl;
-#endif
-    sigmoid->arg->parents.push_back(sigmoid);
-    sigmoid->mid->parents.push_back(sigmoid);
-    // sigmoid->arg->accept(this);
-    // sigmoid->mid->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Sin> sin) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Sin> sin)" << endl;
-#endif
-    sin->arg->parents.push_back(sin);
-    // sin->arg->accept(this);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Sum> sum) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Sum> sum)" << endl;
-#endif
-    for (shared_ptr<Term> t : sum->terms) {
-        t->parents.push_back(sum);
-        // t->accept(this);
-    }
-    return false;
-}
-
-int SetParents::visit(shared_ptr<TermPower> power) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<TermPower> power)" << endl;
-#endif
-    power->base->parents.push_back(power);
-    power->exponent->parents.push_back(power);
-    return false;
-}
-
-int SetParents::visit(shared_ptr<Variable> var) {
-#ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Variable> var)" << endl;
+    std::cout << "SetParents::visit(Constant* constant)" << std::endl;
 #endif
     return false;
 }
 
-int SetParents::visit(shared_ptr<Zero> zero) {
+int SetParents::visit(ConstPower* intPower)
+{
 #ifdef SetParentsDEBUG
-    cout << "SetParents::visit(shared_ptr<Zero> zero)" << endl;
+    std::cout << "SetParents::visit(ConstPower* intPower)" << std::endl;
+#endif
+    intPower->getBase()->editParents().push_back(intPower);
+    return false;
+}
+
+int SetParents::visit(ConstraintUtility* cu)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(ConstraintUtility* cu)" << std::endl;
+#endif
+    cu->getLeft()->editParents().push_back(cu);
+    cu->getRight()->editParents().push_back(cu);
+    return false;
+}
+
+int SetParents::visit(Cos* cos)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(Cos* cos)" << std::endl;
+#endif
+    cos->getArg()->editParents().push_back(cos);
+    return false;
+}
+
+int SetParents::visit(Exp* exp)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(Exp* exp)" << std::endl;
+#endif
+    exp->getArg()->editParents().push_back(exp);
+    return false;
+}
+
+int SetParents::visit(LinSigmoid* sigmoid)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(LinSigmoid* sigmoid)" << std::endl;
+#endif
+    sigmoid->getArg()->editParents().push_back(sigmoid);
+    return false;
+}
+
+int SetParents::visit(Log* log)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(Log* log)" << std::endl;
+#endif
+    log->getArg()->editParents().push_back(log);
+    return false;
+}
+
+int SetParents::visit(LTConstraint* constraint)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(LTConstraint* constraint)" << std::endl;
+#endif
+    constraint->getLeft()->editParents().push_back(constraint);
+    constraint->getRight()->editParents().push_back(constraint);
+    return false;
+}
+
+int SetParents::visit(LTEConstraint* constraint)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(LTEConstraint* constraint)" << std::endl;
+#endif
+    constraint->getLeft()->editParents().push_back(constraint);
+    constraint->getRight()->editParents().push_back(constraint);
+    return false;
+}
+
+int SetParents::visit(Max* max)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(Max* max)" << std::endl;
+#endif
+    max->getLeft()->editParents().push_back(max);
+    max->getRight()->editParents().push_back(max);
+    return false;
+}
+
+int SetParents::visit(Min* min)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(Min* min)" << std::endl;
+#endif
+    min->getLeft()->editParents().push_back(min);
+    min->getRight()->editParents().push_back(min);
+    return false;
+}
+
+int SetParents::visit(Or* or_)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(Or* or_)" << std::endl;
+#endif
+    or_->getLeft()->editParents().push_back(or_);
+    or_->getRight()->editParents().push_back(or_);
+    return false;
+}
+
+int SetParents::visit(Product* product)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(Product* product)" << std::endl;
+#endif
+    product->getLeft()->editParents().push_back(product);
+    product->getRight()->editParents().push_back(product);
+    return false;
+}
+
+int SetParents::visit(Reification* reif)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(Reification* reif)" << std::endl;
+#endif
+    reif->getLeft()->editParents().push_back(reif);
+    reif->getRight()->editParents().push_back(reif);
+    return false;
+}
+
+int SetParents::visit(Sigmoid* sigmoid)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(Sigmoid* sigmoid)" << std::endl;
+#endif
+    sigmoid->getArg()->editParents().push_back(sigmoid);
+    return false;
+}
+
+int SetParents::visit(Sin* sin)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(Sin* sin)" << std::endl;
+#endif
+    sin->getArg()->editParents().push_back(sin);
+    return false;
+}
+
+int SetParents::visit(Sum* sum)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(Sum* sum)" << std::endl;
+#endif
+    sum->getLeft()->editParents().push_back(sum);
+    sum->getRight()->editParents().push_back(sum);
+    return false;
+}
+
+int SetParents::visit(TermPower* power)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(TermPower* power)" << std::endl;
+#endif
+    power->getLeft()->editParents().push_back(power);
+    power->getRight()->editParents().push_back(power);
+    return false;
+}
+
+int SetParents::visit(Variable* /* var */)
+{
+#ifdef SetParentsDEBUG
+    std::cout << "SetParents::visit(Variable* var)" << std::endl;
 #endif
     return false;
-    // return UpdateInterval(zero,0,0);
 }
 
 } /* namespace intervalpropagation */

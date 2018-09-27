@@ -9,27 +9,36 @@
 //#define CNSatDebug
 //#define CNSat_Call_Debug
 
+#define CN_SAT_CALLBACK_SOLVER
+
+#include "CNSMTGSolver.h"
+#include "Decider.h"
 #include "types/Clause.h"
 #include "types/DecisionLevel.h"
 #include "types/Lit.h"
 #include "types/Var.h"
 #include "types/Watcher.h"
-#include "CNSMTGSolver.h"
-#include "Decider.h"
 
-#include <engine/IAlicaClock.h>
-#include <clock/AlicaROSClock.h>
+#include <engine/AlicaClock.h>
 
 #include <algorithm>
 
 #include <iostream>
 #include <sstream>
 
-namespace alica {
-namespace reasoner {
-namespace cnsat {
+namespace alica
+{
+namespace reasoner
+{
+namespace cnsat
+{
 
-void CNSat::readFromCNFFile(string path) {
+using std::shared_ptr;
+using std::string;
+using std::vector;
+
+void CNSat::readFromCNFFile(string path)
+{
     ifstream input(path);
     for (string line; getline(input, line);) {
         if (line[0] == 'c')
@@ -40,16 +49,14 @@ void CNSat::readFromCNFFile(string path) {
         shared_ptr<Clause> c = make_shared<Clause>();
 
         stringstream ss(line);
-        string s;
         while (!ss.eof()) {
-            ss >> s;
-            istringstream is(s);
             int val;
-            is >> val;
+            ss >> val;
 
-            if (val == 0)
+            if (val == 0) {
                 continue;
-            int valn = (val < 0) ? -val : val;
+            }
+            size_t valn = abs(val);
             while (this->variables->size() < valn)
                 this->newVar();
 
@@ -65,7 +72,10 @@ void CNSat::readFromCNFFile(string path) {
     input.close();
 }
 
-CNSat::CNSat() {
+CNSat::CNSat()
+    : cnsmtGSolver(nullptr)
+    , learntNum(0)
+{
     this->useIntervalProp = true;
     this->decisionLevelNull = make_shared<DecisionLevel>(0);
     this->unitDecissions = 0;
@@ -81,15 +91,12 @@ CNSat::CNSat() {
     this->variables = make_shared<vector<shared_ptr<Var>>>();
     this->decisions = make_shared<vector<shared_ptr<Var>>>();
     this->decisionLevel = make_shared<vector<shared_ptr<DecisionLevel>>>();
-
-    alicaClock = new alicaRosProxy::AlicaROSClock();
 }
 
-CNSat::~CNSat() {
-    delete alicaClock;
-}
+CNSat::~CNSat() {}
 
-shared_ptr<Var> CNSat::newVar() {
+shared_ptr<Var> CNSat::newVar()
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::newVar()" << endl;
 #endif
@@ -98,7 +105,8 @@ shared_ptr<Var> CNSat::newVar() {
     return t;
 }
 
-bool CNSat::addBasicClause(shared_ptr<Clause> c) {
+bool CNSat::addBasicClause(shared_ptr<Clause> c)
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::addBasicClause()" << endl;
 #endif
@@ -116,8 +124,7 @@ bool CNSat::addBasicClause(shared_ptr<Clause> c) {
          else l->var.NegActivity++;
          }*/
     } else {
-        if (c->literals->at(0)->var->assignment != Assignment::UNASSIGNED &&
-                c->literals->at(0)->var->assignment != c->literals->at(0)->sign)
+        if (c->literals->at(0)->var->assignment != Assignment::UNASSIGNED && c->literals->at(0)->var->assignment != c->literals->at(0)->sign)
             return false;
 
         c->literals->at(0)->var->assignment = c->literals->at(0)->sign;
@@ -133,27 +140,31 @@ bool CNSat::addBasicClause(shared_ptr<Clause> c) {
     return true;
 }
 
-void CNSat::emptySATClause() {
+void CNSat::emptySATClause()
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::emptySATClause()" << endl;
 #endif
     emptyClauseList(this->satClauses);
 }
 
-void CNSat::emptyTClause() {
+void CNSat::emptyTClause()
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::emptyTClause()" << endl;
 #endif
     emptyClauseList(this->tClauses);
 }
 
-void CNSat::resetVariables() {
+void CNSat::resetVariables()
+{
     for (shared_ptr<Var> v : *variables) {
         v->reset();
     }
 }
 
-bool CNSat::addSATClause(shared_ptr<Clause> c) {
+bool CNSat::addSATClause(shared_ptr<Clause> c)
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::addSATClause()" << endl;
 #endif
@@ -195,7 +206,8 @@ bool CNSat::addSATClause(shared_ptr<Clause> c) {
     return true;
 }
 
-bool CNSat::addTClause(shared_ptr<Clause> c) {
+bool CNSat::addTClause(shared_ptr<Clause> c)
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::addTClause()" << endl;
 #endif
@@ -227,12 +239,13 @@ bool CNSat::addTClause(shared_ptr<Clause> c) {
     return true;
 }
 
-bool CNSat::preAddIUnitClause(shared_ptr<Var> v, Assignment ass) {
+bool CNSat::preAddIUnitClause(shared_ptr<Var> v, Assignment ass)
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::preAddIUnitClause()" << endl;
 #endif
     if ((v->assignment != Assignment::UNASSIGNED) && (v->assignment != ass)) {
-        return false;  // problem is unsolveable
+        return false; // problem is unsolveable
     }
     decisions->insert(decisions->begin(), v);
     v->decisionLevel = this->decisionLevel->at(0);
@@ -244,7 +257,8 @@ bool CNSat::preAddIUnitClause(shared_ptr<Var> v, Assignment ass) {
     return true;
 }
 
-bool CNSat::addIClause(shared_ptr<Clause> c) {
+bool CNSat::addIClause(shared_ptr<Clause> c)
+{
     if (c->literals->size() == 1) {
         // TODO brauchen wir hier noch einen check, ob da schon was gesetzt ist?
         // if (c->literals->at(0)->var->locked && c->literals->at(0)->sign != c->literals->at(0)->var->assignment)
@@ -275,7 +289,8 @@ bool CNSat::addIClause(shared_ptr<Clause> c) {
     return true;
 }
 
-void CNSat::init() {
+void CNSat::init()
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::init()" << endl;
 #endif
@@ -292,21 +307,8 @@ void CNSat::init() {
     this->recentBacktrack = false;
 }
 
-bool CNSat::solve() {
-#ifdef CNSat_Call_Debug
-    cout << "CNSat::solve()";
-#endif
-    shared_ptr<CNSMTGSolver> cnsmtGSolver = nullptr;
-    if (this->cnsmtGSolver.use_count() > 0) {
-#ifdef CNSat_Call_Debug
-        cout << " cnsmtGSolver != nullptr";
-#endif
-        cnsmtGSolver = this->cnsmtGSolver.lock();
-    }
-#ifdef CNSat_Call_Debug
-    cout << endl;
-#endif
-
+bool CNSat::solve(AlicaTime until, CNSMTGSolver* callbackSolver)
+{
     int restartNum = 100;
     learntNum = 700;
     restartCount = 0;
@@ -318,7 +320,7 @@ bool CNSat::solve() {
 
     while (true) {
         c = nullptr;
-        while ((c = propagate()) != nullptr)  // resolve all conflicts
+        while ((c = propagate()) != nullptr) // resolve all conflicts
         {
             //						cout << "while ((c = propagate()) != nullptr) => " << endl;
             //						cout << "\t" << "conflictCount=" << conflictCount << endl;
@@ -339,12 +341,9 @@ bool CNSat::solve() {
 #endif
                 return false;
             }
-            if (conflictCount % 50 == 0 && cnsmtGSolver != nullptr &&
-                    cnsmtGSolver->begin + cnsmtGSolver->maxSolveTime < cnsmtGSolver->getTime()) {
+            if (conflictCount % 50 == 0 && until < alicaClock.now()) {
 #ifdef CNSat_Call_Debug
-                cout << "CNSat::solve() => return false => " << conflictCount
-                     << " % 50 == 0 && cnsmtGSolver != nullptr && " << cnsmtGSolver->begin << " + "
-                     << cnsmtGSolver->maxSolveTime << " < " << cnsmtGSolver->getTime() << endl;
+                std::cout << "CNSat::solve() => return false => " << conflictCount << " % 50 == 0 && " << until << " < alicaClock.now()" << std::endl;
 #endif
                 return false;
             }
@@ -356,13 +355,13 @@ bool CNSat::solve() {
             }
         }
 
-        //					cout << "\tdecisionLevel->size() = " << decisionLevel->size() << endl;
-        //					cout << "all conflicts resolved " << (cnsmtGSolver != nullptr) << " " <<
-        // useIntervalProp << endl;
-
-        if (cnsmtGSolver != nullptr) {
+            //					cout << "\tdecisionLevel->size() = " << decisionLevel->size() << endl;
+            //					cout << "all conflicts resolved " << (cnsmtGSolver != nullptr) << " " <<
+            // useIntervalProp << endl;
+#ifdef CN_SAT_CALLBACK_SOLVER
+        if (callbackSolver != nullptr) {
             // check for conflict of Theoremprover
-            if (useIntervalProp && !cnsmtGSolver->intervalPropagate(decisions, curRanges)) {
+            if (useIntervalProp && !callbackSolver->intervalPropagate(decisions, curRanges)) {
                 continue;
             } else {
                 // TODO: Heuristic Decision whether or not to query the T-solver
@@ -377,13 +376,13 @@ bool CNSat::solve() {
                 // if(!VarAssignmentInsideRange(Decisions[decisions->size()-1],curRanges)) {
                 // if(evaluatedDL==null || !AssignmentInsideRange(evaluatedDL, curRanges)) {
                 //								if (!CNSMTGSolver.ProbeForSolution(decisions,
-                //out  solution)) { 									continue;
+                // out  solution)) { 									continue;
                 //								}
                 //	evaluatedDL = DecisionLevel[DecisionLevel->size()-1];
                 //}
                 //}
 
-                if (!cnsmtGSolver->probeForSolution(decisions, solution)) {
+                if (!callbackSolver->probeForSolution(decisions, solution)) {
                     continue;
                 }
                 int satClauseCount = 0;
@@ -392,21 +391,24 @@ bool CNSat::solve() {
                         satClauseCount++;
                     }
                 }
-                if (satClauseCount >= clauses->size()) {
+                if (satClauseCount >= static_cast<int>(clauses->size())) {
                     return true;
                 }
             }
         }
+
         shared_ptr<Var> next;
-        if (cnsmtGSolver != nullptr) {
+
+        if (callbackSolver != nullptr) {
             next = Decider::decideVariableCountBased(variables, *this);
         } else {
             next = Decider::decideActivityBased(variables, *this);
         }
-
-        if (next == nullptr) {  // if no unassigned vars
-            cout << "ConflictCount: " << conflictCount << " DecisionCount " << decisionCount << " LC "
-                 << this->learnedCount << endl;
+#else
+        shared_ptr<Var> next = Decider::decideActivityBased(variables, *this);
+#endif
+        if (next == nullptr) { // if no unassigned vars
+            cout << "ConflictCount: " << conflictCount << " DecisionCount " << decisionCount << " LC " << this->learnedCount << endl;
             return true;
         }
 #ifdef CNSatDebug
@@ -415,15 +417,11 @@ bool CNSat::solve() {
         cout << endl;
 #endif
         ++decisionCount;
-        if (decisionCount % 25 == 0 && cnsmtGSolver != nullptr &&
-                cnsmtGSolver->begin + cnsmtGSolver->maxSolveTime < cnsmtGSolver->getTime()) {
+        if (decisionCount % 25 == 0 && until < alicaClock.now()) {
 #ifdef CNSat_Call_Debug
-            cout << "CNSat::solve() => return false => " << decisionCount << " % 25 == 0 && cnsmtGSolver != nullptr && "
-                 << cnsmtGSolver->begin << " + " << cnsmtGSolver->maxSolveTime << " < " << cnsmtGSolver->getTime()
-                 << endl;
+            std::cout << "CNSat::solve() => return false => " << decisionCount << " % 25 == 0 && " << until << " < alicaClock.now()" << std::endl;
 #endif
-            // unsigned long long test = cnsmtGSolver->getTime() - (cnsmtGSolver->begin);// +
-            // cnsmtGSolver->maxSolveTime);
+
             return false;
         }
         // Forget unused clauses
@@ -439,7 +437,7 @@ bool CNSat::solve() {
             restartNum *= 2;
             learntNum += learntNum / 10;
             restartCount++;
-            for (int j = (decisionLevel->at(1)->level); j < decisions->size(); j++) {
+            for (int j = (decisionLevel->at(1)->level); j < static_cast<int>(decisions->size()); ++j) {
                 cout << "solve strange unass" << endl;
                 decisions->at(j)->assignment = Assignment::UNASSIGNED;
                 decisions->at(j)->setReason(nullptr);
@@ -455,19 +453,20 @@ bool CNSat::solve() {
     }
 }
 
-void CNSat::reduceDB(int num) {
-    if (satClauses->size() < num)
+void CNSat::reduceDB(int num)
+{
+    if (static_cast<int>(satClauses->size()) < num)
         return;
     stable_sort(satClauses->begin(), satClauses->end(), Clause::compareTo);
-    for (int i = num; i < satClauses->size(); i++) {
+    for (int i = num; i < static_cast<int>(satClauses->size()); i++) {
         {
-            auto iter = find(satClauses->at(i)->watcher->at(0)->lit->var->watchList->begin(),
-                    satClauses->at(i)->watcher->at(0)->lit->var->watchList->end(), satClauses->at(i)->watcher->at(0));
+            auto iter = find(satClauses->at(i)->watcher->at(0)->lit->var->watchList->begin(), satClauses->at(i)->watcher->at(0)->lit->var->watchList->end(),
+                             satClauses->at(i)->watcher->at(0));
             satClauses->at(i)->watcher->at(0)->lit->var->watchList->erase(iter);
         }
         {
-            auto iter = find(satClauses->at(i)->watcher->at(1)->lit->var->watchList->begin(),
-                    satClauses->at(i)->watcher->at(1)->lit->var->watchList->end(), satClauses->at(i)->watcher->at(1));
+            auto iter = find(satClauses->at(i)->watcher->at(1)->lit->var->watchList->begin(), satClauses->at(i)->watcher->at(1)->lit->var->watchList->end(),
+                             satClauses->at(i)->watcher->at(1));
             satClauses->at(i)->watcher->at(1)->lit->var->watchList->erase(iter);
         }
         // shared_ptr<Lit> l = satClauses->at(i)->literals[satClauses->at(i)->literals->size()-1];
@@ -477,12 +476,13 @@ void CNSat::reduceDB(int num) {
     //				satClauses->erase(satClauses->begin() + num, satClauses->begin() + (satClauses->size() -
     // num));
     satClauses->erase(satClauses->begin() + num, satClauses->end());
-    for (int i = 0; i < satClauses->size(); i++) {
+    for (int i = 0; i < static_cast<int>(satClauses->size()); ++i) {
         satClauses->at(i)->activity /= 4;
     }
 }
 
-shared_ptr<Clause> CNSat::propagate() {
+shared_ptr<Clause> CNSat::propagate()
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::propagate()" << endl;
 #endif
@@ -496,7 +496,7 @@ shared_ptr<Clause> CNSat::propagate() {
     cout << "\tdecisions->size() = " << decisions->size() << endl;
 #endif
 
-    for (int i = lLevel; i < decisions->size(); ++i) {
+    for (int i = lLevel; i < static_cast<int>(decisions->size()); ++i) {
         shared_ptr<vector<Watcher*>> watchList = decisions->at(i)->watchList;
 #ifdef CNSat_Call_Debug
         cout << "\t\twatchList->size() = " << watchList->size() << endl;
@@ -509,7 +509,7 @@ shared_ptr<Clause> CNSat::propagate() {
         cout << endl;
 #endif
 
-        for (int j = 0; j < watchList->size(); ++j) {
+        for (int j = 0; j < static_cast<int>(watchList->size()); ++j) {
             Watcher* w = watchList->at(j);
 #ifdef CNSatDebug
             decisions->at(i)->print();
@@ -555,8 +555,7 @@ shared_ptr<Clause> CNSat::propagate() {
 #endif
             bool found = false;
             for (shared_ptr<Lit> l : *(c->literals)) {
-                if (c->watcher->at(oWId)->lit->var != l->var &&
-                        (l->var->assignment == Assignment::UNASSIGNED || l->satisfied())) {
+                if (c->watcher->at(oWId)->lit->var != l->var && (l->var->assignment == Assignment::UNASSIGNED || l->satisfied())) {
                     //								auto iter =
                     // find(w->lit->var->watchList->begin(),  w->lit->var->watchList->end(),  w);
                     //								w->lit->var->watchList->erase(iter);
@@ -607,7 +606,8 @@ shared_ptr<Clause> CNSat::propagate() {
     return nullptr;
 }
 
-bool CNSat::resolveConflict(shared_ptr<Clause> c) {
+bool CNSat::resolveConflict(shared_ptr<Clause> c)
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::resolveConflict()" << endl;
 #endif
@@ -654,7 +654,7 @@ bool CNSat::resolveConflict(shared_ptr<Clause> c) {
 
         shared_ptr<Clause> cl = confl;
         // Inspect conflict reason clause Literals
-        for (int j = 0; j < cl->literals->size(); j++) {
+        for (int j = 0; j < static_cast<int>(cl->literals->size()); j++) {
             shared_ptr<Lit> q = cl->literals->at(j);
             // ignore UIP
             if (q->var == p) {
@@ -701,8 +701,7 @@ bool CNSat::resolveConflict(shared_ptr<Clause> c) {
     cout << "-------------------" << endl;
 #endif
     // Add UIP
-    shared_ptr<Lit> t =
-            make_shared<Lit>(p, (p->assignment == Assignment::FALSE) ? Assignment::TRUE : Assignment::FALSE);
+    shared_ptr<Lit> t = make_shared<Lit>(p, (p->assignment == Assignment::FALSE) ? Assignment::TRUE : Assignment::FALSE);
     learnt->add(t);
 
     // Store Seen Variables for later reset
@@ -712,7 +711,7 @@ bool CNSat::resolveConflict(shared_ptr<Clause> c) {
 
     // simplify learnt clause
     // Here is still an error!!!!!!!
-    for (int m = 0; m < learnt->literals->size() - 1; ++m) {
+    for (int m = 0; m < static_cast<int>(learnt->literals->size()) - 1; ++m) {
         shared_ptr<Lit> l = learnt->literals->at(m);
         // Ignore Literals without reason
         if (l->var->getReason() == nullptr) {
@@ -778,7 +777,7 @@ bool CNSat::resolveConflict(shared_ptr<Clause> c) {
         maxLitIndex = 0;
 
         // Search newest decission, which affects a literal in learnt.
-        for (i = 1; i < learnt->literals->size() - 1; ++i) {
+        for (i = 1; i < static_cast<int>(learnt->literals->size()) - 1; ++i) {
             shared_ptr<Lit> l = learnt->literals->at(i);
 
             if (db->level < l->var->decisionLevel->level) {
@@ -793,8 +792,7 @@ bool CNSat::resolveConflict(shared_ptr<Clause> c) {
     }
 
 #ifdef CNSatDebug
-    cout << "Backtracking from " << this->decisionLevel->at(this->decisionLevel->size() - 1)->level << " to "
-         << db->level << endl;
+    cout << "Backtracking from " << this->decisionLevel->at(this->decisionLevel->size() - 1)->level << " to " << db->level << endl;
 #endif
 
     // Backtrack to db
@@ -802,7 +800,7 @@ bool CNSat::resolveConflict(shared_ptr<Clause> c) {
 
     // Add learnt clause: Unit Clauses have to be satisfied otherwise: -> UNSAT
     bool solvable = this->addSATClause(learnt);
-    if (!solvable) {  // TODO can be removed once bugfree
+    if (!solvable) { // TODO can be removed once bugfree
         cout << "Error on insert learned clause" << endl;
         return false;
     }
@@ -840,7 +838,8 @@ bool CNSat::resolveConflict(shared_ptr<Clause> c) {
     return true;
 }
 
-void CNSat::backTrack(shared_ptr<DecisionLevel> db) {
+void CNSat::backTrack(shared_ptr<DecisionLevel> db)
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::backTrack() DecisionLevel" << endl;
 #endif
@@ -848,16 +847,15 @@ void CNSat::backTrack(shared_ptr<DecisionLevel> db) {
     recentBacktrack = true;
     auto iter = find(decisionLevel->begin(), decisionLevel->end(), db);
     int ndbidx = distance(decisionLevel->begin(), iter) + 1;
-    if (ndbidx >= decisionLevel->size())
+    if (ndbidx >= static_cast<int>(decisionLevel->size()))
         return;
     db = decisionLevel->at(ndbidx);
-    for (int j = db->level; j < decisions->size(); j++) {
+    for (int j = db->level; j < static_cast<int>(decisions->size()); j++) {
         decisions->at(j)->assignment = Assignment::UNASSIGNED;
         decisions->at(j)->setReason(nullptr);
         // this is expensive
         for (Watcher* wa : *(decisions->at(j)->watchList)) {
-            wa->clause->satisfied =
-                    wa->clause->watcher->at(0)->lit->satisfied() || wa->clause->watcher->at(1)->lit->satisfied();
+            wa->clause->satisfied = wa->clause->watcher->at(0)->lit->satisfied() || wa->clause->watcher->at(1)->lit->satisfied();
             // wa->clause->satisfied = false; //this should take other watcher into account
         }
     }
@@ -872,7 +870,8 @@ void CNSat::backTrack(shared_ptr<DecisionLevel> db) {
     decisionLevel->erase(decisionLevel->begin() + i, decisionLevel->end());
 }
 
-void CNSat::backTrack(int decission) {
+void CNSat::backTrack(int decission)
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::backTrack(" << decission << ") decission" << endl;
 #endif
@@ -887,7 +886,7 @@ void CNSat::backTrack(int decission) {
 
     decisionLevel->at(1)->level = decission;
 
-    for (int j = decisionLevel->at(1)->level; j < this->decisions->size(); ++j) {
+    for (int j = decisionLevel->at(1)->level; j < static_cast<int>(this->decisions->size()); ++j) {
         decisions->at(j)->assignment = cnsat::Assignment::UNASSIGNED;
         decisions->at(j)->setReason(nullptr);
         decisions->at(j)->locked = false;
@@ -899,7 +898,7 @@ void CNSat::backTrack(int decission) {
     cout << "\tdecisionLevel->at(1)->level = " << decisionLevel->at(1)->level << endl;
     cout << "\tdecisions->size() = " << decisions->size() << endl;
 #endif
-    if (decisionLevel->at(1)->level < decisions->size()) {
+    if (decisionLevel->at(1)->level < static_cast<int>(decisions->size())) {
         // dont use erase, because i dont want to delete the objects
         removeRangeOfDecisions(decisionLevel->at(1)->level, decisions->size() - decisionLevel->at(1)->level);
     }
@@ -911,26 +910,25 @@ void CNSat::backTrack(int decission) {
     decisionLevelNull->level = decisions->size();
 }
 
-void CNSat::emptyClauseList(shared_ptr<vector<shared_ptr<Clause>>> list) {
+void CNSat::emptyClauseList(shared_ptr<vector<shared_ptr<Clause>>> list)
+{
 #ifdef CNSat_Call_Debug
     cout << "CNSat::emptyClauseList()" << endl;
 #endif
     for (shared_ptr<Clause> c : *list) {
-        auto it = find(c->watcher->at(0)->lit->var->watchList->begin(), c->watcher->at(0)->lit->var->watchList->end(),
-                c->watcher->at(0));
+        auto it = std::find(c->watcher->at(0)->lit->var->watchList->begin(), c->watcher->at(0)->lit->var->watchList->end(), c->watcher->at(0));
         c->watcher->at(0)->lit->var->watchList->erase(it);
         c->watcher->at(0)->lit->variableCount--;
-        it = find(c->watcher->at(1)->lit->var->watchList->begin(), c->watcher->at(1)->lit->var->watchList->end(),
-                c->watcher->at(1));
+        it = std::find(c->watcher->at(1)->lit->var->watchList->begin(), c->watcher->at(1)->lit->var->watchList->end(), c->watcher->at(1));
         c->watcher->at(1)->lit->var->watchList->erase(it);
         c->watcher->at(1)->lit->variableCount--;
     }
     list->clear();
 }
 
-bool CNSat::solutionInsideRange(
-        shared_ptr<vector<double>> solution, shared_ptr<vector<shared_ptr<vector<double>>>> range) {
-    for (int i = 0; i < solution->size(); i++) {
+bool CNSat::solutionInsideRange(shared_ptr<vector<double>> solution, shared_ptr<vector<shared_ptr<vector<double>>>> range)
+{
+    for (int i = 0; i < static_cast<int>(solution->size()); i++) {
         double val = solution->at(i);
         if (val < range->at(i)->at(0) || val > range->at(i)->at(1)) {
             return false;
@@ -939,13 +937,14 @@ bool CNSat::solutionInsideRange(
     return true;
 }
 
-bool CNSat::varAssignmentInsideRange(shared_ptr<Var> v, shared_ptr<vector<shared_ptr<vector<double>>>> range) {
+bool CNSat::varAssignmentInsideRange(shared_ptr<Var> v, shared_ptr<vector<shared_ptr<vector<double>>>> range)
+{
     shared_ptr<vector<shared_ptr<vector<double>>>> litrange = nullptr;
     if (v->assignment == Assignment::TRUE)
         litrange = v->positiveRanges;
     else
         litrange = v->negativeRanges;
-    for (int i = 0; i < litrange->size(); i++) {
+    for (int i = 0; i < static_cast<int>(litrange->size()); i++) {
         double min = litrange->at(i)->at(0);
         double max = litrange->at(i)->at(1);
         if (min < range->at(i)->at(0) || max > range->at(i)->at(1)) {
@@ -955,22 +954,24 @@ bool CNSat::varAssignmentInsideRange(shared_ptr<Var> v, shared_ptr<vector<shared
     return true;
 }
 
-bool CNSat::assignmentInsideRange(shared_ptr<DecisionLevel> dl, shared_ptr<vector<shared_ptr<vector<double>>>> range) {
-    for (int i = dl->level; i < decisions->size(); i++) {
+bool CNSat::assignmentInsideRange(shared_ptr<DecisionLevel> dl, shared_ptr<vector<shared_ptr<vector<double>>>> range)
+{
+    for (int i = dl->level; i < static_cast<int>(decisions->size()); i++) {
         if (!varAssignmentInsideRange(decisions->at(i), range))
             return false;
     }
     return true;
 }
 
-void CNSat::printStatistics() {
-    cout << "DC: " << decisionCount << "\tCC: " << conflictCount << "\tAD: " << decisions->size()
-         << "\tLC: " << satClauses->size() << "/" << learntNum << "\t IC: " << restartCount
-         << "\tTC: " << decisionLevel->at(0)->level << "\tRestarts: " << iClauses->size()
-         << "\t0 Level: " << tClauses->size() << endl;
+void CNSat::printStatistics()
+{
+    cout << "DC: " << decisionCount << "\tCC: " << conflictCount << "\tAD: " << decisions->size() << "\tLC: " << satClauses->size() << "/" << learntNum
+         << "\t IC: " << restartCount << "\tTC: " << decisionLevel->at(0)->level << "\tRestarts: " << iClauses->size() << "\t0 Level: " << tClauses->size()
+         << endl;
 }
 
-void CNSat::printAssignments() {
+void CNSat::printAssignments()
+{
     for (shared_ptr<Var> v : *variables) {
         v->print();
         cout << " ";
@@ -978,12 +979,13 @@ void CNSat::printAssignments() {
     cout << endl;
 }
 
-void CNSat::removeRangeOfDecisions(int index, int count) {
+void CNSat::removeRangeOfDecisions(int index, int count)
+{
     shared_ptr<vector<shared_ptr<Var>>> newDecisions = make_shared<vector<shared_ptr<Var>>>();
     for (int i = 0; i < index; ++i) {
         newDecisions->push_back(decisions->at(i));
     }
-    for (int i = index + count; i < decisions->size(); ++i) {
+    for (int i = index + count; i < static_cast<int>(decisions->size()); ++i) {
         newDecisions->push_back(decisions->at(i));
     }
     decisions = newDecisions;

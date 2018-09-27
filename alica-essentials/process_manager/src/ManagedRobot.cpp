@@ -1,15 +1,16 @@
-#include <process_manager/RobotExecutableRegistry.h>
 #include "process_manager/ManagedRobot.h"
 #include "process_manager/ManagedExecutable.h"
 #include <iostream>
 #include <limits>
+#include <process_manager/RobotExecutableRegistry.h>
 
 using std::cerr;
 using std::cout;
 using std::endl;
 using std::string;
 
-namespace supplementary {
+namespace supplementary
+{
 
 /**
  * Creates a ManagedRobot object.
@@ -17,10 +18,13 @@ namespace supplementary {
  * @param id
  */
 ManagedRobot::ManagedRobot(string robotName, const AgentID* agentID, ProcessManager* procMan)
-        : RobotMetaData(robotName, agentID)
-        , procMan(procMan) {}
+    : RobotMetaData(robotName, agentID)
+    , procMan(procMan)
+{
+}
 
-ManagedRobot::~ManagedRobot() {
+ManagedRobot::~ManagedRobot()
+{
     for (auto mngdExec : this->executableMap) {
         delete mngdExec.second;
     }
@@ -33,7 +37,8 @@ ManagedRobot::~ManagedRobot() {
  * @param shouldRun
  * @param registry
  */
-void ManagedRobot::changeDesiredState(int execId, bool shouldRun, RobotExecutableRegistry* registry) {
+void ManagedRobot::changeDesiredState(int execId, bool shouldRun, RobotExecutableRegistry* registry)
+{
     const ExecutableMetaData* exec = registry->getExecutable(execId);
     int lowestParamId = INT_MAX;
     for (auto paramEntry : exec->parameterMap) {
@@ -51,7 +56,8 @@ void ManagedRobot::changeDesiredState(int execId, bool shouldRun, RobotExecutabl
  * @param shouldRun
  * @param registry
  */
-void ManagedRobot::changeDesiredState(int execId, int paramSetId, bool shouldRun, RobotExecutableRegistry* registry) {
+void ManagedRobot::changeDesiredState(int execId, int paramSetId, bool shouldRun, RobotExecutableRegistry* registry)
+{
     auto execEntry = this->executableMap.find(execId);
     if (execEntry != this->executableMap.end()) {
         execEntry->second->changeDesiredState(shouldRun, paramSetId);
@@ -59,18 +65,17 @@ void ManagedRobot::changeDesiredState(int execId, int paramSetId, bool shouldRun
         // Lazy initialisation of the executableMap
         ExecutableMetaData const* const executableMetaData = registry->getExecutable(execId);
         if (executableMetaData != nullptr) {
-            auto mapIter = this->executableMap.emplace(
-                    execId, new ManagedExecutable(executableMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name,
-                                    this->procMan));
+            auto mapIter =
+                this->executableMap.emplace(execId, new ManagedExecutable(executableMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name, this->procMan));
             mapIter.first->second->changeDesiredState(shouldRun, paramSetId);
         } else {
-            cerr << "MR: Could not change desired state of executable id '" << execId << "' as it is not registered."
-                 << endl;
+            cerr << "MR: Could not change desired state of executable id '" << execId << "' as it is not registered." << endl;
         }
     }
 }
 
-void ManagedRobot::changeLogPublishing(int execId, bool shouldPublish, RobotExecutableRegistry* registry) {
+void ManagedRobot::changeLogPublishing(int execId, bool shouldPublish, RobotExecutableRegistry* registry)
+{
     auto execEntry = this->executableMap.find(execId);
     if (execEntry != this->executableMap.end()) {
         execEntry->second->changeDesiredLogPublishingState(shouldPublish);
@@ -78,13 +83,11 @@ void ManagedRobot::changeLogPublishing(int execId, bool shouldPublish, RobotExec
         // Lazy initialisation of the executableMap
         ExecutableMetaData const* const executableMetaData = registry->getExecutable(execId);
         if (executableMetaData != nullptr) {
-            auto mapIter = this->executableMap.emplace(
-                    execId, new ManagedExecutable(executableMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name,
-                                    this->procMan));
+            auto mapIter =
+                this->executableMap.emplace(execId, new ManagedExecutable(executableMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name, this->procMan));
             mapIter.first->second->changeDesiredLogPublishingState(shouldPublish);
         } else {
-            cerr << "MR: Could not change desired state of executable id '" << execId << "' as it is not registered."
-                 << endl;
+            cerr << "MR: Could not change desired state of executable id '" << execId << "' as it is not registered." << endl;
         }
     }
 }
@@ -95,13 +98,15 @@ void ManagedRobot::changeLogPublishing(int execId, bool shouldPublish, RobotExec
  * @param execName
  * @param execid
  */
-void ManagedRobot::startExecutable(string execName, int execid) {
+void ManagedRobot::startExecutable(string execName, int execid)
+{
     auto execEntry = this->executableMap.find(execid);
     if (execEntry == this->executableMap.end()) {
         // This should never happen, as changeDesiredState is initialising the executableMap
         cout << "MR: Tried to start executable " << execName << ", was not present under ID " << execid << endl;
+    } else {
+        execEntry->second->startProcess();
     }
-    execEntry->second->startProcess();
 }
 
 /**
@@ -128,16 +133,16 @@ void ManagedRobot::startExecutable(string execName, int execid) {
  * @param execid
  * @param pid
  */
-void ManagedRobot::queue4update(int execId, long pid, RobotExecutableRegistry* registry) {
+void ManagedRobot::queue4update(int execId, long pid, RobotExecutableRegistry* registry)
+{
     auto execEntry = this->executableMap.find(execId);
     if (execEntry != this->executableMap.end()) {
         execEntry->second->queue4Update(pid);
     } else {
         ExecutableMetaData const* const execMetaData = registry->getExecutable(execId);
         if (execMetaData != nullptr) {
-            auto newExecEntry = this->executableMap.emplace(
-                    execId, new ManagedExecutable(
-                                    execMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name, this->procMan));
+            auto newExecEntry =
+                this->executableMap.emplace(execId, new ManagedExecutable(execMetaData, ExecutableMetaData::NOTHING_MANAGED, this->name, this->procMan));
             newExecEntry.first->second->queue4Update(pid);
         } else {
             cerr << "MR: Unable to queue ID '" << execId << "', as it is not registered!" << endl;
@@ -148,13 +153,15 @@ void ManagedRobot::queue4update(int execId, long pid, RobotExecutableRegistry* r
 /**
  * This method starts to update all queued processes/ executables.
  */
-void ManagedRobot::update(unsigned long long cpuDelta) {
+void ManagedRobot::update(unsigned long long cpuDelta)
+{
     for (auto const& managedExec : this->executableMap) {
         managedExec.second->update(cpuDelta);
     }
 }
 
-void ManagedRobot::report(process_manager::ProcessStats& psts) {
+void ManagedRobot::report(process_manager::ProcessStats& psts)
+{
     for (auto const& mngdExec : this->executableMap) {
         mngdExec.second->report(psts, this->agentID);
     }

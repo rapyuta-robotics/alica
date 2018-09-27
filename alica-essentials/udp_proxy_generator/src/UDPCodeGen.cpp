@@ -1,38 +1,42 @@
+#include <boost/algorithm/string.hpp>
+#include <boost/regex.hpp>
+#include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdio.h>
 #include <unistd.h>
 #include <vector>
-#include <boost/regex.hpp>
-#include <boost/algorithm/string.hpp>
-#include <fstream>
-#include <sstream>
 
 #include "boost/filesystem.hpp"
 using namespace boost::filesystem;
 
-#include "RelayedMessage.h"
 #include "../include/RelayedMessage.h"
+#include "RelayedMessage.h"
 
 using namespace std;
 
 // trim from start
-inline std::string& ltrim(std::string& s) {
+inline std::string& ltrim(std::string& s)
+{
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
     return s;
 }
 
 // trim from end
-inline std::string& rtrim(std::string& s) {
+inline std::string& rtrim(std::string& s)
+{
     s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
     return s;
 }
 
 // trim from both ends
-inline std::string& trim(std::string& s) {
+inline std::string& trim(std::string& s)
+{
     return ltrim(rtrim(s));
 }
 
-std::string exec(const char* cmd) {
+std::string exec(const char* cmd)
+{
     FILE* pipe = popen(cmd, "r");
     if (!pipe)
         return "ERROR";
@@ -46,13 +50,15 @@ std::string exec(const char* cmd) {
     return result;
 }
 
-string getTemplateDir() {
+string getTemplateDir()
+{
     string pwd = exec((string("rospack find udp_proxy_generator")).c_str());
     pwd.pop_back();
     return pwd + "/templates";
 }
 
-bool checkForCollisions(vector<RelayedMessage*>& msgList) {
+bool checkForCollisions(vector<RelayedMessage*>& msgList)
+{
     for (int i = 0; i < msgList.size(); i++) {
         for (int j = i + 1; j < msgList.size(); j++) {
             if (msgList[i]->Id == msgList[j]->Id) {
@@ -64,7 +70,8 @@ bool checkForCollisions(vector<RelayedMessage*>& msgList) {
     return true;
 }
 
-bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList, string& lang) {
+bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList, string& lang)
+{
     // regex line("Topic:\\^ ");
     // regex line("Topic:\\.*(\\.+)\\.*Msg:\\.*(\\.+)\\.*Opt:\\.*\\[(.*)\\]");
     string regstr;
@@ -119,7 +126,8 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList, st
     return true;
 }
 
-string processTemplate(stringstream& t, vector<RelayedMessage*>& msgList, string& pkgName) {
+string processTemplate(stringstream& t, vector<RelayedMessage*>& msgList, string& pkgName)
+{
     string reg_string = "<\\?(.*)\\?>";
     boost::regex markers(reg_string.c_str());
     boost::smatch m;
@@ -145,11 +153,10 @@ string processTemplate(stringstream& t, vector<RelayedMessage*>& msgList, string
             int i = 0;
             for (RelayedMessage* m : msgList) {
                 if (m->UseRosTcp) {
-                    ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\","
-                        << m->Ros2UdpQueueLength << ", " << m->getRosCallBackName() << ");\n";
+                    ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\"," << m->Ros2UdpQueueLength << ", " << m->getRosCallBackName()
+                        << ");\n";
                 } else {
-                    ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\","
-                        << m->Ros2UdpQueueLength << ", " << m->getRosCallBackName()
+                    ret << "ros::Subscriber sub" << i << " = n.subscribe(\"" << m->Topic << "\"," << m->Ros2UdpQueueLength << ", " << m->getRosCallBackName()
                         << ",ros::TransportHints().unreliable().tcpNoDelay().reliable());\n";
                 }
                 i++;
@@ -160,8 +167,8 @@ string processTemplate(stringstream& t, vector<RelayedMessage*>& msgList, string
             }
         } else if (s == "advertisement") {
             for (RelayedMessage* m : msgList) {
-                ret << m->getPublisherName() << " = n.advertise<" << m->getRosClassName() << ">(\"" << m->Topic << "\","
-                    << m->Udp2RosQueueLength << ",false);\n";
+                ret << m->getPublisherName() << " = n.advertise<" << m->getRosClassName() << ">(\"" << m->Topic << "\"," << m->Udp2RosQueueLength
+                    << ",false);\n";
             }
         } else if (s == "rosPublisherDecl") {
             for (RelayedMessage* m : msgList) {
@@ -171,8 +178,7 @@ string processTemplate(stringstream& t, vector<RelayedMessage*>& msgList, string
             for (RelayedMessage* m : msgList) {
                 ret << "case " << m->Id << "ul: {\n";
                 ret << m->getRosClassName() << " m" << m->Id << ";\n";
-                ret << "ros::serialization::Serializer<" << m->getRosClassName() << ">::read(stream, m" << m->Id
-                    << ");\n";
+                ret << "ros::serialization::Serializer<" << m->getRosClassName() << ">::read(stream, m" << m->Id << ");\n";
                 ret << m->getPublisherName() << ".publish<" << m->getRosClassName() << ">(m" << m->Id << ");\n";
                 ret << "break; }\n";
             }
@@ -189,7 +195,8 @@ string processTemplate(stringstream& t, vector<RelayedMessage*>& msgList, string
     return ret.str();
 }
 
-string processTemplateJava(stringstream& t, vector<RelayedMessage*>& msgList, string& pkgName) {
+string processTemplateJava(stringstream& t, vector<RelayedMessage*>& msgList, string& pkgName)
+{
     string reg_string = "<\\?(.*)\\?>";
     boost::regex markers(reg_string.c_str());
     boost::smatch m;
@@ -215,8 +222,7 @@ string processTemplateJava(stringstream& t, vector<RelayedMessage*>& msgList, st
             int i = 0;
             for (RelayedMessage* m : msgList) {
                 if (m->SendReceiveString.compare("send") == 0 || m->SendReceiveString.compare("") == 0) {
-                    ret << "final Subscriber sub" << i << " = connectedNode.newSubscriber(\"" << m->Topic << "\", \""
-                        << m->FullName << "\");\n";
+                    ret << "final Subscriber sub" << i << " = connectedNode.newSubscriber(\"" << m->Topic << "\", \"" << m->FullName << "\");\n";
                     ret << "sub" << i << ".addMessageListener(new " << m->getRosJavaCallBackName() << "());\n";
                     i++;
                 }
@@ -229,8 +235,7 @@ string processTemplateJava(stringstream& t, vector<RelayedMessage*>& msgList, st
             }
         } else if (s == "advertisement") {
             for (RelayedMessage* m : msgList) {
-                ret << m->getPublisherName() << " = connectedNode.newPublisher(\"" << m->Topic << "\", \""
-                    << m->FullName << "\");\n";
+                ret << m->getPublisherName() << " = connectedNode.newPublisher(\"" << m->Topic << "\", \"" << m->FullName << "\");\n";
             }
         } else if (s == "rosPublisherDecl") {
             for (RelayedMessage* m : msgList) {
@@ -246,8 +251,7 @@ string processTemplateJava(stringstream& t, vector<RelayedMessage*>& msgList, st
                         first = false;
                     }
                     ret << "if(id == " << m->Id << "l) {\n";
-                    ret << "MessageDeserializer<" + m->BaseName +
-                                    "> deserializer = node.getMessageSerializationFactory().newMessageDeserializer("
+                    ret << "MessageDeserializer<" + m->BaseName + "> deserializer = node.getMessageSerializationFactory().newMessageDeserializer("
                         << m->BaseName << "._TYPE);\n";
                     ret << "byte[] message = Arrays.copyOfRange(packet.getData(), Integer.SIZE / Byte.SIZE, "
                            "packet.getData().length-4);\n";
@@ -272,7 +276,8 @@ string processTemplateJava(stringstream& t, vector<RelayedMessage*>& msgList, st
     return ret.str();
 }
 
-vector<string> getFilesinFolder(string folder) {
+vector<string> getFilesinFolder(string folder)
+{
     namespace fs = boost::filesystem;
     fs::path someDir(folder.c_str());
     fs::directory_iterator end_iter;
@@ -289,8 +294,9 @@ vector<string> getFilesinFolder(string folder) {
     return result_set;
 }
 
-void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& msgList, string& pkgName) {
-    vector<string> tmplarr = getFilesinFolder(tmplDir);  // = Directory.GetFiles(tmplDir,"*.*");
+void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& msgList, string& pkgName)
+{
+    vector<string> tmplarr = getFilesinFolder(tmplDir); // = Directory.GetFiles(tmplDir,"*.*");
     for (string tmpl : tmplarr) {
         std::cout << "Template: " << tmpl << std::endl;
         int idx = tmpl.find_last_of('/');
@@ -306,7 +312,7 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
         if (basename.find(".tpl") != std::string::npos && outDir.find("proxy_gen") != std::string::npos) {
             string parsedContent = processTemplate(ss, msgList, pkgName);
 
-            string outputFile = outDir + "/" + basename.substr(0, basename.length()-3) + "cpp";
+            string outputFile = outDir + "/" + basename.substr(0, basename.length() - 3) + "cpp";
             std::ofstream ofs(outputFile);
             ofs << parsedContent;
             ofs.close();
@@ -314,7 +320,7 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
         } else if (outDir.find("src/main/java/util") != std::string::npos) {
             string parsedContent = processTemplateJava(ss, msgList, pkgName);
 
-            string outputFile = outDir + "/" + basename.substr(0, basename.length()-4) + "java";
+            string outputFile = outDir + "/" + basename.substr(0, basename.length() - 4) + "java";
             std::ofstream ofs(outputFile);
             ofs << parsedContent;
             ofs.close();
@@ -322,7 +328,8 @@ void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& ms
     }
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
     if (argc < 2) {
         // TODO update this usage information
         cout << "Usage MakeUDPProxy.exe <packageName> <optional j>" << endl;

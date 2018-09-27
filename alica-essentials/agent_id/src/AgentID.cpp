@@ -19,7 +19,7 @@ bool AgentID::operator==(const AgentID& other) const {
     if (this->id.size() != other.id.size()) {
         return false;
     }
-    for (int i = 0; i < this->id.size(); i++) {
+    for (int i = 0; i < static_cast<int>(this->id.size()); i++) {
         if (this->id[i] != other.id[i]) {
             return false;
         }

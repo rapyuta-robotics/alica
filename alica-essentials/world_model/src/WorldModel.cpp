@@ -1,15 +1,17 @@
 #include "supplementary/WorldModel.h"
 
+#include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <engine/teammanager/TeamManager.h>
-#include <engine/IAlicaClock.h>
 #include <supplementary/AgentID.h>
 
-namespace supplementary {
+namespace supplementary
+{
 WorldModel::WorldModel()
-        : maySendMessages(true)
-        , alicaEngine(nullptr)
-        , ownID(nullptr) {
+    : maySendMessages(true)
+    , alicaEngine(nullptr)
+    , ownID(nullptr)
+{
     this->sc = supplementary::SystemConfig::getInstance();
     this->maySendMessages = (*this->sc)["WorldModel"]->get<bool>("WorldModel", "MaySendMessages", NULL);
 }
@@ -18,7 +20,8 @@ WorldModel::~WorldModel() {}
 
 void WorldModel::init() {}
 
-bool WorldModel::setEngine(alica::AlicaEngine* ae) {
+bool WorldModel::setEngine(alica::AlicaEngine* ae)
+{
     std::cout << "WorldModel: SetEngine called!" << std::endl;
     if (this->alicaEngine == nullptr) {
         this->alicaEngine = ae;
@@ -28,37 +31,43 @@ bool WorldModel::setEngine(alica::AlicaEngine* ae) {
     }
 }
 
-alica::AlicaEngine* WorldModel::getEngine() {
+alica::AlicaEngine* WorldModel::getEngine()
+{
     return this->alicaEngine;
 }
 
-InfoTime WorldModel::getTime() {
+alica::AlicaTime WorldModel::getTime()
+{
     if (this->alicaEngine != nullptr) {
-        return this->alicaEngine->getIAlicaClock()->now();
+        return this->alicaEngine->getAlicaClock()->now();
     } else {
-        return 0;
+        return alica::AlicaTime::zero();
     }
 }
 
-bool WorldModel::isMaySendMessages() const {
+bool WorldModel::isMaySendMessages() const
+{
     return this->maySendMessages;
 }
 
-void WorldModel::setMaySendMessages(bool maySendMessages) {
+void WorldModel::setMaySendMessages(bool maySendMessages)
+{
     this->maySendMessages = maySendMessages;
 }
 
 /**
  * The AlicaEngine must be set, before this method is called!
  */
-const supplementary::AgentID* WorldModel::getOwnId() {
+const supplementary::AgentID* WorldModel::getOwnId()
+{
     if (!this->ownID) {
-        this->ownID = this->alicaEngine->getTeamManager()->getLocalAgentID();
+        this->ownID = this->alicaEngine->getTeamManager()->getLocalAgentID().get();
     }
     return this->ownID;
 }
 
-supplementary::SystemConfig* WorldModel::getSystemConfig() {
+supplementary::SystemConfig* WorldModel::getSystemConfig()
+{
     return this->sc;
 }
-}  // namespace supplementary
+} // namespace supplementary

@@ -25,11 +25,11 @@ public:
     void setInterval(long msInterval);
     const long getInterval() const;
     void run(bool notifyAll = false);
-    void registerCV(condition_variable* condVar);
+    void registerCV(std::condition_variable* condVar);
 
 private:
-    thread* runThread;
-    chrono::milliseconds msInterval; /** < The time between two fired events */
+    std::thread* runThread;
+    std::chrono::milliseconds msInterval; /** < The time between two fired events */
     bool running, started;
     t_notificationcallback<NotificationClass> callback;
     NotificationClass* obj;
@@ -40,8 +40,8 @@ NotifyTimer<NotificationClass>::NotifyTimer(
         long msInterval, t_notificationcallback<NotificationClass> callback, NotificationClass* obj) {
     this->started = true;
     this->running = false;
-    this->msInterval = chrono::milliseconds(msInterval);
-    this->runThread = new thread(&NotifyTimer::run, this, false);
+    this->msInterval = std::chrono::milliseconds(msInterval);
+    this->runThread = new std::thread(&NotifyTimer::run, this, false);
     this->callback = callback;
     this->obj = obj;
 }
@@ -52,7 +52,7 @@ void NotifyTimer<NotificationClass>::run(bool notifyAll) {
         if (!this->started)  // for destroying the NotifyTimer
             return;
 
-        chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
+        std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
         if (this->running) {
             (obj->*callback)();
         }
@@ -61,7 +61,7 @@ void NotifyTimer<NotificationClass>::run(bool notifyAll) {
         //			cout << "NotifyTimerEvent: Duration is " <<
         // chrono::duration_cast<chrono::nanoseconds>(dura).count()
         //					<< " nanoseconds" << endl;
-        this_thread::sleep_for(msInterval - dura);
+        std::this_thread::sleep_for(msInterval - dura);
     }
 }
 
@@ -101,7 +101,7 @@ bool NotifyTimer<NotificationClass>::isStarted() {
 
 template <class NotificationClass>
 void NotifyTimer<NotificationClass>::setInterval(long msInterval) {
-    this->msInterval = chrono::milliseconds(msInterval);
+    this->msInterval = std::chrono::milliseconds(msInterval);
 }
 
 template <class NotificationClass>
@@ -112,4 +112,4 @@ const long NotifyTimer<NotificationClass>::getInterval() const {
 } /* namespace supplementary */
 
 template <class NotificationClass>
-inline void supplementary::NotifyTimer<NotificationClass>::registerCV(condition_variable* condVar) {}
+inline void supplementary::NotifyTimer<NotificationClass>::registerCV(std::condition_variable* condVar) {}

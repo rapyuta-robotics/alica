@@ -1,17 +1,17 @@
 #include <gtest/gtest.h>
 
-#include <AutoDiff.h>
-#include "CNSat.h"
 #include "CNSMTGSolver.h"
+#include "CNSat.h"
 #include "GSolver.h"
+#include <autodiff/AutoDiff.h>
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <memory>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
+#include <iostream>
+#include <memory>
 #include <sstream>
+#include <string>
 
 using namespace std;
 using namespace alica;
@@ -21,20 +21,22 @@ using namespace autodiff;
 
 const int minCount = 2, maxCount = 20;
 const int minform = 2, maxform = 2;
-const long maxTime = 15000;  // 000000; //nanos
+const long maxTime = 15000; // 000000; //nanos
 const int solverCount = 3;
-const int count = 1000;  // solving count
+const int count = 1000; // solving count
 const double delta = 0.01;
 
-class SolverStats {
-public:
+class SolverStats
+{
+  public:
     int solved = 0;
     double n = 0;
     double mean = 0;
     double m2 = 0;
     int toSlow = 0;
 
-    SolverStats() {
+    SolverStats()
+    {
         solved = 0;
         n = 0;
         mean = 0;
@@ -42,7 +44,8 @@ public:
         toSlow = 0;
     }
 
-    void updateStats(double time, bool solved) {
+    void updateStats(double time, bool solved)
+    {
         if (solved)
             this->solved++;
 
@@ -58,18 +61,18 @@ public:
         m2 += delta * (time - mean);
     }
 
-    void reset() {
+    void reset()
+    {
         solved = 0;
         n = 0;
         mean = 0;
         m2 = 0;
     }
 
-    double curVariance() {
-        return (m2 / (n - 1));
-    }
+    double curVariance() { return (m2 / (n - 1)); }
 
-    string toOutputString() {
+    string toOutputString()
+    {
         stringstream ss;
         ss << mean << "\t" << curVariance() << "\t" << solved;
         return ss.str();
@@ -256,7 +259,7 @@ public:
 //						for (int k = 0; k < i; k++)
 //						{
 //							//constraint =  constraint &new AD.Abs(target->at(i) -
-//target->at(k))
+// target->at(k))
 //+  new
 // AD.Abs(targetY->at(i) - targetY->at(k)) > 2*delta; 							constraint =
 // constraint

@@ -8,16 +8,10 @@
 // Declare a test
 TEST(SystemConfigBasics, readValues)
 {
-    // determine the path to the test config
-    string path = supplementary::FileSystem::getSelfPath();
-
-    int place = path.rfind("devel");
-    path = path.substr(0, place);
-    path = path + "src/supplementary/system_config/test";
     // bring up the SystemConfig with the corresponding path
-    supplementary::SystemConfig *sc = supplementary::SystemConfig::getInstance();
-    sc->setRootPath(path);
-    sc->setConfigPath(path + "/etc");
+    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    sc->setRootPath(".");
+    sc->setConfigPath("./etc");
 
     // read int
     unsigned short uShortTestValue = (*sc)["Test"]->get<unsigned short>("uShortTestValue", NULL);
@@ -42,8 +36,7 @@ TEST(SystemConfigBasics, readValues)
     // read list of strings
     std::vector<std::string> stringListTestValue = (*sc)["Test"]->getList<std::string>("stringListTestValue", NULL);
     std::vector<std::string> referenceStringList{"asdf", "bla", "blub", "hust hust", "möp"};
-    for (int i = 0; i < stringListTestValue.size(); i++)
-    {
+    for (int i = 0; i < stringListTestValue.size(); i++) {
         EXPECT_STREQ(stringListTestValue[i].c_str(), referenceStringList[i].c_str());
     }
 
@@ -60,7 +53,7 @@ TEST(SystemConfigBasics, readValues)
     EXPECT_FLOAT_EQ(0.66412f, testSectionValue2);
 }
 // Run all the tests that were declared with TEST()
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

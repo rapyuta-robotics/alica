@@ -1,7 +1,10 @@
 #include "alica/reasoner/DummySolver.h"
+#include "alica/reasoner/DummyContext.h"
 #include "alica/reasoner/DummyTerm.h"
 #include "alica/reasoner/DummyVariable.h"
 
+#include <engine/AlicaEngine.h>
+#include <engine/blackboard/BlackBoard.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>
 
@@ -12,69 +15,57 @@ namespace reasoner
 {
 
 DummySolver::DummySolver(AlicaEngine* ae)
-    : alica::ISolver(ae)
+    : ISolver(ae)
 {
 }
 
-DummySolver::~DummySolver()
-{
-}
+DummySolver::~DummySolver() {}
 
-bool DummySolver::existsSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls)
+bool DummySolver::existsSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls)
 {
     return true;
 }
 
-bool DummySolver::getSolution(const VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<void*>& results)
+bool DummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results)
 {
-    std::vector<std::shared_ptr<DummyVariable>> dummyVariables;
-    dummyVariables.reserve(vars.size());
-    for (auto variable : vars) {
-        auto dummyVariable = std::dynamic_pointer_cast<alica::reasoner::DummyVariable>(variable->getSolverVar());
-        if (!dummyVariable) {
-            std::cerr << "DummySolver: Variable type does not match Solver type!" << std::endl;
-        }
-        dummyVariables.push_back(dummyVariable);
+    DummyContext* dc = static_cast<DummyContext*>(ctx);
+
+    results.reserve(dc->getVariables().size());
+
+    BlackBoard& bb = getAlicaEngine()->editBlackBoard();
+    for (const std::unique_ptr<DummyVariable>& dummyVariable : dc->getVariables()) {
+        const std::string& val = getValue(dummyVariable->getId(), calls);
+        BBIdent bid = bb.registerValue(val.c_str(), val.size());
+        results.push_back(bid);
     }
 
-    std::map<long, std::string> dummyVariableValueMap;
+    return true;
+}
 
-    for (auto& c : calls) {
-        auto constraintTerm = std::dynamic_pointer_cast<DummyTerm>(c->getConstraint());
+SolverVariable* DummySolver::createVariable(int64_t representingVariableID, SolverContext* ctx)
+{
+    return static_cast<DummyContext*>(ctx)->createVariable(representingVariableID);
+}
+std::unique_ptr<SolverContext> DummySolver::createSolverContext()
+{
+    return std::unique_ptr<SolverContext>(new DummyContext());
+}
+
+const std::string& DummySolver::getValue(int64_t id, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) const
+{
+    for (const auto& c : calls) {
+        DummyTerm* constraintTerm = dynamic_cast<DummyTerm*>(c->getConstraint());
         if (!constraintTerm) {
             std::cerr << "DummySolver: Constraint type not compatible with selected solver!" << std::endl;
-            return false;
+            continue;
         }
-        for (auto dummyVariable : dummyVariables) {
-            std::string value = constraintTerm->getValue(dummyVariable);
-            auto mapEntry = dummyVariableValueMap.find(dummyVariable->getID());
-            if (mapEntry == dummyVariableValueMap.end()) {
-                // insert new value
-                dummyVariableValueMap.emplace(dummyVariable->getID(), value);
-                continue;
-            }
-
-            // check consistence of values
-            if (mapEntry->second != value) {
-                return false;
-            }
+        const std::string* value = constraintTerm->tryGetValue(id);
+        if (value) {
+            return *value;
         }
     }
-
-    // TODO: set results
-    results.reserve(dummyVariables.size());
-    for (auto dummyVariable : dummyVariables) {
-        results.push_back(new std::string(dummyVariableValueMap[dummyVariable->getID()]));
-    }
-
-    return true;
-}
-
-std::shared_ptr<SolverVariable> DummySolver::createVariable(long representingVariableID)
-{
-    return std::make_shared<DummyVariable>(representingVariableID);
+    return DummyVariable::NO_VALUE;
 }
 
 } /* namespace reasoner */
-
 } /* namespace alica */

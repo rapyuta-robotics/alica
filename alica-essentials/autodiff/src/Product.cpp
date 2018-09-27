@@ -1,70 +1,78 @@
-/*
- * Product.cpp
- *
- *  Created on: Jun 12, 2014
- *      Author: psp
- */
 
 #include "Product.h"
 
-#include "TermBuilder.h"
 #include "Constant.h"
-#include "Zero.h"
+#include "TermHolder.h"
 
 #include <cmath>
+#include <sstream>
 
-namespace autodiff {
+namespace autodiff
+{
 
-Product::Product(shared_ptr<Term> left, shared_ptr<Term> right)
-        : Term() {
-    this->left = left;
-    this->right = right;
+Product::Product(TermPtr left, TermPtr right, TermHolder* owner)
+    : BinaryFunction(left, right, owner)
+{
 }
 
-int Product::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<Product> thisCasted = dynamic_pointer_cast<Product>(shared_from_this());
-    return visitor->visit(thisCasted);
+int Product::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-shared_ptr<Term> Product::aggregateConstants() {
-    left = left->aggregateConstants();
-    right = right->aggregateConstants();
-    if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0) {
-        shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
-        shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
-        return TermBuilder::constant(leftConstant->value * rightConstant->value);
-    } else if (dynamic_pointer_cast<Zero>(left) != 0) {
-        return left;
-    } else if (dynamic_pointer_cast<Zero>(right) != 0) {
-        return right;
+void Product::acceptRecursive(ITermVisitor* visitor)
+{
+    _left->acceptRecursive(visitor);
+    _right->acceptRecursive(visitor);
+    visitor->visit(this);
+}
+
+TermPtr Product::aggregateConstants()
+{
+    _left = _left->aggregateConstants();
+    _right = _right->aggregateConstants();
+    if (_left->isConstant() && _right->isConstant()) {
+        return _owner->constant(static_cast<Constant*>(_left)->getValue() * static_cast<Constant*>(_right)->getValue());
     }
-    if (dynamic_pointer_cast<Constant>(left) != 0) {
-        shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
-        if (leftConstant->value == 1) {
-            return right;
+    if (_left->isConstant()) {
+        if (static_cast<Constant*>(_left)->getValue() == 0.0) {
+            return _left;
+        }
+        if (static_cast<Constant*>(_left)->getValue() == 1.0) {
+            return _right;
         }
     }
-    if (dynamic_pointer_cast<Constant>(right) != 0) {
-        shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
-        if (rightConstant->value == 1) {
-            return left;
+    if (_right->isConstant()) {
+        if (static_cast<Constant*>(_right)->getValue() == 0.0) {
+            return _right;
+        }
+        if (static_cast<Constant*>(_right)->getValue() == 1.0) {
+            return _left;
         }
     }
-    return shared_from_this();
+    return this;
 }
 
-shared_ptr<Term> Product::derivative(shared_ptr<Variable> v) {
-    return left * right->derivative(v) + right * left->derivative(v);
+TermPtr Product::derivative(VarPtr v) const
+{
+    return _left * _right->derivative(v) + _right * _left->derivative(v);
 }
 
-string Product::toString() {
-    string str;
-    str.append("( ");
-    str.append(left->toString());
-    str.append(" * ");
-    str.append(right->toString());
-    str.append(" )");
-    return str;
+std::string Product::toString() const
+{
+    std::stringstream str;
+    str << "( " << _left->toString() << " * " << _right->toString() << " )";
+    return str.str();
+}
+
+void Product::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* l = tape.getValues(params[0].asIdx);
+    const double* r = tape.getValues(params[1].asIdx);
+    result[0] = l[0] * r[0];
+    for (int i = 1; i <= dim; ++i) {
+        result[i] = l[0] * r[i] + l[i] * r[0];
+    }
 }
 
 } /* namespace autodiff */

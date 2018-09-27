@@ -2,23 +2,18 @@
 
 #include "alica/reasoner/DummyTerm.h"
 
-#include <engine/constraintmodul/SolverVariable.h>
+#include <alica_solver_interface/SolverVariable.h>
 
-namespace alica {
-namespace reasoner {
+namespace alica
+{
+namespace reasoner
+{
 
-class DummyVariable : public DummyTerm, public alica::SolverVariable {
-public:
-    DummyVariable(long representingVariableID);
-    virtual ~DummyVariable();
-    long getID() const;
-
-    static long ID_COUNTER;
+class DummyVariable : public DummyTerm, public alica::SolverVariable
+{
+  public:
+    DummyVariable(int64_t representingVariableID);
     static std::string NO_VALUE;
-
-private:
-    long representingVariableID;
-    long id;
 };
 
 } /* namespace reasoner */

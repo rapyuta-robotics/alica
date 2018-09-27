@@ -1,46 +1,60 @@
-/*
- * Abs.cpp
- *
- *  Created on: Jul 17, 2014
- *      Author: psp
- */
 
 #include "Abs.h"
 
-#include "TermBuilder.h"
 #include "Constant.h"
+#include "Tape.h"
+#include "TermHolder.h"
 
 #include <cmath>
+#include <sstream>
 
-namespace autodiff {
-Abs::Abs(shared_ptr<Term> arg)
-        : Term() {
-    this->arg = arg;
+namespace autodiff
+{
+
+Abs::Abs(TermPtr arg, TermHolder* owner)
+    : UnaryFunction(arg, owner)
+{
 }
 
-int Abs::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<Abs> thisCasted = dynamic_pointer_cast<Abs>(shared_from_this());
-    return visitor->visit(thisCasted);
+int Abs::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
+}
+void Abs::acceptRecursive(ITermVisitor* visitor)
+{
+    _arg->acceptRecursive(visitor);
+    visitor->visit(this);
 }
 
-shared_ptr<Term> Abs::aggregateConstants() {
-    arg = arg->aggregateConstants();
-    if (dynamic_pointer_cast<Constant>(arg) != 0) {
-        shared_ptr<Constant> constArg = dynamic_pointer_cast<Constant>(arg);
-        return TermBuilder::constant(fabs(constArg->value));
+TermPtr Abs::aggregateConstants()
+{
+    _arg = _arg->aggregateConstants();
+    if (_arg->isConstant()) {
+        return _owner->constant(fabs(static_cast<Constant*>(_arg)->getValue()));
     } else {
-        return shared_from_this();
+        return this;
     }
 }
-shared_ptr<Term> Abs::derivative(shared_ptr<Variable> v) {
-    return arg->derivative(v) * arg / shared_from_this();
+
+TermPtr Abs::derivative(VarPtr v) const
+{
+    return _arg->derivative(v) * _arg / this;
 }
 
-string Abs::toString() {
-    string str;
-    str.append("abs( ");
-    str.append(arg->toString());
-    str.append(" )");
-    return str;
+std::string Abs::toString() const
+{
+    std::stringstream str;
+    str << "abs( " << _arg->toString() << " )";
+    return str.str();
+}
+
+void Abs::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* arg = tape.getValues(params[0].asIdx);
+    result[0] = fabs(arg[0]);
+    double sign = std::copysign(1.0, arg[0]);
+    for (int i = 1; i <= dim; ++i) {
+        result[i] = arg[i] * sign;
+    }
 }
 } /* namespace autodiff */

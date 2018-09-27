@@ -1,34 +1,38 @@
 #pragma once
 
-#include <AutoDiff.h>
-#include <engine/constraintmodul/ISolver.h>
+#include "GSolver.h"
+
 #include <engine/Types.h>
-#include <vector>
+#include <engine/constraintmodul/ISolver.h>
 #include <memory>
 #include <mutex>
-#include "GSolver.h"
+#include <vector>
 
 //#define CGSolver_DEBUG
 
-namespace alica {
+namespace alica
+{
 class AlicaEngine;
 class IVariableSyncModule;
+class SolverContext;
 
-namespace reasoner {
+namespace reasoner
+{
 class GSolver;
 
-class CGSolver : public ISolver {
-public:
+class CGSolver : public ISolver<CGSolver, double>
+{
+  public:
     CGSolver(AlicaEngine* ae);
     virtual ~CGSolver();
 
-    bool existsSolution(
-            const alica::VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls) override;
-    bool getSolution(const alica::VariableGrp& vars, std::vector<std::shared_ptr<ProblemDescriptor>>& calls,
-            std::vector<void*>& results) override;
-    std::shared_ptr<SolverVariable> createVariable(long id) override;
+    bool existsSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
+    bool getSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<double>& results);
 
-protected:
+    virtual SolverVariable* createVariable(int64_t id, alica::SolverContext* context) override;
+    virtual std::unique_ptr<SolverContext> createSolverContext() override;
+
+  private:
     GSolver _gs;
     GSolver _sgs;
 
@@ -39,5 +43,5 @@ protected:
     double _lastFEvals;
 };
 
-}  // namespace reasoner
-}  // namespace alica
+} // namespace reasoner
+} // namespace alica

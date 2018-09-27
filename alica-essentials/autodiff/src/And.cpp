@@ -1,70 +1,83 @@
-/*
- * And.cpp
- *
- *  Created on: Jul 17, 2014
- *      Author: psp
- */
-
 #include "And.h"
-
-#include "TermBuilder.h"
 #include "Constant.h"
+#include "TermHolder.h"
 
-namespace autodiff {
-And::And(shared_ptr<Term> left, shared_ptr<Term> right)
-        : Term() {
-    this->left = left;
-    this->right = right;
+#include <sstream>
+
+namespace autodiff
+{
+And::And(TermPtr left, TermPtr right, TermHolder* owner)
+    : BinaryFunction(left, right, owner)
+{
 }
 
-int And::accept(shared_ptr<ITermVisitor> visitor) {
-    shared_ptr<And> thisCasted = dynamic_pointer_cast<And>(shared_from_this());
-    return visitor->visit(thisCasted);
+int And::accept(ITermVisitor* visitor)
+{
+    return visitor->visit(this);
 }
 
-shared_ptr<Term> And::aggregateConstants() {
-    left = left->aggregateConstants();
-    if (left == Term::FALSE) {
-        return left;
+void And::acceptRecursive(ITermVisitor* visitor)
+{
+    _left->acceptRecursive(visitor);
+    _right->acceptRecursive(visitor);
+    visitor->visit(this);
+}
+
+TermPtr And::aggregateConstants()
+{
+    _left = _left->aggregateConstants();
+    if (_left == _owner->falseConstant()) {
+        return _left;
     }
-    right = right->aggregateConstants();
-    if (left == Term::TRUE) {
-        return right;
+    _right = _right->aggregateConstants();
+    if (_left == _owner->trueConstant()) {
+        return _right;
     }
-    if (right == Term::FALSE) {
-        return right;
+    if (_right == _owner->falseConstant()) {
+        return _right;
     }
-    if (right == Term::TRUE) {
-        return left;
+    if (_right == _owner->trueConstant()) {
+        return _left;
     }
-    if (dynamic_pointer_cast<Constant>(left) != 0 && dynamic_pointer_cast<Constant>(right) != 0) {
-        shared_ptr<Constant> leftConstant = dynamic_pointer_cast<Constant>(left);
-        shared_ptr<Constant> rightConstant = dynamic_pointer_cast<Constant>(right);
-        if (leftConstant->value > 0.75 && rightConstant->value > 0.75) {
-            return Term::TRUE;
+    if (_left->isConstant() && _right->isConstant()) {
+        if (static_cast<Constant*>(_left)->getValue() > 0.75 && static_cast<Constant*>(_right)->getValue() > 0.75) {
+            return _owner->trueConstant();
         } else {
-            return Term::FALSE;
+            return _owner->falseConstant();
         }
     } else {
-        return shared_from_this();
+        return this;
     }
 }
 
-shared_ptr<Term> And::derivative(shared_ptr<Variable> v) {
+TermPtr And::derivative(VarPtr /*v*/) const
+{
     throw "Symbolic Derivation of And not supported";
+    return nullptr;
 }
 
-shared_ptr<Term> And::negate() {
-    return left->negate() | right->negate();
+TermPtr And::negate() const
+{
+    return _left->negate() | _right->negate();
 }
 
-string And::toString() {
-    string str;
-    str.append("and( ");
-    str.append(left->toString());
-    str.append(", ");
-    str.append(right->toString());
-    str.append(" )");
-    return str;
+std::string And::toString() const
+{
+    std::stringstream str;
+    str << "and( " << _left->toString();
+    str << ", " << _right->toString();
+    str << " )";
+    return str.str();
+}
+
+void And::Eval(const Tape& tape, const Parameter* params, double* result, const double* vars, int dim)
+{
+    const double* l = tape.getValues(params[0].asIdx);
+    const double* r = tape.getValues(params[1].asIdx);
+    double val = std::min(l[0], r[0]);
+    result[0] = val > 0.0 ? 1.0 : val;
+    for (int i = 1; i <= dim; ++i) {
+        result[i] = l[i] + r[i];
+    }
 }
 } /* namespace autodiff */
