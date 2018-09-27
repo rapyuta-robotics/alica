@@ -7,6 +7,7 @@
 #include "engine/IAlicaCommunication.h"
 #include "engine/PlanBase.h"
 #include "engine/TeamObserver.h"
+
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include <CGSolver.h>
@@ -22,7 +23,7 @@ using alica::reasoner::CGSolver;
 
 class AlicaVariableHandlingTest : public ::testing::Test
 {
-  protected:
+protected:
     supplementary::SystemConfig* sc;
     alica::AlicaEngine* ae1;
     alica::AlicaEngine* ae2;
@@ -50,7 +51,7 @@ class AlicaVariableHandlingTest : public ::testing::Test
         sc->setHostname("nase");
 
         // setup the engine
-        ae1 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "VHMaster", ".", true);
+        ae1 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "VHMaster", true);
         bc1 = new alica::BehaviourCreator();
         cc1 = new alica::ConditionCreator();
         uc1 = new alica::UtilityFunctionCreator();
@@ -61,7 +62,7 @@ class AlicaVariableHandlingTest : public ::testing::Test
 
         sc->setHostname("hairy");
 
-        ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "VHMaster", ".", true);
+        ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "VHMaster", true);
         bc2 = new alica::BehaviourCreator();
         cc2 = new alica::ConditionCreator();
         uc2 = new alica::UtilityFunctionCreator();
@@ -113,17 +114,17 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
         }
     } while (ae1->getTeamManager()->getTeamSize() != 2 || ae2->getTeamManager()->getTeamSize() != 2);
 
-    std::shared_ptr<const RunningPlan> rp1 = ae1->getPlanBase()->getDeepestNode();
-    std::shared_ptr<const RunningPlan> rp2 = ae1->getPlanBase()->getDeepestNode();
+    const RunningPlan* rp1 = ae1->getPlanBase()->getDeepestNode();
+    const RunningPlan* rp2 = ae1->getPlanBase()->getDeepestNode();
 
     alica::AgentIDConstPtr id1 = ae1->getTeamManager()->getLocalAgentID();
     alica::AgentIDConstPtr id2 = ae2->getTeamManager()->getLocalAgentID();
     EXPECT_NE(*id1, *id2) << "Agents use the same ID.";
 
-    EXPECT_EQ(rp1->getPlan()->getId(), rp2->getPlan()->getId());
-    EXPECT_EQ(rp1->getPlan()->getName(), "Lvl1");
-    EXPECT_EQ(rp1->getAssignment()->getAllRobots().size(), 2u);
-    EXPECT_EQ(rp2->getAssignment()->getAllRobots().size(), 2u);
+    EXPECT_EQ(rp1->getActivePlan()->getId(), rp2->getActivePlan()->getId());
+    EXPECT_EQ(rp1->getActivePlan()->getName(), "Lvl1");
+    EXPECT_EQ(rp1->getAssignment().size(), 2u);
+    EXPECT_EQ(rp2->getAssignment().size(), 2u);
 
     EXPECT_EQ(rp1->getActiveState()->getId(), 1524453481856);
     EXPECT_EQ(rp2->getActiveState()->getId(), 1524453481856);
@@ -134,15 +135,15 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     alica::Query q1;
 
     q1.addDomainVariable(id1, "X", ae1);
-    ok = q1.getSolution<CGSolver, double>(rp1, result1);
+    ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_FALSE(ok);
     EXPECT_TRUE(result1.empty());
     EXPECT_EQ(0, q1.getPartCount());
 
     q1.clearDomainVariables();
 
-    const alica::Variable* v1 = rp1->getPlan()->getVariableByName("L1A");
-    const alica::Variable* v2 = rp1->getPlan()->getVariableByName("L1B");
+    const alica::Variable* v1 = rp1->getActivePlan()->getVariableByName("L1A");
+    const alica::Variable* v2 = rp1->getActivePlan()->getVariableByName("L1B");
 
     EXPECT_NE(v1, nullptr);
     EXPECT_NE(v2, nullptr);
@@ -150,7 +151,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     q1.addStaticVariable(v1);
     q1.addStaticVariable(v2);
 
-    ok = q1.getSolution<CGSolver, double>(rp1, result1);
+    ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(2, result1.size());
     EXPECT_EQ(1, q1.getPartCount());
@@ -159,7 +160,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     EXPECT_LT(result1[0] + result1[1], 10.0);
     EXPECT_GT(result1[0] + result1[1], -10.0);
     q1.addDomainVariable(id1, "X", ae1);
-    ok = q1.getSolution<CGSolver, double>(rp1, result1);
+    ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(3, result1.size());
     EXPECT_EQ(1, q1.getPartCount());
@@ -181,12 +182,12 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     q1.clearStaticVariables();
     q1.clearDomainVariables();
 
-    v1 = rp1->getPlan()->getVariableByName("L3A");
-    v2 = rp1->getPlan()->getVariableByName("L3B");
+    v1 = rp1->getActivePlan()->getVariableByName("L3A");
+    v2 = rp1->getActivePlan()->getVariableByName("L3B");
     q1.addStaticVariable(v1);
     q1.addStaticVariable(v2);
 
-    ok = q1.getSolution<CGSolver, double>(rp1, result1);
+    ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(2, result1.size());
     EXPECT_EQ(4, q1.getPartCount());
@@ -195,7 +196,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     q2.addDomainVariable(id2, "X", ae2);
     q2.addDomainVariable(id2, "Y", ae2);
 
-    ok = q2.getSolution<CGSolver, double>(rp2, result1);
+    ok = q2.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp2), result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(2, result1.size());
     EXPECT_EQ(3, q2.getPartCount());
@@ -206,7 +207,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     q1.addDomainVariable(id1, "X", ae1);
     q1.addDomainVariable(id1, "Y", ae1);
-    ok = q1.getSolution<CGSolver, double>(rp1, result1);
+    ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(2, result1.size());
     EXPECT_EQ(4, q1.getPartCount());

@@ -3,20 +3,21 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/IAlicaCommunication.h"
 #include "engine/PlanBase.h"
-#include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
-#include "engine/model/Task.h"
 #include "engine/model/Variable.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <supplementary/ITrigger.h>
-#include <supplementary/Timer.h>
+#include <alica_common_config/debug_output.h>
 
+#include <supplementary/ITrigger.h>
+
+#include <assert.h>
 #include <iostream>
 
 namespace alica
@@ -27,49 +28,50 @@ namespace alica
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(const std::string& name)
-    : name(name)
-    , engine(nullptr)
-    , failure(false)
-    , success(false)
-    , callInit(true)
-    , started(true)
-    , _configuration(nullptr)
-    , msInterval(100)
-    , msDelayedStart(0)
+        : _name(name)
+        , _engine(nullptr)
+        , _failure(false)
+        , _success(false)
+        , _callInit(true)
+        , _started(true)
+        , _configuration(nullptr)
+        , _msInterval(100)
+        , _msDelayedStart(0)
+        , _running(false)
+        , _contextInRun(nullptr)
+        , _behaviourTrigger(nullptr)
+        , _runThread(nullptr)
+        , _context(nullptr)
 {
-    this->running = false;
-    this->timer = new supplementary::Timer(0, 0);
-    this->timer->registerCV(&this->runCV);
-    this->behaviourTrigger = nullptr;
-    this->runThread = new std::thread(&BasicBehaviour::runInternal, this);
 }
 
 BasicBehaviour::~BasicBehaviour()
 {
-    this->started = false;
-    this->runCV.notify_all();
-    this->timer->start();
-    this->runThread->join();
-    delete this->runThread;
-    delete this->timer;
-    if (behaviourTrigger != nullptr) {
-        delete this->behaviourTrigger;
+    _started = false;
+    _runCV.notify_all();
+    if (_runThread) {
+        _runThread->join();
+        delete _runThread;
     }
 }
 
-const std::string& BasicBehaviour::getName() const
+bool BasicBehaviour::isRunningInContext(const RunningPlan* rp) const
 {
-    return this->name;
-}
-
-void BasicBehaviour::setName(const std::string& name)
-{
-    this->name = name;
+    // we run in the context of rp if rp is the context in run or the context in run is null and context is rp
+    RunningPlan* curInRun;
+    curInRun = _contextInRun;
+    return curInRun == rp || (curInRun == nullptr && _context == rp && _started && _running);
 }
 
 void BasicBehaviour::setConfiguration(const BehaviourConfiguration* beh)
 {
+    assert(_configuration == nullptr);
     _configuration = beh;
+    if (_configuration->isEventDriven()) {
+        _runThread = new std::thread(&BasicBehaviour::runInternalTriggered, this);
+    } else {
+        _runThread = new std::thread(&BasicBehaviour::runInternalTimed, this);
+    }
 }
 
 const Variable* BasicBehaviour::getVariableByName(const std::string& name) const
@@ -77,33 +79,13 @@ const Variable* BasicBehaviour::getVariableByName(const std::string& name) const
     return _configuration->getVariableByName(name);
 }
 
-int BasicBehaviour::getDelayedStart() const
-{
-    return this->timer->getDelayedStart();
-}
-
-void BasicBehaviour::setDelayedStart(long msDelayedStart)
-{
-    this->timer->setDelayedStart(msDelayedStart);
-}
-
-int BasicBehaviour::getInterval() const
-{
-    return this->timer->getInterval();
-}
-
-void BasicBehaviour::setInterval(long msInterval)
-{
-    this->timer->setInterval(msInterval);
-}
-
 /**
  * Convenience method to obtain the robot's own id.
  * @return the own robot id
  */
-const supplementary::AgentID* BasicBehaviour::getOwnId() const
+AgentIDConstPtr BasicBehaviour::getOwnId() const
 {
-    return this->engine->getTeamManager()->getLocalAgentID();
+    return _engine->getTeamManager()->getLocalAgentID();
 }
 
 /**
@@ -111,13 +93,9 @@ const supplementary::AgentID* BasicBehaviour::getOwnId() const
  */
 bool BasicBehaviour::stop()
 {
-    this->success = false;
-    this->failure = false;
-    if (behaviourTrigger == nullptr) {
-        return this->timer->stop();
-    } else {
-        this->running = false;
-    }
+    _running = false;
+    _success = false;
+    _failure = false;
     return true;
 }
 
@@ -126,94 +104,55 @@ bool BasicBehaviour::stop()
  */
 bool BasicBehaviour::start()
 {
-    this->callInit = true;
-    if (behaviourTrigger == nullptr) {
-        return this->timer->start();
-    } else {
-        this->running = true;
+    _callInit = true;
+    _running = true;
+    if (!_configuration->isEventDriven()) {
+        _runCV.notify_all();
     }
     return true;
 }
 
-shared_ptr<RunningPlan> BasicBehaviour::getRunningPlan() const
+void BasicBehaviour::setSuccess()
 {
-    return runningPlan;
-}
-
-void BasicBehaviour::setRunningPlan(shared_ptr<RunningPlan> runningPlan)
-{
-    this->runningPlan = runningPlan;
-}
-
-void BasicBehaviour::setSuccess(bool success)
-{
-    if (!this->success && success) {
-        this->runningPlan->getAlicaEngine()->getPlanBase()->addFastPathEvent(this->runningPlan);
+    if (!_success) {
+        _engine->getPlanBase()->addFastPathEvent(_context);
     }
-    this->success = success;
+    _success = true;
 }
 
 bool BasicBehaviour::isSuccess() const
 {
-    return success && !this->callInit;
+    return _success && !_callInit;
 }
 
-void BasicBehaviour::setFailure(bool failure)
+void BasicBehaviour::setFailure()
 {
-    if (!this->failure && failure) {
-        this->runningPlan->getAlicaEngine()->getPlanBase()->addFastPathEvent(this->runningPlan);
+    if (!_failure) {
+        _engine->getPlanBase()->addFastPathEvent(_context);
     }
-    this->failure = failure;
+    _failure = true;
 }
 
 bool BasicBehaviour::isFailure() const
 {
-    return failure && !this->callInit;
+    return _failure && !_callInit;
 }
 
 void BasicBehaviour::setTrigger(supplementary::ITrigger* trigger)
 {
-    this->behaviourTrigger = trigger;
-    this->behaviourTrigger->registerCV(&this->runCV);
-}
-
-const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryPointOfHigherPlan(const EntryPoint* ep)
-{
-    if (ep == nullptr) {
-        return nullptr;
-    }
-    std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
-    while (cur != nullptr) {
-        const EntryPointGrp& eps = static_cast<const Plan*>(cur->getPlan())->getEntryPoints();
-        if (std::find(eps.begin(), eps.end(), ep) != eps.end()) {
-            return cur->getAssignment()->getRobotsWorking(ep);
-        }
-        cur = cur->getParent().lock();
-    }
-    return nullptr;
-}
-
-const std::vector<const supplementary::AgentID*>* BasicBehaviour::robotsInEntryPoint(const EntryPoint* ep)
-{
-    if (ep == nullptr) {
-        return nullptr;
-    }
-    std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
-    if (cur != nullptr) {
-        return cur->getAssignment()->getRobotsWorking(ep);
-    }
-    return nullptr;
+    _behaviourTrigger = trigger;
+    _behaviourTrigger->registerCV(&_runCV);
 }
 
 void BasicBehaviour::initInternal()
 {
-    this->success = false;
-    this->failure = false;
-    this->callInit = false;
+    _success = false;
+    _failure = false;
+    _callInit = false;
     try {
-        this->initialiseParameters();
-    } catch (std::exception& e) {
-        std::cerr << "BB: Exception in Behaviour-INIT of: " << this->getName() << std::endl << e.what() << std::endl;
+        initialiseParameters();
+    } catch (const std::exception& e) {
+        ALICA_ERROR_MSG("BB: Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
     }
 }
 
@@ -225,101 +164,76 @@ bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut)
             return true;
         }
     }
-    valueOut = "";
+    valueOut.clear();
     return false;
 }
 
-void BasicBehaviour::runInternal()
+void BasicBehaviour::runInternalTimed()
 {
-    std::unique_lock<std::mutex> lck(runCV_mtx);
-    while (this->started) {
-        this->runCV.wait(lck, [&] {
-            if (behaviourTrigger == nullptr) {
-                return !this->started || this->timer->isNotifyCalled(&runCV);
-            } else {
-                return !this->started || (this->behaviourTrigger->isNotifyCalled(&runCV) && this->running);
+    while (_started) {
+        {
+            std::unique_lock<std::mutex> lck(_runLoopMutex);
+            if (!_running) {
+                _contextInRun = nullptr;
+                _runCV.wait(lck, [this] { return _running || !_started; }); // wait for signal to run
             }
-        }); // protection against spurious wake-ups
-        if (!this->started)
+            _contextInRun = _context;
+        }
+        if (!_started) {
+            _contextInRun = nullptr;
             return;
-
-        if (this->callInit)
-            this->initInternal();
-#ifdef BEH_DEBUG
-        std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
-#endif
-        // TODO: pass something like an eventarg (to be implemented) class-member, which could be set for an event
-        // triggered (to be implemented) behaviour.
-        try {
-            if (behaviourTrigger == nullptr) {
-                this->run((void*)timer);
-            } else {
-                this->run((void*)behaviourTrigger);
+        }
+        if (_callInit) {
+            if (_msDelayedStart > std::chrono::milliseconds(0)) {
+                std::this_thread::sleep_for(_msDelayedStart);
             }
-        } catch (std::exception& e) {
-            std::string err = string("Exception catched:  ") + this->getName() + std::string(" - ") + std::string(e.what());
+            initInternal();
+        }
+        std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
+        try {
+            run(nullptr);
+        } catch (const std::exception& e) {
+            std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
             sendLogMessage(4, err);
         }
-#ifdef BEH_DEBUG
-        const BehaviourConfiguration* conf = static_cast<const BehaviourConfiguration*>(this->runningPlan->getPlan());
-        if (!conf->isEventDriven()) {
-            double dura = (std::chrono::high_resolution_clock::now() - start).count() / 1000000.0 - 1.0 / conf->getFrequency() * 1000.0;
-            if (dura > 0.1) {
-                std::stringstream ss;
-                ss << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura << "ms!";
-                sendLogMessage(2, ss.str());
-                // cout << "BB: Behaviour " << conf->getBehaviour()->getName() << " exceeded runtime by \t" << dura
-                //	<< "ms!" << endl;
-            }
-        }
-#endif
-        if (behaviourTrigger == nullptr) {
-            this->timer->setNotifyCalled(false, &runCV);
-        } else {
-            this->behaviourTrigger->setNotifyCalled(false, &runCV);
+        std::chrono::duration<float, std::milli> duration = std::chrono::high_resolution_clock::now() - start;
+        ALICA_WARNING_MSG_IF(
+                duration > _msInterval + std::chrono::microseconds(100), "BB: Behaviour " << _name << "exceeded runtime:  " << duration.count() << "ms!");
+        if (duration < _msInterval) {
+            std::this_thread::sleep_for(_msInterval - duration);
         }
     }
 }
 
-const EntryPoint* BasicBehaviour::getParentEntryPoint(const std::string& taskName)
+void BasicBehaviour::runInternalTriggered()
 {
-    std::shared_ptr<RunningPlan> parent = this->runningPlan->getParent().lock();
-    if (parent == nullptr) {
-        return nullptr;
-    }
-    for (const EntryPoint* e : static_cast<const Plan*>(parent->getPlan())->getEntryPoints()) {
-        if (e->getTask()->getName() == taskName) {
-            return e;
+    while (_started) {
+        {
+            std::unique_lock<std::mutex> lck(_runLoopMutex);
+            _contextInRun = nullptr;
+            _runCV.wait(lck, [this] { return !_started || (_behaviourTrigger->isNotifyCalled(&_runCV) && _running); });
+            _contextInRun = _started ? _context : nullptr;
         }
-    }
-    return nullptr;
-}
-
-const EntryPoint* BasicBehaviour::getHigherEntryPoint(const std::string& planName, const std::string& taskName)
-{
-    std::shared_ptr<RunningPlan> cur = this->runningPlan->getParent().lock();
-    while (cur != nullptr) {
-        if (cur->getPlan()->getName() == planName) {
-            for (const EntryPoint* e : ((Plan*)cur->getPlan())->getEntryPoints()) {
-                if (e->getTask()->getName() == taskName) {
-                    return e;
-                }
-            }
-            return nullptr;
+        if (!_started) {
+            return;
         }
-        cur = cur->getParent().lock();
+        if (_callInit) {
+            initInternal();
+        }
+
+        try {
+            run(static_cast<void*>(_behaviourTrigger));
+        } catch (const std::exception& e) {
+            std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
+            sendLogMessage(4, err);
+        }
+        _behaviourTrigger->setNotifyCalled(false, &_runCV);
     }
-    return nullptr;
 }
 
-void BasicBehaviour::sendLogMessage(int level, const string& message) const
+void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 {
-    runningPlan->sendLogMessage(level, message);
-}
-
-void BasicBehaviour::setEngine(AlicaEngine* engine)
-{
-    this->engine = engine;
+    _engine->getCommunicator()->sendLogMessage(level, message);
 }
 
 } /* namespace alica */

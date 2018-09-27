@@ -1,38 +1,33 @@
-#include <test_alica.h>
-#include <gtest/gtest.h>
-#include <engine/AlicaEngine.h>
-#include <engine/AlicaClock.h>
-#include "engine/IAlicaCommunication.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
-#include "UtilityFunctionCreator.h"
-#include <communication/AlicaRosCommunication.h>
+#include "DummyTestSummand.h"
+#include "TestConstantValueSummand.h"
 #include "TestWorldModel.h"
+#include "UtilityFunctionCreator.h"
+#include "engine/IAlicaCommunication.h"
+#include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
+#include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
 #include "engine/model/Plan.h"
-#include "TestConstantValueSummand.h"
-#include "engine/TeamObserver.h"
-#include "engine/PlanBase.h"
 #include "engine/model/State.h"
-#include "TestWorldModel.h"
-#include "DummyTestSummand.h"
 #include "engine/teammanager/TeamManager.h"
+#include <communication/AlicaRosCommunication.h>
+#include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
+#include <gtest/gtest.h>
+#include <test_alica.h>
 
-class AlicaSyncTransition : public ::testing::Test { /* namespace alicaTests */
+class AlicaSyncTransition : public AlicaTestFixtureBase
+{ /* namespace alicaTests */
 protected:
-    supplementary::SystemConfig* sc;
-    alica::AlicaEngine* ae;
     alica::AlicaEngine* ae2;
-    alica::BehaviourCreator* bc;
-    alica::ConditionCreator* cc;
-    alica::UtilityFunctionCreator* uc;
-    alica::ConstraintCreator* crc;
     alicaRosProxy::AlicaRosCommunication* ros;
     alicaRosProxy::AlicaRosCommunication* ros2;
 
-    virtual void SetUp() {
+    virtual void SetUp()
+    {
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -51,7 +46,8 @@ protected:
         crc = new alica::ConstraintCreator();
     }
 
-    virtual void TearDown() {
+    virtual void TearDown()
+    {
         ae->shutdown();
         ae2->shutdown();
         sc->shutdown();
@@ -69,20 +65,19 @@ protected:
 /**
  * Test for SyncTransition
  */
-TEST_F(AlicaSyncTransition, syncTransitionTest) {
+TEST_F(AlicaSyncTransition, syncTransitionTest)
+{
     ASSERT_NO_SIGNAL
 
     sc->setHostname("hairy");
-    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
-            "RealMasterPlanForSyncTest", ".", true);
+    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
     ros = new alicaRosProxy::AlicaRosCommunication(ae);
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(ros);
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("nase");
-    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA",
-            "RealMasterPlanForSyncTest", ".", true);
+    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
     ros2 = new alicaRosProxy::AlicaRosCommunication(ae2);
     ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(ros2);
@@ -92,12 +87,10 @@ TEST_F(AlicaSyncTransition, syncTransitionTest) {
     ae2->start();
 
     for (int i = 0; i < 20; i++) {
-        std::cout << "AE ----------------------------------------------- " << *ae->getTeamManager()->getLocalAgentID()
-                  << std::endl;
+        std::cout << i << "AE ----------------------------------------------- " << *ae->getTeamManager()->getLocalAgentID() << std::endl;
         step(ae);
 
-        std::cout << "AE ----------------------------------------------- " << *ae2->getTeamManager()->getLocalAgentID()
-                  << std::endl;
+        std::cout << i << "AE ----------------------------------------------- " << *ae2->getTeamManager()->getLocalAgentID() << std::endl;
         step(ae2);
 
         if (i == 2) {
@@ -109,16 +102,12 @@ TEST_F(AlicaSyncTransition, syncTransitionTest) {
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825428924(true);
         }
         if (i > 1 && i < 4) {
-            EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
-                    1418825395940);
-            EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
-                    1418825404963);
+            EXPECT_EQ(ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825395940);
+            EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825404963);
         }
         if (i == 5) {
-            EXPECT_EQ((*ae->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
-                    1418825409988);
-            EXPECT_EQ((*ae2->getPlanBase()->getRootNode()->getChildren()->begin())->getActiveState()->getId(),
-                    1418825411686);
+            EXPECT_EQ(ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825409988);
+            EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825411686);
         }
     }
 }

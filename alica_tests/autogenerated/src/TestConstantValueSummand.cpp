@@ -7,25 +7,22 @@
 
 #include "TestConstantValueSummand.h"
 
+#include <engine/planselector/IAssignment.h>
+
 namespace alica
 {
 
-TestConstantValueSummand::TestConstantValueSummand(double weight, std::string name, long id, double val)
-    : robotId(nullptr)
+TestConstantValueSummand::TestConstantValueSummand(double weight, double val)
+        : USummand(weight)
+        , robotId(nullptr)
+        , val(val)
 {
-    this->weight = weight;
-    this->name = name;
-    this->id = id;
-    this->val = val;
 }
 
 TestConstantValueSummand::~TestConstantValueSummand() {}
-void TestConstantValueSummand::cacheEvalData() {}
-UtilityInterval TestConstantValueSummand::eval(IAssignment* ass)
-{
-    ui.setMin(val);
-    ui.setMax(val);
 
-    return ui;
+UtilityInterval TestConstantValueSummand::eval(IAssignment) const
+{
+    return UtilityInterval(val, val);
 }
 } /* namespace alica */

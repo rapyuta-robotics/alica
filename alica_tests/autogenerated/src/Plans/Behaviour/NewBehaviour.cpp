@@ -8,7 +8,7 @@ namespace alica
 /*PROTECTED REGION ID(staticVars1413810772726) ENABLED START*/ // initialise static variables here
 /*PROTECTED REGION END*/
 NewBehaviour::NewBehaviour()
-    : DomainBehaviour("NewBehaviour")
+        : DomainBehaviour("NewBehaviour")
 {
     /*PROTECTED REGION ID(con1413810772726) ENABLED START*/ // Add additional options here
     /*PROTECTED REGION END*/

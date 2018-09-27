@@ -12,7 +12,7 @@ namespace alica
 {
 class TriggerB : public DomainBehaviour
 {
-  public:
+public:
     TriggerB();
     virtual ~TriggerB();
     virtual void run(void* msg);
@@ -20,11 +20,11 @@ class TriggerB : public DomainBehaviour
     int callCounter;
     int initCounter;
     /*PROTECTED REGION END*/
-  protected:
+protected:
     virtual void initialiseParameters();
     /*PROTECTED REGION ID(pro1428508316905) ENABLED START*/ // Add additional protected methods here
     /*PROTECTED REGION END*/
-  private:
+private:
 /*PROTECTED REGION ID(prv1428508316905) ENABLED START*/ // Add additional private methods here
         /*PROTECTED REGION END*/};
         } /* namespace alica */

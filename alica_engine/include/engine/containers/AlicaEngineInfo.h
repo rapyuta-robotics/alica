@@ -1,27 +1,30 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
+#include "engine/AgentIDConstPtr.h"
 
 #include <string>
 #include <tuple>
 #include <vector>
 
-namespace alica {
-typedef std::tuple<const supplementary::AgentID*, std::string, std::string, std::string, std::string, std::string,
-        std::vector<const supplementary::AgentID*>>
-        stdAlicaEngineInfo;
-struct AlicaEngineInfo {
+namespace alica
+{
+typedef std::tuple<AgentIDConstPtr, std::string, std::string, std::string, std::string, std::string, std::vector<AgentIDConstPtr>> stdAlicaEngineInfo;
+struct AlicaEngineInfo
+{
     AlicaEngineInfo()
-            : senderID(nullptr) {}
-    const supplementary::AgentID* senderID;
+            : senderID(nullptr)
+    {
+    }
+    AgentIDConstPtr senderID;
     std::string masterPlan;
     std::string currentPlan;
     std::string currentState;
     std::string currentRole;
     std::string currentTask;
-    std::vector<const supplementary::AgentID*> robotIDsWithMe;
+    std::vector<AgentIDConstPtr> robotIDsWithMe;
 
-    AlicaEngineInfo(stdAlicaEngineInfo& s) {
+    AlicaEngineInfo(stdAlicaEngineInfo&& s)
+    {
         senderID = std::get<0>(s);
         masterPlan = std::move(std::get<1>(s));
         currentPlan = std::move(std::get<2>(s));
@@ -31,9 +34,6 @@ struct AlicaEngineInfo {
         robotIDsWithMe = std::move(std::get<6>(s));
     }
 
-    stdAlicaEngineInfo toStandard() {
-        return std::move(
-                make_tuple(senderID, masterPlan, currentPlan, currentState, currentRole, currentTask, robotIDsWithMe));
-    }
+    stdAlicaEngineInfo toStandard() const { return std::make_tuple(senderID, masterPlan, currentPlan, currentState, currentRole, currentTask, robotIDsWithMe); }
 };
-}  // namespace alica
+} // namespace alica

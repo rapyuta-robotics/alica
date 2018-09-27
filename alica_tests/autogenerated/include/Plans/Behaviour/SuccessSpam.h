@@ -8,17 +8,17 @@ namespace alica
 {
 class SuccessSpam : public DomainBehaviour
 {
-  public:
+public:
     SuccessSpam();
     virtual ~SuccessSpam();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1522377401286) ENABLED START*/ // Add additional public methods here
     /*PROTECTED REGION END*/
-  protected:
+protected:
     virtual void initialiseParameters();
     /*PROTECTED REGION ID(pro1522377401286) ENABLED START*/ // Add additional protected methods here
     /*PROTECTED REGION END*/
-  private:
+private:
 /*PROTECTED REGION ID(prv1522377401286) ENABLED START*/ // Add additional private methods here
         /*PROTECTED REGION END*/};
         } /* namespace alica */

@@ -25,12 +25,12 @@ using std::shared_ptr;
 using std::vector;
 
 SyncModule::SyncModule(AlicaEngine* ae)
-    : myId(nullptr)
-    , ae(ae)
-    , pr(nullptr)
-    , running(false)
-    , ticks(0)
-    , communicator(nullptr)
+        : myId(nullptr)
+        , ae(ae)
+        , pr(nullptr)
+        , running(false)
+        , ticks(0)
+        , communicator(nullptr)
 {
 }
 
@@ -136,7 +136,7 @@ bool SyncModule::followSyncTransition(const Transition* trans)
 }
 void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
 {
-    if (!this->running || *(st->senderID) == *(this->myId))
+    if (!this->running || st->senderID == this->myId)
         return;
     if (this->ae->getTeamManager()->isAgentIgnored(st->senderID))
         return;
