@@ -51,7 +51,7 @@ UtilityInterval DistBallRobot::eval(IAssignment ass) const
             curPosition = alicaTests::TestWorldModel::getTwo()->robotsXPos[pos];
         }
         // if no opp is near ball
-        ui.setMin(std::max(ui.getMin(), 1 - fabs(sb - curPosition) / 18000));
+        ui.setMin(std::max(ui.getMin(), 1 - std::abs(sb - curPosition) / 18000));
         ++numAssignedRobots;
     }
     ui.setMax(ui.getMin());
@@ -63,7 +63,7 @@ UtilityInterval DistBallRobot::eval(IAssignment ass) const
             } else {
                 curPosition = alicaTests::TestWorldModel::getTwo()->robotsXPos.at(i);
             }
-            ui.setMax(std::max(ui.getMax(), 1 - fabs(sb - curPosition) / 18000));
+            ui.setMax(std::max(ui.getMax(), 1 - std::abs(sb - curPosition) / 18000));
         }
     }
 
