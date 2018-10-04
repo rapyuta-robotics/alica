@@ -102,7 +102,7 @@ bool RobotExecutableRegistry::robotExists(string robotName)
     return false;
 }
 
-const AgentID* RobotExecutableRegistry::getRobotId(string robotName)
+const AgentID* RobotExecutableRegistry::getRobotId(const std::string& robotName) const
 {
     for (auto& agentEntry : this->robotMap) {
         if (agentEntry.second->name == robotName) {
@@ -112,7 +112,7 @@ const AgentID* RobotExecutableRegistry::getRobotId(string robotName)
     return nullptr;
 }
 
-const AgentID* RobotExecutableRegistry::getRobotId(vector<uint8_t>& idVector, string& robotName)
+const AgentID* RobotExecutableRegistry::getRobotId(const std::vector<uint8_t>& idVector, std::string& robotName)
 {
     auto agentID = this->agentIDManager->getIDFromBytes(idVector);
     auto agentEntry = this->robotMap.find(agentID);

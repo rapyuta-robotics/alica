@@ -1,11 +1,11 @@
 # RobotId determines the ROBOT-Environment Variables, under which the reported process is running.
-agent_id/AgentID robotId
+agent_id/AgentID robot_id
 
 # Process ID from the Processes.conf file.
-int32 processKey
+int32 process_key
 
 # Parameter Set ID from the Processes.conf file
-int32 paramSet
+int32 param_set
 
 # State has to be set to one of the values above. 
 uint8 state

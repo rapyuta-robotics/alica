@@ -32,9 +32,9 @@ ControlledProcessManager::~ControlledProcessManager()
 void ControlledProcessManager::handleProcessStats(std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair)
 {
     this->timeLastMsgReceived = timePstsPair.first;
-    for (auto& processStat : timePstsPair.second->processStats) {
+    for (auto& processStat : timePstsPair.second->process_stats) {
         // get the corresponding controlled robot
-        auto agentID = this->pmRegistry->getRobotId(processStat.robotId.id);
+        auto agentID = this->pmRegistry->getRobotId(processStat.robot_id.id);
         ControlledRobot* controlledRobot = this->getControlledRobot(agentID);
         if (controlledRobot != nullptr) {
             // call the controlled robot to update its corresponding process statistics.

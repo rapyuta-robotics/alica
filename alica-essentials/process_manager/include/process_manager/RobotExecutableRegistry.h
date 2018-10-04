@@ -2,12 +2,13 @@
 
 #include <supplementary/AgentID.h>
 
-#include <vector>
-#include <string>
 #include <map>
 #include <stdint.h>
+#include <string>
+#include <vector>
 
-namespace supplementary {
+namespace supplementary
+{
 
 class AgentIDFactory;
 class AgentID;
@@ -20,16 +21,17 @@ class SystemConfig;
  * The RobotExecutableRegistry help the process manager and its
  * control GUI to remember/manage the names and IDs of robots and executables.
  */
-class RobotExecutableRegistry {
-public:
+class RobotExecutableRegistry
+{
+  public:
     static RobotExecutableRegistry* get();
     const std::map<const AgentID*, RobotMetaData*, supplementary::AgentIDComparator>& getRobots() const;
     void addRobot(std::string agentName, const AgentID* agentID);
     const AgentID* addRobot(std::string agentName);
     std::string addRobot(const AgentID* agentID);
-    const AgentID* getRobotId(std::string agentName);
+    const AgentID* getRobotId(const std::string& agentName) const;
     const AgentID* getRobotId(const std::vector<uint8_t>& idVector);
-    const AgentID* getRobotId(std::vector<uint8_t>& idVector, std::string& robotName);
+    const AgentID* getRobotId(const std::vector<uint8_t>& idVector, std::string& robotName);
     bool getRobotName(const AgentID* agentID, std::string& robotName);
     bool robotExists(const AgentID* agentID);
     bool robotExists(std::string agentName);
@@ -47,7 +49,7 @@ public:
     bool executableExists(int execId);
     bool executableExists(std::string execName);
 
-private:
+  private:
     RobotExecutableRegistry();
     virtual ~RobotExecutableRegistry();
 

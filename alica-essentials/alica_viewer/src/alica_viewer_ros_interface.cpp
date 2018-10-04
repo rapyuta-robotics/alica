@@ -42,13 +42,13 @@ void AlicaViewerRosInterface::run()
 void AlicaViewerRosInterface::alicaEngineInfoCallback(const alica_msgs::AlicaEngineInfo& msg)
 {
     AlicaEngineInfo aei;
-    aei.senderID = _agent_id_manager->getIDFromBytes(msg.senderID.id);
-    aei.masterPlan = msg.masterPlan;
-    aei.currentPlan = msg.currentPlan;
-    aei.currentState = msg.currentState;
-    aei.currentRole = msg.currentRole;
-    aei.currentTask = msg.currentTask;
-    for (const auto& robotID : msg.robotIDsWithMe) {
+    aei.senderID = _agent_id_manager->getIDFromBytes(msg.sender_id.id);
+    aei.masterPlan = msg.master_plan;
+    aei.currentPlan = msg.current_plan;
+    aei.currentState = msg.current_state;
+    aei.currentRole = msg.current_role;
+    aei.currentTask = msg.current_task;
+    for (const auto& robotID : msg.robot_ids_with_me) {
         aei.robotIDsWithMe.push_back(_agent_id_manager->getIDFromBytes(robotID.id));
     }
     Q_EMIT alicaEngineInfoUpdate(aei);
@@ -57,11 +57,11 @@ void AlicaViewerRosInterface::alicaEngineInfoCallback(const alica_msgs::AlicaEng
 void AlicaViewerRosInterface::alicaPlanInfoCallback(const alica_msgs::PlanTreeInfo& msg)
 {
     PlanTreeInfo pti;
-    pti.senderID = _agent_id_manager->getIDFromBytes(msg.senderID.id);
-    for (int64_t i : msg.stateIDs) {
+    pti.senderID = _agent_id_manager->getIDFromBytes(msg.sender_id.id);
+    for (int64_t i : msg.state_ids) {
         pti.stateIDs.push_back(i);
     }
-    for (int64_t i : msg.succeededEps) {
+    for (int64_t i : msg.succeeded_eps) {
         pti.succeededEPs.push_back(i);
     }
     Q_EMIT alicaPlanInfoUpdate(pti);

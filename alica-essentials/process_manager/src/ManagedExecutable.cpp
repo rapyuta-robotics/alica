@@ -206,14 +206,14 @@ void ManagedExecutable::report(process_manager::ProcessStats& psts, const AgentI
 {
     if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED) {
         process_manager::ProcessStat ps;
-        ps.robotId.id = agentID->toByteVector();
+        ps.robot_id.id = agentID->toByteVector();
         ps.cpu = this->cpu;
         ps.mem = this->memory * ManagedExecutable::kernelPageSize / 1024.0 / 1024.0; // MB
-        ps.processKey = this->metaExec->id;
-        ps.paramSet = this->runningParamSet;
+        ps.process_key = this->metaExec->id;
+        ps.param_set = this->runningParamSet;
         ps.state = this->state;
         ps.publishing = (this->publishing ? 1 : 0);
-        psts.processStats.push_back(ps);
+        psts.process_stats.push_back(ps);
     }
 }
 

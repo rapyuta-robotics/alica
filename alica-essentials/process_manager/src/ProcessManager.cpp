@@ -130,10 +130,10 @@ void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
     // check whether this message is for me, 0 is a wild card for all ProcessManagers
     const AgentID* receiverId = nullptr;
     supplementary::BroadcastID bcid(nullptr, 0);
-    if (pc->receiverId.type == supplementary::AgentID::BC_TYPE) {
+    if (pc->receiver_id.type == supplementary::AgentID::BC_TYPE) {
         receiverId = &bcid;
     } else {
-        receiverId = this->pmRegistry->getRobotId(pc->receiverId.id);
+        receiverId = this->pmRegistry->getRobotId(pc->receiver_id.id);
     }
     if (receiverId != this->ownId && !(simMode && dynamic_cast<const supplementary::BroadcastID*>(receiverId))) {
         return;
@@ -157,9 +157,9 @@ void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
 
 void ProcessManager::changeLogPublishing(process_manager::ProcessCommandPtr pc, bool shouldPublish)
 {
-    for (auto& agentIDros : pc->robotIds) {
+    for (const auto& agentIDros : pc->robot_ids) {
         // Check whether the robot with the given id is known
-        string robotName;
+        std::string robotName;
         if (const AgentID* agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName)) {
             // Find the ManagedRobot object
             auto mapIter = this->robotMap.find(agentID);
@@ -172,8 +172,8 @@ void ProcessManager::changeLogPublishing(process_manager::ProcessCommandPtr pc, 
                 mngdRobot = mapIter->second;
             }
 
-            for (int i = 0; i < pc->processKeys.size(); i++) {
-                mngdRobot->changeLogPublishing(pc->processKeys[i], shouldPublish, this->pmRegistry);
+            for (int i = 0; i < pc->process_keys.size(); i++) {
+                mngdRobot->changeLogPublishing(pc->process_keys[i], shouldPublish, this->pmRegistry);
             }
         } else {
             cout << "PM: Received command for unknown robot id: " << agentID << endl;
@@ -188,14 +188,14 @@ void ProcessManager::changeLogPublishing(process_manager::ProcessCommandPtr pc, 
  */
 void ProcessManager::changeDesiredProcessStates(process_manager::ProcessCommandPtr pc, bool shouldRun)
 {
-    if (pc->processKeys.size() != pc->paramSets.size()) {
+    if (pc->process_keys.size() != pc->param_sets.size()) {
         cerr << "PM: Received malformed process command! #ProcessKeys != #ParamSets" << endl;
         return;
     }
 
-    for (auto& agentIDros : pc->robotIds) {
+    for (const auto& agentIDros : pc->robot_ids) {
         // Check whether the robot with the given id is known
-        string robotName;
+        std::string robotName;
         if (const AgentID* agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName)) {
             // Find the ManagedRobot object
             auto mapIter = this->robotMap.find(agentID);
@@ -208,8 +208,8 @@ void ProcessManager::changeDesiredProcessStates(process_manager::ProcessCommandP
                 mngdRobot = mapIter->second;
             }
 
-            for (int i = 0; i < pc->processKeys.size(); i++) {
-                mngdRobot->changeDesiredState(pc->processKeys[i], pc->paramSets[i], shouldRun, this->pmRegistry);
+            for (int i = 0; i < pc->process_keys.size(); i++) {
+                mngdRobot->changeDesiredState(pc->process_keys[i], pc->param_sets[i], shouldRun, this->pmRegistry);
             }
         } else {
             cout << "PM: Received command for unknown robot id: " << agentID << endl;
@@ -313,7 +313,7 @@ void ProcessManager::updateTotalCPUTimes()
 void ProcessManager::report()
 {
     process_manager::ProcessStats psts;
-    psts.senderId.id = this->ownId->toByteVector();
+    psts.sender_id.id = this->ownId->toByteVector();
     for (auto const& mngdRobot : this->robotMap) {
         // cout << "PM: report() We try to add another ProcessStat from " << mngdRobot.second->name << "!" << endl;
         mngdRobot.second->report(psts);
