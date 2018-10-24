@@ -49,7 +49,7 @@ public:
     void setBehaviour(const Behaviour* beh);
 
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
-    const Variable* getVariableByName(const std::string& name) const;
+    const Variable* getVariable(const std::string &name) const { return _behaviour->getVariable(name); };
 
     bool stop();
     bool start();

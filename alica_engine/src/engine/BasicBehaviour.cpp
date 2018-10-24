@@ -74,16 +74,6 @@ void BasicBehaviour::setBehaviour(const Behaviour* beh)
     }
 }
 
-const Variable* BasicBehaviour::getVariableByName(const std::string& name) const
-{
-    for (const Variable* variable : _behaviour->getVariables()) {
-        if (variable->getName() == name) {
-            return variable;
-        }
-    }
-    return nullptr;
-}
-
 /**
  * Convenience method to obtain the robot's own id.
  * @return the own robot id
