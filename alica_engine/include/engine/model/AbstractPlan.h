@@ -59,7 +59,6 @@ private:
     void setMasterPlan(bool isMasterPlan);
 
     void setFileName(const std::string& fileName);
-    void setVariables(const VariableGrp& variables);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
 

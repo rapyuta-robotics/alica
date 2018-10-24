@@ -89,11 +89,6 @@ void AbstractPlan::setFileName(const std::string& fileName)
     _fileName = fileName;
 }
 
-void AbstractPlan::setVariables(const VariableGrp& variables)
-{
-    _variables = variables;
-}
-
 void AbstractPlan::setRuntimeCondition(RuntimeCondition* runtimeCondition)
 {
     _runtimeCondition = runtimeCondition;
