@@ -86,7 +86,7 @@ protected:
      */
     virtual void initialiseParameters() {}
     /**
-     * Calledn whenever a basic behavior is stopped, i.e., when the corresponding state is left.
+     * Called whenever a basic behavior is stopped, i.e., when the corresponding state is left.
      * Override for behaviour specific initialisation. Guaranteed to be executed on the behavior's thread.
      */
     virtual void onTermination() {}
