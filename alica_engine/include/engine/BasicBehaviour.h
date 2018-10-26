@@ -78,9 +78,14 @@ protected:
 
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
-     * Override for behaviour specific initialisation.
+     * Override for behaviour specific initialisation. Guaranteed to be executed on the beahvior's thread.
      */
-    virtual void initialiseParameters(){};
+    virtual void initialiseParameters() {}
+    /**
+     * Calledn whenever a basic behavior is stopped, i.e., when the corresponding state is left.
+     * Override for behaviour specific initialisation. Guaranteed to be executed on the beahvior's thread.
+     */
+    virtual void onTermination() {}
 
 private:
     void runInternalTimed();
