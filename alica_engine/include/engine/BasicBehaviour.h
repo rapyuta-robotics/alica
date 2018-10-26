@@ -70,7 +70,11 @@ public:
 
     void sendLogMessage(int level, const std::string& message) const;
 
-    virtual void init(){};
+    /**
+     * Called after construction.
+     * Override in case custom initialization has to happen after the behavior has been integrated into the engine.
+     */
+    virtual void init() {}
 
 protected:
     AgentIDConstPtr getOwnId() const;
