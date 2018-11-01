@@ -70,7 +70,11 @@ public:
 
     void sendLogMessage(int level, const std::string& message) const;
 
-    virtual void init(){};
+    /**
+     * Called after construction.
+     * Override in case custom initialization has to happen after the behavior has been integrated into the engine.
+     */
+    virtual void init() {}
 
 protected:
     AgentIDConstPtr getOwnId() const;
@@ -78,9 +82,14 @@ protected:
 
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
-     * Override for behaviour specific initialisation.
+     * Override for behaviour specific initialisation. Guaranteed to be executed on the behavior's thread.
      */
-    virtual void initialiseParameters(){};
+    virtual void initialiseParameters() {}
+    /**
+     * Called whenever a basic behavior is stopped, i.e., when the corresponding state is left.
+     * Override for behaviour specific termination. Guaranteed to be executed on the behavior's thread.
+     */
+    virtual void onTermination() {}
 
 private:
     void runInternalTimed();
