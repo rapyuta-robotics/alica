@@ -1,16 +1,17 @@
 #ifndef RELAYEDMESSAGE_H_
 #define RELAYEDMESSAGE_H_
 
-#include <iostream>
 #include <functional>
+#include <iostream>
 
 #include <boost/regex.hpp>
 #include <cstdint>
 
 using namespace std;
 
-class RelayedMessage {
-public:
+class RelayedMessage
+{
+  public:
     RelayedMessage(string topic, string message, string options, string sendReceive);
     ~RelayedMessage();
 

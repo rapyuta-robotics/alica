@@ -44,10 +44,11 @@
 #include <QLayout>
 #include <QRect>
 #include <QStyle>
-class flowlayout : public QLayout {
+class flowlayout : public QLayout
+{
     Q_OBJECT
 
-public:
+  public:
     explicit flowlayout(QWidget* parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
     explicit flowlayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);
     ~flowlayout();
@@ -65,7 +66,7 @@ public:
     QSize sizeHint() const;
     QLayoutItem* takeAt(int index);
 
-private:
+  private:
     int doLayout(const QRect& rect, bool testOnly) const;
     int smartSpacing(QStyle::PixelMetric pm) const;
 
@@ -74,4 +75,4 @@ private:
     int m_vSpace;
 };
 
-#endif  // FLOWLAYOUT_H
+#endif // FLOWLAYOUT_H

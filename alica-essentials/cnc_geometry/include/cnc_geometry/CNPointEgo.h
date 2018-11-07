@@ -2,16 +2,18 @@
 
 #include "CNPointTemplate.h"
 
-namespace geometry {
+namespace geometry
+{
 
 class CNPointAllo;
 class CNPositionAllo;
 class CNVecEgo;
 
-class CNPointEgo : public CNPointTemplate<CNPointEgo> {
-public:
+class CNPointEgo : public CNPointTemplate<CNPointEgo>
+{
+  public:
     CNPointEgo()
-            : CNPointEgo(0, 0, 0){};
+        : CNPointEgo(0, 0, 0){};
     CNPointEgo(double x, double y, double z = 0);
     CNPointEgo(const CNPointEgo& obj);
     virtual ~CNPointEgo();

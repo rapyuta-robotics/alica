@@ -2,13 +2,17 @@
 
 #include <supplementary/AgentID.h>
 
-namespace supplementary {
+namespace supplementary
+{
 
 RobotMetaData::RobotMetaData(std::string name, const AgentID* agentID)
-        : name(name)
-        , agentID(agentID) {}
+    : name(name)
+    , agentID(agentID)
+{
+}
 
-RobotMetaData::~RobotMetaData() {
+RobotMetaData::~RobotMetaData()
+{
     delete agentID;
 }
 

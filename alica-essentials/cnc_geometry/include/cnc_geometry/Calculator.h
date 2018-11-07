@@ -6,23 +6,25 @@
  */
 #pragma once
 
-#include "CNPointTemplate.h"
 #include "CNPointAllo.h"
 #include "CNPointEgo.h"
+#include "CNPointTemplate.h"
 #include "CNVecTemplate.h"
 
 #include <vector>
 
 using std::vector;
 
-namespace geometry {
+namespace geometry
+{
 
 /**
  * Normalizes the given angle between M_PI and -M_PI.
  * @param angle to be normalized
  * @return angle normalized between M_PI and -M_PI
  */
-inline double normalizeAngle(double angle) {
+inline double normalizeAngle(double angle)
+{
     if (angle > M_PI) {
         while (angle > M_PI)
             angle -= 2 * M_PI;
@@ -39,7 +41,8 @@ inline double normalizeAngle(double angle) {
  * @param angle2
  * @return Normalized difference angle
  */
-inline double deltaAngle(double angle1, double angle2) {
+inline double deltaAngle(double angle1, double angle2)
+{
     return normalizeAngle(angle2 - angle1);
 }
 
@@ -49,7 +52,8 @@ inline double deltaAngle(double angle1, double angle2) {
  * @param angle2
  * @return Normalized absolute difference angle
  */
-inline double absDeltaAngle(double angle1, double angle2) {
+inline double absDeltaAngle(double angle1, double angle2)
+{
     return abs(deltaAngle(angle1, angle2));
 }
 
@@ -61,7 +65,8 @@ inline double absDeltaAngle(double angle1, double angle2) {
  * @param y2 Y coordinate of point 2
  * @return Distance between the two points.
  */
-inline double distance(double x1, double y1, double x2, double y2) {
+inline double distance(double x1, double y1, double x2, double y2)
+{
     double dx = (x1 - x2);
     double dy = (y1 - y2);
 
@@ -77,8 +82,8 @@ inline double distance(double x1, double y1, double x2, double y2) {
  * @return True if the given point is inside or on the edge of the rectangle.
  */
 template <class T>
-bool isInsideRectangle(
-        const CNPointTemplate<T>& rectPointA, const CNPointTemplate<T>& rectPointB, const CNPointTemplate<T>& point) {
+bool isInsideRectangle(const CNPointTemplate<T>& rectPointA, const CNPointTemplate<T>& rectPointB, const CNPointTemplate<T>& point)
+{
     double minX = min(rectPointA.x, rectPointB.x);
     double maxX = max(rectPointA.x, rectPointB.x);
     double minY = min(rectPointA.y, rectPointB.y);
@@ -95,7 +100,8 @@ bool isInsideRectangle(
  * @return True if point q lies on line segment 'pr'.
  */
 template <class T>
-bool onSegment(const CNPointTemplate<T>& p, const CNPointTemplate<T>& q, const CNPointTemplate<T>& r) {
+bool onSegment(const CNPointTemplate<T>& p, const CNPointTemplate<T>& q, const CNPointTemplate<T>& r)
+{
     if (q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) && q.y <= max(p.y, r.y) && q.y >= min(p.y, r.y)) {
         return true;
     }
@@ -110,12 +116,13 @@ bool onSegment(const CNPointTemplate<T>& p, const CNPointTemplate<T>& q, const C
  * @return 0 --> p, q and r are colinear; 1 --> Clockwise; 2 --> Counterclockwise
  */
 template <class T>
-int orientation(const CNPointTemplate<T>& p, const CNPointTemplate<T>& q, const CNPointTemplate<T>& r) {
+int orientation(const CNPointTemplate<T>& p, const CNPointTemplate<T>& q, const CNPointTemplate<T>& r)
+{
     int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
 
     if (val == 0)
-        return 0;              // colinear
-    return (val > 0) ? 1 : 2;  // clock or counterclock wise
+        return 0;             // colinear
+    return (val > 0) ? 1 : 2; // clock or counterclock wise
 }
 
 /**
@@ -127,8 +134,8 @@ int orientation(const CNPointTemplate<T>& p, const CNPointTemplate<T>& q, const 
  * @return True if line segment 'p1q1' and 'p2q2' intersect
  */
 template <class T>
-bool doIntersect(const CNPointTemplate<T>& p1, const CNPointTemplate<T>& q1, const CNPointTemplate<T>& p2,
-        const CNPointTemplate<T>& q2) {
+bool doIntersect(const CNPointTemplate<T>& p1, const CNPointTemplate<T>& q1, const CNPointTemplate<T>& p2, const CNPointTemplate<T>& q2)
+{
     // Find the four orientations needed for general and
     // special cases
     int o1 = orientation(p1, q1, p2);
@@ -157,7 +164,7 @@ bool doIntersect(const CNPointTemplate<T>& p1, const CNPointTemplate<T>& q1, con
     if (o4 == 0 && onSegment(p2, q1, q2))
         return true;
 
-    return false;  // Doesn't fall in any of the above cases
+    return false; // Doesn't fall in any of the above cases
 }
 
 /**
@@ -168,7 +175,8 @@ bool doIntersect(const CNPointTemplate<T>& p1, const CNPointTemplate<T>& q1, con
  * @return Distance between the p and line ab
  */
 template <class T>
-double distancePointToLine(const CNPointTemplate<T>& a, const CNPointTemplate<T>& b, const CNPointTemplate<T>& p) {
+double distancePointToLine(const CNPointTemplate<T>& a, const CNPointTemplate<T>& b, const CNPointTemplate<T>& p)
+{
     auto a2p = p - a;
     auto a2b = b - a;
     return (a2p.x * a2b.y - a2p.y * a2b.x) / a2p.length();
@@ -184,7 +192,8 @@ double distancePointToLine(const CNPointTemplate<T>& a, const CNPointTemplate<T>
  * @param ly2
  * @return Distance between (x,y) and line segment (lx1, ly1) and (lx2, ly2).
  */
-inline double distancePointToLineSegmentCalc(double px, double py, double lx1, double ly1, double lx2, double ly2) {
+inline double distancePointToLineSegmentCalc(double px, double py, double lx1, double ly1, double lx2, double ly2)
+{
     double abx = lx2 - lx1;
     double aby = ly2 - ly1;
     double apx = px - lx1;
@@ -221,8 +230,8 @@ inline double distancePointToLineSegmentCalc(double px, double py, double lx1, d
  * @return Distance between (x,y) and line segment ab
  */
 template <class T>
-typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, double>::type distancePointToLineSegment(
-        double x, double y, const T& a, const T& b) {
+typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, double>::type distancePointToLineSegment(double x, double y, const T& a, const T& b)
+{
     return distancePointToLineSegmentCalc(x, y, a.x, a.y, b.x, b.y);
 }
 
@@ -233,8 +242,8 @@ typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, double>::
  * @return True if the point p lies inside the polygon
  */
 template <typename T>
-typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::type isInsidePolygon(
-        const vector<T>& polygon, const T& p) {
+typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::type isInsidePolygon(const vector<T>& polygon, const T& p)
+{
     // There must be at least 3 points to build a polygon
     if (polygon.size() < 3)
         return false;
@@ -262,7 +271,7 @@ typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::ty
     } while (i != 0);
 
     // Return true if count is odd, false otherwise
-    return count & 1;  // Same as (count%2 == 1)
+    return count & 1; // Same as (count%2 == 1)
 }
 
 /**
@@ -275,8 +284,9 @@ typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::ty
  * @return True if all points are outside the triangle (a,b,c).
  */
 template <class T>
-typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::type outsideTriangle(
-        const T& a, const T& b, const T& c, double tolerance, const vector<T>& points) {
+typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::type outsideTriangle(const T& a, const T& b, const T& c, double tolerance,
+                                                                                                   const vector<T>& points)
+{
     auto a2b = b - a;
     auto b2c = c - b;
     auto c2a = a - c;
@@ -287,9 +297,8 @@ typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::ty
         auto b2p = p - b;
         auto c2p = p - c;
 
-        if ((a2p.x * a2b.y - a2p.y * a2b.x) / a2p.normalize().length() < tolerance &&
-                (b2p.x * b2c.y - b2p.y * b2c.x) / b2p.normalize().length() < tolerance &&
-                (c2p.x * c2a.y - c2p.y * c2a.x) / c2p.normalize().length() < tolerance) {
+        if ((a2p.x * a2b.y - a2p.y * a2b.x) / a2p.normalize().length() < tolerance && (b2p.x * b2c.y - b2p.y * b2c.x) / b2p.normalize().length() < tolerance &&
+            (c2p.x * c2a.y - c2p.y * c2a.x) / c2p.normalize().length() < tolerance) {
             return false;
         }
     }
@@ -303,7 +312,8 @@ typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::ty
  * @return True is a is left of b.
  */
 template <class T>
-bool leftOf(const CNPointTemplate<T>& a, const CNPointTemplate<T>& b) {
+bool leftOf(const CNPointTemplate<T>& a, const CNPointTemplate<T>& b)
+{
     return (a.x * b.y - a.y * b.x) < 0;
 }
 
@@ -314,7 +324,8 @@ bool leftOf(const CNPointTemplate<T>& a, const CNPointTemplate<T>& b) {
  * @return True is a is left of b.
  */
 template <class T>
-bool leftOf(const CNVecTemplate<T>& a, const CNVecTemplate<T>& b) {
+bool leftOf(const CNVecTemplate<T>& a, const CNVecTemplate<T>& b)
+{
     return (a.x * b.y - a.y * b.x) < 0;
 }
 
@@ -324,7 +335,8 @@ bool leftOf(const CNVecTemplate<T>& a, const CNVecTemplate<T>& b) {
  * @return The mean of all given points.
  */
 template <typename T>
-typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, T>::type calculateMean(const vector<T>& points) {
+typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, T>::type calculateMean(const vector<T>& points)
+{
     if (points.empty()) {
         return T();
     }
@@ -343,7 +355,8 @@ typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, T>::type 
  *  Sign function (Vorzeichenfunktion)
  */
 template <typename T>
-static int sgn(const T val) {
+static int sgn(const T val)
+{
     return (T(0) < val) - (val < T(0));
 }
 

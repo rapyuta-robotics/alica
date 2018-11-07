@@ -231,4 +231,4 @@ string SystemConfig::getEnv(const string& var)
         return val;
     }
 }
-}
+} // namespace supplementary

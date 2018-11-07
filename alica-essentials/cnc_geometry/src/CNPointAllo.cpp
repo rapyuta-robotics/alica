@@ -5,18 +5,21 @@
 
 #include "cnc_geometry/CNPositionAllo.h"
 
-namespace geometry {
+namespace geometry
+{
 
 using std::shared_ptr;
 using std::string;
 
-CNPointAllo::CNPointAllo(double x, double y, double z) {
+CNPointAllo::CNPointAllo(double x, double y, double z)
+{
     this->x = x;
     this->y = y;
     this->z = z;
 }
 
-CNPointAllo::CNPointAllo(const CNPointAllo& obj) {
+CNPointAllo::CNPointAllo(const CNPointAllo& obj)
+{
     this->x = obj.x;
     this->y = obj.y;
     this->z = obj.z;
@@ -24,7 +27,8 @@ CNPointAllo::CNPointAllo(const CNPointAllo& obj) {
 
 CNPointAllo::~CNPointAllo() {}
 
-string CNPointAllo::toString() const {
+string CNPointAllo::toString() const
+{
     std::stringstream ss;
     ss << "CNPointAllo: x: " << x << " y: " << y << " z: " << z << std::endl;
     return ss.str();
@@ -36,7 +40,8 @@ string CNPointAllo::toString() const {
  * @param alloPos the allocentric reference position
  * @return an egocentric 2d point with alloPos as origin of ordinates
  */
-CNPointEgo CNPointAllo::toEgo(CNPositionAllo& me) const {
+CNPointEgo CNPointAllo::toEgo(CNPositionAllo& me) const
+{
     CNPointEgo ego = CNPointEgo();
 
     double x = this->x - me.x;
@@ -76,19 +81,23 @@ CNPointEgo CNPointAllo::toEgo(CNPositionAllo& me) const {
 //    return ego;
 //}
 
-double CNPointAllo::distanceTo(const CNPointAllo& other) const {
+double CNPointAllo::distanceTo(const CNPointAllo& other) const
+{
     return (*this - other).length();
 }
 
-CNPointAllo CNPointAllo::operator+(const CNVecAllo& right) const {
+CNPointAllo CNPointAllo::operator+(const CNVecAllo& right) const
+{
     return CNPointAllo(this->x + right.x, this->y + right.y, this->z + right.z);
 }
 
-CNPointAllo CNPointAllo::operator-(const CNVecAllo& right) const {
+CNPointAllo CNPointAllo::operator-(const CNVecAllo& right) const
+{
     return CNPointAllo(this->x - right.x, this->y - right.y, this->z - right.z);
 }
 
-CNVecAllo CNPointAllo::operator-(const CNPointAllo& right) const {
+CNVecAllo CNPointAllo::operator-(const CNPointAllo& right) const
+{
     return CNVecAllo(this->x - right.x, this->y - right.y, this->z - right.z);
 }
 

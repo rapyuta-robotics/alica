@@ -2,11 +2,13 @@
 
 #include <string>
 
-namespace supplementary {
+namespace supplementary
+{
 class AgentID;
 
-class RobotMetaData {
-public:
+class RobotMetaData
+{
+  public:
     RobotMetaData(std::string name, const AgentID* agentID);
     virtual ~RobotMetaData();
 

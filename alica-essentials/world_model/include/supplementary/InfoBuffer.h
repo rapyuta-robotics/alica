@@ -8,22 +8,25 @@
 #include <mutex>
 #include <typeinfo>
 
-namespace supplementary {
+namespace supplementary
+{
 /**
  * Information buffer of shared_ptr of a given data type.
  */
 template <typename T>
-class InfoBuffer {
-public:
+class InfoBuffer
+{
+  public:
     /**
      * Default constructor.
      * @param bufferSize Number of elements which can be stored within the information buffer
      */
     InfoBuffer(const int bufferSize)
-            : mtx_() {
+        : mtx_()
+    {
         this->bufferSize = bufferSize;
         this->infoElementCounter = 0;
-        this->index = -1;
+        this->index = 0;
         this->ringBuffer = new std::shared_ptr<const InformationElement<T>>[this->bufferSize];
     }
 
@@ -39,25 +42,19 @@ public:
     /**
      *  Default destructor.
      */
-    virtual ~InfoBuffer() {
-        delete[] this->ringBuffer;
-    }
+    virtual ~InfoBuffer() { delete[] this->ringBuffer; }
 
     /**
      * Return the buffer size.
      * @return the buffer size.
      */
-    const int getBufferSize() const {
-        return this->bufferSize;
-    }
+    const int getBufferSize() const { return this->bufferSize; }
 
     /**
      * Returns the current number of elements within the information buffer.
      * @return the current number of elements within the information buffer.
      */
-    const int getSize() const {
-        return std::min(this->bufferSize, this->infoElementCounter);
-    }
+    const int getSize() const { return std::min(this->bufferSize, this->infoElementCounter); }
 
     /**
      * Clears the buffer. If cleanBuffer is false only the index structure is reset, but the
@@ -65,15 +62,16 @@ public:
      * pointers from the buffer are cleared as well.
      * @param cleanBuffer True to clear the buffer.
      */
-    void clear(bool cleanBuffer) {
+    void clear(bool cleanBuffer)
+    {
         std::lock_guard<std::mutex> guard(mtx_);
 
-        this->index = -1;
+        this->index = 0;
         this->infoElementCounter = 0;
 
         if (cleanBuffer) {
             std::shared_ptr<const InformationElement<T>> element;
-            for (int i = 0; i < this->bufferSize; ++i)
+            for (unsigned i = 0; i < this->bufferSize; ++i)
                 this->ringBuffer[i] = element;
         }
     }
@@ -82,9 +80,7 @@ public:
      * Returns the type_info of the used template type.
      * @return The type_info of the used template type.
      */
-    const std::type_info* getTypeInfo() const {
-        return &typeid(T);
-    }
+    const std::type_info* getTypeInfo() const { return &typeid(T); }
 
     /**
      * Sets the out parameter to the n-th last element, if it exists.
@@ -92,7 +88,8 @@ public:
      * @param n States that the n-th last element should be set to the out parameter.
      * @return True if the n-th last element exists, false otherwise.
      */
-    const std::shared_ptr<const InformationElement<T>> getLast(const int n = 0) const {
+    const std::shared_ptr<const InformationElement<T>> getLast(const int n = 0) const
+    {
         std::lock_guard<std::mutex> guard(mtx_);
         return this->getLastInternal(n);
     }
@@ -103,14 +100,15 @@ public:
      * @see InformationElement::isValid()
      * @return a shared_ptr to the element, nullptr if none found
      */
-    const std::shared_ptr<const InformationElement<T>> getLastValid() const {
+    const std::shared_ptr<const InformationElement<T>> getLastValid() const
+    {
         std::lock_guard<std::mutex> guard(mtx_);
 
-        if (this->index < 0 || this->bufferSize <= 0 || this->infoElementCounter <= 0) {
+        if (this->bufferSize == 0 || this->infoElementCounter == 0) {
             return nullptr;
         }
 
-        int limit = std::min((unsigned long long) this->bufferSize, this->infoElementCounter);
+        int limit = std::min(this->bufferSize, this->infoElementCounter);
         for (int i = 0; i < limit; i++) {
             int index = (this->index - i) % this->bufferSize;
             if (this->ringBuffer[index]->isValid()) {
@@ -125,7 +123,8 @@ public:
      * @see InformationElement::isValid()
      * @return optional with the content of the last valid element, nullopt if none found
      */
-    const nonstd::optional<T> getLastValidContent() const {
+    const nonstd::optional<T> getLastValidContent() const
+    {
         auto lastValid = this->getLastValid();
 
         if (lastValid == nullptr) {
@@ -140,19 +139,20 @@ public:
      * @param time to search for
      * @return a shared_ptr to the element if found, else nullptr (empty buffer)
      */
-    const std::shared_ptr<const InformationElement<T>> getTemporalCloseTo(const InfoTime time) const {
+    const std::shared_ptr<const InformationElement<T>> getTemporalCloseTo(const alica::AlicaTime time) const
+    {
         std::lock_guard<std::mutex> guard(mtx_);
-        if (this->index < 0 || this->bufferSize <= 0 || this->infoElementCounter <= 0) {
+        if (this->bufferSize == 0 || this->infoElementCounter == 0) {
             return nullptr;
         }
 
         std::shared_ptr<const InformationElement<T>> closest = nullptr;
 
-        InfoTime timeDiffOfClosest = std::numeric_limits<long long>::max();
+        alica::AlicaTime timeDiffOfClosest = alica::AlicaTime::nanoseconds(std::numeric_limits<long long>::max());
         int numberOfAvailableElements = std::min(this->bufferSize, this->infoElementCounter);
         for (int i = 0; i < numberOfAvailableElements; i++) {
             int index = (this->index - i) % this->bufferSize;
-            InfoTime curTimeDiff = std::abs(time - this->ringBuffer[index]->getCreationTime());
+            alica::AlicaTime curTimeDiff = (time - this->ringBuffer[index]->getCreationTime()).abs();
             if (curTimeDiff < timeDiffOfClosest) {
                 closest = this->ringBuffer[index];
                 timeDiffOfClosest = curTimeDiff;
@@ -173,11 +173,11 @@ public:
      * @param maxTimeDiff maximum offset to given time
      * @return a shared_ptr to the element if found, else nullptr
      */
-    const std::shared_ptr<const InformationElement<T>> getTemporalCloseTo(
-            const InfoTime time, const InfoTime maxTimeDiff) const {
+    const std::shared_ptr<const InformationElement<T>> getTemporalCloseTo(const alica::AlicaTime time, const alica::AlicaTime maxTimeDiff) const
+    {
         auto closest = this->getTemporalCloseTo(time);
 
-        if (!closest || std::abs(time - closest->getCreationTime()) > maxTimeDiff) {
+        if (!closest || (time - closest->getCreationTime()).abs() > maxTimeDiff) {
             return nullptr;
         } else {
             return closest;
@@ -189,7 +189,8 @@ public:
      * @param element The element to add.
      * @return True if the element was added, False otherwise.
      */
-    bool add(const std::shared_ptr<const InformationElement<T>> element) {
+    bool add(const std::shared_ptr<const InformationElement<T>> element)
+    {
         std::lock_guard<std::mutex> guard(mtx_);
 
         auto last = this->getLastInternal();
@@ -198,25 +199,26 @@ public:
             return false;
         }
         this->infoElementCounter++;
-        this->index = (++this->index) % this->bufferSize;
+        this->index = (this->index+1) % this->bufferSize;
         this->ringBuffer[index] = element;
         return true;
     }
 
-protected:
+  protected:
     /**
      * Sets the out parameter to the n-th last element, if it exists without locking the mutex
      * @param n States that the n-th last element should be set to the out parameter.
      * @return The n-th last element if it exists, nullptr otherwise.
      */
-    const std::shared_ptr<const InformationElement<T>> getLastInternal(const int n = 0) const {
-        if (this->index < 0 || this->bufferSize <= n || this->infoElementCounter <= n) {
+    const std::shared_ptr<const InformationElement<T>> getLastInternal(const unsigned n = 0) const
+    {
+        if (this->bufferSize <= n || this->infoElementCounter <= n) {
             return nullptr;
         }
         return this->ringBuffer[(this->index - n) % this->bufferSize];
     }
 
-private:
+  private:
     mutable std::mutex mtx_;
     std::shared_ptr<const InformationElement<T>>* ringBuffer; /**< Ring buffer of elements */
     unsigned long long bufferSize;                            /**< number of stored elements */

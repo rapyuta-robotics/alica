@@ -2,17 +2,21 @@
 #include "alica/AlicaWidget.h"
 #include <sstream>
 
-namespace alica {
+namespace alica
+{
 AlicaWidget::AlicaWidget()
-        : qframe(new QFrame()) {
+    : qframe(new QFrame())
+{
     this->uiAlicaWidget.setupUi(qframe);
 }
 
-AlicaWidget::~AlicaWidget() {
+AlicaWidget::~AlicaWidget()
+{
     delete qframe;
 }
 
-void AlicaWidget::handleAlicaEngineInfo(alica_msgs::AlicaEngineInfoConstPtr aei) {
+void AlicaWidget::handleAlicaEngineInfo(alica_msgs::AlicaEngineInfoConstPtr aei)
+{
     uiAlicaWidget.planVal->setText(QString(aei->currentPlan.c_str()));
     uiAlicaWidget.roleVal->setText(QString(aei->currentRole.c_str()));
     uiAlicaWidget.taskVal->setText(QString(aei->currentTask.c_str()));
@@ -40,7 +44,8 @@ void AlicaWidget::handleAlicaEngineInfo(alica_msgs::AlicaEngineInfoConstPtr aei)
     uiAlicaWidget.stateVal->setText(QString(ss.str().c_str()));
 }
 
-void AlicaWidget::clearGUI() {
+void AlicaWidget::clearGUI()
+{
     if (uiAlicaWidget.planVal != nullptr) {
         uiAlicaWidget.planVal->setText(QString(""));
         uiAlicaWidget.roleVal->setText(QString(""));
@@ -49,4 +54,4 @@ void AlicaWidget::clearGUI() {
         uiAlicaWidget.stateVal->setText(QString(""));
     }
 }
-}  // namespace alica
+} // namespace alica

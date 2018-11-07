@@ -199,4 +199,4 @@ void TermHolder::clear()
     _vars.clear();
     _tape = Tape();
 }
-}
+} // namespace autodiff

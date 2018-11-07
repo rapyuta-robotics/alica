@@ -355,9 +355,9 @@ bool CNSat::solve(AlicaTime until, CNSMTGSolver* callbackSolver)
             }
         }
 
-            //					cout << "\tdecisionLevel->size() = " << decisionLevel->size() << endl;
-            //					cout << "all conflicts resolved " << (cnsmtGSolver != nullptr) << " " <<
-            // useIntervalProp << endl;
+        //					cout << "\tdecisionLevel->size() = " << decisionLevel->size() << endl;
+        //					cout << "all conflicts resolved " << (cnsmtGSolver != nullptr) << " " <<
+        // useIntervalProp << endl;
 #ifdef CN_SAT_CALLBACK_SOLVER
         if (callbackSolver != nullptr) {
             // check for conflict of Theoremprover

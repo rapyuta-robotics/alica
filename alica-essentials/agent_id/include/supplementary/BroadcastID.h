@@ -4,10 +4,12 @@
 
 #include <iostream>
 
-namespace supplementary {
+namespace supplementary
+{
 
-class BroadcastID : public supplementary::AgentID {
-public:
+class BroadcastID : public supplementary::AgentID
+{
+  public:
     BroadcastID(const uint8_t* idBytes, int idSize);
     virtual ~BroadcastID();
 

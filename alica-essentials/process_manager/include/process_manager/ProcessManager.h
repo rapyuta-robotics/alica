@@ -1,20 +1,22 @@
 #pragma once
 
-#define PM_DEBUG  // for toggling debug output
+#define PM_DEBUG // for toggling debug output
 
 #include "process_manager/ProcessCommand.h"
 #include "process_manager/ProcessStat.h"
 #include "process_manager/ProcessStats.h"
 
-#include <supplementary/AgentID.h>
-#include <ros/ros.h>
 #include <chrono>
+#include <ros/ros.h>
+#include <supplementary/AgentID.h>
 
-namespace std {
+namespace std
+{
 class thread;
 }
 
-namespace supplementary {
+namespace supplementary
+{
 
 class AgentIDFactory;
 class SystemConfig;
@@ -24,8 +26,9 @@ class RobotMetaData;
 class ExecutableMetaData;
 class RobotExecutableRegistry;
 
-class ProcessManager {
-public:
+class ProcessManager
+{
+  public:
     ProcessManager(int argc, char** argv);
     virtual ~ProcessManager();
     void start();
@@ -42,7 +45,7 @@ public:
     static int numCPUs;  /* < including hyper threading cores */
     static bool running; /* < has to be static, to be changeable within ProcessManager::pmSignintHandler() */
 
-private:
+  private:
     SystemConfig* sc;
     std::string ownHostname;
     const AgentID* ownId;
@@ -74,4 +77,4 @@ private:
     void report();
 };
 
-}  // namespace supplementary
+} // namespace supplementary

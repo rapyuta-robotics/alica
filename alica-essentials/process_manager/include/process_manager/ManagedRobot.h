@@ -4,19 +4,21 @@
 
 #include "process_manager/ProcessStat.h"
 #include "process_manager/ProcessStats.h"
-#include "process_manager/RobotMetaData.h"
 #include "process_manager/RobotExecutableRegistry.h"
+#include "process_manager/RobotMetaData.h"
 
 #include <map>
 #include <string>
 #include <vector>
 
-namespace supplementary {
+namespace supplementary
+{
 class ManagedExecutable;
 class ProcessManager;
 
-class ManagedRobot : public RobotMetaData {
-public:
+class ManagedRobot : public RobotMetaData
+{
+  public:
     ManagedRobot(std::string robotName, const AgentID* agentID, ProcessManager* procMan);
     virtual ~ManagedRobot();
     void queue4update(int execid, long pid, RobotExecutableRegistry* registry);
@@ -28,7 +30,7 @@ public:
     void changeLogPublishing(int execId, bool shouldPublish, RobotExecutableRegistry* registry);
     void report(process_manager::ProcessStats& psts);
 
-private:
+  private:
     ProcessManager* procMan;
     std::map<int, ManagedExecutable*> executableMap;
 };

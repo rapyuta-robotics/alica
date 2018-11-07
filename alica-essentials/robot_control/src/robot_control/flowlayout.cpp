@@ -38,34 +38,39 @@
 **
 ****************************************************************************/
 
-#include <robot_control/flowlayout.h>
 #include <QWidget>
 #include <iostream>
+#include <robot_control/flowlayout.h>
 
 flowlayout::flowlayout(QWidget* parent, int margin, int hSpacing, int vSpacing)
-        : QLayout(parent)
-        , m_hSpace(hSpacing)
-        , m_vSpace(vSpacing) {
+    : QLayout(parent)
+    , m_hSpace(hSpacing)
+    , m_vSpace(vSpacing)
+{
     setContentsMargins(margin, margin, margin, margin);
 }
 
 flowlayout::flowlayout(int margin, int hSpacing, int vSpacing)
-        : m_hSpace(hSpacing)
-        , m_vSpace(vSpacing) {
+    : m_hSpace(hSpacing)
+    , m_vSpace(vSpacing)
+{
     setContentsMargins(margin, margin, margin, margin);
 }
 
-flowlayout::~flowlayout() {
+flowlayout::~flowlayout()
+{
     QLayoutItem* item;
     while ((item = takeAt(0)))
         delete item;
 }
 
-void flowlayout::addItem(QLayoutItem* item) {
+void flowlayout::addItem(QLayoutItem* item)
+{
     itemList.append(item);
 }
 
-int flowlayout::horizontalSpacing() const {
+int flowlayout::horizontalSpacing() const
+{
     if (m_hSpace >= 0) {
         return m_hSpace;
     } else {
@@ -73,7 +78,8 @@ int flowlayout::horizontalSpacing() const {
     }
 }
 
-int flowlayout::verticalSpacing() const {
+int flowlayout::verticalSpacing() const
+{
     if (m_vSpace >= 0) {
         return m_vSpace;
     } else {
@@ -81,45 +87,54 @@ int flowlayout::verticalSpacing() const {
     }
 }
 
-int flowlayout::count() const {
+int flowlayout::count() const
+{
     return itemList.size();
 }
 
-QLayoutItem* flowlayout::itemAt(int index) const {
+QLayoutItem* flowlayout::itemAt(int index) const
+{
     return itemList.value(index);
 }
 
-QLayoutItem* flowlayout::takeAt(int index) {
+QLayoutItem* flowlayout::takeAt(int index)
+{
     if (index >= 0 && index < itemList.size())
         return itemList.takeAt(index);
     else
         return 0;
 }
 
-Qt::Orientations flowlayout::expandingDirections() const {
+Qt::Orientations flowlayout::expandingDirections() const
+{
     return 0;
 }
 
-bool flowlayout::hasHeightForWidth() const {
+bool flowlayout::hasHeightForWidth() const
+{
     return true;
 }
 
-int flowlayout::heightForWidth(int width) const {
+int flowlayout::heightForWidth(int width) const
+{
     int height = doLayout(QRect(0, 0, width, 0), true);
     return height;
 }
 
-void flowlayout::setGeometry(const QRect& rect) {
+void flowlayout::setGeometry(const QRect& rect)
+{
     QLayout::setGeometry(rect);
     // doLayout(rect, false);
     doLayout(rect, true);
 }
 
-QSize flowlayout::sizeHint() const {
+QSize flowlayout::sizeHint() const
+{
     return minimumSize();
 }
 
-QSize flowlayout::minimumSize() const {
+QSize flowlayout::minimumSize() const
+{
     QSize size;
     QLayoutItem* item;
     foreach (item, itemList)
@@ -129,7 +144,8 @@ QSize flowlayout::minimumSize() const {
     return size;
 }
 
-int flowlayout::doLayout(const QRect& rect, bool testOnly) const {
+int flowlayout::doLayout(const QRect& rect, bool testOnly) const
+{
     int left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
     QRect effectiveRect = rect.adjusted(+left, +top, -right, -bottom);
@@ -164,7 +180,8 @@ int flowlayout::doLayout(const QRect& rect, bool testOnly) const {
     }
     return y + lineHeight - rect.y() + bottom;
 }
-int flowlayout::smartSpacing(QStyle::PixelMetric pm) const {
+int flowlayout::smartSpacing(QStyle::PixelMetric pm) const
+{
     QObject* parent = this->parent();
     if (!parent) {
         return -1;

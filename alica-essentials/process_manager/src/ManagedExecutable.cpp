@@ -130,11 +130,10 @@ void ManagedExecutable::update(unsigned long long cpuDelta)
                             publishing = false;
                         }
 
-                        if (this->desiredParamSet == this->runningParamSet ||
-                            this->desiredRunState == RunState::MANUAL_STARTED) { // our process is running with the
-                                                                                 // right parameters, or is started
-                                                                                 // manually
-                                                                                 // -> so kill all others
+                        if (this->desiredParamSet == this->runningParamSet || this->desiredRunState == RunState::MANUAL_STARTED) { // our process is running
+                                                                                                                                   // with the right parameters,
+                                                                                                                                   // or is started manually
+                                                                                                                                   // -> so kill all others
 
                             if (this->shouldPublish && !this->publishing) { // start the log publishing threads if necessary
                                 startPublishingLogs();

@@ -10,6 +10,6 @@ TermPtr ifThen(TermPtr tif, TermPtr tthen);
 TermPtr ifThenElse(TermPtr tif, TermPtr tthen, TermPtr telse);
 TermPtr equiv(TermPtr a, TermPtr b);
 TermPtr applyConstraint(TermPtr constraint, TermPtr utility);
-}
+} // namespace Constraints
 
 } // namespace autodiff

@@ -13,22 +13,26 @@
 
 using namespace std;
 
-namespace alica {
-namespace reasoner {
-namespace cnsat {
+namespace alica
+{
+namespace reasoner
+{
+namespace cnsat
+{
 class CNSat;
 class Lit;
 class Var;
 
-class Decider {
-public:
+class Decider
+{
+  public:
     static shared_ptr<Var> decideRangeBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver);
     static shared_ptr<Var> decideActivityBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver);
     static shared_ptr<Var> decideVariableCountBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver);
     static bool litRangeCompare(shared_ptr<Lit> a, shared_ptr<Lit> b);
 };
 
-}  // namespace cnsat
+} // namespace cnsat
 /* namespace cnsat */
 } /* namespace reasoner */
 } /* namespace alica */

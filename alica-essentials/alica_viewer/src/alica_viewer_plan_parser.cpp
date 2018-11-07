@@ -17,7 +17,7 @@ void sortPlanTrees(std::vector<std::unique_ptr<PlanTree>>& planTrees)
         }
     });
 }
-}
+} // namespace
 
 PlanTree::PlanTree(AlicaTime creationTime)
     : _parent(nullptr)

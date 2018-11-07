@@ -2,14 +2,17 @@
 
 #include "container/CNPosition.h"
 
-namespace supplementary {
+namespace supplementary
+{
 class IAgentID;
 }
 
-namespace geometry {
+namespace geometry
+{
 
-class CNRobot : public CNPosition {
-public:
+class CNRobot : public CNPosition
+{
+  public:
     CNRobot();
     virtual ~CNRobot();
     double radius;
@@ -22,4 +25,4 @@ public:
     double rotation;
     string toString();
 };
-}  // namespace geometry
+} // namespace geometry

@@ -7,15 +7,20 @@
 
 #include "types/DecisionLevel.h"
 
-namespace alica {
-namespace reasoner {
-namespace cnsat {
+namespace alica
+{
+namespace reasoner
+{
+namespace cnsat
+{
 
-DecisionLevel::DecisionLevel(int level) {
+DecisionLevel::DecisionLevel(int level)
+{
     this->level = level;
 }
 
-DecisionLevel::~DecisionLevel() {
+DecisionLevel::~DecisionLevel()
+{
     // TODO Auto-generated destructor stub
 }
 

@@ -20,5 +20,5 @@ class DummyContext : public SolverContext
   private:
     std::vector<std::unique_ptr<DummyVariable>> _vars;
 };
-}
-}
+} // namespace reasoner
+} // namespace alica

@@ -20,4 +20,4 @@ class UnaryFunction : public Term
 
     TermPtr _arg;
 };
-}
+} // namespace autodiff

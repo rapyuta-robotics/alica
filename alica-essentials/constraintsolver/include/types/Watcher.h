@@ -12,14 +12,18 @@
 
 using namespace std;
 
-namespace alica {
-namespace reasoner {
-namespace cnsat {
+namespace alica
+{
+namespace reasoner
+{
+namespace cnsat
+{
 class Clause;
 class Lit;
 
-class Watcher : public enable_shared_from_this<Watcher> {
-public:
+class Watcher : public enable_shared_from_this<Watcher>
+{
+  public:
     Watcher(shared_ptr<Lit> l, shared_ptr<Clause> parent);
     virtual ~Watcher();
 

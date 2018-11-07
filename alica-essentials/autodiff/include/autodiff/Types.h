@@ -39,4 +39,4 @@ union Parameter
 };
 
 typedef void (*EvalFunction)(const Tape&, const Parameter*, double*, const double*, int);
-}
+} // namespace autodiff

@@ -1,38 +1,40 @@
-#include <process_manager/ProcessStats.h>
 #include <process_manager/ProcessCommand.h>
+#include <process_manager/ProcessStats.h>
 
-#include <ros/ros.h>
-#include <QFrame>
 #include <QBoxLayout>
+#include <QFrame>
+#include <chrono>
+#include <ros/ros.h>
 #include <string>
 #include <utility>
-#include <chrono>
 
 #include <supplementary/AgentID.h>
 
-namespace supplementary {
+namespace supplementary
+{
 class SystemConfig;
 class RobotExecutableRegistry;
-}  // namespace supplementary
+} // namespace supplementary
 
-namespace pm_control {
+namespace pm_control
+{
 class PMControl;
 }
 
-namespace pm_widget {
+namespace pm_widget
+{
 class ControlledRobot;
 
-class ControlledProcessManager : public QObject {
+class ControlledProcessManager : public QObject
+{
     Q_OBJECT
 
-public:
-    ControlledProcessManager(std::string processManagerName, const supplementary::AgentID* processManagerId,
-            QBoxLayout* pmHorizontalLayout);
+  public:
+    ControlledProcessManager(std::string processManagerName, const supplementary::AgentID* processManagerId, QBoxLayout* pmHorizontalLayout);
     virtual ~ControlledProcessManager();
 
     void updateGUI(std::chrono::system_clock::time_point now);
-    void handleProcessStats(
-            std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair);
+    void handleProcessStats(std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair);
     void addRobot(QFrame* robot);
     void removeRobot(QFrame* robot);
 
@@ -40,15 +42,14 @@ public:
     void show();
 
     std::chrono::duration<double> msgTimeOut;
-    std::chrono::system_clock::time_point
-            timeLastMsgReceived;      /* < Time point, when the last message have been received */
-    std::string name;                 /* < Hostname under which this process manager is running */
-    const supplementary::AgentID* id; /* < The id of the host */
+    std::chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
+    std::string name;                                          /* < Hostname under which this process manager is running */
+    const supplementary::AgentID* id;                          /* < The id of the host */
     supplementary::RobotExecutableRegistry* pmRegistry;
 
-private:
+  private:
     std::map<const supplementary::AgentID*, ControlledRobot*, supplementary::AgentIDComparator>
-            controlledRobotsMap; /* < The robots, which are controlled by this process manager */
+        controlledRobotsMap; /* < The robots, which are controlled by this process manager */
     QBoxLayout* parentLayout;
     ControlledRobot* getControlledRobot(const supplementary::AgentID* robotId);
 };

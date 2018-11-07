@@ -11,30 +11,34 @@
 #include <process_manager/ProcessStat.h>
 #include <qt5/QtWidgets/QWidget>
 
+#include <chrono>
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
-#include <chrono>
 
-namespace Ui {
+namespace Ui
+{
 class ProcessWidget;
 class RobotProcessesWidget;
-}  // namespace Ui
+} // namespace Ui
 
-namespace supplementary {
+namespace supplementary
+{
 class ExecutableMetaData;
 class RobotExecutableRegistry;
-}  // namespace supplementary
+} // namespace supplementary
 
 using namespace std;
 
-namespace pm_widget {
+namespace pm_widget
+{
 class ControlledRobot;
 
-class ControlledExecutable : public QObject {
+class ControlledExecutable : public QObject
+{
     Q_OBJECT
 
-public:
+  public:
     ControlledExecutable(supplementary::ExecutableMetaData* metaExec, ControlledRobot* parentRobot);
     virtual ~ControlledExecutable();
 
@@ -57,14 +61,14 @@ public:
     QWidget* processWidget;
     Ui::ProcessWidget* _processWidget;
 
-public Q_SLOTS:
+  public Q_SLOTS:
     void handleCheckBoxStateChanged(int newState);
     void showContextMenu(const QPoint& pos);
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void processCheckBoxStateChanged(int, int); /**< first int is newState, second int is execId */
 
-private:
+  private:
     static const string redBackground;
     static const string greenBackground;
     static const string grayBackground;

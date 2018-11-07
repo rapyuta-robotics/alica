@@ -5,10 +5,10 @@
 #include "pm_widget/ControlledRobot.h"
 #include "ui_RobotProcessesWidget.h"
 
-using std::chrono::duration;
 using std::cout;
 using std::endl;
 using std::string;
+using std::chrono::duration;
 
 namespace pm_widget
 {

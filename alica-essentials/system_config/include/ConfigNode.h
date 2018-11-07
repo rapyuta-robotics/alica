@@ -19,7 +19,8 @@ typedef std::shared_ptr<ConfigNode> ConfigNodePtr;
 class ConfigNode
 {
   public:
-    typedef enum {
+    typedef enum
+    {
         Node = 0,
         Leaf = 1,
         Comment = 2,

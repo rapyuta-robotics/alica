@@ -82,4 +82,4 @@ inline void Tape::evaluate(InputIt point_begin, InputIt point_end, OutputIt valu
     }
     std::copy(_values + (_tapeLength - 1) * _tapeWidth, _values + _tapeLength * _tapeWidth, value_begin);
 }
-}
+} // namespace autodiff

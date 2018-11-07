@@ -26,4 +26,4 @@ class BinaryFunction : public Term
     TermPtr _left;
     TermPtr _right;
 };
-}
+} // namespace autodiff

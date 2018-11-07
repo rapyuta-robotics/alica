@@ -16,5 +16,5 @@ void DummyContext::clear()
 {
     _vars.clear();
 }
-}
-}
+} // namespace reasoner
+} // namespace alica

@@ -8,12 +8,16 @@
 #ifndef DECISIONLEVEL_H_
 #define DECISIONLEVEL_H_
 
-namespace alica {
-namespace reasoner {
-namespace cnsat {
+namespace alica
+{
+namespace reasoner
+{
+namespace cnsat
+{
 
-class DecisionLevel {
-public:
+class DecisionLevel
+{
+  public:
     DecisionLevel(int level);
     virtual ~DecisionLevel();
 

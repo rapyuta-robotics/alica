@@ -2,29 +2,35 @@
 //#define MNGD_EXEC_DEBUG
 
 #include "ExecutableMetaData.h"
-#include "process_manager/ProcessStats.h"
 #include "process_manager/ProcessStat.h"
+#include "process_manager/ProcessStats.h"
 
 #include <supplementary/AgentID.h>
 
 #include <ros/console.h>
 
-#include <string>
-#include <vector>
 #include <chrono>
+#include <string>
 #include <thread>
+#include <vector>
 
-namespace supplementary {
+namespace supplementary
+{
 class ProcessManager;
 class ExecutableMetaData;
 class AgentID;
 
-enum RunState { SHOULD_RUN, SHOULDNT_RUN, MANUAL_STARTED };
+enum RunState
+{
+    SHOULD_RUN,
+    SHOULDNT_RUN,
+    MANUAL_STARTED
+};
 
-class ManagedExecutable {
-public:
-    ManagedExecutable(
-            ExecutableMetaData const* const metaExec, long pid, std::string robotName, ProcessManager* procMan);
+class ManagedExecutable
+{
+  public:
+    ManagedExecutable(ExecutableMetaData const* const metaExec, long pid, std::string robotName, ProcessManager* procMan);
     virtual ~ManagedExecutable();
     void queue4Update(long pid);
     void update(unsigned long long cpuDelta);
@@ -41,12 +47,12 @@ public:
 
     ExecutableMetaData const* const metaExec;
 
-private:
+  private:
     // Information about the managed process (updated continuously)
     long managedPid;
     std::vector<char const*> runningParams;
     int runningParamSet;
-    char state;  // The process state (zombie, running, etc)
+    char state; // The process state (zombie, running, etc)
     unsigned long long lastUTime;
     unsigned long long lastSTime;
     unsigned long long currentUTime;
@@ -68,8 +74,7 @@ private:
     RunState desiredRunState;
     bool need2ReadParams;
     int desiredParamSet;
-    std::vector<long>
-            queuedPids4Update; /* < a list of PIDs, which match this managed executable (should be only one, normally)*/
+    std::vector<long> queuedPids4Update; /* < a list of PIDs, which match this managed executable (should be only one, normally)*/
     ProcessManager* procMan;
 
     void updateStats(unsigned long long cpuDelta, bool isNew = false);

@@ -52,4 +52,4 @@ class SystemConfig
     SystemConfig();
     ~SystemConfig(){};
 };
-}
+} // namespace supplementary

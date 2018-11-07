@@ -12,7 +12,7 @@ namespace elastic_nodes
 
 class Node;
 class Edge;
-}
+} // namespace elastic_nodes
 
 namespace alica
 {

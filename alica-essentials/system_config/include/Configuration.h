@@ -376,4 +376,4 @@ inline std::vector<std::string> Configuration::convertList<std::string>(std::str
     }
     return itemVector;
 }
-}
+} // namespace supplementary

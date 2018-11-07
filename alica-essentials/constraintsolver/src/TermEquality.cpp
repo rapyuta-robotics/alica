@@ -7,15 +7,20 @@
 
 #include <TermEquality.h>
 
-namespace alica {
-namespace reasoner {
-namespace cnsat {
+namespace alica
+{
+namespace reasoner
+{
+namespace cnsat
+{
 
-TermEquality::TermEquality() {
+TermEquality::TermEquality()
+{
     // TODO Auto-generated constructor stub
 }
 
-TermEquality::~TermEquality() {
+TermEquality::~TermEquality()
+{
     // TODO Auto-generated destructor stub
 }
 

@@ -2,10 +2,12 @@
 
 #include "AgentID.h"
 
-namespace supplementary {
+namespace supplementary
+{
 
-class AgentIDFactory {
-public:
+class AgentIDFactory
+{
+  public:
     AgentIDFactory();
     virtual ~AgentIDFactory();
     virtual const AgentID* create(const std::vector<uint8_t>& bytes) const;

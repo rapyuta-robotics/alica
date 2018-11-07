@@ -166,4 +166,4 @@ TermPtr& TermPtr::operator&=(const TermPtr rhs)
     *this = *this & rhs;
     return *this;
 }
-}
+} // namespace autodiff

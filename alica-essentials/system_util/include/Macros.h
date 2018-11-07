@@ -4,7 +4,8 @@
 
 #pragma once
 
-namespace supplementary {
+namespace supplementary
+{
 
 #ifdef __GNUC__
 #define DEPRECATED __attribute__((deprecated))
@@ -14,4 +15,4 @@ namespace supplementary {
 #define DEPRECATED
 #pragma message("DEPRECATED is not defined for this compiler")
 #endif
-}
+} // namespace supplementary

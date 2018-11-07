@@ -95,4 +95,4 @@ class TermHolder : public alica::SolverContext
     std::unique_ptr<Term> _zero;
     Tape _tape;
 };
-}
+} // namespace autodiff

@@ -44,5 +44,5 @@ TermPtr applyConstraint(TermPtr constraint, TermPtr utility)
 {
     return constraint->getOwner()->constraintUtility(constraint, utility);
 }
-}
+} // namespace Constraints
 } /* namespace autodiff */
