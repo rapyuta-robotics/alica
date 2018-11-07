@@ -1,12 +1,13 @@
-#include <engine/parser/PlanWriter.h>
-#include <SystemConfig.h>
 #include <FileSystem.h>
+#include <SystemConfig.h>
+#include <engine/parser/PlanWriter.h>
 
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/AlicaElement.h"
+#include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/FailureState.h"
@@ -15,7 +16,6 @@
 #include "engine/model/Parametrisation.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
-#include "engine/model/Behaviour.h"
 #include "engine/model/PlanningProblem.h"
 #include "engine/model/PostCondition.h"
 #include "engine/model/PreCondition.h"

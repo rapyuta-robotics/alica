@@ -23,7 +23,7 @@ int ConstraintTestPlanDummySolver::existsSolutionCallCounter = 0;
 int ConstraintTestPlanDummySolver::getSolutionCallCounter = 0;
 
 ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(AlicaEngine* ae)
-    : ISolver(ae)
+        : ISolver(ae)
 {
 }
 

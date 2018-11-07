@@ -43,13 +43,12 @@ public:
 
     bool isRunningInContext(const RunningPlan* rp) const;
     void setEngine(AlicaEngine* engine) { _engine = engine; }
-    void setName(const std::string& name);
     const std::string& getName() const { return _name; }
 
     void setBehaviour(const Behaviour* beh);
 
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
-    const Variable* getVariable(const std::string &name) const { return _behaviour->getVariable(name); };
+    const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };
 
     bool stop();
     bool start();
@@ -83,7 +82,6 @@ protected:
 
     virtual void initialiseParameters(){};
     std::string getParameter(std::string paramName);
-
 
 private:
     void runInternalTimed();

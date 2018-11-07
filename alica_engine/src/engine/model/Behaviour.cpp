@@ -6,13 +6,9 @@
 namespace alica
 {
 
-Behaviour::Behaviour()
-{
-}
+Behaviour::Behaviour() {}
 
-Behaviour::~Behaviour()
-{
-}
+Behaviour::~Behaviour() {}
 
 std::string Behaviour::toString() const
 {

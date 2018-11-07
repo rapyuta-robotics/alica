@@ -10,24 +10,24 @@
 //
 //#include <sstream>
 //
-//namespace alica {
+// namespace alica {
 //
-//BehaviourConfiguration::BehaviourConfiguration()
+// BehaviourConfiguration::BehaviourConfiguration()
 //        : _eventDriven(false)
 //        , _frequency(30)
 //        , _deferring(0)
 //        , _behaviour(nullptr) {}
 //
-//BehaviourConfiguration::BehaviourConfiguration(int64_t id)
+// BehaviourConfiguration::BehaviourConfiguration(int64_t id)
 //        : AbstractPlan(id)
 //        , _eventDriven(false)
 //        , _frequency(30)
 //        , _deferring(0)
 //        , _behaviour(nullptr) {}
 //
-//BehaviourConfiguration::~BehaviourConfiguration() {}
+// BehaviourConfiguration::~BehaviourConfiguration() {}
 //
-//std::string BehaviourConfiguration::toString() const {
+// std::string BehaviourConfiguration::toString() const {
 //    std::stringstream ss;
 //    ss << "#BehaviourConfiguration: " << getName() << " " << getId() << std::endl;
 //    ss << "\t Behaviour: ";
@@ -54,23 +54,23 @@
 //    return ss.str();
 //}
 //
-//void BehaviourConfiguration::setDeferring(int deferring) {
+// void BehaviourConfiguration::setDeferring(int deferring) {
 //    _deferring = deferring;
 //}
 //
-//void BehaviourConfiguration::setEventDriven(bool eventDriven) {
+// void BehaviourConfiguration::setEventDriven(bool eventDriven) {
 //    _eventDriven = eventDriven;
 //}
 //
-//void BehaviourConfiguration::setFrequency(int frequency) {
+// void BehaviourConfiguration::setFrequency(int frequency) {
 //    _frequency = frequency;
 //}
 //
-//void BehaviourConfiguration::setParameters(const BehaviourParameterMap& parameters) {
+// void BehaviourConfiguration::setParameters(const BehaviourParameterMap& parameters) {
 //    _parameters = parameters;
 //}
 //
-//void BehaviourConfiguration::setBehaviour(const Behaviour* behaviour) {
+// void BehaviourConfiguration::setBehaviour(const Behaviour* behaviour) {
 //    _behaviour = behaviour;
 //}
 //

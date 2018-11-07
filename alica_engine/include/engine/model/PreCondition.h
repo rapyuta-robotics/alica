@@ -10,14 +10,16 @@
 
 #include "Condition.h"
 
-namespace alica {
+namespace alica
+{
 
 class ModelFactory;
 
 /**
  * A precondition guards a Plan or a Transition.
  */
-class PreCondition : public Condition {
+class PreCondition : public Condition
+{
 public:
     PreCondition(int64_t id = 0);
     virtual ~PreCondition();
@@ -32,6 +34,6 @@ private:
     bool _enabled;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* PRECONDITION_H_ */

@@ -1,10 +1,3 @@
-/*
- * Condition.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/Condition.h"
 
 #include "engine/BasicCondition.h"

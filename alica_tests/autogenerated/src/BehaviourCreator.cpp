@@ -139,4 +139,4 @@ shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfI
         break;
     }
 }
-}
+} // namespace alica

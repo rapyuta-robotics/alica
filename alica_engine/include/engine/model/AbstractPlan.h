@@ -50,7 +50,7 @@ public:
     const std::string& getFileName() const { return _fileName; }
 
     void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const; // not a mistake, this is mutable
-    const Variable* getVariable(const std::string &name) const;
+    const Variable* getVariable(const std::string& name) const;
 
 private:
     friend ModelFactory;

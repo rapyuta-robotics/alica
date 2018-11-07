@@ -11,9 +11,9 @@ namespace alica
 {
 
 ProblemDescriptor::ProblemDescriptor(SolverContext* ctx)
-    : _context(ctx)
-    , _constraint(nullptr)
-    , _utility(nullptr)
+        : _context(ctx)
+        , _constraint(nullptr)
+        , _utility(nullptr)
 {
     clear();
 }

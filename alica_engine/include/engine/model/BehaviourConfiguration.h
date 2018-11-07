@@ -11,9 +11,9 @@
 //#include "AbstractPlan.h"
 //#include "engine/Types.h"
 //
-//namespace alica {
-//class Behaviour;
-//class ModelFactory;
+// namespace alica {
+// class Behaviour;
+// class ModelFactory;
 //
 ///**
 // * A Behaviour Configuration encapsulates a set of static parameters and a set of variables for a (Basic)Behaviour.
@@ -21,8 +21,8 @@
 // * The BehaviourConfiguration is indirectly derived from AlicaElement, therefore it
 // * is owned by the PlanRepository and should never be deleted or changed by anybody else.
 // */
-//class BehaviourConfiguration : public AbstractPlan {
-//public:
+// class BehaviourConfiguration : public AbstractPlan {
+// public:
 //    BehaviourConfiguration();
 //    BehaviourConfiguration(int64_t id);
 //    virtual ~BehaviourConfiguration();
@@ -36,7 +36,7 @@
 //    const BehaviourParameterMap& getParameters() const { return _parameters; }
 //    const Behaviour* getBehaviour() const { return _behaviour; }
 //
-//private:
+// private:
 //    friend ModelFactory;
 //    void setDeferring(int deferring);
 //    void setEventDriven(bool eventDriven);

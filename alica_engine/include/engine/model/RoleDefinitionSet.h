@@ -13,10 +13,12 @@
 #include "AlicaElement.h"
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 class ModelFactory;
 
-class RoleDefinitionSet : public AlicaElement {
+class RoleDefinitionSet : public AlicaElement
+{
 public:
     RoleDefinitionSet();
     virtual ~RoleDefinitionSet();
@@ -32,6 +34,6 @@ private:
     std::string _fileName;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* ROLEDEFINITIONSET_H_ */

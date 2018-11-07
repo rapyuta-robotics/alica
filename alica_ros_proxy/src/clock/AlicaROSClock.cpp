@@ -2,16 +2,19 @@
 
 #include "ros/time.h"
 
-namespace alicaRosProxy {
+namespace alicaRosProxy
+{
 
-AlicaROSClock::AlicaROSClock() {
+AlicaROSClock::AlicaROSClock()
+{
     ros::Time::init();
 }
 
 AlicaROSClock::~AlicaROSClock() {}
 
-alica::AlicaTime AlicaROSClock::now() const {
+alica::AlicaTime AlicaROSClock::now() const
+{
     return alica::AlicaTime::nanoseconds(ros::Time::now().toNSec());
 }
 
-}  // namespace alicaRosProxy
+} // namespace alicaRosProxy

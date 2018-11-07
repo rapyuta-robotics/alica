@@ -5,8 +5,8 @@ namespace alica
 {
 class SolverContext
 {
-  public:
+public:
     virtual ~SolverContext(){};
     virtual void clear() = 0;
 };
-}
+} // namespace alica

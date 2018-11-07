@@ -15,7 +15,7 @@ namespace alica
 
 class BasicTrueCondition : public BasicCondition
 {
-  public:
+public:
     BasicTrueCondition();
     virtual ~BasicTrueCondition();
 

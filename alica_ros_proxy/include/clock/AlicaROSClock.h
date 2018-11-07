@@ -2,9 +2,11 @@
 
 #include <engine/AlicaClock.h>
 
-namespace alicaRosProxy {
+namespace alicaRosProxy
+{
 
-class AlicaROSClock : public virtual alica::AlicaClock {
+class AlicaROSClock : public virtual alica::AlicaClock
+{
 public:
     AlicaROSClock();
     virtual ~AlicaROSClock();

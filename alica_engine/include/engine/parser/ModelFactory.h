@@ -1,12 +1,13 @@
 #pragma once
 
-#include <memory>
 #include <list>
 #include <map>
+#include <memory>
 
 #include "tinyxml2.h"
 
-namespace alica {
+namespace alica
+{
 class PlanParser;
 class PlanRepository;
 class Plan;
@@ -38,7 +39,8 @@ class Parameter;
 /**
  * Constructs Model elements, i.e., objects inheriting from <see cref="PlanElement"/> given their XML representation.
  */
-class ModelFactory {
+class ModelFactory
+{
 public:
     ModelFactory(PlanParser* p, PlanRepository* rep);
     virtual ~ModelFactory();
@@ -146,4 +148,4 @@ private:
     void createVariableTemplates();
     void removeRedundancy();
 };
-}  // namespace alica
+} // namespace alica

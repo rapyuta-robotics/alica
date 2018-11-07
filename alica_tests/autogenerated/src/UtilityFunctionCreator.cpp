@@ -272,4 +272,4 @@ shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(long util
         break;
     }
 }
-}
+} // namespace alica

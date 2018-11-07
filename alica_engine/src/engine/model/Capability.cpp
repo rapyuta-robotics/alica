@@ -8,10 +8,11 @@
 #include "engine/model/Capability.h"
 #include "engine/model/CapValue.h"
 
-#include <iostream>
 #include <exception>
+#include <iostream>
 
-namespace alica {
+namespace alica
+{
 Capability::Capability() {}
 
 Capability::~Capability() {}
@@ -22,7 +23,8 @@ Capability::~Capability() {}
  * @param robotVal Robot value
  * @return The value, ranges between 0 and 1.
  */
-double Capability::similarityValue(const CapValue* roleVal, const CapValue* robotVal) const {
+double Capability::similarityValue(const CapValue* roleVal, const CapValue* robotVal) const
+{
     const int nCount = _capValues.size();
 
     int rlIndex = -1;
@@ -58,4 +60,4 @@ double Capability::similarityValue(const CapValue* roleVal, const CapValue* robo
     return (nCount - 1 - abs(rlIndex - rbIndex)) / (nCount - 1);
 }
 
-}  // namespace alica
+} // namespace alica

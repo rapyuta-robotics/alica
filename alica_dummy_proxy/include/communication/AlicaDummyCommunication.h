@@ -10,9 +10,11 @@
 
 #include <engine/IAlicaCommunication.h>
 
-namespace alica_dummy_proxy {
+namespace alica_dummy_proxy
+{
 
-class AlicaDummyCommunication : public alica::IAlicaCommunication {
+class AlicaDummyCommunication : public alica::IAlicaCommunication
+{
 public:
     AlicaDummyCommunication(alica::AlicaEngine* ae);
     virtual ~AlicaDummyCommunication();
@@ -31,6 +33,6 @@ public:
     virtual void stopCommunication();
 };
 
-}  // namespace alica_dummy_proxy
+} // namespace alica_dummy_proxy
 
 #endif /* ALICA_ALICA_DUMMY_PROXY_INCLUDE_COMMUNICATION_ALICADUMMYCOMMUNICATION_H_ */

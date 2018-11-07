@@ -11,14 +11,16 @@
 #include "AlicaElement.h"
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 class CapValue;
 class ModelFactory;
 
 /**
  * A capability is used to match agents to roles.
  */
-class Capability : public AlicaElement {
+class Capability : public AlicaElement
+{
 public:
     Capability();
     virtual ~Capability();
@@ -34,5 +36,5 @@ private:
      */
     CapValueGrp _capValues;
 };
-}  // namespace alica
+} // namespace alica
 #endif /* CAPABILITY_H_ */

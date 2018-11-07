@@ -13,10 +13,12 @@
 
 #include "AlicaElement.h"
 
-namespace alica {
+namespace alica
+{
 class RoleTaskMapping;
 
-class RoleSet : public AlicaElement {
+class RoleSet : public AlicaElement
+{
 public:
     RoleSet();
     virtual ~RoleSet();
@@ -39,6 +41,6 @@ private:
     int64_t _usableWithPlanID;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* ROLESET_H_ */

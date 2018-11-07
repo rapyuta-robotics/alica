@@ -6,10 +6,10 @@ namespace alica
 
 struct TaskRoleStruct
 {
-  public:
+public:
     TaskRoleStruct(int64_t tid, int64_t rid)
-        : taskId(tid)
-        , roleId(rid)
+            : taskId(tid)
+            , roleId(rid)
     {
     }
     int64_t taskId;

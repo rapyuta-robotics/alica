@@ -11,12 +11,14 @@
 #include "AlicaElement.h"
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 class ModelFactory;
 /**
  * A capability definition set holds all defined capabilities.
  */
-class CapabilityDefinitionSet : public AlicaElement {
+class CapabilityDefinitionSet : public AlicaElement
+{
 public:
     CapabilityDefinitionSet();
     virtual ~CapabilityDefinitionSet();
@@ -28,6 +30,6 @@ private:
     CapabilityGrp _capabilities;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* CAPABILITYDEFINITIONSET_H_ */

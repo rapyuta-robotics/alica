@@ -14,7 +14,8 @@
 
 #include <string>
 
-namespace alica {
+namespace alica
+{
 class Condition;
 class PreCondition;
 class PostCondition;
@@ -24,7 +25,8 @@ class ModelFactory;
 /**
  * An ALICA planningProblem
  */
-class PlanningProblem : public AbstractPlan {
+class PlanningProblem : public AbstractPlan
+{
 public:
     PlanningProblem();
     virtual ~PlanningProblem();
@@ -68,6 +70,6 @@ private:
     std::string _requirements;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* PLANNINGPROBLEM_H_ */

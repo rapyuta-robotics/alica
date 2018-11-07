@@ -18,7 +18,7 @@ class RunningPlan;
 
 class RuntimeCondition : public Condition
 {
-  public:
+public:
     RuntimeCondition(int64_t id);
     virtual ~RuntimeCondition();
 

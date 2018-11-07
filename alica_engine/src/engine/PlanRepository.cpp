@@ -62,7 +62,7 @@ bool checkVarsInPlan(const Plan* p)
 
     return ret;
 }
-}
+} // namespace
 
 PlanRepository::PlanRepository() {}
 PlanRepository::~PlanRepository() {}

@@ -9,8 +9,8 @@ Variable::Variable() {}
 Variable::~Variable() {}
 
 Variable::Variable(int64_t id, const std::string& name, const std::string& type)
-    : AlicaElement(id, name)
-    , _type(type)
+        : AlicaElement(id, name)
+        , _type(type)
 {
 }
 

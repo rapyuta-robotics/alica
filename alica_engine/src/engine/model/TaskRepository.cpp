@@ -11,7 +11,7 @@ namespace alica
 {
 
 TaskRepository::TaskRepository()
-    : _defaultTask(0)
+        : _defaultTask(0)
 {
 }
 

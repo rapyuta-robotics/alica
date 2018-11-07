@@ -11,7 +11,7 @@ namespace alica_dummy_proxy
 {
 
 AlicaDummyCommunication::AlicaDummyCommunication(alica::AlicaEngine* ae)
-    : alica::IAlicaCommunication(ae)
+        : alica::IAlicaCommunication(ae)
 {
 }
 

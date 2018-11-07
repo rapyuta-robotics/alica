@@ -14,7 +14,7 @@ namespace reasoner
 
 class ConstraintTestPlanDummySolver : public ISolver<ConstraintTestPlanDummySolver, BBIdent>
 {
-  public:
+public:
     ConstraintTestPlanDummySolver(AlicaEngine* ae);
     virtual ~ConstraintTestPlanDummySolver();
 
@@ -27,7 +27,7 @@ class ConstraintTestPlanDummySolver : public ISolver<ConstraintTestPlanDummySolv
     static int getExistsSolutionCallCounter();
     static int getGetSolutionCallCounter();
 
-  private:
+private:
     static int existsSolutionCallCounter;
     static int getSolutionCallCounter;
 };

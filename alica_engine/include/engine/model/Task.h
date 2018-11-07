@@ -12,24 +12,26 @@
 
 #include <string>
 
-namespace alica {
+namespace alica
+{
 
 class TaskRepository;
 class ModelFactory;
 /**
  * an abstract description of parts of plans to be taken on by a set of robots
  */
-class Task : public AlicaElement {
+class Task : public AlicaElement
+{
 public:
     Task(int64_t id, bool defaultTask);
     Task(bool defaultTask);
     virtual ~Task();
     const std::string& getDescription() const { return _description; }
 
-    const TaskRepository* getTaskRepository() const {return _taskRepository;}
+    const TaskRepository* getTaskRepository() const { return _taskRepository; }
     std::string toString() const override;
 
-    static constexpr int64_t IDLEID = -1;  // For Task Id of an Idle EntryPoint...
+    static constexpr int64_t IDLEID = -1; // For Task Id of an Idle EntryPoint...
 private:
     friend ModelFactory;
     void setTaskRepository(const TaskRepository* taskRepository);
@@ -39,6 +41,6 @@ private:
     bool _defaultTask;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* TASK_H_ */

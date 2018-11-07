@@ -8,20 +8,26 @@
 #include "engine/model/Task.h"
 #include <sstream>
 
-namespace alica {
+namespace alica
+{
 
 Task::~Task() {}
 
 Task::Task(int64_t id, bool defaultTask)
         : AlicaElement(id)
         , _defaultTask(defaultTask)
-        , _taskRepository(nullptr) {}
+        , _taskRepository(nullptr)
+{
+}
 
 Task::Task(bool defaultTask)
         : _defaultTask(defaultTask)
-        , _taskRepository(nullptr) {}
+        , _taskRepository(nullptr)
+{
+}
 
-std::string Task::toString() const {
+std::string Task::toString() const
+{
     std::stringstream ss;
     ss << "#Task: " << getName() << " " << getId() << std::endl;
     ss << "\t Description: " << _description << std::endl;
@@ -29,12 +35,14 @@ std::string Task::toString() const {
     return ss.str();
 }
 
-void Task::setDescription(const std::string& description) {
+void Task::setDescription(const std::string& description)
+{
     _description = description;
 }
 
-void Task::setTaskRepository(const TaskRepository* taskRepository) {
+void Task::setTaskRepository(const TaskRepository* taskRepository)
+{
     _taskRepository = taskRepository;
 }
 
-}  // namespace alica
+} // namespace alica
