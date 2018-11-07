@@ -40,7 +40,7 @@ class ExpressionHandler;
  */
 class PlanRepository
 {
-  public:
+public:
     PlanRepository();
     virtual ~PlanRepository();
 
@@ -52,9 +52,9 @@ class PlanRepository
     {
         class iterator
         {
-          public:
+        public:
             iterator(typename MapType<T>::const_iterator inner)
-                : _innerIter(inner)
+                    : _innerIter(inner)
             {
             }
             bool operator!=(const iterator& o) const { return _innerIter != o._innerIter; }
@@ -67,13 +67,13 @@ class PlanRepository
                 return *this;
             }
 
-          private:
+        private:
             typename MapType<T>::const_iterator _innerIter;
         };
 
-      public:
+    public:
         Accessor(const MapType<T>& map)
-            : _ref(map)
+                : _ref(map)
         {
         }
 
@@ -92,7 +92,7 @@ class PlanRepository
         iterator begin() const { return iterator(_ref.begin()); }
         iterator end() const { return iterator(_ref.end()); }
 
-      private:
+    private:
         const MapType<T>& _ref;
     };
 
@@ -122,7 +122,7 @@ class PlanRepository
 
     bool verifyPlanBase() const;
 
-  private:
+private:
     friend ModelFactory;
     friend ExpressionHandler;
     MapType<Plan> _plans;

@@ -38,7 +38,7 @@ class AlicaEngine;
  */
 class PlanWriter
 {
-  public:
+public:
     PlanWriter(AlicaEngine* ae, PlanRepository* rep);
     ~PlanWriter();
 
@@ -61,7 +61,7 @@ class PlanWriter
     tinyxml2::XMLDocument* createRoleSetXMLDocument(const RoleSet* r);
     tinyxml2::XMLDocument* createTaskRepositoryXMLDocument(const TaskRepository* tr);
 
-  private:
+private:
     PlanRepository* rep;
     std::string currentFile;
     static int objectCounter;
@@ -84,7 +84,7 @@ class PlanWriter
     tinyxml2::XMLElement* createTransitionXMLNode(const Transition* t, tinyxml2::XMLDocument* doc);
     tinyxml2::XMLElement* createEntryPointXMLNode(const EntryPoint* e, tinyxml2::XMLDocument* doc);
 
-  protected:
+protected:
     AlicaEngine* ae;
     std::string tempPlanDir;
     std::string configPath;

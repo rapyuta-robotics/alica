@@ -9,19 +9,23 @@
 
 #include <sstream>
 
-#include "engine/model/Variable.h"
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/Variable.h"
 
-namespace alica {
+namespace alica
+{
 
 Parametrisation::Parametrisation()
         : _subPlan(nullptr)
         , _subVar(nullptr)
-        , _var(nullptr) {}
+        , _var(nullptr)
+{
+}
 
 Parametrisation::~Parametrisation() {}
 
-std::string Parametrisation::toString() const {
+std::string Parametrisation::toString() const
+{
     std::stringstream ss;
     ss << "[Parametrisation: Var=" << _var->getId();
     ss << " SubVar=" << _subVar->getName() << " (" << _subVar->getId() << "), ";
@@ -29,16 +33,19 @@ std::string Parametrisation::toString() const {
     return ss.str();
 }
 
-void Parametrisation::setSubPlan(const AbstractPlan* subPlan) {
+void Parametrisation::setSubPlan(const AbstractPlan* subPlan)
+{
     _subPlan = subPlan;
 }
 
-void Parametrisation::setSubVar(const Variable* subVar) {
+void Parametrisation::setSubVar(const Variable* subVar)
+{
     _subVar = subVar;
 }
 
-void Parametrisation::setVar(const Variable* var) {
+void Parametrisation::setVar(const Variable* var)
+{
     _var = var;
 }
 
-}  // namespace alica
+} // namespace alica

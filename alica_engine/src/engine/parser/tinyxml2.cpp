@@ -30,9 +30,9 @@
 #include <cstddef>
 #endif
 
-static const char LINE_FEED = (char)0x0a; // all line endings are normalized to LF
+static const char LINE_FEED = (char) 0x0a; // all line endings are normalized to LF
 static const char LF = LINE_FEED;
-static const char CARRIAGE_RETURN = (char)0x0d; // CR gets filtered out
+static const char CARRIAGE_RETURN = (char) 0x0d; // CR gets filtered out
 static const char CR = CARRIAGE_RETURN;
 static const char SINGLE_QUOTE = '\'';
 static const char DOUBLE_QUOTE = '\"';
@@ -280,19 +280,19 @@ void XMLUtil::ConvertUTF32ToUTF8(unsigned long input, char* output, int* length)
     switch (*length) {
     case 4:
         --output;
-        *output = (char)((input | BYTE_MARK) & BYTE_MASK);
+        *output = (char) ((input | BYTE_MARK) & BYTE_MASK);
         input >>= 6;
     case 3:
         --output;
-        *output = (char)((input | BYTE_MARK) & BYTE_MASK);
+        *output = (char) ((input | BYTE_MARK) & BYTE_MASK);
         input >>= 6;
     case 2:
         --output;
-        *output = (char)((input | BYTE_MARK) & BYTE_MASK);
+        *output = (char) ((input | BYTE_MARK) & BYTE_MASK);
         input >>= 6;
     case 1:
         --output;
-        *output = (char)(input | FIRST_BYTE_MARK[*length]);
+        *output = (char) (input | FIRST_BYTE_MARK[*length]);
     default:
         break;
     }
@@ -527,13 +527,13 @@ bool XMLDocument::Accept(XMLVisitor* visitor) const
 // --------- XMLNode ----------- //
 
 XMLNode::XMLNode(XMLDocument* doc)
-    : _document(doc)
-    , _parent(0)
-    , _firstChild(0)
-    , _lastChild(0)
-    , _prev(0)
-    , _next(0)
-    , _memPool(0)
+        : _document(doc)
+        , _parent(0)
+        , _firstChild(0)
+        , _lastChild(0)
+        , _prev(0)
+        , _next(0)
+        , _memPool(0)
 {
 }
 
@@ -852,7 +852,7 @@ bool XMLText::Accept(XMLVisitor* visitor) const
 // --------- XMLComment ---------- //
 
 XMLComment::XMLComment(XMLDocument* doc)
-    : XMLNode(doc)
+        : XMLNode(doc)
 {
 }
 
@@ -891,7 +891,7 @@ bool XMLComment::Accept(XMLVisitor* visitor) const
 // --------- XMLDeclaration ---------- //
 
 XMLDeclaration::XMLDeclaration(XMLDocument* doc)
-    : XMLNode(doc)
+        : XMLNode(doc)
 {
 }
 
@@ -933,7 +933,7 @@ bool XMLDeclaration::Accept(XMLVisitor* visitor) const
 // --------- XMLUnknown ---------- //
 
 XMLUnknown::XMLUnknown(XMLDocument* doc)
-    : XMLNode(doc)
+        : XMLNode(doc)
 {
 }
 
@@ -1096,9 +1096,9 @@ void XMLAttribute::SetAttribute(float v)
 
 // --------- XMLElement ---------- //
 XMLElement::XMLElement(XMLDocument* doc)
-    : XMLNode(doc)
-    , _closingType(0)
-    , _rootAttribute(0)
+        : XMLNode(doc)
+        , _closingType(0)
+        , _rootAttribute(0)
 {
 }
 
@@ -1435,14 +1435,14 @@ bool XMLElement::Accept(XMLVisitor* visitor) const
 
 // --------- XMLDocument ----------- //
 XMLDocument::XMLDocument(bool processEntities, Whitespace whitespace)
-    : XMLNode(0)
-    , _writeBOM(false)
-    , _processEntities(processEntities)
-    , _errorID(XML_NO_ERROR)
-    , _whitespace(whitespace)
-    , _errorStr1(0)
-    , _errorStr2(0)
-    , _charBuffer(0)
+        : XMLNode(0)
+        , _writeBOM(false)
+        , _processEntities(processEntities)
+        , _errorID(XML_NO_ERROR)
+        , _whitespace(whitespace)
+        , _errorStr1(0)
+        , _errorStr2(0)
+        , _charBuffer(0)
 {
     _document = this; // avoid warning about 'this' in initializer list
 }
@@ -1676,13 +1676,13 @@ void XMLDocument::PrintError() const
 }
 
 XMLPrinter::XMLPrinter(FILE* file, bool compact, int depth)
-    : _elementJustOpened(false)
-    , _firstElement(true)
-    , _fp(file)
-    , _depth(depth)
-    , _textDepth(-1)
-    , _processEntities(true)
-    , _compactMode(compact)
+        : _elementJustOpened(false)
+        , _firstElement(true)
+        , _fp(file)
+        , _depth(depth)
+        , _textDepth(-1)
+        , _processEntities(true)
+        , _compactMode(compact)
 {
     for (int i = 0; i < ENTITY_RANGE; ++i) {
         _entityFlag[i] = false;
@@ -1691,12 +1691,12 @@ XMLPrinter::XMLPrinter(FILE* file, bool compact, int depth)
     for (int i = 0; i < NUM_ENTITIES; ++i) {
         TIXMLASSERT(entities[i].value < ENTITY_RANGE);
         if (entities[i].value < ENTITY_RANGE) {
-            _entityFlag[(int)entities[i].value] = true;
+            _entityFlag[(int) entities[i].value] = true;
         }
     }
-    _restrictedEntityFlag[(int)'&'] = true;
-    _restrictedEntityFlag[(int)'<'] = true;
-    _restrictedEntityFlag[(int)'>'] = true; // not required, but consistency is nice
+    _restrictedEntityFlag[(int) '&'] = true;
+    _restrictedEntityFlag[(int) '<'] = true;
+    _restrictedEntityFlag[(int) '>'] = true; // not required, but consistency is nice
     _buffer.Push(0);
 }
 
@@ -1708,8 +1708,8 @@ void XMLPrinter::Print(const char* format, ...)
     if (_fp) {
         vfprintf(_fp, format, va);
     } else {
-    // This seems brutally complex. Haven't figured out a better
-    // way on windows.
+        // This seems brutally complex. Haven't figured out a better
+        // way on windows.
 #ifdef _MSC_VER
         int len = -1;
         int expand = 1000;
@@ -1755,7 +1755,7 @@ void XMLPrinter::PrintString(const char* p, bool restricted)
                 // Check for entities. If one is found, flush
                 // the stream up until the entity, write the
                 // entity, and keep looking.
-                if (flag[(unsigned)(*q)]) {
+                if (flag[(unsigned) (*q)]) {
                     while (p < q) {
                         Print("%c", *p);
                         ++p;

@@ -7,7 +7,8 @@
 
 #include <engine/model/CapValue.h>
 
-namespace alica {
+namespace alica
+{
 
 CapValue::CapValue() {}
 

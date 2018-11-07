@@ -13,10 +13,10 @@ namespace alica
 {
 
 SyncTransition::SyncTransition()
-    : _failOnSyncTimeOut(false)
-    , _syncTimeOut(AlicaTime::milliseconds(3000))
-    , _talkTimeOut(AlicaTime::milliseconds(30))
-    , _plan(nullptr)
+        : _failOnSyncTimeOut(false)
+        , _syncTimeOut(AlicaTime::milliseconds(3000))
+        , _talkTimeOut(AlicaTime::milliseconds(30))
+        , _plan(nullptr)
 {
 }
 

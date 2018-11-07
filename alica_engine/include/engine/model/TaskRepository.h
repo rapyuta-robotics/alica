@@ -18,14 +18,14 @@ namespace alica
 
 class TaskRepository : public AlicaElement
 {
-  public:
+public:
     TaskRepository();
     virtual ~TaskRepository();
     int64_t getDefaultTask() const { return _defaultTask; }
     const TaskGrp& getTasks() const { return _tasks; }
     std::string getFileName() const;
 
-  private:
+private:
     friend ModelFactory;
     void setTasks(const TaskGrp& tasks);
     void setDefaultTask(int64_t defaultTask);

@@ -8,18 +8,20 @@
 #ifndef ROLE_H_
 #define ROLE_H_
 
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
 #include "AlicaElement.h"
 
-namespace alica {
+namespace alica
+{
 class RoleTaskMapping;
 class RoleDefinitionSet;
 class Characteristic;
 class ModelFactory;
 
-class Role : public AlicaElement {
+class Role : public AlicaElement
+{
 public:
     Role();
     virtual ~Role();
@@ -27,9 +29,7 @@ public:
     double getPriority(int64_t taskId) const;
     std::string toString() const override;
 
-    const std::unordered_map<std::string, const Characteristic*>& getCharacteristics() const {
-        return _characteristics;
-    }
+    const std::unordered_map<std::string, const Characteristic*>& getCharacteristics() const { return _characteristics; }
     const RoleDefinitionSet* getRoleDefinitionSet() const { return _roleDefinitionSet; }
     const RoleTaskMapping* getRoleTaskMapping() const { return _roleTaskMapping; }
 
@@ -43,6 +43,6 @@ private:
     const RoleDefinitionSet* _roleDefinitionSet;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* ROLE_H_ */

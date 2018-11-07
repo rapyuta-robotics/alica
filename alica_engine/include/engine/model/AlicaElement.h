@@ -1,14 +1,16 @@
 #pragma once
 
-#include <string>
 #include <stdint.h>
+#include <string>
 
-namespace alica {
+namespace alica
+{
 class ModelFactory;
 /**
  * Base class of all model elements
  */
-class AlicaElement {
+class AlicaElement
+{
 public:
     AlicaElement();
     AlicaElement(int64_t id);
@@ -41,4 +43,4 @@ private:
     std::string _name;
 };
 
-}  // namespace alica
+} // namespace alica

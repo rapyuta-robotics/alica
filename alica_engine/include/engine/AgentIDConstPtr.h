@@ -53,4 +53,4 @@ struct AgentIDHash
 {
     std::size_t operator()(AgentIDConstPtr id) const { return id->hash(); }
 };
-}
+} // namespace alica

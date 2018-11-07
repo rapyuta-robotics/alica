@@ -24,7 +24,7 @@ protected:
     int callCounter;
     /*PROTECTED REGION END*/
 private:
-/*PROTECTED REGION ID(prv1479556104511) ENABLED START*/ // Add additional private methods here
+    /*PROTECTED REGION ID(prv1479556104511) ENABLED START*/ // Add additional private methods here
         /*PROTECTED REGION END*/};
         } /* namespace alica */
 

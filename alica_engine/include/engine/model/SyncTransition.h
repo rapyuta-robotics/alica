@@ -9,20 +9,22 @@
 #define SYNCTRANSITION_H_
 
 #include <list>
-#include <string>
 #include <sstream>
+#include <string>
 
-#include "engine/AlicaClock.h"
 #include "AlicaElement.h"
+#include "engine/AlicaClock.h"
 #include "engine/Types.h"
 
-namespace alica {
+namespace alica
+{
 
 class Plan;
 class Transition;
 class ModelFactory;
 
-class SyncTransition : public AlicaElement {
+class SyncTransition : public AlicaElement
+{
 public:
     SyncTransition();
     virtual ~SyncTransition();
@@ -55,6 +57,6 @@ private:
     bool _failOnSyncTimeOut;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* SYNCTRANSITION_H_ */

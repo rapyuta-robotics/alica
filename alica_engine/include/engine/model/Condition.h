@@ -1,12 +1,4 @@
-/*
- * Condition.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef CONDITION_H_
-#define CONDITION_H_
+#pragma once
 
 #include <memory>
 #include <string>
@@ -88,5 +80,3 @@ private:
     std::string _plugInName; // TODO: is this needed?!
 };
 } // namespace alica
-
-#endif /* CONDITION_H_ */

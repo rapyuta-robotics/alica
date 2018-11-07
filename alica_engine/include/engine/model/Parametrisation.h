@@ -12,11 +12,13 @@
 
 #include "AlicaElement.h"
 
-namespace alica {
+namespace alica
+{
 class Variable;
 class AbstractPlan;
 
-class Parametrisation : public AlicaElement {
+class Parametrisation : public AlicaElement
+{
 public:
     Parametrisation();
     virtual ~Parametrisation();
@@ -39,6 +41,6 @@ protected:
     const AbstractPlan* _subPlan;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* PARAMETRISATION_H_ */

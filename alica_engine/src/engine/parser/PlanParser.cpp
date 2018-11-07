@@ -399,9 +399,8 @@ int64_t PlanParser::fetchId(const string& idString, int64_t id)
             path = supplementary::FileSystem::combinePaths(this->baseTaskPath, locator);
         } else if (supplementary::FileSystem::endsWith(locator, ".rdefset") || supplementary::FileSystem::endsWith(locator, ".cdefset")) {
             path = supplementary::FileSystem::combinePaths(this->baseRolePath, locator);
-        } else{
+        } else {
             std::cout << "PP: Unknown locator ending: " << locator << std::endl;
-
         }
 
         if (std::find(std::begin(filesParsed), std::end(filesParsed), path) == std::end(filesParsed) &&

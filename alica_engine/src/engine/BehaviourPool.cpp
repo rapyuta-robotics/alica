@@ -43,8 +43,7 @@ bool BehaviourPool::init(IBehaviourCreator* bc)
 
     _behaviourCreator = bc;
 
-    const PlanRepository::Accessor<Behaviour>& behaviours =
-            _ae->getPlanRepository()->getBehaviours();
+    const PlanRepository::Accessor<Behaviour>& behaviours = _ae->getPlanRepository()->getBehaviours();
     for (const Behaviour* beh : behaviours) {
         auto basicBeh = _behaviourCreator->createBehaviour(beh->getId());
         if (basicBeh != nullptr) {
@@ -66,7 +65,8 @@ bool BehaviourPool::init(IBehaviourCreator* bc)
 /**
  * Calls stop on all BasicBehaviours.
  */
-void BehaviourPool::stopAll() {
+void BehaviourPool::stopAll()
+{
     const PlanRepository::Accessor<Behaviour>& behaviours = _ae->getPlanRepository()->getBehaviours();
     for (const Behaviour* beh : behaviours) {
         auto bbPtr = _availableBehaviours.at(beh);

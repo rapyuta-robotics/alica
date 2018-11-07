@@ -85,4 +85,4 @@ const AbstractPlan* ThreadSafePlanInterface::getActivePlan() const
     RunningPlan::ScopedReadLock lck(_rp->getReadLock());
     return _rp->getActivePlan();
 }
-}
+} // namespace alica

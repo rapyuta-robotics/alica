@@ -222,7 +222,8 @@ void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 std::string BasicBehaviour::getParameter(std::string paramName)
 {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-    string configSectionName = (*sc)["BehaviourConfigurations"]->get<std::string>(this->getName().c_str(), this->getPlanContext().getRunningPlan()->getActiveState()->getId(), NULL);
+    string configSectionName = (*sc)["BehaviourConfigurations"]->get<std::string>(
+            this->getName().c_str(), this->getPlanContext().getRunningPlan()->getActiveState()->getId(), NULL);
     return (*sc)["BehaviourConfigurations"]->get<std::string>(this->getName().c_str(), configSectionName.c_str(), paramName.c_str(), NULL);
 }
 

@@ -8,23 +8,25 @@
 #ifndef FAILURESTATE_H_
 #define FAILURESTATE_H_
 
-#include <string>
 #include <sstream>
+#include <string>
 
 #include "TerminalState.h"
 
-namespace alica {
+namespace alica
+{
 
 /**
  * A terminal failure state in a plan. Indicates unsuccesful termination.
  */
-class FailureState : public TerminalState {
+class FailureState : public TerminalState
+{
 public:
     FailureState();
     virtual ~FailureState();
     std::string toString() const override;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* FAILURESTATE_H_ */

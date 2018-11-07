@@ -121,7 +121,7 @@ bool Query::existsSolution(ThreadSafePlanInterface pi)
     if (!collectProblemStatement(pi, solver, cds, domOffset)) {
         return false;
     }
-    return solver->existsSolution(_relevantVariables, cds);
+    return solver->existsSolution(_context.get(), cds);
 }
 
 template <class SolverType, typename ResultType>

@@ -30,7 +30,6 @@ public:
     bool isBehaviourRunningInContext(const RunningPlan& rp) const;
     const std::map<const Behaviour*, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const { return _availableBehaviours; }
 
-
 private:
     /**
      * Manages behaviours used by the running ALICA program.

@@ -8,14 +8,18 @@
 #include "engine/model/FailureState.h"
 #include "engine/model/Transition.h"
 
-namespace alica {
+namespace alica
+{
 
 FailureState::FailureState()
-        : TerminalState(FAILURE) {}
+        : TerminalState(FAILURE)
+{
+}
 
 FailureState::~FailureState() {}
 
-std::string FailureState::toString() const {
+std::string FailureState::toString() const
+{
     std::stringstream ss;
     ss << "#FailureState: " << getName() << " " << getId() << std::endl;
     ss << "\t Result:" << std::endl;
@@ -29,4 +33,4 @@ std::string FailureState::toString() const {
     return ss.str();
 }
 
-}  // namespace alica
+} // namespace alica

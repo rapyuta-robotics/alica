@@ -4,18 +4,22 @@
  *  Created on: Mar 8, 2014
  *      Author: Stephan Opfer
  */
-#include <sstream>
 #include "engine/model/RoleSet.h"
+#include <sstream>
 
-namespace alica {
+namespace alica
+{
 
 RoleSet::RoleSet()
         : _usableWithPlanID(0)
-        , _isDefault(false) {}
+        , _isDefault(false)
+{
+}
 
 RoleSet::~RoleSet() {}
 
-std::string RoleSet::toString() const {
+std::string RoleSet::toString() const
+{
     std::stringstream ss;
     ss << "#RoleSet: " << getName() << " " << getId() << std::endl;
     ss << "\t UsableWithPlanID: " << _usableWithPlanID << std::endl;
@@ -27,16 +31,19 @@ std::string RoleSet::toString() const {
     return ss.str();
 }
 
-void RoleSet::setIsDefault(bool isDefault) {
+void RoleSet::setIsDefault(bool isDefault)
+{
     _isDefault = isDefault;
 }
 
-void RoleSet::setRoleTaskMappings(const std::vector<RoleTaskMapping*>& roleTaskMappings) {
+void RoleSet::setRoleTaskMappings(const std::vector<RoleTaskMapping*>& roleTaskMappings)
+{
     _roleTaskMappings = roleTaskMappings;
 }
 
-void RoleSet::setUsableWithPlanId(int64_t usableWithPlanId) {
+void RoleSet::setUsableWithPlanId(int64_t usableWithPlanId)
+{
     _usableWithPlanID = usableWithPlanId;
 }
 
-}  // namespace alica
+} // namespace alica

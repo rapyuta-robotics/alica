@@ -7,15 +7,19 @@
 
 #include "engine/model/PreCondition.h"
 #include <sstream>
-namespace alica {
+namespace alica
+{
 
 PreCondition::PreCondition(int64_t id)
         : Condition(id)
-        , _enabled(true) {}
+        , _enabled(true)
+{
+}
 
 PreCondition::~PreCondition() {}
 
-std::string PreCondition::toString() const {
+std::string PreCondition::toString() const
+{
     std::stringstream ss;
     ss << "#PreCondition: " << getName() << " " << getId() << (_enabled ? "enabled" : "disabled") << std::endl;
     ss << "\t ConditionString: " << getConditionString() << std::endl;
@@ -23,8 +27,9 @@ std::string PreCondition::toString() const {
     return ss.str();
 }
 
-void PreCondition::setEnabled(bool enabled) {
+void PreCondition::setEnabled(bool enabled)
+{
     _enabled = enabled;
 }
 
-}  // namespace alica
+} // namespace alica

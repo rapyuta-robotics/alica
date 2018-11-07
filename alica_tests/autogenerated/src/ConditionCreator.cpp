@@ -413,4 +413,4 @@ shared_ptr<BasicCondition> ConditionCreator::createConditions(long conditionConf
         break;
     }
 }
-}
+} // namespace alica

@@ -87,7 +87,8 @@ void Synchronisation::changeOwnData(int64_t transitionID, bool conditionHolds)
         std::lock_guard<mutex> lock(syncMutex);
         if (myRow != nullptr) {
             if (/*sd->ack != myRow->getSyncData()->ack
-						||*/ sd.conditionHolds != myRow->getSyncData().conditionHolds ||
+                                                ||*/
+                            sd.conditionHolds != myRow->getSyncData().conditionHolds ||
                     *(sd.robotID) != *(myRow->getSyncData().robotID) || sd.transitionID != myRow->getSyncData().transitionID) {
                 // my sync row has changed
                 myRow->setSyncData(sd);
@@ -202,7 +203,8 @@ bool Synchronisation::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t
                 ALICA_DEBUG_MSG("CUR SD: " << sd.robotID << " " << sd.transitionID << " " << sd.conditionHolds << " " << sd.ack);
 
                 if (/*sd.ack == row->getSyncData()->ack
-							&&*/ sd.conditionHolds == row->getSyncData().conditionHolds &&
+                                                        &&*/
+                                sd.conditionHolds == row->getSyncData().conditionHolds &&
                         *(sd.robotID) == *(row->getSyncData().robotID) && sd.transitionID == row->getSyncData().transitionID) {
                     rowInMatrix = row;
                     break;

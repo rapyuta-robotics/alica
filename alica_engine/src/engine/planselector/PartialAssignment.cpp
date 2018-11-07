@@ -16,7 +16,7 @@ namespace
 {
 // constexpr int INFINITE = std::numeric_limits<int>::max();
 constexpr int64_t PRECISION = 0x40000000;
-}
+} // namespace
 
 bool PartialAssignment::s_allowIdling = true;
 

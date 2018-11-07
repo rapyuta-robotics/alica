@@ -1,10 +1,11 @@
-#include <gtest/gtest.h>
 #include <engine/AlicaClock.h>
+#include <gtest/gtest.h>
 
-using alica::AlicaTime;
 using alica::AlicaClock;
+using alica::AlicaTime;
 
-TEST(AlicaTime, AlicaClock) {
+TEST(AlicaTime, AlicaClock)
+{
 
     AlicaTime t;
     EXPECT_EQ(t.inNanoseconds(), 0);

@@ -7,15 +7,15 @@ namespace alica
 
 class SolverVariable
 {
-  public:
+public:
     SolverVariable(int64_t id)
-        : _id(id)
+            : _id(id)
     {
     }
     virtual ~SolverVariable() {}
     int64_t getId() const { return _id; }
 
-  private:
+private:
     int64_t _id;
 };
 } /* namespace alica */

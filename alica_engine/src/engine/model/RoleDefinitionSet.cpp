@@ -7,17 +7,20 @@
 
 #include "engine/model/RoleDefinitionSet.h"
 
-namespace alica {
+namespace alica
+{
 
 RoleDefinitionSet::RoleDefinitionSet() {}
 
 RoleDefinitionSet::~RoleDefinitionSet() {}
 
-void RoleDefinitionSet::setFileName(const std::string& fileName) {
+void RoleDefinitionSet::setFileName(const std::string& fileName)
+{
     _fileName = fileName;
 }
 
-void RoleDefinitionSet::setRoles(const RoleGrp& roles) {
+void RoleDefinitionSet::setRoles(const RoleGrp& roles)
+{
     _roles = roles;
 }
-}  // namespace alica
+} // namespace alica

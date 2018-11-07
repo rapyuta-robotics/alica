@@ -9,17 +9,21 @@
 #include "engine/model/Transition.h"
 #include <sstream>
 
-namespace alica {
+namespace alica
+{
 
 /**
  * Basic constructor
  */
 SuccessState::SuccessState()
-        : TerminalState(SUCCESS) {}
+        : TerminalState(SUCCESS)
+{
+}
 
 SuccessState::~SuccessState() {}
 
-std::string SuccessState::toString() const {
+std::string SuccessState::toString() const
+{
     std::stringstream ss;
     ss << "#SuccessState: " << getName() << " " << getId() << std::endl;
     ss << "\t Result:" << std::endl;
@@ -33,4 +37,4 @@ std::string SuccessState::toString() const {
     return ss.str();
 }
 
-}  // namespace alica
+} // namespace alica

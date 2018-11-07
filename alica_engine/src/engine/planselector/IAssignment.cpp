@@ -89,4 +89,4 @@ UniquePartialAssignmentSuccessView IAssignment::getUniqueAgentsWorkingAndFinishe
 {
     return UniquePartialAssignmentSuccessView(ep->getIndex(), _impl);
 }
-}
+} // namespace alica

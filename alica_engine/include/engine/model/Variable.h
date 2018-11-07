@@ -14,7 +14,7 @@ class ModelFactory;
  */
 class Variable : public AlicaElement
 {
-  public:
+public:
     Variable();
     Variable(int64_t id, const std::string& name, const std::string& type);
     virtual ~Variable();
@@ -24,7 +24,7 @@ class Variable : public AlicaElement
 
     friend std::ostream& operator<<(std::ostream& os, const Variable& variable) { return os << variable.getName() << "(" << variable.getId() << ")"; }
 
-  private:
+private:
     friend ModelFactory;
     void setType(const std::string& type);
     std::string _type;

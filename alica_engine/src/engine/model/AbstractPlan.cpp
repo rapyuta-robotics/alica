@@ -45,7 +45,7 @@ std::string AbstractPlan::toString() const
     return ss.str();
 }
 
-const Variable* AbstractPlan::getVariable(const std::string &name) const
+const Variable* AbstractPlan::getVariable(const std::string& name) const
 {
     for (const Variable* variable : _variables) {
         if (variable->getName() == name) {

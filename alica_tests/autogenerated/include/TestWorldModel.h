@@ -1,13 +1,15 @@
 #pragma once
 
-#include <supplementary/ITrigger.h>
 #include <SystemConfig.h>
+#include <supplementary/ITrigger.h>
 
 #include <vector>
 
-namespace alicaTests {
+namespace alicaTests
+{
 
-class TestWorldModel {
+class TestWorldModel
+{
 public:
     virtual ~TestWorldModel();
     static TestWorldModel* getOne();
@@ -56,4 +58,4 @@ private:
     bool runtimeCondition1418042967134;
 };
 
-}  // namespace alicaTests
+} // namespace alicaTests

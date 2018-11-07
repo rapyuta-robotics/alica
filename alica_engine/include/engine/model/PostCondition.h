@@ -12,15 +12,17 @@
 
 #include "Condition.h"
 
-namespace alica {
+namespace alica
+{
 
-class PostCondition : public Condition {
+class PostCondition : public Condition
+{
 public:
     PostCondition(int64_t id = 0);
     virtual ~PostCondition();
     std::string toString() const override;
 };
 
-}  // namespace alica
+} // namespace alica
 
 #endif /* POSTCONDITION_H_ */

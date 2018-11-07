@@ -153,4 +153,4 @@ shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(long constraintC
         break;
     }
 }
-}
+} // namespace alica

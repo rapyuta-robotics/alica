@@ -7,16 +7,19 @@
 
 #include "engine/model/Quantifier.h"
 #include "engine/AlicaEngine.h"
+#include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
-#include "engine/model/EntryPoint.h"
 #include <assert.h>
-namespace alica {
+namespace alica
+{
 
 Quantifier::Quantifier(int64_t id)
         : AlicaElement(id)
         , _scope(nullptr)
-        , _scopeType(PLANSCOPE) {}
+        , _scopeType(PLANSCOPE)
+{
+}
 
 Quantifier::~Quantifier() {}
 
@@ -24,7 +27,8 @@ Quantifier::~Quantifier() {}
  * Set the scope of this quantifier, called by the ModelFactory
  * @param ae An AlicaElement
  */
-void Quantifier::setScope(const AlicaElement* element) {
+void Quantifier::setScope(const AlicaElement* element)
+{
     _scope = element;
     if (dynamic_cast<const EntryPoint*>(element) != nullptr) {
         _scopeType = ENTRYPOINTSCOPE;
@@ -37,8 +41,9 @@ void Quantifier::setScope(const AlicaElement* element) {
     }
 }
 
-void Quantifier::setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers) {
+void Quantifier::setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers)
+{
     _domainIdentifiers = domainIdentifiers;
 }
 
-}  // namespace alica
+} // namespace alica

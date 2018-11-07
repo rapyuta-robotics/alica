@@ -19,7 +19,7 @@ class IAlicaCommunication;
 
 class VariableSyncModule
 {
-  public:
+public:
     VariableSyncModule(AlicaEngine* ae);
     ~VariableSyncModule();
 
@@ -40,10 +40,10 @@ class VariableSyncModule
     VariableSyncModule& operator=(const VariableSyncModule&) = delete;
     VariableSyncModule& operator=(VariableSyncModule&&) = delete;
 
-  private:
+private:
     class VotedSeed
     {
-      public:
+    public:
         VotedSeed(std::vector<Variant>&& v);
 
         bool takeVector(const std::vector<Variant>& v, const std::vector<Interval<double>>& limits, double distThreshold);

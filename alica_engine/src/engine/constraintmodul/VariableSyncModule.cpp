@@ -15,13 +15,13 @@
 namespace alica
 {
 VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
-    : _ae(ae)
-    , _running(false)
-    , _timer(nullptr)
-    , _distThreshold(0)
-    , _communicator(nullptr)
-    , _ttl4Communication(AlicaTime::zero())
-    , _ttl4Usage(AlicaTime::zero())
+        : _ae(ae)
+        , _running(false)
+        , _timer(nullptr)
+        , _distThreshold(0)
+        , _communicator(nullptr)
+        , _ttl4Communication(AlicaTime::zero())
+        , _ttl4Usage(AlicaTime::zero())
 {
 }
 
@@ -126,10 +126,10 @@ void VariableSyncModule::postResult(int64_t vid, Variant result)
 }
 
 VariableSyncModule::VotedSeed::VotedSeed(std::vector<Variant>&& vs)
-    : _values(std::move(vs))
-    , _supporterCount(_values.size())
-    , _hash(0)
-    , _totalSupCount(0)
+        : _values(std::move(vs))
+        , _supporterCount(_values.size())
+        , _hash(0)
+        , _totalSupCount(0)
 {
     assert(_values.size() == _supporterCount.size());
     for (const Variant& v : _values) {
@@ -140,10 +140,10 @@ VariableSyncModule::VotedSeed::VotedSeed(std::vector<Variant>&& vs)
 }
 
 VariableSyncModule::VotedSeed::VotedSeed(VotedSeed&& o)
-    : _values(std::move(o._values))
-    , _supporterCount(std::move(o._supporterCount))
-    , _hash(o._hash)
-    , _totalSupCount(o._totalSupCount)
+        : _values(std::move(o._values))
+        , _supporterCount(std::move(o._supporterCount))
+        , _hash(o._hash)
+        , _totalSupCount(o._totalSupCount)
 {
 }
 

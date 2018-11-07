@@ -8,14 +8,18 @@
 #include "engine/model/RuntimeCondition.h"
 #include <sstream>
 
-namespace alica {
+namespace alica
+{
 
 RuntimeCondition::RuntimeCondition(int64_t id)
-        : Condition(id) {}
+        : Condition(id)
+{
+}
 
 RuntimeCondition::~RuntimeCondition() {}
 
-std::string RuntimeCondition::toString() const {
+std::string RuntimeCondition::toString() const
+{
     std::stringstream ss;
     ss << "#RuntimeCondition: " << getName() << " " << getId() << std::endl;
     ss << "\t ConditionString: " << getConditionString() << std::endl;
@@ -23,4 +27,4 @@ std::string RuntimeCondition::toString() const {
     return ss.str();
 }
 
-}  // namespace alica
+} // namespace alica
