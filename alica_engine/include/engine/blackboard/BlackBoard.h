@@ -1,6 +1,5 @@
 #pragma once
 
-#include "engine/blackboard/ByteArray.h"
 #include "engine/blackboard/BBIdent.h"
 #include "engine/blackboard/ByteArray.h"
 #include "engine/util/HashFunctions.h"
@@ -10,9 +9,11 @@
 #include <string.h>
 #include <type_traits>
 
-namespace alica {
+namespace alica
+{
 
-class BlackBoard {
+class BlackBoard
+{
 public:
     using IdType = BBIdent;
     using ObjectType = ByteArray;
@@ -42,7 +43,8 @@ private:
 };
 
 template <class InputIt>
-BlackBoard::IdType BlackBoard::registerValue(InputIt begin, InputIt end) {
+BlackBoard::IdType BlackBoard::registerValue(InputIt begin, InputIt end)
+{
     static_assert(std::is_pod<typename InputIt::value_type>::value, "Iterators must point to POD type.");
     const int32_t len = std::distance(begin, end) * sizeof(typename InputIt::value_type);
     ObjectType element(len);
@@ -58,4 +60,4 @@ BlackBoard::IdType BlackBoard::registerValue(InputIt begin, InputIt end) {
     return id;
 }
 
-}  // namespace alica
+} // namespace alica

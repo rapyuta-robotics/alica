@@ -18,6 +18,7 @@ public:
     /*PROTECTED REGION ID(pub1414068597716) ENABLED START*/ // Add additional public methods here
     int getCallCounter() const;
     static std::vector<BBIdent> result;
+    static bool madequery;
     /*PROTECTED REGION END*/
 protected:
     virtual void initialiseParameters();
@@ -26,7 +27,7 @@ protected:
     int _callCounter;
     /*PROTECTED REGION END*/
 private:
-/*PROTECTED REGION ID(prv1414068597716) ENABLED START*/ // Add additional private methods here
+    /*PROTECTED REGION ID(prv1414068597716) ENABLED START*/ // Add additional private methods here
         /*PROTECTED REGION END*/};
         } /* namespace alica */
 

@@ -10,6 +10,7 @@ namespace alica
 {
 /*PROTECTED REGION ID(staticVars1414068597716) ENABLED START*/ // initialise static variables here
 std::vector<BBIdent> ConstraintUsingBehaviour::result;
+bool ConstraintUsingBehaviour::madequery = false;
 /*PROTECTED REGION END*/
 ConstraintUsingBehaviour::ConstraintUsingBehaviour()
         : DomainBehaviour("ConstraintUsingBehaviour")
@@ -29,12 +30,14 @@ void ConstraintUsingBehaviour::run(void* msg)
     ++_callCounter;
     cout << "ConstraintUsingBehaviour was called " << _callCounter << " times!" << endl;
     _query.getSolution<reasoner::ConstraintTestPlanDummySolver, BBIdent>(getPlanContext(), result);
+    madequery = true;
     /*PROTECTED REGION END*/
 }
 void ConstraintUsingBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1414068597716) ENABLED START*/ // Add additional options here
     _callCounter = 0;
+    madequery = false;
     _query.clearStaticVariables();
     _query.addStaticVariable(getVariableByName("Y"));
     /*PROTECTED REGION END*/

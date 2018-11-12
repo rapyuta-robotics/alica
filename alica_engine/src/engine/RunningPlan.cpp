@@ -99,10 +99,12 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc)
 
 bool RunningPlan::isDeleteable() const
 {
-    if (!_children.empty())
+    if (!_children.empty()) {
         return false; // children deregister from their parents
-    if (_status.active == PlanActivity::InActive)
+    }
+    if (_status.active == PlanActivity::InActive) {
         return true; // shortcut for plans from planselector
+    }
     return isRetired() && (!isBehaviour() || !_ae->getBehaviourPool()->isBehaviourRunningInContext(*this));
 }
 
