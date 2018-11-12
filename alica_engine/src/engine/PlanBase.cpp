@@ -151,6 +151,10 @@ void PlanBase::run()
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
             ALICA_INFO_MSG("PB: MasterPlan Failed");
         }
+        // clear deepest node pointer before deleting plans:
+        if (_deepestNode && _deepestNode->isRetired()) {
+            _deepestNode = nullptr;
+        }
             // remove deletable plans:
             // this should be done just before clearing fpEvents, to make sure no spurious pointers remain
 #ifdef ALICA_DEBUG_ENABLED
@@ -191,7 +195,7 @@ void PlanBase::run()
             ALICA_WARNING_MSG("PB: lastSendTime is in the future of the current system time, did the system time change?");
             _lastSendTime = now;
         }
-        _deepestNode = nullptr;
+
         if ((_ruleBook.hasChangeOccurred() && _lastSendTime + _minSendInterval < now) || _lastSendTime + _maxSendInterval < now) {
             IdGrp msg;
             _deepestNode = _rootNode;

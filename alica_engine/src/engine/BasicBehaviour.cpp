@@ -115,9 +115,9 @@ bool BasicBehaviour::start()
 void BasicBehaviour::setSuccess()
 {
     if (!_success) {
+        _success = true;
         _engine->getPlanBase()->addFastPathEvent(_context);
     }
-    _success = true;
 }
 
 bool BasicBehaviour::isSuccess() const
@@ -128,9 +128,9 @@ bool BasicBehaviour::isSuccess() const
 void BasicBehaviour::setFailure()
 {
     if (!_failure) {
+        _failure = true;
         _engine->getPlanBase()->addFastPathEvent(_context);
     }
-    _failure = true;
 }
 
 bool BasicBehaviour::isFailure() const
