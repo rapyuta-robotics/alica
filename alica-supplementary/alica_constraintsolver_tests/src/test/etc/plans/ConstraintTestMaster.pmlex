@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="ConstraintTestMaster.pml#1414068495567"/>
+    <value xPos="145" yPos="114" width="81" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="ConstraintTestMaster.pml#1414068495566"/>
+    <value width="522" height="350"/>
+  </extensions>
+  <extensions>
+    <key href="ConstraintTestMaster.pml#1414068495568"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="ConstraintTestPlan.pml#1414068524245"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>

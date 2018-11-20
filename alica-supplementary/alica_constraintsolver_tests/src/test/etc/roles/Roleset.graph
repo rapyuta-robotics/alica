@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ASCII"?>
+<alica:TaskGraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn">
+  <nodes outEdge="//@edges.0"/>
+  <nodes xsi:type="alica:TaskWrapper" inEdge="//@edges.0">
+    <task href="../Misc/taskrepository.tsk#1225112227903"/>
+    <mappings priority="0.5">
+      <role href="rolesDefinition.rdefset#1222973297047"/>
+    </mappings>
+    <mappings priority="0.5">
+      <role href="rolesDefinition.rdefset#1222973297049"/>
+    </mappings>
+    <mappings priority="0.5">
+      <role href="rolesDefinition.rdefset#1222973297051"/>
+    </mappings>
+    <mappings priority="0.5">
+      <role href="rolesDefinition.rdefset#1222973297052"/>
+    </mappings>
+    <mappings priority="0.5">
+      <role href="rolesDefinition.rdefset#1222973297054"/>
+    </mappings>
+    <mappings priority="0.5">
+      <role href="rolesDefinition.rdefset#1222973297056"/>
+    </mappings>
+  </nodes>
+  <edges from="//@nodes.0" to="//@nodes.1"/>
+</alica:TaskGraph>

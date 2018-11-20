@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="Lvl1.pml#1524452759600"/>
+    <value xPos="230" yPos="56" width="143" height="92" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="Lvl1.pml#1524452759599"/>
+    <value xPos="85" yPos="208" width="576" height="241"/>
+  </extensions>
+  <extensions>
+    <key href="Lvl1.pml#1524452759601"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="VHPlanType.pty#1524452770528"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Lvl1.pml#1524453470580"/>
+    <value xPos="357" yPos="173"/>
+  </extensions>
+  <extensions>
+    <key href="Lvl1.pml#1524453481856"/>
+    <value xPos="66" yPos="59" width="80" height="70"/>
+  </extensions>
+  <extensions>
+    <key href="Lvl1.pml#1524453490345"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>

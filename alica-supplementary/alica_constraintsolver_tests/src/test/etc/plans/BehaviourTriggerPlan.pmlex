@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extension>
+    <key href="BehaviourTriggerPlan.pml#1428492704178"/>
+    <value xPos="180" yPos="188" width="81" height="67" collapsed="false" visible="true"/>
+  </extension>
+  <extension>
+    <value width="685" height="578" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="BehaviourTriggerPlan.pml#1428492704179"/>
+    <value width="-1" height="-1" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="Behaviour/TriggerA.beh#1428508312886"/>
+    <value width="-1" height="-1" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="Behaviour/TriggerA.beh#1428508312886"/>
+    <value width="-1" height="-1" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="Behaviour/TriggerB.beh#1428508331620"/>
+    <value width="-1" height="-1" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="Behaviour/TriggerB.beh#1428508331620"/>
+    <value width="-1" height="-1" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="BehaviourTriggerPlan.pml#1428492704178"/>
+    <value width="-1" height="-1" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="BehaviourTriggerPlan.pml#1428492704179"/>
+    <value width="-1" height="-1" collapsed="true" visible="true"/>
+  </extension>
+</uiextensionmodel:PmlUiExtensionMap>
