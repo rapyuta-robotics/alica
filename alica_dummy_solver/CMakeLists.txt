@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(dummy_solver)
+project(alica_dummy_solver)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 -ggdb ${CMAKE_CXX_FLAGS}")
@@ -13,7 +13,7 @@ find_package(catkin REQUIRED COMPONENTS alica_engine alica_common_config alica_s
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES dummy_solver
+  LIBRARIES alica_dummy_solver
   CATKIN_DEPENDS alica_engine alica_common_config alica_solver_interface
 )
 

@@ -17,8 +17,6 @@
 
 #include "Plans/VariableHandling/constraints/Lvl21524452793378Constraints.h"
 
-#include "Plans/GSolver/constraints/GSolverTestPlan1417423757243Constraints.h"
-
 #include "Plans/Authority/constraints/AuthorityTestMaster1414403396328Constraints.h"
 
 #include "Plans/constraints/GoalPlan1402488870347Constraints.h"
@@ -71,8 +69,6 @@
 
 #include "Plans/constraints/PreConditionPlan1418042796751Constraints.h"
 
-#include "Plans/GSolver/constraints/GSolverMaster1417423751087Constraints.h"
-
 #include "Plans/constraints/ConstraintTestMaster1414068495566Constraints.h"
 
 #include "Plans/ProblemModule/constraints/ProbBuildingLevel11479557378264Constraints.h"
@@ -101,10 +97,6 @@ shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(long constraintC
 
     case 1524453266123:
         return make_shared<Constraint1524453266123>();
-        break;
-
-    case 1417424512343:
-        return make_shared<Constraint1417424512343>();
         break;
 
     case 1403773741874:
