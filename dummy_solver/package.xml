@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>dummy_solver</name>
+  <version>0.0.0</version>
+  <description>The dummy_solver package</description>
+
+  <maintainer email="jakob@vs.uni-kassel.de">Stefan Jakob</maintainer>
+
+  <license>MIT</license>
+
+  <depend>alica_engine</depend>
+  <depend>alica_common_config</depend>
+  <depend>alica_solver_interface</depend>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>

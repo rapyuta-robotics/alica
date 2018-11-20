@@ -13,7 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     system_config
     fsystem
-    autodiff
+    dummy_solver
     constraintsolver
     event_handling
     agent_id
