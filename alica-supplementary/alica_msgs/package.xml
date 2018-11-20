@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>alica_msgs</name>
+  <version>0.0.0</version>
+  <description>The alica_msgs package</description>
+
+  <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>message_runtime</depend>
+  <depend>agent_id</depend>
+
+  <export>
+  </export>
+</package>
