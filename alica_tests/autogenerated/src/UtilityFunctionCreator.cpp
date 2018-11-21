@@ -126,10 +126,6 @@ shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(long util
         return make_shared<UtilityFunction1524452793378>();
         break;
 
-    case 1417423757243:
-        return make_shared<UtilityFunction1417423757243>();
-        break;
-
     case 1414403396328:
         return make_shared<UtilityFunction1414403396328>();
         break;
@@ -232,10 +228,6 @@ shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(long util
 
     case 1418042796751:
         return make_shared<UtilityFunction1418042796751>();
-        break;
-
-    case 1417423751087:
-        return make_shared<UtilityFunction1417423751087>();
         break;
 
     case 1414068495566:

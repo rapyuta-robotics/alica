@@ -8,13 +8,15 @@
 
 #include <CGSolver.h>
 #include <SystemConfig.h>
-#include <communication/AlicaRosCommunication.h>
+#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 
 #include <csetjmp>
 #include <csignal>
 #include <string>
+
+#include <ros/ros.h>
 
 #include <gtest/gtest.h>
 
@@ -58,7 +60,7 @@ protected:
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
         ae->setAlicaClock(new alica::AlicaClock());
-        ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+        ae->setCommunicator(new alica_dummy_proxy::AlicaDummyCommunication(ae));
 
         EXPECT_TRUE(ae->init(bc, cc, uc, crc));
     }
