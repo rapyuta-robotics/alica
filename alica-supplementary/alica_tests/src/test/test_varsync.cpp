@@ -38,16 +38,16 @@ TEST_F(VariableSyncModuleTest, GetOwnSeed)
     vsm->postResult(1, v1);
     vsm->postResult(2, v2);
 
-    std::vector<Interval<double>> limits(2);
+    std::vector<alica::Interval<double>> limits(2);
 
-    limits[0] = Interval<double>(-10, 10);
-    limits[1] = Interval<double>(-10, 10);
+    limits[0] = alica::Interval<double>(-10, 10);
+    limits[1] = alica::Interval<double>(-10, 10);
 
     std::vector<Variant> seeds;
 
-    SolverVariable sv1(1);
-    SolverVariable sv2(2);
-    std::vector<SolverVariable*> vs(2);
+    alica::SolverVariable sv1(1);
+    alica::SolverVariable sv2(2);
+    std::vector<alica::SolverVariable*> vs(2);
     vs[0] = &sv1;
     vs[1] = &sv2;
 
