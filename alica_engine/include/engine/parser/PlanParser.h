@@ -9,6 +9,7 @@
 
 #include <FileSystem.h>
 #include <SystemConfig.h>
+#include <yaml-cpp/node/node.h>
 
 namespace tinyxml2
 {
@@ -41,7 +42,8 @@ public:
     void setCurrentFile(const std::string& currentFile);
     void parseFileLoop();
     const RoleSet* parseRoleSet(std::string roleSetName);
-    int64_t parserId(tinyxml2::XMLElement* node);
+    int64_t parserId(YAML::Node node);
+    int64_t fetchId(const std::string& idString);
 
 private:
     supplementary::SystemConfig* sc;
@@ -64,9 +66,7 @@ private:
     void parsePlanTypeFile(const std::string& currentFile);
     void parseBehaviourFile(const std::string& currentFile);
     Plan* parsePlanFile(const std::string& planFile);
-    int64_t fetchId(const std::string& idString, int64_t id);
     std::string findDefaultRoleSet(std::string dir);
-
     std::list<std::string> filesToParse;
     std::list<std::string> filesParsed;
 };
