@@ -3,6 +3,7 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <yaml-cpp/node/node.h>
 
 #include "tinyxml2.h"
 
@@ -48,15 +49,15 @@ public:
     bool ignoreMasterPlanId;
     bool getIgnoreMasterPlanId();
     void setIgnoreMasterPlanId(bool value);
-    Plan* createPlan(tinyxml2::XMLDocument* node);
+    Plan* createPlan(YAML::Node& node);
     std::map<int64_t, AlicaElement*>* getElements();
     void setElements(const std::map<int64_t, AlicaElement*>& elements);
     std::string getNameOfNode(tinyxml2::XMLElement* node);
-    void createTasks(tinyxml2::XMLDocument* node);
-    void createBehaviour(tinyxml2::XMLDocument* node);
+    void createTasks(YAML::Node& node);
+    void createBehaviour(YAML::Node& node);
     void createCapabilityDefinitionSet(tinyxml2::XMLDocument* node);
     void createRoleDefinitionSet(tinyxml2::XMLDocument* node);
-    void createPlanType(tinyxml2::XMLDocument* node);
+    void createPlanType(YAML::Node& node);
     void computeReachabilities();
     void attachPlanReferences();
     void attachRoleReferences();
@@ -124,7 +125,7 @@ private:
     ReferenceList planningProblemPlanWaitReferences;
     ReferenceList planningProblemPlanAlternativeReferences;
 
-    void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele);
+    void setAlicaElementAttributes(AlicaElement* ae, YAML::Node node);
     EntryPoint* createEntryPoint(tinyxml2::XMLElement* element);
     State* createState(tinyxml2::XMLElement* element);
     SuccessState* createSuccessState(tinyxml2::XMLElement* element);
@@ -132,7 +133,7 @@ private:
     Transition* createTransition(tinyxml2::XMLElement* element, Plan* plan);
     SyncTransition* createSyncTransition(tinyxml2::XMLElement* element);
     Parameter* createParameter(tinyxml2::XMLElement* element);
-    Parametrisation* createParametrisation(tinyxml2::XMLElement* element);
+    Parametrisation* createParametrisation(YAML::Node node);
     PreCondition* createPreCondition(tinyxml2::XMLElement* element);
     PostCondition* createPostCondition(tinyxml2::XMLElement* element);
     RuntimeCondition* createRuntimeCondition(tinyxml2::XMLElement* element);
@@ -141,7 +142,7 @@ private:
     Capability* createCapability(tinyxml2::XMLElement* element);
     Role* createRole(tinyxml2::XMLElement* element);
     Characteristic* createCharacteristic(tinyxml2::XMLElement* element);
-    Variable* createVariable(tinyxml2::XMLElement* element);
+    Variable* createVariable(YAML::Node node);
     bool isReferenceNode(tinyxml2::XMLElement* node) const;
     void addElement(AlicaElement* ael);
 
