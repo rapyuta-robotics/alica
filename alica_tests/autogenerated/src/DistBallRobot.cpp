@@ -4,7 +4,7 @@
 #include <engine/model/EntryPoint.h>
 #include <engine/planselector/IAssignment.h>
 
-#include <supplementary/AgentIDManager.h>
+#include <essentials/AgentIDManager.h>
 
 namespace alica
 {
@@ -15,7 +15,7 @@ DistBallRobot::DistBallRobot(double weight)
         , velAngle(0)
         , robotId(nullptr)
         , sb(0)
-        , manager(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()))
+        , manager(new essentials::AgentIDManager(new essentials::AgentIDFactory()))
 {
 }
 

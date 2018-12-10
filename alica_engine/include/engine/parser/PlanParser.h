@@ -44,7 +44,7 @@ public:
     int64_t parserId(tinyxml2::XMLElement* node);
 
 private:
-    supplementary::SystemConfig* sc;
+    essentials::SystemConfig* sc;
     std::shared_ptr<ModelFactory> mf;
     PlanRepository* rep;
     Plan* masterPlan;

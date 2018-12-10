@@ -47,7 +47,7 @@ PlanBase::PlanBase(AlicaEngine* ae, const Plan* masterPlan)
         , _isWaiting(false)
 
 {
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
 
     double freq = (*sc)["Alica"]->get<double>("Alica.EngineFrequency", NULL);
     double minbcfreq = (*sc)["Alica"]->get<double>("Alica.MinBroadcastFrequency", NULL);

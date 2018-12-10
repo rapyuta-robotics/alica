@@ -34,7 +34,7 @@ protected:
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
         // bring up the SystemConfig with the corresponding path
-        sc = supplementary::SystemConfig::getInstance();
+        sc = essentials::SystemConfig::getInstance();
         sc->setRootPath(path);
         sc->setConfigPath(path + "/etc");
         sc->setHostname("nase");
@@ -77,8 +77,8 @@ TEST(AllocationDifference, MessageCancelsUtil)
     const char* aname = "aa";
     const char* bname = "bb";
 
-    supplementary::AgentID a1(reinterpret_cast<const uint8_t*>(aname), 2);
-    supplementary::AgentID a2(reinterpret_cast<const uint8_t*>(bname), 2);
+    essentials::AgentID a1(reinterpret_cast<const uint8_t*>(aname), 2);
+    essentials::AgentID a2(reinterpret_cast<const uint8_t*>(bname), 2);
 
     EntryPointRobotPair aTot1(&e1, &a1);
     EntryPointRobotPair bTot1(&e1, &a2);
@@ -109,13 +109,13 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     // ASSERT_NO_SIGNAL
 
     sc->setHostname("nase");
-    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", true);
+    ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", true);
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("hairy");
-    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", true);
+    ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", true);
     ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
     EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";

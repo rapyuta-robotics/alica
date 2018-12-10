@@ -15,7 +15,7 @@
 
 #include <alica_common_config/debug_output.h>
 
-#include <supplementary/ITrigger.h>
+#include <essentials/ITrigger.h>
 
 #include <assert.h>
 #include <iostream>
@@ -138,7 +138,7 @@ bool BasicBehaviour::isFailure() const
     return _failure && !_callInit;
 }
 
-void BasicBehaviour::setTrigger(supplementary::ITrigger* trigger)
+void BasicBehaviour::setTrigger(essentials::ITrigger* trigger)
 {
     _behaviourTrigger = trigger;
     _behaviourTrigger->registerCV(&_runCV);

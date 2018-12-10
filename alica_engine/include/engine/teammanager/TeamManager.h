@@ -65,7 +65,7 @@ private:
     AgentMap _agents;
     bool useConfigForTeam;
 
-    void readTeamFromConfig(supplementary::SystemConfig* sc);
+    void readTeamFromConfig(essentials::SystemConfig* sc);
 };
 
 class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, AgentIDConstPtr>
