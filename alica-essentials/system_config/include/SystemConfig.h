@@ -16,7 +16,7 @@
 const std::string DOMAIN_FOLDER = "DOMAIN_FOLDER";
 const std::string DOMAIN_CONFIG_FOLDER = "DOMAIN_CONFIG_FOLDER";
 
-namespace supplementary
+namespace essentials
 {
 class SystemConfig
 {

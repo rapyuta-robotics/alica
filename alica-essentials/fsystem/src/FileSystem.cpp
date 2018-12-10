@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-namespace supplementary
+namespace essentials
 {
 std::string const FileSystem::CURDIR = ".";
 std::string const FileSystem::PARENTDIR = "..";
@@ -291,7 +291,7 @@ bool FileSystem::createDirectory(std::string path, int rights)
         result = result + path.substr(0, pos) + PATH_SEPARATOR;
         // cout << "FS: Result is '" << result << "' Pos is: " << pos << endl;
         if (path.substr(0, pos).size() != 1) {
-            if (!supplementary::FileSystem::isDirectory(result)) {
+            if (!essentials::FileSystem::isDirectory(result)) {
                 if (mkdir(result.c_str(), rights) != 0) {
                     std::cerr << "FS: Could not create directory: " << strerror(errno) << std::endl;
                     return false;
@@ -303,4 +303,4 @@ bool FileSystem::createDirectory(std::string path, int rights)
     return true;
 }
 
-} // namespace supplementary
+} // namespace essentials

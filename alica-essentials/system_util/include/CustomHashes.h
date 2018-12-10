@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 
-namespace supplementary {
+namespace essentials {
 
 class CustomHashes {
 public:
@@ -20,6 +20,6 @@ public:
             0xcbf29ce484222325; /**< Constant offset for hashing 64bit wise according to FNV Hash Algorithm */
 };
 
-} /* namespace supplementary */
+} /* namespace essentials */
 
 #endif /* SRC_CUSTOMHASHES_H_ */

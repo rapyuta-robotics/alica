@@ -1,7 +1,7 @@
-#include <supplementary/AgentID.h>
-#include <supplementary/AgentIDFactory.h>
-#include <supplementary/AgentIDManager.h>
-#include <supplementary/BroadcastID.h>
+#include <essentials/AgentID.h>
+#include <essentials/AgentIDFactory.h>
+#include <essentials/AgentIDManager.h>
+#include <essentials/BroadcastID.h>
 
 #include <gtest/gtest.h>
 #include <vector>
@@ -11,7 +11,7 @@ TEST(AgentID, ConstructorCopiesBytes) {
     for (int i = 0; i < 20; i++) {
         bytes1.push_back(i);
     }
-    supplementary::AgentID* id1 = new supplementary::AgentID(bytes1.data(), bytes1.size());
+    essentials::AgentID* id1 = new essentials::AgentID(bytes1.data(), bytes1.size());
 
     ASSERT_FALSE(id1->getRaw() == bytes1.data());
 
@@ -24,7 +24,7 @@ TEST(AgentID, ConstructionOfHugeID) {
     for (int i = 0; i < size; i++) {
         bytes1.push_back(i);
     }
-    supplementary::AgentID* id1 = new supplementary::AgentID(bytes1.data(), bytes1.size());
+    essentials::AgentID* id1 = new essentials::AgentID(bytes1.data(), bytes1.size());
 
     ASSERT_EQ(id1->getSize(), size);
 
@@ -37,7 +37,7 @@ TEST(AgentID, ToByteVectorReturnsCopy) {
     for (int i = 0; i < size; i++) {
         bytes1.push_back(i);
     }
-    supplementary::AgentID* id1 = new supplementary::AgentID(bytes1.data(), bytes1.size());
+    essentials::AgentID* id1 = new essentials::AgentID(bytes1.data(), bytes1.size());
     auto byteVector = id1->toByteVector();
 
     ASSERT_NE(byteVector.data(), id1->getRaw());
@@ -52,8 +52,8 @@ TEST(AgentID, HashEqualForSameIDs) {
         bytes1.push_back(i);
         bytes2.push_back(i);
     }
-    supplementary::AgentID* id1 = new supplementary::AgentID(bytes1.data(), bytes1.size());
-    supplementary::AgentID* id2 = new supplementary::AgentID(bytes2.data(), bytes2.size());
+    essentials::AgentID* id1 = new essentials::AgentID(bytes1.data(), bytes1.size());
+    essentials::AgentID* id2 = new essentials::AgentID(bytes2.data(), bytes2.size());
 
     ASSERT_EQ(id1->hash(), id2->hash());
 
@@ -68,8 +68,8 @@ TEST(AgentID, EqualWithSameID) {
         bytes1.push_back(i);
         bytes2.push_back(i);
     }
-    supplementary::AgentID* id1 = new supplementary::AgentID(bytes1.data(), bytes1.size());
-    supplementary::AgentID* id2 = new supplementary::AgentID(bytes2.data(), bytes2.size());
+    essentials::AgentID* id1 = new essentials::AgentID(bytes1.data(), bytes1.size());
+    essentials::AgentID* id2 = new essentials::AgentID(bytes2.data(), bytes2.size());
 
     ASSERT_TRUE(*id1 == *id2);
 
@@ -85,8 +85,8 @@ TEST(AgentID, NotEqualWithDifferentID) {
         bytes2.push_back(i);
     }
     bytes2.push_back(2);
-    supplementary::AgentID* id1 = new supplementary::AgentID(bytes1.data(), bytes1.size());
-    supplementary::AgentID* id2 = new supplementary::AgentID(bytes2.data(), bytes2.size());
+    essentials::AgentID* id1 = new essentials::AgentID(bytes1.data(), bytes1.size());
+    essentials::AgentID* id2 = new essentials::AgentID(bytes2.data(), bytes2.size());
 
     ASSERT_FALSE(*id1 == *id2);
 
@@ -99,9 +99,9 @@ TEST(BroadCastID, NotEqualWithNormalID) {
     for (int i = 0; i < 20; i++) {
         bytes1.push_back(i);
     }
-    supplementary::AgentID* normalID = new supplementary::AgentID(bytes1.data(), bytes1.size());
+    essentials::AgentID* normalID = new essentials::AgentID(bytes1.data(), bytes1.size());
     std::vector<uint8_t> bytesBroadcast;
-    supplementary::AgentID* broadcastID = new supplementary::BroadcastID(bytesBroadcast.data(), bytesBroadcast.size());
+    essentials::AgentID* broadcastID = new essentials::BroadcastID(bytesBroadcast.data(), bytesBroadcast.size());
 
     ASSERT_FALSE(*broadcastID == *normalID);
 
@@ -112,11 +112,11 @@ TEST(BroadCastID, NotEqualWithNormalID) {
 TEST(BroadCastID, EqualWithBroadcastID) {
     std::vector<uint8_t> bytesBroadcast1;
     bytesBroadcast1.push_back(1);
-    supplementary::AgentID* broadcastID1 =
-            new supplementary::BroadcastID(bytesBroadcast1.data(), bytesBroadcast1.size());
+    essentials::AgentID* broadcastID1 =
+            new essentials::BroadcastID(bytesBroadcast1.data(), bytesBroadcast1.size());
     std::vector<uint8_t> bytesBroadcast2;
-    supplementary::AgentID* broadcastID2 =
-            new supplementary::BroadcastID(bytesBroadcast2.data(), bytesBroadcast2.size());
+    essentials::AgentID* broadcastID2 =
+            new essentials::BroadcastID(bytesBroadcast2.data(), bytesBroadcast2.size());
 
     ASSERT_TRUE(*broadcastID1 == *broadcastID2);
 
@@ -125,7 +125,7 @@ TEST(BroadCastID, EqualWithBroadcastID) {
 }
 
 TEST(AgentIDFactory, GenerateIDsOfVariousLength) {
-    supplementary::AgentIDFactory factory;
+    essentials::AgentIDFactory factory;
 
     auto id1 = factory.generateID(1);
     ASSERT_EQ(id1->getSize(), 1);
@@ -141,15 +141,15 @@ TEST(AgentIDFactory, GenerateIDsOfVariousLength) {
 }
 
 TEST(AgentIDFactory, DuplicateIDs) {
-    supplementary::AgentIDFactory factory;
+    essentials::AgentIDFactory factory;
     auto id18 = factory.generateID(18);
     auto id18Copy = factory.create(id18->toByteVector());
     ASSERT_TRUE(*id18 == *id18Copy);
 }
 
 TEST(AgentIDManager, CreateIDsFromIntegralTypes) {
-    supplementary::AgentIDFactory* factory = new supplementary::AgentIDFactory();
-    supplementary::AgentIDManager idManager(factory);
+    essentials::AgentIDFactory* factory = new essentials::AgentIDFactory();
+    essentials::AgentIDManager idManager(factory);
     int idInt = 5;
     auto intId5 = idManager.getID<int>(idInt);
 
@@ -158,14 +158,14 @@ TEST(AgentIDManager, CreateIDsFromIntegralTypes) {
     idBytes.push_back(0);
     idBytes.push_back(0);
     idBytes.push_back(0);
-    supplementary::AgentID* referenceId5 = new supplementary::AgentID(idBytes.data(), idBytes.size());
+    essentials::AgentID* referenceId5 = new essentials::AgentID(idBytes.data(), idBytes.size());
 
     ASSERT_TRUE(*intId5 == *referenceId5);
 }
 
 TEST(AgentIDManager, GuarenteeSingleEntities) {
-    supplementary::AgentIDFactory* factory = new supplementary::AgentIDFactory();
-    supplementary::AgentIDManager idManager(factory);
+    essentials::AgentIDFactory* factory = new essentials::AgentIDFactory();
+    essentials::AgentIDManager idManager(factory);
     int idInt = 5;
     auto intId1 = idManager.getID<int>(idInt);
     auto intId2 = idManager.getID<int>(idInt);
@@ -174,8 +174,8 @@ TEST(AgentIDManager, GuarenteeSingleEntities) {
 }
 
 TEST(AgentIDManager, GenerateIDsOfVariousLength) {
-    supplementary::AgentIDFactory* factory = new supplementary::AgentIDFactory();
-    supplementary::AgentIDManager idManager(factory);
+    essentials::AgentIDFactory* factory = new essentials::AgentIDFactory();
+    essentials::AgentIDManager idManager(factory);
 
     auto id1 = idManager.generateID(1);
     ASSERT_EQ(id1->getSize(), 1);

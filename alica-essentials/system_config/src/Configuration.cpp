@@ -1,6 +1,6 @@
 #include "Configuration.h"
 
-namespace supplementary
+namespace essentials
 {
 Configuration::Configuration()
     : filename()
@@ -483,4 +483,4 @@ std::shared_ptr<std::vector<std::string>> Configuration::getParams(char seperato
     }
     return params;
 }
-} // namespace supplementary
+} // namespace essentials

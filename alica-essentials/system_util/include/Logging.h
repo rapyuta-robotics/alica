@@ -10,7 +10,7 @@
 #include <iostream>
 #include <string>
 
-namespace supplementary
+namespace essentials
 {
 namespace logging
 {
@@ -67,6 +67,6 @@ void Log(const char* file, const char* function, int line, LogData<List>&& data)
 }
 
 #define LOG(msg)                                                                                                                                               \
-    (supplementary::logging::Log(basename(__FILE__), __FUNCTION__, __LINE__, supplementary::logging::LogData<supplementary::logging::None>() << msg))
+    (essentials::logging::Log(basename(__FILE__), __FUNCTION__, __LINE__, essentials::logging::LogData<essentials::logging::None>() << msg))
 } // namespace logging
-} /* namespace supplementary */
+} /* namespace essentials */

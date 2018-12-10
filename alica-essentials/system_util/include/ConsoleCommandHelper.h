@@ -10,7 +10,7 @@
 
 #include <string>
 
-namespace supplementary {
+namespace essentials {
 
 class ConsoleCommandHelper {
 public:
@@ -19,6 +19,6 @@ public:
     static std::string exec(const char* cmd);
 };
 
-} /* namespace supplementary */
+} /* namespace essentials */
 
 #endif /* SUPPLEMENTARY_SYSTEM_UTIL_SRC_CONSOLECOMMANDHELPER_H_ */

@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace supplementary
+namespace essentials
 {
 
 class FileSystem
@@ -34,4 +34,4 @@ class FileSystem
     FileSystem();
 };
 
-} // namespace supplementary
+} // namespace essentials
