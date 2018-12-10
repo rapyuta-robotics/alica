@@ -34,7 +34,7 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
 
         // bring up the SystemConfig with the corresponding path
-        sc = supplementary::SystemConfig::getInstance();
+        sc = essentials::SystemConfig::getInstance();
         sc->setRootPath(path);
         sc->setConfigPath(path + "/etc");
         sc->setHostname("nase");
@@ -70,14 +70,14 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
     ASSERT_NO_SIGNAL
 
     sc->setHostname("hairy");
-    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
+    ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
     ros = new alicaRosProxy::AlicaRosCommunication(ae);
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(ros);
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("nase");
-    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
+    ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
     ros2 = new alicaRosProxy::AlicaRosCommunication(ae2);
     ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(ros2);

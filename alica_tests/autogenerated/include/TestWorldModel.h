@@ -1,6 +1,6 @@
 #pragma once
 
-#include <supplementary/ITrigger.h>
+#include <essentials/ITrigger.h>
 #include <SystemConfig.h>
 
 #include <vector>
@@ -36,8 +36,8 @@ public:
 
     std::vector<double> robotsXPos;
     double x;
-    supplementary::ITrigger* trigger1;
-    supplementary::ITrigger* trigger2;
+    essentials::ITrigger* trigger1;
+    essentials::ITrigger* trigger2;
 
 private:
     TestWorldModel();
