@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <name>cnc_geometry</name>
+  <version>0.0.0</version>
+  <description>The cnc_geometry package</description>
+
+  <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <build_depend>geometry_msgs</build_depend>
+  
+  <run_depend>geometry_msgs</run_depend>
+
+  <export>
+  </export>
+</package>

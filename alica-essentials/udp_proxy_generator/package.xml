@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <name>udp_proxy_generator</name>
+  <version>0.0.1</version>
+  <description>The system_config package</description>
+
+  <maintainer email="witsch@vs.uni-kassel.de">Andreas Witsch</maintainer>
+
+  <license>MIT</license>
+
+  <author email="skubch@vs.uni-kassel.de">Hendrik Skubch</author>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>fsystem</build_depend>
+
+  <run_depend>fsystem</run_depend>  
+
+  <export>
+  </export>
+</package>
