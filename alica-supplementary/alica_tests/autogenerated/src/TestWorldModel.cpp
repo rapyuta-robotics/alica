@@ -7,7 +7,7 @@
 
 #include "TestWorldModel.h"
 
-#include <supplementary/EventTrigger.h>
+#include <essentials/EventTrigger.h>
 
 namespace alicaTests
 {
@@ -25,8 +25,8 @@ TestWorldModel* TestWorldModel::getTwo()
 }
 
 TestWorldModel::TestWorldModel()
-        : trigger1(new supplementary::EventTrigger())
-        , trigger2(new supplementary::EventTrigger())
+        : trigger1(new essentials::EventTrigger())
+        , trigger2(new essentials::EventTrigger())
 {
     this->transitionCondition1413201227586 = false;
     this->transitionCondition1413201389955 = false;

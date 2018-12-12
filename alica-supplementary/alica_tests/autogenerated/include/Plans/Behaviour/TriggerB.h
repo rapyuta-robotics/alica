@@ -5,7 +5,7 @@
 /*PROTECTED REGION ID(inc1428508316905) ENABLED START*/ // Add additional includes here
 #include "TestWorldModel.h"
 #include <SystemConfig.h>
-#include <supplementary/ITrigger.h>
+#include <essentials/ITrigger.h>
 
 /*PROTECTED REGION END*/
 namespace alica

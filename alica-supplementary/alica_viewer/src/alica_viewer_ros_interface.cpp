@@ -4,7 +4,7 @@ namespace alica
 {
 
 AlicaViewerRosInterface::AlicaViewerRosInterface(int argc, char* argv[])
-    : _agent_id_manager(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()))
+    : _agent_id_manager(new essentials::AgentIDManager(new essentials::AgentIDFactory()))
 {
     ros::init(argc, argv, "alica_viewer");
     ros::start(); // explicitly needed since our nodehandle is going out of scope.

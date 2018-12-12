@@ -1,15 +1,16 @@
 #pragma once
 
+#include <SystemConfig.h>
+#include <essentials/AgentID.h>
+
 namespace alica
 {
 class AlicaEngine;
 class AlicaTime;
 } // namespace alica
 
-namespace supplementary
+namespace supplementary 
 {
-class SystemConfig;
-class AgentID;
 
 class WorldModel
 {
@@ -20,15 +21,15 @@ class WorldModel
     alica::AlicaTime getTime();
     bool isMaySendMessages() const;
     void setMaySendMessages(bool maySendMessages);
-    const supplementary::AgentID* getOwnId();
+    const essentials::AgentID* getOwnId();
     bool setEngine(alica::AlicaEngine* ae);
     alica::AlicaEngine* getEngine();
-    supplementary::SystemConfig* getSystemConfig();
+    essentials::SystemConfig* getSystemConfig();
 
   protected:
-    SystemConfig* sc;
+    essentials::SystemConfig* sc;
     alica::AlicaEngine* alicaEngine;
     bool maySendMessages;
-    const supplementary::AgentID* ownID;
+    const essentials::AgentID* ownID;
 };
 } // namespace supplementary

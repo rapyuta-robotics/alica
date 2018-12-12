@@ -24,7 +24,7 @@ using alica::reasoner::CGSolver;
 class AlicaVariableHandlingTest : public ::testing::Test
 {
 protected:
-    supplementary::SystemConfig* sc;
+    essentials::SystemConfig* sc;
     alica::AlicaEngine* ae1;
     alica::AlicaEngine* ae2;
     alica::BehaviourCreator* bc1;
@@ -45,13 +45,13 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
 
         // bring up the SystemConfig with the corresponding path
-        sc = supplementary::SystemConfig::getInstance();
+        sc = essentials::SystemConfig::getInstance();
         sc->setRootPath(path);
         sc->setConfigPath(path + "/etc");
         sc->setHostname("nase");
 
         // setup the engine
-        ae1 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "VHMaster", true);
+        ae1 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "VHMaster", true);
         bc1 = new alica::BehaviourCreator();
         cc1 = new alica::ConditionCreator();
         uc1 = new alica::UtilityFunctionCreator();
@@ -62,7 +62,7 @@ protected:
 
         sc->setHostname("hairy");
 
-        ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "VHMaster", true);
+        ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "VHMaster", true);
         bc2 = new alica::BehaviourCreator();
         cc2 = new alica::ConditionCreator();
         uc2 = new alica::UtilityFunctionCreator();

@@ -13,7 +13,7 @@
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
 #include "engine/teammanager/TeamManager.h"
-#include "supplementary/AgentIDFactory.h"
+#include "essentials/AgentIDFactory.h"
 
 #include <ros/console.h>
 #include <ros/node_handle.h>
@@ -36,7 +36,7 @@ AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae)
     spinner = new ros::AsyncSpinner(4);
 
     // read topic strings from AlicaRosProxy.conf
-    this->sc = supplementary::SystemConfig::getInstance();
+    this->sc = essentials::SystemConfig::getInstance();
     this->allocationAuthorityInfoTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.allocationAuthorityInfoTopic", NULL);
     this->ownRoleTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.ownRoleTopic", NULL);
     this->alicaEngineInfoTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.alicaEngineInfoTopic", NULL);
