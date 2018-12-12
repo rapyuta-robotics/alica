@@ -142,8 +142,8 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     q1.clearDomainVariables();
 
-    const alica::Variable* v1 = rp1->getActivePlan()->getVariable("L1A");
-    const alica::Variable* v2 = rp1->getActivePlan()->getVariable("L1B");
+    const alica::Variable* v1 = rp1->getActivePlan()->getVariableByName("L1A");
+    const alica::Variable* v2 = rp1->getActivePlan()->getVariableByName("L1B");
 
     EXPECT_NE(v1, nullptr);
     EXPECT_NE(v2, nullptr);
@@ -182,8 +182,8 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     q1.clearStaticVariables();
     q1.clearDomainVariables();
 
-    v1 = rp1->getActivePlan()->getVariable("L3A");
-    v2 = rp1->getActivePlan()->getVariable("L3B");
+    v1 = rp1->getActivePlan()->getVariableByName("L3A");
+    v2 = rp1->getActivePlan()->getVariableByName("L3B");
     q1.addStaticVariable(v1);
     q1.addStaticVariable(v2);
 
