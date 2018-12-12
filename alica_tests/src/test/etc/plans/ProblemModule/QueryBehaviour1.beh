@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="ASCII"?>
-<alica:Behaviour xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1479556104511" name="QueryBehaviour1" comment="" >
-  <configurations id="1479556115746" name="QueryBehaviour1Default" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" deferring="0" frequency="30" eventDriven="false">
-    <vars id="1479556246733" name="QBX" comment="" Type=""/>
-    <vars id="1479557263650" name="QBY" comment="" Type=""/>
-  </configurations>
-</alica:Behaviour>
