@@ -10,7 +10,7 @@
 #include <cstddef>
 #include <memory>
 
-namespace supplementary
+namespace essentials
 {
 class ConfigNode;
 
@@ -129,4 +129,4 @@ class ConfigNode
         return *this;
     }
 };
-} // namespace supplementary
+} // namespace essentials

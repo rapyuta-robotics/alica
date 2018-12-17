@@ -7,7 +7,7 @@
 
 #define EPOCH_ADJUST (62135596800LL)
 
-namespace supplementary {
+namespace essentials {
 
 struct DateTime {
 protected:
@@ -42,6 +42,6 @@ public:
         return this->ticks;
     }
 };
-}  // namespace supplementary
+}  // namespace essentials
 
 #endif /* SUPPLEMENTARY_DATETIME_H */

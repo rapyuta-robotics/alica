@@ -5,7 +5,7 @@ using std::map;
 using std::string;
 using std::vector;
 
-namespace supplementary {
+namespace  essentials {
 
 ExecutableMetaData::ExecutableMetaData(
         string name, int id, string mode, string execName, string rosPackage, string prefixCmd, string absExecName)
@@ -90,4 +90,4 @@ ExecutableMetaData::~ExecutableMetaData() {
     }
 }
 
-} /* namespace supplementary */
+} /* namespace  essentials */

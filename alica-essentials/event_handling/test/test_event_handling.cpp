@@ -2,7 +2,7 @@
 #include <string>
 #include <thread>
 
-#include <supplementary/Timer.h>
+#include <essentials/Timer.h>
 
 class EventTest : public ::testing::Test
 {
@@ -24,7 +24,7 @@ TEST_F(EventTest, timerEvent)
     this->cv = new std::condition_variable();
     std::unique_lock<std::mutex> lck(cv_mtx);
 
-    supplementary::Timer timerEvent(1000, 1000);
+    essentials::Timer timerEvent(1000, 1000);
     timerEvent.registerCV(this->cv);
     timerEvent.start();
 

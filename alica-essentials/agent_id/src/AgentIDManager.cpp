@@ -1,6 +1,6 @@
-#include "supplementary/AgentIDManager.h"
-#include "supplementary/AgentIDFactory.h"
-namespace supplementary
+#include "essentials/AgentIDManager.h"
+#include "essentials/AgentIDFactory.h"
+namespace essentials
 {
 
 /**
@@ -49,4 +49,4 @@ const AgentID* AgentIDManager::getIDFromBytes(const std::vector<uint8_t>& idByte
     }
     return *(entry.first);
 }
-} // namespace supplementary
+} // namespace essentials

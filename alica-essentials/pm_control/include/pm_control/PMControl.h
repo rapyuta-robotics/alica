@@ -5,7 +5,8 @@
 #include <ui_PMControl.h>
 #include <process_manager/ProcessStats.h>
 #include <process_manager/ProcessStat.h>
-#include <supplementary/AgentID.h>
+#include <essentials/AgentID.h>
+#include <SystemConfig.h>
 
 #include <QtGui>
 #include <QWidget>
@@ -19,10 +20,9 @@
 #include <utility>
 #include <chrono>
 
-namespace supplementary {
-class SystemConfig;
+namespace  essentials {
 class RobotExecutableRegistry;
-}  // namespace supplementary
+}  // namespace  essentials
 
 namespace pm_widget {
 class ControlledProcessManager;
@@ -40,8 +40,8 @@ public:
     virtual void restoreSettings(
             const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
-    void sendProcessCommand(const supplementary::AgentID* receiverId,
-            std::vector<const supplementary::AgentID*> robotIds, std::vector<int> execIds, std::vector<int> paramSets,
+    void sendProcessCommand(const essentials::AgentID* receiverId,
+            std::vector<const essentials::AgentID*> robotIds, std::vector<int> execIds, std::vector<int> paramSets,
             int cmd);
 
     std::chrono::duration<double> msgTimeOut;
@@ -49,7 +49,7 @@ public:
     Ui::PMControlWidget ui_;
     QWidget* widget_;
 
-    supplementary::RobotExecutableRegistry* pmRegistry;
+     essentials::RobotExecutableRegistry* pmRegistry;
 
 private:
     ros::NodeHandle* rosNode;
@@ -59,9 +59,9 @@ private:
             processStatMsgQueue;
     std::mutex msgQueueMutex;
 
-    supplementary::SystemConfig* sc;
+    essentials::SystemConfig* sc;
 
-    std::map<const supplementary::AgentID*, pm_widget::ControlledProcessManager*, supplementary::AgentIDComparator>
+    std::map<const essentials::AgentID*, pm_widget::ControlledProcessManager*, essentials::AgentIDComparator>
             processManagersMap;
 
     void handleProcessStats();

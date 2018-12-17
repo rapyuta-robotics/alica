@@ -21,7 +21,7 @@
 
 <?messageIncludes?>
 
-using namespace supplementary;
+using namespace essentials;
 
 using boost::asio::ip::udp;
 

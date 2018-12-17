@@ -2,7 +2,7 @@
 
 #include "container/CNPosition.h"
 
-namespace supplementary {
+namespace  essentials {
 class IAgentID;
 }
 
@@ -15,7 +15,7 @@ public:
     double radius;
     double velocityX;
     double velocityY;
-    const supplementary::IAgentID* id;
+    const  essentials::IAgentID* id;
     shared_ptr<vector<int>> opposer;
     shared_ptr<vector<int>> supporter;
     double certainty;

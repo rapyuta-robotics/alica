@@ -5,8 +5,7 @@
 #include "process_manager/RobotExecutableRegistry.h"
 
 #include <Logging.h>
-#include <SystemConfig.h>
-#include <supplementary/BroadcastID.h>
+#include <essentials/BroadcastID.h>
 
 #include <cstdlib>
 #include <dirent.h>
@@ -22,7 +21,7 @@
 #include <thread>
 #include <unistd.h>
 
-namespace supplementary
+namespace  essentials
 {
 
 using std::cerr;
@@ -51,15 +50,15 @@ ProcessManager::ProcessManager(int argc, char** argv)
     , simMode(false)
     , ownId(nullptr)
 {
-    this->sc = SystemConfig::getInstance();
+    this->sc = essentials::SystemConfig::getInstance();
     this->ownHostname = this->sc->getHostname();
-    this->pmRegistry = supplementary::RobotExecutableRegistry::get();
+    this->pmRegistry =  essentials::RobotExecutableRegistry::get();
 
     /* Initialise some data structures for better performance in searchProcFS-Method with
      * data from Globals.conf and Processes.conf file. */
 
     // Register robots from Globals.conf
-    const AgentID* tmpAgentID;
+    const essentials::AgentID* tmpAgentID;
     auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
     for (auto robotName : (*robotNames)) {
         tmpAgentID = this->pmRegistry->addRobot(robotName);
@@ -128,14 +127,14 @@ ProcessManager::~ProcessManager()
 void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
 {
     // check whether this message is for me, 0 is a wild card for all ProcessManagers
-    const AgentID* receiverId = nullptr;
-    supplementary::BroadcastID bcid(nullptr, 0);
-    if (pc->receiver_id.type == supplementary::AgentID::BC_TYPE) {
+    const essentials::AgentID* receiverId = nullptr;
+    essentials::BroadcastID bcid(nullptr, 0);
+    if (pc->receiver_id.type == essentials::AgentID::BC_TYPE) {
         receiverId = &bcid;
     } else {
         receiverId = this->pmRegistry->getRobotId(pc->receiver_id.id);
     }
-    if (receiverId != this->ownId && !(simMode && dynamic_cast<const supplementary::BroadcastID*>(receiverId))) {
+    if (receiverId != this->ownId && !(simMode && dynamic_cast<const essentials::BroadcastID*>(receiverId))) {
         return;
     }
 
@@ -160,7 +159,7 @@ void ProcessManager::changeLogPublishing(process_manager::ProcessCommandPtr pc, 
     for (const auto& agentIDros : pc->robot_ids) {
         // Check whether the robot with the given id is known
         std::string robotName;
-        if (const AgentID* agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName)) {
+        if (const essentials::AgentID* agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName)) {
             // Find the ManagedRobot object
             auto mapIter = this->robotMap.find(agentID);
             ManagedRobot* mngdRobot;
@@ -196,7 +195,7 @@ void ProcessManager::changeDesiredProcessStates(process_manager::ProcessCommandP
     for (const auto& agentIDros : pc->robot_ids) {
         // Check whether the robot with the given id is known
         std::string robotName;
-        if (const AgentID* agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName)) {
+        if (const essentials::AgentID* agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName)) {
             // Find the ManagedRobot object
             auto mapIter = this->robotMap.find(agentID);
             ManagedRobot* mngdRobot;
@@ -374,7 +373,7 @@ void ProcessManager::searchProcFS()
         if (this->pmRegistry->getExecutableId(splittedCmdLine, execId)) {
             // get the robots name from the ROBOT environment variable
             string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
-            const AgentID* agentID = this->pmRegistry->getRobotId(robotName);
+            const essentials::AgentID* agentID = this->pmRegistry->getRobotId(robotName);
             if (!agentID) {
                 cout << "PM: Warning! Unknown robot '" << robotName << "' is running executable with ID '" << execId << "'" << endl;
                 agentID = this->pmRegistry->addRobot(robotName);
@@ -518,7 +517,7 @@ bool ProcessManager::selfCheck()
                 string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
 
                 // get the Robot Id of the robot running the roscore
-                const AgentID* agentID = this->pmRegistry->getRobotId(robotName);
+                const essentials::AgentID* agentID = this->pmRegistry->getRobotId(robotName);
                 if (!agentID) {
                     agentID = this->pmRegistry->addRobot(robotName);
                 }
@@ -546,13 +545,13 @@ bool ProcessManager::selfCheck()
         {
             setsid();
             // redirect stdout
-            string logFileName = logging::getLogFilename("roscore");
+            string logFileName = essentials::logging::getLogFilename("roscore");
             FILE* fd = fopen(logFileName.c_str(), "w+");
             dup2(fileno(fd), STDOUT_FILENO);
             fclose(fd);
 
             // redirect stderr
-            logFileName = logging::getErrLogFilename("roscore");
+            logFileName = essentials::logging::getErrLogFilename("roscore");
             fd = fopen(logFileName.c_str(), "w+");
             dup2(fileno(fd), STDERR_FILENO);
             fclose(fd);
@@ -571,7 +570,7 @@ bool ProcessManager::selfCheck()
             // remember started roscore in process managing data structures
             int roscoreExecId;
             if (this->pmRegistry->getExecutableIdByExecName(roscoreExecName, roscoreExecId)) {
-                const AgentID* agentID = this->pmRegistry->getRobotId(this->ownHostname);
+                const essentials::AgentID* agentID = this->pmRegistry->getRobotId(this->ownHostname);
                 if (agentID != nullptr) {
                     // create managed robot if necessary and change desired state of roscore accordingly
                     auto mngdRobot = this->robotMap.find(agentID);
@@ -673,18 +672,18 @@ void ProcessManager::pmSigchildHandler(int sig)
     } while (result > 0);
 }
 
-} /* namespace supplementary */
+} /* namespace  essentials */
 
 int main(int argc, char** argv)
 {
     // Set kernel page size for human readable memory consumption
-    supplementary::ManagedExecutable::kernelPageSize = sysconf(_SC_PAGESIZE);
+     essentials::ManagedExecutable::kernelPageSize = sysconf(_SC_PAGESIZE);
     // Determine number of cores
-    while (supplementary::FileSystem::pathExists("/sys/devices/system/cpu/cpu" + std::to_string(supplementary::ProcessManager::numCPUs))) {
-        supplementary::ProcessManager::numCPUs++;
+    while (essentials::FileSystem::pathExists("/sys/devices/system/cpu/cpu" + std::to_string( essentials::ProcessManager::numCPUs))) {
+         essentials::ProcessManager::numCPUs++;
     }
 
-    supplementary::ProcessManager* pm = new supplementary::ProcessManager(argc, argv);
+     essentials::ProcessManager* pm = new  essentials::ProcessManager(argc, argv);
     if (pm->selfCheck()) {
         try {
             pm->initCommunication(argc, argv);
@@ -693,9 +692,9 @@ int main(int argc, char** argv)
             return -1;
         }
         // has to be set after ProcessManager::initCommunication() , in order to override the ROS signal handler
-        signal(SIGINT, supplementary::ProcessManager::pmSigintHandler);
+        signal(SIGINT,  essentials::ProcessManager::pmSigintHandler);
 
-        signal(SIGCHLD, supplementary::ProcessManager::pmSigchildHandler);
+        signal(SIGCHLD,  essentials::ProcessManager::pmSigchildHandler);
 
         pm->start();
 

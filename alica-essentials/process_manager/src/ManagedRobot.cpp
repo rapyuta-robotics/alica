@@ -9,7 +9,7 @@ using std::cout;
 using std::endl;
 using std::string;
 
-namespace supplementary
+namespace  essentials
 {
 
 /**
@@ -17,7 +17,7 @@ namespace supplementary
  * @param robotName
  * @param id
  */
-ManagedRobot::ManagedRobot(string robotName, const AgentID* agentID, ProcessManager* procMan)
+ManagedRobot::ManagedRobot(string robotName, const essentials::AgentID* agentID, ProcessManager* procMan)
     : RobotMetaData(robotName, agentID)
     , procMan(procMan)
 {
@@ -167,4 +167,4 @@ void ManagedRobot::report(process_manager::ProcessStats& psts)
     }
 }
 
-} /* namespace supplementary */
+} /* namespace  essentials */

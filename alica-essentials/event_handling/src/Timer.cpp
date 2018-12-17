@@ -1,6 +1,6 @@
-#include "supplementary/Timer.h"
+#include "essentials/Timer.h"
 
-namespace supplementary {
+namespace essentials {
 
 Timer::Timer(long msInterval, long msDelayedStart) {
     this->started = true;
@@ -81,4 +81,4 @@ const long Timer::getInterval() const {
     return msInterval.count();
 }
 
-} /* namespace supplementary */
+} /* namespace essentials */

@@ -8,15 +8,15 @@
 #include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
 #include <process_manager/RobotExecutableRegistry.h>
-#include <supplementary/AgentID.h>
-#include <supplementary/BroadcastID.h>
+#include <essentials/AgentID.h>
+#include <essentials/BroadcastID.h>
 
 #include <limits.h>
 #include <ros/ros.h>
 namespace pm_widget
 {
 // Second Constructor is for robot_control
-ControlledRobot::ControlledRobot(string robotName, const supplementary::AgentID* robotId, const supplementary::AgentID* parentPMid)
+ControlledRobot::ControlledRobot(string robotName, const essentials::AgentID* robotId, const essentials::AgentID* parentPMid)
     : RobotMetaData(robotName, robotId)
     , robotProcessesQFrame(new QFrame())
     , _robotProcessesWidget(new Ui::RobotProcessesWidget())
@@ -24,8 +24,8 @@ ControlledRobot::ControlledRobot(string robotName, const supplementary::AgentID*
 {
     // setup gui stuff
     this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
-    auto pmRegistry = supplementary::RobotExecutableRegistry::get();
-    if (dynamic_cast<const supplementary::BroadcastID*>(parentPMid)) {
+    auto pmRegistry =  essentials::RobotExecutableRegistry::get();
+    if (dynamic_cast<const essentials::BroadcastID*>(parentPMid)) {
         // don't show in robot_control
         this->_robotProcessesWidget->robotHostLabel->hide();
         this->inRobotControl = true;
@@ -47,18 +47,18 @@ ControlledRobot::ControlledRobot(string robotName, const supplementary::AgentID*
     }
 
     // construct all known executables
-    const vector<supplementary::ExecutableMetaData*>& execMetaDatas = pmRegistry->getExecutables();
+    const vector< essentials::ExecutableMetaData*>& execMetaDatas = pmRegistry->getExecutables();
     ControlledExecutable* controlledExec;
     for (auto execMetaDataEntry : execMetaDatas) {
         controlledExec = new ControlledExecutable(execMetaDataEntry, this);
         this->controlledExecMap.emplace(execMetaDataEntry->id, controlledExec);
     }
 
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     this->msgTimeOut = chrono::duration<double>((*sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 
     ros::NodeHandle* nh = new ros::NodeHandle();
-    string cmdTopic = (*supplementary::SystemConfig::getInstance())["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
+    string cmdTopic = (*essentials::SystemConfig::getInstance())["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
     processCommandPub = nh->advertise<process_manager::ProcessCommand>(cmdTopic, 10);
 }
 
@@ -71,7 +71,7 @@ ControlledRobot::~ControlledRobot()
 }
 
 void ControlledRobot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps,
-                                        const supplementary::AgentID* parentPMid)
+                                        const essentials::AgentID* parentPMid)
 {
     this->parentPMid = parentPMid;
 

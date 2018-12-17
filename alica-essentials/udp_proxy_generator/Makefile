@@ -120,14 +120,14 @@ test/fast: test
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/psp/cnws && $(CMAKE_COMMAND) -E cmake_progress_start /home/psp/cnws/CMakeFiles /home/psp/cnws/src/supplementary/udp_proxy_generator/CMakeFiles/progress.marks
-	cd /home/psp/cnws && $(MAKE) -f CMakeFiles/Makefile2 src/supplementary/udp_proxy_generator/all
+	cd /home/psp/cnws && $(CMAKE_COMMAND) -E cmake_progress_start /home/psp/cnws/CMakeFiles /home/psp/cnws/src/essentials/udp_proxy_generator/CMakeFiles/progress.marks
+	cd /home/psp/cnws && $(MAKE) -f CMakeFiles/Makefile2 src/essentials/udp_proxy_generator/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/psp/cnws/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/psp/cnws && $(MAKE) -f CMakeFiles/Makefile2 src/supplementary/udp_proxy_generator/clean
+	cd /home/psp/cnws && $(MAKE) -f CMakeFiles/Makefile2 src/essentials/udp_proxy_generator/clean
 .PHONY : clean
 
 # The main clean target
@@ -136,12 +136,12 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/psp/cnws && $(MAKE) -f CMakeFiles/Makefile2 src/supplementary/udp_proxy_generator/preinstall
+	cd /home/psp/cnws && $(MAKE) -f CMakeFiles/Makefile2 src/essentials/udp_proxy_generator/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/psp/cnws && $(MAKE) -f CMakeFiles/Makefile2 src/supplementary/udp_proxy_generator/preinstall
+	cd /home/psp/cnws && $(MAKE) -f CMakeFiles/Makefile2 src/essentials/udp_proxy_generator/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
@@ -150,17 +150,17 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/rule:
-	cd /home/psp/cnws && $(MAKE) -f CMakeFiles/Makefile2 src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/rule
-.PHONY : src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/rule
+src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/rule:
+	cd /home/psp/cnws && $(MAKE) -f CMakeFiles/Makefile2 src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/rule
+.PHONY : src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/rule
 
 # Convenience name for target.
-udp_proxy_generator: src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/rule
+udp_proxy_generator: src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/rule
 .PHONY : udp_proxy_generator
 
 # fast build rule for target.
 udp_proxy_generator/fast:
-	cd /home/psp/cnws && $(MAKE) -f src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build
+	cd /home/psp/cnws && $(MAKE) -f src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build
 .PHONY : udp_proxy_generator/fast
 
 src/RelayedMessage.o: src/RelayedMessage.cpp.o
@@ -168,7 +168,7 @@ src/RelayedMessage.o: src/RelayedMessage.cpp.o
 
 # target to build an object file
 src/RelayedMessage.cpp.o:
-	cd /home/psp/cnws && $(MAKE) -f src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/src/RelayedMessage.cpp.o
+	cd /home/psp/cnws && $(MAKE) -f src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/src/RelayedMessage.cpp.o
 .PHONY : src/RelayedMessage.cpp.o
 
 src/RelayedMessage.i: src/RelayedMessage.cpp.i
@@ -176,7 +176,7 @@ src/RelayedMessage.i: src/RelayedMessage.cpp.i
 
 # target to preprocess a source file
 src/RelayedMessage.cpp.i:
-	cd /home/psp/cnws && $(MAKE) -f src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/src/RelayedMessage.cpp.i
+	cd /home/psp/cnws && $(MAKE) -f src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/src/RelayedMessage.cpp.i
 .PHONY : src/RelayedMessage.cpp.i
 
 src/RelayedMessage.s: src/RelayedMessage.cpp.s
@@ -184,7 +184,7 @@ src/RelayedMessage.s: src/RelayedMessage.cpp.s
 
 # target to generate assembly for a file
 src/RelayedMessage.cpp.s:
-	cd /home/psp/cnws && $(MAKE) -f src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/src/RelayedMessage.cpp.s
+	cd /home/psp/cnws && $(MAKE) -f src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/src/RelayedMessage.cpp.s
 .PHONY : src/RelayedMessage.cpp.s
 
 src/UDPCodeGen.o: src/UDPCodeGen.cpp.o
@@ -192,7 +192,7 @@ src/UDPCodeGen.o: src/UDPCodeGen.cpp.o
 
 # target to build an object file
 src/UDPCodeGen.cpp.o:
-	cd /home/psp/cnws && $(MAKE) -f src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/src/UDPCodeGen.cpp.o
+	cd /home/psp/cnws && $(MAKE) -f src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/src/UDPCodeGen.cpp.o
 .PHONY : src/UDPCodeGen.cpp.o
 
 src/UDPCodeGen.i: src/UDPCodeGen.cpp.i
@@ -200,7 +200,7 @@ src/UDPCodeGen.i: src/UDPCodeGen.cpp.i
 
 # target to preprocess a source file
 src/UDPCodeGen.cpp.i:
-	cd /home/psp/cnws && $(MAKE) -f src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/src/UDPCodeGen.cpp.i
+	cd /home/psp/cnws && $(MAKE) -f src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/src/UDPCodeGen.cpp.i
 .PHONY : src/UDPCodeGen.cpp.i
 
 src/UDPCodeGen.s: src/UDPCodeGen.cpp.s
@@ -208,7 +208,7 @@ src/UDPCodeGen.s: src/UDPCodeGen.cpp.s
 
 # target to generate assembly for a file
 src/UDPCodeGen.cpp.s:
-	cd /home/psp/cnws && $(MAKE) -f src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/supplementary/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/src/UDPCodeGen.cpp.s
+	cd /home/psp/cnws && $(MAKE) -f src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/build.make src/essentials/udp_proxy_generator/CMakeFiles/udp_proxy_generator.dir/src/UDPCodeGen.cpp.s
 .PHONY : src/UDPCodeGen.cpp.s
 
 # Help Target

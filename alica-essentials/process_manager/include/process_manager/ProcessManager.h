@@ -6,7 +6,10 @@
 #include "process_manager/ProcessStat.h"
 #include "process_manager/ProcessStats.h"
 
-#include <supplementary/AgentID.h>
+#include <essentials/AgentID.h>
+#include <essentials/AgentIDFactory.h>
+#include <SystemConfig.h>
+
 #include <ros/ros.h>
 #include <chrono>
 
@@ -14,10 +17,8 @@ namespace std {
 class thread;
 }
 
-namespace supplementary {
+namespace  essentials {
 
-class AgentIDFactory;
-class SystemConfig;
 class ManagedRobot;
 class ManagedExecutable;
 class RobotMetaData;
@@ -43,11 +44,11 @@ public:
     static bool running; /* < has to be static, to be changeable within ProcessManager::pmSignintHandler() */
 
 private:
-    SystemConfig* sc;
+    essentials::SystemConfig* sc;
     std::string ownHostname;
-    const AgentID* ownId;
+    const essentials::AgentID* ownId;
     bool simMode;
-    std::map<const AgentID*, ManagedRobot*, AgentIDComparator> robotMap;
+    std::map<const essentials::AgentID*, ManagedRobot*, essentials::AgentIDComparator> robotMap;
     RobotExecutableRegistry* pmRegistry;
     std::vector<std::string> interpreters;
     unsigned long long lastTotalCPUTime;
@@ -74,4 +75,4 @@ private:
     void report();
 };
 
-}  // namespace supplementary
+}  // namespace  essentials

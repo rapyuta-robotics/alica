@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <vector>
 
-namespace supplementary
+namespace  essentials
 {
 
 using std::cerr;
@@ -202,7 +202,7 @@ void ManagedExecutable::update(unsigned long long cpuDelta)
     }
 }
 
-void ManagedExecutable::report(process_manager::ProcessStats& psts, const AgentID* agentID)
+void ManagedExecutable::report(process_manager::ProcessStats& psts, const essentials::AgentID* agentID)
 {
     if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED) {
         process_manager::ProcessStat ps;
@@ -500,8 +500,8 @@ void ManagedExecutable::startPublishingLogs()
  */
 void ManagedExecutable::startProcess(vector<char*>& params)
 {
-    this->stdLogFileName = logging::getLogFilename(this->robotEnvVariable + '_' + metaExec->name);
-    this->errLogFileName = logging::getErrLogFilename(this->robotEnvVariable + '_' + this->metaExec->name);
+    this->stdLogFileName = essentials::logging::getLogFilename(this->robotEnvVariable + '_' + metaExec->name);
+    this->errLogFileName = essentials::logging::getErrLogFilename(this->robotEnvVariable + '_' + this->metaExec->name);
 
     const char* execStartString;
     vector<char*> startParams;
@@ -587,7 +587,7 @@ void ManagedExecutable::publishLogFile(string logFileName, ros::console::levels:
 {
     std::ifstream ifs;
     int startCounter = 0;
-    while (!FileSystem::isFile(logFileName)) {
+    while (!essentials::FileSystem::isFile(logFileName)) {
         usleep(1000);
         startCounter++;
         if (startCounter > 2) {
@@ -654,4 +654,4 @@ void ManagedExecutable::startProcess()
     this->startProcess(entry);
 }
 
-} /* namespace supplementary */
+} /* namespace  essentials */

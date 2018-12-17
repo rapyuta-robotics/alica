@@ -21,10 +21,10 @@ class ProcessWidget;
 class RobotProcessesWidget;
 }  // namespace Ui
 
-namespace supplementary {
+namespace  essentials {
 class ExecutableMetaData;
 class RobotExecutableRegistry;
-}  // namespace supplementary
+}  // namespace  essentials
 
 using namespace std;
 
@@ -35,7 +35,7 @@ class ControlledExecutable : public QObject {
     Q_OBJECT
 
 public:
-    ControlledExecutable(supplementary::ExecutableMetaData* metaExec, ControlledRobot* parentRobot);
+    ControlledExecutable( essentials::ExecutableMetaData* metaExec, ControlledRobot* parentRobot);
     virtual ~ControlledExecutable();
 
     void handleStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
@@ -53,7 +53,7 @@ public:
     long int memory;
     bool publishing;
 
-    supplementary::ExecutableMetaData* metaExec;
+     essentials::ExecutableMetaData* metaExec;
     QWidget* processWidget;
     Ui::ProcessWidget* _processWidget;
 
@@ -69,7 +69,7 @@ private:
     static const string greenBackground;
     static const string grayBackground;
     ControlledRobot* parentRobot;
-    supplementary::RobotExecutableRegistry* pmRegistry;
+     essentials::RobotExecutableRegistry* pmRegistry;
 };
 
 } /* namespace pm_widget */

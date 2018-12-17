@@ -12,13 +12,13 @@ using std::string;
 
 namespace pm_widget
 {
-ControlledProcessManager::ControlledProcessManager(string processManagerName, const supplementary::AgentID* processManagerId, QBoxLayout* parentLayout)
+ControlledProcessManager::ControlledProcessManager(string processManagerName, const essentials::AgentID* processManagerId, QBoxLayout* parentLayout)
     : name(processManagerName)
     , id(processManagerId)
-    , pmRegistry(supplementary::RobotExecutableRegistry::get())
+    , pmRegistry( essentials::RobotExecutableRegistry::get())
     , parentLayout(parentLayout)
 {
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     this->msgTimeOut = duration<double>((*sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 }
 
@@ -43,7 +43,7 @@ void ControlledProcessManager::handleProcessStats(std::pair<std::chrono::system_
     }
 }
 
-ControlledRobot* ControlledProcessManager::getControlledRobot(const supplementary::AgentID* robotId)
+ControlledRobot* ControlledProcessManager::getControlledRobot(const essentials::AgentID* robotId)
 {
     auto controlledRobotEntry = this->controlledRobotsMap.find(robotId);
     if (controlledRobotEntry != this->controlledRobotsMap.end()) { // robot is already known

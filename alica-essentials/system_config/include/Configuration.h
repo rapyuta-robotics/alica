@@ -14,7 +14,7 @@
 
 #include "ConfigNode.h"
 
-namespace supplementary
+namespace essentials
 {
 class Configuration
 {

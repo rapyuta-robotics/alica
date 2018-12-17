@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace supplementary {
+namespace essentials {
 
 ConsoleCommandHelper::ConsoleCommandHelper() {
     // TODO Auto-generated constructor stub
@@ -34,4 +34,4 @@ std::string ConsoleCommandHelper::exec(const char* cmd) {
     return result;
 }
 
-} /* namespace supplementary */
+} /* namespace essentials */

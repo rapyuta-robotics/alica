@@ -1,10 +1,10 @@
-#include "supplementary/AgentIDFactory.h"
+#include "essentials/AgentIDFactory.h"
 
 #include <uuid/uuid.h>
 
 #include <random>
 
-namespace supplementary {
+namespace essentials {
 
 AgentIDFactory::AgentIDFactory() {}
 
@@ -31,4 +31,4 @@ const AgentID* AgentIDFactory::generateID(int size) const {
     }
 }
 
-} /* namespace supplementary */
+} /* namespace essentials */
