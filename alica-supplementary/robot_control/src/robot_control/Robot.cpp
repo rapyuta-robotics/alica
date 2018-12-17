@@ -7,7 +7,7 @@
 #include <pm_widget/ControlledRobot.h>
 
 #include <process_manager/RobotExecutableRegistry.h>
-#include <supplementary/BroadcastID.h>
+#include <essentials/BroadcastID.h>
 
 #include <alica/AlicaWidget.h>
 
@@ -23,7 +23,7 @@ using std::stringstream;
 namespace robot_control
 {
 
-Robot::Robot(string robotName, const supplementary::AgentID* robotId, RobotsControl* parentRobotsControl)
+Robot::Robot(string robotName, const essentials::AgentID* robotId, RobotsControl* parentRobotsControl)
     : RobotMetaData(robotName, robotId)
     , parentRobotsControl(parentRobotsControl)
     , widget(new QFrame())
@@ -57,7 +57,7 @@ Robot::Robot(string robotName, const supplementary::AgentID* robotId, RobotsCont
     QHBoxLayout* frameHBoxPm = new QHBoxLayout(frameForPM);
     frameHBoxPm->setContentsMargins(0, 0, 0, 0);
     frameHBoxPm->setAlignment(Qt::AlignmentFlag::AlignTop);
-    this->broadcastId = new supplementary::BroadcastID(nullptr, 0);
+    this->broadcastId = new essentials::BroadcastID(nullptr, 0);
     this->controlledRobotWidget = new pm_widget::ControlledRobot(robotName, robotId, this->broadcastId);
     frameHBoxPm->addWidget(this->controlledRobotWidget->robotProcessesQFrame);
     this->uiControlledRobot->horizontalLayout_2->addWidget(frameForPM);
@@ -162,7 +162,7 @@ void Robot::handleAlicaInfo(pair<std::chrono::system_clock::time_point, alica_ms
     this->alicaWidget->handleAlicaEngineInfo(timeAEIpair.second);
 }
 
-void Robot::handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, const supplementary::AgentID* parentPMid)
+void Robot::handleProcessStat(std::chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, const essentials::AgentID* parentPMid)
 {
     this->timeLastMsgReceived = timeMsgReceived;
     this->controlledRobotWidget->handleProcessStat(timeMsgReceived, ps, parentPMid);

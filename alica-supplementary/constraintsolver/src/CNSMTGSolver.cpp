@@ -58,7 +58,7 @@ CNSMTGSolver::CNSMTGSolver()
 
     ip = make_shared<intervalpropagation::IntervalPropagator>();
 
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
     maxSolveTime = AlicaTime::milliseconds((*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
     rPropConvergenceStepSize = 0;

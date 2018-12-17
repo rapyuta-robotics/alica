@@ -9,7 +9,7 @@
 #include <engine/model/State.h>
 #include <engine/model/Task.h>
 #include <engine/parser/PlanParser.h>
-#include <supplementary/AgentIDManager.h>
+#include <essentials/AgentIDManager.h>
 #include <unordered_map>
 
 namespace alica
@@ -98,7 +98,7 @@ class AlicaPlan
     PlanTree* _combinedPlanTree;
     AgentInfoMap _agentInfos;
     AlicaClock _clock;
-    supplementary::AgentIDManager _agentIDManager;
+    essentials::AgentIDManager _agentIDManager;
     AlicaTime _teamTimeOut;
 };
 

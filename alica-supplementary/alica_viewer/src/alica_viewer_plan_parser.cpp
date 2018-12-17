@@ -153,7 +153,7 @@ void PlanTree::getRobotsSorted(AgentGrp& robotIds) const
 AlicaPlan::AlicaPlan(int argc, char* argv[])
     : _planParser(&_planRepository)
     , _combinedPlanTree(nullptr)
-    , _agentIDManager(new supplementary::AgentIDFactory())
+    , _agentIDManager(new essentials::AgentIDFactory())
 {
     if (argc < 2) {
         std::cout << "Usage: Base -m [Masterplan] -r [roleset]" << std::endl;
@@ -181,7 +181,7 @@ AlicaPlan::AlicaPlan(int argc, char* argv[])
 
     _planParser.parsePlanTree(masterPlanName);
 
-    _teamTimeOut = AlicaTime::milliseconds((*supplementary::SystemConfig::getInstance())["Alica"]->get<uint64_t>("Alica.TeamTimeOut", NULL));
+    _teamTimeOut = AlicaTime::milliseconds((*essentials::SystemConfig::getInstance())["Alica"]->get<uint64_t>("Alica.TeamTimeOut", NULL));
 }
 
 void AlicaPlan::combinePlanTree(PlanTree& planTree) const

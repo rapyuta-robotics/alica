@@ -44,13 +44,13 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
 
         // bring up the SystemConfig with the corresponding path
-        sc = supplementary::SystemConfig::getInstance();
+        sc = essentials::SystemConfig::getInstance();
         sc->setRootPath(path);
         sc->setConfigPath(path + "/etc");
         cout << sc->getConfigPath() << endl;
 
         sc->setHostname("nase");
-        ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "MasterPlanTaskAssignment", false);
+        ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "MasterPlanTaskAssignment", false);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();

@@ -10,7 +10,7 @@
 #include <engine/BehaviourPool.h>
 #include <engine/PlanBase.h>
 #include <engine/model/BehaviourConfiguration.h>
-#include <supplementary/EventTrigger.h>
+#include <essentials/EventTrigger.h>
 
 #include <condition_variable>
 #include <mutex>

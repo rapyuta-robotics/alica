@@ -33,7 +33,7 @@ TEST(AutoDiffTest, GSOLVER)
 {
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test";
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     sc->setRootPath(path);
     sc->setConfigPath(path + "/etc");
 
@@ -116,7 +116,7 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 {
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test";
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     sc->setRootPath(path);
     sc->setConfigPath(path + "/etc");
     // 12000 * 18000

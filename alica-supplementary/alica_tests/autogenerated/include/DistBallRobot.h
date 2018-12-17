@@ -29,7 +29,7 @@ protected:
     double sb;
     double angleBallOpp;
     double velAngle;
-    supplementary::AgentIDManager* manager;
+    essentials::AgentIDManager* manager;
 };
 
 } /* namespace alica */
