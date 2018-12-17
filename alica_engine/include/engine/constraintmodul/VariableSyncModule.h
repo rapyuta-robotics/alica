@@ -6,8 +6,8 @@
 
 #include "engine/AlicaEngine.h"
 
-#include <supplementary/AgentID.h>
-#include <supplementary/NotifyTimer.h>
+#include <essentials/AgentID.h>
+#include <essentials/NotifyTimer.h>
 
 #include <vector>
 
@@ -69,7 +69,7 @@ class VariableSyncModule
     const IAlicaCommunication* _communicator;
     bool _running;
     double _distThreshold;
-    supplementary::NotifyTimer<VariableSyncModule>* _timer;
+    essentials::NotifyTimer<VariableSyncModule>* _timer;
     mutable std::mutex _mutex;
 };
 

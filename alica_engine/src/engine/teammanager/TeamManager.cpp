@@ -2,7 +2,7 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/collections/RobotProperties.h"
-#include "supplementary/AgentIDFactory.h"
+#include "essentials/AgentIDFactory.h"
 
 #include <SystemConfig.h>
 #include <iostream>
@@ -27,7 +27,7 @@ TeamManager::~TeamManager()
 
 void TeamManager::init()
 {
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc =essentials::SystemConfig::getInstance();
     this->teamTimeOut = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
 
     if (useConfigForTeam) {
@@ -35,7 +35,7 @@ void TeamManager::init()
     }
 }
 
-void TeamManager::readTeamFromConfig(supplementary::SystemConfig* sc)
+void TeamManager::readTeamFromConfig(essentials::SystemConfig* sc)
 {
     std::string localAgentName = this->engine->getRobotName();
     std::shared_ptr<std::vector<std::string>> agentNames = (*sc)["Globals"]->getSections("Globals.Team", NULL);
@@ -131,7 +131,7 @@ bool TeamManager::isAgentActive(AgentIDConstPtr agentId) const
 
 /**
  * Checks if an agent is ignored
- * @param agentId an supplementary::AgentID identifying the agent
+ * @param agentId an essentials::AgentID identifying the agent
  */
 bool TeamManager::isAgentIgnored(AgentIDConstPtr agentId) const
 {

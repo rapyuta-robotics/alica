@@ -4,7 +4,8 @@
 #include "engine/PlanInterface.h"
 #include "engine/Types.h"
 #include "engine/model/BehaviourConfiguration.h"
-#include <supplementary/AgentID.h>
+#include <essentials/Timer.h>
+#include <essentials/ITrigger.h>
 
 #include <atomic>
 #include <chrono>
@@ -13,12 +14,6 @@
 #include <string>
 #include <thread>
 #include <vector>
-
-namespace supplementary
-{
-class Timer;
-class ITrigger;
-} // namespace supplementary
 
 namespace alica
 {
@@ -66,7 +61,7 @@ public:
     void setFailure();
 
     bool getParameter(const std::string& key, std::string& valueOut) const;
-    void setTrigger(supplementary::ITrigger* trigger);
+    void setTrigger(essentials::ITrigger* trigger);
 
     void sendLogMessage(int level, const std::string& message) const;
 
@@ -126,7 +121,7 @@ private:
 
     std::thread* _runThread; /** < executes the runInternal and thereby the abstract run method */
 
-    supplementary::ITrigger* _behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
+    essentials::ITrigger* _behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
                                                   is event triggered, alternative to timer */
     std::condition_variable _runCV;
     mutable std::mutex _runLoopMutex;

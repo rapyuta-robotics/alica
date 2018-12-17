@@ -32,13 +32,13 @@ Logger::Logger(AlicaEngine* ae)
         , receivedEvent(false)
         , _fileWriter()
 {
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     _active = (*sc)["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
     if (_active) {
         std::string robotName = ae->getRobotName();
         std::string logPath = (*sc)["Alica"]->get<std::string>("Alica.EventLogging.LogFolder", NULL);
-        if (!supplementary::FileSystem::isDirectory(logPath)) {
-            if (!supplementary::FileSystem::createDirectory(logPath, 0777)) {
+        if (!essentials::FileSystem::isDirectory(logPath)) {
+            if (!essentials::FileSystem::createDirectory(logPath, 0777)) {
                 AlicaEngine::abort("Cannot create log folder: ", logPath);
             }
         }

@@ -51,10 +51,10 @@ int PlanWriter::objectCounter = 0;
 PlanWriter::PlanWriter(AlicaEngine* ae, PlanRepository* rep)
 {
     this->ae = ae;
-    string path = supplementary::SystemConfig::getInstance()->getConfigPath();
-    this->tempPlanDir = supplementary::FileSystem::combinePaths(path, "plans/tmp/");
+    string path = essentials::SystemConfig::getInstance()->getConfigPath();
+    this->tempPlanDir = essentials::FileSystem::combinePaths(path, "plans/tmp/");
     this->rep = rep;
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     this->configPath = sc->getConfigPath();
 }
 
@@ -107,22 +107,22 @@ void PlanWriter::saveAllPlans()
  */
 void PlanWriter::saveSinglePlan(const Plan* p)
 {
-    this->currentFile = supplementary::FileSystem::combinePaths(this->tempPlanDir, p->getName() + string(".pml"));
+    this->currentFile = essentials::FileSystem::combinePaths(this->tempPlanDir, p->getName() + string(".pml"));
     tinyxml2::XMLDocument* doc = createPlanXMLDocument(p);
 
-    if (!supplementary::FileSystem::pathExists(this->tempPlanDir)) {
-        supplementary::FileSystem::createDirectory(this->tempPlanDir, 777);
+    if (!essentials::FileSystem::pathExists(this->tempPlanDir)) {
+        essentials::FileSystem::createDirectory(this->tempPlanDir, 777);
     }
     doc->SaveFile(this->currentFile.c_str(), false);
 }
 
 void PlanWriter::saveSinglePlan(std::string directory, const Plan* p)
 {
-    this->currentFile = supplementary::FileSystem::combinePaths(directory, p->getFileName());
+    this->currentFile = essentials::FileSystem::combinePaths(directory, p->getFileName());
     tinyxml2::XMLDocument* doc = createPlanXMLDocument(p);
 
-    if (!supplementary::FileSystem::pathExists(directory)) {
-        supplementary::FileSystem::createDirectory(directory, 777);
+    if (!essentials::FileSystem::pathExists(directory)) {
+        essentials::FileSystem::createDirectory(directory, 777);
     }
     doc->SaveFile(this->currentFile.c_str(), false);
 }
@@ -255,22 +255,22 @@ tinyxml2::XMLDocument* PlanWriter::createRoleSetXMLDocument(const RoleSet* r)
 
 void PlanWriter::saveRoleSet(const RoleSet* r, string name)
 {
-    this->currentFile = supplementary::FileSystem::combinePaths(this->tempPlanDir, name);
+    this->currentFile = essentials::FileSystem::combinePaths(this->tempPlanDir, name);
     tinyxml2::XMLDocument* doc = createRoleSetXMLDocument(r);
 
-    if (!supplementary::FileSystem::pathExists(this->tempPlanDir)) {
-        supplementary::FileSystem::createDirectory(this->tempPlanDir, 777);
+    if (!essentials::FileSystem::pathExists(this->tempPlanDir)) {
+        essentials::FileSystem::createDirectory(this->tempPlanDir, 777);
     }
     doc->SaveFile(this->currentFile.c_str(), false);
 }
 
 void PlanWriter::saveRoleSet(const RoleSet* r, string directory, string name)
 {
-    this->currentFile = supplementary::FileSystem::combinePaths(directory, name);
+    this->currentFile = essentials::FileSystem::combinePaths(directory, name);
     tinyxml2::XMLDocument* doc = createRoleSetXMLDocument(r);
 
-    if (!supplementary::FileSystem::pathExists(directory)) {
-        supplementary::FileSystem::createDirectory(directory, 777);
+    if (!essentials::FileSystem::pathExists(directory)) {
+        essentials::FileSystem::createDirectory(directory, 777);
     }
     doc->SaveFile(this->currentFile.c_str(), false);
 }
@@ -289,22 +289,22 @@ tinyxml2::XMLDocument* PlanWriter::createTaskRepositoryXMLDocument(const TaskRep
 
 void PlanWriter::saveTaskRepository(const TaskRepository* tr, string name)
 {
-    this->currentFile = supplementary::FileSystem::combinePaths(this->tempPlanDir, name);
+    this->currentFile = essentials::FileSystem::combinePaths(this->tempPlanDir, name);
     tinyxml2::XMLDocument* doc = createTaskRepositoryXMLDocument(tr);
 
-    if (!supplementary::FileSystem::pathExists(this->tempPlanDir)) {
-        supplementary::FileSystem::createDirectory(this->tempPlanDir, 777);
+    if (!essentials::FileSystem::pathExists(this->tempPlanDir)) {
+        essentials::FileSystem::createDirectory(this->tempPlanDir, 777);
     }
     doc->SaveFile(this->currentFile.c_str(), false);
 }
 
 void PlanWriter::saveTaskRepository(const TaskRepository* tr, string directory, string name)
 {
-    this->currentFile = supplementary::FileSystem::combinePaths(directory, name);
+    this->currentFile = essentials::FileSystem::combinePaths(directory, name);
     tinyxml2::XMLDocument* doc = createTaskRepositoryXMLDocument(tr);
 
-    if (!supplementary::FileSystem::pathExists(directory)) {
-        supplementary::FileSystem::createDirectory(directory, 777);
+    if (!essentials::FileSystem::pathExists(directory)) {
+        essentials::FileSystem::createDirectory(directory, 777);
     }
     doc->SaveFile(this->currentFile.c_str(), false);
 }
@@ -480,7 +480,7 @@ tinyxml2::XMLElement* PlanWriter::createSynchronisationXMLNode(const SyncTransit
         synched.append(to_string(s->getInSync()[i]->getId()));
         synched.append(" ");
     }
-    xr->SetAttribute("synchedTransitions", supplementary::Configuration::trim(synched).c_str());
+    xr->SetAttribute("synchedTransitions", essentials::Configuration::trim(synched).c_str());
     xr->SetAttribute("talkTimeout", to_string(s->getTalkTimeOut().inMilliseconds()).c_str());
     xr->SetAttribute("syncTimeout", to_string(s->getSyncTimeOut().inMilliseconds()).c_str());
     xr->SetAttribute("failOnSyncTimeOut", "false");
@@ -543,24 +543,24 @@ std::string PlanWriter::getRelativeFileName(const std::string& file)
 {
     std::string curdir = this->currentFile;
     std::string ufile = "";
-    if (supplementary::FileSystem::isPathRooted(file)) {
+    if (essentials::FileSystem::isPathRooted(file)) {
         ufile = file;
     } else {
         if (file.substr(file.size() - 4, 4) == ".beh" || file.substr(file.size() - 4, 4) == ".pty" || file.substr(file.size() - 4, 4) == ".pml" ||
                 file.substr(file.size() - 3, 3) == ".pp") {
-            supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+            essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
             std::string tfile = (*sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
-            // tfile = supplementary::FileSystem::combinePaths(tfile, file);
-            if (!supplementary::FileSystem::isPathRooted(tfile)) {
-                tfile = supplementary::FileSystem::combinePaths(this->configPath, tfile);
+            // tfile = essentials::FileSystem::combinePaths(tfile, file);
+            if (!essentials::FileSystem::isPathRooted(tfile)) {
+                tfile = essentials::FileSystem::combinePaths(this->configPath, tfile);
             }
             ufile = tfile;
         } else if (file.substr(file.size() - 4, 4) == ".tsk") {
-            supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+            essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
             std::string tfile = (*sc)["Alica"]->get<string>("Alica.MiscDir", NULL);
-            // tfile = supplementary::FileSystem::combinePaths(tfile, file);
-            if (!supplementary::FileSystem::isPathRooted(tfile)) {
-                tfile = supplementary::FileSystem::combinePaths(this->configPath, tfile);
+            // tfile = essentials::FileSystem::combinePaths(tfile, file);
+            if (!essentials::FileSystem::isPathRooted(tfile)) {
+                tfile = essentials::FileSystem::combinePaths(this->configPath, tfile);
             }
             ufile = tfile;
         } else {
