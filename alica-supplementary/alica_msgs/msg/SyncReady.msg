@@ -1,2 +1,2 @@
-agent_id/AgentID senderID
-int64 syncTransitionID
+agent_id/AgentID sender_id
+int64 sync_transition_id

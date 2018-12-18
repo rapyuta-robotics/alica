@@ -194,7 +194,7 @@ void RobotsControl::processMessages()
             // unqueue the ROS alica info message
             auto timeAlicaInfoPair = alicaInfoMsgQueue.front();
             alicaInfoMsgQueue.pop();
-            auto agentID = this->pmRegistry->getRobotId(timeAlicaInfoPair.second->senderID.id);
+            auto agentID = this->pmRegistry->getRobotId(timeAlicaInfoPair.second->sender_id.id);
             this->checkAndInit(agentID);
             this->controlledRobotsMap[agentID]->handleAlicaInfo(timeAlicaInfoPair);
         }
