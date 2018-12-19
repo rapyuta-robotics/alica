@@ -83,9 +83,6 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
     std::vector<VotedSeed> seeds;
 
     AlicaTime earliest = _ae->getAlicaClock()->now() - _ttl4Usage;
-    if (_ownResults.getValues(query, earliest, vec)) {
-        seeds.emplace_back(std::move(vec));
-    }
     { // for lock
         std::lock_guard<std::mutex> lock(_mutex);
         for (const ResultEntry& re : _store) {

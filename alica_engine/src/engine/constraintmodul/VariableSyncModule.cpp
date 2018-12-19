@@ -75,9 +75,6 @@ void VariableSyncModule::clear()
 
 void VariableSyncModule::onSolverResult(const SolverResult& msg)
 {
-    if (*(msg.senderID) == *_ownResults.getId()) {
-        return;
-    }
     if (_ae->getTeamManager()->isAgentIgnored(msg.senderID)) {
         return;
     }
@@ -90,9 +87,14 @@ void VariableSyncModule::onSolverResult(const SolverResult& msg)
         }
     }
     if (re == nullptr) {
+        ResultEntry new_entry(msg.senderID);
         std::lock_guard<std::mutex> lock(_mutex);
-        _store.emplace_back(msg.senderID);
-        re = &_store.back();
+        auto agent_sorted_loc = std::upper_bound(_store.begin(), _store.end(), new_entry, 
+            [](const ResultEntry& a, const ResultEntry& b) {
+                return (a.getId() < b.getId());
+            });
+        agent_sorted_loc = _store.insert(agent_sorted_loc, std::move(new_entry));
+        re = &(*agent_sorted_loc);
     }
     AlicaTime now = _ae->getAlicaClock()->now();
     for (const SolverVar& sv : msg.vars) {
