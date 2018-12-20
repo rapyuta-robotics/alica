@@ -60,8 +60,9 @@ class VariableSyncModule
         int _totalSupCount;
     };
 
-    ResultEntry _ownResults;
-    std::vector<ResultEntry> _store;
+    // This memory resides in _store, don't delete
+    ResultEntry* _ownResults;
+    std::vector<std::unique_ptr<ResultEntry>> _store;
     SolverResult _publishData;
     AlicaTime _ttl4Communication;
     AlicaTime _ttl4Usage;
@@ -85,8 +86,8 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
     AlicaTime earliest = _ae->getAlicaClock()->now() - _ttl4Usage;
     { // for lock
         std::lock_guard<std::mutex> lock(_mutex);
-        for (const ResultEntry& re : _store) {
-            bool any = re.getValues(query, earliest, vec);
+        for (const std::unique_ptr<ResultEntry>& re : _store) {
+            bool any = re->getValues(query, earliest, vec);
             if (!any) {
                 continue;
             }
