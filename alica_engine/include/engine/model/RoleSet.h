@@ -1,10 +1,3 @@
-/*
- * RoleSet.h
- *
- *  Created on: Mar 8, 2014
- *      Author: Stephan Opfer
- */
-
 #ifndef ROLESET_H_
 #define ROLESET_H_
 

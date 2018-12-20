@@ -51,11 +51,6 @@ private:
 
     void setPlans(const AbstractPlanGrp& plans);
 
-    void setSuccessState(bool successState);
-    void setFailureState(bool failureState);
-
-    void setTerminal(bool terminal);
-
     /**
      * The list of AbstractPlans meant to be executed in the context of this state.
      */
