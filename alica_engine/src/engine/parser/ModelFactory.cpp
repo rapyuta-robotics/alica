@@ -1292,41 +1292,47 @@ namespace alica
     const Plan* ModelFactory::getHackedPlan() {
         long id = 1;
 
-        Plan* hackedPlan = new Plan(id++);
+        Plan* hackedPlan = new Plan(id);
 
         // simple stuff
         hackedPlan->setMinCardinality(0);
         hackedPlan->setMaxCardinality(2);
         hackedPlan->setName("HackedPlan");
         hackedPlan->setMasterPlan(true);
+        rep->_plans.insert(pair<int64_t, Plan*>(id++, hackedPlan));
 
         // state
         State* state = new State();
-        state->setId(id++);
+        state->setId(id);
         state->setName("HackedState");
         state->setInPlan(hackedPlan);
+        state->_type = State::StateType::NORMAL;
         hackedPlan->_states.push_back(state);
+        rep->_states.insert(pair<int64_t, State*>(id++, state));
 
         // behaviour
         Behaviour* behaviour = new Behaviour();
-        behaviour->setId(id++);
+        behaviour->setId(id);
         behaviour->setName("HackedBehaviour");
         behaviour->setDeferring(0);
         behaviour->setEventDriven(false);
         behaviour->setFrequency(30);
         state->_plans.push_back(behaviour);
+        rep->_behaviours.insert(pair<int64_t, Behaviour*>(id++, behaviour));
 
         // task repository
         TaskRepository* taskRepository = new TaskRepository();
-        taskRepository->setId(id++);
+        taskRepository->setId(id);
         taskRepository->setName("HackedTaskRepository");
         taskRepository->setDefaultTask(id);
+        rep->_taskRepositories.insert(pair<int64_t, TaskRepository*>(id++, taskRepository));
 
         // task
-        Task* task = new Task(id++, true);
+        Task* task = new Task(id, true);
         task->setName("HackedTask");
         task->setTaskRepository(taskRepository);
         taskRepository->_tasks.push_back(task);
+        rep->_tasks.insert(pair<int64_t, Task*>(id++, task));
 
         // entrypoint
         EntryPoint* entryPoint = new EntryPoint();
@@ -1336,7 +1342,12 @@ namespace alica
         entryPoint->setPlan(hackedPlan);
         entryPoint->setSuccessRequired(false);
         entryPoint->_task = task;
+        entryPoint->computeReachabilitySet();
+        entryPoint->_index = 0;
         hackedPlan->_entryPoints.push_back(entryPoint);
+        entryPoint->_cardinality = Interval<int>(0,2);
+        state->_entryPoint = entryPoint;
+        rep->_entryPoints.insert(pair<int64_t, EntryPoint*>(id++, entryPoint));
 
         return hackedPlan;
     }
@@ -1346,14 +1357,16 @@ namespace alica
 
         // role definition set
         RoleDefinitionSet* rDefSet = new RoleDefinitionSet();
-        rDefSet->setId(id++);
+        rDefSet->setId(id);
         rDefSet->setName("HackedRDefSet");
+        rep->_roleDefinitionSets.insert(pair<int64_t, RoleDefinitionSet*>(id++, rDefSet));
 
         // role
         Role* role = new Role();
-        role->setId(id++);
-        role->setName("HackedRole");
+        role->setId(id);
+        role->setName("Assistent");
         role->_roleDefinitionSet = rDefSet;
+        rep->_roles.insert(pair<int64_t, Role*>(id++, role));
         rDefSet->_roles.push_back(role);
 
         // role task mapping
@@ -1361,7 +1374,7 @@ namespace alica
         rtm->setId(id++);
         rtm->setName("HackedRoleTaskMapping");
         rtm->setRole(role);
-        rtm->_taskPriorities.emplace(4, 1);
+        rtm->_taskPriorities.emplace(5, 1);
         role->_roleTaskMapping = rtm;
 
 //        // capability
