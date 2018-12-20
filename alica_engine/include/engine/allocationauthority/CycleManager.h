@@ -10,10 +10,6 @@
 #include <thread>
 #include <vector>
 
-namespace supplementary
-{
-class SystemConfig;
-}
 namespace alica
 {
 class RunningPlan;

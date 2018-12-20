@@ -11,11 +11,6 @@
 
 #include <unordered_map>
 
-namespace supplementary
-{
-class AgentIDFactory;
-}
-
 namespace alica
 {
 class AlicaClock;
