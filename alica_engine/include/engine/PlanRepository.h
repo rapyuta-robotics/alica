@@ -91,6 +91,7 @@ public:
 
         iterator begin() const { return iterator(_ref.begin()); }
         iterator end() const { return iterator(_ref.end()); }
+        unsigned long size() const { return _ref.size(); }
 
     private:
         const MapType<T>& _ref;
