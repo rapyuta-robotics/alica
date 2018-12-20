@@ -1289,4 +1289,100 @@ namespace alica
         return idleEP;
     }
 
+    const Plan* ModelFactory::getHackedPlan() {
+        long id = 1;
+
+        Plan* hackedPlan = new Plan(id++);
+
+        // simple stuff
+        hackedPlan->setMinCardinality(0);
+        hackedPlan->setMaxCardinality(2);
+        hackedPlan->setName("HackedPlan");
+        hackedPlan->setMasterPlan(true);
+
+        // state
+        State* state = new State();
+        state->setId(id++);
+        state->setName("HackedState");
+        state->setInPlan(hackedPlan);
+        hackedPlan->_states.push_back(state);
+
+        // behaviour
+        Behaviour* behaviour = new Behaviour();
+        behaviour->setId(id++);
+        behaviour->setName("HackedBehaviour");
+        behaviour->setDeferring(0);
+        behaviour->setEventDriven(false);
+        behaviour->setFrequency(30);
+        state->_plans.push_back(behaviour);
+
+        // task repository
+        TaskRepository* taskRepository = new TaskRepository();
+        taskRepository->setId(id++);
+        taskRepository->setName("HackedTaskRepository");
+        taskRepository->setDefaultTask(id);
+
+        // task
+        Task* task = new Task(id++, true);
+        task->setName("HackedTask");
+        task->setTaskRepository(taskRepository);
+        taskRepository->_tasks.push_back(task);
+
+        // entrypoint
+        EntryPoint* entryPoint = new EntryPoint();
+        entryPoint->setId(id++);
+        entryPoint->setName("HackedEntryPoint");
+        entryPoint->setState(state);
+        entryPoint->setPlan(hackedPlan);
+        entryPoint->setSuccessRequired(false);
+        entryPoint->_task = task;
+        hackedPlan->_entryPoints.push_back(entryPoint);
+
+        return hackedPlan;
+    }
+
+    const RoleSet* ModelFactory::getHackedRoleSet() {
+        long id = 6;
+
+        // role definition set
+        RoleDefinitionSet* rDefSet = new RoleDefinitionSet();
+        rDefSet->setId(id++);
+        rDefSet->setName("HackedRDefSet");
+
+        // role
+        Role* role = new Role();
+        role->setId(id++);
+        role->setName("HackedRole");
+        role->_roleDefinitionSet = rDefSet;
+        rDefSet->_roles.push_back(role);
+
+        // role task mapping
+        RoleTaskMapping* rtm = new RoleTaskMapping();
+        rtm->setId(id++);
+        rtm->setName("HackedRoleTaskMapping");
+        rtm->setRole(role);
+        rtm->_taskPriorities.emplace(4, 1);
+        role->_roleTaskMapping = rtm;
+
+//        // capability
+//        Capability* capability = new Capability();
+//        capability->setId(id++);
+//        capability->setName("HackedCapability");
+//
+//        // capability definition set
+//        CapabilityDefinitionSet* cDefSet = new CapabilityDefinitionSet();
+//        cDefSet->setId(id++);
+//        cDefSet->setName("HackedCDefSet");
+//        cDefSet->_capabilities.push_back(capability);
+
+        // role set
+        RoleSet* rs = new RoleSet();
+        rs->setIsDefault(true);
+        rs->setId(id++);
+        rs->setUsableWithPlanId(1);
+        rs->_roleTaskMappings.push_back(rtm);
+
+        return rs;
+    }
+
 } // namespace alica

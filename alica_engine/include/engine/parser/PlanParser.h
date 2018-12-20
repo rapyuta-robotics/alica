@@ -34,6 +34,8 @@ public:
     PlanParser(PlanRepository* rep);
     ~PlanParser();
 
+    const RoleSet* getHackedRoleSet();
+    const Plan* getHackedPlan();
     const Plan* parsePlanTree(const std::string& masterplan);
     void ignoreMasterPlanId(bool val);
     std::map<int64_t, AlicaElement*>* getParsedElements();
