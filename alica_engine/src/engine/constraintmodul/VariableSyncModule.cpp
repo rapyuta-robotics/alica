@@ -22,6 +22,7 @@ VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
     , _communicator(nullptr)
     , _ttl4Communication(AlicaTime::zero())
     , _ttl4Usage(AlicaTime::zero())
+    , _ownResults(nullptr)
 {
 }
 
