@@ -33,8 +33,9 @@ class BasicBehaviour
 {
 public:
     BasicBehaviour(const std::string& name);
-    virtual ~BasicBehaviour();
+    virtual ~BasicBehaviour() {};
     virtual void run(void* msg) = 0;
+
     bool isRunningInContext(const RunningPlan* rp) const;
     void setEngine(AlicaEngine* engine) { _engine = engine; }
     const std::string& getName() const { return _name; }
@@ -47,6 +48,7 @@ public:
 
     bool stop();
     bool start();
+    void terminate();
 
     void setDelayedStart(int32_t msDelayedStart) { _msDelayedStart = std::chrono::milliseconds(msDelayedStart); }
 

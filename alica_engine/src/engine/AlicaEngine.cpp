@@ -139,6 +139,7 @@ void AlicaEngine::shutdown()
 
     if (this->behaviourPool != nullptr) {
         this->behaviourPool->stopAll();
+        this->behaviourPool->terminateAll();
         delete this->behaviourPool;
         this->behaviourPool = nullptr;
     }
