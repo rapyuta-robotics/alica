@@ -10,11 +10,6 @@
 #include <string>
 #include <unordered_set>
 
-namespace supplementary
-{
-class SystemConfig;
-}
-
 namespace alica
 {
 

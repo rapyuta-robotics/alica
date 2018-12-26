@@ -17,8 +17,6 @@ using std::string;
  */
 PlanParser::PlanParser(PlanRepository* rep)
 {
-    using namespace supplementary;
-
     this->masterPlan = nullptr;
     this->rep = rep;
     this->mf = shared_ptr<ModelFactory>(new ModelFactory(this, rep));
@@ -79,7 +77,6 @@ PlanParser::~PlanParser() {}
  */
 const RoleSet* PlanParser::parseRoleSet(std::string roleSetName)
 {
-    using namespace supplementary;
     std::string roleSetLocation;
     if (roleSetName.empty()) {
         roleSetLocation = findDefaultRoleSet(baseRolePath);
