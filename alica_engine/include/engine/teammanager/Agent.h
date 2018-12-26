@@ -8,11 +8,6 @@
 #include <memory>
 #include <string>
 
-namespace supplementary
-{
-class AgentID;
-}
-
 namespace alica
 {
 
