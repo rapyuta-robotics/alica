@@ -24,10 +24,11 @@ void Timer::run(bool notifyAll) {
         std::this_thread::sleep_for(msDelayedStart);
     }
 
-    std::unique_lock<std::mutex> lck(cv_mtx);
-
     while (this->started) {
-        this->cv.wait(lck, [&] { return !this->started || (this->running && this->registeredCVs.size() > 0); });
+        {
+            std::unique_lock<std::mutex> lck(cv_mtx);
+            this->cv.wait(lck, [&] { return !this->started || (this->running && this->registeredCVs.size() > 0); });
+        }
 
         if (!this->started)  // for destroying the timer
             return;
