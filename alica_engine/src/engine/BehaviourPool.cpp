@@ -67,14 +67,8 @@ bool BehaviourPool::init(IBehaviourCreator* bc)
  */
 void BehaviourPool::stopAll()
 {
-    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = _ae->getPlanRepository()->getBehaviourConfigurations();
-    for (const BehaviourConfiguration* beh : behaviourConfs) {
-        auto bbPtr = _availableBehaviours.at(beh);
-        if (bbPtr == nullptr) {
-            ALICA_ERROR_MSG("BP::stop(): Found Behaviour without an BasicBehaviour attached!");
-            continue;
-        }
-        bbPtr->stop();
+    for (auto& beh_pair : _availableBehaviours) {
+        beh_pair.second->stop();
     }
 }
 
@@ -83,14 +77,8 @@ void BehaviourPool::stopAll()
  */
 void BehaviourPool::terminateAll()
 {
-    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = _ae->getPlanRepository()->getBehaviourConfigurations();
-    for (const BehaviourConfiguration* beh : behaviourConfs) {
-        auto bbPtr = _availableBehaviours.at(beh);
-        if (bbPtr == nullptr) {
-            ALICA_ERROR_MSG("BP::stop(): Found Behaviour without an BasicBehaviour attached!");
-            continue;
-        }
-        bbPtr->terminate();
+    for (auto& beh_pair : _availableBehaviours) {
+        beh_pair.second->terminate();
     }
 }
 
