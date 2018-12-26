@@ -45,7 +45,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
 {
 }
 
-BasicBehaviour::~BasicBehaviour()
+void BasicBehaviour::terminate()
 {
     _started = false;
     _runCV.notify_all();
