@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ASCII"?>
+<alica:PlanType xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1418042702402" name="TestPlanType" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" >
+  <plans id="1418042836377" name="MISSING_NAME" comment="" activated="true">
+    <plan>OtherPlan.pml#1418042819203</plan>
+  </plans>
+  <plans id="1418042833223" name="MISSING_NAME" comment="" activated="true">
+    <plan>RuntimeConditionPlan.pml#1418042806575</plan>
+  </plans>
+  <plans id="1418042831574" name="MISSING_NAME" comment="" activated="true">
+    <plan>PreConditionPlan.pml#1418042796751</plan>
+  </plans>
+</alica:PlanType>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="BehaviourTriggerTestPlan.pml#1428508768573"/>
+    <value xPos="145" yPos="129" width="81" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="BehaviourTriggerTestPlan.pml#1428508768572"/>
+    <value width="684" height="463"/>
+  </extensions>
+  <extensions>
+    <key href="BehaviourTriggerTestPlan.pml#1428508768574"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/TriggerA.beh#1428508312886"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/TriggerB.beh#1428508331620"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/TriggerC.beh#1428508367402"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="BehaviourTriggerTestPlan.pml#1429017227839"/>
+    <value xPos="305" yPos="134" width="81" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="BehaviourTriggerTestPlan.pml#1429017235181"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/NotToTrigger.beh#1429017293301"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>
