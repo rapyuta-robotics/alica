@@ -165,23 +165,23 @@ typedef struct Queues{
     InProcQueue<alica::SyncReady> srq;
     InProcQueue<alica::SolverResult> soq;
 
-    Queues(CommModuleContainer& communicator) : aaq(communicator),
-                ptq(communicator), stq(communicator),
-                srq(communicator), soq(communicator) {}
+    Queues(CommModuleContainer& mContainer) : aaq(mContainer),
+                ptq(mContainer), stq(mContainer),
+                srq(mContainer), soq(mContainer) {}
 }Queues;
 
-CommModuleContainer AlicaDummyCommunication::communicator;
-Queues AlicaDummyCommunication::qctx(communicator);
+CommModuleContainer AlicaDummyCommunication::modContainer;
+Queues AlicaDummyCommunication::qctx(modContainer);
 
 AlicaDummyCommunication::AlicaDummyCommunication(alica::AlicaEngine* ae)
     : alica::IAlicaCommunication(ae), isRunning(false)
 {
-    communicator.registerModule(this);
+    modContainer.registerModule(this);
 }
 
 AlicaDummyCommunication::~AlicaDummyCommunication()
 {
-    communicator.deregisterModule(this);
+    modContainer.deregisterModule(this);
 }
 
 void AlicaDummyCommunication::sendAllocationAuthority(const alica::AllocationAuthorityInfo& aai) const

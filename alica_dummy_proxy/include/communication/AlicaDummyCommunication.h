@@ -35,7 +35,7 @@ public:
     alica::AlicaEngine* getEngine() { return ae; }
 private:
     bool isRunning;
-    static CommModuleContainer communicator;
+    static CommModuleContainer modContainer;
     static Queues qctx;
 };
 
