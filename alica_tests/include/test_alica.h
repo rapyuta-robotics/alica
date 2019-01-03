@@ -59,7 +59,7 @@ protected:
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
         ae->setAlicaClock(new alica::AlicaClock());
-        ae->setCommunicator(new alica_dummy_proxy::AlicaDummyCommunication(ae));
+        ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
 
         EXPECT_TRUE(ae->init(bc, cc, uc, crc));
     }

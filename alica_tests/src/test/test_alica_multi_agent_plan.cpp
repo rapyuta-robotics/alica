@@ -15,7 +15,7 @@
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include <Plans/Behaviour/Attack.h>
-#include <communication/AlicaRosCommunication.h>
+#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <gtest/gtest.h>
@@ -68,13 +68,13 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
     sc->setHostname("nase");
     ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "MultiAgentTestMaster", true);
     ae->setAlicaClock(new alica::AlicaClock());
-    ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+    ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
     ASSERT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("hairy");
     ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "MultiAgentTestMaster", true);
     ae2->setAlicaClock(new alica::AlicaClock());
-    ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
+    ae2->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae2));
     ASSERT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     ae->start();

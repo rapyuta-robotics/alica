@@ -10,7 +10,10 @@
 
 #include <engine/IAlicaCommunication.h>
 
-namespace alica_dummy_proxy {
+namespace alicaDummyProxy {
+
+class CommModuleContainer;
+struct Queues;
 
 class AlicaDummyCommunication : public alica::IAlicaCommunication {
 public:
@@ -29,8 +32,13 @@ public:
 
     virtual void startCommunication();
     virtual void stopCommunication();
+    alica::AlicaEngine* getEngine() { return ae; }
+private:
+    bool isRunning;
+    static CommModuleContainer communicator;
+    static Queues qctx;
 };
 
-}  // namespace alica_dummy_proxy
+}  // namespace alicaDummyProxy
 
 #endif /* ALICA_ALICA_DUMMY_PROXY_INCLUDE_COMMUNICATION_ALICADUMMYCOMMUNICATION_H_ */

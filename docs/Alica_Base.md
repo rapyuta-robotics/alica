@@ -12,7 +12,6 @@
 #include "engine/AlicaClock.h"
 
 //Choose one
-#include "communication/AlicaRosCommunication.h"
 #include "communication/AlicaDummyCommunication.h"
 
 #include "robotmovement/RobotMovement.h"
@@ -38,13 +37,9 @@ namespace msl
 		//AlicaClock and IAlicaCommunication, respectively.
 		//ae.setAlicaClock(new MyOwnClock());
 		
-		//ROS Communicator
-		//For ROS use this
-		ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-
 		//DummyCommunication has only empty methods so cant communicate with other robots
 		//Without ros use this
-		ae->setCommunicator(new alicaRosProxy::AlicaDummyCommunication(ae));
+		ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
 		
 		//WORLDMODEL 
 		wm = MSLWorldModel::get();
@@ -70,8 +65,6 @@ namespace msl
 		ae->shutdown();
 		delete ae->getCommunicator();
 		delete ae;
-		delete cc;
-		delete bc;
 		delete uc;
 		delete crc;
 	}

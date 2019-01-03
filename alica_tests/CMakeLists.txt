@@ -17,7 +17,6 @@ find_package(catkin REQUIRED COMPONENTS
     agent_id
     alica_engine
     alica_dummy_proxy
-    alica_ros_proxy
     alica_simple_solver
     alica_common_config
     alica_solver_interface
