@@ -6,7 +6,6 @@ using alica::AlicaTime;
 
 TEST(AlicaTime, AlicaClock)
 {
-
     AlicaTime t;
     EXPECT_EQ(t.inNanoseconds(), 0);
     EXPECT_EQ(t.inMicroseconds(), 0);

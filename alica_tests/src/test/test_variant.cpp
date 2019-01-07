@@ -6,7 +6,6 @@ using alica::Variant;
 
 TEST(Variant, works)
 {
-
     int64_t val = 5;
     Variant v1;
     Variant v2(val);
