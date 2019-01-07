@@ -28,8 +28,8 @@ public:
     static int getGetSolutionCallCounter();
 
 private:
-    static int existsSolutionCallCounter;
-    static int getSolutionCallCounter;
+    static int s_existsSolutionCallCounter;
+    static int s_getSolutionCallCounter;
 };
 } /* namespace reasoner */
 

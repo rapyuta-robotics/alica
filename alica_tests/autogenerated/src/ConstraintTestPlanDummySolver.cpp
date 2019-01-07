@@ -19,8 +19,8 @@ namespace alica
 namespace reasoner
 {
 
-int ConstraintTestPlanDummySolver::existsSolutionCallCounter = 0;
-int ConstraintTestPlanDummySolver::getSolutionCallCounter = 0;
+int ConstraintTestPlanDummySolver::s_existsSolutionCallCounter = 0;
+int ConstraintTestPlanDummySolver::s_getSolutionCallCounter = 0;
 
 ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(AlicaEngine* ae)
         : ISolver(ae)
@@ -31,8 +31,8 @@ ConstraintTestPlanDummySolver::~ConstraintTestPlanDummySolver() {}
 
 bool ConstraintTestPlanDummySolver::existsSolutionImpl(SolverContext*, const std::vector<shared_ptr<ProblemDescriptor>>&)
 {
-    ++existsSolutionCallCounter;
-    // std::cout << "ConstraintTestPlanDummySolver::existsSolution was called " << existsSolutionCallCounter
+    ++s_existsSolutionCallCounter;
+    // std::cout << "ConstraintTestPlanDummySolver::existsSolution was called " << s_existsSolutionCallCounter
     //		<< " times!" << std::endl;
     return false;
 }
@@ -45,20 +45,20 @@ bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const st
         std::string s = std::to_string(var->getId());
         results.push_back(bb.registerValue(s.c_str(), static_cast<int>(s.size())));
     }
-    ++getSolutionCallCounter;
-    // std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << getSolutionCallCounter << " times!"
+    ++s_getSolutionCallCounter;
+    // std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << s_getSolutionCallCounter << " times!"
     //		<< std::endl;
     return true;
 }
 
 int ConstraintTestPlanDummySolver::getExistsSolutionCallCounter()
 {
-    return existsSolutionCallCounter;
+    return s_existsSolutionCallCounter;
 }
 
 int ConstraintTestPlanDummySolver::getGetSolutionCallCounter()
 {
-    return getSolutionCallCounter;
+    return s_getSolutionCallCounter;
 }
 
 SolverVariable* ConstraintTestPlanDummySolver::createVariable(int64_t id, SolverContext* ctx)
