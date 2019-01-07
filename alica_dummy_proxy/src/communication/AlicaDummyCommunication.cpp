@@ -7,17 +7,17 @@
 
 #include "communication/AlicaDummyCommunication.h"
 
-#include <queue>
-#include <mutex>
 #include <condition_variable>
+#include <mutex>
+#include <queue>
 #include <thread>
 
 #include "engine/AlicaEngine.h"
+#include "engine/containers/AllocationAuthorityInfo.h"
+#include "engine/containers/PlanTreeInfo.h"
+#include "engine/containers/SolverResult.h"
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
-#include "engine/containers/PlanTreeInfo.h"
-#include "engine/containers/AllocationAuthorityInfo.h"
-#include "engine/containers/SolverResult.h"
 
 namespace alicaDummyProxy
 {
@@ -25,84 +25,94 @@ namespace alicaDummyProxy
 class CommModuleContainer
 {
 public:
-    void registerModule(AlicaDummyCommunication* newModule) {
-        std::lock_guard<std::mutex> lock(cb_mtx);
-        registeredModules.push_back(newModule);
+    void registerModule(AlicaDummyCommunication* newModule)
+    {
+        std::lock_guard<std::mutex> lock(_cbMtx);
+        _registeredModules.push_back(newModule);
     }
 
-    void deregisterModule(AlicaDummyCommunication* oldModule) {
-        std::lock_guard<std::mutex> lock(cb_mtx);
-        registeredModules.erase(
-                        std::remove(registeredModules.begin(), registeredModules.end(), oldModule),
-                        registeredModules.end());
+    void deregisterModule(AlicaDummyCommunication* oldModule)
+    {
+        std::lock_guard<std::mutex> lock(_cbMtx);
+        _registeredModules.erase(std::remove(_registeredModules.begin(), _registeredModules.end(), oldModule), _registeredModules.end());
     }
 
-    std::vector<AlicaDummyCommunication*> getModules() {
-        std::lock_guard<std::mutex> lock(cb_mtx);
-        // duplication at the cost of thread safety
-        return registeredModules;
+    std::vector<AlicaDummyCommunication*> getModules()
+    {
+        std::lock_guard<std::mutex> lock(_cbMtx);
+        // duplication to ensure thread safety
+        return _registeredModules;
     }
+
 private:
-    std::mutex cb_mtx;
-    std::vector<AlicaDummyCommunication*> registeredModules;
+    std::mutex _cbMtx;
+    std::vector<AlicaDummyCommunication*> _registeredModules;
 };
 
-template<class T>
+template <class T>
 class InProcQueue
 {
 public:
-    InProcQueue(CommModuleContainer& cModules)  : isRunning(true), commModules(cModules) {
-        cbThread = new std::thread(&InProcQueue::run, this);
+    InProcQueue(CommModuleContainer& cModules)
+            : _isRunning(true)
+            , _commModules(cModules)
+    {
+        _cbThread = new std::thread(&InProcQueue::run, this);
     }
 
-    ~InProcQueue() {
-        isRunning = false;
-        qcondition.notify_one();
-        cbThread->join();
-        delete cbThread;
+    ~InProcQueue()
+    {
+        _isRunning = false;
+        _qcondition.notify_one();
+        _cbThread->join();
+        delete _cbThread;
     }
 
-    void push(const T& data){
+    void push(const T& data)
+    {
         {
-            std::lock_guard<std::mutex> lock(qmutex);
-            q.push(std::unique_ptr<T>(new T(data)));
+            std::lock_guard<std::mutex> lock(_qmutex);
+            _q.push(std::unique_ptr<T>(new T(data)));
         }
-        qcondition.notify_one();
+        _qcondition.notify_one();
     }
+
 private:
-    void run() {
-        while(isRunning) {
+    void run()
+    {
+        while (_isRunning) {
             std::unique_ptr<T> first;
             {
-                std::unique_lock<std::mutex> lck(qmutex);
-                qcondition.wait(lck, [&] { return !isRunning || !q.empty(); });
-                if (!isRunning) {
+                std::unique_lock<std::mutex> lck(_qmutex);
+                _qcondition.wait(lck, [&] { return !_isRunning || !_q.empty(); });
+                if (!_isRunning) {
                     return;
                 }
 
-                first = std::move(q.front());
-                q.pop();
+                first = std::move(_q.front());
+                _q.pop();
             }
             process(first);
         }
     }
 
     void process(std::unique_ptr<T>& first);
-    std::thread* cbThread;
-    std::mutex qmutex;
-    std::condition_variable qcondition;
-    std::queue<std::unique_ptr<T>> q;
-    bool isRunning;
-    CommModuleContainer& commModules;
+    std::thread* _cbThread;
+    std::mutex _qmutex;
+    std::condition_variable _qcondition;
+    std::queue<std::unique_ptr<T>> _q;
+    bool _isRunning;
+    CommModuleContainer& _commModules;
 };
 
-template<>
-void InProcQueue<alica::AllocationAuthorityInfo>::process(std::unique_ptr<alica::AllocationAuthorityInfo>& first) {
+template <>
+void InProcQueue<alica::AllocationAuthorityInfo>::process(std::unique_ptr<alica::AllocationAuthorityInfo>& first)
+{
     alica::AllocationAuthorityInfo newInfo(*first);
-    std::vector<AlicaDummyCommunication*> registeredModules = commModules.getModules();
-    for(AlicaDummyCommunication* module : registeredModules){
+    std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
+    for (AlicaDummyCommunication* module : registeredModules) {
         newInfo.senderID = module->getEngine()->getIdFromBytes(first->senderID->toByteVector());
-        newInfo.authority = module->getEngine()->getIdFromBytes(first->senderID->toByteVector());
+        newInfo.authority = module->getEngine()->getIdFromBytes(first->authority->toByteVector());
         for (size_t i = 0; i < newInfo.entryPointRobots.size(); ++i) {
             for (size_t j = 0; j < newInfo.entryPointRobots[i].robots.size(); ++j) {
                 newInfo.entryPointRobots[i].robots[j] = module->getEngine()->getIdFromBytes(first->entryPointRobots[i].robots[j]->toByteVector());
@@ -112,10 +122,11 @@ void InProcQueue<alica::AllocationAuthorityInfo>::process(std::unique_ptr<alica:
     }
 }
 
-template<>
-void InProcQueue<alica::PlanTreeInfo>::process(std::unique_ptr<alica::PlanTreeInfo>& first) {
-    std::vector<AlicaDummyCommunication*> registeredModules = commModules.getModules();
-    for(AlicaDummyCommunication* module : registeredModules){
+template <>
+void InProcQueue<alica::PlanTreeInfo>::process(std::unique_ptr<alica::PlanTreeInfo>& first)
+{
+    std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
+    for (AlicaDummyCommunication* module : registeredModules) {
         // Each module expects ownership of shared_ptr
         auto pti = std::make_shared<alica::PlanTreeInfo>(*first);
         pti->senderID = module->getEngine()->getIdFromBytes(first->senderID->toByteVector());
@@ -123,24 +134,26 @@ void InProcQueue<alica::PlanTreeInfo>::process(std::unique_ptr<alica::PlanTreeIn
     }
 }
 
-template<>
-void InProcQueue<alica::SyncTalk>::process(std::unique_ptr<alica::SyncTalk>& first) {
-    std::vector<AlicaDummyCommunication*> registeredModules = commModules.getModules();
-    for(AlicaDummyCommunication* module : registeredModules){
+template <>
+void InProcQueue<alica::SyncTalk>::process(std::unique_ptr<alica::SyncTalk>& first)
+{
+    std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
+    for (AlicaDummyCommunication* module : registeredModules) {
         // Each module expects ownership of shared_ptr
         auto newSt = std::make_shared<alica::SyncTalk>(*first);
         newSt->senderID = module->getEngine()->getIdFromBytes(first->senderID->toByteVector());
-        for(size_t i = 0; i < newSt->syncData.size(); ++i) {
+        for (size_t i = 0; i < newSt->syncData.size(); ++i) {
             newSt->syncData[i].robotID = module->getEngine()->getIdFromBytes(first->syncData[i].robotID->toByteVector());
         }
         module->onSyncTalkReceived(newSt);
     }
 }
 
-template<>
-void InProcQueue<alica::SyncReady>::process(std::unique_ptr<alica::SyncReady>& first) {
-    std::vector<AlicaDummyCommunication*> registeredModules = commModules.getModules();
-    for(AlicaDummyCommunication* module : registeredModules){
+template <>
+void InProcQueue<alica::SyncReady>::process(std::unique_ptr<alica::SyncReady>& first)
+{
+    std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
+    for (AlicaDummyCommunication* module : registeredModules) {
         // Each module expects ownership of shared_ptr
         auto newSr = std::make_shared<alica::SyncReady>(*first);
         newSr->senderID = module->getEngine()->getIdFromBytes(first->senderID->toByteVector());
@@ -148,85 +161,99 @@ void InProcQueue<alica::SyncReady>::process(std::unique_ptr<alica::SyncReady>& f
     }
 }
 
-template<>
-void InProcQueue<alica::SolverResult>::process(std::unique_ptr<alica::SolverResult>& first) {
-    std::vector<AlicaDummyCommunication*> registeredModules = commModules.getModules();
-    auto prev = first->senderID;
-    for(AlicaDummyCommunication* module : registeredModules) {
+template <>
+void InProcQueue<alica::SolverResult>::process(std::unique_ptr<alica::SolverResult>& first)
+{
+    std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
+    alica::AgentIDConstPtr prev = first->senderID;
+    for (AlicaDummyCommunication* module : registeredModules) {
         first->senderID = module->getEngine()->getIdFromBytes(prev->toByteVector());
         module->onSolverResult(*first);
     }
 }
 
-typedef struct Queues{
+typedef struct Queues
+{
     InProcQueue<alica::AllocationAuthorityInfo> aaq;
     InProcQueue<alica::PlanTreeInfo> ptq;
     InProcQueue<alica::SyncTalk> stq;
     InProcQueue<alica::SyncReady> srq;
     InProcQueue<alica::SolverResult> soq;
 
-    Queues(CommModuleContainer& mContainer) : aaq(mContainer),
-                ptq(mContainer), stq(mContainer),
-                srq(mContainer), soq(mContainer) {}
-}Queues;
+    Queues(CommModuleContainer& mContainer)
+            : aaq(mContainer)
+            , ptq(mContainer)
+            , stq(mContainer)
+            , srq(mContainer)
+            , soq(mContainer)
+    {
+    }
+} Queues;
 
-CommModuleContainer AlicaDummyCommunication::modContainer;
-Queues AlicaDummyCommunication::qctx(modContainer);
+CommModuleContainer AlicaDummyCommunication::s_modContainer;
+Queues AlicaDummyCommunication::s_qctx(s_modContainer);
 
 AlicaDummyCommunication::AlicaDummyCommunication(alica::AlicaEngine* ae)
-    : alica::IAlicaCommunication(ae), isRunning(false)
+        : alica::IAlicaCommunication(ae)
+        , _isRunning(false)
 {
-    modContainer.registerModule(this);
+    s_modContainer.registerModule(this);
 }
 
 AlicaDummyCommunication::~AlicaDummyCommunication()
 {
-    modContainer.deregisterModule(this);
+    s_modContainer.deregisterModule(this);
 }
 
 void AlicaDummyCommunication::sendAllocationAuthority(const alica::AllocationAuthorityInfo& aai) const
 {
-    if(!isRunning) {
+    if (!_isRunning) {
         return;
     }
-    qctx.aaq.push(aai);
+    s_qctx.aaq.push(aai);
 }
 
-void AlicaDummyCommunication::sendPlanTreeInfo(const alica::PlanTreeInfo& pti) const {
-    if(!isRunning) {
+void AlicaDummyCommunication::sendPlanTreeInfo(const alica::PlanTreeInfo& pti) const
+{
+    if (!_isRunning) {
         return;
     }
-    qctx.ptq.push(pti);
+    s_qctx.ptq.push(pti);
 }
 
-void AlicaDummyCommunication::sendSyncReady(const alica::SyncReady& sr) const {
-    if(!isRunning) {
+void AlicaDummyCommunication::sendSyncReady(const alica::SyncReady& sr) const
+{
+    if (!_isRunning) {
         return;
     }
-    qctx.srq.push(sr);
+    s_qctx.srq.push(sr);
 }
 
-void AlicaDummyCommunication::sendSyncTalk(const alica::SyncTalk& st) const {
-    if(!isRunning) {
+void AlicaDummyCommunication::sendSyncTalk(const alica::SyncTalk& st) const
+{
+    if (!_isRunning) {
         return;
     }
-    qctx.stq.push(st);
+    s_qctx.stq.push(st);
 }
 
-void AlicaDummyCommunication::sendSolverResult(const alica::SolverResult& sr) const {
-    if(!isRunning) {
+void AlicaDummyCommunication::sendSolverResult(const alica::SolverResult& sr) const
+{
+    if (!_isRunning) {
         return;
     }
-    qctx.soq.push(sr);
+    s_qctx.soq.push(sr);
 }
 
 void AlicaDummyCommunication::tick() {}
-void AlicaDummyCommunication::startCommunication() {
-    isRunning = true;
+void AlicaDummyCommunication::startCommunication()
+{
+    _isRunning = true;
 }
 
-void AlicaDummyCommunication::stopCommunication() {
-    isRunning = false;
+void AlicaDummyCommunication::stopCommunication()
+{
+    _isRunning = false;
 }
 
 void AlicaDummyCommunication::sendAlicaEngineInfo(const alica::AlicaEngineInfo& /*ai*/) const {}

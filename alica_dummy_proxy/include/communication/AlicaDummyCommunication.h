@@ -5,17 +5,18 @@
  *      Author: Paul Panin
  */
 
-#ifndef ALICADUMMYCOMMUNICATION_H_
-#define ALICADUMMYCOMMUNICATION_H_
+#pragma once
 
 #include <engine/IAlicaCommunication.h>
 
-namespace alicaDummyProxy {
+namespace alicaDummyProxy
+{
 
 class CommModuleContainer;
 struct Queues;
 
-class AlicaDummyCommunication : public alica::IAlicaCommunication {
+class AlicaDummyCommunication : public alica::IAlicaCommunication
+{
 public:
     AlicaDummyCommunication(alica::AlicaEngine* ae);
     virtual ~AlicaDummyCommunication();
@@ -32,13 +33,12 @@ public:
 
     virtual void startCommunication();
     virtual void stopCommunication();
-    alica::AlicaEngine* getEngine() { return ae; }
+    alica::AlicaEngine* getEngine() const { return ae; }
+
 private:
-    bool isRunning;
-    static CommModuleContainer modContainer;
-    static Queues qctx;
+    bool _isRunning;
+    static CommModuleContainer s_modContainer;
+    static Queues s_qctx;
 };
 
-}  // namespace alicaDummyProxy
-
-#endif /* ALICA_ALICA_DUMMY_PROXY_INCLUDE_COMMUNICATION_ALICADUMMYCOMMUNICATION_H_ */
+} // namespace alicaDummyProxy
