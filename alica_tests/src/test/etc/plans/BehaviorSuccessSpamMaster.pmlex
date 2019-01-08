@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="BehaviorSuccessSpamMaster.pml#1522377375149"/>
+    <value xPos="87" yPos="119" width="80" height="70" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="BehaviorSuccessSpamMaster.pml#1522377375148"/>
+    <value width="463" height="325"/>
+  </extensions>
+  <extensions>
+    <key href="BehaviorSuccessSpamMaster.pml#1522377375150"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/SuccessSpam.beh#1522377419087"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="BehaviorSuccessSpamMaster.pml#1522377929290"/>
+    <value xPos="283" yPos="63" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="BehaviorSuccessSpamMaster.pml#1522377944058"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="BehaviorSuccessSpamMaster.pml#1522377945069"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>

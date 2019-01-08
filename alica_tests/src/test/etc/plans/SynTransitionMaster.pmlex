@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extension>
+    <key href="SynTransitionMaster.pml#1418822952600"/>
+    <value xPos="178" yPos="167" width="81" height="67" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <value xPos="28" yPos="31" width="819" height="558" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="SynTransitionMaster.pml#1418822952601"/>
+    <value width="-1" height="-1" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="SynTransitionMaster.pml#1418822969756"/>
+    <value xPos="476" yPos="104" width="100" height="67" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="SynTransitionMaster.pml#1418822974078"/>
+    <value xPos="484" yPos="327" width="86" height="67" collapsed="true" visible="true"/>
+  </extension>
+  <extension>
+    <key href="SynTransitionMaster.pml#1418825312031"/>
+    <value width="-1" height="-1" collapsed="true" visible="true"/>
+  </extension>
+</uiextensionmodel:PmlUiExtensionMap>
