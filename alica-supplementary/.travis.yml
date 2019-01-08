@@ -55,14 +55,14 @@ install:
 before_script:
   - docker exec -t alica-test bash -c "
     cd ~/catkin_ws/src && 
-    wstool init && 
-    if [[ -f /travis/dependencies.rosinstall ]] ; then 
-        sed -i -e \"s/$BASE_BRANCH/$BRANCH/g\" /travis/dependencies.rosinstall ; 
-        wstool merge -a -y /travis/dependencies.rosinstall ; 
-        if ! wstool up ; then 
-            sed -i -e \"s/$BRANCH/$BASE_BRANCH/g\" /travis/dependencies.rosinstall ; 
-            wstool merge -a -y /travis/dependencies.rosinstall ; 
-            wstool up ; 
+    wstool init &&
+    if [[ -f /travis/dependencies.rosinstall ]] ; then
+        sed -i -e \"s/$BASE_BRANCH/$BRANCH/g\" /travis/dependencies.rosinstall ;
+        wstool merge -a -y /travis/dependencies.rosinstall ;
+        if ! wstool up --continue-on-error; then
+            sed -i -e \"s/$BRANCH/$BASE_BRANCH/g\" /travis/dependencies.rosinstall ;
+            wstool merge -a -y /travis/dependencies.rosinstall ;
+            wstool up --continue-on-error ;
         fi ; 
     fi && 
     cd ~/catkin_ws && 
